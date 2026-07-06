@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8" />
+<title>ha-appliance-card demo</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@mdi/font@7.4.47/css/materialdesignicons.min.css">
+<style>
+  html, body {
+    margin: 0; font-family: "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background: #f2f4f7; padding: 32px;
+    --primary-text-color: #20293a; --secondary-text-color: #6b7280; --divider-color: #e2e5ea;
+    --card-background-color: #ffffff; --disabled-text-color: #9aa1ab;
+    --info-color: #2196f3; --warning-color: #ff9800; --success-color: #4caf50; --error-color: #f44336;
+  }
+  .row { display: flex; gap: 24px; flex-wrap: wrap; align-items: flex-start; }
+  ha-card { display: block; width: 300px; background: #ffffff; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.08); }
+</style>
+</head>
+<body>
+<script>
+class StubIcon extends HTMLElement {
+  connectedCallback() { this._sync(); }
+  static get observedAttributes() { return ["icon"]; }
+  attributeChangedCallback() { this._sync(); }
+  _sync() {
+    const name = (this.getAttribute("icon") || "").replace("mdi:", "");
+    this.innerHTML = `<i class="mdi mdi-${name}" style="font-size: var(--mdc-icon-size, 20px); line-height:1;"></i>`;
+    this.style.display = "inline-flex";
+    this.style.alignItems = "center";
+    this.style.justifyContent = "center";
+  }
+}
+customElements.define("ha-icon", StubIcon);
+</script>
+<script src="../dist/ha-appliance-card.js"></script>
+<div class="row">
+  <ha-appliance-card id="card1"></ha-appliance-card>
+  <ha-appliance-card id="card2"></ha-appliance-card>
+</div>
+<script>
+function st(entity_id, state, attributes) {
+  return { entity_id, state: String(state), attributes: attributes || {} };
+}
+function mkHass(states) {
+  return {
+    language: "fr", locale: { language: "fr" }, states, entities: {}, devices: {},
+    callService: () => {},
+  };
+}
+
+const states1 = {};
+[st("sensor.lave_linge_appliance_state", "Running", { friendly_name: "Lave-linge" }),
+ st("select.lave_linge_program_uid", "Cotton Pr Eco40-60"),
+ st("sensor.lave_linge_time_to_end", 1380, { unit_of_measurement: "s" }),
+ st("binary_sensor.lave_linge_door_state", "off"),
+ st("binary_sensor.lave_linge_connectivity_state", "on"),
+ st("select.lave_linge_temperature", "40 Celsius", { friendly_name: "Lave-linge Temperature" }),
+ st("select.lave_linge_spin_speed", "1200 Rpm", { friendly_name: "Lave-linge Spin speed" }),
+ st("sensor.lave_linge_alerts", "0", {}),
+ st("button.lave_linge_execute_command_pause", "unknown"),
+ st("button.lave_linge_execute_command_stopreset", "unknown"),
+].forEach((s) => (states1[s.entity_id] = s));
+const card1 = document.getElementById("card1");
+card1.setConfig({
+  type: "custom:ha-appliance-card",
+  state_entity: "sensor.lave_linge_appliance_state",
+  program_entity: "select.lave_linge_program_uid",
+  remaining_time_entity: "sensor.lave_linge_time_to_end",
+  door_entity: "binary_sensor.lave_linge_door_state",
+  connectivity_entity: "binary_sensor.lave_linge_connectivity_state",
+  alerts_entity: "sensor.lave_linge_alerts",
+  info_entities: [
+    { entity: "select.lave_linge_temperature", icon: "mdi:thermometer" },
+    { entity: "select.lave_linge_spin_speed", icon: "mdi:rotate-3d-variant" },
+  ],
+  pause_entity: "button.lave_linge_execute_command_pause",
+  stop_entity: "button.lave_linge_execute_command_stopreset",
+});
+card1.hass = mkHass(states1);
+let remaining = 1380;
+setInterval(() => {
+  remaining = Math.max(0, remaining - 60);
+  states1["sensor.lave_linge_time_to_end"].state = String(remaining);
+  card1.hass = mkHass(states1);
+}, 1000);
+
+const states2 = {};
+[st("sensor.dw_state", "paused", { friendly_name: "Lave-vaisselle" }),
+ st("sensor.dw_program", "Eco 50", {}),
+ st("sensor.dw_progress", 63, {}),
+].forEach((s) => (states2[s.entity_id] = s));
+const card2 = document.getElementById("card2");
+card2.setConfig({
+  type: "custom:ha-appliance-card",
+  name: "Lave-vaisselle",
+  appliance_type: "dishwasher",
+  state_entity: "sensor.dw_state",
+  program_entity: "sensor.dw_program",
+  program_format: "raw",
+  progress_entity: "sensor.dw_progress",
+});
+card2.hass = mkHass(states2);
+</script>
+</body>
+</html>

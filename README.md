@@ -4,7 +4,9 @@ A Home Assistant Lovelace card for washers, dryers and dishwashers — cycle in 
 
 Unlike brand-specific cards, this one doesn't assume any particular integration. Every field is a configurable entity mapping, so it works with **any** washer/dryer/dishwasher integration (Electrolux, Samsung, LG, Bosch/Siemens Home Connect, Miele, a generic smart plug + template sensors, etc.) as long as you point it at the right entities.
 
-> Status: early preview (v0.0.1). Feedback and issues welcome.
+> Status: early preview. Feedback and issues welcome.
+
+![HA Appliance Card screenshot](https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/screenshot.png)
 
 ## Features
 
