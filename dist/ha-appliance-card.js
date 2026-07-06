@@ -982,7 +982,7 @@ class ApplianceCard extends HTMLElement {
     if (programText) lines.push({ icon: "mdi:tag-outline", label: t(hass, "program"), value: programText });
     infoEntities.forEach((e) => {
       lines.push({
-        icon: e.icon || "mdi:information-outline",
+        icon: e.icon || e.st.attributes.icon || "mdi:information-outline",
         label: e.label || stripNamePrefix(e.st.attributes.friendly_name, e.entity),
         value: `${e.st.state}${e.st.attributes.unit_of_measurement ? " " + e.st.attributes.unit_of_measurement : ""}`,
       });
@@ -1261,6 +1261,19 @@ class ApplianceCardEditor extends HTMLElement {
     slotEl.appendChild(input);
   }
 
+  _mountInfoIcon(slotEl, index) {
+    const hass = this._hass;
+    const current = this._infoEntitiesList()[index] || {};
+    const picker = document.createElement("ha-icon-picker");
+    picker.hass = hass;
+    picker.value = current.icon || "";
+    picker.label = t(hass, "picker_icon");
+    picker.addEventListener("value-changed", (ev) => {
+      this._updateInfoEntity(index, { icon: ev.detail.value || undefined });
+    });
+    slotEl.appendChild(picker);
+  }
+
   _sectionHtml(section) {
     const hass = this._hass;
     const open = this._open.has(section.field);
@@ -1347,6 +1360,7 @@ class ApplianceCardEditor extends HTMLElement {
         ${Array.from({ length: this._infoCount }, (_, i) => `
           <div class="section">
             <div class="picker-slot" data-slot="__info_${i}"></div>
+            <div class="picker-slot" data-slot="__info_icon_${i}"></div>
             <div class="picker-slot" data-slot="__info_label_${i}"></div>
           </div>`).join("")}
       </details>
@@ -1363,6 +1377,7 @@ class ApplianceCardEditor extends HTMLElement {
     }
     for (let i = 0; i < this._infoCount; i++) {
       this._mountInfoPicker(this._root.querySelector(`[data-slot="__info_${i}"]`), i);
+      this._mountInfoIcon(this._root.querySelector(`[data-slot="__info_icon_${i}"]`), i);
       this._mountInfoLabel(this._root.querySelector(`[data-slot="__info_label_${i}"]`), i);
     }
 
