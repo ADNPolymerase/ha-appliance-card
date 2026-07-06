@@ -655,29 +655,74 @@ const SECTIONS = [
   { field: "stop_entity", labelKey: "section_stop" },
 ];
 
+function setsEqual(a, b) {
+  if (a.size !== b.size) return false;
+  for (const v of a) if (!b.has(v)) return false;
+  return true;
+}
+
 class ApplianceCardEditor extends HTMLElement {
+  _computeOpen(cfg) {
+    const open = new Set(SECTIONS.filter((s) => cfg[s.field]).map((s) => s.field));
+    if ((cfg.info_entities || []).length) open.add("__info");
+    return open;
+  }
+
   setConfig(config) {
     this._config = { ...config };
-    this._open = new Set(SECTIONS.filter((s) => this._config[s.field]).map((s) => s.field));
-    this._render();
+    const newOpen = this._computeOpen(this._config);
+    if (!this._open || !setsEqual(this._open, newOpen)) this._needsBuild = true;
+    this._open = newOpen;
+    this._maybeBuild();
   }
 
   set hass(hass) {
     const first = !this._hass;
     this._hass = hass;
+    if (first) this._needsBuild = true;
     if (first && this._config && this._config.state_entity && !this._autoSuggested) {
       this._autoSuggested = true;
       this._applySuggestions();
+      return;
     }
-    this._render();
+    this._maybeBuild();
+  }
+
+  // Only rebuilds the DOM when the set of visible sections actually changes.
+  // hass updates on their own (which fire constantly as entity states change)
+  // must NOT tear down and recreate <ha-entity-picker> elements — that closes
+  // any open dropdown and can leave its floating listbox orphaned on screen.
+  _maybeBuild() {
+    if (!this._hass || !this._config) return;
+    if (this._needsBuild || !this._built) {
+      this._needsBuild = false;
+      this._build();
+    } else {
+      this._refreshPickersHass();
+    }
+  }
+
+  _refreshPickersHass() {
+    if (!this._root) return;
+    this._root.querySelectorAll("ha-entity-picker").forEach((p) => {
+      p.hass = this._hass;
+    });
   }
 
   _applySuggestions() {
     const patch = autoSuggest(this._hass, this._config);
-    if (Object.keys(patch).length === 0) return;
-    this._config = { ...this._config, ...patch };
-    for (const s of SECTIONS) if (patch[s.field]) this._open.add(s.field);
-    this.dispatchEvent(new CustomEvent("config-changed", { detail: { config: this._config } }));
+    if (Object.keys(patch).length > 0) {
+      this._config = { ...this._config, ...patch };
+      const newOpen = this._computeOpen(this._config);
+      for (const s of SECTIONS) if (patch[s.field]) newOpen.add(s.field);
+      if (patch.info_entities) newOpen.add("__info");
+      this._open = newOpen;
+      this._needsBuild = true;
+    }
+    this._maybeBuild();
+    if (Object.keys(patch).length > 0) {
+      this.dispatchEvent(new CustomEvent("config-changed", { detail: { config: this._config } }));
+    }
   }
 
   _row(labelKey, field, opts) {
@@ -755,8 +800,9 @@ class ApplianceCardEditor extends HTMLElement {
       </div>`;
   }
 
-  _render() {
+  _build() {
     if (!this._hass || !this._config) return;
+    this._built = true;
     const hass = this._hass;
 
     if (!this._root) {
@@ -842,7 +888,7 @@ class ApplianceCardEditor extends HTMLElement {
           }
           this.dispatchEvent(new CustomEvent("config-changed", { detail: { config: this._config } }));
         }
-        this._render();
+        this._build();
       });
     });
   }
