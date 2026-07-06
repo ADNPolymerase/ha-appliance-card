@@ -629,15 +629,17 @@ class ApplianceCard extends HTMLElement {
 // Editor
 // ---------------------------------------------------------------------------
 
+const ACTION_DOMAINS = ["button", "switch", "script", "input_boolean"];
+
 const SECTIONS = [
-  { field: "program_entity", labelKey: "section_program", extra: (c, hass) => c._row("program_format", "program_format", {
+  { field: "program_entity", labelKey: "section_program", includeDomains: ["select", "sensor", "input_select"], extra: (c, hass) => c._row("program_format", "program_format", {
       type: "select",
       options: [
         { value: "clean", label: t(hass, "program_format_clean") },
         { value: "raw", label: t(hass, "program_format_raw") },
       ],
     }) },
-  { field: "remaining_time_entity", labelKey: "section_remaining", extra: (c, hass) => c._row("remaining_time_unit", "remaining_time_unit", {
+  { field: "remaining_time_entity", labelKey: "section_remaining", includeDomains: ["sensor", "input_number"], extra: (c, hass) => c._row("remaining_time_unit", "remaining_time_unit", {
       type: "select",
       options: [
         { value: "auto", label: t(hass, "unit_auto") },
@@ -645,14 +647,14 @@ const SECTIONS = [
         { value: "minutes", label: t(hass, "unit_minutes") },
       ],
     }) },
-  { field: "progress_entity", labelKey: "section_progress" },
-  { field: "door_entity", labelKey: "section_door", extra: (c, hass) => c._row("door_open_state", "door_open_state", { placeholder: "on" }) },
-  { field: "alerts_entity", labelKey: "section_alerts" },
-  { field: "connectivity_entity", labelKey: "section_connectivity", extra: (c, hass) => c._row("connectivity_connected_state", "connectivity_connected_state", { placeholder: "on" }) },
-  { field: "start_entity", labelKey: "section_start" },
-  { field: "pause_entity", labelKey: "section_pause" },
-  { field: "resume_entity", labelKey: "section_resume" },
-  { field: "stop_entity", labelKey: "section_stop" },
+  { field: "progress_entity", labelKey: "section_progress", includeDomains: ["sensor", "input_number"] },
+  { field: "door_entity", labelKey: "section_door", includeDomains: ["binary_sensor", "sensor"], extra: (c, hass) => c._row("door_open_state", "door_open_state", { placeholder: "on" }) },
+  { field: "alerts_entity", labelKey: "section_alerts", includeDomains: ["sensor", "binary_sensor"] },
+  { field: "connectivity_entity", labelKey: "section_connectivity", includeDomains: ["binary_sensor", "sensor"], extra: (c, hass) => c._row("connectivity_connected_state", "connectivity_connected_state", { placeholder: "on" }) },
+  { field: "start_entity", labelKey: "section_start", includeDomains: ACTION_DOMAINS },
+  { field: "pause_entity", labelKey: "section_pause", includeDomains: ACTION_DOMAINS },
+  { field: "resume_entity", labelKey: "section_resume", includeDomains: ACTION_DOMAINS },
+  { field: "stop_entity", labelKey: "section_stop", includeDomains: ACTION_DOMAINS },
 ];
 
 function setsEqual(a, b) {
@@ -850,10 +852,13 @@ class ApplianceCardEditor extends HTMLElement {
       </div>
     `;
 
-    this._mountPicker(this._root.querySelector('[data-slot="state_entity"]'), "state_entity", { label: t(hass, "state_entity") });
+    this._mountPicker(this._root.querySelector('[data-slot="state_entity"]'), "state_entity", {
+      label: t(hass, "state_entity"),
+      includeDomains: ["sensor", "binary_sensor"],
+    });
     for (const s of SECTIONS) {
       if (this._open.has(s.field)) {
-        this._mountPicker(this._root.querySelector(`[data-slot="${s.field}"]`), s.field);
+        this._mountPicker(this._root.querySelector(`[data-slot="${s.field}"]`), s.field, { includeDomains: s.includeDomains });
       }
     }
     if (infoOpen) {
