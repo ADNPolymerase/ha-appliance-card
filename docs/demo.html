@@ -41,21 +41,25 @@ customElements.define("ha-icon", StubIcon);
 function st(entity_id, state, attributes) {
   return { entity_id, state: String(state), attributes: attributes || {} };
 }
+const demoLang = new URLSearchParams(location.search).get("lang") === "fr" ? "fr" : "en";
+const washerName = demoLang === "fr" ? "Lave-linge" : "Washer";
+const dishwasherName = demoLang === "fr" ? "Lave-vaisselle" : "Dishwasher";
+
 function mkHass(states) {
   return {
-    language: "fr", locale: { language: "fr" }, states, entities: {}, devices: {},
+    language: demoLang, locale: { language: demoLang }, states, entities: {}, devices: {},
     callService: () => {},
   };
 }
 
 const states1 = {};
-[st("sensor.lave_linge_appliance_state", "Running", { friendly_name: "Lave-linge" }),
+[st("sensor.lave_linge_appliance_state", "Running", { friendly_name: washerName }),
  st("select.lave_linge_program_uid", "Cotton Pr Eco40-60"),
  st("sensor.lave_linge_time_to_end", 1380, { unit_of_measurement: "s" }),
  st("binary_sensor.lave_linge_door_state", "off"),
  st("binary_sensor.lave_linge_connectivity_state", "on"),
- st("select.lave_linge_temperature", "40 Celsius", { friendly_name: "Lave-linge Temperature" }),
- st("select.lave_linge_spin_speed", "1200 Rpm", { friendly_name: "Lave-linge Spin speed" }),
+ st("select.lave_linge_temperature", "40 Celsius", { friendly_name: `${washerName} Temperature` }),
+ st("select.lave_linge_spin_speed", "1200 Rpm", { friendly_name: `${washerName} Spin speed` }),
  st("sensor.lave_linge_alerts", "0", {}),
  st("button.lave_linge_execute_command_pause", "unknown"),
  st("button.lave_linge_execute_command_stopreset", "unknown"),
@@ -85,14 +89,14 @@ setInterval(() => {
 }, 1000);
 
 const states2 = {};
-[st("sensor.dw_state", "paused", { friendly_name: "Lave-vaisselle" }),
+[st("sensor.dw_state", "paused", { friendly_name: dishwasherName }),
  st("sensor.dw_program", "Eco 50", {}),
  st("sensor.dw_progress", 63, {}),
 ].forEach((s) => (states2[s.entity_id] = s));
 const card2 = document.getElementById("card2");
 card2.setConfig({
   type: "custom:ha-appliance-card",
-  name: "Lave-vaisselle",
+  name: dishwasherName,
   appliance_type: "dishwasher",
   state_entity: "sensor.dw_state",
   program_entity: "sensor.dw_program",
