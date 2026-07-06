@@ -14,7 +14,7 @@ const T = {
   en: {
     idle: "Idle", running: "Running", paused: "Paused", done: "Finished",
     delayed: "Delayed start", error: "Error", unknown: "Unknown",
-    program: "Program", remaining: "remaining", ready_at: "ready at",
+    program: "Program", remaining: "remaining", ready_at: "ready at", time_done: "Done",
     door_open: "Door open", door_closed: "Door closed", alerts: "Alerts",
     connected: "Connected", disconnected: "Disconnected",
     start: "Start", pause: "Pause", resume: "Resume", stop: "Stop",
@@ -22,7 +22,6 @@ const T = {
     main_settings: "Main entities", display_settings: "Display",
     action_settings: "Controls",
     group_general: "General settings",
-    group_other: "Other options",
     compact: "Compact mode (hide icon)",
     appliance_type: "Appliance type",
     type_auto: "Auto-detect", type_washer: "Washer", type_dryer: "Dryer", type_dishwasher: "Dishwasher",
@@ -37,6 +36,7 @@ const T = {
     door_entity: "Door sensor entity",
     door_open_state: "\"Open\" state value",
     door_invert: "Invert (state means closed, not open)",
+    door_hide_in_list: "Don't show in the info list",
     alerts_entity: "Alerts entity (attributes-style)",
     info_entities: "Extra info entities (comma-separated entity IDs)",
     connectivity_entity: "Connectivity entity",
@@ -49,6 +49,7 @@ const T = {
     section_progress: "Progress % (override)", section_door: "Door sensor",
     section_alerts: "Alerts", section_connectivity: "Connectivity",
     section_info: "Extra info entities (up to 3)",
+    section_info_enable: "Enable extra info entities",
     section_start: "Start button", section_pause: "Pause button",
     section_resume: "Resume button", section_stop: "Stop / reset button",
     picker_icon: "Icon (optional)",
@@ -56,7 +57,7 @@ const T = {
   fr: {
     idle: "En veille", running: "En cours", paused: "En pause", done: "Terminé",
     delayed: "Départ différé", error: "Erreur", unknown: "Inconnu",
-    program: "Programme", remaining: "restant", ready_at: "fin ~",
+    program: "Programme", remaining: "restant", ready_at: "fin ~", time_done: "Fin",
     door_open: "Porte ouverte", door_closed: "Porte fermée", alerts: "Alertes",
     connected: "Connecté", disconnected: "Déconnecté",
     start: "Démarrer", pause: "Pause", resume: "Reprendre", stop: "Stop",
@@ -64,7 +65,6 @@ const T = {
     main_settings: "Entités principales", display_settings: "Affichage",
     action_settings: "Commandes",
     group_general: "Réglages généraux",
-    group_other: "Autres options",
     compact: "Mode compact (masquer l'icône)",
     appliance_type: "Type d'appareil",
     type_auto: "Détection auto", type_washer: "Lave-linge", type_dryer: "Sèche-linge", type_dishwasher: "Lave-vaisselle",
@@ -79,6 +79,7 @@ const T = {
     door_entity: "Entité capteur de porte",
     door_open_state: "Valeur d'état \"ouverte\"",
     door_invert: "Inverser (l'état signifie fermée, pas ouverte)",
+    door_hide_in_list: "Ne pas afficher dans la liste d'infos",
     alerts_entity: "Entité alertes (façon attributs)",
     info_entities: "Entités d'info complémentaires (IDs séparés par virgule)",
     connectivity_entity: "Entité de connectivité",
@@ -91,6 +92,7 @@ const T = {
     section_progress: "Progression % (remplace l'estimation)", section_door: "Capteur de porte",
     section_alerts: "Alertes", section_connectivity: "Connectivité",
     section_info: "Entités d'info complémentaires (jusqu'à 3)",
+    section_info_enable: "Activer les entités d'info complémentaires",
     section_start: "Bouton Démarrer", section_pause: "Bouton Pause",
     section_resume: "Bouton Reprendre", section_stop: "Bouton Stop / Reset",
     picker_icon: "Icône (optionnel)",
@@ -517,16 +519,17 @@ class ApplianceCard extends HTMLElement {
           background: rgba(244, 67, 54, 0.12); color: var(--error-color, #f44336);
           font-size: 0.85em; display: flex; align-items: center; gap: 6px;
         }
-        .actions-row { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; justify-content: center; }
+        .actions-row { display: flex; gap: 8px; margin-top: 12px; justify-content: center; }
         .action-btn {
-          display: flex; align-items: center; gap: 6px;
+          display: flex; align-items: center; justify-content: center;
+          width: 40px; height: 40px; flex-shrink: 0;
           border: 1px solid var(--divider-color, #e0e0e0);
-          border-radius: 20px; padding: 6px 14px; cursor: pointer;
+          border-radius: 50%; cursor: pointer;
           background: var(--card-background-color, transparent);
-          color: var(--primary-text-color, #1c1c1c); font-size: 0.85em;
+          color: var(--primary-text-color, #1c1c1c);
         }
         .action-btn:hover { background: var(--secondary-background-color, rgba(0,0,0,0.04)); }
-        .action-btn ha-icon { --mdc-icon-size: 18px; }
+        .action-btn ha-icon { --mdc-icon-size: 20px; }
       </style>
     `;
 
@@ -587,13 +590,16 @@ class ApplianceCard extends HTMLElement {
       });
     });
     if (remSec !== null) {
+      const remRounded = Math.round(remSec / 60);
       lines.push({
         icon: "mdi:timer-outline",
-        label: t(hass, "remaining"),
-        value: `${formatDuration(remSec, hass)} · ${t(hass, "ready_at")} ${formatEta(remSec)}`,
+        label: t(hass, "section_remaining"),
+        value: remRounded > 0
+          ? `${formatDuration(remSec, hass)} · ${t(hass, "ready_at")} ${formatEta(remSec)}`
+          : t(hass, "time_done"),
       });
     }
-    if (cfg.door_entity) {
+    if (cfg.door_entity && !cfg.door_hide_in_list) {
       lines.push({
         icon: doorOpen ? "mdi:door-open" : "mdi:door-closed",
         label: doorOpen ? t(hass, "door_open") : t(hass, "door_closed"),
@@ -625,7 +631,7 @@ class ApplianceCard extends HTMLElement {
       ? `<div class="actions-row">${actions
           .map(
             (a) =>
-              `<div class="action-btn" data-entity="${a.entity}"><ha-icon icon="${a.icon}"></ha-icon>${a.label}</div>`
+              `<div class="action-btn" data-entity="${a.entity}" title="${a.label}" aria-label="${a.label}"><ha-icon icon="${a.icon}"></ha-icon></div>`
           )
           .join("")}</div>`
       : "";
@@ -686,7 +692,8 @@ const SECTIONS = [
   { field: "progress_entity", labelKey: "section_progress", includeDomains: ["sensor", "input_number"] },
   { field: "door_entity", labelKey: "section_door", includeDomains: ["binary_sensor", "sensor"], extra: (c, hass) =>
       c._row("door_open_state", "door_open_state", { placeholder: "on" }) +
-      c._row("door_invert", "door_invert", { type: "checkbox" }) },
+      c._row("door_invert", "door_invert", { type: "checkbox" }) +
+      c._row("door_hide_in_list", "door_hide_in_list", { type: "checkbox" }) },
   { field: "alerts_entity", labelKey: "section_alerts", includeDomains: ["sensor", "binary_sensor"] },
   { field: "connectivity_entity", labelKey: "section_connectivity", includeDomains: ["binary_sensor", "sensor"], extra: (c, hass) => c._row("connectivity_connected_state", "connectivity_connected_state", { placeholder: "on" }) },
   { field: "start_entity", labelKey: "section_start", includeDomains: ACTION_DOMAINS },
@@ -714,7 +721,7 @@ class ApplianceCardEditor extends HTMLElement {
     if (!this._open || !setsEqual(this._open, newOpen)) this._needsBuild = true;
     this._open = newOpen;
     if (!this._panelOpen) {
-      this._panelOpen = { general: true, other: this._open.size > 0 };
+      this._panelOpen = { general: true, info: (this._config.info_entities || []).length > 0 };
     }
     this._maybeBuild();
   }
@@ -761,7 +768,7 @@ class ApplianceCardEditor extends HTMLElement {
       if (patch.info_entities) newOpen.add("__info");
       this._open = newOpen;
       this._needsBuild = true;
-      if (newOpen.size > 0 && this._panelOpen) this._panelOpen.other = true;
+      if (patch.info_entities && this._panelOpen) this._panelOpen.info = true;
     }
     this._maybeBuild();
     if (Object.keys(patch).length > 0) {
@@ -900,12 +907,12 @@ class ApplianceCardEditor extends HTMLElement {
         <div class="section">
           <div class="picker-slot" data-slot="state_entity"></div>
         </div>
-      </details>
-      <details class="group" data-panel="other" ${this._panelOpen.other ? "open" : ""}>
-        <summary>${t(hass, "group_other")}</summary>
         ${SECTIONS.map((s) => this._sectionHtml(s)).join("")}
+      </details>
+      <details class="group" data-panel="info" ${this._panelOpen.info ? "open" : ""}>
+        <summary>${t(hass, "section_info")}</summary>
         <div class="section">
-          <label class="row-inline"><input type="checkbox" data-toggle="__info" ${infoOpen ? "checked" : ""} /> ${t(hass, "section_info")}</label>
+          <label class="row-inline"><input type="checkbox" data-toggle="__info" ${infoOpen ? "checked" : ""} /> ${t(hass, "section_info_enable")}</label>
           ${infoOpen ? [0, 1, 2].map((i) => `<div class="picker-slot" data-slot="__info_${i}"></div>`).join("") : ""}
         </div>
       </details>
@@ -952,7 +959,11 @@ class ApplianceCardEditor extends HTMLElement {
           } else {
             delete this._config[field];
             const section = SECTIONS.find((s) => s.field === field);
-            if (section && section.field === "door_entity") delete this._config.door_open_state;
+            if (section && section.field === "door_entity") {
+              delete this._config.door_open_state;
+              delete this._config.door_invert;
+              delete this._config.door_hide_in_list;
+            }
             if (section && section.field === "connectivity_entity") delete this._config.connectivity_connected_state;
           }
           this.dispatchEvent(new CustomEvent("config-changed", { detail: { config: this._config } }));
