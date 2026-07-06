@@ -19,12 +19,21 @@
 <body>
 <script>
 class StubIcon extends HTMLElement {
-  connectedCallback() { this._sync(); }
+  connectedCallback() {
+    if (!this._root) this._root = this.attachShadow({ mode: "open" });
+    this._sync();
+  }
   static get observedAttributes() { return ["icon"]; }
   attributeChangedCallback() { this._sync(); }
   _sync() {
+    if (!this._root) return;
     const name = (this.getAttribute("icon") || "").replace("mdi:", "");
-    this.innerHTML = `<i class="mdi mdi-${name}" style="font-size: var(--mdc-icon-size, 20px); line-height:1;"></i>`;
+    this._root.innerHTML = `
+      <style>
+        @import url("https://cdn.jsdelivr.net/npm/@mdi/font@7.4.47/css/materialdesignicons.min.css");
+        i { font-size: var(--mdc-icon-size, 20px); line-height: 1; }
+      </style>
+      <i class="mdi mdi-${name}"></i>`;
     this.style.display = "inline-flex";
     this.style.alignItems = "center";
     this.style.justifyContent = "center";
@@ -36,6 +45,7 @@ customElements.define("ha-icon", StubIcon);
 <div class="row">
   <ha-appliance-card id="card1"></ha-appliance-card>
   <ha-appliance-card id="card2"></ha-appliance-card>
+  <ha-appliance-card id="card3"></ha-appliance-card>
 </div>
 <script>
 function st(entity_id, state, attributes) {
@@ -88,13 +98,32 @@ setInterval(() => {
   card1.hass = mkHass(states1);
 }, 1000);
 
+// Dryer, cycle finished, door open (ajar illustration) — never shown while "running"
+const dryerName = demoLang === "fr" ? "Sèche-linge" : "Dryer";
 const states2 = {};
-[st("sensor.dw_state", "paused", { friendly_name: dishwasherName }),
- st("sensor.dw_program", "Eco 50", {}),
- st("sensor.dw_progress", 63, {}),
+[st("sensor.dryer_state", "Finished", { friendly_name: dryerName }),
+ st("sensor.dryer_program", "Cotton", {}),
+ st("binary_sensor.dryer_door", "on"),
 ].forEach((s) => (states2[s.entity_id] = s));
 const card2 = document.getElementById("card2");
 card2.setConfig({
+  type: "custom:ha-appliance-card",
+  name: dryerName,
+  appliance_type: "dryer",
+  state_entity: "sensor.dryer_state",
+  program_entity: "sensor.dryer_program",
+  program_format: "raw",
+  door_entity: "binary_sensor.dryer_door",
+});
+card2.hass = mkHass(states2);
+
+const states3 = {};
+[st("sensor.dw_state", "paused", { friendly_name: dishwasherName }),
+ st("sensor.dw_program", "Eco 50", {}),
+ st("sensor.dw_progress", 63, {}),
+].forEach((s) => (states3[s.entity_id] = s));
+const card3 = document.getElementById("card3");
+card3.setConfig({
   type: "custom:ha-appliance-card",
   name: dishwasherName,
   appliance_type: "dishwasher",
@@ -103,7 +132,7 @@ card2.setConfig({
   program_format: "raw",
   progress_entity: "sensor.dw_progress",
 });
-card2.hass = mkHass(states2);
+card3.hass = mkHass(states3);
 </script>
 </body>
 </html>
