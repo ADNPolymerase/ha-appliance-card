@@ -12,7 +12,8 @@ Unlike brand-specific cards, this one doesn't assume any particular integration.
 - State normalization: maps whatever raw string your integration reports (`Idle`, `Running`, `RUNNING`, `wash`, ...) to a common idle / running / paused / done / delayed / error vocabulary, with automatic keyword-based fallback and an optional explicit `state_map` override.
 - Illustrated appliance icon (front-loading washer with animated water, tumbling clothes for dryers, spinning spray arm for dishwashers) — static when idle, animated only while running. Auto-detected from the entity/icon, or set explicitly via `appliance_type`.
 - Progress bar: uses a direct percentage sensor if your integration exposes one, otherwise estimates it client-side from the remaining-time sensor.
-- Program name, extra info lines (temperature, spin speed, steam level, ...), door state, alerts, connectivity — each optional and independently configurable.
+- Program name, extra info lines (temperature, spin speed, steam level, ...), door state and alerts — each optional and independently configurable. Info line labels automatically drop a repeated device-name prefix (e.g. an entity named "Lave-linge Pods" shows as just "Pods").
+- The door is shown ajar on the illustration itself while open, in addition to a text line; connectivity is shown as a small wifi/wifi-off icon in the top-right corner instead of a text line.
 - Start / pause / resume / stop controls (only shown for the buttons/entities you configure).
 - Compact mode to hide the illustration and keep only the text.
 - Visual editor: pick the state entity and most other fields are auto-suggested from sibling entities on the same device — override any of them with the entity picker.
@@ -40,9 +41,9 @@ Only `state_entity` is required — everything else is optional. In the visual e
 | `program_entity` / `program_format` | Entity holding the selected program/cycle. `program_format: clean` (default) trims common `"<category> Pr <name>"` patterns; `raw` shows the state as-is. |
 | `remaining_time_entity` / `remaining_time_unit` | Entity with the remaining duration. Unit `auto` (default, read from the entity), `seconds`, or `minutes`. |
 | `progress_entity` | Optional 0–100 sensor; overrides the client-side progress estimate. |
-| `door_entity` / `door_open_state` | Door sensor and the state value meaning "open" (default `on`). |
+| `door_entity` / `door_open_state` / `door_invert` | Door sensor, the state value meaning "open" (default `on`), and an `invert` toggle for sensors where that state actually means closed. |
 | `alerts_entity` | An entity whose *attributes* are individually on/off flags (e.g. `door: OFF`, `water_leak: ON`); any attribute matching an "on/true/active" value is shown as an active alert. |
-| `connectivity_entity` / `connectivity_connected_state` | Connectivity sensor and the state value meaning "connected" (default `on`). |
+| `connectivity_entity` / `connectivity_connected_state` | Connectivity sensor and the state value meaning "connected" (default `on`); shown as a top-right wifi icon. |
 | `info_entities` | Up to a few `{ entity, icon?, label? }` entries shown as extra info lines (temperature, spin speed, ...). |
 | `start_entity` / `pause_entity` / `resume_entity` / `stop_entity` | Button/switch/script entities wired to the corresponding control. Only configured ones are shown. |
 

@@ -34,6 +34,7 @@ const T = {
     progress_entity: "Progress % entity (optional override)",
     door_entity: "Door sensor entity",
     door_open_state: "\"Open\" state value",
+    door_invert: "Invert (state means closed, not open)",
     alerts_entity: "Alerts entity (attributes-style)",
     info_entities: "Extra info entities (comma-separated entity IDs)",
     connectivity_entity: "Connectivity entity",
@@ -73,6 +74,7 @@ const T = {
     progress_entity: "Entité progression % (remplace l'estimation)",
     door_entity: "Entité capteur de porte",
     door_open_state: "Valeur d'état \"ouverte\"",
+    door_invert: "Inverser (l'état signifie fermée, pas ouverte)",
     alerts_entity: "Entité alertes (façon attributs)",
     info_entities: "Entités d'info complémentaires (IDs séparés par virgule)",
     connectivity_entity: "Entité de connectivité",
@@ -371,7 +373,10 @@ class ApplianceCard extends HTMLElement {
     let doorOpen = false;
     if (cfg.door_entity) {
       const dst = stateObj(hass, cfg.door_entity);
-      if (dst) doorOpen = dst.state === (cfg.door_open_state || "on");
+      if (dst) {
+        doorOpen = dst.state === (cfg.door_open_state || "on");
+        if (cfg.door_invert) doorOpen = !doorOpen;
+      }
     }
 
     // Alerts
@@ -406,7 +411,12 @@ class ApplianceCard extends HTMLElement {
 
     const styleTag = `
       <style>
-        ha-card { padding: 16px; }
+        ha-card { display: block; padding: 16px; position: relative; }
+        .conn-badge {
+          position: absolute; top: 10px; right: 12px;
+          --mdc-icon-size: 18px; color: var(--secondary-text-color, #767676);
+        }
+        .conn-badge.disconnected { color: var(--error-color, #f44336); }
         .top { display: flex; flex-direction: column; align-items: center; text-align: center; cursor: pointer; }
         .machine { position: relative; width: 96px; height: 108px; margin: 0 auto 8px; }
         .mbody {
@@ -423,12 +433,19 @@ class ApplianceCard extends HTMLElement {
           border-radius: 50%; background: var(--disabled-text-color, #9e9e9e);
         }
         .mknob.k2 { right: 20px; }
-        .bezel {
+        .bezel-wrap {
           position: absolute; left: 50%; top: 62%; transform: translate(-50%, -50%);
-          width: 64px; height: 64px; border-radius: 50%;
+          width: 64px; height: 64px; perspective: 220px;
+        }
+        .drum-hole { position: absolute; inset: 0; border-radius: 50%; background: #14161a; }
+        .door {
+          position: absolute; inset: 0; border-radius: 50%;
           background: var(--divider-color, #b0b0b0);
           box-shadow: inset 0 0 0 2px rgba(0, 0, 0, 0.15);
+          transform-origin: left center; transform: rotateY(0deg);
+          transition: transform 0.4s ease;
         }
+        .door.ajar { transform: rotateY(50deg); }
         .rim { position: absolute; inset: 5px; border-radius: 50%; background: #2b2f36; }
         .glass {
           position: absolute; inset: 6px; border-radius: 50%; overflow: hidden;
@@ -528,21 +545,30 @@ class ApplianceCard extends HTMLElement {
             <div class="mknob"></div>
             <div class="mknob k2"></div>
           </div>
-          <div class="bezel">
-            <div class="rim">
-              <div class="glass">
-                ${glassContent}
+          <div class="bezel-wrap">
+            <div class="drum-hole"></div>
+            <div class="door ${doorOpen ? "ajar" : ""}">
+              <div class="rim">
+                <div class="glass">
+                  ${glassContent}
+                </div>
               </div>
             </div>
           </div>
         </div>`;
+
+    const stripNamePrefix = (label) => {
+      if (typeof label !== "string") return label;
+      const prefix = `${name} `;
+      return label.startsWith(prefix) ? label.slice(prefix.length) : label;
+    };
 
     const lines = [];
     if (programText) lines.push({ icon: "mdi:tag-outline", label: t(hass, "program"), value: programText });
     infoEntities.forEach((e) => {
       lines.push({
         icon: e.icon || "mdi:information-outline",
-        label: e.label || (e.st.attributes.friendly_name || e.entity),
+        label: e.label || stripNamePrefix(e.st.attributes.friendly_name || e.entity),
         value: `${e.st.state}${e.st.attributes.unit_of_measurement ? " " + e.st.attributes.unit_of_measurement : ""}`,
       });
     });
@@ -561,15 +587,6 @@ class ApplianceCard extends HTMLElement {
         warn: doorOpen,
       });
     }
-    if (connectivity !== null) {
-      lines.push({
-        icon: connectivity ? "mdi:wifi" : "mdi:wifi-off",
-        label: connectivity ? t(hass, "connected") : t(hass, "disconnected"),
-        value: "",
-        warn: !connectivity,
-      });
-    }
-
     const linesHtml = lines.length
       ? `<div class="info-lines">${lines
           .map(
@@ -599,9 +616,14 @@ class ApplianceCard extends HTMLElement {
           .join("")}</div>`
       : "";
 
+    const connBadgeHtml = connectivity !== null
+      ? `<div class="conn-badge ${connectivity ? "" : "disconnected"}"><ha-icon icon="${connectivity ? "mdi:wifi" : "mdi:wifi-off"}"></ha-icon></div>`
+      : "";
+
     this._root.innerHTML = `
       ${styleTag}
       <ha-card>
+        ${connBadgeHtml}
         <div class="top" id="header">
           ${iconHtml}
           <div class="name">${name}</div>
@@ -648,7 +670,9 @@ const SECTIONS = [
       ],
     }) },
   { field: "progress_entity", labelKey: "section_progress", includeDomains: ["sensor", "input_number"] },
-  { field: "door_entity", labelKey: "section_door", includeDomains: ["binary_sensor", "sensor"], extra: (c, hass) => c._row("door_open_state", "door_open_state", { placeholder: "on" }) },
+  { field: "door_entity", labelKey: "section_door", includeDomains: ["binary_sensor", "sensor"], extra: (c, hass) =>
+      c._row("door_open_state", "door_open_state", { placeholder: "on" }) +
+      c._row("door_invert", "door_invert", { type: "checkbox" }) },
   { field: "alerts_entity", labelKey: "section_alerts", includeDomains: ["sensor", "binary_sensor"] },
   { field: "connectivity_entity", labelKey: "section_connectivity", includeDomains: ["binary_sensor", "sensor"], extra: (c, hass) => c._row("connectivity_connected_state", "connectivity_connected_state", { placeholder: "on" }) },
   { field: "start_entity", labelKey: "section_start", includeDomains: ACTION_DOMAINS },
