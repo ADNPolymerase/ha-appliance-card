@@ -14,6 +14,8 @@ Une card Lovelace Home Assistant pour lave-linge, sèche-linge et lave-vaisselle
 
 Contrairement aux cards spécifiques à une marque, celle-ci ne suppose aucune intégration particulière. Chaque champ est un mapping d'entité configurable, elle fonctionne donc avec **n'importe quelle** intégration de lave-linge/sèche-linge/lave-vaisselle (Electrolux, Samsung, LG, Bosch/Siemens Home Connect, Miele, une simple prise connectée + capteurs template, etc.) du moment que tu la pointes vers les bonnes entités.
 
+Interface multilingue (anglais, français, allemand, espagnol, italien, néerlandais, portugais, suédois, norvégien, danois, polonais — détectée automatiquement depuis Home Assistant).
+
 > Statut : preview précoce. Retours et issues bienvenus.
 
 > 🇬🇧 [Read in English](README.md)
