@@ -1,0 +1,69 @@
+# HA Appliance Card
+
+A Home Assistant Lovelace card for washers, dryers and dishwashers — cycle in progress, program, remaining time, door status, alerts and controls.
+
+Unlike brand-specific cards, this one doesn't assume any particular integration. Every field is a configurable entity mapping, so it works with **any** washer/dryer/dishwasher integration (Electrolux, Samsung, LG, Bosch/Siemens Home Connect, Miele, a generic smart plug + template sensors, etc.) as long as you point it at the right entities.
+
+> Status: early preview (v0.0.1). Feedback and issues welcome.
+
+## Features
+
+- Works across brands/integrations: no hardcoded entity IDs, everything is mapped in the card config.
+- State normalization: maps whatever raw string your integration reports (`Idle`, `Running`, `RUNNING`, `wash`, ...) to a common idle / running / paused / done / delayed / error vocabulary, with automatic keyword-based fallback and an optional explicit `state_map` override.
+- Illustrated appliance icon (front-loading washer with animated water, tumbling clothes for dryers, spinning spray arm for dishwashers) — static when idle, animated only while running. Auto-detected from the entity/icon, or set explicitly via `appliance_type`.
+- Progress bar: uses a direct percentage sensor if your integration exposes one, otherwise estimates it client-side from the remaining-time sensor.
+- Program name, extra info lines (temperature, spin speed, steam level, ...), door state, alerts, connectivity — each optional and independently configurable.
+- Start / pause / resume / stop controls (only shown for the buttons/entities you configure).
+- Compact mode to hide the illustration and keep only the text.
+- Visual editor: pick the state entity and most other fields are auto-suggested from sibling entities on the same device — override any of them with the entity picker.
+
+## Installation (HACS)
+
+This card is not yet in the default HACS store. Add it as a custom repository:
+
+1. HACS → the "⋮" menu (top right) → **Custom repositories**.
+2. Repository: `https://github.com/ADNPolymerase/ha-appliance-card`, category: **Dashboard** (Lovelace plugin).
+3. Install **HA Appliance Card**, then reload/clear cache if the resource doesn't pick up automatically.
+4. Add a card of type `custom:ha-appliance-card` to a dashboard, either via YAML or the visual editor.
+
+## Configuration
+
+Only `state_entity` is required — everything else is optional. In the visual editor, setting the state entity auto-fills the other fields when a matching sibling entity is found on the same device; each field can still be changed or cleared.
+
+| Option | Description |
+|---|---|
+| `state_entity` | **Required.** Entity reporting the appliance's overall state (any domain). |
+| `state_map` | Optional map of raw state string → `idle`\|`running`\|`paused`\|`done`\|`delayed`\|`error`, for integrations whose wording isn't auto-detected. |
+| `name` | Card title. Defaults to the state entity's friendly name. |
+| `compact` | `true` to hide the illustration and show only text. |
+| `appliance_type` | `auto` (default) \| `washer` \| `dryer` \| `dishwasher`. |
+| `program_entity` / `program_format` | Entity holding the selected program/cycle. `program_format: clean` (default) trims common `"<category> Pr <name>"` patterns; `raw` shows the state as-is. |
+| `remaining_time_entity` / `remaining_time_unit` | Entity with the remaining duration. Unit `auto` (default, read from the entity), `seconds`, or `minutes`. |
+| `progress_entity` | Optional 0–100 sensor; overrides the client-side progress estimate. |
+| `door_entity` / `door_open_state` | Door sensor and the state value meaning "open" (default `on`). |
+| `alerts_entity` | An entity whose *attributes* are individually on/off flags (e.g. `door: OFF`, `water_leak: ON`); any attribute matching an "on/true/active" value is shown as an active alert. |
+| `connectivity_entity` / `connectivity_connected_state` | Connectivity sensor and the state value meaning "connected" (default `on`). |
+| `info_entities` | Up to a few `{ entity, icon?, label? }` entries shown as extra info lines (temperature, spin speed, ...). |
+| `start_entity` / `pause_entity` / `resume_entity` / `stop_entity` | Button/switch/script entities wired to the corresponding control. Only configured ones are shown. |
+
+### Example
+
+```yaml
+type: custom:ha-appliance-card
+state_entity: sensor.lave_linge_appliance_state
+program_entity: select.lave_linge_program_uid
+remaining_time_entity: sensor.lave_linge_time_to_end
+door_entity: binary_sensor.lave_linge_door_state
+alerts_entity: sensor.lave_linge_alerts
+info_entities:
+  - entity: select.lave_linge_temperature
+    icon: mdi:thermometer
+  - entity: select.lave_linge_spin_speed
+    icon: mdi:rotate-3d-variant
+pause_entity: button.lave_linge_execute_command_pause
+stop_entity: button.lave_linge_execute_command_stopreset
+```
+
+## License
+
+MIT — see [LICENSE](LICENSE).
