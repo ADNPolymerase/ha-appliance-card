@@ -758,7 +758,7 @@ class ApplianceCardEditor extends HTMLElement {
     const picker = document.createElement("ha-entity-picker");
     picker.hass = hass;
     picker.value = this._config[field] || "";
-    picker.label = opts.label || t(hass, field);
+    picker.label = opts.label || t(hass, "entity");
     if (opts.includeDomains) picker.includeDomains = opts.includeDomains;
     picker.addEventListener("value-changed", (ev) => {
       const value = ev.detail.value;
@@ -841,7 +841,6 @@ class ApplianceCardEditor extends HTMLElement {
         })}
       </div>
       <div class="section">
-        <h4>${t(hass, "state_entity")}</h4>
         <div class="picker-slot" data-slot="state_entity"></div>
       </div>
       ${SECTIONS.map((s) => this._sectionHtml(s)).join("")}
@@ -851,7 +850,7 @@ class ApplianceCardEditor extends HTMLElement {
       </div>
     `;
 
-    this._mountPicker(this._root.querySelector('[data-slot="state_entity"]'), "state_entity");
+    this._mountPicker(this._root.querySelector('[data-slot="state_entity"]'), "state_entity", { label: t(hass, "state_entity") });
     for (const s of SECTIONS) {
       if (this._open.has(s.field)) {
         this._mountPicker(this._root.querySelector(`[data-slot="${s.field}"]`), s.field);
