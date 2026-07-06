@@ -48,8 +48,9 @@ const T = {
     section_program: "Program", section_remaining: "Remaining time",
     section_progress: "Progress % (override)", section_door: "Door sensor",
     section_alerts: "Alerts", section_connectivity: "Connectivity",
-    section_info: "Extra info entities (up to 3)",
-    section_info_enable: "Enable extra info entities",
+    section_info: "Extra info entities",
+    info_count: "Number of extra entities",
+    info_label: "Display name (optional)",
     section_start: "Start button", section_pause: "Pause button",
     section_resume: "Resume button", section_stop: "Stop / reset button",
     picker_icon: "Icon (optional)",
@@ -91,8 +92,9 @@ const T = {
     section_program: "Programme", section_remaining: "Temps restant",
     section_progress: "Progression % (remplace l'estimation)", section_door: "Capteur de porte",
     section_alerts: "Alertes", section_connectivity: "Connectivité",
-    section_info: "Entités d'info complémentaires (jusqu'à 3)",
-    section_info_enable: "Activer les entités d'info complémentaires",
+    section_info: "Entités d'info complémentaires",
+    info_count: "Nombre d'entités supplémentaires",
+    info_label: "Nom affiché (optionnel)",
     section_start: "Bouton Démarrer", section_pause: "Bouton Pause",
     section_resume: "Bouton Reprendre", section_stop: "Bouton Stop / Reset",
     picker_icon: "Icône (optionnel)",
@@ -710,9 +712,7 @@ function setsEqual(a, b) {
 
 class ApplianceCardEditor extends HTMLElement {
   _computeOpen(cfg) {
-    const open = new Set(SECTIONS.filter((s) => cfg[s.field]).map((s) => s.field));
-    if ((cfg.info_entities || []).length) open.add("__info");
-    return open;
+    return new Set(SECTIONS.filter((s) => cfg[s.field]).map((s) => s.field));
   }
 
   setConfig(config) {
@@ -722,6 +722,10 @@ class ApplianceCardEditor extends HTMLElement {
     this._open = newOpen;
     if (!this._panelOpen) {
       this._panelOpen = { general: true, info: (this._config.info_entities || []).length > 0 };
+    }
+    if (this._infoCount === undefined) {
+      const existing = (this._config.info_entities || []).length;
+      this._infoCount = Math.min(5, existing || 3);
     }
     this._maybeBuild();
   }
@@ -765,10 +769,12 @@ class ApplianceCardEditor extends HTMLElement {
       this._config = { ...this._config, ...patch };
       const newOpen = this._computeOpen(this._config);
       for (const s of SECTIONS) if (patch[s.field]) newOpen.add(s.field);
-      if (patch.info_entities) newOpen.add("__info");
       this._open = newOpen;
       this._needsBuild = true;
-      if (patch.info_entities && this._panelOpen) this._panelOpen.info = true;
+      if (patch.info_entities && this._panelOpen) {
+        this._panelOpen.info = true;
+        this._infoCount = Math.min(5, Math.max(this._infoCount || 0, patch.info_entities.length));
+      }
     }
     this._maybeBuild();
     if (Object.keys(patch).length > 0) {
@@ -821,24 +827,42 @@ class ApplianceCardEditor extends HTMLElement {
     slotEl.appendChild(picker);
   }
 
+  _infoEntitiesList() {
+    return (this._config.info_entities || []).map((e) => (typeof e === "string" ? { entity: e } : { ...e }));
+  }
+
+  _updateInfoEntity(index, patch) {
+    const next = this._infoEntitiesList();
+    while (next.length <= index) next.push({});
+    next[index] = { ...next[index], ...patch };
+    this._config = { ...this._config, info_entities: next };
+    this.dispatchEvent(new CustomEvent("config-changed", { detail: { config: this._config } }));
+  }
+
   _mountInfoPicker(slotEl, index) {
     const hass = this._hass;
-    const list = (this._config.info_entities || []).map((e) => (typeof e === "string" ? { entity: e } : e));
-    const current = list[index] || {};
+    const current = this._infoEntitiesList()[index] || {};
     const picker = document.createElement("ha-entity-picker");
     picker.hass = hass;
     picker.value = current.entity || "";
     picker.label = `${t(hass, "entity")} ${index + 1}`;
     picker.addEventListener("value-changed", (ev) => {
-      const value = ev.detail.value;
-      const next = (this._config.info_entities || []).map((e) => (typeof e === "string" ? { entity: e } : { ...e }));
-      while (next.length <= index) next.push({});
-      if (value) next[index] = { ...next[index], entity: value };
-      else next[index] = { ...next[index], entity: undefined };
-      this._config = { ...this._config, info_entities: next.filter((e) => e.entity) };
-      this.dispatchEvent(new CustomEvent("config-changed", { detail: { config: this._config } }));
+      this._updateInfoEntity(index, { entity: ev.detail.value || undefined });
     });
     slotEl.appendChild(picker);
+  }
+
+  _mountInfoLabel(slotEl, index) {
+    const hass = this._hass;
+    const current = this._infoEntitiesList()[index] || {};
+    const input = document.createElement("input");
+    input.type = "text";
+    input.placeholder = t(hass, "info_label");
+    input.value = current.label || "";
+    input.addEventListener("change", (ev) => {
+      this._updateInfoEntity(index, { label: ev.target.value || undefined });
+    });
+    slotEl.appendChild(input);
   }
 
   _sectionHtml(section) {
@@ -861,8 +885,6 @@ class ApplianceCardEditor extends HTMLElement {
       this._root = this.shadowRoot;
     }
 
-    const infoOpen = (this._config.info_entities || []).length > 0 || this._open.has("__info");
-
     this._root.innerHTML = `
       <style>
         .section { margin-bottom: 10px; padding-bottom: 8px; border-bottom: 1px solid var(--divider-color, #eee); }
@@ -876,6 +898,11 @@ class ApplianceCardEditor extends HTMLElement {
         .row-inline { display: flex; align-items: center; gap: 6px; font-size: 0.9em; color: var(--primary-text-color, #1c1c1c); cursor: pointer; }
         .row-inline input { width: auto; }
         .picker-slot { margin: 6px 0; }
+        .picker-slot input[type="text"] {
+          width: 100%; padding: 6px 8px; border-radius: 4px; box-sizing: border-box;
+          border: 1px solid var(--divider-color, #ccc);
+          background: var(--card-background-color, white); color: var(--primary-text-color, #1c1c1c);
+        }
         details.group {
           border: 1px solid var(--divider-color, #eee); border-radius: 8px;
           margin-bottom: 10px; padding: 0 10px;
@@ -889,20 +916,22 @@ class ApplianceCardEditor extends HTMLElement {
         details.group[open] summary::before { content: "▾ "; }
         details.group .section:last-child { padding-bottom: 10px; }
       </style>
+      <div class="section" style="border-bottom:none;">
+        ${this._row("name", "name")}
+        ${this._row("appliance_type", "appliance_type", {
+          type: "select",
+          options: [
+            { value: "auto", label: t(hass, "type_auto") },
+            { value: "washer", label: t(hass, "type_washer") },
+            { value: "dryer", label: t(hass, "type_dryer") },
+            { value: "dishwasher", label: t(hass, "type_dishwasher") },
+          ],
+        })}
+      </div>
       <details class="group" data-panel="general" ${this._panelOpen.general ? "open" : ""}>
         <summary>${t(hass, "group_general")}</summary>
         <div class="section">
-          ${this._row("name", "name")}
           ${this._row("compact", "compact", { type: "checkbox" })}
-          ${this._row("appliance_type", "appliance_type", {
-            type: "select",
-            options: [
-              { value: "auto", label: t(hass, "type_auto") },
-              { value: "washer", label: t(hass, "type_washer") },
-              { value: "dryer", label: t(hass, "type_dryer") },
-              { value: "dishwasher", label: t(hass, "type_dishwasher") },
-            ],
-          })}
         </div>
         <div class="section">
           <div class="picker-slot" data-slot="state_entity"></div>
@@ -912,9 +941,18 @@ class ApplianceCardEditor extends HTMLElement {
       <details class="group" data-panel="info" ${this._panelOpen.info ? "open" : ""}>
         <summary>${t(hass, "section_info")}</summary>
         <div class="section">
-          <label class="row-inline"><input type="checkbox" data-toggle="__info" ${infoOpen ? "checked" : ""} /> ${t(hass, "section_info_enable")}</label>
-          ${infoOpen ? [0, 1, 2].map((i) => `<div class="picker-slot" data-slot="__info_${i}"></div>`).join("") : ""}
+          <div class="row">
+            <label>${t(hass, "info_count")}</label>
+            <select data-role="info-count-select">
+              ${[0, 1, 2, 3, 4, 5].map((n) => `<option value="${n}" ${n === this._infoCount ? "selected" : ""}>${n}</option>`).join("")}
+            </select>
+          </div>
         </div>
+        ${Array.from({ length: this._infoCount }, (_, i) => `
+          <div class="section">
+            <div class="picker-slot" data-slot="__info_${i}"></div>
+            <div class="picker-slot" data-slot="__info_label_${i}"></div>
+          </div>`).join("")}
       </details>
     `;
 
@@ -927,8 +965,21 @@ class ApplianceCardEditor extends HTMLElement {
         this._mountPicker(this._root.querySelector(`[data-slot="${s.field}"]`), s.field, { includeDomains: s.includeDomains });
       }
     }
-    if (infoOpen) {
-      [0, 1, 2].forEach((i) => this._mountInfoPicker(this._root.querySelector(`[data-slot="__info_${i}"]`), i));
+    for (let i = 0; i < this._infoCount; i++) {
+      this._mountInfoPicker(this._root.querySelector(`[data-slot="__info_${i}"]`), i);
+      this._mountInfoLabel(this._root.querySelector(`[data-slot="__info_label_${i}"]`), i);
+    }
+
+    const infoCountSelect = this._root.querySelector('[data-role="info-count-select"]');
+    if (infoCountSelect) {
+      infoCountSelect.addEventListener("change", (ev) => {
+        const count = parseInt(ev.target.value, 10);
+        this._infoCount = count;
+        const list = (this._config.info_entities || []).map((e) => (typeof e === "string" ? { entity: e } : e));
+        this._config = { ...this._config, info_entities: list.slice(0, count).filter((e) => e && e.entity) };
+        this.dispatchEvent(new CustomEvent("config-changed", { detail: { config: this._config } }));
+        this._build();
+      });
     }
 
     this._root.querySelectorAll("details.group").forEach((el) => {
@@ -954,18 +1005,14 @@ class ApplianceCardEditor extends HTMLElement {
         } else {
           this._open.delete(field);
           this._config = { ...this._config };
-          if (field === "__info") {
-            delete this._config.info_entities;
-          } else {
-            delete this._config[field];
-            const section = SECTIONS.find((s) => s.field === field);
-            if (section && section.field === "door_entity") {
-              delete this._config.door_open_state;
-              delete this._config.door_invert;
-              delete this._config.door_hide_in_list;
-            }
-            if (section && section.field === "connectivity_entity") delete this._config.connectivity_connected_state;
+          delete this._config[field];
+          const section = SECTIONS.find((s) => s.field === field);
+          if (section && section.field === "door_entity") {
+            delete this._config.door_open_state;
+            delete this._config.door_invert;
+            delete this._config.door_hide_in_list;
           }
+          if (section && section.field === "connectivity_entity") delete this._config.connectivity_connected_state;
           this.dispatchEvent(new CustomEvent("config-changed", { detail: { config: this._config } }));
         }
         this._build();

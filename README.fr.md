@@ -58,7 +58,7 @@ Seule `state_entity` est obligatoire — tout le reste est optionnel. Dans l'éd
 | `door_entity` / `door_open_state` / `door_invert` | Capteur de porte, la valeur d'état signifiant "ouverte" (défaut `on`), et une bascule `invert` pour les capteurs où cet état signifie en réalité fermée. |
 | `alerts_entity` | Une entité dont les *attributs* sont chacun un indicateur on/off (ex : `door: OFF`, `water_leak: ON`) ; tout attribut correspondant à une valeur "on/true/active" s'affiche comme alerte active. |
 | `connectivity_entity` / `connectivity_connected_state` | Capteur de connectivité et la valeur d'état signifiant "connecté" (défaut `on`) ; affiché en icône wifi en haut à droite. |
-| `info_entities` | Jusqu'à quelques entrées `{ entity, icon?, label? }` affichées en lignes d'info complémentaires (température, essorage, ...). |
+| `info_entities` | Jusqu'à 5 entrées `{ entity, icon?, label? }` affichées en lignes d'info complémentaires (température, essorage, ...). L'éditeur visuel permet de choisir combien (0–5) et de personnaliser le nom affiché de chacune. |
 | `start_entity` / `pause_entity` / `resume_entity` / `stop_entity` | Entités bouton/switch/script reliées à la commande correspondante. Seules celles configurées sont affichées. |
 
 ### Exemple

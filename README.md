@@ -58,7 +58,7 @@ Only `state_entity` is required — everything else is optional. In the visual e
 | `door_entity` / `door_open_state` / `door_invert` | Door sensor, the state value meaning "open" (default `on`), and an `invert` toggle for sensors where that state actually means closed. |
 | `alerts_entity` | An entity whose *attributes* are individually on/off flags (e.g. `door: OFF`, `water_leak: ON`); any attribute matching an "on/true/active" value is shown as an active alert. |
 | `connectivity_entity` / `connectivity_connected_state` | Connectivity sensor and the state value meaning "connected" (default `on`); shown as a top-right wifi icon. |
-| `info_entities` | Up to a few `{ entity, icon?, label? }` entries shown as extra info lines (temperature, spin speed, ...). |
+| `info_entities` | Up to 5 `{ entity, icon?, label? }` entries shown as extra info lines (temperature, spin speed, ...). The visual editor lets you pick how many (0–5) and override the displayed name for each. |
 | `start_entity` / `pause_entity` / `resume_entity` / `stop_entity` | Button/switch/script entities wired to the corresponding control. Only configured ones are shown. |
 
 ### Example
