@@ -831,6 +831,7 @@ class ApplianceCard extends HTMLElement {
 
     const styleTag = `
       <style>
+        :host { font-size: 16px; }
         ha-card { display: block; padding: 16px; position: relative; }
         .conn-badge {
           position: absolute; top: 10px; right: 12px;
@@ -909,14 +910,14 @@ class ApplianceCard extends HTMLElement {
           from { transform: translate(-50%, -50%) rotate(0deg); }
           to { transform: translate(-50%, -50%) rotate(360deg); }
         }
-        .name { font-size: 1.05em; font-weight: 500; color: var(--primary-text-color, #1c1c1c); }
-        .state-line { font-size: 0.9em; color: ${color}; margin-top: 2px; }
-        .info-lines { margin-top: 12px; display: flex; flex-direction: column; gap: 6px; }
+        .name { font-size: 1.2em; font-weight: 500; color: var(--primary-text-color, #1c1c1c); }
+        .state-line { font-size: 1.05em; color: ${color}; margin-top: 2px; }
+        .info-lines { margin-top: 12px; display: flex; flex-direction: column; gap: 8px; }
         .info-line {
           display: flex; align-items: center; gap: 8px;
-          font-size: 0.85em; color: var(--primary-text-color, #1c1c1c); text-align: left;
+          font-size: 1em; color: var(--primary-text-color, #1c1c1c); text-align: left;
         }
-        .info-line ha-icon { --mdc-icon-size: 18px; color: var(--secondary-text-color, #767676); flex-shrink: 0; }
+        .info-line ha-icon { --mdc-icon-size: 20px; color: var(--secondary-text-color, #767676); flex-shrink: 0; }
         .info-line .label { color: var(--secondary-text-color, #767676); }
         .info-line.warn { color: var(--error-color, #f44336); }
         .info-line.warn ha-icon { color: var(--error-color, #f44336); }
@@ -924,9 +925,9 @@ class ApplianceCard extends HTMLElement {
         .bar { height: 6px; border-radius: 3px; background: var(--divider-color, #e0e0e0); overflow: hidden; }
         .bar-fill { height: 100%; background: ${color}; transition: width 1s linear; }
         .alerts-banner {
-          margin-top: 10px; padding: 6px 10px; border-radius: 8px;
+          margin-top: 10px; padding: 8px 12px; border-radius: 8px;
           background: rgba(244, 67, 54, 0.12); color: var(--error-color, #f44336);
-          font-size: 0.85em; display: flex; align-items: center; gap: 6px;
+          font-size: 1em; display: flex; align-items: center; gap: 6px;
         }
         .actions-row { display: flex; gap: 8px; margin-top: 12px; justify-content: center; }
         .action-btn {
