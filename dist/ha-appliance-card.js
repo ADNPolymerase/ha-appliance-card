@@ -51,6 +51,7 @@ const T = {
     section_info: "Extra info entities",
     info_count: "Number of extra entities",
     info_label: "Display name (optional)",
+    info_drag: "Drag to reorder",
     section_start: "Start button", section_pause: "Pause button",
     section_resume: "Resume button", section_stop: "Stop / reset button",
     picker_icon: "Icon (optional)",
@@ -95,6 +96,7 @@ const T = {
     section_info: "Entités d'info complémentaires",
     info_count: "Nombre d'entités supplémentaires",
     info_label: "Nom affiché (optionnel)",
+    info_drag: "Glisser pour réorganiser",
     section_start: "Bouton Démarrer", section_pause: "Bouton Pause",
     section_resume: "Bouton Reprendre", section_stop: "Bouton Stop / Reset",
     picker_icon: "Icône (optionnel)",
@@ -139,6 +141,7 @@ const T = {
     section_info: "Zusätzliche Info-Entitäten",
     info_count: "Anzahl zusätzlicher Entitäten",
     info_label: "Anzeigename (optional)",
+    info_drag: "Zum Neuordnen ziehen",
     section_start: "Start-Taste", section_pause: "Pause-Taste",
     section_resume: "Fortsetzen-Taste", section_stop: "Stopp/Reset-Taste",
     picker_icon: "Symbol (optional)",
@@ -183,6 +186,7 @@ const T = {
     section_info: "Entidades de información adicionales",
     info_count: "Número de entidades adicionales",
     info_label: "Nombre mostrado (opcional)",
+    info_drag: "Arrastrar para reordenar",
     section_start: "Botón Iniciar", section_pause: "Botón Pausa",
     section_resume: "Botón Reanudar", section_stop: "Botón Parar/Reiniciar",
     picker_icon: "Icono (opcional)",
@@ -227,6 +231,7 @@ const T = {
     section_info: "Entità informative aggiuntive",
     info_count: "Numero di entità aggiuntive",
     info_label: "Nome visualizzato (opzionale)",
+    info_drag: "Trascina per riordinare",
     section_start: "Pulsante Avvia", section_pause: "Pulsante Pausa",
     section_resume: "Pulsante Riprendi", section_stop: "Pulsante Stop/Reset",
     picker_icon: "Icona (opzionale)",
@@ -271,6 +276,7 @@ const T = {
     section_info: "Extra info-entiteiten",
     info_count: "Aantal extra entiteiten",
     info_label: "Weergavenaam (optioneel)",
+    info_drag: "Sleep om te herordenen",
     section_start: "Startknop", section_pause: "Pauzeknop",
     section_resume: "Hervattenknop", section_stop: "Stop/resetknop",
     picker_icon: "Pictogram (optioneel)",
@@ -315,6 +321,7 @@ const T = {
     section_info: "Entidades de informação adicionais",
     info_count: "Número de entidades adicionais",
     info_label: "Nome exibido (opcional)",
+    info_drag: "Arraste para reordenar",
     section_start: "Botão Iniciar", section_pause: "Botão Pausa",
     section_resume: "Botão Retomar", section_stop: "Botão Parar/Reiniciar",
     picker_icon: "Ícone (opcional)",
@@ -359,6 +366,7 @@ const T = {
     section_info: "Extra infoentiteter",
     info_count: "Antal extra entiteter",
     info_label: "Visningsnamn (valfritt)",
+    info_drag: "Dra för att ändra ordning",
     section_start: "Startknapp", section_pause: "Pausknapp",
     section_resume: "Återupptaknapp", section_stop: "Stopp-/återställningsknapp",
     picker_icon: "Ikon (valfritt)",
@@ -403,6 +411,7 @@ const T = {
     section_info: "Ekstra infoentiteter",
     info_count: "Antall ekstra entiteter",
     info_label: "Visningsnavn (valgfritt)",
+    info_drag: "Dra for å endre rekkefølge",
     section_start: "Startknapp", section_pause: "Pauseknapp",
     section_resume: "Gjenopptaknapp", section_stop: "Stopp-/tilbakestillingsknapp",
     picker_icon: "Ikon (valgfritt)",
@@ -447,6 +456,7 @@ const T = {
     section_info: "Ekstra info-enheder",
     info_count: "Antal ekstra enheder",
     info_label: "Vist navn (valgfrit)",
+    info_drag: "Træk for at ændre rækkefølge",
     section_start: "Startknap", section_pause: "Pauseknap",
     section_resume: "Genoptagknap", section_stop: "Stop-/nulstillingsknap",
     picker_icon: "Ikon (valgfrit)",
@@ -491,6 +501,7 @@ const T = {
     section_info: "Dodatkowe encje informacyjne",
     info_count: "Liczba dodatkowych encji",
     info_label: "Nazwa wyświetlana (opcjonalnie)",
+    info_drag: "Przeciągnij, aby zmienić kolejność",
     section_start: "Przycisk Start", section_pause: "Przycisk Pauza",
     section_resume: "Przycisk Wznów", section_stop: "Przycisk Stop/Reset",
     picker_icon: "Ikona (opcjonalnie)",
@@ -1274,6 +1285,48 @@ class ApplianceCardEditor extends HTMLElement {
     slotEl.appendChild(picker);
   }
 
+  _reorderInfoEntities(fromIndex, toIndex) {
+    if (fromIndex === toIndex) return;
+    const list = this._infoEntitiesList();
+    while (list.length < this._infoCount) list.push({});
+    const [moved] = list.splice(fromIndex, 1);
+    list.splice(toIndex, 0, moved);
+    this._config = { ...this._config, info_entities: list.filter((e) => e && e.entity) };
+    this.dispatchEvent(new CustomEvent("config-changed", { detail: { config: this._config } }));
+    this._build();
+  }
+
+  _wireInfoDragAndDrop() {
+    const rows = this._root.querySelectorAll(".info-row");
+    let dragIndex = null;
+    rows.forEach((row) => {
+      row.addEventListener("dragstart", (ev) => {
+        dragIndex = parseInt(row.getAttribute("data-drag-index"), 10);
+        row.classList.add("dragging");
+        ev.dataTransfer.effectAllowed = "move";
+      });
+      row.addEventListener("dragend", () => {
+        row.classList.remove("dragging");
+        rows.forEach((r) => r.classList.remove("drag-over"));
+      });
+      row.addEventListener("dragover", (ev) => {
+        ev.preventDefault();
+        ev.dataTransfer.dropEffect = "move";
+        row.classList.add("drag-over");
+      });
+      row.addEventListener("dragleave", () => {
+        row.classList.remove("drag-over");
+      });
+      row.addEventListener("drop", (ev) => {
+        ev.preventDefault();
+        row.classList.remove("drag-over");
+        const dropIndex = parseInt(row.getAttribute("data-drag-index"), 10);
+        if (dragIndex !== null) this._reorderInfoEntities(dragIndex, dropIndex);
+        dragIndex = null;
+      });
+    });
+  }
+
   _sectionHtml(section) {
     const hass = this._hass;
     const open = this._open.has(section.field);
@@ -1312,6 +1365,15 @@ class ApplianceCardEditor extends HTMLElement {
           border: 1px solid var(--divider-color, #ccc);
           background: var(--card-background-color, white); color: var(--primary-text-color, #1c1c1c);
         }
+        .info-row { display: flex; gap: 8px; align-items: flex-start; }
+        .info-row-handle {
+          cursor: grab; user-select: none; padding: 6px 4px; margin-top: 2px;
+          color: var(--secondary-text-color, #767676); font-size: 1.1em; line-height: 1;
+        }
+        .info-row-handle:active { cursor: grabbing; }
+        .info-row-fields { flex: 1; min-width: 0; }
+        .info-row.dragging { opacity: 0.4; }
+        .info-row.drag-over { border-top: 2px solid var(--primary-color, #03a9f4); }
         details.group {
           border: 1px solid var(--divider-color, #eee); border-radius: 8px;
           margin-bottom: 10px; padding: 0 10px;
@@ -1358,10 +1420,13 @@ class ApplianceCardEditor extends HTMLElement {
           </div>
         </div>
         ${Array.from({ length: this._infoCount }, (_, i) => `
-          <div class="section">
-            <div class="picker-slot" data-slot="__info_${i}"></div>
-            <div class="picker-slot" data-slot="__info_icon_${i}"></div>
-            <div class="picker-slot" data-slot="__info_label_${i}"></div>
+          <div class="section info-row" draggable="true" data-drag-index="${i}">
+            <div class="info-row-handle" title="${t(hass, "info_drag")}">⠿</div>
+            <div class="info-row-fields">
+              <div class="picker-slot" data-slot="__info_${i}"></div>
+              <div class="picker-slot" data-slot="__info_icon_${i}"></div>
+              <div class="picker-slot" data-slot="__info_label_${i}"></div>
+            </div>
           </div>`).join("")}
       </details>
     `;
@@ -1380,6 +1445,7 @@ class ApplianceCardEditor extends HTMLElement {
       this._mountInfoIcon(this._root.querySelector(`[data-slot="__info_icon_${i}"]`), i);
       this._mountInfoLabel(this._root.querySelector(`[data-slot="__info_label_${i}"]`), i);
     }
+    this._wireInfoDragAndDrop();
 
     const infoCountSelect = this._root.querySelector('[data-role="info-count-select"]');
     if (infoCountSelect) {
