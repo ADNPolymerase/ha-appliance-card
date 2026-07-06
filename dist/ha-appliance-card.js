@@ -21,6 +21,8 @@ const T = {
     name: "Name", icon: "Icon", entity: "Entity",
     main_settings: "Main entities", display_settings: "Display",
     action_settings: "Controls",
+    group_general: "General settings",
+    group_other: "Other options",
     compact: "Compact mode (hide icon)",
     appliance_type: "Appliance type",
     type_auto: "Auto-detect", type_washer: "Washer", type_dryer: "Dryer", type_dishwasher: "Dishwasher",
@@ -61,6 +63,8 @@ const T = {
     name: "Nom", icon: "Icône", entity: "Entité",
     main_settings: "Entités principales", display_settings: "Affichage",
     action_settings: "Commandes",
+    group_general: "Réglages généraux",
+    group_other: "Autres options",
     compact: "Mode compact (masquer l'icône)",
     appliance_type: "Type d'appareil",
     type_auto: "Détection auto", type_washer: "Lave-linge", type_dryer: "Sèche-linge", type_dishwasher: "Lave-vaisselle",
@@ -200,6 +204,11 @@ function activeAlerts(hass, entityId) {
     if (v === "on" || v === "true" || v === "1" || v === "active") active.push(key);
   }
   return active;
+}
+
+function humanizeEntityId(entityId) {
+  const objectId = (entityId || "").split(".")[1] || entityId || "";
+  return objectId.replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
 }
 
 function domainOf(entityId) {
@@ -557,10 +566,15 @@ class ApplianceCard extends HTMLElement {
           </div>
         </div>`;
 
-    const stripNamePrefix = (label) => {
-      if (typeof label !== "string") return label;
-      const prefix = `${name} `;
-      return label.startsWith(prefix) ? label.slice(prefix.length) : label;
+    const stripNamePrefix = (friendlyName, entityId) => {
+      if (!friendlyName) return humanizeEntityId(entityId);
+      const reg = hass.entities && hass.entities[entityId];
+      const device = reg && reg.device_id && hass.devices && hass.devices[reg.device_id];
+      const deviceName = (device && (device.name_by_user || device.name)) || name;
+      if (deviceName && friendlyName.startsWith(`${deviceName} `)) {
+        return friendlyName.slice(deviceName.length + 1);
+      }
+      return friendlyName;
     };
 
     const lines = [];
@@ -568,7 +582,7 @@ class ApplianceCard extends HTMLElement {
     infoEntities.forEach((e) => {
       lines.push({
         icon: e.icon || "mdi:information-outline",
-        label: e.label || stripNamePrefix(e.st.attributes.friendly_name || e.entity),
+        label: e.label || stripNamePrefix(e.st.attributes.friendly_name, e.entity),
         value: `${e.st.state}${e.st.attributes.unit_of_measurement ? " " + e.st.attributes.unit_of_measurement : ""}`,
       });
     });
@@ -699,6 +713,9 @@ class ApplianceCardEditor extends HTMLElement {
     const newOpen = this._computeOpen(this._config);
     if (!this._open || !setsEqual(this._open, newOpen)) this._needsBuild = true;
     this._open = newOpen;
+    if (!this._panelOpen) {
+      this._panelOpen = { general: true, other: this._open.size > 0 };
+    }
     this._maybeBuild();
   }
 
@@ -744,6 +761,7 @@ class ApplianceCardEditor extends HTMLElement {
       if (patch.info_entities) newOpen.add("__info");
       this._open = newOpen;
       this._needsBuild = true;
+      if (newOpen.size > 0 && this._panelOpen) this._panelOpen.other = true;
     }
     this._maybeBuild();
     if (Object.keys(patch).length > 0) {
@@ -851,29 +869,46 @@ class ApplianceCardEditor extends HTMLElement {
         .row-inline { display: flex; align-items: center; gap: 6px; font-size: 0.9em; color: var(--primary-text-color, #1c1c1c); cursor: pointer; }
         .row-inline input { width: auto; }
         .picker-slot { margin: 6px 0; }
+        details.group {
+          border: 1px solid var(--divider-color, #eee); border-radius: 8px;
+          margin-bottom: 10px; padding: 0 10px;
+        }
+        details.group summary {
+          padding: 10px 0; font-weight: 500; cursor: pointer;
+          color: var(--primary-text-color, #1c1c1c); list-style: none;
+        }
+        details.group summary::-webkit-details-marker { display: none; }
+        details.group summary::before { content: "▸ "; }
+        details.group[open] summary::before { content: "▾ "; }
+        details.group .section:last-child { padding-bottom: 10px; }
       </style>
-      <div class="section">
-        <h4>${t(hass, "display_settings")}</h4>
-        ${this._row("name", "name")}
-        ${this._row("compact", "compact", { type: "checkbox" })}
-        ${this._row("appliance_type", "appliance_type", {
-          type: "select",
-          options: [
-            { value: "auto", label: t(hass, "type_auto") },
-            { value: "washer", label: t(hass, "type_washer") },
-            { value: "dryer", label: t(hass, "type_dryer") },
-            { value: "dishwasher", label: t(hass, "type_dishwasher") },
-          ],
-        })}
-      </div>
-      <div class="section">
-        <div class="picker-slot" data-slot="state_entity"></div>
-      </div>
-      ${SECTIONS.map((s) => this._sectionHtml(s)).join("")}
-      <div class="section">
-        <label class="row-inline"><input type="checkbox" data-toggle="__info" ${infoOpen ? "checked" : ""} /> ${t(hass, "section_info")}</label>
-        ${infoOpen ? [0, 1, 2].map((i) => `<div class="picker-slot" data-slot="__info_${i}"></div>`).join("") : ""}
-      </div>
+      <details class="group" data-panel="general" ${this._panelOpen.general ? "open" : ""}>
+        <summary>${t(hass, "group_general")}</summary>
+        <div class="section">
+          ${this._row("name", "name")}
+          ${this._row("compact", "compact", { type: "checkbox" })}
+          ${this._row("appliance_type", "appliance_type", {
+            type: "select",
+            options: [
+              { value: "auto", label: t(hass, "type_auto") },
+              { value: "washer", label: t(hass, "type_washer") },
+              { value: "dryer", label: t(hass, "type_dryer") },
+              { value: "dishwasher", label: t(hass, "type_dishwasher") },
+            ],
+          })}
+        </div>
+        <div class="section">
+          <div class="picker-slot" data-slot="state_entity"></div>
+        </div>
+      </details>
+      <details class="group" data-panel="other" ${this._panelOpen.other ? "open" : ""}>
+        <summary>${t(hass, "group_other")}</summary>
+        ${SECTIONS.map((s) => this._sectionHtml(s)).join("")}
+        <div class="section">
+          <label class="row-inline"><input type="checkbox" data-toggle="__info" ${infoOpen ? "checked" : ""} /> ${t(hass, "section_info")}</label>
+          ${infoOpen ? [0, 1, 2].map((i) => `<div class="picker-slot" data-slot="__info_${i}"></div>`).join("") : ""}
+        </div>
+      </details>
     `;
 
     this._mountPicker(this._root.querySelector('[data-slot="state_entity"]'), "state_entity", {
@@ -888,6 +923,12 @@ class ApplianceCardEditor extends HTMLElement {
     if (infoOpen) {
       [0, 1, 2].forEach((i) => this._mountInfoPicker(this._root.querySelector(`[data-slot="__info_${i}"]`), i));
     }
+
+    this._root.querySelectorAll("details.group").forEach((el) => {
+      el.addEventListener("toggle", () => {
+        this._panelOpen[el.getAttribute("data-panel")] = el.open;
+      });
+    });
 
     this._root.querySelectorAll("[data-field]").forEach((el) => {
       el.addEventListener("change", (ev) => {
