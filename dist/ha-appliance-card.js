@@ -1349,26 +1349,29 @@ class ApplianceCardEditor extends HTMLElement {
 
     this._root.innerHTML = `
       <style>
+        :host { font-size: 16px; }
         .section { margin-bottom: 10px; padding-bottom: 8px; border-bottom: 1px solid var(--divider-color, #eee); }
-        .section h4 { margin: 12px 0 4px; font-size: 0.95em; color: var(--secondary-text-color, #767676); }
+        .section h4 { margin: 12px 0 4px; font-size: 1.05em; color: var(--secondary-text-color, #767676); }
         .row { display: flex; flex-direction: column; margin: 8px 0; }
-        .row label { font-size: 0.8em; color: var(--secondary-text-color, #767676); margin-bottom: 2px; }
+        .row label { font-size: 0.95em; color: var(--secondary-text-color, #767676); margin-bottom: 4px; }
         .row input, .row select {
-          padding: 6px 8px; border-radius: 4px; border: 1px solid var(--divider-color, #ccc);
+          padding: 8px 10px; border-radius: 4px; border: 1px solid var(--divider-color, #ccc);
           background: var(--card-background-color, white); color: var(--primary-text-color, #1c1c1c);
+          font-size: 1em; font-family: inherit;
         }
-        .row-inline { display: flex; align-items: center; gap: 6px; font-size: 0.9em; color: var(--primary-text-color, #1c1c1c); cursor: pointer; }
+        .row-inline { display: flex; align-items: center; gap: 8px; font-size: 1.05em; color: var(--primary-text-color, #1c1c1c); cursor: pointer; }
         .row-inline input { width: auto; }
         .picker-slot { margin: 6px 0; }
         .picker-slot input[type="text"] {
-          width: 100%; padding: 6px 8px; border-radius: 4px; box-sizing: border-box;
+          width: 100%; padding: 8px 10px; border-radius: 4px; box-sizing: border-box;
           border: 1px solid var(--divider-color, #ccc);
           background: var(--card-background-color, white); color: var(--primary-text-color, #1c1c1c);
+          font-size: 1em; font-family: inherit;
         }
         .info-row { display: flex; gap: 8px; align-items: flex-start; }
         .info-row-handle {
           cursor: grab; user-select: none; padding: 6px 4px; margin-top: 2px;
-          color: var(--secondary-text-color, #767676); font-size: 1.1em; line-height: 1;
+          color: var(--secondary-text-color, #767676); font-size: 1.3em; line-height: 1;
         }
         .info-row-handle:active { cursor: grabbing; }
         .info-row-fields { flex: 1; min-width: 0; }
@@ -1379,7 +1382,7 @@ class ApplianceCardEditor extends HTMLElement {
           margin-bottom: 10px; padding: 0 10px;
         }
         details.group summary {
-          padding: 10px 0; font-weight: 500; cursor: pointer;
+          padding: 10px 0; font-weight: 500; font-size: 1.1em; cursor: pointer;
           color: var(--primary-text-color, #1c1c1c); list-style: none;
         }
         details.group summary::-webkit-details-marker { display: none; }
