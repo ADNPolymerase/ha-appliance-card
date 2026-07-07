@@ -51,6 +51,7 @@ Only `state_entity` is required — everything else is optional. In the visual e
 |---|---|
 | `state_entity` | **Required.** Entity reporting the appliance's overall state (any domain). |
 | `state_map` | Optional map of raw state string → `idle`\|`running`\|`paused`\|`done`\|`delayed`\|`error`, for integrations whose wording isn't auto-detected. |
+| `state_show_raw` | `true` to always display the entity's raw state text instead of the translated category label (color/animation still follow the detected category). Off by default; handy for a plain power-threshold template sensor where you'd rather see your own wording than a generic "Idle"/"Running". |
 | `name` | Card title. Defaults to the state entity's friendly name. |
 | `compact` | `true` to hide the illustration and show only text. |
 | `appliance_type` | `auto` (default) \| `washer` \| `dryer` \| `dishwasher`. |

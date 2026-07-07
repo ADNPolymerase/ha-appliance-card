@@ -23,6 +23,7 @@ const T = {
     action_settings: "Controls",
     group_general: "General settings",
     compact: "Compact mode (hide icon)",
+    state_show_raw: "Always show the entity's raw text instead of the translated label",
     appliance_type: "Appliance type",
     type_auto: "Auto-detect", type_washer: "Washer", type_dryer: "Dryer", type_dishwasher: "Dishwasher",
     state_entity: "State entity (required)",
@@ -68,6 +69,7 @@ const T = {
     action_settings: "Commandes",
     group_general: "Réglages généraux",
     compact: "Mode compact (masquer l'icône)",
+    state_show_raw: "Toujours afficher le texte brut de l'entité plutôt que le libellé traduit",
     appliance_type: "Type d'appareil",
     type_auto: "Détection auto", type_washer: "Lave-linge", type_dryer: "Sèche-linge", type_dishwasher: "Lave-vaisselle",
     state_entity: "Entité d'état (obligatoire)",
@@ -113,6 +115,7 @@ const T = {
     action_settings: "Steuerung",
     group_general: "Allgemeine Einstellungen",
     compact: "Kompaktmodus (Symbol ausblenden)",
+    state_show_raw: "Immer den rohen Entitätstext statt der übersetzten Bezeichnung anzeigen",
     appliance_type: "Gerätetyp",
     type_auto: "Automatisch erkennen", type_washer: "Waschmaschine", type_dryer: "Trockner", type_dishwasher: "Geschirrspüler",
     state_entity: "Status-Entität (erforderlich)",
@@ -158,6 +161,7 @@ const T = {
     action_settings: "Controles",
     group_general: "Ajustes generales",
     compact: "Modo compacto (ocultar icono)",
+    state_show_raw: "Mostrar siempre el texto bruto de la entidad en lugar de la etiqueta traducida",
     appliance_type: "Tipo de electrodoméstico",
     type_auto: "Detección automática", type_washer: "Lavadora", type_dryer: "Secadora", type_dishwasher: "Lavavajillas",
     state_entity: "Entidad de estado (obligatoria)",
@@ -203,6 +207,7 @@ const T = {
     action_settings: "Comandi",
     group_general: "Impostazioni generali",
     compact: "Modalità compatta (nascondi icona)",
+    state_show_raw: "Mostra sempre il testo grezzo dell'entità invece dell'etichetta tradotta",
     appliance_type: "Tipo di elettrodomestico",
     type_auto: "Rilevamento automatico", type_washer: "Lavatrice", type_dryer: "Asciugatrice", type_dishwasher: "Lavastoviglie",
     state_entity: "Entità di stato (obbligatoria)",
@@ -248,6 +253,7 @@ const T = {
     action_settings: "Bediening",
     group_general: "Algemene instellingen",
     compact: "Compacte modus (pictogram verbergen)",
+    state_show_raw: "Altijd de ruwe tekst van de entiteit tonen in plaats van het vertaalde label",
     appliance_type: "Type apparaat",
     type_auto: "Automatisch detecteren", type_washer: "Wasmachine", type_dryer: "Droger", type_dishwasher: "Vaatwasser",
     state_entity: "Status-entiteit (verplicht)",
@@ -293,6 +299,7 @@ const T = {
     action_settings: "Controlos",
     group_general: "Definições gerais",
     compact: "Modo compacto (ocultar ícone)",
+    state_show_raw: "Mostrar sempre o texto bruto da entidade em vez do rótulo traduzido",
     appliance_type: "Tipo de eletrodoméstico",
     type_auto: "Deteção automática", type_washer: "Máquina de lavar", type_dryer: "Secadora", type_dishwasher: "Máquina de lavar loiça",
     state_entity: "Entidade de estado (obrigatória)",
@@ -338,6 +345,7 @@ const T = {
     action_settings: "Styrning",
     group_general: "Allmänna inställningar",
     compact: "Kompakt läge (dölj ikon)",
+    state_show_raw: "Visa alltid entitetens rådata istället för den översatta etiketten",
     appliance_type: "Typ av apparat",
     type_auto: "Automatisk identifiering", type_washer: "Tvättmaskin", type_dryer: "Torktumlare", type_dishwasher: "Diskmaskin",
     state_entity: "Statusentitet (obligatorisk)",
@@ -383,6 +391,7 @@ const T = {
     action_settings: "Styring",
     group_general: "Generelle innstillinger",
     compact: "Kompakt modus (skjul ikon)",
+    state_show_raw: "Vis alltid entitetens rå tekst i stedet for den oversatte etiketten",
     appliance_type: "Apparattype",
     type_auto: "Automatisk gjenkjenning", type_washer: "Vaskemaskin", type_dryer: "Tørketrommel", type_dishwasher: "Oppvaskmaskin",
     state_entity: "Statusentitet (påkrevd)",
@@ -428,6 +437,7 @@ const T = {
     action_settings: "Betjening",
     group_general: "Generelle indstillinger",
     compact: "Kompakt tilstand (skjul ikon)",
+    state_show_raw: "Vis altid enhedens rå tekst i stedet for den oversatte etiket",
     appliance_type: "Apparattype",
     type_auto: "Automatisk registrering", type_washer: "Vaskemaskine", type_dryer: "Tørretumbler", type_dishwasher: "Opvaskemaskine",
     state_entity: "Statusenhed (påkrævet)",
@@ -473,6 +483,7 @@ const T = {
     action_settings: "Sterowanie",
     group_general: "Ustawienia ogólne",
     compact: "Tryb kompaktowy (ukryj ikonę)",
+    state_show_raw: "Zawsze pokazuj surowy tekst encji zamiast przetłumaczonej etykiety",
     appliance_type: "Typ urządzenia",
     type_auto: "Wykrywanie automatyczne", type_washer: "Pralka", type_dryer: "Suszarka", type_dishwasher: "Zmywarka",
     state_entity: "Encja stanu (wymagana)",
@@ -768,7 +779,11 @@ class ApplianceCard extends HTMLElement {
     // instead of a generic "Unknown" label — common for custom template
     // sensors (e.g. power-threshold based presence) whose wording we can't
     // guess. Falls back to the translated label when there's truly no data.
-    const stateLabel = norm === "unknown" && !rawIsMeaningless ? String(rawState) : t(hass, norm);
+    // state_show_raw opts into always showing the raw text (still colored/
+    // animated per the detected category) for setups without a real
+    // appliance integration, where the category label alone loses the
+    // user's own wording.
+    const stateLabel = (cfg.state_show_raw || norm === "unknown") && !rawIsMeaningless ? String(rawState) : t(hass, norm);
 
     const name = cfg.name || (st && st.attributes.friendly_name) || cfg.state_entity;
     const applianceType = detectApplianceType(cfg, st);
@@ -1428,6 +1443,7 @@ class ApplianceCardEditor extends HTMLElement {
         <summary>${t(hass, "group_general")}</summary>
         <div class="section">
           ${this._row("compact", "compact", { type: "checkbox" })}
+          ${this._row("state_show_raw", "state_show_raw", { type: "checkbox" })}
         </div>
         <div class="section">
           <div class="picker-slot" data-slot="state_entity"></div>

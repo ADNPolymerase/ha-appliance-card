@@ -51,6 +51,7 @@ Seule `state_entity` est obligatoire — tout le reste est optionnel. Dans l'éd
 |---|---|
 | `state_entity` | **Obligatoire.** Entité rapportant l'état général de l'appareil (n'importe quel domaine). |
 | `state_map` | Map optionnelle chaîne d'état brute → `idle`\|`running`\|`paused`\|`done`\|`delayed`\|`error`, pour les intégrations dont le vocabulaire n'est pas auto-détecté. |
+| `state_show_raw` | `true` pour toujours afficher le texte brut de l'entité plutôt que le libellé traduit de la catégorie (la couleur/l'animation suivent toujours la catégorie détectée). Désactivé par défaut ; pratique pour un simple capteur template basé sur un seuil de puissance, quand tu préfères voir ton propre texte plutôt qu'un "Idle"/"Running" générique. |
 | `name` | Titre de la card. Par défaut, le nom convivial de l'entité d'état. |
 | `compact` | `true` pour masquer l'illustration et n'afficher que le texte. |
 | `appliance_type` | `auto` (défaut) \| `washer` \| `dryer` \| `dishwasher`. |
