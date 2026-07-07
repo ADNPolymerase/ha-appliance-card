@@ -531,14 +531,24 @@ const STATE_KEYWORDS = {
   error: ["error", "fault", "alarm", "erreur"],
 };
 
+// Matching requires a word boundary before the keyword (but not necessarily
+// after), so "on" matches "On"/"Ongoing" but not the "on" inside "Done" or
+// "Pending" — and "wash"/"dry"/"spin" still match gerund forms like
+// "Washing"/"Drying"/"Spinning".
+const STATE_KEYWORD_PATTERNS = Object.fromEntries(
+  Object.entries(STATE_KEYWORDS).map(([norm, keywords]) => [
+    norm,
+    keywords.map((kw) => new RegExp(`\\b${kw}`, "i")),
+  ])
+);
+
 function normalizeState(raw, stateMap) {
   if (raw === undefined || raw === null) return "unknown";
   const s = String(raw).trim();
   if (["unknown", "unavailable", "none", ""].includes(s.toLowerCase())) return "unknown";
   if (stateMap && Object.prototype.hasOwnProperty.call(stateMap, s)) return stateMap[s];
-  const low = s.toLowerCase();
-  for (const norm of Object.keys(STATE_KEYWORDS)) {
-    if (STATE_KEYWORDS[norm].some((kw) => low.includes(kw))) return norm;
+  for (const norm of Object.keys(STATE_KEYWORD_PATTERNS)) {
+    if (STATE_KEYWORD_PATTERNS[norm].some((re) => re.test(s))) return norm;
   }
   return "unknown";
 }
