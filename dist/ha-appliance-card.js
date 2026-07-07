@@ -523,13 +523,17 @@ function t(hass, key) {
 // ---------------------------------------------------------------------------
 
 const STATE_KEYWORDS = {
-  idle: ["idle", "off", "standby", "veille", "ready_to_start", "ready to start"],
-  running: ["run", "wash", "spin", "dry", "rinsing", "heating", "cours", "on", "active"],
+  idle: ["idle", "off", "standby", "veille", "eteint", "arret", "inactif", "ready_to_start", "ready to start"],
+  running: ["run", "wash", "spin", "dry", "rinsing", "heating", "cours", "on", "active", "marche", "actif"],
   paused: ["pause", "hold", "suspended"],
   done: ["end", "done", "finish", "complete", "termin"],
   delayed: ["delay", "differ", "scheduled", "programmed"],
   error: ["error", "fault", "alarm", "erreur"],
 };
+
+function stripAccents(str) {
+  return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+}
 
 // Matching requires a word boundary before the keyword (but not necessarily
 // after), so "on" matches "On"/"Ongoing" but not the "on" inside "Done" or
@@ -547,8 +551,9 @@ function normalizeState(raw, stateMap) {
   const s = String(raw).trim();
   if (["unknown", "unavailable", "none", ""].includes(s.toLowerCase())) return "unknown";
   if (stateMap && Object.prototype.hasOwnProperty.call(stateMap, s)) return stateMap[s];
+  const flat = stripAccents(s);
   for (const norm of Object.keys(STATE_KEYWORD_PATTERNS)) {
-    if (STATE_KEYWORD_PATTERNS[norm].some((re) => re.test(s))) return norm;
+    if (STATE_KEYWORD_PATTERNS[norm].some((re) => re.test(flat))) return norm;
   }
   return "unknown";
 }
@@ -758,6 +763,12 @@ class ApplianceCard extends HTMLElement {
     const rawState = st ? st.state : "unknown";
     const norm = normalizeState(rawState, cfg.state_map);
     const color = STATE_COLORS[norm] || STATE_COLORS.unknown;
+    const rawIsMeaningless = ["unknown", "unavailable", "none", ""].includes(String(rawState).trim().toLowerCase());
+    // When the raw state doesn't match any known vocabulary, show it as-is
+    // instead of a generic "Unknown" label — common for custom template
+    // sensors (e.g. power-threshold based presence) whose wording we can't
+    // guess. Falls back to the translated label when there's truly no data.
+    const stateLabel = norm === "unknown" && !rawIsMeaningless ? String(rawState) : t(hass, norm);
 
     const name = cfg.name || (st && st.attributes.friendly_name) || cfg.state_entity;
     const applianceType = detectApplianceType(cfg, st);
@@ -1067,7 +1078,7 @@ class ApplianceCard extends HTMLElement {
         <div class="top" id="header">
           ${iconHtml}
           <div class="name">${name}</div>
-          <div class="state-line">${t(hass, norm)}</div>
+          <div class="state-line">${stateLabel}</div>
         </div>
         ${barHtml}
         ${linesHtml}

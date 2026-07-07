@@ -25,7 +25,7 @@ Multilingual UI (English, French, German, Spanish, Italian, Dutch, Portuguese, S
 ## Features
 
 - Works across brands/integrations: no hardcoded entity IDs, everything is mapped in the card config.
-- State normalization: maps whatever raw string your integration reports (`Idle`, `Running`, `RUNNING`, `wash`, ...) to a common idle / running / paused / done / delayed / error vocabulary, with automatic keyword-based fallback and an optional explicit `state_map` override.
+- State normalization: maps whatever raw string your integration reports (`Idle`, `Running`, `RUNNING`, `wash`, `Éteint`, `En marche`, ...) to a common idle / running / paused / done / delayed / error vocabulary, with automatic accent-insensitive keyword-based fallback and an optional explicit `state_map` override. Handy for plain power-threshold template sensors, not just real appliance integrations. If a raw state doesn't match anything, it's shown as-is instead of a generic "Unknown" label.
 - Illustrated appliance icon (front-loading washer with animated water, tumbling clothes for dryers, spinning spray arm for dishwashers) — static when idle, animated only while running. Auto-detected from the entity/icon, or set explicitly via `appliance_type`.
 - Progress bar: uses a direct percentage sensor if your integration exposes one, otherwise estimates it client-side from the remaining-time sensor.
 - Program name, extra info lines (temperature, spin speed, steam level, ...), door state and alerts — each optional and independently configurable. Info line labels automatically drop a repeated device-name prefix (e.g. an entity named "Lave-linge Pods" shows as just "Pods").
