@@ -14,7 +14,7 @@ A Home Assistant Lovelace card for washers, dryers and dishwashers — cycle in 
 
 Unlike brand-specific cards, this one doesn't assume any particular integration. Every field is a configurable entity mapping, so it works with **any** washer/dryer/dishwasher integration (Electrolux, Samsung, LG, Bosch/Siemens Home Connect, Miele, a generic smart plug + template sensors, etc.) as long as you point it at the right entities.
 
-Multilingual UI (English, French, German, Spanish, Italian, Dutch, Portuguese, Swedish, Norwegian, Danish, Polish — auto-detected from Home Assistant).
+Multilingual UI (English, French, German, Spanish, Italian, Dutch, Portuguese, Swedish, Norwegian, Danish, Polish, Russian — auto-detected from Home Assistant).
 
 > Status: early preview. Feedback and issues welcome.
 
