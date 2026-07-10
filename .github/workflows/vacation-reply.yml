@@ -1,0 +1,23 @@
+name: Vacation auto-reply
+
+on:
+  issues:
+    types: [opened]
+
+permissions:
+  issues: write
+
+jobs:
+  reply:
+    if: github.event.issue.user.login != 'ADNPolymerase'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Post vacation notice (self-disables after 2026-07-31)
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          if [ "$(date -u +%Y%m%d)" -le "20260731" ]; then
+            gh issue comment "${{ github.event.issue.number }}" --repo "${{ github.repository }}" --body "👋 Thanks for the report! I'm on holiday and away from my setup until the end of July. I'll take care of this issue as soon as I'm back — thanks for your patience! 🌴"
+          else
+            echo "Vacation over — no auto-reply."
+          fi
