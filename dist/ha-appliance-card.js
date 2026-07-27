@@ -32,6 +32,7 @@ const T = {
     program_format_raw: "Raw", program_format_clean: "Cleaned up",
     remaining_time_entity: "Remaining time entity",
     remaining_time_unit: "Remaining time unit",
+    remaining_time_hide_when_idle: "Hide remaining time unless running",
     unit_auto: "Auto-detect", unit_seconds: "Seconds", unit_minutes: "Minutes",
     progress_entity: "Progress % entity (optional override)",
     door_entity: "Door sensor entity",
@@ -643,6 +644,18 @@ function numericState(hass, entityId) {
 function remainingSeconds(hass, entityId, unitCfg) {
   const st = stateObj(hass, entityId);
   if (!st) return null;
+
+  // Handle device_class: timestamp (ISO 8601 datetime) entities, as reported
+  // by integrations like Samsung SmartThings and LG SmartThinQ for cycle end
+  // time. These report an absolute completion time rather than a numeric
+  // duration, so the remaining time must be derived from the difference to now.
+  if (st.attributes.device_class === "timestamp") {
+    const finish = new Date(st.state);
+    if (isNaN(finish)) return null;
+    const diff = (finish - Date.now()) / 1000;
+    return diff > 0 ? diff : 0;
+  }
+
   const v = parseFloat(st.state);
   if (!Number.isFinite(v) || v < 0) return null;
   let unit = unitCfg || "auto";
@@ -846,7 +859,13 @@ class ApplianceCard extends HTMLElement {
     // Remaining time / progress
     let remSec = null;
     if (cfg.remaining_time_entity) {
-      remSec = remainingSeconds(hass, cfg.remaining_time_entity, cfg.remaining_time_unit);
+      // remaining_time_hide_when_idle cross-references the already-normalized
+      // machine state so stale completion timestamps (integrations like
+      // Samsung SmartThings keep reporting a past cycle's finish time after
+      // the appliance goes idle) don't show a leftover "remaining time".
+      if (!cfg.remaining_time_hide_when_idle || norm === "running") {
+        remSec = remainingSeconds(hass, cfg.remaining_time_entity, cfg.remaining_time_unit);
+      }
     }
 
     let progressPct = null;
@@ -1180,7 +1199,7 @@ const SECTIONS = [
         { value: "seconds", label: t(hass, "unit_seconds") },
         { value: "minutes", label: t(hass, "unit_minutes") },
       ],
-    }) },
+    }) + c._row("remaining_time_hide_when_idle", "remaining_time_hide_when_idle", { type: "checkbox" }) },
   { field: "progress_entity", labelKey: "section_progress", includeDomains: ["sensor", "input_number"] },
   { field: "door_entity", labelKey: "section_door", includeDomains: ["binary_sensor", "sensor"], extra: (c, hass) =>
       c._row("door_open_state", "door_open_state", { placeholder: "on" }) +
