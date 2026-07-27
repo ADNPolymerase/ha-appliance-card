@@ -50,6 +50,7 @@ Only `state_entity` is required — everything else is optional. In the visual e
 | `appliance_type` | `auto` (default) \| `washer` \| `dryer` \| `dishwasher`. |
 | `program_entity` / `program_format` | Program/cycle entity. `clean` (default) trims common `"<category> Pr <name>"` patterns; `raw` shows the state as-is. |
 | `remaining_time_entity` / `remaining_time_unit` | Remaining duration. Unit `auto` (default), `seconds`, or `minutes`. |
+| `remaining_time_hide_when_idle` | `true` to only show remaining time while the appliance is running. Prevents stale completion timestamps (e.g. Samsung SmartThings keeping a past finish time after the cycle ends) from displaying. |
 | `progress_entity` | Optional 0–100 sensor; overrides the client-side estimate. |
 | `door_entity` / `door_open_state` / `door_invert` | Door sensor, the state meaning "open" (default `on`), and an invert toggle. |
 | `alerts_entity` | Entity whose *attributes* are on/off flags; any "on/true/active" attribute is shown as an active alert. |
