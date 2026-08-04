@@ -690,6 +690,22 @@ function formatEta(totalSeconds) {
   return eta.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
 }
 
+function formatInfoValue(st, hass) {
+  const dc = st.attributes.device_class;
+  if (dc === "timestamp" || dc === "date") {
+    const d = new Date(st.state);
+    if (!isNaN(d.getTime())) {
+      const options = dc === "date" ? { dateStyle: "long" } : { dateStyle: "long", timeStyle: "short" };
+      try {
+        return new Intl.DateTimeFormat(lang(hass), options).format(d);
+      } catch (e) {
+        // Unsupported locale/options: fall through to the raw formatting below.
+      }
+    }
+  }
+  return `${st.state}${st.attributes.unit_of_measurement ? " " + st.attributes.unit_of_measurement : ""}`;
+}
+
 function cleanProgramName(raw) {
   if (!raw) return raw;
   // Many integrations report "<Category> Pr <ProgramName>" \u2014 keep the meaningful part.
@@ -1108,7 +1124,7 @@ class ApplianceCard extends HTMLElement {
       lines.push({
         icon: e.icon || e.st.attributes.icon || "mdi:information-outline",
         label: e.label || stripNamePrefix(e.st.attributes.friendly_name, e.entity),
-        value: `${e.st.state}${e.st.attributes.unit_of_measurement ? " " + e.st.attributes.unit_of_measurement : ""}`,
+        value: formatInfoValue(e.st, hass),
       });
     });
     if (remSec !== null) {

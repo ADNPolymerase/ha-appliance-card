@@ -55,7 +55,7 @@ Only `state_entity` is required — everything else is optional. In the visual e
 | `door_entity` / `door_open_state` / `door_invert` | Door sensor, the state meaning "open" (default `on`), and an invert toggle. |
 | `alerts_entity` | Entity whose *attributes* are on/off flags; any "on/true/active" attribute is shown as an active alert. |
 | `connectivity_entity` / `connectivity_connected_state` | Connectivity sensor and the state meaning "connected" (default `on`). |
-| `info_entities` | Up to 5 `{ entity, icon?, label? }` extra info lines (temperature, spin speed…). |
+| `info_entities` | Up to 5 `{ entity, icon?, label? }` extra info lines (temperature, spin speed…). Entities with a `timestamp`/`date` device class are formatted in the local timezone using the Home Assistant language, like HA itself shows them. |
 | `start_entity` / `pause_entity` / `resume_entity` / `stop_entity` | Button/switch/script entities wired to the corresponding control. Only configured ones are shown. |
 
 ### Example

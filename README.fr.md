@@ -54,7 +54,7 @@ Seule `state_entity` est obligatoire — tout le reste est optionnel. Dans l'éd
 | `door_entity` / `door_open_state` / `door_invert` | Capteur de porte, l'état signifiant « ouverte » (défaut `on`), et une bascule d'inversion. |
 | `alerts_entity` | Entité dont les *attributs* sont des indicateurs on/off ; tout attribut « on/true/active » s'affiche en alerte active. |
 | `connectivity_entity` / `connectivity_connected_state` | Capteur de connectivité et l'état signifiant « connecté » (défaut `on`). |
-| `info_entities` | Jusqu'à 5 entrées `{ entity, icon?, label? }` en lignes d'info (température, essorage…). |
+| `info_entities` | Jusqu'à 5 entrées `{ entity, icon?, label? }` en lignes d'info (température, essorage…). Les entités avec un device class `timestamp`/`date` sont formatées dans le fuseau horaire local et la langue de Home Assistant, comme HA les affiche. |
 | `start_entity` / `pause_entity` / `resume_entity` / `stop_entity` | Entités bouton/switch/script reliées à la commande correspondante. Seules celles configurées sont affichées. |
 
 ### Exemple
