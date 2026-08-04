@@ -1,4 +1,4 @@
-const CARD_VERSION = "0.3.0";
+const CARD_VERSION = "0.4.0";
 
 console.info(
   "%c HA-APPLIANCE-CARD %c v" + CARD_VERSION + " ",
@@ -690,7 +690,24 @@ function formatEta(totalSeconds) {
   return eta.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
 }
 
-function formatInfoValue(st, hass) {
+// Integrations often expose a phase/status as a bare code ("0".."18") or an
+// untranslated token. value_map lets the user relabel those per info entity;
+// keys are matched exactly first, then case-insensitively.
+function mapInfoValue(state, valueMap) {
+  if (!valueMap || typeof valueMap !== "object") return null;
+  if (Object.prototype.hasOwnProperty.call(valueMap, state)) return valueMap[state];
+  const lower = String(state).toLowerCase();
+  for (const key of Object.keys(valueMap)) {
+    if (String(key).toLowerCase() === lower) return valueMap[key];
+  }
+  return null;
+}
+
+function formatInfoValue(st, hass, valueMap) {
+  const mapped = mapInfoValue(st.state, valueMap);
+  // A mapped label replaces the value outright: appending a unit to it
+  // ("Rinsing rpm") would never read correctly.
+  if (mapped !== null && mapped !== undefined) return String(mapped);
   const dc = st.attributes.device_class;
   if (dc === "timestamp" || dc === "date") {
     const d = new Date(st.state);
@@ -1124,7 +1141,7 @@ class ApplianceCard extends HTMLElement {
       lines.push({
         icon: e.icon || e.st.attributes.icon || "mdi:information-outline",
         label: e.label || stripNamePrefix(e.st.attributes.friendly_name, e.entity),
-        value: formatInfoValue(e.st, hass),
+        value: formatInfoValue(e.st, hass, e.value_map),
       });
     });
     if (remSec !== null) {

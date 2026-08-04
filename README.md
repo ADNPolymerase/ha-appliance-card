@@ -55,7 +55,7 @@ Only `state_entity` is required — everything else is optional. In the visual e
 | `door_entity` / `door_open_state` / `door_invert` | Door sensor, the state meaning "open" (default `on`), and an invert toggle. |
 | `alerts_entity` | Entity whose *attributes* are on/off flags; any "on/true/active" attribute is shown as an active alert. |
 | `connectivity_entity` / `connectivity_connected_state` | Connectivity sensor and the state meaning "connected" (default `on`). |
-| `info_entities` | Up to 5 `{ entity, icon?, label? }` extra info lines (temperature, spin speed…). Entities with a `timestamp`/`date` device class are formatted in the local timezone using the Home Assistant language, like HA itself shows them. |
+| `info_entities` | Up to 5 `{ entity, icon?, label?, value_map? }` extra info lines (temperature, spin speed…). Entities with a `timestamp`/`date` device class are formatted in the local timezone using the Home Assistant language, like HA itself shows them. `value_map` relabels raw values, for integrations reporting a phase as a bare code or an untranslated token (see below). |
 | `start_entity` / `pause_entity` / `resume_entity` / `stop_entity` | Button/switch/script entities wired to the corresponding control. Only configured ones are shown. |
 
 ### Example
@@ -75,6 +75,28 @@ info_entities:
 pause_entity: button.lave_linge_execute_command_pause
 stop_entity: button.lave_linge_execute_command_stopreset
 ```
+
+### Relabeling raw values (`value_map`)
+
+Some integrations report the cycle phase as a bare number or an untranslated
+token. `value_map` turns those into readable text, per info entity:
+
+```yaml
+info_entities:
+  - entity: sensor.washing_machine_program_phase
+    icon: mdi:washing-machine
+    label: Phase
+    value_map:
+      0: Ready
+      1: Washing
+      2: Rinsing
+      3: Spinning
+      18: Finished
+```
+
+Keys are matched against the raw state exactly first, then case-insensitively
+(so `washing` also matches a state of `Washing`). Unmapped values are shown
+as-is, and a mapped label replaces the value entirely (no unit is appended).
 
 ## License
 

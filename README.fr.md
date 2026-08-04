@@ -54,7 +54,7 @@ Seule `state_entity` est obligatoire — tout le reste est optionnel. Dans l'éd
 | `door_entity` / `door_open_state` / `door_invert` | Capteur de porte, l'état signifiant « ouverte » (défaut `on`), et une bascule d'inversion. |
 | `alerts_entity` | Entité dont les *attributs* sont des indicateurs on/off ; tout attribut « on/true/active » s'affiche en alerte active. |
 | `connectivity_entity` / `connectivity_connected_state` | Capteur de connectivité et l'état signifiant « connecté » (défaut `on`). |
-| `info_entities` | Jusqu'à 5 entrées `{ entity, icon?, label? }` en lignes d'info (température, essorage…). Les entités avec un device class `timestamp`/`date` sont formatées dans le fuseau horaire local et la langue de Home Assistant, comme HA les affiche. |
+| `info_entities` | Jusqu'à 5 entrées `{ entity, icon?, label?, value_map? }` en lignes d'info (température, essorage…). Les entités avec un device class `timestamp`/`date` sont formatées dans le fuseau horaire local et la langue de Home Assistant, comme HA les affiche. `value_map` renomme les valeurs brutes, pour les intégrations qui exposent une phase sous forme de code ou de terme non traduit (voir plus bas). |
 | `start_entity` / `pause_entity` / `resume_entity` / `stop_entity` | Entités bouton/switch/script reliées à la commande correspondante. Seules celles configurées sont affichées. |
 
 ### Exemple
@@ -74,6 +74,30 @@ info_entities:
 pause_entity: button.lave_linge_execute_command_pause
 stop_entity: button.lave_linge_execute_command_stopreset
 ```
+
+### Renommer des valeurs brutes (`value_map`)
+
+Certaines intégrations exposent la phase du cycle sous forme de simple nombre
+ou de terme non traduit. `value_map` permet de les remplacer par du texte
+lisible, entité d'info par entité d'info :
+
+```yaml
+info_entities:
+  - entity: sensor.washing_machine_program_phase
+    icon: mdi:washing-machine
+    label: Phase
+    value_map:
+      0: Prêt
+      1: Lavage
+      2: Rinçage
+      3: Essorage
+      18: Terminé
+```
+
+Les clés sont d'abord comparées à l'état brut à l'identique, puis sans tenir
+compte de la casse (donc `washing` correspond aussi à un état `Washing`). Les
+valeurs non mappées sont affichées telles quelles, et un libellé mappé remplace
+entièrement la valeur (aucune unité n'est ajoutée).
 
 ## Licence
 
