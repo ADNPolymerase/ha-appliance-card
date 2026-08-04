@@ -1,4 +1,4 @@
-const CARD_VERSION = "0.4.0";
+const CARD_VERSION = "0.5.0";
 
 console.info(
   "%c HA-APPLIANCE-CARD %c v" + CARD_VERSION + " ",
@@ -53,6 +53,8 @@ const T = {
     section_info: "Extra info entities",
     info_count: "Number of extra entities",
     info_label: "Display name (optional)",
+    info_value_map: "Value mapping (optional)",
+    info_value_map_placeholder: "One per line, e.g.\n0: Ready\n1: Washing",
     info_drag: "Drag to reorder",
     section_start: "Start button", section_pause: "Pause button",
     section_resume: "Resume button", section_stop: "Stop / reset button",
@@ -100,6 +102,8 @@ const T = {
     section_info: "Entit\u00e9s d'info compl\u00e9mentaires",
     info_count: "Nombre d'entit\u00e9s suppl\u00e9mentaires",
     info_label: "Nom affich\u00e9 (optionnel)",
+    info_value_map: "Correspondance des valeurs (optionnel)",
+    info_value_map_placeholder: "Une par ligne, ex.\n0: Pr\u00eat\n1: Lavage",
     info_drag: "Glisser pour r\u00e9organiser",
     section_start: "Bouton D\u00e9marrer", section_pause: "Bouton Pause",
     section_resume: "Bouton Reprendre", section_stop: "Bouton Stop / Reset",
@@ -147,6 +151,8 @@ const T = {
     section_info: "\u0414\u043e\u043f. \u0441\u0443\u0449\u043d\u043e\u0441\u0442\u0438 \u0438\u043d\u0444\u043e\u0440\u043c\u0430\u0446\u0438\u0438",
     info_count: "\u041a\u043e\u043b\u0438\u0447\u0435\u0441\u0442\u0432\u043e \u0434\u043e\u043f. \u0441\u0443\u0449\u043d\u043e\u0441\u0442\u0435\u0439",
     info_label: "\u041e\u0442\u043e\u0431\u0440\u0430\u0436\u0430\u0435\u043c\u043e\u0435 \u0438\u043c\u044f (\u043d\u0435\u043e\u0431\u044f\u0437\u0430\u0442\u0435\u043b\u044c\u043d\u043e)",
+    info_value_map: "\u0421\u043e\u043f\u043e\u0441\u0442\u0430\u0432\u043b\u0435\u043d\u0438\u0435 \u0437\u043d\u0430\u0447\u0435\u043d\u0438\u0439 (\u043d\u0435\u043e\u0431\u044f\u0437\u0430\u0442\u0435\u043b\u044c\u043d\u043e)",
+    info_value_map_placeholder: "\u041f\u043e \u043e\u0434\u043d\u043e\u043c\u0443 \u0432 \u0441\u0442\u0440\u043e\u043a\u0435, \u043d\u0430\u043f\u0440.\n0: \u0413\u043e\u0442\u043e\u0432\u043e\n1: \u0421\u0442\u0438\u0440\u043a\u0430",
     info_drag: "\u041f\u0435\u0440\u0435\u0442\u0430\u0449\u0438\u0442\u0435 \u0434\u043b\u044f \u0438\u0437\u043c\u0435\u043d\u0435\u043d\u0438\u044f \u043f\u043e\u0440\u044f\u0434\u043a\u0430",
     section_start: "\u041a\u043d\u043e\u043f\u043a\u0430 \u0421\u0442\u0430\u0440\u0442", section_pause: "\u041a\u043d\u043e\u043f\u043a\u0430 \u041f\u0430\u0443\u0437\u0430",
     section_resume: "\u041a\u043d\u043e\u043f\u043a\u0430 \u041f\u0440\u043e\u0434\u043e\u043b\u0436\u0438\u0442\u044c", section_stop: "\u041a\u043d\u043e\u043f\u043a\u0430 \u0421\u0442\u043e\u043f / \u0421\u0431\u0440\u043e\u0441",
@@ -194,6 +200,8 @@ const T = {
     section_info: "Zus\u00e4tzliche Info-Entit\u00e4ten",
     info_count: "Anzahl zus\u00e4tzlicher Entit\u00e4ten",
     info_label: "Anzeigename (optional)",
+    info_value_map: "Wertzuordnung (optional)",
+    info_value_map_placeholder: "Eine pro Zeile, z. B.\n0: Bereit\n1: Waschen",
     info_drag: "Zum Neuordnen ziehen",
     section_start: "Start-Taste", section_pause: "Pause-Taste",
     section_resume: "Fortsetzen-Taste", section_stop: "Stopp/Reset-Taste",
@@ -241,6 +249,8 @@ const T = {
     section_info: "Entidades de informaci\u00f3n adicionales",
     info_count: "N\u00famero de entidades adicionales",
     info_label: "Nombre mostrado (opcional)",
+    info_value_map: "Correspondencia de valores (opcional)",
+    info_value_map_placeholder: "Una por l\u00ednea, p. ej.\n0: Listo\n1: Lavado",
     info_drag: "Arrastrar para reordenar",
     section_start: "Bot\u00f3n Iniciar", section_pause: "Bot\u00f3n Pausa",
     section_resume: "Bot\u00f3n Reanudar", section_stop: "Bot\u00f3n Parar/Reiniciar",
@@ -288,6 +298,8 @@ const T = {
     section_info: "Entit\u00e0 informative aggiuntive",
     info_count: "Numero di entit\u00e0 aggiuntive",
     info_label: "Nome visualizzato (opzionale)",
+    info_value_map: "Corrispondenza dei valori (opzionale)",
+    info_value_map_placeholder: "Una per riga, es.\n0: Pronto\n1: Lavaggio",
     info_drag: "Trascina per riordinare",
     section_start: "Pulsante Avvia", section_pause: "Pulsante Pausa",
     section_resume: "Pulsante Riprendi", section_stop: "Pulsante Stop/Reset",
@@ -335,6 +347,8 @@ const T = {
     section_info: "Extra info-entiteiten",
     info_count: "Aantal extra entiteiten",
     info_label: "Weergavenaam (optioneel)",
+    info_value_map: "Waardetoewijzing (optioneel)",
+    info_value_map_placeholder: "E\u00e9n per regel, bijv.\n0: Gereed\n1: Wassen",
     info_drag: "Sleep om te herordenen",
     section_start: "Startknop", section_pause: "Pauzeknop",
     section_resume: "Hervattenknop", section_stop: "Stop/resetknop",
@@ -382,6 +396,8 @@ const T = {
     section_info: "Entidades de informa\u00e7\u00e3o adicionais",
     info_count: "N\u00famero de entidades adicionais",
     info_label: "Nome exibido (opcional)",
+    info_value_map: "Correspond\u00eancia de valores (opcional)",
+    info_value_map_placeholder: "Uma por linha, ex.\n0: Pronto\n1: Lavagem",
     info_drag: "Arraste para reordenar",
     section_start: "Bot\u00e3o Iniciar", section_pause: "Bot\u00e3o Pausa",
     section_resume: "Bot\u00e3o Retomar", section_stop: "Bot\u00e3o Parar/Reiniciar",
@@ -429,6 +445,8 @@ const T = {
     section_info: "Extra infoentiteter",
     info_count: "Antal extra entiteter",
     info_label: "Visningsnamn (valfritt)",
+    info_value_map: "V\u00e4rdemappning (valfritt)",
+    info_value_map_placeholder: "En per rad, t.ex.\n0: Klar\n1: Tv\u00e4tt",
     info_drag: "Dra f\u00f6r att \u00e4ndra ordning",
     section_start: "Startknapp", section_pause: "Pausknapp",
     section_resume: "\u00c5terupptaknapp", section_stop: "Stopp-/\u00e5terst\u00e4llningsknapp",
@@ -476,6 +494,8 @@ const T = {
     section_info: "Ekstra infoentiteter",
     info_count: "Antall ekstra entiteter",
     info_label: "Visningsnavn (valgfritt)",
+    info_value_map: "Verditilordning (valgfritt)",
+    info_value_map_placeholder: "\u00c9n per linje, f.eks.\n0: Klar\n1: Vask",
     info_drag: "Dra for \u00e5 endre rekkef\u00f8lge",
     section_start: "Startknapp", section_pause: "Pauseknapp",
     section_resume: "Gjenopptaknapp", section_stop: "Stopp-/tilbakestillingsknapp",
@@ -523,6 +543,8 @@ const T = {
     section_info: "Ekstra info-enheder",
     info_count: "Antal ekstra enheder",
     info_label: "Vist navn (valgfrit)",
+    info_value_map: "V\u00e6rditilknytning (valgfrit)",
+    info_value_map_placeholder: "\u00c9n pr. linje, f.eks.\n0: Klar\n1: Vask",
     info_drag: "Tr\u00e6k for at \u00e6ndre r\u00e6kkef\u00f8lge",
     section_start: "Startknap", section_pause: "Pauseknap",
     section_resume: "Genoptagknap", section_stop: "Stop-/nulstillingsknap",
@@ -570,6 +592,8 @@ const T = {
     section_info: "Dodatkowe encje informacyjne",
     info_count: "Liczba dodatkowych encji",
     info_label: "Nazwa wy\u015bwietlana (opcjonalnie)",
+    info_value_map: "Mapowanie warto\u015bci (opcjonalnie)",
+    info_value_map_placeholder: "Jedno na lini\u0119, np.\n0: Gotowe\n1: Pranie",
     info_drag: "Przeci\u0105gnij, aby zmieni\u0107 kolejno\u015b\u0107",
     section_start: "Przycisk Start", section_pause: "Przycisk Pauza",
     section_resume: "Przycisk Wzn\u00f3w", section_stop: "Przycisk Stop/Reset",
@@ -701,6 +725,28 @@ function mapInfoValue(state, valueMap) {
     if (String(key).toLowerCase() === lower) return valueMap[key];
   }
   return null;
+}
+
+// The editor edits value_map as plain text, one "code: label" per line, since
+// integrations can expose ~20 phase codes and a row-per-entry UI would dwarf
+// the rest of the editor. Split on the first ":" or "=" so a label may itself
+// contain either character.
+function parseValueMap(text) {
+  const map = {};
+  for (const rawLine of String(text || "").split("\n")) {
+    const line = rawLine.trim();
+    if (!line || line.startsWith("#")) continue;
+    const match = line.match(/^([^:=]+)[:=](.*)$/);
+    if (!match) continue;
+    const key = match[1].trim();
+    if (key) map[key] = match[2].trim();
+  }
+  return Object.keys(map).length ? map : undefined;
+}
+
+function stringifyValueMap(valueMap) {
+  if (!valueMap || typeof valueMap !== "object") return "";
+  return Object.keys(valueMap).map((key) => `${key}: ${valueMap[key]}`).join("\n");
 }
 
 function formatInfoValue(st, hass, valueMap) {
@@ -1418,6 +1464,26 @@ class ApplianceCardEditor extends HTMLElement {
     slotEl.appendChild(input);
   }
 
+  _mountInfoValueMap(slotEl, index) {
+    const hass = this._hass;
+    const current = this._infoEntitiesList()[index] || {};
+    const wrap = document.createElement("div");
+    const label = document.createElement("label");
+    label.textContent = t(hass, "info_value_map");
+    const area = document.createElement("textarea");
+    area.rows = 3;
+    area.placeholder = t(hass, "info_value_map_placeholder");
+    area.value = stringifyValueMap(current.value_map);
+    // "change" (blur) rather than "input": committing per keystroke would
+    // rewrite the config mid-line and fight the user while typing.
+    area.addEventListener("change", (ev) => {
+      this._updateInfoEntity(index, { value_map: parseValueMap(ev.target.value) });
+    });
+    wrap.appendChild(label);
+    wrap.appendChild(area);
+    slotEl.appendChild(wrap);
+  }
+
   _mountInfoIcon(slotEl, index) {
     const hass = this._hass;
     const current = this._infoEntitiesList()[index] || {};
@@ -1508,11 +1574,16 @@ class ApplianceCardEditor extends HTMLElement {
         .row-inline { display: flex; align-items: center; gap: 8px; font-size: 1.05em; color: var(--primary-text-color, #1c1c1c); cursor: pointer; }
         .row-inline input { width: auto; }
         .picker-slot { margin: 6px 0; }
-        .picker-slot input[type="text"] {
+        .picker-slot input[type="text"], .picker-slot textarea {
           width: 100%; padding: 8px 10px; border-radius: 4px; box-sizing: border-box;
           border: 1px solid var(--divider-color, #ccc);
           background: var(--card-background-color, white); color: var(--primary-text-color, #1c1c1c);
           font-size: 1em; font-family: inherit;
+        }
+        .picker-slot textarea { resize: vertical; min-height: 62px; }
+        .picker-slot label {
+          display: block; font-size: 0.95em; margin-bottom: 4px;
+          color: var(--secondary-text-color, #767676);
         }
         .info-row { display: flex; gap: 8px; align-items: flex-start; }
         .info-row-handle {
@@ -1576,6 +1647,7 @@ class ApplianceCardEditor extends HTMLElement {
               <div class="picker-slot" data-slot="__info_${i}"></div>
               <div class="picker-slot" data-slot="__info_icon_${i}"></div>
               <div class="picker-slot" data-slot="__info_label_${i}"></div>
+              <div class="picker-slot" data-slot="__info_valuemap_${i}"></div>
             </div>
           </div>`).join("")}
       </details>
@@ -1594,6 +1666,7 @@ class ApplianceCardEditor extends HTMLElement {
       this._mountInfoPicker(this._root.querySelector(`[data-slot="__info_${i}"]`), i);
       this._mountInfoIcon(this._root.querySelector(`[data-slot="__info_icon_${i}"]`), i);
       this._mountInfoLabel(this._root.querySelector(`[data-slot="__info_label_${i}"]`), i);
+      this._mountInfoValueMap(this._root.querySelector(`[data-slot="__info_valuemap_${i}"]`), i);
     }
     this._wireInfoDragAndDrop();
 

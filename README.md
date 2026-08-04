@@ -98,6 +98,11 @@ Keys are matched against the raw state exactly first, then case-insensitively
 (so `washing` also matches a state of `Washing`). Unmapped values are shown
 as-is, and a mapped label replaces the value entirely (no unit is appended).
 
+In the visual editor the same thing is edited as one `code: label` per line,
+under each info entity. `=` also works as the separator, blank lines and lines
+starting with `#` are ignored, and only the first `:` or `=` splits the line so
+a label may itself contain one.
+
 ## License
 
 MIT — see [LICENSE](LICENSE).

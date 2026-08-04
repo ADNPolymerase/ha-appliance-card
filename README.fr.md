@@ -99,6 +99,12 @@ compte de la casse (donc `washing` correspond aussi à un état `Washing`). Les
 valeurs non mappées sont affichées telles quelles, et un libellé mappé remplace
 entièrement la valeur (aucune unité n'est ajoutée).
 
+Dans l'éditeur visuel, la même chose se saisit sous forme d'une ligne
+`code: libellé` par correspondance, sous chaque entité d'info. Le séparateur `=`
+fonctionne aussi, les lignes vides et celles commençant par `#` sont ignorées,
+et seul le premier `:` ou `=` découpe la ligne, donc un libellé peut lui-même en
+contenir un.
+
 ## Licence
 
 MIT — voir [LICENSE](LICENSE).
