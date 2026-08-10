@@ -10,7 +10,7 @@
 <a href="https://buymeacoffee.com/adnpolymerase" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-orange.png" alt="Buy Me A Coffee" height="60"></a>
 <a href="https://adnpolymerase.github.io/HA/" target="_blank"><img src="https://raw.githubusercontent.com/ADNPolymerase/HA/main/assets/site-button.svg" alt="Link to my github.io for my other projects" height="60"></a>
 
-A Lovelace card for washers, dryers and dishwashers — cycle in progress, program, remaining time, door status, alerts and controls.
+A Lovelace card for kitchen and laundry appliances — washers, dryers, dishwashers, ovens, microwaves, cooker hoods and cooktops. Cycle in progress, program, remaining time, temperature, fan speed, cooking zones, door status, alerts and controls.
 
 No brand assumed: every field is a configurable entity mapping, so it works with **any** integration (Electrolux, Samsung, LG, Home Connect, Miele, a smart plug + template sensors…).
 
@@ -22,7 +22,8 @@ No brand assumed: every field is a configurable entity mapping, so it works with
 ## Features
 
 - **State normalization**: `Idle`, `RUNNING`, `wash`, `En marche`… are auto-detected (accent-insensitive, 12 languages) and mapped to idle / running / paused / done / delayed / error. `state_map` covers anything else; unmatched states are shown as-is.
-- **Animated illustration** (washer water, dryer tumbling, dishwasher spray arm) — static when idle, auto-detected or set via `appliance_type`. The door is shown ajar on the illustration while open. `compact: true` keeps only the text.
+- **Seven appliance types**, each with its own animated illustration: washer (water), dryer (tumbling), dishwasher (spray arm), oven (glowing elements, door dropping open), microwave (turntable, lit cavity), cooker hood (rising airflow, light beams) and cooktop (per-zone level and residual heat). Static when idle, auto-detected or set via `appliance_type`. `compact: true` keeps only the text.
+- **Works from a smart plug alone**: set `power_entity` + `power_on_threshold` and the state is derived from consumption — standby → running → finished — with no appliance integration at all.
 - **Progress bar** from a direct percentage sensor, or estimated client-side from the remaining time.
 - **Program, info lines** (temperature, spin speed…), **door, alerts, connectivity** (top-right wifi icon) — each optional and independent.
 - **Start / pause / resume / stop** controls, only shown for the entities you configure.
@@ -47,7 +48,8 @@ Only `state_entity` is required — everything else is optional. In the visual e
 | `state_show_raw` | `true` to display the raw state text instead of the translated label (color/animation still follow the detected category). |
 | `name` | Card title. Defaults to the state entity's friendly name. |
 | `compact` | `true` to hide the illustration and show only text. |
-| `appliance_type` | `auto` (default) \| `washer` \| `dryer` \| `dishwasher`. |
+| `appliance_type` | `auto` (default) \| `washer` \| `dryer` \| `dishwasher` \| `oven` \| `microwave` \| `hood` \| `cooktop`. The visual editor only offers the fields the chosen type can use. |
+| `power_entity` / `power_on_threshold` | Power sensor (W). With a threshold set, the state is derived from it instead of `state_entity`: above the threshold is *running*, and falling back below it is *finished* until the next run. |
 | `program_entity` / `program_format` | Program/cycle entity. `clean` (default) trims common `"<category> Pr <name>"` patterns; `raw` shows the state as-is. |
 | `remaining_time_entity` / `remaining_time_unit` | Remaining duration. Unit `auto` (default), `seconds`, or `minutes`. |
 | `remaining_time_hide_when_idle` | `true` to only show remaining time while the appliance is running. Prevents stale completion timestamps (e.g. Samsung SmartThings keeping a past finish time after the cycle ends) from displaying. |
@@ -57,6 +59,21 @@ Only `state_entity` is required — everything else is optional. In the visual e
 | `connectivity_entity` / `connectivity_connected_state` | Connectivity sensor and the state meaning "connected" (default `on`). |
 | `info_entities` | Up to 5 `{ entity, icon?, label?, value_map? }` extra info lines (temperature, spin speed…). Entities with a `timestamp`/`date` device class are formatted in the local timezone using the Home Assistant language, like HA itself shows them. `value_map` relabels raw values, for integrations reporting a phase as a bare code or an untranslated token (see below). |
 | `start_entity` / `pause_entity` / `resume_entity` / `stop_entity` | Button/switch/script entities wired to the corresponding control. Only configured ones are shown. |
+
+Per type:
+
+| Option | Types | Description |
+|---|---|---|
+| `target_temperature_entity` / `current_temperature_entity` | oven | Setpoint and actual temperature. While climbing, the bar becomes a preheat gauge and the state reads *Preheating*. |
+| `heating_entity` | oven | Optional; drives the glowing elements. Falls back to the running state. |
+| `light_entity` | oven, hood | Cavity light / hood lamps, also shown as a toggle button. |
+| `power_level_entity` | microwave | Power level (e.g. 800 W). |
+| `fan_entity` | hood | A `fan` entity: its percentage or preset sets the airflow speed shown. |
+| `boost_entity` | hood | Optional intensive mode, when the preset doesn't already say so. |
+| `filter_life_entity` / `filter_reset_entity` | hood | Grease filter wear (%) as a bar, and a reset button. |
+| `zones` | cooktop | List of `{ level_entity, residual_heat_entity?, name? }`, up to 6. Levels can be numeric (0–9) or a word (`boost`); zones off but still hot show `H`. |
+| `zones_layout` | cooktop | `2x1` \| `2x2` \| `3x2`. Derived from the number of zones by default. |
+| `child_lock_entity` | cooktop | Shows a padlock on the illustration. |
 
 ### Example
 
@@ -74,6 +91,53 @@ info_entities:
     icon: mdi:rotate-3d-variant
 pause_entity: button.lave_linge_execute_command_pause
 stop_entity: button.lave_linge_execute_command_stopreset
+```
+
+### Oven, hood and cooktop examples
+
+```yaml
+type: custom:ha-appliance-card
+appliance_type: oven
+state_entity: sensor.oven_state
+target_temperature_entity: number.oven_setpoint
+current_temperature_entity: sensor.oven_temperature
+door_entity: binary_sensor.oven_door
+light_entity: light.oven_light
+remaining_time_entity: sensor.oven_time_to_end
+```
+
+```yaml
+type: custom:ha-appliance-card
+appliance_type: hood
+state_entity: fan.hood
+fan_entity: fan.hood
+light_entity: light.hood
+filter_life_entity: sensor.hood_grease_filter
+```
+
+```yaml
+type: custom:ha-appliance-card
+appliance_type: cooktop
+state_entity: sensor.cooktop_state
+child_lock_entity: binary_sensor.cooktop_child_lock
+zones:
+  - level_entity: sensor.cooktop_zone_1_level
+    residual_heat_entity: binary_sensor.cooktop_zone_1_hot
+    name: Front left
+  - level_entity: sensor.cooktop_zone_2_level
+  - level_entity: sensor.cooktop_zone_3_level
+  - level_entity: sensor.cooktop_zone_4_level
+```
+
+With nothing but a smart plug:
+
+```yaml
+type: custom:ha-appliance-card
+appliance_type: oven
+name: Oven
+state_entity: sensor.oven_plug_power
+power_entity: sensor.oven_plug_power
+power_on_threshold: 10
 ```
 
 ### Relabeling raw values (`value_map`)

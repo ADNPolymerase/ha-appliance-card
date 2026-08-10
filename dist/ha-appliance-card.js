@@ -1,4 +1,4 @@
-const CARD_VERSION = "0.5.0";
+const CARD_VERSION = "1.0.0-beta.1";
 
 console.info(
   "%c HA-APPLIANCE-CARD %c v" + CARD_VERSION + " ",
@@ -59,6 +59,29 @@ const T = {
     section_start: "Start button", section_pause: "Pause button",
     section_resume: "Resume button", section_stop: "Stop / reset button",
     picker_icon: "Icon (optional)",
+    type_oven: "Oven", type_microwave: "Microwave",
+    type_hood: "Cooker hood", type_cooktop: "Cooktop",
+    preheating: "Preheating", standby: "Standby",
+    temperature: "Temperature", fan_speed: "Fan speed",
+    filter: "Filter", power: "Power",
+    power_level: "Power level", child_lock: "Child lock",
+    residual_heat: "Residual heat", boost: "Boost",
+    light: "Light", filter_reset: "Reset filter",
+    zone: "Zone", zones_active: "active zones",
+    section_target_temperature: "Target temperature", section_current_temperature: "Current temperature",
+    section_light: "Light", section_heating: "Heating indicator",
+    section_power_level: "Power level", section_fan: "Fan",
+    section_filter_life: "Filter life", section_filter_reset: "Reset filter button",
+    section_boost: "Boost mode", section_child_lock: "Child lock",
+    section_power: "Power consumption", section_zones: "Cooking zones",
+    target_temperature_entity: "Target temperature entity", current_temperature_entity: "Current temperature entity",
+    light_entity: "Light entity", heating_entity: "Heating entity (optional)",
+    power_level_entity: "Power level entity", fan_entity: "Fan entity",
+    filter_life_entity: "Filter life % entity", filter_reset_entity: "Reset filter button entity",
+    boost_entity: "Boost mode entity", child_lock_entity: "Child lock entity",
+    power_entity: "Power (W) entity", power_on_threshold: "Running above this power (W)",
+    zones_count: "Number of cooking zones", zone_level_entity: "Level entity",
+    zone_residual_entity: "Residual heat entity", zone_name: "Zone name (optional)",
   },
   fr: {
     idle: "En veille", running: "En cours", paused: "En pause", done: "Termin\u00e9",
@@ -108,6 +131,29 @@ const T = {
     section_start: "Bouton D\u00e9marrer", section_pause: "Bouton Pause",
     section_resume: "Bouton Reprendre", section_stop: "Bouton Stop / Reset",
     picker_icon: "Ic\u00f4ne (optionnel)",
+    type_oven: "Four", type_microwave: "Micro-ondes",
+    type_hood: "Hotte", type_cooktop: "Plaque de cuisson",
+    preheating: "Pr\u00e9chauffage", standby: "En veille",
+    temperature: "Temp\u00e9rature", fan_speed: "Vitesse",
+    filter: "Filtre", power: "Puissance",
+    power_level: "Niveau de puissance", child_lock: "S\u00e9curit\u00e9 enfant",
+    residual_heat: "Chaleur r\u00e9siduelle", boost: "Intensif",
+    light: "\u00c9clairage", filter_reset: "R\u00e9initialiser le filtre",
+    zone: "Foyer", zones_active: "foyers actifs",
+    section_target_temperature: "Temp\u00e9rature de consigne", section_current_temperature: "Temp\u00e9rature actuelle",
+    section_light: "\u00c9clairage", section_heating: "Indicateur de chauffe",
+    section_power_level: "Niveau de puissance", section_fan: "Ventilation",
+    section_filter_life: "Usure du filtre", section_filter_reset: "Bouton de r\u00e9initialisation du filtre",
+    section_boost: "Mode intensif", section_child_lock: "S\u00e9curit\u00e9 enfant",
+    section_power: "Consommation", section_zones: "Foyers de cuisson",
+    target_temperature_entity: "Entit\u00e9 temp\u00e9rature de consigne", current_temperature_entity: "Entit\u00e9 temp\u00e9rature actuelle",
+    light_entity: "Entit\u00e9 \u00e9clairage", heating_entity: "Entit\u00e9 de chauffe (optionnel)",
+    power_level_entity: "Entit\u00e9 niveau de puissance", fan_entity: "Entit\u00e9 ventilation",
+    filter_life_entity: "Entit\u00e9 usure du filtre (%)", filter_reset_entity: "Entit\u00e9 bouton de r\u00e9initialisation du filtre",
+    boost_entity: "Entit\u00e9 mode intensif", child_lock_entity: "Entit\u00e9 s\u00e9curit\u00e9 enfant",
+    power_entity: "Entit\u00e9 puissance (W)", power_on_threshold: "En marche au-dessus de cette puissance (W)",
+    zones_count: "Nombre de foyers", zone_level_entity: "Entit\u00e9 niveau",
+    zone_residual_entity: "Entit\u00e9 chaleur r\u00e9siduelle", zone_name: "Nom du foyer (optionnel)",
   },
   ru: {
     idle: "\u041e\u0436\u0438\u0434\u0430\u043d\u0438\u0435", running: "\u0420\u0430\u0431\u043e\u0442\u0430\u0435\u0442", paused: "\u041d\u0430 \u043f\u0430\u0443\u0437\u0435", done: "\u0417\u0430\u0432\u0435\u0440\u0448\u0435\u043d\u043e",
@@ -157,6 +203,29 @@ const T = {
     section_start: "\u041a\u043d\u043e\u043f\u043a\u0430 \u0421\u0442\u0430\u0440\u0442", section_pause: "\u041a\u043d\u043e\u043f\u043a\u0430 \u041f\u0430\u0443\u0437\u0430",
     section_resume: "\u041a\u043d\u043e\u043f\u043a\u0430 \u041f\u0440\u043e\u0434\u043e\u043b\u0436\u0438\u0442\u044c", section_stop: "\u041a\u043d\u043e\u043f\u043a\u0430 \u0421\u0442\u043e\u043f / \u0421\u0431\u0440\u043e\u0441",
     picker_icon: "\u0417\u043d\u0430\u0447\u043e\u043a (\u043d\u0435\u043e\u0431\u044f\u0437\u0430\u0442\u0435\u043b\u044c\u043d\u043e)",
+    type_oven: "\u0414\u0443\u0445\u043e\u0432\u043a\u0430", type_microwave: "\u041c\u0438\u043a\u0440\u043e\u0432\u043e\u043b\u043d\u043e\u0432\u043a\u0430",
+    type_hood: "\u0412\u044b\u0442\u044f\u0436\u043a\u0430", type_cooktop: "\u0412\u0430\u0440\u043e\u0447\u043d\u0430\u044f \u043f\u0430\u043d\u0435\u043b\u044c",
+    preheating: "\u041f\u0440\u0435\u0434\u0432\u0430\u0440\u0438\u0442\u0435\u043b\u044c\u043d\u044b\u0439 \u043d\u0430\u0433\u0440\u0435\u0432", standby: "\u041e\u0436\u0438\u0434\u0430\u043d\u0438\u0435",
+    temperature: "\u0422\u0435\u043c\u043f\u0435\u0440\u0430\u0442\u0443\u0440\u0430", fan_speed: "\u0421\u043a\u043e\u0440\u043e\u0441\u0442\u044c",
+    filter: "\u0424\u0438\u043b\u044c\u0442\u0440", power: "\u041c\u043e\u0449\u043d\u043e\u0441\u0442\u044c",
+    power_level: "\u0423\u0440\u043e\u0432\u0435\u043d\u044c \u043c\u043e\u0449\u043d\u043e\u0441\u0442\u0438", child_lock: "\u0417\u0430\u0449\u0438\u0442\u0430 \u043e\u0442 \u0434\u0435\u0442\u0435\u0439",
+    residual_heat: "\u041e\u0441\u0442\u0430\u0442\u043e\u0447\u043d\u043e\u0435 \u0442\u0435\u043f\u043b\u043e", boost: "\u0418\u043d\u0442\u0435\u043d\u0441\u0438\u0432\u043d\u044b\u0439",
+    light: "\u041f\u043e\u0434\u0441\u0432\u0435\u0442\u043a\u0430", filter_reset: "\u0421\u0431\u0440\u043e\u0441\u0438\u0442\u044c \u0444\u0438\u043b\u044c\u0442\u0440",
+    zone: "\u041a\u043e\u043d\u0444\u043e\u0440\u043a\u0430", zones_active: "\u0430\u043a\u0442\u0438\u0432\u043d\u044b\u0445 \u043a\u043e\u043d\u0444\u043e\u0440\u043e\u043a",
+    section_target_temperature: "\u0426\u0435\u043b\u0435\u0432\u0430\u044f \u0442\u0435\u043c\u043f\u0435\u0440\u0430\u0442\u0443\u0440\u0430", section_current_temperature: "\u0422\u0435\u043a\u0443\u0449\u0430\u044f \u0442\u0435\u043c\u043f\u0435\u0440\u0430\u0442\u0443\u0440\u0430",
+    section_light: "\u041f\u043e\u0434\u0441\u0432\u0435\u0442\u043a\u0430", section_heating: "\u0418\u043d\u0434\u0438\u043a\u0430\u0442\u043e\u0440 \u043d\u0430\u0433\u0440\u0435\u0432\u0430",
+    section_power_level: "\u0423\u0440\u043e\u0432\u0435\u043d\u044c \u043c\u043e\u0449\u043d\u043e\u0441\u0442\u0438", section_fan: "\u0412\u0435\u043d\u0442\u0438\u043b\u044f\u0442\u043e\u0440",
+    section_filter_life: "\u0420\u0435\u0441\u0443\u0440\u0441 \u0444\u0438\u043b\u044c\u0442\u0440\u0430", section_filter_reset: "\u041a\u043d\u043e\u043f\u043a\u0430 \u0441\u0431\u0440\u043e\u0441\u0430 \u0444\u0438\u043b\u044c\u0442\u0440\u0430",
+    section_boost: "\u0418\u043d\u0442\u0435\u043d\u0441\u0438\u0432\u043d\u044b\u0439 \u0440\u0435\u0436\u0438\u043c", section_child_lock: "\u0417\u0430\u0449\u0438\u0442\u0430 \u043e\u0442 \u0434\u0435\u0442\u0435\u0439",
+    section_power: "\u041f\u043e\u0442\u0440\u0435\u0431\u043b\u0435\u043d\u0438\u0435", section_zones: "\u041a\u043e\u043d\u0444\u043e\u0440\u043a\u0438",
+    target_temperature_entity: "\u041e\u0431\u044a\u0435\u043a\u0442 \u0446\u0435\u043b\u0435\u0432\u043e\u0439 \u0442\u0435\u043c\u043f\u0435\u0440\u0430\u0442\u0443\u0440\u044b", current_temperature_entity: "\u041e\u0431\u044a\u0435\u043a\u0442 \u0442\u0435\u043a\u0443\u0449\u0435\u0439 \u0442\u0435\u043c\u043f\u0435\u0440\u0430\u0442\u0443\u0440\u044b",
+    light_entity: "\u041e\u0431\u044a\u0435\u043a\u0442 \u043f\u043e\u0434\u0441\u0432\u0435\u0442\u043a\u0438", heating_entity: "\u041e\u0431\u044a\u0435\u043a\u0442 \u043d\u0430\u0433\u0440\u0435\u0432\u0430 (\u043e\u043f\u0446\u0438\u043e\u043d\u0430\u043b\u044c\u043d\u043e)",
+    power_level_entity: "\u041e\u0431\u044a\u0435\u043a\u0442 \u0443\u0440\u043e\u0432\u043d\u044f \u043c\u043e\u0449\u043d\u043e\u0441\u0442\u0438", fan_entity: "\u041e\u0431\u044a\u0435\u043a\u0442 \u0432\u0435\u043d\u0442\u0438\u043b\u044f\u0442\u043e\u0440\u0430",
+    filter_life_entity: "\u041e\u0431\u044a\u0435\u043a\u0442 \u0440\u0435\u0441\u0443\u0440\u0441\u0430 \u0444\u0438\u043b\u044c\u0442\u0440\u0430 (%)", filter_reset_entity: "\u041e\u0431\u044a\u0435\u043a\u0442 \u043a\u043d\u043e\u043f\u043a\u0438 \u0441\u0431\u0440\u043e\u0441\u0430 \u0444\u0438\u043b\u044c\u0442\u0440\u0430",
+    boost_entity: "\u041e\u0431\u044a\u0435\u043a\u0442 \u0438\u043d\u0442\u0435\u043d\u0441\u0438\u0432\u043d\u043e\u0433\u043e \u0440\u0435\u0436\u0438\u043c\u0430", child_lock_entity: "\u041e\u0431\u044a\u0435\u043a\u0442 \u0437\u0430\u0449\u0438\u0442\u044b \u043e\u0442 \u0434\u0435\u0442\u0435\u0439",
+    power_entity: "\u041e\u0431\u044a\u0435\u043a\u0442 \u043c\u043e\u0449\u043d\u043e\u0441\u0442\u0438 (\u0412\u0442)", power_on_threshold: "\u0420\u0430\u0431\u043e\u0442\u0430\u0435\u0442 \u0432\u044b\u0448\u0435 \u044d\u0442\u043e\u0439 \u043c\u043e\u0449\u043d\u043e\u0441\u0442\u0438 (\u0412\u0442)",
+    zones_count: "\u041a\u043e\u043b\u0438\u0447\u0435\u0441\u0442\u0432\u043e \u043a\u043e\u043d\u0444\u043e\u0440\u043e\u043a", zone_level_entity: "\u041e\u0431\u044a\u0435\u043a\u0442 \u0443\u0440\u043e\u0432\u043d\u044f",
+    zone_residual_entity: "\u041e\u0431\u044a\u0435\u043a\u0442 \u043e\u0441\u0442\u0430\u0442\u043e\u0447\u043d\u043e\u0433\u043e \u0442\u0435\u043f\u043b\u0430", zone_name: "\u041d\u0430\u0437\u0432\u0430\u043d\u0438\u0435 \u043a\u043e\u043d\u0444\u043e\u0440\u043a\u0438 (\u043e\u043f\u0446\u0438\u043e\u043d\u0430\u043b\u044c\u043d\u043e)",
   },
   de: {
     idle: "Inaktiv", running: "L\u00e4uft", paused: "Pausiert", done: "Fertig",
@@ -206,6 +275,29 @@ const T = {
     section_start: "Start-Taste", section_pause: "Pause-Taste",
     section_resume: "Fortsetzen-Taste", section_stop: "Stopp/Reset-Taste",
     picker_icon: "Symbol (optional)",
+    type_oven: "Backofen", type_microwave: "Mikrowelle",
+    type_hood: "Dunstabzugshaube", type_cooktop: "Kochfeld",
+    preheating: "Vorheizen", standby: "Bereitschaft",
+    temperature: "Temperatur", fan_speed: "L\u00fcfterstufe",
+    filter: "Filter", power: "Leistung",
+    power_level: "Leistungsstufe", child_lock: "Kindersicherung",
+    residual_heat: "Restw\u00e4rme", boost: "Intensiv",
+    light: "Licht", filter_reset: "Filter zur\u00fccksetzen",
+    zone: "Kochzone", zones_active: "aktive Kochzonen",
+    section_target_temperature: "Solltemperatur", section_current_temperature: "Isttemperatur",
+    section_light: "Licht", section_heating: "Heizanzeige",
+    section_power_level: "Leistungsstufe", section_fan: "L\u00fcfter",
+    section_filter_life: "Filterlebensdauer", section_filter_reset: "Filter-Reset-Taste",
+    section_boost: "Intensivstufe", section_child_lock: "Kindersicherung",
+    section_power: "Stromverbrauch", section_zones: "Kochzonen",
+    target_temperature_entity: "Entit\u00e4t Solltemperatur", current_temperature_entity: "Entit\u00e4t Isttemperatur",
+    light_entity: "Entit\u00e4t Licht", heating_entity: "Entit\u00e4t Heizen (optional)",
+    power_level_entity: "Entit\u00e4t Leistungsstufe", fan_entity: "Entit\u00e4t L\u00fcfter",
+    filter_life_entity: "Entit\u00e4t Filterlebensdauer (%)", filter_reset_entity: "Entit\u00e4t Filter-Reset-Taste",
+    boost_entity: "Entit\u00e4t Intensivstufe", child_lock_entity: "Entit\u00e4t Kindersicherung",
+    power_entity: "Entit\u00e4t Leistung (W)", power_on_threshold: "L\u00e4uft oberhalb dieser Leistung (W)",
+    zones_count: "Anzahl der Kochzonen", zone_level_entity: "Entit\u00e4t Stufe",
+    zone_residual_entity: "Entit\u00e4t Restw\u00e4rme", zone_name: "Name der Kochzone (optional)",
   },
   es: {
     idle: "Inactivo", running: "En marcha", paused: "En pausa", done: "Finalizado",
@@ -255,6 +347,29 @@ const T = {
     section_start: "Bot\u00f3n Iniciar", section_pause: "Bot\u00f3n Pausa",
     section_resume: "Bot\u00f3n Reanudar", section_stop: "Bot\u00f3n Parar/Reiniciar",
     picker_icon: "Icono (opcional)",
+    type_oven: "Horno", type_microwave: "Microondas",
+    type_hood: "Campana extractora", type_cooktop: "Placa de cocina",
+    preheating: "Precalentando", standby: "En espera",
+    temperature: "Temperatura", fan_speed: "Velocidad",
+    filter: "Filtro", power: "Potencia",
+    power_level: "Nivel de potencia", child_lock: "Bloqueo infantil",
+    residual_heat: "Calor residual", boost: "Intensivo",
+    light: "Luz", filter_reset: "Reiniciar filtro",
+    zone: "Zona", zones_active: "zonas activas",
+    section_target_temperature: "Temperatura objetivo", section_current_temperature: "Temperatura actual",
+    section_light: "Luz", section_heating: "Indicador de calentamiento",
+    section_power_level: "Nivel de potencia", section_fan: "Ventilador",
+    section_filter_life: "Vida del filtro", section_filter_reset: "Bot\u00f3n de reinicio del filtro",
+    section_boost: "Modo intensivo", section_child_lock: "Bloqueo infantil",
+    section_power: "Consumo", section_zones: "Zonas de cocci\u00f3n",
+    target_temperature_entity: "Entidad de temperatura objetivo", current_temperature_entity: "Entidad de temperatura actual",
+    light_entity: "Entidad de luz", heating_entity: "Entidad de calentamiento (opcional)",
+    power_level_entity: "Entidad de nivel de potencia", fan_entity: "Entidad de ventilador",
+    filter_life_entity: "Entidad de vida del filtro (%)", filter_reset_entity: "Entidad del bot\u00f3n de reinicio del filtro",
+    boost_entity: "Entidad de modo intensivo", child_lock_entity: "Entidad de bloqueo infantil",
+    power_entity: "Entidad de potencia (W)", power_on_threshold: "En marcha por encima de esta potencia (W)",
+    zones_count: "N\u00famero de zonas de cocci\u00f3n", zone_level_entity: "Entidad de nivel",
+    zone_residual_entity: "Entidad de calor residual", zone_name: "Nombre de la zona (opcional)",
   },
   it: {
     idle: "Inattivo", running: "In funzione", paused: "In pausa", done: "Terminato",
@@ -304,6 +419,29 @@ const T = {
     section_start: "Pulsante Avvia", section_pause: "Pulsante Pausa",
     section_resume: "Pulsante Riprendi", section_stop: "Pulsante Stop/Reset",
     picker_icon: "Icona (opzionale)",
+    type_oven: "Forno", type_microwave: "Microonde",
+    type_hood: "Cappa aspirante", type_cooktop: "Piano cottura",
+    preheating: "Preriscaldamento", standby: "In attesa",
+    temperature: "Temperatura", fan_speed: "Velocit\u00e0",
+    filter: "Filtro", power: "Potenza",
+    power_level: "Livello di potenza", child_lock: "Sicurezza bambini",
+    residual_heat: "Calore residuo", boost: "Intensivo",
+    light: "Luce", filter_reset: "Reimposta filtro",
+    zone: "Zona", zones_active: "zone attive",
+    section_target_temperature: "Temperatura impostata", section_current_temperature: "Temperatura attuale",
+    section_light: "Luce", section_heating: "Indicatore di riscaldamento",
+    section_power_level: "Livello di potenza", section_fan: "Ventola",
+    section_filter_life: "Durata del filtro", section_filter_reset: "Pulsante di reset del filtro",
+    section_boost: "Modalit\u00e0 intensiva", section_child_lock: "Sicurezza bambini",
+    section_power: "Consumo", section_zones: "Zone di cottura",
+    target_temperature_entity: "Entit\u00e0 temperatura impostata", current_temperature_entity: "Entit\u00e0 temperatura attuale",
+    light_entity: "Entit\u00e0 luce", heating_entity: "Entit\u00e0 riscaldamento (opzionale)",
+    power_level_entity: "Entit\u00e0 livello di potenza", fan_entity: "Entit\u00e0 ventola",
+    filter_life_entity: "Entit\u00e0 durata del filtro (%)", filter_reset_entity: "Entit\u00e0 pulsante di reset del filtro",
+    boost_entity: "Entit\u00e0 modalit\u00e0 intensiva", child_lock_entity: "Entit\u00e0 sicurezza bambini",
+    power_entity: "Entit\u00e0 potenza (W)", power_on_threshold: "In funzione sopra questa potenza (W)",
+    zones_count: "Numero di zone di cottura", zone_level_entity: "Entit\u00e0 livello",
+    zone_residual_entity: "Entit\u00e0 calore residuo", zone_name: "Nome della zona (opzionale)",
   },
   nl: {
     idle: "Inactief", running: "Actief", paused: "Gepauzeerd", done: "Klaar",
@@ -353,6 +491,29 @@ const T = {
     section_start: "Startknop", section_pause: "Pauzeknop",
     section_resume: "Hervattenknop", section_stop: "Stop/resetknop",
     picker_icon: "Pictogram (optioneel)",
+    type_oven: "Oven", type_microwave: "Magnetron",
+    type_hood: "Afzuigkap", type_cooktop: "Kookplaat",
+    preheating: "Voorverwarmen", standby: "Stand-by",
+    temperature: "Temperatuur", fan_speed: "Ventilatorstand",
+    filter: "Filter", power: "Vermogen",
+    power_level: "Vermogensstand", child_lock: "Kinderslot",
+    residual_heat: "Restwarmte", boost: "Intensief",
+    light: "Verlichting", filter_reset: "Filter resetten",
+    zone: "Kookzone", zones_active: "actieve kookzones",
+    section_target_temperature: "Ingestelde temperatuur", section_current_temperature: "Huidige temperatuur",
+    section_light: "Verlichting", section_heating: "Verwarmingsindicator",
+    section_power_level: "Vermogensstand", section_fan: "Ventilator",
+    section_filter_life: "Filterlevensduur", section_filter_reset: "Filter-resetknop",
+    section_boost: "Intensiefstand", section_child_lock: "Kinderslot",
+    section_power: "Verbruik", section_zones: "Kookzones",
+    target_temperature_entity: "Entiteit ingestelde temperatuur", current_temperature_entity: "Entiteit huidige temperatuur",
+    light_entity: "Entiteit verlichting", heating_entity: "Entiteit verwarming (optioneel)",
+    power_level_entity: "Entiteit vermogensstand", fan_entity: "Entiteit ventilator",
+    filter_life_entity: "Entiteit filterlevensduur (%)", filter_reset_entity: "Entiteit filter-resetknop",
+    boost_entity: "Entiteit intensiefstand", child_lock_entity: "Entiteit kinderslot",
+    power_entity: "Entiteit vermogen (W)", power_on_threshold: "Draait boven dit vermogen (W)",
+    zones_count: "Aantal kookzones", zone_level_entity: "Entiteit stand",
+    zone_residual_entity: "Entiteit restwarmte", zone_name: "Naam van de kookzone (optioneel)",
   },
   pt: {
     idle: "Inativo", running: "Em funcionamento", paused: "Em pausa", done: "Conclu\u00eddo",
@@ -402,6 +563,29 @@ const T = {
     section_start: "Bot\u00e3o Iniciar", section_pause: "Bot\u00e3o Pausa",
     section_resume: "Bot\u00e3o Retomar", section_stop: "Bot\u00e3o Parar/Reiniciar",
     picker_icon: "\u00cdcone (opcional)",
+    type_oven: "Forno", type_microwave: "Micro-ondas",
+    type_hood: "Exaustor", type_cooktop: "Placa de coz\u00ednha",
+    preheating: "A pr\u00e9-aquecer", standby: "Em espera",
+    temperature: "Temperatura", fan_speed: "Velocidade",
+    filter: "Filtro", power: "Pot\u00eancia",
+    power_level: "N\u00edvel de pot\u00eancia", child_lock: "Bloqueio para crian\u00e7as",
+    residual_heat: "Calor residual", boost: "Intensivo",
+    light: "Luz", filter_reset: "Repor filtro",
+    zone: "Zona", zones_active: "zonas ativas",
+    section_target_temperature: "Temperatura definida", section_current_temperature: "Temperatura atual",
+    section_light: "Luz", section_heating: "Indicador de aquecimento",
+    section_power_level: "N\u00edvel de pot\u00eancia", section_fan: "Ventilador",
+    section_filter_life: "Vida do filtro", section_filter_reset: "Bot\u00e3o de reposi\u00e7\u00e3o do filtro",
+    section_boost: "Modo intensivo", section_child_lock: "Bloqueio para crian\u00e7as",
+    section_power: "Consumo", section_zones: "Zonas de cozedura",
+    target_temperature_entity: "Entidade de temperatura definida", current_temperature_entity: "Entidade de temperatura atual",
+    light_entity: "Entidade de luz", heating_entity: "Entidade de aquecimento (opcional)",
+    power_level_entity: "Entidade de n\u00edvel de pot\u00eancia", fan_entity: "Entidade de ventilador",
+    filter_life_entity: "Entidade de vida do filtro (%)", filter_reset_entity: "Entidade do bot\u00e3o de reposi\u00e7\u00e3o do filtro",
+    boost_entity: "Entidade de modo intensivo", child_lock_entity: "Entidade de bloqueio para crian\u00e7as",
+    power_entity: "Entidade de pot\u00eancia (W)", power_on_threshold: "Em funcionamento acima desta pot\u00eancia (W)",
+    zones_count: "N\u00famero de zonas de cozedura", zone_level_entity: "Entidade de n\u00edvel",
+    zone_residual_entity: "Entidade de calor residual", zone_name: "Nome da zona (opcional)",
   },
   sv: {
     idle: "Inaktiv", running: "Ig\u00e5ng", paused: "Pausad", done: "Klar",
@@ -451,6 +635,29 @@ const T = {
     section_start: "Startknapp", section_pause: "Pausknapp",
     section_resume: "\u00c5terupptaknapp", section_stop: "Stopp-/\u00e5terst\u00e4llningsknapp",
     picker_icon: "Ikon (valfritt)",
+    type_oven: "Ugn", type_microwave: "Mikrov\u00e5gsugn",
+    type_hood: "K\u00f6ksfl\u00e4kt", type_cooktop: "H\u00e4ll",
+    preheating: "F\u00f6rv\u00e4rmer", standby: "Standby",
+    temperature: "Temperatur", fan_speed: "Fl\u00e4ktl\u00e4ge",
+    filter: "Filter", power: "Effekt",
+    power_level: "Effektl\u00e4ge", child_lock: "Barnl\u00e5s",
+    residual_heat: "Restv\u00e4rme", boost: "Intensiv",
+    light: "Belysning", filter_reset: "\u00c5terst\u00e4ll filter",
+    zone: "Kokzon", zones_active: "aktiva kokzoner",
+    section_target_temperature: "M\u00e5ltemperatur", section_current_temperature: "Aktuell temperatur",
+    section_light: "Belysning", section_heating: "V\u00e4rmeindikator",
+    section_power_level: "Effektl\u00e4ge", section_fan: "Fl\u00e4kt",
+    section_filter_life: "Filterlivsl\u00e4ngd", section_filter_reset: "Knapp f\u00f6r filter\u00e5terst\u00e4llning",
+    section_boost: "Intensivl\u00e4ge", section_child_lock: "Barnl\u00e5s",
+    section_power: "F\u00f6rbrukning", section_zones: "Kokzoner",
+    target_temperature_entity: "Entitet f\u00f6r m\u00e5ltemperatur", current_temperature_entity: "Entitet f\u00f6r aktuell temperatur",
+    light_entity: "Entitet f\u00f6r belysning", heating_entity: "Entitet f\u00f6r uppv\u00e4rmning (valfritt)",
+    power_level_entity: "Entitet f\u00f6r effektl\u00e4ge", fan_entity: "Entitet f\u00f6r fl\u00e4kt",
+    filter_life_entity: "Entitet f\u00f6r filterlivsl\u00e4ngd (%)", filter_reset_entity: "Entitet f\u00f6r filter\u00e5terst\u00e4llningsknapp",
+    boost_entity: "Entitet f\u00f6r intensivl\u00e4ge", child_lock_entity: "Entitet f\u00f6r barnl\u00e5s",
+    power_entity: "Entitet f\u00f6r effekt (W)", power_on_threshold: "I drift \u00f6ver denna effekt (W)",
+    zones_count: "Antal kokzoner", zone_level_entity: "Entitet f\u00f6r l\u00e4ge",
+    zone_residual_entity: "Entitet f\u00f6r restv\u00e4rme", zone_name: "Kokzonens namn (valfritt)",
   },
   no: {
     idle: "Inaktiv", running: "I gang", paused: "Pauset", done: "Ferdig",
@@ -500,6 +707,29 @@ const T = {
     section_start: "Startknapp", section_pause: "Pauseknapp",
     section_resume: "Gjenopptaknapp", section_stop: "Stopp-/tilbakestillingsknapp",
     picker_icon: "Ikon (valgfritt)",
+    type_oven: "Stekeovn", type_microwave: "Mikrob\u00f8lgeovn",
+    type_hood: "Kj\u00f8kkenvifte", type_cooktop: "Koketopp",
+    preheating: "Forvarmer", standby: "Hvilemodus",
+    temperature: "Temperatur", fan_speed: "Viftetrinn",
+    filter: "Filter", power: "Effekt",
+    power_level: "Effekttrinn", child_lock: "Barnesikring",
+    residual_heat: "Restvarme", boost: "Intensiv",
+    light: "Lys", filter_reset: "Tilbakestill filter",
+    zone: "Kokesone", zones_active: "aktive kokesoner",
+    section_target_temperature: "M\u00e5ltemperatur", section_current_temperature: "N\u00e5v\u00e6rende temperatur",
+    section_light: "Lys", section_heating: "Varmeindikator",
+    section_power_level: "Effekttrinn", section_fan: "Vifte",
+    section_filter_life: "Filterlevetid", section_filter_reset: "Knapp for filtertilbakestilling",
+    section_boost: "Intensivmodus", section_child_lock: "Barnesikring",
+    section_power: "Forbruk", section_zones: "Kokesoner",
+    target_temperature_entity: "Enhet for m\u00e5ltemperatur", current_temperature_entity: "Enhet for n\u00e5v\u00e6rende temperatur",
+    light_entity: "Enhet for lys", heating_entity: "Enhet for oppvarming (valgfritt)",
+    power_level_entity: "Enhet for effekttrinn", fan_entity: "Enhet for vifte",
+    filter_life_entity: "Enhet for filterlevetid (%)", filter_reset_entity: "Enhet for filtertilbakestillingsknapp",
+    boost_entity: "Enhet for intensivmodus", child_lock_entity: "Enhet for barnesikring",
+    power_entity: "Enhet for effekt (W)", power_on_threshold: "I drift over denne effekten (W)",
+    zones_count: "Antall kokesoner", zone_level_entity: "Enhet for trinn",
+    zone_residual_entity: "Enhet for restvarme", zone_name: "Navn p\u00e5 kokesonen (valgfritt)",
   },
   da: {
     idle: "Inaktiv", running: "I gang", paused: "Sat p\u00e5 pause", done: "F\u00e6rdig",
@@ -549,6 +779,29 @@ const T = {
     section_start: "Startknap", section_pause: "Pauseknap",
     section_resume: "Genoptagknap", section_stop: "Stop-/nulstillingsknap",
     picker_icon: "Ikon (valgfrit)",
+    type_oven: "Ovn", type_microwave: "Mikroovn",
+    type_hood: "Emh\u00e6tte", type_cooktop: "Kogeplade",
+    preheating: "Forvarmer", standby: "Standby",
+    temperature: "Temperatur", fan_speed: "Ventilatortrin",
+    filter: "Filter", power: "Effekt",
+    power_level: "Effekttrin", child_lock: "B\u00f8rnesikring",
+    residual_heat: "Restvarme", boost: "Intensiv",
+    light: "Lys", filter_reset: "Nulstil filter",
+    zone: "Kogezone", zones_active: "aktive kogezoner",
+    section_target_temperature: "M\u00e5ltemperatur", section_current_temperature: "Aktuel temperatur",
+    section_light: "Lys", section_heating: "Varmeindikator",
+    section_power_level: "Effekttrin", section_fan: "Ventilator",
+    section_filter_life: "Filterlevetid", section_filter_reset: "Knap til filternulstilling",
+    section_boost: "Intensivtilstand", section_child_lock: "B\u00f8rnesikring",
+    section_power: "Forbrug", section_zones: "Kogezoner",
+    target_temperature_entity: "Enhed for m\u00e5ltemperatur", current_temperature_entity: "Enhed for aktuel temperatur",
+    light_entity: "Enhed for lys", heating_entity: "Enhed for opvarmning (valgfrit)",
+    power_level_entity: "Enhed for effekttrin", fan_entity: "Enhed for ventilator",
+    filter_life_entity: "Enhed for filterlevetid (%)", filter_reset_entity: "Enhed for filternulstillingsknap",
+    boost_entity: "Enhed for intensivtilstand", child_lock_entity: "Enhed for b\u00f8rnesikring",
+    power_entity: "Enhed for effekt (W)", power_on_threshold: "K\u00f8rer over denne effekt (W)",
+    zones_count: "Antal kogezoner", zone_level_entity: "Enhed for trin",
+    zone_residual_entity: "Enhed for restvarme", zone_name: "Kogezonens navn (valgfrit)",
   },
   pl: {
     idle: "Bezczynny", running: "W trakcie", paused: "Wstrzymany", done: "Zako\u0144czony",
@@ -598,6 +851,29 @@ const T = {
     section_start: "Przycisk Start", section_pause: "Przycisk Pauza",
     section_resume: "Przycisk Wzn\u00f3w", section_stop: "Przycisk Stop/Reset",
     picker_icon: "Ikona (opcjonalnie)",
+    type_oven: "Piekarnik", type_microwave: "Kuchenka mikrofalowa",
+    type_hood: "Okap kuchenny", type_cooktop: "P\u0142yta grzewcza",
+    preheating: "Nagrzewanie wst\u0119pne", standby: "Czuwanie",
+    temperature: "Temperatura", fan_speed: "Bieg wentylatora",
+    filter: "Filtr", power: "Moc",
+    power_level: "Poziom mocy", child_lock: "Blokada rodzicielska",
+    residual_heat: "Ciep\u0142o resztkowe", boost: "Intensywny",
+    light: "O\u015bwietlenie", filter_reset: "Zresetuj filtr",
+    zone: "Pole grzejne", zones_active: "aktywne pola grzejne",
+    section_target_temperature: "Temperatura zadana", section_current_temperature: "Temperatura bie\u017c\u0105ca",
+    section_light: "O\u015bwietlenie", section_heating: "Wska\u017anik grzania",
+    section_power_level: "Poziom mocy", section_fan: "Wentylator",
+    section_filter_life: "\u017bywotno\u015b\u0107 filtra", section_filter_reset: "Przycisk resetu filtra",
+    section_boost: "Tryb intensywny", section_child_lock: "Blokada rodzicielska",
+    section_power: "Zu\u017cycie", section_zones: "Pola grzejne",
+    target_temperature_entity: "Encja temperatury zadanej", current_temperature_entity: "Encja temperatury bie\u017c\u0105cej",
+    light_entity: "Encja o\u015bwietlenia", heating_entity: "Encja grzania (opcjonalnie)",
+    power_level_entity: "Encja poziomu mocy", fan_entity: "Encja wentylatora",
+    filter_life_entity: "Encja \u017cywotno\u015bci filtra (%)", filter_reset_entity: "Encja przycisku resetu filtra",
+    boost_entity: "Encja trybu intensywnego", child_lock_entity: "Encja blokady rodzicielskiej",
+    power_entity: "Encja mocy (W)", power_on_threshold: "Pracuje powy\u017cej tej mocy (W)",
+    zones_count: "Liczba p\u00f3l grzejnych", zone_level_entity: "Encja poziomu",
+    zone_residual_entity: "Encja ciep\u0142a resztkowego", zone_name: "Nazwa pola grzejnego (opcjonalnie)",
   },
 };
 
@@ -617,12 +893,22 @@ function t(hass, key) {
 
 const STATE_KEYWORDS = {
   idle: ["idle", "off", "standby", "veille", "eteint", "arret", "inactif", "ready_to_start", "ready to start"],
+  // Before "running": ovens report "Preheating", and the "heating" keyword
+  // below cannot match it anyway (no word boundary inside "preheating").
+  preheating: ["preheat", "pre-heat", "pre_heat", "prechauff", "vorheiz", "precalent", "voorverwarm"],
   running: ["run", "wash", "spin", "dry", "rinsing", "heating", "cours", "on", "active", "marche", "actif"],
   paused: ["pause", "hold", "suspended"],
   done: ["end", "done", "finish", "complete", "termin"],
   delayed: ["delay", "differ", "scheduled", "programmed"],
   error: ["error", "fault", "alarm", "erreur"],
 };
+
+// States where the appliance is actually doing something: they drive the
+// animations, the progress latch and the heat glow alike.
+const ACTIVE_STATES = ["running", "preheating"];
+function isActiveState(norm) {
+  return ACTIVE_STATES.includes(norm);
+}
 
 function stripAccents(str) {
   return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
@@ -654,6 +940,9 @@ function normalizeState(raw, stateMap) {
 const STATE_COLORS = {
   idle: "var(--disabled-text-color, #9e9e9e)",
   running: "var(--info-color, #2196f3)",
+  // Same warm tone as the heating elements: preheating reads as "warming up",
+  // not as a fourth kind of "running".
+  preheating: "#ff7043",
   paused: "var(--warning-color, #ff9800)",
   done: "var(--success-color, #4caf50)",
   delayed: "#9c27b0",
@@ -712,6 +1001,27 @@ function formatDuration(totalSeconds, hass) {
 function formatEta(totalSeconds) {
   const eta = new Date(Date.now() + totalSeconds * 1000);
   return eta.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+}
+
+function unitOf(hass, entityId) {
+  const st = stateObj(hass, entityId);
+  return (st && st.attributes.unit_of_measurement) || "";
+}
+
+function temperatureUnit(hass, entityId) {
+  return (
+    unitOf(hass, entityId) ||
+    (hass.config && hass.config.unit_system && hass.config.unit_system.temperature) ||
+    "\u00b0C"
+  );
+}
+
+// Appliance front panels show a countdown, not "1h04".
+function formatClock(totalSeconds) {
+  const s = Math.max(0, Math.round(totalSeconds));
+  const minutes = Math.floor(s / 60);
+  if (minutes >= 60) return `${Math.floor(minutes / 60)}:${String(minutes % 60).padStart(2, "0")}`;
+  return `${minutes}:${String(s % 60).padStart(2, "0")}`;
 }
 
 // Integrations often expose a phase/status as a bare code ("0".."18") or an
@@ -822,6 +1132,28 @@ const AUTO_PATTERNS = {
   pause_entity: /pause/i,
   resume_entity: /resume/i,
   stop_entity: /stop|reset/i,
+  power_entity: /_power$|power_w$|watt/i,
+};
+
+// Suggested only for the types that can actually use them, so a washing
+// machine doesn't end up with a "filter life" field pre-filled.
+const TYPE_AUTO_PATTERNS = {
+  oven: {
+    target_temperature_entity: /target.?temp|setpoint|temperature_setting/i,
+    current_temperature_entity: /current.?temp|cavity.?temp|^(?!.*target).*temperature/i,
+    light_entity: /light|lamp/i,
+  },
+  microwave: {
+    power_level_entity: /power.?level|watt.?level/i,
+  },
+  hood: {
+    fan_entity: /fan|hood|vent/i,
+    light_entity: /light|lamp/i,
+    filter_life_entity: /filter/i,
+  },
+  cooktop: {
+    child_lock_entity: /child.?lock|lock/i,
+  },
 };
 
 const INFO_PATTERNS = [
@@ -833,9 +1165,14 @@ const INFO_PATTERNS = [
 function autoSuggest(hass, cfg) {
   if (!cfg.state_entity || !hass.states[cfg.state_entity]) return {};
   const siblings = siblingEntityIds(hass, cfg.state_entity).filter((id) => id !== cfg.state_entity);
+  const type = detectApplianceType(cfg, hass.states[cfg.state_entity]);
+  // Only ever fill fields the current type actually shows: a suggestion the
+  // editor then hides is just a stray key in the user's YAML.
+  const allowed = new Set(sectionsForType(type).map((s) => s.field));
+  const patterns = { ...AUTO_PATTERNS, ...(TYPE_AUTO_PATTERNS[type] || {}) };
   const patch = {};
-  for (const [field, re] of Object.entries(AUTO_PATTERNS)) {
-    if (cfg[field]) continue;
+  for (const [field, re] of Object.entries(patterns)) {
+    if (cfg[field] || !allowed.has(field)) continue;
     const match = siblings.find((id) => re.test(id));
     if (match) patch[field] = match;
   }
@@ -850,187 +1187,136 @@ function autoSuggest(hass, cfg) {
   return patch;
 }
 
+// ---------------------------------------------------------------------------
+// Appliance types
+// ---------------------------------------------------------------------------
+
+// What each type can express. Drives both the illustration and which sections
+// the visual editor offers: a hood has no program, no remaining time and no
+// door, and a cooktop has no cycle at all \u2014 offering those fields anyway
+// would only be noise.
+const TYPE_CAPS = {
+  washer: { cycle: true, door: true },
+  dryer: { cycle: true, door: true },
+  dishwasher: { cycle: true, door: true },
+  oven: { cycle: true, door: true, temperature: true, light: true, heating: true },
+  microwave: { cycle: true, door: true, powerLevel: true },
+  hood: { fan: true, light: true, filter: true, boost: true },
+  cooktop: { zones: true, childLock: true },
+};
+const APPLIANCE_TYPES = Object.keys(TYPE_CAPS);
+const LAUNDRY_TYPES = ["washer", "dryer", "dishwasher"];
+
+function caps(type) {
+  return TYPE_CAPS[type] || TYPE_CAPS.washer;
+}
+
 function detectApplianceType(cfg, st) {
   if (cfg.appliance_type && cfg.appliance_type !== "auto") return cfg.appliance_type;
   const hay = `${cfg.icon || ""} ${cfg.state_entity || ""} ${(st && st.attributes.icon) || ""}`.toLowerCase();
+  // "microwave" before "oven": plenty of devices are named "microwave_oven".
+  if (/microwave|micro.?onde|mikrowelle|magnetron|mikrob/.test(hay)) return "microwave";
+  if (/hood|hotte|abzug|extractor|exaustor|afzuigkap|emh|okap/.test(hay)) return "hood";
+  if (/cooktop|hotplate|plaque|kochfeld|kookplaat|induction|induktion|kogeplade/.test(hay)) return "cooktop";
+  if (/oven|four|backofen|horno|forno|piekarnik/.test(hay)) return "oven";
   if (/dry|dryer|seche|s\u00e8che|tumble/.test(hay)) return "dryer";
   if (/dish|vaisselle/.test(hay)) return "dishwasher";
   return "washer";
 }
 
-// ---------------------------------------------------------------------------
-// Card
-// ---------------------------------------------------------------------------
+// Derive a cycle state from a power meter. This is what makes the card usable
+// with nothing but a smart plug: 3 W is standby, 1800 W is running, and the
+// drop back below the threshold is the only "finished" signal such a setup can
+// ever give. "done" is deliberately sticky until the next run \u2014 the same
+// way a real appliance integration keeps reporting "finished" until restarted.
+function powerDerivedState(watts, threshold, wasRunning) {
+  if (watts === null || !isFinite(threshold)) return null;
+  if (watts >= threshold) return "running";
+  return wasRunning ? "done" : "idle";
+}
 
-class ApplianceCard extends HTMLElement {
-  static getStubConfig(hass) {
-    const sensors = Object.keys(hass.states).filter((e) => e.startsWith("sensor."));
-    const guess = sensors.find((e) => /state/i.test(e) && /washer|wash|dry|dish|lave|linge/i.test(e));
-    return { type: "custom:ha-appliance-card", state_entity: guess || "" };
-  }
-
-  setConfig(config) {
-    if (!config || !config.state_entity) {
-      throw new Error("ha-appliance-card: 'state_entity' is required");
-    }
-    this._config = config;
-    this._runStartSeconds = null;
-    this._prevNormState = null;
-    if (!this._root) {
-      this.attachShadow({ mode: "open" });
-      this._root = this.shadowRoot;
-    }
-  }
-
-  getCardSize() {
-    return 3;
-  }
-
-  static getConfigElement() {
-    return document.createElement("ha-appliance-card-editor");
-  }
-
-  set hass(hass) {
-    this._hass = hass;
-    this._render();
-  }
-
-  _call(entityId) {
-    if (!this._hass || !entityId) return;
-    const domain = domainOf(entityId);
-    if (domain === "button") {
-      this._hass.callService("button", "press", { entity_id: entityId });
-    } else if (["switch", "input_boolean", "fan", "light"].includes(domain)) {
-      this._hass.callService(domain, "toggle", { entity_id: entityId });
-    } else if (domain === "script") {
-      this._hass.callService("script", "turn_on", { entity_id: entityId });
-    } else {
-      this._hass.callService("homeassistant", "toggle", { entity_id: entityId });
-    }
-  }
-
-  _moreInfo(entityId) {
-    const ev = new CustomEvent("hass-more-info", { detail: { entityId }, bubbles: true, composed: true });
-    this.dispatchEvent(ev);
-  }
-
-  _render() {
-    const hass = this._hass;
-    const cfg = this._config;
-    if (!hass || !cfg) return;
-
-    const st = stateObj(hass, cfg.state_entity);
-    const rawState = st ? st.state : "unknown";
-    const norm = normalizeState(rawState, cfg.state_map);
-    const color = STATE_COLORS[norm] || STATE_COLORS.unknown;
-    const rawIsMeaningless = ["unknown", "unavailable", "none", ""].includes(String(rawState).trim().toLowerCase());
-    // When the raw state doesn't match any known vocabulary, show it as-is
-    // instead of a generic "Unknown" label \u2014 common for custom template
-    // sensors (e.g. power-threshold based presence) whose wording we can't
-    // guess. Falls back to the translated label when there's truly no data.
-    // state_show_raw opts into always showing the raw text (still colored/
-    // animated per the detected category) for setups without a real
-    // appliance integration, where the category label alone loses the
-    // user's own wording.
-    const stateLabel = (cfg.state_show_raw || norm === "unknown") && !rawIsMeaningless ? String(rawState) : t(hass, norm);
-
-    const name = cfg.name || (st && st.attributes.friendly_name) || cfg.state_entity;
-    const applianceType = detectApplianceType(cfg, st);
-
-    // Program
-    let programText = null;
-    if (cfg.program_entity) {
-      const pst = stateObj(hass, cfg.program_entity);
-      if (pst && !["unknown", "unavailable"].includes(pst.state)) {
-        programText = cfg.program_format === "raw" ? pst.state : cleanProgramName(pst.state);
-      }
-    }
-
-    // Remaining time / progress
-    let remSec = null;
-    if (cfg.remaining_time_entity) {
-      // remaining_time_hide_when_idle cross-references the already-normalized
-      // machine state so stale completion timestamps (integrations like
-      // Samsung SmartThings keep reporting a past cycle's finish time after
-      // the appliance goes idle) don't show a leftover "remaining time".
-      if (!cfg.remaining_time_hide_when_idle || norm === "running") {
-        remSec = remainingSeconds(hass, cfg.remaining_time_entity, cfg.remaining_time_unit);
-      }
-    }
-
-    let progressPct = null;
-    if (cfg.progress_entity) {
-      const p = numericState(hass, cfg.progress_entity);
-      if (p !== null) progressPct = Math.max(0, Math.min(100, p));
-    } else if (remSec !== null) {
-      if (norm === "running") {
-        if (this._prevNormState !== "running" || !this._runStartSeconds || remSec > this._runStartSeconds) {
-          this._runStartSeconds = remSec > 0 ? remSec : null;
+// Cooking zone level: numeric levels (0-9) and word levels ("boost", "P") both
+// happen depending on the integration.
+function zoneState(hass, zone) {
+  const out = { on: false, label: "", intensity: 0, residual: false, max: false };
+  if (!zone) return out;
+  const st = zone.level_entity ? stateObj(hass, zone.level_entity) : null;
+  if (st) {
+    const raw = String(st.state).trim();
+    const low = raw.toLowerCase();
+    if (!["unknown", "unavailable", "none", "", "off", "false"].includes(low)) {
+      const num = parseFloat(raw);
+      if (!isNaN(num)) {
+        if (num > 0) {
+          out.on = true;
+          out.label = String(Math.round(num));
+          out.intensity = Math.max(0, Math.min(1, num / 9));
+          out.max = num >= 9;
         }
-        if (this._runStartSeconds) {
-          progressPct = Math.max(0, Math.min(100, 100 - (remSec / this._runStartSeconds) * 100));
-        }
-      } else if (norm === "done") {
-        progressPct = 100;
       } else {
-        this._runStartSeconds = null;
-      }
-    } else {
-      this._runStartSeconds = null;
-    }
-    this._prevNormState = norm;
-
-    // Door
-    let doorOpen = false;
-    if (cfg.door_entity) {
-      const dst = stateObj(hass, cfg.door_entity);
-      if (dst) {
-        doorOpen = dst.state === (cfg.door_open_state || "on");
-        if (cfg.door_invert) doorOpen = !doorOpen;
+        const isMax = /boost|power|turbo|max/.test(low) || low === "p";
+        out.on = true;
+        out.intensity = isMax ? 1 : 0.6;
+        out.max = isMax;
+        out.label = isMax ? "P" : raw.slice(0, 1).toUpperCase();
       }
     }
-
-    // Alerts
-    const alerts = cfg.alerts_entity ? activeAlerts(hass, cfg.alerts_entity) : [];
-
-    // Extra info chips
-    const infoEntities = (cfg.info_entities || [])
-      .map((e) => (typeof e === "string" ? { entity: e } : e))
-      .map((e) => ({ ...e, st: stateObj(hass, e.entity) }))
-      .filter((e) => e.st && !["unknown", "unavailable"].includes(e.st.state));
-
-    // Connectivity
-    let connectivity = null;
-    if (cfg.connectivity_entity) {
-      const cst = stateObj(hass, cfg.connectivity_entity);
-      if (cst) {
-        const want = (cfg.connectivity_connected_state || "on").toLowerCase();
-        const got = String(cst.state).toLowerCase();
-        connectivity = got === want || got === "true" || got === "connected";
-      }
+  }
+  if (!out.on && zone.residual_heat_entity) {
+    const rst = stateObj(hass, zone.residual_heat_entity);
+    if (rst && ["on", "true", "hot"].includes(String(rst.state).toLowerCase())) {
+      out.residual = true;
+      out.label = "H";
     }
+  }
+  return out;
+}
 
-    // Action buttons
-    const actions = [
-      { key: "start", entity: cfg.start_entity, icon: "mdi:play", label: t(hass, "start") },
-      { key: "pause", entity: cfg.pause_entity, icon: "mdi:pause", label: t(hass, "pause") },
-      { key: "resume", entity: cfg.resume_entity, icon: "mdi:play-pause", label: t(hass, "resume") },
-      { key: "stop", entity: cfg.stop_entity, icon: "mdi:stop", label: t(hass, "stop") },
-    ].filter((a) => a.entity);
+// Hood fan: a `fan` entity gives a percentage and/or a preset; anything else
+// degrades to plain on/off, which is all a smart plug can tell us.
+function hoodFanState(hass, cfg, norm) {
+  const out = { level: 0, boost: false, percentage: null, preset: null };
+  const fst = cfg.fan_entity ? stateObj(hass, cfg.fan_entity) : null;
+  if (fst) {
+    if (String(fst.state).toLowerCase() === "on") {
+      const pct = fst.attributes.percentage;
+      out.percentage = typeof pct === "number" ? pct : null;
+      out.preset = fst.attributes.preset_mode || null;
+      out.level = out.percentage === null ? 2 : Math.max(1, Math.min(3, Math.ceil(out.percentage / 33.34)));
+    }
+  } else if (isActiveState(norm)) {
+    // No fan entity: we know it runs, not how fast. Mid speed reads as "on"
+    // without pretending to know a level we don't have.
+    out.level = 2;
+  }
+  if (out.preset && /boost|turbo|intensiv|intensif|max/i.test(out.preset)) out.boost = true;
+  if (cfg.boost_entity) {
+    const bst = stateObj(hass, cfg.boost_entity);
+    if (bst && ["on", "true"].includes(String(bst.state).toLowerCase())) out.boost = true;
+  }
+  if (out.boost) out.level = 3;
+  return out;
+}
 
-    const spinning = norm === "running";
+// 1-2 zones sit in a row, 3 and 5-6 in three columns, 4 in a square.
+function zoneColumns(count, layout) {
+  if (layout === "2x1") return 2;
+  if (layout === "2x2") return 2;
+  if (layout === "3x2") return 3;
+  if (count <= 1) return 1;
+  if (count === 3 || count >= 5) return 3;
+  return 2;
+}
 
-    const styleTag = `
-      <style>
-        :host { font-size: 16px; }
-        ha-card { display: block; padding: 16px; position: relative; }
-        .conn-badge {
-          position: absolute; top: 10px; right: 12px;
-          --mdc-icon-size: 18px; color: var(--secondary-text-color, #767676);
-        }
-        .conn-badge.disconnected { color: var(--error-color, #f44336); }
-        .top { display: flex; flex-direction: column; align-items: center; text-align: center; cursor: pointer; }
-        .machine { position: relative; width: 96px; height: 108px; margin: 0 auto 8px; }
+// ---------------------------------------------------------------------------
+// Illustrations
+// ---------------------------------------------------------------------------
+
+// One entry per illustration family. Only the active type's rules are injected,
+// so the class names are free to overlap between families and the style tag
+// rebuilt on every state change stays small.
+const ILLUSTRATION_CSS = {
+  laundry: (color) => `
         .mbody {
           position: absolute; inset: 0; border-radius: 10px;
           background: var(--secondary-background-color, #d7d7d7);
@@ -1101,6 +1387,732 @@ class ApplianceCard extends HTMLElement {
           from { transform: translate(-50%, -50%) rotate(0deg); }
           to { transform: translate(-50%, -50%) rotate(360deg); }
         }
+  `,
+  oven: () => `
+        .ov-body {
+          position: absolute; inset: 0; border-radius: 10px;
+          background: var(--secondary-background-color, #d7d7d7);
+          border: 1px solid var(--divider-color, #c7c7c7);
+        }
+        .ov-panel { position: absolute; top: 6px; left: 8px; right: 8px; height: 12px; }
+        .ov-disp {
+          position: absolute; left: 0; top: 2px; min-width: 30px; height: 9px; padding: 0 2px;
+          border-radius: 2px; background: #14161a; color: #ff7043; text-align: center;
+          font: 600 6px/9px ui-monospace, "SF Mono", monospace; letter-spacing: 0.5px;
+        }
+        .ov-knob {
+          position: absolute; top: 3px; right: 0; width: 7px; height: 7px;
+          border-radius: 50%; background: var(--disabled-text-color, #9e9e9e);
+        }
+        .ov-knob.k2 { right: 12px; }
+        .ov-doorwrap { position: absolute; left: 7px; right: 7px; top: 24px; bottom: 7px; perspective: 300px; }
+        .ov-cavity { position: absolute; inset: 0; border-radius: 6px; background: #14161a; overflow: hidden; }
+        .ov-elem { position: absolute; left: 7px; right: 7px; height: 3px; border-radius: 2px; background: #3b4048; }
+        .ov-elem.top { top: 16px; }
+        .ov-elem.bottom { bottom: 10px; }
+        .ov-rack { position: absolute; left: 5px; right: 5px; top: 60%; height: 1px; background: #4c525b; }
+        .ov-dish {
+          position: absolute; left: 50%; top: 60%; width: 30px; height: 9px;
+          transform: translate(-50%, -100%); border-radius: 3px 3px 2px 2px; background: #5b6069;
+        }
+        .machine.heating .ov-elem {
+          background: #ff7043; box-shadow: 0 0 9px 1px #ff7043;
+          animation: ov-ember 2.6s ease-in-out infinite;
+        }
+        .machine.heating .ov-elem.bottom { animation-delay: -1.3s; }
+        .machine.heating .ov-cavity { box-shadow: inset 0 0 22px rgba(255, 112, 67, 0.45); }
+        @keyframes ov-ember { 0%, 100% { opacity: 0.55; } 50% { opacity: 1; } }
+        .machine.lit .ov-cavity {
+          background: radial-gradient(ellipse at 50% 40%, rgba(255, 209, 102, 0.28), #14161a 72%);
+        }
+        .ov-door {
+          position: absolute; inset: 0; border-radius: 6px;
+          background: var(--secondary-background-color, #d7d7d7);
+          border: 1px solid var(--divider-color, #c7c7c7);
+          transform-origin: bottom center; transform: rotateX(0deg); transition: transform 0.45s ease;
+        }
+        .ov-handle {
+          position: absolute; left: 5px; right: 5px; top: 3px; height: 4px;
+          border-radius: 2px; background: var(--disabled-text-color, #9e9e9e);
+        }
+        /* The resistances are drawn on the glass rather than seen through it: making
+           the glass translucent enough to reveal the cavity washes the whole door out
+           to a flat beige and you can no longer read what the oven is doing. */
+        .ov-glass {
+          position: absolute; left: 5px; right: 5px; top: 11px; bottom: 5px; border-radius: 4px;
+          background: rgba(16, 18, 22, 0.94); box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.35);
+          overflow: hidden; transition: box-shadow 0.4s ease;
+        }
+        .ov-glass::before, .ov-glass::after {
+          content: ""; position: absolute; left: 8px; right: 8px; height: 3px; border-radius: 2px;
+          background: #2a2e35; transition: background 0.4s ease;
+        }
+        .ov-glass::before { top: 8px; }
+        .ov-glass::after { bottom: 8px; }
+        .machine.heating .ov-glass {
+          box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.35), inset 0 0 15px rgba(255, 112, 67, 0.32);
+        }
+        .machine.heating .ov-glass::before, .machine.heating .ov-glass::after {
+          background: #ff7043; box-shadow: 0 0 8px 1px #ff7043;
+          animation: ov-ember 2.6s ease-in-out infinite;
+        }
+        .machine.heating .ov-glass::after { animation-delay: -1.3s; }
+        .machine.open .ov-door { transform: rotateX(-74deg); }
+  `,
+  microwave: () => `
+        .mw-body {
+          position: absolute; left: 0; right: 0; top: 17px; height: 74px; border-radius: 8px;
+          background: var(--secondary-background-color, #d7d7d7);
+          border: 1px solid var(--divider-color, #c7c7c7);
+        }
+        .mw-doorwrap { position: absolute; left: 5px; top: 5px; bottom: 5px; width: 65px; perspective: 280px; }
+        .mw-cavity { position: absolute; inset: 0; border-radius: 4px; background: #14161a; overflow: hidden; }
+        .mw-turn {
+          position: absolute; left: 50%; top: 62%; width: 40px; height: 40px;
+          transform: translate(-50%, -50%) scaleY(0.3);
+        }
+        .mw-plate { position: absolute; inset: 0; border-radius: 50%; background: #2b2f36; }
+        .mw-food {
+          position: absolute; left: 50%; top: 2px; width: 9px; height: 9px;
+          margin-left: -4.5px; border-radius: 50%; background: #6d737c;
+        }
+        .machine.spinning .mw-turn { animation: mw-spin 3.4s linear infinite; }
+        @keyframes mw-spin {
+          from { transform: translate(-50%, -50%) scaleY(0.3) rotate(0deg); }
+          to { transform: translate(-50%, -50%) scaleY(0.3) rotate(360deg); }
+        }
+        .machine.spinning .mw-cavity {
+          background: radial-gradient(ellipse at 50% 45%, rgba(255, 209, 102, 0.3), #14161a 70%);
+          animation: mw-pulse 1.7s ease-in-out infinite;
+        }
+        @keyframes mw-pulse { 0%, 100% { filter: brightness(0.88); } 50% { filter: brightness(1.15); } }
+        .machine.spinning .mw-plate { background: #3a3128; }
+        .machine.spinning .mw-food { background: #c98b4b; }
+        .mw-door {
+          position: absolute; inset: 0; border-radius: 4px;
+          background: var(--secondary-background-color, #d7d7d7);
+          border: 1px solid var(--divider-color, #c7c7c7);
+          transform-origin: left center; transform: rotateY(0deg); transition: transform 0.45s ease;
+        }
+        .mw-mesh {
+          position: absolute; left: 4px; right: 9px; top: 4px; bottom: 4px; border-radius: 3px;
+          background:
+            radial-gradient(circle, rgba(190, 200, 215, 0.34) 0.8px, transparent 1.1px) 0 0/5px 5px,
+            rgba(18, 20, 24, 0.74);
+          transition: background 0.4s ease;
+        }
+        /* Same reasoning as the oven glass: keep the grille dark and put a pool of
+           warm light behind it, instead of lightening the grille itself. */
+        .machine.spinning .mw-mesh {
+          background:
+            radial-gradient(circle, rgba(190, 200, 215, 0.42) 0.8px, transparent 1.1px) 0 0/5px 5px,
+            radial-gradient(ellipse at 50% 58%, rgba(255, 183, 88, 0.5), transparent 72%),
+            rgba(16, 18, 22, 0.8);
+        }
+        .mw-handle {
+          position: absolute; right: 3px; top: 12px; bottom: 12px; width: 3px;
+          border-radius: 2px; background: var(--disabled-text-color, #9e9e9e);
+        }
+        .machine.open .mw-door { transform: rotateY(-58deg); }
+        .mw-panel { position: absolute; right: 3px; top: 5px; bottom: 5px; width: 19px; }
+        .mw-disp {
+          position: absolute; left: 0; right: 0; top: 0; height: 10px; border-radius: 2px;
+          background: #14161a; color: #ffd166; text-align: center;
+          font: 600 6px/10px ui-monospace, "SF Mono", monospace;
+        }
+        .mw-keys {
+          position: absolute; left: 0; right: 0; top: 14px;
+          display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px;
+        }
+        .mw-keys i { display: block; height: 4px; border-radius: 1px; background: var(--divider-color, #bdbdbd); }
+  `,
+  hood: (color) => `
+        .hd-chimney {
+          position: absolute; left: 50%; transform: translateX(-50%); top: 2px; width: 26px; height: 32px;
+          border-radius: 3px 3px 0 0; background: var(--secondary-background-color, #d7d7d7);
+          border: 1px solid var(--divider-color, #c7c7c7);
+        }
+        .hd-canopy {
+          position: absolute; left: 5px; right: 5px; top: 33px; height: 26px;
+          background: var(--secondary-background-color, #d7d7d7);
+          border-bottom: 1px solid var(--divider-color, #c7c7c7);
+          clip-path: polygon(20% 0, 80% 0, 100% 100%, 0 100%);
+        }
+        .hd-under { position: absolute; left: 5px; right: 5px; top: 58px; height: 6px; border-radius: 0 0 3px 3px; background: #2b2f36; }
+        .hd-lamp { position: absolute; top: 61px; width: 7px; height: 3px; border-radius: 2px; background: #4c525b; }
+        .hd-lamp.l1 { left: 22px; }
+        .hd-lamp.l2 { right: 22px; }
+        .machine.lit .hd-lamp { background: #ffd166; box-shadow: 0 0 7px 1px #ffd166; }
+        .hd-beam {
+          position: absolute; top: 64px; width: 30px; height: 40px; opacity: 0;
+          background: linear-gradient(to bottom, rgba(255, 209, 102, 0.4), rgba(255, 209, 102, 0));
+          clip-path: polygon(34% 0, 66% 0, 100% 100%, 0 100%);
+          transition: opacity 0.3s ease;
+        }
+        .hd-beam.b1 { left: 11px; }
+        .hd-beam.b2 { right: 11px; }
+        .machine.lit .hd-beam { opacity: 1; }
+        .hd-air {
+          position: absolute; width: 9px; height: 9px; bottom: 6px;
+          border-top: 2px solid ${color}; border-left: 2px solid ${color};
+          border-radius: 1px; opacity: 0;
+        }
+        .hd-air.a1 { left: 26px; }
+        .hd-air.a2 { left: 44px; }
+        .hd-air.a3 { left: 62px; }
+        .machine.fan .hd-air { animation: hd-rise linear infinite; }
+        .machine.fan .hd-air.a2 { animation-delay: -0.45s; }
+        .machine.fan .hd-air.a3 { animation-delay: -0.9s; }
+        .machine.v1 .hd-air { animation-duration: 2.4s; }
+        .machine.v2 .hd-air { animation-duration: 1.5s; }
+        .machine.v3 .hd-air { animation-duration: 1s; }
+        .machine.boost .hd-air { animation-duration: 0.55s; border-color: var(--warning-color, #ff9800); }
+        /* At the lowest speed a single chevron reads as "barely moving"; three would
+           look the same as full speed to anyone glancing at the card. */
+        .machine.v1 .hd-air.a1, .machine.v1 .hd-air.a3 { display: none; }
+        @keyframes hd-rise {
+          0% { transform: translateY(0) rotate(45deg); opacity: 0; }
+          25% { opacity: 0.95; }
+          100% { transform: translateY(-30px) rotate(45deg); opacity: 0; }
+        }
+  `,
+  cooktop: () => `
+        .ck-top {
+          position: absolute; inset: 4px 1px; border-radius: 9px; background: #1a1c20;
+          border: 1px solid var(--divider-color, #c7c7c7); box-shadow: inset 0 0 14px rgba(0, 0, 0, 0.55);
+        }
+        .ck-zones {
+          position: absolute; left: 6px; right: 6px; top: 8px; bottom: 22px;
+          display: grid; gap: 3px; align-items: center; justify-items: center;
+        }
+        .ck-zones.g1 { grid-template-columns: minmax(0, 1fr); }
+        .ck-zones.g2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        .ck-zones.g3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+        .ck-zone {
+          width: 30px; height: 30px; box-sizing: border-box;
+          border-radius: 50%; border: 1.5px solid #383d45;
+          display: flex; align-items: center; justify-content: center; color: #4c525b;
+          font: 600 11px/1 ui-monospace, "SF Mono", monospace;
+        }
+        .ck-zones.g3 .ck-zone { width: 22px; height: 22px; font-size: 9px; }
+        .ck-zone.on {
+          border-color: #ff7043; color: #ff7043;
+          background: radial-gradient(circle, rgba(255, 112, 67, 0.42), transparent 70%);
+          box-shadow: 0 0 11px rgba(255, 112, 67, 0.55);
+          opacity: calc(0.5 + var(--zi, 1) * 0.5);
+          animation: ck-ember 3s ease-in-out infinite;
+        }
+        .ck-zone.max {
+          border-color: #ff3d00; color: #ff3d00;
+          background: radial-gradient(circle, rgba(255, 61, 0, 0.55), transparent 72%);
+          box-shadow: 0 0 15px rgba(255, 61, 0, 0.7);
+        }
+        /* Powered off but still hot: the one thing a cooktop card is actually for. */
+        .ck-zone.residual {
+          border-color: #7a3b2c; color: #b1543d; background: none;
+          box-shadow: none; animation: none; opacity: 1;
+        }
+        @keyframes ck-ember { 0%, 100% { filter: brightness(0.85); } 50% { filter: brightness(1.12); } }
+        .ck-ctrl { position: absolute; left: 12px; right: 22px; bottom: 10px; display: flex; gap: 5px; justify-content: center; }
+        .ck-ctrl i { display: block; width: 11px; height: 3px; border-radius: 2px; background: #383d45; }
+        .ck-ctrl i.act { background: #ff7043; box-shadow: 0 0 6px #ff7043; }
+        .ck-lock {
+          position: absolute; right: 8px; bottom: 8px; width: 9px; height: 7px;
+          border-radius: 1px; background: var(--warning-color, #ff9800);
+        }
+        .ck-lock::before {
+          content: ""; position: absolute; left: 2px; top: -4px; width: 5px; height: 5px;
+          border: 1.5px solid var(--warning-color, #ff9800); border-bottom: none; border-radius: 3px 3px 0 0;
+        }
+  `,
+};
+
+function illustrationCss(type, color) {
+  const family = LAUNDRY_TYPES.includes(type) ? "laundry" : type;
+  const fn = ILLUSTRATION_CSS[family] || ILLUSTRATION_CSS.laundry;
+  return fn(color);
+}
+
+function attrEscape(value) {
+  return String(value).replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/</g, "&lt;");
+}
+
+function illustrationHtml(type, ctx) {
+  const cls = [
+    ctx.spinning ? "spinning" : "",
+    ctx.heating ? "heating" : "",
+    ctx.lit ? "lit" : "",
+    ctx.doorOpen ? "open" : "",
+  ]
+    .filter(Boolean)
+    .join(" ");
+
+  if (LAUNDRY_TYPES.includes(type)) {
+    const glassContent = {
+      washer: `
+        <div class="water-level">
+          <div class="wave"></div>
+          <div class="wave wave2"></div>
+        </div>`,
+      dryer: `
+        <div class="garments">
+          <div class="garment g1"></div>
+          <div class="garment g2"></div>
+          <div class="garment g3"></div>
+        </div>`,
+      dishwasher: `<div class="spray-arm"></div>`,
+    }[type];
+    return `
+        <div class="machine ${ctx.spinning ? "spinning" : ""}">
+          <div class="mbody">
+            <div class="mpanel"></div>
+            <div class="mknob"></div>
+            <div class="mknob k2"></div>
+          </div>
+          <div class="bezel-wrap">
+            <div class="drum-hole"></div>
+            <div class="door ${ctx.doorOpen ? "ajar" : ""}">
+              <div class="rim">
+                <div class="glass">
+                  ${glassContent}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>`;
+  }
+
+  if (type === "oven") {
+    return `
+        <div class="machine ${cls}">
+          <div class="ov-body">
+            <div class="ov-panel">
+              <div class="ov-disp">${ctx.display || "--"}</div>
+              <div class="ov-knob"></div>
+              <div class="ov-knob k2"></div>
+            </div>
+            <div class="ov-doorwrap">
+              <div class="ov-cavity">
+                <div class="ov-elem top"></div>
+                <div class="ov-rack"></div>
+                <div class="ov-dish"></div>
+                <div class="ov-elem bottom"></div>
+              </div>
+              <div class="ov-door">
+                <div class="ov-handle"></div>
+                <div class="ov-glass"></div>
+              </div>
+            </div>
+          </div>
+        </div>`;
+  }
+
+  if (type === "microwave") {
+    return `
+        <div class="machine ${cls}">
+          <div class="mw-body">
+            <div class="mw-doorwrap">
+              <div class="mw-cavity">
+                <div class="mw-turn"><div class="mw-plate"></div><div class="mw-food"></div></div>
+              </div>
+              <div class="mw-door">
+                <div class="mw-mesh"></div>
+                <div class="mw-handle"></div>
+              </div>
+            </div>
+            <div class="mw-panel">
+              <div class="mw-disp">${ctx.display || "--"}</div>
+              <div class="mw-keys">${"<i></i>".repeat(9)}</div>
+            </div>
+          </div>
+        </div>`;
+  }
+
+  if (type === "hood") {
+    const level = ctx.fanLevel || 0;
+    const fanCls = `${level > 0 ? "fan" : ""} v${level} ${ctx.boost ? "boost" : ""}`;
+    return `
+        <div class="machine ${cls} ${fanCls}">
+          <div class="hd-chimney"></div>
+          <div class="hd-canopy"></div>
+          <div class="hd-under"></div>
+          <div class="hd-lamp l1"></div>
+          <div class="hd-lamp l2"></div>
+          <div class="hd-beam b1"></div>
+          <div class="hd-beam b2"></div>
+          <div class="hd-air a1"></div>
+          <div class="hd-air a2"></div>
+          <div class="hd-air a3"></div>
+        </div>`;
+  }
+
+  if (type === "cooktop") {
+    const zones = ctx.zones || [];
+    const zonesHtml = zones
+      .map((z) => {
+        const zc = [z.on ? "on" : "", z.max ? "max" : "", z.residual ? "residual" : ""]
+          .filter(Boolean)
+          .join(" ");
+        const title = z.title ? ` title="${attrEscape(z.title)}"` : "";
+        return `<div class="ck-zone ${zc}" style="--zi:${z.intensity.toFixed(2)}"${title}>${z.label || ""}</div>`;
+      })
+      .join("");
+    const act = ctx.anyZoneOn ? "act" : "";
+    return `
+        <div class="machine ${cls}">
+          <div class="ck-top">
+            <div class="ck-zones g${ctx.zoneColumns || 2}">${zonesHtml}</div>
+            <div class="ck-ctrl"><i class="${act}"></i><i class="${act}"></i><i class="${act}"></i></div>
+            ${ctx.childLock ? `<div class="ck-lock"></div>` : ""}
+          </div>
+        </div>`;
+  }
+
+  return "";
+}
+
+// ---------------------------------------------------------------------------
+// Card
+// ---------------------------------------------------------------------------
+
+class ApplianceCard extends HTMLElement {
+  static getStubConfig(hass) {
+    const sensors = Object.keys(hass.states).filter((e) => e.startsWith("sensor."));
+    const guess = sensors.find((e) => /state/i.test(e) && /washer|wash|dry|dish|lave|linge/i.test(e));
+    return { type: "custom:ha-appliance-card", state_entity: guess || "" };
+  }
+
+  setConfig(config) {
+    if (!config || !config.state_entity) {
+      throw new Error("ha-appliance-card: 'state_entity' is required");
+    }
+    this._config = config;
+    this._runStartSeconds = null;
+    this._prevNormState = null;
+    if (!this._root) {
+      this.attachShadow({ mode: "open" });
+      this._root = this.shadowRoot;
+    }
+  }
+
+  getCardSize() {
+    return 3;
+  }
+
+  static getConfigElement() {
+    return document.createElement("ha-appliance-card-editor");
+  }
+
+  set hass(hass) {
+    this._hass = hass;
+    this._render();
+  }
+
+  _call(entityId) {
+    if (!this._hass || !entityId) return;
+    const domain = domainOf(entityId);
+    if (domain === "button") {
+      this._hass.callService("button", "press", { entity_id: entityId });
+    } else if (["switch", "input_boolean", "fan", "light"].includes(domain)) {
+      this._hass.callService(domain, "toggle", { entity_id: entityId });
+    } else if (domain === "script") {
+      this._hass.callService("script", "turn_on", { entity_id: entityId });
+    } else {
+      this._hass.callService("homeassistant", "toggle", { entity_id: entityId });
+    }
+  }
+
+  _moreInfo(entityId) {
+    const ev = new CustomEvent("hass-more-info", { detail: { entityId }, bubbles: true, composed: true });
+    this.dispatchEvent(ev);
+  }
+
+  _render() {
+    const hass = this._hass;
+    const cfg = this._config;
+    if (!hass || !cfg) return;
+
+    const st = stateObj(hass, cfg.state_entity);
+    const rawState = st ? st.state : "unknown";
+    let norm = normalizeState(rawState, cfg.state_map);
+
+    // A power threshold, when configured, wins over the state entity: on a
+    // smart-plug setup the state entity is the plug itself, which reads "on"
+    // as soon as the appliance is plugged in and says nothing about whether
+    // it is actually doing anything.
+    let powerDerived = false;
+    const watts = cfg.power_entity ? numericState(hass, cfg.power_entity) : null;
+    if (cfg.power_entity && cfg.power_on_threshold !== undefined && cfg.power_on_threshold !== "") {
+      const derived = powerDerivedState(watts, parseFloat(cfg.power_on_threshold), this._powerWasRunning);
+      if (derived) {
+        // Only "running" flips the latch on. "done" must leave it set, or the
+        // next render would fall straight back to "idle" and the finished
+        // cycle would never be shown.
+        if (derived === "running") this._powerWasRunning = true;
+        else if (derived === "idle") this._powerWasRunning = false;
+        norm = derived;
+        powerDerived = true;
+      }
+    }
+
+    const color = STATE_COLORS[norm] || STATE_COLORS.unknown;
+    const rawIsMeaningless = ["unknown", "unavailable", "none", ""].includes(String(rawState).trim().toLowerCase());
+    // When the raw state doesn't match any known vocabulary, show it as-is
+    // instead of a generic "Unknown" label \u2014 common for custom template
+    // sensors (e.g. power-threshold based presence) whose wording we can't
+    // guess. Falls back to the translated label when there's truly no data.
+    // state_show_raw opts into always showing the raw text (still colored/
+    // animated per the detected category) for setups without a real
+    // appliance integration, where the category label alone loses the
+    // user's own wording.
+    // Never echo the raw state when it came from the power meter: the "raw"
+    // text there is a wattage, which is not a state anyone wants to read.
+    const stateLabel = !powerDerived && (cfg.state_show_raw || norm === "unknown") && !rawIsMeaningless
+      ? String(rawState)
+      : t(hass, norm);
+
+    const name = cfg.name || (st && st.attributes.friendly_name) || cfg.state_entity;
+    const applianceType = detectApplianceType(cfg, st);
+
+    // Program
+    let programText = null;
+    if (cfg.program_entity) {
+      const pst = stateObj(hass, cfg.program_entity);
+      if (pst && !["unknown", "unavailable"].includes(pst.state)) {
+        programText = cfg.program_format === "raw" ? pst.state : cleanProgramName(pst.state);
+      }
+    }
+
+    // Remaining time / progress
+    let remSec = null;
+    if (cfg.remaining_time_entity) {
+      // remaining_time_hide_when_idle cross-references the already-normalized
+      // machine state so stale completion timestamps (integrations like
+      // Samsung SmartThings keep reporting a past cycle's finish time after
+      // the appliance goes idle) don't show a leftover "remaining time".
+      if (!cfg.remaining_time_hide_when_idle || isActiveState(norm)) {
+        remSec = remainingSeconds(hass, cfg.remaining_time_entity, cfg.remaining_time_unit);
+      }
+    }
+
+    let progressPct = null;
+    if (cfg.progress_entity) {
+      const p = numericState(hass, cfg.progress_entity);
+      if (p !== null) progressPct = Math.max(0, Math.min(100, p));
+    } else if (remSec !== null) {
+      if (isActiveState(norm)) {
+        if (!isActiveState(this._prevNormState) || !this._runStartSeconds || remSec > this._runStartSeconds) {
+          this._runStartSeconds = remSec > 0 ? remSec : null;
+        }
+        if (this._runStartSeconds) {
+          progressPct = Math.max(0, Math.min(100, 100 - (remSec / this._runStartSeconds) * 100));
+        }
+      } else if (norm === "done") {
+        progressPct = 100;
+      } else {
+        this._runStartSeconds = null;
+      }
+    } else {
+      this._runStartSeconds = null;
+    }
+    this._prevNormState = norm;
+
+    // Door
+    let doorOpen = false;
+    if (cfg.door_entity) {
+      const dst = stateObj(hass, cfg.door_entity);
+      if (dst) {
+        doorOpen = dst.state === (cfg.door_open_state || "on");
+        if (cfg.door_invert) doorOpen = !doorOpen;
+      }
+    }
+
+    // Alerts
+    const alerts = cfg.alerts_entity ? activeAlerts(hass, cfg.alerts_entity) : [];
+
+    // Extra info chips
+    const infoEntities = (cfg.info_entities || [])
+      .map((e) => (typeof e === "string" ? { entity: e } : e))
+      .map((e) => ({ ...e, st: stateObj(hass, e.entity) }))
+      .filter((e) => e.st && !["unknown", "unavailable"].includes(e.st.state));
+
+    // Connectivity
+    let connectivity = null;
+    if (cfg.connectivity_entity) {
+      const cst = stateObj(hass, cfg.connectivity_entity);
+      if (cst) {
+        const want = (cfg.connectivity_connected_state || "on").toLowerCase();
+        const got = String(cst.state).toLowerCase();
+        connectivity = got === want || got === "true" || got === "connected";
+      }
+    }
+
+    // ---- Type-specific readings -------------------------------------------
+    const cap = caps(applianceType);
+    const extraLines = [];
+    let heatBarPct = null;
+    let filterPct = null;
+
+    // Oven / microwave: light, heat and what the front display shows.
+    let lit = false;
+    if (cap.light && cfg.light_entity) {
+      const lst = stateObj(hass, cfg.light_entity);
+      lit = !!lst && ["on", "true"].includes(String(lst.state).toLowerCase());
+    }
+
+    let heating = false;
+    let displayText = "";
+    if (cap.temperature) {
+      const target = cfg.target_temperature_entity ? numericState(hass, cfg.target_temperature_entity) : null;
+      const current = cfg.current_temperature_entity ? numericState(hass, cfg.current_temperature_entity) : null;
+      const unit = temperatureUnit(hass, cfg.target_temperature_entity || cfg.current_temperature_entity);
+      if (cfg.heating_entity) {
+        const hst = stateObj(hass, cfg.heating_entity);
+        heating = !!hst && ["on", "true", "heating"].includes(String(hst.state).toLowerCase());
+      } else {
+        heating = isActiveState(norm);
+      }
+      if (target !== null) displayText = `${Math.round(target)}\u00b0`;
+      if (current !== null || target !== null) {
+        extraLines.push({
+          icon: "mdi:thermometer",
+          label: t(hass, "temperature"),
+          value: current !== null && target !== null
+            ? `${Math.round(current)} ${unit} \u2192 ${Math.round(target)} ${unit}`
+            : `${Math.round(current !== null ? current : target)} ${unit}`,
+        });
+      }
+      // While the oven is still climbing, the bar is far more useful as a
+      // preheat gauge than as a cycle progress bar.
+      if (heating && current !== null && target !== null && target > 0 && current < target) {
+        heatBarPct = Math.max(0, Math.min(100, (current / target) * 100));
+      }
+    } else {
+      heating = isActiveState(norm);
+    }
+
+    if (cap.powerLevel && cfg.power_level_entity) {
+      const plst = stateObj(hass, cfg.power_level_entity);
+      if (plst && !["unknown", "unavailable"].includes(plst.state)) {
+        extraLines.push({
+          icon: "mdi:signal-cellular-2",
+          label: t(hass, "power_level"),
+          value: formatInfoValue(plst, hass),
+        });
+      }
+    }
+    if (applianceType === "microwave" && remSec !== null && remSec > 0) {
+      displayText = formatClock(remSec);
+    }
+
+    // Hood: fan speed, light and filter wear.
+    let fan = { level: 0, boost: false, percentage: null, preset: null };
+    if (cap.fan) {
+      fan = hoodFanState(hass, cfg, norm);
+      if (fan.level > 0 && cfg.fan_entity) {
+        extraLines.push({
+          icon: "mdi:fan",
+          label: t(hass, "fan_speed"),
+          value: fan.boost
+            ? t(hass, "boost")
+            : fan.percentage !== null
+              ? `${Math.round(fan.percentage)} %`
+              : String(fan.level),
+        });
+      }
+    }
+    if (cap.filter && cfg.filter_life_entity) {
+      const f = numericState(hass, cfg.filter_life_entity);
+      if (f !== null) {
+        filterPct = Math.max(0, Math.min(100, f));
+        extraLines.push({
+          icon: "mdi:air-filter",
+          label: t(hass, "filter"),
+          value: `${Math.round(filterPct)} %`,
+          warn: filterPct <= 15,
+        });
+      }
+    }
+
+    // Cooktop: one entry per zone, plus the child lock.
+    let zones = [];
+    let childLock = false;
+    if (cap.zones) {
+      const configured = (cfg.zones || []).filter((z) => z && (z.level_entity || z.residual_heat_entity));
+      if (configured.length) {
+        zones = configured.map((z) => ({ ...zoneState(hass, z), title: z.name || "" }));
+      } else {
+        // Nothing but an on/off signal: show that it heats without inventing
+        // a level or a zone we have no data for.
+        const on = isActiveState(norm);
+        zones = Array.from({ length: 4 }, () => ({
+          on, label: "", intensity: on ? 0.3 : 0, residual: false, max: false, title: "",
+        }));
+      }
+      const active = zones.filter((z) => z.on).length;
+      if (configured.length && active > 0) {
+        extraLines.push({
+          icon: "mdi:circle-slice-8",
+          label: t(hass, "section_zones"),
+          value: `${active} / ${zones.length}`,
+        });
+      }
+      if (cfg.child_lock_entity) {
+        const clst = stateObj(hass, cfg.child_lock_entity);
+        childLock = !!clst && ["on", "true", "locked"].includes(String(clst.state).toLowerCase());
+        if (childLock) {
+          extraLines.push({ icon: "mdi:lock", label: t(hass, "child_lock"), value: "" });
+        }
+      }
+    }
+
+    // Power draw is worth showing on any type once the entity is there.
+    if (cfg.power_entity && watts !== null) {
+      extraLines.push({
+        icon: "mdi:flash",
+        label: t(hass, "power"),
+        value: `${Math.round(watts)} ${unitOf(hass, cfg.power_entity) || "W"}`,
+      });
+    }
+
+    const illustrationCtx = {
+      spinning: isActiveState(norm),
+      doorOpen: cap.door && doorOpen,
+      heating: applianceType === "oven" ? heating : false,
+      lit,
+      display: displayText,
+      fanLevel: fan.level,
+      boost: fan.boost,
+      zones,
+      zoneColumns: zoneColumns(zones.length, cfg.zones_layout),
+      anyZoneOn: zones.some((z) => z.on),
+      childLock,
+    };
+
+    // Action buttons
+    const actions = [
+      { key: "start", entity: cfg.start_entity, icon: "mdi:play", label: t(hass, "start") },
+      { key: "pause", entity: cfg.pause_entity, icon: "mdi:pause", label: t(hass, "pause") },
+      { key: "resume", entity: cfg.resume_entity, icon: "mdi:play-pause", label: t(hass, "resume") },
+      { key: "stop", entity: cfg.stop_entity, icon: "mdi:stop", label: t(hass, "stop") },
+      cap.light ? { key: "light", entity: cfg.light_entity, icon: lit ? "mdi:lightbulb" : "mdi:lightbulb-outline", label: t(hass, "light") } : {},
+      cap.filter ? { key: "filter_reset", entity: cfg.filter_reset_entity, icon: "mdi:air-filter", label: t(hass, "filter_reset") } : {},
+    ].filter((a) => a.entity);
+
+    const spinning = isActiveState(norm);
+
+    const styleTag = `
+      <style>
+        :host { font-size: 16px; }
+        ha-card { display: block; padding: 16px; position: relative; }
+        .conn-badge {
+          position: absolute; top: 10px; right: 12px;
+          --mdc-icon-size: 18px; color: var(--secondary-text-color, #767676);
+        }
+        .conn-badge.disconnected { color: var(--error-color, #f44336); }
+        .top { display: flex; flex-direction: column; align-items: center; text-align: center; cursor: pointer; }
+        .machine { position: relative; width: 96px; height: 108px; margin: 0 auto 8px; }
+        ${illustrationCss(applianceType, color)}
         .name { font-size: 1.2em; font-weight: 500; color: var(--primary-text-color, #1c1c1c); }
         .state-line { font-size: 1.05em; color: ${color}; margin-top: 2px; }
         .info-lines { margin-top: 12px; display: flex; flex-direction: column; gap: 8px; }
@@ -1134,41 +2146,7 @@ class ApplianceCard extends HTMLElement {
       </style>
     `;
 
-    const glassContent = {
-      washer: `
-        <div class="water-level">
-          <div class="wave"></div>
-          <div class="wave wave2"></div>
-        </div>`,
-      dryer: `
-        <div class="garments">
-          <div class="garment g1"></div>
-          <div class="garment g2"></div>
-          <div class="garment g3"></div>
-        </div>`,
-      dishwasher: `<div class="spray-arm"></div>`,
-    }[applianceType];
-
-    const iconHtml = cfg.compact
-      ? ""
-      : `
-        <div class="machine ${spinning ? "spinning" : ""}">
-          <div class="mbody">
-            <div class="mpanel"></div>
-            <div class="mknob"></div>
-            <div class="mknob k2"></div>
-          </div>
-          <div class="bezel-wrap">
-            <div class="drum-hole"></div>
-            <div class="door ${doorOpen ? "ajar" : ""}">
-              <div class="rim">
-                <div class="glass">
-                  ${glassContent}
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>`;
+    const iconHtml = cfg.compact ? "" : illustrationHtml(applianceType, illustrationCtx);
 
     const stripNamePrefix = (friendlyName, entityId) => {
       if (!friendlyName) return humanizeEntityId(entityId);
@@ -1200,7 +2178,7 @@ class ApplianceCard extends HTMLElement {
           : t(hass, "time_done"),
       });
     }
-    if (cfg.door_entity && !cfg.door_hide_in_list) {
+    if (cap.door && cfg.door_entity && !cfg.door_hide_in_list) {
       lines.push({
         icon: doorOpen ? "mdi:door-open" : "mdi:door-closed",
         label: doorOpen ? t(hass, "door_open") : t(hass, "door_closed"),
@@ -1208,6 +2186,7 @@ class ApplianceCard extends HTMLElement {
         warn: doorOpen,
       });
     }
+    lines.push(...extraLines);
     const linesHtml = lines.length
       ? `<div class="info-lines">${lines
           .map(
@@ -1217,10 +2196,22 @@ class ApplianceCard extends HTMLElement {
           .join("")}</div>`
       : "";
 
-    const barHtml = progressPct !== null
+    // Bar priority: preheating beats cycle progress (it's the live information
+    // while an oven climbs), and a hood has no cycle so its bar is the filter.
+    let barPct = progressPct;
+    let barColor = color;
+    if (heatBarPct !== null) {
+      barPct = heatBarPct;
+      barColor = "#ff7043";
+    } else if (cap.filter && filterPct !== null && progressPct === null) {
+      barPct = filterPct;
+      barColor = filterPct <= 15 ? "var(--error-color, #f44336)" : "var(--warning-color, #ff9800)";
+    }
+
+    const barHtml = barPct !== null
       ? `
         <div class="bar-row">
-          <div class="bar"><div class="bar-fill" style="width:${progressPct.toFixed(0)}%"></div></div>
+          <div class="bar"><div class="bar-fill" style="width:${barPct.toFixed(0)}%;background:${barColor}"></div></div>
         </div>`
       : "";
 
@@ -1274,15 +2265,20 @@ class ApplianceCard extends HTMLElement {
 
 const ACTION_DOMAINS = ["button", "switch", "script", "input_boolean"];
 
+// Which types a section applies to. Anything cycle-shaped keeps the original
+// program/time/door/controls set; a hood or a cooktop would only be cluttered
+// by fields it can never fill.
+const CYCLE_TYPES = ["washer", "dryer", "dishwasher", "oven", "microwave"];
+
 const SECTIONS = [
-  { field: "program_entity", labelKey: "section_program", includeDomains: ["select", "sensor", "input_select"], extra: (c, hass) => c._row("program_format", "program_format", {
+  { field: "program_entity", types: CYCLE_TYPES, labelKey: "section_program", includeDomains: ["select", "sensor", "input_select"], extra: (c, hass) => c._row("program_format", "program_format", {
       type: "select",
       options: [
         { value: "clean", label: t(hass, "program_format_clean") },
         { value: "raw", label: t(hass, "program_format_raw") },
       ],
     }) },
-  { field: "remaining_time_entity", labelKey: "section_remaining", includeDomains: ["sensor", "input_number"], extra: (c, hass) => c._row("remaining_time_unit", "remaining_time_unit", {
+  { field: "remaining_time_entity", types: CYCLE_TYPES, labelKey: "section_remaining", includeDomains: ["sensor", "input_number"], extra: (c, hass) => c._row("remaining_time_unit", "remaining_time_unit", {
       type: "select",
       options: [
         { value: "auto", label: t(hass, "unit_auto") },
@@ -1290,18 +2286,47 @@ const SECTIONS = [
         { value: "minutes", label: t(hass, "unit_minutes") },
       ],
     }) + c._row("remaining_time_hide_when_idle", "remaining_time_hide_when_idle", { type: "checkbox" }) },
-  { field: "progress_entity", labelKey: "section_progress", includeDomains: ["sensor", "input_number"] },
-  { field: "door_entity", labelKey: "section_door", includeDomains: ["binary_sensor", "sensor"], extra: (c, hass) =>
+  { field: "progress_entity", types: CYCLE_TYPES, labelKey: "section_progress", includeDomains: ["sensor", "input_number"] },
+  { field: "door_entity", types: CYCLE_TYPES, labelKey: "section_door", includeDomains: ["binary_sensor", "sensor"], extra: (c, hass) =>
       c._row("door_open_state", "door_open_state", { placeholder: "on" }) +
       c._row("door_invert", "door_invert", { type: "checkbox" }) +
       c._row("door_hide_in_list", "door_hide_in_list", { type: "checkbox" }) },
-  { field: "alerts_entity", labelKey: "section_alerts", includeDomains: ["sensor", "binary_sensor"] },
-  { field: "connectivity_entity", labelKey: "section_connectivity", includeDomains: ["binary_sensor", "sensor"], extra: (c, hass) => c._row("connectivity_connected_state", "connectivity_connected_state", { placeholder: "on" }) },
-  { field: "start_entity", labelKey: "section_start", includeDomains: ACTION_DOMAINS },
-  { field: "pause_entity", labelKey: "section_pause", includeDomains: ACTION_DOMAINS },
-  { field: "resume_entity", labelKey: "section_resume", includeDomains: ACTION_DOMAINS },
-  { field: "stop_entity", labelKey: "section_stop", includeDomains: ACTION_DOMAINS },
+
+  // Oven
+  { field: "target_temperature_entity", types: ["oven"], labelKey: "section_target_temperature", includeDomains: ["number", "sensor", "input_number"] },
+  { field: "current_temperature_entity", types: ["oven"], labelKey: "section_current_temperature", includeDomains: ["sensor", "number"] },
+  { field: "heating_entity", types: ["oven"], labelKey: "section_heating", includeDomains: ["binary_sensor", "sensor", "switch"] },
+
+  // Microwave
+  { field: "power_level_entity", types: ["microwave"], labelKey: "section_power_level", includeDomains: ["number", "select", "sensor", "input_number", "input_select"] },
+
+  // Hood
+  { field: "fan_entity", types: ["hood"], labelKey: "section_fan", includeDomains: ["fan"] },
+  { field: "boost_entity", types: ["hood"], labelKey: "section_boost", includeDomains: ["switch", "binary_sensor", "input_boolean"] },
+  { field: "filter_life_entity", types: ["hood"], labelKey: "section_filter_life", includeDomains: ["sensor"] },
+  { field: "filter_reset_entity", types: ["hood"], labelKey: "section_filter_reset", includeDomains: ACTION_DOMAINS },
+
+  // Oven + hood
+  { field: "light_entity", types: ["oven", "hood"], labelKey: "section_light", includeDomains: ["light", "switch", "input_boolean"] },
+
+  // Cooktop
+  { field: "child_lock_entity", types: ["cooktop"], labelKey: "section_child_lock", includeDomains: ["binary_sensor", "switch", "lock"] },
+
+  // Any type: a plug's power meter, optionally driving the state itself.
+  { field: "power_entity", types: APPLIANCE_TYPES, labelKey: "section_power", includeDomains: ["sensor"], extra: (c) =>
+      c._row("power_on_threshold", "power_on_threshold", { placeholder: "10" }) },
+
+  { field: "alerts_entity", types: APPLIANCE_TYPES, labelKey: "section_alerts", includeDomains: ["sensor", "binary_sensor"] },
+  { field: "connectivity_entity", types: APPLIANCE_TYPES, labelKey: "section_connectivity", includeDomains: ["binary_sensor", "sensor"], extra: (c, hass) => c._row("connectivity_connected_state", "connectivity_connected_state", { placeholder: "on" }) },
+  { field: "start_entity", types: CYCLE_TYPES, labelKey: "section_start", includeDomains: ACTION_DOMAINS },
+  { field: "pause_entity", types: CYCLE_TYPES, labelKey: "section_pause", includeDomains: ACTION_DOMAINS },
+  { field: "resume_entity", types: CYCLE_TYPES, labelKey: "section_resume", includeDomains: ACTION_DOMAINS },
+  { field: "stop_entity", types: CYCLE_TYPES, labelKey: "section_stop", includeDomains: ACTION_DOMAINS },
 ];
+
+function sectionsForType(type) {
+  return SECTIONS.filter((s) => !s.types || s.types.includes(type));
+}
 
 function setsEqual(a, b) {
   if (a.size !== b.size) return false;
@@ -1310,23 +2335,86 @@ function setsEqual(a, b) {
 }
 
 class ApplianceCardEditor extends HTMLElement {
+  _currentType() {
+    const st = this._hass && this._config ? stateObj(this._hass, this._config.state_entity) : null;
+    return detectApplianceType(this._config || {}, st);
+  }
+
+  _sections() {
+    return sectionsForType(this._currentType());
+  }
+
   _computeOpen(cfg) {
-    return new Set(SECTIONS.filter((s) => cfg[s.field]).map((s) => s.field));
+    return new Set(this._sections().filter((s) => cfg[s.field]).map((s) => s.field));
   }
 
   setConfig(config) {
     this._config = { ...config };
     const newOpen = this._computeOpen(this._config);
     if (!this._open || !setsEqual(this._open, newOpen)) this._needsBuild = true;
+    // Switching appliance type swaps the whole set of visible sections, and
+    // that alone does not change which fields are filled in \u2014 so the open-set
+    // comparison above would miss it.
+    const type = this._currentType();
+    if (this._type !== type) {
+      this._type = type;
+      this._needsBuild = true;
+    }
     this._open = newOpen;
     if (!this._panelOpen) {
-      this._panelOpen = { general: true, info: (this._config.info_entities || []).length > 0 };
+      this._panelOpen = {
+        general: true,
+        info: (this._config.info_entities || []).length > 0,
+        zones: (this._config.zones || []).length > 0,
+      };
     }
     if (this._infoCount === undefined) {
       const existing = (this._config.info_entities || []).length;
       this._infoCount = Math.min(5, existing || 3);
     }
+    if (this._zoneCount === undefined) {
+      this._zoneCount = Math.min(6, (this._config.zones || []).length || 4);
+    }
     this._maybeBuild();
+  }
+
+  _zonesList() {
+    return (this._config.zones || []).map((z) => ({ ...z }));
+  }
+
+  _updateZone(index, patch) {
+    const next = this._zonesList();
+    while (next.length <= index) next.push({});
+    next[index] = { ...next[index], ...patch };
+    this._config = { ...this._config, zones: next };
+    this.dispatchEvent(new CustomEvent("config-changed", { detail: { config: this._config } }));
+  }
+
+  _mountZonePicker(slotEl, index, field, labelKey, includeDomains) {
+    const hass = this._hass;
+    const current = this._zonesList()[index] || {};
+    const picker = document.createElement("ha-entity-picker");
+    picker.hass = hass;
+    picker.value = current[field] || "";
+    picker.label = `${t(hass, labelKey)} ${index + 1}`;
+    picker.includeDomains = includeDomains;
+    picker.addEventListener("value-changed", (ev) => {
+      this._updateZone(index, { [field]: ev.detail.value || undefined });
+    });
+    slotEl.appendChild(picker);
+  }
+
+  _mountZoneName(slotEl, index) {
+    const hass = this._hass;
+    const current = this._zonesList()[index] || {};
+    const input = document.createElement("input");
+    input.type = "text";
+    input.placeholder = t(hass, "zone_name");
+    input.value = current.name || "";
+    input.addEventListener("change", (ev) => {
+      this._updateZone(index, { name: ev.target.value || undefined });
+    });
+    slotEl.appendChild(input);
   }
 
   set hass(hass) {
@@ -1367,7 +2455,7 @@ class ApplianceCardEditor extends HTMLElement {
     if (Object.keys(patch).length > 0) {
       this._config = { ...this._config, ...patch };
       const newOpen = this._computeOpen(this._config);
-      for (const s of SECTIONS) if (patch[s.field]) newOpen.add(s.field);
+      for (const s of this._sections()) if (patch[s.field]) newOpen.add(s.field);
       this._open = newOpen;
       this._needsBuild = true;
       if (patch.info_entities && this._panelOpen) {
@@ -1553,6 +2641,9 @@ class ApplianceCardEditor extends HTMLElement {
     if (!this._hass || !this._config) return;
     this._built = true;
     const hass = this._hass;
+    // setConfig may have run before hass was available, in which case the
+    // detected type could not see the entity's icon yet.
+    this._type = this._currentType();
 
     if (!this._root) {
       this.attachShadow({ mode: "open" });
@@ -1616,6 +2707,10 @@ class ApplianceCardEditor extends HTMLElement {
             { value: "washer", label: t(hass, "type_washer") },
             { value: "dryer", label: t(hass, "type_dryer") },
             { value: "dishwasher", label: t(hass, "type_dishwasher") },
+            { value: "oven", label: t(hass, "type_oven") },
+            { value: "microwave", label: t(hass, "type_microwave") },
+            { value: "hood", label: t(hass, "type_hood") },
+            { value: "cooktop", label: t(hass, "type_cooktop") },
           ],
         })}
       </div>
@@ -1628,8 +2723,27 @@ class ApplianceCardEditor extends HTMLElement {
         <div class="section">
           <div class="picker-slot" data-slot="state_entity"></div>
         </div>
-        ${SECTIONS.map((s) => this._sectionHtml(s)).join("")}
+        ${this._sections().map((s) => this._sectionHtml(s)).join("")}
       </details>
+      ${caps(this._type).zones ? `
+      <details class="group" data-panel="zones" ${this._panelOpen.zones ? "open" : ""}>
+        <summary>${t(hass, "section_zones")}</summary>
+        <div class="section">
+          <div class="row">
+            <label>${t(hass, "zones_count")}</label>
+            <select data-role="zone-count-select">
+              ${[0, 1, 2, 3, 4, 5, 6].map((n) => `<option value="${n}" ${n === this._zoneCount ? "selected" : ""}>${n}</option>`).join("")}
+            </select>
+          </div>
+        </div>
+        ${Array.from({ length: this._zoneCount }, (_, i) => `
+          <div class="section">
+            <h4>${t(hass, "zone")} ${i + 1}</h4>
+            <div class="picker-slot" data-slot="__zone_level_${i}"></div>
+            <div class="picker-slot" data-slot="__zone_residual_${i}"></div>
+            <div class="picker-slot" data-slot="__zone_name_${i}"></div>
+          </div>`).join("")}
+      </details>` : ""}
       <details class="group" data-panel="info" ${this._panelOpen.info ? "open" : ""}>
         <summary>${t(hass, "section_info")}</summary>
         <div class="section">
@@ -1657,9 +2771,26 @@ class ApplianceCardEditor extends HTMLElement {
       label: t(hass, "state_entity"),
       includeDomains: ["sensor", "binary_sensor"],
     });
-    for (const s of SECTIONS) {
+    for (const s of this._sections()) {
       if (this._open.has(s.field)) {
         this._mountPicker(this._root.querySelector(`[data-slot="${s.field}"]`), s.field, { includeDomains: s.includeDomains });
+      }
+    }
+    if (caps(this._type).zones) {
+      for (let i = 0; i < this._zoneCount; i++) {
+        this._mountZonePicker(this._root.querySelector(`[data-slot="__zone_level_${i}"]`), i, "level_entity", "zone_level_entity", ["sensor", "number", "select", "input_number", "input_select"]);
+        this._mountZonePicker(this._root.querySelector(`[data-slot="__zone_residual_${i}"]`), i, "residual_heat_entity", "zone_residual_entity", ["binary_sensor", "sensor"]);
+        this._mountZoneName(this._root.querySelector(`[data-slot="__zone_name_${i}"]`), i);
+      }
+      const zoneCountSelect = this._root.querySelector('[data-role="zone-count-select"]');
+      if (zoneCountSelect) {
+        zoneCountSelect.addEventListener("change", (ev) => {
+          const count = parseInt(ev.target.value, 10);
+          this._zoneCount = count;
+          this._config = { ...this._config, zones: this._zonesList().slice(0, count) };
+          this.dispatchEvent(new CustomEvent("config-changed", { detail: { config: this._config } }));
+          this._build();
+        });
       }
     }
     for (let i = 0; i < this._infoCount; i++) {
@@ -1706,13 +2837,13 @@ class ApplianceCardEditor extends HTMLElement {
           this._open.delete(field);
           this._config = { ...this._config };
           delete this._config[field];
-          const section = SECTIONS.find((s) => s.field === field);
-          if (section && section.field === "door_entity") {
+          if (field === "door_entity") {
             delete this._config.door_open_state;
             delete this._config.door_invert;
             delete this._config.door_hide_in_list;
           }
-          if (section && section.field === "connectivity_entity") delete this._config.connectivity_connected_state;
+          if (field === "connectivity_entity") delete this._config.connectivity_connected_state;
+          if (field === "power_entity") delete this._config.power_on_threshold;
           this.dispatchEvent(new CustomEvent("config-changed", { detail: { config: this._config } }));
         }
         this._build();
@@ -1728,5 +2859,5 @@ window.customCards = window.customCards || [];
 window.customCards.push({
   type: "ha-appliance-card",
   name: "HA Appliance Card",
-  description: "Cycle/program card for washers, dryers & dishwashers \u2014 works with any brand/integration via configurable entity mapping.",
+  description: "Card for washers, dryers, dishwashers, ovens, microwaves, cooker hoods & cooktops \u2014 works with any brand/integration via configurable entity mapping.",
 });
