@@ -49,6 +49,7 @@ Seule `state_entity` est obligatoire — tout le reste est optionnel. Dans l'éd
 | `name` | Titre de la card. Par défaut, le nom convivial de l'entité d'état. |
 | `compact` | `true` pour masquer l'illustration et n'afficher que le texte. |
 | `appliance_type` | `auto` (défaut) \| `washer` \| `dryer` \| `dishwasher` \| `oven` \| `microwave` \| `hood` \| `cooktop`. L'éditeur visuel ne propose que les champs utilisables par le type choisi. |
+| `toggle_entity` | Commande marche/arrêt, affichée en bouton d'alimentation sur la card et mise en évidence quand c'est allumé. N'importe quel `switch`/`button`/`script`/`input_boolean`/`fan`. Nommée ainsi pour ne pas être confondue avec `power_entity` ci-dessous, qui est le compteur de watts. |
 | `power_entity` / `power_on_threshold` / `power_icon` | Capteur de puissance (W). Avec un seuil défini, l'état est déduit de la puissance plutôt que de `state_entity` : au-dessus du seuil c'est *en marche*, et la redescente sous le seuil signifie *terminé* jusqu'au prochain cycle. Pointer `state_entity` sur le même capteur de puissance suffit à l'activer, avec un seuil par défaut de 10 W. `power_icon` remplace l'icône par défaut `mdi:power-plug`. |
 | `program_entity` / `program_format` | Entité du programme/cycle. `clean` (défaut) simplifie les motifs courants `"<catégorie> Pr <nom>"` ; `raw` affiche l'état tel quel. |
 | `remaining_time_entity` / `remaining_time_unit` | Temps restant. Unité `auto` (défaut), `seconds`, ou `minutes`. |
@@ -67,7 +68,7 @@ Par type :
 | `heating_entity` | four | Optionnel ; pilote le rougeoiement des résistances. À défaut, déduit de l'état en cours. |
 | `light_entity` | four, hotte | Éclairage de la cavité / lampes de la hotte. Affiché en petite bascule dans l'en-tête de la card plutôt qu'en rangée de boutons, pour garder la card courte. |
 | `power_level_entity` | micro-ondes, plaque | Niveau de puissance (ex. 800 W). Sur une plaque, c'est le niveau *global* remonté par les tables qui ne disent jamais quel foyer chauffe ; il pilote l'intensité du halo des foyers. |
-| `fan_entity` | hotte | La source de la vitesse. Une entité `fan` utilise son pourcentage ou son preset ; un `select` (Home Connect expose le niveau de ventilation comme ça), un `sensor` ou un `number` est ramené sur une échelle 1–3, via la liste d'options quand elle existe. Un clic sur la ligne de vitesse ouvre l'entité pour la changer. |
+| `fan_entity` | hotte | La source de la vitesse. La ligne reste visible hotte à l'arrêt (affichée *Arrêt*) — c'est en cliquant dessus qu'on change la vitesse.  Une entité `fan` utilise son pourcentage ou son preset ; un `select` (Home Connect expose le niveau de ventilation comme ça), un `sensor` ou un `number` est ramené sur une échelle 1–3, via la liste d'options quand elle existe. Un clic sur la ligne de vitesse ouvre l'entité pour la changer. |
 | `boost_entity` | hotte | Mode intensif optionnel, quand le preset ne l'indique pas déjà. |
 | `filter_life_entity` / `filter_reset_entity` | hotte | Usure du filtre à graisse (%) en barre, et un bouton de remise à zéro. |
 | `zones` | plaque | Liste de `{ level_entity, residual_heat_entity?, name? }`, jusqu'à 6. Les niveaux peuvent être numériques (0–9) ou un mot (`boost`) ; un foyer éteint mais encore chaud affiche `H`. |

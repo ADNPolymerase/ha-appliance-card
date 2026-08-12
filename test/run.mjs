@@ -108,6 +108,9 @@ const ovenDisp   = h => (/<div class="ov-disp">([^<]*)<\/div>/.exec(h) || [, '']
 const mwDisp     = h => (/<div class="mw-disp">([^<]*)<\/div>/.exec(h) || [, ''])[1];
 const zones      = h => [...h.matchAll(/<div class="ck-zone ([^"]*)"[^>]*>([^<]*)</g)]
   .map(m => `${m[1].trim()}:${m[2]}`);
+/** Action buttons as "label:classes", so both presence and state are testable. */
+const actionBtns = h => [...h.matchAll(/<div class="action-btn ([^"]*)"[^>]*title="([^"]*)"/g)]
+  .map(m => `${m[2]}:${m[1].trim()}`);
 
 /** Value of the info line carrying `label`, or null when the line is absent. */
 function infoLine(html, label) {
@@ -329,6 +332,35 @@ check('hotte sur prise seule : aucune vitesse inventee',
   infoLine(render({ appliance_type: 'hood', state_entity: 'sensor.h' },
     { 'sensor.h': { state: 'on', attributes: {} } }), 'Fan speed'), null);
 
+// The speed line is the only way in to the speed entity, so it must survive the
+// hood being switched off — hiding it locked the user out of the setting.
+const hoodOff = render({ appliance_type: 'hood', state_entity: 'switch.hood', fan_entity: 'select.venting' },
+  { 'switch.hood': { state: 'off', attributes: {} },
+    'select.venting': { state: HC_OPTS[0], attributes: { options: HC_OPTS } } });
+check('hotte a l\'arret : la ligne vitesse reste affichee', infoLine(hoodOff, 'Fan speed'), 'Off');
+contains('hotte a l\'arret : la ligne vitesse reste cliquable', hoodOff, 'data-more="select.venting"');
+
+// ── On/off control ───────────────────────────────────────────────────────────
+// A hood or a cooktop has no cycle to start or stop, so without this option it
+// could report its state but never change it.
+
+const hoodOn = render({ appliance_type: 'hood', state_entity: 'switch.hood',
+                        toggle_entity: 'switch.hood', fan_entity: 'select.venting' },
+  { 'switch.hood': { state: 'on', attributes: {} },
+    'select.venting': { state: HC_OPTS[2], attributes: { options: HC_OPTS } } });
+check('interrupteur : bouton rendu', actionBtns(hoodOn).length, 1);
+contains('interrupteur : icone d\'alimentation', hoodOn, 'mdi:power');
+contains('interrupteur : cible la bonne entite', hoodOn, 'data-entity="switch.hood"');
+check('interrupteur : marque actif quand allume', actionBtns(hoodOn)[0].endsWith(':on'), true);
+
+check('interrupteur : non marque quand eteint',
+  actionBtns(render({ appliance_type: 'hood', state_entity: 'switch.hood', toggle_entity: 'switch.hood' },
+    { 'switch.hood': { state: 'off', attributes: {} } }))[0].endsWith(':on'), false);
+
+check('interrupteur : absent si l\'option n\'est pas configuree',
+  actionBtns(render({ appliance_type: 'hood', state_entity: 'switch.hood' },
+    { 'switch.hood': { state: 'on', attributes: {} } })).length, 0);
+
 // Cooktop zones: numeric levels, worded levels and residual heat.
 const hob = render({ appliance_type: 'cooktop', state_entity: 'sensor.hob',
                      child_lock_entity: 'binary_sensor.lock',
@@ -492,6 +524,15 @@ check('editeur : la hotte propose bien la ventilation',
   newEditor({ state_entity: 'sensor.oven_appliance_state', appliance_type: 'hood' })
     ._root.querySelectorAll('[data-toggle]').map(n => n.getAttribute('data-toggle')).includes('fan_entity'),
   true);
+
+// The on/off control is offered everywhere, including on the types that have
+// no cycle and therefore no start/stop section.
+for (const type of ['hood', 'cooktop', 'washer']) {
+  check(`editeur : interrupteur propose sur ${type}`,
+    newEditor({ state_entity: 'sensor.oven_appliance_state', appliance_type: type })
+      ._root.querySelectorAll('[data-toggle]').map(n => n.getAttribute('data-toggle')).includes('toggle_entity'),
+    true);
+}
 
 check('carte : state_entity manquante est refusee',
   (() => { try { new Card().setConfig({ type: 'custom:ha-appliance-card' }); return false; }

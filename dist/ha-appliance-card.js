@@ -1,4 +1,4 @@
-const CARD_VERSION = "1.0.0";
+const CARD_VERSION = "1.1.0";
 
 console.info(
   "%c HA-APPLIANCE-CARD %c v" + CARD_VERSION + " ",
@@ -81,6 +81,8 @@ const T = {
     boost_entity: "Boost mode entity", child_lock_entity: "Child lock entity",
     power_entity: "Power (W) entity", power_on_threshold: "Running above this power (W)",
     zones_count: "Number of cooking zones", zone_level_entity: "Level entity",
+    section_toggle: "Power switch", toggle: "Power",
+    off_short: "Off", toggle_entity: "Power switch entity",
     zone_residual_entity: "Residual heat entity", zone_name: "Zone name (optional)",
   },
   fr: {
@@ -153,6 +155,8 @@ const T = {
     boost_entity: "Entit\u00e9 mode intensif", child_lock_entity: "Entit\u00e9 s\u00e9curit\u00e9 enfant",
     power_entity: "Entit\u00e9 puissance (W)", power_on_threshold: "En marche au-dessus de cette puissance (W)",
     zones_count: "Nombre de foyers", zone_level_entity: "Entit\u00e9 niveau",
+    section_toggle: "Interrupteur", toggle: "Marche / Arr\u00eat",
+    off_short: "Arr\u00eat", toggle_entity: "Entit\u00e9 interrupteur",
     zone_residual_entity: "Entit\u00e9 chaleur r\u00e9siduelle", zone_name: "Nom du foyer (optionnel)",
   },
   ru: {
@@ -225,6 +229,8 @@ const T = {
     boost_entity: "\u041e\u0431\u044a\u0435\u043a\u0442 \u0438\u043d\u0442\u0435\u043d\u0441\u0438\u0432\u043d\u043e\u0433\u043e \u0440\u0435\u0436\u0438\u043c\u0430", child_lock_entity: "\u041e\u0431\u044a\u0435\u043a\u0442 \u0437\u0430\u0449\u0438\u0442\u044b \u043e\u0442 \u0434\u0435\u0442\u0435\u0439",
     power_entity: "\u041e\u0431\u044a\u0435\u043a\u0442 \u043c\u043e\u0449\u043d\u043e\u0441\u0442\u0438 (\u0412\u0442)", power_on_threshold: "\u0420\u0430\u0431\u043e\u0442\u0430\u0435\u0442 \u0432\u044b\u0448\u0435 \u044d\u0442\u043e\u0439 \u043c\u043e\u0449\u043d\u043e\u0441\u0442\u0438 (\u0412\u0442)",
     zones_count: "\u041a\u043e\u043b\u0438\u0447\u0435\u0441\u0442\u0432\u043e \u043a\u043e\u043d\u0444\u043e\u0440\u043e\u043a", zone_level_entity: "\u041e\u0431\u044a\u0435\u043a\u0442 \u0443\u0440\u043e\u0432\u043d\u044f",
+    section_toggle: "\u0412\u044b\u043a\u043b\u044e\u0447\u0430\u0442\u0435\u043b\u044c", toggle: "\u041f\u0438\u0442\u0430\u043d\u0438\u0435",
+    off_short: "\u0412\u044b\u043a\u043b.", toggle_entity: "\u041e\u0431\u044a\u0435\u043a\u0442 \u0432\u044b\u043a\u043b\u044e\u0447\u0430\u0442\u0435\u043b\u044f",
     zone_residual_entity: "\u041e\u0431\u044a\u0435\u043a\u0442 \u043e\u0441\u0442\u0430\u0442\u043e\u0447\u043d\u043e\u0433\u043e \u0442\u0435\u043f\u043b\u0430", zone_name: "\u041d\u0430\u0437\u0432\u0430\u043d\u0438\u0435 \u043a\u043e\u043d\u0444\u043e\u0440\u043a\u0438 (\u043e\u043f\u0446\u0438\u043e\u043d\u0430\u043b\u044c\u043d\u043e)",
   },
   de: {
@@ -297,6 +303,8 @@ const T = {
     boost_entity: "Entit\u00e4t Intensivstufe", child_lock_entity: "Entit\u00e4t Kindersicherung",
     power_entity: "Entit\u00e4t Leistung (W)", power_on_threshold: "L\u00e4uft oberhalb dieser Leistung (W)",
     zones_count: "Anzahl der Kochzonen", zone_level_entity: "Entit\u00e4t Stufe",
+    section_toggle: "Ein/Aus-Schalter", toggle: "Ein/Aus",
+    off_short: "Aus", toggle_entity: "Entit\u00e4t Ein/Aus-Schalter",
     zone_residual_entity: "Entit\u00e4t Restw\u00e4rme", zone_name: "Name der Kochzone (optional)",
   },
   es: {
@@ -369,6 +377,8 @@ const T = {
     boost_entity: "Entidad de modo intensivo", child_lock_entity: "Entidad de bloqueo infantil",
     power_entity: "Entidad de potencia (W)", power_on_threshold: "En marcha por encima de esta potencia (W)",
     zones_count: "N\u00famero de zonas de cocci\u00f3n", zone_level_entity: "Entidad de nivel",
+    section_toggle: "Interruptor", toggle: "Encendido",
+    off_short: "Apagado", toggle_entity: "Entidad del interruptor",
     zone_residual_entity: "Entidad de calor residual", zone_name: "Nombre de la zona (opcional)",
   },
   it: {
@@ -441,6 +451,8 @@ const T = {
     boost_entity: "Entit\u00e0 modalit\u00e0 intensiva", child_lock_entity: "Entit\u00e0 sicurezza bambini",
     power_entity: "Entit\u00e0 potenza (W)", power_on_threshold: "In funzione sopra questa potenza (W)",
     zones_count: "Numero di zone di cottura", zone_level_entity: "Entit\u00e0 livello",
+    section_toggle: "Interruttore", toggle: "Accensione",
+    off_short: "Spento", toggle_entity: "Entit\u00e0 interruttore",
     zone_residual_entity: "Entit\u00e0 calore residuo", zone_name: "Nome della zona (opzionale)",
   },
   nl: {
@@ -513,6 +525,8 @@ const T = {
     boost_entity: "Entiteit intensiefstand", child_lock_entity: "Entiteit kinderslot",
     power_entity: "Entiteit vermogen (W)", power_on_threshold: "Draait boven dit vermogen (W)",
     zones_count: "Aantal kookzones", zone_level_entity: "Entiteit stand",
+    section_toggle: "Aan/uit-schakelaar", toggle: "Aan/uit",
+    off_short: "Uit", toggle_entity: "Entiteit aan/uit-schakelaar",
     zone_residual_entity: "Entiteit restwarmte", zone_name: "Naam van de kookzone (optioneel)",
   },
   pt: {
@@ -585,6 +599,8 @@ const T = {
     boost_entity: "Entidade de modo intensivo", child_lock_entity: "Entidade de bloqueio para crian\u00e7as",
     power_entity: "Entidade de pot\u00eancia (W)", power_on_threshold: "Em funcionamento acima desta pot\u00eancia (W)",
     zones_count: "N\u00famero de zonas de cozedura", zone_level_entity: "Entidade de n\u00edvel",
+    section_toggle: "Interruptor", toggle: "Ligar/Desligar",
+    off_short: "Desligado", toggle_entity: "Entidade do interruptor",
     zone_residual_entity: "Entidade de calor residual", zone_name: "Nome da zona (opcional)",
   },
   sv: {
@@ -657,6 +673,8 @@ const T = {
     boost_entity: "Entitet f\u00f6r intensivl\u00e4ge", child_lock_entity: "Entitet f\u00f6r barnl\u00e5s",
     power_entity: "Entitet f\u00f6r effekt (W)", power_on_threshold: "I drift \u00f6ver denna effekt (W)",
     zones_count: "Antal kokzoner", zone_level_entity: "Entitet f\u00f6r l\u00e4ge",
+    section_toggle: "Str\u00f6mbrytare", toggle: "P\u00e5/av",
+    off_short: "Av", toggle_entity: "Entitet f\u00f6r str\u00f6mbrytare",
     zone_residual_entity: "Entitet f\u00f6r restv\u00e4rme", zone_name: "Kokzonens namn (valfritt)",
   },
   no: {
@@ -729,6 +747,8 @@ const T = {
     boost_entity: "Enhet for intensivmodus", child_lock_entity: "Enhet for barnesikring",
     power_entity: "Enhet for effekt (W)", power_on_threshold: "I drift over denne effekten (W)",
     zones_count: "Antall kokesoner", zone_level_entity: "Enhet for trinn",
+    section_toggle: "Av/p\u00e5-bryter", toggle: "Av/p\u00e5",
+    off_short: "Av", toggle_entity: "Enhet for av/p\u00e5-bryter",
     zone_residual_entity: "Enhet for restvarme", zone_name: "Navn p\u00e5 kokesonen (valgfritt)",
   },
   da: {
@@ -801,6 +821,8 @@ const T = {
     boost_entity: "Enhed for intensivtilstand", child_lock_entity: "Enhed for b\u00f8rnesikring",
     power_entity: "Enhed for effekt (W)", power_on_threshold: "K\u00f8rer over denne effekt (W)",
     zones_count: "Antal kogezoner", zone_level_entity: "Enhed for trin",
+    section_toggle: "T\u00e6nd/sluk-knap", toggle: "T\u00e6nd/sluk",
+    off_short: "Slukket", toggle_entity: "Enhed for t\u00e6nd/sluk-knap",
     zone_residual_entity: "Enhed for restvarme", zone_name: "Kogezonens navn (valgfrit)",
   },
   pl: {
@@ -873,6 +895,8 @@ const T = {
     boost_entity: "Encja trybu intensywnego", child_lock_entity: "Encja blokady rodzicielskiej",
     power_entity: "Encja mocy (W)", power_on_threshold: "Pracuje powy\u017cej tej mocy (W)",
     zones_count: "Liczba p\u00f3l grzejnych", zone_level_entity: "Encja poziomu",
+    section_toggle: "W\u0142\u0105cznik", toggle: "Zasilanie",
+    off_short: "Wy\u0142.", toggle_entity: "Encja w\u0142\u0105cznika",
     zone_residual_entity: "Encja ciep\u0142a resztkowego", zone_name: "Nazwa pola grzejnego (opcjonalnie)",
   },
 };
@@ -2066,15 +2090,19 @@ class ApplianceCard extends HTMLElement {
     let fan = { level: 0, boost: false, percentage: null, preset: null };
     if (cap.fan) {
       fan = hoodFanState(hass, cfg, norm);
-      if (fan.level > 0 && cfg.fan_entity) {
+      // Shown even at rest: this line is what opens the speed entity, so
+      // hiding it while the hood is off removes the only way to set it.
+      if (cfg.fan_entity) {
         extraLines.push({
           icon: "mdi:fan",
           label: t(hass, "fan_speed"),
-          value: fan.boost
-            ? t(hass, "boost")
-            : fan.percentage !== null
-              ? `${Math.round(fan.percentage)} %`
-              : fan.label || String(fan.level),
+          value: fan.level === 0
+            ? t(hass, "off_short")
+            : fan.boost
+              ? t(hass, "boost")
+              : fan.percentage !== null
+                ? `${Math.round(fan.percentage)} %`
+                : fan.label || String(fan.level),
           entity: cfg.fan_entity,
         });
       }
@@ -2166,8 +2194,17 @@ class ApplianceCard extends HTMLElement {
       childLock,
     };
 
+    // A plain on/off control, for the types that have no cycle to start or
+    // stop: a hood or a cooktop could report its state but never change it.
+    let toggleOn = false;
+    if (cfg.toggle_entity) {
+      const tst = stateObj(hass, cfg.toggle_entity);
+      toggleOn = !!tst && ["on", "true", "open"].includes(String(tst.state).toLowerCase());
+    }
+
     // Action buttons
     const actions = [
+      { key: "toggle", entity: cfg.toggle_entity, icon: "mdi:power", label: t(hass, "toggle"), on: toggleOn },
       { key: "start", entity: cfg.start_entity, icon: "mdi:play", label: t(hass, "start") },
       { key: "pause", entity: cfg.pause_entity, icon: "mdi:pause", label: t(hass, "pause") },
       { key: "resume", entity: cfg.resume_entity, icon: "mdi:play-pause", label: t(hass, "resume") },
@@ -2230,6 +2267,7 @@ class ApplianceCard extends HTMLElement {
           color: var(--primary-text-color, #1c1c1c);
         }
         .action-btn:hover { background: var(--secondary-background-color, rgba(0,0,0,0.04)); }
+        .action-btn.on { color: var(--primary-color, #03a9f4); border-color: var(--primary-color, #03a9f4); }
         .action-btn ha-icon { --mdc-icon-size: 20px; }
       </style>
     `;
@@ -2311,7 +2349,7 @@ class ApplianceCard extends HTMLElement {
       ? `<div class="actions-row">${actions
           .map(
             (a) =>
-              `<div class="action-btn" data-entity="${a.entity}" title="${a.label}" aria-label="${a.label}"><ha-icon icon="${a.icon}"></ha-icon></div>`
+              `<div class="action-btn ${a.on ? "on" : ""}" data-entity="${a.entity}" title="${a.label}" aria-label="${a.label}"><ha-icon icon="${a.icon}"></ha-icon></div>`
           )
           .join("")}</div>`
       : "";
@@ -2410,6 +2448,11 @@ const SECTIONS = [
 
   // Cooktop
   { field: "child_lock_entity", types: ["cooktop"], labelKey: "section_child_lock", includeDomains: ["binary_sensor", "switch", "lock"] },
+
+  // Any type: the on/off control. Named toggle_entity rather than
+  // power_switch_entity so it cannot be confused with power_entity below,
+  // which is the wattage meter.
+  { field: "toggle_entity", types: APPLIANCE_TYPES, labelKey: "section_toggle", includeDomains: ACTION_DOMAINS.concat(["fan"]) },
 
   // Any type: a plug's power meter, optionally driving the state itself.
   { field: "power_entity", types: APPLIANCE_TYPES, labelKey: "section_power", includeDomains: ["sensor"], extra: (c) =>
