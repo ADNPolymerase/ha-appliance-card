@@ -1,4 +1,4 @@
-const CARD_VERSION = "1.0.0-beta.1";
+const CARD_VERSION = "1.0.0-beta.2";
 
 console.info(
   "%c HA-APPLIANCE-CARD %c v" + CARD_VERSION + " ",
@@ -1274,15 +1274,63 @@ function zoneState(hass, zone) {
 
 // Hood fan: a `fan` entity gives a percentage and/or a preset; anything else
 // degrades to plain on/off, which is all a smart plug can tell us.
+// A speed picker that is not a `fan` entity: Home Connect exposes a hood's
+// venting level as a select of opaque options
+// ("Cooking.Common.EnumType.Hood.VentingLevel.FanStage02"), so map the option
+// to a 1-3 scale using the option list when there is one, and the trailing
+// digit otherwise.
+function levelFromChoice(st) {
+  const raw = String(st.state);
+  const low = raw.toLowerCase();
+  if (["off", "unknown", "unavailable", "none", "", "0", "false"].includes(low) || /fanoff|\.off$|_off$/.test(low)) {
+    return { level: 0, boost: false, label: null };
+  }
+  const boost = /intensiv|boost|turbo/.test(low);
+  const options = Array.isArray(st.attributes.options) ? st.attributes.options : null;
+  if (options && options.length) {
+    const usable = options.filter((o) => !/fanoff|\.off$|_off$|^off$/i.test(String(o)));
+    const idx = usable.indexOf(raw);
+    if (idx >= 0 && usable.length > 1) {
+      return { level: Math.max(1, Math.min(3, Math.round(((idx + 1) / usable.length) * 3))), boost, label: String(idx + 1) };
+    }
+  }
+  const digits = low.match(/(\d+)\s*$/);
+  if (digits) {
+    const n = parseInt(digits[1], 10);
+    return { level: Math.max(1, Math.min(3, n)), boost, label: String(n) };
+  }
+  return { level: boost ? 3 : 2, boost, label: null };
+}
+
 function hoodFanState(hass, cfg, norm) {
-  const out = { level: 0, boost: false, percentage: null, preset: null };
+  const out = { level: 0, boost: false, percentage: null, preset: null, label: null };
   const fst = cfg.fan_entity ? stateObj(hass, cfg.fan_entity) : null;
   if (fst) {
-    if (String(fst.state).toLowerCase() === "on") {
-      const pct = fst.attributes.percentage;
-      out.percentage = typeof pct === "number" ? pct : null;
-      out.preset = fst.attributes.preset_mode || null;
-      out.level = out.percentage === null ? 2 : Math.max(1, Math.min(3, Math.ceil(out.percentage / 33.34)));
+    const domain = domainOf(cfg.fan_entity);
+    if (domain === "fan") {
+      if (String(fst.state).toLowerCase() === "on") {
+        const pct = fst.attributes.percentage;
+        out.percentage = typeof pct === "number" ? pct : null;
+        out.preset = fst.attributes.preset_mode || null;
+        out.level = out.percentage === null ? 2 : Math.max(1, Math.min(3, Math.ceil(out.percentage / 33.34)));
+      }
+    } else if (norm === "idle") {
+      // A select keeps its last venting level after the hood is switched off,
+      // so the appliance's own state has the last word here.
+      out.level = 0;
+    } else {
+      const parsed = levelFromChoice(fst);
+      out.level = parsed.level;
+      out.boost = parsed.boost;
+      out.label = parsed.label;
+      if (unitOf(hass, cfg.fan_entity) === "%") {
+        const pct = parseFloat(fst.state);
+        if (!isNaN(pct)) {
+          out.percentage = pct;
+          out.level = pct <= 0 ? 0 : Math.max(1, Math.min(3, Math.ceil(pct / 33.34)));
+          out.label = null;
+        }
+      }
     }
   } else if (isActiveState(norm)) {
     // No fan entity: we know it runs, not how fast. Mid speed reads as "on"
@@ -1842,8 +1890,17 @@ class ApplianceCard extends HTMLElement {
     // it is actually doing anything.
     let powerDerived = false;
     const watts = cfg.power_entity ? numericState(hass, cfg.power_entity) : null;
-    if (cfg.power_entity && cfg.power_on_threshold !== undefined && cfg.power_on_threshold !== "") {
-      const derived = powerDerivedState(watts, parseFloat(cfg.power_on_threshold), this._powerWasRunning);
+    const hasThreshold = cfg.power_on_threshold !== undefined && cfg.power_on_threshold !== "";
+    // Pointing state_entity at the power meter itself can only mean "derive the
+    // state from it"; without a default threshold the card would print a bare
+    // wattage as the appliance's state.
+    const threshold = hasThreshold
+      ? parseFloat(cfg.power_on_threshold)
+      : cfg.power_entity === cfg.state_entity
+        ? 10
+        : NaN;
+    if (cfg.power_entity && isFinite(threshold)) {
+      const derived = powerDerivedState(watts, threshold, this._powerWasRunning);
       if (derived) {
         // Only "running" flips the latch on. "done" must leave it set, or the
         // next render would fall straight back to "idle" and the finished
@@ -2017,7 +2074,8 @@ class ApplianceCard extends HTMLElement {
             ? t(hass, "boost")
             : fan.percentage !== null
               ? `${Math.round(fan.percentage)} %`
-              : String(fan.level),
+              : fan.label || String(fan.level),
+          entity: cfg.fan_entity,
         });
       }
     }
@@ -2043,11 +2101,29 @@ class ApplianceCard extends HTMLElement {
         zones = configured.map((z) => ({ ...zoneState(hass, z), title: z.name || "" }));
       } else {
         // Nothing but an on/off signal: show that it heats without inventing
-        // a level or a zone we have no data for.
+        // a level or a zone we have no data for. Home Connect hobs are exactly
+        // this case \u2014 they report a global power level but never say which
+        // zone it belongs to.
         const on = isActiveState(norm);
-        zones = Array.from({ length: 4 }, () => ({
-          on, label: "", intensity: on ? 0.3 : 0, residual: false, max: false, title: "",
+        let intensity = on ? 0.3 : 0;
+        if (on && cfg.power_level_entity) {
+          const gl = numericState(hass, cfg.power_level_entity);
+          if (gl !== null && gl > 0) intensity = Math.max(0.2, Math.min(1, gl / 9));
+        }
+        zones = Array.from({ length: cfg.zones_count || 4 }, () => ({
+          on, label: "", intensity, residual: false, max: false, title: "",
         }));
+      }
+      if (cfg.power_level_entity) {
+        const plst = stateObj(hass, cfg.power_level_entity);
+        if (plst && !["unknown", "unavailable"].includes(plst.state)) {
+          extraLines.push({
+            icon: "mdi:speedometer",
+            label: t(hass, "power_level"),
+            value: formatInfoValue(plst, hass),
+            entity: cfg.power_level_entity,
+          });
+        }
       }
       const active = zones.filter((z) => z.on).length;
       if (configured.length && active > 0) {
@@ -2069,9 +2145,10 @@ class ApplianceCard extends HTMLElement {
     // Power draw is worth showing on any type once the entity is there.
     if (cfg.power_entity && watts !== null) {
       extraLines.push({
-        icon: "mdi:flash",
+        icon: cfg.power_icon || "mdi:power-plug",
         label: t(hass, "power"),
         value: `${Math.round(watts)} ${unitOf(hass, cfg.power_entity) || "W"}`,
+        entity: cfg.power_entity,
       });
     }
 
@@ -2095,7 +2172,6 @@ class ApplianceCard extends HTMLElement {
       { key: "pause", entity: cfg.pause_entity, icon: "mdi:pause", label: t(hass, "pause") },
       { key: "resume", entity: cfg.resume_entity, icon: "mdi:play-pause", label: t(hass, "resume") },
       { key: "stop", entity: cfg.stop_entity, icon: "mdi:stop", label: t(hass, "stop") },
-      cap.light ? { key: "light", entity: cfg.light_entity, icon: lit ? "mdi:lightbulb" : "mdi:lightbulb-outline", label: t(hass, "light") } : {},
       cap.filter ? { key: "filter_reset", entity: cfg.filter_reset_entity, icon: "mdi:air-filter", label: t(hass, "filter_reset") } : {},
     ].filter((a) => a.entity);
 
@@ -2110,6 +2186,14 @@ class ApplianceCard extends HTMLElement {
           --mdc-icon-size: 18px; color: var(--secondary-text-color, #767676);
         }
         .conn-badge.disconnected { color: var(--error-color, #f44336); }
+        /* The light sits in the header rather than in the button row: on a
+           hood it is the only control, and a full row for it made the card
+           needlessly tall. */
+        .light-badge {
+          position: absolute; top: 10px; left: 12px; cursor: pointer;
+          --mdc-icon-size: 20px; color: var(--secondary-text-color, #767676);
+        }
+        .light-badge.on { color: #ffb300; }
         .top { display: flex; flex-direction: column; align-items: center; text-align: center; cursor: pointer; }
         .machine { position: relative; width: 96px; height: 108px; margin: 0 auto 8px; }
         ${illustrationCss(applianceType, color)}
@@ -2122,6 +2206,10 @@ class ApplianceCard extends HTMLElement {
         }
         .info-line ha-icon { --mdc-icon-size: 20px; color: var(--secondary-text-color, #767676); flex-shrink: 0; }
         .info-line .label { color: var(--secondary-text-color, #767676); }
+        /* Lines backed by an entity open its more-info dialog: that is where a
+           venting level or a power level is actually changed, and it costs no
+           extra height on the card. */
+        .info-line.clickable { cursor: pointer; }
         .info-line.warn { color: var(--error-color, #f44336); }
         .info-line.warn ha-icon { color: var(--error-color, #f44336); }
         .bar-row { margin-top: 4px; }
@@ -2191,7 +2279,7 @@ class ApplianceCard extends HTMLElement {
       ? `<div class="info-lines">${lines
           .map(
             (l) =>
-              `<div class="info-line ${l.warn ? "warn" : ""}"><ha-icon icon="${l.icon}"></ha-icon><span class="label">${l.label}</span>${l.value ? `<span>${l.value}</span>` : ""}</div>`
+              `<div class="info-line ${l.warn ? "warn" : ""}${l.entity ? " clickable" : ""}"${l.entity ? ` data-more="${l.entity}"` : ""}><ha-icon icon="${l.icon}"></ha-icon><span class="label">${l.label}</span>${l.value ? `<span>${l.value}</span>` : ""}</div>`
           )
           .join("")}</div>`
       : "";
@@ -2232,9 +2320,14 @@ class ApplianceCard extends HTMLElement {
       ? `<div class="conn-badge ${connectivity ? "" : "disconnected"}"><ha-icon icon="${connectivity ? "mdi:wifi" : "mdi:wifi-off"}"></ha-icon></div>`
       : "";
 
+    const lightBadgeHtml = cap.light && cfg.light_entity
+      ? `<div class="light-badge ${lit ? "on" : ""}" data-entity="${cfg.light_entity}" title="${t(hass, "light")}" aria-label="${t(hass, "light")}"><ha-icon icon="${lit ? "mdi:lightbulb-on" : "mdi:lightbulb-outline"}"></ha-icon></div>`
+      : "";
+
     this._root.innerHTML = `
       ${styleTag}
       <ha-card>
+        ${lightBadgeHtml}
         ${connBadgeHtml}
         <div class="top" id="header">
           ${iconHtml}
@@ -2250,10 +2343,16 @@ class ApplianceCard extends HTMLElement {
 
     const header = this._root.getElementById("header");
     if (header) header.addEventListener("click", () => this._moreInfo(cfg.state_entity));
-    this._root.querySelectorAll(".action-btn").forEach((el) => {
+    this._root.querySelectorAll(".action-btn, .light-badge").forEach((el) => {
       el.addEventListener("click", (ev) => {
         ev.stopPropagation();
         this._call(el.getAttribute("data-entity"));
+      });
+    });
+    this._root.querySelectorAll(".info-line[data-more]").forEach((el) => {
+      el.addEventListener("click", (ev) => {
+        ev.stopPropagation();
+        this._moreInfo(el.getAttribute("data-more"));
       });
     });
   }
@@ -2298,10 +2397,10 @@ const SECTIONS = [
   { field: "heating_entity", types: ["oven"], labelKey: "section_heating", includeDomains: ["binary_sensor", "sensor", "switch"] },
 
   // Microwave
-  { field: "power_level_entity", types: ["microwave"], labelKey: "section_power_level", includeDomains: ["number", "select", "sensor", "input_number", "input_select"] },
+  { field: "power_level_entity", types: ["microwave", "cooktop"], labelKey: "section_power_level", includeDomains: ["number", "select", "sensor", "input_number", "input_select"] },
 
   // Hood
-  { field: "fan_entity", types: ["hood"], labelKey: "section_fan", includeDomains: ["fan"] },
+  { field: "fan_entity", types: ["hood"], labelKey: "section_fan", includeDomains: ["fan", "select", "input_select", "sensor", "number", "input_number"] },
   { field: "boost_entity", types: ["hood"], labelKey: "section_boost", includeDomains: ["switch", "binary_sensor", "input_boolean"] },
   { field: "filter_life_entity", types: ["hood"], labelKey: "section_filter_life", includeDomains: ["sensor"] },
   { field: "filter_reset_entity", types: ["hood"], labelKey: "section_filter_reset", includeDomains: ACTION_DOMAINS },

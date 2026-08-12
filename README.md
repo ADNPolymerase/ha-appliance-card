@@ -49,7 +49,7 @@ Only `state_entity` is required — everything else is optional. In the visual e
 | `name` | Card title. Defaults to the state entity's friendly name. |
 | `compact` | `true` to hide the illustration and show only text. |
 | `appliance_type` | `auto` (default) \| `washer` \| `dryer` \| `dishwasher` \| `oven` \| `microwave` \| `hood` \| `cooktop`. The visual editor only offers the fields the chosen type can use. |
-| `power_entity` / `power_on_threshold` | Power sensor (W). With a threshold set, the state is derived from it instead of `state_entity`: above the threshold is *running*, and falling back below it is *finished* until the next run. |
+| `power_entity` / `power_on_threshold` / `power_icon` | Power sensor (W). With a threshold set, the state is derived from it instead of `state_entity`: above the threshold is *running*, and falling back below it is *finished* until the next run. Pointing `state_entity` at the same power sensor enables this on its own, with a default threshold of 10 W. `power_icon` overrides the default `mdi:power-plug`. |
 | `program_entity` / `program_format` | Program/cycle entity. `clean` (default) trims common `"<category> Pr <name>"` patterns; `raw` shows the state as-is. |
 | `remaining_time_entity` / `remaining_time_unit` | Remaining duration. Unit `auto` (default), `seconds`, or `minutes`. |
 | `remaining_time_hide_when_idle` | `true` to only show remaining time while the appliance is running. Prevents stale completion timestamps (e.g. Samsung SmartThings keeping a past finish time after the cycle ends) from displaying. |
@@ -66,13 +66,14 @@ Per type:
 |---|---|---|
 | `target_temperature_entity` / `current_temperature_entity` | oven | Setpoint and actual temperature. While climbing, the bar becomes a preheat gauge and the state reads *Preheating*. |
 | `heating_entity` | oven | Optional; drives the glowing elements. Falls back to the running state. |
-| `light_entity` | oven, hood | Cavity light / hood lamps, also shown as a toggle button. |
-| `power_level_entity` | microwave | Power level (e.g. 800 W). |
-| `fan_entity` | hood | A `fan` entity: its percentage or preset sets the airflow speed shown. |
+| `light_entity` | oven, hood | Cavity light / hood lamps. Shown as a small toggle in the card header rather than a full button row, to keep the card short. |
+| `power_level_entity` | microwave, cooktop | Power level (e.g. 800 W). On a cooktop it is the *global* level reported by hobs that never say which zone is heating; it sets how brightly the zones glow. |
+| `fan_entity` | hood | The speed source. A `fan` entity uses its percentage or preset; a `select` (Home Connect exposes the venting level that way), `sensor` or `number` is mapped onto a 1–3 scale, using the option list when there is one. Click the speed line to open the entity and change it. |
 | `boost_entity` | hood | Optional intensive mode, when the preset doesn't already say so. |
 | `filter_life_entity` / `filter_reset_entity` | hood | Grease filter wear (%) as a bar, and a reset button. |
 | `zones` | cooktop | List of `{ level_entity, residual_heat_entity?, name? }`, up to 6. Levels can be numeric (0–9) or a word (`boost`); zones off but still hot show `H`. |
 | `zones_layout` | cooktop | `2x1` \| `2x2` \| `3x2`. Derived from the number of zones by default. |
+| `zones_count` | cooktop | How many zones to draw when no per-zone entity exists (default 4). |
 | `child_lock_entity` | cooktop | Shows a padlock on the illustration. |
 
 ### Example
