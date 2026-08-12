@@ -14,7 +14,7 @@ A Lovelace card for kitchen and laundry appliances — washers, dryers, dishwash
 
 No brand assumed: every field is a configurable entity mapping, so it works with **any** integration (Electrolux, Samsung, LG, Home Connect, Miele, a smart plug + template sensors…).
 
-> Status: early preview. Feedback and issues welcome.
+> Feedback and issues welcome.
 > 🇫🇷 [Lire en français](README.fr.md)
 
 ![HA Appliance Card screenshot](https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/screenshot.png)

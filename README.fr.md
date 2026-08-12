@@ -14,7 +14,7 @@ Une card Lovelace pour les appareils de cuisine et de buanderie — lave-linge, 
 
 Aucune marque supposée : chaque champ est un mapping d'entité configurable, elle fonctionne donc avec **n'importe quelle** intégration (Electrolux, Samsung, LG, Home Connect, Miele, une prise connectée + capteurs template…).
 
-> Statut : préversion. Retours et issues bienvenus.
+> Retours et issues bienvenus.
 > 🇬🇧 [Read in English](README.md)
 
 ![HA Appliance Card screenshot](https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/screenshot.fr.png)
