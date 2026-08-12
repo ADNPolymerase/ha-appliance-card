@@ -55,7 +55,7 @@ Only `state_entity` is required — everything else is optional. In the visual e
 | `remaining_time_entity` / `remaining_time_unit` | Remaining duration. Unit `auto` (default), `seconds`, or `minutes`. |
 | `remaining_time_hide_when_idle` | `true` to only show remaining time while the appliance is running. Prevents stale completion timestamps (e.g. Samsung SmartThings keeping a past finish time after the cycle ends) from displaying. |
 | `progress_entity` | Optional 0–100 sensor; overrides the client-side estimate. |
-| `door_entity` / `door_open_state` / `door_invert` | Door sensor, the state meaning "open" (default `on`), and an invert toggle. |
+| `door_entity` / `door_open_state` / `door_invert` / `door_hide_in_list` | Door sensor, the state meaning "open" (default `on`), an invert toggle, and an option to keep the door out of the info list (it still shows on the illustration). |
 | `alerts_entity` | Entity whose *attributes* are on/off flags; any "on/true/active" attribute is shown as an active alert. |
 | `connectivity_entity` / `connectivity_connected_state` | Connectivity sensor and the state meaning "connected" (default `on`). |
 | `info_entities` | Up to 5 `{ entity, icon?, label?, value_map? }` extra info lines (temperature, spin speed…). Entities with a `timestamp`/`date` device class are formatted in the local timezone using the Home Assistant language, like HA itself shows them. `value_map` relabels raw values, for integrations reporting a phase as a bare code or an untranslated token (see below). |
