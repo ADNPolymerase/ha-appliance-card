@@ -547,6 +547,87 @@ fire(zoneSelect, 'change', { target: { value: '1' } });
 checkFired('10/10 nombre de foyers', edZoneCount,
   ev => check('10/10 nombre de foyers : liste tronquee', ev.detail.config.zones.length, 1));
 
+// ── Silent config loss on rebuild ────────────────────────────────────────────
+// Home Assistant calls setConfig again after every config-changed the editor
+// emits. When that round trip changes which sections are filled, the editor
+// rebuilds and recreates every ha-entity-picker — and a fresh picker announces
+// an empty value before it knows its own. Taken at face value, that empty
+// value deletes the configured entity and the card ends up saying the entity
+// cannot be found, with nobody having touched anything.
+
+const LOSS_STATES = {
+  'sensor.washer_state':  { state: 'Running', attributes: {} },
+  // Deliberately not a sibling of the state entity, so auto-suggestion stays
+  // out of this scenario.
+  'sensor.other_program': { state: 'Cotton', attributes: {} },
+};
+
+function editorAfterRoundTrip() {
+  const ed = new Editor();
+  ed.setConfig({ type: 'custom:ha-appliance-card', state_entity: 'sensor.washer_state' });
+  ed.hass = HASS(LOSS_STATES);
+  // The round trip: a second field arrives, the open-set changes, the form is
+  // rebuilt and every picker is recreated.
+  ed.setConfig({ type: 'custom:ha-appliance-card', state_entity: 'sensor.washer_state',
+                 program_entity: 'sensor.other_program' });
+  return ed;
+}
+
+const edLoss = editorAfterRoundTrip();
+const freshPicker = edLoss._root.querySelector('[data-slot="state_entity"]').children.at(-1);
+fire(freshPicker, 'value-changed', { detail: { value: '' } });
+check('picker recree : l\'entite configuree survit a un value-changed vide',
+  edLoss._config.state_entity, 'sensor.washer_state');
+
+const edLossInfo = new Editor();
+edLossInfo.setConfig({ type: 'custom:ha-appliance-card', state_entity: 'sensor.washer_state',
+                       info_entities: [{ entity: 'sensor.other_program' }] });
+edLossInfo.hass = HASS(LOSS_STATES);
+const infoPicker = edLossInfo._root.querySelector('[data-slot="__info_0"]').children.at(-1);
+fire(infoPicker, 'value-changed', { detail: { value: '' } });
+check('picker d\'info recree : l\'entite survit a un value-changed vide',
+  edLossInfo._config.info_entities[0]?.entity, 'sensor.other_program');
+
+// The same empty value must still clear the field once the user has actually
+// been in the form — otherwise the guard would make entities unremovable.
+const edClear = editorAfterRoundTrip();
+edClear._touched = true;
+fire(edClear._root.querySelector('[data-slot="state_entity"]').children.at(-1),
+     'value-changed', { detail: { value: '' } });
+check('apres interaction : effacer reste possible', edClear._config.state_entity, undefined);
+
+// An echo of the value already held is not a change and must not be republished.
+const edEcho = editorAfterRoundTrip();
+const echoBefore = edEcho.events.length;
+fire(edEcho._root.querySelector('[data-slot="state_entity"]').children.at(-1),
+     'value-changed', { detail: { value: 'sensor.washer_state' } });
+check('echo de la meme valeur : aucun config-changed emis',
+  edEcho.events.length, echoBefore);
+
+// The guard must read the value the config holds now, not the one captured
+// when the picker was mounted: info entities and zones change without forcing
+// a rebuild, so a stale closure would refuse a legitimate clear.
+const edLate = new Editor();
+edLate.setConfig({ type: 'custom:ha-appliance-card', state_entity: 'sensor.washer_state' });
+edLate.hass = HASS(LOSS_STATES);
+edLate._touched = true;
+const latePicker = edLate._root.querySelector('[data-slot="__info_0"]').children.at(-1);
+fire(latePicker, 'value-changed', { detail: { value: 'sensor.other_program' } });
+check('info : la selection est enregistree',
+  edLate._config.info_entities[0]?.entity, 'sensor.other_program');
+fire(latePicker, 'value-changed', { detail: { value: '' } });
+check('info : effacer juste apres avoir choisi fonctionne encore',
+  edLate._config.info_entities[0]?.entity, undefined);
+
+// The structural guard itself: an equivalent config must not tear the form down.
+const edStable = new Editor();
+edStable.setConfig({ type: 'custom:ha-appliance-card', state_entity: 'sensor.washer_state' });
+edStable.hass = HASS(LOSS_STATES);
+edStable._root.innerHTML = '<!--sentinelle-->';
+edStable.setConfig({ type: 'custom:ha-appliance-card', state_entity: 'sensor.washer_state' });
+contains('config equivalente : le formulaire n\'est pas reconstruit',
+  edStable._root.innerHTML, 'sentinelle');
+
 // ── Editor guards ────────────────────────────────────────────────────────────
 
 check('editeur : les sections suivent le type choisi',

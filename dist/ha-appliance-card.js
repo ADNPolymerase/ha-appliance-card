@@ -1,4 +1,4 @@
-const CARD_VERSION = "1.1.1";
+const CARD_VERSION = "1.1.2";
 
 console.info(
   "%c HA-APPLIANCE-CARD %c v" + CARD_VERSION + " ",
@@ -2535,6 +2535,30 @@ class ApplianceCardEditor extends HTMLElement {
     this._maybeBuild();
   }
 
+  // A freshly created ha-entity-picker announces an empty value before it knows
+  // its own, and Home Assistant calls setConfig again after every
+  // config-changed we emit. A rebuild can therefore be followed immediately by
+  // an empty pick that deletes a configured entity, with nobody having touched
+  // anything \u2014 the card then reports an entity it can no longer find.
+  // So: ignore an echo of the value already held, and never clear a field
+  // until the user has actually been in the form.
+  _acceptsPick(current, value) {
+    const next = value || "";
+    const held = current || "";
+    if (next === held) return false;
+    if (!next && held && !this._touched) return false;
+    return true;
+  }
+
+  // Any real interaction with the form counts, whichever control it lands on.
+  _wireTouchTracking() {
+    if (this._touchWired) return;
+    this._touchWired = true;
+    for (const type of ["focusin", "pointerdown", "keydown"]) {
+      this._root.addEventListener(type, () => { this._touched = true; });
+    }
+  }
+
   _zonesList() {
     return (this._config.zones || []).map((z) => ({ ...z }));
   }
@@ -2556,6 +2580,8 @@ class ApplianceCardEditor extends HTMLElement {
     picker.label = `${t(hass, labelKey)} ${index + 1}`;
     picker.includeDomains = includeDomains;
     picker.addEventListener("value-changed", (ev) => {
+      const held = (this._zonesList()[index] || {})[field];
+      if (!this._acceptsPick(held, ev.detail.value)) return;
       this._updateZone(index, { [field]: ev.detail.value || undefined });
     });
     slotEl.appendChild(picker);
@@ -2663,6 +2689,7 @@ class ApplianceCardEditor extends HTMLElement {
     if (opts.includeDomains) picker.includeDomains = opts.includeDomains;
     picker.addEventListener("value-changed", (ev) => {
       const value = ev.detail.value;
+      if (!this._acceptsPick(this._config[field], value)) return;
       this._config = { ...this._config };
       if (value) this._config[field] = value;
       else delete this._config[field];
@@ -2691,6 +2718,8 @@ class ApplianceCardEditor extends HTMLElement {
     picker.value = current.entity || "";
     picker.label = `${t(hass, "entity")} ${index + 1}`;
     picker.addEventListener("value-changed", (ev) => {
+      const held = (this._infoEntitiesList()[index] || {}).entity;
+      if (!this._acceptsPick(held, ev.detail.value)) return;
       this._updateInfoEntity(index, { entity: ev.detail.value || undefined });
     });
     slotEl.appendChild(picker);
@@ -2924,6 +2953,7 @@ class ApplianceCardEditor extends HTMLElement {
       </details>
     `;
 
+    this._wireTouchTracking();
     this._mountPicker(this._root.querySelector('[data-slot="state_entity"]'), "state_entity", {
       label: t(hass, "state_entity"),
       includeDomains: ["sensor", "binary_sensor"],
