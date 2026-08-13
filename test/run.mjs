@@ -299,11 +299,13 @@ check('seuil implicite quand state_entity et power_entity sont le meme capteur',
     plugStates(1850))), 'Running');
 
 // Home Connect exposes a hood's venting level as a select of opaque options.
+// The real option strings from a Siemens LR97CBS20 on Home Connect, as shown
+// in the reporter's own more-info dialog.
 const HC_OPTS = [
-  'Cooking.Common.EnumType.Hood.VentingLevel.FanOff',
-  'Cooking.Common.EnumType.Hood.VentingLevel.FanStage01',
-  'Cooking.Common.EnumType.Hood.VentingLevel.FanStage02',
-  'Cooking.Common.EnumType.Hood.VentingLevel.FanStage03',
+  'Cooking.Hood.EnumType.Stage.FanOff',
+  'Cooking.Hood.EnumType.Stage.FanStage01',
+  'Cooking.Hood.EnumType.Stage.FanStage02',
+  'Cooking.Hood.EnumType.Stage.FanStage03',
 ];
 const hoodSelect = render({ appliance_type: 'hood', state_entity: 'switch.hood', fan_entity: 'select.venting' },
   { 'switch.hood': { state: 'on', attributes: {} },
