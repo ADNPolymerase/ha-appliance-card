@@ -340,6 +340,38 @@ const hoodOff = render({ appliance_type: 'hood', state_entity: 'switch.hood', fa
 check('hotte a l\'arret : la ligne vitesse reste affichee', infoLine(hoodOff, 'Fan speed'), 'Off');
 contains('hotte a l\'arret : la ligne vitesse reste cliquable', hoodOff, 'data-more="select.venting"');
 
+// Home Connect drops the venting level to unavailable while the hood is off.
+// The line still says "Off" — which is true — but must not invite a click that
+// lands on a more-info dialog where nothing can be set.
+const hoodLost = render({ appliance_type: 'hood', state_entity: 'switch.hood',
+                          fan_entity: 'select.venting' },
+  { 'switch.hood': { state: 'off', attributes: {} },
+    'select.venting': { state: 'unavailable', attributes: {} } });
+check('entite indisponible : la ligne reste affichee', infoLine(hoodLost, 'Fan speed'), 'Off');
+check('entite indisponible : la ligne n\'est plus cliquable',
+  /data-more="select.venting"/.test(hoodLost), false);
+check('entite indisponible : plus de classe clickable',
+  /class="info-line \s*clickable"/.test(hoodLost), false);
+
+// Lost while the hood runs is not a speed of zero: we simply do not know.
+check('entite perdue en marche : ni "Off" ni un niveau invente',
+  infoLine(render({ appliance_type: 'hood', state_entity: 'switch.hood', fan_entity: 'select.venting' },
+    { 'switch.hood': { state: 'on', attributes: {} },
+      'select.venting': { state: 'unavailable', attributes: {} } }), 'Fan speed'), '—');
+
+// The rule is generic, not hood-specific.
+check('puissance indisponible : ligne non cliquable',
+  /data-more="sensor.pw"/.test(render({ appliance_type: 'washer', state_entity: 'sensor.w',
+    power_entity: 'sensor.pw' },
+    { 'sensor.w': { state: 'Running', attributes: {} },
+      'sensor.pw': { state: 'unavailable', attributes: {} } })), false);
+
+contains('puissance disponible : ligne cliquable',
+  render({ appliance_type: 'washer', state_entity: 'sensor.w', power_entity: 'sensor.pw' },
+    { 'sensor.w': { state: 'Running', attributes: {} },
+      'sensor.pw': { state: '1850', attributes: { unit_of_measurement: 'W' } } }),
+  'data-more="sensor.pw"');
+
 // ── On/off control ───────────────────────────────────────────────────────────
 // A hood or a cooktop has no cycle to start or stop, so without this option it
 // could report its state but never change it.

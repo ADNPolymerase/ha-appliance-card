@@ -1,4 +1,4 @@
-const CARD_VERSION = "1.1.0";
+const CARD_VERSION = "1.1.1";
 
 console.info(
   "%c HA-APPLIANCE-CARD %c v" + CARD_VERSION + " ",
@@ -980,6 +980,15 @@ const STATE_COLORS = {
 
 function stateObj(hass, entityId) {
   return entityId && hass.states[entityId] ? hass.states[entityId] : null;
+}
+
+// An entity you cannot act on. Integrations routinely drop an option to
+// unavailable while the appliance is off \u2014 Home Connect does it with a
+// hood's venting level \u2014 and opening the more-info dialog of such an
+// entity is a dead end, so the card must not invite the click.
+function entityUsable(hass, entityId) {
+  const st = stateObj(hass, entityId);
+  return !!st && !["unavailable", "unknown"].includes(String(st.state).toLowerCase());
 }
 
 function numericState(hass, entityId) {
@@ -2093,10 +2102,15 @@ class ApplianceCard extends HTMLElement {
       // Shown even at rest: this line is what opens the speed entity, so
       // hiding it while the hood is off removes the only way to set it.
       if (cfg.fan_entity) {
+        // A speed entity that dropped out while the hood runs is unknown, not
+        // zero; once the hood is off, "off" is the truthful reading.
+        const fanLost = !entityUsable(hass, cfg.fan_entity) && norm !== "idle";
         extraLines.push({
           icon: "mdi:fan",
           label: t(hass, "fan_speed"),
-          value: fan.level === 0
+          value: fanLost
+            ? "\u2014"
+            : fan.level === 0
             ? t(hass, "off_short")
             : fan.boost
               ? t(hass, "boost")
@@ -2315,9 +2329,10 @@ class ApplianceCard extends HTMLElement {
     lines.push(...extraLines);
     const linesHtml = lines.length
       ? `<div class="info-lines">${lines
+          .map((l) => ({ ...l, open: !!l.entity && entityUsable(hass, l.entity) }))
           .map(
             (l) =>
-              `<div class="info-line ${l.warn ? "warn" : ""}${l.entity ? " clickable" : ""}"${l.entity ? ` data-more="${l.entity}"` : ""}><ha-icon icon="${l.icon}"></ha-icon><span class="label">${l.label}</span>${l.value ? `<span>${l.value}</span>` : ""}</div>`
+              `<div class="info-line ${l.warn ? "warn" : ""}${l.open ? " clickable" : ""}"${l.open ? ` data-more="${l.entity}"` : ""}><ha-icon icon="${l.icon}"></ha-icon><span class="label">${l.label}</span>${l.value ? `<span>${l.value}</span>` : ""}</div>`
           )
           .join("")}</div>`
       : "";
