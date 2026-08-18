@@ -1,4 +1,4 @@
-const CARD_VERSION = "1.2.0";
+const CARD_VERSION = "1.2.1";
 
 console.info(
   "%c HA-APPLIANCE-CARD %c v" + CARD_VERSION + " ",
@@ -905,7 +905,7 @@ const T = {
     program: "\u7a0b\u5e8f", remaining: "\u5269\u4f59\u65f6\u95f4", ready_at: "\u9884\u8ba1\u5b8c\u6210", time_done: "\u5b8c\u6210",
     door_open: "\u95e8\u5df2\u5f00", door_closed: "\u95e8\u5df2\u5173", alerts: "\u8b66\u62a5",
     connected: "\u5df2\u8fde\u63a5", disconnected: "\u5df2\u65ad\u5f00",
-    start: "\u5f00\u59cb", pause: "\u6682\u505c", resume: "\u7ee7\u7eed", stop: "\u7ed3\u675f",
+    start: "\u5f00\u59cb", pause: "\u6682\u505c", resume: "\u7ee7\u7eed", stop: "\u505c\u6b62",
     name: "\u540d\u79f0", icon: "\u56fe\u6807", entity: "\u5b9e\u4f53",
     main_settings: "\u4e3b\u5b9e\u4f53", display_settings: "\u663e\u793a",
     action_settings: "\u63a7\u5236\u9879",
