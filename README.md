@@ -21,12 +21,13 @@ No brand assumed: every field is a configurable entity mapping, so it works with
 
 ## Features
 
-- **State normalization**: `Idle`, `RUNNING`, `wash`, `En marche`… are auto-detected (accent-insensitive, 12 languages) and mapped to idle / running / paused / done / delayed / error. `state_map` covers anything else; unmatched states are shown as-is.
+- **State normalization**: `Idle`, `RUNNING`, `wash`, `En marche`… are auto-detected (accent-insensitive) and mapped to idle / preheating / running / paused / done / delayed / error. `state_map` covers anything else; unmatched states are shown as-is.
 - **Seven appliance types**, each with its own animated illustration: washer (water), dryer (tumbling), dishwasher (spray arm), oven (glowing elements, door dropping open), microwave (turntable, lit cavity), cooker hood (rising airflow, light beams) and cooktop (per-zone level and residual heat). Static when idle, auto-detected or set via `appliance_type`. `compact: true` keeps only the text.
 - **Works from a smart plug alone**: set `power_entity` + `power_on_threshold` and the state is derived from consumption — standby → running → finished — with no appliance integration at all.
 - **Progress bar** from a direct percentage sensor, or estimated client-side from the remaining time.
 - **Program, info lines** (temperature, spin speed…), **door, alerts, connectivity** (top-right wifi icon) — each optional and independent.
 - **Start / pause / resume / stop** controls, only shown for the entities you configure.
+- **Interface translated into 13 languages** (EN, FR, DE, ES, IT, NL, PT, SV, NO, DA, PL, RU, ZH), picked up from the Home Assistant locale.
 - **Visual editor**: pick the state entity and the other fields are auto-suggested from sibling entities on the same device.
 
 ## Installation (HACS)
@@ -168,6 +169,11 @@ In the visual editor the same thing is edited as one `code: label` per line,
 under each info entity. `=` also works as the separator, blank lines and lines
 starting with `#` are ignored, and only the first `:` or `=` splits the line so
 a label may itself contain one.
+
+## Thanks
+
+- [@chike-he](https://github.com/chike-he) — Chinese translation ([#3](https://github.com/ADNPolymerase/ha-appliance-card/issues/3))
+- [@pbarone](https://github.com/pbarone) — `device_class: timestamp` support for the remaining time ([#2](https://github.com/ADNPolymerase/ha-appliance-card/pull/2))
 
 ## License
 

@@ -21,12 +21,13 @@ Aucune marque supposée : chaque champ est un mapping d'entité configurable, el
 
 ## Fonctionnalités
 
-- **Normalisation d'état** : `Idle`, `RUNNING`, `wash`, `En marche`… sont détectés automatiquement (insensible aux accents, 12 langues) et convertis en veille / en cours / en pause / terminé / différé / erreur. `state_map` couvre le reste ; les états inconnus sont affichés tels quels.
+- **Normalisation d'état** : `Idle`, `RUNNING`, `wash`, `En marche`… sont détectés automatiquement (insensible aux accents) et convertis en veille / préchauffage / en cours / en pause / terminé / différé / erreur. `state_map` couvre le reste ; les états inconnus sont affichés tels quels.
 - **Sept types d'appareils**, chacun avec sa propre illustration animée : lave-linge (eau), sèche-linge (linge qui tourne), lave-vaisselle (bras d'aspersion), four (résistances qui rougeoient, porte qui bascule), micro-ondes (plateau qui tourne, cavité éclairée), hotte (flux d'air, faisceaux lumineux) et plaque de cuisson (niveau par foyer et chaleur résiduelle). Statique à l'arrêt, auto-détectée ou choisie via `appliance_type`. `compact: true` ne garde que le texte.
 - **Fonctionne avec une simple prise connectée** : renseigne `power_entity` + `power_on_threshold` et l'état est déduit de la consommation — veille → en marche → terminé — sans aucune intégration de l'appareil.
 - **Barre de progression** depuis un capteur de pourcentage direct, ou estimée côté client depuis le temps restant.
 - **Programme, lignes d'info** (température, essorage…), **porte, alertes, connectivité** (icône wifi en haut à droite) — chacun optionnel et indépendant.
 - **Démarrer / Pause / Reprendre / Stop**, affichés uniquement pour les entités que tu configures.
+- **Interface traduite en 13 langues** (EN, FR, DE, ES, IT, NL, PT, SV, NO, DA, PL, RU, ZH), suivant la langue de Home Assistant.
 - **Éditeur visuel** : choisis l'entité d'état et les autres champs sont auto-suggérés depuis les entités sœurs du même appareil.
 
 ## Installation (HACS)
@@ -171,6 +172,11 @@ Dans l'éditeur visuel, la même chose se saisit sous forme d'une ligne
 fonctionne aussi, les lignes vides et celles commençant par `#` sont ignorées,
 et seul le premier `:` ou `=` découpe la ligne, donc un libellé peut lui-même en
 contenir un.
+
+## Remerciements
+
+- [@chike-he](https://github.com/chike-he) — traduction chinoise ([#3](https://github.com/ADNPolymerase/ha-appliance-card/issues/3))
+- [@pbarone](https://github.com/pbarone) — prise en charge de `device_class: timestamp` pour le temps restant ([#2](https://github.com/ADNPolymerase/ha-appliance-card/pull/2))
 
 ## Licence
 

@@ -12,6 +12,7 @@
  * so a dispatch built the wrong way drops the payload and every edit is lost.
  * This card has ten CustomEvent sites and they are all exercised below.
  */
+import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 import { loadCard, markup, freezeClock, now, check, contains, report }
@@ -652,5 +653,34 @@ for (const type of ['hood', 'cooktop', 'washer']) {
 check('carte : state_entity manquante est refusee',
   (() => { try { new Card().setConfig({ type: 'custom:ha-appliance-card' }); return false; }
            catch { return true; } })(), true);
+
+// ── Translation table ────────────────────────────────────────────────────────
+// A partial language block degrades silently: t() falls back to English one key
+// at a time, so a card ends up half translated with nothing ever failing. This
+// is a static check on the table itself, which is what a contributed language
+// needs before it can be trusted.
+
+const SRC    = readFileSync(join(HERE, '..', 'dist', 'ha-appliance-card.js'), 'utf8');
+const tStart = SRC.indexOf('const T = {');
+const TABLE  = eval('(' + SRC.slice(tStart + 'const T ='.length, SRC.indexOf('\n};', tStart) + 2) + ')');
+const EN_KEYS = Object.keys(TABLE.en);
+
+for (const [code, block] of Object.entries(TABLE)) {
+  const missing = EN_KEYS.filter(k => !(k in block));
+  const extra   = Object.keys(block).filter(k => !EN_KEYS.includes(k));
+  check(`traductions ${code} : parite des cles avec en`,
+    [...missing.map(k => '-' + k), ...extra.map(k => '+' + k)].join(' ') || 'ok', 'ok');
+}
+
+// Regional variants must land on the base language, not fall back to English.
+check('locale zh-CN : resolue vers le bloc zh',
+  stateLine((() => {
+    const c = new Card();
+    c.setConfig({ type: 'custom:ha-appliance-card', appliance_type: 'washer', state_entity: 'sensor.w' });
+    c._hass = { ...HASS({ 'sensor.w': { state: 'Running', attributes: {} } }),
+                locale: { language: 'zh-CN' }, language: 'zh-CN' };
+    c._render();
+    return markup(c);
+  })()), '\u8fd0\u884c\u4e2d');
 
 report();
