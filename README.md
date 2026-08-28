@@ -32,11 +32,18 @@ No brand assumed: every field is a configurable entity mapping, so it works with
 
 ## Installation (HACS)
 
-Not yet in the default HACS store — add it as a custom repository:
+1. In HACS, search for **HA Appliance Card** and install it.
+2. Add a `custom:ha-appliance-card` card to your dashboard, in YAML or through the visual editor.
 
-1. HACS → "⋮" menu → **Custom repositories**.
-2. Repository: `https://github.com/ADNPolymerase/ha-appliance-card`, category: **Dashboard**.
-3. Install **HA Appliance Card**, then add a `custom:ha-appliance-card` card (YAML or visual editor).
+<details>
+<summary>Not showing up in HACS yet?</summary>
+
+Inclusion in the default HACS store is still in review, so until it lands the
+card has to be added as a custom repository: HACS → "⋮" menu → **Custom
+repositories** → `https://github.com/ADNPolymerase/ha-appliance-card`,
+category **Dashboard**.
+
+</details>
 
 ## Configuration
 

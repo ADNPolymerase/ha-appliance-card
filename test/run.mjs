@@ -432,9 +432,9 @@ check('non-regression lave-linge : porte fermee', infoLine(washer, 'Door closed'
 const quoted = render({ appliance_type: 'cooktop', state_entity: 'sensor.hob',
                         zones: [{ level_entity: 'sensor.z1', name: 'Avant "gauche" <b>' }] },
   { 'sensor.hob': { state: 'on', attributes: {} }, 'sensor.z1': { state: '3', attributes: {} } });
-// '>' is left alone on purpose: inside a quoted attribute it cannot break out,
-// and only & " < can.
-contains('nom de foyer echappe dans l\'attribut title', quoted, 'title="Avant &quot;gauche&quot; &lt;b>"');
+// All five of & < > " ' are escaped, so the name survives as text and cannot
+// close the attribute or open a tag.
+contains('nom de foyer echappe dans l\'attribut title', quoted, 'title="Avant &quot;gauche&quot; &lt;b&gt;"');
 check('nom de foyer : rien d\'injecte', /title="Avant "gauche"/.test(quoted), false);
 
 // =============================================================================
@@ -682,5 +682,72 @@ check('locale zh-CN : resolue vers le bloc zh',
     c._render();
     return markup(c);
   })()), '\u8fd0\u884c\u4e2d');
+
+// ── Escaping of everything an integration can inject ─────────────────────────
+// The card builds its markup as a string. Every value below comes from the
+// integration, not from the dashboard author: SmartThings, Home Connect, LG
+// and Miele take program names, phase labels, friendly names and alert keys
+// straight from a vendor cloud. Unescaped, any of them renders as HTML in the
+// user's Home Assistant session. Reported by @frenck on hacs/default#9021.
+
+const XSS = '<img src=x onerror=alert(1)>';
+
+// The payload stays in the output — that is the point, it is a value the user
+// should see. What must never happen is it arriving as live markup, so assert
+// on the tag, not on the substring "onerror" which survives harmlessly as text.
+function noInjection(label, html) {
+  check(`${label} : aucune balise vivante`, /<img/i.test(html), false);
+  contains(`${label} : la charge est echappee`, html, '&lt;img');
+}
+
+noInjection('nom convivial', render({ appliance_type: 'washer', state_entity: 'sensor.w' },
+  { 'sensor.w': { state: 'Running', attributes: { friendly_name: XSS } } }));
+
+noInjection('etat brut affiche tel quel',
+  render({ appliance_type: 'washer', state_entity: 'sensor.w', state_show_raw: true },
+    { 'sensor.w': { state: XSS, attributes: {} } }));
+
+// A payload carrying no state keyword, so it really goes down the raw-echo
+// path: '<img ... onerror=...>' would normalise to running on the leading
+// " on" and never be echoed at all, which tested nothing.
+const XSS_PLAIN = '<b>PWN</b>';
+const unmapped = render({ appliance_type: 'washer', state_entity: 'sensor.w' },
+  { 'sensor.w': { state: XSS_PLAIN, attributes: {} } });
+check('etat non reconnu : aucune balise vivante', /<b>/i.test(unmapped), false);
+contains('etat non reconnu : la charge est echappee', unmapped, '&lt;b&gt;PWN&lt;/b&gt;');
+
+noInjection('libelle de ligne d\'info',
+  render({ appliance_type: 'washer', state_entity: 'sensor.w', info_entities: [{ entity: 'sensor.i' }] },
+    { 'sensor.w': { state: 'Running', attributes: {} },
+      'sensor.i': { state: '40', attributes: { friendly_name: XSS } } }));
+
+noInjection('valeur de ligne d\'info',
+  render({ appliance_type: 'washer', state_entity: 'sensor.w', info_entities: [{ entity: 'sensor.i' }] },
+    { 'sensor.w': { state: 'Running', attributes: {} },
+      'sensor.i': { state: XSS, attributes: {} } }));
+
+noInjection('cle d\'alerte',
+  render({ appliance_type: 'washer', state_entity: 'sensor.w', alerts_entity: 'sensor.a' },
+    { 'sensor.w': { state: 'Running', attributes: {} },
+      'sensor.a': { state: 'on', attributes: { [XSS]: 'on' } } }));
+
+// The icon sits inside a quoted attribute, so a bare double quote is enough to
+// break out of it — no angle bracket needed.
+const iconBreak = render(
+  { appliance_type: 'washer', state_entity: 'sensor.w', info_entities: [{ entity: 'sensor.i' }] },
+  { 'sensor.w': { state: 'Running', attributes: {} },
+    'sensor.i': { state: '40', attributes: { icon: 'mdi:x" onload="alert(1)' } } });
+// Unescaped this renders as icon="mdi:x" onload="alert(1)" — a real attribute.
+// Escaped, onload= survives as text but its quotes do not, so no attribute can
+// form.
+check('attribut icon : aucun attribut onload forme', /onload="/i.test(iconBreak), false);
+contains('attribut icon : le guillemet est echappe', iconBreak, 'onload=&quot;');
+
+// A legitimate value must still survive intact.
+contains('valeur normale non alteree',
+  render({ appliance_type: 'washer', state_entity: 'sensor.w', info_entities: [{ entity: 'sensor.i' }] },
+    { 'sensor.w': { state: 'Running', attributes: {} },
+      'sensor.i': { state: '1200', attributes: { friendly_name: 'Spin speed', unit_of_measurement: 'rpm' } } }),
+  'Spin speed');
 
 report();

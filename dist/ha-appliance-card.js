@@ -1,4 +1,4 @@
-const CARD_VERSION = "1.2.1";
+const CARD_VERSION = "1.2.2";
 
 console.info(
   "%c HA-APPLIANCE-CARD %c v" + CARD_VERSION + " ",
@@ -1788,8 +1788,20 @@ function illustrationCss(type, color) {
   return fn(color);
 }
 
-function attrEscape(value) {
-  return String(value).replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/</g, "&lt;");
+// Everything this card renders is concatenated into innerHTML, and much of it
+// comes from the integration rather than the dashboard author: SmartThings,
+// Home Connect, LG and Miele pass program names, phase labels, friendly names
+// and alert keys straight through from a vendor cloud. Unescaped, any of them
+// renders as live markup in the user's session, and inside a quoted attribute
+// a bare double quote is enough to break out. Escape the five characters that
+// matter, everywhere an entity-derived value reaches the template.
+function esc(value) {
+  return String(value === undefined || value === null ? "" : value)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
 }
 
 function illustrationHtml(type, ctx) {
@@ -1908,8 +1920,8 @@ function illustrationHtml(type, ctx) {
         const zc = [z.on ? "on" : "", z.max ? "max" : "", z.residual ? "residual" : ""]
           .filter(Boolean)
           .join(" ");
-        const title = z.title ? ` title="${attrEscape(z.title)}"` : "";
-        return `<div class="ck-zone ${zc}" style="--zi:${z.intensity.toFixed(2)}"${title}>${z.label || ""}</div>`;
+        const title = z.title ? ` title="${esc(z.title)}"` : "";
+        return `<div class="ck-zone ${zc}" style="--zi:${z.intensity.toFixed(2)}"${title}>${esc(z.label || "")}</div>`;
       })
       .join("");
     const act = ctx.anyZoneOn ? "act" : "";
@@ -2406,7 +2418,7 @@ class ApplianceCard extends HTMLElement {
           .map((l) => ({ ...l, open: !!l.entity && entityUsable(hass, l.entity) }))
           .map(
             (l) =>
-              `<div class="info-line ${l.warn ? "warn" : ""}${l.open ? " clickable" : ""}"${l.open ? ` data-more="${l.entity}"` : ""}><ha-icon icon="${l.icon}"></ha-icon><span class="label">${l.label}</span>${l.value ? `<span>${l.value}</span>` : ""}</div>`
+              `<div class="info-line ${l.warn ? "warn" : ""}${l.open ? " clickable" : ""}"${l.open ? ` data-more="${esc(l.entity)}"` : ""}><ha-icon icon="${esc(l.icon)}"></ha-icon><span class="label">${esc(l.label)}</span>${l.value ? `<span>${esc(l.value)}</span>` : ""}</div>`
           )
           .join("")}</div>`
       : "";
@@ -2431,14 +2443,14 @@ class ApplianceCard extends HTMLElement {
       : "";
 
     const alertsHtml = alerts.length
-      ? `<div class="alerts-banner"><ha-icon icon="mdi:alert-circle"></ha-icon>${t(hass, "alerts")}: ${alerts.join(", ")}</div>`
+      ? `<div class="alerts-banner"><ha-icon icon="mdi:alert-circle"></ha-icon>${t(hass, "alerts")}: ${alerts.map(esc).join(", ")}</div>`
       : "";
 
     const actionsHtml = actions.length
       ? `<div class="actions-row">${actions
           .map(
             (a) =>
-              `<div class="action-btn ${a.on ? "on" : ""}" data-entity="${a.entity}" title="${a.label}" aria-label="${a.label}"><ha-icon icon="${a.icon}"></ha-icon></div>`
+              `<div class="action-btn ${a.on ? "on" : ""}" data-entity="${esc(a.entity)}" title="${esc(a.label)}" aria-label="${esc(a.label)}"><ha-icon icon="${a.icon}"></ha-icon></div>`
           )
           .join("")}</div>`
       : "";
@@ -2448,7 +2460,7 @@ class ApplianceCard extends HTMLElement {
       : "";
 
     const lightBadgeHtml = cap.light && cfg.light_entity
-      ? `<div class="light-badge ${lit ? "on" : ""}" data-entity="${cfg.light_entity}" title="${t(hass, "light")}" aria-label="${t(hass, "light")}"><ha-icon icon="${lit ? "mdi:lightbulb-on" : "mdi:lightbulb-outline"}"></ha-icon></div>`
+      ? `<div class="light-badge ${lit ? "on" : ""}" data-entity="${esc(cfg.light_entity)}" title="${esc(t(hass, "light"))}" aria-label="${esc(t(hass, "light"))}"><ha-icon icon="${lit ? "mdi:lightbulb-on" : "mdi:lightbulb-outline"}"></ha-icon></div>`
       : "";
 
     this._root.innerHTML = `
@@ -2458,8 +2470,8 @@ class ApplianceCard extends HTMLElement {
         ${connBadgeHtml}
         <div class="top" id="header">
           ${iconHtml}
-          <div class="name">${name}</div>
-          <div class="state-line">${stateLabel}</div>
+          <div class="name">${esc(name)}</div>
+          <div class="state-line">${esc(stateLabel)}</div>
         </div>
         ${barHtml}
         ${linesHtml}

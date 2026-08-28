@@ -32,11 +32,18 @@ Aucune marque supposée : chaque champ est un mapping d'entité configurable, el
 
 ## Installation (HACS)
 
-Pas encore dans le store HACS par défaut — ajoute un dépôt personnalisé :
+1. Dans HACS, cherche **HA Appliance Card** et installe-la.
+2. Ajoute une card `custom:ha-appliance-card` à ton tableau de bord, en YAML ou via l'éditeur visuel.
 
-1. HACS → menu « ⋮ » → **Dépôts personnalisés**.
-2. Dépôt : `https://github.com/ADNPolymerase/ha-appliance-card`, catégorie : **Dashboard**.
-3. Installe **HA Appliance Card**, puis ajoute une card `custom:ha-appliance-card` (YAML ou éditeur visuel).
+<details>
+<summary>Elle n'apparaît pas encore dans HACS ?</summary>
+
+L'inclusion dans le store HACS par défaut est encore en cours de revue. En
+attendant, la card s'ajoute en dépôt personnalisé : HACS → menu « ⋮ » →
+**Dépôts personnalisés** → `https://github.com/ADNPolymerase/ha-appliance-card`,
+catégorie **Dashboard**.
+
+</details>
 
 ## Configuration
 
