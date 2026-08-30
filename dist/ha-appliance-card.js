@@ -3883,16 +3883,8 @@ const SECTIONS = [
 
   // Fridge. One option describes both the number of doors and where the
   // freezer sits, because on a real fridge those are the same fact.
-  { field: "fridge_temperature_entity", types: ["fridge"], labelKey: "section_fridge_temperature", includeDomains: ["sensor", "number", "input_number"], extra: (c, hass) =>
-      c._row("section_fridge_layout", "fridge_layout", {
-        type: "select",
-        options: [
-          { value: "freezer_bottom", label: t(hass, "layout_freezer_bottom") },
-          { value: "freezer_top", label: t(hass, "layout_freezer_top") },
-          { value: "side_by_side", label: t(hass, "layout_side_by_side") },
-          { value: "single", label: t(hass, "layout_single") },
-        ],
-      }) + c._row("fridge_max_temperature", "fridge_max_temperature", { placeholder: "8" }) },
+  { field: "fridge_temperature_entity", types: ["fridge"], labelKey: "section_fridge_temperature", includeDomains: ["sensor", "number", "input_number"], extra: (c) =>
+      c._row("fridge_max_temperature", "fridge_max_temperature", { placeholder: "8" }) },
   { field: "freezer_temperature_entity", types: ["fridge"], labelKey: "section_freezer_temperature", includeDomains: ["sensor", "number", "input_number"] },
   { field: "freezer_door_entity", types: ["fridge"], labelKey: "section_freezer_door", includeDomains: ["binary_sensor", "sensor"] },
   { field: "ice_maker_entity", types: ["fridge"], labelKey: "section_ice_maker", includeDomains: ["switch", "binary_sensor", "sensor", "input_boolean"] },
@@ -4352,6 +4344,15 @@ class ApplianceCardEditor extends HTMLElement {
             { value: "rice_cooker", label: t(hass, "type_rice_cooker") },
           ],
         })}
+        ${this._type === "fridge" ? this._row("section_fridge_layout", "fridge_layout", {
+          type: "select",
+          options: [
+            { value: "freezer_bottom", label: t(hass, "layout_freezer_bottom") },
+            { value: "freezer_top", label: t(hass, "layout_freezer_top") },
+            { value: "side_by_side", label: t(hass, "layout_side_by_side") },
+            { value: "single", label: t(hass, "layout_single") },
+          ],
+        }) : ""}
       </div>
       <details class="group" data-panel="general" ${this._panelOpen.general ? "open" : ""}>
         <summary>${t(hass, "group_general")}</summary>
@@ -4482,10 +4483,7 @@ class ApplianceCardEditor extends HTMLElement {
             delete this._config.door_invert;
             delete this._config.door_hide_in_list;
           }
-          if (field === "fridge_temperature_entity") {
-            delete this._config.fridge_layout;
-            delete this._config.fridge_max_temperature;
-          }
+          if (field === "fridge_temperature_entity") delete this._config.fridge_max_temperature;
           if (field === "connectivity_entity") delete this._config.connectivity_connected_state;
           if (field === "power_entity") delete this._config.power_on_threshold;
           this.dispatchEvent(new CustomEvent("config-changed", { detail: { config: this._config } }));

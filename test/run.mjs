@@ -1177,4 +1177,19 @@ check('state_map hors normes : rien ne bouge', machineCls(bogus).includes('spinn
 check('state_map valide : toujours pris en compte', stateLine(mapped('running')), 'Running');
 check('state_map valide : la machine tourne', machineCls(mapped('running')).includes('spinning'), true);
 
+// The fridge layout decides the whole drawing: how many doors there are and
+// where the freezer sits. Hiding it inside the temperature section meant a
+// fridge set up with nothing but a door contact could never reach it.
+const edLayout = (config) => markup(newEditor({ appliance_type: 'fridge', ...config }));
+check('editeur : l\'implantation du frigo est offerte sans aucune sonde',
+  /data-field="fridge_layout"/.test(edLayout({ door_entity: 'binary_sensor.d' })), true);
+check('editeur : offerte aussi sur un frigo vide de tout',
+  /data-field="fridge_layout"/.test(edLayout({})), true);
+check('editeur : les quatre implantations sont proposees',
+  ['single', 'freezer_bottom', 'freezer_top', 'side_by_side']
+    .every((v) => edLayout({}).includes(`value="${v}"`)), true);
+// And it belongs to the fridge alone.
+check('editeur : aucune implantation sur un lave-linge',
+  /data-field="fridge_layout"/.test(markup(newEditor({ appliance_type: 'washer', state_entity: 'sensor.w' }))), false);
+
 report();
