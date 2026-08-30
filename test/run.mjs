@@ -754,8 +754,14 @@ contains('valeur normale non alteree',
 
 // ── Sections dashboard sizing ────────────────────────────────────────────────
 // getCardSize() only serves the older masonry view. Sections sizes cards from
-// getGridOptions(), and without it the card is guessed at and squeezed, which
-// is what wraps the info lines onto three cramped lines.
+// getGridOptions(), and the height counted there was an approximation: it
+// assumed one visual line per info entity. At half width a label like
+// "Vitesse rotation" wraps onto two, the card grows past the rows it declared,
+// and in a section that reads as one card overlapping the next.
+//
+// The content is variable by construction: info lines wrap, an alerts banner
+// appears and disappears, the button row comes and goes. No row count can be
+// right for all of it, so the card asks for the height it actually takes.
 
 function grid(cfg) {
   const c = new Card();
@@ -771,9 +777,14 @@ const gRich = grid({ state_entity: 'sensor.w', program_entity: 'p', remaining_ti
 
 check('grille : largeur declaree', gMin.columns, 6);
 check('grille : largeur minimale declaree', gMin.min_columns, 4);
-check('grille : le mode compact tient sur moins de lignes', gComp.rows < gMin.rows, true);
-check('grille : une config riche demande plus de lignes', gRich.rows > gMin.rows, true);
-check('grille : jamais sous le plancher', gComp.rows >= gComp.min_rows, true);
+// The whole point: never a number, whatever the config.
+check('grille : hauteur automatique', gMin.rows, 'auto');
+check('grille : automatique aussi en mode compact', gComp.rows, 'auto');
+check('grille : automatique aussi sur une config chargee', gRich.rows, 'auto');
+check('grille : automatique sur un frigo', grid({ appliance_type: 'fridge', power_entity: 'p' }).rows, 'auto');
+// A leftover min_rows would let a section clamp the card back to a fixed height.
+check('grille : aucun plancher de hauteur', gRich.min_rows, undefined);
+check('grille : aucun plafond de hauteur', gRich.max_rows, undefined);
 
 // ── Fridge and kettle ────────────────────────────────────────────────────────
 // The fridge is the one type with no cycle: it never stops, so "running" is

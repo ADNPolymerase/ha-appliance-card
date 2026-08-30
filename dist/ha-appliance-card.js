@@ -2983,41 +2983,20 @@ class ApplianceCard extends HTMLElement {
   // derived from the config, since that is what decides how many rows are
   // actually drawn.
   getGridOptions() {
-    const cfg = this._config || {};
-    const type = detectApplianceType(cfg, null);
-    const cap = caps(type);
-
-    let lines = (cfg.info_entities || []).length;
-    if (cap.cycle && cfg.program_entity) lines++;
-    if (cap.cycle && cfg.remaining_time_entity) lines++;
-    if (cap.door && cfg.door_entity && !cfg.door_hide_in_list) lines++;
-    if (cap.temperature && (cfg.target_temperature_entity || cfg.current_temperature_entity)) lines++;
-    if (cap.powerLevel && cfg.power_level_entity) lines++;
-    if (cap.fan && cfg.fan_entity) lines++;
-    if (cap.filter && cfg.filter_life_entity) lines++;
-    if (cap.zones) lines += cfg.child_lock_entity ? 2 : 1;
-    if (cap.fridgeTemp) {
-      if (cfg.freezer_door_entity && !cfg.door_hide_in_list) lines++;
-      if (cfg.fridge_temperature_entity) lines++;
-      if (cfg.freezer_temperature_entity) lines++;
-      if (cfg.ice_maker_entity) lines++;
-    }
-    if (cap.kettleTemp && cfg.temperature_entity) lines++;
-    if (cap.speed && cfg.speed_entity) lines++;
-    // Consumable lines only appear when something needs doing, so the height
-    // is budgeted for one, not for all four at once.
-    if (cap.consumables && ["water", "beans", "tray", "descaling"].some((k) => cfg[`${k}_entity`])) lines++;
-    if (cap.consumables && cfg.cups_entity) lines++;
-    if (cap.consumables && cfg.strength_entity) lines++;
-    if (cfg.power_entity) lines++;
-
-    const hasActions = !cap.readOnly && ["start", "pause", "resume", "stop", "filter_reset", "toggle"]
-      .some((key) => cfg[`${key}_entity`]);
-
-    // A grid row is roughly 56 px: the illustration takes two, the name and
-    // state line one, a pair of info lines about one, and the button row one.
-    const rows = (cfg.compact ? 0 : 2) + 1 + Math.ceil(lines / 2) + (hasActions ? 1 : 0);
-    return { columns: 6, min_columns: 4, rows: Math.max(2, rows), min_rows: 2 };
+    // Sections sizes a card from this. Counting the rows here was always an
+    // approximation: it assumed one visual line per info entity, and at half
+    // width a label like "Vitesse rotation" wraps onto two. The card then grew
+    // past the height it had declared, which a section renders as one card
+    // overlapping the next.
+    //
+    // The content is variable by construction. Info lines wrap on a narrow
+    // column, an alerts banner appears and disappears with the appliance, the
+    // button row comes and goes with the entities configured, and a fridge
+    // gains a line the moment its plug drops out. No row count is right for
+    // all of that, so the card asks for the height it actually takes and lets
+    // the grid measure it. min_rows and max_rows are deliberately absent:
+    // either one would clamp it back to a fixed height.
+    return { columns: 6, min_columns: 4, rows: "auto" };
   }
 
   static getConfigElement() {
