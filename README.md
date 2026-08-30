@@ -27,6 +27,7 @@ No brand assumed: every field is a configurable entity mapping, so it works with
 - **Progress bar** from a direct percentage sensor, or estimated client-side from the remaining time.
 - **Program, info lines** (temperature, spin speed…), **door, alerts, connectivity** (top-right wifi icon) — each optional and independent.
 - **Start / pause / resume / stop** controls, only shown for the entities you configure.
+- **Sizes itself in Sections dashboards**: the card declares its own width and height, so it isn't squeezed into wrapping its info lines.
 - **Interface translated into 13 languages** (EN, FR, DE, ES, IT, NL, PT, SV, NO, DA, PL, RU, ZH), picked up from the Home Assistant locale.
 - **Visual editor**: pick the state entity and the other fields are auto-suggested from sibling entities on the same device.
 

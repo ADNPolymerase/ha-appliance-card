@@ -1,4 +1,4 @@
-const CARD_VERSION = "1.2.2";
+const CARD_VERSION = "1.3.0";
 
 console.info(
   "%c HA-APPLIANCE-CARD %c v" + CARD_VERSION + " ",
@@ -1964,6 +1964,36 @@ class ApplianceCard extends HTMLElement {
 
   getCardSize() {
     return 3;
+  }
+
+  // Sections dashboards size a card from this rather than from getCardSize().
+  // Without it the card is guessed at and usually ends up squeezed, which is
+  // what pushes the info lines into two- and three-line wraps. The height is
+  // derived from the config, since that is what decides how many rows are
+  // actually drawn.
+  getGridOptions() {
+    const cfg = this._config || {};
+    const type = detectApplianceType(cfg, null);
+    const cap = caps(type);
+
+    let lines = (cfg.info_entities || []).length;
+    if (cap.cycle && cfg.program_entity) lines++;
+    if (cap.cycle && cfg.remaining_time_entity) lines++;
+    if (cap.door && cfg.door_entity && !cfg.door_hide_in_list) lines++;
+    if (cap.temperature && (cfg.target_temperature_entity || cfg.current_temperature_entity)) lines++;
+    if (cap.powerLevel && cfg.power_level_entity) lines++;
+    if (cap.fan && cfg.fan_entity) lines++;
+    if (cap.filter && cfg.filter_life_entity) lines++;
+    if (cap.zones) lines += cfg.child_lock_entity ? 2 : 1;
+    if (cfg.power_entity) lines++;
+
+    const hasActions = ["start", "pause", "resume", "stop", "filter_reset", "toggle"]
+      .some((key) => cfg[`${key}_entity`]);
+
+    // A grid row is roughly 56 px: the illustration takes two, the name and
+    // state line one, a pair of info lines about one, and the button row one.
+    const rows = (cfg.compact ? 0 : 2) + 1 + Math.ceil(lines / 2) + (hasActions ? 1 : 0);
+    return { columns: 6, min_columns: 4, rows: Math.max(2, rows), min_rows: 2 };
   }
 
   static getConfigElement() {

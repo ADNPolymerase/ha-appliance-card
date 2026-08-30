@@ -27,6 +27,7 @@ Aucune marque supposée : chaque champ est un mapping d'entité configurable, el
 - **Barre de progression** depuis un capteur de pourcentage direct, ou estimée côté client depuis le temps restant.
 - **Programme, lignes d'info** (température, essorage…), **porte, alertes, connectivité** (icône wifi en haut à droite) — chacun optionnel et indépendant.
 - **Démarrer / Pause / Reprendre / Stop**, affichés uniquement pour les entités que tu configures.
+- **Se dimensionne dans les dashboards Sections** : la card déclare sa largeur et sa hauteur, elle n'est plus compressée au point de replier ses lignes d'info.
 - **Interface traduite en 13 langues** (EN, FR, DE, ES, IT, NL, PT, SV, NO, DA, PL, RU, ZH), suivant la langue de Home Assistant.
 - **Éditeur visuel** : choisis l'entité d'état et les autres champs sont auto-suggérés depuis les entités sœurs du même appareil.
 

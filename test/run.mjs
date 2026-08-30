@@ -750,4 +750,27 @@ contains('valeur normale non alteree',
       'sensor.i': { state: '1200', attributes: { friendly_name: 'Spin speed', unit_of_measurement: 'rpm' } } }),
   'Spin speed');
 
+// ── Sections dashboard sizing ────────────────────────────────────────────────
+// getCardSize() only serves the older masonry view. Sections sizes cards from
+// getGridOptions(), and without it the card is guessed at and squeezed — which
+// is what wraps the info lines onto three cramped lines.
+
+function grid(cfg) {
+  const c = new Card();
+  c.setConfig({ type: 'custom:ha-appliance-card', ...cfg });
+  return c.getGridOptions();
+}
+
+const gMin  = grid({ state_entity: 'sensor.w' });
+const gComp = grid({ state_entity: 'sensor.w', compact: true });
+const gRich = grid({ state_entity: 'sensor.w', program_entity: 'p', remaining_time_entity: 'r',
+                     door_entity: 'd', info_entities: [{ entity: 'a' }, { entity: 'b' }],
+                     start_entity: 's' });
+
+check('grille : largeur declaree', gMin.columns, 6);
+check('grille : largeur minimale declaree', gMin.min_columns, 4);
+check('grille : le mode compact tient sur moins de lignes', gComp.rows < gMin.rows, true);
+check('grille : une config riche demande plus de lignes', gRich.rows > gMin.rows, true);
+check('grille : jamais sous le plancher', gComp.rows >= gComp.min_rows, true);
+
 report();
