@@ -775,8 +775,12 @@ const gRich = grid({ state_entity: 'sensor.w', program_entity: 'p', remaining_ti
                      door_entity: 'd', info_entities: [{ entity: 'a' }, { entity: 'b' }],
                      start_entity: 's' });
 
-check('grille : largeur declaree', gMin.columns, 6);
+// Full width by default: the card carries an illustration and a column of
+// labelled lines, and half a section is where those labels start wrapping.
+check('grille : pleine largeur par defaut', gMin.columns, 12);
 check('grille : largeur minimale declaree', gMin.min_columns, 4);
+check('grille : pleine largeur aussi sur un frigo',
+  grid({ appliance_type: 'fridge', power_entity: 'p' }).columns, 12);
 // The whole point: never a number, whatever the config.
 check('grille : hauteur automatique', gMin.rows, 'auto');
 check('grille : automatique aussi en mode compact', gComp.rows, 'auto');

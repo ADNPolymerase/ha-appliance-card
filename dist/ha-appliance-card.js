@@ -2996,7 +2996,11 @@ class ApplianceCard extends HTMLElement {
     // all of that, so the card asks for the height it actually takes and lets
     // the grid measure it. min_rows and max_rows are deliberately absent:
     // either one would clamp it back to a fixed height.
-    return { columns: 6, min_columns: 4, rows: "auto" };
+    //
+    // Full width by default, because the card pairs an illustration with a
+    // column of labelled lines and half a section is where those labels start
+    // wrapping. min_columns still allows a narrower one on purpose.
+    return { columns: 12, min_columns: 4, rows: "auto" };
   }
 
   static getConfigElement() {
