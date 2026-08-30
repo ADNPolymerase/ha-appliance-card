@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
 <meta charset="utf-8" />
 <title>ha-appliance-card demo</title>
@@ -12,7 +12,8 @@
     --card-background-color: #ffffff; --disabled-text-color: #9aa1ab;
     --info-color: #2196f3; --warning-color: #ff9800; --success-color: #4caf50; --error-color: #f44336;
   }
-  .row { display: flex; gap: 24px; flex-wrap: wrap; align-items: flex-start; }
+  #wrap { display: inline-block; }
+  .row { display: grid; grid-template-columns: repeat(var(--cols, 4), 300px); gap: 24px; align-items: start; }
   ha-card { display: block; width: 300px; background: #ffffff; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.08); }
 </style>
 </head>
@@ -42,97 +43,300 @@ class StubIcon extends HTMLElement {
 customElements.define("ha-icon", StubIcon);
 </script>
 <script src="../dist/ha-appliance-card.js"></script>
-<div class="row">
-  <ha-appliance-card id="card1"></ha-appliance-card>
-  <ha-appliance-card id="card2"></ha-appliance-card>
-  <ha-appliance-card id="card3"></ha-appliance-card>
-</div>
+<div id="wrap"><div class="row" id="row"></div></div>
 <script>
+// Two views out of one file:
+//   ?view=hero   four cards, the image at the top of the README
+//   ?view=types  the whole range, one card per appliance type
+// plus ?lang=fr for the French screenshots.
+const params = new URLSearchParams(location.search);
+const uiLang = params.get("lang") === "fr" ? "fr" : "en";
+const view = params.get("view") === "types" ? "types" : "hero";
+document.documentElement.style.setProperty("--cols", params.get("cols") || (view === "types" ? 4 : 4));
+const fr = uiLang === "fr";
+const L = (en, f) => (fr ? f : en);
+
 function st(entity_id, state, attributes) {
   return { entity_id, state: String(state), attributes: attributes || {} };
 }
-const demoLang = new URLSearchParams(location.search).get("lang") === "fr" ? "fr" : "en";
-const washerName = demoLang === "fr" ? "Lave-linge" : "Washer";
-const dishwasherName = demoLang === "fr" ? "Lave-vaisselle" : "Dishwasher";
-
 function mkHass(states) {
-  return {
-    language: demoLang, locale: { language: demoLang }, states, entities: {}, devices: {},
-    callService: () => {},
-  };
+  return { language: uiLang, locale: { language: uiLang }, states, entities: {}, devices: {}, callService: () => {} };
 }
 
-const states1 = {};
-[st("sensor.lave_linge_appliance_state", "Running", { friendly_name: washerName }),
- st("select.lave_linge_program_uid", "Cotton Pr Eco40-60"),
- st("sensor.lave_linge_time_to_end", 1380, { unit_of_measurement: "s" }),
- st("binary_sensor.lave_linge_door_state", "off"),
- st("binary_sensor.lave_linge_connectivity_state", "on"),
- st("select.lave_linge_temperature", "40 Celsius", { friendly_name: `${washerName} Temperature` }),
- st("select.lave_linge_spin_speed", "1200 Rpm", { friendly_name: `${washerName} Spin speed` }),
- st("sensor.lave_linge_alerts", "0", {}),
- st("button.lave_linge_execute_command_pause", "unknown"),
- st("button.lave_linge_execute_command_stopreset", "unknown"),
-].forEach((s) => (states1[s.entity_id] = s));
-const card1 = document.getElementById("card1");
-card1.setConfig({
-  type: "custom:ha-appliance-card",
-  state_entity: "sensor.lave_linge_appliance_state",
-  program_entity: "select.lave_linge_program_uid",
-  remaining_time_entity: "sensor.lave_linge_time_to_end",
-  door_entity: "binary_sensor.lave_linge_door_state",
-  connectivity_entity: "binary_sensor.lave_linge_connectivity_state",
-  alerts_entity: "sensor.lave_linge_alerts",
-  info_entities: [
-    { entity: "select.lave_linge_temperature", icon: "mdi:thermometer" },
-    { entity: "select.lave_linge_spin_speed", icon: "mdi:rotate-3d-variant" },
-  ],
-  pause_entity: "button.lave_linge_execute_command_pause",
-  stop_entity: "button.lave_linge_execute_command_stopreset",
-});
-card1.hass = mkHass(states1);
-let remaining = 1380;
-setInterval(() => {
-  remaining = Math.max(0, remaining - 60);
-  states1["sensor.lave_linge_time_to_end"].state = String(remaining);
-  card1.hass = mkHass(states1);
-}, 1000);
+const row = document.getElementById("row");
+function card(config, entities) {
+  const states = {};
+  entities.forEach((s) => (states[s.entity_id] = s));
+  const el = document.createElement("ha-appliance-card");
+  row.appendChild(el);
+  el.setConfig({ type: "custom:ha-appliance-card", ...config });
+  el.hass = mkHass(states);
+  return el;
+}
 
-// Dryer, cycle finished, door open (ajar illustration) — never shown while "running"
-const dryerName = demoLang === "fr" ? "Sèche-linge" : "Dryer";
-const states2 = {};
-[st("sensor.dryer_state", "Finished", { friendly_name: dryerName }),
- st("sensor.dryer_program", "Cotton", {}),
- st("binary_sensor.dryer_door", "on"),
-].forEach((s) => (states2[s.entity_id] = s));
-const card2 = document.getElementById("card2");
-card2.setConfig({
-  type: "custom:ha-appliance-card",
-  name: dryerName,
+// Every appliance runs the programs it actually has. A "Cotton 40" on an oven
+// or on a coffee machine is nonsense, and the whole point of these images is
+// to show what each type looks like with its own data.
+
+const washer = () => card({
+  name: L("Washer", "Lave-linge"),
+  appliance_type: "washer",
+  state_entity: "sensor.washer_state",
+  program_entity: "select.washer_program",
+  remaining_time_entity: "sensor.washer_time_to_end",
+  door_entity: "binary_sensor.washer_door",
+  connectivity_entity: "binary_sensor.washer_connectivity",
+  // Home Connect hands these over as "40 Celsius" and "1200 Rpm"; value_map is
+  // what turns a vendor's wording into something readable on a card.
+  info_entities: [
+    { entity: "select.washer_temperature", icon: "mdi:thermometer", value_map: { "40 Celsius": "40 \u00b0C" } },
+    { entity: "select.washer_spin", icon: "mdi:rotate-3d-variant", value_map: { "1200 Rpm": "1200 rpm" } },
+  ],
+  pause_entity: "button.washer_pause",
+  stop_entity: "button.washer_stop",
+}, [
+  st("sensor.washer_state", "Running"),
+  st("select.washer_program", "Cotton Pr Eco40-60"),
+  st("sensor.washer_time_to_end", 1380, { unit_of_measurement: "s" }),
+  st("binary_sensor.washer_door", "off"),
+  st("binary_sensor.washer_connectivity", "on"),
+  st("select.washer_temperature", "40 Celsius", { friendly_name: L("Temperature", "Température") }),
+  st("select.washer_spin", "1200 Rpm", { friendly_name: L("Spin speed", "Essorage") }),
+  st("button.washer_pause", "unknown"),
+  st("button.washer_stop", "unknown"),
+]);
+
+const dryer = () => card({
+  name: L("Dryer", "Sèche-linge"),
   appliance_type: "dryer",
   state_entity: "sensor.dryer_state",
   program_entity: "sensor.dryer_program",
   program_format: "raw",
   door_entity: "binary_sensor.dryer_door",
-});
-card2.hass = mkHass(states2);
+}, [
+  st("sensor.dryer_state", "Finished"),
+  st("sensor.dryer_program", L("Cotton", "Coton")),
+  st("binary_sensor.dryer_door", "on"),
+]);
 
-const states3 = {};
-[st("sensor.dw_state", "paused", { friendly_name: dishwasherName }),
- st("sensor.dw_program", "Eco 50", {}),
- st("sensor.dw_progress", 63, {}),
-].forEach((s) => (states3[s.entity_id] = s));
-const card3 = document.getElementById("card3");
-card3.setConfig({
-  type: "custom:ha-appliance-card",
-  name: dishwasherName,
+const dishwasher = () => card({
+  name: L("Dishwasher", "Lave-vaisselle"),
   appliance_type: "dishwasher",
   state_entity: "sensor.dw_state",
   program_entity: "sensor.dw_program",
   program_format: "raw",
   progress_entity: "sensor.dw_progress",
-});
-card3.hass = mkHass(states3);
+  door_entity: "binary_sensor.dw_door",
+}, [
+  st("sensor.dw_state", "Paused"),
+  st("sensor.dw_program", L("Eco 50 °C", "Éco 50 °C")),
+  st("sensor.dw_progress", 63),
+  st("binary_sensor.dw_door", "off"),
+]);
+
+// Home Connect calls the oven's programs heating modes, not wash cycles:
+// Cooking.Oven.Program.HeatingMode.HotAir.
+const oven = () => card({
+  name: L("Oven", "Four"),
+  appliance_type: "oven",
+  state_entity: "sensor.oven_state",
+  program_entity: "sensor.oven_program",
+  program_format: "raw",
+  target_temperature_entity: "number.oven_target",
+  current_temperature_entity: "sensor.oven_current",
+  light_entity: "switch.oven_light",
+  door_entity: "binary_sensor.oven_door",
+}, [
+  st("sensor.oven_state", "Preheating"),
+  st("sensor.oven_program", L("Hot air", "Chaleur tournante")),
+  st("number.oven_target", 200, { unit_of_measurement: "°C" }),
+  st("sensor.oven_current", 165, { unit_of_measurement: "°C" }),
+  st("switch.oven_light", "on"),
+  st("binary_sensor.oven_door", "off"),
+]);
+
+const microwave = () => card({
+  name: L("Microwave", "Micro-ondes"),
+  appliance_type: "microwave",
+  state_entity: "sensor.mw_state",
+  program_entity: "sensor.mw_program",
+  program_format: "raw",
+  remaining_time_entity: "sensor.mw_remaining",
+  power_level_entity: "sensor.mw_power_level",
+  door_entity: "binary_sensor.mw_door",
+}, [
+  st("sensor.mw_state", "Running"),
+  st("sensor.mw_program", L("Reheat", "Réchauffage")),
+  st("sensor.mw_remaining", 150, { unit_of_measurement: "s" }),
+  st("sensor.mw_power_level", "900 W"),
+  st("binary_sensor.mw_door", "off"),
+]);
+
+const hood = () => card({
+  name: L("Cooker hood", "Hotte"),
+  appliance_type: "hood",
+  state_entity: "sensor.hood_state",
+  fan_entity: "select.hood_venting",
+  light_entity: "switch.hood_light",
+  filter_life_entity: "sensor.hood_filter",
+}, [
+  st("sensor.hood_state", "Running"),
+  st("select.hood_venting", "Cooking.Hood.EnumType.Stage.FanStage02", {
+    options: [
+      "Cooking.Hood.EnumType.Stage.FanOff",
+      "Cooking.Hood.EnumType.Stage.FanStage01",
+      "Cooking.Hood.EnumType.Stage.FanStage02",
+      "Cooking.Hood.EnumType.Stage.FanStage03",
+    ],
+  }),
+  st("switch.hood_light", "on"),
+  st("sensor.hood_filter", 62, { unit_of_measurement: "%" }),
+]);
+
+const cooktop = () => card({
+  name: L("Cooktop", "Plaque de cuisson"),
+  appliance_type: "cooktop",
+  state_entity: "sensor.hob_state",
+  zones: [
+    { level_entity: "sensor.hob_z1" },
+    { level_entity: "sensor.hob_z2" },
+    { level_entity: "sensor.hob_z3", residual_heat_entity: "binary_sensor.hob_z3_hot" },
+    { level_entity: "sensor.hob_z4" },
+  ],
+  child_lock_entity: "binary_sensor.hob_lock",
+}, [
+  st("sensor.hob_state", "Running"),
+  st("sensor.hob_z1", 6),
+  st("sensor.hob_z2", 0),
+  st("sensor.hob_z3", 0),
+  st("binary_sensor.hob_z3_hot", "on"),
+  st("sensor.hob_z4", 9),
+  st("binary_sensor.hob_lock", "off"),
+]);
+
+const fridge = () => card({
+  name: L("Fridge", "Réfrigérateur"),
+  appliance_type: "fridge",
+  fridge_layout: "side_by_side",
+  fridge_temperature_entity: "sensor.fridge_temp",
+  freezer_temperature_entity: "sensor.freezer_temp",
+  door_entity: "binary_sensor.fridge_door",
+  freezer_door_entity: "binary_sensor.freezer_door",
+  ice_maker_entity: "switch.ice_maker",
+  power_entity: "sensor.fridge_power",
+}, [
+  st("sensor.fridge_temp", 4, { unit_of_measurement: "°C" }),
+  st("sensor.freezer_temp", -18, { unit_of_measurement: "°C" }),
+  st("binary_sensor.fridge_door", "off"),
+  st("binary_sensor.freezer_door", "off"),
+  st("switch.ice_maker", "on"),
+  st("sensor.fridge_power", 68, { unit_of_measurement: "W" }),
+]);
+
+const kettle = () => card({
+  name: L("Kettle", "Bouilloire"),
+  appliance_type: "kettle",
+  state_entity: "switch.kettle",
+  temperature_entity: "sensor.kettle_temp",
+  power_entity: "sensor.kettle_power",
+}, [
+  st("switch.kettle", "on"),
+  st("sensor.kettle_temp", 82, { unit_of_measurement: "°C" }),
+  st("sensor.kettle_power", 2200, { unit_of_measurement: "W" }),
+]);
+
+const cooker = () => card({
+  name: L("Cooker", "Robot cuiseur"),
+  appliance_type: "cooker",
+  state_entity: "sensor.cooker_state",
+  program_entity: "sensor.cooker_program",
+  program_format: "raw",
+  remaining_time_entity: "sensor.cooker_remaining",
+  target_temperature_entity: "number.cooker_target",
+  current_temperature_entity: "sensor.cooker_current",
+  speed_entity: "sensor.cooker_speed",
+  heating_entity: "binary_sensor.cooker_heating",
+}, [
+  st("sensor.cooker_state", "Cooking"),
+  st("sensor.cooker_program", L("Soup", "Soupe")),
+  st("sensor.cooker_remaining", 900, { unit_of_measurement: "s" }),
+  st("number.cooker_target", 100, { unit_of_measurement: "°C" }),
+  st("sensor.cooker_current", 64, { unit_of_measurement: "°C" }),
+  st("sensor.cooker_speed", 4),
+  st("binary_sensor.cooker_heating", "on"),
+]);
+
+const coffee = () => card({
+  name: L("Coffee machine", "Machine à café"),
+  appliance_type: "coffee",
+  state_entity: "sensor.coffee_state",
+  program_entity: "sensor.coffee_beverage",
+  program_format: "raw",
+  water_entity: "binary_sensor.coffee_water",
+  beans_entity: "binary_sensor.coffee_beans",
+  tray_entity: "binary_sensor.coffee_tray",
+  descaling_entity: "binary_sensor.coffee_descaling",
+  cups_entity: "switch.coffee_multiple",
+  strength_entity: "select.coffee_strength",
+}, [
+  st("sensor.coffee_state", "Run"),
+  st("sensor.coffee_beverage", "Cappuccino"),
+  st("binary_sensor.coffee_water", "off"),
+  st("binary_sensor.coffee_beans", "off"),
+  st("binary_sensor.coffee_tray", "off"),
+  st("binary_sensor.coffee_descaling", "off"),
+  st("switch.coffee_multiple", "on"),
+  st("select.coffee_strength", L("Strong", "Fort")),
+]);
+
+const riceCooker = () => card({
+  name: L("Rice cooker", "Cuiseur à riz"),
+  appliance_type: "rice_cooker",
+  state_entity: "sensor.rice_state",
+  program_entity: "sensor.rice_mode",
+  program_format: "raw",
+  current_temperature_entity: "sensor.rice_temp",
+}, [
+  st("sensor.rice_state", "Keep-warm"),
+  st("sensor.rice_mode", L("Fine cooking", "Cuisson fine")),
+  st("sensor.rice_temp", 72, { unit_of_measurement: "°C" }),
+]);
+
+// ?only=cooker,coffee filters the gallery down to a few types, which is how
+// the animated captures are taken.
+const ALL = { washer, dryer, dishwasher, oven, microwave, hood, cooktop, fridge,
+              kettle, cooker, coffee, rice_cooker: riceCooker };
+const only = (params.get("only") || "").split(",").map((k) => k.trim()).filter(Boolean);
+if (only.length) {
+  document.documentElement.style.setProperty("--cols", only.length);
+  only.forEach((k) => ALL[k] && ALL[k]());
+} else if (view === "types") {
+  Object.values(ALL).forEach((f) => f());
+} else {
+  [washer, oven, coffee, fridge].forEach((f) => f());
+  // The washer counts down, so the header image is alive when opened by hand.
+  const el = row.firstChild;
+  let remaining = 1380;
+  setInterval(() => {
+    remaining = Math.max(0, remaining - 60);
+    const states = { ...el._hass.states };
+    states["sensor.washer_time_to_end"] = st("sensor.washer_time_to_end", remaining, { unit_of_measurement: "s" });
+    el.hass = mkHass(states);
+  }, 1000);
+}
+const phase = params.get("phase");
+if (phase !== null) {
+  requestAnimationFrame(() => {
+    for (const el of row.children) {
+      if (!el.shadowRoot) continue;
+      for (const a of el.shadowRoot.getAnimations()) {
+        a.pause();
+        a.currentTime = Number(phase);
+      }
+    }
+    document.title = "ready";
+  });
+}
 </script>
 </body>
 </html>

@@ -4,14 +4,14 @@
  *
  * It does NOT implement the DOM. Nodes only remember the HTML string assigned
  * to them, which is enough to assert on what a card actually renders for a
- * given hass state — the part that silently goes wrong.
+ * given hass state, the part that silently goes wrong.
  *
  * What it can check:
  *   - the markup produced by _render() for a given config + hass state
  *   - the numbers shown in it (the reason this file exists)
  *   - that an editor dispatches config-changed with a real detail.config
  *
- * What it cannot check: layout, CSS, anything visual, and event handlers —
+ * What it cannot check: layout, CSS, anything visual, and event handlers:
  * getElementById/querySelector return inert stubs, so wiring runs without
  * throwing but cannot be triggered. Visual verification stays manual.
  */
@@ -62,7 +62,7 @@ export async function loadCard(modulePath) {
   };
   globalThis.document = { createElement: tag => new FakeNode(tag) };
   globalThis.window   = globalThis;
-  // node ships a read-only navigator that already has .language — leave it be.
+  // node ships a read-only navigator that already has .language, so leave it be.
   await import(modulePath);
   return registry;
 }
@@ -99,7 +99,7 @@ export function contains(label, haystack, needle) {
   check(label, String(haystack).includes(needle), true);
 }
 
-/** Prints the tally and exits non-zero on any failure — the CI signal. */
+/** Prints the tally and exits non-zero on any failure, which is the CI signal. */
 export function report() {
   console.log(failures
     ? `\n❌ ${failures} échec(s) sur ${total} assertions`

@@ -10,7 +10,7 @@
 <a href="https://buymeacoffee.com/adnpolymerase" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-orange.png" alt="Buy Me A Coffee" height="60"></a>
 <a href="https://adnpolymerase.github.io/HA/" target="_blank"><img src="https://raw.githubusercontent.com/ADNPolymerase/HA/main/assets/site-button.svg" alt="Link to my github.io for my other projects" height="60"></a>
 
-A Lovelace card for kitchen and laundry appliances — washers, dryers, dishwashers, ovens, microwaves, cooker hoods and cooktops. Cycle in progress, program, remaining time, temperature, fan speed, cooking zones, door status, alerts and controls.
+A Lovelace card for kitchen and laundry appliances: washers, dryers, dishwashers, ovens, microwaves, cooker hoods, cooktops, fridges, kettles, cookers, coffee machines and rice cookers. Cycle in progress, program, remaining time, temperature, fan speed, cooking zones, door status, alerts and controls.
 
 No brand assumed: every field is a configurable entity mapping, so it works with **any** integration (Electrolux, Samsung, LG, Home Connect, Miele, a smart plug + template sensors…).
 
@@ -22,42 +22,38 @@ No brand assumed: every field is a configurable entity mapping, so it works with
 ## Features
 
 - **State normalization**: `Idle`, `RUNNING`, `wash`, `En marche`… are auto-detected (accent-insensitive) and mapped to idle / preheating / running / paused / done / delayed / error. `state_map` covers anything else; unmatched states are shown as-is.
-- **Seven appliance types**, each with its own animated illustration: washer (water), dryer (tumbling), dishwasher (spray arm), oven (glowing elements, door dropping open), microwave (turntable, lit cavity), cooker hood (rising airflow, light beams) and cooktop (per-zone level and residual heat). Static when idle, auto-detected or set via `appliance_type`. `compact: true` keeps only the text.
-- **Works from a smart plug alone**: set `power_entity` + `power_on_threshold` and the state is derived from consumption — standby → running → finished — with no appliance integration at all.
+- **Twelve appliance types**, each with its own animated illustration: washer (water), dryer (tumbling), dishwasher (spray arm), oven (glowing elements, door dropping open), microwave (turntable, lit cavity), cooker hood (rising airflow, light beams), cooktop (per-zone level and residual heat), fridge (each door swings for its own sensor, lit interior, falling ice cubes), kettle (glowing base, bubbles, steam), cooker (turning blade, hot element, steam), coffee machine (pouring stream, filling cup, tank level) and rice cooker (steam, keep-warm glow). Static when idle, auto-detected or set via `appliance_type`. `compact: true` keeps only the text.
+- **A coffee machine says what it needs**: an empty tank, an empty bean container, a full drip tray or a due descaling takes over the state line whenever the machine isn't actually pouring, in the order in which each one stops you getting a coffee. Only what needs doing takes a line.
+- **A fridge reports its health, not a cycle**: it never stops, so *Running* would be true of it every hour of its life. The state line carries the one thing worth reading instead, in order of what it costs to miss: unplugged, a door left open, a temperature above the limit, otherwise normal. Read-only, with no buttons to press.
+- **Works from a smart plug alone**: set `power_entity` + `power_on_threshold` and the state is derived from consumption (standby → running → finished), with no appliance integration at all.
 - **Progress bar** from a direct percentage sensor, or estimated client-side from the remaining time.
-- **Program, info lines** (temperature, spin speed…), **door, alerts, connectivity** (top-right wifi icon) — each optional and independent.
+- **Program, info lines** (temperature, spin speed…), **door, alerts, connectivity** (top-right wifi icon), each optional and independent.
 - **Start / pause / resume / stop** controls, only shown for the entities you configure.
 - **Sizes itself in Sections dashboards**: the card declares its own width and height, so it isn't squeezed into wrapping its info lines.
 - **Interface translated into 13 languages** (EN, FR, DE, ES, IT, NL, PT, SV, NO, DA, PL, RU, ZH), picked up from the Home Assistant locale.
 - **Visual editor**: pick the state entity and the other fields are auto-suggested from sibling entities on the same device.
+
+Illustrations are CSS, not images, and they animate on the appliance's own data: the blade turns once per pulse at the speed the cooker reports, coffee pours into one cup or two, ice cubes fall while the maker runs, a kettle bubbles and steams.
+
+![Animated appliance types](https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/animated.gif)
 
 ## Installation (HACS)
 
 1. In HACS, search for **HA Appliance Card** and install it.
 2. Add a `custom:ha-appliance-card` card to your dashboard, in YAML or through the visual editor.
 
-<details>
-<summary>Not showing up in HACS yet?</summary>
-
-Inclusion in the default HACS store is still in review, so until it lands the
-card has to be added as a custom repository: HACS → "⋮" menu → **Custom
-repositories** → `https://github.com/ADNPolymerase/ha-appliance-card`,
-category **Dashboard**.
-
-</details>
-
 ## Configuration
 
-Only `state_entity` is required — everything else is optional. In the visual editor, setting the state entity auto-fills the other fields when a matching sibling entity is found on the same device; each field can still be changed or cleared.
+Only `state_entity` is required; everything else is optional. A fridge is the exception: a temperature probe or a door contact is a complete configuration on its own, since a fridge has no state to report. In the visual editor, setting the state entity auto-fills the other fields when a matching sibling entity is found on the same device; each field can still be changed or cleared.
 
 | Option | Description |
 |---|---|
-| `state_entity` | **Required.** Entity reporting the appliance's overall state (any domain). |
-| `state_map` | Optional map: raw state → `idle`\|`running`\|`paused`\|`done`\|`delayed`\|`error`. |
+| `state_entity` | **Required**, except on a fridge. Entity reporting the appliance's overall state (any domain). |
+| `state_map` | Optional map: raw state → `idle`\|`running`\|`paused`\|`done`\|`delayed`\|`error`\|`keep_warm`. |
 | `state_show_raw` | `true` to display the raw state text instead of the translated label (color/animation still follow the detected category). |
 | `name` | Card title. Defaults to the state entity's friendly name. |
 | `compact` | `true` to hide the illustration and show only text. |
-| `appliance_type` | `auto` (default) \| `washer` \| `dryer` \| `dishwasher` \| `oven` \| `microwave` \| `hood` \| `cooktop`. The visual editor only offers the fields the chosen type can use. |
+| `appliance_type` | `auto` (default) \| `washer` \| `dryer` \| `dishwasher` \| `oven` \| `microwave` \| `hood` \| `cooktop` \| `fridge` \| `kettle` \| `cooker` \| `coffee` \| `rice_cooker`. The visual editor only offers the fields the chosen type can use. |
 | `toggle_entity` | On/off control, shown as a power button on the card and highlighted while on. Any `switch`/`button`/`script`/`input_boolean`/`fan`. Named this way so it is not mistaken for `power_entity` below, which is the wattage meter. |
 | `power_entity` / `power_on_threshold` / `power_icon` | Power sensor (W). With a threshold set, the state is derived from it instead of `state_entity`: above the threshold is *running*, and falling back below it is *finished* until the next run. Pointing `state_entity` at the same power sensor enables this on its own, with a default threshold of 10 W. `power_icon` overrides the default `mdi:power-plug`. |
 | `program_entity` / `program_format` | Program/cycle entity. `clean` (default) trims common `"<category> Pr <name>"` patterns; `raw` shows the state as-is. |
@@ -78,13 +74,26 @@ Per type:
 | `heating_entity` | oven | Optional; drives the glowing elements. Falls back to the running state. |
 | `light_entity` | oven, hood | Cavity light / hood lamps. Shown as a small toggle in the card header rather than a full button row, to keep the card short. |
 | `power_level_entity` | microwave, cooktop | Power level (e.g. 800 W). On a cooktop it is the *global* level reported by hobs that never say which zone is heating; it sets how brightly the zones glow. |
-| `fan_entity` | hood | The speed source. The line stays visible while the hood is off (shown as *Off*) — clicking it is how the speed gets changed.  A `fan` entity uses its percentage or preset; a `select` (Home Connect exposes the venting level that way), `sensor` or `number` is mapped onto a 1–3 scale, using the option list when there is one. Click the speed line to open the entity and change it — unless the integration has dropped it to unavailable, in which case the line stays visible but is no longer clickable. |
+| `fan_entity` | hood | The speed source. The line stays visible while the hood is off (shown as *Off*), since clicking it is how the speed gets changed.  A `fan` entity uses its percentage or preset; a `select` (Home Connect exposes the venting level that way), `sensor` or `number` is mapped onto a 1–3 scale, using the option list when there is one. Click the speed line to open the entity and change it, unless the integration has dropped it to unavailable, in which case the line stays visible but is no longer clickable. |
 | `boost_entity` | hood | Optional intensive mode, when the preset doesn't already say so. |
 | `filter_life_entity` / `filter_reset_entity` | hood | Grease filter wear (%) as a bar, and a reset button. |
 | `zones` | cooktop | List of `{ level_entity, residual_heat_entity?, name? }`, up to 6. Levels can be numeric (0–9) or a word (`boost`); zones off but still hot show `H`. |
 | `zones_layout` | cooktop | `2x1` \| `2x2` \| `3x2`. Derived from the number of zones by default. |
 | `zones_count` | cooktop | How many zones to draw when no per-zone entity exists (default 4). |
 | `child_lock_entity` | cooktop | Shows a padlock on the illustration. |
+| `fridge_layout` | fridge | `freezer_bottom` (default) \| `freezer_top` \| `side_by_side` \| `single`. One option, because on a real fridge the number of doors and where the freezer sits are the same fact. |
+| `fridge_temperature_entity` / `freezer_temperature_entity` | fridge | The two displays on the doors. A plain temperature sensor sitting inside the fridge is enough. Nothing is drawn without the entity; a probe that stops reporting shows `--°` rather than a stale number, which is what a Zigbee sensor does when the fridge is unplugged but the sensor lives on. |
+| `fridge_max_temperature` | fridge | Above this, the state reads *Temperature high* and the display turns red. Default 8 °C. |
+| `door_entity` / `freezer_door_entity` | fridge | One door per sensor: each panel swings for its own, hinged on the outer edge, and the lit compartment shows behind it. With a single sensor only the fridge door moves. |
+| `ice_maker_entity` | fridge | Cubes fall while it produces and grey out when it doesn't. No entity, no dispenser drawn. |
+| `power_entity` / `power_on_threshold` | fridge | Read backwards on a fridge: *staying below* the threshold is the fault, not the idle state. Default 1 W. The alert waits 30 minutes, because a plug emits isolated zeroes while everything is fine. The longest such run measured on a real fridge lasted 15 minutes. |
+| `temperature_entity` | kettle | Water temperature, shown on the body. No entity, no display. |
+| `target_temperature_entity` / `current_temperature_entity` / `heating_entity` | cooker, rice cooker | Shared with the oven: the bar becomes a heat-up gauge while the temperature climbs, and the element under the bowl glows. |
+| `speed_entity` | cooker | Mixing speed, drawn as how fast the blade turns. A number is banded onto three speeds (a Thermomix goes to 10); a word other than *off* (`Turbo`, `Knead`) counts as the fastest. The real value stays on the info line. |
+| `water_entity` | coffee | Either shape works. Home Connect fires `ConsumerProducts.CoffeeMaker.Event.WaterTankEmpty`, so the entity is a boolean; a filter machine reports a level instead, and then the percentage is shown and drawn, with *empty* below 10%. |
+| `beans_entity` / `tray_entity` / `descaling_entity` | coffee | The other three Home Connect events: `BeanContainerEmpty`, `DripTrayFull`, `DeviceShouldBeDescaled`. |
+| `cups_entity` | coffee | How many cups are coming. A count (filter machines go 1 to 12), a boolean (Home Connect's `Option.MultipleBeverages`), or a beverage name whose plural is in the word (Jura's product select: *2 Espressi*). The drawing shows one cup or two; the line keeps the real value. |
+| `strength_entity` | coffee | Coffee strength: Home Connect's `Option.BeanAmount`, Jura's `coffee_strength`. Numbers and words both map onto how full the bean hopper looks. |
 
 ### Example
 
@@ -180,9 +189,9 @@ a label may itself contain one.
 
 ## Thanks
 
-- [@chike-he](https://github.com/chike-he) — Chinese translation ([#3](https://github.com/ADNPolymerase/ha-appliance-card/issues/3))
-- [@pbarone](https://github.com/pbarone) — `device_class: timestamp` support for the remaining time ([#2](https://github.com/ADNPolymerase/ha-appliance-card/pull/2))
+- [@chike-he](https://github.com/chike-he): Chinese translation ([#3](https://github.com/ADNPolymerase/ha-appliance-card/issues/3))
+- [@pbarone](https://github.com/pbarone): `device_class: timestamp` support for the remaining time ([#2](https://github.com/ADNPolymerase/ha-appliance-card/pull/2))
 
 ## License
 
-MIT — see [LICENSE](LICENSE).
+MIT. See [LICENSE](LICENSE).

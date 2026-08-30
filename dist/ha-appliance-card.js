@@ -1,4 +1,4 @@
-const CARD_VERSION = "1.3.0";
+const CARD_VERSION = "2.0.0";
 
 console.info(
   "%c HA-APPLIANCE-CARD %c v" + CARD_VERSION + " ",
@@ -84,6 +84,28 @@ const T = {
     section_toggle: "Power switch", toggle: "Power",
     off_short: "Off", toggle_entity: "Power switch entity",
     zone_residual_entity: "Residual heat entity", zone_name: "Zone name (optional)",
+    type_fridge: "Fridge", type_kettle: "Kettle",
+    fridge_ok: "Normal", temp_high: "Temperature high",
+    unplugged: "Unplugged", kettle_heating: "Heating",
+    kettle_off: "Off", fridge_compartment: "Fridge",
+    freezer_compartment: "Freezer", ice_maker: "Ice maker",
+    since: "for", section_fridge_layout: "Layout",
+    layout_single: "One door", layout_freezer_bottom: "Freezer at the bottom",
+    layout_freezer_top: "Freezer on top", layout_side_by_side: "Side by side",
+    section_fridge_temperature: "Fridge temperature", section_freezer_temperature: "Freezer temperature",
+    section_freezer_door: "Freezer door sensor", section_ice_maker: "Ice maker",
+    fridge_max_temperature: "Warn above this temperature", section_kettle_temperature: "Water temperature",
+    ice_on: "Running", ice_off: "Off", doors_closed: "Doors closed",
+    fridge_door_open: "Fridge door open", freezer_door_open: "Freezer door open",
+    type_cooker: "Cooker", type_coffee: "Coffee machine",
+    water_empty: "Water tank empty", beans_empty: "Bean container empty",
+    tray_full: "Drip tray full", descale: "Descaling due",
+    speed: "Speed", section_speed: "Mixing speed",
+    section_water: "Water tank", section_beans: "Bean container",
+    section_tray: "Drip tray", section_descaling: "Descaling",
+    cups: "Cups", strength: "Strength",
+    section_cups: "Number of cups", section_strength: "Coffee strength",
+    type_rice_cooker: "Rice cooker", keep_warm: "Keeping warm",
   },
   fr: {
     idle: "En veille", running: "En cours", paused: "En pause", done: "Termin\u00e9",
@@ -158,6 +180,28 @@ const T = {
     section_toggle: "Interrupteur", toggle: "Marche / Arr\u00eat",
     off_short: "Arr\u00eat", toggle_entity: "Entit\u00e9 interrupteur",
     zone_residual_entity: "Entit\u00e9 chaleur r\u00e9siduelle", zone_name: "Nom du foyer (optionnel)",
+    type_fridge: "R\u00e9frig\u00e9rateur", type_kettle: "Bouilloire",
+    fridge_ok: "Normal", temp_high: "Temp\u00e9rature haute",
+    unplugged: "D\u00e9branch\u00e9", kettle_heating: "En chauffe",
+    kettle_off: "\u00c0 l'arr\u00eat", fridge_compartment: "R\u00e9frig\u00e9rateur",
+    freezer_compartment: "Cong\u00e9lateur", ice_maker: "Gla\u00e7ons",
+    since: "depuis", section_fridge_layout: "Implantation",
+    layout_single: "Une porte", layout_freezer_bottom: "Cong\u00e9lateur en bas",
+    layout_freezer_top: "Cong\u00e9lateur en haut", layout_side_by_side: "Am\u00e9ricain",
+    section_fridge_temperature: "Temp\u00e9rature du r\u00e9frig\u00e9rateur", section_freezer_temperature: "Temp\u00e9rature du cong\u00e9lateur",
+    section_freezer_door: "Capteur de porte du cong\u00e9lateur", section_ice_maker: "Machine \u00e0 gla\u00e7ons",
+    fridge_max_temperature: "Alerter au-dessus de cette temp\u00e9rature", section_kettle_temperature: "Temp\u00e9rature de l'eau",
+    ice_on: "En marche", ice_off: "\u00c0 l'arr\u00eat", doors_closed: "Portes ferm\u00e9es",
+    fridge_door_open: "R\u00e9frig\u00e9rateur ouvert", freezer_door_open: "Cong\u00e9lateur ouvert",
+    type_cooker: "Robot cuiseur", type_coffee: "Machine \u00e0 caf\u00e9",
+    water_empty: "R\u00e9servoir d'eau vide", beans_empty: "Bac \u00e0 grains vide",
+    tray_full: "Bac d'\u00e9gouttage plein", descale: "D\u00e9tartrage \u00e0 faire",
+    speed: "Vitesse", section_speed: "Vitesse du couteau",
+    section_water: "R\u00e9servoir d'eau", section_beans: "Bac \u00e0 grains",
+    section_tray: "Bac d'\u00e9gouttage", section_descaling: "D\u00e9tartrage",
+    cups: "Tasses", strength: "Force",
+    section_cups: "Nombre de tasses", section_strength: "Force du caf\u00e9",
+    type_rice_cooker: "Cuiseur \u00e0 riz", keep_warm: "Maintien au chaud",
   },
   ru: {
     idle: "\u041e\u0436\u0438\u0434\u0430\u043d\u0438\u0435", running: "\u0420\u0430\u0431\u043e\u0442\u0430\u0435\u0442", paused: "\u041d\u0430 \u043f\u0430\u0443\u0437\u0435", done: "\u0417\u0430\u0432\u0435\u0440\u0448\u0435\u043d\u043e",
@@ -232,6 +276,28 @@ const T = {
     section_toggle: "\u0412\u044b\u043a\u043b\u044e\u0447\u0430\u0442\u0435\u043b\u044c", toggle: "\u041f\u0438\u0442\u0430\u043d\u0438\u0435",
     off_short: "\u0412\u044b\u043a\u043b.", toggle_entity: "\u041e\u0431\u044a\u0435\u043a\u0442 \u0432\u044b\u043a\u043b\u044e\u0447\u0430\u0442\u0435\u043b\u044f",
     zone_residual_entity: "\u041e\u0431\u044a\u0435\u043a\u0442 \u043e\u0441\u0442\u0430\u0442\u043e\u0447\u043d\u043e\u0433\u043e \u0442\u0435\u043f\u043b\u0430", zone_name: "\u041d\u0430\u0437\u0432\u0430\u043d\u0438\u0435 \u043a\u043e\u043d\u0444\u043e\u0440\u043a\u0438 (\u043e\u043f\u0446\u0438\u043e\u043d\u0430\u043b\u044c\u043d\u043e)",
+    type_fridge: "\u0425\u043e\u043b\u043e\u0434\u0438\u043b\u044c\u043d\u0438\u043a", type_kettle: "\u0427\u0430\u0439\u043d\u0438\u043a",
+    fridge_ok: "\u041d\u043e\u0440\u043c\u0430", temp_high: "\u0412\u044b\u0441\u043e\u043a\u0430\u044f \u0442\u0435\u043c\u043f\u0435\u0440\u0430\u0442\u0443\u0440\u0430",
+    unplugged: "\u041e\u0442\u043a\u043b\u044e\u0447\u0451\u043d \u043e\u0442 \u0441\u0435\u0442\u0438", kettle_heating: "\u041d\u0430\u0433\u0440\u0435\u0432",
+    kettle_off: "\u0412\u044b\u043a\u043b\u044e\u0447\u0435\u043d", fridge_compartment: "\u0425\u043e\u043b\u043e\u0434\u0438\u043b\u044c\u043d\u0438\u043a",
+    freezer_compartment: "\u041c\u043e\u0440\u043e\u0437\u0438\u043b\u044c\u043d\u0438\u043a", ice_maker: "\u041b\u0435\u0434\u043e\u0433\u0435\u043d\u0435\u0440\u0430\u0442\u043e\u0440",
+    since: "\u0443\u0436\u0435", section_fridge_layout: "\u041a\u043e\u043c\u043f\u043e\u043d\u043e\u0432\u043a\u0430",
+    layout_single: "\u041e\u0434\u043d\u0430 \u0434\u0432\u0435\u0440\u044c", layout_freezer_bottom: "\u041c\u043e\u0440\u043e\u0437\u0438\u043b\u043a\u0430 \u0441\u043d\u0438\u0437\u0443",
+    layout_freezer_top: "\u041c\u043e\u0440\u043e\u0437\u0438\u043b\u043a\u0430 \u0441\u0432\u0435\u0440\u0445\u0443", layout_side_by_side: "Side by side",
+    section_fridge_temperature: "\u0422\u0435\u043c\u043f\u0435\u0440\u0430\u0442\u0443\u0440\u0430 \u0445\u043e\u043b\u043e\u0434\u0438\u043b\u044c\u043d\u0438\u043a\u0430", section_freezer_temperature: "\u0422\u0435\u043c\u043f\u0435\u0440\u0430\u0442\u0443\u0440\u0430 \u043c\u043e\u0440\u043e\u0437\u0438\u043b\u044c\u043d\u0438\u043a\u0430",
+    section_freezer_door: "\u0414\u0430\u0442\u0447\u0438\u043a \u0434\u0432\u0435\u0440\u0438 \u043c\u043e\u0440\u043e\u0437\u0438\u043b\u044c\u043d\u0438\u043a\u0430", section_ice_maker: "\u041b\u0435\u0434\u043e\u0433\u0435\u043d\u0435\u0440\u0430\u0442\u043e\u0440",
+    fridge_max_temperature: "\u041f\u0440\u0435\u0434\u0443\u043f\u0440\u0435\u0436\u0434\u0430\u0442\u044c \u0432\u044b\u0448\u0435 \u044d\u0442\u043e\u0439 \u0442\u0435\u043c\u043f\u0435\u0440\u0430\u0442\u0443\u0440\u044b", section_kettle_temperature: "\u0422\u0435\u043c\u043f\u0435\u0440\u0430\u0442\u0443\u0440\u0430 \u0432\u043e\u0434\u044b",
+    ice_on: "\u0420\u0430\u0431\u043e\u0442\u0430\u0435\u0442", ice_off: "\u0412\u044b\u043a\u043b\u044e\u0447\u0435\u043d", doors_closed: "\u0414\u0432\u0435\u0440\u0438 \u0437\u0430\u043a\u0440\u044b\u0442\u044b",
+    fridge_door_open: "\u0414\u0432\u0435\u0440\u044c \u0445\u043e\u043b\u043e\u0434\u0438\u043b\u044c\u043d\u0438\u043a\u0430 \u043e\u0442\u043a\u0440\u044b\u0442\u0430", freezer_door_open: "\u0414\u0432\u0435\u0440\u044c \u043c\u043e\u0440\u043e\u0437\u0438\u043b\u044c\u043d\u0438\u043a\u0430 \u043e\u0442\u043a\u0440\u044b\u0442\u0430",
+    type_cooker: "\u041a\u0443\u0445\u043e\u043d\u043d\u044b\u0439 \u043a\u043e\u043c\u0431\u0430\u0439\u043d", type_coffee: "\u041a\u043e\u0444\u0435\u043c\u0430\u0448\u0438\u043d\u0430",
+    water_empty: "\u0411\u0430\u043a \u0434\u043b\u044f \u0432\u043e\u0434\u044b \u043f\u0443\u0441\u0442", beans_empty: "\u041a\u043e\u043d\u0442\u0435\u0439\u043d\u0435\u0440 \u0434\u043b\u044f \u0437\u0451\u0440\u0435\u043d \u043f\u0443\u0441\u0442",
+    tray_full: "\u041f\u043e\u0434\u0434\u043e\u043d \u043f\u0435\u0440\u0435\u043f\u043e\u043b\u043d\u0435\u043d", descale: "\u0422\u0440\u0435\u0431\u0443\u0435\u0442\u0441\u044f \u043e\u0447\u0438\u0441\u0442\u043a\u0430 \u043e\u0442 \u043d\u0430\u043a\u0438\u043f\u0438",
+    speed: "\u0421\u043a\u043e\u0440\u043e\u0441\u0442\u044c", section_speed: "\u0421\u043a\u043e\u0440\u043e\u0441\u0442\u044c \u043d\u043e\u0436\u0430",
+    section_water: "\u0411\u0430\u043a \u0434\u043b\u044f \u0432\u043e\u0434\u044b", section_beans: "\u041a\u043e\u043d\u0442\u0435\u0439\u043d\u0435\u0440 \u0434\u043b\u044f \u0437\u0451\u0440\u0435\u043d",
+    section_tray: "\u041f\u043e\u0434\u0434\u043e\u043d", section_descaling: "\u041e\u0447\u0438\u0441\u0442\u043a\u0430 \u043e\u0442 \u043d\u0430\u043a\u0438\u043f\u0438",
+    cups: "\u0427\u0430\u0448\u043a\u0438", strength: "\u041a\u0440\u0435\u043f\u043e\u0441\u0442\u044c",
+    section_cups: "\u041a\u043e\u043b\u0438\u0447\u0435\u0441\u0442\u0432\u043e \u0447\u0430\u0448\u0435\u043a", section_strength: "\u041a\u0440\u0435\u043f\u043e\u0441\u0442\u044c \u043a\u043e\u0444\u0435",
+    type_rice_cooker: "\u0420\u0438\u0441\u043e\u0432\u0430\u0440\u043a\u0430", keep_warm: "\u041f\u043e\u0434\u0434\u0435\u0440\u0436\u0430\u043d\u0438\u0435 \u0442\u0435\u043f\u043b\u0430",
   },
   de: {
     idle: "Inaktiv", running: "L\u00e4uft", paused: "Pausiert", done: "Fertig",
@@ -306,6 +372,28 @@ const T = {
     section_toggle: "Ein/Aus-Schalter", toggle: "Ein/Aus",
     off_short: "Aus", toggle_entity: "Entit\u00e4t Ein/Aus-Schalter",
     zone_residual_entity: "Entit\u00e4t Restw\u00e4rme", zone_name: "Name der Kochzone (optional)",
+    type_fridge: "K\u00fchlschrank", type_kettle: "Wasserkocher",
+    fridge_ok: "Normal", temp_high: "Temperatur zu hoch",
+    unplugged: "Nicht angeschlossen", kettle_heating: "Heizt",
+    kettle_off: "Aus", fridge_compartment: "K\u00fchlteil",
+    freezer_compartment: "Gefrierteil", ice_maker: "Eisbereiter",
+    since: "seit", section_fridge_layout: "Bauform",
+    layout_single: "Eine T\u00fcr", layout_freezer_bottom: "Gefrierteil unten",
+    layout_freezer_top: "Gefrierteil oben", layout_side_by_side: "Side-by-Side",
+    section_fridge_temperature: "K\u00fchltemperatur", section_freezer_temperature: "Gefriertemperatur",
+    section_freezer_door: "T\u00fcrsensor Gefrierteil", section_ice_maker: "Eisbereiter",
+    fridge_max_temperature: "Warnen oberhalb dieser Temperatur", section_kettle_temperature: "Wassertemperatur",
+    ice_on: "L\u00e4uft", ice_off: "Aus", doors_closed: "T\u00fcren geschlossen",
+    fridge_door_open: "K\u00fchlteil offen", freezer_door_open: "Gefrierteil offen",
+    type_cooker: "K\u00fcchenmaschine", type_coffee: "Kaffeemaschine",
+    water_empty: "Wassertank leer", beans_empty: "Bohnenbeh\u00e4lter leer",
+    tray_full: "Tropfschale voll", descale: "Entkalken f\u00e4llig",
+    speed: "Geschwindigkeit", section_speed: "R\u00fchrgeschwindigkeit",
+    section_water: "Wassertank", section_beans: "Bohnenbeh\u00e4lter",
+    section_tray: "Tropfschale", section_descaling: "Entkalken",
+    cups: "Tassen", strength: "St\u00e4rke",
+    section_cups: "Anzahl Tassen", section_strength: "Kaffeest\u00e4rke",
+    type_rice_cooker: "Reiskocher", keep_warm: "Warmhalten",
   },
   es: {
     idle: "Inactivo", running: "En marcha", paused: "En pausa", done: "Finalizado",
@@ -380,6 +468,28 @@ const T = {
     section_toggle: "Interruptor", toggle: "Encendido",
     off_short: "Apagado", toggle_entity: "Entidad del interruptor",
     zone_residual_entity: "Entidad de calor residual", zone_name: "Nombre de la zona (opcional)",
+    type_fridge: "Frigor\u00edfico", type_kettle: "Hervidor",
+    fridge_ok: "Normal", temp_high: "Temperatura alta",
+    unplugged: "Desenchufado", kettle_heating: "Calentando",
+    kettle_off: "Apagado", fridge_compartment: "Frigor\u00edfico",
+    freezer_compartment: "Congelador", ice_maker: "Fabricador de hielo",
+    since: "desde hace", section_fridge_layout: "Distribuci\u00f3n",
+    layout_single: "Una puerta", layout_freezer_bottom: "Congelador abajo",
+    layout_freezer_top: "Congelador arriba", layout_side_by_side: "Side by side",
+    section_fridge_temperature: "Temperatura del frigor\u00edfico", section_freezer_temperature: "Temperatura del congelador",
+    section_freezer_door: "Sensor de puerta del congelador", section_ice_maker: "Fabricador de hielo",
+    fridge_max_temperature: "Avisar por encima de esta temperatura", section_kettle_temperature: "Temperatura del agua",
+    ice_on: "En marcha", ice_off: "Apagado", doors_closed: "Puertas cerradas",
+    fridge_door_open: "Frigor\u00edfico abierto", freezer_door_open: "Congelador abierto",
+    type_cooker: "Robot de cocina", type_coffee: "Cafetera",
+    water_empty: "Dep\u00f3sito de agua vac\u00edo", beans_empty: "Dep\u00f3sito de granos vac\u00edo",
+    tray_full: "Bandeja de goteo llena", descale: "Descalcificaci\u00f3n pendiente",
+    speed: "Velocidad", section_speed: "Velocidad de la cuchilla",
+    section_water: "Dep\u00f3sito de agua", section_beans: "Dep\u00f3sito de granos",
+    section_tray: "Bandeja de goteo", section_descaling: "Descalcificaci\u00f3n",
+    cups: "Tazas", strength: "Intensidad",
+    section_cups: "N\u00famero de tazas", section_strength: "Intensidad del caf\u00e9",
+    type_rice_cooker: "Arrocera", keep_warm: "Manteniendo caliente",
   },
   it: {
     idle: "Inattivo", running: "In funzione", paused: "In pausa", done: "Terminato",
@@ -454,6 +564,28 @@ const T = {
     section_toggle: "Interruttore", toggle: "Accensione",
     off_short: "Spento", toggle_entity: "Entit\u00e0 interruttore",
     zone_residual_entity: "Entit\u00e0 calore residuo", zone_name: "Nome della zona (opzionale)",
+    type_fridge: "Frigorifero", type_kettle: "Bollitore",
+    fridge_ok: "Normale", temp_high: "Temperatura alta",
+    unplugged: "Scollegato", kettle_heating: "In riscaldamento",
+    kettle_off: "Spento", fridge_compartment: "Frigorifero",
+    freezer_compartment: "Congelatore", ice_maker: "Fabbricatore di ghiaccio",
+    since: "da", section_fridge_layout: "Configurazione",
+    layout_single: "Una porta", layout_freezer_bottom: "Congelatore in basso",
+    layout_freezer_top: "Congelatore in alto", layout_side_by_side: "Side by side",
+    section_fridge_temperature: "Temperatura del frigorifero", section_freezer_temperature: "Temperatura del congelatore",
+    section_freezer_door: "Sensore porta del congelatore", section_ice_maker: "Fabbricatore di ghiaccio",
+    fridge_max_temperature: "Avvisa sopra questa temperatura", section_kettle_temperature: "Temperatura dell'acqua",
+    ice_on: "In funzione", ice_off: "Spento", doors_closed: "Porte chiuse",
+    fridge_door_open: "Frigorifero aperto", freezer_door_open: "Congelatore aperto",
+    type_cooker: "Robot da cucina", type_coffee: "Macchina da caff\u00e8",
+    water_empty: "Serbatoio dell'acqua vuoto", beans_empty: "Contenitore chicchi vuoto",
+    tray_full: "Vaschetta raccogligocce piena", descale: "Decalcificazione da fare",
+    speed: "Velocit\u00e0", section_speed: "Velocit\u00e0 della lama",
+    section_water: "Serbatoio dell'acqua", section_beans: "Contenitore chicchi",
+    section_tray: "Vaschetta raccogligocce", section_descaling: "Decalcificazione",
+    cups: "Tazze", strength: "Intensit\u00e0",
+    section_cups: "Numero di tazze", section_strength: "Intensit\u00e0 del caff\u00e8",
+    type_rice_cooker: "Cuociriso", keep_warm: "Mantenimento in caldo",
   },
   nl: {
     idle: "Inactief", running: "Actief", paused: "Gepauzeerd", done: "Klaar",
@@ -528,6 +660,28 @@ const T = {
     section_toggle: "Aan/uit-schakelaar", toggle: "Aan/uit",
     off_short: "Uit", toggle_entity: "Entiteit aan/uit-schakelaar",
     zone_residual_entity: "Entiteit restwarmte", zone_name: "Naam van de kookzone (optioneel)",
+    type_fridge: "Koelkast", type_kettle: "Waterkoker",
+    fridge_ok: "Normaal", temp_high: "Temperatuur te hoog",
+    unplugged: "Niet aangesloten", kettle_heating: "Aan het koken",
+    kettle_off: "Uit", fridge_compartment: "Koelkast",
+    freezer_compartment: "Vriezer", ice_maker: "IJsmaker",
+    since: "sinds", section_fridge_layout: "Indeling",
+    layout_single: "E\u00e9n deur", layout_freezer_bottom: "Vriezer onderin",
+    layout_freezer_top: "Vriezer bovenin", layout_side_by_side: "Side by side",
+    section_fridge_temperature: "Koelkasttemperatuur", section_freezer_temperature: "Vriezertemperatuur",
+    section_freezer_door: "Deursensor vriezer", section_ice_maker: "IJsmaker",
+    fridge_max_temperature: "Waarschuwen boven deze temperatuur", section_kettle_temperature: "Watertemperatuur",
+    ice_on: "In bedrijf", ice_off: "Uit", doors_closed: "Deuren dicht",
+    fridge_door_open: "Koelkast open", freezer_door_open: "Vriezer open",
+    type_cooker: "Keukenmachine", type_coffee: "Koffiemachine",
+    water_empty: "Waterreservoir leeg", beans_empty: "Bonenreservoir leeg",
+    tray_full: "Lekbak vol", descale: "Ontkalken nodig",
+    speed: "Snelheid", section_speed: "Messnelheid",
+    section_water: "Waterreservoir", section_beans: "Bonenreservoir",
+    section_tray: "Lekbak", section_descaling: "Ontkalken",
+    cups: "Kopjes", strength: "Sterkte",
+    section_cups: "Aantal kopjes", section_strength: "Koffiesterkte",
+    type_rice_cooker: "Rijstkoker", keep_warm: "Warmhouden",
   },
   pt: {
     idle: "Inativo", running: "Em funcionamento", paused: "Em pausa", done: "Conclu\u00eddo",
@@ -602,6 +756,28 @@ const T = {
     section_toggle: "Interruptor", toggle: "Ligar/Desligar",
     off_short: "Desligado", toggle_entity: "Entidade do interruptor",
     zone_residual_entity: "Entidade de calor residual", zone_name: "Nome da zona (opcional)",
+    type_fridge: "Frigor\u00edfico", type_kettle: "Chaleira",
+    fridge_ok: "Normal", temp_high: "Temperatura alta",
+    unplugged: "Desligado da tomada", kettle_heating: "A aquecer",
+    kettle_off: "Desligada", fridge_compartment: "Frigor\u00edfico",
+    freezer_compartment: "Congelador", ice_maker: "M\u00e1quina de gelo",
+    since: "h\u00e1", section_fridge_layout: "Configura\u00e7\u00e3o",
+    layout_single: "Uma porta", layout_freezer_bottom: "Congelador em baixo",
+    layout_freezer_top: "Congelador em cima", layout_side_by_side: "Side by side",
+    section_fridge_temperature: "Temperatura do frigor\u00edfico", section_freezer_temperature: "Temperatura do congelador",
+    section_freezer_door: "Sensor da porta do congelador", section_ice_maker: "M\u00e1quina de gelo",
+    fridge_max_temperature: "Avisar acima desta temperatura", section_kettle_temperature: "Temperatura da \u00e1gua",
+    ice_on: "Em funcionamento", ice_off: "Desligada", doors_closed: "Portas fechadas",
+    fridge_door_open: "Frigor\u00edfico aberto", freezer_door_open: "Congelador aberto",
+    type_cooker: "Rob\u00f4 de cozinha", type_coffee: "M\u00e1quina de caf\u00e9",
+    water_empty: "Dep\u00f3sito de \u00e1gua vazio", beans_empty: "Dep\u00f3sito de gr\u00e3os vazio",
+    tray_full: "Bandeja de recolha cheia", descale: "Descalcifica\u00e7\u00e3o pendente",
+    speed: "Velocidade", section_speed: "Velocidade da l\u00e2mina",
+    section_water: "Dep\u00f3sito de \u00e1gua", section_beans: "Dep\u00f3sito de gr\u00e3os",
+    section_tray: "Bandeja de recolha", section_descaling: "Descalcifica\u00e7\u00e3o",
+    cups: "Ch\u00e1venas", strength: "Intensidade",
+    section_cups: "N\u00famero de ch\u00e1venas", section_strength: "Intensidade do caf\u00e9",
+    type_rice_cooker: "Panela de arroz", keep_warm: "A manter quente",
   },
   sv: {
     idle: "Inaktiv", running: "Ig\u00e5ng", paused: "Pausad", done: "Klar",
@@ -676,6 +852,28 @@ const T = {
     section_toggle: "Str\u00f6mbrytare", toggle: "P\u00e5/av",
     off_short: "Av", toggle_entity: "Entitet f\u00f6r str\u00f6mbrytare",
     zone_residual_entity: "Entitet f\u00f6r restv\u00e4rme", zone_name: "Kokzonens namn (valfritt)",
+    type_fridge: "Kylsk\u00e5p", type_kettle: "Vattenkokare",
+    fridge_ok: "Normal", temp_high: "H\u00f6g temperatur",
+    unplugged: "Urkopplad", kettle_heating: "V\u00e4rmer",
+    kettle_off: "Av", fridge_compartment: "Kyl",
+    freezer_compartment: "Frys", ice_maker: "Ismaskin",
+    since: "sedan", section_fridge_layout: "Utf\u00f6rande",
+    layout_single: "En d\u00f6rr", layout_freezer_bottom: "Frys nedtill",
+    layout_freezer_top: "Frys upptill", layout_side_by_side: "Side by side",
+    section_fridge_temperature: "Kyltemperatur", section_freezer_temperature: "Frystemperatur",
+    section_freezer_door: "D\u00f6rrsensor frys", section_ice_maker: "Ismaskin",
+    fridge_max_temperature: "Varna \u00f6ver denna temperatur", section_kettle_temperature: "Vattentemperatur",
+    ice_on: "I drift", ice_off: "Av", doors_closed: "D\u00f6rrar st\u00e4ngda",
+    fridge_door_open: "Kylen \u00f6ppen", freezer_door_open: "Frysen \u00f6ppen",
+    type_cooker: "K\u00f6ksmaskin", type_coffee: "Kaffemaskin",
+    water_empty: "Vattentanken \u00e4r tom", beans_empty: "B\u00f6nbeh\u00e5llaren \u00e4r tom",
+    tray_full: "Droppsk\u00e5len \u00e4r full", descale: "Avkalkning beh\u00f6vs",
+    speed: "Hastighet", section_speed: "Knivhastighet",
+    section_water: "Vattentank", section_beans: "B\u00f6nbeh\u00e5llare",
+    section_tray: "Droppsk\u00e5l", section_descaling: "Avkalkning",
+    cups: "Koppar", strength: "Styrka",
+    section_cups: "Antal koppar", section_strength: "Kaffestyrka",
+    type_rice_cooker: "Riskokare", keep_warm: "Varmh\u00e5llning",
   },
   no: {
     idle: "Inaktiv", running: "I gang", paused: "Pauset", done: "Ferdig",
@@ -750,6 +948,28 @@ const T = {
     section_toggle: "Av/p\u00e5-bryter", toggle: "Av/p\u00e5",
     off_short: "Av", toggle_entity: "Enhet for av/p\u00e5-bryter",
     zone_residual_entity: "Enhet for restvarme", zone_name: "Navn p\u00e5 kokesonen (valgfritt)",
+    type_fridge: "Kj\u00f8leskap", type_kettle: "Vannkoker",
+    fridge_ok: "Normal", temp_high: "H\u00f8y temperatur",
+    unplugged: "Frakoblet", kettle_heating: "Varmer",
+    kettle_off: "Av", fridge_compartment: "Kj\u00f8l",
+    freezer_compartment: "Frys", ice_maker: "Ismaskin",
+    since: "siden", section_fridge_layout: "Utf\u00f8relse",
+    layout_single: "\u00c9n d\u00f8r", layout_freezer_bottom: "Frys nederst",
+    layout_freezer_top: "Frys \u00f8verst", layout_side_by_side: "Side by side",
+    section_fridge_temperature: "Kj\u00f8letemperatur", section_freezer_temperature: "Frysetemperatur",
+    section_freezer_door: "D\u00f8rsensor for frys", section_ice_maker: "Ismaskin",
+    fridge_max_temperature: "Varsle over denne temperaturen", section_kettle_temperature: "Vanntemperatur",
+    ice_on: "I drift", ice_off: "Av", doors_closed: "D\u00f8rer lukket",
+    fridge_door_open: "Kj\u00f8leskapet er \u00e5pent", freezer_door_open: "Fryseren er \u00e5pen",
+    type_cooker: "Kj\u00f8kkenmaskin", type_coffee: "Kaffemaskin",
+    water_empty: "Vanntanken er tom", beans_empty: "B\u00f8nnebeholderen er tom",
+    tray_full: "Dryppsk\u00e5len er full", descale: "Avkalking trengs",
+    speed: "Hastighet", section_speed: "Knivhastighet",
+    section_water: "Vanntank", section_beans: "B\u00f8nnebeholder",
+    section_tray: "Dryppsk\u00e5l", section_descaling: "Avkalking",
+    cups: "Kopper", strength: "Styrke",
+    section_cups: "Antall kopper", section_strength: "Kaffestyrke",
+    type_rice_cooker: "Riskoker", keep_warm: "Varmholding",
   },
   da: {
     idle: "Inaktiv", running: "I gang", paused: "Sat p\u00e5 pause", done: "F\u00e6rdig",
@@ -824,6 +1044,28 @@ const T = {
     section_toggle: "T\u00e6nd/sluk-knap", toggle: "T\u00e6nd/sluk",
     off_short: "Slukket", toggle_entity: "Enhed for t\u00e6nd/sluk-knap",
     zone_residual_entity: "Enhed for restvarme", zone_name: "Kogezonens navn (valgfrit)",
+    type_fridge: "K\u00f8leskab", type_kettle: "Elkedel",
+    fridge_ok: "Normal", temp_high: "H\u00f8j temperatur",
+    unplugged: "Ikke tilsluttet", kettle_heating: "Varmer",
+    kettle_off: "Slukket", fridge_compartment: "K\u00f8l",
+    freezer_compartment: "Frys", ice_maker: "Ismaskine",
+    since: "siden", section_fridge_layout: "Udf\u00f8relse",
+    layout_single: "\u00c9n l\u00e5ge", layout_freezer_bottom: "Fryser nederst",
+    layout_freezer_top: "Fryser \u00f8verst", layout_side_by_side: "Side by side",
+    section_fridge_temperature: "K\u00f8letemperatur", section_freezer_temperature: "Frysetemperatur",
+    section_freezer_door: "L\u00e5gesensor til fryser", section_ice_maker: "Ismaskine",
+    fridge_max_temperature: "Advar over denne temperatur", section_kettle_temperature: "Vandtemperatur",
+    ice_on: "I drift", ice_off: "Slukket", doors_closed: "L\u00e5ger lukket",
+    fridge_door_open: "K\u00f8leskabet er \u00e5bent", freezer_door_open: "Fryseren er \u00e5ben",
+    type_cooker: "K\u00f8kkenmaskine", type_coffee: "Kaffemaskine",
+    water_empty: "Vandtanken er tom", beans_empty: "B\u00f8nnebeholderen er tom",
+    tray_full: "Drypbakken er fuld", descale: "Afkalkning p\u00e5kr\u00e6vet",
+    speed: "Hastighed", section_speed: "Knivhastighed",
+    section_water: "Vandtank", section_beans: "B\u00f8nnebeholder",
+    section_tray: "Drypbakke", section_descaling: "Afkalkning",
+    cups: "Kopper", strength: "Styrke",
+    section_cups: "Antal kopper", section_strength: "Kaffestyrke",
+    type_rice_cooker: "Riskoger", keep_warm: "Varmholdning",
   },
   pl: {
     idle: "Bezczynny", running: "W trakcie", paused: "Wstrzymany", done: "Zako\u0144czony",
@@ -898,6 +1140,28 @@ const T = {
     section_toggle: "W\u0142\u0105cznik", toggle: "Zasilanie",
     off_short: "Wy\u0142.", toggle_entity: "Encja w\u0142\u0105cznika",
     zone_residual_entity: "Encja ciep\u0142a resztkowego", zone_name: "Nazwa pola grzejnego (opcjonalnie)",
+    type_fridge: "Lod\u00f3wka", type_kettle: "Czajnik",
+    fridge_ok: "Normalnie", temp_high: "Wysoka temperatura",
+    unplugged: "Od\u0142\u0105czona", kettle_heating: "Grzeje",
+    kettle_off: "Wy\u0142\u0105czony", fridge_compartment: "Ch\u0142odziarka",
+    freezer_compartment: "Zamra\u017carka", ice_maker: "Kostkarka",
+    since: "od", section_fridge_layout: "Uk\u0142ad",
+    layout_single: "Jedne drzwi", layout_freezer_bottom: "Zamra\u017carka na dole",
+    layout_freezer_top: "Zamra\u017carka u g\u00f3ry", layout_side_by_side: "Side by side",
+    section_fridge_temperature: "Temperatura ch\u0142odziarki", section_freezer_temperature: "Temperatura zamra\u017carki",
+    section_freezer_door: "Czujnik drzwi zamra\u017carki", section_ice_maker: "Kostkarka",
+    fridge_max_temperature: "Ostrzegaj powy\u017cej tej temperatury", section_kettle_temperature: "Temperatura wody",
+    ice_on: "Pracuje", ice_off: "Wy\u0142\u0105czona", doors_closed: "Drzwi zamkni\u0119te",
+    fridge_door_open: "Ch\u0142odziarka otwarta", freezer_door_open: "Zamra\u017carka otwarta",
+    type_cooker: "Robot kuchenny", type_coffee: "Ekspres do kawy",
+    water_empty: "Pusty zbiornik na wod\u0119", beans_empty: "Pusty pojemnik na ziarna",
+    tray_full: "Pe\u0142na tacka ociekowa", descale: "Wymagane odkamienianie",
+    speed: "Pr\u0119dko\u015b\u0107", section_speed: "Pr\u0119dko\u015b\u0107 no\u017ca",
+    section_water: "Zbiornik na wod\u0119", section_beans: "Pojemnik na ziarna",
+    section_tray: "Tacka ociekowa", section_descaling: "Odkamienianie",
+    cups: "Fili\u017canki", strength: "Moc",
+    section_cups: "Liczba fili\u017canek", section_strength: "Moc kawy",
+    type_rice_cooker: "Ry\u017cowar", keep_warm: "Podtrzymywanie ciep\u0142a",
   },
   zh: {
     idle: "\u7a7a\u95f2", running: "\u8fd0\u884c\u4e2d", paused: "\u6682\u505c", done: "\u5b8c\u6210",
@@ -972,6 +1236,28 @@ const T = {
     section_toggle: "\u7535\u6e90\u5f00\u5173", toggle: "\u7535\u6e90",
     off_short: "\u5173", toggle_entity: "\u7535\u6e90\u5f00\u5173\u5b9e\u4f53",
     zone_residual_entity: "\u4f59\u70ed\u5b9e\u4f53", zone_name: "\u533a\u57df\u540d\u79f0 (\u53ef\u9009)",
+    type_fridge: "\u51b0\u7bb1", type_kettle: "\u70e7\u6c34\u58f6",
+    fridge_ok: "\u6b63\u5e38", temp_high: "\u6e29\u5ea6\u8fc7\u9ad8",
+    unplugged: "\u5df2\u65ad\u7535", kettle_heating: "\u52a0\u70ed\u4e2d",
+    kettle_off: "\u5df2\u5173\u95ed", fridge_compartment: "\u51b7\u85cf\u5ba4",
+    freezer_compartment: "\u51b7\u51bb\u5ba4", ice_maker: "\u5236\u51b0\u673a",
+    since: "\u5df2\u6301\u7eed", section_fridge_layout: "\u7ed3\u6784",
+    layout_single: "\u5355\u95e8", layout_freezer_bottom: "\u4e0b\u7f6e\u51b7\u51bb\u5ba4",
+    layout_freezer_top: "\u4e0a\u7f6e\u51b7\u51bb\u5ba4", layout_side_by_side: "\u5bf9\u5f00\u95e8",
+    section_fridge_temperature: "\u51b7\u85cf\u5ba4\u6e29\u5ea6", section_freezer_temperature: "\u51b7\u51bb\u5ba4\u6e29\u5ea6",
+    section_freezer_door: "\u51b7\u51bb\u5ba4\u95e8\u4f20\u611f\u5668", section_ice_maker: "\u5236\u51b0\u673a",
+    fridge_max_temperature: "\u9ad8\u4e8e\u6b64\u6e29\u5ea6\u65f6\u63d0\u9192", section_kettle_temperature: "\u6c34\u6e29",
+    ice_on: "\u8fd0\u884c\u4e2d", ice_off: "\u5df2\u5173\u95ed", doors_closed: "\u95e8\u5df2\u5173\u95ed",
+    fridge_door_open: "\u51b7\u85cf\u5ba4\u95e8\u5df2\u6253\u5f00", freezer_door_open: "\u51b7\u51bb\u5ba4\u95e8\u5df2\u6253\u5f00",
+    type_cooker: "\u6599\u7406\u673a", type_coffee: "\u5496\u5561\u673a",
+    water_empty: "\u6c34\u7bb1\u5df2\u7a7a", beans_empty: "\u8c46\u4ed3\u5df2\u7a7a",
+    tray_full: "\u63a5\u6c34\u76d8\u5df2\u6ee1", descale: "\u9700\u8981\u9664\u57a2",
+    speed: "\u901f\u5ea6", section_speed: "\u6405\u62cc\u901f\u5ea6",
+    section_water: "\u6c34\u7bb1", section_beans: "\u8c46\u4ed3",
+    section_tray: "\u63a5\u6c34\u76d8", section_descaling: "\u9664\u57a2",
+    cups: "\u676f\u6570", strength: "\u6d53\u5ea6",
+    section_cups: "\u676f\u6570", section_strength: "\u5496\u5561\u6d53\u5ea6",
+    type_rice_cooker: "\u7535\u996d\u7172", keep_warm: "\u4fdd\u6e29\u4e2d",
   },
 };
 
@@ -986,7 +1272,7 @@ function t(hass, key) {
 }
 
 // ---------------------------------------------------------------------------
-// State normalization \u2014 works across brands/integrations
+// State normalization, working across brands and integrations
 // ---------------------------------------------------------------------------
 
 const STATE_KEYWORDS = {
@@ -994,7 +1280,13 @@ const STATE_KEYWORDS = {
   // Before "running": ovens report "Preheating", and the "heating" keyword
   // below cannot match it anyway (no word boundary inside "preheating").
   preheating: ["preheat", "pre-heat", "pre_heat", "prechauff", "vorheiz", "precalent", "voorverwarm"],
-  running: ["run", "wash", "spin", "dry", "rinsing", "heating", "cours", "on", "active", "marche", "actif"],
+  // A rice cooker sits in this state for hours after it has finished, and so
+  // does an oven on its warming setting. MIoT reports it as status 4,
+  // "Keep-warm", and it is neither running nor done.
+  keep_warm: ["keep.?warm", "keepwarm", "warming", "maintien", "au chaud",
+    "warmhalten", "mantener caliente", "mantenimento", "warmhouden"],
+  running: ["run", "wash", "spin", "dry", "rinsing", "heating", "cours", "on", "active", "marche", "actif",
+    "cooking\\b(?!\\s*(?:complete|finished|done))", "cuisson\\b(?!\\s*termin)", "brewing", "baking"],
   paused: ["pause", "hold", "suspended"],
   done: ["end", "done", "finish", "complete", "termin"],
   delayed: ["delay", "differ", "scheduled", "programmed"],
@@ -1014,7 +1306,7 @@ function stripAccents(str) {
 
 // Matching requires a word boundary before the keyword (but not necessarily
 // after), so "on" matches "On"/"Ongoing" but not the "on" inside "Done" or
-// "Pending" \u2014 and "wash"/"dry"/"spin" still match gerund forms like
+// "Pending". And "wash"/"dry"/"spin" still match gerund forms like
 // "Washing"/"Drying"/"Spinning".
 const STATE_KEYWORD_PATTERNS = Object.fromEntries(
   Object.entries(STATE_KEYWORDS).map(([norm, keywords]) => [
@@ -1023,11 +1315,19 @@ const STATE_KEYWORD_PATTERNS = Object.fromEntries(
   ])
 );
 
+// A state_map names its target category by hand, so a typo lands a value no
+// other part of the card knows: no colour, no label, no animation. Rejecting it
+// here covers all three at once, rather than adding a fallback at every read.
+const MAPPABLE_STATES = Object.keys(STATE_KEYWORDS).concat("unknown");
+
 function normalizeState(raw, stateMap) {
   if (raw === undefined || raw === null) return "unknown";
   const s = String(raw).trim();
   if (["unknown", "unavailable", "none", ""].includes(s.toLowerCase())) return "unknown";
-  if (stateMap && Object.prototype.hasOwnProperty.call(stateMap, s)) return stateMap[s];
+  if (stateMap && Object.prototype.hasOwnProperty.call(stateMap, s)) {
+    const target = stateMap[s];
+    return MAPPABLE_STATES.includes(target) ? target : "unknown";
+  }
   const flat = stripAccents(s);
   for (const norm of Object.keys(STATE_KEYWORD_PATTERNS)) {
     if (STATE_KEYWORD_PATTERNS[norm].some((re) => re.test(flat))) return norm;
@@ -1046,6 +1346,21 @@ const STATE_COLORS = {
   delayed: "#9c27b0",
   error: "var(--error-color, #f44336)",
   unknown: "var(--disabled-text-color, #9e9e9e)",
+  // Fridge health. "fridge_ok" is the cold blue of the temperature displays,
+  // so a healthy fridge reads as cold rather than as "idle" grey.
+  fridge_ok: "#4fc3f7",
+  temp_high: "var(--warning-color, #ff9800)",
+  door_open: "var(--error-color, #f44336)",
+  unplugged: "var(--error-color, #f44336)",
+  // Coffee machine consumables. Orange rather than red: the machine is not
+  // broken, it is waiting for you.
+  water_empty: "var(--warning-color, #ff9800)",
+  beans_empty: "var(--warning-color, #ff9800)",
+  tray_full: "var(--warning-color, #ff9800)",
+  descale: "var(--warning-color, #ff9800)",
+  // Amber: the food is ready and being held, which is neither "running" blue
+  // nor the green of a cycle that is over and needs emptying.
+  keep_warm: "#ffb300",
 };
 
 // ---------------------------------------------------------------------------
@@ -1057,8 +1372,8 @@ function stateObj(hass, entityId) {
 }
 
 // An entity you cannot act on. Integrations routinely drop an option to
-// unavailable while the appliance is off \u2014 Home Connect does it with a
-// hood's venting level \u2014 and opening the more-info dialog of such an
+// unavailable while the appliance is off (Home Connect does it with a
+// hood's venting level), and opening the more-info dialog of such an
 // entity is a dead end, so the card must not invite the click.
 function entityUsable(hass, entityId) {
   const st = stateObj(hass, entityId);
@@ -1188,7 +1503,7 @@ function formatInfoValue(st, hass, valueMap) {
 
 function cleanProgramName(raw) {
   if (!raw) return raw;
-  // Many integrations report "<Category> Pr <ProgramName>" \u2014 keep the meaningful part.
+  // Many integrations report "<Category> Pr <ProgramName>": keep the meaningful part.
   const parts = String(raw).split(/\s+Pr\s+/i);
   const name = parts.length > 1 ? parts[1] : parts[0];
   return name
@@ -1261,6 +1576,28 @@ const TYPE_AUTO_PATTERNS = {
   cooktop: {
     child_lock_entity: /child.?lock|lock/i,
   },
+  fridge: {
+    fridge_temperature_entity: /fridge|refriger|frigo|cooler/i,
+    freezer_temperature_entity: /freezer|congel/i,
+    freezer_door_entity: /freezer.?door|door.?freezer/i,
+    ice_maker_entity: /ice.?maker|ice/i,
+  },
+  kettle: {
+    temperature_entity: /temperature|water.?temp/i,
+  },
+  cooker: {
+    target_temperature_entity: /target.?temp|setpoint/i,
+    current_temperature_entity: /current.?temp|^(?!.*target).*temperature/i,
+    speed_entity: /speed|vitesse|drehzahl/i,
+  },
+  coffee: {
+    water_entity: /water.?tank|water.?level|reservoir/i,
+    beans_entity: /bean.?container|bean.?empty/i,
+    tray_entity: /drip.?tray|tray/i,
+    descaling_entity: /descal|calc/i,
+    cups_entity: /cups|multiple.?beverages|tasses/i,
+    strength_entity: /strength|bean.?amount|force/i,
+  },
 };
 
 const INFO_PATTERNS = [
@@ -1300,7 +1637,7 @@ function autoSuggest(hass, cfg) {
 
 // What each type can express. Drives both the illustration and which sections
 // the visual editor offers: a hood has no program, no remaining time and no
-// door, and a cooktop has no cycle at all \u2014 offering those fields anyway
+// door, and a cooktop has no cycle at all, so offering those fields anyway
 // would only be noise.
 const TYPE_CAPS = {
   washer: { cycle: true, door: true },
@@ -1310,9 +1647,35 @@ const TYPE_CAPS = {
   microwave: { cycle: true, door: true, powerLevel: true },
   hood: { fan: true, light: true, filter: true, boost: true },
   cooktop: { zones: true, childLock: true },
+  // A fridge never stops, so it has no cycle, no program and nothing to press.
+  // What it has is a health summary, which is what its state line carries.
+  fridge: { fridgeTemp: true, door: true, freezerDoor: true, ice: true, readOnly: true },
+  kettle: { kettleTemp: true },
+  // Robot cuiseur. Bosch ships one (the Cookit) but it has no keys at all in
+  // the public Home Connect API (only an icon in the docs stylesheet), and
+  // Thermomix and Cookeo have no official integration either. So the options
+  // stay generic on purpose: whatever an owner can expose, plus a smart plug.
+  cooker: { cycle: true, temperature: true, heating: true, speed: true },
+  // Coffee machine, the opposite case: Home Connect exposes it in detail, and
+  // the three consumables below are the reason to put one on a dashboard.
+  coffee: { cycle: true, consumables: true },
+  // Rice cooker. Everything it reports already exists on the card: MIoT gives
+  // status, cook-mode and left-time, which are the state, the program and the
+  // remaining time. It needs a drawing of its own and nothing else.
+  rice_cooker: { cycle: true, temperature: true, heating: true },
 };
 const APPLIANCE_TYPES = Object.keys(TYPE_CAPS);
 const LAUNDRY_TYPES = ["washer", "dryer", "dishwasher"];
+// Fields no other type has. Their presence identifies a fridge on its own,
+// which matters because a fridge is the one type that can be configured
+// without a state entity at all.
+const FRIDGE_ONLY_FIELDS = [
+  "fridge_temperature_entity",
+  "freezer_temperature_entity",
+  "freezer_door_entity",
+  "ice_maker_entity",
+  "fridge_layout",
+];
 
 function caps(type) {
   return TYPE_CAPS[type] || TYPE_CAPS.washer;
@@ -1320,9 +1683,18 @@ function caps(type) {
 
 function detectApplianceType(cfg, st) {
   if (cfg.appliance_type && cfg.appliance_type !== "auto") return cfg.appliance_type;
+  // A fridge-only field settles it before any name matching: those keys mean
+  // nothing on the other seven types, and a fridge may have no state entity
+  // whose name could be matched in the first place.
+  if (FRIDGE_ONLY_FIELDS.some((f) => cfg[f])) return "fridge";
   const hay = `${cfg.icon || ""} ${cfg.state_entity || ""} ${(st && st.attributes.icon) || ""}`.toLowerCase();
   // "microwave" before "oven": plenty of devices are named "microwave_oven".
   if (/microwave|micro.?onde|mikrowelle|magnetron|mikrob/.test(hay)) return "microwave";
+  if (/coffee|cafeti|cafe|kaffee|espresso|cafetera|macchina.?caff|koffie|kaffemask|ekspres.?do.?kawy/.test(hay)) return "coffee";
+  if (/rice.?cooker|ricecooker|cuiseur.?(a.?)?riz|reiskocher|arrocera|cuociriso|rijstkoker|multicooker.?rice/.test(hay)) return "rice_cooker";
+  if (/cook.?processor|cookit|thermomix|robot.?cuiseur|companion|monsieur.?cuisine|cookeo|k\u00fcchenmaschine|kuchenmaschine|multicooker/.test(hay)) return "cooker";
+  if (/fridge|freezer|frigo|r\u00e9frig|refrig|kuhlschrank|k\u00fchlschrank|nevera|frigor|koelkast|kyl(skap)?\b|kj\u00f8leskap|lod\u00f3wka|lodowka/.test(hay)) return "fridge";
+  if (/kettle|bouilloire|wasserkocher|hervidor|bollitore|waterkoker|vattenkokare|vannkoker|elkedel|czajnik/.test(hay)) return "kettle";
   if (/hood|hotte|abzug|extractor|exaustor|afzuigkap|emh|okap/.test(hay)) return "hood";
   if (/cooktop|hotplate|plaque|kochfeld|kookplaat|induction|induktion|kogeplade/.test(hay)) return "cooktop";
   if (/oven|four|backofen|horno|forno|piekarnik/.test(hay)) return "oven";
@@ -1331,10 +1703,83 @@ function detectApplianceType(cfg, st) {
   return "washer";
 }
 
+// A plug reports isolated 0 W readings while everything is fine. Measured
+// on a real fridge, the longest such run lasted 13 to 15 minutes. Half an hour
+// below the threshold is therefore the shortest delay that cannot produce a
+// false alarm, and it doubles the observed worst case.
+const FRIDGE_UNPLUGGED_AFTER_MS = 30 * 60 * 1000;
+
+// Mixing speed, on the 0-3 scale the blade animation runs at. Thermomix goes
+// to 10 and calls the top one "Turbo"; the exact figure stays on the info line,
+// this is only how fast the drawing turns.
+function mixerSpeed(hass, cfg) {
+  if (!cfg.speed_entity) return { level: 0, label: "" };
+  const st = stateObj(hass, cfg.speed_entity);
+  if (!st || ["unknown", "unavailable"].includes(String(st.state).toLowerCase())) {
+    return { level: 0, label: "" };
+  }
+  const raw = String(st.state);
+  const v = parseFloat(raw);
+  if (!isFinite(v)) {
+    // A word rather than a number: only "off" means stopped, anything else
+    // ("turbo", "knead") is the fastest thing the appliance does.
+    const off = /^(off|arret|arr\u00eat|aus|apagado|spento|uit|0)$/i.test(stripAccents(raw));
+    return { level: off ? 0 : 3, label: raw };
+  }
+  return { level: v <= 0 ? 0 : v <= 3 ? 1 : v <= 6 ? 2 : 3, label: raw };
+}
+
+// How many cups are coming. Three shapes reach this from real integrations:
+// a count (Smarter's filter machines go 1 to 12), a boolean (Home Connect's
+// ConsumerProducts.CoffeeMaker.Option.MultipleBeverages), and a beverage name
+// where the plural is in the word (Jura's product select: "2 Espressi").
+// The drawing only ever shows one cup or two, but the line keeps the real value.
+function cupCount(hass, entityId) {
+  if (!entityId) return { cups: 1, label: "" };
+  const st = stateObj(hass, entityId);
+  if (!st || ["unknown", "unavailable"].includes(String(st.state).toLowerCase())) {
+    return { cups: 1, label: "" };
+  }
+  const raw = String(st.state);
+  const n = parseFloat(raw);
+  if (isFinite(n)) return { cups: n >= 2 ? 2 : 1, label: String(Math.round(n)) };
+  if (/^(on|true)$/i.test(raw)) return { cups: 2, label: "2" };
+  if (/^(off|false)$/i.test(raw)) return { cups: 1, label: "1" };
+  // A beverage name: only a leading count tells us anything reliable.
+  const lead = /^\s*(\d+)/.exec(raw);
+  return { cups: lead && parseInt(lead[1], 10) >= 2 ? 2 : 1, label: raw };
+}
+
+// Coffee strength, as the number of beans the drawing shows. Home Connect uses
+// a five-step BeanAmount enum, Jura a coffee_strength select; both come through
+// as either a number or a word, so both are mapped onto 1-3.
+function strengthLevel(hass, entityId) {
+  if (!entityId) return { level: 3, label: "" };
+  const st = stateObj(hass, entityId);
+  if (!st || ["unknown", "unavailable"].includes(String(st.state).toLowerCase())) {
+    return { level: 3, label: "" };
+  }
+  const raw = String(st.state);
+  const n = parseFloat(raw);
+  if (isFinite(n)) return { level: n <= 1 ? 1 : n <= 3 ? 2 : 3, label: raw };
+  const word = stripAccents(raw).toLowerCase();
+  if (/verymild|mild|weak|leger|schwach|suave|debole|1$/.test(word.replace(/[^a-z0-9]/g, ""))) return { level: 1, label: raw };
+  if (/verystrong|strong|fort|stark|fuerte|forte|extra|3$/.test(word.replace(/[^a-z0-9]/g, ""))) return { level: 3, label: raw };
+  return { level: 2, label: raw };
+}
+
+// The one thing worth reading on a fridge, in order of what it costs to miss.
+function fridgeHealth(unplugged, doorOpen, tempHigh) {
+  if (unplugged) return "unplugged";
+  if (doorOpen) return "door_open";
+  if (tempHigh) return "temp_high";
+  return "fridge_ok";
+}
+
 // Derive a cycle state from a power meter. This is what makes the card usable
 // with nothing but a smart plug: 3 W is standby, 1800 W is running, and the
 // drop back below the threshold is the only "finished" signal such a setup can
-// ever give. "done" is deliberately sticky until the next run \u2014 the same
+// ever give. "done" is deliberately sticky until the next run, the same
 // way a real appliance integration keeps reporting "finished" until restarted.
 function powerDerivedState(watts, threshold, wasRunning) {
   if (watts === null || !isFinite(threshold)) return null;
@@ -1780,6 +2225,356 @@ const ILLUSTRATION_CSS = {
           border: 1.5px solid var(--warning-color, #ff9800); border-bottom: none; border-radius: 3px 3px 0 0;
         }
   `,
+  fridge: () => `
+        .fr-body {
+          position: absolute; left: 12px; right: 12px; top: 2px; bottom: 2px;
+          border-radius: 8px;
+          background: linear-gradient(100deg, var(--secondary-background-color, #d7d7d7) 0%, #e6e6e6 45%, var(--secondary-background-color, #d7d7d7) 100%);
+          border: 1px solid var(--divider-color, #c7c7c7);
+        }
+        /* The open-door view needs its own stacking context and a perspective,
+           so the panels can swing without dragging the whole card into 3D. */
+        .fr-wrap { position: absolute; left: 12px; right: 12px; top: 2px; bottom: 2px; perspective: 320px; }
+        .fr-split { position: absolute; background: var(--divider-color, #c7c7c7); }
+        .fr-split.h { left: 3px; right: 3px; height: 2px; }
+        .fr-split.v { top: 3px; bottom: 3px; width: 2px; }
+        .fr-handle { position: absolute; width: 3px; border-radius: 2px; background: var(--disabled-text-color, #9e9e9e); }
+        .fr-lcd {
+          position: absolute; height: 11px; min-width: 22px; padding: 0 3px;
+          border-radius: 2px; background: #14161a; color: #4fc3f7; text-align: center;
+          font: 600 7px/11px ui-monospace, "SF Mono", monospace;
+        }
+        .fr-lcd.freeze { color: #90caf9; }
+        .fr-lcd.warn { color: var(--error-color, #f44336); }
+        .fr-disp {
+          position: absolute; border-radius: 3px; background: #20242b;
+          box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.6);
+        }
+        .fr-cav {
+          position: absolute; z-index: 0; border-radius: 6px; overflow: hidden;
+          background: radial-gradient(ellipse at 60% 40%, rgba(255, 209, 102, 0.3), #1a1d22 72%);
+        }
+        .fr-shelf { position: absolute; left: 4px; right: 4px; height: 1.5px; border-radius: 1px; background: #4c525b; }
+        .fr-door {
+          position: absolute; z-index: 1; border-radius: 6px;
+          background: linear-gradient(100deg, var(--secondary-background-color, #d7d7d7), #e6e6e6);
+          border: 1px solid var(--divider-color, #c7c7c7);
+          transform-origin: left center; transition: transform 0.45s ease;
+        }
+        /* An open door has to paint over the one below it: left to DOM order it
+           would slide behind its neighbour instead. */
+        .fr-door.swung { z-index: 3; transform: rotateY(-74deg); }
+        /* Hinge on the outer edge, so on a side-by-side the right-hand door
+           opens to the right rather than folding across the left one. */
+        .fr-door.hinge-right { transform-origin: right center; }
+        .fr-door.hinge-right.swung { transform: rotateY(74deg); }
+        .fr-icebox { position: absolute; overflow: hidden; }
+        .fr-cube { position: absolute; width: 5px; height: 5px; border-radius: 1px; background: #4fc3f7; opacity: 0; }
+        .machine.ice .fr-cube { animation: fr-fall 1.8s linear infinite; }
+        .machine.ice .fr-cube.c2 { animation-delay: -0.6s; }
+        .machine.ice .fr-cube.c3 { animation-delay: -1.2s; }
+        /* Configured but not producing: the cubes stay, greyed, so the card
+           still shows there is an ice maker. */
+        .fr-icebox.off .fr-cube { opacity: 0.22; background: var(--disabled-text-color, #9e9e9e); animation: none; }
+        @keyframes fr-fall {
+          0% { transform: translateY(0); opacity: 0; }
+          15%, 80% { opacity: 0.95; }
+          100% { transform: translateY(19px); opacity: 0; }
+        }
+  `,
+  kettle: () => `
+        .kt-base { position: absolute; left: 20px; right: 20px; bottom: 6px; height: 7px; border-radius: 3px; background: #3b4048; }
+        .kt-body {
+          position: absolute; left: 24px; right: 24px; top: 26px; bottom: 13px;
+          background: var(--secondary-background-color, #d7d7d7);
+          border: 1px solid var(--divider-color, #c7c7c7);
+          border-radius: 4px 4px 10px 10px;
+          clip-path: polygon(12% 0, 88% 0, 100% 100%, 0 100%); overflow: hidden;
+        }
+        .kt-water { position: absolute; left: 0; right: 0; bottom: 0; height: 52%; background: rgba(79, 195, 247, 0.34); }
+        .kt-lcd {
+          position: absolute; left: 50%; transform: translateX(-50%); top: 38px; z-index: 2;
+          height: 11px; min-width: 24px; padding: 0 3px; border-radius: 2px;
+          background: #14161a; color: #ff7043; text-align: center;
+          font: 600 7px/11px ui-monospace, "SF Mono", monospace;
+        }
+        .kt-lid {
+          position: absolute; left: 34px; right: 34px; top: 20px; height: 7px; border-radius: 3px;
+          background: var(--secondary-background-color, #d7d7d7); border: 1px solid var(--divider-color, #c7c7c7);
+        }
+        .kt-knob {
+          position: absolute; left: 50%; transform: translateX(-50%); top: 15px; width: 9px; height: 5px;
+          border-radius: 3px 3px 0 0; background: var(--disabled-text-color, #9e9e9e);
+        }
+        .kt-spout {
+          position: absolute; left: 13px; top: 30px; width: 0; height: 0;
+          border-left: 11px solid transparent;
+          border-bottom: 9px solid var(--secondary-background-color, #d7d7d7);
+          filter: drop-shadow(-1px 0 0 var(--divider-color, #c7c7c7));
+        }
+        .kt-handle {
+          position: absolute; right: 8px; top: 30px; width: 17px; height: 40px;
+          border: 3px solid var(--secondary-background-color, #d7d7d7); border-left: none;
+          border-radius: 0 14px 14px 0; box-shadow: 1px 0 0 var(--divider-color, #c7c7c7);
+        }
+        /* Heating: the base glows, the water bubbles and steam leaves the spout. */
+        .machine.on .kt-base { background: #ff7043; box-shadow: 0 0 10px 1px #ff7043; }
+        .kt-bub { position: absolute; bottom: 6px; width: 5px; height: 5px; border-radius: 50%; background: rgba(255, 255, 255, 0.75); opacity: 0; }
+        .kt-bub.b1 { left: 34px; }
+        .kt-bub.b2 { left: 46px; }
+        .kt-bub.b3 { left: 57px; }
+        .machine.on .kt-bub { animation: kt-rise 1.6s linear infinite; }
+        .machine.on .kt-bub.b2 { animation-delay: -0.55s; }
+        .machine.on .kt-bub.b3 { animation-delay: -1.1s; }
+        @keyframes kt-rise {
+          0% { transform: translateY(0); opacity: 0; }
+          25% { opacity: 0.85; }
+          100% { transform: translateY(-26px); opacity: 0; }
+        }
+        .kt-steam {
+          position: absolute; top: 14px; width: 5px; height: 14px; border-radius: 3px; opacity: 0;
+          background: linear-gradient(to top, rgba(200, 215, 230, 0.75), rgba(200, 215, 230, 0));
+        }
+        .kt-steam.s1 { left: 12px; }
+        .kt-steam.s2 { left: 20px; }
+        .machine.on .kt-steam { animation: kt-steam 2.2s ease-in-out infinite; }
+        .machine.on .kt-steam.s2 { animation-delay: -1.1s; }
+        @keyframes kt-steam {
+          0% { transform: translateY(6px) scaleY(0.6); opacity: 0; }
+          35% { opacity: 0.9; }
+          100% { transform: translateY(-10px) scaleY(1.25); opacity: 0; }
+        }
+  `,
+  cooker: (color) => `
+        .rc-base {
+          position: absolute; left: 10px; right: 10px; top: 68px; bottom: 4px;
+          border-radius: 7px;
+          background: linear-gradient(160deg, var(--secondary-background-color, #d7d7d7), #bdbdbd);
+          border: 1px solid var(--divider-color, #c7c7c7);
+        }
+        .rc-disp {
+          position: absolute; left: 8px; top: 9px; width: 30px; height: 12px;
+          border-radius: 2px; background: #14161a; color: ${color}; text-align: center;
+          font: 600 7px/11px ui-monospace, "SF Mono", monospace;
+        }
+        .rc-dial {
+          position: absolute; right: 8px; top: 7px; width: 16px; height: 16px;
+          border-radius: 50%; background: var(--disabled-text-color, #9e9e9e);
+          box-shadow: inset 0 -1px 2px rgba(0, 0, 0, 0.35);
+        }
+        /* The bowl is drawn as a jug rather than as opaque metal: the blade is
+           the whole point of the drawing and has to be visible. */
+        .rc-bowl {
+          position: absolute; left: 20px; right: 20px; top: 19px; height: 50px; overflow: hidden;
+          background: rgba(255, 255, 255, 0.7);
+          border: 1.5px solid var(--disabled-text-color, #9e9e9e);
+          clip-path: polygon(0 0, 100% 0, 88% 100%, 12% 100%);
+        }
+        .rc-food { position: absolute; left: 0; right: 0; bottom: 0; height: 50%; background: rgba(186, 148, 96, 0.75); }
+        /* Two graduations, so the bowl reads as a measuring jug rather than as
+           a paper bag once the contents are pale. */
+        .rc-grad { position: absolute; right: 6px; width: 7px; height: 1px; background: var(--divider-color, #c7c7c7); }
+        .rc-grad.g1 { top: 14px; }
+        .rc-grad.g2 { top: 24px; }
+        .rc-blade {
+          position: absolute; left: 50%; bottom: 7px; width: 28px; height: 3.5px; margin-left: -14px;
+          border-radius: 2px; background: #5a6068;
+        }
+        .rc-blade::before {
+          content: ""; position: absolute; inset: 0; border-radius: 2px;
+          background: #5a6068; transform: rotate(72deg);
+        }
+        .machine.mixing .rc-blade { animation: rc-spin linear infinite; }
+        /* The speed shows in how often the turn comes round, not in how fast
+           the blade travels: a turn too quick to follow reads as a glitch. */
+        .machine.s1 .rc-blade { animation-duration: 2.6s; }
+        .machine.s2 .rc-blade { animation-duration: 1.6s; }
+        .machine.s3 .rc-blade { animation-duration: 0.9s; }
+        @keyframes rc-spin {
+          0% { transform: rotate(0deg); animation-timing-function: cubic-bezier(0.4, 0, 0.3, 1); }
+          68% { transform: rotate(360deg); }
+          100% { transform: rotate(360deg); }
+        }
+        /* Heating shows as the element under the bowl, not as a halo around the
+           whole base: a glow that big read as a rendering fault. */
+        /* Sits exactly on the seam between bowl and base, where the element is. */
+        .rc-heat {
+          position: absolute; left: 24px; right: 24px; top: 67px; height: 4px;
+          border-radius: 2px; background: transparent;
+        }
+        .machine.heating .rc-heat { background: #ff7043; box-shadow: 0 0 6px 0 #ff7043; }
+        .machine.heating .rc-food { background: rgba(214, 140, 90, 0.8); }
+        .rc-lid {
+          position: absolute; left: 19px; right: 19px; top: 12px; height: 9px; border-radius: 5px;
+          background: var(--secondary-background-color, #d7d7d7); border: 1px solid var(--divider-color, #c7c7c7);
+        }
+        .rc-cap {
+          position: absolute; left: 50%; top: 5px; width: 12px; height: 8px; margin-left: -6px;
+          border-radius: 3px 3px 0 0; background: var(--disabled-text-color, #9e9e9e);
+        }
+        .rc-steam {
+          position: absolute; top: 0; width: 4px; height: 12px; border-radius: 2px; opacity: 0;
+          background: linear-gradient(to top, rgba(200, 215, 230, 0.8), rgba(200, 215, 230, 0));
+        }
+        .rc-steam.v1 { left: 38px; }
+        .rc-steam.v2 { left: 54px; }
+        .machine.heating .rc-steam { animation: rc-vapour 2.4s ease-in-out infinite; }
+        .machine.heating .rc-steam.v2 { animation-delay: -1.2s; }
+        @keyframes rc-vapour {
+          0% { transform: translateY(6px) scaleY(0.6); opacity: 0; }
+          40% { opacity: 0.85; }
+          100% { transform: translateY(-8px) scaleY(1.2); opacity: 0; }
+        }
+  `,
+  coffee: (color) => `
+        .cf-body {
+          position: absolute; left: 14px; right: 14px; top: 2px; height: 64px; border-radius: 8px;
+          background: linear-gradient(105deg, var(--secondary-background-color, #d7d7d7), #e6e6e6);
+          border: 1px solid var(--divider-color, #c7c7c7);
+        }
+        .cf-hopper {
+          position: absolute; left: 22px; right: 22px; top: 5px; height: 12px; border-radius: 3px;
+          background: #2a2e35; overflow: hidden;
+        }
+        .cf-bean { position: absolute; top: 4px; width: 5px; height: 4px; border-radius: 50%; background: #8d6e63; }
+        .cf-bean.b1 { left: 20%; }
+        .cf-bean.b2 { left: 44%; top: 6px; }
+        .cf-bean.b3 { left: 66%; }
+        /* Empty hopper: the beans stay, greyed, so the drawing still reads as a
+           bean machine rather than losing a part. */
+        .machine.no-beans .cf-bean { background: var(--disabled-text-color, #9e9e9e); opacity: 0.35; }
+        /* Strength shows as how full the hopper looks. */
+        .machine.st1 .cf-bean.b2, .machine.st1 .cf-bean.b3 { display: none; }
+        .machine.st2 .cf-bean.b3 { display: none; }
+        .cf-disp {
+          position: absolute; left: 50%; top: 23px; transform: translateX(-50%);
+          min-width: 32px; height: 11px; padding: 0 3px; border-radius: 2px;
+          background: #14161a; color: ${color}; text-align: center;
+          font: 600 7px/11px ui-monospace, "SF Mono", monospace;
+        }
+        /* Three keys under the display: without them the body is a blank slab. */
+        .cf-key { position: absolute; top: 42px; width: 7px; height: 7px; border-radius: 50%; background: var(--disabled-text-color, #9e9e9e); }
+        .cf-key.k1 { left: 32px; }
+        .cf-key.k2 { left: 44px; }
+        .cf-key.k3 { left: 56px; }
+        .machine.pouring .cf-key.k2 { background: ${color}; }
+        .cf-tank {
+          position: absolute; right: 2px; top: 14px; width: 11px; height: 44px; border-radius: 3px;
+          background: rgba(255, 255, 255, 0.5); border: 1px solid var(--divider-color, #c7c7c7); overflow: hidden;
+        }
+        .cf-water { position: absolute; left: 0; right: 0; bottom: 0; height: 62%; background: rgba(79, 195, 247, 0.45); }
+        .machine.no-water .cf-water { height: 8%; background: var(--warning-color, #ff9800); opacity: 0.7; }
+        .cf-spout { position: absolute; top: 66px; width: 4px; height: 5px; border-radius: 0 0 2px 2px; background: #4c525b; }
+        .cf-spout.p1 { left: 41px; }
+        .cf-spout.p2 { left: 51px; }
+        .cf-stream { position: absolute; top: 71px; width: 2px; height: 13px; background: #6d4c41; opacity: 0; }
+        .cf-stream.p1 { left: 42px; }
+        .cf-stream.p2 { left: 52px; }
+        .machine.pouring .cf-stream { animation: cf-pour 0.7s linear infinite; }
+        .machine.pouring .cf-stream.p2 { animation-delay: -0.35s; }
+        @keyframes cf-pour {
+          0% { opacity: 0; transform: scaleY(0.2); transform-origin: top; }
+          30% { opacity: 0.9; transform: scaleY(1); }
+          100% { opacity: 0.9; transform: scaleY(1); }
+        }
+        .cf-cup {
+          position: absolute; top: 83px; height: 15px; overflow: hidden;
+          background: #fafafa; border: 1px solid var(--divider-color, #c7c7c7);
+          border-radius: 2px 2px 8px 8px;
+        }
+        .cf-cup.c1 { left: 34px; right: 34px; }
+        .cf-cup.c2 { display: none; }
+        /* Two cups: the spouts move apart to stand over one each, the way the
+           machine's own swivel outlet does. */
+        .machine.two-cups .cf-cup.c1 { left: 27px; right: 49px; }
+        .machine.two-cups .cf-cup.c2 { display: block; left: 49px; right: 27px; }
+        .machine.two-cups .cf-spout.p1 { left: 35px; }
+        .machine.two-cups .cf-spout.p2 { left: 57px; }
+        .machine.two-cups .cf-stream.p1 { left: 36px; }
+        .machine.two-cups .cf-stream.p2 { left: 58px; }
+        .machine.two-cups .cf-ear { right: 20px; }
+        .cf-fill { position: absolute; left: 0; right: 0; bottom: 0; height: 0; background: #6d4c41; transition: height 0.6s linear; }
+        .machine.pouring .cf-fill { height: 62%; }
+        .cf-ear {
+          position: absolute; right: 27px; top: 86px; width: 7px; height: 9px;
+          border: 2px solid var(--divider-color, #c7c7c7); border-left: none; border-radius: 0 6px 6px 0;
+        }
+        .cf-tray {
+          position: absolute; left: 24px; right: 24px; top: 100px; height: 4px; border-radius: 2px;
+          background: var(--disabled-text-color, #9e9e9e);
+        }
+        .machine.tray-full .cf-tray { background: var(--warning-color, #ff9800); }
+        .cf-steam {
+          position: absolute; top: 72px; width: 4px; height: 10px; border-radius: 2px; opacity: 0;
+          background: linear-gradient(to top, rgba(200, 215, 230, 0.8), rgba(200, 215, 230, 0));
+        }
+        .cf-steam.p1 { left: 36px; }
+        .cf-steam.p2 { left: 56px; }
+        .machine.pouring .cf-steam { animation: cf-wisp 2s ease-in-out infinite; }
+        .machine.pouring .cf-steam.p2 { animation-delay: -1s; }
+        @keyframes cf-wisp {
+          0% { transform: translateY(4px) scaleY(0.6); opacity: 0; }
+          40% { opacity: 0.8; }
+          100% { transform: translateY(-7px) scaleY(1.2); opacity: 0; }
+        }
+  `,
+  rice_cooker: (color) => `
+        /* Squat and round, nothing like the cooker's tall jug: a rice cooker is
+           a closed pot, so there is no interior to show. */
+        .rk-body {
+          position: absolute; left: 8px; right: 8px; top: 34px; bottom: 8px;
+          border-radius: 12px 12px 16px 16px;
+          background: linear-gradient(105deg, var(--secondary-background-color, #d7d7d7), #e9e9e9 55%, #cfcfcf);
+          border: 1px solid var(--divider-color, #c7c7c7);
+        }
+        .rk-lid {
+          position: absolute; left: 12px; right: 12px; top: 22px; height: 16px;
+          border-radius: 12px 12px 4px 4px;
+          background: linear-gradient(180deg, #eeeeee, var(--secondary-background-color, #d7d7d7));
+          border: 1px solid var(--divider-color, #c7c7c7);
+        }
+        .rk-vent {
+          position: absolute; left: 50%; top: 15px; width: 14px; height: 9px; margin-left: -7px;
+          border-radius: 4px 4px 2px 2px; background: var(--disabled-text-color, #9e9e9e);
+        }
+        .rk-handle {
+          position: absolute; left: 20px; right: 20px; top: 8px; height: 10px;
+          border: 2.5px solid var(--disabled-text-color, #9e9e9e); border-bottom: none;
+          border-radius: 10px 10px 0 0;
+        }
+        .rk-disp {
+          position: absolute; left: 50%; top: 46px; transform: translateX(-50%);
+          min-width: 32px; height: 12px; padding: 0 3px; border-radius: 2px;
+          background: #14161a; color: ${color}; text-align: center;
+          font: 600 8px/12px ui-monospace, "SF Mono", monospace;
+        }
+        .rk-key { position: absolute; top: 66px; width: 8px; height: 8px; border-radius: 50%; background: var(--disabled-text-color, #9e9e9e); }
+        .rk-key.k1 { left: 32px; }
+        .rk-key.k2 { left: 44px; }
+        .rk-key.k3 { left: 56px; }
+        /* The element is the plate under the pot, so the glow belongs at the
+           foot rather than around the whole body. */
+        .rk-foot {
+          position: absolute; left: 20px; right: 20px; bottom: 4px; height: 4px;
+          border-radius: 2px; background: var(--disabled-text-color, #9e9e9e);
+        }
+        .machine.heating .rk-foot { background: #ff7043; box-shadow: 0 0 7px 0 #ff7043; }
+        .machine.warm .rk-foot { background: #ffb300; box-shadow: 0 0 6px 0 #ffb300; }
+        .machine.warm .rk-key.k3 { background: #ffb300; }
+        .rk-steam {
+          position: absolute; top: 0; width: 5px; height: 13px; border-radius: 3px; opacity: 0;
+          background: linear-gradient(to top, rgba(200, 215, 230, 0.8), rgba(200, 215, 230, 0));
+        }
+        .rk-steam.w1 { left: 40px; }
+        .rk-steam.w2 { left: 51px; }
+        .machine.heating .rk-steam { animation: rk-puff 2.3s ease-in-out infinite; }
+        .machine.heating .rk-steam.w2 { animation-delay: -1.15s; }
+        @keyframes rk-puff {
+          0% { transform: translateY(7px) scaleY(0.6); opacity: 0; }
+          40% { opacity: 0.9; }
+          100% { transform: translateY(-8px) scaleY(1.25); opacity: 0; }
+        }
+  `,
 };
 
 function illustrationCss(type, color) {
@@ -1802,6 +2597,110 @@ function esc(value) {
     .replace(/>/g, "&gt;")
     .replace(/"/g, "&quot;")
     .replace(/'/g, "&#39;");
+}
+
+// The fridge drawing. Two sets of coordinates: `body` is laid out against the
+// whole cabinet (doors shut), `door[]` against each panel (a door open). The
+// display, the handle and the ice dispenser belong to their door and swing
+// with it, which is also why an open door shows nothing but its edge.
+function fridgeHtml(ctx) {
+  const layout = ctx.layout || "freezer_bottom";
+  // No temperature entity, no display: an empty dial would be worse than none.
+  // A configured probe that stopped reporting shows dashes instead, since that
+  // is a real state on a fridge whose plug is out but whose Zigbee sensor lives on.
+  const lcd = (cls, style, v) =>
+    v === undefined ? "" : `<div class="fr-lcd ${cls}" style="${style}">${esc(v)}</div>`;
+  const icebox = (left, top, w) =>
+    ctx.ice === undefined
+      ? ""
+      : `<div class="fr-icebox ${ctx.ice ? "" : "off"}" style="left:${left}px;top:${top}px;width:${w}px;height:19px">
+           <div class="fr-cube c1" style="left:${(w / 2 - 8).toFixed(1)}px"></div>
+           <div class="fr-cube c2" style="left:${(w / 2 - 2.5).toFixed(1)}px"></div>
+           <div class="fr-cube c3" style="left:${(w / 2 + 3).toFixed(1)}px"></div>
+         </div>`;
+  const fT = ctx.fridgeTemp;
+  const zT = layout === "single" ? undefined : ctx.freezerTemp;
+  const fCls = ctx.fridgeWarn ? "warn" : "";
+
+  let body = "";
+  let door = ["", ""];
+  if (layout === "single") {
+    body = `<div class="fr-handle" style="right:8px;top:24px;bottom:24px"></div>
+            ${lcd(fCls, "left:9px;top:9px", fT)}${icebox(14, 74, 22)}`;
+    door = [body, ""];
+  } else if (layout === "freezer_top") {
+    body = `<div class="fr-split h" style="top:34%"></div>
+            <div class="fr-handle" style="right:8px;top:10px;height:18px"></div>
+            <div class="fr-handle" style="right:8px;top:42%;bottom:20px"></div>
+            ${lcd("freeze", "left:9px;top:8px", zT)}
+            ${lcd(fCls, "left:9px;top:40%", fT)}${icebox(14, 74, 22)}`;
+    door = [
+      `<div class="fr-handle" style="right:7px;top:10px;height:18px"></div>
+       ${lcd("freeze", "left:9px;top:8px", zT)}`,
+      `<div class="fr-handle" style="right:7px;top:9px;bottom:20px"></div>
+       ${lcd(fCls, "left:9px;top:7px", fT)}${icebox(14, 39, 22)}`,
+    ];
+  } else if (layout === "side_by_side") {
+    body = `<div class="fr-split v" style="left:42%"></div>
+            <div class="fr-handle" style="left:34%;top:22px;bottom:22px"></div>
+            <div class="fr-handle" style="left:47%;top:22px;bottom:22px"></div>
+            <div class="fr-disp" style="left:3px;top:29px;width:20px;height:31px"></div>
+            ${lcd("freeze", "left:4px;top:9px;min-width:19px;font-size:6px", zT)}
+            ${lcd(fCls, "right:7px;top:9px;min-width:19px;font-size:6px", fT)}
+            ${icebox(3, 33, 20)}`;
+    // Handle on the side away from the hinge: right of the left door, and the
+    // other way round for the right one.
+    door = [
+      `<div class="fr-handle" style="right:5px;top:22px;bottom:22px"></div>
+       <div class="fr-disp" style="left:3px;top:29px;width:20px;height:31px"></div>
+       ${lcd("freeze", "left:4px;top:9px;min-width:19px;font-size:6px", zT)}${icebox(3, 33, 20)}`,
+      `<div class="fr-handle" style="left:5px;top:22px;bottom:22px"></div>
+       ${lcd(fCls, "right:7px;top:9px;min-width:19px;font-size:6px", fT)}`,
+    ];
+  } else {
+    body = `<div class="fr-split h" style="top:63%"></div>
+            <div class="fr-handle" style="right:8px;top:26px;height:28px"></div>
+            <div class="fr-handle" style="right:8px;top:70%;height:20px"></div>
+            ${lcd(fCls, "left:9px;top:9px", fT)}
+            ${lcd("freeze", "left:9px;top:70%", zT)}${icebox(14, 42, 22)}`;
+    door = [
+      `<div class="fr-handle" style="right:7px;top:26px;height:28px"></div>
+       ${lcd(fCls, "left:9px;top:9px", fT)}${icebox(14, 42, 22)}`,
+      `<div class="fr-handle" style="right:7px;top:8px;height:20px"></div>
+       ${lcd("freeze", "left:9px;top:8px", zT)}`,
+    ];
+  }
+
+  const open = !!ctx.doorOpen;
+  const openFreezer = !!ctx.freezerDoorOpen;
+  if (!open && !openFreezer) return `<div class="fr-body">${body}</div>`;
+
+  const cav = (style) =>
+    `<div class="fr-cav" style="${style}">
+       <div class="fr-shelf" style="top:28%"></div><div class="fr-shelf" style="top:62%"></div>
+     </div>`;
+  const panel = (style, content, on, hinge) =>
+    `<div class="fr-door${on ? " swung" : ""}${hinge === "right" ? " hinge-right" : ""}" style="${style}">${content}</div>`;
+
+  if (layout === "single") {
+    return `<div class="fr-wrap">${cav("inset:0")}${panel("inset:0", door[0], open)}</div>`;
+  }
+  if (layout === "side_by_side") {
+    return `<div class="fr-wrap">
+        ${cav("left:0;width:42%;top:0;bottom:0")}${cav("left:42%;right:0;top:0;bottom:0")}
+        ${panel("left:0;width:42%;top:0;bottom:0", door[0], openFreezer)}
+        ${panel("left:42%;right:0;top:0;bottom:0", door[1], open, "right")}
+      </div>`;
+  }
+  // Stacked layouts: the top door belongs to whichever compartment is on top.
+  const cut = layout === "freezer_top" ? 34 : 63;
+  const topOpen = layout === "freezer_top" ? openFreezer : open;
+  const bottomOpen = layout === "freezer_top" ? open : openFreezer;
+  return `<div class="fr-wrap">
+      ${cav(`left:0;right:0;top:0;height:${cut}%`)}${cav(`left:0;right:0;top:${cut}%;bottom:0`)}
+      ${panel(`left:0;right:0;top:0;height:${cut}%`, door[0], topOpen)}
+      ${panel(`left:0;right:0;top:${cut}%;bottom:0`, door[1], bottomOpen)}
+    </div>`;
 }
 
 function illustrationHtml(type, ctx) {
@@ -1854,7 +2753,7 @@ function illustrationHtml(type, ctx) {
         <div class="machine ${cls}">
           <div class="ov-body">
             <div class="ov-panel">
-              <div class="ov-disp">${ctx.display || "--"}</div>
+              <div class="ov-disp">${esc(ctx.display || "--")}</div>
               <div class="ov-knob"></div>
               <div class="ov-knob k2"></div>
             </div>
@@ -1888,7 +2787,7 @@ function illustrationHtml(type, ctx) {
               </div>
             </div>
             <div class="mw-panel">
-              <div class="mw-disp">${ctx.display || "--"}</div>
+              <div class="mw-disp">${esc(ctx.display || "--")}</div>
               <div class="mw-keys">${"<i></i>".repeat(9)}</div>
             </div>
           </div>
@@ -1910,6 +2809,110 @@ function illustrationHtml(type, ctx) {
           <div class="hd-air a1"></div>
           <div class="hd-air a2"></div>
           <div class="hd-air a3"></div>
+        </div>`;
+  }
+
+  if (type === "fridge") {
+    return `<div class="machine ${cls} ${ctx.ice ? "ice" : ""}">${fridgeHtml(ctx)}</div>`;
+  }
+
+  if (type === "kettle") {
+    // No timer and no progress: the drawing is the whole readout.
+    const lcd = ctx.display ? `<div class="kt-lcd">${esc(ctx.display)}</div>` : "";
+    return `
+        <div class="machine ${cls} ${ctx.spinning ? "on" : ""}">
+          ${lcd}
+          <div class="kt-steam s1"></div>
+          <div class="kt-steam s2"></div>
+          <div class="kt-knob"></div>
+          <div class="kt-lid"></div>
+          <div class="kt-spout"></div>
+          <div class="kt-handle"></div>
+          <div class="kt-body">
+            <div class="kt-water"></div>
+            <div class="kt-bub b1"></div>
+            <div class="kt-bub b2"></div>
+            <div class="kt-bub b3"></div>
+          </div>
+          <div class="kt-base"></div>
+        </div>`;
+  }
+
+  if (type === "cooker") {
+    const sp = ctx.speed || 0;
+    return `
+        <div class="machine ${cls} ${sp > 0 ? "mixing" : ""} s${sp}">
+          <div class="rc-steam v1"></div>
+          <div class="rc-steam v2"></div>
+          <div class="rc-cap"></div>
+          <div class="rc-lid"></div>
+          <div class="rc-bowl">
+            <div class="rc-food"></div>
+            <div class="rc-grad g1"></div>
+            <div class="rc-grad g2"></div>
+            <div class="rc-blade"></div>
+          </div>
+          <div class="rc-heat"></div>
+          <div class="rc-base">
+            ${ctx.display ? `<div class="rc-disp">${esc(ctx.display)}</div>` : ""}
+            <div class="rc-dial"></div>
+          </div>
+        </div>`;
+  }
+
+  if (type === "coffee") {
+    const flags = [
+      ctx.spinning ? "pouring" : "",
+      ctx.noWater ? "no-water" : "",
+      ctx.noBeans ? "no-beans" : "",
+      ctx.trayFull ? "tray-full" : "",
+      ctx.cups >= 2 ? "two-cups" : "",
+      `st${ctx.strength || 3}`,
+    ].filter(Boolean).join(" ");
+    return `
+        <div class="machine ${cls} ${flags}">
+          <div class="cf-body">
+            <div class="cf-hopper">
+              <div class="cf-bean b1"></div><div class="cf-bean b2"></div><div class="cf-bean b3"></div>
+            </div>
+            ${ctx.display ? `<div class="cf-disp">${esc(ctx.display)}</div>` : ""}
+            <div class="cf-key k1"></div>
+            <div class="cf-key k2"></div>
+            <div class="cf-key k3"></div>
+          </div>
+          <div class="cf-tank"><div class="cf-water"${
+            ctx.waterPct === null || ctx.waterPct === undefined
+              ? ""
+              : ` style="height:${Math.max(4, ctx.waterPct).toFixed(0)}%"`
+          }></div></div>
+          <div class="cf-spout p1"></div>
+          <div class="cf-spout p2"></div>
+          <div class="cf-stream p1"></div>
+          <div class="cf-stream p2"></div>
+          <div class="cf-steam p1"></div>
+          <div class="cf-steam p2"></div>
+          <div class="cf-ear"></div>
+          <div class="cf-cup c1"><div class="cf-fill"></div></div>
+          <div class="cf-cup c2"><div class="cf-fill"></div></div>
+          <div class="cf-tray"></div>
+        </div>`;
+  }
+
+  if (type === "rice_cooker") {
+    return `
+        <div class="machine ${cls} ${ctx.keepWarm ? "warm" : ""}">
+          <div class="rk-steam w1"></div>
+          <div class="rk-steam w2"></div>
+          <div class="rk-handle"></div>
+          <div class="rk-vent"></div>
+          <div class="rk-lid"></div>
+          <div class="rk-body">
+            ${ctx.display ? `<div class="rk-disp">${esc(ctx.display)}</div>` : ""}
+            <div class="rk-key k1"></div>
+            <div class="rk-key k2"></div>
+            <div class="rk-key k3"></div>
+          </div>
+          <div class="rk-foot"></div>
         </div>`;
   }
 
@@ -1950,7 +2953,15 @@ class ApplianceCard extends HTMLElement {
   }
 
   setConfig(config) {
-    if (!config || !config.state_entity) {
+    // Every type but the fridge is defined by a state entity. A fridge has no
+    // state to report: a temperature probe and a door contact on an ordinary
+    // fridge are a complete configuration, and demanding a state entity would
+    // only push people to point it at something meaningless.
+    const fridgeOnly = config && FRIDGE_ONLY_FIELDS.some((f) => config[f]);
+    const asFridge = config && (config.appliance_type === "fridge" || fridgeOnly);
+    const hasFridgeSource = fridgeOnly ||
+      (asFridge && !!(config.door_entity || config.power_entity));
+    if (!config || (!config.state_entity && !hasFridgeSource)) {
       throw new Error("ha-appliance-card: 'state_entity' is required");
     }
     this._config = config;
@@ -1985,9 +2996,22 @@ class ApplianceCard extends HTMLElement {
     if (cap.fan && cfg.fan_entity) lines++;
     if (cap.filter && cfg.filter_life_entity) lines++;
     if (cap.zones) lines += cfg.child_lock_entity ? 2 : 1;
+    if (cap.fridgeTemp) {
+      if (cfg.freezer_door_entity && !cfg.door_hide_in_list) lines++;
+      if (cfg.fridge_temperature_entity) lines++;
+      if (cfg.freezer_temperature_entity) lines++;
+      if (cfg.ice_maker_entity) lines++;
+    }
+    if (cap.kettleTemp && cfg.temperature_entity) lines++;
+    if (cap.speed && cfg.speed_entity) lines++;
+    // Consumable lines only appear when something needs doing, so the height
+    // is budgeted for one, not for all four at once.
+    if (cap.consumables && ["water", "beans", "tray", "descaling"].some((k) => cfg[`${k}_entity`])) lines++;
+    if (cap.consumables && cfg.cups_entity) lines++;
+    if (cap.consumables && cfg.strength_entity) lines++;
     if (cfg.power_entity) lines++;
 
-    const hasActions = ["start", "pause", "resume", "stop", "filter_reset", "toggle"]
+    const hasActions = !cap.readOnly && ["start", "pause", "resume", "stop", "filter_reset", "toggle"]
       .some((key) => cfg[`${key}_entity`]);
 
     // A grid row is roughly 56 px: the illustration takes two, the name and
@@ -2003,6 +3027,17 @@ class ApplianceCard extends HTMLElement {
   set hass(hass) {
     this._hass = hass;
     this._render();
+  }
+
+  _clearUnplugTimer() {
+    if (this._unplugTimer) {
+      clearTimeout(this._unplugTimer);
+      this._unplugTimer = null;
+    }
+  }
+
+  disconnectedCallback() {
+    this._clearUnplugTimer();
   }
 
   _call(entityId) {
@@ -2037,6 +3072,8 @@ class ApplianceCard extends HTMLElement {
     // smart-plug setup the state entity is the plug itself, which reads "on"
     // as soon as the appliance is plugged in and says nothing about whether
     // it is actually doing anything.
+    const applianceType = detectApplianceType(cfg, st);
+    const cap = caps(applianceType);
     let powerDerived = false;
     const watts = cfg.power_entity ? numericState(hass, cfg.power_entity) : null;
     const hasThreshold = cfg.power_on_threshold !== undefined && cfg.power_on_threshold !== "";
@@ -2045,10 +3082,16 @@ class ApplianceCard extends HTMLElement {
     // wattage as the appliance's state.
     const threshold = hasThreshold
       ? parseFloat(cfg.power_on_threshold)
-      : cfg.power_entity === cfg.state_entity
-        ? 10
-        : NaN;
-    if (cfg.power_entity && isFinite(threshold)) {
+      : cap.fridgeTemp
+        ? 1
+        : cfg.power_entity === cfg.state_entity
+          ? 10
+          : NaN;
+    // A fridge is excluded here on purpose: its compressor cycles all day, so
+    // reading the meter as a cycle state would report "finished" every twenty
+    // minutes. What the meter says on a fridge is whether it is still plugged
+    // in, and that is decided further down with the health summary.
+    if (!cap.fridgeTemp && cfg.power_entity && isFinite(threshold)) {
       const derived = powerDerivedState(watts, threshold, this._powerWasRunning);
       if (derived) {
         // Only "running" flips the latch on. "done" must leave it set, or the
@@ -2061,10 +3104,10 @@ class ApplianceCard extends HTMLElement {
       }
     }
 
-    const color = STATE_COLORS[norm] || STATE_COLORS.unknown;
+    let color = STATE_COLORS[norm] || STATE_COLORS.unknown;
     const rawIsMeaningless = ["unknown", "unavailable", "none", ""].includes(String(rawState).trim().toLowerCase());
     // When the raw state doesn't match any known vocabulary, show it as-is
-    // instead of a generic "Unknown" label \u2014 common for custom template
+    // instead of a generic "Unknown" label, which is common for custom template
     // sensors (e.g. power-threshold based presence) whose wording we can't
     // guess. Falls back to the translated label when there's truly no data.
     // state_show_raw opts into always showing the raw text (still colored/
@@ -2073,12 +3116,11 @@ class ApplianceCard extends HTMLElement {
     // user's own wording.
     // Never echo the raw state when it came from the power meter: the "raw"
     // text there is a wattage, which is not a state anyone wants to read.
-    const stateLabel = !powerDerived && (cfg.state_show_raw || norm === "unknown") && !rawIsMeaningless
+    let stateLabel = !powerDerived && (cfg.state_show_raw || norm === "unknown") && !rawIsMeaningless
       ? String(rawState)
       : t(hass, norm);
 
     const name = cfg.name || (st && st.attributes.friendly_name) || cfg.state_entity;
-    const applianceType = detectApplianceType(cfg, st);
 
     // Program
     let programText = null;
@@ -2154,7 +3196,6 @@ class ApplianceCard extends HTMLElement {
     }
 
     // ---- Type-specific readings -------------------------------------------
-    const cap = caps(applianceType);
     const extraLines = [];
     let heatBarPct = null;
     let filterPct = null;
@@ -2207,7 +3248,7 @@ class ApplianceCard extends HTMLElement {
         });
       }
     }
-    if (applianceType === "microwave" && remSec !== null && remSec > 0) {
+    if (["microwave", "coffee", "rice_cooker"].includes(applianceType) && remSec !== null && remSec > 0) {
       displayText = formatClock(remSec);
     }
 
@@ -2225,7 +3266,7 @@ class ApplianceCard extends HTMLElement {
           icon: "mdi:fan",
           label: t(hass, "fan_speed"),
           value: fanLost
-            ? "\u2014"
+            ? "--"
             : fan.level === 0
             ? t(hass, "off_short")
             : fan.boost
@@ -2260,7 +3301,7 @@ class ApplianceCard extends HTMLElement {
       } else {
         // Nothing but an on/off signal: show that it heats without inventing
         // a level or a zone we have no data for. Home Connect hobs are exactly
-        // this case \u2014 they report a global power level but never say which
+        // this case: they report a global power level but never say which
         // zone it belongs to.
         const on = isActiveState(norm);
         let intensity = on ? 0.3 : 0;
@@ -2300,8 +3341,261 @@ class ApplianceCard extends HTMLElement {
       }
     }
 
+    // ---- Fridge -----------------------------------------------------------
+    // Read-only by design: a fridge exposes nothing to press, so the card
+    // reports and never commands. The state line is a health summary instead
+    // of a cycle, because "running" is true of a fridge every hour of its life
+    // and therefore says nothing.
+    let fridgeCtx = null;
+    if (cap.fridgeTemp) {
+      const unit = temperatureUnit(hass, cfg.fridge_temperature_entity || cfg.freezer_temperature_entity);
+      // Configured but silent is not the same as not configured: a Zigbee probe
+      // keeps reporting after the plug is pulled, and one that stops must show
+      // dashes rather than a stale number. Nothing is drawn without an entity.
+      const readTemp = (entityId) => {
+        if (!entityId) return { value: null, text: undefined };
+        const v = numericState(hass, entityId);
+        return v === null
+          ? { value: null, text: "--\u00b0" }
+          : { value: v, text: `${Math.round(v)}\u00b0` };
+      };
+      const fridgeT = readTemp(cfg.fridge_temperature_entity);
+      const freezerT = readTemp(cfg.freezer_temperature_entity);
+      const maxTemp = cfg.fridge_max_temperature === undefined || cfg.fridge_max_temperature === ""
+        ? 8
+        : parseFloat(cfg.fridge_max_temperature);
+      const tempHigh = fridgeT.value !== null && isFinite(maxTemp) && fridgeT.value > maxTemp;
+
+      let freezerDoorOpen = false;
+      if (cfg.freezer_door_entity) {
+        const fdst = stateObj(hass, cfg.freezer_door_entity);
+        if (fdst) {
+          freezerDoorOpen = fdst.state === (cfg.door_open_state || "on");
+          if (cfg.door_invert) freezerDoorOpen = !freezerDoorOpen;
+        }
+      }
+
+      // Below the threshold is only worth reporting once it has lasted: a plug
+      // emits isolated zeroes while everything is fine.
+      let unplugged = false;
+      let belowMs = 0;
+      if (cfg.power_entity && watts !== null && isFinite(threshold) && watts < threshold) {
+        if (!this._belowSince) this._belowSince = Date.now();
+        belowMs = Date.now() - this._belowSince;
+        unplugged = belowMs >= FRIDGE_UNPLUGGED_AFTER_MS;
+      } else {
+        this._belowSince = null;
+      }
+      // Nothing re-renders the card at the moment the delay expires: a plug
+      // that is off has no further state changes to push. Schedule that render.
+      this._clearUnplugTimer();
+      if (this._belowSince && !unplugged) {
+        this._unplugTimer = setTimeout(() => {
+          this._unplugTimer = null;
+          this._render();
+        }, FRIDGE_UNPLUGGED_AFTER_MS - belowMs + 1000);
+      }
+
+      norm = fridgeHealth(unplugged, doorOpen || freezerDoorOpen, tempHigh);
+      color = STATE_COLORS[norm];
+      stateLabel = t(hass, norm);
+
+      const twoDoors = !!(cfg.door_entity && cfg.freezer_door_entity);
+      const doorLine = (open, openKey) => ({
+        icon: open ? "mdi:door-open" : "mdi:door-closed",
+        label: t(hass, open ? openKey : "door_closed"),
+        value: "",
+        warn: open,
+      });
+      if (!cfg.door_hide_in_list) {
+        if (twoDoors && !doorOpen && !freezerDoorOpen) {
+          // Naming each compartment only to say "closed" twice reads as noise;
+          // one line says the same thing.
+          extraLines.push({ icon: "mdi:door-closed", label: t(hass, "doors_closed"), value: "" });
+        } else {
+          if (cfg.door_entity && (!twoDoors || doorOpen)) {
+            extraLines.push(doorLine(doorOpen, twoDoors ? "fridge_door_open" : "door_open"));
+          }
+          if (cfg.freezer_door_entity && (!twoDoors || freezerDoorOpen)) {
+            extraLines.push(doorLine(freezerDoorOpen, twoDoors ? "freezer_door_open" : "door_open"));
+          }
+        }
+      }
+      if (cfg.fridge_temperature_entity) {
+        extraLines.push({
+          icon: "mdi:thermometer",
+          label: t(hass, "fridge_compartment"),
+          value: fridgeT.value === null ? "--" : `${Math.round(fridgeT.value)} ${unit}`,
+          warn: tempHigh,
+          entity: cfg.fridge_temperature_entity,
+        });
+      }
+      if (cfg.freezer_temperature_entity) {
+        extraLines.push({
+          icon: "mdi:snowflake",
+          label: t(hass, "freezer_compartment"),
+          value: freezerT.value === null ? "--" : `${Math.round(freezerT.value)} ${unit}`,
+          entity: cfg.freezer_temperature_entity,
+        });
+      }
+      let ice;
+      if (cfg.ice_maker_entity) {
+        const ist = stateObj(hass, cfg.ice_maker_entity);
+        ice = !!ist && ["on", "true", "running"].includes(String(ist.state).toLowerCase());
+        extraLines.push({
+          icon: "mdi:snowflake-variant",
+          label: t(hass, "ice_maker"),
+          value: t(hass, ice ? "ice_on" : "ice_off"),
+          entity: cfg.ice_maker_entity,
+        });
+      }
+      if (cfg.power_entity && watts !== null) {
+        extraLines.push({
+          icon: cfg.power_icon || "mdi:power-plug",
+          label: t(hass, "power"),
+          // While the plug reads low, how long it has been low is the whole
+          // point: it is what separates a compressor pause from an unplugged fridge.
+          value: this._belowSince
+            ? `${Math.round(watts)} ${unitOf(hass, cfg.power_entity) || "W"} \u00b7 ${t(hass, "since")} ${formatDuration(Math.round(belowMs / 1000), hass)}`
+            : `${Math.round(watts)} ${unitOf(hass, cfg.power_entity) || "W"}`,
+          warn: unplugged,
+          entity: cfg.power_entity,
+        });
+      }
+
+      fridgeCtx = {
+        layout: cfg.fridge_layout || "freezer_bottom",
+        fridgeTemp: fridgeT.text,
+        freezerTemp: freezerT.text,
+        fridgeWarn: tempHigh || unplugged,
+        freezerDoorOpen,
+        ice,
+      };
+    } else {
+      this._clearUnplugTimer();
+      this._belowSince = null;
+    }
+
+    // Cooker: the blade turns at the speed the appliance reports, and the
+    // temperature block above already drives the heat and the preheat gauge.
+    let mixer = { level: 0, label: "" };
+    if (cap.speed && cfg.speed_entity) {
+      mixer = mixerSpeed(hass, cfg);
+      extraLines.push({
+        icon: "mdi:blender",
+        label: t(hass, "speed"),
+        value: mixer.level === 0 ? t(hass, "off_short") : mixer.label,
+        entity: cfg.speed_entity,
+      });
+    }
+
+    // Coffee machine: the three consumables are why one goes on a dashboard,
+    // and Home Connect reports each as its own event
+    // (ConsumerProducts.CoffeeMaker.Event.WaterTankEmpty and friends).
+    let coffeeCtx = null;
+    if (cap.consumables) {
+      const flagged = (entityId, onStates) => {
+        if (!entityId) return null;
+        const cst = stateObj(hass, entityId);
+        if (!cst || ["unknown", "unavailable"].includes(String(cst.state).toLowerCase())) return null;
+        return onStates.includes(String(cst.state).toLowerCase());
+      };
+      const ON = ["on", "true", "present", "confirmed"];
+      // The water tank comes in two shapes. Home Connect fires an event, so the
+      // entity is a boolean; a filter machine reports a level, and there the
+      // useful reading is how much is left, not just whether it ran out.
+      let waterPct = null;
+      let noWater = null;
+      if (cfg.water_entity) {
+        const lvl = numericState(hass, cfg.water_entity);
+        if (lvl !== null) {
+          waterPct = Math.max(0, Math.min(100, lvl));
+          noWater = waterPct <= 10;
+        } else {
+          noWater = flagged(cfg.water_entity, ON);
+        }
+      }
+      const noBeans = flagged(cfg.beans_entity, ON);
+      const trayFull = flagged(cfg.tray_entity, ON);
+      const descale = flagged(cfg.descaling_entity, ON);
+      // Order of what stops you getting a coffee first.
+      const need = noWater ? "water_empty"
+        : noBeans ? "beans_empty"
+          : trayFull ? "tray_full"
+            : descale ? "descale" : null;
+      // A consumable never overrides a cycle in progress: while the machine is
+      // actually pouring, that is the more useful thing to read. Home Connect
+      // stops the machine on an empty tank anyway, so the two rarely collide.
+      if (need && !["running", "preheating", "paused", "error"].includes(norm)) {
+        norm = need;
+        color = STATE_COLORS[need];
+        stateLabel = t(hass, need);
+      }
+      for (const [flag, key] of [[noWater, "water_empty"], [noBeans, "beans_empty"],
+                                 [trayFull, "tray_full"], [descale, "descale"]]) {
+        // Only what needs doing takes a line. A machine with nothing wrong says
+        // so on its state line already.
+        if (flag) extraLines.push({ icon: "mdi:alert-circle-outline", label: t(hass, key), value: "", warn: true });
+      }
+      const cupInfo = cupCount(hass, cfg.cups_entity);
+      if (cfg.cups_entity && cupInfo.label) {
+        extraLines.push({
+          icon: "mdi:coffee-outline",
+          label: t(hass, "cups"),
+          value: cupInfo.label,
+          entity: cfg.cups_entity,
+        });
+      }
+      const strength = strengthLevel(hass, cfg.strength_entity);
+      if (cfg.strength_entity && strength.label) {
+        extraLines.push({
+          icon: "mdi:coffee-maker",
+          label: t(hass, "strength"),
+          value: strength.label,
+          entity: cfg.strength_entity,
+        });
+      }
+      if (waterPct !== null) {
+        extraLines.push({
+          icon: "mdi:cup-water",
+          label: t(hass, "section_water"),
+          value: `${Math.round(waterPct)} %`,
+          warn: !!noWater,
+          entity: cfg.water_entity,
+        });
+      }
+      coffeeCtx = {
+        noWater: !!noWater, noBeans: !!noBeans, trayFull: !!trayFull,
+        waterPct, cups: cupInfo.cups, strength: strength.level,
+      };
+    }
+
+    // Kettle: no timer, no program. The drawing carries the state, and the
+    // water temperature is the only reading it can show.
+    if (cap.kettleTemp) {
+      if (norm === "running" || norm === "idle") {
+        if (!cfg.state_show_raw) {
+          stateLabel = t(hass, norm === "running" ? "kettle_heating" : "kettle_off");
+        }
+        if (norm === "running") color = "#ff7043";
+      }
+      if (cfg.temperature_entity) {
+        const kv = numericState(hass, cfg.temperature_entity);
+        const kunit = temperatureUnit(hass, cfg.temperature_entity);
+        if (kv !== null) {
+          displayText = `${Math.round(kv)}\u00b0`;
+          extraLines.push({
+            icon: "mdi:thermometer-water",
+            label: t(hass, "temperature"),
+            value: `${Math.round(kv)} ${kunit}`,
+            entity: cfg.temperature_entity,
+          });
+        }
+      }
+    }
+
     // Power draw is worth showing on any type once the entity is there.
-    if (cfg.power_entity && watts !== null) {
+    if (!cap.fridgeTemp && cfg.power_entity && watts !== null) {
       extraLines.push({
         icon: cfg.power_icon || "mdi:power-plug",
         label: t(hass, "power"),
@@ -2311,9 +3605,13 @@ class ApplianceCard extends HTMLElement {
     }
 
     const illustrationCtx = {
+      ...(fridgeCtx || {}),
+      ...(coffeeCtx || {}),
+      speed: mixer.level,
       spinning: isActiveState(norm),
       doorOpen: cap.door && doorOpen,
-      heating: applianceType === "oven" ? heating : false,
+      heating: ["oven", "cooker", "rice_cooker"].includes(applianceType) ? heating : false,
+      keepWarm: norm === "keep_warm",
       lit,
       display: displayText,
       fanLevel: fan.level,
@@ -2340,7 +3638,7 @@ class ApplianceCard extends HTMLElement {
       { key: "resume", entity: cfg.resume_entity, icon: "mdi:play-pause", label: t(hass, "resume") },
       { key: "stop", entity: cfg.stop_entity, icon: "mdi:stop", label: t(hass, "stop") },
       cap.filter ? { key: "filter_reset", entity: cfg.filter_reset_entity, icon: "mdi:air-filter", label: t(hass, "filter_reset") } : {},
-    ].filter((a) => a.entity);
+    ].filter((a) => a.entity && !cap.readOnly);
 
     const spinning = isActiveState(norm);
 
@@ -2434,7 +3732,7 @@ class ApplianceCard extends HTMLElement {
           : t(hass, "time_done"),
       });
     }
-    if (cap.door && cfg.door_entity && !cfg.door_hide_in_list) {
+    if (cap.door && !cap.fridgeTemp && cfg.door_entity && !cfg.door_hide_in_list) {
       lines.push({
         icon: doorOpen ? "mdi:door-open" : "mdi:door-closed",
         label: doorOpen ? t(hass, "door_open") : t(hass, "door_closed"),
@@ -2536,7 +3834,10 @@ const ACTION_DOMAINS = ["button", "switch", "script", "input_boolean"];
 // Which types a section applies to. Anything cycle-shaped keeps the original
 // program/time/door/controls set; a hood or a cooktop would only be cluttered
 // by fields it can never fill.
-const CYCLE_TYPES = ["washer", "dryer", "dishwasher", "oven", "microwave"];
+const CYCLE_TYPES = ["washer", "dryer", "dishwasher", "oven", "microwave", "cooker", "coffee", "rice_cooker"];
+// A coffee machine has no door and a cooker's lid has no sensor, so neither
+// belongs in the door section even though both run programs.
+const DOOR_TYPES = ["washer", "dryer", "dishwasher", "oven", "microwave", "fridge"];
 
 const SECTIONS = [
   { field: "program_entity", types: CYCLE_TYPES, labelKey: "section_program", includeDomains: ["select", "sensor", "input_select"], extra: (c, hass) => c._row("program_format", "program_format", {
@@ -2555,15 +3856,15 @@ const SECTIONS = [
       ],
     }) + c._row("remaining_time_hide_when_idle", "remaining_time_hide_when_idle", { type: "checkbox" }) },
   { field: "progress_entity", types: CYCLE_TYPES, labelKey: "section_progress", includeDomains: ["sensor", "input_number"] },
-  { field: "door_entity", types: CYCLE_TYPES, labelKey: "section_door", includeDomains: ["binary_sensor", "sensor"], extra: (c, hass) =>
+  { field: "door_entity", types: DOOR_TYPES, labelKey: "section_door", includeDomains: ["binary_sensor", "sensor"], extra: (c, hass) =>
       c._row("door_open_state", "door_open_state", { placeholder: "on" }) +
       c._row("door_invert", "door_invert", { type: "checkbox" }) +
       c._row("door_hide_in_list", "door_hide_in_list", { type: "checkbox" }) },
 
   // Oven
-  { field: "target_temperature_entity", types: ["oven"], labelKey: "section_target_temperature", includeDomains: ["number", "sensor", "input_number"] },
-  { field: "current_temperature_entity", types: ["oven"], labelKey: "section_current_temperature", includeDomains: ["sensor", "number"] },
-  { field: "heating_entity", types: ["oven"], labelKey: "section_heating", includeDomains: ["binary_sensor", "sensor", "switch"] },
+  { field: "target_temperature_entity", types: ["oven", "cooker", "rice_cooker"], labelKey: "section_target_temperature", includeDomains: ["number", "sensor", "input_number"] },
+  { field: "current_temperature_entity", types: ["oven", "cooker", "rice_cooker"], labelKey: "section_current_temperature", includeDomains: ["sensor", "number"] },
+  { field: "heating_entity", types: ["oven", "cooker", "rice_cooker"], labelKey: "section_heating", includeDomains: ["binary_sensor", "sensor", "switch"] },
 
   // Microwave
   { field: "power_level_entity", types: ["microwave", "cooktop"], labelKey: "section_power_level", includeDomains: ["number", "select", "sensor", "input_number", "input_select"] },
@@ -2580,14 +3881,45 @@ const SECTIONS = [
   // Cooktop
   { field: "child_lock_entity", types: ["cooktop"], labelKey: "section_child_lock", includeDomains: ["binary_sensor", "switch", "lock"] },
 
+  // Fridge. One option describes both the number of doors and where the
+  // freezer sits, because on a real fridge those are the same fact.
+  { field: "fridge_temperature_entity", types: ["fridge"], labelKey: "section_fridge_temperature", includeDomains: ["sensor", "number", "input_number"], extra: (c, hass) =>
+      c._row("section_fridge_layout", "fridge_layout", {
+        type: "select",
+        options: [
+          { value: "freezer_bottom", label: t(hass, "layout_freezer_bottom") },
+          { value: "freezer_top", label: t(hass, "layout_freezer_top") },
+          { value: "side_by_side", label: t(hass, "layout_side_by_side") },
+          { value: "single", label: t(hass, "layout_single") },
+        ],
+      }) + c._row("fridge_max_temperature", "fridge_max_temperature", { placeholder: "8" }) },
+  { field: "freezer_temperature_entity", types: ["fridge"], labelKey: "section_freezer_temperature", includeDomains: ["sensor", "number", "input_number"] },
+  { field: "freezer_door_entity", types: ["fridge"], labelKey: "section_freezer_door", includeDomains: ["binary_sensor", "sensor"] },
+  { field: "ice_maker_entity", types: ["fridge"], labelKey: "section_ice_maker", includeDomains: ["switch", "binary_sensor", "sensor", "input_boolean"] },
+
+  // Kettle
+  { field: "temperature_entity", types: ["kettle"], labelKey: "section_kettle_temperature", includeDomains: ["sensor", "number", "input_number"] },
+
+  // Cooker
+  { field: "speed_entity", types: ["cooker"], labelKey: "section_speed", includeDomains: ["sensor", "number", "select", "input_number", "input_select"] },
+
+  // Coffee machine. Each of these is one Home Connect event, exposed as its
+  // own binary sensor.
+  { field: "water_entity", types: ["coffee"], labelKey: "section_water", includeDomains: ["binary_sensor", "sensor"] },
+  { field: "beans_entity", types: ["coffee"], labelKey: "section_beans", includeDomains: ["binary_sensor", "sensor"] },
+  { field: "tray_entity", types: ["coffee"], labelKey: "section_tray", includeDomains: ["binary_sensor", "sensor"] },
+  { field: "descaling_entity", types: ["coffee"], labelKey: "section_descaling", includeDomains: ["binary_sensor", "sensor"] },
+  { field: "cups_entity", types: ["coffee"], labelKey: "section_cups", includeDomains: ["sensor", "number", "select", "binary_sensor", "switch", "input_number", "input_select"] },
+  { field: "strength_entity", types: ["coffee"], labelKey: "section_strength", includeDomains: ["select", "sensor", "number", "input_select", "input_number"] },
+
   // Any type: the on/off control. Named toggle_entity rather than
   // power_switch_entity so it cannot be confused with power_entity below,
   // which is the wattage meter.
-  { field: "toggle_entity", types: APPLIANCE_TYPES, labelKey: "section_toggle", includeDomains: ACTION_DOMAINS.concat(["fan"]) },
+  { field: "toggle_entity", types: APPLIANCE_TYPES.filter((ty) => !caps(ty).readOnly), labelKey: "section_toggle", includeDomains: ACTION_DOMAINS.concat(["fan"]) },
 
   // Any type: a plug's power meter, optionally driving the state itself.
   { field: "power_entity", types: APPLIANCE_TYPES, labelKey: "section_power", includeDomains: ["sensor"], extra: (c) =>
-      c._row("power_on_threshold", "power_on_threshold", { placeholder: "10" }) },
+      c._row("power_on_threshold", "power_on_threshold", { placeholder: caps(c._currentType()).fridgeTemp ? "1" : "10" }) },
 
   { field: "alerts_entity", types: APPLIANCE_TYPES, labelKey: "section_alerts", includeDomains: ["sensor", "binary_sensor"] },
   { field: "connectivity_entity", types: APPLIANCE_TYPES, labelKey: "section_connectivity", includeDomains: ["binary_sensor", "sensor"], extra: (c, hass) => c._row("connectivity_connected_state", "connectivity_connected_state", { placeholder: "on" }) },
@@ -2626,7 +3958,7 @@ class ApplianceCardEditor extends HTMLElement {
     const newOpen = this._computeOpen(this._config);
     if (!this._open || !setsEqual(this._open, newOpen)) this._needsBuild = true;
     // Switching appliance type swaps the whole set of visible sections, and
-    // that alone does not change which fields are filled in \u2014 so the open-set
+    // that alone does not change which fields are filled in, so the open-set
     // comparison above would miss it.
     const type = this._currentType();
     if (this._type !== type) {
@@ -2655,7 +3987,7 @@ class ApplianceCardEditor extends HTMLElement {
   // its own, and Home Assistant calls setConfig again after every
   // config-changed we emit. A rebuild can therefore be followed immediately by
   // an empty pick that deletes a configured entity, with nobody having touched
-  // anything \u2014 the card then reports an entity it can no longer find.
+  // anything. The card then reports an entity it can no longer find.
   // So: ignore an echo of the value already held, and never clear a field
   // until the user has actually been in the form.
   _acceptsPick(current, value) {
@@ -2730,7 +4062,7 @@ class ApplianceCardEditor extends HTMLElement {
 
   // Only rebuilds the DOM when the set of visible sections actually changes.
   // hass updates on their own (which fire constantly as entity states change)
-  // must NOT tear down and recreate <ha-entity-picker> elements \u2014 that closes
+  // must NOT tear down and recreate <ha-entity-picker> elements, because that closes
   // any open dropdown and can leave its floating listbox orphaned on screen.
   _maybeBuild() {
     if (!this._hass || !this._config) return;
@@ -2780,7 +4112,7 @@ class ApplianceCardEditor extends HTMLElement {
     }
     if (opts.type === "select") {
       const options = opts.options
-        .map((o) => `<option value="${o.value}" ${o.value === value ? "selected" : ""}>${o.label}</option>`)
+        .map((o) => `<option value="${esc(o.value)}" ${o.value === value ? "selected" : ""}>${esc(o.label)}</option>`)
         .join("");
       return `
         <div class="row">
@@ -2791,7 +4123,7 @@ class ApplianceCardEditor extends HTMLElement {
     return `
       <div class="row">
         <label>${t(hass, labelKey)}</label>
-        <input type="text" data-field="${field}" value="${value}" placeholder="${opts.placeholder || ""}" />
+        <input type="text" data-field="${field}" value="${esc(value)}" placeholder="${esc(opts.placeholder || "")}" />
       </div>`;
   }
 
@@ -3013,6 +4345,11 @@ class ApplianceCardEditor extends HTMLElement {
             { value: "microwave", label: t(hass, "type_microwave") },
             { value: "hood", label: t(hass, "type_hood") },
             { value: "cooktop", label: t(hass, "type_cooktop") },
+            { value: "fridge", label: t(hass, "type_fridge") },
+            { value: "kettle", label: t(hass, "type_kettle") },
+            { value: "cooker", label: t(hass, "type_cooker") },
+            { value: "coffee", label: t(hass, "type_coffee") },
+            { value: "rice_cooker", label: t(hass, "type_rice_cooker") },
           ],
         })}
       </div>
@@ -3145,6 +4482,10 @@ class ApplianceCardEditor extends HTMLElement {
             delete this._config.door_invert;
             delete this._config.door_hide_in_list;
           }
+          if (field === "fridge_temperature_entity") {
+            delete this._config.fridge_layout;
+            delete this._config.fridge_max_temperature;
+          }
           if (field === "connectivity_entity") delete this._config.connectivity_connected_state;
           if (field === "power_entity") delete this._config.power_on_threshold;
           this.dispatchEvent(new CustomEvent("config-changed", { detail: { config: this._config } }));
@@ -3162,5 +4503,5 @@ window.customCards = window.customCards || [];
 window.customCards.push({
   type: "ha-appliance-card",
   name: "HA Appliance Card",
-  description: "Card for washers, dryers, dishwashers, ovens, microwaves, cooker hoods & cooktops \u2014 works with any brand/integration via configurable entity mapping.",
+  description: "Card for washers, dryers, dishwashers, ovens, microwaves, cooker hoods & cooktops. Works with any brand or integration via configurable entity mapping.",
 });
