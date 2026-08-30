@@ -37,10 +37,20 @@ Les illustrations sont en CSS, pas en images, et elles s'animent sur les donnée
 
 ![Types d'appareils animés](https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/animated.fr.gif)
 
-## Installation (HACS)
+## Installation
+
+### Par HACS
 
 1. Dans HACS, cherche **HA Appliance Card** et installe-la.
 2. Ajoute une card `custom:ha-appliance-card` à ton tableau de bord, en YAML ou via l'éditeur visuel.
+
+### À la main
+
+1. Télécharge `ha-appliance-card.js` depuis la [dernière release](https://github.com/ADNPolymerase/ha-appliance-card/releases/latest) et dépose-le dans `config/www/`.
+2. Déclare la ressource dans **Paramètres > Tableaux de bord > Ressources**, URL `/local/ha-appliance-card.js`, type **Module JavaScript**.
+3. Ajoute une card `custom:ha-appliance-card` à ton tableau de bord.
+
+HACS tient la card à jour tout seul ; une installation manuelle est à refaire à chaque release.
 
 ## Configuration
 
