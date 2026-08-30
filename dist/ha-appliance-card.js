@@ -1,4 +1,4 @@
-const CARD_VERSION = "2.0.3";
+const CARD_VERSION = "2.0.4";
 
 console.info(
   "%c HA-APPLIANCE-CARD %c v" + CARD_VERSION + " ",
@@ -1501,14 +1501,27 @@ function formatInfoValue(st, hass, valueMap) {
   return `${st.state}${st.attributes.unit_of_measurement ? " " + st.attributes.unit_of_measurement : ""}`;
 }
 
+// Home Connect, and the home_connect_alt custom integration, report the
+// programme as a fully qualified enum: LaundryCare.Washer.Program.Auto40. Four
+// segments at least, and only the last one names the programme. Requiring
+// three dots rather than one keeps a decimal such as "1.5 kg", or a two-part
+// name, from being mistaken for a namespace and cut down to its tail.
+const PROGRAM_ENUM = /^[A-Za-z][A-Za-z0-9]*(\.[A-Za-z0-9]+){3,}$/;
+
 function cleanProgramName(raw) {
   if (!raw) return raw;
   // Many integrations report "<Category> Pr <ProgramName>": keep the meaningful part.
   const parts = String(raw).split(/\s+Pr\s+/i);
-  const name = parts.length > 1 ? parts[1] : parts[0];
+  let name = parts.length > 1 ? parts[1] : parts[0];
+  if (PROGRAM_ENUM.test(name)) name = name.slice(name.lastIndexOf(".") + 1);
   return name
     .replace(/([a-z])([A-Z])/g, "$1 $2")
+    // Vendors run the temperature and the duration into the name, where there
+    // is no case boundary to split on: Auto40, Rapid20Min, Eco40-60.
+    .replace(/([A-Za-z])(\d)/g, "$1 $2")
+    .replace(/(\d)([A-Za-z])/g, "$1 $2")
     .replace(/_/g, " ")
+    .replace(/\s+/g, " ")
     .trim();
 }
 

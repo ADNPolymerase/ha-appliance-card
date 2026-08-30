@@ -1207,4 +1207,39 @@ check('editeur : les quatre implantations sont proposees',
 check('editeur : aucune implantation sur un lave-linge',
   /data-field="fridge_layout"/.test(markup(newEditor({ appliance_type: 'washer', state_entity: 'sensor.w' }))), false);
 
+// ── Fully qualified program enums ────────────────────────────────────────────
+// Home Connect, and the home_connect_alt custom integration, report the
+// programme as a namespaced enum: LaundryCare.Washer.Program.Auto40. Only the
+// last segment names the programme; everything before it is noise on a card.
+// Reported in issue #4.
+
+const progName = (raw, extra) => infoLine(
+  render({ appliance_type: 'washer', state_entity: 'sensor.w', program_entity: 'sensor.p', ...extra },
+    { 'sensor.w': { state: 'Running', attributes: {} }, 'sensor.p': { state: raw, attributes: {} } }),
+  'Program');
+
+check('programme : l\'espace de noms Home Connect est retire',
+  progName('LaundryCare.Washer.Program.Auto40'), 'Auto 40');
+check('programme : sans chiffre non plus',
+  progName('LaundryCare.Dryer.Program.Hygiene'), 'Hygiene');
+check('programme : un enum a cinq segments aussi',
+  progName('Cooking.Oven.Program.HeatingMode.HotAir'), 'Hot Air');
+check('programme : la cafetiere de meme',
+  progName('ConsumerProducts.CoffeeMaker.Program.Beverage.LatteMacchiato'), 'Latte Macchiato');
+
+// Vendors run the temperature into the name, with no case boundary to split on.
+check('programme : la temperature collee au nom est detachee', progName('Auto40'), 'Auto 40');
+check('programme : et le suffixe apres le nombre', progName('Rapid20Min'), 'Rapid 20 Min');
+
+// The behaviour that already existed must survive.
+check('programme : le motif "<categorie> Pr <nom>" tient toujours',
+  progName('Cotton Pr Eco40-60'), 'Eco 40-60');
+check('programme : un nom deja lisible est laisse tel quel', progName('Eco 50 °C'), 'Eco 50 °C');
+check('programme : raw ne touche a rien',
+  progName('LaundryCare.Washer.Program.Auto40', { program_format: 'raw' }), 'LaundryCare.Washer.Program.Auto40');
+
+// A value that merely contains a dot is not an enum and must be left alone.
+check('programme : un nombre decimal n\'est pas un enum', progName('1.5 kg'), '1.5 kg');
+check('programme : deux segments ne suffisent pas a en faire un', progName('Auto40.5'), 'Auto 40.5');
+
 report();
