@@ -1222,6 +1222,13 @@ check('programme : l\'espace de noms Home Connect est retire',
   progName('LaundryCare.Washer.Program.Auto40'), 'Auto 40');
 check('programme : sans chiffre non plus',
   progName('LaundryCare.Dryer.Program.Hygiene'), 'Hygiene');
+// Confirmed on real hardware by @eclaassens in #4, on a Bosch WAXH2E70NL
+// washer and a WTXH8E70NL dryer through home_connect_alt. Values seen on a
+// device beat values invented for a test.
+check('programme : SportFitness, releve sur un lave-linge Bosch',
+  progName('LaundryCare.Washer.Program.SportFitness'), 'Sport Fitness');
+check('programme : Synthetic, releve sur un seche-linge Bosch',
+  progName('LaundryCare.Dryer.Program.Synthetic'), 'Synthetic');
 check('programme : un enum a cinq segments aussi',
   progName('Cooking.Oven.Program.HeatingMode.HotAir'), 'Hot Air');
 check('programme : la cafetiere de meme',
