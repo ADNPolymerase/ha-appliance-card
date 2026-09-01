@@ -1249,4 +1249,55 @@ check('programme : raw ne touche a rien',
 check('programme : un nombre decimal n\'est pas un enum', progName('1.5 kg'), '1.5 kg');
 check('programme : deux segments ne suffisent pas a en faire un', progName('Auto40.5'), 'Auto 40.5');
 
+// ── Per-card language ────────────────────────────────────────────────────────
+// Someone running Home Assistant in English so that error messages match what
+// they find online may still want the card in their own language. Requested in
+// issue #5.
+
+/** Renders with an explicit Home Assistant UI language, whatever the card asks for. */
+function inHa(haLang, config, states) {
+  const c = new Card();
+  c.setConfig({ type: 'custom:ha-appliance-card', ...config });
+  c._hass = { ...HASS(states), language: haLang, locale: { language: haLang } };
+  c._render();
+  return markup(c);
+}
+const WASH = { 'sensor.w': { state: 'Running', attributes: {} },
+               'binary_sensor.d': { state: 'off', attributes: {} } };
+const base = { appliance_type: 'washer', state_entity: 'sensor.w', door_entity: 'binary_sensor.d' };
+
+check('langue : sans option, la card suit Home Assistant',
+  stateLine(inHa('en', base, WASH)), 'Running');
+check('langue : forcee en francais malgre un HA anglais',
+  stateLine(inHa('en', { ...base, language: 'fr' }, WASH)), 'En cours');
+check('langue : forcee en anglais malgre un HA francais',
+  stateLine(inHa('fr', { ...base, language: 'en' }, WASH)), 'Running');
+// The override reaches every label, not just the state line.
+contains('langue : les lignes d\'info suivent aussi',
+  inHa('en', { ...base, language: 'fr' }, WASH), 'Porte fermée');
+check('langue : auto revient au reglage de Home Assistant',
+  stateLine(inHa('en', { ...base, language: 'auto' }, WASH)), 'Running');
+// A code the card does not ship must not blank the card out.
+check('langue : un code inconnu retombe sur Home Assistant',
+  stateLine(inHa('fr', { ...base, language: 'xx' }, WASH)), 'En cours');
+// Overriding the locale must not disturb anything else read from hass.
+contains('langue : les entites restent lues normalement',
+  inHa('en', { ...base, language: 'fr' }, WASH), 'mdi:door-closed');
+
+// The editor offers it, and follows it too.
+const edLang = markup(newEditor({ ...base, language: 'fr' }));
+check('editeur : le selecteur de langue est propose',
+  /data-field="language"/.test(edLang), true);
+// Its own labels follow the choice too: picking a language and then reading
+// English underneath would be its own kind of confusing. newEditor builds
+// against an English Home Assistant, so a French label can only come from the
+// card's own setting.
+contains('editeur : ses libelles suivent la langue choisie', edLang, "Type d'appareil");
+contains('editeur : jusque dans les sections depliantes', edLang, 'R\u00e9glages g\u00e9n\u00e9raux');
+check('editeur : sans option, il reste dans la langue de Home Assistant',
+  /Type d'appareil/.test(markup(newEditor(base))), false);
+check('editeur : les treize langues et le mode auto sont listes',
+  (edLang.match(/<option value="[a-z]{2}"/g) || []).length, 13);
+contains('editeur : le mode auto est propose', edLang, 'value="auto"');
+
 report();

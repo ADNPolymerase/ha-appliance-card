@@ -1,4 +1,4 @@
-const CARD_VERSION = "2.0.4";
+const CARD_VERSION = "2.1.0";
 
 console.info(
   "%c HA-APPLIANCE-CARD %c v" + CARD_VERSION + " ",
@@ -106,6 +106,7 @@ const T = {
     cups: "Cups", strength: "Strength",
     section_cups: "Number of cups", section_strength: "Coffee strength",
     type_rice_cooker: "Rice cooker", keep_warm: "Keeping warm",
+    language: "Language", language_auto: "Follow Home Assistant",
   },
   fr: {
     idle: "En veille", running: "En cours", paused: "En pause", done: "Termin\u00e9",
@@ -202,6 +203,7 @@ const T = {
     cups: "Tasses", strength: "Force",
     section_cups: "Nombre de tasses", section_strength: "Force du caf\u00e9",
     type_rice_cooker: "Cuiseur \u00e0 riz", keep_warm: "Maintien au chaud",
+    language: "Langue", language_auto: "Suivre Home Assistant",
   },
   ru: {
     idle: "\u041e\u0436\u0438\u0434\u0430\u043d\u0438\u0435", running: "\u0420\u0430\u0431\u043e\u0442\u0430\u0435\u0442", paused: "\u041d\u0430 \u043f\u0430\u0443\u0437\u0435", done: "\u0417\u0430\u0432\u0435\u0440\u0448\u0435\u043d\u043e",
@@ -298,6 +300,7 @@ const T = {
     cups: "\u0427\u0430\u0448\u043a\u0438", strength: "\u041a\u0440\u0435\u043f\u043e\u0441\u0442\u044c",
     section_cups: "\u041a\u043e\u043b\u0438\u0447\u0435\u0441\u0442\u0432\u043e \u0447\u0430\u0448\u0435\u043a", section_strength: "\u041a\u0440\u0435\u043f\u043e\u0441\u0442\u044c \u043a\u043e\u0444\u0435",
     type_rice_cooker: "\u0420\u0438\u0441\u043e\u0432\u0430\u0440\u043a\u0430", keep_warm: "\u041f\u043e\u0434\u0434\u0435\u0440\u0436\u0430\u043d\u0438\u0435 \u0442\u0435\u043f\u043b\u0430",
+    language: "\u042f\u0437\u044b\u043a", language_auto: "\u0421\u043b\u0435\u0434\u043e\u0432\u0430\u0442\u044c Home Assistant",
   },
   de: {
     idle: "Inaktiv", running: "L\u00e4uft", paused: "Pausiert", done: "Fertig",
@@ -394,6 +397,7 @@ const T = {
     cups: "Tassen", strength: "St\u00e4rke",
     section_cups: "Anzahl Tassen", section_strength: "Kaffeest\u00e4rke",
     type_rice_cooker: "Reiskocher", keep_warm: "Warmhalten",
+    language: "Sprache", language_auto: "Home Assistant folgen",
   },
   es: {
     idle: "Inactivo", running: "En marcha", paused: "En pausa", done: "Finalizado",
@@ -490,6 +494,7 @@ const T = {
     cups: "Tazas", strength: "Intensidad",
     section_cups: "N\u00famero de tazas", section_strength: "Intensidad del caf\u00e9",
     type_rice_cooker: "Arrocera", keep_warm: "Manteniendo caliente",
+    language: "Idioma", language_auto: "Seguir a Home Assistant",
   },
   it: {
     idle: "Inattivo", running: "In funzione", paused: "In pausa", done: "Terminato",
@@ -586,6 +591,7 @@ const T = {
     cups: "Tazze", strength: "Intensit\u00e0",
     section_cups: "Numero di tazze", section_strength: "Intensit\u00e0 del caff\u00e8",
     type_rice_cooker: "Cuociriso", keep_warm: "Mantenimento in caldo",
+    language: "Lingua", language_auto: "Segui Home Assistant",
   },
   nl: {
     idle: "Inactief", running: "Actief", paused: "Gepauzeerd", done: "Klaar",
@@ -682,6 +688,7 @@ const T = {
     cups: "Kopjes", strength: "Sterkte",
     section_cups: "Aantal kopjes", section_strength: "Koffiesterkte",
     type_rice_cooker: "Rijstkoker", keep_warm: "Warmhouden",
+    language: "Taal", language_auto: "Home Assistant volgen",
   },
   pt: {
     idle: "Inativo", running: "Em funcionamento", paused: "Em pausa", done: "Conclu\u00eddo",
@@ -778,6 +785,7 @@ const T = {
     cups: "Ch\u00e1venas", strength: "Intensidade",
     section_cups: "N\u00famero de ch\u00e1venas", section_strength: "Intensidade do caf\u00e9",
     type_rice_cooker: "Panela de arroz", keep_warm: "A manter quente",
+    language: "Idioma", language_auto: "Seguir o Home Assistant",
   },
   sv: {
     idle: "Inaktiv", running: "Ig\u00e5ng", paused: "Pausad", done: "Klar",
@@ -874,6 +882,7 @@ const T = {
     cups: "Koppar", strength: "Styrka",
     section_cups: "Antal koppar", section_strength: "Kaffestyrka",
     type_rice_cooker: "Riskokare", keep_warm: "Varmh\u00e5llning",
+    language: "Spr\u00e5k", language_auto: "F\u00f6lj Home Assistant",
   },
   no: {
     idle: "Inaktiv", running: "I gang", paused: "Pauset", done: "Ferdig",
@@ -970,6 +979,7 @@ const T = {
     cups: "Kopper", strength: "Styrke",
     section_cups: "Antall kopper", section_strength: "Kaffestyrke",
     type_rice_cooker: "Riskoker", keep_warm: "Varmholding",
+    language: "Spr\u00e5k", language_auto: "F\u00f8lg Home Assistant",
   },
   da: {
     idle: "Inaktiv", running: "I gang", paused: "Sat p\u00e5 pause", done: "F\u00e6rdig",
@@ -1066,6 +1076,7 @@ const T = {
     cups: "Kopper", strength: "Styrke",
     section_cups: "Antal kopper", section_strength: "Kaffestyrke",
     type_rice_cooker: "Riskoger", keep_warm: "Varmholdning",
+    language: "Sprog", language_auto: "F\u00f8lg Home Assistant",
   },
   pl: {
     idle: "Bezczynny", running: "W trakcie", paused: "Wstrzymany", done: "Zako\u0144czony",
@@ -1162,6 +1173,7 @@ const T = {
     cups: "Fili\u017canki", strength: "Moc",
     section_cups: "Liczba fili\u017canek", section_strength: "Moc kawy",
     type_rice_cooker: "Ry\u017cowar", keep_warm: "Podtrzymywanie ciep\u0142a",
+    language: "J\u0119zyk", language_auto: "Zgodnie z Home Assistant",
   },
   zh: {
     idle: "\u7a7a\u95f2", running: "\u8fd0\u884c\u4e2d", paused: "\u6682\u505c", done: "\u5b8c\u6210",
@@ -1258,6 +1270,7 @@ const T = {
     cups: "\u676f\u6570", strength: "\u6d53\u5ea6",
     section_cups: "\u676f\u6570", section_strength: "\u5496\u5561\u6d53\u5ea6",
     type_rice_cooker: "\u7535\u996d\u7172", keep_warm: "\u4fdd\u6e29\u4e2d",
+    language: "\u8bed\u8a00", language_auto: "\u8ddf\u968f Home Assistant",
   },
 };
 
@@ -1269,6 +1282,25 @@ function lang(hass) {
 function t(hass, key) {
   const l = lang(hass);
   return (T[l] && T[l][key]) || T.en[key] || key;
+}
+
+// Each language names itself, so the list needs no translating.
+const LANGUAGE_NAMES = {
+  en: "English", fr: "Fran\u00e7ais", de: "Deutsch", es: "Espa\u00f1ol",
+  it: "Italiano", nl: "Nederlands", pt: "Portugu\u00eas", sv: "Svenska",
+  no: "Norsk", da: "Dansk", pl: "Polski", ru: "\u0420\u0443\u0441\u0441\u043a\u0438\u0439",
+  zh: "\u4e2d\u6587",
+};
+
+// A card can be pinned to one language whatever Home Assistant is set to.
+// Someone running HA in English so error messages match what they find online
+// may still want the card in their own language. Overriding the locale on a
+// copy of hass leaves every t() call downstream working unchanged, and carries
+// the choice to the dates as well, which share the same resolution.
+function localizedHass(hass, cfg) {
+  const want = cfg && cfg.language;
+  if (!hass || !want || want === "auto" || !T[want]) return hass;
+  return { ...hass, language: want, locale: { ...(hass.locale || {}), language: want } };
 }
 
 // ---------------------------------------------------------------------------
@@ -3056,8 +3088,8 @@ class ApplianceCard extends HTMLElement {
   }
 
   _render() {
-    const hass = this._hass;
     const cfg = this._config;
+    const hass = localizedHass(this._hass, cfg);
     if (!hass || !cfg) return;
 
     const st = stateObj(hass, cfg.state_entity);
@@ -4013,7 +4045,7 @@ class ApplianceCardEditor extends HTMLElement {
     const picker = document.createElement("ha-entity-picker");
     picker.hass = hass;
     picker.value = current[field] || "";
-    picker.label = `${t(hass, labelKey)} ${index + 1}`;
+    picker.label = `${t(this._l10n, labelKey)} ${index + 1}`;
     picker.includeDomains = includeDomains;
     picker.addEventListener("value-changed", (ev) => {
       const held = (this._zonesList()[index] || {})[field];
@@ -4024,7 +4056,7 @@ class ApplianceCardEditor extends HTMLElement {
   }
 
   _mountZoneName(slotEl, index) {
-    const hass = this._hass;
+    const hass = this._l10n;
     const current = this._zonesList()[index] || {};
     const input = document.createElement("input");
     input.type = "text";
@@ -4090,7 +4122,7 @@ class ApplianceCardEditor extends HTMLElement {
 
   _row(labelKey, field, opts) {
     opts = opts || {};
-    const hass = this._hass;
+    const hass = this._l10n;
     const value = this._config[field] || "";
     if (opts.type === "checkbox") {
       return `
@@ -4121,7 +4153,7 @@ class ApplianceCardEditor extends HTMLElement {
     const picker = document.createElement("ha-entity-picker");
     picker.hass = hass;
     picker.value = this._config[field] || "";
-    picker.label = opts.label || t(hass, "entity");
+    picker.label = opts.label || t(this._l10n, "entity");
     if (opts.includeDomains) picker.includeDomains = opts.includeDomains;
     picker.addEventListener("value-changed", (ev) => {
       const value = ev.detail.value;
@@ -4152,7 +4184,7 @@ class ApplianceCardEditor extends HTMLElement {
     const picker = document.createElement("ha-entity-picker");
     picker.hass = hass;
     picker.value = current.entity || "";
-    picker.label = `${t(hass, "entity")} ${index + 1}`;
+    picker.label = `${t(this._l10n, "entity")} ${index + 1}`;
     picker.addEventListener("value-changed", (ev) => {
       const held = (this._infoEntitiesList()[index] || {}).entity;
       if (!this._acceptsPick(held, ev.detail.value)) return;
@@ -4162,7 +4194,7 @@ class ApplianceCardEditor extends HTMLElement {
   }
 
   _mountInfoLabel(slotEl, index) {
-    const hass = this._hass;
+    const hass = this._l10n;
     const current = this._infoEntitiesList()[index] || {};
     const input = document.createElement("input");
     input.type = "text";
@@ -4175,7 +4207,7 @@ class ApplianceCardEditor extends HTMLElement {
   }
 
   _mountInfoValueMap(slotEl, index) {
-    const hass = this._hass;
+    const hass = this._l10n;
     const current = this._infoEntitiesList()[index] || {};
     const wrap = document.createElement("div");
     const label = document.createElement("label");
@@ -4195,7 +4227,7 @@ class ApplianceCardEditor extends HTMLElement {
   }
 
   _mountInfoIcon(slotEl, index) {
-    const hass = this._hass;
+    const hass = this._l10n;
     const current = this._infoEntitiesList()[index] || {};
     const picker = document.createElement("ha-icon-picker");
     picker.hass = hass;
@@ -4250,7 +4282,7 @@ class ApplianceCardEditor extends HTMLElement {
   }
 
   _sectionHtml(section) {
-    const hass = this._hass;
+    const hass = this._l10n;
     const open = this._open.has(section.field);
     return `
       <div class="section">
@@ -4259,10 +4291,19 @@ class ApplianceCardEditor extends HTMLElement {
       </div>`;
   }
 
+  // Every label the editor draws goes through here. The helpers below used to
+  // read this._hass directly, so the card's language choice reached the option
+  // lists built in _build but not the labels sitting beside them.
+  get _l10n() {
+    return localizedHass(this._hass, this._config);
+  }
+
   _build() {
     if (!this._hass || !this._config) return;
     this._built = true;
-    const hass = this._hass;
+    // The editor follows the same choice: picking a language and then reading
+    // English labels underneath would be its own kind of confusing.
+    const hass = this._l10n;
     // setConfig may have run before hass was available, in which case the
     // detected type could not see the entity's icon yet.
     this._type = this._currentType();
@@ -4353,6 +4394,12 @@ class ApplianceCardEditor extends HTMLElement {
       <details class="group" data-panel="general" ${this._panelOpen.general ? "open" : ""}>
         <summary>${t(hass, "group_general")}</summary>
         <div class="section">
+          ${this._row("language", "language", {
+            type: "select",
+            options: [{ value: "auto", label: t(hass, "language_auto") }].concat(
+              Object.keys(LANGUAGE_NAMES).map((code) => ({ value: code, label: LANGUAGE_NAMES[code] }))
+            ),
+          })}
           ${this._row("compact", "compact", { type: "checkbox" })}
           ${this._row("state_show_raw", "state_show_raw", { type: "checkbox" })}
         </div>
