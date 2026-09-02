@@ -16,6 +16,8 @@
  * throwing but cannot be triggered. Visual verification stays manual.
  */
 
+import { pathToFileURL } from 'node:url';
+
 // ── DOM stubs ────────────────────────────────────────────────────────────────
 
 class FakeNode {
@@ -63,7 +65,9 @@ export async function loadCard(modulePath) {
   globalThis.document = { createElement: tag => new FakeNode(tag) };
   globalThis.window   = globalThis;
   // node ships a read-only navigator that already has .language, so leave it be.
-  await import(modulePath);
+  // An absolute path is not a valid ESM specifier on Windows, where
+  // "d:\\..." reads as an unknown URL scheme. Hand import() a file:// URL.
+  await import(pathToFileURL(modulePath).href);
   return registry;
 }
 

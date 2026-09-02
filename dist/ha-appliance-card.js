@@ -1,4 +1,4 @@
-const CARD_VERSION = "2.1.0";
+const CARD_VERSION = "2.1.1";
 
 console.info(
   "%c HA-APPLIANCE-CARD %c v" + CARD_VERSION + " ",
@@ -1546,7 +1546,14 @@ function cleanProgramName(raw) {
   const parts = String(raw).split(/\s+Pr\s+/i);
   let name = parts.length > 1 ? parts[1] : parts[0];
   if (PROGRAM_ENUM.test(name)) name = name.slice(name.lastIndexOf(".") + 1);
-  return name
+  // Home Assistant's own home_connect integration slugifies the same enum,
+  // so the programme arrives as dishcare_dishwasher_program_eco_50 and the
+  // dotted pattern cannot see it. Everything up to "_program_" is the
+  // namespace, exactly as before the last dot.
+  const snake = /^[a-z0-9]+_[a-z0-9]+_program_(.+)$/.exec(name);
+  const wasSnake = !!snake;
+  if (snake) name = snake[1];
+  const out = name
     .replace(/([a-z])([A-Z])/g, "$1 $2")
     // Vendors run the temperature and the duration into the name, where there
     // is no case boundary to split on: Auto40, Rapid20Min, Eco40-60.
@@ -1555,6 +1562,31 @@ function cleanProgramName(raw) {
     .replace(/_/g, " ")
     .replace(/\s+/g, " ")
     .trim();
+  // A slugified enum arrives entirely in lower case, which reads as a shout of
+  // one beside the card's other lines. Only a value that actually came in that
+  // shape is re-cased: a name carrying its own capitals keeps them, and a plain
+  // reading like "1.5 kg" is not a programme name to capitalise.
+  return wasSnake ? out.replace(/\b[a-z]/g, (c) => c.toUpperCase()) : out;
+}
+
+// Home Assistant ships the translated label for an enum option, and
+// formatEntityState is how the frontend renders one. Prefer it over any string
+// mangling of ours: it carries the integration's own wording and the user's
+// language. It reads the Home Assistant locale though, so a language pinned on
+// the card would be contradicted by it, and there our own cleanup wins.
+function programLabel(hass, st, raw, cfg) {
+  if (!raw) return raw;
+  if (cfg && cfg.program_format === "raw") return raw;
+  const pinned = cfg && cfg.language && cfg.language !== "auto";
+  if (!pinned && st && hass && typeof hass.formatEntityState === "function") {
+    try {
+      const label = hass.formatEntityState(st, raw);
+      if (label && label !== raw) return label;
+    } catch (e) {
+      /* fall through to the local cleanup */
+    }
+  }
+  return cleanProgramName(raw);
 }
 
 function activeAlerts(hass, entityId) {
@@ -1753,6 +1785,9 @@ function detectApplianceType(cfg, st) {
 // below the threshold is therefore the shortest delay that cannot produce a
 // false alarm, and it doubles the observed worst case.
 const FRIDGE_UNPLUGGED_AFTER_MS = 30 * 60 * 1000;
+// The count is shown in whole minutes, so half a minute is close enough to
+// keep it honest without redrawing for nothing.
+const FRIDGE_TICK_MS = 30 * 1000;
 
 // Mixing speed, on the 0-3 scale the blade animation runs at. Thermomix goes
 // to 10 and calls the top one "Turbo"; the exact figure stays on the info line,
@@ -2001,8 +2036,8 @@ const ILLUSTRATION_CSS = {
           transition: background 1s linear;
         }
         .wave.wave2 { opacity: 0.45; }
-        .machine.spinning .wave { animation: waterspin 6s linear infinite; }
-        .machine.spinning .wave.wave2 { animation: waterspin 9s linear infinite reverse; }
+        .machine.spinning .wave { animation: waterspin 6s linear infinite; animation-delay: var(--anim-offset, 0s); }
+        .machine.spinning .wave.wave2 { animation: waterspin 9s linear infinite reverse; animation-delay: var(--anim-offset, 0s); }
         @keyframes waterspin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
         .garments { position: absolute; inset: 0; }
         .garment {
@@ -2012,7 +2047,7 @@ const ILLUSTRATION_CSS = {
         .garment.g1 { top: 9px; left: 12px; }
         .garment.g2 { top: 27px; left: 32px; transform: rotate(15deg); }
         .garment.g3 { top: 15px; left: 36px; transform: rotate(-25deg); }
-        .machine.spinning .garments { animation: tumble 2.6s linear infinite; }
+        .machine.spinning .garments { animation: tumble 2.6s linear infinite; animation-delay: var(--anim-offset, 0s); }
         @keyframes tumble { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
         .spray-arm {
           position: absolute; top: 50%; left: 50%; width: 3px; height: 72%;
@@ -2027,7 +2062,7 @@ const ILLUSTRATION_CSS = {
           content: ""; position: absolute; top: 50%; left: 50%; width: 6px; height: 6px;
           border-radius: 50%; background: ${color}; transform: translate(-50%, -50%);
         }
-        .machine.spinning .spray-arm { animation: spray-spin 0.7s linear infinite; }
+        .machine.spinning .spray-arm { animation: spray-spin 0.7s linear infinite; animation-delay: var(--anim-offset, 0s); }
         @keyframes spray-spin {
           from { transform: translate(-50%, -50%) rotate(0deg); }
           to { transform: translate(-50%, -50%) rotate(360deg); }
@@ -2062,9 +2097,9 @@ const ILLUSTRATION_CSS = {
         }
         .machine.heating .ov-elem {
           background: #ff7043; box-shadow: 0 0 9px 1px #ff7043;
-          animation: ov-ember 2.6s ease-in-out infinite;
+          animation: ov-ember 2.6s ease-in-out infinite; animation-delay: var(--anim-offset, 0s);
         }
-        .machine.heating .ov-elem.bottom { animation-delay: -1.3s; }
+        .machine.heating .ov-elem.bottom { animation-delay: calc(-1.3s + var(--anim-offset, 0s)); }
         .machine.heating .ov-cavity { box-shadow: inset 0 0 22px rgba(255, 112, 67, 0.45); }
         @keyframes ov-ember { 0%, 100% { opacity: 0.55; } 50% { opacity: 1; } }
         .machine.lit .ov-cavity {
@@ -2099,9 +2134,9 @@ const ILLUSTRATION_CSS = {
         }
         .machine.heating .ov-glass::before, .machine.heating .ov-glass::after {
           background: #ff7043; box-shadow: 0 0 8px 1px #ff7043;
-          animation: ov-ember 2.6s ease-in-out infinite;
+          animation: ov-ember 2.6s ease-in-out infinite; animation-delay: var(--anim-offset, 0s);
         }
-        .machine.heating .ov-glass::after { animation-delay: -1.3s; }
+        .machine.heating .ov-glass::after { animation-delay: calc(-1.3s + var(--anim-offset, 0s)); }
         .machine.open .ov-door { transform: rotateX(-74deg); }
   `,
   microwave: () => `
@@ -2121,14 +2156,14 @@ const ILLUSTRATION_CSS = {
           position: absolute; left: 50%; top: 2px; width: 9px; height: 9px;
           margin-left: -4.5px; border-radius: 50%; background: #6d737c;
         }
-        .machine.spinning .mw-turn { animation: mw-spin 3.4s linear infinite; }
+        .machine.spinning .mw-turn { animation: mw-spin 3.4s linear infinite; animation-delay: var(--anim-offset, 0s); }
         @keyframes mw-spin {
           from { transform: translate(-50%, -50%) scaleY(0.3) rotate(0deg); }
           to { transform: translate(-50%, -50%) scaleY(0.3) rotate(360deg); }
         }
         .machine.spinning .mw-cavity {
           background: radial-gradient(ellipse at 50% 45%, rgba(255, 209, 102, 0.3), #14161a 70%);
-          animation: mw-pulse 1.7s ease-in-out infinite;
+          animation: mw-pulse 1.7s ease-in-out infinite; animation-delay: var(--anim-offset, 0s);
         }
         @keyframes mw-pulse { 0%, 100% { filter: brightness(0.88); } 50% { filter: brightness(1.15); } }
         .machine.spinning .mw-plate { background: #3a3128; }
@@ -2205,9 +2240,9 @@ const ILLUSTRATION_CSS = {
         .hd-air.a1 { left: 26px; }
         .hd-air.a2 { left: 44px; }
         .hd-air.a3 { left: 62px; }
-        .machine.fan .hd-air { animation: hd-rise linear infinite; }
-        .machine.fan .hd-air.a2 { animation-delay: -0.45s; }
-        .machine.fan .hd-air.a3 { animation-delay: -0.9s; }
+        .machine.fan .hd-air { animation: hd-rise linear infinite; animation-delay: var(--anim-offset, 0s); }
+        .machine.fan .hd-air.a2 { animation-delay: calc(-0.45s + var(--anim-offset, 0s)); }
+        .machine.fan .hd-air.a3 { animation-delay: calc(-0.9s + var(--anim-offset, 0s)); }
         .machine.v1 .hd-air { animation-duration: 2.4s; }
         .machine.v2 .hd-air { animation-duration: 1.5s; }
         .machine.v3 .hd-air { animation-duration: 1s; }
@@ -2245,7 +2280,7 @@ const ILLUSTRATION_CSS = {
           background: radial-gradient(circle, rgba(255, 112, 67, 0.42), transparent 70%);
           box-shadow: 0 0 11px rgba(255, 112, 67, 0.55);
           opacity: calc(0.5 + var(--zi, 1) * 0.5);
-          animation: ck-ember 3s ease-in-out infinite;
+          animation: ck-ember 3s ease-in-out infinite; animation-delay: var(--anim-offset, 0s);
         }
         .ck-zone.max {
           border-color: #ff3d00; color: #ff3d00;
@@ -2255,7 +2290,7 @@ const ILLUSTRATION_CSS = {
         /* Powered off but still hot: the one thing a cooktop card is actually for. */
         .ck-zone.residual {
           border-color: #7a3b2c; color: #b1543d; background: none;
-          box-shadow: none; animation: none; opacity: 1;
+          box-shadow: none; animation: none; animation-delay: var(--anim-offset, 0s); opacity: 1;
         }
         @keyframes ck-ember { 0%, 100% { filter: brightness(0.85); } 50% { filter: brightness(1.12); } }
         .ck-ctrl { position: absolute; left: 12px; right: 22px; bottom: 10px; display: flex; gap: 5px; justify-content: center; }
@@ -2315,12 +2350,12 @@ const ILLUSTRATION_CSS = {
         .fr-door.hinge-right.swung { transform: rotateY(74deg); }
         .fr-icebox { position: absolute; overflow: hidden; }
         .fr-cube { position: absolute; width: 5px; height: 5px; border-radius: 1px; background: #4fc3f7; opacity: 0; }
-        .machine.ice .fr-cube { animation: fr-fall 1.8s linear infinite; }
-        .machine.ice .fr-cube.c2 { animation-delay: -0.6s; }
-        .machine.ice .fr-cube.c3 { animation-delay: -1.2s; }
+        .machine.ice .fr-cube { animation: fr-fall 1.8s linear infinite; animation-delay: var(--anim-offset, 0s); }
+        .machine.ice .fr-cube.c2 { animation-delay: calc(-0.6s + var(--anim-offset, 0s)); }
+        .machine.ice .fr-cube.c3 { animation-delay: calc(-1.2s + var(--anim-offset, 0s)); }
         /* Configured but not producing: the cubes stay, greyed, so the card
            still shows there is an ice maker. */
-        .fr-icebox.off .fr-cube { opacity: 0.22; background: var(--disabled-text-color, #9e9e9e); animation: none; }
+        .fr-icebox.off .fr-cube { opacity: 0.22; background: var(--disabled-text-color, #9e9e9e); animation: none; animation-delay: var(--anim-offset, 0s); }
         @keyframes fr-fall {
           0% { transform: translateY(0); opacity: 0; }
           15%, 80% { opacity: 0.95; }
@@ -2368,9 +2403,9 @@ const ILLUSTRATION_CSS = {
         .kt-bub.b1 { left: 34px; }
         .kt-bub.b2 { left: 46px; }
         .kt-bub.b3 { left: 57px; }
-        .machine.on .kt-bub { animation: kt-rise 1.6s linear infinite; }
-        .machine.on .kt-bub.b2 { animation-delay: -0.55s; }
-        .machine.on .kt-bub.b3 { animation-delay: -1.1s; }
+        .machine.on .kt-bub { animation: kt-rise 1.6s linear infinite; animation-delay: var(--anim-offset, 0s); }
+        .machine.on .kt-bub.b2 { animation-delay: calc(-0.55s + var(--anim-offset, 0s)); }
+        .machine.on .kt-bub.b3 { animation-delay: calc(-1.1s + var(--anim-offset, 0s)); }
         @keyframes kt-rise {
           0% { transform: translateY(0); opacity: 0; }
           25% { opacity: 0.85; }
@@ -2382,8 +2417,8 @@ const ILLUSTRATION_CSS = {
         }
         .kt-steam.s1 { left: 12px; }
         .kt-steam.s2 { left: 20px; }
-        .machine.on .kt-steam { animation: kt-steam 2.2s ease-in-out infinite; }
-        .machine.on .kt-steam.s2 { animation-delay: -1.1s; }
+        .machine.on .kt-steam { animation: kt-steam 2.2s ease-in-out infinite; animation-delay: var(--anim-offset, 0s); }
+        .machine.on .kt-steam.s2 { animation-delay: calc(-1.1s + var(--anim-offset, 0s)); }
         @keyframes kt-steam {
           0% { transform: translateY(6px) scaleY(0.6); opacity: 0; }
           35% { opacity: 0.9; }
@@ -2429,7 +2464,7 @@ const ILLUSTRATION_CSS = {
           content: ""; position: absolute; inset: 0; border-radius: 2px;
           background: #5a6068; transform: rotate(72deg);
         }
-        .machine.mixing .rc-blade { animation: rc-spin linear infinite; }
+        .machine.mixing .rc-blade { animation: rc-spin linear infinite; animation-delay: var(--anim-offset, 0s); }
         /* The speed shows in how often the turn comes round, not in how fast
            the blade travels: a turn too quick to follow reads as a glitch. */
         .machine.s1 .rc-blade { animation-duration: 2.6s; }
@@ -2463,8 +2498,8 @@ const ILLUSTRATION_CSS = {
         }
         .rc-steam.v1 { left: 38px; }
         .rc-steam.v2 { left: 54px; }
-        .machine.heating .rc-steam { animation: rc-vapour 2.4s ease-in-out infinite; }
-        .machine.heating .rc-steam.v2 { animation-delay: -1.2s; }
+        .machine.heating .rc-steam { animation: rc-vapour 2.4s ease-in-out infinite; animation-delay: var(--anim-offset, 0s); }
+        .machine.heating .rc-steam.v2 { animation-delay: calc(-1.2s + var(--anim-offset, 0s)); }
         @keyframes rc-vapour {
           0% { transform: translateY(6px) scaleY(0.6); opacity: 0; }
           40% { opacity: 0.85; }
@@ -2515,8 +2550,8 @@ const ILLUSTRATION_CSS = {
         .cf-stream { position: absolute; top: 71px; width: 2px; height: 13px; background: #6d4c41; opacity: 0; }
         .cf-stream.p1 { left: 42px; }
         .cf-stream.p2 { left: 52px; }
-        .machine.pouring .cf-stream { animation: cf-pour 0.7s linear infinite; }
-        .machine.pouring .cf-stream.p2 { animation-delay: -0.35s; }
+        .machine.pouring .cf-stream { animation: cf-pour 0.7s linear infinite; animation-delay: var(--anim-offset, 0s); }
+        .machine.pouring .cf-stream.p2 { animation-delay: calc(-0.35s + var(--anim-offset, 0s)); }
         @keyframes cf-pour {
           0% { opacity: 0; transform: scaleY(0.2); transform-origin: top; }
           30% { opacity: 0.9; transform: scaleY(1); }
@@ -2555,8 +2590,8 @@ const ILLUSTRATION_CSS = {
         }
         .cf-steam.p1 { left: 36px; }
         .cf-steam.p2 { left: 56px; }
-        .machine.pouring .cf-steam { animation: cf-wisp 2s ease-in-out infinite; }
-        .machine.pouring .cf-steam.p2 { animation-delay: -1s; }
+        .machine.pouring .cf-steam { animation: cf-wisp 2s ease-in-out infinite; animation-delay: var(--anim-offset, 0s); }
+        .machine.pouring .cf-steam.p2 { animation-delay: calc(-1s + var(--anim-offset, 0s)); }
         @keyframes cf-wisp {
           0% { transform: translateY(4px) scaleY(0.6); opacity: 0; }
           40% { opacity: 0.8; }
@@ -2612,8 +2647,8 @@ const ILLUSTRATION_CSS = {
         }
         .rk-steam.w1 { left: 40px; }
         .rk-steam.w2 { left: 51px; }
-        .machine.heating .rk-steam { animation: rk-puff 2.3s ease-in-out infinite; }
-        .machine.heating .rk-steam.w2 { animation-delay: -1.15s; }
+        .machine.heating .rk-steam { animation: rk-puff 2.3s ease-in-out infinite; animation-delay: var(--anim-offset, 0s); }
+        .machine.heating .rk-steam.w2 { animation-delay: calc(-1.15s + var(--anim-offset, 0s)); }
         @keyframes rk-puff {
           0% { transform: translateY(7px) scaleY(0.6); opacity: 0; }
           40% { opacity: 0.9; }
@@ -3010,6 +3045,9 @@ class ApplianceCard extends HTMLElement {
       throw new Error("ha-appliance-card: 'state_entity' is required");
     }
     this._config = config;
+    // A reconfiguration changes what is drawn without touching any state, so
+    // the next hass must go through whatever the signature says.
+    this._lastSignature = undefined;
     this._runStartSeconds = null;
     this._prevNormState = null;
     if (!this._root) {
@@ -3052,14 +3090,69 @@ class ApplianceCard extends HTMLElement {
     return document.createElement("ha-appliance-card-editor");
   }
 
+  // Entities this card actually reads: the *_entity config keys, the extra
+  // info lines, and the cooking zones, which nest their own entity keys.
+  _watchedEntityIds() {
+    const cfg = this._config || {};
+    const ids = [];
+    for (const [k, v] of Object.entries(cfg)) {
+      if (k.endsWith("_entity") && typeof v === "string" && v) ids.push(v);
+    }
+    for (const e of cfg.info_entities || []) {
+      const id = typeof e === "string" ? e : e && e.entity;
+      if (id) ids.push(id);
+    }
+    for (const z of cfg.zones || []) {
+      if (z && z.level_entity) ids.push(z.level_entity);
+      if (z && z.residual_heat_entity) ids.push(z.residual_heat_entity);
+    }
+    return ids;
+  }
+
+  // A fingerprint of everything the rendered output depends on. Only the
+  // attributes the card reads are folded in: an integration that republishes
+  // telemetry every second, as Electrolux does, would otherwise defeat the
+  // whole point. alerts_entity is the exception, since its attributes are its
+  // content.
+  _stateSignature(hass) {
+    if (!hass || !this._config) return "";
+    const parts = [
+      (hass.locale && hass.locale.language) || hass.language || "",
+      (hass.config && hass.config.unit_system && hass.config.unit_system.temperature) || "",
+    ];
+    for (const id of this._watchedEntityIds()) {
+      const st = hass.states ? hass.states[id] : null;
+      if (!st) { parts.push(id + "=-"); continue; }
+      const a = st.attributes || {};
+      parts.push(id + "=" + st.state + "@" + (st.last_changed || ""));
+      parts.push([a.friendly_name, a.icon, a.unit_of_measurement, a.device_class,
+                  Array.isArray(a.options) ? a.options.join(",") : ""].join("~"));
+      if (id === this._config.alerts_entity) parts.push(JSON.stringify(a));
+    }
+    // While a fridge counts the minutes since its plug went quiet, the minute
+    // is part of what is displayed even though no state carries it. The card
+    // also ticks on its own, but a browser throttles the timers of a hidden
+    // tab, so the count has to be able to catch up on the next update too.
+    if (this._belowSince) parts.push("u" + Math.floor((Date.now() - this._belowSince) / 60000));
+    return parts.join("|");
+  }
+
   set hass(hass) {
+    // _render rebuilds the subtree through innerHTML, which restarts every CSS
+    // animation at zero. Home Assistant calls this setter on any state change
+    // anywhere in the system, so on a busy instance the drum never gets past a
+    // few degrees. Redraw only when something this card shows has moved.
+    const sig = this._stateSignature(hass);
+    const first = this._lastSignature === undefined;
     this._hass = hass;
+    if (!first && sig !== "" && sig === this._lastSignature) return;
+    this._lastSignature = sig;
     this._render();
   }
 
   _clearUnplugTimer() {
     if (this._unplugTimer) {
-      clearTimeout(this._unplugTimer);
+      clearInterval(this._unplugTimer);
       this._unplugTimer = null;
     }
   }
@@ -3155,7 +3248,7 @@ class ApplianceCard extends HTMLElement {
     if (cfg.program_entity) {
       const pst = stateObj(hass, cfg.program_entity);
       if (pst && !["unknown", "unavailable"].includes(pst.state)) {
-        programText = cfg.program_format === "raw" ? pst.state : cleanProgramName(pst.state);
+        programText = programLabel(hass, pst, pst.state, cfg);
       }
     }
 
@@ -3414,14 +3507,13 @@ class ApplianceCard extends HTMLElement {
       } else {
         this._belowSince = null;
       }
-      // Nothing re-renders the card at the moment the delay expires: a plug
-      // that is off has no further state changes to push. Schedule that render.
+      // This line reads the clock, not the state: a plug sitting at 0 W stops
+      // changing, so nothing pushes an update and the count would freeze where
+      // it started. The card keeps its own beat while it is counting, which
+      // also covers the moment the thirty minutes are up.
       this._clearUnplugTimer();
-      if (this._belowSince && !unplugged) {
-        this._unplugTimer = setTimeout(() => {
-          this._unplugTimer = null;
-          this._render();
-        }, FRIDGE_UNPLUGGED_AFTER_MS - belowMs + 1000);
+      if (this._belowSince) {
+        this._unplugTimer = setInterval(() => this._render(), FRIDGE_TICK_MS);
       }
 
       norm = fridgeHealth(unplugged, doorOpen || freezerDoorOpen, tempHigh);
@@ -3670,9 +3762,26 @@ class ApplianceCard extends HTMLElement {
 
     const spinning = isActiveState(norm);
 
+    // How long the current animation has been running. A redraw restarts every
+    // CSS animation at zero, so the elapsed time is handed to the stylesheet as
+    // a negative delay and the cycle picks up where it left off. The key is
+    // every flag that drives an animation: when one of them changes, the
+    // appliance is doing something else and the cycle genuinely starts over.
+    const animKey = [
+      illustrationCtx.spinning, illustrationCtx.heating, illustrationCtx.lit,
+      illustrationCtx.ice, illustrationCtx.noWater, illustrationCtx.speed,
+      illustrationCtx.fanLevel, illustrationCtx.boost, illustrationCtx.keepWarm,
+      illustrationCtx.anyZoneOn,
+    ].join(",");
+    if (animKey !== this._animKey) {
+      this._animKey = animKey;
+      this._animStart = Date.now();
+    }
+    const animOffset = -((Date.now() - this._animStart) / 1000);
+
     const styleTag = `
       <style>
-        :host { font-size: 16px; }
+        :host { font-size: 16px; --anim-offset: ${animOffset}s; }
         ha-card { display: block; padding: 16px; position: relative; }
         .conn-badge {
           position: absolute; top: 10px; right: 12px;

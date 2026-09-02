@@ -948,13 +948,15 @@ const KETTLE = {
 };
 const ktOff = render({ appliance_type: 'kettle', state_entity: 'switch.kt', temperature_entity: 'sensor.kt_t' }, KETTLE);
 check('bouilloire : a l\'arret plutot qu\'en veille', stateLine(ktOff), 'Off');
-check('bouilloire : rien ne bouille au repos', /machine [^"]*\bon\b/.test(ktOff), false);
+// On the class attribute, not on the whole markup: "on" is a common word and
+// a stylesheet comment should not be able to answer this question.
+check('bouilloire : rien ne bouille au repos', machineCls(ktOff).split(' ').includes('on'), false);
 contains('bouilloire : la sonde est affichee sur le corps', ktOff, '21°');
 
 const ktOn = render({ appliance_type: 'kettle', state_entity: 'switch.kt', temperature_entity: 'sensor.kt_t' },
   { ...KETTLE, 'switch.kt': { state: 'on', attributes: {} }, 'sensor.kt_t': { state: '82', attributes: { unit_of_measurement: '°C' } } });
 check('bouilloire : en chauffe plutot qu\'en cours', stateLine(ktOn), 'Heating');
-check('bouilloire : le socle chauffe', /machine [^"]*\bon\b/.test(ktOn), true);
+check('bouilloire : le socle chauffe', machineCls(ktOn).split(' ').includes('on'), true);
 // The blue of "running" contradicted the glowing base; heating must read warm.
 check('bouilloire : la ligne d\'etat est chaude, pas bleue', stateColor(ktOn), '#ff7043');
 check('lave-linge : la ligne d\'etat reste bleue en cours',
@@ -1299,5 +1301,204 @@ check('editeur : sans option, il reste dans la langue de Home Assistant',
 check('editeur : les treize langues et le mode auto sont listes',
   (edLang.match(/<option value="[a-z]{2}"/g) || []).length, 13);
 contains('editeur : le mode auto est propose', edLang, 'value="auto"');
+
+// ── Re-rendering, and animations that survive it ─────────────────────────────
+// _render rebuilds the whole subtree through innerHTML, which restarts every
+// CSS animation at zero. Home Assistant calls the hass setter on any state
+// change anywhere in the system, so on a busy instance the drum never gets
+// past a few degrees. Two things follow: only redraw when something this card
+// shows has moved, and when a redraw does happen, resume the animation instead
+// of restarting it.
+
+function counted(config) {
+  const c = new Card();
+  c.setConfig({ type: 'custom:ha-appliance-card', ...config });
+  let renders = 0;
+  const real = c._render.bind(c);
+  c._render = function () { renders++; return real(); };
+  return { card: c, count: () => renders };
+}
+const noise = (n, extra) => ({
+  'sensor.w': { state: 'Running', attributes: {}, last_changed: 'T0' },
+  'sensor.rem': { state: '600', attributes: {}, last_changed: 'T0' },
+  ...Array.from({ length: 5 }, (_, i) => i).reduce((a, i) => {
+    a['sensor.unrelated' + i] = { state: String(n), attributes: {}, last_changed: 'T' + n };
+    return a;
+  }, {}),
+  ...(extra || {}),
+});
+
+const w = counted({ appliance_type: 'washer', state_entity: 'sensor.w', remaining_time_entity: 'sensor.rem' });
+w.card.hass = HASS(noise(0));
+const after1 = w.count();
+for (let i = 1; i <= 20; i++) w.card.hass = HASS(noise(i));
+check('rendu : 20 changements sans rapport ne redessinent pas', w.count() - after1, 0);
+
+// What the card does show must still get through. Each step below moves one
+// thing and holds the rest still: a helper that churned the watched entities
+// would make every signature differ and prove nothing.
+const shown = (over) => HASS({ ...noise(99), ...over });
+w.card.hass = shown({ 'sensor.rem': { state: '540', attributes: {}, last_changed: 'T1' } });
+check('rendu : un changement affiche redessine bien', w.count() - after1, 1);
+w.card.hass = shown({ 'sensor.rem': { state: '540', attributes: {}, last_changed: 'T1' } });
+check('rendu : le meme etat deux fois ne redessine pas', w.count() - after1, 1);
+// An attribute the card reads is part of what it shows, and nothing else moves
+// here: only the friendly name can carry this render.
+w.card.hass = shown({
+  'sensor.rem': { state: '540', attributes: {}, last_changed: 'T1' },
+  'sensor.w': { state: 'Running', attributes: { friendly_name: 'Ma machine' }, last_changed: 'T0' },
+});
+check('rendu : un nom convivial qui change redessine', w.count() - after1, 2);
+contains('rendu : et le nouveau nom est affiche', markup(w.card), 'Ma machine');
+
+// setConfig must always force the next render, or an edit would not show. The
+// states handed over afterwards are byte for byte the ones already seen, so
+// only the reconfiguration itself can get this through.
+const frozen = {
+  'sensor.rem': { state: '540', attributes: {}, last_changed: 'T1' },
+  'sensor.w': { state: 'Running', attributes: { friendly_name: 'Ma machine' }, last_changed: 'T0' },
+};
+w.card.hass = shown(frozen);
+const beforeConfig = w.count();
+w.card.setConfig({ type: 'custom:ha-appliance-card', appliance_type: 'washer',
+  state_entity: 'sensor.w', remaining_time_entity: 'sensor.rem', name: 'Renommee' });
+w.card.hass = shown(frozen);
+check('rendu : une reconfiguration passe toujours', w.count() - beforeConfig, 1);
+contains('rendu : et la card porte le nouveau nom', markup(w.card), 'Renommee');
+
+// The fridge counts wall-clock time, not state. Its plug sits at 0 W with an
+// unchanging last_changed, so nothing in the state can carry the minutes: the
+// card has to keep its own beat or the line freezes at "0 min".
+const T1 = freezeClock('2026-09-01T10:00:00Z');
+const fr = counted({ appliance_type: 'fridge', power_entity: 'sensor.p', power_on_threshold: '1' });
+const flat = () => ({ 'sensor.p': { state: '0', attributes: { unit_of_measurement: 'W' }, last_changed: 'T0' } });
+fr.card.hass = HASS(flat());
+const dur = () => (/<span class="label">Power<\/span><span>([^<]*)<\/span>/.exec(markup(fr.card)) || [, ''])[1];
+contains('frigo : la duree part de zero', dur(), '0 min');
+freezeClock(new Date(T1 + 12 * 60000).toISOString());
+fr.card.hass = HASS(flat());
+contains('frigo : la duree avance malgre une prise immobile', dur(), '12 min');
+freezeClock(new Date(T1 + 31 * 60000).toISOString());
+fr.card.hass = HASS(flat());
+check('frigo : le debranchement se declenche toujours', stateLine(markup(fr.card)), 'Unplugged');
+fr.card.disconnectedCallback();
+freezeClock(new Date(T1).toISOString());
+
+// Staggered delays are what make three bubbles read as three. A blanket
+// animation-delay would collapse them onto one.
+const kettleStagger = render({ appliance_type: 'kettle', state_entity: 'switch.k' },
+  { 'switch.k': { state: 'on', attributes: {} } });
+check('animation : aucune regle n\'ecrase les delais propres',
+  /animation-delay:[^;]*!important/.test(kettleStagger), false);
+contains('animation : les bulles gardent leur decalage',
+  kettleStagger, 'animation-delay: calc(-0.55s + var(--anim-offset, 0s))');
+contains('animation : la vapeur aussi',
+  kettleStagger, 'animation-delay: calc(-1.1s + var(--anim-offset, 0s))');
+// An element with no stagger of its own still gets the resume offset, and the
+// shorthand that sets the animation must carry it or it resets the delay.
+contains('animation : le raccourci porte le decalage',
+  kettleStagger, 'animation-delay: var(--anim-offset, 0s)');
+const hoodStagger = render({ appliance_type: 'hood', state_entity: 'sensor.h', fan_entity: 'sensor.f' },
+  { 'sensor.h': { state: 'Running', attributes: {} }, 'sensor.f': { state: '3', attributes: {} } });
+contains('animation : les chevrons de hotte gardent le leur',
+  hoodStagger, 'animation-delay: calc(-0.45s + var(--anim-offset, 0s))');
+// And the offset composes with them rather than replacing them.
+check('animation : plus aucune variable --d orpheline',
+  /--d:/.test(kettleStagger), false);
+
+// The whole suite once passed with every animation dead: a shorthand had lost
+// its semicolon, so `animation: kt-rise 1.6s linear infinite animation-delay:
+// ...` parsed as nothing and animation-name computed to none. Nothing here
+// runs a CSS engine, so guard the shape of the declaration itself.
+// Checked on the source, not on one rendered card: the card injects only the
+// active appliance's stylesheet, so a broken shorthand in any other family
+// would go unseen.
+check('animation : aucun raccourci ampute de son point-virgule',
+  /animation:[^;{}\n]*animation-delay/.test(SRC), false);
+// Every family that animates carries the resume offset on its shorthand,
+// otherwise the shorthand resets the delay and the stagger is lost.
+check('animation : chaque raccourci porte le decalage de reprise',
+  (SRC.match(/animation: [^;{}\n]+;/g) || []).length,
+  (SRC.match(/animation: [^;{}\n]+; animation-delay: var\(--anim-offset, 0s\);/g) || []).length);
+const styleOf = (h) => (/<style>([\s\S]*?)<\/style>/.exec(h) || [, ''])[1];
+// And the animations a running appliance is supposed to declare are declared.
+for (const [label, markupOf, names] of [
+  ['bouilloire', kettleStagger, ['kt-rise', 'kt-steam']],
+  ['hotte', hoodStagger, ['hd-rise']],
+]) {
+  for (const n of names) {
+    check(`animation : ${label} declare ${n}`,
+      new RegExp('animation: ' + n + '[^;]*;').test(styleOf(markupOf)), true);
+  }
+}
+
+// And the offset actually carries the time already spent running, so a redraw
+// picks the animation up where it was instead of snapping back to zero.
+const offsetOf = (h) => (/--anim-offset: (-?[\d.]+)s/.exec(h) || [, null])[1];
+const T2 = freezeClock('2026-09-01T12:00:00Z');
+const spin = new Card();
+spin.setConfig({ type: 'custom:ha-appliance-card', appliance_type: 'washer',
+  state_entity: 'sensor.w', remaining_time_entity: 'sensor.rem' });
+const spinStates = (rem) => ({ 'sensor.w': { state: 'Running', attributes: {}, last_changed: 'T0' },
+  'sensor.rem': { state: String(rem), attributes: {}, last_changed: 'r' + rem } });
+spin.hass = HASS(spinStates(600));
+check('animation : au demarrage, aucun decalage', offsetOf(markup(spin)), '0');
+freezeClock(new Date(T2 + 5000).toISOString());
+spin.hass = HASS(spinStates(595));
+check('animation : cinq secondes plus tard, le cycle reprend ou il en etait',
+  offsetOf(markup(spin)), '-5');
+// Stopping and starting again is a new cycle, not a resumed one.
+freezeClock(new Date(T2 + 9000).toISOString());
+spin.hass = HASS({ 'sensor.w': { state: 'Idle', attributes: {}, last_changed: 'T1' },
+  'sensor.rem': { state: '0', attributes: {}, last_changed: 'r0' } });
+freezeClock(new Date(T2 + 12000).toISOString());
+spin.hass = HASS(spinStates(900));
+check('animation : un nouveau cycle repart de zero', offsetOf(markup(spin)), '0');
+freezeClock(new Date(T2).toISOString());
+
+// ── The official Home Connect integration, and Home Assistant's own label ────
+// home_connect_alt reports the dotted enum handled above. Home Assistant's own
+// home_connect integration slugifies it instead, so the same programme arrives
+// as dishcare_dishwasher_program_eco_50 and the dotted pattern cannot see it.
+
+check('programme : enum en snake_case de l\'integration officielle',
+  progName('dishcare_dishwasher_program_eco_50'), 'Eco 50');
+check('programme : lave-linge en snake_case',
+  progName('laundrycare_washer_program_auto_40'), 'Auto 40');
+check('programme : un seul mot apres le prefixe',
+  progName('laundrycare_dryer_program_synthetic'), 'Synthetic');
+// A snake_case token arrives entirely lower case, which shouts next to the
+// other lines. Only such a token is re-cased.
+check('programme : une valeur qui porte deja ses majuscules garde les siennes',
+  progName('LaundryCare.Washer.Program.SportFitness'), 'Sport Fitness');
+check('programme : une lecture ordinaire n\'est pas capitalisee', progName('1.5 kg'), '1.5 kg');
+
+// Home Assistant ships the translated label for an enum option and renders it
+// with formatEntityState. That beats any string mangling of ours: it carries
+// the integration's own wording and the user's language.
+function withFormatter(config, raw, formatted) {
+  const c = new Card();
+  c.setConfig({ type: 'custom:ha-appliance-card', appliance_type: 'washer',
+    state_entity: 'sensor.w', program_entity: 'sensor.p', ...config });
+  const states = { 'sensor.w': { state: 'Running', attributes: {} },
+                   'sensor.p': { state: raw, attributes: {} } };
+  c._hass = { ...HASS(states), formatEntityState: () => formatted };
+  c._render();
+  // The label beside the value follows the card's language, so read the line
+  // by its position rather than by an English word.
+  return infoLine(markup(c), config.language === 'fr' ? 'Programme' : 'Program');
+}
+check('programme : le libelle de Home Assistant est prefere',
+  withFormatter({}, 'dishcare_dishwasher_program_eco_50', 'Eco 50 °C'), 'Eco 50 °C');
+// It cannot honour a language pinned on the card, since it reads the Home
+// Assistant locale. Rather than contradict the option, fall back to our own.
+check('programme : une langue forcee sur la card l\'emporte sur le formateur',
+  withFormatter({ language: 'fr' }, 'dishcare_dishwasher_program_eco_50', 'Eco 50 °C'), 'Eco 50');
+// A formatter that hands the raw value straight back has told us nothing.
+check('programme : un formateur qui ne formate rien laisse la main',
+  withFormatter({}, 'dishcare_dishwasher_program_eco_50', 'dishcare_dishwasher_program_eco_50'), 'Eco 50');
+check('programme : raw court-circuite tout',
+  withFormatter({ program_format: 'raw' }, 'dishcare_dishwasher_program_eco_50', 'Eco 50 °C'),
+  'dishcare_dishwasher_program_eco_50');
 
 report();
