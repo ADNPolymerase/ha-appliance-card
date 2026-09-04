@@ -30,7 +30,7 @@ Aucune marque supposée : chaque champ est un mapping d'entité configurable, el
 - **Programme, lignes d'info** (température, essorage…), **porte, alertes, connectivité** (icône wifi en haut à droite), chacun optionnel et indépendant.
 - **Démarrer / Pause / Reprendre / Stop**, affichés uniquement pour les entités que tu configures.
 - **Se dimensionne dans les dashboards Sections** : la card déclare sa largeur et sa hauteur, elle n'est plus compressée au point de replier ses lignes d'info.
-- **Interface traduite en 14 langues** (EN, CS, FR, DE, ES, IT, NL, PT, SV, NO, DA, PL, RU, ZH), suivant la langue de Home Assistant.
+- **Interface traduite en 14 langues** (EN, FR, DE, ES, IT, NL, PT, SV, NO, DA, PL, RU, ZH, CS), suivant la langue de Home Assistant.
 - **Éditeur visuel** : choisis l'entité d'état et les autres champs sont auto-suggérés depuis les entités sœurs du même appareil.
 
 Les illustrations sont en CSS, pas en images, et elles s'animent sur les données de l'appareil : le couteau fait un tour par saccade à la vitesse remontée par le robot, le café coule dans une tasse ou deux, les glaçons tombent tant que la machine produit, la bouilloire bout et fume.
@@ -63,7 +63,7 @@ Seule `state_entity` est obligatoire ; tout le reste est optionnel. Le réfrigé
 | `state_show_raw` | `true` pour afficher le texte brut plutôt que le libellé traduit (couleur/animation suivent toujours la catégorie détectée). |
 | `name` | Titre de la card. Par défaut, le nom convivial de l'entité d'état. |
 | `compact` | `true` pour masquer l'illustration et n'afficher que le texte. |
-| `language` | `auto` (défaut) suit Home Assistant. N'importe lequel des quatorze codes livrés (`en`, `cs`, `fr`, `de`, `es`, `it`, `nl`, `pt`, `sv`, `no`, `da`, `pl`, `ru`, `zh`) fixe cette card, et son éditeur, dans cette langue. Pour faire tourner Home Assistant dans une langue et lire une card dans une autre. |
+| `language` | `auto` (défaut) suit Home Assistant. N'importe lequel des quatorze codes livrés (`en`, `fr`, `de`, `es`, `it`, `nl`, `pt`, `sv`, `no`, `da`, `pl`, `ru`, `zh`, `cs`) fixe cette card, et son éditeur, dans cette langue. Pour faire tourner Home Assistant dans une langue et lire une card dans une autre. |
 | `appliance_type` | `auto` (défaut) \| `washer` \| `dryer` \| `dishwasher` \| `oven` \| `microwave` \| `hood` \| `cooktop` \| `fridge` \| `kettle` \| `cooker` \| `coffee` \| `rice_cooker`. L'éditeur visuel ne propose que les champs utilisables par le type choisi. |
 | `toggle_entity` | Commande marche/arrêt, affichée en bouton d'alimentation sur la card et mise en évidence quand c'est allumé. N'importe quel `switch`/`button`/`script`/`input_boolean`/`fan`. Nommée ainsi pour ne pas être confondue avec `power_entity` ci-dessous, qui est le compteur de watts. |
 | `power_entity` / `power_on_threshold` / `power_icon` | Capteur de puissance (W). Avec un seuil défini, l'état est déduit de la puissance plutôt que de `state_entity` : au-dessus du seuil c'est *en marche*, et la redescente sous le seuil signifie *terminé* jusqu'au prochain cycle. Pointer `state_entity` sur le même capteur de puissance suffit à l'activer, avec un seuil par défaut de 10 W. `power_icon` remplace l'icône par défaut `mdi:power-plug`. |
