@@ -685,6 +685,16 @@ check('locale zh-CN : resolue vers le bloc zh',
     return markup(c);
   })()), '\u8fd0\u884c\u4e2d');
 
+check('locale cs-CZ : resolue vers le bloc cs',
+  stateLine((() => {
+    const c = new Card();
+    c.setConfig({ type: 'custom:ha-appliance-card', appliance_type: 'washer', state_entity: 'sensor.w' });
+    c._hass = { ...HASS({ 'sensor.w': { state: 'Running', attributes: {} } }),
+                locale: { language: 'cs-CZ' }, language: 'cs-CZ' };
+    c._render();
+    return markup(c);
+  })()), 'V provozu');
+
 // ── Escaping of everything an integration can inject ─────────────────────────
 // The card builds its markup as a string. Every value below comes from the
 // integration, not from the dashboard author: SmartThings, Home Connect, LG
@@ -1298,8 +1308,8 @@ contains('editeur : ses libelles suivent la langue choisie', edLang, "Type d'app
 contains('editeur : jusque dans les sections depliantes', edLang, 'R\u00e9glages g\u00e9n\u00e9raux');
 check('editeur : sans option, il reste dans la langue de Home Assistant',
   /Type d'appareil/.test(markup(newEditor(base))), false);
-check('editeur : les treize langues et le mode auto sont listes',
-  (edLang.match(/<option value="[a-z]{2}"/g) || []).length, 13);
+check('editeur : les quatorze langues et le mode auto sont listes',
+  (edLang.match(/<option value="[a-z]{2}"/g) || []).length, 14);
 contains('editeur : le mode auto est propose', edLang, 'value="auto"');
 
 // ── Re-rendering, and animations that survive it ─────────────────────────────

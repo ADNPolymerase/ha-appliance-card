@@ -30,7 +30,7 @@ No brand assumed: every field is a configurable entity mapping, so it works with
 - **Program, info lines** (temperature, spin speed…), **door, alerts, connectivity** (top-right wifi icon), each optional and independent.
 - **Start / pause / resume / stop** controls, only shown for the entities you configure.
 - **Sizes itself in Sections dashboards**: the card declares its own width and height, so it isn't squeezed into wrapping its info lines.
-- **Interface translated into 13 languages** (EN, FR, DE, ES, IT, NL, PT, SV, NO, DA, PL, RU, ZH), picked up from the Home Assistant locale.
+- **Interface translated into 14 languages** (EN, CS, FR, DE, ES, IT, NL, PT, SV, NO, DA, PL, RU, ZH), picked up from the Home Assistant locale.
 - **Visual editor**: pick the state entity and the other fields are auto-suggested from sibling entities on the same device.
 
 Illustrations are CSS, not images, and they animate on the appliance's own data: the blade turns once per pulse at the speed the cooker reports, coffee pours into one cup or two, ice cubes fall while the maker runs, a kettle bubbles and steams.
@@ -63,7 +63,7 @@ Only `state_entity` is required; everything else is optional. A fridge is the ex
 | `state_show_raw` | `true` to display the raw state text instead of the translated label (color/animation still follow the detected category). |
 | `name` | Card title. Defaults to the state entity's friendly name. |
 | `compact` | `true` to hide the illustration and show only text. |
-| `language` | `auto` (default) follows Home Assistant. Any of the thirteen shipped codes (`en`, `fr`, `de`, `es`, `it`, `nl`, `pt`, `sv`, `no`, `da`, `pl`, `ru`, `zh`) pins this card, and its editor, to that language instead. For running Home Assistant in one language while reading a card in another. |
+| `language` | `auto` (default) follows Home Assistant. Any of the fourteen shipped codes (`en`, `cs`, `fr`, `de`, `es`, `it`, `nl`, `pt`, `sv`, `no`, `da`, `pl`, `ru`, `zh`) pins this card, and its editor, to that language instead. For running Home Assistant in one language while reading a card in another. |
 | `appliance_type` | `auto` (default) \| `washer` \| `dryer` \| `dishwasher` \| `oven` \| `microwave` \| `hood` \| `cooktop` \| `fridge` \| `kettle` \| `cooker` \| `coffee` \| `rice_cooker`. The visual editor only offers the fields the chosen type can use. |
 | `toggle_entity` | On/off control, shown as a power button on the card and highlighted while on. Any `switch`/`button`/`script`/`input_boolean`/`fan`. Named this way so it is not mistaken for `power_entity` below, which is the wattage meter. |
 | `power_entity` / `power_on_threshold` / `power_icon` | Power sensor (W). With a threshold set, the state is derived from it instead of `state_entity`: above the threshold is *running*, and falling back below it is *finished* until the next run. Pointing `state_entity` at the same power sensor enables this on its own, with a default threshold of 10 W. `power_icon` overrides the default `mdi:power-plug`. |
