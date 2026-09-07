@@ -1370,6 +1370,71 @@ check('editeur : les quatorze langues et le mode auto sont listes',
   (edLang.match(/<option value="[a-z]{2}"/g) || []).length, 14);
 contains('editeur : le mode auto est propose', edLang, 'value="auto"');
 
+// ── A light that only reports (issue #8, follow-up) ──────────────────────────
+// Ovens routinely expose their lamp as a binary_sensor. Reading it always
+// worked; the editor was the only thing hiding it, and clicking the badge on
+// one would have called a service the entity cannot answer.
+
+const ovenLight = (entity, state) => {
+  const calls = [];
+  const c = new Card();
+  c.setConfig({ type: 'custom:ha-appliance-card', appliance_type: 'oven',
+    state_entity: 'sensor.o', light_entity: entity });
+  c._hass = { ...HASS({ 'sensor.o': { state: 'Running', attributes: {} },
+                        [entity]: { state, attributes: {} } }),
+              callService: (domain, service, data) => calls.push({ domain, service, data }) };
+  c._render();
+  return { card: c, calls };
+};
+const badgeOn = (o) => {
+  const m = /<div class="light-badge ([^"]*)"/.exec(markup(o.card));
+  return m ? m[1].split(' ').includes('on') : null;
+};
+
+check('lampe : un binary_sensor allume le badge', badgeOn(ovenLight('binary_sensor.lamp', 'on')), true);
+check('lampe : et l\'eteint', badgeOn(ovenLight('binary_sensor.lamp', 'off')), false);
+check('lampe : une vraie light marche toujours', badgeOn(ovenLight('light.lamp', 'on')), true);
+
+// The click. A binary_sensor has nothing to toggle, so it opens instead.
+const lampRO = ovenLight('binary_sensor.lamp', 'on');
+lampRO.card._call('binary_sensor.lamp');
+check('lampe : cliquer un capteur n\'appelle aucun service', lampRO.calls.length, 0);
+check('lampe : il ouvre la fiche d\'entite', lampRO.card.events.at(-1)?.type, 'hass-more-info');
+check('lampe : et sur la bonne entite',
+  lampRO.card.events.at(-1)?.detail?.entityId, 'binary_sensor.lamp');
+
+// A light that really can be switched must still be switched.
+const lampRW = ovenLight('light.lamp', 'on');
+lampRW.card._call('light.lamp');
+check('lampe : une light est toujours basculee', lampRW.calls.at(-1)?.service, 'toggle');
+check('lampe : sur son propre domaine', lampRW.calls.at(-1)?.domain, 'light');
+const swRW = ovenLight('switch.lamp', 'on');
+swRW.card._call('switch.lamp');
+check('lampe : un switch aussi', swRW.calls.at(-1)?.service, 'toggle');
+
+// The editor offered every other on/off field a binary_sensor and not this one.
+const edLight = newEditor({ state_entity: 'sensor.oven_appliance_state',
+                            appliance_type: 'oven', light_entity: 'binary_sensor.lamp' });
+const lightPicker = edLight._root.querySelector('[data-slot="light_entity"]')?.children.at(-1);
+check('editeur : le selecteur de lampe accepte un capteur',
+  (lightPicker?.includeDomains || []).includes('binary_sensor'), true);
+check('editeur : et n\'a pas perdu les vraies lampes',
+  (lightPicker?.includeDomains || []).includes('light'), true);
+
+// The lamp lights the door glass. It used to light only the cavity, which sits
+// behind a pane that is 94% opaque with the door shut, so the rule worked and
+// the light was invisible. Asserting the glass rule specifically is the point:
+// a cavity-only rule would pass a "is there a lit style" test and still show
+// nothing.
+const OVEN_CSS = SRC.slice(SRC.indexOf('oven: () => `'), SRC.indexOf('microwave: () => `'));
+check('four : la lampe eclaire la vitre de la porte',
+  /\.machine\.lit \.ov-glass \{[^}]*background:/.test(OVEN_CSS), true);
+check('four : et toujours la cavite, porte ouverte',
+  /\.machine\.lit \.ov-cavity \{[^}]*background:/.test(OVEN_CSS), true);
+// The unlit pane must stay dark, or the oven would read as permanently on.
+check('four : la vitre au repos reste sombre',
+  /\.ov-glass \{[^}]*background: rgba\(16, 18, 22, 0\.94\)/.test(OVEN_CSS), true);
+
 // ── state_map in the visual editor (issue #8) ────────────────────────────────
 // The option existed in YAML from the start and was never offered here, which
 // is exactly why it was requested as a new feature.

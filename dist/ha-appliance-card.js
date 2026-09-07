@@ -1,4 +1,4 @@
-const CARD_VERSION = "2.2.0";
+const CARD_VERSION = "2.2.1";
 
 console.info(
   "%c HA-APPLIANCE-CARD %c v" + CARD_VERSION + " ",
@@ -1742,6 +1742,10 @@ function humanizeEntityId(entityId) {
   return objectId.replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
 }
 
+// Domains that report rather than act. A click on one of these has nothing
+// to call, so the card opens the entity instead of raising a service error.
+const READ_ONLY_DOMAINS = ["binary_sensor", "sensor"];
+
 function domainOf(entityId) {
   return entityId ? entityId.split(".")[0] : null;
 }
@@ -2238,8 +2242,16 @@ const ILLUSTRATION_CSS = {
         .machine.heating .ov-elem.bottom { animation-delay: calc(-1.3s + var(--anim-offset, 0s)); }
         .machine.heating .ov-cavity { box-shadow: inset 0 0 22px rgba(255, 112, 67, 0.45); }
         @keyframes ov-ember { 0%, 100% { opacity: 0.55; } 50% { opacity: 1; } }
+        /* The lamp has to light the door glass, not the cavity behind it. With
+           the door shut the glass is 94% opaque, so a cavity lit underneath is
+           invisible: the rule worked and nobody could see it. Lighting the
+           pane is also what a real oven looks like, the lamp reaching you
+           through the window rather than off the back wall. */
         .machine.lit .ov-cavity {
           background: radial-gradient(ellipse at 50% 40%, rgba(255, 209, 102, 0.28), #14161a 72%);
+        }
+        .machine.lit .ov-glass {
+          background: radial-gradient(ellipse at 50% 38%, rgba(104, 76, 38, 0.86), rgba(16, 18, 22, 0.94) 78%);
         }
         .ov-door {
           position: absolute; inset: 0; border-radius: 6px;
@@ -3300,6 +3312,11 @@ class ApplianceCard extends HTMLElement {
   _call(entityId) {
     if (!this._hass || !entityId) return;
     const domain = domainOf(entityId);
+    // Plenty of ovens expose their lamp as a binary_sensor: it reports the
+    // light, it does not drive it. Toggling one only writes an error to the
+    // log, so the click opens the entity instead, which is the one useful
+    // thing left to do with a reading.
+    if (READ_ONLY_DOMAINS.includes(domain)) return this._moreInfo(entityId);
     if (domain === "button") {
       this._hass.callService("button", "press", { entity_id: entityId });
     } else if (["switch", "input_boolean", "fan", "light"].includes(domain)) {
@@ -4149,7 +4166,7 @@ const SECTIONS = [
   { field: "filter_reset_entity", types: ["hood"], labelKey: "section_filter_reset", includeDomains: ACTION_DOMAINS },
 
   // Oven + hood
-  { field: "light_entity", types: ["oven", "hood"], labelKey: "section_light", includeDomains: ["light", "switch", "input_boolean"] },
+  { field: "light_entity", types: ["oven", "hood"], labelKey: "section_light", includeDomains: ["light", "switch", "input_boolean", "binary_sensor"] },
 
   // Cooktop
   { field: "child_lock_entity", types: ["cooktop"], labelKey: "section_child_lock", includeDomains: ["binary_sensor", "switch", "lock"] },
