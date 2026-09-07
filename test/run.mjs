@@ -695,6 +695,58 @@ check('locale cs-CZ : resolue vers le bloc cs',
     return markup(c);
   })()), 'V provozu');
 
+// ── Home Connect operation states (issue #8) ─────────────────────────────────
+// Half of BSH's OperationState enum was recognised and half was not, and an
+// unrecognised one printed its whole namespace on the card. Both halves are
+// asserted here so a future keyword edit cannot quietly undo one of them.
+
+const HC = "BSH.Common.EnumType.OperationState.";
+const hcState = (value, extra) => {
+  const c = new Card();
+  c.setConfig({ type: 'custom:ha-appliance-card', appliance_type: 'washer',
+    state_entity: 'sensor.hc', ...extra });
+  c._hass = HASS({ 'sensor.hc': { state: value, attributes: {} } });
+  c._render();
+  return markup(c);
+};
+
+for (const [value, label] of [
+  ['Run', 'Running'], ['Finished', 'Finished'], ['Pause', 'Paused'],
+  ['DelayedStart', 'Delayed start'],
+  // The four that fell through before.
+  ['Ready', 'Idle'], ['Inactive', 'Idle'], ['Aborting', 'Running'],
+]) {
+  check(`home connect : ${value} se lit "${label}"`, stateLine(hcState(HC + value)), label);
+}
+
+// Aborting is a cycle being cancelled, so the drum is still turning: the
+// category has to drive the animation, not just the label.
+check('home connect : Aborting anime encore le tambour',
+  machineCls(hcState(HC + 'Aborting')).split(' ').includes('spinning'), true);
+check('home connect : Ready ne l\'anime pas',
+  machineCls(hcState(HC + 'Ready')).split(' ').includes('spinning'), false);
+
+// An enum the card has no opinion on is still echoed, but without the four
+// words of namespace, and split where the vendor ran two words together.
+check('home connect : un etat inconnu perd son espace de noms',
+  stateLine(hcState(HC + 'ActionRequired')), 'Action Required');
+check('home connect : et reste en gris, faute de categorie',
+  stateColor(hcState(HC + 'ActionRequired')), 'var(--disabled-text-color, #9e9e9e)');
+
+// state_show_raw asks for the entity's own text: it gets it whole, namespace
+// included, because that is what was asked for.
+check('home connect : state_show_raw garde l\'enum entier',
+  stateLine(hcState(HC + 'ActionRequired', { state_show_raw: true })), HC + 'ActionRequired');
+
+// The escape hatch the issue was really asking for, and which predates it.
+check('home connect : state_map classe ce que les mots-cles ignorent',
+  stateLine(hcState(HC + 'ActionRequired', { state_map: { [HC + 'ActionRequired']: 'error' } })),
+  'Error');
+
+// A plain state must not be mangled by the namespace stripper.
+check('home connect : un etat sans point n\'est pas touche',
+  stateLine(hcState('Souple', {})), 'Souple');
+
 // ── Escaping of everything an integration can inject ─────────────────────────
 // The card builds its markup as a string. Every value below comes from the
 // integration, not from the dashboard author: SmartThings, Home Connect, LG
@@ -1041,7 +1093,13 @@ const cafeCfg = (extra) => ({ appliance_type: 'coffee', state_entity: 'sensor.cf
 const cafe = (states, extra) => render(cafeCfg(extra), { ...CAFE, ...states });
 const ON = { state: 'on', attributes: {} };
 
-check('cafe : rien a signaler, l\'etat reste celui de la machine', stateLine(cafe({})), 'Ready');
+// "Ready" is now recognised as idle rather than echoed as an unknown state:
+// the category is what drives the colour, the animations and the hiding of a
+// stale remaining time, and a machine sitting at Ready is idle. The machine's
+// own wording stays available through state_show_raw, asserted just below.
+check('cafe : rien a signaler, la machine est au repos', stateLine(cafe({})), 'Idle');
+check('cafe : state_show_raw rend son mot a la machine',
+  stateLine(render(cafeCfg({ state_show_raw: true }), CAFE)), 'Ready');
 // Nothing wrong takes no line: the state line already says the machine is fine.
 check('cafe : aucun consommable en alerte, aucune ligne',
   (cafe({}).match(/class="info-line /g) || []).length, 0);
@@ -1097,7 +1155,7 @@ check('cafe : sans entite de force, le bac est plein',
 const lvl = (v) => cafe({ 'sensor.lvl': { state: String(v), attributes: { unit_of_measurement: '%' } } },
   { water_entity: 'sensor.lvl' });
 contains('cafe : un niveau chiffre est affiche tel quel', infoLine(lvl(76), 'Water tank'), '76');
-check('cafe : un niveau confortable ne declenche rien', stateLine(lvl(76)), 'Ready');
+check('cafe : un niveau confortable ne declenche rien', stateLine(lvl(76)), 'Idle');
 check('cafe : sous 10 %, le reservoir est vide', stateLine(lvl(6)), 'Water tank empty');
 check('cafe : le niveau pilote la hauteur dessinee', /class="cf-water" style="height:76%"/.test(lvl(76)), true);
 check('cafe : un booleen ne dessine pas de hauteur',
@@ -1311,6 +1369,55 @@ check('editeur : sans option, il reste dans la langue de Home Assistant',
 check('editeur : les quatorze langues et le mode auto sont listes',
   (edLang.match(/<option value="[a-z]{2}"/g) || []).length, 14);
 contains('editeur : le mode auto est propose', edLang, 'value="auto"');
+
+// ── state_map in the visual editor (issue #8) ────────────────────────────────
+// The option existed in YAML from the start and was never offered here, which
+// is exactly why it was requested as a new feature.
+
+const edMap = newEditor({ state_entity: 'sensor.oven_appliance_state' });
+const mapSlot = edMap._root.querySelector('[data-slot="__state_map"]');
+const mapArea = mapSlot && mapSlot.children.at(-1).children.at(-1);
+check('editeur : la zone de mapping d\'etat existe', !!mapArea, true);
+contains('editeur : son exemple montre la forme attendue',
+  mapArea.placeholder, 'Ready: idle');
+
+mapArea.value = 'BSH.Common.EnumType.OperationState.Aborting: error\nReady: idle';
+fire(mapArea, 'change', { target: mapArea });
+checkFired('editeur : _mountStateMap', edMap, (ev) => {
+  check('editeur : le mapping est ecrit dans la config',
+    ev.detail.config.state_map['BSH.Common.EnumType.OperationState.Aborting'], 'error');
+  check('editeur : et la seconde ligne aussi',
+    ev.detail.config.state_map.Ready, 'idle');
+});
+
+// Emptying the box removes the key rather than leaving an empty object behind,
+// which would show up in the YAML editor as noise the user never typed.
+mapArea.value = '';
+fire(mapArea, 'change', { target: mapArea });
+check('editeur : vider la zone retire la cle',
+  'state_map' in edMap.events.at(-1).detail.config, false);
+
+// An existing mapping has to come back into the box, or opening the editor on a
+// YAML-written card would look like the mapping had been lost.
+// The event hands the dashboard a reference to the config object. Mutating the
+// one already emitted lets a later edit rewrite an earlier payload under the
+// dashboard's feet, which is how an edit ends up looking like it was lost.
+const edEchoMap = newEditor({ state_entity: 'sensor.oven_appliance_state' });
+const echoArea = edEchoMap._root.querySelector('[data-slot="__state_map"]').children.at(-1).children.at(-1);
+echoArea.value = 'Ready: idle';
+fire(echoArea, 'change', { target: echoArea });
+const firstEmit = edEchoMap.events.at(-1).detail.config;
+echoArea.value = 'Ready: done';
+fire(echoArea, 'change', { target: echoArea });
+check('editeur : la config deja emise n\'est pas reecrite',
+  firstEmit.state_map.Ready, 'idle');
+check('editeur : la seconde edition est bien prise en compte',
+  edEchoMap.events.at(-1).detail.config.state_map.Ready, 'done');
+
+const edMapPre = newEditor({ state_entity: 'sensor.oven_appliance_state',
+                             state_map: { Ready: 'idle' } });
+const preArea = edMapPre._root.querySelector('[data-slot="__state_map"]').children.at(-1).children.at(-1);
+check('editeur : un mapping existant est reaffiche', preArea.value, 'Ready: idle');
 
 // ── Re-rendering, and animations that survive it ─────────────────────────────
 // _render rebuilds the whole subtree through innerHTML, which restarts every

@@ -21,7 +21,7 @@ No brand assumed: every field is a configurable entity mapping, so it works with
 
 ## Features
 
-- **State normalization**: `Idle`, `RUNNING`, `wash`, `En marche`… are auto-detected (accent-insensitive) and mapped to idle / preheating / running / paused / done / delayed / error. `state_map` covers anything else; unmatched states are shown as-is.
+- **State normalization**: `Idle`, `RUNNING`, `wash`, `En marche`… are auto-detected (accent-insensitive) and mapped to idle / preheating / running / paused / done / delayed / error. An unmatched state is shown as it came, minus the namespace an integration wraps it in: `BSH.Common.EnumType.OperationState.ActionRequired` reads `Action Required`. `state_map` classifies whatever is left.
 - **Twelve appliance types**, each with its own animated illustration: washer (water), dryer (tumbling), dishwasher (spray arm), oven (glowing elements, door dropping open), microwave (turntable, lit cavity), cooker hood (rising airflow, light beams), cooktop (per-zone level and residual heat), fridge (each door swings for its own sensor, lit interior, falling ice cubes), kettle (glowing base, bubbles, steam), cooker (turning blade, hot element, steam), coffee machine (pouring stream, filling cup, tank level) and rice cooker (steam, keep-warm glow). Static when idle, auto-detected or set via `appliance_type`. `compact: true` keeps only the text.
 - **A coffee machine says what it needs**: an empty tank, an empty bean container, a full drip tray or a due descaling takes over the state line whenever the machine isn't actually pouring, in the order in which each one stops you getting a coffee. Only what needs doing takes a line.
 - **A fridge reports its health, not a cycle**: it never stops, so *Running* would be true of it every hour of its life. The state line carries the one thing worth reading instead, in order of what it costs to miss: unplugged, a door left open, a temperature above the limit, otherwise normal. Read-only, with no buttons to press.
@@ -59,7 +59,7 @@ Only `state_entity` is required; everything else is optional. A fridge is the ex
 | Option | Description |
 |---|---|
 | `state_entity` | **Required**, except on a fridge. Entity reporting the appliance's overall state (any domain). |
-| `state_map` | Optional map: raw state → `idle`\|`running`\|`paused`\|`done`\|`delayed`\|`error`\|`keep_warm`. |
+| `state_map` | Optional map: raw state → `idle`\|`running`\|`preheating`\|`keep_warm`\|`paused`\|`done`\|`delayed`\|`error`. Sets the colour and the animation as well as the label, and the label comes out in the card's language. Also in the visual editor, under the state entity. |
 | `state_show_raw` | `true` to display the raw state text instead of the translated label (color/animation still follow the detected category). |
 | `name` | Card title. Defaults to the state entity's friendly name. |
 | `compact` | `true` to hide the illustration and show only text. |

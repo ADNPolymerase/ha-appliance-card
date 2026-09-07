@@ -21,7 +21,7 @@ Aucune marque supposée : chaque champ est un mapping d'entité configurable, el
 
 ## Fonctionnalités
 
-- **Normalisation d'état** : `Idle`, `RUNNING`, `wash`, `En marche`… sont détectés automatiquement (insensible aux accents) et convertis en veille / préchauffage / en cours / en pause / terminé / différé / erreur. `state_map` couvre le reste ; les états inconnus sont affichés tels quels.
+- **Normalisation d'état** : `Idle`, `RUNNING`, `wash`, `En marche`… sont détectés automatiquement (insensible aux accents) et convertis en veille / préchauffage / en cours / en pause / terminé / différé / erreur. Un état inconnu s'affiche tel quel, moins l'espace de noms dont l'intégration l'entoure : `BSH.Common.EnumType.OperationState.ActionRequired` se lit `Action Required`. `state_map` classe ce qu'il reste.
 - **Douze types d'appareils**, chacun avec sa propre illustration animée : lave-linge (eau), sèche-linge (linge qui tourne), lave-vaisselle (bras d'aspersion), four (résistances qui rougeoient, porte qui bascule), micro-ondes (plateau qui tourne, cavité éclairée), hotte (flux d'air, faisceaux lumineux), plaque de cuisson (niveau par foyer et chaleur résiduelle), réfrigérateur (chaque porte s'ouvre pour son propre capteur, intérieur éclairé, glaçons qui tombent), bouilloire (socle rouge, bulles, vapeur), robot cuiseur (couteau qui tourne, résistance chaude, vapeur), machine à café (café qui coule, tasse qui se remplit, niveau du réservoir) et cuiseur à riz (vapeur, maintien au chaud). Statique à l'arrêt, auto-détectée ou choisie via `appliance_type`. `compact: true` ne garde que le texte.
 - **Une machine à café dit ce qui lui manque** : réservoir vide, bac à grains vide, bac d'égouttage plein ou détartrage à faire prennent la ligne d'état dès que la machine ne coule pas, dans l'ordre où chacun t'empêche d'avoir ton café. Seul ce qui demande une action prend une ligne.
 - **Un réfrigérateur rapporte sa santé, pas un cycle** : il ne s'arrête jamais, donc *En cours* serait vrai de lui à toute heure. La ligne d'état porte à la place la seule chose qui compte, dans l'ordre du coût à l'ignorer : débranché, une porte restée ouverte, une température au-dessus de la limite, sinon normal. En lecture seule, sans aucun bouton.
@@ -59,7 +59,7 @@ Seule `state_entity` est obligatoire ; tout le reste est optionnel. Le réfrigé
 | Option | Description |
 |---|---|
 | `state_entity` | **Obligatoire**, sauf sur un réfrigérateur. Entité rapportant l'état général de l'appareil (n'importe quel domaine). |
-| `state_map` | Map optionnelle : état brut → `idle`\|`running`\|`paused`\|`done`\|`delayed`\|`error`\|`keep_warm`. |
+| `state_map` | Map optionnelle : état brut → `idle`\|`running`\|`preheating`\|`keep_warm`\|`paused`\|`done`\|`delayed`\|`error`. Fixe la couleur et l'animation autant que le libellé, lequel sort dans la langue de la card. Disponible aussi dans l'éditeur visuel, sous l'entité d'état. |
 | `state_show_raw` | `true` pour afficher le texte brut plutôt que le libellé traduit (couleur/animation suivent toujours la catégorie détectée). |
 | `name` | Titre de la card. Par défaut, le nom convivial de l'entité d'état. |
 | `compact` | `true` pour masquer l'illustration et n'afficher que le texte. |

@@ -1,4 +1,4 @@
-const CARD_VERSION = "2.1.2";
+const CARD_VERSION = "2.2.0";
 
 console.info(
   "%c HA-APPLIANCE-CARD %c v" + CARD_VERSION + " ",
@@ -55,6 +55,7 @@ const T = {
     info_label: "Display name (optional)",
     info_value_map: "Value mapping (optional)",
     info_value_map_placeholder: "One per line, e.g.\n0: Ready\n1: Washing",
+    state_map_placeholder: "One per line, e.g.\nReady: idle\nAborting: running",
     info_drag: "Drag to reorder",
     section_start: "Start button", section_pause: "Pause button",
     section_resume: "Resume button", section_stop: "Stop / reset button",
@@ -152,6 +153,7 @@ const T = {
     info_label: "Nom affich\u00e9 (optionnel)",
     info_value_map: "Correspondance des valeurs (optionnel)",
     info_value_map_placeholder: "Une par ligne, ex.\n0: Pr\u00eat\n1: Lavage",
+    state_map_placeholder: "Une par ligne, ex.\nReady: idle\nAborting: running",
     info_drag: "Glisser pour r\u00e9organiser",
     section_start: "Bouton D\u00e9marrer", section_pause: "Bouton Pause",
     section_resume: "Bouton Reprendre", section_stop: "Bouton Stop / Reset",
@@ -249,6 +251,7 @@ const T = {
     info_label: "\u041e\u0442\u043e\u0431\u0440\u0430\u0436\u0430\u0435\u043c\u043e\u0435 \u0438\u043c\u044f (\u043d\u0435\u043e\u0431\u044f\u0437\u0430\u0442\u0435\u043b\u044c\u043d\u043e)",
     info_value_map: "\u0421\u043e\u043f\u043e\u0441\u0442\u0430\u0432\u043b\u0435\u043d\u0438\u0435 \u0437\u043d\u0430\u0447\u0435\u043d\u0438\u0439 (\u043d\u0435\u043e\u0431\u044f\u0437\u0430\u0442\u0435\u043b\u044c\u043d\u043e)",
     info_value_map_placeholder: "\u041f\u043e \u043e\u0434\u043d\u043e\u043c\u0443 \u0432 \u0441\u0442\u0440\u043e\u043a\u0435, \u043d\u0430\u043f\u0440.\n0: \u0413\u043e\u0442\u043e\u0432\u043e\n1: \u0421\u0442\u0438\u0440\u043a\u0430",
+    state_map_placeholder: "\u041f\u043e \u043e\u0434\u043d\u043e\u043c\u0443 \u0432 \u0441\u0442\u0440\u043e\u043a\u0435, \u043d\u0430\u043f\u0440.\nReady: idle\nAborting: running",
     info_drag: "\u041f\u0435\u0440\u0435\u0442\u0430\u0449\u0438\u0442\u0435 \u0434\u043b\u044f \u0438\u0437\u043c\u0435\u043d\u0435\u043d\u0438\u044f \u043f\u043e\u0440\u044f\u0434\u043a\u0430",
     section_start: "\u041a\u043d\u043e\u043f\u043a\u0430 \u0421\u0442\u0430\u0440\u0442", section_pause: "\u041a\u043d\u043e\u043f\u043a\u0430 \u041f\u0430\u0443\u0437\u0430",
     section_resume: "\u041a\u043d\u043e\u043f\u043a\u0430 \u041f\u0440\u043e\u0434\u043e\u043b\u0436\u0438\u0442\u044c", section_stop: "\u041a\u043d\u043e\u043f\u043a\u0430 \u0421\u0442\u043e\u043f / \u0421\u0431\u0440\u043e\u0441",
@@ -346,6 +349,7 @@ const T = {
     info_label: "Anzeigename (optional)",
     info_value_map: "Wertzuordnung (optional)",
     info_value_map_placeholder: "Eine pro Zeile, z. B.\n0: Bereit\n1: Waschen",
+    state_map_placeholder: "Eine pro Zeile, z. B.\nReady: idle\nAborting: running",
     info_drag: "Zum Neuordnen ziehen",
     section_start: "Start-Taste", section_pause: "Pause-Taste",
     section_resume: "Fortsetzen-Taste", section_stop: "Stopp/Reset-Taste",
@@ -443,6 +447,7 @@ const T = {
     info_label: "Nombre mostrado (opcional)",
     info_value_map: "Correspondencia de valores (opcional)",
     info_value_map_placeholder: "Una por l\u00ednea, p. ej.\n0: Listo\n1: Lavado",
+    state_map_placeholder: "Una por l\u00ednea, p. ej.\nReady: idle\nAborting: running",
     info_drag: "Arrastrar para reordenar",
     section_start: "Bot\u00f3n Iniciar", section_pause: "Bot\u00f3n Pausa",
     section_resume: "Bot\u00f3n Reanudar", section_stop: "Bot\u00f3n Parar/Reiniciar",
@@ -540,6 +545,7 @@ const T = {
     info_label: "Nome visualizzato (opzionale)",
     info_value_map: "Corrispondenza dei valori (opzionale)",
     info_value_map_placeholder: "Una per riga, es.\n0: Pronto\n1: Lavaggio",
+    state_map_placeholder: "Una per riga, es.\nReady: idle\nAborting: running",
     info_drag: "Trascina per riordinare",
     section_start: "Pulsante Avvia", section_pause: "Pulsante Pausa",
     section_resume: "Pulsante Riprendi", section_stop: "Pulsante Stop/Reset",
@@ -637,6 +643,7 @@ const T = {
     info_label: "Weergavenaam (optioneel)",
     info_value_map: "Waardetoewijzing (optioneel)",
     info_value_map_placeholder: "E\u00e9n per regel, bijv.\n0: Gereed\n1: Wassen",
+    state_map_placeholder: "E\u00e9n per regel, bijv.\nReady: idle\nAborting: running",
     info_drag: "Sleep om te herordenen",
     section_start: "Startknop", section_pause: "Pauzeknop",
     section_resume: "Hervattenknop", section_stop: "Stop/resetknop",
@@ -734,6 +741,7 @@ const T = {
     info_label: "Nome exibido (opcional)",
     info_value_map: "Correspond\u00eancia de valores (opcional)",
     info_value_map_placeholder: "Uma por linha, ex.\n0: Pronto\n1: Lavagem",
+    state_map_placeholder: "Uma por linha, ex.\nReady: idle\nAborting: running",
     info_drag: "Arraste para reordenar",
     section_start: "Bot\u00e3o Iniciar", section_pause: "Bot\u00e3o Pausa",
     section_resume: "Bot\u00e3o Retomar", section_stop: "Bot\u00e3o Parar/Reiniciar",
@@ -831,6 +839,7 @@ const T = {
     info_label: "Visningsnamn (valfritt)",
     info_value_map: "V\u00e4rdemappning (valfritt)",
     info_value_map_placeholder: "En per rad, t.ex.\n0: Klar\n1: Tv\u00e4tt",
+    state_map_placeholder: "En per rad, t.ex.\nReady: idle\nAborting: running",
     info_drag: "Dra f\u00f6r att \u00e4ndra ordning",
     section_start: "Startknapp", section_pause: "Pausknapp",
     section_resume: "\u00c5terupptaknapp", section_stop: "Stopp-/\u00e5terst\u00e4llningsknapp",
@@ -928,6 +937,7 @@ const T = {
     info_label: "Visningsnavn (valgfritt)",
     info_value_map: "Verditilordning (valgfritt)",
     info_value_map_placeholder: "\u00c9n per linje, f.eks.\n0: Klar\n1: Vask",
+    state_map_placeholder: "\u00c9n per linje, f.eks.\nReady: idle\nAborting: running",
     info_drag: "Dra for \u00e5 endre rekkef\u00f8lge",
     section_start: "Startknapp", section_pause: "Pauseknapp",
     section_resume: "Gjenopptaknapp", section_stop: "Stopp-/tilbakestillingsknapp",
@@ -1025,6 +1035,7 @@ const T = {
     info_label: "Vist navn (valgfrit)",
     info_value_map: "V\u00e6rditilknytning (valgfrit)",
     info_value_map_placeholder: "\u00c9n pr. linje, f.eks.\n0: Klar\n1: Vask",
+    state_map_placeholder: "\u00c9n pr. linje, f.eks.\nReady: idle\nAborting: running",
     info_drag: "Tr\u00e6k for at \u00e6ndre r\u00e6kkef\u00f8lge",
     section_start: "Startknap", section_pause: "Pauseknap",
     section_resume: "Genoptagknap", section_stop: "Stop-/nulstillingsknap",
@@ -1122,6 +1133,7 @@ const T = {
     info_label: "Nazwa wy\u015bwietlana (opcjonalnie)",
     info_value_map: "Mapowanie warto\u015bci (opcjonalnie)",
     info_value_map_placeholder: "Jedno na lini\u0119, np.\n0: Gotowe\n1: Pranie",
+    state_map_placeholder: "Jedno na lini\u0119, np.\nReady: idle\nAborting: running",
     info_drag: "Przeci\u0105gnij, aby zmieni\u0107 kolejno\u015b\u0107",
     section_start: "Przycisk Start", section_pause: "Przycisk Pauza",
     section_resume: "Przycisk Wzn\u00f3w", section_stop: "Przycisk Stop/Reset",
@@ -1219,6 +1231,7 @@ const T = {
     info_label: "\u663e\u793a\u540d\u79f0 (\u53ef\u9009)",
     info_value_map: "\u503c\u6620\u5c04 (\u53ef\u9009)",
     info_value_map_placeholder: "\u6bcf\u4e2a\u503c\u4e00\u884c, \u4f8b\u5982\n0: \u5f85\u673a\n1: \u6d17\u6da4\u4e2d",
+    state_map_placeholder: "\u6bcf\u4e2a\u503c\u4e00\u884c, \u4f8b\u5982\nReady: idle\nAborting: running",
     info_drag: "\u62d6\u62fd\u6392\u5e8f",
     section_start: "\u5f00\u59cb\u6309\u952e", section_pause: "\u6682\u505c\u6309\u952e",
     section_resume: "\u7ee7\u7eed\u6309\u952e", section_stop: "\u505c\u6b62/\u91cd\u7f6e\u6309\u952e",
@@ -1316,6 +1329,7 @@ const T = {
     info_label: "Zobrazovan\u00fd n\u00e1zev (voliteln\u00e9)",
     info_value_map: "Mapov\u00e1n\u00ed hodnot (voliteln\u00e9)",
     info_value_map_placeholder: "Jedna hodnota na \u0159\u00e1dek, nap\u0159.\n0: P\u0159ipraveno\n1: Pran\u00ed",
+    state_map_placeholder: "Jedna hodnota na \u0159\u00e1dek, nap\u0159.\nReady: idle\nAborting: running",
     info_drag: "P\u0159eta\u017een\u00edm zm\u011b\u0148te po\u0159ad\u00ed",
     section_start: "Tla\u010d\u00edtko Spustit", section_pause: "Tla\u010d\u00edtko Pozastavit",
     section_resume: "Tla\u010d\u00edtko Pokra\u010dovat", section_stop: "Tla\u010d\u00edtko Zastavit / resetovat",
@@ -1405,7 +1419,11 @@ function localizedHass(hass, cfg) {
 // ---------------------------------------------------------------------------
 
 const STATE_KEYWORDS = {
-  idle: ["idle", "off", "standby", "veille", "eteint", "arret", "inactif", "ready_to_start", "ready to start"],
+  // "ready" covers the "Ready To Start" spelling as well as Home Connect's
+  // OperationState.Ready. "inactive" has to be listed here rather than left
+  // to "active" under running: that keyword cannot match inside a word, and
+  // would mean the opposite of the state if it could.
+  idle: ["idle", "off", "standby", "veille", "eteint", "arret", "inactif", "inactive", "ready"],
   // Before "running": ovens report "Preheating", and the "heating" keyword
   // below cannot match it anyway (no word boundary inside "preheating").
   preheating: ["preheat", "pre-heat", "pre_heat", "prechauff", "vorheiz", "precalent", "voorverwarm"],
@@ -1415,7 +1433,10 @@ const STATE_KEYWORDS = {
   keep_warm: ["keep.?warm", "keepwarm", "warming", "maintien", "au chaud",
     "warmhalten", "mantener caliente", "mantenimento", "warmhouden"],
   running: ["run", "wash", "spin", "dry", "rinsing", "heating", "cours", "on", "active", "marche", "actif",
-    "cooking\\b(?!\\s*(?:complete|finished|done))", "cuisson\\b(?!\\s*termin)", "brewing", "baking"],
+    "cooking\\b(?!\\s*(?:complete|finished|done))", "cuisson\\b(?!\\s*termin)", "brewing", "baking",
+    // Aborting is a cancelled cycle still draining, not an error and not
+    // finished: the appliance is doing something until it stops.
+    "abort"],
   paused: ["pause", "hold", "suspended"],
   done: ["end", "done", "finish", "complete", "termin"],
   delayed: ["delay", "differ", "scheduled", "programmed"],
@@ -1635,14 +1656,32 @@ function formatInfoValue(st, hass, valueMap) {
 // segments at least, and only the last one names the programme. Requiring
 // three dots rather than one keeps a decimal such as "1.5 kg", or a two-part
 // name, from being mistaken for a namespace and cut down to its tail.
-const PROGRAM_ENUM = /^[A-Za-z][A-Za-z0-9]*(\.[A-Za-z0-9]+){3,}$/;
+const DOTTED_ENUM = /^[A-Za-z][A-Za-z0-9]*(\.[A-Za-z0-9]+){3,}$/;
+
+// An unrecognised state is echoed to the card rather than dropped, which is
+// right: the card cannot know every vendor's wording. What it should not echo
+// is the namespace around it. BSH.Common.EnumType.OperationState.Ready is one
+// word of information and four of boilerplate, and programme names have had
+// this cleanup since 2.0.4 while the state line never did.
+// state_show_raw stays verbatim on purpose: it opts into the entity's own
+// text, whatever shape that text has.
+function cleanStateLabel(raw) {
+  if (raw === undefined || raw === null) return raw;
+  let name = String(raw);
+  if (DOTTED_ENUM.test(name)) name = name.slice(name.lastIndexOf(".") + 1);
+  return name
+    .replace(/([a-z])([A-Z])/g, "$1 $2")
+    .replace(/_/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
 
 function cleanProgramName(raw) {
   if (!raw) return raw;
   // Many integrations report "<Category> Pr <ProgramName>": keep the meaningful part.
   const parts = String(raw).split(/\s+Pr\s+/i);
   let name = parts.length > 1 ? parts[1] : parts[0];
-  if (PROGRAM_ENUM.test(name)) name = name.slice(name.lastIndexOf(".") + 1);
+  if (DOTTED_ENUM.test(name)) name = name.slice(name.lastIndexOf(".") + 1);
   // Home Assistant's own home_connect integration slugifies the same enum,
   // so the programme arrives as dishcare_dishwasher_program_eco_50 and the
   // dotted pattern cannot see it. Everything up to "_program_" is the
@@ -3335,7 +3374,7 @@ class ApplianceCard extends HTMLElement {
     // Never echo the raw state when it came from the power meter: the "raw"
     // text there is a wattage, which is not a state anyone wants to read.
     let stateLabel = !powerDerived && (cfg.state_show_raw || norm === "unknown") && !rawIsMeaningless
-      ? String(rawState)
+      ? (cfg.state_show_raw ? String(rawState) : cleanStateLabel(rawState))
       : t(hass, norm);
 
     const name = cfg.name || (st && st.attributes.friendly_name) || cfg.state_entity;
@@ -4412,6 +4451,37 @@ class ApplianceCardEditor extends HTMLElement {
     slotEl.appendChild(input);
   }
 
+  // state_map is the one value map the card has always accepted in YAML and
+  // never offered here. That gap is what sends a Home Connect user looking for
+  // a feature request: the option they need already exists, in the one place
+  // they never open.
+  _mountStateMap(slotEl) {
+    if (!slotEl) return;
+    const hass = this._l10n;
+    const wrap = document.createElement("div");
+    const label = document.createElement("label");
+    label.textContent = t(hass, "info_value_map");
+    const area = document.createElement("textarea");
+    area.rows = 3;
+    area.placeholder = t(hass, "state_map_placeholder");
+    area.value = stringifyValueMap(this._config.state_map);
+    // "change" (blur) rather than "input", for the same reason as the info
+    // maps: committing per keystroke rewrites the config mid-line.
+    area.addEventListener("change", (ev) => {
+      const map = parseValueMap(ev.target.value);
+      // A fresh object every time: mutating the one already handed out lets an
+      // echoed config-changed put the old value back.
+      const next = { ...this._config };
+      if (map) next.state_map = map;
+      else delete next.state_map;
+      this._config = next;
+      this.dispatchEvent(new CustomEvent("config-changed", { detail: { config: this._config } }));
+    });
+    wrap.appendChild(label);
+    wrap.appendChild(area);
+    slotEl.appendChild(wrap);
+  }
+
   _mountInfoValueMap(slotEl, index) {
     const hass = this._l10n;
     const current = this._infoEntitiesList()[index] || {};
@@ -4611,6 +4681,7 @@ class ApplianceCardEditor extends HTMLElement {
         </div>
         <div class="section">
           <div class="picker-slot" data-slot="state_entity"></div>
+          <div class="picker-slot" data-slot="__state_map"></div>
         </div>
         ${this._sections().map((s) => this._sectionHtml(s)).join("")}
       </details>
@@ -4657,6 +4728,7 @@ class ApplianceCardEditor extends HTMLElement {
     `;
 
     this._wireTouchTracking();
+    this._mountStateMap(this._root.querySelector('[data-slot="__state_map"]'));
     this._mountPicker(this._root.querySelector('[data-slot="state_entity"]'), "state_entity", {
       label: t(hass, "state_entity"),
       includeDomains: ["sensor", "binary_sensor"],
