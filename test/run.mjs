@@ -435,6 +435,8 @@ const dishwasherClosed = render({ appliance_type: 'dishwasher', state_entity: 's
     'binary_sensor.dw_door': { state: 'off', attributes: {} } });
 check('lave-vaisselle : illustration dediee', /class="dw-body"/.test(dishwasherClosed), true);
 check('lave-vaisselle : pas de corps lave-linge', /class="mbody"/.test(dishwasherClosed), false);
+check('lave-vaisselle : inactiv ne porte pas spinning',
+  machineCls(dishwasherClosed).includes('spinning'), false);
 
 const dishwasherRunning = render({ appliance_type: 'dishwasher', state_entity: 'sensor.dw',
                                    door_entity: 'binary_sensor.dw_door' },
@@ -442,6 +444,8 @@ const dishwasherRunning = render({ appliance_type: 'dishwasher', state_entity: '
     'binary_sensor.dw_door': { state: 'on', attributes: {} } });
 check('lave-vaisselle : porte ouverte porte la classe open',
   /class="dw-door open"/.test(dishwasherRunning), true);
+check('lave-vaisselle : en marche porte la classe spinning',
+  machineCls(dishwasherRunning).includes('spinning'), true);
 contains('lave-vaisselle : en marche anime le bras de lavage',
   dishwasherRunning, 'animation: dw-spray-spin');
 
