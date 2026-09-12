@@ -897,7 +897,7 @@ const T = {
     idle: "Inaktiv", running: "I gang", paused: "Pauset", done: "Ferdig",
     delayed: "Utsatt start", error: "Feil", unknown: "Ukjent",
     program: "Program", remaining: "gjenst\u00e5r", ready_at: "ferdig kl.", time_done: "Ferdig",
-    door_open: "Luke \u00e5pen", door_closed: "Luke lukket", alerts: "Varsler",
+    door_open: "D\u00f8r \u00e5pen", door_closed: "D\u00f8r lukket", alerts: "Varsler",
     connected: "Tilkoblet", disconnected: "Frakoblet",
     start: "Start", pause: "Pause", resume: "Gjenoppta", stop: "Stopp",
     name: "Navn", icon: "Ikon", entity: "Entitet",
@@ -1385,9 +1385,15 @@ const T = {
   },
 };
 
+function canonicalLanguage(code) {
+  const base = String(code || "en").toLowerCase().split("-")[0];
+  // Home Assistant uses nb/nb-NO for Norwegian Bokmal. The card's existing
+  // translation is kept under no for backwards compatibility, so treat both
+  // identifiers as the same language instead of falling back to English.
+  return base === "nb" ? "no" : base;
+}
 function lang(hass) {
-  const l = String((hass && ((hass.locale && hass.locale.language) || hass.language)) || "en")
-    .toLowerCase().split("-")[0];
+  const l = canonicalLanguage(hass && ((hass.locale && hass.locale.language) || hass.language));
   return T[l] ? l : "en";
 }
 function t(hass, key) {
@@ -1410,8 +1416,9 @@ const LANGUAGE_NAMES = {
 // the choice to the dates as well, which share the same resolution.
 function localizedHass(hass, cfg) {
   const want = cfg && cfg.language;
-  if (!hass || !want || want === "auto" || !T[want]) return hass;
-  return { ...hass, language: want, locale: { ...(hass.locale || {}), language: want } };
+  const resolved = canonicalLanguage(want);
+  if (!hass || !want || want === "auto" || !T[resolved]) return hass;
+  return { ...hass, language: resolved, locale: { ...(hass.locale || {}), language: resolved } };
 }
 
 // ---------------------------------------------------------------------------
