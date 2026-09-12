@@ -429,6 +429,59 @@ check('non-regression lave-linge : etat', stateLine(washer), 'Running');
 contains('non-regression lave-linge : illustration du tambour', washer, 'water-level');
 check('non-regression lave-linge : porte fermee', infoLine(washer, 'Door closed'), '');
 
+const dishwasherClosed = render({ appliance_type: 'dishwasher', state_entity: 'sensor.dw',
+                                  door_entity: 'binary_sensor.dw_door' },
+  { 'sensor.dw': { state: 'Idle', attributes: {} },
+    'binary_sensor.dw_door': { state: 'off', attributes: {} } });
+check('lave-vaisselle : illustration dediee', /class="dw-body"/.test(dishwasherClosed), true);
+check('lave-vaisselle : pas de corps lave-linge', /class="mbody"/.test(dishwasherClosed), false);
+check('lave-vaisselle : inactiv ne porte pas spinning',
+  machineCls(dishwasherClosed).includes('spinning'), false);
+
+const dishwasherRunning = render({ appliance_type: 'dishwasher', state_entity: 'sensor.dw',
+                                   door_entity: 'binary_sensor.dw_door' },
+  { 'sensor.dw': { state: 'Running', attributes: {} },
+    'binary_sensor.dw_door': { state: 'on', attributes: {} } });
+check('lave-vaisselle : porte ouverte porte la classe open',
+  /class="dw-door open"/.test(dishwasherRunning), true);
+check('lave-vaisselle : en marche porte la classe spinning',
+  machineCls(dishwasherRunning).includes('spinning'), true);
+contains('lave-vaisselle : en marche anime le bras de lavage',
+  dishwasherRunning, 'animation: dw-spray-spin');
+
+const dishwasherDrying = render({ appliance_type: 'dishwasher', state_entity: 'sensor.dw',
+                                 phase_entity: 'sensor.dw_phase' },
+  { 'sensor.dw': { state: 'Running', attributes: {} },
+    'sensor.dw_phase': { state: 'Drying', attributes: {} } });
+check('lave-vaisselle : Drying donne une classe de phase',
+  machineCls(dishwasherDrying).includes('phase-drying'), true);
+contains('lave-vaisselle : Drying affiche le ventilateur interne',
+  dishwasherDrying, 'class="dw-fan"');
+contains('lave-vaisselle : Drying affiche la chaleur interne',
+  dishwasherDrying, 'class="dw-dry-heat"');
+contains('lave-vaisselle : Drying anime le ventilateur',
+  dishwasherDrying, 'animation: dw-fan-spin');
+
+const dishwasherAdoDrying = render({ appliance_type: 'dishwasher', state_entity: 'sensor.dw',
+                                    phase_entity: 'sensor.dw_phase' },
+  { 'sensor.dw': { state: 'Running', attributes: {} },
+    'sensor.dw_phase': { state: 'Ado Drying', attributes: {} } });
+check('lave-vaisselle : Ado Drying donne une classe de phase',
+  machineCls(dishwasherAdoDrying).includes('phase-ado_drying'), true);
+contains('lave-vaisselle : Ado Drying affiche la chaleur',
+  dishwasherAdoDrying, 'class="dw-heat"');
+contains('lave-vaisselle : Ado Drying anime la chaleur',
+  dishwasherAdoDrying, 'animation: dw-heat-rise');
+
+const dishwasherNoPhase = render({ appliance_type: 'dishwasher', state_entity: 'sensor.dw',
+                                  phase_entity: 'sensor.dw_phase' },
+  { 'sensor.dw': { state: 'Running', attributes: {} },
+    'sensor.dw_phase': { state: 'Unavailable', attributes: {} } });
+check('lave-vaisselle : phase indisponible ne casse pas la classe',
+  machineCls(dishwasherNoPhase).includes('phase-'), false);
+contains('lave-vaisselle : phase indisponible conserve le lavage',
+  dishwasherNoPhase, 'animation: dw-spray-spin');
+
 // ── Escaping ─────────────────────────────────────────────────────────────────
 
 const quoted = render({ appliance_type: 'cooktop', state_entity: 'sensor.hob',
