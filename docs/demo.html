@@ -79,6 +79,7 @@ function card(config, entities) {
 // to show what each type looks like with its own data.
 
 const washer = () => card({
+  illustration_color: "white",
   name: L("Washer", "Lave-linge"),
   appliance_type: "washer",
   state_entity: "sensor.washer_state",
@@ -107,6 +108,7 @@ const washer = () => card({
 ]);
 
 const dryer = () => card({
+  illustration_color: "grey",
   name: L("Dryer", "Sèche-linge"),
   appliance_type: "dryer",
   state_entity: "sensor.dryer_state",
@@ -120,6 +122,7 @@ const dryer = () => card({
 ]);
 
 const dishwasher = () => card({
+  illustration_color: "black",
   name: L("Dishwasher", "Lave-vaisselle"),
   appliance_type: "dishwasher",
   state_entity: "sensor.dw_state",
@@ -137,6 +140,7 @@ const dishwasher = () => card({
 // Home Connect calls the oven's programs heating modes, not wash cycles:
 // Cooking.Oven.Program.HeatingMode.HotAir.
 const oven = () => card({
+  illustration_color: "white",
   name: L("Oven", "Four"),
   appliance_type: "oven",
   state_entity: "sensor.oven_state",
@@ -156,6 +160,7 @@ const oven = () => card({
 ]);
 
 const microwave = () => card({
+  illustration_color: "grey",
   name: L("Microwave", "Micro-ondes"),
   appliance_type: "microwave",
   state_entity: "sensor.mw_state",
@@ -173,6 +178,7 @@ const microwave = () => card({
 ]);
 
 const hood = () => card({
+  illustration_color: "black",
   name: L("Cooker hood", "Hotte"),
   appliance_type: "hood",
   state_entity: "sensor.hood_state",
@@ -194,6 +200,7 @@ const hood = () => card({
 ]);
 
 const cooktop = () => card({
+  illustration_color: "white",
   name: L("Cooktop", "Plaque de cuisson"),
   appliance_type: "cooktop",
   state_entity: "sensor.hob_state",
@@ -215,6 +222,7 @@ const cooktop = () => card({
 ]);
 
 const fridge = () => card({
+  illustration_color: "grey",
   name: L("Fridge", "Réfrigérateur"),
   appliance_type: "fridge",
   fridge_layout: "side_by_side",
@@ -234,6 +242,7 @@ const fridge = () => card({
 ]);
 
 const kettle = () => card({
+  illustration_color: "black",
   name: L("Kettle", "Bouilloire"),
   appliance_type: "kettle",
   state_entity: "switch.kettle",
@@ -246,6 +255,7 @@ const kettle = () => card({
 ]);
 
 const cooker = () => card({
+  illustration_color: "white",
   name: L("Cooker", "Robot cuiseur"),
   appliance_type: "cooker",
   state_entity: "sensor.cooker_state",
@@ -267,6 +277,7 @@ const cooker = () => card({
 ]);
 
 const coffee = () => card({
+  illustration_color: "grey",
   name: L("Coffee machine", "Machine à café"),
   appliance_type: "coffee",
   state_entity: "sensor.coffee_state",
@@ -290,6 +301,7 @@ const coffee = () => card({
 ]);
 
 const riceCooker = () => card({
+  illustration_color: "black",
   name: L("Rice cooker", "Cuiseur à riz"),
   appliance_type: "rice_cooker",
   state_entity: "sensor.rice_state",
