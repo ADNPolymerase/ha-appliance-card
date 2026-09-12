@@ -1350,6 +1350,12 @@ check('langue : auto revient au reglage de Home Assistant',
 // A code the card does not ship must not blank the card out.
 check('langue : un code inconnu retombe sur Home Assistant',
   stateLine(inHa('fr', { ...base, language: 'xx' }, WASH)), 'En cours');
+check('locale nb : resolue vers le bloc no',
+  stateLine(inHa('nb', base, WASH)), 'I gang');
+check('locale nb-NO : resolue vers le bloc no',
+  stateLine(inHa('nb-NO', base, WASH)), 'I gang');
+check('langue : forcee en bokmal malgre un HA anglais',
+  stateLine(inHa('en', { ...base, language: 'nb' }, WASH)), 'I gang');
 // Overriding the locale must not disturb anything else read from hass.
 contains('langue : les entites restent lues normalement',
   inHa('en', { ...base, language: 'fr' }, WASH), 'mdi:door-closed');
