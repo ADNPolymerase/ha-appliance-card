@@ -429,6 +429,22 @@ check('non-regression lave-linge : etat', stateLine(washer), 'Running');
 contains('non-regression lave-linge : illustration du tambour', washer, 'water-level');
 check('non-regression lave-linge : porte fermee', infoLine(washer, 'Door closed'), '');
 
+const dishwasherClosed = render({ appliance_type: 'dishwasher', state_entity: 'sensor.dw',
+                                  door_entity: 'binary_sensor.dw_door' },
+  { 'sensor.dw': { state: 'Idle', attributes: {} },
+    'binary_sensor.dw_door': { state: 'off', attributes: {} } });
+check('lave-vaisselle : illustration dediee', /class="dw-body"/.test(dishwasherClosed), true);
+check('lave-vaisselle : pas de corps lave-linge', /class="mbody"/.test(dishwasherClosed), false);
+
+const dishwasherRunning = render({ appliance_type: 'dishwasher', state_entity: 'sensor.dw',
+                                   door_entity: 'binary_sensor.dw_door' },
+  { 'sensor.dw': { state: 'Running', attributes: {} },
+    'binary_sensor.dw_door': { state: 'on', attributes: {} } });
+check('lave-vaisselle : porte ouverte porte la classe open',
+  /class="dw-door open"/.test(dishwasherRunning), true);
+contains('lave-vaisselle : en marche anime le bras de lavage',
+  dishwasherRunning, 'animation: dw-spray-spin');
+
 // ── Escaping ─────────────────────────────────────────────────────────────────
 
 const quoted = render({ appliance_type: 'cooktop', state_entity: 'sensor.hob',

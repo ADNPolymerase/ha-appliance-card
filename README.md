@@ -33,7 +33,7 @@ No brand assumed: every field is a configurable entity mapping, so it works with
 - **Interface translated into 14 languages** (EN, FR, DE, ES, IT, NL, PT, SV, NO, DA, PL, RU, ZH, CS), picked up from the Home Assistant locale.
 - **Visual editor**: pick the state entity and the other fields are auto-suggested from sibling entities on the same device.
 
-Illustrations are CSS, not images, and they animate on the appliance's own data: the blade turns once per pulse at the speed the cooker reports, coffee pours into one cup or two, ice cubes fall while the maker runs, a kettle bubbles and steams.
+Illustrations are CSS, not images, and they animate on the appliance's own data: the blade turns once per pulse at the speed the cooker reports, coffee pours into one cup or two, ice cubes fall while the maker runs, a kettle bubbles and steams. The dishwasher has its own front-loading illustration with a square, bottom-hinged door, visible plates, a rotating spray arm, droplets and water waves while running.
 
 ![Animated appliance types](https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/animated.gif)
 
