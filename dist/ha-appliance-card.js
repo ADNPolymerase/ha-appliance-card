@@ -2316,6 +2316,28 @@ const ILLUSTRATION_CSS = {
         }
         .dw-wave-a { top: 2px; }
         .dw-wave-b { top: 6px; left: 8%; opacity: 0.6; }
+        .dw-fan {
+          position: absolute; top: 12%; left: 50%; z-index: 3;
+          width: 16px; height: 16px; border: 1px solid rgba(255, 193, 7, 0.42);
+          border-radius: 50%; opacity: 0; transform: translateX(-50%);
+        }
+        .dw-fan::before,
+        .dw-fan::after {
+          content: ""; position: absolute; top: 50%; left: 50%;
+          width: 12px; height: 3px; border-radius: 50%;
+          background: rgba(255, 112, 67, 0.72); transform-origin: 0 50%;
+        }
+        .dw-fan::before { transform: translate(-1px, -50%) rotate(25deg); }
+        .dw-fan::after { transform: translate(-1px, -50%) rotate(115deg); }
+        .dw-dry-heat { position: absolute; inset: 13% 24% 30%; z-index: 3; opacity: 0; pointer-events: none; }
+        .dw-dry-heat i {
+          position: absolute; bottom: 0; width: 2px; height: 13px; border-radius: 50%;
+          background: linear-gradient(180deg, rgba(255, 193, 7, 0), rgba(255, 112, 67, 0.72));
+          opacity: 0;
+        }
+        .dw-dry-heat-a { left: 20%; }
+        .dw-dry-heat-b { left: 48%; height: 17px !important; }
+        .dw-dry-heat-c { right: 20%; height: 11px !important; }
         .machine.spinning .dw-spray { opacity: 0.95; animation: dw-spray-spin 2.8s linear infinite; animation-delay: var(--anim-offset, 0s); }
         .machine.spinning .dw-drop { animation: dw-drop-fall 1.65s ease-in infinite; animation-delay: var(--anim-offset, 0s); }
         .machine.spinning .dw-drop-a { animation-delay: calc(-0.3s + var(--anim-offset, 0s)); }
@@ -2340,16 +2362,24 @@ const ILLUSTRATION_CSS = {
         .dw-heat-a { left: 12%; }
         .dw-heat-b { left: 42%; height: 19px !important; }
         .dw-heat-c { right: 12%; height: 14px !important; }
-        .machine.phase-drying .dw-heat,
-        .machine.phase-ado_drying .dw-heat { opacity: 0.8; }
+        .machine.phase-drying .dw-cavity {
+          box-shadow: inset 0 0 18px rgba(255, 112, 67, 0.38);
+        }
+        .machine.phase-drying .dw-fan {
+          opacity: 0.82; animation: dw-fan-spin 1.2s linear infinite; animation-delay: var(--anim-offset, 0s);
+        }
+        .machine.phase-drying .dw-dry-heat { opacity: 0.9; }
+        .machine.phase-drying .dw-dry-heat i {
+          animation: dw-dry-heat-rise 2.6s ease-in-out infinite; animation-delay: var(--anim-offset, 0s);
+        }
+        .machine.phase-drying .dw-dry-heat-b { animation-delay: calc(-0.85s + var(--anim-offset, 0s)); }
+        .machine.phase-drying .dw-dry-heat-c { animation-delay: calc(-1.7s + var(--anim-offset, 0s)); }
+        .machine.phase-ado_drying .dw-heat { opacity: 1; }
         .machine.phase-ado_drying .dw-heat { top: 8px; height: 34px; opacity: 1; }
-        .machine.phase-drying .dw-heat i,
         .machine.phase-ado_drying .dw-heat i {
           animation: dw-heat-rise 2.4s ease-in-out infinite; animation-delay: var(--anim-offset, 0s);
         }
-        .machine.phase-drying .dw-heat-b,
         .machine.phase-ado_drying .dw-heat-b { animation-delay: calc(-0.8s + var(--anim-offset, 0s)); }
-        .machine.phase-drying .dw-heat-c,
         .machine.phase-ado_drying .dw-heat-c { animation-delay: calc(-1.5s + var(--anim-offset, 0s)); }
         .machine.phase-drying .dw-spray,
         .machine.phase-drying .dw-drop,
@@ -2388,6 +2418,12 @@ const ILLUSTRATION_CSS = {
         }
         @keyframes dw-water-pulse { 0%, 100% { transform: scaleX(0.97); } 50% { transform: scaleX(1.02); } }
         @keyframes dw-wave-drift { 0%, 100% { transform: translateX(-3%); } 50% { transform: translateX(3%); } }
+        @keyframes dw-fan-spin { to { transform: translateX(-50%) rotate(360deg); } }
+        @keyframes dw-dry-heat-rise {
+          0% { opacity: 0; transform: translateY(3px) scaleY(0.8); }
+          35% { opacity: 0.55; }
+          100% { opacity: 0; transform: translateY(-12px) scaleY(1.1); }
+        }
         @keyframes dw-heat-rise {
           0% { opacity: 0; transform: translateY(4px) scaleY(0.8) rotate(-4deg); }
           35% { opacity: 0.62; }
@@ -2396,7 +2432,8 @@ const ILLUSTRATION_CSS = {
         @media (prefers-reduced-motion: reduce) {
           .machine.spinning .dw-spray, .machine.spinning .dw-drop, .machine.spinning .dw-water,
           .machine.spinning .dw-wave-a, .machine.spinning .dw-wave-b,
-          .machine.phase-drying .dw-heat i, .machine.phase-ado_drying .dw-heat i {
+          .machine.phase-drying .dw-fan, .machine.phase-drying .dw-dry-heat i,
+          .machine.phase-ado_drying .dw-heat i {
           animation-duration: 0.001ms !important; animation-iteration-count: 1 !important;
           }
         }
@@ -3156,6 +3193,10 @@ function illustrationHtml(type, ctx) {
               </div>
               <div class="dw-water" aria-hidden="true">
                 <span class="dw-wave dw-wave-a"></span><span class="dw-wave dw-wave-b"></span>
+              </div>
+              <div class="dw-fan" aria-hidden="true"></div>
+              <div class="dw-dry-heat" aria-hidden="true">
+                <i class="dw-dry-heat-a"></i><i class="dw-dry-heat-b"></i><i class="dw-dry-heat-c"></i>
               </div>
             </div>
             <div class="dw-heat" aria-hidden="true">
