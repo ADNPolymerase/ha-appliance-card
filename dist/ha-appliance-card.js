@@ -1,4 +1,4 @@
-const CARD_VERSION = "2.3.0";
+const CARD_VERSION = "2.3.1";
 
 console.info(
   "%c HA-APPLIANCE-CARD %c v" + CARD_VERSION + " ",
@@ -108,6 +108,8 @@ const T = {
     section_cups: "Number of cups", section_strength: "Coffee strength",
     type_rice_cooker: "Rice cooker", keep_warm: "Keeping warm",
     language: "Language", language_auto: "Follow Home Assistant",
+    illustration_color: "Appliance colour", color_auto: "Follow the theme",
+    color_white: "White", color_grey: "Grey", color_black: "Black",
   },
   fr: {
     idle: "En veille", running: "En cours", paused: "En pause", done: "Termin\u00e9",
@@ -206,6 +208,8 @@ const T = {
     section_cups: "Nombre de tasses", section_strength: "Force du caf\u00e9",
     type_rice_cooker: "Cuiseur \u00e0 riz", keep_warm: "Maintien au chaud",
     language: "Langue", language_auto: "Suivre Home Assistant",
+    illustration_color: "Couleur de l'appareil", color_auto: "Suivre le th\u00e8me",
+    color_white: "Blanc", color_grey: "Gris", color_black: "Noir",
   },
   ru: {
     idle: "\u041e\u0436\u0438\u0434\u0430\u043d\u0438\u0435", running: "\u0420\u0430\u0431\u043e\u0442\u0430\u0435\u0442", paused: "\u041d\u0430 \u043f\u0430\u0443\u0437\u0435", done: "\u0417\u0430\u0432\u0435\u0440\u0448\u0435\u043d\u043e",
@@ -304,6 +308,8 @@ const T = {
     section_cups: "\u041a\u043e\u043b\u0438\u0447\u0435\u0441\u0442\u0432\u043e \u0447\u0430\u0448\u0435\u043a", section_strength: "\u041a\u0440\u0435\u043f\u043e\u0441\u0442\u044c \u043a\u043e\u0444\u0435",
     type_rice_cooker: "\u0420\u0438\u0441\u043e\u0432\u0430\u0440\u043a\u0430", keep_warm: "\u041f\u043e\u0434\u0434\u0435\u0440\u0436\u0430\u043d\u0438\u0435 \u0442\u0435\u043f\u043b\u0430",
     language: "\u042f\u0437\u044b\u043a", language_auto: "\u0421\u043b\u0435\u0434\u043e\u0432\u0430\u0442\u044c Home Assistant",
+    illustration_color: "\u0426\u0432\u0435\u0442 \u043f\u0440\u0438\u0431\u043e\u0440\u0430", color_auto: "\u041a\u0430\u043a \u0432 \u0442\u0435\u043c\u0435",
+    color_white: "\u0411\u0435\u043b\u044b\u0439", color_grey: "\u0421\u0435\u0440\u044b\u0439", color_black: "\u0427\u0451\u0440\u043d\u044b\u0439",
   },
   de: {
     idle: "Inaktiv", running: "L\u00e4uft", paused: "Pausiert", done: "Fertig",
@@ -402,6 +408,8 @@ const T = {
     section_cups: "Anzahl Tassen", section_strength: "Kaffeest\u00e4rke",
     type_rice_cooker: "Reiskocher", keep_warm: "Warmhalten",
     language: "Sprache", language_auto: "Home Assistant folgen",
+    illustration_color: "Ger\u00e4tefarbe", color_auto: "Theme folgen",
+    color_white: "Wei\u00df", color_grey: "Grau", color_black: "Schwarz",
   },
   es: {
     idle: "Inactivo", running: "En marcha", paused: "En pausa", done: "Finalizado",
@@ -500,6 +508,8 @@ const T = {
     section_cups: "N\u00famero de tazas", section_strength: "Intensidad del caf\u00e9",
     type_rice_cooker: "Arrocera", keep_warm: "Manteniendo caliente",
     language: "Idioma", language_auto: "Seguir a Home Assistant",
+    illustration_color: "Color del aparato", color_auto: "Seguir el tema",
+    color_white: "Blanco", color_grey: "Gris", color_black: "Negro",
   },
   it: {
     idle: "Inattivo", running: "In funzione", paused: "In pausa", done: "Terminato",
@@ -598,6 +608,8 @@ const T = {
     section_cups: "Numero di tazze", section_strength: "Intensit\u00e0 del caff\u00e8",
     type_rice_cooker: "Cuociriso", keep_warm: "Mantenimento in caldo",
     language: "Lingua", language_auto: "Segui Home Assistant",
+    illustration_color: "Colore dell'elettrodomestico", color_auto: "Segui il tema",
+    color_white: "Bianco", color_grey: "Grigio", color_black: "Nero",
   },
   nl: {
     idle: "Inactief", running: "Actief", paused: "Gepauzeerd", done: "Klaar",
@@ -696,6 +708,8 @@ const T = {
     section_cups: "Aantal kopjes", section_strength: "Koffiesterkte",
     type_rice_cooker: "Rijstkoker", keep_warm: "Warmhouden",
     language: "Taal", language_auto: "Home Assistant volgen",
+    illustration_color: "Kleur van het apparaat", color_auto: "Thema volgen",
+    color_white: "Wit", color_grey: "Grijs", color_black: "Zwart",
   },
   pt: {
     idle: "Inativo", running: "Em funcionamento", paused: "Em pausa", done: "Conclu\u00eddo",
@@ -794,6 +808,8 @@ const T = {
     section_cups: "N\u00famero de ch\u00e1venas", section_strength: "Intensidade do caf\u00e9",
     type_rice_cooker: "Panela de arroz", keep_warm: "A manter quente",
     language: "Idioma", language_auto: "Seguir o Home Assistant",
+    illustration_color: "Cor do eletrodom\u00e9stico", color_auto: "Seguir o tema",
+    color_white: "Branco", color_grey: "Cinzento", color_black: "Preto",
   },
   sv: {
     idle: "Inaktiv", running: "Ig\u00e5ng", paused: "Pausad", done: "Klar",
@@ -892,6 +908,8 @@ const T = {
     section_cups: "Antal koppar", section_strength: "Kaffestyrka",
     type_rice_cooker: "Riskokare", keep_warm: "Varmh\u00e5llning",
     language: "Spr\u00e5k", language_auto: "F\u00f6lj Home Assistant",
+    illustration_color: "Apparatens f\u00e4rg", color_auto: "F\u00f6lj temat",
+    color_white: "Vit", color_grey: "Gr\u00e5", color_black: "Svart",
   },
   no: {
     idle: "Inaktiv", running: "I gang", paused: "Pauset", done: "Ferdig",
@@ -990,6 +1008,8 @@ const T = {
     section_cups: "Antall kopper", section_strength: "Kaffestyrke",
     type_rice_cooker: "Riskoker", keep_warm: "Varmholding",
     language: "Spr\u00e5k", language_auto: "F\u00f8lg Home Assistant",
+    illustration_color: "Farge p\u00e5 apparatet", color_auto: "F\u00f8lg temaet",
+    color_white: "Hvit", color_grey: "Gr\u00e5", color_black: "Svart",
   },
   da: {
     idle: "Inaktiv", running: "I gang", paused: "Sat p\u00e5 pause", done: "F\u00e6rdig",
@@ -1088,6 +1108,8 @@ const T = {
     section_cups: "Antal kopper", section_strength: "Kaffestyrke",
     type_rice_cooker: "Riskoger", keep_warm: "Varmholdning",
     language: "Sprog", language_auto: "F\u00f8lg Home Assistant",
+    illustration_color: "Apparatets farve", color_auto: "F\u00f8lg temaet",
+    color_white: "Hvid", color_grey: "Gr\u00e5", color_black: "Sort",
   },
   pl: {
     idle: "Bezczynny", running: "W trakcie", paused: "Wstrzymany", done: "Zako\u0144czony",
@@ -1186,6 +1208,8 @@ const T = {
     section_cups: "Liczba fili\u017canek", section_strength: "Moc kawy",
     type_rice_cooker: "Ry\u017cowar", keep_warm: "Podtrzymywanie ciep\u0142a",
     language: "J\u0119zyk", language_auto: "Zgodnie z Home Assistant",
+    illustration_color: "Kolor urz\u0105dzenia", color_auto: "Zgodnie z motywem",
+    color_white: "Bia\u0142y", color_grey: "Szary", color_black: "Czarny",
   },
   zh: {
     idle: "\u7a7a\u95f2", running: "\u8fd0\u884c\u4e2d", paused: "\u6682\u505c", done: "\u5b8c\u6210",
@@ -1284,6 +1308,8 @@ const T = {
     section_cups: "\u676f\u6570", section_strength: "\u5496\u5561\u6d53\u5ea6",
     type_rice_cooker: "\u7535\u996d\u7172", keep_warm: "\u4fdd\u6e29\u4e2d",
     language: "\u8bed\u8a00", language_auto: "\u8ddf\u968f Home Assistant",
+    illustration_color: "\u8bbe\u5907\u989c\u8272", color_auto: "\u8ddf\u968f\u4e3b\u9898",
+    color_white: "\u767d\u8272", color_grey: "\u7070\u8272", color_black: "\u9ed1\u8272",
   },
   cs: {
     idle: "Ne\u010dinn\u00e9", running: "V provozu", paused: "Pozastaveno", done: "Dokon\u010deno",
@@ -1382,6 +1408,8 @@ const T = {
     section_cups: "Po\u010det \u0161\u00e1lk\u016f", section_strength: "Intenzita k\u00e1vy",
     type_rice_cooker: "R\u00fd\u017eovar", keep_warm: "Udr\u017eov\u00e1n\u00ed teploty",
     language: "Jazyk", language_auto: "Podle Home Assistantu",
+    illustration_color: "Barva spot\u0159ebi\u010de", color_auto: "Podle motivu",
+    color_white: "B\u00edl\u00e1", color_grey: "\u0160ed\u00e1", color_black: "\u010cern\u00e1",
   },
 };
 
@@ -2176,11 +2204,21 @@ function zoneColumns(count, layout) {
 // One entry per illustration family. Only the active type's rules are injected,
 // so the class names are free to overlap between families and the style tag
 // rebuilt on every state change stays small.
+// Three presets rather than a free colour: the shell is shaded, so an
+// arbitrary hue fights the highlights baked into every illustration. Black
+// is a charcoal and white is an off-white for the same reason, a true
+// extreme would flatten the body into a silhouette.
+const BODY_COLORS = {
+  white: { body: "#f1f3f4", hi: "#ffffff", lo: "#d8dcde" },
+  grey: { body: "#b6bbbf", hi: "#d0d5d8", lo: "#8e9498" },
+  black: { body: "#3b4045", hi: "#515860", lo: "#22262a" },
+};
+
 const ILLUSTRATION_CSS = {
   laundry: (color) => `
         .mbody {
           position: absolute; inset: 0; border-radius: 10px;
-          background: var(--secondary-background-color, #d7d7d7);
+          background: var(--ac-body, var(--secondary-background-color, #d7d7d7));
           border: 1px solid var(--divider-color, #c7c7c7);
         }
         .mpanel {
@@ -2236,7 +2274,7 @@ const ILLUSTRATION_CSS = {
            Keep the same compact, CSS-only visual language as the other types. */
         .dw-body {
           position: absolute; inset: 0; border-radius: 10px 10px 6px 6px;
-          background: linear-gradient(145deg, var(--secondary-background-color, #d7d7d7), #aeb2b5);
+          background: linear-gradient(145deg, var(--ac-body, var(--secondary-background-color, #d7d7d7)), var(--ac-body-lo, #aeb2b5));
           border: 1px solid var(--divider-color, #c7c7c7);
           perspective: 260px;
         }
@@ -2289,11 +2327,14 @@ const ILLUSTRATION_CSS = {
         .dw-plate-c { left: 47%; transform: rotate(5deg); }
         .dw-plate-d { right: 0; transform: rotate(12deg); }
         .dw-spray {
-          position: absolute; top: 21%; left: 12%; width: 76%; height: 4px; z-index: 3;
+          position: absolute; top: 21%; left: 10%; width: 80%; height: 5px; z-index: 3;
           border-radius: 999px;
-          background: linear-gradient(90deg, transparent, ${color}, transparent);
+          background: linear-gradient(90deg, transparent 0 3%, ${color} 10% 90%, transparent 97%);
           box-shadow: 0 0 6px ${color};
-          opacity: 0.5; transform-origin: 50% 50%; transition: opacity 0.3s ease;
+          /* Visible at rest too, in the state colour: once the glass clears for
+             a paused or finished load, a half-faded arm reads as a rendering
+             glitch rather than as an arm standing still. */
+          opacity: 0.85; transform-origin: 50% 50%; transition: opacity 0.3s ease;
         }
         .dw-spray::before,
         .dw-spray::after {
@@ -2329,7 +2370,13 @@ const ILLUSTRATION_CSS = {
         }
         .dw-wave-a { top: 2px; }
         .dw-wave-b { top: 6px; left: 8%; opacity: 0.6; }
-        .machine.spinning .dw-spray { opacity: 1; animation: dw-spray-spin 2.8s linear infinite; animation-delay: var(--anim-offset, 0s); }
+                /* Promoted to its own layer: a thin bar carrying a box-shadow is
+           otherwise repainted at every angle, and the glow resampling reads as
+           a vibration rather than as rotation. */
+        .machine.spinning .dw-spray {
+          opacity: 1; will-change: transform; backface-visibility: hidden;
+          animation: dw-spray-spin 2.8s linear infinite; animation-delay: var(--anim-offset, 0s);
+        }
         .machine.spinning .dw-drop { animation: dw-drop-fall 1.65s ease-in infinite; animation-delay: var(--anim-offset, 0s); }
         .machine.spinning .dw-drop-a { animation-delay: calc(-0.3s + var(--anim-offset, 0s)); }
         .machine.spinning .dw-drop-b { animation-delay: calc(-0.95s + var(--anim-offset, 0s)); }
@@ -2452,10 +2499,14 @@ const ILLUSTRATION_CSS = {
         @keyframes dw-water-pulse { 0%, 100% { transform: scaleX(0.97); } 50% { transform: scaleX(1.02); } }
         @keyframes dw-wave-drift { 0%, 100% { transform: translateX(-3%); } 50% { transform: translateX(3%); } }
         @keyframes dw-heat-rise {
-          0% { opacity: 0; transform: translateY(14px) scaleY(0.7); }
+          /* Translation only. Animating scaleY on an element that is both
+             clip-path shaped and blurred forces the polygon to be recomputed
+             and the blur resampled every frame, which reads as a vibration
+             rather than as steam. The volutes already differ by height. */
+          0% { opacity: 0; transform: translateY(16px); }
           20% { opacity: 0.72; }
           75% { opacity: 0.72; }
-          100% { opacity: 0; transform: translateY(-30px) scaleY(1.18); }
+          100% { opacity: 0; transform: translateY(-32px); }
         }
         @media (prefers-reduced-motion: reduce) {
           .machine.spinning .dw-spray, .machine.spinning .dw-drop, .machine.spinning .dw-water,
@@ -2468,7 +2519,7 @@ const ILLUSTRATION_CSS = {
   oven: () => `
         .ov-body {
           position: absolute; inset: 0; border-radius: 10px;
-          background: var(--secondary-background-color, #d7d7d7);
+          background: var(--ac-body, var(--secondary-background-color, #d7d7d7));
           border: 1px solid var(--divider-color, #c7c7c7);
         }
         .ov-panel { position: absolute; top: 6px; left: 8px; right: 8px; height: 12px; }
@@ -2512,7 +2563,7 @@ const ILLUSTRATION_CSS = {
         }
         .ov-door {
           position: absolute; inset: 0; border-radius: 6px;
-          background: var(--secondary-background-color, #d7d7d7);
+          background: var(--ac-body, var(--secondary-background-color, #d7d7d7));
           border: 1px solid var(--divider-color, #c7c7c7);
           transform-origin: bottom center; transform: rotateX(0deg); transition: transform 0.45s ease;
         }
@@ -2547,7 +2598,7 @@ const ILLUSTRATION_CSS = {
   microwave: () => `
         .mw-body {
           position: absolute; left: 0; right: 0; top: 17px; height: 74px; border-radius: 8px;
-          background: var(--secondary-background-color, #d7d7d7);
+          background: var(--ac-body, var(--secondary-background-color, #d7d7d7));
           border: 1px solid var(--divider-color, #c7c7c7);
         }
         .mw-doorwrap { position: absolute; left: 5px; top: 5px; bottom: 5px; width: 65px; perspective: 280px; }
@@ -2575,7 +2626,7 @@ const ILLUSTRATION_CSS = {
         .machine.spinning .mw-food { background: #c98b4b; }
         .mw-door {
           position: absolute; inset: 0; border-radius: 4px;
-          background: var(--secondary-background-color, #d7d7d7);
+          background: var(--ac-body, var(--secondary-background-color, #d7d7d7));
           border: 1px solid var(--divider-color, #c7c7c7);
           transform-origin: left center; transform: rotateY(0deg); transition: transform 0.45s ease;
         }
@@ -2614,12 +2665,12 @@ const ILLUSTRATION_CSS = {
   hood: (color) => `
         .hd-chimney {
           position: absolute; left: 50%; transform: translateX(-50%); top: 2px; width: 26px; height: 32px;
-          border-radius: 3px 3px 0 0; background: var(--secondary-background-color, #d7d7d7);
+          border-radius: 3px 3px 0 0; background: var(--ac-body, var(--secondary-background-color, #d7d7d7));
           border: 1px solid var(--divider-color, #c7c7c7);
         }
         .hd-canopy {
           position: absolute; left: 5px; right: 5px; top: 33px; height: 26px;
-          background: var(--secondary-background-color, #d7d7d7);
+          background: var(--ac-body, var(--secondary-background-color, #d7d7d7));
           border-bottom: 1px solid var(--divider-color, #c7c7c7);
           clip-path: polygon(20% 0, 80% 0, 100% 100%, 0 100%);
         }
@@ -2714,7 +2765,7 @@ const ILLUSTRATION_CSS = {
         .fr-body {
           position: absolute; left: 12px; right: 12px; top: 2px; bottom: 2px;
           border-radius: 8px;
-          background: linear-gradient(100deg, var(--secondary-background-color, #d7d7d7) 0%, #e6e6e6 45%, var(--secondary-background-color, #d7d7d7) 100%);
+          background: linear-gradient(100deg, var(--ac-body, var(--secondary-background-color, #d7d7d7)) 0%, var(--ac-body-hi, #e6e6e6) 45%, var(--ac-body, var(--secondary-background-color, #d7d7d7)) 100%);
           border: 1px solid var(--divider-color, #c7c7c7);
         }
         /* The open-door view needs its own stacking context and a perspective,
@@ -2742,7 +2793,7 @@ const ILLUSTRATION_CSS = {
         .fr-shelf { position: absolute; left: 4px; right: 4px; height: 1.5px; border-radius: 1px; background: #4c525b; }
         .fr-door {
           position: absolute; z-index: 1; border-radius: 6px;
-          background: linear-gradient(100deg, var(--secondary-background-color, #d7d7d7), #e6e6e6);
+          background: linear-gradient(100deg, var(--ac-body, var(--secondary-background-color, #d7d7d7)), var(--ac-body-hi, #e6e6e6));
           border: 1px solid var(--divider-color, #c7c7c7);
           transform-origin: left center; transition: transform 0.45s ease;
         }
@@ -2771,7 +2822,7 @@ const ILLUSTRATION_CSS = {
         .kt-base { position: absolute; left: 20px; right: 20px; bottom: 6px; height: 7px; border-radius: 3px; background: #3b4048; }
         .kt-body {
           position: absolute; left: 24px; right: 24px; top: 26px; bottom: 13px;
-          background: var(--secondary-background-color, #d7d7d7);
+          background: var(--ac-body, var(--secondary-background-color, #d7d7d7));
           border: 1px solid var(--divider-color, #c7c7c7);
           border-radius: 4px 4px 10px 10px;
           clip-path: polygon(12% 0, 88% 0, 100% 100%, 0 100%); overflow: hidden;
@@ -2785,7 +2836,7 @@ const ILLUSTRATION_CSS = {
         }
         .kt-lid {
           position: absolute; left: 34px; right: 34px; top: 20px; height: 7px; border-radius: 3px;
-          background: var(--secondary-background-color, #d7d7d7); border: 1px solid var(--divider-color, #c7c7c7);
+          background: var(--ac-body, var(--secondary-background-color, #d7d7d7)); border: 1px solid var(--divider-color, #c7c7c7);
         }
         .kt-knob {
           position: absolute; left: 50%; transform: translateX(-50%); top: 15px; width: 9px; height: 5px;
@@ -2794,12 +2845,12 @@ const ILLUSTRATION_CSS = {
         .kt-spout {
           position: absolute; left: 13px; top: 30px; width: 0; height: 0;
           border-left: 11px solid transparent;
-          border-bottom: 9px solid var(--secondary-background-color, #d7d7d7);
+          border-bottom: 9px solid var(--ac-body, var(--secondary-background-color, #d7d7d7));
           filter: drop-shadow(-1px 0 0 var(--divider-color, #c7c7c7));
         }
         .kt-handle {
           position: absolute; right: 8px; top: 30px; width: 17px; height: 40px;
-          border: 3px solid var(--secondary-background-color, #d7d7d7); border-left: none;
+          border: 3px solid var(--ac-body, var(--secondary-background-color, #d7d7d7)); border-left: none;
           border-radius: 0 14px 14px 0; box-shadow: 1px 0 0 var(--divider-color, #c7c7c7);
         }
         /* Heating: the base glows, the water bubbles and steam leaves the spout. */
@@ -2834,7 +2885,7 @@ const ILLUSTRATION_CSS = {
         .rc-base {
           position: absolute; left: 10px; right: 10px; top: 68px; bottom: 4px;
           border-radius: 7px;
-          background: linear-gradient(160deg, var(--secondary-background-color, #d7d7d7), #bdbdbd);
+          background: linear-gradient(160deg, var(--ac-body, var(--secondary-background-color, #d7d7d7)), var(--ac-body-lo, #bdbdbd));
           border: 1px solid var(--divider-color, #c7c7c7);
         }
         .rc-disp {
@@ -2891,7 +2942,7 @@ const ILLUSTRATION_CSS = {
         .machine.heating .rc-food { background: rgba(214, 140, 90, 0.8); }
         .rc-lid {
           position: absolute; left: 19px; right: 19px; top: 12px; height: 9px; border-radius: 5px;
-          background: var(--secondary-background-color, #d7d7d7); border: 1px solid var(--divider-color, #c7c7c7);
+          background: var(--ac-body, var(--secondary-background-color, #d7d7d7)); border: 1px solid var(--divider-color, #c7c7c7);
         }
         .rc-cap {
           position: absolute; left: 50%; top: 5px; width: 12px; height: 8px; margin-left: -6px;
@@ -2914,7 +2965,7 @@ const ILLUSTRATION_CSS = {
   coffee: (color) => `
         .cf-body {
           position: absolute; left: 14px; right: 14px; top: 2px; height: 64px; border-radius: 8px;
-          background: linear-gradient(105deg, var(--secondary-background-color, #d7d7d7), #e6e6e6);
+          background: linear-gradient(105deg, var(--ac-body, var(--secondary-background-color, #d7d7d7)), var(--ac-body-hi, #e6e6e6));
           border: 1px solid var(--divider-color, #c7c7c7);
         }
         .cf-hopper {
@@ -3009,13 +3060,13 @@ const ILLUSTRATION_CSS = {
         .rk-body {
           position: absolute; left: 8px; right: 8px; top: 34px; bottom: 8px;
           border-radius: 12px 12px 16px 16px;
-          background: linear-gradient(105deg, var(--secondary-background-color, #d7d7d7), #e9e9e9 55%, #cfcfcf);
+          background: linear-gradient(105deg, var(--ac-body, var(--secondary-background-color, #d7d7d7)), var(--ac-body-hi, #e9e9e9) 55%, var(--ac-body-lo, #cfcfcf));
           border: 1px solid var(--divider-color, #c7c7c7);
         }
         .rk-lid {
           position: absolute; left: 12px; right: 12px; top: 22px; height: 16px;
           border-radius: 12px 12px 4px 4px;
-          background: linear-gradient(180deg, #eeeeee, var(--secondary-background-color, #d7d7d7));
+          background: linear-gradient(180deg, var(--ac-body-hi, #eeeeee), var(--ac-body, var(--secondary-background-color, #d7d7d7)));
           border: 1px solid var(--divider-color, #c7c7c7);
         }
         .rk-vent {
@@ -4231,10 +4282,15 @@ class ApplianceCard extends HTMLElement {
       this._animStart = Date.now();
     }
     const animOffset = -((Date.now() - this._animStart) / 1000);
+    const bodyPreset = BODY_COLORS[cfg.illustration_color];
+    const bodyVar = bodyPreset
+      ? ` --ac-body: ${bodyPreset.body}; --ac-body-hi: ${bodyPreset.hi};`
+        + ` --ac-body-lo: ${bodyPreset.lo};`
+      : "";
 
     const styleTag = `
       <style>
-        :host { font-size: 16px; --anim-offset: ${animOffset}s; }
+        :host { font-size: 16px; --anim-offset: ${animOffset}s;${bodyVar} }
         ha-card { display: block; padding: 16px; position: relative; }
         .conn-badge {
           position: absolute; top: 10px; right: 12px;
@@ -4991,6 +5047,12 @@ class ApplianceCardEditor extends HTMLElement {
             type: "select",
             options: [{ value: "auto", label: t(hass, "language_auto") }].concat(
               Object.keys(LANGUAGE_NAMES).map((code) => ({ value: code, label: LANGUAGE_NAMES[code] }))
+            ),
+          })}
+          ${this._row("illustration_color", "illustration_color", {
+            type: "select",
+            options: [{ value: "auto", label: t(hass, "color_auto") }].concat(
+              Object.keys(BODY_COLORS).map((k) => ({ value: k, label: t(hass, `color_${k}`) }))
             ),
           })}
           ${this._row("compact", "compact", { type: "checkbox" })}

@@ -549,6 +549,33 @@ check('lave-vaisselle : en pause pose la classe paused',
 contains('lave-vaisselle : la vitre s eclaircit aussi termine et en pause',
   dishwasherPaused, '.machine.done .dw-door,');
 
+// At rest the arm is a still object in the state colour, not a dimmed version
+// of the running one: no animation, and the accent the card already computed.
+check('lave-vaisselle : termine, le bras ne tourne pas',
+  machineCls(dishwasherDone).includes('spinning'), false);
+contains('lave-vaisselle : termine, le bras prend la couleur de l etat',
+  dishwasherDone, '#4caf50');
+contains('lave-vaisselle : en pause, le bras prend la couleur de l etat',
+  dishwasherPaused, '#ff9800');
+
+// The shell colour is a preset, not a free value: it is injected as one CSS
+// variable that every illustration family already reads for its body, doors and
+// lids, so one option recolours the whole appliance without touching the state
+// colours. Unset, nothing is emitted and the theme keeps its say.
+const dwBlack = render({ appliance_type: 'dishwasher', state_entity: 'sensor.dw',
+                         illustration_color: 'black' },
+  { 'sensor.dw': { state: 'Idle', attributes: {} } });
+contains('couleur du corps : le preset noir est injecte', dwBlack, '--ac-body: #3b4045;');
+check('couleur du corps : par defaut rien n est impose',
+  /--ac-body:/.test(dishwasherClosed), false);
+contains('couleur du corps : la carrosserie lit la variable',
+  dishwasherClosed, 'var(--ac-body, var(--secondary-background-color, #d7d7d7))');
+const dwBogus = render({ appliance_type: 'dishwasher', state_entity: 'sensor.dw',
+                         illustration_color: 'chartreuse' },
+  { 'sensor.dw': { state: 'Idle', attributes: {} } });
+check('couleur du corps : une valeur inconnue est ignoree',
+  /--ac-body:/.test(dwBogus), false);
+
 // ── Escaping ─────────────────────────────────────────────────────────────────
 
 const quoted = render({ appliance_type: 'cooktop', state_entity: 'sensor.hob',
