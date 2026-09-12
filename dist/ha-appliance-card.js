@@ -1,4 +1,4 @@
-const CARD_VERSION = "2.2.2";
+const CARD_VERSION = "2.3.0";
 
 console.info(
   "%c HA-APPLIANCE-CARD %c v" + CARD_VERSION + " ",
@@ -2260,8 +2260,13 @@ const ILLUSTRATION_CSS = {
         .dw-cavity {
           position: absolute; top: 22px; right: 8px; bottom: 8px; left: 8px;
           overflow: hidden; border: 3px solid #34383b; border-radius: 4px;
-          background: linear-gradient(180deg, #1c2931, #5d6d73);
-          box-shadow: inset 0 0 12px rgba(0, 0, 0, 0.58);
+          background: linear-gradient(180deg, #33474f, #7d8f95);
+          box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.34);
+        }
+        .machine.done .dw-plate {
+          border-color: #b9f6ca;
+          background: linear-gradient(90deg, transparent 0 22%, rgba(185, 246, 202, 0.62) 50%, transparent 78%);
+          box-shadow: inset 0 0 0 1px rgba(185, 246, 202, 0.55), 0 0 8px rgba(105, 240, 174, 0.65);
         }
         .dw-rack {
           position: absolute; right: 10%; bottom: 13%; left: 10%; height: 34%;
@@ -2284,10 +2289,11 @@ const ILLUSTRATION_CSS = {
         .dw-plate-c { left: 47%; transform: rotate(5deg); }
         .dw-plate-d { right: 0; transform: rotate(12deg); }
         .dw-spray {
-          position: absolute; top: 21%; left: 16%; width: 68%; height: 3px; z-index: 3;
+          position: absolute; top: 21%; left: 12%; width: 76%; height: 4px; z-index: 3;
           border-radius: 999px;
           background: linear-gradient(90deg, transparent, ${color}, transparent);
-          opacity: 0.42; transform-origin: 50% 50%; transition: opacity 0.3s ease;
+          box-shadow: 0 0 6px ${color};
+          opacity: 0.5; transform-origin: 50% 50%; transition: opacity 0.3s ease;
         }
         .dw-spray::before,
         .dw-spray::after {
@@ -2323,29 +2329,7 @@ const ILLUSTRATION_CSS = {
         }
         .dw-wave-a { top: 2px; }
         .dw-wave-b { top: 6px; left: 8%; opacity: 0.6; }
-        .dw-fan {
-          position: absolute; top: 12%; left: 50%; z-index: 3;
-          width: 16px; height: 16px; border: 1px solid rgba(255, 193, 7, 0.42);
-          border-radius: 50%; opacity: 0; transform: translateX(-50%);
-        }
-        .dw-fan::before,
-        .dw-fan::after {
-          content: ""; position: absolute; top: 50%; left: 50%;
-          width: 12px; height: 3px; border-radius: 50%;
-          background: rgba(255, 112, 67, 0.72); transform-origin: 0 50%;
-        }
-        .dw-fan::before { transform: translate(-1px, -50%) rotate(25deg); }
-        .dw-fan::after { transform: translate(-1px, -50%) rotate(115deg); }
-        .dw-dry-heat { position: absolute; inset: 13% 24% 30%; z-index: 3; opacity: 0; pointer-events: none; }
-        .dw-dry-heat i {
-          position: absolute; bottom: 0; width: 2px; height: 13px; border-radius: 50%;
-          background: linear-gradient(180deg, rgba(255, 193, 7, 0), rgba(255, 112, 67, 0.72));
-          opacity: 0;
-        }
-        .dw-dry-heat-a { left: 20%; }
-        .dw-dry-heat-b { left: 48%; height: 17px !important; }
-        .dw-dry-heat-c { right: 20%; height: 11px !important; }
-        .machine.spinning .dw-spray { opacity: 0.95; animation: dw-spray-spin 2.8s linear infinite; animation-delay: var(--anim-offset, 0s); }
+        .machine.spinning .dw-spray { opacity: 1; animation: dw-spray-spin 2.8s linear infinite; animation-delay: var(--anim-offset, 0s); }
         .machine.spinning .dw-drop { animation: dw-drop-fall 1.65s ease-in infinite; animation-delay: var(--anim-offset, 0s); }
         .machine.spinning .dw-drop-a { animation-delay: calc(-0.3s + var(--anim-offset, 0s)); }
         .machine.spinning .dw-drop-b { animation-delay: calc(-0.95s + var(--anim-offset, 0s)); }
@@ -2356,66 +2340,108 @@ const ILLUSTRATION_CSS = {
         .machine.spinning .dw-wave-a { animation: dw-wave-drift 1.8s ease-in-out infinite; animation-delay: var(--anim-offset, 0s); }
         .machine.spinning .dw-wave-b { animation: dw-wave-drift 2.4s ease-in-out infinite reverse; animation-delay: var(--anim-offset, 0s); }
         .dw-heat {
-          position: absolute; top: 17px; right: 25%; left: 25%; z-index: 6;
-          height: 28px; opacity: 0; pointer-events: none;
+          position: absolute; top: 22px; right: 8px; bottom: 8px; left: 8px; z-index: 6;
+          overflow: hidden; border-radius: 4px; opacity: 0; pointer-events: none;
           transition: opacity 0.35s ease;
         }
         .dw-heat i {
-          position: absolute; bottom: 0; width: 3px; height: 16px;
-          border-radius: 50%; opacity: 0;
-          background: linear-gradient(180deg, rgba(255, 193, 7, 0), rgba(255, 112, 67, 0.9));
-          filter: blur(0.35px);
+          position: absolute; bottom: 0; width: 15px; height: 34px; opacity: 0;
+          background: linear-gradient(180deg, rgba(255, 183, 77, 0), rgba(255, 183, 77, 0.9) 45%, rgba(255, 138, 60, 0.95));
+          clip-path: polygon(63% 0%, 79% 7%, 90% 14%, 93% 21%, 86% 29%, 73% 36%, 56% 43%, 42% 50%, 34% 57%, 35% 64%, 44% 71%, 60% 79%, 76% 86%, 88% 93%, 93% 100%, 67% 100%, 62% 93%, 50% 86%, 34% 79%, 18% 71%, 9% 64%, 8% 57%, 16% 50%, 30% 43%, 47% 36%, 60% 29%, 67% 21%, 64% 14%, 53% 7%, 37% 0%);
+          filter: blur(0.5px);
         }
-        .dw-heat-a { left: 12%; }
-        .dw-heat-b { left: 42%; height: 19px !important; }
-        .dw-heat-c { right: 12%; height: 14px !important; }
-        .machine.phase-drying .dw-cavity {
-          box-shadow: inset 0 0 18px rgba(255, 112, 67, 0.38);
+        .dw-heat-a { left: 3%; }
+        .dw-heat-b { left: 24%; height: 27px !important; }
+        .dw-heat-c { left: 44%; height: 22px !important; }
+        .dw-heat-d { left: 64%; height: 29px !important; }
+        .dw-heat-e { right: 3%; height: 24px !important; }
+        /* Both drying phases show the same thing: heat rising across the full width
+           of the machine. They differ only in where it sits, inside the cavity
+           while drying and up at the door once the door is cracked open. The wash
+           animation is paused underneath, since nothing is spraying any more. */
+        .machine.phase-drying .dw-cavity,
+        .machine.phase-ado_drying .dw-cavity {
+          box-shadow: inset 0 0 20px rgba(255, 112, 67, 0.28);
         }
-        .machine.phase-drying .dw-fan {
-          opacity: 0.82; animation: dw-fan-spin 1.2s linear infinite; animation-delay: var(--anim-offset, 0s);
-        }
-        .machine.phase-drying .dw-dry-heat { opacity: 0.9; }
-        .machine.phase-drying .dw-dry-heat i {
-          animation: dw-dry-heat-rise 2.6s ease-in-out infinite; animation-delay: var(--anim-offset, 0s);
-        }
-        .machine.phase-drying .dw-dry-heat-b { animation-delay: calc(-0.85s + var(--anim-offset, 0s)); }
-        .machine.phase-drying .dw-dry-heat-c { animation-delay: calc(-1.7s + var(--anim-offset, 0s)); }
+        .machine.phase-drying .dw-heat,
         .machine.phase-ado_drying .dw-heat { opacity: 1; }
-        .machine.phase-ado_drying .dw-heat { top: 8px; height: 34px; opacity: 1; }
+        /* Ado drying pushes the steam further up the door, which is the only
+           thing separating it from the plain drying phase. */
+        .machine.phase-ado_drying .dw-heat i { height: 44px !important; }
+        .machine.phase-drying .dw-heat i,
         .machine.phase-ado_drying .dw-heat i {
           animation: dw-heat-rise 2.4s ease-in-out infinite; animation-delay: var(--anim-offset, 0s);
         }
-        .machine.phase-ado_drying .dw-heat-b { animation-delay: calc(-0.8s + var(--anim-offset, 0s)); }
-        .machine.phase-ado_drying .dw-heat-c { animation-delay: calc(-1.5s + var(--anim-offset, 0s)); }
+        .machine.phase-drying .dw-heat i.dw-heat-b,
+        .machine.phase-ado_drying .dw-heat i.dw-heat-b { animation-delay: calc(-0.48s + var(--anim-offset, 0s)); }
+        .machine.phase-drying .dw-heat i.dw-heat-c,
+        .machine.phase-ado_drying .dw-heat i.dw-heat-c { animation-delay: calc(-0.96s + var(--anim-offset, 0s)); }
+        .machine.phase-drying .dw-heat i.dw-heat-d,
+        .machine.phase-ado_drying .dw-heat i.dw-heat-d { animation-delay: calc(-1.44s + var(--anim-offset, 0s)); }
+        .machine.phase-drying .dw-heat i.dw-heat-e,
+        .machine.phase-ado_drying .dw-heat i.dw-heat-e { animation-delay: calc(-1.92s + var(--anim-offset, 0s)); }
         .machine.phase-drying .dw-spray,
-        .machine.phase-drying .dw-drop,
         .machine.phase-drying .dw-water,
         .machine.phase-drying .dw-wave-a,
         .machine.phase-drying .dw-wave-b,
         .machine.phase-ado_drying .dw-spray,
-        .machine.phase-ado_drying .dw-drop,
         .machine.phase-ado_drying .dw-water,
         .machine.phase-ado_drying .dw-wave-a,
         .machine.phase-ado_drying .dw-wave-b {
           animation-play-state: paused; opacity: 0.12;
         }
+        /* No water at all while drying: the drops are gone, not dimmed, and
+           the rising steam takes the space they used to occupy. */
+        .machine.phase-drying .dw-drops,
+        .machine.phase-ado_drying .dw-drops { display: none; }
+        /* The arm stays lit while drying, but in heat colour: blue reads as
+           water, and there is no water left at this point in the cycle. */
+        .machine.phase-drying .dw-spray,
+        .machine.phase-ado_drying .dw-spray {
+          background: linear-gradient(90deg, transparent, #ffa726, transparent);
+          box-shadow: 0 0 5px rgba(255, 167, 38, 0.55);
+          opacity: 0.6;
+        }
+        .machine.phase-drying .dw-spray-hub,
+        .machine.phase-ado_drying .dw-spray-hub {
+          border-color: #ffa726;
+        }
+        .machine.phase-drying .dw-door,
         .machine.phase-ado_drying .dw-door {
-          box-shadow: inset 0 0 0 1px rgba(225, 235, 236, 0.18), 0 0 8px rgba(255, 112, 67, 0.35);
+          box-shadow: inset 0 0 0 1px rgba(225, 235, 236, 0.3),
+            inset 0 0 15px rgba(255, 112, 67, 0.32), 0 0 8px rgba(255, 112, 67, 0.3);
         }
         .dw-door {
           position: absolute; top: 22px; right: 8px; bottom: 8px; left: 8px; z-index: 5;
           padding: 0; border: 3px solid #34383b; border-radius: 4px;
-          background: linear-gradient(180deg, rgba(18, 26, 30, 0.48), rgba(18, 26, 30, 0.8));
-          box-shadow: inset 0 0 0 1px rgba(225, 235, 236, 0.18), 0 3px 5px rgba(0, 0, 0, 0.25);
+          background: linear-gradient(180deg, rgba(14, 20, 24, 0.5), rgba(14, 20, 24, 0.74));
+          box-shadow: inset 0 0 0 1px rgba(225, 235, 236, 0.3), 0 3px 5px rgba(0, 0, 0, 0.25);
           transform-origin: 50% 100%;
           transition: transform 0.42s cubic-bezier(.2, .75, .25, 1), box-shadow 0.42s ease;
+        }
+        .dw-door::after {
+          content: ""; position: absolute; inset: 0; z-index: 1; border-radius: 2px;
+          pointer-events: none;
+          background: linear-gradient(116deg, rgba(255, 255, 255, 0.17) 0 17%, rgba(255, 255, 255, 0) 40%);
         }
         .dw-door::before {
           content: ""; position: absolute; top: 4px; right: 18%; left: 18%; height: 2px;
           border-radius: 8px; background: rgba(225, 231, 232, 0.6);
         }
-        .dw-door.open { transform: rotateX(66deg) translateY(7px) translateZ(4px); box-shadow: 0 12px 10px rgba(0, 0, 0, 0.32); }
+        /* Clear whenever there is something in the tub worth seeing: a running
+           cycle, a paused one, or a finished load waiting to be emptied. Opaque
+           only at rest, and that contrast is what separates a shut door from an
+           open one at a glance. */
+        .machine.spinning .dw-door,
+        .machine.done .dw-door,
+        .machine.paused .dw-door {
+          background: linear-gradient(180deg, rgba(18, 26, 30, 0.08), rgba(18, 26, 30, 0.3));
+        }
+        .dw-door.open {
+          background: linear-gradient(180deg, #2c343a, #14191c);
+          transform: rotateX(81deg) translateY(13px) translateZ(9px);
+          box-shadow: 0 16px 14px rgba(0, 0, 0, 0.45);
+        }
         @keyframes dw-spray-spin { to { transform: rotate(360deg); } }
         @keyframes dw-drop-fall {
           0% { opacity: 0; transform: translateY(-4px) scale(0.75); }
@@ -2425,22 +2451,16 @@ const ILLUSTRATION_CSS = {
         }
         @keyframes dw-water-pulse { 0%, 100% { transform: scaleX(0.97); } 50% { transform: scaleX(1.02); } }
         @keyframes dw-wave-drift { 0%, 100% { transform: translateX(-3%); } 50% { transform: translateX(3%); } }
-        @keyframes dw-fan-spin { to { transform: translateX(-50%) rotate(360deg); } }
-        @keyframes dw-dry-heat-rise {
-          0% { opacity: 0; transform: translateY(3px) scaleY(0.8); }
-          35% { opacity: 0.55; }
-          100% { opacity: 0; transform: translateY(-12px) scaleY(1.1); }
-        }
         @keyframes dw-heat-rise {
-          0% { opacity: 0; transform: translateY(4px) scaleY(0.8) rotate(-4deg); }
-          35% { opacity: 0.62; }
-          100% { opacity: 0; transform: translateY(-18px) scaleY(1.15) rotate(5deg); }
+          0% { opacity: 0; transform: translateY(14px) scaleY(0.7); }
+          20% { opacity: 0.72; }
+          75% { opacity: 0.72; }
+          100% { opacity: 0; transform: translateY(-30px) scaleY(1.18); }
         }
         @media (prefers-reduced-motion: reduce) {
           .machine.spinning .dw-spray, .machine.spinning .dw-drop, .machine.spinning .dw-water,
           .machine.spinning .dw-wave-a, .machine.spinning .dw-wave-b,
-          .machine.phase-drying .dw-fan, .machine.phase-drying .dw-dry-heat i,
-          .machine.phase-ado_drying .dw-heat i {
+          .machine.phase-drying .dw-heat i, .machine.phase-ado_drying .dw-heat i {
           animation-duration: 0.001ms !important; animation-iteration-count: 1 !important;
           }
         }
@@ -3174,6 +3194,8 @@ function illustrationHtml(type, ctx) {
     ctx.heating ? "heating" : "",
     ctx.lit ? "lit" : "",
     ctx.doorOpen ? "open" : "",
+    ctx.done ? "done" : "",
+    ctx.paused ? "paused" : "",
     ctx.phase && DISHWASHER_PHASES.has(ctx.phase) ? `phase-${ctx.phase}` : "",
   ]
     .filter(Boolean)
@@ -3201,13 +3223,9 @@ function illustrationHtml(type, ctx) {
               <div class="dw-water" aria-hidden="true">
                 <span class="dw-wave dw-wave-a"></span><span class="dw-wave dw-wave-b"></span>
               </div>
-              <div class="dw-fan" aria-hidden="true"></div>
-              <div class="dw-dry-heat" aria-hidden="true">
-                <i class="dw-dry-heat-a"></i><i class="dw-dry-heat-b"></i><i class="dw-dry-heat-c"></i>
-              </div>
-            </div>
+                          </div>
             <div class="dw-heat" aria-hidden="true">
-              <i class="dw-heat-a"></i><i class="dw-heat-b"></i><i class="dw-heat-c"></i>
+              <i class="dw-heat-a"></i><i class="dw-heat-b"></i><i class="dw-heat-c"></i><i class="dw-heat-d"></i><i class="dw-heat-e"></i>
             </div>
             <div class="dw-door ${ctx.doorOpen ? "open" : ""}" aria-hidden="true"></div>
           </div>
@@ -4161,6 +4179,8 @@ class ApplianceCard extends HTMLElement {
       speed: mixer.level,
       spinning: isActiveState(norm),
       doorOpen: cap.door && doorOpen,
+      done: norm === "done",
+      paused: norm === "paused",
       heating: ["oven", "cooker", "rice_cooker"].includes(applianceType) ? heating : false,
       keepWarm: norm === "keep_warm",
       lit,

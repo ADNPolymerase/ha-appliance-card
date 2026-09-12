@@ -22,7 +22,7 @@ No brand assumed: every field is a configurable entity mapping, so it works with
 ## Features
 
 - **State normalization**: `Idle`, `RUNNING`, `wash`, `En marche`… are auto-detected (accent-insensitive) and mapped to idle / preheating / running / paused / done / delayed / error. An unmatched state is shown as it came, minus the namespace an integration wraps it in: `BSH.Common.EnumType.OperationState.ActionRequired` reads `Action Required`. `state_map` classifies whatever is left.
-- **Twelve appliance types**, each with its own animated illustration: washer (water), dryer (tumbling), dishwasher (spray arm, plates, bottom-hinged door and phase-aware drying), oven (glowing elements, door dropping open), microwave (turntable, lit cavity), cooker hood (rising airflow, light beams), cooktop (per-zone level and residual heat), fridge (each door swings for its own sensor, lit interior, falling ice cubes), kettle (glowing base, bubbles, steam), cooker (turning blade, hot element, steam), coffee machine (pouring stream, filling cup, tank level) and rice cooker (steam, keep-warm glow). Static when idle, auto-detected or set via `appliance_type`. `compact: true` keeps only the text.
+- **Twelve appliance types**, each with its own animated illustration: washer (water), dryer (tumbling), dishwasher (spray arm, plates, bottom-hinged door, orange steam while drying and a green load when the cycle ends), oven (glowing elements, door dropping open), microwave (turntable, lit cavity), cooker hood (rising airflow, light beams), cooktop (per-zone level and residual heat), fridge (each door swings for its own sensor, lit interior, falling ice cubes), kettle (glowing base, bubbles, steam), cooker (turning blade, hot element, steam), coffee machine (pouring stream, filling cup, tank level) and rice cooker (steam, keep-warm glow). Static when idle, auto-detected or set via `appliance_type`. `compact: true` keeps only the text.
 - **A coffee machine says what it needs**: an empty tank, an empty bean container, a full drip tray or a due descaling takes over the state line whenever the machine isn't actually pouring, in the order in which each one stops you getting a coffee. Only what needs doing takes a line.
 - **A fridge reports its health, not a cycle**: it never stops, so *Running* would be true of it every hour of its life. The state line carries the one thing worth reading instead, in order of what it costs to miss: unplugged, a door left open, a temperature above the limit, otherwise normal. Read-only, with no buttons to press.
 - **Works from a smart plug alone**: set `power_entity` + `power_on_threshold` and the state is derived from consumption (standby → running → finished), with no appliance integration at all.
@@ -33,7 +33,7 @@ No brand assumed: every field is a configurable entity mapping, so it works with
 - **Interface translated into 14 languages** (EN, FR, DE, ES, IT, NL, PT, SV, NO, DA, PL, RU, ZH, CS), picked up from the Home Assistant locale. Norwegian Bokmal is accepted under both `nb`/`nb-NO` and the existing `no` translation key.
 - **Visual editor**: pick the state entity and the other fields are auto-suggested from sibling entities on the same device.
 
-Illustrations are CSS, not images, and they animate on the appliance's own data: the blade turns once per pulse at the speed the cooker reports, coffee pours into one cup or two, ice cubes fall while the maker runs, a kettle bubbles and steams. The dishwasher has its own front-loading illustration with a square, bottom-hinged door, visible plates, a rotating spray arm, droplets and water waves while running. When `phase_entity` reports `Drying`, the closed machine shows internal heat and a fan; `Ado Drying` shows heat rising from the top of the door. Unknown or unavailable phase values keep the normal animation.
+Illustrations are CSS, not images, and they animate on the appliance's own data: the blade turns once per pulse at the speed the cooker reports, coffee pours into one cup or two, ice cubes fall while the maker runs, a kettle bubbles and steams. The dishwasher has its own front-loading illustration with a square, bottom-hinged door, visible plates, a rotating spray arm, droplets and water waves while running. Its glass clears whenever there is something to look at, which is a cycle running, a paused one, or a finished load waiting to be emptied, and stays dark at rest, so a shut door never reads as an open one. When the cycle ends the load turns green. With a `phase_entity` configured, the two drying phases replace the wash animation with orange steam rising up the door, `Ado Drying` carrying it higher than `Drying`, and the water disappears entirely since there is none left at that point.
 
 ![Animated appliance types](https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/animated.gif)
 
@@ -68,7 +68,7 @@ Only `state_entity` is required; everything else is optional. A fridge is the ex
 | `toggle_entity` | On/off control, shown as a power button on the card and highlighted while on. Any `switch`/`button`/`script`/`input_boolean`/`fan`. Named this way so it is not mistaken for `power_entity` below, which is the wattage meter. |
 | `power_entity` / `power_on_threshold` / `power_icon` | Power sensor (W). With a threshold set, the state is derived from it instead of `state_entity`: above the threshold is *running*, and falling back below it is *finished* until the next run. Pointing `state_entity` at the same power sensor enables this on its own, with a default threshold of 10 W. `power_icon` overrides the default `mdi:power-plug`. |
 | `program_entity` / `program_format` | Program/cycle entity. `clean` (default) trims the common `"<category> Pr <name>"` pattern, drops the namespace off a fully qualified Home Connect enum (`LaundryCare.Washer.Program.Auto40` reads as *Auto 40*), and separates a temperature or a duration run into the name (`Rapid20Min` reads as *Rapid 20 Min*). `raw` shows the state as-is. |
-| `phase_entity` / `phase_map` | Optional dishwasher cycle-phase entity and raw-value map. Known phases include `Prewash`, `Mainwash`, `Drying` and `Ado Drying`; `Drying` shows internal heat/fan animation and `Ado Drying` shows heat escaping at the door. Missing, unavailable or unknown values are ignored safely. |
+| `phase_entity` / `phase_map` | Dishwasher only. Cycle-phase entity, and a map for vendor-specific raw values. Recognised phases are `Prewash`, `Mainwash`, `Rinsing`, `Drying` and `Ado Drying`. Only the two drying phases change the illustration: the wash animation gives way to orange steam, higher up the door for `Ado Drying`. The three wash phases deliberately share one animation, since the machine really is doing the same thing in all of them. Missing, unavailable or unrecognised values are ignored and the normal animation stays. YAML only for now, the visual editor does not offer these two fields yet. |
 | `remaining_time_entity` / `remaining_time_unit` | Remaining duration. Unit `auto` (default), `seconds`, or `minutes`. |
 | `remaining_time_hide_when_idle` | `true` to only show remaining time while the appliance is running. Prevents stale completion timestamps (e.g. Samsung SmartThings keeping a past finish time after the cycle ends) from displaying. |
 | `progress_entity` | Optional 0–100 sensor; overrides the client-side estimate. |
@@ -202,7 +202,7 @@ a label may itself contain one.
 ### Dishwasher phase animation
 
 The phase entity is optional. If the integration exposes the dishwasher phase,
-add it directly or provide an explicit map for vendor-specific values:
+add it directly, or provide an explicit map for vendor-specific values:
 
 ```yaml
 appliance_type: dishwasher
@@ -215,14 +215,24 @@ phase_map:
   Ado Drying: ado_drying
 ```
 
-The built-in aliases recognise these values without `phase_map` as well. The
-phase only changes the illustration; it does not replace the appliance state
-or door sensor.
+The built-in aliases recognise these spellings without `phase_map` as well,
+along with `Pre Wash`, `Wash`, `Rinse` and `Dry`.
+
+What each phase does: `Prewash`, `Mainwash` and `Rinsing` all keep the normal
+wash animation, because a dishwasher is doing the same thing in all three.
+`Drying` and `Ado Drying` stop the spray and the water and show orange steam
+rising up the door instead, higher for `Ado Drying`, with the door glowing at
+its seal.
+
+The phase only changes the illustration. It does not replace the appliance
+state or the door sensor, and an unrecognised value is ignored rather than
+breaking the animation.
 
 ## Thanks
 
 - [@chike-he](https://github.com/chike-he): Chinese translation ([#3](https://github.com/ADNPolymerase/ha-appliance-card/issues/3))
 - [@pbarone](https://github.com/pbarone): `device_class: timestamp` support for the remaining time ([#2](https://github.com/ADNPolymerase/ha-appliance-card/pull/2))
+- [@monsivar](https://github.com/monsivar): Norwegian Bokmal locale aliases ([#10](https://github.com/ADNPolymerase/ha-appliance-card/pull/10)) and the dedicated dishwasher illustration ([#11](https://github.com/ADNPolymerase/ha-appliance-card/pull/11))
 
 ## License
 

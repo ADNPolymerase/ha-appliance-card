@@ -455,12 +455,17 @@ const dishwasherDrying = render({ appliance_type: 'dishwasher', state_entity: 's
     'sensor.dw_phase': { state: 'Drying', attributes: {} } });
 check('lave-vaisselle : Drying donne une classe de phase',
   machineCls(dishwasherDrying).includes('phase-drying'), true);
-contains('lave-vaisselle : Drying affiche le ventilateur interne',
-  dishwasherDrying, 'class="dw-fan"');
-contains('lave-vaisselle : Drying affiche la chaleur interne',
-  dishwasherDrying, 'class="dw-dry-heat"');
-contains('lave-vaisselle : Drying anime le ventilateur',
-  dishwasherDrying, 'animation: dw-fan-spin');
+contains('lave-vaisselle : Drying affiche les barres de chaleur',
+  dishwasherDrying, 'class="dw-heat"');
+// Both drying phases share one heat animation; only its position differs.
+contains('lave-vaisselle : Drying anime la chaleur',
+  dishwasherDrying, '.machine.phase-drying .dw-heat i,');
+// The steam box is the door box, and it clips: without overflow the rising
+// volutes escape above the machine and float over the card.
+contains('lave-vaisselle : la vapeur est confinee au cadre de la porte',
+  dishwasherDrying, 'top: 22px; right: 8px; bottom: 8px; left: 8px; z-index: 6;');
+contains('lave-vaisselle : la vapeur est rognee au cadre',
+  dishwasherDrying, 'overflow: hidden; border-radius: 4px; opacity: 0;');
 
 const dishwasherAdoDrying = render({ appliance_type: 'dishwasher', state_entity: 'sensor.dw',
                                     phase_entity: 'sensor.dw_phase' },
@@ -473,6 +478,40 @@ contains('lave-vaisselle : Ado Drying affiche la chaleur',
 contains('lave-vaisselle : Ado Drying anime la chaleur',
   dishwasherAdoDrying, 'animation: dw-heat-rise');
 
+const dishwasherPrewash = render({ appliance_type: 'dishwasher', state_entity: 'sensor.dw',
+                                  phase_entity: 'sensor.dw_phase' },
+  { 'sensor.dw': { state: 'Running', attributes: {} },
+    'sensor.dw_phase': { state: 'Pre Wash', attributes: {} } });
+check('lave-vaisselle : Prewash pose la classe phase-prewash',
+  machineCls(dishwasherPrewash).includes('phase-prewash'), true);
+// A wash phase must keep the wash animation: only its character changes.
+check('lave-vaisselle : Prewash reste en lavage',
+  machineCls(dishwasherPrewash).includes('spinning'), true);
+// The three wash phases deliberately share one animation: a dishwasher is
+// doing the same thing in all of them, so none of them overrides the default.
+check('lave-vaisselle : Prewash ne surcharge rien',
+  /\.machine\.phase-prewash /.test(dishwasherPrewash), false);
+
+const dishwasherRinsing = render({ appliance_type: 'dishwasher', state_entity: 'sensor.dw',
+                                  phase_entity: 'sensor.dw_phase' },
+  { 'sensor.dw': { state: 'Running', attributes: {} },
+    'sensor.dw_phase': { state: 'Rinse', attributes: {} } });
+check('lave-vaisselle : Rinsing pose la classe phase-rinsing',
+  machineCls(dishwasherRinsing).includes('phase-rinsing'), true);
+check('lave-vaisselle : Rinsing ne surcharge rien',
+  /\.machine\.phase-rinsing /.test(dishwasherRinsing), false);
+
+// mainwash has no rules of its own on purpose: the default wash animation is
+// the main wash, so a phase class with no CSS behind it is the correct result.
+const dishwasherMainwash = render({ appliance_type: 'dishwasher', state_entity: 'sensor.dw',
+                                   phase_entity: 'sensor.dw_phase' },
+  { 'sensor.dw': { state: 'Running', attributes: {} },
+    'sensor.dw_phase': { state: 'Main Wash', attributes: {} } });
+check('lave-vaisselle : Mainwash pose la classe phase-mainwash',
+  machineCls(dishwasherMainwash).includes('phase-mainwash'), true);
+check('lave-vaisselle : Mainwash ne surcharge rien',
+  /\.machine\.phase-mainwash /.test(dishwasherMainwash), false);
+
 const dishwasherNoPhase = render({ appliance_type: 'dishwasher', state_entity: 'sensor.dw',
                                   phase_entity: 'sensor.dw_phase' },
   { 'sensor.dw': { state: 'Running', attributes: {} },
@@ -481,6 +520,34 @@ check('lave-vaisselle : phase indisponible ne casse pas la classe',
   machineCls(dishwasherNoPhase).includes('phase-'), false);
 contains('lave-vaisselle : phase indisponible conserve le lavage',
   dishwasherNoPhase, 'animation: dw-spray-spin');
+
+// An animation whose @keyframes is missing from the injected CSS is set on the
+// element but never runs: the browser resolves animation-name to nothing and the
+// element silently keeps its base style. A stray brace above the rule is enough
+// to lose it, and the card still renders, so nothing else catches this.
+for (const [label, markupOf] of [['lave-vaisselle', dishwasherDrying], ['lave-linge', washer]]) {
+  const names = [...markupOf.matchAll(/animation:\s*([a-z0-9-]+)/g)].map(m => m[1]);
+  const defined = new Set([...markupOf.matchAll(/@keyframes\s+([a-z0-9-]+)/g)].map(m => m[1]));
+  const missing = [...new Set(names)].filter(n => !defined.has(n));
+  check(`${label} : chaque animation a ses keyframes dans le CSS injecte`, missing.join(',') , '');
+}
+
+const dishwasherDone = render({ appliance_type: 'dishwasher', state_entity: 'sensor.dw' },
+  { 'sensor.dw': { state: 'Finished', attributes: {} } });
+check('lave-vaisselle : cycle termine pose la classe done',
+  machineCls(dishwasherDone).includes('done'), true);
+contains('lave-vaisselle : vaisselle verte une fois termine',
+  dishwasherDone, '.machine.done .dw-plate');
+check('lave-vaisselle : a l arret la vaisselle reste neutre',
+  machineCls(dishwasherClosed).includes('done'), false);
+
+const dishwasherPaused = render({ appliance_type: 'dishwasher', state_entity: 'sensor.dw' },
+  { 'sensor.dw': { state: 'Paused', attributes: {} } });
+check('lave-vaisselle : en pause pose la classe paused',
+  machineCls(dishwasherPaused).includes('paused'), true);
+// done and paused both have a load to show, so the glass clears for them too.
+contains('lave-vaisselle : la vitre s eclaircit aussi termine et en pause',
+  dishwasherPaused, '.machine.done .dw-door,');
 
 // ── Escaping ─────────────────────────────────────────────────────────────────
 

@@ -22,7 +22,7 @@ Aucune marque supposée : chaque champ est un mapping d'entité configurable, el
 ## Fonctionnalités
 
 - **Normalisation d'état** : `Idle`, `RUNNING`, `wash`, `En marche`… sont détectés automatiquement (insensible aux accents) et convertis en veille / préchauffage / en cours / en pause / terminé / différé / erreur. Un état inconnu s'affiche tel quel, moins l'espace de noms dont l'intégration l'entoure : `BSH.Common.EnumType.OperationState.ActionRequired` se lit `Action Required`. `state_map` classe ce qu'il reste.
-- **Douze types d'appareils**, chacun avec sa propre illustration animée : lave-linge (eau), sèche-linge (linge qui tourne), lave-vaisselle (bras d'aspersion), four (résistances qui rougeoient, porte qui bascule), micro-ondes (plateau qui tourne, cavité éclairée), hotte (flux d'air, faisceaux lumineux), plaque de cuisson (niveau par foyer et chaleur résiduelle), réfrigérateur (chaque porte s'ouvre pour son propre capteur, intérieur éclairé, glaçons qui tombent), bouilloire (socle rouge, bulles, vapeur), robot cuiseur (couteau qui tourne, résistance chaude, vapeur), machine à café (café qui coule, tasse qui se remplit, niveau du réservoir) et cuiseur à riz (vapeur, maintien au chaud). Statique à l'arrêt, auto-détectée ou choisie via `appliance_type`. `compact: true` ne garde que le texte.
+- **Douze types d'appareils**, chacun avec sa propre illustration animée : lave-linge (eau), sèche-linge (linge qui tourne), lave-vaisselle (bras d'aspersion, vaisselle, porte à charnière basse, vapeur orange au séchage et chargement vert en fin de cycle), four (résistances qui rougeoient, porte qui bascule), micro-ondes (plateau qui tourne, cavité éclairée), hotte (flux d'air, faisceaux lumineux), plaque de cuisson (niveau par foyer et chaleur résiduelle), réfrigérateur (chaque porte s'ouvre pour son propre capteur, intérieur éclairé, glaçons qui tombent), bouilloire (socle rouge, bulles, vapeur), robot cuiseur (couteau qui tourne, résistance chaude, vapeur), machine à café (café qui coule, tasse qui se remplit, niveau du réservoir) et cuiseur à riz (vapeur, maintien au chaud). Statique à l'arrêt, auto-détectée ou choisie via `appliance_type`. `compact: true` ne garde que le texte.
 - **Une machine à café dit ce qui lui manque** : réservoir vide, bac à grains vide, bac d'égouttage plein ou détartrage à faire prennent la ligne d'état dès que la machine ne coule pas, dans l'ordre où chacun t'empêche d'avoir ton café. Seul ce qui demande une action prend une ligne.
 - **Un réfrigérateur rapporte sa santé, pas un cycle** : il ne s'arrête jamais, donc *En cours* serait vrai de lui à toute heure. La ligne d'état porte à la place la seule chose qui compte, dans l'ordre du coût à l'ignorer : débranché, une porte restée ouverte, une température au-dessus de la limite, sinon normal. En lecture seule, sans aucun bouton.
 - **Fonctionne avec une simple prise connectée** : renseigne `power_entity` + `power_on_threshold` et l'état est déduit de la consommation (veille → en marche → terminé), sans aucune intégration de l'appareil.
@@ -33,7 +33,7 @@ Aucune marque supposée : chaque champ est un mapping d'entité configurable, el
 - **Interface traduite en 14 langues** (EN, FR, DE, ES, IT, NL, PT, SV, NO, DA, PL, RU, ZH, CS), suivant la langue de Home Assistant.
 - **Éditeur visuel** : choisis l'entité d'état et les autres champs sont auto-suggérés depuis les entités sœurs du même appareil.
 
-Les illustrations sont en CSS, pas en images, et elles s'animent sur les données de l'appareil : le couteau fait un tour par saccade à la vitesse remontée par le robot, le café coule dans une tasse ou deux, les glaçons tombent tant que la machine produit, la bouilloire bout et fume.
+Les illustrations sont en CSS, pas en images, et elles s'animent sur les données de l'appareil : le couteau fait un tour par saccade à la vitesse remontée par le robot, le café coule dans une tasse ou deux, les glaçons tombent tant que la machine produit, la bouilloire bout et fume. Le lave-vaisselle a sa propre illustration frontale, avec une porte carrée à charnière basse, la vaisselle visible, un bras d'aspersion qui tourne, des gouttes et des vagues pendant le lavage. Sa vitre s'éclaircit dès qu'il y a quelque chose à voir, c'est-à-dire un cycle en cours, une pause, ou une vaisselle propre qui attend d'être rangée, et reste sombre à l'arrêt, si bien qu'une porte fermée ne se confond jamais avec une porte ouverte. En fin de cycle le chargement passe au vert. Avec une `phase_entity` configurée, les deux phases de séchage remplacent l'animation de lavage par de la vapeur orange qui monte le long de la porte, plus haut pour `Ado Drying` que pour `Drying`, et l'eau disparaît complètement puisqu'il n'y en a plus a ce moment-la.
 
 ![Types d'appareils animés](https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/animated.fr.gif)
 
@@ -63,11 +63,12 @@ Seule `state_entity` est obligatoire ; tout le reste est optionnel. Le réfrigé
 | `state_show_raw` | `true` pour afficher le texte brut plutôt que le libellé traduit (couleur/animation suivent toujours la catégorie détectée). |
 | `name` | Titre de la card. Par défaut, le nom convivial de l'entité d'état. |
 | `compact` | `true` pour masquer l'illustration et n'afficher que le texte. |
-| `language` | `auto` (défaut) suit Home Assistant. N'importe lequel des quatorze codes livrés (`en`, `fr`, `de`, `es`, `it`, `nl`, `pt`, `sv`, `no`, `da`, `pl`, `ru`, `zh`, `cs`) fixe cette card, et son éditeur, dans cette langue. Pour faire tourner Home Assistant dans une langue et lire une card dans une autre. |
+| `language` | `auto` (défaut) suit Home Assistant. N'importe lequel des quatorze codes livrés (`en`, `fr`, `de`, `es`, `it`, `nl`, `pt`, `sv`, `no`, `da`, `pl`, `ru`, `zh`, `cs`) fixe cette card, et son éditeur, dans cette langue. Le bokmål norvégien accepte aussi `nb` et `nb-NO`, qui retombent sur la traduction norvégienne existante. Pour faire tourner Home Assistant dans une langue et lire une card dans une autre. |
 | `appliance_type` | `auto` (défaut) \| `washer` \| `dryer` \| `dishwasher` \| `oven` \| `microwave` \| `hood` \| `cooktop` \| `fridge` \| `kettle` \| `cooker` \| `coffee` \| `rice_cooker`. L'éditeur visuel ne propose que les champs utilisables par le type choisi. |
 | `toggle_entity` | Commande marche/arrêt, affichée en bouton d'alimentation sur la card et mise en évidence quand c'est allumé. N'importe quel `switch`/`button`/`script`/`input_boolean`/`fan`. Nommée ainsi pour ne pas être confondue avec `power_entity` ci-dessous, qui est le compteur de watts. |
 | `power_entity` / `power_on_threshold` / `power_icon` | Capteur de puissance (W). Avec un seuil défini, l'état est déduit de la puissance plutôt que de `state_entity` : au-dessus du seuil c'est *en marche*, et la redescente sous le seuil signifie *terminé* jusqu'au prochain cycle. Pointer `state_entity` sur le même capteur de puissance suffit à l'activer, avec un seuil par défaut de 10 W. `power_icon` remplace l'icône par défaut `mdi:power-plug`. |
 | `program_entity` / `program_format` | Entité du programme/cycle. `clean` (défaut) simplifie le motif courant `"<catégorie> Pr <nom>"`, retire l'espace de noms d'un enum Home Connect complet (`LaundryCare.Washer.Program.Auto40` s'affiche *Auto 40*) et détache une température ou une durée collée au nom (`Rapid20Min` s'affiche *Rapid 20 Min*). `raw` affiche l'état tel quel. |
+| `phase_entity` / `phase_map` | Lave-vaisselle uniquement. Entité de phase du cycle, et une table pour les valeurs brutes propres à chaque marque. Phases reconnues : `Prewash`, `Mainwash`, `Rinsing`, `Drying` et `Ado Drying`. Seules les deux phases de séchage changent l'illustration : l'animation de lavage cède la place à de la vapeur orange, plus haute sur la porte pour `Ado Drying`. Les trois phases de lavage partagent volontairement la même animation, puisque la machine y fait réellement la même chose. Une valeur absente, indisponible ou non reconnue est ignorée et l'animation normale est conservée. En YAML seulement pour l'instant, l'éditeur visuel ne propose pas encore ces deux champs. |
 | `remaining_time_entity` / `remaining_time_unit` | Temps restant. Unité `auto` (défaut), `seconds`, ou `minutes`. |
 | `remaining_time_hide_when_idle` | `true` pour n'afficher le temps restant que pendant la marche. Évite qu'une heure de fin périmée (Samsung SmartThings conserve celle du cycle précédent) reste affichée. |
 | `progress_entity` | Capteur 0–100 optionnel ; remplace l'estimation côté client. |
@@ -200,10 +201,41 @@ fonctionne aussi, les lignes vides et celles commençant par `#` sont ignorées,
 et seul le premier `:` ou `=` découpe la ligne, donc un libellé peut lui-même en
 contenir un.
 
+### Animation des phases du lave-vaisselle
+
+L'entité de phase est optionnelle. Si l'intégration expose la phase du cycle,
+indique-la directement, ou fournis une table explicite pour les valeurs propres
+à la marque :
+
+```yaml
+appliance_type: dishwasher
+state_entity: sensor.lave_vaisselle_etat
+phase_entity: sensor.lave_vaisselle_phase
+phase_map:
+  Prewash: prewash
+  Mainwash: mainwash
+  Drying: drying
+  Ado Drying: ado_drying
+```
+
+Les alias intégrés reconnaissent aussi ces valeurs sans `phase_map`, ainsi que
+`Pre Wash`, `Wash`, `Rinse` et `Dry`.
+
+Ce que fait chaque phase : `Prewash`, `Mainwash` et `Rinsing` conservent toutes
+l'animation de lavage, parce qu'un lave-vaisselle y fait la même chose.
+`Drying` et `Ado Drying` arrêtent le bras et l'eau, et affichent à la place de
+la vapeur orange qui monte le long de la porte, plus haut pour `Ado Drying`,
+avec le joint de porte qui rougeoie.
+
+La phase ne change que l'illustration. Elle ne remplace ni l'état de l'appareil
+ni le capteur de porte, et une valeur non reconnue est ignorée plutôt que de
+casser l'animation.
+
 ## Remerciements
 
 - [@chike-he](https://github.com/chike-he) : traduction chinoise ([#3](https://github.com/ADNPolymerase/ha-appliance-card/issues/3))
 - [@pbarone](https://github.com/pbarone) : prise en charge de `device_class: timestamp` pour le temps restant ([#2](https://github.com/ADNPolymerase/ha-appliance-card/pull/2))
+- [@monsivar](https://github.com/monsivar) : alias de locale du bokmål norvégien ([#10](https://github.com/ADNPolymerase/ha-appliance-card/pull/10)) et illustration dédiée du lave-vaisselle ([#11](https://github.com/ADNPolymerase/ha-appliance-card/pull/11))
 
 ## Licence
 
