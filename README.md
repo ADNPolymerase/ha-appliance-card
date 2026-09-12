@@ -17,7 +17,7 @@ No brand assumed: every field is a configurable entity mapping, so it works with
 > Feedback and issues welcome.
 > 🇫🇷 [Lire en français](README.fr.md)
 
-![HA Appliance Card screenshot](https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/screenshot.png)
+<img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/screenshot.png" alt="HA Appliance Card screenshot" width="640">
 
 ## Features
 

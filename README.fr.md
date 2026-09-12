@@ -17,7 +17,7 @@ Aucune marque supposée : chaque champ est un mapping d'entité configurable, el
 > Retours et issues bienvenus.
 > 🇬🇧 [Read in English](README.md)
 
-![HA Appliance Card screenshot](https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/screenshot.fr.png)
+<img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/screenshot.fr.png" alt="HA Appliance Card screenshot" width="640">
 
 ## Fonctionnalités
 
