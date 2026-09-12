@@ -1631,6 +1631,40 @@ function stringifyValueMap(valueMap) {
   return Object.keys(valueMap).map((key) => `${key}: ${valueMap[key]}`).join("\n");
 }
 
+// Dishwasher integrations do not share one phase vocabulary. Keep the
+// visual model deliberately small and safe: an optional phase entity can add
+// a known phase class, but a missing, unavailable, or new vendor value simply
+// leaves the normal dishwasher animation in place.
+const DISHWASHER_PHASE_ALIASES = {
+  prewash: "prewash",
+  "pre wash": "prewash",
+  "pre rinse": "prewash",
+  prerinsing: "prewash",
+  mainwash: "mainwash",
+  "main wash": "mainwash",
+  wash: "mainwash",
+  washing: "mainwash",
+  rinse: "rinsing",
+  rinsing: "rinsing",
+  drying: "drying",
+  dry: "drying",
+  "ado drying": "ado_drying",
+  adodrying: "ado_drying",
+};
+const DISHWASHER_PHASES = new Set(Object.values(DISHWASHER_PHASE_ALIASES));
+
+function normalizeDishwasherPhase(raw, phaseMap) {
+  if (raw === undefined || raw === null) return "";
+  const text = String(raw).trim();
+  if (["unknown", "unavailable", "none", ""].includes(text.toLowerCase())) return "";
+
+  const mapped = mapInfoValue(text, phaseMap);
+  const candidate = mapped === null || mapped === undefined ? text : mapped;
+  const key = stripAccents(String(candidate).trim()).toLowerCase().replace(/[\\_-]+/g, " ").replace(/\\s+/g, " ");
+  const phase = DISHWASHER_PHASE_ALIASES[key] || key.replace(/ /g, "_");
+  return DISHWASHER_PHASES.has(phase) ? phase : "";
+}
+
 function formatInfoValue(st, hass, valueMap) {
   const mapped = mapInfoValue(st.state, valueMap);
   // A mapped label replaces the value outright: appending a unit to it
@@ -2292,6 +2326,46 @@ const ILLUSTRATION_CSS = {
         .machine.spinning .dw-water { opacity: 0.82; animation: dw-water-pulse 2.2s ease-in-out infinite; animation-delay: var(--anim-offset, 0s); }
         .machine.spinning .dw-wave-a { animation: dw-wave-drift 1.8s ease-in-out infinite; animation-delay: var(--anim-offset, 0s); }
         .machine.spinning .dw-wave-b { animation: dw-wave-drift 2.4s ease-in-out infinite reverse; animation-delay: var(--anim-offset, 0s); }
+        .dw-heat {
+          position: absolute; top: 17px; right: 25%; left: 25%; z-index: 6;
+          height: 28px; opacity: 0; pointer-events: none;
+          transition: opacity 0.35s ease;
+        }
+        .dw-heat i {
+          position: absolute; bottom: 0; width: 3px; height: 16px;
+          border-radius: 50%; opacity: 0;
+          background: linear-gradient(180deg, rgba(255, 193, 7, 0), rgba(255, 112, 67, 0.9));
+          filter: blur(0.35px);
+        }
+        .dw-heat-a { left: 12%; }
+        .dw-heat-b { left: 42%; height: 19px !important; }
+        .dw-heat-c { right: 12%; height: 14px !important; }
+        .machine.phase-drying .dw-heat,
+        .machine.phase-ado_drying .dw-heat { opacity: 0.8; }
+        .machine.phase-ado_drying .dw-heat { top: 8px; height: 34px; opacity: 1; }
+        .machine.phase-drying .dw-heat i,
+        .machine.phase-ado_drying .dw-heat i {
+          animation: dw-heat-rise 2.4s ease-in-out infinite; animation-delay: var(--anim-offset, 0s);
+        }
+        .machine.phase-drying .dw-heat-b,
+        .machine.phase-ado_drying .dw-heat-b { animation-delay: calc(-0.8s + var(--anim-offset, 0s)); }
+        .machine.phase-drying .dw-heat-c,
+        .machine.phase-ado_drying .dw-heat-c { animation-delay: calc(-1.5s + var(--anim-offset, 0s)); }
+        .machine.phase-drying .dw-spray,
+        .machine.phase-drying .dw-drop,
+        .machine.phase-drying .dw-water,
+        .machine.phase-drying .dw-wave-a,
+        .machine.phase-drying .dw-wave-b,
+        .machine.phase-ado_drying .dw-spray,
+        .machine.phase-ado_drying .dw-drop,
+        .machine.phase-ado_drying .dw-water,
+        .machine.phase-ado_drying .dw-wave-a,
+        .machine.phase-ado_drying .dw-wave-b {
+          animation-play-state: paused; opacity: 0.12;
+        }
+        .machine.phase-ado_drying .dw-door {
+          box-shadow: inset 0 0 0 1px rgba(225, 235, 236, 0.18), 0 0 8px rgba(255, 112, 67, 0.35);
+        }
         .dw-door {
           position: absolute; top: 22px; right: 8px; bottom: 8px; left: 8px; z-index: 5;
           padding: 0; border: 3px solid #34383b; border-radius: 4px;
@@ -2314,9 +2388,15 @@ const ILLUSTRATION_CSS = {
         }
         @keyframes dw-water-pulse { 0%, 100% { transform: scaleX(0.97); } 50% { transform: scaleX(1.02); } }
         @keyframes dw-wave-drift { 0%, 100% { transform: translateX(-3%); } 50% { transform: translateX(3%); } }
+        @keyframes dw-heat-rise {
+          0% { opacity: 0; transform: translateY(4px) scaleY(0.8) rotate(-4deg); }
+          35% { opacity: 0.62; }
+          100% { opacity: 0; transform: translateY(-18px) scaleY(1.15) rotate(5deg); }
+        }
         @media (prefers-reduced-motion: reduce) {
           .machine.spinning .dw-spray, .machine.spinning .dw-drop, .machine.spinning .dw-water,
-          .machine.spinning .dw-wave-a, .machine.spinning .dw-wave-b {
+          .machine.spinning .dw-wave-a, .machine.spinning .dw-wave-b,
+          .machine.phase-drying .dw-heat i, .machine.phase-ado_drying .dw-heat i {
           animation-duration: 0.001ms !important; animation-iteration-count: 1 !important;
           }
         }
@@ -3050,13 +3130,14 @@ function illustrationHtml(type, ctx) {
     ctx.heating ? "heating" : "",
     ctx.lit ? "lit" : "",
     ctx.doorOpen ? "open" : "",
+    ctx.phase && DISHWASHER_PHASES.has(ctx.phase) ? `phase-${ctx.phase}` : "",
   ]
     .filter(Boolean)
     .join(" ");
 
   if (type === "dishwasher") {
     return `
-        <div class="machine ${ctx.spinning ? "spinning" : ""}">
+        <div class="machine ${cls}">
           <div class="dw-body">
             <div class="dw-controls"><div class="dw-screen"></div></div>
             <div class="dw-cavity">
@@ -3076,6 +3157,9 @@ function illustrationHtml(type, ctx) {
               <div class="dw-water" aria-hidden="true">
                 <span class="dw-wave dw-wave-a"></span><span class="dw-wave dw-wave-b"></span>
               </div>
+            </div>
+            <div class="dw-heat" aria-hidden="true">
+              <i class="dw-heat-a"></i><i class="dw-heat-b"></i><i class="dw-heat-c"></i>
             </div>
             <div class="dw-door ${ctx.doorOpen ? "open" : ""}" aria-hidden="true"></div>
           </div>
@@ -3592,6 +3676,12 @@ class ApplianceCard extends HTMLElement {
     // Alerts
     const alerts = cfg.alerts_entity ? activeAlerts(hass, cfg.alerts_entity) : [];
 
+    // Phase is optional. A phase sensor is useful for richer dishwasher
+    // animation, but integrations that do not expose one must render exactly
+    // as before. Unknown vendor phases are intentionally ignored as well.
+    const phaseState = cfg.phase_entity ? stateObj(hass, cfg.phase_entity) : null;
+    const phase = phaseState ? normalizeDishwasherPhase(phaseState.state, cfg.phase_map) : "";
+
     // Extra info chips
     const infoEntities = (cfg.info_entities || [])
       .map((e) => (typeof e === "string" ? { entity: e } : e))
@@ -4033,6 +4123,7 @@ class ApplianceCard extends HTMLElement {
       zoneColumns: zoneColumns(zones.length, cfg.zones_layout),
       anyZoneOn: zones.some((z) => z.on),
       childLock,
+      phase: applianceType === "dishwasher" ? phase : "",
     };
 
     // A plain on/off control, for the types that have no cycle to start or
@@ -4065,6 +4156,7 @@ class ApplianceCard extends HTMLElement {
       illustrationCtx.ice, illustrationCtx.noWater, illustrationCtx.speed,
       illustrationCtx.fanLevel, illustrationCtx.boost, illustrationCtx.keepWarm,
       illustrationCtx.anyZoneOn,
+      illustrationCtx.phase,
     ].join(",");
     if (animKey !== this._animKey) {
       this._animKey = animKey;
