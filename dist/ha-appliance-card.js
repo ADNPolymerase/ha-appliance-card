@@ -1,4 +1,4 @@
-const CARD_VERSION = "2.3.2";
+const CARD_VERSION = "2.3.3";
 
 console.info(
   "%c HA-APPLIANCE-CARD %c v" + CARD_VERSION + " ",
@@ -33,6 +33,7 @@ const T = {
     remaining_time_entity: "Remaining time entity",
     remaining_time_unit: "Remaining time unit",
     remaining_time_hide_when_idle: "Hide remaining time unless running",
+    remaining_time_split: "Show the end time on its own line",
     unit_auto: "Auto-detect", unit_seconds: "Seconds", unit_minutes: "Minutes",
     progress_entity: "Progress % entity (optional override)",
     door_entity: "Door sensor entity",
@@ -48,6 +49,7 @@ const T = {
     resume_entity: "Resume button entity",
     stop_entity: "Stop / reset button entity",
     section_program: "Program", section_remaining: "Remaining time",
+    section_ready_at: "Ready at",
     section_progress: "Progress % (override)", section_door: "Door sensor",
     section_alerts: "Alerts", section_connectivity: "Connectivity",
     section_info: "Extra info entities",
@@ -133,6 +135,7 @@ const T = {
     remaining_time_entity: "Entit\u00e9 temps restant",
     remaining_time_unit: "Unit\u00e9 du temps restant",
     remaining_time_hide_when_idle: "Masquer le temps restant hors fonctionnement",
+    remaining_time_split: "Afficher l'heure de fin sur une ligne \u00e0 part",
     unit_auto: "D\u00e9tection auto", unit_seconds: "Secondes", unit_minutes: "Minutes",
     progress_entity: "Entit\u00e9 progression % (remplace l'estimation)",
     door_entity: "Entit\u00e9 capteur de porte",
@@ -148,6 +151,7 @@ const T = {
     resume_entity: "Entit\u00e9 bouton Reprendre",
     stop_entity: "Entit\u00e9 bouton Stop / Reset",
     section_program: "Programme", section_remaining: "Temps restant",
+    section_ready_at: "Fin pr\u00e9vue",
     section_progress: "Progression % (remplace l'estimation)", section_door: "Capteur de porte",
     section_alerts: "Alertes", section_connectivity: "Connectivit\u00e9",
     section_info: "Entit\u00e9s d'info compl\u00e9mentaires",
@@ -233,6 +237,7 @@ const T = {
     remaining_time_entity: "\u0421\u0443\u0449\u043d\u043e\u0441\u0442\u044c \u043e\u0441\u0442\u0430\u0432\u0448\u0435\u0433\u043e\u0441\u044f \u0432\u0440\u0435\u043c\u0435\u043d\u0438",
     remaining_time_unit: "\u0415\u0434\u0438\u043d\u0438\u0446\u0430 \u043e\u0441\u0442\u0430\u0432\u0448\u0435\u0433\u043e\u0441\u044f \u0432\u0440\u0435\u043c\u0435\u043d\u0438",
     remaining_time_hide_when_idle: "\u0421\u043a\u0440\u044b\u0432\u0430\u0442\u044c \u043e\u0441\u0442\u0430\u0432\u0448\u0435\u0435\u0441\u044f \u0432\u0440\u0435\u043c\u044f \u0432\u043d\u0435 \u0440\u0430\u0431\u043e\u0442\u044b",
+    remaining_time_split: "\u041f\u043e\u043a\u0430\u0437\u044b\u0432\u0430\u0442\u044c \u0432\u0440\u0435\u043c\u044f \u043e\u043a\u043e\u043d\u0447\u0430\u043d\u0438\u044f \u043e\u0442\u0434\u0435\u043b\u044c\u043d\u043e\u0439 \u0441\u0442\u0440\u043e\u043a\u043e\u0439",
     unit_auto: "\u0410\u0432\u0442\u043e\u043e\u043f\u0440\u0435\u0434\u0435\u043b\u0435\u043d\u0438\u0435", unit_seconds: "\u0421\u0435\u043a\u0443\u043d\u0434\u044b", unit_minutes: "\u041c\u0438\u043d\u0443\u0442\u044b",
     progress_entity: "\u0421\u0443\u0449\u043d\u043e\u0441\u0442\u044c \u043f\u0440\u043e\u0433\u0440\u0435\u0441\u0441\u0430 % (\u043f\u0435\u0440\u0435\u043e\u043f\u0440\u0435\u0434\u0435\u043b\u044f\u0435\u0442 \u0440\u0430\u0441\u0447\u0451\u0442)",
     door_entity: "\u0421\u0443\u0449\u043d\u043e\u0441\u0442\u044c \u0434\u0430\u0442\u0447\u0438\u043a\u0430 \u0434\u0432\u0435\u0440\u0438",
@@ -248,6 +253,7 @@ const T = {
     resume_entity: "\u0421\u0443\u0449\u043d\u043e\u0441\u0442\u044c \u043a\u043d\u043e\u043f\u043a\u0438 \u041f\u0440\u043e\u0434\u043e\u043b\u0436\u0438\u0442\u044c",
     stop_entity: "\u0421\u0443\u0449\u043d\u043e\u0441\u0442\u044c \u043a\u043d\u043e\u043f\u043a\u0438 \u0421\u0442\u043e\u043f / \u0421\u0431\u0440\u043e\u0441",
     section_program: "\u041f\u0440\u043e\u0433\u0440\u0430\u043c\u043c\u0430", section_remaining: "\u041e\u0441\u0442\u0430\u0432\u0448\u0435\u0435\u0441\u044f \u0432\u0440\u0435\u043c\u044f",
+    section_ready_at: "\u041e\u043a\u043e\u043d\u0447\u0430\u043d\u0438\u0435",
     section_progress: "\u041f\u0440\u043e\u0433\u0440\u0435\u0441\u0441 % (\u043f\u0435\u0440\u0435\u043e\u043f\u0440\u0435\u0434\u0435\u043b\u0435\u043d\u0438\u0435)", section_door: "\u0414\u0430\u0442\u0447\u0438\u043a \u0434\u0432\u0435\u0440\u0438",
     section_alerts: "\u041e\u043f\u043e\u0432\u0435\u0449\u0435\u043d\u0438\u044f", section_connectivity: "\u041f\u043e\u0434\u043a\u043b\u044e\u0447\u0435\u043d\u0438\u0435",
     section_info: "\u0414\u043e\u043f. \u0441\u0443\u0449\u043d\u043e\u0441\u0442\u0438 \u0438\u043d\u0444\u043e\u0440\u043c\u0430\u0446\u0438\u0438",
@@ -333,6 +339,7 @@ const T = {
     remaining_time_entity: "Entit\u00e4t Restzeit",
     remaining_time_unit: "Einheit der Restzeit",
     remaining_time_hide_when_idle: "Restzeit nur w\u00e4hrend des Betriebs anzeigen",
+    remaining_time_split: "Endzeit in eigener Zeile anzeigen",
     unit_auto: "Automatisch erkennen", unit_seconds: "Sekunden", unit_minutes: "Minuten",
     progress_entity: "Fortschritt %-Entit\u00e4t (optionale \u00dcberschreibung)",
     door_entity: "T\u00fcrsensor-Entit\u00e4t",
@@ -348,6 +355,7 @@ const T = {
     resume_entity: "Fortsetzen-Taster-Entit\u00e4t",
     stop_entity: "Stopp/Reset-Taster-Entit\u00e4t",
     section_program: "Programm", section_remaining: "Restzeit",
+    section_ready_at: "Fertig um",
     section_progress: "Fortschritt % (\u00dcberschreibung)", section_door: "T\u00fcrsensor",
     section_alerts: "Warnungen", section_connectivity: "Konnektivit\u00e4t",
     section_info: "Zus\u00e4tzliche Info-Entit\u00e4ten",
@@ -433,6 +441,7 @@ const T = {
     remaining_time_entity: "Entidad de tiempo restante",
     remaining_time_unit: "Unidad del tiempo restante",
     remaining_time_hide_when_idle: "Ocultar tiempo restante si no est\u00e1 en marcha",
+    remaining_time_split: "Mostrar la hora de fin en una l\u00ednea aparte",
     unit_auto: "Detecci\u00f3n autom\u00e1tica", unit_seconds: "Segundos", unit_minutes: "Minutos",
     progress_entity: "Entidad de progreso % (anula la estimaci\u00f3n)",
     door_entity: "Entidad del sensor de puerta",
@@ -448,6 +457,7 @@ const T = {
     resume_entity: "Entidad del bot\u00f3n Reanudar",
     stop_entity: "Entidad del bot\u00f3n Parar/Reiniciar",
     section_program: "Programa", section_remaining: "Tiempo restante",
+    section_ready_at: "Listo a las",
     section_progress: "Progreso % (anula estimaci\u00f3n)", section_door: "Sensor de puerta",
     section_alerts: "Alertas", section_connectivity: "Conectividad",
     section_info: "Entidades de informaci\u00f3n adicionales",
@@ -533,6 +543,7 @@ const T = {
     remaining_time_entity: "Entit\u00e0 tempo rimanente",
     remaining_time_unit: "Unit\u00e0 del tempo rimanente",
     remaining_time_hide_when_idle: "Nascondi tempo residuo se non in funzione",
+    remaining_time_split: "Mostra l'ora di fine su una riga a parte",
     unit_auto: "Rilevamento automatico", unit_seconds: "Secondi", unit_minutes: "Minuti",
     progress_entity: "Entit\u00e0 progresso % (sovrascrive la stima)",
     door_entity: "Entit\u00e0 sensore portello",
@@ -548,6 +559,7 @@ const T = {
     resume_entity: "Entit\u00e0 pulsante Riprendi",
     stop_entity: "Entit\u00e0 pulsante Stop/Reset",
     section_program: "Programma", section_remaining: "Tempo rimanente",
+    section_ready_at: "Pronto alle",
     section_progress: "Progresso % (sovrascrive stima)", section_door: "Sensore portello",
     section_alerts: "Avvisi", section_connectivity: "Connettivit\u00e0",
     section_info: "Entit\u00e0 informative aggiuntive",
@@ -633,6 +645,7 @@ const T = {
     remaining_time_entity: "Entiteit resterende tijd",
     remaining_time_unit: "Eenheid resterende tijd",
     remaining_time_hide_when_idle: "Resterende tijd verbergen buiten gebruik",
+    remaining_time_split: "Eindtijd op een aparte regel tonen",
     unit_auto: "Automatisch detecteren", unit_seconds: "Seconden", unit_minutes: "Minuten",
     progress_entity: "Voortgang %-entiteit (overschrijft schatting)",
     door_entity: "Deursensor-entiteit",
@@ -648,6 +661,7 @@ const T = {
     resume_entity: "Hervatten-knopentiteit",
     stop_entity: "Stop/reset-knopentiteit",
     section_program: "Programma", section_remaining: "Resterende tijd",
+    section_ready_at: "Klaar om",
     section_progress: "Voortgang % (overschrijft schatting)", section_door: "Deursensor",
     section_alerts: "Meldingen", section_connectivity: "Connectiviteit",
     section_info: "Extra info-entiteiten",
@@ -733,6 +747,7 @@ const T = {
     remaining_time_entity: "Entidade de tempo restante",
     remaining_time_unit: "Unidade do tempo restante",
     remaining_time_hide_when_idle: "Ocultar tempo restante fora de funcionamento",
+    remaining_time_split: "Mostrar a hora de fim numa linha \u00e0 parte",
     unit_auto: "Dete\u00e7\u00e3o autom\u00e1tica", unit_seconds: "Segundos", unit_minutes: "Minutos",
     progress_entity: "Entidade de progresso % (substitui a estimativa)",
     door_entity: "Entidade do sensor de porta",
@@ -748,6 +763,7 @@ const T = {
     resume_entity: "Entidade do bot\u00e3o Retomar",
     stop_entity: "Entidade do bot\u00e3o Parar/Reiniciar",
     section_program: "Programa", section_remaining: "Tempo restante",
+    section_ready_at: "Pronto \u00e0s",
     section_progress: "Progresso % (substitui estimativa)", section_door: "Sensor de porta",
     section_alerts: "Alertas", section_connectivity: "Conetividade",
     section_info: "Entidades de informa\u00e7\u00e3o adicionais",
@@ -833,6 +849,7 @@ const T = {
     remaining_time_entity: "Entitet f\u00f6r \u00e5terst\u00e5ende tid",
     remaining_time_unit: "Enhet f\u00f6r \u00e5terst\u00e5ende tid",
     remaining_time_hide_when_idle: "D\u00f6lj \u00e5terst\u00e5ende tid n\u00e4r den inte k\u00f6r",
+    remaining_time_split: "Visa sluttiden p\u00e5 en egen rad",
     unit_auto: "Automatisk identifiering", unit_seconds: "Sekunder", unit_minutes: "Minuter",
     progress_entity: "F\u00f6rlopp %-entitet (\u00e5sidos\u00e4tter uppskattning)",
     door_entity: "Luckans sensorentitet",
@@ -848,6 +865,7 @@ const T = {
     resume_entity: "\u00c5terupptaknappentitet",
     stop_entity: "Stopp-/\u00e5terst\u00e4llningsknappentitet",
     section_program: "Program", section_remaining: "\u00c5terst\u00e5ende tid",
+    section_ready_at: "Klar kl.",
     section_progress: "F\u00f6rlopp % (\u00e5sidos\u00e4tter uppskattning)", section_door: "Luckans sensor",
     section_alerts: "Varningar", section_connectivity: "Anslutning",
     section_info: "Extra infoentiteter",
@@ -933,6 +951,7 @@ const T = {
     remaining_time_entity: "Entitet for gjenv\u00e6rende tid",
     remaining_time_unit: "Enhet for gjenv\u00e6rende tid",
     remaining_time_hide_when_idle: "Skjul gjenst\u00e5ende tid n\u00e5r den ikke kj\u00f8rer",
+    remaining_time_split: "Vis sluttidspunktet p\u00e5 en egen linje",
     unit_auto: "Automatisk gjenkjenning", unit_seconds: "Sekunder", unit_minutes: "Minutter",
     progress_entity: "Fremdrift %-entitet (overstyrer estimat)",
     door_entity: "Lukesensor-entitet",
@@ -948,6 +967,7 @@ const T = {
     resume_entity: "Gjenopptaknapp-entitet",
     stop_entity: "Stopp-/tilbakestillingsknapp-entitet",
     section_program: "Program", section_remaining: "Gjenv\u00e6rende tid",
+    section_ready_at: "Ferdig kl.",
     section_progress: "Fremdrift % (overstyrer estimat)", section_door: "Lukesensor",
     section_alerts: "Varsler", section_connectivity: "Tilkobling",
     section_info: "Ekstra infoentiteter",
@@ -1033,6 +1053,7 @@ const T = {
     remaining_time_entity: "Enhed for resterende tid",
     remaining_time_unit: "Tidsenhed for resterende tid",
     remaining_time_hide_when_idle: "Skjul resterende tid uden for drift",
+    remaining_time_split: "Vis sluttidspunktet p\u00e5 en separat linje",
     unit_auto: "Automatisk registrering", unit_seconds: "Sekunder", unit_minutes: "Minutter",
     progress_entity: "Fremgang %-enhed (tilsides\u00e6tter estimat)",
     door_entity: "L\u00e5gesensor-enhed",
@@ -1048,6 +1069,7 @@ const T = {
     resume_entity: "Genoptagknap-enhed",
     stop_entity: "Stop-/nulstillingsknap-enhed",
     section_program: "Program", section_remaining: "Resterende tid",
+    section_ready_at: "F\u00e6rdig kl.",
     section_progress: "Fremgang % (tilsides\u00e6tter estimat)", section_door: "L\u00e5gesensor",
     section_alerts: "Advarsler", section_connectivity: "Forbindelse",
     section_info: "Ekstra info-enheder",
@@ -1133,6 +1155,7 @@ const T = {
     remaining_time_entity: "Encja pozosta\u0142ego czasu",
     remaining_time_unit: "Jednostka pozosta\u0142ego czasu",
     remaining_time_hide_when_idle: "Ukryj pozosta\u0142y czas poza prac\u0105",
+    remaining_time_split: "Pokazuj godzin\u0119 zako\u0144czenia w osobnym wierszu",
     unit_auto: "Wykrywanie automatyczne", unit_seconds: "Sekundy", unit_minutes: "Minuty",
     progress_entity: "Encja post\u0119pu % (nadpisuje szacowanie)",
     door_entity: "Encja czujnika drzwiczek",
@@ -1148,6 +1171,7 @@ const T = {
     resume_entity: "Encja przycisku Wzn\u00f3w",
     stop_entity: "Encja przycisku Stop/Reset",
     section_program: "Program", section_remaining: "Pozosta\u0142y czas",
+    section_ready_at: "Koniec o",
     section_progress: "Post\u0119p % (nadpisuje szacowanie)", section_door: "Czujnik drzwiczek",
     section_alerts: "Alerty", section_connectivity: "\u0141\u0105czno\u015b\u0107",
     section_info: "Dodatkowe encje informacyjne",
@@ -1233,6 +1257,7 @@ const T = {
     remaining_time_entity: "\u5269\u4f59\u65f6\u95f4\u5b9e\u4f53",
     remaining_time_unit: "\u5269\u4f59\u65f6\u95f4\u5355\u4f4d",
     remaining_time_hide_when_idle: "\u672a\u8fd0\u884c\u65f6\u9690\u85cf\u65f6\u95f4\u663e\u793a",
+    remaining_time_split: "\u5728\u5355\u72ec\u4e00\u884c\u663e\u793a\u7ed3\u675f\u65f6\u95f4",
     unit_auto: "\u81ea\u52a8\u68c0\u6d4b", unit_seconds: "\u79d2", unit_minutes: "\u5206",
     progress_entity: "\u8fdb\u5ea6\u767e\u5206\u6bd4\u5b9e\u4f53 (\u53ef\u9009 \u8986\u5199)",
     door_entity: "\u95e8\u4f20\u611f\u5668\u5b9e\u4f53",
@@ -1248,6 +1273,7 @@ const T = {
     resume_entity: "\u7ee7\u7eed\u6309\u952e\u5b9e\u4f53",
     stop_entity: "\u505c\u6b62/\u590d\u4f4d\u6309\u952e\u5b9e\u4f53",
     section_program: "\u7a0b\u5e8f", section_remaining: "\u5269\u4f59\u65f6\u95f4",
+    section_ready_at: "\u9884\u8ba1\u5b8c\u6210",
     section_progress: "\u8fdb\u5ea6\u767e\u5206\u6bd4\u5b9e\u4f53 (\u8986\u5199)", section_door: "\u95e8\u4f20\u611f\u5668",
     section_alerts: "\u8b66\u62a5", section_connectivity: "\u8fde\u7f51\u72b6\u6001",
     section_info: "\u989d\u5916\u4fe1\u606f\u5b9e\u4f53",
@@ -1333,6 +1359,7 @@ const T = {
     remaining_time_entity: "Entita zb\u00fdvaj\u00edc\u00edho \u010dasu",
     remaining_time_unit: "Jednotka zb\u00fdvaj\u00edc\u00edho \u010dasu",
     remaining_time_hide_when_idle: "Skr\u00fdt zb\u00fdvaj\u00edc\u00ed \u010das, pokud spot\u0159ebi\u010d nen\u00ed v provozu",
+    remaining_time_split: "Zobrazit \u010das dokon\u010den\u00ed na samostatn\u00e9m \u0159\u00e1dku",
     unit_auto: "Automaticky rozpoznat", unit_seconds: "Sekundy", unit_minutes: "Minuty",
     progress_entity: "Entita pr\u016fb\u011bhu v % (voliteln\u00e9 nahrazen\u00ed odhadu)",
     door_entity: "Entita sn\u00edma\u010de dv\u00ed\u0159ek",
@@ -1348,6 +1375,7 @@ const T = {
     resume_entity: "Entita tla\u010d\u00edtka Pokra\u010dovat",
     stop_entity: "Entita tla\u010d\u00edtka Zastavit / resetovat",
     section_program: "Program", section_remaining: "Zb\u00fdvaj\u00edc\u00ed \u010das",
+    section_ready_at: "Hotovo v",
     section_progress: "Pr\u016fb\u011bh v % (nahrazuje odhad)", section_door: "Sn\u00edma\u010d dv\u00ed\u0159ek",
     section_alerts: "Upozorn\u011bn\u00ed", section_connectivity: "P\u0159ipojen\u00ed",
     section_info: "Dal\u0161\u00ed informa\u010dn\u00ed entity",
@@ -1603,6 +1631,13 @@ function formatDuration(totalSeconds, hass) {
   const m = mins % 60;
   if (h > 0) return `${h}h${String(m).padStart(2, "0")}`;
   return `${m} min`;
+}
+
+// A space inside one reading must never become a line break: "46 min" and
+// "ready at 11:37" stay whole, so a narrow card can only wrap after the dot
+// instead of leaving the time alone on the next line.
+function keepTogether(s) {
+  return String(s).replace(/[ \u202f]/g, "\u00a0");
 }
 
 function formatEta(totalSeconds) {
@@ -4370,13 +4405,28 @@ class ApplianceCard extends HTMLElement {
     });
     if (remSec !== null) {
       const remRounded = Math.round(remSec / 60);
-      lines.push({
-        icon: "mdi:timer-outline",
-        label: t(hass, "section_remaining"),
-        value: remRounded > 0
-          ? `${formatDuration(remSec, hass)} \u00b7 ${t(hass, "ready_at")} ${formatEta(remSec)}`
-          : t(hass, "time_done"),
-      });
+      // Opt-in: the end time on a line of its own keeps both readings on one
+      // row down to a much narrower card than the combined value manages.
+      if (remRounded > 0 && cfg.remaining_time_split) {
+        lines.push({
+          icon: "mdi:timer-outline",
+          label: t(hass, "section_remaining"),
+          value: keepTogether(formatDuration(remSec, hass)),
+        });
+        lines.push({
+          icon: "mdi:clock-end",
+          label: t(hass, "section_ready_at"),
+          value: keepTogether(formatEta(remSec)),
+        });
+      } else {
+        lines.push({
+          icon: "mdi:timer-outline",
+          label: t(hass, "section_remaining"),
+          value: remRounded > 0
+            ? `${keepTogether(formatDuration(remSec, hass))}\u00a0\u00b7 ${keepTogether(`${t(hass, "ready_at")} ${formatEta(remSec)}`)}`
+            : t(hass, "time_done"),
+        });
+      }
     }
     if (cap.door && !cap.fridgeTemp && cfg.door_entity && !cfg.door_hide_in_list) {
       lines.push({
@@ -4500,7 +4550,8 @@ const SECTIONS = [
         { value: "seconds", label: t(hass, "unit_seconds") },
         { value: "minutes", label: t(hass, "unit_minutes") },
       ],
-    }) + c._row("remaining_time_hide_when_idle", "remaining_time_hide_when_idle", { type: "checkbox" }) },
+    }) + c._row("remaining_time_hide_when_idle", "remaining_time_hide_when_idle", { type: "checkbox" })
+      + c._row("remaining_time_split", "remaining_time_split", { type: "checkbox" }) },
   { field: "progress_entity", types: CYCLE_TYPES, labelKey: "section_progress", includeDomains: ["sensor", "input_number"] },
   { field: "door_entity", types: DOOR_TYPES, labelKey: "section_door", includeDomains: ["binary_sensor", "sensor"], extra: (c, hass) =>
       c._row("door_open_state", "door_open_state", { placeholder: "on" }) +

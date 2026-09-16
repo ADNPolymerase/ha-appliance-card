@@ -137,20 +137,20 @@ const remOven = render(
   { appliance_type: 'oven', state_entity: 'sensor.oven_state', remaining_time_entity: 'sensor.oven_rem' },
   OVEN);
 
-contains('temps restant : 1440 s sans unite = 24 min', infoLine(remOven, 'Remaining time'), '24 min');
+contains('temps restant : 1440 s sans unite = 24 min', infoLine(remOven, 'Remaining time'), '24\u00a0min');
 check('temps restant : une heure de fin est calculee',
-  /ready at \d{1,2}:\d{2}/.test(infoLine(remOven, 'Remaining time') || ''), true);
+  /ready\u00a0at\u00a0\d{1,2}:\d{2}/.test(infoLine(remOven, 'Remaining time') || ''), true);
 
 contains('temps restant : unite minutes explicite',
   infoLine(render({ appliance_type: 'oven', state_entity: 'sensor.oven_state',
                     remaining_time_entity: 'sensor.rem_min', remaining_time_unit: 'minutes' },
-    { ...OVEN, 'sensor.rem_min': { state: '24', attributes: {} } }), 'Remaining time'), '24 min');
+    { ...OVEN, 'sensor.rem_min': { state: '24', attributes: {} } }), 'Remaining time'), '24\u00a0min');
 
 contains('temps restant : unite auto depuis unit_of_measurement "min"',
   infoLine(render({ appliance_type: 'oven', state_entity: 'sensor.oven_state',
                     remaining_time_entity: 'sensor.rem_auto' },
     { ...OVEN, 'sensor.rem_auto': { state: '24', attributes: { unit_of_measurement: 'min' } } }),
-    'Remaining time'), '24 min');
+    'Remaining time'), '24\u00a0min');
 
 // device_class timestamp: an absolute finish time, not a duration.
 contains('temps restant : device_class timestamp = difference a maintenant',
@@ -158,7 +158,7 @@ contains('temps restant : device_class timestamp = difference a maintenant',
                     remaining_time_entity: 'sensor.rem_ts' },
     { ...OVEN, 'sensor.rem_ts': { state: new Date(T0 + 30 * 60000).toISOString(),
                                   attributes: { device_class: 'timestamp' } } }),
-    'Remaining time'), '30 min');
+    'Remaining time'), '30\u00a0min');
 
 check('temps restant : timestamp deja passe = termine',
   infoLine(render({ appliance_type: 'oven', state_entity: 'sensor.oven_state',
@@ -176,7 +176,30 @@ check('hide_when_idle : masque le temps restant hors marche',
 contains('hide_when_idle : affiche le temps restant en marche',
   infoLine(render({ appliance_type: 'washer', state_entity: 'sensor.run',
                     remaining_time_entity: 'sensor.oven_rem', remaining_time_hide_when_idle: true },
-    { ...OVEN, 'sensor.run': { state: 'Running', attributes: {} } }), 'Remaining time'), '24 min');
+    { ...OVEN, 'sensor.run': { state: 'Running', attributes: {} } }), 'Remaining time'), '24\u00a0min');
+
+// A narrow card may only wrap the combined value right after its dot. The
+// duration and the end time keep their inner spaces unbreakable, so the time
+// can never end up alone on the next line, cut off from what it is.
+const remValue = infoLine(remOven, 'Remaining time') || '';
+check('temps restant : une seule espace secable dans la valeur',
+  (remValue.match(/ /g) || []).length, 1);
+check('temps restant : cette espace suit le point',
+  remValue.includes('\u00b7 '), true);
+
+// remaining_time_split gives the end time a row of its own.
+const splitOven = render({ appliance_type: 'oven', state_entity: 'sensor.oven_state',
+                           remaining_time_entity: 'sensor.oven_rem', remaining_time_split: true }, OVEN);
+check('split : la duree seule sur sa ligne', infoLine(splitOven, 'Remaining time'), '24\u00a0min');
+check('split : l heure de fin sur sa propre ligne',
+  /^\d{1,2}:\d{2}/.test(infoLine(splitOven, 'Ready at') || ''), true);
+check('sans split : aucune ligne heure de fin', infoLine(remOven, 'Ready at'), null);
+const splitDone = render({ appliance_type: 'oven', state_entity: 'sensor.oven_state',
+                           remaining_time_entity: 'sensor.rem_past', remaining_time_split: true },
+  { ...OVEN, 'sensor.rem_past': { state: new Date(T0 - 60000).toISOString(),
+                                  attributes: { device_class: 'timestamp' } } });
+check('split : cycle termine, une seule ligne', infoLine(splitDone, 'Remaining time'), 'Done');
+check('split : cycle termine, pas d heure de fin', infoLine(splitDone, 'Ready at'), null);
 
 // Progress is latched on the first running render, then counts down from it.
 const prog = build({ appliance_type: 'washer', state_entity: 'sensor.w', remaining_time_entity: 'sensor.r' },
@@ -1511,6 +1534,10 @@ contains('langue : les entites restent lues normalement',
 const edLang = markup(newEditor({ ...base, language: 'fr' }));
 check('editeur : le selecteur de langue est propose',
   /data-field="language"/.test(edLang), true);
+// The split option sits with the other remaining time settings.
+check('split : la case est dans l editeur',
+  /data-field="remaining_time_split"/.test(markup(newEditor({ appliance_type: 'washer',
+    state_entity: 'sensor.w', remaining_time_entity: 'sensor.r' }))), true);
 // Its own labels follow the choice too: picking a language and then reading
 // English underneath would be its own kind of confusing. newEditor builds
 // against an English Home Assistant, so a French label can only come from the

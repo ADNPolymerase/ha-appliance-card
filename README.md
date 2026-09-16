@@ -72,7 +72,8 @@ Only `state_entity` is required; everything else is optional. A fridge is the ex
 | `phase_entity` / `phase_map` | Dishwasher only. Cycle-phase entity, and a map for vendor-specific raw values. Recognised phases are `Prewash`, `Mainwash`, `Rinsing`, `Drying` and `Ado Drying`. Only the two drying phases change the illustration: the wash animation gives way to orange steam, higher up the door for `Ado Drying`. The three wash phases deliberately share one animation, since the machine really is doing the same thing in all of them. Missing, unavailable or unrecognised values are ignored and the normal animation stays. YAML only for now, the visual editor does not offer these two fields yet. |
 | `remaining_time_entity` / `remaining_time_unit` | Remaining duration. Unit `auto` (default), `seconds`, or `minutes`. |
 | `remaining_time_hide_when_idle` | `true` to only show remaining time while the appliance is running. Prevents stale completion timestamps (e.g. Samsung SmartThings keeping a past finish time after the cycle ends) from displaying. |
-| `progress_entity` | Optional 0–100 sensor; overrides the client-side estimate. |
+| `remaining_time_split` | `true` to show the end time on a line of its own (*Ready at 11:37*) instead of after the duration. Keeps both readings on one row in a narrow card, a horizontal stack for instance. Also in the visual editor, under the remaining time entity. |
+| `progress_entity` | Optional 0-100 sensor; overrides the client-side estimate. |
 | `door_entity` / `door_open_state` / `door_invert` / `door_hide_in_list` | Door sensor, the state meaning "open" (default `on`), an invert toggle, and an option to keep the door out of the info list (it still shows on the illustration). |
 | `alerts_entity` | Entity whose *attributes* are on/off flags; any "on/true/active" attribute is shown as an active alert. |
 | `connectivity_entity` / `connectivity_connected_state` | Connectivity sensor and the state meaning "connected" (default `on`). |
@@ -87,10 +88,10 @@ Per type:
 | `heating_entity` | oven | Optional; drives the glowing elements. Falls back to the running state. |
 | `light_entity` | oven, hood | Cavity light / hood lamps. Shown as a small toggle in the card header rather than a full button row, to keep the card short. |
 | `power_level_entity` | microwave, cooktop | Power level (e.g. 800 W). On a cooktop it is the *global* level reported by hobs that never say which zone is heating; it sets how brightly the zones glow. |
-| `fan_entity` | hood | The speed source. The line stays visible while the hood is off (shown as *Off*), since clicking it is how the speed gets changed.  A `fan` entity uses its percentage or preset; a `select` (Home Connect exposes the venting level that way), `sensor` or `number` is mapped onto a 1–3 scale, using the option list when there is one. Click the speed line to open the entity and change it, unless the integration has dropped it to unavailable, in which case the line stays visible but is no longer clickable. |
+| `fan_entity` | hood | The speed source. The line stays visible while the hood is off (shown as *Off*), since clicking it is how the speed gets changed.  A `fan` entity uses its percentage or preset; a `select` (Home Connect exposes the venting level that way), `sensor` or `number` is mapped onto a 1-3 scale, using the option list when there is one. Click the speed line to open the entity and change it, unless the integration has dropped it to unavailable, in which case the line stays visible but is no longer clickable. |
 | `boost_entity` | hood | Optional intensive mode, when the preset doesn't already say so. |
 | `filter_life_entity` / `filter_reset_entity` | hood | Grease filter wear (%) as a bar, and a reset button. |
-| `zones` | cooktop | List of `{ level_entity, residual_heat_entity?, name? }`, up to 6. Levels can be numeric (0–9) or a word (`boost`); zones off but still hot show `H`. |
+| `zones` | cooktop | List of `{ level_entity, residual_heat_entity?, name? }`, up to 6. Levels can be numeric (0-9) or a word (`boost`); zones off but still hot show `H`. |
 | `zones_layout` | cooktop | `2x1` \| `2x2` \| `3x2`. Derived from the number of zones by default. |
 | `zones_count` | cooktop | How many zones to draw when no per-zone entity exists (default 4). |
 | `child_lock_entity` | cooktop | Shows a padlock on the illustration. |
