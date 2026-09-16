@@ -1199,6 +1199,132 @@ check('bouilloire : aucune barre de progression', /class="bar-fill"/.test(ktOn),
 check('bouilloire : sans sonde, aucun afficheur',
   /class="kt-lcd/.test(render({ appliance_type: 'kettle', state_entity: 'switch.kt' }, KETTLE)), false);
 
+// ── Water heater ─────────────────────────────────────────────────────────────
+// A tank heats or waits. What it must never do is look finished, or blue.
+const WH = {
+  'switch.wh':   { state: 'on', attributes: {} },
+  'sensor.wh_t': { state: '46', attributes: { unit_of_measurement: '°C' } },
+};
+const whCfg = { appliance_type: 'water_heater', state_entity: 'switch.wh', temperature_entity: 'sensor.wh_t' };
+const whOn = render(whCfg, WH);
+check('chauffe-eau : en chauffe', stateLine(whOn), 'Heating');
+check('chauffe-eau : la resistance chauffe', machineCls(whOn).split(' ').includes('heating'), true);
+check('chauffe-eau : la ligne d\'etat est chaude', stateColor(whOn), '#ff7043');
+contains('chauffe-eau : la sonde s\'affiche sur la cuve', whOn, '<div class="wh-lcd">46°</div>');
+// 46 degrees on the 15-65 scale fills the tank to 62 %.
+contains('chauffe-eau : la couche chaude suit la temperature', whOn, '--wh-hot: 0.62');
+check('chauffe-eau : ligne de temperature', infoLine(whOn, 'Temperature'), '46 °C');
+check('chauffe-eau : aucune barre de progression', /class="bar-fill"/.test(whOn), false);
+
+const whOff = render(whCfg, { ...WH, 'switch.wh': { state: 'off', attributes: {} } });
+check('chauffe-eau : en veille a l\'arret', stateLine(whOff), 'Standby');
+check('chauffe-eau : rien ne chauffe en veille', machineCls(whOff).split(' ').includes('heating'), false);
+check('chauffe-eau : la veille est grise', stateColor(whOff), 'var(--disabled-text-color, #9e9e9e)');
+
+// A plug falling back under its threshold means the tank is warm again.
+const whPlug = build({ appliance_type: 'water_heater', state_entity: 'sensor.wh_p', power_entity: 'sensor.wh_p' },
+  { 'sensor.wh_p': { state: '2400', attributes: { unit_of_measurement: 'W' } } });
+check('chauffe-eau : la prise consomme, il chauffe', stateLine(whPlug.html), 'Heating');
+check('chauffe-eau : la prise redescend, il attend plutot que terminer',
+  stateLine(rerender(whPlug.card, { 'sensor.wh_p': { state: '0', attributes: { unit_of_measurement: 'W' } } })), 'Standby');
+
+// A water_heater entity reports its operation mode as state and the temperature
+// as an attribute; the heating indicator settles what the mode cannot.
+const whNative = render({ appliance_type: 'water_heater', state_entity: 'water_heater.tank', heating_entity: 'binary_sensor.tank_heating' },
+  { 'water_heater.tank': { state: 'eco', attributes: { current_temperature: 53, temperature: 55 } },
+    'binary_sensor.tank_heating': { state: 'on', attributes: {} } });
+contains('chauffe-eau : une entite water_heater donne sa temperature', whNative, '<div class="wh-lcd">53°</div>');
+check('chauffe-eau : l\'indicateur de chauffe decide', stateLine(whNative), 'Heating');
+check('chauffe-eau : indicateur eteint, en veille',
+  stateLine(render({ appliance_type: 'water_heater', state_entity: 'water_heater.tank', heating_entity: 'binary_sensor.tank_heating' },
+    { 'water_heater.tank': { state: 'eco', attributes: {} }, 'binary_sensor.tank_heating': { state: 'off', attributes: {} } })), 'Standby');
+
+const whBare = render({ appliance_type: 'water_heater', state_entity: 'switch.wh' }, WH);
+check('chauffe-eau : sans sonde, aucun afficheur', /class="wh-lcd/.test(whBare), false);
+contains('chauffe-eau : sans sonde, la cuve reste neutre', whBare, '--wh-hot: 0.00');
+contains('chauffe-eau : en francais', render({ ...whCfg, language: 'fr' }, WH), 'En chauffe');
+
+// ── Boiler ───────────────────────────────────────────────────────────────────
+// Nefit and Bosch show -H, =H and 0H on the panel and say CH, HW and No in their
+// status. A combi boiler serves the taps first, so hot water wins a tie.
+const blOf = (state, extra = {}, more = {}) => render({ appliance_type: 'boiler', state_entity: 'sensor.bl', ...extra },
+  { 'sensor.bl': { state, attributes: {} }, ...more });
+for (const [raw, label, mode] of [
+  ['-H', 'Heating', 'space_heating'], ['=H', 'Hot water', 'hot_water'], ['0H', 'Standby', 'idle'],
+  ['CH', 'Heating', 'space_heating'], ['HW', 'Hot water', 'hot_water'], ['No', 'Standby', 'idle'],
+  ['Chauffage', 'Heating', 'space_heating'], ['Eau chaude', 'Hot water', 'hot_water'],
+]) {
+  const h = blOf(raw);
+  check(`chaudiere : ${raw} se lit ${label}`, stateLine(h), label);
+  check(`chaudiere : ${raw} dessine le mode ${mode}`, machineCls(h).split(' ').includes(`mode-${mode}`), true);
+}
+check('chaudiere : la flamme brule en chauffage', machineCls(blOf('-H')).split(' ').includes('flame'), true);
+check('chaudiere : la flamme brule pour l\'eau chaude', machineCls(blOf('=H')).split(' ').includes('flame'), true);
+check('chaudiere : pas de flamme en veille', machineCls(blOf('0H')).split(' ').includes('flame'), false);
+check('chaudiere : chauffage en orange', stateColor(blOf('-H')), '#ff7043');
+check('chaudiere : eau chaude en rouge', stateColor(blOf('=H')), '#ef5350');
+check('chaudiere : veille en gris', stateColor(blOf('0H')), 'var(--disabled-text-color, #9e9e9e)');
+check('chaudiere : state_map vers un mode', stateLine(blOf('7', { state_map: { 7: 'hot_water' } })), 'Hot water');
+check('chaudiere : une valeur inconnue reste lisible', stateLine(blOf('Maintenance')), 'Maintenance');
+contains('chaudiere : en francais', blOf('=H', { language: 'fr' }), 'Eau chaude');
+
+const blInd = (hw, ch) => blOf('whatever', { hot_water_entity: 'binary_sensor.hw', heating_entity: 'binary_sensor.ch' },
+  { 'binary_sensor.hw': { state: hw, attributes: {} }, 'binary_sensor.ch': { state: ch, attributes: {} } });
+check('chaudiere : indicateur d\'eau chaude', stateLine(blInd('on', 'off')), 'Hot water');
+check('chaudiere : indicateur de chauffage', stateLine(blInd('off', 'on')), 'Heating');
+check('chaudiere : les deux allumes, l\'eau chaude passe devant', stateLine(blInd('on', 'on')), 'Hot water');
+check('chaudiere : les deux eteints, en veille', stateLine(blInd('off', 'off')), 'Standby');
+
+// Only a burner modulation: the flame says it heats, not what for.
+const blBurn = build({ appliance_type: 'boiler', state_entity: 'sensor.mod', power_entity: 'sensor.mod' },
+  { 'sensor.mod': { state: '100', attributes: { unit_of_measurement: '%' } } });
+check('chaudiere : bruleur seul', stateLine(blBurn.html), 'Burner on');
+check('chaudiere : bruleur seul, la flamme sans sortie', machineCls(blBurn.html).split(' ').includes('mode-burner'), true);
+check('chaudiere : bruleur eteint, en veille plutot que terminee',
+  stateLine(rerender(blBurn.card, { 'sensor.mod': { state: '0', attributes: { unit_of_measurement: '%' } } })), 'Standby');
+contains('chaudiere : temperature de depart a l\'ecran',
+  blOf('-H', { temperature_entity: 'sensor.flow' }, { 'sensor.flow': { state: '62', attributes: { unit_of_measurement: '°C' } } }),
+  '<div class="bl-lcd">62°</div>');
+check('chaudiere : aucune barre de progression', /class="bar-fill"/.test(blOf('-H')), false);
+
+for (const [label, h, names] of [
+  ['chauffe-eau', whOn, ['wh-glow', 'wh-rise']],
+  ['chaudiere en chauffage', blOf('-H'), ['bl-flicker', 'bl-rise']],
+  ['chaudiere en eau chaude', blOf('=H'), ['bl-flicker', 'bl-drip']],
+]) {
+  const used = [...h.matchAll(/animation:\s*([a-z0-9-]+)/g)].map(m => m[1]);
+  const defined = new Set([...h.matchAll(/@keyframes\s+([a-z0-9-]+)/g)].map(m => m[1]));
+  check(`${label} : chaque animation a ses keyframes`, [...new Set(used)].filter(n => !defined.has(n)).join(','), '');
+  for (const n of names) check(`${label} : declare ${n}`, used.includes(n), true);
+}
+
+// ── Detection by name ────────────────────────────────────────────────────────
+const drawn = h => /class="wh-tank"/.test(h) ? 'water_heater' : /class="bl-box"/.test(h) ? 'boiler'
+  : /class="kt-body"/.test(h) ? 'kettle' : 'other';
+for (const [id, want, icon] of [
+  ['switch.chauffe_eau', 'water_heater'], ['switch.cumulus', 'water_heater'], ['water_heater.dhw', 'water_heater'],
+  ['switch.salle_de_bain', 'water_heater', 'mdi:water-boiler'],
+  ['sensor.chaudiere_etat', 'boiler'], ['sensor.boiler_status', 'boiler'],
+  ['switch.kettle', 'kettle'], ['sensor.dryer_state', 'other'], ['sensor.washer_state', 'other'],
+]) {
+  check(`detection : ${icon || id}`, drawn(render({ state_entity: id },
+    { [id]: { state: 'off', attributes: icon ? { icon } : {} } })), want);
+}
+
+// ── Editor ───────────────────────────────────────────────────────────────────
+const edHtml = type => markup(newEditor({ state_entity: 'sensor.oven_appliance_state', appliance_type: type })._root)
+  || newEditor({ state_entity: 'sensor.oven_appliance_state', appliance_type: type })._root._html || '';
+const toggles = type => [...edHtml(type).matchAll(/data-toggle="([^"]+)"/g)].map(m => m[1]);
+contains('editeur : le chauffe-eau est au choix', edHtml('boiler'), 'value="water_heater"');
+contains('editeur : la chaudiere est au choix', edHtml('boiler'), 'value="boiler"');
+check('editeur : la chaudiere propose l\'eau chaude', toggles('boiler').includes('hot_water_entity'), true);
+check('editeur : la chaudiere propose le chauffage', toggles('boiler').includes('heating_entity'), true);
+check('editeur : une seule temperature sur la chaudiere', toggles('boiler').filter(f => f === 'temperature_entity').length, 1);
+check('editeur : un seul indicateur de chauffe sur le chauffe-eau', toggles('water_heater').filter(f => f === 'heating_entity').length, 1);
+check('editeur : le chauffe-eau propose sa sonde', toggles('water_heater').includes('temperature_entity'), true);
+check('editeur : pas d\'eau chaude a part sur le chauffe-eau', toggles('water_heater').includes('hot_water_entity'), false);
+check('editeur : pas de programme sur une chaudiere', toggles('boiler').includes('program_entity'), false);
+
 // ── Source encoding ──────────────────────────────────────────────────────────
 // The card ships as one file loaded over HTTP by browsers whose charset
 // guess is not ours to control. Every accented label is escaped at the source,

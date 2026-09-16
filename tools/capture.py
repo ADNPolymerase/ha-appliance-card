@@ -20,8 +20,8 @@ demo page takes ?phase=<ms> and pins every animation to that offset through the
 Web Animations API, so each frame is captured at a chosen point of the cycle and
 the result actually moves.
 
-The screenshots come back at exactly the committed size, 2608x2357 and
-2608x2355. The animated strip lands within a few pixels of the committed one:
+The screenshots come back at exactly the committed size, 3263x2248 and
+3263x2245. The animated strip lands within a few pixels of the committed one:
 the remainder is content rather than framing, since the demo prints a clock
 time that moves and label widths differ from one run to the next.
 
@@ -102,7 +102,8 @@ def shoot(url, out, window=(1500, 1500), crop=True, scale=SCALE):
 def screenshots():
     for lang, name in (("", "screenshot.png"), ("&lang=fr", "screenshot.fr.png")):
         out = DOCS / name
-        im = shoot(f"http://127.0.0.1:{PORT}/docs/demo.html?view=types{lang}", str(out))
+        # Five columns since the water heater and the boiler joined: 1660px wide.
+        im = shoot(f"http://127.0.0.1:{PORT}/docs/demo.html?view=types{lang}", str(out), window=(1800, 1500))
         print(f"  {name}  {im.size[0]}x{im.size[1]}")
 
 

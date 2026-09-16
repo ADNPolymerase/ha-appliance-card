@@ -1,4 +1,4 @@
-const CARD_VERSION = "2.3.3";
+const CARD_VERSION = "2.4.0";
 
 console.info(
   "%c HA-APPLIANCE-CARD %c v" + CARD_VERSION + " ",
@@ -112,6 +112,9 @@ const T = {
     language: "Language", language_auto: "Follow Home Assistant",
     illustration_color: "Appliance colour", color_auto: "Follow the theme",
     color_white: "White", color_grey: "Grey", color_black: "Black",
+    type_water_heater: "Water heater", type_boiler: "Boiler",
+    boiler_space_heating: "Heating", boiler_hot_water: "Hot water", boiler_burner: "Burner on",
+    section_space_heating: "Central heating indicator", section_hot_water: "Hot water indicator", section_flow_temperature: "Flow temperature",
   },
   fr: {
     idle: "En veille", running: "En cours", paused: "En pause", done: "Termin\u00e9",
@@ -214,6 +217,9 @@ const T = {
     language: "Langue", language_auto: "Suivre Home Assistant",
     illustration_color: "Couleur de l'appareil", color_auto: "Suivre le th\u00e8me",
     color_white: "Blanc", color_grey: "Gris", color_black: "Noir",
+    type_water_heater: "Chauffe-eau", type_boiler: "Chaudi\u00e8re",
+    boiler_space_heating: "Chauffage", boiler_hot_water: "Eau chaude", boiler_burner: "Br\u00fbleur allum\u00e9",
+    section_space_heating: "Indicateur de chauffage", section_hot_water: "Indicateur d'eau chaude", section_flow_temperature: "Temp\u00e9rature de d\u00e9part",
   },
   ru: {
     idle: "\u041e\u0436\u0438\u0434\u0430\u043d\u0438\u0435", running: "\u0420\u0430\u0431\u043e\u0442\u0430\u0435\u0442", paused: "\u041d\u0430 \u043f\u0430\u0443\u0437\u0435", done: "\u0417\u0430\u0432\u0435\u0440\u0448\u0435\u043d\u043e",
@@ -316,6 +322,9 @@ const T = {
     language: "\u042f\u0437\u044b\u043a", language_auto: "\u0421\u043b\u0435\u0434\u043e\u0432\u0430\u0442\u044c Home Assistant",
     illustration_color: "\u0426\u0432\u0435\u0442 \u043f\u0440\u0438\u0431\u043e\u0440\u0430", color_auto: "\u041a\u0430\u043a \u0432 \u0442\u0435\u043c\u0435",
     color_white: "\u0411\u0435\u043b\u044b\u0439", color_grey: "\u0421\u0435\u0440\u044b\u0439", color_black: "\u0427\u0451\u0440\u043d\u044b\u0439",
+    type_water_heater: "\u0412\u043e\u0434\u043e\u043d\u0430\u0433\u0440\u0435\u0432\u0430\u0442\u0435\u043b\u044c", type_boiler: "\u041a\u043e\u0442\u0451\u043b",
+    boiler_space_heating: "\u041e\u0442\u043e\u043f\u043b\u0435\u043d\u0438\u0435", boiler_hot_water: "\u0413\u043e\u0440\u044f\u0447\u0430\u044f \u0432\u043e\u0434\u0430", boiler_burner: "\u0413\u043e\u0440\u0435\u043b\u043a\u0430 \u0432\u043a\u043b\u044e\u0447\u0435\u043d\u0430",
+    section_space_heating: "\u0418\u043d\u0434\u0438\u043a\u0430\u0442\u043e\u0440 \u043e\u0442\u043e\u043f\u043b\u0435\u043d\u0438\u044f", section_hot_water: "\u0418\u043d\u0434\u0438\u043a\u0430\u0442\u043e\u0440 \u0433\u043e\u0440\u044f\u0447\u0435\u0439 \u0432\u043e\u0434\u044b", section_flow_temperature: "\u0422\u0435\u043c\u043f\u0435\u0440\u0430\u0442\u0443\u0440\u0430 \u043f\u043e\u0434\u0430\u0447\u0438",
   },
   de: {
     idle: "Inaktiv", running: "L\u00e4uft", paused: "Pausiert", done: "Fertig",
@@ -418,6 +427,9 @@ const T = {
     language: "Sprache", language_auto: "Home Assistant folgen",
     illustration_color: "Ger\u00e4tefarbe", color_auto: "Theme folgen",
     color_white: "Wei\u00df", color_grey: "Grau", color_black: "Schwarz",
+    type_water_heater: "Warmwasserspeicher", type_boiler: "Heizkessel",
+    boiler_space_heating: "Heizung", boiler_hot_water: "Warmwasser", boiler_burner: "Brenner an",
+    section_space_heating: "Heizungsanzeige", section_hot_water: "Warmwasseranzeige", section_flow_temperature: "Vorlauftemperatur",
   },
   es: {
     idle: "Inactivo", running: "En marcha", paused: "En pausa", done: "Finalizado",
@@ -520,6 +532,9 @@ const T = {
     language: "Idioma", language_auto: "Seguir a Home Assistant",
     illustration_color: "Color del aparato", color_auto: "Seguir el tema",
     color_white: "Blanco", color_grey: "Gris", color_black: "Negro",
+    type_water_heater: "Termo", type_boiler: "Caldera",
+    boiler_space_heating: "Calefacci\u00f3n", boiler_hot_water: "Agua caliente", boiler_burner: "Quemador encendido",
+    section_space_heating: "Indicador de calefacci\u00f3n", section_hot_water: "Indicador de agua caliente", section_flow_temperature: "Temperatura de impulsi\u00f3n",
   },
   it: {
     idle: "Inattivo", running: "In funzione", paused: "In pausa", done: "Terminato",
@@ -622,6 +637,9 @@ const T = {
     language: "Lingua", language_auto: "Segui Home Assistant",
     illustration_color: "Colore dell'elettrodomestico", color_auto: "Segui il tema",
     color_white: "Bianco", color_grey: "Grigio", color_black: "Nero",
+    type_water_heater: "Scaldabagno", type_boiler: "Caldaia",
+    boiler_space_heating: "Riscaldamento", boiler_hot_water: "Acqua calda", boiler_burner: "Bruciatore acceso",
+    section_space_heating: "Indicatore riscaldamento", section_hot_water: "Indicatore acqua calda", section_flow_temperature: "Temperatura di mandata",
   },
   nl: {
     idle: "Inactief", running: "Actief", paused: "Gepauzeerd", done: "Klaar",
@@ -724,6 +742,9 @@ const T = {
     language: "Taal", language_auto: "Home Assistant volgen",
     illustration_color: "Kleur van het apparaat", color_auto: "Thema volgen",
     color_white: "Wit", color_grey: "Grijs", color_black: "Zwart",
+    type_water_heater: "Boiler", type_boiler: "Cv-ketel",
+    boiler_space_heating: "Verwarming", boiler_hot_water: "Warm water", boiler_burner: "Brander aan",
+    section_space_heating: "Cv-indicator", section_hot_water: "Warmwaterindicator", section_flow_temperature: "Aanvoertemperatuur",
   },
   pt: {
     idle: "Inativo", running: "Em funcionamento", paused: "Em pausa", done: "Conclu\u00eddo",
@@ -826,6 +847,9 @@ const T = {
     language: "Idioma", language_auto: "Seguir o Home Assistant",
     illustration_color: "Cor do eletrodom\u00e9stico", color_auto: "Seguir o tema",
     color_white: "Branco", color_grey: "Cinzento", color_black: "Preto",
+    type_water_heater: "Termoacumulador", type_boiler: "Caldeira",
+    boiler_space_heating: "Aquecimento", boiler_hot_water: "\u00c1gua quente", boiler_burner: "Queimador ligado",
+    section_space_heating: "Indicador de aquecimento central", section_hot_water: "Indicador de \u00e1gua quente", section_flow_temperature: "Temperatura de ida",
   },
   sv: {
     idle: "Inaktiv", running: "Ig\u00e5ng", paused: "Pausad", done: "Klar",
@@ -928,6 +952,9 @@ const T = {
     language: "Spr\u00e5k", language_auto: "F\u00f6lj Home Assistant",
     illustration_color: "Apparatens f\u00e4rg", color_auto: "F\u00f6lj temat",
     color_white: "Vit", color_grey: "Gr\u00e5", color_black: "Svart",
+    type_water_heater: "Varmvattenberedare", type_boiler: "Panna",
+    boiler_space_heating: "Uppv\u00e4rmning", boiler_hot_water: "Varmvatten", boiler_burner: "Br\u00e4nnare p\u00e5",
+    section_space_heating: "Indikator f\u00f6r uppv\u00e4rmning", section_hot_water: "Indikator f\u00f6r varmvatten", section_flow_temperature: "Framledningstemperatur",
   },
   no: {
     idle: "Inaktiv", running: "I gang", paused: "Pauset", done: "Ferdig",
@@ -1030,6 +1057,9 @@ const T = {
     language: "Spr\u00e5k", language_auto: "F\u00f8lg Home Assistant",
     illustration_color: "Farge p\u00e5 apparatet", color_auto: "F\u00f8lg temaet",
     color_white: "Hvit", color_grey: "Gr\u00e5", color_black: "Svart",
+    type_water_heater: "Varmtvannsbereder", type_boiler: "Kjele",
+    boiler_space_heating: "Oppvarming", boiler_hot_water: "Varmtvann", boiler_burner: "Brenner p\u00e5",
+    section_space_heating: "Indikator for oppvarming", section_hot_water: "Indikator for varmtvann", section_flow_temperature: "Turtemperatur",
   },
   da: {
     idle: "Inaktiv", running: "I gang", paused: "Sat p\u00e5 pause", done: "F\u00e6rdig",
@@ -1132,6 +1162,9 @@ const T = {
     language: "Sprog", language_auto: "F\u00f8lg Home Assistant",
     illustration_color: "Apparatets farve", color_auto: "F\u00f8lg temaet",
     color_white: "Hvid", color_grey: "Gr\u00e5", color_black: "Sort",
+    type_water_heater: "Varmtvandsbeholder", type_boiler: "Kedel",
+    boiler_space_heating: "Opvarmning", boiler_hot_water: "Varmt vand", boiler_burner: "Br\u00e6nder t\u00e6ndt",
+    section_space_heating: "Indikator for opvarmning", section_hot_water: "Indikator for varmt vand", section_flow_temperature: "Freml\u00f8bstemperatur",
   },
   pl: {
     idle: "Bezczynny", running: "W trakcie", paused: "Wstrzymany", done: "Zako\u0144czony",
@@ -1234,6 +1267,9 @@ const T = {
     language: "J\u0119zyk", language_auto: "Zgodnie z Home Assistant",
     illustration_color: "Kolor urz\u0105dzenia", color_auto: "Zgodnie z motywem",
     color_white: "Bia\u0142y", color_grey: "Szary", color_black: "Czarny",
+    type_water_heater: "Podgrzewacz wody", type_boiler: "Kocio\u0142",
+    boiler_space_heating: "Ogrzewanie", boiler_hot_water: "Ciep\u0142a woda", boiler_burner: "Palnik w\u0142\u0105czony",
+    section_space_heating: "Wska\u017anik ogrzewania", section_hot_water: "Wska\u017anik ciep\u0142ej wody", section_flow_temperature: "Temperatura zasilania",
   },
   zh: {
     idle: "\u7a7a\u95f2", running: "\u8fd0\u884c\u4e2d", paused: "\u6682\u505c", done: "\u5b8c\u6210",
@@ -1336,6 +1372,9 @@ const T = {
     language: "\u8bed\u8a00", language_auto: "\u8ddf\u968f Home Assistant",
     illustration_color: "\u8bbe\u5907\u989c\u8272", color_auto: "\u8ddf\u968f\u4e3b\u9898",
     color_white: "\u767d\u8272", color_grey: "\u7070\u8272", color_black: "\u9ed1\u8272",
+    type_water_heater: "\u70ed\u6c34\u5668", type_boiler: "\u9505\u7089",
+    boiler_space_heating: "\u4f9b\u6696", boiler_hot_water: "\u70ed\u6c34", boiler_burner: "\u71c3\u70e7\u5668\u5df2\u70b9\u706b",
+    section_space_heating: "\u4f9b\u6696\u6307\u793a", section_hot_water: "\u70ed\u6c34\u6307\u793a", section_flow_temperature: "\u4f9b\u6c34\u6e29\u5ea6",
   },
   cs: {
     idle: "Ne\u010dinn\u00e9", running: "V provozu", paused: "Pozastaveno", done: "Dokon\u010deno",
@@ -1438,6 +1477,9 @@ const T = {
     language: "Jazyk", language_auto: "Podle Home Assistantu",
     illustration_color: "Barva spot\u0159ebi\u010de", color_auto: "Podle motivu",
     color_white: "B\u00edl\u00e1", color_grey: "\u0160ed\u00e1", color_black: "\u010cern\u00e1",
+    type_water_heater: "Oh\u0159\u00edva\u010d vody", type_boiler: "Kotel",
+    boiler_space_heating: "Topen\u00ed", boiler_hot_water: "Tepl\u00e1 voda", boiler_burner: "Ho\u0159\u00e1k zapnut",
+    section_space_heating: "Indik\u00e1tor topen\u00ed", section_hot_water: "Indik\u00e1tor tepl\u00e9 vody", section_flow_temperature: "Teplota topn\u00e9 vody",
   },
 };
 
@@ -1532,6 +1574,24 @@ const STATE_KEYWORD_PATTERNS = Object.fromEntries(
 // other part of the card knows: no colour, no label, no animation. Rejecting it
 // here covers all three at once, rather than adding a fallback at every read.
 const MAPPABLE_STATES = Object.keys(STATE_KEYWORDS).concat("unknown");
+
+// What a combi boiler is doing. Nefit and Bosch display -H, =H and 0H on the
+// front panel and report CH, HW and No in their status; the words cover the rest.
+// A state_map entry pointing at one of the three modes wins, as it does everywhere.
+const BOILER_MODES = ["space_heating", "hot_water", "idle"];
+function boilerModeOf(raw, stateMap) {
+  if (raw === undefined || raw === null) return "";
+  const s = String(raw).trim();
+  if (stateMap && Object.prototype.hasOwnProperty.call(stateMap, s)) {
+    return BOILER_MODES.includes(stateMap[s]) ? stateMap[s] : "";
+  }
+  const f = stripAccents(s).toLowerCase();
+  // Hot water first: "chauffage eau chaude" is about the taps, not the radiators.
+  if (f === "=h" || /\b(hw|dhw|ecs)\b|hot.?water|eau.?chaude|sanitaire|warmwasser|agua.?caliente|acqua.?calda|warm.?water/.test(f)) return "hot_water";
+  if (f === "-h" || /\bch\b|central.?heating|space.?heating|chauffage|heizung|calefaccion|riscaldamento|verwarming/.test(f)) return "space_heating";
+  if (f === "0h" || f === "no") return "idle";
+  return "";
+}
 
 function normalizeState(raw, stateMap) {
   if (raw === undefined || raw === null) return "unknown";
@@ -1906,6 +1966,15 @@ const TYPE_AUTO_PATTERNS = {
   kettle: {
     temperature_entity: /temperature|water.?temp/i,
   },
+  water_heater: {
+    temperature_entity: /temperature|water.?temp/i,
+    heating_entity: /heating|chauffe/i,
+  },
+  boiler: {
+    temperature_entity: /flow|supply|depart|temperature/i,
+    hot_water_entity: /hot.?water|dhw|eau.?chaude/i,
+    heating_entity: /central.?heating|chauffage/i,
+  },
   cooker: {
     target_temperature_entity: /target.?temp|setpoint/i,
     current_temperature_entity: /current.?temp|^(?!.*target).*temperature/i,
@@ -1984,6 +2053,12 @@ const TYPE_CAPS = {
   // status, cook-mode and left-time, which are the state, the program and the
   // remaining time. It needs a drawing of its own and nothing else.
   rice_cooker: { cycle: true, temperature: true, heating: true },
+  // A storage tank. It heats or it waits, and the water temperature is the one
+  // reading worth having. Nothing to program and no cycle to count down.
+  water_heater: { tankTemp: true },
+  // A combi boiler, which is not a tank: the same flame serves the radiators or
+  // the taps, and which one is the whole story.
+  boiler: { boilerMode: true },
 };
 const APPLIANCE_TYPES = Object.keys(TYPE_CAPS);
 const LAUNDRY_TYPES = ["washer", "dryer", "dishwasher"];
@@ -2016,6 +2091,10 @@ function detectApplianceType(cfg, st) {
   if (/cook.?processor|cookit|thermomix|robot.?cuiseur|companion|monsieur.?cuisine|cookeo|k\u00fcchenmaschine|kuchenmaschine|multicooker/.test(hay)) return "cooker";
   if (/fridge|freezer|frigo|r\u00e9frig|refrig|kuhlschrank|k\u00fchlschrank|nevera|frigor|koelkast|kyl(skap)?\b|kj\u00f8leskap|lod\u00f3wka|lodowka/.test(hay)) return "fridge";
   if (/kettle|bouilloire|wasserkocher|hervidor|bollitore|waterkoker|vattenkokare|vannkoker|elkedel|czajnik/.test(hay)) return "kettle";
+  // Before the boiler: MDI names a storage tank "water-boiler", and water_heater
+  // is the Home Assistant domain for one.
+  if (/water.?heater|water.?boiler|chauffe.?eau|cumulus|warmwasserspeicher|termo.?electrico|scaldabagno|varmvattenberedare|varmtvannsbereder|podgrzewacz/.test(hay)) return "water_heater";
+  if (/\bboiler|chaudiere|chaudi\u00e8re|heizkessel|gaskessel|caldaia|caldera|cv.?ketel|kocio\u0142|nefit/.test(hay)) return "boiler";
   if (/hood|hotte|abzug|extractor|exaustor|afzuigkap|emh|okap/.test(hay)) return "hood";
   if (/cooktop|hotplate|plaque|kochfeld|kookplaat|induction|induktion|kogeplade/.test(hay)) return "cooktop";
   if (/oven|four|backofen|horno|forno|piekarnik/.test(hay)) return "oven";
@@ -2853,6 +2932,150 @@ const ILLUSTRATION_CSS = {
           100% { transform: translateY(19px); opacity: 0; }
         }
   `,
+  water_heater: () => `
+        .wh-bracket { position: absolute; left: 40px; right: 40px; top: 1px; height: 5px; border-radius: 2px; background: #3b4048; }
+        .wh-tank {
+          position: absolute; left: 23px; right: 23px; top: 4px; bottom: 15px;
+          border-radius: 25px / 14px; overflow: hidden;
+          background: linear-gradient(90deg, var(--ac-body-lo, #aeb2b5), var(--ac-body, var(--secondary-background-color, #d7d7d7)) 30%,
+            var(--ac-body-hi, #e6e6e6) 50%, var(--ac-body, var(--secondary-background-color, #d7d7d7)) 72%, var(--ac-body-lo, #aeb2b5));
+          border: 1px solid var(--divider-color, #c7c7c7);
+        }
+        .wh-glass {
+          position: absolute; left: 8px; right: 8px; top: 13px; bottom: 10px; border-radius: 7px; overflow: hidden;
+          background: rgba(20, 24, 30, 0.10); box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.14);
+        }
+        .wh-water { position: absolute; inset: 0; background: rgba(79, 195, 247, 0.38); }
+        .wh-hot {
+          position: absolute; left: 0; right: 0; top: 0; height: calc(var(--wh-hot, 0) * 100%);
+          background: linear-gradient(180deg, rgba(255, 87, 51, 0.72), rgba(255, 138, 60, 0.42));
+          transition: height 1s ease;
+        }
+        .wh-lcd {
+          position: absolute; left: 50%; transform: translateX(-50%); top: 22px; z-index: 3;
+          height: 11px; min-width: 22px; padding: 0 3px; border-radius: 2px;
+          background: #14161a; color: #4fc3f7; text-align: center;
+          font: 600 7px/11px ui-monospace, "SF Mono", monospace;
+        }
+        .machine.heating .wh-lcd { color: #ff7043; }
+        /* The element: a hairpin at the foot of the tank, where a real one sits.
+           border-box, or the borders push it off the tank's axis. */
+        .wh-coil {
+          position: absolute; left: 50%; bottom: -3px; z-index: 2;
+          box-sizing: border-box; width: 18px; height: 19px; margin-left: -9px;
+          border: 3px solid #5f6770; border-bottom: none; border-radius: 7px 7px 0 0;
+        }
+        .machine.heating .wh-coil {
+          border-color: #ff3d00;
+          animation: wh-glow 1.2s ease-in-out infinite; animation-delay: var(--anim-offset, 0s);
+        }
+        @keyframes wh-glow {
+          0%, 100% { box-shadow: 0 0 5px 1px rgba(255, 61, 0, 0.55), inset 0 0 3px rgba(255, 61, 0, 0.5); }
+          50% { box-shadow: 0 0 10px 3px rgba(255, 61, 0, 0.9), inset 0 0 5px rgba(255, 61, 0, 0.8); }
+        }
+        .wh-heat { position: absolute; inset: 0; z-index: 1; opacity: 0; pointer-events: none; }
+        .machine.heating .wh-heat { opacity: 1; }
+        .wh-heat i {
+          position: absolute; bottom: 6px; width: 11px; height: 32px; margin-left: -5.5px; opacity: 0;
+          background: linear-gradient(180deg, rgba(255, 112, 67, 0), rgba(255, 112, 67, 0.85) 45%, rgba(255, 61, 0, 0.95));
+          clip-path: polygon(63% 0%, 79% 7%, 90% 14%, 93% 21%, 86% 29%, 73% 36%, 56% 43%, 42% 50%, 34% 57%, 35% 64%, 44% 71%, 60% 79%, 76% 86%, 88% 93%, 93% 100%, 67% 100%, 62% 93%, 50% 86%, 34% 79%, 18% 71%, 9% 64%, 8% 57%, 16% 50%, 30% 43%, 47% 36%, 60% 29%, 67% 21%, 64% 14%, 53% 7%, 37% 0%);
+        }
+        .wh-heat i.wh-h1 { left: 22%; }
+        .wh-heat i.wh-h2 { left: 50%; }
+        .wh-heat i.wh-h3 { left: 78%; }
+        .machine.heating .wh-heat i { animation: wh-rise 2.4s ease-in infinite; animation-delay: var(--anim-offset, 0s); }
+        .machine.heating .wh-heat i.wh-h2 { animation-delay: calc(-0.8s + var(--anim-offset, 0s)); }
+        .machine.heating .wh-heat i.wh-h3 { animation-delay: calc(-1.6s + var(--anim-offset, 0s)); }
+        @keyframes wh-rise {
+          0% { transform: translateY(6px); opacity: 0; }
+          25% { opacity: 0.9; }
+          100% { transform: translateY(-30px); opacity: 0; }
+        }
+        .wh-pipe { position: absolute; bottom: 3px; width: 4px; height: 14px; border-radius: 0 0 2px 2px; }
+        .wh-pipe.cold { left: 37px; background: #5aa9d6; }
+        .wh-pipe.hot { right: 37px; background: #d9674a; }
+  `,
+  boiler: () => `
+        .bl-box {
+          position: absolute; left: 27px; right: 27px; top: 2px; height: 58px; border-radius: 5px;
+          background: linear-gradient(160deg, var(--ac-body-hi, #e6e6e6), var(--ac-body, var(--secondary-background-color, #d7d7d7)) 45%, var(--ac-body-lo, #aeb2b5));
+          border: 1px solid var(--divider-color, #c7c7c7);
+        }
+        .bl-lcd {
+          position: absolute; left: 50%; transform: translateX(-50%); top: 6px;
+          height: 10px; min-width: 20px; padding: 0 3px; border-radius: 2px;
+          background: #14161a; color: #4fc3f7; text-align: center;
+          font: 600 7px/10px ui-monospace, "SF Mono", monospace;
+        }
+        .machine.flame .bl-lcd { color: #ff7043; }
+        .bl-window {
+          position: absolute; left: 50%; top: 24px; width: 20px; height: 22px; margin-left: -10px;
+          border-radius: 4px; background: #14161a; overflow: hidden;
+        }
+        .bl-flame {
+          position: absolute; left: 50%; bottom: 2px; width: 14px; height: 18px; margin-left: -7px;
+          transform-origin: 50% 100%; opacity: 0;
+          background: linear-gradient(0deg, #2979ff 0%, #42a5f5 14%, #ffca28 34%, #ff9800 62%, #ff5722 100%);
+          clip-path: polygon(46% 0%, 58% 30%, 70% 10%, 76% 44%, 90% 28%, 94% 64%, 86% 88%, 66% 100%, 34% 100%, 14% 88%, 6% 62%, 12% 32%, 26% 50%, 30% 18%, 42% 36%);
+        }
+        .machine.flame .bl-flame { opacity: 1; animation: bl-flicker 0.6s ease-in-out infinite; animation-delay: var(--anim-offset, 0s); }
+        @keyframes bl-flicker {
+          0%, 100% { transform: scale(1, 1); }
+          30% { transform: scale(0.92, 1.1); }
+          60% { transform: scale(1.06, 0.9); }
+        }
+        .bl-pipe { position: absolute; background: #8a9096; }
+        .bl-pipe.tap-down { left: 33px; top: 60px; width: 4px; height: 12px; }
+        .bl-pipe.tap-arm { left: 12px; top: 70px; width: 25px; height: 4px; border-radius: 2px 0 0 2px; }
+        .bl-pipe.tap-nose { left: 12px; top: 70px; width: 4px; height: 9px; border-radius: 2px 2px 1px 1px; }
+        .bl-knob { position: absolute; left: 20px; top: 65px; width: 8px; height: 5px; border-radius: 2px 2px 0 0; background: #d9674a; }
+        .bl-drop {
+          position: absolute; left: 12px; top: 80px; width: 4px; height: 6px; opacity: 0;
+          border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%; background: #4fc3f7;
+        }
+        .machine.mode-hot_water .bl-pipe.tap-down,
+        .machine.mode-hot_water .bl-pipe.tap-arm,
+        .machine.mode-hot_water .bl-pipe.tap-nose { background: #ef5350; }
+        .machine.mode-hot_water .bl-drop { animation: bl-drip 0.9s ease-in infinite; animation-delay: var(--anim-offset, 0s); }
+        .machine.mode-hot_water .bl-drop.d2 { animation-delay: calc(-0.3s + var(--anim-offset, 0s)); }
+        .machine.mode-hot_water .bl-drop.d3 { animation-delay: calc(-0.6s + var(--anim-offset, 0s)); }
+        @keyframes bl-drip {
+          0% { transform: translateY(0); opacity: 0; }
+          15% { opacity: 1; }
+          100% { transform: translateY(24px); opacity: 0; }
+        }
+        .bl-pipe.rad-down { left: 59px; top: 60px; width: 4px; height: 30px; }
+        .bl-pipe.rad-arm { left: 59px; top: 86px; width: 9px; height: 4px; }
+        .bl-rad { position: absolute; left: 67px; right: 1px; top: 76px; height: 29px; }
+        .bl-rad i {
+          position: absolute; top: 0; bottom: 0; width: 5px; border-radius: 2px;
+          background: var(--ac-body-lo, #aeb2b5); box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.12);
+        }
+        .bl-rad i:nth-child(1) { left: 0; }
+        .bl-rad i:nth-child(2) { left: 7px; }
+        .bl-rad i:nth-child(3) { left: 14px; }
+        .bl-rad i:nth-child(4) { left: 21px; }
+        .machine.mode-space_heating .bl-pipe.rad-down,
+        .machine.mode-space_heating .bl-pipe.rad-arm { background: #ff7043; }
+        .machine.mode-space_heating .bl-rad i { background: linear-gradient(180deg, #ffab91, #ff7043); }
+        .bl-waves { position: absolute; left: 67px; right: 1px; top: 48px; height: 28px; overflow: hidden; pointer-events: none; }
+        .bl-waves i {
+          position: absolute; bottom: 0; width: 8px; height: 24px; opacity: 0;
+          background: linear-gradient(180deg, rgba(255, 112, 67, 0), rgba(255, 112, 67, 0.85) 45%, rgba(255, 87, 34, 0.95));
+          clip-path: polygon(63% 0%, 79% 7%, 90% 14%, 93% 21%, 86% 29%, 73% 36%, 56% 43%, 42% 50%, 34% 57%, 35% 64%, 44% 71%, 60% 79%, 76% 86%, 88% 93%, 93% 100%, 67% 100%, 62% 93%, 50% 86%, 34% 79%, 18% 71%, 9% 64%, 8% 57%, 16% 50%, 30% 43%, 47% 36%, 60% 29%, 67% 21%, 64% 14%, 53% 7%, 37% 0%);
+        }
+        .bl-waves i.w1 { left: 0; }
+        .bl-waves i.w2 { left: 10px; }
+        .bl-waves i.w3 { left: 20px; }
+        .machine.mode-space_heating .bl-waves i { animation: bl-rise 2.4s ease-in infinite; animation-delay: var(--anim-offset, 0s); }
+        .machine.mode-space_heating .bl-waves i.w2 { animation-delay: calc(-0.8s + var(--anim-offset, 0s)); }
+        .machine.mode-space_heating .bl-waves i.w3 { animation-delay: calc(-1.6s + var(--anim-offset, 0s)); }
+        @keyframes bl-rise {
+          0% { transform: translateY(18px); opacity: 0; }
+          30% { opacity: 0.9; }
+          100% { transform: translateY(-8px); opacity: 0; }
+        }
+  `,
   kettle: () => `
         .kt-base { position: absolute; left: 20px; right: 20px; bottom: 6px; height: 7px; border-radius: 3px; background: #3b4048; }
         .kt-body {
@@ -3418,6 +3641,51 @@ function illustrationHtml(type, ctx) {
 
   if (type === "fridge") {
     return `<div class="machine ${cls} ${ctx.ice ? "ice" : ""}">${fridgeHtml(ctx)}</div>`;
+  }
+
+  if (type === "water_heater") {
+    // Hot water sits on top of a real tank, so the warm layer grows down from
+    // the dome as the water heats: 15 degrees is a cold tank, 65 a full one.
+    const hot = ctx.tankTemp === null || ctx.tankTemp === undefined
+      ? 0 : Math.max(0, Math.min(1, (ctx.tankTemp - 15) / 50));
+    const lcd = ctx.display ? `<div class="wh-lcd">${esc(ctx.display)}</div>` : "";
+    return `
+        <div class="machine ${cls}" style="--wh-hot: ${hot.toFixed(2)}">
+          <div class="wh-bracket"></div>
+          <div class="wh-tank">
+            <div class="wh-glass">
+              <div class="wh-water"></div>
+              <div class="wh-hot"></div>
+              <div class="wh-heat"><i class="wh-h1"></i><i class="wh-h2"></i><i class="wh-h3"></i></div>
+              <div class="wh-coil"></div>
+            </div>
+          </div>
+          ${lcd}
+          <div class="wh-pipe cold"></div>
+          <div class="wh-pipe hot"></div>
+        </div>`;
+  }
+
+  if (type === "boiler") {
+    const mode = ctx.boilerMode || "idle";
+    const flame = mode !== "idle";
+    const lcd = ctx.display ? `<div class="bl-lcd">${esc(ctx.display)}</div>` : "";
+    return `
+        <div class="machine ${cls} mode-${mode} ${flame ? "flame" : ""}">
+          <div class="bl-box">
+            ${lcd}
+            <div class="bl-window"><div class="bl-flame"></div></div>
+          </div>
+          <div class="bl-pipe tap-down"></div>
+          <div class="bl-pipe tap-arm"></div>
+          <div class="bl-pipe tap-nose"></div>
+          <div class="bl-knob"></div>
+          <i class="bl-drop d1"></i><i class="bl-drop d2"></i><i class="bl-drop d3"></i>
+          <div class="bl-pipe rad-down"></div>
+          <div class="bl-pipe rad-arm"></div>
+          <div class="bl-rad"><i></i><i></i><i></i><i></i></div>
+          <div class="bl-waves"><i class="w1"></i><i class="w2"></i><i class="w3"></i></div>
+        </div>`;
   }
 
   if (type === "kettle") {
@@ -4225,6 +4493,75 @@ class ApplianceCard extends HTMLElement {
       };
     }
 
+    const isOn = (id) => {
+      const os = stateObj(hass, id);
+      return !!os && ["on", "true", "heating", "active"].includes(String(os.state).toLowerCase());
+    };
+
+    // Water heater. A tank never finishes, so a power meter falling back under
+    // its threshold means it is waiting again, not that something is done.
+    let tankTemp = null;
+    let tankHeating = false;
+    if (cap.tankTemp) {
+      tankHeating = cfg.heating_entity ? isOn(cfg.heating_entity) : isActiveState(norm);
+      if (cfg.heating_entity || ["running", "idle", "done"].includes(norm)) {
+        if (!cfg.state_show_raw) stateLabel = t(hass, tankHeating ? "kettle_heating" : "standby");
+        color = tankHeating ? "#ff7043" : STATE_COLORS.idle;
+      }
+      let wv = cfg.temperature_entity ? numericState(hass, cfg.temperature_entity) : null;
+      let wunit = temperatureUnit(hass, cfg.temperature_entity || cfg.state_entity);
+      // A water_heater entity carries its own reading; nothing else to configure.
+      if (wv === null && st && /^water_heater\./.test(cfg.state_entity || "")) {
+        const a = parseFloat(st.attributes.current_temperature);
+        if (Number.isFinite(a)) wv = a;
+      }
+      if (wv !== null) {
+        tankTemp = /F/.test(wunit) ? (wv - 32) * 5 / 9 : wv;
+        displayText = `${Math.round(wv)}\u00b0`;
+        extraLines.push({
+          icon: "mdi:thermometer-water",
+          label: t(hass, "temperature"),
+          value: `${Math.round(wv)} ${wunit}`,
+          entity: cfg.temperature_entity,
+        });
+      }
+    }
+
+    // Combi boiler. Two optional indicators say it outright; otherwise the state
+    // entity's words or panel codes do; failing both, a burner that is lit at
+    // least says it is heating something.
+    let boilerMode = "";
+    if (cap.boilerMode) {
+      if (cfg.hot_water_entity || cfg.heating_entity) {
+        // Hot water takes priority on a combi boiler, so it wins a tie.
+        boilerMode = cfg.hot_water_entity && isOn(cfg.hot_water_entity) ? "hot_water"
+          : cfg.heating_entity && isOn(cfg.heating_entity) ? "space_heating" : "idle";
+      } else if (!powerDerived) {
+        boilerMode = boilerModeOf(rawState, cfg.state_map);
+      }
+      if (!boilerMode) {
+        if (isActiveState(norm)) boilerMode = "burner";
+        else if (norm === "idle" || norm === "done") boilerMode = "idle";
+      }
+      if (boilerMode) {
+        if (!cfg.state_show_raw) stateLabel = t(hass, boilerMode === "idle" ? "standby" : `boiler_${boilerMode}`);
+        color = boilerMode === "hot_water" ? "#ef5350" : boilerMode === "idle" ? STATE_COLORS.idle : "#ff7043";
+      }
+      if (cfg.temperature_entity) {
+        const bv = numericState(hass, cfg.temperature_entity);
+        if (bv !== null) {
+          const bunit = temperatureUnit(hass, cfg.temperature_entity);
+          displayText = `${Math.round(bv)}\u00b0`;
+          extraLines.push({
+            icon: "mdi:thermometer",
+            label: t(hass, "temperature"),
+            value: `${Math.round(bv)} ${bunit}`,
+            entity: cfg.temperature_entity,
+          });
+        }
+      }
+    }
+
     // Kettle: no timer, no program. The drawing carries the state, and the
     // water temperature is the only reading it can show.
     if (cap.kettleTemp) {
@@ -4267,7 +4604,8 @@ class ApplianceCard extends HTMLElement {
       doorOpen: cap.door && doorOpen,
       done: norm === "done",
       paused: norm === "paused",
-      heating: ["oven", "cooker", "rice_cooker"].includes(applianceType) ? heating : false,
+      heating: ["oven", "cooker", "rice_cooker"].includes(applianceType) ? heating
+        : applianceType === "water_heater" ? tankHeating : false,
       keepWarm: norm === "keep_warm",
       lit,
       display: displayText,
@@ -4278,6 +4616,8 @@ class ApplianceCard extends HTMLElement {
       anyZoneOn: zones.some((z) => z.on),
       childLock,
       phase: applianceType === "dishwasher" ? phase : "",
+      tankTemp,
+      boilerMode,
     };
 
     // A plain on/off control, for the types that have no cycle to start or
@@ -4311,6 +4651,7 @@ class ApplianceCard extends HTMLElement {
       illustrationCtx.fanLevel, illustrationCtx.boost, illustrationCtx.keepWarm,
       illustrationCtx.anyZoneOn,
       illustrationCtx.phase,
+      illustrationCtx.boilerMode,
     ].join(",");
     if (animKey !== this._animKey) {
       this._animKey = animKey;
@@ -4587,7 +4928,15 @@ const SECTIONS = [
   { field: "ice_maker_entity", types: ["fridge"], labelKey: "section_ice_maker", includeDomains: ["switch", "binary_sensor", "sensor", "input_boolean"] },
 
   // Kettle
-  { field: "temperature_entity", types: ["kettle"], labelKey: "section_kettle_temperature", includeDomains: ["sensor", "number", "input_number"] },
+  { field: "temperature_entity", types: ["kettle", "water_heater"], labelKey: "section_kettle_temperature", includeDomains: ["sensor", "number", "input_number"] },
+
+  // Water heater: whether it heats, when the state entity cannot say.
+  { field: "heating_entity", types: ["water_heater"], labelKey: "section_heating", includeDomains: ["binary_sensor", "sensor", "switch", "input_boolean"] },
+
+  // Boiler
+  { field: "heating_entity", types: ["boiler"], labelKey: "section_space_heating", includeDomains: ["binary_sensor", "sensor", "switch", "input_boolean"] },
+  { field: "hot_water_entity", types: ["boiler"], labelKey: "section_hot_water", includeDomains: ["binary_sensor", "sensor", "switch", "input_boolean"] },
+  { field: "temperature_entity", types: ["boiler"], labelKey: "section_flow_temperature", includeDomains: ["sensor", "number", "input_number"] },
 
   // Cooker
   { field: "speed_entity", types: ["cooker"], labelKey: "section_speed", includeDomains: ["sensor", "number", "select", "input_number", "input_select"] },
@@ -5079,6 +5428,8 @@ class ApplianceCardEditor extends HTMLElement {
             { value: "cooker", label: t(hass, "type_cooker") },
             { value: "coffee", label: t(hass, "type_coffee") },
             { value: "rice_cooker", label: t(hass, "type_rice_cooker") },
+            { value: "water_heater", label: t(hass, "type_water_heater") },
+            { value: "boiler", label: t(hass, "type_boiler") },
           ],
         })}
         ${this._type === "fridge" ? this._row("section_fridge_layout", "fridge_layout", {

@@ -52,7 +52,7 @@ customElements.define("ha-icon", StubIcon);
 const params = new URLSearchParams(location.search);
 const uiLang = params.get("lang") === "fr" ? "fr" : "en";
 const view = params.get("view") === "types" ? "types" : "hero";
-document.documentElement.style.setProperty("--cols", params.get("cols") || (view === "types" ? 4 : 4));
+document.documentElement.style.setProperty("--cols", params.get("cols") || (view === "types" ? 5 : 4));
 const fr = uiLang === "fr";
 const L = (en, f) => (fr ? f : en);
 
@@ -314,10 +314,35 @@ const riceCooker = () => card({
   st("sensor.rice_temp", 72, { unit_of_measurement: "°C" }),
 ]);
 
+const waterHeater = () => card({
+  illustration_color: "white",
+  name: L("Water heater", "Chauffe-eau"),
+  appliance_type: "water_heater",
+  state_entity: "switch.water_heater",
+  temperature_entity: "sensor.water_heater_temp",
+  power_entity: "sensor.water_heater_power",
+}, [
+  st("switch.water_heater", "on"),
+  st("sensor.water_heater_temp", 52, { unit_of_measurement: "°C" }),
+  st("sensor.water_heater_power", 2400, { unit_of_measurement: "W" }),
+]);
+
+// A Nefit or Bosch panel code, exactly as the boiler reports it.
+const boiler = () => card({
+  illustration_color: "grey",
+  name: L("Boiler", "Chaudière"),
+  appliance_type: "boiler",
+  state_entity: "sensor.boiler_display_code",
+  temperature_entity: "sensor.boiler_flow_temp",
+}, [
+  st("sensor.boiler_display_code", "-H"),
+  st("sensor.boiler_flow_temp", 58, { unit_of_measurement: "°C" }),
+]);
+
 // ?only=cooker,coffee filters the gallery down to a few types, which is how
 // the animated captures are taken.
 const ALL = { washer, dryer, dishwasher, oven, microwave, hood, cooktop, fridge,
-              kettle, cooker, coffee, rice_cooker: riceCooker };
+              kettle, cooker, coffee, rice_cooker: riceCooker, water_heater: waterHeater, boiler };
 const only = (params.get("only") || "").split(",").map((k) => k.trim()).filter(Boolean);
 if (only.length) {
   document.documentElement.style.setProperty("--cols", only.length);

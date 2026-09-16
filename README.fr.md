@@ -10,9 +10,9 @@
 <a href="https://buymeacoffee.com/adnpolymerase" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-orange.png" alt="Buy Me A Coffee" height="60"></a>
 <a href="https://adnpolymerase.github.io/HA/" target="_blank"><img src="https://raw.githubusercontent.com/ADNPolymerase/HA/main/assets/site-button.svg" alt="Lien vers mon github.io pour mes autres projets" height="60"></a>
 
-Une card Lovelace pour les appareils de cuisine et de buanderie : lave-linge, sèche-linge, lave-vaisselle, four, micro-ondes, hotte, plaque de cuisson, réfrigérateur, bouilloire, robot cuiseur, machine à café et cuiseur à riz. Cycle en cours, programme, temps restant, température, vitesse de ventilation, foyers de cuisson, état de la porte, alertes et commandes.
+Une card Lovelace pour les appareils de la maison : lave-linge, sèche-linge, lave-vaisselle, four, micro-ondes, hotte, plaque de cuisson, réfrigérateur, bouilloire, robot cuiseur, machine à café, cuiseur à riz, chauffe-eau et chaudière. Cycle en cours, programme, temps restant, température, alertes et commandes.
 
-Aucune marque supposée : chaque champ est un mapping d'entité configurable, elle fonctionne donc avec **n'importe quelle** intégration (Electrolux, Samsung, LG, Home Connect, Miele, une prise connectée + capteurs template…).
+Aucune marque supposée : chaque champ est une entité à choisir, elle fonctionne donc avec **n'importe quelle** intégration (Electrolux, Samsung, LG, Home Connect, Miele, une simple prise connectée…).
 
 > Retours et issues bienvenus.
 > 🇬🇧 [Read in English](README.md)
@@ -21,19 +21,13 @@ Aucune marque supposée : chaque champ est un mapping d'entité configurable, el
 
 ## Fonctionnalités
 
-- **Normalisation d'état** : `Idle`, `RUNNING`, `wash`, `En marche`… sont détectés automatiquement (insensible aux accents) et convertis en veille / préchauffage / en cours / en pause / terminé / différé / erreur. Un état inconnu s'affiche tel quel, moins l'espace de noms dont l'intégration l'entoure : `BSH.Common.EnumType.OperationState.ActionRequired` se lit `Action Required`. `state_map` classe ce qu'il reste.
-- **Douze types d'appareils**, chacun avec sa propre illustration animée : lave-linge (eau), sèche-linge (linge qui tourne), lave-vaisselle (bras d'aspersion, vaisselle, porte à charnière basse, vapeur orange au séchage et chargement vert en fin de cycle), four (résistances qui rougeoient, porte qui bascule), micro-ondes (plateau qui tourne, cavité éclairée), hotte (flux d'air, faisceaux lumineux), plaque de cuisson (niveau par foyer et chaleur résiduelle), réfrigérateur (chaque porte s'ouvre pour son propre capteur, intérieur éclairé, glaçons qui tombent), bouilloire (socle rouge, bulles, vapeur), robot cuiseur (couteau qui tourne, résistance chaude, vapeur), machine à café (café qui coule, tasse qui se remplit, niveau du réservoir) et cuiseur à riz (vapeur, maintien au chaud). Statique à l'arrêt, auto-détectée ou choisie via `appliance_type`. `compact: true` ne garde que le texte.
-- **Une machine à café dit ce qui lui manque** : réservoir vide, bac à grains vide, bac d'égouttage plein ou détartrage à faire prennent la ligne d'état dès que la machine ne coule pas, dans l'ordre où chacun t'empêche d'avoir ton café. Seul ce qui demande une action prend une ligne.
-- **Un réfrigérateur rapporte sa santé, pas un cycle** : il ne s'arrête jamais, donc *En cours* serait vrai de lui à toute heure. La ligne d'état porte à la place la seule chose qui compte, dans l'ordre du coût à l'ignorer : débranché, une porte restée ouverte, une température au-dessus de la limite, sinon normal. En lecture seule, sans aucun bouton.
-- **Fonctionne avec une simple prise connectée** : renseigne `power_entity` + `power_on_threshold` et l'état est déduit de la consommation (veille → en marche → terminé), sans aucune intégration de l'appareil.
-- **Barre de progression** depuis un capteur de pourcentage direct, ou estimée côté client depuis le temps restant.
-- **Programme, lignes d'info** (température, essorage…), **porte, alertes, connectivité** (icône wifi en haut à droite), chacun optionnel et indépendant.
-- **Démarrer / Pause / Reprendre / Stop**, affichés uniquement pour les entités que tu configures.
-- **Se dimensionne dans les dashboards Sections** : la card déclare sa largeur et sa hauteur, elle n'est plus compressée au point de replier ses lignes d'info.
-- **Interface traduite en 14 langues** (EN, FR, DE, ES, IT, NL, PT, SV, NO, DA, PL, RU, ZH, CS), suivant la langue de Home Assistant.
-- **Éditeur visuel** : choisis l'entité d'état et les autres champs sont auto-suggérés depuis les entités sœurs du même appareil.
-
-Les illustrations sont en CSS, pas en images, et elles s'animent sur les données de l'appareil : le couteau fait un tour par saccade à la vitesse remontée par le robot, le café coule dans une tasse ou deux, les glaçons tombent tant que la machine produit, la bouilloire bout et fume. Le lave-vaisselle a sa propre illustration frontale, avec une porte carrée à charnière basse, la vaisselle visible, un bras d'aspersion qui tourne, des gouttes et des vagues pendant le lavage. Sa vitre s'éclaircit dès qu'il y a quelque chose à voir, c'est-à-dire un cycle en cours, une pause, ou une vaisselle propre qui attend d'être rangée, et reste sombre à l'arrêt, si bien qu'une porte fermée ne se confond jamais avec une porte ouverte. En fin de cycle le chargement passe au vert. Avec une `phase_entity` configurée, les deux phases de séchage remplacent l'animation de lavage par de la vapeur orange qui monte le long de la porte, plus haut pour `Ado Drying` que pour `Drying`, et l'eau disparaît complètement puisqu'il n'y en a plus a ce moment-la.
+- **Quatorze types d'appareils**, chacun avec une illustration en CSS animée sur les données de l'appareil et statique à l'arrêt. Le type est détecté tout seul ou choisi via `appliance_type`, et `compact: true` ne garde que le texte.
+- **Normalisation d'état** : `Idle`, `RUNNING`, `wash`, `En marche`… sont reconnus (sans tenir compte des accents) et classés en veille, préchauffage, en cours, en pause, terminé, différé ou erreur. Un état inconnu s'affiche tel quel, sans l'espace de noms de l'intégration, et `state_map` classe le reste.
+- **Chaque appareil dit ce qui compte pour lui** : une machine à café ce qui lui manque (eau, grains, bac, détartrage), un réfrigérateur sa santé (débranché, porte ouverte, température haute), une chaudière mixte ce qu'elle chauffe (chauffage, eau chaude ou veille).
+- **Fonctionne avec une simple prise connectée** : `power_entity` et `power_on_threshold` suffisent à déduire l'état de la consommation.
+- **Programme, temps restant, barre de progression, lignes d'info, porte, alertes, connectivité et commandes** (démarrer, pause, reprise, stop), chacun optionnel.
+- **14 langues** (EN, FR, DE, ES, IT, NL, PT, SV, NO, DA, PL, RU, ZH, CS), celle de Home Assistant ou fixée sur la card.
+- **Éditeur visuel** qui pré-remplit les champs depuis les entités du même appareil et ne propose que ceux utiles au type choisi.
 
 ![Types d'appareils animés](https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/animated.fr.gif)
 
@@ -42,73 +36,69 @@ Les illustrations sont en CSS, pas en images, et elles s'animent sur les donnée
 ### Par HACS
 
 1. Dans HACS, cherche **HA Appliance Card** et installe-la.
-2. Ajoute une card `custom:ha-appliance-card` à ton tableau de bord, en YAML ou via l'éditeur visuel.
+2. Ajoute une card `custom:ha-appliance-card` à ton tableau de bord.
 
 ### À la main
 
 1. Télécharge `ha-appliance-card.js` depuis la [dernière release](https://github.com/ADNPolymerase/ha-appliance-card/releases/latest) et dépose-le dans `config/www/`.
-2. Déclare la ressource dans **Paramètres > Tableaux de bord > Ressources**, URL `/local/ha-appliance-card.js`, type **Module JavaScript**.
-3. Ajoute une card `custom:ha-appliance-card` à ton tableau de bord.
-
-HACS tient la card à jour tout seul ; une installation manuelle est à refaire à chaque release.
+2. Ajoute la ressource `/local/ha-appliance-card.js`, type **Module JavaScript**, dans **Paramètres > Tableaux de bord > Ressources**.
+3. Ajoute une card `custom:ha-appliance-card`. Une installation manuelle est à refaire à chaque release.
 
 ## Configuration
 
-Seule `state_entity` est obligatoire ; tout le reste est optionnel. Le réfrigérateur fait exception : une sonde de température ou un contact de porte suffisent à eux seuls, puisqu'un frigo n'a pas d'état à rapporter. Dans l'éditeur visuel, définir l'entité d'état pré-remplit automatiquement les autres champs quand une entité sœur correspondante est trouvée sur le même appareil ; chaque champ reste modifiable ou effaçable.
+Seule `state_entity` est obligatoire, sauf sur un réfrigérateur où une sonde ou un contact de porte suffit. Dans l'éditeur visuel, choisir l'entité d'état pré-remplit les autres champs.
 
 | Option | Description |
 |---|---|
-| `state_entity` | **Obligatoire**, sauf sur un réfrigérateur. Entité rapportant l'état général de l'appareil (n'importe quel domaine). |
-| `state_map` | Map optionnelle : état brut → `idle`\|`running`\|`preheating`\|`keep_warm`\|`paused`\|`done`\|`delayed`\|`error`. Fixe la couleur et l'animation autant que le libellé, lequel sort dans la langue de la card. Disponible aussi dans l'éditeur visuel, sous l'entité d'état. |
-| `state_show_raw` | `true` pour afficher le texte brut plutôt que le libellé traduit (couleur/animation suivent toujours la catégorie détectée). |
-| `name` | Titre de la card. Par défaut, le nom convivial de l'entité d'état. |
-| `compact` | `true` pour masquer l'illustration et n'afficher que le texte. |
-| `illustration_color` | `auto` (défaut) suit le thème, ce qui est justement ce qui rend un appareil sombre sur un thème sombre, la carrosserie lisant `--secondary-background-color`. `white` \| `grey` \| `black` la fixent à la place. Trois préréglages plutôt qu'une couleur libre : le corps est ombré, et une teinte arbitraire se bat avec les reflets dessinés dans chaque illustration. Seule la carrosserie change ; les couleurs d'état, les cuves et les afficheurs ne bougent pas. |
-| `language` | `auto` (défaut) suit Home Assistant. N'importe lequel des quatorze codes livrés (`en`, `fr`, `de`, `es`, `it`, `nl`, `pt`, `sv`, `no`, `da`, `pl`, `ru`, `zh`, `cs`) fixe cette card, et son éditeur, dans cette langue. Le bokmål norvégien accepte aussi `nb` et `nb-NO`, qui retombent sur la traduction norvégienne existante. Pour faire tourner Home Assistant dans une langue et lire une card dans une autre. |
-| `appliance_type` | `auto` (défaut) \| `washer` \| `dryer` \| `dishwasher` \| `oven` \| `microwave` \| `hood` \| `cooktop` \| `fridge` \| `kettle` \| `cooker` \| `coffee` \| `rice_cooker`. L'éditeur visuel ne propose que les champs utilisables par le type choisi. |
-| `toggle_entity` | Commande marche/arrêt, affichée en bouton d'alimentation sur la card et mise en évidence quand c'est allumé. N'importe quel `switch`/`button`/`script`/`input_boolean`/`fan`. Nommée ainsi pour ne pas être confondue avec `power_entity` ci-dessous, qui est le compteur de watts. |
-| `power_entity` / `power_on_threshold` / `power_icon` | Capteur de puissance (W). Avec un seuil défini, l'état est déduit de la puissance plutôt que de `state_entity` : au-dessus du seuil c'est *en marche*, et la redescente sous le seuil signifie *terminé* jusqu'au prochain cycle. Pointer `state_entity` sur le même capteur de puissance suffit à l'activer, avec un seuil par défaut de 10 W. `power_icon` remplace l'icône par défaut `mdi:power-plug`. |
-| `program_entity` / `program_format` | Entité du programme/cycle. `clean` (défaut) simplifie le motif courant `"<catégorie> Pr <nom>"`, retire l'espace de noms d'un enum Home Connect complet (`LaundryCare.Washer.Program.Auto40` s'affiche *Auto 40*) et détache une température ou une durée collée au nom (`Rapid20Min` s'affiche *Rapid 20 Min*). `raw` affiche l'état tel quel. |
-| `phase_entity` / `phase_map` | Lave-vaisselle uniquement. Entité de phase du cycle, et une table pour les valeurs brutes propres à chaque marque. Phases reconnues : `Prewash`, `Mainwash`, `Rinsing`, `Drying` et `Ado Drying`. Seules les deux phases de séchage changent l'illustration : l'animation de lavage cède la place à de la vapeur orange, plus haute sur la porte pour `Ado Drying`. Les trois phases de lavage partagent volontairement la même animation, puisque la machine y fait réellement la même chose. Une valeur absente, indisponible ou non reconnue est ignorée et l'animation normale est conservée. En YAML seulement pour l'instant, l'éditeur visuel ne propose pas encore ces deux champs. |
-| `remaining_time_entity` / `remaining_time_unit` | Temps restant. Unité `auto` (défaut), `seconds`, ou `minutes`. |
-| `remaining_time_hide_when_idle` | `true` pour n'afficher le temps restant que pendant la marche. Évite qu'une heure de fin périmée (Samsung SmartThings conserve celle du cycle précédent) reste affichée. |
-| `remaining_time_split` | `true` pour afficher l'heure de fin sur une ligne à part (*Fin prévue 11:37*) plutôt qu'après la durée. Garde les deux informations sur une seule rangée dans une carte étroite, une pile horizontale par exemple. Aussi dans l'éditeur visuel, sous l'entité de temps restant. |
-| `progress_entity` | Capteur 0-100 optionnel ; remplace l'estimation côté client. |
-| `door_entity` / `door_open_state` / `door_invert` / `door_hide_in_list` | Capteur de porte, l'état signifiant « ouverte » (défaut `on`), une bascule d'inversion, et une option pour ne pas faire figurer la porte dans la liste d'infos (elle reste visible sur l'illustration). |
-| `alerts_entity` | Entité dont les *attributs* sont des indicateurs on/off ; tout attribut « on/true/active » s'affiche en alerte active. |
-| `connectivity_entity` / `connectivity_connected_state` | Capteur de connectivité et l'état signifiant « connecté » (défaut `on`). |
-| `info_entities` | Jusqu'à 5 entrées `{ entity, icon?, label?, value_map? }` en lignes d'info (température, essorage…). Les entités avec un device class `timestamp`/`date` sont formatées dans le fuseau horaire local et la langue de Home Assistant, comme HA les affiche. `value_map` renomme les valeurs brutes, pour les intégrations qui exposent une phase sous forme de code ou de terme non traduit (voir plus bas). |
-| `start_entity` / `pause_entity` / `resume_entity` / `stop_entity` | Entités bouton/switch/script reliées à la commande correspondante. Seules celles configurées sont affichées. |
+| `state_entity` | **Obligatoire**, sauf sur un frigo. Entité portant l'état de l'appareil, de n'importe quel domaine. |
+| `state_map` | Table état brut → `idle` \| `running` \| `preheating` \| `keep_warm` \| `paused` \| `done` \| `delayed` \| `error`. Fixe le libellé, la couleur et l'animation. Aussi dans l'éditeur visuel. |
+| `state_show_raw` | `true` affiche le texte brut plutôt que le libellé traduit. |
+| `name` | Titre de la card. Par défaut, le nom de l'entité d'état. |
+| `compact` | `true` masque l'illustration. |
+| `illustration_color` | `auto` (défaut, suit le thème) \| `white` \| `grey` \| `black`. Ne change que la carrosserie, pas les couleurs d'état. |
+| `language` | `auto` (défaut, suit Home Assistant) ou l'un des 14 codes : `en`, `fr`, `de`, `es`, `it`, `nl`, `pt`, `sv`, `no`, `da`, `pl`, `ru`, `zh`, `cs`. `nb` et `nb-NO` donnent le norvégien. |
+| `appliance_type` | `auto` (défaut) \| `washer` \| `dryer` \| `dishwasher` \| `oven` \| `microwave` \| `hood` \| `cooktop` \| `fridge` \| `kettle` \| `cooker` \| `coffee` \| `rice_cooker` \| `water_heater` \| `boiler`. |
+| `toggle_entity` | Bouton marche/arrêt (`switch`, `button`, `script`, `input_boolean`, `fan`), mis en évidence quand c'est allumé. |
+| `power_entity` / `power_on_threshold` / `power_icon` | Capteur de puissance. Avec un seuil, l'état en est déduit : *en marche* au-dessus, puis *terminé* en redescendant. Pointer `state_entity` sur ce même capteur l'active avec un seuil de 10 W. `power_icon` remplace `mdi:power-plug`. |
+| `program_entity` / `program_format` | Programme. `clean` (défaut) le rend lisible (`LaundryCare.Washer.Program.Auto40` devient *Auto 40*, `Rapid20Min` devient *Rapid 20 Min*), `raw` l'affiche tel quel. |
+| `remaining_time_entity` / `remaining_time_unit` | Temps restant, en `auto` (défaut), `seconds` ou `minutes`. |
+| `remaining_time_hide_when_idle` | `true` n'affiche le temps restant qu'en marche, contre les heures de fin périmées (SmartThings). |
+| `remaining_time_split` | `true` met l'heure de fin sur sa propre ligne, pour une card étroite. |
+| `progress_entity` | Capteur 0-100 qui remplace l'estimation tirée du temps restant. |
+| `door_entity` / `door_open_state` / `door_invert` / `door_hide_in_list` | Capteur de porte, état « ouverte » (défaut `on`), inversion, et masquage de la ligne (la porte reste dessinée). |
+| `alerts_entity` | Entité dont chaque *attribut* à on, true ou active s'affiche en alerte. |
+| `connectivity_entity` / `connectivity_connected_state` | Connectivité, en icône wifi, et état « connecté » (défaut `on`). |
+| `info_entities` | Jusqu'à 5 lignes `{ entity, icon?, label?, value_map? }`. Les dates sont formatées comme dans Home Assistant, et `value_map` renomme les valeurs brutes (voir plus bas). |
+| `start_entity` / `pause_entity` / `resume_entity` / `stop_entity` | Commandes, affichées seulement si configurées. |
 
 Par type :
 
 | Option | Types | Description |
 |---|---|---|
-| `target_temperature_entity` / `current_temperature_entity` | four, robot cuiseur, cuiseur à riz | Consigne et température réelle. Pendant la montée, la barre devient une jauge de chauffe et l'état affiche *Préchauffage*. |
-| `heating_entity` | four, robot cuiseur, cuiseur à riz | Optionnel ; pilote le rougeoiement des résistances. À défaut, déduit de l'état en cours. |
-| `light_entity` | four, hotte | Éclairage de la cavité / lampes de la hotte. Affiché en petite bascule dans l'en-tête de la card plutôt qu'en rangée de boutons, pour garder la card courte. |
-| `power_level_entity` | micro-ondes, plaque | Niveau de puissance (ex. 800 W). Sur une plaque, c'est le niveau *global* remonté par les tables qui ne disent jamais quel foyer chauffe ; il pilote l'intensité du halo des foyers. |
-| `fan_entity` | hotte | La source de la vitesse. La ligne reste visible hotte à l'arrêt (affichée *Arrêt*), car c'est en cliquant dessus qu'on change la vitesse.  Une entité `fan` utilise son pourcentage ou son preset ; un `select` (Home Connect expose le niveau de ventilation comme ça), un `sensor` ou un `number` est ramené sur une échelle 1-3, via la liste d'options quand elle existe. Un clic sur la ligne de vitesse ouvre l'entité pour la changer, sauf si l'intégration l'a passée en indisponible, auquel cas la ligne reste affichée mais n'est plus cliquable. |
-| `boost_entity` | hotte | Mode intensif optionnel, quand le preset ne l'indique pas déjà. |
-| `filter_life_entity` / `filter_reset_entity` | hotte | Usure du filtre à graisse (%) en barre, et un bouton de remise à zéro. |
-| `zones` | plaque | Liste de `{ level_entity, residual_heat_entity?, name? }`, jusqu'à 6. Les niveaux peuvent être numériques (0-9) ou un mot (`boost`) ; un foyer éteint mais encore chaud affiche `H`. |
-| `zones_layout` | plaque | `2x1` \| `2x2` \| `3x2`. Déduit du nombre de foyers par défaut. |
-| `zones_count` | plaque | Nombre de foyers à dessiner quand aucune entité par foyer n'existe (4 par défaut). |
-| `child_lock_entity` | plaque | Affiche un cadenas sur l'illustration. |
-| `fridge_layout` | frigo | `freezer_bottom` (défaut) \| `freezer_top` \| `side_by_side` \| `single`. Une seule option, parce que sur un vrai frigo le nombre de portes et la position du congélateur sont le même fait. |
-| `fridge_temperature_entity` / `freezer_temperature_entity` | frigo | Les deux afficheurs sur les portes. Un simple capteur de température posé dans le frigo suffit. Rien n'est dessiné sans l'entité ; une sonde qui cesse de répondre affiche `--°` plutôt qu'une valeur périmée, ce que fait un capteur Zigbee quand le frigo est débranché mais que le capteur, lui, continue. |
-| `fridge_max_temperature` | frigo | Au-dessus, l'état passe en *Température haute* et l'afficheur vire au rouge. 8 °C par défaut. |
-| `door_entity` / `freezer_door_entity` | frigo | Une porte par capteur : chaque battant s'ouvre pour le sien, charnière côté extérieur, et le compartiment éclairé apparaît derrière. Avec un seul capteur, seule la porte du réfrigérateur bouge. |
-| `ice_maker_entity` | frigo | Les glaçons tombent quand elle produit et s'éteignent sinon. Sans entité, aucun distributeur n'est dessiné. |
-| `power_entity` / `power_on_threshold` | frigo | Lu à l'envers sur un frigo : *rester sous* le seuil est le défaut, pas l'état de repos. 1 W par défaut. L'alerte attend 30 minutes, parce qu'une prise émet des 0 W isolés alors que tout va bien. Le plus long train mesuré sur un vrai frigo a duré 15 minutes. |
-| `temperature_entity` | bouilloire | Température de l'eau, affichée sur le corps. Sans entité, aucun afficheur. |
-| `speed_entity` | robot cuiseur | Vitesse du couteau, dessinée par la vitesse de rotation. Un nombre est ramené sur trois vitesses (un Thermomix va jusqu'à 10) ; un mot autre qu'*arrêt* (`Turbo`, `Pétrissage`) compte pour la plus rapide. La vraie valeur reste sur la ligne d'info. |
-| `water_entity` | machine à café | Les deux formes marchent. Home Connect émet `ConsumerProducts.CoffeeMaker.Event.WaterTankEmpty`, donc l'entité est un booléen ; une cafetière filtre remonte plutôt un niveau, et là c'est le pourcentage qui est affiché et dessiné, avec *vide* sous 10 %. |
-| `beans_entity` / `tray_entity` / `descaling_entity` | machine à café | Les trois autres événements Home Connect : `BeanContainerEmpty`, `DripTrayFull`, `DeviceShouldBeDescaled`. |
-| `cups_entity` | machine à café | Combien de tasses arrivent. Un compte (les cafetières filtre vont de 1 à 12), un booléen (`Option.MultipleBeverages` chez Home Connect), ou un nom de boisson dont le pluriel est dans le mot (le select `product` de Jura : *2 Espressi*). Le dessin montre une tasse ou deux ; la ligne garde la vraie valeur. |
-| `strength_entity` | machine à café | Force du café : `Option.BeanAmount` chez Home Connect, `coffee_strength` chez Jura. Nombres et mots sont ramenés sur le remplissage du bac à grains. |
+| `phase_entity` / `phase_map` | lave-vaisselle | Phase du cycle, voir plus bas. En YAML seulement. |
+| `target_temperature_entity` / `current_temperature_entity` | four, robot cuiseur, cuiseur à riz | Consigne et température réelle. Pendant la montée, la barre devient une jauge de préchauffage. |
+| `heating_entity` | four, robot cuiseur, cuiseur à riz, chauffe-eau | Dit s'il chauffe quand l'entité d'état ne le dit pas. À défaut, déduit de l'état en cours. |
+| `light_entity` | four, hotte | Éclairage, en petite bascule dans l'en-tête. |
+| `power_level_entity` | micro-ondes, plaque | Niveau de puissance. Sur une plaque, il règle l'intensité du halo des foyers. |
+| `fan_entity` | hotte | Vitesse : pourcentage ou preset d'un `fan`, ou `select`, `sensor` ou `number` ramené sur 1 à 3. Un clic sur la ligne ouvre l'entité pour la changer. |
+| `boost_entity` | hotte | Mode intensif, quand le preset ne le dit pas. |
+| `filter_life_entity` / `filter_reset_entity` | hotte | Usure du filtre en barre, et bouton de remise à zéro. |
+| `zones` / `zones_layout` / `zones_count` | plaque | Jusqu'à 6 foyers `{ level_entity, residual_heat_entity?, name? }`, niveau en chiffre ou en mot (`boost`), `H` pour la chaleur résiduelle. Disposition `2x1` \| `2x2` \| `3x2`, et nombre de foyers à dessiner sans entité (4 par défaut). |
+| `child_lock_entity` | plaque | Cadenas sur l'illustration. |
+| `fridge_layout` | frigo | `freezer_bottom` (défaut) \| `freezer_top` \| `side_by_side` \| `single`. |
+| `fridge_temperature_entity` / `freezer_temperature_entity` / `fridge_max_temperature` | frigo | Températures affichées sur les portes, `--°` si la sonde se tait. Au-dessus du maximum (8 °C par défaut), l'état passe en *Température haute*. |
+| `door_entity` / `freezer_door_entity` | frigo | Chaque porte s'ouvre pour son propre capteur. |
+| `ice_maker_entity` | frigo | Les glaçons tombent quand elle produit. |
+| `power_entity` / `power_on_threshold` | frigo | Rester sous le seuil (1 W par défaut) plus de 30 minutes signale *Débranché*. |
+| `temperature_entity` | bouilloire, chauffe-eau, chaudière | Température de l'eau (de départ sur une chaudière), affichée sur l'appareil. Sur un chauffe-eau, l'eau chaude remplit la cuve de 15 à 65 °C, et une entité `water_heater` donne la sienne toute seule. |
+| `heating_entity` / `hot_water_entity` | chaudière | Indicateurs chauffage et eau chaude ; allumés tous les deux, l'eau chaude l'emporte. Sans eux, le mode vient de `state_entity` : codes `-H`, `=H`, `0H` (Nefit, Bosch), `CH`, `HW`, `No`, ou *chauffage* et *eau chaude*. `state_map` accepte `space_heating`, `hot_water` et `idle`. Avec seulement le brûleur en `power_entity`, la flamme s'allume sans dire pour quoi. |
+| `speed_entity` | robot cuiseur | Vitesse du couteau, ramenée sur trois vitesses. |
+| `water_entity` | machine à café | Réservoir : booléen Home Connect, ou niveau en % avec *vide* sous 10 %. |
+| `beans_entity` / `tray_entity` / `descaling_entity` | machine à café | Grains vides, bac plein, détartrage à faire. |
+| `cups_entity` | machine à café | Nombre de tasses : un compte, un booléen ou un nom de boisson (*2 Espressi*). |
+| `strength_entity` | machine à café | Force du café, en chiffre ou en mot. |
 
-### Exemple
+### Exemples
 
 ```yaml
 type: custom:ha-appliance-card
@@ -116,17 +106,12 @@ state_entity: sensor.lave_linge_appliance_state
 program_entity: select.lave_linge_program_uid
 remaining_time_entity: sensor.lave_linge_time_to_end
 door_entity: binary_sensor.lave_linge_door_state
-alerts_entity: sensor.lave_linge_alerts
 info_entities:
   - entity: select.lave_linge_temperature
     icon: mdi:thermometer
-  - entity: select.lave_linge_spin_speed
-    icon: mdi:rotate-3d-variant
 pause_entity: button.lave_linge_execute_command_pause
 stop_entity: button.lave_linge_execute_command_stopreset
 ```
-
-### Exemples four, hotte et plaque
 
 ```yaml
 type: custom:ha-appliance-card
@@ -134,104 +119,66 @@ appliance_type: oven
 state_entity: sensor.four_state
 target_temperature_entity: number.four_consigne
 current_temperature_entity: sensor.four_temperature
-door_entity: binary_sensor.four_porte
 light_entity: light.four_eclairage
-remaining_time_entity: sensor.four_time_to_end
-```
-
-```yaml
-type: custom:ha-appliance-card
-appliance_type: hood
-state_entity: fan.hotte
-fan_entity: fan.hotte
-light_entity: light.hotte
-filter_life_entity: sensor.hotte_filtre_graisse
 ```
 
 ```yaml
 type: custom:ha-appliance-card
 appliance_type: cooktop
 state_entity: sensor.plaque_state
-child_lock_entity: binary_sensor.plaque_securite_enfant
 zones:
   - level_entity: sensor.plaque_foyer_1_niveau
     residual_heat_entity: binary_sensor.plaque_foyer_1_chaud
     name: Avant gauche
   - level_entity: sensor.plaque_foyer_2_niveau
-  - level_entity: sensor.plaque_foyer_3_niveau
-  - level_entity: sensor.plaque_foyer_4_niveau
+```
+
+```yaml
+type: custom:ha-appliance-card
+appliance_type: boiler
+state_entity: sensor.chaudiere_code_afficheur
+temperature_entity: sensor.chaudiere_temperature_depart
 ```
 
 Avec une simple prise connectée :
 
 ```yaml
 type: custom:ha-appliance-card
-appliance_type: oven
-name: Four
-state_entity: sensor.prise_four_puissance
-power_entity: sensor.prise_four_puissance
+appliance_type: water_heater
+state_entity: sensor.prise_cumulus_puissance
+power_entity: sensor.prise_cumulus_puissance
 power_on_threshold: 10
 ```
 
 ### Renommer des valeurs brutes (`value_map`)
 
-Certaines intégrations exposent la phase du cycle sous forme de simple nombre
-ou de terme non traduit. `value_map` permet de les remplacer par du texte
-lisible, entité d'info par entité d'info :
+Quand une intégration expose une phase en code ou en terme non traduit, `value_map` la renomme, ligne d'info par ligne d'info :
 
 ```yaml
 info_entities:
   - entity: sensor.washing_machine_program_phase
-    icon: mdi:washing-machine
     label: Phase
     value_map:
       0: Prêt
       1: Lavage
-      2: Rinçage
-      3: Essorage
       18: Terminé
 ```
 
-Les clés sont d'abord comparées à l'état brut à l'identique, puis sans tenir
-compte de la casse (donc `washing` correspond aussi à un état `Washing`). Les
-valeurs non mappées sont affichées telles quelles, et un libellé mappé remplace
-entièrement la valeur (aucune unité n'est ajoutée).
+La casse est ignorée et une valeur absente de la table s'affiche telle quelle. Dans l'éditeur visuel, c'est une ligne `code: libellé` par correspondance.
 
-Dans l'éditeur visuel, la même chose se saisit sous forme d'une ligne
-`code: libellé` par correspondance, sous chaque entité d'info. Le séparateur `=`
-fonctionne aussi, les lignes vides et celles commençant par `#` sont ignorées,
-et seul le premier `:` ou `=` découpe la ligne, donc un libellé peut lui-même en
-contenir un.
+### Phases du lave-vaisselle
 
-### Animation des phases du lave-vaisselle
-
-L'entité de phase est optionnelle. Si l'intégration expose la phase du cycle,
-indique-la directement, ou fournis une table explicite pour les valeurs propres
-à la marque :
+Avec une `phase_entity`, `Drying` et `Ado Drying` remplacent le lavage par de la vapeur orange qui monte le long de la porte, plus haut pour `Ado Drying`. `Prewash`, `Mainwash` et `Rinsing` gardent l'animation de lavage. Ces valeurs sont reconnues d'office, comme `Pre Wash`, `Wash`, `Rinse` et `Dry`, et `phase_map` traduit les autres :
 
 ```yaml
 appliance_type: dishwasher
 state_entity: sensor.lave_vaisselle_etat
 phase_entity: sensor.lave_vaisselle_phase
 phase_map:
-  Prewash: prewash
-  Mainwash: mainwash
-  Drying: drying
-  Ado Drying: ado_drying
+  Sechage: drying
 ```
 
-Les alias intégrés reconnaissent aussi ces valeurs sans `phase_map`, ainsi que
-`Pre Wash`, `Wash`, `Rinse` et `Dry`.
-
-Ce que fait chaque phase : `Prewash`, `Mainwash` et `Rinsing` conservent toutes
-l'animation de lavage, parce qu'un lave-vaisselle y fait la même chose.
-`Drying` et `Ado Drying` arrêtent le bras et l'eau, et affichent à la place de
-la vapeur orange qui monte le long de la porte, plus haut pour `Ado Drying`,
-avec le joint de porte qui rougeoie.
-
-La phase ne change que l'illustration. Elle ne remplace ni l'état de l'appareil
-ni le capteur de porte, et une valeur non reconnue est ignorée plutôt que de
-casser l'animation.
+La phase ne change que l'illustration, et une valeur non reconnue est ignorée.
 
 ## Remerciements
 
