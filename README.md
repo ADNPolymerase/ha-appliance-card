@@ -90,8 +90,9 @@ Per type:
 | `door_entity` / `freezer_door_entity` | fridge | Each door swings for its own sensor. |
 | `ice_maker_entity` | fridge | Ice cubes fall while it produces. |
 | `power_entity` / `power_on_threshold` | fridge | Staying below the threshold (default 1 W) for more than 30 minutes reads *Unplugged*. |
-| `temperature_entity` | kettle, water heater, boiler | Water temperature (flow temperature on a boiler), shown on the appliance. On a water heater the hot water fills the tank from 15 to 65 °C, and a `water_heater` entity provides its own. |
-| `heating_entity` / `hot_water_entity` | boiler | Central heating and hot water indicators; with both on, hot water wins. Without them the mode comes from `state_entity`: codes `-H`, `=H`, `0H` (Nefit, Bosch), `CH`, `HW`, `No`, or *central heating* and *hot water*. `state_map` accepts `space_heating`, `hot_water` and `idle`. With only the burner as `power_entity`, the flame lights without saying what for. |
+| `temperature_entity` | kettle, water heater, boiler | Water temperature (flow temperature on a boiler), shown on the appliance. A `water_heater` entity provides its own. On a water heater the hot water fills the tank from 15 to 65 °C. |
+| `state_entity` as `water_heater` | water heater | Its state is the mode (*Eco*, *Performance*…), shown as Home Assistant translates it. Heating then comes from `heating_entity`, a smart plug or MELCloud's `status` attribute. |
+| `heating_entity` / `hot_water_entity` | boiler | Central heating and hot water indicators; with both on, hot water wins. Without them the mode comes from `state_entity`: codes `-H`, `=H`, `0H` (Nefit, Bosch), `CH`, `HW`, `No`, those of InComfort, ebusd, myVAILLANT and MELCloud, or *central heating* and *hot water*. With the indicators off but the flame lit, it reads *Burner on*. `state_map` accepts `space_heating`, `hot_water` and `idle`. With only the burner as `power_entity`, the flame lights without saying what for. |
 | `speed_entity` | cooker | Blade speed, banded onto three speeds. |
 | `water_entity` | coffee | Tank: a Home Connect boolean, or a level in % with *empty* below 10%. |
 | `beans_entity` / `tray_entity` / `descaling_entity` | coffee | Beans empty, tray full, descaling due. |

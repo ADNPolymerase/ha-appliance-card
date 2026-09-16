@@ -1,4 +1,4 @@
-const CARD_VERSION = "2.4.0";
+const CARD_VERSION = "2.4.1";
 
 console.info(
   "%c HA-APPLIANCE-CARD %c v" + CARD_VERSION + " ",
@@ -1576,8 +1576,11 @@ const STATE_KEYWORD_PATTERNS = Object.fromEntries(
 const MAPPABLE_STATES = Object.keys(STATE_KEYWORDS).concat("unknown");
 
 // What a combi boiler is doing. Nefit and Bosch display -H, =H and 0H on the
-// front panel and report CH, HW and No in their status; the words cover the rest.
-// A state_map entry pointing at one of the three modes wins, as it does everywhere.
+// front panel and report CH, HW and No in their status. InComfort (Intergas)
+// reports central_heating, starting_ch and tapwater, ebusd hwc_on and its
+// siblings, MELCloud heat_zones and heat_water, myVAILLANT HEATING. The words
+// cover the rest. A state_map entry pointing at one of the three modes wins,
+// as it does everywhere.
 const BOILER_MODES = ["space_heating", "hot_water", "idle"];
 function boilerModeOf(raw, stateMap) {
   if (raw === undefined || raw === null) return "";
@@ -1587,10 +1590,32 @@ function boilerModeOf(raw, stateMap) {
   }
   const f = stripAccents(s).toLowerCase();
   // Hot water first: "chauffage eau chaude" is about the taps, not the radiators.
-  if (f === "=h" || /\b(hw|dhw|ecs)\b|hot.?water|eau.?chaude|sanitaire|warmwasser|agua.?caliente|acqua.?calda|warm.?water/.test(f)) return "hot_water";
-  if (f === "-h" || /\bch\b|central.?heating|space.?heating|chauffage|heizung|calefaccion|riscaldamento|verwarming/.test(f)) return "space_heating";
+  if (f === "=h" || /\b(hw|dhw|ecs|acs)\b|\bhwc|tap.?water|heat.?water|hot.?water|eau.?chaude|sanitaire|warmwasser|agua.?caliente|acqua.?calda|warm.?water/.test(f)) return "hot_water";
+  // Plain "heating" only after hot water has had its turn: on a boiler, a
+  // heating that is not about the taps is about the radiators.
+  if (f === "-h" || /\bch\b|starting.?ch|central.?heating|space.?heating|heat.?zones|\bheating\b|chauffage|heizung|heizbetrieb|calefaccion|riscaldamento|verwarming|\bcv\b/.test(f)) return "space_heating";
   if (f === "0h" || f === "no") return "idle";
   return "";
+}
+
+// MELCloud puts what an air-to-water heat pump is doing in a status attribute
+// on its water_heater entity. heat_water is the tank; the rest is not.
+const MELCLOUD_STATUSES = ["idle", "heat_water", "heat_zones", "cool", "defrost", "standby", "legionella"];
+
+// A water_heater entity's state is its operation mode. Home Assistant already
+// translates those, so its label wins unless the card's language is pinned.
+function modeLabel(hass, st, raw, cfg) {
+  const pinned = cfg && cfg.language && cfg.language !== "auto";
+  if (!pinned && st && hass && typeof hass.formatEntityState === "function") {
+    try {
+      const label = hass.formatEntityState(st, raw);
+      if (label && label !== raw) return label;
+    } catch (e) {
+      /* fall through to the local cleanup */
+    }
+  }
+  const clean = cleanStateLabel(raw);
+  return clean.charAt(0).toUpperCase() + clean.slice(1);
 }
 
 function normalizeState(raw, stateMap) {
@@ -2091,6 +2116,10 @@ function detectApplianceType(cfg, st) {
   if (/cook.?processor|cookit|thermomix|robot.?cuiseur|companion|monsieur.?cuisine|cookeo|k\u00fcchenmaschine|kuchenmaschine|multicooker/.test(hay)) return "cooker";
   if (/fridge|freezer|frigo|r\u00e9frig|refrig|kuhlschrank|k\u00fchlschrank|nevera|frigor|koelkast|kyl(skap)?\b|kj\u00f8leskap|lod\u00f3wka|lodowka/.test(hay)) return "fridge";
   if (/kettle|bouilloire|wasserkocher|hervidor|bollitore|waterkoker|vattenkokare|vannkoker|elkedel|czajnik/.test(hay)) return "kettle";
+  // InComfort exposes an Intergas combi boiler as water_heater.boiler: the
+  // domain says tank, the name says boiler, and the name is the one that knows.
+  const eid = String(cfg.state_entity || "").toLowerCase();
+  if (/^water_heater\..*(boiler|chaudiere)/.test(eid) && !/water.?boiler/.test(eid)) return "boiler";
   // Before the boiler: MDI names a storage tank "water-boiler", and water_heater
   // is the Home Assistant domain for one.
   if (/water.?heater|water.?boiler|chauffe.?eau|cumulus|warmwasserspeicher|termo.?electrico|scaldabagno|varmvattenberedare|varmtvannsbereder|podgrzewacz/.test(hay)) return "water_heater";
@@ -4495,7 +4524,8 @@ class ApplianceCard extends HTMLElement {
 
     const isOn = (id) => {
       const os = stateObj(hass, id);
-      return !!os && ["on", "true", "heating", "active"].includes(String(os.state).toLowerCase());
+      // ebusd publishes some demands as yes/no rather than on/off.
+      return !!os && ["on", "true", "yes", "heating", "active"].includes(String(os.state).toLowerCase());
     };
 
     // Water heater. A tank never finishes, so a power meter falling back under
@@ -4503,9 +4533,31 @@ class ApplianceCard extends HTMLElement {
     let tankTemp = null;
     let tankHeating = false;
     if (cap.tankTemp) {
-      tankHeating = cfg.heating_entity ? isOn(cfg.heating_entity) : isActiveState(norm);
-      if (cfg.heating_entity || ["running", "idle", "done"].includes(norm)) {
-        if (!cfg.state_show_raw) stateLabel = t(hass, tankHeating ? "kettle_heating" : "standby");
+      // A water_heater entity reports its mode, never whether it heats: "on" is
+      // Overkiz's standard mode. Only an indicator, a power meter or MELCloud's
+      // status attribute can say the tank is heating; without one, the card
+      // shows the mode and leaves the element cold.
+      const tankEntity = /^water_heater\./.test(cfg.state_entity || "");
+      const tankStatus = tankEntity && st ? String(st.attributes.status || "").toLowerCase() : "";
+      let tankLabel = null;
+      if (cfg.heating_entity) {
+        tankHeating = isOn(cfg.heating_entity);
+        tankLabel = t(hass, tankHeating ? "kettle_heating" : "standby");
+      } else if (tankEntity && !powerDerived) {
+        if (MELCLOUD_STATUSES.includes(tankStatus)) {
+          tankHeating = tankStatus === "heat_water";
+          tankLabel = t(hass, tankHeating ? "kettle_heating" : "standby");
+        } else if (String(rawState).trim().toLowerCase() === "off") {
+          tankLabel = t(hass, "standby");
+        } else if (!rawIsMeaningless) {
+          tankLabel = modeLabel(hass, st, rawState, cfg);
+        }
+      } else {
+        tankHeating = isActiveState(norm);
+        if (["running", "idle", "done"].includes(norm)) tankLabel = t(hass, tankHeating ? "kettle_heating" : "standby");
+      }
+      if (tankLabel !== null) {
+        if (!cfg.state_show_raw) stateLabel = tankLabel;
         color = tankHeating ? "#ff7043" : STATE_COLORS.idle;
       }
       let wv = cfg.temperature_entity ? numericState(hass, cfg.temperature_entity) : null;
@@ -4534,8 +4586,11 @@ class ApplianceCard extends HTMLElement {
     if (cap.boilerMode) {
       if (cfg.hot_water_entity || cfg.heating_entity) {
         // Hot water takes priority on a combi boiler, so it wins a tie.
+        // Both off while the flame is lit (frost protection, or only one of the
+        // two indicators configured) is still a burner at work.
         boilerMode = cfg.hot_water_entity && isOn(cfg.hot_water_entity) ? "hot_water"
-          : cfg.heating_entity && isOn(cfg.heating_entity) ? "space_heating" : "idle";
+          : cfg.heating_entity && isOn(cfg.heating_entity) ? "space_heating"
+          : isActiveState(norm) ? "burner" : "idle";
       } else if (!powerDerived) {
         boilerMode = boilerModeOf(rawState, cfg.state_map);
       }
@@ -4547,18 +4602,21 @@ class ApplianceCard extends HTMLElement {
         if (!cfg.state_show_raw) stateLabel = t(hass, boilerMode === "idle" ? "standby" : `boiler_${boilerMode}`);
         color = boilerMode === "hot_water" ? "#ef5350" : boilerMode === "idle" ? STATE_COLORS.idle : "#ff7043";
       }
-      if (cfg.temperature_entity) {
-        const bv = numericState(hass, cfg.temperature_entity);
-        if (bv !== null) {
-          const bunit = temperatureUnit(hass, cfg.temperature_entity);
-          displayText = `${Math.round(bv)}\u00b0`;
-          extraLines.push({
-            icon: "mdi:thermometer",
-            label: t(hass, "temperature"),
-            value: `${Math.round(bv)} ${bunit}`,
-            entity: cfg.temperature_entity,
-          });
-        }
+      let bv = cfg.temperature_entity ? numericState(hass, cfg.temperature_entity) : null;
+      // InComfort's water_heater entity carries the boiler temperature itself.
+      if (bv === null && st && /^water_heater\./.test(cfg.state_entity || "")) {
+        const a = parseFloat(st.attributes.current_temperature);
+        if (Number.isFinite(a)) bv = a;
+      }
+      if (bv !== null) {
+        const bunit = temperatureUnit(hass, cfg.temperature_entity || cfg.state_entity);
+        displayText = `${Math.round(bv)}\u00b0`;
+        extraLines.push({
+          icon: "mdi:thermometer",
+          label: t(hass, "temperature"),
+          value: `${Math.round(bv)} ${bunit}`,
+          entity: cfg.temperature_entity,
+        });
       }
     }
 

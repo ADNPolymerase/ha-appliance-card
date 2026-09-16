@@ -90,8 +90,9 @@ Par type :
 | `door_entity` / `freezer_door_entity` | frigo | Chaque porte s'ouvre pour son propre capteur. |
 | `ice_maker_entity` | frigo | Les glaçons tombent quand elle produit. |
 | `power_entity` / `power_on_threshold` | frigo | Rester sous le seuil (1 W par défaut) plus de 30 minutes signale *Débranché*. |
-| `temperature_entity` | bouilloire, chauffe-eau, chaudière | Température de l'eau (de départ sur une chaudière), affichée sur l'appareil. Sur un chauffe-eau, l'eau chaude remplit la cuve de 15 à 65 °C, et une entité `water_heater` donne la sienne toute seule. |
-| `heating_entity` / `hot_water_entity` | chaudière | Indicateurs chauffage et eau chaude ; allumés tous les deux, l'eau chaude l'emporte. Sans eux, le mode vient de `state_entity` : codes `-H`, `=H`, `0H` (Nefit, Bosch), `CH`, `HW`, `No`, ou *chauffage* et *eau chaude*. `state_map` accepte `space_heating`, `hot_water` et `idle`. Avec seulement le brûleur en `power_entity`, la flamme s'allume sans dire pour quoi. |
+| `temperature_entity` | bouilloire, chauffe-eau, chaudière | Température de l'eau (de départ sur une chaudière), affichée sur l'appareil. Une entité `water_heater` donne la sienne toute seule. Sur un chauffe-eau, l'eau chaude remplit la cuve de 15 à 65 °C. |
+| `state_entity` en `water_heater` | chauffe-eau | Son état est le mode (*Éco*, *Performance*…), affiché tel que Home Assistant le traduit. La chauffe vient alors de `heating_entity`, d'une prise ou de l'attribut `status` de MELCloud. |
+| `heating_entity` / `hot_water_entity` | chaudière | Indicateurs chauffage et eau chaude ; allumés tous les deux, l'eau chaude l'emporte. Sans eux, le mode vient de `state_entity` : codes `-H`, `=H`, `0H` (Nefit, Bosch), `CH`, `HW`, `No`, ceux d'InComfort, ebusd, myVAILLANT et MELCloud, ou *chauffage* et *eau chaude*. Indicateurs éteints mais flamme allumée, elle affiche *Brûleur allumé*. `state_map` accepte `space_heating`, `hot_water` et `idle`. Avec seulement le brûleur en `power_entity`, la flamme s'allume sans dire pour quoi. |
 | `speed_entity` | robot cuiseur | Vitesse du couteau, ramenée sur trois vitesses. |
 | `water_entity` | machine à café | Réservoir : booléen Home Connect, ou niveau en % avec *vide* sous 10 %. |
 | `beans_entity` / `tray_entity` / `descaling_entity` | machine à café | Grains vides, bac plein, détartrage à faire. |

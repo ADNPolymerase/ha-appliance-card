@@ -1311,6 +1311,68 @@ for (const [id, want, icon] of [
     { [id]: { state: 'off', attributes: icon ? { icon } : {} } })), want);
 }
 
+// ── Real integrations ────────────────────────────────────────────────────────
+// Each shape below is what an integration actually stores, read from its source.
+// A water_heater entity's state is its operation mode, never whether it heats.
+const tank = (state, attributes = {}, extra = {}, more = {}) => render(
+  { appliance_type: 'water_heater', state_entity: 'water_heater.tank', ...extra },
+  { 'water_heater.tank': { state, attributes }, ...more });
+// Overkiz reports its standard mode as "on".
+const overkizOn = tank('on', { current_temperature: 48 });
+check('integrations : le mode "on" d\'Overkiz n\'est pas une chauffe', stateLine(overkizOn), 'On');
+check('integrations : mode "on", la resistance reste froide', machineCls(overkizOn).split(' ').includes('heating'), false);
+check('integrations : un mode se lit avec une majuscule', stateLine(tank('performance')), 'Performance');
+check('integrations : un mode en snake_case se lit en mots', stateLine(tank('heat_pump')), 'Heat pump');
+// Home Assistant translates water_heater modes; its label wins, as for programmes.
+{
+  const c = new Card();
+  c.setConfig({ type: 'custom:ha-appliance-card', appliance_type: 'water_heater', state_entity: 'water_heater.tank' });
+  c._hass = { ...HASS({ 'water_heater.tank': { state: 'electric', attributes: {} } }), formatEntityState: () => 'Électrique' };
+  c._render();
+  check('integrations : le libelle de mode de Home Assistant est prefere', stateLine(markup(c)), 'Électrique');
+}
+check('integrations : chauffe-eau off, en veille', stateLine(tank('off')), 'Standby');
+// MELCloud: status heat_water is the tank, heat_zones is the house.
+const melTank = tank('auto', { current_temperature: 47, status: 'heat_water' });
+check('integrations : MELCloud heat_water chauffe la cuve', stateLine(melTank), 'Heating');
+check('integrations : MELCloud heat_water allume la resistance', machineCls(melTank).split(' ').includes('heating'), true);
+check('integrations : MELCloud heat_zones laisse la cuve en veille', stateLine(tank('auto', { status: 'heat_zones' })), 'Standby');
+check('integrations : une prise l\'emporte sur le mode',
+  stateLine(render({ appliance_type: 'water_heater', state_entity: 'water_heater.tank', power_entity: 'sensor.tank_w', power_on_threshold: 10 },
+    { 'water_heater.tank': { state: 'eco', attributes: {} }, 'sensor.tank_w': { state: '2000', attributes: { unit_of_measurement: 'W' } } })), 'Heating');
+
+// Combi boiler vocabularies.
+for (const [raw, label, who] of [
+  ['tapwater', 'Hot water', 'InComfort'], ['tapwater_int', 'Hot water', 'InComfort'],
+  ['starting_ch', 'Heating', 'InComfort'], ['central_heating_rf', 'Heating', 'InComfort'],
+  ['hwc_on', 'Hot water', 'ebusd'], ['hwc_ignition', 'Hot water', 'ebusd'],
+  ['HEATING', 'Heating', 'myVAILLANT'], ['heat_zones', 'Heating', 'MELCloud'], ['heat_water', 'Hot water', 'MELCloud'],
+  ['ACS', 'Hot water', 'libelle espagnol'], ['Heizbetrieb', 'Heating', 'libelle allemand'],
+]) {
+  check(`integrations : ${who} ${raw} se lit ${label}`, stateLine(blOf(raw)), label);
+}
+// InComfort names its boiler water_heater.boiler and carries its temperature.
+const incomfort = render({ state_entity: 'water_heater.boiler' },
+  { 'water_heater.boiler': { state: 'tapwater', attributes: { current_temperature: 55 } } });
+check('integrations : water_heater.boiler est une chaudiere', drawn(incomfort), 'boiler');
+contains('integrations : la chaudiere InComfort donne sa temperature', incomfort, '<div class="bl-lcd">55°</div>');
+check('integrations : water_heater.chauffe_eau reste un chauffe-eau',
+  drawn(render({ state_entity: 'water_heater.chauffe_eau' }, { 'water_heater.chauffe_eau': { state: 'eco', attributes: {} } })), 'water_heater');
+check('integrations : water_heater.water_boiler reste un chauffe-eau',
+  drawn(render({ state_entity: 'water_heater.water_boiler' }, { 'water_heater.water_boiler': { state: 'eco', attributes: {} } })), 'water_heater');
+
+// Flame lit while both indicators are off: frost protection on OpenTherm, or
+// ViCare with only its hot water charging configured.
+const otgw = (flame, ch, hw) => render({ appliance_type: 'boiler', state_entity: 'binary_sensor.flame',
+  heating_entity: 'binary_sensor.ch', hot_water_entity: 'binary_sensor.hw' },
+  { 'binary_sensor.flame': { state: flame, attributes: {} }, 'binary_sensor.ch': { state: ch, attributes: {} },
+    'binary_sensor.hw': { state: hw, attributes: {} } });
+check('integrations : flamme allumee, indicateurs eteints, bruleur allume', stateLine(otgw('on', 'off', 'off')), 'Burner on');
+check('integrations : flamme eteinte, indicateurs eteints, en veille', stateLine(otgw('off', 'off', 'off')), 'Standby');
+check('integrations : un indicateur allume passe devant la flamme', stateLine(otgw('on', 'on', 'off')), 'Heating');
+// ebusd publishes some demands as yes/no.
+check('integrations : un indicateur a "yes" compte comme allume', stateLine(otgw('on', 'off', 'yes')), 'Hot water');
+
 // ── Editor ───────────────────────────────────────────────────────────────────
 const edHtml = type => markup(newEditor({ state_entity: 'sensor.oven_appliance_state', appliance_type: type })._root)
   || newEditor({ state_entity: 'sensor.oven_appliance_state', appliance_type: type })._root._html || '';
