@@ -68,7 +68,7 @@ Only `state_entity` is required, except on a fridge where a probe or a door cont
 | `door_entity` / `door_open_state` / `door_invert` / `door_hide_in_list` | Door sensor, "open" state (default `on`), inversion, and hiding the line (the door is still drawn). |
 | `alerts_entity` | Entity whose every *attribute* at on, true or active shows as an alert. |
 | `connectivity_entity` / `connectivity_connected_state` | Connectivity, as a wifi icon, and the "connected" state (default `on`). |
-| `info_entities` | Up to 5 lines `{ entity, icon?, label?, value_map? }`. Dates are formatted as in Home Assistant, and `value_map` relabels raw values (see below). |
+| `info_entities` | Up to 5 lines `{ entity, icon?, label?, value_map?, hide_unit? }`. Values read as in Home Assistant, with the entity's display precision. `value_map` relabels raw values (see below), `hide_unit` drops the unit. |
 | `start_entity` / `pause_entity` / `resume_entity` / `stop_entity` | Controls, only shown when configured. |
 
 Per type:
@@ -89,10 +89,10 @@ Per type:
 | `fridge_temperature_entity` / `freezer_temperature_entity` / `fridge_max_temperature` | fridge | Temperatures shown on the doors, `--°` when the probe goes quiet. Above the maximum (default 8 °C), the state reads *Temperature high*. |
 | `door_entity` / `freezer_door_entity` | fridge | Each door swings for its own sensor. |
 | `ice_maker_entity` | fridge | Ice cubes fall while it produces. |
-| `power_entity` / `power_on_threshold` | fridge | Staying below the threshold (default 1 W) for more than 30 minutes reads *Unplugged*. |
+| `power_entity` / `power_on_threshold` | fridge | Staying below the threshold (default 1 W) for more than 30 minutes reads *Unplugged*, counted from the reading's last change so a page reload does not restart it. |
 | `temperature_entity` | kettle, water heater, boiler | Water temperature (flow temperature on a boiler), shown on the appliance. A `water_heater` entity provides its own. On a water heater the hot water fills the tank from 15 to 65 °C. |
 | `state_entity` as `water_heater` | water heater | Its state is the mode (*Eco*, *Performance*…), shown as Home Assistant translates it. Heating then comes from `heating_entity`, a smart plug or MELCloud's `status` attribute. |
-| `heating_entity` / `hot_water_entity` | boiler | Central heating and hot water indicators; with both on, hot water wins. Without them the mode comes from `state_entity`: codes `-H`, `=H`, `0H` (Nefit, Bosch), `CH`, `HW`, `No`, those of InComfort, ebusd, myVAILLANT and MELCloud, or *central heating* and *hot water*. With the indicators off but the flame lit, it reads *Burner on*. `state_map` accepts `space_heating`, `hot_water` and `idle`. With only the burner as `power_entity`, the flame lights without saying what for. |
+| `heating_entity` / `hot_water_entity` | boiler | Central heating and hot water indicators; with both on, hot water wins. Without them the mode comes from `state_entity`: codes `-H`, `=H`, `0H` (Nefit, Bosch) or their numeric form `200`, `201`, `203`, with start-up (`0U`, `0C`, `0L` or `270`, `283`, `284`) read as *Ignition* and the burner's waits (`0A`, `0Y`, `0E` or `202`, `204`, `265`, `305`, `353`) as *Waiting*; `CH`, `HW`, `No`; those of InComfort, ebusd, myVAILLANT and MELCloud; or *central heating* and *hot water*. With the indicators off but the flame lit, it reads *Burner on*. `state_map` accepts `space_heating`, `hot_water`, `starting`, `waiting` and `idle`. With only the burner as `power_entity`, the flame lights without saying what for. |
 | `speed_entity` | cooker | Blade speed, banded onto three speeds. |
 | `water_entity` | coffee | Tank: a Home Connect boolean, or a level in % with *empty* below 10%. |
 | `beans_entity` / `tray_entity` / `descaling_entity` | coffee | Beans empty, tray full, descaling due. |

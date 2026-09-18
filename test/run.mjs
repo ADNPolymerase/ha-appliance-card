@@ -792,6 +792,17 @@ fire(latePicker, 'value-changed', { detail: { value: '' } });
 check('info : effacer juste apres avoir choisi fonctionne encore',
   edLate._config.info_entities[0]?.entity, undefined);
 
+// Hiding the unit is set per info entity, from the form.
+const edHide = new Editor();
+edHide.setConfig({ type: 'custom:ha-appliance-card', state_entity: 'sensor.washer_state',
+                   info_entities: [{ entity: 'sensor.other_program' }] });
+edHide.hass = HASS(LOSS_STATES);
+const hideBox = edHide._root.querySelector('[data-slot="__info_hideunit_0"]').children.at(-1).children[0];
+fire(hideBox, 'change', { target: { checked: true } });
+check('editeur : masquer l\'unite est enregistre', edHide._config.info_entities[0]?.hide_unit, true);
+fire(hideBox, 'change', { target: { checked: false } });
+check('editeur : decocher retire l\'option', edHide._config.info_entities[0]?.hide_unit, undefined);
+
 // The structural guard itself: an equivalent config must not tear the form down.
 const edStable = new Editor();
 edStable.setConfig({ type: 'custom:ha-appliance-card', state_entity: 'sensor.washer_state' });
@@ -983,6 +994,66 @@ contains('valeur normale non alteree',
     { 'sensor.w': { state: 'Running', attributes: {} },
       'sensor.i': { state: '1200', attributes: { friendly_name: 'Spin speed', unit_of_measurement: 'rpm' } } }),
   'Spin speed');
+
+// ── Info line formatting ─────────────────────────────────────────────────────
+// Home Assistant prints a state the way its entity asks, and its formatter is
+// what applies the display precision chosen in the entity's settings. The raw
+// state showed a probe set to whole degrees as 48.7999992370605 °C.
+const fmtCard = (info, states, extra = {}, hassExtra = {}) => {
+  const c = new Card();
+  c.setConfig({ type: 'custom:ha-appliance-card', appliance_type: 'washer', state_entity: 'sensor.w',
+    info_entities: [info], ...extra });
+  c._hass = { ...HASS({ 'sensor.w': { state: 'Running', attributes: {} }, ...states }), ...hassExtra };
+  c._render();
+  return markup(c);
+};
+const probe = { 'sensor.t': { entity_id: 'sensor.t', state: '48.7999992370605',
+  attributes: { friendly_name: 'Top', unit_of_measurement: '°C' } } };
+// A stand-in for hass.formatEntityState that honours the precision the way
+// the frontend does.
+const fmtHass = (precision) => ({
+  entities: { 'sensor.t': { display_precision: precision } },
+  formatEntityState: (st) => `${Number(st.state).toFixed(precision)} ${st.attributes.unit_of_measurement}`,
+});
+check('info : la precision d\'affichage passe par Home Assistant',
+  infoLine(fmtCard({ entity: 'sensor.t' }, probe, {}, fmtHass(0)), 'Top'), '49 °C');
+// What only the frontend knows: the translated label of an on/off.
+check('info : un etat traduit par Home Assistant',
+  infoLine(fmtCard({ entity: 'binary_sensor.d' },
+    { 'binary_sensor.d': { entity_id: 'binary_sensor.d', state: 'on', attributes: { friendly_name: 'Door' } } },
+    {}, { formatEntityState: (st) => (st.state === 'on' ? 'Open' : 'Closed') }), 'Door'), 'Open');
+check('info : value_map garde la main sur le formateur',
+  infoLine(fmtCard({ entity: 'sensor.t', value_map: { '48.7999992370605': 'Chaud' } }, probe, {}, fmtHass(0)), 'Top'), 'Chaud');
+check('info : hide_unit retire l\'unite rendue par Home Assistant',
+  infoLine(fmtCard({ entity: 'sensor.t', hide_unit: true }, probe, {}, fmtHass(1)), 'Top'), '48.8');
+check('info : hide_unit quand l\'unite est collee au nombre',
+  infoLine(fmtCard({ entity: 'sensor.p', hide_unit: true },
+    { 'sensor.p': { entity_id: 'sensor.p', state: '50.92', attributes: { friendly_name: 'Filled', unit_of_measurement: '%' } } },
+    {}, { formatEntityState: (st) => `${st.state}%` }), 'Filled'), '50.92');
+check('info : un formateur en erreur retombe sur le repli',
+  infoLine(fmtCard({ entity: 'sensor.t' }, probe, {}, { entities: { 'sensor.t': { display_precision: 0 } },
+    formatEntityState: () => { throw new Error('x'); } }), 'Top'), '49 °C');
+// Pinned to another language, the frontend would answer in Home Assistant's
+// language: the card formats the number itself, precision included.
+check('info : langue forcee, la precision est appliquee localement',
+  infoLine(fmtCard({ entity: 'sensor.t' }, probe, { language: 'fr' },
+    { entities: { 'sensor.t': { display_precision: 1 } }, formatEntityState: () => 'NE PAS UTILISER' }), 'Top'), '48,8 °C');
+check('info : repli, la precision retrouvee sans entity_id dans l\'etat',
+  infoLine(fmtCard({ entity: 'sensor.t' },
+    { 'sensor.t': { state: '48.79', attributes: { friendly_name: 'Top', unit_of_measurement: '°C' } } },
+    {}, { entities: { 'sensor.t': { display_precision: 0 } } }), 'Top'), '49 °C');
+check('info : repli, un pas entier donne un entier',
+  infoLine(fmtCard({ entity: 'input_number.c' },
+    { 'input_number.c': { state: '177.0', attributes: { friendly_name: 'Compteur', step: 1 } } }), 'Compteur'), '177');
+check('info : repli, un pas fractionnaire garde ses decimales',
+  infoLine(fmtCard({ entity: 'input_number.c' },
+    { 'input_number.c': { state: '2.0', attributes: { friendly_name: 'Dose', step: 0.5 } } }), 'Dose'), '2.0');
+check('info : repli, sans precision la valeur reste telle quelle',
+  infoLine(fmtCard({ entity: 'sensor.l' },
+    { 'sensor.l': { state: '121.7', attributes: { friendly_name: 'Litres', unit_of_measurement: 'L' } } }), 'Litres'), '121.7 L');
+check('info : repli, hide_unit',
+  infoLine(fmtCard({ entity: 'sensor.l', hide_unit: true },
+    { 'sensor.l': { state: '121.7', attributes: { friendly_name: 'Litres', unit_of_measurement: 'L' } } }), 'Litres'), '121.7');
 
 // ── Sections dashboard sizing ────────────────────────────────────────────────
 // getCardSize() only serves the older masonry view. Sections sizes cards from
@@ -1268,6 +1339,44 @@ check('chaudiere : state_map vers un mode', stateLine(blOf('7', { state_map: { 7
 check('chaudiere : une valeur inconnue reste lisible', stateLine(blOf('Maintenance')), 'Maintenance');
 contains('chaudiere : en francais', blOf('=H', { language: 'fr' }), 'Eau chaude');
 
+// The same panel letters as a numeric cause code. Start-up reads Ignition, the
+// waits a burner resting with a demand still there, and a code the card knows
+// is never printed as a bare number.
+for (const [raw, label, mode] of [
+  ['200', 'Heating', 'space_heating'], ['201', 'Hot water', 'hot_water'], ['203', 'Standby', 'idle'],
+  ['270', 'Ignition', 'starting'], ['283', 'Ignition', 'starting'], ['284', 'Ignition', 'starting'],
+  ['202', 'Waiting', 'waiting'], ['204', 'Waiting', 'waiting'], ['265', 'Waiting', 'waiting'],
+  ['305', 'Waiting', 'waiting'], ['353', 'Waiting', 'waiting'],
+  ['0U', 'Ignition', 'starting'], ['0C', 'Ignition', 'starting'], ['0L', 'Ignition', 'starting'],
+  ['0A', 'Waiting', 'waiting'], ['0Y', 'Waiting', 'waiting'], ['0E', 'Waiting', 'waiting'],
+]) {
+  const h = blOf(raw);
+  check(`chaudiere : code ${raw} se lit ${label}`, stateLine(h), label);
+  check(`chaudiere : code ${raw} dessine le mode ${mode}`, machineCls(h).split(' ').includes(`mode-${mode}`), true);
+}
+check('chaudiere : un code numerique flottant se lit aussi', stateLine(blOf('201.0')), 'Hot water');
+check('chaudiere : un code d\'allumage flottant se lit aussi', stateLine(blOf('283.0')), 'Ignition');
+check('chaudiere : la flamme brule sur le code 201', machineCls(blOf('201')).split(' ').includes('flame'), true);
+check('chaudiere : pas de flamme sur une attente', machineCls(blOf('204')).split(' ').includes('flame'), false);
+check('chaudiere : une petite flamme a l\'allumage', machineCls(blOf('283')).split(' ').includes('flame'), true);
+contains('chaudiere : la flamme d\'allumage est plus petite', blOf('283'),
+  '.machine.mode-starting .bl-flame { width: 8px; height: 10px; margin-left: -4px; }');
+check('chaudiere : allumage en orange', stateColor(blOf('283')), '#ff7043');
+check('chaudiere : attente en gris', stateColor(blOf('204')), 'var(--disabled-text-color, #9e9e9e)');
+check('chaudiere : state_map passe devant un code', stateLine(blOf('201', { state_map: { 201: 'space_heating' } })), 'Heating');
+check('chaudiere : state_map vers l\'allumage', stateLine(blOf('9', { state_map: { 9: 'starting' } })), 'Ignition');
+check('chaudiere : state_map vers l\'attente', stateLine(blOf('9', { state_map: { 9: 'waiting' } })), 'Waiting');
+check('chaudiere : un nombre qui commence comme un code n\'en est pas un', stateLine(blOf('2010')), '2010');
+check('chaudiere : une decimale non nulle n\'est pas un code', stateLine(blOf('201.5')), '201.5');
+contains('chaudiere : allumage en francais', blOf('283', { language: 'fr' }), 'Allumage');
+contains('chaudiere : attente en francais', blOf('204', { language: 'fr' }), 'En attente');
+// In several languages the word for standby already means waiting: the two
+// must still read differently, and so must ignition and a lit burner.
+for (const [code, block] of Object.entries(TABLE)) {
+  check(`chaudiere ${code} : l'attente ne se confond pas avec la veille`, block.boiler_waiting !== block.standby, true);
+  check(`chaudiere ${code} : l'allumage ne se confond pas avec le bruleur`, block.boiler_starting !== block.boiler_burner, true);
+}
+
 const blInd = (hw, ch) => blOf('whatever', { hot_water_entity: 'binary_sensor.hw', heating_entity: 'binary_sensor.ch' },
   { 'binary_sensor.hw': { state: hw, attributes: {} }, 'binary_sensor.ch': { state: ch, attributes: {} } });
 check('chaudiere : indicateur d\'eau chaude', stateLine(blInd('on', 'off')), 'Hot water');
@@ -1291,6 +1400,7 @@ for (const [label, h, names] of [
   ['chauffe-eau', whOn, ['wh-glow', 'wh-rise']],
   ['chaudiere en chauffage', blOf('-H'), ['bl-flicker', 'bl-rise']],
   ['chaudiere en eau chaude', blOf('=H'), ['bl-flicker', 'bl-drip']],
+  ['chaudiere a l\'allumage', blOf('283'), ['bl-flicker']],
 ]) {
   const used = [...h.matchAll(/animation:\s*([a-z0-9-]+)/g)].map(m => m[1]);
   const defined = new Set([...h.matchAll(/@keyframes\s+([a-z0-9-]+)/g)].map(m => m[1]));
@@ -1932,6 +2042,27 @@ freezeClock(new Date(T1 + 31 * 60000).toISOString());
 fr.card.hass = HASS(flat());
 check('frigo : le debranchement se declenche toujours', stateLine(markup(fr.card)), 'Unplugged');
 fr.card.disconnectedCallback();
+
+// A dashboard rebuilds its cards at every visit, a phone app at each launch,
+// so a count started by the card itself went back to zero every time and never
+// reached the half hour. It starts from when Home Assistant saw the reading
+// change: a plug off since last night is unplugged the moment the card opens.
+const TP = freezeClock('2026-09-02T08:00:00Z');
+const plugFrom = (minutesAgo) => ({ 'sensor.p': { state: '0', attributes: { unit_of_measurement: 'W' },
+  last_changed: new Date(TP - minutesAgo * 60000).toISOString() } });
+const frFresh = build({ appliance_type: 'fridge', power_entity: 'sensor.p' }, plugFrom(45));
+check('frigo : une carte neuve reprend le compte depuis le changement', stateLine(frFresh.html), 'Unplugged');
+contains('frigo : la duree part du changement d\'etat', infoLine(frFresh.html, 'Power'), '45 min');
+const frRecent = build({ appliance_type: 'fridge', power_entity: 'sensor.p' }, plugFrom(10));
+check('frigo : 10 min depuis le changement, toujours Normal', stateLine(frRecent.html), 'Normal');
+// A browser clock behind the server's puts last_changed in the future. The
+// count then starts now, rather than from a moment that has not come yet.
+const frAhead = build({ appliance_type: 'fridge', power_entity: 'sensor.p' }, plugFrom(-60));
+check('frigo : un horodatage dans le futur, Normal au depart', stateLine(frAhead.html), 'Normal');
+freezeClock(new Date(TP + 31 * 60000).toISOString());
+check('frigo : un horodatage dans le futur compte depuis maintenant',
+  stateLine(rerender(frAhead.card, plugFrom(-60))), 'Unplugged');
+for (const f of [frFresh, frRecent, frAhead]) f.card.disconnectedCallback();
 freezeClock(new Date(T1).toISOString());
 
 // Staggered delays are what make three bubbles read as three. A blanket

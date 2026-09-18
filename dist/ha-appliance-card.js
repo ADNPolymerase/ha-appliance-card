@@ -1,4 +1,4 @@
-const CARD_VERSION = "2.4.1";
+const CARD_VERSION = "2.5.0";
 
 console.info(
   "%c HA-APPLIANCE-CARD %c v" + CARD_VERSION + " ",
@@ -57,6 +57,7 @@ const T = {
     info_label: "Display name (optional)",
     info_value_map: "Value mapping (optional)",
     info_value_map_placeholder: "One per line, e.g.\n0: Ready\n1: Washing",
+    info_hide_unit: "Hide unit",
     state_map_placeholder: "One per line, e.g.\nReady: idle\nAborting: running",
     info_drag: "Drag to reorder",
     section_start: "Start button", section_pause: "Pause button",
@@ -113,7 +114,7 @@ const T = {
     illustration_color: "Appliance colour", color_auto: "Follow the theme",
     color_white: "White", color_grey: "Grey", color_black: "Black",
     type_water_heater: "Water heater", type_boiler: "Boiler",
-    boiler_space_heating: "Heating", boiler_hot_water: "Hot water", boiler_burner: "Burner on",
+    boiler_space_heating: "Heating", boiler_hot_water: "Hot water", boiler_burner: "Burner on", boiler_starting: "Ignition", boiler_waiting: "Waiting",
     section_space_heating: "Central heating indicator", section_hot_water: "Hot water indicator", section_flow_temperature: "Flow temperature",
   },
   fr: {
@@ -162,6 +163,7 @@ const T = {
     info_label: "Nom affich\u00e9 (optionnel)",
     info_value_map: "Correspondance des valeurs (optionnel)",
     info_value_map_placeholder: "Une par ligne, ex.\n0: Pr\u00eat\n1: Lavage",
+    info_hide_unit: "Masquer l'unit\u00e9",
     state_map_placeholder: "Une par ligne, ex.\nReady: idle\nAborting: running",
     info_drag: "Glisser pour r\u00e9organiser",
     section_start: "Bouton D\u00e9marrer", section_pause: "Bouton Pause",
@@ -218,7 +220,7 @@ const T = {
     illustration_color: "Couleur de l'appareil", color_auto: "Suivre le th\u00e8me",
     color_white: "Blanc", color_grey: "Gris", color_black: "Noir",
     type_water_heater: "Chauffe-eau", type_boiler: "Chaudi\u00e8re",
-    boiler_space_heating: "Chauffage", boiler_hot_water: "Eau chaude", boiler_burner: "Br\u00fbleur allum\u00e9",
+    boiler_space_heating: "Chauffage", boiler_hot_water: "Eau chaude", boiler_burner: "Br\u00fbleur allum\u00e9", boiler_starting: "Allumage", boiler_waiting: "En attente",
     section_space_heating: "Indicateur de chauffage", section_hot_water: "Indicateur d'eau chaude", section_flow_temperature: "Temp\u00e9rature de d\u00e9part",
   },
   ru: {
@@ -267,6 +269,7 @@ const T = {
     info_label: "\u041e\u0442\u043e\u0431\u0440\u0430\u0436\u0430\u0435\u043c\u043e\u0435 \u0438\u043c\u044f (\u043d\u0435\u043e\u0431\u044f\u0437\u0430\u0442\u0435\u043b\u044c\u043d\u043e)",
     info_value_map: "\u0421\u043e\u043f\u043e\u0441\u0442\u0430\u0432\u043b\u0435\u043d\u0438\u0435 \u0437\u043d\u0430\u0447\u0435\u043d\u0438\u0439 (\u043d\u0435\u043e\u0431\u044f\u0437\u0430\u0442\u0435\u043b\u044c\u043d\u043e)",
     info_value_map_placeholder: "\u041f\u043e \u043e\u0434\u043d\u043e\u043c\u0443 \u0432 \u0441\u0442\u0440\u043e\u043a\u0435, \u043d\u0430\u043f\u0440.\n0: \u0413\u043e\u0442\u043e\u0432\u043e\n1: \u0421\u0442\u0438\u0440\u043a\u0430",
+    info_hide_unit: "\u0421\u043a\u0440\u044b\u0442\u044c \u0435\u0434\u0438\u043d\u0438\u0446\u0443 \u0438\u0437\u043c\u0435\u0440\u0435\u043d\u0438\u044f",
     state_map_placeholder: "\u041f\u043e \u043e\u0434\u043d\u043e\u043c\u0443 \u0432 \u0441\u0442\u0440\u043e\u043a\u0435, \u043d\u0430\u043f\u0440.\nReady: idle\nAborting: running",
     info_drag: "\u041f\u0435\u0440\u0435\u0442\u0430\u0449\u0438\u0442\u0435 \u0434\u043b\u044f \u0438\u0437\u043c\u0435\u043d\u0435\u043d\u0438\u044f \u043f\u043e\u0440\u044f\u0434\u043a\u0430",
     section_start: "\u041a\u043d\u043e\u043f\u043a\u0430 \u0421\u0442\u0430\u0440\u0442", section_pause: "\u041a\u043d\u043e\u043f\u043a\u0430 \u041f\u0430\u0443\u0437\u0430",
@@ -323,7 +326,7 @@ const T = {
     illustration_color: "\u0426\u0432\u0435\u0442 \u043f\u0440\u0438\u0431\u043e\u0440\u0430", color_auto: "\u041a\u0430\u043a \u0432 \u0442\u0435\u043c\u0435",
     color_white: "\u0411\u0435\u043b\u044b\u0439", color_grey: "\u0421\u0435\u0440\u044b\u0439", color_black: "\u0427\u0451\u0440\u043d\u044b\u0439",
     type_water_heater: "\u0412\u043e\u0434\u043e\u043d\u0430\u0433\u0440\u0435\u0432\u0430\u0442\u0435\u043b\u044c", type_boiler: "\u041a\u043e\u0442\u0451\u043b",
-    boiler_space_heating: "\u041e\u0442\u043e\u043f\u043b\u0435\u043d\u0438\u0435", boiler_hot_water: "\u0413\u043e\u0440\u044f\u0447\u0430\u044f \u0432\u043e\u0434\u0430", boiler_burner: "\u0413\u043e\u0440\u0435\u043b\u043a\u0430 \u0432\u043a\u043b\u044e\u0447\u0435\u043d\u0430",
+    boiler_space_heating: "\u041e\u0442\u043e\u043f\u043b\u0435\u043d\u0438\u0435", boiler_hot_water: "\u0413\u043e\u0440\u044f\u0447\u0430\u044f \u0432\u043e\u0434\u0430", boiler_burner: "\u0413\u043e\u0440\u0435\u043b\u043a\u0430 \u0432\u043a\u043b\u044e\u0447\u0435\u043d\u0430", boiler_starting: "\u0420\u043e\u0437\u0436\u0438\u0433", boiler_waiting: "\u041f\u0430\u0443\u0437\u0430 \u0433\u043e\u0440\u0435\u043b\u043a\u0438",
     section_space_heating: "\u0418\u043d\u0434\u0438\u043a\u0430\u0442\u043e\u0440 \u043e\u0442\u043e\u043f\u043b\u0435\u043d\u0438\u044f", section_hot_water: "\u0418\u043d\u0434\u0438\u043a\u0430\u0442\u043e\u0440 \u0433\u043e\u0440\u044f\u0447\u0435\u0439 \u0432\u043e\u0434\u044b", section_flow_temperature: "\u0422\u0435\u043c\u043f\u0435\u0440\u0430\u0442\u0443\u0440\u0430 \u043f\u043e\u0434\u0430\u0447\u0438",
   },
   de: {
@@ -372,6 +375,7 @@ const T = {
     info_label: "Anzeigename (optional)",
     info_value_map: "Wertzuordnung (optional)",
     info_value_map_placeholder: "Eine pro Zeile, z. B.\n0: Bereit\n1: Waschen",
+    info_hide_unit: "Einheit ausblenden",
     state_map_placeholder: "Eine pro Zeile, z. B.\nReady: idle\nAborting: running",
     info_drag: "Zum Neuordnen ziehen",
     section_start: "Start-Taste", section_pause: "Pause-Taste",
@@ -428,7 +432,7 @@ const T = {
     illustration_color: "Ger\u00e4tefarbe", color_auto: "Theme folgen",
     color_white: "Wei\u00df", color_grey: "Grau", color_black: "Schwarz",
     type_water_heater: "Warmwasserspeicher", type_boiler: "Heizkessel",
-    boiler_space_heating: "Heizung", boiler_hot_water: "Warmwasser", boiler_burner: "Brenner an",
+    boiler_space_heating: "Heizung", boiler_hot_water: "Warmwasser", boiler_burner: "Brenner an", boiler_starting: "Z\u00fcndung", boiler_waiting: "Wartezeit",
     section_space_heating: "Heizungsanzeige", section_hot_water: "Warmwasseranzeige", section_flow_temperature: "Vorlauftemperatur",
   },
   es: {
@@ -477,6 +481,7 @@ const T = {
     info_label: "Nombre mostrado (opcional)",
     info_value_map: "Correspondencia de valores (opcional)",
     info_value_map_placeholder: "Una por l\u00ednea, p. ej.\n0: Listo\n1: Lavado",
+    info_hide_unit: "Ocultar la unidad",
     state_map_placeholder: "Una por l\u00ednea, p. ej.\nReady: idle\nAborting: running",
     info_drag: "Arrastrar para reordenar",
     section_start: "Bot\u00f3n Iniciar", section_pause: "Bot\u00f3n Pausa",
@@ -533,7 +538,7 @@ const T = {
     illustration_color: "Color del aparato", color_auto: "Seguir el tema",
     color_white: "Blanco", color_grey: "Gris", color_black: "Negro",
     type_water_heater: "Termo", type_boiler: "Caldera",
-    boiler_space_heating: "Calefacci\u00f3n", boiler_hot_water: "Agua caliente", boiler_burner: "Quemador encendido",
+    boiler_space_heating: "Calefacci\u00f3n", boiler_hot_water: "Agua caliente", boiler_burner: "Quemador encendido", boiler_starting: "Ignici\u00f3n", boiler_waiting: "Pausa del quemador",
     section_space_heating: "Indicador de calefacci\u00f3n", section_hot_water: "Indicador de agua caliente", section_flow_temperature: "Temperatura de impulsi\u00f3n",
   },
   it: {
@@ -582,6 +587,7 @@ const T = {
     info_label: "Nome visualizzato (opzionale)",
     info_value_map: "Corrispondenza dei valori (opzionale)",
     info_value_map_placeholder: "Una per riga, es.\n0: Pronto\n1: Lavaggio",
+    info_hide_unit: "Nascondi l'unit\u00e0",
     state_map_placeholder: "Una per riga, es.\nReady: idle\nAborting: running",
     info_drag: "Trascina per riordinare",
     section_start: "Pulsante Avvia", section_pause: "Pulsante Pausa",
@@ -638,7 +644,7 @@ const T = {
     illustration_color: "Colore dell'elettrodomestico", color_auto: "Segui il tema",
     color_white: "Bianco", color_grey: "Grigio", color_black: "Nero",
     type_water_heater: "Scaldabagno", type_boiler: "Caldaia",
-    boiler_space_heating: "Riscaldamento", boiler_hot_water: "Acqua calda", boiler_burner: "Bruciatore acceso",
+    boiler_space_heating: "Riscaldamento", boiler_hot_water: "Acqua calda", boiler_burner: "Bruciatore acceso", boiler_starting: "Accensione", boiler_waiting: "Pausa bruciatore",
     section_space_heating: "Indicatore riscaldamento", section_hot_water: "Indicatore acqua calda", section_flow_temperature: "Temperatura di mandata",
   },
   nl: {
@@ -687,6 +693,7 @@ const T = {
     info_label: "Weergavenaam (optioneel)",
     info_value_map: "Waardetoewijzing (optioneel)",
     info_value_map_placeholder: "E\u00e9n per regel, bijv.\n0: Gereed\n1: Wassen",
+    info_hide_unit: "Eenheid verbergen",
     state_map_placeholder: "E\u00e9n per regel, bijv.\nReady: idle\nAborting: running",
     info_drag: "Sleep om te herordenen",
     section_start: "Startknop", section_pause: "Pauzeknop",
@@ -743,7 +750,7 @@ const T = {
     illustration_color: "Kleur van het apparaat", color_auto: "Thema volgen",
     color_white: "Wit", color_grey: "Grijs", color_black: "Zwart",
     type_water_heater: "Boiler", type_boiler: "Cv-ketel",
-    boiler_space_heating: "Verwarming", boiler_hot_water: "Warm water", boiler_burner: "Brander aan",
+    boiler_space_heating: "Verwarming", boiler_hot_water: "Warm water", boiler_burner: "Brander aan", boiler_starting: "Ontsteking", boiler_waiting: "Wachten",
     section_space_heating: "Cv-indicator", section_hot_water: "Warmwaterindicator", section_flow_temperature: "Aanvoertemperatuur",
   },
   pt: {
@@ -792,6 +799,7 @@ const T = {
     info_label: "Nome exibido (opcional)",
     info_value_map: "Correspond\u00eancia de valores (opcional)",
     info_value_map_placeholder: "Uma por linha, ex.\n0: Pronto\n1: Lavagem",
+    info_hide_unit: "Ocultar a unidade",
     state_map_placeholder: "Uma por linha, ex.\nReady: idle\nAborting: running",
     info_drag: "Arraste para reordenar",
     section_start: "Bot\u00e3o Iniciar", section_pause: "Bot\u00e3o Pausa",
@@ -848,7 +856,7 @@ const T = {
     illustration_color: "Cor do eletrodom\u00e9stico", color_auto: "Seguir o tema",
     color_white: "Branco", color_grey: "Cinzento", color_black: "Preto",
     type_water_heater: "Termoacumulador", type_boiler: "Caldeira",
-    boiler_space_heating: "Aquecimento", boiler_hot_water: "\u00c1gua quente", boiler_burner: "Queimador ligado",
+    boiler_space_heating: "Aquecimento", boiler_hot_water: "\u00c1gua quente", boiler_burner: "Queimador ligado", boiler_starting: "Igni\u00e7\u00e3o", boiler_waiting: "Pausa do queimador",
     section_space_heating: "Indicador de aquecimento central", section_hot_water: "Indicador de \u00e1gua quente", section_flow_temperature: "Temperatura de ida",
   },
   sv: {
@@ -897,6 +905,7 @@ const T = {
     info_label: "Visningsnamn (valfritt)",
     info_value_map: "V\u00e4rdemappning (valfritt)",
     info_value_map_placeholder: "En per rad, t.ex.\n0: Klar\n1: Tv\u00e4tt",
+    info_hide_unit: "D\u00f6lj enhet",
     state_map_placeholder: "En per rad, t.ex.\nReady: idle\nAborting: running",
     info_drag: "Dra f\u00f6r att \u00e4ndra ordning",
     section_start: "Startknapp", section_pause: "Pausknapp",
@@ -953,7 +962,7 @@ const T = {
     illustration_color: "Apparatens f\u00e4rg", color_auto: "F\u00f6lj temat",
     color_white: "Vit", color_grey: "Gr\u00e5", color_black: "Svart",
     type_water_heater: "Varmvattenberedare", type_boiler: "Panna",
-    boiler_space_heating: "Uppv\u00e4rmning", boiler_hot_water: "Varmvatten", boiler_burner: "Br\u00e4nnare p\u00e5",
+    boiler_space_heating: "Uppv\u00e4rmning", boiler_hot_water: "Varmvatten", boiler_burner: "Br\u00e4nnare p\u00e5", boiler_starting: "T\u00e4ndning", boiler_waiting: "V\u00e4ntar",
     section_space_heating: "Indikator f\u00f6r uppv\u00e4rmning", section_hot_water: "Indikator f\u00f6r varmvatten", section_flow_temperature: "Framledningstemperatur",
   },
   no: {
@@ -1002,6 +1011,7 @@ const T = {
     info_label: "Visningsnavn (valgfritt)",
     info_value_map: "Verditilordning (valgfritt)",
     info_value_map_placeholder: "\u00c9n per linje, f.eks.\n0: Klar\n1: Vask",
+    info_hide_unit: "Skjul enhet",
     state_map_placeholder: "\u00c9n per linje, f.eks.\nReady: idle\nAborting: running",
     info_drag: "Dra for \u00e5 endre rekkef\u00f8lge",
     section_start: "Startknapp", section_pause: "Pauseknapp",
@@ -1058,7 +1068,7 @@ const T = {
     illustration_color: "Farge p\u00e5 apparatet", color_auto: "F\u00f8lg temaet",
     color_white: "Hvit", color_grey: "Gr\u00e5", color_black: "Svart",
     type_water_heater: "Varmtvannsbereder", type_boiler: "Kjele",
-    boiler_space_heating: "Oppvarming", boiler_hot_water: "Varmtvann", boiler_burner: "Brenner p\u00e5",
+    boiler_space_heating: "Oppvarming", boiler_hot_water: "Varmtvann", boiler_burner: "Brenner p\u00e5", boiler_starting: "Tenning", boiler_waiting: "Venter",
     section_space_heating: "Indikator for oppvarming", section_hot_water: "Indikator for varmtvann", section_flow_temperature: "Turtemperatur",
   },
   da: {
@@ -1107,6 +1117,7 @@ const T = {
     info_label: "Vist navn (valgfrit)",
     info_value_map: "V\u00e6rditilknytning (valgfrit)",
     info_value_map_placeholder: "\u00c9n pr. linje, f.eks.\n0: Klar\n1: Vask",
+    info_hide_unit: "Skjul enhed",
     state_map_placeholder: "\u00c9n pr. linje, f.eks.\nReady: idle\nAborting: running",
     info_drag: "Tr\u00e6k for at \u00e6ndre r\u00e6kkef\u00f8lge",
     section_start: "Startknap", section_pause: "Pauseknap",
@@ -1163,7 +1174,7 @@ const T = {
     illustration_color: "Apparatets farve", color_auto: "F\u00f8lg temaet",
     color_white: "Hvid", color_grey: "Gr\u00e5", color_black: "Sort",
     type_water_heater: "Varmtvandsbeholder", type_boiler: "Kedel",
-    boiler_space_heating: "Opvarmning", boiler_hot_water: "Varmt vand", boiler_burner: "Br\u00e6nder t\u00e6ndt",
+    boiler_space_heating: "Opvarmning", boiler_hot_water: "Varmt vand", boiler_burner: "Br\u00e6nder t\u00e6ndt", boiler_starting: "T\u00e6nding", boiler_waiting: "Venter",
     section_space_heating: "Indikator for opvarmning", section_hot_water: "Indikator for varmt vand", section_flow_temperature: "Freml\u00f8bstemperatur",
   },
   pl: {
@@ -1212,6 +1223,7 @@ const T = {
     info_label: "Nazwa wy\u015bwietlana (opcjonalnie)",
     info_value_map: "Mapowanie warto\u015bci (opcjonalnie)",
     info_value_map_placeholder: "Jedno na lini\u0119, np.\n0: Gotowe\n1: Pranie",
+    info_hide_unit: "Ukryj jednostk\u0119",
     state_map_placeholder: "Jedno na lini\u0119, np.\nReady: idle\nAborting: running",
     info_drag: "Przeci\u0105gnij, aby zmieni\u0107 kolejno\u015b\u0107",
     section_start: "Przycisk Start", section_pause: "Przycisk Pauza",
@@ -1268,7 +1280,7 @@ const T = {
     illustration_color: "Kolor urz\u0105dzenia", color_auto: "Zgodnie z motywem",
     color_white: "Bia\u0142y", color_grey: "Szary", color_black: "Czarny",
     type_water_heater: "Podgrzewacz wody", type_boiler: "Kocio\u0142",
-    boiler_space_heating: "Ogrzewanie", boiler_hot_water: "Ciep\u0142a woda", boiler_burner: "Palnik w\u0142\u0105czony",
+    boiler_space_heating: "Ogrzewanie", boiler_hot_water: "Ciep\u0142a woda", boiler_burner: "Palnik w\u0142\u0105czony", boiler_starting: "Zap\u0142on", boiler_waiting: "Oczekiwanie",
     section_space_heating: "Wska\u017anik ogrzewania", section_hot_water: "Wska\u017anik ciep\u0142ej wody", section_flow_temperature: "Temperatura zasilania",
   },
   zh: {
@@ -1317,6 +1329,7 @@ const T = {
     info_label: "\u663e\u793a\u540d\u79f0 (\u53ef\u9009)",
     info_value_map: "\u503c\u6620\u5c04 (\u53ef\u9009)",
     info_value_map_placeholder: "\u6bcf\u4e2a\u503c\u4e00\u884c, \u4f8b\u5982\n0: \u5f85\u673a\n1: \u6d17\u6da4\u4e2d",
+    info_hide_unit: "\u9690\u85cf\u5355\u4f4d",
     state_map_placeholder: "\u6bcf\u4e2a\u503c\u4e00\u884c, \u4f8b\u5982\nReady: idle\nAborting: running",
     info_drag: "\u62d6\u62fd\u6392\u5e8f",
     section_start: "\u5f00\u59cb\u6309\u952e", section_pause: "\u6682\u505c\u6309\u952e",
@@ -1373,7 +1386,7 @@ const T = {
     illustration_color: "\u8bbe\u5907\u989c\u8272", color_auto: "\u8ddf\u968f\u4e3b\u9898",
     color_white: "\u767d\u8272", color_grey: "\u7070\u8272", color_black: "\u9ed1\u8272",
     type_water_heater: "\u70ed\u6c34\u5668", type_boiler: "\u9505\u7089",
-    boiler_space_heating: "\u4f9b\u6696", boiler_hot_water: "\u70ed\u6c34", boiler_burner: "\u71c3\u70e7\u5668\u5df2\u70b9\u706b",
+    boiler_space_heating: "\u4f9b\u6696", boiler_hot_water: "\u70ed\u6c34", boiler_burner: "\u71c3\u70e7\u5668\u5df2\u70b9\u706b", boiler_starting: "\u70b9\u706b\u4e2d", boiler_waiting: "\u7b49\u5f85\u4e2d",
     section_space_heating: "\u4f9b\u6696\u6307\u793a", section_hot_water: "\u70ed\u6c34\u6307\u793a", section_flow_temperature: "\u4f9b\u6c34\u6e29\u5ea6",
   },
   cs: {
@@ -1422,6 +1435,7 @@ const T = {
     info_label: "Zobrazovan\u00fd n\u00e1zev (voliteln\u00e9)",
     info_value_map: "Mapov\u00e1n\u00ed hodnot (voliteln\u00e9)",
     info_value_map_placeholder: "Jedna hodnota na \u0159\u00e1dek, nap\u0159.\n0: P\u0159ipraveno\n1: Pran\u00ed",
+    info_hide_unit: "Skr\u00fdt jednotku",
     state_map_placeholder: "Jedna hodnota na \u0159\u00e1dek, nap\u0159.\nReady: idle\nAborting: running",
     info_drag: "P\u0159eta\u017een\u00edm zm\u011b\u0148te po\u0159ad\u00ed",
     section_start: "Tla\u010d\u00edtko Spustit", section_pause: "Tla\u010d\u00edtko Pozastavit",
@@ -1478,7 +1492,7 @@ const T = {
     illustration_color: "Barva spot\u0159ebi\u010de", color_auto: "Podle motivu",
     color_white: "B\u00edl\u00e1", color_grey: "\u0160ed\u00e1", color_black: "\u010cern\u00e1",
     type_water_heater: "Oh\u0159\u00edva\u010d vody", type_boiler: "Kotel",
-    boiler_space_heating: "Topen\u00ed", boiler_hot_water: "Tepl\u00e1 voda", boiler_burner: "Ho\u0159\u00e1k zapnut",
+    boiler_space_heating: "Topen\u00ed", boiler_hot_water: "Tepl\u00e1 voda", boiler_burner: "Ho\u0159\u00e1k zapnut", boiler_starting: "Zapalov\u00e1n\u00ed", boiler_waiting: "\u010cek\u00e1n\u00ed",
     section_space_heating: "Indik\u00e1tor topen\u00ed", section_hot_water: "Indik\u00e1tor tepl\u00e9 vody", section_flow_temperature: "Teplota topn\u00e9 vody",
   },
 };
@@ -1579,22 +1593,40 @@ const MAPPABLE_STATES = Object.keys(STATE_KEYWORDS).concat("unknown");
 // front panel and report CH, HW and No in their status. InComfort (Intergas)
 // reports central_heating, starting_ch and tapwater, ebusd hwc_on and its
 // siblings, MELCloud heat_zones and heat_water, myVAILLANT HEATING. The words
-// cover the rest. A state_map entry pointing at one of the three modes wins,
-// as it does everywhere.
-const BOILER_MODES = ["space_heating", "hot_water", "idle"];
+// cover the rest. A state_map entry pointing at one of the modes wins, as it
+// does everywhere.
+const BOILER_MODES = ["space_heating", "hot_water", "starting", "waiting", "idle"];
+// The same panel letters as numbers, the cause code Nefit and Bosch keep in
+// /system/appliance/causecode: 200 is -H, 201 is =H, 203 is 0H. Start-up is 0U,
+// then 0C (fan and pump) and 0L (gas valve). The waits are a burner resting
+// with a demand still there (0A anti-cycling, 305 right after hot water, 0Y
+// flow above its setpoint, 0E low-load cycling): waiting, not standby.
+const NEFIT_CAUSE_CODES = {
+  200: "space_heating", 201: "hot_water", 203: "idle",
+  270: "starting", 283: "starting", 284: "starting",
+  202: "waiting", 204: "waiting", 265: "waiting", 305: "waiting", 353: "waiting",
+};
+const NEFIT_PANEL_CODES = {
+  "0h": "idle", "0u": "starting", "0c": "starting", "0l": "starting",
+  "0a": "waiting", "0y": "waiting", "0e": "waiting",
+};
 function boilerModeOf(raw, stateMap) {
   if (raw === undefined || raw === null) return "";
   const s = String(raw).trim();
   if (stateMap && Object.prototype.hasOwnProperty.call(stateMap, s)) {
     return BOILER_MODES.includes(stateMap[s]) ? stateMap[s] : "";
   }
+  // A numeric sensor can hand the code over as "201.0".
+  const code = /^(\d+)(?:\.0+)?$/.exec(s);
+  if (code && Object.prototype.hasOwnProperty.call(NEFIT_CAUSE_CODES, code[1])) return NEFIT_CAUSE_CODES[code[1]];
   const f = stripAccents(s).toLowerCase();
   // Hot water first: "chauffage eau chaude" is about the taps, not the radiators.
   if (f === "=h" || /\b(hw|dhw|ecs|acs)\b|\bhwc|tap.?water|heat.?water|hot.?water|eau.?chaude|sanitaire|warmwasser|agua.?caliente|acqua.?calda|warm.?water/.test(f)) return "hot_water";
   // Plain "heating" only after hot water has had its turn: on a boiler, a
   // heating that is not about the taps is about the radiators.
   if (f === "-h" || /\bch\b|starting.?ch|central.?heating|space.?heating|heat.?zones|\bheating\b|chauffage|heizung|heizbetrieb|calefaccion|riscaldamento|verwarming|\bcv\b/.test(f)) return "space_heating";
-  if (f === "0h" || f === "no") return "idle";
+  if (Object.prototype.hasOwnProperty.call(NEFIT_PANEL_CODES, f)) return NEFIT_PANEL_CODES[f];
+  if (f === "no") return "idle";
   return "";
 }
 
@@ -1820,7 +1852,32 @@ function normalizeDishwasherPhase(raw, phaseMap) {
   return DISHWASHER_PHASES.has(phase) ? phase : "";
 }
 
-function formatInfoValue(st, hass, valueMap) {
+// A number as Home Assistant would print it, for a card pinned to another
+// language: the frontend's formatter answers in Home Assistant's language, so
+// it cannot be used there. The same two rules: the display precision set in the
+// entity's settings, and whole numbers for a helper whose step is whole
+// ("177.0" on an input_number). Anything else is left exactly as reported.
+function localNumber(st, hass, entityId) {
+  const n = Number(st.state);
+  if (String(st.state).trim() === "" || !Number.isFinite(n)) return null;
+  const ent = hass && hass.entities && hass.entities[st.entity_id || entityId];
+  const p = ent ? Number(ent.display_precision) : NaN;
+  const step = st.attributes.step;
+  let options = null;
+  if (ent && ent.display_precision !== undefined && ent.display_precision !== null && Number.isInteger(p) && p >= 0) {
+    options = { minimumFractionDigits: p, maximumFractionDigits: p };
+  } else if (step !== undefined && step !== null && step !== "" && Number.isInteger(Number(step)) && Number.isInteger(n)) {
+    options = { maximumFractionDigits: 0 };
+  }
+  if (!options) return null;
+  try {
+    return new Intl.NumberFormat(lang(hass), options).format(n);
+  } catch (e) {
+    return null;
+  }
+}
+
+function formatInfoValue(st, hass, valueMap, cfg, entityId, hideUnit) {
   const mapped = mapInfoValue(st.state, valueMap);
   // A mapped label replaces the value outright: appending a unit to it
   // ("Rinsing rpm") would never read correctly.
@@ -1837,7 +1894,27 @@ function formatInfoValue(st, hass, valueMap) {
       }
     }
   }
-  return `${st.state}${st.attributes.unit_of_measurement ? " " + st.attributes.unit_of_measurement : ""}`;
+  const unit = st.attributes.unit_of_measurement || "";
+  // Home Assistant prints a state the way its entity asks: the display
+  // precision chosen in the entity's settings, the locale's separators and a
+  // translated on/off or enum. The raw state skipped all of that, and a probe
+  // set to whole degrees showed 48.7999992370605 \u00b0C.
+  const pinned = cfg && cfg.language && cfg.language !== "auto";
+  if (!pinned && hass && typeof hass.formatEntityState === "function") {
+    try {
+      const label = hass.formatEntityState(st);
+      if (label !== undefined && label !== null && String(label) !== "") {
+        const text = String(label);
+        // The unit is always the tail of what the frontend returns, with or
+        // without a space depending on the locale.
+        return hideUnit && unit && text.endsWith(unit) ? text.slice(0, -unit.length).trim() : text;
+      }
+    } catch (e) {
+      /* fall through to the local formatting */
+    }
+  }
+  const value = localNumber(st, hass, entityId) || st.state;
+  return hideUnit || !unit ? `${value}` : `${value} ${unit}`;
 }
 
 // Home Connect, and the home_connect_alt custom integration, report the
@@ -2201,6 +2278,17 @@ function strengthLevel(hass, entityId) {
 }
 
 // The one thing worth reading on a fridge, in order of what it costs to miss.
+// Where the half hour starts. The card is rebuilt every time a dashboard opens,
+// which a phone app does at each launch, so counting from the moment this card
+// first saw 0 W restarted the count at every visit and never reached it. Home
+// Assistant knows when the reading last changed, and a value below the
+// threshold has held at least since then: the real start can only be earlier,
+// so the alarm can come late, never early.
+function belowSinceOf(st) {
+  const at = st ? Date.parse(st.last_changed) : NaN;
+  return Number.isFinite(at) && at <= Date.now() ? at : Date.now();
+}
+
 function fridgeHealth(unplugged, doorOpen, tempHigh) {
   if (unplugged) return "unplugged";
   if (doorOpen) return "door_open";
@@ -3048,6 +3136,7 @@ const ILLUSTRATION_CSS = {
           clip-path: polygon(46% 0%, 58% 30%, 70% 10%, 76% 44%, 90% 28%, 94% 64%, 86% 88%, 66% 100%, 34% 100%, 14% 88%, 6% 62%, 12% 32%, 26% 50%, 30% 18%, 42% 36%);
         }
         .machine.flame .bl-flame { opacity: 1; animation: bl-flicker 0.6s ease-in-out infinite; animation-delay: var(--anim-offset, 0s); }
+        .machine.mode-starting .bl-flame { width: 8px; height: 10px; margin-left: -4px; }
         @keyframes bl-flicker {
           0%, 100% { transform: scale(1, 1); }
           30% { transform: scale(0.92, 1.1); }
@@ -3697,7 +3786,8 @@ function illustrationHtml(type, ctx) {
 
   if (type === "boiler") {
     const mode = ctx.boilerMode || "idle";
-    const flame = mode !== "idle";
+    // A burner waiting its turn is out, like one on standby.
+    const flame = mode !== "idle" && mode !== "waiting";
     const lcd = ctx.display ? `<div class="bl-lcd">${esc(ctx.display)}</div>` : "";
     return `
         <div class="machine ${cls} mode-${mode} ${flame ? "flame" : ""}">
@@ -4197,7 +4287,7 @@ class ApplianceCard extends HTMLElement {
         extraLines.push({
           icon: "mdi:signal-cellular-2",
           label: t(hass, "power_level"),
-          value: formatInfoValue(plst, hass),
+          value: formatInfoValue(plst, hass, null, cfg, cfg.power_level_entity),
         });
       }
     }
@@ -4272,7 +4362,7 @@ class ApplianceCard extends HTMLElement {
           extraLines.push({
             icon: "mdi:speedometer",
             label: t(hass, "power_level"),
-            value: formatInfoValue(plst, hass),
+            value: formatInfoValue(plst, hass, null, cfg, cfg.power_level_entity),
             entity: cfg.power_level_entity,
           });
         }
@@ -4333,7 +4423,7 @@ class ApplianceCard extends HTMLElement {
       let unplugged = false;
       let belowMs = 0;
       if (cfg.power_entity && watts !== null && isFinite(threshold) && watts < threshold) {
-        if (!this._belowSince) this._belowSince = Date.now();
+        if (!this._belowSince) this._belowSince = belowSinceOf(stateObj(hass, cfg.power_entity));
         belowMs = Date.now() - this._belowSince;
         unplugged = belowMs >= FRIDGE_UNPLUGGED_AFTER_MS;
       } else {
@@ -4600,7 +4690,8 @@ class ApplianceCard extends HTMLElement {
       }
       if (boilerMode) {
         if (!cfg.state_show_raw) stateLabel = t(hass, boilerMode === "idle" ? "standby" : `boiler_${boilerMode}`);
-        color = boilerMode === "hot_water" ? "#ef5350" : boilerMode === "idle" ? STATE_COLORS.idle : "#ff7043";
+        color = boilerMode === "hot_water" ? "#ef5350"
+          : boilerMode === "idle" || boilerMode === "waiting" ? STATE_COLORS.idle : "#ff7043";
       }
       let bv = cfg.temperature_entity ? numericState(hass, cfg.temperature_entity) : null;
       // InComfort's water_heater entity carries the boiler temperature itself.
@@ -4799,7 +4890,7 @@ class ApplianceCard extends HTMLElement {
       lines.push({
         icon: e.icon || e.st.attributes.icon || "mdi:information-outline",
         label: e.label || stripNamePrefix(e.st.attributes.friendly_name, e.entity),
-        value: formatInfoValue(e.st, hass, e.value_map),
+        value: formatInfoValue(e.st, hass, e.value_map, cfg, e.entity, e.hide_unit),
       });
     });
     if (remSec !== null) {
@@ -5333,6 +5424,24 @@ class ApplianceCardEditor extends HTMLElement {
     slotEl.appendChild(wrap);
   }
 
+  _mountInfoHideUnit(slotEl, index) {
+    if (!slotEl) return;
+    const hass = this._l10n;
+    const current = this._infoEntitiesList()[index] || {};
+    const label = document.createElement("label");
+    const box = document.createElement("input");
+    box.type = "checkbox";
+    box.checked = !!current.hide_unit;
+    box.addEventListener("change", (ev) => {
+      this._updateInfoEntity(index, { hide_unit: ev.target.checked || undefined });
+    });
+    const text = document.createElement("span");
+    text.textContent = " " + t(hass, "info_hide_unit");
+    label.appendChild(box);
+    label.appendChild(text);
+    slotEl.appendChild(label);
+  }
+
   _mountInfoIcon(slotEl, index) {
     const hass = this._l10n;
     const current = this._infoEntitiesList()[index] || {};
@@ -5561,6 +5670,7 @@ class ApplianceCardEditor extends HTMLElement {
               <div class="picker-slot" data-slot="__info_icon_${i}"></div>
               <div class="picker-slot" data-slot="__info_label_${i}"></div>
               <div class="picker-slot" data-slot="__info_valuemap_${i}"></div>
+              <div class="picker-slot" data-slot="__info_hideunit_${i}"></div>
             </div>
           </div>`).join("")}
       </details>
@@ -5599,6 +5709,7 @@ class ApplianceCardEditor extends HTMLElement {
       this._mountInfoIcon(this._root.querySelector(`[data-slot="__info_icon_${i}"]`), i);
       this._mountInfoLabel(this._root.querySelector(`[data-slot="__info_label_${i}"]`), i);
       this._mountInfoValueMap(this._root.querySelector(`[data-slot="__info_valuemap_${i}"]`), i);
+      this._mountInfoHideUnit(this._root.querySelector(`[data-slot="__info_hideunit_${i}"]`), i);
     }
     this._wireInfoDragAndDrop();
 
