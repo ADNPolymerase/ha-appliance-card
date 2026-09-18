@@ -1,4 +1,4 @@
-const CARD_VERSION = "2.5.0";
+const CARD_VERSION = "2.5.1";
 
 console.info(
   "%c HA-APPLIANCE-CARD %c v" + CARD_VERSION + " ",
@@ -95,7 +95,7 @@ const T = {
     freezer_compartment: "Freezer", ice_maker: "Ice maker",
     since: "for", section_fridge_layout: "Layout",
     layout_single: "One door", layout_freezer_bottom: "Freezer at the bottom",
-    layout_freezer_top: "Freezer on top", layout_side_by_side: "Side by side",
+    layout_freezer_top: "Freezer on top", layout_side_by_side: "Side by side", layout_wine: "Glass door (wine cooler)",
     section_fridge_temperature: "Fridge temperature", section_freezer_temperature: "Freezer temperature",
     section_freezer_door: "Freezer door sensor", section_ice_maker: "Ice maker",
     fridge_max_temperature: "Warn above this temperature", section_kettle_temperature: "Water temperature",
@@ -201,7 +201,7 @@ const T = {
     freezer_compartment: "Cong\u00e9lateur", ice_maker: "Gla\u00e7ons",
     since: "depuis", section_fridge_layout: "Implantation",
     layout_single: "Une porte", layout_freezer_bottom: "Cong\u00e9lateur en bas",
-    layout_freezer_top: "Cong\u00e9lateur en haut", layout_side_by_side: "Am\u00e9ricain",
+    layout_freezer_top: "Cong\u00e9lateur en haut", layout_side_by_side: "Am\u00e9ricain", layout_wine: "Porte vitr\u00e9e (cave \u00e0 vin)",
     section_fridge_temperature: "Temp\u00e9rature du r\u00e9frig\u00e9rateur", section_freezer_temperature: "Temp\u00e9rature du cong\u00e9lateur",
     section_freezer_door: "Capteur de porte du cong\u00e9lateur", section_ice_maker: "Machine \u00e0 gla\u00e7ons",
     fridge_max_temperature: "Alerter au-dessus de cette temp\u00e9rature", section_kettle_temperature: "Temp\u00e9rature de l'eau",
@@ -307,7 +307,7 @@ const T = {
     freezer_compartment: "\u041c\u043e\u0440\u043e\u0437\u0438\u043b\u044c\u043d\u0438\u043a", ice_maker: "\u041b\u0435\u0434\u043e\u0433\u0435\u043d\u0435\u0440\u0430\u0442\u043e\u0440",
     since: "\u0443\u0436\u0435", section_fridge_layout: "\u041a\u043e\u043c\u043f\u043e\u043d\u043e\u0432\u043a\u0430",
     layout_single: "\u041e\u0434\u043d\u0430 \u0434\u0432\u0435\u0440\u044c", layout_freezer_bottom: "\u041c\u043e\u0440\u043e\u0437\u0438\u043b\u043a\u0430 \u0441\u043d\u0438\u0437\u0443",
-    layout_freezer_top: "\u041c\u043e\u0440\u043e\u0437\u0438\u043b\u043a\u0430 \u0441\u0432\u0435\u0440\u0445\u0443", layout_side_by_side: "Side by side",
+    layout_freezer_top: "\u041c\u043e\u0440\u043e\u0437\u0438\u043b\u043a\u0430 \u0441\u0432\u0435\u0440\u0445\u0443", layout_side_by_side: "Side by side", layout_wine: "\u0421\u0442\u0435\u043a\u043b\u044f\u043d\u043d\u0430\u044f \u0434\u0432\u0435\u0440\u044c (\u0432\u0438\u043d\u043d\u044b\u0439 \u0448\u043a\u0430\u0444)",
     section_fridge_temperature: "\u0422\u0435\u043c\u043f\u0435\u0440\u0430\u0442\u0443\u0440\u0430 \u0445\u043e\u043b\u043e\u0434\u0438\u043b\u044c\u043d\u0438\u043a\u0430", section_freezer_temperature: "\u0422\u0435\u043c\u043f\u0435\u0440\u0430\u0442\u0443\u0440\u0430 \u043c\u043e\u0440\u043e\u0437\u0438\u043b\u044c\u043d\u0438\u043a\u0430",
     section_freezer_door: "\u0414\u0430\u0442\u0447\u0438\u043a \u0434\u0432\u0435\u0440\u0438 \u043c\u043e\u0440\u043e\u0437\u0438\u043b\u044c\u043d\u0438\u043a\u0430", section_ice_maker: "\u041b\u0435\u0434\u043e\u0433\u0435\u043d\u0435\u0440\u0430\u0442\u043e\u0440",
     fridge_max_temperature: "\u041f\u0440\u0435\u0434\u0443\u043f\u0440\u0435\u0436\u0434\u0430\u0442\u044c \u0432\u044b\u0448\u0435 \u044d\u0442\u043e\u0439 \u0442\u0435\u043c\u043f\u0435\u0440\u0430\u0442\u0443\u0440\u044b", section_kettle_temperature: "\u0422\u0435\u043c\u043f\u0435\u0440\u0430\u0442\u0443\u0440\u0430 \u0432\u043e\u0434\u044b",
@@ -413,7 +413,7 @@ const T = {
     freezer_compartment: "Gefrierteil", ice_maker: "Eisbereiter",
     since: "seit", section_fridge_layout: "Bauform",
     layout_single: "Eine T\u00fcr", layout_freezer_bottom: "Gefrierteil unten",
-    layout_freezer_top: "Gefrierteil oben", layout_side_by_side: "Side-by-Side",
+    layout_freezer_top: "Gefrierteil oben", layout_side_by_side: "Side-by-Side", layout_wine: "Glast\u00fcr (Weink\u00fchlschrank)",
     section_fridge_temperature: "K\u00fchltemperatur", section_freezer_temperature: "Gefriertemperatur",
     section_freezer_door: "T\u00fcrsensor Gefrierteil", section_ice_maker: "Eisbereiter",
     fridge_max_temperature: "Warnen oberhalb dieser Temperatur", section_kettle_temperature: "Wassertemperatur",
@@ -519,7 +519,7 @@ const T = {
     freezer_compartment: "Congelador", ice_maker: "Fabricador de hielo",
     since: "desde hace", section_fridge_layout: "Distribuci\u00f3n",
     layout_single: "Una puerta", layout_freezer_bottom: "Congelador abajo",
-    layout_freezer_top: "Congelador arriba", layout_side_by_side: "Side by side",
+    layout_freezer_top: "Congelador arriba", layout_side_by_side: "Side by side", layout_wine: "Puerta de cristal (vinoteca)",
     section_fridge_temperature: "Temperatura del frigor\u00edfico", section_freezer_temperature: "Temperatura del congelador",
     section_freezer_door: "Sensor de puerta del congelador", section_ice_maker: "Fabricador de hielo",
     fridge_max_temperature: "Avisar por encima de esta temperatura", section_kettle_temperature: "Temperatura del agua",
@@ -625,7 +625,7 @@ const T = {
     freezer_compartment: "Congelatore", ice_maker: "Fabbricatore di ghiaccio",
     since: "da", section_fridge_layout: "Configurazione",
     layout_single: "Una porta", layout_freezer_bottom: "Congelatore in basso",
-    layout_freezer_top: "Congelatore in alto", layout_side_by_side: "Side by side",
+    layout_freezer_top: "Congelatore in alto", layout_side_by_side: "Side by side", layout_wine: "Porta a vetro (cantinetta)",
     section_fridge_temperature: "Temperatura del frigorifero", section_freezer_temperature: "Temperatura del congelatore",
     section_freezer_door: "Sensore porta del congelatore", section_ice_maker: "Fabbricatore di ghiaccio",
     fridge_max_temperature: "Avvisa sopra questa temperatura", section_kettle_temperature: "Temperatura dell'acqua",
@@ -731,7 +731,7 @@ const T = {
     freezer_compartment: "Vriezer", ice_maker: "IJsmaker",
     since: "sinds", section_fridge_layout: "Indeling",
     layout_single: "E\u00e9n deur", layout_freezer_bottom: "Vriezer onderin",
-    layout_freezer_top: "Vriezer bovenin", layout_side_by_side: "Side by side",
+    layout_freezer_top: "Vriezer bovenin", layout_side_by_side: "Side by side", layout_wine: "Glazen deur (wijnklimaatkast)",
     section_fridge_temperature: "Koelkasttemperatuur", section_freezer_temperature: "Vriezertemperatuur",
     section_freezer_door: "Deursensor vriezer", section_ice_maker: "IJsmaker",
     fridge_max_temperature: "Waarschuwen boven deze temperatuur", section_kettle_temperature: "Watertemperatuur",
@@ -837,7 +837,7 @@ const T = {
     freezer_compartment: "Congelador", ice_maker: "M\u00e1quina de gelo",
     since: "h\u00e1", section_fridge_layout: "Configura\u00e7\u00e3o",
     layout_single: "Uma porta", layout_freezer_bottom: "Congelador em baixo",
-    layout_freezer_top: "Congelador em cima", layout_side_by_side: "Side by side",
+    layout_freezer_top: "Congelador em cima", layout_side_by_side: "Side by side", layout_wine: "Porta de vidro (garrafeira)",
     section_fridge_temperature: "Temperatura do frigor\u00edfico", section_freezer_temperature: "Temperatura do congelador",
     section_freezer_door: "Sensor da porta do congelador", section_ice_maker: "M\u00e1quina de gelo",
     fridge_max_temperature: "Avisar acima desta temperatura", section_kettle_temperature: "Temperatura da \u00e1gua",
@@ -943,7 +943,7 @@ const T = {
     freezer_compartment: "Frys", ice_maker: "Ismaskin",
     since: "sedan", section_fridge_layout: "Utf\u00f6rande",
     layout_single: "En d\u00f6rr", layout_freezer_bottom: "Frys nedtill",
-    layout_freezer_top: "Frys upptill", layout_side_by_side: "Side by side",
+    layout_freezer_top: "Frys upptill", layout_side_by_side: "Side by side", layout_wine: "Glasd\u00f6rr (vinkyl)",
     section_fridge_temperature: "Kyltemperatur", section_freezer_temperature: "Frystemperatur",
     section_freezer_door: "D\u00f6rrsensor frys", section_ice_maker: "Ismaskin",
     fridge_max_temperature: "Varna \u00f6ver denna temperatur", section_kettle_temperature: "Vattentemperatur",
@@ -1049,7 +1049,7 @@ const T = {
     freezer_compartment: "Frys", ice_maker: "Ismaskin",
     since: "siden", section_fridge_layout: "Utf\u00f8relse",
     layout_single: "\u00c9n d\u00f8r", layout_freezer_bottom: "Frys nederst",
-    layout_freezer_top: "Frys \u00f8verst", layout_side_by_side: "Side by side",
+    layout_freezer_top: "Frys \u00f8verst", layout_side_by_side: "Side by side", layout_wine: "Glassd\u00f8r (vinkj\u00f8leskap)",
     section_fridge_temperature: "Kj\u00f8letemperatur", section_freezer_temperature: "Frysetemperatur",
     section_freezer_door: "D\u00f8rsensor for frys", section_ice_maker: "Ismaskin",
     fridge_max_temperature: "Varsle over denne temperaturen", section_kettle_temperature: "Vanntemperatur",
@@ -1155,7 +1155,7 @@ const T = {
     freezer_compartment: "Frys", ice_maker: "Ismaskine",
     since: "siden", section_fridge_layout: "Udf\u00f8relse",
     layout_single: "\u00c9n l\u00e5ge", layout_freezer_bottom: "Fryser nederst",
-    layout_freezer_top: "Fryser \u00f8verst", layout_side_by_side: "Side by side",
+    layout_freezer_top: "Fryser \u00f8verst", layout_side_by_side: "Side by side", layout_wine: "Glasd\u00f8r (vink\u00f8leskab)",
     section_fridge_temperature: "K\u00f8letemperatur", section_freezer_temperature: "Frysetemperatur",
     section_freezer_door: "L\u00e5gesensor til fryser", section_ice_maker: "Ismaskine",
     fridge_max_temperature: "Advar over denne temperatur", section_kettle_temperature: "Vandtemperatur",
@@ -1261,7 +1261,7 @@ const T = {
     freezer_compartment: "Zamra\u017carka", ice_maker: "Kostkarka",
     since: "od", section_fridge_layout: "Uk\u0142ad",
     layout_single: "Jedne drzwi", layout_freezer_bottom: "Zamra\u017carka na dole",
-    layout_freezer_top: "Zamra\u017carka u g\u00f3ry", layout_side_by_side: "Side by side",
+    layout_freezer_top: "Zamra\u017carka u g\u00f3ry", layout_side_by_side: "Side by side", layout_wine: "Szklane drzwi (ch\u0142odziarka do wina)",
     section_fridge_temperature: "Temperatura ch\u0142odziarki", section_freezer_temperature: "Temperatura zamra\u017carki",
     section_freezer_door: "Czujnik drzwi zamra\u017carki", section_ice_maker: "Kostkarka",
     fridge_max_temperature: "Ostrzegaj powy\u017cej tej temperatury", section_kettle_temperature: "Temperatura wody",
@@ -1367,7 +1367,7 @@ const T = {
     freezer_compartment: "\u51b7\u51bb\u5ba4", ice_maker: "\u5236\u51b0\u673a",
     since: "\u5df2\u6301\u7eed", section_fridge_layout: "\u7ed3\u6784",
     layout_single: "\u5355\u95e8", layout_freezer_bottom: "\u4e0b\u7f6e\u51b7\u51bb\u5ba4",
-    layout_freezer_top: "\u4e0a\u7f6e\u51b7\u51bb\u5ba4", layout_side_by_side: "\u5bf9\u5f00\u95e8",
+    layout_freezer_top: "\u4e0a\u7f6e\u51b7\u51bb\u5ba4", layout_side_by_side: "\u5bf9\u5f00\u95e8", layout_wine: "\u73bb\u7483\u95e8\uff08\u9152\u67dc\uff09",
     section_fridge_temperature: "\u51b7\u85cf\u5ba4\u6e29\u5ea6", section_freezer_temperature: "\u51b7\u51bb\u5ba4\u6e29\u5ea6",
     section_freezer_door: "\u51b7\u51bb\u5ba4\u95e8\u4f20\u611f\u5668", section_ice_maker: "\u5236\u51b0\u673a",
     fridge_max_temperature: "\u9ad8\u4e8e\u6b64\u6e29\u5ea6\u65f6\u63d0\u9192", section_kettle_temperature: "\u6c34\u6e29",
@@ -1473,7 +1473,7 @@ const T = {
     freezer_compartment: "Mrazni\u010dka", ice_maker: "V\u00fdrobn\u00edk ledu",
     since: "po dobu", section_fridge_layout: "Uspo\u0159\u00e1d\u00e1n\u00ed",
     layout_single: "Jedny dve\u0159e", layout_freezer_bottom: "Mrazni\u010dka dole",
-    layout_freezer_top: "Mrazni\u010dka naho\u0159e", layout_side_by_side: "Vedle sebe",
+    layout_freezer_top: "Mrazni\u010dka naho\u0159e", layout_side_by_side: "Vedle sebe", layout_wine: "Sklen\u011bn\u00e9 dve\u0159e (vinot\u00e9ka)",
     section_fridge_temperature: "Teplota chladni\u010dky", section_freezer_temperature: "Teplota mrazni\u010dky",
     section_freezer_door: "Sn\u00edma\u010d dve\u0159\u00ed mrazni\u010dky", section_ice_maker: "V\u00fdrobn\u00edk ledu",
     fridge_max_temperature: "Upozornit nad touto teplotou", section_kettle_temperature: "Teplota vody",
@@ -2191,6 +2191,7 @@ function detectApplianceType(cfg, st) {
   if (/coffee|cafeti|cafe|kaffee|espresso|cafetera|macchina.?caff|koffie|kaffemask|ekspres.?do.?kawy/.test(hay)) return "coffee";
   if (/rice.?cooker|ricecooker|cuiseur.?(a.?)?riz|reiskocher|arrocera|cuociriso|rijstkoker|multicooker.?rice/.test(hay)) return "rice_cooker";
   if (/cook.?processor|cookit|thermomix|robot.?cuiseur|companion|monsieur.?cuisine|cookeo|k\u00fcchenmaschine|kuchenmaschine|multicooker/.test(hay)) return "cooker";
+  if (/wine.?(cooler|cellar|fridge)|cave.?(a|\u00e0).?vin|weink(u|ue|\u00fc)hl|weinklima|vinoteca|cantinetta|wijnklimaat|vinkyl|vinkj|vink\u00f8l|winiark|vinotek/.test(hay)) return "fridge";
   if (/fridge|freezer|frigo|r\u00e9frig|refrig|kuhlschrank|k\u00fchlschrank|nevera|frigor|koelkast|kyl(skap)?\b|kj\u00f8leskap|lod\u00f3wka|lodowka/.test(hay)) return "fridge";
   if (/kettle|bouilloire|wasserkocher|hervidor|bollitore|waterkoker|vattenkokare|vannkoker|elkedel|czajnik/.test(hay)) return "kettle";
   // InComfort exposes an Intergas combi boiler as water_heater.boiler: the
@@ -3022,6 +3023,22 @@ const ILLUSTRATION_CSS = {
           background: radial-gradient(ellipse at 60% 40%, rgba(255, 209, 102, 0.3), #1a1d22 72%);
         }
         .fr-shelf { position: absolute; left: 4px; right: 4px; height: 1.5px; border-radius: 1px; background: #4c525b; }
+        .fr-glass {
+          position: absolute; border-radius: 4px; overflow: hidden; border: 2px solid #3b4048;
+          background: radial-gradient(ellipse at 50% 0%, rgba(255, 224, 178, 0.35), rgba(26, 29, 34, 0.92) 70%);
+        }
+        .fr-glass::after {
+          content: ""; position: absolute; inset: 0; pointer-events: none;
+          background: linear-gradient(115deg, transparent 32%, rgba(255, 255, 255, 0.16) 40%, transparent 48%);
+        }
+        .fr-glass.empty { background: rgba(26, 29, 34, 0.5); }
+        .fr-racks { position: absolute; left: 8px; right: 17px; top: 21px; bottom: 9px; }
+        .fr-rack {
+          position: absolute; left: 50%; width: 45px; margin-left: -22.5px; height: 9px; border-bottom: 1.5px solid #8d6e63;
+          background:
+            radial-gradient(circle at 4.5px 4.5px, #8e2439 0 2.6px, #3a0d17 2.8px 3.8px, transparent 4px) 0 0 / 18px 9px repeat-x,
+            radial-gradient(circle at 13.5px 4.5px, #4a7a3f 0 2.6px, #13240f 2.8px 3.8px, transparent 4px) 0 0 / 18px 9px repeat-x;
+        }
         .fr-door {
           position: absolute; z-index: 1; border-radius: 6px;
           background: linear-gradient(100deg, var(--ac-body, var(--secondary-background-color, #d7d7d7)), var(--ac-body-hi, #e6e6e6));
@@ -3532,11 +3549,21 @@ function fridgeHtml(ctx) {
          </div>`;
   const fT = ctx.fridgeTemp;
   const zT = layout === "single" ? undefined : ctx.freezerTemp;
+  // Bottles lying on wooden racks, seen through the glass or with the door open.
+  const racks = [3, 17, 31, 45, 59].map((y) => `<div class="fr-rack" style="top:${y}px"></div>`).join("");
   const fCls = ctx.fridgeWarn ? "warn" : "";
 
   let body = "";
   let door = ["", ""];
-  if (layout === "single") {
+  if (layout === "wine") {
+    // A glass door: the display sits above the pane, and no ice maker.
+    body = `<div class="fr-handle" style="right:8px;top:24px;bottom:24px"></div>
+            ${lcd(fCls, "left:9px;top:5px", fT)}
+            <div class="fr-glass" style="left:6px;right:15px;top:19px;bottom:7px">${racks}</div>`;
+    door = [`<div class="fr-handle" style="right:8px;top:24px;bottom:24px"></div>
+            ${lcd(fCls, "left:9px;top:5px", fT)}
+            <div class="fr-glass empty" style="left:6px;right:15px;top:19px;bottom:7px"></div>`, ""];
+  } else if (layout === "single") {
     body = `<div class="fr-handle" style="right:8px;top:24px;bottom:24px"></div>
             ${lcd(fCls, "left:9px;top:9px", fT)}${icebox(14, 74, 22)}`;
     door = [body, ""];
@@ -3596,6 +3623,9 @@ function fridgeHtml(ctx) {
 
   if (layout === "single") {
     return `<div class="fr-wrap">${cav("inset:0")}${panel("inset:0", door[0], open)}</div>`;
+  }
+  if (layout === "wine") {
+    return `<div class="fr-wrap"><div class="fr-cav wine" style="inset:0"><div class="fr-racks">${racks}</div></div>${panel("inset:0", door[0], open)}</div>`;
   }
   if (layout === "side_by_side") {
     return `<div class="fr-wrap">
@@ -4404,8 +4434,10 @@ class ApplianceCard extends HTMLElement {
       };
       const fridgeT = readTemp(cfg.fridge_temperature_entity);
       const freezerT = readTemp(cfg.freezer_temperature_entity);
+      // A wine cooler keeps 10 to 14 degrees on purpose; past 18 the wine suffers.
+      const wine = cfg.fridge_layout === "wine";
       const maxTemp = cfg.fridge_max_temperature === undefined || cfg.fridge_max_temperature === ""
-        ? 8
+        ? (wine ? 18 : 8)
         : parseFloat(cfg.fridge_max_temperature);
       const tempHigh = fridgeT.value !== null && isFinite(maxTemp) && fridgeT.value > maxTemp;
 
@@ -4466,7 +4498,7 @@ class ApplianceCard extends HTMLElement {
       if (cfg.fridge_temperature_entity) {
         extraLines.push({
           icon: "mdi:thermometer",
-          label: t(hass, "fridge_compartment"),
+          label: t(hass, wine ? "temperature" : "fridge_compartment"),
           value: fridgeT.value === null ? "--" : `${Math.round(fridgeT.value)} ${unit}`,
           warn: tempHigh,
           entity: cfg.fridge_temperature_entity,
@@ -5071,7 +5103,7 @@ const SECTIONS = [
   // Fridge. One option describes both the number of doors and where the
   // freezer sits, because on a real fridge those are the same fact.
   { field: "fridge_temperature_entity", types: ["fridge"], labelKey: "section_fridge_temperature", includeDomains: ["sensor", "number", "input_number"], extra: (c) =>
-      c._row("fridge_max_temperature", "fridge_max_temperature", { placeholder: "8" }) },
+      c._row("fridge_max_temperature", "fridge_max_temperature", { placeholder: c._config.fridge_layout === "wine" ? "18" : "8" }) },
   { field: "freezer_temperature_entity", types: ["fridge"], labelKey: "section_freezer_temperature", includeDomains: ["sensor", "number", "input_number"] },
   { field: "freezer_door_entity", types: ["fridge"], labelKey: "section_freezer_door", includeDomains: ["binary_sensor", "sensor"] },
   { field: "ice_maker_entity", types: ["fridge"], labelKey: "section_ice_maker", includeDomains: ["switch", "binary_sensor", "sensor", "input_boolean"] },
@@ -5606,6 +5638,7 @@ class ApplianceCardEditor extends HTMLElement {
             { value: "freezer_top", label: t(hass, "layout_freezer_top") },
             { value: "side_by_side", label: t(hass, "layout_side_by_side") },
             { value: "single", label: t(hass, "layout_single") },
+            { value: "wine", label: t(hass, "layout_wine") },
           ],
         }) : ""}
       </div>

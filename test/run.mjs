@@ -1235,6 +1235,41 @@ check('congelateur en bas : la porte du frigo est celle du haut',
 check('congelateur en haut : la porte du frigo est celle du bas',
   panels(openFridgeDoor('freezer_top')).join(','), 'shut,swung');
 
+// A wine cooler: one glass door, bottles lying on wooden racks behind it,
+// and a cellar temperature that would alarm on a fridge.
+const wineT = t => ({ 'sensor.fr_t': { state: t, attributes: { unit_of_measurement: '°C' } } });
+const wine = (extra = {}, states = {}) => render(fridgeCfg({ fridge_layout: 'wine', fridge_temperature_entity: 'sensor.fr_t',
+  door_entity: 'binary_sensor.fr_d', ...extra }), withStates(states));
+const wineShut = wine({}, wineT('12'));
+check('cave a vin : une vitre', (wineShut.match(/class="fr-glass"/g) || []).length, 1);
+check('cave a vin : cinq casiers derriere la vitre', (wineShut.match(/class="fr-rack"/g) || []).length, 5);
+check('cave a vin : les casiers sont dans la vitre',
+  /<div class="fr-glass"[^>]*>(\s*<div class="fr-rack"[^>]*><\/div>){5}\s*<\/div>/.test(wineShut), true);
+contains('cave a vin : la temperature a l\'ecran', wineShut, '>12°</div>');
+check('cave a vin : 12 degres, c\'est normal', stateLine(wineShut), 'Normal');
+check('cave a vin : la ligne dit Temperature', infoLine(wineShut, 'Temperature'), '12 °C');
+check('cave a vin : pas de ligne Fridge', infoLine(wineShut, 'Fridge'), null);
+check('cave a vin : 18 degres, encore normal', stateLine(wine({}, wineT('18'))), 'Normal');
+check('cave a vin : au-dessus de 18, temperature haute', stateLine(wine({}, wineT('19'))), 'Temperature high');
+check('cave a vin : le seuil choisi passe devant', stateLine(wine({ fridge_max_temperature: 14 }, wineT('15'))), 'Temperature high');
+check('frigo une porte : 12 degres restent trop chauds', stateLine(render(fridgeCfg({ fridge_layout: 'single',
+  fridge_temperature_entity: 'sensor.fr_t' }), withStates(wineT('12')))), 'Temperature high');
+const wineMore = wine({ ice_maker_entity: 'switch.ice', freezer_temperature_entity: 'sensor.cg_t' }, wineT('12'));
+check('cave a vin : pas de glacons', /class="fr-icebox/.test(wineMore), false);
+check('frigo une porte : ses glacons, eux, sont la', /class="fr-icebox/.test(render(fridgeCfg({ fridge_layout: 'single', ice_maker_entity: 'switch.ice' }), FRIDGE)), true);
+check('cave a vin : pas d\'ecran de congelateur', /-18°/.test(wineMore), false);
+const wineOpen = wine({}, { ...wineT('12'), 'binary_sensor.fr_d': { state: 'on', attributes: {} } });
+check('cave a vin ouverte : la porte pivote', panels(wineOpen).join(','), 'swung');
+check('cave a vin ouverte : les bouteilles restent dans la cave',
+  /<div class="fr-cav wine"[^>]*><div class="fr-racks">(<div class="fr-rack"[^>]*><\/div>){5}<\/div><\/div>/.test(wineOpen), true);
+check('cave a vin ouverte : la vitre de la porte est vide', /<div class="fr-glass empty"[^>]*><\/div>/.test(wineOpen), true);
+contains('cave a vin : cinq bouteilles entieres par casier', wineShut, 'left: 50%; width: 45px; margin-left: -22.5px;');
+contains('cave a vin : en francais', render(fridgeCfg({ fridge_layout: 'wine', language: 'fr', fridge_temperature_entity: 'sensor.fr_t' }),
+  withStates(wineT('12'))), 'Température');
+for (const id of ['sensor.cave_a_vin_etat', 'sensor.wine_cooler_status', 'binary_sensor.weinkuehlschrank_tur', 'sensor.vinoteca_estado']) {
+  check(`detection : ${id} est un frigo`, /fr-body|fr-wrap/.test(render({ state_entity: id }, { [id]: { state: 'off', attributes: {} } })), true);
+}
+
 // Read-only by design: a fridge exposes nothing to press, so a stray action
 // entity left in the YAML must not grow a button row.
 const frButtons = render(fridgeCfg({ fridge_temperature_entity: 'sensor.fr_t',
@@ -1738,9 +1773,15 @@ check('editeur : l\'implantation du frigo est offerte sans aucune sonde',
   /data-field="fridge_layout"/.test(edLayout({ door_entity: 'binary_sensor.d' })), true);
 check('editeur : offerte aussi sur un frigo vide de tout',
   /data-field="fridge_layout"/.test(edLayout({})), true);
-check('editeur : les quatre implantations sont proposees',
-  ['single', 'freezer_bottom', 'freezer_top', 'side_by_side']
+check('editeur : les cinq implantations sont proposees',
+  ['single', 'freezer_bottom', 'freezer_top', 'side_by_side', 'wine']
     .every((v) => edLayout({}).includes(`value="${v}"`)), true);
+check('editeur : une cave a vin propose 18 degres',
+  /data-field="fridge_max_temperature"[^>]*placeholder="18"|placeholder="18"[^>]*data-field="fridge_max_temperature"/
+    .test(edLayout({ fridge_layout: 'wine', fridge_temperature_entity: 'sensor.fr_t' })), true);
+check('editeur : un frigo garde 8 degres',
+  /data-field="fridge_max_temperature"[^>]*placeholder="8"|placeholder="8"[^>]*data-field="fridge_max_temperature"/
+    .test(edLayout({ fridge_layout: 'single', fridge_temperature_entity: 'sensor.fr_t' })), true);
 // And it belongs to the fridge alone.
 check('editeur : aucune implantation sur un lave-linge',
   /data-field="fridge_layout"/.test(markup(newEditor({ appliance_type: 'washer', state_entity: 'sensor.w' }))), false);

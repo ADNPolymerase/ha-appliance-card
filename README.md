@@ -85,8 +85,8 @@ Per type:
 | `filter_life_entity` / `filter_reset_entity` | hood | Filter wear as a bar, and a reset button. |
 | `zones` / `zones_layout` / `zones_count` | cooktop | Up to 6 zones `{ level_entity, residual_heat_entity?, name? }`, level as a number or a word (`boost`), `H` for residual heat. Layout `2x1` \| `2x2` \| `3x2`, and how many zones to draw without entities (default 4). |
 | `child_lock_entity` | cooktop | Padlock on the illustration. |
-| `fridge_layout` | fridge | `freezer_bottom` (default) \| `freezer_top` \| `side_by_side` \| `single`. |
-| `fridge_temperature_entity` / `freezer_temperature_entity` / `fridge_max_temperature` | fridge | Temperatures shown on the doors, `--°` when the probe goes quiet. Above the maximum (default 8 °C), the state reads *Temperature high*. |
+| `fridge_layout` | fridge | `freezer_bottom` (default) \| `freezer_top` \| `side_by_side` \| `single` \| `wine` (glass door and bottles, for a wine cooler). |
+| `fridge_temperature_entity` / `freezer_temperature_entity` / `fridge_max_temperature` | fridge | Temperatures shown on the doors, `--°` when the probe goes quiet. Above the maximum (default 8 °C, 18 °C for `wine`), the state reads *Temperature high*. |
 | `door_entity` / `freezer_door_entity` | fridge | Each door swings for its own sensor. |
 | `ice_maker_entity` | fridge | Ice cubes fall while it produces. |
 | `power_entity` / `power_on_threshold` | fridge | Staying below the threshold (default 1 W) for more than 30 minutes reads *Unplugged*, counted from the reading's last change so a page reload does not restart it. |

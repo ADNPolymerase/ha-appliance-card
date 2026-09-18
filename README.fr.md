@@ -85,8 +85,8 @@ Par type :
 | `filter_life_entity` / `filter_reset_entity` | hotte | Usure du filtre en barre, et bouton de remise à zéro. |
 | `zones` / `zones_layout` / `zones_count` | plaque | Jusqu'à 6 foyers `{ level_entity, residual_heat_entity?, name? }`, niveau en chiffre ou en mot (`boost`), `H` pour la chaleur résiduelle. Disposition `2x1` \| `2x2` \| `3x2`, et nombre de foyers à dessiner sans entité (4 par défaut). |
 | `child_lock_entity` | plaque | Cadenas sur l'illustration. |
-| `fridge_layout` | frigo | `freezer_bottom` (défaut) \| `freezer_top` \| `side_by_side` \| `single`. |
-| `fridge_temperature_entity` / `freezer_temperature_entity` / `fridge_max_temperature` | frigo | Températures affichées sur les portes, `--°` si la sonde se tait. Au-dessus du maximum (8 °C par défaut), l'état passe en *Température haute*. |
+| `fridge_layout` | frigo | `freezer_bottom` (défaut) \| `freezer_top` \| `side_by_side` \| `single` \| `wine` (porte vitrée et bouteilles, pour une cave à vin). |
+| `fridge_temperature_entity` / `freezer_temperature_entity` / `fridge_max_temperature` | frigo | Températures affichées sur les portes, `--°` si la sonde se tait. Au-dessus du maximum (8 °C par défaut, 18 °C pour `wine`), l'état passe en *Température haute*. |
 | `door_entity` / `freezer_door_entity` | frigo | Chaque porte s'ouvre pour son propre capteur. |
 | `ice_maker_entity` | frigo | Les glaçons tombent quand elle produit. |
 | `power_entity` / `power_on_threshold` | frigo | Rester sous le seuil (1 W par défaut) plus de 30 minutes signale *Débranché*, compté depuis le dernier changement de la mesure : recharger la page ne le remet pas à zéro. |
