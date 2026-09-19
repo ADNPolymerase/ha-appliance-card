@@ -61,7 +61,7 @@ Only `state_entity` is required, except on a fridge where a probe or a door cont
 | `toggle_entity` | Power button (`switch`, `button`, `script`, `input_boolean`, `fan`), highlighted while on. |
 | `power_entity` / `power_on_threshold` / `power_icon` | Power sensor. With a threshold, the state is derived from it: *running* above, then *finished* when it falls back. Pointing `state_entity` at the same sensor enables it with a 10 W threshold. `power_icon` replaces `mdi:power-plug`. |
 | `program_entity` / `program_format` | Program. `clean` (default) makes it readable (`LaundryCare.Washer.Program.Auto40` becomes *Auto 40*, `Rapid20Min` becomes *Rapid 20 Min*), `raw` shows it as-is. |
-| `remaining_time_entity` / `remaining_time_unit` | Remaining time, in `auto` (default), `seconds` or `minutes`. |
+| `remaining_time_entity` / `remaining_time_unit` | Remaining time, in `auto` (default), `seconds` or `minutes`, or a finish time (`timestamp`). It also draws the progress bar: the time run since the cycle began, pauses left out, over that time plus what is left. Opened mid-cycle, the card finds the start in the state history. |
 | `remaining_time_hide_when_idle` | `true` only shows the remaining time while running, against stale finish times (SmartThings). |
 | `remaining_time_split` | `true` puts the end time on its own line, for a narrow card. |
 | `progress_entity` | 0-100 sensor replacing the estimate drawn from the remaining time. |

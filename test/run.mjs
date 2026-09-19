@@ -201,16 +201,219 @@ const splitDone = render({ appliance_type: 'oven', state_entity: 'sensor.oven_st
 check('split : cycle termine, une seule ligne', infoLine(splitDone, 'Remaining time'), 'Done');
 check('split : cycle termine, pas d heure de fin', infoLine(splitDone, 'Ready at'), null);
 
-// Progress is latched on the first running render, then counts down from it.
-const prog = build({ appliance_type: 'washer', state_entity: 'sensor.w', remaining_time_entity: 'sensor.r' },
-  { 'sensor.w': { state: 'Running', attributes: {} }, 'sensor.r': { state: '3600', attributes: {} } });
-check('progression : premier rendu = 0 %', barWidth(prog.html), '0');
+// Progress is the time the cycle has run over that time plus what is left.
+// The start is when the state turned to running, pauses are taken out, and a
+// change of phase or a gap in the data does not restart it.
+const MIN = 60000;
+const at = m => new Date(T0 + m * MIN).toISOString();
+const wst = (state, lcMin) => ({ state, attributes: {}, last_changed: at(lcMin) });
+const secs = n => ({ state: String(n), attributes: {} });
+const finish = m => ({ state: at(m), attributes: { device_class: 'timestamp' } });
+const WCFG = { appliance_type: 'washer', state_entity: 'sensor.w', remaining_time_entity: 'sensor.r' };
+const clockAt = m => freezeClock(at(m));
+
+const prog = build(WCFG, { 'sensor.w': wst('Idle', -90), 'sensor.r': secs(0) });
+check('progression : pas de barre a l\'arret', /class="bar-fill"/.test(prog.html), false);
+check('progression : depart vu = 0 %',
+  barWidth(rerender(prog.card, { 'sensor.w': wst('Running', 0), 'sensor.r': secs(3600) })), '0');
+clockAt(30);
 check('progression : moitie du temps ecoule = 50 %',
-  barWidth(rerender(prog.card, { 'sensor.w': { state: 'Running', attributes: {} },
-                                 'sensor.r': { state: '1800', attributes: {} } })), '50');
+  barWidth(rerender(prog.card, { 'sensor.w': wst('Running', 0), 'sensor.r': secs(1800) })), '50');
+// A change of phase is a new state, with its own last change: the cycle
+// still began where it began.
+clockAt(45);
+check('progression : un changement de phase ne remet pas a zero',
+  barWidth(rerender(prog.card, { 'sensor.w': wst('Rinsing', 45), 'sensor.r': secs(900) })), '75');
 check('progression : cycle termine = 100 %',
-  barWidth(rerender(prog.card, { 'sensor.w': { state: 'Finished', attributes: {} },
-                                 'sensor.r': { state: '0', attributes: {} } })), '100');
+  barWidth(rerender(prog.card, { 'sensor.w': wst('Finished', 60), 'sensor.r': secs(0) })), '100');
+// The finished cycle is over: the next one starts from its own beginning.
+clockAt(100);
+check('progression : le cycle suivant repart de son debut',
+  barWidth(rerender(prog.card, { 'sensor.w': wst('Running', 100), 'sensor.r': secs(3600) })), '0');
+clockAt(0);
+
+// A pause is not time spent on the cycle. 20 minutes run, 10 paused, then 40
+// left: a third of the way.
+const paused = build(WCFG, { 'sensor.w': wst('Idle', -90), 'sensor.r': secs(0) });
+rerender(paused.card, { 'sensor.w': wst('Running', 0), 'sensor.r': secs(3600) });
+// The card is told a little after each change: the times come from the
+// states, not from when the card happened to hear about them.
+clockAt(25);
+check('pause : la barre disparait pendant la pause',
+  /class="bar-fill"/.test(rerender(paused.card, { 'sensor.w': wst('Paused', 20), 'sensor.r': secs(2400) })), false);
+// 31 minutes since the start, paused from 20 to 30: 21 run, 40 left.
+clockAt(31);
+check('pause : le temps en pause est retire',
+  barWidth(rerender(paused.card, { 'sensor.w': wst('Running', 30), 'sensor.r': secs(2400) })), '34');
+// A restart of Home Assistant turns every state unavailable for a moment.
+clockAt(32);
+rerender(paused.card, { 'sensor.w': wst('unavailable', 32), 'sensor.r': secs(2340) });
+// 33 minutes since the start, 10 of them paused: 23 run, 38 left.
+clockAt(33);
+check('coupure : une indisponibilite ne remet pas a zero',
+  barWidth(rerender(paused.card, { 'sensor.w': wst('Running', 33), 'sensor.r': secs(2280) })), '38');
+clockAt(0);
+
+// Opened during a pause: the pause is not run time either, history or not.
+const openPaused = build(WCFG, { 'sensor.w': wst('Paused', -10), 'sensor.r': secs(1800) });
+check('pause : ouverte en pause, pas de barre', /class="bar-fill"/.test(openPaused.html), false);
+check('pause : ouverte en pause, la reprise part de zero',
+  barWidth(rerender(openPaused.card, { 'sensor.w': wst('Running', 0), 'sensor.r': secs(1800) })), '0');
+
+// A browser clock a little behind Home Assistant sees the state change in
+// the future. That is no time run, and certainly not a finished cycle.
+check('horloge en retard : pas de temps negatif',
+  barWidth(render(WCFG, { 'sensor.w': wst('Running', 5), 'sensor.r': secs(60) })), '0');
+// Nothing run and nothing left: there is nothing to draw.
+check('progression : ni temps ecoule ni temps restant, pas de barre',
+  /class="bar-fill"/.test(render(WCFG, { 'sensor.w': wst('Running', 0), 'sensor.r': secs(0) })), false);
+// A state derived from the power meter did not change when the cycle began:
+// the plug's own state says nothing about it.
+check('puissance : le changement d\'etat de la prise ne sert pas de depart',
+  barWidth(render({ ...WCFG, power_entity: 'sensor.pw', power_on_threshold: 10 },
+    { 'sensor.w': wst('on', -60), 'sensor.pw': secs(500), 'sensor.r': secs(1800) })), '0');
+
+// Opened in the middle of a cycle: the reported case, an LG ThinQ washer
+// whose finish time is a timestamp. Running since 14 minutes, 47 left.
+const midway = render(WCFG, { 'sensor.w': wst('Running', -14), 'sensor.r': finish(47) });
+check('en plein cycle : la barre part du debut du cycle, pas de zero', barWidth(midway), '23');
+// Without any time of change, the card can only start from now.
+check('en plein cycle : sans heure de changement, depart maintenant',
+  barWidth(render(WCFG, { 'sensor.w': { state: 'Running', attributes: {} }, 'sensor.r': secs(1800) })), '0');
+// A progress entity says it all.
+check('progression : l\'entite de progression prime',
+  barWidth(render({ ...WCFG, progress_entity: 'sensor.p' },
+    { 'sensor.w': wst('Running', -14), 'sensor.r': finish(47), 'sensor.p': secs(80) })), '80');
+
+// ── The history lookup ──
+// Opened during the rinse, the last change of state is only the rinse. The
+// card reads the history once to find where the cycle really began.
+const H = (state, m) => ({ s: state, lu: (T0 + m * MIN) / 1000 });
+function withHistory(config, states, answer) {
+  const calls = [];
+  const c = new Card();
+  c.setConfig({ type: 'custom:ha-appliance-card', ...config });
+  c._hass = { ...HASS(states), callWS: msg => { calls.push(msg); return typeof answer === 'function' ? answer(msg) : Promise.resolve(answer); } };
+  c._render();
+  return { card: c, calls, html: markup(c) };
+}
+const settle = () => new Promise(r => setTimeout(r, 0));
+const RINSE = { 'sensor.w': wst('Rinsing', -5), 'sensor.r': secs(35 * 60) };
+const hist = withHistory(WCFG, RINSE, { 'sensor.w': [
+  H('Idle', -60), H('Running', -40), H('Paused', -30), H('Running', -25), H('Rinsing', -5)] });
+check('historique : en attendant, le dernier changement sert de depart', barWidth(hist.html), '13');
+check('historique : une seule demande', hist.calls.length, 1);
+check('historique : la bonne demande', hist.calls[0]?.type, 'history/history_during_period');
+check('historique : sur l\'entite d\'etat', hist.calls[0]?.entity_ids?.join(','), 'sensor.w');
+check('historique : sur douze heures', hist.calls[0]?.start_time, new Date(T0 - 12 * 60 * MIN).toISOString());
+check('historique : jusqu\'a maintenant', hist.calls[0]?.end_time, at(0));
+check('historique : sans attributs', hist.calls[0]?.no_attributes, true);
+check('historique : avec l\'etat au debut de la fenetre', hist.calls[0]?.include_start_time_state, true);
+check('historique : au format court', hist.calls[0]?.minimal_response, true);
+check('historique : tous les changements', hist.calls[0]?.significant_changes_only, false);
+await settle();
+// 40 minutes since the start, 5 of them paused: 35 run, 35 left.
+check('historique : le vrai debut, pauses retirees', barWidth(markup(hist.card)), '50');
+rerender(hist.card, RINSE);
+check('historique : pas de seconde demande pour le meme cycle', hist.calls.length, 1);
+
+// "lc" wins over "lu" when Home Assistant sends both.
+const histLc = withHistory(WCFG, RINSE, { 'sensor.w': [
+  { s: 'Idle', lu: (T0 - 60 * MIN) / 1000 }, { s: 'Running', lu: (T0 - 20 * MIN) / 1000, lc: (T0 - 40 * MIN) / 1000 },
+  H('Rinsing', -5)] });
+await settle();
+check('historique : last_changed plutot que last_updated', barWidth(markup(histLc.card)), '53');
+
+// A gap cannot open a cycle: idle, then out of sight, then running.
+const histGap = withHistory(WCFG, RINSE, { 'sensor.w': [
+  H('Idle', -60), H('unavailable', -50), H('Running', -40), H('Rinsing', -5)] });
+await settle();
+check('historique : une indisponibilite n\'ouvre pas le cycle', barWidth(markup(histGap.card)), '53');
+// ...but one in the middle of the cycle belongs to it.
+const histMid = withHistory(WCFG, RINSE, { 'sensor.w': [
+  H('Idle', -60), H('Running', -40), H('unavailable', -20), H('Running', -19), H('Rinsing', -5)] });
+await settle();
+check('historique : une indisponibilite en cours de cycle en fait partie', barWidth(markup(histMid.card)), '53');
+// Running since before the window: the window is all there is.
+const histLong = withHistory(WCFG, RINSE, { 'sensor.w': [H('Running', -40), H('Rinsing', -5)] });
+await settle();
+check('historique : en marche depuis le debut de la fenetre', barWidth(markup(histLong.card)), '53');
+// Still paused: the pause in progress is not run time either.
+const histPaused = withHistory(WCFG, { 'sensor.w': wst('Running', -5), 'sensor.r': secs(30 * 60) }, { 'sensor.w': [
+  H('Idle', -60), H('Running', -40), H('Paused', -20), H('Running', -5)] });
+await settle();
+check('historique : les pauses terminees sont retirees', barWidth(markup(histPaused.card)), '45');
+// Opened during a pause: the history knows since when, and the resume counts
+// it out. 40 minutes since the start, paused from -10 to 0: 30 run, 30 left.
+const histInPause = withHistory(WCFG, { 'sensor.w': wst('Paused', -10), 'sensor.r': secs(30 * 60) }, { 'sensor.w': [
+  H('Idle', -60), H('Running', -40), H('Paused', -10)] });
+await settle();
+histInPause.card._hass = { ...histInPause.card._hass, states: { 'sensor.w': wst('Running', 0), 'sensor.r': secs(30 * 60) } };
+histInPause.card._render();
+check('historique : ouverte en pause, la pause en cours est retiree', barWidth(markup(histInPause.card)), '50');
+
+// What the history cannot improve is left alone.
+const histLate = withHistory(WCFG, RINSE, { 'sensor.w': [H('Idle', -60), H('Rinsing', -2)] });
+await settle();
+check('historique : un debut plus tardif est ignore', barWidth(markup(histLate.card)), '13');
+const histStale = withHistory(WCFG, RINSE, { 'sensor.w': [H('Running', -40), H('Finished', -30)] });
+await settle();
+check('historique : un historique en retard sur l\'etat est ignore', barWidth(markup(histStale.card)), '13');
+const histEmpty = withHistory(WCFG, RINSE, {});
+await settle();
+check('historique : entite hors de l\'historique, le dernier changement reste', barWidth(markup(histEmpty.card)), '13');
+const histFail = withHistory(WCFG, RINSE, () => Promise.reject(new Error('refuse')));
+await settle();
+check('historique : une demande refusee ne casse rien', barWidth(markup(histFail.card)), '13');
+const histThrow = withHistory(WCFG, RINSE, () => { throw new Error('pas de websocket'); });
+check('historique : une demande qui leve ne casse rien', barWidth(histThrow.html), '13');
+
+// An answer that arrives after the cycle ended must not bring it back.
+let release;
+const histSlow = withHistory(WCFG, RINSE, () => new Promise(r => { release = r; }));
+rerender(histSlow.card, { 'sensor.w': wst('Finished', 0), 'sensor.r': secs(0) });
+let lateRenders = 0;
+const slowRender = histSlow.card._render.bind(histSlow.card);
+histSlow.card._render = () => { lateRenders++; slowRender(); };
+release({ 'sensor.w': [H('Idle', -60), H('Running', -40), H('Rinsing', -5)] });
+await settle();
+check('historique : une reponse apres la fin est ignoree', histSlow.card._cycle, null);
+check('historique : une reponse apres la fin ne redessine rien', lateRenders, 0);
+check('historique : la barre reste pleine', barWidth(markup(histSlow.card)), '100');
+
+// No lookup when there is nothing to find.
+check('historique : depart vu, aucune demande', (() => {
+  const seen = withHistory(WCFG, { 'sensor.w': wst('Idle', -60), 'sensor.r': secs(0) }, {});
+  seen.card._hass = { ...seen.card._hass, states: { 'sensor.w': wst('Running', 0), 'sensor.r': secs(3600) } };
+  seen.card._render();
+  return seen.calls.length;
+})(), 0);
+check('historique : etat tire de la puissance, aucune demande',
+  withHistory({ ...WCFG, power_entity: 'sensor.pw', power_on_threshold: 10 },
+    { 'sensor.w': wst('on', -60), 'sensor.pw': secs(500), 'sensor.r': secs(1800) }, {}).calls.length, 0);
+check('historique : entite de progression, aucune demande',
+  withHistory({ ...WCFG, progress_entity: 'sensor.p' }, { ...RINSE, 'sensor.p': secs(40) }, {}).calls.length, 0);
+check('historique : sans temps restant, aucune demande',
+  withHistory({ appliance_type: 'washer', state_entity: 'sensor.w' }, RINSE, {}).calls.length, 0);
+check('historique : ouverte indisponible, aucune demande',
+  withHistory(WCFG, { 'sensor.w': wst('unavailable', -60), 'sensor.r': secs(1800) }, {}).calls.length, 0);
+check('historique : a l\'arret, aucune demande',
+  withHistory(WCFG, { 'sensor.w': wst('Idle', -60), 'sensor.r': secs(0) }, {}).calls.length, 0);
+
+// ── The countdown beat ──
+// A finish time does not change while the minutes run out: the card keeps
+// its own beat, and the minute on screen joins what decides a redraw.
+const tick = build(WCFG, { 'sensor.w': wst('Running', -14), 'sensor.r': finish(47) }).card;
+check('decompte : la carte bat la mesure', !!tick._countdownTimer, true);
+check('decompte : la minute compte pour redessiner', tick._stateSignature(tick._hass).includes('|c'), true);
+tick.disconnectedCallback();
+check('decompte : arrete quand la carte est retiree', tick._countdownTimer, null);
+check('decompte : pas pour une duree, qui se met a jour seule',
+  !!build(WCFG, { 'sensor.w': wst('Running', -14), 'sensor.r': secs(1800) }).card._countdownTimer, false);
+const tickDone = build(WCFG, { 'sensor.w': wst('Running', -14), 'sensor.r': finish(47) }).card;
+rerender(tickDone, { 'sensor.w': wst('Finished', 0), 'sensor.r': finish(0) });
+check('decompte : arrete en fin de cycle', tickDone._countdownTimer, null);
+check('decompte : la minute sort de la signature', tickDone._stateSignature(tickDone._hass).includes('|c'), false);
 
 // "Preheating" has no word boundary before "heating", so it fell through to the
 // unknown bucket until it got its own keyword. It must count as an active state.

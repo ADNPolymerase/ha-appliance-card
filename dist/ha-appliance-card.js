@@ -1,4 +1,4 @@
-const CARD_VERSION = "2.6.1";
+const CARD_VERSION = "2.6.2";
 
 console.info(
   "%c HA-APPLIANCE-CARD %c v" + CARD_VERSION + " ",
@@ -1569,6 +1569,45 @@ function isActiveState(norm) {
   return ACTIVE_STATES.includes(norm);
 }
 
+// Where a state stands in a cycle, for timing the progress bar. A pause and a
+// gap in the data (Home Assistant restarting, the integration reconnecting)
+// belong to the cycle they interrupt. Anything else ends it.
+function cycleRole(norm) {
+  if (isActiveState(norm)) return "active";
+  if (norm === "paused") return "paused";
+  if (norm === "unknown") return "gap";
+  return "out";
+}
+
+// How far back the card looks for the start of a cycle it opened in the
+// middle of. The longest programs, eco dishwashers and washer-dryers, stay
+// well under it.
+const CYCLE_HISTORY_MS = 12 * 60 * 60 * 1000;
+
+// Rebuilds the cycle in progress from the state history Home Assistant keeps,
+// in its compressed format: { s: state, lu: last updated, lc: last changed },
+// times in seconds. Walks back from the latest state to the first one of the
+// streak the machine is still in, and adds up the pauses already over. A
+// pause still going on is the current state, which the card times itself.
+function cycleFromHistory(entries, stateMap) {
+  if (!Array.isArray(entries)) return null;
+  const rows = entries
+    .map((e) => ({ role: cycleRole(normalizeState(e && e.s, stateMap)), t: 1000 * Number(e && (e.lc !== undefined ? e.lc : e.lu)) }))
+    .filter((r) => Number.isFinite(r.t));
+  const last = rows.length - 1;
+  if (last < 0 || rows[last].role === "out") return null;
+  let i = last;
+  while (i > 0 && rows[i - 1].role !== "out") i--;
+  // A gap cannot open a cycle: the machine was idle, then dropped out of
+  // sight, and the cycle began when it came back running.
+  while (i < last && rows[i].role === "gap") i++;
+  let pausedMs = 0;
+  for (let j = i; j < last; j++) {
+    if (rows[j].role === "paused") pausedMs += rows[j + 1].t - rows[j].t;
+  }
+  return { start: rows[i].t, pausedMs };
+}
+
 function stripAccents(str) {
   return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
 }
@@ -2277,6 +2316,8 @@ const FRIDGE_UNPLUGGED_AFTER_MS = 30 * 60 * 1000;
 // The count is shown in whole minutes, so half a minute is close enough to
 // keep it honest without redrawing for nothing.
 const FRIDGE_TICK_MS = 30 * 1000;
+// Same beat for a cycle counting down to a finish time.
+const COUNTDOWN_TICK_MS = 30 * 1000;
 
 // Mixing speed, on the 0-3 scale the blade animation runs at. Thermomix goes
 // to 10 and calls the top one "Turbo"; the exact figure stays on the info line,
@@ -4054,7 +4095,7 @@ class ApplianceCard extends HTMLElement {
     // A reconfiguration changes what is drawn without touching any state, so
     // the next hass must go through whatever the signature says.
     this._lastSignature = undefined;
-    this._runStartSeconds = null;
+    this._cycle = null;
     this._prevNormState = null;
     if (!this._root) {
       this.attachShadow({ mode: "open" });
@@ -4140,6 +4181,8 @@ class ApplianceCard extends HTMLElement {
     // also ticks on its own, but a browser throttles the timers of a hidden
     // tab, so the count has to be able to catch up on the next update too.
     if (this._belowSince) parts.push("u" + Math.floor((Date.now() - this._belowSince) / 60000));
+    // Same for a countdown to a finish time: the minute left is on screen.
+    if (this._countingDown) parts.push("c" + Math.floor(Date.now() / 60000));
     return parts.join("|");
   }
 
@@ -4163,8 +4206,48 @@ class ApplianceCard extends HTMLElement {
     }
   }
 
+  _clearCountdownTimer() {
+    if (this._countdownTimer) {
+      clearInterval(this._countdownTimer);
+      this._countdownTimer = null;
+    }
+  }
+
   disconnectedCallback() {
     this._clearUnplugTimer();
+    this._clearCountdownTimer();
+  }
+
+  // Reads the state history once per cycle to find where it really began.
+  // Without a recorder, or with the entity excluded from it, the last change
+  // of state stays the best guess.
+  _lookUpCycle(cycle, cfg) {
+    const hass = this._hass;
+    if (!hass || typeof hass.callWS !== "function" || !cfg.state_entity) return;
+    const end = Date.now();
+    let req;
+    try {
+      req = hass.callWS({
+        type: "history/history_during_period",
+        start_time: new Date(end - CYCLE_HISTORY_MS).toISOString(),
+        end_time: new Date(end).toISOString(),
+        entity_ids: [cfg.state_entity],
+        include_start_time_state: true,
+        significant_changes_only: false,
+        minimal_response: true,
+        no_attributes: true,
+      });
+    } catch (e) {
+      return;
+    }
+    Promise.resolve(req).then((res) => {
+      // The cycle may have ended, or the card been reconfigured, meanwhile.
+      if (this._cycle !== cycle) return;
+      const found = cycleFromHistory(res && res[cfg.state_entity], cfg.state_map);
+      if (!found || found.start > cycle.start) return;
+      Object.assign(cycle, found);
+      this._render();
+    }, () => {});
   }
 
   _call(entityId) {
@@ -4275,27 +4358,62 @@ class ApplianceCard extends HTMLElement {
       }
     }
 
+    // Progress is the time the cycle has run over that time plus what is
+    // left. The start is when the state turned to running, which Home
+    // Assistant carries with the state, so reopening the page mid-cycle no
+    // longer starts the bar from zero. Pauses are taken out of the time run.
     let progressPct = null;
+    const role = cycleRole(norm);
+    const nowMs = Date.now();
+    // When the state moved. A state derived from the power meter has no such
+    // moment of its own, and a fixture or a bare state may carry none.
+    const since = !powerDerived && st && Number.isFinite(Date.parse(st.last_changed))
+      ? Date.parse(st.last_changed)
+      : nowMs;
+    // Only a cycle measured against its remaining time needs a start. A
+    // progress entity says it all, and a kettle has no cycle to time.
+    if (role === "out" || cfg.progress_entity || !cfg.remaining_time_entity) {
+      this._cycle = null;
+    } else if (!this._cycle) {
+      // A gap opens nothing: the card waits for a state it can read.
+      if (role !== "gap") {
+        // Opened in the middle of a cycle, or on a state the card never saw
+        // begin: the last change is only a phase, a pause or a restart away
+        // from the real start, which the state history still holds.
+        const seenStart = this._prevNormState !== null && cycleRole(this._prevNormState) === "out";
+        this._cycle = { start: since, pausedMs: 0, pausedSince: role === "paused" ? since : null };
+        if (!seenStart && !powerDerived) this._lookUpCycle(this._cycle, cfg);
+      }
+    } else if (role === "paused" && this._cycle.pausedSince === null) {
+      this._cycle.pausedSince = since;
+    } else if (role === "active" && this._cycle.pausedSince !== null) {
+      this._cycle.pausedMs += Math.max(0, since - this._cycle.pausedSince);
+      this._cycle.pausedSince = null;
+    }
     if (cfg.progress_entity) {
       const p = numericState(hass, cfg.progress_entity);
       if (p !== null) progressPct = Math.max(0, Math.min(100, p));
     } else if (remSec !== null) {
-      if (isActiveState(norm)) {
-        if (!isActiveState(this._prevNormState) || !this._runStartSeconds || remSec > this._runStartSeconds) {
-          this._runStartSeconds = remSec > 0 ? remSec : null;
-        }
-        if (this._runStartSeconds) {
-          progressPct = Math.max(0, Math.min(100, 100 - (remSec / this._runStartSeconds) * 100));
-        }
+      if (role === "active" && this._cycle) {
+        const c = this._cycle;
+        const ranMs = Math.max(0, nowMs - c.start - c.pausedMs);
+        const totalMs = ranMs + remSec * 1000;
+        if (totalMs > 0) progressPct = Math.min(100, (ranMs / totalMs) * 100);
       } else if (norm === "done") {
         progressPct = 100;
-      } else {
-        this._runStartSeconds = null;
       }
-    } else {
-      this._runStartSeconds = null;
     }
     this._prevNormState = norm;
+
+    // A finish time does not change while the minutes run out, so nothing
+    // pushes an update: the card keeps its own beat while it counts down.
+    const remTs = cfg.remaining_time_entity ? stateObj(hass, cfg.remaining_time_entity) : null;
+    this._countingDown = role === "active" && remSec !== null
+      && !!remTs && remTs.attributes.device_class === "timestamp";
+    this._clearCountdownTimer();
+    if (this._countingDown) {
+      this._countdownTimer = setInterval(() => this._render(), COUNTDOWN_TICK_MS);
+    }
 
     // Door
     let doorOpen = false;

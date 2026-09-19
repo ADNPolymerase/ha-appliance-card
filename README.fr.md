@@ -61,7 +61,7 @@ Seule `state_entity` est obligatoire, sauf sur un réfrigérateur où une sonde 
 | `toggle_entity` | Bouton marche/arrêt (`switch`, `button`, `script`, `input_boolean`, `fan`), mis en évidence quand c'est allumé. |
 | `power_entity` / `power_on_threshold` / `power_icon` | Capteur de puissance. Avec un seuil, l'état en est déduit : *en marche* au-dessus, puis *terminé* en redescendant. Pointer `state_entity` sur ce même capteur l'active avec un seuil de 10 W. `power_icon` remplace `mdi:power-plug`. |
 | `program_entity` / `program_format` | Programme. `clean` (défaut) le rend lisible (`LaundryCare.Washer.Program.Auto40` devient *Auto 40*, `Rapid20Min` devient *Rapid 20 Min*), `raw` l'affiche tel quel. |
-| `remaining_time_entity` / `remaining_time_unit` | Temps restant, en `auto` (défaut), `seconds` ou `minutes`. |
+| `remaining_time_entity` / `remaining_time_unit` | Temps restant, en `auto` (défaut), `seconds` ou `minutes`, ou une heure de fin (`timestamp`). Il donne aussi la barre de progression : le temps écoulé depuis le début du cycle, pauses retirées, sur ce temps plus ce qui reste. Ouverte en plein cycle, la carte retrouve le début dans l'historique de l'état. |
 | `remaining_time_hide_when_idle` | `true` n'affiche le temps restant qu'en marche, contre les heures de fin périmées (SmartThings). |
 | `remaining_time_split` | `true` met l'heure de fin sur sa propre ligne, pour une card étroite. |
 | `progress_entity` | Capteur 0-100 qui remplace l'estimation tirée du temps restant. |
