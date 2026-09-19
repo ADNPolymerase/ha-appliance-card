@@ -1,4 +1,4 @@
-const CARD_VERSION = "2.6.0";
+const CARD_VERSION = "2.6.1";
 
 console.info(
   "%c HA-APPLIANCE-CARD %c v" + CARD_VERSION + " ",
@@ -2145,6 +2145,12 @@ const TYPE_AUTO_PATTERNS = {
   },
 };
 
+// Eight extra info lines at most: past that the card turns into a list, so
+// the ninth and after are ignored, by the card and by the editor alike. Past
+// five, the lines tighten up so that eight still read as a card.
+const INFO_MAX = 8;
+const INFO_COMPACT_ABOVE = 5;
+
 const INFO_PATTERNS = [
   { re: /temperature/i, icon: "mdi:thermometer" },
   { re: /spin/i, icon: "mdi:rotate-3d-variant" },
@@ -4098,7 +4104,7 @@ class ApplianceCard extends HTMLElement {
     for (const [k, v] of Object.entries(cfg)) {
       if (k.endsWith("_entity") && typeof v === "string" && v) ids.push(v);
     }
-    for (const e of cfg.info_entities || []) {
+    for (const e of (cfg.info_entities || []).slice(0, INFO_MAX)) {
       const id = typeof e === "string" ? e : e && e.entity;
       if (id) ids.push(id);
     }
@@ -4312,6 +4318,7 @@ class ApplianceCard extends HTMLElement {
 
     // Extra info chips
     const infoEntities = (cfg.info_entities || [])
+      .slice(0, INFO_MAX)
       .map((e) => (typeof e === "string" ? { entity: e } : e))
       .map((e) => ({ ...e, st: stateObj(hass, e.entity) }))
       .filter((e) => e.st && !["unknown", "unavailable"].includes(e.st.state));
@@ -4949,6 +4956,9 @@ class ApplianceCard extends HTMLElement {
         /* Lines backed by an entity open its more-info dialog: that is where a
            venting level or a power level is actually changed, and it costs no
            extra height on the card. */
+        .info-lines.compact { gap: 4px; }
+        .info-lines.compact .info-line { font-size: 0.92em; }
+        .info-lines.compact .info-line ha-icon { --mdc-icon-size: 18px; }
         .info-line.clickable { cursor: pointer; }
         .info-line.warn { color: var(--error-color, #f44336); }
         .info-line.warn ha-icon { color: var(--error-color, #f44336); }
@@ -5033,7 +5043,7 @@ class ApplianceCard extends HTMLElement {
     }
     lines.push(...extraLines);
     const linesHtml = lines.length
-      ? `<div class="info-lines">${lines
+      ? `<div class="info-lines${infoEntities.length > INFO_COMPACT_ABOVE ? " compact" : ""}">${lines
           .map((l) => ({ ...l, open: !!l.entity && entityUsable(hass, l.entity) }))
           .map(
             (l) =>
@@ -5295,7 +5305,7 @@ class ApplianceCardEditor extends HTMLElement {
     }
     if (this._infoCount === undefined) {
       const existing = (this._config.info_entities || []).length;
-      this._infoCount = Math.min(5, existing || 3);
+      this._infoCount = Math.min(INFO_MAX, existing || 3);
     }
     if (this._zoneCount === undefined) {
       this._zoneCount = Math.min(6, (this._config.zones || []).length || 4);
@@ -5411,7 +5421,7 @@ class ApplianceCardEditor extends HTMLElement {
       this._needsBuild = true;
       if (patch.info_entities && this._panelOpen) {
         this._panelOpen.info = true;
-        this._infoCount = Math.min(5, Math.max(this._infoCount || 0, patch.info_entities.length));
+        this._infoCount = Math.min(INFO_MAX, Math.max(this._infoCount || 0, patch.info_entities.length));
       }
     }
     this._maybeBuild();
@@ -5792,7 +5802,7 @@ class ApplianceCardEditor extends HTMLElement {
           <div class="row">
             <label>${t(hass, "info_count")}</label>
             <select data-role="info-count-select">
-              ${[0, 1, 2, 3, 4, 5].map((n) => `<option value="${n}" ${n === this._infoCount ? "selected" : ""}>${n}</option>`).join("")}
+              ${Array.from({ length: INFO_MAX + 1 }, (_, n) => n).map((n) => `<option value="${n}" ${n === this._infoCount ? "selected" : ""}>${n}</option>`).join("")}
             </select>
           </div>
         </div>

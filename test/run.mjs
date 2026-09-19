@@ -995,6 +995,64 @@ contains('valeur normale non alteree',
       'sensor.i': { state: '1200', attributes: { friendly_name: 'Spin speed', unit_of_measurement: 'rpm' } } }),
   'Spin speed');
 
+// ── Info line limit ──────────────────────────────────────────────────────────
+// Eight extra lines at most: past that the card is a list. The ninth and after
+// are ignored rather than squeezed in, and past five the lines tighten up.
+const nineInfo = Array.from({ length: 9 }, (_, i) => ({ entity: `sensor.info${i + 1}`, label: `Info ${i + 1}` }));
+const nineStates = unavailableAt => {
+  const st = { 'sensor.w': { state: 'Running', attributes: {} } };
+  for (let i = 1; i <= 9; i++) {
+    st[`sensor.info${i}`] = { state: i === unavailableAt ? 'unavailable' : String(i), attributes: {} };
+  }
+  return st;
+};
+const infoCard = (infos, states) => render({ appliance_type: 'washer', state_entity: 'sensor.w', info_entities: infos }, states);
+const infoCount = h => (h.match(/<span class="label">Info \d<\/span>/g) || []).length;
+const isCompact = h => /<div class="info-lines compact">/.test(h);
+
+const nine = infoCard(nineInfo, nineStates());
+check('lignes d\'info : huit au plus', infoCount(nine), 8);
+contains('lignes d\'info : la huitieme est la', nine, '<span class="label">Info 8</span>');
+check('lignes d\'info : la neuvieme est ignoree', /Info 9/.test(nine), false);
+// The limit applies to the configured list, not to what is left once the
+// unavailable ones are gone: the ninth never steps in for a missing line.
+const nineGap = infoCard(nineInfo, nineStates(2));
+check('lignes d\'info : une ligne indisponible ne fait pas entrer la neuvieme', /Info 9/.test(nineGap), false);
+check('lignes d\'info : sept affichees quand une des huit manque', infoCount(nineGap), 7);
+
+check('lignes d\'info : resserrees au dela de cinq', isCompact(infoCard(nineInfo.slice(0, 6), nineStates())), true);
+check('lignes d\'info : cinq gardent l\'espacement normal', isCompact(infoCard(nineInfo.slice(0, 5), nineStates())), false);
+contains('lignes d\'info : sans resserrage la classe est nue', infoCard(nineInfo.slice(0, 5), nineStates()), '<div class="info-lines">');
+// What counts is what is shown: six configured with one unavailable is five
+// lines on screen, and five keep the normal spacing.
+check('lignes d\'info : une ligne indisponible ne compte pas', isCompact(infoCard(nineInfo.slice(0, 6), nineStates(3))), false);
+// Only the extra info entities count: the program and the remaining time were
+// always there, and a card that did not change must not change its look.
+check('lignes d\'info : programme et temps restant ne comptent pas',
+  isCompact(render({ appliance_type: 'washer', state_entity: 'sensor.w', program_entity: 'sensor.p',
+    remaining_time_entity: 'sensor.r', info_entities: nineInfo.slice(0, 5) },
+    { ...nineStates(), 'sensor.p': { state: 'Cotton', attributes: {} },
+      'sensor.r': { state: '45', attributes: { unit_of_measurement: 'min' } } })), false);
+contains('lignes d\'info : l\'espacement resserre', nine, '.info-lines.compact { gap: 4px; }');
+contains('lignes d\'info : le texte resserre', nine, '.info-lines.compact .info-line { font-size: 0.92em; }');
+contains('lignes d\'info : les icones resserrees', nine, '.info-lines.compact .info-line ha-icon { --mdc-icon-size: 18px; }');
+
+// An ignored line must not redraw the card either.
+const nineCard = build({ appliance_type: 'washer', state_entity: 'sensor.w', info_entities: nineInfo }, nineStates()).card;
+check('lignes d\'info : la huitieme est surveillee', nineCard._watchedEntityIds().includes('sensor.info8'), true);
+check('lignes d\'info : la neuvieme n\'est pas surveillee', nineCard._watchedEntityIds().includes('sensor.info9'), false);
+
+// The editor offers the same eight, and opens a longer YAML list on eight.
+const infoOptions = config => {
+  const ed = newEditor({ state_entity: 'sensor.oven_appliance_state', ...config });
+  const html = markup(ed._root) || ed._root._html || '';
+  const sel = (/data-role="info-count-select">([\s\S]*?)<\/select>/.exec(html) || [, ''])[1];
+  return { ed, values: [...sel.matchAll(/<option value="(\d+)"/g)].map(m => Number(m[1])) };
+};
+check('editeur : le nombre de lignes va de 0 a 8', infoOptions({}).values.join(','), '0,1,2,3,4,5,6,7,8');
+check('editeur : huit lignes s\'ouvrent sur huit', infoOptions({ info_entities: nineInfo.slice(0, 8) }).ed._infoCount, 8);
+check('editeur : une liste plus longue s\'ouvre sur huit', infoOptions({ info_entities: nineInfo }).ed._infoCount, 8);
+
 // ── Info line formatting ─────────────────────────────────────────────────────
 // Home Assistant prints a state the way its entity asks, and its formatter is
 // what applies the display precision chosen in the entity's settings. The raw

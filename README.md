@@ -68,7 +68,7 @@ Only `state_entity` is required, except on a fridge where a probe or a door cont
 | `door_entity` / `door_open_state` / `door_invert` / `door_hide_in_list` | Door sensor, "open" state (default `on`), inversion, and hiding the line (the door is still drawn). |
 | `alerts_entity` | Entity whose every *attribute* at on, true or active shows as an alert. |
 | `connectivity_entity` / `connectivity_connected_state` | Connectivity, as a wifi icon, and the "connected" state (default `on`). |
-| `info_entities` | Up to 5 lines `{ entity, icon?, label?, value_map?, hide_unit? }`. Values read as in Home Assistant, with the entity's display precision. `value_map` relabels raw values (see below), `hide_unit` drops the unit. |
+| `info_entities` | Up to 8 lines `{ entity, icon?, label?, value_map?, hide_unit? }`, any beyond are ignored. Past 5 lines the spacing tightens. Values read as in Home Assistant, with the entity's display precision. `value_map` relabels raw values (see below), `hide_unit` drops the unit. |
 | `start_entity` / `pause_entity` / `resume_entity` / `stop_entity` | Controls, only shown when configured. |
 
 Per type:
