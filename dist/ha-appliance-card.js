@@ -1,4 +1,4 @@
-const CARD_VERSION = "2.5.2";
+const CARD_VERSION = "2.6.0";
 
 console.info(
   "%c HA-APPLIANCE-CARD %c v" + CARD_VERSION + " ",
@@ -90,7 +90,7 @@ const T = {
     zone_residual_entity: "Residual heat entity", zone_name: "Zone name (optional)",
     type_fridge: "Fridge", type_kettle: "Kettle",
     fridge_ok: "Normal", temp_high: "Temperature high",
-    unplugged: "Unplugged", kettle_heating: "Heating",
+    unplugged: "Unplugged", no_power: "No power draw", section_plug: "Plug switch", no_power_after: "Warn after (minutes without power draw)", temperature_decimals: "Temperature precision", precision_auto: "Like the entity", precision_0: "Whole degree", precision_1: "One decimal", kettle_heating: "Heating",
     kettle_off: "Off", fridge_compartment: "Fridge",
     freezer_compartment: "Freezer", ice_maker: "Ice maker",
     since: "for", section_fridge_layout: "Layout",
@@ -196,7 +196,7 @@ const T = {
     zone_residual_entity: "Entit\u00e9 chaleur r\u00e9siduelle", zone_name: "Nom du foyer (optionnel)",
     type_fridge: "R\u00e9frig\u00e9rateur", type_kettle: "Bouilloire",
     fridge_ok: "Normal", temp_high: "Temp\u00e9rature haute",
-    unplugged: "D\u00e9branch\u00e9", kettle_heating: "En chauffe",
+    unplugged: "D\u00e9branch\u00e9", no_power: "Aucune consommation", section_plug: "Interrupteur de la prise", no_power_after: "Alerter apr\u00e8s (minutes sans consommation)", temperature_decimals: "Pr\u00e9cision de la temp\u00e9rature", precision_auto: "Comme l'entit\u00e9", precision_0: "Au degr\u00e9", precision_1: "Au dixi\u00e8me", kettle_heating: "En chauffe",
     kettle_off: "\u00c0 l'arr\u00eat", fridge_compartment: "R\u00e9frig\u00e9rateur",
     freezer_compartment: "Cong\u00e9lateur", ice_maker: "Gla\u00e7ons",
     since: "depuis", section_fridge_layout: "Implantation",
@@ -302,7 +302,7 @@ const T = {
     zone_residual_entity: "\u041e\u0431\u044a\u0435\u043a\u0442 \u043e\u0441\u0442\u0430\u0442\u043e\u0447\u043d\u043e\u0433\u043e \u0442\u0435\u043f\u043b\u0430", zone_name: "\u041d\u0430\u0437\u0432\u0430\u043d\u0438\u0435 \u043a\u043e\u043d\u0444\u043e\u0440\u043a\u0438 (\u043e\u043f\u0446\u0438\u043e\u043d\u0430\u043b\u044c\u043d\u043e)",
     type_fridge: "\u0425\u043e\u043b\u043e\u0434\u0438\u043b\u044c\u043d\u0438\u043a", type_kettle: "\u0427\u0430\u0439\u043d\u0438\u043a",
     fridge_ok: "\u041d\u043e\u0440\u043c\u0430", temp_high: "\u0412\u044b\u0441\u043e\u043a\u0430\u044f \u0442\u0435\u043c\u043f\u0435\u0440\u0430\u0442\u0443\u0440\u0430",
-    unplugged: "\u041e\u0442\u043a\u043b\u044e\u0447\u0451\u043d \u043e\u0442 \u0441\u0435\u0442\u0438", kettle_heating: "\u041d\u0430\u0433\u0440\u0435\u0432",
+    unplugged: "\u041e\u0442\u043a\u043b\u044e\u0447\u0451\u043d \u043e\u0442 \u0441\u0435\u0442\u0438", no_power: "\u041d\u0435\u0442 \u043f\u043e\u0442\u0440\u0435\u0431\u043b\u0435\u043d\u0438\u044f", section_plug: "\u0412\u044b\u043a\u043b\u044e\u0447\u0430\u0442\u0435\u043b\u044c \u0440\u043e\u0437\u0435\u0442\u043a\u0438", no_power_after: "\u041f\u0440\u0435\u0434\u0443\u043f\u0440\u0435\u0434\u0438\u0442\u044c \u0447\u0435\u0440\u0435\u0437 (\u043c\u0438\u043d\u0443\u0442 \u0431\u0435\u0437 \u043f\u043e\u0442\u0440\u0435\u0431\u043b\u0435\u043d\u0438\u044f)", temperature_decimals: "\u0422\u043e\u0447\u043d\u043e\u0441\u0442\u044c \u0442\u0435\u043c\u043f\u0435\u0440\u0430\u0442\u0443\u0440\u044b", precision_auto: "\u041a\u0430\u043a \u0443 \u0441\u0443\u0449\u043d\u043e\u0441\u0442\u0438", precision_0: "\u0414\u043e \u0433\u0440\u0430\u0434\u0443\u0441\u0430", precision_1: "\u0414\u043e \u0434\u0435\u0441\u044f\u0442\u044b\u0445", kettle_heating: "\u041d\u0430\u0433\u0440\u0435\u0432",
     kettle_off: "\u0412\u044b\u043a\u043b\u044e\u0447\u0435\u043d", fridge_compartment: "\u0425\u043e\u043b\u043e\u0434\u0438\u043b\u044c\u043d\u0438\u043a",
     freezer_compartment: "\u041c\u043e\u0440\u043e\u0437\u0438\u043b\u044c\u043d\u0438\u043a", ice_maker: "\u041b\u0435\u0434\u043e\u0433\u0435\u043d\u0435\u0440\u0430\u0442\u043e\u0440",
     since: "\u0443\u0436\u0435", section_fridge_layout: "\u041a\u043e\u043c\u043f\u043e\u043d\u043e\u0432\u043a\u0430",
@@ -408,7 +408,7 @@ const T = {
     zone_residual_entity: "Entit\u00e4t Restw\u00e4rme", zone_name: "Name der Kochzone (optional)",
     type_fridge: "K\u00fchlschrank", type_kettle: "Wasserkocher",
     fridge_ok: "Normal", temp_high: "Temperatur zu hoch",
-    unplugged: "Nicht angeschlossen", kettle_heating: "Heizt",
+    unplugged: "Nicht angeschlossen", no_power: "Kein Verbrauch", section_plug: "Schalter der Steckdose", no_power_after: "Warnen nach (Minuten ohne Verbrauch)", temperature_decimals: "Temperaturgenauigkeit", precision_auto: "Wie die Entit\u00e4t", precision_0: "Ganze Grad", precision_1: "Eine Nachkommastelle", kettle_heating: "Heizt",
     kettle_off: "Aus", fridge_compartment: "K\u00fchlteil",
     freezer_compartment: "Gefrierteil", ice_maker: "Eisbereiter",
     since: "seit", section_fridge_layout: "Bauform",
@@ -514,7 +514,7 @@ const T = {
     zone_residual_entity: "Entidad de calor residual", zone_name: "Nombre de la zona (opcional)",
     type_fridge: "Frigor\u00edfico", type_kettle: "Hervidor",
     fridge_ok: "Normal", temp_high: "Temperatura alta",
-    unplugged: "Desenchufado", kettle_heating: "Calentando",
+    unplugged: "Desenchufado", no_power: "Sin consumo", section_plug: "Interruptor del enchufe", no_power_after: "Avisar tras (minutos sin consumo)", temperature_decimals: "Precisi\u00f3n de la temperatura", precision_auto: "Como la entidad", precision_0: "Al grado", precision_1: "Un decimal", kettle_heating: "Calentando",
     kettle_off: "Apagado", fridge_compartment: "Frigor\u00edfico",
     freezer_compartment: "Congelador", ice_maker: "Fabricador de hielo",
     since: "desde hace", section_fridge_layout: "Distribuci\u00f3n",
@@ -620,7 +620,7 @@ const T = {
     zone_residual_entity: "Entit\u00e0 calore residuo", zone_name: "Nome della zona (opzionale)",
     type_fridge: "Frigorifero", type_kettle: "Bollitore",
     fridge_ok: "Normale", temp_high: "Temperatura alta",
-    unplugged: "Scollegato", kettle_heating: "In riscaldamento",
+    unplugged: "Scollegato", no_power: "Nessun consumo", section_plug: "Interruttore della presa", no_power_after: "Avvisa dopo (minuti senza consumo)", temperature_decimals: "Precisione della temperatura", precision_auto: "Come l'entit\u00e0", precision_0: "Al grado", precision_1: "Un decimale", kettle_heating: "In riscaldamento",
     kettle_off: "Spento", fridge_compartment: "Frigorifero",
     freezer_compartment: "Congelatore", ice_maker: "Fabbricatore di ghiaccio",
     since: "da", section_fridge_layout: "Configurazione",
@@ -726,7 +726,7 @@ const T = {
     zone_residual_entity: "Entiteit restwarmte", zone_name: "Naam van de kookzone (optioneel)",
     type_fridge: "Koelkast", type_kettle: "Waterkoker",
     fridge_ok: "Normaal", temp_high: "Temperatuur te hoog",
-    unplugged: "Niet aangesloten", kettle_heating: "Aan het koken",
+    unplugged: "Niet aangesloten", no_power: "Geen verbruik", section_plug: "Schakelaar van de stekker", no_power_after: "Waarschuwen na (minuten zonder verbruik)", temperature_decimals: "Temperatuurnauwkeurigheid", precision_auto: "Zoals de entiteit", precision_0: "Hele graden", precision_1: "E\u00e9n decimaal", kettle_heating: "Aan het koken",
     kettle_off: "Uit", fridge_compartment: "Koelkast",
     freezer_compartment: "Vriezer", ice_maker: "IJsmaker",
     since: "sinds", section_fridge_layout: "Indeling",
@@ -832,7 +832,7 @@ const T = {
     zone_residual_entity: "Entidade de calor residual", zone_name: "Nome da zona (opcional)",
     type_fridge: "Frigor\u00edfico", type_kettle: "Chaleira",
     fridge_ok: "Normal", temp_high: "Temperatura alta",
-    unplugged: "Desligado da tomada", kettle_heating: "A aquecer",
+    unplugged: "Desligado da tomada", no_power: "Sem consumo", section_plug: "Interruptor da tomada", no_power_after: "Avisar ap\u00f3s (minutos sem consumo)", temperature_decimals: "Precis\u00e3o da temperatura", precision_auto: "Como a entidade", precision_0: "Ao grau", precision_1: "Uma casa decimal", kettle_heating: "A aquecer",
     kettle_off: "Desligada", fridge_compartment: "Frigor\u00edfico",
     freezer_compartment: "Congelador", ice_maker: "M\u00e1quina de gelo",
     since: "h\u00e1", section_fridge_layout: "Configura\u00e7\u00e3o",
@@ -938,7 +938,7 @@ const T = {
     zone_residual_entity: "Entitet f\u00f6r restv\u00e4rme", zone_name: "Kokzonens namn (valfritt)",
     type_fridge: "Kylsk\u00e5p", type_kettle: "Vattenkokare",
     fridge_ok: "Normal", temp_high: "H\u00f6g temperatur",
-    unplugged: "Urkopplad", kettle_heating: "V\u00e4rmer",
+    unplugged: "Urkopplad", no_power: "Ingen f\u00f6rbrukning", section_plug: "Uttagets str\u00f6mbrytare", no_power_after: "Varna efter (minuter utan f\u00f6rbrukning)", temperature_decimals: "Temperaturprecision", precision_auto: "Som entiteten", precision_0: "Hela grader", precision_1: "En decimal", kettle_heating: "V\u00e4rmer",
     kettle_off: "Av", fridge_compartment: "Kyl",
     freezer_compartment: "Frys", ice_maker: "Ismaskin",
     since: "sedan", section_fridge_layout: "Utf\u00f6rande",
@@ -1044,7 +1044,7 @@ const T = {
     zone_residual_entity: "Enhet for restvarme", zone_name: "Navn p\u00e5 kokesonen (valgfritt)",
     type_fridge: "Kj\u00f8leskap", type_kettle: "Vannkoker",
     fridge_ok: "Normal", temp_high: "H\u00f8y temperatur",
-    unplugged: "Frakoblet", kettle_heating: "Varmer",
+    unplugged: "Frakoblet", no_power: "Ingen forbruk", section_plug: "Stikkontaktens bryter", no_power_after: "Varsle etter (minutter uten forbruk)", temperature_decimals: "Temperaturpresisjon", precision_auto: "Som entiteten", precision_0: "Hele grader", precision_1: "\u00c9n desimal", kettle_heating: "Varmer",
     kettle_off: "Av", fridge_compartment: "Kj\u00f8l",
     freezer_compartment: "Frys", ice_maker: "Ismaskin",
     since: "siden", section_fridge_layout: "Utf\u00f8relse",
@@ -1150,7 +1150,7 @@ const T = {
     zone_residual_entity: "Enhed for restvarme", zone_name: "Kogezonens navn (valgfrit)",
     type_fridge: "K\u00f8leskab", type_kettle: "Elkedel",
     fridge_ok: "Normal", temp_high: "H\u00f8j temperatur",
-    unplugged: "Ikke tilsluttet", kettle_heating: "Varmer",
+    unplugged: "Ikke tilsluttet", no_power: "Intet forbrug", section_plug: "Stikkontaktens afbryder", no_power_after: "Advar efter (minutter uden forbrug)", temperature_decimals: "Temperaturpr\u00e6cision", precision_auto: "Som enheden", precision_0: "Hele grader", precision_1: "\u00c9n decimal", kettle_heating: "Varmer",
     kettle_off: "Slukket", fridge_compartment: "K\u00f8l",
     freezer_compartment: "Frys", ice_maker: "Ismaskine",
     since: "siden", section_fridge_layout: "Udf\u00f8relse",
@@ -1256,7 +1256,7 @@ const T = {
     zone_residual_entity: "Encja ciep\u0142a resztkowego", zone_name: "Nazwa pola grzejnego (opcjonalnie)",
     type_fridge: "Lod\u00f3wka", type_kettle: "Czajnik",
     fridge_ok: "Normalnie", temp_high: "Wysoka temperatura",
-    unplugged: "Od\u0142\u0105czona", kettle_heating: "Grzeje",
+    unplugged: "Od\u0142\u0105czona", no_power: "Brak poboru", section_plug: "W\u0142\u0105cznik gniazdka", no_power_after: "Ostrze\u017c po (minutach bez poboru)", temperature_decimals: "Dok\u0142adno\u015b\u0107 temperatury", precision_auto: "Jak encja", precision_0: "Do stopnia", precision_1: "Do dziesi\u0105tych", kettle_heating: "Grzeje",
     kettle_off: "Wy\u0142\u0105czony", fridge_compartment: "Ch\u0142odziarka",
     freezer_compartment: "Zamra\u017carka", ice_maker: "Kostkarka",
     since: "od", section_fridge_layout: "Uk\u0142ad",
@@ -1362,7 +1362,7 @@ const T = {
     zone_residual_entity: "\u4f59\u70ed\u5b9e\u4f53", zone_name: "\u533a\u57df\u540d\u79f0 (\u53ef\u9009)",
     type_fridge: "\u51b0\u7bb1", type_kettle: "\u70e7\u6c34\u58f6",
     fridge_ok: "\u6b63\u5e38", temp_high: "\u6e29\u5ea6\u8fc7\u9ad8",
-    unplugged: "\u5df2\u65ad\u7535", kettle_heating: "\u52a0\u70ed\u4e2d",
+    unplugged: "\u5df2\u65ad\u7535", no_power: "\u65e0\u8017\u7535", section_plug: "\u63d2\u5ea7\u5f00\u5173", no_power_after: "\u65e0\u8017\u7535\u591a\u5c11\u5206\u949f\u540e\u63d0\u9192", temperature_decimals: "\u6e29\u5ea6\u7cbe\u5ea6", precision_auto: "\u8ddf\u968f\u5b9e\u4f53", precision_0: "\u6574\u6570\u5ea6", precision_1: "\u4e00\u4f4d\u5c0f\u6570", kettle_heating: "\u52a0\u70ed\u4e2d",
     kettle_off: "\u5df2\u5173\u95ed", fridge_compartment: "\u51b7\u85cf\u5ba4",
     freezer_compartment: "\u51b7\u51bb\u5ba4", ice_maker: "\u5236\u51b0\u673a",
     since: "\u5df2\u6301\u7eed", section_fridge_layout: "\u7ed3\u6784",
@@ -1468,7 +1468,7 @@ const T = {
     zone_residual_entity: "Entita zbytkov\u00e9ho tepla", zone_name: "N\u00e1zev varn\u00e9 z\u00f3ny (voliteln\u00e9)",
     type_fridge: "Lednice", type_kettle: "Rychlovarn\u00e1 konvice",
     fridge_ok: "V po\u0159\u00e1dku", temp_high: "Vysok\u00e1 teplota",
-    unplugged: "Odpojeno od nap\u00e1jen\u00ed", kettle_heating: "Oh\u0159\u00edv\u00e1n\u00ed",
+    unplugged: "Odpojeno od nap\u00e1jen\u00ed", no_power: "\u017d\u00e1dn\u00e1 spot\u0159eba", section_plug: "Vyp\u00edna\u010d z\u00e1suvky", no_power_after: "Upozornit po (minut\u00e1ch bez spot\u0159eby)", temperature_decimals: "P\u0159esnost teploty", precision_auto: "Jako entita", precision_0: "Na cel\u00e9 stupn\u011b", precision_1: "Na desetiny", kettle_heating: "Oh\u0159\u00edv\u00e1n\u00ed",
     kettle_off: "Vypnuto", fridge_compartment: "Chladni\u010dka",
     freezer_compartment: "Mrazni\u010dka", ice_maker: "V\u00fdrobn\u00edk ledu",
     since: "po dobu", section_fridge_layout: "Uspo\u0159\u00e1d\u00e1n\u00ed",
@@ -1682,6 +1682,9 @@ const STATE_COLORS = {
   temp_high: "var(--warning-color, #ff9800)",
   door_open: "var(--error-color, #f44336)",
   unplugged: "var(--error-color, #f44336)",
+  // A meter at 0 W cannot tell a long compressor pause from a pulled plug:
+  // worth a look, not an alarm.
+  no_power: "var(--warning-color, #ff9800)",
   // Coffee machine consumables. Orange rather than red: the machine is not
   // broken, it is waiting for you.
   water_empty: "var(--warning-color, #ff9800)",
@@ -1875,6 +1878,56 @@ function localNumber(st, hass, entityId) {
   } catch (e) {
     return null;
   }
+}
+
+// A temperature line reads like the entity does everywhere else in Home
+// Assistant, decimals included. Only a reading with no unit of its own (an
+// attribute, or a bare input_number) keeps the whole degree and a borrowed unit.
+function tempText(hass, cfg, entityId, value, unit) {
+  const d = tempDecimals(cfg);
+  if (d !== null) return `${fixedTemp(hass, value, d)} ${unit}`;
+  const st = numericEntity(hass, entityId);
+  if (st && st.attributes.unit_of_measurement) return formatInfoValue(st, hass, null, cfg, entityId);
+  return `${Math.round(value)} ${unit}`;
+}
+
+// temperature_decimals: every reading of the card, screens and lines, in whole
+// degrees unless asked otherwise. "1" gives one decimal, "auto" hands each
+// reading to its entity's own display precision.
+function tempDecimals(cfg) {
+  const d = String(cfg && cfg.temperature_decimals);
+  if (d === "auto") return null;
+  return d === "1" ? 1 : 0;
+}
+function fixedTemp(hass, value, d) {
+  // Rounded first, so -0.3 at the whole degree reads 0 and not -0.
+  const r = Math.round(value * 10 ** d) / 10 ** d;
+  return new Intl.NumberFormat(lang(hass), { minimumFractionDigits: d, maximumFractionDigits: d }).format(r === 0 ? 0 : r);
+}
+function numericEntity(hass, entityId) {
+  const st = entityId ? stateObj(hass, entityId) : null;
+  return st && String(st.state).trim() !== "" && Number.isFinite(Number(st.state)) ? st : null;
+}
+
+// The small screen on an appliance shows the number Home Assistant shows,
+// without the unit: 4,2 on a probe set to one decimal, 4 on one set to none.
+// With a pinned language the formatter speaks the wrong one, so only an
+// explicit precision is honoured there, and the whole degree otherwise.
+function screenTemp(hass, cfg, entityId, value) {
+  const d = tempDecimals(cfg);
+  if (d !== null) return `${fixedTemp(hass, value, d)}\u00b0`;
+  const st = numericEntity(hass, entityId);
+  const unit = st ? st.attributes.unit_of_measurement : "";
+  const pinned = cfg && cfg.language && cfg.language !== "auto";
+  if (unit && !pinned && hass && typeof hass.formatEntityState === "function") {
+    try {
+      const label = String(hass.formatEntityState(st) || "");
+      const text = label.endsWith(unit) ? label.slice(0, -unit.length).trim() : "";
+      if (/\d/.test(text)) return `${text}\u00b0`;
+    } catch (e) { /* fall through */ }
+  }
+  const local = st ? localNumber(st, hass, entityId) : null;
+  return `${local !== null ? local : Math.round(value)}\u00b0`;
 }
 
 function formatInfoValue(st, hass, valueMap, cfg, entityId, hideUnit) {
@@ -2290,8 +2343,9 @@ function belowSinceOf(st) {
   return Number.isFinite(at) && at <= Date.now() ? at : Date.now();
 }
 
-function fridgeHealth(unplugged, doorOpen, tempHigh) {
+function fridgeHealth(unplugged, noPower, doorOpen, tempHigh) {
   if (unplugged) return "unplugged";
+  if (noPower) return "no_power";
   if (doorOpen) return "door_open";
   if (tempHigh) return "temp_high";
   return "fridge_ok";
@@ -3033,6 +3087,8 @@ const ILLUSTRATION_CSS = {
           background: linear-gradient(115deg, transparent 32%, rgba(255, 255, 255, 0.16) 40%, transparent 48%);
         }
         .fr-glass.empty { background: rgba(26, 29, 34, 0.5); }
+        .fr-cav.off, .fr-glass.off { background: #15171b; }
+        .fr-cav.off .fr-rack, .fr-glass.off .fr-rack { filter: brightness(0.35); }
         .fr-racks { position: absolute; left: 8px; right: 17px; top: 21px; bottom: 9px; }
         .fr-rack {
           position: absolute; left: 50%; width: 45px; margin-left: -22.5px; height: 9px; border-bottom: 1.5px solid #8d6e63;
@@ -3552,6 +3608,8 @@ function fridgeHtml(ctx) {
   const zT = layout === "single" ? undefined : ctx.freezerTemp;
   // Bottles lying on wooden racks, seen through the glass or with the door open.
   const racks = [3, 17, 31, 45, 59].map((y) => `<div class="fr-rack" style="top:${y}px"></div>`).join("");
+  // Unplugged or drawing nothing: the light inside is out too.
+  const off = ctx.dark ? " off" : "";
   const fCls = ctx.fridgeWarn ? "warn" : "";
 
   let body = "";
@@ -3560,7 +3618,7 @@ function fridgeHtml(ctx) {
     // A glass door: the display sits above the pane, and no ice maker.
     body = `<div class="fr-handle" style="right:8px;top:24px;bottom:24px"></div>
             ${lcd(fCls, "left:9px;top:5px", fT)}
-            <div class="fr-glass" style="left:6px;right:15px;top:19px;bottom:7px">${racks}</div>`;
+            <div class="fr-glass${off}" style="left:6px;right:15px;top:19px;bottom:7px">${racks}</div>`;
     door = [`<div class="fr-handle" style="right:8px;top:24px;bottom:24px"></div>
             ${lcd(fCls, "left:9px;top:5px", fT)}
             <div class="fr-glass empty" style="left:6px;right:15px;top:19px;bottom:7px"></div>`, ""];
@@ -3616,7 +3674,7 @@ function fridgeHtml(ctx) {
   if (!open && !openFreezer) return `<div class="fr-body">${body}</div>`;
 
   const cav = (style) =>
-    `<div class="fr-cav" style="${style}">
+    `<div class="fr-cav${off}" style="${style}">
        <div class="fr-shelf" style="top:28%"></div><div class="fr-shelf" style="top:62%"></div>
      </div>`;
   const panel = (style, content, on, hinge) =>
@@ -3626,7 +3684,7 @@ function fridgeHtml(ctx) {
     return `<div class="fr-wrap">${cav("inset:0")}${panel("inset:0", door[0], open)}</div>`;
   }
   if (layout === "wine") {
-    return `<div class="fr-wrap"><div class="fr-cav wine" style="inset:0"><div class="fr-racks">${racks}</div></div>${panel("inset:0", door[0], open)}</div>`;
+    return `<div class="fr-wrap"><div class="fr-cav wine${off}" style="inset:0"><div class="fr-racks">${racks}</div></div>${panel("inset:0", door[0], open)}</div>`;
   }
   if (layout === "side_by_side") {
     return `<div class="fr-wrap">
@@ -4431,7 +4489,7 @@ class ApplianceCard extends HTMLElement {
         const v = numericState(hass, entityId);
         return v === null
           ? { value: null, text: "--\u00b0" }
-          : { value: v, text: `${Math.round(v)}\u00b0` };
+          : { value: v, text: screenTemp(hass, cfg, entityId, v) };
       };
       const fridgeT = readTemp(cfg.fridge_temperature_entity);
       const freezerT = readTemp(cfg.freezer_temperature_entity);
@@ -4453,12 +4511,22 @@ class ApplianceCard extends HTMLElement {
 
       // Below the threshold is only worth reporting once it has lasted: a plug
       // emits isolated zeroes while everything is fine.
+      // Only the plug's own switch can say the fridge is unplugged, and it says
+      // so at once. A meter at 0 W only says the fridge draws nothing, which a
+      // compressor pause does too, sometimes for longer than half an hour.
       let unplugged = false;
+      if (cfg.plug_entity) {
+        const pst = stateObj(hass, cfg.plug_entity);
+        unplugged = !!pst && ["off", "false"].includes(String(pst.state).toLowerCase());
+      }
+      const afterMin = parseFloat(cfg.no_power_after);
+      const afterMs = Number.isFinite(afterMin) && afterMin > 0 ? afterMin * 60000 : FRIDGE_UNPLUGGED_AFTER_MS;
+      let noPower = false;
       let belowMs = 0;
       if (cfg.power_entity && watts !== null && isFinite(threshold) && watts < threshold) {
         if (!this._belowSince) this._belowSince = belowSinceOf(stateObj(hass, cfg.power_entity));
         belowMs = Date.now() - this._belowSince;
-        unplugged = belowMs >= FRIDGE_UNPLUGGED_AFTER_MS;
+        noPower = belowMs >= afterMs;
       } else {
         this._belowSince = null;
       }
@@ -4471,7 +4539,7 @@ class ApplianceCard extends HTMLElement {
         this._unplugTimer = setInterval(() => this._render(), FRIDGE_TICK_MS);
       }
 
-      norm = fridgeHealth(unplugged, doorOpen || freezerDoorOpen, tempHigh);
+      norm = fridgeHealth(unplugged, noPower, doorOpen || freezerDoorOpen, tempHigh);
       color = STATE_COLORS[norm];
       stateLabel = t(hass, norm);
 
@@ -4496,20 +4564,20 @@ class ApplianceCard extends HTMLElement {
           }
         }
       }
-      if (cfg.fridge_temperature_entity) {
+      if (cfg.fridge_temperature_entity && !cfg.temperature_hide_in_list) {
         extraLines.push({
           icon: "mdi:thermometer",
           label: t(hass, wine ? "temperature" : "fridge_compartment"),
-          value: fridgeT.value === null ? "--" : `${Math.round(fridgeT.value)} ${unit}`,
+          value: fridgeT.value === null ? "--" : tempText(hass, cfg, cfg.fridge_temperature_entity, fridgeT.value, unit),
           warn: tempHigh,
           entity: cfg.fridge_temperature_entity,
         });
       }
-      if (cfg.freezer_temperature_entity) {
+      if (cfg.freezer_temperature_entity && !cfg.temperature_hide_in_list) {
         extraLines.push({
           icon: "mdi:snowflake",
           label: t(hass, "freezer_compartment"),
-          value: freezerT.value === null ? "--" : `${Math.round(freezerT.value)} ${unit}`,
+          value: freezerT.value === null ? "--" : tempText(hass, cfg, cfg.freezer_temperature_entity, freezerT.value, unit),
           entity: cfg.freezer_temperature_entity,
         });
       }
@@ -4534,6 +4602,7 @@ class ApplianceCard extends HTMLElement {
             ? `${Math.round(watts)} ${unitOf(hass, cfg.power_entity) || "W"} \u00b7 ${t(hass, "since")} ${formatDuration(Math.round(belowMs / 1000), hass)}`
             : `${Math.round(watts)} ${unitOf(hass, cfg.power_entity) || "W"}`,
           warn: unplugged,
+          caution: noPower,
           entity: cfg.power_entity,
         });
       }
@@ -4543,6 +4612,8 @@ class ApplianceCard extends HTMLElement {
         fridgeTemp: fridgeT.text,
         freezerTemp: freezerT.text,
         fridgeWarn: tempHigh || unplugged,
+        // No current, no light: the cabinet goes dark behind the glass.
+        dark: unplugged || noPower,
         freezerDoorOpen,
         ice,
       };
@@ -4692,11 +4763,11 @@ class ApplianceCard extends HTMLElement {
       }
       if (wv !== null) {
         tankTemp = /F/.test(wunit) ? (wv - 32) * 5 / 9 : wv;
-        displayText = `${Math.round(wv)}\u00b0`;
+        displayText = screenTemp(hass, cfg, cfg.temperature_entity, wv);
         extraLines.push({
           icon: "mdi:thermometer-water",
           label: t(hass, "temperature"),
-          value: `${Math.round(wv)} ${wunit}`,
+          value: tempText(hass, cfg, cfg.temperature_entity, wv, wunit),
           entity: cfg.temperature_entity,
         });
       }
@@ -4734,11 +4805,11 @@ class ApplianceCard extends HTMLElement {
       }
       if (bv !== null) {
         const bunit = temperatureUnit(hass, cfg.temperature_entity || cfg.state_entity);
-        displayText = `${Math.round(bv)}\u00b0`;
+        displayText = screenTemp(hass, cfg, cfg.temperature_entity, bv);
         extraLines.push({
           icon: "mdi:thermometer",
           label: t(hass, "temperature"),
-          value: `${Math.round(bv)} ${bunit}`,
+          value: tempText(hass, cfg, cfg.temperature_entity, bv, bunit),
           entity: cfg.temperature_entity,
         });
       }
@@ -4757,11 +4828,11 @@ class ApplianceCard extends HTMLElement {
         const kv = numericState(hass, cfg.temperature_entity);
         const kunit = temperatureUnit(hass, cfg.temperature_entity);
         if (kv !== null) {
-          displayText = `${Math.round(kv)}\u00b0`;
+          displayText = screenTemp(hass, cfg, cfg.temperature_entity, kv);
           extraLines.push({
             icon: "mdi:thermometer-water",
             label: t(hass, "temperature"),
-            value: `${Math.round(kv)} ${kunit}`,
+            value: tempText(hass, cfg, cfg.temperature_entity, kv, kunit),
             entity: cfg.temperature_entity,
           });
         }
@@ -4881,6 +4952,7 @@ class ApplianceCard extends HTMLElement {
         .info-line.clickable { cursor: pointer; }
         .info-line.warn { color: var(--error-color, #f44336); }
         .info-line.warn ha-icon { color: var(--error-color, #f44336); }
+        .info-line.caution, .info-line.caution ha-icon { color: var(--warning-color, #ff9800); }
         .bar-row { margin-top: 4px; }
         .bar { height: 6px; border-radius: 3px; background: var(--divider-color, #e0e0e0); overflow: hidden; }
         .bar-fill { height: 100%; background: ${color}; transition: width 1s linear; }
@@ -4965,7 +5037,7 @@ class ApplianceCard extends HTMLElement {
           .map((l) => ({ ...l, open: !!l.entity && entityUsable(hass, l.entity) }))
           .map(
             (l) =>
-              `<div class="info-line ${l.warn ? "warn" : ""}${l.open ? " clickable" : ""}"${l.open ? ` data-more="${esc(l.entity)}"` : ""}><ha-icon icon="${esc(l.icon)}"></ha-icon><span class="label">${esc(l.label)}</span>${l.value ? `<span>${esc(l.value)}</span>` : ""}</div>`
+              `<div class="info-line ${l.warn ? "warn" : l.caution ? "caution" : ""}${l.open ? " clickable" : ""}"${l.open ? ` data-more="${esc(l.entity)}"` : ""}><ha-icon icon="${esc(l.icon)}"></ha-icon><span class="label">${esc(l.label)}</span>${l.value ? `<span>${esc(l.value)}</span>` : ""}</div>`
           )
           .join("")}</div>`
       : "";
@@ -5103,14 +5175,33 @@ const SECTIONS = [
 
   // Fridge. One option describes both the number of doors and where the
   // freezer sits, because on a real fridge those are the same fact.
-  { field: "fridge_temperature_entity", types: ["fridge"], labelKey: "section_fridge_temperature", includeDomains: ["sensor", "number", "input_number"], extra: (c) =>
-      c._row("fridge_max_temperature", "fridge_max_temperature", { placeholder: c._config.fridge_layout === "wine" ? "18" : "8" }) },
+  { field: "fridge_temperature_entity", types: ["fridge"], labelKey: "section_fridge_temperature", includeDomains: ["sensor", "number", "input_number"], extra: (c, hass) =>
+      c._row("fridge_max_temperature", "fridge_max_temperature", { placeholder: c._config.fridge_layout === "wine" ? "18" : "8" })
+      + c._row("door_hide_in_list", "temperature_hide_in_list", { type: "checkbox" })
+      + c._row("temperature_decimals", "temperature_decimals", {
+        type: "select",
+        options: [
+          { value: "0", label: t(hass, "precision_0") },
+          { value: "1", label: t(hass, "precision_1") },
+          { value: "auto", label: t(hass, "precision_auto") },
+        ],
+      }) },
   { field: "freezer_temperature_entity", types: ["fridge"], labelKey: "section_freezer_temperature", includeDomains: ["sensor", "number", "input_number"] },
   { field: "freezer_door_entity", types: ["fridge"], labelKey: "section_freezer_door", includeDomains: ["binary_sensor", "sensor"] },
   { field: "ice_maker_entity", types: ["fridge"], labelKey: "section_ice_maker", includeDomains: ["switch", "binary_sensor", "sensor", "input_boolean"] },
+  // The smart plug's switch: off means unplugged, with no half hour to wait.
+  { field: "plug_entity", types: ["fridge"], labelKey: "section_plug", includeDomains: ["switch", "binary_sensor", "input_boolean"] },
 
   // Kettle
-  { field: "temperature_entity", types: ["kettle", "water_heater"], labelKey: "section_kettle_temperature", includeDomains: ["sensor", "number", "input_number"] },
+  { field: "temperature_entity", types: ["kettle", "water_heater"], labelKey: "section_kettle_temperature", includeDomains: ["sensor", "number", "input_number"], extra: (c, hass) =>
+      c._row("temperature_decimals", "temperature_decimals", {
+        type: "select",
+        options: [
+          { value: "0", label: t(hass, "precision_0") },
+          { value: "1", label: t(hass, "precision_1") },
+          { value: "auto", label: t(hass, "precision_auto") },
+        ],
+      }) },
 
   // Water heater: whether it heats, when the state entity cannot say.
   { field: "heating_entity", types: ["water_heater"], labelKey: "section_heating", includeDomains: ["binary_sensor", "sensor", "switch", "input_boolean"] },
@@ -5118,7 +5209,15 @@ const SECTIONS = [
   // Boiler
   { field: "heating_entity", types: ["boiler"], labelKey: "section_space_heating", includeDomains: ["binary_sensor", "sensor", "switch", "input_boolean"] },
   { field: "hot_water_entity", types: ["boiler"], labelKey: "section_hot_water", includeDomains: ["binary_sensor", "sensor", "switch", "input_boolean"] },
-  { field: "temperature_entity", types: ["boiler"], labelKey: "section_flow_temperature", includeDomains: ["sensor", "number", "input_number"] },
+  { field: "temperature_entity", types: ["boiler"], labelKey: "section_flow_temperature", includeDomains: ["sensor", "number", "input_number"], extra: (c, hass) =>
+      c._row("temperature_decimals", "temperature_decimals", {
+        type: "select",
+        options: [
+          { value: "0", label: t(hass, "precision_0") },
+          { value: "1", label: t(hass, "precision_1") },
+          { value: "auto", label: t(hass, "precision_auto") },
+        ],
+      }) },
 
   // Cooker
   { field: "speed_entity", types: ["cooker"], labelKey: "section_speed", includeDomains: ["sensor", "number", "select", "input_number", "input_select"] },
@@ -5139,7 +5238,8 @@ const SECTIONS = [
 
   // Any type: a plug's power meter, optionally driving the state itself.
   { field: "power_entity", types: APPLIANCE_TYPES, labelKey: "section_power", includeDomains: ["sensor"], extra: (c) =>
-      c._row("power_on_threshold", "power_on_threshold", { placeholder: caps(c._currentType()).fridgeTemp ? "1" : "10" }) },
+      c._row("power_on_threshold", "power_on_threshold", { placeholder: caps(c._currentType()).fridgeTemp ? "1" : "10" })
+      + (caps(c._currentType()).fridgeTemp ? c._row("no_power_after", "no_power_after", { placeholder: "30" }) : "") },
 
   { field: "alerts_entity", types: APPLIANCE_TYPES, labelKey: "section_alerts", includeDomains: ["sensor", "binary_sensor"] },
   { field: "connectivity_entity", types: APPLIANCE_TYPES, labelKey: "section_connectivity", includeDomains: ["binary_sensor", "sensor"], extra: (c, hass) => c._row("connectivity_connected_state", "connectivity_connected_state", { placeholder: "on" }) },
@@ -5788,9 +5888,17 @@ class ApplianceCardEditor extends HTMLElement {
             delete this._config.door_invert;
             delete this._config.door_hide_in_list;
           }
-          if (field === "fridge_temperature_entity") delete this._config.fridge_max_temperature;
+          if (field === "fridge_temperature_entity") {
+            delete this._config.fridge_max_temperature;
+            delete this._config.temperature_hide_in_list;
+            delete this._config.temperature_decimals;
+          }
+          if (field === "temperature_entity") delete this._config.temperature_decimals;
           if (field === "connectivity_entity") delete this._config.connectivity_connected_state;
-          if (field === "power_entity") delete this._config.power_on_threshold;
+          if (field === "power_entity") {
+            delete this._config.power_on_threshold;
+            delete this._config.no_power_after;
+          }
           this.dispatchEvent(new CustomEvent("config-changed", { detail: { config: this._config } }));
         }
         this._build();

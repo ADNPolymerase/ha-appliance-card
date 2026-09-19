@@ -1162,7 +1162,13 @@ check('frigo : 10 min sous le seuil, toujours Normal',
 freezeClock(new Date(T0 + 31 * 60 * 1000).toISOString());
 const frUnplugged = rerender(frLow.card,
   withStates({ 'sensor.plug': { state: '0', attributes: { unit_of_measurement: 'W' } } }));
-check('frigo : 31 min sous le seuil, debranche', stateLine(frUnplugged), 'Unplugged');
+// A meter alone cannot tell a long pause from a pulled plug: it warns, it does not diagnose.
+check('frigo : 31 min sous le seuil, aucune consommation', stateLine(frUnplugged), 'No power draw');
+check('frigo : aucune consommation en orange', stateColor(frUnplugged), 'var(--warning-color, #ff9800)');
+check('frigo : aucune consommation, la ligne de puissance en orange',
+  /<div class="info-line caution[^"]*"[^>]*><ha-icon icon="[^"]*"><\/ha-icon><span class="label">Power<\/span>/.test(frUnplugged), true);
+contains('frigo : la ligne orange a sa couleur', frUnplugged, '.info-line.caution, .info-line.caution ha-icon { color: var(--warning-color, #ff9800); }');
+check('frigo : aucune consommation, l\'ecran du frigo reste normal', /class="fr-lcd warn"/.test(frUnplugged), false);
 contains('frigo debranche : la duree accompagne la puissance', infoLine(frUnplugged, 'Power'), 'for');
 
 // One reading back above the threshold clears the latch: a compressor restart
@@ -1174,11 +1180,11 @@ const frBoth = build(fridgeCfg({ door_entity: 'binary_sensor.fr_d', power_entity
   withStates({ 'sensor.plug': { state: '0', attributes: { unit_of_measurement: 'W' } },
                'binary_sensor.fr_d': { state: 'on', attributes: {} } }));
 freezeClock(new Date(T0 + 62 * 60 * 1000).toISOString());
-check('frigo : debranche passe devant une porte ouverte',
+check('frigo : aucune consommation passe devant une porte ouverte',
   stateLine(rerender(frBoth.card,
     withStates({ 'sensor.plug': { state: '0', attributes: { unit_of_measurement: 'W' } },
                  'binary_sensor.fr_d': { state: 'on', attributes: {} } }))),
-  'Unplugged');
+  'No power draw');
 freezeClock(new Date(T0 + 31 * 60 * 1000).toISOString());
 
 const frBack = rerender(frLow.card, FRIDGE);
@@ -1234,6 +1240,153 @@ check('congelateur en bas : la porte du frigo est celle du haut',
   panels(openFridgeDoor('freezer_bottom')).join(','), 'swung,shut');
 check('congelateur en haut : la porte du frigo est celle du bas',
   panels(openFridgeDoor('freezer_top')).join(','), 'shut,swung');
+
+// Whole degrees by default, on the screens and in the lines: an update must
+// not change what a dashboard shows. temperature_decimals: auto hands each
+// reading to its entity, decimals included.
+{
+  const fmt = st => st.state === '4.2' ? '4,2 °C' : st.state === '-20.6' ? '-20,6 °C' : st.state;
+  const fridgeWith = (extra) => {
+    const c = new Card();
+    c.setConfig({ type: 'custom:ha-appliance-card', appliance_type: 'fridge', fridge_temperature_entity: 'sensor.fr_t',
+      freezer_temperature_entity: 'sensor.cg_t', ...extra });
+    c._hass = { ...HASS(withStates({ 'sensor.fr_t': { state: '4.2', attributes: { unit_of_measurement: '°C' } },
+      'sensor.cg_t': { state: '-20.6', attributes: { unit_of_measurement: '°C' } } })), formatEntityState: fmt };
+    c._render();
+    return markup(c);
+  };
+  const def = fridgeWith({});
+  check('temperature par defaut : le frigo au degre', infoLine(def, 'Fridge'), '4 °C');
+  check('temperature par defaut : le congelateur au degre', infoLine(def, 'Freezer'), '-21 °C');
+  contains('temperature par defaut : l\'ecran au degre', def, '>4°</div>');
+  contains('temperature par defaut : l\'ecran du congelateur au degre', def, '>-21°</div>');
+  const h = fridgeWith({ temperature_decimals: 'auto' });
+  check('temperature auto : le frigo garde ses decimales', infoLine(h, 'Fridge'), '4,2 °C');
+  check('temperature auto : le congelateur aussi', infoLine(h, 'Freezer'), '-20,6 °C');
+  contains('temperature auto : l\'ecran suit la precision de l\'entite', h, '>4,2°</div>');
+  contains('temperature auto : l\'ecran du congelateur aussi', h, '>-20,6°</div>');
+  check('temperature auto : sans formateur, la valeur telle quelle', infoLine(render(fridgeCfg({ fridge_temperature_entity: 'sensor.fr_t',
+    temperature_decimals: 'auto' }), withStates({ 'sensor.fr_t': { state: '4.2', attributes: { unit_of_measurement: '°C' } } })), 'Fridge'), '4.2 °C');
+  check('temperature auto : sans unite, le degre entier et l\'unite de HA', infoLine(render(fridgeCfg({ fridge_temperature_entity: 'input_number.fr',
+    temperature_decimals: 'auto' }), withStates({ 'input_number.fr': { state: '4.2', attributes: {} } })), 'Fridge'), '4 °C');
+  const blf = (extra = {}) => render({ appliance_type: 'boiler', state_entity: 'sensor.bl', temperature_entity: 'sensor.flow', ...extra },
+    { 'sensor.bl': { state: 'CH', attributes: {} }, 'sensor.flow': { state: '56.5', attributes: { unit_of_measurement: '°C' } } });
+  check('temperature par defaut : la chaudiere au degre', infoLine(blf(), 'Temperature'), '57 °C');
+  contains('temperature par defaut : l\'ecran de la chaudiere au degre', blf(), '<div class="bl-lcd">57°</div>');
+  check('temperature auto : la chaudiere aussi', infoLine(blf({ temperature_decimals: 'auto' }), 'Temperature'), '56.5 °C');
+  const ktf = (extra = {}) => render({ appliance_type: 'kettle', state_entity: 'switch.kt', temperature_entity: 'sensor.kt_t', ...extra },
+    { 'switch.kt': { state: 'on', attributes: {} }, 'sensor.kt_t': { state: '71.4', attributes: { unit_of_measurement: '°C' } } });
+  check('temperature par defaut : la bouilloire au degre', infoLine(ktf(), 'Temperature'), '71 °C');
+  check('temperature auto : la bouilloire aussi', infoLine(ktf({ temperature_decimals: 'auto' }), 'Temperature'), '71.4 °C');
+  const whf = (extra = {}) => render({ appliance_type: 'water_heater', state_entity: 'switch.wh', temperature_entity: 'sensor.wh_t', ...extra },
+    { 'switch.wh': { state: 'on', attributes: {} }, 'sensor.wh_t': { state: '48.5', attributes: { unit_of_measurement: '°C' } } });
+  check('temperature par defaut : le chauffe-eau au degre', infoLine(whf(), 'Temperature'), '49 °C');
+  check('temperature auto : le chauffe-eau aussi', infoLine(whf({ temperature_decimals: 'auto' }), 'Temperature'), '48.5 °C');
+  const whAttr = render({ appliance_type: 'water_heater', state_entity: 'water_heater.tank', temperature_decimals: 'auto' },
+    { 'water_heater.tank': { state: 'eco', attributes: { current_temperature: 47.6 } } });
+  check('temperature auto : un attribut garde le degre entier', infoLine(whAttr, 'Temperature'), '48 °C');
+}
+
+// temperature_decimals: whole degree by default, one decimal, or each reading's
+// own entity precision, on the screens and in the lines alike.
+{
+  const fmt = st => ({ '4.2': '4,2 \u00b0C', '-20.6': '-20,6 \u00b0C', '56.5': '56,5 \u00b0C', '71.4': '71,4 \u00b0C', '48.5': '48,5 \u00b0C' })[st.state] || st.state;
+  const withFmt = (config, states, entities = {}) => {
+    const c = new Card();
+    c.setConfig({ type: 'custom:ha-appliance-card', ...config });
+    c._hass = { ...HASS(states), entities, formatEntityState: fmt };
+    c._render();
+    return markup(c);
+  };
+  const T = (v) => ({ state: v, attributes: { unit_of_measurement: '\u00b0C' } });
+  const frCfg = (extra = {}) => ({ appliance_type: 'fridge', fridge_temperature_entity: 'sensor.fr_t',
+    freezer_temperature_entity: 'sensor.cg_t', ...extra });
+  const frSt = (a = '4.2', b = '-20.6') => withStates({ 'sensor.fr_t': T(a), 'sensor.cg_t': T(b) });
+  const deg = withFmt(frCfg({ temperature_decimals: '0' }), frSt());
+  contains('precision au degre : l\'ecran', deg, '>4\u00b0</div>');
+  contains('precision au degre : le congelateur arrondit', deg, '>-21\u00b0</div>');
+  check('precision au degre : la ligne', infoLine(deg, 'Fridge'), '4 \u00b0C');
+  const dix = withFmt(frCfg({ temperature_decimals: '1' }), frSt('4', '-18'));
+  contains('precision au dixieme : l\'ecran', dix, '>4.0\u00b0</div>');
+  check('precision au dixieme : la ligne', infoLine(dix, 'Fridge'), '4.0 \u00b0C');
+  check('precision au dixieme : le congelateur', infoLine(dix, 'Freezer'), '-18.0 \u00b0C');
+  check('precision en nombre YAML : 0 compris', infoLine(withFmt(frCfg({ temperature_decimals: 0 }), frSt()), 'Fridge'), '4 \u00b0C');
+  check('precision en nombre YAML : 1 compris', infoLine(withFmt(frCfg({ temperature_decimals: 1 }), frSt('4')), 'Fridge'), '4.0 \u00b0C');
+  check('precision auto : comme l\'entite', infoLine(withFmt(frCfg({ temperature_decimals: 'auto' }), frSt()), 'Fridge'), '4,2 \u00b0C');
+  check('precision inconnue : au degre', infoLine(withFmt(frCfg({ temperature_decimals: '2' }), frSt()), 'Fridge'), '4 \u00b0C');
+  const zero = withFmt(frCfg({ temperature_decimals: '0' }), frSt('-0.3'));
+  contains('precision au degre : -0,3 se lit 0', zero, '>0\u00b0</div>');
+  check('precision au degre : jamais -0', /-0\u00b0/.test(zero), false);
+  // A pinned language: the formatter would answer in the wrong one.
+  check('langue forcee : la precision de l\'entite', /(>4,2\u00b0<\/div>)/.test(withFmt(frCfg({ language: 'fr', temperature_decimals: 'auto' }), frSt(),
+    { 'sensor.fr_t': { display_precision: 1 } })), true);
+  check('langue forcee : sans precision, le degre entier', /(>4\u00b0<\/div>)/.test(withFmt(frCfg({ language: 'fr', temperature_decimals: 'auto' }), frSt())), true);
+  // Every appliance with a temperature, screens included.
+  const blf = withFmt({ appliance_type: 'boiler', state_entity: 'sensor.bl', temperature_entity: 'sensor.flow', temperature_decimals: 'auto' },
+    { 'sensor.bl': { state: 'CH', attributes: {} }, 'sensor.flow': T('56.5') });
+  contains('chaudiere : l\'ecran suit l\'entite', blf, '<div class="bl-lcd">56,5\u00b0</div>');
+  const blDeg = withFmt({ appliance_type: 'boiler', state_entity: 'sensor.bl', temperature_entity: 'sensor.flow', temperature_decimals: '0' },
+    { 'sensor.bl': { state: 'CH', attributes: {} }, 'sensor.flow': T('56.5') });
+  contains('chaudiere au degre : l\'ecran', blDeg, '<div class="bl-lcd">57\u00b0</div>');
+  check('chaudiere au degre : la ligne', infoLine(blDeg, 'Temperature'), '57 \u00b0C');
+  contains('bouilloire : l\'ecran suit l\'entite', withFmt({ appliance_type: 'kettle', state_entity: 'switch.kt', temperature_entity: 'sensor.kt_t', temperature_decimals: 'auto' },
+    { 'switch.kt': { state: 'on', attributes: {} }, 'sensor.kt_t': T('71.4') }), '>71,4\u00b0</div>');
+  contains('chauffe-eau : l\'ecran suit l\'entite', withFmt({ appliance_type: 'water_heater', state_entity: 'switch.wh', temperature_entity: 'sensor.wh_t', temperature_decimals: 'auto' },
+    { 'switch.wh': { state: 'on', attributes: {} }, 'sensor.wh_t': T('48.5') }), '>48,5\u00b0</div>');
+  const whAttr = withFmt({ appliance_type: 'water_heater', state_entity: 'water_heater.tank', temperature_decimals: '1' },
+    { 'water_heater.tank': { state: 'eco', attributes: { current_temperature: 47.6 } } });
+  contains('chauffe-eau : un attribut au dixieme, l\'ecran', whAttr, '>47.6\u00b0</div>');
+  check('chauffe-eau : un attribut au dixieme, la ligne', infoLine(whAttr, 'Temperature'), '47.6 \u00b0C');
+  // A probe that stopped reporting hands over to the tank's own reading, not
+  // its word "unknown".
+  const whGone = withFmt({ appliance_type: 'water_heater', state_entity: 'water_heater.tank', temperature_entity: 'sensor.wh_t', temperature_decimals: 'auto' },
+    { 'water_heater.tank': { state: 'eco', attributes: { current_temperature: 47.6 } },
+      'sensor.wh_t': { state: 'unknown', attributes: { unit_of_measurement: '\u00b0C' } } });
+  check('sonde muette : la ligne reprend la cuve', infoLine(whGone, 'Temperature'), '48 \u00b0C');
+  contains('sonde muette : l\'ecran aussi', whGone, '>48\u00b0</div>');
+}
+
+// No current, no light: the cabinet goes dark behind the glass, and inside
+// any fridge whose door is open.
+{
+  const cave = (extra, states) => render({ appliance_type: 'fridge', fridge_layout: 'wine', fridge_temperature_entity: 'sensor.fr_t',
+    power_entity: 'sensor.p', ...extra }, { 'sensor.fr_t': FRIDGE['sensor.fr_t'], ...states });
+  const lit = cave({ plug_entity: 'switch.plug' }, { 'sensor.p': { state: '14', attributes: { unit_of_measurement: 'W' } },
+    'switch.plug': { state: 'on', attributes: {} } });
+  check('cave allumee : la vitre est eclairee', /class="fr-glass"/.test(lit), true);
+  check('cave allumee : pas d\'extinction', /fr-glass off/.test(lit), false);
+  const unpl = cave({ plug_entity: 'switch.plug' }, { 'sensor.p': { state: '0', attributes: { unit_of_measurement: 'W' } },
+    'switch.plug': { state: 'off', attributes: {} } });
+  check('cave debranchee : la lumiere s\'eteint', /class="fr-glass off"/.test(unpl), true);
+  const zeroFrom = m => ({ 'sensor.p': { state: '0', attributes: { unit_of_measurement: 'W' },
+    last_changed: new Date(now() - m * 60000).toISOString() } });
+  const zeroW = cave({}, zeroFrom(45));
+  check('cave a 0 W : la lumiere s\'eteint aussi', /class="fr-glass off"/.test(zeroW), true);
+  check('cave a 0 W depuis 10 min : encore allumee', /fr-glass off/.test(cave({}, zeroFrom(10))), false);
+  const openOff = render({ appliance_type: 'fridge', fridge_layout: 'wine', door_entity: 'binary_sensor.fr_d', plug_entity: 'switch.plug' },
+    { 'binary_sensor.fr_d': { state: 'on', attributes: {} }, 'switch.plug': { state: 'off', attributes: {} } });
+  check('cave debranchee ouverte : l\'interieur est noir', /class="fr-cav wine off"/.test(openOff), true);
+  const single = (sw) => render({ appliance_type: 'fridge', fridge_layout: 'single', door_entity: 'binary_sensor.fr_d', plug_entity: 'switch.plug' },
+    { 'binary_sensor.fr_d': { state: 'on', attributes: {} }, 'switch.plug': { state: sw, attributes: {} } });
+  check('frigo debranche ouvert : l\'interieur est noir', /class="fr-cav off"/.test(single('off')), true);
+  check('frigo branche ouvert : l\'interieur est eclaire', /class="fr-cav"/.test(single('on')), true);
+  contains('lumiere eteinte : sa couleur', lit, '.fr-cav.off, .fr-glass.off { background: #15171b; }');
+  contains('lumiere eteinte : les bouteilles dans le noir', lit, '.fr-cav.off .fr-rack, .fr-glass.off .fr-rack { filter: brightness(0.35); }');
+}
+
+// Hidden from the list, still on the doors: an American fridge already shows
+// both readings on its drawing.
+{
+  const hot = render(fridgeCfg({ fridge_temperature_entity: 'sensor.fr_t', freezer_temperature_entity: 'sensor.cg_t',
+    door_entity: 'binary_sensor.fr_d', temperature_hide_in_list: true, fridge_layout: 'side_by_side' }),
+    withStates({ 'sensor.fr_t': { state: '11', attributes: { unit_of_measurement: '°C' } } }));
+  check('masquer les temperatures : plus de ligne frigo', infoLine(hot, 'Fridge'), null);
+  check('masquer les temperatures : plus de ligne congelateur', infoLine(hot, 'Freezer'), null);
+  contains('masquer les temperatures : toujours sur les portes', hot, '>11°</div>');
+  contains('masquer les temperatures : et le congelateur', hot, '>-18°</div>');
+  check('masquer les temperatures : l\'alerte reste', stateLine(hot), 'Temperature high');
+  check('masquer les temperatures : la porte reste dans la liste', /Door closed/.test(hot), true);
+}
 
 // A wine cooler: one glass door, bottles lying on wooden racks behind it,
 // and a cellar temperature that would alarm on a fridge.
@@ -1782,6 +1935,49 @@ check('editeur : une cave a vin propose 18 degres',
 check('editeur : un frigo garde 8 degres',
   /data-field="fridge_max_temperature"[^>]*placeholder="8"|placeholder="8"[^>]*data-field="fridge_max_temperature"/
     .test(edLayout({ fridge_layout: 'single', fridge_temperature_entity: 'sensor.fr_t' })), true);
+check('editeur : l\'interrupteur de la prise est propose sur un frigo',
+  [...edLayout({}).matchAll(/data-toggle="([^"]+)"/g)].map(m => m[1]).includes('plug_entity'), true);
+check('editeur : pas sur un lave-linge',
+  /data-toggle="plug_entity"/.test(markup(newEditor({ appliance_type: 'washer', state_entity: 'sensor.w' }))), false);
+check('editeur : le delai sans consommation sur un frigo',
+  /data-field="no_power_after"[^>]*placeholder="30"|placeholder="30"[^>]*data-field="no_power_after"/
+    .test(edLayout({ power_entity: 'sensor.p' })), true);
+check('editeur : pas de delai sur un lave-linge',
+  /data-field="no_power_after"/.test(markup(newEditor({ appliance_type: 'washer', state_entity: 'sensor.w', power_entity: 'sensor.p' }))), false);
+check('editeur : masquer les temperatures sous la sonde du frigo',
+  /data-field="temperature_hide_in_list"/.test(edLayout({ fridge_temperature_entity: 'sensor.fr_t' })), true);
+{
+  const ed = newEditor({ appliance_type: 'fridge', power_entity: 'sensor.p', no_power_after: 90,
+    fridge_temperature_entity: 'sensor.fr_t', temperature_hide_in_list: true });
+  for (const [field, gone] of [['power_entity', 'no_power_after'], ['fridge_temperature_entity', 'temperature_hide_in_list']]) {
+    const tg = ed._root.querySelectorAll('[data-toggle]').find(n => n.getAttribute('data-toggle') === field);
+    tg.checked = false;
+    fire(tg, 'change', { target: tg });
+    check(`editeur : retirer ${field} efface ${gone}`, gone in (ed.events.at(-1)?.detail?.config || { [gone]: 1 }), false);
+  }
+}
+{
+  // Whole degree first: an unset option shows the default.
+  check('editeur : le degre entier en tete de la precision',
+    /<select data-field="temperature_decimals"><option value="0" >[^<]*<\/option><option value="1" >[^<]*<\/option><option value="auto" >/
+      .test(edLayout({ fridge_temperature_entity: 'sensor.fr_t' })), true);
+  const hasPrecision = html => /data-field="temperature_decimals"/.test(html)
+    && ['auto', '0', '1'].every(v => new RegExp(`data-field="temperature_decimals"[\\s\\S]*?value="${v}"`).test(html));
+  check('editeur : la precision sous la sonde du frigo', hasPrecision(edLayout({ fridge_temperature_entity: 'sensor.fr_t' })), true);
+  for (const type of ['kettle', 'water_heater', 'boiler']) {
+    check(`editeur : la precision sur ${type}`, hasPrecision(markup(newEditor({ appliance_type: type,
+      state_entity: 'sensor.oven_appliance_state', temperature_entity: 'sensor.t' }))), true);
+  }
+  check('editeur : pas de precision sur un lave-linge', /data-field="temperature_decimals"/.test(markup(newEditor({ appliance_type: 'washer',
+    state_entity: 'sensor.w', temperature_entity: 'sensor.t' }))), false);
+  for (const [type, field] of [['fridge', 'fridge_temperature_entity'], ['kettle', 'temperature_entity']]) {
+    const ed = newEditor({ appliance_type: type, state_entity: 'sensor.oven_appliance_state', [field]: 'sensor.t', temperature_decimals: '1' });
+    const tg = ed._root.querySelectorAll('[data-toggle]').find(n => n.getAttribute('data-toggle') === field);
+    tg.checked = false;
+    fire(tg, 'change', { target: tg });
+    check(`editeur : retirer ${field} efface la precision`, 'temperature_decimals' in (ed.events.at(-1)?.detail?.config || { temperature_decimals: 1 }), false);
+  }
+}
 // And it belongs to the fridge alone.
 check('editeur : aucune implantation sur un lave-linge',
   /data-field="fridge_layout"/.test(markup(newEditor({ appliance_type: 'washer', state_entity: 'sensor.w' }))), false);
@@ -2081,7 +2277,7 @@ fr.card.hass = HASS(flat());
 contains('frigo : la duree avance malgre une prise immobile', dur(), '12 min');
 freezeClock(new Date(T1 + 31 * 60000).toISOString());
 fr.card.hass = HASS(flat());
-check('frigo : le debranchement se declenche toujours', stateLine(markup(fr.card)), 'Unplugged');
+check('frigo : l\'alerte se declenche toujours', stateLine(markup(fr.card)), 'No power draw');
 fr.card.disconnectedCallback();
 
 // A dashboard rebuilds its cards at every visit, a phone app at each launch,
@@ -2092,7 +2288,7 @@ const TP = freezeClock('2026-09-02T08:00:00Z');
 const plugFrom = (minutesAgo) => ({ 'sensor.p': { state: '0', attributes: { unit_of_measurement: 'W' },
   last_changed: new Date(TP - minutesAgo * 60000).toISOString() } });
 const frFresh = build({ appliance_type: 'fridge', power_entity: 'sensor.p' }, plugFrom(45));
-check('frigo : une carte neuve reprend le compte depuis le changement', stateLine(frFresh.html), 'Unplugged');
+check('frigo : une carte neuve reprend le compte depuis le changement', stateLine(frFresh.html), 'No power draw');
 contains('frigo : la duree part du changement d\'etat', infoLine(frFresh.html, 'Power'), '45 min');
 const frRecent = build({ appliance_type: 'fridge', power_entity: 'sensor.p' }, plugFrom(10));
 check('frigo : 10 min depuis le changement, toujours Normal', stateLine(frRecent.html), 'Normal');
@@ -2102,8 +2298,49 @@ const frAhead = build({ appliance_type: 'fridge', power_entity: 'sensor.p' }, pl
 check('frigo : un horodatage dans le futur, Normal au depart', stateLine(frAhead.html), 'Normal');
 freezeClock(new Date(TP + 31 * 60000).toISOString());
 check('frigo : un horodatage dans le futur compte depuis maintenant',
-  stateLine(rerender(frAhead.card, plugFrom(-60))), 'Unplugged');
+  stateLine(rerender(frAhead.card, plugFrom(-60))), 'No power draw');
 for (const f of [frFresh, frRecent, frAhead]) f.card.disconnectedCallback();
+freezeClock(new Date(T1).toISOString());
+
+// The plug's own switch is the only thing that can say unplugged, and it says
+// it at once. Switched on, a long 0 W is only a missing draw.
+freezeClock(new Date(TP).toISOString());
+{
+  const withPlug = (sw, minutesAgo, extra = {}) => build({ appliance_type: 'fridge', power_entity: 'sensor.p',
+    plug_entity: 'switch.plug', fridge_temperature_entity: 'sensor.fr_t', ...extra },
+    { ...plugFrom(minutesAgo), 'switch.plug': { state: sw, attributes: {} }, 'sensor.fr_t': FRIDGE['sensor.fr_t'],
+      'binary_sensor.fr_d': { state: 'on', attributes: {} } });
+  const off = withPlug('off', 2);
+  check('prise coupee : debranche tout de suite', stateLine(off.html), 'Unplugged');
+  check('prise coupee : en rouge', stateColor(off.html), 'var(--error-color, #f44336)');
+  check('prise coupee : l\'ecran du frigo passe en alerte', /class="fr-lcd warn"/.test(off.html), true);
+  check('prise coupee : la ligne de puissance en rouge', /<div class="info-line warn[^"]*"[^>]*><ha-icon icon="[^"]*"><\/ha-icon><span class="label">Power<\/span>/.test(off.html), true);
+  check('prise coupee : passe devant une porte ouverte',
+    stateLine(withPlug('off', 2, { door_entity: 'binary_sensor.fr_d' }).html), 'Unplugged');
+  const offDraw = build({ appliance_type: 'fridge', power_entity: 'sensor.p', plug_entity: 'switch.plug' },
+    { 'sensor.p': { state: '72', attributes: { unit_of_measurement: 'W' } }, 'switch.plug': { state: 'off', attributes: {} } });
+  check('prise coupee : meme si le compteur dit autre chose', stateLine(offDraw.html), 'Unplugged');
+  const on45 = withPlug('on', 45);
+  check('prise allumee, 45 min a 0 W : aucune consommation', stateLine(on45.html), 'No power draw');
+  check('prise allumee : l\'ecran du frigo reste normal', /class="fr-lcd warn"/.test(on45.html), false);
+  check('prise allumee, 10 min a 0 W : Normal', stateLine(withPlug('on', 10).html), 'Normal');
+  const gone = build({ appliance_type: 'fridge', power_entity: 'sensor.p', plug_entity: 'switch.plug' },
+    { 'sensor.p': { state: '72', attributes: { unit_of_measurement: 'W' } }, 'switch.plug': { state: 'unavailable', attributes: {} } });
+  check('prise injoignable : ignoree', stateLine(gone.html), 'Normal');
+  // The delay is the owner's to set: a chest freezer can rest an hour.
+  const delay = (v, minutesAgo) => stateLine(build({ appliance_type: 'fridge', power_entity: 'sensor.p', no_power_after: v },
+    plugFrom(minutesAgo)).html);
+  check('delai 90 min : a 45 min, Normal', delay(90, 45), 'Normal');
+  check('delai 90 min : a 91 min, alerte', delay(90, 91), 'No power draw');
+  check('delai 90 en texte : compris', delay('90', 45), 'Normal');
+  check('delai 5 min : a 6 min, alerte', delay(5, 6), 'No power draw');
+  for (const bad of ['abc', 0, -5, '']) check(`delai invalide ${JSON.stringify(bad)} : 30 min par defaut`, delay(bad, 31), 'No power draw');
+  check('delai invalide : pas avant 30 min', delay('abc', 29), 'Normal');
+  check('delai 0 : pas une alerte immediate', delay(0, 1), 'Normal');
+  contains('aucune consommation : en francais', build({ appliance_type: 'fridge', power_entity: 'sensor.p', language: 'fr' },
+    plugFrom(45)).html, 'Aucune consommation');
+  for (const b of [off, offDraw, on45, gone]) b.card.disconnectedCallback();
+}
 freezeClock(new Date(T1).toISOString());
 
 // Staggered delays are what make three bubbles read as three. A blanket
