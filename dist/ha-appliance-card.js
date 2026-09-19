@@ -2487,13 +2487,13 @@ const ILLUSTRATION_CSS = {
           top: 39%;
           width: 170%;
           height: 266%;
-          border-radius: 58%;
           background: ${color};
           opacity: 0.85;
           transition: background 1s linear;
         }
         wave2 { opacity: 0.45; }
         .machine.spinning .wave {
+            border-radius: 58%;
             animation: waterspin 6s linear infinite;
             animation-delay: var(--anim-offset, 0s);
         }
@@ -2508,16 +2508,20 @@ const ILLUSTRATION_CSS = {
             width: 22px;
             height: 27px;
             border-radius: 40px;
-            opacity: 13.85;
-            transition: background 13s linear;
             background: ${color};
+            opacity: 0.85;
+            transition: background 1s linear;
         }
-        .garment.g1 {
+        .machine.spinning .garment.g1{
             top: -5px;
             left: -12px;
         }
-        .garment.g2 { top: 27px; left: 32px; transform: rotate(15deg); }
-        .garment.g3 { top: 15px; left: 36px; transform: rotate(-25deg); }
+        .garment.g1 {
+            top: 29px;
+            left: -6px;
+        }
+        .garment.g2 { top: 24px; left: 32px; transform: rotate(15deg); opacity: 0.5}
+        .garment.g3 { top: 33px; left: 13px; transform: rotate(-25deg); }
         .machine.spinning .garments { animation: tumble 2.6s linear infinite; animation-delay: var(--anim-offset, 0s); }
         @keyframes tumble { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
   `,
