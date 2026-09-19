@@ -2482,22 +2482,23 @@ const ILLUSTRATION_CSS = {
         }
         .water-level { position: absolute; left: 0; right: 0; bottom: 0; height: 55%; overflow: hidden; }
         .wave {
-          position: absolute; left: -25%; top: -75%; width: 150%; height: 150%;
-          border-radius: 45%; background: ${color}; opacity: 0.85;
+          position: absolute; left: -58%; top: 39%; width: 170%; height: 266%;
+          background: ${color}; opacity: 0.85;
           transition: background 1s linear;
         }
         .wave.wave2 { opacity: 0.45; }
-        .machine.spinning .wave { animation: waterspin 6s linear infinite; animation-delay: var(--anim-offset, 0s); }
-        .machine.spinning .wave.wave2 { animation: waterspin 9s linear infinite reverse; animation-delay: var(--anim-offset, 0s); }
+        .machine.spinning .wave { border-radius: 58%; animation: waterspin 6s linear infinite; animation-delay: var(--anim-offset, 0s); }
+        .machine.spinning .wave.wave2 { animation: waterspin 8s ease-in-out infinite; animation-delay: var(--anim-offset, 0s); }
         @keyframes waterspin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
         .garments { position: absolute; inset: 0; }
         .garment {
-          position: absolute; width: 15px; height: 10px; border-radius: 6px;
+          position: absolute; width: 22px; height: 27px; border-radius: 40px;
           background: ${color}; opacity: 0.85; transition: background 1s linear;
         }
-        .garment.g1 { top: 9px; left: 12px; }
-        .garment.g2 { top: 27px; left: 32px; transform: rotate(15deg); }
-        .garment.g3 { top: 15px; left: 36px; transform: rotate(-25deg); }
+        .garment.g1 { top: 29px; left: -6px; }
+        .machine.spinning .garment.g1 { top: -5px; left: -12px; }
+        .garment.g2 { top: 24px; left: 32px; transform: rotate(15deg); opacity: 0.5; }
+        .garment.g3 { top: 33px; left: 13px; transform: rotate(-25deg); }
         .machine.spinning .garments { animation: tumble 2.6s linear infinite; animation-delay: var(--anim-offset, 0s); }
         @keyframes tumble { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
   `,
