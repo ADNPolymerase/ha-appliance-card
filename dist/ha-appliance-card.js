@@ -2488,7 +2488,7 @@ const ILLUSTRATION_CSS = {
           width: 170%;
           height: 266%;
           border-radius: 58%;
-          background: var(--info-color, #2196f3);
+          background: ${color};
           opacity: 0.85;
           transition: background 1s linear;
         }
@@ -2508,9 +2508,9 @@ const ILLUSTRATION_CSS = {
             width: 22px;
             height: 27px;
             border-radius: 40px;
-            background: #c56367;
             opacity: 13.85;
             transition: background 13s linear;
+            background: ${color};
         }
         .garment.g1 {
             top: -5px;
