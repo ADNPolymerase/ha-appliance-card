@@ -1857,17 +1857,201 @@ for (const [label, h, names] of [
   for (const n of names) check(`${label} : declare ${n}`, used.includes(n), true);
 }
 
+// ── Heat pump ────────────────────────────────────────────────────────────────
+// A climate entity says what the pump does in hvac_action (Octopus Energy sets
+// heating or idle from the zone's relay); its state is only the mode picked.
+const hpOf = (state, attributes = {}, extra = {}, more = {}) => render(
+  { appliance_type: 'heat_pump', state_entity: 'climate.hp_zone', ...extra },
+  { 'climate.hp_zone': { state, attributes }, ...more });
+const hasCls = (h, c) => machineCls(h).split(' ').includes(c);
+for (const [action, label, mode, fan] of [
+  ['heating', 'Heating', 'space_heating', true], ['preheating', 'Heating', 'space_heating', true],
+  ['idle', 'Standby', 'idle', false], ['off', 'Standby', 'idle', false],
+  ['defrosting', 'Defrosting', 'defrost', false], ['cooling', 'Cooling', 'cooling', true],
+]) {
+  const h = hpOf('heat', { hvac_action: action });
+  check(`pac : hvac_action ${action} se lit ${label}`, stateLine(h), label);
+  check(`pac : hvac_action ${action} dessine le mode ${mode}`, hasCls(h, `mode-${mode}`), true);
+  check(`pac : hvac_action ${action}, ventilateur ${fan ? 'en marche' : 'arrete'}`, hasCls(h, 'fan'), fan);
+}
+check('pac : sans hvac_action, le mode choisi et rien de plus', stateLine(hpOf('heat')), 'Heat');
+check('pac : sans hvac_action, le ventilateur ne tourne pas', hasCls(hpOf('heat'), 'fan'), false);
+check('pac : le mode cool n\'est pas un refroidissement en cours', stateLine(hpOf('cool')), 'Cool');
+check('pac : un mode reste gris', stateColor(hpOf('heat')), 'var(--disabled-text-color, #9e9e9e)');
+check('pac : sans hvac_action, off reste le mode off', stateLine(hpOf('off')), 'Off');
+// Overkiz calls a mode "on", which reads as running anywhere else.
+const hpOn = render({ appliance_type: 'heat_pump', state_entity: 'water_heater.hp_tank' },
+  { 'water_heater.hp_tank': { state: 'on', attributes: {} } });
+check('pac : un mode "on" n\'est pas une marche', stateLine(hpOn), 'On');
+check('pac : un mode "on" reste gris', stateColor(hpOn), 'var(--disabled-text-color, #9e9e9e)');
+check('pac : un mode "on" ne fait pas tourner le ventilateur', hasCls(hpOn, 'fan'), false);
+check('pac : chauffage en orange', stateColor(hpOf('heat', { hvac_action: 'heating' })), '#ff7043');
+check('pac : refroidissement en bleu', stateColor(hpOf('cool', { hvac_action: 'cooling' })), '#29b6f6');
+check('pac : degivrage en cyan', stateColor(hpOf('heat', { hvac_action: 'defrosting' })), '#4dd0e1');
+check('pac : veille en gris', stateColor(hpOf('heat', { hvac_action: 'idle' })), 'var(--disabled-text-color, #9e9e9e)');
+contains('pac : en francais', hpOf('heat', { hvac_action: 'defrosting' }, { language: 'fr' }), 'Dégivrage');
+
+// Indicators win when they are on, and hot water wins a tie.
+const hpInd = (hw, ch, action = 'heating') => hpOf('heat', { hvac_action: action },
+  { hot_water_entity: 'binary_sensor.hw', heating_entity: 'binary_sensor.ch' },
+  { 'binary_sensor.hw': { state: hw, attributes: {} }, 'binary_sensor.ch': { state: ch, attributes: {} } });
+check('pac : indicateur d\'eau chaude', stateLine(hpInd('on', 'off')), 'Hot water');
+check('pac : eau chaude en rouge', stateColor(hpInd('on', 'off')), '#ef5350');
+check('pac : l\'eau chaude passe devant le chauffage', stateLine(hpInd('on', 'on')), 'Hot water');
+check('pac : indicateur de chauffage sur une zone au repos', stateLine(hpInd('off', 'on', 'idle')), 'Heating');
+check('pac : indicateurs eteints, la zone decide', stateLine(hpInd('off', 'off', 'idle')), 'Standby');
+check('pac : eau chaude, ventilateur en marche', hasCls(hpInd('on', 'off'), 'fan'), true);
+
+// MELCloud (Ecodan) says it in its water heater's status attribute.
+const hpMel = status => render({ appliance_type: 'heat_pump', state_entity: 'water_heater.hp_tank' },
+  { 'water_heater.hp_tank': { state: 'auto', attributes: { status } } });
+for (const [status, label] of [['heat_water', 'Hot water'], ['legionella', 'Hot water'], ['heat_zones', 'Heating'],
+  ['defrost', 'Defrosting'], ['cool', 'Cooling'], ['idle', 'Standby']]) {
+  check(`pac : MELCloud ${status} se lit ${label}`, stateLine(hpMel(status)), label);
+}
+
+// A sensor speaks in words, and state_map still wins.
+const hpWord = (state, extra = {}) => render({ appliance_type: 'heat_pump', state_entity: 'sensor.hp_status', ...extra },
+  { 'sensor.hp_status': { state, attributes: {} } });
+for (const [raw, label, mode] of [['Defrost', 'Defrosting', 'defrost'], ['Abtauen', 'Defrosting', 'defrost'],
+  ['Cooling', 'Cooling', 'cooling'], ['Rafraîchissement', 'Cooling', 'cooling'], ['DHW', 'Hot water', 'hot_water'],
+  ['Heating', 'Heating', 'space_heating'], ['Standby', 'Standby', 'idle']]) {
+  check(`pac : ${raw} se lit ${label}`, stateLine(hpWord(raw)), label);
+  check(`pac : ${raw} dessine le mode ${mode}`, hasCls(hpWord(raw), `mode-${mode}`), true);
+}
+check('pac : state_map vers le degivrage', stateLine(hpWord('7', { state_map: { 7: 'defrost' } })), 'Defrosting');
+check('pac : state_map passe devant hvac_action',
+  stateLine(hpOf('heat', { hvac_action: 'heating' }, { state_map: { heat: 'idle' } })), 'Standby');
+check('pac : un mot inconnu reste lisible', stateLine(hpWord('Maintenance')), 'Maintenance');
+
+// Only a power meter: it runs, without saying what for.
+const hpPow = w => render({ appliance_type: 'heat_pump', state_entity: 'sensor.hp_in', power_entity: 'sensor.hp_in', power_on_threshold: 50 },
+  { 'sensor.hp_in': { state: w, attributes: { unit_of_measurement: 'W' } } });
+check('pac : compteur seul, en marche', stateLine(hpPow('900')), 'Running');
+check('pac : compteur seul, le ventilateur tourne', hasCls(hpPow('900'), 'fan'), true);
+check('pac : compteur seul, a l\'arret', stateLine(hpPow('3')), 'Standby');
+
+// The readings.
+const HP_READINGS = {
+  'sensor.hp_flow': { state: '41.6', attributes: { unit_of_measurement: '°C' } },
+  'sensor.hp_out': { state: '7.5', attributes: { unit_of_measurement: '°C' } },
+  'sensor.hp_in': { state: '0.85', attributes: { unit_of_measurement: 'kW' } },
+  'sensor.hp_heat': { state: '2.55', attributes: { unit_of_measurement: 'kW' } },
+  'sensor.hp_cop': { state: '3.2', attributes: {} },
+};
+const hpFull = (extra = {}, more = {}) => hpOf('heat', { hvac_action: 'heating' },
+  { temperature_entity: 'sensor.hp_flow', outdoor_temperature_entity: 'sensor.hp_out', power_entity: 'sensor.hp_in',
+    heat_output_entity: 'sensor.hp_heat', ...extra }, { ...HP_READINGS, ...more });
+const hpH = hpFull();
+contains('pac : temperature de depart a l\'ecran', hpH, '<div class="hp-lcd">42°</div>');
+check('pac : ligne temperature de depart, au degre par defaut', infoLine(hpH, 'Flow temperature'), '42\u00a0°C');
+check('pac : ligne temperature exterieure, au degre par defaut', infoLine(hpH, 'Outdoor temperature'), '8\u00a0°C');
+const hpDix = hpFull({ temperature_decimals: '1' });
+check('pac au dixieme : depart', infoLine(hpDix, 'Flow temperature'), '41.6\u00a0°C');
+check('pac au dixieme : exterieur', infoLine(hpDix, 'Outdoor temperature'), '7.5\u00a0°C');
+contains('pac au dixieme : l\'ecran', hpDix, '<div class="hp-lcd">41.6°</div>');
+check('pac : la puissance garde ses decimales au degre', infoLine(hpH, 'Power'), '0.85\u00a0kW');
+check('pac : une sonde exterieure muette ne fait pas de ligne',
+  infoLine(hpFull({}, { 'sensor.hp_out': { state: 'unavailable', attributes: { unit_of_measurement: '°C' } } }), 'Outdoor temperature'), null);
+check('pac : puissance en kW sans arrondi', infoLine(hpH, 'Power'), '0.85\u00a0kW');
+check('pac : une seule ligne de puissance', (hpH.match(/<span class="label">Power<\/span>/g) || []).length, 1);
+check('pac : chaleur produite', infoLine(hpH, 'Heat output'), '2.55\u00a0kW');
+check('pac : COP calcule sans entite', infoLine(hpH, 'COP'), '3.0');
+check('pac : COP calcule en watts et kilowatts',
+  infoLine(hpFull({}, { 'sensor.hp_in': { state: '850', attributes: { unit_of_measurement: 'W' } } }), 'COP'), '3.0');
+check('pac : pas de COP a l\'arret',
+  infoLine(hpFull({}, { 'sensor.hp_in': { state: '0', attributes: { unit_of_measurement: 'kW' } } }), 'COP'), null);
+check('pac : pas de COP sur un compteur negatif',
+  infoLine(hpFull({}, { 'sensor.hp_in': { state: '-0.2', attributes: { unit_of_measurement: 'kW' } } }), 'COP'), null);
+check('pac : pas de COP sans unite connue',
+  infoLine(hpFull({}, { 'sensor.hp_heat': { state: '2.55', attributes: {} } }), 'COP'), null);
+check('pac : l\'entite COP passe devant le calcul', infoLine(hpFull({ cop_entity: 'sensor.hp_cop' }), 'COP'), '3.2');
+check('pac : aucune barre de progression', /class="bar-fill"/.test(hpH), false);
+contains('pac : la cuve se remplit d\'eau chaude', hpInd('on', 'off'),
+  '.machine.mode-hot_water .hp-tank i { height: 100%;');
+contains('pac : les radiateurs chauffent', hpH, '.machine.mode-space_heating .hp-rad i { background: linear-gradient(180deg, #ffab91, #ff7043);');
+
+for (const [label, h, names] of [
+  ['pac en chauffage', hpOf('heat', { hvac_action: 'heating' }), ['hp-spin', 'hp-glow']],
+  ['pac en eau chaude', hpInd('on', 'off'), ['hp-spin', 'hp-glow']],
+  ['pac en degivrage', hpOf('heat', { hvac_action: 'defrosting' }), ['hp-frost']],
+]) {
+  const used = [...h.matchAll(/animation:\s*([a-z0-9-]+)/g)].map(m => m[1]);
+  const defined = new Set([...h.matchAll(/@keyframes\s+([a-z0-9-]+)/g)].map(m => m[1]));
+  check(`${label} : chaque animation a ses keyframes`, [...new Set(used)].filter(n => !defined.has(n)).join(','), '');
+  for (const n of names) check(`${label} : declare ${n}`, used.includes(n), true);
+}
+
 // ── Detection by name ────────────────────────────────────────────────────────
-const drawn = h => /class="wh-tank"/.test(h) ? 'water_heater' : /class="bl-box"/.test(h) ? 'boiler'
+const drawn = h => /class="hp-unit"/.test(h) ? 'heat_pump' : /class="wh-tank"/.test(h) ? 'water_heater' : /class="bl-box"/.test(h) ? 'boiler'
   : /class="kt-body"/.test(h) ? 'kettle' : 'other';
 for (const [id, want, icon] of [
   ['switch.chauffe_eau', 'water_heater'], ['switch.cumulus', 'water_heater'], ['water_heater.dhw', 'water_heater'],
   ['switch.salle_de_bain', 'water_heater', 'mdi:water-boiler'],
   ['sensor.chaudiere_etat', 'boiler'], ['sensor.boiler_status', 'boiler'],
   ['switch.kettle', 'kettle'], ['sensor.dryer_state', 'other'], ['sensor.washer_state', 'other'],
+  ['climate.octopus_energy_heat_pump_00a1_zone_1', 'heat_pump'], ['water_heater.octopus_energy_heat_pump_00a1', 'heat_pump'],
+  ['sensor.pompe_a_chaleur_etat', 'heat_pump'], ['sensor.waermepumpe_status', 'heat_pump'],
+  ['sensor.warmtepomp_status', 'heat_pump'], ['water_heater.ecodan', 'heat_pump'],
+  ['switch.buanderie', 'heat_pump', 'mdi:heat-pump'],
 ]) {
   check(`detection : ${icon || id}`, drawn(render({ state_entity: id },
     { [id]: { state: 'off', attributes: icon ? { icon } : {} } })), want);
+}
+
+// The editor offers the heat pump, its readings, and the entities it is
+// usually exposed as.
+{
+  const hpEd = newEditor({ state_entity: 'sensor.oven_appliance_state', appliance_type: 'heat_pump' });
+  const hpHtml = markup(hpEd._root);
+  const hpToggles = [...hpHtml.matchAll(/data-toggle="([^"]+)"/g)].map(m => m[1]);
+  contains('editeur : la pompe a chaleur est au choix', hpHtml, 'value="heat_pump"');
+  for (const f of ['temperature_entity', 'outdoor_temperature_entity', 'heat_output_entity', 'cop_entity',
+    'hot_water_entity', 'heating_entity', 'power_entity']) {
+    check(`editeur pac : propose ${f}`, hpToggles.filter(x => x === f).length, 1);
+  }
+  check('editeur pac : pas de programme', hpToggles.includes('program_entity'), false);
+  const hpPrec = markup(newEditor({ state_entity: 'sensor.oven_appliance_state', appliance_type: 'heat_pump', temperature_entity: 'sensor.t' })._root);
+  check('editeur pac : la precision sous la temperature de depart', /data-field="temperature_decimals"/.test(hpPrec), true);
+  const domainsOf = type => newEditor({ state_entity: 'sensor.oven_appliance_state', appliance_type: type })
+    ._root.querySelector('[data-slot="state_entity"]')?.children.at(-1)?.includeDomains || [];
+  check('editeur pac : l\'etat accepte une entite climate', domainsOf('heat_pump').includes('climate'), true);
+  check('editeur pac : et un water_heater', domainsOf('heat_pump').includes('water_heater'), true);
+  check('editeur : le chauffe-eau accepte un water_heater', domainsOf('water_heater').includes('water_heater'), true);
+  check('editeur : la chaudiere accepte un water_heater', domainsOf('boiler').includes('water_heater'), true);
+  check('editeur : un lave-linge ne propose pas climate', domainsOf('washer').includes('climate'), false);
+  check('editeur : les capteurs restent proposes', domainsOf('heat_pump').includes('sensor'), true);
+}
+
+// Auto-suggestion on the pump's own device: the live readings, never the
+// lifetime ones, and no target flow temperature passed off as the measured one.
+{
+  const dev = { device_id: 'hp1' };
+  // The lifetime readings come first, so a pattern that let them through would pick them.
+  const ids = ['climate.hp_zone_1', 'sensor.hp_lifetime_power_input', 'sensor.hp_lifetime_heat_output',
+    'sensor.hp_lifetime_scop', 'sensor.hp_fixed_target_flow_temperature', 'sensor.hp_live_power_input',
+    'sensor.hp_live_heat_output', 'sensor.hp_live_cop', 'sensor.hp_live_outdoor_temperature'];
+  const states = Object.fromEntries(ids.map(id => [id, { state: '1', attributes: {} }]));
+  const ed = new Editor();
+  ed.setConfig({ type: 'custom:ha-appliance-card', appliance_type: 'heat_pump', state_entity: 'climate.hp_zone_1' });
+  ed.hass = { ...HASS(states), entities: Object.fromEntries(ids.map(id => [id, dev])) };
+  const sug = ed.events.at(-1)?.detail?.config || {};
+  check('suggestion pac : puissance instantanee', sug.power_entity, 'sensor.hp_live_power_input');
+  check('suggestion pac : chaleur instantanee', sug.heat_output_entity, 'sensor.hp_live_heat_output');
+  check('suggestion pac : COP instantane', sug.cop_entity, 'sensor.hp_live_cop');
+  check('suggestion pac : temperature exterieure', sug.outdoor_temperature_entity, 'sensor.hp_live_outdoor_temperature');
+  check('suggestion pac : pas de consigne prise pour la mesure', sug.temperature_entity, undefined);
+}
+{
+  // Its only temperature is the outdoor one: it goes to its field, not twice.
+  const ids = ['climate.hp_zone_1', 'sensor.hp_live_outdoor_temperature'];
+  const ed = new Editor();
+  ed.setConfig({ type: 'custom:ha-appliance-card', appliance_type: 'heat_pump', state_entity: 'climate.hp_zone_1' });
+  ed.hass = { ...HASS(Object.fromEntries(ids.map(id => [id, { state: '1', attributes: {} }]))),
+    entities: Object.fromEntries(ids.map(id => [id, { device_id: 'hp1' }])) };
+  const sug = ed.events.at(-1)?.detail?.config || {};
+  check('suggestion pac : la temperature exterieure dans son champ', sug.outdoor_temperature_entity, 'sensor.hp_live_outdoor_temperature');
+  check('suggestion pac : et pas une seconde fois en ligne d\'info', sug.info_entities, undefined);
 }
 
 // ── Real integrations ────────────────────────────────────────────────────────
@@ -2720,5 +2904,374 @@ check('programme : un formateur qui ne formate rien laisse la main',
 check('programme : raw court-circuite tout',
   withFormatter({ program_format: 'raw' }, 'dishcare_dishwasher_program_eco_50', 'Eco 50 °C'),
   'dishcare_dishwasher_program_eco_50');
+
+// =============================================================================
+// 3D printer
+// =============================================================================
+// Every raw value below is one an integration actually sends, read in its
+// code: OctoPrint and PrusaLink (core), Bambu Lab, Moonraker, Creality,
+// Elegoo, Flashforge, Anycubic, RepRapFirmware. The entities are made up.
+const P3 = { appliance_type: 'printer_3d', state_entity: 'sensor.p3_status' };
+const p3 = (state, extra = {}, more = {}) => render({ ...P3, ...extra },
+  { 'sensor.p3_status': { state, attributes: {} }, ...more });
+const TEMP = v => ({ state: String(v), attributes: { unit_of_measurement: '°C', device_class: 'temperature' } });
+const PCT = v => ({ state: String(v), attributes: { unit_of_measurement: '%' } });
+
+for (const [raw, want] of [
+  ['printing', 'Printing'], ['printing_sd', 'Printing'], ['running', 'Printing'], ['RUNNING', 'Printing'],
+  ['Printing', 'Printing'], ['processing', 'Printing'], ['resuming', 'Printing'], ['print_started', 'Printing'],
+  ['prepare', 'Preparing'], ['slicing', 'Preparing'], ['busy', 'Preparing'], ['self-testing', 'Preparing'],
+  ['file_transferring', 'Preparing'], ['starting', 'Preparing'],
+  ['preheating', 'Preheating'], ['heating', 'Preheating'],
+  ['pause', 'Paused'], ['paused', 'Paused'], ['pausing', 'Paused'],
+  ['attention', 'Needs attention'],
+  ['finish', 'Finished'], ['complete', 'Finished'], ['completed', 'Finished'], ['finished', 'Finished'],
+  ['cancelled', 'Cancelled'], ['stopped', 'Cancelled'], ['cancelling', 'Cancelled'],
+  ['failed', 'Failed'], ['error', 'Error'], ['offline_after_error', 'Error'],
+  ['operational', 'Idle'], ['standby', 'Idle'], ['ready', 'Idle'], ['idle', 'Idle'], ['available', 'Idle'],
+  ['offline', 'Offline'], ['shutdown', 'Offline'],
+  ['leveling', 'Bed levelling'], ['levelling', 'Bed levelling'], ['homing', 'Homing'],
+  ['loading_unloading', 'Changing filament'], ['input_shaping', 'Calibrating'], ['pid_tuning', 'Calibrating'],
+]) {
+  check(`imprimante : etat ${raw}`, stateLine(p3(raw)), want);
+}
+check('imprimante : un etat inconnu reste affiche', stateLine(p3('Zwischenschritt')), 'Zwischenschritt');
+check('imprimante : state_map passe avant le vocabulaire', stateLine(p3('Druckt', { state_map: { Druckt: 'running' } })), 'Printing');
+check('imprimante : state_map vers un etat sans equivalent', stateLine(p3('Wartet', { state_map: { Wartet: 'delayed' } })), 'Delayed start');
+check('imprimante : state_show_raw garde le mot brut', stateLine(p3('prepare', { state_show_raw: true })), 'prepare');
+
+// Colours: the heaters' warm tone, the fridge's cold blue, and the card's own
+// colours for the rest.
+check('imprimante : prechauffage en orange chaud', stateColor(p3('preheating')), '#ff7043');
+check('imprimante : impression en bleu', stateColor(p3('printing')), 'var(--info-color, #2196f3)');
+check('imprimante : echec en rouge', stateColor(p3('failed')), 'var(--error-color, #f44336)');
+check('imprimante : annulee en gris', stateColor(p3('cancelled')), 'var(--disabled-text-color, #9e9e9e)');
+check('imprimante : intervention en orange', stateColor(p3('attention')), 'var(--warning-color, #ff9800)');
+check('imprimante : hors ligne en gris', stateColor(p3('offline')), 'var(--disabled-text-color, #9e9e9e)');
+
+// The stage entity (Bambu Lab current_stage, Elegoo print_status) says what
+// the job is busy with.
+const staged = (state, stage) => p3(state, { phase_entity: 'sensor.p3_stage' }, { 'sensor.p3_stage': { state: stage, attributes: {} } });
+check('etape : changement de filament', stateLine(staged('running', 'changing_filament')), 'Changing filament');
+check('etape : plateau en chauffe', stateLine(staged('running', 'heatbed_preheating')), 'Preheating');
+check('etape : plateau en chauffe, orange', stateColor(staged('running', 'heatbed_preheating')), '#ff7043');
+// A stage that still says preheating with the heaters already there: the
+// gauge is full, not past full.
+check('etape : chauffe annoncee deja atteinte, jauge pleine', barWidth(p3('running', { phase_entity: 'sensor.p3_stage',
+  bed_temperature_entity: 'sensor.p3_bed', bed_target_entity: 'sensor.p3_bt' },
+  { 'sensor.p3_stage': { state: 'heatbed_preheating', attributes: {} }, 'sensor.p3_bed': TEMP(105), 'sensor.p3_bt': TEMP(100) })), '100');
+check('etape : buse en refroidissement', stateLine(staged('running', 'cooling_nozzle')), 'Cooling');
+check('etape : refroidissement en bleu froid', stateColor(staged('running', 'cooling_nozzle')), '#29b6f6');
+check('etape : nivellement', stateLine(staged('prepare', 'auto_bed_leveling')), 'Bed levelling');
+check('etape : calibration', stateLine(staged('running', 'calibrating_extrusion_flow')), 'Calibrating');
+check('etape : mise a l\'origine', stateLine(staged('running', 'homing_toolhead')), 'Homing');
+check('etape : une pause nommee reste une pause', stateLine(staged('running', 'paused_filament_runout')), 'Paused');
+check('etape : un jalon atteint ne nomme aucune etape', stateLine(staged('printing', 'preheating_completed')), 'Printing');
+check('etape : une etape inconnue laisse l\'etat', stateLine(staged('running', 'printing')), 'Printing');
+check('etape : ignoree hors d\'un travail', stateLine(staged('idle', 'auto_bed_leveling')), 'Idle');
+check('etape : ignoree une fois termine', stateLine(staged('finish', 'cooling_nozzle')), 'Finished');
+check('etape : une pause nommee ne met pas en pause une imprimante a l\'arret', stateLine(staged('idle', 'paused_user')), 'Idle');
+check('etape : en pause, la pause l\'emporte sur l\'etape', stateLine(staged('pause', 'cooling_nozzle')), 'Paused');
+
+// Most integrations report "printing" from the start code on: a heater still
+// well below its target at the start of a job is preheating.
+const heating = (state, n, nt, b, bt, extra = {}, more = {}) => p3(state, {
+  nozzle_temperature_entity: 'sensor.p3_nozzle', nozzle_target_entity: 'number.p3_nozzle_target',
+  bed_temperature_entity: 'sensor.p3_bed', bed_target_entity: 'number.p3_bed_target', ...extra,
+}, { 'sensor.p3_nozzle': TEMP(n), 'number.p3_nozzle_target': TEMP(nt),
+     'sensor.p3_bed': TEMP(b), 'number.p3_bed_target': TEMP(bt), ...more });
+check('chauffe deduite : buse froide au depart', stateLine(heating('printing', 120, 240, 100, 100)), 'Preheating');
+check('chauffe deduite : plateau froid au depart', stateLine(heating('printing', 240, 240, 40, 100)), 'Preheating');
+check('chauffe deduite : la jauge suit le plus en retard', barWidth(heating('printing', 120, 240, 40, 100)), '40');
+check('chauffe deduite : la jauge en couleur chaude', barStyle(heating('printing', 120, 240, 40, 100)).includes('#ff7043'), true);
+check('chauffe deduite : a cinq degres pres, c\'est arrive', stateLine(heating('printing', 236, 240, 96, 100)), 'Printing');
+check('chauffe deduite : juste au-dela, ca chauffe encore', stateLine(heating('printing', 234, 240, 100, 100)), 'Preheating');
+check('chauffe deduite : pas en cours de piece', stateLine(heating('printing', 120, 240, 100, 100,
+  { progress_entity: 'sensor.p3_progress' }, { 'sensor.p3_progress': PCT(30) })), 'Printing');
+check('chauffe deduite : a 1 % encore au depart', stateLine(heating('printing', 120, 240, 100, 100,
+  { progress_entity: 'sensor.p3_progress' }, { 'sensor.p3_progress': PCT(1) })), 'Preheating');
+check('chauffe deduite : une consigne a zero ne compte pas', stateLine(heating('printing', 30, 0, 25, 0)), 'Printing');
+check('chauffe deduite : pas hors d\'un travail', stateLine(heating('idle', 120, 240, 40, 100)), 'Idle');
+check('chauffe deduite : pas de jauge hors d\'un travail', barWidth(heating('idle', 120, 240, 40, 100)), null);
+check('chauffe annoncee : la jauge suit les consignes', barWidth(heating('preheating', 120, 240, 40, 100)), '40');
+check('chauffe annoncee : Flashforge dit heating', barWidth(heating('heating', 120, 240, 90, 100)), '50');
+check('chauffe deduite : pas en pause', stateLine(heating('paused', 120, 240, 40, 100)), 'Paused');
+check('chauffe deduite : une etape nommee l\'emporte', stateLine(heating('running', 120, 240, 40, 100,
+  { phase_entity: 'sensor.p3_stage' }, { 'sensor.p3_stage': { state: 'auto_bed_leveling', attributes: {} } })), 'Bed levelling');
+check('chauffe deduite : sans consigne, rien a deduire', stateLine(p3('printing',
+  { nozzle_temperature_entity: 'sensor.p3_nozzle' }, { 'sensor.p3_nozzle': TEMP(120) })), 'Printing');
+check('chauffe annoncee : jauge sans consigne, pas de barre de chauffe', barWidth(p3('preheating')), null);
+check('chauffe annoncee : une consigne a zero ne fait pas de jauge', barWidth(p3('preheating',
+  { nozzle_temperature_entity: 'sensor.p3_nozzle', nozzle_target_entity: 'sensor.p3_nt' },
+  { 'sensor.p3_nozzle': TEMP(30), 'sensor.p3_nt': TEMP(0) })), null);
+
+// Creality keeps the target in an attribute of the reading.
+const creality = (attrs) => p3('printing', { nozzle_temperature_entity: 'sensor.p3_nozzle' },
+  { 'sensor.p3_nozzle': { state: '150', attributes: { unit_of_measurement: '°C', ...attrs } } });
+check('consigne en attribut : lue', infoLine(creality({ target: 220 }), 'Nozzle'), '150\u00a0°C → 220\u00a0°C');
+check('consigne en attribut : target_temperature aussi', infoLine(creality({ target_temperature: 220 }), 'Nozzle'), '150\u00a0°C → 220\u00a0°C');
+check('consigne en attribut : chauffe deduite', stateLine(creality({ target: 220 })), 'Preheating');
+check('consigne en attribut : illisible, ignoree', infoLine(creality({ target: 'n/a' }), 'Nozzle'), '150\u00a0°C');
+// Unreadable, it is no target at all: the nozzle is hot because it prints.
+contains('consigne en attribut : illisible, la buse suit l\'activite', machineCls(creality({ target: 'n/a' })), 'nozzle-hot');
+check('consigne en attribut : l\'entite de consigne passe avant', infoLine(p3('printing',
+  { nozzle_temperature_entity: 'sensor.p3_nozzle', nozzle_target_entity: 'number.p3_nozzle_target' },
+  { 'sensor.p3_nozzle': { state: '150', attributes: { unit_of_measurement: '°C', target: 180 } },
+    'number.p3_nozzle_target': TEMP(220) }), 'Nozzle'), '150\u00a0°C → 220\u00a0°C');
+
+// The lines: layer, heaters, chamber, file.
+const job = (extra = {}, more = {}) => p3('printing', {
+  nozzle_temperature_entity: 'sensor.p3_nozzle', nozzle_target_entity: 'sensor.p3_nozzle_target',
+  bed_temperature_entity: 'sensor.p3_bed', bed_target_entity: 'sensor.p3_bed_target',
+  chamber_temperature_entity: 'sensor.p3_chamber', current_layer_entity: 'sensor.p3_layer',
+  total_layers_entity: 'sensor.p3_layers', program_entity: 'sensor.p3_file', progress_entity: 'sensor.p3_progress', ...extra,
+}, { 'sensor.p3_nozzle': TEMP(219), 'sensor.p3_nozzle_target': TEMP(220), 'sensor.p3_bed': TEMP(60),
+     'sensor.p3_bed_target': TEMP(60), 'sensor.p3_chamber': TEMP(34), 'sensor.p3_layer': { state: '84', attributes: {} },
+     'sensor.p3_layers': { state: '190', attributes: {} }, 'sensor.p3_file': { state: 'jobs/Benchy_PLA.3mf', attributes: {} },
+     'sensor.p3_progress': PCT(45), ...more });
+const busy = job();
+check('lignes : buse vers sa consigne', infoLine(busy, 'Nozzle'), '219\u00a0°C → 220\u00a0°C');
+check('lignes : plateau a sa consigne, sans fleche', infoLine(busy, 'Bed'), '60\u00a0°C');
+check('lignes : enceinte', infoLine(busy, 'Chamber'), '34\u00a0°C');
+check('lignes : couche sur le total', infoLine(busy, 'Layer'), '84 / 190');
+check('lignes : couche seule sans total', infoLine(job({ total_layers_entity: undefined }), 'Layer'), '84');
+check('lignes : un total a zero est ignore', infoLine(job({}, { 'sensor.p3_layers': { state: '0', attributes: {} } }), 'Layer'), '84');
+check('lignes : fichier sans dossier ni extension', infoLine(busy, 'File'), 'Benchy_PLA');
+check('lignes : fichier gcode', infoLine(job({}, { 'sensor.p3_file': { state: 'cube.gcode', attributes: {} } }), 'File'), 'cube');
+check('lignes : fichier sans extension connue', infoLine(job({}, { 'sensor.p3_file': { state: 'cube.v2', attributes: {} } }), 'File'), 'cube.v2');
+check('lignes : un nom long peut se couper', /class="info-line  wrap"[^>]*><ha-icon icon="mdi:file-outline">/.test(busy), true);
+contains('lignes : la coupure est dans le style', busy, '.info-line.wrap span:last-child { min-width: 0; overflow-wrap: anywhere; }');
+check('lignes : pas de ligne Programme', infoLine(busy, 'Program'), null);
+check('lignes : plateau froid, consigne a zero, sans fleche', infoLine(job({}, { 'sensor.p3_bed': TEMP(24), 'sensor.p3_bed_target': TEMP(0) }), 'Bed'), '24\u00a0°C');
+check('lignes : sonde muette, pas de ligne', infoLine(job({}, { 'sensor.p3_chamber': { state: 'unavailable', attributes: {} } }), 'Chamber'), null);
+check('lignes : la precision au dixieme s\'applique', infoLine(job({ temperature_decimals: '1' }), 'Nozzle'), '219.0\u00a0°C → 220.0\u00a0°C');
+check('ecran : la buse sur l\'afficheur', /<div class="p3-lcd">219°<\/div>/.test(busy), true);
+
+// Only a job has a progress bar: a Bambu Lab keeps 100 once idle.
+check('barre : en cours', barWidth(busy), '45');
+check('barre : a l\'arret, pas de barre malgre 100 %', barWidth(p3('idle', { progress_entity: 'sensor.p3_progress' }, { 'sensor.p3_progress': PCT(100) })), null);
+check('barre : annulee, pas de barre', barWidth(p3('cancelled', { progress_entity: 'sensor.p3_progress' }, { 'sensor.p3_progress': PCT(40) })), null);
+check('barre : terminee, pleine', barWidth(p3('finish', { progress_entity: 'sensor.p3_progress' }, { 'sensor.p3_progress': PCT(100) })), '100');
+check('barre : en pause, la progression reste', barWidth(p3('paused', { progress_entity: 'sensor.p3_progress' }, { 'sensor.p3_progress': PCT(62) })), '62');
+// Moonraker drops its progress to 0 while paused: the print did not.
+const moon = build({ ...P3, progress_entity: 'sensor.p3_progress' },
+  { 'sensor.p3_status': { state: 'printing', attributes: {} }, 'sensor.p3_progress': PCT(62) });
+check('barre : pause Moonraker, la derniere progression reste',
+  barWidth(rerender(moon.card, { 'sensor.p3_status': { state: 'paused', attributes: {} }, 'sensor.p3_progress': PCT(0) })), '62');
+check('barre : reprise, la vraie progression revient',
+  barWidth(rerender(moon.card, { 'sensor.p3_status': { state: 'printing', attributes: {} }, 'sensor.p3_progress': PCT(63) })), '63');
+rerender(moon.card, { 'sensor.p3_status': { state: 'idle', attributes: {} }, 'sensor.p3_progress': PCT(0) });
+check('barre : une fois a l\'arret, plus de souvenir',
+  barWidth(rerender(moon.card, { 'sensor.p3_status': { state: 'paused', attributes: {} }, 'sensor.p3_progress': PCT(0) })), '0');
+
+// A printer keeps its last job's times: they are hidden out of a job.
+const rem = (state, extra = {}) => infoLine(p3(state, { remaining_time_entity: 'sensor.p3_left', ...extra },
+  { 'sensor.p3_left': { state: '30', attributes: { unit_of_measurement: 'min' } } }), 'Remaining time');
+contains('temps restant : affiche en cours', rem('printing') || '', '30 min');
+contains('temps restant : affiche en pause', rem('paused') || '', '30 min');
+check('temps restant : masque a l\'arret', rem('idle'), null);
+check('temps restant : masque une fois termine', rem('finish'), null);
+contains('temps restant : affiche a l\'arret si demande', rem('idle', { remaining_time_hide_when_idle: false }) || '', '30 min');
+contains('temps restant : les autres types restent comme avant',
+  infoLine(render({ appliance_type: 'washer', state_entity: 'sensor.w', remaining_time_entity: 'sensor.r' },
+    { 'sensor.w': { state: 'Idle', attributes: {} }, 'sensor.r': { state: '30', attributes: { unit_of_measurement: 'min' } } }), 'Remaining time') || '', '30 min');
+
+// ── The drawing ──
+const p3Cls = h => machineCls(h);
+const p3H = h => (/style="--p3-h:(\d+)px"/.exec(h) || [, null])[1];
+contains('dessin : fermee par defaut', p3Cls(busy), 'p3-enclosed');
+contains('dessin : cadre ouvert', p3Cls(job({ printer_layout: 'open' })), 'p3-open');
+check('dessin : cadre ouvert, un portique', /class="p3-gantry"/.test(job({ printer_layout: 'open' })), true);
+check('dessin : fermee, une vitre', /class="p3-window"/.test(busy), true);
+contains('dessin : fermee pour une valeur inconnue', p3Cls(job({ printer_layout: 'cube' })), 'p3-enclosed');
+check('dessin : la piece suit la progression', p3H(busy), '18');
+check('dessin : terminee, la piece est entiere', p3H(p3('finish', { progress_entity: 'sensor.p3_progress' }, { 'sensor.p3_progress': PCT(0) })), '40');
+check('dessin : a l\'arret, plateau vide', p3H(p3('idle', { progress_entity: 'sensor.p3_progress' }, { 'sensor.p3_progress': PCT(100) })), '0');
+check('dessin : un echec garde sa piece', p3H(p3('failed', { progress_entity: 'sensor.p3_progress' }, { 'sensor.p3_progress': PCT(35) })), '14');
+check('dessin : un echec sans progression, plateau vide', p3H(p3('failed')), '0');
+contains('dessin : la piece prend la couleur de l\'etat', busy, 'transparent 1px 3px), var(--info-color, #2196f3);');
+contains('dessin : la tete bouge en impression', p3Cls(busy), 'moving');
+check('dessin : pas pendant la chauffe', /moving/.test(p3Cls(heating('printing', 120, 240, 40, 100))), false);
+check('dessin : pas en pause', /moving/.test(p3Cls(p3('paused'))), false);
+contains('dessin : une piece presente', p3Cls(busy), 'has-part');
+check('dessin : sans piece, pas de trait qui s\'allume', /has-part/.test(p3Cls(heating('printing', 120, 240, 40, 100))), false);
+contains('dessin : buse chaude', p3Cls(busy), 'nozzle-hot');
+contains('dessin : plateau chaud', p3Cls(busy), 'bed-hot');
+check('dessin : buse froide, consigne a zero', /nozzle-hot/.test(p3Cls(job({}, { 'sensor.p3_nozzle_target': TEMP(0) }))), false);
+contains('dessin : sans consigne, chaude en impression', p3Cls(p3('printing')), 'nozzle-hot');
+check('dessin : sans consigne, froide a l\'arret', /nozzle-hot|bed-hot/.test(p3Cls(p3('idle'))), false);
+contains('dessin : a l\'arret, le plateau descend', p3Cls(p3('idle')), 'parked');
+check('dessin : en chauffe, le plateau reste en haut', /parked/.test(p3Cls(heating('printing', 120, 240, 40, 100))), false);
+check('dessin : terminee, pas range', /parked/.test(p3Cls(p3('finish'))), false);
+contains('dessin : le plateau range est en bas', busy, '.p3-enclosed.parked .p3-bed { top: auto; bottom: 8px; }');
+contains('dessin : la tete va et vient', busy, '.machine.moving .p3-head { animation: p3-move 1.6s ease-in-out infinite alternate;');
+contains('dessin : la couche se depose', busy, '.machine.moving.has-part .p3-part i { animation: p3-draw');
+contains('dessin : le plateau descend avec la piece', busy, 'top: calc(21px + var(--p3-h, 0px))');
+contains('dessin : le portique monte avec la piece', busy, 'bottom: calc(22px + var(--p3-h, 0px))');
+// The part: a cube by default, a pyramid or a rubber duck on request. The
+// whole shape is drawn and only what is printed shows, from the bottom up.
+contains('piece : un cube par defaut', p3Cls(busy), 'p3-part-cube');
+contains('piece : une pyramide', p3Cls(job({ printed_part: 'pyramid' })), 'p3-part-pyramid');
+contains('piece : un canard', p3Cls(job({ printed_part: 'duck' })), 'p3-part-duck');
+contains('piece : une forme inconnue reste un cube', p3Cls(job({ printed_part: 'benchy' })), 'p3-part-cube');
+check('piece : le canard a un oeil', /<b class="p3-eye"><\/b>/.test(job({ printed_part: 'duck' })), true);
+check('piece : le cube n\'en a pas', /p3-eye"/.test(busy), false);
+check('piece : la pyramide non plus', /p3-eye"/.test(job({ printed_part: 'pyramid' })), false);
+contains('piece : la forme entiere dans la partie imprimee', busy, '<div class="p3-part"><div class="p3-shape"><i></i></div></div>');
+contains('piece : on ne voit que ce qui est imprime', busy, 'height: var(--p3-h, 0px);\n          overflow: hidden;');
+contains('piece : la forme a sa pleine hauteur', busy, 'position: absolute; left: 0; bottom: 0; width: 100%; height: 40px;');
+contains('piece : la couche en cours au sommet de l\'imprime', busy, 'bottom: calc(var(--p3-h, 0px) - 2px); height: 2px;');
+contains('piece : pyramide en triangle', busy, '.p3-part-pyramid .p3-shape { border-radius: 0; clip-path: polygon(50% 0, 100% 100%, 0 100%); }');
+contains('piece : pyramide plus large', busy, '.p3-part-pyramid .p3-part { width: 32px; margin-left: -16px; }');
+check('piece : canard decoupe', /[\s;{]clip-path: path\("M1 20 L10 24 [^"]* Z"\);/.test(busy), true);
+contains('piece : canard plus large', busy, '.p3-part-duck .p3-part { width: 34px; margin-left: -17px; }');
+check('editeur : la piece proposee pour l\'imprimante', /data-field="printed_part"/.test(edHtml('printer_3d')), true);
+check('editeur : la piece absente ailleurs', /data-field="printed_part"/.test(edHtml('oven')), false);
+for (const v of ['cube', 'pyramid', 'duck']) contains(`editeur : piece ${v}`, edHtml('printer_3d'), `value="${v}"`);
+contains('editeur : le canard a son nom', edHtml('printer_3d'), 'Rubber duck');
+// A reading keeps its number and its unit together on a narrow card.
+check('lignes : une temperature ne se coupe pas', /219 °C|220 °C/.test(infoLine(busy, 'Nozzle')), false);
+const lit = job({ light_entity: 'light.p3_light' }, { 'light.p3_light': { state: 'on', attributes: {} } });
+contains('lumiere : l\'enceinte s\'eclaire', p3Cls(lit), 'lit');
+check('lumiere : le bouton en tete', /class="light-badge on"/.test(lit), true);
+contains('lumiere : la vitre eclairee', lit, '.machine.lit .p3-window {');
+
+// ── Remaining time in any unit ──
+const remIn = (state, attributes, extra = {}) => infoLine(render({ appliance_type: 'washer', state_entity: 'sensor.w',
+  remaining_time_entity: 'sensor.r', ...extra }, { 'sensor.w': { state: 'Running', attributes: {} },
+  'sensor.r': { state, attributes } }), 'Remaining time') || '';
+contains('duree : en heures (Bambu Lab)', remIn('1.25', { unit_of_measurement: 'h' }), '1h15');
+contains('duree : en heures ecrites', remIn('2', { unit_of_measurement: 'hours' }), '2h00');
+contains('duree : en millisecondes', remIn('1800000', { unit_of_measurement: 'ms' }), '30 min');
+contains('duree : en jours', remIn('0.5', { unit_of_measurement: 'd' }), '12h00');
+contains('duree : en secondes par defaut', remIn('1800', {}), '30 min');
+contains('duree : unite forcee en heures', remIn('1.5', {}, { remaining_time_unit: 'hours' }), '1h30');
+contains('duree : horloge H:MM:SS (Snapmaker)', remIn('1:02:03', {}), '1h02');
+contains('duree : horloge a zero', remIn('00:00:00', {}), 'Done');
+
+// ── History, with the printer's own words ──
+// Generic words would read "printing" as a gap and start the job at the pause.
+{
+  clockAt(0);
+  const H3 = (state, m) => ({ s: state, lu: (T0 + m * MIN) / 1000 });
+  const c = new Card();
+  c.setConfig({ type: 'custom:ha-appliance-card', ...P3, remaining_time_entity: 'sensor.p3_left' });
+  c._hass = { ...HASS({ 'sensor.p3_status': { state: 'printing', attributes: {}, last_changed: at(-25) },
+    'sensor.p3_left': { state: String(35 * 60), attributes: {} } }),
+    callWS: () => Promise.resolve({ 'sensor.p3_status': [H3('standby', -60), H3('printing', -40), H3('paused', -30), H3('printing', -25)] }) };
+  c._render();
+  await settle();
+  check('historique imprimante : le vocabulaire de l\'imprimante', barWidth(markup(c)), '50');
+}
+
+// ── Detection ──
+const p3drawn = h => /class="p3-/.test(h);
+for (const [id, want, icon] of [
+  ['sensor.p1s_01p00a123_print_status', true], ['sensor.x1c_00m09c_print_status', true], ['sensor.a1_mini_03919_print_status', true],
+  ['sensor.octoprint_current_state', true], ['sensor.voron_current_print_state', true], ['sensor.prusa_mk4', true],
+  ['sensor.ender_3_v3_status', true], ['sensor.kobra_2_job_state', true], ['sensor.creality_k1_print_status', true],
+  ['sensor.centauri_carbon_current_status', true], ['sensor.flashforge_ad5m_machine_status', true],
+  ['sensor.atelier', true, 'mdi:printer-3d'],
+  ['sensor.blender_state', false], ['sensor.imprimante_etat', false], ['sensor.hp_printer_status', false],
+]) {
+  check(`detection imprimante : ${icon || id}`, p3drawn(render({ state_entity: id },
+    { [id]: { state: 'idle', attributes: icon ? { icon } : {} } })), want);
+}
+check('detection imprimante : une buse suffit', p3drawn(render({ state_entity: 'sensor.atelier', nozzle_temperature_entity: 'sensor.n' },
+  { 'sensor.atelier': { state: 'idle', attributes: {} }, 'sensor.n': TEMP(25) })), true);
+check('detection imprimante : la piece suffit', p3drawn(render({ state_entity: 'sensor.atelier', printed_part: 'duck' },
+  { 'sensor.atelier': { state: 'idle', attributes: {} } })), true);
+check('detection imprimante : le cadre suffit', p3drawn(render({ state_entity: 'sensor.atelier', printer_layout: 'open' },
+  { 'sensor.atelier': { state: 'idle', attributes: {} } })), true);
+
+// ── Editor ──
+contains('editeur : l\'imprimante 3D est au choix', edHtml('printer_3d'), 'value="printer_3d"');
+check('editeur : le cadre propose pour l\'imprimante', /data-field="printer_layout"/.test(edHtml('printer_3d')), true);
+check('editeur : le cadre absent ailleurs', /data-field="printer_layout"/.test(edHtml('washer')), false);
+for (const f of ['nozzle_temperature_entity', 'nozzle_target_entity', 'bed_temperature_entity', 'bed_target_entity',
+  'chamber_temperature_entity', 'current_layer_entity', 'total_layers_entity', 'program_entity', 'phase_entity',
+  'progress_entity', 'remaining_time_entity', 'light_entity', 'pause_entity', 'resume_entity', 'stop_entity']) {
+  check(`editeur imprimante : ${f}`, toggles('printer_3d').includes(f), true);
+}
+{
+  const withFile = markup(newEditor({ state_entity: 'sensor.oven_appliance_state', appliance_type: 'printer_3d', program_entity: 'sensor.f' })._root) || '';
+  check('editeur imprimante : pas de format de programme', /data-field="program_format"/.test(withFile), false);
+  check('editeur imprimante : une seule section fichier', (withFile.match(/data-toggle="program_entity"/g) || []).length, 1);
+}
+check('editeur : le format de programme reste au lave-linge', /data-field="program_format"/.test(edHtml('washer')), true);
+check('editeur : pas de buse sur un four', toggles('oven').includes('nozzle_temperature_entity'), false);
+check('editeur : l\'etape seulement sur l\'imprimante', toggles('dishwasher').includes('phase_entity'), false);
+{
+  const ed = newEditor({ state_entity: 'sensor.oven_appliance_state', appliance_type: 'printer_3d', remaining_time_entity: 'sensor.x' });
+  contains('editeur : les heures pour le temps restant', markup(ed._root) || ed._root._html || '', 'value="hours"');
+}
+contains('editeur : le fichier imprime a son libelle', edHtml('printer_3d'), 'Print file');
+
+// Auto-suggestion on a Bambu Lab device: the readings, their targets, and
+// buttons, never OctoPrint's start_time sensor or Moonraker's emergency stop.
+{
+  const ids = ['sensor.p1s_x_print_status', 'sensor.p1s_x_start_time', 'sensor.p1s_x_end_time', 'sensor.p1s_x_print_progress',
+    'sensor.p1s_x_nozzle_target_temperature', 'sensor.p1s_x_nozzle_temperature', 'number.p1s_x_bed_target_temperature',
+    'sensor.p1s_x_bed_temperature', 'sensor.p1s_x_chamber_temperature', 'sensor.p1s_x_current_layer',
+    'sensor.p1s_x_total_layer_count', 'sensor.p1s_x_task_name', 'sensor.p1s_x_current_stage', 'light.p1s_x_chamber_light',
+    'button.p1s_x_pause', 'button.p1s_x_resume', 'button.p1s_x_emergency_stop', 'button.p1s_x_stop',
+    'sensor.p1s_x_extruder_power', 'sensor.p1s_x_plug_power'];
+  const ed = new Editor();
+  ed.setConfig({ type: 'custom:ha-appliance-card', appliance_type: 'printer_3d', state_entity: 'sensor.p1s_x_print_status' });
+  ed.hass = { ...HASS(Object.fromEntries(ids.map(id => [id, { state: '1', attributes: {} }]))),
+    entities: Object.fromEntries(ids.map(id => [id, { device_id: 'p1s' }])) };
+  const sug = ed.events.at(-1)?.detail?.config || {};
+  check('suggestion imprimante : progression', sug.progress_entity, 'sensor.p1s_x_print_progress');
+  check('suggestion imprimante : fin prevue', sug.remaining_time_entity, 'sensor.p1s_x_end_time');
+  check('suggestion imprimante : buse mesuree, pas la consigne', sug.nozzle_temperature_entity, 'sensor.p1s_x_nozzle_temperature');
+  check('suggestion imprimante : consigne de buse', sug.nozzle_target_entity, 'sensor.p1s_x_nozzle_target_temperature');
+  check('suggestion imprimante : plateau mesure', sug.bed_temperature_entity, 'sensor.p1s_x_bed_temperature');
+  check('suggestion imprimante : consigne de plateau', sug.bed_target_entity, 'number.p1s_x_bed_target_temperature');
+  check('suggestion imprimante : enceinte', sug.chamber_temperature_entity, 'sensor.p1s_x_chamber_temperature');
+  check('suggestion imprimante : couche', sug.current_layer_entity, 'sensor.p1s_x_current_layer');
+  check('suggestion imprimante : total des couches', sug.total_layers_entity, 'sensor.p1s_x_total_layer_count');
+  check('suggestion imprimante : fichier', sug.program_entity, 'sensor.p1s_x_task_name');
+  check('suggestion imprimante : etape', sug.phase_entity, 'sensor.p1s_x_current_stage');
+  check('suggestion imprimante : lumiere', sug.light_entity, 'light.p1s_x_chamber_light');
+  check('suggestion imprimante : pause', sug.pause_entity, 'button.p1s_x_pause');
+  check('suggestion imprimante : reprise', sug.resume_entity, 'button.p1s_x_resume');
+  check('suggestion imprimante : arret, pas l\'arret d\'urgence', sug.stop_entity, 'button.p1s_x_stop');
+  check('suggestion imprimante : pas le capteur start_time en bouton', sug.start_entity, undefined);
+  check('suggestion imprimante : la prise, pas la chauffe de la buse', sug.power_entity, 'sensor.p1s_x_plug_power');
+}
+{
+  // OctoPrint names: actual and target, tool0; Moonraker: extruder, number targets.
+  const ids = ['sensor.octoprint_current_state', 'sensor.octoprint_target_tool0_temp', 'sensor.octoprint_actual_tool0_temp',
+    'sensor.octoprint_target_bed_temp', 'sensor.octoprint_actual_bed_temp', 'sensor.octoprint_current_file_size',
+    'sensor.octoprint_current_file', 'sensor.octoprint_estimated_finish_time', 'button.octoprint_stop_job'];
+  const ed = new Editor();
+  ed.setConfig({ type: 'custom:ha-appliance-card', appliance_type: 'printer_3d', state_entity: 'sensor.octoprint_current_state' });
+  ed.hass = { ...HASS(Object.fromEntries(ids.map(id => [id, { state: '1', attributes: {} }]))),
+    entities: Object.fromEntries(ids.map(id => [id, { device_id: 'op' }])) };
+  const sug = ed.events.at(-1)?.detail?.config || {};
+  check('suggestion OctoPrint : buse', sug.nozzle_temperature_entity, 'sensor.octoprint_actual_tool0_temp');
+  check('suggestion OctoPrint : consigne de buse', sug.nozzle_target_entity, 'sensor.octoprint_target_tool0_temp');
+  check('suggestion OctoPrint : plateau', sug.bed_temperature_entity, 'sensor.octoprint_actual_bed_temp');
+  check('suggestion OctoPrint : consigne de plateau', sug.bed_target_entity, 'sensor.octoprint_target_bed_temp');
+  check('suggestion OctoPrint : le fichier, pas sa taille', sug.program_entity, 'sensor.octoprint_current_file');
+  check('suggestion OctoPrint : fin prevue', sug.remaining_time_entity, 'sensor.octoprint_estimated_finish_time');
+  check('suggestion OctoPrint : arret du travail', sug.stop_entity, 'button.octoprint_stop_job');
+}
+{
+  const ids = ['sensor.voron_current_print_state', 'sensor.voron_extruder_temperature', 'number.voron_extruder_target',
+    'sensor.voron_bed_temperature', 'number.voron_bed_target', 'sensor.voron_print_time_left', 'button.voron_cancel_print',
+    'button.voron_emergency_stop', 'sensor.voron_extruder_power', 'sensor.voron_bed_power'];
+  const ed = new Editor();
+  ed.setConfig({ type: 'custom:ha-appliance-card', appliance_type: 'printer_3d', state_entity: 'sensor.voron_current_print_state' });
+  ed.hass = { ...HASS(Object.fromEntries(ids.map(id => [id, { state: '1', attributes: {} }]))),
+    entities: Object.fromEntries(ids.map(id => [id, { device_id: 'vo' }])) };
+  const sug = ed.events.at(-1)?.detail?.config || {};
+  check('suggestion Moonraker : extrudeur', sug.nozzle_temperature_entity, 'sensor.voron_extruder_temperature');
+  check('suggestion Moonraker : consigne en nombre', sug.nozzle_target_entity, 'number.voron_extruder_target');
+  check('suggestion Moonraker : plateau', sug.bed_target_entity, 'number.voron_bed_target');
+  check('suggestion Moonraker : temps restant', sug.remaining_time_entity, 'sensor.voron_print_time_left');
+  check('suggestion Moonraker : annuler, pas l\'arret d\'urgence', sug.stop_entity, 'button.voron_cancel_print');
+  check('suggestion Moonraker : aucune chauffe prise pour la prise', sug.power_entity, undefined);
+}
 
 report();

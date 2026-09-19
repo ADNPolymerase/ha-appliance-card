@@ -52,7 +52,8 @@ customElements.define("ha-icon", StubIcon);
 const params = new URLSearchParams(location.search);
 const uiLang = params.get("lang") === "fr" ? "fr" : "en";
 const view = params.get("view") === "types" ? "types" : "hero";
-document.documentElement.style.setProperty("--cols", params.get("cols") || (view === "types" ? 5 : 4));
+// Sixteen types make a square of four.
+document.documentElement.style.setProperty("--cols", params.get("cols") || 4);
 const fr = uiLang === "fr";
 const L = (en, f) => (fr ? f : en);
 
@@ -339,10 +340,60 @@ const boiler = () => card({
   st("sensor.boiler_flow_temp", 58, { unit_of_measurement: "°C" }),
 ]);
 
+// An air-to-water heat pump filling its hot water tank. The COP is worked out
+// from the heat output over the power drawn.
+const heatPump = () => card({
+  illustration_color: "white",
+  name: L("Heat pump", "Pompe à chaleur"),
+  appliance_type: "heat_pump",
+  state_entity: "climate.heat_pump_zone",
+  hot_water_entity: "binary_sensor.heat_pump_hot_water",
+  temperature_entity: "sensor.heat_pump_flow_temp",
+  outdoor_temperature_entity: "sensor.heat_pump_outdoor_temp",
+  power_entity: "sensor.heat_pump_power",
+  heat_output_entity: "sensor.heat_pump_heat_output",
+}, [
+  st("climate.heat_pump_zone", "heat", { hvac_action: "heating" }),
+  st("binary_sensor.heat_pump_hot_water", "on"),
+  st("sensor.heat_pump_flow_temp", 48, { unit_of_measurement: "°C" }),
+  st("sensor.heat_pump_outdoor_temp", 6, { unit_of_measurement: "°C" }),
+  st("sensor.heat_pump_power", 1150, { unit_of_measurement: "W" }),
+  st("sensor.heat_pump_heat_output", 3900, { unit_of_measurement: "W" }),
+]);
+
+// A Bambu Lab printer halfway through a part, as its integration reports it:
+// a lowercase status, a remaining time in hours.
+const printer3d = () => card({
+  name: L("3D printer", "Imprimante 3D"),
+  appliance_type: "printer_3d",
+  state_entity: "sensor.printer_print_status",
+  progress_entity: "sensor.printer_progress",
+  remaining_time_entity: "sensor.printer_remaining_time",
+  program_entity: "sensor.printer_task_name",
+  nozzle_temperature_entity: "sensor.printer_nozzle_temp",
+  nozzle_target_entity: "sensor.printer_nozzle_target",
+  bed_temperature_entity: "sensor.printer_bed_temp",
+  bed_target_entity: "sensor.printer_bed_target",
+  current_layer_entity: "sensor.printer_layer",
+  total_layers_entity: "sensor.printer_layers",
+}, [
+  st("sensor.printer_print_status", "running"),
+  st("sensor.printer_progress", 45, { unit_of_measurement: "%" }),
+  st("sensor.printer_remaining_time", 1.25, { unit_of_measurement: "h" }),
+  st("sensor.printer_task_name", "Benchy.3mf"),
+  st("sensor.printer_nozzle_temp", 219, { unit_of_measurement: "°C" }),
+  st("sensor.printer_nozzle_target", 220, { unit_of_measurement: "°C" }),
+  st("sensor.printer_bed_temp", 55, { unit_of_measurement: "°C" }),
+  st("sensor.printer_bed_target", 55, { unit_of_measurement: "°C" }),
+  st("sensor.printer_layer", 84),
+  st("sensor.printer_layers", 190),
+]);
+
 // ?only=cooker,coffee filters the gallery down to a few types, which is how
 // the animated captures are taken.
 const ALL = { washer, dryer, dishwasher, oven, microwave, hood, cooktop, fridge,
-              kettle, cooker, coffee, rice_cooker: riceCooker, water_heater: waterHeater, boiler };
+              kettle, cooker, coffee, rice_cooker: riceCooker, water_heater: waterHeater, boiler,
+              heat_pump: heatPump, printer_3d: printer3d };
 const only = (params.get("only") || "").split(",").map((k) => k.trim()).filter(Boolean);
 if (only.length) {
   document.documentElement.style.setProperty("--cols", only.length);

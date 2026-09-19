@@ -1,4 +1,4 @@
-const CARD_VERSION = "2.6.2";
+const CARD_VERSION = "2.7.0";
 
 console.info(
   "%c HA-APPLIANCE-CARD %c v" + CARD_VERSION + " ",
@@ -113,9 +113,20 @@ const T = {
     language: "Language", language_auto: "Follow Home Assistant",
     illustration_color: "Appliance colour", color_auto: "Follow the theme",
     color_white: "White", color_grey: "Grey", color_black: "Black",
-    type_water_heater: "Water heater", type_boiler: "Boiler",
-    boiler_space_heating: "Heating", boiler_hot_water: "Hot water", boiler_burner: "Burner on", boiler_starting: "Ignition", boiler_waiting: "Waiting",
-    section_space_heating: "Central heating indicator", section_hot_water: "Hot water indicator", section_flow_temperature: "Flow temperature",
+    type_water_heater: "Water heater", type_boiler: "Boiler", type_heat_pump: "Heat pump",
+    boiler_space_heating: "Heating", boiler_hot_water: "Hot water", boiler_burner: "Burner on", boiler_starting: "Ignition", boiler_waiting: "Waiting", hp_cooling: "Cooling", hp_defrost: "Defrosting",
+    section_space_heating: "Central heating indicator", section_hot_water: "Hot water indicator", section_flow_temperature: "Flow temperature", section_heat_output: "Heat output", section_cop: "Coefficient of performance (COP)", section_outdoor_temperature: "Outdoor temperature",
+    type_printer_3d: "3D printer", section_nozzle_temperature: "Nozzle temperature", section_nozzle_target: "Nozzle target temperature",
+    section_bed_temperature: "Bed temperature", section_bed_target: "Bed target temperature", section_chamber_temperature: "Chamber temperature",
+    section_current_layer: "Current layer", section_total_layers: "Total layers", section_print_file: "Print file",
+    section_print_stage: "Print stage", section_printer_layout: "Frame", layout_enclosed: "Enclosed",
+    layout_open: "Open frame (moving bed)", unit_hours: "Hours", p3_nozzle: "Nozzle",
+    p3_bed: "Bed", p3_chamber: "Chamber", p3_layer: "Layer",
+    p3_file: "File", p3_printing: "Printing", p3_preparing: "Preparing",
+    p3_cancelled: "Cancelled", p3_failed: "Failed", p3_offline: "Offline",
+    p3_attention: "Needs attention", p3_leveling: "Bed levelling", p3_filament: "Changing filament",
+    p3_cooling: "Cooling", p3_calibrating: "Calibrating", p3_homing: "Homing",
+    section_printed_part: "Printed part", part_cube: "Cube", part_pyramid: "Pyramid", part_duck: "Rubber duck",
   },
   fr: {
     idle: "En veille", running: "En cours", paused: "En pause", done: "Termin\u00e9",
@@ -219,9 +230,20 @@ const T = {
     language: "Langue", language_auto: "Suivre Home Assistant",
     illustration_color: "Couleur de l'appareil", color_auto: "Suivre le th\u00e8me",
     color_white: "Blanc", color_grey: "Gris", color_black: "Noir",
-    type_water_heater: "Chauffe-eau", type_boiler: "Chaudi\u00e8re",
-    boiler_space_heating: "Chauffage", boiler_hot_water: "Eau chaude", boiler_burner: "Br\u00fbleur allum\u00e9", boiler_starting: "Allumage", boiler_waiting: "En attente",
-    section_space_heating: "Indicateur de chauffage", section_hot_water: "Indicateur d'eau chaude", section_flow_temperature: "Temp\u00e9rature de d\u00e9part",
+    type_water_heater: "Chauffe-eau", type_boiler: "Chaudi\u00e8re", type_heat_pump: "Pompe \u00e0 chaleur",
+    boiler_space_heating: "Chauffage", boiler_hot_water: "Eau chaude", boiler_burner: "Br\u00fbleur allum\u00e9", boiler_starting: "Allumage", boiler_waiting: "En attente", hp_cooling: "Rafra\u00eechissement", hp_defrost: "D\u00e9givrage",
+    section_space_heating: "Indicateur de chauffage", section_hot_water: "Indicateur d'eau chaude", section_flow_temperature: "Temp\u00e9rature de d\u00e9part", section_heat_output: "Chaleur produite", section_cop: "Coefficient de performance (COP)", section_outdoor_temperature: "Temp\u00e9rature ext\u00e9rieure",
+    type_printer_3d: "Imprimante 3D", section_nozzle_temperature: "Temp\u00e9rature de la buse", section_nozzle_target: "Consigne de la buse",
+    section_bed_temperature: "Temp\u00e9rature du plateau", section_bed_target: "Consigne du plateau", section_chamber_temperature: "Temp\u00e9rature de l'enceinte",
+    section_current_layer: "Couche en cours", section_total_layers: "Nombre de couches", section_print_file: "Fichier imprim\u00e9",
+    section_print_stage: "\u00c9tape d'impression", section_printer_layout: "Ch\u00e2ssis", layout_enclosed: "Ferm\u00e9e (caisson)",
+    layout_open: "Ouverte (plateau mobile)", unit_hours: "Heures", p3_nozzle: "Buse",
+    p3_bed: "Plateau", p3_chamber: "Enceinte", p3_layer: "Couche",
+    p3_file: "Fichier", p3_printing: "Impression", p3_preparing: "Pr\u00e9paration",
+    p3_cancelled: "Annul\u00e9e", p3_failed: "\u00c9chec", p3_offline: "Hors ligne",
+    p3_attention: "Intervention requise", p3_leveling: "Nivellement du plateau", p3_filament: "Changement de filament",
+    p3_cooling: "Refroidissement", p3_calibrating: "Calibrage", p3_homing: "Mise \u00e0 l'origine",
+    section_printed_part: "Pi\u00e8ce imprim\u00e9e", part_cube: "Cube", part_pyramid: "Pyramide", part_duck: "Canard en plastique",
   },
   ru: {
     idle: "\u041e\u0436\u0438\u0434\u0430\u043d\u0438\u0435", running: "\u0420\u0430\u0431\u043e\u0442\u0430\u0435\u0442", paused: "\u041d\u0430 \u043f\u0430\u0443\u0437\u0435", done: "\u0417\u0430\u0432\u0435\u0440\u0448\u0435\u043d\u043e",
@@ -325,9 +347,20 @@ const T = {
     language: "\u042f\u0437\u044b\u043a", language_auto: "\u0421\u043b\u0435\u0434\u043e\u0432\u0430\u0442\u044c Home Assistant",
     illustration_color: "\u0426\u0432\u0435\u0442 \u043f\u0440\u0438\u0431\u043e\u0440\u0430", color_auto: "\u041a\u0430\u043a \u0432 \u0442\u0435\u043c\u0435",
     color_white: "\u0411\u0435\u043b\u044b\u0439", color_grey: "\u0421\u0435\u0440\u044b\u0439", color_black: "\u0427\u0451\u0440\u043d\u044b\u0439",
-    type_water_heater: "\u0412\u043e\u0434\u043e\u043d\u0430\u0433\u0440\u0435\u0432\u0430\u0442\u0435\u043b\u044c", type_boiler: "\u041a\u043e\u0442\u0451\u043b",
-    boiler_space_heating: "\u041e\u0442\u043e\u043f\u043b\u0435\u043d\u0438\u0435", boiler_hot_water: "\u0413\u043e\u0440\u044f\u0447\u0430\u044f \u0432\u043e\u0434\u0430", boiler_burner: "\u0413\u043e\u0440\u0435\u043b\u043a\u0430 \u0432\u043a\u043b\u044e\u0447\u0435\u043d\u0430", boiler_starting: "\u0420\u043e\u0437\u0436\u0438\u0433", boiler_waiting: "\u041f\u0430\u0443\u0437\u0430 \u0433\u043e\u0440\u0435\u043b\u043a\u0438",
-    section_space_heating: "\u0418\u043d\u0434\u0438\u043a\u0430\u0442\u043e\u0440 \u043e\u0442\u043e\u043f\u043b\u0435\u043d\u0438\u044f", section_hot_water: "\u0418\u043d\u0434\u0438\u043a\u0430\u0442\u043e\u0440 \u0433\u043e\u0440\u044f\u0447\u0435\u0439 \u0432\u043e\u0434\u044b", section_flow_temperature: "\u0422\u0435\u043c\u043f\u0435\u0440\u0430\u0442\u0443\u0440\u0430 \u043f\u043e\u0434\u0430\u0447\u0438",
+    type_water_heater: "\u0412\u043e\u0434\u043e\u043d\u0430\u0433\u0440\u0435\u0432\u0430\u0442\u0435\u043b\u044c", type_boiler: "\u041a\u043e\u0442\u0451\u043b", type_heat_pump: "\u0422\u0435\u043f\u043b\u043e\u0432\u043e\u0439 \u043d\u0430\u0441\u043e\u0441",
+    boiler_space_heating: "\u041e\u0442\u043e\u043f\u043b\u0435\u043d\u0438\u0435", boiler_hot_water: "\u0413\u043e\u0440\u044f\u0447\u0430\u044f \u0432\u043e\u0434\u0430", boiler_burner: "\u0413\u043e\u0440\u0435\u043b\u043a\u0430 \u0432\u043a\u043b\u044e\u0447\u0435\u043d\u0430", boiler_starting: "\u0420\u043e\u0437\u0436\u0438\u0433", boiler_waiting: "\u041f\u0430\u0443\u0437\u0430 \u0433\u043e\u0440\u0435\u043b\u043a\u0438", hp_cooling: "\u041e\u0445\u043b\u0430\u0436\u0434\u0435\u043d\u0438\u0435", hp_defrost: "\u041e\u0442\u0442\u0430\u0439\u043a\u0430",
+    section_space_heating: "\u0418\u043d\u0434\u0438\u043a\u0430\u0442\u043e\u0440 \u043e\u0442\u043e\u043f\u043b\u0435\u043d\u0438\u044f", section_hot_water: "\u0418\u043d\u0434\u0438\u043a\u0430\u0442\u043e\u0440 \u0433\u043e\u0440\u044f\u0447\u0435\u0439 \u0432\u043e\u0434\u044b", section_flow_temperature: "\u0422\u0435\u043c\u043f\u0435\u0440\u0430\u0442\u0443\u0440\u0430 \u043f\u043e\u0434\u0430\u0447\u0438", section_heat_output: "\u0422\u0435\u043f\u043b\u043e\u0432\u0430\u044f \u043c\u043e\u0449\u043d\u043e\u0441\u0442\u044c", section_cop: "\u041a\u043e\u044d\u0444\u0444\u0438\u0446\u0438\u0435\u043d\u0442 \u044d\u0444\u0444\u0435\u043a\u0442\u0438\u0432\u043d\u043e\u0441\u0442\u0438 (COP)", section_outdoor_temperature: "\u041d\u0430\u0440\u0443\u0436\u043d\u0430\u044f \u0442\u0435\u043c\u043f\u0435\u0440\u0430\u0442\u0443\u0440\u0430",
+    type_printer_3d: "3D-\u043f\u0440\u0438\u043d\u0442\u0435\u0440", section_nozzle_temperature: "\u0422\u0435\u043c\u043f\u0435\u0440\u0430\u0442\u0443\u0440\u0430 \u0441\u043e\u043f\u043b\u0430", section_nozzle_target: "\u0417\u0430\u0434\u0430\u043d\u043d\u0430\u044f \u0442\u0435\u043c\u043f\u0435\u0440\u0430\u0442\u0443\u0440\u0430 \u0441\u043e\u043f\u043b\u0430",
+    section_bed_temperature: "\u0422\u0435\u043c\u043f\u0435\u0440\u0430\u0442\u0443\u0440\u0430 \u0441\u0442\u043e\u043b\u0430", section_bed_target: "\u0417\u0430\u0434\u0430\u043d\u043d\u0430\u044f \u0442\u0435\u043c\u043f\u0435\u0440\u0430\u0442\u0443\u0440\u0430 \u0441\u0442\u043e\u043b\u0430", section_chamber_temperature: "\u0422\u0435\u043c\u043f\u0435\u0440\u0430\u0442\u0443\u0440\u0430 \u043a\u0430\u043c\u0435\u0440\u044b",
+    section_current_layer: "\u0422\u0435\u043a\u0443\u0449\u0438\u0439 \u0441\u043b\u043e\u0439", section_total_layers: "\u0412\u0441\u0435\u0433\u043e \u0441\u043b\u043e\u0451\u0432", section_print_file: "\u0424\u0430\u0439\u043b \u043f\u0435\u0447\u0430\u0442\u0438",
+    section_print_stage: "\u042d\u0442\u0430\u043f \u043f\u0435\u0447\u0430\u0442\u0438", section_printer_layout: "\u041a\u043e\u0440\u043f\u0443\u0441", layout_enclosed: "\u0417\u0430\u043a\u0440\u044b\u0442\u044b\u0439 \u043a\u043e\u0440\u043f\u0443\u0441",
+    layout_open: "\u041e\u0442\u043a\u0440\u044b\u0442\u044b\u0439 \u043a\u0430\u0440\u043a\u0430\u0441 (\u043f\u043e\u0434\u0432\u0438\u0436\u043d\u044b\u0439 \u0441\u0442\u043e\u043b)", unit_hours: "\u0427\u0430\u0441\u044b", p3_nozzle: "\u0421\u043e\u043f\u043b\u043e",
+    p3_bed: "\u0421\u0442\u043e\u043b", p3_chamber: "\u041a\u0430\u043c\u0435\u0440\u0430", p3_layer: "\u0421\u043b\u043e\u0439",
+    p3_file: "\u0424\u0430\u0439\u043b", p3_printing: "\u041f\u0435\u0447\u0430\u0442\u044c", p3_preparing: "\u041f\u043e\u0434\u0433\u043e\u0442\u043e\u0432\u043a\u0430",
+    p3_cancelled: "\u041e\u0442\u043c\u0435\u043d\u0435\u043d\u043e", p3_failed: "\u0421\u0431\u043e\u0439", p3_offline: "\u041d\u0435 \u0432 \u0441\u0435\u0442\u0438",
+    p3_attention: "\u0422\u0440\u0435\u0431\u0443\u0435\u0442\u0441\u044f \u0432\u043d\u0438\u043c\u0430\u043d\u0438\u0435", p3_leveling: "\u0412\u044b\u0440\u0430\u0432\u043d\u0438\u0432\u0430\u043d\u0438\u0435 \u0441\u0442\u043e\u043b\u0430", p3_filament: "\u0421\u043c\u0435\u043d\u0430 \u0444\u0438\u043b\u0430\u043c\u0435\u043d\u0442\u0430",
+    p3_cooling: "\u041e\u0445\u043b\u0430\u0436\u0434\u0435\u043d\u0438\u0435", p3_calibrating: "\u041a\u0430\u043b\u0438\u0431\u0440\u043e\u0432\u043a\u0430", p3_homing: "\u041f\u0430\u0440\u043a\u043e\u0432\u043a\u0430 \u043e\u0441\u0435\u0439",
+    section_printed_part: "\u041f\u0435\u0447\u0430\u0442\u0430\u0435\u043c\u0430\u044f \u043c\u043e\u0434\u0435\u043b\u044c", part_cube: "\u041a\u0443\u0431", part_pyramid: "\u041f\u0438\u0440\u0430\u043c\u0438\u0434\u0430", part_duck: "\u0420\u0435\u0437\u0438\u043d\u043e\u0432\u0430\u044f \u0443\u0442\u043e\u0447\u043a\u0430",
   },
   de: {
     idle: "Inaktiv", running: "L\u00e4uft", paused: "Pausiert", done: "Fertig",
@@ -431,9 +464,20 @@ const T = {
     language: "Sprache", language_auto: "Home Assistant folgen",
     illustration_color: "Ger\u00e4tefarbe", color_auto: "Theme folgen",
     color_white: "Wei\u00df", color_grey: "Grau", color_black: "Schwarz",
-    type_water_heater: "Warmwasserspeicher", type_boiler: "Heizkessel",
-    boiler_space_heating: "Heizung", boiler_hot_water: "Warmwasser", boiler_burner: "Brenner an", boiler_starting: "Z\u00fcndung", boiler_waiting: "Wartezeit",
-    section_space_heating: "Heizungsanzeige", section_hot_water: "Warmwasseranzeige", section_flow_temperature: "Vorlauftemperatur",
+    type_water_heater: "Warmwasserspeicher", type_boiler: "Heizkessel", type_heat_pump: "W\u00e4rmepumpe",
+    boiler_space_heating: "Heizung", boiler_hot_water: "Warmwasser", boiler_burner: "Brenner an", boiler_starting: "Z\u00fcndung", boiler_waiting: "Wartezeit", hp_cooling: "K\u00fchlen", hp_defrost: "Abtauen",
+    section_space_heating: "Heizungsanzeige", section_hot_water: "Warmwasseranzeige", section_flow_temperature: "Vorlauftemperatur", section_heat_output: "Heizleistung", section_cop: "Leistungszahl (COP)", section_outdoor_temperature: "Au\u00dfentemperatur",
+    type_printer_3d: "3D-Drucker", section_nozzle_temperature: "D\u00fcsentemperatur", section_nozzle_target: "D\u00fcsen-Solltemperatur",
+    section_bed_temperature: "Betttemperatur", section_bed_target: "Bett-Solltemperatur", section_chamber_temperature: "Bauraumtemperatur",
+    section_current_layer: "Aktuelle Schicht", section_total_layers: "Schichten gesamt", section_print_file: "Druckdatei",
+    section_print_stage: "Druckphase", section_printer_layout: "Bauform", layout_enclosed: "Geschlossen",
+    layout_open: "Offen (bewegliches Bett)", unit_hours: "Stunden", p3_nozzle: "D\u00fcse",
+    p3_bed: "Bett", p3_chamber: "Bauraum", p3_layer: "Schicht",
+    p3_file: "Datei", p3_printing: "Druckt", p3_preparing: "Vorbereitung",
+    p3_cancelled: "Abgebrochen", p3_failed: "Fehlgeschlagen", p3_offline: "Offline",
+    p3_attention: "Eingriff n\u00f6tig", p3_leveling: "Bettnivellierung", p3_filament: "Filamentwechsel",
+    p3_cooling: "Abk\u00fchlen", p3_calibrating: "Kalibrierung", p3_homing: "Referenzfahrt",
+    section_printed_part: "Druckobjekt", part_cube: "W\u00fcrfel", part_pyramid: "Pyramide", part_duck: "Quietscheentchen",
   },
   es: {
     idle: "Inactivo", running: "En marcha", paused: "En pausa", done: "Finalizado",
@@ -537,9 +581,20 @@ const T = {
     language: "Idioma", language_auto: "Seguir a Home Assistant",
     illustration_color: "Color del aparato", color_auto: "Seguir el tema",
     color_white: "Blanco", color_grey: "Gris", color_black: "Negro",
-    type_water_heater: "Termo", type_boiler: "Caldera",
-    boiler_space_heating: "Calefacci\u00f3n", boiler_hot_water: "Agua caliente", boiler_burner: "Quemador encendido", boiler_starting: "Ignici\u00f3n", boiler_waiting: "Pausa del quemador",
-    section_space_heating: "Indicador de calefacci\u00f3n", section_hot_water: "Indicador de agua caliente", section_flow_temperature: "Temperatura de impulsi\u00f3n",
+    type_water_heater: "Termo", type_boiler: "Caldera", type_heat_pump: "Bomba de calor",
+    boiler_space_heating: "Calefacci\u00f3n", boiler_hot_water: "Agua caliente", boiler_burner: "Quemador encendido", boiler_starting: "Ignici\u00f3n", boiler_waiting: "Pausa del quemador", hp_cooling: "Refrigeraci\u00f3n", hp_defrost: "Desescarche",
+    section_space_heating: "Indicador de calefacci\u00f3n", section_hot_water: "Indicador de agua caliente", section_flow_temperature: "Temperatura de impulsi\u00f3n", section_heat_output: "Calor producido", section_cop: "Coeficiente de rendimiento (COP)", section_outdoor_temperature: "Temperatura exterior",
+    type_printer_3d: "Impresora 3D", section_nozzle_temperature: "Temperatura de la boquilla", section_nozzle_target: "Temperatura objetivo de la boquilla",
+    section_bed_temperature: "Temperatura de la cama", section_bed_target: "Temperatura objetivo de la cama", section_chamber_temperature: "Temperatura de la c\u00e1mara",
+    section_current_layer: "Capa actual", section_total_layers: "Capas totales", section_print_file: "Archivo de impresi\u00f3n",
+    section_print_stage: "Etapa de impresi\u00f3n", section_printer_layout: "Chasis", layout_enclosed: "Cerrada",
+    layout_open: "Abierta (cama m\u00f3vil)", unit_hours: "Horas", p3_nozzle: "Boquilla",
+    p3_bed: "Cama", p3_chamber: "C\u00e1mara", p3_layer: "Capa",
+    p3_file: "Archivo", p3_printing: "Imprimiendo", p3_preparing: "Preparando",
+    p3_cancelled: "Cancelada", p3_failed: "Fallida", p3_offline: "Sin conexi\u00f3n",
+    p3_attention: "Requiere atenci\u00f3n", p3_leveling: "Nivelando la cama", p3_filament: "Cambiando el filamento",
+    p3_cooling: "Enfriando", p3_calibrating: "Calibrando", p3_homing: "Buscando el origen",
+    section_printed_part: "Pieza impresa", part_cube: "Cubo", part_pyramid: "Pir\u00e1mide", part_duck: "Patito de goma",
   },
   it: {
     idle: "Inattivo", running: "In funzione", paused: "In pausa", done: "Terminato",
@@ -643,9 +698,20 @@ const T = {
     language: "Lingua", language_auto: "Segui Home Assistant",
     illustration_color: "Colore dell'elettrodomestico", color_auto: "Segui il tema",
     color_white: "Bianco", color_grey: "Grigio", color_black: "Nero",
-    type_water_heater: "Scaldabagno", type_boiler: "Caldaia",
-    boiler_space_heating: "Riscaldamento", boiler_hot_water: "Acqua calda", boiler_burner: "Bruciatore acceso", boiler_starting: "Accensione", boiler_waiting: "Pausa bruciatore",
-    section_space_heating: "Indicatore riscaldamento", section_hot_water: "Indicatore acqua calda", section_flow_temperature: "Temperatura di mandata",
+    type_water_heater: "Scaldabagno", type_boiler: "Caldaia", type_heat_pump: "Pompa di calore",
+    boiler_space_heating: "Riscaldamento", boiler_hot_water: "Acqua calda", boiler_burner: "Bruciatore acceso", boiler_starting: "Accensione", boiler_waiting: "Pausa bruciatore", hp_cooling: "Raffrescamento", hp_defrost: "Sbrinamento",
+    section_space_heating: "Indicatore riscaldamento", section_hot_water: "Indicatore acqua calda", section_flow_temperature: "Temperatura di mandata", section_heat_output: "Calore prodotto", section_cop: "Coefficiente di prestazione (COP)", section_outdoor_temperature: "Temperatura esterna",
+    type_printer_3d: "Stampante 3D", section_nozzle_temperature: "Temperatura dell'ugello", section_nozzle_target: "Temperatura obiettivo dell'ugello",
+    section_bed_temperature: "Temperatura del piatto", section_bed_target: "Temperatura obiettivo del piatto", section_chamber_temperature: "Temperatura della camera",
+    section_current_layer: "Strato attuale", section_total_layers: "Strati totali", section_print_file: "File di stampa",
+    section_print_stage: "Fase di stampa", section_printer_layout: "Telaio", layout_enclosed: "Chiusa",
+    layout_open: "Aperta (piatto mobile)", unit_hours: "Ore", p3_nozzle: "Ugello",
+    p3_bed: "Piatto", p3_chamber: "Camera", p3_layer: "Strato",
+    p3_file: "File", p3_printing: "In stampa", p3_preparing: "Preparazione",
+    p3_cancelled: "Annullata", p3_failed: "Non riuscita", p3_offline: "Offline",
+    p3_attention: "Richiede attenzione", p3_leveling: "Livellamento del piatto", p3_filament: "Cambio filamento",
+    p3_cooling: "Raffreddamento", p3_calibrating: "Calibrazione", p3_homing: "Azzeramento assi",
+    section_printed_part: "Oggetto stampato", part_cube: "Cubo", part_pyramid: "Piramide", part_duck: "Paperella di gomma",
   },
   nl: {
     idle: "Inactief", running: "Actief", paused: "Gepauzeerd", done: "Klaar",
@@ -749,9 +815,20 @@ const T = {
     language: "Taal", language_auto: "Home Assistant volgen",
     illustration_color: "Kleur van het apparaat", color_auto: "Thema volgen",
     color_white: "Wit", color_grey: "Grijs", color_black: "Zwart",
-    type_water_heater: "Boiler", type_boiler: "Cv-ketel",
-    boiler_space_heating: "Verwarming", boiler_hot_water: "Warm water", boiler_burner: "Brander aan", boiler_starting: "Ontsteking", boiler_waiting: "Wachten",
-    section_space_heating: "Cv-indicator", section_hot_water: "Warmwaterindicator", section_flow_temperature: "Aanvoertemperatuur",
+    type_water_heater: "Boiler", type_boiler: "Cv-ketel", type_heat_pump: "Warmtepomp",
+    boiler_space_heating: "Verwarming", boiler_hot_water: "Warm water", boiler_burner: "Brander aan", boiler_starting: "Ontsteking", boiler_waiting: "Wachten", hp_cooling: "Koelen", hp_defrost: "Ontdooien",
+    section_space_heating: "Cv-indicator", section_hot_water: "Warmwaterindicator", section_flow_temperature: "Aanvoertemperatuur", section_heat_output: "Warmteafgifte", section_cop: "Prestatieco\u00ebffici\u00ebnt (COP)", section_outdoor_temperature: "Buitentemperatuur",
+    type_printer_3d: "3D-printer", section_nozzle_temperature: "Nozzletemperatuur", section_nozzle_target: "Doeltemperatuur nozzle",
+    section_bed_temperature: "Bedtemperatuur", section_bed_target: "Doeltemperatuur bed", section_chamber_temperature: "Temperatuur van de behuizing",
+    section_current_layer: "Huidige laag", section_total_layers: "Totaal aantal lagen", section_print_file: "Printbestand",
+    section_print_stage: "Printfase", section_printer_layout: "Frame", layout_enclosed: "Gesloten",
+    layout_open: "Open frame (bewegend bed)", unit_hours: "Uren", p3_nozzle: "Nozzle",
+    p3_bed: "Bed", p3_chamber: "Behuizing", p3_layer: "Laag",
+    p3_file: "Bestand", p3_printing: "Bezig met printen", p3_preparing: "Voorbereiden",
+    p3_cancelled: "Geannuleerd", p3_failed: "Mislukt", p3_offline: "Offline",
+    p3_attention: "Aandacht vereist", p3_leveling: "Bed nivelleren", p3_filament: "Filament wisselen",
+    p3_cooling: "Afkoelen", p3_calibrating: "Kalibreren", p3_homing: "Homen",
+    section_printed_part: "Geprint object", part_cube: "Kubus", part_pyramid: "Piramide", part_duck: "Badeendje",
   },
   pt: {
     idle: "Inativo", running: "Em funcionamento", paused: "Em pausa", done: "Conclu\u00eddo",
@@ -855,9 +932,20 @@ const T = {
     language: "Idioma", language_auto: "Seguir o Home Assistant",
     illustration_color: "Cor do eletrodom\u00e9stico", color_auto: "Seguir o tema",
     color_white: "Branco", color_grey: "Cinzento", color_black: "Preto",
-    type_water_heater: "Termoacumulador", type_boiler: "Caldeira",
-    boiler_space_heating: "Aquecimento", boiler_hot_water: "\u00c1gua quente", boiler_burner: "Queimador ligado", boiler_starting: "Igni\u00e7\u00e3o", boiler_waiting: "Pausa do queimador",
-    section_space_heating: "Indicador de aquecimento central", section_hot_water: "Indicador de \u00e1gua quente", section_flow_temperature: "Temperatura de ida",
+    type_water_heater: "Termoacumulador", type_boiler: "Caldeira", type_heat_pump: "Bomba de calor",
+    boiler_space_heating: "Aquecimento", boiler_hot_water: "\u00c1gua quente", boiler_burner: "Queimador ligado", boiler_starting: "Igni\u00e7\u00e3o", boiler_waiting: "Pausa do queimador", hp_cooling: "Arrefecimento", hp_defrost: "Descongela\u00e7\u00e3o",
+    section_space_heating: "Indicador de aquecimento central", section_hot_water: "Indicador de \u00e1gua quente", section_flow_temperature: "Temperatura de ida", section_heat_output: "Calor produzido", section_cop: "Coeficiente de desempenho (COP)", section_outdoor_temperature: "Temperatura exterior",
+    type_printer_3d: "Impressora 3D", section_nozzle_temperature: "Temperatura do bico", section_nozzle_target: "Temperatura alvo do bico",
+    section_bed_temperature: "Temperatura da mesa", section_bed_target: "Temperatura alvo da mesa", section_chamber_temperature: "Temperatura da c\u00e2mara",
+    section_current_layer: "Camada atual", section_total_layers: "Total de camadas", section_print_file: "Arquivo de impress\u00e3o",
+    section_print_stage: "Etapa de impress\u00e3o", section_printer_layout: "Estrutura", layout_enclosed: "Fechada",
+    layout_open: "Aberta (mesa m\u00f3vel)", unit_hours: "Horas", p3_nozzle: "Bico",
+    p3_bed: "Mesa", p3_chamber: "C\u00e2mara", p3_layer: "Camada",
+    p3_file: "Arquivo", p3_printing: "Imprimindo", p3_preparing: "Preparando",
+    p3_cancelled: "Cancelada", p3_failed: "Falhou", p3_offline: "Offline",
+    p3_attention: "Requer aten\u00e7\u00e3o", p3_leveling: "Nivelando a mesa", p3_filament: "Trocando o filamento",
+    p3_cooling: "Resfriando", p3_calibrating: "Calibrando", p3_homing: "Retornando \u00e0 origem",
+    section_printed_part: "Pe\u00e7a impressa", part_cube: "Cubo", part_pyramid: "Pir\u00e2mide", part_duck: "Patinho de borracha",
   },
   sv: {
     idle: "Inaktiv", running: "Ig\u00e5ng", paused: "Pausad", done: "Klar",
@@ -961,9 +1049,20 @@ const T = {
     language: "Spr\u00e5k", language_auto: "F\u00f6lj Home Assistant",
     illustration_color: "Apparatens f\u00e4rg", color_auto: "F\u00f6lj temat",
     color_white: "Vit", color_grey: "Gr\u00e5", color_black: "Svart",
-    type_water_heater: "Varmvattenberedare", type_boiler: "Panna",
-    boiler_space_heating: "Uppv\u00e4rmning", boiler_hot_water: "Varmvatten", boiler_burner: "Br\u00e4nnare p\u00e5", boiler_starting: "T\u00e4ndning", boiler_waiting: "V\u00e4ntar",
-    section_space_heating: "Indikator f\u00f6r uppv\u00e4rmning", section_hot_water: "Indikator f\u00f6r varmvatten", section_flow_temperature: "Framledningstemperatur",
+    type_water_heater: "Varmvattenberedare", type_boiler: "Panna", type_heat_pump: "V\u00e4rmepump",
+    boiler_space_heating: "Uppv\u00e4rmning", boiler_hot_water: "Varmvatten", boiler_burner: "Br\u00e4nnare p\u00e5", boiler_starting: "T\u00e4ndning", boiler_waiting: "V\u00e4ntar", hp_cooling: "Kylning", hp_defrost: "Avfrostning",
+    section_space_heating: "Indikator f\u00f6r uppv\u00e4rmning", section_hot_water: "Indikator f\u00f6r varmvatten", section_flow_temperature: "Framledningstemperatur", section_heat_output: "V\u00e4rmeeffekt", section_cop: "V\u00e4rmefaktor (COP)", section_outdoor_temperature: "Utomhustemperatur",
+    type_printer_3d: "3D-skrivare", section_nozzle_temperature: "Munstyckets temperatur", section_nozzle_target: "Munstyckets m\u00e5ltemperatur",
+    section_bed_temperature: "B\u00e4ddens temperatur", section_bed_target: "B\u00e4ddens m\u00e5ltemperatur", section_chamber_temperature: "Kammartemperatur",
+    section_current_layer: "Aktuellt lager", section_total_layers: "Antal lager", section_print_file: "Utskriftsfil",
+    section_print_stage: "Utskriftsfas", section_printer_layout: "Ram", layout_enclosed: "Sluten",
+    layout_open: "\u00d6ppen ram (r\u00f6rlig b\u00e4dd)", unit_hours: "Timmar", p3_nozzle: "Munstycke",
+    p3_bed: "B\u00e4dd", p3_chamber: "Kammare", p3_layer: "Lager",
+    p3_file: "Fil", p3_printing: "Skriver ut", p3_preparing: "F\u00f6rbereder",
+    p3_cancelled: "Avbruten", p3_failed: "Misslyckades", p3_offline: "Offline",
+    p3_attention: "Kr\u00e4ver \u00e5tg\u00e4rd", p3_leveling: "Nivellerar b\u00e4dden", p3_filament: "Byter filament",
+    p3_cooling: "Kyler", p3_calibrating: "Kalibrerar", p3_homing: "Nollst\u00e4ller axlar",
+    section_printed_part: "Utskrivet objekt", part_cube: "Kub", part_pyramid: "Pyramid", part_duck: "Badanka",
   },
   no: {
     idle: "Inaktiv", running: "I gang", paused: "Pauset", done: "Ferdig",
@@ -1067,9 +1166,20 @@ const T = {
     language: "Spr\u00e5k", language_auto: "F\u00f8lg Home Assistant",
     illustration_color: "Farge p\u00e5 apparatet", color_auto: "F\u00f8lg temaet",
     color_white: "Hvit", color_grey: "Gr\u00e5", color_black: "Svart",
-    type_water_heater: "Varmtvannsbereder", type_boiler: "Kjele",
-    boiler_space_heating: "Oppvarming", boiler_hot_water: "Varmtvann", boiler_burner: "Brenner p\u00e5", boiler_starting: "Tenning", boiler_waiting: "Venter",
-    section_space_heating: "Indikator for oppvarming", section_hot_water: "Indikator for varmtvann", section_flow_temperature: "Turtemperatur",
+    type_water_heater: "Varmtvannsbereder", type_boiler: "Kjele", type_heat_pump: "Varmepumpe",
+    boiler_space_heating: "Oppvarming", boiler_hot_water: "Varmtvann", boiler_burner: "Brenner p\u00e5", boiler_starting: "Tenning", boiler_waiting: "Venter", hp_cooling: "Kj\u00f8ling", hp_defrost: "Avriming",
+    section_space_heating: "Indikator for oppvarming", section_hot_water: "Indikator for varmtvann", section_flow_temperature: "Turtemperatur", section_heat_output: "Varmeeffekt", section_cop: "Effektfaktor (COP)", section_outdoor_temperature: "Utetemperatur",
+    type_printer_3d: "3D-skriver", section_nozzle_temperature: "Dysetemperatur", section_nozzle_target: "M\u00e5ltemperatur for dysen",
+    section_bed_temperature: "Sengetemperatur", section_bed_target: "M\u00e5ltemperatur for sengen", section_chamber_temperature: "Kammertemperatur",
+    section_current_layer: "Gjeldende lag", section_total_layers: "Antall lag", section_print_file: "Utskriftsfil",
+    section_print_stage: "Utskriftsfase", section_printer_layout: "Ramme", layout_enclosed: "Lukket",
+    layout_open: "\u00c5pen ramme (bevegelig seng)", unit_hours: "Timer", p3_nozzle: "Dyse",
+    p3_bed: "Seng", p3_chamber: "Kammer", p3_layer: "Lag",
+    p3_file: "Fil", p3_printing: "Skriver ut", p3_preparing: "Forbereder",
+    p3_cancelled: "Avbrutt", p3_failed: "Mislyktes", p3_offline: "Frakoblet",
+    p3_attention: "Krever tilsyn", p3_leveling: "Nivellerer sengen", p3_filament: "Bytter filament",
+    p3_cooling: "Kj\u00f8ler", p3_calibrating: "Kalibrerer", p3_homing: "Nullstiller akser",
+    section_printed_part: "Utskrevet objekt", part_cube: "Kube", part_pyramid: "Pyramide", part_duck: "Badeand",
   },
   da: {
     idle: "Inaktiv", running: "I gang", paused: "Sat p\u00e5 pause", done: "F\u00e6rdig",
@@ -1173,9 +1283,20 @@ const T = {
     language: "Sprog", language_auto: "F\u00f8lg Home Assistant",
     illustration_color: "Apparatets farve", color_auto: "F\u00f8lg temaet",
     color_white: "Hvid", color_grey: "Gr\u00e5", color_black: "Sort",
-    type_water_heater: "Varmtvandsbeholder", type_boiler: "Kedel",
-    boiler_space_heating: "Opvarmning", boiler_hot_water: "Varmt vand", boiler_burner: "Br\u00e6nder t\u00e6ndt", boiler_starting: "T\u00e6nding", boiler_waiting: "Venter",
-    section_space_heating: "Indikator for opvarmning", section_hot_water: "Indikator for varmt vand", section_flow_temperature: "Freml\u00f8bstemperatur",
+    type_water_heater: "Varmtvandsbeholder", type_boiler: "Kedel", type_heat_pump: "Varmepumpe",
+    boiler_space_heating: "Opvarmning", boiler_hot_water: "Varmt vand", boiler_burner: "Br\u00e6nder t\u00e6ndt", boiler_starting: "T\u00e6nding", boiler_waiting: "Venter", hp_cooling: "K\u00f8ling", hp_defrost: "Afrimning",
+    section_space_heating: "Indikator for opvarmning", section_hot_water: "Indikator for varmt vand", section_flow_temperature: "Freml\u00f8bstemperatur", section_heat_output: "Varmeydelse", section_cop: "Effektfaktor (COP)", section_outdoor_temperature: "Udetemperatur",
+    type_printer_3d: "3D-printer", section_nozzle_temperature: "Dysetemperatur", section_nozzle_target: "M\u00e5ltemperatur for dysen",
+    section_bed_temperature: "Sengetemperatur", section_bed_target: "M\u00e5ltemperatur for sengen", section_chamber_temperature: "Kammertemperatur",
+    section_current_layer: "Aktuelt lag", section_total_layers: "Antal lag", section_print_file: "Printfil",
+    section_print_stage: "Printfase", section_printer_layout: "Ramme", layout_enclosed: "Lukket",
+    layout_open: "\u00c5ben ramme (bev\u00e6gelig seng)", unit_hours: "Timer", p3_nozzle: "Dyse",
+    p3_bed: "Seng", p3_chamber: "Kammer", p3_layer: "Lag",
+    p3_file: "Fil", p3_printing: "Printer", p3_preparing: "Forbereder",
+    p3_cancelled: "Annulleret", p3_failed: "Mislykkedes", p3_offline: "Offline",
+    p3_attention: "Kr\u00e6ver handling", p3_leveling: "Nivellerer sengen", p3_filament: "Skifter filament",
+    p3_cooling: "K\u00f8ler", p3_calibrating: "Kalibrerer", p3_homing: "Nulstiller akser",
+    section_printed_part: "Printet emne", part_cube: "Terning", part_pyramid: "Pyramide", part_duck: "Badeand",
   },
   pl: {
     idle: "Bezczynny", running: "W trakcie", paused: "Wstrzymany", done: "Zako\u0144czony",
@@ -1279,9 +1400,20 @@ const T = {
     language: "J\u0119zyk", language_auto: "Zgodnie z Home Assistant",
     illustration_color: "Kolor urz\u0105dzenia", color_auto: "Zgodnie z motywem",
     color_white: "Bia\u0142y", color_grey: "Szary", color_black: "Czarny",
-    type_water_heater: "Podgrzewacz wody", type_boiler: "Kocio\u0142",
-    boiler_space_heating: "Ogrzewanie", boiler_hot_water: "Ciep\u0142a woda", boiler_burner: "Palnik w\u0142\u0105czony", boiler_starting: "Zap\u0142on", boiler_waiting: "Oczekiwanie",
-    section_space_heating: "Wska\u017anik ogrzewania", section_hot_water: "Wska\u017anik ciep\u0142ej wody", section_flow_temperature: "Temperatura zasilania",
+    type_water_heater: "Podgrzewacz wody", type_boiler: "Kocio\u0142", type_heat_pump: "Pompa ciep\u0142a",
+    boiler_space_heating: "Ogrzewanie", boiler_hot_water: "Ciep\u0142a woda", boiler_burner: "Palnik w\u0142\u0105czony", boiler_starting: "Zap\u0142on", boiler_waiting: "Oczekiwanie", hp_cooling: "Ch\u0142odzenie", hp_defrost: "Odszranianie",
+    section_space_heating: "Wska\u017anik ogrzewania", section_hot_water: "Wska\u017anik ciep\u0142ej wody", section_flow_temperature: "Temperatura zasilania", section_heat_output: "Moc grzewcza", section_cop: "Wsp\u00f3\u0142czynnik efektywno\u015bci (COP)", section_outdoor_temperature: "Temperatura zewn\u0119trzna",
+    type_printer_3d: "Drukarka 3D", section_nozzle_temperature: "Temperatura dyszy", section_nozzle_target: "Temperatura docelowa dyszy",
+    section_bed_temperature: "Temperatura sto\u0142u", section_bed_target: "Temperatura docelowa sto\u0142u", section_chamber_temperature: "Temperatura komory",
+    section_current_layer: "Bie\u017c\u0105ca warstwa", section_total_layers: "Liczba warstw", section_print_file: "Plik wydruku",
+    section_print_stage: "Etap drukowania", section_printer_layout: "Konstrukcja", layout_enclosed: "Zamkni\u0119ta",
+    layout_open: "Otwarta rama (ruchomy st\u00f3\u0142)", unit_hours: "Godziny", p3_nozzle: "Dysza",
+    p3_bed: "St\u00f3\u0142", p3_chamber: "Komora", p3_layer: "Warstwa",
+    p3_file: "Plik", p3_printing: "Drukowanie", p3_preparing: "Przygotowanie",
+    p3_cancelled: "Anulowano", p3_failed: "Nieudany", p3_offline: "Offline",
+    p3_attention: "Wymaga uwagi", p3_leveling: "Poziomowanie sto\u0142u", p3_filament: "Zmiana filamentu",
+    p3_cooling: "Ch\u0142odzenie", p3_calibrating: "Kalibracja", p3_homing: "Bazowanie",
+    section_printed_part: "Drukowany obiekt", part_cube: "Sze\u015bcian", part_pyramid: "Piramida", part_duck: "Gumowa kaczuszka",
   },
   zh: {
     idle: "\u7a7a\u95f2", running: "\u8fd0\u884c\u4e2d", paused: "\u6682\u505c", done: "\u5b8c\u6210",
@@ -1385,9 +1517,20 @@ const T = {
     language: "\u8bed\u8a00", language_auto: "\u8ddf\u968f Home Assistant",
     illustration_color: "\u8bbe\u5907\u989c\u8272", color_auto: "\u8ddf\u968f\u4e3b\u9898",
     color_white: "\u767d\u8272", color_grey: "\u7070\u8272", color_black: "\u9ed1\u8272",
-    type_water_heater: "\u70ed\u6c34\u5668", type_boiler: "\u9505\u7089",
-    boiler_space_heating: "\u4f9b\u6696", boiler_hot_water: "\u70ed\u6c34", boiler_burner: "\u71c3\u70e7\u5668\u5df2\u70b9\u706b", boiler_starting: "\u70b9\u706b\u4e2d", boiler_waiting: "\u7b49\u5f85\u4e2d",
-    section_space_heating: "\u4f9b\u6696\u6307\u793a", section_hot_water: "\u70ed\u6c34\u6307\u793a", section_flow_temperature: "\u4f9b\u6c34\u6e29\u5ea6",
+    type_water_heater: "\u70ed\u6c34\u5668", type_boiler: "\u9505\u7089", type_heat_pump: "\u70ed\u6cf5",
+    boiler_space_heating: "\u4f9b\u6696", boiler_hot_water: "\u70ed\u6c34", boiler_burner: "\u71c3\u70e7\u5668\u5df2\u70b9\u706b", boiler_starting: "\u70b9\u706b\u4e2d", boiler_waiting: "\u7b49\u5f85\u4e2d", hp_cooling: "\u5236\u51b7", hp_defrost: "\u9664\u971c",
+    section_space_heating: "\u4f9b\u6696\u6307\u793a", section_hot_water: "\u70ed\u6c34\u6307\u793a", section_flow_temperature: "\u4f9b\u6c34\u6e29\u5ea6", section_heat_output: "\u5236\u70ed\u91cf", section_cop: "\u80fd\u6548\u6bd4 (COP)", section_outdoor_temperature: "\u5ba4\u5916\u6e29\u5ea6",
+    type_printer_3d: "3D \u6253\u5370\u673a", section_nozzle_temperature: "\u55b7\u5634\u6e29\u5ea6", section_nozzle_target: "\u55b7\u5634\u76ee\u6807\u6e29\u5ea6",
+    section_bed_temperature: "\u70ed\u5e8a\u6e29\u5ea6", section_bed_target: "\u70ed\u5e8a\u76ee\u6807\u6e29\u5ea6", section_chamber_temperature: "\u8154\u4f53\u6e29\u5ea6",
+    section_current_layer: "\u5f53\u524d\u5c42", section_total_layers: "\u603b\u5c42\u6570", section_print_file: "\u6253\u5370\u6587\u4ef6",
+    section_print_stage: "\u6253\u5370\u9636\u6bb5", section_printer_layout: "\u673a\u8eab", layout_enclosed: "\u5c01\u95ed\u5f0f",
+    layout_open: "\u5f00\u653e\u5f0f\uff08\u79fb\u52a8\u70ed\u5e8a\uff09", unit_hours: "\u5c0f\u65f6", p3_nozzle: "\u55b7\u5634",
+    p3_bed: "\u70ed\u5e8a", p3_chamber: "\u8154\u4f53", p3_layer: "\u5c42",
+    p3_file: "\u6587\u4ef6", p3_printing: "\u6253\u5370\u4e2d", p3_preparing: "\u51c6\u5907\u4e2d",
+    p3_cancelled: "\u5df2\u53d6\u6d88", p3_failed: "\u5931\u8d25", p3_offline: "\u79bb\u7ebf",
+    p3_attention: "\u9700\u8981\u5904\u7406", p3_leveling: "\u8c03\u5e73\u4e2d", p3_filament: "\u66f4\u6362\u8017\u6750",
+    p3_cooling: "\u51b7\u5374\u4e2d", p3_calibrating: "\u6821\u51c6\u4e2d", p3_homing: "\u5f52\u4f4d\u4e2d",
+    section_printed_part: "\u6253\u5370\u6a21\u578b", part_cube: "\u7acb\u65b9\u4f53", part_pyramid: "\u91d1\u5b57\u5854", part_duck: "\u6a61\u76ae\u9e2d",
   },
   cs: {
     idle: "Ne\u010dinn\u00e9", running: "V provozu", paused: "Pozastaveno", done: "Dokon\u010deno",
@@ -1491,9 +1634,20 @@ const T = {
     language: "Jazyk", language_auto: "Podle Home Assistantu",
     illustration_color: "Barva spot\u0159ebi\u010de", color_auto: "Podle motivu",
     color_white: "B\u00edl\u00e1", color_grey: "\u0160ed\u00e1", color_black: "\u010cern\u00e1",
-    type_water_heater: "Oh\u0159\u00edva\u010d vody", type_boiler: "Kotel",
-    boiler_space_heating: "Topen\u00ed", boiler_hot_water: "Tepl\u00e1 voda", boiler_burner: "Ho\u0159\u00e1k zapnut", boiler_starting: "Zapalov\u00e1n\u00ed", boiler_waiting: "\u010cek\u00e1n\u00ed",
-    section_space_heating: "Indik\u00e1tor topen\u00ed", section_hot_water: "Indik\u00e1tor tepl\u00e9 vody", section_flow_temperature: "Teplota topn\u00e9 vody",
+    type_water_heater: "Oh\u0159\u00edva\u010d vody", type_boiler: "Kotel", type_heat_pump: "Tepeln\u00e9 \u010derpadlo",
+    boiler_space_heating: "Topen\u00ed", boiler_hot_water: "Tepl\u00e1 voda", boiler_burner: "Ho\u0159\u00e1k zapnut", boiler_starting: "Zapalov\u00e1n\u00ed", boiler_waiting: "\u010cek\u00e1n\u00ed", hp_cooling: "Chlazen\u00ed", hp_defrost: "Odmrazov\u00e1n\u00ed",
+    section_space_heating: "Indik\u00e1tor topen\u00ed", section_hot_water: "Indik\u00e1tor tepl\u00e9 vody", section_flow_temperature: "Teplota topn\u00e9 vody", section_heat_output: "Tepeln\u00fd v\u00fdkon", section_cop: "Topn\u00fd faktor (COP)", section_outdoor_temperature: "Venkovn\u00ed teplota",
+    type_printer_3d: "3D tisk\u00e1rna", section_nozzle_temperature: "Teplota trysky", section_nozzle_target: "C\u00edlov\u00e1 teplota trysky",
+    section_bed_temperature: "Teplota podlo\u017eky", section_bed_target: "C\u00edlov\u00e1 teplota podlo\u017eky", section_chamber_temperature: "Teplota komory",
+    section_current_layer: "Aktu\u00e1ln\u00ed vrstva", section_total_layers: "Celkem vrstev", section_print_file: "Tiskov\u00fd soubor",
+    section_print_stage: "F\u00e1ze tisku", section_printer_layout: "Konstrukce", layout_enclosed: "Uzav\u0159en\u00e1",
+    layout_open: "Otev\u0159en\u00fd r\u00e1m (pohybliv\u00e1 podlo\u017eka)", unit_hours: "Hodiny", p3_nozzle: "Tryska",
+    p3_bed: "Podlo\u017eka", p3_chamber: "Komora", p3_layer: "Vrstva",
+    p3_file: "Soubor", p3_printing: "Tiskne", p3_preparing: "P\u0159\u00edprava",
+    p3_cancelled: "Zru\u0161eno", p3_failed: "Nezda\u0159ilo se", p3_offline: "Offline",
+    p3_attention: "Vy\u017eaduje pozornost", p3_leveling: "Vyrovn\u00e1v\u00e1n\u00ed podlo\u017eky", p3_filament: "V\u00fdm\u011bna filamentu",
+    p3_cooling: "Chlazen\u00ed", p3_calibrating: "Kalibrace", p3_homing: "Naj\u00ed\u017ed\u011bn\u00ed do v\u00fdchoz\u00ed polohy",
+    section_printed_part: "Ti\u0161t\u011bn\u00fd objekt", part_cube: "Krychle", part_pyramid: "Pyramida", part_duck: "Gumov\u00e1 kachni\u010dka",
   },
 };
 
@@ -1589,10 +1743,10 @@ const CYCLE_HISTORY_MS = 12 * 60 * 60 * 1000;
 // times in seconds. Walks back from the latest state to the first one of the
 // streak the machine is still in, and adds up the pauses already over. A
 // pause still going on is the current state, which the card times itself.
-function cycleFromHistory(entries, stateMap) {
+function cycleFromHistory(entries, normOf) {
   if (!Array.isArray(entries)) return null;
   const rows = entries
-    .map((e) => ({ role: cycleRole(normalizeState(e && e.s, stateMap)), t: 1000 * Number(e && (e.lc !== undefined ? e.lc : e.lu)) }))
+    .map((e) => ({ role: cycleRole(normOf(e && e.s)), t: 1000 * Number(e && (e.lc !== undefined ? e.lc : e.lu)) }))
     .filter((r) => Number.isFinite(r.t));
   const last = rows.length - 1;
   if (last < 0 || rows[last].role === "out") return null;
@@ -1673,6 +1827,39 @@ function boilerModeOf(raw, stateMap) {
 // on its water_heater entity. heat_water is the tank; the rest is not.
 const MELCLOUD_STATUSES = ["idle", "heat_water", "heat_zones", "cool", "defrost", "standby", "legionella"];
 
+// What an air-to-water heat pump is doing. A climate entity says it in
+// hvac_action (Octopus Energy sets heating or idle from the zone's relay),
+// MELCloud in its water heater's status attribute, a sensor in words. The state
+// of a climate or water_heater entity is a mode the user picked, never what the
+// pump does, so its words are left alone.
+const HEAT_PUMP_MODES = ["space_heating", "hot_water", "cooling", "defrost", "idle"];
+const HVAC_ACTION_MODES = {
+  heating: "space_heating", preheating: "space_heating", cooling: "cooling",
+  defrosting: "defrost", idle: "idle", off: "idle",
+};
+const MELCLOUD_MODES = {
+  heat_water: "hot_water", legionella: "hot_water", heat_zones: "space_heating",
+  cool: "cooling", defrost: "defrost", idle: "idle", standby: "idle",
+};
+function heatPumpModeOf(raw, attrs, stateMap, modeEntity) {
+  if (raw === undefined || raw === null) return "";
+  const s = String(raw).trim();
+  if (stateMap && Object.prototype.hasOwnProperty.call(stateMap, s)) {
+    return HEAT_PUMP_MODES.includes(stateMap[s]) ? stateMap[s] : "";
+  }
+  const a = attrs || {};
+  const action = String(a.hvac_action || "").toLowerCase();
+  if (Object.prototype.hasOwnProperty.call(HVAC_ACTION_MODES, action)) return HVAC_ACTION_MODES[action];
+  const status = String(a.status || "").toLowerCase();
+  if (Object.prototype.hasOwnProperty.call(MELCLOUD_MODES, status)) return MELCLOUD_MODES[status];
+  if (modeEntity) return "";
+  const f = stripAccents(s).toLowerCase();
+  if (/defrost|degivr|abtau|descongel|desescarch|sbrin|ontdooi|avfrost|avrim|afrim|odszran|odmraz/.test(f)) return "defrost";
+  if (/\bcool(ing)?\b|refroidissement|rafraichissement|kuhlen|kuehlen|refrigeracion|raffrescamento|koelen|kylning|kjoling|koling|chlodzenie|chlazeni/.test(f)) return "cooling";
+  const m = boilerModeOf(s, null);
+  return HEAT_PUMP_MODES.includes(m) ? m : "";
+}
+
 // A water_heater entity's state is its operation mode. Home Assistant already
 // translates those, so its label wins unless the card's language is pinned.
 function modeLabel(hass, st, raw, cfg) {
@@ -1687,6 +1874,95 @@ function modeLabel(hass, st, raw, cfg) {
   }
   const clean = cleanStateLabel(raw);
   return clean.charAt(0).toUpperCase() + clean.slice(1);
+}
+
+// What a 3D printer reports, read in the integrations' own code: OctoPrint and
+// PrusaLink in the core, Bambu Lab, Moonraker (Klipper, Qidi), Creality,
+// Elegoo, Flashforge, Anycubic, Snapmaker and RepRapFirmware. Each has its
+// own list, as an enum or a raw string; they are matched lowercased.
+const PRINTER_STATES = {
+  printing: "printing", printing_sd: "printing", printing_streaming: "printing", running: "printing",
+  processing: "printing", print_started: "printing", printing_recovery: "printing", recovery: "printing",
+  resuming: "printing", finishing: "printing", simulating: "printing",
+  prepare: "preparing", init: "preparing", slicing: "preparing", busy: "preparing", startup: "preparing",
+  starting: "preparing", starting_sd: "preparing", starting_streaming: "preparing",
+  "self-testing": "preparing", self_testing: "preparing", checking: "preparing", file_checking: "preparing",
+  printers_checking: "preparing", devices_testing: "preparing", exposure_testing: "preparing",
+  downloading: "preparing", file_transferring: "preparing", transferring_file: "preparing",
+  preheating: "preheating", heating: "preheating",
+  paused: "paused", pause: "paused", pausing: "paused",
+  attention: "attention",
+  complete: "done", completed: "done", finished: "done", finish: "done",
+  cancelled: "cancelled", canceled: "cancelled", cancelling: "cancelled", stopped: "cancelled", stopping: "cancelled",
+  failed: "failed",
+  error: "error", offline_after_error: "error", halted: "error",
+  idle: "idle", standby: "idle", operational: "idle", ready: "idle", available: "idle",
+  open_serial: "idle", detect_serial: "idle", connecting: "idle",
+  offline: "offline", off: "offline", shutdown: "offline", disconnected: "offline",
+};
+// How each of those runs the card: a cancelled job is over without being
+// finished, and a failed one reads as an error.
+const PRINTER_NORMS = {
+  printing: "running", preparing: "running", preheating: "preheating", paused: "paused", attention: "paused",
+  done: "done", cancelled: "idle", failed: "error", error: "error", idle: "idle", offline: "idle",
+};
+const PRINTER_LABELS = {
+  printing: "p3_printing", preparing: "p3_preparing", preheating: "preheating", paused: "paused",
+  attention: "p3_attention", done: "done", cancelled: "p3_cancelled", failed: "p3_failed", error: "error",
+  idle: "idle", offline: "p3_offline", leveling: "p3_leveling", filament: "p3_filament",
+  cooling: "p3_cooling", calibrating: "p3_calibrating", homing: "p3_homing",
+};
+// The same warm tone as every heater on the card, and the cold blue of the
+// fridge for cooling down. The other steps of a job keep the running colour.
+const PRINTER_COLORS = { preheating: "#ff7043", cooling: "#29b6f6" };
+const NORM_PRINTER_MODES = { running: "printing", preheating: "preheating", paused: "paused", done: "done", idle: "idle", error: "error" };
+
+// What the printer is busy with inside a job. Bambu Lab says it in its
+// current stage, Elegoo in its print status, and a few printers in their
+// state itself (leveling, homing). A milestone such as preheating_completed
+// stays up for the whole job on an Elegoo, so it names no step at all.
+function printerPhaseOf(raw) {
+  const f = String(raw === undefined || raw === null ? "" : raw).trim().toLowerCase();
+  if (!f || /_complete(d)?$/.test(f)) return "";
+  if (/pause/.test(f)) return "paused";
+  if (/preheat|heating_hotend|heating_chamber|waiting_for_heatbed|waiting_chamber|thermal_precondition|preparing_hotend/.test(f)) return "preheating";
+  if (/cool/.test(f)) return "cooling";
+  if (/level|scanning_bed|measuring_surface/.test(f)) return "leveling";
+  if (/filament|loading|feeding|preparing_ams|changingtool|changing_tool/.test(f)) return "filament";
+  if (/calibrat|input_shaping|pid_tuning|resonance|motor_noise|accuracy/.test(f)) return "calibrating";
+  if (/homing/.test(f)) return "homing";
+  return "";
+}
+
+// The state as the printer means it, and the step it names when it names one.
+function printerModeOf(raw, stateMap) {
+  if (raw === undefined || raw === null) return { mode: "", phase: "" };
+  const s = String(raw).trim();
+  if (stateMap && Object.prototype.hasOwnProperty.call(stateMap, s)) {
+    return { mode: NORM_PRINTER_MODES[stateMap[s]] || "", phase: "" };
+  }
+  const f = s.toLowerCase();
+  let mode = Object.prototype.hasOwnProperty.call(PRINTER_STATES, f) ? PRINTER_STATES[f] : "";
+  const phase = mode === "preheating" ? "" : printerPhaseOf(f);
+  if (!mode && phase) mode = phase === "paused" ? "paused" : "preparing";
+  return { mode, phase: phase === "paused" ? "" : phase };
+}
+
+function printerNorm(raw, stateMap) {
+  const { mode } = printerModeOf(raw, stateMap);
+  return mode ? PRINTER_NORMS[mode] : normalizeState(raw, stateMap);
+}
+
+// The card reads the state of a 3D printer with its own vocabulary, and every
+// other appliance with the shared one.
+function normFor(type, raw, stateMap) {
+  return type === "printer_3d" ? printerNorm(raw, stateMap) : normalizeState(raw, stateMap);
+}
+
+// A print file as a person names it: no folder, no slicer extension.
+function printerFileName(raw) {
+  const base = String(raw).split(/[\\/]/).pop();
+  return base.replace(/\.(gcode|gco|g|bgcode|3mf|ufp|ctb|goo|pwmx)$/i, "") || base;
 }
 
 function normalizeState(raw, stateMap) {
@@ -1774,14 +2050,25 @@ function remainingSeconds(hass, entityId, unitCfg) {
     return diff > 0 ? diff : 0;
   }
 
+  // A clock reading, "1:02:03", as an older Snapmaker reports it. Two parts
+  // alone could be hours or minutes, so only the full form is read.
+  const clock = /^(\d+):([0-5]\d):([0-5]\d)$/.exec(String(st.state).trim());
+  if (clock) return Number(clock[1]) * 3600 + Number(clock[2]) * 60 + Number(clock[3]);
   const v = parseFloat(st.state);
   if (!Number.isFinite(v) || v < 0) return null;
   let unit = unitCfg || "auto";
   if (unit === "auto") {
+    // Home Assistant lets a user show a duration in any unit, and Bambu Lab
+    // defaults its remaining time to hours: the unit decides, not the brand.
     const u = (st.attributes.unit_of_measurement || "").toLowerCase();
-    unit = u.startsWith("min") ? "minutes" : "seconds";
+    unit = u === "ms" ? "milliseconds"
+      : u.startsWith("min") ? "minutes"
+        : u === "h" || u.startsWith("hour") || u === "hr" ? "hours"
+          : u === "d" || u.startsWith("day") ? "days"
+            : "seconds";
   }
-  return unit === "minutes" ? v * 60 : v;
+  const factor = { milliseconds: 0.001, minutes: 60, hours: 3600, days: 86400 }[unit] || 1;
+  return v * factor;
 }
 
 function formatDuration(totalSeconds, hass) {
@@ -2164,6 +2451,15 @@ const TYPE_AUTO_PATTERNS = {
     temperature_entity: /temperature|water.?temp/i,
     heating_entity: /heating|chauffe/i,
   },
+  // Octopus Energy names both a live and a lifetime reading, and its flow
+  // temperature is a target: only the live ones say what the pump does now.
+  heat_pump: {
+    temperature_entity: /^(?!.*(target|setpoint|fixed)).*(flow|supply|leaving|vorlauf|depart).*temp/i,
+    outdoor_temperature_entity: /outdoor|outside|exterieur|aussen/i,
+    heat_output_entity: /^(?!.*lifetime).*heat.?(output|produced)/i,
+    cop_entity: /(^|[._])cop$/i,
+    power_entity: /^(?!.*lifetime).*(power.?input|_power$|power_w$|watt)/i,
+  },
   boiler: {
     temperature_entity: /flow|supply|depart|temperature/i,
     hot_water_entity: /hot.?water|dhw|eau.?chaude/i,
@@ -2173,6 +2469,28 @@ const TYPE_AUTO_PATTERNS = {
     target_temperature_entity: /target.?temp|setpoint/i,
     current_temperature_entity: /current.?temp|^(?!.*target).*temperature/i,
     speed_entity: /speed|vitesse|drehzahl/i,
+  },
+  // Names read in the integrations' code. Targets come as sensors or
+  // numbers, and a control is a button or a script, never the start_time
+  // sensor that OctoPrint and Bambu Lab also have.
+  printer_3d: {
+    progress_entity: /progress|percent_?complete|job_percentage/i,
+    remaining_time_entity: /remaining|time_left|estimated_finish|print_finish|end_time|print_eta/i,
+    program_entity: /task_name|gcode_file|file_?name|current_file(?!_size)|job_name/i,
+    phase_entity: /current_stage/i,
+    nozzle_temperature_entity: /^sensor\.(?!.*(target|min|max)).*(nozzle|extruder|hotend|tool0).*temp/i,
+    nozzle_target_entity: /(nozzle|extruder|hotend|tool0).*target|target.*(nozzle|extruder|hotend|tool0)/i,
+    bed_temperature_entity: /^sensor\.(?!.*target).*(heatbed|hotbed|[._]bed).*temp/i,
+    bed_target_entity: /(heatbed|hotbed|[._]bed).*target|target.*(heatbed|hotbed|[._]bed)/i,
+    chamber_temperature_entity: /^sensor\.(?!.*target).*(chamber|box|enclosure).*temp/i,
+    current_layer_entity: /current_layer|working_layer/i,
+    total_layers_entity: /total_layer/i,
+    light_entity: /^(light|switch)\..*(light|led)/i,
+    start_entity: /^(button|script)\..*start/i,
+    pause_entity: /^(button|script)\..*pause/i,
+    resume_entity: /^(button|script)\..*(resume|continue)/i,
+    stop_entity: /^(button|script)\..*(?<!emergency_)(stop|cancel)/i,
+    power_entity: /^sensor\.(?!.*(extruder|bed|chamber|heater|nozzle)).*(_power$|power_w$|watt)/i,
   },
   coffee: {
     water_entity: /water.?tank|water.?level|reservoir/i,
@@ -2211,9 +2529,11 @@ function autoSuggest(hass, cfg) {
     if (match) patch[field] = match;
   }
   if (!cfg.info_entities || !cfg.info_entities.length) {
+    // An entity already given a field of its own would only repeat itself.
+    const taken = new Set(Object.values(patch).concat(Object.values(cfg)));
     const infos = [];
     for (const { re, icon } of INFO_PATTERNS) {
-      const match = siblings.find((id) => re.test(id));
+      const match = siblings.find((id) => re.test(id) && !taken.has(id));
       if (match) infos.push({ entity: match, icon });
     }
     if (infos.length) patch.info_entities = infos;
@@ -2259,6 +2579,12 @@ const TYPE_CAPS = {
   // A combi boiler, which is not a tank: the same flame serves the radiators or
   // the taps, and which one is the whole story.
   boiler: { boilerMode: true },
+  // An air-to-water heat pump: the radiators, the hot water tank, and the
+  // outdoor unit that sometimes has to melt its own ice.
+  heat_pump: { heatPump: true },
+  // A 3D printer: a job with a progress and a remaining time like any cycle,
+  // two heaters to bring up to temperature first, and often a chamber light.
+  printer_3d: { cycle: true, light: true, printer3d: true },
 };
 const APPLIANCE_TYPES = Object.keys(TYPE_CAPS);
 const LAUNDRY_TYPES = ["washer", "dryer", "dishwasher"];
@@ -2273,6 +2599,19 @@ const FRIDGE_ONLY_FIELDS = [
   "fridge_layout",
 ];
 
+// Same for a 3D printer: nothing else has a nozzle or a print bed.
+const PRINTER_ONLY_FIELDS = [
+  "nozzle_temperature_entity",
+  "nozzle_target_entity",
+  "bed_temperature_entity",
+  "bed_target_entity",
+  "chamber_temperature_entity",
+  "current_layer_entity",
+  "total_layers_entity",
+  "printer_layout",
+  "printed_part",
+];
+
 function caps(type) {
   return TYPE_CAPS[type] || TYPE_CAPS.washer;
 }
@@ -2283,7 +2622,11 @@ function detectApplianceType(cfg, st) {
   // nothing on the other seven types, and a fridge may have no state entity
   // whose name could be matched in the first place.
   if (FRIDGE_ONLY_FIELDS.some((f) => cfg[f])) return "fridge";
+  if (PRINTER_ONLY_FIELDS.some((f) => cfg[f])) return "printer_3d";
   const hay = `${cfg.icon || ""} ${cfg.state_entity || ""} ${(st && st.attributes.icon) || ""}`.toLowerCase();
+  // Before everything else: a printer's entities are named after its maker or
+  // its software, and a Bambu Lab one after its model ("p1s_...", "a1_...").
+  if (/3d.?print|print.?3d|printer-3d|octoprint|prusa|bambu|klipper|moonraker|creality|elegoo|centauri|anycubic|kobra|flashforge|snapmaker|voron|reprap|duet3d|(^|[\s._])(x1c|x1e|p1s|p1p|p2s|a1|a1_mini|h2d|h2s)_|(^|[\s._-])ender[._-]?\d/.test(hay)) return "printer_3d";
   // "microwave" before "oven": plenty of devices are named "microwave_oven".
   if (/microwave|micro.?onde|mikrowelle|magnetron|mikrob/.test(hay)) return "microwave";
   if (/coffee|cafeti|cafe|kaffee|espresso|cafetera|macchina.?caff|koffie|kaffemask|ekspres.?do.?kawy/.test(hay)) return "coffee";
@@ -2295,6 +2638,8 @@ function detectApplianceType(cfg, st) {
   // InComfort exposes an Intergas combi boiler as water_heater.boiler: the
   // domain says tank, the name says boiler, and the name is the one that knows.
   const eid = String(cfg.state_entity || "").toLowerCase();
+  // First: a heat pump's own water heater is still the heat pump.
+  if (/heat.?pump|pompe.?(a|\u00e0).?chaleur|w(a|ae|\u00e4)rmepumpe|bomba.?de.?calor|pompa.?di.?calore|warmtepomp|v(a|\u00e4)rmepump|pompa.?ciep|tepelne.?cerpadlo|ecodan|altherma|aquarea/.test(hay)) return "heat_pump";
   if (/^water_heater\..*(boiler|chaudiere)/.test(eid) && !/water.?boiler/.test(eid)) return "boiler";
   // Before the boiler: MDI names a storage tank "water-boiler", and water_heater
   // is the Home Assistant domain for one.
@@ -2313,6 +2658,11 @@ function detectApplianceType(cfg, st) {
 // below the threshold is therefore the shortest delay that cannot produce a
 // false alarm, and it doubles the observed worst case.
 const FRIDGE_UNPLUGGED_AFTER_MS = 30 * 60 * 1000;
+// A heater within five degrees of its target has arrived: printing holds
+// them within a degree or two, and preheating starts from the room.
+const P3_HEAT_MARGIN = 5;
+// Height of a finished part on the drawing, in pixels.
+const P3_PART_MAX = 40;
 // The count is shown in whole minutes, so half a minute is close enough to
 // keep it honest without redrawing for nothing.
 const FRIDGE_TICK_MS = 30 * 1000;
@@ -2548,6 +2898,82 @@ const BODY_COLORS = {
 };
 
 const ILLUSTRATION_CSS = {
+  printer_3d: (color) => `
+        .p3-case {
+          position: absolute; left: 6px; right: 6px; top: 2px; bottom: 5px; border-radius: 6px;
+          background: linear-gradient(160deg, var(--ac-body-hi, #e6e6e6), var(--ac-body, var(--secondary-background-color, #d7d7d7)) 45%, var(--ac-body-lo, #aeb2b5));
+          border: 1px solid var(--divider-color, #c7c7c7);
+        }
+        .p3-window {
+          position: absolute; left: 6px; right: 6px; top: 6px; bottom: 18px; border-radius: 3px; overflow: hidden;
+          background: #1b1e23; box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.35);
+        }
+        .machine.lit .p3-window { background: #2b3038; box-shadow: inset 0 6px 12px rgba(255, 236, 179, 0.35); }
+        .p3-glass { position: absolute; inset: 0; background: linear-gradient(135deg, rgba(255, 255, 255, 0.10), transparent 45%); pointer-events: none; }
+        .p3-rail { position: absolute; left: 3px; right: 3px; top: 8px; height: 3px; border-radius: 1px; background: #5f666e; }
+        .p3-head {
+          position: absolute; left: 50%; top: 4px; width: 14px; height: 12px; margin-left: -7px; z-index: 2;
+          border-radius: 2px; background: linear-gradient(180deg, #e0e3e6, #aab0b6);
+        }
+        .p3-nozzle {
+          position: absolute; left: 3px; bottom: -4px; width: 0; height: 0;
+          border-left: 4px solid transparent; border-right: 4px solid transparent; border-top: 4px solid #8a9096;
+        }
+        .machine.nozzle-hot .p3-nozzle { border-top-color: #ff7043; }
+        .p3-enclosed .p3-bed {
+          position: absolute; left: 8px; right: 8px; top: calc(21px + var(--p3-h, 0px)); height: 4px; border-radius: 1px;
+          background: #8f969d;
+        }
+        .p3-enclosed.parked .p3-bed { top: auto; bottom: 8px; }
+        .machine.bed-hot .p3-bed { background: linear-gradient(180deg, #ffab91, #ff7043); box-shadow: 0 0 6px rgba(255, 112, 67, 0.55); }
+        .p3-part {
+          position: absolute; left: 50%; bottom: 100%; width: 26px; margin-left: -13px; height: var(--p3-h, 0px);
+          overflow: hidden;
+        }
+        .p3-shape {
+          position: absolute; left: 0; bottom: 0; width: 100%; height: 40px; border-radius: 1px 1px 0 0;
+          background: repeating-linear-gradient(0deg, rgba(0, 0, 0, 0.18) 0 1px, transparent 1px 3px), ${color};
+        }
+        .p3-part i { position: absolute; left: 0; right: 0; bottom: calc(var(--p3-h, 0px) - 2px); height: 2px; opacity: 0; background: rgba(255, 255, 255, 0.85); }
+        .p3-part-pyramid .p3-part { width: 32px; margin-left: -16px; }
+        .p3-part-pyramid .p3-shape { border-radius: 0; clip-path: polygon(50% 0, 100% 100%, 0 100%); }
+        /* A rubber duck in one outline: tail, head, beak, and a round front. */
+        .p3-part-duck .p3-part { width: 34px; margin-left: -17px; }
+        .p3-part-duck .p3-shape {
+          border-radius: 0;
+          clip-path: path("M1 20 L10 24 Q13 23 15 20 C12 14 15 5 22 5 C27 5 29 8 29.5 10 L34 12.5 L34 14 L29.5 16 Q28 19 25 21 C31 22 33 26 33 30 C33 37 27 40 17 40 C7 40 2 36 2 31 C2 27 1 24 1 20 Z");
+        }
+        .p3-eye { position: absolute; left: 22px; top: 9px; width: 3px; height: 3px; border-radius: 50%; background: rgba(0, 0, 0, 0.55); }
+        .p3-lcd {
+          position: absolute; left: 10px; bottom: 4px; width: 30px; height: 9px; border-radius: 2px;
+          background: #14161a; color: #4fc3f7; text-align: center; font: 600 7px/9px ui-monospace, "SF Mono", monospace;
+        }
+        .p3-knob { position: absolute; right: 10px; bottom: 5px; width: 7px; height: 7px; border-radius: 50%; background: #3b4048; }
+        .p3-foot { position: absolute; bottom: 1px; width: 12px; height: 4px; border-radius: 0 0 2px 2px; background: #3b4048; }
+        .p3-foot.f1 { left: 14px; }
+        .p3-foot.f2 { right: 14px; }
+        /* Open frame: two uprights and a top bar, a gantry that climbs with the
+           part, and a bed on the base. */
+        .p3-post { position: absolute; top: 6px; bottom: 17px; width: 4px; border-radius: 1px; background: #5f666e; }
+        .p3-post.l { left: 12px; }
+        .p3-post.r { right: 12px; }
+        .p3-top { position: absolute; left: 12px; right: 12px; top: 6px; height: 4px; border-radius: 1px; background: #5f666e; }
+        .p3-gantry { position: absolute; left: 12px; right: 12px; height: 16px; bottom: calc(22px + var(--p3-h, 0px)); }
+        .p3-gantry::before { content: ""; position: absolute; left: 0; right: 0; top: 4px; height: 3px; border-radius: 1px; background: #5f666e; }
+        .p3-gantry .p3-head { top: 0; }
+        .p3-open .p3-bed { position: absolute; left: 18px; right: 18px; bottom: 18px; height: 4px; border-radius: 1px; background: #8f969d; }
+        .p3-base {
+          position: absolute; left: 6px; right: 6px; bottom: 3px; height: 14px; border-radius: 3px;
+          background: linear-gradient(160deg, var(--ac-body-hi, #e6e6e6), var(--ac-body, var(--secondary-background-color, #d7d7d7)) 45%, var(--ac-body-lo, #aeb2b5));
+          border: 1px solid var(--divider-color, #c7c7c7);
+        }
+        .p3-base .p3-lcd { bottom: 2px; }
+        .p3-base .p3-knob { bottom: 3px; }
+        @keyframes p3-move { from { transform: translateX(-14px); } to { transform: translateX(14px); } }
+        @keyframes p3-draw { 0% { opacity: 0; } 30% { opacity: 0.9; } 100% { opacity: 0; } }
+        .machine.moving .p3-head { animation: p3-move 1.6s ease-in-out infinite alternate; animation-delay: var(--anim-offset, 0s); }
+        .machine.moving.has-part .p3-part i { animation: p3-draw 1.6s ease-in-out infinite; animation-delay: var(--anim-offset, 0s); }
+      `,
   laundry: (color) => `
         .mbody {
           position: absolute; inset: 0; border-radius: 10px;
@@ -3315,6 +3741,66 @@ const ILLUSTRATION_CSS = {
           100% { transform: translateY(-8px); opacity: 0; }
         }
   `,
+  heat_pump: () => `
+        .hp-unit {
+          position: absolute; left: 2px; right: 2px; top: 4px; height: 60px; border-radius: 5px;
+          background: linear-gradient(160deg, var(--ac-body-hi, #e6e6e6), var(--ac-body, var(--secondary-background-color, #d7d7d7)) 45%, var(--ac-body-lo, #aeb2b5));
+          border: 1px solid var(--divider-color, #c7c7c7);
+        }
+        .hp-grille {
+          position: absolute; left: 5px; top: 5px; width: 48px; height: 48px; border-radius: 50%;
+          background: #14161a; overflow: hidden; box-shadow: 0 0 0 2px var(--ac-body-lo, #aeb2b5);
+        }
+        .hp-fan {
+          position: absolute; inset: 5px; border-radius: 50%;
+          background: conic-gradient(#6b737c 0 16%, transparent 16% 33.3%, #6b737c 33.3% 49.3%, transparent 49.3% 66.6%, #6b737c 66.6% 82.6%, transparent 82.6%);
+        }
+        .hp-hub { position: absolute; left: 50%; top: 50%; width: 9px; height: 9px; margin: -4.5px 0 0 -4.5px; border-radius: 50%; background: #8a9096; }
+        .hp-guard { position: absolute; inset: 0; border-radius: 50%; background: repeating-radial-gradient(circle, transparent 0 5px, rgba(255, 255, 255, 0.14) 5px 6px); }
+        .hp-frost { position: absolute; inset: 0; border-radius: 50%; opacity: 0; background: radial-gradient(circle, rgba(225, 245, 254, 0.15) 35%, rgba(225, 245, 254, 0.9) 100%); }
+        .hp-side { position: absolute; left: 58px; right: 4px; top: 5px; bottom: 5px; }
+        .hp-lcd {
+          position: absolute; left: 0; right: 0; top: 0; height: 10px; border-radius: 2px;
+          background: #14161a; color: #4fc3f7; text-align: center; font: 600 7px/10px ui-monospace, "SF Mono", monospace;
+        }
+        .hp-fins { position: absolute; left: 0; right: 0; top: 14px; bottom: 0; background: repeating-linear-gradient(180deg, var(--ac-body-lo, #aeb2b5) 0 1px, transparent 1px 4px); }
+        .hp-foot { position: absolute; top: 65px; width: 10px; height: 4px; border-radius: 0 0 2px 2px; background: #3b4048; }
+        .hp-foot.f1 { left: 6px; }
+        .hp-foot.f2 { right: 6px; }
+        .hp-pipe { position: absolute; top: 66px; width: 4px; height: 14px; background: #8a9096; }
+        .hp-pipe.tank { left: 22px; }
+        .hp-pipe.rad { left: 64px; }
+        .hp-tank {
+          position: absolute; left: 12px; top: 78px; width: 24px; height: 28px; border-radius: 8px / 5px; overflow: hidden;
+          background: linear-gradient(90deg, var(--ac-body-lo, #aeb2b5), var(--ac-body, var(--secondary-background-color, #d7d7d7)) 35%, var(--ac-body-hi, #e6e6e6) 55%, var(--ac-body-lo, #aeb2b5));
+          border: 1px solid var(--divider-color, #c7c7c7);
+        }
+        .hp-tank i { position: absolute; left: 0; right: 0; bottom: 0; height: 0; background: linear-gradient(180deg, rgba(255, 87, 51, 0.75), rgba(255, 138, 60, 0.45)); }
+        .hp-rad { position: absolute; left: 58px; right: 2px; top: 80px; height: 26px; }
+        .hp-rad i {
+          position: absolute; top: 0; bottom: 0; width: 5px; border-radius: 2px;
+          background: var(--ac-body-lo, #aeb2b5); box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.12);
+        }
+        .hp-rad i:nth-child(1) { left: 0; }
+        .hp-rad i:nth-child(2) { left: 7px; }
+        .hp-rad i:nth-child(3) { left: 14px; }
+        .hp-rad i:nth-child(4) { left: 21px; }
+        .hp-rad i:nth-child(5) { left: 28px; }
+        .machine.fan .hp-fan { animation: hp-spin 1.1s linear infinite; animation-delay: var(--anim-offset, 0s); }
+        @keyframes hp-spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        .machine.mode-space_heating .hp-lcd,
+        .machine.mode-hot_water .hp-lcd { color: #ff7043; }
+        .machine.mode-space_heating .hp-pipe.rad { background: #ff7043; }
+        .machine.mode-space_heating .hp-rad i { background: linear-gradient(180deg, #ffab91, #ff7043); animation: hp-glow 1.6s ease-in-out infinite; animation-delay: var(--anim-offset, 0s); }
+        .machine.mode-hot_water .hp-pipe.tank { background: #ef5350; }
+        .machine.mode-hot_water .hp-tank i { height: 100%; animation: hp-glow 1.6s ease-in-out infinite; animation-delay: var(--anim-offset, 0s); }
+        .machine.mode-cooling .hp-pipe.rad { background: #29b6f6; }
+        .machine.mode-cooling .hp-rad i { background: linear-gradient(180deg, #b3e5fc, #29b6f6); }
+        @keyframes hp-glow { 0%, 100% { filter: brightness(0.9); } 50% { filter: brightness(1.15); } }
+        .machine.mode-defrost .hp-frost { animation: hp-frost 2.4s ease-in-out infinite; animation-delay: var(--anim-offset, 0s); }
+        .machine.mode-defrost .hp-fins { background: repeating-linear-gradient(180deg, #b3e5fc 0 1px, transparent 1px 4px); }
+        @keyframes hp-frost { 0%, 100% { opacity: 0.35; } 50% { opacity: 0.9; } }
+  `,
   kettle: () => `
         .kt-base { position: absolute; left: 20px; right: 20px; bottom: 6px; height: 7px; border-radius: 3px; background: #3b4048; }
         .kt-body {
@@ -3943,6 +4429,74 @@ function illustrationHtml(type, ctx) {
         </div>`;
   }
 
+  if (type === "heat_pump") {
+    const mode = ctx.hpMode || "idle";
+    // The fan turns whenever the pump works; it stops to defrost, as the real
+    // one does while it melts the ice off its coil.
+    const fan = ["space_heating", "hot_water", "cooling", "running"].includes(mode);
+    const lcd = ctx.display ? `<div class="hp-lcd">${esc(ctx.display)}</div>` : "";
+    return `
+        <div class="machine ${cls} mode-${mode} ${fan ? "fan" : ""}">
+          <div class="hp-unit">
+            <div class="hp-grille"><div class="hp-fan"></div><div class="hp-hub"></div><div class="hp-guard"></div><div class="hp-frost"></div></div>
+            <div class="hp-side">${lcd}<div class="hp-fins"></div></div>
+          </div>
+          <div class="hp-foot f1"></div><div class="hp-foot f2"></div>
+          <div class="hp-pipe tank"></div>
+          <div class="hp-tank"><i></i></div>
+          <div class="hp-pipe rad"></div>
+          <div class="hp-rad"><i></i><i></i><i></i><i></i><i></i></div>
+        </div>`;
+  }
+
+  if (type === "printer_3d") {
+    const p = ctx.p3 || { layout: "enclosed", height: 0 };
+    // The part grows with the job. On an enclosed printer the bed drops as it
+    // grows, the head staying at the top; on an open frame the gantry climbs.
+    const h = Math.round(Math.max(0, Math.min(1, p.height || 0)) * P3_PART_MAX);
+    const lcd = ctx.display ? `<div class="p3-lcd">${esc(ctx.display)}</div>` : "";
+    const flags = [
+      `p3-${p.layout === "open" ? "open" : "enclosed"}`,
+      `p3-part-${p.part || "cube"}`,
+      p.moving ? "moving" : "",
+      p.nozzleHot ? "nozzle-hot" : "",
+      p.bedHot ? "bed-hot" : "",
+      h > 0 ? "has-part" : "",
+      p.parked ? "parked" : "",
+    ].filter(Boolean).join(" ");
+    const head = `<div class="p3-head"><div class="p3-nozzle"></div></div>`;
+    // The whole part is drawn and only what is printed shows, from the bottom
+    // up, the way a printer lays it down.
+    const eye = p.part === "duck" ? `<b class="p3-eye"></b>` : "";
+    const bed = `<div class="p3-bed"><div class="p3-part"><div class="p3-shape">${eye}<i></i></div></div></div>`;
+    if (p.layout === "open") {
+      return `
+        <div class="machine ${cls} ${flags}" style="--p3-h:${h}px">
+          <div class="p3-post l"></div>
+          <div class="p3-post r"></div>
+          <div class="p3-top"></div>
+          <div class="p3-gantry">${head}</div>
+          ${bed}
+          <div class="p3-base">${lcd}<div class="p3-knob"></div></div>
+        </div>`;
+    }
+    return `
+        <div class="machine ${cls} ${flags}" style="--p3-h:${h}px">
+          <div class="p3-case">
+            <div class="p3-window">
+              <div class="p3-rail"></div>
+              ${head}
+              ${bed}
+              <div class="p3-glass"></div>
+            </div>
+            ${lcd}
+            <div class="p3-knob"></div>
+          </div>
+          <div class="p3-foot f1"></div>
+          <div class="p3-foot f2"></div>
+        </div>`;
+  }
+
   if (type === "kettle") {
     // No timer and no progress: the drawing is the whole readout.
     const lcd = ctx.display ? `<div class="kt-lcd">${esc(ctx.display)}</div>` : "";
@@ -4221,7 +4775,7 @@ class ApplianceCard extends HTMLElement {
   // Reads the state history once per cycle to find where it really began.
   // Without a recorder, or with the entity excluded from it, the last change
   // of state stays the best guess.
-  _lookUpCycle(cycle, cfg) {
+  _lookUpCycle(cycle, cfg, type) {
     const hass = this._hass;
     if (!hass || typeof hass.callWS !== "function" || !cfg.state_entity) return;
     const end = Date.now();
@@ -4243,7 +4797,7 @@ class ApplianceCard extends HTMLElement {
     Promise.resolve(req).then((res) => {
       // The cycle may have ended, or the card been reconfigured, meanwhile.
       if (this._cycle !== cycle) return;
-      const found = cycleFromHistory(res && res[cfg.state_entity], cfg.state_map);
+      const found = cycleFromHistory(res && res[cfg.state_entity], (raw) => normFor(type, raw, cfg.state_map));
       if (!found || found.start > cycle.start) return;
       Object.assign(cycle, found);
       this._render();
@@ -4289,6 +4843,7 @@ class ApplianceCard extends HTMLElement {
     // it is actually doing anything.
     const applianceType = detectApplianceType(cfg, st);
     const cap = caps(applianceType);
+    if (cap.printer3d) norm = printerNorm(rawState, cfg.state_map);
     let powerDerived = false;
     const watts = cfg.power_entity ? numericState(hass, cfg.power_entity) : null;
     const hasThreshold = cfg.power_on_threshold !== undefined && cfg.power_on_threshold !== "";
@@ -4342,7 +4897,7 @@ class ApplianceCard extends HTMLElement {
     if (cfg.program_entity) {
       const pst = stateObj(hass, cfg.program_entity);
       if (pst && !["unknown", "unavailable"].includes(pst.state)) {
-        programText = programLabel(hass, pst, pst.state, cfg);
+        programText = cap.printer3d ? printerFileName(pst.state) : programLabel(hass, pst, pst.state, cfg);
       }
     }
 
@@ -4353,7 +4908,10 @@ class ApplianceCard extends HTMLElement {
       // machine state so stale completion timestamps (integrations like
       // Samsung SmartThings keep reporting a past cycle's finish time after
       // the appliance goes idle) don't show a leftover "remaining time".
-      if (!cfg.remaining_time_hide_when_idle || isActiveState(norm)) {
+      // A printer keeps its last job's times once it is done with it, so it
+      // hides them outside a job unless told otherwise; a pause is still one.
+      const hideIdle = cfg.remaining_time_hide_when_idle !== undefined ? cfg.remaining_time_hide_when_idle : !!cap.printer3d;
+      if (!hideIdle || isActiveState(norm) || (cap.printer3d && norm === "paused")) {
         remSec = remainingSeconds(hass, cfg.remaining_time_entity, cfg.remaining_time_unit);
       }
     }
@@ -4382,7 +4940,7 @@ class ApplianceCard extends HTMLElement {
         // from the real start, which the state history still holds.
         const seenStart = this._prevNormState !== null && cycleRole(this._prevNormState) === "out";
         this._cycle = { start: since, pausedMs: 0, pausedSince: role === "paused" ? since : null };
-        if (!seenStart && !powerDerived) this._lookUpCycle(this._cycle, cfg);
+        if (!seenStart && !powerDerived) this._lookUpCycle(this._cycle, cfg, applianceType);
       }
     } else if (role === "paused" && this._cycle.pausedSince === null) {
       this._cycle.pausedSince = since;
@@ -4940,6 +5498,168 @@ class ApplianceCard extends HTMLElement {
       }
     }
 
+    // 3D printer. The state names the job, a stage entity or the heaters say
+    // what the job is doing: most integrations report "printing" from the
+    // moment the start code begins heating, so a heater still well below its
+    // target at the start of a job is read as preheating.
+    let p3 = null;
+    if (cap.printer3d) {
+      const { mode, phase: statePhase } = printerModeOf(rawState, cfg.state_map);
+      let pPhase = statePhase;
+      const inJob = mode === "printing" || mode === "preparing";
+      const stageSt = cfg.phase_entity ? stateObj(hass, cfg.phase_entity) : null;
+      if (stageSt && (inJob || mode === "paused")) {
+        const staged = printerPhaseOf(stageSt.state);
+        if (staged) pPhase = staged;
+      }
+      const heater = (curEntity, targetEntity) => {
+        const cur = curEntity ? numericState(hass, curEntity) : null;
+        let target = targetEntity ? numericState(hass, targetEntity) : null;
+        // Creality puts the target in an attribute of the reading.
+        if (target === null && curEntity) {
+          const a = (stateObj(hass, curEntity) || {}).attributes || {};
+          const v = Number(a.target !== undefined ? a.target : a.target_temperature);
+          if (a.target !== undefined || a.target_temperature !== undefined) target = Number.isFinite(v) ? v : null;
+        }
+        return { cur, target, entity: curEntity };
+      };
+      const nozzle = heater(cfg.nozzle_temperature_entity, cfg.nozzle_target_entity);
+      const bed = heater(cfg.bed_temperature_entity, cfg.bed_target_entity);
+      const chamber = heater(cfg.chamber_temperature_entity, null);
+      const heaters = [nozzle, bed].filter((h) => h.cur !== null && h.target !== null && h.target > 0);
+      const warming = heaters.some((h) => h.cur < h.target - P3_HEAT_MARGIN);
+      if (inJob && !pPhase && warming && !(progressPct > 1)) pPhase = "preheating";
+      // The gauge, whether the printer says it heats (Anycubic, Flashforge)
+      // or the card worked it out.
+      if ((pPhase === "preheating" || mode === "preheating") && heaters.length) {
+        heatBarPct = Math.min(100, ...heaters.map((h) => (h.cur / h.target) * 100));
+      }
+      const shown = pPhase === "paused" ? "paused" : pPhase && (inJob || mode === "preheating") ? pPhase : mode;
+      if (shown) {
+        if (!cfg.state_show_raw) stateLabel = t(hass, PRINTER_LABELS[shown]);
+        color = PRINTER_COLORS[shown] || STATE_COLORS[PRINTER_NORMS[shown]] || STATE_COLORS.running;
+      }
+      // A failed job keeps its part on the drawing, in red, at the height it
+      // reached.
+      const reached = progressPct;
+      // Only a job has a progress: an idle printer keeps its last one (a
+      // Bambu Lab shows 100 until the next print), which is no longer news.
+      if (!(isActiveState(norm) || norm === "paused" || norm === "done")) {
+        progressPct = null;
+      } else if (norm === "paused" && !(progressPct > 0) && this._p3Pct) {
+        // Moonraker drops its progress to 0 while paused: the print did not.
+        progressPct = this._p3Pct;
+      }
+      if (isActiveState(norm) && progressPct > 0) this._p3Pct = progressPct;
+      if (!isActiveState(norm) && norm !== "paused") this._p3Pct = null;
+
+      const tLine = (h, icon, label) => {
+        if (h.cur === null) return;
+        const unit = temperatureUnit(hass, h.entity);
+        const now = tempText(hass, cfg, h.entity, h.cur, unit);
+        const goal = h.target !== null && h.target > 0 ? tempText(hass, cfg, h.entity, h.target, unit) : null;
+        extraLines.push({
+          icon,
+          label,
+          // The target only when there is still a way to go: a bed holding
+          // 60 degrees reads 60 degrees, not 60 to 60.
+          value: goal !== null && goal !== now ? `${keepTogether(now)} \u2192 ${keepTogether(goal)}` : keepTogether(now),
+          entity: h.entity,
+        });
+      };
+      const layer = cfg.current_layer_entity ? numericState(hass, cfg.current_layer_entity) : null;
+      if (layer !== null) {
+        const total = cfg.total_layers_entity ? numericState(hass, cfg.total_layers_entity) : null;
+        extraLines.push({
+          icon: "mdi:layers-triple-outline",
+          label: t(hass, "p3_layer"),
+          value: total !== null && total > 0 ? `${Math.round(layer)} / ${Math.round(total)}` : `${Math.round(layer)}`,
+          entity: cfg.current_layer_entity,
+        });
+      }
+      tLine(nozzle, "mdi:printer-3d-nozzle-heat-outline", t(hass, "p3_nozzle"));
+      tLine(bed, "mdi:heating-coil", t(hass, "p3_bed"));
+      tLine(chamber, "mdi:thermometer", t(hass, "p3_chamber"));
+      if (nozzle.cur !== null) displayText = screenTemp(hass, cfg, nozzle.entity, nozzle.cur);
+
+      const job = isActiveState(norm) || norm === "paused" || norm === "error";
+      p3 = {
+        layout: cfg.printer_layout === "open" ? "open" : "enclosed",
+        part: ["pyramid", "duck"].includes(cfg.printed_part) ? cfg.printed_part : "cube",
+        // The part on the bed grows with the job, and stays whole once done.
+        height: norm === "done" ? 1 : norm === "error" ? (reached || 0) / 100 : (progressPct || 0) / 100,
+        moving: isActiveState(norm) && shown !== "preheating",
+        nozzleHot: nozzle.target !== null ? nozzle.target > 0 : isActiveState(norm),
+        bedHot: bed.target !== null ? bed.target > 0 : isActiveState(norm),
+        // Out of a job and with nothing on it, the bed rests at the bottom.
+        parked: !job && norm !== "done",
+      };
+    }
+
+    // Heat pump. An indicator that is on says it outright; otherwise the state
+    // entity does. A climate or water_heater entity that says nothing about
+    // what the pump does still shows its mode, without pretending it runs.
+    let hpMode = "";
+    if (cap.heatPump) {
+      const modeEntity = /^(climate|water_heater)\./.test(cfg.state_entity || "");
+      if (cfg.hot_water_entity && isOn(cfg.hot_water_entity)) hpMode = "hot_water";
+      else if (cfg.heating_entity && isOn(cfg.heating_entity)) hpMode = "space_heating";
+      else if (!powerDerived && st) hpMode = heatPumpModeOf(rawState, st.attributes, cfg.state_map, modeEntity);
+      if (!hpMode && (powerDerived || !modeEntity)) {
+        if (isActiveState(norm)) hpMode = "running";
+        else if (norm === "idle" || norm === "done") hpMode = "idle";
+      }
+      if (hpMode) {
+        const key = { space_heating: "boiler_space_heating", hot_water: "boiler_hot_water", cooling: "hp_cooling",
+          defrost: "hp_defrost", idle: "standby", running: "running" }[hpMode];
+        if (!cfg.state_show_raw) stateLabel = t(hass, key);
+        color = { space_heating: "#ff7043", hot_water: "#ef5350", cooling: "#29b6f6", defrost: "#4dd0e1",
+          idle: STATE_COLORS.idle, running: STATE_COLORS.running }[hpMode];
+      } else if (modeEntity && !rawIsMeaningless && !cfg.state_show_raw) {
+        stateLabel = modeLabel(hass, st, rawState, cfg);
+        color = STATE_COLORS.idle;
+      }
+      const flow = cfg.temperature_entity ? numericState(hass, cfg.temperature_entity) : null;
+      if (flow !== null) displayText = screenTemp(hass, cfg, cfg.temperature_entity, flow);
+      // Temperatures follow temperature_decimals like everywhere else on the
+      // card; power, heat and COP keep the entity's own formatting.
+      const hpTemp = (entity, icon, label) => {
+        const v = entity ? numericState(hass, entity) : null;
+        if (v === null) return;
+        // A reading never breaks between its number and its unit: the labels
+        // are long, and a narrow card would leave the unit alone below.
+        extraLines.push({ icon, label, value: keepTogether(tempText(hass, cfg, entity, v, temperatureUnit(hass, entity))), entity });
+      };
+      const hpLine = (entity, icon, label) => {
+        const ls = entity ? stateObj(hass, entity) : null;
+        if (!ls || ["unknown", "unavailable"].includes(ls.state)) return;
+        extraLines.push({ icon, label, value: keepTogether(formatInfoValue(ls, hass, null, cfg, entity)), entity });
+      };
+      hpTemp(cfg.temperature_entity, "mdi:thermometer", t(hass, "section_flow_temperature"));
+      hpTemp(cfg.outdoor_temperature_entity, "mdi:sun-thermometer-outline", t(hass, "section_outdoor_temperature"));
+      hpLine(cfg.power_entity, cfg.power_icon || "mdi:flash", t(hass, "power"));
+      hpLine(cfg.heat_output_entity, "mdi:heat-wave", t(hass, "section_heat_output"));
+      if (cfg.cop_entity) {
+        hpLine(cfg.cop_entity, "mdi:gauge", "COP");
+      } else if (cfg.heat_output_entity && watts !== null) {
+        // No COP entity: heat out over power in, once both are in watts.
+        const kw = (v, id) => {
+          const u = String(unitOf(hass, id) || "").toLowerCase();
+          return u === "w" ? v / 1000 : u === "kw" ? v : NaN;
+        };
+        const heat = numericState(hass, cfg.heat_output_entity);
+        const cop = heat === null ? NaN : kw(heat, cfg.heat_output_entity) / kw(watts, cfg.power_entity);
+        // At rest the ratio is infinite, and a meter below zero gives nonsense.
+        if (Number.isFinite(cop) && cop > 0) {
+          extraLines.push({
+            icon: "mdi:gauge",
+            label: "COP",
+            value: new Intl.NumberFormat(lang(hass), { minimumFractionDigits: 1, maximumFractionDigits: 1 }).format(cop),
+          });
+        }
+      }
+    }
+
     // Kettle: no timer, no program. The drawing carries the state, and the
     // water temperature is the only reading it can show.
     if (cap.kettleTemp) {
@@ -4965,7 +5685,7 @@ class ApplianceCard extends HTMLElement {
     }
 
     // Power draw is worth showing on any type once the entity is there.
-    if (!cap.fridgeTemp && cfg.power_entity && watts !== null) {
+    if (!cap.fridgeTemp && !cap.heatPump && cfg.power_entity && watts !== null) {
       extraLines.push({
         icon: cfg.power_icon || "mdi:power-plug",
         label: t(hass, "power"),
@@ -4996,6 +5716,8 @@ class ApplianceCard extends HTMLElement {
       phase: applianceType === "dishwasher" ? phase : "",
       tankTemp,
       boilerMode,
+      hpMode,
+      p3,
     };
 
     // A plain on/off control, for the types that have no cycle to start or
@@ -5030,6 +5752,7 @@ class ApplianceCard extends HTMLElement {
       illustrationCtx.anyZoneOn,
       illustrationCtx.phase,
       illustrationCtx.boilerMode,
+      illustrationCtx.hpMode,
     ].join(",");
     if (animKey !== this._animKey) {
       this._animKey = animKey;
@@ -5078,6 +5801,9 @@ class ApplianceCard extends HTMLElement {
         .info-lines.compact .info-line { font-size: 0.92em; }
         .info-lines.compact .info-line ha-icon { --mdc-icon-size: 18px; }
         .info-line.clickable { cursor: pointer; }
+        /* A print file is one long word: it breaks anywhere rather than
+           spilling out of the card. */
+        .info-line.wrap span:last-child { min-width: 0; overflow-wrap: anywhere; }
         .info-line.warn { color: var(--error-color, #f44336); }
         .info-line.warn ha-icon { color: var(--error-color, #f44336); }
         .info-line.caution, .info-line.caution ha-icon { color: var(--warning-color, #ff9800); }
@@ -5118,7 +5844,11 @@ class ApplianceCard extends HTMLElement {
     };
 
     const lines = [];
-    if (programText) lines.push({ icon: "mdi:tag-outline", label: t(hass, "program"), value: programText });
+    if (programText) {
+      lines.push(cap.printer3d
+        ? { icon: "mdi:file-outline", label: t(hass, "p3_file"), value: programText, wrap: true }
+        : { icon: "mdi:tag-outline", label: t(hass, "program"), value: programText });
+    }
     infoEntities.forEach((e) => {
       lines.push({
         icon: e.icon || e.st.attributes.icon || "mdi:information-outline",
@@ -5165,7 +5895,7 @@ class ApplianceCard extends HTMLElement {
           .map((l) => ({ ...l, open: !!l.entity && entityUsable(hass, l.entity) }))
           .map(
             (l) =>
-              `<div class="info-line ${l.warn ? "warn" : l.caution ? "caution" : ""}${l.open ? " clickable" : ""}"${l.open ? ` data-more="${esc(l.entity)}"` : ""}><ha-icon icon="${esc(l.icon)}"></ha-icon><span class="label">${esc(l.label)}</span>${l.value ? `<span>${esc(l.value)}</span>` : ""}</div>`
+              `<div class="info-line ${l.warn ? "warn" : l.caution ? "caution" : ""}${l.open ? " clickable" : ""}${l.wrap ? " wrap" : ""}"${l.open ? ` data-more="${esc(l.entity)}"` : ""}><ha-icon icon="${esc(l.icon)}"></ha-icon><span class="label">${esc(l.label)}</span>${l.value ? `<span>${esc(l.value)}</span>` : ""}</div>`
           )
           .join("")}</div>`
       : "";
@@ -5253,13 +5983,13 @@ const ACTION_DOMAINS = ["button", "switch", "script", "input_boolean"];
 // Which types a section applies to. Anything cycle-shaped keeps the original
 // program/time/door/controls set; a hood or a cooktop would only be cluttered
 // by fields it can never fill.
-const CYCLE_TYPES = ["washer", "dryer", "dishwasher", "oven", "microwave", "cooker", "coffee", "rice_cooker"];
+const CYCLE_TYPES = ["washer", "dryer", "dishwasher", "oven", "microwave", "cooker", "coffee", "rice_cooker", "printer_3d"];
 // A coffee machine has no door and a cooker's lid has no sensor, so neither
 // belongs in the door section even though both run programs.
 const DOOR_TYPES = ["washer", "dryer", "dishwasher", "oven", "microwave", "fridge"];
 
 const SECTIONS = [
-  { field: "program_entity", types: CYCLE_TYPES, labelKey: "section_program", includeDomains: ["select", "sensor", "input_select"], extra: (c, hass) => c._row("program_format", "program_format", {
+  { field: "program_entity", types: CYCLE_TYPES.filter((ty) => ty !== "printer_3d"), labelKey: "section_program", includeDomains: ["select", "sensor", "input_select"], extra: (c, hass) => c._row("program_format", "program_format", {
       type: "select",
       options: [
         { value: "clean", label: t(hass, "program_format_clean") },
@@ -5272,6 +6002,7 @@ const SECTIONS = [
         { value: "auto", label: t(hass, "unit_auto") },
         { value: "seconds", label: t(hass, "unit_seconds") },
         { value: "minutes", label: t(hass, "unit_minutes") },
+        { value: "hours", label: t(hass, "unit_hours") },
       ],
     }) + c._row("remaining_time_hide_when_idle", "remaining_time_hide_when_idle", { type: "checkbox" })
       + c._row("remaining_time_split", "remaining_time_split", { type: "checkbox" }) },
@@ -5296,7 +6027,7 @@ const SECTIONS = [
   { field: "filter_reset_entity", types: ["hood"], labelKey: "section_filter_reset", includeDomains: ACTION_DOMAINS },
 
   // Oven + hood
-  { field: "light_entity", types: ["oven", "hood"], labelKey: "section_light", includeDomains: ["light", "switch", "input_boolean", "binary_sensor"] },
+  { field: "light_entity", types: ["oven", "hood", "printer_3d"], labelKey: "section_light", includeDomains: ["light", "switch", "input_boolean", "binary_sensor"] },
 
   // Cooktop
   { field: "child_lock_entity", types: ["cooktop"], labelKey: "section_child_lock", includeDomains: ["binary_sensor", "switch", "lock"] },
@@ -5335,9 +6066,9 @@ const SECTIONS = [
   { field: "heating_entity", types: ["water_heater"], labelKey: "section_heating", includeDomains: ["binary_sensor", "sensor", "switch", "input_boolean"] },
 
   // Boiler
-  { field: "heating_entity", types: ["boiler"], labelKey: "section_space_heating", includeDomains: ["binary_sensor", "sensor", "switch", "input_boolean"] },
-  { field: "hot_water_entity", types: ["boiler"], labelKey: "section_hot_water", includeDomains: ["binary_sensor", "sensor", "switch", "input_boolean"] },
-  { field: "temperature_entity", types: ["boiler"], labelKey: "section_flow_temperature", includeDomains: ["sensor", "number", "input_number"], extra: (c, hass) =>
+  { field: "heating_entity", types: ["boiler", "heat_pump"], labelKey: "section_space_heating", includeDomains: ["binary_sensor", "sensor", "switch", "input_boolean"] },
+  { field: "hot_water_entity", types: ["boiler", "heat_pump"], labelKey: "section_hot_water", includeDomains: ["binary_sensor", "sensor", "switch", "input_boolean"] },
+  { field: "temperature_entity", types: ["boiler", "heat_pump"], labelKey: "section_flow_temperature", includeDomains: ["sensor", "number", "input_number"], extra: (c, hass) =>
       c._row("temperature_decimals", "temperature_decimals", {
         type: "select",
         options: [
@@ -5346,6 +6077,31 @@ const SECTIONS = [
           { value: "auto", label: t(hass, "precision_auto") },
         ],
       }) },
+
+  // Heat pump
+  { field: "outdoor_temperature_entity", types: ["heat_pump"], labelKey: "section_outdoor_temperature", includeDomains: ["sensor"] },
+  { field: "heat_output_entity", types: ["heat_pump"], labelKey: "section_heat_output", includeDomains: ["sensor"] },
+  { field: "cop_entity", types: ["heat_pump"], labelKey: "section_cop", includeDomains: ["sensor", "input_number"] },
+
+  // 3D printer. A target may be a sensor or a number, as the integrations
+  // put it; Creality keeps it as an attribute of the reading instead.
+  { field: "program_entity", types: ["printer_3d"], labelKey: "section_print_file", includeDomains: ["sensor", "select", "input_select", "input_text"] },
+  { field: "phase_entity", types: ["printer_3d"], labelKey: "section_print_stage", includeDomains: ["sensor", "input_select"] },
+  { field: "nozzle_temperature_entity", types: ["printer_3d"], labelKey: "section_nozzle_temperature", includeDomains: ["sensor"], extra: (c, hass) =>
+      c._row("temperature_decimals", "temperature_decimals", {
+        type: "select",
+        options: [
+          { value: "0", label: t(hass, "precision_0") },
+          { value: "1", label: t(hass, "precision_1") },
+          { value: "auto", label: t(hass, "precision_auto") },
+        ],
+      }) },
+  { field: "nozzle_target_entity", types: ["printer_3d"], labelKey: "section_nozzle_target", includeDomains: ["sensor", "number", "input_number"] },
+  { field: "bed_temperature_entity", types: ["printer_3d"], labelKey: "section_bed_temperature", includeDomains: ["sensor"] },
+  { field: "bed_target_entity", types: ["printer_3d"], labelKey: "section_bed_target", includeDomains: ["sensor", "number", "input_number"] },
+  { field: "chamber_temperature_entity", types: ["printer_3d"], labelKey: "section_chamber_temperature", includeDomains: ["sensor"] },
+  { field: "current_layer_entity", types: ["printer_3d"], labelKey: "section_current_layer", includeDomains: ["sensor", "number"] },
+  { field: "total_layers_entity", types: ["printer_3d"], labelKey: "section_total_layers", includeDomains: ["sensor", "number"] },
 
   // Cooker
   { field: "speed_entity", types: ["cooker"], labelKey: "section_speed", includeDomains: ["sensor", "number", "select", "input_number", "input_select"] },
@@ -5858,6 +6614,8 @@ class ApplianceCardEditor extends HTMLElement {
             { value: "rice_cooker", label: t(hass, "type_rice_cooker") },
             { value: "water_heater", label: t(hass, "type_water_heater") },
             { value: "boiler", label: t(hass, "type_boiler") },
+            { value: "heat_pump", label: t(hass, "type_heat_pump") },
+            { value: "printer_3d", label: t(hass, "type_printer_3d") },
           ],
         })}
         ${this._type === "fridge" ? this._row("section_fridge_layout", "fridge_layout", {
@@ -5868,6 +6626,21 @@ class ApplianceCardEditor extends HTMLElement {
             { value: "side_by_side", label: t(hass, "layout_side_by_side") },
             { value: "single", label: t(hass, "layout_single") },
             { value: "wine", label: t(hass, "layout_wine") },
+          ],
+        }) : ""}
+        ${this._type === "printer_3d" ? this._row("section_printer_layout", "printer_layout", {
+          type: "select",
+          options: [
+            { value: "enclosed", label: t(hass, "layout_enclosed") },
+            { value: "open", label: t(hass, "layout_open") },
+          ],
+        }) : ""}
+        ${this._type === "printer_3d" ? this._row("section_printed_part", "printed_part", {
+          type: "select",
+          options: [
+            { value: "cube", label: t(hass, "part_cube") },
+            { value: "pyramid", label: t(hass, "part_pyramid") },
+            { value: "duck", label: t(hass, "part_duck") },
           ],
         }) : ""}
       </div>
@@ -5942,7 +6715,10 @@ class ApplianceCardEditor extends HTMLElement {
     this._mountStateMap(this._root.querySelector('[data-slot="__state_map"]'));
     this._mountPicker(this._root.querySelector('[data-slot="state_entity"]'), "state_entity", {
       label: t(hass, "state_entity"),
-      includeDomains: ["sensor", "binary_sensor"],
+      // A tank, a combi boiler and a heat pump are often their integration's
+      // own water_heater or climate entity.
+      includeDomains: ["sensor", "binary_sensor"].concat(
+        { water_heater: ["water_heater"], boiler: ["water_heater"], heat_pump: ["climate", "water_heater"] }[this._type] || []),
     });
     for (const s of this._sections()) {
       if (this._open.has(s.field)) {
