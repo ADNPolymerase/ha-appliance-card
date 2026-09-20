@@ -237,7 +237,7 @@ The phase only changes the illustration, and an unrecognised value is ignored.
 
 ### Pet feeders
 
-A feeder is read rather than run: no cycle, no programme, no door. Its state is worked out from what it reports, *Tank empty*, *Error*, *Dispensing* or *Ready*, and the card carries what was served today and when the last meal was. An empty tank is the one thing a feeder cannot fix by itself, so it takes the state line and empties the hopper on the drawing. A cat turns up beside it, distinctly unimpressed, with a red warning triangle, and it turns up for a jam as well, that time with the kibble still in the tank.
+A feeder is read rather than run: no cycle, no programme, no door. Its state is worked out from what it reports, *Tank empty*, *Error*, *Dispensing* or *Ready*, and the card carries what was served today and when the last meal was. An empty tank is the one thing a feeder cannot fix by itself, so it takes the state line and empties the hopper on the drawing. A red warning triangle goes up with it, and it goes up for a jam as well, that time with the kibble still in the tank.
 
 The control is the interesting part, because a feeder rarely has a button. This one dispenses from a list set to `START`, over Zigbee2MQTT:
 

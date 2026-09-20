@@ -237,7 +237,7 @@ La phase ne change que l'illustration, et une valeur non reconnue est ignorée.
 
 ### Distributeurs de croquettes
 
-Un distributeur se lit, il ne se pilote pas : pas de cycle, pas de programme, pas de porte. Son état est calculé à partir de ce qu'il rapporte, *Réservoir vide*, *Erreur*, *Distribution* ou *Prêt*, et la carte porte ce qui a été servi aujourd'hui et l'heure du dernier repas. Un réservoir vide est la seule chose qu'un distributeur ne peut pas régler tout seul : il prend la ligne d'état, et vide la trémie sur le dessin. Un chat vient s'asseoir à côté, l'air peu impressionné, avec un triangle rouge, et il vient aussi pour un blocage, avec les croquettes toujours dans le réservoir cette fois.
+Un distributeur se lit, il ne se pilote pas : pas de cycle, pas de programme, pas de porte. Son état est calculé à partir de ce qu'il rapporte, *Réservoir vide*, *Erreur*, *Distribution* ou *Prêt*, et la carte porte ce qui a été servi aujourd'hui et l'heure du dernier repas. Un réservoir vide est la seule chose qu'un distributeur ne peut pas régler tout seul : il prend la ligne d'état, et vide la trémie sur le dessin. Un triangle rouge se lève avec lui, et il se lève aussi pour un blocage, avec les croquettes toujours dans le réservoir cette fois.
 
 La commande est le point intéressant, parce qu'un distributeur a rarement un bouton. Celui-ci distribue depuis une liste réglée sur `START`, via Zigbee2MQTT :
 
