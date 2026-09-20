@@ -3726,6 +3726,34 @@ check('code de defaut : un code non nul est une erreur', stateLine(fFault(1)), '
 check('code de defaut : et le chat vient le dire', /class="pf-cat"/.test(fFault(2)), true);
 check('code de defaut : un bourrage nomme se lit aussi', stateLine(fFault('food_jam')), 'Error');
 check('code de defaut : une entite muette ne crie pas', stateLine(fFault('unknown')), 'Ready');
+
+// The appliance colour paints the machine: lid, dispenser, foot and bowl, the
+// bowl a shade under the body so it keeps its own shape. The hopper is clear
+// plastic on every one of these machines and stays out of it, or a black
+// feeder would show black kibble in a black tank.
+check('couleur : le bloc distributeur suit la couleur de l\'appareil',
+  /\.pf-unit \{[^}]*background: var\(--ac-body,/.test(fIn), true);
+check('couleur : le couvercle aussi',
+  /\.pf-lid \{[^}]*background: var\(--ac-body-lo,/.test(fIn), true);
+check('couleur : et le pied',
+  /\.pf-base \{[^}]*background: var\(--ac-body-lo,/.test(fIn), true);
+check('couleur : la gamelle, d\'un ton en dessous',
+  /\.pf-bowl \{[^}]*background: var\(--ac-body-lo,/.test(fIn), true);
+check('couleur : la tremie reste du plastique clair',
+  /\.pf-body \{[^}]*--ac-body/.test(fIn), false);
+
+// The body is drawn long enough to meet the bowl: one moulded piece rather
+// than a block floating above a dish. Read from the CSS instead of pinned to a
+// number, so moving either one has to keep them touching.
+function cssPx(html, selector, prop) {
+  const block = new RegExp(`\\${selector} \\{([^}]*)\\}`).exec(html);
+  const m = block && new RegExp(`${prop}: (-?[\\d.]+)px`).exec(block[1]);
+  return m ? parseFloat(m[1]) : null;
+}
+const machineH = cssPx(fIn, '.machine', 'height');
+const unitBottom = cssPx(fIn, '.pf-unit', 'top') + cssPx(fIn, '.pf-unit', 'height');
+const bowlTop = machineH - cssPx(fIn, '.pf-bowl', 'bottom') - cssPx(fIn, '.pf-bowl', 'height');
+check('dessin : le corps descend jusqu\'au haut de la gamelle', unitBottom, bowlTop);
 // An error that names itself reads as what it is.
 check('gamelle : une erreur qui dit vide se lit vide',
   stateLine(feeder({}, { 'binary_sensor.croquettes_error': { state: 'no_food', attributes: {} } })), 'Tank empty');

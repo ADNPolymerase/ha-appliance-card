@@ -1,4 +1,4 @@
-const CARD_VERSION = "2.9.0";
+const CARD_VERSION = "2.9.1";
 
 console.info(
   "%c HA-APPLIANCE-CARD %c v" + CARD_VERSION + " ",
@@ -4106,13 +4106,21 @@ const ILLUSTRATION_CSS = {
         /* Flat and face on, the way a feeder is always drawn: the lid, the
            hopper with its heap of kibble, the dark block that serves, and the
            bowl with a heap of its own. */
+        /* Lid, dispenser and foot are the moulded shell, so they are what the
+           appliance colour paints. Dark by default, which is how these
+           machines are sold when they are not white. */
         .pf-lid {
           position: absolute; left: 14px; right: 14px; top: 3px; height: 7px; border-radius: 2px;
-          background: #343a40;
+          background: var(--ac-body-lo, #343a40);
+          box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.10);
         }
+        /* The hopper and the bowl are clear plastic on every one of these
+           machines, black body or white: they keep their own light tint rather
+           than following the appliance colour, or a black feeder would show
+           black kibble in a black tank. */
         .pf-body {
           position: absolute; left: 16px; right: 16px; top: 10px; height: 36px; overflow: hidden;
-          background: linear-gradient(100deg, var(--ac-body-hi, #eceded), var(--ac-body, var(--secondary-background-color, #dcdee0)));
+          background: linear-gradient(100deg, #f2f3f4, #e2e4e6);
           clip-path: polygon(0 0, 100% 0, 86% 100%, 14% 100%);
         }
         /* A heap, not a pattern: a block of kibble with a bumpy top. */
@@ -4126,8 +4134,9 @@ const ILLUSTRATION_CSS = {
           background-size: 9px 9px;
         }
         .pf-unit {
-          position: absolute; left: 23px; right: 23px; top: 45px; height: 23px; border-radius: 3px;
-          background: #343a40;
+          position: absolute; left: 23px; right: 23px; top: 45px; height: 32px; border-radius: 3px;
+          background: var(--ac-body, #343a40);
+          box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.10);
         }
         .pf-unit i {
           position: absolute; left: 6px; right: 6px; bottom: 4px; height: 8px; border-radius: 2px;
@@ -4135,7 +4144,7 @@ const ILLUSTRATION_CSS = {
         }
         .pf-bowl {
           position: absolute; left: 25px; right: 25px; bottom: 11px; height: 20px; overflow: hidden;
-          background: linear-gradient(100deg, var(--ac-body-hi, #eceded), var(--ac-body, var(--secondary-background-color, #dcdee0)));
+          background: var(--ac-body-lo, #22262a); box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.10);
           clip-path: polygon(0 0, 100% 0, 84% 100%, 16% 100%);
         }
         .pf-dish { position: absolute; left: 2px; right: 2px; bottom: 0; height: 12px; background: #8d6e63; }
@@ -4144,7 +4153,10 @@ const ILLUSTRATION_CSS = {
           background: radial-gradient(circle at 4.5px 4.5px, #8d6e63 4.3px, transparent 4.7px) repeat-x;
           background-size: 9px 9px;
         }
-        .pf-base { position: absolute; left: 19px; right: 19px; bottom: 4px; height: 6px; border-radius: 2px; background: #343a40; }
+        .pf-base {
+          position: absolute; left: 19px; right: 19px; bottom: 4px; height: 6px; border-radius: 2px;
+          background: var(--ac-body-lo, #343a40); box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.10);
+        }
         /* The cat, when there is something to be cross about: an empty tank or a
            jam. Its proportions are the ones every grumpy cat is drawn with: a
            head that takes half the height and nearly all the width, a small
@@ -4229,7 +4241,7 @@ const ILLUSTRATION_CSS = {
         .pf-alert .dot { top: 12px; width: 2.5px; height: 2.5px; margin-left: -1.25px; border-radius: 50%; }
         .pf-fall { position: absolute; inset: 0; }
         .pf-fall i {
-          position: absolute; left: 46px; top: 69px; width: 4px; height: 4px; border-radius: 50%;
+          position: absolute; left: 46px; top: 78px; width: 4px; height: 4px; border-radius: 50%;
           background: #8d6e63; opacity: 0;
         }
         .machine.feeding .pf-fall i { animation: pf-fall 0.8s linear infinite; animation-delay: var(--anim-offset, 0s); }
@@ -4239,7 +4251,7 @@ const ILLUSTRATION_CSS = {
           0% { opacity: 0; transform: translateY(0); }
           20% { opacity: 1; }
           85% { opacity: 1; }
-          100% { opacity: 0; transform: translateY(11px); }
+          100% { opacity: 0; transform: translateY(7px); }
         }
   `,
   kettle: () => `
