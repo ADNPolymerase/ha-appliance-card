@@ -10,7 +10,7 @@
 <a href="https://buymeacoffee.com/adnpolymerase" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-orange.png" alt="Buy Me A Coffee" height="60"></a>
 <a href="https://adnpolymerase.github.io/HA/" target="_blank"><img src="https://raw.githubusercontent.com/ADNPolymerase/HA/main/assets/site-button.svg" alt="Lien vers mon github.io pour mes autres projets" height="60"></a>
 
-Une card Lovelace pour les appareils de la maison : lave-linge, sèche-linge, lave-vaisselle, four, micro-ondes, hotte, plaque de cuisson, réfrigérateur, bouilloire, robot cuiseur, machine à café, cuiseur à riz, chauffe-eau, chaudière, pompe à chaleur et imprimante 3D. Cycle en cours, programme, temps restant, température, alertes et commandes.
+Une card Lovelace pour les appareils de la maison : lave-linge, sèche-linge, lave-vaisselle, four, micro-ondes, hotte, plaque de cuisson, réfrigérateur, bouilloire, robot cuiseur, machine à café, cuiseur à riz, chauffe-eau, chaudière, pompe à chaleur, imprimante 3D et distributeur de croquettes. Cycle en cours, programme, temps restant, température, alertes et commandes.
 
 Aucune marque supposée : chaque champ est une entité à choisir, elle fonctionne donc avec **n'importe quelle** intégration (Electrolux, Samsung, LG, Home Connect, Miele, une simple prise connectée…).
 
@@ -21,7 +21,7 @@ Aucune marque supposée : chaque champ est une entité à choisir, elle fonction
 
 ## Fonctionnalités
 
-- **Seize types d'appareils**, chacun avec une illustration en CSS animée sur les données de l'appareil et statique à l'arrêt. Le type est détecté tout seul ou choisi via `appliance_type`, et `compact: true` ne garde que le texte.
+- **Dix-sept types d'appareils**, chacun avec une illustration en CSS animée sur les données de l'appareil et statique à l'arrêt. Le type est détecté tout seul ou choisi via `appliance_type`, et `compact: true` ne garde que le texte.
 - **Normalisation d'état** : `Idle`, `RUNNING`, `wash`, `En marche`… sont reconnus (sans tenir compte des accents) et classés en veille, préchauffage, en cours, en pause, terminé, différé ou erreur. Un état inconnu s'affiche tel quel, sans l'espace de noms de l'intégration, et `state_map` classe le reste, `"*"` ramassant tout ce qui dépasse.
 - **Une lavante-séchante est un lave-linge qui sèche** : `washer_dryer: true`, et le tambour montre de l'eau pendant le lavage, puis du linge qui tourne dans l'air chaud pendant le séchage. L'étape vient de l'état lui-même ou d'une entité de phase, et la ligne d'état lit *Lavage* ou *Séchage*.
 - **Chaque appareil dit ce qui compte pour lui** : une machine à café ce qui lui manque (eau, grains, bac, détartrage), un réfrigérateur sa santé (débranché, porte ouverte, température haute), une chaudière mixte ce qu'elle chauffe (chauffage, eau chaude ou veille), une imprimante 3D ce que fait l'impression (préchauffage, nivellement, changement de filament).
@@ -58,7 +58,7 @@ Seule `state_entity` est obligatoire, sauf sur un réfrigérateur où une sonde 
 | `compact` | `true` masque l'illustration. |
 | `illustration_color` | `auto` (défaut, suit le thème) \| `white` \| `grey` \| `black`. Ne change que la carrosserie, pas les couleurs d'état. |
 | `language` | `auto` (défaut, suit Home Assistant) ou l'un des 14 codes : `en`, `fr`, `de`, `es`, `it`, `nl`, `pt`, `sv`, `no`, `da`, `pl`, `ru`, `zh`, `cs`. `nb` et `nb-NO` donnent le norvégien. |
-| `appliance_type` | `auto` (défaut) \| `washer` \| `dryer` \| `dishwasher` \| `oven` \| `microwave` \| `hood` \| `cooktop` \| `fridge` \| `kettle` \| `cooker` \| `coffee` \| `rice_cooker` \| `water_heater` \| `boiler` \| `heat_pump` \| `printer_3d`. |
+| `appliance_type` | `auto` (défaut) \| `washer` \| `dryer` \| `dishwasher` \| `oven` \| `microwave` \| `hood` \| `cooktop` \| `fridge` \| `kettle` \| `cooker` \| `coffee` \| `rice_cooker` \| `water_heater` \| `boiler` \| `heat_pump` \| `printer_3d` \| `pet_feeder`. |
 | `toggle_entity` | Bouton marche/arrêt (`switch`, `button`, `script`, `input_boolean`, `fan`), mis en évidence quand c'est allumé. |
 | `power_entity` / `power_on_threshold` / `power_icon` | Capteur de puissance. Avec un seuil, l'état en est déduit : *en marche* au-dessus, puis *terminé* en redescendant. Pointer `state_entity` sur ce même capteur l'active avec un seuil de 10 W. `power_icon` remplace `mdi:power-plug`. |
 | `program_entity` / `program_format` | Programme. `clean` (défaut) le rend lisible (`LaundryCare.Washer.Program.Auto40` devient *Auto 40*, `Rapid20Min` devient *Rapid 20 Min*), `raw` l'affiche tel quel. |
@@ -70,7 +70,7 @@ Seule `state_entity` est obligatoire, sauf sur un réfrigérateur où une sonde 
 | `alerts_entity` | Entité dont chaque *attribut* à on, true ou active s'affiche en alerte. |
 | `connectivity_entity` / `connectivity_connected_state` | Connectivité, en icône wifi, et état « connecté » (défaut `on`). |
 | `info_entities` | Jusqu'à 8 lignes `{ entity, icon?, label?, value_map?, hide_unit? }`, les suivantes sont ignorées. Au-delà de 5 lignes, l'espacement se resserre. Les valeurs s'affichent comme dans Home Assistant, avec la précision d'affichage de l'entité. `value_map` renomme les valeurs brutes (voir plus bas), `hide_unit` masque l'unité. |
-| `start_entity` / `pause_entity` / `resume_entity` / `stop_entity` | Commandes, affichées seulement si configurées. |
+| `start_entity` / `pause_entity` / `resume_entity` / `stop_entity` | Commandes, affichées seulement si configurées. Une commande est d'ordinaire un `button`, un `script` ou une `automation`, qui est déclenchée et non désactivée, et peut aussi être un `select` ou un `number` : `start_option` dit quelle option choisir (la carte la prend toute seule quand la liste n'en propose qu'une), `start_value` ce qu'il faut écrire. Idem pour les trois autres, en `pause_option`, `stop_value` et ainsi de suite. |
 
 Par type :
 
@@ -99,6 +99,12 @@ Par type :
 | `heating_entity` / `hot_water_entity` | chaudière, pompe à chaleur | Indicateurs chauffage et eau chaude ; allumés tous les deux, l'eau chaude l'emporte. Sans eux, le mode vient de `state_entity` : codes `-H`, `=H`, `0H` (Nefit, Bosch) ou leur forme numérique `200`, `201`, `203`, le démarrage (`0U`, `0C`, `0L` ou `270`, `283`, `284`) se lisant *Allumage* et les attentes du brûleur (`0A`, `0Y`, `0E` ou `202`, `204`, `265`, `305`, `353`) *En attente* ; `CH`, `HW`, `No` ; ceux d'InComfort, ebusd, myVAILLANT et MELCloud ; ou *chauffage* et *eau chaude*. Indicateurs éteints mais flamme allumée, elle affiche *Brûleur allumé*. `state_map` accepte `space_heating`, `hot_water`, `starting`, `waiting` et `idle`. Avec seulement le brûleur en `power_entity`, la flamme s'allume sans dire pour quoi. |
 | `state_entity` sur une pompe à chaleur | pompe à chaleur | Ce que fait la pompe : le `hvac_action` d'une entité `climate` (chauffage, refroidissement, dégivrage, repos), l'attribut `status` de MELCloud (`heat_water`, `heat_zones`, `cool`, `defrost`, `standby`, `legionella`) ou un capteur en toutes lettres (*chauffage*, *eau chaude*, *refroidissement*, *dégivrage*, en 14 langues). L'état d'une entité `climate` ou `water_heater` est le mode que vous avez choisi, affiché tel quel quand l'entité ne dit rien de ce que fait la pompe. `state_map` accepte `space_heating`, `hot_water`, `cooling`, `defrost` et `idle`. Le ventilateur de l'unité extérieure tourne quand elle travaille et s'arrête pour dégivrer ; le ballon ou le radiateur chauffe selon le mode. |
 | `outdoor_temperature_entity` / `heat_output_entity` / `cop_entity` | pompe à chaleur | Température extérieure, chaleur produite et COP, dans la liste. Sans entité COP, la card divise la chaleur produite par `power_entity` dès que les deux sont en W ou en kW. |
+| `return_temperature_entity` | pompe à chaleur | L'eau qui revient. Départ et retour partagent alors une seule ligne, *42 °C → 36 °C*, et la carte calcule l'écart toute seule comme elle calcule le COP, toujours avec un dixième puisqu'une pompe à chaleur travaille sur quelques degrés. Pris comme une distance, donc positif même quand la pompe rafraîchit. |
+| `water_flow_entity` | pompe à chaleur | Débit d'eau, dans l'unité de l'entité. |
+| `compressor_entity` | pompe à chaleur | Fréquence en hertz, ou un contact tout ou rien lu *En marche* et *Éteint*. Un compresseur à l'arrêt arrête le ventilateur du dessin : la pompe ne fait plus que brasser de l'eau. |
+| `fan_speed_entity` | pompe à chaleur | Vitesse du ventilateur, dans l'unité de l'entité. |
+| `no_hot_water` | pompe à chaleur | `true` retire le ballon du dessin, pour une installation qui ne fait pas d'eau chaude sanitaire. Ce qui reste se recentre. |
+| `underfloor_heating` | pompe à chaleur | `true` dessine un plancher chauffant à la place du radiateur, ce qui est le cas de la plupart des installations air-eau : la dalle vue de biais, ses quatre panneaux, et la chaleur qui s'en échappe quand elle chauffe. Elle passe au bleu quand la pompe rafraîchit. |
 | `state_entity` sur une imprimante 3D | imprimante 3D | L'état de l'imprimante, tel que chaque intégration l'envoie : `current_state` (OctoPrint), le capteur de l'imprimante (PrusaLink), `print_status` (Bambu Lab, Creality), `current_print_state` (Moonraker, Klipper), `current_status` (Elegoo), `machine_status` (Flashforge), `job_state` (Anycubic). Il se lit *Impression*, *Préparation*, *Préchauffage*, *En pause*, *Intervention requise*, *Terminé*, *Annulée*, *Échec*, *Erreur*, *En veille* ou *Hors ligne*. La plupart des intégrations disent *impression* dès que le code de départ chauffe : tant qu'une résistance reste à plus de 5 °C sous sa consigne et que la pièce n'a pas commencé, la card affiche *Préchauffage* et la barre devient une jauge de chauffe. Hors d'une impression, le temps restant est masqué, car l'imprimante garde celui du dernier travail. |
 | `phase_entity` | imprimante 3D | Ce que fait l'impression : `current_stage` de Bambu Lab, `print_status` d'Elegoo. Il se lit *Préchauffage*, *Nivellement du plateau*, *Changement de filament*, *Refroidissement*, *Calibrage* ou *Mise à l'origine* pendant une impression. |
 | `program_entity` | imprimante 3D | Le fichier imprimé, sans son dossier ni l'extension du trancheur. |
@@ -106,6 +112,13 @@ Par type :
 | `current_layer_entity` / `total_layers_entity` | imprimante 3D | La couche, en *84 / 190*. |
 | `printer_layout` | imprimante 3D | `enclosed` (défaut : une enceinte dont le plateau descend quand la pièce monte) \| `open` (un cadre ouvert dont le portique monte). La pièce grandit avec la progression, dans la couleur de l'état, et la tête va et vient pendant l'impression. |
 | `printed_part` | imprimante 3D | La pièce sur le plateau : `cube` (défaut), `pyramid` (pyramide) ou `duck` (un canard en plastique). Elle apparaît de bas en haut au fil de l'impression. |
+| `portions_today_entity` / `weight_today_entity` | distributeur | Ce qui a été servi aujourd'hui, sur une seule ligne. Sans entité de poids, la carte calcule les grammes à partir de `portion_weight_entity` : rien n'est supposé sur la taille d'un repas. |
+| `serving_size_entity` / `portion_weight_entity` | distributeur | Combien de portions par distribution, et ce que pèse une portion. |
+| `schedule_entity` | distributeur | Le planning, dans les mots de l'intégration, sur une ligne qui s'enroule. |
+| `last_feed_entity` | distributeur | L'horodatage du dernier repas, quand l'intégration en donne un. Sinon la carte le trouve : un `script` dit quand il a tourné pour la dernière fois, quoi qu'il l'ait demandé, un `button` porte l'heure de son dernier appui, et le compteur du jour bouge à chaque repas que le distributeur rapporte, y compris ceux qu'il sert sur son propre planning. |
+| `level_entity` / `level_empty_below` / `level_max` | distributeur | Ce qui reste dans le réservoir : un pourcentage, qui remplit la trémie sur le dessin, ou un contact qui dit seulement *vide*. À `level_empty_below` ou en dessous (0 par défaut), dans l'unité du relevé, l'état lit *Réservoir vide*, en orange, et la trémie se vide. Un réservoir compté en grammes ou en litres remplit la trémie dès que `level_max` en donne la contenance. |
+| `error_entity` | distributeur | Fait passer l'état en *Erreur*, et en *Réservoir vide* quand l'erreur se nomme elle-même (`no_food`, `empty`, et le même mot dans les autres langues). Un code de défaut vaut une erreur sur toute valeur autre que zéro. |
+| `state_entity` | distributeur | Facultatif : un distributeur est au repos presque tout le temps, donc une commande ou un compteur suffisent. Quand il rapporte quelque chose, *on* se lit *Distribution* et les croquettes tombent. |
 | `speed_entity` | robot cuiseur | Vitesse du couteau, ramenée sur trois vitesses. |
 | `water_entity` | machine à café | Réservoir : booléen Home Connect, ou niveau en % avec *vide* sous 10 %. |
 | `beans_entity` / `tray_entity` / `descaling_entity` | machine à café | Grains vides, bac plein, détartrage à faire. |
@@ -221,6 +234,37 @@ phase_map:
 ```
 
 La phase ne change que l'illustration, et une valeur non reconnue est ignorée.
+
+### Distributeurs de croquettes
+
+Un distributeur se lit, il ne se pilote pas : pas de cycle, pas de programme, pas de porte. Son état est calculé à partir de ce qu'il rapporte, *Réservoir vide*, *Erreur*, *Distribution* ou *Prêt*, et la carte porte ce qui a été servi aujourd'hui et l'heure du dernier repas. Un réservoir vide est la seule chose qu'un distributeur ne peut pas régler tout seul : il prend la ligne d'état, et vide la trémie sur le dessin. Un chat vient s'asseoir à côté, l'air peu impressionné, avec un triangle rouge, et il vient aussi pour un blocage, avec les croquettes toujours dans le réservoir cette fois.
+
+La commande est le point intéressant, parce qu'un distributeur a rarement un bouton. Celui-ci distribue depuis une liste réglée sur `START`, via Zigbee2MQTT :
+
+```yaml
+type: custom:ha-appliance-card
+appliance_type: pet_feeder
+start_entity: select.croquettes_feed
+portions_today_entity: sensor.croquettes_portions_per_day
+weight_today_entity: sensor.croquettes_weight_per_day
+portion_weight_entity: number.croquettes_portion_weight
+serving_size_entity: number.croquettes_serving_size
+schedule_entity: sensor.croquettes_planning
+```
+
+L'option n'est pas écrite : une liste dont la seule vraie option est `START` n'a rien à demander. Celui-là distribue par un script, et compte ses repas avec un helper `history_stats` :
+
+```yaml
+type: custom:ha-appliance-card
+appliance_type: pet_feeder
+start_entity: script.distribuer_croquettes
+portions_today_entity: sensor.croquettes_distributions_du_jour
+state_entity: binary_sensor.distributeur_distribution
+```
+
+Une automation fait aussi bien l'affaire comme commande, et un `utility_meter` fait un bon compteur : `portions_today_entity` prend ce qui compte les repas, là où l'intégration le tient.
+
+Trois entités se lisent aussi bien que dix : une ligne n'existe que si son entité répond.
 
 ### Lavantes-séchantes
 

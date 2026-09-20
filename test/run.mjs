@@ -45,6 +45,22 @@ FakeNodeProto.querySelector = function (sel) {
 // ([data-field], [data-toggle]), and the stubs are built from the markup this
 // node was actually given, so they carry real attribute values.
 FakeNodeProto.querySelectorAll = function (sel) {
+  // The card wires its own clicks on a class selector, and a button carries
+  // what the click has to pass on: the entity, and for a list or a number the
+  // option to pick or the value to write. Without this the whole click path
+  // would be unreachable, which is exactly where such a payload gets lost.
+  if (sel === '.action-btn, .light-badge') {
+    const memo = (this.__qsa ||= new Map());
+    if (memo.has(sel)) return memo.get(sel);
+    const out = [];
+    for (const m of String(this._html || '').matchAll(/<div class="(?:action-btn|light-badge)[^"]*"([^>]*)>/g)) {
+      const node = document.createElement('div');
+      for (const a of m[1].matchAll(/([a-z-]+)="([^"]*)"/g)) node.setAttribute(a[1], a[2]);
+      out.push(node);
+    }
+    memo.set(sel, out);
+    return out;
+  }
   const attr = /^\[([a-z-]+)\]$/.exec(sel)?.[1];
   if (!attr) return [];
   const memo = (this.__qsa ||= new Map());
@@ -1966,6 +1982,103 @@ check('pac : pas de COP sur un compteur negatif',
 check('pac : pas de COP sans unite connue',
   infoLine(hpFull({}, { 'sensor.hp_heat': { state: '2.55', attributes: {} } }), 'COP'), null);
 check('pac : l\'entite COP passe devant le calcul', infoLine(hpFull({ cop_entity: 'sensor.hp_cop' }), 'COP'), '3.2');
+// The hydraulics (issue #17): what comes back, what the emitter took out of
+// it on the way, how fast the water goes round and what the machine is doing
+// to make it happen.
+const HP_HYDRO = {
+  'sensor.hp_return': { state: '36.2', attributes: { unit_of_measurement: '°C' } },
+  'sensor.hp_rate':   { state: '17.4', attributes: { unit_of_measurement: 'L/min' } },
+  'sensor.hp_hz':     { state: '43',   attributes: { unit_of_measurement: 'Hz' } },
+  'sensor.hp_rpm':    { state: '720',  attributes: { unit_of_measurement: 'rpm' } },
+};
+const hpHydro = (extra = {}, more = {}) => hpFull({ return_temperature_entity: 'sensor.hp_return',
+  water_flow_entity: 'sensor.hp_rate', compressor_entity: 'sensor.hp_hz',
+  fan_speed_entity: 'sensor.hp_rpm', ...extra }, { ...HP_HYDRO, ...more });
+const hpHy = hpHydro();
+// One line for one pipe: the water leaves at 42 and comes back at 36.
+check('pac : depart et retour sur une ligne', infoLine(hpHy, 'Flow and return'), '42 °C → 36 °C');
+check('pac : et plus de ligne de retour separee', infoLine(hpHy, 'Return temperature'), null);
+check('pac : le retour seul garde sa ligne',
+  infoLine(hpOf('heat', { hvac_action: 'heating' }, { return_temperature_entity: 'sensor.hp_return' }, HP_HYDRO), 'Return temperature'), '36 °C');
+check('pac : le depart seul garde la sienne', infoLine(hpFull(), 'Flow temperature'), '42 °C');
+check('pac : debit d\'eau', infoLine(hpHy, 'Water flow'), '17.4 L/min');
+check('pac : frequence du compresseur', infoLine(hpHy, 'Compressor'), '43 Hz');
+check('pac : vitesse du ventilateur', infoLine(hpHy, 'Fan speed'), '720 rpm');
+
+// The delta is worked out from the two temperatures, like the COP from heat
+// over power. Never at the whole degree: a pump works on a couple of them.
+check('pac : l\'ecart est calcule', infoLine(hpHy, 'Delta'), '5.4 °C');
+check('pac : l\'ecart garde son dixieme quand le reste est au degre entier',
+  infoLine(hpHydro({ temperature_decimals: '0' }), 'Delta'), '5.4 °C');
+check('pac : l\'ecart au dixieme demande', infoLine(hpHydro({ temperature_decimals: '1' }), 'Delta'), '5.4 °C');
+check('pac : pas d\'ecart sans le retour', infoLine(hpFull(), 'Delta'), null);
+check('pac : pas d\'ecart sans le depart',
+  infoLine(hpOf('heat', { hvac_action: 'heating' }, { return_temperature_entity: 'sensor.hp_return' }, HP_HYDRO), 'Delta'), null);
+// In cooling the water comes back warmer, and an ecart is a distance.
+check('pac : en froid l\'ecart reste positif',
+  infoLine(hpHydro({}, { 'sensor.hp_flow': { state: '18.0', attributes: { unit_of_measurement: '°C' } },
+                         'sensor.hp_return': { state: '23.0', attributes: { unit_of_measurement: '°C' } } }), 'Delta'),
+  '5.0 °C');
+
+// What the pump feeds: a tank and radiators by default, and either of them
+// can go. An installation without domestic hot water has no tank to draw, and
+// aerothermal installs mostly heat a floor rather than radiators.
+const hpDraw = (extra) => hpOf('heat', { hvac_action: 'heating' }, extra, HP_READINGS);
+const hpPlain = hpDraw({});
+check('pac : le ballon est dessine par defaut', /class="hp-tank"/.test(hpPlain), true);
+check('pac : et des radiateurs', /class="hp-rad"/.test(hpPlain), true);
+const hpNoTank = hpDraw({ no_hot_water: true });
+check('pac sans eau chaude : plus de ballon', /class="hp-tank"/.test(hpNoTank), false);
+check('pac sans eau chaude : ni son tuyau', /class="hp-pipe tank"/.test(hpNoTank), false);
+check('pac sans eau chaude : la classe est posee', hasCls(hpNoTank, 'no-tank'), true);
+contains('pac sans eau chaude : ce qui reste se recentre', hpNoTank, '.machine.no-tank .hp-rad { left: 31px;');
+const hpFloor = hpDraw({ underfloor_heating: true });
+check('pac plancher : le plancher remplace les radiateurs', /class="hp-floor"/.test(hpFloor), true);
+check('pac plancher : et il n\'y a plus de radiateurs', /class="hp-rad"/.test(hpFloor), false);
+check('pac plancher : la classe est posee', hasCls(hpFloor, 'underfloor'), true);
+contains('pac plancher : le tuyau descend jusqu\'au coin de la dalle', hpFloor, '.machine.underfloor .hp-pipe.rad { left: 56px; height: 31px; }');
+check('pac plancher : la dalle a ses quatre panneaux', /class="hp-slab"><b>/.test(hpFloor), true);
+// The tile is one face cut to a diamond, with nothing under it.
+check('pac plancher : la dalle est en perspective',
+  (hpFloor.match(/clip-path: polygon\(50% 0, 100% 50%, 50% 100%, 0 50%\);/g) || []).length, 1);
+check('pac plancher : rien sous la dalle', /\.hp-slab::before/.test(hpFloor), false);
+// Four panels and not four triangles: the lines lean like the tile's own
+// edges instead of running corner to corner.
+contains('pac plancher : le panneau penche comme la dalle', hpFloor, '.hp-slab b::before { transform: rotate(19.7deg); }');
+contains('pac plancher : et l\'autre dans l\'autre sens', hpFloor, '.hp-slab b::after { transform: rotate(-19.7deg); }');
+contains('pac plancher : les deux traversent le centre', hpFloor, "content: \"\"; position: absolute; left: 50%; top: 50%; width: 44px; height: 1px;");
+contains('pac plancher : la dalle chauffe',
+  hpFloor, '.machine.mode-space_heating .hp-slab b { background: linear-gradient(180deg, #ffab91, #ff7043); }');
+contains('pac plancher : et la chaleur monte',
+  hpFloor, '.machine.mode-space_heating .hp-floor i { animation: hp-rise');
+check('pac plancher : trois volutes', (hpFloor.match(/<div class="hp-floor"><i><\/i><i><\/i><i><\/i>/g) || []).length, 1);
+check('pac : en froid la chaleur ne monte pas',
+  /mode-cooling .hp-floor i \{ animation/.test(hpOf('heat', { hvac_action: 'cooling' }, { underfloor_heating: true }, HP_READINGS)), false);
+contains('pac plancher : et refroidit en froid',
+  hpOf('heat', { hvac_action: 'cooling' }, { underfloor_heating: true }, HP_READINGS),
+  '.machine.mode-cooling .hp-slab b { background: linear-gradient(180deg, #b3e5fc, #29b6f6); }');
+const hpBoth = hpDraw({ no_hot_water: true, underfloor_heating: true });
+check('pac : les deux options tiennent ensemble',
+  /class="hp-floor"/.test(hpBoth) && !/class="hp-tank"/.test(hpBoth), true);
+contains('pac : et la dalle se recentre aussi', hpBoth, '.machine.no-tank .hp-floor { left: 31px;');
+
+// A compressor at rest is a pump pushing water around, and its fan has no
+// reason to turn even though the pump reports heating.
+check('pac : compresseur en marche, le ventilateur tourne', hasCls(hpHy, 'fan'), true);
+const hpIdleComp = hpHydro({}, { 'sensor.hp_hz': { state: '0', attributes: { unit_of_measurement: 'Hz' } } });
+check('pac : compresseur a zero, le ventilateur s\'arrete', hasCls(hpIdleComp, 'fan'), false);
+check('pac : compresseur a zero, la ligne reste', infoLine(hpIdleComp, 'Compressor'), '0 Hz');
+check('pac : un contact ferme se lit en mots',
+  infoLine(hpHydro({ compressor_entity: 'binary_sensor.hp_comp' },
+    { 'binary_sensor.hp_comp': { state: 'on', attributes: {} } }), 'Compressor'), 'Running');
+const hpCompOff = hpHydro({ compressor_entity: 'binary_sensor.hp_comp' },
+  { 'binary_sensor.hp_comp': { state: 'off', attributes: {} } });
+check('pac : un contact ouvert aussi', infoLine(hpCompOff, 'Compressor'), 'Off');
+check('pac : et il arrete le ventilateur', hasCls(hpCompOff, 'fan'), false);
+const hpCompNone = hpHydro({}, { 'sensor.hp_hz': { state: 'unavailable', attributes: {} } });
+check('pac : un compresseur muet ne fait pas de ligne', infoLine(hpCompNone, 'Compressor'), null);
+check('pac : et ne prive pas le ventilateur', hasCls(hpCompNone, 'fan'), true);
+
 check('pac : aucune barre de progression', /class="bar-fill"/.test(hpH), false);
 contains('pac : la cuve se remplit d\'eau chaude', hpInd('on', 'off'),
   '.machine.mode-hot_water .hp-tank i { height: 100%;');
@@ -2041,6 +2154,26 @@ for (const [id, want, icon] of [
   check('suggestion pac : COP instantane', sug.cop_entity, 'sensor.hp_live_cop');
   check('suggestion pac : temperature exterieure', sug.outdoor_temperature_entity, 'sensor.hp_live_outdoor_temperature');
   check('suggestion pac : pas de consigne prise pour la mesure', sug.temperature_entity, undefined);
+}
+{
+  // HeishaMon's naming, the Panasonic bridge behind most aerothermal installs:
+  // the unit's outlet is the water going out, its inlet the water coming back.
+  // The hours come first on purpose, since they carry the compressor's name.
+  const ids = ['climate.aquarea', 'sensor.aquarea_compressor_hours', 'sensor.aquarea_main_target_temp',
+    'sensor.aquarea_main_outlet_temp', 'sensor.aquarea_main_inlet_temp',
+    // Named like a flow rate, but it is a temperature.
+    'sensor.aquarea_water_flow_temperature', 'sensor.aquarea_pump_flow',
+    'sensor.aquarea_compressor_freq', 'sensor.aquarea_fan1_motor_speed'];
+  const ed = new Editor();
+  ed.setConfig({ type: 'custom:ha-appliance-card', appliance_type: 'heat_pump', state_entity: 'climate.aquarea' });
+  ed.hass = { ...HASS(Object.fromEntries(ids.map(id => [id, { state: '1', attributes: {} }]))),
+    entities: Object.fromEntries(ids.map(id => [id, { device_id: 'aq' }])) };
+  const sug = ed.events.at(-1)?.detail?.config || {};
+  check('suggestion pac : la sortie est le depart', sug.temperature_entity, 'sensor.aquarea_main_outlet_temp');
+  check('suggestion pac : l\'entree est le retour', sug.return_temperature_entity, 'sensor.aquarea_main_inlet_temp');
+  check('suggestion pac : le debit de la pompe, pas une temperature', sug.water_flow_entity, 'sensor.aquarea_pump_flow');
+  check('suggestion pac : la frequence, pas les heures de compresseur', sug.compressor_entity, 'sensor.aquarea_compressor_freq');
+  check('suggestion pac : la vitesse du ventilateur', sug.fan_speed_entity, 'sensor.aquarea_fan1_motor_speed');
 }
 {
   // Its only temperature is the outdoor one: it goes to its field, not twice.
@@ -2129,6 +2262,14 @@ check('editeur : un seul indicateur de chauffe sur le chauffe-eau', toggles('wat
 check('editeur : le chauffe-eau propose sa sonde', toggles('water_heater').includes('temperature_entity'), true);
 check('editeur : pas d\'eau chaude a part sur le chauffe-eau', toggles('water_heater').includes('hot_water_entity'), false);
 check('editeur : pas de programme sur une chaudiere', toggles('boiler').includes('program_entity'), false);
+for (const f of ['no_hot_water', 'underfloor_heating']) {
+  check(`editeur pac : la case ${f}`, new RegExp(`data-field="${f}"`).test(edHtml('heat_pump')), true);
+  check(`editeur : ${f} n'est pas sur une chaudiere`, new RegExp(`data-field="${f}"`).test(edHtml('boiler')), false);
+}
+for (const f of ['return_temperature_entity', 'water_flow_entity', 'compressor_entity', 'fan_speed_entity']) {
+  check(`editeur pac : ${f} est propose`, toggles('heat_pump').includes(f), true);
+  check(`editeur : ${f} n'est pas sur une chaudiere`, toggles('boiler').includes(f), false);
+}
 
 // ── Source encoding ──────────────────────────────────────────────────────────
 // The card ships as one file loaded over HTTP by browsers whose charset
@@ -3473,5 +3614,394 @@ check('editeur : cocher la case fait reapparaitre la phase', (() => {
   check('suggestion : la phase du programme est proposee',
     sug.phase_entity, 'sensor.washer_dryer_program_phase');
 }
+
+// == Pet feeder (issue: two feeders, two transports) =========================
+// A feeder is read like a fridge and not run like a washer: no cycle, no
+// programme, no door. What it did today and when it last served is the whole
+// card, and it must be as readable with three entities as with ten.
+
+const AGO = ms => new Date(T0 - ms).toISOString();
+// The card prints a clock time in the card's own language, so the tests
+// compare against the same formatter rather than a hard-coded hour.
+// ...and through the same no-break rule, since the card never lets a time
+// split between its number and its AM.
+const HHMM = ms => new Date(T0 - ms).toLocaleString('en', { hour: '2-digit', minute: '2-digit' })
+  .replace(/[ \u202f]/g, '\u00a0');
+const FEEDER_IN = {
+  'select.croquettes_feed': { state: '', attributes: { options: ['', 'START'] }, last_changed: AGO(3600e3) },
+  'sensor.croquettes_portions_per_day': { state: '12', attributes: { unit_of_measurement: 'portion' }, last_changed: AGO(1800e3) },
+  'sensor.croquettes_weight_per_day': { state: '96', attributes: { unit_of_measurement: 'g' } },
+  'number.croquettes_portion_weight': { state: '8', attributes: { unit_of_measurement: 'g' } },
+  'number.croquettes_serving_size': { state: '3', attributes: { unit_of_measurement: 'portion' } },
+  'sensor.croquettes_schedule_pretty': { state: '07:00 | 12:00 | 19:00', attributes: {} },
+  'binary_sensor.croquettes_error': { state: 'off', attributes: {} },
+};
+const CFG_IN = { appliance_type: 'pet_feeder', start_entity: 'select.croquettes_feed',
+  portions_today_entity: 'sensor.croquettes_portions_per_day',
+  weight_today_entity: 'sensor.croquettes_weight_per_day',
+  portion_weight_entity: 'number.croquettes_portion_weight',
+  serving_size_entity: 'number.croquettes_serving_size',
+  schedule_entity: 'sensor.croquettes_schedule_pretty',
+  error_entity: 'binary_sensor.croquettes_error' };
+const feeder = (extra = {}, more = {}) => render({ ...CFG_IN, ...extra }, { ...FEEDER_IN, ...more });
+
+const fIn = feeder();
+check('gamelle : au repos elle est prete', stateLine(fIn), 'Ready');
+check('gamelle : portions du jour', infoLine(fIn, 'Portions today'), '12 portion · 96 g');
+check('gamelle : taille de la portion', infoLine(fIn, 'Serving size'), '3 portion');
+check('gamelle : poids d\'une portion', infoLine(fIn, 'Portion weight'), '8 g');
+check('gamelle : le planning tel quel', infoLine(fIn, 'Schedule'), '07:00 | 12:00 | 19:00');
+check('gamelle : le planning s\'enroule', /class="info-line[^"]* wrap"/.test(fIn), true);
+check('gamelle : aucune barre de progression', /class="bar-fill"/.test(fIn), false);
+check('gamelle : et le bouton de distribution', /data-entity="select.croquettes_feed"/.test(fIn), true);
+
+// Grams are worked out when the feeder does not count them, and never assumed:
+// a portion weighs what its own setting says, from one gram to twenty.
+check('gamelle : les grammes se calculent',
+  infoLine(feeder({ weight_today_entity: undefined }), 'Portions today'), '12 portion · 96 g');
+check('gamelle : avec un autre poids de portion, un autre total',
+  infoLine(feeder({ weight_today_entity: undefined },
+    { 'number.croquettes_portion_weight': { state: '20', attributes: { unit_of_measurement: 'g' } } }), 'Portions today'),
+  '12 portion · 240 g');
+check('gamelle : sans poids de portion, pas de grammes inventes',
+  infoLine(feeder({ weight_today_entity: undefined, portion_weight_entity: undefined }), 'Portions today'), '12 portion');
+
+// The state is worked out, like a fridge's health.
+check('gamelle : une erreur passe devant tout',
+  stateLine(feeder({}, { 'binary_sensor.croquettes_error': { state: 'on', attributes: {} } })), 'Error');
+const fBusy = feeder({ state_entity: 'binary_sensor.wifi_feeder_alimentation' },
+  { 'binary_sensor.wifi_feeder_alimentation': { state: 'on', attributes: {} } });
+check('gamelle : une distribution en cours se lit', stateLine(fBusy), 'Dispensing');
+check('gamelle : et les croquettes tombent', machineCls(fBusy).includes('feeding'), true);
+contains('gamelle : elles tombent vraiment', fBusy, 'animation: pf-fall');
+// They fall in front of the bowl, or the bowl would hide the whole fall.
+check('gamelle : la chute passe devant la gamelle',
+  fBusy.indexOf('class="pf-fall"') > fBusy.indexOf('class="pf-bowl"'), true);
+check('gamelle : au repos rien ne tombe', machineCls(fIn).includes('feeding'), false);
+
+// An empty tank: the one thing a feeder cannot fix by itself, so it takes the
+// state line rather than hiding in a reading.
+const fEmpty = feeder({ level_entity: 'binary_sensor.no_food' },
+  { 'binary_sensor.no_food': { state: 'on', attributes: {} } });
+check('gamelle : un contact de manque annonce le reservoir vide', stateLine(fEmpty), 'Tank empty');
+check('gamelle : et la tremie se vide sur le dessin', machineCls(fEmpty).includes('empty'), true);
+check('gamelle : le tas disparait alors', /\.machine\.empty \.pf-heap \{ display: none; \}/.test(fEmpty), true);
+check('gamelle : contact ferme, pleine',
+  stateLine(feeder({ level_entity: 'binary_sensor.no_food' },
+    { 'binary_sensor.no_food': { state: 'off', attributes: {} } })), 'Ready');
+// A percentage fills the hopper, and empties it at the bottom.
+const fLevel = (pct, extra) => feeder({ level_entity: 'sensor.food_level', ...extra },
+  { 'sensor.food_level': { state: String(pct), attributes: { unit_of_measurement: '%' } } });
+check('gamelle : le niveau remplit la tremie', /--pf-fill:15\.0px/.test(fLevel(50)), true);
+check('gamelle : plein, elle est pleine', /--pf-fill:26\.0px/.test(fLevel(100)), true);
+check('gamelle : le niveau fait une ligne', infoLine(fLevel(50), 'Food level'), '50\u00a0%');
+check('gamelle : a zero le reservoir est vide', stateLine(fLevel(0)), 'Tank empty');
+check('gamelle : et le seuil se regle', stateLine(fLevel(4, { level_empty_below: '5' })), 'Tank empty');
+check('gamelle : au-dessus du seuil, rien a signaler', stateLine(fLevel(6, { level_empty_below: '5' })), 'Ready');
+check('gamelle : sans niveau, pas de hauteur imposee', /style="--pf-fill/.test(fIn), false);
+
+// A tank counted in grams, as the Tuya feeders report it: the reading is what
+// is left, and 729 g says nothing about how full the hopper is until the
+// tank's capacity is known. The reading is shown either way.
+const fGrams = (g, extra) => feeder({ level_entity: 'sensor.food_left', ...extra },
+  { 'sensor.food_left': { state: String(g), attributes: { unit_of_measurement: 'g' } } });
+check('grammes : la ligne montre le poids', infoLine(fGrams(729), 'Food level'), '729\u00a0g');
+check('grammes : sans contenance, aucune hauteur imposee', /style="--pf-fill/.test(fGrams(729)), false);
+check('grammes : avec la contenance, la tremie se remplit', /--pf-fill:20\.6px/.test(fGrams(729, { level_max: '964' })), true);
+check('grammes : presque vide, presque plate', /--pf-fill:4\.7px/.test(fGrams(30, { level_max: '964' })), true);
+check('grammes : le seuil de vide reste dans l\'unite du capteur',
+  stateLine(fGrams(60, { level_empty_below: '100' })), 'Tank empty');
+check('grammes : au-dessus du seuil, rien a signaler',
+  stateLine(fGrams(200, { level_empty_below: '100' })), 'Ready');
+// A reading with no unit at all keeps being read as a percentage, as before.
+check('niveau sans unite : toujours un pourcentage',
+  /--pf-fill:15\.0px/.test(feeder({ level_entity: 'sensor.food_level' },
+    { 'sensor.food_level': { state: '50', attributes: {} } })), true);
+
+// A fault code names which fault it is, and zero is the only value that says
+// there is none: a feeder reporting 1 is jammed, not ready.
+const fFault = (code) => feeder({}, { 'binary_sensor.croquettes_error': { state: String(code), attributes: {} } });
+check('code de defaut : zero ne signale rien', stateLine(fFault(0)), 'Ready');
+check('code de defaut : un code non nul est une erreur', stateLine(fFault(1)), 'Error');
+check('code de defaut : et le chat vient le dire', /class="pf-cat"/.test(fFault(2)), true);
+check('code de defaut : un bourrage nomme se lit aussi', stateLine(fFault('food_jam')), 'Error');
+check('code de defaut : une entite muette ne crie pas', stateLine(fFault('unknown')), 'Ready');
+// An error that names itself reads as what it is.
+check('gamelle : une erreur qui dit vide se lit vide',
+  stateLine(feeder({}, { 'binary_sensor.croquettes_error': { state: 'no_food', attributes: {} } })), 'Tank empty');
+check('gamelle : une erreur muette reste une erreur',
+  stateLine(feeder({}, { 'binary_sensor.croquettes_error': { state: 'on', attributes: {} } })), 'Error');
+check('gamelle : une vraie erreur passe devant un niveau bas',
+  stateLine(feeder({ level_entity: 'binary_sensor.no_food' },
+    { 'binary_sensor.croquettes_error': { state: 'on', attributes: {} },
+      'binary_sensor.no_food': { state: 'on', attributes: {} } })), 'Error');
+
+// The cat says it too, since a state line in a list is easy to miss: it shows
+// up for an empty tank and for a jam, with the red triangle.
+const fJam = feeder({}, { 'binary_sensor.croquettes_error': { state: 'on', attributes: {} } });
+check('chat : il vient voir quand le reservoir est vide', /class="pf-cat"/.test(fEmpty), true);
+check('chat : et quand c\'est bloque', /class="pf-cat"/.test(fJam), true);
+check('chat : le triangle rouge avec lui', /class="pf-alert"/.test(fJam), true);
+check('chat : rien a signaler, pas de chat', /class="pf-cat"/.test(fIn), false);
+check('chat : ni de triangle', /class="pf-alert"/.test(fIn), false);
+check('chat : pas de chat pendant une distribution', /class="pf-cat"/.test(fBusy), false);
+// A jam is not an empty tank: the kibble is still there, and the drawing says so.
+check('blocage : la tremie reste pleine', machineCls(fJam).includes('empty'), false);
+check('blocage : le reservoir vide, lui, se vide', machineCls(fEmpty).includes('empty'), true);
+
+// The last meal, from whichever source can prove one happened.
+check('gamelle : le compteur donne l\'heure du dernier repas', infoLine(fIn, 'Last feed'), HHMM(1800e3));
+check('gamelle : et c\'est une heure', /^\d{1,2}:\d{2}/.test(infoLine(fIn, 'Last feed')), true);
+check('gamelle : a zero, le compteur ne prouve rien',
+  infoLine(feeder({}, { 'sensor.croquettes_portions_per_day': { state: '0', attributes: {}, last_changed: AGO(60e3) } }), 'Last feed'), null);
+check('gamelle : un select seul ne prouve rien non plus',
+  infoLine(feeder({ portions_today_entity: undefined, weight_today_entity: undefined }), 'Last feed'), null);
+// A script says when it last ran, whatever asked it to, which is how a feeder
+// triggered from HomeKit still shows its meal.
+const fScript = render({ appliance_type: 'pet_feeder', start_entity: 'script.distribuer_chat_exterieur',
+    portions_today_entity: 'sensor.distributions_du_jour' },
+  { 'script.distribuer_chat_exterieur': { state: 'off', attributes: { last_triggered: AGO(7200e3) } },
+    'sensor.distributions_du_jour': { state: '2', attributes: {}, last_changed: AGO(7100e3) } });
+// The script ran at 08:00 and the counter moved a minute later: the most
+// recent of the two is the meal.
+check('gamelle : le script et le compteur, le plus recent gagne', infoLine(fScript, 'Last feed'), HHMM(7100e3));
+// With nothing served today, the script is the only thing that can answer.
+check('gamelle : le script seul date le dernier repas',
+  infoLine(render({ appliance_type: 'pet_feeder', start_entity: 'script.s', portions_today_entity: 'sensor.c' },
+    { 'script.s': { state: 'off', attributes: { last_triggered: AGO(7200e3) } },
+      'sensor.c': { state: '0', attributes: {}, last_changed: AGO(60e3) } }), 'Last feed'), HHMM(7200e3));
+check('gamelle : et la plus recente des deux dates gagne',
+  infoLine(render({ appliance_type: 'pet_feeder', start_entity: 'script.s', portions_today_entity: 'sensor.c' },
+    { 'script.s': { state: 'off', attributes: { last_triggered: AGO(7200e3) } },
+      'sensor.c': { state: '2', attributes: {}, last_changed: AGO(600e3) } }), 'Last feed'), HHMM(600e3));
+check('gamelle : un bouton porte lui-meme son horodatage',
+  infoLine(render({ appliance_type: 'pet_feeder', start_entity: 'button.feed' },
+    { 'button.feed': { state: AGO(5400e3), attributes: {} } }), 'Last feed'), HHMM(5400e3));
+check('gamelle : une entite d\'horodatage passe aussi',
+  infoLine(render({ appliance_type: 'pet_feeder', start_entity: 'button.feed', last_feed_entity: 'sensor.last' },
+    { 'button.feed': { state: 'unknown', attributes: {} },
+      'sensor.last': { state: AGO(900e3), attributes: { device_class: 'timestamp' } } }), 'Last feed'), HHMM(900e3));
+
+// Yesterday's meal has to say so: "04:30" on its own would read as this
+// morning, so an older one carries its date as well.
+{
+  const older = infoLine(render({ appliance_type: 'pet_feeder', start_entity: 'button.feed' },
+    { 'button.feed': { state: AGO(30 * 3600e3), attributes: {} } }), 'Last feed');
+  check('gamelle : un repas d\'un autre jour ne se lit pas comme une heure', older === HHMM(30 * 3600e3), false);
+  check('gamelle : il porte sa date', /\d{2}.\d{2}/.test(older), true);
+}
+
+// Three entities must read as well as ten.
+const fOut = render({ appliance_type: 'pet_feeder', start_entity: 'script.distribuer_chat_exterieur',
+    portions_today_entity: 'sensor.distributions_du_jour', state_entity: 'binary_sensor.wifi_feeder_alimentation' },
+  { 'script.distribuer_chat_exterieur': { state: 'off', attributes: {} },
+    'sensor.distributions_du_jour': { state: '0', attributes: {} },
+    'binary_sensor.wifi_feeder_alimentation': { state: 'off', attributes: {} } });
+check('gamelle nue : elle reste prete', stateLine(fOut), 'Ready');
+check('gamelle nue : son compteur du jour', infoLine(fOut, 'Portions today'), '0 portions');
+check('gamelle nue : aucune ligne vide', (fOut.match(/<span class="label">/g) || []).length, 1);
+check('gamelle nue : elle garde son bouton', /data-entity="script.distribuer_chat_exterieur"/.test(fOut), true);
+
+// A feeder reports nothing while it waits, so it is allowed to have no state
+// entity at all, exactly like a fridge.
+check('gamelle : une config sans entite d\'etat passe', accepts({ appliance_type: 'pet_feeder', start_entity: 'script.s' }), true);
+check('gamelle : un compteur seul suffit aussi', accepts({ appliance_type: 'pet_feeder', portions_today_entity: 'sensor.c' }), true);
+check('gamelle : mais un lave-linge exige toujours son etat', accepts({ appliance_type: 'washer' }), false);
+
+// == The control that is not a button =========================================
+// Aqara dispenses from a select set to START, Tuya from a number written with
+// a number of portions. A card that only knew how to press buttons would be
+// tied to one brand, which is the one thing this card refuses to be.
+
+const pressed = (config, states) => {
+  const calls = [];
+  const c = new Card();
+  c.setConfig({ type: 'custom:ha-appliance-card', ...config });
+  c._hass = { ...HASS(states), callService: (domain, service, data) => calls.push({ domain, service, data }) };
+  c._render();
+  c._call(config.start_entity, { option: config.start_option, value: config.start_value });
+  return { card: c, calls };
+};
+
+const oneOption = pressed({ appliance_type: 'pet_feeder', start_entity: 'select.croquettes_feed' },
+  { 'select.croquettes_feed': { state: '', attributes: { options: ['', 'START'] } } });
+check('commande : un select est choisi, pas bascule', oneOption.calls.at(-1)?.service, 'select_option');
+check('commande : sur son domaine', oneOption.calls.at(-1)?.domain, 'select');
+check('commande : l\'option unique est trouvee toute seule',
+  oneOption.calls.at(-1)?.data?.option, 'START');
+
+const twoOptions = pressed({ appliance_type: 'pet_feeder', start_entity: 'select.feed' },
+  { 'select.feed': { state: 'manual', attributes: { options: ['manual', 'schedule'] } } });
+check('commande : deux options sans choix n\'appellent rien', twoOptions.calls.length, 0);
+check('commande : elles ouvrent la fiche', twoOptions.card.events.at(-1)?.type, 'hass-more-info');
+const chosen = pressed({ appliance_type: 'pet_feeder', start_entity: 'select.feed', start_option: 'schedule' },
+  { 'select.feed': { state: 'manual', attributes: { options: ['manual', 'schedule'] } } });
+check('commande : l\'option configuree est prise', chosen.calls.at(-1)?.data?.option, 'schedule');
+
+const written = pressed({ appliance_type: 'pet_feeder', start_entity: 'number.wifi_feeder_distribuer', start_value: '3' },
+  { 'number.wifi_feeder_distribuer': { state: '3', attributes: { min: 1, max: 12 } } });
+check('commande : un number est ecrit', written.calls.at(-1)?.service, 'set_value');
+check('commande : avec la valeur demandee, en nombre', written.calls.at(-1)?.data?.value, 3);
+const noValue = pressed({ appliance_type: 'pet_feeder', start_entity: 'number.wifi_feeder_distribuer' },
+  { 'number.wifi_feeder_distribuer': { state: '3', attributes: {} } });
+check('commande : sans valeur, rien n\'est ecrit', noValue.calls.length, 0);
+check('commande : la fiche s\'ouvre a la place', noValue.card.events.at(-1)?.type, 'hass-more-info');
+
+const scripted = pressed({ appliance_type: 'pet_feeder', start_entity: 'script.distribuer_chat_exterieur' },
+  { 'script.distribuer_chat_exterieur': { state: 'off', attributes: {} } });
+check('commande : un script est toujours lance', scripted.calls.at(-1)?.service, 'turn_on');
+// Plenty of feeders are served by an automation, which a toggle would switch
+// off instead of running.
+const automated = pressed({ appliance_type: 'pet_feeder', start_entity: 'automation.feed_the_cat' },
+  { 'automation.feed_the_cat': { state: 'on', attributes: {} } });
+check('commande : une automation est declenchee', automated.calls.at(-1)?.service, 'trigger');
+check('commande : et pas basculee', automated.calls.at(-1)?.domain, 'automation');
+check('gamelle : une automation date aussi le dernier repas',
+  infoLine(render({ appliance_type: 'pet_feeder', start_entity: 'automation.feed_the_cat' },
+    { 'automation.feed_the_cat': { state: 'on', attributes: { last_triggered: AGO(3600e3) } } }), 'Last feed'), HHMM(3600e3));
+const buttoned = pressed({ appliance_type: 'washer', state_entity: 'sensor.w', start_entity: 'button.start' },
+  { 'sensor.w': { state: 'Idle', attributes: {} }, 'button.start': { state: 'unknown', attributes: {} } });
+check('commande : un bouton est toujours presse', buttoned.calls.at(-1)?.service, 'press');
+
+// The whole click path, and not just the service call underneath it: the
+// button carries the option, the handler has to hand it over.
+{
+  const calls = [];
+  const c = new Card();
+  c.setConfig({ type: 'custom:ha-appliance-card', appliance_type: 'pet_feeder',
+    start_entity: 'select.feed', start_option: 'schedule' });
+  c._hass = { ...HASS({ 'select.feed': { state: 'manual', attributes: { options: ['manual', 'schedule'] } } }),
+    callService: (domain, service, data) => calls.push({ domain, service, data }) };
+  c._render();
+  const btn = c._root.querySelectorAll('.action-btn, .light-badge')
+    .find(n => n.getAttribute('data-entity') === 'select.feed');
+  check('clic : le bouton de distribution existe', !!btn, true);
+  fire(btn, 'click', { stopPropagation() {} });
+  check('clic : il choisit l\'option portee par le bouton', calls.at(-1)?.data?.option, 'schedule');
+  check('clic : sur la bonne entite', calls.at(-1)?.data?.entity_id, 'select.feed');
+}
+{
+  const calls = [];
+  const c = new Card();
+  c.setConfig({ type: 'custom:ha-appliance-card', appliance_type: 'pet_feeder',
+    start_entity: 'number.portions', start_value: '4' });
+  c._hass = { ...HASS({ 'number.portions': { state: '1', attributes: {} } }),
+    callService: (domain, service, data) => calls.push({ domain, service, data }) };
+  c._render();
+  const btn = c._root.querySelectorAll('.action-btn, .light-badge')
+    .find(n => n.getAttribute('data-entity') === 'number.portions');
+  fire(btn, 'click', { stopPropagation() {} });
+  check('clic : il ecrit la valeur portee par le bouton', calls.at(-1)?.data?.value, 4);
+}
+
+// The option travels through the markup, or the click would lose it.
+contains('commande : l\'option est portee par le bouton',
+  render({ appliance_type: 'pet_feeder', start_entity: 'select.feed', start_option: 'schedule' },
+    { 'select.feed': { state: 'manual', attributes: { options: ['manual', 'schedule'] } } }),
+  'data-option="schedule"');
+contains('commande : la valeur aussi',
+  render({ appliance_type: 'pet_feeder', start_entity: 'number.n', start_value: '3' },
+    { 'number.n': { state: '1', attributes: {} } }), 'data-value="3"');
+
+// The editor side of the feeder, and of the control that is not a button.
+{
+  const edFeeder = (cfg = {}) => markup(newEditor({ state_entity: 'sensor.oven_appliance_state',
+    appliance_type: 'pet_feeder', ...cfg })._root);
+  const feederToggles = (cfg = {}) => [...edFeeder(cfg).matchAll(/data-toggle="([^"]+)"/g)].map(m => m[1]);
+  contains('editeur : la gamelle est au choix des types', edFeeder(), 'value="pet_feeder"');
+  for (const f of ['portions_today_entity', 'weight_today_entity', 'serving_size_entity',
+                   'portion_weight_entity', 'schedule_entity', 'last_feed_entity', 'level_entity', 'error_entity']) {
+    check(`editeur gamelle : ${f} est propose`, feederToggles().includes(f), true);
+    check(`editeur : ${f} n'est pas sur un lave-linge`, toggles('washer').includes(f), false);
+  }
+  check('editeur gamelle : le bouton de distribution est propose', feederToggles().includes('start_entity'), true);
+  check('editeur gamelle : mais pas la pause', feederToggles().includes('pause_entity'), false);
+  check('editeur gamelle : ni le programme', feederToggles().includes('program_entity'), false);
+  check('editeur gamelle : ni le temps restant', feederToggles().includes('remaining_time_entity'), false);
+
+  // The start control accepts what a feeder really has. A section only mounts
+  // its picker once it holds a value, so each one is opened by giving it one.
+  const slotDomains = (field, cfg) => newEditor({ state_entity: 'sensor.oven_appliance_state',
+    appliance_type: 'pet_feeder', ...cfg })._root.querySelector(`[data-slot="${field}"]`)
+    ?.children.at(-1)?.includeDomains;
+  const startDomains = slotDomains('start_entity', { start_entity: 'script.feed' }) || [];
+  check('editeur : le depart accepte un select', startDomains.includes('select'), true);
+  check('editeur : et un number', startDomains.includes('number'), true);
+  check('editeur : il accepte toujours un bouton', startDomains.includes('button'), true);
+  check('editeur : et une automation', startDomains.includes('automation'), true);
+  // The power switch is a different list: a select cannot be switched on.
+  const toggleDomains = slotDomains('toggle_entity', { toggle_entity: 'switch.feeder' }) || [];
+  check('editeur : l\'interrupteur, lui, refuse le select', toggleDomains.includes('select'), false);
+  check('editeur : et garde ses propres domaines', toggleDomains.includes('switch'), true);
+}
+{
+  // The option is only asked for when there is a choice to make.
+  const withSelect = (options) => {
+    const ed = new Editor();
+    ed.setConfig({ type: 'custom:ha-appliance-card', appliance_type: 'pet_feeder', start_entity: 'select.feed' });
+    ed.hass = HASS({ 'select.feed': { state: '', attributes: { options } } });
+    return markup(ed._root);
+  };
+  check('editeur : une seule option, rien a demander',
+    /data-field="start_option"/.test(withSelect(['', 'START'])), false);
+  check('editeur : deux options, le choix est demande',
+    /data-field="start_option"/.test(withSelect(['manual', 'schedule'])), true);
+  const edNumber = new Editor();
+  edNumber.setConfig({ type: 'custom:ha-appliance-card', appliance_type: 'pet_feeder', start_entity: 'number.feed' });
+  edNumber.hass = HASS({ 'number.feed': { state: '3', attributes: {} } });
+  check('editeur : un number demande sa valeur', /data-field="start_value"/.test(markup(edNumber._root)), true);
+  const edScript = new Editor();
+  edScript.setConfig({ type: 'custom:ha-appliance-card', appliance_type: 'pet_feeder', start_entity: 'script.feed' });
+  edScript.hass = HASS({ 'script.feed': { state: 'off', attributes: {} } });
+  const scripted = markup(edScript._root);
+  check('editeur : un script ne demande ni option ni valeur',
+    /data-field="start_(option|value)"/.test(scripted), false);
+}
+{
+  // An Aqara over Zigbee2MQTT, named as Zigbee2MQTT names it.
+  const ids = ['select.croquettes_feed', 'select.croquettes_mode', 'sensor.croquettes_portions_per_day',
+    'sensor.croquettes_weight_per_day', 'number.croquettes_portion_weight', 'number.croquettes_serving_size',
+    'sensor.croquettes_feeding_size', 'sensor.croquettes_schedule', 'sensor.croquettes_schedule_pretty',
+    'binary_sensor.croquettes_error'];
+  const ed = new Editor();
+  ed.setConfig({ type: 'custom:ha-appliance-card', appliance_type: 'pet_feeder', state_entity: 'binary_sensor.croquettes_error' });
+  ed.hass = { ...HASS(Object.fromEntries(ids.map(id => [id, { state: '1', attributes: {} }]))),
+    entities: Object.fromEntries(ids.map(id => [id, { device_id: 'aq' }])) };
+  const sug = ed.events.at(-1)?.detail?.config || {};
+  check('suggestion gamelle : la distribution', sug.start_entity, 'select.croquettes_feed');
+  check('suggestion gamelle : les portions du jour', sug.portions_today_entity, 'sensor.croquettes_portions_per_day');
+  check('suggestion gamelle : les grammes du jour', sug.weight_today_entity, 'sensor.croquettes_weight_per_day');
+  check('suggestion gamelle : le poids d\'une portion', sug.portion_weight_entity, 'number.croquettes_portion_weight');
+  check('suggestion gamelle : la taille de la portion', sug.serving_size_entity, 'number.croquettes_serving_size');
+  // The raw schedule is a Python repr, which belongs in a template and not on
+  // a card: only a readable one is ever suggested.
+  check('suggestion gamelle : le planning lisible, pas le brut', sug.schedule_entity, 'sensor.croquettes_schedule_pretty');
+}
+{
+  // A Tuya feeder, which reports almost nothing, driven by a script.
+  const ids = ['script.distribuer_chat_exterieur', 'number.wifi_feeder_distribuer',
+    'binary_sensor.wifi_feeder_alimentation', 'sensor.croquettes_exterieur_distributions_du_jour'];
+  const ed = new Editor();
+  ed.setConfig({ type: 'custom:ha-appliance-card', appliance_type: 'pet_feeder',
+    state_entity: 'binary_sensor.wifi_feeder_alimentation' });
+  ed.hass = { ...HASS(Object.fromEntries(ids.map(id => [id, { state: '1', attributes: {} }]))),
+    entities: Object.fromEntries(ids.map(id => [id, { device_id: 'tu' }])) };
+  const sug = ed.events.at(-1)?.detail?.config || {};
+  check('suggestion gamelle : un script fait un declencheur', sug.start_entity, 'script.distribuer_chat_exterieur');
+  check('suggestion gamelle : le compteur du jour', sug.portions_today_entity, 'sensor.croquettes_exterieur_distributions_du_jour');
+}
+// Detection: by name, and by a field no other type has.
+check('detection : une gamelle se reconnait a son nom',
+  /class="pf-body"/.test(render({ state_entity: 'sensor.croquettes_portions_per_day' },
+    { 'sensor.croquettes_portions_per_day': { state: '3', attributes: {} } })), true);
+check('detection : un feeder aussi',
+  /class="pf-body"/.test(render({ state_entity: 'binary_sensor.wifi_feeder_alimentation' },
+    { 'binary_sensor.wifi_feeder_alimentation': { state: 'off', attributes: {} } })), true);
+check('detection : un champ de gamelle suffit',
+  /class="pf-body"/.test(render({ state_entity: 'sensor.x', portions_today_entity: 'sensor.p' },
+    { 'sensor.x': { state: 'off', attributes: {} }, 'sensor.p': { state: '1', attributes: {} } })), true);
+check('detection : un lave-linge reste un lave-linge',
+  /class="pf-body"/.test(render({ state_entity: 'sensor.washer_state' },
+    { 'sensor.washer_state': { state: 'Running', attributes: {} } })), false);
 
 report();

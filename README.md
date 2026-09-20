@@ -10,7 +10,7 @@
 <a href="https://buymeacoffee.com/adnpolymerase" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-orange.png" alt="Buy Me A Coffee" height="60"></a>
 <a href="https://adnpolymerase.github.io/HA/" target="_blank"><img src="https://raw.githubusercontent.com/ADNPolymerase/HA/main/assets/site-button.svg" alt="Link to my github.io for my other projects" height="60"></a>
 
-A Lovelace card for household appliances: washers, dryers, dishwashers, ovens, microwaves, cooker hoods, cooktops, fridges, kettles, cookers, coffee machines, rice cookers, water heaters, boilers, heat pumps and 3D printers. Cycle in progress, program, remaining time, temperature, alerts and controls.
+A Lovelace card for household appliances: washers, dryers, dishwashers, ovens, microwaves, cooker hoods, cooktops, fridges, kettles, cookers, coffee machines, rice cookers, water heaters, boilers, heat pumps, 3D printers and pet feeders. Cycle in progress, program, remaining time, temperature, alerts and controls.
 
 No brand assumed: every field is an entity you pick, so it works with **any** integration (Electrolux, Samsung, LG, Home Connect, Miele, a plain smart plug…).
 
@@ -21,7 +21,7 @@ No brand assumed: every field is an entity you pick, so it works with **any** in
 
 ## Features
 
-- **Sixteen appliance types**, each with a CSS illustration that animates on the appliance's own data and stays still when idle. The type is detected on its own or set via `appliance_type`, and `compact: true` keeps only the text.
+- **Seventeen appliance types**, each with a CSS illustration that animates on the appliance's own data and stays still when idle. The type is detected on its own or set via `appliance_type`, and `compact: true` keeps only the text.
 - **State normalization**: `Idle`, `RUNNING`, `wash`, `En marche`… are recognised (accent-insensitive) and sorted into idle, preheating, running, paused, done, delayed or error. An unknown state is shown as it came, minus the integration's namespace, and `state_map` sorts the rest, `"*"` catching everything left over.
 - **A washer-dryer is a washer that dries**: `washer_dryer: true`, and the drum shows water while it washes, then clothes turning in hot air while it dries. The step comes from the state itself or from a phase entity, and the state line reads *Washing* or *Drying*.
 - **Each appliance says what matters for it**: a coffee machine what it is missing (water, beans, tray, descaling), a fridge its health (unplugged, door open, temperature high), a combi boiler what it is heating (central heating, hot water or standby), a 3D printer what the job is doing (preheating, bed levelling, changing filament).
@@ -58,7 +58,7 @@ Only `state_entity` is required, except on a fridge where a probe or a door cont
 | `compact` | `true` hides the illustration. |
 | `illustration_color` | `auto` (default, follows the theme) \| `white` \| `grey` \| `black`. Only changes the casing, not the state colours. |
 | `language` | `auto` (default, follows Home Assistant) or one of the 14 codes: `en`, `fr`, `de`, `es`, `it`, `nl`, `pt`, `sv`, `no`, `da`, `pl`, `ru`, `zh`, `cs`. `nb` and `nb-NO` give Norwegian. |
-| `appliance_type` | `auto` (default) \| `washer` \| `dryer` \| `dishwasher` \| `oven` \| `microwave` \| `hood` \| `cooktop` \| `fridge` \| `kettle` \| `cooker` \| `coffee` \| `rice_cooker` \| `water_heater` \| `boiler` \| `heat_pump` \| `printer_3d`. |
+| `appliance_type` | `auto` (default) \| `washer` \| `dryer` \| `dishwasher` \| `oven` \| `microwave` \| `hood` \| `cooktop` \| `fridge` \| `kettle` \| `cooker` \| `coffee` \| `rice_cooker` \| `water_heater` \| `boiler` \| `heat_pump` \| `printer_3d` \| `pet_feeder`. |
 | `toggle_entity` | Power button (`switch`, `button`, `script`, `input_boolean`, `fan`), highlighted while on. |
 | `power_entity` / `power_on_threshold` / `power_icon` | Power sensor. With a threshold, the state is derived from it: *running* above, then *finished* when it falls back. Pointing `state_entity` at the same sensor enables it with a 10 W threshold. `power_icon` replaces `mdi:power-plug`. |
 | `program_entity` / `program_format` | Program. `clean` (default) makes it readable (`LaundryCare.Washer.Program.Auto40` becomes *Auto 40*, `Rapid20Min` becomes *Rapid 20 Min*), `raw` shows it as-is. |
@@ -70,7 +70,7 @@ Only `state_entity` is required, except on a fridge where a probe or a door cont
 | `alerts_entity` | Entity whose every *attribute* at on, true or active shows as an alert. |
 | `connectivity_entity` / `connectivity_connected_state` | Connectivity, as a wifi icon, and the "connected" state (default `on`). |
 | `info_entities` | Up to 8 lines `{ entity, icon?, label?, value_map?, hide_unit? }`, any beyond are ignored. Past 5 lines the spacing tightens. Values read as in Home Assistant, with the entity's display precision. `value_map` relabels raw values (see below), `hide_unit` drops the unit. |
-| `start_entity` / `pause_entity` / `resume_entity` / `stop_entity` | Controls, only shown when configured. |
+| `start_entity` / `pause_entity` / `resume_entity` / `stop_entity` | Controls, only shown when configured. A control is usually a `button`, a `script` or an `automation`, which is triggered rather than switched off, and can also be a `select` or a `number`: `start_option` says which option to pick (the card takes it on its own when the list holds only one), `start_value` what to write. The same goes for the other three, as `pause_option`, `stop_value` and so on. |
 
 Per type:
 
@@ -99,6 +99,12 @@ Per type:
 | `heating_entity` / `hot_water_entity` | boiler, heat pump | Central heating and hot water indicators; with both on, hot water wins. Without them the mode comes from `state_entity`: codes `-H`, `=H`, `0H` (Nefit, Bosch) or their numeric form `200`, `201`, `203`, with start-up (`0U`, `0C`, `0L` or `270`, `283`, `284`) read as *Ignition* and the burner's waits (`0A`, `0Y`, `0E` or `202`, `204`, `265`, `305`, `353`) as *Waiting*; `CH`, `HW`, `No`; those of InComfort, ebusd, myVAILLANT and MELCloud; or *central heating* and *hot water*. With the indicators off but the flame lit, it reads *Burner on*. `state_map` accepts `space_heating`, `hot_water`, `starting`, `waiting` and `idle`. With only the burner as `power_entity`, the flame lights without saying what for. |
 | `state_entity` on a heat pump | heat pump | What the pump is doing: a `climate` entity's `hvac_action` (heating, cooling, defrosting, idle), MELCloud's `status` attribute (`heat_water`, `heat_zones`, `cool`, `defrost`, `standby`, `legionella`) or a sensor in words (*heating*, *hot water*, *cooling*, *defrost*, in 14 languages). The state of a `climate` or `water_heater` entity is the mode you picked, shown as-is when the entity says nothing about what the pump does. `state_map` accepts `space_heating`, `hot_water`, `cooling`, `defrost` and `idle`. The outdoor unit's fan turns while it works and stops to defrost; the tank or the radiator warms depending on the mode. |
 | `outdoor_temperature_entity` / `heat_output_entity` / `cop_entity` | heat pump | Outdoor temperature, heat output and COP, in the list. Without a COP entity, the card divides the heat output by `power_entity` once both are in W or kW. |
+| `return_temperature_entity` | heat pump | The water coming back. Flow and return then share one line, as *42 °C → 36 °C*, and the card works out the delta on its own like it does the COP, always with a decimal since a heat pump works on a couple of degrees. Taken as a distance, so it stays positive while the pump cools the house. |
+| `water_flow_entity` | heat pump | Flow rate, in the entity's own unit. |
+| `compressor_entity` | heat pump | Frequency in hertz, or an on/off contact read as *Running* and *Off*. A compressor at rest stops the fan on the drawing: the pump is only pushing water around. |
+| `fan_speed_entity` | heat pump | Fan speed, in the entity's own unit. |
+| `no_hot_water` | heat pump | `true` drops the hot water tank from the drawing, for an installation that heats no domestic hot water. What is left stands in the middle. |
+| `underfloor_heating` | heat pump | `true` draws a heated floor instead of a radiator, which is how most air-to-water installations emit their heat: the slab seen at an angle, its four panels, and the heat rising off it while it warms. It turns blue when the pump cools the house. |
 | `state_entity` on a 3D printer | 3D printer | The printer's status, as each integration sends it: `current_state` (OctoPrint), the printer's own sensor (PrusaLink), `print_status` (Bambu Lab, Creality), `current_print_state` (Moonraker, Klipper), `current_status` (Elegoo), `machine_status` (Flashforge), `job_state` (Anycubic). It reads *Printing*, *Preparing*, *Preheating*, *Paused*, *Needs attention*, *Finished*, *Cancelled*, *Failed*, *Error*, *Idle* or *Offline*. Most integrations say *printing* from the moment the start code heats up: while a heater is still more than 5 °C below its target and the part has not started, the card reads *Preheating* and the bar becomes a heating gauge. Outside a job the remaining time is hidden, since a printer keeps its last one. |
 | `phase_entity` | 3D printer | What the job is busy with: Bambu Lab's `current_stage`, Elegoo's `print_status`. It reads *Preheating*, *Bed levelling*, *Changing filament*, *Cooling*, *Calibrating* or *Homing* during a job. |
 | `program_entity` | 3D printer | The print file, without its folder or its slicer extension. |
@@ -106,6 +112,13 @@ Per type:
 | `current_layer_entity` / `total_layers_entity` | 3D printer | The layer, as *84 / 190*. |
 | `printer_layout` | 3D printer | `enclosed` (default: a chamber whose bed drops as the part grows) \| `open` (an open frame whose gantry climbs). The part grows with the progress, in the state's colour, and the head moves while it prints. |
 | `printed_part` | 3D printer | The part on the bed: `cube` (default), `pyramid` or `duck` (a rubber duck). It shows from the bottom up as it prints. |
+| `portions_today_entity` / `weight_today_entity` | pet feeder | What was served today, on one line. Without a weight entity the card works the grams out from `portion_weight_entity`, so nothing is assumed about the size of a meal. |
+| `serving_size_entity` / `portion_weight_entity` | pet feeder | How many portions a serving holds, and what one weighs. |
+| `schedule_entity` | pet feeder | The feeding plan, as the integration words it, on a line that wraps. |
+| `last_feed_entity` | pet feeder | A timestamp of the last meal, when the integration gives one. Otherwise the card finds it: a `script` says when it last ran, whatever asked it to, a `button` carries the time of its last press, and the day's counter moves on every meal the feeder serves, including the ones it serves on its own schedule. |
+| `level_entity` / `level_empty_below` / `level_max` | pet feeder | What is left in the tank: a percentage, which fills the hopper on the drawing, or a contact that only says *empty*. At or below `level_empty_below` (default 0) the state reads *Tank empty*, in orange, and the hopper is drawn empty, in the reading's own unit. A tank counted in grams or in litres fills the hopper once `level_max` gives its capacity. |
+| `error_entity` | pet feeder | Turns the state to *Error*, and to *Tank empty* when the error names itself (`no_food`, `empty`, and the same word in the other languages). A fault code counts as an error on any value but zero. |
+| `state_entity` | pet feeder | Optional: a feeder is idle nearly all the time, so a control or a counter is a complete configuration. When it does report, *on* reads as *Dispensing* and the kibble falls. |
 | `speed_entity` | cooker | Blade speed, banded onto three speeds. |
 | `water_entity` | coffee | Tank: a Home Connect boolean, or a level in % with *empty* below 10%. |
 | `beans_entity` / `tray_entity` / `descaling_entity` | coffee | Beans empty, tray full, descaling due. |
@@ -221,6 +234,37 @@ phase_map:
 ```
 
 The phase only changes the illustration, and an unrecognised value is ignored.
+
+### Pet feeders
+
+A feeder is read rather than run: no cycle, no programme, no door. Its state is worked out from what it reports, *Tank empty*, *Error*, *Dispensing* or *Ready*, and the card carries what was served today and when the last meal was. An empty tank is the one thing a feeder cannot fix by itself, so it takes the state line and empties the hopper on the drawing. A cat turns up beside it, distinctly unimpressed, with a red warning triangle, and it turns up for a jam as well, that time with the kibble still in the tank.
+
+The control is the interesting part, because a feeder rarely has a button. This one dispenses from a list set to `START`, over Zigbee2MQTT:
+
+```yaml
+type: custom:ha-appliance-card
+appliance_type: pet_feeder
+start_entity: select.feeder_feed
+portions_today_entity: sensor.feeder_portions_per_day
+weight_today_entity: sensor.feeder_weight_per_day
+portion_weight_entity: number.feeder_portion_weight
+serving_size_entity: number.feeder_serving_size
+schedule_entity: sensor.feeder_schedule
+```
+
+The option is not written down: a list whose only real option is `START` has nothing to ask. This one dispenses from a script instead, and counts its meals with a `history_stats` helper:
+
+```yaml
+type: custom:ha-appliance-card
+appliance_type: pet_feeder
+start_entity: script.feed_the_cat
+portions_today_entity: sensor.feeder_meals_today
+state_entity: binary_sensor.feeder_dispensing
+```
+
+An automation works as a control too, and a `utility_meter` makes a fine counter: `portions_today_entity` takes whatever counts the meals, and the day's total is read where the integration keeps it.
+
+Three entities read as well as ten: a line only exists when its entity answers.
 
 ### Washer-dryers
 

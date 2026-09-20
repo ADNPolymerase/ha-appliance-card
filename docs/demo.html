@@ -13,7 +13,7 @@
     --info-color: #2196f3; --warning-color: #ff9800; --success-color: #4caf50; --error-color: #f44336;
   }
   #wrap { display: inline-block; }
-  .row { display: grid; grid-template-columns: repeat(var(--cols, 4), 300px); gap: 24px; align-items: start; }
+  .row { display: grid; grid-template-columns: repeat(var(--cols, 5), 300px); gap: 24px; align-items: start; }
   ha-card { display: block; width: 300px; background: #ffffff; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.08); }
 </style>
 </head>
@@ -52,8 +52,8 @@ customElements.define("ha-icon", StubIcon);
 const params = new URLSearchParams(location.search);
 const uiLang = params.get("lang") === "fr" ? "fr" : "en";
 const view = params.get("view") === "types" ? "types" : "hero";
-// Sixteen types make a square of four.
-document.documentElement.style.setProperty("--cols", params.get("cols") || 4);
+// Seventeen types: six across and three down.
+document.documentElement.style.setProperty("--cols", params.get("cols") || 5);
 const fr = uiLang === "fr";
 const L = (en, f) => (fr ? f : en);
 
@@ -361,6 +361,32 @@ const heatPump = () => card({
   st("sensor.heat_pump_heat_output", 3900, { unit_of_measurement: "W" }),
 ]);
 
+// The same machine set up as a heating-only aerothermal system: no cylinder,
+// an underfloor slab in place of the radiator, and the hydraulics on one line
+// with the delta worked out between flow and return.
+const aerothermal = () => card({
+  illustration_color: "white",
+  name: L("Aerothermal", "Aérothermie"),
+  appliance_type: "heat_pump",
+  no_hot_water: true,
+  underfloor_heating: true,
+  state_entity: "climate.aero_zone",
+  temperature_entity: "sensor.aero_flow_temp",
+  return_temperature_entity: "sensor.aero_return_temp",
+  water_flow_entity: "sensor.aero_water_flow",
+  compressor_entity: "binary_sensor.aero_compressor",
+  fan_speed_entity: "sensor.aero_fan_speed",
+  outdoor_temperature_entity: "sensor.aero_outdoor_temp",
+}, [
+  st("climate.aero_zone", "heat", { hvac_action: "heating" }),
+  st("sensor.aero_flow_temp", 35, { unit_of_measurement: "°C" }),
+  st("sensor.aero_return_temp", 30, { unit_of_measurement: "°C" }),
+  st("sensor.aero_water_flow", 18.4, { unit_of_measurement: "L/min" }),
+  st("binary_sensor.aero_compressor", "on"),
+  st("sensor.aero_fan_speed", 620, { unit_of_measurement: "rpm" }),
+  st("sensor.aero_outdoor_temp", 4, { unit_of_measurement: "°C" }),
+]);
+
 // A Bambu Lab printer halfway through a part, as its integration reports it:
 // a lowercase status, a remaining time in hours.
 const printer3d = () => card({
@@ -391,9 +417,25 @@ const printer3d = () => card({
 
 // ?only=cooker,coffee filters the gallery down to a few types, which is how
 // the animated captures are taken.
+const petFeeder = () => card({
+  name: L("Pet feeder", "Croquettes"),
+  appliance_type: "pet_feeder",
+  start_entity: "select.feeder_feed",
+  portions_today_entity: "sensor.feeder_portions_per_day",
+  weight_today_entity: "sensor.feeder_weight_per_day",
+  serving_size_entity: "number.feeder_serving_size",
+  schedule_entity: "sensor.feeder_schedule",
+}, [
+  st("select.feeder_feed", "", { options: ["", "START"] }),
+  st("sensor.feeder_portions_per_day", 9, { unit_of_measurement: "portion" }),
+  st("sensor.feeder_weight_per_day", 72, { unit_of_measurement: "g" }),
+  st("number.feeder_serving_size", 3, { unit_of_measurement: "portion" }),
+  st("sensor.feeder_schedule", "07:00 | 12:00 | 19:00"),
+]);
+
 const ALL = { washer, dryer, dishwasher, oven, microwave, hood, cooktop, fridge,
               kettle, cooker, coffee, rice_cooker: riceCooker, water_heater: waterHeater, boiler,
-              heat_pump: heatPump, printer_3d: printer3d };
+              heat_pump: heatPump, aerothermal, printer_3d: printer3d, pet_feeder: petFeeder };
 const only = (params.get("only") || "").split(",").map((k) => k.trim()).filter(Boolean);
 if (only.length) {
   document.documentElement.style.setProperty("--cols", only.length);

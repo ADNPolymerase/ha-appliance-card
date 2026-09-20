@@ -28,6 +28,7 @@ time that moves and label widths differ from one run to the next.
 Needs Chrome and Pillow. No other dependency, on purpose.
 """
 
+import os
 import http.server
 import functools
 import socketserver
@@ -45,7 +46,10 @@ PORT = 8801
 
 # The page gives itself 32px of padding, handed back after cropping to the
 # content so the framing matches what the demo page itself shows.
-SCALE = 2
+# The README shows the gallery 640px wide. Rendering at 0.8 keeps it twice
+# that, and rendering small beats shrinking afterwards: the page is drawn at
+# the size it is saved, so the flat colours stay flat and the palette holds.
+SCALE = 0.8
 
 # The animated strip is a subset of the gallery, one row wide. It deliberately
 # leaves out the oven and the laundry family: five appliances that all animate
@@ -95,16 +99,35 @@ def shoot(url, out, window=(1500, 1500), crop=True, scale=SCALE):
     l, t, r, b = box
     im = im.crop((max(0, l - pad), max(0, t - pad),
                   min(im.width, r + pad), min(im.height, b + pad)))
-    im.save(out)
+    squeeze(im, out)
     return im
+
+
+def squeeze(im, out):
+    """Write the PNG small enough to sit in a README.
+
+    The gallery is flat colour: a handful of greys, the state colours and the
+    appliances' own shading. An adaptive 256-colour palette holds all of it
+    with no visible loss and cuts the file to a third, where recompressing the
+    truecolour image saves nothing at all. Dithering is off on purpose, since
+    it would scatter noise over the flat areas and grow the file back.
+    """
+    im.save(out)
+    palette = im.quantize(colors=256, method=Image.Quantize.MEDIANCUT, dither=Image.Dither.NONE)
+    tmp = out + ".pal"
+    palette.save(tmp, format="PNG", optimize=True)
+    if os.path.getsize(tmp) < os.path.getsize(out):
+        os.replace(tmp, out)
+    else:
+        os.remove(tmp)
 
 
 def screenshots():
     for lang, name in (("", "screenshot.png"), ("&lang=fr", "screenshot.fr.png")):
         out = DOCS / name
-        # Four columns of four since the heat pump and the 3D printer joined:
-        # narrower, but a row taller than the window used to be.
-        im = shoot(f"http://127.0.0.1:{PORT}/docs/demo.html?view=types{lang}", str(out), window=(1800, 2200))
+        # Six columns of three: eighteen cards fill the band exactly, and a
+        # wide band reads better than a ragged square.
+        im = shoot(f"http://127.0.0.1:{PORT}/docs/demo.html?view=types{lang}", str(out), window=(2100, 1800))
         print(f"  {name}  {im.size[0]}x{im.size[1]}")
 
 

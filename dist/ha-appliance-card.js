@@ -1,4 +1,4 @@
-const CARD_VERSION = "2.8.0";
+const CARD_VERSION = "2.9.0";
 
 console.info(
   "%c HA-APPLIANCE-CARD %c v" + CARD_VERSION + " ",
@@ -116,6 +116,8 @@ const T = {
     type_water_heater: "Water heater", type_boiler: "Boiler", type_heat_pump: "Heat pump",
     boiler_space_heating: "Heating", boiler_hot_water: "Hot water", boiler_burner: "Burner on", boiler_starting: "Ignition", boiler_waiting: "Waiting", hp_cooling: "Cooling", hp_defrost: "Defrosting",
     section_space_heating: "Central heating indicator", section_hot_water: "Hot water indicator", section_flow_temperature: "Flow temperature", section_heat_output: "Heat output", section_cop: "Coefficient of performance (COP)", section_outdoor_temperature: "Outdoor temperature",
+    section_return_temperature: "Return temperature", section_water_flow: "Water flow", section_compressor: "Compressor", hp_delta: "Delta", section_fan_speed: "Fan speed",
+    hp_flow_return: "Flow and return", no_hot_water: "No hot water tank", underfloor_heating: "Underfloor heating instead of radiators",
     type_printer_3d: "3D printer", section_nozzle_temperature: "Nozzle temperature", section_nozzle_target: "Nozzle target temperature",
     section_bed_temperature: "Bed temperature", section_bed_target: "Bed target temperature", section_chamber_temperature: "Chamber temperature",
     section_current_layer: "Current layer", section_total_layers: "Total layers", section_print_file: "Print file",
@@ -127,6 +129,8 @@ const T = {
     p3_attention: "Needs attention", p3_leveling: "Bed levelling", p3_filament: "Changing filament",
     p3_cooling: "Cooling", p3_calibrating: "Calibrating", p3_homing: "Homing",
     section_printed_part: "Printed part", part_cube: "Cube", part_pyramid: "Pyramid", part_duck: "Rubber duck",
+    type_pet_feeder: "Pet feeder", feeder_ready: "Ready", feeder_feeding: "Dispensing", section_portions_today: "Portions today", section_weight_today: "Weight today", section_portion_weight: "Portion weight", section_serving_size: "Serving size", section_feeder_schedule: "Schedule", section_last_feed: "Last feed", section_error: "Error indicator", start_option: "Option to select", start_value: "Value to write", portions: "portions",
+    feeder_empty: "Tank empty", section_level: "Food level", level_empty_below: "Empty at or below", level_max: "Tank capacity",
     washer_dryer: "Washer-dryer (washes and dries)", wd_drying: "Drying", section_cycle_phase: "Cycle phase",
   },
   fr: {
@@ -234,6 +238,8 @@ const T = {
     type_water_heater: "Chauffe-eau", type_boiler: "Chaudi\u00e8re", type_heat_pump: "Pompe \u00e0 chaleur",
     boiler_space_heating: "Chauffage", boiler_hot_water: "Eau chaude", boiler_burner: "Br\u00fbleur allum\u00e9", boiler_starting: "Allumage", boiler_waiting: "En attente", hp_cooling: "Rafra\u00eechissement", hp_defrost: "D\u00e9givrage",
     section_space_heating: "Indicateur de chauffage", section_hot_water: "Indicateur d'eau chaude", section_flow_temperature: "Temp\u00e9rature de d\u00e9part", section_heat_output: "Chaleur produite", section_cop: "Coefficient de performance (COP)", section_outdoor_temperature: "Temp\u00e9rature ext\u00e9rieure",
+    section_return_temperature: "Temp\u00e9rature de retour", section_water_flow: "D\u00e9bit d'eau", section_compressor: "Compresseur", hp_delta: "\u00c9cart", section_fan_speed: "Vitesse du ventilateur",
+    hp_flow_return: "D\u00e9part et retour", no_hot_water: "Pas de ballon d'eau chaude", underfloor_heating: "Plancher chauffant au lieu des radiateurs",
     type_printer_3d: "Imprimante 3D", section_nozzle_temperature: "Temp\u00e9rature de la buse", section_nozzle_target: "Consigne de la buse",
     section_bed_temperature: "Temp\u00e9rature du plateau", section_bed_target: "Consigne du plateau", section_chamber_temperature: "Temp\u00e9rature de l'enceinte",
     section_current_layer: "Couche en cours", section_total_layers: "Nombre de couches", section_print_file: "Fichier imprim\u00e9",
@@ -245,6 +251,8 @@ const T = {
     p3_attention: "Intervention requise", p3_leveling: "Nivellement du plateau", p3_filament: "Changement de filament",
     p3_cooling: "Refroidissement", p3_calibrating: "Calibrage", p3_homing: "Mise \u00e0 l'origine",
     section_printed_part: "Pi\u00e8ce imprim\u00e9e", part_cube: "Cube", part_pyramid: "Pyramide", part_duck: "Canard en plastique",
+    type_pet_feeder: "Distributeur de croquettes", feeder_ready: "Pr\u00eat", feeder_feeding: "Distribution", section_portions_today: "Portions du jour", section_weight_today: "Poids du jour", section_portion_weight: "Poids d'une portion", section_serving_size: "Taille de la portion", section_feeder_schedule: "Planning", section_last_feed: "Dernier repas", section_error: "Indicateur d'erreur", start_option: "Option \u00e0 choisir", start_value: "Valeur \u00e0 \u00e9crire", portions: "portions",
+    feeder_empty: "R\u00e9servoir vide", section_level: "Niveau de croquettes", level_empty_below: "Vide \u00e0 ce niveau ou moins", level_max: "Contenance du r\u00e9servoir",
     washer_dryer: "Lavante-s\u00e9chante (lave et s\u00e8che)", wd_drying: "S\u00e9chage", section_cycle_phase: "Phase du cycle",
   },
   ru: {
@@ -352,6 +360,8 @@ const T = {
     type_water_heater: "\u0412\u043e\u0434\u043e\u043d\u0430\u0433\u0440\u0435\u0432\u0430\u0442\u0435\u043b\u044c", type_boiler: "\u041a\u043e\u0442\u0451\u043b", type_heat_pump: "\u0422\u0435\u043f\u043b\u043e\u0432\u043e\u0439 \u043d\u0430\u0441\u043e\u0441",
     boiler_space_heating: "\u041e\u0442\u043e\u043f\u043b\u0435\u043d\u0438\u0435", boiler_hot_water: "\u0413\u043e\u0440\u044f\u0447\u0430\u044f \u0432\u043e\u0434\u0430", boiler_burner: "\u0413\u043e\u0440\u0435\u043b\u043a\u0430 \u0432\u043a\u043b\u044e\u0447\u0435\u043d\u0430", boiler_starting: "\u0420\u043e\u0437\u0436\u0438\u0433", boiler_waiting: "\u041f\u0430\u0443\u0437\u0430 \u0433\u043e\u0440\u0435\u043b\u043a\u0438", hp_cooling: "\u041e\u0445\u043b\u0430\u0436\u0434\u0435\u043d\u0438\u0435", hp_defrost: "\u041e\u0442\u0442\u0430\u0439\u043a\u0430",
     section_space_heating: "\u0418\u043d\u0434\u0438\u043a\u0430\u0442\u043e\u0440 \u043e\u0442\u043e\u043f\u043b\u0435\u043d\u0438\u044f", section_hot_water: "\u0418\u043d\u0434\u0438\u043a\u0430\u0442\u043e\u0440 \u0433\u043e\u0440\u044f\u0447\u0435\u0439 \u0432\u043e\u0434\u044b", section_flow_temperature: "\u0422\u0435\u043c\u043f\u0435\u0440\u0430\u0442\u0443\u0440\u0430 \u043f\u043e\u0434\u0430\u0447\u0438", section_heat_output: "\u0422\u0435\u043f\u043b\u043e\u0432\u0430\u044f \u043c\u043e\u0449\u043d\u043e\u0441\u0442\u044c", section_cop: "\u041a\u043e\u044d\u0444\u0444\u0438\u0446\u0438\u0435\u043d\u0442 \u044d\u0444\u0444\u0435\u043a\u0442\u0438\u0432\u043d\u043e\u0441\u0442\u0438 (COP)", section_outdoor_temperature: "\u041d\u0430\u0440\u0443\u0436\u043d\u0430\u044f \u0442\u0435\u043c\u043f\u0435\u0440\u0430\u0442\u0443\u0440\u0430",
+    section_return_temperature: "\u0422\u0435\u043c\u043f\u0435\u0440\u0430\u0442\u0443\u0440\u0430 \u043e\u0431\u0440\u0430\u0442\u043a\u0438", section_water_flow: "\u0420\u0430\u0441\u0445\u043e\u0434 \u0432\u043e\u0434\u044b", section_compressor: "\u041a\u043e\u043c\u043f\u0440\u0435\u0441\u0441\u043e\u0440", hp_delta: "\u0414\u0435\u043b\u044c\u0442\u0430", section_fan_speed: "\u0421\u043a\u043e\u0440\u043e\u0441\u0442\u044c \u0432\u0435\u043d\u0442\u0438\u043b\u044f\u0442\u043e\u0440\u0430",
+    hp_flow_return: "\u041f\u043e\u0434\u0430\u0447\u0430 \u0438 \u043e\u0431\u0440\u0430\u0442\u043a\u0430", no_hot_water: "\u0411\u0435\u0437 \u0431\u0430\u043a\u0430 \u0433\u043e\u0440\u044f\u0447\u0435\u0439 \u0432\u043e\u0434\u044b", underfloor_heating: "\u0422\u0451\u043f\u043b\u044b\u0439 \u043f\u043e\u043b \u0432\u043c\u0435\u0441\u0442\u043e \u0440\u0430\u0434\u0438\u0430\u0442\u043e\u0440\u043e\u0432",
     type_printer_3d: "3D-\u043f\u0440\u0438\u043d\u0442\u0435\u0440", section_nozzle_temperature: "\u0422\u0435\u043c\u043f\u0435\u0440\u0430\u0442\u0443\u0440\u0430 \u0441\u043e\u043f\u043b\u0430", section_nozzle_target: "\u0417\u0430\u0434\u0430\u043d\u043d\u0430\u044f \u0442\u0435\u043c\u043f\u0435\u0440\u0430\u0442\u0443\u0440\u0430 \u0441\u043e\u043f\u043b\u0430",
     section_bed_temperature: "\u0422\u0435\u043c\u043f\u0435\u0440\u0430\u0442\u0443\u0440\u0430 \u0441\u0442\u043e\u043b\u0430", section_bed_target: "\u0417\u0430\u0434\u0430\u043d\u043d\u0430\u044f \u0442\u0435\u043c\u043f\u0435\u0440\u0430\u0442\u0443\u0440\u0430 \u0441\u0442\u043e\u043b\u0430", section_chamber_temperature: "\u0422\u0435\u043c\u043f\u0435\u0440\u0430\u0442\u0443\u0440\u0430 \u043a\u0430\u043c\u0435\u0440\u044b",
     section_current_layer: "\u0422\u0435\u043a\u0443\u0449\u0438\u0439 \u0441\u043b\u043e\u0439", section_total_layers: "\u0412\u0441\u0435\u0433\u043e \u0441\u043b\u043e\u0451\u0432", section_print_file: "\u0424\u0430\u0439\u043b \u043f\u0435\u0447\u0430\u0442\u0438",
@@ -363,6 +373,8 @@ const T = {
     p3_attention: "\u0422\u0440\u0435\u0431\u0443\u0435\u0442\u0441\u044f \u0432\u043d\u0438\u043c\u0430\u043d\u0438\u0435", p3_leveling: "\u0412\u044b\u0440\u0430\u0432\u043d\u0438\u0432\u0430\u043d\u0438\u0435 \u0441\u0442\u043e\u043b\u0430", p3_filament: "\u0421\u043c\u0435\u043d\u0430 \u0444\u0438\u043b\u0430\u043c\u0435\u043d\u0442\u0430",
     p3_cooling: "\u041e\u0445\u043b\u0430\u0436\u0434\u0435\u043d\u0438\u0435", p3_calibrating: "\u041a\u0430\u043b\u0438\u0431\u0440\u043e\u0432\u043a\u0430", p3_homing: "\u041f\u0430\u0440\u043a\u043e\u0432\u043a\u0430 \u043e\u0441\u0435\u0439",
     section_printed_part: "\u041f\u0435\u0447\u0430\u0442\u0430\u0435\u043c\u0430\u044f \u043c\u043e\u0434\u0435\u043b\u044c", part_cube: "\u041a\u0443\u0431", part_pyramid: "\u041f\u0438\u0440\u0430\u043c\u0438\u0434\u0430", part_duck: "\u0420\u0435\u0437\u0438\u043d\u043e\u0432\u0430\u044f \u0443\u0442\u043e\u0447\u043a\u0430",
+    type_pet_feeder: "\u041a\u043e\u0440\u043c\u0443\u0448\u043a\u0430", feeder_ready: "\u0413\u043e\u0442\u043e\u0432\u0430", feeder_feeding: "\u041a\u043e\u0440\u043c\u043b\u0435\u043d\u0438\u0435", section_portions_today: "\u041f\u043e\u0440\u0446\u0438\u0439 \u0437\u0430 \u0434\u0435\u043d\u044c", section_weight_today: "\u0412\u0435\u0441 \u0437\u0430 \u0434\u0435\u043d\u044c", section_portion_weight: "\u0412\u0435\u0441 \u043f\u043e\u0440\u0446\u0438\u0438", section_serving_size: "\u0420\u0430\u0437\u043c\u0435\u0440 \u043f\u043e\u0440\u0446\u0438\u0438", section_feeder_schedule: "\u0420\u0430\u0441\u043f\u0438\u0441\u0430\u043d\u0438\u0435", section_last_feed: "\u041f\u043e\u0441\u043b\u0435\u0434\u043d\u0435\u0435 \u043a\u043e\u0440\u043c\u043b\u0435\u043d\u0438\u0435", section_error: "\u0418\u043d\u0434\u0438\u043a\u0430\u0442\u043e\u0440 \u043e\u0448\u0438\u0431\u043a\u0438", start_option: "\u0412\u044b\u0431\u0438\u0440\u0430\u0435\u043c\u0430\u044f \u043e\u043f\u0446\u0438\u044f", start_value: "\u0417\u0430\u043f\u0438\u0441\u044b\u0432\u0430\u0435\u043c\u043e\u0435 \u0437\u043d\u0430\u0447\u0435\u043d\u0438\u0435", portions: "\u043f\u043e\u0440\u0446\u0438\u0439",
+    feeder_empty: "\u0411\u0443\u043d\u043a\u0435\u0440 \u043f\u0443\u0441\u0442", section_level: "\u0423\u0440\u043e\u0432\u0435\u043d\u044c \u043a\u043e\u0440\u043c\u0430", level_empty_below: "\u041f\u0443\u0441\u0442\u043e \u043f\u0440\u0438 \u0437\u043d\u0430\u0447\u0435\u043d\u0438\u0438 \u043d\u0435 \u0432\u044b\u0448\u0435", level_max: "\u0401\u043c\u043a\u043e\u0441\u0442\u044c \u0431\u0443\u043d\u043a\u0435\u0440\u0430",
     washer_dryer: "\u0421\u0442\u0438\u0440\u0430\u043b\u044c\u043d\u043e-\u0441\u0443\u0448\u0438\u043b\u044c\u043d\u0430\u044f \u043c\u0430\u0448\u0438\u043d\u0430 (\u0441\u0442\u0438\u0440\u0430\u0435\u0442 \u0438 \u0441\u0443\u0448\u0438\u0442)", wd_drying: "\u0421\u0443\u0448\u043a\u0430", section_cycle_phase: "\u0424\u0430\u0437\u0430 \u0446\u0438\u043a\u043b\u0430",
   },
   de: {
@@ -470,6 +482,8 @@ const T = {
     type_water_heater: "Warmwasserspeicher", type_boiler: "Heizkessel", type_heat_pump: "W\u00e4rmepumpe",
     boiler_space_heating: "Heizung", boiler_hot_water: "Warmwasser", boiler_burner: "Brenner an", boiler_starting: "Z\u00fcndung", boiler_waiting: "Wartezeit", hp_cooling: "K\u00fchlen", hp_defrost: "Abtauen",
     section_space_heating: "Heizungsanzeige", section_hot_water: "Warmwasseranzeige", section_flow_temperature: "Vorlauftemperatur", section_heat_output: "Heizleistung", section_cop: "Leistungszahl (COP)", section_outdoor_temperature: "Au\u00dfentemperatur",
+    section_return_temperature: "R\u00fccklauftemperatur", section_water_flow: "Wasserdurchfluss", section_compressor: "Kompressor", hp_delta: "Spreizung", section_fan_speed: "L\u00fcfterdrehzahl",
+    hp_flow_return: "Vor- und R\u00fccklauf", no_hot_water: "Kein Warmwasserspeicher", underfloor_heating: "Fu\u00dfbodenheizung statt Heizk\u00f6rper",
     type_printer_3d: "3D-Drucker", section_nozzle_temperature: "D\u00fcsentemperatur", section_nozzle_target: "D\u00fcsen-Solltemperatur",
     section_bed_temperature: "Betttemperatur", section_bed_target: "Bett-Solltemperatur", section_chamber_temperature: "Bauraumtemperatur",
     section_current_layer: "Aktuelle Schicht", section_total_layers: "Schichten gesamt", section_print_file: "Druckdatei",
@@ -481,6 +495,8 @@ const T = {
     p3_attention: "Eingriff n\u00f6tig", p3_leveling: "Bettnivellierung", p3_filament: "Filamentwechsel",
     p3_cooling: "Abk\u00fchlen", p3_calibrating: "Kalibrierung", p3_homing: "Referenzfahrt",
     section_printed_part: "Druckobjekt", part_cube: "W\u00fcrfel", part_pyramid: "Pyramide", part_duck: "Quietscheentchen",
+    type_pet_feeder: "Futterautomat", feeder_ready: "Bereit", feeder_feeding: "F\u00fcttert", section_portions_today: "Portionen heute", section_weight_today: "Menge heute", section_portion_weight: "Portionsgewicht", section_serving_size: "Portionsgr\u00f6\u00dfe", section_feeder_schedule: "Zeitplan", section_last_feed: "Letzte F\u00fctterung", section_error: "St\u00f6rungsanzeige", start_option: "Auszuw\u00e4hlende Option", start_value: "Zu schreibender Wert", portions: "Portionen",
+    feeder_empty: "Beh\u00e4lter leer", section_level: "F\u00fcllstand", level_empty_below: "Leer ab oder unter", level_max: "Fassungsverm\u00f6gen",
     washer_dryer: "Waschtrockner (w\u00e4scht und trocknet)", wd_drying: "Trocknen", section_cycle_phase: "Programmphase",
   },
   es: {
@@ -588,6 +604,8 @@ const T = {
     type_water_heater: "Termo", type_boiler: "Caldera", type_heat_pump: "Bomba de calor",
     boiler_space_heating: "Calefacci\u00f3n", boiler_hot_water: "Agua caliente", boiler_burner: "Quemador encendido", boiler_starting: "Ignici\u00f3n", boiler_waiting: "Pausa del quemador", hp_cooling: "Refrigeraci\u00f3n", hp_defrost: "Desescarche",
     section_space_heating: "Indicador de calefacci\u00f3n", section_hot_water: "Indicador de agua caliente", section_flow_temperature: "Temperatura de impulsi\u00f3n", section_heat_output: "Calor producido", section_cop: "Coeficiente de rendimiento (COP)", section_outdoor_temperature: "Temperatura exterior",
+    section_return_temperature: "Temperatura de retorno", section_water_flow: "Caudal de agua", section_compressor: "Compresor", hp_delta: "Salto t\u00e9rmico", section_fan_speed: "Velocidad del ventilador",
+    hp_flow_return: "Ida y retorno", no_hot_water: "Sin dep\u00f3sito de agua caliente", underfloor_heating: "Suelo radiante en vez de radiadores",
     type_printer_3d: "Impresora 3D", section_nozzle_temperature: "Temperatura de la boquilla", section_nozzle_target: "Temperatura objetivo de la boquilla",
     section_bed_temperature: "Temperatura de la cama", section_bed_target: "Temperatura objetivo de la cama", section_chamber_temperature: "Temperatura de la c\u00e1mara",
     section_current_layer: "Capa actual", section_total_layers: "Capas totales", section_print_file: "Archivo de impresi\u00f3n",
@@ -599,6 +617,8 @@ const T = {
     p3_attention: "Requiere atenci\u00f3n", p3_leveling: "Nivelando la cama", p3_filament: "Cambiando el filamento",
     p3_cooling: "Enfriando", p3_calibrating: "Calibrando", p3_homing: "Buscando el origen",
     section_printed_part: "Pieza impresa", part_cube: "Cubo", part_pyramid: "Pir\u00e1mide", part_duck: "Patito de goma",
+    type_pet_feeder: "Comedero autom\u00e1tico", feeder_ready: "Listo", feeder_feeding: "Dispensando", section_portions_today: "Raciones de hoy", section_weight_today: "Peso de hoy", section_portion_weight: "Peso de la raci\u00f3n", section_serving_size: "Tama\u00f1o de la raci\u00f3n", section_feeder_schedule: "Programaci\u00f3n", section_last_feed: "\u00daltima comida", section_error: "Indicador de error", start_option: "Opci\u00f3n a seleccionar", start_value: "Valor a escribir", portions: "raciones",
+    feeder_empty: "Dep\u00f3sito vac\u00edo", section_level: "Nivel de comida", level_empty_below: "Vac\u00edo en o por debajo de", level_max: "Capacidad del dep\u00f3sito",
     washer_dryer: "Lavasecadora (lava y seca)", wd_drying: "Secado", section_cycle_phase: "Fase del ciclo",
   },
   it: {
@@ -706,6 +726,8 @@ const T = {
     type_water_heater: "Scaldabagno", type_boiler: "Caldaia", type_heat_pump: "Pompa di calore",
     boiler_space_heating: "Riscaldamento", boiler_hot_water: "Acqua calda", boiler_burner: "Bruciatore acceso", boiler_starting: "Accensione", boiler_waiting: "Pausa bruciatore", hp_cooling: "Raffrescamento", hp_defrost: "Sbrinamento",
     section_space_heating: "Indicatore riscaldamento", section_hot_water: "Indicatore acqua calda", section_flow_temperature: "Temperatura di mandata", section_heat_output: "Calore prodotto", section_cop: "Coefficiente di prestazione (COP)", section_outdoor_temperature: "Temperatura esterna",
+    section_return_temperature: "Temperatura di ritorno", section_water_flow: "Portata d'acqua", section_compressor: "Compressore", hp_delta: "Delta", section_fan_speed: "Velocit\u00e0 della ventola",
+    hp_flow_return: "Mandata e ritorno", no_hot_water: "Nessun bollitore", underfloor_heating: "Riscaldamento a pavimento invece dei radiatori",
     type_printer_3d: "Stampante 3D", section_nozzle_temperature: "Temperatura dell'ugello", section_nozzle_target: "Temperatura obiettivo dell'ugello",
     section_bed_temperature: "Temperatura del piatto", section_bed_target: "Temperatura obiettivo del piatto", section_chamber_temperature: "Temperatura della camera",
     section_current_layer: "Strato attuale", section_total_layers: "Strati totali", section_print_file: "File di stampa",
@@ -717,6 +739,8 @@ const T = {
     p3_attention: "Richiede attenzione", p3_leveling: "Livellamento del piatto", p3_filament: "Cambio filamento",
     p3_cooling: "Raffreddamento", p3_calibrating: "Calibrazione", p3_homing: "Azzeramento assi",
     section_printed_part: "Oggetto stampato", part_cube: "Cubo", part_pyramid: "Piramide", part_duck: "Paperella di gomma",
+    type_pet_feeder: "Distributore di crocchette", feeder_ready: "Pronto", feeder_feeding: "Erogazione", section_portions_today: "Porzioni di oggi", section_weight_today: "Peso di oggi", section_portion_weight: "Peso della porzione", section_serving_size: "Dimensione della porzione", section_feeder_schedule: "Programmazione", section_last_feed: "Ultimo pasto", section_error: "Indicatore di errore", start_option: "Opzione da selezionare", start_value: "Valore da scrivere", portions: "porzioni",
+    feeder_empty: "Serbatoio vuoto", section_level: "Livello del cibo", level_empty_below: "Vuoto a questo livello o meno", level_max: "Capacit\u00e0 del serbatoio",
     washer_dryer: "Lavasciuga (lava e asciuga)", wd_drying: "Asciugatura", section_cycle_phase: "Fase del ciclo",
   },
   nl: {
@@ -824,6 +848,8 @@ const T = {
     type_water_heater: "Boiler", type_boiler: "Cv-ketel", type_heat_pump: "Warmtepomp",
     boiler_space_heating: "Verwarming", boiler_hot_water: "Warm water", boiler_burner: "Brander aan", boiler_starting: "Ontsteking", boiler_waiting: "Wachten", hp_cooling: "Koelen", hp_defrost: "Ontdooien",
     section_space_heating: "Cv-indicator", section_hot_water: "Warmwaterindicator", section_flow_temperature: "Aanvoertemperatuur", section_heat_output: "Warmteafgifte", section_cop: "Prestatieco\u00ebffici\u00ebnt (COP)", section_outdoor_temperature: "Buitentemperatuur",
+    section_return_temperature: "Retourtemperatuur", section_water_flow: "Waterdebiet", section_compressor: "Compressor", hp_delta: "Delta", section_fan_speed: "Ventilatortoerental",
+    hp_flow_return: "Aanvoer en retour", no_hot_water: "Geen boiler", underfloor_heating: "Vloerverwarming in plaats van radiatoren",
     type_printer_3d: "3D-printer", section_nozzle_temperature: "Nozzletemperatuur", section_nozzle_target: "Doeltemperatuur nozzle",
     section_bed_temperature: "Bedtemperatuur", section_bed_target: "Doeltemperatuur bed", section_chamber_temperature: "Temperatuur van de behuizing",
     section_current_layer: "Huidige laag", section_total_layers: "Totaal aantal lagen", section_print_file: "Printbestand",
@@ -835,6 +861,8 @@ const T = {
     p3_attention: "Aandacht vereist", p3_leveling: "Bed nivelleren", p3_filament: "Filament wisselen",
     p3_cooling: "Afkoelen", p3_calibrating: "Kalibreren", p3_homing: "Homen",
     section_printed_part: "Geprint object", part_cube: "Kubus", part_pyramid: "Piramide", part_duck: "Badeendje",
+    type_pet_feeder: "Voerautomaat", feeder_ready: "Gereed", feeder_feeding: "Voeren", section_portions_today: "Porties vandaag", section_weight_today: "Gewicht vandaag", section_portion_weight: "Portiegewicht", section_serving_size: "Portiegrootte", section_feeder_schedule: "Schema", section_last_feed: "Laatste voeding", section_error: "Storingsindicator", start_option: "Te kiezen optie", start_value: "Te schrijven waarde", portions: "porties",
+    feeder_empty: "Reservoir leeg", section_level: "Voerniveau", level_empty_below: "Leeg bij of onder", level_max: "Inhoud van het reservoir",
     washer_dryer: "Was-droogcombinatie (wast en droogt)", wd_drying: "Drogen", section_cycle_phase: "Programmafase",
   },
   pt: {
@@ -942,6 +970,8 @@ const T = {
     type_water_heater: "Termoacumulador", type_boiler: "Caldeira", type_heat_pump: "Bomba de calor",
     boiler_space_heating: "Aquecimento", boiler_hot_water: "\u00c1gua quente", boiler_burner: "Queimador ligado", boiler_starting: "Igni\u00e7\u00e3o", boiler_waiting: "Pausa do queimador", hp_cooling: "Arrefecimento", hp_defrost: "Descongela\u00e7\u00e3o",
     section_space_heating: "Indicador de aquecimento central", section_hot_water: "Indicador de \u00e1gua quente", section_flow_temperature: "Temperatura de ida", section_heat_output: "Calor produzido", section_cop: "Coeficiente de desempenho (COP)", section_outdoor_temperature: "Temperatura exterior",
+    section_return_temperature: "Temperatura de retorno", section_water_flow: "Caudal de \u00e1gua", section_compressor: "Compressor", hp_delta: "Delta", section_fan_speed: "Velocidade da ventoinha",
+    hp_flow_return: "Ida e retorno", no_hot_water: "Sem dep\u00f3sito de \u00e1gua quente", underfloor_heating: "Piso radiante em vez de radiadores",
     type_printer_3d: "Impressora 3D", section_nozzle_temperature: "Temperatura do bico", section_nozzle_target: "Temperatura alvo do bico",
     section_bed_temperature: "Temperatura da mesa", section_bed_target: "Temperatura alvo da mesa", section_chamber_temperature: "Temperatura da c\u00e2mara",
     section_current_layer: "Camada atual", section_total_layers: "Total de camadas", section_print_file: "Arquivo de impress\u00e3o",
@@ -953,6 +983,8 @@ const T = {
     p3_attention: "Requer aten\u00e7\u00e3o", p3_leveling: "Nivelando a mesa", p3_filament: "Trocando o filamento",
     p3_cooling: "Resfriando", p3_calibrating: "Calibrando", p3_homing: "Retornando \u00e0 origem",
     section_printed_part: "Pe\u00e7a impressa", part_cube: "Cubo", part_pyramid: "Pir\u00e2mide", part_duck: "Patinho de borracha",
+    type_pet_feeder: "Alimentador autom\u00e1tico", feeder_ready: "Pronto", feeder_feeding: "A distribuir", section_portions_today: "Por\u00e7\u00f5es de hoje", section_weight_today: "Peso de hoje", section_portion_weight: "Peso da por\u00e7\u00e3o", section_serving_size: "Tamanho da por\u00e7\u00e3o", section_feeder_schedule: "Programa\u00e7\u00e3o", section_last_feed: "\u00daltima refei\u00e7\u00e3o", section_error: "Indicador de erro", start_option: "Op\u00e7\u00e3o a selecionar", start_value: "Valor a escrever", portions: "por\u00e7\u00f5es",
+    feeder_empty: "Dep\u00f3sito vazio", section_level: "N\u00edvel de comida", level_empty_below: "Vazio em ou abaixo de", level_max: "Capacidade do dep\u00f3sito",
     washer_dryer: "M\u00e1quina de lavar e secar (lava e seca)", wd_drying: "Secagem", section_cycle_phase: "Fase do ciclo",
   },
   sv: {
@@ -1060,6 +1092,8 @@ const T = {
     type_water_heater: "Varmvattenberedare", type_boiler: "Panna", type_heat_pump: "V\u00e4rmepump",
     boiler_space_heating: "Uppv\u00e4rmning", boiler_hot_water: "Varmvatten", boiler_burner: "Br\u00e4nnare p\u00e5", boiler_starting: "T\u00e4ndning", boiler_waiting: "V\u00e4ntar", hp_cooling: "Kylning", hp_defrost: "Avfrostning",
     section_space_heating: "Indikator f\u00f6r uppv\u00e4rmning", section_hot_water: "Indikator f\u00f6r varmvatten", section_flow_temperature: "Framledningstemperatur", section_heat_output: "V\u00e4rmeeffekt", section_cop: "V\u00e4rmefaktor (COP)", section_outdoor_temperature: "Utomhustemperatur",
+    section_return_temperature: "Returtemperatur", section_water_flow: "Vattenfl\u00f6de", section_compressor: "Kompressor", hp_delta: "Delta", section_fan_speed: "Fl\u00e4kthastighet",
+    hp_flow_return: "Fram och retur", no_hot_water: "Ingen varmvattenberedare", underfloor_heating: "Golvv\u00e4rme i st\u00e4llet f\u00f6r radiatorer",
     type_printer_3d: "3D-skrivare", section_nozzle_temperature: "Munstyckets temperatur", section_nozzle_target: "Munstyckets m\u00e5ltemperatur",
     section_bed_temperature: "B\u00e4ddens temperatur", section_bed_target: "B\u00e4ddens m\u00e5ltemperatur", section_chamber_temperature: "Kammartemperatur",
     section_current_layer: "Aktuellt lager", section_total_layers: "Antal lager", section_print_file: "Utskriftsfil",
@@ -1071,6 +1105,8 @@ const T = {
     p3_attention: "Kr\u00e4ver \u00e5tg\u00e4rd", p3_leveling: "Nivellerar b\u00e4dden", p3_filament: "Byter filament",
     p3_cooling: "Kyler", p3_calibrating: "Kalibrerar", p3_homing: "Nollst\u00e4ller axlar",
     section_printed_part: "Utskrivet objekt", part_cube: "Kub", part_pyramid: "Pyramid", part_duck: "Badanka",
+    type_pet_feeder: "Foderautomat", feeder_ready: "Redo", feeder_feeding: "Matar", section_portions_today: "Portioner idag", section_weight_today: "Vikt idag", section_portion_weight: "Portionsvikt", section_serving_size: "Portionsstorlek", section_feeder_schedule: "Schema", section_last_feed: "Senaste matning", section_error: "Felindikator", start_option: "Alternativ att v\u00e4lja", start_value: "V\u00e4rde att skriva", portions: "portioner",
+    feeder_empty: "Beh\u00e5llaren tom", section_level: "Foderm\u00e4ngd", level_empty_below: "Tom vid eller under", level_max: "Beh\u00e5llarens volym",
     washer_dryer: "Kombinerad tv\u00e4tt/tork (tv\u00e4ttar och torkar)", wd_drying: "Torkning", section_cycle_phase: "Programfas",
   },
   no: {
@@ -1178,6 +1214,8 @@ const T = {
     type_water_heater: "Varmtvannsbereder", type_boiler: "Kjele", type_heat_pump: "Varmepumpe",
     boiler_space_heating: "Oppvarming", boiler_hot_water: "Varmtvann", boiler_burner: "Brenner p\u00e5", boiler_starting: "Tenning", boiler_waiting: "Venter", hp_cooling: "Kj\u00f8ling", hp_defrost: "Avriming",
     section_space_heating: "Indikator for oppvarming", section_hot_water: "Indikator for varmtvann", section_flow_temperature: "Turtemperatur", section_heat_output: "Varmeeffekt", section_cop: "Effektfaktor (COP)", section_outdoor_temperature: "Utetemperatur",
+    section_return_temperature: "Returtemperatur", section_water_flow: "Vannmengde", section_compressor: "Kompressor", hp_delta: "Delta", section_fan_speed: "Viftehastighet",
+    hp_flow_return: "Tur og retur", no_hot_water: "Ingen varmtvannsbereder", underfloor_heating: "Gulvvarme i stedet for radiatorer",
     type_printer_3d: "3D-skriver", section_nozzle_temperature: "Dysetemperatur", section_nozzle_target: "M\u00e5ltemperatur for dysen",
     section_bed_temperature: "Sengetemperatur", section_bed_target: "M\u00e5ltemperatur for sengen", section_chamber_temperature: "Kammertemperatur",
     section_current_layer: "Gjeldende lag", section_total_layers: "Antall lag", section_print_file: "Utskriftsfil",
@@ -1189,6 +1227,8 @@ const T = {
     p3_attention: "Krever tilsyn", p3_leveling: "Nivellerer sengen", p3_filament: "Bytter filament",
     p3_cooling: "Kj\u00f8ler", p3_calibrating: "Kalibrerer", p3_homing: "Nullstiller akser",
     section_printed_part: "Utskrevet objekt", part_cube: "Kube", part_pyramid: "Pyramide", part_duck: "Badeand",
+    type_pet_feeder: "F\u00f4rautomat", feeder_ready: "Klar", feeder_feeding: "Mater", section_portions_today: "Porsjoner i dag", section_weight_today: "Vekt i dag", section_portion_weight: "Porsjonsvekt", section_serving_size: "Porsjonsst\u00f8rrelse", section_feeder_schedule: "Tidsplan", section_last_feed: "Siste m\u00e5ltid", section_error: "Feilindikator", start_option: "Alternativ \u00e5 velge", start_value: "Verdi \u00e5 skrive", portions: "porsjoner",
+    feeder_empty: "Beholder tom", section_level: "F\u00f4rniv\u00e5", level_empty_below: "Tom ved eller under", level_max: "Beholderens volum",
     washer_dryer: "Kombinert vaske-/t\u00f8rkemaskin (vasker og t\u00f8rker)", wd_drying: "T\u00f8rking", section_cycle_phase: "Programfase",
   },
   da: {
@@ -1296,6 +1336,8 @@ const T = {
     type_water_heater: "Varmtvandsbeholder", type_boiler: "Kedel", type_heat_pump: "Varmepumpe",
     boiler_space_heating: "Opvarmning", boiler_hot_water: "Varmt vand", boiler_burner: "Br\u00e6nder t\u00e6ndt", boiler_starting: "T\u00e6nding", boiler_waiting: "Venter", hp_cooling: "K\u00f8ling", hp_defrost: "Afrimning",
     section_space_heating: "Indikator for opvarmning", section_hot_water: "Indikator for varmt vand", section_flow_temperature: "Freml\u00f8bstemperatur", section_heat_output: "Varmeydelse", section_cop: "Effektfaktor (COP)", section_outdoor_temperature: "Udetemperatur",
+    section_return_temperature: "Returtemperatur", section_water_flow: "Vandflow", section_compressor: "Kompressor", hp_delta: "Delta", section_fan_speed: "Ventilatorhastighed",
+    hp_flow_return: "Frem og retur", no_hot_water: "Ingen varmtvandsbeholder", underfloor_heating: "Gulvvarme i stedet for radiatorer",
     type_printer_3d: "3D-printer", section_nozzle_temperature: "Dysetemperatur", section_nozzle_target: "M\u00e5ltemperatur for dysen",
     section_bed_temperature: "Sengetemperatur", section_bed_target: "M\u00e5ltemperatur for sengen", section_chamber_temperature: "Kammertemperatur",
     section_current_layer: "Aktuelt lag", section_total_layers: "Antal lag", section_print_file: "Printfil",
@@ -1307,6 +1349,8 @@ const T = {
     p3_attention: "Kr\u00e6ver handling", p3_leveling: "Nivellerer sengen", p3_filament: "Skifter filament",
     p3_cooling: "K\u00f8ler", p3_calibrating: "Kalibrerer", p3_homing: "Nulstiller akser",
     section_printed_part: "Printet emne", part_cube: "Terning", part_pyramid: "Pyramide", part_duck: "Badeand",
+    type_pet_feeder: "Foderautomat", feeder_ready: "Klar", feeder_feeding: "Fodrer", section_portions_today: "Portioner i dag", section_weight_today: "V\u00e6gt i dag", section_portion_weight: "Portionsv\u00e6gt", section_serving_size: "Portionsst\u00f8rrelse", section_feeder_schedule: "Tidsplan", section_last_feed: "Sidste fodring", section_error: "Fejlindikator", start_option: "Valgmulighed", start_value: "V\u00e6rdi at skrive", portions: "portioner",
+    feeder_empty: "Beholder tom", section_level: "Foderm\u00e6ngde", level_empty_below: "Tom ved eller under", level_max: "Beholderens rumfang",
     washer_dryer: "Vaske-t\u00f8rremaskine (vasker og t\u00f8rrer)", wd_drying: "T\u00f8rring", section_cycle_phase: "Programfase",
   },
   pl: {
@@ -1414,6 +1458,8 @@ const T = {
     type_water_heater: "Podgrzewacz wody", type_boiler: "Kocio\u0142", type_heat_pump: "Pompa ciep\u0142a",
     boiler_space_heating: "Ogrzewanie", boiler_hot_water: "Ciep\u0142a woda", boiler_burner: "Palnik w\u0142\u0105czony", boiler_starting: "Zap\u0142on", boiler_waiting: "Oczekiwanie", hp_cooling: "Ch\u0142odzenie", hp_defrost: "Odszranianie",
     section_space_heating: "Wska\u017anik ogrzewania", section_hot_water: "Wska\u017anik ciep\u0142ej wody", section_flow_temperature: "Temperatura zasilania", section_heat_output: "Moc grzewcza", section_cop: "Wsp\u00f3\u0142czynnik efektywno\u015bci (COP)", section_outdoor_temperature: "Temperatura zewn\u0119trzna",
+    section_return_temperature: "Temperatura powrotu", section_water_flow: "Przep\u0142yw wody", section_compressor: "Spr\u0119\u017carka", hp_delta: "Delta", section_fan_speed: "Pr\u0119dko\u015b\u0107 wentylatora",
+    hp_flow_return: "Zasilanie i powr\u00f3t", no_hot_water: "Bez zasobnika CWU", underfloor_heating: "Ogrzewanie pod\u0142ogowe zamiast grzejnik\u00f3w",
     type_printer_3d: "Drukarka 3D", section_nozzle_temperature: "Temperatura dyszy", section_nozzle_target: "Temperatura docelowa dyszy",
     section_bed_temperature: "Temperatura sto\u0142u", section_bed_target: "Temperatura docelowa sto\u0142u", section_chamber_temperature: "Temperatura komory",
     section_current_layer: "Bie\u017c\u0105ca warstwa", section_total_layers: "Liczba warstw", section_print_file: "Plik wydruku",
@@ -1425,6 +1471,8 @@ const T = {
     p3_attention: "Wymaga uwagi", p3_leveling: "Poziomowanie sto\u0142u", p3_filament: "Zmiana filamentu",
     p3_cooling: "Ch\u0142odzenie", p3_calibrating: "Kalibracja", p3_homing: "Bazowanie",
     section_printed_part: "Drukowany obiekt", part_cube: "Sze\u015bcian", part_pyramid: "Piramida", part_duck: "Gumowa kaczuszka",
+    type_pet_feeder: "Karmnik automatyczny", feeder_ready: "Gotowy", feeder_feeding: "Wydawanie", section_portions_today: "Porcje dzisiaj", section_weight_today: "Waga dzisiaj", section_portion_weight: "Waga porcji", section_serving_size: "Wielko\u015b\u0107 porcji", section_feeder_schedule: "Harmonogram", section_last_feed: "Ostatnie karmienie", section_error: "Wska\u017anik b\u0142\u0119du", start_option: "Opcja do wybrania", start_value: "Warto\u015b\u0107 do zapisania", portions: "porcji",
+    feeder_empty: "Pusty zasobnik", section_level: "Poziom karmy", level_empty_below: "Pusty przy tej warto\u015bci lub ni\u017cej", level_max: "Pojemno\u015b\u0107 zasobnika",
     washer_dryer: "Pralko-suszarka (pierze i suszy)", wd_drying: "Suszenie", section_cycle_phase: "Faza programu",
   },
   zh: {
@@ -1532,6 +1580,8 @@ const T = {
     type_water_heater: "\u70ed\u6c34\u5668", type_boiler: "\u9505\u7089", type_heat_pump: "\u70ed\u6cf5",
     boiler_space_heating: "\u4f9b\u6696", boiler_hot_water: "\u70ed\u6c34", boiler_burner: "\u71c3\u70e7\u5668\u5df2\u70b9\u706b", boiler_starting: "\u70b9\u706b\u4e2d", boiler_waiting: "\u7b49\u5f85\u4e2d", hp_cooling: "\u5236\u51b7", hp_defrost: "\u9664\u971c",
     section_space_heating: "\u4f9b\u6696\u6307\u793a", section_hot_water: "\u70ed\u6c34\u6307\u793a", section_flow_temperature: "\u4f9b\u6c34\u6e29\u5ea6", section_heat_output: "\u5236\u70ed\u91cf", section_cop: "\u80fd\u6548\u6bd4 (COP)", section_outdoor_temperature: "\u5ba4\u5916\u6e29\u5ea6",
+    section_return_temperature: "\u56de\u6c34\u6e29\u5ea6", section_water_flow: "\u6c34\u6d41\u91cf", section_compressor: "\u538b\u7f29\u673a", hp_delta: "\u6e29\u5dee", section_fan_speed: "\u98ce\u673a\u8f6c\u901f",
+    hp_flow_return: "\u4f9b\u6c34\u4e0e\u56de\u6c34", no_hot_water: "\u65e0\u70ed\u6c34\u6c34\u7bb1", underfloor_heating: "\u5730\u6696\u4ee3\u66ff\u6563\u70ed\u5668",
     type_printer_3d: "3D \u6253\u5370\u673a", section_nozzle_temperature: "\u55b7\u5634\u6e29\u5ea6", section_nozzle_target: "\u55b7\u5634\u76ee\u6807\u6e29\u5ea6",
     section_bed_temperature: "\u70ed\u5e8a\u6e29\u5ea6", section_bed_target: "\u70ed\u5e8a\u76ee\u6807\u6e29\u5ea6", section_chamber_temperature: "\u8154\u4f53\u6e29\u5ea6",
     section_current_layer: "\u5f53\u524d\u5c42", section_total_layers: "\u603b\u5c42\u6570", section_print_file: "\u6253\u5370\u6587\u4ef6",
@@ -1543,6 +1593,8 @@ const T = {
     p3_attention: "\u9700\u8981\u5904\u7406", p3_leveling: "\u8c03\u5e73\u4e2d", p3_filament: "\u66f4\u6362\u8017\u6750",
     p3_cooling: "\u51b7\u5374\u4e2d", p3_calibrating: "\u6821\u51c6\u4e2d", p3_homing: "\u5f52\u4f4d\u4e2d",
     section_printed_part: "\u6253\u5370\u6a21\u578b", part_cube: "\u7acb\u65b9\u4f53", part_pyramid: "\u91d1\u5b57\u5854", part_duck: "\u6a61\u76ae\u9e2d",
+    type_pet_feeder: "\u81ea\u52a8\u5582\u98df\u5668", feeder_ready: "\u5c31\u7eea", feeder_feeding: "\u6295\u5582\u4e2d", section_portions_today: "\u4eca\u65e5\u4efd\u6570", section_weight_today: "\u4eca\u65e5\u91cd\u91cf", section_portion_weight: "\u6bcf\u4efd\u91cd\u91cf", section_serving_size: "\u6bcf\u6b21\u4efd\u91cf", section_feeder_schedule: "\u8ba1\u5212", section_last_feed: "\u4e0a\u6b21\u6295\u5582", section_error: "\u6545\u969c\u6307\u793a", start_option: "\u8981\u9009\u62e9\u7684\u9009\u9879", start_value: "\u8981\u5199\u5165\u7684\u503c", portions: "\u4efd",
+    feeder_empty: "\u6599\u6876\u5df2\u7a7a", section_level: "\u4f59\u91cf", level_empty_below: "\u4f4e\u4e8e\u6216\u7b49\u4e8e\u6b64\u503c\u89c6\u4e3a\u7a7a", level_max: "\u6599\u6876\u5bb9\u91cf",
     washer_dryer: "\u6d17\u70d8\u4e00\u4f53\u673a\uff08\u6d17\u6da4\u5e76\u70d8\u5e72\uff09", wd_drying: "\u70d8\u5e72\u4e2d", section_cycle_phase: "\u7a0b\u5e8f\u9636\u6bb5",
   },
   cs: {
@@ -1650,6 +1702,8 @@ const T = {
     type_water_heater: "Oh\u0159\u00edva\u010d vody", type_boiler: "Kotel", type_heat_pump: "Tepeln\u00e9 \u010derpadlo",
     boiler_space_heating: "Topen\u00ed", boiler_hot_water: "Tepl\u00e1 voda", boiler_burner: "Ho\u0159\u00e1k zapnut", boiler_starting: "Zapalov\u00e1n\u00ed", boiler_waiting: "\u010cek\u00e1n\u00ed", hp_cooling: "Chlazen\u00ed", hp_defrost: "Odmrazov\u00e1n\u00ed",
     section_space_heating: "Indik\u00e1tor topen\u00ed", section_hot_water: "Indik\u00e1tor tepl\u00e9 vody", section_flow_temperature: "Teplota topn\u00e9 vody", section_heat_output: "Tepeln\u00fd v\u00fdkon", section_cop: "Topn\u00fd faktor (COP)", section_outdoor_temperature: "Venkovn\u00ed teplota",
+    section_return_temperature: "Teplota zp\u00e1te\u010dky", section_water_flow: "Pr\u016ftok vody", section_compressor: "Kompresor", hp_delta: "Delta", section_fan_speed: "Ot\u00e1\u010dky ventil\u00e1toru",
+    hp_flow_return: "P\u0159\u00edvod a zp\u00e1te\u010dka", no_hot_water: "Bez z\u00e1sobn\u00edku tepl\u00e9 vody", underfloor_heating: "Podlahov\u00e9 vyt\u00e1p\u011bn\u00ed m\u00edsto radi\u00e1tor\u016f",
     type_printer_3d: "3D tisk\u00e1rna", section_nozzle_temperature: "Teplota trysky", section_nozzle_target: "C\u00edlov\u00e1 teplota trysky",
     section_bed_temperature: "Teplota podlo\u017eky", section_bed_target: "C\u00edlov\u00e1 teplota podlo\u017eky", section_chamber_temperature: "Teplota komory",
     section_current_layer: "Aktu\u00e1ln\u00ed vrstva", section_total_layers: "Celkem vrstev", section_print_file: "Tiskov\u00fd soubor",
@@ -1661,6 +1715,8 @@ const T = {
     p3_attention: "Vy\u017eaduje pozornost", p3_leveling: "Vyrovn\u00e1v\u00e1n\u00ed podlo\u017eky", p3_filament: "V\u00fdm\u011bna filamentu",
     p3_cooling: "Chlazen\u00ed", p3_calibrating: "Kalibrace", p3_homing: "Naj\u00ed\u017ed\u011bn\u00ed do v\u00fdchoz\u00ed polohy",
     section_printed_part: "Ti\u0161t\u011bn\u00fd objekt", part_cube: "Krychle", part_pyramid: "Pyramida", part_duck: "Gumov\u00e1 kachni\u010dka",
+    type_pet_feeder: "Krm\u00edtko", feeder_ready: "P\u0159ipraveno", feeder_feeding: "Krmen\u00ed", section_portions_today: "Porce dnes", section_weight_today: "Hmotnost dnes", section_portion_weight: "Hmotnost porce", section_serving_size: "Velikost porce", section_feeder_schedule: "Rozvrh", section_last_feed: "Posledn\u00ed krmen\u00ed", section_error: "Indik\u00e1tor chyby", start_option: "Mo\u017enost k v\u00fdb\u011bru", start_value: "Hodnota k z\u00e1pisu", portions: "porc\u00ed",
+    feeder_empty: "Z\u00e1sobn\u00edk pr\u00e1zdn\u00fd", section_level: "Mno\u017estv\u00ed krmiva", level_empty_below: "Pr\u00e1zdn\u00fd p\u0159i t\u00e9to hodnot\u011b nebo ni\u017e\u0161\u00ed", level_max: "Objem z\u00e1sobn\u00edku",
     washer_dryer: "Pra\u010dka se su\u0161i\u010dkou (pere a su\u0161\u00ed)", wd_drying: "Su\u0161en\u00ed", section_cycle_phase: "F\u00e1ze programu",
   },
 };
@@ -2022,6 +2078,12 @@ const STATE_COLORS = {
   // Fridge health. "fridge_ok" is the cold blue of the temperature displays,
   // so a healthy fridge reads as cold rather than as "idle" grey.
   fridge_ok: "#4fc3f7",
+  // A feeder at rest is idle, and a feeder serving is doing something: the
+  // same two colours as everywhere else on the card.
+  feeder_ready: "var(--disabled-text-color, #9e9e9e)",
+  // An empty tank is the one thing a feeder cannot fix by itself.
+  feeder_empty: "var(--warning-color, #ff9800)",
+  feeder_feeding: "var(--info-color, #2196f3)",
   temp_high: "var(--warning-color, #ff9800)",
   door_open: "var(--error-color, #f44336)",
   unplugged: "var(--error-color, #f44336)",
@@ -2466,6 +2528,16 @@ function humanizeEntityId(entityId) {
 // to call, so the card opens the entity instead of raising a service error.
 const READ_ONLY_DOMAINS = ["binary_sensor", "sensor"];
 
+// A select whose options are one command and nothing else, "" and "START" on
+// an Aqara feeder: there is only one thing it can be asked, so asking for it
+// needs no configuration at all.
+function soleOption(hass, entityId) {
+  const st = stateObj(hass, entityId);
+  const options = (st && st.attributes && st.attributes.options) || [];
+  const real = options.filter((o) => String(o).trim() !== "");
+  return real.length === 1 ? real[0] : "";
+}
+
 function domainOf(entityId) {
   return entityId ? entityId.split(".")[0] : null;
 }
@@ -2535,8 +2607,15 @@ const TYPE_AUTO_PATTERNS = {
   // Octopus Energy names both a live and a lifetime reading, and its flow
   // temperature is a target: only the live ones say what the pump does now.
   heat_pump: {
-    temperature_entity: /^(?!.*(target|setpoint|fixed)).*(flow|supply|leaving|vorlauf|depart).*temp/i,
+    temperature_entity: /^(?!.*(target|setpoint|fixed)).*(flow|supply|leaving|outlet|vorlauf|depart).*temp/i,
+    // The water coming back is the unit's inlet, which is what HeishaMon and
+    // the Aquarea integrations call it.
+    return_temperature_entity: /^(?!.*(target|setpoint|fixed)).*(return|inlet|ruck|rueck|retour|retorno|ritorno|retur).*temp/i,
     outdoor_temperature_entity: /outdoor|outside|exterieur|aussen/i,
+    // A flow rate, never the flow temperature.
+    water_flow_entity: /^(?!.*temp).*(pump.?flow|water.?flow|flow.?rate|debit|caudal|durchfluss|portata)/i,
+    compressor_entity: /(compressor|compresseur|kompressor|compresor)(?!.*(power|current|energy|hours|starts|count))/i,
+    fan_speed_entity: /fan.?\d?.?(motor)?.?(speed|rpm)|ventilateur.*vitesse|luefter.?drehzahl/i,
     heat_output_entity: /^(?!.*lifetime).*heat.?(output|produced)/i,
     cop_entity: /(^|[._])cop$/i,
     power_entity: /^(?!.*lifetime).*(power.?input|_power$|power_w$|watt)/i,
@@ -2572,6 +2651,19 @@ const TYPE_AUTO_PATTERNS = {
     resume_entity: /^(button|script)\..*(resume|continue)/i,
     stop_entity: /^(button|script)\..*(?<!emergency_)(stop|cancel)/i,
     power_entity: /^sensor\.(?!.*(extruder|bed|chamber|heater|nozzle)).*(_power$|power_w$|watt)/i,
+  },
+  // A feeder's own words, read on an Aqara over Zigbee2MQTT and on a Tuya.
+  // The schedule is only suggested when a readable one exists: the raw one is
+  // a Python repr, which belongs in a template rather than on a card.
+  pet_feeder: {
+    start_entity: /^(button|script|automation|select|number)\..*(feed|start|distribu|croquette|portion)/i,
+    portions_today_entity: /portions?.?(per.?day|today|du.?jour)|distributions?.?(per.?day|today|du.?jour)/i,
+    weight_today_entity: /weight.?(per.?day|today)|poids.?du.?jour/i,
+    portion_weight_entity: /portion.?weight|poids.?(d.)?une?.?portion/i,
+    serving_size_entity: /serving.?size|feeding.?size|taille.*portion/i,
+    schedule_entity: /schedule.?(pretty|text|readable)|planning/i,
+    error_entity: /error|fault|defaut/i,
+    level_entity: /food.?(level|remain)|level.?(of.)?food|lack.?of.?food|niveau.*croquette|remaining.?food/i,
   },
   coffee: {
     water_entity: /water.?tank|water.?level|reservoir/i,
@@ -2672,6 +2764,10 @@ const TYPE_CAPS = {
   // A 3D printer: a job with a progress and a remaining time like any cycle,
   // two heaters to bring up to temperature first, and often a chamber light.
   printer_3d: { cycle: true, light: true, printer3d: true },
+  // A pet feeder. It sits idle almost all the time, so it is read like a
+  // fridge rather than run like a washer: no cycle, no programme, no door.
+  // What matters is how much was served today and when the last meal was.
+  pet_feeder: { petFeeder: true },
 };
 const APPLIANCE_TYPES = Object.keys(TYPE_CAPS);
 const LAUNDRY_TYPES = ["washer", "dryer", "dishwasher"];
@@ -2684,6 +2780,15 @@ const FRIDGE_ONLY_FIELDS = [
   "freezer_door_entity",
   "ice_maker_entity",
   "fridge_layout",
+];
+
+// Same for a pet feeder: nothing else counts portions.
+const FEEDER_ONLY_FIELDS = [
+  "portions_today_entity",
+  "weight_today_entity",
+  "portion_weight_entity",
+  "serving_size_entity",
+  "last_feed_entity",
 ];
 
 // Same for a 3D printer: nothing else has a nozzle or a print bed.
@@ -2710,10 +2815,13 @@ function detectApplianceType(cfg, st) {
   // whose name could be matched in the first place.
   if (FRIDGE_ONLY_FIELDS.some((f) => cfg[f])) return "fridge";
   if (PRINTER_ONLY_FIELDS.some((f) => cfg[f])) return "printer_3d";
+  if (FEEDER_ONLY_FIELDS.some((f) => cfg[f])) return "pet_feeder";
   const hay = `${cfg.icon || ""} ${cfg.state_entity || ""} ${(st && st.attributes.icon) || ""}`.toLowerCase();
   // Before everything else: a printer's entities are named after its maker or
   // its software, and a Bambu Lab one after its model ("p1s_...", "a1_...").
   if (/3d.?print|print.?3d|printer-3d|octoprint|prusa|bambu|klipper|moonraker|creality|elegoo|centauri|anycubic|kobra|flashforge|snapmaker|voron|reprap|duet3d|(^|[\s._])(x1c|x1e|p1s|p1p|p2s|a1|a1_mini|h2d|h2s)_|(^|[\s._-])ender[._-]?\d/.test(hay)) return "printer_3d";
+  // A feeder names itself after what it holds as often as after what it is.
+  if (/feeder|pet.?feed|croquette|kibble|futterautomat|comedero|alimentador|voerautomaat|foderautomat|f\u00f4rautomat|forautomat|karmnik|krmitko|\u5582\u98df|\u043a\u043e\u0440\u043c\u0443\u0448\u043a/.test(hay)) return "pet_feeder";
   // "microwave" before "oven": plenty of devices are named "microwave_oven".
   if (/microwave|micro.?onde|mikrowelle|magnetron|mikrob/.test(hay)) return "microwave";
   if (/coffee|cafeti|cafe|kaffee|espresso|cafetera|macchina.?caff|koffie|kaffemask|ekspres.?do.?kawy/.test(hay)) return "coffee";
@@ -2828,6 +2936,46 @@ function strengthLevel(hass, entityId) {
 function belowSinceOf(st) {
   const at = st ? Date.parse(st.last_changed) : NaN;
   return Number.isFinite(at) && at <= Date.now() ? at : Date.now();
+}
+
+// When the last meal was served, from whichever source can prove one happened.
+// A script knows when it last ran, whatever asked it to: the card, an
+// automation, or a HomeKit button, which is how most feeders are really used.
+// A button's state is that same time. The counter moves on every meal the
+// appliance reports, including the ones it serves on its own schedule, and at
+// zero it has only just been reset at midnight. A select or a number cannot
+// prove anything on its own, so it is only ever used to refine a time one of
+// the others already established.
+function feederLastFeed(hass, cfg, portions) {
+  const times = [];
+  const at = (v) => {
+    const d = Date.parse(v);
+    if (Number.isFinite(d)) times.push(d);
+  };
+  const explicit = cfg.last_feed_entity ? stateObj(hass, cfg.last_feed_entity) : null;
+  if (explicit && !["unknown", "unavailable"].includes(explicit.state)) at(explicit.state);
+  const start = cfg.start_entity ? stateObj(hass, cfg.start_entity) : null;
+  const startDomain = domainOf(cfg.start_entity);
+  if (start && start.attributes && start.attributes.last_triggered) at(start.attributes.last_triggered);
+  else if (start && startDomain === "button") at(start.state);
+  const counter = cfg.portions_today_entity ? stateObj(hass, cfg.portions_today_entity) : null;
+  if (counter && portions > 0) at(counter.last_changed);
+  if (!times.length) return null;
+  if (start && ["select", "input_select", "number", "input_number"].includes(startDomain)) at(start.last_changed);
+  return Math.max(...times);
+}
+
+// The time as a card line shows it: the clock alone for a meal served today,
+// the date as well for an older one, since "19:02" on its own would read as
+// this evening.
+function feedTime(hass, ts) {
+  const d = new Date(ts);
+  const now = new Date(Date.now());
+  const sameDay = d.getFullYear() === now.getFullYear() && d.getMonth() === now.getMonth() && d.getDate() === now.getDate();
+  const opts = sameDay
+    ? { hour: "2-digit", minute: "2-digit" }
+    : { day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit" };
+  return d.toLocaleString(lang(hass), opts);
 }
 
 function fridgeHealth(unplugged, noPower, doorOpen, tempHigh) {
@@ -3896,6 +4044,47 @@ const ILLUSTRATION_CSS = {
         .hp-rad i:nth-child(3) { left: 14px; }
         .hp-rad i:nth-child(4) { left: 21px; }
         .hp-rad i:nth-child(5) { left: 28px; }
+        /* Underfloor heating as everyone draws it: a slab seen from above at an
+           angle, its four panels, and the heat rising off it. */
+        .hp-floor { position: absolute; left: 56px; right: 2px; top: 78px; height: 28px; }
+        .hp-slab { position: absolute; left: -2px; right: -2px; bottom: 2px; height: 15px; }
+        .hp-slab b {
+          position: absolute; inset: 0;
+          background: var(--ac-body-lo, #9aa0a6);
+          clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%);
+        }
+        /* Four panels, not four triangles: the lines run parallel to the tile's
+           own edges, which the angle of view leans over rather than crossing it
+           corner to corner. The clip cuts them at the middle of each edge. */
+        .hp-slab b::before, .hp-slab b::after {
+          content: ""; position: absolute; left: 50%; top: 50%; width: 44px; height: 1px;
+          margin: 0 0 0 -22px; background: rgba(0, 0, 0, 0.3);
+        }
+        .hp-slab b::before { transform: rotate(19.7deg); }
+        .hp-slab b::after { transform: rotate(-19.7deg); }
+        .hp-floor i {
+          position: absolute; bottom: 17px; width: 6px; height: 13px; opacity: 0;
+          background: linear-gradient(180deg, rgba(255, 183, 77, 0), rgba(255, 138, 60, 0.95));
+          clip-path: polygon(63% 0%, 79% 7%, 90% 14%, 93% 21%, 86% 29%, 73% 36%, 56% 43%, 42% 50%, 34% 57%, 35% 64%, 44% 71%, 60% 79%, 76% 86%, 88% 93%, 93% 100%, 67% 100%, 62% 93%, 50% 86%, 34% 79%, 18% 71%, 9% 64%, 8% 57%, 16% 50%, 30% 43%, 47% 36%, 60% 29%, 67% 21%, 64% 14%, 53% 7%, 37% 0%);
+        }
+        .hp-floor i:nth-child(1) { left: 9px; }
+        .hp-floor i:nth-child(2) { left: 19px; height: 16px; }
+        .hp-floor i:nth-child(3) { left: 29px; height: 11px; }
+        .machine.mode-space_heating .hp-floor i { animation: hp-rise 2.6s ease-in-out infinite; animation-delay: var(--anim-offset, 0s); }
+        .machine.mode-space_heating .hp-floor i:nth-child(2) { animation-delay: calc(-0.87s + var(--anim-offset, 0s)); }
+        .machine.mode-space_heating .hp-floor i:nth-child(3) { animation-delay: calc(-1.74s + var(--anim-offset, 0s)); }
+        @keyframes hp-rise {
+          0% { opacity: 0; transform: translateY(5px) scaleY(0.75); }
+          35% { opacity: 0.85; }
+          100% { opacity: 0; transform: translateY(-9px) scaleY(1.1); }
+        }
+        /* The pipe drops onto the near corner of the slab. */
+        .machine.underfloor .hp-pipe.rad { left: 56px; height: 31px; }
+        /* With no tank on the left, what is left stands in the middle. */
+        .machine.no-tank .hp-pipe.rad { left: 37px; }
+        .machine.no-tank .hp-rad { left: 31px; right: 29px; }
+        .machine.no-tank .hp-floor { left: 31px; right: 27px; }
+        .machine.no-tank.underfloor .hp-pipe.rad { left: 31px; }
         .machine.fan .hp-fan { animation: hp-spin 1.1s linear infinite; animation-delay: var(--anim-offset, 0s); }
         @keyframes hp-spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
         .machine.mode-space_heating .hp-lcd,
@@ -3904,12 +4093,154 @@ const ILLUSTRATION_CSS = {
         .machine.mode-space_heating .hp-rad i { background: linear-gradient(180deg, #ffab91, #ff7043); animation: hp-glow 1.6s ease-in-out infinite; animation-delay: var(--anim-offset, 0s); }
         .machine.mode-hot_water .hp-pipe.tank { background: #ef5350; }
         .machine.mode-hot_water .hp-tank i { height: 100%; animation: hp-glow 1.6s ease-in-out infinite; animation-delay: var(--anim-offset, 0s); }
+        .machine.mode-space_heating .hp-slab b { background: linear-gradient(180deg, #ffab91, #ff7043); }
         .machine.mode-cooling .hp-pipe.rad { background: #29b6f6; }
         .machine.mode-cooling .hp-rad i { background: linear-gradient(180deg, #b3e5fc, #29b6f6); }
+        .machine.mode-cooling .hp-slab b { background: linear-gradient(180deg, #b3e5fc, #29b6f6); }
         @keyframes hp-glow { 0%, 100% { filter: brightness(0.9); } 50% { filter: brightness(1.15); } }
         .machine.mode-defrost .hp-frost { animation: hp-frost 2.4s ease-in-out infinite; animation-delay: var(--anim-offset, 0s); }
         .machine.mode-defrost .hp-fins { background: repeating-linear-gradient(180deg, #b3e5fc 0 1px, transparent 1px 4px); }
         @keyframes hp-frost { 0%, 100% { opacity: 0.35; } 50% { opacity: 0.9; } }
+  `,
+  pet_feeder: () => `
+        /* Flat and face on, the way a feeder is always drawn: the lid, the
+           hopper with its heap of kibble, the dark block that serves, and the
+           bowl with a heap of its own. */
+        .pf-lid {
+          position: absolute; left: 14px; right: 14px; top: 3px; height: 7px; border-radius: 2px;
+          background: #343a40;
+        }
+        .pf-body {
+          position: absolute; left: 16px; right: 16px; top: 10px; height: 36px; overflow: hidden;
+          background: linear-gradient(100deg, var(--ac-body-hi, #eceded), var(--ac-body, var(--secondary-background-color, #dcdee0)));
+          clip-path: polygon(0 0, 100% 0, 86% 100%, 14% 100%);
+        }
+        /* A heap, not a pattern: a block of kibble with a bumpy top. */
+        .pf-heap { position: absolute; left: 0; right: 0; bottom: 0; height: var(--pf-fill, 12px); background: #8d6e63; }
+        /* Nothing left to serve: the hopper is drawn empty, which is the whole
+           point of saying so. */
+        .machine.empty .pf-heap { display: none; }
+        .pf-heap::before {
+          content: ""; position: absolute; left: 0; right: 0; top: -4px; height: 9px;
+          background: radial-gradient(circle at 4.5px 4.5px, #8d6e63 4.3px, transparent 4.7px) repeat-x;
+          background-size: 9px 9px;
+        }
+        .pf-unit {
+          position: absolute; left: 23px; right: 23px; top: 45px; height: 23px; border-radius: 3px;
+          background: #343a40;
+        }
+        .pf-unit i {
+          position: absolute; left: 6px; right: 6px; bottom: 4px; height: 8px; border-radius: 2px;
+          background: #1b1e23;
+        }
+        .pf-bowl {
+          position: absolute; left: 25px; right: 25px; bottom: 11px; height: 20px; overflow: hidden;
+          background: linear-gradient(100deg, var(--ac-body-hi, #eceded), var(--ac-body, var(--secondary-background-color, #dcdee0)));
+          clip-path: polygon(0 0, 100% 0, 84% 100%, 16% 100%);
+        }
+        .pf-dish { position: absolute; left: 2px; right: 2px; bottom: 0; height: 12px; background: #8d6e63; }
+        .pf-dish::before {
+          content: ""; position: absolute; left: 0; right: 0; top: -4px; height: 9px;
+          background: radial-gradient(circle at 4.5px 4.5px, #8d6e63 4.3px, transparent 4.7px) repeat-x;
+          background-size: 9px 9px;
+        }
+        .pf-base { position: absolute; left: 19px; right: 19px; bottom: 4px; height: 6px; border-radius: 2px; background: #343a40; }
+        /* The cat, when there is something to be cross about: an empty tank or a
+           jam. Its proportions are the ones every grumpy cat is drawn with: a
+           head that takes half the height and nearly all the width, a small
+           body tucked under it, and the tail curled round the front. */
+        .pf-cat { position: absolute; left: 0; bottom: 3px; width: 42px; height: 44px; }
+        .pf-cat .body {
+          position: absolute; left: 9px; bottom: 0; width: 24px; height: 17px;
+          border-radius: 12px 12px 9px 9px; background: #e7dbcf;
+        }
+        .pf-cat .paw {
+          position: absolute; bottom: 0; width: 8px; height: 5px; border-radius: 4px 4px 3px 3px;
+          background: #f6efe6;
+        }
+        .pf-cat .paw.l { left: 13px; }
+        .pf-cat .paw.r { right: 13px; }
+        .pf-cat .head {
+          position: absolute; left: 1px; bottom: 12px; width: 40px; height: 30px;
+          border-radius: 50% 50% 46% 46% / 46% 46% 54% 54%; background: #efe5da;
+        }
+        /* Small ears, set wide and tilted out, with the darker point a seal
+           point cat carries. */
+        .pf-cat .ear {
+          position: absolute; bottom: 34px; width: 12px; height: 11px; background: #a1887f;
+          clip-path: polygon(50% 0, 100% 100%, 0 100%);
+        }
+        .pf-cat .ear span {
+          position: absolute; left: 50%; bottom: 0; width: 6px; height: 6px; margin-left: -3px;
+          background: #d8b7ad; clip-path: polygon(50% 0, 100% 100%, 0 100%);
+        }
+        .pf-cat .ear.l { left: 0; transform: rotate(-18deg); }
+        .pf-cat .ear.r { right: 0; transform: rotate(18deg); }
+        /* The lids do the sulking: thick, level, and low over the eye. */
+        /* The eye is a low almond, and most of it is lid: on a grumpy cat the
+           open part is a slit, which is what makes the stare. */
+        .pf-cat .eye {
+          position: absolute; top: 10px; width: 11px; height: 7px; border-radius: 1px 1px 5px 5px;
+          background: #bcd6e6; border-top: 4px solid #4a4a46; overflow: hidden;
+        }
+        /* A big pupil, cut off at the top by the lid: on both drawings it takes
+           most of what the eye still shows. */
+        .pf-cat .eye span {
+          position: absolute; left: 50%; top: -1px; width: 6px; height: 6px; margin-left: -3px;
+          border-radius: 50%; background: #3a3f45;
+        }
+        .pf-cat .eye.l { left: 5px; transform: rotate(7deg); }
+        .pf-cat .eye.r { right: 5px; transform: rotate(-7deg); }
+        .pf-cat .muzzle {
+          position: absolute; left: 50%; bottom: 2px; width: 21px; height: 13px; margin-left: -10.5px;
+          border-radius: 50%; background: #faf4ec;
+        }
+        .pf-cat .nose {
+          position: absolute; left: 50%; bottom: 8px; width: 5px; height: 4px; margin-left: -2.5px;
+          background: #c98f8f; clip-path: polygon(50% 100%, 100% 0, 0 0);
+        }
+        .pf-cat .mouth {
+          position: absolute; bottom: 3px; width: 7px; height: 5px;
+          border-top: 1.8px solid #7a675d; border-radius: 50%;
+        }
+        .pf-cat .mouth.l { left: 50%; margin-left: -7px; }
+        .pf-cat .mouth.r { left: 50%; margin-left: 0; }
+        .pf-cat .whisk {
+          position: absolute; bottom: 8px; width: 12px; height: 1px; border-radius: 1px;
+          background: rgba(122, 103, 93, 0.5);
+        }
+        .pf-cat .whisk.l { left: -5px; transform: rotate(9deg); box-shadow: 1px 4px 0 0 rgba(122, 103, 93, 0.4); }
+        .pf-cat .whisk.r { right: -5px; transform: rotate(-9deg); box-shadow: -1px 4px 0 0 rgba(122, 103, 93, 0.4); }
+        /* The tail comes round the front, as a sitting cat lays it. */
+        .pf-cat .tail {
+          position: absolute; left: -3px; bottom: -1px; width: 17px; height: 13px;
+          border: 4.5px solid #d9ccbf; border-top-color: transparent; border-right-color: transparent;
+          border-radius: 0 0 0 12px;
+        }
+        /* The warning sits straight above its head: the two say the same thing,
+           so they are read together. */
+        .pf-alert { position: absolute; left: 12px; top: 38px; width: 18px; height: 16px; }
+        .pf-alert::before {
+          content: ""; position: absolute; inset: 0; background: var(--error-color, #f44336);
+          clip-path: polygon(50% 0, 100% 100%, 0 100%);
+        }
+        .pf-alert i { position: absolute; left: 50%; background: #fff; }
+        .pf-alert .bar { top: 5.5px; width: 2.5px; height: 5px; margin-left: -1.25px; border-radius: 1.25px; }
+        .pf-alert .dot { top: 12px; width: 2.5px; height: 2.5px; margin-left: -1.25px; border-radius: 50%; }
+        .pf-fall { position: absolute; inset: 0; }
+        .pf-fall i {
+          position: absolute; left: 46px; top: 69px; width: 4px; height: 4px; border-radius: 50%;
+          background: #8d6e63; opacity: 0;
+        }
+        .machine.feeding .pf-fall i { animation: pf-fall 0.8s linear infinite; animation-delay: var(--anim-offset, 0s); }
+        .machine.feeding .pf-fall i:nth-child(2) { animation-delay: calc(-0.27s + var(--anim-offset, 0s)); }
+        .machine.feeding .pf-fall i:nth-child(3) { animation-delay: calc(-0.54s + var(--anim-offset, 0s)); }
+        @keyframes pf-fall {
+          0% { opacity: 0; transform: translateY(0); }
+          20% { opacity: 1; }
+          85% { opacity: 1; }
+          100% { opacity: 0; transform: translateY(11px); }
+        }
   `,
   kettle: () => `
         .kt-base { position: absolute; left: 20px; right: 20px; bottom: 6px; height: 7px; border-radius: 3px; background: #3b4048; }
@@ -4430,6 +4761,31 @@ function illustrationHtml(type, ctx) {
         </div>`;
   }
 
+  if (type === "pet_feeder") {
+    return `
+        <div class="machine ${[ctx.feeding ? "feeding" : "", ctx.feederEmpty ? "empty" : ""].filter(Boolean).join(" ")}"${
+          ctx.feederFill === null || ctx.feederFill === undefined ? "" : ` style="--pf-fill:${(4 + (ctx.feederFill / 100) * 22).toFixed(1)}px"`}>
+          <div class="pf-lid"></div>
+          <div class="pf-body"><div class="pf-heap"></div></div>
+          <div class="pf-unit"><i></i></div>
+          <div class="pf-bowl"><div class="pf-dish"></div></div>
+          <div class="pf-base"></div>
+          <div class="pf-fall" aria-hidden="true"><i></i><i></i><i></i></div>${ctx.feederAlert ? `
+          <div class="pf-cat" aria-hidden="true">
+            <u class="ear l"><span></span></u><u class="ear r"><span></span></u>
+            <u class="tail"></u>
+            <b class="body"><span class="paw l"></span><span class="paw r"></span></b>
+            <b class="head">
+              <i class="whisk l"></i><i class="whisk r"></i>
+              <i class="muzzle"></i>
+              <i class="eye l"><span></span></i><i class="eye r"><span></span></i>
+              <i class="nose"></i><i class="mouth l"></i><i class="mouth r"></i>
+            </b>
+          </div>
+          <div class="pf-alert" aria-hidden="true"><i class="bar"></i><i class="dot"></i></div>` : ""}
+        </div>`;
+  }
+
   if (type === "oven") {
     return `
         <div class="machine ${cls}">
@@ -4548,19 +4904,25 @@ function illustrationHtml(type, ctx) {
     const mode = ctx.hpMode || "idle";
     // The fan turns whenever the pump works; it stops to defrost, as the real
     // one does while it melts the ice off its coil.
-    const fan = ["space_heating", "hot_water", "cooling", "running"].includes(mode);
+    const fan = ["space_heating", "hot_water", "cooling", "running"].includes(mode) && !ctx.compressorOff;
     const lcd = ctx.display ? `<div class="hp-lcd">${esc(ctx.display)}</div>` : "";
+    // A pump that heats no domestic hot water has no tank to draw, and what
+    // takes its heat is a radiator or the floor.
+    const tank = ctx.noTank ? "" : `
+          <div class="hp-pipe tank"></div>
+          <div class="hp-tank"><i></i></div>`;
+    const emitter = ctx.underfloor
+      ? `<div class="hp-floor"><i></i><i></i><i></i><div class="hp-slab"><b></b></div></div>`
+      : `<div class="hp-rad"><i></i><i></i><i></i><i></i><i></i></div>`;
     return `
-        <div class="machine ${cls} mode-${mode} ${fan ? "fan" : ""}">
+        <div class="machine ${cls} mode-${mode} ${fan ? "fan" : ""} ${ctx.noTank ? "no-tank" : ""} ${ctx.underfloor ? "underfloor" : ""}">
           <div class="hp-unit">
             <div class="hp-grille"><div class="hp-fan"></div><div class="hp-hub"></div><div class="hp-guard"></div><div class="hp-frost"></div></div>
             <div class="hp-side">${lcd}<div class="hp-fins"></div></div>
           </div>
-          <div class="hp-foot f1"></div><div class="hp-foot f2"></div>
-          <div class="hp-pipe tank"></div>
-          <div class="hp-tank"><i></i></div>
+          <div class="hp-foot f1"></div><div class="hp-foot f2"></div>${tank}
           <div class="hp-pipe rad"></div>
-          <div class="hp-rad"><i></i><i></i><i></i><i></i><i></i></div>
+          ${emitter}
         </div>`;
   }
 
@@ -4757,7 +5119,13 @@ class ApplianceCard extends HTMLElement {
     const asFridge = config && (config.appliance_type === "fridge" || fridgeOnly);
     const hasFridgeSource = fridgeOnly ||
       (asFridge && !!(config.door_entity || config.power_entity));
-    if (!config || (!config.state_entity && !hasFridgeSource)) {
+    // Same for a pet feeder, and for the same reason: most of them report
+    // nothing while they wait. A control to serve with, or a counter of what
+    // was served, is a complete configuration.
+    const feederOnly = config && FEEDER_ONLY_FIELDS.some((f) => config[f]);
+    const asFeeder = config && (config.appliance_type === "pet_feeder" || feederOnly);
+    const hasFeederSource = feederOnly || (asFeeder && !!config.start_entity);
+    if (!config || (!config.state_entity && !hasFridgeSource && !hasFeederSource)) {
       throw new Error("ha-appliance-card: 'state_entity' is required");
     }
     this._config = config;
@@ -4919,9 +5287,27 @@ class ApplianceCard extends HTMLElement {
     }, () => {});
   }
 
-  _call(entityId) {
+  // A control is not always a button. A pet feeder dispenses from a select set
+  // to START (Aqara over Zigbee2MQTT) or from a number written with the number
+  // of portions (Tuya), and a card that only knew how to press buttons would
+  // be tied to one brand, which is the one thing this card refuses to be.
+  _call(entityId, opts) {
     if (!this._hass || !entityId) return;
     const domain = domainOf(entityId);
+    if (domain === "select" || domain === "input_select") {
+      const option = (opts && opts.option) || soleOption(this._hass, entityId);
+      // Without an option there is nothing to pick, and picking the wrong one
+      // would run the wrong programme: open the entity and let the user choose.
+      if (!option) return this._moreInfo(entityId);
+      return this._hass.callService(domain, "select_option", { entity_id: entityId, option });
+    }
+    if (domain === "number" || domain === "input_number") {
+      const value = opts && opts.value;
+      if (value === undefined || value === null || value === "" || !Number.isFinite(Number(value))) {
+        return this._moreInfo(entityId);
+      }
+      return this._hass.callService(domain, "set_value", { entity_id: entityId, value: Number(value) });
+    }
     // Plenty of ovens expose their lamp as a binary_sensor: it reports the
     // light, it does not drive it. Toggling one only writes an error to the
     // log, so the click opens the entity instead, which is the one useful
@@ -4933,6 +5319,10 @@ class ApplianceCard extends HTMLElement {
       this._hass.callService(domain, "toggle", { entity_id: entityId });
     } else if (domain === "script") {
       this._hass.callService("script", "turn_on", { entity_id: entityId });
+    } else if (domain === "automation") {
+      // Toggling an automation would switch it off, silently, which is the
+      // opposite of what a button reading "start" is asking for.
+      this._hass.callService("automation", "trigger", { entity_id: entityId });
     } else {
       this._hass.callService("homeassistant", "toggle", { entity_id: entityId });
     }
@@ -5736,6 +6126,9 @@ class ApplianceCard extends HTMLElement {
     // entity does. A climate or water_heater entity that says nothing about
     // what the pump does still shows its mode, without pretending it runs.
     let hpMode = "";
+    // A pump whose compressor is idle is only pushing water around, so its fan
+    // has no reason to turn.
+    let compressorOff = false;
     if (cap.heatPump) {
       const modeEntity = /^(climate|water_heater)\./.test(cfg.state_entity || "");
       if (cfg.hot_water_entity && isOn(cfg.hot_water_entity)) hpMode = "hot_water";
@@ -5771,7 +6164,37 @@ class ApplianceCard extends HTMLElement {
         if (!ls || ["unknown", "unavailable"].includes(ls.state)) return;
         extraLines.push({ icon, label, value: keepTogether(formatInfoValue(ls, hass, null, cfg, entity)), entity });
       };
-      hpTemp(cfg.temperature_entity, "mdi:thermometer", t(hass, "section_flow_temperature"));
+      // Flow and return share one line, as the water's own journey: two lines
+      // for one pipe is what makes this card long.
+      const ret = cfg.return_temperature_entity ? numericState(hass, cfg.return_temperature_entity) : null;
+      if (flow !== null && ret !== null) {
+        const fu = temperatureUnit(hass, cfg.temperature_entity);
+        const ru = temperatureUnit(hass, cfg.return_temperature_entity);
+        extraLines.push({
+          icon: "mdi:thermometer",
+          label: t(hass, "hp_flow_return"),
+          value: `${keepTogether(tempText(hass, cfg, cfg.temperature_entity, flow, fu))} \u2192 ${keepTogether(tempText(hass, cfg, cfg.return_temperature_entity, ret, ru))}`,
+          entity: cfg.temperature_entity,
+        });
+      } else {
+        hpTemp(cfg.temperature_entity, "mdi:thermometer", t(hass, "section_flow_temperature"));
+        hpTemp(cfg.return_temperature_entity, "mdi:thermometer-low", t(hass, "section_return_temperature"));
+      }
+      // The delta is worked out rather than asked for, like the COP: the two
+      // temperatures are already there, and what the emitter takes out of the
+      // water is the number a heat pump is read on. Taken as a distance, since
+      // the return is the warmer one when the pump cools the house.
+      if (flow !== null && ret !== null) {
+        const d = tempDecimals(cfg);
+        extraLines.push({
+          icon: "mdi:delta",
+          label: t(hass, "hp_delta"),
+          // Never in whole degrees: a heat pump works on a couple of them, and
+          // rounding a delta of 4.4 to 4 hides most of what it says.
+          value: keepTogether(`${fixedTemp(hass, Math.abs(flow - ret), d === 0 ? 1 : d === null ? 1 : d)} ${temperatureUnit(hass, cfg.temperature_entity)}`),
+        });
+      }
+      hpLine(cfg.water_flow_entity, "mdi:water-pump", t(hass, "section_water_flow"));
       hpTemp(cfg.outdoor_temperature_entity, "mdi:sun-thermometer-outline", t(hass, "section_outdoor_temperature"));
       hpLine(cfg.power_entity, cfg.power_icon || "mdi:flash", t(hass, "power"));
       hpLine(cfg.heat_output_entity, "mdi:heat-wave", t(hass, "section_heat_output"));
@@ -5793,6 +6216,129 @@ class ApplianceCard extends HTMLElement {
             value: new Intl.NumberFormat(lang(hass), { minimumFractionDigits: 1, maximumFractionDigits: 1 }).format(cop),
           });
         }
+      }
+
+      // The compressor answers the one question a flow temperature cannot: is
+      // the machine making heat, or only pushing water around. A frequency in
+      // hertz reads as it comes, a contact reads in words, and either way a
+      // compressor at rest stops the fan on the drawing.
+      const compSt = cfg.compressor_entity ? stateObj(hass, cfg.compressor_entity) : null;
+      if (compSt && !["unknown", "unavailable"].includes(compSt.state)) {
+        const hz = numericState(hass, cfg.compressor_entity);
+        const on = hz !== null ? hz > 0 : ["on", "true", "running"].includes(String(compSt.state).toLowerCase());
+        compressorOff = !on;
+        extraLines.push({
+          icon: "mdi:sine-wave",
+          label: t(hass, "section_compressor"),
+          value: keepTogether(hz !== null
+            ? formatInfoValue(compSt, hass, null, cfg, cfg.compressor_entity)
+            : t(hass, on ? "running" : "off_short")),
+          entity: cfg.compressor_entity,
+        });
+      }
+      hpLine(cfg.fan_speed_entity, "mdi:fan", t(hass, "section_fan_speed"));
+    }
+
+    // Pet feeder: read like a fridge, since it is idle almost all the time.
+    // Its state is worked out rather than reported, and what it did today is
+    // the content of the card.
+    let feeding = false;
+    let feederEmpty = false;
+    let feederAlert = false;
+    let feederFill = null;
+    if (cap.petFeeder) {
+      const errSt = cfg.error_entity ? stateObj(hass, cfg.error_entity) : null;
+      const errText = errSt ? String(errSt.state).toLowerCase() : "";
+      // A feeder names its fault in one of three ways: a contact that turns on,
+      // a word, or a code. Tuya reports a number on which zero is the only good
+      // value, so anything else is a fault however it is spelled.
+      const errCode = errText === "" ? NaN : Number(errText);
+      const erred = !!errSt && (Number.isFinite(errCode)
+        ? errCode !== 0
+        : ["on", "true", "error", "problem", "fault"].includes(errText) || /jam|block|stuck|clog|bourrage/.test(errText));
+      // An error that says which error it is, when the feeder names it: an
+      // empty tank is not a fault to look into, it is a bag to go and fetch.
+      const errEmpty = !!errSt && /empty|no.?food|lack|out.?of.?food|vide|leer|vacio|vuoto|tom\b|pust|pr(a|\u00e1)zdn/.test(stripAccents(errText));
+      // The level, as a percentage that fills the hopper or as a contact that
+      // only says "empty". Polarity is the usual one: on means there is a
+      // problem, which for a feeder means nothing left to serve.
+      const levelPct = cfg.level_entity ? numericState(hass, cfg.level_entity) : null;
+      const levelSt = cfg.level_entity ? stateObj(hass, cfg.level_entity) : null;
+      const levelEmpty = levelPct !== null
+        ? levelPct <= (parseFloat(cfg.level_empty_below) || 0)
+        : !!levelSt && ["on", "true", "empty", "low"].includes(String(levelSt.state).toLowerCase());
+      // A feeder that reports anything at all reports a pulse while it serves.
+      feeding = !!st && ["on", "true", "dispensing", "feeding", "running"].includes(String(rawState).toLowerCase());
+      norm = errEmpty || (levelEmpty && !erred) ? "feeder_empty"
+        : erred ? "error"
+        : feeding ? "feeder_feeding" : "feeder_ready";
+      feederEmpty = norm === "feeder_empty";
+      // Empty or jammed, the cat is equally unimpressed.
+      feederAlert = feederEmpty || norm === "error";
+      if (levelSt && !["unknown", "unavailable"].includes(levelSt.state)) {
+        extraLines.push({
+          icon: feederEmpty ? "mdi:alert-circle-outline" : "mdi:silo",
+          label: t(hass, "section_level"),
+          value: keepTogether(levelPct !== null ? formatInfoValue(levelSt, hass, null, cfg, cfg.level_entity) : t(hass, feederEmpty ? "feeder_empty" : "feeder_ready")),
+          entity: cfg.level_entity,
+          warn: feederEmpty,
+        });
+      }
+      color = STATE_COLORS[norm];
+      if (!cfg.state_show_raw) stateLabel = t(hass, norm);
+      // The heap is drawn from a percentage. A tank counted in grams or in
+      // litres only says how full it is once its capacity is known, so without
+      // that capacity the drawing stays at its resting height rather than
+      // reading 729 g as a brimming hopper.
+      const levelMax = parseFloat(cfg.level_max);
+      const levelUnit = cfg.level_entity ? unitOf(hass, cfg.level_entity) : null;
+      if (levelPct !== null) {
+        const filled = levelMax > 0 ? (levelPct / levelMax) * 100
+          : !levelUnit || levelUnit === "%" ? levelPct : null;
+        if (filled !== null) feederFill = Math.max(0, Math.min(100, filled));
+      }
+
+      const portionsSt = cfg.portions_today_entity ? stateObj(hass, cfg.portions_today_entity) : null;
+      const portions = cfg.portions_today_entity ? numericState(hass, cfg.portions_today_entity) : null;
+      const weight = cfg.weight_today_entity ? numericState(hass, cfg.weight_today_entity) : null;
+      const perPortion = cfg.portion_weight_entity ? numericState(hass, cfg.portion_weight_entity) : null;
+      // Grams are worked out when the feeder does not count them itself, from
+      // its own portion weight: how much a portion weighs is a setting, from
+      // one gram to twenty, and never something to assume.
+      const grams = weight !== null ? weight
+        : portions !== null && perPortion !== null ? portions * perPortion : null;
+      const gramUnit = (weight !== null ? unitOf(hass, cfg.weight_today_entity) : unitOf(hass, cfg.portion_weight_entity)) || "g";
+      const gramText = grams === null ? "" : keepTogether(`${Math.round(grams)} ${gramUnit}`);
+      if (portions !== null) {
+        const count = unitOf(hass, cfg.portions_today_entity)
+          ? formatInfoValue(portionsSt, hass, null, cfg, cfg.portions_today_entity)
+          : `${formatInfoValue(portionsSt, hass, null, cfg, cfg.portions_today_entity)} ${t(hass, "portions")}`;
+        extraLines.push({
+          icon: "mdi:bowl-mix",
+          label: t(hass, "section_portions_today"),
+          value: keepTogether(count) + (gramText ? ` \u00b7 ${gramText}` : ""),
+          entity: cfg.portions_today_entity,
+        });
+      } else if (gramText) {
+        extraLines.push({ icon: "mdi:bowl-mix", label: t(hass, "section_weight_today"), value: gramText, entity: cfg.weight_today_entity });
+      }
+
+      const last = feederLastFeed(hass, cfg, portions);
+      if (last !== null) {
+        extraLines.push({ icon: "mdi:clock-outline", label: t(hass, "section_last_feed"), value: keepTogether(feedTime(hass, last)) });
+      }
+
+      const feederLine = (entity, icon, label) => {
+        const ls = entity ? stateObj(hass, entity) : null;
+        if (!ls || ["unknown", "unavailable"].includes(ls.state)) return;
+        extraLines.push({ icon, label, value: keepTogether(formatInfoValue(ls, hass, null, cfg, entity)), entity });
+      };
+      feederLine(cfg.serving_size_entity, "mdi:bowl-mix-outline", t(hass, "section_serving_size"));
+      feederLine(cfg.portion_weight_entity, "mdi:weight-gram", t(hass, "section_portion_weight"));
+      // The schedule is a sentence rather than a number, so it wraps.
+      const schedSt = cfg.schedule_entity ? stateObj(hass, cfg.schedule_entity) : null;
+      if (schedSt && !["unknown", "unavailable"].includes(schedSt.state)) {
+        extraLines.push({ icon: "mdi:calendar-clock", label: t(hass, "section_feeder_schedule"), value: schedSt.state, entity: cfg.schedule_entity, wrap: true });
       }
     }
 
@@ -5853,9 +6399,16 @@ class ApplianceCard extends HTMLElement {
       // The drum of a washer-dryer: water while it washes, clothes tumbling in
       // hot air while it dries.
       drying: !!this._wdDrying,
+      feeding,
+      feederEmpty,
+      feederAlert,
+      feederFill,
       tankTemp,
       boilerMode,
       hpMode,
+      compressorOff,
+      noTank: applianceType === "heat_pump" && !!cfg.no_hot_water,
+      underfloor: applianceType === "heat_pump" && !!cfg.underfloor_heating,
       p3,
     };
 
@@ -5875,7 +6428,9 @@ class ApplianceCard extends HTMLElement {
       { key: "resume", entity: cfg.resume_entity, icon: "mdi:play-pause", label: t(hass, "resume") },
       { key: "stop", entity: cfg.stop_entity, icon: "mdi:stop", label: t(hass, "stop") },
       cap.filter ? { key: "filter_reset", entity: cfg.filter_reset_entity, icon: "mdi:air-filter", label: t(hass, "filter_reset") } : {},
-    ].filter((a) => a.entity && !cap.readOnly);
+    ]
+      .map((a) => (a.key && a.key !== "toggle" ? { ...a, option: cfg[`${a.key}_option`], value: cfg[`${a.key}_value`] } : a))
+      .filter((a) => a.entity && !cap.readOnly);
 
     const spinning = isActiveState(norm);
 
@@ -5891,8 +6446,15 @@ class ApplianceCard extends HTMLElement {
       illustrationCtx.anyZoneOn,
       illustrationCtx.phase,
       illustrationCtx.drying,
+      illustrationCtx.feeding,
+      illustrationCtx.feederEmpty,
+      illustrationCtx.feederAlert,
+      illustrationCtx.feederFill,
       illustrationCtx.boilerMode,
       illustrationCtx.hpMode,
+      illustrationCtx.compressorOff,
+      illustrationCtx.noTank,
+      illustrationCtx.underfloor,
     ].join(",");
     if (animKey !== this._animKey) {
       this._animKey = animKey;
@@ -6067,7 +6629,7 @@ class ApplianceCard extends HTMLElement {
       ? `<div class="actions-row">${actions
           .map(
             (a) =>
-              `<div class="action-btn ${a.on ? "on" : ""}" data-entity="${esc(a.entity)}" title="${esc(a.label)}" aria-label="${esc(a.label)}"><ha-icon icon="${a.icon}"></ha-icon></div>`
+              `<div class="action-btn ${a.on ? "on" : ""}" data-entity="${esc(a.entity)}"${a.option ? ` data-option="${esc(a.option)}"` : ""}${a.value !== undefined && a.value !== null && a.value !== "" ? ` data-value="${esc(a.value)}"` : ""} title="${esc(a.label)}" aria-label="${esc(a.label)}"><ha-icon icon="${a.icon}"></ha-icon></div>`
           )
           .join("")}</div>`
       : "";
@@ -6102,7 +6664,10 @@ class ApplianceCard extends HTMLElement {
     this._root.querySelectorAll(".action-btn, .light-badge").forEach((el) => {
       el.addEventListener("click", (ev) => {
         ev.stopPropagation();
-        this._call(el.getAttribute("data-entity"));
+        this._call(el.getAttribute("data-entity"), {
+          option: el.getAttribute("data-option"),
+          value: el.getAttribute("data-value"),
+        });
       });
     });
     this._root.querySelectorAll(".info-line[data-more]").forEach((el) => {
@@ -6119,6 +6684,9 @@ class ApplianceCard extends HTMLElement {
 // ---------------------------------------------------------------------------
 
 const ACTION_DOMAINS = ["button", "switch", "script", "input_boolean"];
+// A control can also be a list to pick from or a number to write, which is how
+// pet feeders dispense. A power switch cannot, so this list is its own.
+const START_DOMAINS = ACTION_DOMAINS.concat(["automation", "select", "input_select", "number", "input_number"]);
 
 // Which types a section applies to. Anything cycle-shaped keeps the original
 // program/time/door/controls set; a hood or a cooktop would only be cluttered
@@ -6127,6 +6695,8 @@ const CYCLE_TYPES = ["washer", "dryer", "dishwasher", "oven", "microwave", "cook
 // A coffee machine has no door and a cooker's lid has no sensor, so neither
 // belongs in the door section even though both run programs.
 const DOOR_TYPES = ["washer", "dryer", "dishwasher", "oven", "microwave", "fridge"];
+// A pet feeder has no cycle, but it does have one thing to press.
+const START_TYPES = CYCLE_TYPES.concat(["pet_feeder"]);
 
 const SECTIONS = [
   { field: "program_entity", types: CYCLE_TYPES.filter((ty) => ty !== "printer_3d"), labelKey: "section_program", includeDomains: ["select", "sensor", "input_select"], extra: (c, hass) => c._row("program_format", "program_format", {
@@ -6223,7 +6793,11 @@ const SECTIONS = [
       }) },
 
   // Heat pump
+  { field: "return_temperature_entity", types: ["heat_pump"], labelKey: "section_return_temperature", includeDomains: ["sensor", "number", "input_number"] },
   { field: "outdoor_temperature_entity", types: ["heat_pump"], labelKey: "section_outdoor_temperature", includeDomains: ["sensor"] },
+  { field: "water_flow_entity", types: ["heat_pump"], labelKey: "section_water_flow", includeDomains: ["sensor"] },
+  { field: "compressor_entity", types: ["heat_pump"], labelKey: "section_compressor", includeDomains: ["sensor", "binary_sensor", "switch", "input_boolean"] },
+  { field: "fan_speed_entity", types: ["heat_pump"], labelKey: "section_fan_speed", includeDomains: ["sensor", "number"] },
   { field: "heat_output_entity", types: ["heat_pump"], labelKey: "section_heat_output", includeDomains: ["sensor"] },
   { field: "cop_entity", types: ["heat_pump"], labelKey: "section_cop", includeDomains: ["sensor", "input_number"] },
 
@@ -6246,6 +6820,19 @@ const SECTIONS = [
   { field: "chamber_temperature_entity", types: ["printer_3d"], labelKey: "section_chamber_temperature", includeDomains: ["sensor"] },
   { field: "current_layer_entity", types: ["printer_3d"], labelKey: "section_current_layer", includeDomains: ["sensor", "number"] },
   { field: "total_layers_entity", types: ["printer_3d"], labelKey: "section_total_layers", includeDomains: ["sensor", "number"] },
+
+  // Pet feeder. Everything is optional: one feeder counts portions, grams and
+  // its own schedule, the next one counts nothing at all.
+  { field: "portions_today_entity", types: ["pet_feeder"], labelKey: "section_portions_today", includeDomains: ["sensor", "counter", "number", "input_number"] },
+  { field: "weight_today_entity", types: ["pet_feeder"], labelKey: "section_weight_today", includeDomains: ["sensor"] },
+  { field: "serving_size_entity", types: ["pet_feeder"], labelKey: "section_serving_size", includeDomains: ["number", "sensor", "select", "input_number"] },
+  { field: "portion_weight_entity", types: ["pet_feeder"], labelKey: "section_portion_weight", includeDomains: ["number", "sensor", "input_number"] },
+  { field: "schedule_entity", types: ["pet_feeder"], labelKey: "section_feeder_schedule", includeDomains: ["sensor", "input_text"] },
+  { field: "last_feed_entity", types: ["pet_feeder"], labelKey: "section_last_feed", includeDomains: ["sensor", "input_datetime"] },
+  { field: "level_entity", types: ["pet_feeder"], labelKey: "section_level", includeDomains: ["sensor", "binary_sensor", "number", "input_number"], extra: (c) =>
+      c._row("level_empty_below", "level_empty_below", { placeholder: "0" })
+      + c._row("level_max", "level_max", { placeholder: "100" }) },
+  { field: "error_entity", types: ["pet_feeder"], labelKey: "section_error", includeDomains: ["binary_sensor", "sensor"] },
 
   // Cooker
   { field: "speed_entity", types: ["cooker"], labelKey: "section_speed", includeDomains: ["sensor", "number", "select", "input_number", "input_select"] },
@@ -6271,7 +6858,20 @@ const SECTIONS = [
 
   { field: "alerts_entity", types: APPLIANCE_TYPES, labelKey: "section_alerts", includeDomains: ["sensor", "binary_sensor"] },
   { field: "connectivity_entity", types: APPLIANCE_TYPES, labelKey: "section_connectivity", includeDomains: ["binary_sensor", "sensor"], extra: (c, hass) => c._row("connectivity_connected_state", "connectivity_connected_state", { placeholder: "on" }) },
-  { field: "start_entity", types: CYCLE_TYPES, labelKey: "section_start", includeDomains: ACTION_DOMAINS },
+  // The start control is the one an appliance always has in some form, and it
+  // is not always a button: a feeder dispenses from a select or from a number.
+  { field: "start_entity", types: START_TYPES, labelKey: "section_start", includeDomains: START_DOMAINS, extra: (c, hass) => {
+      const d = domainOf(c._config.start_entity);
+      if (d === "select" || d === "input_select") {
+        const st = c._hass ? stateObj(c._hass, c._config.start_entity) : null;
+        const options = (((st && st.attributes) || {}).options || []).filter((o) => String(o).trim() !== "");
+        // One option and one only: the card picks it, so there is nothing to ask.
+        return options.length > 1
+          ? c._row("start_option", "start_option", { type: "select", options: options.map((o) => ({ value: o, label: o })) })
+          : "";
+      }
+      return d === "number" || d === "input_number" ? c._row("start_value", "start_value", {}) : "";
+    } },
   { field: "pause_entity", types: CYCLE_TYPES, labelKey: "section_pause", includeDomains: ACTION_DOMAINS },
   { field: "resume_entity", types: CYCLE_TYPES, labelKey: "section_resume", includeDomains: ACTION_DOMAINS },
   { field: "stop_entity", types: CYCLE_TYPES, labelKey: "section_stop", includeDomains: ACTION_DOMAINS },
@@ -6769,9 +7369,12 @@ class ApplianceCardEditor extends HTMLElement {
             { value: "boiler", label: t(hass, "type_boiler") },
             { value: "heat_pump", label: t(hass, "type_heat_pump") },
             { value: "printer_3d", label: t(hass, "type_printer_3d") },
+            { value: "pet_feeder", label: t(hass, "type_pet_feeder") },
           ],
         })}
         ${this._type === "washer" ? this._row("washer_dryer", "washer_dryer", { type: "checkbox" }) : ""}
+        ${this._type === "heat_pump" ? this._row("no_hot_water", "no_hot_water", { type: "checkbox" }) : ""}
+        ${this._type === "heat_pump" ? this._row("underfloor_heating", "underfloor_heating", { type: "checkbox" }) : ""}
         ${this._type === "fridge" ? this._row("section_fridge_layout", "fridge_layout", {
           type: "select",
           options: [
