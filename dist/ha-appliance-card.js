@@ -1,4 +1,4 @@
-const CARD_VERSION = "2.7.0";
+const CARD_VERSION = "2.8.0";
 
 console.info(
   "%c HA-APPLIANCE-CARD %c v" + CARD_VERSION + " ",
@@ -58,7 +58,7 @@ const T = {
     info_value_map: "Value mapping (optional)",
     info_value_map_placeholder: "One per line, e.g.\n0: Ready\n1: Washing",
     info_hide_unit: "Hide unit",
-    state_map_placeholder: "One per line, e.g.\nReady: idle\nAborting: running",
+    state_map_placeholder: "One per line, e.g.\nReady: idle\nAborting: running\n*: running",
     info_drag: "Drag to reorder",
     section_start: "Start button", section_pause: "Pause button",
     section_resume: "Resume button", section_stop: "Stop / reset button",
@@ -127,6 +127,7 @@ const T = {
     p3_attention: "Needs attention", p3_leveling: "Bed levelling", p3_filament: "Changing filament",
     p3_cooling: "Cooling", p3_calibrating: "Calibrating", p3_homing: "Homing",
     section_printed_part: "Printed part", part_cube: "Cube", part_pyramid: "Pyramid", part_duck: "Rubber duck",
+    washer_dryer: "Washer-dryer (washes and dries)", wd_drying: "Drying", section_cycle_phase: "Cycle phase",
   },
   fr: {
     idle: "En veille", running: "En cours", paused: "En pause", done: "Termin\u00e9",
@@ -175,7 +176,7 @@ const T = {
     info_value_map: "Correspondance des valeurs (optionnel)",
     info_value_map_placeholder: "Une par ligne, ex.\n0: Pr\u00eat\n1: Lavage",
     info_hide_unit: "Masquer l'unit\u00e9",
-    state_map_placeholder: "Une par ligne, ex.\nReady: idle\nAborting: running",
+    state_map_placeholder: "Une par ligne, ex.\nReady: idle\nAborting: running\n*: running",
     info_drag: "Glisser pour r\u00e9organiser",
     section_start: "Bouton D\u00e9marrer", section_pause: "Bouton Pause",
     section_resume: "Bouton Reprendre", section_stop: "Bouton Stop / Reset",
@@ -244,6 +245,7 @@ const T = {
     p3_attention: "Intervention requise", p3_leveling: "Nivellement du plateau", p3_filament: "Changement de filament",
     p3_cooling: "Refroidissement", p3_calibrating: "Calibrage", p3_homing: "Mise \u00e0 l'origine",
     section_printed_part: "Pi\u00e8ce imprim\u00e9e", part_cube: "Cube", part_pyramid: "Pyramide", part_duck: "Canard en plastique",
+    washer_dryer: "Lavante-s\u00e9chante (lave et s\u00e8che)", wd_drying: "S\u00e9chage", section_cycle_phase: "Phase du cycle",
   },
   ru: {
     idle: "\u041e\u0436\u0438\u0434\u0430\u043d\u0438\u0435", running: "\u0420\u0430\u0431\u043e\u0442\u0430\u0435\u0442", paused: "\u041d\u0430 \u043f\u0430\u0443\u0437\u0435", done: "\u0417\u0430\u0432\u0435\u0440\u0448\u0435\u043d\u043e",
@@ -292,7 +294,7 @@ const T = {
     info_value_map: "\u0421\u043e\u043f\u043e\u0441\u0442\u0430\u0432\u043b\u0435\u043d\u0438\u0435 \u0437\u043d\u0430\u0447\u0435\u043d\u0438\u0439 (\u043d\u0435\u043e\u0431\u044f\u0437\u0430\u0442\u0435\u043b\u044c\u043d\u043e)",
     info_value_map_placeholder: "\u041f\u043e \u043e\u0434\u043d\u043e\u043c\u0443 \u0432 \u0441\u0442\u0440\u043e\u043a\u0435, \u043d\u0430\u043f\u0440.\n0: \u0413\u043e\u0442\u043e\u0432\u043e\n1: \u0421\u0442\u0438\u0440\u043a\u0430",
     info_hide_unit: "\u0421\u043a\u0440\u044b\u0442\u044c \u0435\u0434\u0438\u043d\u0438\u0446\u0443 \u0438\u0437\u043c\u0435\u0440\u0435\u043d\u0438\u044f",
-    state_map_placeholder: "\u041f\u043e \u043e\u0434\u043d\u043e\u043c\u0443 \u0432 \u0441\u0442\u0440\u043e\u043a\u0435, \u043d\u0430\u043f\u0440.\nReady: idle\nAborting: running",
+    state_map_placeholder: "\u041f\u043e \u043e\u0434\u043d\u043e\u043c\u0443 \u0432 \u0441\u0442\u0440\u043e\u043a\u0435, \u043d\u0430\u043f\u0440.\nReady: idle\nAborting: running\n*: running",
     info_drag: "\u041f\u0435\u0440\u0435\u0442\u0430\u0449\u0438\u0442\u0435 \u0434\u043b\u044f \u0438\u0437\u043c\u0435\u043d\u0435\u043d\u0438\u044f \u043f\u043e\u0440\u044f\u0434\u043a\u0430",
     section_start: "\u041a\u043d\u043e\u043f\u043a\u0430 \u0421\u0442\u0430\u0440\u0442", section_pause: "\u041a\u043d\u043e\u043f\u043a\u0430 \u041f\u0430\u0443\u0437\u0430",
     section_resume: "\u041a\u043d\u043e\u043f\u043a\u0430 \u041f\u0440\u043e\u0434\u043e\u043b\u0436\u0438\u0442\u044c", section_stop: "\u041a\u043d\u043e\u043f\u043a\u0430 \u0421\u0442\u043e\u043f / \u0421\u0431\u0440\u043e\u0441",
@@ -361,6 +363,7 @@ const T = {
     p3_attention: "\u0422\u0440\u0435\u0431\u0443\u0435\u0442\u0441\u044f \u0432\u043d\u0438\u043c\u0430\u043d\u0438\u0435", p3_leveling: "\u0412\u044b\u0440\u0430\u0432\u043d\u0438\u0432\u0430\u043d\u0438\u0435 \u0441\u0442\u043e\u043b\u0430", p3_filament: "\u0421\u043c\u0435\u043d\u0430 \u0444\u0438\u043b\u0430\u043c\u0435\u043d\u0442\u0430",
     p3_cooling: "\u041e\u0445\u043b\u0430\u0436\u0434\u0435\u043d\u0438\u0435", p3_calibrating: "\u041a\u0430\u043b\u0438\u0431\u0440\u043e\u0432\u043a\u0430", p3_homing: "\u041f\u0430\u0440\u043a\u043e\u0432\u043a\u0430 \u043e\u0441\u0435\u0439",
     section_printed_part: "\u041f\u0435\u0447\u0430\u0442\u0430\u0435\u043c\u0430\u044f \u043c\u043e\u0434\u0435\u043b\u044c", part_cube: "\u041a\u0443\u0431", part_pyramid: "\u041f\u0438\u0440\u0430\u043c\u0438\u0434\u0430", part_duck: "\u0420\u0435\u0437\u0438\u043d\u043e\u0432\u0430\u044f \u0443\u0442\u043e\u0447\u043a\u0430",
+    washer_dryer: "\u0421\u0442\u0438\u0440\u0430\u043b\u044c\u043d\u043e-\u0441\u0443\u0448\u0438\u043b\u044c\u043d\u0430\u044f \u043c\u0430\u0448\u0438\u043d\u0430 (\u0441\u0442\u0438\u0440\u0430\u0435\u0442 \u0438 \u0441\u0443\u0448\u0438\u0442)", wd_drying: "\u0421\u0443\u0448\u043a\u0430", section_cycle_phase: "\u0424\u0430\u0437\u0430 \u0446\u0438\u043a\u043b\u0430",
   },
   de: {
     idle: "Inaktiv", running: "L\u00e4uft", paused: "Pausiert", done: "Fertig",
@@ -409,7 +412,7 @@ const T = {
     info_value_map: "Wertzuordnung (optional)",
     info_value_map_placeholder: "Eine pro Zeile, z. B.\n0: Bereit\n1: Waschen",
     info_hide_unit: "Einheit ausblenden",
-    state_map_placeholder: "Eine pro Zeile, z. B.\nReady: idle\nAborting: running",
+    state_map_placeholder: "Eine pro Zeile, z. B.\nReady: idle\nAborting: running\n*: running",
     info_drag: "Zum Neuordnen ziehen",
     section_start: "Start-Taste", section_pause: "Pause-Taste",
     section_resume: "Fortsetzen-Taste", section_stop: "Stopp/Reset-Taste",
@@ -478,6 +481,7 @@ const T = {
     p3_attention: "Eingriff n\u00f6tig", p3_leveling: "Bettnivellierung", p3_filament: "Filamentwechsel",
     p3_cooling: "Abk\u00fchlen", p3_calibrating: "Kalibrierung", p3_homing: "Referenzfahrt",
     section_printed_part: "Druckobjekt", part_cube: "W\u00fcrfel", part_pyramid: "Pyramide", part_duck: "Quietscheentchen",
+    washer_dryer: "Waschtrockner (w\u00e4scht und trocknet)", wd_drying: "Trocknen", section_cycle_phase: "Programmphase",
   },
   es: {
     idle: "Inactivo", running: "En marcha", paused: "En pausa", done: "Finalizado",
@@ -526,7 +530,7 @@ const T = {
     info_value_map: "Correspondencia de valores (opcional)",
     info_value_map_placeholder: "Una por l\u00ednea, p. ej.\n0: Listo\n1: Lavado",
     info_hide_unit: "Ocultar la unidad",
-    state_map_placeholder: "Una por l\u00ednea, p. ej.\nReady: idle\nAborting: running",
+    state_map_placeholder: "Una por l\u00ednea, p. ej.\nReady: idle\nAborting: running\n*: running",
     info_drag: "Arrastrar para reordenar",
     section_start: "Bot\u00f3n Iniciar", section_pause: "Bot\u00f3n Pausa",
     section_resume: "Bot\u00f3n Reanudar", section_stop: "Bot\u00f3n Parar/Reiniciar",
@@ -595,6 +599,7 @@ const T = {
     p3_attention: "Requiere atenci\u00f3n", p3_leveling: "Nivelando la cama", p3_filament: "Cambiando el filamento",
     p3_cooling: "Enfriando", p3_calibrating: "Calibrando", p3_homing: "Buscando el origen",
     section_printed_part: "Pieza impresa", part_cube: "Cubo", part_pyramid: "Pir\u00e1mide", part_duck: "Patito de goma",
+    washer_dryer: "Lavasecadora (lava y seca)", wd_drying: "Secado", section_cycle_phase: "Fase del ciclo",
   },
   it: {
     idle: "Inattivo", running: "In funzione", paused: "In pausa", done: "Terminato",
@@ -643,7 +648,7 @@ const T = {
     info_value_map: "Corrispondenza dei valori (opzionale)",
     info_value_map_placeholder: "Una per riga, es.\n0: Pronto\n1: Lavaggio",
     info_hide_unit: "Nascondi l'unit\u00e0",
-    state_map_placeholder: "Una per riga, es.\nReady: idle\nAborting: running",
+    state_map_placeholder: "Una per riga, es.\nReady: idle\nAborting: running\n*: running",
     info_drag: "Trascina per riordinare",
     section_start: "Pulsante Avvia", section_pause: "Pulsante Pausa",
     section_resume: "Pulsante Riprendi", section_stop: "Pulsante Stop/Reset",
@@ -712,6 +717,7 @@ const T = {
     p3_attention: "Richiede attenzione", p3_leveling: "Livellamento del piatto", p3_filament: "Cambio filamento",
     p3_cooling: "Raffreddamento", p3_calibrating: "Calibrazione", p3_homing: "Azzeramento assi",
     section_printed_part: "Oggetto stampato", part_cube: "Cubo", part_pyramid: "Piramide", part_duck: "Paperella di gomma",
+    washer_dryer: "Lavasciuga (lava e asciuga)", wd_drying: "Asciugatura", section_cycle_phase: "Fase del ciclo",
   },
   nl: {
     idle: "Inactief", running: "Actief", paused: "Gepauzeerd", done: "Klaar",
@@ -760,7 +766,7 @@ const T = {
     info_value_map: "Waardetoewijzing (optioneel)",
     info_value_map_placeholder: "E\u00e9n per regel, bijv.\n0: Gereed\n1: Wassen",
     info_hide_unit: "Eenheid verbergen",
-    state_map_placeholder: "E\u00e9n per regel, bijv.\nReady: idle\nAborting: running",
+    state_map_placeholder: "E\u00e9n per regel, bijv.\nReady: idle\nAborting: running\n*: running",
     info_drag: "Sleep om te herordenen",
     section_start: "Startknop", section_pause: "Pauzeknop",
     section_resume: "Hervattenknop", section_stop: "Stop/resetknop",
@@ -829,6 +835,7 @@ const T = {
     p3_attention: "Aandacht vereist", p3_leveling: "Bed nivelleren", p3_filament: "Filament wisselen",
     p3_cooling: "Afkoelen", p3_calibrating: "Kalibreren", p3_homing: "Homen",
     section_printed_part: "Geprint object", part_cube: "Kubus", part_pyramid: "Piramide", part_duck: "Badeendje",
+    washer_dryer: "Was-droogcombinatie (wast en droogt)", wd_drying: "Drogen", section_cycle_phase: "Programmafase",
   },
   pt: {
     idle: "Inativo", running: "Em funcionamento", paused: "Em pausa", done: "Conclu\u00eddo",
@@ -877,7 +884,7 @@ const T = {
     info_value_map: "Correspond\u00eancia de valores (opcional)",
     info_value_map_placeholder: "Uma por linha, ex.\n0: Pronto\n1: Lavagem",
     info_hide_unit: "Ocultar a unidade",
-    state_map_placeholder: "Uma por linha, ex.\nReady: idle\nAborting: running",
+    state_map_placeholder: "Uma por linha, ex.\nReady: idle\nAborting: running\n*: running",
     info_drag: "Arraste para reordenar",
     section_start: "Bot\u00e3o Iniciar", section_pause: "Bot\u00e3o Pausa",
     section_resume: "Bot\u00e3o Retomar", section_stop: "Bot\u00e3o Parar/Reiniciar",
@@ -946,6 +953,7 @@ const T = {
     p3_attention: "Requer aten\u00e7\u00e3o", p3_leveling: "Nivelando a mesa", p3_filament: "Trocando o filamento",
     p3_cooling: "Resfriando", p3_calibrating: "Calibrando", p3_homing: "Retornando \u00e0 origem",
     section_printed_part: "Pe\u00e7a impressa", part_cube: "Cubo", part_pyramid: "Pir\u00e2mide", part_duck: "Patinho de borracha",
+    washer_dryer: "M\u00e1quina de lavar e secar (lava e seca)", wd_drying: "Secagem", section_cycle_phase: "Fase do ciclo",
   },
   sv: {
     idle: "Inaktiv", running: "Ig\u00e5ng", paused: "Pausad", done: "Klar",
@@ -994,7 +1002,7 @@ const T = {
     info_value_map: "V\u00e4rdemappning (valfritt)",
     info_value_map_placeholder: "En per rad, t.ex.\n0: Klar\n1: Tv\u00e4tt",
     info_hide_unit: "D\u00f6lj enhet",
-    state_map_placeholder: "En per rad, t.ex.\nReady: idle\nAborting: running",
+    state_map_placeholder: "En per rad, t.ex.\nReady: idle\nAborting: running\n*: running",
     info_drag: "Dra f\u00f6r att \u00e4ndra ordning",
     section_start: "Startknapp", section_pause: "Pausknapp",
     section_resume: "\u00c5terupptaknapp", section_stop: "Stopp-/\u00e5terst\u00e4llningsknapp",
@@ -1063,6 +1071,7 @@ const T = {
     p3_attention: "Kr\u00e4ver \u00e5tg\u00e4rd", p3_leveling: "Nivellerar b\u00e4dden", p3_filament: "Byter filament",
     p3_cooling: "Kyler", p3_calibrating: "Kalibrerar", p3_homing: "Nollst\u00e4ller axlar",
     section_printed_part: "Utskrivet objekt", part_cube: "Kub", part_pyramid: "Pyramid", part_duck: "Badanka",
+    washer_dryer: "Kombinerad tv\u00e4tt/tork (tv\u00e4ttar och torkar)", wd_drying: "Torkning", section_cycle_phase: "Programfas",
   },
   no: {
     idle: "Inaktiv", running: "I gang", paused: "Pauset", done: "Ferdig",
@@ -1111,7 +1120,7 @@ const T = {
     info_value_map: "Verditilordning (valgfritt)",
     info_value_map_placeholder: "\u00c9n per linje, f.eks.\n0: Klar\n1: Vask",
     info_hide_unit: "Skjul enhet",
-    state_map_placeholder: "\u00c9n per linje, f.eks.\nReady: idle\nAborting: running",
+    state_map_placeholder: "\u00c9n per linje, f.eks.\nReady: idle\nAborting: running\n*: running",
     info_drag: "Dra for \u00e5 endre rekkef\u00f8lge",
     section_start: "Startknapp", section_pause: "Pauseknapp",
     section_resume: "Gjenopptaknapp", section_stop: "Stopp-/tilbakestillingsknapp",
@@ -1180,6 +1189,7 @@ const T = {
     p3_attention: "Krever tilsyn", p3_leveling: "Nivellerer sengen", p3_filament: "Bytter filament",
     p3_cooling: "Kj\u00f8ler", p3_calibrating: "Kalibrerer", p3_homing: "Nullstiller akser",
     section_printed_part: "Utskrevet objekt", part_cube: "Kube", part_pyramid: "Pyramide", part_duck: "Badeand",
+    washer_dryer: "Kombinert vaske-/t\u00f8rkemaskin (vasker og t\u00f8rker)", wd_drying: "T\u00f8rking", section_cycle_phase: "Programfase",
   },
   da: {
     idle: "Inaktiv", running: "I gang", paused: "Sat p\u00e5 pause", done: "F\u00e6rdig",
@@ -1228,7 +1238,7 @@ const T = {
     info_value_map: "V\u00e6rditilknytning (valgfrit)",
     info_value_map_placeholder: "\u00c9n pr. linje, f.eks.\n0: Klar\n1: Vask",
     info_hide_unit: "Skjul enhed",
-    state_map_placeholder: "\u00c9n pr. linje, f.eks.\nReady: idle\nAborting: running",
+    state_map_placeholder: "\u00c9n pr. linje, f.eks.\nReady: idle\nAborting: running\n*: running",
     info_drag: "Tr\u00e6k for at \u00e6ndre r\u00e6kkef\u00f8lge",
     section_start: "Startknap", section_pause: "Pauseknap",
     section_resume: "Genoptagknap", section_stop: "Stop-/nulstillingsknap",
@@ -1297,6 +1307,7 @@ const T = {
     p3_attention: "Kr\u00e6ver handling", p3_leveling: "Nivellerer sengen", p3_filament: "Skifter filament",
     p3_cooling: "K\u00f8ler", p3_calibrating: "Kalibrerer", p3_homing: "Nulstiller akser",
     section_printed_part: "Printet emne", part_cube: "Terning", part_pyramid: "Pyramide", part_duck: "Badeand",
+    washer_dryer: "Vaske-t\u00f8rremaskine (vasker og t\u00f8rrer)", wd_drying: "T\u00f8rring", section_cycle_phase: "Programfase",
   },
   pl: {
     idle: "Bezczynny", running: "W trakcie", paused: "Wstrzymany", done: "Zako\u0144czony",
@@ -1345,7 +1356,7 @@ const T = {
     info_value_map: "Mapowanie warto\u015bci (opcjonalnie)",
     info_value_map_placeholder: "Jedno na lini\u0119, np.\n0: Gotowe\n1: Pranie",
     info_hide_unit: "Ukryj jednostk\u0119",
-    state_map_placeholder: "Jedno na lini\u0119, np.\nReady: idle\nAborting: running",
+    state_map_placeholder: "Jedno na lini\u0119, np.\nReady: idle\nAborting: running\n*: running",
     info_drag: "Przeci\u0105gnij, aby zmieni\u0107 kolejno\u015b\u0107",
     section_start: "Przycisk Start", section_pause: "Przycisk Pauza",
     section_resume: "Przycisk Wzn\u00f3w", section_stop: "Przycisk Stop/Reset",
@@ -1414,6 +1425,7 @@ const T = {
     p3_attention: "Wymaga uwagi", p3_leveling: "Poziomowanie sto\u0142u", p3_filament: "Zmiana filamentu",
     p3_cooling: "Ch\u0142odzenie", p3_calibrating: "Kalibracja", p3_homing: "Bazowanie",
     section_printed_part: "Drukowany obiekt", part_cube: "Sze\u015bcian", part_pyramid: "Piramida", part_duck: "Gumowa kaczuszka",
+    washer_dryer: "Pralko-suszarka (pierze i suszy)", wd_drying: "Suszenie", section_cycle_phase: "Faza programu",
   },
   zh: {
     idle: "\u7a7a\u95f2", running: "\u8fd0\u884c\u4e2d", paused: "\u6682\u505c", done: "\u5b8c\u6210",
@@ -1462,7 +1474,7 @@ const T = {
     info_value_map: "\u503c\u6620\u5c04 (\u53ef\u9009)",
     info_value_map_placeholder: "\u6bcf\u4e2a\u503c\u4e00\u884c, \u4f8b\u5982\n0: \u5f85\u673a\n1: \u6d17\u6da4\u4e2d",
     info_hide_unit: "\u9690\u85cf\u5355\u4f4d",
-    state_map_placeholder: "\u6bcf\u4e2a\u503c\u4e00\u884c, \u4f8b\u5982\nReady: idle\nAborting: running",
+    state_map_placeholder: "\u6bcf\u4e2a\u503c\u4e00\u884c, \u4f8b\u5982\nReady: idle\nAborting: running\n*: running",
     info_drag: "\u62d6\u62fd\u6392\u5e8f",
     section_start: "\u5f00\u59cb\u6309\u952e", section_pause: "\u6682\u505c\u6309\u952e",
     section_resume: "\u7ee7\u7eed\u6309\u952e", section_stop: "\u505c\u6b62/\u91cd\u7f6e\u6309\u952e",
@@ -1531,6 +1543,7 @@ const T = {
     p3_attention: "\u9700\u8981\u5904\u7406", p3_leveling: "\u8c03\u5e73\u4e2d", p3_filament: "\u66f4\u6362\u8017\u6750",
     p3_cooling: "\u51b7\u5374\u4e2d", p3_calibrating: "\u6821\u51c6\u4e2d", p3_homing: "\u5f52\u4f4d\u4e2d",
     section_printed_part: "\u6253\u5370\u6a21\u578b", part_cube: "\u7acb\u65b9\u4f53", part_pyramid: "\u91d1\u5b57\u5854", part_duck: "\u6a61\u76ae\u9e2d",
+    washer_dryer: "\u6d17\u70d8\u4e00\u4f53\u673a\uff08\u6d17\u6da4\u5e76\u70d8\u5e72\uff09", wd_drying: "\u70d8\u5e72\u4e2d", section_cycle_phase: "\u7a0b\u5e8f\u9636\u6bb5",
   },
   cs: {
     idle: "Ne\u010dinn\u00e9", running: "V provozu", paused: "Pozastaveno", done: "Dokon\u010deno",
@@ -1579,7 +1592,7 @@ const T = {
     info_value_map: "Mapov\u00e1n\u00ed hodnot (voliteln\u00e9)",
     info_value_map_placeholder: "Jedna hodnota na \u0159\u00e1dek, nap\u0159.\n0: P\u0159ipraveno\n1: Pran\u00ed",
     info_hide_unit: "Skr\u00fdt jednotku",
-    state_map_placeholder: "Jedna hodnota na \u0159\u00e1dek, nap\u0159.\nReady: idle\nAborting: running",
+    state_map_placeholder: "Jedna hodnota na \u0159\u00e1dek, nap\u0159.\nReady: idle\nAborting: running\n*: running",
     info_drag: "P\u0159eta\u017een\u00edm zm\u011b\u0148te po\u0159ad\u00ed",
     section_start: "Tla\u010d\u00edtko Spustit", section_pause: "Tla\u010d\u00edtko Pozastavit",
     section_resume: "Tla\u010d\u00edtko Pokra\u010dovat", section_stop: "Tla\u010d\u00edtko Zastavit / resetovat",
@@ -1648,6 +1661,7 @@ const T = {
     p3_attention: "Vy\u017eaduje pozornost", p3_leveling: "Vyrovn\u00e1v\u00e1n\u00ed podlo\u017eky", p3_filament: "V\u00fdm\u011bna filamentu",
     p3_cooling: "Chlazen\u00ed", p3_calibrating: "Kalibrace", p3_homing: "Naj\u00ed\u017ed\u011bn\u00ed do v\u00fdchoz\u00ed polohy",
     section_printed_part: "Ti\u0161t\u011bn\u00fd objekt", part_cube: "Krychle", part_pyramid: "Pyramida", part_duck: "Gumov\u00e1 kachni\u010dka",
+    washer_dryer: "Pra\u010dka se su\u0161i\u010dkou (pere a su\u0161\u00ed)", wd_drying: "Su\u0161en\u00ed", section_cycle_phase: "F\u00e1ze programu",
   },
 };
 
@@ -1781,6 +1795,11 @@ const STATE_KEYWORD_PATTERNS = Object.fromEntries(
 // other part of the card knows: no colour, no label, no animation. Rejecting it
 // here covers all three at once, rather than adding a fallback at every read.
 const MAPPABLE_STATES = Object.keys(STATE_KEYWORDS).concat("unknown");
+
+// Two more targets a state_map may name, for a washer-dryer whose state is the
+// step: "Drying" is a machine that is running, and which step it is at is read
+// from the same entry by laundryPhaseOf.
+const PHASE_STATE_TARGETS = { washing: "running", drying: "running" };
 
 // What a combi boiler is doing. Nefit and Bosch display -H, =H and 0H on the
 // front panel and report CH, HW and No in their status. InComfort (Intergas)
@@ -1965,18 +1984,27 @@ function printerFileName(raw) {
   return base.replace(/\.(gcode|gco|g|bgcode|3mf|ufp|ctb|goo|pwmx)$/i, "") || base;
 }
 
+// One state_map target, checked against the categories a map may name.
+function mappedState(target) {
+  if (MAPPABLE_STATES.includes(target)) return target;
+  return PHASE_STATE_TARGETS[target] || "unknown";
+}
+
 function normalizeState(raw, stateMap) {
   if (raw === undefined || raw === null) return "unknown";
   const s = String(raw).trim();
   if (["unknown", "unavailable", "none", ""].includes(s.toLowerCase())) return "unknown";
-  if (stateMap && Object.prototype.hasOwnProperty.call(stateMap, s)) {
-    const target = stateMap[s];
-    return MAPPABLE_STATES.includes(target) ? target : "unknown";
-  }
+  if (stateMap && Object.prototype.hasOwnProperty.call(stateMap, s)) return mappedState(stateMap[s]);
   const flat = stripAccents(s);
   for (const norm of Object.keys(STATE_KEYWORD_PATTERNS)) {
     if (STATE_KEYWORD_PATTERNS[norm].some((re) => re.test(flat))) return norm;
   }
+  // A state_map may end on a catch-all. Machines that run one long programme
+  // in many named steps, washer-dryers above all, report dozens of values that
+  // all mean "running": naming the handful that do not, and sending the rest
+  // to one category, is the short way round. It comes last on purpose, so the
+  // states the card already knows keep their own meaning.
+  if (stateMap && Object.prototype.hasOwnProperty.call(stateMap, "*")) return mappedState(stateMap["*"]);
   return "unknown";
 }
 
@@ -2179,6 +2207,53 @@ function normalizeDishwasherPhase(raw, phaseMap) {
   const key = stripAccents(String(candidate).trim()).toLowerCase().replace(/[\\_-]+/g, " ").replace(/\\s+/g, " ");
   const phase = DISHWASHER_PHASE_ALIASES[key] || key.replace(/ /g, "_");
   return DISHWASHER_PHASES.has(phase) ? phase : "";
+}
+
+// A washer-dryer runs one cycle that washes and then dries in the same drum,
+// and the two steps look nothing alike: water, then hot air and no water at
+// all. Which one is running comes from the state itself on the integrations
+// that say it there, and from a phase entity on those that leave the state at
+// "Running" and name the step elsewhere. Either way a state_map or a phase_map
+// entry can name the step by hand, which is what an unknown vendor value needs.
+const LAUNDRY_PHASES = ["drying", "washing"];
+// Drying is tried first: a value naming both steps is a programme name, and
+// the one it is actually doing is the one it dries with. The washing words
+// carry the whole wash, rinse and spin, since all three put water in the drum.
+const LAUNDRY_PHASE_PATTERNS = {
+  drying: /\b(dry|tumble|sech|trockn|secad|secag|seca\b|asciug|droog|drogen|tork|torr|susz|susen)|t\u00f8rk|t\u00f8rr|\u0441\u0443\u0448|\u70d8\u5e72/i,
+  washing: /\b(wash|rins|spin|soak|steam|lav|wasch|wass|spul|schleuder|essorag|centrifug|risciacqu|tvatt|skolj|vask|prani|plukan|wirowan|machan|odstred)|sk\u00f6lj|\u0441\u0442\u0438\u0440|\u043f\u043e\u043b\u043e\u0441\u043a|\u043e\u0442\u0436\u0438\u043c|\u6d17|\u8131\u6c34/i,
+};
+
+// The step a washer-dryer is at, from a raw value and the map that goes with
+// it. The map wins, and it may name the step outright ("drying") as well as
+// translate a vendor code into a word: both land on the same patterns, since
+// a step names itself with the very words they look for.
+function laundryPhaseOf(raw, valueMap) {
+  if (raw === undefined || raw === null) return "";
+  const text = String(raw).trim();
+  if (["unknown", "unavailable", "none", ""].includes(text.toLowerCase())) return "";
+  const mapped = mapInfoValue(text, valueMap);
+  const candidate = String(mapped === null || mapped === undefined ? text : mapped).trim();
+  // Separators become spaces before anything is matched. Integrations answer in
+  // snake case as often as in words, and an underscore is a word character:
+  // without this, "ai_drying" and "pre_wash" match nothing at all.
+  const flat = stripAccents(candidate).replace(/[._-]+/g, " ");
+  for (const phase of LAUNDRY_PHASES) {
+    if (LAUNDRY_PHASE_PATTERNS[phase].test(flat)) return phase;
+  }
+  return "";
+}
+
+// Names that mean a machine that washes and then dries. Checked before the
+// dryer test, since every one of them contains a drying word as well.
+const WASHER_DRYER_RE = /washer.?dryer|washerdryer|washer.?drier|wash.?(and|n)?.?dry(er)?\b|wash.?combo|washcombo|lavante.?sechante|lave.?linge.?sechant|waschtrockner|lavasciuga|lavasecadora|lava.?e.?seca|was.?droog|wasdroogcombinatie|vaske.?torre|tvatt.?tork|pralko.?suszarka|pracka.?se.?susickou|\u0441\u0442\u0438\u0440\u0430\u043b\u044c\u043d\u043e.?\u0441\u0443\u0448\u0438\u043b/i;
+
+// Whether this washer also dries. The option settles it, and a name that says
+// so answers for the setups that never open the editor.
+function isWasherDryer(cfg, st) {
+  if (cfg.washer_dryer !== undefined && cfg.washer_dryer !== "") return !!cfg.washer_dryer;
+  const hay = stripAccents(`${cfg.icon || ""} ${cfg.state_entity || ""} ${cfg.name || ""} ${(st && st.attributes.friendly_name) || ""}`);
+  return WASHER_DRYER_RE.test(hay);
 }
 
 // A number as Home Assistant would print it, for a card pinned to another
@@ -2444,6 +2519,12 @@ const TYPE_AUTO_PATTERNS = {
     freezer_door_entity: /freezer.?door|door.?freezer/i,
     ice_maker_entity: /ice.?maker|ice/i,
   },
+  // Only a washer-dryer reads a phase, and only then is the field offered at
+  // all, so the pattern cannot land on a plain washer. Home Connect and Miele
+  // name it a program phase, SmartThings a job state, hOn a pr phase.
+  washer: {
+    phase_entity: /program.?phase|cycle.?phase|job.?state|pr.?phase|machine.?phase/i,
+  },
   kettle: {
     temperature_entity: /temperature|water.?temp/i,
   },
@@ -2520,9 +2601,15 @@ function autoSuggest(hass, cfg) {
   const type = detectApplianceType(cfg, hass.states[cfg.state_entity]);
   // Only ever fill fields the current type actually shows: a suggestion the
   // editor then hides is just a stray key in the user's YAML.
-  const allowed = new Set(sectionsForType(type).map((s) => s.field));
+  const allowed = new Set(sectionsForType(type, cfg).map((s) => s.field));
   const patterns = { ...AUTO_PATTERNS, ...(TYPE_AUTO_PATTERNS[type] || {}) };
   const patch = {};
+  // A machine whose name says it washes and dries gets the option written
+  // down, so that the editor shows it ticked and the YAML says what the card
+  // is doing, rather than both relying on the name for ever.
+  if (type === "washer" && cfg.washer_dryer === undefined && isWasherDryer(cfg, hass.states[cfg.state_entity])) {
+    patch.washer_dryer = true;
+  }
   for (const [field, re] of Object.entries(patterns)) {
     if (cfg[field] || !allowed.has(field)) continue;
     const match = siblings.find((id) => re.test(id));
@@ -2648,6 +2735,9 @@ function detectApplianceType(cfg, st) {
   if (/hood|hotte|abzug|extractor|exaustor|afzuigkap|emh|okap/.test(hay)) return "hood";
   if (/cooktop|hotplate|plaque|kochfeld|kookplaat|induction|induktion|kogeplade/.test(hay)) return "cooktop";
   if (/oven|four|backofen|horno|forno|piekarnik/.test(hay)) return "oven";
+  // Before the dryer: a washer-dryer says "dry" in every language, and it is a
+  // washer that also dries, not a dryer that also washes.
+  if (WASHER_DRYER_RE.test(stripAccents(hay))) return "washer";
   if (/dry|dryer|seche|s\u00e8che|tumble/.test(hay)) return "dryer";
   if (/dish|vaisselle/.test(hay)) return "dishwasher";
   return "washer";
@@ -3028,6 +3118,26 @@ const ILLUSTRATION_CSS = {
         .garment.g3 { top: 33px; left: 13px; transform: rotate(-25deg); }
         .machine.spinning .garments { animation: tumble 2.6s linear infinite; animation-delay: var(--anim-offset, 0s); }
         @keyframes tumble { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        /* Drying, on a washer-dryer: the drum is empty of water and warm, so
+           the glass loses its cold cast and three wisps rise behind the load. */
+        .machine.drying .glass { box-shadow: inset 0 0 12px rgba(255, 112, 67, 0.85); }
+        .wd-heat { position: absolute; inset: 0; z-index: 0; }
+        .wd-heat i {
+          position: absolute; bottom: 2px; width: 5px; height: 16px; opacity: 0;
+          background: linear-gradient(180deg, rgba(255, 183, 77, 0), rgba(255, 128, 40, 0.95));
+          border-radius: 50% 50% 40% 40%; filter: blur(0.6px);
+        }
+        .wd-heat i:nth-child(1) { left: 26%; }
+        .wd-heat i:nth-child(2) { left: 48%; height: 21px; }
+        .wd-heat i:nth-child(3) { left: 68%; height: 14px; }
+        .machine.drying .wd-heat i { animation: wd-rise 2.8s ease-in-out infinite; animation-delay: var(--anim-offset, 0s); }
+        .machine.drying .wd-heat i:nth-child(2) { animation-delay: calc(-0.93s + var(--anim-offset, 0s)); }
+        .machine.drying .wd-heat i:nth-child(3) { animation-delay: calc(-1.86s + var(--anim-offset, 0s)); }
+        @keyframes wd-rise {
+          0% { opacity: 0; transform: translateY(4px) scaleY(0.7); }
+          35% { opacity: 0.9; }
+          100% { opacity: 0; transform: translateY(-18px) scaleY(1.15); }
+        }
   `,
   dishwasher: (color) => `
         /* A dishwasher is front-loading, but its door hinges at the bottom.
@@ -4282,21 +4392,26 @@ function illustrationHtml(type, ctx) {
   }
 
   if (LAUNDRY_TYPES.includes(type)) {
-    const glassContent = {
-      washer: `
+    const water = `
         <div class="water-level">
           <div class="wave"></div>
           <div class="wave wave2"></div>
-        </div>`,
-      dryer: `
+        </div>`;
+    const clothes = `
         <div class="garments">
           <div class="garment g1"></div>
           <div class="garment g2"></div>
           <div class="garment g3"></div>
-        </div>`,
-    }[type];
+        </div>`;
+    // A washer-dryer empties its drum before it dries, so while it dries it is
+    // a dryer: clothes turning in hot air, and the warm haze that goes with it.
+    const glassContent = type === "dryer" || ctx.drying ? clothes : water;
+    const heat = ctx.drying
+      ? `
+        <div class="wd-heat" aria-hidden="true"><i></i><i></i><i></i></div>`
+      : "";
     return `
-        <div class="machine ${ctx.spinning ? "spinning" : ""}">
+        <div class="machine ${[ctx.spinning ? "spinning" : "", ctx.drying ? "drying" : ""].filter(Boolean).join(" ")}">
           <div class="mbody">
             <div class="mpanel"></div>
             <div class="mknob"></div>
@@ -4307,7 +4422,7 @@ function illustrationHtml(type, ctx) {
             <div class="door ${ctx.doorOpen ? "ajar" : ""}">
               <div class="rim">
                 <div class="glass">
-                  ${glassContent}
+                  ${heat}${glassContent}
                 </div>
               </div>
             </div>
@@ -4991,6 +5106,27 @@ class ApplianceCard extends HTMLElement {
     // as before. Unknown vendor phases are intentionally ignored as well.
     const phaseState = cfg.phase_entity ? stateObj(hass, cfg.phase_entity) : null;
     const phase = phaseState ? normalizeDishwasherPhase(phaseState.state, cfg.phase_map) : "";
+
+    // A washer-dryer says which step it is at either in its own state or, when
+    // the state stays at "Running" all the way through, in a phase entity. The
+    // phase entity wins, since a machine that has one says nothing in its
+    // state. Outside a cycle there is no step to show.
+    const washerDryer = applianceType === "washer" && isWasherDryer(cfg, st);
+    let laundryPhase = "";
+    if (!washerDryer || (!isActiveState(norm) && norm !== "paused")) {
+      this._wdDrying = false;
+    } else {
+      laundryPhase = (phaseState ? laundryPhaseOf(phaseState.state, cfg.phase_map) : "")
+        || laundryPhaseOf(rawState, cfg.state_map);
+      // The drum keeps the last step it was told. A cycle that finishes its
+      // drying on an anti-crease or a cool-down names no step at all, and
+      // filling the drum with water again at that point would be a plain lie.
+      if (laundryPhase) this._wdDrying = laundryPhase === "drying";
+      // Only the drying is named. Washing is what a washer does, and a state
+      // that already says "Rinsing" would lose by being called "Washing".
+      // Paused says more than the step does, so it keeps the state line too.
+      if (laundryPhase === "drying" && isActiveState(norm) && !cfg.state_show_raw) stateLabel = t(hass, "wd_drying");
+    }
 
     // Extra info chips
     const infoEntities = (cfg.info_entities || [])
@@ -5714,6 +5850,9 @@ class ApplianceCard extends HTMLElement {
       anyZoneOn: zones.some((z) => z.on),
       childLock,
       phase: applianceType === "dishwasher" ? phase : "",
+      // The drum of a washer-dryer: water while it washes, clothes tumbling in
+      // hot air while it dries.
+      drying: !!this._wdDrying,
       tankTemp,
       boilerMode,
       hpMode,
@@ -5751,6 +5890,7 @@ class ApplianceCard extends HTMLElement {
       illustrationCtx.fanLevel, illustrationCtx.boost, illustrationCtx.keepWarm,
       illustrationCtx.anyZoneOn,
       illustrationCtx.phase,
+      illustrationCtx.drying,
       illustrationCtx.boilerMode,
       illustrationCtx.hpMode,
     ].join(",");
@@ -6007,6 +6147,10 @@ const SECTIONS = [
     }) + c._row("remaining_time_hide_when_idle", "remaining_time_hide_when_idle", { type: "checkbox" })
       + c._row("remaining_time_split", "remaining_time_split", { type: "checkbox" }) },
   { field: "progress_entity", types: CYCLE_TYPES, labelKey: "section_progress", includeDomains: ["sensor", "input_number"] },
+  // Whether a washer-dryer is washing or drying, for the machines that keep
+  // their state at "Running" throughout and name the step elsewhere. A plain
+  // washer has no step to read, so the section only appears once it dries.
+  { field: "phase_entity", types: ["washer"], when: (cfg) => isWasherDryer(cfg, null), labelKey: "section_cycle_phase", includeDomains: ["sensor", "input_select"] },
   { field: "door_entity", types: DOOR_TYPES, labelKey: "section_door", includeDomains: ["binary_sensor", "sensor"], extra: (c, hass) =>
       c._row("door_open_state", "door_open_state", { placeholder: "on" }) +
       c._row("door_invert", "door_invert", { type: "checkbox" }) +
@@ -6133,8 +6277,10 @@ const SECTIONS = [
   { field: "stop_entity", types: CYCLE_TYPES, labelKey: "section_stop", includeDomains: ACTION_DOMAINS },
 ];
 
-function sectionsForType(type) {
-  return SECTIONS.filter((s) => !s.types || s.types.includes(type));
+// A section may also depend on an option rather than on the type alone: the
+// cycle phase of a washer is only worth asking for when that washer dries.
+function sectionsForType(type, cfg) {
+  return SECTIONS.filter((s) => (!s.types || s.types.includes(type)) && (!s.when || s.when(cfg || {}, type)));
 }
 
 function setsEqual(a, b) {
@@ -6150,7 +6296,7 @@ class ApplianceCardEditor extends HTMLElement {
   }
 
   _sections() {
-    return sectionsForType(this._currentType());
+    return sectionsForType(this._currentType(), this._config || {});
   }
 
   _computeOpen(cfg) {
@@ -6167,6 +6313,13 @@ class ApplianceCardEditor extends HTMLElement {
     const type = this._currentType();
     if (this._type !== type) {
       this._type = type;
+      this._needsBuild = true;
+    }
+    // Ticking "washer-dryer" adds a section the same way, and it fills none
+    // either, so it needs the same nudge.
+    const dries = type === "washer" && isWasherDryer(this._config, null);
+    if (this._washerDryer !== dries) {
+      this._washerDryer = dries;
       this._needsBuild = true;
     }
     this._open = newOpen;
@@ -6618,6 +6771,7 @@ class ApplianceCardEditor extends HTMLElement {
             { value: "printer_3d", label: t(hass, "type_printer_3d") },
           ],
         })}
+        ${this._type === "washer" ? this._row("washer_dryer", "washer_dryer", { type: "checkbox" }) : ""}
         ${this._type === "fridge" ? this._row("section_fridge_layout", "fridge_layout", {
           type: "select",
           options: [

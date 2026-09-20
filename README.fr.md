@@ -22,7 +22,8 @@ Aucune marque supposée : chaque champ est une entité à choisir, elle fonction
 ## Fonctionnalités
 
 - **Seize types d'appareils**, chacun avec une illustration en CSS animée sur les données de l'appareil et statique à l'arrêt. Le type est détecté tout seul ou choisi via `appliance_type`, et `compact: true` ne garde que le texte.
-- **Normalisation d'état** : `Idle`, `RUNNING`, `wash`, `En marche`… sont reconnus (sans tenir compte des accents) et classés en veille, préchauffage, en cours, en pause, terminé, différé ou erreur. Un état inconnu s'affiche tel quel, sans l'espace de noms de l'intégration, et `state_map` classe le reste.
+- **Normalisation d'état** : `Idle`, `RUNNING`, `wash`, `En marche`… sont reconnus (sans tenir compte des accents) et classés en veille, préchauffage, en cours, en pause, terminé, différé ou erreur. Un état inconnu s'affiche tel quel, sans l'espace de noms de l'intégration, et `state_map` classe le reste, `"*"` ramassant tout ce qui dépasse.
+- **Une lavante-séchante est un lave-linge qui sèche** : `washer_dryer: true`, et le tambour montre de l'eau pendant le lavage, puis du linge qui tourne dans l'air chaud pendant le séchage. L'étape vient de l'état lui-même ou d'une entité de phase, et la ligne d'état lit *Lavage* ou *Séchage*.
 - **Chaque appareil dit ce qui compte pour lui** : une machine à café ce qui lui manque (eau, grains, bac, détartrage), un réfrigérateur sa santé (débranché, porte ouverte, température haute), une chaudière mixte ce qu'elle chauffe (chauffage, eau chaude ou veille), une imprimante 3D ce que fait l'impression (préchauffage, nivellement, changement de filament).
 - **Fonctionne avec une simple prise connectée** : `power_entity` et `power_on_threshold` suffisent à déduire l'état de la consommation.
 - **Programme, temps restant, barre de progression, lignes d'info, porte, alertes, connectivité et commandes** (démarrer, pause, reprise, stop), chacun optionnel.
@@ -51,7 +52,7 @@ Seule `state_entity` est obligatoire, sauf sur un réfrigérateur où une sonde 
 | Option | Description |
 |---|---|
 | `state_entity` | **Obligatoire**, sauf sur un frigo. Entité portant l'état de l'appareil, de n'importe quel domaine. |
-| `state_map` | Table état brut → `idle` \| `running` \| `preheating` \| `keep_warm` \| `paused` \| `done` \| `delayed` \| `error`. Fixe le libellé, la couleur et l'animation. Aussi dans l'éditeur visuel. |
+| `state_map` | Table état brut → `idle` \| `running` \| `preheating` \| `keep_warm` \| `paused` \| `done` \| `delayed` \| `error`. Fixe le libellé, la couleur et l'animation. La clé `"*"` ramasse tous les états qui dépassent (voir plus bas), et sur une lavante-séchante `washing` et `drying` nomment l'étape. Aussi dans l'éditeur visuel. |
 | `state_show_raw` | `true` affiche le texte brut plutôt que le libellé traduit. |
 | `name` | Titre de la card. Par défaut, le nom de l'entité d'état. |
 | `compact` | `true` masque l'illustration. |
@@ -75,7 +76,8 @@ Par type :
 
 | Option | Types | Description |
 |---|---|---|
-| `phase_entity` / `phase_map` | lave-vaisselle | Phase du cycle, voir plus bas. En YAML seulement. |
+| `washer_dryer` | lave-linge | `true` pour une machine qui lave puis sèche, sous forme de case sous le type d'appareil. Un nom qui le dit suffit ; `false` ramène le lave-linge ordinaire. |
+| `phase_entity` / `phase_map` | lave-vaisselle, lavante-séchante | Phase du cycle, voir plus bas. Sur un lave-vaisselle, en YAML seulement. |
 | `target_temperature_entity` / `current_temperature_entity` | four, robot cuiseur, cuiseur à riz | Consigne et température réelle. Pendant la montée, la barre devient une jauge de préchauffage. |
 | `heating_entity` | four, robot cuiseur, cuiseur à riz, chauffe-eau | Dit s'il chauffe quand l'entité d'état ne le dit pas. À défaut, déduit de l'état en cours. |
 | `light_entity` | four, hotte, imprimante 3D | Éclairage, en petite bascule dans l'en-tête. Allumé, il éclaire aussi l'enceinte de l'imprimante. |
@@ -219,6 +221,43 @@ phase_map:
 ```
 
 La phase ne change que l'illustration, et une valeur non reconnue est ignorée.
+
+### Lavantes-séchantes
+
+Une lavante-séchante est un lave-linge avec `washer_dryer: true`, et non un type à part : l'option est une case sous le type d'appareil. Cochée, le tambour montre de l'eau pendant le lavage et du linge qui tourne dans l'air chaud pendant le séchage, et la ligne d'état lit *Lavage* ou *Séchage* plutôt que *En cours*. Une machine dont le nom dit qu'elle lave et sèche est reconnue toute seule.
+
+Où se trouve l'étape dépend de l'intégration :
+
+| Intégration | Où elle le dit | À configurer |
+|---|---|---|
+| LG ThinQ, Midea | l'état lui-même (`drying`, `Dry`) | rien |
+| Miele, SmartThings, hOn (Candy, Hoover, Haier) | une entité de phase (`program_phase`, `job_state`, `prPhase`) | `phase_entity` |
+| Electrolux, AEG | `cyclePhase`, qui lit `Dry` | `phase_entity` |
+| Home Connect (Bosch, Siemens), Whirlpool | nulle part : l'état reste *Run* du début à la fin | `state_map`, ou rien |
+
+Le rinçage et l'essorage comptent pour du lavage, puisqu'il y a encore de l'eau dans le tambour. Une étape que la carte ne sait pas lire laisse le dessin en l'état : un cycle qui finit sur un défroissage ou un refroidissement garde son linge au lieu de se remplir d'eau. Les codes des marques se traduisent avec `phase_map`, et `state_map` accepte `washing` et `drying` comme cibles :
+
+```yaml
+appliance_type: washer
+washer_dryer: true
+state_entity: sensor.lavante_sechante_etat
+phase_entity: sensor.lavante_sechante_phase
+phase_map:
+  4: drying
+```
+
+### Trop d'états (`"*"`)
+
+Une lavante-séchante déroule un seul long programme en une dizaine d'étapes nommées, qui veulent presque toutes dire *en cours*. Plutôt que de les nommer une par une, on nomme les quelques-unes qui n'en sont pas et on envoie le reste dans une seule catégorie :
+
+```yaml
+state_map:
+  Ready To Start: idle
+  End Of Cycle: done
+  "*": running
+```
+
+Le fourre-tout passe en dernier : les états que la carte connaît déjà gardent leur sens, et seul ce qui dépasse y atterrit. Les guillemets sont ceux du YAML : un `*` nu ouvre un alias.
 
 ## Remerciements
 

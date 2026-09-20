@@ -3274,4 +3274,204 @@ contains('editeur : le fichier imprime a son libelle', edHtml('printer_3d'), 'Pr
   check('suggestion Moonraker : aucune chauffe prise pour la prise', sug.power_entity, undefined);
 }
 
+// == Washer-dryers, and a catch-all for their many states (issue #16) =========
+// A combo washes and then dries in the same drum, so one card has to show two
+// machines. The step comes from the state itself, from a phase entity, or from
+// a map entry; everything else on a washer must be untouched by all of it.
+
+const WD = { appliance_type: 'washer', washer_dryer: true, state_entity: 'sensor.wd' };
+const wd = (state, extra, states) => render({ ...WD, ...(extra || {}) },
+  { 'sensor.wd': { state, attributes: {} }, ...(states || {}) });
+const drum = h => /<div class="water-level">/.test(h) ? 'water'
+  : /<div class="garments">/.test(h) ? 'clothes' : '';
+
+const wdWashing = wd('Washing');
+// Only the drying is named: a wash is what a washer does, and a state already
+// saying "Rinsing" would lose by being relabelled.
+check('lavante-sechante : le lavage garde En cours', stateLine(wdWashing), 'Running');
+check('lavante-sechante : lavage, de l\'eau dans le tambour', drum(wdWashing), 'water');
+check('lavante-sechante : lavage, pas de classe de sechage',
+  machineCls(wdWashing).includes('drying'), false);
+
+const wdDrying = wd('Drying');
+check('lavante-sechante : sechage nomme', stateLine(wdDrying), 'Drying');
+check('lavante-sechante : sechage, du linge et plus d\'eau', drum(wdDrying), 'clothes');
+check('lavante-sechante : sechage, la classe y est', machineCls(wdDrying).includes('drying'), true);
+contains('lavante-sechante : sechage, la chaleur monte', wdDrying, '<div class="wd-heat"');
+contains('lavante-sechante : et elle est animee', wdDrying, 'animation: wd-rise');
+check('lavante-sechante : lavage, aucune volute', /<div class="wd-heat"/.test(wdWashing), false);
+check('lavante-sechante : sechage, le tambour tourne toujours',
+  machineCls(wdDrying).includes('spinning'), true);
+
+// Rinsing and spinning are the wash: the drum still has water in it. Proven
+// against the latch, since water is also what an unread step leaves in place.
+{
+  const dried = (state, states) => {
+    const c = build({ ...WD, phase_entity: 'sensor.ph' },
+      { 'sensor.wd': { state: 'Run', attributes: {} }, 'sensor.ph': { state: 'drying', attributes: {} } }).card;
+    return drum(rerender(c, states || { 'sensor.wd': { state, attributes: {} } }));
+  };
+  check('lavante-sechante : le rincage ramene l\'eau', dried('Rinsing'), 'water');
+  check('lavante-sechante : l\'essorage aussi', dried('Spinning'), 'water');
+}
+
+// Nothing of this reaches a plain washer, whatever its state says.
+const plainDrying = render({ appliance_type: 'washer', state_entity: 'sensor.wd' },
+  { 'sensor.wd': { state: 'Drying', attributes: {} } });
+check('lave-linge simple : Drying reste En cours', stateLine(plainDrying), 'Running');
+check('lave-linge simple : et garde son eau', drum(plainDrying), 'water');
+
+// A step only exists inside a running cycle: a phase entity left on its last
+// value must not dry an idle machine.
+const wdIdle = wd('Idle', { phase_entity: 'sensor.ph' }, { 'sensor.ph': { state: 'Drying', attributes: {} } });
+check('lavante-sechante : a l\'arret, aucun sechage', machineCls(wdIdle).includes('drying'), false);
+check('lavante-sechante : a l\'arret, l\'etat reste l\'etat', stateLine(wdIdle), 'Idle');
+
+// Home Connect, Miele and SmartThings keep the state at "Running" all the way
+// through and name the step in an entity of their own.
+const wdPhase = wd('Run', { phase_entity: 'sensor.ph' }, { 'sensor.ph': { state: 'Drying', attributes: {} } });
+check('lavante-sechante : l\'etape vient de l\'entite de phase', stateLine(wdPhase), 'Drying');
+check('lavante-sechante : et le tambour la suit', drum(wdPhase), 'clothes');
+
+// hOn reports a numbered phase, which phase_map turns into a word.
+const wdCode = wd('Run', { phase_entity: 'sensor.ph', phase_map: { 14: 'Drying' } },
+  { 'sensor.ph': { state: '14', attributes: {} } });
+check('lavante-sechante : un code de phase traduit par phase_map', stateLine(wdCode), 'Drying');
+
+// And a state nobody can read is named by hand in state_map, which is the
+// request: a step as a target, not just a state.
+const wdMapped = wd('DRY_28', { state_map: { DRY_28: 'drying' } });
+check('lavante-sechante : state_map peut nommer l\'etape', stateLine(wdMapped), 'Drying');
+check('lavante-sechante : et la machine reste en marche',
+  machineCls(wdMapped).includes('spinning'), true);
+{
+  const cfg = { ...WD, state_map: { DRY_28: 'drying', WASH_12: 'washing' } };
+  const c = build(cfg, { 'sensor.wd': { state: 'DRY_28', attributes: {} } }).card;
+  check('lavante-sechante : lavage nomme a la main aussi',
+    drum(rerender(c, { 'sensor.wd': { state: 'WASH_12', attributes: {} } })), 'water');
+  check('lavante-sechante : et il reste en marche',
+    stateLine(rerender(c, { 'sensor.wd': { state: 'WASH_12', attributes: {} } })), 'Running');
+}
+
+// The words are not only English. A German phase entity says Trocknen, and a
+// state in a language the card does not read is still a step once the machine
+// is known to be running.
+check('lavante-sechante : Trocknen est un sechage',
+  stateLine(wd('Run', { phase_entity: 'sensor.ph' }, { 'sensor.ph': { state: 'Trocknen', attributes: {} } })), 'Drying');
+check('lavante-sechante : Asciugatura aussi',
+  drum(wd('Run', { phase_entity: 'sensor.ph' }, { 'sensor.ph': { state: 'Asciugatura', attributes: {} } })), 'clothes');
+check('lavante-sechante : un etat etranger, une fois en marche, seche quand meme',
+  stateLine(wd('Trocknen', { state_map: { '*': 'running' } })), 'Drying');
+check('lavante-sechante : un mot inconnu ne seche pas',
+  machineCls(wd('Aquaplus', { state_map: { '*': 'running' } })).includes('drying'), false);
+
+// Integrations answer in snake case as often as in words, and an underscore is
+// a word character: without separators turned into spaces these match nothing.
+check('lavante-sechante : ai_drying est un sechage',
+  stateLine(wd('Run', { phase_entity: 'sensor.ph' }, { 'sensor.ph': { state: 'ai_drying', attributes: {} } })), 'Drying');
+{
+  const c = build({ ...WD, phase_entity: 'sensor.ph' },
+    { 'sensor.wd': { state: 'Run', attributes: {} }, 'sensor.ph': { state: 'drying', attributes: {} } }).card;
+  check('lavante-sechante : pre_wash est un lavage',
+    drum(rerender(c, { 'sensor.wd': { state: 'Run', attributes: {} },
+                       'sensor.ph': { state: 'pre_wash', attributes: {} } })), 'water');
+}
+// Electrolux and Midea say "Dry", not "Drying".
+check('lavante-sechante : Dry tout court', stateLine(wd('Run', { phase_entity: 'sensor.ph' },
+  { 'sensor.ph': { state: 'Dry', attributes: {} } })), 'Drying');
+
+// The drum keeps the last step it was told. A cycle ends its drying on an
+// anti-crease or a cool-down, which name no step at all, and water back in the
+// drum at that point would be a plain lie.
+{
+  const run = ph => ({ 'sensor.wd': { state: 'Run', attributes: {} },
+                       'sensor.ph': { state: ph, attributes: {} } });
+  const c = build({ ...WD, phase_entity: 'sensor.ph' }, run('drying')).card;
+  check('lavante-sechante : le sechage est pris', drum(markup(c)), 'clothes');
+  check('lavante-sechante : l\'anti-froissage garde le linge',
+    drum(rerender(c, run('anti_crease'))), 'clothes');
+  check('lavante-sechante : et la chaleur avec',
+    machineCls(rerender(c, run('cooling_down'))).includes('drying'), true);
+  check('lavante-sechante : un lavage nomme ramene l\'eau',
+    drum(rerender(c, run('main_wash'))), 'water');
+  rerender(c, run('drying'));
+  check('lavante-sechante : en pause, le linge reste',
+    drum(rerender(c, { 'sensor.wd': { state: 'Paused', attributes: {} },
+                       'sensor.ph': { state: 'anti_crease', attributes: {} } })), 'clothes');
+  check('lavante-sechante : en pause, l\'etat prime sur l\'etape',
+    stateLine(rerender(c, { 'sensor.wd': { state: 'Paused', attributes: {} },
+                            'sensor.ph': { state: 'drying', attributes: {} } })), 'Paused');
+  check('lavante-sechante : le cycle fini rend le tambour a l\'eau',
+    drum(rerender(c, { 'sensor.wd': { state: 'End Of Cycle', attributes: {} },
+                       'sensor.ph': { state: 'drying', attributes: {} } })), 'water');
+}
+
+// A machine whose name says it dries is one, without the option being set.
+const wdAuto = render({ state_entity: 'sensor.washer_dryer_state' },
+  { 'sensor.washer_dryer_state': { state: 'Drying', attributes: {} } });
+check('lavante-sechante : le nom suffit a la reconnaitre', stateLine(wdAuto), 'Drying');
+contains('lavante-sechante : et c\'est bien un lave-linge, pas un seche-linge', wdAuto, 'class="mbody"');
+check('lavante-sechante : reconnue par le nom, le tambour seche', drum(wdAuto), 'clothes');
+
+// The option always wins over the name, in both directions.
+const wdOff = render({ state_entity: 'sensor.washer_dryer_state', washer_dryer: false },
+  { 'sensor.washer_dryer_state': { state: 'Drying', attributes: {} } });
+check('lavante-sechante : l\'option a false rend un lave-linge ordinaire',
+  stateLine(wdOff), 'Running');
+
+// The catch-all, the other half of the request: naming the handful of states
+// that are not "running" is shorter than naming the dozens that are.
+const catchAll = { appliance_type: 'washer', state_entity: 'sensor.wd', state_map: { '*': 'running' } };
+const wdUnknown = render(catchAll, { 'sensor.wd': { state: 'Aquaplus XL', attributes: {} } });
+check('fourre-tout : un etat inconnu passe en marche', stateLine(wdUnknown), 'Running');
+check('fourre-tout : et la machine tourne', machineCls(wdUnknown).includes('spinning'), true);
+check('fourre-tout : les etats connus gardent leur sens',
+  stateLine(render(catchAll, { 'sensor.wd': { state: 'Ready to start', attributes: {} } })), 'Idle');
+check('fourre-tout : une entree nommee passe avant',
+  stateLine(render({ ...catchAll, state_map: { '*': 'running', Aquaplus: 'error' } },
+    { 'sensor.wd': { state: 'Aquaplus', attributes: {} } })), 'Error');
+check('fourre-tout : une cible invalide ne cree pas d\'etat',
+  stateLine(render({ ...catchAll, state_map: { '*': 'sechage' } },
+    { 'sensor.wd': { state: 'Aquaplus XL', attributes: {} } })), 'Aquaplus XL');
+check('fourre-tout : rien n\'est invente sans l\'etoile',
+  machineCls(render({ appliance_type: 'washer', state_entity: 'sensor.wd' },
+    { 'sensor.wd': { state: 'Aquaplus XL', attributes: {} } })).includes('spinning'), false);
+
+// The editor: one checkbox, and the phase field only once it is ticked.
+const edWasher = cfg => markup(newEditor({ state_entity: 'sensor.oven_appliance_state',
+  appliance_type: 'washer', ...cfg })._root);
+const edWasherToggles = cfg => [...edWasher(cfg).matchAll(/data-toggle="([^"]+)"/g)].map(m => m[1]);
+contains('editeur : la case lavante-sechante est sur le lave-linge',
+  edWasher(), 'data-field="washer_dryer"');
+check('editeur : elle n\'est pas sur le seche-linge',
+  /data-field="washer_dryer"/.test(edHtml('dryer')), false);
+check('editeur : la phase n\'est offerte qu\'une fois la case cochee',
+  edWasherToggles().includes('phase_entity'), false);
+check('editeur : cochee, la phase est offerte',
+  edWasherToggles({ washer_dryer: true }).includes('phase_entity'), true);
+// Ticking it adds a section without filling one, which is exactly the case the
+// open-set comparison misses: without its own nudge the form is never rebuilt
+// and the field never appears.
+check('editeur : cocher la case fait reapparaitre la phase', (() => {
+  const ed = newEditor({ state_entity: 'sensor.oven_appliance_state', appliance_type: 'washer' });
+  // Nothing but the checkbox changes: rebuilding on a field that came or went
+  // would prove the wrong thing.
+  ed.setConfig({ ...ed._config, washer_dryer: true });
+  return markup(ed._root).includes('data-toggle="phase_entity"');
+})(), true);
+
+// Opening the editor on a machine whose name says it dries writes the option
+// down, so the YAML says what the card is already doing.
+{
+  const ids = ['sensor.washer_dryer_machine_state', 'sensor.washer_dryer_program_phase'];
+  const ed = new Editor();
+  ed.setConfig({ type: 'custom:ha-appliance-card', state_entity: 'sensor.washer_dryer_machine_state' });
+  ed.hass = { ...HASS(Object.fromEntries(ids.map(id => [id, { state: 'Drying', attributes: {} }]))),
+    entities: Object.fromEntries(ids.map(id => [id, { device_id: 'wd' }])) };
+  const sug = ed.events.at(-1)?.detail?.config || {};
+  check('suggestion : l\'option est ecrite dans la config', sug.washer_dryer, true);
+  check('suggestion : la phase du programme est proposee',
+    sug.phase_entity, 'sensor.washer_dryer_program_phase');
+}
+
 report();
