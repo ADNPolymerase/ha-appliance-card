@@ -1,4 +1,4 @@
-const CARD_VERSION = "2.12.0";
+const CARD_VERSION = "2.13.0";
 
 console.info(
   "%c HA-APPLIANCE-CARD %c v" + CARD_VERSION + " ",
@@ -16,6 +16,7 @@ const T = {
     delayed: "Delayed start", error: "Error", unknown: "Unknown",
     program: "Program", remaining: "remaining", ready_at: "ready at", time_done: "Done",
     door_open: "Door open", door_closed: "Door closed", alerts: "Alerts",
+    alerts_n_one: "{n} alert", alerts_n_few: "{n} alerts", alerts_n_many: "{n} alerts", alerts_n_other: "{n} alerts",
     connected: "Connected", disconnected: "Disconnected",
     start: "Start", pause: "Pause", resume: "Resume", stop: "Stop",
     name: "Name", icon: "Icon", entity: "Entity",
@@ -54,6 +55,7 @@ const T = {
     section_alerts: "Alerts", section_connectivity: "Connectivity",
     section_info: "Extra info entities", section_lines_order: "Line order",
     info_count: "Number of extra entities",
+    section_alert_list: "Alert entities", alerts_add: "Add an alert\u2026", alerts_other: "Other entity\u2026", alerts_remove: "Remove",
     info_label: "Display name (optional)",
     info_value_map: "Value mapping (optional)",
     info_value_map_placeholder: "One per line, e.g.\n0: Ready\n1: Washing",
@@ -140,6 +142,7 @@ const T = {
     delayed: "D\u00e9part diff\u00e9r\u00e9", error: "Erreur", unknown: "Inconnu",
     program: "Programme", remaining: "restant", ready_at: "fin ~", time_done: "Fin",
     door_open: "Porte ouverte", door_closed: "Porte ferm\u00e9e", alerts: "Alertes",
+    alerts_n_one: "{n} alerte", alerts_n_few: "{n} alertes", alerts_n_many: "{n} alertes", alerts_n_other: "{n} alertes",
     connected: "Connect\u00e9", disconnected: "D\u00e9connect\u00e9",
     start: "D\u00e9marrer", pause: "Pause", resume: "Reprendre", stop: "Stop",
     name: "Nom", icon: "Ic\u00f4ne", entity: "Entit\u00e9",
@@ -178,6 +181,7 @@ const T = {
     section_alerts: "Alertes", section_connectivity: "Connectivit\u00e9",
     section_info: "Entit\u00e9s d'info compl\u00e9mentaires", section_lines_order: "Ordre des lignes",
     info_count: "Nombre d'entit\u00e9s suppl\u00e9mentaires",
+    section_alert_list: "Entit\u00e9s d'alerte", alerts_add: "Ajouter une alerte\u2026", alerts_other: "Autre entit\u00e9\u2026", alerts_remove: "Retirer",
     info_label: "Nom affich\u00e9 (optionnel)",
     info_value_map: "Correspondance des valeurs (optionnel)",
     info_value_map_placeholder: "Une par ligne, ex.\n0: Pr\u00eat\n1: Lavage",
@@ -264,6 +268,7 @@ const T = {
     delayed: "\u041e\u0442\u043b\u043e\u0436\u0435\u043d\u043d\u044b\u0439 \u0441\u0442\u0430\u0440\u0442", error: "\u041e\u0448\u0438\u0431\u043a\u0430", unknown: "\u041d\u0435\u0438\u0437\u0432\u0435\u0441\u0442\u043d\u043e",
     program: "\u041f\u0440\u043e\u0433\u0440\u0430\u043c\u043c\u0430", remaining: "\u043e\u0441\u0442\u0430\u043b\u043e\u0441\u044c", ready_at: "\u043e\u043a\u043e\u043d\u0447\u0430\u043d\u0438\u0435 ~", time_done: "\u0413\u043e\u0442\u043e\u0432\u043e",
     door_open: "\u0414\u0432\u0435\u0440\u044c \u043e\u0442\u043a\u0440\u044b\u0442\u0430", door_closed: "\u0414\u0432\u0435\u0440\u044c \u0437\u0430\u043a\u0440\u044b\u0442\u0430", alerts: "\u041e\u043f\u043e\u0432\u0435\u0449\u0435\u043d\u0438\u044f",
+    alerts_n_one: "{n} \u043e\u043f\u043e\u0432\u0435\u0449\u0435\u043d\u0438\u0435", alerts_n_few: "{n} \u043e\u043f\u043e\u0432\u0435\u0449\u0435\u043d\u0438\u044f", alerts_n_many: "{n} \u043e\u043f\u043e\u0432\u0435\u0449\u0435\u043d\u0438\u0439", alerts_n_other: "{n} \u043e\u043f\u043e\u0432\u0435\u0449\u0435\u043d\u0438\u044f",
     connected: "\u041f\u043e\u0434\u043a\u043b\u044e\u0447\u0435\u043d\u043e", disconnected: "\u041e\u0442\u043a\u043b\u044e\u0447\u0435\u043d\u043e",
     start: "\u0421\u0442\u0430\u0440\u0442", pause: "\u041f\u0430\u0443\u0437\u0430", resume: "\u041f\u0440\u043e\u0434\u043e\u043b\u0436\u0438\u0442\u044c", stop: "\u0421\u0442\u043e\u043f",
     name: "\u041d\u0430\u0437\u0432\u0430\u043d\u0438\u0435", icon: "\u0417\u043d\u0430\u0447\u043e\u043a", entity: "\u0421\u0443\u0449\u043d\u043e\u0441\u0442\u044c",
@@ -302,6 +307,7 @@ const T = {
     section_alerts: "\u041e\u043f\u043e\u0432\u0435\u0449\u0435\u043d\u0438\u044f", section_connectivity: "\u041f\u043e\u0434\u043a\u043b\u044e\u0447\u0435\u043d\u0438\u0435",
     section_info: "\u0414\u043e\u043f. \u0441\u0443\u0449\u043d\u043e\u0441\u0442\u0438 \u0438\u043d\u0444\u043e\u0440\u043c\u0430\u0446\u0438\u0438", section_lines_order: "\u041f\u043e\u0440\u044f\u0434\u043e\u043a \u0441\u0442\u0440\u043e\u043a",
     info_count: "\u041a\u043e\u043b\u0438\u0447\u0435\u0441\u0442\u0432\u043e \u0434\u043e\u043f. \u0441\u0443\u0449\u043d\u043e\u0441\u0442\u0435\u0439",
+    section_alert_list: "\u0421\u0443\u0449\u043d\u043e\u0441\u0442\u0438 \u043e\u043f\u043e\u0432\u0435\u0449\u0435\u043d\u0438\u0439", alerts_add: "\u0414\u043e\u0431\u0430\u0432\u0438\u0442\u044c \u043e\u043f\u043e\u0432\u0435\u0449\u0435\u043d\u0438\u0435\u2026", alerts_other: "\u0414\u0440\u0443\u0433\u0430\u044f \u0441\u0443\u0449\u043d\u043e\u0441\u0442\u044c\u2026", alerts_remove: "\u0423\u0434\u0430\u043b\u0438\u0442\u044c",
     info_label: "\u041e\u0442\u043e\u0431\u0440\u0430\u0436\u0430\u0435\u043c\u043e\u0435 \u0438\u043c\u044f (\u043d\u0435\u043e\u0431\u044f\u0437\u0430\u0442\u0435\u043b\u044c\u043d\u043e)",
     info_value_map: "\u0421\u043e\u043f\u043e\u0441\u0442\u0430\u0432\u043b\u0435\u043d\u0438\u0435 \u0437\u043d\u0430\u0447\u0435\u043d\u0438\u0439 (\u043d\u0435\u043e\u0431\u044f\u0437\u0430\u0442\u0435\u043b\u044c\u043d\u043e)",
     info_value_map_placeholder: "\u041f\u043e \u043e\u0434\u043d\u043e\u043c\u0443 \u0432 \u0441\u0442\u0440\u043e\u043a\u0435, \u043d\u0430\u043f\u0440.\n0: \u0413\u043e\u0442\u043e\u0432\u043e\n1: \u0421\u0442\u0438\u0440\u043a\u0430",
@@ -388,6 +394,7 @@ const T = {
     delayed: "Startverz\u00f6gerung", error: "Fehler", unknown: "Unbekannt",
     program: "Programm", remaining: "verbleibend", ready_at: "fertig um", time_done: "Fertig",
     door_open: "T\u00fcr offen", door_closed: "T\u00fcr geschlossen", alerts: "Warnungen",
+    alerts_n_one: "{n} Warnung", alerts_n_few: "{n} Warnungen", alerts_n_many: "{n} Warnungen", alerts_n_other: "{n} Warnungen",
     connected: "Verbunden", disconnected: "Getrennt",
     start: "Start", pause: "Pause", resume: "Fortsetzen", stop: "Stopp",
     name: "Name", icon: "Symbol", entity: "Entit\u00e4t",
@@ -426,6 +433,7 @@ const T = {
     section_alerts: "Warnungen", section_connectivity: "Konnektivit\u00e4t",
     section_info: "Zus\u00e4tzliche Info-Entit\u00e4ten", section_lines_order: "Reihenfolge der Zeilen",
     info_count: "Anzahl zus\u00e4tzlicher Entit\u00e4ten",
+    section_alert_list: "Warnungs-Entit\u00e4ten", alerts_add: "Warnung hinzuf\u00fcgen\u2026", alerts_other: "Andere Entit\u00e4t\u2026", alerts_remove: "Entfernen",
     info_label: "Anzeigename (optional)",
     info_value_map: "Wertzuordnung (optional)",
     info_value_map_placeholder: "Eine pro Zeile, z. B.\n0: Bereit\n1: Waschen",
@@ -512,6 +520,7 @@ const T = {
     delayed: "Inicio diferido", error: "Error", unknown: "Desconocido",
     program: "Programa", remaining: "restante", ready_at: "listo a las", time_done: "Fin",
     door_open: "Puerta abierta", door_closed: "Puerta cerrada", alerts: "Alertas",
+    alerts_n_one: "{n} alerta", alerts_n_few: "{n} alertas", alerts_n_many: "{n} alertas", alerts_n_other: "{n} alertas",
     connected: "Conectado", disconnected: "Desconectado",
     start: "Iniciar", pause: "Pausa", resume: "Reanudar", stop: "Parar",
     name: "Nombre", icon: "Icono", entity: "Entidad",
@@ -550,6 +559,7 @@ const T = {
     section_alerts: "Alertas", section_connectivity: "Conectividad",
     section_info: "Entidades de informaci\u00f3n adicionales", section_lines_order: "Orden de las l\u00edneas",
     info_count: "N\u00famero de entidades adicionales",
+    section_alert_list: "Entidades de alerta", alerts_add: "A\u00f1adir una alerta\u2026", alerts_other: "Otra entidad\u2026", alerts_remove: "Quitar",
     info_label: "Nombre mostrado (opcional)",
     info_value_map: "Correspondencia de valores (opcional)",
     info_value_map_placeholder: "Una por l\u00ednea, p. ej.\n0: Listo\n1: Lavado",
@@ -636,6 +646,7 @@ const T = {
     delayed: "Avvio ritardato", error: "Errore", unknown: "Sconosciuto",
     program: "Programma", remaining: "rimanente", ready_at: "pronto alle", time_done: "Fine",
     door_open: "Portello aperto", door_closed: "Portello chiuso", alerts: "Avvisi",
+    alerts_n_one: "{n} avviso", alerts_n_few: "{n} avvisi", alerts_n_many: "{n} avvisi", alerts_n_other: "{n} avvisi",
     connected: "Connesso", disconnected: "Disconnesso",
     start: "Avvia", pause: "Pausa", resume: "Riprendi", stop: "Stop",
     name: "Nome", icon: "Icona", entity: "Entit\u00e0",
@@ -674,6 +685,7 @@ const T = {
     section_alerts: "Avvisi", section_connectivity: "Connettivit\u00e0",
     section_info: "Entit\u00e0 informative aggiuntive", section_lines_order: "Ordine delle righe",
     info_count: "Numero di entit\u00e0 aggiuntive",
+    section_alert_list: "Entit\u00e0 di avviso", alerts_add: "Aggiungi un avviso\u2026", alerts_other: "Altra entit\u00e0\u2026", alerts_remove: "Rimuovi",
     info_label: "Nome visualizzato (opzionale)",
     info_value_map: "Corrispondenza dei valori (opzionale)",
     info_value_map_placeholder: "Una per riga, es.\n0: Pronto\n1: Lavaggio",
@@ -760,6 +772,7 @@ const T = {
     delayed: "Uitgestelde start", error: "Fout", unknown: "Onbekend",
     program: "Programma", remaining: "resterend", ready_at: "klaar om", time_done: "Klaar",
     door_open: "Deur open", door_closed: "Deur dicht", alerts: "Meldingen",
+    alerts_n_one: "{n} melding", alerts_n_few: "{n} meldingen", alerts_n_many: "{n} meldingen", alerts_n_other: "{n} meldingen",
     connected: "Verbonden", disconnected: "Niet verbonden",
     start: "Start", pause: "Pauze", resume: "Hervatten", stop: "Stop",
     name: "Naam", icon: "Pictogram", entity: "Entiteit",
@@ -798,6 +811,7 @@ const T = {
     section_alerts: "Meldingen", section_connectivity: "Connectiviteit",
     section_info: "Extra info-entiteiten", section_lines_order: "Volgorde van de regels",
     info_count: "Aantal extra entiteiten",
+    section_alert_list: "Meldingsentiteiten", alerts_add: "Melding toevoegen\u2026", alerts_other: "Andere entiteit\u2026", alerts_remove: "Verwijderen",
     info_label: "Weergavenaam (optioneel)",
     info_value_map: "Waardetoewijzing (optioneel)",
     info_value_map_placeholder: "E\u00e9n per regel, bijv.\n0: Gereed\n1: Wassen",
@@ -884,6 +898,7 @@ const T = {
     delayed: "In\u00edcio diferido", error: "Erro", unknown: "Desconhecido",
     program: "Programa", remaining: "restante", ready_at: "pronto \u00e0s", time_done: "Fim",
     door_open: "Porta aberta", door_closed: "Porta fechada", alerts: "Alertas",
+    alerts_n_one: "{n} alerta", alerts_n_few: "{n} alertas", alerts_n_many: "{n} alertas", alerts_n_other: "{n} alertas",
     connected: "Conectado", disconnected: "Desconectado",
     start: "Iniciar", pause: "Pausa", resume: "Retomar", stop: "Parar",
     name: "Nome", icon: "\u00cdcone", entity: "Entidade",
@@ -922,6 +937,7 @@ const T = {
     section_alerts: "Alertas", section_connectivity: "Conetividade",
     section_info: "Entidades de informa\u00e7\u00e3o adicionais", section_lines_order: "Ordem das linhas",
     info_count: "N\u00famero de entidades adicionais",
+    section_alert_list: "Entidades de alerta", alerts_add: "Adicionar um alerta\u2026", alerts_other: "Outra entidade\u2026", alerts_remove: "Remover",
     info_label: "Nome exibido (opcional)",
     info_value_map: "Correspond\u00eancia de valores (opcional)",
     info_value_map_placeholder: "Uma por linha, ex.\n0: Pronto\n1: Lavagem",
@@ -1008,6 +1024,7 @@ const T = {
     delayed: "F\u00f6rdr\u00f6jd start", error: "Fel", unknown: "Ok\u00e4nd",
     program: "Program", remaining: "kvar", ready_at: "klar kl.", time_done: "Klar",
     door_open: "Lucka \u00f6ppen", door_closed: "Lucka st\u00e4ngd", alerts: "Varningar",
+    alerts_n_one: "{n} varning", alerts_n_few: "{n} varningar", alerts_n_many: "{n} varningar", alerts_n_other: "{n} varningar",
     connected: "Ansluten", disconnected: "Fr\u00e5nkopplad",
     start: "Start", pause: "Paus", resume: "\u00c5teruppta", stop: "Stopp",
     name: "Namn", icon: "Ikon", entity: "Entitet",
@@ -1046,6 +1063,7 @@ const T = {
     section_alerts: "Varningar", section_connectivity: "Anslutning",
     section_info: "Extra infoentiteter", section_lines_order: "Radernas ordning",
     info_count: "Antal extra entiteter",
+    section_alert_list: "Varningsentiteter", alerts_add: "L\u00e4gg till en varning\u2026", alerts_other: "Annan entitet\u2026", alerts_remove: "Ta bort",
     info_label: "Visningsnamn (valfritt)",
     info_value_map: "V\u00e4rdemappning (valfritt)",
     info_value_map_placeholder: "En per rad, t.ex.\n0: Klar\n1: Tv\u00e4tt",
@@ -1132,6 +1150,7 @@ const T = {
     delayed: "Utsatt start", error: "Feil", unknown: "Ukjent",
     program: "Program", remaining: "gjenst\u00e5r", ready_at: "ferdig kl.", time_done: "Ferdig",
     door_open: "D\u00f8r \u00e5pen", door_closed: "D\u00f8r lukket", alerts: "Varsler",
+    alerts_n_one: "{n} varsel", alerts_n_few: "{n} varsler", alerts_n_many: "{n} varsler", alerts_n_other: "{n} varsler",
     connected: "Tilkoblet", disconnected: "Frakoblet",
     start: "Start", pause: "Pause", resume: "Gjenoppta", stop: "Stopp",
     name: "Navn", icon: "Ikon", entity: "Entitet",
@@ -1170,6 +1189,7 @@ const T = {
     section_alerts: "Varsler", section_connectivity: "Tilkobling",
     section_info: "Ekstra infoentiteter", section_lines_order: "Rekkef\u00f8lge p\u00e5 linjene",
     info_count: "Antall ekstra entiteter",
+    section_alert_list: "Varselentiteter", alerts_add: "Legg til et varsel\u2026", alerts_other: "Annen entitet\u2026", alerts_remove: "Fjern",
     info_label: "Visningsnavn (valgfritt)",
     info_value_map: "Verditilordning (valgfritt)",
     info_value_map_placeholder: "\u00c9n per linje, f.eks.\n0: Klar\n1: Vask",
@@ -1256,6 +1276,7 @@ const T = {
     delayed: "Forsinket start", error: "Fejl", unknown: "Ukendt",
     program: "Program", remaining: "resterer", ready_at: "f\u00e6rdig kl.", time_done: "F\u00e6rdig",
     door_open: "L\u00e5ge \u00e5ben", door_closed: "L\u00e5ge lukket", alerts: "Advarsler",
+    alerts_n_one: "{n} advarsel", alerts_n_few: "{n} advarsler", alerts_n_many: "{n} advarsler", alerts_n_other: "{n} advarsler",
     connected: "Forbundet", disconnected: "Afbrudt",
     start: "Start", pause: "Pause", resume: "Genoptag", stop: "Stop",
     name: "Navn", icon: "Ikon", entity: "Enhed",
@@ -1294,6 +1315,7 @@ const T = {
     section_alerts: "Advarsler", section_connectivity: "Forbindelse",
     section_info: "Ekstra info-enheder", section_lines_order: "Linjernes r\u00e6kkef\u00f8lge",
     info_count: "Antal ekstra enheder",
+    section_alert_list: "Advarselsenheder", alerts_add: "Tilf\u00f8j en advarsel\u2026", alerts_other: "Anden enhed\u2026", alerts_remove: "Fjern",
     info_label: "Vist navn (valgfrit)",
     info_value_map: "V\u00e6rditilknytning (valgfrit)",
     info_value_map_placeholder: "\u00c9n pr. linje, f.eks.\n0: Klar\n1: Vask",
@@ -1380,6 +1402,7 @@ const T = {
     delayed: "Op\u00f3\u017aniony start", error: "B\u0142\u0105d", unknown: "Nieznany",
     program: "Program", remaining: "pozosta\u0142o", ready_at: "koniec o", time_done: "Koniec",
     door_open: "Drzwiczki otwarte", door_closed: "Drzwiczki zamkni\u0119te", alerts: "Alerty",
+    alerts_n_one: "{n} alert", alerts_n_few: "{n} alerty", alerts_n_many: "{n} alert\u00f3w", alerts_n_other: "{n} alertu",
     connected: "Po\u0142\u0105czono", disconnected: "Roz\u0142\u0105czono",
     start: "Start", pause: "Pauza", resume: "Wzn\u00f3w", stop: "Stop",
     name: "Nazwa", icon: "Ikona", entity: "Encja",
@@ -1418,6 +1441,7 @@ const T = {
     section_alerts: "Alerty", section_connectivity: "\u0141\u0105czno\u015b\u0107",
     section_info: "Dodatkowe encje informacyjne", section_lines_order: "Kolejno\u015b\u0107 wierszy",
     info_count: "Liczba dodatkowych encji",
+    section_alert_list: "Encje alert\u00f3w", alerts_add: "Dodaj alert\u2026", alerts_other: "Inna encja\u2026", alerts_remove: "Usu\u0144",
     info_label: "Nazwa wy\u015bwietlana (opcjonalnie)",
     info_value_map: "Mapowanie warto\u015bci (opcjonalnie)",
     info_value_map_placeholder: "Jedno na lini\u0119, np.\n0: Gotowe\n1: Pranie",
@@ -1504,6 +1528,7 @@ const T = {
     delayed: "\u5ef6\u8fdf\u542f\u52a8", error: "\u9519\u8bef", unknown: "\u672a\u77e5",
     program: "\u7a0b\u5e8f", remaining: "\u5269\u4f59\u65f6\u95f4", ready_at: "\u9884\u8ba1\u5b8c\u6210", time_done: "\u5b8c\u6210",
     door_open: "\u95e8\u5df2\u5f00", door_closed: "\u95e8\u5df2\u5173", alerts: "\u8b66\u62a5",
+    alerts_n_one: "{n} \u6761\u8b66\u62a5", alerts_n_few: "{n} \u6761\u8b66\u62a5", alerts_n_many: "{n} \u6761\u8b66\u62a5", alerts_n_other: "{n} \u6761\u8b66\u62a5",
     connected: "\u5df2\u8fde\u63a5", disconnected: "\u5df2\u65ad\u5f00",
     start: "\u5f00\u59cb", pause: "\u6682\u505c", resume: "\u7ee7\u7eed", stop: "\u505c\u6b62",
     name: "\u540d\u79f0", icon: "\u56fe\u6807", entity: "\u5b9e\u4f53",
@@ -1542,6 +1567,7 @@ const T = {
     section_alerts: "\u8b66\u62a5", section_connectivity: "\u8fde\u7f51\u72b6\u6001",
     section_info: "\u989d\u5916\u4fe1\u606f\u5b9e\u4f53", section_lines_order: "\u4fe1\u606f\u884c\u987a\u5e8f",
     info_count: "\u5b9e\u4f53\u6570\u91cf",
+    section_alert_list: "\u8b66\u62a5\u5b9e\u4f53", alerts_add: "\u6dfb\u52a0\u8b66\u62a5\u2026", alerts_other: "\u5176\u4ed6\u5b9e\u4f53\u2026", alerts_remove: "\u79fb\u9664",
     info_label: "\u663e\u793a\u540d\u79f0 (\u53ef\u9009)",
     info_value_map: "\u503c\u6620\u5c04 (\u53ef\u9009)",
     info_value_map_placeholder: "\u6bcf\u4e2a\u503c\u4e00\u884c, \u4f8b\u5982\n0: \u5f85\u673a\n1: \u6d17\u6da4\u4e2d",
@@ -1628,6 +1654,7 @@ const T = {
     delayed: "Odlo\u017een\u00fd start", error: "Chyba", unknown: "Nezn\u00e1m\u00fd stav",
     program: "Program", remaining: "zb\u00fdv\u00e1", ready_at: "hotovo v", time_done: "Hotovo",
     door_open: "Dv\u00ed\u0159ka otev\u0159en\u00e1", door_closed: "Dv\u00ed\u0159ka zav\u0159en\u00e1", alerts: "Upozorn\u011bn\u00ed",
+    alerts_n_one: "{n} upozorn\u011bn\u00ed", alerts_n_few: "{n} upozorn\u011bn\u00ed", alerts_n_many: "{n} upozorn\u011bn\u00ed", alerts_n_other: "{n} upozorn\u011bn\u00ed",
     connected: "P\u0159ipojeno", disconnected: "Odpojeno",
     start: "Spustit", pause: "Pozastavit", resume: "Pokra\u010dovat", stop: "Zastavit",
     name: "N\u00e1zev", icon: "Ikona", entity: "Entita",
@@ -1666,6 +1693,7 @@ const T = {
     section_alerts: "Upozorn\u011bn\u00ed", section_connectivity: "P\u0159ipojen\u00ed",
     section_info: "Dal\u0161\u00ed informa\u010dn\u00ed entity", section_lines_order: "Po\u0159ad\u00ed \u0159\u00e1dk\u016f",
     info_count: "Po\u010det dal\u0161\u00edch entit",
+    section_alert_list: "Entity upozorn\u011bn\u00ed", alerts_add: "P\u0159idat upozorn\u011bn\u00ed\u2026", alerts_other: "Jin\u00e1 entita\u2026", alerts_remove: "Odebrat",
     info_label: "Zobrazovan\u00fd n\u00e1zev (voliteln\u00e9)",
     info_value_map: "Mapov\u00e1n\u00ed hodnot (voliteln\u00e9)",
     info_value_map_placeholder: "Jedna hodnota na \u0159\u00e1dek, nap\u0159.\n0: P\u0159ipraveno\n1: Pran\u00ed",
@@ -2657,9 +2685,104 @@ function activeAlerts(hass, entityId) {
   return active;
 }
 
+// Home Connect gives each alert an entity of its own (issue #19): the salt or
+// the rinse aid running low, a detergent tank of the washer, a filter to
+// clean. An alert stands while its entity says so, in the words the alerts
+// attributes are read with, and in Home Connect's own: present, then confirmed
+// once acknowledged on the appliance, which leaves the salt just as low. Both
+// stand until the appliance says off.
+const ALERT_ON_STATES = ["on", "true", "1", "active", "present", "confirmed"];
+// Eight at most, like the info lines: the card and the editor stop there.
+const ALERTS_MAX = 8;
+// Every Home Connect event has these three states, alerts and news alike.
+const EVENT_STATES = ["present", "confirmed", "off"];
+// The events that report on a program, press a favourite or count down to a
+// service ask nothing of anyone. Read on the integration's own key, which is
+// the same in every language, or on the entity id when there is none.
+const EVENT_NOT_ALERT_RE = /program_(aborted|finished)|alarm_clock|favorite|preheat|process_finished|_in_?\d+_?cups|keep_milk/;
+
+// A list, or a single entity written without one.
+function alertsArray(list) {
+  if (Array.isArray(list)) return list;
+  return list ? [list] : [];
+}
+
+function alertEntitiesList(list) {
+  return alertsArray(list)
+    .map((e) => (typeof e === "string" ? { entity: e } : e || {}))
+    .filter((e) => e.entity)
+    .slice(0, ALERTS_MAX);
+}
+
+// For the editor to find a device's alerts: its events, less the news.
+function isEventAlert(hass, entityId) {
+  const st = hass.states[entityId];
+  const options = st && st.attributes && st.attributes.options;
+  if (!Array.isArray(options) || !EVENT_STATES.every((s) => options.includes(s))) return false;
+  const reg = hass.entities && hass.entities[entityId];
+  return !EVENT_NOT_ALERT_RE.test((reg && reg.translation_key) || entityId);
+}
+
+// The binary sensors that report a problem rather than a state: a leak or a
+// low battery is an alert, a door or a running flag is not.
+const ALERT_DEVICE_CLASSES = ["problem", "safety", "battery", "moisture", "smoke", "gas", "carbon_monoxide", "heat", "cold", "tamper"];
+// The menu's last entry, which opens a picker for any other entity.
+const ALERT_OTHER = "__other__";
+
+function isAlertCandidate(hass, entityId) {
+  if (isEventAlert(hass, entityId)) return true;
+  const st = hass.states[entityId];
+  return /^binary_sensor\./.test(entityId) && !!st && ALERT_DEVICE_CLASSES.includes(st.attributes.device_class);
+}
+
+// What the editor offers as alerts: the appliance's own, less what the card
+// already shows and what is already chosen.
+function alertCandidates(hass, cfg) {
+  if (!hass || !cfg || !cfg.state_entity || !hass.states[cfg.state_entity]) return [];
+  const used = new Set();
+  for (const [k, v] of Object.entries(cfg)) if (k.endsWith("_entity") && typeof v === "string") used.add(v);
+  for (const e of cfg.info_entities || []) used.add(typeof e === "string" ? e : e && e.entity);
+  for (const e of alertEntitiesList(cfg.alerts_entities)) used.add(e.entity);
+  return siblingEntityIds(hass, cfg.state_entity).filter((id) => !used.has(id) && isAlertCandidate(hass, id));
+}
+
+// "2 alertes": the count in the plural its language wants. Russian, Polish
+// and Czech do not agree 2 and 5 alike, so the form comes from the language's
+// own rules.
+function alertsCountLabel(hass, n) {
+  const l = lang(hass);
+  let form = "other";
+  try {
+    form = new Intl.PluralRules(l).select(n);
+  } catch (e) {
+    /* the plain plural then */
+  }
+  const tr = T[l] || T.en;
+  return (tr[`alerts_n_${form}`] || tr.alerts_n_other || T.en.alerts_n_other).replace("{n}", n);
+}
+
+function raisedAlerts(hass, list) {
+  return alertEntitiesList(list)
+    .map((e) => ({ ...e, st: stateObj(hass, e.entity) }))
+    .filter((e) => e.st && ALERT_ON_STATES.includes(String(e.st.state).trim().toLowerCase()));
+}
+
 function humanizeEntityId(entityId) {
   const objectId = (entityId || "").split(".")[1] || entityId || "";
   return objectId.replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
+}
+
+// An entity's name without its appliance's, which integrations put in front:
+// "Dishwasher Salt nearly empty" reads "Salt nearly empty" on the card.
+function stripDeviceName(hass, friendlyName, entityId, cardName) {
+  if (!friendlyName) return humanizeEntityId(entityId);
+  const reg = hass.entities && hass.entities[entityId];
+  const device = reg && reg.device_id && hass.devices && hass.devices[reg.device_id];
+  const deviceName = (device && (device.name_by_user || device.name)) || cardName;
+  if (deviceName && friendlyName.startsWith(`${deviceName} `)) {
+    return friendlyName.slice(deviceName.length + 1);
+  }
+  return friendlyName;
 }
 
 // Domains that report rather than act. A click on one of these has nothing
@@ -2860,9 +2983,16 @@ function autoSuggest(hass, cfg) {
     const match = siblings.find((id) => re.test(id));
     if (match) patch[field] = match;
   }
+  // An entity already given a field of its own would only repeat itself.
+  const takenIds = () => new Set(Object.values(patch).concat(Object.values(cfg)).flat());
+  // Home Connect's alerts, on an empty list only.
+  if (!alertsArray(cfg.alerts_entities).length) {
+    const taken = takenIds();
+    const found = siblings.filter((id) => !taken.has(id) && isEventAlert(hass, id)).slice(0, ALERTS_MAX);
+    if (found.length) patch.alerts_entities = found;
+  }
   if (!cfg.info_entities || !cfg.info_entities.length) {
-    // An entity already given a field of its own would only repeat itself.
-    const taken = new Set(Object.values(patch).concat(Object.values(cfg)));
+    const taken = takenIds();
     const infos = [];
     for (const { re, icon } of INFO_PATTERNS) {
       const match = siblings.find((id) => re.test(id) && !taken.has(id));
@@ -5384,6 +5514,7 @@ class ApplianceCard extends HTMLElement {
       const id = typeof e === "string" ? e : e && e.entity;
       if (id) ids.push(id);
     }
+    for (const e of alertEntitiesList(cfg.alerts_entities)) ids.push(e.entity);
     for (const z of cfg.zones || []) {
       if (z && z.level_entity) ids.push(z.level_entity);
       if (z && z.residual_heat_entity) ids.push(z.residual_heat_entity);
@@ -6787,11 +6918,24 @@ class ApplianceCard extends HTMLElement {
         .bar-row { margin-top: 4px; }
         .bar { height: 6px; border-radius: 3px; background: var(--divider-color, #e0e0e0); overflow: hidden; }
         .bar-fill { height: 100%; background: ${color}; transition: width 1s linear; }
-        .alerts-banner {
-          margin-top: 10px; padding: 8px 12px; border-radius: 8px;
+        .alerts-wrap { margin-top: 12px; display: flex; flex-direction: column; align-items: center; }
+        .alerts-pill {
+          display: inline-flex; align-items: center; gap: 6px; max-width: 100%; box-sizing: border-box;
+          padding: 6px 14px; border-radius: 16px; cursor: pointer; font-size: 1em;
           background: rgba(244, 67, 54, 0.12); color: var(--error-color, #f44336);
-          font-size: 1em; display: flex; align-items: center; gap: 6px;
         }
+        .alerts-pill ha-icon, .alert-row ha-icon { --mdc-icon-size: 20px; flex-shrink: 0; }
+        .alerts-menu {
+          align-self: stretch; margin-top: 8px; padding: 6px 0; border-radius: 10px;
+          background: var(--card-background-color, #fff);
+          box-shadow: 0 4px 14px rgba(0, 0, 0, 0.16), 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+        .alert-row {
+          display: flex; align-items: center; gap: 8px; padding: 8px 14px; cursor: pointer;
+          color: var(--error-color, #f44336);
+        }
+        .alert-row .alert-label { flex: 1; min-width: 0; }
+        .alert-row .go { color: var(--secondary-text-color, #727272); }
         .actions-row { display: flex; gap: 8px; margin-top: 12px; justify-content: center; }
         .action-btn {
           display: flex; align-items: center; justify-content: center;
@@ -6809,16 +6953,7 @@ class ApplianceCard extends HTMLElement {
 
     const iconHtml = cfg.compact ? "" : illustrationHtml(applianceType, illustrationCtx);
 
-    const stripNamePrefix = (friendlyName, entityId) => {
-      if (!friendlyName) return humanizeEntityId(entityId);
-      const reg = hass.entities && hass.entities[entityId];
-      const device = reg && reg.device_id && hass.devices && hass.devices[reg.device_id];
-      const deviceName = (device && (device.name_by_user || device.name)) || name;
-      if (deviceName && friendlyName.startsWith(`${deviceName} `)) {
-        return friendlyName.slice(deviceName.length + 1);
-      }
-      return friendlyName;
-    };
+    const stripNamePrefix = (friendlyName, entityId) => stripDeviceName(hass, friendlyName, entityId, name);
 
     let lines = [];
     if (programText) {
@@ -6927,9 +7062,27 @@ class ApplianceCard extends HTMLElement {
         </div>`
       : "";
 
-    const alertsHtml = alerts.length
-      ? `<div class="alerts-banner"><ha-icon icon="mdi:alert-circle"></ha-icon>${t(hass, "alerts")}: ${alerts.map(esc).join(", ")}</div>`
-      : "";
+    // Every alert, the alerts entity's attributes and the alert entities
+    // alike, each a tap away from the entity where it gets acknowledged. One
+    // shows under its own name; several gather behind their count, which
+    // opens them.
+    const alertItems = alerts.map((key) => ({ entity: cfg.alerts_entity, label: key, icon: "mdi:alert-circle" }))
+      .concat(raisedAlerts(hass, cfg.alerts_entities).map((a) => ({
+        entity: a.entity,
+        label: a.label || stripNamePrefix(a.st.attributes.friendly_name, a.entity),
+        icon: a.icon || a.st.attributes.icon || "mdi:alert-circle",
+      })));
+    if (alertItems.length < 2) this._alertsOpen = false;
+    const alertItem = (a, cls) => `<div class="${cls} clickable" data-more="${esc(a.entity)}"><ha-icon icon="${esc(a.icon)}"></ha-icon><span class="alert-label">${esc(a.label)}</span>`;
+    let alertsHtml = "";
+    if (alertItems.length === 1) {
+      alertsHtml = `<div class="alerts-wrap">${alertItem(alertItems[0], "alerts-pill")}</div></div>`;
+    } else if (alertItems.length > 1) {
+      const open = !!this._alertsOpen;
+      alertsHtml = `<div class="alerts-wrap"><div class="alerts-pill" data-alerts-toggle="1" aria-expanded="${open}"><ha-icon icon="mdi:alert-circle"></ha-icon><span class="alert-label">${esc(alertsCountLabel(hass, alertItems.length))}</span><ha-icon class="caret" icon="mdi:chevron-${open ? "up" : "down"}"></ha-icon></div>${open
+        ? `<div class="alerts-menu">${alertItems.map((a) => `${alertItem(a, "alert-row")}<ha-icon class="go" icon="mdi:chevron-right"></ha-icon></div>`).join("")}</div>`
+        : ""}</div>`;
+    }
 
     const actionsHtml = actions.length
       ? `<div class="actions-row">${actions
@@ -6976,10 +7129,17 @@ class ApplianceCard extends HTMLElement {
         });
       });
     });
-    this._root.querySelectorAll(".info-line[data-more]").forEach((el) => {
+    this._root.querySelectorAll(".info-line[data-more], .alert-row[data-more], .alerts-pill[data-more]").forEach((el) => {
       el.addEventListener("click", (ev) => {
         ev.stopPropagation();
         this._moreInfo(el.getAttribute("data-more"));
+      });
+    });
+    this._root.querySelectorAll("[data-alerts-toggle]").forEach((el) => {
+      el.addEventListener("click", (ev) => {
+        ev.stopPropagation();
+        this._alertsOpen = !this._alertsOpen;
+        this._render();
       });
     });
   }
@@ -7230,6 +7390,7 @@ class ApplianceCardEditor extends HTMLElement {
       this._panelOpen = {
         general: true,
         info: (this._config.info_entities || []).length > 0,
+        alerts: alertsArray(this._config.alerts_entities).length > 0,
         order: (this._config.lines_order || []).length > 0,
         zones: (this._config.zones || []).length > 0,
       };
@@ -7266,6 +7427,62 @@ class ApplianceCardEditor extends HTMLElement {
     for (const type of ["focusin", "pointerdown", "keydown"]) {
       this._root.addEventListener(type, () => { this._touched = true; });
     }
+  }
+
+  _alertsList() {
+    return alertsArray(this._config.alerts_entities).map((e) => (typeof e === "string" ? { entity: e } : { ...e }));
+  }
+
+  // An alert is its entity, so it is written back as a plain id unless a
+  // label or an icon was set on it by hand. No alert left, no key left.
+  _writeAlerts(list) {
+    const entries = list.map((e) =>
+      (Object.keys(e).some((k) => k !== "entity" && e[k] !== undefined) ? e : e.entity));
+    if (entries.length) {
+      this._config = { ...this._config, alerts_entities: entries };
+    } else {
+      this._config = { ...this._config };
+      delete this._config.alerts_entities;
+    }
+    this.dispatchEvent(new CustomEvent("config-changed", { detail: { config: this._config } }));
+  }
+
+  _addAlert(entityId) {
+    const list = this._alertsList().filter((e) => e.entity);
+    if (list.length >= ALERTS_MAX || list.some((e) => e.entity === entityId)) return;
+    this._writeAlerts(list.concat({ entity: entityId }));
+  }
+
+  // The name the card will show, so the list reads like the card.
+  _alertName(e) {
+    if (e.label) return e.label;
+    const hass = this._hass;
+    const st = hass.states[e.entity];
+    const card = this._config.state_entity && hass.states[this._config.state_entity];
+    const cardName = this._config.name || (card && card.attributes.friendly_name);
+    return stripDeviceName(hass, st && st.attributes.friendly_name, e.entity, cardName);
+  }
+
+  _alertIcon(e) {
+    const st = this._hass.states[e.entity];
+    return e.icon || (st && st.attributes.icon) || "mdi:alert-circle";
+  }
+
+  // Any other entity, from any appliance, through a picker of its own.
+  _mountAlertOther(slotEl) {
+    if (!slotEl) return;
+    const picker = document.createElement("ha-entity-picker");
+    picker.hass = this._hass;
+    picker.value = "";
+    picker.label = t(this._l10n, "entity");
+    picker.includeDomains = ["binary_sensor", "sensor"];
+    picker.addEventListener("value-changed", (ev) => {
+      if (!ev.detail.value) return;
+      this._alertOther = false;
+      this._addAlert(ev.detail.value);
+      this._build();
+    });
+    slotEl.appendChild(picker);
   }
 
   _zonesList() {
@@ -7350,6 +7567,9 @@ class ApplianceCardEditor extends HTMLElement {
       for (const s of this._sections()) if (patch[s.field]) newOpen.add(s.field);
       this._open = newOpen;
       this._needsBuild = true;
+      if (patch.alerts_entities && this._panelOpen) {
+        this._panelOpen.alerts = true;
+      }
       if (patch.info_entities && this._panelOpen) {
         this._panelOpen.info = true;
         this._infoCount = Math.min(INFO_MAX, Math.max(this._infoCount || 0, patch.info_entities.length));
@@ -7632,6 +7852,11 @@ class ApplianceCardEditor extends HTMLElement {
     // detected type could not see the entity's icon yet.
     this._type = this._currentType();
     const drawn = this._drawnLines();
+    // The alerts chosen, and the appliance's others for the menu, by name.
+    const chosenAlerts = this._alertsList().filter((e) => e.entity);
+    const alertOptions = alertCandidates(this._hass, this._config)
+      .map((id) => ({ id, name: this._alertName({ entity: id }) }))
+      .sort((a, b) => a.name.localeCompare(b.name));
 
     if (!this._root) {
       this.attachShadow({ mode: "open" });
@@ -7672,6 +7897,14 @@ class ApplianceCardEditor extends HTMLElement {
         .info-row-handle:active { cursor: grabbing; }
         .info-row-fields { flex: 1; min-width: 0; }
         .order-line { padding: 7px 0; }
+        .alert-choice { display: flex; align-items: center; gap: 10px; padding: 6px 2px; color: var(--primary-text-color, #1c1c1c); }
+        .alert-choice > ha-icon { --mdc-icon-size: 20px; color: var(--error-color, #f44336); flex-shrink: 0; }
+        .alert-choice span { flex: 1; min-width: 0; }
+        .alert-remove {
+          display: flex; border: none; background: none; padding: 4px; border-radius: 50%; cursor: pointer;
+          color: var(--secondary-text-color, #767676);
+        }
+        .alert-remove ha-icon { --mdc-icon-size: 18px; }
         .info-row.dragging { opacity: 0.4; }
         .info-row.drag-over { border-top: 2px solid var(--primary-color, #03a9f4); }
         details.group {
@@ -7806,6 +8039,22 @@ class ApplianceCardEditor extends HTMLElement {
             </div>
           </div>`).join("")}
       </details>
+      <details class="group" data-panel="alerts" ${this._panelOpen.alerts ? "open" : ""}>
+        <summary>${t(hass, "section_alert_list")}</summary>
+        <div class="section">
+          <div class="row">
+            <select data-role="alerts-add-select"${chosenAlerts.length >= ALERTS_MAX ? " disabled" : ""}>
+              <option value="">${esc(t(hass, "alerts_add"))}</option>
+              ${alertOptions.map((o) => `<option value="${esc(o.id)}">${esc(o.name)}</option>`).join("")}
+              <option value="${ALERT_OTHER}">${esc(t(hass, "alerts_other"))}</option>
+            </select>
+          </div>
+          ${this._alertOther ? `<div class="picker-slot" data-slot="__alert_other"></div>` : ""}
+        </div>
+        ${chosenAlerts.length ? `<div class="section">${chosenAlerts.map((e, i) => `
+          <div class="alert-choice"><ha-icon icon="${esc(this._alertIcon(e))}"></ha-icon><span>${esc(this._alertName(e))}</span><button type="button" class="alert-remove" data-alert-remove="${i}" title="${esc(t(hass, "alerts_remove"))}" aria-label="${esc(t(hass, "alerts_remove"))}"><ha-icon icon="mdi:close"></ha-icon></button></div>`).join("")}
+        </div>` : ""}
+      </details>
       ${drawn.length > 1 ? `
       <details class="group" data-panel="order" ${this._panelOpen.order ? "open" : ""}>
         <summary>${t(hass, "section_lines_order")}</summary>
@@ -7856,6 +8105,26 @@ class ApplianceCardEditor extends HTMLElement {
       this._mountInfoHideUnit(this._root.querySelector(`[data-slot="__info_hideunit_${i}"]`), i);
     }
     this._wireInfoDragAndDrop();
+
+    const alertSelect = this._root.querySelector('[data-role="alerts-add-select"]');
+    if (alertSelect) {
+      alertSelect.addEventListener("change", (ev) => {
+        const value = ev.target.value;
+        if (!value) return;
+        if (value === ALERT_OTHER) this._alertOther = true;
+        else this._addAlert(value);
+        this._build();
+      });
+    }
+    if (this._alertOther) this._mountAlertOther(this._root.querySelector('[data-slot="__alert_other"]'));
+    this._root.querySelectorAll("[data-alert-remove]").forEach((el) => {
+      el.addEventListener("click", () => {
+        const next = this._alertsList().filter((e) => e.entity);
+        next.splice(parseInt(el.getAttribute("data-alert-remove"), 10), 1);
+        this._writeAlerts(next);
+        this._build();
+      });
+    });
 
     const infoCountSelect = this._root.querySelector('[data-role="info-count-select"]');
     if (infoCountSelect) {

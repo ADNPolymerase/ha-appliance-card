@@ -69,6 +69,7 @@ Only `state_entity` is required, except on a fridge where a probe or a door cont
 | `progress_entity` | 0-100 sensor replacing the estimate drawn from the remaining time. |
 | `door_entity` / `door_open_state` / `door_invert` / `door_hide_in_list` | Door sensor, "open" state (default `on`), inversion, and hiding the line (the door is still drawn). |
 | `alerts_entity` | Entity whose every *attribute* at on, true or active shows as an alert. |
+| `alerts_entities` | Up to 8 alerts with an entity each (Home Connect's salt, rinse aid, i-Dos, filters…), as `{ entity, label?, icon? }` or a plain id, shown while on, true, active, *present* or *confirmed*: one under its own name, several behind their count (see *Alert entities*). |
 | `connectivity_entity` / `connectivity_connected_state` | Connectivity, as a wifi icon, and the "connected" state (default `on`). |
 | `info_entities` | Up to 8 lines `{ entity, icon?, label?, value_map?, hide_unit? }`, any beyond are ignored, shown under the lines the card reads on its own. A tap opens the entity's dialog, which is how a tank or a filter gets reset from the card. Past 5 lines the spacing tightens. Values read as in Home Assistant, with the entity's display precision. `value_map` relabels raw values (see below), `hide_unit` drops the unit. |
 | `lines_order` | The order of the info lines, as a list of their keys: `program`, `remaining`, `door`, the ones each type brings (`level`, `last_feed`, `flow_return`, `nozzle`…) and, for the lines you add, their entity id. The visual editor writes it for you by dragging. Lines left out keep their place after the ones named, and a line that is not showing is skipped. |
@@ -328,6 +329,23 @@ washer_dryer: true
 state_entity: sensor.washer_dryer_machine_state
 phase_entity: sensor.washer_dryer_program_phase
 ```
+
+### Alert entities
+
+Home Connect gives each alert an entity of its own: salt or rinse aid nearly empty, an i-Dos tank running low, a filter to clean. Listed in `alerts_entities`, each one shows while it is *present* or *confirmed* (acknowledged on the appliance, the salt still low), and goes once the appliance says *off*. A single alert shows in red under its own name; several gather behind their count, *2 alerts*, which opens their list. A tap on an alert opens its entity.
+
+```yaml
+appliance_type: dishwasher
+state_entity: sensor.dishwasher_operation_state
+alerts_entities:
+  - sensor.dishwasher_salt_nearly_empty
+  - sensor.dishwasher_rinse_aid_nearly_empty
+  - entity: sensor.dishwasher_machine_care_reminder
+    label: Run a care cycle
+    icon: mdi:spray-bottle
+```
+
+Home Assistant creates these entities disabled: enable the ones you want on the device page first. The visual editor then finds them on its own, whatever language they were named in, and leaves out the events that only report on a program (finished, aborted). Its *Add an alert…* menu offers the appliance's own alerts only: its events, and the binary sensors that report a problem, a leak or a low battery. *Other entity…*, at the end of the menu, takes any entity from any appliance, a pet feeder's desiccant `binary_sensor` for instance, raised while it is on.
 
 ### Too many states (`"*"`)
 

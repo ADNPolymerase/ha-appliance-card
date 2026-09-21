@@ -69,6 +69,7 @@ Seule `state_entity` est obligatoire, sauf sur un réfrigérateur où une sonde 
 | `progress_entity` | Capteur 0-100 qui remplace l'estimation tirée du temps restant. |
 | `door_entity` / `door_open_state` / `door_invert` / `door_hide_in_list` | Capteur de porte, état « ouverte » (défaut `on`), inversion, et masquage de la ligne (la porte reste dessinée). |
 | `alerts_entity` | Entité dont chaque *attribut* à on, true ou active s'affiche en alerte. |
+| `alerts_entities` | Jusqu'à 8 alertes, une entité chacune (sel, liquide de rinçage, i-Dos, filtres… de Home Connect), en `{ entity, label?, icon? }` ou en simple identifiant, affichées tant qu'elles sont à on, true, active, *present* ou *confirmed* : une seule sous son propre nom, plusieurs derrière leur nombre (voir *Entités d'alerte*). |
 | `connectivity_entity` / `connectivity_connected_state` | Connectivité, en icône wifi, et état « connecté » (défaut `on`). |
 | `info_entities` | Jusqu'à 8 lignes `{ entity, icon?, label?, value_map?, hide_unit? }`, les suivantes sont ignorées, affichées sous les lignes que la carte lit d'elle-même. Un appui ouvre la fiche de l'entité, ce qui permet de réinitialiser un réservoir ou un filtre depuis la carte. Au-delà de 5 lignes, l'espacement se resserre. Les valeurs s'affichent comme dans Home Assistant, avec la précision d'affichage de l'entité. `value_map` renomme les valeurs brutes (voir plus bas), `hide_unit` masque l'unité. |
 | `lines_order` | L'ordre des lignes d'info, donné par leurs clés : `program`, `remaining`, `door`, celles que chaque type apporte (`level`, `last_feed`, `flow_return`, `nozzle`…) et, pour les lignes ajoutées, leur identifiant d'entité. L'éditeur visuel l'écrit tout seul au glisser. Les lignes non citées gardent leur place après celles qui le sont, et une ligne qui ne s'affiche pas est ignorée. |
@@ -328,6 +329,23 @@ washer_dryer: true
 state_entity: sensor.lavante_sechante_etat
 phase_entity: sensor.lavante_sechante_phase
 ```
+
+### Entités d'alerte
+
+Home Connect donne à chaque alerte une entité à part : sel ou liquide de rinçage presque vide, réservoir i-Dos bas, filtre à nettoyer. Listées dans `alerts_entities`, chacune s'affiche tant qu'elle est *present* ou *confirmed* (acquittée sur l'appareil, le sel toujours bas), et disparaît quand l'appareil passe à *off*. Une seule alerte s'affiche en rouge sous son propre nom ; plusieurs se rangent derrière leur nombre, *2 alertes*, qui ouvre leur liste. Un appui sur une alerte ouvre son entité.
+
+```yaml
+appliance_type: dishwasher
+state_entity: sensor.lave_vaisselle_etat_de_fonctionnement
+alerts_entities:
+  - sensor.lave_vaisselle_sel_presque_vide
+  - sensor.lave_vaisselle_liquide_de_rincage_presque_vide
+  - entity: sensor.lave_vaisselle_rappel_d_entretien_de_la_machine
+    label: Lancer un entretien
+    icon: mdi:spray-bottle
+```
+
+Home Assistant crée ces entités désactivées : activez d'abord celles qui vous intéressent sur la page de l'appareil. L'éditeur visuel les trouve ensuite tout seul, quelle que soit la langue de leur nom, et laisse de côté les événements qui ne font que rendre compte d'un programme (terminé, interrompu). Son menu *Ajouter une alerte…* ne propose que les alertes de l'appareil : ses événements, et les capteurs binaires qui signalent un problème, une fuite ou une batterie faible. *Autre entité…*, en bas du menu, accepte n'importe quelle entité de n'importe quel appareil, le `binary_sensor` du déshydratant d'un distributeur par exemple, en alerte tant qu'il est à on.
 
 ### Trop d'états (`"*"`)
 

@@ -70,6 +70,27 @@ FakeNodeProto.querySelectorAll = function (sel) {
     memo.set(sel, out);
     return out;
   }
+  // The info lines and the alert rows open their entity: their click is wired
+  // on class selectors as well, and the entity rides on data-more. The nodes
+  // are kept by entity, for a test to click the one the card wired, and are
+  // made again whenever the markup changes.
+  if (/^\.[a-z-]+\[data-more\](,\s*\.[a-z-]+\[data-more\])*$/.test(sel)) {
+    const classes = [...sel.matchAll(/\.([a-z-]+)\[data-more\]/g)].map(m => m[1]);
+    if (this.__moreHtml !== this._html) {
+      this.__moreHtml = this._html;
+      this.__more = new Map();
+    }
+    const out = [];
+    for (const m of String(this._html || '').matchAll(/<div class="([^"]*)"([^>]*)>/g)) {
+      const id = /data-more="([^"]*)"/.exec(m[2])?.[1];
+      if (!id || !m[1].split(/\s+/).some(c => classes.includes(c))) continue;
+      const node = this.__more.get(id) || document.createElement('div');
+      node.setAttribute('data-more', id);
+      this.__more.set(id, node);
+      out.push(node);
+    }
+    return out;
+  }
   const attr = /^\[([a-z-]+)\]$/.exec(sel)?.[1];
   if (!attr) return [];
   const memo = (this.__qsa ||= new Map());
@@ -4463,5 +4484,480 @@ check('detection : un champ de gamelle suffit',
 check('detection : un lave-linge reste un lave-linge',
   /class="pf-body"/.test(render({ state_entity: 'sensor.washer_state' },
     { 'sensor.washer_state': { state: 'Running', attributes: {} } })), false);
+
+// ── Alert entities (issue #19) ───────────────────────────────────────────────
+// Home Connect gives each alert an entity of its own: an enum sensor whose
+// states are present, confirmed and off, named after its appliance. Read here
+// as Home Assistant stores it, registry included.
+const HC_OPTIONS = ['confirmed', 'off', 'present'];
+const hcEvent = (state, name, extra = {}) =>
+  ({ state, attributes: { friendly_name: `Dishwasher ${name}`, device_class: 'enum', options: HC_OPTIONS, ...extra } });
+
+/** A dishwasher with alert entities, its menu opened unless told otherwise. */
+function alertCard(config, states, withRegistry = true, open = true) {
+  const all = { 'sensor.dw_state': { state: 'Ready', attributes: { friendly_name: 'Dishwasher Operation state' } }, ...states };
+  const c = new Card();
+  c.setConfig({ type: 'custom:ha-appliance-card', appliance_type: 'dishwasher', state_entity: 'sensor.dw_state', ...config });
+  c._hass = { ...HASS(all),
+    entities: withRegistry ? Object.fromEntries(Object.keys(all).map(id => [id, { device_id: 'dw' }])) : {},
+    devices: withRegistry ? { dw: { name: 'Dishwasher' } } : {} };
+  c._alertsOpen = open;
+  c._render();
+  return c;
+}
+/** New states for the same card, its registry kept. */
+function alertRerender(card, states) {
+  card._hass = { ...card._hass, states: { 'sensor.dw_state': card._hass.states['sensor.dw_state'], ...states } };
+  card._render();
+  return markup(card);
+}
+/** Every alert shown, alone on the pill or in the menu, as "entity|icon|label". */
+const alertRows = h => [...h.matchAll(/<div class="(?:alert-row|alerts-pill) clickable" data-more="([^"]*)"><ha-icon icon="([^"]*)"><\/ha-icon><span class="alert-label">([^<]*)<\/span>/g)]
+  .map(m => `${m[1]}|${m[2]}|${m[3]}`);
+const alertLabel = (h, i = 0) => (alertRows(h)[i] || '||').split('|')[2];
+const alertIcon = (h, i = 0) => (alertRows(h)[i] || '||').split('|')[1];
+/** The pill gathering several alerts, as "count|open|caret", or '' without one. */
+const alertsPill = h => {
+  const m = /<div class="alerts-pill" data-alerts-toggle="1" aria-expanded="(true|false)"><ha-icon icon="mdi:alert-circle"><\/ha-icon><span class="alert-label">([^<]*)<\/span><ha-icon class="caret" icon="([^"]*)"><\/ha-icon><\/div>/.exec(h);
+  return m ? `${m[2]}|${m[1]}|${m[3]}` : '';
+};
+const alertsShown = h => /class="alerts-wrap"/.test(h);
+/** Clicks the row the card wired for `id`, and says what the card asked for. */
+function clickMore(card, id) {
+  const node = card._root.__more?.get(id);
+  if (!node?.__handlers?.click) return 'aucun clic';
+  let stopped = false;
+  node.__handlers.click({ stopPropagation() { stopped = true; } });
+  const ev = card.events.at(-1);
+  return `${ev?.type} ${ev?.detail?.entityId}${stopped ? '' : ' propage'}`;
+}
+/** Taps the count as the card wired it, and gives the markup after. */
+function tapAlerts(card) {
+  const node = card._root.querySelectorAll('[data-alerts-toggle]')[0];
+  if (!node?.__handlers?.click) return 'aucun clic';
+  let stopped = false;
+  node.__handlers.click({ stopPropagation() { stopped = true; } });
+  return stopped ? markup(card) : 'propage';
+}
+
+{
+  const ids = ['sensor.dw_salt_nearly_empty', 'sensor.dw_rinse_aid_nearly_empty', 'sensor.dw_machine_care_reminder'];
+  const c = alertCard({ alerts_entities: ids }, {
+    'sensor.dw_salt_nearly_empty': hcEvent('present', 'Salt nearly empty'),
+    'sensor.dw_rinse_aid_nearly_empty': hcEvent('confirmed', 'Rinse aid nearly empty'),
+    'sensor.dw_machine_care_reminder': hcEvent('off', 'Machine care reminder') });
+  const h = markup(c);
+  check('alertes : deux levees, un compte', alertsPill(h), '2 alerts|true|mdi:chevron-up');
+  check('alertes : une ligne par alerte levee, dans l\'ordre donne', alertRows(h).join(' / '),
+    'sensor.dw_salt_nearly_empty|mdi:alert-circle|Salt nearly empty / '
+    + 'sensor.dw_rinse_aid_nearly_empty|mdi:alert-circle|Rinse aid nearly empty');
+  check('alertes : la ligne ouvre son entite', clickMore(c, 'sensor.dw_rinse_aid_nearly_empty'),
+    'hass-more-info sensor.dw_rinse_aid_nearly_empty');
+  check('alertes : chaque ligne finit par un chevron',
+    (h.match(/<\/span><ha-icon class="go" icon="mdi:chevron-right"><\/ha-icon><\/div>/g) || []).length, 2);
+  check('alertes : une alerte eteinte n\'a rien a ouvrir', clickMore(c, 'sensor.dw_machine_care_reminder'), 'aucun clic');
+  check('alertes : toutes sont surveillees, eteintes comprises',
+    ids.every(id => c._watchedEntityIds().includes(id)), true);
+}
+
+// Several gather behind their count, closed until tapped.
+{
+  const two = { 'sensor.dw_a': hcEvent('present', 'Salt nearly empty'), 'sensor.dw_b': hcEvent('present', 'Rinse aid nearly empty') };
+  const c = alertCard({ alerts_entities: ['sensor.dw_a', 'sensor.dw_b'] }, two, true, false);
+  check('alertes : le menu est ferme au depart', alertsPill(markup(c)), '2 alerts|false|mdi:chevron-down');
+  check('alertes : ferme, il ne montre aucune ligne', alertRows(markup(c)).length, 0);
+  const opened = tapAlerts(c);
+  check('alertes : un toucher l\'ouvre', alertsPill(opened), '2 alerts|true|mdi:chevron-up');
+  check('alertes : ouvert, une ligne par alerte', alertRows(opened).length, 2);
+  check('alertes : il reste ouvert quand les etats changent', alertsPill(alertRerender(c, two)), '2 alerts|true|mdi:chevron-up');
+  check('alertes : un second toucher le referme', alertsPill(tapAlerts(c)), '2 alerts|false|mdi:chevron-down');
+  // Down to one and back up to two: the menu starts closed again.
+  tapAlerts(c);
+  alertRerender(c, { ...two, 'sensor.dw_b': hcEvent('off', 'Rinse aid nearly empty') });
+  check('alertes : revenu a deux, le menu est referme', alertsPill(alertRerender(c, two)), '2 alerts|false|mdi:chevron-down');
+}
+
+// One shows under its own name, and opens its entity straight away.
+{
+  const c = alertCard({ alerts_entities: ['sensor.dw_a', 'sensor.dw_b'] },
+    { 'sensor.dw_a': hcEvent('present', 'Salt nearly empty'), 'sensor.dw_b': hcEvent('off', 'Rinse aid nearly empty') });
+  const h = markup(c);
+  check('alertes : une seule se montre sous son nom', alertRows(h).join(''), 'sensor.dw_a|mdi:alert-circle|Salt nearly empty');
+  check('alertes : sans compte ni menu', alertsPill(h) + String(/class="alerts-menu"/.test(h)), 'false');
+  check('alertes : et un toucher ouvre son entite', clickMore(c, 'sensor.dw_a'), 'hass-more-info sensor.dw_a');
+}
+
+// Raised on the words the alerts attributes are read with and on Home
+// Connect's two, whatever the case or the spaces around; anything else is off.
+const raisedBy = state => alertRows(markup(alertCard({ alerts_entities: ['sensor.dw_a'] },
+  { 'sensor.dw_a': hcEvent(state, 'Salt nearly empty') }))).length;
+for (const s of ['on', 'true', '1', 'active', 'present', 'confirmed', 'Present', ' on ', 'TRUE']) {
+  check(`alertes : "${s}" leve l'alerte`, raisedBy(s), 1);
+}
+for (const s of ['off', 'false', '0', 'inactive', 'no', 'unavailable', 'unknown', '', 'Off']) {
+  check(`alertes : "${s}" ne leve rien`, raisedBy(s), 0);
+}
+
+check('alertes : rien de leve, rien d\'affiche',
+  alertsShown(markup(alertCard({ alerts_entities: ['sensor.dw_a'] }, { 'sensor.dw_a': hcEvent('off', 'Salt nearly empty') }))), false);
+check('alertes : une entite absente ne dessine rien',
+  alertsShown(markup(alertCard({ alerts_entities: ['sensor.dw_ghost'] }, {}))), false);
+check('alertes : une entite seule, sans liste',
+  alertRows(markup(alertCard({ alerts_entities: 'sensor.dw_a' }, { 'sensor.dw_a': hcEvent('present', 'Salt nearly empty') }))).length, 1);
+check('alertes : les entrees vides sont sautees',
+  alertRows(markup(alertCard({ alerts_entities: [null, '', { label: 'Sans entite' }, 'sensor.dw_a'] },
+    { 'sensor.dw_a': hcEvent('present', 'Salt nearly empty') }))).join(''),
+  'sensor.dw_a|mdi:alert-circle|Salt nearly empty');
+check('alertes : les entrees vides ne comptent pas dans les huit',
+  alertRows(markup(alertCard({ alerts_entities: ['', '', '', '', '', '', '', '', 'sensor.dw_a'] },
+    { 'sensor.dw_a': hcEvent('present', 'Salt nearly empty') }))).length, 1);
+
+// The name: the one given, else the entity's without the appliance's, which
+// Home Connect puts in front of every entity.
+{
+  const one = (config, withRegistry = true, attrs = {}) => markup(alertCard({ alerts_entities: ['sensor.dw_a'], ...config },
+    { 'sensor.dw_a': hcEvent('present', 'Salt nearly empty', attrs) }, withRegistry));
+  check('alertes : le nom de l\'appareil est retire, lu dans le registre', alertLabel(one({})), 'Salt nearly empty');
+  check('alertes : sans registre, le nom reste entier', alertLabel(one({}, false)), 'Dishwasher Salt nearly empty');
+  check('alertes : ou sans le nom de la carte, s\'il le porte', alertLabel(one({ name: 'Dishwasher' }, false)), 'Salt nearly empty');
+  check('alertes : sans nom du tout, l\'identifiant lisible',
+    alertLabel(markup(alertCard({ alerts_entities: ['binary_sensor.salt_low'] },
+      { 'binary_sensor.salt_low': { state: 'on', attributes: {} } }, false))), 'Salt Low');
+  check('alertes : le libelle donne l\'emporte',
+    alertLabel(one({ alerts_entities: [{ entity: 'sensor.dw_a', label: 'Sel a remettre' }] })), 'Sel a remettre');
+  check('alertes : l\'icone donnee l\'emporte',
+    alertIcon(one({ alerts_entities: [{ entity: 'sensor.dw_a', icon: 'mdi:shaker-outline' }] }, true, { icon: 'mdi:water' })),
+    'mdi:shaker-outline');
+  check('alertes : sinon celle de l\'entite', alertIcon(one({}, true, { icon: 'mdi:water' })), 'mdi:water');
+  check('alertes : sinon le rond d\'alerte', alertIcon(one({})), 'mdi:alert-circle');
+  check('alertes : une entree avec libelle est surveillee aussi',
+    alertCard({ alerts_entities: [{ entity: 'sensor.dw_a', label: 'Sel' }] }, {})._watchedEntityIds().includes('sensor.dw_a'), true);
+}
+
+// The alerts entity's attributes count as well, first, each opening that entity.
+{
+  const c = alertCard({ alerts_entity: 'sensor.dw_alerts', alerts_entities: ['sensor.dw_a'] }, {
+    'sensor.dw_alerts': { state: 'on', attributes: { door_open: 'on' } },
+    'sensor.dw_a': hcEvent('present', 'Salt nearly empty') });
+  const h = markup(c);
+  check('alertes : les attributs comptent aussi', alertsPill(h).split('|')[0], '2 alerts');
+  check('alertes : en premier, chacun ouvrant son entite', alertRows(h).join(' / '),
+    'sensor.dw_alerts|mdi:alert-circle|door_open / sensor.dw_a|mdi:alert-circle|Salt nearly empty');
+  check('alertes : la ligne d\'attribut ouvre l\'entite d\'alertes', clickMore(c, 'sensor.dw_alerts'), 'hass-more-info sensor.dw_alerts');
+  contains('alertes : une pastille centree', h, '.alerts-wrap { margin-top: 12px; display: flex; flex-direction: column; align-items: center; }');
+  contains('alertes : rouge sur fond rouge pale', h, 'background: rgba(244, 67, 54, 0.12); color: var(--error-color, #f44336);');
+  contains('alertes : le menu se detache de la carte', h, 'box-shadow: 0 4px 14px rgba(0, 0, 0, 0.16), 0 1px 3px rgba(0, 0, 0, 0.1);');
+  contains('alertes : une ligne du menu s\'etire', h, '.alert-row .alert-label { flex: 1; min-width: 0; }');
+}
+check('alertes : un attribut seul se montre sous son nom',
+  alertRows(markup(alertCard({ alerts_entity: 'sensor.dw_alerts' }, { 'sensor.dw_alerts': { state: 'on', attributes: { door_open: 'on' } } }))).join(''),
+  'sensor.dw_alerts|mdi:alert-circle|door_open');
+
+// Eight at most, drawn and watched, like the info lines.
+{
+  const ids = Array.from({ length: 9 }, (_, i) => `sensor.dw_alert_${i + 1}`);
+  const c = alertCard({ alerts_entities: ids }, Object.fromEntries(ids.map(id => [id, hcEvent('present', 'Alert')])));
+  check('alertes : huit au plus', alertRows(markup(c)).length, 8);
+  check('alertes : et huit comptees', alertsPill(markup(c)).split('|')[0], '8 alerts');
+  check('alertes : la huitieme est surveillee', c._watchedEntityIds().includes('sensor.dw_alert_8'), true);
+  check('alertes : la neuvieme ni dessinee ni surveillee',
+    c._watchedEntityIds().includes('sensor.dw_alert_9') || markup(c).includes('sensor.dw_alert_9'), false);
+}
+
+// The count in each language's own plural: Russian, Polish and Czech do not
+// agree 2 and 5 alike.
+{
+  const count = (language, n) => {
+    const ids = Array.from({ length: n }, (_, i) => `sensor.dw_p${i}`);
+    return alertsPill(markup(alertCard({ language, alerts_entities: ids },
+      Object.fromEntries(ids.map(id => [id, hcEvent('present', 'P')])), true, false))).split('|')[0];
+  };
+  check('alertes : 2 en francais', count('fr', 2), '2 alertes');
+  check('alertes : 2 en russe', count('ru', 2), '2 оповещения');
+  check('alertes : 5 en russe', count('ru', 5), '5 оповещений');
+  check('alertes : 2 en polonais', count('pl', 2), '2 alerty');
+  check('alertes : 5 en polonais', count('pl', 5), '5 alertów');
+  check('alertes : 8 en tcheque', count('cs', 8), '8 upozornění');
+  check('alertes : 3 en chinois', count('zh', 3), '3 条警报');
+  for (const language of ['de', 'es', 'it', 'nl', 'pt', 'sv', 'no', 'da']) {
+    const text = count(language, 3);
+    check(`alertes : le compte traduit en ${language}`, /^3 \S/.test(text) && text !== '3 alerts', true);
+  }
+}
+
+// Every type has them: a pet feeder's desiccant is an alert as much as a
+// dishwasher's salt, and a type drawn its own way must not lose it.
+for (const type of ['washer', 'dryer', 'dishwasher', 'oven', 'microwave', 'hood', 'cooktop', 'fridge', 'kettle',
+  'cooker', 'coffee', 'rice_cooker', 'water_heater', 'boiler', 'heat_pump', 'printer_3d', 'pet_feeder']) {
+  check(`alertes : sur ${type} aussi`, alertRows(markup(alertCard({ appliance_type: type, alerts_entities: ['binary_sensor.x_alert'] },
+    { 'binary_sensor.x_alert': { state: 'on', attributes: { friendly_name: 'Alerte' } } }))).length, 1);
+}
+
+// The info lines still open their entity through the same wiring.
+check('lignes d\'info : la ligne ouvre toujours son entite',
+  clickMore(alertCard({ info_entities: [{ entity: 'sensor.dw_rinse' }] }, { 'sensor.dw_rinse': { state: '3', attributes: {} } }),
+    'sensor.dw_rinse'), 'hass-more-info sensor.dw_rinse');
+
+noInjection('nom d\'alerte', markup(alertCard({ alerts_entities: ['sensor.dw_a'] },
+  { 'sensor.dw_a': { state: 'present', attributes: { friendly_name: XSS } } })));
+check('icone d\'alerte : aucun attribut onload forme',
+  /onload="/i.test(markup(alertCard({ alerts_entities: ['sensor.dw_a'] },
+    { 'sensor.dw_a': { state: 'on', attributes: { icon: 'mdi:x" onload="alert(1)' } } }))), false);
+
+// ── The editor: a menu of the appliance's alerts ──
+// A Home Connect dishwasher with its events, a door, two binary sensors that
+// report a problem and one that does not, a battery level, and a leak sensor
+// of another device. Home Connect's two alerts are found on opening.
+const ALERT_DEVICE = {
+  'sensor.dw_state': [{ state: 'ready', attributes: { friendly_name: 'Dishwasher Operation state' } }, null],
+  'binary_sensor.dw_door': [{ state: 'off', attributes: { friendly_name: 'Dishwasher Door', device_class: 'door' } }, null],
+  'binary_sensor.dw_leak': [{ state: 'off', attributes: { friendly_name: 'Dishwasher Leak', device_class: 'moisture' } }, null],
+  'binary_sensor.dw_filter': [{ state: 'on', attributes: { friendly_name: 'Dishwasher Filter clogged', device_class: 'problem' } }, null],
+  'binary_sensor.dw_remote': [{ state: 'on', attributes: { friendly_name: 'Dishwasher Remote control' } }, null],
+  'sensor.dw_battery': [{ state: '80', attributes: { friendly_name: 'Dishwasher Battery', device_class: 'battery', unit_of_measurement: '%' } }, null],
+  'sensor.dw_salt': [hcEvent('present', 'Salt nearly empty'), 'salt_nearly_empty'],
+  'sensor.dw_rinse': [hcEvent('off', 'Rinse aid nearly empty'), 'rinse_aid_nearly_empty'],
+  'sensor.dw_finished': [hcEvent('off', 'Program finished'), 'program_finished'],
+};
+function alertEditor(config = {}, extraStates = {}, extraDevice = {}) {
+  const states = { 'binary_sensor.kitchen_leak': { state: 'off', attributes: { friendly_name: 'Kitchen leak', device_class: 'moisture' } },
+    ...extraStates };
+  const entities = {};
+  for (const [id, [st, key]] of Object.entries({ ...ALERT_DEVICE, ...extraDevice })) {
+    states[id] = st;
+    entities[id] = key ? { device_id: 'dw', translation_key: key } : { device_id: 'dw' };
+  }
+  const ed = new Editor();
+  ed.setConfig({ type: 'custom:ha-appliance-card', appliance_type: 'dishwasher', state_entity: 'sensor.dw_state',
+    door_entity: 'binary_sensor.dw_door', ...config });
+  ed.hass = { ...HASS(states), entities, devices: { dw: { name: 'Dishwasher' } } };
+  return ed;
+}
+/** The menu's entries as "value:text". */
+const alertMenu = h => {
+  const sel = (/<select data-role="alerts-add-select"[^>]*>([\s\S]*?)<\/select>/.exec(h) || [, ''])[1];
+  return [...sel.matchAll(/<option value="([^"]*)">([^<]*)<\/option>/g)].map(m => `${m[1]}:${m[2]}`);
+};
+/** The alerts chosen, as "icon|name|remove index". */
+const alertChoices = h => [...h.matchAll(/<div class="alert-choice"><ha-icon icon="([^"]*)"><\/ha-icon><span>([^<]*)<\/span><button type="button" class="alert-remove" data-alert-remove="(\d+)"/g)]
+  .map(m => `${m[1]}|${m[2]}|${m[3]}`);
+const alertSelect = ed => ed._root.querySelector('[data-role="alerts-add-select"]');
+{
+  const ed = alertEditor();
+  const html = markup(ed._root);
+  contains('editeur alertes : un panneau a lui', html, 'data-panel="alerts"');
+  check('editeur alertes : ouvert sur les alertes trouvees', /data-panel="alerts" open/.test(html), true);
+  check('editeur alertes : les alertes trouvees, dans la liste', alertChoices(html).join(' / '),
+    'mdi:alert-circle|Salt nearly empty|0 / mdi:alert-circle|Rinse aid nearly empty|1');
+  // Limited: the appliance's own alerts, by name, without its news, its door,
+  // what reports no problem, nor anything of another device.
+  check('editeur alertes : le menu ne propose que les alertes de l\'appareil', alertMenu(html).join(' / '),
+    ':Add an alert… / binary_sensor.dw_filter:Filter clogged / binary_sensor.dw_leak:Leak / __other__:Other entity…');
+  check('editeur alertes : la croix se nomme', /class="alert-remove" data-alert-remove="0" title="Remove" aria-label="Remove"/.test(html), true);
+  fire(alertSelect(ed), 'change', { target: { value: 'binary_sensor.dw_leak' } });
+  checkFired('editeur alertes : choisir dans le menu', ed, ev =>
+    check('editeur alertes : ajoutee a la suite, en simple identifiant', (ev?.detail?.config?.alerts_entities || []).join(' '),
+      'sensor.dw_salt sensor.dw_rinse binary_sensor.dw_leak'));
+  const after = markup(ed._root);
+  check('editeur alertes : la liste la montre', alertChoices(after).length, 3);
+  check('editeur alertes : le menu ne la propose plus', alertMenu(after).join(' / '),
+    ':Add an alert… / binary_sensor.dw_filter:Filter clogged / __other__:Other entity…');
+  const events = ed.events.length;
+  fire(alertSelect(ed), 'change', { target: { value: '' } });
+  check('editeur alertes : le titre du menu ne choisit rien', ed.events.length, events);
+}
+{
+  // The remove buttons, and the key gone with the last alert.
+  const ed = alertEditor({ alerts_entities: ['sensor.dw_salt', 'sensor.dw_rinse'] });
+  const crosses = ed._root.querySelectorAll('[data-alert-remove]');
+  fire(crosses[0], 'click', {});
+  checkFired('editeur alertes : retirer une alerte', ed, ev =>
+    check('editeur alertes : elle quitte la liste', (ev?.detail?.config?.alerts_entities || []).join(' '), 'sensor.dw_rinse'));
+  check('editeur alertes : et revient dans le menu', alertMenu(markup(ed._root)).some(o => o.startsWith('sensor.dw_salt:')), true);
+  const last = alertEditor({ alerts_entities: ['sensor.dw_salt'] });
+  fire(last._root.querySelectorAll('[data-alert-remove]')[0], 'click', {});
+  check('editeur alertes : plus d\'alerte, plus de cle', 'alerts_entities' in last._config, false);
+}
+{
+  // Any other entity, through a picker of sensors and binary sensors.
+  const ed = alertEditor({ alerts_entities: ['sensor.dw_salt'] });
+  check('editeur alertes : pas de selecteur avant d\'en demander un', /data-slot="__alert_other"/.test(markup(ed._root)), false);
+  fire(alertSelect(ed), 'change', { target: { value: '__other__' } });
+  check('editeur alertes : autre entite ouvre un selecteur', /data-slot="__alert_other"/.test(markup(ed._root)), true);
+  const picker = ed._root.querySelector('[data-slot="__alert_other"]').children.at(-1);
+  check('editeur alertes : capteurs et capteurs binaires', (picker.includeDomains || []).join(','), 'binary_sensor,sensor');
+  check('editeur alertes : le selecteur se nomme', picker.label, 'Entity');
+  const events = ed.events.length;
+  fire(picker, 'value-changed', { detail: { value: '' } });
+  check('editeur alertes : un selecteur vide n\'ajoute rien', ed.events.length, events);
+  fire(picker, 'value-changed', { detail: { value: 'binary_sensor.kitchen_leak' } });
+  check('editeur alertes : l\'entite choisie s\'ajoute', ed._config.alerts_entities.join(' '), 'sensor.dw_salt binary_sensor.kitchen_leak');
+  check('editeur alertes : et le selecteur se referme', /data-slot="__alert_other"/.test(markup(ed._root)), false);
+  fire(alertSelect(ed), 'change', { target: { value: '__other__' } });
+  fire(ed._root.querySelector('[data-slot="__alert_other"]').children.at(-1), 'value-changed', { detail: { value: 'sensor.dw_salt' } });
+  check('editeur alertes : une alerte deja choisie ne se double pas', ed._config.alerts_entities.join(' '),
+    'sensor.dw_salt binary_sensor.kitchen_leak');
+}
+{
+  const ed = alertEditor({ alerts_entities: ['sensor.dw_salt'], info_entities: [{ entity: 'binary_sensor.dw_leak' }] });
+  check('editeur alertes : ce que la carte montre deja n\'est pas propose',
+    alertMenu(markup(ed._root)).some(o => o.startsWith('binary_sensor.dw_leak:')), false);
+  check('editeur alertes : ni ce qu\'un champ montre',
+    alertMenu(markup(alertEditor({ alerts_entities: ['sensor.dw_salt'], alerts_entity: 'binary_sensor.dw_filter' })._root))
+      .some(o => o.startsWith('binary_sensor.dw_filter:')), false);
+  check('editeur alertes : ouvert sur une liste deja faite',
+    /data-panel="alerts" open/.test(markup(alertEditor({ alerts_entities: ['sensor.dw_salt'] })._root)), true);
+  const full = alertEditor({ alerts_entities: Array.from({ length: 8 }, (_, i) => `sensor.a${i}`) });
+  check('editeur alertes : a huit, le menu se ferme', /<select data-role="alerts-add-select" disabled>/.test(markup(full._root)), true);
+  full._addAlert('binary_sensor.dw_leak');
+  check('editeur alertes : et rien ne s\'y ajoute', full._config.alerts_entities.length, 8);
+  const open = alertEditor({ alerts_entities: ['sensor.dw_salt'] });
+  check('editeur alertes : sous huit, il reste ouvert', /<select data-role="alerts-add-select">/.test(markup(open._root)), true);
+}
+{
+  const ed = alertEditor({ alerts_entities: [{ entity: 'sensor.dw_salt', label: 'Sel', icon: 'mdi:shaker' }, 'sensor.dw_rinse'] });
+  check('editeur alertes : le libelle et l\'icone donnes se voient', alertChoices(markup(ed._root))[0], 'mdi:shaker|Sel|0');
+  const cross = ed._root.querySelectorAll('[data-alert-remove]')[1];
+  if (cross) fire(cross, 'click', {});
+  check('editeur alertes : et restent quand une autre part', JSON.stringify(ed._config.alerts_entities),
+    '[{"entity":"sensor.dw_salt","label":"Sel","icon":"mdi:shaker"}]');
+  check('editeur alertes : une entite seule, sans liste',
+    alertChoices(markup(alertEditor({ alerts_entities: 'sensor.dw_salt' })._root)).join(''), 'mdi:alert-circle|Salt nearly empty|0');
+  // Without a device, the name the card was given comes off, as on the card.
+  check('editeur alertes : sans appareil, le nom de la carte s\'efface',
+    alertChoices(markup(alertEditor({ name: 'Cellar', alerts_entities: ['binary_sensor.cellar_pump'] },
+      { 'binary_sensor.cellar_pump': { state: 'off', attributes: { friendly_name: 'Cellar Pump fault', device_class: 'problem' } } })._root)).join(''),
+    'mdi:alert-circle|Pump fault|0');
+}
+{
+  // An appliance with nothing to offer: the panel stays closed, the menu
+  // keeps only the other entity.
+  const bare = new Editor();
+  bare.setConfig({ type: 'custom:ha-appliance-card', appliance_type: 'dishwasher', state_entity: 'sensor.other_state' });
+  bare.hass = HASS({ 'sensor.other_state': { state: 'Ready', attributes: {} } });
+  const h = markup(bare._root);
+  check('editeur alertes : ferme tant qu\'il n\'y a rien', /data-panel="alerts" open/.test(h), false);
+  check('editeur alertes : rien a proposer que l\'autre entite', alertMenu(h).join(' / '), ':Add an alert… / __other__:Other entity…');
+  const panel = (/data-panel="alerts"[\s\S]*?<\/details>/.exec(h) || [''])[0];
+  check('editeur alertes : ni liste, pas meme vide', (panel.match(/<div class="section">/g) || []).length, 1);
+}
+noInjection('nom d\'alerte dans l\'editeur', markup(alertEditor({ alerts_entities: ['binary_sensor.xss'] },
+  { 'binary_sensor.xss': { state: 'on', attributes: { friendly_name: XSS } } })._root));
+noInjection('nom propose dans le menu de l\'editeur', markup(alertEditor({}, {},
+  { 'binary_sensor.dw_xss': [{ state: 'off', attributes: { friendly_name: XSS, device_class: 'problem' } }, null] })._root));
+
+for (const type of ['washer', 'dryer', 'dishwasher', 'oven', 'microwave', 'hood', 'cooktop', 'fridge', 'kettle',
+  'cooker', 'coffee', 'rice_cooker', 'water_heater', 'boiler', 'heat_pump', 'printer_3d', 'pet_feeder']) {
+  check(`editeur alertes : le panneau sur ${type} aussi`, /data-panel="alerts"/.test(markup(alertEditor({ appliance_type: type })._root)), true);
+}
+
+// The panel in fourteen languages: its own words in each, never the English
+// ones a missing entry would fall back to.
+for (const language of ['fr', 'ru', 'de', 'es', 'it', 'nl', 'pt', 'sv', 'no', 'da', 'pl', 'zh', 'cs']) {
+  const html = markup(alertEditor({ language })._root);
+  const title = (/data-panel="alerts"[^>]*>\s*<summary>([^<]*)<\/summary>/.exec(html) || [, ''])[1];
+  const menu = alertMenu(html);
+  const remove = (/class="alert-remove" data-alert-remove="0" title="([^"]*)"/.exec(html) || [, ''])[1];
+  check(`editeur alertes : titre traduit en ${language}`, title !== '' && title !== 'Alert entities', true);
+  check(`editeur alertes : menu traduit en ${language}`, menu[0] !== ':Add an alert…' && menu[0].startsWith(':'), true);
+  check(`editeur alertes : autre entite traduite en ${language}`, menu.at(-1) !== '__other__:Other entity…' && menu.at(-1).startsWith('__other__:'), true);
+  check(`editeur alertes : croix traduite en ${language}`, remove !== '' && remove !== 'Remove', true);
+}
+contains('editeur alertes : titre en anglais', markup(alertEditor()._root), '<summary>Alert entities</summary>');
+
+// ── Found on the device ──
+// By Home Connect's three states and by the integration's key, which is the
+// same in every language, never by the name.
+function suggestOn(type, stateId, list, config = {}) {
+  const states = { [stateId]: { state: 'ready', attributes: {} } };
+  const entities = { [stateId]: { device_id: 'hc' } };
+  for (const [id, key, options = HC_OPTIONS] of list) {
+    states[id] = { state: 'off', attributes: options ? { options } : {} };
+    entities[id] = key ? { device_id: 'hc', translation_key: key } : { device_id: 'hc' };
+  }
+  const ed = new Editor();
+  ed.setConfig({ type: 'custom:ha-appliance-card', appliance_type: type, state_entity: stateId, ...config });
+  ed.hass = { ...HASS(states), entities };
+  return { ed, sug: ed.events.at(-1)?.detail?.config || {} };
+}
+{
+  // Its news come first, and an enum of its own, so that anything short of
+  // the three states and the key would pick them.
+  const { ed, sug } = suggestOn('dishwasher', 'sensor.dishwasher_operation_state', [
+    ['sensor.dishwasher_alarm_clock_elapsed', 'alarm_clock_elapsed'],
+    ['sensor.dishwasher_door', 'door', ['open', 'closed', 'locked']],
+    ['binary_sensor.dishwasher_salt_low', null, null],
+    ['sensor.dishwasher_salt_nearly_empty', 'salt_nearly_empty'],
+    ['sensor.dishwasher_rinse_aid_nearly_empty', 'rinse_aid_nearly_empty'],
+    ['sensor.dishwasher_machine_care_reminder', 'machine_care_reminder'],
+  ]);
+  check('suggestion alertes : les alertes de Home Connect, pas ses nouvelles', (sug.alerts_entities || []).join(' '),
+    'sensor.dishwasher_salt_nearly_empty sensor.dishwasher_rinse_aid_nearly_empty sensor.dishwasher_machine_care_reminder');
+  check('suggestion alertes : le panneau s\'ouvre', ed._panelOpen?.alerts, true);
+  check('suggestion alertes : et les liste', alertChoices(markup(ed._root)).length, 3);
+}
+{
+  // Home Assistant set to French names the entities in French, never the keys.
+  // The program is already chosen, so that nothing but the key keeps the
+  // finished program out.
+  const { sug } = suggestOn('dishwasher', 'sensor.lave_vaisselle_etat_de_fonctionnement', [
+    ['sensor.lave_vaisselle_programme_termine', 'program_finished'],
+    ['sensor.lave_vaisselle_sel_presque_vide', 'salt_nearly_empty'],
+    ['sensor.lave_vaisselle_manque_de_liquide_de_rincage', 'rinse_aid_lack'],
+  ], { program_entity: 'select.lave_vaisselle_programme_actif' });
+  check('suggestion alertes : dans toutes les langues, par la cle', (sug.alerts_entities || []).join(' '),
+    'sensor.lave_vaisselle_sel_presque_vide sensor.lave_vaisselle_manque_de_liquide_de_rincage');
+}
+for (const options of [['confirmed', 'off', 'on'], ['present', 'off', 'on'], ['present', 'confirmed', 'on'], ['off', 'eco', 'auto']]) {
+  check(`suggestion alertes : ${options.join('/')} n'est pas un evenement`,
+    suggestOn('dishwasher', 'sensor.dw_state', [['sensor.dw_ev', 'salt_nearly_empty', options]]).sug.alerts_entities, undefined);
+}
+check('suggestion alertes : sans cle, l\'identifiant fait foi',
+  (suggestOn('dishwasher', 'sensor.dishwasher_operation_state', [
+    ['sensor.dishwasher_alarm_clock_elapsed', null],
+    ['sensor.dishwasher_salt_nearly_empty', null]]).sug.alerts_entities || []).join(' '),
+  'sensor.dishwasher_salt_nearly_empty');
+// Each of the news, and each kind of alert, on an entity whose id says nothing.
+for (const key of ['program_aborted', 'program_finished', 'alarm_clock_elapsed', 'favorite_short_press',
+  'favorite_long_press', 'preheat_finished', 'regular_preheat_finished', 'drying_process_finished',
+  'descaling_in_20_cups', 'calc_n_clean_in5cups', 'keep_milk_tank_cool']) {
+  check(`suggestion alertes : ${key} n'est pas une alerte`,
+    suggestOn('dishwasher', 'sensor.dw_state', [['sensor.dw_ev', key]]).sug.alerts_entities, undefined);
+}
+for (const key of ['salt_lack', 'program_blocked_salt_lack', 'smart_filter_cleaning_reminder', 'poor_i_dos_1_fill_level',
+  'grease_filter_max_saturation_reached', 'device_should_be_descaled', 'freezer_door_alarm']) {
+  check(`suggestion alertes : ${key} en est une`,
+    (suggestOn('dishwasher', 'sensor.dw_state', [['sensor.dw_ev', key]]).sug.alerts_entities || []).join(''), 'sensor.dw_ev');
+}
+{
+  // A coffee machine keeps its reserves in their fields, not twice.
+  const { sug } = suggestOn('coffee', 'sensor.coffee_maker_operation_state', [
+    ['sensor.coffee_maker_bean_container_empty', 'bean_container_empty'],
+    ['sensor.coffee_maker_water_tank_empty', 'water_tank_empty'],
+    ['sensor.coffee_maker_device_should_be_cleaned', 'device_should_be_cleaned'],
+  ]);
+  check('suggestion alertes : le cafe garde ses reserves dans leurs champs, pas en alerte',
+    [sug.beans_entity, sug.water_entity, ...(sug.alerts_entities || [])].join(' '),
+    'sensor.coffee_maker_bean_container_empty sensor.coffee_maker_water_tank_empty sensor.coffee_maker_device_should_be_cleaned');
+}
+{
+  // An alert named like a temperature goes to the alerts, and the info line to
+  // the temperature itself.
+  const { sug } = suggestOn('washer', 'sensor.washer_operation_state', [
+    ['sensor.washer_temperature_alarm', 'temperature_alarm'],
+    ['sensor.washer_temperature', null, null],
+  ]);
+  check('suggestion alertes : l\'alerte dans les alertes', (sug.alerts_entities || []).join(' '), 'sensor.washer_temperature_alarm');
+  check('suggestion alertes : la ligne d\'info sur la temperature', (sug.info_entities || []).map(e => e.entity).join(' '),
+    'sensor.washer_temperature');
+}
+check('suggestion alertes : huit au plus',
+  (suggestOn('dishwasher', 'sensor.dw_state', Array.from({ length: 10 }, (_, i) => [`sensor.dw_ev_${i}`, 'machine_care_reminder']))
+    .sug.alerts_entities || []).length, 8);
+for (const [label, mine] of [['une liste', ['binary_sensor.mine']], ['une entite seule', 'binary_sensor.mine'],
+  ['une entree seule', { entity: 'binary_sensor.mine', label: 'Mine' }]]) {
+  const { ed } = suggestOn('dishwasher', 'sensor.dw_state', [['sensor.dw_ev', 'salt_nearly_empty']], { alerts_entities: mine });
+  check(`suggestion alertes : ${label} deja faite est laissee`, JSON.stringify(ed._config.alerts_entities), JSON.stringify(mine));
+}
 
 report();
