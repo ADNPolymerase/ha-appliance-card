@@ -4060,7 +4060,7 @@ const CFG_IN = { appliance_type: 'pet_feeder', start_entity: 'select.croquettes_
 const feeder = (extra = {}, more = {}) => render({ ...CFG_IN, ...extra }, { ...FEEDER_IN, ...more });
 
 const fIn = feeder();
-check('gamelle : au repos elle est prete', stateLine(fIn), 'Ready');
+check('gamelle : au repos, rien a dire', /class="state-line"/.test(fIn), false);
 check('gamelle : portions du jour', infoLine(fIn, 'Portions today'), '12 portion · 96 g');
 check('gamelle : taille de la portion', infoLine(fIn, 'Serving size'), '3 portion');
 check('gamelle : poids d\'une portion', infoLine(fIn, 'Portion weight'), '8 g');
@@ -4100,9 +4100,9 @@ const fEmpty = feeder({ level_entity: 'binary_sensor.no_food' },
 check('gamelle : un contact de manque annonce le reservoir vide', stateLine(fEmpty), 'Tank empty');
 check('gamelle : et la tremie se vide sur le dessin', machineCls(fEmpty).includes('empty'), true);
 check('gamelle : le tas disparait alors', /\.machine\.empty \.pf-heap \{ display: none; \}/.test(fEmpty), true);
-check('gamelle : contact ferme, pleine',
-  stateLine(feeder({ level_entity: 'binary_sensor.no_food' },
-    { 'binary_sensor.no_food': { state: 'off', attributes: {} } })), 'Ready');
+check('gamelle : contact ferme, rien a signaler',
+  /class="state-line"/.test(feeder({ level_entity: 'binary_sensor.no_food' },
+    { 'binary_sensor.no_food': { state: 'off', attributes: {} } })), false);
 // A percentage fills the hopper, and empties it at the bottom.
 const fLevel = (pct, extra) => feeder({ level_entity: 'sensor.food_level', ...extra },
   { 'sensor.food_level': { state: String(pct), attributes: { unit_of_measurement: '%' } } });
@@ -4111,7 +4111,7 @@ check('gamelle : plein, elle est pleine', /--pf-fill:26\.0px/.test(fLevel(100)),
 check('gamelle : le niveau fait une ligne', infoLine(fLevel(50), 'Food level'), '50\u00a0%');
 check('gamelle : a zero le reservoir est vide', stateLine(fLevel(0)), 'Tank empty');
 check('gamelle : et le seuil se regle', stateLine(fLevel(4, { level_empty_below: '5' })), 'Tank empty');
-check('gamelle : au-dessus du seuil, rien a signaler', stateLine(fLevel(6, { level_empty_below: '5' })), 'Ready');
+check('gamelle : au-dessus du seuil, le niveau seulement', stateLine(fLevel(6, { level_empty_below: '5' })), 'Tank at 6%');
 check('gamelle : sans niveau, pas de hauteur imposee', /style="--pf-fill/.test(fIn), false);
 
 // A tank counted in grams, as the Tuya feeders report it: the reading is what
@@ -4126,7 +4126,7 @@ check('grammes : presque vide, presque plate', /--pf-fill:4\.7px/.test(fGrams(30
 check('grammes : le seuil de vide reste dans l\'unite du capteur',
   stateLine(fGrams(60, { level_empty_below: '100' })), 'Tank empty');
 check('grammes : au-dessus du seuil, rien a signaler',
-  stateLine(fGrams(200, { level_empty_below: '100' })), 'Ready');
+  /class="state-line"/.test(fGrams(200, { level_empty_below: '100' })), false);
 // A reading with no unit at all keeps being read as a percentage, as before.
 check('niveau sans unite : toujours un pourcentage',
   /--pf-fill:15\.0px/.test(feeder({ level_entity: 'sensor.food_level' },
@@ -4135,11 +4135,11 @@ check('niveau sans unite : toujours un pourcentage',
 // A fault code names which fault it is, and zero is the only value that says
 // there is none: a feeder reporting 1 is jammed, not ready.
 const fFault = (code) => feeder({}, { 'binary_sensor.croquettes_error': { state: String(code), attributes: {} } });
-check('code de defaut : zero ne signale rien', stateLine(fFault(0)), 'Ready');
+check('code de defaut : zero ne signale rien', /class="state-line"/.test(fFault(0)), false);
 check('code de defaut : un code non nul est une erreur', stateLine(fFault(1)), 'Error');
 check('code de defaut : et le chat vient le dire', /class="pf-cat"/.test(fFault(2)), true);
 check('code de defaut : un bourrage nomme se lit aussi', stateLine(fFault('food_jam')), 'Error');
-check('code de defaut : une entite muette ne crie pas', stateLine(fFault('unknown')), 'Ready');
+check('code de defaut : une entite muette ne crie pas', /class="state-line"/.test(fFault('unknown')), false);
 
 // The appliance colour paints the machine: lid, dispenser, foot and bowl, the
 // bowl a shade under the body so it keeps its own shape. The hopper is clear
@@ -4278,7 +4278,7 @@ const fOut = render({ appliance_type: 'pet_feeder', start_entity: 'script.distri
   { 'script.distribuer_chat_exterieur': { state: 'off', attributes: {} },
     'sensor.distributions_du_jour': { state: '0', attributes: {} },
     'binary_sensor.wifi_feeder_alimentation': { state: 'off', attributes: {} } });
-check('gamelle nue : elle reste prete', stateLine(fOut), 'Ready');
+check('gamelle nue : rien a dire au repos', /class="state-line"/.test(fOut), false);
 check('gamelle nue : son compteur du jour', infoLine(fOut, 'Portions today'), '0 portions');
 check('gamelle nue : aucune ligne vide', (fOut.match(/<span class="label">/g) || []).length, 1);
 check('gamelle nue : elle garde son bouton', /data-entity="script.distribuer_chat_exterieur"/.test(fOut), true);
@@ -4288,6 +4288,106 @@ check('gamelle nue : elle garde son bouton', /data-entity="script.distribuer_cha
 check('gamelle : une config sans entite d\'etat passe', accepts({ appliance_type: 'pet_feeder', start_entity: 'script.s' }), true);
 check('gamelle : un compteur seul suffit aussi', accepts({ appliance_type: 'pet_feeder', portions_today_entity: 'sensor.c' }), true);
 check('gamelle : mais un lave-linge exige toujours son etat', accepts({ appliance_type: 'washer' }), false);
+
+// == Pet feeder, second round (HACF): the tank's level, a second model =========
+// "Ready" is what a feeder is nearly all day long, so it said nothing. At rest
+// the state line reads how full the tank is when that is known, and nothing at
+// all otherwise; serving, empty and a fault keep their own words.
+check('reservoir : le pourcentage remplace le pret', stateLine(fLevel(50)), 'Tank at 50%');
+check('reservoir : en grammes, avec la contenance', stateLine(fGrams(729, { level_max: '964' })), 'Tank at 76%');
+check('reservoir : arrondi a l\'unite', stateLine(fLevel(73.6)), 'Tank at 74%');
+check('reservoir : jamais plus de cent', stateLine(fGrams(1200, { level_max: '964' })), 'Tank at 100%');
+check('reservoir : en grammes sans contenance, rien a dire', /class="state-line"/.test(fGrams(729)), false);
+check('reservoir : sans niveau, pas de ligne d\'etat du tout', /class="state-line"/.test(fIn), false);
+check('reservoir : un contact de niveau ne donne pas de pourcentage',
+  /class="state-line"/.test(feeder({ level_entity: 'binary_sensor.no_food' },
+    { 'binary_sensor.no_food': { state: 'off', attributes: {} } })), false);
+const LEVEL50 = { 'sensor.food_level': { state: '50', attributes: { unit_of_measurement: '%' } } };
+check('reservoir : la distribution garde son mot',
+  stateLine(feeder({ state_entity: 'binary_sensor.busy', level_entity: 'sensor.food_level' },
+    { ...LEVEL50, 'binary_sensor.busy': { state: 'on', attributes: {} } })), 'Dispensing');
+check('reservoir : le vide garde le sien', stateLine(fLevel(0)), 'Tank empty');
+check('reservoir : et l\'erreur aussi',
+  stateLine(feeder({ level_entity: 'sensor.food_level' },
+    { ...LEVEL50, 'binary_sensor.croquettes_error': { state: 'on', attributes: {} } })), 'Error');
+check('reservoir : l\'etat brut reste l\'etat brut',
+  stateLine(feeder({ state_entity: 'sensor.feeder_state', state_show_raw: true, level_entity: 'sensor.food_level' },
+    { ...LEVEL50, 'sensor.feeder_state': { state: 'standby', attributes: {} } })), 'standby');
+// In the card's own language, and with the space French puts before the sign.
+check('reservoir : dans la langue de la carte',
+  stateLine(feeder({ language: 'fr', level_entity: 'sensor.food_level' },
+    { 'sensor.food_level': { state: '74', attributes: { unit_of_measurement: '%' } } })), 'Réservoir à 74 %');
+
+// The other family of feeders, the one in the photo on the forum: a round tank
+// of smoked plastic on a round base, the bowl set down in front of it rather
+// than built in. The tower stays the default.
+const fCan = (level, extra, more) => feeder({ feeder_layout: 'canister', level_entity: 'sensor.food_level', ...extra },
+  { 'sensor.food_level': { state: String(level), attributes: { unit_of_measurement: '%' } }, ...more });
+const can50 = fCan(50);
+check('rond : le modele se choisit', machineCls(can50).split(' ').includes('canister'), true);
+check('rond : reservoir, couvercle, socle, boutons, trappe et gamelle',
+  ['pfc-tank', 'pfc-lid', 'pfc-base', 'pfc-panel', 'pfc-chute', 'pfc-bowl', 'pfc-dish']
+    .filter(c => !can50.includes(`class="${c}"`)).join(' '), '');
+check('rond : rien de la tour',
+  ['pf-lid', 'pf-body', 'pf-unit', 'pf-bowl', 'pf-base'].filter(c => can50.includes(`class="${c}"`)).join(' '), '');
+check('rond : la tour reste le modele par defaut',
+  /class="pf-unit"/.test(fIn) && !machineCls(fIn).split(' ').includes('canister'), true);
+check('rond : la tour se nomme aussi', /class="pf-unit"/.test(feeder({ feeder_layout: 'tower' })), true);
+check('rond : un modele inconnu reste une tour', /class="pf-unit"/.test(feeder({ feeder_layout: 'zzz' })), true);
+// Its tank is taller, so the same level makes a taller heap.
+check('rond : a moitie plein', /--pf-fill:21\.0px/.test(can50), true);
+check('rond : plein', /--pf-fill:38\.0px/.test(fCan(100)), true);
+check('rond : la tour garde sa hauteur', /--pf-fill:15\.0px/.test(fLevel(50)), true);
+check('rond : vide, le reservoir se vide', machineCls(fCan(0)).includes('empty'), true);
+check('rond : et son tas disparait', /\.machine\.empty \.pfc-heap \{ display: none; \}/.test(can50), true);
+
+// The kibble leaves the dark mouth and lands on the heap at the top of the
+// bowl. Read from the CSS, so moving the chute or the bowl has to keep the
+// fall on both.
+{
+  const px = (sel, prop) => cssPx(can50, sel, prop);
+  const H = px('.machine', 'height');
+  const chuteTop = px('.pfc-base', 'top') + px('.pfc-chute', 'top');
+  const chuteBottom = chuteTop + px('.pfc-chute', 'height');
+  const fallTop = px('.machine.canister .pf-fall i', 'top');
+  const drop = Number((/@keyframes pfc-fall \{[\s\S]*?100% \{ opacity: 0; transform: translateY\(([\d.]+)px\); \}/.exec(can50) || [])[1]);
+  const dot = px('.pf-fall i', 'height');
+  const heapTop = H - px('.pfc-dish', 'bottom') - px('.pfc-dish', 'height') + px('.pfc-dish::before', 'top');
+  const rim = H - px('.pfc-bowl', 'bottom') - px('.pfc-bowl', 'height');
+  check('rond : les croquettes partent de la bouche noire', fallTop >= chuteTop && fallTop < chuteBottom, true);
+  contains('rond : avec sa propre chute', can50, '.machine.canister.feeding .pf-fall i { animation-name: pfc-fall; }');
+  check('rond : et finissent sur le haut de la gamelle',
+    fallTop + drop + dot >= heapTop && fallTop + drop + dot <= rim, true);
+  check('rond : juste au-dessus de son bord', fallTop + drop + dot >= rim - 2, true);
+  const fallLeft = px('.machine.canister .pf-fall i', 'left');
+  const bowlLeft = px('.pfc-bowl', 'left');
+  check('rond : au-dessus de la gamelle', fallLeft >= bowlLeft && fallLeft + dot <= bowlLeft + px('.pfc-bowl', 'width'), true);
+  check('rond : la gamelle posee devant, a gauche du socle', bowlLeft < px('.pfc-base', 'left'), true);
+}
+
+// White by default, the way these are sold; the appliance colour paints the
+// base, the lid and the bowl, never the smoked tank.
+check('rond : blanc par defaut', /\.pfc-lid \{[^}]*background: var\(--ac-body-hi, #ffffff\)/.test(can50), true);
+check('rond : la couleur de l\'appareil peint le socle', /\.pfc-base \{[^}]*var\(--ac-body,/.test(can50), true);
+check('rond : et la gamelle', /\.pfc-bowl \{[^}]*var\(--ac-body,/.test(can50), true);
+check('rond : le reservoir reste en plastique fume', /\.pfc-tank \{[^}]*--ac-body/.test(can50), false);
+
+const canEmpty = fCan(0);
+check('rond : le chat vient aussi', /class="pf-cat"/.test(canEmpty), true);
+check('rond : a droite du socle, la gamelle etant a gauche',
+  /\.machine\.canister \.pf-cat \{ left: auto; right: 0; \}/.test(canEmpty), true);
+check('rond : son triangle le suit', /\.machine\.canister \.pf-alert \{ left: auto; right: 12px; \}/.test(canEmpty), true);
+const canBusy = fCan(50, { state_entity: 'binary_sensor.busy' }, { 'binary_sensor.busy': { state: 'on', attributes: {} } });
+check('rond : les croquettes tombent', machineCls(canBusy).includes('feeding'), true);
+check('rond : devant la gamelle', canBusy.indexOf('class="pf-fall"') > canBusy.indexOf('class="pfc-bowl"'), true);
+// The model alone says it is a feeder, like a fridge's layout says fridge.
+check('rond : le modele suffit a la config', accepts({ feeder_layout: 'canister' }), true);
+check('rond : et designe seul un distributeur', (() => {
+  try {
+    return machineCls(render({ feeder_layout: 'canister', start_entity: 'script.s' }, { 'script.s': { state: 'off', attributes: {} } }))
+      .includes('canister');
+  } catch { return 'refusee'; }
+})(), true);
 
 // == The control that is not a button =========================================
 // Aqara dispenses from a select set to START, Tuya from a number written with
@@ -4739,7 +4839,7 @@ const alertMenu = h => {
   return [...sel.matchAll(/<option value="([^"]*)">([^<]*)<\/option>/g)].map(m => `${m[1]}:${m[2]}`);
 };
 /** The alerts chosen, as "icon|name|remove index". */
-const alertChoices = h => [...h.matchAll(/<div class="alert-choice"><ha-icon icon="([^"]*)"><\/ha-icon><span>([^<]*)<\/span><button type="button" class="alert-remove" data-alert-remove="(\d+)"/g)]
+const alertChoices = h => [...h.matchAll(/<div class="list-choice alerts"><ha-icon icon="([^"]*)"><\/ha-icon><span>([^<]*)<\/span><button type="button" class="list-remove" data-alerts-remove="(\d+)"/g)]
   .map(m => `${m[1]}|${m[2]}|${m[3]}`);
 const alertSelect = ed => ed._root.querySelector('[data-role="alerts-add-select"]');
 {
@@ -4753,7 +4853,7 @@ const alertSelect = ed => ed._root.querySelector('[data-role="alerts-add-select"
   // what reports no problem, nor anything of another device.
   check('editeur alertes : le menu ne propose que les alertes de l\'appareil', alertMenu(html).join(' / '),
     ':Add an alert… / binary_sensor.dw_filter:Filter clogged / binary_sensor.dw_leak:Leak / __other__:Other entity…');
-  check('editeur alertes : la croix se nomme', /class="alert-remove" data-alert-remove="0" title="Remove" aria-label="Remove"/.test(html), true);
+  check('editeur alertes : la croix se nomme', /class="list-remove" data-alerts-remove="0" title="Remove" aria-label="Remove"/.test(html), true);
   fire(alertSelect(ed), 'change', { target: { value: 'binary_sensor.dw_leak' } });
   checkFired('editeur alertes : choisir dans le menu', ed, ev =>
     check('editeur alertes : ajoutee a la suite, en simple identifiant', (ev?.detail?.config?.alerts_entities || []).join(' '),
@@ -4769,22 +4869,22 @@ const alertSelect = ed => ed._root.querySelector('[data-role="alerts-add-select"
 {
   // The remove buttons, and the key gone with the last alert.
   const ed = alertEditor({ alerts_entities: ['sensor.dw_salt', 'sensor.dw_rinse'] });
-  const crosses = ed._root.querySelectorAll('[data-alert-remove]');
+  const crosses = ed._root.querySelectorAll('[data-alerts-remove]');
   fire(crosses[0], 'click', {});
   checkFired('editeur alertes : retirer une alerte', ed, ev =>
     check('editeur alertes : elle quitte la liste', (ev?.detail?.config?.alerts_entities || []).join(' '), 'sensor.dw_rinse'));
   check('editeur alertes : et revient dans le menu', alertMenu(markup(ed._root)).some(o => o.startsWith('sensor.dw_salt:')), true);
   const last = alertEditor({ alerts_entities: ['sensor.dw_salt'] });
-  fire(last._root.querySelectorAll('[data-alert-remove]')[0], 'click', {});
+  fire(last._root.querySelectorAll('[data-alerts-remove]')[0], 'click', {});
   check('editeur alertes : plus d\'alerte, plus de cle', 'alerts_entities' in last._config, false);
 }
 {
   // Any other entity, through a picker of sensors and binary sensors.
   const ed = alertEditor({ alerts_entities: ['sensor.dw_salt'] });
-  check('editeur alertes : pas de selecteur avant d\'en demander un', /data-slot="__alert_other"/.test(markup(ed._root)), false);
+  check('editeur alertes : pas de selecteur avant d\'en demander un', /data-slot="__alerts_other"/.test(markup(ed._root)), false);
   fire(alertSelect(ed), 'change', { target: { value: '__other__' } });
-  check('editeur alertes : autre entite ouvre un selecteur', /data-slot="__alert_other"/.test(markup(ed._root)), true);
-  const picker = ed._root.querySelector('[data-slot="__alert_other"]').children.at(-1);
+  check('editeur alertes : autre entite ouvre un selecteur', /data-slot="__alerts_other"/.test(markup(ed._root)), true);
+  const picker = ed._root.querySelector('[data-slot="__alerts_other"]').children.at(-1);
   check('editeur alertes : capteurs et capteurs binaires', (picker.includeDomains || []).join(','), 'binary_sensor,sensor');
   check('editeur alertes : le selecteur se nomme', picker.label, 'Entity');
   const events = ed.events.length;
@@ -4792,9 +4892,9 @@ const alertSelect = ed => ed._root.querySelector('[data-role="alerts-add-select"
   check('editeur alertes : un selecteur vide n\'ajoute rien', ed.events.length, events);
   fire(picker, 'value-changed', { detail: { value: 'binary_sensor.kitchen_leak' } });
   check('editeur alertes : l\'entite choisie s\'ajoute', ed._config.alerts_entities.join(' '), 'sensor.dw_salt binary_sensor.kitchen_leak');
-  check('editeur alertes : et le selecteur se referme', /data-slot="__alert_other"/.test(markup(ed._root)), false);
+  check('editeur alertes : et le selecteur se referme', /data-slot="__alerts_other"/.test(markup(ed._root)), false);
   fire(alertSelect(ed), 'change', { target: { value: '__other__' } });
-  fire(ed._root.querySelector('[data-slot="__alert_other"]').children.at(-1), 'value-changed', { detail: { value: 'sensor.dw_salt' } });
+  fire(ed._root.querySelector('[data-slot="__alerts_other"]').children.at(-1), 'value-changed', { detail: { value: 'sensor.dw_salt' } });
   check('editeur alertes : une alerte deja choisie ne se double pas', ed._config.alerts_entities.join(' '),
     'sensor.dw_salt binary_sensor.kitchen_leak');
 }
@@ -4809,7 +4909,7 @@ const alertSelect = ed => ed._root.querySelector('[data-role="alerts-add-select"
     /data-panel="alerts" open/.test(markup(alertEditor({ alerts_entities: ['sensor.dw_salt'] })._root)), true);
   const full = alertEditor({ alerts_entities: Array.from({ length: 8 }, (_, i) => `sensor.a${i}`) });
   check('editeur alertes : a huit, le menu se ferme', /<select data-role="alerts-add-select" disabled>/.test(markup(full._root)), true);
-  full._addAlert('binary_sensor.dw_leak');
+  full._addToList('alerts', 'binary_sensor.dw_leak');
   check('editeur alertes : et rien ne s\'y ajoute', full._config.alerts_entities.length, 8);
   const open = alertEditor({ alerts_entities: ['sensor.dw_salt'] });
   check('editeur alertes : sous huit, il reste ouvert', /<select data-role="alerts-add-select">/.test(markup(open._root)), true);
@@ -4817,7 +4917,7 @@ const alertSelect = ed => ed._root.querySelector('[data-role="alerts-add-select"
 {
   const ed = alertEditor({ alerts_entities: [{ entity: 'sensor.dw_salt', label: 'Sel', icon: 'mdi:shaker' }, 'sensor.dw_rinse'] });
   check('editeur alertes : le libelle et l\'icone donnes se voient', alertChoices(markup(ed._root))[0], 'mdi:shaker|Sel|0');
-  const cross = ed._root.querySelectorAll('[data-alert-remove]')[1];
+  const cross = ed._root.querySelectorAll('[data-alerts-remove]')[1];
   if (cross) fire(cross, 'click', {});
   check('editeur alertes : et restent quand une autre part', JSON.stringify(ed._config.alerts_entities),
     '[{"entity":"sensor.dw_salt","label":"Sel","icon":"mdi:shaker"}]');
@@ -4857,13 +4957,313 @@ for (const language of ['fr', 'ru', 'de', 'es', 'it', 'nl', 'pt', 'sv', 'no', 'd
   const html = markup(alertEditor({ language })._root);
   const title = (/data-panel="alerts"[^>]*>\s*<summary>([^<]*)<\/summary>/.exec(html) || [, ''])[1];
   const menu = alertMenu(html);
-  const remove = (/class="alert-remove" data-alert-remove="0" title="([^"]*)"/.exec(html) || [, ''])[1];
+  const remove = (/class="list-remove" data-alerts-remove="0" title="([^"]*)"/.exec(html) || [, ''])[1];
   check(`editeur alertes : titre traduit en ${language}`, title !== '' && title !== 'Alert entities', true);
   check(`editeur alertes : menu traduit en ${language}`, menu[0] !== ':Add an alert…' && menu[0].startsWith(':'), true);
   check(`editeur alertes : autre entite traduite en ${language}`, menu.at(-1) !== '__other__:Other entity…' && menu.at(-1).startsWith('__other__:'), true);
   check(`editeur alertes : croix traduite en ${language}`, remove !== '' && remove !== 'Remove', true);
 }
 contains('editeur alertes : titre en anglais', markup(alertEditor()._root), '<summary>Alert entities</summary>');
+
+// == Switches at hand, in the corners (HACF) ===================================
+// A feeder's child lock and auto lock as icons in the top corners, one a side:
+// the first left, the second right, each under what already sits in its
+// corner. The icon says what the switch does and whether it holds.
+const CORNER_ST = {
+  'sensor.feeder_state': { state: 'standby', attributes: {} },
+  'switch.feeder_child_lock': { state: 'on', attributes: { friendly_name: 'Feeder Child lock' } },
+  'switch.feeder_auto_lock': { state: 'off', attributes: { friendly_name: 'Feeder Auto lock' } },
+  'switch.feeder_forcing': { state: 'on', attributes: { friendly_name: 'Feeder Forcing' } },
+  'lock.feeder_hatch': { state: 'locked', attributes: { friendly_name: 'Feeder Hatch' } },
+  'switch.feeder_led': { state: 'off', attributes: { friendly_name: 'Feeder LED', icon: 'mdi:led-on' } },
+  'binary_sensor.feeder_online': { state: 'on', attributes: {} },
+};
+const cornerCard = (list, extra = {}, states = {}) => build({ appliance_type: 'pet_feeder', name: 'Feeder',
+  state_entity: 'sensor.feeder_state', corner_entities: list, ...extra }, { ...CORNER_ST, ...states });
+/** The corner icons as "side[+ when on]:top:entity:title:icon". */
+const corners = h => [...h.matchAll(/<div class="corner-btn (left|right)( on)?" style="top:(\d+)px" data-corner="([^"]*)" title="([^"]*)" aria-label="([^"]*)"><ha-icon icon="([^"]*)">/g)]
+  .map(m => `${m[1]}${m[2] ? '+' : ''}:${m[3]}:${m[4]}:${m[5]}:${m[7]}`);
+const cornerSpot = c => c.split(':').slice(0, 2).join(':');
+const cornerIco = c => (c || '').split(':').slice(-2).join(':');
+{
+  const h = cornerCard(['switch.feeder_child_lock', 'switch.feeder_auto_lock', 'switch.feeder_forcing']).html;
+  check('coins : le premier a gauche, le second a droite, et pas de troisieme', corners(h).join(' / '),
+    'left+:6:switch.feeder_child_lock:Child lock:mdi:account-lock / '
+    + 'right:6:switch.feeder_auto_lock:Auto lock:mdi:timer-lock-open-outline');
+  check('coins : son nom se lit aussi a l\'oreille',
+    /data-corner="switch\.feeder_child_lock" title="Child lock" aria-label="Child lock"/.test(h), true);
+  contains('coins : a gauche, au bord', h, '.corner-btn.left { left: 8px; }');
+  contains('coins : a droite, au bord', h, '.corner-btn.right { right: 8px; }');
+  contains('coins : allume, en ambre', h, '.corner-btn.on { color: #ffb300; }');
+}
+check('coins : sous le Wi-Fi a droite',
+  corners(cornerCard(['switch.feeder_child_lock', 'switch.feeder_auto_lock'],
+    { connectivity_entity: 'binary_sensor.feeder_online' }).html).map(cornerSpot).join(' '), 'left+:6 right:36');
+check('coins : sous la lumiere a gauche',
+  corners(render({ appliance_type: 'oven', state_entity: 'sensor.o', light_entity: 'light.o',
+    corner_entities: ['switch.feeder_child_lock', 'switch.feeder_auto_lock'] },
+  { ...CORNER_ST, 'sensor.o': { state: 'off', attributes: {} }, 'light.o': { state: 'off', attributes: {} } }))
+    .map(cornerSpot).join(' '), 'left+:36 right:6');
+check('coins : deux au plus',
+  corners(cornerCard(['switch.feeder_child_lock', 'switch.feeder_auto_lock', 'switch.feeder_forcing',
+    'lock.feeder_hatch', 'switch.feeder_led']).html).length, 2);
+check('coins : une entite absente ne prend pas de place',
+  corners(cornerCard(['switch.nothing', 'switch.feeder_auto_lock']).html).map(c => c.split(':').slice(0, 3).join(':')).join(' '),
+  'left:6:switch.feeder_auto_lock');
+check('coins : une entree vide non plus',
+  corners(cornerCard([null, { label: 'x' }, 'switch.feeder_auto_lock']).html).length, 1);
+check('coins : une entite seule, sans liste',
+  corners(cornerCard('switch.feeder_auto_lock').html).length, 1);
+check('coins : un libelle donne remplace le nom',
+  /title="Enfants"/.test(cornerCard([{ entity: 'switch.feeder_child_lock', label: 'Enfants' }]).html), true);
+check('coins : une icone donnee aussi, dans les deux etats',
+  corners(cornerCard([{ entity: 'switch.feeder_child_lock', icon: 'mdi:baby-face' },
+    { entity: 'switch.feeder_auto_lock', icon: 'mdi:baby-face' }]).html).map(cornerIco).join(' '),
+  'mdi:baby-face mdi:baby-face');
+
+// Each kind drawn locked and unlocked.
+const cornerAs = (id, state) => corners(cornerCard([id], {}, { [id]: { ...CORNER_ST[id], state } }).html)[0] || '';
+check('coins : securite enfant activee', cornerIco(cornerAs('switch.feeder_child_lock', 'on')), 'mdi:account-lock');
+check('coins : securite enfant levee', cornerIco(cornerAs('switch.feeder_child_lock', 'off')), 'mdi:account-lock-open-outline');
+check('coins : verrouillage auto actif', cornerIco(cornerAs('switch.feeder_auto_lock', 'on')), 'mdi:timer-lock');
+check('coins : verrouillage auto coupe', cornerIco(cornerAs('switch.feeder_auto_lock', 'off')), 'mdi:timer-lock-open-outline');
+check('coins : une serrure fermee', cornerIco(cornerAs('lock.feeder_hatch', 'locked')), 'mdi:lock');
+check('coins : une serrure ouverte', cornerIco(cornerAs('lock.feeder_hatch', 'unlocked')), 'mdi:lock-open-variant-outline');
+check('coins : une serrure grande ouverte n\'est pas fermee', cornerIco(cornerAs('lock.feeder_hatch', 'open')), 'mdi:lock-open-variant-outline');
+check('coins : un interrupteur allume', cornerIco(cornerAs('switch.feeder_forcing', 'on')), 'mdi:toggle-switch');
+check('coins : un interrupteur eteint', cornerIco(cornerAs('switch.feeder_forcing', 'off')), 'mdi:toggle-switch-off-outline');
+check('coins : l\'icone propre a l\'entite reste', cornerIco(cornerAs('switch.feeder_led', 'off')), 'mdi:led-on');
+check('coins : sauf quand la carte sait ce qu\'il verrouille',
+  cornerIco(corners(cornerCard(['switch.feeder_child_lock'], {},
+    { 'switch.feeder_child_lock': { state: 'off', attributes: { friendly_name: 'Feeder Child lock', icon: 'mdi:shield' } } }).html)[0]),
+  'mdi:account-lock-open-outline');
+check('coins : allume, il s\'eclaire', cornerAs('switch.feeder_forcing', 'on').startsWith('left+'), true);
+check('coins : une serrure fermee s\'eclaire', cornerAs('lock.feeder_hatch', 'locked').startsWith('left+'), true);
+check('coins : ouverte, non', cornerAs('lock.feeder_hatch', 'open').startsWith('left+'), false);
+check('coins : eteint, non', cornerAs('switch.feeder_forcing', 'off').startsWith('left+'), false);
+check('coins : indisponible, non', cornerAs('switch.feeder_forcing', 'unavailable').startsWith('left+'), false);
+
+// What a switch is: the integration's key first, the same in every language,
+// then its id and its name, in the card's fourteen languages.
+{
+  const kindOf = (id, name, key) => {
+    const c = new Card();
+    c.setConfig({ type: 'custom:ha-appliance-card', appliance_type: 'pet_feeder', state_entity: 'sensor.feeder_state',
+      corner_entities: [id] });
+    c._hass = { ...HASS({ ...CORNER_ST, [id]: { state: 'on', attributes: { friendly_name: name } } }),
+      entities: key ? { [id]: { translation_key: key } } : {} };
+    c._render();
+    return cornerIco(corners(markup(c))[0]);
+  };
+  check('coins : la cle de l\'integration d\'abord', kindOf('switch.feeder_x', 'Feeder X', 'child_lock'), 'mdi:account-lock');
+  check('coins : l\'identifiant parle aussi', kindOf('switch.feeder_children_lock', 'Feeder X'), 'mdi:account-lock');
+  for (const [name, icon] of [
+    ['Sécurité enfant', 'mdi:account-lock'], ['Verrouillage automatique', 'mdi:timer-lock'],
+    ['Kindersicherung', 'mdi:account-lock'], ['Automatische Sperre', 'mdi:timer-lock'],
+    ['Bloqueo infantil', 'mdi:account-lock'], ['Bloqueo automático', 'mdi:timer-lock'],
+    ['Blocco bambini', 'mdi:account-lock'], ['Blocco automatico', 'mdi:timer-lock'],
+    ['Kinderslot', 'mdi:account-lock'], ['Automatisch slot', 'mdi:timer-lock'],
+    ['Bloqueio para crianças', 'mdi:account-lock'], ['Bloqueio automático', 'mdi:timer-lock'],
+    ['Barnlås', 'mdi:account-lock'], ['Autolås', 'mdi:timer-lock'],
+    ['Blokada rodzicielska', 'mdi:account-lock'], ['Automatyczna blokada', 'mdi:timer-lock'],
+    ['Blokada przed dzie\u0107mi', 'mdi:account-lock'], ['Zamkni\u0119cie automatyczne', 'mdi:timer-lock'],
+    ['\u0417\u0430\u043c\u043e\u043a', 'mdi:lock'],
+    ['Dětská pojistka', 'mdi:account-lock'], ['Automatický zámek', 'mdi:timer-lock'],
+    ['Защита от детей', 'mdi:account-lock'],
+    ['Автоблокировка', 'mdi:timer-lock'],
+    ['儿童锁', 'mdi:account-lock'], ['自动锁', 'mdi:timer-lock'],
+    ['Verrou', 'mdi:lock'], ['Sperre', 'mdi:lock'], ['Clock sync', 'mdi:toggle-switch'],
+    ['Automatic feeding', 'mdi:toggle-switch'],
+  ]) check(`coins : ${name}`, kindOf('switch.feeder_x', name), icon);
+}
+
+// A tap toggles the switch; a lock only opens its dialog, since a stray tap
+// on a dashboard must never unlock anything.
+{
+  const calls = [];
+  const cardFor = (list) => {
+    const c = new Card();
+    c.setConfig({ type: 'custom:ha-appliance-card', appliance_type: 'pet_feeder', name: 'Feeder',
+      state_entity: 'sensor.feeder_state', corner_entities: list });
+    c._hass = { ...HASS({ ...CORNER_ST, 'input_boolean.feeder_holiday': { state: 'off', attributes: {} } }),
+      callService: (domain, service, data) => calls.push(`${domain}.${service} ${data.entity_id}`) };
+    c._render();
+    return c;
+  };
+  const tap = (c, id) => {
+    const node = c._root.querySelectorAll('[data-corner]').find(n => n.getAttribute('data-corner') === id);
+    if (!node?.__handlers?.click) return 'aucun clic';
+    let stopped = false;
+    node.__handlers.click({ stopPropagation() { stopped = true; } });
+    return stopped ? 'arrete' : 'propage';
+  };
+  const both = cardFor(['switch.feeder_child_lock', 'input_boolean.feeder_holiday']);
+  check('coins : un appui ne remonte pas a la carte', tap(both, 'switch.feeder_child_lock'), 'arrete');
+  check('coins : il bascule l\'interrupteur', calls.at(-1), 'switch.toggle switch.feeder_child_lock');
+  tap(both, 'input_boolean.feeder_holiday');
+  check('coins : un booleen aussi', calls.at(-1), 'input_boolean.toggle input_boolean.feeder_holiday');
+  const lock = cardFor(['lock.feeder_hatch']);
+  const before = calls.length;
+  tap(lock, 'lock.feeder_hatch');
+  check('coins : une serrure ne se deverrouille pas d\'un appui', calls.length, before);
+  check('coins : sa fiche s\'ouvre', `${lock.events.at(-1)?.type} ${lock.events.at(-1)?.detail?.entityId}`,
+    'hass-more-info lock.feeder_hatch');
+}
+check('coins : les interrupteurs sont surveilles',
+  cornerCard(['switch.feeder_child_lock', 'switch.feeder_auto_lock']).card._watchedEntityIds()
+    .filter(id => id.startsWith('switch.')).join(' '), 'switch.feeder_child_lock switch.feeder_auto_lock');
+check('coins : deux surveilles au plus',
+  cornerCard(['switch.feeder_child_lock', 'switch.feeder_auto_lock', 'switch.feeder_forcing', 'lock.feeder_hatch',
+    'switch.feeder_led']).card._watchedEntityIds().filter(id => /^(switch|lock)\./.test(id)).length, 2);
+noInjection('nom d\'un interrupteur', cornerCard(['switch.feeder_child_lock'], {},
+  { 'switch.feeder_child_lock': { state: 'on', attributes: { friendly_name: XSS } } }).html);
+check('icone d\'un interrupteur : aucun attribut onload forme',
+  /onload="/i.test(cornerCard(['switch.feeder_led'], {},
+    { 'switch.feeder_led': { state: 'on', attributes: { icon: 'mdi:x" onload="alert(1)' } } }).html), false);
+for (const type of ['washer', 'dryer', 'dishwasher', 'oven', 'microwave', 'hood', 'cooktop', 'fridge', 'kettle',
+  'cooker', 'coffee', 'rice_cooker', 'water_heater', 'boiler', 'heat_pump', 'printer_3d', 'pet_feeder']) {
+  check(`coins : sur ${type} aussi`,
+    corners(render({ appliance_type: type, state_entity: 'sensor.feeder_state', corner_entities: ['switch.feeder_forcing'] },
+      CORNER_ST)).length, 1);
+}
+
+// ── The editor: a menu of the appliance's switches ──
+// The same dishwasher, with a child lock, an eco switch and a door lock of
+// its own, and a light switch of another device.
+const CORNER_DEVICE = {
+  'switch.dw_child_lock': [{ state: 'on', attributes: { friendly_name: 'Dishwasher Child lock' } }, 'child_lock'],
+  'switch.dw_eco': [{ state: 'on', attributes: { friendly_name: 'Dishwasher Eco' } }, null],
+  'lock.dw_door_lock': [{ state: 'locked', attributes: { friendly_name: 'Dishwasher Door lock' } }, null],
+};
+const cornerEditor = (config = {}, extraStates = {}) => alertEditor(config,
+  { 'switch.kitchen_light': { state: 'off', attributes: { friendly_name: 'Kitchen light' } }, ...extraStates }, CORNER_DEVICE);
+const cornerMenu = h => {
+  const sel = (/<select data-role="corners-add-select"[^>]*>([\s\S]*?)<\/select>/.exec(h) || [, ''])[1];
+  return [...sel.matchAll(/<option value="([^"]*)">([^<]*)<\/option>/g)].map(m => `${m[1]}:${m[2]}`);
+};
+/** The switches chosen, as "icon|name|remove index". */
+const cornerChoices = h => [...h.matchAll(/<div class="list-choice corners"><ha-icon icon="([^"]*)"><\/ha-icon><span>([^<]*)<\/span><button type="button" class="list-remove" data-corners-remove="(\d+)"/g)]
+  .map(m => `${m[1]}|${m[2]}|${m[3]}`);
+const cornerSelect = ed => ed._root.querySelector('[data-role="corners-add-select"]');
+{
+  const ed = cornerEditor();
+  const html = markup(ed._root);
+  contains('editeur coins : un panneau a lui', html, 'data-panel="corners"');
+  check('editeur coins : ferme tant qu\'il est vide', /data-panel="corners" open/.test(html), false);
+  check('editeur coins : le menu ne propose que ce que l\'appareil bascule', cornerMenu(html).join(' / '),
+    ':Add a switch… / switch.dw_child_lock:Child lock / lock.dw_door_lock:Door lock / switch.dw_eco:Eco / __other__:Other entity…');
+  fire(cornerSelect(ed), 'change', { target: { value: 'switch.dw_child_lock' } });
+  checkFired('editeur coins : choisir dans le menu', ed, ev =>
+    check('editeur coins : en simple identifiant', (ev?.detail?.config?.corner_entities || []).join(' '), 'switch.dw_child_lock'));
+  const after = markup(ed._root);
+  check('editeur coins : la liste le montre, avec l\'icone de la carte', cornerChoices(after).join(' / '),
+    'mdi:account-lock|Child lock|0');
+  check('editeur coins : le menu ne le propose plus', cornerMenu(after).some(o => o.startsWith('switch.dw_child_lock:')), false);
+  check('editeur coins : les alertes n\'en sont pas', /data-alerts-remove="2"/.test(after), false);
+  const events = ed.events.length;
+  fire(cornerSelect(ed), 'change', { target: { value: '' } });
+  check('editeur coins : le titre du menu ne choisit rien', ed.events.length, events);
+}
+check('editeur coins : ni ce qu\'un champ commande deja',
+  cornerMenu(markup(cornerEditor({ toggle_entity: 'switch.dw_eco' })._root)).some(o => o.startsWith('switch.dw_eco:')), false);
+check('editeur coins : ni ce qu\'une ligne montre',
+  cornerMenu(markup(cornerEditor({ info_entities: ['switch.dw_eco'] })._root)).some(o => o.startsWith('switch.dw_eco:')), false);
+{
+  const ed = cornerEditor();
+  fire(cornerSelect(ed), 'change', { target: { value: '__other__' } });
+  const picker = ed._root.querySelector('[data-slot="__corners_other"]').children.at(-1);
+  check('editeur coins : autre entite, parmi ce qui se bascule', (picker.includeDomains || []).join(','),
+    'switch,input_boolean,lock,light,fan');
+  check('editeur coins : les alertes gardent leur selecteur ferme', /data-slot="__alerts_other"/.test(markup(ed._root)), false);
+  fire(picker, 'value-changed', { detail: { value: 'switch.kitchen_light' } });
+  check('editeur coins : l\'entite choisie s\'ajoute', ed._config.corner_entities.join(' '), 'switch.kitchen_light');
+  check('editeur coins : et le selecteur se referme', /data-slot="__corners_other"/.test(markup(ed._root)), false);
+}
+{
+  const full = cornerEditor({ corner_entities: ['switch.a', 'switch.b'] });
+  check('editeur coins : a deux, le menu se ferme', /<select data-role="corners-add-select" disabled>/.test(markup(full._root)), true);
+  full._addToList('corners', 'switch.dw_eco');
+  check('editeur coins : et rien ne s\'y ajoute', full._config.corner_entities.length, 2);
+  check('editeur coins : ouvert sur une liste deja faite', /data-panel="corners" open/.test(markup(full._root)), true);
+  check('editeur coins : a un, il reste ouvert',
+    /<select data-role="corners-add-select">/.test(markup(cornerEditor({ corner_entities: ['switch.a'] })._root)), true);
+}
+{
+  const ed = cornerEditor({ corner_entities: ['switch.dw_child_lock', 'lock.dw_door_lock'] });
+  fire(ed._root.querySelectorAll('[data-corners-remove]')[0], 'click', {});
+  check('editeur coins : retirer un interrupteur', ed._config.corner_entities.join(' '), 'lock.dw_door_lock');
+  const last = cornerEditor({ corner_entities: ['switch.dw_child_lock'] });
+  fire(last._root.querySelectorAll('[data-corners-remove]')[0], 'click', {});
+  check('editeur coins : plus rien, plus de cle', 'corner_entities' in last._config, false);
+  check('editeur coins : les alertes restent',
+    JSON.stringify(last._config.alerts_entities), JSON.stringify(['sensor.dw_salt', 'sensor.dw_rinse']));
+}
+{
+  // A feeder is often set up with no state at all: the menus find the device
+  // through the card's other entities, the first that belongs to one.
+  const ed = new Editor();
+  ed.setConfig({ type: 'custom:ha-appliance-card', appliance_type: 'pet_feeder', start_entity: 'script.feed',
+    portions_today_entity: 'sensor.cq_portions' });
+  ed.hass = { ...HASS({
+    'script.feed': { state: 'off', attributes: {} },
+    'sensor.cq_portions': { state: '2', attributes: {} },
+    'switch.cq_child_lock': { state: 'on', attributes: { friendly_name: 'Croquettes Child lock' } },
+    'binary_sensor.cq_jam': { state: 'off', attributes: { friendly_name: 'Croquettes Jam', device_class: 'problem' } },
+    'switch.other_plug': { state: 'on', attributes: { friendly_name: 'Plug' } } }),
+  entities: { 'sensor.cq_portions': { device_id: 'cq' }, 'switch.cq_child_lock': { device_id: 'cq' },
+    'binary_sensor.cq_jam': { device_id: 'cq' }, 'switch.other_plug': { device_id: 'x' },
+    'switch.cq_disabled': { device_id: 'cq' } },
+  devices: { cq: { name: 'Croquettes' } } };
+  const h = markup(ed._root);
+  check('editeur coins : sans etat, l\'appareil se trouve par ses autres entites', cornerMenu(h).join(' / '),
+    ':Add a switch… / switch.cq_child_lock:Child lock / __other__:Other entity…');
+  check('editeur alertes : sans etat non plus', alertMenu(h).join(' / '),
+    ':Add an alert… / binary_sensor.cq_jam:Jam / __other__:Other entity…');
+}
+{
+  // A state entity that no longer exists finds no appliance, rather than
+  // offering every switch of the house.
+  const ed = new Editor();
+  ed.setConfig({ type: 'custom:ha-appliance-card', appliance_type: 'washer', state_entity: 'sensor.w_state' });
+  ed.hass = HASS({ 'switch.plug': { state: 'on', attributes: { friendly_name: 'Plug' } } });
+  check('editeur coins : une entite d\'etat introuvable ne propose rien', cornerMenu(markup(ed._root)).join(' / '),
+    ':Add a switch\u2026 / __other__:Other entity\u2026');
+}
+for (const type of ['washer', 'dryer', 'dishwasher', 'oven', 'microwave', 'hood', 'cooktop', 'fridge', 'kettle',
+  'cooker', 'coffee', 'rice_cooker', 'water_heater', 'boiler', 'heat_pump', 'printer_3d', 'pet_feeder']) {
+  check(`editeur coins : le panneau sur ${type} aussi`, /data-panel="corners"/.test(markup(cornerEditor({ appliance_type: type })._root)), true);
+}
+for (const language of ['fr', 'ru', 'de', 'es', 'it', 'nl', 'pt', 'sv', 'no', 'da', 'pl', 'zh', 'cs']) {
+  const html = markup(cornerEditor({ language })._root);
+  const title = (/data-panel="corners"[^>]*>\s*<summary>([^<]*)<\/summary>/.exec(html) || [, ''])[1];
+  const menu = cornerMenu(html);
+  check(`editeur coins : titre traduit en ${language}`, title !== '' && title !== 'Corner switches', true);
+  check(`editeur coins : menu traduit en ${language}`, menu[0] !== ':Add a switch…' && menu[0].startsWith(':'), true);
+}
+contains('editeur coins : titre en anglais', markup(cornerEditor()._root), '<summary>Corner switches</summary>');
+
+// ── The editor: the feeder's model ──
+{
+  const modelOf = (config) => {
+    const ed = new Editor();
+    ed.setConfig({ type: 'custom:ha-appliance-card', start_entity: 'script.feed', ...config });
+    ed.hass = HASS({ 'script.feed': { state: 'off', attributes: {} } });
+    return markup(ed._root);
+  };
+  const models = h => [...((/<select data-field="feeder_layout">([\s\S]*?)<\/select>/.exec(h) || [, ''])[1])
+    .matchAll(/<option value="([^"]*)"\s*(selected)?>([^<]*)</g)].map(m => `${m[1]}${m[2] ? '*' : ''}:${m[3]}`);
+  const h = modelOf({ appliance_type: 'pet_feeder' });
+  check('editeur modele : les deux dessins', models(h).join(' / '), 'tower:Tower, built-in bowl / canister:Round tank, separate bowl');
+  check('editeur modele : son titre', /<label>Model<\/label>\s*<select data-field="feeder_layout">/.test(h), true);
+  check('editeur modele : le choix se relit', models(modelOf({ appliance_type: 'pet_feeder', feeder_layout: 'canister' }))[1],
+    'canister*:Round tank, separate bowl');
+  check('editeur modele : seulement pour un distributeur', /data-field="feeder_layout"/.test(modelOf({ appliance_type: 'washer' })), false);
+  for (const language of ['fr', 'ru', 'de', 'es', 'it', 'nl', 'pt', 'sv', 'no', 'da', 'pl', 'zh', 'cs']) {
+    const opts = models(modelOf({ appliance_type: 'pet_feeder', language }));
+    check(`editeur modele : traduit en ${language}`,
+      opts.length === 2 && !opts.some(o => /Tower, built-in bowl|Round tank, separate bowl/.test(o)), true);
+  }
+}
 
 // ── Found on the device ──
 // By Home Connect's three states and by the integration's key, which is the

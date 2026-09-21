@@ -1,4 +1,4 @@
-const CARD_VERSION = "2.13.0";
+const CARD_VERSION = "2.14.0";
 
 console.info(
   "%c HA-APPLIANCE-CARD %c v" + CARD_VERSION + " ",
@@ -55,7 +55,8 @@ const T = {
     section_alerts: "Alerts", section_connectivity: "Connectivity",
     section_info: "Extra info entities", section_lines_order: "Line order",
     info_count: "Number of extra entities",
-    section_alert_list: "Alert entities", alerts_add: "Add an alert\u2026", alerts_other: "Other entity\u2026", alerts_remove: "Remove",
+    section_alert_list: "Alert entities", alerts_add: "Add an alert\u2026", list_other: "Other entity\u2026", list_remove: "Remove",
+    section_corner_list: "Corner switches", corners_add: "Add a switch\u2026",
     info_label: "Display name (optional)",
     info_value_map: "Value mapping (optional)",
     info_value_map_placeholder: "One per line, e.g.\n0: Ready\n1: Washing",
@@ -133,7 +134,8 @@ const T = {
     p3_cooling: "Cooling", p3_calibrating: "Calibrating", p3_homing: "Homing",
     section_printed_part: "Printed part", part_cube: "Cube", part_pyramid: "Pyramid", part_duck: "Rubber duck",
     type_pet_feeder: "Pet feeder", feeder_ready: "Ready", feeder_feeding: "Dispensing", section_portions_today: "Portions today", section_weight_today: "Weight today", section_portion_weight: "Portion weight", section_serving_size: "Serving size", section_feeder_schedule: "Schedule", section_last_feed: "Last feed", section_error: "Error indicator", start_option: "Option to select", start_value: "Value to write", portions: "portions",
-    feeder_empty: "Tank empty", section_level: "Food level", level_empty_below: "Empty at or below", level_max: "Tank capacity",
+    feeder_empty: "Tank empty", feeder_level: "Tank at {pct}", section_level: "Food level", level_empty_below: "Empty at or below", level_max: "Tank capacity",
+    section_feeder_layout: "Model", layout_tower: "Tower, built-in bowl", layout_canister: "Round tank, separate bowl",
     washer_dryer: "Washer-dryer (washes and dries)", step_drying: "Drying", section_cycle_phase: "Cycle phase",
     step_prewash: "Pre-wash", step_soaking: "Soaking", step_weighing: "Weighing", step_filling: "Filling", step_washing: "Washing", step_rinsing: "Rinsing", step_draining: "Draining", step_spinning: "Spinning", step_cooling: "Cooling", step_anti_crease: "Anti-crease", step_steam: "Steam",
   },
@@ -181,7 +183,8 @@ const T = {
     section_alerts: "Alertes", section_connectivity: "Connectivit\u00e9",
     section_info: "Entit\u00e9s d'info compl\u00e9mentaires", section_lines_order: "Ordre des lignes",
     info_count: "Nombre d'entit\u00e9s suppl\u00e9mentaires",
-    section_alert_list: "Entit\u00e9s d'alerte", alerts_add: "Ajouter une alerte\u2026", alerts_other: "Autre entit\u00e9\u2026", alerts_remove: "Retirer",
+    section_alert_list: "Entit\u00e9s d'alerte", alerts_add: "Ajouter une alerte\u2026", list_other: "Autre entit\u00e9\u2026", list_remove: "Retirer",
+    section_corner_list: "Interrupteurs dans les coins", corners_add: "Ajouter un interrupteur\u2026",
     info_label: "Nom affich\u00e9 (optionnel)",
     info_value_map: "Correspondance des valeurs (optionnel)",
     info_value_map_placeholder: "Une par ligne, ex.\n0: Pr\u00eat\n1: Lavage",
@@ -259,7 +262,8 @@ const T = {
     p3_cooling: "Refroidissement", p3_calibrating: "Calibrage", p3_homing: "Mise \u00e0 l'origine",
     section_printed_part: "Pi\u00e8ce imprim\u00e9e", part_cube: "Cube", part_pyramid: "Pyramide", part_duck: "Canard en plastique",
     type_pet_feeder: "Distributeur de croquettes", feeder_ready: "Pr\u00eat", feeder_feeding: "Distribution", section_portions_today: "Portions du jour", section_weight_today: "Poids du jour", section_portion_weight: "Poids d'une portion", section_serving_size: "Taille de la portion", section_feeder_schedule: "Planning", section_last_feed: "Dernier repas", section_error: "Indicateur d'erreur", start_option: "Option \u00e0 choisir", start_value: "Valeur \u00e0 \u00e9crire", portions: "portions",
-    feeder_empty: "R\u00e9servoir vide", section_level: "Niveau de croquettes", level_empty_below: "Vide \u00e0 ce niveau ou moins", level_max: "Contenance du r\u00e9servoir",
+    feeder_empty: "R\u00e9servoir vide", feeder_level: "R\u00e9servoir \u00e0 {pct}", section_level: "Niveau de croquettes", level_empty_below: "Vide \u00e0 ce niveau ou moins", level_max: "Contenance du r\u00e9servoir",
+    section_feeder_layout: "Mod\u00e8le", layout_tower: "Tour, gamelle int\u00e9gr\u00e9e", layout_canister: "R\u00e9servoir rond, gamelle \u00e0 part",
     washer_dryer: "Lavante-s\u00e9chante (lave et s\u00e8che)", step_drying: "S\u00e9chage", section_cycle_phase: "Phase du cycle",
     step_prewash: "Pr\u00e9lavage", step_soaking: "Trempage", step_weighing: "Pes\u00e9e", step_filling: "Remplissage", step_washing: "Lavage", step_rinsing: "Rin\u00e7age", step_draining: "Vidange", step_spinning: "Essorage", step_cooling: "Refroidissement", step_anti_crease: "Anti-froissage", step_steam: "Vapeur",
   },
@@ -307,7 +311,8 @@ const T = {
     section_alerts: "\u041e\u043f\u043e\u0432\u0435\u0449\u0435\u043d\u0438\u044f", section_connectivity: "\u041f\u043e\u0434\u043a\u043b\u044e\u0447\u0435\u043d\u0438\u0435",
     section_info: "\u0414\u043e\u043f. \u0441\u0443\u0449\u043d\u043e\u0441\u0442\u0438 \u0438\u043d\u0444\u043e\u0440\u043c\u0430\u0446\u0438\u0438", section_lines_order: "\u041f\u043e\u0440\u044f\u0434\u043e\u043a \u0441\u0442\u0440\u043e\u043a",
     info_count: "\u041a\u043e\u043b\u0438\u0447\u0435\u0441\u0442\u0432\u043e \u0434\u043e\u043f. \u0441\u0443\u0449\u043d\u043e\u0441\u0442\u0435\u0439",
-    section_alert_list: "\u0421\u0443\u0449\u043d\u043e\u0441\u0442\u0438 \u043e\u043f\u043e\u0432\u0435\u0449\u0435\u043d\u0438\u0439", alerts_add: "\u0414\u043e\u0431\u0430\u0432\u0438\u0442\u044c \u043e\u043f\u043e\u0432\u0435\u0449\u0435\u043d\u0438\u0435\u2026", alerts_other: "\u0414\u0440\u0443\u0433\u0430\u044f \u0441\u0443\u0449\u043d\u043e\u0441\u0442\u044c\u2026", alerts_remove: "\u0423\u0434\u0430\u043b\u0438\u0442\u044c",
+    section_alert_list: "\u0421\u0443\u0449\u043d\u043e\u0441\u0442\u0438 \u043e\u043f\u043e\u0432\u0435\u0449\u0435\u043d\u0438\u0439", alerts_add: "\u0414\u043e\u0431\u0430\u0432\u0438\u0442\u044c \u043e\u043f\u043e\u0432\u0435\u0449\u0435\u043d\u0438\u0435\u2026", list_other: "\u0414\u0440\u0443\u0433\u0430\u044f \u0441\u0443\u0449\u043d\u043e\u0441\u0442\u044c\u2026", list_remove: "\u0423\u0434\u0430\u043b\u0438\u0442\u044c",
+    section_corner_list: "\u041f\u0435\u0440\u0435\u043a\u043b\u044e\u0447\u0430\u0442\u0435\u043b\u0438 \u0432 \u0443\u0433\u043b\u0430\u0445", corners_add: "\u0414\u043e\u0431\u0430\u0432\u0438\u0442\u044c \u043f\u0435\u0440\u0435\u043a\u043b\u044e\u0447\u0430\u0442\u0435\u043b\u044c\u2026",
     info_label: "\u041e\u0442\u043e\u0431\u0440\u0430\u0436\u0430\u0435\u043c\u043e\u0435 \u0438\u043c\u044f (\u043d\u0435\u043e\u0431\u044f\u0437\u0430\u0442\u0435\u043b\u044c\u043d\u043e)",
     info_value_map: "\u0421\u043e\u043f\u043e\u0441\u0442\u0430\u0432\u043b\u0435\u043d\u0438\u0435 \u0437\u043d\u0430\u0447\u0435\u043d\u0438\u0439 (\u043d\u0435\u043e\u0431\u044f\u0437\u0430\u0442\u0435\u043b\u044c\u043d\u043e)",
     info_value_map_placeholder: "\u041f\u043e \u043e\u0434\u043d\u043e\u043c\u0443 \u0432 \u0441\u0442\u0440\u043e\u043a\u0435, \u043d\u0430\u043f\u0440.\n0: \u0413\u043e\u0442\u043e\u0432\u043e\n1: \u0421\u0442\u0438\u0440\u043a\u0430",
@@ -385,7 +390,8 @@ const T = {
     p3_cooling: "\u041e\u0445\u043b\u0430\u0436\u0434\u0435\u043d\u0438\u0435", p3_calibrating: "\u041a\u0430\u043b\u0438\u0431\u0440\u043e\u0432\u043a\u0430", p3_homing: "\u041f\u0430\u0440\u043a\u043e\u0432\u043a\u0430 \u043e\u0441\u0435\u0439",
     section_printed_part: "\u041f\u0435\u0447\u0430\u0442\u0430\u0435\u043c\u0430\u044f \u043c\u043e\u0434\u0435\u043b\u044c", part_cube: "\u041a\u0443\u0431", part_pyramid: "\u041f\u0438\u0440\u0430\u043c\u0438\u0434\u0430", part_duck: "\u0420\u0435\u0437\u0438\u043d\u043e\u0432\u0430\u044f \u0443\u0442\u043e\u0447\u043a\u0430",
     type_pet_feeder: "\u041a\u043e\u0440\u043c\u0443\u0448\u043a\u0430", feeder_ready: "\u0413\u043e\u0442\u043e\u0432\u0430", feeder_feeding: "\u041a\u043e\u0440\u043c\u043b\u0435\u043d\u0438\u0435", section_portions_today: "\u041f\u043e\u0440\u0446\u0438\u0439 \u0437\u0430 \u0434\u0435\u043d\u044c", section_weight_today: "\u0412\u0435\u0441 \u0437\u0430 \u0434\u0435\u043d\u044c", section_portion_weight: "\u0412\u0435\u0441 \u043f\u043e\u0440\u0446\u0438\u0438", section_serving_size: "\u0420\u0430\u0437\u043c\u0435\u0440 \u043f\u043e\u0440\u0446\u0438\u0438", section_feeder_schedule: "\u0420\u0430\u0441\u043f\u0438\u0441\u0430\u043d\u0438\u0435", section_last_feed: "\u041f\u043e\u0441\u043b\u0435\u0434\u043d\u0435\u0435 \u043a\u043e\u0440\u043c\u043b\u0435\u043d\u0438\u0435", section_error: "\u0418\u043d\u0434\u0438\u043a\u0430\u0442\u043e\u0440 \u043e\u0448\u0438\u0431\u043a\u0438", start_option: "\u0412\u044b\u0431\u0438\u0440\u0430\u0435\u043c\u0430\u044f \u043e\u043f\u0446\u0438\u044f", start_value: "\u0417\u0430\u043f\u0438\u0441\u044b\u0432\u0430\u0435\u043c\u043e\u0435 \u0437\u043d\u0430\u0447\u0435\u043d\u0438\u0435", portions: "\u043f\u043e\u0440\u0446\u0438\u0439",
-    feeder_empty: "\u0411\u0443\u043d\u043a\u0435\u0440 \u043f\u0443\u0441\u0442", section_level: "\u0423\u0440\u043e\u0432\u0435\u043d\u044c \u043a\u043e\u0440\u043c\u0430", level_empty_below: "\u041f\u0443\u0441\u0442\u043e \u043f\u0440\u0438 \u0437\u043d\u0430\u0447\u0435\u043d\u0438\u0438 \u043d\u0435 \u0432\u044b\u0448\u0435", level_max: "\u0401\u043c\u043a\u043e\u0441\u0442\u044c \u0431\u0443\u043d\u043a\u0435\u0440\u0430",
+    feeder_empty: "\u0411\u0443\u043d\u043a\u0435\u0440 \u043f\u0443\u0441\u0442", feeder_level: "\u0411\u0443\u043d\u043a\u0435\u0440 \u0437\u0430\u043f\u043e\u043b\u043d\u0435\u043d \u043d\u0430 {pct}", section_level: "\u0423\u0440\u043e\u0432\u0435\u043d\u044c \u043a\u043e\u0440\u043c\u0430", level_empty_below: "\u041f\u0443\u0441\u0442\u043e \u043f\u0440\u0438 \u0437\u043d\u0430\u0447\u0435\u043d\u0438\u0438 \u043d\u0435 \u0432\u044b\u0448\u0435", level_max: "\u0401\u043c\u043a\u043e\u0441\u0442\u044c \u0431\u0443\u043d\u043a\u0435\u0440\u0430",
+    section_feeder_layout: "\u041c\u043e\u0434\u0435\u043b\u044c", layout_tower: "\u0411\u0430\u0448\u043d\u044f \u0441\u043e \u0432\u0441\u0442\u0440\u043e\u0435\u043d\u043d\u043e\u0439 \u043c\u0438\u0441\u043a\u043e\u0439", layout_canister: "\u041a\u0440\u0443\u0433\u043b\u044b\u0439 \u0431\u0443\u043d\u043a\u0435\u0440, \u043e\u0442\u0434\u0435\u043b\u044c\u043d\u0430\u044f \u043c\u0438\u0441\u043a\u0430",
     washer_dryer: "\u0421\u0442\u0438\u0440\u0430\u043b\u044c\u043d\u043e-\u0441\u0443\u0448\u0438\u043b\u044c\u043d\u0430\u044f \u043c\u0430\u0448\u0438\u043d\u0430 (\u0441\u0442\u0438\u0440\u0430\u0435\u0442 \u0438 \u0441\u0443\u0448\u0438\u0442)", step_drying: "\u0421\u0443\u0448\u043a\u0430", section_cycle_phase: "\u0424\u0430\u0437\u0430 \u0446\u0438\u043a\u043b\u0430",
     step_prewash: "\u041f\u0440\u0435\u0434\u0441\u0442\u0438\u0440\u043a\u0430", step_soaking: "\u0417\u0430\u043c\u0430\u0447\u0438\u0432\u0430\u043d\u0438\u0435", step_weighing: "\u0412\u0437\u0432\u0435\u0448\u0438\u0432\u0430\u043d\u0438\u0435", step_filling: "\u041d\u0430\u0431\u043e\u0440 \u0432\u043e\u0434\u044b", step_washing: "\u0421\u0442\u0438\u0440\u043a\u0430", step_rinsing: "\u041f\u043e\u043b\u043e\u0441\u043a\u0430\u043d\u0438\u0435", step_draining: "\u0421\u043b\u0438\u0432", step_spinning: "\u041e\u0442\u0436\u0438\u043c", step_cooling: "\u041e\u0445\u043b\u0430\u0436\u0434\u0435\u043d\u0438\u0435", step_anti_crease: "\u0417\u0430\u0449\u0438\u0442\u0430 \u043e\u0442 \u0441\u043c\u0438\u043d\u0430\u043d\u0438\u044f", step_steam: "\u041f\u0430\u0440",
   },
@@ -433,7 +439,8 @@ const T = {
     section_alerts: "Warnungen", section_connectivity: "Konnektivit\u00e4t",
     section_info: "Zus\u00e4tzliche Info-Entit\u00e4ten", section_lines_order: "Reihenfolge der Zeilen",
     info_count: "Anzahl zus\u00e4tzlicher Entit\u00e4ten",
-    section_alert_list: "Warnungs-Entit\u00e4ten", alerts_add: "Warnung hinzuf\u00fcgen\u2026", alerts_other: "Andere Entit\u00e4t\u2026", alerts_remove: "Entfernen",
+    section_alert_list: "Warnungs-Entit\u00e4ten", alerts_add: "Warnung hinzuf\u00fcgen\u2026", list_other: "Andere Entit\u00e4t\u2026", list_remove: "Entfernen",
+    section_corner_list: "Schalter in den Ecken", corners_add: "Schalter hinzuf\u00fcgen\u2026",
     info_label: "Anzeigename (optional)",
     info_value_map: "Wertzuordnung (optional)",
     info_value_map_placeholder: "Eine pro Zeile, z. B.\n0: Bereit\n1: Waschen",
@@ -511,7 +518,8 @@ const T = {
     p3_cooling: "Abk\u00fchlen", p3_calibrating: "Kalibrierung", p3_homing: "Referenzfahrt",
     section_printed_part: "Druckobjekt", part_cube: "W\u00fcrfel", part_pyramid: "Pyramide", part_duck: "Quietscheentchen",
     type_pet_feeder: "Futterautomat", feeder_ready: "Bereit", feeder_feeding: "F\u00fcttert", section_portions_today: "Portionen heute", section_weight_today: "Menge heute", section_portion_weight: "Portionsgewicht", section_serving_size: "Portionsgr\u00f6\u00dfe", section_feeder_schedule: "Zeitplan", section_last_feed: "Letzte F\u00fctterung", section_error: "St\u00f6rungsanzeige", start_option: "Auszuw\u00e4hlende Option", start_value: "Zu schreibender Wert", portions: "Portionen",
-    feeder_empty: "Beh\u00e4lter leer", section_level: "F\u00fcllstand", level_empty_below: "Leer ab oder unter", level_max: "Fassungsverm\u00f6gen",
+    feeder_empty: "Beh\u00e4lter leer", feeder_level: "Beh\u00e4lter zu {pct} voll", section_level: "F\u00fcllstand", level_empty_below: "Leer ab oder unter", level_max: "Fassungsverm\u00f6gen",
+    section_feeder_layout: "Modell", layout_tower: "Turm, Napf integriert", layout_canister: "Runder Beh\u00e4lter, separater Napf",
     washer_dryer: "Waschtrockner (w\u00e4scht und trocknet)", step_drying: "Trocknen", section_cycle_phase: "Programmphase",
     step_prewash: "Vorw\u00e4sche", step_soaking: "Einweichen", step_weighing: "Wiegen", step_filling: "Bef\u00fcllen", step_washing: "Waschen", step_rinsing: "Sp\u00fclen", step_draining: "Abpumpen", step_spinning: "Schleudern", step_cooling: "Abk\u00fchlen", step_anti_crease: "Knitterschutz", step_steam: "Dampf",
   },
@@ -559,7 +567,8 @@ const T = {
     section_alerts: "Alertas", section_connectivity: "Conectividad",
     section_info: "Entidades de informaci\u00f3n adicionales", section_lines_order: "Orden de las l\u00edneas",
     info_count: "N\u00famero de entidades adicionales",
-    section_alert_list: "Entidades de alerta", alerts_add: "A\u00f1adir una alerta\u2026", alerts_other: "Otra entidad\u2026", alerts_remove: "Quitar",
+    section_alert_list: "Entidades de alerta", alerts_add: "A\u00f1adir una alerta\u2026", list_other: "Otra entidad\u2026", list_remove: "Quitar",
+    section_corner_list: "Interruptores en las esquinas", corners_add: "A\u00f1adir un interruptor\u2026",
     info_label: "Nombre mostrado (opcional)",
     info_value_map: "Correspondencia de valores (opcional)",
     info_value_map_placeholder: "Una por l\u00ednea, p. ej.\n0: Listo\n1: Lavado",
@@ -637,7 +646,8 @@ const T = {
     p3_cooling: "Enfriando", p3_calibrating: "Calibrando", p3_homing: "Buscando el origen",
     section_printed_part: "Pieza impresa", part_cube: "Cubo", part_pyramid: "Pir\u00e1mide", part_duck: "Patito de goma",
     type_pet_feeder: "Comedero autom\u00e1tico", feeder_ready: "Listo", feeder_feeding: "Dispensando", section_portions_today: "Raciones de hoy", section_weight_today: "Peso de hoy", section_portion_weight: "Peso de la raci\u00f3n", section_serving_size: "Tama\u00f1o de la raci\u00f3n", section_feeder_schedule: "Programaci\u00f3n", section_last_feed: "\u00daltima comida", section_error: "Indicador de error", start_option: "Opci\u00f3n a seleccionar", start_value: "Valor a escribir", portions: "raciones",
-    feeder_empty: "Dep\u00f3sito vac\u00edo", section_level: "Nivel de comida", level_empty_below: "Vac\u00edo en o por debajo de", level_max: "Capacidad del dep\u00f3sito",
+    feeder_empty: "Dep\u00f3sito vac\u00edo", feeder_level: "Dep\u00f3sito al {pct}", section_level: "Nivel de comida", level_empty_below: "Vac\u00edo en o por debajo de", level_max: "Capacidad del dep\u00f3sito",
+    section_feeder_layout: "Modelo", layout_tower: "Torre, cuenco integrado", layout_canister: "Dep\u00f3sito redondo, cuenco aparte",
     washer_dryer: "Lavasecadora (lava y seca)", step_drying: "Secado", section_cycle_phase: "Fase del ciclo",
     step_prewash: "Prelavado", step_soaking: "Remojo", step_weighing: "Pesaje", step_filling: "Llenado", step_washing: "Lavado", step_rinsing: "Aclarado", step_draining: "Desag\u00fce", step_spinning: "Centrifugado", step_cooling: "Enfriamiento", step_anti_crease: "Antiarrugas", step_steam: "Vapor",
   },
@@ -685,7 +695,8 @@ const T = {
     section_alerts: "Avvisi", section_connectivity: "Connettivit\u00e0",
     section_info: "Entit\u00e0 informative aggiuntive", section_lines_order: "Ordine delle righe",
     info_count: "Numero di entit\u00e0 aggiuntive",
-    section_alert_list: "Entit\u00e0 di avviso", alerts_add: "Aggiungi un avviso\u2026", alerts_other: "Altra entit\u00e0\u2026", alerts_remove: "Rimuovi",
+    section_alert_list: "Entit\u00e0 di avviso", alerts_add: "Aggiungi un avviso\u2026", list_other: "Altra entit\u00e0\u2026", list_remove: "Rimuovi",
+    section_corner_list: "Interruttori negli angoli", corners_add: "Aggiungi un interruttore\u2026",
     info_label: "Nome visualizzato (opzionale)",
     info_value_map: "Corrispondenza dei valori (opzionale)",
     info_value_map_placeholder: "Una per riga, es.\n0: Pronto\n1: Lavaggio",
@@ -763,7 +774,8 @@ const T = {
     p3_cooling: "Raffreddamento", p3_calibrating: "Calibrazione", p3_homing: "Azzeramento assi",
     section_printed_part: "Oggetto stampato", part_cube: "Cubo", part_pyramid: "Piramide", part_duck: "Paperella di gomma",
     type_pet_feeder: "Distributore di crocchette", feeder_ready: "Pronto", feeder_feeding: "Erogazione", section_portions_today: "Porzioni di oggi", section_weight_today: "Peso di oggi", section_portion_weight: "Peso della porzione", section_serving_size: "Dimensione della porzione", section_feeder_schedule: "Programmazione", section_last_feed: "Ultimo pasto", section_error: "Indicatore di errore", start_option: "Opzione da selezionare", start_value: "Valore da scrivere", portions: "porzioni",
-    feeder_empty: "Serbatoio vuoto", section_level: "Livello del cibo", level_empty_below: "Vuoto a questo livello o meno", level_max: "Capacit\u00e0 del serbatoio",
+    feeder_empty: "Serbatoio vuoto", feeder_level: "Serbatoio al {pct}", section_level: "Livello del cibo", level_empty_below: "Vuoto a questo livello o meno", level_max: "Capacit\u00e0 del serbatoio",
+    section_feeder_layout: "Modello", layout_tower: "Torre, ciotola integrata", layout_canister: "Serbatoio tondo, ciotola separata",
     washer_dryer: "Lavasciuga (lava e asciuga)", step_drying: "Asciugatura", section_cycle_phase: "Fase del ciclo",
     step_prewash: "Prelavaggio", step_soaking: "Ammollo", step_weighing: "Pesatura", step_filling: "Carico acqua", step_washing: "Lavaggio", step_rinsing: "Risciacquo", step_draining: "Scarico", step_spinning: "Centrifuga", step_cooling: "Raffreddamento", step_anti_crease: "Antipiega", step_steam: "Vapore",
   },
@@ -811,7 +823,8 @@ const T = {
     section_alerts: "Meldingen", section_connectivity: "Connectiviteit",
     section_info: "Extra info-entiteiten", section_lines_order: "Volgorde van de regels",
     info_count: "Aantal extra entiteiten",
-    section_alert_list: "Meldingsentiteiten", alerts_add: "Melding toevoegen\u2026", alerts_other: "Andere entiteit\u2026", alerts_remove: "Verwijderen",
+    section_alert_list: "Meldingsentiteiten", alerts_add: "Melding toevoegen\u2026", list_other: "Andere entiteit\u2026", list_remove: "Verwijderen",
+    section_corner_list: "Schakelaars in de hoeken", corners_add: "Schakelaar toevoegen\u2026",
     info_label: "Weergavenaam (optioneel)",
     info_value_map: "Waardetoewijzing (optioneel)",
     info_value_map_placeholder: "E\u00e9n per regel, bijv.\n0: Gereed\n1: Wassen",
@@ -889,7 +902,8 @@ const T = {
     p3_cooling: "Afkoelen", p3_calibrating: "Kalibreren", p3_homing: "Homen",
     section_printed_part: "Geprint object", part_cube: "Kubus", part_pyramid: "Piramide", part_duck: "Badeendje",
     type_pet_feeder: "Voerautomaat", feeder_ready: "Gereed", feeder_feeding: "Voeren", section_portions_today: "Porties vandaag", section_weight_today: "Gewicht vandaag", section_portion_weight: "Portiegewicht", section_serving_size: "Portiegrootte", section_feeder_schedule: "Schema", section_last_feed: "Laatste voeding", section_error: "Storingsindicator", start_option: "Te kiezen optie", start_value: "Te schrijven waarde", portions: "porties",
-    feeder_empty: "Reservoir leeg", section_level: "Voerniveau", level_empty_below: "Leeg bij of onder", level_max: "Inhoud van het reservoir",
+    feeder_empty: "Reservoir leeg", feeder_level: "Reservoir voor {pct} vol", section_level: "Voerniveau", level_empty_below: "Leeg bij of onder", level_max: "Inhoud van het reservoir",
+    section_feeder_layout: "Model", layout_tower: "Toren, ingebouwde bak", layout_canister: "Rond reservoir, losse bak",
     washer_dryer: "Was-droogcombinatie (wast en droogt)", step_drying: "Drogen", section_cycle_phase: "Programmafase",
     step_prewash: "Voorwas", step_soaking: "Weken", step_weighing: "Wegen", step_filling: "Vullen", step_washing: "Wassen", step_rinsing: "Spoelen", step_draining: "Afpompen", step_spinning: "Centrifugeren", step_cooling: "Afkoelen", step_anti_crease: "Anti-kreuk", step_steam: "Stoom",
   },
@@ -937,7 +951,8 @@ const T = {
     section_alerts: "Alertas", section_connectivity: "Conetividade",
     section_info: "Entidades de informa\u00e7\u00e3o adicionais", section_lines_order: "Ordem das linhas",
     info_count: "N\u00famero de entidades adicionais",
-    section_alert_list: "Entidades de alerta", alerts_add: "Adicionar um alerta\u2026", alerts_other: "Outra entidade\u2026", alerts_remove: "Remover",
+    section_alert_list: "Entidades de alerta", alerts_add: "Adicionar um alerta\u2026", list_other: "Outra entidade\u2026", list_remove: "Remover",
+    section_corner_list: "Interruptores nos cantos", corners_add: "Adicionar um interruptor\u2026",
     info_label: "Nome exibido (opcional)",
     info_value_map: "Correspond\u00eancia de valores (opcional)",
     info_value_map_placeholder: "Uma por linha, ex.\n0: Pronto\n1: Lavagem",
@@ -1015,7 +1030,8 @@ const T = {
     p3_cooling: "Resfriando", p3_calibrating: "Calibrando", p3_homing: "Retornando \u00e0 origem",
     section_printed_part: "Pe\u00e7a impressa", part_cube: "Cubo", part_pyramid: "Pir\u00e2mide", part_duck: "Patinho de borracha",
     type_pet_feeder: "Alimentador autom\u00e1tico", feeder_ready: "Pronto", feeder_feeding: "A distribuir", section_portions_today: "Por\u00e7\u00f5es de hoje", section_weight_today: "Peso de hoje", section_portion_weight: "Peso da por\u00e7\u00e3o", section_serving_size: "Tamanho da por\u00e7\u00e3o", section_feeder_schedule: "Programa\u00e7\u00e3o", section_last_feed: "\u00daltima refei\u00e7\u00e3o", section_error: "Indicador de erro", start_option: "Op\u00e7\u00e3o a selecionar", start_value: "Valor a escrever", portions: "por\u00e7\u00f5es",
-    feeder_empty: "Dep\u00f3sito vazio", section_level: "N\u00edvel de comida", level_empty_below: "Vazio em ou abaixo de", level_max: "Capacidade do dep\u00f3sito",
+    feeder_empty: "Dep\u00f3sito vazio", feeder_level: "Dep\u00f3sito a {pct}", section_level: "N\u00edvel de comida", level_empty_below: "Vazio em ou abaixo de", level_max: "Capacidade do dep\u00f3sito",
+    section_feeder_layout: "Modelo", layout_tower: "Torre, ta\u00e7a integrada", layout_canister: "Dep\u00f3sito redondo, ta\u00e7a \u00e0 parte",
     washer_dryer: "M\u00e1quina de lavar e secar (lava e seca)", step_drying: "Secagem", section_cycle_phase: "Fase do ciclo",
     step_prewash: "Pr\u00e9-lavagem", step_soaking: "Molho", step_weighing: "Pesagem", step_filling: "Enchimento", step_washing: "Lavagem", step_rinsing: "Enxaguamento", step_draining: "Escoamento", step_spinning: "Centrifuga\u00e7\u00e3o", step_cooling: "Arrefecimento", step_anti_crease: "Anti-vincos", step_steam: "Vapor",
   },
@@ -1063,7 +1079,8 @@ const T = {
     section_alerts: "Varningar", section_connectivity: "Anslutning",
     section_info: "Extra infoentiteter", section_lines_order: "Radernas ordning",
     info_count: "Antal extra entiteter",
-    section_alert_list: "Varningsentiteter", alerts_add: "L\u00e4gg till en varning\u2026", alerts_other: "Annan entitet\u2026", alerts_remove: "Ta bort",
+    section_alert_list: "Varningsentiteter", alerts_add: "L\u00e4gg till en varning\u2026", list_other: "Annan entitet\u2026", list_remove: "Ta bort",
+    section_corner_list: "Brytare i h\u00f6rnen", corners_add: "L\u00e4gg till en brytare\u2026",
     info_label: "Visningsnamn (valfritt)",
     info_value_map: "V\u00e4rdemappning (valfritt)",
     info_value_map_placeholder: "En per rad, t.ex.\n0: Klar\n1: Tv\u00e4tt",
@@ -1141,7 +1158,8 @@ const T = {
     p3_cooling: "Kyler", p3_calibrating: "Kalibrerar", p3_homing: "Nollst\u00e4ller axlar",
     section_printed_part: "Utskrivet objekt", part_cube: "Kub", part_pyramid: "Pyramid", part_duck: "Badanka",
     type_pet_feeder: "Foderautomat", feeder_ready: "Redo", feeder_feeding: "Matar", section_portions_today: "Portioner idag", section_weight_today: "Vikt idag", section_portion_weight: "Portionsvikt", section_serving_size: "Portionsstorlek", section_feeder_schedule: "Schema", section_last_feed: "Senaste matning", section_error: "Felindikator", start_option: "Alternativ att v\u00e4lja", start_value: "V\u00e4rde att skriva", portions: "portioner",
-    feeder_empty: "Beh\u00e5llaren tom", section_level: "Foderm\u00e4ngd", level_empty_below: "Tom vid eller under", level_max: "Beh\u00e5llarens volym",
+    feeder_empty: "Beh\u00e5llaren tom", feeder_level: "Beh\u00e5llaren {pct} full", section_level: "Foderm\u00e4ngd", level_empty_below: "Tom vid eller under", level_max: "Beh\u00e5llarens volym",
+    section_feeder_layout: "Modell", layout_tower: "Torn, inbyggd sk\u00e5l", layout_canister: "Rund beh\u00e5llare, separat sk\u00e5l",
     washer_dryer: "Kombinerad tv\u00e4tt/tork (tv\u00e4ttar och torkar)", step_drying: "Torkning", section_cycle_phase: "Programfas",
     step_prewash: "F\u00f6rtv\u00e4tt", step_soaking: "Bl\u00f6tl\u00e4ggning", step_weighing: "V\u00e4gning", step_filling: "P\u00e5fyllning", step_washing: "Tv\u00e4tt", step_rinsing: "Sk\u00f6ljning", step_draining: "T\u00f6mning", step_spinning: "Centrifugering", step_cooling: "Avsvalning", step_anti_crease: "Skrynkelskydd", step_steam: "\u00c5nga",
   },
@@ -1189,7 +1207,8 @@ const T = {
     section_alerts: "Varsler", section_connectivity: "Tilkobling",
     section_info: "Ekstra infoentiteter", section_lines_order: "Rekkef\u00f8lge p\u00e5 linjene",
     info_count: "Antall ekstra entiteter",
-    section_alert_list: "Varselentiteter", alerts_add: "Legg til et varsel\u2026", alerts_other: "Annen entitet\u2026", alerts_remove: "Fjern",
+    section_alert_list: "Varselentiteter", alerts_add: "Legg til et varsel\u2026", list_other: "Annen entitet\u2026", list_remove: "Fjern",
+    section_corner_list: "Brytere i hj\u00f8rnene", corners_add: "Legg til en bryter\u2026",
     info_label: "Visningsnavn (valgfritt)",
     info_value_map: "Verditilordning (valgfritt)",
     info_value_map_placeholder: "\u00c9n per linje, f.eks.\n0: Klar\n1: Vask",
@@ -1267,7 +1286,8 @@ const T = {
     p3_cooling: "Kj\u00f8ler", p3_calibrating: "Kalibrerer", p3_homing: "Nullstiller akser",
     section_printed_part: "Utskrevet objekt", part_cube: "Kube", part_pyramid: "Pyramide", part_duck: "Badeand",
     type_pet_feeder: "F\u00f4rautomat", feeder_ready: "Klar", feeder_feeding: "Mater", section_portions_today: "Porsjoner i dag", section_weight_today: "Vekt i dag", section_portion_weight: "Porsjonsvekt", section_serving_size: "Porsjonsst\u00f8rrelse", section_feeder_schedule: "Tidsplan", section_last_feed: "Siste m\u00e5ltid", section_error: "Feilindikator", start_option: "Alternativ \u00e5 velge", start_value: "Verdi \u00e5 skrive", portions: "porsjoner",
-    feeder_empty: "Beholder tom", section_level: "F\u00f4rniv\u00e5", level_empty_below: "Tom ved eller under", level_max: "Beholderens volum",
+    feeder_empty: "Beholder tom", feeder_level: "Beholder {pct} full", section_level: "F\u00f4rniv\u00e5", level_empty_below: "Tom ved eller under", level_max: "Beholderens volum",
+    section_feeder_layout: "Modell", layout_tower: "T\u00e5rn, innebygd sk\u00e5l", layout_canister: "Rund beholder, separat sk\u00e5l",
     washer_dryer: "Kombinert vaske-/t\u00f8rkemaskin (vasker og t\u00f8rker)", step_drying: "T\u00f8rking", section_cycle_phase: "Programfase",
     step_prewash: "Forvask", step_soaking: "Bl\u00f8tlegging", step_weighing: "Veiing", step_filling: "Vannfylling", step_washing: "Vask", step_rinsing: "Skylling", step_draining: "T\u00f8mming", step_spinning: "Sentrifugering", step_cooling: "Avkj\u00f8ling", step_anti_crease: "Antikr\u00f8ll", step_steam: "Damp",
   },
@@ -1315,7 +1335,8 @@ const T = {
     section_alerts: "Advarsler", section_connectivity: "Forbindelse",
     section_info: "Ekstra info-enheder", section_lines_order: "Linjernes r\u00e6kkef\u00f8lge",
     info_count: "Antal ekstra enheder",
-    section_alert_list: "Advarselsenheder", alerts_add: "Tilf\u00f8j en advarsel\u2026", alerts_other: "Anden enhed\u2026", alerts_remove: "Fjern",
+    section_alert_list: "Advarselsenheder", alerts_add: "Tilf\u00f8j en advarsel\u2026", list_other: "Anden enhed\u2026", list_remove: "Fjern",
+    section_corner_list: "Kontakter i hj\u00f8rnerne", corners_add: "Tilf\u00f8j en kontakt\u2026",
     info_label: "Vist navn (valgfrit)",
     info_value_map: "V\u00e6rditilknytning (valgfrit)",
     info_value_map_placeholder: "\u00c9n pr. linje, f.eks.\n0: Klar\n1: Vask",
@@ -1393,7 +1414,8 @@ const T = {
     p3_cooling: "K\u00f8ler", p3_calibrating: "Kalibrerer", p3_homing: "Nulstiller akser",
     section_printed_part: "Printet emne", part_cube: "Terning", part_pyramid: "Pyramide", part_duck: "Badeand",
     type_pet_feeder: "Foderautomat", feeder_ready: "Klar", feeder_feeding: "Fodrer", section_portions_today: "Portioner i dag", section_weight_today: "V\u00e6gt i dag", section_portion_weight: "Portionsv\u00e6gt", section_serving_size: "Portionsst\u00f8rrelse", section_feeder_schedule: "Tidsplan", section_last_feed: "Sidste fodring", section_error: "Fejlindikator", start_option: "Valgmulighed", start_value: "V\u00e6rdi at skrive", portions: "portioner",
-    feeder_empty: "Beholder tom", section_level: "Foderm\u00e6ngde", level_empty_below: "Tom ved eller under", level_max: "Beholderens rumfang",
+    feeder_empty: "Beholder tom", feeder_level: "Beholder {pct} fuld", section_level: "Foderm\u00e6ngde", level_empty_below: "Tom ved eller under", level_max: "Beholderens rumfang",
+    section_feeder_layout: "Model", layout_tower: "T\u00e5rn, indbygget sk\u00e5l", layout_canister: "Rund beholder, separat sk\u00e5l",
     washer_dryer: "Vaske-t\u00f8rremaskine (vasker og t\u00f8rrer)", step_drying: "T\u00f8rring", section_cycle_phase: "Programfase",
     step_prewash: "Forvask", step_soaking: "Ibl\u00f8ds\u00e6tning", step_weighing: "Vejning", step_filling: "P\u00e5fyldning", step_washing: "Vask", step_rinsing: "Skylning", step_draining: "Udpumpning", step_spinning: "Centrifugering", step_cooling: "Afk\u00f8ling", step_anti_crease: "Antikr\u00f8l", step_steam: "Damp",
   },
@@ -1441,7 +1463,8 @@ const T = {
     section_alerts: "Alerty", section_connectivity: "\u0141\u0105czno\u015b\u0107",
     section_info: "Dodatkowe encje informacyjne", section_lines_order: "Kolejno\u015b\u0107 wierszy",
     info_count: "Liczba dodatkowych encji",
-    section_alert_list: "Encje alert\u00f3w", alerts_add: "Dodaj alert\u2026", alerts_other: "Inna encja\u2026", alerts_remove: "Usu\u0144",
+    section_alert_list: "Encje alert\u00f3w", alerts_add: "Dodaj alert\u2026", list_other: "Inna encja\u2026", list_remove: "Usu\u0144",
+    section_corner_list: "Prze\u0142\u0105czniki w rogach", corners_add: "Dodaj prze\u0142\u0105cznik\u2026",
     info_label: "Nazwa wy\u015bwietlana (opcjonalnie)",
     info_value_map: "Mapowanie warto\u015bci (opcjonalnie)",
     info_value_map_placeholder: "Jedno na lini\u0119, np.\n0: Gotowe\n1: Pranie",
@@ -1519,7 +1542,8 @@ const T = {
     p3_cooling: "Ch\u0142odzenie", p3_calibrating: "Kalibracja", p3_homing: "Bazowanie",
     section_printed_part: "Drukowany obiekt", part_cube: "Sze\u015bcian", part_pyramid: "Piramida", part_duck: "Gumowa kaczuszka",
     type_pet_feeder: "Karmnik automatyczny", feeder_ready: "Gotowy", feeder_feeding: "Wydawanie", section_portions_today: "Porcje dzisiaj", section_weight_today: "Waga dzisiaj", section_portion_weight: "Waga porcji", section_serving_size: "Wielko\u015b\u0107 porcji", section_feeder_schedule: "Harmonogram", section_last_feed: "Ostatnie karmienie", section_error: "Wska\u017anik b\u0142\u0119du", start_option: "Opcja do wybrania", start_value: "Warto\u015b\u0107 do zapisania", portions: "porcji",
-    feeder_empty: "Pusty zasobnik", section_level: "Poziom karmy", level_empty_below: "Pusty przy tej warto\u015bci lub ni\u017cej", level_max: "Pojemno\u015b\u0107 zasobnika",
+    feeder_empty: "Pusty zasobnik", feeder_level: "Zasobnik nape\u0142niony w {pct}", section_level: "Poziom karmy", level_empty_below: "Pusty przy tej warto\u015bci lub ni\u017cej", level_max: "Pojemno\u015b\u0107 zasobnika",
+    section_feeder_layout: "Model", layout_tower: "Wie\u017ca, wbudowana miska", layout_canister: "Okr\u0105g\u0142y zasobnik, osobna miska",
     washer_dryer: "Pralko-suszarka (pierze i suszy)", step_drying: "Suszenie", section_cycle_phase: "Faza programu",
     step_prewash: "Pranie wst\u0119pne", step_soaking: "Namaczanie", step_weighing: "Wa\u017cenie", step_filling: "Nape\u0142nianie", step_washing: "Pranie", step_rinsing: "P\u0142ukanie", step_draining: "Odpompowanie", step_spinning: "Wirowanie", step_cooling: "Sch\u0142adzanie", step_anti_crease: "Przeciw zagnieceniom", step_steam: "Para",
   },
@@ -1567,7 +1591,8 @@ const T = {
     section_alerts: "\u8b66\u62a5", section_connectivity: "\u8fde\u7f51\u72b6\u6001",
     section_info: "\u989d\u5916\u4fe1\u606f\u5b9e\u4f53", section_lines_order: "\u4fe1\u606f\u884c\u987a\u5e8f",
     info_count: "\u5b9e\u4f53\u6570\u91cf",
-    section_alert_list: "\u8b66\u62a5\u5b9e\u4f53", alerts_add: "\u6dfb\u52a0\u8b66\u62a5\u2026", alerts_other: "\u5176\u4ed6\u5b9e\u4f53\u2026", alerts_remove: "\u79fb\u9664",
+    section_alert_list: "\u8b66\u62a5\u5b9e\u4f53", alerts_add: "\u6dfb\u52a0\u8b66\u62a5\u2026", list_other: "\u5176\u4ed6\u5b9e\u4f53\u2026", list_remove: "\u79fb\u9664",
+    section_corner_list: "\u89d2\u843d\u5f00\u5173", corners_add: "\u6dfb\u52a0\u5f00\u5173\u2026",
     info_label: "\u663e\u793a\u540d\u79f0 (\u53ef\u9009)",
     info_value_map: "\u503c\u6620\u5c04 (\u53ef\u9009)",
     info_value_map_placeholder: "\u6bcf\u4e2a\u503c\u4e00\u884c, \u4f8b\u5982\n0: \u5f85\u673a\n1: \u6d17\u6da4\u4e2d",
@@ -1645,7 +1670,8 @@ const T = {
     p3_cooling: "\u51b7\u5374\u4e2d", p3_calibrating: "\u6821\u51c6\u4e2d", p3_homing: "\u5f52\u4f4d\u4e2d",
     section_printed_part: "\u6253\u5370\u6a21\u578b", part_cube: "\u7acb\u65b9\u4f53", part_pyramid: "\u91d1\u5b57\u5854", part_duck: "\u6a61\u76ae\u9e2d",
     type_pet_feeder: "\u81ea\u52a8\u5582\u98df\u5668", feeder_ready: "\u5c31\u7eea", feeder_feeding: "\u6295\u5582\u4e2d", section_portions_today: "\u4eca\u65e5\u4efd\u6570", section_weight_today: "\u4eca\u65e5\u91cd\u91cf", section_portion_weight: "\u6bcf\u4efd\u91cd\u91cf", section_serving_size: "\u6bcf\u6b21\u4efd\u91cf", section_feeder_schedule: "\u8ba1\u5212", section_last_feed: "\u4e0a\u6b21\u6295\u5582", section_error: "\u6545\u969c\u6307\u793a", start_option: "\u8981\u9009\u62e9\u7684\u9009\u9879", start_value: "\u8981\u5199\u5165\u7684\u503c", portions: "\u4efd",
-    feeder_empty: "\u6599\u6876\u5df2\u7a7a", section_level: "\u4f59\u91cf", level_empty_below: "\u4f4e\u4e8e\u6216\u7b49\u4e8e\u6b64\u503c\u89c6\u4e3a\u7a7a", level_max: "\u6599\u6876\u5bb9\u91cf",
+    feeder_empty: "\u6599\u6876\u5df2\u7a7a", feeder_level: "\u6599\u6876\u4f59\u91cf {pct}", section_level: "\u4f59\u91cf", level_empty_below: "\u4f4e\u4e8e\u6216\u7b49\u4e8e\u6b64\u503c\u89c6\u4e3a\u7a7a", level_max: "\u6599\u6876\u5bb9\u91cf",
+    section_feeder_layout: "\u578b\u53f7", layout_tower: "\u5854\u5f0f\uff0c\u4e00\u4f53\u5f0f\u98df\u76c6", layout_canister: "\u5706\u5f62\u6599\u6876\uff0c\u72ec\u7acb\u98df\u76c6",
     washer_dryer: "\u6d17\u70d8\u4e00\u4f53\u673a\uff08\u6d17\u6da4\u5e76\u70d8\u5e72\uff09", step_drying: "\u70d8\u5e72\u4e2d", section_cycle_phase: "\u7a0b\u5e8f\u9636\u6bb5",
     step_prewash: "\u9884\u6d17\u4e2d", step_soaking: "\u6d78\u6ce1\u4e2d", step_weighing: "\u79f0\u91cd\u4e2d", step_filling: "\u8fdb\u6c34\u4e2d", step_washing: "\u6d17\u6da4\u4e2d", step_rinsing: "\u6f02\u6d17\u4e2d", step_draining: "\u6392\u6c34\u4e2d", step_spinning: "\u8131\u6c34\u4e2d", step_cooling: "\u51b7\u5374\u4e2d", step_anti_crease: "\u9632\u76b1\u4e2d", step_steam: "\u84b8\u6c7d\u4e2d",
   },
@@ -1693,7 +1719,8 @@ const T = {
     section_alerts: "Upozorn\u011bn\u00ed", section_connectivity: "P\u0159ipojen\u00ed",
     section_info: "Dal\u0161\u00ed informa\u010dn\u00ed entity", section_lines_order: "Po\u0159ad\u00ed \u0159\u00e1dk\u016f",
     info_count: "Po\u010det dal\u0161\u00edch entit",
-    section_alert_list: "Entity upozorn\u011bn\u00ed", alerts_add: "P\u0159idat upozorn\u011bn\u00ed\u2026", alerts_other: "Jin\u00e1 entita\u2026", alerts_remove: "Odebrat",
+    section_alert_list: "Entity upozorn\u011bn\u00ed", alerts_add: "P\u0159idat upozorn\u011bn\u00ed\u2026", list_other: "Jin\u00e1 entita\u2026", list_remove: "Odebrat",
+    section_corner_list: "P\u0159ep\u00edna\u010de v roz\u00edch", corners_add: "P\u0159idat p\u0159ep\u00edna\u010d\u2026",
     info_label: "Zobrazovan\u00fd n\u00e1zev (voliteln\u00e9)",
     info_value_map: "Mapov\u00e1n\u00ed hodnot (voliteln\u00e9)",
     info_value_map_placeholder: "Jedna hodnota na \u0159\u00e1dek, nap\u0159.\n0: P\u0159ipraveno\n1: Pran\u00ed",
@@ -1771,7 +1798,8 @@ const T = {
     p3_cooling: "Chlazen\u00ed", p3_calibrating: "Kalibrace", p3_homing: "Naj\u00ed\u017ed\u011bn\u00ed do v\u00fdchoz\u00ed polohy",
     section_printed_part: "Ti\u0161t\u011bn\u00fd objekt", part_cube: "Krychle", part_pyramid: "Pyramida", part_duck: "Gumov\u00e1 kachni\u010dka",
     type_pet_feeder: "Krm\u00edtko", feeder_ready: "P\u0159ipraveno", feeder_feeding: "Krmen\u00ed", section_portions_today: "Porce dnes", section_weight_today: "Hmotnost dnes", section_portion_weight: "Hmotnost porce", section_serving_size: "Velikost porce", section_feeder_schedule: "Rozvrh", section_last_feed: "Posledn\u00ed krmen\u00ed", section_error: "Indik\u00e1tor chyby", start_option: "Mo\u017enost k v\u00fdb\u011bru", start_value: "Hodnota k z\u00e1pisu", portions: "porc\u00ed",
-    feeder_empty: "Z\u00e1sobn\u00edk pr\u00e1zdn\u00fd", section_level: "Mno\u017estv\u00ed krmiva", level_empty_below: "Pr\u00e1zdn\u00fd p\u0159i t\u00e9to hodnot\u011b nebo ni\u017e\u0161\u00ed", level_max: "Objem z\u00e1sobn\u00edku",
+    feeder_empty: "Z\u00e1sobn\u00edk pr\u00e1zdn\u00fd", feeder_level: "Z\u00e1sobn\u00edk napln\u011bn na {pct}", section_level: "Mno\u017estv\u00ed krmiva", level_empty_below: "Pr\u00e1zdn\u00fd p\u0159i t\u00e9to hodnot\u011b nebo ni\u017e\u0161\u00ed", level_max: "Objem z\u00e1sobn\u00edku",
+    section_feeder_layout: "Model", layout_tower: "V\u011b\u017e, vestav\u011bn\u00e1 miska", layout_canister: "Kulat\u00fd z\u00e1sobn\u00edk, samostatn\u00e1 miska",
     washer_dryer: "Pra\u010dka se su\u0161i\u010dkou (pere a su\u0161\u00ed)", step_drying: "Su\u0161en\u00ed", section_cycle_phase: "F\u00e1ze programu",
     step_prewash: "P\u0159edp\u00edrka", step_soaking: "Nam\u00e1\u010den\u00ed", step_weighing: "V\u00e1\u017een\u00ed", step_filling: "Napou\u0161t\u011bn\u00ed", step_washing: "Pran\u00ed", step_rinsing: "M\u00e1ch\u00e1n\u00ed", step_draining: "Vypou\u0161t\u011bn\u00ed", step_spinning: "Odst\u0159e\u010fov\u00e1n\u00ed", step_cooling: "Chlazen\u00ed", step_anti_crease: "Proti poma\u010dk\u00e1n\u00ed", step_steam: "P\u00e1ra",
   },
@@ -2707,11 +2735,15 @@ function alertsArray(list) {
   return list ? [list] : [];
 }
 
-function alertEntitiesList(list) {
+function entityEntries(list, max) {
   return alertsArray(list)
     .map((e) => (typeof e === "string" ? { entity: e } : e || {}))
     .filter((e) => e.entity)
-    .slice(0, ALERTS_MAX);
+    .slice(0, max);
+}
+
+function alertEntitiesList(list) {
+  return entityEntries(list, ALERTS_MAX);
 }
 
 // For the editor to find a device's alerts: its events, less the news.
@@ -2726,24 +2758,100 @@ function isEventAlert(hass, entityId) {
 // The binary sensors that report a problem rather than a state: a leak or a
 // low battery is an alert, a door or a running flag is not.
 const ALERT_DEVICE_CLASSES = ["problem", "safety", "battery", "moisture", "smoke", "gas", "carbon_monoxide", "heat", "cold", "tamper"];
-// The menu's last entry, which opens a picker for any other entity.
-const ALERT_OTHER = "__other__";
-
 function isAlertCandidate(hass, entityId) {
   if (isEventAlert(hass, entityId)) return true;
   const st = hass.states[entityId];
   return /^binary_sensor\./.test(entityId) && !!st && ALERT_DEVICE_CLASSES.includes(st.attributes.device_class);
 }
 
-// What the editor offers as alerts: the appliance's own, less what the card
-// already shows and what is already chosen.
-function alertCandidates(hass, cfg) {
-  if (!hass || !cfg || !cfg.state_entity || !hass.states[cfg.state_entity]) return [];
+// An alert as the card draws it: its own icon, or the red circle.
+function alertIcon(hass, e) {
+  const st = hass.states[e.entity];
+  return e.icon || (st && st.attributes.icon) || "mdi:alert-circle";
+}
+
+// Two switches at most, one in each top corner: more would crowd the drawing
+// they sit beside.
+const CORNERS_MAX = 2;
+// What a switch in the corners locks, if anything. A feeder has two: the child
+// lock and the lock that closes the buttons by itself after a while. Read on
+// the integration's own key first, the same in every language, then on the
+// entity id, which names a lock's domain, and on its name. A clock is not a
+// lock.
+const CORNER_CHILD_RE = /child|kinder|enfant|infantil|crianca|bambin|barn|dziec|rodzic|detsk|\u0434\u0435\u0442|\u513f\u7ae5/;
+const CORNER_LOCK_RE = /(^|[^c])lock|verrou|sperr|bloqu|blocc|slot|blokad|zamk|zamek|autolas|\u0431\u043b\u043e\u043a|\u0437\u0430\u043c\u043e\u043a|\u9501/;
+const CORNER_AUTO_RE = /auto|\u0430\u0432\u0442\u043e|\u81ea\u52a8/;
+function cornerKind(hass, entityId) {
+  const reg = hass.entities && hass.entities[entityId];
+  const st = hass.states[entityId];
+  const hay = stripAccents([reg && reg.translation_key, entityId, st && st.attributes.friendly_name]
+    .filter(Boolean).join(" ").toLowerCase());
+  if (CORNER_CHILD_RE.test(hay)) return "child";
+  const locks = CORNER_LOCK_RE.test(hay);
+  if (locks && CORNER_AUTO_RE.test(hay)) return "auto";
+  return locks ? "lock" : "";
+}
+// Each kind drawn locked and unlocked: what it is, and whether it holds.
+const CORNER_ICONS = {
+  child: ["mdi:account-lock", "mdi:account-lock-open-outline"],
+  auto: ["mdi:timer-lock", "mdi:timer-lock-open-outline"],
+  lock: ["mdi:lock", "mdi:lock-open-variant-outline"],
+  "": ["mdi:toggle-switch", "mdi:toggle-switch-off-outline"],
+};
+// A switch holds while it is on, a lock while it is locked. An open lock is
+// the opposite of a locked one.
+function cornerOn(st) {
+  return !!st && ["on", "locked"].includes(st.state);
+}
+// The icon says what the switch does and whether it holds, unless one was
+// given. An entity's own icon is kept for a switch the card does not know.
+function cornerIcon(hass, c) {
+  if (c.icon) return c.icon;
+  const st = hass.states[c.entity];
+  const kind = cornerKind(hass, c.entity);
+  if (!kind && st && st.attributes.icon) return st.attributes.icon;
+  return CORNER_ICONS[kind][cornerOn(st) ? 0 : 1];
+}
+
+// What the corners offer: the appliance's own switches and locks. A helper
+// belongs to no appliance, so it is reached through the picker instead.
+function isCornerCandidate(hass, entityId) {
+  return ["switch", "lock"].includes(domainOf(entityId)) && !!hass.states[entityId];
+}
+
+// The entity the appliance is found by: the first of the card's that belongs
+// to a device, its state first. A feeder is often set up with no state at all.
+function anchorEntity(hass, cfg) {
+  const ids = [cfg.state_entity]
+    .concat(Object.entries(cfg).filter(([k, v]) => k.endsWith("_entity") && typeof v === "string").map(([, v]) => v))
+    .filter((id) => id && hass.states[id]);
+  const reg = (id) => hass.entities && hass.entities[id];
+  return ids.find((id) => reg(id) && reg(id).device_id) || ids[0] || null;
+}
+
+// Each menu's last entry, which opens a picker for any other entity.
+const LIST_OTHER = "__other__";
+
+// The two lists the editor fills from a menu: the alerts, and the switches in
+// the corners. Each menu offers the appliance's own entities of its kind, and
+// any other entity through its last entry.
+const ENTITY_LISTS = [
+  { panel: "alerts", field: "alerts_entities", max: ALERTS_MAX, title: "section_alert_list", add: "alerts_add",
+    domains: ["binary_sensor", "sensor"], offers: isAlertCandidate, icon: alertIcon },
+  { panel: "corners", field: "corner_entities", max: CORNERS_MAX, title: "section_corner_list", add: "corners_add",
+    domains: ["switch", "input_boolean", "lock", "light", "fan"], offers: isCornerCandidate, icon: cornerIcon },
+];
+
+// What a menu offers: the appliance's own, less what the card already shows
+// and what is already chosen.
+function listCandidates(hass, cfg, list) {
+  const anchor = hass && cfg ? anchorEntity(hass, cfg) : null;
+  if (!anchor) return [];
   const used = new Set();
   for (const [k, v] of Object.entries(cfg)) if (k.endsWith("_entity") && typeof v === "string") used.add(v);
   for (const e of cfg.info_entities || []) used.add(typeof e === "string" ? e : e && e.entity);
-  for (const e of alertEntitiesList(cfg.alerts_entities)) used.add(e.entity);
-  return siblingEntityIds(hass, cfg.state_entity).filter((id) => !used.has(id) && isAlertCandidate(hass, id));
+  for (const e of entityEntries(cfg[list.field], list.max)) used.add(e.entity);
+  return siblingEntityIds(hass, anchor).filter((id) => !used.has(id) && list.offers(hass, id));
 }
 
 // "2 alertes": the count in the plural its language wants. Russian, Polish
@@ -3067,6 +3175,7 @@ const FRIDGE_ONLY_FIELDS = [
 
 // Same for a pet feeder: nothing else counts portions.
 const FEEDER_ONLY_FIELDS = [
+  "feeder_layout",
   "portions_today_entity",
   "weight_today_entity",
   "portion_weight_entity",
@@ -4564,6 +4673,74 @@ const ILLUSTRATION_CSS = {
           85% { opacity: 1; }
           100% { opacity: 0; transform: translateY(7px); }
         }
+        /* The other family: a round tank of smoked plastic on a round base,
+           the buttons and the chute on its front, and the bowl set down in
+           front of it rather than built in. White by default, the way these
+           are sold. */
+        .pfc-lid {
+          position: absolute; left: 17px; right: 17px; top: 6px; height: 8px; border-radius: 4px 4px 2px 2px;
+          background: var(--ac-body-hi, #ffffff); box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.12);
+        }
+        .pfc-tank {
+          position: absolute; left: 20px; right: 20px; top: 12px; height: 42px; overflow: hidden;
+          border-radius: 2px 2px 10px 10px; background: #c9ced3;
+        }
+        .pfc-heap { position: absolute; left: 0; right: 0; bottom: 0; height: var(--pf-fill, 16px); background: #8d6e63; }
+        .pfc-heap::before {
+          content: ""; position: absolute; left: 0; right: 0; top: -4px; height: 9px;
+          background: radial-gradient(circle at 4.5px 4.5px, #8d6e63 4.3px, transparent 4.7px) repeat-x;
+          background-size: 9px 9px;
+        }
+        .machine.empty .pfc-heap { display: none; }
+        /* The smoked plastic in front of the kibble, rounder at the sides. */
+        .pfc-tank::after {
+          content: ""; position: absolute; inset: 0; border-radius: inherit;
+          background: linear-gradient(90deg, rgba(60, 66, 72, 0.30), rgba(255, 255, 255, 0.22) 38%, rgba(255, 255, 255, 0.05) 60%, rgba(60, 66, 72, 0.34));
+          box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.10);
+        }
+        .pfc-base {
+          position: absolute; left: 26px; right: 26px; top: 50px; bottom: 6px; border-radius: 3px 3px 7px 7px;
+          background: linear-gradient(90deg, var(--ac-body-lo, #d8dcde), var(--ac-body-hi, #ffffff) 40%, var(--ac-body, #f1f3f4) 70%, var(--ac-body-lo, #d8dcde));
+          box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.10);
+        }
+        .pfc-panel {
+          position: absolute; left: 10px; right: 10px; top: 7px; height: 11px; border-radius: 5px;
+          background: var(--ac-body-lo, #d8dcde);
+        }
+        .pfc-panel i {
+          position: absolute; top: 2px; width: 6px; height: 7px; border-radius: 3px;
+          background: var(--ac-body-hi, #ffffff); box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.18);
+        }
+        .pfc-panel i:first-child { left: 4px; }
+        .pfc-panel i:last-child { right: 4px; }
+        .pfc-chute {
+          position: absolute; left: 11px; right: 11px; top: 21px; height: 8px; border-radius: 2px 2px 3px 3px;
+          background: #1b1e23;
+        }
+        /* The bowl, apart and in front, with its kibble heaped over the rim. */
+        .pfc-bowl {
+          position: absolute; left: 5px; width: 52px; bottom: 3px; height: 17px;
+          background: linear-gradient(180deg, var(--ac-body-lo, #d8dcde) 0 2px, var(--ac-body-hi, #ffffff) 2px, var(--ac-body, #f1f3f4) 70%, var(--ac-body-lo, #d8dcde));
+          clip-path: polygon(0 0, 100% 0, 86% 100%, 14% 100%);
+        }
+        .pfc-dish { position: absolute; left: 10px; width: 42px; bottom: 16px; height: 6px; background: #8d6e63; }
+        .pfc-dish::before {
+          content: ""; position: absolute; left: 0; right: 0; top: -4px; height: 9px;
+          background: radial-gradient(circle at 4.5px 4.5px, #8d6e63 4.3px, transparent 4.7px) repeat-x;
+          background-size: 9px 9px;
+        }
+        /* The kibble leaves the dark mouth and lands on the heap in the bowl,
+           just above its rim: a longer fall than the tower's. */
+        .machine.canister .pf-fall i { left: 44px; top: 73px; }
+        .machine.canister.feeding .pf-fall i { animation-name: pfc-fall; }
+        @keyframes pfc-fall {
+          0% { opacity: 0; transform: translateY(0); }
+          20% { opacity: 1; }
+          85% { opacity: 1; }
+          100% { opacity: 0; transform: translateY(10px); }
+        }
+        .machine.canister .pf-cat { left: auto; right: 0; }
+        .machine.canister .pf-alert { left: auto; right: 12px; }
   `,
   kettle: () => `
         .kt-base { position: absolute; left: 20px; right: 20px; bottom: 6px; height: 7px; border-radius: 3px; background: #3b4048; }
@@ -5086,14 +5263,23 @@ function illustrationHtml(type, ctx) {
   }
 
   if (type === "pet_feeder") {
+    // The tower serves into a bowl of its own; the round tank stands on a
+    // base with the bowl set down in front of it, and holds a taller heap.
+    const canister = ctx.feederLayout === "canister";
+    const heapPx = canister ? 34 : 22;
     return `
-        <div class="machine ${[ctx.feeding ? "feeding" : "", ctx.feederEmpty ? "empty" : ""].filter(Boolean).join(" ")}"${
-          ctx.feederFill === null || ctx.feederFill === undefined ? "" : ` style="--pf-fill:${(4 + (ctx.feederFill / 100) * 22).toFixed(1)}px"`}>
+        <div class="machine ${[canister ? "canister" : "", ctx.feeding ? "feeding" : "", ctx.feederEmpty ? "empty" : ""].filter(Boolean).join(" ")}"${
+          ctx.feederFill === null || ctx.feederFill === undefined ? "" : ` style="--pf-fill:${(4 + (ctx.feederFill / 100) * heapPx).toFixed(1)}px"`}>${canister ? `
+          <div class="pfc-base"><div class="pfc-panel"><i></i><i></i></div><div class="pfc-chute"></div></div>
+          <div class="pfc-tank"><div class="pfc-heap"></div></div>
+          <div class="pfc-lid"></div>
+          <div class="pfc-dish"></div>
+          <div class="pfc-bowl"></div>` : `
           <div class="pf-lid"></div>
           <div class="pf-body"><div class="pf-heap"></div></div>
           <div class="pf-unit"><i></i></div>
           <div class="pf-bowl"><div class="pf-dish"></div></div>
-          <div class="pf-base"></div>
+          <div class="pf-base"></div>`}
           <div class="pf-fall" aria-hidden="true"><i></i><i></i><i></i></div>${ctx.feederAlert ? `
           <div class="pf-cat" aria-hidden="true">
             <u class="ear l"><span></span></u><u class="ear r"><span></span></u>
@@ -5515,6 +5701,7 @@ class ApplianceCard extends HTMLElement {
       if (id) ids.push(id);
     }
     for (const e of alertEntitiesList(cfg.alerts_entities)) ids.push(e.entity);
+    for (const e of entityEntries(cfg.corner_entities, CORNERS_MAX)) ids.push(e.entity);
     for (const z of cfg.zones || []) {
       if (z && z.level_entity) ids.push(z.level_entity);
       if (z && z.residual_heat_entity) ids.push(z.residual_heat_entity);
@@ -6686,7 +6873,6 @@ class ApplianceCard extends HTMLElement {
         });
       }
       color = STATE_COLORS[norm];
-      if (!cfg.state_show_raw) stateLabel = t(hass, norm);
       // The heap is drawn from a percentage. A tank counted in grams or in
       // litres only says how full it is once its capacity is known, so without
       // that capacity the drawing stays at its resting height rather than
@@ -6697,6 +6883,16 @@ class ApplianceCard extends HTMLElement {
         const filled = levelMax > 0 ? (levelPct / levelMax) * 100
           : !levelUnit || levelUnit === "%" ? levelPct : null;
         if (filled !== null) feederFill = Math.max(0, Math.min(100, filled));
+      }
+      // "Ready" is what a feeder is nearly all day long, so saying it says
+      // nothing. At rest the line tells how full the tank is when that is
+      // known and stays empty otherwise; serving, empty and a fault keep their
+      // own words.
+      if (!cfg.state_show_raw) {
+        stateLabel = norm !== "feeder_ready" ? t(hass, norm)
+          : feederFill === null ? ""
+          : t(hass, "feeder_level").replace("{pct}",
+            new Intl.NumberFormat(lang(hass), { style: "percent", maximumFractionDigits: 0 }).format(feederFill / 100));
       }
 
       const portionsSt = cfg.portions_today_entity ? stateObj(hass, cfg.portions_today_entity) : null;
@@ -6809,6 +7005,7 @@ class ApplianceCard extends HTMLElement {
       feederEmpty,
       feederAlert,
       feederFill,
+      feederLayout: cfg.feeder_layout === "canister" ? "canister" : "",
       tankTemp,
       boilerMode,
       hpMode,
@@ -6890,6 +7087,17 @@ class ApplianceCard extends HTMLElement {
           --mdc-icon-size: 20px; color: var(--secondary-text-color, #767676);
         }
         .light-badge.on { color: #ffb300; }
+        /* Switches at hand, lined up under the light on the left and under
+           the connection on the right, centred on the same axis. */
+        .corner-btn {
+          position: absolute; width: 28px; height: 28px; border-radius: 50%; cursor: pointer;
+          display: flex; align-items: center; justify-content: center;
+          --mdc-icon-size: 20px; color: var(--secondary-text-color, #767676);
+        }
+        .corner-btn.left { left: 8px; }
+        .corner-btn.right { right: 8px; }
+        .corner-btn.on { color: #ffb300; }
+        .corner-btn:hover { background: var(--secondary-background-color, rgba(0, 0, 0, 0.04)); }
         .top { display: flex; flex-direction: column; align-items: center; text-align: center; cursor: pointer; }
         .machine { position: relative; width: 96px; height: 108px; margin: 0 auto 8px; }
         ${illustrationCss(applianceType, color)}
@@ -7101,15 +7309,32 @@ class ApplianceCard extends HTMLElement {
       ? `<div class="light-badge ${lit ? "on" : ""}" data-entity="${esc(cfg.light_entity)}" title="${esc(t(hass, "light"))}" aria-label="${esc(t(hass, "light"))}"><ha-icon icon="${lit ? "mdi:lightbulb-on" : "mdi:lightbulb-outline"}"></ha-icon></div>`
       : "";
 
+    // The switches the user wants at hand: the first on the left, the second
+    // on the right, each under what already sits in its corner. The icon says
+    // what each one does and whether it holds.
+    const cornersHtml = entityEntries(cfg.corner_entities, CORNERS_MAX)
+      .filter((c) => stateObj(hass, c.entity))
+      .map((c, i) => {
+        const cst = stateObj(hass, c.entity);
+        const on = cornerOn(cst);
+        const icon = cornerIcon(hass, c);
+        const label = c.label || stripNamePrefix(cst.attributes.friendly_name, c.entity);
+        const side = i ? "right" : "left";
+        const top = (side === "left" ? lightBadgeHtml : connBadgeHtml) ? 36 : 6;
+        return `<div class="corner-btn ${side}${on ? " on" : ""}" style="top:${top}px" data-corner="${esc(c.entity)}" title="${esc(label)}" aria-label="${esc(label)}"><ha-icon icon="${esc(icon)}"></ha-icon></div>`;
+      })
+      .join("");
+
     this._root.innerHTML = `
       ${styleTag}
       <ha-card>
         ${lightBadgeHtml}
         ${connBadgeHtml}
+        ${cornersHtml}
         <div class="top" id="header">
           ${iconHtml}
           <div class="name">${esc(name)}</div>
-          <div class="state-line">${esc(stateLabel)}</div>
+          ${stateLabel ? `<div class="state-line">${esc(stateLabel)}</div>` : ""}
         </div>
         ${barHtml}
         ${linesHtml}
@@ -7133,6 +7358,16 @@ class ApplianceCard extends HTMLElement {
       el.addEventListener("click", (ev) => {
         ev.stopPropagation();
         this._moreInfo(el.getAttribute("data-more"));
+      });
+    });
+    // A lock is opened rather than unlocked: a stray tap on a dashboard must
+    // never unlock anything.
+    this._root.querySelectorAll("[data-corner]").forEach((el) => {
+      el.addEventListener("click", (ev) => {
+        ev.stopPropagation();
+        const id = el.getAttribute("data-corner");
+        if (domainOf(id) === "lock") this._moreInfo(id);
+        else this._call(id);
       });
     });
     this._root.querySelectorAll("[data-alerts-toggle]").forEach((el) => {
@@ -7391,6 +7626,7 @@ class ApplianceCardEditor extends HTMLElement {
         general: true,
         info: (this._config.info_entities || []).length > 0,
         alerts: alertsArray(this._config.alerts_entities).length > 0,
+        corners: alertsArray(this._config.corner_entities).length > 0,
         order: (this._config.lines_order || []).length > 0,
         zones: (this._config.zones || []).length > 0,
       };
@@ -7429,32 +7665,33 @@ class ApplianceCardEditor extends HTMLElement {
     }
   }
 
-  _alertsList() {
-    return alertsArray(this._config.alerts_entities).map((e) => (typeof e === "string" ? { entity: e } : { ...e }));
+  _entityList(field) {
+    return alertsArray(this._config[field]).map((e) => (typeof e === "string" ? { entity: e } : { ...e }));
   }
 
-  // An alert is its entity, so it is written back as a plain id unless a
-  // label or an icon was set on it by hand. No alert left, no key left.
-  _writeAlerts(list) {
+  // An entry is its entity, so it is written back as a plain id unless a
+  // label or an icon was set on it by hand. Nothing left, no key left.
+  _writeList(field, list) {
     const entries = list.map((e) =>
       (Object.keys(e).some((k) => k !== "entity" && e[k] !== undefined) ? e : e.entity));
     if (entries.length) {
-      this._config = { ...this._config, alerts_entities: entries };
+      this._config = { ...this._config, [field]: entries };
     } else {
       this._config = { ...this._config };
-      delete this._config.alerts_entities;
+      delete this._config[field];
     }
     this.dispatchEvent(new CustomEvent("config-changed", { detail: { config: this._config } }));
   }
 
-  _addAlert(entityId) {
-    const list = this._alertsList().filter((e) => e.entity);
-    if (list.length >= ALERTS_MAX || list.some((e) => e.entity === entityId)) return;
-    this._writeAlerts(list.concat({ entity: entityId }));
+  _addToList(panel, entityId) {
+    const list = ENTITY_LISTS.find((l) => l.panel === panel);
+    const chosen = this._entityList(list.field).filter((e) => e.entity);
+    if (chosen.length >= list.max || chosen.some((e) => e.entity === entityId)) return;
+    this._writeList(list.field, chosen.concat({ entity: entityId }));
   }
 
   // The name the card will show, so the list reads like the card.
-  _alertName(e) {
+  _entryName(e) {
     if (e.label) return e.label;
     const hass = this._hass;
     const st = hass.states[e.entity];
@@ -7463,26 +7700,48 @@ class ApplianceCardEditor extends HTMLElement {
     return stripDeviceName(hass, st && st.attributes.friendly_name, e.entity, cardName);
   }
 
-  _alertIcon(e) {
-    const st = this._hass.states[e.entity];
-    return e.icon || (st && st.attributes.icon) || "mdi:alert-circle";
-  }
-
   // Any other entity, from any appliance, through a picker of its own.
-  _mountAlertOther(slotEl) {
+  _mountListOther(slotEl, list) {
     if (!slotEl) return;
     const picker = document.createElement("ha-entity-picker");
     picker.hass = this._hass;
     picker.value = "";
     picker.label = t(this._l10n, "entity");
-    picker.includeDomains = ["binary_sensor", "sensor"];
+    picker.includeDomains = list.domains;
     picker.addEventListener("value-changed", (ev) => {
       if (!ev.detail.value) return;
-      this._alertOther = false;
-      this._addAlert(ev.detail.value);
+      this._otherList = "";
+      this._addToList(list.panel, ev.detail.value);
       this._build();
     });
     slotEl.appendChild(picker);
+  }
+
+  // A list's panel: the menu to add from, then what is chosen, each with a
+  // cross to take it out again.
+  _listPanel(list) {
+    const hass = this._l10n;
+    const chosen = this._entityList(list.field).filter((e) => e.entity);
+    const options = listCandidates(this._hass, this._config, list)
+      .map((id) => ({ id, name: this._entryName({ entity: id }) }))
+      .sort((a, b) => a.name.localeCompare(b.name));
+    return `
+      <details class="group" data-panel="${list.panel}" ${this._panelOpen[list.panel] ? "open" : ""}>
+        <summary>${t(hass, list.title)}</summary>
+        <div class="section">
+          <div class="row">
+            <select data-role="${list.panel}-add-select"${chosen.length >= list.max ? " disabled" : ""}>
+              <option value="">${esc(t(hass, list.add))}</option>
+              ${options.map((o) => `<option value="${esc(o.id)}">${esc(o.name)}</option>`).join("")}
+              <option value="${LIST_OTHER}">${esc(t(hass, "list_other"))}</option>
+            </select>
+          </div>
+          ${this._otherList === list.panel ? `<div class="picker-slot" data-slot="__${list.panel}_other"></div>` : ""}
+        </div>
+        ${chosen.length ? `<div class="section">${chosen.map((e, i) => `
+          <div class="list-choice ${list.panel}"><ha-icon icon="${esc(list.icon(this._hass, e))}"></ha-icon><span>${esc(this._entryName(e))}</span><button type="button" class="list-remove" data-${list.panel}-remove="${i}" title="${esc(t(hass, "list_remove"))}" aria-label="${esc(t(hass, "list_remove"))}"><ha-icon icon="mdi:close"></ha-icon></button></div>`).join("")}
+        </div>` : ""}
+      </details>`;
   }
 
   _zonesList() {
@@ -7852,11 +8111,6 @@ class ApplianceCardEditor extends HTMLElement {
     // detected type could not see the entity's icon yet.
     this._type = this._currentType();
     const drawn = this._drawnLines();
-    // The alerts chosen, and the appliance's others for the menu, by name.
-    const chosenAlerts = this._alertsList().filter((e) => e.entity);
-    const alertOptions = alertCandidates(this._hass, this._config)
-      .map((id) => ({ id, name: this._alertName({ entity: id }) }))
-      .sort((a, b) => a.name.localeCompare(b.name));
 
     if (!this._root) {
       this.attachShadow({ mode: "open" });
@@ -7897,14 +8151,15 @@ class ApplianceCardEditor extends HTMLElement {
         .info-row-handle:active { cursor: grabbing; }
         .info-row-fields { flex: 1; min-width: 0; }
         .order-line { padding: 7px 0; }
-        .alert-choice { display: flex; align-items: center; gap: 10px; padding: 6px 2px; color: var(--primary-text-color, #1c1c1c); }
-        .alert-choice > ha-icon { --mdc-icon-size: 20px; color: var(--error-color, #f44336); flex-shrink: 0; }
-        .alert-choice span { flex: 1; min-width: 0; }
-        .alert-remove {
+        .list-choice { display: flex; align-items: center; gap: 10px; padding: 6px 2px; color: var(--primary-text-color, #1c1c1c); }
+        .list-choice > ha-icon { --mdc-icon-size: 20px; color: var(--secondary-text-color, #767676); flex-shrink: 0; }
+        .list-choice.alerts > ha-icon { color: var(--error-color, #f44336); }
+        .list-choice span { flex: 1; min-width: 0; }
+        .list-remove {
           display: flex; border: none; background: none; padding: 4px; border-radius: 50%; cursor: pointer;
           color: var(--secondary-text-color, #767676);
         }
-        .alert-remove ha-icon { --mdc-icon-size: 18px; }
+        .list-remove ha-icon { --mdc-icon-size: 18px; }
         .info-row.dragging { opacity: 0.4; }
         .info-row.drag-over { border-top: 2px solid var(--primary-color, #03a9f4); }
         details.group {
@@ -7956,6 +8211,13 @@ class ApplianceCardEditor extends HTMLElement {
             { value: "side_by_side", label: t(hass, "layout_side_by_side") },
             { value: "single", label: t(hass, "layout_single") },
             { value: "wine", label: t(hass, "layout_wine") },
+          ],
+        }) : ""}
+        ${this._type === "pet_feeder" ? this._row("section_feeder_layout", "feeder_layout", {
+          type: "select",
+          options: [
+            { value: "tower", label: t(hass, "layout_tower") },
+            { value: "canister", label: t(hass, "layout_canister") },
           ],
         }) : ""}
         ${this._type === "printer_3d" ? this._row("section_printer_layout", "printer_layout", {
@@ -8039,22 +8301,7 @@ class ApplianceCardEditor extends HTMLElement {
             </div>
           </div>`).join("")}
       </details>
-      <details class="group" data-panel="alerts" ${this._panelOpen.alerts ? "open" : ""}>
-        <summary>${t(hass, "section_alert_list")}</summary>
-        <div class="section">
-          <div class="row">
-            <select data-role="alerts-add-select"${chosenAlerts.length >= ALERTS_MAX ? " disabled" : ""}>
-              <option value="">${esc(t(hass, "alerts_add"))}</option>
-              ${alertOptions.map((o) => `<option value="${esc(o.id)}">${esc(o.name)}</option>`).join("")}
-              <option value="${ALERT_OTHER}">${esc(t(hass, "alerts_other"))}</option>
-            </select>
-          </div>
-          ${this._alertOther ? `<div class="picker-slot" data-slot="__alert_other"></div>` : ""}
-        </div>
-        ${chosenAlerts.length ? `<div class="section">${chosenAlerts.map((e, i) => `
-          <div class="alert-choice"><ha-icon icon="${esc(this._alertIcon(e))}"></ha-icon><span>${esc(this._alertName(e))}</span><button type="button" class="alert-remove" data-alert-remove="${i}" title="${esc(t(hass, "alerts_remove"))}" aria-label="${esc(t(hass, "alerts_remove"))}"><ha-icon icon="mdi:close"></ha-icon></button></div>`).join("")}
-        </div>` : ""}
-      </details>
+      ${ENTITY_LISTS.map((list) => this._listPanel(list)).join("")}
       ${drawn.length > 1 ? `
       <details class="group" data-panel="order" ${this._panelOpen.order ? "open" : ""}>
         <summary>${t(hass, "section_lines_order")}</summary>
@@ -8106,25 +8353,29 @@ class ApplianceCardEditor extends HTMLElement {
     }
     this._wireInfoDragAndDrop();
 
-    const alertSelect = this._root.querySelector('[data-role="alerts-add-select"]');
-    if (alertSelect) {
-      alertSelect.addEventListener("change", (ev) => {
-        const value = ev.target.value;
-        if (!value) return;
-        if (value === ALERT_OTHER) this._alertOther = true;
-        else this._addAlert(value);
-        this._build();
+    for (const list of ENTITY_LISTS) {
+      const select = this._root.querySelector(`[data-role="${list.panel}-add-select"]`);
+      if (select) {
+        select.addEventListener("change", (ev) => {
+          const value = ev.target.value;
+          if (!value) return;
+          if (value === LIST_OTHER) this._otherList = list.panel;
+          else this._addToList(list.panel, value);
+          this._build();
+        });
+      }
+      if (this._otherList === list.panel) {
+        this._mountListOther(this._root.querySelector(`[data-slot="__${list.panel}_other"]`), list);
+      }
+      this._root.querySelectorAll(`[data-${list.panel}-remove]`).forEach((el) => {
+        el.addEventListener("click", () => {
+          const next = this._entityList(list.field).filter((e) => e.entity);
+          next.splice(parseInt(el.getAttribute(`data-${list.panel}-remove`), 10), 1);
+          this._writeList(list.field, next);
+          this._build();
+        });
       });
     }
-    if (this._alertOther) this._mountAlertOther(this._root.querySelector('[data-slot="__alert_other"]'));
-    this._root.querySelectorAll("[data-alert-remove]").forEach((el) => {
-      el.addEventListener("click", () => {
-        const next = this._alertsList().filter((e) => e.entity);
-        next.splice(parseInt(el.getAttribute("data-alert-remove"), 10), 1);
-        this._writeAlerts(next);
-        this._build();
-      });
-    });
 
     const infoCountSelect = this._root.querySelector('[data-role="info-count-select"]');
     if (infoCountSelect) {
