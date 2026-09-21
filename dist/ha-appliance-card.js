@@ -1,4 +1,4 @@
-const CARD_VERSION = "2.9.1";
+const CARD_VERSION = "2.9.2";
 
 console.info(
   "%c HA-APPLIANCE-CARD %c v" + CARD_VERSION + " ",
@@ -6563,13 +6563,6 @@ class ApplianceCard extends HTMLElement {
         ? { icon: "mdi:file-outline", label: t(hass, "p3_file"), value: programText, wrap: true }
         : { icon: "mdi:tag-outline", label: t(hass, "program"), value: programText });
     }
-    infoEntities.forEach((e) => {
-      lines.push({
-        icon: e.icon || e.st.attributes.icon || "mdi:information-outline",
-        label: e.label || stripNamePrefix(e.st.attributes.friendly_name, e.entity),
-        value: formatInfoValue(e.st, hass, e.value_map, cfg, e.entity, e.hide_unit),
-      });
-    });
     if (remSec !== null) {
       const remRounded = Math.round(remSec / 60);
       // Opt-in: the end time on a line of its own keeps both readings on one
@@ -6604,6 +6597,18 @@ class ApplianceCard extends HTMLElement {
       });
     }
     lines.push(...extraLines);
+    // Lines you added come after the ones the card knows how to read on its
+    // own: the appliance first, then whatever else you wanted next to it. They
+    // carry their entity like every other line, so a tap opens its dialog,
+    // which is how a tank or a filter gets reset from the card.
+    infoEntities.forEach((e) => {
+      lines.push({
+        icon: e.icon || e.st.attributes.icon || "mdi:information-outline",
+        label: e.label || stripNamePrefix(e.st.attributes.friendly_name, e.entity),
+        value: formatInfoValue(e.st, hass, e.value_map, cfg, e.entity, e.hide_unit),
+        entity: e.entity,
+      });
+    });
     const linesHtml = lines.length
       ? `<div class="info-lines${infoEntities.length > INFO_COMPACT_ABOVE ? " compact" : ""}">${lines
           .map((l) => ({ ...l, open: !!l.entity && entityUsable(hass, l.entity) }))

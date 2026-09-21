@@ -3754,6 +3754,18 @@ const machineH = cssPx(fIn, '.machine', 'height');
 const unitBottom = cssPx(fIn, '.pf-unit', 'top') + cssPx(fIn, '.pf-unit', 'height');
 const bowlTop = machineH - cssPx(fIn, '.pf-bowl', 'bottom') - cssPx(fIn, '.pf-bowl', 'height');
 check('dessin : le corps descend jusqu\'au haut de la gamelle', unitBottom, bowlTop);
+
+// Lines you add come under the ones the card reads on its own, and they carry
+// their entity like every other line: a tap opens its dialog, which is how a
+// tank or a dessicant gets reset from the card itself.
+const fExtra = feeder({ info_entities: [{ entity: 'sensor.dessicant', label: 'Dessicant' }] },
+  { 'sensor.dessicant': { state: '38', attributes: { unit_of_measurement: 'd' } } });
+check('ligne ajoutee : elle passe sous les lignes de la carte',
+  fExtra.indexOf('Dessicant') > fExtra.indexOf('Portions today'), true);
+check('ligne ajoutee : un appui ouvre sa fiche',
+  /data-more="sensor\.dessicant"/.test(fExtra), true);
+check('ligne de la carte : cliquable elle aussi',
+  /data-more="sensor\.croquettes_portions_per_day"/.test(fIn), true);
 // An error that names itself reads as what it is.
 check('gamelle : une erreur qui dit vide se lit vide',
   stateLine(feeder({}, { 'binary_sensor.croquettes_error': { state: 'no_food', attributes: {} } })), 'Tank empty');
