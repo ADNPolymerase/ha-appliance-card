@@ -33,6 +33,15 @@ const T0 = freezeClock('2026-08-12T10:00:00Z');
 
 const FakeNodeProto = Object.getPrototypeOf(document.createElement('div'));
 
+// The editor builds a card of its own to ask which lines it draws. The harness
+// hands back inert nodes for every tag, so a defined element is instantiated
+// here instead, which is what a browser does.
+const plainCreate = document.createElement;
+document.createElement = (tag) => {
+  const Defined = registry.get(tag);
+  return Defined ? new Defined() : plainCreate(tag);
+};
+
 FakeNodeProto.addEventListener = function (type, cb) {
   (this.__handlers ||= {})[type] = cb;
 };
@@ -893,6 +902,23 @@ edReorder._reorderInfoEntities(0, 1);
 checkFired('5/10 _reorderInfoEntities', edReorder,
   ev => check('5/10 _reorderInfoEntities : ordre inverse',
     ev.detail.config.info_entities[0].entity, 'sensor.b'));
+
+// 5bis/10. The order panel asks the card which lines it draws, and dragging one
+// writes the whole order down rather than a diff, so it survives the next edit.
+const edOrder = newEditor({ appliance_type: 'oven', state_entity: 'sensor.oven_appliance_state',
+                            program_entity: 'sensor.oven_program', door_entity: 'sensor.oven_door' });
+const drawnKeys = edOrder._drawnLines().map((l) => l.key);
+check('5bis/10 ordre : l\'editeur lit les lignes de la carte',
+  drawnKeys.join(' '), 'program door');
+check('5bis/10 ordre : le panneau liste les lignes',
+  (markup(edOrder).match(/data-line-index=/g) || []).length, 2);
+edOrder._reorderLines(0, 1);
+checkFired('5bis/10 _reorderLines', edOrder,
+  ev => check('5bis/10 _reorderLines : ordre inverse dans lines_order',
+    (ev.detail.config.lines_order || []).join(' '), 'door program'));
+const edNoOrder = newEditor({ appliance_type: 'kettle', state_entity: 'sensor.z1' });
+check('5bis/10 ordre : rien a ranger, pas de panneau',
+  /data-line-index=/.test(markup(edNoOrder)), false);
 
 // 6/10. An entity picker changed.
 const edPicker = newEditor({ state_entity: 'sensor.oven_appliance_state' });
@@ -3766,6 +3792,33 @@ check('ligne ajoutee : un appui ouvre sa fiche',
   /data-more="sensor\.dessicant"/.test(fExtra), true);
 check('ligne de la carte : cliquable elle aussi',
   /data-more="sensor\.croquettes_portions_per_day"/.test(fIn), true);
+
+// lines_order names the lines you want first. Every line carries a key, the
+// ones you add carry their entity id, and what the list leaves out keeps the
+// order the card gave it.
+const ORDER_IN = { ...CFG_IN, level_entity: 'sensor.food_level',
+  info_entities: [{ entity: 'sensor.dessicant', label: 'Dessicant' }] };
+const ORDER_ST = { ...FEEDER_IN,
+  'sensor.food_level': { state: '50', attributes: { unit_of_measurement: '%' } },
+  'sensor.dessicant': { state: '38', attributes: { unit_of_measurement: 'd' } } };
+const ordered = (order) => {
+  const html = render(order ? { ...ORDER_IN, lines_order: order } : ORDER_IN, ORDER_ST);
+  return [...html.matchAll(/<span class="label">([^<]*)<\/span>/g)].map((m) => m[1]);
+};
+check('ordre : sans liste, l\'ordre de la carte',
+  ordered().slice(0, 3).join(' | '), 'Food level | Portions today | Last feed');
+check('ordre : une seule cle suffit a remonter sa ligne',
+  ordered(['sensor.dessicant'])[0], 'Dessicant');
+check('ordre : le reste garde sa place',
+  ordered(['sensor.dessicant']).slice(1, 3).join(' | '), 'Food level | Portions today');
+check('ordre : plusieurs cles, dans l\'ordre demande',
+  ordered(['last_feed', 'level']).slice(0, 2).join(' | '), 'Last feed | Food level');
+check('ordre : une cle qui ne s\'affiche pas est ignoree',
+  ordered(['door', 'level'])[0], 'Food level');
+check('ordre : une cle inconnue ne casse rien',
+  ordered(['zzz', 'level'])[0], 'Food level');
+check('ordre : une liste vide laisse la carte tranquille',
+  ordered([]).join(' | '), ordered().join(' | '));
 // An error that names itself reads as what it is.
 check('gamelle : une erreur qui dit vide se lit vide',
   stateLine(feeder({}, { 'binary_sensor.croquettes_error': { state: 'no_food', attributes: {} } })), 'Tank empty');

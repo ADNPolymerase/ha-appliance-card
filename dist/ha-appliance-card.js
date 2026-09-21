@@ -1,4 +1,4 @@
-const CARD_VERSION = "2.9.2";
+const CARD_VERSION = "2.10.0";
 
 console.info(
   "%c HA-APPLIANCE-CARD %c v" + CARD_VERSION + " ",
@@ -52,7 +52,7 @@ const T = {
     section_ready_at: "Ready at",
     section_progress: "Progress % (override)", section_door: "Door sensor",
     section_alerts: "Alerts", section_connectivity: "Connectivity",
-    section_info: "Extra info entities",
+    section_info: "Extra info entities", section_lines_order: "Line order",
     info_count: "Number of extra entities",
     info_label: "Display name (optional)",
     info_value_map: "Value mapping (optional)",
@@ -174,7 +174,7 @@ const T = {
     section_ready_at: "Fin pr\u00e9vue",
     section_progress: "Progression % (remplace l'estimation)", section_door: "Capteur de porte",
     section_alerts: "Alertes", section_connectivity: "Connectivit\u00e9",
-    section_info: "Entit\u00e9s d'info compl\u00e9mentaires",
+    section_info: "Entit\u00e9s d'info compl\u00e9mentaires", section_lines_order: "Ordre des lignes",
     info_count: "Nombre d'entit\u00e9s suppl\u00e9mentaires",
     info_label: "Nom affich\u00e9 (optionnel)",
     info_value_map: "Correspondance des valeurs (optionnel)",
@@ -296,7 +296,7 @@ const T = {
     section_ready_at: "\u041e\u043a\u043e\u043d\u0447\u0430\u043d\u0438\u0435",
     section_progress: "\u041f\u0440\u043e\u0433\u0440\u0435\u0441\u0441 % (\u043f\u0435\u0440\u0435\u043e\u043f\u0440\u0435\u0434\u0435\u043b\u0435\u043d\u0438\u0435)", section_door: "\u0414\u0430\u0442\u0447\u0438\u043a \u0434\u0432\u0435\u0440\u0438",
     section_alerts: "\u041e\u043f\u043e\u0432\u0435\u0449\u0435\u043d\u0438\u044f", section_connectivity: "\u041f\u043e\u0434\u043a\u043b\u044e\u0447\u0435\u043d\u0438\u0435",
-    section_info: "\u0414\u043e\u043f. \u0441\u0443\u0449\u043d\u043e\u0441\u0442\u0438 \u0438\u043d\u0444\u043e\u0440\u043c\u0430\u0446\u0438\u0438",
+    section_info: "\u0414\u043e\u043f. \u0441\u0443\u0449\u043d\u043e\u0441\u0442\u0438 \u0438\u043d\u0444\u043e\u0440\u043c\u0430\u0446\u0438\u0438", section_lines_order: "\u041f\u043e\u0440\u044f\u0434\u043e\u043a \u0441\u0442\u0440\u043e\u043a",
     info_count: "\u041a\u043e\u043b\u0438\u0447\u0435\u0441\u0442\u0432\u043e \u0434\u043e\u043f. \u0441\u0443\u0449\u043d\u043e\u0441\u0442\u0435\u0439",
     info_label: "\u041e\u0442\u043e\u0431\u0440\u0430\u0436\u0430\u0435\u043c\u043e\u0435 \u0438\u043c\u044f (\u043d\u0435\u043e\u0431\u044f\u0437\u0430\u0442\u0435\u043b\u044c\u043d\u043e)",
     info_value_map: "\u0421\u043e\u043f\u043e\u0441\u0442\u0430\u0432\u043b\u0435\u043d\u0438\u0435 \u0437\u043d\u0430\u0447\u0435\u043d\u0438\u0439 (\u043d\u0435\u043e\u0431\u044f\u0437\u0430\u0442\u0435\u043b\u044c\u043d\u043e)",
@@ -418,7 +418,7 @@ const T = {
     section_ready_at: "Fertig um",
     section_progress: "Fortschritt % (\u00dcberschreibung)", section_door: "T\u00fcrsensor",
     section_alerts: "Warnungen", section_connectivity: "Konnektivit\u00e4t",
-    section_info: "Zus\u00e4tzliche Info-Entit\u00e4ten",
+    section_info: "Zus\u00e4tzliche Info-Entit\u00e4ten", section_lines_order: "Reihenfolge der Zeilen",
     info_count: "Anzahl zus\u00e4tzlicher Entit\u00e4ten",
     info_label: "Anzeigename (optional)",
     info_value_map: "Wertzuordnung (optional)",
@@ -540,7 +540,7 @@ const T = {
     section_ready_at: "Listo a las",
     section_progress: "Progreso % (anula estimaci\u00f3n)", section_door: "Sensor de puerta",
     section_alerts: "Alertas", section_connectivity: "Conectividad",
-    section_info: "Entidades de informaci\u00f3n adicionales",
+    section_info: "Entidades de informaci\u00f3n adicionales", section_lines_order: "Orden de las l\u00edneas",
     info_count: "N\u00famero de entidades adicionales",
     info_label: "Nombre mostrado (opcional)",
     info_value_map: "Correspondencia de valores (opcional)",
@@ -662,7 +662,7 @@ const T = {
     section_ready_at: "Pronto alle",
     section_progress: "Progresso % (sovrascrive stima)", section_door: "Sensore portello",
     section_alerts: "Avvisi", section_connectivity: "Connettivit\u00e0",
-    section_info: "Entit\u00e0 informative aggiuntive",
+    section_info: "Entit\u00e0 informative aggiuntive", section_lines_order: "Ordine delle righe",
     info_count: "Numero di entit\u00e0 aggiuntive",
     info_label: "Nome visualizzato (opzionale)",
     info_value_map: "Corrispondenza dei valori (opzionale)",
@@ -784,7 +784,7 @@ const T = {
     section_ready_at: "Klaar om",
     section_progress: "Voortgang % (overschrijft schatting)", section_door: "Deursensor",
     section_alerts: "Meldingen", section_connectivity: "Connectiviteit",
-    section_info: "Extra info-entiteiten",
+    section_info: "Extra info-entiteiten", section_lines_order: "Volgorde van de regels",
     info_count: "Aantal extra entiteiten",
     info_label: "Weergavenaam (optioneel)",
     info_value_map: "Waardetoewijzing (optioneel)",
@@ -906,7 +906,7 @@ const T = {
     section_ready_at: "Pronto \u00e0s",
     section_progress: "Progresso % (substitui estimativa)", section_door: "Sensor de porta",
     section_alerts: "Alertas", section_connectivity: "Conetividade",
-    section_info: "Entidades de informa\u00e7\u00e3o adicionais",
+    section_info: "Entidades de informa\u00e7\u00e3o adicionais", section_lines_order: "Ordem das linhas",
     info_count: "N\u00famero de entidades adicionais",
     info_label: "Nome exibido (opcional)",
     info_value_map: "Correspond\u00eancia de valores (opcional)",
@@ -1028,7 +1028,7 @@ const T = {
     section_ready_at: "Klar kl.",
     section_progress: "F\u00f6rlopp % (\u00e5sidos\u00e4tter uppskattning)", section_door: "Luckans sensor",
     section_alerts: "Varningar", section_connectivity: "Anslutning",
-    section_info: "Extra infoentiteter",
+    section_info: "Extra infoentiteter", section_lines_order: "Radernas ordning",
     info_count: "Antal extra entiteter",
     info_label: "Visningsnamn (valfritt)",
     info_value_map: "V\u00e4rdemappning (valfritt)",
@@ -1150,7 +1150,7 @@ const T = {
     section_ready_at: "Ferdig kl.",
     section_progress: "Fremdrift % (overstyrer estimat)", section_door: "Lukesensor",
     section_alerts: "Varsler", section_connectivity: "Tilkobling",
-    section_info: "Ekstra infoentiteter",
+    section_info: "Ekstra infoentiteter", section_lines_order: "Rekkef\u00f8lge p\u00e5 linjene",
     info_count: "Antall ekstra entiteter",
     info_label: "Visningsnavn (valgfritt)",
     info_value_map: "Verditilordning (valgfritt)",
@@ -1272,7 +1272,7 @@ const T = {
     section_ready_at: "F\u00e6rdig kl.",
     section_progress: "Fremgang % (tilsides\u00e6tter estimat)", section_door: "L\u00e5gesensor",
     section_alerts: "Advarsler", section_connectivity: "Forbindelse",
-    section_info: "Ekstra info-enheder",
+    section_info: "Ekstra info-enheder", section_lines_order: "Linjernes r\u00e6kkef\u00f8lge",
     info_count: "Antal ekstra enheder",
     info_label: "Vist navn (valgfrit)",
     info_value_map: "V\u00e6rditilknytning (valgfrit)",
@@ -1394,7 +1394,7 @@ const T = {
     section_ready_at: "Koniec o",
     section_progress: "Post\u0119p % (nadpisuje szacowanie)", section_door: "Czujnik drzwiczek",
     section_alerts: "Alerty", section_connectivity: "\u0141\u0105czno\u015b\u0107",
-    section_info: "Dodatkowe encje informacyjne",
+    section_info: "Dodatkowe encje informacyjne", section_lines_order: "Kolejno\u015b\u0107 wierszy",
     info_count: "Liczba dodatkowych encji",
     info_label: "Nazwa wy\u015bwietlana (opcjonalnie)",
     info_value_map: "Mapowanie warto\u015bci (opcjonalnie)",
@@ -1516,7 +1516,7 @@ const T = {
     section_ready_at: "\u9884\u8ba1\u5b8c\u6210",
     section_progress: "\u8fdb\u5ea6\u767e\u5206\u6bd4\u5b9e\u4f53 (\u8986\u5199)", section_door: "\u95e8\u4f20\u611f\u5668",
     section_alerts: "\u8b66\u62a5", section_connectivity: "\u8fde\u7f51\u72b6\u6001",
-    section_info: "\u989d\u5916\u4fe1\u606f\u5b9e\u4f53",
+    section_info: "\u989d\u5916\u4fe1\u606f\u5b9e\u4f53", section_lines_order: "\u4fe1\u606f\u884c\u987a\u5e8f",
     info_count: "\u5b9e\u4f53\u6570\u91cf",
     info_label: "\u663e\u793a\u540d\u79f0 (\u53ef\u9009)",
     info_value_map: "\u503c\u6620\u5c04 (\u53ef\u9009)",
@@ -1638,7 +1638,7 @@ const T = {
     section_ready_at: "Hotovo v",
     section_progress: "Pr\u016fb\u011bh v % (nahrazuje odhad)", section_door: "Sn\u00edma\u010d dv\u00ed\u0159ek",
     section_alerts: "Upozorn\u011bn\u00ed", section_connectivity: "P\u0159ipojen\u00ed",
-    section_info: "Dal\u0161\u00ed informa\u010dn\u00ed entity",
+    section_info: "Dal\u0161\u00ed informa\u010dn\u00ed entity", section_lines_order: "Po\u0159ad\u00ed \u0159\u00e1dk\u016f",
     info_count: "Po\u010det dal\u0161\u00edch entit",
     info_label: "Zobrazovan\u00fd n\u00e1zev (voliteln\u00e9)",
     info_value_map: "Mapov\u00e1n\u00ed hodnot (voliteln\u00e9)",
@@ -5272,6 +5272,7 @@ class ApplianceCard extends HTMLElement {
   // of state stays the best guess.
   _lookUpCycle(cycle, cfg, type) {
     const hass = this._hass;
+    if (this._inert) return;
     if (!hass || typeof hass.callWS !== "function" || !cfg.state_entity) return;
     const end = Date.now();
     let req;
@@ -5487,7 +5488,7 @@ class ApplianceCard extends HTMLElement {
       && !!remTs && remTs.attributes.device_class === "timestamp";
     this._clearCountdownTimer();
     if (this._countingDown) {
-      this._countdownTimer = setInterval(() => this._render(), COUNTDOWN_TICK_MS);
+      if (!this._inert) this._countdownTimer = setInterval(() => this._render(), COUNTDOWN_TICK_MS);
     }
 
     // Door
@@ -5575,6 +5576,7 @@ class ApplianceCard extends HTMLElement {
       if (target !== null) displayText = `${Math.round(target)}\u00b0`;
       if (current !== null || target !== null) {
         extraLines.push({
+          key: "temperature",
           icon: "mdi:thermometer",
           label: t(hass, "temperature"),
           value: current !== null && target !== null
@@ -5595,6 +5597,7 @@ class ApplianceCard extends HTMLElement {
       const plst = stateObj(hass, cfg.power_level_entity);
       if (plst && !["unknown", "unavailable"].includes(plst.state)) {
         extraLines.push({
+          key: "power_level",
           icon: "mdi:signal-cellular-2",
           label: t(hass, "power_level"),
           value: formatInfoValue(plst, hass, null, cfg, cfg.power_level_entity),
@@ -5616,6 +5619,7 @@ class ApplianceCard extends HTMLElement {
         // zero; once the hood is off, "off" is the truthful reading.
         const fanLost = !entityUsable(hass, cfg.fan_entity) && norm !== "idle";
         extraLines.push({
+          key: "fan_speed",
           icon: "mdi:fan",
           label: t(hass, "fan_speed"),
           value: fanLost
@@ -5636,6 +5640,7 @@ class ApplianceCard extends HTMLElement {
       if (f !== null) {
         filterPct = Math.max(0, Math.min(100, f));
         extraLines.push({
+          key: "filter",
           icon: "mdi:air-filter",
           label: t(hass, "filter"),
           value: `${Math.round(filterPct)} %`,
@@ -5670,6 +5675,7 @@ class ApplianceCard extends HTMLElement {
         const plst = stateObj(hass, cfg.power_level_entity);
         if (plst && !["unknown", "unavailable"].includes(plst.state)) {
           extraLines.push({
+            key: "power_level",
             icon: "mdi:speedometer",
             label: t(hass, "power_level"),
             value: formatInfoValue(plst, hass, null, cfg, cfg.power_level_entity),
@@ -5680,6 +5686,7 @@ class ApplianceCard extends HTMLElement {
       const active = zones.filter((z) => z.on).length;
       if (configured.length && active > 0) {
         extraLines.push({
+          key: "zones",
           icon: "mdi:circle-slice-8",
           label: t(hass, "section_zones"),
           value: `${active} / ${zones.length}`,
@@ -5689,7 +5696,7 @@ class ApplianceCard extends HTMLElement {
         const clst = stateObj(hass, cfg.child_lock_entity);
         childLock = !!clst && ["on", "true", "locked"].includes(String(clst.state).toLowerCase());
         if (childLock) {
-          extraLines.push({ icon: "mdi:lock", label: t(hass, "child_lock"), value: "" });
+          extraLines.push({ key: "child_lock", icon: "mdi:lock", label: t(hass, "child_lock"), value: "" });
         }
       }
     }
@@ -5757,7 +5764,7 @@ class ApplianceCard extends HTMLElement {
       // also covers the moment the thirty minutes are up.
       this._clearUnplugTimer();
       if (this._belowSince) {
-        this._unplugTimer = setInterval(() => this._render(), FRIDGE_TICK_MS);
+        if (!this._inert) this._unplugTimer = setInterval(() => this._render(), FRIDGE_TICK_MS);
       }
 
       norm = fridgeHealth(unplugged, noPower, doorOpen || freezerDoorOpen, tempHigh);
@@ -5775,7 +5782,7 @@ class ApplianceCard extends HTMLElement {
         if (twoDoors && !doorOpen && !freezerDoorOpen) {
           // Naming each compartment only to say "closed" twice reads as noise;
           // one line says the same thing.
-          extraLines.push({ icon: "mdi:door-closed", label: t(hass, "doors_closed"), value: "" });
+          extraLines.push({ key: "doors", icon: "mdi:door-closed", label: t(hass, "doors_closed"), value: "" });
         } else {
           if (cfg.door_entity && (!twoDoors || doorOpen)) {
             extraLines.push(doorLine(doorOpen, twoDoors ? "fridge_door_open" : "door_open"));
@@ -5787,6 +5794,7 @@ class ApplianceCard extends HTMLElement {
       }
       if (cfg.fridge_temperature_entity && !cfg.temperature_hide_in_list) {
         extraLines.push({
+          key: "fridge_temp",
           icon: "mdi:thermometer",
           label: t(hass, wine ? "temperature" : "fridge_compartment"),
           value: fridgeT.value === null ? "--" : tempText(hass, cfg, cfg.fridge_temperature_entity, fridgeT.value, unit),
@@ -5796,6 +5804,7 @@ class ApplianceCard extends HTMLElement {
       }
       if (cfg.freezer_temperature_entity && !cfg.temperature_hide_in_list) {
         extraLines.push({
+          key: "freezer_temp",
           icon: "mdi:snowflake",
           label: t(hass, "freezer_compartment"),
           value: freezerT.value === null ? "--" : tempText(hass, cfg, cfg.freezer_temperature_entity, freezerT.value, unit),
@@ -5807,6 +5816,7 @@ class ApplianceCard extends HTMLElement {
         const ist = stateObj(hass, cfg.ice_maker_entity);
         ice = !!ist && ["on", "true", "running"].includes(String(ist.state).toLowerCase());
         extraLines.push({
+          key: "ice_maker",
           icon: "mdi:snowflake-variant",
           label: t(hass, "ice_maker"),
           value: t(hass, ice ? "ice_on" : "ice_off"),
@@ -5815,6 +5825,7 @@ class ApplianceCard extends HTMLElement {
       }
       if (cfg.power_entity && watts !== null) {
         extraLines.push({
+          key: "power",
           icon: cfg.power_icon || "mdi:power-plug",
           label: t(hass, "power"),
           // While the plug reads low, how long it has been low is the whole
@@ -5849,6 +5860,7 @@ class ApplianceCard extends HTMLElement {
     if (cap.speed && cfg.speed_entity) {
       mixer = mixerSpeed(hass, cfg);
       extraLines.push({
+        key: "speed",
         icon: "mdi:blender",
         label: t(hass, "speed"),
         value: mixer.level === 0 ? t(hass, "off_short") : mixer.label,
@@ -5902,11 +5914,12 @@ class ApplianceCard extends HTMLElement {
                                  [trayFull, "tray_full"], [descale, "descale"]]) {
         // Only what needs doing takes a line. A machine with nothing wrong says
         // so on its state line already.
-        if (flag) extraLines.push({ icon: "mdi:alert-circle-outline", label: t(hass, key), value: "", warn: true });
+        if (flag) extraLines.push({ key, icon: "mdi:alert-circle-outline", label: t(hass, key), value: "", warn: true });
       }
       const cupInfo = cupCount(hass, cfg.cups_entity);
       if (cfg.cups_entity && cupInfo.label) {
         extraLines.push({
+          key: "cups",
           icon: "mdi:coffee-outline",
           label: t(hass, "cups"),
           value: cupInfo.label,
@@ -5916,6 +5929,7 @@ class ApplianceCard extends HTMLElement {
       const strength = strengthLevel(hass, cfg.strength_entity);
       if (cfg.strength_entity && strength.label) {
         extraLines.push({
+          key: "strength",
           icon: "mdi:coffee-maker",
           label: t(hass, "strength"),
           value: strength.label,
@@ -5924,6 +5938,7 @@ class ApplianceCard extends HTMLElement {
       }
       if (waterPct !== null) {
         extraLines.push({
+          key: "water",
           icon: "mdi:cup-water",
           label: t(hass, "section_water"),
           value: `${Math.round(waterPct)} %`,
@@ -5986,6 +6001,7 @@ class ApplianceCard extends HTMLElement {
         tankTemp = /F/.test(wunit) ? (wv - 32) * 5 / 9 : wv;
         displayText = screenTemp(hass, cfg, cfg.temperature_entity, wv);
         extraLines.push({
+          key: "temperature",
           icon: "mdi:thermometer-water",
           label: t(hass, "temperature"),
           value: tempText(hass, cfg, cfg.temperature_entity, wv, wunit),
@@ -6028,6 +6044,7 @@ class ApplianceCard extends HTMLElement {
         const bunit = temperatureUnit(hass, cfg.temperature_entity || cfg.state_entity);
         displayText = screenTemp(hass, cfg, cfg.temperature_entity, bv);
         extraLines.push({
+          key: "temperature",
           icon: "mdi:thermometer",
           label: t(hass, "temperature"),
           value: tempText(hass, cfg, cfg.temperature_entity, bv, bunit),
@@ -6091,12 +6108,13 @@ class ApplianceCard extends HTMLElement {
       if (isActiveState(norm) && progressPct > 0) this._p3Pct = progressPct;
       if (!isActiveState(norm) && norm !== "paused") this._p3Pct = null;
 
-      const tLine = (h, icon, label) => {
+      const tLine = (h, key, icon, label) => {
         if (h.cur === null) return;
         const unit = temperatureUnit(hass, h.entity);
         const now = tempText(hass, cfg, h.entity, h.cur, unit);
         const goal = h.target !== null && h.target > 0 ? tempText(hass, cfg, h.entity, h.target, unit) : null;
         extraLines.push({
+          key,
           icon,
           label,
           // The target only when there is still a way to go: a bed holding
@@ -6109,15 +6127,16 @@ class ApplianceCard extends HTMLElement {
       if (layer !== null) {
         const total = cfg.total_layers_entity ? numericState(hass, cfg.total_layers_entity) : null;
         extraLines.push({
+          key: "layer",
           icon: "mdi:layers-triple-outline",
           label: t(hass, "p3_layer"),
           value: total !== null && total > 0 ? `${Math.round(layer)} / ${Math.round(total)}` : `${Math.round(layer)}`,
           entity: cfg.current_layer_entity,
         });
       }
-      tLine(nozzle, "mdi:printer-3d-nozzle-heat-outline", t(hass, "p3_nozzle"));
-      tLine(bed, "mdi:heating-coil", t(hass, "p3_bed"));
-      tLine(chamber, "mdi:thermometer", t(hass, "p3_chamber"));
+      tLine(nozzle, "nozzle", "mdi:printer-3d-nozzle-heat-outline", t(hass, "p3_nozzle"));
+      tLine(bed, "bed", "mdi:heating-coil", t(hass, "p3_bed"));
+      tLine(chamber, "chamber", "mdi:thermometer", t(hass, "p3_chamber"));
       if (nozzle.cur !== null) displayText = screenTemp(hass, cfg, nozzle.entity, nozzle.cur);
 
       const job = isActiveState(norm) || norm === "paused" || norm === "error";
@@ -6164,17 +6183,17 @@ class ApplianceCard extends HTMLElement {
       if (flow !== null) displayText = screenTemp(hass, cfg, cfg.temperature_entity, flow);
       // Temperatures follow temperature_decimals like everywhere else on the
       // card; power, heat and COP keep the entity's own formatting.
-      const hpTemp = (entity, icon, label) => {
+      const hpTemp = (entity, key, icon, label) => {
         const v = entity ? numericState(hass, entity) : null;
         if (v === null) return;
         // A reading never breaks between its number and its unit: the labels
         // are long, and a narrow card would leave the unit alone below.
-        extraLines.push({ icon, label, value: keepTogether(tempText(hass, cfg, entity, v, temperatureUnit(hass, entity))), entity });
+        extraLines.push({ key, icon, label, value: keepTogether(tempText(hass, cfg, entity, v, temperatureUnit(hass, entity))), entity });
       };
-      const hpLine = (entity, icon, label) => {
+      const hpLine = (entity, key, icon, label) => {
         const ls = entity ? stateObj(hass, entity) : null;
         if (!ls || ["unknown", "unavailable"].includes(ls.state)) return;
-        extraLines.push({ icon, label, value: keepTogether(formatInfoValue(ls, hass, null, cfg, entity)), entity });
+        extraLines.push({ key, icon, label, value: keepTogether(formatInfoValue(ls, hass, null, cfg, entity)), entity });
       };
       // Flow and return share one line, as the water's own journey: two lines
       // for one pipe is what makes this card long.
@@ -6183,14 +6202,15 @@ class ApplianceCard extends HTMLElement {
         const fu = temperatureUnit(hass, cfg.temperature_entity);
         const ru = temperatureUnit(hass, cfg.return_temperature_entity);
         extraLines.push({
+          key: "flow_return",
           icon: "mdi:thermometer",
           label: t(hass, "hp_flow_return"),
           value: `${keepTogether(tempText(hass, cfg, cfg.temperature_entity, flow, fu))} \u2192 ${keepTogether(tempText(hass, cfg, cfg.return_temperature_entity, ret, ru))}`,
           entity: cfg.temperature_entity,
         });
       } else {
-        hpTemp(cfg.temperature_entity, "mdi:thermometer", t(hass, "section_flow_temperature"));
-        hpTemp(cfg.return_temperature_entity, "mdi:thermometer-low", t(hass, "section_return_temperature"));
+        hpTemp(cfg.temperature_entity, "flow_temp", "mdi:thermometer", t(hass, "section_flow_temperature"));
+        hpTemp(cfg.return_temperature_entity, "return_temp", "mdi:thermometer-low", t(hass, "section_return_temperature"));
       }
       // The delta is worked out rather than asked for, like the COP: the two
       // temperatures are already there, and what the emitter takes out of the
@@ -6199,6 +6219,7 @@ class ApplianceCard extends HTMLElement {
       if (flow !== null && ret !== null) {
         const d = tempDecimals(cfg);
         extraLines.push({
+          key: "delta",
           icon: "mdi:delta",
           label: t(hass, "hp_delta"),
           // Never in whole degrees: a heat pump works on a couple of them, and
@@ -6206,12 +6227,12 @@ class ApplianceCard extends HTMLElement {
           value: keepTogether(`${fixedTemp(hass, Math.abs(flow - ret), d === 0 ? 1 : d === null ? 1 : d)} ${temperatureUnit(hass, cfg.temperature_entity)}`),
         });
       }
-      hpLine(cfg.water_flow_entity, "mdi:water-pump", t(hass, "section_water_flow"));
-      hpTemp(cfg.outdoor_temperature_entity, "mdi:sun-thermometer-outline", t(hass, "section_outdoor_temperature"));
-      hpLine(cfg.power_entity, cfg.power_icon || "mdi:flash", t(hass, "power"));
-      hpLine(cfg.heat_output_entity, "mdi:heat-wave", t(hass, "section_heat_output"));
+      hpLine(cfg.water_flow_entity, "water_flow", "mdi:water-pump", t(hass, "section_water_flow"));
+      hpTemp(cfg.outdoor_temperature_entity, "outdoor_temp", "mdi:sun-thermometer-outline", t(hass, "section_outdoor_temperature"));
+      hpLine(cfg.power_entity, "power", cfg.power_icon || "mdi:flash", t(hass, "power"));
+      hpLine(cfg.heat_output_entity, "heat_output", "mdi:heat-wave", t(hass, "section_heat_output"));
       if (cfg.cop_entity) {
-        hpLine(cfg.cop_entity, "mdi:gauge", "COP");
+        hpLine(cfg.cop_entity, "cop", "mdi:gauge", "COP");
       } else if (cfg.heat_output_entity && watts !== null) {
         // No COP entity: heat out over power in, once both are in watts.
         const kw = (v, id) => {
@@ -6223,6 +6244,7 @@ class ApplianceCard extends HTMLElement {
         // At rest the ratio is infinite, and a meter below zero gives nonsense.
         if (Number.isFinite(cop) && cop > 0) {
           extraLines.push({
+            key: "cop",
             icon: "mdi:gauge",
             label: "COP",
             value: new Intl.NumberFormat(lang(hass), { minimumFractionDigits: 1, maximumFractionDigits: 1 }).format(cop),
@@ -6240,6 +6262,7 @@ class ApplianceCard extends HTMLElement {
         const on = hz !== null ? hz > 0 : ["on", "true", "running"].includes(String(compSt.state).toLowerCase());
         compressorOff = !on;
         extraLines.push({
+          key: "compressor",
           icon: "mdi:sine-wave",
           label: t(hass, "section_compressor"),
           value: keepTogether(hz !== null
@@ -6248,7 +6271,7 @@ class ApplianceCard extends HTMLElement {
           entity: cfg.compressor_entity,
         });
       }
-      hpLine(cfg.fan_speed_entity, "mdi:fan", t(hass, "section_fan_speed"));
+      hpLine(cfg.fan_speed_entity, "fan_speed", "mdi:fan", t(hass, "section_fan_speed"));
     }
 
     // Pet feeder: read like a fridge, since it is idle almost all the time.
@@ -6289,6 +6312,7 @@ class ApplianceCard extends HTMLElement {
       feederAlert = feederEmpty || norm === "error";
       if (levelSt && !["unknown", "unavailable"].includes(levelSt.state)) {
         extraLines.push({
+          key: "level",
           icon: feederEmpty ? "mdi:alert-circle-outline" : "mdi:silo",
           label: t(hass, "section_level"),
           value: keepTogether(levelPct !== null ? formatInfoValue(levelSt, hass, null, cfg, cfg.level_entity) : t(hass, feederEmpty ? "feeder_empty" : "feeder_ready")),
@@ -6326,31 +6350,32 @@ class ApplianceCard extends HTMLElement {
           ? formatInfoValue(portionsSt, hass, null, cfg, cfg.portions_today_entity)
           : `${formatInfoValue(portionsSt, hass, null, cfg, cfg.portions_today_entity)} ${t(hass, "portions")}`;
         extraLines.push({
+          key: "portions_today",
           icon: "mdi:bowl-mix",
           label: t(hass, "section_portions_today"),
           value: keepTogether(count) + (gramText ? ` \u00b7 ${gramText}` : ""),
           entity: cfg.portions_today_entity,
         });
       } else if (gramText) {
-        extraLines.push({ icon: "mdi:bowl-mix", label: t(hass, "section_weight_today"), value: gramText, entity: cfg.weight_today_entity });
+        extraLines.push({ key: "weight_today", icon: "mdi:bowl-mix", label: t(hass, "section_weight_today"), value: gramText, entity: cfg.weight_today_entity });
       }
 
       const last = feederLastFeed(hass, cfg, portions);
       if (last !== null) {
-        extraLines.push({ icon: "mdi:clock-outline", label: t(hass, "section_last_feed"), value: keepTogether(feedTime(hass, last)) });
+        extraLines.push({ key: "last_feed", icon: "mdi:clock-outline", label: t(hass, "section_last_feed"), value: keepTogether(feedTime(hass, last)) });
       }
 
-      const feederLine = (entity, icon, label) => {
+      const feederLine = (entity, key, icon, label) => {
         const ls = entity ? stateObj(hass, entity) : null;
         if (!ls || ["unknown", "unavailable"].includes(ls.state)) return;
-        extraLines.push({ icon, label, value: keepTogether(formatInfoValue(ls, hass, null, cfg, entity)), entity });
+        extraLines.push({ key, icon, label, value: keepTogether(formatInfoValue(ls, hass, null, cfg, entity)), entity });
       };
-      feederLine(cfg.serving_size_entity, "mdi:bowl-mix-outline", t(hass, "section_serving_size"));
-      feederLine(cfg.portion_weight_entity, "mdi:weight-gram", t(hass, "section_portion_weight"));
+      feederLine(cfg.serving_size_entity, "serving_size", "mdi:bowl-mix-outline", t(hass, "section_serving_size"));
+      feederLine(cfg.portion_weight_entity, "portion_weight", "mdi:weight-gram", t(hass, "section_portion_weight"));
       // The schedule is a sentence rather than a number, so it wraps.
       const schedSt = cfg.schedule_entity ? stateObj(hass, cfg.schedule_entity) : null;
       if (schedSt && !["unknown", "unavailable"].includes(schedSt.state)) {
-        extraLines.push({ icon: "mdi:calendar-clock", label: t(hass, "section_feeder_schedule"), value: schedSt.state, entity: cfg.schedule_entity, wrap: true });
+        extraLines.push({ key: "schedule", icon: "mdi:calendar-clock", label: t(hass, "section_feeder_schedule"), value: schedSt.state, entity: cfg.schedule_entity, wrap: true });
       }
     }
 
@@ -6369,6 +6394,7 @@ class ApplianceCard extends HTMLElement {
         if (kv !== null) {
           displayText = screenTemp(hass, cfg, cfg.temperature_entity, kv);
           extraLines.push({
+            key: "temperature",
             icon: "mdi:thermometer-water",
             label: t(hass, "temperature"),
             value: tempText(hass, cfg, cfg.temperature_entity, kv, kunit),
@@ -6381,6 +6407,7 @@ class ApplianceCard extends HTMLElement {
     // Power draw is worth showing on any type once the entity is there.
     if (!cap.fridgeTemp && !cap.heatPump && cfg.power_entity && watts !== null) {
       extraLines.push({
+        key: "power",
         icon: cfg.power_icon || "mdi:power-plug",
         label: t(hass, "power"),
         value: `${Math.round(watts)} ${unitOf(hass, cfg.power_entity) || "W"}`,
@@ -6557,11 +6584,11 @@ class ApplianceCard extends HTMLElement {
       return friendlyName;
     };
 
-    const lines = [];
+    let lines = [];
     if (programText) {
       lines.push(cap.printer3d
-        ? { icon: "mdi:file-outline", label: t(hass, "p3_file"), value: programText, wrap: true }
-        : { icon: "mdi:tag-outline", label: t(hass, "program"), value: programText });
+        ? { key: "file", icon: "mdi:file-outline", label: t(hass, "p3_file"), value: programText, wrap: true }
+        : { key: "program", icon: "mdi:tag-outline", label: t(hass, "program"), value: programText });
     }
     if (remSec !== null) {
       const remRounded = Math.round(remSec / 60);
@@ -6569,17 +6596,20 @@ class ApplianceCard extends HTMLElement {
       // row down to a much narrower card than the combined value manages.
       if (remRounded > 0 && cfg.remaining_time_split) {
         lines.push({
+          key: "remaining",
           icon: "mdi:timer-outline",
           label: t(hass, "section_remaining"),
           value: keepTogether(formatDuration(remSec, hass)),
         });
         lines.push({
+          key: "ready_at",
           icon: "mdi:clock-end",
           label: t(hass, "section_ready_at"),
           value: keepTogether(formatEta(remSec)),
         });
       } else {
         lines.push({
+          key: "remaining",
           icon: "mdi:timer-outline",
           label: t(hass, "section_remaining"),
           value: remRounded > 0
@@ -6590,6 +6620,7 @@ class ApplianceCard extends HTMLElement {
     }
     if (cap.door && !cap.fridgeTemp && cfg.door_entity && !cfg.door_hide_in_list) {
       lines.push({
+        key: "door",
         icon: doorOpen ? "mdi:door-open" : "mdi:door-closed",
         label: doorOpen ? t(hass, "door_open") : t(hass, "door_closed"),
         value: "",
@@ -6607,8 +6638,30 @@ class ApplianceCard extends HTMLElement {
         label: e.label || stripNamePrefix(e.st.attributes.friendly_name, e.entity),
         value: formatInfoValue(e.st, hass, e.value_map, cfg, e.entity, e.hide_unit),
         entity: e.entity,
+        key: e.entity,
       });
     });
+
+    // The order you chose, then everything else where the card puts it. A list
+    // naming one line pins that line to the top without having to describe the
+    // rest, a line that is not showing today is simply skipped, and an empty
+    // list is the card's own order. Sorting is stable, so what you left out
+    // keeps the order it had.
+    const order = (Array.isArray(cfg.lines_order) ? cfg.lines_order : []).filter(Boolean);
+    if (order.length) {
+      const rank = (l) => {
+        const at = l.key ? order.indexOf(l.key) : -1;
+        return at === -1 ? order.length : at;
+      };
+      lines = lines
+        .map((line, at) => ({ line, at }))
+        .sort((a, b) => rank(a.line) - rank(b.line) || a.at - b.at)
+        .map((x) => x.line);
+    }
+    // What the editor reads to offer an order: the lines actually drawn, in
+    // the card's own language, rather than a second list to keep in step with
+    // this one.
+    this._drawnLines = lines.filter((l) => l.key).map((l) => ({ key: l.key, label: l.label }));
     const linesHtml = lines.length
       ? `<div class="info-lines${infoEntities.length > INFO_COMPACT_ABOVE ? " compact" : ""}">${lines
           .map((l) => ({ ...l, open: !!l.entity && entityUsable(hass, l.entity) }))
@@ -6944,6 +6997,7 @@ class ApplianceCardEditor extends HTMLElement {
       this._panelOpen = {
         general: true,
         info: (this._config.info_entities || []).length > 0,
+        order: (this._config.lines_order || []).length > 0,
         zones: (this._config.zones || []).length > 0,
       };
     }
@@ -7253,12 +7307,46 @@ class ApplianceCardEditor extends HTMLElement {
     this._build();
   }
 
+  // The lines the card is drawing right now, in the order it draws them. The
+  // editor asks the card rather than keeping a second list that would drift
+  // from it: a probe never joins the document, and an inert render neither
+  // reads the history nor arms a clock.
+  _drawnLines() {
+    if (!this._hass || !this._config) return [];
+    try {
+      const probe = document.createElement("ha-appliance-card");
+      probe._inert = true;
+      probe.setConfig({ type: "custom:ha-appliance-card", ...this._config });
+      probe.hass = this._hass;
+      return probe._drawnLines || [];
+    } catch (e) {
+      return [];
+    }
+  }
+
+  _reorderLines(fromIndex, toIndex) {
+    const keys = this._drawnLines().map((l) => l.key);
+    if (fromIndex === toIndex || !keys[fromIndex]) return;
+    const [moved] = keys.splice(fromIndex, 1);
+    keys.splice(toIndex, 0, moved);
+    this._config = { ...this._config, lines_order: keys };
+    this.dispatchEvent(new CustomEvent("config-changed", { detail: { config: this._config } }));
+    this._build();
+  }
+
   _wireInfoDragAndDrop() {
-    const rows = this._root.querySelectorAll(".info-row");
+    this._wireDragAndDrop(".info-row[data-drag-index]", "data-drag-index", (from, to) => this._reorderInfoEntities(from, to));
+    this._wireDragAndDrop(".info-row[data-line-index]", "data-line-index", (from, to) => this._reorderLines(from, to));
+  }
+
+  // One list of rows that can be dragged onto each other, used by the extra
+  // info entities and by the order of the lines alike.
+  _wireDragAndDrop(selector, attr, onDrop) {
+    const rows = this._root.querySelectorAll(selector);
     let dragIndex = null;
     rows.forEach((row) => {
       row.addEventListener("dragstart", (ev) => {
-        dragIndex = parseInt(row.getAttribute("data-drag-index"), 10);
+        dragIndex = parseInt(row.getAttribute(attr), 10);
         row.classList.add("dragging");
         ev.dataTransfer.effectAllowed = "move";
       });
@@ -7277,8 +7365,8 @@ class ApplianceCardEditor extends HTMLElement {
       row.addEventListener("drop", (ev) => {
         ev.preventDefault();
         row.classList.remove("drag-over");
-        const dropIndex = parseInt(row.getAttribute("data-drag-index"), 10);
-        if (dragIndex !== null) this._reorderInfoEntities(dragIndex, dropIndex);
+        const dropIndex = parseInt(row.getAttribute(attr), 10);
+        if (dragIndex !== null) onDrop(dragIndex, dropIndex);
         dragIndex = null;
       });
     });
@@ -7310,6 +7398,7 @@ class ApplianceCardEditor extends HTMLElement {
     // setConfig may have run before hass was available, in which case the
     // detected type could not see the entity's icon yet.
     this._type = this._currentType();
+    const drawn = this._drawnLines();
 
     if (!this._root) {
       this.attachShadow({ mode: "open" });
@@ -7349,6 +7438,7 @@ class ApplianceCardEditor extends HTMLElement {
         }
         .info-row-handle:active { cursor: grabbing; }
         .info-row-fields { flex: 1; min-width: 0; }
+        .order-line { padding: 7px 0; }
         .info-row.dragging { opacity: 0.4; }
         .info-row.drag-over { border-top: 2px solid var(--primary-color, #03a9f4); }
         details.group {
@@ -7483,6 +7573,15 @@ class ApplianceCardEditor extends HTMLElement {
             </div>
           </div>`).join("")}
       </details>
+      ${drawn.length > 1 ? `
+      <details class="group" data-panel="order" ${this._panelOpen.order ? "open" : ""}>
+        <summary>${t(hass, "section_lines_order")}</summary>
+        ${drawn.map((l, i) => `
+          <div class="section info-row" draggable="true" data-line-index="${i}">
+            <div class="info-row-handle" title="${t(hass, "info_drag")}">\u283f</div>
+            <div class="info-row-fields"><div class="order-line">${esc(l.label)}</div></div>
+          </div>`).join("")}
+      </details>` : ""}
     `;
 
     this._wireTouchTracking();
