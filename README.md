@@ -23,6 +23,7 @@ No brand assumed: every field is an entity you pick, so it works with **any** in
 
 - **Seventeen appliance types**, each with a CSS illustration that animates on the appliance's own data and stays still when idle. The type is detected on its own or set via `appliance_type`, and `compact: true` keeps only the text.
 - **State normalization**: `Idle`, `RUNNING`, `wash`, `En marche`… are recognised (accent-insensitive) and sorted into idle, preheating, running, paused, done, delayed or error. An unknown state is shown as it came, minus the integration's namespace, and `state_map` sorts the rest, `"*"` catching everything left over.
+- **The step, not an hour of *Running***: a washer, a dryer or a dishwasher names the step it is at (*Pre-wash*, *Washing*, *Rinsing*, *Spinning*, *Drying* and seven more), from a phase entity or from its own state, and the drum whirls while it spins. The time left is still the whole cycle's.
 - **A washer-dryer is a washer that dries**: `washer_dryer: true`, and the drum shows water while it washes, then clothes turning in hot air while it dries. The step comes from the state itself or from a phase entity, and the state line reads *Washing* or *Drying*.
 - **Each appliance says what matters for it**: a coffee machine what it is missing (water, beans, tray, descaling), a fridge its health (unplugged, door open, temperature high), a combi boiler what it is heating (central heating, hot water or standby), a 3D printer what the job is doing (preheating, bed levelling, changing filament).
 - **Works from a smart plug alone**: `power_entity` and `power_on_threshold` are enough to derive the state from consumption.
@@ -52,7 +53,7 @@ Only `state_entity` is required, except on a fridge where a probe or a door cont
 | Option | Description |
 |---|---|
 | `state_entity` | **Required**, except on a fridge. Entity carrying the appliance's state, any domain. |
-| `state_map` | Map raw state → `idle` \| `running` \| `preheating` \| `keep_warm` \| `paused` \| `done` \| `delayed` \| `error`. Sets the label, the colour and the animation. The key `"*"` catches every state left over (see below), and on a washer-dryer `washing` and `drying` name the step. Also in the visual editor. |
+| `state_map` | Map raw state → `idle` \| `running` \| `preheating` \| `keep_warm` \| `paused` \| `done` \| `delayed` \| `error`. Sets the label, the colour and the animation. The key `"*"` catches every state left over (see below), and on a washer, a dryer or a dishwasher the steps (`washing`, `spinning`...) are targets too. Also in the visual editor. |
 | `state_show_raw` | `true` shows the raw text instead of the translated label. |
 | `name` | Card title. Defaults to the state entity's name. |
 | `compact` | `true` hides the illustration. |
@@ -78,7 +79,7 @@ Per type:
 | Option | Types | Description |
 |---|---|---|
 | `washer_dryer` | washer | `true` for a machine that washes and then dries, as a checkbox under the appliance type. A name that says so is enough; `false` forces the plain washer back. |
-| `phase_entity` / `phase_map` | dishwasher, washer-dryer | Cycle phase, see below. On a dishwasher, YAML only. |
+| `phase_entity` / `phase_map` | washer, dryer, dishwasher | The step the cycle is at, named on the state line. See *Cycle steps* below. |
 | `target_temperature_entity` / `current_temperature_entity` | oven, cooker, rice cooker | Setpoint and actual temperature. While climbing, the bar becomes a preheat gauge. |
 | `heating_entity` | oven, cooker, rice cooker, water heater | Says whether it heats when the state entity cannot. Otherwise derived from the running state. |
 | `light_entity` | oven, hood, 3D printer | Light, as a small toggle in the header. A lit printer's chamber lights up too. |
@@ -234,7 +235,7 @@ phase_map:
   Sechage: drying
 ```
 
-The phase only changes the illustration, and an unrecognised value is ignored.
+An unrecognised value leaves the illustration as it is, and the phase also names the step on the state line (see *Cycle steps*).
 
 ### Pet feeders
 
@@ -267,28 +268,43 @@ An automation works as a control too, and a `utility_meter` makes a fine counter
 
 Three entities read as well as ten: a line only exists when its entity answers.
 
-### Washer-dryers
+### Cycle steps
 
-A washer-dryer is a washer with `washer_dryer: true`, not a type of its own: the option is a checkbox under the appliance type. Ticked, the drum shows water while the machine washes and clothes turning in hot air while it dries, and the state line reads *Washing* or *Drying* rather than *Running*. A machine whose name says it washes and dries is recognised on its own.
+While a washer, a dryer or a dishwasher runs, the state line names the step it is at rather than *Running* all the way through: *Pre-wash*, *Soaking*, *Weighing*, *Filling*, *Washing*, *Rinsing*, *Draining*, *Spinning*, *Drying*, *Cooling*, *Anti-crease* or *Steam*. While a washer spins, its drum empties and the laundry whirls. A paused, finished or delayed machine keeps its word, and the time left and the progress bar stay those of the whole cycle.
 
 Where the step comes from depends on the integration:
 
 | Integration | Where it says it | What to configure |
 |---|---|---|
-| LG ThinQ, Midea | the state itself (`drying`, `Dry`) | nothing |
-| Miele, SmartThings, hOn (Candy, Hoover, Haier) | a phase entity (`program_phase`, `job_state`, `prPhase`) | `phase_entity` |
-| Electrolux, AEG | `cyclePhase`, which reads `Dry` | `phase_entity` |
-| Home Connect (Bosch, Siemens), Whirlpool | nowhere: the operation state stays *Run* all the way through | `state_map`, or nothing |
+| LG ThinQ, Whirlpool, Midea | the state itself (`rinsing`, `cycle_spinning`, `Dry`) | nothing |
+| Electrolux, AEG | `cyclePhase` (`Wash`, `Rinse`, `Spin`) | `phase_entity` |
+| Miele, SmartThings | a phase entity (`program_phase`, `job_state`) | `phase_entity` |
+| hOn (Candy, Hoover, Haier) | a numbered phase (`prPhase`) | `phase_entity` and `phase_map` |
+| Home Connect (Bosch, Siemens) | nowhere: the state stays *Run* all the way through | nothing to read |
 
-Rinsing and spinning count as washing, since the drum still has water in it. A step the card cannot read leaves the drawing as it is, so a cycle ending on an anti-crease or a cool-down keeps its clothes instead of filling with water again. Vendor codes are translated by `phase_map`, and `state_map` accepts `washing` and `drying` as targets:
+A word from the phase entity that the card does not know is shown as it is written. `phase_map` translates codes, into one of the steps above or into words of your own, and `state_map` takes the steps as targets too:
+
+```yaml
+appliance_type: washer
+state_entity: sensor.washer_machine_state
+phase_entity: sensor.washer_program_phase
+phase_map:
+  4: rinsing
+  5: spinning
+  9: Anti-allergy
+```
+
+### Washer-dryers
+
+A washer-dryer is a washer with `washer_dryer: true`, not a type of its own: the option is a checkbox under the appliance type. Ticked, the drum shows water while the machine washes and clothes turning in hot air while it dries, read from the same step as the state line. A machine whose name says it washes and dries is recognised on its own.
+
+Rinsing counts as washing, since the drum still has water in it. A step the card cannot read leaves the drawing as it is, so a cycle ending on an anti-crease or a cool-down keeps its clothes instead of filling with water again.
 
 ```yaml
 appliance_type: washer
 washer_dryer: true
 state_entity: sensor.washer_dryer_machine_state
 phase_entity: sensor.washer_dryer_program_phase
-phase_map:
-  4: drying
 ```
 
 ### Too many states (`"*"`)
