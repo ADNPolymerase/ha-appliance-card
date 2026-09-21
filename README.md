@@ -98,15 +98,17 @@ Per type:
 | `temperature_decimals` | fridge, kettle, water heater, boiler, heat pump | `0` (default, whole degree), `1` (one decimal) or `auto` (the entity's display precision), on the appliance's screen and in the list. |
 | `temperature_entity` | kettle, water heater, boiler, heat pump | Water temperature (flow temperature on a boiler or a heat pump), shown on the appliance and in the list. A `water_heater` entity provides its own. On a water heater the hot water fills the tank from 15 to 65 °C. |
 | `state_entity` as `water_heater` | water heater | Its state is the mode (*Eco*, *Performance*…), shown as Home Assistant translates it. Heating then comes from `heating_entity`, a smart plug or MELCloud's `status` attribute. |
-| `heating_entity` / `hot_water_entity` | boiler, heat pump | Central heating and hot water indicators; with both on, hot water wins. Without them the mode comes from `state_entity`: codes `-H`, `=H`, `0H` (Nefit, Bosch) or their numeric form `200`, `201`, `203`, with start-up (`0U`, `0C`, `0L` or `270`, `283`, `284`) read as *Ignition* and the burner's waits (`0A`, `0Y`, `0E` or `202`, `204`, `265`, `305`, `353`) as *Waiting*; `CH`, `HW`, `No`; those of InComfort, ebusd, myVAILLANT and MELCloud; or *central heating* and *hot water*. With the indicators off but the flame lit, it reads *Burner on*. `state_map` accepts `space_heating`, `hot_water`, `starting`, `waiting` and `idle`. With only the burner as `power_entity`, the flame lights without saying what for. |
-| `state_entity` on a heat pump | heat pump | What the pump is doing: a `climate` entity's `hvac_action` (heating, cooling, defrosting, idle), MELCloud's `status` attribute (`heat_water`, `heat_zones`, `cool`, `defrost`, `standby`, `legionella`) or a sensor in words (*heating*, *hot water*, *cooling*, *defrost*, in 14 languages). The state of a `climate` or `water_heater` entity is the mode you picked, shown as-is when the entity says nothing about what the pump does. `state_map` accepts `space_heating`, `hot_water`, `cooling`, `defrost` and `idle`. The outdoor unit's fan turns while it works and stops to defrost; the tank or the radiator warms depending on the mode. |
+| `heating_entity` / `hot_water_entity` | boiler, heat pump | Central heating and hot water indicators; with both on, hot water wins. A heat pump has a cooling one as well, below. Without them the mode comes from `state_entity`: codes `-H`, `=H`, `0H` (Nefit, Bosch) or their numeric form `200`, `201`, `203`, with start-up (`0U`, `0C`, `0L` or `270`, `283`, `284`) read as *Ignition* and the burner's waits (`0A`, `0Y`, `0E` or `202`, `204`, `265`, `305`, `353`) as *Waiting*; `CH`, `HW`, `No`; those of InComfort, ebusd, myVAILLANT and MELCloud; or *central heating* and *hot water*. With the indicators off but the flame lit, it reads *Burner on*. `state_map` accepts `space_heating`, `hot_water`, `starting`, `waiting` and `idle`. With only the burner as `power_entity`, the flame lights without saying what for. |
+| `state_entity` on a heat pump | heat pump | What the pump is doing: a `climate` entity's `hvac_action` (heating, cooling, defrosting, idle), MELCloud's `status` attribute (`heat_water`, `heat_zones`, `cool`, `defrost`, `standby`, `legionella`) or a sensor in words (*heating*, *hot water*, *cooling*, *defrost*, in 14 languages). The state of a `climate` or `water_heater` entity is the mode you picked, shown as-is when the entity says nothing about what the pump does. `state_map` accepts `space_heating`, `hot_water`, `cooling`, `defrost` and `idle`. The outdoor unit's fan turns while it works and stops to defrost; the tank or the radiator warms depending on the mode, and the water runs down the flow pipe and back up the return, out hot and back cooler while it heats, the other way round while it cools. |
+| `cooling_entity` and the valves | heat pump | A cooling indicator, beside the heating and hot water ones. An indicator may also be a valve: HeishaMon's 2-way valve reads *Heating* or *Cooling* and its 3-way valve *Room* or *Tank*, whichever field they sit in. The tank comes first, then cooling, then heating. |
 | `outdoor_temperature_entity` / `heat_output_entity` / `cop_entity` | heat pump | Outdoor temperature, heat output and COP, in the list. Without a COP entity, the card divides the heat output by `power_entity` once both are in W or kW. |
+| `cooling_power_entity` / `cooling_output_entity` / `hot_water_power_entity` / `hot_water_output_entity` | heat pump | What the pump draws and makes while it cools and for the tank, for the integrations that measure each circuit apart (HeishaMon). The card reads the pair of the circuit the indicators point to, even at rest, and the heating pair otherwise. Cooling, the line reads *Cooling output* and the computed ratio *EER*. |
 | `return_temperature_entity` | heat pump | The water coming back. Flow and return then share one line, as *42 °C → 36 °C*, and the card works out the delta on its own like it does the COP, always with a decimal since a heat pump works on a couple of degrees. Taken as a distance, so it stays positive while the pump cools the house. |
 | `water_flow_entity` | heat pump | Flow rate, in the entity's own unit. |
-| `compressor_entity` | heat pump | Frequency in hertz, or an on/off contact read as *Running* and *Off*. A compressor at rest stops the fan on the drawing: the pump is only pushing water around. |
+| `compressor_entity` | heat pump | Frequency in hertz, or an on/off contact read as *Running* and *Off*. A compressor at rest stops the fan on the drawing and puts the indicators on *Standby*: the pump is only pushing water around, whichever way the valves point. At work, it turns a standby state into *Running*. |
 | `fan_speed_entity` | heat pump | Fan speed, in the entity's own unit. |
 | `no_hot_water` | heat pump | `true` drops the hot water tank from the drawing, for an installation that heats no domestic hot water. What is left stands in the middle. |
-| `underfloor_heating` | heat pump | `true` draws a heated floor instead of a radiator, which is how most air-to-water installations emit their heat: the slab seen at an angle, its four panels, and the heat rising off it while it warms. It turns blue when the pump cools the house. |
+| `underfloor_heating` | heat pump | `true` draws a heated floor instead of a radiator, which is how most air-to-water installations emit their heat: the slab seen at an angle with its pipe snaking across it, and the heat rising off it while it warms. It turns blue when the pump cools the house. |
 | `state_entity` on a 3D printer | 3D printer | The printer's status, as each integration sends it: `current_state` (OctoPrint), the printer's own sensor (PrusaLink), `print_status` (Bambu Lab, Creality), `current_print_state` (Moonraker, Klipper), `current_status` (Elegoo), `machine_status` (Flashforge), `job_state` (Anycubic). It reads *Printing*, *Preparing*, *Preheating*, *Paused*, *Needs attention*, *Finished*, *Cancelled*, *Failed*, *Error*, *Idle* or *Offline*. Most integrations say *printing* from the moment the start code heats up: while a heater is still more than 5 °C below its target and the part has not started, the card reads *Preheating* and the bar becomes a heating gauge. Outside a job the remaining time is hidden, since a printer keeps its last one. |
 | `phase_entity` | 3D printer | What the job is busy with: Bambu Lab's `current_stage`, Elegoo's `print_status`. It reads *Preheating*, *Bed levelling*, *Changing filament*, *Cooling*, *Calibrating* or *Homing* during a job. |
 | `program_entity` | 3D printer | The print file, without its folder or its slicer extension. |
@@ -178,6 +180,26 @@ temperature_entity: sensor.heat_pump_flow_temperature
 outdoor_temperature_entity: sensor.heat_pump_outdoor_temperature
 power_entity: sensor.heat_pump_power
 heat_output_entity: sensor.heat_pump_heat_output
+```
+
+A Panasonic Aquarea on HeishaMon, with its valves and each circuit measured apart:
+
+```yaml
+type: custom:ha-appliance-card
+appliance_type: heat_pump
+state_entity: climate.aquarea_zone_1
+hot_water_entity: sensor.aquarea_3_way_valve
+heating_entity: sensor.aquarea_2_way_valve
+cooling_entity: sensor.aquarea_2_way_valve
+compressor_entity: sensor.aquarea_compressor_frequency
+water_flow_entity: sensor.aquarea_pump_flow
+power_entity: sensor.aquarea_heat_power_consumed
+heat_output_entity: sensor.aquarea_heat_power_produced
+cooling_power_entity: sensor.aquarea_thermal_cooling_power_consumption
+cooling_output_entity: sensor.aquarea_thermal_cooling_power_production
+hot_water_power_entity: sensor.aquarea_dhw_power_consumed
+hot_water_output_entity: sensor.aquarea_dhw_power_produced
+underfloor_heating: true
 ```
 
 ```yaml

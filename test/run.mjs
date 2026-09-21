@@ -2056,26 +2056,50 @@ check('pac : le ballon est dessine par defaut', /class="hp-tank"/.test(hpPlain),
 check('pac : et des radiateurs', /class="hp-rad"/.test(hpPlain), true);
 const hpNoTank = hpDraw({ no_hot_water: true });
 check('pac sans eau chaude : plus de ballon', /class="hp-tank"/.test(hpNoTank), false);
-check('pac sans eau chaude : ni son tuyau', /class="hp-pipe tank"/.test(hpNoTank), false);
+check('pac sans eau chaude : ni ses tuyaux', /class="hp-pipe tank/.test(hpNoTank), false);
+check('pac : avec le ballon, ses deux tuyaux', (hpPlain.match(/class="hp-pipe tank (flow|ret)"/g) || []).length, 2);
 check('pac sans eau chaude : la classe est posee', hasCls(hpNoTank, 'no-tank'), true);
 contains('pac sans eau chaude : ce qui reste se recentre', hpNoTank, '.machine.no-tank .hp-rad { left: 31px;');
 const hpFloor = hpDraw({ underfloor_heating: true });
 check('pac plancher : le plancher remplace les radiateurs', /class="hp-floor"/.test(hpFloor), true);
 check('pac plancher : et il n\'y a plus de radiateurs', /class="hp-rad"/.test(hpFloor), false);
 check('pac plancher : la classe est posee', hasCls(hpFloor, 'underfloor'), true);
-contains('pac plancher : le tuyau descend jusqu\'au coin de la dalle', hpFloor, '.machine.underfloor .hp-pipe.rad { left: 56px; height: 31px; }');
-check('pac plancher : la dalle a ses quatre panneaux', /class="hp-slab"><b>/.test(hpFloor), true);
-// The tile is one face cut to a diamond, with nothing under it.
-check('pac plancher : la dalle est en perspective',
-  (hpFloor.match(/clip-path: polygon\(50% 0, 100% 50%, 50% 100%, 0 50%\);/g) || []).length, 1);
-check('pac plancher : rien sous la dalle', /\.hp-slab::before/.test(hpFloor), false);
-// Four panels and not four triangles: the lines lean like the tile's own
-// edges instead of running corner to corner.
-contains('pac plancher : le panneau penche comme la dalle', hpFloor, '.hp-slab b::before { transform: rotate(19.7deg); }');
-contains('pac plancher : et l\'autre dans l\'autre sens', hpFloor, '.hp-slab b::after { transform: rotate(-19.7deg); }');
-contains('pac plancher : les deux traversent le centre', hpFloor, "content: \"\"; position: absolute; left: 50%; top: 50%; width: 44px; height: 1px;");
-contains('pac plancher : la dalle chauffe',
-  hpFloor, '.machine.mode-space_heating .hp-slab b { background: linear-gradient(180deg, #ffab91, #ff7043); }');
+// The slab, as the underfloor symbol draws it (mdi:heating-coil): a pipe
+// snaking across it, four runs and three bends, one bend a box whose long
+// borders are two runs.
+check('pac plancher : un serpentin dans la dalle',
+  /<div class="hp-slab"><div class="hp-coil"><b><\/b><b><\/b><b><\/b><\/div><\/div>/.test(hpFloor), true);
+check('pac plancher : plus de panneaux', /\.hp-slab b::before/.test(hpFloor), false);
+contains('pac plancher : premier coude', hpFloor, '.hp-coil b:nth-child(1) { top: 2px; }');
+contains('pac plancher : le deuxieme tourne de l\'autre cote', hpFloor,
+  '.hp-coil b:nth-child(2) { top: 9px; border-left: 3px solid #6b737c; border-right: 0; border-radius: 5px 0 0 5px; }');
+contains('pac plancher : troisieme coude', hpFloor, '.hp-coil b:nth-child(3) { top: 16px; }');
+// Each box shares its last run with the next one's first: a box of 10 with a
+// border of 3 hands over 7 lower, which is where the next one starts.
+check('pac plancher : les passages se touchent', cssPx(hpFloor, '.hp-coil b', 'height') - 3, 7);
+// The coil is drawn flat and laid down: a square of 30 turned by 45 degrees
+// spans 42 across, which is the slab, and squashed to its 15 in height.
+{
+  const side = cssPx(hpFloor, '.hp-coil', 'width');
+  const squash = Number((/transform: scaleY\(([\d.]+)\) rotate\(45deg\);/.exec(hpFloor) || [])[1]);
+  const slabW = 96 - cssPx(hpFloor, '.hp-floor', 'left') - cssPx(hpFloor, '.hp-floor', 'right') - 2 * cssPx(hpFloor, '.hp-slab', 'left');
+  check('pac plancher : le serpentin couvre la dalle en largeur', Math.round(side * Math.SQRT2), slabW);
+  check('pac plancher : et en hauteur', Math.round(side * Math.SQRT2 * squash), cssPx(hpFloor, '.hp-slab', 'height'));
+  // Both pipes reach the slab's near edge, which rises from its left corner
+  // to its top one: the flow at the corner, the return a little higher.
+  const left = cssPx(hpFloor, '.hp-floor', 'left') + cssPx(hpFloor, '.hp-slab', 'left');
+  const corner = cssPx(hpFloor, '.hp-floor', 'top') + cssPx(hpFloor, '.hp-floor', 'height')
+    - cssPx(hpFloor, '.hp-slab', 'bottom') - cssPx(hpFloor, '.hp-slab', 'height') / 2;
+  const edgeAt = x => corner - (x - left) / (slabW / 2) * (cssPx(hpFloor, '.hp-slab', 'height') / 2);
+  const top = cssPx(hpFloor, '.hp-pipe', 'top');
+  const w = cssPx(hpFloor, '.hp-pipe', 'width');
+  for (const [name, sel] of [['aller', '.machine.underfloor .hp-pipe.rad.flow'], ['retour', '.machine.underfloor .hp-pipe.rad.ret']]) {
+    const x = cssPx(hpFloor, sel, 'left');
+    check(`pac plancher : le tuyau ${name} arrive sur la dalle`,
+      Math.abs(top + cssPx(hpFloor, sel, 'height') - edgeAt(x + w / 2)) <= 1, true);
+  }
+}
+contains('pac plancher : la dalle chauffe', hpFloor, '.machine.mode-space_heating .hp-coil b { border-color: #ff7043; }');
 contains('pac plancher : et la chaleur monte',
   hpFloor, '.machine.mode-space_heating .hp-floor i { animation: hp-rise');
 check('pac plancher : trois volutes', (hpFloor.match(/<div class="hp-floor"><i><\/i><i><\/i><i><\/i>/g) || []).length, 1);
@@ -2083,7 +2107,7 @@ check('pac : en froid la chaleur ne monte pas',
   /mode-cooling .hp-floor i \{ animation/.test(hpOf('heat', { hvac_action: 'cooling' }, { underfloor_heating: true }, HP_READINGS)), false);
 contains('pac plancher : et refroidit en froid',
   hpOf('heat', { hvac_action: 'cooling' }, { underfloor_heating: true }, HP_READINGS),
-  '.machine.mode-cooling .hp-slab b { background: linear-gradient(180deg, #b3e5fc, #29b6f6); }');
+  '.machine.mode-cooling .hp-coil b { border-color: #29b6f6; }');
 const hpBoth = hpDraw({ no_hot_water: true, underfloor_heating: true });
 check('pac : les deux options tiennent ensemble',
   /class="hp-floor"/.test(hpBoth) && !/class="hp-tank"/.test(hpBoth), true);
@@ -2105,6 +2129,153 @@ check('pac : et il arrete le ventilateur', hasCls(hpCompOff, 'fan'), false);
 const hpCompNone = hpHydro({}, { 'sensor.hp_hz': { state: 'unavailable', attributes: {} } });
 check('pac : un compresseur muet ne fait pas de ligne', infoLine(hpCompNone, 'Compressor'), null);
 check('pac : et ne prive pas le ventilateur', hasCls(hpCompNone, 'fan'), true);
+
+// == The valves, the compressor and the circuits (issue #17, second round) ===
+// HeishaMon, behind most Panasonic Aquarea installs, reads its 2-way valve
+// Heating or Cooling and its 3-way valve Room or Tank. A valve is a position:
+// the compressor says whether the pump works. And each circuit is measured
+// apart, so the readings follow the circuit the valves point to.
+const HMW = n => ({ state: String(n), attributes: { unit_of_measurement: 'W' } });
+const HM = (v2, v3, hz, extra = {}, more = {}) => render({ appliance_type: 'heat_pump', state_entity: 'sensor.hm_state',
+  heating_entity: 'sensor.hm_2way', hot_water_entity: 'sensor.hm_3way', compressor_entity: 'sensor.hm_hz', ...extra },
+  { 'sensor.hm_state': { state: 'idle', attributes: {} },
+    'sensor.hm_2way': { state: v2, attributes: {} }, 'sensor.hm_3way': { state: v3, attributes: {} },
+    'sensor.hm_hz': { state: String(hz), attributes: { unit_of_measurement: 'Hz' } }, ...more });
+
+// The reported case: the 2-way valve in the heating field, in summer.
+const hmCool = HM('Cooling', 'Room', 17);
+check('vannes : Cooling dans le champ chauffage, la pompe refroidit', stateLine(hmCool), 'Cooling');
+check('vannes : et dessine le froid', hasCls(hmCool, 'mode-cooling'), true);
+check('vannes : le ventilateur tourne', hasCls(hmCool, 'fan'), true);
+check('vannes : Heating chauffe', stateLine(HM('Heating', 'Room', 41)), 'Heating');
+// The 3-way valve takes all the water for the tank: hot water comes first.
+check('vannes : Tank passe devant le froid', stateLine(HM('Cooling', 'Tank', 55)), 'Hot water');
+check('vannes : et devant le chauffage', stateLine(HM('Heating', 'Tank', 55)), 'Hot water');
+// Cooling and heating share the 2-way valve and exclude each other; two
+// contacts both on are settled the same way, cooling first.
+check('vannes : le froid passe devant le chauffage', stateLine(render({ appliance_type: 'heat_pump',
+  state_entity: 'sensor.hm_state', heating_entity: 'binary_sensor.hm_heat', cooling_entity: 'binary_sensor.hm_cool' },
+  { 'sensor.hm_state': { state: 'idle', attributes: {} }, 'binary_sensor.hm_heat': { state: 'on', attributes: {} },
+    'binary_sensor.hm_cool': { state: 'on', attributes: {} } })), 'Cooling');
+// A cooling indicator of its own, a contact or the same valve.
+const coolContact = (s, hz = 30) => render({ appliance_type: 'heat_pump', state_entity: 'sensor.hm_state',
+  cooling_entity: 'binary_sensor.hm_cool', compressor_entity: 'sensor.hm_hz' },
+  { 'sensor.hm_state': { state: 'idle', attributes: {} }, 'binary_sensor.hm_cool': { state: s, attributes: {} },
+    'sensor.hm_hz': { state: String(hz), attributes: { unit_of_measurement: 'Hz' } } });
+check('vannes : un contact de froid allume', stateLine(coolContact('on')), 'Cooling');
+check('vannes : eteint, rien', stateLine(coolContact('off')), 'Running');
+// A valve says where the water goes whatever field it sits in.
+check('vannes : la vanne dans le champ froid dit Heating', stateLine(HM('Heating', 'Room', 41,
+  { heating_entity: undefined, cooling_entity: 'sensor.hm_2way' })), 'Heating');
+// A tank "heating" is a tank taking heat, as it always read.
+check('vannes : un ballon qui chauffe reste l\'eau chaude', stateLine(HM('Cooling', 'heating', 50)), 'Hot water');
+
+// The compressor judges. At rest, the pump is on standby whichever way the
+// valves point; at work, it works, whatever the state said.
+const hmNight = HM('Cooling', 'Room', 0);
+check('compresseur : a zero, en veille malgre la vanne', stateLine(hmNight), 'Standby');
+check('compresseur : a zero, rien de dessine en froid', hasCls(hmNight, 'mode-idle'), true);
+check('compresseur : a zero, pas d\'eau qui coule', hasCls(hmNight, 'flowing'), false);
+check('compresseur : un contact de froid aussi', stateLine(coolContact('on', 0)), 'Standby');
+check('compresseur : en marche sur un etat au repos', stateLine(render({ appliance_type: 'heat_pump',
+  state_entity: 'sensor.hm_state', compressor_entity: 'sensor.hm_hz' },
+  { 'sensor.hm_state': { state: 'idle', attributes: {} }, 'sensor.hm_hz': { state: '30', attributes: { unit_of_measurement: 'Hz' } } })), 'Running');
+// What the state entity itself reports is not second-guessed: a climate that
+// says heating keeps its word, the fan alone stopping.
+check('compresseur : l\'action du climat garde son mot', stateLine(hpIdleComp), 'Heating');
+
+// The readings of the circuit in use.
+const HMF = { power_entity: 'sensor.hm_heat_in', heat_output_entity: 'sensor.hm_heat_out',
+  cooling_power_entity: 'sensor.hm_cool_in', cooling_output_entity: 'sensor.hm_cool_out',
+  hot_water_power_entity: 'sensor.hm_dhw_in', hot_water_output_entity: 'sensor.hm_dhw_out' };
+const HMR = (heat, cool, dhw) => ({ 'sensor.hm_heat_in': HMW(heat[0]), 'sensor.hm_heat_out': HMW(heat[1]),
+  'sensor.hm_cool_in': HMW(cool[0]), 'sensor.hm_cool_out': HMW(cool[1]),
+  'sensor.hm_dhw_in': HMW(dhw[0]), 'sensor.hm_dhw_out': HMW(dhw[1]) });
+const rCool = HM('Cooling', 'Room', 17, HMF, HMR([0, 0], [520, 2900], [0, 0]));
+check('circuits : en froid, la puissance du froid', infoLine(rCool, 'Power'), '520 W');
+check('circuits : le froid produit', infoLine(rCool, 'Cooling output'), '2900 W');
+check('circuits : sous un flocon', /<ha-icon icon="mdi:snowflake"><\/ha-icon><span class="label">Cooling output/.test(rCool), true);
+check('circuits : pas de chaleur produite en froid', infoLine(rCool, 'Heat output'), null);
+check('circuits : le rapport s\'appelle EER en froid', infoLine(rCool, 'EER'), '5.6');
+check('circuits : et pas COP', infoLine(rCool, 'COP'), null);
+const rHeat = HM('Heating', 'Room', 41, HMF, HMR([900, 3600], [0, 0], [0, 0]));
+check('circuits : en chauffage, sa puissance', infoLine(rHeat, 'Power'), '900 W');
+check('circuits : sa chaleur', infoLine(rHeat, 'Heat output'), '3600 W');
+check('circuits : son COP', infoLine(rHeat, 'COP'), '4.0');
+const rTank = HM('Cooling', 'Tank', 55, HMF, HMR([0, 0], [0, 0], [1400, 4200]));
+check('circuits : pour le ballon, sa puissance', infoLine(rTank, 'Power'), '1400 W');
+check('circuits : sa chaleur', infoLine(rTank, 'Heat output'), '4200 W');
+check('circuits : son COP', infoLine(rTank, 'COP'), '3.0');
+// On a summer night the lines are still the cooling ones, at zero.
+const rNight = HM('Cooling', 'Room', 0, HMF, HMR([0, 0], [0, 0], [0, 0]));
+check('circuits : la nuit en ete, le froid a zero', infoLine(rNight, 'Cooling output'), '0 W');
+// Without cooling fields, the card falls back to the ones it has, and still
+// calls what comes out cold.
+const rBare = HM('Cooling', 'Room', 17, { power_entity: 'sensor.hm_heat_in', heat_output_entity: 'sensor.hm_heat_out' },
+  HMR([610, 2400], [0, 0], [0, 0]));
+check('circuits : sans champ de froid, la puissance du chauffage', infoLine(rBare, 'Power'), '610 W');
+check('circuits : nommee froid produit', infoLine(rBare, 'Cooling output'), '2400 W');
+// A COP entity is the owner's own, and keeps its name.
+check('circuits : une entite COP reste COP en froid', infoLine(HM('Cooling', 'Room', 17,
+  { ...HMF, cop_entity: 'sensor.hp_cop' }, { ...HMR([0, 0], [520, 2900], [0, 0]), ...HP_READINGS }), 'COP'), '3.2');
+check('circuits : en francais', infoLine(HM('Cooling', 'Room', 17, { ...HMF, language: 'fr' },
+  HMR([0, 0], [520, 2900], [0, 0])), 'Froid produit'), '2900 W');
+
+// The water: down the flow pipe and back up the return, on the circuit the
+// pump works, out hot and back cooler while it heats, the other way round
+// while it cools.
+check('eau : deux tuyaux vers l\'emetteur', (hmCool.match(/class="hp-pipe rad (flow|ret)"/g) || []).length, 2);
+check('eau : elle coule en froid', hasCls(hmCool, 'flowing'), true);
+check('eau : en chauffage', hasCls(HM('Heating', 'Room', 41), 'flowing'), true);
+check('eau : vers le ballon', hasCls(HM('Cooling', 'Tank', 55), 'flowing'), true);
+check('eau : pas quand on ne sait pas ou', hasCls(render({ appliance_type: 'heat_pump', state_entity: 'sensor.hm_state',
+  compressor_entity: 'sensor.hm_hz' }, { 'sensor.hm_state': { state: 'idle', attributes: {} },
+  'sensor.hm_hz': { state: '30', attributes: { unit_of_measurement: 'Hz' } } }), 'flowing'), false);
+check('eau : pas pendant le degivrage', hasCls(hpOf('heat', { hvac_action: 'defrosting' }), 'flowing'), false);
+check('eau : pas quand le compresseur se repose', hasCls(hpIdleComp, 'flowing'), false);
+contains('eau : elle court dans les tuyaux', hmCool, 'animation: hp-flow 0.8s linear infinite;');
+contains('eau : sur le circuit en froid', hmCool, '.machine.flowing.mode-cooling .hp-pipe.rad::after');
+contains('eau : et remonte par le retour', hmCool, '.machine.flowing .hp-pipe.ret::after { animation-direction: reverse; }');
+contains('eau : part froide', hmCool, '.machine.mode-cooling .hp-pipe.rad.flow { background: #29b6f6; }');
+contains('eau : revient plus chaude', hmCool, '.machine.mode-cooling .hp-pipe.rad.ret { background: #ff8a65; }');
+contains('eau : part chaude en chauffage', hmCool, '.machine.mode-space_heating .hp-pipe.rad.flow { background: #ff7043; }');
+contains('eau : et revient plus froide', hmCool, '.machine.mode-space_heating .hp-pipe.rad.ret,');
+contains('eau : rouge vers le ballon', hmCool, '.machine.mode-hot_water .hp-pipe.tank.flow { background: #ef5350; }');
+contains('eau : et elle y coule', hmCool, '.machine.flowing.mode-hot_water .hp-pipe.tank::after,');
+
+{
+  // HeishaMon's own names. The flow rate mode and the pump duty come before
+  // the flow itself on purpose: neither is a flow.
+  const ids = ['sensor.aquarea_main_state', 'sensor.aquarea_3_way_valve', 'sensor.aquarea_2_way_valve',
+    'sensor.aquarea_pump_flowrate_mode', 'sensor.aquarea_pump_duty', 'sensor.aquarea_pump_flow',
+    'sensor.aquarea_heat_power_produced', 'sensor.aquarea_heat_power_consumed',
+    'sensor.aquarea_thermal_cooling_power_production', 'sensor.aquarea_thermal_cooling_power_consumption',
+    'sensor.aquarea_dhw_power_produced', 'sensor.aquarea_dhw_power_consumed'];
+  const ed = new Editor();
+  ed.setConfig({ type: 'custom:ha-appliance-card', appliance_type: 'heat_pump', state_entity: 'sensor.aquarea_main_state' });
+  ed.hass = { ...HASS(Object.fromEntries(ids.map(id => [id, { state: '1', attributes: {} }]))),
+    entities: Object.fromEntries(ids.map(id => [id, { device_id: 'hm' }])) };
+  const sug = ed.events.at(-1)?.detail?.config || {};
+  check('suggestion heishamon : la vanne 3 voies pour l\'eau chaude', sug.hot_water_entity, 'sensor.aquarea_3_way_valve');
+  check('suggestion heishamon : la vanne 2 voies pour le chauffage', sug.heating_entity, 'sensor.aquarea_2_way_valve');
+  check('suggestion heishamon : et pour le froid', sug.cooling_entity, 'sensor.aquarea_2_way_valve');
+  check('suggestion heishamon : le debit, pas son mode ni la pompe', sug.water_flow_entity, 'sensor.aquarea_pump_flow');
+  check('suggestion heishamon : la chaleur produite', sug.heat_output_entity, 'sensor.aquarea_heat_power_produced');
+  check('suggestion heishamon : la puissance du chauffage', sug.power_entity, 'sensor.aquarea_heat_power_consumed');
+  check('suggestion heishamon : le froid produit', sug.cooling_output_entity, 'sensor.aquarea_thermal_cooling_power_production');
+  check('suggestion heishamon : la puissance du froid', sug.cooling_power_entity, 'sensor.aquarea_thermal_cooling_power_consumption');
+  check('suggestion heishamon : la chaleur du ballon', sug.hot_water_output_entity, 'sensor.aquarea_dhw_power_produced');
+  check('suggestion heishamon : la puissance du ballon', sug.hot_water_power_entity, 'sensor.aquarea_dhw_power_consumed');
+}
+
+// The cooling line in fourteen languages: a label of its own in each, never
+// the English one a missing entry would fall back to.
+for (const language of ['fr', 'ru', 'de', 'es', 'it', 'nl', 'pt', 'sv', 'no', 'da', 'pl', 'zh', 'cs']) {
+  const h = HM('Cooling', 'Room', 17, { ...HMF, language }, HMR([0, 0], [520, 2900], [0, 0]));
+  const labels = [...h.matchAll(/<span class="label">([^<]*)<\/span>/g)].map(m => m[1]);
+  check(`circuits : froid produit en ${language}`,
+    labels.some(l => l === 'Cooling output' || l.startsWith('section_')), false);
+}
 
 check('pac : aucune barre de progression', /class="bar-fill"/.test(hpH), false);
 contains('pac : la cuve se remplit d\'eau chaude', hpInd('on', 'off'),
@@ -2296,6 +2467,12 @@ for (const f of ['no_hot_water', 'underfloor_heating']) {
 for (const f of ['return_temperature_entity', 'water_flow_entity', 'compressor_entity', 'fan_speed_entity']) {
   check(`editeur pac : ${f} est propose`, toggles('heat_pump').includes(f), true);
   check(`editeur : ${f} n'est pas sur une chaudiere`, toggles('boiler').includes(f), false);
+}
+// The indicators and readings of issue #17's second round, on the heat pump
+// only.
+for (const f of ['cooling_entity', 'cooling_power_entity', 'cooling_output_entity', 'hot_water_power_entity', 'hot_water_output_entity']) {
+  check(`editeur pac : ${f}`, toggles('heat_pump').includes(f), true);
+  check(`editeur chaudiere : pas de ${f}`, toggles('boiler').includes(f), false);
 }
 
 // ── Source encoding ──────────────────────────────────────────────────────────

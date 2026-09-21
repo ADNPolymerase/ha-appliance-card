@@ -1,4 +1,4 @@
-const CARD_VERSION = "2.11.0";
+const CARD_VERSION = "2.12.0";
 
 console.info(
   "%c HA-APPLIANCE-CARD %c v" + CARD_VERSION + " ",
@@ -116,6 +116,7 @@ const T = {
     type_water_heater: "Water heater", type_boiler: "Boiler", type_heat_pump: "Heat pump",
     boiler_space_heating: "Heating", boiler_hot_water: "Hot water", boiler_burner: "Burner on", boiler_starting: "Ignition", boiler_waiting: "Waiting", hp_cooling: "Cooling", hp_defrost: "Defrosting",
     section_space_heating: "Central heating indicator", section_hot_water: "Hot water indicator", section_flow_temperature: "Flow temperature", section_heat_output: "Heat output", section_cop: "Coefficient of performance (COP)", section_outdoor_temperature: "Outdoor temperature",
+    section_cooling: "Cooling indicator", section_cooling_power: "Power while cooling", section_cooling_output: "Cooling output", section_hot_water_power: "Power while heating water", section_hot_water_output: "Heat output for hot water",
     section_return_temperature: "Return temperature", section_water_flow: "Water flow", section_compressor: "Compressor", hp_delta: "Delta", section_fan_speed: "Fan speed",
     hp_flow_return: "Flow and return", no_hot_water: "No hot water tank", underfloor_heating: "Underfloor heating instead of radiators",
     type_printer_3d: "3D printer", section_nozzle_temperature: "Nozzle temperature", section_nozzle_target: "Nozzle target temperature",
@@ -239,6 +240,7 @@ const T = {
     type_water_heater: "Chauffe-eau", type_boiler: "Chaudi\u00e8re", type_heat_pump: "Pompe \u00e0 chaleur",
     boiler_space_heating: "Chauffage", boiler_hot_water: "Eau chaude", boiler_burner: "Br\u00fbleur allum\u00e9", boiler_starting: "Allumage", boiler_waiting: "En attente", hp_cooling: "Rafra\u00eechissement", hp_defrost: "D\u00e9givrage",
     section_space_heating: "Indicateur de chauffage", section_hot_water: "Indicateur d'eau chaude", section_flow_temperature: "Temp\u00e9rature de d\u00e9part", section_heat_output: "Chaleur produite", section_cop: "Coefficient de performance (COP)", section_outdoor_temperature: "Temp\u00e9rature ext\u00e9rieure",
+    section_cooling: "Indicateur de rafra\u00eechissement", section_cooling_power: "Puissance en rafra\u00eechissement", section_cooling_output: "Froid produit", section_hot_water_power: "Puissance pour l'eau chaude", section_hot_water_output: "Chaleur produite pour l'eau chaude",
     section_return_temperature: "Temp\u00e9rature de retour", section_water_flow: "D\u00e9bit d'eau", section_compressor: "Compresseur", hp_delta: "\u00c9cart", section_fan_speed: "Vitesse du ventilateur",
     hp_flow_return: "D\u00e9part et retour", no_hot_water: "Pas de ballon d'eau chaude", underfloor_heating: "Plancher chauffant au lieu des radiateurs",
     type_printer_3d: "Imprimante 3D", section_nozzle_temperature: "Temp\u00e9rature de la buse", section_nozzle_target: "Consigne de la buse",
@@ -362,6 +364,7 @@ const T = {
     type_water_heater: "\u0412\u043e\u0434\u043e\u043d\u0430\u0433\u0440\u0435\u0432\u0430\u0442\u0435\u043b\u044c", type_boiler: "\u041a\u043e\u0442\u0451\u043b", type_heat_pump: "\u0422\u0435\u043f\u043b\u043e\u0432\u043e\u0439 \u043d\u0430\u0441\u043e\u0441",
     boiler_space_heating: "\u041e\u0442\u043e\u043f\u043b\u0435\u043d\u0438\u0435", boiler_hot_water: "\u0413\u043e\u0440\u044f\u0447\u0430\u044f \u0432\u043e\u0434\u0430", boiler_burner: "\u0413\u043e\u0440\u0435\u043b\u043a\u0430 \u0432\u043a\u043b\u044e\u0447\u0435\u043d\u0430", boiler_starting: "\u0420\u043e\u0437\u0436\u0438\u0433", boiler_waiting: "\u041f\u0430\u0443\u0437\u0430 \u0433\u043e\u0440\u0435\u043b\u043a\u0438", hp_cooling: "\u041e\u0445\u043b\u0430\u0436\u0434\u0435\u043d\u0438\u0435", hp_defrost: "\u041e\u0442\u0442\u0430\u0439\u043a\u0430",
     section_space_heating: "\u0418\u043d\u0434\u0438\u043a\u0430\u0442\u043e\u0440 \u043e\u0442\u043e\u043f\u043b\u0435\u043d\u0438\u044f", section_hot_water: "\u0418\u043d\u0434\u0438\u043a\u0430\u0442\u043e\u0440 \u0433\u043e\u0440\u044f\u0447\u0435\u0439 \u0432\u043e\u0434\u044b", section_flow_temperature: "\u0422\u0435\u043c\u043f\u0435\u0440\u0430\u0442\u0443\u0440\u0430 \u043f\u043e\u0434\u0430\u0447\u0438", section_heat_output: "\u0422\u0435\u043f\u043b\u043e\u0432\u0430\u044f \u043c\u043e\u0449\u043d\u043e\u0441\u0442\u044c", section_cop: "\u041a\u043e\u044d\u0444\u0444\u0438\u0446\u0438\u0435\u043d\u0442 \u044d\u0444\u0444\u0435\u043a\u0442\u0438\u0432\u043d\u043e\u0441\u0442\u0438 (COP)", section_outdoor_temperature: "\u041d\u0430\u0440\u0443\u0436\u043d\u0430\u044f \u0442\u0435\u043c\u043f\u0435\u0440\u0430\u0442\u0443\u0440\u0430",
+    section_cooling: "\u0418\u043d\u0434\u0438\u043a\u0430\u0442\u043e\u0440 \u043e\u0445\u043b\u0430\u0436\u0434\u0435\u043d\u0438\u044f", section_cooling_power: "\u041c\u043e\u0449\u043d\u043e\u0441\u0442\u044c \u043f\u0440\u0438 \u043e\u0445\u043b\u0430\u0436\u0434\u0435\u043d\u0438\u0438", section_cooling_output: "\u041c\u043e\u0449\u043d\u043e\u0441\u0442\u044c \u043e\u0445\u043b\u0430\u0436\u0434\u0435\u043d\u0438\u044f", section_hot_water_power: "\u041c\u043e\u0449\u043d\u043e\u0441\u0442\u044c \u043d\u0430 \u0433\u043e\u0440\u044f\u0447\u0443\u044e \u0432\u043e\u0434\u0443", section_hot_water_output: "\u0422\u0435\u043f\u043b\u043e\u0432\u0430\u044f \u043c\u043e\u0449\u043d\u043e\u0441\u0442\u044c \u043d\u0430 \u0433\u043e\u0440\u044f\u0447\u0443\u044e \u0432\u043e\u0434\u0443",
     section_return_temperature: "\u0422\u0435\u043c\u043f\u0435\u0440\u0430\u0442\u0443\u0440\u0430 \u043e\u0431\u0440\u0430\u0442\u043a\u0438", section_water_flow: "\u0420\u0430\u0441\u0445\u043e\u0434 \u0432\u043e\u0434\u044b", section_compressor: "\u041a\u043e\u043c\u043f\u0440\u0435\u0441\u0441\u043e\u0440", hp_delta: "\u0414\u0435\u043b\u044c\u0442\u0430", section_fan_speed: "\u0421\u043a\u043e\u0440\u043e\u0441\u0442\u044c \u0432\u0435\u043d\u0442\u0438\u043b\u044f\u0442\u043e\u0440\u0430",
     hp_flow_return: "\u041f\u043e\u0434\u0430\u0447\u0430 \u0438 \u043e\u0431\u0440\u0430\u0442\u043a\u0430", no_hot_water: "\u0411\u0435\u0437 \u0431\u0430\u043a\u0430 \u0433\u043e\u0440\u044f\u0447\u0435\u0439 \u0432\u043e\u0434\u044b", underfloor_heating: "\u0422\u0451\u043f\u043b\u044b\u0439 \u043f\u043e\u043b \u0432\u043c\u0435\u0441\u0442\u043e \u0440\u0430\u0434\u0438\u0430\u0442\u043e\u0440\u043e\u0432",
     type_printer_3d: "3D-\u043f\u0440\u0438\u043d\u0442\u0435\u0440", section_nozzle_temperature: "\u0422\u0435\u043c\u043f\u0435\u0440\u0430\u0442\u0443\u0440\u0430 \u0441\u043e\u043f\u043b\u0430", section_nozzle_target: "\u0417\u0430\u0434\u0430\u043d\u043d\u0430\u044f \u0442\u0435\u043c\u043f\u0435\u0440\u0430\u0442\u0443\u0440\u0430 \u0441\u043e\u043f\u043b\u0430",
@@ -485,6 +488,7 @@ const T = {
     type_water_heater: "Warmwasserspeicher", type_boiler: "Heizkessel", type_heat_pump: "W\u00e4rmepumpe",
     boiler_space_heating: "Heizung", boiler_hot_water: "Warmwasser", boiler_burner: "Brenner an", boiler_starting: "Z\u00fcndung", boiler_waiting: "Wartezeit", hp_cooling: "K\u00fchlen", hp_defrost: "Abtauen",
     section_space_heating: "Heizungsanzeige", section_hot_water: "Warmwasseranzeige", section_flow_temperature: "Vorlauftemperatur", section_heat_output: "Heizleistung", section_cop: "Leistungszahl (COP)", section_outdoor_temperature: "Au\u00dfentemperatur",
+    section_cooling: "K\u00fchlanzeige", section_cooling_power: "Leistung beim K\u00fchlen", section_cooling_output: "K\u00fchlleistung", section_hot_water_power: "Leistung f\u00fcr Warmwasser", section_hot_water_output: "Heizleistung f\u00fcr Warmwasser",
     section_return_temperature: "R\u00fccklauftemperatur", section_water_flow: "Wasserdurchfluss", section_compressor: "Kompressor", hp_delta: "Spreizung", section_fan_speed: "L\u00fcfterdrehzahl",
     hp_flow_return: "Vor- und R\u00fccklauf", no_hot_water: "Kein Warmwasserspeicher", underfloor_heating: "Fu\u00dfbodenheizung statt Heizk\u00f6rper",
     type_printer_3d: "3D-Drucker", section_nozzle_temperature: "D\u00fcsentemperatur", section_nozzle_target: "D\u00fcsen-Solltemperatur",
@@ -608,6 +612,7 @@ const T = {
     type_water_heater: "Termo", type_boiler: "Caldera", type_heat_pump: "Bomba de calor",
     boiler_space_heating: "Calefacci\u00f3n", boiler_hot_water: "Agua caliente", boiler_burner: "Quemador encendido", boiler_starting: "Ignici\u00f3n", boiler_waiting: "Pausa del quemador", hp_cooling: "Refrigeraci\u00f3n", hp_defrost: "Desescarche",
     section_space_heating: "Indicador de calefacci\u00f3n", section_hot_water: "Indicador de agua caliente", section_flow_temperature: "Temperatura de impulsi\u00f3n", section_heat_output: "Calor producido", section_cop: "Coeficiente de rendimiento (COP)", section_outdoor_temperature: "Temperatura exterior",
+    section_cooling: "Indicador de refrigeraci\u00f3n", section_cooling_power: "Potencia en refrigeraci\u00f3n", section_cooling_output: "Fr\u00edo producido", section_hot_water_power: "Potencia para agua caliente", section_hot_water_output: "Calor producido para agua caliente",
     section_return_temperature: "Temperatura de retorno", section_water_flow: "Caudal de agua", section_compressor: "Compresor", hp_delta: "Salto t\u00e9rmico", section_fan_speed: "Velocidad del ventilador",
     hp_flow_return: "Ida y retorno", no_hot_water: "Sin dep\u00f3sito de agua caliente", underfloor_heating: "Suelo radiante en vez de radiadores",
     type_printer_3d: "Impresora 3D", section_nozzle_temperature: "Temperatura de la boquilla", section_nozzle_target: "Temperatura objetivo de la boquilla",
@@ -731,6 +736,7 @@ const T = {
     type_water_heater: "Scaldabagno", type_boiler: "Caldaia", type_heat_pump: "Pompa di calore",
     boiler_space_heating: "Riscaldamento", boiler_hot_water: "Acqua calda", boiler_burner: "Bruciatore acceso", boiler_starting: "Accensione", boiler_waiting: "Pausa bruciatore", hp_cooling: "Raffrescamento", hp_defrost: "Sbrinamento",
     section_space_heating: "Indicatore riscaldamento", section_hot_water: "Indicatore acqua calda", section_flow_temperature: "Temperatura di mandata", section_heat_output: "Calore prodotto", section_cop: "Coefficiente di prestazione (COP)", section_outdoor_temperature: "Temperatura esterna",
+    section_cooling: "Indicatore raffrescamento", section_cooling_power: "Potenza in raffrescamento", section_cooling_output: "Freddo prodotto", section_hot_water_power: "Potenza per acqua calda", section_hot_water_output: "Calore prodotto per acqua calda",
     section_return_temperature: "Temperatura di ritorno", section_water_flow: "Portata d'acqua", section_compressor: "Compressore", hp_delta: "Delta", section_fan_speed: "Velocit\u00e0 della ventola",
     hp_flow_return: "Mandata e ritorno", no_hot_water: "Nessun bollitore", underfloor_heating: "Riscaldamento a pavimento invece dei radiatori",
     type_printer_3d: "Stampante 3D", section_nozzle_temperature: "Temperatura dell'ugello", section_nozzle_target: "Temperatura obiettivo dell'ugello",
@@ -854,6 +860,7 @@ const T = {
     type_water_heater: "Boiler", type_boiler: "Cv-ketel", type_heat_pump: "Warmtepomp",
     boiler_space_heating: "Verwarming", boiler_hot_water: "Warm water", boiler_burner: "Brander aan", boiler_starting: "Ontsteking", boiler_waiting: "Wachten", hp_cooling: "Koelen", hp_defrost: "Ontdooien",
     section_space_heating: "Cv-indicator", section_hot_water: "Warmwaterindicator", section_flow_temperature: "Aanvoertemperatuur", section_heat_output: "Warmteafgifte", section_cop: "Prestatieco\u00ebffici\u00ebnt (COP)", section_outdoor_temperature: "Buitentemperatuur",
+    section_cooling: "Koelindicator", section_cooling_power: "Vermogen bij koelen", section_cooling_output: "Koelafgifte", section_hot_water_power: "Vermogen voor warm water", section_hot_water_output: "Warmteafgifte voor warm water",
     section_return_temperature: "Retourtemperatuur", section_water_flow: "Waterdebiet", section_compressor: "Compressor", hp_delta: "Delta", section_fan_speed: "Ventilatortoerental",
     hp_flow_return: "Aanvoer en retour", no_hot_water: "Geen boiler", underfloor_heating: "Vloerverwarming in plaats van radiatoren",
     type_printer_3d: "3D-printer", section_nozzle_temperature: "Nozzletemperatuur", section_nozzle_target: "Doeltemperatuur nozzle",
@@ -977,6 +984,7 @@ const T = {
     type_water_heater: "Termoacumulador", type_boiler: "Caldeira", type_heat_pump: "Bomba de calor",
     boiler_space_heating: "Aquecimento", boiler_hot_water: "\u00c1gua quente", boiler_burner: "Queimador ligado", boiler_starting: "Igni\u00e7\u00e3o", boiler_waiting: "Pausa do queimador", hp_cooling: "Arrefecimento", hp_defrost: "Descongela\u00e7\u00e3o",
     section_space_heating: "Indicador de aquecimento central", section_hot_water: "Indicador de \u00e1gua quente", section_flow_temperature: "Temperatura de ida", section_heat_output: "Calor produzido", section_cop: "Coeficiente de desempenho (COP)", section_outdoor_temperature: "Temperatura exterior",
+    section_cooling: "Indicador de arrefecimento", section_cooling_power: "Pot\u00eancia em arrefecimento", section_cooling_output: "Frio produzido", section_hot_water_power: "Pot\u00eancia para \u00e1gua quente", section_hot_water_output: "Calor produzido para \u00e1gua quente",
     section_return_temperature: "Temperatura de retorno", section_water_flow: "Caudal de \u00e1gua", section_compressor: "Compressor", hp_delta: "Delta", section_fan_speed: "Velocidade da ventoinha",
     hp_flow_return: "Ida e retorno", no_hot_water: "Sem dep\u00f3sito de \u00e1gua quente", underfloor_heating: "Piso radiante em vez de radiadores",
     type_printer_3d: "Impressora 3D", section_nozzle_temperature: "Temperatura do bico", section_nozzle_target: "Temperatura alvo do bico",
@@ -1100,6 +1108,7 @@ const T = {
     type_water_heater: "Varmvattenberedare", type_boiler: "Panna", type_heat_pump: "V\u00e4rmepump",
     boiler_space_heating: "Uppv\u00e4rmning", boiler_hot_water: "Varmvatten", boiler_burner: "Br\u00e4nnare p\u00e5", boiler_starting: "T\u00e4ndning", boiler_waiting: "V\u00e4ntar", hp_cooling: "Kylning", hp_defrost: "Avfrostning",
     section_space_heating: "Indikator f\u00f6r uppv\u00e4rmning", section_hot_water: "Indikator f\u00f6r varmvatten", section_flow_temperature: "Framledningstemperatur", section_heat_output: "V\u00e4rmeeffekt", section_cop: "V\u00e4rmefaktor (COP)", section_outdoor_temperature: "Utomhustemperatur",
+    section_cooling: "Indikator f\u00f6r kylning", section_cooling_power: "Effekt vid kylning", section_cooling_output: "Kyleffekt", section_hot_water_power: "Effekt f\u00f6r varmvatten", section_hot_water_output: "V\u00e4rmeeffekt f\u00f6r varmvatten",
     section_return_temperature: "Returtemperatur", section_water_flow: "Vattenfl\u00f6de", section_compressor: "Kompressor", hp_delta: "Delta", section_fan_speed: "Fl\u00e4kthastighet",
     hp_flow_return: "Fram och retur", no_hot_water: "Ingen varmvattenberedare", underfloor_heating: "Golvv\u00e4rme i st\u00e4llet f\u00f6r radiatorer",
     type_printer_3d: "3D-skrivare", section_nozzle_temperature: "Munstyckets temperatur", section_nozzle_target: "Munstyckets m\u00e5ltemperatur",
@@ -1223,6 +1232,7 @@ const T = {
     type_water_heater: "Varmtvannsbereder", type_boiler: "Kjele", type_heat_pump: "Varmepumpe",
     boiler_space_heating: "Oppvarming", boiler_hot_water: "Varmtvann", boiler_burner: "Brenner p\u00e5", boiler_starting: "Tenning", boiler_waiting: "Venter", hp_cooling: "Kj\u00f8ling", hp_defrost: "Avriming",
     section_space_heating: "Indikator for oppvarming", section_hot_water: "Indikator for varmtvann", section_flow_temperature: "Turtemperatur", section_heat_output: "Varmeeffekt", section_cop: "Effektfaktor (COP)", section_outdoor_temperature: "Utetemperatur",
+    section_cooling: "Indikator for kj\u00f8ling", section_cooling_power: "Effekt ved kj\u00f8ling", section_cooling_output: "Kj\u00f8leeffekt", section_hot_water_power: "Effekt for varmtvann", section_hot_water_output: "Varmeeffekt for varmtvann",
     section_return_temperature: "Returtemperatur", section_water_flow: "Vannmengde", section_compressor: "Kompressor", hp_delta: "Delta", section_fan_speed: "Viftehastighet",
     hp_flow_return: "Tur og retur", no_hot_water: "Ingen varmtvannsbereder", underfloor_heating: "Gulvvarme i stedet for radiatorer",
     type_printer_3d: "3D-skriver", section_nozzle_temperature: "Dysetemperatur", section_nozzle_target: "M\u00e5ltemperatur for dysen",
@@ -1346,6 +1356,7 @@ const T = {
     type_water_heater: "Varmtvandsbeholder", type_boiler: "Kedel", type_heat_pump: "Varmepumpe",
     boiler_space_heating: "Opvarmning", boiler_hot_water: "Varmt vand", boiler_burner: "Br\u00e6nder t\u00e6ndt", boiler_starting: "T\u00e6nding", boiler_waiting: "Venter", hp_cooling: "K\u00f8ling", hp_defrost: "Afrimning",
     section_space_heating: "Indikator for opvarmning", section_hot_water: "Indikator for varmt vand", section_flow_temperature: "Freml\u00f8bstemperatur", section_heat_output: "Varmeydelse", section_cop: "Effektfaktor (COP)", section_outdoor_temperature: "Udetemperatur",
+    section_cooling: "Indikator for k\u00f8ling", section_cooling_power: "Effekt ved k\u00f8ling", section_cooling_output: "K\u00f8leydelse", section_hot_water_power: "Effekt til varmt vand", section_hot_water_output: "Varmeydelse til varmt vand",
     section_return_temperature: "Returtemperatur", section_water_flow: "Vandflow", section_compressor: "Kompressor", hp_delta: "Delta", section_fan_speed: "Ventilatorhastighed",
     hp_flow_return: "Frem og retur", no_hot_water: "Ingen varmtvandsbeholder", underfloor_heating: "Gulvvarme i stedet for radiatorer",
     type_printer_3d: "3D-printer", section_nozzle_temperature: "Dysetemperatur", section_nozzle_target: "M\u00e5ltemperatur for dysen",
@@ -1469,6 +1480,7 @@ const T = {
     type_water_heater: "Podgrzewacz wody", type_boiler: "Kocio\u0142", type_heat_pump: "Pompa ciep\u0142a",
     boiler_space_heating: "Ogrzewanie", boiler_hot_water: "Ciep\u0142a woda", boiler_burner: "Palnik w\u0142\u0105czony", boiler_starting: "Zap\u0142on", boiler_waiting: "Oczekiwanie", hp_cooling: "Ch\u0142odzenie", hp_defrost: "Odszranianie",
     section_space_heating: "Wska\u017anik ogrzewania", section_hot_water: "Wska\u017anik ciep\u0142ej wody", section_flow_temperature: "Temperatura zasilania", section_heat_output: "Moc grzewcza", section_cop: "Wsp\u00f3\u0142czynnik efektywno\u015bci (COP)", section_outdoor_temperature: "Temperatura zewn\u0119trzna",
+    section_cooling: "Wska\u017anik ch\u0142odzenia", section_cooling_power: "Moc przy ch\u0142odzeniu", section_cooling_output: "Moc ch\u0142odnicza", section_hot_water_power: "Moc na ciep\u0142\u0105 wod\u0119", section_hot_water_output: "Moc grzewcza na ciep\u0142\u0105 wod\u0119",
     section_return_temperature: "Temperatura powrotu", section_water_flow: "Przep\u0142yw wody", section_compressor: "Spr\u0119\u017carka", hp_delta: "Delta", section_fan_speed: "Pr\u0119dko\u015b\u0107 wentylatora",
     hp_flow_return: "Zasilanie i powr\u00f3t", no_hot_water: "Bez zasobnika CWU", underfloor_heating: "Ogrzewanie pod\u0142ogowe zamiast grzejnik\u00f3w",
     type_printer_3d: "Drukarka 3D", section_nozzle_temperature: "Temperatura dyszy", section_nozzle_target: "Temperatura docelowa dyszy",
@@ -1592,6 +1604,7 @@ const T = {
     type_water_heater: "\u70ed\u6c34\u5668", type_boiler: "\u9505\u7089", type_heat_pump: "\u70ed\u6cf5",
     boiler_space_heating: "\u4f9b\u6696", boiler_hot_water: "\u70ed\u6c34", boiler_burner: "\u71c3\u70e7\u5668\u5df2\u70b9\u706b", boiler_starting: "\u70b9\u706b\u4e2d", boiler_waiting: "\u7b49\u5f85\u4e2d", hp_cooling: "\u5236\u51b7", hp_defrost: "\u9664\u971c",
     section_space_heating: "\u4f9b\u6696\u6307\u793a", section_hot_water: "\u70ed\u6c34\u6307\u793a", section_flow_temperature: "\u4f9b\u6c34\u6e29\u5ea6", section_heat_output: "\u5236\u70ed\u91cf", section_cop: "\u80fd\u6548\u6bd4 (COP)", section_outdoor_temperature: "\u5ba4\u5916\u6e29\u5ea6",
+    section_cooling: "\u5236\u51b7\u6307\u793a", section_cooling_power: "\u5236\u51b7\u529f\u7387", section_cooling_output: "\u5236\u51b7\u91cf", section_hot_water_power: "\u70ed\u6c34\u529f\u7387", section_hot_water_output: "\u70ed\u6c34\u5236\u70ed\u91cf",
     section_return_temperature: "\u56de\u6c34\u6e29\u5ea6", section_water_flow: "\u6c34\u6d41\u91cf", section_compressor: "\u538b\u7f29\u673a", hp_delta: "\u6e29\u5dee", section_fan_speed: "\u98ce\u673a\u8f6c\u901f",
     hp_flow_return: "\u4f9b\u6c34\u4e0e\u56de\u6c34", no_hot_water: "\u65e0\u70ed\u6c34\u6c34\u7bb1", underfloor_heating: "\u5730\u6696\u4ee3\u66ff\u6563\u70ed\u5668",
     type_printer_3d: "3D \u6253\u5370\u673a", section_nozzle_temperature: "\u55b7\u5634\u6e29\u5ea6", section_nozzle_target: "\u55b7\u5634\u76ee\u6807\u6e29\u5ea6",
@@ -1715,6 +1728,7 @@ const T = {
     type_water_heater: "Oh\u0159\u00edva\u010d vody", type_boiler: "Kotel", type_heat_pump: "Tepeln\u00e9 \u010derpadlo",
     boiler_space_heating: "Topen\u00ed", boiler_hot_water: "Tepl\u00e1 voda", boiler_burner: "Ho\u0159\u00e1k zapnut", boiler_starting: "Zapalov\u00e1n\u00ed", boiler_waiting: "\u010cek\u00e1n\u00ed", hp_cooling: "Chlazen\u00ed", hp_defrost: "Odmrazov\u00e1n\u00ed",
     section_space_heating: "Indik\u00e1tor topen\u00ed", section_hot_water: "Indik\u00e1tor tepl\u00e9 vody", section_flow_temperature: "Teplota topn\u00e9 vody", section_heat_output: "Tepeln\u00fd v\u00fdkon", section_cop: "Topn\u00fd faktor (COP)", section_outdoor_temperature: "Venkovn\u00ed teplota",
+    section_cooling: "Indik\u00e1tor chlazen\u00ed", section_cooling_power: "P\u0159\u00edkon p\u0159i chlazen\u00ed", section_cooling_output: "Chladic\u00ed v\u00fdkon", section_hot_water_power: "P\u0159\u00edkon pro teplou vodu", section_hot_water_output: "Tepeln\u00fd v\u00fdkon pro teplou vodu",
     section_return_temperature: "Teplota zp\u00e1te\u010dky", section_water_flow: "Pr\u016ftok vody", section_compressor: "Kompresor", hp_delta: "Delta", section_fan_speed: "Ot\u00e1\u010dky ventil\u00e1toru",
     hp_flow_return: "P\u0159\u00edvod a zp\u00e1te\u010dka", no_hot_water: "Bez z\u00e1sobn\u00edku tepl\u00e9 vody", underfloor_heating: "Podlahov\u00e9 vyt\u00e1p\u011bn\u00ed m\u00edsto radi\u00e1tor\u016f",
     type_printer_3d: "3D tisk\u00e1rna", section_nozzle_temperature: "Teplota trysky", section_nozzle_target: "C\u00edlov\u00e1 teplota trysky",
@@ -1953,6 +1967,21 @@ function heatPumpModeOf(raw, attrs, stateMap, modeEntity) {
   const m = boilerModeOf(s, null);
   return HEAT_PUMP_MODES.includes(m) ? m : "";
 }
+
+// What a heat pump's valve says. HeishaMon reads its 2-way valve Heating or
+// Cooling and its 3-way valve Room or Tank: a position, which names the mode
+// the water is going to, whatever field the valve was put in. Room names
+// nothing, since it is the heating or the cooling, whichever the other valve
+// says.
+function hpValveMode(raw) {
+  if (raw === undefined || raw === null) return "";
+  if (/\btank\b/.test(stripAccents(String(raw)).toLowerCase())) return "hot_water";
+  const mode = heatPumpModeOf(raw, {}, null, false);
+  return ["space_heating", "hot_water", "cooling"].includes(mode) ? mode : "";
+}
+
+// A contact that is on, in the words indicators use.
+const HP_ON_WORDS = ["on", "true", "yes", "heating", "active"];
 
 // A water_heater entity's state is its operation mode. Home Assistant already
 // translates those, so its label wins unless the card's language is pinned.
@@ -2728,13 +2757,21 @@ const TYPE_AUTO_PATTERNS = {
     // the Aquarea integrations call it.
     return_temperature_entity: /^(?!.*(target|setpoint|fixed)).*(return|inlet|ruck|rueck|retour|retorno|ritorno|retur).*temp/i,
     outdoor_temperature_entity: /outdoor|outside|exterieur|aussen/i,
-    // A flow rate, never the flow temperature.
-    water_flow_entity: /^(?!.*temp).*(pump.?flow|water.?flow|flow.?rate|debit|caudal|durchfluss|portata)/i,
+    // A flow rate, never the flow temperature, nor HeishaMon's flow rate mode.
+    water_flow_entity: /^(?!.*(temp|mode)).*(pump.?flow|water.?flow|flow.?rate|debit|caudal|durchfluss|portata)/i,
     compressor_entity: /(compressor|compresseur|kompressor|compresor)(?!.*(power|current|energy|hours|starts|count))/i,
     fan_speed_entity: /fan.?\d?.?(motor)?.?(speed|rpm)|ventilateur.*vitesse|luefter.?drehzahl/i,
-    heat_output_entity: /^(?!.*lifetime).*heat.?(output|produced)/i,
+    heat_output_entity: /^(?!.*lifetime).*heat.?(power.?)?(output|produc)/i,
     cop_entity: /(^|[._])cop$/i,
-    power_entity: /^(?!.*lifetime).*(power.?input|_power$|power_w$|watt)/i,
+    power_entity: /^(?!.*lifetime).*(power.?input|heat.?power.?consum|_power$|power_w$|watt)/i,
+    // HeishaMon: the valves, and what each circuit draws and makes.
+    hot_water_entity: /3.?way.?valve|three.?way/i,
+    heating_entity: /2.?way.?valve|two.?way/i,
+    cooling_entity: /2.?way.?valve|two.?way/i,
+    cooling_power_entity: /cool\w*.?power.?consum/i,
+    cooling_output_entity: /cool\w*.?power.?produc/i,
+    hot_water_power_entity: /(dhw|hot.?water).?power.?consum/i,
+    hot_water_output_entity: /(dhw|hot.?water).?power.?produc/i,
   },
   boiler: {
     temperature_entity: /flow|supply|depart|temperature/i,
@@ -4144,9 +4181,12 @@ const ILLUSTRATION_CSS = {
         .hp-foot { position: absolute; top: 65px; width: 10px; height: 4px; border-radius: 0 0 2px 2px; background: #3b4048; }
         .hp-foot.f1 { left: 6px; }
         .hp-foot.f2 { right: 6px; }
-        .hp-pipe { position: absolute; top: 66px; width: 4px; height: 14px; background: #8a9096; }
-        .hp-pipe.tank { left: 22px; }
-        .hp-pipe.rad { left: 64px; }
+        /* Two pipes a circuit, the flow and the return. */
+        .hp-pipe { position: absolute; top: 66px; width: 3px; height: 14px; background: #8a9096; overflow: hidden; }
+        .hp-pipe.tank.flow { left: 20px; }
+        .hp-pipe.tank.ret { left: 25px; }
+        .hp-pipe.rad.flow { left: 62px; }
+        .hp-pipe.rad.ret { left: 67px; }
         .hp-tank {
           position: absolute; left: 12px; top: 78px; width: 24px; height: 28px; border-radius: 8px / 5px; overflow: hidden;
           background: linear-gradient(90deg, var(--ac-body-lo, #aeb2b5), var(--ac-body, var(--secondary-background-color, #d7d7d7)) 35%, var(--ac-body-hi, #e6e6e6) 55%, var(--ac-body-lo, #aeb2b5));
@@ -4163,24 +4203,25 @@ const ILLUSTRATION_CSS = {
         .hp-rad i:nth-child(3) { left: 14px; }
         .hp-rad i:nth-child(4) { left: 21px; }
         .hp-rad i:nth-child(5) { left: 28px; }
-        /* Underfloor heating as everyone draws it: a slab seen from above at an
-           angle, its four panels, and the heat rising off it. */
+        /* Underfloor heating as its symbol draws it (mdi:heating-coil): a pipe
+           snaking across a slab seen from above at an angle, and the heat
+           rising off it. The coil is drawn flat in a square and laid down at
+           the slab's angle, so its runs lean exactly like the slab's edges. */
         .hp-floor { position: absolute; left: 56px; right: 2px; top: 78px; height: 28px; }
         .hp-slab { position: absolute; left: -2px; right: -2px; bottom: 2px; height: 15px; }
-        .hp-slab b {
-          position: absolute; inset: 0;
-          background: var(--ac-body-lo, #9aa0a6);
-          clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%);
+        .hp-coil {
+          position: absolute; left: 50%; top: 50%; width: 30px; height: 30px; margin: -15px 0 0 -15px;
+          background: var(--ac-body-lo, #9aa0a6); transform: scaleY(0.357) rotate(45deg);
         }
-        /* Four panels, not four triangles: the lines run parallel to the tile's
-           own edges, which the angle of view leans over rather than crossing it
-           corner to corner. The clip cuts them at the middle of each edge. */
-        .hp-slab b::before, .hp-slab b::after {
-          content: ""; position: absolute; left: 50%; top: 50%; width: 44px; height: 1px;
-          margin: 0 0 0 -22px; background: rgba(0, 0, 0, 0.3);
+        /* Four runs and three bends, one bend a box: its two long borders are
+           two runs, and its rounded side the bend between them. */
+        .hp-coil b {
+          position: absolute; left: 3px; right: 3px; height: 10px; box-sizing: border-box;
+          border: 3px solid #6b737c; border-left: 0; border-radius: 0 5px 5px 0;
         }
-        .hp-slab b::before { transform: rotate(19.7deg); }
-        .hp-slab b::after { transform: rotate(-19.7deg); }
+        .hp-coil b:nth-child(1) { top: 2px; }
+        .hp-coil b:nth-child(2) { top: 9px; border-left: 3px solid #6b737c; border-right: 0; border-radius: 5px 0 0 5px; }
+        .hp-coil b:nth-child(3) { top: 16px; }
         .hp-floor i {
           position: absolute; bottom: 17px; width: 6px; height: 13px; opacity: 0;
           background: linear-gradient(180deg, rgba(255, 183, 77, 0), rgba(255, 138, 60, 0.95));
@@ -4197,25 +4238,46 @@ const ILLUSTRATION_CSS = {
           35% { opacity: 0.85; }
           100% { opacity: 0; transform: translateY(-9px) scaleY(1.1); }
         }
-        /* The pipe drops onto the near corner of the slab. */
-        .machine.underfloor .hp-pipe.rad { left: 56px; height: 31px; }
+        /* The pipes drop onto the near edge of the slab. */
+        .machine.underfloor .hp-pipe.rad.flow { left: 54px; height: 30px; }
+        .machine.underfloor .hp-pipe.rad.ret { left: 59px; height: 28px; }
         /* With no tank on the left, what is left stands in the middle. */
-        .machine.no-tank .hp-pipe.rad { left: 37px; }
+        .machine.no-tank .hp-pipe.rad.flow { left: 35px; }
+        .machine.no-tank .hp-pipe.rad.ret { left: 40px; }
         .machine.no-tank .hp-rad { left: 31px; right: 29px; }
         .machine.no-tank .hp-floor { left: 31px; right: 27px; }
-        .machine.no-tank.underfloor .hp-pipe.rad { left: 31px; }
+        .machine.no-tank.underfloor .hp-pipe.rad.flow { left: 29px; }
+        .machine.no-tank.underfloor .hp-pipe.rad.ret { left: 34px; }
         .machine.fan .hp-fan { animation: hp-spin 1.1s linear infinite; animation-delay: var(--anim-offset, 0s); }
         @keyframes hp-spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
         .machine.mode-space_heating .hp-lcd,
         .machine.mode-hot_water .hp-lcd { color: #ff7043; }
-        .machine.mode-space_heating .hp-pipe.rad { background: #ff7043; }
+        /* Out hot and back cooler while it heats, out cold and back warmer
+           while it cools: the two colours say which way the heat goes. */
+        .machine.mode-space_heating .hp-pipe.rad.flow { background: #ff7043; }
+        .machine.mode-space_heating .hp-pipe.rad.ret,
+        .machine.mode-hot_water .hp-pipe.tank.ret { background: #4fc3f7; }
         .machine.mode-space_heating .hp-rad i { background: linear-gradient(180deg, #ffab91, #ff7043); animation: hp-glow 1.6s ease-in-out infinite; animation-delay: var(--anim-offset, 0s); }
-        .machine.mode-hot_water .hp-pipe.tank { background: #ef5350; }
+        .machine.mode-hot_water .hp-pipe.tank.flow { background: #ef5350; }
         .machine.mode-hot_water .hp-tank i { height: 100%; animation: hp-glow 1.6s ease-in-out infinite; animation-delay: var(--anim-offset, 0s); }
-        .machine.mode-space_heating .hp-slab b { background: linear-gradient(180deg, #ffab91, #ff7043); }
-        .machine.mode-cooling .hp-pipe.rad { background: #29b6f6; }
+        .machine.mode-space_heating .hp-coil { background: #ffe0d6; }
+        .machine.mode-space_heating .hp-coil b { border-color: #ff7043; }
+        .machine.mode-cooling .hp-pipe.rad.flow { background: #29b6f6; }
+        .machine.mode-cooling .hp-pipe.rad.ret { background: #ff8a65; }
         .machine.mode-cooling .hp-rad i { background: linear-gradient(180deg, #b3e5fc, #29b6f6); }
-        .machine.mode-cooling .hp-slab b { background: linear-gradient(180deg, #b3e5fc, #29b6f6); }
+        .machine.mode-cooling .hp-coil { background: #d8f1fd; }
+        .machine.mode-cooling .hp-coil b { border-color: #29b6f6; }
+        /* The water itself: light dashes running down the flow pipe and back
+           up the return, on the circuit the pump is working. */
+        .machine.flowing.mode-hot_water .hp-pipe.tank::after,
+        .machine.flowing.mode-space_heating .hp-pipe.rad::after,
+        .machine.flowing.mode-cooling .hp-pipe.rad::after {
+          content: ""; position: absolute; inset: 0;
+          background: repeating-linear-gradient(180deg, rgba(255, 255, 255, 0.6) 0 2px, transparent 2px 6px);
+          animation: hp-flow 0.8s linear infinite; animation-delay: var(--anim-offset, 0s);
+        }
+        .machine.flowing .hp-pipe.ret::after { animation-direction: reverse; }
+        @keyframes hp-flow { from { background-position: 0 0; } to { background-position: 0 6px; } }
         @keyframes hp-glow { 0%, 100% { filter: brightness(0.9); } 50% { filter: brightness(1.15); } }
         .machine.mode-defrost .hp-frost { animation: hp-frost 2.4s ease-in-out infinite; animation-delay: var(--anim-offset, 0s); }
         .machine.mode-defrost .hp-fins { background: repeating-linear-gradient(180deg, #b3e5fc 0 1px, transparent 1px 4px); }
@@ -5037,23 +5099,27 @@ function illustrationHtml(type, ctx) {
     // The fan turns whenever the pump works; it stops to defrost, as the real
     // one does while it melts the ice off its coil.
     const fan = ["space_heating", "hot_water", "cooling", "running"].includes(mode) && !ctx.compressorOff;
+    // Water runs while the pump works a circuit: down the flow pipe and back
+    // up the return, to the tank for hot water and to the emitter otherwise.
+    const flowing = ["space_heating", "hot_water", "cooling"].includes(mode) && !ctx.compressorOff;
     const lcd = ctx.display ? `<div class="hp-lcd">${esc(ctx.display)}</div>` : "";
+    const pipes = (circuit) => `<div class="hp-pipe ${circuit} flow"></div><div class="hp-pipe ${circuit} ret"></div>`;
     // A pump that heats no domestic hot water has no tank to draw, and what
     // takes its heat is a radiator or the floor.
     const tank = ctx.noTank ? "" : `
-          <div class="hp-pipe tank"></div>
+          ${pipes("tank")}
           <div class="hp-tank"><i></i></div>`;
     const emitter = ctx.underfloor
-      ? `<div class="hp-floor"><i></i><i></i><i></i><div class="hp-slab"><b></b></div></div>`
+      ? `<div class="hp-floor"><i></i><i></i><i></i><div class="hp-slab"><div class="hp-coil"><b></b><b></b><b></b></div></div></div>`
       : `<div class="hp-rad"><i></i><i></i><i></i><i></i><i></i></div>`;
     return `
-        <div class="machine ${cls} mode-${mode} ${fan ? "fan" : ""} ${ctx.noTank ? "no-tank" : ""} ${ctx.underfloor ? "underfloor" : ""}">
+        <div class="machine ${cls} mode-${mode} ${fan ? "fan" : ""} ${flowing ? "flowing" : ""} ${ctx.noTank ? "no-tank" : ""} ${ctx.underfloor ? "underfloor" : ""}">
           <div class="hp-unit">
             <div class="hp-grille"><div class="hp-fan"></div><div class="hp-hub"></div><div class="hp-guard"></div><div class="hp-frost"></div></div>
             <div class="hp-side">${lcd}<div class="hp-fins"></div></div>
           </div>
           <div class="hp-foot f1"></div><div class="hp-foot f2"></div>${tank}
-          <div class="hp-pipe rad"></div>
+          ${pipes("rad")}
           ${emitter}
         </div>`;
   }
@@ -6290,18 +6356,49 @@ class ApplianceCard extends HTMLElement {
     // entity does. A climate or water_heater entity that says nothing about
     // what the pump does still shows its mode, without pretending it runs.
     let hpMode = "";
+    let hpCircuit = "";
     // A pump whose compressor is idle is only pushing water around, so its fan
     // has no reason to turn.
     let compressorOff = false;
     if (cap.heatPump) {
       const modeEntity = /^(climate|water_heater)\./.test(cfg.state_entity || "");
-      if (cfg.hot_water_entity && isOn(cfg.hot_water_entity)) hpMode = "hot_water";
-      else if (cfg.heating_entity && isOn(cfg.heating_entity)) hpMode = "space_heating";
+      // The compressor answers the one question a flow temperature cannot: is
+      // the machine making heat or cold, or only pushing water around. A
+      // frequency in hertz or a contact, and unknown when it says nothing.
+      const compSt = cfg.compressor_entity ? stateObj(hass, cfg.compressor_entity) : null;
+      const compKnown = !!compSt && !["unknown", "unavailable"].includes(compSt.state);
+      const compHz = compKnown ? numericState(hass, cfg.compressor_entity) : null;
+      const compOn = compKnown && (compHz !== null ? compHz > 0 : ["on", "true", "running"].includes(String(compSt.state).toLowerCase()));
+      compressorOff = compKnown && !compOn;
+      // The indicators (issue #17). A contact says its own mode when it is on;
+      // a valve says in words where the water goes, whichever field it sits
+      // in, so a 2-way valve put in the heating field still says Cooling in
+      // summer. The tank comes first, since the 3-way valve takes all the water
+      // for it, then cooling, then heating, which share the 2-way valve.
+      const said = new Set();
+      for (const [field, own] of [["hot_water_entity", "hot_water"], ["cooling_entity", "cooling"], ["heating_entity", "space_heating"]]) {
+        const os = cfg[field] ? stateObj(hass, cfg[field]) : null;
+        if (!os) continue;
+        const valve = hpValveMode(os.state);
+        // A tank "heating" is a tank taking heat: in the hot water field that
+        // word is the field's own mode, as it always was.
+        if (valve && !(own === "hot_water" && valve === "space_heating")) said.add(valve);
+        else if (HP_ON_WORDS.includes(String(os.state).trim().toLowerCase())) said.add(own);
+      }
+      const indicated = ["hot_water", "cooling", "space_heating"].find((m) => said.has(m)) || "";
+      // A valve is a position, not a sign of work: with the compressor at
+      // rest, the pump is on standby whichever way the valves point.
+      if (indicated) hpMode = compressorOff ? "idle" : indicated;
       else if (!powerDerived && st) hpMode = heatPumpModeOf(rawState, st.attributes, cfg.state_map, modeEntity);
       if (!hpMode && (powerDerived || !modeEntity)) {
         if (isActiveState(norm)) hpMode = "running";
         else if (norm === "idle" || norm === "done") hpMode = "idle";
       }
+      // And a compressor at work is a pump at work, whatever the state says.
+      if (hpMode === "idle" && compOn) hpMode = "running";
+      // The readings follow the circuit the valves point to, even at rest: on
+      // a summer night the lines are the cooling ones, at zero.
+      hpCircuit = indicated || hpMode;
       if (hpMode) {
         const key = { space_heating: "boiler_space_heating", hot_water: "boiler_hot_water", cooling: "hp_cooling",
           defrost: "hp_defrost", idle: "standby", running: "running" }[hpMode];
@@ -6362,45 +6459,49 @@ class ApplianceCard extends HTMLElement {
       }
       hpLine(cfg.water_flow_entity, "water_flow", "mdi:water-pump", t(hass, "section_water_flow"));
       hpTemp(cfg.outdoor_temperature_entity, "outdoor_temp", "mdi:sun-thermometer-outline", t(hass, "section_outdoor_temperature"));
-      hpLine(cfg.power_entity, "power", cfg.power_icon || "mdi:flash", t(hass, "power"));
-      hpLine(cfg.heat_output_entity, "heat_output", "mdi:heat-wave", t(hass, "section_heat_output"));
+      // HeishaMon measures each circuit apart: what the pump draws and makes
+      // while it heats, while it cools and for the tank. The card reads the
+      // pair of the circuit in use, and the heating pair when there is none.
+      const cooling = hpCircuit === "cooling";
+      const tankCircuit = hpCircuit === "hot_water";
+      const powerId = (cooling && cfg.cooling_power_entity) || (tankCircuit && cfg.hot_water_power_entity) || cfg.power_entity;
+      const outputId = (cooling && cfg.cooling_output_entity) || (tankCircuit && cfg.hot_water_output_entity) || cfg.heat_output_entity;
+      hpLine(powerId, "power", cfg.power_icon || "mdi:flash", t(hass, "power"));
+      hpLine(outputId, "heat_output", cooling ? "mdi:snowflake" : "mdi:heat-wave",
+        t(hass, cooling ? "section_cooling_output" : "section_heat_output"));
+      const pw = powerId ? numericState(hass, powerId) : null;
       if (cfg.cop_entity) {
         hpLine(cfg.cop_entity, "cop", "mdi:gauge", "COP");
-      } else if (cfg.heat_output_entity && watts !== null) {
-        // No COP entity: heat out over power in, once both are in watts.
+      } else if (outputId && pw !== null) {
+        // No COP entity: what comes out over power in, once both are in
+        // watts. Cooling, the same ratio is called an EER.
         const kw = (v, id) => {
           const u = String(unitOf(hass, id) || "").toLowerCase();
           return u === "w" ? v / 1000 : u === "kw" ? v : NaN;
         };
-        const heat = numericState(hass, cfg.heat_output_entity);
-        const cop = heat === null ? NaN : kw(heat, cfg.heat_output_entity) / kw(watts, cfg.power_entity);
+        const made = numericState(hass, outputId);
+        const cop = made === null ? NaN : kw(made, outputId) / kw(pw, powerId);
         // At rest the ratio is infinite, and a meter below zero gives nonsense.
         if (Number.isFinite(cop) && cop > 0) {
           extraLines.push({
             key: "cop",
             icon: "mdi:gauge",
-            label: "COP",
+            label: cooling ? "EER" : "COP",
             value: new Intl.NumberFormat(lang(hass), { minimumFractionDigits: 1, maximumFractionDigits: 1 }).format(cop),
           });
         }
       }
 
-      // The compressor answers the one question a flow temperature cannot: is
-      // the machine making heat, or only pushing water around. A frequency in
-      // hertz reads as it comes, a contact reads in words, and either way a
-      // compressor at rest stops the fan on the drawing.
-      const compSt = cfg.compressor_entity ? stateObj(hass, cfg.compressor_entity) : null;
-      if (compSt && !["unknown", "unavailable"].includes(compSt.state)) {
-        const hz = numericState(hass, cfg.compressor_entity);
-        const on = hz !== null ? hz > 0 : ["on", "true", "running"].includes(String(compSt.state).toLowerCase());
-        compressorOff = !on;
+      // A frequency in hertz reads as it comes, a contact reads in words, and
+      // either way a compressor at rest stops the fan on the drawing.
+      if (compKnown) {
         extraLines.push({
           key: "compressor",
           icon: "mdi:sine-wave",
           label: t(hass, "section_compressor"),
-          value: keepTogether(hz !== null
+          value: keepTogether(compHz !== null
             ? formatInfoValue(compSt, hass, null, cfg, cfg.compressor_entity)
-            : t(hass, on ? "running" : "off_short")),
+            : t(hass, compOn ? "running" : "off_short")),
           entity: cfg.compressor_entity,
         });
       }
@@ -6986,6 +7087,7 @@ const SECTIONS = [
   // Boiler
   { field: "heating_entity", types: ["boiler", "heat_pump"], labelKey: "section_space_heating", includeDomains: ["binary_sensor", "sensor", "switch", "input_boolean"] },
   { field: "hot_water_entity", types: ["boiler", "heat_pump"], labelKey: "section_hot_water", includeDomains: ["binary_sensor", "sensor", "switch", "input_boolean"] },
+  { field: "cooling_entity", types: ["heat_pump"], labelKey: "section_cooling", includeDomains: ["binary_sensor", "sensor", "switch", "input_boolean"] },
   { field: "temperature_entity", types: ["boiler", "heat_pump"], labelKey: "section_flow_temperature", includeDomains: ["sensor", "number", "input_number"], extra: (c, hass) =>
       c._row("temperature_decimals", "temperature_decimals", {
         type: "select",
@@ -7004,6 +7106,12 @@ const SECTIONS = [
   { field: "fan_speed_entity", types: ["heat_pump"], labelKey: "section_fan_speed", includeDomains: ["sensor", "number"] },
   { field: "heat_output_entity", types: ["heat_pump"], labelKey: "section_heat_output", includeDomains: ["sensor"] },
   { field: "cop_entity", types: ["heat_pump"], labelKey: "section_cop", includeDomains: ["sensor", "input_number"] },
+  // What the pump draws and makes while it cools and for the tank, for the
+  // integrations that measure each circuit apart.
+  { field: "cooling_power_entity", types: ["heat_pump"], labelKey: "section_cooling_power", includeDomains: ["sensor"] },
+  { field: "cooling_output_entity", types: ["heat_pump"], labelKey: "section_cooling_output", includeDomains: ["sensor"] },
+  { field: "hot_water_power_entity", types: ["heat_pump"], labelKey: "section_hot_water_power", includeDomains: ["sensor"] },
+  { field: "hot_water_output_entity", types: ["heat_pump"], labelKey: "section_hot_water_output", includeDomains: ["sensor"] },
 
   // 3D printer. A target may be a sensor or a number, as the integrations
   // put it; Creality keeps it as an attribute of the reading instead.

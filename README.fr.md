@@ -98,15 +98,17 @@ Par type :
 | `temperature_decimals` | frigo, bouilloire, chauffe-eau, chaudière, pompe à chaleur | `0` (défaut, au degré), `1` (au dixième) ou `auto` (la précision d'affichage de l'entité), sur l'écran de l'appareil et dans la liste. |
 | `temperature_entity` | bouilloire, chauffe-eau, chaudière, pompe à chaleur | Température de l'eau (de départ sur une chaudière ou une pompe à chaleur), affichée sur l'appareil et dans la liste. Une entité `water_heater` donne la sienne toute seule. Sur un chauffe-eau, l'eau chaude remplit la cuve de 15 à 65 °C. |
 | `state_entity` en `water_heater` | chauffe-eau | Son état est le mode (*Éco*, *Performance*…), affiché tel que Home Assistant le traduit. La chauffe vient alors de `heating_entity`, d'une prise ou de l'attribut `status` de MELCloud. |
-| `heating_entity` / `hot_water_entity` | chaudière, pompe à chaleur | Indicateurs chauffage et eau chaude ; allumés tous les deux, l'eau chaude l'emporte. Sans eux, le mode vient de `state_entity` : codes `-H`, `=H`, `0H` (Nefit, Bosch) ou leur forme numérique `200`, `201`, `203`, le démarrage (`0U`, `0C`, `0L` ou `270`, `283`, `284`) se lisant *Allumage* et les attentes du brûleur (`0A`, `0Y`, `0E` ou `202`, `204`, `265`, `305`, `353`) *En attente* ; `CH`, `HW`, `No` ; ceux d'InComfort, ebusd, myVAILLANT et MELCloud ; ou *chauffage* et *eau chaude*. Indicateurs éteints mais flamme allumée, elle affiche *Brûleur allumé*. `state_map` accepte `space_heating`, `hot_water`, `starting`, `waiting` et `idle`. Avec seulement le brûleur en `power_entity`, la flamme s'allume sans dire pour quoi. |
-| `state_entity` sur une pompe à chaleur | pompe à chaleur | Ce que fait la pompe : le `hvac_action` d'une entité `climate` (chauffage, refroidissement, dégivrage, repos), l'attribut `status` de MELCloud (`heat_water`, `heat_zones`, `cool`, `defrost`, `standby`, `legionella`) ou un capteur en toutes lettres (*chauffage*, *eau chaude*, *refroidissement*, *dégivrage*, en 14 langues). L'état d'une entité `climate` ou `water_heater` est le mode que vous avez choisi, affiché tel quel quand l'entité ne dit rien de ce que fait la pompe. `state_map` accepte `space_heating`, `hot_water`, `cooling`, `defrost` et `idle`. Le ventilateur de l'unité extérieure tourne quand elle travaille et s'arrête pour dégivrer ; le ballon ou le radiateur chauffe selon le mode. |
+| `heating_entity` / `hot_water_entity` | chaudière, pompe à chaleur | Indicateurs chauffage et eau chaude ; allumés tous les deux, l'eau chaude l'emporte. Une pompe à chaleur a aussi celui du rafraîchissement, plus bas. Sans eux, le mode vient de `state_entity` : codes `-H`, `=H`, `0H` (Nefit, Bosch) ou leur forme numérique `200`, `201`, `203`, le démarrage (`0U`, `0C`, `0L` ou `270`, `283`, `284`) se lisant *Allumage* et les attentes du brûleur (`0A`, `0Y`, `0E` ou `202`, `204`, `265`, `305`, `353`) *En attente* ; `CH`, `HW`, `No` ; ceux d'InComfort, ebusd, myVAILLANT et MELCloud ; ou *chauffage* et *eau chaude*. Indicateurs éteints mais flamme allumée, elle affiche *Brûleur allumé*. `state_map` accepte `space_heating`, `hot_water`, `starting`, `waiting` et `idle`. Avec seulement le brûleur en `power_entity`, la flamme s'allume sans dire pour quoi. |
+| `state_entity` sur une pompe à chaleur | pompe à chaleur | Ce que fait la pompe : le `hvac_action` d'une entité `climate` (chauffage, refroidissement, dégivrage, repos), l'attribut `status` de MELCloud (`heat_water`, `heat_zones`, `cool`, `defrost`, `standby`, `legionella`) ou un capteur en toutes lettres (*chauffage*, *eau chaude*, *refroidissement*, *dégivrage*, en 14 langues). L'état d'une entité `climate` ou `water_heater` est le mode que vous avez choisi, affiché tel quel quand l'entité ne dit rien de ce que fait la pompe. `state_map` accepte `space_heating`, `hot_water`, `cooling`, `defrost` et `idle`. Le ventilateur de l'unité extérieure tourne quand elle travaille et s'arrête pour dégivrer ; le ballon ou le radiateur chauffe selon le mode, et l'eau descend par le tuyau de départ et remonte par le retour, partie chaude et revenue plus froide quand la pompe chauffe, l'inverse quand elle rafraîchit. |
+| `cooling_entity` et les vannes | pompe à chaleur | Un indicateur de rafraîchissement, à côté de ceux du chauffage et de l'eau chaude. Un indicateur peut aussi être une vanne : la vanne 2 voies de HeishaMon lit *Heating* ou *Cooling* et sa vanne 3 voies *Room* ou *Tank*, quel que soit le champ où on les met. Le ballon passe d'abord, puis le rafraîchissement, puis le chauffage. |
 | `outdoor_temperature_entity` / `heat_output_entity` / `cop_entity` | pompe à chaleur | Température extérieure, chaleur produite et COP, dans la liste. Sans entité COP, la card divise la chaleur produite par `power_entity` dès que les deux sont en W ou en kW. |
+| `cooling_power_entity` / `cooling_output_entity` / `hot_water_power_entity` / `hot_water_output_entity` | pompe à chaleur | Ce que la pompe consomme et produit en rafraîchissement et pour le ballon, pour les intégrations qui mesurent chaque circuit à part (HeishaMon). La carte lit la paire du circuit qu'indiquent les indicateurs, même à l'arrêt, et celle du chauffage sinon. En rafraîchissement, la ligne devient *Froid produit* et le rapport calculé *EER*. |
 | `return_temperature_entity` | pompe à chaleur | L'eau qui revient. Départ et retour partagent alors une seule ligne, *42 °C → 36 °C*, et la carte calcule l'écart toute seule comme elle calcule le COP, toujours avec un dixième puisqu'une pompe à chaleur travaille sur quelques degrés. Pris comme une distance, donc positif même quand la pompe rafraîchit. |
 | `water_flow_entity` | pompe à chaleur | Débit d'eau, dans l'unité de l'entité. |
-| `compressor_entity` | pompe à chaleur | Fréquence en hertz, ou un contact tout ou rien lu *En marche* et *Éteint*. Un compresseur à l'arrêt arrête le ventilateur du dessin : la pompe ne fait plus que brasser de l'eau. |
+| `compressor_entity` | pompe à chaleur | Fréquence en hertz, ou un contact tout ou rien lu *En marche* et *Éteint*. Un compresseur à l'arrêt arrête le ventilateur du dessin et met les indicateurs *En veille* : la pompe ne fait plus que brasser de l'eau, quel que soit le sens des vannes. En marche, il fait passer un état en veille à *En marche*. |
 | `fan_speed_entity` | pompe à chaleur | Vitesse du ventilateur, dans l'unité de l'entité. |
 | `no_hot_water` | pompe à chaleur | `true` retire le ballon du dessin, pour une installation qui ne fait pas d'eau chaude sanitaire. Ce qui reste se recentre. |
-| `underfloor_heating` | pompe à chaleur | `true` dessine un plancher chauffant à la place du radiateur, ce qui est le cas de la plupart des installations air-eau : la dalle vue de biais, ses quatre panneaux, et la chaleur qui s'en échappe quand elle chauffe. Elle passe au bleu quand la pompe rafraîchit. |
+| `underfloor_heating` | pompe à chaleur | `true` dessine un plancher chauffant à la place du radiateur, ce qui est le cas de la plupart des installations air-eau : la dalle vue de biais avec son tuyau en serpentin, et la chaleur qui s'en échappe quand elle chauffe. Elle passe au bleu quand la pompe rafraîchit. |
 | `state_entity` sur une imprimante 3D | imprimante 3D | L'état de l'imprimante, tel que chaque intégration l'envoie : `current_state` (OctoPrint), le capteur de l'imprimante (PrusaLink), `print_status` (Bambu Lab, Creality), `current_print_state` (Moonraker, Klipper), `current_status` (Elegoo), `machine_status` (Flashforge), `job_state` (Anycubic). Il se lit *Impression*, *Préparation*, *Préchauffage*, *En pause*, *Intervention requise*, *Terminé*, *Annulée*, *Échec*, *Erreur*, *En veille* ou *Hors ligne*. La plupart des intégrations disent *impression* dès que le code de départ chauffe : tant qu'une résistance reste à plus de 5 °C sous sa consigne et que la pièce n'a pas commencé, la card affiche *Préchauffage* et la barre devient une jauge de chauffe. Hors d'une impression, le temps restant est masqué, car l'imprimante garde celui du dernier travail. |
 | `phase_entity` | imprimante 3D | Ce que fait l'impression : `current_stage` de Bambu Lab, `print_status` d'Elegoo. Il se lit *Préchauffage*, *Nivellement du plateau*, *Changement de filament*, *Refroidissement*, *Calibrage* ou *Mise à l'origine* pendant une impression. |
 | `program_entity` | imprimante 3D | Le fichier imprimé, sans son dossier ni l'extension du trancheur. |
@@ -178,6 +180,26 @@ temperature_entity: sensor.heat_pump_flow_temperature
 outdoor_temperature_entity: sensor.heat_pump_outdoor_temperature
 power_entity: sensor.heat_pump_power
 heat_output_entity: sensor.heat_pump_heat_output
+```
+
+Une Panasonic Aquarea sous HeishaMon, avec ses vannes et chaque circuit mesuré à part :
+
+```yaml
+type: custom:ha-appliance-card
+appliance_type: heat_pump
+state_entity: climate.aquarea_zone_1
+hot_water_entity: sensor.aquarea_3_way_valve
+heating_entity: sensor.aquarea_2_way_valve
+cooling_entity: sensor.aquarea_2_way_valve
+compressor_entity: sensor.aquarea_compressor_frequency
+water_flow_entity: sensor.aquarea_pump_flow
+power_entity: sensor.aquarea_heat_power_consumed
+heat_output_entity: sensor.aquarea_heat_power_produced
+cooling_power_entity: sensor.aquarea_thermal_cooling_power_consumption
+cooling_output_entity: sensor.aquarea_thermal_cooling_power_production
+hot_water_power_entity: sensor.aquarea_dhw_power_consumed
+hot_water_output_entity: sensor.aquarea_dhw_power_produced
+underfloor_heating: true
 ```
 
 ```yaml
