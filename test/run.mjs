@@ -4029,6 +4029,131 @@ for (const [type, ids] of [
   if (type === 'washer') check('suggestion : sans en faire une lavante-sechante', sug.washer_dryer, undefined);
 }
 
+// == HomeWhiz: Beko, Grundig, Arcelik, Bauknecht (issue #18, second round) ======
+// HomeWhiz hands over the firmware's own keys, lowercased, for the state and
+// for the step alike. Read as words they said nothing, and the card showed
+// "device state running" in grey all cycle long. Every value below is one of
+// its appliance configurations, read in the integration's test fixtures.
+
+const HW = { appliance_type: 'washer', state_entity: 'sensor.hw_state', phase_entity: 'sensor.hw_sub_state' };
+const hw = (state, sub, extra = {}) => render({ ...HW, ...extra },
+  { 'sensor.hw_state': { state, attributes: {} }, 'sensor.hw_sub_state': { state: sub, attributes: {} } });
+const hwRun = (sub, extra) => hw('device_state_running', sub, extra);
+
+// The state. "On" is a machine switched on and waiting for a programme.
+check('homewhiz : allumee, en veille', stateLine(hw('device_state_on', 'unknown')), 'Idle');
+check('homewhiz : allumee, le tambour ne tourne pas', hasCls(hw('device_state_on', 'unknown'), 'spinning'), false);
+check('homewhiz : eteinte', stateLine(hw('device_state_off', 'unknown')), 'Idle');
+check('homewhiz : dans ses reglages', stateLine(hw('device_state_settings', 'unknown')), 'Idle');
+check('homewhiz : porte ouverte', stateLine(hw('device_state_door_open', 'unknown')), 'Idle');
+check('homewhiz : en marche', stateLine(hw('device_state_running', 'unknown')), 'Running');
+check('homewhiz : en marche, le tambour tourne', hasCls(hw('device_state_running', 'unknown'), 'spinning'), true);
+check('homewhiz : l\'annulation vidange encore', stateLine(hw('device_state_cancelling', 'unknown')), 'Running');
+check('homewhiz : en pause', stateLine(hw('device_state_paused', 'unknown')), 'Paused');
+check('homewhiz : un depart differe', stateLine(hw('device_state_time_delay_active', 'unknown')), 'Delayed start');
+// A countdown on hold will not start by itself.
+check('homewhiz : un depart differe en pause', stateLine(hw('device_state_time_delay_paused', 'unknown')), 'Paused');
+check('homewhiz : une table de cuisson qui cuit', stateLine(render({ appliance_type: 'cooktop', state_entity: 'sensor.hw_hob' },
+  { 'sensor.hw_hob': { state: 'device_state_cooking', attributes: {} } })), 'Running');
+check('homewhiz : en francais', stateLine(hw('device_state_paused', 'unknown', { language: 'fr' })), 'En pause');
+// state_map still says what the state is, and a key of the table's own object
+// is no HomeWhiz state.
+check('homewhiz : state_map passe devant',
+  stateLine(hw('device_state_on', 'unknown', { state_map: { device_state_on: 'done' } })), 'Finished');
+check('homewhiz : un etat nomme constructor reste tel quel',
+  stateLine(render({ appliance_type: 'washer', state_entity: 'sensor.hw_state' },
+    { 'sensor.hw_state': { state: 'constructor', attributes: {} } })), 'constructor');
+
+// The step, from the sub state, on a washer.
+check('homewhiz : le prelavage', stateLine(hwRun('washer_substate_prewash')), 'Pre-wash');
+check('homewhiz : le lavage', stateLine(hwRun('washer_substate_washing')), 'Washing');
+check('homewhiz : l\'arrivee d\'eau', stateLine(hwRun('washer_water_intake')), 'Filling');
+check('homewhiz : le rincage', stateLine(hwRun('washer_substate_rinsing')), 'Rinsing');
+// The softener goes in with the last rinse.
+check('homewhiz : l\'adoucissant est un rincage', stateLine(hwRun('washer_substate_softener')), 'Rinsing');
+check('homewhiz : l\'essorage', stateLine(hwRun('washer_substate_spin')), 'Spinning');
+check('homewhiz : l\'essorage s\'emballe', hasCls(hwRun('washer_substate_spin'), 'spin-cycle'), true);
+check('homewhiz : le sechage', stateLine(hwRun('washer_substate_drying')), 'Drying');
+check('homewhiz : l\'anti-froissage', stateLine(hwRun('washer_substate_remote_anticrease')), 'Anti-crease');
+// Analysing is the load, which its Spanish words say: "Analizando la carga".
+check('homewhiz : l\'analyse de la charge', stateLine(hwRun('washer_substate_analysing')), 'Weighing');
+check('homewhiz : l\'essorage en francais', stateLine(hwRun('washer_substate_spin', { language: 'fr' })), 'Essorage');
+// Its messages say more than steps. None of these is one.
+for (const sub of ['program_started', 'door_locked', 'locking_door', 'opening_door', 'add_laundry',
+  'remove_laundry', 'rinse_hold', 'time_delay_enabled', 'time_delay_paused', 'paused']) {
+  check(`homewhiz : ${sub} ne nomme pas d'etape`, stateLine(hwRun('washer_substate_' + sub)), 'Running');
+}
+// phase_map still names a value by hand, a step by its key or in its own words.
+check('homewhiz : phase_map nomme une etape',
+  stateLine(hwRun('washer_substate_program_started', { phase_map: { washer_substate_program_started: 'filling' } })), 'Filling');
+check('homewhiz : phase_map donne ses mots',
+  stateLine(hwRun('washer_substate_door_locked', { phase_map: { washer_substate_door_locked: 'Door locked' } })), 'Door locked');
+check('homewhiz : une etape a l\'arret ne dit rien', stateLine(hw('device_state_on', 'washer_substate_spin')), 'Idle');
+
+// A dryer, and a dryer's messages: every one says "dryer", which is no drying.
+const hwDryer = sub => render({ ...HW, appliance_type: 'dryer' },
+  { 'sensor.hw_state': { state: 'device_state_running', attributes: {} }, 'sensor.hw_sub_state': { state: sub, attributes: {} } });
+check('homewhiz seche-linge : le sechage', stateLine(hwDryer('dryer_message_drying')), 'Drying');
+check('homewhiz seche-linge : le refroidissement', stateLine(hwDryer('dryer_message_cooling')), 'Cooling');
+check('homewhiz seche-linge : l\'anti-froissage', stateLine(hwDryer('dryer_message_anti_creasing')), 'Anti-crease');
+for (const sub of ['hello', 'closing', 'child_lock', 'program_started', 'refreshing', 'drum_empty']) {
+  check(`homewhiz seche-linge : ${sub} ne nomme pas d'etape`, stateLine(hwDryer('dryer_message_' + sub)), 'Running');
+}
+
+// A dishwasher, whose drawing takes the step too.
+const hwDish = sub => render({ ...HW, appliance_type: 'dishwasher' },
+  { 'sensor.hw_state': { state: 'device_state_running', attributes: {} }, 'sensor.hw_sub_state': { state: sub, attributes: {} } });
+check('homewhiz lave-vaisselle : le lavage', stateLine(hwDish('dishwasher_message_washing')), 'Washing');
+check('homewhiz lave-vaisselle : le lavage dessine', hasCls(hwDish('dishwasher_message_washing'), 'phase-mainwash'), true);
+check('homewhiz lave-vaisselle : le rincage', stateLine(hwDish('dishwasher_message_rinsing')), 'Rinsing');
+check('homewhiz lave-vaisselle : le rincage dessine', hasCls(hwDish('dishwasher_message_rinsing'), 'phase-rinsing'), true);
+check('homewhiz lave-vaisselle : le sechage', stateLine(hwDish('dishwasher_message_drying')), 'Drying');
+check('homewhiz lave-vaisselle : le sechage dessine', hasCls(hwDish('dishwasher_message_drying'), 'phase-drying'), true);
+for (const sub of ['program_started', 'cancelling', 'program_sanitized']) {
+  check(`homewhiz lave-vaisselle : ${sub} ne nomme pas d'etape`, stateLine(hwDish('dishwasher_message_' + sub)), 'Running');
+}
+
+// A washer-dryer: the drum dries on the drying, and an anti-crease after it
+// keeps the heat rather than pouring the water back in.
+check('homewhiz lavante-sechante : le sechage seche',
+  hasCls(hwRun('washer_substate_drying', { washer_dryer: true }), 'drying'), true);
+check('homewhiz lavante-sechante : l\'essorage ne seche pas',
+  drum(hwRun('washer_substate_spin', { washer_dryer: true })), 'clothes');
+{
+  const c = build({ ...HW, washer_dryer: true }, { 'sensor.hw_state': { state: 'device_state_running', attributes: {} },
+    'sensor.hw_sub_state': { state: 'washer_substate_drying', attributes: {} } }).card;
+  check('homewhiz lavante-sechante : l\'anti-froissage garde le sechage', hasCls(rerender(c, {
+    'sensor.hw_state': { state: 'device_state_running', attributes: {} },
+    'sensor.hw_sub_state': { state: 'washer_substate_remote_anticrease', attributes: {} } }), 'drying'), true);
+}
+
+// The editor, on a HomeWhiz washer as its entities come: selects first, then
+// the sensors. It finds the sub state, and no start button, since the one entity
+// that says start is the start delay, a sensor and a number.
+{
+  const ids = ['select.hw_state', 'select.hw_programme', 'select.hw_temperature', 'select.hw_spin',
+    'sensor.hw_state', 'sensor.hw_programme', 'sensor.hw_sub_state', 'sensor.hw_duration', 'sensor.hw_remaining',
+    'sensor.hw_start_delay', 'sensor.hw_programme_end_time', 'sensor.hw_delay_start_time',
+    'number.hw_start_delay', 'switch.hw_steam', 'binary_sensor.hw_remote_control', 'binary_sensor.hw_door_is_open'];
+  const ed = new Editor();
+  ed.setConfig({ type: 'custom:ha-appliance-card', state_entity: 'sensor.hw_state' });
+  ed.hass = { ...HASS(Object.fromEntries(ids.map(id => [id, { state: 'x', attributes: {} }]))),
+    entities: Object.fromEntries(ids.map(id => [id, { device_id: 'hw' }])) };
+  const sug = ed.events.at(-1)?.detail?.config || {};
+  check('suggestion homewhiz : le sous-etat comme phase', sug.phase_entity, 'sensor.hw_sub_state');
+  check('suggestion homewhiz : pas le depart differe comme bouton', sug.start_entity, undefined);
+}
+// A sensor that says start is no button either, and a real button still is.
+{
+  const ids = ['sensor.lv_state', 'sensor.lv_program_start', 'number.lv_start_delay', 'button.lv_start'];
+  const ed = new Editor();
+  ed.setConfig({ type: 'custom:ha-appliance-card', appliance_type: 'washer', state_entity: 'sensor.lv_state' });
+  ed.hass = { ...HASS(Object.fromEntries(ids.map(id => [id, { state: 'x', attributes: {} }]))),
+    entities: Object.fromEntries(ids.map(id => [id, { device_id: 'lv' }])) };
+  const sug = ed.events.at(-1)?.detail?.config || {};
+  check('suggestion : le bouton, ni un capteur ni un delai', sug.start_entity, 'button.lv_start');
+}
+
 // == Pet feeder (issue: two feeders, two transports) =========================
 // A feeder is read like a fridge and not run like a washer: no cycle, no
 // programme, no door. What it did today and when it last served is the whole

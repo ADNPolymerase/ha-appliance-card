@@ -1,4 +1,4 @@
-const CARD_VERSION = "2.14.0";
+const CARD_VERSION = "2.14.1";
 
 console.info(
   "%c HA-APPLIANCE-CARD %c v" + CARD_VERSION + " ",
@@ -2158,11 +2158,27 @@ function mappedState(target) {
   return PHASE_STATE_TARGETS[target] || "unknown";
 }
 
+// HomeWhiz (Beko, Grundig, Arcelik, Bauknecht) hands over the keys of the
+// machine's own firmware, lowercased: DEVICE_STATE_RUNNING. Read as words they
+// say nothing, since no keyword can start inside a key, and they would mislead
+// if they could: "on" there is a machine switched on and waiting for a
+// programme, and a delay counting down is not running. A paused countdown will
+// not start by itself, so it is a pause rather than a delay. Cancelling drains
+// the water out, which the card counts as running, like an aborted cycle.
+const HOMEWHIZ_STATES = {
+  device_state_on: "idle", device_state_off: "idle", device_state_settings: "idle",
+  device_state_door_open: "idle",
+  device_state_running: "running", device_state_cooking: "running", device_state_cancelling: "running",
+  device_state_paused: "paused", device_state_time_delay_paused: "paused",
+  device_state_time_delay_active: "delayed",
+};
+
 function normalizeState(raw, stateMap) {
   if (raw === undefined || raw === null) return "unknown";
   const s = String(raw).trim();
   if (["unknown", "unavailable", "none", ""].includes(s.toLowerCase())) return "unknown";
   if (stateMap && Object.prototype.hasOwnProperty.call(stateMap, s)) return mappedState(stateMap[s]);
+  if (Object.prototype.hasOwnProperty.call(HOMEWHIZ_STATES, s)) return HOMEWHIZ_STATES[s];
   const flat = stripAccents(s);
   for (const norm of Object.keys(STATE_KEYWORD_PATTERNS)) {
     if (STATE_KEYWORD_PATTERNS[norm].some((re) => re.test(flat))) return norm;
@@ -2349,6 +2365,20 @@ function stringifyValueMap(valueMap) {
   return Object.keys(valueMap).map((key) => `${key}: ${valueMap[key]}`).join("\n");
 }
 
+// HomeWhiz names what a machine is busy with in its firmware's keys as well,
+// one namespace per machine: WASHER_SUBSTATE_SPIN, DRYER_MESSAGE_COOLING,
+// DISHWASHER_MESSAGE_RINSING. The namespace would be read as a step of its own,
+// since every washer key says "washer" and every dryer key "dryer": the step is
+// the word after it. The one washer key without it, WASHER_WATER_INTAKE, names
+// its step whole.
+const HOMEWHIZ_MESSAGE = /^(?:washer_substate|dryer_message|dishwasher_message)_(\w+)$/;
+
+// A HomeWhiz message without its namespace, or null for any other value.
+function homewhizMessage(text) {
+  const m = HOMEWHIZ_MESSAGE.exec(text);
+  return m ? m[1] : null;
+}
+
 // Dishwasher integrations do not share one phase vocabulary. Keep the
 // visual model deliberately small and safe: an optional phase entity can add
 // a known phase class, but a missing, unavailable, or new vendor value simply
@@ -2377,7 +2407,7 @@ function normalizeDishwasherPhase(raw, phaseMap) {
   if (["unknown", "unavailable", "none", ""].includes(text.toLowerCase())) return "";
 
   const mapped = mapInfoValue(text, phaseMap);
-  const candidate = mapped === null || mapped === undefined ? text : mapped;
+  const candidate = mapped === null || mapped === undefined ? homewhizMessage(text) || text : mapped;
   const key = stripAccents(String(candidate).trim()).toLowerCase().replace(/[\\_-]+/g, " ").replace(/\\s+/g, " ");
   const phase = DISHWASHER_PHASE_ALIASES[key] || key.replace(/ /g, "_");
   return DISHWASHER_PHASES.has(phase) ? phase : "";
@@ -2407,7 +2437,7 @@ function laundryPhaseOf(raw, valueMap) {
   const text = String(raw).trim();
   if (["unknown", "unavailable", "none", ""].includes(text.toLowerCase())) return "";
   const mapped = mapInfoValue(text, valueMap);
-  const candidate = String(mapped === null || mapped === undefined ? text : mapped).trim();
+  const candidate = String(mapped === null || mapped === undefined ? homewhizMessage(text) || text : mapped).trim();
   // Separators become spaces before anything is matched. Integrations answer in
   // snake case as often as in words, and an underscore is a word character:
   // without this, "ai_drying" and "pre_wash" match nothing at all.
@@ -2423,7 +2453,9 @@ function laundryPhaseOf(raw, valueMap) {
 // integrations' own, read in their code: Electrolux says Wash, Rinse, Drain,
 // Spin and Anticrease, SmartThings ai_rinse, weight_sensing and
 // wrinkle_prevent, LG soaking and detecting in the state itself, Miele
-// main_wash and cooling_down, Whirlpool cycle_filling. French, German,
+// main_wash and cooling_down, Whirlpool cycle_filling, HomeWhiz water_intake,
+// analysing (the load, which its Spanish words say), softener (the last
+// rinse, which takes it in) and anti_creasing. French, German,
 // Spanish, Italian and Dutch cover a sensor written by hand, and the drying
 // words are the washer-dryer's, so that the drum and the state line never
 // disagree. Samsung's "air wash" is a refresh in hot air, with no water in
@@ -2431,14 +2463,14 @@ function laundryPhaseOf(raw, valueMap) {
 const CYCLE_STEP_PATTERNS = [
   ["prewash", /\bpre ?(dish ?)?wash|\bpre ?rins|\bprelav|\bvorwasch|\bvoorwas/],
   ["soaking", /\bsoak|\btremp|\beinweich|\bremoj|\bammoll|\bweken/],
-  ["weighing", /\bweigh|\bweight|\bdetect|\bsensing|\bpes(ee|ag|aje|atura)|\bwieg/],
-  ["filling", /\bfill|\bremplis|\bbefull|\bllenad|\bvullen/],
-  ["anti_crease", /\banti ?crease|\bwrinkle|\bfroiss|\bknitter|\bantiarrug|\bantipieg|\bkreuk/],
+  ["weighing", /\bweigh|\bweight|\bdetect|\bsensing|\banaly[sz]|\bpes(ee|ag|aje|atura)|\bwieg/],
+  ["filling", /\bfill|\bintake|\bremplis|\bbefull|\bllenad|\bvullen/],
+  ["anti_crease", /\banti ?creas|\bwrinkle|\bfroiss|\bknitter|\bantiarrug|\bantipieg|\bkreuk/],
   ["steam", /steam|\bvapeur|\bdampf|\bvapor|\bstoom/],
   ["cooling", /\bcool|\brefroid|\babkuhl|\benfri|\braffredd|\bafkoel/],
   ["draining", /\bdrain|\bvidang|\babpump|\bdesag|\bscaric|\bafpomp/],
   ["spinning", /\bspin|\bessor|\bschleuder|\bcentrifug/],
-  ["rinsing", /rins|\brinc|\bspul|\baclar|\benjuag|\brisciacq|\bspoel/],
+  ["rinsing", /rins|\bsoftener|\brinc|\bspul|\baclar|\benjuag|\brisciacq|\bspoel/],
   ["drying", LAUNDRY_PHASE_PATTERNS.drying],
   ["washing", /(?<!\bair )wash|\blavag|\blavad|\bwasch|\bwassen/],
 ];
@@ -2477,17 +2509,22 @@ function stepOfWord(text) {
 // integration's own word for it, since naming the step is all such an entity
 // is for. A code nobody mapped says nothing, and neither does a word that is
 // really a state, running or finished. A phase_map entry names a step by its
-// key ("spinning") or gives the words to show.
+// key ("spinning") or gives the words to show. HomeWhiz's messages say more
+// than steps (hello, child lock, door locked, remove the laundry): only one
+// that names a step is shown.
 function phaseStepOf(raw, phaseMap) {
   if (raw === undefined || raw === null) return null;
   const mapped = mapInfoValue(String(raw).trim(), phaseMap);
-  const text = String(mapped === null || mapped === undefined ? raw : mapped).trim();
+  const own = mapped === null || mapped === undefined;
+  const message = own ? homewhizMessage(String(raw).trim()) : null;
+  const text = String(own ? message || raw : mapped).trim();
   const step = stepOfWord(text);
   if (step) return { step };
+  if (message) return null;
   const flat = stepFlat(text);
   if (STEP_BLANK.test(flat) || /^[\d\s]+$/.test(flat)) return null;
   if (Object.values(STATE_KEYWORD_PATTERNS).some((res) => res.some((re) => re.test(flat)))) return null;
-  const words = mapped === null || mapped === undefined ? cleanStateLabel(text) : text;
+  const words = own ? cleanStateLabel(text) : text;
   return { step: "", text: words.charAt(0).toUpperCase() + words.slice(1) };
 }
 
@@ -2928,7 +2965,8 @@ const AUTO_PATTERNS = {
   door_entity: /door/i,
   alerts_entity: /alert/i,
   connectivity_entity: /connectiv/i,
-  start_entity: /start/i,
+  // A start delay is set, not pressed: HomeWhiz writes its own on a number.
+  start_entity: /^(?!.*delay).*start/i,
   pause_entity: /pause/i,
   resume_entity: /resume/i,
   stop_entity: /stop|reset/i,
@@ -2936,8 +2974,8 @@ const AUTO_PATTERNS = {
 };
 
 // The step of a cycle: Miele names it a program phase, Electrolux a cycle
-// phase, SmartThings a job state, hOn a pr phase.
-const PHASE_ENTITY_RE = /program.?phase|cycle.?phase|job.?state|pr.?phase|machine.?phase/i;
+// phase, SmartThings a job state, hOn a pr phase, HomeWhiz a sub state.
+const PHASE_ENTITY_RE = /program.?phase|cycle.?phase|job.?state|pr.?phase|machine.?phase|sub.?state/i;
 
 // Suggested only for the types that can actually use them, so a washing
 // machine doesn't end up with a "filter life" field pre-filled.
@@ -3076,8 +3114,11 @@ function autoSuggest(hass, cfg) {
   const siblings = siblingEntityIds(hass, cfg.state_entity).filter((id) => id !== cfg.state_entity);
   const type = detectApplianceType(cfg, hass.states[cfg.state_entity]);
   // Only ever fill fields the current type actually shows: a suggestion the
-  // editor then hides is just a stray key in the user's YAML.
-  const allowed = new Set(sectionsForType(type).map((s) => s.field));
+  // editor then hides is just a stray key in the user's YAML. Nor one its own
+  // picker would refuse: a sensor whose name says start is no start button.
+  const sections = sectionsForType(type);
+  const allowed = new Set(sections.map((s) => s.field));
+  const domains = Object.fromEntries(sections.map((s) => [s.field, s.includeDomains]));
   const patterns = { ...AUTO_PATTERNS, ...(TYPE_AUTO_PATTERNS[type] || {}) };
   const patch = {};
   // A machine whose name says it washes and dries gets the option written
@@ -3088,7 +3129,7 @@ function autoSuggest(hass, cfg) {
   }
   for (const [field, re] of Object.entries(patterns)) {
     if (cfg[field] || !allowed.has(field)) continue;
-    const match = siblings.find((id) => re.test(id));
+    const match = siblings.find((id) => re.test(id) && domains[field].includes(domainOf(id)));
     if (match) patch[field] = match;
   }
   // An entity already given a field of its own would only repeat itself.

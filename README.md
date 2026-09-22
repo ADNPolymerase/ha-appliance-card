@@ -314,9 +314,10 @@ Where the step comes from depends on the integration:
 | Electrolux, AEG | `cyclePhase` (`Wash`, `Rinse`, `Spin`) | `phase_entity` |
 | Miele, SmartThings | a phase entity (`program_phase`, `job_state`) | `phase_entity` |
 | hOn (Candy, Hoover, Haier) | a numbered phase (`prPhase`) | `phase_entity` and `phase_map` |
+| HomeWhiz (Beko, Grundig, Arçelik, Bauknecht) | its *Sub state* (`washer_substate_spin`, `dryer_message_cooling`) | `phase_entity` |
 | Home Connect (Bosch, Siemens) | nowhere: the state stays *Run* all the way through | nothing to read |
 
-A word from the phase entity that the card does not know is shown as it is written. `phase_map` translates codes, into one of the steps above or into words of your own, and `state_map` takes the steps as targets too:
+A word from the phase entity that the card does not know is shown as it is written, except a HomeWhiz message that names no step (*Hello*, *Child lock*), which leaves *Running* in place. `phase_map` translates codes, into one of the steps above or into words of your own, and `state_map` takes the steps as targets too:
 
 ```yaml
 appliance_type: washer
