@@ -50,6 +50,13 @@ FakeNodeProto.querySelector = function (sel) {
   if (!memo.has(sel)) memo.set(sel, document.createElement('div'));
   return memo.get(sel);
 };
+// The card wires the tap on its header, which it finds by id. Without this the
+// handler is never registered and the whole tap path is unreachable.
+FakeNodeProto.getElementById = function (id) {
+  const memo = (this.__ids ||= new Map());
+  if (!memo.has(id)) memo.set(id, document.createElement('div'));
+  return memo.get(id);
+};
 // Only attribute-presence selectors are resolved, which is all the editor uses
 // ([data-field], [data-toggle]), and the stubs are built from the markup this
 // node was actually given, so they carry real attribute values.
@@ -670,6 +677,29 @@ check('interrupteur : absent si l\'option n\'est pas configuree',
   actionBtns(render({ appliance_type: 'hood', state_entity: 'switch.hood' },
     { 'switch.hood': { state: 'on', attributes: {} } })).length, 0);
 
+// A button's icon is the owner's to choose (HACF): mdi:play reads as "run a
+// programme", which is not what every press does. YAML only, no editor field.
+{
+  const btnIcon = (cfg, extra) => (/<div class="action-btn[^"]*"[^>]*><ha-icon icon="([^"]*)"/
+    .exec(render({ appliance_type: 'washer', state_entity: 'sensor.w', ...cfg },
+      { 'sensor.w': { state: 'Idle', attributes: {} }, ...(extra || {}) })) || [, ''])[1];
+  check('icone de bouton : mdi:play par defaut', btnIcon({ start_entity: 'button.b' }), 'mdi:play');
+  check('icone de bouton : celle du YAML',
+    btnIcon({ start_entity: 'button.b', start_icon: 'mdi:gesture-tap-button' }), 'mdi:gesture-tap-button');
+  check('icone de bouton : une valeur vide garde la sienne',
+    btnIcon({ start_entity: 'button.b', start_icon: '' }), 'mdi:play');
+  // Every button, not only the start: each one takes the icon named after it.
+  for (const [key, field, dflt] of [['pause', 'pause_entity', 'mdi:pause'], ['resume', 'resume_entity', 'mdi:play-pause'],
+    ['stop', 'stop_entity', 'mdi:stop'], ['toggle', 'toggle_entity', 'mdi:power']]) {
+    check(`icone de bouton : ${key} par defaut`, btnIcon({ [field]: 'button.b' }), dflt);
+    check(`icone de bouton : ${key} au choix`, btnIcon({ [field]: 'button.b', [`${key}_icon`]: 'mdi:gesture-tap-button' }), 'mdi:gesture-tap-button');
+  }
+  check('icone de bouton : le filtre d\'une hotte aussi',
+    (/<div class="action-btn[^"]*"[^>]*><ha-icon icon="([^"]*)"/.exec(render({ appliance_type: 'hood',
+      state_entity: 'switch.hood', filter_reset_entity: 'button.b', filter_reset_icon: 'mdi:broom' },
+      { 'switch.hood': { state: 'on', attributes: {} } })) || [, ''])[1], 'mdi:broom');
+}
+
 // Cooktop zones: numeric levels, worded levels and residual heat.
 const hob = render({ appliance_type: 'cooktop', state_entity: 'sensor.hob',
                      child_lock_entity: 'binary_sensor.lock',
@@ -1218,6 +1248,9 @@ noInjection('nom convivial', render({ appliance_type: 'washer', state_entity: 's
 noInjection('etat brut affiche tel quel',
   render({ appliance_type: 'washer', state_entity: 'sensor.w', state_show_raw: true },
     { 'sensor.w': { state: XSS, attributes: {} } }));
+
+noInjection('icone de bouton choisie', render({ appliance_type: 'washer', state_entity: 'sensor.w',
+  start_entity: 'button.b', start_icon: XSS }, { 'sensor.w': { state: 'Idle', attributes: {} } }));
 
 // A payload carrying no state keyword, so it really goes down the raw-echo
 // path: '<img ... onerror=...>' would normalise to running on the leading
@@ -5503,5 +5536,164 @@ for (const [label, mine] of [['une liste', ['binary_sensor.mine']], ['une entite
   const { ed } = suggestOn('dishwasher', 'sensor.dw_state', [['sensor.dw_ev', 'salt_nearly_empty']], { alerts_entities: mine });
   check(`suggestion alertes : ${label} deja faite est laissee`, JSON.stringify(ed._config.alerts_entities), JSON.stringify(mine));
 }
+
+// == What a tap on the card does (HACF) =======================================
+// A dashboard speaks Home Assistant's action config, and the card only ever
+// opened the entity. The popup cards people build on browser_mod need
+// fire-dom-event, which is handed over whole. YAML only: the editor stays as
+// long as it is.
+
+{
+  const tapCard = (cfg, states) => {
+    const c = build({ appliance_type: 'washer', state_entity: 'sensor.w', ...cfg },
+      states || { 'sensor.w': { state: 'Running', attributes: {} } }).card;
+    const calls = [];
+    c._hass = { ...c._hass, callService: (...a) => calls.push(a) };
+    fire(c._root.getElementById('header'), 'click', {});
+    return { card: c, ev: c.events.at(-1), calls };
+  };
+  const POPUP = { action: 'fire-dom-event', browser_mod: { service: 'browser_mod.popup', data: { popup_card_id: 'chauffe-eau' } } };
+
+  const plain = tapCard({});
+  check('appui : sans option, la fiche de l\'entite', plain.ev?.type, 'hass-more-info');
+  check('appui : et c\'est celle de l\'etat', plain.ev?.detail?.entityId, 'sensor.w');
+
+  const popup = tapCard({ tap_action: POPUP });
+  check('appui : fire-dom-event leve ll-custom', popup.ev?.type, 'll-custom');
+  check('appui : l\'action est passee entiere', popup.ev?.detail?.browser_mod?.data?.popup_card_id, 'chauffe-eau');
+  check('appui : il sort de la carte', [popup.ev?.bubbles, popup.ev?.composed].join(' '), 'true true');
+  check('appui : et la fiche ne s\'ouvre pas', popup.card.events.some(e => e.type === 'hass-more-info'), false);
+
+  check('appui : none ne fait rien', tapCard({ tap_action: { action: 'none' } }).card.events.length, 0);
+  check('appui : more-info sur une autre entite',
+    tapCard({ tap_action: { action: 'more-info', entity: 'sensor.autre' } }).ev?.detail?.entityId, 'sensor.autre');
+  check('appui : navigate previent le tableau de bord',
+    tapCard({ tap_action: { action: 'navigate', navigation_path: '/lovelace/buanderie' } }).ev?.type, 'location-changed');
+  check('appui : navigate sans chemin ouvre la fiche',
+    tapCard({ tap_action: { action: 'navigate' } }).ev?.type, 'hass-more-info');
+  {
+    const { calls } = tapCard({ tap_action: { action: 'toggle' } });
+    check('appui : toggle appelle le service', calls[0]?.slice(0, 2).join('.'), 'homeassistant.toggle');
+    check('appui : sur l\'entite de la carte', JSON.stringify(calls[0]?.[2]), '{"entity_id":"sensor.w"}');
+  }
+  {
+    const { calls } = tapCard({ tap_action: { action: 'perform-action', perform_action: 'script.repasser',
+      data: { mode: 'vapeur' }, target: { entity_id: 'script.repasser' } } });
+    check('appui : perform-action, le domaine et le service', calls[0]?.slice(0, 2).join('.'), 'script.repasser');
+    check('appui : ses donnees', JSON.stringify(calls[0]?.[2]), '{"mode":"vapeur"}');
+    check('appui : sa cible', JSON.stringify(calls[0]?.[3]), '{"entity_id":"script.repasser"}');
+  }
+  // The 2024.8 renaming: both spellings are written in dashboards today.
+  check('appui : call-service est encore ecrit',
+    tapCard({ tap_action: { action: 'call-service', service: 'light.turn_on' } }).calls[0]?.slice(0, 2).join('.'), 'light.turn_on');
+  check('appui : un service sans domaine ne casse rien',
+    tapCard({ tap_action: { action: 'perform-action', perform_action: 'repasser' } }).calls.length, 0);
+  check('appui : une action inconnue ouvre la fiche',
+    tapCard({ tap_action: { action: 'assist' } }).ev?.type, 'hass-more-info');
+  {
+    const opened = [];
+    const realOpen = globalThis.window.open;
+    globalThis.window.open = (...a) => opened.push(a);
+    const { ev } = tapCard({ tap_action: { action: 'url', url_path: 'https://example.com/doc' } });
+    globalThis.window.open = realOpen;
+    check('appui : url ouvre le lien', opened[0]?.join(' '), 'https://example.com/doc _blank');
+    check('appui : et rien d\'autre', ev, undefined);
+  }
+}
+
+// == An iron, and the steam generator (issue #20) ==============================
+// Nothing connects an iron to Home Assistant, so it is read from the smart
+// plug it sits on, which is why it is on one: an iron left on is the one its
+// owner worries about. The state line and the drawing say heating, and after
+// the time the owner set, the iron catches fire.
+
+const IRON = { appliance_type: 'iron', state_entity: 'switch.fer', power_entity: 'sensor.fer_w', power_on_threshold: 20 };
+const ironStates = (state, onMin, watts) => ({
+  'switch.fer': { state, attributes: {}, last_changed: AGO(onMin * 60e3) },
+  'sensor.fer_w': { state: String(watts), attributes: { unit_of_measurement: 'W' } },
+});
+const iron = (state, onMin, watts, extra = {}) => render({ ...IRON, ...extra }, ironStates(state, onMin, watts));
+
+check('fer : a l\'arret', stateLine(iron('off', 60, 0)), 'Off');
+check('fer : en chauffe', stateLine(iron('on', 2, 1400)), 'Heating');
+check('fer : en chauffe, la semelle chauffe', hasCls(iron('on', 2, 1400), 'heating'), true);
+check('fer : a l\'arret, elle ne chauffe pas', hasCls(iron('off', 60, 0), 'heating'), false);
+check('fer : en francais', stateLine(iron('on', 2, 1400, { language: 'fr' })), 'En chauffe');
+check('fer : en chauffe, le mot est chaud', stateColor(iron('on', 2, 1400)), '#ff7043');
+// Without a power threshold the state entity speaks for itself, and
+// state_show_raw keeps its word rather than the card's.
+check('fer : state_show_raw garde le mot de l\'entite',
+  stateLine(render({ appliance_type: 'iron', state_entity: 'switch.fer', state_show_raw: true },
+    { 'switch.fer': { state: 'on', attributes: {} } })), 'on');
+contains('fer : la semelle est dessinee', iron('off', 60, 0), '<div class="ir-plate">');
+contains('fer : le reservoir est dans la coque', iron('off', 60, 0), '<div class="ir-shell"><div class="ir-tank"></div></div>');
+check('fer : sans centrale, pas de socle', /<div class="gen-base">/.test(iron('off', 60, 0)), false);
+contains('fer : un cordon a la place', iron('off', 60, 0), '<div class="ir-cord">');
+
+// The generator: the same iron on a base that holds the water.
+const gen = (state, onMin, watts, extra = {}) => iron(state, onMin, watts, { iron_layout: 'generator', ...extra });
+check('centrale : la classe du modele', hasCls(gen('on', 2, 1900), 'generator'), true);
+contains('centrale : le socle', gen('on', 2, 1900), '<div class="gen-base">');
+contains('centrale : son reservoir', gen('on', 2, 1900), '<div class="gen-tank">');
+contains('centrale : le cordon de vapeur', gen('on', 2, 1900), '<div class="gen-hose">');
+check('centrale : et plus de cordon simple', /<div class="ir-cord">/.test(gen('on', 2, 1900)), false);
+check('centrale : le fer y est encore', /<div class="ir-plate">/.test(gen('on', 2, 1900)), true);
+check('fer : un modele inconnu reste un fer', hasCls(iron('on', 2, 1400, { iron_layout: 'centrale' }), 'generator'), false);
+
+// Left on: the minutes are counted by the card, since a plug left on stops
+// changing and nothing would push the update that crosses the threshold.
+check('fer : reste allume au-dela du delai', stateLine(iron('on', 45, 1400, { left_on_after: 30 })), 'Left on');
+check('fer : il prend feu', hasCls(iron('on', 45, 1400, { left_on_after: 30 }), 'left-on'), true);
+check('fer : en francais', stateLine(iron('on', 45, 1400, { left_on_after: 30, language: 'fr' })), 'Resté allumé');
+check('fer : reste allume, le mot est rouge', stateColor(iron('on', 45, 1400, { left_on_after: 30 })), 'var(--error-color, #f44336)');
+check('fer : avant le delai, il chauffe seulement', stateLine(iron('on', 10, 1400, { left_on_after: 30 })), 'Heating');
+// The count is the card's own: it starts when the card first saw the iron
+// heating, and a meter that moves with every watt must not push it back.
+check('fer : le compteur ne repart pas a chaque mesure', (() => {
+  const meter = w => ({ 'sensor.fer_w': { state: String(w), attributes: { unit_of_measurement: 'W' }, last_changed: AGO(w === 1400 ? 40 * 60e3 : 0) } });
+  const c = build({ appliance_type: 'iron', state_entity: 'sensor.fer_w', power_entity: 'sensor.fer_w',
+    power_on_threshold: 20, left_on_after: 30 }, meter(1400)).card;
+  return hasCls(rerender(c, meter(1390)), 'left-on');
+})(), true);
+check('fer : avant le delai, aucune flamme', hasCls(iron('on', 10, 1400, { left_on_after: 30 }), 'left-on'), false);
+check('fer : sans delai, jamais d\'alerte', hasCls(iron('on', 300, 1400), 'left-on'), false);
+check('fer : un delai vide ne compte pas', hasCls(iron('on', 300, 1400, { left_on_after: '' }), 'left-on'), false);
+check('fer : un delai a zero non plus', hasCls(iron('on', 300, 1400, { left_on_after: 0 }), 'left-on'), false);
+check('fer : a l\'arret depuis des heures, rien ne brule', hasCls(iron('off', 300, 0, { left_on_after: 30 }), 'left-on'), false);
+check('fer : eteint, l\'etat reste l\'etat', stateLine(iron('off', 300, 0, { left_on_after: 30 })), 'Off');
+// The flames are drawn whatever happens: only the class lights them.
+contains('fer : les flammes sont dans le dessin', iron('off', 60, 0), '<div class="ir-fire f1">');
+check('fer : le compteur repart quand il s\'eteint', (() => {
+  const c = build({ ...IRON, left_on_after: 30 }, ironStates('on', 45, 1400)).card;
+  const before = hasCls(markup(c), 'left-on');
+  rerender(c, ironStates('off', 0, 0));
+  return [before, hasCls(rerender(c, ironStates('on', 1, 1400)), 'left-on')].join(' ');
+})(), 'true false');
+
+// Its own name says what it is, in the languages the card speaks.
+const isIron = id => /<div class="ir-plate">/.test(render({ state_entity: id }, { [id]: { state: 'off', attributes: {} } }));
+for (const id of ['switch.iron', 'switch.steam_generator', 'switch.fer_a_repasser', 'switch.centrale_vapeur',
+  'switch.bugeleisen', 'switch.dampfstation', 'switch.plancha_de_ropa', 'switch.ferro_da_stiro',
+  'switch.strijkijzer', 'switch.zelazko', 'switch.strykjarn']) {
+  check(`fer : ${id} en est un`, isIron(id), true);
+}
+// A Spanish griddle is a plancha too, and it is no iron.
+check('fer : une plancha de cuisine n\'en est pas un', isIron('switch.plancha_de_cocina'), false);
+// And an environment sensor is not one either: "iron" hides inside the word.
+check('fer : environment n\'en est pas un',
+  /<div class="ir-plate">/.test(render({ state_entity: 'sensor.environment_state' },
+    { 'sensor.environment_state': { state: 'off', attributes: {} } })), false);
+
+// The editor: the type, its model and its delay, and nowhere else.
+check('editeur : le fer est dans la liste des types',
+  /<option value="iron"/.test(markup(newEditor({ state_entity: 'sensor.w', appliance_type: 'iron' }))), true);
+check('editeur : le modele est propose sur un fer',
+  /data-field="iron_layout"/.test(markup(newEditor({ state_entity: 'sensor.w', appliance_type: 'iron' }))), true);
+check('editeur : le delai aussi',
+  /data-field="left_on_after"/.test(markup(newEditor({ state_entity: 'sensor.w', appliance_type: 'iron' }))), true);
+check('editeur : pas de modele de fer sur un lave-linge',
+  /data-field="iron_layout"/.test(markup(newEditor({ state_entity: 'sensor.w', appliance_type: 'washer' }))), false);
+check('editeur : ni le delai',
+  /data-field="left_on_after"/.test(markup(newEditor({ state_entity: 'sensor.w', appliance_type: 'washer' }))), false);
 
 report();

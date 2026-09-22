@@ -21,7 +21,7 @@ No brand assumed: every field is an entity you pick, so it works with **any** in
 
 ## Features
 
-- **Seventeen appliance types**, each with a CSS illustration that animates on the appliance's own data and stays still when idle. The type is detected on its own or set via `appliance_type`, and `compact: true` keeps only the text.
+- **Eighteen appliance types**, each with a CSS illustration that animates on the appliance's own data and stays still when idle. The type is detected on its own or set via `appliance_type`, and `compact: true` keeps only the text.
 - **State normalization**: `Idle`, `RUNNING`, `wash`, `En marche`… are recognised (accent-insensitive) and sorted into idle, preheating, running, paused, done, delayed or error. An unknown state is shown as it came, minus the integration's namespace, and `state_map` sorts the rest, `"*"` catching everything left over.
 - **The step, not an hour of *Running***: a washer, a dryer or a dishwasher names the step it is at (*Pre-wash*, *Washing*, *Rinsing*, *Spinning*, *Drying* and seven more), from a phase entity or from its own state, and the drum whirls while it spins. The time left is still the whole cycle's.
 - **A washer-dryer is a washer that dries**: `washer_dryer: true`, and the drum shows water while it washes, then clothes turning in hot air while it dries. The step comes from the state itself or from a phase entity, and the state line reads *Washing* or *Drying*.
@@ -59,7 +59,8 @@ Only `state_entity` is required, except on a fridge where a probe or a door cont
 | `compact` | `true` hides the illustration. |
 | `illustration_color` | `auto` (default, follows the theme) \| `white` \| `grey` \| `black`. Only changes the casing, not the state colours. |
 | `language` | `auto` (default, follows Home Assistant) or one of the 14 codes: `en`, `fr`, `de`, `es`, `it`, `nl`, `pt`, `sv`, `no`, `da`, `pl`, `ru`, `zh`, `cs`. `nb` and `nb-NO` give Norwegian. |
-| `appliance_type` | `auto` (default) \| `washer` \| `dryer` \| `dishwasher` \| `oven` \| `microwave` \| `hood` \| `cooktop` \| `fridge` \| `kettle` \| `cooker` \| `coffee` \| `rice_cooker` \| `water_heater` \| `boiler` \| `heat_pump` \| `printer_3d` \| `pet_feeder`. |
+| `appliance_type` | `auto` (default) \| `washer` \| `dryer` \| `dishwasher` \| `oven` \| `microwave` \| `hood` \| `cooktop` \| `fridge` \| `kettle` \| `cooker` \| `coffee` \| `rice_cooker` \| `water_heater` \| `boiler` \| `heat_pump` \| `printer_3d` \| `pet_feeder` \| `iron`. |
+| `tap_action` | What a tap on the card does, in Home Assistant's own words: `more-info` (default), `none`, `navigate`, `url`, `toggle`, `perform-action` or `fire-dom-event`, which is what the popup cards built on browser_mod listen for. In YAML only. |
 | `toggle_entity` | Power button (`switch`, `button`, `script`, `input_boolean`, `fan`), highlighted while on. |
 | `power_entity` / `power_on_threshold` / `power_icon` | Power sensor. With a threshold, the state is derived from it: *running* above, then *finished* when it falls back. Pointing `state_entity` at the same sensor enables it with a 10 W threshold. `power_icon` replaces `mdi:power-plug`. |
 | `program_entity` / `program_format` | Program. `clean` (default) makes it readable (`LaundryCare.Washer.Program.Auto40` becomes *Auto 40*, `Rapid20Min` becomes *Rapid 20 Min*), `raw` shows it as-is. |
@@ -74,7 +75,7 @@ Only `state_entity` is required, except on a fridge where a probe or a door cont
 | `corner_entities` | Up to 2 switches as icons in the top corners, the first on the left and the second on the right, as `{ entity, label?, icon? }` or a plain id. The icon says what each one does and whether it holds (a child lock, an automatic lock, a lock, a switch), and a tap toggles it. A `lock` only opens its dialog: a stray tap never unlocks anything. |
 | `info_entities` | Up to 8 lines `{ entity, icon?, label?, value_map?, hide_unit? }`, any beyond are ignored, shown under the lines the card reads on its own. A tap opens the entity's dialog, which is how a tank or a filter gets reset from the card. Past 5 lines the spacing tightens. Values read as in Home Assistant, with the entity's display precision. `value_map` relabels raw values (see below), `hide_unit` drops the unit. |
 | `lines_order` | The order of the info lines, as a list of their keys: `program`, `remaining`, `door`, the ones each type brings (`level`, `last_feed`, `flow_return`, `nozzle`…) and, for the lines you add, their entity id. The visual editor writes it for you by dragging. Lines left out keep their place after the ones named, and a line that is not showing is skipped. |
-| `start_entity` / `pause_entity` / `resume_entity` / `stop_entity` | Controls, only shown when configured. A control is usually a `button`, a `script` or an `automation`, which is triggered rather than switched off, and can also be a `select` or a `number`: `start_option` says which option to pick (the card takes it on its own when the list holds only one), `start_value` what to write. The same goes for the other three, as `pause_option`, `stop_value` and so on. |
+| `start_entity` / `pause_entity` / `resume_entity` / `stop_entity` | Controls, only shown when configured. A control is usually a `button`, a `script` or an `automation`, which is triggered rather than switched off, and can also be a `select` or a `number`: `start_option` says which option to pick (the card takes it on its own when the list holds only one), `start_value` what to write. The same goes for the other three, as `pause_option`, `stop_value` and so on. `start_icon` swaps the button's icon, as do `pause_icon`, `resume_icon`, `stop_icon`, `toggle_icon` and `filter_reset_icon`: `mdi:play` reads as a programme starting, which is not what every press does. In YAML only. |
 
 Per type:
 
@@ -118,6 +119,8 @@ Per type:
 | `current_layer_entity` / `total_layers_entity` | 3D printer | The layer, as *84 / 190*. |
 | `printer_layout` | 3D printer | `enclosed` (default: a chamber whose bed drops as the part grows) \| `open` (an open frame whose gantry climbs). The part grows with the progress, in the state's colour, and the head moves while it prints. |
 | `printed_part` | 3D printer | The part on the bed: `cube` (default), `pyramid` or `duck` (a rubber duck). It shows from the bottom up as it prints. |
+| `iron_layout` | iron | `iron` (default, the iron alone) \| `generator` (the same iron on the base of a steam generator). |
+| `left_on_after` | iron | Minutes switched on after which the state line reads *Left on*, in red. Empty, it never does. |
 | `feeder_layout` | pet feeder | `tower` (default, the bowl built in) \| `canister` (a round tank on its base, the bowl set down in front). |
 | `portions_today_entity` / `weight_today_entity` | pet feeder | What was served today, on one line. Without a weight entity the card works the grams out from `portion_weight_entity`, so nothing is assumed about the size of a meal. |
 | `serving_size_entity` / `portion_weight_entity` | pet feeder | How many portions a serving holds, and what one weighs. |
@@ -261,6 +264,24 @@ phase_map:
 ```
 
 An unrecognised value leaves the illustration as it is, and the phase also names the step on the state line (see *Cycle steps*).
+
+### Irons
+
+Nothing connects an iron to Home Assistant, which is why it is on a smart plug: the state comes from what it draws, and the drawing does the rest. Heating, the soleplate glows and steam leaves the nose. Two models are drawn, the iron alone and the same iron on the base of a steam generator.
+
+`left_on_after` is the reason the plug is there. Past that many minutes switched on, the state line reads *Left on*, in red:
+
+```yaml
+type: custom:ha-appliance-card
+appliance_type: iron
+iron_layout: generator
+state_entity: switch.iron_plug
+power_entity: sensor.iron_plug_power
+power_on_threshold: 20
+left_on_after: 30
+```
+
+The card shows the alert; turning the iron off is an automation's job, on the same entity.
 
 ### Pet feeders
 

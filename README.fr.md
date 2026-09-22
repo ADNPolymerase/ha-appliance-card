@@ -21,7 +21,7 @@ Aucune marque supposée : chaque champ est une entité à choisir, elle fonction
 
 ## Fonctionnalités
 
-- **Dix-sept types d'appareils**, chacun avec une illustration en CSS animée sur les données de l'appareil et statique à l'arrêt. Le type est détecté tout seul ou choisi via `appliance_type`, et `compact: true` ne garde que le texte.
+- **Dix-huit types d'appareils**, chacun avec une illustration en CSS animée sur les données de l'appareil et statique à l'arrêt. Le type est détecté tout seul ou choisi via `appliance_type`, et `compact: true` ne garde que le texte.
 - **Normalisation d'état** : `Idle`, `RUNNING`, `wash`, `En marche`… sont reconnus (sans tenir compte des accents) et classés en veille, préchauffage, en cours, en pause, terminé, différé ou erreur. Un état inconnu s'affiche tel quel, sans l'espace de noms de l'intégration, et `state_map` classe le reste, `"*"` ramassant tout ce qui dépasse.
 - **L'étape, et non une heure d'*En cours*** : un lave-linge, un sèche-linge ou un lave-vaisselle nomme l'étape où il en est (*Prélavage*, *Lavage*, *Rinçage*, *Essorage*, *Séchage* et sept autres), d'après une entité de phase ou son propre état, et le tambour s'emballe pendant l'essorage. Le temps restant est toujours celui du cycle entier.
 - **Une lavante-séchante est un lave-linge qui sèche** : `washer_dryer: true`, et le tambour montre de l'eau pendant le lavage, puis du linge qui tourne dans l'air chaud pendant le séchage. L'étape vient de l'état lui-même ou d'une entité de phase, et la ligne d'état lit *Lavage* ou *Séchage*.
@@ -59,7 +59,8 @@ Seule `state_entity` est obligatoire, sauf sur un réfrigérateur où une sonde 
 | `compact` | `true` masque l'illustration. |
 | `illustration_color` | `auto` (défaut, suit le thème) \| `white` \| `grey` \| `black`. Ne change que la carrosserie, pas les couleurs d'état. |
 | `language` | `auto` (défaut, suit Home Assistant) ou l'un des 14 codes : `en`, `fr`, `de`, `es`, `it`, `nl`, `pt`, `sv`, `no`, `da`, `pl`, `ru`, `zh`, `cs`. `nb` et `nb-NO` donnent le norvégien. |
-| `appliance_type` | `auto` (défaut) \| `washer` \| `dryer` \| `dishwasher` \| `oven` \| `microwave` \| `hood` \| `cooktop` \| `fridge` \| `kettle` \| `cooker` \| `coffee` \| `rice_cooker` \| `water_heater` \| `boiler` \| `heat_pump` \| `printer_3d` \| `pet_feeder`. |
+| `appliance_type` | `auto` (défaut) \| `washer` \| `dryer` \| `dishwasher` \| `oven` \| `microwave` \| `hood` \| `cooktop` \| `fridge` \| `kettle` \| `cooker` \| `coffee` \| `rice_cooker` \| `water_heater` \| `boiler` \| `heat_pump` \| `printer_3d` \| `pet_feeder` \| `iron`. |
+| `tap_action` | Ce que fait un appui sur la carte, dans les mots de Home Assistant : `more-info` (défaut), `none`, `navigate`, `url`, `toggle`, `perform-action` ou `fire-dom-event`, celle qu'écoutent les cartes popup bâties sur browser_mod. En YAML seulement. |
 | `toggle_entity` | Bouton marche/arrêt (`switch`, `button`, `script`, `input_boolean`, `fan`), mis en évidence quand c'est allumé. |
 | `power_entity` / `power_on_threshold` / `power_icon` | Capteur de puissance. Avec un seuil, l'état en est déduit : *en marche* au-dessus, puis *terminé* en redescendant. Pointer `state_entity` sur ce même capteur l'active avec un seuil de 10 W. `power_icon` remplace `mdi:power-plug`. |
 | `program_entity` / `program_format` | Programme. `clean` (défaut) le rend lisible (`LaundryCare.Washer.Program.Auto40` devient *Auto 40*, `Rapid20Min` devient *Rapid 20 Min*), `raw` l'affiche tel quel. |
@@ -74,7 +75,7 @@ Seule `state_entity` est obligatoire, sauf sur un réfrigérateur où une sonde 
 | `corner_entities` | Jusqu'à 2 interrupteurs en icônes dans les coins du haut, le premier à gauche et le second à droite, en `{ entity, label?, icon? }` ou en simple identifiant. L'icône dit ce que fait chacun et s'il est enclenché (sécurité enfant, verrouillage automatique, verrou, interrupteur), et un appui le bascule. Un `lock` ouvre seulement sa fiche : un appui par erreur ne déverrouille jamais rien. |
 | `info_entities` | Jusqu'à 8 lignes `{ entity, icon?, label?, value_map?, hide_unit? }`, les suivantes sont ignorées, affichées sous les lignes que la carte lit d'elle-même. Un appui ouvre la fiche de l'entité, ce qui permet de réinitialiser un réservoir ou un filtre depuis la carte. Au-delà de 5 lignes, l'espacement se resserre. Les valeurs s'affichent comme dans Home Assistant, avec la précision d'affichage de l'entité. `value_map` renomme les valeurs brutes (voir plus bas), `hide_unit` masque l'unité. |
 | `lines_order` | L'ordre des lignes d'info, donné par leurs clés : `program`, `remaining`, `door`, celles que chaque type apporte (`level`, `last_feed`, `flow_return`, `nozzle`…) et, pour les lignes ajoutées, leur identifiant d'entité. L'éditeur visuel l'écrit tout seul au glisser. Les lignes non citées gardent leur place après celles qui le sont, et une ligne qui ne s'affiche pas est ignorée. |
-| `start_entity` / `pause_entity` / `resume_entity` / `stop_entity` | Commandes, affichées seulement si configurées. Une commande est d'ordinaire un `button`, un `script` ou une `automation`, qui est déclenchée et non désactivée, et peut aussi être un `select` ou un `number` : `start_option` dit quelle option choisir (la carte la prend toute seule quand la liste n'en propose qu'une), `start_value` ce qu'il faut écrire. Idem pour les trois autres, en `pause_option`, `stop_value` et ainsi de suite. |
+| `start_entity` / `pause_entity` / `resume_entity` / `stop_entity` | Commandes, affichées seulement si configurées. Une commande est d'ordinaire un `button`, un `script` ou une `automation`, qui est déclenchée et non désactivée, et peut aussi être un `select` ou un `number` : `start_option` dit quelle option choisir (la carte la prend toute seule quand la liste n'en propose qu'une), `start_value` ce qu'il faut écrire. Idem pour les trois autres, en `pause_option`, `stop_value` et ainsi de suite. `start_icon` remplace l'icône du bouton, comme `pause_icon`, `resume_icon`, `stop_icon`, `toggle_icon` et `filter_reset_icon` : `mdi:play` se lit comme un programme qui démarre, ce que tout appui n'est pas. En YAML seulement. |
 
 Par type :
 
@@ -118,6 +119,8 @@ Par type :
 | `current_layer_entity` / `total_layers_entity` | imprimante 3D | La couche, en *84 / 190*. |
 | `printer_layout` | imprimante 3D | `enclosed` (défaut : une enceinte dont le plateau descend quand la pièce monte) \| `open` (un cadre ouvert dont le portique monte). La pièce grandit avec la progression, dans la couleur de l'état, et la tête va et vient pendant l'impression. |
 | `printed_part` | imprimante 3D | La pièce sur le plateau : `cube` (défaut), `pyramid` (pyramide) ou `duck` (un canard en plastique). Elle apparaît de bas en haut au fil de l'impression. |
+| `iron_layout` | fer | `iron` (défaut, le fer seul) \| `generator` (le même fer sur le socle d'une centrale vapeur). |
+| `left_on_after` | fer | Minutes allumé au bout desquelles la ligne d'état affiche *Resté allumé*, en rouge. Vide, cela n'arrive jamais. |
 | `feeder_layout` | distributeur | `tower` (défaut, la gamelle intégrée) \| `canister` (un réservoir rond sur son socle, la gamelle posée devant). |
 | `portions_today_entity` / `weight_today_entity` | distributeur | Ce qui a été servi aujourd'hui, sur une seule ligne. Sans entité de poids, la carte calcule les grammes à partir de `portion_weight_entity` : rien n'est supposé sur la taille d'un repas. |
 | `serving_size_entity` / `portion_weight_entity` | distributeur | Combien de portions par distribution, et ce que pèse une portion. |
@@ -261,6 +264,24 @@ phase_map:
 ```
 
 Une valeur non reconnue laisse l'illustration en l'état, et la phase nomme aussi l'étape sur la ligne d'état (voir *Étapes du cycle*).
+
+### Fers à repasser
+
+Rien ne relie un fer à Home Assistant, et c'est bien pourquoi il est sur une prise connectée : l'état vient de ce qu'il consomme, le dessin fait le reste. En chauffe, la semelle rougit et la vapeur sort du nez. Deux modèles sont dessinés, le fer seul et le même fer sur le socle d'une centrale vapeur.
+
+`left_on_after` est la raison d'être de la prise. Passé ce nombre de minutes allumé, la ligne d'état affiche *Resté allumé*, en rouge :
+
+```yaml
+type: custom:ha-appliance-card
+appliance_type: iron
+iron_layout: generator
+state_entity: switch.prise_fer
+power_entity: sensor.prise_fer_puissance
+power_on_threshold: 20
+left_on_after: 30
+```
+
+La carte montre l'alerte ; éteindre le fer reste le travail d'une automatisation, sur la même entité.
 
 ### Distributeurs de croquettes
 

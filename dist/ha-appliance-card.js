@@ -1,4 +1,4 @@
-const CARD_VERSION = "2.14.2";
+const CARD_VERSION = "2.15.0";
 
 console.info(
   "%c HA-APPLIANCE-CARD %c v" + CARD_VERSION + " ",
@@ -136,6 +136,8 @@ const T = {
     type_pet_feeder: "Pet feeder", feeder_ready: "Ready", feeder_feeding: "Dispensing", section_portions_today: "Portions today", section_weight_today: "Weight today", section_portion_weight: "Portion weight", section_serving_size: "Serving size", section_feeder_schedule: "Schedule", section_last_feed: "Last feed", section_error: "Error indicator", start_option: "Option to select", start_value: "Value to write", portions: "portions",
     feeder_empty: "Tank empty", feeder_level: "Tank at {pct}", section_level: "Food level", level_empty_below: "Empty at or below", level_max: "Tank capacity",
     section_feeder_layout: "Model", layout_tower: "Tower, built-in bowl", layout_canister: "Round tank, separate bowl",
+    type_iron: "Iron", section_iron_layout: "Model", layout_iron: "Iron", layout_generator: "Steam generator",
+    iron_heating: "Heating", iron_off: "Off", left_on: "Left on", left_on_after: "Warn after (minutes switched on)",
     washer_dryer: "Washer-dryer (washes and dries)", step_drying: "Drying", section_cycle_phase: "Cycle phase",
     step_prewash: "Pre-wash", step_soaking: "Soaking", step_weighing: "Weighing", step_filling: "Filling", step_washing: "Washing", step_rinsing: "Rinsing", step_draining: "Draining", step_spinning: "Spinning", step_cooling: "Cooling", step_anti_crease: "Anti-crease", step_steam: "Steam",
   },
@@ -264,6 +266,8 @@ const T = {
     type_pet_feeder: "Distributeur de croquettes", feeder_ready: "Pr\u00eat", feeder_feeding: "Distribution", section_portions_today: "Portions du jour", section_weight_today: "Poids du jour", section_portion_weight: "Poids d'une portion", section_serving_size: "Taille de la portion", section_feeder_schedule: "Planning", section_last_feed: "Dernier repas", section_error: "Indicateur d'erreur", start_option: "Option \u00e0 choisir", start_value: "Valeur \u00e0 \u00e9crire", portions: "portions",
     feeder_empty: "R\u00e9servoir vide", feeder_level: "R\u00e9servoir \u00e0 {pct}", section_level: "Niveau de croquettes", level_empty_below: "Vide \u00e0 ce niveau ou moins", level_max: "Contenance du r\u00e9servoir",
     section_feeder_layout: "Mod\u00e8le", layout_tower: "Tour, gamelle int\u00e9gr\u00e9e", layout_canister: "R\u00e9servoir rond, gamelle \u00e0 part",
+    type_iron: "Fer \u00e0 repasser", section_iron_layout: "Mod\u00e8le", layout_iron: "Fer seul", layout_generator: "Centrale vapeur",
+    iron_heating: "En chauffe", iron_off: "\u00c0 l'arr\u00eat", left_on: "Rest\u00e9 allum\u00e9", left_on_after: "Alerter apr\u00e8s (minutes allum\u00e9)",
     washer_dryer: "Lavante-s\u00e9chante (lave et s\u00e8che)", step_drying: "S\u00e9chage", section_cycle_phase: "Phase du cycle",
     step_prewash: "Pr\u00e9lavage", step_soaking: "Trempage", step_weighing: "Pes\u00e9e", step_filling: "Remplissage", step_washing: "Lavage", step_rinsing: "Rin\u00e7age", step_draining: "Vidange", step_spinning: "Essorage", step_cooling: "Refroidissement", step_anti_crease: "Anti-froissage", step_steam: "Vapeur",
   },
@@ -392,6 +396,8 @@ const T = {
     type_pet_feeder: "\u041a\u043e\u0440\u043c\u0443\u0448\u043a\u0430", feeder_ready: "\u0413\u043e\u0442\u043e\u0432\u0430", feeder_feeding: "\u041a\u043e\u0440\u043c\u043b\u0435\u043d\u0438\u0435", section_portions_today: "\u041f\u043e\u0440\u0446\u0438\u0439 \u0437\u0430 \u0434\u0435\u043d\u044c", section_weight_today: "\u0412\u0435\u0441 \u0437\u0430 \u0434\u0435\u043d\u044c", section_portion_weight: "\u0412\u0435\u0441 \u043f\u043e\u0440\u0446\u0438\u0438", section_serving_size: "\u0420\u0430\u0437\u043c\u0435\u0440 \u043f\u043e\u0440\u0446\u0438\u0438", section_feeder_schedule: "\u0420\u0430\u0441\u043f\u0438\u0441\u0430\u043d\u0438\u0435", section_last_feed: "\u041f\u043e\u0441\u043b\u0435\u0434\u043d\u0435\u0435 \u043a\u043e\u0440\u043c\u043b\u0435\u043d\u0438\u0435", section_error: "\u0418\u043d\u0434\u0438\u043a\u0430\u0442\u043e\u0440 \u043e\u0448\u0438\u0431\u043a\u0438", start_option: "\u0412\u044b\u0431\u0438\u0440\u0430\u0435\u043c\u0430\u044f \u043e\u043f\u0446\u0438\u044f", start_value: "\u0417\u0430\u043f\u0438\u0441\u044b\u0432\u0430\u0435\u043c\u043e\u0435 \u0437\u043d\u0430\u0447\u0435\u043d\u0438\u0435", portions: "\u043f\u043e\u0440\u0446\u0438\u0439",
     feeder_empty: "\u0411\u0443\u043d\u043a\u0435\u0440 \u043f\u0443\u0441\u0442", feeder_level: "\u0411\u0443\u043d\u043a\u0435\u0440 \u0437\u0430\u043f\u043e\u043b\u043d\u0435\u043d \u043d\u0430 {pct}", section_level: "\u0423\u0440\u043e\u0432\u0435\u043d\u044c \u043a\u043e\u0440\u043c\u0430", level_empty_below: "\u041f\u0443\u0441\u0442\u043e \u043f\u0440\u0438 \u0437\u043d\u0430\u0447\u0435\u043d\u0438\u0438 \u043d\u0435 \u0432\u044b\u0448\u0435", level_max: "\u0401\u043c\u043a\u043e\u0441\u0442\u044c \u0431\u0443\u043d\u043a\u0435\u0440\u0430",
     section_feeder_layout: "\u041c\u043e\u0434\u0435\u043b\u044c", layout_tower: "\u0411\u0430\u0448\u043d\u044f \u0441\u043e \u0432\u0441\u0442\u0440\u043e\u0435\u043d\u043d\u043e\u0439 \u043c\u0438\u0441\u043a\u043e\u0439", layout_canister: "\u041a\u0440\u0443\u0433\u043b\u044b\u0439 \u0431\u0443\u043d\u043a\u0435\u0440, \u043e\u0442\u0434\u0435\u043b\u044c\u043d\u0430\u044f \u043c\u0438\u0441\u043a\u0430",
+    type_iron: "\u0423\u0442\u044e\u0433", section_iron_layout: "\u041c\u043e\u0434\u0435\u043b\u044c", layout_iron: "\u0423\u0442\u044e\u0433", layout_generator: "\u041f\u0430\u0440\u043e\u0433\u0435\u043d\u0435\u0440\u0430\u0442\u043e\u0440",
+    iron_heating: "\u041d\u0430\u0433\u0440\u0435\u0432", iron_off: "\u0412\u044b\u043a\u043b\u044e\u0447\u0435\u043d", left_on: "\u041e\u0441\u0442\u0430\u043b\u0441\u044f \u0432\u043a\u043b\u044e\u0447\u0451\u043d\u043d\u044b\u043c", left_on_after: "\u041f\u0440\u0435\u0434\u0443\u043f\u0440\u0435\u0434\u0438\u0442\u044c \u0447\u0435\u0440\u0435\u0437 (\u043c\u0438\u043d\u0443\u0442 \u0432\u043a\u043b\u044e\u0447\u0435\u043d\u0438\u044f)",
     washer_dryer: "\u0421\u0442\u0438\u0440\u0430\u043b\u044c\u043d\u043e-\u0441\u0443\u0448\u0438\u043b\u044c\u043d\u0430\u044f \u043c\u0430\u0448\u0438\u043d\u0430 (\u0441\u0442\u0438\u0440\u0430\u0435\u0442 \u0438 \u0441\u0443\u0448\u0438\u0442)", step_drying: "\u0421\u0443\u0448\u043a\u0430", section_cycle_phase: "\u0424\u0430\u0437\u0430 \u0446\u0438\u043a\u043b\u0430",
     step_prewash: "\u041f\u0440\u0435\u0434\u0441\u0442\u0438\u0440\u043a\u0430", step_soaking: "\u0417\u0430\u043c\u0430\u0447\u0438\u0432\u0430\u043d\u0438\u0435", step_weighing: "\u0412\u0437\u0432\u0435\u0448\u0438\u0432\u0430\u043d\u0438\u0435", step_filling: "\u041d\u0430\u0431\u043e\u0440 \u0432\u043e\u0434\u044b", step_washing: "\u0421\u0442\u0438\u0440\u043a\u0430", step_rinsing: "\u041f\u043e\u043b\u043e\u0441\u043a\u0430\u043d\u0438\u0435", step_draining: "\u0421\u043b\u0438\u0432", step_spinning: "\u041e\u0442\u0436\u0438\u043c", step_cooling: "\u041e\u0445\u043b\u0430\u0436\u0434\u0435\u043d\u0438\u0435", step_anti_crease: "\u0417\u0430\u0449\u0438\u0442\u0430 \u043e\u0442 \u0441\u043c\u0438\u043d\u0430\u043d\u0438\u044f", step_steam: "\u041f\u0430\u0440",
   },
@@ -520,6 +526,8 @@ const T = {
     type_pet_feeder: "Futterautomat", feeder_ready: "Bereit", feeder_feeding: "F\u00fcttert", section_portions_today: "Portionen heute", section_weight_today: "Menge heute", section_portion_weight: "Portionsgewicht", section_serving_size: "Portionsgr\u00f6\u00dfe", section_feeder_schedule: "Zeitplan", section_last_feed: "Letzte F\u00fctterung", section_error: "St\u00f6rungsanzeige", start_option: "Auszuw\u00e4hlende Option", start_value: "Zu schreibender Wert", portions: "Portionen",
     feeder_empty: "Beh\u00e4lter leer", feeder_level: "Beh\u00e4lter zu {pct} voll", section_level: "F\u00fcllstand", level_empty_below: "Leer ab oder unter", level_max: "Fassungsverm\u00f6gen",
     section_feeder_layout: "Modell", layout_tower: "Turm, Napf integriert", layout_canister: "Runder Beh\u00e4lter, separater Napf",
+    type_iron: "B\u00fcgeleisen", section_iron_layout: "Modell", layout_iron: "B\u00fcgeleisen", layout_generator: "Dampfstation",
+    iron_heating: "Heizt", iron_off: "Aus", left_on: "Eingeschaltet geblieben", left_on_after: "Warnen nach (Minuten eingeschaltet)",
     washer_dryer: "Waschtrockner (w\u00e4scht und trocknet)", step_drying: "Trocknen", section_cycle_phase: "Programmphase",
     step_prewash: "Vorw\u00e4sche", step_soaking: "Einweichen", step_weighing: "Wiegen", step_filling: "Bef\u00fcllen", step_washing: "Waschen", step_rinsing: "Sp\u00fclen", step_draining: "Abpumpen", step_spinning: "Schleudern", step_cooling: "Abk\u00fchlen", step_anti_crease: "Knitterschutz", step_steam: "Dampf",
   },
@@ -648,6 +656,8 @@ const T = {
     type_pet_feeder: "Comedero autom\u00e1tico", feeder_ready: "Listo", feeder_feeding: "Dispensando", section_portions_today: "Raciones de hoy", section_weight_today: "Peso de hoy", section_portion_weight: "Peso de la raci\u00f3n", section_serving_size: "Tama\u00f1o de la raci\u00f3n", section_feeder_schedule: "Programaci\u00f3n", section_last_feed: "\u00daltima comida", section_error: "Indicador de error", start_option: "Opci\u00f3n a seleccionar", start_value: "Valor a escribir", portions: "raciones",
     feeder_empty: "Dep\u00f3sito vac\u00edo", feeder_level: "Dep\u00f3sito al {pct}", section_level: "Nivel de comida", level_empty_below: "Vac\u00edo en o por debajo de", level_max: "Capacidad del dep\u00f3sito",
     section_feeder_layout: "Modelo", layout_tower: "Torre, cuenco integrado", layout_canister: "Dep\u00f3sito redondo, cuenco aparte",
+    type_iron: "Plancha", section_iron_layout: "Modelo", layout_iron: "Plancha", layout_generator: "Centro de planchado",
+    iron_heating: "Calentando", iron_off: "Apagado", left_on: "Sigue encendida", left_on_after: "Avisar tras (minutos encendida)",
     washer_dryer: "Lavasecadora (lava y seca)", step_drying: "Secado", section_cycle_phase: "Fase del ciclo",
     step_prewash: "Prelavado", step_soaking: "Remojo", step_weighing: "Pesaje", step_filling: "Llenado", step_washing: "Lavado", step_rinsing: "Aclarado", step_draining: "Desag\u00fce", step_spinning: "Centrifugado", step_cooling: "Enfriamiento", step_anti_crease: "Antiarrugas", step_steam: "Vapor",
   },
@@ -776,6 +786,8 @@ const T = {
     type_pet_feeder: "Distributore di crocchette", feeder_ready: "Pronto", feeder_feeding: "Erogazione", section_portions_today: "Porzioni di oggi", section_weight_today: "Peso di oggi", section_portion_weight: "Peso della porzione", section_serving_size: "Dimensione della porzione", section_feeder_schedule: "Programmazione", section_last_feed: "Ultimo pasto", section_error: "Indicatore di errore", start_option: "Opzione da selezionare", start_value: "Valore da scrivere", portions: "porzioni",
     feeder_empty: "Serbatoio vuoto", feeder_level: "Serbatoio al {pct}", section_level: "Livello del cibo", level_empty_below: "Vuoto a questo livello o meno", level_max: "Capacit\u00e0 del serbatoio",
     section_feeder_layout: "Modello", layout_tower: "Torre, ciotola integrata", layout_canister: "Serbatoio tondo, ciotola separata",
+    type_iron: "Ferro da stiro", section_iron_layout: "Modello", layout_iron: "Ferro da stiro", layout_generator: "Ferro con caldaia",
+    iron_heating: "In riscaldamento", iron_off: "Spento", left_on: "Rimasto acceso", left_on_after: "Avvisa dopo (minuti acceso)",
     washer_dryer: "Lavasciuga (lava e asciuga)", step_drying: "Asciugatura", section_cycle_phase: "Fase del ciclo",
     step_prewash: "Prelavaggio", step_soaking: "Ammollo", step_weighing: "Pesatura", step_filling: "Carico acqua", step_washing: "Lavaggio", step_rinsing: "Risciacquo", step_draining: "Scarico", step_spinning: "Centrifuga", step_cooling: "Raffreddamento", step_anti_crease: "Antipiega", step_steam: "Vapore",
   },
@@ -904,6 +916,8 @@ const T = {
     type_pet_feeder: "Voerautomaat", feeder_ready: "Gereed", feeder_feeding: "Voeren", section_portions_today: "Porties vandaag", section_weight_today: "Gewicht vandaag", section_portion_weight: "Portiegewicht", section_serving_size: "Portiegrootte", section_feeder_schedule: "Schema", section_last_feed: "Laatste voeding", section_error: "Storingsindicator", start_option: "Te kiezen optie", start_value: "Te schrijven waarde", portions: "porties",
     feeder_empty: "Reservoir leeg", feeder_level: "Reservoir voor {pct} vol", section_level: "Voerniveau", level_empty_below: "Leeg bij of onder", level_max: "Inhoud van het reservoir",
     section_feeder_layout: "Model", layout_tower: "Toren, ingebouwde bak", layout_canister: "Rond reservoir, losse bak",
+    type_iron: "Strijkijzer", section_iron_layout: "Model", layout_iron: "Strijkijzer", layout_generator: "Stoomgenerator",
+    iron_heating: "Aan het koken", iron_off: "Uit", left_on: "Blijft aan", left_on_after: "Waarschuwen na (minuten aan)",
     washer_dryer: "Was-droogcombinatie (wast en droogt)", step_drying: "Drogen", section_cycle_phase: "Programmafase",
     step_prewash: "Voorwas", step_soaking: "Weken", step_weighing: "Wegen", step_filling: "Vullen", step_washing: "Wassen", step_rinsing: "Spoelen", step_draining: "Afpompen", step_spinning: "Centrifugeren", step_cooling: "Afkoelen", step_anti_crease: "Anti-kreuk", step_steam: "Stoom",
   },
@@ -1032,6 +1046,8 @@ const T = {
     type_pet_feeder: "Alimentador autom\u00e1tico", feeder_ready: "Pronto", feeder_feeding: "A distribuir", section_portions_today: "Por\u00e7\u00f5es de hoje", section_weight_today: "Peso de hoje", section_portion_weight: "Peso da por\u00e7\u00e3o", section_serving_size: "Tamanho da por\u00e7\u00e3o", section_feeder_schedule: "Programa\u00e7\u00e3o", section_last_feed: "\u00daltima refei\u00e7\u00e3o", section_error: "Indicador de erro", start_option: "Op\u00e7\u00e3o a selecionar", start_value: "Valor a escrever", portions: "por\u00e7\u00f5es",
     feeder_empty: "Dep\u00f3sito vazio", feeder_level: "Dep\u00f3sito a {pct}", section_level: "N\u00edvel de comida", level_empty_below: "Vazio em ou abaixo de", level_max: "Capacidade do dep\u00f3sito",
     section_feeder_layout: "Modelo", layout_tower: "Torre, ta\u00e7a integrada", layout_canister: "Dep\u00f3sito redondo, ta\u00e7a \u00e0 parte",
+    type_iron: "Ferro de engomar", section_iron_layout: "Modelo", layout_iron: "Ferro de engomar", layout_generator: "Gerador de vapor",
+    iron_heating: "A aquecer", iron_off: "Desligada", left_on: "Ficou ligado", left_on_after: "Avisar ap\u00f3s (minutos ligado)",
     washer_dryer: "M\u00e1quina de lavar e secar (lava e seca)", step_drying: "Secagem", section_cycle_phase: "Fase do ciclo",
     step_prewash: "Pr\u00e9-lavagem", step_soaking: "Molho", step_weighing: "Pesagem", step_filling: "Enchimento", step_washing: "Lavagem", step_rinsing: "Enxaguamento", step_draining: "Escoamento", step_spinning: "Centrifuga\u00e7\u00e3o", step_cooling: "Arrefecimento", step_anti_crease: "Anti-vincos", step_steam: "Vapor",
   },
@@ -1160,6 +1176,8 @@ const T = {
     type_pet_feeder: "Foderautomat", feeder_ready: "Redo", feeder_feeding: "Matar", section_portions_today: "Portioner idag", section_weight_today: "Vikt idag", section_portion_weight: "Portionsvikt", section_serving_size: "Portionsstorlek", section_feeder_schedule: "Schema", section_last_feed: "Senaste matning", section_error: "Felindikator", start_option: "Alternativ att v\u00e4lja", start_value: "V\u00e4rde att skriva", portions: "portioner",
     feeder_empty: "Beh\u00e5llaren tom", feeder_level: "Beh\u00e5llaren {pct} full", section_level: "Foderm\u00e4ngd", level_empty_below: "Tom vid eller under", level_max: "Beh\u00e5llarens volym",
     section_feeder_layout: "Modell", layout_tower: "Torn, inbyggd sk\u00e5l", layout_canister: "Rund beh\u00e5llare, separat sk\u00e5l",
+    type_iron: "Strykj\u00e4rn", section_iron_layout: "Modell", layout_iron: "Strykj\u00e4rn", layout_generator: "\u00c5ngstation",
+    iron_heating: "V\u00e4rmer", iron_off: "Av", left_on: "St\u00e5r p\u00e5", left_on_after: "Varna efter (minuter p\u00e5slagen)",
     washer_dryer: "Kombinerad tv\u00e4tt/tork (tv\u00e4ttar och torkar)", step_drying: "Torkning", section_cycle_phase: "Programfas",
     step_prewash: "F\u00f6rtv\u00e4tt", step_soaking: "Bl\u00f6tl\u00e4ggning", step_weighing: "V\u00e4gning", step_filling: "P\u00e5fyllning", step_washing: "Tv\u00e4tt", step_rinsing: "Sk\u00f6ljning", step_draining: "T\u00f6mning", step_spinning: "Centrifugering", step_cooling: "Avsvalning", step_anti_crease: "Skrynkelskydd", step_steam: "\u00c5nga",
   },
@@ -1288,6 +1306,8 @@ const T = {
     type_pet_feeder: "F\u00f4rautomat", feeder_ready: "Klar", feeder_feeding: "Mater", section_portions_today: "Porsjoner i dag", section_weight_today: "Vekt i dag", section_portion_weight: "Porsjonsvekt", section_serving_size: "Porsjonsst\u00f8rrelse", section_feeder_schedule: "Tidsplan", section_last_feed: "Siste m\u00e5ltid", section_error: "Feilindikator", start_option: "Alternativ \u00e5 velge", start_value: "Verdi \u00e5 skrive", portions: "porsjoner",
     feeder_empty: "Beholder tom", feeder_level: "Beholder {pct} full", section_level: "F\u00f4rniv\u00e5", level_empty_below: "Tom ved eller under", level_max: "Beholderens volum",
     section_feeder_layout: "Modell", layout_tower: "T\u00e5rn, innebygd sk\u00e5l", layout_canister: "Rund beholder, separat sk\u00e5l",
+    type_iron: "Strykejern", section_iron_layout: "Modell", layout_iron: "Strykejern", layout_generator: "Dampstasjon",
+    iron_heating: "Varmer", iron_off: "Av", left_on: "St\u00e5r p\u00e5", left_on_after: "Varsle etter (minutter p\u00e5sl\u00e5tt)",
     washer_dryer: "Kombinert vaske-/t\u00f8rkemaskin (vasker og t\u00f8rker)", step_drying: "T\u00f8rking", section_cycle_phase: "Programfase",
     step_prewash: "Forvask", step_soaking: "Bl\u00f8tlegging", step_weighing: "Veiing", step_filling: "Vannfylling", step_washing: "Vask", step_rinsing: "Skylling", step_draining: "T\u00f8mming", step_spinning: "Sentrifugering", step_cooling: "Avkj\u00f8ling", step_anti_crease: "Antikr\u00f8ll", step_steam: "Damp",
   },
@@ -1416,6 +1436,8 @@ const T = {
     type_pet_feeder: "Foderautomat", feeder_ready: "Klar", feeder_feeding: "Fodrer", section_portions_today: "Portioner i dag", section_weight_today: "V\u00e6gt i dag", section_portion_weight: "Portionsv\u00e6gt", section_serving_size: "Portionsst\u00f8rrelse", section_feeder_schedule: "Tidsplan", section_last_feed: "Sidste fodring", section_error: "Fejlindikator", start_option: "Valgmulighed", start_value: "V\u00e6rdi at skrive", portions: "portioner",
     feeder_empty: "Beholder tom", feeder_level: "Beholder {pct} fuld", section_level: "Foderm\u00e6ngde", level_empty_below: "Tom ved eller under", level_max: "Beholderens rumfang",
     section_feeder_layout: "Model", layout_tower: "T\u00e5rn, indbygget sk\u00e5l", layout_canister: "Rund beholder, separat sk\u00e5l",
+    type_iron: "Strygejern", section_iron_layout: "Model", layout_iron: "Strygejern", layout_generator: "Dampstation",
+    iron_heating: "Varmer", iron_off: "Slukket", left_on: "St\u00e5r t\u00e6ndt", left_on_after: "Advar efter (minutter t\u00e6ndt)",
     washer_dryer: "Vaske-t\u00f8rremaskine (vasker og t\u00f8rrer)", step_drying: "T\u00f8rring", section_cycle_phase: "Programfase",
     step_prewash: "Forvask", step_soaking: "Ibl\u00f8ds\u00e6tning", step_weighing: "Vejning", step_filling: "P\u00e5fyldning", step_washing: "Vask", step_rinsing: "Skylning", step_draining: "Udpumpning", step_spinning: "Centrifugering", step_cooling: "Afk\u00f8ling", step_anti_crease: "Antikr\u00f8l", step_steam: "Damp",
   },
@@ -1544,6 +1566,8 @@ const T = {
     type_pet_feeder: "Karmnik automatyczny", feeder_ready: "Gotowy", feeder_feeding: "Wydawanie", section_portions_today: "Porcje dzisiaj", section_weight_today: "Waga dzisiaj", section_portion_weight: "Waga porcji", section_serving_size: "Wielko\u015b\u0107 porcji", section_feeder_schedule: "Harmonogram", section_last_feed: "Ostatnie karmienie", section_error: "Wska\u017anik b\u0142\u0119du", start_option: "Opcja do wybrania", start_value: "Warto\u015b\u0107 do zapisania", portions: "porcji",
     feeder_empty: "Pusty zasobnik", feeder_level: "Zasobnik nape\u0142niony w {pct}", section_level: "Poziom karmy", level_empty_below: "Pusty przy tej warto\u015bci lub ni\u017cej", level_max: "Pojemno\u015b\u0107 zasobnika",
     section_feeder_layout: "Model", layout_tower: "Wie\u017ca, wbudowana miska", layout_canister: "Okr\u0105g\u0142y zasobnik, osobna miska",
+    type_iron: "\u017belazko", section_iron_layout: "Model", layout_iron: "\u017belazko", layout_generator: "Generator pary",
+    iron_heating: "Grzeje", iron_off: "Wy\u0142\u0105czony", left_on: "Pozosta\u0142o w\u0142\u0105czone", left_on_after: "Ostrze\u017c po (minutach w\u0142\u0105czenia)",
     washer_dryer: "Pralko-suszarka (pierze i suszy)", step_drying: "Suszenie", section_cycle_phase: "Faza programu",
     step_prewash: "Pranie wst\u0119pne", step_soaking: "Namaczanie", step_weighing: "Wa\u017cenie", step_filling: "Nape\u0142nianie", step_washing: "Pranie", step_rinsing: "P\u0142ukanie", step_draining: "Odpompowanie", step_spinning: "Wirowanie", step_cooling: "Sch\u0142adzanie", step_anti_crease: "Przeciw zagnieceniom", step_steam: "Para",
   },
@@ -1672,6 +1696,8 @@ const T = {
     type_pet_feeder: "\u81ea\u52a8\u5582\u98df\u5668", feeder_ready: "\u5c31\u7eea", feeder_feeding: "\u6295\u5582\u4e2d", section_portions_today: "\u4eca\u65e5\u4efd\u6570", section_weight_today: "\u4eca\u65e5\u91cd\u91cf", section_portion_weight: "\u6bcf\u4efd\u91cd\u91cf", section_serving_size: "\u6bcf\u6b21\u4efd\u91cf", section_feeder_schedule: "\u8ba1\u5212", section_last_feed: "\u4e0a\u6b21\u6295\u5582", section_error: "\u6545\u969c\u6307\u793a", start_option: "\u8981\u9009\u62e9\u7684\u9009\u9879", start_value: "\u8981\u5199\u5165\u7684\u503c", portions: "\u4efd",
     feeder_empty: "\u6599\u6876\u5df2\u7a7a", feeder_level: "\u6599\u6876\u4f59\u91cf {pct}", section_level: "\u4f59\u91cf", level_empty_below: "\u4f4e\u4e8e\u6216\u7b49\u4e8e\u6b64\u503c\u89c6\u4e3a\u7a7a", level_max: "\u6599\u6876\u5bb9\u91cf",
     section_feeder_layout: "\u578b\u53f7", layout_tower: "\u5854\u5f0f\uff0c\u4e00\u4f53\u5f0f\u98df\u76c6", layout_canister: "\u5706\u5f62\u6599\u6876\uff0c\u72ec\u7acb\u98df\u76c6",
+    type_iron: "\u71a8\u6597", section_iron_layout: "\u578b\u53f7", layout_iron: "\u71a8\u6597", layout_generator: "\u84b8\u6c7d\u53d1\u751f\u5668",
+    iron_heating: "\u52a0\u70ed\u4e2d", iron_off: "\u5df2\u5173\u95ed", left_on: "\u4ecd\u7136\u5f00\u7740", left_on_after: "\u5f00\u542f\u591a\u5c11\u5206\u949f\u540e\u63d0\u9192",
     washer_dryer: "\u6d17\u70d8\u4e00\u4f53\u673a\uff08\u6d17\u6da4\u5e76\u70d8\u5e72\uff09", step_drying: "\u70d8\u5e72\u4e2d", section_cycle_phase: "\u7a0b\u5e8f\u9636\u6bb5",
     step_prewash: "\u9884\u6d17\u4e2d", step_soaking: "\u6d78\u6ce1\u4e2d", step_weighing: "\u79f0\u91cd\u4e2d", step_filling: "\u8fdb\u6c34\u4e2d", step_washing: "\u6d17\u6da4\u4e2d", step_rinsing: "\u6f02\u6d17\u4e2d", step_draining: "\u6392\u6c34\u4e2d", step_spinning: "\u8131\u6c34\u4e2d", step_cooling: "\u51b7\u5374\u4e2d", step_anti_crease: "\u9632\u76b1\u4e2d", step_steam: "\u84b8\u6c7d\u4e2d",
   },
@@ -1800,6 +1826,8 @@ const T = {
     type_pet_feeder: "Krm\u00edtko", feeder_ready: "P\u0159ipraveno", feeder_feeding: "Krmen\u00ed", section_portions_today: "Porce dnes", section_weight_today: "Hmotnost dnes", section_portion_weight: "Hmotnost porce", section_serving_size: "Velikost porce", section_feeder_schedule: "Rozvrh", section_last_feed: "Posledn\u00ed krmen\u00ed", section_error: "Indik\u00e1tor chyby", start_option: "Mo\u017enost k v\u00fdb\u011bru", start_value: "Hodnota k z\u00e1pisu", portions: "porc\u00ed",
     feeder_empty: "Z\u00e1sobn\u00edk pr\u00e1zdn\u00fd", feeder_level: "Z\u00e1sobn\u00edk napln\u011bn na {pct}", section_level: "Mno\u017estv\u00ed krmiva", level_empty_below: "Pr\u00e1zdn\u00fd p\u0159i t\u00e9to hodnot\u011b nebo ni\u017e\u0161\u00ed", level_max: "Objem z\u00e1sobn\u00edku",
     section_feeder_layout: "Model", layout_tower: "V\u011b\u017e, vestav\u011bn\u00e1 miska", layout_canister: "Kulat\u00fd z\u00e1sobn\u00edk, samostatn\u00e1 miska",
+    type_iron: "\u017dehli\u010dka", section_iron_layout: "Model", layout_iron: "\u017dehli\u010dka", layout_generator: "Parn\u00ed gener\u00e1tor",
+    iron_heating: "Oh\u0159\u00edv\u00e1n\u00ed", iron_off: "Vypnuto", left_on: "Z\u016fstala zapnut\u00e1", left_on_after: "Upozornit po (minut\u00e1ch zapnut\u00ed)",
     washer_dryer: "Pra\u010dka se su\u0161i\u010dkou (pere a su\u0161\u00ed)", step_drying: "Su\u0161en\u00ed", section_cycle_phase: "F\u00e1ze programu",
     step_prewash: "P\u0159edp\u00edrka", step_soaking: "Nam\u00e1\u010den\u00ed", step_weighing: "V\u00e1\u017een\u00ed", step_filling: "Napou\u0161t\u011bn\u00ed", step_washing: "Pran\u00ed", step_rinsing: "M\u00e1ch\u00e1n\u00ed", step_draining: "Vypou\u0161t\u011bn\u00ed", step_spinning: "Odst\u0159e\u010fov\u00e1n\u00ed", step_cooling: "Chlazen\u00ed", step_anti_crease: "Proti poma\u010dk\u00e1n\u00ed", step_steam: "P\u00e1ra",
   },
@@ -3212,6 +3240,10 @@ const TYPE_CAPS = {
   // fridge rather than run like a washer: no cycle, no programme, no door.
   // What matters is how much was served today and when the last meal was.
   pet_feeder: { petFeeder: true },
+  // An iron, on its own or on the base of a steam generator. Nothing connects
+  // one to Home Assistant, so it is read from the smart plug it is on, which
+  // is why it is there: an iron left on is the one an owner worries about.
+  iron: { iron: true },
 };
 const APPLIANCE_TYPES = Object.keys(TYPE_CAPS);
 const LAUNDRY_TYPES = ["washer", "dryer", "dishwasher"];
@@ -3275,6 +3307,10 @@ function detectApplianceType(cfg, st) {
   if (/wine.?(cooler|cellar|fridge)|cave.?(a|\u00e0).?vin|weink(u|ue|\u00fc)hl|weinklima|vinoteca|cantinetta|wijnklimaat|vinkyl|vinkj|vink\u00f8l|winiark|vinotek/.test(hay)) return "fridge";
   if (/fridge|freezer|frigo|r\u00e9frig|refrig|kuhlschrank|k\u00fchlschrank|nevera|frigor|koelkast|kyl(skap)?\b|kj\u00f8leskap|lod\u00f3wka|lodowka/.test(hay)) return "fridge";
   if (/kettle|bouilloire|wasserkocher|hervidor|bollitore|waterkoker|vattenkokare|vannkoker|elkedel|czajnik/.test(hay)) return "kettle";
+  // An iron, and the steam generator that is one on a boiler. Spanish and
+  // Portuguese call a griddle a plancha as well, so theirs is the ironing one:
+  // plancha de ropa, centro de planchado, ferro de engomar.
+  if (/\biron(ing)?\b|steam.?(generator|station)|fer.?a.?repasser|centrale.?vapeur|bugeleisen|dampfstation|dampfbugel|plancha.?de.?ropa|planchado|ferro.?(da.?stiro|de.?engomar|de.?passar)|strijkijzer|stoomgenerator|stryk(jarn|ejern)|strygejern|zelazko|generator.?pary|zehlicka|parni.?generator|\u0443\u0442\u044e\u0433|\u043f\u0430\u0440\u043e\u0433\u0435\u043d\u0435\u0440\u0430\u0442\u043e\u0440|\u71a8\u6597/.test(hay)) return "iron";
   // InComfort exposes an Intergas combi boiler as water_heater.boiler: the
   // domain says tank, the name says boiler, and the name is the one that knows.
   const eid = String(cfg.state_entity || "").toLowerCase();
@@ -3306,9 +3342,10 @@ const FRIDGE_UNPLUGGED_AFTER_MS = 30 * 60 * 1000;
 const P3_HEAT_MARGIN = 5;
 // Height of a finished part on the drawing, in pixels.
 const P3_PART_MAX = 40;
-// The count is shown in whole minutes, so half a minute is close enough to
-// keep it honest without redrawing for nothing.
-const FRIDGE_TICK_MS = 30 * 1000;
+// A card that counts minutes of its own, the fridge without power and the
+// iron left on, redraws on this beat: the count is shown in whole minutes, so
+// half a minute is close enough to keep it honest.
+const CLOCK_TICK_MS = 30 * 1000;
 // Same beat for a cycle counting down to a finish time.
 const COUNTDOWN_TICK_MS = 30 * 1000;
 
@@ -3378,7 +3415,7 @@ function strengthLevel(hass, entityId) {
 // Assistant knows when the reading last changed, and a value below the
 // threshold has held at least since then: the real start can only be earlier,
 // so the alarm can come late, never early.
-function belowSinceOf(st) {
+function changedSinceOf(st) {
   const at = st ? Date.parse(st.last_changed) : NaN;
   return Number.isFinite(at) && at <= Date.now() ? at : Date.now();
 }
@@ -5088,6 +5125,115 @@ const ILLUSTRATION_CSS = {
           100% { transform: translateY(-8px) scaleY(1.25); opacity: 0; }
         }
   `,
+  // An iron in profile, nose to the left: the soleplate, the shell rising to
+  // the back, the tank inside it and the handle over the top. The same iron is
+  // drawn smaller on the base of a steam generator.
+  iron: () => `
+        .ir { position: absolute; left: 0; right: 0; top: 0; bottom: 0; }
+        .ir-shell {
+          position: absolute; left: 8px; right: 10px; top: 44px; height: 26px;
+          background: var(--ac-body, var(--secondary-background-color, #d7d7d7));
+          border: 1px solid var(--divider-color, #c7c7c7); border-radius: 10px 16px 4px 4px;
+          clip-path: polygon(0 100%, 12% 40%, 34% 10%, 100% 0, 100% 100%);
+        }
+        /* The tank sits inside the shell, so the shell's own outline cuts it:
+           drawn beside it, it stuck out past the nose. */
+        .ir-tank {
+          position: absolute; left: 12px; right: 26px; top: 9px; height: 12px;
+          border-radius: 7px 3px 3px 7px; background: rgba(79, 195, 247, 0.34);
+        }
+        .ir-top {
+          position: absolute; left: 34px; right: 14px; top: 33px; height: 15px; border-radius: 9px 9px 0 0;
+          background: var(--ac-body, var(--secondary-background-color, #d7d7d7));
+          border: 1px solid var(--divider-color, #c7c7c7); border-bottom: none;
+        }
+        .ir-handle {
+          position: absolute; left: 26px; right: 12px; top: 17px; height: 22px;
+          border: 5px solid var(--ac-body, var(--secondary-background-color, #d7d7d7)); border-bottom: none;
+          border-radius: 16px 10px 0 0; box-shadow: 0 -1px 0 var(--divider-color, #c7c7c7);
+        }
+        .ir-plate {
+          position: absolute; left: 4px; right: 8px; top: 69px; height: 9px; background: #3b4048;
+          border-radius: 2px 4px 4px 4px; clip-path: polygon(0 66%, 10% 0, 100% 0, 100% 100%, 3% 100%);
+        }
+        .ir-cord {
+          position: absolute; right: 4px; top: 42px; width: 14px; height: 20px;
+          border: 3px solid var(--disabled-text-color, #9e9e9e); border-left: none; border-top: none;
+          border-radius: 0 0 12px 0;
+        }
+        /* Heating: the soleplate glows and steam leaves the nose. */
+        .machine.heating .ir-plate { background: #ff7043; box-shadow: 0 0 10px 1px #ff7043; }
+        .ir-steam {
+          position: absolute; width: 6px; height: 15px; border-radius: 4px; opacity: 0;
+          background: linear-gradient(to top, rgba(176, 196, 214, 0.85), rgba(176, 196, 214, 0));
+        }
+        .ir-steam.s1 { left: 6px; top: 34px; }
+        .ir-steam.s2 { left: 16px; top: 28px; }
+        .ir-steam.s3 { left: 26px; top: 32px; }
+        .machine.heating .ir-steam { animation: ir-puff 2.2s ease-out infinite; animation-delay: var(--anim-offset, 0s); }
+        .machine.heating .ir-steam.s2 { animation-delay: calc(-0.75s + var(--anim-offset, 0s)); }
+        .machine.heating .ir-steam.s3 { animation-delay: calc(-1.5s + var(--anim-offset, 0s)); }
+        @keyframes ir-puff {
+          0% { transform: translateY(8px) scale(0.5); opacity: 0; }
+          35% { opacity: 0.9; }
+          100% { transform: translateY(-14px) scale(1.2); opacity: 0; }
+        }
+        /* Left on for too long: the boiler's flame, its shape and its flicker,
+           in front of the iron. Its blue root belongs to a gas burner and is
+           dropped: nothing burns gas here. */
+        .ir-fire {
+          position: absolute; transform-origin: 50% 100%; opacity: 0;
+          background: linear-gradient(0deg, #ffca28 0%, #ffa726 30%, #ff9800 60%, #ff5722 100%);
+          clip-path: polygon(46% 0%, 58% 30%, 70% 10%, 76% 44%, 90% 28%, 94% 64%, 86% 88%, 66% 100%, 34% 100%, 14% 88%, 6% 62%, 12% 32%, 26% 50%, 30% 18%, 42% 36%);
+        }
+        .ir-fire.f1 { left: 8px; bottom: 28px; width: 18px; height: 32px; }
+        .ir-fire.f2 { left: 28px; bottom: 30px; width: 26px; height: 48px; }
+        .ir-fire.f3 { left: 56px; bottom: 30px; width: 20px; height: 38px; }
+        .machine.left-on .ir-fire { opacity: 1; animation: ir-flicker 0.6s ease-in-out infinite; animation-delay: var(--anim-offset, 0s); }
+        .machine.left-on .ir-fire.f2 { animation-delay: calc(-0.2s + var(--anim-offset, 0s)); }
+        .machine.left-on .ir-fire.f3 { animation-delay: calc(-0.4s + var(--anim-offset, 0s)); }
+        @keyframes ir-flicker {
+          0%, 100% { transform: scale(1, 1); }
+          30% { transform: scale(0.92, 1.1); }
+          60% { transform: scale(1.06, 0.9); }
+        }
+        .machine.left-on .ir-plate { background: #ff5722; box-shadow: 0 0 14px 2px #ff5722; }
+        /* The generator: the base carries the water tank, a dial and a lamp,
+           and the iron rests on its mat rather than sinking into it. */
+        .machine.generator .ir { transform: scale(0.74) translate(2px, -35px); transform-origin: 50% 100%; }
+        .machine.generator .ir-steam.s1 { left: 8px; top: 14px; }
+        .machine.generator .ir-steam.s2 { left: 18px; top: 8px; }
+        .machine.generator .ir-steam.s3 { left: 28px; top: 12px; }
+        .machine.generator .ir-fire.f1 { left: 12px; bottom: 52px; width: 16px; height: 28px; }
+        .machine.generator .ir-fire.f2 { left: 29px; bottom: 54px; width: 23px; height: 42px; }
+        .machine.generator .ir-fire.f3 { left: 54px; bottom: 52px; width: 18px; height: 32px; }
+        .gen-base {
+          position: absolute; left: 5px; right: 5px; bottom: 10px; height: 33px; border-radius: 7px 7px 10px 10px;
+          background: var(--ac-body, var(--secondary-background-color, #d7d7d7));
+          border: 1px solid var(--divider-color, #c7c7c7);
+        }
+        .gen-mat {
+          position: absolute; left: 11px; right: 11px; bottom: 42px; height: 6px; border-radius: 4px 4px 0 0;
+          background: var(--ac-body, var(--secondary-background-color, #d7d7d7));
+          border: 1px solid var(--divider-color, #c7c7c7); border-bottom: none;
+        }
+        .gen-tank {
+          position: absolute; left: 11px; width: 30px; bottom: 16px; height: 22px; border-radius: 4px 7px 7px 4px;
+          background: rgba(79, 195, 247, 0.34); border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+        .gen-dial {
+          position: absolute; right: 12px; bottom: 19px; width: 14px; height: 14px; border-radius: 50%;
+          background: var(--disabled-text-color, #9e9e9e);
+        }
+        .gen-led { position: absolute; right: 33px; bottom: 24px; width: 5px; height: 5px; border-radius: 50%; background: #8e9498; }
+        .machine.generator.heating .gen-led { background: #ff7043; box-shadow: 0 0 6px 1px #ff7043; }
+        .machine.generator.left-on .gen-led { background: #ff5722; box-shadow: 0 0 8px 2px #ff5722; }
+        .gen-hose {
+          position: absolute; right: 6px; top: 52px; width: 15px; height: 18px;
+          border: 4px solid var(--disabled-text-color, #9e9e9e); border-left: none; border-top: none;
+          border-radius: 0 0 12px 0;
+        }
+  `,
 };
 
 function illustrationCss(type, color) {
@@ -5541,6 +5687,31 @@ function illustrationHtml(type, ctx) {
         </div>`;
   }
 
+  if (type === "iron") {
+    // The iron alone, or the same iron on the base of a steam generator. The
+    // base is drawn first, so the iron rests on it rather than through it.
+    const base = ctx.ironLayout === "generator"
+      ? `<div class="gen-base"></div><div class="gen-tank"></div><div class="gen-dial"></div>
+          <div class="gen-led"></div><div class="gen-mat"></div><div class="gen-hose"></div>`
+      : `<div class="ir-cord"></div>`;
+    return `
+        <div class="machine ${cls} ${ctx.ironLayout} ${ctx.leftOn ? "left-on" : ""}">
+          ${base}
+          <div class="ir">
+            <div class="ir-handle"></div>
+            <div class="ir-top"></div>
+            <div class="ir-shell"><div class="ir-tank"></div></div>
+            <div class="ir-plate"></div>
+          </div>
+          <div class="ir-steam s1"></div>
+          <div class="ir-steam s2"></div>
+          <div class="ir-steam s3"></div>
+          <div class="ir-fire f1"></div>
+          <div class="ir-fire f2"></div>
+          <div class="ir-fire f3"></div>
+        </div>`;
+  }
+
   if (type === "kettle") {
     // No timer and no progress: the drawing is the whole readout.
     const lcd = ctx.display ? `<div class="kt-lcd">${esc(ctx.display)}</div>` : "";
@@ -5805,10 +5976,10 @@ class ApplianceCard extends HTMLElement {
     this._render();
   }
 
-  _clearUnplugTimer() {
-    if (this._unplugTimer) {
-      clearInterval(this._unplugTimer);
-      this._unplugTimer = null;
+  _clearClockTimer() {
+    if (this._clockTimer) {
+      clearInterval(this._clockTimer);
+      this._clockTimer = null;
     }
   }
 
@@ -5820,7 +5991,7 @@ class ApplianceCard extends HTMLElement {
   }
 
   disconnectedCallback() {
-    this._clearUnplugTimer();
+    this._clearClockTimer();
     this._clearCountdownTimer();
   }
 
@@ -5901,6 +6072,50 @@ class ApplianceCard extends HTMLElement {
   _moreInfo(entityId) {
     const ev = new CustomEvent("hass-more-info", { detail: { entityId }, bubbles: true, composed: true });
     this.dispatchEvent(ev);
+  }
+
+  // What a tap on the card does. Home Assistant's own action config, the one
+  // every dashboard already speaks, rather than a wording of the card's: a tap
+  // opens the entity unless the YAML says otherwise (HACF). fire-dom-event is
+  // the one the popup cards are built on: browser_mod listens for ll-custom
+  // and reads the action itself, so the card hands it over whole.
+  _tap(cfg) {
+    const action = cfg.tap_action || {};
+    const kind = action.action || "more-info";
+    const entityId = action.entity || cfg.state_entity;
+    if (kind === "none") return;
+    if (kind === "fire-dom-event") {
+      this.dispatchEvent(new CustomEvent("ll-custom", { detail: action, bubbles: true, composed: true }));
+      return;
+    }
+    if (kind === "navigate" && action.navigation_path) {
+      if (typeof history !== "undefined" && history.pushState) history.pushState(null, "", action.navigation_path);
+      this.dispatchEvent(new CustomEvent("location-changed", { detail: { replace: false }, bubbles: true, composed: true }));
+      return;
+    }
+    if (kind === "url" && action.url_path) {
+      if (typeof window !== "undefined" && typeof window.open === "function") {
+        window.open(action.url_path, action.target || "_blank");
+      }
+      return;
+    }
+    if (kind === "toggle" && this._hass) {
+      this._hass.callService("homeassistant", "toggle", { entity_id: entityId });
+      return;
+    }
+    // "call-service" was renamed "perform-action" in 2024.8, and both spellings
+    // are still written in dashboards today.
+    if ((kind === "call-service" || kind === "perform-action") && this._hass) {
+      const called = action.perform_action || action.service;
+      const [domain, service] = String(called || "").split(".");
+      if (domain && service) {
+        this._hass.callService(domain, service, action.data || action.service_data || {}, action.target);
+      }
+      return;
+    }
+    // Anything else, an action the card does not know or one missing what it
+    // needs, opens the entity: a tap that does nothing at all reads as broken.
+    this._moreInfo(entityId);
   }
 
   _render() {
@@ -6332,7 +6547,7 @@ class ApplianceCard extends HTMLElement {
       let noPower = false;
       let belowMs = 0;
       if (cfg.power_entity && watts !== null && isFinite(threshold) && watts < threshold) {
-        if (!this._belowSince) this._belowSince = belowSinceOf(stateObj(hass, cfg.power_entity));
+        if (!this._belowSince) this._belowSince = changedSinceOf(stateObj(hass, cfg.power_entity));
         belowMs = Date.now() - this._belowSince;
         noPower = belowMs >= afterMs;
       } else {
@@ -6342,9 +6557,9 @@ class ApplianceCard extends HTMLElement {
       // changing, so nothing pushes an update and the count would freeze where
       // it started. The card keeps its own beat while it is counting, which
       // also covers the moment the thirty minutes are up.
-      this._clearUnplugTimer();
+      this._clearClockTimer();
       if (this._belowSince) {
-        if (!this._inert) this._unplugTimer = setInterval(() => this._render(), FRIDGE_TICK_MS);
+        if (!this._inert) this._clockTimer = setInterval(() => this._render(), CLOCK_TICK_MS);
       }
 
       norm = fridgeHealth(unplugged, noPower, doorOpen || freezerDoorOpen, tempHigh);
@@ -6430,7 +6645,7 @@ class ApplianceCard extends HTMLElement {
         ice,
       };
     } else {
-      this._clearUnplugTimer();
+      this._clearClockTimer();
       this._belowSince = null;
     }
 
@@ -7028,6 +7243,39 @@ class ApplianceCard extends HTMLElement {
       }
     }
 
+    // An iron, read from the plug it is on: heating or off, and the state line
+    // says so in its own words, since "running" says nothing of an iron.
+    let leftOn = false;
+    if (cap.iron) {
+      if (norm === "running" || norm === "idle") {
+        if (!cfg.state_show_raw) stateLabel = t(hass, norm === "running" ? "iron_heating" : "iron_off");
+        if (norm === "running") color = "#ff7043";
+      }
+      // Left on: the one thing an owner puts a plug on an iron for. The card
+      // counts the minutes itself, because a plug left on stops changing and
+      // nothing would push the update that crosses the threshold. The count
+      // starts when the state entity last changed, which on a switch is the
+      // moment it was switched on; a meter moving with every watt only dates
+      // from when the card first saw it heating.
+      const afterMin = parseFloat(cfg.left_on_after);
+      if (Number.isFinite(afterMin) && afterMin > 0 && isActiveState(norm)) {
+        if (!this._onSince) this._onSince = changedSinceOf(st);
+        leftOn = Date.now() - this._onSince >= afterMin * 60000;
+      } else {
+        this._onSince = null;
+      }
+      this._clearClockTimer();
+      // Once it has fired there is nothing left to count: the next change of
+      // state is the one that clears it, and that one arrives on its own.
+      if (this._onSince && !leftOn && !this._inert) {
+        this._clockTimer = setInterval(() => this._render(), CLOCK_TICK_MS);
+      }
+      if (leftOn && !cfg.state_show_raw) {
+        stateLabel = t(hass, "left_on");
+        color = STATE_COLORS.error;
+      }
+    }
+
     // Power draw is worth showing on any type once the entity is there.
     if (!cap.fridgeTemp && !cap.heatPump && cfg.power_entity && watts !== null) {
       extraLines.push({
@@ -7048,7 +7296,8 @@ class ApplianceCard extends HTMLElement {
       done: norm === "done",
       paused: norm === "paused",
       heating: ["oven", "cooker", "rice_cooker"].includes(applianceType) ? heating
-        : applianceType === "water_heater" ? tankHeating : false,
+        : applianceType === "water_heater" ? tankHeating
+        : applianceType === "iron" ? isActiveState(norm) : false,
       keepWarm: norm === "keep_warm",
       lit,
       display: displayText,
@@ -7069,6 +7318,8 @@ class ApplianceCard extends HTMLElement {
       feederAlert,
       feederFill,
       feederLayout: cfg.feeder_layout === "canister" ? "canister" : "",
+      ironLayout: cfg.iron_layout === "generator" ? "generator" : "",
+      leftOn,
       tankTemp,
       boilerMode,
       hpMode,
@@ -7096,6 +7347,12 @@ class ApplianceCard extends HTMLElement {
       cap.filter ? { key: "filter_reset", entity: cfg.filter_reset_entity, icon: "mdi:air-filter", label: t(hass, "filter_reset") } : {},
     ]
       .map((a) => (a.key && a.key !== "toggle" ? { ...a, option: cfg[`${a.key}_option`], value: cfg[`${a.key}_value`] } : a))
+      // A button's icon can be swapped for another, `start_icon` and its
+      // siblings: what a press does is the owner's business, and mdi:play
+      // reads as "run a programme" where a feeder only drops a portion. The
+      // editor does not offer it, since a menu long enough to hold every
+      // icon of the card would be a menu nobody reads.
+      .map((a) => (a.key && cfg[`${a.key}_icon`] ? { ...a, icon: cfg[`${a.key}_icon`] } : a))
       .filter((a) => a.entity && !cap.readOnly);
 
     const spinning = isActiveState(norm);
@@ -7121,6 +7378,7 @@ class ApplianceCard extends HTMLElement {
       illustrationCtx.compressorOff,
       illustrationCtx.noTank,
       illustrationCtx.underfloor,
+      illustrationCtx.leftOn,
     ].join(",");
     if (animKey !== this._animKey) {
       this._animKey = animKey;
@@ -7359,7 +7617,7 @@ class ApplianceCard extends HTMLElement {
       ? `<div class="actions-row">${actions
           .map(
             (a) =>
-              `<div class="action-btn ${a.on ? "on" : ""}" data-entity="${esc(a.entity)}"${a.option ? ` data-option="${esc(a.option)}"` : ""}${a.value !== undefined && a.value !== null && a.value !== "" ? ` data-value="${esc(a.value)}"` : ""} title="${esc(a.label)}" aria-label="${esc(a.label)}"><ha-icon icon="${a.icon}"></ha-icon></div>`
+              `<div class="action-btn ${a.on ? "on" : ""}" data-entity="${esc(a.entity)}"${a.option ? ` data-option="${esc(a.option)}"` : ""}${a.value !== undefined && a.value !== null && a.value !== "" ? ` data-value="${esc(a.value)}"` : ""} title="${esc(a.label)}" aria-label="${esc(a.label)}"><ha-icon icon="${esc(a.icon)}"></ha-icon></div>`
           )
           .join("")}</div>`
       : "";
@@ -7407,7 +7665,7 @@ class ApplianceCard extends HTMLElement {
     `;
 
     const header = this._root.getElementById("header");
-    if (header) header.addEventListener("click", () => this._moreInfo(cfg.state_entity));
+    if (header) header.addEventListener("click", () => this._tap(cfg));
     this._root.querySelectorAll(".action-btn, .light-badge").forEach((el) => {
       el.addEventListener("click", (ev) => {
         ev.stopPropagation();
@@ -8283,6 +8541,13 @@ class ApplianceCardEditor extends HTMLElement {
             { value: "canister", label: t(hass, "layout_canister") },
           ],
         }) : ""}
+        ${this._type === "iron" ? this._row("section_iron_layout", "iron_layout", {
+          type: "select",
+          options: [
+            { value: "iron", label: t(hass, "layout_iron") },
+            { value: "generator", label: t(hass, "layout_generator") },
+          ],
+        }) + this._row("left_on_after", "left_on_after", { placeholder: "30" }) : ""}
         ${this._type === "printer_3d" ? this._row("section_printer_layout", "printer_layout", {
           type: "select",
           options: [

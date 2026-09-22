@@ -434,9 +434,36 @@ const petFeeder = () => card({
   st("sensor.feeder_schedule", "07:00 | 12:00 | 19:00"),
 ]);
 
+// An iron reaches Home Assistant through the plug it sits on, and nothing
+// else: the state is what it draws. Both models, the iron alone and the one
+// that rests on a steam generator.
+const iron = () => card({
+  name: L("Iron", "Fer \u00e0 repasser"),
+  appliance_type: "iron",
+  state_entity: "switch.iron_plug",
+  power_entity: "sensor.iron_plug_power",
+  power_on_threshold: 20,
+}, [
+  st("switch.iron_plug", "on"),
+  st("sensor.iron_plug_power", 1400, { unit_of_measurement: "W" }),
+]);
+
+const steamGenerator = () => card({
+  name: L("Steam generator", "Centrale vapeur"),
+  appliance_type: "iron",
+  iron_layout: "generator",
+  state_entity: "switch.steam_plug",
+  power_entity: "sensor.steam_plug_power",
+  power_on_threshold: 20,
+}, [
+  st("switch.steam_plug", "on"),
+  st("sensor.steam_plug_power", 1900, { unit_of_measurement: "W" }),
+]);
+
 const ALL = { washer, dryer, dishwasher, oven, microwave, hood, cooktop, fridge,
               kettle, cooker, coffee, rice_cooker: riceCooker, water_heater: waterHeater, boiler,
-              heat_pump: heatPump, aerothermal, printer_3d: printer3d, pet_feeder: petFeeder };
+              heat_pump: heatPump, aerothermal, printer_3d: printer3d, pet_feeder: petFeeder,
+              iron, steam_generator: steamGenerator };
 const only = (params.get("only") || "").split(",").map((k) => k.trim()).filter(Boolean);
 if (only.length) {
   document.documentElement.style.setProperty("--cols", only.length);
