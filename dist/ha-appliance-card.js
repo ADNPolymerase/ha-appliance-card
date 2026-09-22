@@ -1,4 +1,4 @@
-const CARD_VERSION = "2.14.1";
+const CARD_VERSION = "2.14.2";
 
 console.info(
   "%c HA-APPLIANCE-CARD %c v" + CARD_VERSION + " ",
@@ -2377,6 +2377,18 @@ const HOMEWHIZ_MESSAGE = /^(?:washer_substate|dryer_message|dishwasher_message)_
 function homewhizMessage(text) {
   const m = HOMEWHIZ_MESSAGE.exec(text);
   return m ? m[1] : null;
+}
+
+// What HomeWhiz says once the cycle is over: the washer asks for the laundry
+// back, the dryer and the dishwasher call the programme complete, and a
+// sanitized one is complete as well. The card's own words for a finish read
+// the rest.
+const HOMEWHIZ_DONE = ["remove_laundry", "program_sanitized"];
+function homewhizDone(raw) {
+  const word = homewhizMessage(String(raw === undefined || raw === null ? "" : raw).trim());
+  if (!word) return false;
+  return HOMEWHIZ_DONE.includes(word)
+    || STATE_KEYWORD_PATTERNS.done.some((re) => re.test(word.replace(/_/g, " ")));
 }
 
 // Dishwasher integrations do not share one phase vocabulary. Keep the
@@ -5901,6 +5913,16 @@ class ApplianceCard extends HTMLElement {
     const applianceType = detectApplianceType(cfg, st);
     const cap = caps(applianceType);
     let norm = normFor(applianceType, rawState, cfg.state_map);
+
+    // HomeWhiz says a finished cycle in its message rather than in its state:
+    // the washer goes back to "on" and asks for the laundry back, the dryer and
+    // the dishwasher call the programme complete, and only a while later does
+    // the machine switch itself off (issue #18). Still switched on, it is
+    // finished; switched off, it is off.
+    if (rawState === "device_state_on" && cfg.phase_entity) {
+      const pst = stateObj(hass, cfg.phase_entity);
+      if (pst && homewhizDone(pst.state)) norm = "done";
+    }
 
     // A power threshold, when configured, wins over the state entity: on a
     // smart-plug setup the state entity is the plug itself, which reads "on"

@@ -4090,6 +4090,19 @@ check('homewhiz : phase_map donne ses mots',
   stateLine(hwRun('washer_substate_door_locked', { phase_map: { washer_substate_door_locked: 'Door locked' } })), 'Door locked');
 check('homewhiz : une etape a l\'arret ne dit rien', stateLine(hw('device_state_on', 'washer_substate_spin')), 'Idle');
 
+// The end of a cycle, as the machine reports it: the state goes back to "on"
+// and the message asks for the laundry, then the washer switches itself off a
+// while later. Idle at that moment would say the cycle never ran.
+check('homewhiz : le cycle fini', stateLine(hw('device_state_on', 'washer_substate_remove_laundry')), 'Finished');
+check('homewhiz : eteinte ensuite, plus rien',
+  stateLine(hw('device_state_off', 'washer_substate_remove_laundry')), 'Idle');
+check('homewhiz : allumee sans message, en veille', stateLine(hw('device_state_on', 'washer_substate_program_started')), 'Idle');
+check('homewhiz : fini en francais',
+  stateLine(hw('device_state_on', 'washer_substate_remove_laundry', { language: 'fr' })), 'Terminé');
+check('homewhiz : sans entite de phase, l\'etat seul',
+  stateLine(render({ appliance_type: 'washer', state_entity: 'sensor.hw_state' },
+    { 'sensor.hw_state': { state: 'device_state_on', attributes: {} } })), 'Idle');
+
 // A dryer, and a dryer's messages: every one says "dryer", which is no drying.
 const hwDryer = sub => render({ ...HW, appliance_type: 'dryer' },
   { 'sensor.hw_state': { state: 'device_state_running', attributes: {} }, 'sensor.hw_sub_state': { state: sub, attributes: {} } });
@@ -4099,6 +4112,9 @@ check('homewhiz seche-linge : l\'anti-froissage', stateLine(hwDryer('dryer_messa
 for (const sub of ['hello', 'closing', 'child_lock', 'program_started', 'refreshing', 'drum_empty']) {
   check(`homewhiz seche-linge : ${sub} ne nomme pas d'etape`, stateLine(hwDryer('dryer_message_' + sub)), 'Running');
 }
+const hwEnd = (type, sub) => stateLine(render({ ...HW, appliance_type: type },
+  { 'sensor.hw_state': { state: 'device_state_on', attributes: {} }, 'sensor.hw_sub_state': { state: sub, attributes: {} } }));
+check('homewhiz seche-linge : le programme fini', hwEnd('dryer', 'dryer_message_program_finished'), 'Finished');
 
 // A dishwasher, whose drawing takes the step too.
 const hwDish = sub => render({ ...HW, appliance_type: 'dishwasher' },
@@ -4112,6 +4128,9 @@ check('homewhiz lave-vaisselle : le sechage dessine', hasCls(hwDish('dishwasher_
 for (const sub of ['program_started', 'cancelling', 'program_sanitized']) {
   check(`homewhiz lave-vaisselle : ${sub} ne nomme pas d'etape`, stateLine(hwDish('dishwasher_message_' + sub)), 'Running');
 }
+check('homewhiz lave-vaisselle : le programme fini', hwEnd('dishwasher', 'dishwasher_message_program_finished'), 'Finished');
+// Complete, and sanitized with it.
+check('homewhiz lave-vaisselle : et desinfecte', hwEnd('dishwasher', 'dishwasher_message_program_sanitized'), 'Finished');
 
 // A washer-dryer: the drum dries on the drying, and an anti-crease after it
 // keeps the heat rather than pouring the water back in.

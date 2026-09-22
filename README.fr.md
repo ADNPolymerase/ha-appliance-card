@@ -317,7 +317,7 @@ Où se trouve l'étape dépend de l'intégration :
 | HomeWhiz (Beko, Grundig, Arçelik, Bauknecht) | son *Sub state* (`washer_substate_spin`, `dryer_message_cooling`) | `phase_entity` |
 | Home Connect (Bosch, Siemens) | nulle part : l'état reste *Run* du début à la fin | rien à lire |
 
-Un mot de l'entité de phase que la carte ne connaît pas s'affiche tel qu'il est écrit, sauf un message de HomeWhiz qui ne nomme pas d'étape (*Hello*, *Child lock*), qui laisse *En cours*. `phase_map` traduit les codes, vers une des étapes ci-dessus ou vers vos propres mots, et `state_map` accepte aussi les étapes comme cibles :
+Un mot de l'entité de phase que la carte ne connaît pas s'affiche tel qu'il est écrit, sauf un message de HomeWhiz qui ne nomme pas d'étape (*Hello*, *Child lock*), qui laisse *En cours*. Une machine HomeWhiz dit aussi la fin du cycle dans ce message, en réclamant le linge ou en annonçant le programme terminé alors que son état revient à *On* : encore allumée, la carte affiche *Terminé*. `phase_map` traduit les codes, vers une des étapes ci-dessus ou vers vos propres mots, et `state_map` accepte aussi les étapes comme cibles :
 
 ```yaml
 appliance_type: washer
