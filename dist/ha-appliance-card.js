@@ -5163,20 +5163,28 @@ const ILLUSTRATION_CSS = {
         }
         /* Heating: the soleplate glows and steam leaves the nose. */
         .machine.heating .ir-plate { background: #ff7043; box-shadow: 0 0 10px 1px #ff7043; }
+        /* Steam: four wisps off the nose, rising clear of the iron and
+           drifting as they go. Kept tall and staggered so that two or three
+           are always in the air rather than one appearing now and then. They
+           are drawn inside the iron: on a generator it is scaled and lifted
+           onto its base, and steam left on the card would rise from nowhere. */
         .ir-steam {
-          position: absolute; width: 6px; height: 15px; border-radius: 4px; opacity: 0;
-          background: linear-gradient(to top, rgba(176, 196, 214, 0.85), rgba(176, 196, 214, 0));
+          position: absolute; width: 8px; height: 22px; border-radius: 5px; opacity: 0;
+          background: linear-gradient(to top, rgba(176, 196, 214, 0.9), rgba(176, 196, 214, 0));
         }
-        .ir-steam.s1 { left: 6px; top: 34px; }
-        .ir-steam.s2 { left: 16px; top: 28px; }
-        .ir-steam.s3 { left: 26px; top: 32px; }
-        .machine.heating .ir-steam { animation: ir-puff 2.2s ease-out infinite; animation-delay: var(--anim-offset, 0s); }
-        .machine.heating .ir-steam.s2 { animation-delay: calc(-0.75s + var(--anim-offset, 0s)); }
-        .machine.heating .ir-steam.s3 { animation-delay: calc(-1.5s + var(--anim-offset, 0s)); }
+        .ir-steam.s1 { left: 2px; top: 44px; }
+        .ir-steam.s2 { left: 12px; top: 40px; }
+        .ir-steam.s3 { left: 23px; top: 42px; }
+        .ir-steam.s4 { left: 33px; top: 46px; }
+        .machine.heating .ir-steam { animation: ir-puff 2.6s ease-out infinite; animation-delay: var(--anim-offset, 0s); }
+        .machine.heating .ir-steam.s2 { animation-delay: calc(-0.65s + var(--anim-offset, 0s)); }
+        .machine.heating .ir-steam.s3 { animation-delay: calc(-1.3s + var(--anim-offset, 0s)); }
+        .machine.heating .ir-steam.s4 { animation-delay: calc(-1.95s + var(--anim-offset, 0s)); }
         @keyframes ir-puff {
-          0% { transform: translateY(8px) scale(0.5); opacity: 0; }
-          35% { opacity: 0.9; }
-          100% { transform: translateY(-14px) scale(1.2); opacity: 0; }
+          0% { transform: translate(0, 10px) scale(0.45); opacity: 0; }
+          20% { opacity: 0.95; }
+          70% { opacity: 0.7; }
+          100% { transform: translate(-7px, -34px) scale(1.35); opacity: 0; }
         }
         /* Left on for too long: the boiler's flame, its shape and its flicker,
            in front of the iron. Its blue root belongs to a gas burner and is
@@ -5201,9 +5209,6 @@ const ILLUSTRATION_CSS = {
         /* The generator: the base carries the water tank, a dial and a lamp,
            and the iron rests on its mat rather than sinking into it. */
         .machine.generator .ir { transform: scale(0.74) translate(2px, -35px); transform-origin: 50% 100%; }
-        .machine.generator .ir-steam.s1 { left: 8px; top: 14px; }
-        .machine.generator .ir-steam.s2 { left: 18px; top: 8px; }
-        .machine.generator .ir-steam.s3 { left: 28px; top: 12px; }
         .machine.generator .ir-fire.f1 { left: 12px; bottom: 52px; width: 16px; height: 28px; }
         .machine.generator .ir-fire.f2 { left: 29px; bottom: 54px; width: 23px; height: 42px; }
         .machine.generator .ir-fire.f3 { left: 54px; bottom: 52px; width: 18px; height: 32px; }
@@ -5698,14 +5703,15 @@ function illustrationHtml(type, ctx) {
         <div class="machine ${cls} ${ctx.ironLayout} ${ctx.leftOn ? "left-on" : ""}">
           ${base}
           <div class="ir">
+            <div class="ir-steam s1"></div>
+            <div class="ir-steam s2"></div>
+            <div class="ir-steam s3"></div>
+            <div class="ir-steam s4"></div>
             <div class="ir-handle"></div>
             <div class="ir-top"></div>
             <div class="ir-shell"><div class="ir-tank"></div></div>
             <div class="ir-plate"></div>
           </div>
-          <div class="ir-steam s1"></div>
-          <div class="ir-steam s2"></div>
-          <div class="ir-steam s3"></div>
           <div class="ir-fire f1"></div>
           <div class="ir-fire f2"></div>
           <div class="ir-fire f3"></div>
