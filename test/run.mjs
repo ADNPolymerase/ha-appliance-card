@@ -5162,6 +5162,12 @@ const corners = h => [...h.matchAll(/<div class="corner-btn (left|right)( on)?" 
   .map(m => `${m[1]}${m[2] ? '+' : ''}:${m[3]}:${m[4]}:${m[5]}:${m[7]}`);
 const cornerSpot = c => c.split(':').slice(0, 2).join(':');
 const cornerIco = c => (c || '').split(':').slice(-2).join(':');
+/** The body of a CSS rule, and the icon size it sets, class by class. */
+const cssRule = (h, sel) => {
+  const m = new RegExp(`\\.${sel}\\s*\\{([^}]*)\\}`).exec(h);
+  return m ? m[1].replace(/\s+/g, ' ').trim() : '';
+};
+const cssIcon = (h, sel) => (/--mdc-icon-size: (\d+)px/.exec(cssRule(h, sel)) || [])[1];
 {
   const h = cornerCard(['switch.feeder_child_lock', 'switch.feeder_auto_lock', 'switch.feeder_forcing']).html;
   check('coins : le premier a gauche, le second a droite, et pas de troisieme', corners(h).join(' / '),
@@ -5172,6 +5178,13 @@ const cornerIco = c => (c || '').split(':').slice(-2).join(':');
   contains('coins : a gauche, au bord', h, '.corner-btn.left { left: 8px; }');
   contains('coins : a droite, au bord', h, '.corner-btn.right { right: 8px; }');
   contains('coins : allume, en ambre', h, '.corner-btn.on { color: #ffb300; }');
+  // The top of a card reads as one row, and two of its three icons are meant
+  // to be tapped: they are all drawn at the same size, on a button wide
+  // enough for a finger.
+  check('coins : le bouton, une pastille large comme le doigt',
+    cssRule(h, 'corner-btn').includes('width: 32px; height: 32px; border-radius: 50%'), true);
+  check('haut de carte : les trois icones a la meme taille',
+    ['corner-btn', 'light-badge', 'conn-badge'].map(sel => cssIcon(h, sel)).join(' '), '24 24 24');
 }
 check('coins : sous le Wi-Fi a droite',
   corners(cornerCard(['switch.feeder_child_lock', 'switch.feeder_auto_lock'],

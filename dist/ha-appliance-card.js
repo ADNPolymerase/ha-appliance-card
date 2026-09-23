@@ -1,4 +1,4 @@
-const CARD_VERSION = "2.15.0";
+const CARD_VERSION = "2.15.1";
 
 console.info(
   "%c HA-APPLIANCE-CARD %c v" + CARD_VERSION + " ",
@@ -7401,9 +7401,11 @@ class ApplianceCard extends HTMLElement {
       <style>
         :host { font-size: 16px; --anim-offset: ${animOffset}s;${bodyVar} }
         ha-card { display: block; padding: 16px; position: relative; }
+        /* The three icons along the top of a card read as one row, and two of
+           them are meant to be tapped: they share one size. */
         .conn-badge {
           position: absolute; top: 10px; right: 12px;
-          --mdc-icon-size: 18px; color: var(--secondary-text-color, #767676);
+          --mdc-icon-size: 24px; color: var(--secondary-text-color, #767676);
         }
         .conn-badge.disconnected { color: var(--error-color, #f44336); }
         /* The light sits in the header rather than in the button row: on a
@@ -7411,15 +7413,15 @@ class ApplianceCard extends HTMLElement {
            needlessly tall. */
         .light-badge {
           position: absolute; top: 10px; left: 12px; cursor: pointer;
-          --mdc-icon-size: 20px; color: var(--secondary-text-color, #767676);
+          --mdc-icon-size: 24px; color: var(--secondary-text-color, #767676);
         }
         .light-badge.on { color: #ffb300; }
         /* Switches at hand, lined up under the light on the left and under
            the connection on the right, centred on the same axis. */
         .corner-btn {
-          position: absolute; width: 28px; height: 28px; border-radius: 50%; cursor: pointer;
+          position: absolute; width: 32px; height: 32px; border-radius: 50%; cursor: pointer;
           display: flex; align-items: center; justify-content: center;
-          --mdc-icon-size: 20px; color: var(--secondary-text-color, #767676);
+          --mdc-icon-size: 24px; color: var(--secondary-text-color, #767676);
         }
         .corner-btn.left { left: 8px; }
         .corner-btn.right { right: 8px; }
