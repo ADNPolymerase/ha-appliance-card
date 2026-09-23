@@ -5019,6 +5019,18 @@ const alertMenu = h => {
 const alertChoices = h => [...h.matchAll(/<div class="list-choice alerts"><ha-icon icon="([^"]*)"><\/ha-icon><span>([^<]*)<\/span><button type="button" class="list-remove" data-alerts-remove="(\d+)"/g)]
   .map(m => `${m[1]}|${m[2]}|${m[3]}`);
 const alertSelect = ed => ed._root.querySelector('[data-role="alerts-add-select"]');
+// Two neighbouring sections read as alerts, and their titles barely differ:
+// one entity carrying them in its attributes on one side, a list of entities
+// of their own on the other. Only the picker can say which is which.
+{
+  const ed = alertEditor({ alerts_entity: 'sensor.dw_alerts' },
+    { 'sensor.dw_alerts': { state: 'on', attributes: { salt_empty: 'on' } } });
+  const pickerLabel = field => ed._root.querySelector(`[data-slot="${field}"]`)?.children.at(-1)?.label;
+  check('editeur alertes : le selecteur dit de quelles alertes il parle',
+    pickerLabel('alerts_entity'), 'Alerts entity (attributes-style)');
+  check('editeur : les autres sections gardent le nom generique',
+    pickerLabel('door_entity'), 'Entity');
+}
 {
   const ed = alertEditor();
   const html = markup(ed._root);

@@ -1,4 +1,4 @@
-const CARD_VERSION = "2.15.1";
+const CARD_VERSION = "2.15.2";
 
 console.info(
   "%c HA-APPLIANCE-CARD %c v" + CARD_VERSION + " ",
@@ -7892,7 +7892,10 @@ const SECTIONS = [
       c._row("power_on_threshold", "power_on_threshold", { placeholder: caps(c._currentType()).fridgeTemp ? "1" : "10" })
       + (caps(c._currentType()).fridgeTemp ? c._row("no_power_after", "no_power_after", { placeholder: "30" }) : "") },
 
-  { field: "alerts_entity", types: APPLIANCE_TYPES, labelKey: "section_alerts", includeDomains: ["sensor", "binary_sensor"] },
+  // Two sections read as alerts, and only their pickers tell them apart: one
+  // entity carrying them in its attributes here, a list of entities of
+  // their own next door. The picker says which one this is.
+  { field: "alerts_entity", types: APPLIANCE_TYPES, labelKey: "section_alerts", pickerLabelKey: "alerts_entity", includeDomains: ["sensor", "binary_sensor"] },
   { field: "connectivity_entity", types: APPLIANCE_TYPES, labelKey: "section_connectivity", includeDomains: ["binary_sensor", "sensor"], extra: (c, hass) => c._row("connectivity_connected_state", "connectivity_connected_state", { placeholder: "on" }) },
   // The start control is the one an appliance always has in some form, and it
   // is not always a button: a feeder dispenses from a select or from a number.
@@ -8660,7 +8663,8 @@ class ApplianceCardEditor extends HTMLElement {
     });
     for (const s of this._sections()) {
       if (this._open.has(s.field)) {
-        this._mountPicker(this._root.querySelector(`[data-slot="${s.field}"]`), s.field, { includeDomains: s.includeDomains });
+        this._mountPicker(this._root.querySelector(`[data-slot="${s.field}"]`), s.field,
+          { includeDomains: s.includeDomains, label: s.pickerLabelKey ? t(hass, s.pickerLabelKey) : undefined });
       }
     }
     if (caps(this._type).zones) {
