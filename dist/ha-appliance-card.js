@@ -1,4 +1,4 @@
-const CARD_VERSION = "2.15.2";
+const CARD_VERSION = "2.16.0";
 
 console.info(
   "%c HA-APPLIANCE-CARD %c v" + CARD_VERSION + " ",
@@ -7397,8 +7397,7 @@ class ApplianceCard extends HTMLElement {
         + ` --ac-body-lo: ${bodyPreset.lo};`
       : "";
 
-    const styleTag = `
-      <style>
+    const css = `
         :host { font-size: 16px; --anim-offset: ${animOffset}s;${bodyVar} }
         ha-card { display: block; padding: 16px; position: relative; }
         /* The three icons along the top of a card read as one row, and two of
@@ -7485,7 +7484,6 @@ class ApplianceCard extends HTMLElement {
         .action-btn:hover { background: var(--secondary-background-color, rgba(0,0,0,0.04)); }
         .action-btn.on { color: var(--primary-color, #03a9f4); border-color: var(--primary-color, #03a9f4); }
         .action-btn ha-icon { --mdc-icon-size: 20px; }
-      </style>
     `;
 
     const iconHtml = cfg.compact ? "" : illustrationHtml(applianceType, illustrationCtx);
@@ -7654,9 +7652,19 @@ class ApplianceCard extends HTMLElement {
       })
       .join("");
 
-    this._root.innerHTML = `
-      ${styleTag}
-      <ha-card>
+    // A theme reaches this card through its ha-card, and card_mod styles that
+    // element too. Rebuilding the whole shadow root would hand them a new one
+    // on every state change, and the card would sit there unthemed until the
+    // page was reloaded (issue #21). The shell is therefore built once and
+    // only its contents are redrawn.
+    if (!this._card) {
+      this._styleEl = document.createElement("style");
+      this._card = document.createElement("ha-card");
+      this._root.appendChild(this._styleEl);
+      this._root.appendChild(this._card);
+    }
+    this._styleEl.textContent = css;
+    this._card.innerHTML = `
         ${lightBadgeHtml}
         ${connBadgeHtml}
         ${cornersHtml}
@@ -7669,7 +7677,6 @@ class ApplianceCard extends HTMLElement {
         ${linesHtml}
         ${alertsHtml}
         ${actionsHtml}
-      </ha-card>
     `;
 
     const header = this._root.getElementById("header");

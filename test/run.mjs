@@ -50,6 +50,26 @@ FakeNodeProto.querySelector = function (sel) {
   if (!memo.has(sel)) memo.set(sel, document.createElement('div'));
   return memo.get(sel);
 };
+// The card keeps its <style> and its <ha-card> from one render to the next
+// instead of rewriting the shadow root, so the harness has to print an
+// element's own tag and not only what was assigned inside it. Those two are
+// the only tags the card builds by hand.
+const PRINTED_TAGS = new Set(['STYLE', 'HA-CARD']);
+Object.defineProperty(FakeNodeProto, 'markup', {
+  configurable: true,
+  get() {
+    const inner = this._html + this.children.map((c) => c.markup).join('');
+    if (!PRINTED_TAGS.has(this.tagName)) return inner;
+    const tag = this.tagName.toLowerCase();
+    return `<${tag}>${inner}</${tag}>`;
+  },
+});
+// And a <style> is filled through textContent, which the harness ignores.
+Object.defineProperty(FakeNodeProto, 'textContent', {
+  configurable: true,
+  set(v) { this._html = String(v); this.children = []; },
+  get() { return this._html; },
+});
 // The card wires the tap on its header, which it finds by id. Without this the
 // handler is never registered and the whole tap path is unreachable.
 FakeNodeProto.getElementById = function (id) {
@@ -58,8 +78,9 @@ FakeNodeProto.getElementById = function (id) {
   return memo.get(id);
 };
 // Only attribute-presence selectors are resolved, which is all the editor uses
-// ([data-field], [data-toggle]), and the stubs are built from the markup this
-// node was actually given, so they carry real attribute values.
+// ([data-field], [data-toggle]), and the stubs are built from the markup of
+// the whole subtree, as a browser would search it, so they carry real
+// attribute values even now that the card draws inside its ha-card.
 FakeNodeProto.querySelectorAll = function (sel) {
   // The card wires its own clicks on a class selector, and a button carries
   // what the click has to pass on: the entity, and for a list or a number the
@@ -69,7 +90,7 @@ FakeNodeProto.querySelectorAll = function (sel) {
     const memo = (this.__qsa ||= new Map());
     if (memo.has(sel)) return memo.get(sel);
     const out = [];
-    for (const m of String(this._html || '').matchAll(/<div class="(?:action-btn|light-badge)[^"]*"([^>]*)>/g)) {
+    for (const m of String(this.markup || '').matchAll(/<div class="(?:action-btn|light-badge)[^"]*"([^>]*)>/g)) {
       const node = document.createElement('div');
       for (const a of m[1].matchAll(/([a-z-]+)="([^"]*)"/g)) node.setAttribute(a[1], a[2]);
       out.push(node);
@@ -83,12 +104,12 @@ FakeNodeProto.querySelectorAll = function (sel) {
   // made again whenever the markup changes.
   if (/^\.[a-z-]+\[data-more\](,\s*\.[a-z-]+\[data-more\])*$/.test(sel)) {
     const classes = [...sel.matchAll(/\.([a-z-]+)\[data-more\]/g)].map(m => m[1]);
-    if (this.__moreHtml !== this._html) {
-      this.__moreHtml = this._html;
+    if (this.__moreHtml !== this.markup) {
+      this.__moreHtml = this.markup;
       this.__more = new Map();
     }
     const out = [];
-    for (const m of String(this._html || '').matchAll(/<div class="([^"]*)"([^>]*)>/g)) {
+    for (const m of String(this.markup || '').matchAll(/<div class="([^"]*)"([^>]*)>/g)) {
       const id = /data-more="([^"]*)"/.exec(m[2])?.[1];
       if (!id || !m[1].split(/\s+/).some(c => classes.includes(c))) continue;
       const node = this.__more.get(id) || document.createElement('div');
@@ -103,7 +124,7 @@ FakeNodeProto.querySelectorAll = function (sel) {
   const memo = (this.__qsa ||= new Map());
   if (memo.has(sel)) return memo.get(sel);
   const seen = new Set(), out = [];
-  for (const m of String(this._html || '').matchAll(new RegExp(`${attr}="([^"]*)"`, 'g'))) {
+  for (const m of String(this.markup || '').matchAll(new RegExp(`${attr}="([^"]*)"`, 'g'))) {
     if (seen.has(m[1])) continue;
     seen.add(m[1]);
     const node = document.createElement('input');
@@ -503,6 +524,23 @@ check('micro-ondes : minuteur formate en compte a rebours',
                   remaining_time_entity: 'sensor.mw_rem' },
     { 'sensor.mw': { state: 'Running', attributes: {} },
       'sensor.mw_rem': { state: '80', attributes: {} } })), '1:20');
+
+// A theme reaches this card through its ha-card, and card_mod styles that same
+// element. Redrawing used to rebuild the whole shadow root, which handed them
+// a brand new ha-card on every state change: the card then sat there unthemed
+// until the page was reloaded (issue #21).
+{
+  const themed = build({ appliance_type: 'washer', state_entity: 'sensor.themed' },
+    { 'sensor.themed': { state: 'Idle', attributes: {} } });
+  check('theme : la coquille est un style et une ha-card',
+    themed.card._root.children.map(n => n.tagName).join(' '), 'STYLE HA-CARD');
+  const shell = themed.card._card;
+  const after = rerender(themed.card, { 'sensor.themed': { state: 'Running', attributes: {} } });
+  check('theme : un changement d\'etat ne remplace pas la ha-card', themed.card._card, shell);
+  check('theme : et n\'en empile pas une seconde', themed.card._root.children.length, 2);
+  check('theme : le contenu suit l\'etat quand meme', stateLine(after), 'Running');
+  check('theme : le style aussi', stateColor(after), 'var(--info-color, #2196f3)');
+}
 
 // =============================================================================
 // 2. Brand mapping: unknown states and missing entities must degrade
