@@ -2126,18 +2126,29 @@ check('pac : vitesse du ventilateur', infoLine(hpHy, 'Fan speed'), '720 rpm');
 
 // The delta is worked out from the two temperatures, like the COP from heat
 // over power. Never at the whole degree: a pump works on a couple of them.
-check('pac : l\'ecart est calcule', infoLine(hpHy, 'Delta'), '5.4 °C');
+check('pac : l\'ecart est calcule', infoLine(hpHy, 'Delta T'), '5.4 K');
 check('pac : l\'ecart garde son dixieme quand le reste est au degre entier',
-  infoLine(hpHydro({ temperature_decimals: '0' }), 'Delta'), '5.4 °C');
-check('pac : l\'ecart au dixieme demande', infoLine(hpHydro({ temperature_decimals: '1' }), 'Delta'), '5.4 °C');
-check('pac : pas d\'ecart sans le retour', infoLine(hpFull(), 'Delta'), null);
+  infoLine(hpHydro({ temperature_decimals: '0' }), 'Delta T'), '5.4 K');
+check('pac : l\'ecart au dixieme demande', infoLine(hpHydro({ temperature_decimals: '1' }), 'Delta T'), '5.4 K');
+check('pac : pas d\'ecart sans le retour', infoLine(hpFull(), 'Delta T'), null);
 check('pac : pas d\'ecart sans le depart',
-  infoLine(hpOf('heat', { hvac_action: 'heating' }, { return_temperature_entity: 'sensor.hp_return' }, HP_HYDRO), 'Delta'), null);
+  infoLine(hpOf('heat', { hvac_action: 'heating' }, { return_temperature_entity: 'sensor.hp_return' }, HP_HYDRO), 'Delta T'), null);
 // In cooling the water comes back warmer, and an ecart is a distance.
 check('pac : en froid l\'ecart reste positif',
   infoLine(hpHydro({}, { 'sensor.hp_flow': { state: '18.0', attributes: { unit_of_measurement: '°C' } },
-                         'sensor.hp_return': { state: '23.0', attributes: { unit_of_measurement: '°C' } } }), 'Delta'),
-  '5.0 °C');
+                         'sensor.hp_return': { state: '23.0', attributes: { unit_of_measurement: '°C' } } }), 'Delta T'),
+  '5.0 K');
+
+// A gap of temperatures is written in kelvin, as the trade writes it
+// (issue #23). Fahrenheit has no such unit in common use and keeps °F.
+const hpUnits = (fu, ru = fu) => hpHydro({}, {
+  'sensor.hp_flow':   { state: '42.0', attributes: { unit_of_measurement: fu } },
+  'sensor.hp_return': { state: '36.6', attributes: { unit_of_measurement: ru } } });
+check('pac : l\'ecart en kelvin depuis des °C', infoLine(hpUnits('°C'), 'Delta T'), '5.4 K');
+check('pac : l\'ecart en kelvin depuis le signe ℃', infoLine(hpUnits('℃'), 'Delta T'), '5.4 K');
+check('pac : l\'ecart reste en °F depuis des °F', infoLine(hpUnits('°F'), 'Delta T'), '5.4 °F');
+check('pac : l\'ecart reste en K depuis des K', infoLine(hpUnits('K'), 'Delta T'), '5.4 K');
+check('pac : pas d\'ecart entre deux unites', infoLine(hpUnits('°C', '°F'), 'Delta T'), null);
 
 // What the pump feeds: a tank and radiators by default, and either of them
 // can go. An installation without domestic hot water has no tank to draw, and

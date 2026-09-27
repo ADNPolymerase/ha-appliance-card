@@ -1,4 +1,4 @@
-const CARD_VERSION = "2.17.0";
+const CARD_VERSION = "2.17.1";
 
 console.info(
   "%c HA-APPLIANCE-CARD %c v" + CARD_VERSION + " ",
@@ -120,7 +120,7 @@ const T = {
     boiler_space_heating: "Heating", boiler_hot_water: "Hot water", boiler_burner: "Burner on", boiler_starting: "Ignition", boiler_waiting: "Waiting", hp_cooling: "Cooling", hp_defrost: "Defrosting",
     section_space_heating: "Central heating indicator", section_hot_water: "Hot water indicator", section_flow_temperature: "Flow temperature", section_heat_output: "Heat output", section_cop: "Coefficient of performance (COP)", section_outdoor_temperature: "Outdoor temperature",
     section_cooling: "Cooling indicator", section_cooling_power: "Power while cooling", section_cooling_output: "Cooling output", section_hot_water_power: "Power while heating water", section_hot_water_output: "Heat output for hot water",
-    section_return_temperature: "Return temperature", section_water_flow: "Water flow", section_compressor: "Compressor", hp_delta: "Delta", section_fan_speed: "Fan speed",
+    section_return_temperature: "Return temperature", section_water_flow: "Water flow", section_compressor: "Compressor", hp_delta: "Delta T", section_fan_speed: "Fan speed",
     hp_flow_return: "Flow and return", no_hot_water: "No hot water tank", underfloor_heating: "Underfloor heating instead of radiators",
     type_printer_3d: "3D printer", section_nozzle_temperature: "Nozzle temperature", section_nozzle_target: "Nozzle target temperature",
     section_bed_temperature: "Bed temperature", section_bed_target: "Bed target temperature", section_chamber_temperature: "Chamber temperature",
@@ -388,7 +388,7 @@ const T = {
     boiler_space_heating: "\u041e\u0442\u043e\u043f\u043b\u0435\u043d\u0438\u0435", boiler_hot_water: "\u0413\u043e\u0440\u044f\u0447\u0430\u044f \u0432\u043e\u0434\u0430", boiler_burner: "\u0413\u043e\u0440\u0435\u043b\u043a\u0430 \u0432\u043a\u043b\u044e\u0447\u0435\u043d\u0430", boiler_starting: "\u0420\u043e\u0437\u0436\u0438\u0433", boiler_waiting: "\u041f\u0430\u0443\u0437\u0430 \u0433\u043e\u0440\u0435\u043b\u043a\u0438", hp_cooling: "\u041e\u0445\u043b\u0430\u0436\u0434\u0435\u043d\u0438\u0435", hp_defrost: "\u041e\u0442\u0442\u0430\u0439\u043a\u0430",
     section_space_heating: "\u0418\u043d\u0434\u0438\u043a\u0430\u0442\u043e\u0440 \u043e\u0442\u043e\u043f\u043b\u0435\u043d\u0438\u044f", section_hot_water: "\u0418\u043d\u0434\u0438\u043a\u0430\u0442\u043e\u0440 \u0433\u043e\u0440\u044f\u0447\u0435\u0439 \u0432\u043e\u0434\u044b", section_flow_temperature: "\u0422\u0435\u043c\u043f\u0435\u0440\u0430\u0442\u0443\u0440\u0430 \u043f\u043e\u0434\u0430\u0447\u0438", section_heat_output: "\u0422\u0435\u043f\u043b\u043e\u0432\u0430\u044f \u043c\u043e\u0449\u043d\u043e\u0441\u0442\u044c", section_cop: "\u041a\u043e\u044d\u0444\u0444\u0438\u0446\u0438\u0435\u043d\u0442 \u044d\u0444\u0444\u0435\u043a\u0442\u0438\u0432\u043d\u043e\u0441\u0442\u0438 (COP)", section_outdoor_temperature: "\u041d\u0430\u0440\u0443\u0436\u043d\u0430\u044f \u0442\u0435\u043c\u043f\u0435\u0440\u0430\u0442\u0443\u0440\u0430",
     section_cooling: "\u0418\u043d\u0434\u0438\u043a\u0430\u0442\u043e\u0440 \u043e\u0445\u043b\u0430\u0436\u0434\u0435\u043d\u0438\u044f", section_cooling_power: "\u041c\u043e\u0449\u043d\u043e\u0441\u0442\u044c \u043f\u0440\u0438 \u043e\u0445\u043b\u0430\u0436\u0434\u0435\u043d\u0438\u0438", section_cooling_output: "\u041c\u043e\u0449\u043d\u043e\u0441\u0442\u044c \u043e\u0445\u043b\u0430\u0436\u0434\u0435\u043d\u0438\u044f", section_hot_water_power: "\u041c\u043e\u0449\u043d\u043e\u0441\u0442\u044c \u043d\u0430 \u0433\u043e\u0440\u044f\u0447\u0443\u044e \u0432\u043e\u0434\u0443", section_hot_water_output: "\u0422\u0435\u043f\u043b\u043e\u0432\u0430\u044f \u043c\u043e\u0449\u043d\u043e\u0441\u0442\u044c \u043d\u0430 \u0433\u043e\u0440\u044f\u0447\u0443\u044e \u0432\u043e\u0434\u0443",
-    section_return_temperature: "\u0422\u0435\u043c\u043f\u0435\u0440\u0430\u0442\u0443\u0440\u0430 \u043e\u0431\u0440\u0430\u0442\u043a\u0438", section_water_flow: "\u0420\u0430\u0441\u0445\u043e\u0434 \u0432\u043e\u0434\u044b", section_compressor: "\u041a\u043e\u043c\u043f\u0440\u0435\u0441\u0441\u043e\u0440", hp_delta: "\u0414\u0435\u043b\u044c\u0442\u0430", section_fan_speed: "\u0421\u043a\u043e\u0440\u043e\u0441\u0442\u044c \u0432\u0435\u043d\u0442\u0438\u043b\u044f\u0442\u043e\u0440\u0430",
+    section_return_temperature: "\u0422\u0435\u043c\u043f\u0435\u0440\u0430\u0442\u0443\u0440\u0430 \u043e\u0431\u0440\u0430\u0442\u043a\u0438", section_water_flow: "\u0420\u0430\u0441\u0445\u043e\u0434 \u0432\u043e\u0434\u044b", section_compressor: "\u041a\u043e\u043c\u043f\u0440\u0435\u0441\u0441\u043e\u0440", hp_delta: "\u0414\u0435\u043b\u044c\u0442\u0430 T", section_fan_speed: "\u0421\u043a\u043e\u0440\u043e\u0441\u0442\u044c \u0432\u0435\u043d\u0442\u0438\u043b\u044f\u0442\u043e\u0440\u0430",
     hp_flow_return: "\u041f\u043e\u0434\u0430\u0447\u0430 \u0438 \u043e\u0431\u0440\u0430\u0442\u043a\u0430", no_hot_water: "\u0411\u0435\u0437 \u0431\u0430\u043a\u0430 \u0433\u043e\u0440\u044f\u0447\u0435\u0439 \u0432\u043e\u0434\u044b", underfloor_heating: "\u0422\u0451\u043f\u043b\u044b\u0439 \u043f\u043e\u043b \u0432\u043c\u0435\u0441\u0442\u043e \u0440\u0430\u0434\u0438\u0430\u0442\u043e\u0440\u043e\u0432",
     type_printer_3d: "3D-\u043f\u0440\u0438\u043d\u0442\u0435\u0440", section_nozzle_temperature: "\u0422\u0435\u043c\u043f\u0435\u0440\u0430\u0442\u0443\u0440\u0430 \u0441\u043e\u043f\u043b\u0430", section_nozzle_target: "\u0417\u0430\u0434\u0430\u043d\u043d\u0430\u044f \u0442\u0435\u043c\u043f\u0435\u0440\u0430\u0442\u0443\u0440\u0430 \u0441\u043e\u043f\u043b\u0430",
     section_bed_temperature: "\u0422\u0435\u043c\u043f\u0435\u0440\u0430\u0442\u0443\u0440\u0430 \u0441\u0442\u043e\u043b\u0430", section_bed_target: "\u0417\u0430\u0434\u0430\u043d\u043d\u0430\u044f \u0442\u0435\u043c\u043f\u0435\u0440\u0430\u0442\u0443\u0440\u0430 \u0441\u0442\u043e\u043b\u0430", section_chamber_temperature: "\u0422\u0435\u043c\u043f\u0435\u0440\u0430\u0442\u0443\u0440\u0430 \u043a\u0430\u043c\u0435\u0440\u044b",
@@ -790,7 +790,7 @@ const T = {
     boiler_space_heating: "Riscaldamento", boiler_hot_water: "Acqua calda", boiler_burner: "Bruciatore acceso", boiler_starting: "Accensione", boiler_waiting: "Pausa bruciatore", hp_cooling: "Raffrescamento", hp_defrost: "Sbrinamento",
     section_space_heating: "Indicatore riscaldamento", section_hot_water: "Indicatore acqua calda", section_flow_temperature: "Temperatura di mandata", section_heat_output: "Calore prodotto", section_cop: "Coefficiente di prestazione (COP)", section_outdoor_temperature: "Temperatura esterna",
     section_cooling: "Indicatore raffrescamento", section_cooling_power: "Potenza in raffrescamento", section_cooling_output: "Freddo prodotto", section_hot_water_power: "Potenza per acqua calda", section_hot_water_output: "Calore prodotto per acqua calda",
-    section_return_temperature: "Temperatura di ritorno", section_water_flow: "Portata d'acqua", section_compressor: "Compressore", hp_delta: "Delta", section_fan_speed: "Velocit\u00e0 della ventola",
+    section_return_temperature: "Temperatura di ritorno", section_water_flow: "Portata d'acqua", section_compressor: "Compressore", hp_delta: "Delta T", section_fan_speed: "Velocit\u00e0 della ventola",
     hp_flow_return: "Mandata e ritorno", no_hot_water: "Nessun bollitore", underfloor_heating: "Riscaldamento a pavimento invece dei radiatori",
     type_printer_3d: "Stampante 3D", section_nozzle_temperature: "Temperatura dell'ugello", section_nozzle_target: "Temperatura obiettivo dell'ugello",
     section_bed_temperature: "Temperatura del piatto", section_bed_target: "Temperatura obiettivo del piatto", section_chamber_temperature: "Temperatura della camera",
@@ -924,7 +924,7 @@ const T = {
     boiler_space_heating: "Verwarming", boiler_hot_water: "Warm water", boiler_burner: "Brander aan", boiler_starting: "Ontsteking", boiler_waiting: "Wachten", hp_cooling: "Koelen", hp_defrost: "Ontdooien",
     section_space_heating: "Cv-indicator", section_hot_water: "Warmwaterindicator", section_flow_temperature: "Aanvoertemperatuur", section_heat_output: "Warmteafgifte", section_cop: "Prestatieco\u00ebffici\u00ebnt (COP)", section_outdoor_temperature: "Buitentemperatuur",
     section_cooling: "Koelindicator", section_cooling_power: "Vermogen bij koelen", section_cooling_output: "Koelafgifte", section_hot_water_power: "Vermogen voor warm water", section_hot_water_output: "Warmteafgifte voor warm water",
-    section_return_temperature: "Retourtemperatuur", section_water_flow: "Waterdebiet", section_compressor: "Compressor", hp_delta: "Delta", section_fan_speed: "Ventilatortoerental",
+    section_return_temperature: "Retourtemperatuur", section_water_flow: "Waterdebiet", section_compressor: "Compressor", hp_delta: "Delta T", section_fan_speed: "Ventilatortoerental",
     hp_flow_return: "Aanvoer en retour", no_hot_water: "Geen boiler", underfloor_heating: "Vloerverwarming in plaats van radiatoren",
     type_printer_3d: "3D-printer", section_nozzle_temperature: "Nozzletemperatuur", section_nozzle_target: "Doeltemperatuur nozzle",
     section_bed_temperature: "Bedtemperatuur", section_bed_target: "Doeltemperatuur bed", section_chamber_temperature: "Temperatuur van de behuizing",
@@ -1058,7 +1058,7 @@ const T = {
     boiler_space_heating: "Aquecimento", boiler_hot_water: "\u00c1gua quente", boiler_burner: "Queimador ligado", boiler_starting: "Igni\u00e7\u00e3o", boiler_waiting: "Pausa do queimador", hp_cooling: "Arrefecimento", hp_defrost: "Descongela\u00e7\u00e3o",
     section_space_heating: "Indicador de aquecimento central", section_hot_water: "Indicador de \u00e1gua quente", section_flow_temperature: "Temperatura de ida", section_heat_output: "Calor produzido", section_cop: "Coeficiente de desempenho (COP)", section_outdoor_temperature: "Temperatura exterior",
     section_cooling: "Indicador de arrefecimento", section_cooling_power: "Pot\u00eancia em arrefecimento", section_cooling_output: "Frio produzido", section_hot_water_power: "Pot\u00eancia para \u00e1gua quente", section_hot_water_output: "Calor produzido para \u00e1gua quente",
-    section_return_temperature: "Temperatura de retorno", section_water_flow: "Caudal de \u00e1gua", section_compressor: "Compressor", hp_delta: "Delta", section_fan_speed: "Velocidade da ventoinha",
+    section_return_temperature: "Temperatura de retorno", section_water_flow: "Caudal de \u00e1gua", section_compressor: "Compressor", hp_delta: "Delta T", section_fan_speed: "Velocidade da ventoinha",
     hp_flow_return: "Ida e retorno", no_hot_water: "Sem dep\u00f3sito de \u00e1gua quente", underfloor_heating: "Piso radiante em vez de radiadores",
     type_printer_3d: "Impressora 3D", section_nozzle_temperature: "Temperatura do bico", section_nozzle_target: "Temperatura alvo do bico",
     section_bed_temperature: "Temperatura da mesa", section_bed_target: "Temperatura alvo da mesa", section_chamber_temperature: "Temperatura da c\u00e2mara",
@@ -1192,7 +1192,7 @@ const T = {
     boiler_space_heating: "Uppv\u00e4rmning", boiler_hot_water: "Varmvatten", boiler_burner: "Br\u00e4nnare p\u00e5", boiler_starting: "T\u00e4ndning", boiler_waiting: "V\u00e4ntar", hp_cooling: "Kylning", hp_defrost: "Avfrostning",
     section_space_heating: "Indikator f\u00f6r uppv\u00e4rmning", section_hot_water: "Indikator f\u00f6r varmvatten", section_flow_temperature: "Framledningstemperatur", section_heat_output: "V\u00e4rmeeffekt", section_cop: "V\u00e4rmefaktor (COP)", section_outdoor_temperature: "Utomhustemperatur",
     section_cooling: "Indikator f\u00f6r kylning", section_cooling_power: "Effekt vid kylning", section_cooling_output: "Kyleffekt", section_hot_water_power: "Effekt f\u00f6r varmvatten", section_hot_water_output: "V\u00e4rmeeffekt f\u00f6r varmvatten",
-    section_return_temperature: "Returtemperatur", section_water_flow: "Vattenfl\u00f6de", section_compressor: "Kompressor", hp_delta: "Delta", section_fan_speed: "Fl\u00e4kthastighet",
+    section_return_temperature: "Returtemperatur", section_water_flow: "Vattenfl\u00f6de", section_compressor: "Kompressor", hp_delta: "Delta T", section_fan_speed: "Fl\u00e4kthastighet",
     hp_flow_return: "Fram och retur", no_hot_water: "Ingen varmvattenberedare", underfloor_heating: "Golvv\u00e4rme i st\u00e4llet f\u00f6r radiatorer",
     type_printer_3d: "3D-skrivare", section_nozzle_temperature: "Munstyckets temperatur", section_nozzle_target: "Munstyckets m\u00e5ltemperatur",
     section_bed_temperature: "B\u00e4ddens temperatur", section_bed_target: "B\u00e4ddens m\u00e5ltemperatur", section_chamber_temperature: "Kammartemperatur",
@@ -1326,7 +1326,7 @@ const T = {
     boiler_space_heating: "Oppvarming", boiler_hot_water: "Varmtvann", boiler_burner: "Brenner p\u00e5", boiler_starting: "Tenning", boiler_waiting: "Venter", hp_cooling: "Kj\u00f8ling", hp_defrost: "Avriming",
     section_space_heating: "Indikator for oppvarming", section_hot_water: "Indikator for varmtvann", section_flow_temperature: "Turtemperatur", section_heat_output: "Varmeeffekt", section_cop: "Effektfaktor (COP)", section_outdoor_temperature: "Utetemperatur",
     section_cooling: "Indikator for kj\u00f8ling", section_cooling_power: "Effekt ved kj\u00f8ling", section_cooling_output: "Kj\u00f8leeffekt", section_hot_water_power: "Effekt for varmtvann", section_hot_water_output: "Varmeeffekt for varmtvann",
-    section_return_temperature: "Returtemperatur", section_water_flow: "Vannmengde", section_compressor: "Kompressor", hp_delta: "Delta", section_fan_speed: "Viftehastighet",
+    section_return_temperature: "Returtemperatur", section_water_flow: "Vannmengde", section_compressor: "Kompressor", hp_delta: "Delta T", section_fan_speed: "Viftehastighet",
     hp_flow_return: "Tur og retur", no_hot_water: "Ingen varmtvannsbereder", underfloor_heating: "Gulvvarme i stedet for radiatorer",
     type_printer_3d: "3D-skriver", section_nozzle_temperature: "Dysetemperatur", section_nozzle_target: "M\u00e5ltemperatur for dysen",
     section_bed_temperature: "Sengetemperatur", section_bed_target: "M\u00e5ltemperatur for sengen", section_chamber_temperature: "Kammertemperatur",
@@ -1460,7 +1460,7 @@ const T = {
     boiler_space_heating: "Opvarmning", boiler_hot_water: "Varmt vand", boiler_burner: "Br\u00e6nder t\u00e6ndt", boiler_starting: "T\u00e6nding", boiler_waiting: "Venter", hp_cooling: "K\u00f8ling", hp_defrost: "Afrimning",
     section_space_heating: "Indikator for opvarmning", section_hot_water: "Indikator for varmt vand", section_flow_temperature: "Freml\u00f8bstemperatur", section_heat_output: "Varmeydelse", section_cop: "Effektfaktor (COP)", section_outdoor_temperature: "Udetemperatur",
     section_cooling: "Indikator for k\u00f8ling", section_cooling_power: "Effekt ved k\u00f8ling", section_cooling_output: "K\u00f8leydelse", section_hot_water_power: "Effekt til varmt vand", section_hot_water_output: "Varmeydelse til varmt vand",
-    section_return_temperature: "Returtemperatur", section_water_flow: "Vandflow", section_compressor: "Kompressor", hp_delta: "Delta", section_fan_speed: "Ventilatorhastighed",
+    section_return_temperature: "Returtemperatur", section_water_flow: "Vandflow", section_compressor: "Kompressor", hp_delta: "Delta T", section_fan_speed: "Ventilatorhastighed",
     hp_flow_return: "Frem og retur", no_hot_water: "Ingen varmtvandsbeholder", underfloor_heating: "Gulvvarme i stedet for radiatorer",
     type_printer_3d: "3D-printer", section_nozzle_temperature: "Dysetemperatur", section_nozzle_target: "M\u00e5ltemperatur for dysen",
     section_bed_temperature: "Sengetemperatur", section_bed_target: "M\u00e5ltemperatur for sengen", section_chamber_temperature: "Kammertemperatur",
@@ -1594,7 +1594,7 @@ const T = {
     boiler_space_heating: "Ogrzewanie", boiler_hot_water: "Ciep\u0142a woda", boiler_burner: "Palnik w\u0142\u0105czony", boiler_starting: "Zap\u0142on", boiler_waiting: "Oczekiwanie", hp_cooling: "Ch\u0142odzenie", hp_defrost: "Odszranianie",
     section_space_heating: "Wska\u017anik ogrzewania", section_hot_water: "Wska\u017anik ciep\u0142ej wody", section_flow_temperature: "Temperatura zasilania", section_heat_output: "Moc grzewcza", section_cop: "Wsp\u00f3\u0142czynnik efektywno\u015bci (COP)", section_outdoor_temperature: "Temperatura zewn\u0119trzna",
     section_cooling: "Wska\u017anik ch\u0142odzenia", section_cooling_power: "Moc przy ch\u0142odzeniu", section_cooling_output: "Moc ch\u0142odnicza", section_hot_water_power: "Moc na ciep\u0142\u0105 wod\u0119", section_hot_water_output: "Moc grzewcza na ciep\u0142\u0105 wod\u0119",
-    section_return_temperature: "Temperatura powrotu", section_water_flow: "Przep\u0142yw wody", section_compressor: "Spr\u0119\u017carka", hp_delta: "Delta", section_fan_speed: "Pr\u0119dko\u015b\u0107 wentylatora",
+    section_return_temperature: "Temperatura powrotu", section_water_flow: "Przep\u0142yw wody", section_compressor: "Spr\u0119\u017carka", hp_delta: "Delta T", section_fan_speed: "Pr\u0119dko\u015b\u0107 wentylatora",
     hp_flow_return: "Zasilanie i powr\u00f3t", no_hot_water: "Bez zasobnika CWU", underfloor_heating: "Ogrzewanie pod\u0142ogowe zamiast grzejnik\u00f3w",
     type_printer_3d: "Drukarka 3D", section_nozzle_temperature: "Temperatura dyszy", section_nozzle_target: "Temperatura docelowa dyszy",
     section_bed_temperature: "Temperatura sto\u0142u", section_bed_target: "Temperatura docelowa sto\u0142u", section_chamber_temperature: "Temperatura komory",
@@ -1862,7 +1862,7 @@ const T = {
     boiler_space_heating: "Topen\u00ed", boiler_hot_water: "Tepl\u00e1 voda", boiler_burner: "Ho\u0159\u00e1k zapnut", boiler_starting: "Zapalov\u00e1n\u00ed", boiler_waiting: "\u010cek\u00e1n\u00ed", hp_cooling: "Chlazen\u00ed", hp_defrost: "Odmrazov\u00e1n\u00ed",
     section_space_heating: "Indik\u00e1tor topen\u00ed", section_hot_water: "Indik\u00e1tor tepl\u00e9 vody", section_flow_temperature: "Teplota topn\u00e9 vody", section_heat_output: "Tepeln\u00fd v\u00fdkon", section_cop: "Topn\u00fd faktor (COP)", section_outdoor_temperature: "Venkovn\u00ed teplota",
     section_cooling: "Indik\u00e1tor chlazen\u00ed", section_cooling_power: "P\u0159\u00edkon p\u0159i chlazen\u00ed", section_cooling_output: "Chladic\u00ed v\u00fdkon", section_hot_water_power: "P\u0159\u00edkon pro teplou vodu", section_hot_water_output: "Tepeln\u00fd v\u00fdkon pro teplou vodu",
-    section_return_temperature: "Teplota zp\u00e1te\u010dky", section_water_flow: "Pr\u016ftok vody", section_compressor: "Kompresor", hp_delta: "Delta", section_fan_speed: "Ot\u00e1\u010dky ventil\u00e1toru",
+    section_return_temperature: "Teplota zp\u00e1te\u010dky", section_water_flow: "Pr\u016ftok vody", section_compressor: "Kompresor", hp_delta: "Delta T", section_fan_speed: "Ot\u00e1\u010dky ventil\u00e1toru",
     hp_flow_return: "P\u0159\u00edvod a zp\u00e1te\u010dka", no_hot_water: "Bez z\u00e1sobn\u00edku tepl\u00e9 vody", underfloor_heating: "Podlahov\u00e9 vyt\u00e1p\u011bn\u00ed m\u00edsto radi\u00e1tor\u016f",
     type_printer_3d: "3D tisk\u00e1rna", section_nozzle_temperature: "Teplota trysky", section_nozzle_target: "C\u00edlov\u00e1 teplota trysky",
     section_bed_temperature: "Teplota podlo\u017eky", section_bed_target: "C\u00edlov\u00e1 teplota podlo\u017eky", section_chamber_temperature: "Teplota komory",
@@ -2492,6 +2492,13 @@ function temperatureUnit(hass, entityId) {
     (hass.config && hass.config.unit_system && hass.config.unit_system.temperature) ||
     "\u00b0C"
   );
+}
+
+// A difference of temperatures is written in kelvin, as the trade writes
+// it: a gap of 5 degrees Celsius is 5 K. Fahrenheit has no such unit in
+// common use, so its gaps stay in degrees Fahrenheit.
+function deltaUnit(unit) {
+  return unit === "\u00b0C" || unit === "\u2103" ? "K" : unit;
 }
 
 // Appliance front panels show a countdown, not "1h04".
@@ -7362,7 +7369,9 @@ class ApplianceCard extends HTMLElement {
       // temperatures are already there, and what the emitter takes out of the
       // water is the number a heat pump is read on. Taken as a distance, since
       // the return is the warmer one when the pump cools the house.
-      if (flow !== null && ret !== null) {
+      // Two sensors in different units give no difference worth reading.
+      const fUnit = temperatureUnit(hass, cfg.temperature_entity);
+      if (flow !== null && ret !== null && fUnit === temperatureUnit(hass, cfg.return_temperature_entity)) {
         const d = tempDecimals(cfg);
         extraLines.push({
           key: "delta",
@@ -7370,7 +7379,7 @@ class ApplianceCard extends HTMLElement {
           label: t(hass, "hp_delta"),
           // Never in whole degrees: a heat pump works on a couple of them, and
           // rounding a delta of 4.4 to 4 hides most of what it says.
-          value: keepTogether(`${fixedTemp(hass, Math.abs(flow - ret), d === 0 ? 1 : d === null ? 1 : d)} ${temperatureUnit(hass, cfg.temperature_entity)}`),
+          value: keepTogether(`${fixedTemp(hass, Math.abs(flow - ret), d === 0 ? 1 : d === null ? 1 : d)} ${deltaUnit(fUnit)}`),
         });
       }
       hpLine(cfg.water_flow_entity, "water_flow", "mdi:water-pump", t(hass, "section_water_flow"));
