@@ -1,4 +1,4 @@
-const CARD_VERSION = "2.17.1";
+const CARD_VERSION = "2.18.0";
 
 console.info(
   "%c HA-APPLIANCE-CARD %c v" + CARD_VERSION + " ",
@@ -135,7 +135,7 @@ const T = {
     section_printed_part: "Printed part", part_cube: "Cube", part_pyramid: "Pyramid", part_duck: "Rubber duck",
     type_pet_feeder: "Pet feeder", feeder_ready: "Ready", feeder_feeding: "Dispensing", section_portions_today: "Portions today", section_weight_today: "Weight today", section_portion_weight: "Portion weight", section_serving_size: "Serving size", section_feeder_schedule: "Schedule", section_last_feed: "Last feed", section_error: "Error indicator", start_option: "Option to select", start_value: "Value to write", portions: "portions",
     feeder_empty: "Tank empty", feeder_level: "Tank at {pct}", section_level: "Food level", level_empty_below: "Empty at or below", level_max: "Tank capacity",
-    section_feeder_layout: "Model", layout_tower: "Tower, built-in bowl", layout_canister: "Round tank, separate bowl",
+    section_feeder_layout: "Model", layout_tower: "Square tank", layout_canister: "Round tank", layout_double: "Two bowls",
     type_iron: "Iron", section_iron_layout: "Model", layout_iron: "Iron", layout_generator: "Steam generator",
     iron_heating: "Heating", iron_off: "Off", left_on: "Left on", left_on_after: "Warn after (minutes switched on)",
     type_pellet_stove: "Pellet stove", ps_off: "Off", ps_ignition: "Ignition", ps_burning: "Burning", ps_modulating: "Modulating",
@@ -269,7 +269,7 @@ const T = {
     section_printed_part: "Pi\u00e8ce imprim\u00e9e", part_cube: "Cube", part_pyramid: "Pyramide", part_duck: "Canard en plastique",
     type_pet_feeder: "Distributeur de croquettes", feeder_ready: "Pr\u00eat", feeder_feeding: "Distribution", section_portions_today: "Portions du jour", section_weight_today: "Poids du jour", section_portion_weight: "Poids d'une portion", section_serving_size: "Taille de la portion", section_feeder_schedule: "Planning", section_last_feed: "Dernier repas", section_error: "Indicateur d'erreur", start_option: "Option \u00e0 choisir", start_value: "Valeur \u00e0 \u00e9crire", portions: "portions",
     feeder_empty: "R\u00e9servoir vide", feeder_level: "R\u00e9servoir \u00e0 {pct}", section_level: "Niveau de croquettes", level_empty_below: "Vide \u00e0 ce niveau ou moins", level_max: "Contenance du r\u00e9servoir",
-    section_feeder_layout: "Mod\u00e8le", layout_tower: "Tour, gamelle int\u00e9gr\u00e9e", layout_canister: "R\u00e9servoir rond, gamelle \u00e0 part",
+    section_feeder_layout: "Mod\u00e8le", layout_tower: "R\u00e9servoir carr\u00e9", layout_canister: "R\u00e9servoir rond", layout_double: "Deux gamelles",
     type_iron: "Fer \u00e0 repasser", section_iron_layout: "Mod\u00e8le", layout_iron: "Fer seul", layout_generator: "Centrale vapeur",
     iron_heating: "En chauffe", iron_off: "\u00c0 l'arr\u00eat", left_on: "Rest\u00e9 allum\u00e9", left_on_after: "Alerter apr\u00e8s (minutes allum\u00e9)",
     type_pellet_stove: "Po\u00eale \u00e0 granul\u00e9s", ps_off: "\u00c9teint", ps_ignition: "Allumage", ps_burning: "En chauffe", ps_modulating: "Modulation",
@@ -403,7 +403,7 @@ const T = {
     section_printed_part: "\u041f\u0435\u0447\u0430\u0442\u0430\u0435\u043c\u0430\u044f \u043c\u043e\u0434\u0435\u043b\u044c", part_cube: "\u041a\u0443\u0431", part_pyramid: "\u041f\u0438\u0440\u0430\u043c\u0438\u0434\u0430", part_duck: "\u0420\u0435\u0437\u0438\u043d\u043e\u0432\u0430\u044f \u0443\u0442\u043e\u0447\u043a\u0430",
     type_pet_feeder: "\u041a\u043e\u0440\u043c\u0443\u0448\u043a\u0430", feeder_ready: "\u0413\u043e\u0442\u043e\u0432\u0430", feeder_feeding: "\u041a\u043e\u0440\u043c\u043b\u0435\u043d\u0438\u0435", section_portions_today: "\u041f\u043e\u0440\u0446\u0438\u0439 \u0437\u0430 \u0434\u0435\u043d\u044c", section_weight_today: "\u0412\u0435\u0441 \u0437\u0430 \u0434\u0435\u043d\u044c", section_portion_weight: "\u0412\u0435\u0441 \u043f\u043e\u0440\u0446\u0438\u0438", section_serving_size: "\u0420\u0430\u0437\u043c\u0435\u0440 \u043f\u043e\u0440\u0446\u0438\u0438", section_feeder_schedule: "\u0420\u0430\u0441\u043f\u0438\u0441\u0430\u043d\u0438\u0435", section_last_feed: "\u041f\u043e\u0441\u043b\u0435\u0434\u043d\u0435\u0435 \u043a\u043e\u0440\u043c\u043b\u0435\u043d\u0438\u0435", section_error: "\u0418\u043d\u0434\u0438\u043a\u0430\u0442\u043e\u0440 \u043e\u0448\u0438\u0431\u043a\u0438", start_option: "\u0412\u044b\u0431\u0438\u0440\u0430\u0435\u043c\u0430\u044f \u043e\u043f\u0446\u0438\u044f", start_value: "\u0417\u0430\u043f\u0438\u0441\u044b\u0432\u0430\u0435\u043c\u043e\u0435 \u0437\u043d\u0430\u0447\u0435\u043d\u0438\u0435", portions: "\u043f\u043e\u0440\u0446\u0438\u0439",
     feeder_empty: "\u0411\u0443\u043d\u043a\u0435\u0440 \u043f\u0443\u0441\u0442", feeder_level: "\u0411\u0443\u043d\u043a\u0435\u0440 \u0437\u0430\u043f\u043e\u043b\u043d\u0435\u043d \u043d\u0430 {pct}", section_level: "\u0423\u0440\u043e\u0432\u0435\u043d\u044c \u043a\u043e\u0440\u043c\u0430", level_empty_below: "\u041f\u0443\u0441\u0442\u043e \u043f\u0440\u0438 \u0437\u043d\u0430\u0447\u0435\u043d\u0438\u0438 \u043d\u0435 \u0432\u044b\u0448\u0435", level_max: "\u0401\u043c\u043a\u043e\u0441\u0442\u044c \u0431\u0443\u043d\u043a\u0435\u0440\u0430",
-    section_feeder_layout: "\u041c\u043e\u0434\u0435\u043b\u044c", layout_tower: "\u0411\u0430\u0448\u043d\u044f \u0441\u043e \u0432\u0441\u0442\u0440\u043e\u0435\u043d\u043d\u043e\u0439 \u043c\u0438\u0441\u043a\u043e\u0439", layout_canister: "\u041a\u0440\u0443\u0433\u043b\u044b\u0439 \u0431\u0443\u043d\u043a\u0435\u0440, \u043e\u0442\u0434\u0435\u043b\u044c\u043d\u0430\u044f \u043c\u0438\u0441\u043a\u0430",
+    section_feeder_layout: "\u041c\u043e\u0434\u0435\u043b\u044c", layout_tower: "\u041a\u0432\u0430\u0434\u0440\u0430\u0442\u043d\u044b\u0439 \u0431\u0443\u043d\u043a\u0435\u0440", layout_canister: "\u041a\u0440\u0443\u0433\u043b\u044b\u0439 \u0431\u0443\u043d\u043a\u0435\u0440", layout_double: "\u0414\u0432\u0435 \u043c\u0438\u0441\u043a\u0438",
     type_iron: "\u0423\u0442\u044e\u0433", section_iron_layout: "\u041c\u043e\u0434\u0435\u043b\u044c", layout_iron: "\u0423\u0442\u044e\u0433", layout_generator: "\u041f\u0430\u0440\u043e\u0433\u0435\u043d\u0435\u0440\u0430\u0442\u043e\u0440",
     iron_heating: "\u041d\u0430\u0433\u0440\u0435\u0432", iron_off: "\u0412\u044b\u043a\u043b\u044e\u0447\u0435\u043d", left_on: "\u041e\u0441\u0442\u0430\u043b\u0441\u044f \u0432\u043a\u043b\u044e\u0447\u0451\u043d\u043d\u044b\u043c", left_on_after: "\u041f\u0440\u0435\u0434\u0443\u043f\u0440\u0435\u0434\u0438\u0442\u044c \u0447\u0435\u0440\u0435\u0437 (\u043c\u0438\u043d\u0443\u0442 \u0432\u043a\u043b\u044e\u0447\u0435\u043d\u0438\u044f)",
     type_pellet_stove: "\u041f\u0435\u043b\u043b\u0435\u0442\u043d\u0430\u044f \u043f\u0435\u0447\u044c", ps_off: "\u0412\u044b\u043a\u043b\u044e\u0447\u0435\u043d\u0430", ps_ignition: "\u0420\u043e\u0437\u0436\u0438\u0433", ps_burning: "\u0413\u043e\u0440\u0435\u043d\u0438\u0435", ps_modulating: "\u041c\u043e\u0434\u0443\u043b\u044f\u0446\u0438\u044f",
@@ -537,7 +537,7 @@ const T = {
     section_printed_part: "Druckobjekt", part_cube: "W\u00fcrfel", part_pyramid: "Pyramide", part_duck: "Quietscheentchen",
     type_pet_feeder: "Futterautomat", feeder_ready: "Bereit", feeder_feeding: "F\u00fcttert", section_portions_today: "Portionen heute", section_weight_today: "Menge heute", section_portion_weight: "Portionsgewicht", section_serving_size: "Portionsgr\u00f6\u00dfe", section_feeder_schedule: "Zeitplan", section_last_feed: "Letzte F\u00fctterung", section_error: "St\u00f6rungsanzeige", start_option: "Auszuw\u00e4hlende Option", start_value: "Zu schreibender Wert", portions: "Portionen",
     feeder_empty: "Beh\u00e4lter leer", feeder_level: "Beh\u00e4lter zu {pct} voll", section_level: "F\u00fcllstand", level_empty_below: "Leer ab oder unter", level_max: "Fassungsverm\u00f6gen",
-    section_feeder_layout: "Modell", layout_tower: "Turm, Napf integriert", layout_canister: "Runder Beh\u00e4lter, separater Napf",
+    section_feeder_layout: "Modell", layout_tower: "Eckiger Beh\u00e4lter", layout_canister: "Runder Beh\u00e4lter", layout_double: "Zwei N\u00e4pfe",
     type_iron: "B\u00fcgeleisen", section_iron_layout: "Modell", layout_iron: "B\u00fcgeleisen", layout_generator: "Dampfstation",
     iron_heating: "Heizt", iron_off: "Aus", left_on: "Eingeschaltet geblieben", left_on_after: "Warnen nach (Minuten eingeschaltet)",
     type_pellet_stove: "Pelletofen", ps_off: "Aus", ps_ignition: "Z\u00fcndung", ps_burning: "Brennt", ps_modulating: "Modulation",
@@ -671,7 +671,7 @@ const T = {
     section_printed_part: "Pieza impresa", part_cube: "Cubo", part_pyramid: "Pir\u00e1mide", part_duck: "Patito de goma",
     type_pet_feeder: "Comedero autom\u00e1tico", feeder_ready: "Listo", feeder_feeding: "Dispensando", section_portions_today: "Raciones de hoy", section_weight_today: "Peso de hoy", section_portion_weight: "Peso de la raci\u00f3n", section_serving_size: "Tama\u00f1o de la raci\u00f3n", section_feeder_schedule: "Programaci\u00f3n", section_last_feed: "\u00daltima comida", section_error: "Indicador de error", start_option: "Opci\u00f3n a seleccionar", start_value: "Valor a escribir", portions: "raciones",
     feeder_empty: "Dep\u00f3sito vac\u00edo", feeder_level: "Dep\u00f3sito al {pct}", section_level: "Nivel de comida", level_empty_below: "Vac\u00edo en o por debajo de", level_max: "Capacidad del dep\u00f3sito",
-    section_feeder_layout: "Modelo", layout_tower: "Torre, cuenco integrado", layout_canister: "Dep\u00f3sito redondo, cuenco aparte",
+    section_feeder_layout: "Modelo", layout_tower: "Dep\u00f3sito cuadrado", layout_canister: "Dep\u00f3sito redondo", layout_double: "Dos cuencos",
     type_iron: "Plancha", section_iron_layout: "Modelo", layout_iron: "Plancha", layout_generator: "Centro de planchado",
     iron_heating: "Calentando", iron_off: "Apagado", left_on: "Sigue encendida", left_on_after: "Avisar tras (minutos encendida)",
     type_pellet_stove: "Estufa de pellets", ps_off: "Apagada", ps_ignition: "Encendido", ps_burning: "En marcha", ps_modulating: "Modulando",
@@ -805,7 +805,7 @@ const T = {
     section_printed_part: "Oggetto stampato", part_cube: "Cubo", part_pyramid: "Piramide", part_duck: "Paperella di gomma",
     type_pet_feeder: "Distributore di crocchette", feeder_ready: "Pronto", feeder_feeding: "Erogazione", section_portions_today: "Porzioni di oggi", section_weight_today: "Peso di oggi", section_portion_weight: "Peso della porzione", section_serving_size: "Dimensione della porzione", section_feeder_schedule: "Programmazione", section_last_feed: "Ultimo pasto", section_error: "Indicatore di errore", start_option: "Opzione da selezionare", start_value: "Valore da scrivere", portions: "porzioni",
     feeder_empty: "Serbatoio vuoto", feeder_level: "Serbatoio al {pct}", section_level: "Livello del cibo", level_empty_below: "Vuoto a questo livello o meno", level_max: "Capacit\u00e0 del serbatoio",
-    section_feeder_layout: "Modello", layout_tower: "Torre, ciotola integrata", layout_canister: "Serbatoio tondo, ciotola separata",
+    section_feeder_layout: "Modello", layout_tower: "Serbatoio quadrato", layout_canister: "Serbatoio tondo", layout_double: "Due ciotole",
     type_iron: "Ferro da stiro", section_iron_layout: "Modello", layout_iron: "Ferro da stiro", layout_generator: "Ferro con caldaia",
     iron_heating: "In riscaldamento", iron_off: "Spento", left_on: "Rimasto acceso", left_on_after: "Avvisa dopo (minuti acceso)",
     type_pellet_stove: "Stufa a pellet", ps_off: "Spenta", ps_ignition: "Accensione", ps_burning: "In funzione", ps_modulating: "Modulazione",
@@ -939,7 +939,7 @@ const T = {
     section_printed_part: "Geprint object", part_cube: "Kubus", part_pyramid: "Piramide", part_duck: "Badeendje",
     type_pet_feeder: "Voerautomaat", feeder_ready: "Gereed", feeder_feeding: "Voeren", section_portions_today: "Porties vandaag", section_weight_today: "Gewicht vandaag", section_portion_weight: "Portiegewicht", section_serving_size: "Portiegrootte", section_feeder_schedule: "Schema", section_last_feed: "Laatste voeding", section_error: "Storingsindicator", start_option: "Te kiezen optie", start_value: "Te schrijven waarde", portions: "porties",
     feeder_empty: "Reservoir leeg", feeder_level: "Reservoir voor {pct} vol", section_level: "Voerniveau", level_empty_below: "Leeg bij of onder", level_max: "Inhoud van het reservoir",
-    section_feeder_layout: "Model", layout_tower: "Toren, ingebouwde bak", layout_canister: "Rond reservoir, losse bak",
+    section_feeder_layout: "Model", layout_tower: "Vierkant reservoir", layout_canister: "Rond reservoir", layout_double: "Twee bakken",
     type_iron: "Strijkijzer", section_iron_layout: "Model", layout_iron: "Strijkijzer", layout_generator: "Stoomgenerator",
     iron_heating: "Aan het koken", iron_off: "Uit", left_on: "Blijft aan", left_on_after: "Waarschuwen na (minuten aan)",
     type_pellet_stove: "Pelletkachel", ps_off: "Uit", ps_ignition: "Ontsteking", ps_burning: "Brandt", ps_modulating: "Moduleert",
@@ -1073,7 +1073,7 @@ const T = {
     section_printed_part: "Pe\u00e7a impressa", part_cube: "Cubo", part_pyramid: "Pir\u00e2mide", part_duck: "Patinho de borracha",
     type_pet_feeder: "Alimentador autom\u00e1tico", feeder_ready: "Pronto", feeder_feeding: "A distribuir", section_portions_today: "Por\u00e7\u00f5es de hoje", section_weight_today: "Peso de hoje", section_portion_weight: "Peso da por\u00e7\u00e3o", section_serving_size: "Tamanho da por\u00e7\u00e3o", section_feeder_schedule: "Programa\u00e7\u00e3o", section_last_feed: "\u00daltima refei\u00e7\u00e3o", section_error: "Indicador de erro", start_option: "Op\u00e7\u00e3o a selecionar", start_value: "Valor a escrever", portions: "por\u00e7\u00f5es",
     feeder_empty: "Dep\u00f3sito vazio", feeder_level: "Dep\u00f3sito a {pct}", section_level: "N\u00edvel de comida", level_empty_below: "Vazio em ou abaixo de", level_max: "Capacidade do dep\u00f3sito",
-    section_feeder_layout: "Modelo", layout_tower: "Torre, ta\u00e7a integrada", layout_canister: "Dep\u00f3sito redondo, ta\u00e7a \u00e0 parte",
+    section_feeder_layout: "Modelo", layout_tower: "Dep\u00f3sito quadrado", layout_canister: "Dep\u00f3sito redondo", layout_double: "Duas ta\u00e7as",
     type_iron: "Ferro de engomar", section_iron_layout: "Modelo", layout_iron: "Ferro de engomar", layout_generator: "Gerador de vapor",
     iron_heating: "A aquecer", iron_off: "Desligada", left_on: "Ficou ligado", left_on_after: "Avisar ap\u00f3s (minutos ligado)",
     type_pellet_stove: "Salamandra a pellets", ps_off: "Desligada", ps_ignition: "Igni\u00e7\u00e3o", ps_burning: "A funcionar", ps_modulating: "Em modula\u00e7\u00e3o",
@@ -1207,7 +1207,7 @@ const T = {
     section_printed_part: "Utskrivet objekt", part_cube: "Kub", part_pyramid: "Pyramid", part_duck: "Badanka",
     type_pet_feeder: "Foderautomat", feeder_ready: "Redo", feeder_feeding: "Matar", section_portions_today: "Portioner idag", section_weight_today: "Vikt idag", section_portion_weight: "Portionsvikt", section_serving_size: "Portionsstorlek", section_feeder_schedule: "Schema", section_last_feed: "Senaste matning", section_error: "Felindikator", start_option: "Alternativ att v\u00e4lja", start_value: "V\u00e4rde att skriva", portions: "portioner",
     feeder_empty: "Beh\u00e5llaren tom", feeder_level: "Beh\u00e5llaren {pct} full", section_level: "Foderm\u00e4ngd", level_empty_below: "Tom vid eller under", level_max: "Beh\u00e5llarens volym",
-    section_feeder_layout: "Modell", layout_tower: "Torn, inbyggd sk\u00e5l", layout_canister: "Rund beh\u00e5llare, separat sk\u00e5l",
+    section_feeder_layout: "Modell", layout_tower: "Fyrkantig beh\u00e5llare", layout_canister: "Rund beh\u00e5llare", layout_double: "Tv\u00e5 sk\u00e5lar",
     type_iron: "Strykj\u00e4rn", section_iron_layout: "Modell", layout_iron: "Strykj\u00e4rn", layout_generator: "\u00c5ngstation",
     iron_heating: "V\u00e4rmer", iron_off: "Av", left_on: "St\u00e5r p\u00e5", left_on_after: "Varna efter (minuter p\u00e5slagen)",
     type_pellet_stove: "Pelletskamin", ps_off: "Av", ps_ignition: "T\u00e4ndning", ps_burning: "Eldar", ps_modulating: "Modulerar",
@@ -1341,7 +1341,7 @@ const T = {
     section_printed_part: "Utskrevet objekt", part_cube: "Kube", part_pyramid: "Pyramide", part_duck: "Badeand",
     type_pet_feeder: "F\u00f4rautomat", feeder_ready: "Klar", feeder_feeding: "Mater", section_portions_today: "Porsjoner i dag", section_weight_today: "Vekt i dag", section_portion_weight: "Porsjonsvekt", section_serving_size: "Porsjonsst\u00f8rrelse", section_feeder_schedule: "Tidsplan", section_last_feed: "Siste m\u00e5ltid", section_error: "Feilindikator", start_option: "Alternativ \u00e5 velge", start_value: "Verdi \u00e5 skrive", portions: "porsjoner",
     feeder_empty: "Beholder tom", feeder_level: "Beholder {pct} full", section_level: "F\u00f4rniv\u00e5", level_empty_below: "Tom ved eller under", level_max: "Beholderens volum",
-    section_feeder_layout: "Modell", layout_tower: "T\u00e5rn, innebygd sk\u00e5l", layout_canister: "Rund beholder, separat sk\u00e5l",
+    section_feeder_layout: "Modell", layout_tower: "Firkantet beholder", layout_canister: "Rund beholder", layout_double: "To sk\u00e5ler",
     type_iron: "Strykejern", section_iron_layout: "Modell", layout_iron: "Strykejern", layout_generator: "Dampstasjon",
     iron_heating: "Varmer", iron_off: "Av", left_on: "St\u00e5r p\u00e5", left_on_after: "Varsle etter (minutter p\u00e5sl\u00e5tt)",
     type_pellet_stove: "Pelletsovn", ps_off: "Av", ps_ignition: "Tenning", ps_burning: "Fyrer", ps_modulating: "Modulerer",
@@ -1475,7 +1475,7 @@ const T = {
     section_printed_part: "Printet emne", part_cube: "Terning", part_pyramid: "Pyramide", part_duck: "Badeand",
     type_pet_feeder: "Foderautomat", feeder_ready: "Klar", feeder_feeding: "Fodrer", section_portions_today: "Portioner i dag", section_weight_today: "V\u00e6gt i dag", section_portion_weight: "Portionsv\u00e6gt", section_serving_size: "Portionsst\u00f8rrelse", section_feeder_schedule: "Tidsplan", section_last_feed: "Sidste fodring", section_error: "Fejlindikator", start_option: "Valgmulighed", start_value: "V\u00e6rdi at skrive", portions: "portioner",
     feeder_empty: "Beholder tom", feeder_level: "Beholder {pct} fuld", section_level: "Foderm\u00e6ngde", level_empty_below: "Tom ved eller under", level_max: "Beholderens rumfang",
-    section_feeder_layout: "Model", layout_tower: "T\u00e5rn, indbygget sk\u00e5l", layout_canister: "Rund beholder, separat sk\u00e5l",
+    section_feeder_layout: "Model", layout_tower: "Firkantet beholder", layout_canister: "Rund beholder", layout_double: "To sk\u00e5le",
     type_iron: "Strygejern", section_iron_layout: "Model", layout_iron: "Strygejern", layout_generator: "Dampstation",
     iron_heating: "Varmer", iron_off: "Slukket", left_on: "St\u00e5r t\u00e6ndt", left_on_after: "Advar efter (minutter t\u00e6ndt)",
     type_pellet_stove: "Pilleovn", ps_off: "Slukket", ps_ignition: "T\u00e6nding", ps_burning: "Fyrer", ps_modulating: "Modulerer",
@@ -1609,7 +1609,7 @@ const T = {
     section_printed_part: "Drukowany obiekt", part_cube: "Sze\u015bcian", part_pyramid: "Piramida", part_duck: "Gumowa kaczuszka",
     type_pet_feeder: "Karmnik automatyczny", feeder_ready: "Gotowy", feeder_feeding: "Wydawanie", section_portions_today: "Porcje dzisiaj", section_weight_today: "Waga dzisiaj", section_portion_weight: "Waga porcji", section_serving_size: "Wielko\u015b\u0107 porcji", section_feeder_schedule: "Harmonogram", section_last_feed: "Ostatnie karmienie", section_error: "Wska\u017anik b\u0142\u0119du", start_option: "Opcja do wybrania", start_value: "Warto\u015b\u0107 do zapisania", portions: "porcji",
     feeder_empty: "Pusty zasobnik", feeder_level: "Zasobnik nape\u0142niony w {pct}", section_level: "Poziom karmy", level_empty_below: "Pusty przy tej warto\u015bci lub ni\u017cej", level_max: "Pojemno\u015b\u0107 zasobnika",
-    section_feeder_layout: "Model", layout_tower: "Wie\u017ca, wbudowana miska", layout_canister: "Okr\u0105g\u0142y zasobnik, osobna miska",
+    section_feeder_layout: "Model", layout_tower: "Kwadratowy zasobnik", layout_canister: "Okr\u0105g\u0142y zasobnik", layout_double: "Dwie miski",
     type_iron: "\u017belazko", section_iron_layout: "Model", layout_iron: "\u017belazko", layout_generator: "Generator pary",
     iron_heating: "Grzeje", iron_off: "Wy\u0142\u0105czony", left_on: "Pozosta\u0142o w\u0142\u0105czone", left_on_after: "Ostrze\u017c po (minutach w\u0142\u0105czenia)",
     type_pellet_stove: "Piec na pellet", ps_off: "Wy\u0142\u0105czony", ps_ignition: "Rozpalanie", ps_burning: "Pracuje", ps_modulating: "Modulacja",
@@ -1743,7 +1743,7 @@ const T = {
     section_printed_part: "\u6253\u5370\u6a21\u578b", part_cube: "\u7acb\u65b9\u4f53", part_pyramid: "\u91d1\u5b57\u5854", part_duck: "\u6a61\u76ae\u9e2d",
     type_pet_feeder: "\u81ea\u52a8\u5582\u98df\u5668", feeder_ready: "\u5c31\u7eea", feeder_feeding: "\u6295\u5582\u4e2d", section_portions_today: "\u4eca\u65e5\u4efd\u6570", section_weight_today: "\u4eca\u65e5\u91cd\u91cf", section_portion_weight: "\u6bcf\u4efd\u91cd\u91cf", section_serving_size: "\u6bcf\u6b21\u4efd\u91cf", section_feeder_schedule: "\u8ba1\u5212", section_last_feed: "\u4e0a\u6b21\u6295\u5582", section_error: "\u6545\u969c\u6307\u793a", start_option: "\u8981\u9009\u62e9\u7684\u9009\u9879", start_value: "\u8981\u5199\u5165\u7684\u503c", portions: "\u4efd",
     feeder_empty: "\u6599\u6876\u5df2\u7a7a", feeder_level: "\u6599\u6876\u4f59\u91cf {pct}", section_level: "\u4f59\u91cf", level_empty_below: "\u4f4e\u4e8e\u6216\u7b49\u4e8e\u6b64\u503c\u89c6\u4e3a\u7a7a", level_max: "\u6599\u6876\u5bb9\u91cf",
-    section_feeder_layout: "\u578b\u53f7", layout_tower: "\u5854\u5f0f\uff0c\u4e00\u4f53\u5f0f\u98df\u76c6", layout_canister: "\u5706\u5f62\u6599\u6876\uff0c\u72ec\u7acb\u98df\u76c6",
+    section_feeder_layout: "\u578b\u53f7", layout_tower: "\u65b9\u5f62\u6599\u6876", layout_canister: "\u5706\u5f62\u6599\u6876", layout_double: "\u53cc\u98df\u76c6",
     type_iron: "\u71a8\u6597", section_iron_layout: "\u578b\u53f7", layout_iron: "\u71a8\u6597", layout_generator: "\u84b8\u6c7d\u53d1\u751f\u5668",
     iron_heating: "\u52a0\u70ed\u4e2d", iron_off: "\u5df2\u5173\u95ed", left_on: "\u4ecd\u7136\u5f00\u7740", left_on_after: "\u5f00\u542f\u591a\u5c11\u5206\u949f\u540e\u63d0\u9192",
     type_pellet_stove: "\u9897\u7c92\u7089", ps_off: "\u5df2\u5173\u95ed", ps_ignition: "\u70b9\u706b\u4e2d", ps_burning: "\u71c3\u70e7\u4e2d", ps_modulating: "\u8c03\u8282\u4e2d",
@@ -1877,7 +1877,7 @@ const T = {
     section_printed_part: "Ti\u0161t\u011bn\u00fd objekt", part_cube: "Krychle", part_pyramid: "Pyramida", part_duck: "Gumov\u00e1 kachni\u010dka",
     type_pet_feeder: "Krm\u00edtko", feeder_ready: "P\u0159ipraveno", feeder_feeding: "Krmen\u00ed", section_portions_today: "Porce dnes", section_weight_today: "Hmotnost dnes", section_portion_weight: "Hmotnost porce", section_serving_size: "Velikost porce", section_feeder_schedule: "Rozvrh", section_last_feed: "Posledn\u00ed krmen\u00ed", section_error: "Indik\u00e1tor chyby", start_option: "Mo\u017enost k v\u00fdb\u011bru", start_value: "Hodnota k z\u00e1pisu", portions: "porc\u00ed",
     feeder_empty: "Z\u00e1sobn\u00edk pr\u00e1zdn\u00fd", feeder_level: "Z\u00e1sobn\u00edk napln\u011bn na {pct}", section_level: "Mno\u017estv\u00ed krmiva", level_empty_below: "Pr\u00e1zdn\u00fd p\u0159i t\u00e9to hodnot\u011b nebo ni\u017e\u0161\u00ed", level_max: "Objem z\u00e1sobn\u00edku",
-    section_feeder_layout: "Model", layout_tower: "V\u011b\u017e, vestav\u011bn\u00e1 miska", layout_canister: "Kulat\u00fd z\u00e1sobn\u00edk, samostatn\u00e1 miska",
+    section_feeder_layout: "Model", layout_tower: "Hranat\u00fd z\u00e1sobn\u00edk", layout_canister: "Kulat\u00fd z\u00e1sobn\u00edk", layout_double: "Dv\u011b misky",
     type_iron: "\u017dehli\u010dka", section_iron_layout: "Model", layout_iron: "\u017dehli\u010dka", layout_generator: "Parn\u00ed gener\u00e1tor",
     iron_heating: "Oh\u0159\u00edv\u00e1n\u00ed", iron_off: "Vypnuto", left_on: "Z\u016fstala zapnut\u00e1", left_on_after: "Upozornit po (minut\u00e1ch zapnut\u00ed)",
     type_pellet_stove: "Kamna na pelety", ps_off: "Vypnuto", ps_ignition: "Zapalov\u00e1n\u00ed", ps_burning: "Top\u00ed", ps_modulating: "Modulace",
@@ -2474,6 +2474,12 @@ function formatDuration(totalSeconds, hass) {
 // instead of leaving the time alone on the next line.
 function keepTogether(s) {
   return String(s).replace(/[ \u202f]/g, "\u00a0");
+}
+
+// The time a feeder's screen shows: hours and minutes only, since the screen
+// has no room for a 12-hour clock's AM or PM.
+function feederClock() {
+  return new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }).replace(/[^\d:]/g, "");
 }
 
 function formatEta(totalSeconds) {
@@ -3796,6 +3802,12 @@ const BODY_COLORS = {
   black: { body: "#3b4045", hi: "#515860", lo: "#22262a" },
 };
 
+// A pet feeder's kibble, drawn once as two small tiles: the heap, and the loose
+// pieces along its top. Generated, so each disc sits a little askew and no row
+// lines up with the next.
+const KIBBLE_TILE = "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='12'%3E%3Crect width='18' height='12' fill='%233a2211'/%3E%3Cg transform='translate(1.2 1.5) rotate(-2)'%3E%3Cellipse cy='0.6' rx='1.6' ry='0.9' fill='%235a361e'/%3E%3Cellipse rx='1.6' ry='0.9' fill='%23a67a52'/%3E%3C/g%3E%3Cg transform='translate(1.2 13.5) rotate(-2)'%3E%3Cellipse cy='0.6' rx='1.6' ry='0.9' fill='%235a361e'/%3E%3Cellipse rx='1.6' ry='0.9' fill='%23a67a52'/%3E%3C/g%3E%3Cg transform='translate(19.2 1.5) rotate(-2)'%3E%3Cellipse cy='0.6' rx='1.6' ry='0.9' fill='%235a361e'/%3E%3Cellipse rx='1.6' ry='0.9' fill='%23a67a52'/%3E%3C/g%3E%3Cg transform='translate(19.2 13.5) rotate(-2)'%3E%3Cellipse cy='0.6' rx='1.6' ry='0.9' fill='%235a361e'/%3E%3Cellipse rx='1.6' ry='0.9' fill='%23a67a52'/%3E%3C/g%3E%3Cg transform='translate(4.1 1) rotate(4)'%3E%3Cellipse cy='0.6' rx='1.7' ry='1.5' fill='%235a361e'/%3E%3Cellipse rx='1.7' ry='1.5' fill='%23a27449'/%3E%3C/g%3E%3Cg transform='translate(4.1 13) rotate(4)'%3E%3Cellipse cy='0.6' rx='1.7' ry='1.5' fill='%235a361e'/%3E%3Cellipse rx='1.7' ry='1.5' fill='%23a27449'/%3E%3C/g%3E%3Cg transform='translate(8 1.5) rotate(-8)'%3E%3Cellipse cy='0.6' rx='1.7' ry='1.2' fill='%235a361e'/%3E%3Cellipse rx='1.7' ry='1.2' fill='%23a27449'/%3E%3C/g%3E%3Cg transform='translate(8 13.5) rotate(-8)'%3E%3Cellipse cy='0.6' rx='1.7' ry='1.2' fill='%235a361e'/%3E%3Cellipse rx='1.7' ry='1.2' fill='%23a27449'/%3E%3C/g%3E%3Cg transform='translate(10.2 1.2) rotate(19)'%3E%3Cellipse cy='0.6' rx='1.8' ry='1.2' fill='%235a361e'/%3E%3Cellipse rx='1.8' ry='1.2' fill='%23b0835c'/%3E%3C/g%3E%3Cg transform='translate(10.2 13.2) rotate(19)'%3E%3Cellipse cy='0.6' rx='1.8' ry='1.2' fill='%235a361e'/%3E%3Cellipse rx='1.8' ry='1.2' fill='%23b0835c'/%3E%3C/g%3E%3Cg transform='translate(13.2 2) rotate(26)'%3E%3Cellipse cy='0.5' rx='1.5' ry='1.5' fill='%235a361e'/%3E%3Cellipse rx='1.5' ry='1.5' fill='%23976a44'/%3E%3C/g%3E%3Cg transform='translate(13.2 14) rotate(26)'%3E%3Cellipse cy='0.5' rx='1.5' ry='1.5' fill='%235a361e'/%3E%3Cellipse rx='1.5' ry='1.5' fill='%23976a44'/%3E%3C/g%3E%3Cg transform='translate(-1.5 1.7) rotate(-8)'%3E%3Cellipse cy='0.6' rx='1.8' ry='1.2' fill='%235a361e'/%3E%3Cellipse rx='1.8' ry='1.2' fill='%23a67a52'/%3E%3C/g%3E%3Cg transform='translate(-1.5 13.7) rotate(-8)'%3E%3Cellipse cy='0.6' rx='1.8' ry='1.2' fill='%235a361e'/%3E%3Cellipse rx='1.8' ry='1.2' fill='%23a67a52'/%3E%3C/g%3E%3Cg transform='translate(16.5 1.7) rotate(-8)'%3E%3Cellipse cy='0.6' rx='1.8' ry='1.2' fill='%235a361e'/%3E%3Cellipse rx='1.8' ry='1.2' fill='%23a67a52'/%3E%3C/g%3E%3Cg transform='translate(16.5 13.7) rotate(-8)'%3E%3Cellipse cy='0.6' rx='1.8' ry='1.2' fill='%235a361e'/%3E%3Cellipse rx='1.8' ry='1.2' fill='%23a67a52'/%3E%3C/g%3E%3Cg transform='translate(2.9 4.9) rotate(-37)'%3E%3Cellipse cy='0.6' rx='1.8' ry='1.8' fill='%235a361e'/%3E%3Cellipse rx='1.8' ry='1.8' fill='%23b98c65'/%3E%3C/g%3E%3Cg transform='translate(20.9 4.9) rotate(-37)'%3E%3Cellipse cy='0.6' rx='1.8' ry='1.8' fill='%235a361e'/%3E%3Cellipse rx='1.8' ry='1.8' fill='%23b98c65'/%3E%3C/g%3E%3Cg transform='translate(5.7 5) rotate(-6)'%3E%3Cellipse cy='0.6' rx='1.6' ry='1.4' fill='%235a361e'/%3E%3Cellipse rx='1.6' ry='1.4' fill='%23b98c65'/%3E%3C/g%3E%3Cg transform='translate(9.1 4.5) rotate(32)'%3E%3Cellipse cy='0.6' rx='1.6' ry='1.5' fill='%235a361e'/%3E%3Cellipse rx='1.6' ry='1.5' fill='%23b0835c'/%3E%3C/g%3E%3Cg transform='translate(12.4 5) rotate(16)'%3E%3Cellipse cy='0.6' rx='1.7' ry='1.6' fill='%235a361e'/%3E%3Cellipse rx='1.7' ry='1.6' fill='%23976a44'/%3E%3C/g%3E%3Cg transform='translate(-2.5 4.9) rotate(11)'%3E%3Cellipse cy='0.6' rx='1.6' ry='1.6' fill='%235a361e'/%3E%3Cellipse rx='1.6' ry='1.6' fill='%23a67a52'/%3E%3C/g%3E%3Cg transform='translate(15.5 4.9) rotate(11)'%3E%3Cellipse cy='0.6' rx='1.6' ry='1.6' fill='%235a361e'/%3E%3Cellipse rx='1.6' ry='1.6' fill='%23a67a52'/%3E%3C/g%3E%3Cg transform='translate(-0.2 4.1) rotate(-33)'%3E%3Cellipse cy='0.6' rx='1.6' ry='1.1' fill='%235a361e'/%3E%3Cellipse rx='1.6' ry='1.1' fill='%23b0835c'/%3E%3C/g%3E%3Cg transform='translate(17.8 4.1) rotate(-33)'%3E%3Cellipse cy='0.6' rx='1.6' ry='1.1' fill='%235a361e'/%3E%3Cellipse rx='1.6' ry='1.1' fill='%23b0835c'/%3E%3C/g%3E%3Cg transform='translate(1.4 7.2) rotate(30)'%3E%3Cellipse cy='0.5' rx='1.6' ry='1.1' fill='%235a361e'/%3E%3Cellipse rx='1.6' ry='1.1' fill='%23b0835c'/%3E%3C/g%3E%3Cg transform='translate(19.4 7.2) rotate(30)'%3E%3Cellipse cy='0.5' rx='1.6' ry='1.1' fill='%235a361e'/%3E%3Cellipse rx='1.6' ry='1.1' fill='%23b0835c'/%3E%3C/g%3E%3Cg transform='translate(4.6 7.8) rotate(-14)'%3E%3Cellipse cy='0.6' rx='1.6' ry='0.9' fill='%235a361e'/%3E%3Cellipse rx='1.6' ry='0.9' fill='%23976a44'/%3E%3C/g%3E%3Cg transform='translate(7.5 8) rotate(-31)'%3E%3Cellipse cy='0.5' rx='1.6' ry='1.6' fill='%235a361e'/%3E%3Cellipse rx='1.6' ry='1.6' fill='%23a67a52'/%3E%3C/g%3E%3Cg transform='translate(10 7.2) rotate(-19)'%3E%3Cellipse cy='0.6' rx='1.6' ry='0.9' fill='%235a361e'/%3E%3Cellipse rx='1.6' ry='0.9' fill='%23b0835c'/%3E%3C/g%3E%3Cg transform='translate(14 7.3) rotate(32)'%3E%3Cellipse cy='0.6' rx='1.6' ry='1.5' fill='%235a361e'/%3E%3Cellipse rx='1.6' ry='1.5' fill='%23b98c65'/%3E%3C/g%3E%3Cg transform='translate(-1.6 7.9) rotate(14)'%3E%3Cellipse cy='0.6' rx='1.6' ry='0.9' fill='%235a361e'/%3E%3Cellipse rx='1.6' ry='0.9' fill='%23b0835c'/%3E%3C/g%3E%3Cg transform='translate(16.4 7.9) rotate(14)'%3E%3Cellipse cy='0.6' rx='1.6' ry='0.9' fill='%235a361e'/%3E%3Cellipse rx='1.6' ry='0.9' fill='%23b0835c'/%3E%3C/g%3E%3Cg transform='translate(3.1 -1.1) rotate(11)'%3E%3Cellipse cy='0.6' rx='1.6' ry='1.1' fill='%235a361e'/%3E%3Cellipse rx='1.6' ry='1.1' fill='%23a27449'/%3E%3C/g%3E%3Cg transform='translate(3.1 10.9) rotate(11)'%3E%3Cellipse cy='0.6' rx='1.6' ry='1.1' fill='%235a361e'/%3E%3Cellipse rx='1.6' ry='1.1' fill='%23a27449'/%3E%3C/g%3E%3Cg transform='translate(6.4 -1.6) rotate(4)'%3E%3Cellipse cy='0.5' rx='1.5' ry='1.3' fill='%235a361e'/%3E%3Cellipse rx='1.5' ry='1.3' fill='%23b0835c'/%3E%3C/g%3E%3Cg transform='translate(6.4 10.4) rotate(4)'%3E%3Cellipse cy='0.5' rx='1.5' ry='1.3' fill='%235a361e'/%3E%3Cellipse rx='1.5' ry='1.3' fill='%23b0835c'/%3E%3C/g%3E%3Cg transform='translate(9.3 -1) rotate(9)'%3E%3Cellipse cy='0.5' rx='1.6' ry='1.1' fill='%235a361e'/%3E%3Cellipse rx='1.6' ry='1.1' fill='%23a27449'/%3E%3C/g%3E%3Cg transform='translate(9.3 11) rotate(9)'%3E%3Cellipse cy='0.5' rx='1.6' ry='1.1' fill='%235a361e'/%3E%3Cellipse rx='1.6' ry='1.1' fill='%23a27449'/%3E%3C/g%3E%3Cg transform='translate(11.6 -1.4) rotate(9)'%3E%3Cellipse cy='0.6' rx='1.6' ry='1.4' fill='%235a361e'/%3E%3Cellipse rx='1.6' ry='1.4' fill='%23976a44'/%3E%3C/g%3E%3Cg transform='translate(11.6 10.6) rotate(9)'%3E%3Cellipse cy='0.6' rx='1.6' ry='1.4' fill='%235a361e'/%3E%3Cellipse rx='1.6' ry='1.4' fill='%23976a44'/%3E%3C/g%3E%3Cg transform='translate(-2.8 -2) rotate(37)'%3E%3Cellipse cy='0.5' rx='1.5' ry='1.5' fill='%235a361e'/%3E%3Cellipse rx='1.5' ry='1.5' fill='%23976a44'/%3E%3C/g%3E%3Cg transform='translate(-2.8 10) rotate(37)'%3E%3Cellipse cy='0.5' rx='1.5' ry='1.5' fill='%235a361e'/%3E%3Cellipse rx='1.5' ry='1.5' fill='%23976a44'/%3E%3C/g%3E%3Cg transform='translate(15.2 -2) rotate(37)'%3E%3Cellipse cy='0.5' rx='1.5' ry='1.5' fill='%235a361e'/%3E%3Cellipse rx='1.5' ry='1.5' fill='%23976a44'/%3E%3C/g%3E%3Cg transform='translate(15.2 10) rotate(37)'%3E%3Cellipse cy='0.5' rx='1.5' ry='1.5' fill='%235a361e'/%3E%3Cellipse rx='1.5' ry='1.5' fill='%23976a44'/%3E%3C/g%3E%3Cg transform='translate(0.1 -1.7) rotate(-11)'%3E%3Cellipse cy='0.6' rx='1.7' ry='1.6' fill='%235a361e'/%3E%3Cellipse rx='1.7' ry='1.6' fill='%23976a44'/%3E%3C/g%3E%3Cg transform='translate(0.1 10.3) rotate(-11)'%3E%3Cellipse cy='0.6' rx='1.7' ry='1.6' fill='%235a361e'/%3E%3Cellipse rx='1.7' ry='1.6' fill='%23976a44'/%3E%3C/g%3E%3Cg transform='translate(18.1 -1.7) rotate(-11)'%3E%3Cellipse cy='0.6' rx='1.7' ry='1.6' fill='%235a361e'/%3E%3Cellipse rx='1.7' ry='1.6' fill='%23976a44'/%3E%3C/g%3E%3Cg transform='translate(18.1 10.3) rotate(-11)'%3E%3Cellipse cy='0.6' rx='1.7' ry='1.6' fill='%235a361e'/%3E%3Cellipse rx='1.7' ry='1.6' fill='%23976a44'/%3E%3C/g%3E%3C/svg%3E\")";
+const KIBBLE_TOP = "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='4'%3E%3Cg transform='translate(1.6 1.2) rotate(-38)'%3E%3Cellipse cy='0.6' rx='1.7' ry='1' fill='%235a361e'/%3E%3Cellipse rx='1.7' ry='1' fill='%23b98c65'/%3E%3C/g%3E%3Cg transform='translate(19.6 1.2) rotate(-38)'%3E%3Cellipse cy='0.6' rx='1.7' ry='1' fill='%235a361e'/%3E%3Cellipse rx='1.7' ry='1' fill='%23b98c65'/%3E%3C/g%3E%3Cg transform='translate(4.8 1.9) rotate(-31)'%3E%3Cellipse cy='0.5' rx='1.5' ry='1.4' fill='%235a361e'/%3E%3Cellipse rx='1.5' ry='1.4' fill='%23b98c65'/%3E%3C/g%3E%3Cg transform='translate(7.9 1.7) rotate(-39)'%3E%3Cellipse cy='0.5' rx='1.5' ry='1.4' fill='%235a361e'/%3E%3Cellipse rx='1.5' ry='1.4' fill='%23a27449'/%3E%3C/g%3E%3Cg transform='translate(10.4 1.9) rotate(-27)'%3E%3Cellipse cy='0.6' rx='1.8' ry='1.2' fill='%235a361e'/%3E%3Cellipse rx='1.8' ry='1.2' fill='%23b0835c'/%3E%3C/g%3E%3Cg transform='translate(13.1 1.3) rotate(38)'%3E%3Cellipse cy='0.5' rx='1.5' ry='1.5' fill='%235a361e'/%3E%3Cellipse rx='1.5' ry='1.5' fill='%23b0835c'/%3E%3C/g%3E%3Cg transform='translate(-1.8 1.9) rotate(-17)'%3E%3Cellipse cy='0.6' rx='1.8' ry='1.7' fill='%235a361e'/%3E%3Cellipse rx='1.8' ry='1.7' fill='%23a27449'/%3E%3C/g%3E%3Cg transform='translate(16.2 1.9) rotate(-17)'%3E%3Cellipse cy='0.6' rx='1.8' ry='1.7' fill='%235a361e'/%3E%3Cellipse rx='1.8' ry='1.7' fill='%23a27449'/%3E%3C/g%3E%3C/svg%3E\")";
+
 const ILLUSTRATION_CSS = {
   printer_3d: (color) => `
         .p3-case {
@@ -4908,60 +4920,149 @@ const ILLUSTRATION_CSS = {
         @keyframes hp-frost { 0%, 100% { opacity: 0.35; } 50% { opacity: 0.9; } }
   `,
   pet_feeder: () => `
-        /* Flat and face on, the way a feeder is always drawn: the lid, the
-           hopper with its heap of kibble, the dark block that serves, and the
-           bowl with a heap of its own. */
-        /* Lid, dispenser and foot are the moulded shell, so they are what the
-           appliance colour paints. Dark by default, which is how these
-           machines are sold when they are not white. */
-        .pf-lid {
-          position: absolute; left: 14px; right: 14px; top: 3px; height: 7px; border-radius: 2px;
-          background: var(--ac-body-lo, #343a40);
+        /* Drawn from the feeders people actually buy: a smoked tank of kibble
+           on an opaque base, a small dark panel with a lit screen, a chute on
+           the front and a steel bowl in a holder moulded like the shell. Three
+           families: the square tower, the round tank, and the double with two
+           outlets and two bowls. The shell takes the appliance colour, dark by
+           default, white for the round one, the way they are sold. */
+        .machine { --pf-lo: var(--ac-body-lo, #1f2327); --pf-hi: var(--ac-body-hi, #4a5158); --pf-body: var(--ac-body, #34393e); }
+        .machine.canister { --pf-lo: var(--ac-body-lo, #d8dcde); --pf-hi: var(--ac-body-hi, #ffffff); --pf-body: var(--ac-body, #f1f3f4); }
+        .pf-shell {
+          background: linear-gradient(90deg, var(--pf-lo), var(--pf-hi) 22%, var(--pf-body) 62%, var(--pf-lo));
           box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.10);
         }
-        /* The hopper and the bowl are clear plastic on every one of these
-           machines, black body or white: they keep their own light tint rather
-           than following the appliance colour, or a black feeder would show
-           black kibble in a black tank. */
-        .pf-body {
-          position: absolute; left: 16px; right: 16px; top: 10px; height: 36px; overflow: hidden;
-          background: linear-gradient(100deg, #f2f3f4, #e2e4e6);
-          clip-path: polygon(0 0, 100% 0, 86% 100%, 14% 100%);
+        .pf-floor {
+          position: absolute; left: 8px; right: 8px; bottom: 0; height: 7px; border-radius: 50%;
+          background: radial-gradient(closest-side, rgba(0, 0, 0, 0.20), transparent);
         }
-        /* A heap, not a pattern: a block of kibble with a bumpy top. */
-        .pf-heap { position: absolute; left: 0; right: 0; bottom: 0; height: var(--pf-fill, 12px); background: #8d6e63; }
-        /* Nothing left to serve: the hopper is drawn empty, which is the whole
-           point of saying so. */
+        /* Kibble as it looks: matte discs, a lighter face and a darker edge,
+           one family of browns, packed in a heap with a bumpy top. */
+        .pf-kib { position: absolute; left: 0; right: 0; bottom: 0; background: ${KIBBLE_TILE}; background-size: 18px 12px; }
+        .pf-kib::before {
+          content: ""; position: absolute; left: 0; right: 0; top: -3px; height: 4px;
+          background: ${KIBBLE_TOP}; background-size: 18px 4px;
+        }
+        /* Nothing left to serve: the tank and the bowls are drawn empty. */
+        .machine.empty .pf-kib { display: none; }
+        /* Smoked plastic, so the kibble is seen through grey, and never the
+           appliance colour or a black feeder would hide it. */
+        .pf-tank { position: absolute; overflow: hidden; background: #6d747a; }
+        .pf-tank .pf-kib { height: var(--pf-fill, 22px); }
+        .pf-tank::after {
+          content: ""; position: absolute; inset: 0; border-radius: inherit;
+          background: linear-gradient(90deg, rgba(28, 32, 36, 0.5), rgba(60, 66, 72, 0.14) 18%, rgba(255, 255, 255, 0.26) 27%, rgba(255, 255, 255, 0.04) 36%, rgba(60, 66, 72, 0.10) 78%, rgba(28, 32, 36, 0.5)),
+            linear-gradient(180deg, rgba(40, 44, 48, 0.35), rgba(40, 44, 48, 0) 30%);
+          box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.25);
+        }
+        /* The screen shows the time, like the real ones; blue while it
+           serves, red when something is wrong. */
+        .pf-panel { position: absolute; width: 20px; height: 14px; border-radius: 2.5px; background: #1a1d21; box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.06); }
+        .pf-lcd {
+          position: absolute; left: 2px; right: 2px; top: 2px; height: 7px; border-radius: 1px; overflow: hidden;
+          background: #0e1a1f; color: #7fdcff; text-align: center; white-space: nowrap;
+          font: 700 5.2px/7px ui-monospace, "SF Mono", Menlo, monospace; text-shadow: 0 0 2px rgba(127, 220, 255, 0.7);
+        }
+        .machine.feeding .pf-lcd { background: #1e88e5; color: #ffffff; text-shadow: none; box-shadow: 0 0 3px rgba(30, 136, 229, 0.8); }
+        .machine.alert .pf-lcd { background: #e53935; color: #ffffff; text-shadow: none; box-shadow: 0 0 3px rgba(229, 57, 53, 0.8); }
+        .pf-keys {
+          position: absolute; left: 2.5px; right: 2.5px; bottom: 2px; height: 2.4px;
+          background: radial-gradient(circle, #59626b 0 0.95px, transparent 1.2px); background-size: 25% 100%;
+        }
+        .pf-chute {
+          position: absolute; width: 11px; height: 13px; border-radius: 2px 2px 3px 3px;
+          background: linear-gradient(180deg, #2a2f34, #15181b); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+        }
+        /* A steel insert in a holder moulded like the shell, seen a little
+           from above, with its heap standing over the rim. While it serves the
+           heap is still small: the bowl is being filled. */
+        .pf-bowl { position: absolute; left: 13px; width: 43px; bottom: 3px; height: 15px; }
+        .pf-holder {
+          position: absolute; left: 0; right: 0; top: 3.5px; bottom: 0; border-radius: 2px 2px 50% 50% / 2px 2px 60% 60%;
+          background: linear-gradient(90deg, var(--pf-lo), var(--pf-hi) 25%, var(--pf-body) 60%, var(--pf-lo));
+          box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.10);
+        }
+        .pf-lip { position: absolute; left: 0; right: 0; top: 0; height: 9px; border-radius: 50%; background: var(--pf-hi); box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.10); }
+        .pf-steel {
+          position: absolute; left: 3px; right: 3px; top: 1.5px; height: 6.2px; border-radius: 50%; overflow: hidden;
+          background: radial-gradient(ellipse at 50% 75%, #9aa3aa, #dfe4e7 55%, #aab3b9);
+        }
+        .pf-steel .pf-kib { top: 1.2px; left: 0.8px; right: 0.8px; border-radius: 50%; }
+        .pf-heap {
+          position: absolute; left: 6px; right: 6px; top: -3.2px; height: 7px; overflow: hidden;
+          border-radius: 50% 50% 0 0 / 100% 100% 0 0;
+        }
+        .pf-heap .pf-kib { top: 0; }
+        .pf-steel .pf-kib::before, .pf-heap .pf-kib::before { display: none; }
+        .machine.feeding .pf-heap { left: 12px; right: 12px; top: -0.8px; height: 4px; }
         .machine.empty .pf-heap { display: none; }
-        .pf-heap::before {
-          content: ""; position: absolute; left: 0; right: 0; top: -4px; height: 9px;
-          background: radial-gradient(circle at 4.5px 4.5px, #8d6e63 4.3px, transparent 4.7px) repeat-x;
-          background-size: 9px 9px;
+        .pf-fall i {
+          position: absolute; left: 33px; top: 71px; width: 3px; height: 2.4px; border-radius: 50%; opacity: 0;
+          background: #9a6c48; box-shadow: inset 0 -0.7px 0 #5f3b22;
         }
-        .pf-unit {
-          position: absolute; left: 23px; right: 23px; top: 45px; height: 32px; border-radius: 3px;
-          background: var(--ac-body, #343a40);
-          box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.10);
+        .pf-fall i:nth-child(2) { margin-left: 2px; background: #8c5f3c; }
+        .pf-fall i:nth-child(3) { margin-left: -1.5px; background: #a67856; }
+        .machine.feeding .pf-fall i { animation: pf-fall 0.8s linear infinite; animation-delay: var(--anim-offset, 0s); }
+        .machine.feeding .pf-fall i:nth-child(2) { animation-delay: calc(-0.27s + var(--anim-offset, 0s)); }
+        .machine.feeding .pf-fall i:nth-child(3) { animation-delay: calc(-0.54s + var(--anim-offset, 0s)); }
+        @keyframes pf-fall {
+          0% { opacity: 0; transform: translateY(0) rotate(0); }
+          15% { opacity: 1; }
+          85% { opacity: 1; }
+          100% { opacity: 0; transform: translateY(13px) rotate(160deg); }
         }
-        .pf-unit i {
-          position: absolute; left: 6px; right: 6px; bottom: 4px; height: 8px; border-radius: 2px;
-          background: #1b1e23;
+        /* The square tower, the most common: a square tank under its lid, the
+           chute on the left over the bowl and the screen on the right. */
+        .pf-lid { position: absolute; left: 21px; right: 21px; top: 22px; height: 7px; border-radius: 4px 4px 1.5px 1.5px; }
+        .pf-lid::after { content: ""; position: absolute; left: 19px; right: 19px; top: 2px; height: 1.5px; border-radius: 1px; background: rgba(0, 0, 0, 0.18); }
+        .pf-tank.sq { left: 23px; right: 23px; top: 28px; height: 26px; border-radius: 0 0 2px 2px; }
+        .pf-latch { position: absolute; right: 26px; top: 49px; width: 7px; height: 3px; border-radius: 1px; background: var(--pf-lo); }
+        .pf-base { position: absolute; left: 23px; right: 23px; top: 54px; bottom: 6px; border-radius: 0 0 5px 5px; }
+        .pf-base .pf-panel { right: 4px; top: 5px; }
+        .pf-base .pf-chute { left: 6px; top: 6px; }
+        /* The round tank: a smoked cylinder under a thick lid, a round base
+           with a ribbed foot, the screen over the chute and the chute over the
+           bowl, so the kibble falls straight. */
+        .pf-cap {
+          position: absolute; left: 21px; right: 21px; top: 5px; height: 10px; border-radius: 50%; z-index: 1;
+          background: radial-gradient(ellipse at 42% 35%, var(--pf-hi), var(--pf-body) 55%, var(--pf-lo));
+          box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.14);
         }
-        .pf-bowl {
-          position: absolute; left: 25px; right: 25px; bottom: 11px; height: 20px; overflow: hidden;
-          background: var(--ac-body-lo, #22262a); box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.10);
-          clip-path: polygon(0 0, 100% 0, 84% 100%, 16% 100%);
+        .pf-cap::after { content: ""; position: absolute; left: 12px; right: 12px; top: 2.5px; height: 4px; border-radius: 50%; box-shadow: inset 0 0 0 0.8px rgba(0, 0, 0, 0.18); }
+        .pf-rim { position: absolute; left: 21px; right: 21px; top: 10px; height: 4px; border-radius: 0 0 50% 50% / 0 0 100% 100%; }
+        .pf-tank.rd { left: 23px; right: 23px; top: 12px; height: 34px; border-radius: 0 0 3px 3px; }
+        .pf-drum { position: absolute; left: 23px; right: 23px; top: 45px; bottom: 5px; border-radius: 0 0 50% 50% / 0 0 4px 4px; }
+        .pf-ribs {
+          position: absolute; left: 1px; right: 1px; bottom: 0; height: 5px; border-radius: 0 0 50% 50% / 0 0 100% 100%;
+          background: repeating-linear-gradient(90deg, rgba(0, 0, 0, 0.14) 0 0.7px, transparent 0.7px 3px);
         }
-        .pf-dish { position: absolute; left: 2px; right: 2px; bottom: 0; height: 12px; background: #8d6e63; }
-        .pf-dish::before {
-          content: ""; position: absolute; left: 0; right: 0; top: -4px; height: 9px;
-          background: radial-gradient(circle at 4.5px 4.5px, #8d6e63 4.3px, transparent 4.7px) repeat-x;
-          background-size: 9px 9px;
-        }
-        .pf-base {
-          position: absolute; left: 19px; right: 19px; bottom: 4px; height: 6px; border-radius: 2px;
-          background: var(--ac-body-lo, #343a40); box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.10);
-        }
+        .pf-drum .pf-panel { left: 4px; top: 5px; width: 22px; }
+        .pf-drum .pf-chute { left: 10px; top: 21px; width: 10px; height: 11px; }
+        .machine.canister .pf-bowl { left: 17px; width: 42px; bottom: 2px; }
+        .machine.canister .pf-fall i { left: 36px; top: 72px; }
+        /* The double: one wide body with a level slot and a steel band, and
+           two outlets on its front, each over its own bowl. */
+        .pf-dbody { position: absolute; left: 17px; right: 17px; top: 12px; bottom: 10px; border-radius: 9px 9px 4px 4px; }
+        .pf-dbody::before { content: ""; position: absolute; left: 0; right: 0; top: 8px; height: 1px; background: rgba(0, 0, 0, 0.25); }
+        .pf-dbody .pf-panel { left: 50%; top: 1px; width: 18px; height: 6px; margin-left: -9px; background: none; box-shadow: none; }
+        .pf-dbody .pf-lcd { top: 0; height: 5px; font-size: 4.2px; line-height: 5px; }
+        .pf-slot { position: absolute; left: 50%; top: 11px; width: 4px; height: 16px; margin-left: -2px; border-radius: 2px; overflow: hidden; background: #3e454b; }
+        .pf-slot .pf-kib { height: var(--pf-fill, 9px); }
+        .pf-slot .pf-kib::before { display: none; }
+        .pf-band { position: absolute; left: 0; right: 0; top: 30px; height: 4px; background: linear-gradient(180deg, #8d969d, #eef1f3 45%, #a9b1b7); }
+        .pf-band i { position: absolute; left: 50%; top: 0.5px; width: 3px; height: 3px; margin-left: -1.5px; border-radius: 50%; background: #1a1d21; }
+        .pf-dbody .pf-chute { top: 55px; width: 10px; height: 11px; }
+        .pf-dbody .pf-chute.a { left: 4px; }
+        .pf-dbody .pf-chute.b { right: 4px; }
+        .machine.double .pf-bowl { bottom: 2px; width: 36px; height: 14px; }
+        .machine.double .pf-bowl.a { left: 4px; }
+        .machine.double .pf-bowl.b { left: auto; right: 4px; }
+        .machine.double .pf-fall i { top: 73px; }
+        .machine.double .pf-fall.a i { left: 24px; }
+        .machine.double .pf-fall.b i { left: 69px; }
+        .machine.double.feeding .pf-fall.b i { animation-delay: calc(-0.4s + var(--anim-offset, 0s)); }
+        .machine.double.feeding .pf-fall.b i:nth-child(2) { animation-delay: calc(-0.67s + var(--anim-offset, 0s)); }
+        .machine.double.feeding .pf-fall.b i:nth-child(3) { animation-delay: calc(-0.94s + var(--anim-offset, 0s)); }
         /* The cat, when there is something to be cross about: an empty tank or a
            jam. Its proportions are the ones every grumpy cat is drawn with: a
            head that takes half the height and nearly all the width, a small
@@ -5045,87 +5146,10 @@ const ILLUSTRATION_CSS = {
         .pf-alert .bar { top: 5.5px; width: 2.5px; height: 5px; margin-left: -1.25px; border-radius: 1.25px; }
         .pf-alert .dot { top: 12px; width: 2.5px; height: 2.5px; margin-left: -1.25px; border-radius: 50%; }
         .pf-fall { position: absolute; inset: 0; }
-        .pf-fall i {
-          position: absolute; left: 46px; top: 78px; width: 4px; height: 4px; border-radius: 50%;
-          background: #8d6e63; opacity: 0;
-        }
-        .machine.feeding .pf-fall i { animation: pf-fall 0.8s linear infinite; animation-delay: var(--anim-offset, 0s); }
-        .machine.feeding .pf-fall i:nth-child(2) { animation-delay: calc(-0.27s + var(--anim-offset, 0s)); }
-        .machine.feeding .pf-fall i:nth-child(3) { animation-delay: calc(-0.54s + var(--anim-offset, 0s)); }
-        @keyframes pf-fall {
-          0% { opacity: 0; transform: translateY(0); }
-          20% { opacity: 1; }
-          85% { opacity: 1; }
-          100% { opacity: 0; transform: translateY(7px); }
-        }
-        /* The other family: a round tank of smoked plastic on a round base,
-           the buttons and the chute on its front, and the bowl set down in
-           front of it rather than built in. White by default, the way these
-           are sold. */
-        .pfc-lid {
-          position: absolute; left: 17px; right: 17px; top: 6px; height: 8px; border-radius: 4px 4px 2px 2px;
-          background: var(--ac-body-hi, #ffffff); box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.12);
-        }
-        .pfc-tank {
-          position: absolute; left: 20px; right: 20px; top: 12px; height: 42px; overflow: hidden;
-          border-radius: 2px 2px 10px 10px; background: #c9ced3;
-        }
-        .pfc-heap { position: absolute; left: 0; right: 0; bottom: 0; height: var(--pf-fill, 16px); background: #8d6e63; }
-        .pfc-heap::before {
-          content: ""; position: absolute; left: 0; right: 0; top: -4px; height: 9px;
-          background: radial-gradient(circle at 4.5px 4.5px, #8d6e63 4.3px, transparent 4.7px) repeat-x;
-          background-size: 9px 9px;
-        }
-        .machine.empty .pfc-heap { display: none; }
-        /* The smoked plastic in front of the kibble, rounder at the sides. */
-        .pfc-tank::after {
-          content: ""; position: absolute; inset: 0; border-radius: inherit;
-          background: linear-gradient(90deg, rgba(60, 66, 72, 0.30), rgba(255, 255, 255, 0.22) 38%, rgba(255, 255, 255, 0.05) 60%, rgba(60, 66, 72, 0.34));
-          box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.10);
-        }
-        .pfc-base {
-          position: absolute; left: 26px; right: 26px; top: 50px; bottom: 6px; border-radius: 3px 3px 7px 7px;
-          background: linear-gradient(90deg, var(--ac-body-lo, #d8dcde), var(--ac-body-hi, #ffffff) 40%, var(--ac-body, #f1f3f4) 70%, var(--ac-body-lo, #d8dcde));
-          box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.10);
-        }
-        .pfc-panel {
-          position: absolute; left: 10px; right: 10px; top: 7px; height: 11px; border-radius: 5px;
-          background: var(--ac-body-lo, #d8dcde);
-        }
-        .pfc-panel i {
-          position: absolute; top: 2px; width: 6px; height: 7px; border-radius: 3px;
-          background: var(--ac-body-hi, #ffffff); box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.18);
-        }
-        .pfc-panel i:first-child { left: 4px; }
-        .pfc-panel i:last-child { right: 4px; }
-        .pfc-chute {
-          position: absolute; left: 11px; right: 11px; top: 21px; height: 8px; border-radius: 2px 2px 3px 3px;
-          background: #1b1e23;
-        }
-        /* The bowl, apart and in front, with its kibble heaped over the rim. */
-        .pfc-bowl {
-          position: absolute; left: 5px; width: 52px; bottom: 3px; height: 17px;
-          background: linear-gradient(180deg, var(--ac-body-lo, #d8dcde) 0 2px, var(--ac-body-hi, #ffffff) 2px, var(--ac-body, #f1f3f4) 70%, var(--ac-body-lo, #d8dcde));
-          clip-path: polygon(0 0, 100% 0, 86% 100%, 14% 100%);
-        }
-        .pfc-dish { position: absolute; left: 10px; width: 42px; bottom: 16px; height: 6px; background: #8d6e63; }
-        .pfc-dish::before {
-          content: ""; position: absolute; left: 0; right: 0; top: -4px; height: 9px;
-          background: radial-gradient(circle at 4.5px 4.5px, #8d6e63 4.3px, transparent 4.7px) repeat-x;
-          background-size: 9px 9px;
-        }
-        /* The kibble leaves the dark mouth and lands on the heap in the bowl,
-           just above its rim: a longer fall than the tower's. */
-        .machine.canister .pf-fall i { left: 44px; top: 73px; }
-        .machine.canister.feeding .pf-fall i { animation-name: pfc-fall; }
-        @keyframes pfc-fall {
-          0% { opacity: 0; transform: translateY(0); }
-          20% { opacity: 1; }
-          85% { opacity: 1; }
-          100% { opacity: 0; transform: translateY(10px); }
-        }
-        .machine.canister .pf-cat { left: auto; right: 0; }
-        .machine.canister .pf-alert { left: auto; right: 12px; }
+        /* On the round tank and the double the bowls are on the left or on
+           both sides, and the screen on the left: the cat sits on the right. */
+        .machine.canister .pf-cat, .machine.double .pf-cat { left: auto; right: 0; }
+        .machine.canister .pf-alert, .machine.double .pf-alert { left: auto; right: 12px; }
   `,
   kettle: () => `
         .kt-base { position: absolute; left: 20px; right: 20px; bottom: 6px; height: 7px; border-radius: 3px; background: #3b4048; }
@@ -5762,24 +5786,44 @@ function illustrationHtml(type, ctx) {
   }
 
   if (type === "pet_feeder") {
-    // The tower serves into a bowl of its own; the round tank stands on a
-    // base with the bowl set down in front of it, and holds a taller heap.
-    const canister = ctx.feederLayout === "canister";
-    const heapPx = canister ? 34 : 22;
+    // Three families. The square tower is the default; the round tank and
+    // the double hold a taller heap, and the double shows its level in a slot.
+    const layout = ctx.feederLayout || "";
+    const heapPx = layout === "canister" ? 28 : layout === "double" ? 12 : 20;
+    const lcd = `<div class="pf-lcd">${esc(ctx.feederScreen || "")}</div>`;
+    const panel = `<div class="pf-panel">${lcd}<div class="pf-keys"></div></div>`;
+    const kib = `<div class="pf-kib"></div>`;
+    const bowl = (side = "") => `
+          <div class="pf-bowl${side}"><div class="pf-holder"></div><div class="pf-lip"></div><div class="pf-steel">${kib}</div><div class="pf-heap">${kib}</div></div>`;
+    const fall = (side = "") => `
+          <div class="pf-fall${side}" aria-hidden="true"><i></i><i></i><i></i></div>`;
+    let body;
+    if (layout === "canister") {
+      body = `
+          <div class="pf-tank rd">${kib}</div>
+          <div class="pf-rim pf-shell"></div>
+          <div class="pf-cap"></div>
+          <div class="pf-drum pf-shell"><div class="pf-ribs"></div>${panel}<div class="pf-chute"></div></div>${bowl()}${fall()}`;
+    } else if (layout === "double") {
+      body = `
+          <div class="pf-dbody pf-shell">
+            <div class="pf-panel">${lcd}</div>
+            <div class="pf-slot">${kib}</div>
+            <div class="pf-band"><i></i></div>
+            <div class="pf-chute a"></div><div class="pf-chute b"></div>
+          </div>${bowl(" a")}${bowl(" b")}${fall(" a")}${fall(" b")}`;
+    } else {
+      body = `
+          <div class="pf-tank sq">${kib}</div>
+          <div class="pf-lid pf-shell"></div>
+          <div class="pf-latch"></div>
+          <div class="pf-base pf-shell">${panel}<div class="pf-chute"></div></div>${bowl()}${fall()}`;
+    }
+    const cls = [layout, ctx.feeding ? "feeding" : "", ctx.feederEmpty ? "empty" : "", ctx.feederAlert ? "alert" : ""].filter(Boolean).join(" ");
     return `
-        <div class="machine ${[canister ? "canister" : "", ctx.feeding ? "feeding" : "", ctx.feederEmpty ? "empty" : ""].filter(Boolean).join(" ")}"${
-          ctx.feederFill === null || ctx.feederFill === undefined ? "" : ` style="--pf-fill:${(4 + (ctx.feederFill / 100) * heapPx).toFixed(1)}px"`}>${canister ? `
-          <div class="pfc-base"><div class="pfc-panel"><i></i><i></i></div><div class="pfc-chute"></div></div>
-          <div class="pfc-tank"><div class="pfc-heap"></div></div>
-          <div class="pfc-lid"></div>
-          <div class="pfc-dish"></div>
-          <div class="pfc-bowl"></div>` : `
-          <div class="pf-lid"></div>
-          <div class="pf-body"><div class="pf-heap"></div></div>
-          <div class="pf-unit"><i></i></div>
-          <div class="pf-bowl"><div class="pf-dish"></div></div>
-          <div class="pf-base"></div>`}
-          <div class="pf-fall" aria-hidden="true"><i></i><i></i><i></i></div>${ctx.feederAlert ? `
+        <div class="machine ${cls}"${
+          ctx.feederFill === null || ctx.feederFill === undefined ? "" : ` style="--pf-fill:${(4 + (ctx.feederFill / 100) * heapPx).toFixed(1)}px"`}>
+          <div class="pf-floor"></div>${body}${ctx.feederAlert ? `
           <div class="pf-cat" aria-hidden="true">
             <u class="ear l"><span></span></u><u class="ear r"><span></span></u>
             <u class="tail"></u>
@@ -7577,6 +7621,7 @@ class ApplianceCard extends HTMLElement {
     let feederEmpty = false;
     let feederAlert = false;
     let feederFill = null;
+    let feederScreen = "";
     if (cap.petFeeder) {
       const errSt = cfg.error_entity ? stateObj(hass, cfg.error_entity) : null;
       const errText = errSt ? String(errSt.state).toLowerCase() : "";
@@ -7606,6 +7651,14 @@ class ApplianceCard extends HTMLElement {
       feederEmpty = norm === "feeder_empty";
       // Empty or jammed, the cat is equally unimpressed.
       feederAlert = feederEmpty || norm === "error";
+      // The screen shows what the real ones show: the time. While it serves it
+      // shows the portion being served, when the card knows the serving size.
+      const serving = cfg.serving_size_entity ? numericState(hass, cfg.serving_size_entity) : null;
+      feederScreen = feeding && serving !== null ? `P ${Math.round(serving)}` : feederClock();
+      // A clock has to tick on its own: nothing in the states changes when a
+      // minute goes by.
+      this._clearClockTimer();
+      if (!cfg.compact && !this._inert) this._clockTimer = setInterval(() => this._render(), CLOCK_TICK_MS);
       if (levelSt && !["unknown", "unavailable"].includes(levelSt.state)) {
         extraLines.push({
           key: "level",
@@ -7783,7 +7836,8 @@ class ApplianceCard extends HTMLElement {
       feederEmpty,
       feederAlert,
       feederFill,
-      feederLayout: cfg.feeder_layout === "canister" ? "canister" : "",
+      feederLayout: ["canister", "double"].includes(cfg.feeder_layout) ? cfg.feeder_layout : "",
+      feederScreen,
       ironLayout: cfg.iron_layout === "generator" ? "generator" : "",
       leftOn,
       tankTemp,
@@ -9035,6 +9089,7 @@ class ApplianceCardEditor extends HTMLElement {
           options: [
             { value: "tower", label: t(hass, "layout_tower") },
             { value: "canister", label: t(hass, "layout_canister") },
+            { value: "double", label: t(hass, "layout_double") },
           ],
         }) : ""}
         ${this._type === "iron" ? this._row("section_iron_layout", "iron_layout", {

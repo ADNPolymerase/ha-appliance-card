@@ -4325,15 +4325,15 @@ const fEmpty = feeder({ level_entity: 'binary_sensor.no_food' },
   { 'binary_sensor.no_food': { state: 'on', attributes: {} } });
 check('gamelle : un contact de manque annonce le reservoir vide', stateLine(fEmpty), 'Tank empty');
 check('gamelle : et la tremie se vide sur le dessin', machineCls(fEmpty).includes('empty'), true);
-check('gamelle : le tas disparait alors', /\.machine\.empty \.pf-heap \{ display: none; \}/.test(fEmpty), true);
+check('gamelle : le tas disparait alors', /\.machine\.empty \.pf-kib \{ display: none; \}/.test(fEmpty), true);
 check('gamelle : contact ferme, rien a signaler',
   /class="state-line"/.test(feeder({ level_entity: 'binary_sensor.no_food' },
     { 'binary_sensor.no_food': { state: 'off', attributes: {} } })), false);
 // A percentage fills the hopper, and empties it at the bottom.
 const fLevel = (pct, extra) => feeder({ level_entity: 'sensor.food_level', ...extra },
   { 'sensor.food_level': { state: String(pct), attributes: { unit_of_measurement: '%' } } });
-check('gamelle : le niveau remplit la tremie', /--pf-fill:15\.0px/.test(fLevel(50)), true);
-check('gamelle : plein, elle est pleine', /--pf-fill:26\.0px/.test(fLevel(100)), true);
+check('gamelle : le niveau remplit la tremie', /--pf-fill:14\.0px/.test(fLevel(50)), true);
+check('gamelle : plein, elle est pleine', /--pf-fill:24\.0px/.test(fLevel(100)), true);
 check('gamelle : le niveau fait une ligne', infoLine(fLevel(50), 'Food level'), '50\u00a0%');
 check('gamelle : a zero le reservoir est vide', stateLine(fLevel(0)), 'Tank empty');
 check('gamelle : et le seuil se regle', stateLine(fLevel(4, { level_empty_below: '5' })), 'Tank empty');
@@ -4347,15 +4347,15 @@ const fGrams = (g, extra) => feeder({ level_entity: 'sensor.food_left', ...extra
   { 'sensor.food_left': { state: String(g), attributes: { unit_of_measurement: 'g' } } });
 check('grammes : la ligne montre le poids', infoLine(fGrams(729), 'Food level'), '729\u00a0g');
 check('grammes : sans contenance, aucune hauteur imposee', /style="--pf-fill/.test(fGrams(729)), false);
-check('grammes : avec la contenance, la tremie se remplit', /--pf-fill:20\.6px/.test(fGrams(729, { level_max: '964' })), true);
-check('grammes : presque vide, presque plate', /--pf-fill:4\.7px/.test(fGrams(30, { level_max: '964' })), true);
+check('grammes : avec la contenance, la tremie se remplit', /--pf-fill:19\.1px/.test(fGrams(729, { level_max: '964' })), true);
+check('grammes : presque vide, presque plate', /--pf-fill:4\.6px/.test(fGrams(30, { level_max: '964' })), true);
 check('grammes : le seuil de vide reste dans l\'unite du capteur',
   stateLine(fGrams(60, { level_empty_below: '100' })), 'Tank empty');
 check('grammes : au-dessus du seuil, rien a signaler',
   /class="state-line"/.test(fGrams(200, { level_empty_below: '100' })), false);
 // A reading with no unit at all keeps being read as a percentage, as before.
 check('niveau sans unite : toujours un pourcentage',
-  /--pf-fill:15\.0px/.test(feeder({ level_entity: 'sensor.food_level' },
+  /--pf-fill:14\.0px/.test(feeder({ level_entity: 'sensor.food_level' },
     { 'sensor.food_level': { state: '50', attributes: {} } })), true);
 
 // A fault code names which fault it is, and zero is the only value that says
@@ -4367,33 +4367,55 @@ check('code de defaut : et le chat vient le dire', /class="pf-cat"/.test(fFault(
 check('code de defaut : un bourrage nomme se lit aussi', stateLine(fFault('food_jam')), 'Error');
 check('code de defaut : une entite muette ne crie pas', /class="state-line"/.test(fFault('unknown')), false);
 
-// The appliance colour paints the machine: lid, dispenser, foot and bowl, the
-// bowl a shade under the body so it keeps its own shape. The hopper is clear
-// plastic on every one of these machines and stays out of it, or a black
-// feeder would show black kibble in a black tank.
-check('couleur : le bloc distributeur suit la couleur de l\'appareil',
-  /\.pf-unit \{[^}]*background: var\(--ac-body,/.test(fIn), true);
-check('couleur : le couvercle aussi',
-  /\.pf-lid \{[^}]*background: var\(--ac-body-lo,/.test(fIn), true);
-check('couleur : et le pied',
-  /\.pf-base \{[^}]*background: var\(--ac-body-lo,/.test(fIn), true);
-check('couleur : la gamelle, d\'un ton en dessous',
-  /\.pf-bowl \{[^}]*background: var\(--ac-body-lo,/.test(fIn), true);
-check('couleur : la tremie reste du plastique clair',
-  /\.pf-body \{[^}]*--ac-body/.test(fIn), false);
+// The appliance colour paints the moulded parts, the shell and the bowl
+// holders, dark by default. The tank is smoked plastic on every one of these
+// machines and stays out of it, or a black feeder would show black kibble in a
+// black tank; the bowl itself is steel.
+check('couleur : la coque suit la couleur de l\'appareil',
+  /\.pf-shell \{[^}]*var\(--pf-body\)/.test(fIn) && /\.machine \{ --pf-lo: var\(--ac-body-lo, #1f2327\); --pf-hi: var\(--ac-body-hi, #4a5158\); --pf-body: var\(--ac-body, #34393e\); \}/.test(fIn), true);
+check('couleur : le support de gamelle aussi', /\.pf-holder \{[^}]*var\(--pf-body\)/.test(fIn), true);
+check('couleur : le reservoir reste du plastique fume', /\.pf-tank \{[^}]*--(ac|pf)-/.test(fIn), false);
+check('couleur : la gamelle reste de l\'inox', /\.pf-steel \{[^}]*--(ac|pf)-/.test(fIn), false);
+check('couleur : la coque et le couvercle sont moules ensemble',
+  ['pf-lid pf-shell', 'pf-base pf-shell'].filter(c => !fIn.includes(`class="${c}"`)).join(' '), '');
 
-// The body is drawn long enough to meet the bowl: one moulded piece rather
-// than a block floating above a dish. Read from the CSS instead of pinned to a
-// number, so moving either one has to keep them touching.
+// The kibble leaves the chute and lands on the heap in the bowl, just under
+// its rim, on every model. Read from the CSS, so moving a chute or a bowl has
+// to keep the fall on both.
 function cssPx(html, selector, prop) {
   const block = new RegExp(`\\${selector} \\{([^}]*)\\}`).exec(html);
-  const m = block && new RegExp(`${prop}: (-?[\\d.]+)px`).exec(block[1]);
+  const m = block && new RegExp(`(?:^|[ ;])${prop}: (-?[\\d.]+)px`).exec(block[1]);
   return m ? parseFloat(m[1]) : null;
 }
-const machineH = cssPx(fIn, '.machine', 'height');
-const unitBottom = cssPx(fIn, '.pf-unit', 'top') + cssPx(fIn, '.pf-unit', 'height');
-const bowlTop = machineH - cssPx(fIn, '.pf-bowl', 'bottom') - cssPx(fIn, '.pf-bowl', 'height');
-check('dessin : le corps descend jusqu\'au haut de la gamelle', unitBottom, bowlTop);
+function fallGeometry(html, g) {
+  const px = (sel, prop) => cssPx(html, sel, prop);
+  const H = 108;
+  const drop = Number((/@keyframes pf-fall \{[\s\S]*?100% \{ opacity: 0; transform: translateY\(([\d.]+)px\)/.exec(html) || [])[1]);
+  const dot = px('.pf-fall i', 'height');
+  const fallTop = px(g.fall, 'top') ?? px('.pf-fall i', 'top');
+  const fallLeft = px(g.fallX, 'left') ?? px('.pf-fall i', 'left');
+  const chuteTop = g.boxTop + px(g.chute, 'top');
+  const chuteLeft = g.boxLeft + px(g.chute, 'left');
+  const chuteW = px(g.chute, 'width') ?? px('.pf-chute', 'width');
+  const chuteH = px(g.chute, 'height') ?? px('.pf-chute', 'height');
+  const bowlH = px(g.bowl, 'height') ?? px('.pf-bowl', 'height');
+  const bowlW = px(g.bowl, 'width') ?? px(g.bowlW || '.pf-bowl', 'width');
+  const rim = H - (px(g.bowl, 'bottom') ?? px('.pf-bowl', 'bottom')) - bowlH;
+  const heapTop = rim + px('.pf-heap', 'top');
+  const end = fallTop + drop + dot;
+  return {
+    fromChute: fallTop >= chuteTop && fallTop < chuteTop + chuteH && fallLeft >= chuteLeft && fallLeft + 3 <= chuteLeft + chuteW,
+    onHeap: end >= heapTop - 1 && end <= rim,
+    overBowl: fallLeft >= g.bowlLeft && fallLeft + 3 <= g.bowlLeft + bowlW,
+  };
+}
+{
+  const geo = fallGeometry(fIn, { fall: '.pf-fall i', fallX: '.pf-fall i', chute: '.pf-base .pf-chute', boxTop: cssPx(fIn, '.pf-base', 'top'),
+    boxLeft: cssPx(fIn, '.pf-base', 'left'), bowl: '.pf-bowl', bowlLeft: cssPx(fIn, '.pf-bowl', 'left') });
+  check('dessin : les croquettes partent de la goulotte', geo.fromChute, true);
+  check('dessin : et finissent sur le tas de la gamelle', geo.onHeap, true);
+  check('dessin : droit au-dessus de la gamelle', geo.overBowl, true);
+}
 
 // Lines you add come under the ones the card reads on its own, and they carry
 // their entity like every other line: a tap opens its dialog, which is how a
@@ -4544,68 +4566,48 @@ check('reservoir : dans la langue de la carte',
   stateLine(feeder({ language: 'fr', level_entity: 'sensor.food_level' },
     { 'sensor.food_level': { state: '74', attributes: { unit_of_measurement: '%' } } })), 'Réservoir à 74 %');
 
-// The other family of feeders, the one in the photo on the forum: a round tank
-// of smoked plastic on a round base, the bowl set down in front of it rather
-// than built in. The tower stays the default.
+// The other families: a round tank of smoked plastic on a round base with the
+// bowl in front, and the double with two outlets and two bowls. The square
+// tower stays the default.
 const fCan = (level, extra, more) => feeder({ feeder_layout: 'canister', level_entity: 'sensor.food_level', ...extra },
   { 'sensor.food_level': { state: String(level), attributes: { unit_of_measurement: '%' } }, ...more });
 const can50 = fCan(50);
+const hasAll = (html, cs) => cs.filter(c => !html.includes(`class="${c}`)).join(' ');
 check('rond : le modele se choisit', machineCls(can50).split(' ').includes('canister'), true);
-check('rond : reservoir, couvercle, socle, boutons, trappe et gamelle',
-  ['pfc-tank', 'pfc-lid', 'pfc-base', 'pfc-panel', 'pfc-chute', 'pfc-bowl', 'pfc-dish']
-    .filter(c => !can50.includes(`class="${c}"`)).join(' '), '');
-check('rond : rien de la tour',
-  ['pf-lid', 'pf-body', 'pf-unit', 'pf-bowl', 'pf-base'].filter(c => can50.includes(`class="${c}"`)).join(' '), '');
-check('rond : la tour reste le modele par defaut',
-  /class="pf-unit"/.test(fIn) && !machineCls(fIn).split(' ').includes('canister'), true);
-check('rond : la tour se nomme aussi', /class="pf-unit"/.test(feeder({ feeder_layout: 'tower' })), true);
-check('rond : un modele inconnu reste une tour', /class="pf-unit"/.test(feeder({ feeder_layout: 'zzz' })), true);
+check('rond : reservoir, couvercle, socle nervure, ecran, goulotte et gamelle',
+  hasAll(can50, ['pf-tank rd', 'pf-cap', 'pf-drum', 'pf-ribs', 'pf-lcd', 'pf-chute', 'pf-bowl']), '');
+check('rond : rien de la tour', ['pf-tank sq', 'pf-lid', 'pf-base'].filter(c => can50.includes(`class="${c}`)).join(' '), '');
+check('carre : le modele par defaut', /class="pf-tank sq"/.test(fIn) && machineCls(fIn).split(' ').every(c => !['canister', 'double'].includes(c)), true);
+check('carre : la tour se nomme aussi', /class="pf-tank sq"/.test(feeder({ feeder_layout: 'tower' })), true);
+check('carre : un modele inconnu reste un carre', /class="pf-tank sq"/.test(feeder({ feeder_layout: 'zzz' })), true);
 // Its tank is taller, so the same level makes a taller heap.
-check('rond : a moitie plein', /--pf-fill:21\.0px/.test(can50), true);
-check('rond : plein', /--pf-fill:38\.0px/.test(fCan(100)), true);
-check('rond : la tour garde sa hauteur', /--pf-fill:15\.0px/.test(fLevel(50)), true);
+check('rond : a moitie plein', /--pf-fill:18\.0px/.test(can50), true);
+check('rond : plein', /--pf-fill:32\.0px/.test(fCan(100)), true);
+check('rond : le carre garde sa hauteur', /--pf-fill:14\.0px/.test(fLevel(50)), true);
 check('rond : vide, le reservoir se vide', machineCls(fCan(0)).includes('empty'), true);
-check('rond : et son tas disparait', /\.machine\.empty \.pfc-heap \{ display: none; \}/.test(can50), true);
-
-// The kibble leaves the dark mouth and lands on the heap at the top of the
-// bowl. Read from the CSS, so moving the chute or the bowl has to keep the
-// fall on both.
 {
-  const px = (sel, prop) => cssPx(can50, sel, prop);
-  const H = px('.machine', 'height');
-  const chuteTop = px('.pfc-base', 'top') + px('.pfc-chute', 'top');
-  const chuteBottom = chuteTop + px('.pfc-chute', 'height');
-  const fallTop = px('.machine.canister .pf-fall i', 'top');
-  const drop = Number((/@keyframes pfc-fall \{[\s\S]*?100% \{ opacity: 0; transform: translateY\(([\d.]+)px\); \}/.exec(can50) || [])[1]);
-  const dot = px('.pf-fall i', 'height');
-  const heapTop = H - px('.pfc-dish', 'bottom') - px('.pfc-dish', 'height') + px('.pfc-dish::before', 'top');
-  const rim = H - px('.pfc-bowl', 'bottom') - px('.pfc-bowl', 'height');
-  check('rond : les croquettes partent de la bouche noire', fallTop >= chuteTop && fallTop < chuteBottom, true);
-  contains('rond : avec sa propre chute', can50, '.machine.canister.feeding .pf-fall i { animation-name: pfc-fall; }');
-  check('rond : et finissent sur le haut de la gamelle',
-    fallTop + drop + dot >= heapTop && fallTop + drop + dot <= rim, true);
-  check('rond : juste au-dessus de son bord', fallTop + drop + dot >= rim - 2, true);
-  const fallLeft = px('.machine.canister .pf-fall i', 'left');
-  const bowlLeft = px('.pfc-bowl', 'left');
-  check('rond : au-dessus de la gamelle', fallLeft >= bowlLeft && fallLeft + dot <= bowlLeft + px('.pfc-bowl', 'width'), true);
-  check('rond : la gamelle posee devant, a gauche du socle', bowlLeft < px('.pfc-base', 'left'), true);
+  const geo = fallGeometry(can50, { fall: '.machine.canister .pf-fall i', fallX: '.machine.canister .pf-fall i',
+    chute: '.pf-drum .pf-chute', boxTop: cssPx(can50, '.pf-drum', 'top'), boxLeft: cssPx(can50, '.pf-drum', 'left'),
+    bowl: '.machine.canister .pf-bowl', bowlLeft: cssPx(can50, '.machine.canister .pf-bowl', 'left') });
+  check('rond : les croquettes partent de la goulotte', geo.fromChute, true);
+  check('rond : et finissent sur le tas', geo.onHeap, true);
+  check('rond : droit, pas en diagonale', geo.overBowl, true);
+  check('rond : la gamelle posee devant, a gauche du socle',
+    cssPx(can50, '.machine.canister .pf-bowl', 'left') < cssPx(can50, '.pf-drum', 'left'), true);
 }
-
-// White by default, the way these are sold; the appliance colour paints the
-// base, the lid and the bowl, never the smoked tank.
-check('rond : blanc par defaut', /\.pfc-lid \{[^}]*background: var\(--ac-body-hi, #ffffff\)/.test(can50), true);
-check('rond : la couleur de l\'appareil peint le socle', /\.pfc-base \{[^}]*var\(--ac-body,/.test(can50), true);
-check('rond : et la gamelle', /\.pfc-bowl \{[^}]*var\(--ac-body,/.test(can50), true);
-check('rond : le reservoir reste en plastique fume', /\.pfc-tank \{[^}]*--ac-body/.test(can50), false);
-
+// White by default, the way these are sold.
+check('rond : blanc par defaut',
+  /\.machine\.canister \{ --pf-lo: var\(--ac-body-lo, #d8dcde\); --pf-hi: var\(--ac-body-hi, #ffffff\); --pf-body: var\(--ac-body, #f1f3f4\); \}/.test(can50), true);
+check('rond : la couleur de l\'appareil peint le socle', /class="pf-drum pf-shell"/.test(can50), true);
 const canEmpty = fCan(0);
 check('rond : le chat vient aussi', /class="pf-cat"/.test(canEmpty), true);
-check('rond : a droite du socle, la gamelle etant a gauche',
-  /\.machine\.canister \.pf-cat \{ left: auto; right: 0; \}/.test(canEmpty), true);
-check('rond : son triangle le suit', /\.machine\.canister \.pf-alert \{ left: auto; right: 12px; \}/.test(canEmpty), true);
+check('rond : a droite, la gamelle etant a gauche',
+  /\.machine\.canister \.pf-cat, \.machine\.double \.pf-cat \{ left: auto; right: 0; \}/.test(canEmpty), true);
+check('rond : son triangle le suit',
+  /\.machine\.canister \.pf-alert, \.machine\.double \.pf-alert \{ left: auto; right: 12px; \}/.test(canEmpty), true);
 const canBusy = fCan(50, { state_entity: 'binary_sensor.busy' }, { 'binary_sensor.busy': { state: 'on', attributes: {} } });
 check('rond : les croquettes tombent', machineCls(canBusy).includes('feeding'), true);
-check('rond : devant la gamelle', canBusy.indexOf('class="pf-fall"') > canBusy.indexOf('class="pfc-bowl"'), true);
+check('rond : devant la gamelle', canBusy.indexOf('class="pf-fall"') > canBusy.indexOf('class="pf-bowl"'), true);
 // The model alone says it is a feeder, like a fridge's layout says fridge.
 check('rond : le modele suffit a la config', accepts({ feeder_layout: 'canister' }), true);
 check('rond : et designe seul un distributeur', (() => {
@@ -4614,6 +4616,57 @@ check('rond : et designe seul un distributeur', (() => {
       .includes('canister');
   } catch { return 'refusee'; }
 })(), true);
+
+// The double: one body, two outlets on its front, two bowls, one fall each.
+const fDbl = (level, extra, more) => feeder({ feeder_layout: 'double', level_entity: 'sensor.food_level', ...extra },
+  { 'sensor.food_level': { state: String(level), attributes: { unit_of_measurement: '%' } }, ...more });
+const dbl50 = fDbl(50);
+check('double : le modele se choisit', machineCls(dbl50).split(' ').includes('double'), true);
+check('double : deux sorties', (dbl50.match(/class="pf-chute [ab]"/g) || []).length, 2);
+check('double : deux gamelles', (dbl50.match(/class="pf-bowl [ab]"/g) || []).length, 2);
+check('double : deux chutes', (dbl50.match(/class="pf-fall [ab]"/g) || []).length, 2);
+check('double : une fente de niveau', /class="pf-slot"/.test(dbl50), true);
+check('double : le niveau remplit la fente', /--pf-fill:10\.0px/.test(dbl50), true);
+check('double : pas de reservoir fume', /class="pf-tank/.test(dbl50), false);
+{
+  const top = cssPx(dbl50, '.pf-dbody', 'top'), left = cssPx(dbl50, '.pf-dbody', 'left');
+  const bodyW = 96 - left - cssPx(dbl50, '.pf-dbody', 'right');
+  const chuteW = cssPx(dbl50, '.pf-dbody .pf-chute', 'width');
+  const aLeft = left + cssPx(dbl50, '.pf-dbody .pf-chute.a', 'left');
+  const bLeft = left + bodyW - cssPx(dbl50, '.pf-dbody .pf-chute.b', 'right') - chuteW;
+  const fallTop = cssPx(dbl50, '.machine.double .pf-fall i', 'top');
+  const chuteTop = top + cssPx(dbl50, '.pf-dbody .pf-chute', 'top');
+  const fa = cssPx(dbl50, '.machine.double .pf-fall.a i', 'left'), fb = cssPx(dbl50, '.machine.double .pf-fall.b i', 'left');
+  const bw = cssPx(dbl50, '.machine.double .pf-bowl', 'width');
+  const ba = cssPx(dbl50, '.machine.double .pf-bowl.a', 'left'), bb = 96 - cssPx(dbl50, '.machine.double .pf-bowl.b', 'right') - bw;
+  check('double : les sorties sont en facade, pas dessous', chuteTop + cssPx(dbl50, '.pf-dbody .pf-chute', 'height') <= 108 - cssPx(dbl50, '.pf-dbody', 'bottom'), true);
+  check('double : chaque chute part de sa sortie',
+    fallTop >= chuteTop && fa >= aLeft && fa + 3 <= aLeft + chuteW && fb >= bLeft && fb + 3 <= bLeft + chuteW, true);
+  check('double : et tombe dans sa gamelle', fa >= ba && fa + 3 <= ba + bw && fb >= bb && fb + 3 <= bb + bw, true);
+}
+check('double : le chat a toujours son corps', /class="body"/.test(fDbl(0)) && !/\.pf-dbody[^{]*\.body|\.double \.body/.test(fDbl(0)), true);
+check('double : le chat vient a droite', /class="pf-cat"/.test(fDbl(0)), true);
+
+// The screen shows the time, as the real ones do; blue while it serves, red
+// when something is wrong. While it serves it shows the portion instead, when
+// the card knows the serving size.
+const lcd = h => (/<div class="pf-lcd">([^<]*)<\/div>/.exec(h) || [, null])[1];
+check('ecran : au repos, l\'heure', /^\d\d:\d\d$/.test(lcd(fIn)), true);
+check('ecran : la distribution montre la portion', lcd(fBusy), 'P 3');
+check('ecran : sans taille de portion, l\'heure',
+  /^\d\d:\d\d$/.test(lcd(feeder({ state_entity: 'binary_sensor.b', serving_size_entity: undefined },
+    { 'binary_sensor.b': { state: 'on', attributes: {} } }))), true);
+check('ecran : en erreur, l\'heure aussi', /^\d\d:\d\d$/.test(lcd(fJam)), true);
+check('ecran : bleu pendant la distribution', /\.machine\.feeding \.pf-lcd \{[^}]*background: #1e88e5/.test(fBusy), true);
+check('ecran : rouge quand ca ne va pas', /\.machine\.alert \.pf-lcd \{[^}]*background: #e53935/.test(fJam), true);
+check('ecran : l\'alerte se porte sur la machine', machineCls(fJam).split(' ').includes('alert'), true);
+check('ecran : reservoir vide, rouge aussi', machineCls(fEmpty).split(' ').includes('alert'), true);
+check('ecran : rien a signaler, pas de rouge', machineCls(fIn).split(' ').includes('alert'), false);
+check('ecran : le double a le sien', lcd(dbl50) !== null, true);
+// The bowl holds a heap over its rim, smaller while it is being filled.
+check('gamelle : un tas au-dessus du bord', /class="pf-heap"/.test(fIn), true);
+check('gamelle : plus petit pendant la distribution', /\.machine\.feeding \.pf-heap \{[^}]*height: 4px/.test(fBusy), true);
+check('gamelle : vide avec le reservoir', /\.machine\.empty \.pf-heap \{ display: none; \}/.test(fEmpty), true);
 
 // == The control that is not a button =========================================
 // Aqara dispenses from a select set to START, Tuya from a number written with
@@ -4799,13 +4852,13 @@ contains('commande : la valeur aussi',
 }
 // Detection: by name, and by a field no other type has.
 check('detection : une gamelle se reconnait a son nom',
-  /class="pf-body"/.test(render({ state_entity: 'sensor.croquettes_portions_per_day' },
+  /class="pf-tank/.test(render({ state_entity: 'sensor.croquettes_portions_per_day' },
     { 'sensor.croquettes_portions_per_day': { state: '3', attributes: {} } })), true);
 check('detection : un feeder aussi',
-  /class="pf-body"/.test(render({ state_entity: 'binary_sensor.wifi_feeder_alimentation' },
+  /class="pf-tank/.test(render({ state_entity: 'binary_sensor.wifi_feeder_alimentation' },
     { 'binary_sensor.wifi_feeder_alimentation': { state: 'off', attributes: {} } })), true);
 check('detection : un champ de gamelle suffit',
-  /class="pf-body"/.test(render({ state_entity: 'sensor.x', portions_today_entity: 'sensor.p' },
+  /class="pf-tank/.test(render({ state_entity: 'sensor.x', portions_today_entity: 'sensor.p' },
     { 'sensor.x': { state: 'off', attributes: {} }, 'sensor.p': { state: '1', attributes: {} } })), true);
 check('detection : un lave-linge reste un lave-linge',
   /class="pf-body"/.test(render({ state_entity: 'sensor.washer_state' },
@@ -5504,15 +5557,17 @@ contains('editeur coins : titre en anglais', markup(cornerEditor()._root), '<sum
   const models = h => [...((/<select data-field="feeder_layout">([\s\S]*?)<\/select>/.exec(h) || [, ''])[1])
     .matchAll(/<option value="([^"]*)"\s*(selected)?>([^<]*)</g)].map(m => `${m[1]}${m[2] ? '*' : ''}:${m[3]}`);
   const h = modelOf({ appliance_type: 'pet_feeder' });
-  check('editeur modele : les deux dessins', models(h).join(' / '), 'tower:Tower, built-in bowl / canister:Round tank, separate bowl');
+  check('editeur modele : les trois dessins', models(h).join(' / '), 'tower:Square tank / canister:Round tank / double:Two bowls');
   check('editeur modele : son titre', /<label>Model<\/label>\s*<select data-field="feeder_layout">/.test(h), true);
   check('editeur modele : le choix se relit', models(modelOf({ appliance_type: 'pet_feeder', feeder_layout: 'canister' }))[1],
-    'canister*:Round tank, separate bowl');
+    'canister*:Round tank');
+  check('editeur modele : le double se relit', models(modelOf({ appliance_type: 'pet_feeder', feeder_layout: 'double' }))[2],
+    'double*:Two bowls');
   check('editeur modele : seulement pour un distributeur', /data-field="feeder_layout"/.test(modelOf({ appliance_type: 'washer' })), false);
   for (const language of ['fr', 'ru', 'de', 'es', 'it', 'nl', 'pt', 'sv', 'no', 'da', 'pl', 'zh', 'cs']) {
     const opts = models(modelOf({ appliance_type: 'pet_feeder', language }));
     check(`editeur modele : traduit en ${language}`,
-      opts.length === 2 && !opts.some(o => /Tower, built-in bowl|Round tank, separate bowl/.test(o)), true);
+      opts.length === 3 && !opts.some(o => /Square tank|Round tank|Two bowls/.test(o)), true);
   }
 }
 

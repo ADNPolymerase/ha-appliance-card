@@ -121,7 +121,7 @@ Per type:
 | `printed_part` | 3D printer | The part on the bed: `cube` (default), `pyramid` or `duck` (a rubber duck). It shows from the bottom up as it prints. |
 | `iron_layout` | iron | `iron` (default, the iron alone) \| `generator` (the same iron on the base of a steam generator). |
 | `left_on_after` | iron | Minutes switched on after which the state line reads *Left on*, in red. Empty, it never does. |
-| `feeder_layout` | pet feeder | `tower` (default, the bowl built in) \| `canister` (a round tank on its base, the bowl set down in front). |
+| `feeder_layout` | pet feeder | `tower` (default, a square tank on its base) \| `canister` (a round tank on a round base) \| `double` (two outlets and two bowls). |
 | `portions_today_entity` / `weight_today_entity` | pet feeder | What was served today, on one line. Without a weight entity the card works the grams out from `portion_weight_entity`, so nothing is assumed about the size of a meal. |
 | `serving_size_entity` / `portion_weight_entity` | pet feeder | How many portions a serving holds, and what one weighs. |
 | `schedule_entity` | pet feeder | The feeding plan, as the integration words it, on a line that wraps. |
@@ -290,7 +290,7 @@ The card shows the alert; turning the iron off is an automation's job, on the sa
 
 ### Pet feeders
 
-A feeder is read rather than run: no cycle, no programme, no door. Its state is worked out from what it reports, *Tank empty*, *Error* or *Dispensing*, and at rest the line tells how full the tank is, or nothing when the card cannot know. The card carries what was served today and when the last meal was. An empty tank is the one thing a feeder cannot fix by itself, so it takes the state line and empties the hopper on the drawing. A red warning triangle goes up with it, and it goes up for a jam as well, that time with the kibble still in the tank.
+A feeder is read rather than run: no cycle, no programme, no door. Its state is worked out from what it reports, *Tank empty*, *Error* or *Dispensing*, and at rest the line tells how full the tank is, or nothing when the card cannot know. The card carries what was served today and when the last meal was. An empty tank is the one thing a feeder cannot fix by itself, so it takes the state line and empties the tank and the bowl on the drawing. A red warning triangle goes up with it, and it goes up for a jam as well, that time with the kibble still in the tank.
 
 The control is the interesting part, because a feeder rarely has a button. This one dispenses from a list set to `START`, over Zigbee2MQTT:
 
@@ -319,7 +319,7 @@ An automation works as a control too, and a `utility_meter` makes a fine counter
 
 Three entities read as well as ten: a line only exists when its entity answers.
 
-Two models are drawn: the tower, its bowl built in, and a round tank on its base with the bowl set down in front of it. The child lock and the automatic lock go in the top corners, each showing whether it holds:
+Three models are drawn, after the feeders people buy: a square tank on its base, a round tank on a round base, each with its bowl set down in front, and a double with two outlets on its front and a bowl under each. The small screen shows the time like the real ones, turns blue while the feeder serves, showing the portion when `serving_size_entity` is set, and red on an empty tank or an error. The child lock and the automatic lock go in the top corners, each showing whether it holds:
 
 ```yaml
 feeder_layout: canister

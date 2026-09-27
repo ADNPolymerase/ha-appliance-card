@@ -121,7 +121,7 @@ Par type :
 | `printed_part` | imprimante 3D | La pièce sur le plateau : `cube` (défaut), `pyramid` (pyramide) ou `duck` (un canard en plastique). Elle apparaît de bas en haut au fil de l'impression. |
 | `iron_layout` | fer | `iron` (défaut, le fer seul) \| `generator` (le même fer sur le socle d'une centrale vapeur). |
 | `left_on_after` | fer | Minutes allumé au bout desquelles la ligne d'état affiche *Resté allumé*, en rouge. Vide, cela n'arrive jamais. |
-| `feeder_layout` | distributeur | `tower` (défaut, la gamelle intégrée) \| `canister` (un réservoir rond sur son socle, la gamelle posée devant). |
+| `feeder_layout` | distributeur | `tower` (défaut, un réservoir carré sur son socle) \| `canister` (un réservoir rond sur un socle rond) \| `double` (deux sorties et deux gamelles). |
 | `portions_today_entity` / `weight_today_entity` | distributeur | Ce qui a été servi aujourd'hui, sur une seule ligne. Sans entité de poids, la carte calcule les grammes à partir de `portion_weight_entity` : rien n'est supposé sur la taille d'un repas. |
 | `serving_size_entity` / `portion_weight_entity` | distributeur | Combien de portions par distribution, et ce que pèse une portion. |
 | `schedule_entity` | distributeur | Le planning, dans les mots de l'intégration, sur une ligne qui s'enroule. |
@@ -290,7 +290,7 @@ La carte montre l'alerte ; éteindre le fer reste le travail d'une automatisatio
 
 ### Distributeurs de croquettes
 
-Un distributeur se lit, il ne se pilote pas : pas de cycle, pas de programme, pas de porte. Son état est calculé à partir de ce qu'il rapporte, *Réservoir vide*, *Erreur* ou *Distribution*, et au repos la ligne dit à quel point le réservoir est plein, ou rien quand la carte ne peut pas le savoir. La carte porte ce qui a été servi aujourd'hui et l'heure du dernier repas. Un réservoir vide est la seule chose qu'un distributeur ne peut pas régler tout seul : il prend la ligne d'état, et vide la trémie sur le dessin. Un triangle rouge se lève avec lui, et il se lève aussi pour un blocage, avec les croquettes toujours dans le réservoir cette fois.
+Un distributeur se lit, il ne se pilote pas : pas de cycle, pas de programme, pas de porte. Son état est calculé à partir de ce qu'il rapporte, *Réservoir vide*, *Erreur* ou *Distribution*, et au repos la ligne dit à quel point le réservoir est plein, ou rien quand la carte ne peut pas le savoir. La carte porte ce qui a été servi aujourd'hui et l'heure du dernier repas. Un réservoir vide est la seule chose qu'un distributeur ne peut pas régler tout seul : il prend la ligne d'état, et vide le réservoir et la gamelle sur le dessin. Un triangle rouge se lève avec lui, et il se lève aussi pour un blocage, avec les croquettes toujours dans le réservoir cette fois.
 
 La commande est le point intéressant, parce qu'un distributeur a rarement un bouton. Celui-ci distribue depuis une liste réglée sur `START`, via Zigbee2MQTT :
 
@@ -319,7 +319,7 @@ Une automation fait aussi bien l'affaire comme commande, et un `utility_meter` f
 
 Trois entités se lisent aussi bien que dix : une ligne n'existe que si son entité répond.
 
-Deux modèles sont dessinés : la tour, gamelle intégrée, et un réservoir rond sur son socle avec la gamelle posée devant. La sécurité enfant et le verrouillage automatique se placent dans les coins du haut, chacun montrant s'il est enclenché :
+Trois modèles sont dessinés, d'après les distributeurs du commerce : un réservoir carré sur son socle, un réservoir rond sur un socle rond, chacun avec sa gamelle posée devant, et un double avec deux sorties en façade et une gamelle sous chacune. Le petit écran affiche l'heure comme les vrais, passe en bleu pendant la distribution, avec la portion quand `serving_size_entity` est renseigné, et en rouge sur un réservoir vide ou une erreur. La sécurité enfant et le verrouillage automatique se placent dans les coins du haut, chacun montrant s'il est enclenché :
 
 ```yaml
 feeder_layout: canister
