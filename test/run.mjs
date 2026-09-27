@@ -5759,4 +5759,214 @@ check('editeur : pas de modele de fer sur un lave-linge',
 check('editeur : ni le delai',
   /data-field="left_on_after"/.test(markup(newEditor({ state_entity: 'sensor.w', appliance_type: 'washer' }))), false);
 
+// == A pellet stove (issue #22) ==============================================
+// Palazzetti is the one in Home Assistant itself; Micronova's Agua IOT carries
+// some thirty makers and speaks in the stove's own words and its owner's
+// language; Edilkamin, Rika and Duepi have integrations of their own. All of
+// them say the same eight things, and the card reads the eight.
+
+const psLcd  = h => (/<div class="ps-lcd">([^<]*)<\/div>/.exec(h) || [, null])[1];
+const psFill = h => (/--ps-fill: (\d+)%/.exec(h) || [, null])[1];
+const psLine = (h, label) => {
+  const v = infoLine(h, label);
+  return v === null ? null : v.replace(/ /g, ' ');
+};
+const PS = { appliance_type: 'pellet_stove', state_entity: 'climate.stufa', phase_entity: 'sensor.stufa_status' };
+const psStates = (status, climate = {}, extra = {}) => ({
+  'climate.stufa': { state: climate.state || 'heat', attributes: { hvac_action: climate.action, current_temperature: climate.room, temperature: climate.target } },
+  'sensor.stufa_status': { state: status, attributes: {} },
+  ...extra,
+});
+const stove = (status, climate, extra, cfg = {}) => render({ ...PS, ...cfg }, psStates(status, climate, extra));
+const psMode = h => (/\bmode-(\w+)/.exec(machineCls(h)) || [, null])[1];
+
+// The words each integration uses, and the phase each one is.
+const PHASES = {
+  off: ['off', 'off_timer', 'OFF', 'Off', 'SPENTO', 'Spenta', 'ETEINT', 'Éteint', 'APAGADO', 'AUS', 'UIT', 'Desligada', 'Slukket', 'stove_off'],
+  ignition: ['heatup', 'fueling', 'ign_test', 'test_fire', 'START', 'LOAD PELLET', 'FLAME LIGHT', 'IGNITION', 'Awaiting flame', 'CHECK UP',
+    'ACCENSIONE', 'ATTESA FIAMMA', 'CARICA PELLET', 'FIAMMA PRESENTE', 'STABILIZZAZIONE', 'ALLUMAGE', 'CHARGE PELLET', 'FLAME LUMIERE',
+    'ZÜNDUNG', 'STABILISIERUNG', 'ENCENDIDO', 'Ontsteking', 'ACENDIM-', 'Zapłon', 'Tænding', 'Ignition starting', 'ignition_on', 'starting_up', 'Ignition'],
+  burning: ['burning', 'WORK', 'Work', 'LAVORO', 'TRAVAIL', 'ARBEIT', 'BETRIEB', 'TRABAJO', 'WERKT', 'TRABALHO', 'DRIFT', 'On', 'Flame On', 'running'],
+  modulating: ['burning_mod'],
+  eco: ['ecomode', 'cool_fluid', 'ECO STOP', 'STAND BY', 'Stand-by', 'STANDBY', 'ATTESA', 'Eco idle', 'standby', 'external_request', 'frost_protection'],
+  cooling: ['cooling', 'fire_stop', 'STOP', 'SHUT OFF', 'Shut Off', 'SPEGNIMENTO', 'Extinction', 'ARRÊT', 'ABSCHALTUNG', 'Blussen', 'Shutdown',
+    'Cooling', 'Cooling down', 'burn_off', 'Att. Raffred.', 'ESPERA ENFRIAMENTO'],
+  cleaning: ['clean_fire', 'cleanup', 'CLEANING FIRE-POT', 'FINAL CLEANING', 'PULIZIA BRACIERE', 'PUL. FINALE', 'NETTOYAGE BRASIER', 'Nottoyage brasier',
+    'NETOAGE CREUSET', 'REINIGUNG', 'LIMPIEZA', 'REINIGING', 'Rengøring', 'Czyszczenie', 'Final cleaning', 'Cleaning', 'big_clean', 'clean'],
+  alarm: ['pellet_finished', 'chimney_alarm', 'door_open', 'hatch_door_open', 'cleaning_warning', 'general_error', 'ALARM', 'ALARM MEM.', 'MEM.ALM',
+    'M. Allarm', 'MEMORIA ALLARME', 'Alarm'],
+};
+for (const [mode, words] of Object.entries(PHASES)) {
+  for (const w of words) check(`poele : « ${w} » est ${mode}`, psMode(stove(w, { action: 'heating' })), mode);
+}
+
+// The state line, in the stove's words.
+const PS_LABELS = { off: 'Off', heatup: 'Ignition', burning: 'Burning', burning_mod: 'Modulating', ecomode: 'Eco standby',
+  cooling: 'Cooling down', clean_fire: 'Cleaning', general_error: 'Alarm' };
+for (const [w, label] of Object.entries(PS_LABELS)) check(`poele : ${w} se dit ${label}`, stateLine(stove(w, { action: 'heating' })), label);
+check('poele : en francais', stateLine(stove('burning', {}, {}, { language: 'fr' })), 'En chauffe');
+check('poele : en italien', stateLine(stove('ecomode', {}, {}, { language: 'it' })), 'Stand-by eco');
+check('poele : plus de granules', stateLine(stove('pellet_finished')), 'Out of pellets');
+check('poele : porte ouverte', stateLine(stove('door_open')), 'Door open');
+check('poele : une trappe aussi', stateLine(stove('hatch_door_open')), 'Door open');
+check('poele : le brut quand on le demande', stateLine(render({ appliance_type: 'pellet_stove', state_entity: 'sensor.stufa_status', state_show_raw: true },
+  { 'sensor.stufa_status': { state: 'LAVORO', attributes: {} } })), 'LAVORO');
+
+// Each phase has its colour.
+const PS_COLORS = { off: 'var(--disabled-text-color, #9e9e9e)', heatup: '#ff9800', burning: '#ff5722', burning_mod: '#ff7043',
+  ecomode: 'var(--success-color, #4caf50)', cooling: '#29b6f6', clean_fire: '#ffb300', general_error: 'var(--error-color, #f44336)' };
+for (const [w, c] of Object.entries(PS_COLORS)) check(`poele : ${w} a sa couleur`, stateColor(stove(w)), c);
+
+// A climate entity alone: its hvac_action says whether the fire is lit.
+const climateOnly = (state, action) => render({ appliance_type: 'pellet_stove', state_entity: 'climate.stufa' },
+  { 'climate.stufa': { state, attributes: action === undefined ? {} : { hvac_action: action } } });
+check('poele, thermostat seul : eteint', psMode(climateOnly('off', 'off')), 'off');
+// Agua IOT says idle for a stove in standby, whether it is on or off.
+check('poele, thermostat seul : eteint meme au repos', psMode(climateOnly('off', 'idle')), 'off');
+check('poele, thermostat seul : le feu brule', psMode(climateOnly('heat', 'heating')), 'burning');
+check('poele, thermostat seul : au repos, il attend', psMode(climateOnly('heat', 'idle')), 'eco');
+check('poele, thermostat seul : il prechauffe', psMode(climateOnly('heat', 'preheating')), 'ignition');
+check('poele, thermostat seul : allume sans rien dire, il brule', psMode(climateOnly('heat')), 'burning');
+check('poele, thermostat seul : indisponible, rien', psMode(climateOnly('unavailable')), 'off');
+// The status says more than the climate entity, and wins.
+check('poele : le statut l\'emporte sur le thermostat', psMode(stove('burning_mod', { action: 'idle' })), 'modulating');
+// A status the card does not know hands over to the climate entity.
+check('poele : un statut inconnu laisse parler le thermostat', psMode(stove('Zzz', { action: 'heating' })), 'burning');
+// A status sensor as the state entity, with no climate at all.
+check('poele : un capteur de statut en etat', psMode(render({ appliance_type: 'pellet_stove', state_entity: 'sensor.stufa_status' },
+  { 'sensor.stufa_status': { state: 'LAVORO', attributes: {} } })), 'burning');
+// A state_map names a phase the card does not know.
+check('poele : state_map nomme une phase', psMode(stove('Fase 7', {}, {}, { state_map: { 'Fase 7': 'cleaning' } })), 'cleaning');
+check('poele : state_map ne nomme pas n\'importe quoi', psMode(stove('Fase 7', { action: 'idle' }, {}, { state_map: { 'Fase 7': 'boiling' } })), 'eco');
+// A plug: lit or not, as the rest of the card reads it.
+const psPlug = w => render({ appliance_type: 'pellet_stove', state_entity: 'sensor.stufa_w', power_entity: 'sensor.stufa_w', power_on_threshold: 50 },
+  { 'sensor.stufa_w': { state: String(w), attributes: { unit_of_measurement: 'W' } } });
+check('poele sur prise : il brule', psMode(psPlug(90)), 'burning');
+check('poele sur prise : il est eteint', psMode(psPlug(2)), 'off');
+
+// The alarm entity: an alarm wins over the phase, and "no alarm" is said in
+// many ways.
+const withAlarm = (state, domain = 'sensor') => stove('burning', { action: 'heating' },
+  { [`${domain}.stufa_alarm`]: { state, attributes: {} } }, { error_entity: `${domain}.stufa_alarm` });
+for (const none of ['No alarm', 'NO AL', '--', '____', 'OK', 'Nessun Allarme', "Pas d'alarme", 'Geen alarm', 'Ninguna alarma', 'Kein wecker', 'All OK', '0'])
+  check(`poele : « ${none} » n'est pas une alarme`, psMode(withAlarm(none)), 'burning');
+check('poele : une alarme nommee l\'emporte', psMode(withAlarm('Ignition failed')), 'alarm');
+check('poele : et elle est ecrite', psLine(withAlarm('Ignition failed'), 'Alarm'), 'Ignition failed');
+check('poele : un compteur d\'alarmes', psMode(withAlarm('2')), 'alarm');
+// A code that ends on a zero is still an alarm: the words of "no alarm" are
+// the whole state, never its end.
+check('poele : AL 10 est une alarme', psMode(withAlarm('AL 10')), 'alarm');
+check('poele : et son code s\'affiche', psLcd(withAlarm('AL 10')), 'AL10');
+check('poele : un contact de probleme', psMode(withAlarm('on', 'binary_sensor')), 'alarm');
+check('poele : un contact au repos', psMode(withAlarm('off', 'binary_sensor')), 'burning');
+check('poele : un contact n\'ecrit rien', psLine(withAlarm('on', 'binary_sensor'), 'Alarm'), null);
+check('poele : le code de l\'alarme a l\'ecran', psLcd(withAlarm('AL 05')), 'AL05');
+check('poele : un code court aussi', psLcd(withAlarm('A1 Ignition failed')), 'A01');
+check('poele : sans code, AL', psLcd(withAlarm('Hot smokes')), 'AL');
+check('poele : une alarme de granules', stateLine(withAlarm('No pellet')), 'Out of pellets');
+
+// The screen: the power stage while it burns, a word otherwise.
+const PSP = { power_level_entity: 'number.stufa_power' };
+const stage = (n, extra = {}) => ({ 'number.stufa_power': { state: String(n), attributes: { min: 1, max: 5, ...extra } } });
+check('poele : l\'ecran dit la puissance', psLcd(stove('burning', {}, stage(4), PSP)), 'P4');
+check('poele : en modulation aussi', psLcd(stove('burning_mod', {}, stage(1), PSP)), 'P1');
+check('poele : sans puissance, rien', psLcd(stove('burning')), '');
+for (const [w, lcd] of [['off', 'OFF'], ['heatup', 'IGN'], ['ecomode', 'ECO'], ['cooling', '---'], ['clean_fire', 'CLN'], ['general_error', 'AL']])
+  check(`poele : a l'ecran en ${w}`, psLcd(stove(w, {}, stage(4), PSP)), lcd);
+
+// The lines.
+check('poele : la piece et la consigne', psLine(stove('burning', { room: 19.6, target: 21 }), 'Room'), '20 °C → 21 °C');
+check('poele : consigne atteinte, une seule valeur', psLine(stove('ecomode', { room: 21.2, target: 21 }), 'Room'), '21 °C');
+check('poele : eteint, pas de consigne', psLine(stove('off', { state: 'off', room: 18, target: 21 }), 'Room'), '18 °C');
+check('poele : la piece d\'une entite', psLine(stove('burning', { room: 30, target: 21 }, { 'sensor.stufa_room': { state: '19.2', attributes: { unit_of_measurement: '°C' } } },
+  { current_temperature_entity: 'sensor.stufa_room' }), 'Room'), '19 °C → 21 °C');
+check('poele : la consigne d\'une entite', psLine(stove('burning', { room: 20, target: 21 }, { 'number.stufa_set': { state: '23', attributes: { unit_of_measurement: '°C' } } },
+  { target_temperature_entity: 'number.stufa_set' }), 'Room'), '20 °C → 23 °C');
+check('poele : sans temperature, pas de ligne', psLine(stove('burning'), 'Room'), null);
+check('poele : la puissance sur son maximum', psLine(stove('burning', {}, stage(4), PSP), 'Power'), '4 / 5');
+check('poele : une puissance sans maximum', psLine(stove('burning', {}, { 'sensor.stufa_power': { state: '3', attributes: {} } },
+  { power_level_entity: 'sensor.stufa_power' }), 'Power'), '3');
+check('poele : les fumees', psLine(stove('burning', {}, { 'sensor.stufa_flue': { state: '162', attributes: { unit_of_measurement: '°C' } } },
+  { flue_temperature_entity: 'sensor.stufa_flue' }), 'Flue gas'), '162 °C');
+check('poele : un ventilateur en pourcentage', psLine(stove('burning', {}, { 'fan.stufa': { state: 'on', attributes: { percentage: 60 } } },
+  { fan_speed_entity: 'fan.stufa' }), 'Fan'), '60 %');
+check('poele : un ventilateur arrete dit off', psLine(stove('burning', {}, { 'fan.stufa': { state: 'off', attributes: { percentage: 0 } } },
+  { fan_speed_entity: 'fan.stufa' }), 'Fan'), 'off');
+check('poele : une vitesse en chiffre', psLine(stove('burning', {}, { 'number.stufa_fan': { state: '3', attributes: {} } },
+  { fan_speed_entity: 'number.stufa_fan' }), 'Fan'), '3');
+check('poele : les lignes en francais', psLine(stove('burning', {}, stage(4), { ...PSP, language: 'fr' }), 'Puissance'), '4 / 5');
+
+// The pellets: a share of the hopper, or a contact that only says empty.
+const PSL = { level_entity: 'sensor.stufa_pellets' };
+const pellets = (v, unit = '%') => ({ 'sensor.stufa_pellets': { state: String(v), attributes: unit ? { unit_of_measurement: unit } : {} } });
+check('poele : la tremie se remplit du niveau', psFill(stove('burning', {}, pellets(58), PSL)), '58');
+check('poele : et la ligne le dit', psLine(stove('burning', {}, pellets(58), PSL), 'Pellets'), '58 %');
+check('poele : sans niveau, une tremie au repos', psFill(stove('burning')), '60');
+check('poele : des centimetres sans capacite ne remplissent rien', psFill(stove('burning', {}, pellets(30, 'cm'), PSL)), '60');
+check('poele : avec la capacite, ils remplissent', psFill(stove('burning', {}, pellets(30, 'cm'), { ...PSL, level_max: 40 })), '75');
+check('poele : jamais plus que plein', psFill(stove('burning', {}, pellets(55, 'cm'), { ...PSL, level_max: 40 })), '100');
+check('poele : vide sous le seuil', hasCls(stove('burning', {}, pellets(3), { ...PSL, level_empty_below: 5 }), 'empty'), true);
+check('poele : et la tremie est vide', psFill(stove('burning', {}, pellets(3), { ...PSL, level_empty_below: 5 })), '0');
+check('poele : au seuil, c\'est vide', hasCls(stove('burning', {}, pellets(5), { ...PSL, level_empty_below: 5 }), 'empty'), true);
+check('poele : sans seuil, zero est vide', hasCls(stove('burning', {}, pellets(0), PSL), 'empty'), true);
+check('poele : sans seuil, un peu reste', hasCls(stove('burning', {}, pellets(1), PSL), 'empty'), false);
+check('poele : au-dessus du seuil, il reste', hasCls(stove('burning', {}, pellets(12), { ...PSL, level_empty_below: 5 }), 'empty'), false);
+check('poele : vide mais encore en feu, l\'etat reste le feu', stateLine(stove('burning', {}, pellets(3), { ...PSL, level_empty_below: 5 })), 'Burning');
+const depleted = s => stove('general_error', {}, { 'binary_sensor.stufa_depleted': { state: s, attributes: {} } }, { level_entity: 'binary_sensor.stufa_depleted' });
+check('poele : un contact de reserve allume, plus de granules', stateLine(depleted('on')), 'Out of pellets');
+check('poele : il le dit sur sa ligne', psLine(depleted('on'), 'Pellets'), 'Out of pellets');
+check('poele : un contact au repos ne dit rien', psLine(depleted('off'), 'Pellets'), null);
+check('poele : le statut suffit a vider la tremie', hasCls(stove('pellet_finished'), 'empty'), true);
+
+// The drawing follows the phase, and only the phase.
+contains('poele : la flamme est dessinee', stove('off'), '<div class="ps-flame">');
+contains('poele : la tremie aussi', stove('off'), '<div class="ps-hopper"><div class="ps-pellets"></div></div>');
+contains('poele : la flamme brule en chauffe', stove('burning'), '.machine.mode-burning .ps-flame { opacity: 1;');
+contains('poele : l\'air chaud monte', stove('burning'), '.machine.mode-burning .ps-air i { animation: ps-rise');
+contains('poele : a l\'allumage, la fumee', stove('heatup'), '.machine.mode-ignition .ps-smoke i, .machine.mode-cleaning .ps-smoke i { animation: ps-puff');
+contains('poele : en nettoyage, les cendres', stove('clean_fire'), '.machine.mode-cleaning .ps-ash i { animation: ps-ash');
+contains('poele : en alarme, l\'ecran clignote', stove('general_error'), '.machine.mode-alarm .ps-lcd { color: #ef5350; animation: ps-blink');
+contains('poele : vide, la tremie est rouge', stove('off'), '.machine.empty .ps-hopper { box-shadow: 0 0 0 1.5px #ef5350; }');
+
+// Its own name, or its maker's, says what it is.
+const isStove = (id, st = 'off') => /<div class="ps-hopper">/.test(render({ state_entity: id }, { [id]: { state: st, attributes: {} } }));
+for (const id of ['climate.stufa_salotto', 'climate.poele', 'climate.poêle_salon', 'climate.pellet_stove', 'climate.pelletofen',
+  'climate.palazzetti', 'sensor.extraflame_status', 'climate.ravelli', 'climate.edilkamin_the_mind', 'climate.rika_domo', 'climate.mcz_ego', 'sensor.aguaiot_status'])
+  check(`poele : ${id} en est un`, isStove(id), true);
+check('poele : du paprika non plus', isStove('sensor.paprika_state'), false);
+check('poele : une cuisiniere non plus', isStove('sensor.stove_top'), false);
+check('poele : une temperature de fumees le designe', /<div class="ps-hopper">/.test(render({ state_entity: 'sensor.x', flue_temperature_entity: 'sensor.y' },
+  { 'sensor.x': { state: 'on', attributes: {} } })), true);
+
+// The editor: the type in the list, its own fields, and nowhere else.
+const psEd = newEditor({ state_entity: 'sensor.w', appliance_type: 'pellet_stove' });
+check('editeur : le poele est dans la liste des types', /<option value="pellet_stove"/.test(markup(psEd)), true);
+check('editeur : le fer aussi, enfin', /<option value="iron"/.test(markup(newEditor({ state_entity: 'sensor.w', appliance_type: 'washer' }))), true);
+for (const f of ['phase_entity', 'current_temperature_entity', 'target_temperature_entity', 'power_level_entity',
+  'flue_temperature_entity', 'fan_speed_entity', 'level_entity', 'error_entity'])
+  check(`editeur poele : ${f}`, markup(psEd).includes(`data-toggle="${f}"`), true);
+check('editeur : pas de fumees sur un lave-linge', markup(newEditor({ state_entity: 'sensor.w', appliance_type: 'washer' })).includes('data-toggle="flue_temperature_entity"'), false);
+check('editeur poele : pas de programme', markup(psEd).includes('data-toggle="program_entity"'), false);
+
+{
+  // The names of a Micronova stove on Agua IOT, and of Palazzetti's. The real
+  // power is a stage, not a wattage: it must not end up as the meter.
+  // The fire's own temperature comes first on purpose: it is no flue gas.
+  const ids = ['climate.stufa', 'sensor.stufa_status', 'sensor.stufa_alarm', 'sensor.stufa_real_power', 'number.stufa_power',
+    'sensor.stufa_wood_combustion_temperature', 'sensor.stufa_smoke_temperature', 'sensor.stufa_air_temperature', 'sensor.stufa_pellet_level', 'select.stufa_fan_mode'];
+  const ed = new Editor();
+  ed.setConfig({ type: 'custom:ha-appliance-card', appliance_type: 'pellet_stove', state_entity: 'climate.stufa' });
+  ed.hass = { ...HASS(Object.fromEntries(ids.map(id => [id, { state: '1', attributes: {} }]))),
+    entities: Object.fromEntries(ids.map(id => [id, { device_id: 'stufa' }])) };
+  const sug = ed.events.at(-1)?.detail?.config || {};
+  check('suggestion poele : le statut', sug.phase_entity, 'sensor.stufa_status');
+  check('suggestion poele : les fumees', sug.flue_temperature_entity, 'sensor.stufa_smoke_temperature');
+  check('suggestion poele : la piece', sug.current_temperature_entity, 'sensor.stufa_air_temperature');
+  check('suggestion poele : les granules', sug.level_entity, 'sensor.stufa_pellet_level');
+  check('suggestion poele : l\'alarme', sug.error_entity, 'sensor.stufa_alarm');
+  check('suggestion poele : le ventilateur', sug.fan_speed_entity, 'select.stufa_fan_mode');
+  check('suggestion poele : une puissance, pas un compteur', sug.power_entity, undefined);
+  check('suggestion poele : la puissance est un palier', /power/.test(sug.power_level_entity || ''), true);
+}
+
 report();

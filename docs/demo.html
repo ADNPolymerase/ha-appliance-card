@@ -52,8 +52,8 @@ customElements.define("ha-icon", StubIcon);
 const params = new URLSearchParams(location.search);
 const uiLang = params.get("lang") === "fr" ? "fr" : "en";
 const view = params.get("view") === "types" ? "types" : "hero";
-// Seventeen types in eighteen cards, the heat pump appearing twice: five
-// across and four down.
+// Nineteen types in twenty cards, the heat pump appearing twice and the iron
+// on its steam generator: five across and four down.
 document.documentElement.style.setProperty("--cols", params.get("cols") || 5);
 const fr = uiLang === "fr";
 const L = (en, f) => (fr ? f : en);
@@ -388,6 +388,26 @@ const aerothermal = () => card({
   st("sensor.aero_outdoor_temp", 4, { unit_of_measurement: "°C" }),
 ]);
 
+// A Palazzetti stove in full fire, as its integration reports it: a climate
+// entity for the room and the setpoint, a status for the phase, the
+// combustion power as a stage out of five.
+const pelletStove = () => card({
+  illustration_color: "black",
+  name: L("Pellet stove", "Po\u00eale \u00e0 granul\u00e9s"),
+  appliance_type: "pellet_stove",
+  state_entity: "climate.stove",
+  phase_entity: "sensor.stove_status",
+  power_level_entity: "number.stove_combustion_power",
+  flue_temperature_entity: "sensor.stove_flue_temp",
+  level_entity: "sensor.stove_pellet_level",
+}, [
+  st("climate.stove", "heat", { hvac_action: "heating", current_temperature: 19.6, temperature: 21 }),
+  st("sensor.stove_status", "burning"),
+  st("number.stove_combustion_power", 4, { min: 1, max: 5 }),
+  st("sensor.stove_flue_temp", 162, { unit_of_measurement: "°C" }),
+  st("sensor.stove_pellet_level", 58, { unit_of_measurement: "%" }),
+]);
+
 // A Bambu Lab printer halfway through a part, as its integration reports it:
 // a lowercase status, a remaining time in hours.
 const printer3d = () => card({
@@ -435,19 +455,8 @@ const petFeeder = () => card({
 ]);
 
 // An iron reaches Home Assistant through the plug it sits on, and nothing
-// else: the state is what it draws. Both models, the iron alone and the one
-// that rests on a steam generator.
-const iron = () => card({
-  name: L("Iron", "Fer \u00e0 repasser"),
-  appliance_type: "iron",
-  state_entity: "switch.iron_plug",
-  power_entity: "sensor.iron_plug_power",
-  power_on_threshold: 20,
-}, [
-  st("switch.iron_plug", "on"),
-  st("sensor.iron_plug_power", 1400, { unit_of_measurement: "W" }),
-]);
-
+// else: the state is what it draws. The one that rests on a steam generator
+// shows the iron as well.
 const steamGenerator = () => card({
   name: L("Steam generator", "Centrale vapeur"),
   appliance_type: "iron",
@@ -461,9 +470,9 @@ const steamGenerator = () => card({
 ]);
 
 const ALL = { washer, dryer, dishwasher, oven, microwave, hood, cooktop, fridge,
-              kettle, cooker, coffee, rice_cooker: riceCooker, water_heater: waterHeater, boiler,
-              heat_pump: heatPump, aerothermal, printer_3d: printer3d, pet_feeder: petFeeder,
-              iron, steam_generator: steamGenerator };
+              kettle, cooker, coffee, rice_cooker: riceCooker, pet_feeder: petFeeder,
+              steam_generator: steamGenerator, water_heater: waterHeater, boiler,
+              heat_pump: heatPump, aerothermal, pellet_stove: pelletStove, printer_3d: printer3d };
 const only = (params.get("only") || "").split(",").map((k) => k.trim()).filter(Boolean);
 if (only.length) {
   document.documentElement.style.setProperty("--cols", only.length);

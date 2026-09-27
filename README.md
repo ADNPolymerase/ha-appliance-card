@@ -10,7 +10,7 @@
 <a href="https://buymeacoffee.com/adnpolymerase" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-orange.png" alt="Buy Me A Coffee" height="60"></a>
 <a href="https://adnpolymerase.github.io/HA/" target="_blank"><img src="https://raw.githubusercontent.com/ADNPolymerase/HA/main/assets/site-button.svg" alt="Link to my github.io for my other projects" height="60"></a>
 
-A Lovelace card for household appliances: washers, dryers, dishwashers, ovens, microwaves, cooker hoods, cooktops, fridges, kettles, cookers, coffee machines, rice cookers, water heaters, boilers, heat pumps, 3D printers and pet feeders. Cycle in progress, program, remaining time, temperature, alerts and controls.
+A Lovelace card for household appliances: washers, dryers, dishwashers, ovens, microwaves, cooker hoods, cooktops, fridges, kettles, cookers, coffee machines, rice cookers, water heaters, boilers, heat pumps, 3D printers, pet feeders, irons and pellet stoves. Cycle in progress, program, remaining time, temperature, alerts and controls.
 
 No brand assumed: every field is an entity you pick, so it works with **any** integration (Electrolux, Samsung, LG, Home Connect, Miele, a plain smart plug…).
 
@@ -21,11 +21,11 @@ No brand assumed: every field is an entity you pick, so it works with **any** in
 
 ## Features
 
-- **Eighteen appliance types**, each with a CSS illustration that animates on the appliance's own data and stays still when idle. The type is detected on its own or set via `appliance_type`, and `compact: true` keeps only the text.
+- **Nineteen appliance types**, each with a CSS illustration that animates on the appliance's own data and stays still when idle. The type is detected on its own or set via `appliance_type`, and `compact: true` keeps only the text.
 - **State normalization**: `Idle`, `RUNNING`, `wash`, `En marche`… are recognised (accent-insensitive) and sorted into idle, preheating, running, paused, done, delayed or error. An unknown state is shown as it came, minus the integration's namespace, and `state_map` sorts the rest, `"*"` catching everything left over.
 - **The step, not an hour of *Running***: a washer, a dryer or a dishwasher names the step it is at (*Pre-wash*, *Washing*, *Rinsing*, *Spinning*, *Drying* and seven more), from a phase entity or from its own state, and the drum whirls while it spins. The time left is still the whole cycle's.
 - **A washer-dryer is a washer that dries**: `washer_dryer: true`, and the drum shows water while it washes, then clothes turning in hot air while it dries. The step comes from the state itself or from a phase entity, and the state line reads *Washing* or *Drying*.
-- **Each appliance says what matters for it**: a coffee machine what it is missing (water, beans, tray, descaling), a fridge its health (unplugged, door open, temperature high), a combi boiler what it is heating (central heating, hot water or standby), a 3D printer what the job is doing (preheating, bed levelling, changing filament).
+- **Each appliance says what matters for it**: a coffee machine what it is missing (water, beans, tray, descaling), a fridge its health (unplugged, door open, temperature high), a combi boiler what it is heating (central heating, hot water or standby), a 3D printer what the job is doing (preheating, bed levelling, changing filament), a pellet stove the phase of its fire (ignition, modulating, eco, cleaning).
 - **Works from a smart plug alone**: `power_entity` and `power_on_threshold` are enough to derive the state from consumption.
 - **Program, remaining time, progress bar, info lines, door, alerts, connectivity and controls** (start, pause, resume, stop), each optional.
 - **14 languages** (EN, FR, DE, ES, IT, NL, PT, SV, NO, DA, PL, RU, ZH, CS), Home Assistant's or pinned on the card.
@@ -59,7 +59,7 @@ Only `state_entity` is required, except on a fridge where a probe or a door cont
 | `compact` | `true` hides the illustration. |
 | `illustration_color` | `auto` (default, follows the theme) \| `white` \| `grey` \| `black`. Only changes the casing, not the state colours. |
 | `language` | `auto` (default, follows Home Assistant) or one of the 14 codes: `en`, `fr`, `de`, `es`, `it`, `nl`, `pt`, `sv`, `no`, `da`, `pl`, `ru`, `zh`, `cs`. `nb` and `nb-NO` give Norwegian. |
-| `appliance_type` | `auto` (default) \| `washer` \| `dryer` \| `dishwasher` \| `oven` \| `microwave` \| `hood` \| `cooktop` \| `fridge` \| `kettle` \| `cooker` \| `coffee` \| `rice_cooker` \| `water_heater` \| `boiler` \| `heat_pump` \| `printer_3d` \| `pet_feeder` \| `iron`. |
+| `appliance_type` | `auto` (default) \| `washer` \| `dryer` \| `dishwasher` \| `oven` \| `microwave` \| `hood` \| `cooktop` \| `fridge` \| `kettle` \| `cooker` \| `coffee` \| `rice_cooker` \| `water_heater` \| `boiler` \| `heat_pump` \| `printer_3d` \| `pet_feeder` \| `iron` \| `pellet_stove`. |
 | `tap_action` | What a tap on the card does, in Home Assistant's own words: `more-info` (default), `none`, `navigate`, `url`, `toggle`, `perform-action` or `fire-dom-event`, which is what the popup cards built on browser_mod listen for. In YAML only. |
 | `toggle_entity` | Power button (`switch`, `button`, `script`, `input_boolean`, `fan`), highlighted while on. |
 | `power_entity` / `power_on_threshold` / `power_icon` | Power sensor. With a threshold, the state is derived from it: *running* above, then *finished* when it falls back. Pointing `state_entity` at the same sensor enables it with a 10 W threshold. `power_icon` replaces `mdi:power-plug`. |
@@ -129,6 +129,11 @@ Per type:
 | `level_entity` / `level_empty_below` / `level_max` | pet feeder | What is left in the tank: a percentage, which fills the hopper on the drawing and reads on the state line at rest (*Tank at 74%*), or a contact that only says *empty*. At or below `level_empty_below` (default 0) the state reads *Tank empty*, in orange, and the hopper is drawn empty, in the reading's own unit. A tank counted in grams or in litres fills the hopper, and gives its percentage, once `level_max` gives its capacity. |
 | `error_entity` | pet feeder | Turns the state to *Error*, and to *Tank empty* when the error names itself (`no_food`, `empty`, and the same word in the other languages). A fault code counts as an error on any value but zero. |
 | `state_entity` | pet feeder | Optional: a feeder is idle nearly all the time, so a control or a counter is a complete configuration. When it does report, *on* reads as *Dispensing* and the kibble falls. |
+| `state_entity` / `phase_entity` | pellet stove | The phase of the fire: *Off*, *Ignition*, *Burning*, *Modulating*, *Eco standby*, *Cooling down*, *Cleaning* or *Alarm*. Read from a status sensor in `phase_entity` (Palazzetti's keys, Micronova's Agua IOT in the stove's own language, Edilkamin, Rika, Duepi), and otherwise from a `climate` entity's `hvac_action`, where *idle* is the eco standby. `state_map` accepts the eight phases, as `off`, `ignition`, `burning`, `modulating`, `eco`, `cooling`, `cleaning` and `alarm`. |
+| `current_temperature_entity` / `target_temperature_entity` | pellet stove | Room and setpoint, as *20 °C → 21 °C* while the stove works towards it. A `climate` entity in `state_entity` gives both on its own. |
+| `power_level_entity` / `flue_temperature_entity` / `fan_speed_entity` | pellet stove | The power stage, as *4 / 5* when the entity knows its range, and on the stove's screen while it burns; the flue gas temperature; the fan, a `fan` entity reading in percent. |
+| `level_entity` / `level_empty_below` / `level_max` | pellet stove | The pellets in the hopper: a percentage, or a contact on when the reserve is reached (Agua IOT, Edilkamin). A level in centimetres or kilograms fills the hopper once `level_max` gives its capacity. Empty, the hopper turns red, and in alarm the state reads *Out of pellets*. |
+| `error_entity` | pellet stove | The alarm: a word (*Ignition failed*), a count or a contact. Anything but *no alarm*, however the stove says it, puts the stove in alarm, with its words on a line and its code (*AL05*) on the screen. |
 | `speed_entity` | cooker | Blade speed, banded onto three speeds. |
 | `water_entity` | coffee | Tank: a Home Connect boolean, or a level in % with *empty* below 10%. |
 | `beans_entity` / `tray_entity` / `descaling_entity` | coffee | Beans empty, tray full, descaling due. |
@@ -322,6 +327,24 @@ corner_entities:
   - switch.feeder_auto_lock
   - switch.feeder_child_lock
 ```
+
+### Pellet stoves
+
+A stove says more than on and off: it lights, burns, modulates, rests in eco once the room is warm, cools down and cleans its burn pot. The card reads that phase from the stove's status and draws it: the flame in the glass, the warm air above the grille, smoke at the flue while it lights, ash while it cleans, embers while it rests. The hopper beside the door shows the pellets left.
+
+With the integration in Home Assistant itself, Palazzetti:
+
+```yaml
+type: custom:ha-appliance-card
+appliance_type: pellet_stove
+state_entity: climate.stove
+phase_entity: sensor.stove_status
+power_level_entity: number.stove_combustion_power
+level_entity: sensor.stove_pellet_level
+level_max: 40
+```
+
+The editor fills most of it from the stove's own entities, on Agua IOT (Extraflame, Ravelli, MCZ, Piazzetta and thirty more), Edilkamin, Rika and Duepi as well.
 
 ### Cycle steps
 

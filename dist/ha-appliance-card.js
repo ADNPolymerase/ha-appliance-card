@@ -1,4 +1,4 @@
-const CARD_VERSION = "2.16.0";
+const CARD_VERSION = "2.17.0";
 
 console.info(
   "%c HA-APPLIANCE-CARD %c v" + CARD_VERSION + " ",
@@ -138,6 +138,10 @@ const T = {
     section_feeder_layout: "Model", layout_tower: "Tower, built-in bowl", layout_canister: "Round tank, separate bowl",
     type_iron: "Iron", section_iron_layout: "Model", layout_iron: "Iron", layout_generator: "Steam generator",
     iron_heating: "Heating", iron_off: "Off", left_on: "Left on", left_on_after: "Warn after (minutes switched on)",
+    type_pellet_stove: "Pellet stove", ps_off: "Off", ps_ignition: "Ignition", ps_burning: "Burning", ps_modulating: "Modulating",
+    ps_eco: "Eco standby", ps_cooling: "Cooling down", ps_cleaning: "Cleaning", ps_alarm: "Alarm", ps_no_pellets: "Out of pellets",
+    section_stove_status: "Stove status", section_room_temperature: "Room temperature", section_flue_temperature: "Flue gas temperature", section_pellet_level: "Pellet level",
+    ps_line_room: "Room", ps_line_power: "Power", ps_line_flue: "Flue gas", ps_line_fan: "Fan", ps_line_pellets: "Pellets",
     washer_dryer: "Washer-dryer (washes and dries)", step_drying: "Drying", section_cycle_phase: "Cycle phase",
     step_prewash: "Pre-wash", step_soaking: "Soaking", step_weighing: "Weighing", step_filling: "Filling", step_washing: "Washing", step_rinsing: "Rinsing", step_draining: "Draining", step_spinning: "Spinning", step_cooling: "Cooling", step_anti_crease: "Anti-crease", step_steam: "Steam",
   },
@@ -268,6 +272,10 @@ const T = {
     section_feeder_layout: "Mod\u00e8le", layout_tower: "Tour, gamelle int\u00e9gr\u00e9e", layout_canister: "R\u00e9servoir rond, gamelle \u00e0 part",
     type_iron: "Fer \u00e0 repasser", section_iron_layout: "Mod\u00e8le", layout_iron: "Fer seul", layout_generator: "Centrale vapeur",
     iron_heating: "En chauffe", iron_off: "\u00c0 l'arr\u00eat", left_on: "Rest\u00e9 allum\u00e9", left_on_after: "Alerter apr\u00e8s (minutes allum\u00e9)",
+    type_pellet_stove: "Po\u00eale \u00e0 granul\u00e9s", ps_off: "\u00c9teint", ps_ignition: "Allumage", ps_burning: "En chauffe", ps_modulating: "Modulation",
+    ps_eco: "Veille \u00e9co", ps_cooling: "Refroidissement", ps_cleaning: "Nettoyage", ps_alarm: "Alarme", ps_no_pellets: "Granul\u00e9s \u00e9puis\u00e9s",
+    section_stove_status: "Statut du po\u00eale", section_room_temperature: "Temp\u00e9rature ambiante", section_flue_temperature: "Temp\u00e9rature des fum\u00e9es", section_pellet_level: "Niveau de granul\u00e9s",
+    ps_line_room: "Ambiante", ps_line_power: "Puissance", ps_line_flue: "Fum\u00e9es", ps_line_fan: "Ventilation", ps_line_pellets: "Granul\u00e9s",
     washer_dryer: "Lavante-s\u00e9chante (lave et s\u00e8che)", step_drying: "S\u00e9chage", section_cycle_phase: "Phase du cycle",
     step_prewash: "Pr\u00e9lavage", step_soaking: "Trempage", step_weighing: "Pes\u00e9e", step_filling: "Remplissage", step_washing: "Lavage", step_rinsing: "Rin\u00e7age", step_draining: "Vidange", step_spinning: "Essorage", step_cooling: "Refroidissement", step_anti_crease: "Anti-froissage", step_steam: "Vapeur",
   },
@@ -398,6 +406,10 @@ const T = {
     section_feeder_layout: "\u041c\u043e\u0434\u0435\u043b\u044c", layout_tower: "\u0411\u0430\u0448\u043d\u044f \u0441\u043e \u0432\u0441\u0442\u0440\u043e\u0435\u043d\u043d\u043e\u0439 \u043c\u0438\u0441\u043a\u043e\u0439", layout_canister: "\u041a\u0440\u0443\u0433\u043b\u044b\u0439 \u0431\u0443\u043d\u043a\u0435\u0440, \u043e\u0442\u0434\u0435\u043b\u044c\u043d\u0430\u044f \u043c\u0438\u0441\u043a\u0430",
     type_iron: "\u0423\u0442\u044e\u0433", section_iron_layout: "\u041c\u043e\u0434\u0435\u043b\u044c", layout_iron: "\u0423\u0442\u044e\u0433", layout_generator: "\u041f\u0430\u0440\u043e\u0433\u0435\u043d\u0435\u0440\u0430\u0442\u043e\u0440",
     iron_heating: "\u041d\u0430\u0433\u0440\u0435\u0432", iron_off: "\u0412\u044b\u043a\u043b\u044e\u0447\u0435\u043d", left_on: "\u041e\u0441\u0442\u0430\u043b\u0441\u044f \u0432\u043a\u043b\u044e\u0447\u0451\u043d\u043d\u044b\u043c", left_on_after: "\u041f\u0440\u0435\u0434\u0443\u043f\u0440\u0435\u0434\u0438\u0442\u044c \u0447\u0435\u0440\u0435\u0437 (\u043c\u0438\u043d\u0443\u0442 \u0432\u043a\u043b\u044e\u0447\u0435\u043d\u0438\u044f)",
+    type_pellet_stove: "\u041f\u0435\u043b\u043b\u0435\u0442\u043d\u0430\u044f \u043f\u0435\u0447\u044c", ps_off: "\u0412\u044b\u043a\u043b\u044e\u0447\u0435\u043d\u0430", ps_ignition: "\u0420\u043e\u0437\u0436\u0438\u0433", ps_burning: "\u0413\u043e\u0440\u0435\u043d\u0438\u0435", ps_modulating: "\u041c\u043e\u0434\u0443\u043b\u044f\u0446\u0438\u044f",
+    ps_eco: "\u042d\u043a\u043e-\u043e\u0436\u0438\u0434\u0430\u043d\u0438\u0435", ps_cooling: "\u041e\u0445\u043b\u0430\u0436\u0434\u0435\u043d\u0438\u0435", ps_cleaning: "\u041e\u0447\u0438\u0441\u0442\u043a\u0430", ps_alarm: "\u0410\u0432\u0430\u0440\u0438\u044f", ps_no_pellets: "\u041d\u0435\u0442 \u043f\u0435\u043b\u043b\u0435\u0442",
+    section_stove_status: "\u0421\u043e\u0441\u0442\u043e\u044f\u043d\u0438\u0435 \u043f\u0435\u0447\u0438", section_room_temperature: "\u0422\u0435\u043c\u043f\u0435\u0440\u0430\u0442\u0443\u0440\u0430 \u0432 \u043f\u043e\u043c\u0435\u0449\u0435\u043d\u0438\u0438", section_flue_temperature: "\u0422\u0435\u043c\u043f\u0435\u0440\u0430\u0442\u0443\u0440\u0430 \u0434\u044b\u043c\u043e\u0432\u044b\u0445 \u0433\u0430\u0437\u043e\u0432", section_pellet_level: "\u0423\u0440\u043e\u0432\u0435\u043d\u044c \u043f\u0435\u043b\u043b\u0435\u0442",
+    ps_line_room: "\u041f\u043e\u043c\u0435\u0449\u0435\u043d\u0438\u0435", ps_line_power: "\u041c\u043e\u0449\u043d\u043e\u0441\u0442\u044c", ps_line_flue: "\u0414\u044b\u043c\u043e\u0432\u044b\u0435 \u0433\u0430\u0437\u044b", ps_line_fan: "\u0412\u0435\u043d\u0442\u0438\u043b\u044f\u0442\u043e\u0440", ps_line_pellets: "\u041f\u0435\u043b\u043b\u0435\u0442\u044b",
     washer_dryer: "\u0421\u0442\u0438\u0440\u0430\u043b\u044c\u043d\u043e-\u0441\u0443\u0448\u0438\u043b\u044c\u043d\u0430\u044f \u043c\u0430\u0448\u0438\u043d\u0430 (\u0441\u0442\u0438\u0440\u0430\u0435\u0442 \u0438 \u0441\u0443\u0448\u0438\u0442)", step_drying: "\u0421\u0443\u0448\u043a\u0430", section_cycle_phase: "\u0424\u0430\u0437\u0430 \u0446\u0438\u043a\u043b\u0430",
     step_prewash: "\u041f\u0440\u0435\u0434\u0441\u0442\u0438\u0440\u043a\u0430", step_soaking: "\u0417\u0430\u043c\u0430\u0447\u0438\u0432\u0430\u043d\u0438\u0435", step_weighing: "\u0412\u0437\u0432\u0435\u0448\u0438\u0432\u0430\u043d\u0438\u0435", step_filling: "\u041d\u0430\u0431\u043e\u0440 \u0432\u043e\u0434\u044b", step_washing: "\u0421\u0442\u0438\u0440\u043a\u0430", step_rinsing: "\u041f\u043e\u043b\u043e\u0441\u043a\u0430\u043d\u0438\u0435", step_draining: "\u0421\u043b\u0438\u0432", step_spinning: "\u041e\u0442\u0436\u0438\u043c", step_cooling: "\u041e\u0445\u043b\u0430\u0436\u0434\u0435\u043d\u0438\u0435", step_anti_crease: "\u0417\u0430\u0449\u0438\u0442\u0430 \u043e\u0442 \u0441\u043c\u0438\u043d\u0430\u043d\u0438\u044f", step_steam: "\u041f\u0430\u0440",
   },
@@ -528,6 +540,10 @@ const T = {
     section_feeder_layout: "Modell", layout_tower: "Turm, Napf integriert", layout_canister: "Runder Beh\u00e4lter, separater Napf",
     type_iron: "B\u00fcgeleisen", section_iron_layout: "Modell", layout_iron: "B\u00fcgeleisen", layout_generator: "Dampfstation",
     iron_heating: "Heizt", iron_off: "Aus", left_on: "Eingeschaltet geblieben", left_on_after: "Warnen nach (Minuten eingeschaltet)",
+    type_pellet_stove: "Pelletofen", ps_off: "Aus", ps_ignition: "Z\u00fcndung", ps_burning: "Brennt", ps_modulating: "Modulation",
+    ps_eco: "Eco-Standby", ps_cooling: "Abk\u00fchlung", ps_cleaning: "Reinigung", ps_alarm: "Alarm", ps_no_pellets: "Pellets leer",
+    section_stove_status: "Ofenstatus", section_room_temperature: "Raumtemperatur", section_flue_temperature: "Abgastemperatur", section_pellet_level: "Pelletf\u00fcllstand",
+    ps_line_room: "Raum", ps_line_power: "Leistung", ps_line_flue: "Abgas", ps_line_fan: "Gebl\u00e4se", ps_line_pellets: "Pellets",
     washer_dryer: "Waschtrockner (w\u00e4scht und trocknet)", step_drying: "Trocknen", section_cycle_phase: "Programmphase",
     step_prewash: "Vorw\u00e4sche", step_soaking: "Einweichen", step_weighing: "Wiegen", step_filling: "Bef\u00fcllen", step_washing: "Waschen", step_rinsing: "Sp\u00fclen", step_draining: "Abpumpen", step_spinning: "Schleudern", step_cooling: "Abk\u00fchlen", step_anti_crease: "Knitterschutz", step_steam: "Dampf",
   },
@@ -658,6 +674,10 @@ const T = {
     section_feeder_layout: "Modelo", layout_tower: "Torre, cuenco integrado", layout_canister: "Dep\u00f3sito redondo, cuenco aparte",
     type_iron: "Plancha", section_iron_layout: "Modelo", layout_iron: "Plancha", layout_generator: "Centro de planchado",
     iron_heating: "Calentando", iron_off: "Apagado", left_on: "Sigue encendida", left_on_after: "Avisar tras (minutos encendida)",
+    type_pellet_stove: "Estufa de pellets", ps_off: "Apagada", ps_ignition: "Encendido", ps_burning: "En marcha", ps_modulating: "Modulando",
+    ps_eco: "Espera eco", ps_cooling: "Enfriando", ps_cleaning: "Limpieza", ps_alarm: "Alarma", ps_no_pellets: "Sin pellets",
+    section_stove_status: "Estado de la estufa", section_room_temperature: "Temperatura ambiente", section_flue_temperature: "Temperatura de humos", section_pellet_level: "Nivel de pellets",
+    ps_line_room: "Ambiente", ps_line_power: "Potencia", ps_line_flue: "Humos", ps_line_fan: "Ventilador", ps_line_pellets: "Pellets",
     washer_dryer: "Lavasecadora (lava y seca)", step_drying: "Secado", section_cycle_phase: "Fase del ciclo",
     step_prewash: "Prelavado", step_soaking: "Remojo", step_weighing: "Pesaje", step_filling: "Llenado", step_washing: "Lavado", step_rinsing: "Aclarado", step_draining: "Desag\u00fce", step_spinning: "Centrifugado", step_cooling: "Enfriamiento", step_anti_crease: "Antiarrugas", step_steam: "Vapor",
   },
@@ -788,6 +808,10 @@ const T = {
     section_feeder_layout: "Modello", layout_tower: "Torre, ciotola integrata", layout_canister: "Serbatoio tondo, ciotola separata",
     type_iron: "Ferro da stiro", section_iron_layout: "Modello", layout_iron: "Ferro da stiro", layout_generator: "Ferro con caldaia",
     iron_heating: "In riscaldamento", iron_off: "Spento", left_on: "Rimasto acceso", left_on_after: "Avvisa dopo (minuti acceso)",
+    type_pellet_stove: "Stufa a pellet", ps_off: "Spenta", ps_ignition: "Accensione", ps_burning: "In funzione", ps_modulating: "Modulazione",
+    ps_eco: "Stand-by eco", ps_cooling: "Raffreddamento", ps_cleaning: "Pulizia", ps_alarm: "Allarme", ps_no_pellets: "Pellet esaurito",
+    section_stove_status: "Stato della stufa", section_room_temperature: "Temperatura ambiente", section_flue_temperature: "Temperatura fumi", section_pellet_level: "Livello pellet",
+    ps_line_room: "Ambiente", ps_line_power: "Potenza", ps_line_flue: "Fumi", ps_line_fan: "Ventola", ps_line_pellets: "Pellet",
     washer_dryer: "Lavasciuga (lava e asciuga)", step_drying: "Asciugatura", section_cycle_phase: "Fase del ciclo",
     step_prewash: "Prelavaggio", step_soaking: "Ammollo", step_weighing: "Pesatura", step_filling: "Carico acqua", step_washing: "Lavaggio", step_rinsing: "Risciacquo", step_draining: "Scarico", step_spinning: "Centrifuga", step_cooling: "Raffreddamento", step_anti_crease: "Antipiega", step_steam: "Vapore",
   },
@@ -918,6 +942,10 @@ const T = {
     section_feeder_layout: "Model", layout_tower: "Toren, ingebouwde bak", layout_canister: "Rond reservoir, losse bak",
     type_iron: "Strijkijzer", section_iron_layout: "Model", layout_iron: "Strijkijzer", layout_generator: "Stoomgenerator",
     iron_heating: "Aan het koken", iron_off: "Uit", left_on: "Blijft aan", left_on_after: "Waarschuwen na (minuten aan)",
+    type_pellet_stove: "Pelletkachel", ps_off: "Uit", ps_ignition: "Ontsteking", ps_burning: "Brandt", ps_modulating: "Moduleert",
+    ps_eco: "Eco-stand-by", ps_cooling: "Afkoelen", ps_cleaning: "Reiniging", ps_alarm: "Alarm", ps_no_pellets: "Pellets op",
+    section_stove_status: "Kachelstatus", section_room_temperature: "Kamertemperatuur", section_flue_temperature: "Rookgastemperatuur", section_pellet_level: "Pelletniveau",
+    ps_line_room: "Kamer", ps_line_power: "Vermogen", ps_line_flue: "Rookgas", ps_line_fan: "Ventilator", ps_line_pellets: "Pellets",
     washer_dryer: "Was-droogcombinatie (wast en droogt)", step_drying: "Drogen", section_cycle_phase: "Programmafase",
     step_prewash: "Voorwas", step_soaking: "Weken", step_weighing: "Wegen", step_filling: "Vullen", step_washing: "Wassen", step_rinsing: "Spoelen", step_draining: "Afpompen", step_spinning: "Centrifugeren", step_cooling: "Afkoelen", step_anti_crease: "Anti-kreuk", step_steam: "Stoom",
   },
@@ -1048,6 +1076,10 @@ const T = {
     section_feeder_layout: "Modelo", layout_tower: "Torre, ta\u00e7a integrada", layout_canister: "Dep\u00f3sito redondo, ta\u00e7a \u00e0 parte",
     type_iron: "Ferro de engomar", section_iron_layout: "Modelo", layout_iron: "Ferro de engomar", layout_generator: "Gerador de vapor",
     iron_heating: "A aquecer", iron_off: "Desligada", left_on: "Ficou ligado", left_on_after: "Avisar ap\u00f3s (minutos ligado)",
+    type_pellet_stove: "Salamandra a pellets", ps_off: "Desligada", ps_ignition: "Igni\u00e7\u00e3o", ps_burning: "A funcionar", ps_modulating: "Em modula\u00e7\u00e3o",
+    ps_eco: "Espera eco", ps_cooling: "A arrefecer", ps_cleaning: "Limpeza", ps_alarm: "Alarme", ps_no_pellets: "Sem pellets",
+    section_stove_status: "Estado da salamandra", section_room_temperature: "Temperatura ambiente", section_flue_temperature: "Temperatura dos fumos", section_pellet_level: "N\u00edvel de pellets",
+    ps_line_room: "Ambiente", ps_line_power: "Pot\u00eancia", ps_line_flue: "Fumos", ps_line_fan: "Ventilador", ps_line_pellets: "Pellets",
     washer_dryer: "M\u00e1quina de lavar e secar (lava e seca)", step_drying: "Secagem", section_cycle_phase: "Fase do ciclo",
     step_prewash: "Pr\u00e9-lavagem", step_soaking: "Molho", step_weighing: "Pesagem", step_filling: "Enchimento", step_washing: "Lavagem", step_rinsing: "Enxaguamento", step_draining: "Escoamento", step_spinning: "Centrifuga\u00e7\u00e3o", step_cooling: "Arrefecimento", step_anti_crease: "Anti-vincos", step_steam: "Vapor",
   },
@@ -1178,6 +1210,10 @@ const T = {
     section_feeder_layout: "Modell", layout_tower: "Torn, inbyggd sk\u00e5l", layout_canister: "Rund beh\u00e5llare, separat sk\u00e5l",
     type_iron: "Strykj\u00e4rn", section_iron_layout: "Modell", layout_iron: "Strykj\u00e4rn", layout_generator: "\u00c5ngstation",
     iron_heating: "V\u00e4rmer", iron_off: "Av", left_on: "St\u00e5r p\u00e5", left_on_after: "Varna efter (minuter p\u00e5slagen)",
+    type_pellet_stove: "Pelletskamin", ps_off: "Av", ps_ignition: "T\u00e4ndning", ps_burning: "Eldar", ps_modulating: "Modulerar",
+    ps_eco: "Eco-vila", ps_cooling: "Avsvalning", ps_cleaning: "Reng\u00f6ring", ps_alarm: "Larm", ps_no_pellets: "Slut p\u00e5 pellets",
+    section_stove_status: "Kaminstatus", section_room_temperature: "Rumstemperatur", section_flue_temperature: "R\u00f6kgastemperatur", section_pellet_level: "Pelletsniv\u00e5",
+    ps_line_room: "Rum", ps_line_power: "Effekt", ps_line_flue: "R\u00f6kgas", ps_line_fan: "Fl\u00e4kt", ps_line_pellets: "Pellets",
     washer_dryer: "Kombinerad tv\u00e4tt/tork (tv\u00e4ttar och torkar)", step_drying: "Torkning", section_cycle_phase: "Programfas",
     step_prewash: "F\u00f6rtv\u00e4tt", step_soaking: "Bl\u00f6tl\u00e4ggning", step_weighing: "V\u00e4gning", step_filling: "P\u00e5fyllning", step_washing: "Tv\u00e4tt", step_rinsing: "Sk\u00f6ljning", step_draining: "T\u00f6mning", step_spinning: "Centrifugering", step_cooling: "Avsvalning", step_anti_crease: "Skrynkelskydd", step_steam: "\u00c5nga",
   },
@@ -1308,6 +1344,10 @@ const T = {
     section_feeder_layout: "Modell", layout_tower: "T\u00e5rn, innebygd sk\u00e5l", layout_canister: "Rund beholder, separat sk\u00e5l",
     type_iron: "Strykejern", section_iron_layout: "Modell", layout_iron: "Strykejern", layout_generator: "Dampstasjon",
     iron_heating: "Varmer", iron_off: "Av", left_on: "St\u00e5r p\u00e5", left_on_after: "Varsle etter (minutter p\u00e5sl\u00e5tt)",
+    type_pellet_stove: "Pelletsovn", ps_off: "Av", ps_ignition: "Tenning", ps_burning: "Fyrer", ps_modulating: "Modulerer",
+    ps_eco: "Eco-hvile", ps_cooling: "Nedkj\u00f8ling", ps_cleaning: "Rengj\u00f8ring", ps_alarm: "Alarm", ps_no_pellets: "Tom for pellets",
+    section_stove_status: "Ovnstatus", section_room_temperature: "Romtemperatur", section_flue_temperature: "R\u00f8ykgasstemperatur", section_pellet_level: "Pelletsniv\u00e5",
+    ps_line_room: "Rom", ps_line_power: "Effekt", ps_line_flue: "R\u00f8ykgass", ps_line_fan: "Vifte", ps_line_pellets: "Pellets",
     washer_dryer: "Kombinert vaske-/t\u00f8rkemaskin (vasker og t\u00f8rker)", step_drying: "T\u00f8rking", section_cycle_phase: "Programfase",
     step_prewash: "Forvask", step_soaking: "Bl\u00f8tlegging", step_weighing: "Veiing", step_filling: "Vannfylling", step_washing: "Vask", step_rinsing: "Skylling", step_draining: "T\u00f8mming", step_spinning: "Sentrifugering", step_cooling: "Avkj\u00f8ling", step_anti_crease: "Antikr\u00f8ll", step_steam: "Damp",
   },
@@ -1438,6 +1478,10 @@ const T = {
     section_feeder_layout: "Model", layout_tower: "T\u00e5rn, indbygget sk\u00e5l", layout_canister: "Rund beholder, separat sk\u00e5l",
     type_iron: "Strygejern", section_iron_layout: "Model", layout_iron: "Strygejern", layout_generator: "Dampstation",
     iron_heating: "Varmer", iron_off: "Slukket", left_on: "St\u00e5r t\u00e6ndt", left_on_after: "Advar efter (minutter t\u00e6ndt)",
+    type_pellet_stove: "Pilleovn", ps_off: "Slukket", ps_ignition: "T\u00e6nding", ps_burning: "Fyrer", ps_modulating: "Modulerer",
+    ps_eco: "Eco-standby", ps_cooling: "Afk\u00f8ling", ps_cleaning: "Reng\u00f8ring", ps_alarm: "Alarm", ps_no_pellets: "Ingen piller",
+    section_stove_status: "Ovnstatus", section_room_temperature: "Rumtemperatur", section_flue_temperature: "R\u00f8ggastemperatur", section_pellet_level: "Pilleniveau",
+    ps_line_room: "Rum", ps_line_power: "Effekt", ps_line_flue: "R\u00f8ggas", ps_line_fan: "Bl\u00e6ser", ps_line_pellets: "Piller",
     washer_dryer: "Vaske-t\u00f8rremaskine (vasker og t\u00f8rrer)", step_drying: "T\u00f8rring", section_cycle_phase: "Programfase",
     step_prewash: "Forvask", step_soaking: "Ibl\u00f8ds\u00e6tning", step_weighing: "Vejning", step_filling: "P\u00e5fyldning", step_washing: "Vask", step_rinsing: "Skylning", step_draining: "Udpumpning", step_spinning: "Centrifugering", step_cooling: "Afk\u00f8ling", step_anti_crease: "Antikr\u00f8l", step_steam: "Damp",
   },
@@ -1568,6 +1612,10 @@ const T = {
     section_feeder_layout: "Model", layout_tower: "Wie\u017ca, wbudowana miska", layout_canister: "Okr\u0105g\u0142y zasobnik, osobna miska",
     type_iron: "\u017belazko", section_iron_layout: "Model", layout_iron: "\u017belazko", layout_generator: "Generator pary",
     iron_heating: "Grzeje", iron_off: "Wy\u0142\u0105czony", left_on: "Pozosta\u0142o w\u0142\u0105czone", left_on_after: "Ostrze\u017c po (minutach w\u0142\u0105czenia)",
+    type_pellet_stove: "Piec na pellet", ps_off: "Wy\u0142\u0105czony", ps_ignition: "Rozpalanie", ps_burning: "Pracuje", ps_modulating: "Modulacja",
+    ps_eco: "Czuwanie eko", ps_cooling: "Wygaszanie", ps_cleaning: "Czyszczenie", ps_alarm: "Alarm", ps_no_pellets: "Brak pelletu",
+    section_stove_status: "Stan pieca", section_room_temperature: "Temperatura w pomieszczeniu", section_flue_temperature: "Temperatura spalin", section_pellet_level: "Poziom pelletu",
+    ps_line_room: "Pomieszczenie", ps_line_power: "Moc", ps_line_flue: "Spaliny", ps_line_fan: "Wentylator", ps_line_pellets: "Pellet",
     washer_dryer: "Pralko-suszarka (pierze i suszy)", step_drying: "Suszenie", section_cycle_phase: "Faza programu",
     step_prewash: "Pranie wst\u0119pne", step_soaking: "Namaczanie", step_weighing: "Wa\u017cenie", step_filling: "Nape\u0142nianie", step_washing: "Pranie", step_rinsing: "P\u0142ukanie", step_draining: "Odpompowanie", step_spinning: "Wirowanie", step_cooling: "Sch\u0142adzanie", step_anti_crease: "Przeciw zagnieceniom", step_steam: "Para",
   },
@@ -1698,6 +1746,10 @@ const T = {
     section_feeder_layout: "\u578b\u53f7", layout_tower: "\u5854\u5f0f\uff0c\u4e00\u4f53\u5f0f\u98df\u76c6", layout_canister: "\u5706\u5f62\u6599\u6876\uff0c\u72ec\u7acb\u98df\u76c6",
     type_iron: "\u71a8\u6597", section_iron_layout: "\u578b\u53f7", layout_iron: "\u71a8\u6597", layout_generator: "\u84b8\u6c7d\u53d1\u751f\u5668",
     iron_heating: "\u52a0\u70ed\u4e2d", iron_off: "\u5df2\u5173\u95ed", left_on: "\u4ecd\u7136\u5f00\u7740", left_on_after: "\u5f00\u542f\u591a\u5c11\u5206\u949f\u540e\u63d0\u9192",
+    type_pellet_stove: "\u9897\u7c92\u7089", ps_off: "\u5df2\u5173\u95ed", ps_ignition: "\u70b9\u706b\u4e2d", ps_burning: "\u71c3\u70e7\u4e2d", ps_modulating: "\u8c03\u8282\u4e2d",
+    ps_eco: "\u8282\u80fd\u5f85\u673a", ps_cooling: "\u51b7\u5374\u4e2d", ps_cleaning: "\u6e05\u6d01\u4e2d", ps_alarm: "\u62a5\u8b66", ps_no_pellets: "\u9897\u7c92\u8017\u5c3d",
+    section_stove_status: "\u7089\u5b50\u72b6\u6001", section_room_temperature: "\u5ba4\u5185\u6e29\u5ea6", section_flue_temperature: "\u70df\u6c14\u6e29\u5ea6", section_pellet_level: "\u9897\u7c92\u4f59\u91cf",
+    ps_line_room: "\u5ba4\u5185", ps_line_power: "\u529f\u7387", ps_line_flue: "\u70df\u6c14", ps_line_fan: "\u98ce\u6247", ps_line_pellets: "\u9897\u7c92",
     washer_dryer: "\u6d17\u70d8\u4e00\u4f53\u673a\uff08\u6d17\u6da4\u5e76\u70d8\u5e72\uff09", step_drying: "\u70d8\u5e72\u4e2d", section_cycle_phase: "\u7a0b\u5e8f\u9636\u6bb5",
     step_prewash: "\u9884\u6d17\u4e2d", step_soaking: "\u6d78\u6ce1\u4e2d", step_weighing: "\u79f0\u91cd\u4e2d", step_filling: "\u8fdb\u6c34\u4e2d", step_washing: "\u6d17\u6da4\u4e2d", step_rinsing: "\u6f02\u6d17\u4e2d", step_draining: "\u6392\u6c34\u4e2d", step_spinning: "\u8131\u6c34\u4e2d", step_cooling: "\u51b7\u5374\u4e2d", step_anti_crease: "\u9632\u76b1\u4e2d", step_steam: "\u84b8\u6c7d\u4e2d",
   },
@@ -1828,6 +1880,10 @@ const T = {
     section_feeder_layout: "Model", layout_tower: "V\u011b\u017e, vestav\u011bn\u00e1 miska", layout_canister: "Kulat\u00fd z\u00e1sobn\u00edk, samostatn\u00e1 miska",
     type_iron: "\u017dehli\u010dka", section_iron_layout: "Model", layout_iron: "\u017dehli\u010dka", layout_generator: "Parn\u00ed gener\u00e1tor",
     iron_heating: "Oh\u0159\u00edv\u00e1n\u00ed", iron_off: "Vypnuto", left_on: "Z\u016fstala zapnut\u00e1", left_on_after: "Upozornit po (minut\u00e1ch zapnut\u00ed)",
+    type_pellet_stove: "Kamna na pelety", ps_off: "Vypnuto", ps_ignition: "Zapalov\u00e1n\u00ed", ps_burning: "Top\u00ed", ps_modulating: "Modulace",
+    ps_eco: "Eko pohotovost", ps_cooling: "Chladnut\u00ed", ps_cleaning: "\u010ci\u0161t\u011bn\u00ed", ps_alarm: "Alarm", ps_no_pellets: "Do\u0161ly pelety",
+    section_stove_status: "Stav kamen", section_room_temperature: "Teplota v m\u00edstnosti", section_flue_temperature: "Teplota spalin", section_pellet_level: "Hladina pelet",
+    ps_line_room: "M\u00edstnost", ps_line_power: "V\u00fdkon", ps_line_flue: "Spaliny", ps_line_fan: "Ventil\u00e1tor", ps_line_pellets: "Pelety",
     washer_dryer: "Pra\u010dka se su\u0161i\u010dkou (pere a su\u0161\u00ed)", step_drying: "Su\u0161en\u00ed", section_cycle_phase: "F\u00e1ze programu",
     step_prewash: "P\u0159edp\u00edrka", step_soaking: "Nam\u00e1\u010den\u00ed", step_weighing: "V\u00e1\u017een\u00ed", step_filling: "Napou\u0161t\u011bn\u00ed", step_washing: "Pran\u00ed", step_rinsing: "M\u00e1ch\u00e1n\u00ed", step_draining: "Vypou\u0161t\u011bn\u00ed", step_spinning: "Odst\u0159e\u010fov\u00e1n\u00ed", step_cooling: "Chlazen\u00ed", step_anti_crease: "Proti poma\u010dk\u00e1n\u00ed", step_steam: "P\u00e1ra",
   },
@@ -2051,6 +2107,86 @@ function heatPumpModeOf(raw, attrs, stateMap, modeEntity) {
   const m = boilerModeOf(s, null);
   return HEAT_PUMP_MODES.includes(m) ? m : "";
 }
+
+// What a pellet stove is doing. Palazzetti names its phases in keys (burning,
+// burning_mod, fire_stop), Micronova's Agua IOT in the stove's own words and
+// in its owner's language (WORK, LAVORO, TRAVAIL), Edilkamin, Duepi and Rika
+// in plain English. The alarms come first, since a stove in alarm often still
+// names the phase it stopped in, and a cleaning warning is an alarm, not a
+// cleaning. Eco comes before the stop words, which "ECO STOP" also holds.
+const STOVE_MODES = ["off", "ignition", "burning", "modulating", "eco", "cooling", "cleaning", "alarm"];
+const STOVE_ALARM_RE = /alarm|allarm|alarme|alarma|error|fault|failure|defaut|guasto|warning|pellet.?finished|firewood.?finished|out.?of.?pellet|no.?pellet|door.?open|hatch|probe|pressure|temp.?too.?high|exhaust.?temp|chimney|grate|\bt05\b|\bmem\.?.?al|\bm\.?\s?al/;
+const STOVE_CLEANING_RE = /clean|pulizia|pul\.|nettoy|netoy|netoage|reinig|reining|limpi|limpeza|limpar|reng|czyszcz|brazier|brasier|brasero|creuset|bracier|bracere|brandkorf|brennt?opf|ashpan|sauber/;
+const STOVE_ECO_RE = /\beco\b|ecomode|stand.?by|cool_fluid|external.?request|frost|bereithalten|etre.?pret|en.?enspera|\bwait\b|\battesa$|\batten\.?$|\bwart\.?$/;
+const STOVE_COOLING_RE = /cool|raffred|refroid|kuhl|kuehl|enfria|esfriar|afkoel|shut.?down|shut.?off|burn.?off|fire_stop|spegnimento|extinct|extincion|extincao|abschaltung|arresto|\barret\b|\bstop\b|stopp|\bsluk\b|blussen|zgasic|kachel.?stopt|loschen|eteindre|chlodz|wygasz/;
+const STOVE_IGNITION_RE = /ignit|ignic|ignicao|accen|acend|allum|zund|zuend|anzuend|einschal|ontsteking|t(a|ae|\u00e6)nding|zap(l|\u0142)on|zapal|rozpal|starting|start|avvio|inicio|comece|commencez|debut|opstart|anlaufen|uruchom|load.?pellet|pellet.?load|carica|carico|carga|charge|laden|awaiting.?flame|waiting.?flame|attesa.?fiamma|atteinte.?flamme|flamme.?dans|attente.?de.?flamme|espera.?llama|llama.?a.?la.?espera|aguardando|warte|wartet|afwachting|afventer|oczekiwanie|flamm?e.?(light|licht|lumiere)|fiamma.?presente|fuoco.?presente|flamme.?presente|flamme.?vorhanden|llama.?presente|fuego.?presente|chama.?presente|vlam.?aanwezig|check.?up|kontrolle|controle|controlo|styring|lighting|fueling|heatup|ign_test|test_fire|stabili[sz]|encend|enciende/;
+const STOVE_MODULATING_RE = /modul|burning_mod/;
+const STOVE_BURNING_RE = /burning|\bwork|lavoro|travail|arbeit|betrieb|trabaj|trabalho|werk|\bdrift\b|flame.?on|running|\bon\b|pracuje|split.?log/;
+const STOVE_OFF_RE = /^(off|0)$|off_timer|stove_off|spent|apagad|eteint|^aus$|ausgeschaltet|^uit$|uitgeschakeld|desligad|wylaczon|slukket|vypnut/;
+function stoveModeOf(raw, stateMap) {
+  if (raw === undefined || raw === null) return "";
+  const s = String(raw).trim();
+  if (stateMap && Object.prototype.hasOwnProperty.call(stateMap, s)) {
+    return STOVE_MODES.includes(stateMap[s]) ? stateMap[s] : "";
+  }
+  const f = stripAccents(s).toLowerCase();
+  if (["", "unknown", "unavailable", "none"].includes(f)) return "";
+  if (STOVE_ALARM_RE.test(f)) return "alarm";
+  if (STOVE_CLEANING_RE.test(f)) return "cleaning";
+  if (STOVE_ECO_RE.test(f)) return "eco";
+  if (STOVE_OFF_RE.test(f)) return "off";
+  if (STOVE_COOLING_RE.test(f)) return "cooling";
+  if (STOVE_MODULATING_RE.test(f)) return "modulating";
+  if (STOVE_IGNITION_RE.test(f)) return "ignition";
+  if (STOVE_BURNING_RE.test(f)) return "burning";
+  return "";
+}
+
+// A stove's climate entity knows one thing more than on or off: whether the
+// fire is lit, in its hvac_action. Palazzetti and Agua IOT both say heating
+// or idle, and idle on a stove that is switched on is its eco standby.
+function stoveClimateMode(st) {
+  if (!st) return "";
+  const state = String(st.state).toLowerCase();
+  if (state === "off") return "off";
+  const action = String((st.attributes || {}).hvac_action || "").toLowerCase();
+  const byAction = { heating: "burning", preheating: "ignition", idle: "eco", off: "off" };
+  if (Object.prototype.hasOwnProperty.call(byAction, action)) return byAction[action];
+  // Switched on and silent about the fire: a stove on is a stove burning.
+  return ["heat", "auto", "heat_cool"].includes(state) ? "burning" : "";
+}
+
+// What a stove's alarm entity says. Agua IOT names the alarm in the stove's
+// language and "no alarm" in half a dozen ways, Duepi says All OK, Edilkamin
+// counts its alarms, and a binary sensor is on when there is a problem.
+const STOVE_NO_ALARM_RE = /^(-+|_+|ok|all.?ok|none|off|false|no.?al|no.?allarm[ei]?|no.?alarm|nessun.?allarme|pas.?d.?alarme|kein.?(wecker|alarm)|geen.?alarm|ninguna.?alarma|sin.?alarma|sem.?alarme|brak.?alarmu|zadny.?alarm|ingen.?alarm)$/;
+function stoveAlarmOf(st) {
+  if (!st) return { active: false, text: "" };
+  const s = String(st.state).trim();
+  const f = stripAccents(s).toLowerCase();
+  if (["", "unknown", "unavailable"].includes(f) || STOVE_NO_ALARM_RE.test(f)) return { active: false, text: "" };
+  if (["on", "true", "problem"].includes(f)) return { active: true, text: "" };
+  const n = Number(f);
+  if (Number.isFinite(n)) return { active: n !== 0, text: n !== 0 ? s : "" };
+  return { active: true, text: s };
+}
+
+// The two alarms a stove has an answer for: out of pellets, which is a bag to
+// go and fetch, and an open door, which is a door to go and close.
+const STOVE_NO_PELLETS_RE = /pellet.?finished|firewood.?finished|out.?of.?pellets?|no.?pellets?|pellets?.?(depleted|esaurit|finit|epuis|leer|op\b)|sin.?pellets?|sem.?pellets?|mancanza.?pellet|brak.?pellet/;
+const STOVE_DOOR_RE = /door.?open|hatch|porta.?aperta|porte.?ouverte|tur.?offen/;
+// The code a stove's own display would show for an alarm: A05, AL 05, E12.
+function stoveAlarmCode(text) {
+  const m = /\b(al|a|e|er)\s?(\d{1,3})\b/i.exec(String(text || ""));
+  return m ? `${m[1].toUpperCase()}${m[2].padStart(2, "0")}` : "";
+}
+const STOVE_COLORS = {
+  off: "var(--disabled-text-color, #9e9e9e)", ignition: "#ff9800", burning: "#ff5722", modulating: "#ff7043",
+  eco: "var(--success-color, #4caf50)", cooling: "#29b6f6", cleaning: "#ffb300", alarm: "var(--error-color, #f44336)",
+};
+// What the stove's own little screen shows. The power stage while it burns,
+// as the stoves themselves print it, and a short word otherwise.
+const STOVE_SCREEN = { off: "OFF", ignition: "IGN", eco: "ECO", cooling: "---", cleaning: "CLN", alarm: "AL" };
 
 // What a heat pump's valve says. HeishaMon reads its 2-way valve Heating or
 // Cooling and its 3-way valve Room or Tank: a position, which names the mode
@@ -2279,6 +2415,14 @@ function numericState(hass, entityId) {
   if (!st) return null;
   const v = parseFloat(st.state);
   return Number.isFinite(v) ? v : null;
+}
+
+// A number held in an attribute, the way a climate entity keeps its
+// temperatures. An empty attribute is no reading at all, not zero.
+function numberOrNull(v) {
+  if (v === undefined || v === null || v === "") return null;
+  const n = Number(v);
+  return Number.isFinite(n) ? n : null;
 }
 
 function remainingSeconds(hass, entityId, unitCfg) {
@@ -3127,6 +3271,22 @@ const TYPE_AUTO_PATTERNS = {
     error_entity: /error|fault|defaut/i,
     level_entity: /food.?(level|remain)|level.?(of.)?food|lack.?of.?food|niveau.*croquette|remaining.?food/i,
   },
+  // Names read in the integrations' code: Palazzetti, Micronova's Agua IOT,
+  // Edilkamin, Rika Firenet, Duepi EVO. The status sits next to a climate
+  // entity, which is the one a stove is usually put on a dashboard with. A
+  // stove's power is a stage from 1 to 5, never a wattage, so the meter
+  // pattern is narrowed to the words that only a meter uses.
+  pellet_stove: {
+    phase_entity: /(status|stove_state|operational_phase|burner_status)$/i,
+    current_temperature_entity: /room.?temp|temp_air$|air.?temp|ambient/i,
+    target_temperature_entity: /target.?temp|setpoint|set.?temp/i,
+    flue_temperature_entity: /smoke|flue|flu.?gas|exhaust.?temp|gas.?flue|fumi|fumee/i,
+    power_level_entity: /combustion.?power|power.?level|real.?power|actual.?power|(^|[._])power$/i,
+    fan_speed_entity: /fan.?(left|right|front|rear|\d)?.?speed|fan.?mode|vent.?(front|rear)|^fan\./i,
+    level_entity: /pellet.?(level|quantity)|pellets?.?depleted|ris_pellet|[._]tank$/i,
+    error_entity: /alarm|error.?code|nb.?alarms/i,
+    power_entity: /power_w$|watt|electric/i,
+  },
   coffee: {
     water_entity: /water.?tank|water.?level|reservoir/i,
     beans_entity: /bean.?container|bean.?empty/i,
@@ -3244,6 +3404,11 @@ const TYPE_CAPS = {
   // one to Home Assistant, so it is read from the smart plug it is on, which
   // is why it is there: an iron left on is the one an owner worries about.
   iron: { iron: true },
+  // A pellet stove: a fire behind glass, a hopper of pellets beside it, and a
+  // display that names the phase. No cycle and no programme, but a status that
+  // says more than on and off: lighting, burning, modulating, the eco pause,
+  // the cool-down and the cleaning of the burn pot.
+  pellet_stove: { pelletStove: true },
 };
 const APPLIANCE_TYPES = Object.keys(TYPE_CAPS);
 const LAUNDRY_TYPES = ["washer", "dryer", "dishwasher"];
@@ -3269,6 +3434,9 @@ const FEEDER_ONLY_FIELDS = [
 ];
 
 // Same for a 3D printer: nothing else has a nozzle or a print bed.
+// A flue gas reading belongs to a fire, and the only fire the card draws is a
+// stove's.
+const STOVE_ONLY_FIELDS = ["flue_temperature_entity"];
 const PRINTER_ONLY_FIELDS = [
   "nozzle_temperature_entity",
   "nozzle_target_entity",
@@ -3293,6 +3461,7 @@ function detectApplianceType(cfg, st) {
   if (FRIDGE_ONLY_FIELDS.some((f) => cfg[f])) return "fridge";
   if (PRINTER_ONLY_FIELDS.some((f) => cfg[f])) return "printer_3d";
   if (FEEDER_ONLY_FIELDS.some((f) => cfg[f])) return "pet_feeder";
+  if (STOVE_ONLY_FIELDS.some((f) => cfg[f])) return "pellet_stove";
   const hay = `${cfg.icon || ""} ${cfg.state_entity || ""} ${(st && st.attributes.icon) || ""}`.toLowerCase();
   // Before everything else: a printer's entities are named after its maker or
   // its software, and a Bambu Lab one after its model ("p1s_...", "a1_...").
@@ -3311,6 +3480,9 @@ function detectApplianceType(cfg, st) {
   // Portuguese call a griddle a plancha as well, so theirs is the ironing one:
   // plancha de ropa, centro de planchado, ferro de engomar.
   if (/\biron(ing)?\b|steam.?(generator|station)|fer.?a.?repasser|centrale.?vapeur|bugeleisen|dampfstation|dampfbugel|plancha.?de.?ropa|planchado|ferro.?(da.?stiro|de.?engomar|de.?passar)|strijkijzer|stoomgenerator|stryk(jarn|ejern)|strygejern|zelazko|generator.?pary|zehlicka|parni.?generator|\u0443\u0442\u044e\u0433|\u043f\u0430\u0440\u043e\u0433\u0435\u043d\u0435\u0440\u0430\u0442\u043e\u0440|\u71a8\u6597/.test(hay)) return "iron";
+  // A pellet stove, by its own name or by its maker's and its integration's.
+  // "Stove" alone is a cooktop to an American, so the word needs its pellets.
+  if (/pellet|stufa|poele|po\u00eale|granule|granul\u00e9|pilleovn|palazzetti|micronova|aguaiot|extraflame|ravelli|piazzetta|edilkamin|duepi|(^|[^a-z])(rika|mcz)([^a-z]|$)|\u043f\u0435\u043b\u043b\u0435\u0442|\u9897\u7c92\u7089/.test(hay)) return "pellet_stove";
   // InComfort exposes an Intergas combi boiler as water_heater.boiler: the
   // domain says tank, the name says boiler, and the name is the one that knows.
   const eid = String(cfg.state_entity || "").toLowerCase();
@@ -4484,6 +4656,122 @@ const ILLUSTRATION_CSS = {
           100% { transform: translateY(-8px); opacity: 0; }
         }
   `,
+  // A pellet stove from the front: the flue on top, a small screen, the warm
+  // air grille, the door with the fire behind its glass, and the hopper beside
+  // it, whose window shows how much is left. The warm air leaves by the
+  // grille, the smoke by the flue, and only when the stove makes some.
+  pellet_stove: () => `
+        .ps-pipe {
+          position: absolute; left: 43px; top: 0; width: 10px; height: 14px; border-radius: 2px 2px 0 0;
+          background: linear-gradient(90deg, #5d646b, #8a9096, #5d646b);
+        }
+        .ps-body {
+          position: absolute; left: 15px; right: 15px; top: 13px; bottom: 5px; border-radius: 7px 7px 4px 4px;
+          background: linear-gradient(160deg, var(--ac-body-hi, #e6e6e6), var(--ac-body, var(--secondary-background-color, #d7d7d7)) 45%, var(--ac-body-lo, #aeb2b5));
+          border: 1px solid var(--divider-color, #c7c7c7);
+        }
+        .ps-lid { position: absolute; left: 15px; right: 15px; top: 13px; height: 5px; border-radius: 7px 7px 0 0; background: rgba(0, 0, 0, 0.08); }
+        .ps-lcd {
+          position: absolute; left: 21px; top: 21px; width: 28px; height: 10px; border-radius: 2px;
+          background: #14161a; color: #4fc3f7; text-align: center; overflow: hidden;
+          font: 600 7px/10px ui-monospace, "SF Mono", monospace;
+        }
+        .machine.mode-ignition .ps-lcd, .machine.mode-burning .ps-lcd, .machine.mode-modulating .ps-lcd { color: #ff7043; }
+        .machine.mode-eco .ps-lcd { color: #81c784; }
+        .machine.mode-cooling .ps-lcd { color: #90caf9; }
+        .machine.mode-cleaning .ps-lcd { color: #ffca28; }
+        .machine.mode-alarm .ps-lcd { color: #ef5350; animation: ps-blink 1s steps(2) infinite; animation-delay: var(--anim-offset, 0s); }
+        .ps-grille { position: absolute; left: 54px; top: 22px; width: 22px; height: 8px; opacity: 0.7; background: repeating-linear-gradient(180deg, #6b737c 0 1px, transparent 1px 3px); }
+        .ps-door { position: absolute; left: 21px; top: 35px; width: 44px; height: 52px; border-radius: 5px; background: #2b2f35; box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.4); }
+        .ps-glass { position: absolute; inset: 4px; border-radius: 3px; background: #14161a; overflow: hidden; }
+        .ps-shine { position: absolute; inset: 0; background: linear-gradient(135deg, rgba(255, 255, 255, 0.12), transparent 45%); pointer-events: none; }
+        .ps-handle { position: absolute; left: 61px; top: 52px; width: 3px; height: 16px; border-radius: 2px; background: #8a9096; }
+        .ps-pot { position: absolute; left: 50%; bottom: 3px; width: 22px; height: 6px; margin-left: -11px; border-radius: 1px 1px 3px 3px; background: #4a4f55; }
+        .ps-glow {
+          position: absolute; left: 50%; bottom: 8px; width: 26px; height: 8px; margin-left: -13px; border-radius: 50%; opacity: 0;
+          background: radial-gradient(ellipse, rgba(255, 112, 67, 0.95), rgba(255, 87, 34, 0.25) 60%, transparent 72%);
+        }
+        .ps-spark { position: absolute; left: 50%; bottom: 5px; width: 5px; height: 5px; margin-left: -2.5px; border-radius: 50%; opacity: 0; background: #ffcc80; box-shadow: 0 0 6px 3px rgba(255, 152, 0, 0.9); }
+        /* The boiler's flame, without the blue root of a gas burner. */
+        .ps-flame {
+          position: absolute; left: 50%; bottom: 8px; width: 28px; height: 34px; margin-left: -14px; transform-origin: 50% 100%; opacity: 0;
+          background: linear-gradient(0deg, #ff6d00 0%, #ffa000 25%, #ffca28 55%, #fff176 100%);
+          clip-path: polygon(46% 0%, 58% 30%, 70% 10%, 76% 44%, 90% 28%, 94% 64%, 86% 88%, 66% 100%, 34% 100%, 14% 88%, 6% 62%, 12% 32%, 26% 50%, 30% 18%, 42% 36%);
+        }
+        .ps-ash i { position: absolute; bottom: 9px; width: 3px; height: 3px; border-radius: 50%; background: #9e9e9e; opacity: 0; }
+        .ps-ash i:nth-child(1) { left: 14px; }
+        .ps-ash i:nth-child(2) { left: 19px; }
+        .ps-ash i:nth-child(3) { left: 23px; }
+        .ps-hopper { position: absolute; left: 69px; top: 37px; width: 6px; height: 48px; border-radius: 3px; background: #14161a; overflow: hidden; box-shadow: 0 0 0 1px var(--ac-body-lo, #aeb2b5); }
+        .ps-pellets {
+          position: absolute; left: 0; right: 0; bottom: 0; height: var(--ps-fill, 60%);
+          background: radial-gradient(circle at 1.5px 1.5px, #c08a52 1.1px, transparent 1.4px) 0 0 / 3px 3px, #8d5a2b;
+        }
+        .machine.empty .ps-hopper { box-shadow: 0 0 0 1.5px #ef5350; }
+        .ps-foot { position: absolute; bottom: 1px; width: 10px; height: 4px; border-radius: 0 0 2px 2px; background: #3b4048; }
+        .ps-foot.f1 { left: 21px; }
+        .ps-foot.f2 { right: 21px; }
+        .ps-air { position: absolute; left: 52px; top: -14px; width: 30px; height: 34px; overflow: hidden; pointer-events: none; }
+        .ps-air i {
+          position: absolute; bottom: 0; width: 9px; height: 26px; opacity: 0;
+          background: linear-gradient(180deg, rgba(255, 112, 67, 0), rgba(255, 112, 67, 0.85) 45%, rgba(255, 87, 34, 0.95));
+          clip-path: polygon(63% 0%, 79% 7%, 90% 14%, 93% 21%, 86% 29%, 73% 36%, 56% 43%, 42% 50%, 34% 57%, 35% 64%, 44% 71%, 60% 79%, 76% 86%, 88% 93%, 93% 100%, 67% 100%, 62% 93%, 50% 86%, 34% 79%, 18% 71%, 9% 64%, 8% 57%, 16% 50%, 30% 43%, 47% 36%, 60% 29%, 67% 21%, 64% 14%, 53% 7%, 37% 0%);
+        }
+        .ps-air i.a1 { left: 1px; }
+        .ps-air i.a2 { left: 11px; }
+        .ps-air i.a3 { left: 21px; }
+        .ps-smoke i { position: absolute; left: 44px; top: -2px; width: 8px; height: 8px; border-radius: 50%; background: rgba(140, 145, 150, 0.55); opacity: 0; }
+        .machine.mode-burning .ps-flame { opacity: 1; animation: ps-flicker 0.6s ease-in-out infinite; animation-delay: var(--anim-offset, 0s); }
+        .machine.mode-burning .ps-glow, .machine.mode-modulating .ps-glow, .machine.mode-ignition .ps-glow { opacity: 1; }
+        .machine.mode-burning .ps-air i { animation: ps-rise 2.2s ease-in infinite; animation-delay: var(--anim-offset, 0s); }
+        .machine.mode-burning .ps-air i.a2 { animation-delay: calc(-0.73s + var(--anim-offset, 0s)); }
+        .machine.mode-burning .ps-air i.a3 { animation-delay: calc(-1.46s + var(--anim-offset, 0s)); }
+        /* Modulating: the same fire, smaller, and less warm air. */
+        .machine.mode-modulating .ps-flame { opacity: 1; width: 16px; height: 18px; margin-left: -8px; animation: ps-flicker 0.8s ease-in-out infinite; animation-delay: var(--anim-offset, 0s); }
+        .machine.mode-modulating .ps-air i.a2 { animation: ps-rise 3s ease-in infinite; animation-delay: var(--anim-offset, 0s); }
+        /* Lighting: the igniter glows, a first flame, and smoke at the flue. */
+        .machine.mode-ignition .ps-spark { opacity: 1; animation: ps-spark 0.5s steps(2) infinite; animation-delay: var(--anim-offset, 0s); }
+        .machine.mode-ignition .ps-flame { opacity: 1; width: 9px; height: 10px; margin-left: -4.5px; animation: ps-flicker 0.35s ease-in-out infinite; animation-delay: var(--anim-offset, 0s); }
+        .machine.mode-ignition .ps-smoke i, .machine.mode-cleaning .ps-smoke i { animation: ps-puff 2.6s ease-out infinite; animation-delay: var(--anim-offset, 0s); }
+        .machine.mode-ignition .ps-smoke i:nth-child(2), .machine.mode-cleaning .ps-smoke i:nth-child(2) { animation-delay: calc(-1.3s + var(--anim-offset, 0s)); }
+        /* Eco: the fire is out and the embers breathe. */
+        .machine.mode-eco .ps-glow { animation: ps-breathe 3.2s ease-in-out infinite; animation-delay: var(--anim-offset, 0s); }
+        /* Cooling down: the last embers, and the fans blow the heat out, cool. */
+        .machine.mode-cooling .ps-glow { opacity: 0.25; }
+        .machine.mode-cooling .ps-air i {
+          background: linear-gradient(180deg, rgba(144, 202, 249, 0), rgba(144, 202, 249, 0.8) 45%, rgba(100, 181, 246, 0.9));
+          animation: ps-rise 2.8s ease-in infinite; animation-delay: var(--anim-offset, 0s);
+        }
+        .machine.mode-cooling .ps-air i.a2 { animation-delay: calc(-0.93s + var(--anim-offset, 0s)); }
+        .machine.mode-cooling .ps-air i.a3 { animation-delay: calc(-1.86s + var(--anim-offset, 0s)); }
+        /* Cleaning the burn pot: the ash is blown up out of it. */
+        .machine.mode-cleaning .ps-ash i { animation: ps-ash 1.1s ease-out infinite; animation-delay: var(--anim-offset, 0s); }
+        .machine.mode-cleaning .ps-ash i:nth-child(2) { animation-delay: calc(-0.37s + var(--anim-offset, 0s)); }
+        .machine.mode-cleaning .ps-ash i:nth-child(3) { animation-delay: calc(-0.74s + var(--anim-offset, 0s)); }
+        @keyframes ps-flicker {
+          0%, 100% { transform: scale(1, 1); }
+          30% { transform: scale(0.92, 1.1); }
+          60% { transform: scale(1.06, 0.9); }
+        }
+        @keyframes ps-rise {
+          0% { transform: translateY(18px); opacity: 0; }
+          30% { opacity: 0.9; }
+          100% { transform: translateY(-8px); opacity: 0; }
+        }
+        @keyframes ps-spark { 0% { opacity: 1; } 100% { opacity: 0.2; } }
+        @keyframes ps-puff {
+          0% { transform: translate(0, 4px) scale(0.6); opacity: 0; }
+          25% { opacity: 0.8; }
+          100% { transform: translate(6px, -14px) scale(1.6); opacity: 0; }
+        }
+        @keyframes ps-breathe { 0%, 100% { opacity: 0.25; } 50% { opacity: 0.6; } }
+        @keyframes ps-ash {
+          0% { transform: translateY(0); opacity: 0; }
+          20% { opacity: 1; }
+          100% { transform: translate(4px, -22px); opacity: 0; }
+        }
+        @keyframes ps-blink { 0% { opacity: 1; } 100% { opacity: 0.25; } }
+  `,
   heat_pump: () => `
         .hp-unit {
           position: absolute; left: 2px; right: 2px; top: 4px; height: 60px; border-radius: 5px;
@@ -5611,6 +5899,32 @@ function illustrationHtml(type, ctx) {
           <div class="bl-pipe rad-arm"></div>
           <div class="bl-rad"><i></i><i></i><i></i><i></i></div>
           <div class="bl-waves"><i class="w1"></i><i class="w2"></i><i class="w3"></i></div>
+        </div>`;
+  }
+
+  if (type === "pellet_stove") {
+    // The hopper keeps a resting level when the card cannot know one, rather
+    // than reading a stove with no level entity as an empty one.
+    const s = ctx.stove || {};
+    const fill = s.fill === null || s.fill === undefined ? 60 : Math.round(s.fill);
+    const lcd = ctx.display ? esc(ctx.display) : "";
+    return `
+        <div class="machine ${cls} mode-${s.mode || "off"} ${s.empty ? "empty" : ""}" style="--ps-fill: ${fill}%">
+          <div class="ps-smoke"><i></i><i></i></div>
+          <div class="ps-air"><i class="a1"></i><i class="a2"></i><i class="a3"></i></div>
+          <div class="ps-pipe"></div>
+          <div class="ps-body"></div>
+          <div class="ps-lid"></div>
+          <div class="ps-lcd">${lcd}</div>
+          <div class="ps-grille"></div>
+          <div class="ps-door"><div class="ps-glass">
+            <div class="ps-glow"></div><div class="ps-flame"></div><div class="ps-spark"></div>
+            <div class="ps-ash"><i></i><i></i><i></i></div>
+            <div class="ps-pot"></div><div class="ps-shine"></div>
+          </div></div>
+          <div class="ps-handle"></div>
+          <div class="ps-hopper"><div class="ps-pellets"></div></div>
+          <div class="ps-foot f1"></div><div class="ps-foot f2"></div>
         </div>`;
   }
 
@@ -7110,6 +7424,143 @@ class ApplianceCard extends HTMLElement {
       hpLine(cfg.fan_speed_entity, "fan_speed", "mdi:fan", t(hass, "section_fan_speed"));
     }
 
+    // Pellet stove. The phase comes from the stove's status when there is
+    // one, since a climate entity only knows a lit fire from an idle one; a
+    // climate entity put in the state carries the room and the setpoint. An
+    // alarm entity that reports an alarm wins over any phase, since a stove in
+    // alarm has stopped whatever it was doing.
+    let stove = null;
+    if (cap.pelletStove) {
+      const climate = domainOf(cfg.state_entity) === "climate" ? st : null;
+      const phaseSt = cfg.phase_entity ? stateObj(hass, cfg.phase_entity) : null;
+      let mode = phaseSt ? stoveModeOf(phaseSt.state, cfg.state_map) : "";
+      if (!mode) mode = climate ? stoveClimateMode(climate) : !powerDerived ? stoveModeOf(rawState, cfg.state_map) : "";
+      // A plug, or a word the card does not know: lit or not, as the rest of
+      // the card reads it.
+      if (!mode) {
+        if (isActiveState(norm)) mode = "burning";
+        else if (norm === "idle" || norm === "done") mode = "off";
+        else if (norm === "error") mode = "alarm";
+      }
+      const alarm = stoveAlarmOf(cfg.error_entity ? stateObj(hass, cfg.error_entity) : null);
+      if (alarm.active) mode = "alarm";
+      const said = stripAccents(`${phaseSt ? phaseSt.state : ""} ${climate ? "" : rawState} ${alarm.text}`).toLowerCase();
+
+      // The pellets, as a share of the hopper or as a contact that only says
+      // empty, like a feeder's tank. A level in centimetres or kilograms only
+      // fills the drawing once the hopper's capacity is known.
+      const levelSt = cfg.level_entity ? stateObj(hass, cfg.level_entity) : null;
+      const levelKnown = !!levelSt && !["unknown", "unavailable"].includes(levelSt.state);
+      const levelPct = levelKnown ? numericState(hass, cfg.level_entity) : null;
+      const levelEmpty = levelPct !== null
+        ? levelPct <= (parseFloat(cfg.level_empty_below) || 0)
+        : levelKnown && ["on", "true", "empty", "low"].includes(String(levelSt.state).toLowerCase());
+      const noPellets = levelEmpty || (mode === "alarm" && STOVE_NO_PELLETS_RE.test(said));
+      const doorOpenAlarm = mode === "alarm" && !noPellets && STOVE_DOOR_RE.test(said);
+      let fill = null;
+      if (levelPct !== null) {
+        const max = parseFloat(cfg.level_max);
+        const unit = unitOf(hass, cfg.level_entity);
+        const pct = max > 0 ? (levelPct / max) * 100 : !unit || unit === "%" ? levelPct : null;
+        if (pct !== null) fill = Math.max(0, Math.min(100, pct));
+      }
+      if (noPellets) fill = 0;
+
+      if (mode) {
+        if (!cfg.state_show_raw) {
+          stateLabel = t(hass, noPellets && mode === "alarm" ? "ps_no_pellets" : doorOpenAlarm ? "door_open" : `ps_${mode}`);
+        }
+        color = STOVE_COLORS[mode];
+      }
+
+      // The screen: the power stage while the fire burns, the alarm's own
+      // code in alarm, a short word otherwise.
+      const stage = cfg.power_level_entity ? numericState(hass, cfg.power_level_entity) : null;
+      if ((mode === "burning" || mode === "modulating") && stage !== null) displayText = `P${Math.round(stage)}`;
+      else if (mode === "alarm") displayText = stoveAlarmCode(alarm.text) || stoveAlarmCode(said) || STOVE_SCREEN.alarm;
+      else displayText = STOVE_SCREEN[mode] || "";
+
+      const room = cfg.current_temperature_entity ? numericState(hass, cfg.current_temperature_entity)
+        : climate ? numberOrNull(climate.attributes.current_temperature) : null;
+      const target = cfg.target_temperature_entity ? numericState(hass, cfg.target_temperature_entity)
+        : climate ? numberOrNull(climate.attributes.temperature) : null;
+      if (room !== null) {
+        const roomId = cfg.current_temperature_entity || cfg.state_entity;
+        const unit = temperatureUnit(hass, cfg.current_temperature_entity || cfg.target_temperature_entity);
+        const now = tempText(hass, cfg, roomId, room, unit);
+        const goal = target !== null && mode !== "off" ? tempText(hass, cfg, cfg.target_temperature_entity || cfg.state_entity, target, unit) : null;
+        extraLines.push({
+          key: "room_temp",
+          icon: "mdi:home-thermometer-outline",
+          label: t(hass, "ps_line_room"),
+          // The setpoint while the stove works towards it, as the room
+          // temperature reads it: 20 to 21 degrees.
+          value: goal !== null && goal !== now ? `${keepTogether(now)} \u2192 ${keepTogether(goal)}` : keepTogether(now),
+          entity: cfg.current_temperature_entity || cfg.state_entity,
+        });
+      }
+      // The stage out of its range when the entity knows the range, 4 / 5.
+      const stageSt = cfg.power_level_entity ? stateObj(hass, cfg.power_level_entity) : null;
+      if (stageSt && !["unknown", "unavailable"].includes(stageSt.state)) {
+        const top = numberOrNull((stageSt.attributes || {}).max);
+        extraLines.push({
+          key: "power_level",
+          icon: "mdi:fire",
+          label: t(hass, "ps_line_power"),
+          value: keepTogether(stage !== null && top !== null && top > 0 ? `${Math.round(stage)} / ${Math.round(top)}`
+            : formatInfoValue(stageSt, hass, null, cfg, cfg.power_level_entity)),
+          entity: cfg.power_level_entity,
+        });
+      }
+      const flue = cfg.flue_temperature_entity ? numericState(hass, cfg.flue_temperature_entity) : null;
+      if (flue !== null) {
+        extraLines.push({
+          key: "flue_temp",
+          icon: "mdi:thermometer-high",
+          label: t(hass, "ps_line_flue"),
+          value: keepTogether(tempText(hass, cfg, cfg.flue_temperature_entity, flue, temperatureUnit(hass, cfg.flue_temperature_entity))),
+          entity: cfg.flue_temperature_entity,
+        });
+      }
+      // A fan entity says on or off in its state and how fast in its
+      // percentage; a number, a select or a sensor says it in its state.
+      const fanSt = cfg.fan_speed_entity ? stateObj(hass, cfg.fan_speed_entity) : null;
+      if (fanSt && !["unknown", "unavailable"].includes(fanSt.state)) {
+        const pct = domainOf(cfg.fan_speed_entity) === "fan" ? numberOrNull((fanSt.attributes || {}).percentage) : null;
+        extraLines.push({
+          key: "fan_speed",
+          icon: "mdi:fan",
+          label: t(hass, "ps_line_fan"),
+          value: keepTogether(pct !== null && fanSt.state === "on" ? `${Math.round(pct)} %` : formatInfoValue(fanSt, hass, null, cfg, cfg.fan_speed_entity)),
+          entity: cfg.fan_speed_entity,
+        });
+      }
+      // A contact that says nothing is wrong says nothing worth a line.
+      if (levelKnown && (levelPct !== null || levelEmpty)) {
+        extraLines.push({
+          key: "pellet_level",
+          icon: levelEmpty ? "mdi:alert-circle-outline" : "mdi:grain",
+          label: t(hass, "ps_line_pellets"),
+          value: keepTogether(levelPct !== null ? formatInfoValue(levelSt, hass, null, cfg, cfg.level_entity) : t(hass, "ps_no_pellets")),
+          entity: cfg.level_entity,
+          warn: levelEmpty,
+        });
+      }
+      // The alarm in the stove's own words, when it has some.
+      if (alarm.active && alarm.text) {
+        extraLines.push({
+          key: "alarm",
+          icon: "mdi:alert-circle-outline",
+          label: t(hass, "ps_alarm"),
+          value: alarm.text,
+          entity: cfg.error_entity,
+          warn: true,
+          wrap: true,
+        });
+      }
+      stove = { mode: mode || "off", fill, empty: noPellets };
+    }
+
     // Pet feeder: read like a fridge, since it is idle almost all the time.
     // Its state is worked out rather than reported, and what it did today is
     // the content of the card.
@@ -7333,6 +7784,7 @@ class ApplianceCard extends HTMLElement {
       noTank: applianceType === "heat_pump" && !!cfg.no_hot_water,
       underfloor: applianceType === "heat_pump" && !!cfg.underfloor_heating,
       p3,
+      stove,
     };
 
     // A plain on/off control, for the types that have no cycle to start or
@@ -7385,6 +7837,7 @@ class ApplianceCard extends HTMLElement {
       illustrationCtx.noTank,
       illustrationCtx.underfloor,
       illustrationCtx.leftOn,
+      illustrationCtx.stove && illustrationCtx.stove.mode,
     ].join(",");
     if (animKey !== this._animKey) {
       this._animKey = animKey;
@@ -7843,6 +8296,20 @@ const SECTIONS = [
   { field: "cooling_output_entity", types: ["heat_pump"], labelKey: "section_cooling_output", includeDomains: ["sensor"] },
   { field: "hot_water_power_entity", types: ["heat_pump"], labelKey: "section_hot_water_power", includeDomains: ["sensor"] },
   { field: "hot_water_output_entity", types: ["heat_pump"], labelKey: "section_hot_water_output", includeDomains: ["sensor"] },
+
+  // Pellet stove. The status names the phase; a climate entity in the state
+  // already carries the room and the setpoint, so both fields are for the
+  // stoves that keep them in entities of their own.
+  { field: "phase_entity", types: ["pellet_stove"], labelKey: "section_stove_status", includeDomains: ["sensor", "input_select"] },
+  { field: "current_temperature_entity", types: ["pellet_stove"], labelKey: "section_room_temperature", includeDomains: ["sensor"] },
+  { field: "target_temperature_entity", types: ["pellet_stove"], labelKey: "section_target_temperature", includeDomains: ["number", "sensor", "input_number"] },
+  { field: "power_level_entity", types: ["pellet_stove"], labelKey: "section_power_level", includeDomains: ["number", "sensor", "select", "input_number", "input_select"] },
+  { field: "flue_temperature_entity", types: ["pellet_stove"], labelKey: "section_flue_temperature", includeDomains: ["sensor"] },
+  { field: "fan_speed_entity", types: ["pellet_stove"], labelKey: "section_fan_speed", includeDomains: ["sensor", "number", "select", "fan", "input_number", "input_select"] },
+  { field: "level_entity", types: ["pellet_stove"], labelKey: "section_pellet_level", includeDomains: ["sensor", "binary_sensor", "number", "input_number"], extra: (c) =>
+      c._row("level_empty_below", "level_empty_below", { placeholder: "0" })
+      + c._row("level_max", "level_max", { placeholder: "100" }) },
+  { field: "error_entity", types: ["pellet_stove"], labelKey: "section_error", includeDomains: ["binary_sensor", "sensor"] },
 
   // 3D printer. A target may be a sensor or a number, as the integrations
   // put it; Creality keeps it as an attribute of the reading instead.
@@ -8537,6 +9004,8 @@ class ApplianceCardEditor extends HTMLElement {
             { value: "heat_pump", label: t(hass, "type_heat_pump") },
             { value: "printer_3d", label: t(hass, "type_printer_3d") },
             { value: "pet_feeder", label: t(hass, "type_pet_feeder") },
+            { value: "iron", label: t(hass, "type_iron") },
+            { value: "pellet_stove", label: t(hass, "type_pellet_stove") },
           ],
         })}
         ${this._type === "washer" ? this._row("washer_dryer", "washer_dryer", { type: "checkbox" }) : ""}

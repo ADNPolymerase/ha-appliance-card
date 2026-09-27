@@ -10,7 +10,7 @@
 <a href="https://buymeacoffee.com/adnpolymerase" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-orange.png" alt="Buy Me A Coffee" height="60"></a>
 <a href="https://adnpolymerase.github.io/HA/" target="_blank"><img src="https://raw.githubusercontent.com/ADNPolymerase/HA/main/assets/site-button.svg" alt="Lien vers mon github.io pour mes autres projets" height="60"></a>
 
-Une card Lovelace pour les appareils de la maison : lave-linge, sèche-linge, lave-vaisselle, four, micro-ondes, hotte, plaque de cuisson, réfrigérateur, bouilloire, robot cuiseur, machine à café, cuiseur à riz, chauffe-eau, chaudière, pompe à chaleur, imprimante 3D et distributeur de croquettes. Cycle en cours, programme, temps restant, température, alertes et commandes.
+Une card Lovelace pour les appareils de la maison : lave-linge, sèche-linge, lave-vaisselle, four, micro-ondes, hotte, plaque de cuisson, réfrigérateur, bouilloire, robot cuiseur, machine à café, cuiseur à riz, chauffe-eau, chaudière, pompe à chaleur, imprimante 3D, distributeur de croquettes, fer à repasser et poêle à granulés. Cycle en cours, programme, temps restant, température, alertes et commandes.
 
 Aucune marque supposée : chaque champ est une entité à choisir, elle fonctionne donc avec **n'importe quelle** intégration (Electrolux, Samsung, LG, Home Connect, Miele, une simple prise connectée…).
 
@@ -21,11 +21,11 @@ Aucune marque supposée : chaque champ est une entité à choisir, elle fonction
 
 ## Fonctionnalités
 
-- **Dix-huit types d'appareils**, chacun avec une illustration en CSS animée sur les données de l'appareil et statique à l'arrêt. Le type est détecté tout seul ou choisi via `appliance_type`, et `compact: true` ne garde que le texte.
+- **Dix-neuf types d'appareils**, chacun avec une illustration en CSS animée sur les données de l'appareil et statique à l'arrêt. Le type est détecté tout seul ou choisi via `appliance_type`, et `compact: true` ne garde que le texte.
 - **Normalisation d'état** : `Idle`, `RUNNING`, `wash`, `En marche`… sont reconnus (sans tenir compte des accents) et classés en veille, préchauffage, en cours, en pause, terminé, différé ou erreur. Un état inconnu s'affiche tel quel, sans l'espace de noms de l'intégration, et `state_map` classe le reste, `"*"` ramassant tout ce qui dépasse.
 - **L'étape, et non une heure d'*En cours*** : un lave-linge, un sèche-linge ou un lave-vaisselle nomme l'étape où il en est (*Prélavage*, *Lavage*, *Rinçage*, *Essorage*, *Séchage* et sept autres), d'après une entité de phase ou son propre état, et le tambour s'emballe pendant l'essorage. Le temps restant est toujours celui du cycle entier.
 - **Une lavante-séchante est un lave-linge qui sèche** : `washer_dryer: true`, et le tambour montre de l'eau pendant le lavage, puis du linge qui tourne dans l'air chaud pendant le séchage. L'étape vient de l'état lui-même ou d'une entité de phase, et la ligne d'état lit *Lavage* ou *Séchage*.
-- **Chaque appareil dit ce qui compte pour lui** : une machine à café ce qui lui manque (eau, grains, bac, détartrage), un réfrigérateur sa santé (débranché, porte ouverte, température haute), une chaudière mixte ce qu'elle chauffe (chauffage, eau chaude ou veille), une imprimante 3D ce que fait l'impression (préchauffage, nivellement, changement de filament).
+- **Chaque appareil dit ce qui compte pour lui** : une machine à café ce qui lui manque (eau, grains, bac, détartrage), un réfrigérateur sa santé (débranché, porte ouverte, température haute), une chaudière mixte ce qu'elle chauffe (chauffage, eau chaude ou veille), une imprimante 3D ce que fait l'impression (préchauffage, nivellement, changement de filament), un poêle à granulés la phase de son feu (allumage, modulation, éco, nettoyage).
 - **Fonctionne avec une simple prise connectée** : `power_entity` et `power_on_threshold` suffisent à déduire l'état de la consommation.
 - **Programme, temps restant, barre de progression, lignes d'info, porte, alertes, connectivité et commandes** (démarrer, pause, reprise, stop), chacun optionnel.
 - **14 langues** (EN, FR, DE, ES, IT, NL, PT, SV, NO, DA, PL, RU, ZH, CS), celle de Home Assistant ou fixée sur la card.
@@ -59,7 +59,7 @@ Seule `state_entity` est obligatoire, sauf sur un réfrigérateur où une sonde 
 | `compact` | `true` masque l'illustration. |
 | `illustration_color` | `auto` (défaut, suit le thème) \| `white` \| `grey` \| `black`. Ne change que la carrosserie, pas les couleurs d'état. |
 | `language` | `auto` (défaut, suit Home Assistant) ou l'un des 14 codes : `en`, `fr`, `de`, `es`, `it`, `nl`, `pt`, `sv`, `no`, `da`, `pl`, `ru`, `zh`, `cs`. `nb` et `nb-NO` donnent le norvégien. |
-| `appliance_type` | `auto` (défaut) \| `washer` \| `dryer` \| `dishwasher` \| `oven` \| `microwave` \| `hood` \| `cooktop` \| `fridge` \| `kettle` \| `cooker` \| `coffee` \| `rice_cooker` \| `water_heater` \| `boiler` \| `heat_pump` \| `printer_3d` \| `pet_feeder` \| `iron`. |
+| `appliance_type` | `auto` (défaut) \| `washer` \| `dryer` \| `dishwasher` \| `oven` \| `microwave` \| `hood` \| `cooktop` \| `fridge` \| `kettle` \| `cooker` \| `coffee` \| `rice_cooker` \| `water_heater` \| `boiler` \| `heat_pump` \| `printer_3d` \| `pet_feeder` \| `iron` \| `pellet_stove`. |
 | `tap_action` | Ce que fait un appui sur la carte, dans les mots de Home Assistant : `more-info` (défaut), `none`, `navigate`, `url`, `toggle`, `perform-action` ou `fire-dom-event`, celle qu'écoutent les cartes popup bâties sur browser_mod. En YAML seulement. |
 | `toggle_entity` | Bouton marche/arrêt (`switch`, `button`, `script`, `input_boolean`, `fan`), mis en évidence quand c'est allumé. |
 | `power_entity` / `power_on_threshold` / `power_icon` | Capteur de puissance. Avec un seuil, l'état en est déduit : *en marche* au-dessus, puis *terminé* en redescendant. Pointer `state_entity` sur ce même capteur l'active avec un seuil de 10 W. `power_icon` remplace `mdi:power-plug`. |
@@ -129,6 +129,11 @@ Par type :
 | `level_entity` / `level_empty_below` / `level_max` | distributeur | Ce qui reste dans le réservoir : un pourcentage, qui remplit la trémie sur le dessin et se lit sur la ligne d'état au repos (*Réservoir à 74 %*), ou un contact qui dit seulement *vide*. À `level_empty_below` ou en dessous (0 par défaut), dans l'unité du relevé, l'état lit *Réservoir vide*, en orange, et la trémie se vide. Un réservoir compté en grammes ou en litres remplit la trémie, et donne son pourcentage, dès que `level_max` en donne la contenance. |
 | `error_entity` | distributeur | Fait passer l'état en *Erreur*, et en *Réservoir vide* quand l'erreur se nomme elle-même (`no_food`, `empty`, et le même mot dans les autres langues). Un code de défaut vaut une erreur sur toute valeur autre que zéro. |
 | `state_entity` | distributeur | Facultatif : un distributeur est au repos presque tout le temps, donc une commande ou un compteur suffisent. Quand il rapporte quelque chose, *on* se lit *Distribution* et les croquettes tombent. |
+| `state_entity` / `phase_entity` | poêle | La phase du feu : *Éteint*, *Allumage*, *En chauffe*, *Modulation*, *Veille éco*, *Refroidissement*, *Nettoyage* ou *Alarme*. Lue sur un capteur de statut dans `phase_entity` (les clés de Palazzetti, l'Agua IOT de Micronova dans la langue du poêle, Edilkamin, Rika, Duepi), et sinon sur le `hvac_action` d'une entité `climate`, où *idle* est la veille éco. `state_map` accepte les huit phases : `off`, `ignition`, `burning`, `modulating`, `eco`, `cooling`, `cleaning` et `alarm`. |
+| `current_temperature_entity` / `target_temperature_entity` | poêle | La pièce et la consigne, en *20 °C → 21 °C* tant que le poêle y travaille. Une entité `climate` dans `state_entity` donne les deux d'elle-même. |
+| `power_level_entity` / `flue_temperature_entity` / `fan_speed_entity` | poêle | Le palier de puissance, en *4 / 5* quand l'entité connaît sa plage, et sur l'écran du poêle quand il chauffe ; la température des fumées ; la ventilation, en pourcentage pour une entité `fan`. |
+| `level_entity` / `level_empty_below` / `level_max` | poêle | Les granulés de la trémie : un pourcentage, ou un contact allumé quand la réserve est atteinte (Agua IOT, Edilkamin). Un niveau en centimètres ou en kilos remplit la trémie une fois que `level_max` donne sa contenance. Vide, la trémie passe au rouge, et en alarme l'état se lit *Granulés épuisés*. |
+| `error_entity` | poêle | L'alarme : un mot (*Échec d'allumage*), un compte ou un contact. Tout ce qui n'est pas *pas d'alarme*, quelle que soit la façon dont le poêle le dit, met le poêle en alarme, avec ses mots sur une ligne et son code (*AL05*) sur l'écran. |
 | `speed_entity` | robot cuiseur | Vitesse du couteau, ramenée sur trois vitesses. |
 | `water_entity` | machine à café | Réservoir : booléen Home Connect, ou niveau en % avec *vide* sous 10 %. |
 | `beans_entity` / `tray_entity` / `descaling_entity` | machine à café | Grains vides, bac plein, détartrage à faire. |
@@ -322,6 +327,24 @@ corner_entities:
   - switch.distributeur_auto_lock
   - switch.distributeur_child_lock
 ```
+
+### Poêles à granulés
+
+Un poêle en dit plus qu'allumé ou éteint : il s'allume, chauffe, module, se met en veille éco une fois la pièce chaude, refroidit et nettoie son brasier. La card lit cette phase sur le statut du poêle et la dessine : la flamme derrière la vitre, l'air chaud au-dessus de la grille, la fumée au conduit à l'allumage, les cendres au nettoyage, les braises en veille. La trémie à côté de la porte montre les granulés qui restent.
+
+Avec l'intégration de Home Assistant lui-même, Palazzetti :
+
+```yaml
+type: custom:ha-appliance-card
+appliance_type: pellet_stove
+state_entity: climate.poele
+phase_entity: sensor.poele_status
+power_level_entity: number.poele_combustion_power
+level_entity: sensor.poele_pellet_level
+level_max: 40
+```
+
+L'éditeur en remplit l'essentiel depuis les entités du poêle, aussi sur Agua IOT (Extraflame, Ravelli, MCZ, Piazzetta et une trentaine d'autres), Edilkamin, Rika et Duepi.
 
 ### Étapes du cycle
 
