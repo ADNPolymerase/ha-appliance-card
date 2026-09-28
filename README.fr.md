@@ -10,7 +10,7 @@
 <a href="https://buymeacoffee.com/adnpolymerase" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-orange.png" alt="Buy Me A Coffee" height="60"></a>
 <a href="https://adnpolymerase.github.io/HA/" target="_blank"><img src="https://raw.githubusercontent.com/ADNPolymerase/HA/main/assets/site-button.svg" alt="Lien vers mon github.io pour mes autres projets" height="60"></a>
 
-Une card Lovelace pour les appareils de la maison : lave-linge, sèche-linge, lave-vaisselle, four, micro-ondes, hotte, plaque de cuisson, réfrigérateur, bouilloire, robot cuiseur, machine à café, cuiseur à riz, chauffe-eau, chaudière, pompe à chaleur, imprimante 3D, distributeur de croquettes, fer à repasser, poêle à granulés et climatiseur. Cycle en cours, programme, temps restant, température, alertes et commandes.
+Une card Lovelace pour les appareils de la maison : lave-linge, sèche-linge, lave-vaisselle, four, micro-ondes, hotte, plaque de cuisson, réfrigérateur, bouilloire, robot cuiseur, machine à café, cuiseur à riz, chauffe-eau, chaudière, pompe à chaleur, imprimante 3D, distributeur de croquettes, fer à repasser, poêle à granulés, climatiseur, déshumidificateur, petit chauffage et sèche-serviettes. Cycle en cours, programme, temps restant, température, alertes et commandes.
 
 Aucune marque supposée : chaque champ est une entité à choisir, elle fonctionne donc avec **n'importe quelle** intégration (Electrolux, Samsung, LG, Home Connect, Miele, une simple prise connectée…).
 
@@ -21,7 +21,7 @@ Aucune marque supposée : chaque champ est une entité à choisir, elle fonction
 
 ## Fonctionnalités
 
-- **Vingt types d'appareils**, chacun avec une illustration en CSS animée sur les données de l'appareil et statique à l'arrêt. Le type est détecté tout seul ou choisi via `appliance_type`, et `compact: true` ne garde que le texte.
+- **Vingt-trois types d'appareils**, chacun avec une illustration en CSS animée sur les données de l'appareil et statique à l'arrêt. Le type est détecté tout seul ou choisi via `appliance_type`, et `compact: true` ne garde que le texte.
 - **Normalisation d'état** : `Idle`, `RUNNING`, `wash`, `En marche`… sont reconnus (sans tenir compte des accents) et classés en veille, préchauffage, en cours, en pause, terminé, différé ou erreur. Un état inconnu s'affiche tel quel, sans l'espace de noms de l'intégration, et `state_map` classe le reste, `"*"` ramassant tout ce qui dépasse.
 - **L'étape, et non une heure d'*En cours*** : un lave-linge, un sèche-linge ou un lave-vaisselle nomme l'étape où il en est (*Prélavage*, *Lavage*, *Rinçage*, *Essorage*, *Séchage* et sept autres), d'après une entité de phase ou son propre état, et le tambour s'emballe pendant l'essorage. Le temps restant est toujours celui du cycle entier.
 - **Une lavante-séchante est un lave-linge qui sèche** : `washer_dryer: true`, et le tambour montre de l'eau pendant le lavage, puis du linge qui tourne dans l'air chaud pendant le séchage. L'étape vient de l'état lui-même ou d'une entité de phase, et la ligne d'état lit *Lavage* ou *Séchage*.
@@ -59,7 +59,7 @@ Seule `state_entity` est obligatoire, sauf sur un réfrigérateur où une sonde 
 | `compact` | `true` masque l'illustration. |
 | `illustration_color` | `auto` (défaut, suit le thème) \| `white` \| `grey` \| `black`. Ne change que la carrosserie, pas les couleurs d'état. |
 | `language` | `auto` (défaut, suit Home Assistant) ou l'un des 14 codes : `en`, `fr`, `de`, `es`, `it`, `nl`, `pt`, `sv`, `no`, `da`, `pl`, `ru`, `zh`, `cs`. `nb` et `nb-NO` donnent le norvégien. |
-| `appliance_type` | `auto` (défaut) \| `washer` \| `dryer` \| `dishwasher` \| `oven` \| `microwave` \| `hood` \| `cooktop` \| `fridge` \| `kettle` \| `cooker` \| `coffee` \| `rice_cooker` \| `water_heater` \| `boiler` \| `heat_pump` \| `printer_3d` \| `pet_feeder` \| `iron` \| `pellet_stove` \| `air_conditioner`. |
+| `appliance_type` | `auto` (défaut) \| `washer` \| `dryer` \| `dishwasher` \| `oven` \| `microwave` \| `hood` \| `cooktop` \| `fridge` \| `kettle` \| `cooker` \| `coffee` \| `rice_cooker` \| `water_heater` \| `boiler` \| `heat_pump` \| `printer_3d` \| `pet_feeder` \| `iron` \| `pellet_stove` \| `air_conditioner` \| `dehumidifier` \| `space_heater` \| `towel_warmer`. |
 | `tap_action` | Ce que fait un appui sur la carte, dans les mots de Home Assistant : `more-info` (défaut), `none`, `navigate`, `url`, `toggle`, `perform-action` ou `fire-dom-event`, celle qu'écoutent les cartes popup bâties sur browser_mod. En YAML seulement. |
 | `toggle_entity` | Bouton marche/arrêt (`switch`, `button`, `script`, `input_boolean`, `fan`), mis en évidence quand c'est allumé. |
 | `power_entity` / `power_on_threshold` / `power_icon` | Capteur de puissance. Avec un seuil, l'état en est déduit : *en marche* au-dessus, puis *terminé* en redescendant. Pointer `state_entity` sur ce même capteur l'active avec un seuil de 10 W. `power_icon` remplace `mdi:power-plug`. |
@@ -136,6 +136,11 @@ Par type :
 | `error_entity` | poêle | L'alarme : un mot (*Échec d'allumage*), un compte ou un contact. Tout ce qui n'est pas *pas d'alarme*, quelle que soit la façon dont le poêle le dit, met le poêle en alarme, avec ses mots sur une ligne et son code (*AL05*) sur l'écran. |
 | `state_entity` | climatiseur | Une entité `climate` : *Refroidissement*, *Chauffage*, *Déshumidification*, *Ventilation* ou *Auto* selon le mode, et d'après `hvac_action` *En veille* une fois la consigne atteinte, *Dégivrage* et *Préchauffage*. L'écran montre le symbole du mode et la consigne, les lignes la pièce, l'humidité et la ventilation. Sur une prise, *En cours* ou *Éteint*. `state_map` accepte `off`, `cool`, `heat`, `dry`, `fan`, `auto`, `idle` et `defrost`. |
 | `vane_vertical_entity` / `vane_horizontal_entity` | climatiseur | Les volets, quand ils vivent dans des selects à eux (Panasonic, Midea) ; sinon le `swing_mode` et le `swing_horizontal_mode` de l'entité `climate`. Cinq positions de haut en bas et de gauche à droite, ou le balayage, dans les mots de chaque intégration. |
+| `state_entity` | déshumidificateur | Une entité `humidifier` : *Déshumidification*, *Séchage du linge* quand son mode le dit (clothes_dry chez Midea), *En veille* une fois l'humidité atteinte, *Réservoir plein*. L'écran et une ligne donnent l'humidité et sa cible. |
+| `tank_entity` / `tank_full_above` / `current_humidity_entity` | déshumidificateur | Le réservoir, un contact allumé quand il est plein ou un niveau en pourcentage (plein à partir de `tank_full_above`, 100 par défaut), montré dans la fenêtre du bas ; un hygromètre pour un déshumidificateur sur prise. |
+| `state_entity` / `heater_layout` | petit chauffage | Une entité `climate` : *Chauffage*, *En veille* une fois la consigne atteinte, *Ventilation*. `heater_layout` : `fan` (radiateur soufflant, par défaut) ou `oil` (bain d'huile). |
+| `state_entity` | sèche-serviettes | Le mode du fil pilote : *Confort*, *Éco*, *Hors-gel*, *Boost*, *Séchage*, lu sur le preset d'une entité `climate` (Heatzy, Atlantic) ou sur un select (NodOn). |
+| `current_temperature_entity` / `target_temperature_entity` | petit chauffage, sèche-serviettes | La pièce et la consigne, quand une entité `climate` ne les porte pas. |
 | `fan_speed_entity` / `purifier_entity` / `outdoor_temperature_entity` / `defrost_entity` | climatiseur | La ventilation quand l'entité `climate` ne la porte pas ; le purificateur (nanoe, plasma), allumé sur l'unité ; la température extérieure ; un contact de dégivrage. |
 | `speed_entity` | robot cuiseur | Vitesse du couteau, ramenée sur trois vitesses. |
 | `water_entity` | machine à café | Réservoir : booléen Home Connect, ou niveau en % avec *vide* sous 10 %. |
@@ -363,6 +368,21 @@ outdoor_temperature_entity: sensor.salon_outside_temperature
 ```
 
 Une entité `climate` qui sait refroidir est reconnue d'elle-même, et l'éditeur remplit le reste depuis les entités de l'unité.
+
+### Déshumidificateurs, petits chauffages et sèche-serviettes
+
+Un déshumidificateur montre l'humidité sur son écran et l'eau récupérée dans son réservoir ; un radiateur soufflant rougeoie derrière sa grille, un bain d'huile chauffe ses ailettes ; un sèche-serviettes montre le mode du fil pilote avec les symboles des radiateurs (soleil, lune, flocon). L'air chaud monte, l'air soufflé par un déshumidificateur ou un ventilateur va dans l'autre sens.
+
+Les trois fonctionnent avec une simple prise connectée : au-dessus de `power_on_threshold` ils déshumidifient ou chauffent, en dessous ils sont en veille tant que la prise est allumée, et *Éteint* une fois coupée.
+
+```yaml
+type: custom:ha-appliance-card
+appliance_type: space_heater
+heater_layout: oil
+state_entity: switch.radiateur_prise
+power_entity: sensor.radiateur_prise_power
+power_on_threshold: 30
+```
 
 ### Étapes du cycle
 

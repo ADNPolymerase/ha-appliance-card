@@ -1,4 +1,4 @@
-const CARD_VERSION = "2.19.0";
+const CARD_VERSION = "2.20.0";
 
 console.info(
   "%c HA-APPLIANCE-CARD %c v" + CARD_VERSION + " ",
@@ -143,6 +143,7 @@ const T = {
     section_stove_status: "Stove status", section_room_temperature: "Room temperature", section_flue_temperature: "Flue gas temperature", section_pellet_level: "Pellet level",
     ps_line_room: "Room", ps_line_power: "Power", ps_line_flue: "Flue gas", ps_line_fan: "Fan", ps_line_pellets: "Pellets",
     type_air_conditioner: "Air conditioner", ac_off: "Off", ac_cooling: "Cooling", ac_heating: "Heating", ac_drying: "Drying", ac_fan_only: "Fan only", ac_auto: "Auto", ac_idle: "Standby", ac_defrost: "Defrosting", ac_preheating: "Warming up", ac_line_humidity: "Humidity", section_vane_vertical: "Vane up/down", section_vane_horizontal: "Vane left/right", section_purifier: "Air purifier (nanoe, plasma)", section_defrost: "Defrost indicator",
+    type_dehumidifier: "Dehumidifier", type_space_heater: "Space heater", type_towel_warmer: "Towel warmer", dh_laundry: "Drying laundry", dh_full: "Tank full", dh_line_tank: "Tank", line_mode: "Mode", tw_comfort: "Comfort", tw_eco: "Eco", tw_frost: "Frost protection", tw_boost: "Boost", tw_drying: "Drying", section_tank: "Water tank", section_current_humidity: "Humidity sensor", section_heater_layout: "Model", layout_fan_heater: "Fan heater", layout_oil_radiator: "Oil-filled radiator",
     washer_dryer: "Washer-dryer (washes and dries)", step_drying: "Drying", section_cycle_phase: "Cycle phase",
     step_prewash: "Pre-wash", step_soaking: "Soaking", step_weighing: "Weighing", step_filling: "Filling", step_washing: "Washing", step_rinsing: "Rinsing", step_draining: "Draining", step_spinning: "Spinning", step_cooling: "Cooling", step_anti_crease: "Anti-crease", step_steam: "Steam",
   },
@@ -278,6 +279,7 @@ const T = {
     section_stove_status: "Statut du po\u00eale", section_room_temperature: "Temp\u00e9rature ambiante", section_flue_temperature: "Temp\u00e9rature des fum\u00e9es", section_pellet_level: "Niveau de granul\u00e9s",
     ps_line_room: "Ambiante", ps_line_power: "Puissance", ps_line_flue: "Fum\u00e9es", ps_line_fan: "Ventilation", ps_line_pellets: "Granul\u00e9s",
     type_air_conditioner: "Climatiseur", ac_off: "\u00c9teint", ac_cooling: "Refroidissement", ac_heating: "Chauffage", ac_drying: "D\u00e9shumidification", ac_fan_only: "Ventilation", ac_auto: "Auto", ac_idle: "En veille", ac_defrost: "D\u00e9givrage", ac_preheating: "Pr\u00e9chauffage", ac_line_humidity: "Humidit\u00e9", section_vane_vertical: "Volet haut/bas", section_vane_horizontal: "Volet gauche/droite", section_purifier: "Purificateur d'air (nanoe, plasma)", section_defrost: "Indicateur de d\u00e9givrage",
+    type_dehumidifier: "D\u00e9shumidificateur", type_space_heater: "Petit chauffage", type_towel_warmer: "S\u00e8che-serviettes", dh_laundry: "S\u00e9chage du linge", dh_full: "R\u00e9servoir plein", dh_line_tank: "R\u00e9servoir", line_mode: "Mode", tw_comfort: "Confort", tw_eco: "\u00c9co", tw_frost: "Hors-gel", tw_boost: "Boost", tw_drying: "S\u00e9chage", section_tank: "R\u00e9servoir d'eau", section_current_humidity: "Capteur d'humidit\u00e9", section_heater_layout: "Mod\u00e8le", layout_fan_heater: "Radiateur soufflant", layout_oil_radiator: "Bain d'huile",
     washer_dryer: "Lavante-s\u00e9chante (lave et s\u00e8che)", step_drying: "S\u00e9chage", section_cycle_phase: "Phase du cycle",
     step_prewash: "Pr\u00e9lavage", step_soaking: "Trempage", step_weighing: "Pes\u00e9e", step_filling: "Remplissage", step_washing: "Lavage", step_rinsing: "Rin\u00e7age", step_draining: "Vidange", step_spinning: "Essorage", step_cooling: "Refroidissement", step_anti_crease: "Anti-froissage", step_steam: "Vapeur",
   },
@@ -413,6 +415,7 @@ const T = {
     section_stove_status: "\u0421\u043e\u0441\u0442\u043e\u044f\u043d\u0438\u0435 \u043f\u0435\u0447\u0438", section_room_temperature: "\u0422\u0435\u043c\u043f\u0435\u0440\u0430\u0442\u0443\u0440\u0430 \u0432 \u043f\u043e\u043c\u0435\u0449\u0435\u043d\u0438\u0438", section_flue_temperature: "\u0422\u0435\u043c\u043f\u0435\u0440\u0430\u0442\u0443\u0440\u0430 \u0434\u044b\u043c\u043e\u0432\u044b\u0445 \u0433\u0430\u0437\u043e\u0432", section_pellet_level: "\u0423\u0440\u043e\u0432\u0435\u043d\u044c \u043f\u0435\u043b\u043b\u0435\u0442",
     ps_line_room: "\u041f\u043e\u043c\u0435\u0449\u0435\u043d\u0438\u0435", ps_line_power: "\u041c\u043e\u0449\u043d\u043e\u0441\u0442\u044c", ps_line_flue: "\u0414\u044b\u043c\u043e\u0432\u044b\u0435 \u0433\u0430\u0437\u044b", ps_line_fan: "\u0412\u0435\u043d\u0442\u0438\u043b\u044f\u0442\u043e\u0440", ps_line_pellets: "\u041f\u0435\u043b\u043b\u0435\u0442\u044b",
     type_air_conditioner: "\u041a\u043e\u043d\u0434\u0438\u0446\u0438\u043e\u043d\u0435\u0440", ac_off: "\u0412\u044b\u043a\u043b\u044e\u0447\u0435\u043d", ac_cooling: "\u041e\u0445\u043b\u0430\u0436\u0434\u0435\u043d\u0438\u0435", ac_heating: "\u041e\u0431\u043e\u0433\u0440\u0435\u0432", ac_drying: "\u041e\u0441\u0443\u0448\u0435\u043d\u0438\u0435", ac_fan_only: "\u0412\u0435\u043d\u0442\u0438\u043b\u044f\u0446\u0438\u044f", ac_auto: "\u0410\u0432\u0442\u043e", ac_idle: "\u041e\u0436\u0438\u0434\u0430\u043d\u0438\u0435", ac_defrost: "\u041e\u0442\u0442\u0430\u0438\u0432\u0430\u043d\u0438\u0435", ac_preheating: "\u041f\u0440\u043e\u0433\u0440\u0435\u0432", ac_line_humidity: "\u0412\u043b\u0430\u0436\u043d\u043e\u0441\u0442\u044c", section_vane_vertical: "\u0416\u0430\u043b\u044e\u0437\u0438 \u0432\u0432\u0435\u0440\u0445/\u0432\u043d\u0438\u0437", section_vane_horizontal: "\u0416\u0430\u043b\u044e\u0437\u0438 \u0432\u043b\u0435\u0432\u043e/\u0432\u043f\u0440\u0430\u0432\u043e", section_purifier: "\u041e\u0447\u0438\u0441\u0442\u043a\u0430 \u0432\u043e\u0437\u0434\u0443\u0445\u0430 (nanoe, \u043f\u043b\u0430\u0437\u043c\u0430)", section_defrost: "\u0418\u043d\u0434\u0438\u043a\u0430\u0442\u043e\u0440 \u043e\u0442\u0442\u0430\u0438\u0432\u0430\u043d\u0438\u044f",
+    type_dehumidifier: "\u041e\u0441\u0443\u0448\u0438\u0442\u0435\u043b\u044c", type_space_heater: "\u041e\u0431\u043e\u0433\u0440\u0435\u0432\u0430\u0442\u0435\u043b\u044c", type_towel_warmer: "\u041f\u043e\u043b\u043e\u0442\u0435\u043d\u0446\u0435\u0441\u0443\u0448\u0438\u0442\u0435\u043b\u044c", dh_laundry: "\u0421\u0443\u0448\u043a\u0430 \u0431\u0435\u043b\u044c\u044f", dh_full: "\u0411\u0430\u043a \u043f\u043e\u043b\u043e\u043d", dh_line_tank: "\u0411\u0430\u043a", line_mode: "\u0420\u0435\u0436\u0438\u043c", tw_comfort: "\u041a\u043e\u043c\u0444\u043e\u0440\u0442", tw_eco: "\u042d\u043a\u043e", tw_frost: "\u0417\u0430\u0449\u0438\u0442\u0430 \u043e\u0442 \u0437\u0430\u043c\u0435\u0440\u0437\u0430\u043d\u0438\u044f", tw_boost: "\u0411\u0443\u0441\u0442", tw_drying: "\u0421\u0443\u0448\u043a\u0430", section_tank: "\u0411\u0430\u043a \u0434\u043b\u044f \u0432\u043e\u0434\u044b", section_current_humidity: "\u0414\u0430\u0442\u0447\u0438\u043a \u0432\u043b\u0430\u0436\u043d\u043e\u0441\u0442\u0438", section_heater_layout: "\u041c\u043e\u0434\u0435\u043b\u044c", layout_fan_heater: "\u0422\u0435\u043f\u043b\u043e\u0432\u0435\u043d\u0442\u0438\u043b\u044f\u0442\u043e\u0440", layout_oil_radiator: "\u041c\u0430\u0441\u043b\u044f\u043d\u044b\u0439 \u0440\u0430\u0434\u0438\u0430\u0442\u043e\u0440",
     washer_dryer: "\u0421\u0442\u0438\u0440\u0430\u043b\u044c\u043d\u043e-\u0441\u0443\u0448\u0438\u043b\u044c\u043d\u0430\u044f \u043c\u0430\u0448\u0438\u043d\u0430 (\u0441\u0442\u0438\u0440\u0430\u0435\u0442 \u0438 \u0441\u0443\u0448\u0438\u0442)", step_drying: "\u0421\u0443\u0448\u043a\u0430", section_cycle_phase: "\u0424\u0430\u0437\u0430 \u0446\u0438\u043a\u043b\u0430",
     step_prewash: "\u041f\u0440\u0435\u0434\u0441\u0442\u0438\u0440\u043a\u0430", step_soaking: "\u0417\u0430\u043c\u0430\u0447\u0438\u0432\u0430\u043d\u0438\u0435", step_weighing: "\u0412\u0437\u0432\u0435\u0448\u0438\u0432\u0430\u043d\u0438\u0435", step_filling: "\u041d\u0430\u0431\u043e\u0440 \u0432\u043e\u0434\u044b", step_washing: "\u0421\u0442\u0438\u0440\u043a\u0430", step_rinsing: "\u041f\u043e\u043b\u043e\u0441\u043a\u0430\u043d\u0438\u0435", step_draining: "\u0421\u043b\u0438\u0432", step_spinning: "\u041e\u0442\u0436\u0438\u043c", step_cooling: "\u041e\u0445\u043b\u0430\u0436\u0434\u0435\u043d\u0438\u0435", step_anti_crease: "\u0417\u0430\u0449\u0438\u0442\u0430 \u043e\u0442 \u0441\u043c\u0438\u043d\u0430\u043d\u0438\u044f", step_steam: "\u041f\u0430\u0440",
   },
@@ -548,6 +551,7 @@ const T = {
     section_stove_status: "Ofenstatus", section_room_temperature: "Raumtemperatur", section_flue_temperature: "Abgastemperatur", section_pellet_level: "Pelletf\u00fcllstand",
     ps_line_room: "Raum", ps_line_power: "Leistung", ps_line_flue: "Abgas", ps_line_fan: "Gebl\u00e4se", ps_line_pellets: "Pellets",
     type_air_conditioner: "Klimaanlage", ac_off: "Aus", ac_cooling: "K\u00fchlen", ac_heating: "Heizen", ac_drying: "Entfeuchten", ac_fan_only: "Nur L\u00fcfter", ac_auto: "Automatik", ac_idle: "Bereit", ac_defrost: "Abtauen", ac_preheating: "Vorheizen", ac_line_humidity: "Luftfeuchte", section_vane_vertical: "Lamelle oben/unten", section_vane_horizontal: "Lamelle links/rechts", section_purifier: "Luftreiniger (nanoe, Plasma)", section_defrost: "Abtauanzeige",
+    type_dehumidifier: "Luftentfeuchter", type_space_heater: "Heizger\u00e4t", type_towel_warmer: "Handtuchheizk\u00f6rper", dh_laundry: "W\u00e4sche trocknen", dh_full: "Tank voll", dh_line_tank: "Tank", line_mode: "Modus", tw_comfort: "Komfort", tw_eco: "Eco", tw_frost: "Frostschutz", tw_boost: "Boost", tw_drying: "Trocknen", section_tank: "Wassertank", section_current_humidity: "Feuchtesensor", section_heater_layout: "Modell", layout_fan_heater: "Heizl\u00fcfter", layout_oil_radiator: "\u00d6lradiator",
     washer_dryer: "Waschtrockner (w\u00e4scht und trocknet)", step_drying: "Trocknen", section_cycle_phase: "Programmphase",
     step_prewash: "Vorw\u00e4sche", step_soaking: "Einweichen", step_weighing: "Wiegen", step_filling: "Bef\u00fcllen", step_washing: "Waschen", step_rinsing: "Sp\u00fclen", step_draining: "Abpumpen", step_spinning: "Schleudern", step_cooling: "Abk\u00fchlen", step_anti_crease: "Knitterschutz", step_steam: "Dampf",
   },
@@ -683,6 +687,7 @@ const T = {
     section_stove_status: "Estado de la estufa", section_room_temperature: "Temperatura ambiente", section_flue_temperature: "Temperatura de humos", section_pellet_level: "Nivel de pellets",
     ps_line_room: "Ambiente", ps_line_power: "Potencia", ps_line_flue: "Humos", ps_line_fan: "Ventilador", ps_line_pellets: "Pellets",
     type_air_conditioner: "Aire acondicionado", ac_off: "Apagado", ac_cooling: "Enfriando", ac_heating: "Calentando", ac_drying: "Deshumidificando", ac_fan_only: "Solo ventilador", ac_auto: "Autom\u00e1tico", ac_idle: "En espera", ac_defrost: "Descongelando", ac_preheating: "Precalentando", ac_line_humidity: "Humedad", section_vane_vertical: "Deflector arriba/abajo", section_vane_horizontal: "Deflector izquierda/derecha", section_purifier: "Purificador de aire (nanoe, plasma)", section_defrost: "Indicador de descongelaci\u00f3n",
+    type_dehumidifier: "Deshumidificador", type_space_heater: "Calefactor", type_towel_warmer: "Toallero el\u00e9ctrico", dh_laundry: "Secado de ropa", dh_full: "Dep\u00f3sito lleno", dh_line_tank: "Dep\u00f3sito", line_mode: "Modo", tw_comfort: "Confort", tw_eco: "Eco", tw_frost: "Antihielo", tw_boost: "Boost", tw_drying: "Secado", section_tank: "Dep\u00f3sito de agua", section_current_humidity: "Sensor de humedad", section_heater_layout: "Modelo", layout_fan_heater: "Calefactor de aire", layout_oil_radiator: "Radiador de aceite",
     washer_dryer: "Lavasecadora (lava y seca)", step_drying: "Secado", section_cycle_phase: "Fase del ciclo",
     step_prewash: "Prelavado", step_soaking: "Remojo", step_weighing: "Pesaje", step_filling: "Llenado", step_washing: "Lavado", step_rinsing: "Aclarado", step_draining: "Desag\u00fce", step_spinning: "Centrifugado", step_cooling: "Enfriamiento", step_anti_crease: "Antiarrugas", step_steam: "Vapor",
   },
@@ -818,6 +823,7 @@ const T = {
     section_stove_status: "Stato della stufa", section_room_temperature: "Temperatura ambiente", section_flue_temperature: "Temperatura fumi", section_pellet_level: "Livello pellet",
     ps_line_room: "Ambiente", ps_line_power: "Potenza", ps_line_flue: "Fumi", ps_line_fan: "Ventola", ps_line_pellets: "Pellet",
     type_air_conditioner: "Condizionatore", ac_off: "Spento", ac_cooling: "Raffreddamento", ac_heating: "Riscaldamento", ac_drying: "Deumidificazione", ac_fan_only: "Solo ventilazione", ac_auto: "Automatico", ac_idle: "In attesa", ac_defrost: "Sbrinamento", ac_preheating: "Preriscaldamento", ac_line_humidity: "Umidit\u00e0", section_vane_vertical: "Deflettore alto/basso", section_vane_horizontal: "Deflettore sinistra/destra", section_purifier: "Purificatore d'aria (nanoe, plasma)", section_defrost: "Indicatore di sbrinamento",
+    type_dehumidifier: "Deumidificatore", type_space_heater: "Stufetta", type_towel_warmer: "Scaldasalviette", dh_laundry: "Asciugatura bucato", dh_full: "Serbatoio pieno", dh_line_tank: "Serbatoio", line_mode: "Modalit\u00e0", tw_comfort: "Comfort", tw_eco: "Eco", tw_frost: "Antigelo", tw_boost: "Boost", tw_drying: "Asciugatura", section_tank: "Serbatoio dell'acqua", section_current_humidity: "Sensore di umidit\u00e0", section_heater_layout: "Modello", layout_fan_heater: "Termoventilatore", layout_oil_radiator: "Radiatore a olio",
     washer_dryer: "Lavasciuga (lava e asciuga)", step_drying: "Asciugatura", section_cycle_phase: "Fase del ciclo",
     step_prewash: "Prelavaggio", step_soaking: "Ammollo", step_weighing: "Pesatura", step_filling: "Carico acqua", step_washing: "Lavaggio", step_rinsing: "Risciacquo", step_draining: "Scarico", step_spinning: "Centrifuga", step_cooling: "Raffreddamento", step_anti_crease: "Antipiega", step_steam: "Vapore",
   },
@@ -953,6 +959,7 @@ const T = {
     section_stove_status: "Kachelstatus", section_room_temperature: "Kamertemperatuur", section_flue_temperature: "Rookgastemperatuur", section_pellet_level: "Pelletniveau",
     ps_line_room: "Kamer", ps_line_power: "Vermogen", ps_line_flue: "Rookgas", ps_line_fan: "Ventilator", ps_line_pellets: "Pellets",
     type_air_conditioner: "Airconditioner", ac_off: "Uit", ac_cooling: "Koelen", ac_heating: "Verwarmen", ac_drying: "Ontvochtigen", ac_fan_only: "Alleen ventilator", ac_auto: "Automatisch", ac_idle: "Stand-by", ac_defrost: "Ontdooien", ac_preheating: "Voorverwarmen", ac_line_humidity: "Luchtvochtigheid", section_vane_vertical: "Lamel omhoog/omlaag", section_vane_horizontal: "Lamel links/rechts", section_purifier: "Luchtreiniger (nanoe, plasma)", section_defrost: "Ontdooi-indicator",
+    type_dehumidifier: "Luchtontvochtiger", type_space_heater: "Kacheltje", type_towel_warmer: "Handdoekradiator", dh_laundry: "Was drogen", dh_full: "Tank vol", dh_line_tank: "Tank", line_mode: "Modus", tw_comfort: "Comfort", tw_eco: "Eco", tw_frost: "Vorstbeveiliging", tw_boost: "Boost", tw_drying: "Drogen", section_tank: "Watertank", section_current_humidity: "Vochtsensor", section_heater_layout: "Model", layout_fan_heater: "Ventilatorkachel", layout_oil_radiator: "Oliegevulde radiator",
     washer_dryer: "Was-droogcombinatie (wast en droogt)", step_drying: "Drogen", section_cycle_phase: "Programmafase",
     step_prewash: "Voorwas", step_soaking: "Weken", step_weighing: "Wegen", step_filling: "Vullen", step_washing: "Wassen", step_rinsing: "Spoelen", step_draining: "Afpompen", step_spinning: "Centrifugeren", step_cooling: "Afkoelen", step_anti_crease: "Anti-kreuk", step_steam: "Stoom",
   },
@@ -1088,6 +1095,7 @@ const T = {
     section_stove_status: "Estado da salamandra", section_room_temperature: "Temperatura ambiente", section_flue_temperature: "Temperatura dos fumos", section_pellet_level: "N\u00edvel de pellets",
     ps_line_room: "Ambiente", ps_line_power: "Pot\u00eancia", ps_line_flue: "Fumos", ps_line_fan: "Ventilador", ps_line_pellets: "Pellets",
     type_air_conditioner: "Ar condicionado", ac_off: "Desligado", ac_cooling: "A arrefecer", ac_heating: "A aquecer", ac_drying: "A desumidificar", ac_fan_only: "S\u00f3 ventila\u00e7\u00e3o", ac_auto: "Autom\u00e1tico", ac_idle: "Em espera", ac_defrost: "A descongelar", ac_preheating: "Pr\u00e9-aquecimento", ac_line_humidity: "Humidade", section_vane_vertical: "Defletor cima/baixo", section_vane_horizontal: "Defletor esquerda/direita", section_purifier: "Purificador de ar (nanoe, plasma)", section_defrost: "Indicador de descongela\u00e7\u00e3o",
+    type_dehumidifier: "Desumidificador", type_space_heater: "Aquecedor", type_towel_warmer: "Toalheiro el\u00e9trico", dh_laundry: "Secagem de roupa", dh_full: "Dep\u00f3sito cheio", dh_line_tank: "Dep\u00f3sito", line_mode: "Modo", tw_comfort: "Conforto", tw_eco: "Eco", tw_frost: "Antigelo", tw_boost: "Boost", tw_drying: "Secagem", section_tank: "Dep\u00f3sito de \u00e1gua", section_current_humidity: "Sensor de humidade", section_heater_layout: "Modelo", layout_fan_heater: "Termoventilador", layout_oil_radiator: "Radiador a \u00f3leo",
     washer_dryer: "M\u00e1quina de lavar e secar (lava e seca)", step_drying: "Secagem", section_cycle_phase: "Fase do ciclo",
     step_prewash: "Pr\u00e9-lavagem", step_soaking: "Molho", step_weighing: "Pesagem", step_filling: "Enchimento", step_washing: "Lavagem", step_rinsing: "Enxaguamento", step_draining: "Escoamento", step_spinning: "Centrifuga\u00e7\u00e3o", step_cooling: "Arrefecimento", step_anti_crease: "Anti-vincos", step_steam: "Vapor",
   },
@@ -1223,6 +1231,7 @@ const T = {
     section_stove_status: "Kaminstatus", section_room_temperature: "Rumstemperatur", section_flue_temperature: "R\u00f6kgastemperatur", section_pellet_level: "Pelletsniv\u00e5",
     ps_line_room: "Rum", ps_line_power: "Effekt", ps_line_flue: "R\u00f6kgas", ps_line_fan: "Fl\u00e4kt", ps_line_pellets: "Pellets",
     type_air_conditioner: "Luftkonditionering", ac_off: "Av", ac_cooling: "Kyler", ac_heating: "V\u00e4rmer", ac_drying: "Avfuktar", ac_fan_only: "Endast fl\u00e4kt", ac_auto: "Auto", ac_idle: "V\u00e4ntel\u00e4ge", ac_defrost: "Avfrostning", ac_preheating: "F\u00f6rv\u00e4rmer", ac_line_humidity: "Luftfuktighet", section_vane_vertical: "Luftriktning upp/ned", section_vane_horizontal: "Luftriktning v\u00e4nster/h\u00f6ger", section_purifier: "Luftrenare (nanoe, plasma)", section_defrost: "Avfrostningsindikator",
+    type_dehumidifier: "Avfuktare", type_space_heater: "Elv\u00e4rmare", type_towel_warmer: "Handdukstork", dh_laundry: "Torkar tv\u00e4tt", dh_full: "Tanken full", dh_line_tank: "Tank", line_mode: "L\u00e4ge", tw_comfort: "Komfort", tw_eco: "Eco", tw_frost: "Frostskydd", tw_boost: "Boost", tw_drying: "Torkning", section_tank: "Vattentank", section_current_humidity: "Fuktsensor", section_heater_layout: "Modell", layout_fan_heater: "V\u00e4rmefl\u00e4kt", layout_oil_radiator: "Oljefylld radiator",
     washer_dryer: "Kombinerad tv\u00e4tt/tork (tv\u00e4ttar och torkar)", step_drying: "Torkning", section_cycle_phase: "Programfas",
     step_prewash: "F\u00f6rtv\u00e4tt", step_soaking: "Bl\u00f6tl\u00e4ggning", step_weighing: "V\u00e4gning", step_filling: "P\u00e5fyllning", step_washing: "Tv\u00e4tt", step_rinsing: "Sk\u00f6ljning", step_draining: "T\u00f6mning", step_spinning: "Centrifugering", step_cooling: "Avsvalning", step_anti_crease: "Skrynkelskydd", step_steam: "\u00c5nga",
   },
@@ -1358,6 +1367,7 @@ const T = {
     section_stove_status: "Ovnstatus", section_room_temperature: "Romtemperatur", section_flue_temperature: "R\u00f8ykgasstemperatur", section_pellet_level: "Pelletsniv\u00e5",
     ps_line_room: "Rom", ps_line_power: "Effekt", ps_line_flue: "R\u00f8ykgass", ps_line_fan: "Vifte", ps_line_pellets: "Pellets",
     type_air_conditioner: "Klimaanlegg", ac_off: "Av", ac_cooling: "Kj\u00f8ler", ac_heating: "Varmer", ac_drying: "Avfukter", ac_fan_only: "Kun vifte", ac_auto: "Auto", ac_idle: "Hvilemodus", ac_defrost: "Avising", ac_preheating: "Forvarmer", ac_line_humidity: "Luftfuktighet", section_vane_vertical: "Luftretning opp/ned", section_vane_horizontal: "Luftretning venstre/h\u00f8yre", section_purifier: "Luftrenser (nanoe, plasma)", section_defrost: "Avisingsindikator",
+    type_dehumidifier: "Avfukter", type_space_heater: "Varmeovn", type_towel_warmer: "H\u00e5ndklet\u00f8rker", dh_laundry: "T\u00f8rker kl\u00e6r", dh_full: "Tanken er full", dh_line_tank: "Tank", line_mode: "Modus", tw_comfort: "Komfort", tw_eco: "Eco", tw_frost: "Frostsikring", tw_boost: "Boost", tw_drying: "T\u00f8rking", section_tank: "Vanntank", section_current_humidity: "Fuktsensor", section_heater_layout: "Modell", layout_fan_heater: "Varmevifte", layout_oil_radiator: "Oljefylt radiator",
     washer_dryer: "Kombinert vaske-/t\u00f8rkemaskin (vasker og t\u00f8rker)", step_drying: "T\u00f8rking", section_cycle_phase: "Programfase",
     step_prewash: "Forvask", step_soaking: "Bl\u00f8tlegging", step_weighing: "Veiing", step_filling: "Vannfylling", step_washing: "Vask", step_rinsing: "Skylling", step_draining: "T\u00f8mming", step_spinning: "Sentrifugering", step_cooling: "Avkj\u00f8ling", step_anti_crease: "Antikr\u00f8ll", step_steam: "Damp",
   },
@@ -1493,6 +1503,7 @@ const T = {
     section_stove_status: "Ovnstatus", section_room_temperature: "Rumtemperatur", section_flue_temperature: "R\u00f8ggastemperatur", section_pellet_level: "Pilleniveau",
     ps_line_room: "Rum", ps_line_power: "Effekt", ps_line_flue: "R\u00f8ggas", ps_line_fan: "Bl\u00e6ser", ps_line_pellets: "Piller",
     type_air_conditioner: "Aircondition", ac_off: "Slukket", ac_cooling: "K\u00f8ler", ac_heating: "Varmer", ac_drying: "Affugter", ac_fan_only: "Kun bl\u00e6ser", ac_auto: "Auto", ac_idle: "Standby", ac_defrost: "Afrimning", ac_preheating: "Forvarmer", ac_line_humidity: "Luftfugtighed", section_vane_vertical: "Luftretning op/ned", section_vane_horizontal: "Luftretning venstre/h\u00f8jre", section_purifier: "Luftrenser (nanoe, plasma)", section_defrost: "Afrimningsindikator",
+    type_dehumidifier: "Affugter", type_space_heater: "Varmeapparat", type_towel_warmer: "H\u00e5ndkl\u00e6det\u00f8rrer", dh_laundry: "T\u00f8rrer t\u00f8j", dh_full: "Tank fuld", dh_line_tank: "Tank", line_mode: "Tilstand", tw_comfort: "Komfort", tw_eco: "Eco", tw_frost: "Frostsikring", tw_boost: "Boost", tw_drying: "T\u00f8rring", section_tank: "Vandtank", section_current_humidity: "Fugtsensor", section_heater_layout: "Model", layout_fan_heater: "Varmebl\u00e6ser", layout_oil_radiator: "Oliefyldt radiator",
     washer_dryer: "Vaske-t\u00f8rremaskine (vasker og t\u00f8rrer)", step_drying: "T\u00f8rring", section_cycle_phase: "Programfase",
     step_prewash: "Forvask", step_soaking: "Ibl\u00f8ds\u00e6tning", step_weighing: "Vejning", step_filling: "P\u00e5fyldning", step_washing: "Vask", step_rinsing: "Skylning", step_draining: "Udpumpning", step_spinning: "Centrifugering", step_cooling: "Afk\u00f8ling", step_anti_crease: "Antikr\u00f8l", step_steam: "Damp",
   },
@@ -1628,6 +1639,7 @@ const T = {
     section_stove_status: "Stan pieca", section_room_temperature: "Temperatura w pomieszczeniu", section_flue_temperature: "Temperatura spalin", section_pellet_level: "Poziom pelletu",
     ps_line_room: "Pomieszczenie", ps_line_power: "Moc", ps_line_flue: "Spaliny", ps_line_fan: "Wentylator", ps_line_pellets: "Pellet",
     type_air_conditioner: "Klimatyzator", ac_off: "Wy\u0142\u0105czony", ac_cooling: "Ch\u0142odzenie", ac_heating: "Grzanie", ac_drying: "Osuszanie", ac_fan_only: "Tylko wentylator", ac_auto: "Automatyczny", ac_idle: "Czuwanie", ac_defrost: "Odszranianie", ac_preheating: "Podgrzewanie wst\u0119pne", ac_line_humidity: "Wilgotno\u015b\u0107", section_vane_vertical: "\u017baluzja g\u00f3ra/d\u00f3\u0142", section_vane_horizontal: "\u017baluzja lewo/prawo", section_purifier: "Oczyszczacz powietrza (nanoe, plazma)", section_defrost: "Wska\u017anik odszraniania",
+    type_dehumidifier: "Osuszacz powietrza", type_space_heater: "Grzejnik elektryczny", type_towel_warmer: "Grzejnik \u0142azienkowy", dh_laundry: "Suszenie prania", dh_full: "Zbiornik pe\u0142ny", dh_line_tank: "Zbiornik", line_mode: "Tryb", tw_comfort: "Komfort", tw_eco: "Eko", tw_frost: "Ochrona przed zamarzaniem", tw_boost: "Boost", tw_drying: "Suszenie", section_tank: "Zbiornik na wod\u0119", section_current_humidity: "Czujnik wilgotno\u015bci", section_heater_layout: "Model", layout_fan_heater: "Termowentylator", layout_oil_radiator: "Grzejnik olejowy",
     washer_dryer: "Pralko-suszarka (pierze i suszy)", step_drying: "Suszenie", section_cycle_phase: "Faza programu",
     step_prewash: "Pranie wst\u0119pne", step_soaking: "Namaczanie", step_weighing: "Wa\u017cenie", step_filling: "Nape\u0142nianie", step_washing: "Pranie", step_rinsing: "P\u0142ukanie", step_draining: "Odpompowanie", step_spinning: "Wirowanie", step_cooling: "Sch\u0142adzanie", step_anti_crease: "Przeciw zagnieceniom", step_steam: "Para",
   },
@@ -1763,6 +1775,7 @@ const T = {
     section_stove_status: "\u7089\u5b50\u72b6\u6001", section_room_temperature: "\u5ba4\u5185\u6e29\u5ea6", section_flue_temperature: "\u70df\u6c14\u6e29\u5ea6", section_pellet_level: "\u9897\u7c92\u4f59\u91cf",
     ps_line_room: "\u5ba4\u5185", ps_line_power: "\u529f\u7387", ps_line_flue: "\u70df\u6c14", ps_line_fan: "\u98ce\u6247", ps_line_pellets: "\u9897\u7c92",
     type_air_conditioner: "\u7a7a\u8c03", ac_off: "\u5df2\u5173\u95ed", ac_cooling: "\u5236\u51b7\u4e2d", ac_heating: "\u5236\u70ed\u4e2d", ac_drying: "\u9664\u6e7f\u4e2d", ac_fan_only: "\u9001\u98ce", ac_auto: "\u81ea\u52a8", ac_idle: "\u5f85\u673a", ac_defrost: "\u9664\u971c\u4e2d", ac_preheating: "\u9884\u70ed\u4e2d", ac_line_humidity: "\u6e7f\u5ea6", section_vane_vertical: "\u4e0a\u4e0b\u5bfc\u98ce\u677f", section_vane_horizontal: "\u5de6\u53f3\u5bfc\u98ce\u677f", section_purifier: "\u7a7a\u6c14\u51c0\u5316 (nanoe\u3001\u7b49\u79bb\u5b50)", section_defrost: "\u9664\u971c\u6307\u793a",
+    type_dehumidifier: "\u9664\u6e7f\u673a", type_space_heater: "\u53d6\u6696\u5668", type_towel_warmer: "\u6bdb\u5dfe\u67b6", dh_laundry: "\u8863\u7269\u5e72\u71e5", dh_full: "\u6c34\u7bb1\u5df2\u6ee1", dh_line_tank: "\u6c34\u7bb1", line_mode: "\u6a21\u5f0f", tw_comfort: "\u8212\u9002", tw_eco: "\u8282\u80fd", tw_frost: "\u9632\u51bb", tw_boost: "\u5f3a\u52b2", tw_drying: "\u70d8\u5e72", section_tank: "\u6c34\u7bb1", section_current_humidity: "\u6e7f\u5ea6\u4f20\u611f\u5668", section_heater_layout: "\u578b\u53f7", layout_fan_heater: "\u6696\u98ce\u673a", layout_oil_radiator: "\u6cb9\u6c40",
     washer_dryer: "\u6d17\u70d8\u4e00\u4f53\u673a\uff08\u6d17\u6da4\u5e76\u70d8\u5e72\uff09", step_drying: "\u70d8\u5e72\u4e2d", section_cycle_phase: "\u7a0b\u5e8f\u9636\u6bb5",
     step_prewash: "\u9884\u6d17\u4e2d", step_soaking: "\u6d78\u6ce1\u4e2d", step_weighing: "\u79f0\u91cd\u4e2d", step_filling: "\u8fdb\u6c34\u4e2d", step_washing: "\u6d17\u6da4\u4e2d", step_rinsing: "\u6f02\u6d17\u4e2d", step_draining: "\u6392\u6c34\u4e2d", step_spinning: "\u8131\u6c34\u4e2d", step_cooling: "\u51b7\u5374\u4e2d", step_anti_crease: "\u9632\u76b1\u4e2d", step_steam: "\u84b8\u6c7d\u4e2d",
   },
@@ -1898,6 +1911,7 @@ const T = {
     section_stove_status: "Stav kamen", section_room_temperature: "Teplota v m\u00edstnosti", section_flue_temperature: "Teplota spalin", section_pellet_level: "Hladina pelet",
     ps_line_room: "M\u00edstnost", ps_line_power: "V\u00fdkon", ps_line_flue: "Spaliny", ps_line_fan: "Ventil\u00e1tor", ps_line_pellets: "Pelety",
     type_air_conditioner: "Klimatizace", ac_off: "Vypnuto", ac_cooling: "Chlazen\u00ed", ac_heating: "Topen\u00ed", ac_drying: "Odvlh\u010dov\u00e1n\u00ed", ac_fan_only: "Jen ventil\u00e1tor", ac_auto: "Automaticky", ac_idle: "Pohotovost", ac_defrost: "Odmrazov\u00e1n\u00ed", ac_preheating: "P\u0159edeh\u0159ev", ac_line_humidity: "Vlhkost", section_vane_vertical: "Lamela nahoru/dol\u016f", section_vane_horizontal: "Lamela vlevo/vpravo", section_purifier: "\u010cisti\u010dka vzduchu (nanoe, plazma)", section_defrost: "Indik\u00e1tor odmrazov\u00e1n\u00ed",
+    type_dehumidifier: "Odvlh\u010dova\u010d", type_space_heater: "Topidlo", type_towel_warmer: "Su\u0161\u00e1k na ru\u010dn\u00edky", dh_laundry: "Su\u0161en\u00ed pr\u00e1dla", dh_full: "N\u00e1dr\u017e pln\u00e1", dh_line_tank: "N\u00e1dr\u017e", line_mode: "Re\u017eim", tw_comfort: "Komfort", tw_eco: "Eco", tw_frost: "Protiz\u00e1mraz", tw_boost: "Boost", tw_drying: "Su\u0161en\u00ed", section_tank: "N\u00e1dr\u017e na vodu", section_current_humidity: "\u010cidlo vlhkosti", section_heater_layout: "Model", layout_fan_heater: "Teplovzdu\u0161n\u00fd ventil\u00e1tor", layout_oil_radiator: "Olejov\u00fd radi\u00e1tor",
     washer_dryer: "Pra\u010dka se su\u0161i\u010dkou (pere a su\u0161\u00ed)", step_drying: "Su\u0161en\u00ed", section_cycle_phase: "F\u00e1ze programu",
     step_prewash: "P\u0159edp\u00edrka", step_soaking: "Nam\u00e1\u010den\u00ed", step_weighing: "V\u00e1\u017een\u00ed", step_filling: "Napou\u0161t\u011bn\u00ed", step_washing: "Pran\u00ed", step_rinsing: "M\u00e1ch\u00e1n\u00ed", step_draining: "Vypou\u0161t\u011bn\u00ed", step_spinning: "Odst\u0159e\u010fov\u00e1n\u00ed", step_cooling: "Chlazen\u00ed", step_anti_crease: "Proti poma\u010dk\u00e1n\u00ed", step_steam: "P\u00e1ra",
   },
@@ -2310,6 +2324,10 @@ const AC_ICONS = {
   dry: "M12,20A6,6 0 0,1 6,14C6,10 12,3.25 12,3.25C12,3.25 18,10 18,14A6,6 0 0,1 12,20Z",
   fan: "M12,11A1,1 0 0,0 11,12A1,1 0 0,0 12,13A1,1 0 0,0 13,12A1,1 0 0,0 12,11M12.5,2C17,2 17.11,5.57 14.75,6.75C13.76,7.24 13.32,8.29 13.13,9.22C13.61,9.42 14.03,9.73 14.35,10.13C18.05,8.13 22.03,8.92 22.03,12.5C22.03,17 18.46,17.1 17.28,14.73C16.78,13.74 15.72,13.3 14.79,13.11C14.59,13.59 14.28,14 13.88,14.34C15.87,18.03 15.08,22 11.5,22C7,22 6.91,18.42 9.27,17.24C10.25,16.75 10.69,15.71 10.89,14.79C10.4,14.59 9.97,14.27 9.65,13.87C5.96,15.85 2,15.07 2,11.5C2,7 5.56,6.89 6.74,9.26C7.24,10.25 8.29,10.68 9.22,10.87C9.41,10.39 9.73,9.97 10.14,9.65C8.15,5.96 8.94,2 12.5,2Z",
   auto: "M12,6V9L16,5L12,1V4A8,8 0 0,0 4,12C4,13.57 4.46,15.03 5.24,16.26L6.7,14.8C6.25,13.97 6,13 6,12A6,6 0 0,1 12,6M18.76,7.74L17.3,9.2C17.74,10.04 18,11 18,12A6,6 0 0,1 12,18V15L8,19L12,23V20A8,8 0 0,0 20,12C20,10.43 19.54,8.97 18.76,7.74Z",
+  sun: "M3.55 19.09L4.96 20.5L6.76 18.71L5.34 17.29M12 6C8.69 6 6 8.69 6 12S8.69 18 12 18 18 15.31 18 12C18 8.68 15.31 6 12 6M20 13H23V11H20M17.24 18.71L19.04 20.5L20.45 19.09L18.66 17.29M20.45 5L19.04 3.6L17.24 5.39L18.66 6.81M13 1H11V4H13M6.76 5.39L4.96 3.6L3.55 5L5.34 6.81L6.76 5.39M1 13H4V11H1M13 20H11V23H13",
+  moon: "M17.75,4.09L15.22,6.03L16.13,9.09L13.5,7.28L10.87,9.09L11.78,6.03L9.25,4.09L12.44,4L13.5,1L14.56,4L17.75,4.09M21.25,11L19.61,12.25L20.2,14.23L18.5,13.06L16.8,14.23L17.39,12.25L15.75,11L17.81,10.95L18.5,9L19.19,10.95L21.25,11M18.97,15.95C19.8,15.87 20.69,17.05 20.16,17.8C19.84,18.25 19.5,18.67 19.08,19.07C15.17,23 8.84,23 4.94,19.07C1.03,15.17 1.03,8.83 4.94,4.93C5.34,4.53 5.76,4.17 6.21,3.85C6.96,3.32 8.14,4.21 8.06,5.04C7.79,7.9 8.75,10.87 10.95,13.06C13.14,15.26 16.1,16.22 18.97,15.95Z",
+  rocket: "M13.13 22.19L11.5 18.36C13.07 17.78 14.54 17 15.9 16.09L13.13 22.19M5.64 12.5L1.81 10.87L7.91 8.1C7 9.46 6.22 10.93 5.64 12.5M21.61 2.39C21.61 2.39 16.66 .269 11 5.93C8.81 8.12 7.5 10.53 6.65 12.64C6.37 13.39 6.56 14.21 7.11 14.77L9.24 16.89C9.79 17.45 10.61 17.63 11.36 17.35C13.5 16.53 15.88 15.19 18.07 13C23.73 7.34 21.61 2.39 21.61 2.39M14.54 9.46C13.76 8.68 13.76 7.41 14.54 6.63S16.59 5.85 17.37 6.63C18.14 7.41 18.15 8.68 17.37 9.46C16.59 10.24 15.32 10.24 14.54 9.46Z",
+  laundry: "M16,21H8A1,1 0 0,1 7,20V12.07L5.7,13.07C5.31,13.46 4.68,13.46 4.29,13.07L1.46,10.29C1.07,9.9 1.07,9.27 1.46,8.88L7.34,3H9C9,4.1 10.34,5 12,5C13.66,5 15,4.1 15,3H16.66L22.54,8.88C22.93,9.27 22.93,9.9 22.54,10.29L19.71,13.12C19.32,13.5 18.69,13.5 18.3,13.12L17,12.12V20A1,1 0 0,1 16,21",
 };
 // The setpoint as the unit's screen prints it: 24, or 24.5 on the units that
 // take halves. No unit and no locale, a seven-segment display has neither.
@@ -2330,6 +2348,98 @@ function attrLabel(hass, st, attr, value, cfg) {
   }
   const clean = cleanStateLabel(String(value));
   return clean.charAt(0).toUpperCase() + clean.slice(1);
+}
+
+// A dehumidifier's mode says whether it dries a room or the laundry: Midea's
+// clothes_dry, Tuya's laundry, De'Longhi's dry clothes. Shoes are not laundry.
+const DH_LAUNDRY_RE = /cloth|laundry|linge|wasch|wasche|ropa|bucato|kleding|tvatt|pranie|pradl|\u8863/;
+const DH_COLORS = {
+  off: "var(--disabled-text-color, #9e9e9e)", drying: "#29b6f6", laundry: "#1565c0",
+  idle: "var(--success-color, #4caf50)", full: "var(--error-color, #f44336)",
+};
+const DH_LABELS = { off: "ac_off", drying: "ac_drying", laundry: "dh_laundry", idle: "ac_idle", full: "dh_full" };
+// A dehumidifier from its humidifier entity: switched on or off in its state,
+// and in its action whether it is drying or has reached the humidity asked.
+function dehumidifierModeOf(st) {
+  if (!st) return "";
+  const state = String(st.state).toLowerCase();
+  if (state === "off") return "off";
+  if (state !== "on") return "";
+  const action = String((st.attributes || {}).action || "").toLowerCase();
+  if (action === "idle" || action === "off") return "idle";
+  return "drying";
+}
+
+// A small room heater: a fan heater or an oil-filled radiator, read from a
+// climate entity or from the plug it sits on.
+const SH_COLORS = { off: "var(--disabled-text-color, #9e9e9e)", heating: "#ff7043", idle: "var(--success-color, #4caf50)", fan: "#78909c" };
+const SH_LABELS = { off: "ac_off", heating: "ac_heating", idle: "ac_idle", fan: "ac_fan_only" };
+function spaceHeaterModeOf(st) {
+  if (!st) return "";
+  const state = String(st.state).toLowerCase();
+  if (state === "off") return "off";
+  const action = String((st.attributes || {}).hvac_action || "").toLowerCase();
+  const byAction = { heating: "heating", preheating: "heating", idle: "idle", off: "idle", fan: "fan" };
+  if (Object.prototype.hasOwnProperty.call(byAction, action)) return byAction[action];
+  if (state === "fan_only") return "fan";
+  return ["heat", "auto", "heat_cool", "on"].includes(state) ? "heating" : "";
+}
+
+// A towel warmer on a pilot wire, the French way of driving an electric
+// radiator: comfort, eco, frost protection and off, plus the boost and the
+// towel drying of Atlantic, Thermor and Acova. Heatzy and Atlantic say it in
+// the climate entity's preset, NodOn in a select of its own.
+const TW_MODES = ["off", "comfort", "eco", "frost", "boost", "drying"];
+const TW_COLORS = {
+  off: "var(--disabled-text-color, #9e9e9e)", comfort: "#ff7043", eco: "#9575cd", frost: "#29b6f6", boost: "#f4511e", drying: "#ff8a65",
+};
+const TW_LABELS = { off: "ac_off", comfort: "tw_comfort", eco: "tw_eco", frost: "tw_frost", boost: "tw_boost", drying: "tw_drying" };
+const TW_ICONS = { comfort: "sun", eco: "moon", frost: "cool", boost: "rocket", drying: "laundry" };
+function towelModeOf(raw) {
+  if (raw === undefined || raw === null) return "";
+  const f = stripAccents(String(raw).trim()).toLowerCase();
+  if (["", "unknown", "unavailable", "none"].includes(f)) return "";
+  if (/^(off|0|arret|stop|aus|uit|apagado|spento)$/.test(f)) return "off";
+  if (/boost|turbo|max/.test(f)) return "boost";
+  if (/dry|sech|trock|secad|asciug|droog|tork|susz/.test(f)) return "drying";
+  if (/frost|hors.?gel|antigel|anti.?freeze|away|absen|vacation|holiday|vacanc|frostschutz/.test(f)) return "frost";
+  if (/eco|night|nuit|reduced|reduit|moon|sleep/.test(f)) return "eco";
+  if (/comfort|confort|komfort|^home$|^heat$|^on$/.test(f)) return "comfort";
+  return "";
+}
+
+// The small screen and the air lines the dehumidifier and the two heaters
+// share. Warm air rises; the air a dehumidifier or a fan blows goes the other
+// way along the same lines.
+const MINI_LCD_CSS = `
+        .mini-lcd {
+          position: absolute; height: 9px; padding: 0 1.5px; border-radius: 1.5px;
+          display: flex; align-items: center; justify-content: center; gap: 1px;
+          background: rgba(10, 14, 18, 0.88); color: #7fdcff; text-shadow: 0 0 2px currentColor;
+          font: 700 6.5px/9px ui-monospace, "SF Mono", Menlo, monospace;
+        }
+        .mini-lcd svg { width: 7px; height: 7px; flex: none; fill: currentColor; }
+        .mini-lcd span:empty { display: none; }
+        .machine.mode-off .mini-lcd { display: none; }
+        .air-flow { position: absolute; display: none; overflow: visible; }
+        .air-flow path {
+          fill: none; stroke-width: 2; stroke-linecap: round; stroke-dasharray: 4 5;
+          animation: air-up 1.4s linear infinite; animation-delay: var(--anim-offset, 0s);
+        }
+        .air-flow path:nth-child(2) { animation-delay: calc(-0.45s + var(--anim-offset, 0s)); }
+        .air-flow path:nth-child(3) { animation-delay: calc(-0.9s + var(--anim-offset, 0s)); }
+        .air-flow.down path { animation-name: air-down; }
+        @keyframes air-up { to { stroke-dashoffset: -18; } }
+        @keyframes air-down { to { stroke-dashoffset: 18; } }
+`;
+function miniLcd(cls, icon, text) {
+  const svg = AC_ICONS[icon] ? `<svg viewBox="0 0 24 24"><path d="${AC_ICONS[icon]}"/></svg>` : "";
+  return `<div class="mini-lcd ${cls}">${svg}<span>${esc(text || "")}</span></div>`;
+}
+// Three wavy lines, drawn from the bottom up.
+function airFlow(cls, w, h, down) {
+  const line = (x) => `<path d="M${x} ${h} C${x - w * 0.1} ${h * 0.66} ${x + w * 0.1} ${h * 0.33} ${x} 0"/>`;
+  return `<svg class="air-flow ${cls} ${down ? "down" : ""}" viewBox="0 0 ${w} ${h}">${line(w * 0.25)}${line(w * 0.5)}${line(w * 0.75)}</svg>`;
 }
 
 // What a heat pump's valve says. HeishaMon reads its 2-way valve Heating or
@@ -3444,6 +3554,13 @@ const TYPE_AUTO_PATTERNS = {
     error_entity: /alarm|error.?code|nb.?alarms/i,
     power_entity: /power_w$|watt|electric/i,
   },
+  // Midea LAN and Tuya keep the tank apart, as a contact or a level.
+  dehumidifier: {
+    tank_entity: /tank.?(full|level)|water.?(tank|level|full)|bucket|full.?tank/i,
+    current_humidity_entity: /(current|indoor|room).?humid/i,
+    fan_speed_entity: /fan.?(speed|mode|level)|wind.?speed/i,
+    power_entity: /power$|power_w$|watt/i,
+  },
   // Names read in the integrations: Panasonic Comfort Cloud keeps its vanes
   // and nanoe in selects and switches, Midea LAN its wind angles, and most
   // report the outdoor unit's temperature apart. Gree calls its ioniser the
@@ -3583,6 +3700,12 @@ const TYPE_CAPS = {
   // blows in, the vanes that point the air and the fan that pushes it. No
   // cycle, and a climate entity usually says everything else.
   air_conditioner: { airConditioner: true },
+  // A portable dehumidifier: the humidity it aims at and the tank it fills.
+  dehumidifier: { dehumidifier: true },
+  // A small room heater, blowing or oil-filled, on a thermostat or a plug.
+  space_heater: { spaceHeater: true },
+  // A towel warmer, driven by the pilot wire's modes.
+  towel_warmer: { towelWarmer: true },
 };
 const APPLIANCE_TYPES = Object.keys(TYPE_CAPS);
 const LAUNDRY_TYPES = ["washer", "dryer", "dishwasher"];
@@ -3613,6 +3736,9 @@ const FEEDER_ONLY_FIELDS = [
 const STOVE_ONLY_FIELDS = ["flue_temperature_entity"];
 // And vanes point the air of an air conditioner only.
 const AC_ONLY_FIELDS = ["vane_vertical_entity", "vane_horizontal_entity", "purifier_entity"];
+// A water tank and a humidity reading belong to a dehumidifier, and the
+// choice of a heater's model to a heater.
+const DEHUMIDIFIER_ONLY_FIELDS = ["tank_entity", "current_humidity_entity"];
 const PRINTER_ONLY_FIELDS = [
   "nozzle_temperature_entity",
   "nozzle_target_entity",
@@ -3639,6 +3765,8 @@ function detectApplianceType(cfg, st) {
   if (FEEDER_ONLY_FIELDS.some((f) => cfg[f])) return "pet_feeder";
   if (STOVE_ONLY_FIELDS.some((f) => cfg[f])) return "pellet_stove";
   if (AC_ONLY_FIELDS.some((f) => cfg[f])) return "air_conditioner";
+  if (DEHUMIDIFIER_ONLY_FIELDS.some((f) => cfg[f])) return "dehumidifier";
+  if (cfg.heater_layout) return "space_heater";
   const hay = `${cfg.icon || ""} ${cfg.state_entity || ""} ${(st && st.attributes.icon) || ""}`.toLowerCase();
   // Before everything else: a printer's entities are named after its maker or
   // its software, and a Bambu Lab one after its model ("p1s_...", "a1_...").
@@ -3659,6 +3787,13 @@ function detectApplianceType(cfg, st) {
   if (/\biron(ing)?\b|steam.?(generator|station)|fer.?a.?repasser|centrale.?vapeur|bugeleisen|dampfstation|dampfbugel|plancha.?de.?ropa|planchado|ferro.?(da.?stiro|de.?engomar|de.?passar)|strijkijzer|stoomgenerator|stryk(jarn|ejern)|strygejern|zelazko|generator.?pary|zehlicka|parni.?generator|\u0443\u0442\u044e\u0433|\u043f\u0430\u0440\u043e\u0433\u0435\u043d\u0435\u0440\u0430\u0442\u043e\u0440|\u71a8\u6597/.test(hay)) return "iron";
   // A pellet stove, by its own name or by its maker's and its integration's.
   // "Stove" alone is a cooktop to an American, so the word needs its pellets.
+  // A towel warmer, a dehumidifier and a small heater, by their names. They
+  // come before the stove, since Italian calls an electric heater a stufa
+  // too, and the dehumidifier also by the device class of its entity.
+  if (/towel|seche.?serviette|s\u00e8che.?serviette|handtuch|toallero|scaldasalvie|handdoek|handduk|handkle|recznik|susak|\u6bdb\u5dfe/.test(hay)) return "towel_warmer";
+  if (/dehumid|deshumid|d\u00e9shumid|entfeucht|deumidif|ontvocht|avfukt|affugt|osuszacz|odvlh|\u9664\u6e7f/.test(hay)) return "dehumidifier";
+  if (st && /^humidifier\./.test(String(cfg.state_entity || "")) && st.attributes.device_class === "dehumidifier") return "dehumidifier";
+  if (/space.?heater|fan.?heater|ceramic.?heater|oil.?(filled|heater|radiator)|panel.?heater|soufflant|bain.?d.?huile|chauffage.?d.?appoint|petit.?chauffage|convecteur|heizl(u|ue|\u00fc)fter|(o|oe|\u00f6)lradiator|calefactor|termoventil|stufetta|stufa.?elettric|scaldino|termoconvett|ventilatorkachel|varmefl|termowentyl|\u6696\u98ce\u673a|\u6cb9\u6c40/.test(hay)) return "space_heater";
   if (/pellet|stufa|poele|po\u00eale|granule|granul\u00e9|pilleovn|palazzetti|micronova|aguaiot|extraflame|ravelli|piazzetta|edilkamin|duepi|(^|[^a-z])(rika|mcz)([^a-z]|$)|\u043f\u0435\u043b\u043b\u0435\u0442|\u9897\u7c92\u7089/.test(hay)) return "pellet_stove";
   // InComfort exposes an Intergas combi boiler as water_heater.boiler: the
   // domain says tank, the name says boiler, and the name is the one that knows.
@@ -4942,6 +5077,127 @@ const ILLUSTRATION_CSS = {
           0%, 100% { transform: skewX(-35deg) scaleY(var(--ac-reach, 1)); }
           50% { transform: skewX(35deg) scaleY(var(--ac-reach, 1)); }
         }
+  `,
+  // A portable dehumidifier on its feet: the air leaves by the grille on top,
+  // the screen gives the humidity, and the tank at the bottom shows the water
+  // it has taken out of the room through a window, drop by drop.
+  dehumidifier: () => `${MINI_LCD_CSS}
+        .dh-body {
+          position: absolute; left: 24px; right: 24px; top: 22px; bottom: 8px; border-radius: 9px 9px 6px 6px;
+          background: linear-gradient(90deg, var(--ac-body-lo, #d7dbde), var(--ac-body-hi, #ffffff) 30%, var(--ac-body, #eef0f2) 70%, var(--ac-body-lo, #d7dbde));
+          box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.1);
+        }
+        .dh-grille { position: absolute; left: 29px; right: 29px; top: 25px; height: 10px; border-radius: 3px; background: repeating-linear-gradient(180deg, #3a4047 0 1.2px, #6e767e 1.2px 2.6px); }
+        .dh-lcd { left: 38px; top: 40px; min-width: 16px; }
+        .dh-led { position: absolute; left: 31px; top: 43px; width: 3px; height: 3px; border-radius: 50%; background: #43a047; box-shadow: 0 0 3px #43a047; }
+        .machine.mode-off .dh-led { background: rgba(0, 0, 0, 0.15); box-shadow: none; }
+        .machine.mode-full .dh-led { background: #e53935; box-shadow: 0 0 3px #e53935; animation: dh-blink 1s steps(2) infinite; animation-delay: var(--anim-offset, 0s); }
+        .machine.mode-full .dh-lcd { color: #ff6b6b; }
+        .dh-seam { position: absolute; left: 24px; right: 24px; top: 64px; height: 1px; background: rgba(0, 0, 0, 0.12); }
+        .dh-grip { position: absolute; left: 40px; width: 16px; top: 66px; height: 3px; border-radius: 0 0 3px 3px; background: rgba(0, 0, 0, 0.14); }
+        .dh-win {
+          position: absolute; left: 33px; right: 33px; top: 72px; height: 20px; border-radius: 3px; overflow: hidden;
+          background: linear-gradient(180deg, rgba(210, 225, 235, 0.9), rgba(190, 210, 222, 0.9)); box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.15);
+        }
+        .machine.mode-full .dh-win { box-shadow: inset 0 0 0 1.5px #e53935; }
+        .dh-water { position: absolute; left: 0; right: 0; bottom: 0; height: var(--dh-fill, 35%); background: linear-gradient(180deg, #64b5f6, #1e88e5); }
+        .dh-water::before { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 1.5px; background: rgba(255, 255, 255, 0.6); }
+        .dh-drip i { position: absolute; top: -3px; width: 2px; height: 3px; border-radius: 50%; background: #42a5f5; opacity: 0; }
+        .dh-drip i:nth-child(1) { left: 9px; }
+        .dh-drip i:nth-child(2) { left: 15px; }
+        .machine.mode-drying .dh-drip i, .machine.mode-laundry .dh-drip i { animation: dh-drip 1.3s ease-in infinite; animation-delay: var(--anim-offset, 0s); }
+        .machine.mode-drying .dh-drip i:nth-child(2), .machine.mode-laundry .dh-drip i:nth-child(2) { animation-delay: calc(-0.65s + var(--anim-offset, 0s)); }
+        .dh-foot { position: absolute; bottom: 4px; width: 7px; height: 5px; border-radius: 0 0 3px 3px; background: #3b4048; }
+        .dh-foot.f1 { left: 28px; }
+        .dh-foot.f2 { right: 28px; }
+        .dh-air { left: 28px; top: -2px; width: 40px; height: 24px; }
+        .machine.mode-drying .dh-air, .machine.mode-laundry .dh-air { display: block; }
+        .dh-air path { stroke: #81d4fa; }
+        .machine.mode-laundry .dh-air path { stroke: #1565c0; }
+        @keyframes dh-drip { 0% { opacity: 0; transform: translateY(0); } 15% { opacity: 1; } 90% { opacity: 1; } 100% { opacity: 0; transform: translateY(16px); } }
+        @keyframes dh-blink { 50% { opacity: 0.25; } }
+  `,
+  // A small room heater, in two models. The fan heater glows behind its
+  // grille and its fan turns; the oil-filled radiator warms up from the
+  // bottom of its fins. Warm air rises above both, and a fan heater set to
+  // blow only sends grey air the other way.
+  space_heater: () => `${MINI_LCD_CSS}
+        .machine.mode-heating .mini-lcd { color: #ffab76; }
+        .machine.mode-idle .mini-lcd { color: #a5d6a7; }
+        .machine.mode-fan .mini-lcd { color: #e0e0e0; }
+        .machine.mode-heating .air-flow, .machine.mode-fan .air-flow { display: block; }
+        .air-flow path { stroke: #ff8a65; }
+        .machine.mode-fan .air-flow path { stroke: #90a4ae; }
+        .hf-body {
+          position: absolute; left: 25px; right: 25px; top: 36px; bottom: 10px; border-radius: 12px 12px 8px 8px;
+          background: linear-gradient(160deg, var(--ac-body-hi, #ffffff), var(--ac-body, #eceff1) 55%, var(--ac-body-lo, #cfd6db));
+          box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.1);
+        }
+        .hf-handle { position: absolute; left: 41px; width: 14px; top: 40px; height: 4px; border-radius: 2px; background: rgba(0, 0, 0, 0.28); }
+        .hf-lcd { left: 38px; top: 48px; min-width: 16px; }
+        .hf-grill { position: absolute; left: 31px; top: 61px; width: 34px; height: 31px; border-radius: 7px; overflow: hidden; background: #20252b; }
+        .hf-grill::after { content: ""; position: absolute; inset: 0; background: repeating-linear-gradient(180deg, rgba(30, 34, 40, 0.95) 0 1.4px, transparent 1.4px 4px); }
+        .hf-glow { position: absolute; inset: 0; opacity: 0; background: radial-gradient(ellipse at 50% 55%, #ffb74d, #ff7043 45%, #8d2d0e 80%); }
+        .machine.mode-heating .hf-glow { opacity: 1; animation: sh-glow 2.4s ease-in-out infinite; animation-delay: var(--anim-offset, 0s); }
+        .hf-fan { position: absolute; left: 50%; top: 50%; width: 22px; height: 22px; margin: -11px 0 0 -11px; opacity: 0.5; fill: #78909c; }
+        .machine.mode-heating .hf-fan, .machine.mode-fan .hf-fan { animation: sh-spin 0.5s linear infinite; animation-delay: var(--anim-offset, 0s); }
+        .hf-foot { position: absolute; bottom: 6px; width: 10px; height: 4px; border-radius: 0 0 3px 3px; background: #3b4048; }
+        .hf-foot.f1 { left: 30px; }
+        .hf-foot.f2 { right: 30px; }
+        .hf-air { left: 27px; top: 6px; width: 42px; height: 30px; }
+        .ho-fins { position: absolute; left: 14px; top: 30px; width: 58px; height: 62px; display: flex; gap: 1.5px; }
+        .ho-fins i {
+          flex: 1; border-radius: 4px; position: relative; overflow: hidden;
+          background: linear-gradient(90deg, var(--ac-body-lo, #cfd6db), var(--ac-body-hi, #ffffff) 45%, var(--ac-body, #e6eaed));
+          box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.1);
+        }
+        .ho-fins i::after { content: ""; position: absolute; inset: 0; opacity: 0; background: linear-gradient(0deg, rgba(255, 112, 67, 0.55), rgba(255, 171, 145, 0.15) 70%, transparent); }
+        .machine.mode-heating .ho-fins i::after { opacity: 1; animation: sh-glow 3s ease-in-out infinite; animation-delay: var(--anim-offset, 0s); }
+        .ho-box {
+          position: absolute; left: 73px; top: 34px; width: 12px; height: 26px; border-radius: 3px;
+          background: linear-gradient(90deg, var(--ac-body, #e6eaed), var(--ac-body-lo, #cfd6db)); box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.12);
+        }
+        .ho-knob { position: absolute; left: 76px; top: 48px; width: 6px; height: 6px; border-radius: 50%; background: #90a4ae; box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.2); }
+        .ho-lcd { left: 74px; top: 37px; min-width: 9px; padding: 0 1px; }
+        .ho-base { position: absolute; left: 18px; width: 50px; top: 92px; height: 3px; border-radius: 2px; background: #5f666e; }
+        .ho-wheel { position: absolute; top: 94px; width: 6px; height: 6px; border-radius: 50%; background: #3b4048; }
+        .ho-wheel.w1 { left: 18px; }
+        .ho-wheel.w2 { left: 62px; }
+        .ho-air { left: 14px; top: 2px; width: 58px; height: 28px; }
+        @keyframes sh-spin { to { transform: rotate(360deg); } }
+        @keyframes sh-glow { 0%, 100% { filter: brightness(1); } 50% { filter: brightness(1.25); } }
+  `,
+  // A towel warmer on the bathroom wall: two rails, the bars between them, a
+  // towel over one, and the control box underneath. The bars warm with the
+  // mode, the heat rises above them, and drying, the towel steams.
+  towel_warmer: () => `${MINI_LCD_CSS}
+        .machine.mode-comfort .mini-lcd, .machine.mode-boost .mini-lcd, .machine.mode-drying .mini-lcd { color: #ffab76; }
+        .machine.mode-eco .mini-lcd { color: #b39ddb; }
+        .machine.mode-frost .mini-lcd { color: #81d4fa; }
+        .tw-rail { position: absolute; top: 14px; bottom: 18px; width: 5px; border-radius: 3px; background: linear-gradient(90deg, var(--ac-body-lo, #cfd6db), var(--ac-body-hi, #ffffff), var(--ac-body, #e6eaed)); }
+        .tw-rail.r1 { left: 22px; }
+        .tw-rail.r2 { right: 22px; }
+        .tw-bar {
+          position: absolute; left: 26px; right: 26px; height: 2.6px; border-radius: 2px;
+          background: linear-gradient(180deg, var(--ac-body-hi, #ffffff), var(--ac-body, #e6eaed) 50%, var(--ac-body-lo, #bfc7cd));
+          box-shadow: 0 0.5px 0 rgba(0, 0, 0, 0.12);
+        }
+        .machine.mode-comfort .tw-bar, .machine.mode-drying .tw-bar { background: linear-gradient(180deg, #ffe0d6, #ffab91 55%, #f4511e); }
+        .machine.mode-boost .tw-bar { background: linear-gradient(180deg, #ffab91, #ff5722 55%, #bf360c); box-shadow: 0 0 3px rgba(255, 87, 34, 0.8); }
+        .machine.mode-eco .tw-bar { background: linear-gradient(180deg, #fbe9e7, #ffccbc 55%, #ffab91); }
+        .tw-towel { position: absolute; left: 33px; width: 30px; top: 31px; height: 44px; }
+        .tw-box {
+          position: absolute; left: 35px; right: 35px; top: 92px; height: 12px; border-radius: 3px;
+          background: linear-gradient(180deg, var(--ac-body-hi, #ffffff), var(--ac-body-lo, #cfd6db)); box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.12);
+        }
+        .tw-lcd { left: 39px; top: 93.5px; min-width: 16px; }
+        .tw-air { left: 22px; top: 0; width: 52px; height: 14px; }
+        .machine.mode-comfort .tw-air, .machine.mode-boost .tw-air, .machine.mode-eco .tw-air { display: block; }
+        .tw-air path, .tw-steam path { stroke: #ff8a65; }
+        .machine.mode-eco .tw-air path { animation-duration: 2.6s; opacity: 0.6; }
+        .machine.mode-boost .tw-air path { animation-duration: 0.7s; }
+        .tw-steam { left: 30px; top: 10px; width: 36px; height: 22px; }
+        .machine.mode-drying .tw-steam { display: block; }
   `,
   pellet_stove: () => `
         .ps-pipe {
@@ -6247,6 +6503,72 @@ function illustrationHtml(type, ctx) {
             </g>
             <circle class="ac-drop d1" cx="26" cy="2" r="1.8"/><circle class="ac-drop d2" cx="48" cy="2" r="1.8"/><circle class="ac-drop d3" cx="70" cy="2" r="1.8"/>
           </svg>
+        </div>`;
+  }
+
+  if (type === "dehumidifier") {
+    // The tank keeps a resting level when the card cannot know one, rather
+    // than reading a dehumidifier with no tank entity as an empty one.
+    const d = ctx.dh || {};
+    const mode = d.mode || "off";
+    const fill = mode === "full" ? 100 : d.fill === null || d.fill === undefined ? 35 : Math.round(d.fill);
+    return `
+        <div class="machine ${cls} mode-${mode}" style="--dh-fill: ${fill}%">
+          ${airFlow("dh-air", 40, 24, true)}
+          <div class="dh-body"></div>
+          <div class="dh-grille"></div>
+          ${miniLcd("dh-lcd", d.icon, d.screen)}
+          <div class="dh-led"></div>
+          <div class="dh-seam"></div>
+          <div class="dh-grip"></div>
+          <div class="dh-win"><div class="dh-water"></div><div class="dh-drip"><i></i><i></i></div></div>
+          <div class="dh-foot f1"></div><div class="dh-foot f2"></div>
+        </div>`;
+  }
+
+  if (type === "space_heater") {
+    const h = ctx.heater || {};
+    const mode = h.mode || "off";
+    if (h.layout === "oil") {
+      return `
+        <div class="machine ${cls} oil mode-${mode}">
+          ${airFlow("ho-air", 58, 28, false)}
+          <div class="ho-fins"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+          <div class="ho-box"></div>
+          ${miniLcd("ho-lcd", h.icon, "")}
+          <div class="ho-knob"></div>
+          <div class="ho-base"></div><div class="ho-wheel w1"></div><div class="ho-wheel w2"></div>
+        </div>`;
+    }
+    return `
+        <div class="machine ${cls} mode-${mode}">
+          ${airFlow("hf-air", 42, 30, mode === "fan")}
+          <div class="hf-body"></div>
+          <div class="hf-handle"></div>
+          ${miniLcd("hf-lcd", h.icon, h.screen)}
+          <div class="hf-grill"><div class="hf-glow"></div><svg class="hf-fan" viewBox="0 0 24 24"><path d="${AC_ICONS.fan}"/></svg></div>
+          <div class="hf-foot f1"></div><div class="hf-foot f2"></div>
+        </div>`;
+  }
+
+  if (type === "towel_warmer") {
+    const w = ctx.towel || {};
+    const bars = [17, 23, 29, 35, 47, 53, 59, 71, 77, 83].map((y) => `<div class="tw-bar" style="top: ${y}px"></div>`).join("");
+    // The towel hangs over the fourth bar, its back half behind it.
+    const towel = `<svg class="tw-towel" viewBox="0 0 30 44">`
+      + `<path d="M3 4 H27 V24 H3Z" fill="#80cbc4" opacity=".55"/>`
+      + `<path d="M2 3 Q15 1 28 3 V38 C23 40 18 37 13 39 C8 41 5 39 2 40 Z" fill="#80cbc4"/>`
+      + `<path d="M2 3 Q15 1 28 3 V7 Q15 5 2 7Z" fill="rgba(0,0,0,.14)"/>`
+      + `<path d="M4 33 H26" stroke="rgba(255,255,255,.55)" stroke-width="1.2" stroke-dasharray="2 2"/></svg>`;
+    return `
+        <div class="machine ${cls} mode-${w.mode || "off"}">
+          ${airFlow("tw-air", 52, 14, false)}
+          ${airFlow("tw-steam", 36, 22, false)}
+          <div class="tw-rail r1"></div><div class="tw-rail r2"></div>
+          ${bars}
+          ${towel}
+          <div class="tw-box"></div>
+          ${miniLcd("tw-lcd", w.icon, w.screen)}
         </div>`;
   }
 
@@ -8187,6 +8509,151 @@ class ApplianceCard extends HTMLElement {
       };
     }
 
+    // Dehumidifier, space heater and towel warmer. Each reads its own entity
+    // and falls back on the plug it sits on: at work above the threshold, and
+    // at rest while the plug is switched on but the thermostat or the
+    // hygrostat has nothing to do.
+    const plugMode = (working, resting) => {
+      if (isActiveState(norm)) return working;
+      const sw = st && ["switch", "input_boolean"].includes(domainOf(cfg.state_entity)) ? String(st.state).toLowerCase() : "";
+      return sw === "on" ? resting : "off";
+    };
+    const mappedMode = (modes) => {
+      if (powerDerived || !st || !cfg.state_map || !Object.prototype.hasOwnProperty.call(cfg.state_map, rawState)) return "";
+      return modes.includes(cfg.state_map[rawState]) ? cfg.state_map[rawState] : "";
+    };
+    // The room and the setpoint on one line, as for the stove and the air
+    // conditioner.
+    const roomLine = (attrs, showTarget) => {
+      const room = cfg.current_temperature_entity ? numericState(hass, cfg.current_temperature_entity) : numberOrNull(attrs.current_temperature);
+      const target = cfg.target_temperature_entity ? numericState(hass, cfg.target_temperature_entity) : numberOrNull(attrs.temperature);
+      if (room === null) return target;
+      const roomId = cfg.current_temperature_entity || cfg.state_entity;
+      const unit = temperatureUnit(hass, cfg.current_temperature_entity || cfg.target_temperature_entity);
+      const now = tempText(hass, cfg, roomId, room, unit);
+      const goal = target !== null && showTarget ? tempText(hass, cfg, cfg.target_temperature_entity || cfg.state_entity, target, unit) : null;
+      extraLines.push({
+        key: "room_temp",
+        icon: "mdi:home-thermometer-outline",
+        label: t(hass, "ps_line_room"),
+        value: goal !== null && goal !== now ? `${keepTogether(now)} \u2192 ${keepTogether(goal)}` : keepTogether(now),
+        entity: roomId,
+      });
+      return target;
+    };
+    // A preset or a mode worth naming on its own line, in Home Assistant's
+    // words for it.
+    const modeLine = (ent, attr) => {
+      const v = ent ? (ent.attributes || {})[attr] : null;
+      if (v === undefined || v === null || ["", "none"].includes(String(v).toLowerCase())) return;
+      extraLines.push({ key: "mode", icon: "mdi:tune-variant", label: t(hass, "line_mode"), value: attrLabel(hass, ent, attr, v, cfg), entity: cfg.state_entity });
+    };
+
+    // Dehumidifier. A humidifier entity says whether it is on and, in its
+    // action, whether it is drying or has reached the humidity asked; its mode
+    // says when it dries the laundry. A full tank stops it, and wins.
+    let dh = null;
+    if (cap.dehumidifier) {
+      const hum = domainOf(cfg.state_entity) === "humidifier" ? st : null;
+      const attrs = (hum && hum.attributes) || {};
+      let mode = mappedMode(["off", "drying", "laundry", "idle", "full"]);
+      if (!mode && !powerDerived && hum) mode = dehumidifierModeOf(hum);
+      if (!mode) mode = plugMode("drying", "idle");
+      if (mode === "drying" && DH_LAUNDRY_RE.test(stripAccents(String(attrs.mode || "")).toLowerCase())) mode = "laundry";
+      // The tank: a level in percent, or a contact on when it is full.
+      const tankSt = cfg.tank_entity ? stateObj(hass, cfg.tank_entity) : null;
+      const tankKnown = !!tankSt && !["unknown", "unavailable"].includes(tankSt.state);
+      const tankPct = tankKnown ? numericState(hass, cfg.tank_entity) : null;
+      const full = tankPct !== null
+        ? tankPct >= (parseFloat(cfg.tank_full_above) || 100)
+        : tankKnown && ["on", "true", "full"].includes(String(tankSt.state).toLowerCase());
+      if (full) mode = "full";
+      if (!cfg.state_show_raw) stateLabel = t(hass, DH_LABELS[mode]);
+      color = DH_COLORS[mode];
+
+      const current = cfg.current_humidity_entity ? numericState(hass, cfg.current_humidity_entity) : numberOrNull(attrs.current_humidity);
+      const target = numberOrNull(attrs.humidity);
+      if (current !== null) {
+        const aim = target !== null && mode !== "off" && Math.round(target) !== Math.round(current);
+        extraLines.push({
+          key: "humidity",
+          icon: "mdi:water-percent",
+          label: t(hass, "ac_line_humidity"),
+          value: keepTogether(aim ? `${Math.round(current)} % \u2192 ${Math.round(target)} %` : `${Math.round(current)} %`),
+          entity: cfg.current_humidity_entity || cfg.state_entity,
+        });
+      }
+      if (mode !== "off") modeLine(hum, "mode");
+      if (tankKnown && (tankPct !== null || full)) {
+        extraLines.push({
+          key: "tank",
+          icon: full ? "mdi:alert-circle-outline" : "mdi:cup-water",
+          label: t(hass, "dh_line_tank"),
+          value: tankPct !== null ? keepTogether(`${Math.round(tankPct)} %`) : t(hass, "dh_full"),
+          entity: cfg.tank_entity,
+          warn: full,
+        });
+      }
+      const fanSt = cfg.fan_speed_entity ? stateObj(hass, cfg.fan_speed_entity) : null;
+      if (fanSt && mode !== "off" && !["unknown", "unavailable"].includes(fanSt.state)) {
+        extraLines.push({ key: "fan_speed", icon: "mdi:fan", label: t(hass, "ps_line_fan"),
+          value: keepTogether(formatInfoValue(fanSt, hass, null, cfg, cfg.fan_speed_entity)), entity: cfg.fan_speed_entity });
+      }
+      const unit = tankPct !== null ? unitOf(hass, cfg.tank_entity) : null;
+      dh = {
+        mode,
+        fill: tankPct !== null && (!unit || unit === "%") ? Math.max(0, Math.min(100, tankPct)) : null,
+        icon: mode === "laundry" ? "laundry" : "dry",
+        screen: mode !== "off" && current !== null ? `${Math.round(current)}%` : "",
+      };
+    }
+
+    // Space heater, a fan heater or an oil-filled radiator. A climate entity
+    // says in hvac_action whether it heats or has reached the setpoint.
+    let heater = null;
+    if (cap.spaceHeater) {
+      const climate = domainOf(cfg.state_entity) === "climate" ? st : null;
+      const attrs = (climate && climate.attributes) || {};
+      let mode = mappedMode(["off", "heating", "idle", "fan"]);
+      if (!mode && !powerDerived && climate) mode = spaceHeaterModeOf(climate);
+      if (!mode) mode = plugMode("heating", "idle");
+      if (!cfg.state_show_raw) stateLabel = t(hass, SH_LABELS[mode]);
+      color = SH_COLORS[mode];
+      const target = roomLine(attrs, mode === "heating" || mode === "idle");
+      if (mode !== "off") modeLine(climate, "preset_mode");
+      heater = {
+        mode,
+        layout: cfg.heater_layout === "oil" ? "oil" : "fan",
+        icon: mode === "off" ? "" : mode === "fan" ? "fan" : "heat",
+        screen: (mode === "heating" || mode === "idle") && target !== null ? acScreenTemp(target) : "",
+      };
+    }
+
+    // Towel warmer. Its mode is the pilot wire's: in the climate entity's
+    // preset (Heatzy, Atlantic), in a select as the state (NodOn), or read as
+    // comfort from a plug that is on.
+    let towel = null;
+    if (cap.towelWarmer) {
+      const climate = domainOf(cfg.state_entity) === "climate" ? st : null;
+      const attrs = (climate && climate.attributes) || {};
+      let mode = mappedMode(TW_MODES);
+      if (!mode && !powerDerived && climate) {
+        mode = String(climate.state).toLowerCase() === "off" ? "off"
+          : towelModeOf(attrs.preset_mode) || (["unknown", "unavailable"].includes(climate.state) ? "" : "comfort");
+      } else if (!mode && !powerDerived && st && !rawIsMeaningless) {
+        mode = towelModeOf(rawState);
+      }
+      if (!mode) mode = plugMode("comfort", "comfort");
+      if (!cfg.state_show_raw) stateLabel = t(hass, TW_LABELS[mode]);
+      color = TW_COLORS[mode];
+      const target = roomLine(attrs, ["comfort", "eco", "frost"].includes(mode));
+      towel = {
+        mode,
+        icon: TW_ICONS[mode] || "",
+        screen: ["comfort", "eco", "frost"].includes(mode) && target !== null ? acScreenTemp(target) : "",
+      };
+    }
+
     // An iron, read from the plug it is on: heating or off, and the state line
     // says so in its own words, since "running" says nothing of an iron.
     let leftOn = false;
@@ -8274,6 +8741,9 @@ class ApplianceCard extends HTMLElement {
       p3,
       stove,
       ac,
+      dh,
+      heater,
+      towel,
     };
 
     // A plain on/off control, for the types that have no cycle to start or
@@ -8328,6 +8798,9 @@ class ApplianceCard extends HTMLElement {
       illustrationCtx.leftOn,
       illustrationCtx.stove && illustrationCtx.stove.mode,
       illustrationCtx.ac && [illustrationCtx.ac.mode, illustrationCtx.ac.swingV, illustrationCtx.ac.swingH, illustrationCtx.ac.speed].join("/"),
+      illustrationCtx.dh && illustrationCtx.dh.mode,
+      illustrationCtx.heater && illustrationCtx.heater.mode,
+      illustrationCtx.towel && illustrationCtx.towel.mode,
     ].join(",");
     if (animKey !== this._animKey) {
       this._animKey = animKey;
@@ -8800,6 +9273,16 @@ const SECTIONS = [
       c._row("level_empty_below", "level_empty_below", { placeholder: "0" })
       + c._row("level_max", "level_max", { placeholder: "100" }) },
   { field: "error_entity", types: ["pellet_stove"], labelKey: "section_error", includeDomains: ["binary_sensor", "sensor"] },
+
+  // Dehumidifier. A humidifier entity carries the humidity and its target;
+  // the tank lives apart on most of them.
+  { field: "tank_entity", types: ["dehumidifier"], labelKey: "section_tank", includeDomains: ["binary_sensor", "sensor", "number"] },
+  { field: "current_humidity_entity", types: ["dehumidifier"], labelKey: "section_current_humidity", includeDomains: ["sensor"] },
+  { field: "fan_speed_entity", types: ["dehumidifier"], labelKey: "section_fan_speed", includeDomains: ["select", "fan", "sensor", "input_select"] },
+  // Space heater and towel warmer: a climate entity carries the room and the
+  // setpoint, these fields are for a plug with a thermometer beside it.
+  { field: "current_temperature_entity", types: ["space_heater", "towel_warmer"], labelKey: "section_room_temperature", includeDomains: ["sensor"] },
+  { field: "target_temperature_entity", types: ["space_heater", "towel_warmer"], labelKey: "section_target_temperature", includeDomains: ["number", "sensor", "input_number"] },
 
   // Air conditioner. A climate entity already carries the room, the setpoint,
   // the fan and, on most integrations, the vanes; these fields are for the
@@ -9509,6 +9992,9 @@ class ApplianceCardEditor extends HTMLElement {
             { value: "iron", label: t(hass, "type_iron") },
             { value: "pellet_stove", label: t(hass, "type_pellet_stove") },
             { value: "air_conditioner", label: t(hass, "type_air_conditioner") },
+            { value: "dehumidifier", label: t(hass, "type_dehumidifier") },
+            { value: "space_heater", label: t(hass, "type_space_heater") },
+            { value: "towel_warmer", label: t(hass, "type_towel_warmer") },
           ],
         })}
         ${this._type === "washer" ? this._row("washer_dryer", "washer_dryer", { type: "checkbox" }) : ""}
@@ -9530,6 +10016,13 @@ class ApplianceCardEditor extends HTMLElement {
             { value: "tower", label: t(hass, "layout_tower") },
             { value: "canister", label: t(hass, "layout_canister") },
             { value: "double", label: t(hass, "layout_double") },
+          ],
+        }) : ""}
+        ${this._type === "space_heater" ? this._row("section_heater_layout", "heater_layout", {
+          type: "select",
+          options: [
+            { value: "fan", label: t(hass, "layout_fan_heater") },
+            { value: "oil", label: t(hass, "layout_oil_radiator") },
           ],
         }) : ""}
         ${this._type === "iron" ? this._row("section_iron_layout", "iron_layout", {

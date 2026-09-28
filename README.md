@@ -10,7 +10,7 @@
 <a href="https://buymeacoffee.com/adnpolymerase" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-orange.png" alt="Buy Me A Coffee" height="60"></a>
 <a href="https://adnpolymerase.github.io/HA/" target="_blank"><img src="https://raw.githubusercontent.com/ADNPolymerase/HA/main/assets/site-button.svg" alt="Link to my github.io for my other projects" height="60"></a>
 
-A Lovelace card for household appliances: washers, dryers, dishwashers, ovens, microwaves, cooker hoods, cooktops, fridges, kettles, cookers, coffee machines, rice cookers, water heaters, boilers, heat pumps, 3D printers, pet feeders, irons, pellet stoves and air conditioners. Cycle in progress, program, remaining time, temperature, alerts and controls.
+A Lovelace card for household appliances: washers, dryers, dishwashers, ovens, microwaves, cooker hoods, cooktops, fridges, kettles, cookers, coffee machines, rice cookers, water heaters, boilers, heat pumps, 3D printers, pet feeders, irons, pellet stoves, air conditioners, dehumidifiers, space heaters and towel warmers. Cycle in progress, program, remaining time, temperature, alerts and controls.
 
 No brand assumed: every field is an entity you pick, so it works with **any** integration (Electrolux, Samsung, LG, Home Connect, Miele, a plain smart plug…).
 
@@ -21,7 +21,7 @@ No brand assumed: every field is an entity you pick, so it works with **any** in
 
 ## Features
 
-- **Twenty appliance types**, each with a CSS illustration that animates on the appliance's own data and stays still when idle. The type is detected on its own or set via `appliance_type`, and `compact: true` keeps only the text.
+- **Twenty-three appliance types**, each with a CSS illustration that animates on the appliance's own data and stays still when idle. The type is detected on its own or set via `appliance_type`, and `compact: true` keeps only the text.
 - **State normalization**: `Idle`, `RUNNING`, `wash`, `En marche`… are recognised (accent-insensitive) and sorted into idle, preheating, running, paused, done, delayed or error. An unknown state is shown as it came, minus the integration's namespace, and `state_map` sorts the rest, `"*"` catching everything left over.
 - **The step, not an hour of *Running***: a washer, a dryer or a dishwasher names the step it is at (*Pre-wash*, *Washing*, *Rinsing*, *Spinning*, *Drying* and seven more), from a phase entity or from its own state, and the drum whirls while it spins. The time left is still the whole cycle's.
 - **A washer-dryer is a washer that dries**: `washer_dryer: true`, and the drum shows water while it washes, then clothes turning in hot air while it dries. The step comes from the state itself or from a phase entity, and the state line reads *Washing* or *Drying*.
@@ -59,7 +59,7 @@ Only `state_entity` is required, except on a fridge where a probe or a door cont
 | `compact` | `true` hides the illustration. |
 | `illustration_color` | `auto` (default, follows the theme) \| `white` \| `grey` \| `black`. Only changes the casing, not the state colours. |
 | `language` | `auto` (default, follows Home Assistant) or one of the 14 codes: `en`, `fr`, `de`, `es`, `it`, `nl`, `pt`, `sv`, `no`, `da`, `pl`, `ru`, `zh`, `cs`. `nb` and `nb-NO` give Norwegian. |
-| `appliance_type` | `auto` (default) \| `washer` \| `dryer` \| `dishwasher` \| `oven` \| `microwave` \| `hood` \| `cooktop` \| `fridge` \| `kettle` \| `cooker` \| `coffee` \| `rice_cooker` \| `water_heater` \| `boiler` \| `heat_pump` \| `printer_3d` \| `pet_feeder` \| `iron` \| `pellet_stove` \| `air_conditioner`. |
+| `appliance_type` | `auto` (default) \| `washer` \| `dryer` \| `dishwasher` \| `oven` \| `microwave` \| `hood` \| `cooktop` \| `fridge` \| `kettle` \| `cooker` \| `coffee` \| `rice_cooker` \| `water_heater` \| `boiler` \| `heat_pump` \| `printer_3d` \| `pet_feeder` \| `iron` \| `pellet_stove` \| `air_conditioner` \| `dehumidifier` \| `space_heater` \| `towel_warmer`. |
 | `tap_action` | What a tap on the card does, in Home Assistant's own words: `more-info` (default), `none`, `navigate`, `url`, `toggle`, `perform-action` or `fire-dom-event`, which is what the popup cards built on browser_mod listen for. In YAML only. |
 | `toggle_entity` | Power button (`switch`, `button`, `script`, `input_boolean`, `fan`), highlighted while on. |
 | `power_entity` / `power_on_threshold` / `power_icon` | Power sensor. With a threshold, the state is derived from it: *running* above, then *finished* when it falls back. Pointing `state_entity` at the same sensor enables it with a 10 W threshold. `power_icon` replaces `mdi:power-plug`. |
@@ -136,6 +136,11 @@ Per type:
 | `error_entity` | pellet stove | The alarm: a word (*Ignition failed*), a count or a contact. Anything but *no alarm*, however the stove says it, puts the stove in alarm, with its words on a line and its code (*AL05*) on the screen. |
 | `state_entity` | air conditioner | A `climate` entity: *Cooling*, *Heating*, *Drying*, *Fan only* or *Auto* as set, and from `hvac_action` *Standby* once the setpoint is reached, *Defrosting* and *Warming up*. The screen shows the mode's symbol and the setpoint, and the lines the room, the humidity and the fan. A plug reads *Running* or *Off*. `state_map` accepts `off`, `cool`, `heat`, `dry`, `fan`, `auto`, `idle` and `defrost`. |
 | `vane_vertical_entity` / `vane_horizontal_entity` | air conditioner | The vanes, when they live in selects of their own (Panasonic, Midea); otherwise the `climate` entity's `swing_mode` and `swing_horizontal_mode`. Five positions from top to bottom and from left to right, or a swing, in each integration's words. |
+| `state_entity` | dehumidifier | A `humidifier` entity: *Drying*, *Drying laundry* when its mode says so (Midea's clothes_dry), *Standby* once the humidity is reached, *Tank full*. The screen and a line give the humidity and its target. |
+| `tank_entity` / `tank_full_above` / `current_humidity_entity` | dehumidifier | The tank, a contact on when full or a level in percent (full from `tank_full_above`, 100 by default), shown in the window at the bottom; a hygrometer for a dehumidifier on a plug. |
+| `state_entity` / `heater_layout` | space heater | A `climate` entity: *Heating*, *Standby* once the setpoint is reached, *Fan only*. `heater_layout`: `fan` (fan heater, the default) or `oil` (oil-filled radiator). |
+| `state_entity` | towel warmer | The pilot wire's mode: *Comfort*, *Eco*, *Frost protection*, *Boost*, *Drying*, read from a `climate` entity's preset (Heatzy, Atlantic) or from a select (NodOn). |
+| `current_temperature_entity` / `target_temperature_entity` | space heater, towel warmer | Room and setpoint, when a `climate` entity does not carry them. |
 | `fan_speed_entity` / `purifier_entity` / `outdoor_temperature_entity` / `defrost_entity` | air conditioner | The fan when the `climate` entity does not carry it; the purifier (nanoe, plasma), lit on the unit; the outdoor temperature; a defrost contact. |
 | `speed_entity` | cooker | Blade speed, banded onto three speeds. |
 | `water_entity` | coffee | Tank: a Home Connect boolean, or a level in % with *empty* below 10%. |
@@ -363,6 +368,21 @@ outdoor_temperature_entity: sensor.living_room_outside_temperature
 ```
 
 A `climate` entity that can cool is recognised on its own, and the editor fills the rest from the unit's entities.
+
+### Dehumidifiers, space heaters and towel warmers
+
+A dehumidifier shows the humidity on its screen and the water it has taken in its tank; a fan heater glows behind its grille, an oil-filled radiator warms up its fins; a towel warmer shows the pilot wire's mode with the symbols of French radiators (sun, moon, snowflake). Warm air rises, the air a dehumidifier or a fan blows goes the other way.
+
+All three work on a smart plug alone: above `power_on_threshold` they dry or heat, below it they rest while the plug is on and read *Off* once it is switched off.
+
+```yaml
+type: custom:ha-appliance-card
+appliance_type: space_heater
+heater_layout: oil
+state_entity: switch.heater_plug
+power_entity: sensor.heater_plug_power
+power_on_threshold: 30
+```
 
 ### Cycle steps
 

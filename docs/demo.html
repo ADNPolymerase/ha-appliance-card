@@ -52,8 +52,8 @@ customElements.define("ha-icon", StubIcon);
 const params = new URLSearchParams(location.search);
 const uiLang = params.get("lang") === "fr" ? "fr" : "en";
 const view = params.get("view") === "types" ? "types" : "hero";
-// Twenty types in twenty cards, the iron on its steam generator: five across
-// and four down.
+// Twenty-three types in twenty-three cards, the iron on its steam generator:
+// five across and five down, the last row three short.
 document.documentElement.style.setProperty("--cols", params.get("cols") || 5);
 const fr = uiLang === "fr";
 const L = (en, f) => (fr ? f : en);
@@ -404,6 +404,40 @@ const airConditioner = () => card({
   st("sensor.living_room_power", 640, { unit_of_measurement: "W" }),
 ]);
 
+// A Midea dehumidifier in the cellar, as Midea AC LAN reports it: a
+// humidifier entity for the humidity and its target, the tank apart.
+const dehumidifier = () => card({
+  name: L("Dehumidifier", "D\u00e9shumidificateur"),
+  appliance_type: "dehumidifier",
+  state_entity: "humidifier.cellar",
+  tank_entity: "sensor.cellar_tank_level",
+  power_entity: "sensor.cellar_dehumidifier_power",
+}, [
+  st("humidifier.cellar", "on", { device_class: "dehumidifier", action: "drying", current_humidity: 68, humidity: 55, mode: "continuous" }),
+  st("sensor.cellar_tank_level", 40, { unit_of_measurement: "%" }),
+  st("sensor.cellar_dehumidifier_power", 190, { unit_of_measurement: "W" }),
+]);
+
+// A fan heater in a study, on its own thermostat.
+const spaceHeater = () => card({
+  name: L("Fan heater", "Radiateur soufflant"),
+  appliance_type: "space_heater",
+  state_entity: "climate.study_heater",
+  power_entity: "sensor.study_heater_power",
+}, [
+  st("climate.study_heater", "heat", { hvac_action: "heating", current_temperature: 19.4, temperature: 22 }),
+  st("sensor.study_heater_power", 1500, { unit_of_measurement: "W" }),
+]);
+
+// A towel warmer on a pilot wire, driven by Heatzy: the mode is the preset.
+const towelWarmer = () => card({
+  name: L("Towel warmer", "S\u00e8che-serviettes"),
+  appliance_type: "towel_warmer",
+  state_entity: "climate.bathroom_towel_warmer",
+}, [
+  st("climate.bathroom_towel_warmer", "heat", { preset_mode: "comfort", current_temperature: 20.2, temperature: 21 }),
+]);
+
 // A Bambu Lab printer halfway through a part, as its integration reports it:
 // a lowercase status, a remaining time in hours.
 const printer3d = () => card({
@@ -469,6 +503,7 @@ const ALL = { washer, dryer, dishwasher, oven, microwave, hood, cooktop, fridge,
               kettle, cooker, coffee, rice_cooker: riceCooker, pet_feeder: petFeeder,
               steam_generator: steamGenerator, water_heater: waterHeater, boiler,
               heat_pump: heatPump, pellet_stove: pelletStove, air_conditioner: airConditioner,
+              dehumidifier, space_heater: spaceHeater, towel_warmer: towelWarmer,
               printer_3d: printer3d };
 const only = (params.get("only") || "").split(",").map((k) => k.trim()).filter(Boolean);
 if (only.length) {

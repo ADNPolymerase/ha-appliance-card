@@ -6221,4 +6221,189 @@ check('editeur : pas de volet sur un lave-linge', markup(newEditor({ state_entit
 }
 
 
+// =============================================================================
+// Dehumidifier, space heater, towel warmer
+// =============================================================================
+
+const miniScreen = (h, cls) => (new RegExp(`<div class="mini-lcd ${cls}">(?:<svg[^]*?</svg>)?<span>([^<]*)</span>`).exec(h) || [, null])[1];
+const miniIcon = (h, cls) => {
+  const m = new RegExp(`<div class="mini-lcd ${cls}"><svg viewBox="0 0 24 24"><path d="([^"]{12})`).exec(h);
+  return m ? m[1] : '';
+};
+const modeOf = h => (/\bmode-(\w+)/.exec(machineCls(h)) || [, null])[1];
+const line3 = (h, label) => { const v = infoLine(h, label); return v === null ? null : v.replace(/ /g, ' '); };
+const plug3 = (type, w, cfg = {}, extra = {}) => render({ appliance_type: type, state_entity: 'switch.p', power_entity: 'sensor.p_w', power_on_threshold: 30, ...cfg },
+  { 'switch.p': { state: 'on', attributes: {} }, 'sensor.p_w': { state: String(w), attributes: { unit_of_measurement: 'W' } }, ...extra });
+const plugOff3 = (type) => render({ appliance_type: type, state_entity: 'switch.p', power_entity: 'sensor.p_w', power_on_threshold: 30 },
+  { 'switch.p': { state: 'off', attributes: {} }, 'sensor.p_w': { state: '0', attributes: { unit_of_measurement: 'W' } } });
+
+// ---- Dehumidifier -----------------------------------------------------------
+const DH = { appliance_type: 'dehumidifier', state_entity: 'humidifier.cave' };
+const dhum = (state, attrs = {}, extra = {}, cfg = {}) => render({ ...DH, ...cfg },
+  { 'humidifier.cave': { state, attributes: { device_class: 'dehumidifier', current_humidity: 68, humidity: 55, ...attrs } }, ...extra });
+check('deshum : eteint', modeOf(dhum('off')), 'off');
+check('deshum : allume, il seche', modeOf(dhum('on')), 'drying');
+check('deshum : action drying', modeOf(dhum('on', { action: 'drying' })), 'drying');
+check('deshum : humidite atteinte', modeOf(dhum('on', { action: 'idle' })), 'idle');
+check('deshum : action off allume, au repos', modeOf(dhum('on', { action: 'off' })), 'idle');
+check('deshum : sechage du linge', modeOf(dhum('on', { mode: 'clothes_dry' })), 'laundry');
+check('deshum : linge en francais aussi', modeOf(dhum('on', { mode: 'Linge' })), 'laundry');
+check('deshum : les chaussures ne sont pas du linge', modeOf(dhum('on', { mode: 'shoes_dry' })), 'drying');
+check('deshum : au repos, le linge attend', modeOf(dhum('on', { mode: 'clothes_dry', action: 'idle' })), 'idle');
+check('deshum : indisponible, eteint', modeOf(dhum('unavailable')), 'off');
+check('deshum : state_map', modeOf(render({ ...DH }, { 'humidifier.cave': { state: 'Mode 9', attributes: {} } }, ) ) === 'off', true);
+check('deshum : state_map nomme un mode', modeOf(dhum('Mode 9', {}, {}, { state_map: { 'Mode 9': 'laundry' } })), 'laundry');
+// The tank.
+const dhTank = (s, unit) => ({ 'binary_sensor.cave_tank': { state: s, attributes: {} }, 'sensor.cave_tank': { state: s, attributes: unit ? { unit_of_measurement: unit } : {} } });
+check('deshum : contact de reservoir plein', modeOf(dhum('on', {}, dhTank('on'), { tank_entity: 'binary_sensor.cave_tank' })), 'full');
+check('deshum : contact au repos', modeOf(dhum('on', {}, dhTank('off'), { tank_entity: 'binary_sensor.cave_tank' })), 'drying');
+check('deshum : plein meme eteint', modeOf(dhum('off', {}, dhTank('on'), { tank_entity: 'binary_sensor.cave_tank' })), 'full');
+check('deshum : niveau a 100, plein', modeOf(dhum('on', {}, dhTank('100', '%'), { tank_entity: 'sensor.cave_tank' })), 'full');
+check('deshum : niveau a 60', modeOf(dhum('on', {}, dhTank('60', '%'), { tank_entity: 'sensor.cave_tank' })), 'drying');
+check('deshum : seuil de plein', modeOf(dhum('on', {}, dhTank('85', '%'), { tank_entity: 'sensor.cave_tank', tank_full_above: 80 })), 'full');
+check('deshum : la fenetre se remplit', /--dh-fill: 60%/.test(dhum('on', {}, dhTank('60', '%'), { tank_entity: 'sensor.cave_tank' })), true);
+check('deshum : sans reservoir, niveau au repos', /--dh-fill: 35%/.test(dhum('on')), true);
+check('deshum : plein, la fenetre est pleine', /--dh-fill: 100%/.test(dhum('on', {}, dhTank('on'), { tank_entity: 'binary_sensor.cave_tank' })), true);
+check('deshum : la ligne du reservoir', line3(dhum('on', {}, dhTank('60', '%'), { tank_entity: 'sensor.cave_tank' }), 'Tank'), '60 %');
+check('deshum : la ligne dit plein', line3(dhum('on', {}, dhTank('on'), { tank_entity: 'binary_sensor.cave_tank' }), 'Tank'), 'Tank full');
+check('deshum : contact au repos, pas de ligne', line3(dhum('on', {}, dhTank('off'), { tank_entity: 'binary_sensor.cave_tank' }), 'Tank'), null);
+// State line and colour.
+for (const [s, a, l] of [['off', {}, 'Off'], ['on', {}, 'Drying'], ['on', { mode: 'clothes_dry' }, 'Drying laundry'], ['on', { action: 'idle' }, 'Standby']])
+  check(`deshum : ${s}/${a.mode || a.action || '-'} se dit ${l}`, stateLine(dhum(s, a)), l);
+check('deshum : plein se dit', stateLine(dhum('on', {}, dhTank('on'), { tank_entity: 'binary_sensor.cave_tank' })), 'Tank full');
+check('deshum : en francais', stateLine(dhum('on', { mode: 'clothes_dry' }, {}, { language: 'fr' })), 'Séchage du linge');
+check('deshum : couleur du linge', stateColor(dhum('on', { mode: 'clothes_dry' })), '#1565c0');
+// Screen and lines.
+check('deshum : l\'ecran dit l\'humidite', miniScreen(dhum('on'), 'dh-lcd'), '68%');
+check('deshum : eteint, rien', miniScreen(dhum('off'), 'dh-lcd'), '');
+check('deshum : la goutte', miniIcon(dhum('on'), 'dh-lcd'), 'M12,20A6,6 0');
+check('deshum : le t-shirt pour le linge', miniIcon(dhum('on', { mode: 'clothes_dry' }), 'dh-lcd'), 'M16,21H8A1,1');
+check('deshum : l\'humidite et la cible', line3(dhum('on'), 'Humidity'), '68 % → 55 %');
+check('deshum : eteint, l\'humidite seule', line3(dhum('off'), 'Humidity'), '68 %');
+check('deshum : le mode', line3(dhum('on', { mode: 'continuous' }), 'Mode'), 'Continuous');
+check('deshum : eteint, pas de mode', line3(dhum('off', { mode: 'continuous' }), 'Mode'), null);
+check('deshum : un hygrometre a part', miniScreen(dhum('on', { current_humidity: undefined }, { 'sensor.cave_h': { state: '71.4', attributes: { unit_of_measurement: '%' } } },
+  { current_humidity_entity: 'sensor.cave_h' }), 'dh-lcd'), '71%');
+check('deshum : la ventilation', line3(dhum('on', {}, { 'select.cave_fan': { state: 'High', attributes: {} } }, { fan_speed_entity: 'select.cave_fan' }), 'Fan'), 'High');
+// A plug.
+check('deshum sur prise : il seche', modeOf(plug3('dehumidifier', 250)), 'drying');
+check('deshum sur prise : allume au repos', modeOf(plug3('dehumidifier', 2)), 'idle');
+check('deshum sur prise : eteint', modeOf(plugOff3('dehumidifier')), 'off');
+// The drawing.
+contains('deshum : l\'air sort vers le bas des traits', dhum('on'), '<svg class="air-flow dh-air down"');
+contains('deshum : bleu clair', dhum('on'), '.dh-air path { stroke: #81d4fa; }');
+contains('deshum : bleu fonce pour le linge', dhum('on'), '.machine.mode-laundry .dh-air path { stroke: #1565c0; }');
+contains('deshum : les gouttes tombent', dhum('on'), '.machine.mode-drying .dh-drip i, .machine.mode-laundry .dh-drip i { animation: dh-drip');
+contains('deshum : plein, le voyant clignote', dhum('on'), '.machine.mode-full .dh-led { background: #e53935;');
+
+// ---- Space heater -----------------------------------------------------------
+const SH = { appliance_type: 'space_heater', state_entity: 'climate.bureau' };
+const shHeat = (state, attrs = {}, extra = {}, cfg = {}) => render({ ...SH, ...cfg },
+  { 'climate.bureau': { state, attributes: { current_temperature: 19.4, temperature: 22, ...attrs } }, ...extra });
+check('chauffage : eteint', modeOf(shHeat('off')), 'off');
+check('chauffage : il chauffe', modeOf(shHeat('heat', { hvac_action: 'heating' })), 'heating');
+check('chauffage : sans action, il chauffe', modeOf(shHeat('heat')), 'heating');
+check('chauffage : consigne atteinte', modeOf(shHeat('heat', { hvac_action: 'idle' })), 'idle');
+check('chauffage : ventilation seule', modeOf(shHeat('fan_only')), 'fan');
+check('chauffage : action fan', modeOf(shHeat('heat', { hvac_action: 'fan' })), 'fan');
+check('chauffage : state_map', modeOf(shHeat('Warm', {}, {}, { state_map: { Warm: 'heating' } })), 'heating');
+for (const [s, a, l] of [['off', {}, 'Off'], ['heat', { hvac_action: 'heating' }, 'Heating'], ['heat', { hvac_action: 'idle' }, 'Standby'], ['fan_only', {}, 'Fan only']])
+  check(`chauffage : ${s}/${a.hvac_action || '-'} se dit ${l}`, stateLine(shHeat(s, a)), l);
+check('chauffage : en italien', stateLine(shHeat('heat', {}, {}, { language: 'it' })), 'Riscaldamento');
+check('chauffage : l\'ecran dit la consigne', miniScreen(shHeat('heat'), 'hf-lcd'), '22');
+check('chauffage : en ventilation, pas de consigne', miniScreen(shHeat('fan_only'), 'hf-lcd'), '');
+check('chauffage : la flamme', miniIcon(shHeat('heat'), 'hf-lcd'), 'M17.66 11.2C');
+check('chauffage : l\'helice en ventilation', miniIcon(shHeat('fan_only'), 'hf-lcd'), 'M12,11A1,1 0');
+check('chauffage : la piece et la consigne', line3(shHeat('heat'), 'Room'), '19 °C → 22 °C');
+check('chauffage : eteint, la piece seule', line3(shHeat('off'), 'Room'), '19 °C');
+check('chauffage : le preset', line3(shHeat('heat', { preset_mode: 'eco' }), 'Mode'), 'Eco');
+check('chauffage : preset none, pas de ligne', line3(shHeat('heat', { preset_mode: 'none' }), 'Mode'), null);
+check('chauffage : soufflant par defaut', /class="hf-grill"/.test(shHeat('heat')), true);
+check('chauffage : bain d\'huile', /class="ho-fins"/.test(shHeat('heat', {}, {}, { heater_layout: 'oil' })), true);
+check('chauffage : bain d\'huile sans soufflerie', /class="hf-grill"/.test(shHeat('heat', {}, {}, { heater_layout: 'oil' })), false);
+check('chauffage : la chaleur monte', /<svg class="air-flow hf-air "/.test(shHeat('heat')), true);
+check('chauffage : la ventilation va dans l\'autre sens', /<svg class="air-flow hf-air down"/.test(shHeat('fan_only')), true);
+check('chauffage sur prise : il chauffe', modeOf(plug3('space_heater', 1500)), 'heating');
+check('chauffage sur prise : thermostat au repos', modeOf(plug3('space_heater', 1)), 'idle');
+check('chauffage sur prise : eteint', modeOf(plugOff3('space_heater')), 'off');
+check('chauffage sur prise : la ligne', stateLine(plug3('space_heater', 1500)), 'Heating');
+contains('chauffage : la grille rougeoie', shHeat('heat'), '.machine.mode-heating .hf-glow { opacity: 1;');
+contains('chauffage : les ailettes chauffent', shHeat('heat', {}, {}, { heater_layout: 'oil' }), '.machine.mode-heating .ho-fins i::after { opacity: 1;');
+
+// ---- Towel warmer -----------------------------------------------------------
+const TW = { appliance_type: 'towel_warmer', state_entity: 'climate.sdb' };
+const twel = (state, attrs = {}, extra = {}, cfg = {}) => render({ ...TW, ...cfg },
+  { 'climate.sdb': { state, attributes: { current_temperature: 20.2, temperature: 21, ...attrs } }, ...extra });
+check('seche-serviettes : eteint', modeOf(twel('off')), 'off');
+check('seche-serviettes : chauffe sans preset, confort', modeOf(twel('heat')), 'comfort');
+for (const [p, m] of [['comfort', 'comfort'], ['eco', 'eco'], ['away', 'frost'], ['frost_protection', 'frost'], ['boost', 'boost'],
+  ['drying', 'drying'], ['none', 'comfort'], ['Confort', 'comfort'], ['Hors-gel', 'frost'], ['Séchage', 'drying'], ['comfort_-1', 'comfort']])
+  check(`seche-serviettes : preset « ${p} »`, modeOf(twel('heat', { preset_mode: p })), m);
+// NodOn: a select as the state.
+const nodon = s => modeOf(render({ appliance_type: 'towel_warmer', state_entity: 'select.sdb_pilot_wire' }, { 'select.sdb_pilot_wire': { state: s, attributes: {} } }));
+for (const [s, m] of [['comfort', 'comfort'], ['eco', 'eco'], ['frost_protection', 'frost'], ['off', 'off'], ['comfort_-2', 'comfort']])
+  check(`seche-serviettes NodOn : « ${s} »`, nodon(s), m);
+for (const [p, l] of [['comfort', 'Comfort'], ['eco', 'Eco'], ['away', 'Frost protection'], ['boost', 'Boost'], ['drying', 'Drying']])
+  check(`seche-serviettes : ${p} se dit ${l}`, stateLine(twel('heat', { preset_mode: p })), l);
+check('seche-serviettes : en francais', stateLine(twel('heat', { preset_mode: 'away' }, {}, { language: 'fr' })), 'Hors-gel');
+check('seche-serviettes : couleur eco', stateColor(twel('heat', { preset_mode: 'eco' })), '#9575cd');
+check('seche-serviettes : la consigne en confort', miniScreen(twel('heat', { preset_mode: 'comfort' }), 'tw-lcd'), '21');
+check('seche-serviettes : pas de consigne en boost', miniScreen(twel('heat', { preset_mode: 'boost' }), 'tw-lcd'), '');
+check('seche-serviettes : le soleil en confort', miniIcon(twel('heat', { preset_mode: 'comfort' }), 'tw-lcd'), 'M3.55 19.09L');
+check('seche-serviettes : la lune en eco', miniIcon(twel('heat', { preset_mode: 'eco' }), 'tw-lcd'), 'M17.75,4.09L');
+check('seche-serviettes : le flocon en hors-gel', miniIcon(twel('heat', { preset_mode: 'away' }), 'tw-lcd'), 'M20.79,13.95');
+check('seche-serviettes : la fusee en boost', miniIcon(twel('heat', { preset_mode: 'boost' }), 'tw-lcd'), 'M13.13 22.19');
+check('seche-serviettes : le t-shirt au sechage', miniIcon(twel('heat', { preset_mode: 'drying' }), 'tw-lcd'), 'M16,21H8A1,1');
+check('seche-serviettes : la piece et la consigne', line3(twel('heat'), 'Room'), '20 °C → 21 °C');
+check('seche-serviettes sur prise : confort', modeOf(plug3('towel_warmer', 400)), 'comfort');
+check('seche-serviettes sur prise : eteint', modeOf(plugOff3('towel_warmer')), 'off');
+contains('seche-serviettes : la vapeur en orange', twel('heat', { preset_mode: 'drying' }), '.tw-air path, .tw-steam path { stroke: #ff8a65; }');
+contains('seche-serviettes : la serviette', twel('off'), '<svg class="tw-towel"');
+contains('seche-serviettes : les barres chauffent en boost', twel('heat', { preset_mode: 'boost' }), '.machine.mode-boost .tw-bar { background:');
+
+// ---- Detection and editor ----------------------------------------------------
+const typeOf = (id, attrs = {}, state = 'on') => {
+  const h = render({ state_entity: id }, { [id]: { state, attributes: attrs } });
+  return /class="dh-body"/.test(h) ? 'dehumidifier' : /class="hf-body"|class="ho-fins"/.test(h) ? 'space_heater'
+    : /class="tw-rail/.test(h) ? 'towel_warmer' : /class="ps-hopper"/.test(h) ? 'pellet_stove' : 'other';
+};
+check('detection : un humidificateur de classe deshumidificateur', typeOf('humidifier.153931628871137_humidifier', { device_class: 'dehumidifier' }), 'dehumidifier');
+check('detection : un humidificateur, non', typeOf('humidifier.chambre', { device_class: 'humidifier' }), 'other');
+for (const id of ['switch.deshumidificateur', 'switch.dehumidifier_cave', 'switch.luftentfeuchter', 'switch.deumidificatore'])
+  check(`detection : ${id}`, typeOf(id), 'dehumidifier');
+for (const id of ['switch.radiateur_soufflant', 'climate.space_heater', 'switch.stufetta_bagno', 'switch.stufa_elettrica', 'switch.bain_d_huile', 'switch.heizlufter', 'switch.scaldino'])
+  check(`detection : ${id}`, typeOf(id), 'space_heater');
+for (const id of ['climate.seche_serviettes', 'climate.towel_warmer', 'switch.handtuchheizkorper', 'switch.scaldasalviette', 'climate.toallero'])
+  check(`detection : ${id}`, typeOf(id), 'towel_warmer');
+check('detection : un poele reste un poele', typeOf('climate.stufa_salotto'), 'pellet_stove');
+check('detection : un chauffe-eau reste un chauffe-eau', typeOf('water_heater.water_heater'), 'other');
+check('detection : un reservoir designe un deshumidificateur', /class="dh-body"/.test(render({ state_entity: 'switch.x', tank_entity: 'binary_sensor.y' },
+  { 'switch.x': { state: 'on', attributes: {} } })), true);
+check('detection : le modele designe un chauffage', /class="ho-fins"/.test(render({ state_entity: 'switch.x', heater_layout: 'oil' },
+  { 'switch.x': { state: 'on', attributes: {} } })), true);
+
+for (const [type, fields] of [['dehumidifier', ['tank_entity', 'current_humidity_entity', 'fan_speed_entity', 'power_entity', 'toggle_entity']],
+  ['space_heater', ['current_temperature_entity', 'target_temperature_entity', 'power_entity', 'toggle_entity']],
+  ['towel_warmer', ['current_temperature_entity', 'target_temperature_entity', 'power_entity', 'toggle_entity']]]) {
+  const ed = newEditor({ state_entity: 'switch.p', appliance_type: type });
+  check(`editeur : ${type} dans la liste des types`, new RegExp(`<option value="${type}"`).test(markup(ed)), true);
+  for (const f of fields) check(`editeur ${type} : ${f}`, markup(ed).includes(`data-toggle="${f}"`), true);
+  check(`editeur ${type} : pas de programme`, markup(ed).includes('data-toggle="program_entity"'), false);
+}
+check('editeur chauffage : le choix du modele', /heater_layout/.test(markup(newEditor({ state_entity: 'switch.p', appliance_type: 'space_heater' }))), true);
+check('editeur : pas de modele de chauffage ailleurs', /heater_layout/.test(markup(newEditor({ state_entity: 'switch.p', appliance_type: 'washer' }))), false);
+check('editeur : pas de reservoir sur un lave-linge', markup(newEditor({ state_entity: 'sensor.w', appliance_type: 'washer' })).includes('data-toggle="tank_entity"'), false);
+{
+  const ids = ['humidifier.cave', 'binary_sensor.cave_tank_full', 'select.cave_fan_speed', 'sensor.cave_power'];
+  const ed = new Editor();
+  ed.setConfig({ type: 'custom:ha-appliance-card', appliance_type: 'dehumidifier', state_entity: 'humidifier.cave' });
+  ed.hass = { ...HASS(Object.fromEntries(ids.map(id => [id, { state: '1', attributes: {} }]))),
+    entities: Object.fromEntries(ids.map(id => [id, { device_id: 'cave' }])) };
+  const sug = ed.events.at(-1)?.detail?.config || {};
+  check('suggestion deshum : le reservoir', sug.tank_entity, 'binary_sensor.cave_tank_full');
+  check('suggestion deshum : la ventilation', sug.fan_speed_entity, 'select.cave_fan_speed');
+  check('suggestion deshum : la puissance', sug.power_entity, 'sensor.cave_power');
+}
+
+
 report();

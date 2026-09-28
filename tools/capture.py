@@ -127,7 +127,7 @@ def screenshots():
         out = DOCS / name
         # Six columns of three: eighteen cards fill the band exactly, and a
         # wide band reads better than a ragged square.
-        im = shoot(f"http://127.0.0.1:{PORT}/docs/demo.html?view=types{lang}", str(out), window=(2100, 1800))
+        im = shoot(f"http://127.0.0.1:{PORT}/docs/demo.html?view=types{lang}", str(out), window=(2100, 2300))
         print(f"  {name}  {im.size[0]}x{im.size[1]}")
 
 
