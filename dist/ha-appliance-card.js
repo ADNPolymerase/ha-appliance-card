@@ -1,4 +1,4 @@
-const CARD_VERSION = "2.18.0";
+const CARD_VERSION = "2.19.0";
 
 console.info(
   "%c HA-APPLIANCE-CARD %c v" + CARD_VERSION + " ",
@@ -142,6 +142,7 @@ const T = {
     ps_eco: "Eco standby", ps_cooling: "Cooling down", ps_cleaning: "Cleaning", ps_alarm: "Alarm", ps_no_pellets: "Out of pellets",
     section_stove_status: "Stove status", section_room_temperature: "Room temperature", section_flue_temperature: "Flue gas temperature", section_pellet_level: "Pellet level",
     ps_line_room: "Room", ps_line_power: "Power", ps_line_flue: "Flue gas", ps_line_fan: "Fan", ps_line_pellets: "Pellets",
+    type_air_conditioner: "Air conditioner", ac_off: "Off", ac_cooling: "Cooling", ac_heating: "Heating", ac_drying: "Drying", ac_fan_only: "Fan only", ac_auto: "Auto", ac_idle: "Standby", ac_defrost: "Defrosting", ac_preheating: "Warming up", ac_line_humidity: "Humidity", section_vane_vertical: "Vane up/down", section_vane_horizontal: "Vane left/right", section_purifier: "Air purifier (nanoe, plasma)", section_defrost: "Defrost indicator",
     washer_dryer: "Washer-dryer (washes and dries)", step_drying: "Drying", section_cycle_phase: "Cycle phase",
     step_prewash: "Pre-wash", step_soaking: "Soaking", step_weighing: "Weighing", step_filling: "Filling", step_washing: "Washing", step_rinsing: "Rinsing", step_draining: "Draining", step_spinning: "Spinning", step_cooling: "Cooling", step_anti_crease: "Anti-crease", step_steam: "Steam",
   },
@@ -276,6 +277,7 @@ const T = {
     ps_eco: "Veille \u00e9co", ps_cooling: "Refroidissement", ps_cleaning: "Nettoyage", ps_alarm: "Alarme", ps_no_pellets: "Granul\u00e9s \u00e9puis\u00e9s",
     section_stove_status: "Statut du po\u00eale", section_room_temperature: "Temp\u00e9rature ambiante", section_flue_temperature: "Temp\u00e9rature des fum\u00e9es", section_pellet_level: "Niveau de granul\u00e9s",
     ps_line_room: "Ambiante", ps_line_power: "Puissance", ps_line_flue: "Fum\u00e9es", ps_line_fan: "Ventilation", ps_line_pellets: "Granul\u00e9s",
+    type_air_conditioner: "Climatiseur", ac_off: "\u00c9teint", ac_cooling: "Refroidissement", ac_heating: "Chauffage", ac_drying: "D\u00e9shumidification", ac_fan_only: "Ventilation", ac_auto: "Auto", ac_idle: "En veille", ac_defrost: "D\u00e9givrage", ac_preheating: "Pr\u00e9chauffage", ac_line_humidity: "Humidit\u00e9", section_vane_vertical: "Volet haut/bas", section_vane_horizontal: "Volet gauche/droite", section_purifier: "Purificateur d'air (nanoe, plasma)", section_defrost: "Indicateur de d\u00e9givrage",
     washer_dryer: "Lavante-s\u00e9chante (lave et s\u00e8che)", step_drying: "S\u00e9chage", section_cycle_phase: "Phase du cycle",
     step_prewash: "Pr\u00e9lavage", step_soaking: "Trempage", step_weighing: "Pes\u00e9e", step_filling: "Remplissage", step_washing: "Lavage", step_rinsing: "Rin\u00e7age", step_draining: "Vidange", step_spinning: "Essorage", step_cooling: "Refroidissement", step_anti_crease: "Anti-froissage", step_steam: "Vapeur",
   },
@@ -410,6 +412,7 @@ const T = {
     ps_eco: "\u042d\u043a\u043e-\u043e\u0436\u0438\u0434\u0430\u043d\u0438\u0435", ps_cooling: "\u041e\u0445\u043b\u0430\u0436\u0434\u0435\u043d\u0438\u0435", ps_cleaning: "\u041e\u0447\u0438\u0441\u0442\u043a\u0430", ps_alarm: "\u0410\u0432\u0430\u0440\u0438\u044f", ps_no_pellets: "\u041d\u0435\u0442 \u043f\u0435\u043b\u043b\u0435\u0442",
     section_stove_status: "\u0421\u043e\u0441\u0442\u043e\u044f\u043d\u0438\u0435 \u043f\u0435\u0447\u0438", section_room_temperature: "\u0422\u0435\u043c\u043f\u0435\u0440\u0430\u0442\u0443\u0440\u0430 \u0432 \u043f\u043e\u043c\u0435\u0449\u0435\u043d\u0438\u0438", section_flue_temperature: "\u0422\u0435\u043c\u043f\u0435\u0440\u0430\u0442\u0443\u0440\u0430 \u0434\u044b\u043c\u043e\u0432\u044b\u0445 \u0433\u0430\u0437\u043e\u0432", section_pellet_level: "\u0423\u0440\u043e\u0432\u0435\u043d\u044c \u043f\u0435\u043b\u043b\u0435\u0442",
     ps_line_room: "\u041f\u043e\u043c\u0435\u0449\u0435\u043d\u0438\u0435", ps_line_power: "\u041c\u043e\u0449\u043d\u043e\u0441\u0442\u044c", ps_line_flue: "\u0414\u044b\u043c\u043e\u0432\u044b\u0435 \u0433\u0430\u0437\u044b", ps_line_fan: "\u0412\u0435\u043d\u0442\u0438\u043b\u044f\u0442\u043e\u0440", ps_line_pellets: "\u041f\u0435\u043b\u043b\u0435\u0442\u044b",
+    type_air_conditioner: "\u041a\u043e\u043d\u0434\u0438\u0446\u0438\u043e\u043d\u0435\u0440", ac_off: "\u0412\u044b\u043a\u043b\u044e\u0447\u0435\u043d", ac_cooling: "\u041e\u0445\u043b\u0430\u0436\u0434\u0435\u043d\u0438\u0435", ac_heating: "\u041e\u0431\u043e\u0433\u0440\u0435\u0432", ac_drying: "\u041e\u0441\u0443\u0448\u0435\u043d\u0438\u0435", ac_fan_only: "\u0412\u0435\u043d\u0442\u0438\u043b\u044f\u0446\u0438\u044f", ac_auto: "\u0410\u0432\u0442\u043e", ac_idle: "\u041e\u0436\u0438\u0434\u0430\u043d\u0438\u0435", ac_defrost: "\u041e\u0442\u0442\u0430\u0438\u0432\u0430\u043d\u0438\u0435", ac_preheating: "\u041f\u0440\u043e\u0433\u0440\u0435\u0432", ac_line_humidity: "\u0412\u043b\u0430\u0436\u043d\u043e\u0441\u0442\u044c", section_vane_vertical: "\u0416\u0430\u043b\u044e\u0437\u0438 \u0432\u0432\u0435\u0440\u0445/\u0432\u043d\u0438\u0437", section_vane_horizontal: "\u0416\u0430\u043b\u044e\u0437\u0438 \u0432\u043b\u0435\u0432\u043e/\u0432\u043f\u0440\u0430\u0432\u043e", section_purifier: "\u041e\u0447\u0438\u0441\u0442\u043a\u0430 \u0432\u043e\u0437\u0434\u0443\u0445\u0430 (nanoe, \u043f\u043b\u0430\u0437\u043c\u0430)", section_defrost: "\u0418\u043d\u0434\u0438\u043a\u0430\u0442\u043e\u0440 \u043e\u0442\u0442\u0430\u0438\u0432\u0430\u043d\u0438\u044f",
     washer_dryer: "\u0421\u0442\u0438\u0440\u0430\u043b\u044c\u043d\u043e-\u0441\u0443\u0448\u0438\u043b\u044c\u043d\u0430\u044f \u043c\u0430\u0448\u0438\u043d\u0430 (\u0441\u0442\u0438\u0440\u0430\u0435\u0442 \u0438 \u0441\u0443\u0448\u0438\u0442)", step_drying: "\u0421\u0443\u0448\u043a\u0430", section_cycle_phase: "\u0424\u0430\u0437\u0430 \u0446\u0438\u043a\u043b\u0430",
     step_prewash: "\u041f\u0440\u0435\u0434\u0441\u0442\u0438\u0440\u043a\u0430", step_soaking: "\u0417\u0430\u043c\u0430\u0447\u0438\u0432\u0430\u043d\u0438\u0435", step_weighing: "\u0412\u0437\u0432\u0435\u0448\u0438\u0432\u0430\u043d\u0438\u0435", step_filling: "\u041d\u0430\u0431\u043e\u0440 \u0432\u043e\u0434\u044b", step_washing: "\u0421\u0442\u0438\u0440\u043a\u0430", step_rinsing: "\u041f\u043e\u043b\u043e\u0441\u043a\u0430\u043d\u0438\u0435", step_draining: "\u0421\u043b\u0438\u0432", step_spinning: "\u041e\u0442\u0436\u0438\u043c", step_cooling: "\u041e\u0445\u043b\u0430\u0436\u0434\u0435\u043d\u0438\u0435", step_anti_crease: "\u0417\u0430\u0449\u0438\u0442\u0430 \u043e\u0442 \u0441\u043c\u0438\u043d\u0430\u043d\u0438\u044f", step_steam: "\u041f\u0430\u0440",
   },
@@ -544,6 +547,7 @@ const T = {
     ps_eco: "Eco-Standby", ps_cooling: "Abk\u00fchlung", ps_cleaning: "Reinigung", ps_alarm: "Alarm", ps_no_pellets: "Pellets leer",
     section_stove_status: "Ofenstatus", section_room_temperature: "Raumtemperatur", section_flue_temperature: "Abgastemperatur", section_pellet_level: "Pelletf\u00fcllstand",
     ps_line_room: "Raum", ps_line_power: "Leistung", ps_line_flue: "Abgas", ps_line_fan: "Gebl\u00e4se", ps_line_pellets: "Pellets",
+    type_air_conditioner: "Klimaanlage", ac_off: "Aus", ac_cooling: "K\u00fchlen", ac_heating: "Heizen", ac_drying: "Entfeuchten", ac_fan_only: "Nur L\u00fcfter", ac_auto: "Automatik", ac_idle: "Bereit", ac_defrost: "Abtauen", ac_preheating: "Vorheizen", ac_line_humidity: "Luftfeuchte", section_vane_vertical: "Lamelle oben/unten", section_vane_horizontal: "Lamelle links/rechts", section_purifier: "Luftreiniger (nanoe, Plasma)", section_defrost: "Abtauanzeige",
     washer_dryer: "Waschtrockner (w\u00e4scht und trocknet)", step_drying: "Trocknen", section_cycle_phase: "Programmphase",
     step_prewash: "Vorw\u00e4sche", step_soaking: "Einweichen", step_weighing: "Wiegen", step_filling: "Bef\u00fcllen", step_washing: "Waschen", step_rinsing: "Sp\u00fclen", step_draining: "Abpumpen", step_spinning: "Schleudern", step_cooling: "Abk\u00fchlen", step_anti_crease: "Knitterschutz", step_steam: "Dampf",
   },
@@ -678,6 +682,7 @@ const T = {
     ps_eco: "Espera eco", ps_cooling: "Enfriando", ps_cleaning: "Limpieza", ps_alarm: "Alarma", ps_no_pellets: "Sin pellets",
     section_stove_status: "Estado de la estufa", section_room_temperature: "Temperatura ambiente", section_flue_temperature: "Temperatura de humos", section_pellet_level: "Nivel de pellets",
     ps_line_room: "Ambiente", ps_line_power: "Potencia", ps_line_flue: "Humos", ps_line_fan: "Ventilador", ps_line_pellets: "Pellets",
+    type_air_conditioner: "Aire acondicionado", ac_off: "Apagado", ac_cooling: "Enfriando", ac_heating: "Calentando", ac_drying: "Deshumidificando", ac_fan_only: "Solo ventilador", ac_auto: "Autom\u00e1tico", ac_idle: "En espera", ac_defrost: "Descongelando", ac_preheating: "Precalentando", ac_line_humidity: "Humedad", section_vane_vertical: "Deflector arriba/abajo", section_vane_horizontal: "Deflector izquierda/derecha", section_purifier: "Purificador de aire (nanoe, plasma)", section_defrost: "Indicador de descongelaci\u00f3n",
     washer_dryer: "Lavasecadora (lava y seca)", step_drying: "Secado", section_cycle_phase: "Fase del ciclo",
     step_prewash: "Prelavado", step_soaking: "Remojo", step_weighing: "Pesaje", step_filling: "Llenado", step_washing: "Lavado", step_rinsing: "Aclarado", step_draining: "Desag\u00fce", step_spinning: "Centrifugado", step_cooling: "Enfriamiento", step_anti_crease: "Antiarrugas", step_steam: "Vapor",
   },
@@ -812,6 +817,7 @@ const T = {
     ps_eco: "Stand-by eco", ps_cooling: "Raffreddamento", ps_cleaning: "Pulizia", ps_alarm: "Allarme", ps_no_pellets: "Pellet esaurito",
     section_stove_status: "Stato della stufa", section_room_temperature: "Temperatura ambiente", section_flue_temperature: "Temperatura fumi", section_pellet_level: "Livello pellet",
     ps_line_room: "Ambiente", ps_line_power: "Potenza", ps_line_flue: "Fumi", ps_line_fan: "Ventola", ps_line_pellets: "Pellet",
+    type_air_conditioner: "Condizionatore", ac_off: "Spento", ac_cooling: "Raffreddamento", ac_heating: "Riscaldamento", ac_drying: "Deumidificazione", ac_fan_only: "Solo ventilazione", ac_auto: "Automatico", ac_idle: "In attesa", ac_defrost: "Sbrinamento", ac_preheating: "Preriscaldamento", ac_line_humidity: "Umidit\u00e0", section_vane_vertical: "Deflettore alto/basso", section_vane_horizontal: "Deflettore sinistra/destra", section_purifier: "Purificatore d'aria (nanoe, plasma)", section_defrost: "Indicatore di sbrinamento",
     washer_dryer: "Lavasciuga (lava e asciuga)", step_drying: "Asciugatura", section_cycle_phase: "Fase del ciclo",
     step_prewash: "Prelavaggio", step_soaking: "Ammollo", step_weighing: "Pesatura", step_filling: "Carico acqua", step_washing: "Lavaggio", step_rinsing: "Risciacquo", step_draining: "Scarico", step_spinning: "Centrifuga", step_cooling: "Raffreddamento", step_anti_crease: "Antipiega", step_steam: "Vapore",
   },
@@ -946,6 +952,7 @@ const T = {
     ps_eco: "Eco-stand-by", ps_cooling: "Afkoelen", ps_cleaning: "Reiniging", ps_alarm: "Alarm", ps_no_pellets: "Pellets op",
     section_stove_status: "Kachelstatus", section_room_temperature: "Kamertemperatuur", section_flue_temperature: "Rookgastemperatuur", section_pellet_level: "Pelletniveau",
     ps_line_room: "Kamer", ps_line_power: "Vermogen", ps_line_flue: "Rookgas", ps_line_fan: "Ventilator", ps_line_pellets: "Pellets",
+    type_air_conditioner: "Airconditioner", ac_off: "Uit", ac_cooling: "Koelen", ac_heating: "Verwarmen", ac_drying: "Ontvochtigen", ac_fan_only: "Alleen ventilator", ac_auto: "Automatisch", ac_idle: "Stand-by", ac_defrost: "Ontdooien", ac_preheating: "Voorverwarmen", ac_line_humidity: "Luchtvochtigheid", section_vane_vertical: "Lamel omhoog/omlaag", section_vane_horizontal: "Lamel links/rechts", section_purifier: "Luchtreiniger (nanoe, plasma)", section_defrost: "Ontdooi-indicator",
     washer_dryer: "Was-droogcombinatie (wast en droogt)", step_drying: "Drogen", section_cycle_phase: "Programmafase",
     step_prewash: "Voorwas", step_soaking: "Weken", step_weighing: "Wegen", step_filling: "Vullen", step_washing: "Wassen", step_rinsing: "Spoelen", step_draining: "Afpompen", step_spinning: "Centrifugeren", step_cooling: "Afkoelen", step_anti_crease: "Anti-kreuk", step_steam: "Stoom",
   },
@@ -1080,6 +1087,7 @@ const T = {
     ps_eco: "Espera eco", ps_cooling: "A arrefecer", ps_cleaning: "Limpeza", ps_alarm: "Alarme", ps_no_pellets: "Sem pellets",
     section_stove_status: "Estado da salamandra", section_room_temperature: "Temperatura ambiente", section_flue_temperature: "Temperatura dos fumos", section_pellet_level: "N\u00edvel de pellets",
     ps_line_room: "Ambiente", ps_line_power: "Pot\u00eancia", ps_line_flue: "Fumos", ps_line_fan: "Ventilador", ps_line_pellets: "Pellets",
+    type_air_conditioner: "Ar condicionado", ac_off: "Desligado", ac_cooling: "A arrefecer", ac_heating: "A aquecer", ac_drying: "A desumidificar", ac_fan_only: "S\u00f3 ventila\u00e7\u00e3o", ac_auto: "Autom\u00e1tico", ac_idle: "Em espera", ac_defrost: "A descongelar", ac_preheating: "Pr\u00e9-aquecimento", ac_line_humidity: "Humidade", section_vane_vertical: "Defletor cima/baixo", section_vane_horizontal: "Defletor esquerda/direita", section_purifier: "Purificador de ar (nanoe, plasma)", section_defrost: "Indicador de descongela\u00e7\u00e3o",
     washer_dryer: "M\u00e1quina de lavar e secar (lava e seca)", step_drying: "Secagem", section_cycle_phase: "Fase do ciclo",
     step_prewash: "Pr\u00e9-lavagem", step_soaking: "Molho", step_weighing: "Pesagem", step_filling: "Enchimento", step_washing: "Lavagem", step_rinsing: "Enxaguamento", step_draining: "Escoamento", step_spinning: "Centrifuga\u00e7\u00e3o", step_cooling: "Arrefecimento", step_anti_crease: "Anti-vincos", step_steam: "Vapor",
   },
@@ -1214,6 +1222,7 @@ const T = {
     ps_eco: "Eco-vila", ps_cooling: "Avsvalning", ps_cleaning: "Reng\u00f6ring", ps_alarm: "Larm", ps_no_pellets: "Slut p\u00e5 pellets",
     section_stove_status: "Kaminstatus", section_room_temperature: "Rumstemperatur", section_flue_temperature: "R\u00f6kgastemperatur", section_pellet_level: "Pelletsniv\u00e5",
     ps_line_room: "Rum", ps_line_power: "Effekt", ps_line_flue: "R\u00f6kgas", ps_line_fan: "Fl\u00e4kt", ps_line_pellets: "Pellets",
+    type_air_conditioner: "Luftkonditionering", ac_off: "Av", ac_cooling: "Kyler", ac_heating: "V\u00e4rmer", ac_drying: "Avfuktar", ac_fan_only: "Endast fl\u00e4kt", ac_auto: "Auto", ac_idle: "V\u00e4ntel\u00e4ge", ac_defrost: "Avfrostning", ac_preheating: "F\u00f6rv\u00e4rmer", ac_line_humidity: "Luftfuktighet", section_vane_vertical: "Luftriktning upp/ned", section_vane_horizontal: "Luftriktning v\u00e4nster/h\u00f6ger", section_purifier: "Luftrenare (nanoe, plasma)", section_defrost: "Avfrostningsindikator",
     washer_dryer: "Kombinerad tv\u00e4tt/tork (tv\u00e4ttar och torkar)", step_drying: "Torkning", section_cycle_phase: "Programfas",
     step_prewash: "F\u00f6rtv\u00e4tt", step_soaking: "Bl\u00f6tl\u00e4ggning", step_weighing: "V\u00e4gning", step_filling: "P\u00e5fyllning", step_washing: "Tv\u00e4tt", step_rinsing: "Sk\u00f6ljning", step_draining: "T\u00f6mning", step_spinning: "Centrifugering", step_cooling: "Avsvalning", step_anti_crease: "Skrynkelskydd", step_steam: "\u00c5nga",
   },
@@ -1348,6 +1357,7 @@ const T = {
     ps_eco: "Eco-hvile", ps_cooling: "Nedkj\u00f8ling", ps_cleaning: "Rengj\u00f8ring", ps_alarm: "Alarm", ps_no_pellets: "Tom for pellets",
     section_stove_status: "Ovnstatus", section_room_temperature: "Romtemperatur", section_flue_temperature: "R\u00f8ykgasstemperatur", section_pellet_level: "Pelletsniv\u00e5",
     ps_line_room: "Rom", ps_line_power: "Effekt", ps_line_flue: "R\u00f8ykgass", ps_line_fan: "Vifte", ps_line_pellets: "Pellets",
+    type_air_conditioner: "Klimaanlegg", ac_off: "Av", ac_cooling: "Kj\u00f8ler", ac_heating: "Varmer", ac_drying: "Avfukter", ac_fan_only: "Kun vifte", ac_auto: "Auto", ac_idle: "Hvilemodus", ac_defrost: "Avising", ac_preheating: "Forvarmer", ac_line_humidity: "Luftfuktighet", section_vane_vertical: "Luftretning opp/ned", section_vane_horizontal: "Luftretning venstre/h\u00f8yre", section_purifier: "Luftrenser (nanoe, plasma)", section_defrost: "Avisingsindikator",
     washer_dryer: "Kombinert vaske-/t\u00f8rkemaskin (vasker og t\u00f8rker)", step_drying: "T\u00f8rking", section_cycle_phase: "Programfase",
     step_prewash: "Forvask", step_soaking: "Bl\u00f8tlegging", step_weighing: "Veiing", step_filling: "Vannfylling", step_washing: "Vask", step_rinsing: "Skylling", step_draining: "T\u00f8mming", step_spinning: "Sentrifugering", step_cooling: "Avkj\u00f8ling", step_anti_crease: "Antikr\u00f8ll", step_steam: "Damp",
   },
@@ -1482,6 +1492,7 @@ const T = {
     ps_eco: "Eco-standby", ps_cooling: "Afk\u00f8ling", ps_cleaning: "Reng\u00f8ring", ps_alarm: "Alarm", ps_no_pellets: "Ingen piller",
     section_stove_status: "Ovnstatus", section_room_temperature: "Rumtemperatur", section_flue_temperature: "R\u00f8ggastemperatur", section_pellet_level: "Pilleniveau",
     ps_line_room: "Rum", ps_line_power: "Effekt", ps_line_flue: "R\u00f8ggas", ps_line_fan: "Bl\u00e6ser", ps_line_pellets: "Piller",
+    type_air_conditioner: "Aircondition", ac_off: "Slukket", ac_cooling: "K\u00f8ler", ac_heating: "Varmer", ac_drying: "Affugter", ac_fan_only: "Kun bl\u00e6ser", ac_auto: "Auto", ac_idle: "Standby", ac_defrost: "Afrimning", ac_preheating: "Forvarmer", ac_line_humidity: "Luftfugtighed", section_vane_vertical: "Luftretning op/ned", section_vane_horizontal: "Luftretning venstre/h\u00f8jre", section_purifier: "Luftrenser (nanoe, plasma)", section_defrost: "Afrimningsindikator",
     washer_dryer: "Vaske-t\u00f8rremaskine (vasker og t\u00f8rrer)", step_drying: "T\u00f8rring", section_cycle_phase: "Programfase",
     step_prewash: "Forvask", step_soaking: "Ibl\u00f8ds\u00e6tning", step_weighing: "Vejning", step_filling: "P\u00e5fyldning", step_washing: "Vask", step_rinsing: "Skylning", step_draining: "Udpumpning", step_spinning: "Centrifugering", step_cooling: "Afk\u00f8ling", step_anti_crease: "Antikr\u00f8l", step_steam: "Damp",
   },
@@ -1616,6 +1627,7 @@ const T = {
     ps_eco: "Czuwanie eko", ps_cooling: "Wygaszanie", ps_cleaning: "Czyszczenie", ps_alarm: "Alarm", ps_no_pellets: "Brak pelletu",
     section_stove_status: "Stan pieca", section_room_temperature: "Temperatura w pomieszczeniu", section_flue_temperature: "Temperatura spalin", section_pellet_level: "Poziom pelletu",
     ps_line_room: "Pomieszczenie", ps_line_power: "Moc", ps_line_flue: "Spaliny", ps_line_fan: "Wentylator", ps_line_pellets: "Pellet",
+    type_air_conditioner: "Klimatyzator", ac_off: "Wy\u0142\u0105czony", ac_cooling: "Ch\u0142odzenie", ac_heating: "Grzanie", ac_drying: "Osuszanie", ac_fan_only: "Tylko wentylator", ac_auto: "Automatyczny", ac_idle: "Czuwanie", ac_defrost: "Odszranianie", ac_preheating: "Podgrzewanie wst\u0119pne", ac_line_humidity: "Wilgotno\u015b\u0107", section_vane_vertical: "\u017baluzja g\u00f3ra/d\u00f3\u0142", section_vane_horizontal: "\u017baluzja lewo/prawo", section_purifier: "Oczyszczacz powietrza (nanoe, plazma)", section_defrost: "Wska\u017anik odszraniania",
     washer_dryer: "Pralko-suszarka (pierze i suszy)", step_drying: "Suszenie", section_cycle_phase: "Faza programu",
     step_prewash: "Pranie wst\u0119pne", step_soaking: "Namaczanie", step_weighing: "Wa\u017cenie", step_filling: "Nape\u0142nianie", step_washing: "Pranie", step_rinsing: "P\u0142ukanie", step_draining: "Odpompowanie", step_spinning: "Wirowanie", step_cooling: "Sch\u0142adzanie", step_anti_crease: "Przeciw zagnieceniom", step_steam: "Para",
   },
@@ -1750,6 +1762,7 @@ const T = {
     ps_eco: "\u8282\u80fd\u5f85\u673a", ps_cooling: "\u51b7\u5374\u4e2d", ps_cleaning: "\u6e05\u6d01\u4e2d", ps_alarm: "\u62a5\u8b66", ps_no_pellets: "\u9897\u7c92\u8017\u5c3d",
     section_stove_status: "\u7089\u5b50\u72b6\u6001", section_room_temperature: "\u5ba4\u5185\u6e29\u5ea6", section_flue_temperature: "\u70df\u6c14\u6e29\u5ea6", section_pellet_level: "\u9897\u7c92\u4f59\u91cf",
     ps_line_room: "\u5ba4\u5185", ps_line_power: "\u529f\u7387", ps_line_flue: "\u70df\u6c14", ps_line_fan: "\u98ce\u6247", ps_line_pellets: "\u9897\u7c92",
+    type_air_conditioner: "\u7a7a\u8c03", ac_off: "\u5df2\u5173\u95ed", ac_cooling: "\u5236\u51b7\u4e2d", ac_heating: "\u5236\u70ed\u4e2d", ac_drying: "\u9664\u6e7f\u4e2d", ac_fan_only: "\u9001\u98ce", ac_auto: "\u81ea\u52a8", ac_idle: "\u5f85\u673a", ac_defrost: "\u9664\u971c\u4e2d", ac_preheating: "\u9884\u70ed\u4e2d", ac_line_humidity: "\u6e7f\u5ea6", section_vane_vertical: "\u4e0a\u4e0b\u5bfc\u98ce\u677f", section_vane_horizontal: "\u5de6\u53f3\u5bfc\u98ce\u677f", section_purifier: "\u7a7a\u6c14\u51c0\u5316 (nanoe\u3001\u7b49\u79bb\u5b50)", section_defrost: "\u9664\u971c\u6307\u793a",
     washer_dryer: "\u6d17\u70d8\u4e00\u4f53\u673a\uff08\u6d17\u6da4\u5e76\u70d8\u5e72\uff09", step_drying: "\u70d8\u5e72\u4e2d", section_cycle_phase: "\u7a0b\u5e8f\u9636\u6bb5",
     step_prewash: "\u9884\u6d17\u4e2d", step_soaking: "\u6d78\u6ce1\u4e2d", step_weighing: "\u79f0\u91cd\u4e2d", step_filling: "\u8fdb\u6c34\u4e2d", step_washing: "\u6d17\u6da4\u4e2d", step_rinsing: "\u6f02\u6d17\u4e2d", step_draining: "\u6392\u6c34\u4e2d", step_spinning: "\u8131\u6c34\u4e2d", step_cooling: "\u51b7\u5374\u4e2d", step_anti_crease: "\u9632\u76b1\u4e2d", step_steam: "\u84b8\u6c7d\u4e2d",
   },
@@ -1884,6 +1897,7 @@ const T = {
     ps_eco: "Eko pohotovost", ps_cooling: "Chladnut\u00ed", ps_cleaning: "\u010ci\u0161t\u011bn\u00ed", ps_alarm: "Alarm", ps_no_pellets: "Do\u0161ly pelety",
     section_stove_status: "Stav kamen", section_room_temperature: "Teplota v m\u00edstnosti", section_flue_temperature: "Teplota spalin", section_pellet_level: "Hladina pelet",
     ps_line_room: "M\u00edstnost", ps_line_power: "V\u00fdkon", ps_line_flue: "Spaliny", ps_line_fan: "Ventil\u00e1tor", ps_line_pellets: "Pelety",
+    type_air_conditioner: "Klimatizace", ac_off: "Vypnuto", ac_cooling: "Chlazen\u00ed", ac_heating: "Topen\u00ed", ac_drying: "Odvlh\u010dov\u00e1n\u00ed", ac_fan_only: "Jen ventil\u00e1tor", ac_auto: "Automaticky", ac_idle: "Pohotovost", ac_defrost: "Odmrazov\u00e1n\u00ed", ac_preheating: "P\u0159edeh\u0159ev", ac_line_humidity: "Vlhkost", section_vane_vertical: "Lamela nahoru/dol\u016f", section_vane_horizontal: "Lamela vlevo/vpravo", section_purifier: "\u010cisti\u010dka vzduchu (nanoe, plazma)", section_defrost: "Indik\u00e1tor odmrazov\u00e1n\u00ed",
     washer_dryer: "Pra\u010dka se su\u0161i\u010dkou (pere a su\u0161\u00ed)", step_drying: "Su\u0161en\u00ed", section_cycle_phase: "F\u00e1ze programu",
     step_prewash: "P\u0159edp\u00edrka", step_soaking: "Nam\u00e1\u010den\u00ed", step_weighing: "V\u00e1\u017een\u00ed", step_filling: "Napou\u0161t\u011bn\u00ed", step_washing: "Pran\u00ed", step_rinsing: "M\u00e1ch\u00e1n\u00ed", step_draining: "Vypou\u0161t\u011bn\u00ed", step_spinning: "Odst\u0159e\u010fov\u00e1n\u00ed", step_cooling: "Chlazen\u00ed", step_anti_crease: "Proti poma\u010dk\u00e1n\u00ed", step_steam: "P\u00e1ra",
   },
@@ -2187,6 +2201,136 @@ const STOVE_COLORS = {
 // What the stove's own little screen shows. The power stage while it burns,
 // as the stoves themselves print it, and a short word otherwise.
 const STOVE_SCREEN = { off: "OFF", ignition: "IGN", eco: "ECO", cooling: "---", cleaning: "CLN", alarm: "AL" };
+
+// What a split air conditioner is set to, from its climate entity or from a
+// sensor or select that names the mode. Home Assistant's own modes first, then
+// the words a template sensor might use.
+const AC_SET_MODES = { off: "off", cool: "cool", heat: "heat", dry: "dry", fan_only: "fan", fan: "fan", auto: "auto", heat_cool: "auto" };
+function acSetModeOf(raw) {
+  if (raw === undefined || raw === null) return "";
+  const f = stripAccents(String(raw).trim()).toLowerCase();
+  if (Object.prototype.hasOwnProperty.call(AC_SET_MODES, f)) return AC_SET_MODES[f];
+  if (/^(off|0|aus|uit|eteint|apagad[oa]|spent[oa]|desligad[oa]|av|slukket|wylaczon[ya]|vypnut[oa]?)$/.test(f)) return "off";
+  if (/dry|dehum|deshum|entfeucht|deumid|ontvocht|avfukt|affugt|osusz|odvlh|secado/.test(f)) return "dry";
+  if (/cool|cold|froid|refroid|kuhl|kuehl|frio|enfri|freddo|raffred|koel|kyl|kjol|kol\b|chlod|chlaz/.test(f)) return "cool";
+  if (/heat|chaud|chauff|heiz|calor|calent|caldo|riscald|warm|verwarm|varm|grzan|grzej|topen|aquec/.test(f)) return "heat";
+  if (/fan|vent|luft|lueft|ventil|flakt|vifte|blaes|wentyl/.test(f)) return "fan";
+  if (/auto/.test(f)) return "auto";
+  return "";
+}
+
+// What the unit is doing, which is not always what it is set to: set to cool,
+// it may have reached the setpoint and wait, or melt the ice off its outdoor
+// unit in winter. hvac_action says so when the integration knows; a defrost
+// entity says it for the ones that report it apart.
+const AC_MODES = ["off", "cool", "heat", "dry", "fan", "auto", "idle", "defrost", "preheat", "run"];
+function acModeOf(set, action) {
+  if (set === "off") return "off";
+  const a = String(action || "").toLowerCase();
+  const byAction = { cooling: "cool", heating: "heat", drying: "dry", fan: "fan", idle: "idle", off: "idle", defrosting: "defrost", preheating: "preheat" };
+  if (Object.prototype.hasOwnProperty.call(byAction, a)) return byAction[a];
+  return set;
+}
+
+// The vanes. Every integration names a position its own way: Panasonic
+// UpMid, Gree fixed_upper_middle, MELCloud 1_up to 5_down, Midea up_mid,
+// Sensibo fixedmiddletop, Toshiba Fixed 1. The card keeps five positions from
+// top to bottom, or from left to right, and a swing.
+const AC_SWING_RE = /swing|range|sweep|full|both|3d|^on$|oscil|schwenk|balay|oscill/;
+function acVanePos(raw, axis) {
+  if (raw === undefined || raw === null) return null;
+  const s = stripAccents(String(raw)).toLowerCase().replace(/[^a-z0-9]/g, "");
+  if (!s || ["unknown", "unavailable", "none", "auto", "default", "off", "stop", "stopped"].includes(s)) return null;
+  if (AC_SWING_RE.test(s)) return "swing";
+  // Daikin's swing mode names the axis that swings.
+  if (s === "vertical") return axis === "v" ? "swing" : null;
+  if (s === "horizontal") return axis === "h" ? "swing" : null;
+  const n = /(\d)/.exec(s);
+  if (n) {
+    const i = Math.max(1, Math.min(5, Number(n[1])));
+    return axis === "v" ? i : i - 3;
+  }
+  const t = s.replace(/fixed|position|pos|vane|louver|louvre|wind|angle/g, "");
+  const mid = /mid|center|centre|milieu|mitte|centro|midden/.test(t);
+  if (axis === "v") {
+    const up = /top|upper|up|high|haut|oben|alto|arriba/.test(t);
+    const down = /bottom|lower|down|low|bas|unten|basso|abajo/.test(t);
+    if (up) return mid ? 2 : 1;
+    if (down) return mid ? 4 : 5;
+    return mid ? 3 : null;
+  }
+  const left = /left|gauche|links|sinistra|izquierda|esquerda/.test(t);
+  const right = /right|droite|rechts|destra|derecha|direita/.test(t);
+  if (left) return mid ? -1 : -2;
+  if (right) return mid ? 1 : 2;
+  return mid || /split|wide/.test(t) ? 0 : null;
+}
+
+// How fast the fan blows, in five steps: Panasonic's LowMid, Gree's
+// medium high, Daikin's 1 to 5, a fan entity's percentage.
+function acFanSpeedOf(raw, pct) {
+  if (pct !== null && pct !== undefined) {
+    if (pct <= 0) return "";
+    return pct <= 20 ? "quiet" : pct <= 45 ? "low" : pct <= 70 ? "medium" : pct <= 90 ? "high" : "turbo";
+  }
+  const s = stripAccents(String(raw || "")).toLowerCase().replace(/[^a-z0-9]/g, "");
+  if (!s) return "";
+  if (/turbo|power|boost|max|strong|highest|super|jet/.test(s)) return "turbo";
+  if (/quiet|silen|night|mute|sleep|lowest|ultralow|silence/.test(s)) return "quiet";
+  const n = /^(\d)$/.exec(s);
+  if (n) return ["quiet", "low", "low", "medium", "high", "high"][Math.min(5, Number(n[1]))];
+  if (/high/.test(s)) return "high";
+  if (/low/.test(s)) return "low";
+  return "medium";
+}
+const AC_FAN_SECONDS = { quiet: 2.2, low: 1.7, medium: 1.2, high: 0.8, turbo: 0.5 };
+
+// A preset says quiet, eco or boost on the units that keep them there.
+function acPresetOf(raw) {
+  const s = stripAccents(String(raw || "")).toLowerCase();
+  if (/eco|econom/.test(s)) return "eco";
+  if (/boost|powerful|turbo|power/.test(s)) return "boost";
+  if (/quiet|silen|sleep|night/.test(s)) return "quiet";
+  return "";
+}
+
+const AC_COLORS = {
+  off: "var(--disabled-text-color, #9e9e9e)", cool: "#29b6f6", heat: "#ff7043", dry: "#26c6da", fan: "#78909c",
+  auto: "#66bb6a", idle: "var(--success-color, #4caf50)", defrost: "#4dd0e1", preheat: "#ffa726", run: "#42a5f5",
+};
+const AC_LABELS = {
+  off: "ac_off", cool: "ac_cooling", heat: "ac_heating", dry: "ac_drying", fan: "ac_fan_only", auto: "ac_auto",
+  idle: "ac_idle", defrost: "ac_defrost", preheat: "ac_preheating", run: "running",
+};
+// The unit's own screen shows the mode by a symbol next to the setpoint: the
+// Material Design icons Home Assistant itself uses for them.
+const AC_ICONS = {
+  cool: "M20.79,13.95L18.46,14.57L16.46,13.44V10.56L18.46,9.43L20.79,10.05L21.31,8.12L19.54,7.65L20,5.88L18.07,5.36L17.45,7.69L15.45,8.82L13,7.38V5.12L14.71,3.41L13.29,2L12,3.29L10.71,2L9.29,3.41L11,5.12V7.38L8.5,8.82L6.5,7.69L5.92,5.36L4,5.88L4.47,7.65L2.7,8.12L3.22,10.05L5.55,9.43L7.55,10.56V13.45L5.55,14.58L3.22,13.96L2.7,15.89L4.47,16.36L4,18.12L5.93,18.64L6.55,16.31L8.55,15.18L11,16.62V18.88L9.29,20.59L10.71,22L12,20.71L13.29,22L14.7,20.59L13,18.88V16.62L15.5,15.17L17.5,16.3L18.12,18.63L20,18.12L19.53,16.35L21.3,15.88L20.79,13.95M9.5,10.56L12,9.11L14.5,10.56V13.44L12,14.89L9.5,13.44V10.56Z",
+  heat: "M17.66 11.2C17.43 10.9 17.15 10.64 16.89 10.38C16.22 9.78 15.46 9.35 14.82 8.72C13.33 7.26 13 4.85 13.95 3C13 3.23 12.17 3.75 11.46 4.32C8.87 6.4 7.85 10.07 9.07 13.22C9.11 13.32 9.15 13.42 9.15 13.55C9.15 13.77 9 13.97 8.8 14.05C8.57 14.15 8.33 14.09 8.14 13.93C8.08 13.88 8.04 13.83 8 13.76C6.87 12.33 6.69 10.28 7.45 8.64C5.78 10 4.87 12.3 5 14.47C5.06 14.97 5.12 15.47 5.29 15.97C5.43 16.57 5.7 17.17 6 17.7C7.08 19.43 8.95 20.67 10.96 20.92C13.1 21.19 15.39 20.8 17.03 19.32C18.86 17.66 19.5 15 18.56 12.72L18.43 12.46C18.22 12 17.66 11.2 17.66 11.2M14.5 17.5C14.22 17.74 13.76 18 13.4 18.1C12.28 18.5 11.16 17.94 10.5 17.28C11.69 17 12.4 16.12 12.61 15.23C12.78 14.43 12.46 13.77 12.33 13C12.21 12.26 12.23 11.63 12.5 10.94C12.69 11.32 12.89 11.7 13.13 12C13.9 13 15.11 13.44 15.37 14.8C15.41 14.94 15.43 15.08 15.43 15.23C15.46 16.05 15.1 16.95 14.5 17.5H14.5Z",
+  dry: "M12,20A6,6 0 0,1 6,14C6,10 12,3.25 12,3.25C12,3.25 18,10 18,14A6,6 0 0,1 12,20Z",
+  fan: "M12,11A1,1 0 0,0 11,12A1,1 0 0,0 12,13A1,1 0 0,0 13,12A1,1 0 0,0 12,11M12.5,2C17,2 17.11,5.57 14.75,6.75C13.76,7.24 13.32,8.29 13.13,9.22C13.61,9.42 14.03,9.73 14.35,10.13C18.05,8.13 22.03,8.92 22.03,12.5C22.03,17 18.46,17.1 17.28,14.73C16.78,13.74 15.72,13.3 14.79,13.11C14.59,13.59 14.28,14 13.88,14.34C15.87,18.03 15.08,22 11.5,22C7,22 6.91,18.42 9.27,17.24C10.25,16.75 10.69,15.71 10.89,14.79C10.4,14.59 9.97,14.27 9.65,13.87C5.96,15.85 2,15.07 2,11.5C2,7 5.56,6.89 6.74,9.26C7.24,10.25 8.29,10.68 9.22,10.87C9.41,10.39 9.73,9.97 10.14,9.65C8.15,5.96 8.94,2 12.5,2Z",
+  auto: "M12,6V9L16,5L12,1V4A8,8 0 0,0 4,12C4,13.57 4.46,15.03 5.24,16.26L6.7,14.8C6.25,13.97 6,13 6,12A6,6 0 0,1 12,6M18.76,7.74L17.3,9.2C17.74,10.04 18,11 18,12A6,6 0 0,1 12,18V15L8,19L12,23V20A8,8 0 0,0 20,12C20,10.43 19.54,8.97 18.76,7.74Z",
+};
+// The setpoint as the unit's screen prints it: 24, or 24.5 on the units that
+// take halves. No unit and no locale, a seven-segment display has neither.
+function acScreenTemp(v) {
+  if (v === null || v === undefined || !Number.isFinite(v)) return "";
+  const r = Math.round(v * 2) / 2;
+  return Number.isInteger(r) ? String(r) : r.toFixed(1);
+}
+// An attribute value in the words Home Assistant gives it (fan modes and
+// presets are translated by the integrations), or cleaned up.
+function attrLabel(hass, st, attr, value, cfg) {
+  const pinned = cfg && cfg.language && cfg.language !== "auto";
+  if (!pinned && st && hass && typeof hass.formatEntityAttributeValue === "function") {
+    try {
+      const label = hass.formatEntityAttributeValue(st, attr, value);
+      if (label && label !== value) return String(label);
+    } catch (e) { /* fall through */ }
+  }
+  const clean = cleanStateLabel(String(value));
+  return clean.charAt(0).toUpperCase() + clean.slice(1);
+}
 
 // What a heat pump's valve says. HeishaMon reads its 2-way valve Heating or
 // Cooling and its 3-way valve Room or Tank: a position, which names the mode
@@ -3300,6 +3444,19 @@ const TYPE_AUTO_PATTERNS = {
     error_entity: /alarm|error.?code|nb.?alarms/i,
     power_entity: /power_w$|watt|electric/i,
   },
+  // Names read in the integrations: Panasonic Comfort Cloud keeps its vanes
+  // and nanoe in selects and switches, Midea LAN its wind angles, and most
+  // report the outdoor unit's temperature apart. Gree calls its ioniser the
+  // health mode.
+  air_conditioner: {
+    vane_vertical_entity: /vertical.?(swing|vane|louver|direction|position)|(swing|vane|louver|airflow).?vertical|wind.?ud|up.?down|updown/i,
+    vane_horizontal_entity: /horizontal.?(swing|vane|louver|direction|position)|(swing|vane|louver|airflow).?horizontal|wind.?lr|left.?right|leftright/i,
+    purifier_entity: /nanoe|plasma|ioni[sz]|anion|streamer|purif|air.?clean|health|sante/i,
+    outdoor_temperature_entity: /outdoor|outside|exterieur|aussen/i,
+    current_temperature_entity: /inside.?temp|indoor.?temp|room.?temp/i,
+    defrost_entity: /defrost|degivr|abtau/i,
+    power_entity: /(current|real).?power|power_w$|watt/i,
+  },
   coffee: {
     water_entity: /water.?tank|water.?level|reservoir/i,
     beans_entity: /bean.?container|bean.?empty/i,
@@ -3422,6 +3579,10 @@ const TYPE_CAPS = {
   // says more than on and off: lighting, burning, modulating, the eco pause,
   // the cool-down and the cleaning of the burn pot.
   pellet_stove: { pelletStove: true },
+  // A split air conditioner's indoor unit: the mode it cools, heats, dries or
+  // blows in, the vanes that point the air and the fan that pushes it. No
+  // cycle, and a climate entity usually says everything else.
+  air_conditioner: { airConditioner: true },
 };
 const APPLIANCE_TYPES = Object.keys(TYPE_CAPS);
 const LAUNDRY_TYPES = ["washer", "dryer", "dishwasher"];
@@ -3450,6 +3611,8 @@ const FEEDER_ONLY_FIELDS = [
 // A flue gas reading belongs to a fire, and the only fire the card draws is a
 // stove's.
 const STOVE_ONLY_FIELDS = ["flue_temperature_entity"];
+// And vanes point the air of an air conditioner only.
+const AC_ONLY_FIELDS = ["vane_vertical_entity", "vane_horizontal_entity", "purifier_entity"];
 const PRINTER_ONLY_FIELDS = [
   "nozzle_temperature_entity",
   "nozzle_target_entity",
@@ -3475,6 +3638,7 @@ function detectApplianceType(cfg, st) {
   if (PRINTER_ONLY_FIELDS.some((f) => cfg[f])) return "printer_3d";
   if (FEEDER_ONLY_FIELDS.some((f) => cfg[f])) return "pet_feeder";
   if (STOVE_ONLY_FIELDS.some((f) => cfg[f])) return "pellet_stove";
+  if (AC_ONLY_FIELDS.some((f) => cfg[f])) return "air_conditioner";
   const hay = `${cfg.icon || ""} ${cfg.state_entity || ""} ${(st && st.attributes.icon) || ""}`.toLowerCase();
   // Before everything else: a printer's entities are named after its maker or
   // its software, and a Bambu Lab one after its model ("p1s_...", "a1_...").
@@ -3501,6 +3665,13 @@ function detectApplianceType(cfg, st) {
   const eid = String(cfg.state_entity || "").toLowerCase();
   // First: a heat pump's own water heater is still the heat pump.
   if (/heat.?pump|pompe.?(a|\u00e0).?chaleur|w(a|ae|\u00e4)rmepumpe|bomba.?de.?calor|pompa.?di.?calore|warmtepomp|v(a|\u00e4)rmepump|pompa.?ciep|tepelne.?cerpadlo|ecodan|altherma|aquarea/.test(hay)) return "heat_pump";
+  // A split air conditioner, by its name in any language or its maker's, or
+  // a climate entity named after its room that can cool, dry or only blow:
+  // a boiler's or a stove's only heats. "Clim" and "AC" stand alone, or every
+  // climate entity would be one.
+  if (/air.?con|aircon|airco|mini.?split|(^|[\s._])(split|clim|ac)([\s._]|$)|climatis|climatiz|condicionad|klimaanl|klimatyz|klimatiz|luftkondit|kondicion|sensibo|melcloud|\u043a\u043e\u043d\u0434\u0438\u0446\u0438\u043e\u043d\u0435\u0440|\u7a7a\u8c03/.test(hay)) return "air_conditioner";
+  const hvacModes = st && Array.isArray(st.attributes.hvac_modes) ? st.attributes.hvac_modes : [];
+  if (/^climate\./.test(eid) && hvacModes.some((m) => ["cool", "dry", "fan_only"].includes(m))) return "air_conditioner";
   if (/^water_heater\..*(boiler|chaudiere)/.test(eid) && !/water.?boiler/.test(eid)) return "boiler";
   // Before the boiler: MDI names a storage tank "water-boiler", and water_heater
   // is the Home Assistant domain for one.
@@ -4679,6 +4850,99 @@ const ILLUSTRATION_CSS = {
   // air grille, the door with the fire behind its glass, and the hopper beside
   // it, whose window shows how much is left. The warm air leaves by the
   // grille, the smoke by the flue, and only when the stove makes some.
+  // A split's indoor unit on the wall: a long rounded box, its screen and
+  // lights, and the flap over the outlet, which opens as far as the vane
+  // points down. The air leaves in strokes that lean with the side vanes and
+  // run faster with the fan; drying, the water rises back into the unit.
+  air_conditioner: () => `
+        .ac-unit {
+          position: absolute; left: 2px; right: 2px; top: 16px; height: 38px; border-radius: 7px 7px 11px 11px;
+          background: linear-gradient(180deg, var(--ac-body-hi, #ffffff), var(--ac-body, #f1f3f4) 55%, var(--ac-body-lo, #d8dcde));
+          box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.1), 0 1px 1px rgba(0, 0, 0, 0.08);
+        }
+        .ac-unit::before {
+          content: ""; position: absolute; left: 5px; right: 5px; top: 3px; height: 4px; border-radius: 2px;
+          background: repeating-linear-gradient(90deg, rgba(0, 0, 0, 0.13) 0 1px, transparent 1px 3px);
+        }
+        .ac-seam { position: absolute; left: 0; right: 0; top: 25px; height: 1px; background: rgba(0, 0, 0, 0.1); }
+        .ac-mouth { position: absolute; left: 7px; right: 7px; bottom: 2px; height: 7px; border-radius: 0 0 7px 7px; background: linear-gradient(180deg, #0e1013, #2a2f35); }
+        .ac-flap {
+          position: absolute; left: -1px; right: -1px; top: 0; height: 7px; border-radius: 0 0 7px 7px; transform-origin: 50% 0;
+          background: linear-gradient(180deg, var(--ac-body-lo, #d8dcde), var(--ac-body, #f1f3f4) 60%, var(--ac-body-hi, #ffffff));
+          box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.14), 0 1px 1px rgba(0, 0, 0, 0.12);
+          transform: translateY(calc(var(--ac-flap, 0) * 1px)) scaleY(calc(1 - var(--ac-flap, 0) * 0.09));
+        }
+        .ac-lcd {
+          position: absolute; right: 9px; top: 11px; min-width: 9px; height: 9px; padding: 0 1.5px; border-radius: 1.5px;
+          display: flex; align-items: center; justify-content: center; gap: 1px;
+          background: rgba(10, 14, 18, 0.85); color: #7fdcff; text-shadow: 0 0 2px currentColor;
+          font: 700 6.5px/9px ui-monospace, "SF Mono", Menlo, monospace;
+        }
+        .ac-lcd span:empty { display: none; }
+        .ac-lcd svg { width: 7px; height: 7px; flex: none; fill: currentColor; }
+        .machine.icon-heat .ac-lcd { color: #ffab76; }
+        .machine.icon-dry .ac-lcd { color: #80deea; }
+        .machine.icon-fan .ac-lcd { color: #e0e0e0; }
+        .machine.icon-auto .ac-lcd { color: #a5d6a7; }
+        .machine.mode-off .ac-lcd { display: none; }
+        .ac-leds { position: absolute; left: 10px; top: 14px; display: flex; gap: 2.5px; }
+        .ac-leds i { width: 3px; height: 3px; border-radius: 50%; background: #43a047; box-shadow: 0 0 3px #43a047; }
+        .machine.mode-off .ac-leds i { background: rgba(0, 0, 0, 0.15); box-shadow: none; }
+        .ac-leds i.ion { background: #29b6f6; box-shadow: 0 0 3px #29b6f6; }
+        .ac-leds i.eco { background: #8bc34a; box-shadow: 0 0 3px #8bc34a; }
+        .ac-leds i.quiet { background: #ab8cff; box-shadow: 0 0 3px #ab8cff; }
+        .ac-leds i.boost { background: #ff7043; box-shadow: 0 0 3px #ff7043; }
+        .ac-air { position: absolute; left: 0; top: 56px; width: 96px; height: 50px; overflow: visible; display: none; }
+        .machine.mode-cool .ac-air, .machine.mode-heat .ac-air, .machine.mode-dry .ac-air, .machine.mode-fan .ac-air,
+        .machine.mode-auto .ac-air, .machine.mode-run .ac-air { display: block; }
+        .ac-stream { transform-origin: 48px 0; transform: skewX(var(--ac-skew, 0deg)) scaleY(var(--ac-reach, 1)); }
+        .ac-stream path {
+          fill: none; stroke: var(--ac-air, #4fc3f7); stroke-width: 2.2; stroke-linecap: round; stroke-dasharray: 5 5; opacity: 0.9;
+          animation: ac-flow var(--ac-speed, 1.2s) linear infinite; animation-delay: var(--anim-offset, 0s);
+        }
+        .ac-stream path:nth-child(2) { animation-delay: calc(-0.3s + var(--anim-offset, 0s)); }
+        .ac-stream path:nth-child(3) { animation-delay: calc(-0.6s + var(--anim-offset, 0s)); }
+        .ac-stream path:nth-child(4) { animation-delay: calc(-0.9s + var(--anim-offset, 0s)); }
+        .machine.mode-cool { --ac-air: #42a5f5; }
+        .machine.mode-heat { --ac-air: #ff7043; }
+        .machine.mode-dry { --ac-air: #4dd0e1; }
+        .machine.mode-fan { --ac-air: #90a4ae; }
+        .machine.mode-auto { --ac-air: #81c784; }
+        .machine.mode-run { --ac-air: #90caf9; }
+        /* Drying: the water drawn out of the room goes up into the unit. */
+        .ac-drop { fill: #4fc3f7; opacity: 0; transform-box: fill-box; transform-origin: center; display: none; }
+        .machine.mode-dry .ac-drop { display: inline; animation: ac-drop 2s ease-out infinite; animation-delay: var(--anim-offset, 0s); }
+        .machine.mode-dry .ac-drop.d2 { animation-delay: calc(-0.7s + var(--anim-offset, 0s)); }
+        .machine.mode-dry .ac-drop.d3 { animation-delay: calc(-1.35s + var(--anim-offset, 0s)); }
+        /* Swinging: the flap and the air sweep together. */
+        .machine.swing-v .ac-flap { animation: ac-swing-v 4s ease-in-out infinite; animation-delay: var(--anim-offset, 0s); }
+        .machine.swing-v .ac-stream { animation: ac-reach 4s ease-in-out infinite; animation-delay: var(--anim-offset, 0s); }
+        .machine.swing-h .ac-stream { animation: ac-sweep 5s ease-in-out infinite; animation-delay: var(--anim-offset, 0s); }
+        /* Defrosting: frost on the unit and no air, the fan is stopped. */
+        .ac-frost {
+          position: absolute; left: 2px; right: 2px; top: 16px; height: 38px; border-radius: 7px 7px 11px 11px; display: none;
+          background: radial-gradient(circle at 20% 30%, rgba(255, 255, 255, 0.9) 0 1px, transparent 1.5px),
+            radial-gradient(circle at 70% 60%, rgba(255, 255, 255, 0.9) 0 1px, transparent 1.5px);
+          background-size: 9px 8px; box-shadow: inset 0 0 6px rgba(129, 212, 250, 0.9);
+        }
+        .machine.mode-defrost .ac-frost { display: block; }
+        @keyframes ac-flow { to { stroke-dashoffset: -20; } }
+        @keyframes ac-drop {
+          0% { opacity: 0; transform: translateY(34px) scale(1.2); }
+          25% { opacity: 0.9; }
+          85% { opacity: 0.8; }
+          100% { opacity: 0; transform: translateY(2px) scale(0.6); }
+        }
+        @keyframes ac-swing-v { 0%, 100% { transform: translateY(1px) scaleY(0.91); } 50% { transform: translateY(5px) scaleY(0.55); } }
+        @keyframes ac-reach {
+          0%, 100% { transform: skewX(var(--ac-skew, 0deg)) scaleY(0.45); }
+          50% { transform: skewX(var(--ac-skew, 0deg)) scaleY(1); }
+        }
+        @keyframes ac-sweep {
+          0%, 100% { transform: skewX(-35deg) scaleY(var(--ac-reach, 1)); }
+          50% { transform: skewX(35deg) scaleY(var(--ac-reach, 1)); }
+        }
+  `,
   pellet_stove: () => `
         .ps-pipe {
           position: absolute; left: 43px; top: 0; width: 10px; height: 14px; border-radius: 2px 2px 0 0;
@@ -5950,6 +6214,39 @@ function illustrationHtml(type, ctx) {
           <div class="bl-pipe rad-arm"></div>
           <div class="bl-rad"><i></i><i></i><i></i><i></i></div>
           <div class="bl-waves"><i class="w1"></i><i class="w2"></i><i class="w3"></i></div>
+        </div>`;
+  }
+
+  if (type === "air_conditioner") {
+    // The flap opens a step per vane position, and the air reaches further
+    // the lower it points. At rest the flap is closed whatever the vane says.
+    const a = ctx.ac || {};
+    const mode = a.mode || "off";
+    const blowing = !["off", "idle", "defrost", "preheat"].includes(mode);
+    const v = Number.isInteger(a.vane) ? a.vane : 3;
+    const h = Number.isInteger(a.hvane) ? a.hvane : 0;
+    const style = `--ac-flap: ${blowing ? v : 0}; --ac-reach: ${[0.45, 0.6, 0.75, 0.88, 1][v - 1]}; `
+      + `--ac-skew: ${h * 15}deg; --ac-speed: ${AC_FAN_SECONDS[a.speed] || AC_FAN_SECONDS.medium}s`;
+    const icon = AC_ICONS[a.icon] ? `<svg viewBox="0 0 24 24"><path d="${AC_ICONS[a.icon]}"/></svg>` : "";
+    const leds = ["", ...(a.leds || [])].map((l) => `<i${l ? ` class="${l}"` : ""}></i>`).join("");
+    const acCls = [`mode-${mode}`, a.icon ? `icon-${a.icon}` : "", blowing && a.swingV ? "swing-v" : "", blowing && a.swingH ? "swing-h" : ""]
+      .filter(Boolean).join(" ");
+    return `
+        <div class="machine ${cls} ${acCls}" style="${style}">
+          <div class="ac-unit">
+            <div class="ac-seam"></div>
+            <div class="ac-leds">${leds}</div>
+            <div class="ac-lcd">${icon}<span>${esc(a.screen || "")}</span></div>
+            <div class="ac-mouth"><div class="ac-flap"></div></div>
+          </div>
+          <div class="ac-frost"></div>
+          <svg class="ac-air" viewBox="0 0 96 52">
+            <g class="ac-stream">
+              <path d="M20 2 C17 16 14 28 10 42"/><path d="M36 2 C35 18 34 32 32 48"/>
+              <path d="M60 2 C61 18 62 32 64 48"/><path d="M76 2 C79 16 82 28 86 42"/>
+            </g>
+            <circle class="ac-drop d1" cx="26" cy="2" r="1.8"/><circle class="ac-drop d2" cx="48" cy="2" r="1.8"/><circle class="ac-drop d3" cx="70" cy="2" r="1.8"/>
+          </svg>
         </div>`;
   }
 
@@ -7762,6 +8059,134 @@ class ApplianceCard extends HTMLElement {
       }
     }
 
+    // Air conditioner. A climate entity says it all: the mode it is set to,
+    // what it is actually doing in hvac_action, the room and the setpoint, the
+    // fan and the vanes. The entities of the editor are for what it keeps
+    // apart: Panasonic's vanes and nanoe, an outdoor sensor, a defrost flag.
+    let ac = null;
+    if (cap.airConditioner) {
+      const climate = domainOf(cfg.state_entity) === "climate" ? st : null;
+      const attrs = (climate && climate.attributes) || {};
+      let set = "";
+      let mode = "";
+      if (!powerDerived && st && cfg.state_map && Object.prototype.hasOwnProperty.call(cfg.state_map, rawState)) {
+        const mapped = cfg.state_map[rawState];
+        mode = AC_MODES.includes(mapped) ? mapped : "";
+        set = ["cool", "heat", "dry", "fan", "auto"].includes(mode) ? mode : "";
+      } else if (!powerDerived && st && !rawIsMeaningless) {
+        set = acSetModeOf(rawState);
+        mode = set ? acModeOf(set, attrs.hvac_action) : "";
+      }
+      // A plug, or a word the card does not know: running or not, as the
+      // rest of the card reads it.
+      if (!mode) {
+        if (isActiveState(norm)) mode = "run";
+        else if (norm === "idle" || norm === "done" || powerDerived) mode = "off";
+      }
+      const defrostSt = cfg.defrost_entity ? stateObj(hass, cfg.defrost_entity) : null;
+      if (defrostSt && mode !== "off" && ["on", "true", "defrost", "defrosting"].includes(String(defrostSt.state).toLowerCase())) mode = "defrost";
+
+      if (mode) {
+        if (!cfg.state_show_raw) stateLabel = t(hass, AC_LABELS[mode]);
+        color = AC_COLORS[mode];
+      }
+
+      // The vanes, from their own selects when the integration keeps them
+      // there, from the climate entity's swing modes otherwise. Daikin says
+      // both axes in one swing mode: Vertical, Horizontal or 3D.
+      const vaneRaw = (field, attr) => {
+        const vs = cfg[field] ? stateObj(hass, cfg[field]) : null;
+        return vs ? vs.state : attrs[attr];
+      };
+      const swingRaw = String(attrs.swing_mode || "").toLowerCase();
+      const vane = acVanePos(vaneRaw("vane_vertical_entity", "swing_mode"), "v");
+      let hvane = acVanePos(vaneRaw("vane_horizontal_entity", "swing_horizontal_mode"), "h");
+      if (!cfg.vane_horizontal_entity && attrs.swing_horizontal_mode === undefined && /3d|both|horizontal/.test(swingRaw)) hvane = "swing";
+
+      // The fan: a fan entity's percentage, a select's option, or the climate
+      // entity's fan mode.
+      const fanSt = cfg.fan_speed_entity ? stateObj(hass, cfg.fan_speed_entity) : null;
+      const fanPct = fanSt && domainOf(cfg.fan_speed_entity) === "fan" ? numberOrNull((fanSt.attributes || {}).percentage) : null;
+      const fanRaw = fanSt ? fanSt.state : attrs.fan_mode;
+      const speed = acFanSpeedOf(fanRaw, fanPct);
+
+      // The lights: the purifier, and the preset or the fan saying eco,
+      // quiet or boost.
+      const leds = [];
+      const purSt = cfg.purifier_entity ? stateObj(hass, cfg.purifier_entity) : null;
+      if (purSt && !["off", "false", "unknown", "unavailable", "none", ""].includes(String(purSt.state).toLowerCase())) leds.push("ion");
+      const preset = acPresetOf(attrs.preset_mode);
+      if (preset === "eco") leds.push("eco");
+      if (preset === "quiet" || (!preset && speed === "quiet")) leds.push("quiet");
+      if (preset === "boost") leds.push("boost");
+
+      // The screen: the mode's symbol and the setpoint, as the unit shows
+      // them. A fan has no setpoint to show.
+      const target = cfg.target_temperature_entity ? numericState(hass, cfg.target_temperature_entity) : numberOrNull(attrs.temperature);
+      const icon = set || (mode === "idle" || mode === "defrost" || mode === "preheat" ? "" : ["cool", "heat", "dry", "fan", "auto"].includes(mode) ? mode : "");
+      const screen = mode !== "off" && icon !== "fan" && target !== null ? acScreenTemp(target) : "";
+      displayText = screen;
+
+      const room = cfg.current_temperature_entity ? numericState(hass, cfg.current_temperature_entity) : numberOrNull(attrs.current_temperature);
+      if (room !== null) {
+        const roomId = cfg.current_temperature_entity || cfg.state_entity;
+        const unit = temperatureUnit(hass, cfg.current_temperature_entity || cfg.target_temperature_entity);
+        const now = tempText(hass, cfg, roomId, room, unit);
+        const goal = target !== null && mode !== "off" && icon !== "fan"
+          ? tempText(hass, cfg, cfg.target_temperature_entity || cfg.state_entity, target, unit) : null;
+        extraLines.push({
+          key: "room_temp",
+          icon: "mdi:home-thermometer-outline",
+          label: t(hass, "ps_line_room"),
+          value: goal !== null && goal !== now ? `${keepTogether(now)} \u2192 ${keepTogether(goal)}` : keepTogether(now),
+          entity: roomId,
+        });
+      }
+      // The humidity, and while it dries, the humidity it aims at.
+      const hum = numberOrNull(attrs.current_humidity);
+      if (hum !== null) {
+        const aim = mode !== "off" && set === "dry" ? numberOrNull(attrs.humidity) : null;
+        extraLines.push({
+          key: "humidity",
+          icon: "mdi:water-percent",
+          label: t(hass, "ac_line_humidity"),
+          value: keepTogether(aim !== null && Math.round(aim) !== Math.round(hum) ? `${Math.round(hum)} % \u2192 ${Math.round(aim)} %` : `${Math.round(hum)} %`),
+          entity: cfg.state_entity,
+        });
+      }
+      if (mode !== "off" && fanRaw !== undefined && fanRaw !== null && !["unknown", "unavailable", ""].includes(String(fanRaw))) {
+        extraLines.push({
+          key: "fan_speed",
+          icon: "mdi:fan",
+          label: t(hass, "ps_line_fan"),
+          value: keepTogether(fanPct !== null && fanSt.state === "on" ? `${Math.round(fanPct)} %`
+            : fanSt ? formatInfoValue(fanSt, hass, null, cfg, cfg.fan_speed_entity) : attrLabel(hass, climate, "fan_mode", fanRaw, cfg)),
+          entity: cfg.fan_speed_entity || cfg.state_entity,
+        });
+      }
+      const outdoor = cfg.outdoor_temperature_entity ? numericState(hass, cfg.outdoor_temperature_entity) : null;
+      if (outdoor !== null) {
+        extraLines.push({
+          key: "outdoor_temp",
+          icon: "mdi:sun-thermometer-outline",
+          label: t(hass, "section_outdoor_temperature"),
+          value: keepTogether(tempText(hass, cfg, cfg.outdoor_temperature_entity, outdoor, temperatureUnit(hass, cfg.outdoor_temperature_entity))),
+          entity: cfg.outdoor_temperature_entity,
+        });
+      }
+      ac = {
+        mode: mode || "off",
+        icon,
+        screen,
+        vane: Number.isInteger(vane) ? vane : null,
+        hvane: Number.isInteger(hvane) ? hvane : null,
+        swingV: vane === "swing",
+        swingH: hvane === "swing",
+        speed,
+        leds,
+      };
+    }
+
     // An iron, read from the plug it is on: heating or off, and the state line
     // says so in its own words, since "running" says nothing of an iron.
     let leftOn = false;
@@ -7848,6 +8273,7 @@ class ApplianceCard extends HTMLElement {
       underfloor: applianceType === "heat_pump" && !!cfg.underfloor_heating,
       p3,
       stove,
+      ac,
     };
 
     // A plain on/off control, for the types that have no cycle to start or
@@ -7901,6 +8327,7 @@ class ApplianceCard extends HTMLElement {
       illustrationCtx.underfloor,
       illustrationCtx.leftOn,
       illustrationCtx.stove && illustrationCtx.stove.mode,
+      illustrationCtx.ac && [illustrationCtx.ac.mode, illustrationCtx.ac.swingV, illustrationCtx.ac.swingH, illustrationCtx.ac.speed].join("/"),
     ].join(",");
     if (animKey !== this._animKey) {
       this._animKey = animKey;
@@ -8373,6 +8800,18 @@ const SECTIONS = [
       c._row("level_empty_below", "level_empty_below", { placeholder: "0" })
       + c._row("level_max", "level_max", { placeholder: "100" }) },
   { field: "error_entity", types: ["pellet_stove"], labelKey: "section_error", includeDomains: ["binary_sensor", "sensor"] },
+
+  // Air conditioner. A climate entity already carries the room, the setpoint,
+  // the fan and, on most integrations, the vanes; these fields are for the
+  // units that keep them in entities of their own.
+  { field: "current_temperature_entity", types: ["air_conditioner"], labelKey: "section_room_temperature", includeDomains: ["sensor"] },
+  { field: "target_temperature_entity", types: ["air_conditioner"], labelKey: "section_target_temperature", includeDomains: ["number", "sensor", "input_number"] },
+  { field: "fan_speed_entity", types: ["air_conditioner"], labelKey: "section_fan_speed", includeDomains: ["select", "fan", "sensor", "input_select"] },
+  { field: "vane_vertical_entity", types: ["air_conditioner"], labelKey: "section_vane_vertical", includeDomains: ["select", "sensor", "input_select"] },
+  { field: "vane_horizontal_entity", types: ["air_conditioner"], labelKey: "section_vane_horizontal", includeDomains: ["select", "sensor", "input_select"] },
+  { field: "purifier_entity", types: ["air_conditioner"], labelKey: "section_purifier", includeDomains: ["switch", "binary_sensor", "select", "sensor", "input_boolean"] },
+  { field: "outdoor_temperature_entity", types: ["air_conditioner"], labelKey: "section_outdoor_temperature", includeDomains: ["sensor"] },
+  { field: "defrost_entity", types: ["air_conditioner"], labelKey: "section_defrost", includeDomains: ["binary_sensor", "sensor"] },
 
   // 3D printer. A target may be a sensor or a number, as the integrations
   // put it; Creality keeps it as an attribute of the reading instead.
@@ -9069,6 +9508,7 @@ class ApplianceCardEditor extends HTMLElement {
             { value: "pet_feeder", label: t(hass, "type_pet_feeder") },
             { value: "iron", label: t(hass, "type_iron") },
             { value: "pellet_stove", label: t(hass, "type_pellet_stove") },
+            { value: "air_conditioner", label: t(hass, "type_air_conditioner") },
           ],
         })}
         ${this._type === "washer" ? this._row("washer_dryer", "washer_dryer", { type: "checkbox" }) : ""}

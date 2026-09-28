@@ -6035,4 +6035,190 @@ check('editeur poele : pas de programme', markup(psEd).includes('data-toggle="pr
   check('suggestion poele : la puissance est un palier', /power/.test(sug.power_level_entity || ''), true);
 }
 
+// =============================================================================
+// Air conditioner
+// =============================================================================
+
+const acLine = (h, label) => {
+  const v = infoLine(h, label);
+  return v === null ? null : v.replace(/ /g, ' ');
+};
+const acMode = h => (/\bmode-(\w+)/.exec(machineCls(h)) || [, null])[1];
+const acIcon = h => (/\bicon-(\w+)/.exec(machineCls(h)) || [, null])[1];
+const acScreen = h => (/<div class="ac-lcd">(?:<svg[^]*?<\/svg>)?<span>([^<]*)<\/span>/.exec(h) || [, null])[1];
+const acVar = (h, name) => (new RegExp(`--ac-${name}: ([^;"]+)`).exec(h) || [, null])[1];
+const acLeds = h => [...((/<div class="ac-leds">(.*?)<\/div>/.exec(h) || [, ''])[1]).matchAll(/<i(?: class="(\w+)")?><\/i>/g)].map(m => m[1] || 'pwr');
+const AC = { appliance_type: 'air_conditioner', state_entity: 'climate.salon' };
+const acStates = (state, attrs = {}, extra = {}) => ({
+  'climate.salon': { state, attributes: { hvac_modes: ['off', 'cool', 'heat', 'dry', 'fan_only', 'heat_cool'], ...attrs } },
+  ...extra,
+});
+const aircon = (state, attrs, extra, cfg = {}) => render({ ...AC, ...cfg }, acStates(state, attrs, extra));
+
+// The mode, and what the unit is doing in it.
+check('clim : eteinte', acMode(aircon('off')), 'off');
+check('clim : froid', acMode(aircon('cool', { hvac_action: 'cooling' })), 'cool');
+check('clim : chaud', acMode(aircon('heat', { hvac_action: 'heating' })), 'heat');
+check('clim : deshumidification', acMode(aircon('dry', { hvac_action: 'drying' })), 'dry');
+check('clim : ventilation', acMode(aircon('fan_only', { hvac_action: 'fan' })), 'fan');
+check('clim : sans hvac_action, le mode suffit', acMode(aircon('cool')), 'cool');
+check('clim : auto qui refroidit refroidit', acMode(aircon('heat_cool', { hvac_action: 'cooling' })), 'cool');
+check('clim : mais garde le symbole auto', acIcon(aircon('heat_cool', { hvac_action: 'cooling' })), 'auto');
+check('clim : auto sans action', acMode(aircon('auto')), 'auto');
+check('clim : consigne atteinte, en veille', acMode(aircon('cool', { hvac_action: 'idle' })), 'idle');
+check('clim : en veille, le symbole du mode reste', acIcon(aircon('cool', { hvac_action: 'idle' })), 'cool');
+check('clim : degivrage', acMode(aircon('heat', { hvac_action: 'defrosting' })), 'defrost');
+check('clim : prechauffage', acMode(aircon('heat', { hvac_action: 'preheating' })), 'preheat');
+check('clim : allumee mais action off, en veille', acMode(aircon('cool', { hvac_action: 'off' })), 'idle');
+check('clim : indisponible, eteinte', acMode(aircon('unavailable')), 'off');
+check('clim : un contact de degivrage', acMode(aircon('heat', { hvac_action: 'heating' },
+  { 'binary_sensor.salon_defrost': { state: 'on', attributes: {} } }, { defrost_entity: 'binary_sensor.salon_defrost' })), 'defrost');
+check('clim : degivrage ignore eteinte', acMode(aircon('off', {},
+  { 'binary_sensor.salon_defrost': { state: 'on', attributes: {} } }, { defrost_entity: 'binary_sensor.salon_defrost' })), 'off');
+check('clim : state_map', acMode(aircon('Mode 4', {}, {}, { state_map: { 'Mode 4': 'dry' } })), 'dry');
+// A mode named in words, by a select or a template sensor.
+const acWord = w => acMode(render({ appliance_type: 'air_conditioner', state_entity: 'select.clim_mode' }, { 'select.clim_mode': { state: w, attributes: {} } }));
+for (const [w, m] of [['Cool', 'cool'], ['Froid', 'cool'], ['Heat', 'heat'], ['Chauffage', 'heat'], ['Dry', 'dry'], ['Déshumidification', 'dry'],
+  ['Fan', 'fan'], ['Ventilation', 'fan'], ['Auto', 'auto'], ['Off', 'off']])
+  check(`clim : « ${w} » est ${m}`, acWord(w), m);
+// On a plug: running or not.
+const acPlug = w => render({ appliance_type: 'air_conditioner', state_entity: 'sensor.clim_w', power_entity: 'sensor.clim_w', power_on_threshold: 50 },
+  { 'sensor.clim_w': { state: String(w), attributes: { unit_of_measurement: 'W' } } });
+check('clim sur prise : elle tourne', acMode(acPlug(700)), 'run');
+check('clim sur prise : elle est eteinte', acMode(acPlug(3)), 'off');
+check('clim sur prise : la ligne', stateLine(acPlug(700)), 'Running');
+
+// The state line and its colour.
+const AC_LABEL_TESTS = [['off', {}, 'Off'], ['cool', { hvac_action: 'cooling' }, 'Cooling'], ['heat', { hvac_action: 'heating' }, 'Heating'],
+  ['dry', {}, 'Drying'], ['fan_only', {}, 'Fan only'], ['auto', {}, 'Auto'], ['cool', { hvac_action: 'idle' }, 'Standby'],
+  ['heat', { hvac_action: 'defrosting' }, 'Defrosting'], ['heat', { hvac_action: 'preheating' }, 'Warming up']];
+for (const [s, a, l] of AC_LABEL_TESTS) check(`clim : ${s}/${a.hvac_action || '-'} se dit ${l}`, stateLine(aircon(s, a)), l);
+check('clim : en francais', stateLine(aircon('dry', {}, {}, { language: 'fr' })), 'Déshumidification');
+check('clim : couleur du froid', stateColor(aircon('cool')), '#29b6f6');
+check('clim : couleur du chaud', stateColor(aircon('heat')), '#ff7043');
+check('clim : le brut quand on le demande', stateLine(aircon('cool', {}, {}, { state_show_raw: true })), 'cool');
+
+// The screen: the mode's symbol and the setpoint.
+check('clim : l\'ecran dit la consigne', acScreen(aircon('cool', { temperature: 24 })), '24');
+check('clim : au demi-degre', acScreen(aircon('heat', { temperature: 21.5 })), '21.5');
+check('clim : arrondie au demi', acScreen(aircon('heat', { temperature: 21.3 })), '21.5');
+check('clim : le flocon en froid', /<div class="ac-lcd"><svg viewBox="0 0 24 24"><path d="M20\.79,13\.95/.test(aircon('cool', { temperature: 24 })), true);
+check('clim : la flamme en chaud', acIcon(aircon('heat', { temperature: 22 })), 'heat');
+check('clim : la goutte en deshumidification', acIcon(aircon('dry', { temperature: 25 })), 'dry');
+check('clim : l\'helice en ventilation', acIcon(aircon('fan_only', { temperature: 25 })), 'fan');
+check('clim : en ventilation, pas de consigne', acScreen(aircon('fan_only', { temperature: 25 })), '');
+check('clim : eteinte, rien a l\'ecran', acScreen(aircon('off', { temperature: 25 })), '');
+check('clim : la consigne d\'une entite', acScreen(aircon('cool', { temperature: 24 }, { 'number.clim_set': { state: '26', attributes: {} } },
+  { target_temperature_entity: 'number.clim_set' })), '26');
+
+// The vanes, in each integration's words.
+const vaneV = (swing, extra = {}) => aircon('cool', { hvac_action: 'cooling', swing_mode: swing, ...extra });
+const VANES = { 1: ['Up', 'fixed_upper', '1_up', 'up', 'fixedtop', 'Fixed 1', 'pos_1'],
+  2: ['UpMid', 'fixed_upper_middle', '2', 'up_mid', 'fixedmiddletop'],
+  3: ['Mid', 'fixed_middle', '3', 'middle', 'fixedmiddle'],
+  4: ['DownMid', 'fixed_lower_middle', '4', 'down_mid', 'fixedmiddlebottom'],
+  5: ['Down', 'fixed_lower', '5_down', 'down', 'fixedbottom', 'Fixed 5'] };
+for (const [pos, words] of Object.entries(VANES))
+  for (const w of words) check(`clim : volet « ${w} » en ${pos}`, acVar(vaneV(w), 'flap'), pos);
+for (const w of ['Swing', 'full_swing', 'rangefull', 'swing_upper', 'Vertical', '3D', 'on'])
+  check(`clim : « ${w} » balaie`, hasCls(vaneV(w), 'swing-v'), true);
+check('clim : auto, volet au milieu', acVar(vaneV('Auto'), 'flap'), '3');
+check('clim : eteinte, volet ferme', acVar(aircon('off', { swing_mode: 'Down' }), 'flap'), '0');
+check('clim : en veille, volet ferme', acVar(aircon('cool', { hvac_action: 'idle', swing_mode: 'Down' }), 'flap'), '0');
+check('clim : en veille, pas de balayage', hasCls(aircon('cool', { hvac_action: 'idle', swing_mode: 'Swing' }), 'swing-v'), false);
+check('clim : volet bas, l\'air va loin', acVar(vaneV('Down'), 'reach'), '1');
+check('clim : volet haut, l\'air reste court', acVar(vaneV('Up'), 'reach'), '0.45');
+const vaneH = (h) => aircon('cool', { hvac_action: 'cooling', swing_horizontal_mode: h });
+for (const [w, skew] of [['Left', '-30deg'], ['LeftMid', '-15deg'], ['left_center', '-15deg'], ['Mid', '0deg'], ['center', '0deg'],
+  ['right_center', '15deg'], ['RightMid', '15deg'], ['Right', '30deg'], ['1_left', '-30deg'], ['5_right', '30deg'], ['fixedleft', '-30deg']])
+  check(`clim : volet lateral « ${w} »`, acVar(vaneH(w), 'skew'), skew);
+check('clim : balayage lateral', hasCls(vaneH('full_swing'), 'swing-h'), true);
+check('clim : Daikin Horizontal balaie de cote', hasCls(vaneV('Horizontal'), 'swing-h'), true);
+check('clim : Daikin Horizontal ne balaie pas en hauteur', hasCls(vaneV('Horizontal'), 'swing-v'), false);
+check('clim : Daikin 3D balaie des deux cotes', hasCls(vaneV('3D'), 'swing-h') && hasCls(vaneV('3D'), 'swing-v'), true);
+// Panasonic keeps its vanes in selects.
+const pana = aircon('cool', { hvac_action: 'cooling', swing_mode: 'Auto' }, {
+  'select.salon_vertical_swing': { state: 'DownMid', attributes: {} },
+  'select.salon_horizontal_swing': { state: 'RightMid', attributes: {} },
+}, { vane_vertical_entity: 'select.salon_vertical_swing', vane_horizontal_entity: 'select.salon_horizontal_swing' });
+check('clim : volet d\'un select', acVar(pana, 'flap'), '4');
+check('clim : volet lateral d\'un select', acVar(pana, 'skew'), '15deg');
+
+// The fan: how fast the air flows.
+const fanOf = (f, extra = {}, cfg = {}) => acVar(aircon('cool', { hvac_action: 'cooling', fan_mode: f }, extra, cfg), 'speed');
+for (const [f, s] of [['Auto', '1.2s'], ['Low', '1.7s'], ['LowMid', '1.7s'], ['medium low', '1.7s'], ['Mid', '1.2s'], ['medium', '1.2s'],
+  ['HighMid', '0.8s'], ['medium high', '0.8s'], ['High', '0.8s'], ['Quiet', '2.2s'], ['Silence', '2.2s'], ['turbo', '0.5s'], ['Powerful', '0.5s'],
+  ['1', '1.7s'], ['3', '1.2s'], ['5', '0.8s']])
+  check(`clim : ventilation « ${f} »`, fanOf(f), s);
+check('clim : un ventilateur en pourcentage', fanOf(undefined, { 'fan.clim': { state: 'on', attributes: { percentage: 95 } } }, { fan_speed_entity: 'fan.clim' }), '0.5s');
+check('clim : la ligne de ventilation', acLine(aircon('cool', { fan_mode: 'HighMid' }), 'Fan'), 'High Mid');
+check('clim : eteinte, pas de ligne de ventilation', acLine(aircon('off', { fan_mode: 'Auto' }), 'Fan'), null);
+
+// The lights: power, purifier, eco, quiet, boost.
+check('clim : allumee, le voyant', acLeds(aircon('cool')).join(), 'pwr');
+check('clim : le nanoe', acLeds(aircon('cool', {}, { 'switch.salon_nanoe': { state: 'on', attributes: {} } }, { purifier_entity: 'switch.salon_nanoe' })).join(), 'pwr,ion');
+check('clim : nanoe eteint, pas de voyant', acLeds(aircon('cool', {}, { 'switch.salon_nanoe': { state: 'off', attributes: {} } }, { purifier_entity: 'switch.salon_nanoe' })).join(), 'pwr');
+check('clim : preset eco', acLeds(aircon('cool', { preset_mode: 'eco' })).join(), 'pwr,eco');
+check('clim : preset silencieux', acLeds(aircon('cool', { preset_mode: 'quiet' })).join(), 'pwr,quiet');
+check('clim : preset puissant', acLeds(aircon('cool', { preset_mode: 'powerful' })).join(), 'pwr,boost');
+check('clim : ventilation silencieuse', acLeds(aircon('cool', { fan_mode: 'Quiet' })).join(), 'pwr,quiet');
+check('clim : preset none', acLeds(aircon('cool', { preset_mode: 'none' })).join(), 'pwr');
+
+// The lines.
+check('clim : la piece et la consigne', acLine(aircon('cool', { current_temperature: 26.4, temperature: 24 }), 'Room'), '26 °C → 24 °C');
+check('clim : eteinte, la piece seule', acLine(aircon('off', { current_temperature: 26.4, temperature: 24 }), 'Room'), '26 °C');
+check('clim : en ventilation, la piece seule', acLine(aircon('fan_only', { current_temperature: 26.4, temperature: 24 }), 'Room'), '26 °C');
+check('clim : l\'humidite', acLine(aircon('cool', { current_humidity: 58 }), 'Humidity'), '58 %');
+check('clim : en deshumidification, l\'humidite visee', acLine(aircon('dry', { current_humidity: 68, humidity: 50 }), 'Humidity'), '68 % → 50 %');
+check('clim : la temperature exterieure', acLine(aircon('cool', {}, { 'sensor.salon_outside': { state: '31.2', attributes: { unit_of_measurement: '°C' } } },
+  { outdoor_temperature_entity: 'sensor.salon_outside' }), 'Outdoor temperature'), '31 °C');
+check('clim : la puissance', acLine(aircon('cool', {}, { 'sensor.salon_power': { state: '640', attributes: { unit_of_measurement: 'W' } } },
+  { power_entity: 'sensor.salon_power' }), 'Power'), '640 W');
+
+// The drawing follows the mode.
+contains('clim : l\'unite est dessinee', aircon('off'), '<div class="ac-unit">');
+contains('clim : l\'air souffle', aircon('cool'), '.machine.mode-cool .ac-air, .machine.mode-heat .ac-air');
+contains('clim : les gouttes remontent en deshumidification', aircon('dry'), '.machine.mode-dry .ac-drop { display: inline; animation: ac-drop');
+contains('clim : le givre au degivrage', aircon('heat', { hvac_action: 'defrosting' }), '.machine.mode-defrost .ac-frost { display: block; }');
+
+// Its name, or its modes, say what it is.
+const isAc = (id, attrs = {}) => /<div class="ac-unit">/.test(render({ state_entity: id }, { [id]: { state: 'cool', attributes: attrs } }));
+for (const id of ['climate.clim_salon', 'climate.climatiseur_bureau', 'climate.air_conditioner', 'climate.aircon', 'climate.airco_boven',
+  'climate.split_chambre', 'climate.klimaanlage', 'climate.climatizzatore', 'climate.klimatyzator', 'climate.aire_acondicionado', 'climate.ac_bedroom'])
+  check(`clim : ${id} en est une`, isAc(id), true);
+check('clim : une piece qui refroidit', isAc('climate.salon', { hvac_modes: ['off', 'cool', 'heat'] }), true);
+check('clim : un thermostat qui ne fait que chauffer, non', isAc('climate.hc1', { hvac_modes: ['off', 'heat', 'auto'] }), false);
+check('clim : un poele non plus', isAc('climate.poele', { hvac_modes: ['off', 'heat', 'fan_only'] }), false);
+check('clim : une pompe a chaleur non plus', isAc('climate.aquarea', { hvac_modes: ['off', 'heat', 'cool'] }), false);
+check('clim : un volet la designe', /<div class="ac-unit">/.test(render({ state_entity: 'sensor.x', vane_vertical_entity: 'select.y' },
+  { 'sensor.x': { state: 'on', attributes: {} } })), true);
+check('clim : un accumulateur non', isAc('sensor.accumulator'), false);
+
+// The editor.
+const acEd = newEditor({ state_entity: 'climate.salon', appliance_type: 'air_conditioner' });
+check('editeur : la clim est dans la liste des types', /<option value="air_conditioner"/.test(markup(acEd)), true);
+for (const f of ['current_temperature_entity', 'target_temperature_entity', 'fan_speed_entity', 'vane_vertical_entity',
+  'vane_horizontal_entity', 'purifier_entity', 'outdoor_temperature_entity', 'defrost_entity', 'power_entity', 'toggle_entity'])
+  check(`editeur clim : ${f}`, markup(acEd).includes(`data-toggle="${f}"`), true);
+check('editeur clim : pas de programme', markup(acEd).includes('data-toggle="program_entity"'), false);
+check('editeur : pas de volet sur un lave-linge', markup(newEditor({ state_entity: 'sensor.w', appliance_type: 'washer' })).includes('data-toggle="vane_vertical_entity"'), false);
+
+{
+  // The names of a Panasonic Comfort Cloud unit.
+  const ids = ['climate.salon', 'select.salon_vertical_swing', 'select.salon_horizontal_swing', 'switch.salon_nanoe',
+    'sensor.salon_outside_temperature', 'sensor.salon_inside_temperature', 'sensor.salon_current_power', 'sensor.salon_daily_energy'];
+  const ed = new Editor();
+  ed.setConfig({ type: 'custom:ha-appliance-card', appliance_type: 'air_conditioner', state_entity: 'climate.salon' });
+  ed.hass = { ...HASS(Object.fromEntries(ids.map(id => [id, { state: '1', attributes: {} }]))),
+    entities: Object.fromEntries(ids.map(id => [id, { device_id: 'salon' }])) };
+  const sug = ed.events.at(-1)?.detail?.config || {};
+  check('suggestion clim : le volet vertical', sug.vane_vertical_entity, 'select.salon_vertical_swing');
+  check('suggestion clim : le volet lateral', sug.vane_horizontal_entity, 'select.salon_horizontal_swing');
+  check('suggestion clim : le nanoe', sug.purifier_entity, 'switch.salon_nanoe');
+  check('suggestion clim : l\'exterieur', sug.outdoor_temperature_entity, 'sensor.salon_outside_temperature');
+  check('suggestion clim : la piece', sug.current_temperature_entity, 'sensor.salon_inside_temperature');
+  check('suggestion clim : la puissance', sug.power_entity, 'sensor.salon_current_power');
+}
+
+
 report();

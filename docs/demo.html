@@ -52,8 +52,8 @@ customElements.define("ha-icon", StubIcon);
 const params = new URLSearchParams(location.search);
 const uiLang = params.get("lang") === "fr" ? "fr" : "en";
 const view = params.get("view") === "types" ? "types" : "hero";
-// Nineteen types in twenty cards, the heat pump appearing twice and the iron
-// on its steam generator: five across and four down.
+// Twenty types in twenty cards, the iron on its steam generator: five across
+// and four down.
 document.documentElement.style.setProperty("--cols", params.get("cols") || 5);
 const fr = uiLang === "fr";
 const L = (en, f) => (fr ? f : en);
@@ -362,32 +362,6 @@ const heatPump = () => card({
   st("sensor.heat_pump_heat_output", 3900, { unit_of_measurement: "W" }),
 ]);
 
-// The same machine set up as a heating-only aerothermal system: no cylinder,
-// an underfloor slab in place of the radiator, and the hydraulics on one line
-// with the delta worked out between flow and return.
-const aerothermal = () => card({
-  illustration_color: "white",
-  name: L("Aerothermal", "Aérothermie"),
-  appliance_type: "heat_pump",
-  no_hot_water: true,
-  underfloor_heating: true,
-  state_entity: "climate.aero_zone",
-  temperature_entity: "sensor.aero_flow_temp",
-  return_temperature_entity: "sensor.aero_return_temp",
-  water_flow_entity: "sensor.aero_water_flow",
-  compressor_entity: "binary_sensor.aero_compressor",
-  fan_speed_entity: "sensor.aero_fan_speed",
-  outdoor_temperature_entity: "sensor.aero_outdoor_temp",
-}, [
-  st("climate.aero_zone", "heat", { hvac_action: "heating" }),
-  st("sensor.aero_flow_temp", 35, { unit_of_measurement: "°C" }),
-  st("sensor.aero_return_temp", 30, { unit_of_measurement: "°C" }),
-  st("sensor.aero_water_flow", 18.4, { unit_of_measurement: "L/min" }),
-  st("binary_sensor.aero_compressor", "on"),
-  st("sensor.aero_fan_speed", 620, { unit_of_measurement: "rpm" }),
-  st("sensor.aero_outdoor_temp", 4, { unit_of_measurement: "°C" }),
-]);
-
 // A Palazzetti stove in full fire, as its integration reports it: a climate
 // entity for the room and the setpoint, a status for the phase, the
 // combustion power as a stage out of five.
@@ -406,6 +380,28 @@ const pelletStove = () => card({
   st("number.stove_combustion_power", 4, { min: 1, max: 5 }),
   st("sensor.stove_flue_temp", 162, { unit_of_measurement: "°C" }),
   st("sensor.stove_pellet_level", 58, { unit_of_measurement: "%" }),
+]);
+
+// A Panasonic split on Comfort Cloud, cooling a hot living room: the climate
+// entity for the mode, the room and the fan, the vanes and nanoe in entities
+// of their own, and the outdoor unit's temperature.
+const airConditioner = () => card({
+  name: L("Air conditioner", "Climatiseur"),
+  appliance_type: "air_conditioner",
+  state_entity: "climate.living_room",
+  vane_vertical_entity: "select.living_room_vertical_swing",
+  vane_horizontal_entity: "select.living_room_horizontal_swing",
+  purifier_entity: "switch.living_room_nanoe",
+  outdoor_temperature_entity: "sensor.living_room_outside_temperature",
+  power_entity: "sensor.living_room_power",
+}, [
+  st("climate.living_room", "cool", { hvac_action: "cooling", current_temperature: 27.2, temperature: 24, current_humidity: 58,
+    fan_mode: "Auto", hvac_modes: ["off", "auto", "cool", "heat", "dry", "fan_only"] }),
+  st("select.living_room_vertical_swing", "DownMid"),
+  st("select.living_room_horizontal_swing", "Mid"),
+  st("switch.living_room_nanoe", "on"),
+  st("sensor.living_room_outside_temperature", 33, { unit_of_measurement: "°C" }),
+  st("sensor.living_room_power", 640, { unit_of_measurement: "W" }),
 ]);
 
 // A Bambu Lab printer halfway through a part, as its integration reports it:
@@ -472,7 +468,8 @@ const steamGenerator = () => card({
 const ALL = { washer, dryer, dishwasher, oven, microwave, hood, cooktop, fridge,
               kettle, cooker, coffee, rice_cooker: riceCooker, pet_feeder: petFeeder,
               steam_generator: steamGenerator, water_heater: waterHeater, boiler,
-              heat_pump: heatPump, aerothermal, pellet_stove: pelletStove, printer_3d: printer3d };
+              heat_pump: heatPump, pellet_stove: pelletStove, air_conditioner: airConditioner,
+              printer_3d: printer3d };
 const only = (params.get("only") || "").split(",").map((k) => k.trim()).filter(Boolean);
 if (only.length) {
   document.documentElement.style.setProperty("--cols", only.length);

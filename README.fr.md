@@ -10,7 +10,7 @@
 <a href="https://buymeacoffee.com/adnpolymerase" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-orange.png" alt="Buy Me A Coffee" height="60"></a>
 <a href="https://adnpolymerase.github.io/HA/" target="_blank"><img src="https://raw.githubusercontent.com/ADNPolymerase/HA/main/assets/site-button.svg" alt="Lien vers mon github.io pour mes autres projets" height="60"></a>
 
-Une card Lovelace pour les appareils de la maison : lave-linge, sèche-linge, lave-vaisselle, four, micro-ondes, hotte, plaque de cuisson, réfrigérateur, bouilloire, robot cuiseur, machine à café, cuiseur à riz, chauffe-eau, chaudière, pompe à chaleur, imprimante 3D, distributeur de croquettes, fer à repasser et poêle à granulés. Cycle en cours, programme, temps restant, température, alertes et commandes.
+Une card Lovelace pour les appareils de la maison : lave-linge, sèche-linge, lave-vaisselle, four, micro-ondes, hotte, plaque de cuisson, réfrigérateur, bouilloire, robot cuiseur, machine à café, cuiseur à riz, chauffe-eau, chaudière, pompe à chaleur, imprimante 3D, distributeur de croquettes, fer à repasser, poêle à granulés et climatiseur. Cycle en cours, programme, temps restant, température, alertes et commandes.
 
 Aucune marque supposée : chaque champ est une entité à choisir, elle fonctionne donc avec **n'importe quelle** intégration (Electrolux, Samsung, LG, Home Connect, Miele, une simple prise connectée…).
 
@@ -21,11 +21,11 @@ Aucune marque supposée : chaque champ est une entité à choisir, elle fonction
 
 ## Fonctionnalités
 
-- **Dix-neuf types d'appareils**, chacun avec une illustration en CSS animée sur les données de l'appareil et statique à l'arrêt. Le type est détecté tout seul ou choisi via `appliance_type`, et `compact: true` ne garde que le texte.
+- **Vingt types d'appareils**, chacun avec une illustration en CSS animée sur les données de l'appareil et statique à l'arrêt. Le type est détecté tout seul ou choisi via `appliance_type`, et `compact: true` ne garde que le texte.
 - **Normalisation d'état** : `Idle`, `RUNNING`, `wash`, `En marche`… sont reconnus (sans tenir compte des accents) et classés en veille, préchauffage, en cours, en pause, terminé, différé ou erreur. Un état inconnu s'affiche tel quel, sans l'espace de noms de l'intégration, et `state_map` classe le reste, `"*"` ramassant tout ce qui dépasse.
 - **L'étape, et non une heure d'*En cours*** : un lave-linge, un sèche-linge ou un lave-vaisselle nomme l'étape où il en est (*Prélavage*, *Lavage*, *Rinçage*, *Essorage*, *Séchage* et sept autres), d'après une entité de phase ou son propre état, et le tambour s'emballe pendant l'essorage. Le temps restant est toujours celui du cycle entier.
 - **Une lavante-séchante est un lave-linge qui sèche** : `washer_dryer: true`, et le tambour montre de l'eau pendant le lavage, puis du linge qui tourne dans l'air chaud pendant le séchage. L'étape vient de l'état lui-même ou d'une entité de phase, et la ligne d'état lit *Lavage* ou *Séchage*.
-- **Chaque appareil dit ce qui compte pour lui** : une machine à café ce qui lui manque (eau, grains, bac, détartrage), un réfrigérateur sa santé (débranché, porte ouverte, température haute), une chaudière mixte ce qu'elle chauffe (chauffage, eau chaude ou veille), une imprimante 3D ce que fait l'impression (préchauffage, nivellement, changement de filament), un poêle à granulés la phase de son feu (allumage, modulation, éco, nettoyage).
+- **Chaque appareil dit ce qui compte pour lui** : une machine à café ce qui lui manque (eau, grains, bac, détartrage), un réfrigérateur sa santé (débranché, porte ouverte, température haute), une chaudière mixte ce qu'elle chauffe (chauffage, eau chaude ou veille), une imprimante 3D ce que fait l'impression (préchauffage, nivellement, changement de filament), un poêle à granulés la phase de son feu (allumage, modulation, éco, nettoyage), un climatiseur son mode et où il souffle.
 - **Fonctionne avec une simple prise connectée** : `power_entity` et `power_on_threshold` suffisent à déduire l'état de la consommation.
 - **Programme, temps restant, barre de progression, lignes d'info, porte, alertes, connectivité et commandes** (démarrer, pause, reprise, stop), chacun optionnel.
 - **14 langues** (EN, FR, DE, ES, IT, NL, PT, SV, NO, DA, PL, RU, ZH, CS), celle de Home Assistant ou fixée sur la card.
@@ -59,7 +59,7 @@ Seule `state_entity` est obligatoire, sauf sur un réfrigérateur où une sonde 
 | `compact` | `true` masque l'illustration. |
 | `illustration_color` | `auto` (défaut, suit le thème) \| `white` \| `grey` \| `black`. Ne change que la carrosserie, pas les couleurs d'état. |
 | `language` | `auto` (défaut, suit Home Assistant) ou l'un des 14 codes : `en`, `fr`, `de`, `es`, `it`, `nl`, `pt`, `sv`, `no`, `da`, `pl`, `ru`, `zh`, `cs`. `nb` et `nb-NO` donnent le norvégien. |
-| `appliance_type` | `auto` (défaut) \| `washer` \| `dryer` \| `dishwasher` \| `oven` \| `microwave` \| `hood` \| `cooktop` \| `fridge` \| `kettle` \| `cooker` \| `coffee` \| `rice_cooker` \| `water_heater` \| `boiler` \| `heat_pump` \| `printer_3d` \| `pet_feeder` \| `iron` \| `pellet_stove`. |
+| `appliance_type` | `auto` (défaut) \| `washer` \| `dryer` \| `dishwasher` \| `oven` \| `microwave` \| `hood` \| `cooktop` \| `fridge` \| `kettle` \| `cooker` \| `coffee` \| `rice_cooker` \| `water_heater` \| `boiler` \| `heat_pump` \| `printer_3d` \| `pet_feeder` \| `iron` \| `pellet_stove` \| `air_conditioner`. |
 | `tap_action` | Ce que fait un appui sur la carte, dans les mots de Home Assistant : `more-info` (défaut), `none`, `navigate`, `url`, `toggle`, `perform-action` ou `fire-dom-event`, celle qu'écoutent les cartes popup bâties sur browser_mod. En YAML seulement. |
 | `toggle_entity` | Bouton marche/arrêt (`switch`, `button`, `script`, `input_boolean`, `fan`), mis en évidence quand c'est allumé. |
 | `power_entity` / `power_on_threshold` / `power_icon` | Capteur de puissance. Avec un seuil, l'état en est déduit : *en marche* au-dessus, puis *terminé* en redescendant. Pointer `state_entity` sur ce même capteur l'active avec un seuil de 10 W. `power_icon` remplace `mdi:power-plug`. |
@@ -134,6 +134,9 @@ Par type :
 | `power_level_entity` / `flue_temperature_entity` / `fan_speed_entity` | poêle | Le palier de puissance, en *4 / 5* quand l'entité connaît sa plage, et sur l'écran du poêle quand il chauffe ; la température des fumées ; la ventilation, en pourcentage pour une entité `fan`. |
 | `level_entity` / `level_empty_below` / `level_max` | poêle | Les granulés de la trémie : un pourcentage, ou un contact allumé quand la réserve est atteinte (Agua IOT, Edilkamin). Un niveau en centimètres ou en kilos remplit la trémie une fois que `level_max` donne sa contenance. Vide, la trémie passe au rouge, et en alarme l'état se lit *Granulés épuisés*. |
 | `error_entity` | poêle | L'alarme : un mot (*Échec d'allumage*), un compte ou un contact. Tout ce qui n'est pas *pas d'alarme*, quelle que soit la façon dont le poêle le dit, met le poêle en alarme, avec ses mots sur une ligne et son code (*AL05*) sur l'écran. |
+| `state_entity` | climatiseur | Une entité `climate` : *Refroidissement*, *Chauffage*, *Déshumidification*, *Ventilation* ou *Auto* selon le mode, et d'après `hvac_action` *En veille* une fois la consigne atteinte, *Dégivrage* et *Préchauffage*. L'écran montre le symbole du mode et la consigne, les lignes la pièce, l'humidité et la ventilation. Sur une prise, *En cours* ou *Éteint*. `state_map` accepte `off`, `cool`, `heat`, `dry`, `fan`, `auto`, `idle` et `defrost`. |
+| `vane_vertical_entity` / `vane_horizontal_entity` | climatiseur | Les volets, quand ils vivent dans des selects à eux (Panasonic, Midea) ; sinon le `swing_mode` et le `swing_horizontal_mode` de l'entité `climate`. Cinq positions de haut en bas et de gauche à droite, ou le balayage, dans les mots de chaque intégration. |
+| `fan_speed_entity` / `purifier_entity` / `outdoor_temperature_entity` / `defrost_entity` | climatiseur | La ventilation quand l'entité `climate` ne la porte pas ; le purificateur (nanoe, plasma), allumé sur l'unité ; la température extérieure ; un contact de dégivrage. |
 | `speed_entity` | robot cuiseur | Vitesse du couteau, ramenée sur trois vitesses. |
 | `water_entity` | machine à café | Réservoir : booléen Home Connect, ou niveau en % avec *vide* sous 10 %. |
 | `beans_entity` / `tray_entity` / `descaling_entity` | machine à café | Grains vides, bac plein, détartrage à faire. |
@@ -345,6 +348,21 @@ level_max: 40
 ```
 
 L'éditeur en remplit l'essentiel depuis les entités du poêle, aussi sur Agua IOT (Extraflame, Ravelli, MCZ, Piazzetta et une trentaine d'autres), Edilkamin, Rika et Duepi.
+
+### Climatiseurs
+
+L'unité intérieure d'un split, avec le symbole du mode et la consigne sur son écran. L'air part aussi bas et aussi loin sur le côté que les volets le dirigent, plus vite avec la ventilation, et balaie avec eux ; en déshumidification l'eau remonte dans l'unité, au dégivrage le givre la recouvre. Panasonic Comfort Cloud :
+
+```yaml
+type: custom:ha-appliance-card
+state_entity: climate.salon
+vane_vertical_entity: select.salon_vertical_swing
+vane_horizontal_entity: select.salon_horizontal_swing
+purifier_entity: switch.salon_nanoe
+outdoor_temperature_entity: sensor.salon_outside_temperature
+```
+
+Une entité `climate` qui sait refroidir est reconnue d'elle-même, et l'éditeur remplit le reste depuis les entités de l'unité.
 
 ### Étapes du cycle
 
