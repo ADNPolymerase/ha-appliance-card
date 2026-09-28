@@ -2435,6 +2435,12 @@ for (const [id, want, icon] of [
   check('editeur : la chaudiere accepte un water_heater', domainsOf('boiler').includes('water_heater'), true);
   check('editeur : un lave-linge ne propose pas climate', domainsOf('washer').includes('climate'), false);
   check('editeur : les capteurs restent proposes', domainsOf('heat_pump').includes('sensor'), true);
+  // The climate, humidifier, select and plug the newer types are read from.
+  for (const [type, dom] of [['pellet_stove', 'climate'], ['air_conditioner', 'climate'], ['air_conditioner', 'select'], ['air_conditioner', 'switch'],
+    ['dehumidifier', 'humidifier'], ['dehumidifier', 'switch'], ['space_heater', 'climate'], ['space_heater', 'switch'],
+    ['towel_warmer', 'climate'], ['towel_warmer', 'select'], ['towel_warmer', 'switch'], ['iron', 'switch']])
+    check(`editeur : ${type} propose ${dom} dans la liste`, domainsOf(type).includes(dom), true);
+  check('editeur : un lave-linge ne propose pas humidifier', domainsOf('washer').includes('humidifier'), false);
 }
 
 // Auto-suggestion on the pump's own device: the live readings, never the

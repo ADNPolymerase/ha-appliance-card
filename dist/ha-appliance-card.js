@@ -1,4 +1,4 @@
-const CARD_VERSION = "2.20.0";
+const CARD_VERSION = "2.20.1";
 
 console.info(
   "%c HA-APPLIANCE-CARD %c v" + CARD_VERSION + " ",
@@ -10130,9 +10130,15 @@ class ApplianceCardEditor extends HTMLElement {
     this._mountPicker(this._root.querySelector('[data-slot="state_entity"]'), "state_entity", {
       label: t(hass, "state_entity"),
       // A tank, a combi boiler and a heat pump are often their integration's
-      // own water_heater or climate entity.
-      includeDomains: ["sensor", "binary_sensor"].concat(
-        { water_heater: ["water_heater"], boiler: ["water_heater"], heat_pump: ["climate", "water_heater"] }[this._type] || []),
+      // own water_heater or climate entity, a stove, an air conditioner and a
+      // heater their climate entity, a dehumidifier its humidifier entity, a
+      // towel warmer a select on its pilot wire; and the ones that live on a
+      // smart plug may be read from the plug itself.
+      includeDomains: ["sensor", "binary_sensor"].concat({
+        water_heater: ["water_heater"], boiler: ["water_heater"], heat_pump: ["climate", "water_heater"],
+        pellet_stove: ["climate"], air_conditioner: ["climate", "select", "switch"], dehumidifier: ["humidifier", "switch"],
+        space_heater: ["climate", "switch"], towel_warmer: ["climate", "select", "switch"], iron: ["switch"],
+      }[this._type] || []),
     });
     for (const s of this._sections()) {
       if (this._open.has(s.field)) {
