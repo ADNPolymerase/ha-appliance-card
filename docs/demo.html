@@ -499,12 +499,13 @@ const steamGenerator = () => card({
   st("sensor.steam_plug_power", 1900, { unit_of_measurement: "W" }),
 ]);
 
-const ALL = { washer, dryer, dishwasher, oven, microwave, hood, cooktop, fridge,
-              kettle, cooker, coffee, rice_cooker: riceCooker, pet_feeder: petFeeder,
-              steam_generator: steamGenerator, water_heater: waterHeater, boiler,
-              heat_pump: heatPump, pellet_stove: pelletStove, air_conditioner: airConditioner,
-              dehumidifier, space_heater: spaceHeater, towel_warmer: towelWarmer,
-              printer_3d: printer3d };
+// Grouped by kind: the laundry, the kitchen, heating and climate, then the
+// rest.
+const ALL = { washer, dryer, steam_generator: steamGenerator,
+              dishwasher, oven, microwave, hood, cooktop, fridge, kettle, cooker, coffee, rice_cooker: riceCooker,
+              water_heater: waterHeater, boiler, heat_pump: heatPump, pellet_stove: pelletStove,
+              space_heater: spaceHeater, towel_warmer: towelWarmer, air_conditioner: airConditioner, dehumidifier,
+              pet_feeder: petFeeder, printer_3d: printer3d };
 const only = (params.get("only") || "").split(",").map((k) => k.trim()).filter(Boolean);
 if (only.length) {
   document.documentElement.style.setProperty("--cols", only.length);
