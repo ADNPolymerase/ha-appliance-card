@@ -6571,4 +6571,147 @@ check('detection friteuse : le modele designe la friteuse', isFryer('sensor.x', 
   check('suggestion friteuse : le left_time de Xiaomi', (ed.events.at(-1)?.detail?.config || {}).remaining_time_entity, 'sensor.xiaomi_left_time');
 }
 
+// =============================================================================
+// Off delay on a plug, and the last cycle (issue #22)
+// =============================================================================
+
+const setClock = m => freezeClock(new Date(T0 + m * MIN).toISOString());
+const PLUG = { appliance_type: 'dishwasher', state_entity: 'switch.p', power_entity: 'sensor.p_w', power_on_threshold: 5 };
+const plugSt = w => ({ 'switch.p': { state: 'on', attributes: {} }, 'sensor.p_w': { state: String(w), attributes: { unit_of_measurement: 'W' } } });
+{
+  const { card } = build({ ...PLUG, power_off_delay: 10 }, plugSt(1800));
+  check('delai prise : en marche', stateLine(markup(card)), 'Running');
+  check('delai prise : sous le seuil, encore en cours', stateLine(rerender(card, plugSt(2))), 'Running');
+  check('delai prise : un reveil est programme', !!card._offDelayTimer, true);
+  setClock(9);
+  check('delai prise : 9 minutes plus tard, encore en cours', stateLine(rerender(card, plugSt(2))), 'Running');
+  setClock(10.5);
+  check('delai prise : passe le delai, termine', stateLine(rerender(card, plugSt(2))), 'Finished');
+  setClock(12);
+  check('delai prise : termine reste termine', stateLine(rerender(card, plugSt(1))), 'Finished');
+  check('delai prise : il repart', stateLine(rerender(card, plugSt(1500))), 'Running');
+  setClock(13);
+  check('delai prise : la pause suivante repart de zero', stateLine(rerender(card, plugSt(2))), 'Running');
+  setClock(20);
+  check('delai prise : 7 minutes de la seconde pause, encore en cours', stateLine(rerender(card, plugSt(2))), 'Running');
+  card.disconnectedCallback();
+  check('delai prise : le reveil est annule au retrait', card._offDelayTimer, null);
+  freezeClock(new Date(T0).toISOString());
+}
+{
+  const { card } = build(PLUG, plugSt(1800));
+  check('sans delai : termine tout de suite', stateLine(rerender(card, plugSt(2))), 'Finished');
+  const z = build({ ...PLUG, power_off_delay: '0' }, plugSt(1800)).card;
+  check('delai 0 : termine tout de suite', stateLine(rerender(z, plugSt(2))), 'Finished');
+  const junk = build({ ...PLUG, power_off_delay: 'abc' }, plugSt(1800)).card;
+  check('delai illisible : termine tout de suite', stateLine(rerender(junk, plugSt(2))), 'Finished');
+}
+check('delai : une integration dit sa fin elle-meme', stateLine(render({ appliance_type: 'dishwasher', state_entity: 'sensor.dw', power_off_delay: 10 },
+  { 'sensor.dw': { state: 'Finished', attributes: {} } })), 'Finished');
+check('delai : une prise jamais allumee reste en veille', stateLine(render({ ...PLUG, power_off_delay: 10 }, plugSt(2))), 'Idle');
+
+// The last cycle, from the state history.
+const LC = { appliance_type: 'washer', state_entity: 'sensor.w', show_last_cycle: true };
+const lcHist = (rows, states = { 'sensor.w': { state: 'Idle', attributes: {} } }, cfg = LC) =>
+  withHistory(cfg, states, msg => Promise.resolve({ [msg.entity_ids[0]]: rows }));
+const lastLine = h => { const v = infoLine(h, 'Last cycle'); return v === null ? null : v.replace(/ /g, ' '); };
+{
+  const h = lcHist([H('Idle', -300), H('Running', -200), H('Paused', -150), H('Running', -140), H('Finished', -120), H('Idle', -60)]);
+  check('dernier cycle : une demande', h.calls.length, 1);
+  check('dernier cycle : sur l\'entite d\'etat', h.calls[0]?.entity_ids?.join(','), 'sensor.w');
+  check('dernier cycle : sur sept jours', h.calls[0]?.start_time, new Date(T0 - 7 * 24 * 60 * MIN).toISOString());
+  check('dernier cycle : sans attributs', h.calls[0]?.no_attributes, true);
+  check('dernier cycle : rien avant la reponse', lastLine(h.html), null);
+  await settle();
+  check('dernier cycle : duree pauses comprises', /^1h20 · /.test(lastLine(markup(h.card)) || ''), true);
+  check('dernier cycle : l\'heure de fin', (lastLine(markup(h.card)) || '').endsWith(new Date(T0 - 120 * MIN).toLocaleTimeString('en', { hour: '2-digit', minute: '2-digit' })), true);
+  h.card._render();
+  check('dernier cycle : pas de nouvelle demande a chaque rendu', h.calls.length, 1);
+}
+{
+  const h = lcHist([H('Running', -900), H('Finished', -850), H('Running', -200), H('Finished', -170)]);
+  await settle();
+  check('dernier cycle : le plus recent', /^30 min · /.test(lastLine(markup(h.card)) || ''), true);
+}
+{
+  const h = lcHist([H('Running', -10080), H('Finished', -9000)]);
+  await settle();
+  check('dernier cycle : coupe au debut de la fenetre, rien', lastLine(markup(h.card)), null);
+}
+{
+  const h = lcHist([H('Idle', -300), H('unavailable', -200), H('Idle', -100)]);
+  await settle();
+  check('dernier cycle : une coupure n\'est pas un cycle', lastLine(markup(h.card)), null);
+}
+{
+  const h = lcHist([H('Idle', -300), H('Delayed start', -200), H('Paused', -150), H('Idle', -100)]);
+  await settle();
+  check('dernier cycle : sans marche, pas de cycle', lastLine(markup(h.card)), null);
+}
+{
+  const h = lcHist([H('Idle', -300), H('Running', -200), H('Idle', -199.5)]);
+  await settle();
+  check('dernier cycle : moins d\'une minute, rien', lastLine(markup(h.card)), null);
+}
+{
+  const h = lcHist([H('Running', -200), H('Finished', -120), H('Running', -5)], { 'sensor.w': { state: 'Running', attributes: {} } });
+  await settle();
+  check('dernier cycle : cache pendant un cycle', lastLine(markup(h.card)), null);
+  const ws = h.card._hass.callWS;
+  h.card._hass = { ...HASS({ 'sensor.w': { state: 'Finished', attributes: {} } }), callWS: ws };
+  h.card._render();
+  check('dernier cycle : puis montre a la fin', lastLine(markup(h.card)) !== null, true);
+  check('dernier cycle : une fin vue relit l\'historique', h.calls.filter(c => c.start_time === new Date(T0 - 7 * 24 * 60 * MIN).toISOString()).length, 2);
+}
+{
+  const h = lcHist([H('Running', -200), H('Finished', -120)], undefined, { appliance_type: 'washer', state_entity: 'sensor.w' });
+  await settle();
+  check('dernier cycle : sans l\'option, pas de ligne', lastLine(markup(h.card)), null);
+  check('dernier cycle : sans l\'option, pas de demande', h.calls.length, 0);
+}
+
+// The last cycle of a plug, from its power history, pauses merged by the delay.
+const P = (w, m) => ({ s: String(w), lu: (T0 + m * MIN) / 1000 });
+const powerRows = [P(0, -300), P(1500, -200), P(2, -150), P(1500, -145), P(2, -100), P(1, -60)];
+const plugHist = cfg => withHistory({ ...PLUG, show_last_cycle: true, ...cfg }, plugSt(1),
+  msg => Promise.resolve({ [msg.entity_ids[0]]: powerRows }));
+{
+  const h = plugHist({ power_off_delay: 10 });
+  check('dernier cycle prise : sur la puissance', h.calls[0]?.entity_ids?.join(','), 'sensor.p_w');
+  check('dernier cycle prise : sur deux jours', h.calls[0]?.start_time, new Date(T0 - 48 * 60 * MIN).toISOString());
+  await settle();
+  check('dernier cycle prise : la pause comptee dans le cycle', /^1h40 · /.test(lastLine(markup(h.card)) || ''), true);
+}
+{
+  const h = plugHist({});
+  await settle();
+  check('dernier cycle prise : sans delai, la pause coupe le cycle', /^45 min · /.test(lastLine(markup(h.card)) || ''), true);
+}
+{
+  const rows = [P(0, -300), P(1500, -200), P(2, -100), P(1500, -20), P(2, -3)];
+  const h = withHistory({ ...PLUG, show_last_cycle: true, power_off_delay: 10 }, plugSt(1), msg => Promise.resolve({ [msg.entity_ids[0]]: rows }));
+  await settle();
+  check('dernier cycle prise : une pause en cours ne finit pas le cycle', /^1h40 · /.test(lastLine(markup(h.card)) || ''), true);
+}
+
+{
+  const h = lcHist([H('Idle', -300), H('unavailable', -250), H('Running', -200), H('Finished', -120)]);
+  await settle();
+  check('dernier cycle : une coupure avant le cycle ne l\'allonge pas', /^1h20 · /.test(lastLine(markup(h.card)) || ''), true);
+}
+{
+  const rows = [P(1500, -2880), P(2, -2800), P(1, -60)];
+  const h = withHistory({ ...PLUG, show_last_cycle: true }, plugSt(1), msg => Promise.resolve({ [msg.entity_ids[0]]: rows }));
+  await settle();
+  check('dernier cycle prise : deja en marche a l\'ouverture de la fenetre, rien', lastLine(markup(h.card)), null);
+}
+
+// Editor.
+for (const type of ['washer', 'dishwasher', 'air_fryer', 'iron', 'kettle', 'printer_3d'])
+  check(`editeur : dernier cycle propose sur ${type}`, markup(newEditor({ state_entity: 'sensor.x', appliance_type: type })).includes('data-field="show_last_cycle"'), true);
+for (const type of ['fridge', 'heat_pump', 'hood', 'air_conditioner'])
+  check(`editeur : pas de dernier cycle sur ${type}`, markup(newEditor({ state_entity: 'sensor.x', appliance_type: type })).includes('data-field="show_last_cycle"'), false);
+check('editeur : le delai avec la puissance', markup(newEditor({ state_entity: 'switch.p', appliance_type: 'dishwasher', power_entity: 'sensor.p_w' })).includes('data-field="power_off_delay"'), true);
+check('editeur : pas de delai sur un frigo', markup(newEditor({ state_entity: 'sensor.f', appliance_type: 'fridge', power_entity: 'sensor.p_w' })).includes('data-field="power_off_delay"'), false);
+
 report();
