@@ -2438,7 +2438,7 @@ for (const [id, want, icon] of [
   // The climate, humidifier, select and plug the newer types are read from.
   for (const [type, dom] of [['pellet_stove', 'climate'], ['air_conditioner', 'climate'], ['air_conditioner', 'select'], ['air_conditioner', 'switch'],
     ['dehumidifier', 'humidifier'], ['dehumidifier', 'switch'], ['space_heater', 'climate'], ['space_heater', 'switch'],
-    ['towel_warmer', 'climate'], ['towel_warmer', 'select'], ['towel_warmer', 'switch'], ['iron', 'switch']])
+    ['towel_warmer', 'climate'], ['towel_warmer', 'select'], ['towel_warmer', 'switch'], ['iron', 'switch'], ['air_fryer', 'switch']])
     check(`editeur : ${type} propose ${dom} dans la liste`, domainsOf(type).includes(dom), true);
   check('editeur : un lave-linge ne propose pas humidifier', domainsOf('washer').includes('humidifier'), false);
 }
@@ -6411,5 +6411,164 @@ check('editeur : pas de reservoir sur un lave-linge', markup(newEditor({ state_e
   check('suggestion deshum : la puissance', sug.power_entity, 'sensor.cave_power');
 }
 
+
+// =============================================================================
+// Air fryer
+// =============================================================================
+
+const AF = { appliance_type: 'air_fryer', state_entity: 'sensor.af', remaining_time_entity: 'sensor.af_left', target_temperature_entity: 'sensor.af_temp' };
+const afStates = (state, extra = {}) => ({ 'sensor.af': { state, attributes: {} },
+  'sensor.af_left': { state: '750', attributes: { unit_of_measurement: 's' } },
+  'sensor.af_temp': { state: '180', attributes: { unit_of_measurement: '°C' } }, ...extra });
+const afRender = (state, cfg = {}, extra = {}) => render({ ...AF, ...cfg }, afStates(state, extra));
+const afZones = h => (/\bz1-(\w+)/.exec(machineCls(h)) || [, null])[1] + '/' + (/\bz2-(\w+)/.exec(machineCls(h)) || [, '-'])[1];
+
+// Every firmware word the three integrations report, and what the card makes of it.
+for (const [raw, mode, label] of [
+  // Philips HomeID
+  ['standby', 'off', 'Idle'], ['idle', 'off', 'Idle'], ['setting', 'off', 'Idle'], ['mainmenu', 'off', 'Idle'],
+  ['powersave', 'off', 'Idle'], ['precook', 'preheating', 'Preheating'], ['cooking', 'cooking', 'Cooking'],
+  ['pause', 'paused', 'Paused'], ['parasetting', 'paused', 'Paused'], ['finish', 'done', 'Finished'],
+  ['maintain', 'keep_warm', 'Keeping warm'], ['user_action', 'shake', 'Shake the basket'],
+  // Xiaomi
+  ['Shutdown', 'off', 'Idle'], ['Standby', 'off', 'Idle'], ['Appointment', 'delayed', 'Delayed start'],
+  ['Delay', 'delayed', 'Delayed start'], ['Cooking', 'cooking', 'Cooking'], ['Preheat', 'preheating', 'Preheating'],
+  ['Cooked', 'done', 'Finished'], ['PreheatFinish', 'preheated', 'Preheated'], ['PreheatPause', 'paused', 'Paused'],
+  ['Keepwarm', 'keep_warm', 'Keeping warm'], ['KeepwarmPause', 'paused', 'Paused'], ['KeepwarmFinish', 'done', 'Finished'],
+  ['CrispyRoast', 'cooking', 'Cooking'], ['Degrease', 'cooking', 'Cooking'], ['PotPause', 'basket_out', 'Basket out'],
+  // Cosori (VeSync)
+  ['heating', 'preheating', 'Preheating'], ['cookEnd', 'done', 'Finished'], ['cookStop', 'off', 'Idle'],
+  ['preheatEnd', 'preheated', 'Preheated'], ['preheatStop', 'off', 'Idle'], ['pullOut', 'basket_out', 'Basket out'],
+  // The shared words still work
+  ['Keep warm', 'keep_warm', 'Keeping warm'], ['end', 'done', 'Finished'], ['error', 'error', 'Error'],
+]) {
+  const h = afRender(raw);
+  check(`friteuse : ${raw} -> ${mode}`, modeOf(h), mode);
+  check(`friteuse : ${raw} se lit ${label}`, stateLine(h), label);
+}
+check('friteuse : un appui secouer est orange', stateColor(afRender('user_action')), 'var(--warning-color, #ff9800)');
+check('friteuse : panier sorti orange', stateColor(afRender('pullOut')), 'var(--warning-color, #ff9800)');
+check('friteuse : la cuisson reste bleue', stateColor(afRender('cooking')), 'var(--info-color, #2196f3)');
+
+// Only the air fryer reads these words its own way.
+check('four : maintain reste un mot inconnu', stateLine(render({ appliance_type: 'oven', state_entity: 'sensor.o' }, { 'sensor.o': { state: 'maintain', attributes: {} } })), 'maintain');
+check('four : heating reste en cours', stateLine(render({ appliance_type: 'oven', state_entity: 'sensor.o' }, { 'sensor.o': { state: 'heating', attributes: {} } })), 'Running');
+check('cuiseur a riz : cooked inchange', stateLine(render({ appliance_type: 'rice_cooker', state_entity: 'sensor.r' }, { 'sensor.r': { state: 'Cooked', attributes: {} } })), 'Cooked');
+check('friteuse : state_map passe avant ses mots', stateLine(afRender('cooking', { state_map: { cooking: 'done' } })), 'Finished');
+check('friteuse : state_show_raw garde le mot', stateLine(afRender('user_action', { state_show_raw: true })), 'user_action');
+
+// The screen: the temperature while it heats or keeps warm, the time left while it cooks.
+check('friteuse ecran : prechauffage, la consigne', miniScreen(afRender('precook'), 'af-lcd'), '180°');
+check('friteuse ecran : cuisson, le temps restant', miniScreen(afRender('cooking'), 'af-lcd'), '12:30');
+check('friteuse ecran : secouer, le temps restant', miniScreen(afRender('user_action'), 'af-lcd'), '12:30');
+check('friteuse ecran : maintien, la consigne', miniScreen(afRender('maintain'), 'af-lcd'), '180°');
+check('friteuse ecran : terminee, rien que la coche', miniScreen(afRender('finish'), 'af-lcd'), '');
+check('friteuse ecran : terminee, une coche', miniIcon(afRender('finish'), 'af-lcd'), 'M21,7L9,19L3');
+check('friteuse ecran : cuisson sans temps, la consigne', miniScreen(render({ ...AF, remaining_time_entity: undefined }, afStates('cooking')), 'af-lcd'), '180°');
+check('friteuse ecran : eteinte, vide', miniScreen(afRender('standby'), 'af-lcd'), '');
+
+// What each basket draws.
+check('friteuse panier : cuisson chaude', afZones(afRender('cooking')), 'hot/-');
+check('friteuse panier : maintien tiede', afZones(afRender('maintain')), 'warm/-');
+check('friteuse panier : prete', afZones(afRender('finish')), 'ready/-');
+check('friteuse panier : prechauffee, prete', afZones(afRender('PreheatFinish')), 'ready/-');
+check('friteuse panier : sorti', afZones(afRender('pullOut')), 'out/-');
+check('friteuse panier : en veille', afZones(afRender('standby')), 'off/-');
+check('friteuse panier : en pause, eteint', afZones(afRender('pause')), 'off/-');
+
+// The basket sensor and the shake reminder know better than the state.
+const afDrawer = (state, open) => afRender(state, { basket_entity: 'binary_sensor.af_drawer' }, { 'binary_sensor.af_drawer': { state: open, attributes: {} } });
+check('friteuse tiroir : ouvert pendant la cuisson', stateLine(afDrawer('cooking', 'on')), 'Basket out');
+check('friteuse tiroir : ouvert en maintien', modeOf(afDrawer('maintain', 'on')), 'basket_out');
+check('friteuse tiroir : ferme, cuisson', stateLine(afDrawer('cooking', 'off')), 'Cooking');
+check('friteuse tiroir : ouvert au repos, rien a dire', stateLine(afDrawer('standby', 'on')), 'Idle');
+check('friteuse tiroir : ouvert une fois finie, rien a dire', stateLine(afDrawer('finish', 'on')), 'Finished');
+const afShake = (state, on) => afRender(state, { shake_entity: 'binary_sensor.af_shake' }, { 'binary_sensor.af_shake': { state: on, attributes: {} } });
+check('friteuse rappel : secouer pendant la cuisson', stateLine(afShake('cooking', 'on')), 'Shake the basket');
+check('friteuse rappel : eteint, cuisson', stateLine(afShake('cooking', 'off')), 'Cooking');
+check('friteuse rappel : pas en prechauffage', stateLine(afShake('precook', 'on')), 'Preheating');
+
+// The three models.
+check('friteuse modele : panier par defaut', /af-basket/.test(machineCls(afRender('cooking'))), true);
+check('friteuse modele : hublot', /af-window/.test(machineCls(afRender('cooking', { fryer_layout: 'window' }))), true);
+check('friteuse modele : hublot, les frites', /class="af-fries"/.test(afRender('cooking', { fryer_layout: 'window' })), true);
+check('friteuse modele : panier, pas de hublot', /class="af-win"/.test(afRender('cooking')), false);
+check('friteuse modele : double', /af-dual/.test(machineCls(afRender('cooking', { fryer_layout: 'dual' }))), true);
+check('friteuse modele : inconnu, panier', /af-basket/.test(machineCls(afRender('cooking', { fryer_layout: 'tower' }))), true);
+
+// A dual fryer: basket 2 follows basket 1 unless it reports on its own.
+const afDual = (s1, s2) => afRender(s1, { fryer_layout: 'dual', ...(s2 ? { basket2_state_entity: 'sensor.af2' } : {}) },
+  s2 ? { 'sensor.af2': { state: s2, attributes: {} } } : {});
+check('friteuse double : sans panier 2, les deux cuisent', afZones(afDual('cooking')), 'hot/hot');
+check('friteuse double : panier 2 fini', afZones(afDual('cooking', 'finish')), 'hot/ready');
+check('friteuse double : panier 2, sa ligne', infoLine(afDual('cooking', 'finish'), 'Basket 2'), 'Finished');
+check('friteuse double : panier 2 cuit, sa ligne', infoLine(afDual('standby', 'cooking'), 'Basket 2'), 'Cooking');
+check('friteuse double : panier 2 seul, allumee', modeOf(afDual('standby', 'cooking')), 'cooking');
+check('friteuse double : panier 2 seul, la consigne a l ecran', miniScreen(afDual('standby', 'cooking'), 'af-lcd'), '180°');
+check('friteuse double : panier 2 en mots partages', afZones(afDual('cooking', 'Running')), 'hot/hot');
+check('friteuse double : panier 2 indisponible, pas de ligne', infoLine(afDual('cooking', 'unavailable'), 'Basket 2'), null);
+check('friteuse double : un seul panier, pas de ligne', infoLine(afRender('cooking', { basket2_state_entity: 'sensor.af2' }, { 'sensor.af2': { state: 'finish', attributes: {} } }), 'Basket 2'), null);
+
+// On a smart plug alone.
+check('friteuse prise : cuit', stateLine(plug3('air_fryer', 1500)), 'Cooking');
+check('friteuse prise : cuit, chaud', afZones(plug3('air_fryer', 1500)), 'hot/-');
+check('friteuse prise : eteinte', stateLine(plugOff3('air_fryer')), 'Idle');
+{
+  const { card } = build({ appliance_type: 'air_fryer', state_entity: 'switch.p', power_entity: 'sensor.p_w', power_on_threshold: 30 },
+    { 'switch.p': { state: 'on', attributes: {} }, 'sensor.p_w': { state: '1500', attributes: { unit_of_measurement: 'W' } } });
+  const after = rerender(card, { 'switch.p': { state: 'on', attributes: {} }, 'sensor.p_w': { state: '2', attributes: { unit_of_measurement: 'W' } } });
+  check('friteuse prise : puis terminee', stateLine(after), 'Finished');
+}
+
+// The animation starts over when a basket changes what it does.
+{
+  const { card } = build({ ...AF, fryer_layout: 'dual', basket2_state_entity: 'sensor.af2' }, afStates('cooking', { 'sensor.af2': { state: 'cooking', attributes: {} } }));
+  const k1 = card._animKey;
+  rerender(card, afStates('cooking', { 'sensor.af2': { state: 'finish', attributes: {} } }));
+  check('friteuse : le panier 2 relance l animation', card._animKey !== k1, true);
+}
+
+// Detection.
+const isFryer = (id, cfg = {}) => /class="af-body"/.test(render({ state_entity: id, ...cfg }, { [id]: { state: 'cooking', attributes: {} } }));
+for (const id of ['sensor.airfryer_status', 'sensor.air_fryer_state', 'sensor.cosori_cook_status', 'sensor.kitchen_cook_status',
+  'sensor.xiaomi_airfryer_status', 'sensor.friteuse', 'sensor.friggitrice_ad_aria', 'sensor.heissluftfritteuse', 'sensor.freidora'])
+  check(`detection friteuse : ${id}`, isFryer(id), true);
+check('detection friteuse : un four reste un four', isFryer('sensor.oven_status'), false);
+check('detection friteuse : le panier designe la friteuse', isFryer('sensor.x', { basket_entity: 'binary_sensor.y' }), true);
+check('detection friteuse : le modele designe la friteuse', isFryer('sensor.x', { fryer_layout: 'dual' }), true);
+
+// Editor.
+{
+  const html = markup(newEditor({ state_entity: 'sensor.af', appliance_type: 'air_fryer' }));
+  check('editeur friteuse : dans la liste des types', /<option value="air_fryer"/.test(html), true);
+  check('editeur friteuse : le choix du modele', /fryer_layout/.test(html), true);
+  for (const f of ['basket_entity', 'shake_entity', 'basket2_state_entity', 'remaining_time_entity', 'target_temperature_entity',
+    'current_temperature_entity', 'program_entity', 'start_entity', 'pause_entity', 'power_entity'])
+    check(`editeur friteuse : ${f}`, html.includes(`data-toggle="${f}"`), true);
+  check('editeur friteuse : pas de porte', html.includes('data-toggle="door_entity"'), false);
+  check('editeur : pas de panier sur un four', markup(newEditor({ state_entity: 'sensor.o', appliance_type: 'oven' })).includes('data-toggle="basket_entity"'), false);
+  check('editeur : pas de modele de friteuse ailleurs', /fryer_layout/.test(markup(newEditor({ state_entity: 'sensor.o', appliance_type: 'oven' }))), false);
+}
+{
+  const ids = ['sensor.airfryer_status', 'binary_sensor.airfryer_drawer', 'binary_sensor.airfryer_shake_reminder',
+    'sensor.airfryer_time_remaining', 'sensor.airfryer_target_temperature', 'sensor.airfryer_power'];
+  const ed = new Editor();
+  ed.setConfig({ type: 'custom:ha-appliance-card', appliance_type: 'air_fryer', state_entity: 'sensor.airfryer_status' });
+  ed.hass = { ...HASS(Object.fromEntries(ids.map(id => [id, { state: '1', attributes: {} }]))),
+    entities: Object.fromEntries(ids.map(id => [id, { device_id: 'af' }])) };
+  const sug = ed.events.at(-1)?.detail?.config || {};
+  check('suggestion friteuse : le tiroir', sug.basket_entity, 'binary_sensor.airfryer_drawer');
+  check('suggestion friteuse : le rappel', sug.shake_entity, 'binary_sensor.airfryer_shake_reminder');
+  check('suggestion friteuse : le temps restant', sug.remaining_time_entity, 'sensor.airfryer_time_remaining');
+  check('suggestion friteuse : la consigne', sug.target_temperature_entity, 'sensor.airfryer_target_temperature');
+}
+{
+  const ids = ['sensor.xiaomi_status', 'sensor.xiaomi_left_time'];
+  const ed = new Editor();
+  ed.setConfig({ type: 'custom:ha-appliance-card', appliance_type: 'air_fryer', state_entity: 'sensor.xiaomi_status' });
+  ed.hass = { ...HASS(Object.fromEntries(ids.map(id => [id, { state: '1', attributes: {} }]))),
+    entities: Object.fromEntries(ids.map(id => [id, { device_id: 'x' }])) };
+  check('suggestion friteuse : le left_time de Xiaomi', (ed.events.at(-1)?.detail?.config || {}).remaining_time_entity, 'sensor.xiaomi_left_time');
+}
 
 report();

@@ -1,4 +1,4 @@
-const CARD_VERSION = "2.20.1";
+const CARD_VERSION = "2.21.0";
 
 console.info(
   "%c HA-APPLIANCE-CARD %c v" + CARD_VERSION + " ",
@@ -144,6 +144,7 @@ const T = {
     ps_line_room: "Room", ps_line_power: "Power", ps_line_flue: "Flue gas", ps_line_fan: "Fan", ps_line_pellets: "Pellets",
     type_air_conditioner: "Air conditioner", ac_off: "Off", ac_cooling: "Cooling", ac_heating: "Heating", ac_drying: "Drying", ac_fan_only: "Fan only", ac_auto: "Auto", ac_idle: "Standby", ac_defrost: "Defrosting", ac_preheating: "Warming up", ac_line_humidity: "Humidity", section_vane_vertical: "Vane up/down", section_vane_horizontal: "Vane left/right", section_purifier: "Air purifier (nanoe, plasma)", section_defrost: "Defrost indicator",
     type_dehumidifier: "Dehumidifier", type_space_heater: "Space heater", type_towel_warmer: "Towel warmer", dh_laundry: "Drying laundry", dh_full: "Tank full", dh_line_tank: "Tank", line_mode: "Mode", tw_comfort: "Comfort", tw_eco: "Eco", tw_frost: "Frost protection", tw_boost: "Boost", tw_drying: "Drying", section_tank: "Water tank", section_current_humidity: "Humidity sensor", section_heater_layout: "Model", layout_fan_heater: "Fan heater", layout_oil_radiator: "Oil-filled radiator",
+    type_air_fryer: "Air fryer", af_cooking: "Cooking", af_shake: "Shake the basket", af_basket_out: "Basket out", af_preheated: "Preheated", af_basket2: "Basket 2", section_fryer_layout: "Model", layout_basket: "Basket", layout_window: "Basket with window", layout_dual: "Dual basket", section_basket: "Basket sensor", section_shake: "Shake reminder", section_basket2: "Basket 2 state (dual)",
     washer_dryer: "Washer-dryer (washes and dries)", step_drying: "Drying", section_cycle_phase: "Cycle phase",
     step_prewash: "Pre-wash", step_soaking: "Soaking", step_weighing: "Weighing", step_filling: "Filling", step_washing: "Washing", step_rinsing: "Rinsing", step_draining: "Draining", step_spinning: "Spinning", step_cooling: "Cooling", step_anti_crease: "Anti-crease", step_steam: "Steam",
   },
@@ -280,6 +281,7 @@ const T = {
     ps_line_room: "Ambiante", ps_line_power: "Puissance", ps_line_flue: "Fum\u00e9es", ps_line_fan: "Ventilation", ps_line_pellets: "Granul\u00e9s",
     type_air_conditioner: "Climatiseur", ac_off: "\u00c9teint", ac_cooling: "Refroidissement", ac_heating: "Chauffage", ac_drying: "D\u00e9shumidification", ac_fan_only: "Ventilation", ac_auto: "Auto", ac_idle: "En veille", ac_defrost: "D\u00e9givrage", ac_preheating: "Pr\u00e9chauffage", ac_line_humidity: "Humidit\u00e9", section_vane_vertical: "Volet haut/bas", section_vane_horizontal: "Volet gauche/droite", section_purifier: "Purificateur d'air (nanoe, plasma)", section_defrost: "Indicateur de d\u00e9givrage",
     type_dehumidifier: "D\u00e9shumidificateur", type_space_heater: "Petit chauffage", type_towel_warmer: "S\u00e8che-serviettes", dh_laundry: "S\u00e9chage du linge", dh_full: "R\u00e9servoir plein", dh_line_tank: "R\u00e9servoir", line_mode: "Mode", tw_comfort: "Confort", tw_eco: "\u00c9co", tw_frost: "Hors-gel", tw_boost: "Boost", tw_drying: "S\u00e9chage", section_tank: "R\u00e9servoir d'eau", section_current_humidity: "Capteur d'humidit\u00e9", section_heater_layout: "Mod\u00e8le", layout_fan_heater: "Radiateur soufflant", layout_oil_radiator: "Bain d'huile",
+    type_air_fryer: "Friteuse \u00e0 air", af_cooking: "Cuisson", af_shake: "Secouer le panier", af_basket_out: "Panier sorti", af_preheated: "Pr\u00e9chauff\u00e9e", af_basket2: "Panier 2", section_fryer_layout: "Mod\u00e8le", layout_basket: "Panier", layout_window: "Panier \u00e0 hublot", layout_dual: "Double panier", section_basket: "Capteur du panier", section_shake: "Rappel pour secouer", section_basket2: "\u00c9tat du panier 2 (double)",
     washer_dryer: "Lavante-s\u00e9chante (lave et s\u00e8che)", step_drying: "S\u00e9chage", section_cycle_phase: "Phase du cycle",
     step_prewash: "Pr\u00e9lavage", step_soaking: "Trempage", step_weighing: "Pes\u00e9e", step_filling: "Remplissage", step_washing: "Lavage", step_rinsing: "Rin\u00e7age", step_draining: "Vidange", step_spinning: "Essorage", step_cooling: "Refroidissement", step_anti_crease: "Anti-froissage", step_steam: "Vapeur",
   },
@@ -416,6 +418,7 @@ const T = {
     ps_line_room: "\u041f\u043e\u043c\u0435\u0449\u0435\u043d\u0438\u0435", ps_line_power: "\u041c\u043e\u0449\u043d\u043e\u0441\u0442\u044c", ps_line_flue: "\u0414\u044b\u043c\u043e\u0432\u044b\u0435 \u0433\u0430\u0437\u044b", ps_line_fan: "\u0412\u0435\u043d\u0442\u0438\u043b\u044f\u0442\u043e\u0440", ps_line_pellets: "\u041f\u0435\u043b\u043b\u0435\u0442\u044b",
     type_air_conditioner: "\u041a\u043e\u043d\u0434\u0438\u0446\u0438\u043e\u043d\u0435\u0440", ac_off: "\u0412\u044b\u043a\u043b\u044e\u0447\u0435\u043d", ac_cooling: "\u041e\u0445\u043b\u0430\u0436\u0434\u0435\u043d\u0438\u0435", ac_heating: "\u041e\u0431\u043e\u0433\u0440\u0435\u0432", ac_drying: "\u041e\u0441\u0443\u0448\u0435\u043d\u0438\u0435", ac_fan_only: "\u0412\u0435\u043d\u0442\u0438\u043b\u044f\u0446\u0438\u044f", ac_auto: "\u0410\u0432\u0442\u043e", ac_idle: "\u041e\u0436\u0438\u0434\u0430\u043d\u0438\u0435", ac_defrost: "\u041e\u0442\u0442\u0430\u0438\u0432\u0430\u043d\u0438\u0435", ac_preheating: "\u041f\u0440\u043e\u0433\u0440\u0435\u0432", ac_line_humidity: "\u0412\u043b\u0430\u0436\u043d\u043e\u0441\u0442\u044c", section_vane_vertical: "\u0416\u0430\u043b\u044e\u0437\u0438 \u0432\u0432\u0435\u0440\u0445/\u0432\u043d\u0438\u0437", section_vane_horizontal: "\u0416\u0430\u043b\u044e\u0437\u0438 \u0432\u043b\u0435\u0432\u043e/\u0432\u043f\u0440\u0430\u0432\u043e", section_purifier: "\u041e\u0447\u0438\u0441\u0442\u043a\u0430 \u0432\u043e\u0437\u0434\u0443\u0445\u0430 (nanoe, \u043f\u043b\u0430\u0437\u043c\u0430)", section_defrost: "\u0418\u043d\u0434\u0438\u043a\u0430\u0442\u043e\u0440 \u043e\u0442\u0442\u0430\u0438\u0432\u0430\u043d\u0438\u044f",
     type_dehumidifier: "\u041e\u0441\u0443\u0448\u0438\u0442\u0435\u043b\u044c", type_space_heater: "\u041e\u0431\u043e\u0433\u0440\u0435\u0432\u0430\u0442\u0435\u043b\u044c", type_towel_warmer: "\u041f\u043e\u043b\u043e\u0442\u0435\u043d\u0446\u0435\u0441\u0443\u0448\u0438\u0442\u0435\u043b\u044c", dh_laundry: "\u0421\u0443\u0448\u043a\u0430 \u0431\u0435\u043b\u044c\u044f", dh_full: "\u0411\u0430\u043a \u043f\u043e\u043b\u043e\u043d", dh_line_tank: "\u0411\u0430\u043a", line_mode: "\u0420\u0435\u0436\u0438\u043c", tw_comfort: "\u041a\u043e\u043c\u0444\u043e\u0440\u0442", tw_eco: "\u042d\u043a\u043e", tw_frost: "\u0417\u0430\u0449\u0438\u0442\u0430 \u043e\u0442 \u0437\u0430\u043c\u0435\u0440\u0437\u0430\u043d\u0438\u044f", tw_boost: "\u0411\u0443\u0441\u0442", tw_drying: "\u0421\u0443\u0448\u043a\u0430", section_tank: "\u0411\u0430\u043a \u0434\u043b\u044f \u0432\u043e\u0434\u044b", section_current_humidity: "\u0414\u0430\u0442\u0447\u0438\u043a \u0432\u043b\u0430\u0436\u043d\u043e\u0441\u0442\u0438", section_heater_layout: "\u041c\u043e\u0434\u0435\u043b\u044c", layout_fan_heater: "\u0422\u0435\u043f\u043b\u043e\u0432\u0435\u043d\u0442\u0438\u043b\u044f\u0442\u043e\u0440", layout_oil_radiator: "\u041c\u0430\u0441\u043b\u044f\u043d\u044b\u0439 \u0440\u0430\u0434\u0438\u0430\u0442\u043e\u0440",
+    type_air_fryer: "\u0410\u044d\u0440\u043e\u0433\u0440\u0438\u043b\u044c", af_cooking: "\u0413\u043e\u0442\u043e\u0432\u043a\u0430", af_shake: "\u0412\u0441\u0442\u0440\u044f\u0445\u043d\u0438\u0442\u0435 \u043a\u043e\u0440\u0437\u0438\u043d\u0443", af_basket_out: "\u041a\u043e\u0440\u0437\u0438\u043d\u0430 \u0438\u0437\u0432\u043b\u0435\u0447\u0435\u043d\u0430", af_preheated: "\u0420\u0430\u0437\u043e\u0433\u0440\u0435\u0442", af_basket2: "\u041a\u043e\u0440\u0437\u0438\u043d\u0430 2", section_fryer_layout: "\u041c\u043e\u0434\u0435\u043b\u044c", layout_basket: "\u041a\u043e\u0440\u0437\u0438\u043d\u0430", layout_window: "\u041a\u043e\u0440\u0437\u0438\u043d\u0430 \u0441 \u043e\u043a\u043d\u043e\u043c", layout_dual: "\u0414\u0432\u0435 \u043a\u043e\u0440\u0437\u0438\u043d\u044b", section_basket: "\u0414\u0430\u0442\u0447\u0438\u043a \u043a\u043e\u0440\u0437\u0438\u043d\u044b", section_shake: "\u041d\u0430\u043f\u043e\u043c\u0438\u043d\u0430\u043d\u0438\u0435 \u0432\u0441\u0442\u0440\u044f\u0445\u043d\u0443\u0442\u044c", section_basket2: "\u0421\u043e\u0441\u0442\u043e\u044f\u043d\u0438\u0435 \u043a\u043e\u0440\u0437\u0438\u043d\u044b 2 (\u0434\u0432\u0435 \u043a\u043e\u0440\u0437\u0438\u043d\u044b)",
     washer_dryer: "\u0421\u0442\u0438\u0440\u0430\u043b\u044c\u043d\u043e-\u0441\u0443\u0448\u0438\u043b\u044c\u043d\u0430\u044f \u043c\u0430\u0448\u0438\u043d\u0430 (\u0441\u0442\u0438\u0440\u0430\u0435\u0442 \u0438 \u0441\u0443\u0448\u0438\u0442)", step_drying: "\u0421\u0443\u0448\u043a\u0430", section_cycle_phase: "\u0424\u0430\u0437\u0430 \u0446\u0438\u043a\u043b\u0430",
     step_prewash: "\u041f\u0440\u0435\u0434\u0441\u0442\u0438\u0440\u043a\u0430", step_soaking: "\u0417\u0430\u043c\u0430\u0447\u0438\u0432\u0430\u043d\u0438\u0435", step_weighing: "\u0412\u0437\u0432\u0435\u0448\u0438\u0432\u0430\u043d\u0438\u0435", step_filling: "\u041d\u0430\u0431\u043e\u0440 \u0432\u043e\u0434\u044b", step_washing: "\u0421\u0442\u0438\u0440\u043a\u0430", step_rinsing: "\u041f\u043e\u043b\u043e\u0441\u043a\u0430\u043d\u0438\u0435", step_draining: "\u0421\u043b\u0438\u0432", step_spinning: "\u041e\u0442\u0436\u0438\u043c", step_cooling: "\u041e\u0445\u043b\u0430\u0436\u0434\u0435\u043d\u0438\u0435", step_anti_crease: "\u0417\u0430\u0449\u0438\u0442\u0430 \u043e\u0442 \u0441\u043c\u0438\u043d\u0430\u043d\u0438\u044f", step_steam: "\u041f\u0430\u0440",
   },
@@ -552,6 +555,7 @@ const T = {
     ps_line_room: "Raum", ps_line_power: "Leistung", ps_line_flue: "Abgas", ps_line_fan: "Gebl\u00e4se", ps_line_pellets: "Pellets",
     type_air_conditioner: "Klimaanlage", ac_off: "Aus", ac_cooling: "K\u00fchlen", ac_heating: "Heizen", ac_drying: "Entfeuchten", ac_fan_only: "Nur L\u00fcfter", ac_auto: "Automatik", ac_idle: "Bereit", ac_defrost: "Abtauen", ac_preheating: "Vorheizen", ac_line_humidity: "Luftfeuchte", section_vane_vertical: "Lamelle oben/unten", section_vane_horizontal: "Lamelle links/rechts", section_purifier: "Luftreiniger (nanoe, Plasma)", section_defrost: "Abtauanzeige",
     type_dehumidifier: "Luftentfeuchter", type_space_heater: "Heizger\u00e4t", type_towel_warmer: "Handtuchheizk\u00f6rper", dh_laundry: "W\u00e4sche trocknen", dh_full: "Tank voll", dh_line_tank: "Tank", line_mode: "Modus", tw_comfort: "Komfort", tw_eco: "Eco", tw_frost: "Frostschutz", tw_boost: "Boost", tw_drying: "Trocknen", section_tank: "Wassertank", section_current_humidity: "Feuchtesensor", section_heater_layout: "Modell", layout_fan_heater: "Heizl\u00fcfter", layout_oil_radiator: "\u00d6lradiator",
+    type_air_fryer: "Hei\u00dfluftfritteuse", af_cooking: "Garen", af_shake: "Korb sch\u00fctteln", af_basket_out: "Korb entnommen", af_preheated: "Vorgeheizt", af_basket2: "Korb 2", section_fryer_layout: "Modell", layout_basket: "Korb", layout_window: "Korb mit Sichtfenster", layout_dual: "Doppelkorb", section_basket: "Korbsensor", section_shake: "Sch\u00fcttel-Erinnerung", section_basket2: "Zustand Korb 2 (Doppelkorb)",
     washer_dryer: "Waschtrockner (w\u00e4scht und trocknet)", step_drying: "Trocknen", section_cycle_phase: "Programmphase",
     step_prewash: "Vorw\u00e4sche", step_soaking: "Einweichen", step_weighing: "Wiegen", step_filling: "Bef\u00fcllen", step_washing: "Waschen", step_rinsing: "Sp\u00fclen", step_draining: "Abpumpen", step_spinning: "Schleudern", step_cooling: "Abk\u00fchlen", step_anti_crease: "Knitterschutz", step_steam: "Dampf",
   },
@@ -688,6 +692,7 @@ const T = {
     ps_line_room: "Ambiente", ps_line_power: "Potencia", ps_line_flue: "Humos", ps_line_fan: "Ventilador", ps_line_pellets: "Pellets",
     type_air_conditioner: "Aire acondicionado", ac_off: "Apagado", ac_cooling: "Enfriando", ac_heating: "Calentando", ac_drying: "Deshumidificando", ac_fan_only: "Solo ventilador", ac_auto: "Autom\u00e1tico", ac_idle: "En espera", ac_defrost: "Descongelando", ac_preheating: "Precalentando", ac_line_humidity: "Humedad", section_vane_vertical: "Deflector arriba/abajo", section_vane_horizontal: "Deflector izquierda/derecha", section_purifier: "Purificador de aire (nanoe, plasma)", section_defrost: "Indicador de descongelaci\u00f3n",
     type_dehumidifier: "Deshumidificador", type_space_heater: "Calefactor", type_towel_warmer: "Toallero el\u00e9ctrico", dh_laundry: "Secado de ropa", dh_full: "Dep\u00f3sito lleno", dh_line_tank: "Dep\u00f3sito", line_mode: "Modo", tw_comfort: "Confort", tw_eco: "Eco", tw_frost: "Antihielo", tw_boost: "Boost", tw_drying: "Secado", section_tank: "Dep\u00f3sito de agua", section_current_humidity: "Sensor de humedad", section_heater_layout: "Modelo", layout_fan_heater: "Calefactor de aire", layout_oil_radiator: "Radiador de aceite",
+    type_air_fryer: "Freidora de aire", af_cooking: "Cocinando", af_shake: "Agitar la cesta", af_basket_out: "Cesta fuera", af_preheated: "Precalentada", af_basket2: "Cesta 2", section_fryer_layout: "Modelo", layout_basket: "Cesta", layout_window: "Cesta con ventana", layout_dual: "Doble cesta", section_basket: "Sensor de la cesta", section_shake: "Aviso de agitar", section_basket2: "Estado de la cesta 2 (doble)",
     washer_dryer: "Lavasecadora (lava y seca)", step_drying: "Secado", section_cycle_phase: "Fase del ciclo",
     step_prewash: "Prelavado", step_soaking: "Remojo", step_weighing: "Pesaje", step_filling: "Llenado", step_washing: "Lavado", step_rinsing: "Aclarado", step_draining: "Desag\u00fce", step_spinning: "Centrifugado", step_cooling: "Enfriamiento", step_anti_crease: "Antiarrugas", step_steam: "Vapor",
   },
@@ -824,6 +829,7 @@ const T = {
     ps_line_room: "Ambiente", ps_line_power: "Potenza", ps_line_flue: "Fumi", ps_line_fan: "Ventola", ps_line_pellets: "Pellet",
     type_air_conditioner: "Condizionatore", ac_off: "Spento", ac_cooling: "Raffreddamento", ac_heating: "Riscaldamento", ac_drying: "Deumidificazione", ac_fan_only: "Solo ventilazione", ac_auto: "Automatico", ac_idle: "In attesa", ac_defrost: "Sbrinamento", ac_preheating: "Preriscaldamento", ac_line_humidity: "Umidit\u00e0", section_vane_vertical: "Deflettore alto/basso", section_vane_horizontal: "Deflettore sinistra/destra", section_purifier: "Purificatore d'aria (nanoe, plasma)", section_defrost: "Indicatore di sbrinamento",
     type_dehumidifier: "Deumidificatore", type_space_heater: "Stufetta", type_towel_warmer: "Scaldasalviette", dh_laundry: "Asciugatura bucato", dh_full: "Serbatoio pieno", dh_line_tank: "Serbatoio", line_mode: "Modalit\u00e0", tw_comfort: "Comfort", tw_eco: "Eco", tw_frost: "Antigelo", tw_boost: "Boost", tw_drying: "Asciugatura", section_tank: "Serbatoio dell'acqua", section_current_humidity: "Sensore di umidit\u00e0", section_heater_layout: "Modello", layout_fan_heater: "Termoventilatore", layout_oil_radiator: "Radiatore a olio",
+    type_air_fryer: "Friggitrice ad aria", af_cooking: "Cottura", af_shake: "Scuotere il cestello", af_basket_out: "Cestello estratto", af_preheated: "Preriscaldata", af_basket2: "Cestello 2", section_fryer_layout: "Modello", layout_basket: "Cestello", layout_window: "Cestello con obl\u00f2", layout_dual: "Doppio cestello", section_basket: "Sensore del cestello", section_shake: "Promemoria per scuotere", section_basket2: "Stato del cestello 2 (doppio)",
     washer_dryer: "Lavasciuga (lava e asciuga)", step_drying: "Asciugatura", section_cycle_phase: "Fase del ciclo",
     step_prewash: "Prelavaggio", step_soaking: "Ammollo", step_weighing: "Pesatura", step_filling: "Carico acqua", step_washing: "Lavaggio", step_rinsing: "Risciacquo", step_draining: "Scarico", step_spinning: "Centrifuga", step_cooling: "Raffreddamento", step_anti_crease: "Antipiega", step_steam: "Vapore",
   },
@@ -960,6 +966,7 @@ const T = {
     ps_line_room: "Kamer", ps_line_power: "Vermogen", ps_line_flue: "Rookgas", ps_line_fan: "Ventilator", ps_line_pellets: "Pellets",
     type_air_conditioner: "Airconditioner", ac_off: "Uit", ac_cooling: "Koelen", ac_heating: "Verwarmen", ac_drying: "Ontvochtigen", ac_fan_only: "Alleen ventilator", ac_auto: "Automatisch", ac_idle: "Stand-by", ac_defrost: "Ontdooien", ac_preheating: "Voorverwarmen", ac_line_humidity: "Luchtvochtigheid", section_vane_vertical: "Lamel omhoog/omlaag", section_vane_horizontal: "Lamel links/rechts", section_purifier: "Luchtreiniger (nanoe, plasma)", section_defrost: "Ontdooi-indicator",
     type_dehumidifier: "Luchtontvochtiger", type_space_heater: "Kacheltje", type_towel_warmer: "Handdoekradiator", dh_laundry: "Was drogen", dh_full: "Tank vol", dh_line_tank: "Tank", line_mode: "Modus", tw_comfort: "Comfort", tw_eco: "Eco", tw_frost: "Vorstbeveiliging", tw_boost: "Boost", tw_drying: "Drogen", section_tank: "Watertank", section_current_humidity: "Vochtsensor", section_heater_layout: "Model", layout_fan_heater: "Ventilatorkachel", layout_oil_radiator: "Oliegevulde radiator",
+    type_air_fryer: "Airfryer", af_cooking: "Bereiden", af_shake: "Mand schudden", af_basket_out: "Mand eruit", af_preheated: "Voorverwarmd", af_basket2: "Mand 2", section_fryer_layout: "Model", layout_basket: "Mand", layout_window: "Mand met venster", layout_dual: "Dubbele mand", section_basket: "Mandsensor", section_shake: "Schudherinnering", section_basket2: "Status mand 2 (dubbel)",
     washer_dryer: "Was-droogcombinatie (wast en droogt)", step_drying: "Drogen", section_cycle_phase: "Programmafase",
     step_prewash: "Voorwas", step_soaking: "Weken", step_weighing: "Wegen", step_filling: "Vullen", step_washing: "Wassen", step_rinsing: "Spoelen", step_draining: "Afpompen", step_spinning: "Centrifugeren", step_cooling: "Afkoelen", step_anti_crease: "Anti-kreuk", step_steam: "Stoom",
   },
@@ -1096,6 +1103,7 @@ const T = {
     ps_line_room: "Ambiente", ps_line_power: "Pot\u00eancia", ps_line_flue: "Fumos", ps_line_fan: "Ventilador", ps_line_pellets: "Pellets",
     type_air_conditioner: "Ar condicionado", ac_off: "Desligado", ac_cooling: "A arrefecer", ac_heating: "A aquecer", ac_drying: "A desumidificar", ac_fan_only: "S\u00f3 ventila\u00e7\u00e3o", ac_auto: "Autom\u00e1tico", ac_idle: "Em espera", ac_defrost: "A descongelar", ac_preheating: "Pr\u00e9-aquecimento", ac_line_humidity: "Humidade", section_vane_vertical: "Defletor cima/baixo", section_vane_horizontal: "Defletor esquerda/direita", section_purifier: "Purificador de ar (nanoe, plasma)", section_defrost: "Indicador de descongela\u00e7\u00e3o",
     type_dehumidifier: "Desumidificador", type_space_heater: "Aquecedor", type_towel_warmer: "Toalheiro el\u00e9trico", dh_laundry: "Secagem de roupa", dh_full: "Dep\u00f3sito cheio", dh_line_tank: "Dep\u00f3sito", line_mode: "Modo", tw_comfort: "Conforto", tw_eco: "Eco", tw_frost: "Antigelo", tw_boost: "Boost", tw_drying: "Secagem", section_tank: "Dep\u00f3sito de \u00e1gua", section_current_humidity: "Sensor de humidade", section_heater_layout: "Modelo", layout_fan_heater: "Termoventilador", layout_oil_radiator: "Radiador a \u00f3leo",
+    type_air_fryer: "Fritadeira de ar", af_cooking: "A cozinhar", af_shake: "Agitar o cesto", af_basket_out: "Cesto retirado", af_preheated: "Pr\u00e9-aquecida", af_basket2: "Cesto 2", section_fryer_layout: "Modelo", layout_basket: "Cesto", layout_window: "Cesto com janela", layout_dual: "Cesto duplo", section_basket: "Sensor do cesto", section_shake: "Lembrete para agitar", section_basket2: "Estado do cesto 2 (duplo)",
     washer_dryer: "M\u00e1quina de lavar e secar (lava e seca)", step_drying: "Secagem", section_cycle_phase: "Fase do ciclo",
     step_prewash: "Pr\u00e9-lavagem", step_soaking: "Molho", step_weighing: "Pesagem", step_filling: "Enchimento", step_washing: "Lavagem", step_rinsing: "Enxaguamento", step_draining: "Escoamento", step_spinning: "Centrifuga\u00e7\u00e3o", step_cooling: "Arrefecimento", step_anti_crease: "Anti-vincos", step_steam: "Vapor",
   },
@@ -1232,6 +1240,7 @@ const T = {
     ps_line_room: "Rum", ps_line_power: "Effekt", ps_line_flue: "R\u00f6kgas", ps_line_fan: "Fl\u00e4kt", ps_line_pellets: "Pellets",
     type_air_conditioner: "Luftkonditionering", ac_off: "Av", ac_cooling: "Kyler", ac_heating: "V\u00e4rmer", ac_drying: "Avfuktar", ac_fan_only: "Endast fl\u00e4kt", ac_auto: "Auto", ac_idle: "V\u00e4ntel\u00e4ge", ac_defrost: "Avfrostning", ac_preheating: "F\u00f6rv\u00e4rmer", ac_line_humidity: "Luftfuktighet", section_vane_vertical: "Luftriktning upp/ned", section_vane_horizontal: "Luftriktning v\u00e4nster/h\u00f6ger", section_purifier: "Luftrenare (nanoe, plasma)", section_defrost: "Avfrostningsindikator",
     type_dehumidifier: "Avfuktare", type_space_heater: "Elv\u00e4rmare", type_towel_warmer: "Handdukstork", dh_laundry: "Torkar tv\u00e4tt", dh_full: "Tanken full", dh_line_tank: "Tank", line_mode: "L\u00e4ge", tw_comfort: "Komfort", tw_eco: "Eco", tw_frost: "Frostskydd", tw_boost: "Boost", tw_drying: "Torkning", section_tank: "Vattentank", section_current_humidity: "Fuktsensor", section_heater_layout: "Modell", layout_fan_heater: "V\u00e4rmefl\u00e4kt", layout_oil_radiator: "Oljefylld radiator",
+    type_air_fryer: "Airfryer", af_cooking: "Tillagning", af_shake: "Skaka korgen", af_basket_out: "Korgen ute", af_preheated: "F\u00f6rv\u00e4rmd", af_basket2: "Korg 2", section_fryer_layout: "Modell", layout_basket: "Korg", layout_window: "Korg med f\u00f6nster", layout_dual: "Dubbelkorg", section_basket: "Korgsensor", section_shake: "Skakp\u00e5minnelse", section_basket2: "Status korg 2 (dubbel)",
     washer_dryer: "Kombinerad tv\u00e4tt/tork (tv\u00e4ttar och torkar)", step_drying: "Torkning", section_cycle_phase: "Programfas",
     step_prewash: "F\u00f6rtv\u00e4tt", step_soaking: "Bl\u00f6tl\u00e4ggning", step_weighing: "V\u00e4gning", step_filling: "P\u00e5fyllning", step_washing: "Tv\u00e4tt", step_rinsing: "Sk\u00f6ljning", step_draining: "T\u00f6mning", step_spinning: "Centrifugering", step_cooling: "Avsvalning", step_anti_crease: "Skrynkelskydd", step_steam: "\u00c5nga",
   },
@@ -1368,6 +1377,7 @@ const T = {
     ps_line_room: "Rom", ps_line_power: "Effekt", ps_line_flue: "R\u00f8ykgass", ps_line_fan: "Vifte", ps_line_pellets: "Pellets",
     type_air_conditioner: "Klimaanlegg", ac_off: "Av", ac_cooling: "Kj\u00f8ler", ac_heating: "Varmer", ac_drying: "Avfukter", ac_fan_only: "Kun vifte", ac_auto: "Auto", ac_idle: "Hvilemodus", ac_defrost: "Avising", ac_preheating: "Forvarmer", ac_line_humidity: "Luftfuktighet", section_vane_vertical: "Luftretning opp/ned", section_vane_horizontal: "Luftretning venstre/h\u00f8yre", section_purifier: "Luftrenser (nanoe, plasma)", section_defrost: "Avisingsindikator",
     type_dehumidifier: "Avfukter", type_space_heater: "Varmeovn", type_towel_warmer: "H\u00e5ndklet\u00f8rker", dh_laundry: "T\u00f8rker kl\u00e6r", dh_full: "Tanken er full", dh_line_tank: "Tank", line_mode: "Modus", tw_comfort: "Komfort", tw_eco: "Eco", tw_frost: "Frostsikring", tw_boost: "Boost", tw_drying: "T\u00f8rking", section_tank: "Vanntank", section_current_humidity: "Fuktsensor", section_heater_layout: "Modell", layout_fan_heater: "Varmevifte", layout_oil_radiator: "Oljefylt radiator",
+    type_air_fryer: "Airfryer", af_cooking: "Tilberedning", af_shake: "Rist kurven", af_basket_out: "Kurven er ute", af_preheated: "Forvarmet", af_basket2: "Kurv 2", section_fryer_layout: "Modell", layout_basket: "Kurv", layout_window: "Kurv med vindu", layout_dual: "Dobbel kurv", section_basket: "Kurvsensor", section_shake: "P\u00e5minnelse om \u00e5 riste", section_basket2: "Status kurv 2 (dobbel)",
     washer_dryer: "Kombinert vaske-/t\u00f8rkemaskin (vasker og t\u00f8rker)", step_drying: "T\u00f8rking", section_cycle_phase: "Programfase",
     step_prewash: "Forvask", step_soaking: "Bl\u00f8tlegging", step_weighing: "Veiing", step_filling: "Vannfylling", step_washing: "Vask", step_rinsing: "Skylling", step_draining: "T\u00f8mming", step_spinning: "Sentrifugering", step_cooling: "Avkj\u00f8ling", step_anti_crease: "Antikr\u00f8ll", step_steam: "Damp",
   },
@@ -1504,6 +1514,7 @@ const T = {
     ps_line_room: "Rum", ps_line_power: "Effekt", ps_line_flue: "R\u00f8ggas", ps_line_fan: "Bl\u00e6ser", ps_line_pellets: "Piller",
     type_air_conditioner: "Aircondition", ac_off: "Slukket", ac_cooling: "K\u00f8ler", ac_heating: "Varmer", ac_drying: "Affugter", ac_fan_only: "Kun bl\u00e6ser", ac_auto: "Auto", ac_idle: "Standby", ac_defrost: "Afrimning", ac_preheating: "Forvarmer", ac_line_humidity: "Luftfugtighed", section_vane_vertical: "Luftretning op/ned", section_vane_horizontal: "Luftretning venstre/h\u00f8jre", section_purifier: "Luftrenser (nanoe, plasma)", section_defrost: "Afrimningsindikator",
     type_dehumidifier: "Affugter", type_space_heater: "Varmeapparat", type_towel_warmer: "H\u00e5ndkl\u00e6det\u00f8rrer", dh_laundry: "T\u00f8rrer t\u00f8j", dh_full: "Tank fuld", dh_line_tank: "Tank", line_mode: "Tilstand", tw_comfort: "Komfort", tw_eco: "Eco", tw_frost: "Frostsikring", tw_boost: "Boost", tw_drying: "T\u00f8rring", section_tank: "Vandtank", section_current_humidity: "Fugtsensor", section_heater_layout: "Model", layout_fan_heater: "Varmebl\u00e6ser", layout_oil_radiator: "Oliefyldt radiator",
+    type_air_fryer: "Airfryer", af_cooking: "Tilberedning", af_shake: "Ryst kurven", af_basket_out: "Kurven er ude", af_preheated: "Forvarmet", af_basket2: "Kurv 2", section_fryer_layout: "Model", layout_basket: "Kurv", layout_window: "Kurv med vindue", layout_dual: "Dobbelt kurv", section_basket: "Kurvsensor", section_shake: "P\u00e5mindelse om at ryste", section_basket2: "Status kurv 2 (dobbelt)",
     washer_dryer: "Vaske-t\u00f8rremaskine (vasker og t\u00f8rrer)", step_drying: "T\u00f8rring", section_cycle_phase: "Programfase",
     step_prewash: "Forvask", step_soaking: "Ibl\u00f8ds\u00e6tning", step_weighing: "Vejning", step_filling: "P\u00e5fyldning", step_washing: "Vask", step_rinsing: "Skylning", step_draining: "Udpumpning", step_spinning: "Centrifugering", step_cooling: "Afk\u00f8ling", step_anti_crease: "Antikr\u00f8l", step_steam: "Damp",
   },
@@ -1640,6 +1651,7 @@ const T = {
     ps_line_room: "Pomieszczenie", ps_line_power: "Moc", ps_line_flue: "Spaliny", ps_line_fan: "Wentylator", ps_line_pellets: "Pellet",
     type_air_conditioner: "Klimatyzator", ac_off: "Wy\u0142\u0105czony", ac_cooling: "Ch\u0142odzenie", ac_heating: "Grzanie", ac_drying: "Osuszanie", ac_fan_only: "Tylko wentylator", ac_auto: "Automatyczny", ac_idle: "Czuwanie", ac_defrost: "Odszranianie", ac_preheating: "Podgrzewanie wst\u0119pne", ac_line_humidity: "Wilgotno\u015b\u0107", section_vane_vertical: "\u017baluzja g\u00f3ra/d\u00f3\u0142", section_vane_horizontal: "\u017baluzja lewo/prawo", section_purifier: "Oczyszczacz powietrza (nanoe, plazma)", section_defrost: "Wska\u017anik odszraniania",
     type_dehumidifier: "Osuszacz powietrza", type_space_heater: "Grzejnik elektryczny", type_towel_warmer: "Grzejnik \u0142azienkowy", dh_laundry: "Suszenie prania", dh_full: "Zbiornik pe\u0142ny", dh_line_tank: "Zbiornik", line_mode: "Tryb", tw_comfort: "Komfort", tw_eco: "Eko", tw_frost: "Ochrona przed zamarzaniem", tw_boost: "Boost", tw_drying: "Suszenie", section_tank: "Zbiornik na wod\u0119", section_current_humidity: "Czujnik wilgotno\u015bci", section_heater_layout: "Model", layout_fan_heater: "Termowentylator", layout_oil_radiator: "Grzejnik olejowy",
+    type_air_fryer: "Frytkownica bezt\u0142uszczowa", af_cooking: "Pieczenie", af_shake: "Potrz\u0105\u015bnij koszem", af_basket_out: "Kosz wyj\u0119ty", af_preheated: "Nagrzana", af_basket2: "Kosz 2", section_fryer_layout: "Model", layout_basket: "Kosz", layout_window: "Kosz z okienkiem", layout_dual: "Podw\u00f3jny kosz", section_basket: "Czujnik kosza", section_shake: "Przypomnienie o potrz\u0105\u015bni\u0119ciu", section_basket2: "Stan kosza 2 (podw\u00f3jny)",
     washer_dryer: "Pralko-suszarka (pierze i suszy)", step_drying: "Suszenie", section_cycle_phase: "Faza programu",
     step_prewash: "Pranie wst\u0119pne", step_soaking: "Namaczanie", step_weighing: "Wa\u017cenie", step_filling: "Nape\u0142nianie", step_washing: "Pranie", step_rinsing: "P\u0142ukanie", step_draining: "Odpompowanie", step_spinning: "Wirowanie", step_cooling: "Sch\u0142adzanie", step_anti_crease: "Przeciw zagnieceniom", step_steam: "Para",
   },
@@ -1776,6 +1788,7 @@ const T = {
     ps_line_room: "\u5ba4\u5185", ps_line_power: "\u529f\u7387", ps_line_flue: "\u70df\u6c14", ps_line_fan: "\u98ce\u6247", ps_line_pellets: "\u9897\u7c92",
     type_air_conditioner: "\u7a7a\u8c03", ac_off: "\u5df2\u5173\u95ed", ac_cooling: "\u5236\u51b7\u4e2d", ac_heating: "\u5236\u70ed\u4e2d", ac_drying: "\u9664\u6e7f\u4e2d", ac_fan_only: "\u9001\u98ce", ac_auto: "\u81ea\u52a8", ac_idle: "\u5f85\u673a", ac_defrost: "\u9664\u971c\u4e2d", ac_preheating: "\u9884\u70ed\u4e2d", ac_line_humidity: "\u6e7f\u5ea6", section_vane_vertical: "\u4e0a\u4e0b\u5bfc\u98ce\u677f", section_vane_horizontal: "\u5de6\u53f3\u5bfc\u98ce\u677f", section_purifier: "\u7a7a\u6c14\u51c0\u5316 (nanoe\u3001\u7b49\u79bb\u5b50)", section_defrost: "\u9664\u971c\u6307\u793a",
     type_dehumidifier: "\u9664\u6e7f\u673a", type_space_heater: "\u53d6\u6696\u5668", type_towel_warmer: "\u6bdb\u5dfe\u67b6", dh_laundry: "\u8863\u7269\u5e72\u71e5", dh_full: "\u6c34\u7bb1\u5df2\u6ee1", dh_line_tank: "\u6c34\u7bb1", line_mode: "\u6a21\u5f0f", tw_comfort: "\u8212\u9002", tw_eco: "\u8282\u80fd", tw_frost: "\u9632\u51bb", tw_boost: "\u5f3a\u52b2", tw_drying: "\u70d8\u5e72", section_tank: "\u6c34\u7bb1", section_current_humidity: "\u6e7f\u5ea6\u4f20\u611f\u5668", section_heater_layout: "\u578b\u53f7", layout_fan_heater: "\u6696\u98ce\u673a", layout_oil_radiator: "\u6cb9\u6c40",
+    type_air_fryer: "\u7a7a\u6c14\u70b8\u9505", af_cooking: "\u70f9\u996a\u4e2d", af_shake: "\u8bf7\u6447\u6643\u70b8\u7bee", af_basket_out: "\u70b8\u7bee\u5df2\u53d6\u51fa", af_preheated: "\u5df2\u9884\u70ed", af_basket2: "\u70b8\u7bee 2", section_fryer_layout: "\u578b\u53f7", layout_basket: "\u70b8\u7bee", layout_window: "\u5e26\u89c6\u7a97\u70b8\u7bee", layout_dual: "\u53cc\u70b8\u7bee", section_basket: "\u70b8\u7bee\u4f20\u611f\u5668", section_shake: "\u6447\u6643\u63d0\u9192", section_basket2: "\u70b8\u7bee 2 \u72b6\u6001\uff08\u53cc\u7bee\uff09",
     washer_dryer: "\u6d17\u70d8\u4e00\u4f53\u673a\uff08\u6d17\u6da4\u5e76\u70d8\u5e72\uff09", step_drying: "\u70d8\u5e72\u4e2d", section_cycle_phase: "\u7a0b\u5e8f\u9636\u6bb5",
     step_prewash: "\u9884\u6d17\u4e2d", step_soaking: "\u6d78\u6ce1\u4e2d", step_weighing: "\u79f0\u91cd\u4e2d", step_filling: "\u8fdb\u6c34\u4e2d", step_washing: "\u6d17\u6da4\u4e2d", step_rinsing: "\u6f02\u6d17\u4e2d", step_draining: "\u6392\u6c34\u4e2d", step_spinning: "\u8131\u6c34\u4e2d", step_cooling: "\u51b7\u5374\u4e2d", step_anti_crease: "\u9632\u76b1\u4e2d", step_steam: "\u84b8\u6c7d\u4e2d",
   },
@@ -1912,6 +1925,7 @@ const T = {
     ps_line_room: "M\u00edstnost", ps_line_power: "V\u00fdkon", ps_line_flue: "Spaliny", ps_line_fan: "Ventil\u00e1tor", ps_line_pellets: "Pelety",
     type_air_conditioner: "Klimatizace", ac_off: "Vypnuto", ac_cooling: "Chlazen\u00ed", ac_heating: "Topen\u00ed", ac_drying: "Odvlh\u010dov\u00e1n\u00ed", ac_fan_only: "Jen ventil\u00e1tor", ac_auto: "Automaticky", ac_idle: "Pohotovost", ac_defrost: "Odmrazov\u00e1n\u00ed", ac_preheating: "P\u0159edeh\u0159ev", ac_line_humidity: "Vlhkost", section_vane_vertical: "Lamela nahoru/dol\u016f", section_vane_horizontal: "Lamela vlevo/vpravo", section_purifier: "\u010cisti\u010dka vzduchu (nanoe, plazma)", section_defrost: "Indik\u00e1tor odmrazov\u00e1n\u00ed",
     type_dehumidifier: "Odvlh\u010dova\u010d", type_space_heater: "Topidlo", type_towel_warmer: "Su\u0161\u00e1k na ru\u010dn\u00edky", dh_laundry: "Su\u0161en\u00ed pr\u00e1dla", dh_full: "N\u00e1dr\u017e pln\u00e1", dh_line_tank: "N\u00e1dr\u017e", line_mode: "Re\u017eim", tw_comfort: "Komfort", tw_eco: "Eco", tw_frost: "Protiz\u00e1mraz", tw_boost: "Boost", tw_drying: "Su\u0161en\u00ed", section_tank: "N\u00e1dr\u017e na vodu", section_current_humidity: "\u010cidlo vlhkosti", section_heater_layout: "Model", layout_fan_heater: "Teplovzdu\u0161n\u00fd ventil\u00e1tor", layout_oil_radiator: "Olejov\u00fd radi\u00e1tor",
+    type_air_fryer: "Horkovzdu\u0161n\u00e1 frit\u00e9za", af_cooking: "Va\u0159en\u00ed", af_shake: "Prot\u0159este ko\u0161", af_basket_out: "Ko\u0161 vyta\u017een", af_preheated: "P\u0159edeh\u0159\u00e1to", af_basket2: "Ko\u0161 2", section_fryer_layout: "Model", layout_basket: "Ko\u0161", layout_window: "Ko\u0161 s ok\u00e9nkem", layout_dual: "Dvojit\u00fd ko\u0161", section_basket: "Senzor ko\u0161e", section_shake: "P\u0159ipom\u00ednka prot\u0159ep\u00e1n\u00ed", section_basket2: "Stav ko\u0161e 2 (dvojit\u00fd)",
     washer_dryer: "Pra\u010dka se su\u0161i\u010dkou (pere a su\u0161\u00ed)", step_drying: "Su\u0161en\u00ed", section_cycle_phase: "F\u00e1ze programu",
     step_prewash: "P\u0159edp\u00edrka", step_soaking: "Nam\u00e1\u010den\u00ed", step_weighing: "V\u00e1\u017een\u00ed", step_filling: "Napou\u0161t\u011bn\u00ed", step_washing: "Pran\u00ed", step_rinsing: "M\u00e1ch\u00e1n\u00ed", step_draining: "Vypou\u0161t\u011bn\u00ed", step_spinning: "Odst\u0159e\u010fov\u00e1n\u00ed", step_cooling: "Chlazen\u00ed", step_anti_crease: "Proti poma\u010dk\u00e1n\u00ed", step_steam: "P\u00e1ra",
   },
@@ -2328,6 +2342,11 @@ const AC_ICONS = {
   moon: "M17.75,4.09L15.22,6.03L16.13,9.09L13.5,7.28L10.87,9.09L11.78,6.03L9.25,4.09L12.44,4L13.5,1L14.56,4L17.75,4.09M21.25,11L19.61,12.25L20.2,14.23L18.5,13.06L16.8,14.23L17.39,12.25L15.75,11L17.81,10.95L18.5,9L19.19,10.95L21.25,11M18.97,15.95C19.8,15.87 20.69,17.05 20.16,17.8C19.84,18.25 19.5,18.67 19.08,19.07C15.17,23 8.84,23 4.94,19.07C1.03,15.17 1.03,8.83 4.94,4.93C5.34,4.53 5.76,4.17 6.21,3.85C6.96,3.32 8.14,4.21 8.06,5.04C7.79,7.9 8.75,10.87 10.95,13.06C13.14,15.26 16.1,16.22 18.97,15.95Z",
   rocket: "M13.13 22.19L11.5 18.36C13.07 17.78 14.54 17 15.9 16.09L13.13 22.19M5.64 12.5L1.81 10.87L7.91 8.1C7 9.46 6.22 10.93 5.64 12.5M21.61 2.39C21.61 2.39 16.66 .269 11 5.93C8.81 8.12 7.5 10.53 6.65 12.64C6.37 13.39 6.56 14.21 7.11 14.77L9.24 16.89C9.79 17.45 10.61 17.63 11.36 17.35C13.5 16.53 15.88 15.19 18.07 13C23.73 7.34 21.61 2.39 21.61 2.39M14.54 9.46C13.76 8.68 13.76 7.41 14.54 6.63S16.59 5.85 17.37 6.63C18.14 7.41 18.15 8.68 17.37 9.46C16.59 10.24 15.32 10.24 14.54 9.46Z",
   laundry: "M16,21H8A1,1 0 0,1 7,20V12.07L5.7,13.07C5.31,13.46 4.68,13.46 4.29,13.07L1.46,10.29C1.07,9.9 1.07,9.27 1.46,8.88L7.34,3H9C9,4.1 10.34,5 12,5C13.66,5 15,4.1 15,3H16.66L22.54,8.88C22.93,9.27 22.93,9.9 22.54,10.29L19.71,13.12C19.32,13.5 18.69,13.5 18.3,13.12L17,12.12V20A1,1 0 0,1 16,21",
+  shake: "M16,19H8V5H16M16.5,3H7.5A1.5,1.5 0 0,0 6,4.5V19.5A1.5,1.5 0 0,0 7.5,21H16.5A1.5,1.5 0 0,0 18,19.5V4.5A1.5,1.5 0 0,0 16.5,3M19,17H21V7H19M22,9V15H24V9M3,17H5V7H3M0,15H2V9H0V15Z",
+  pause: "M14,19H18V5H14M6,19H10V5H6V19Z",
+  check: "M21,7L9,19L3.5,13.5L4.91,12.09L9,16.17L19.59,5.59L21,7Z",
+  clock: "M12,20A8,8 0 0,0 20,12A8,8 0 0,0 12,4A8,8 0 0,0 4,12A8,8 0 0,0 12,20M12,2A10,10 0 0,1 22,12A10,10 0 0,1 12,22C6.47,22 2,17.5 2,12A10,10 0 0,1 12,2M12.5,7V12.25L17,14.92L16.25,16.15L11,13V7H12.5Z",
+  warm: "M7.95,3L6.53,5.19L7.95,7.4H7.94L5.95,10.5L4.22,9.6L5.64,7.39L4.22,5.19L6.22,2.09L7.95,3M13.95,2.89L12.53,5.1L13.95,7.3L13.94,7.31L11.95,10.4L10.22,9.5L11.64,7.3L10.22,5.1L12.22,2L13.95,2.89M20,2.89L18.56,5.1L20,7.3V7.31L18,10.4L16.25,9.5L17.67,7.3L16.25,5.1L18.25,2L20,2.89M2,22V14A2,2 0 0,1 4,12H20A2,2 0 0,1 22,14V22H20V20H4V22H2Z",
 };
 // The setpoint as the unit's screen prints it: 24, or 24.5 on the units that
 // take halves. No unit and no locale, a seven-segment display has neither.
@@ -2442,6 +2461,54 @@ function airFlow(cls, w, h, down) {
   return `<svg class="air-flow ${cls} ${down ? "down" : ""}" viewBox="0 0 ${w} ${h}">${line(w * 0.25)}${line(w * 0.5)}${line(w * 0.75)}</svg>`;
 }
 
+// Air fryer. Philips (HomeID and the older HACS integration), Xiaomi (MIoT)
+// and Cosori (VeSync) each report their own firmware words, read here once,
+// lowercased. What the table does not know falls back on the shared
+// vocabulary. A Cosori "heating" is its preheat, and a stop there is the
+// owner's, not the end of the cooking. A Philips asking for a "user action"
+// in the middle of a cook wants the basket shaken.
+const FRYER_STATES = {
+  standby: "off", idle: "off", setting: "off", mainmenu: "off", powersave: "off", pairing: "off", shutdown: "off",
+  precook: "preheating", preheat: "preheating", heating: "preheating",
+  preheatfinish: "preheated", preheatend: "preheated",
+  cooking: "cooking", crispyroast: "cooking", degrease: "cooking",
+  user_action: "shake",
+  pause: "paused", pause2: "paused", parasetting: "paused", preheatpause: "paused", keepwarmpause: "paused",
+  potpause: "basket_out", pullout: "basket_out",
+  maintain: "keep_warm", keepwarm: "keep_warm",
+  finish: "done", cooked: "done", cookend: "done", keepwarmfinish: "done",
+  cookstop: "off", preheatstop: "off",
+  appointment: "delayed", delay: "delayed",
+};
+const FRYER_NORMS = {
+  off: "idle", preheating: "preheating", preheated: "paused", cooking: "running", shake: "running",
+  paused: "paused", basket_out: "paused", keep_warm: "keep_warm", done: "done", delayed: "delayed", error: "error",
+};
+const FRYER_FROM_NORM = {
+  idle: "off", unknown: "off", preheating: "preheating", running: "cooking", paused: "paused",
+  keep_warm: "keep_warm", done: "done", delayed: "delayed", error: "error",
+};
+// The modes the shared labels do not name well.
+const FRYER_LABELS = { cooking: "af_cooking", shake: "af_shake", basket_out: "af_basket_out", preheated: "af_preheated" };
+const FRYER_ICONS = {
+  preheating: "heat", preheated: "heat", cooking: "fan", shake: "shake", paused: "pause", basket_out: "pause",
+  keep_warm: "warm", done: "check", delayed: "clock",
+};
+function fryerModeOf(raw) {
+  if (raw === undefined || raw === null) return "";
+  const k = String(raw).trim().toLowerCase().replace(/[\s-]+/g, "_");
+  return Object.prototype.hasOwnProperty.call(FRYER_STATES, k) ? FRYER_STATES[k] : "";
+}
+// Which way a basket is drawn: cooking hot, keeping warm, ready, pulled out
+// or resting.
+function fryerZoneOf(mode) {
+  if (["preheating", "cooking", "shake"].includes(mode)) return "hot";
+  if (mode === "keep_warm") return "warm";
+  if (mode === "done" || mode === "preheated") return "ready";
+  if (mode === "basket_out") return "out";
+  return "off";
+}
+
 // What a heat pump's valve says. HeishaMon reads its 2-way valve Heating or
 // Cooling and its 3-way valve Room or Tank: a position, which names the mode
 // the water is going to, whatever field the valve was put in. Room names
@@ -2554,6 +2621,12 @@ function printerNorm(raw, stateMap) {
 // other appliance with the shared one.
 function normFor(type, raw, stateMap) {
   if (type === "printer_3d") return printerNorm(raw, stateMap);
+  // An air fryer's firmware words come first, unless state_map says otherwise.
+  if (type === "air_fryer" && !(stateMap && raw !== undefined && raw !== null
+    && Object.prototype.hasOwnProperty.call(stateMap, String(raw).trim()))) {
+    const mode = fryerModeOf(raw);
+    if (mode) return FRYER_NORMS[mode];
+  }
   const norm = normalizeState(raw, stateMap);
   // A laundry machine or a dishwasher whose state names its step is running,
   // even on a word the card does not sort: LG reports soaking and detecting,
@@ -3554,6 +3627,15 @@ const TYPE_AUTO_PATTERNS = {
     error_entity: /alarm|error.?code|nb.?alarms/i,
     power_entity: /power_w$|watt|electric/i,
   },
+  // Philips calls the basket a drawer and Xiaomi a pot; VeSync sets its
+  // temperature, Xiaomi counts the time left.
+  air_fryer: {
+    remaining_time_entity: /time.?to.?end|remaining|left.?time|time.?left|time.?remaining/i,
+    target_temperature_entity: /target.?temp|set.?temp|cook.?temp/i,
+    current_temperature_entity: /current.?temp|work.?temp/i,
+    basket_entity: /drawer|basket|pot.?out|pull.?out/i,
+    shake_entity: /shake|flip/i,
+  },
   // Midea LAN and Tuya keep the tank apart, as a contact or a level.
   dehumidifier: {
     tank_entity: /tank.?(full|level)|water.?(tank|level|full)|bucket|full.?tank/i,
@@ -3706,6 +3788,9 @@ const TYPE_CAPS = {
   space_heater: { spaceHeater: true },
   // A towel warmer, driven by the pilot wire's modes.
   towel_warmer: { towelWarmer: true },
+  // An air fryer: a cycle with a temperature, a basket that comes out and,
+  // on the Philips, a reminder to shake it.
+  air_fryer: { cycle: true, temperature: true, airFryer: true },
 };
 const APPLIANCE_TYPES = Object.keys(TYPE_CAPS);
 const LAUNDRY_TYPES = ["washer", "dryer", "dishwasher"];
@@ -3739,6 +3824,8 @@ const AC_ONLY_FIELDS = ["vane_vertical_entity", "vane_horizontal_entity", "purif
 // A water tank and a humidity reading belong to a dehumidifier, and the
 // choice of a heater's model to a heater.
 const DEHUMIDIFIER_ONLY_FIELDS = ["tank_entity", "current_humidity_entity"];
+// A basket, and the reminder to shake it, belong to an air fryer.
+const FRYER_ONLY_FIELDS = ["fryer_layout", "basket_entity", "shake_entity", "basket2_state_entity"];
 const PRINTER_ONLY_FIELDS = [
   "nozzle_temperature_entity",
   "nozzle_target_entity",
@@ -3767,10 +3854,15 @@ function detectApplianceType(cfg, st) {
   if (AC_ONLY_FIELDS.some((f) => cfg[f])) return "air_conditioner";
   if (DEHUMIDIFIER_ONLY_FIELDS.some((f) => cfg[f])) return "dehumidifier";
   if (cfg.heater_layout) return "space_heater";
+  if (FRYER_ONLY_FIELDS.some((f) => cfg[f])) return "air_fryer";
   const hay = `${cfg.icon || ""} ${cfg.state_entity || ""} ${(st && st.attributes.icon) || ""}`.toLowerCase();
   // Before everything else: a printer's entities are named after its maker or
   // its software, and a Bambu Lab one after its model ("p1s_...", "a1_...").
   if (/3d.?print|print.?3d|printer-3d|octoprint|prusa|bambu|klipper|moonraker|creality|elegoo|centauri|anycubic|kobra|flashforge|snapmaker|voron|reprap|duet3d|(^|[\s._])(x1c|x1e|p1s|p1p|p2s|a1|a1_mini|h2d|h2s)_|(^|[\s._-])ender[._-]?\d/.test(hay)) return "printer_3d";
+  // An air fryer, by its name in any language, by Cosori's maker name, or by
+  // the cook_status VeSync gives it. Before the oven and the microwave, since
+  // plenty of them are sold as air fryer ovens.
+  if (/air.?fr[iy]er|airfryer|friteuse|fritteuse|hei(ss|\u00df)luft|freidora|fritadeira|friggitrice|frituurpan|frytkownic|frit[e\u00e9]z|cosori|cook.?status|\u7a7a\u6c14\u70b8|\u0430\u044d\u0440\u043e\u0433\u0440\u0438\u043b|\u0430\u044d\u0440\u043e\u0444\u0440\u0438\u0442/.test(hay)) return "air_fryer";
   // A feeder names itself after what it holds as often as after what it is.
   if (/feeder|pet.?feed|croquette|kibble|futterautomat|comedero|alimentador|voerautomaat|foderautomat|f\u00f4rautomat|forautomat|karmnik|krmitko|\u5582\u98df|\u043a\u043e\u0440\u043c\u0443\u0448\u043a/.test(hay)) return "pet_feeder";
   // "microwave" before "oven": plenty of devices are named "microwave_oven".
@@ -5199,6 +5291,116 @@ const ILLUSTRATION_CSS = {
         .tw-steam { left: 30px; top: 10px; width: 36px; height: 22px; }
         .machine.mode-drying .tw-steam { display: block; }
   `,
+  // An air fryer, in three models: a basket under a top panel, the same with
+  // a window onto the fries, and two baskets side by side. The heat rises
+  // above it while it cooks, the seam over the basket glows, and a basket
+  // pulled out comes forward.
+  air_fryer: () => `${MINI_LCD_CSS}
+        .machine .mini-lcd { color: #ffab76; }
+        .machine.mode-keep_warm .mini-lcd, .machine.z1-warm .mini-lcd { color: #ffd54f; }
+        .machine.mode-done .mini-lcd, .machine.mode-preheated .mini-lcd { color: #81c784; }
+        .machine.mode-delayed .mini-lcd { color: #ce93d8; }
+        .machine.mode-paused .mini-lcd, .machine.mode-basket_out .mini-lcd, .machine.mode-shake .mini-lcd { color: #ffb74d; }
+        .machine.mode-error .mini-lcd { display: none; }
+        .af-body {
+          position: absolute; border-radius: 16px 16px 7px 7px;
+          background: linear-gradient(90deg, var(--ac-body-lo, #1f2327), var(--ac-body-hi, #4a5158) 30%, var(--ac-body, #34393e) 70%, var(--ac-body-lo, #1f2327));
+          box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.18);
+        }
+        .af-vent { position: absolute; height: 4px; border-radius: 2px; background: repeating-linear-gradient(90deg, rgba(0, 0, 0, 0.45) 0 1.2px, transparent 1.2px 3px); }
+        .af-seam { position: absolute; height: 1.5px; background: rgba(0, 0, 0, 0.35); }
+        .af-drawer {
+          position: absolute; border-radius: 3px 3px 8px 8px; transform-origin: 50% 0;
+          background: linear-gradient(90deg, var(--ac-body-lo, #1f2327), var(--ac-body, #34393e) 35%, var(--ac-body-hi, #4a5158) 60%, var(--ac-body-lo, #1f2327));
+          box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.2);
+        }
+        .af-handle { position: absolute; border-radius: 3px; background: linear-gradient(180deg, #5f666e, #2b3036); box-shadow: 0 1px 1px rgba(0, 0, 0, 0.35); }
+        .af-btn { position: absolute; width: 5px; height: 2px; border-radius: 1px; background: #90a4ae; }
+        .af-foot { position: absolute; bottom: 5px; width: 9px; height: 3px; border-radius: 0 0 3px 3px; background: #1d2126; }
+        .af-led { position: absolute; width: 3px; height: 3px; border-radius: 50%; background: rgba(0, 0, 0, 0.25); }
+        .af-gap { position: absolute; background: #0f1215; display: none; border-radius: 2px; }
+        .af-air path { stroke: #ff8a65; }
+        /* One basket: the whole machine says what it does. */
+        .machine.z1-hot .af-seam.s1, .machine.z2-hot .af-seam.s2 { background: #ff7043; box-shadow: 0 0 3px #ff7043; animation: af-pulse 1.6s ease-in-out infinite; animation-delay: var(--anim-offset, 0s); }
+        .machine.z1-warm .af-seam.s1, .machine.z2-warm .af-seam.s2 { background: #ffb300; box-shadow: 0 0 2px #ffb300; }
+        .machine.z1-hot .af-air.a1, .machine.z2-hot .af-air.a2, .machine.z1-warm .af-air.a1, .machine.z2-warm .af-air.a2 { display: block; }
+        .machine.z1-warm .af-air.a1 path, .machine.z2-warm .af-air.a2 path { stroke: #ffca28; animation-duration: 2.6s; opacity: 0.7; }
+        .machine.mode-preheating .af-air path { animation-duration: 2s; opacity: 0.8; }
+        .machine.z1-hot .af-led.l1, .machine.z2-hot .af-led.l2 { background: #ff7043; box-shadow: 0 0 3px #ff7043; }
+        .machine.z1-warm .af-led.l1, .machine.z2-warm .af-led.l2 { background: #ffb300; box-shadow: 0 0 3px #ffb300; }
+        .machine.z1-ready .af-led.l1, .machine.z2-ready .af-led.l2 { background: #66bb6a; box-shadow: 0 0 3px #66bb6a; animation: af-blink 1.2s steps(2) infinite; animation-delay: var(--anim-offset, 0s); }
+        .machine.z1-out .af-gap.g1, .machine.z2-out .af-gap.g2 { display: block; }
+        .machine.z1-out .af-drawer.d1, .machine.z2-out .af-drawer.d2 { transform: translateY(5px) scale(1.07); filter: drop-shadow(0 2px 2px rgba(0, 0, 0, 0.35)); }
+        .machine.mode-shake .af-drawer.d1 { animation: af-shake 1s ease-in-out infinite; animation-delay: var(--anim-offset, 0s); }
+
+        .af-basket .af-body { left: 21px; right: 21px; top: 20px; bottom: 9px; }
+        .af-basket .af-vent { left: 34px; right: 34px; top: 24px; }
+        .af-basket .mini-lcd { left: 36px; top: 31px; min-width: 22px; }
+        .af-basket .af-led { left: 46.5px; top: 43px; }
+        .af-basket .af-seam { left: 21px; right: 21px; top: 52px; }
+        .af-basket .af-gap { left: 23px; right: 23px; top: 52px; height: 6px; }
+        .af-basket .af-drawer { left: 21px; right: 21px; top: 53px; bottom: 9px; }
+        .af-basket .af-handle { left: 15px; width: 24px; top: 13px; height: 13px; }
+        .af-basket .af-btn { left: 9.5px; top: 1.5px; }
+        .af-basket .af-foot.f1, .af-window .af-foot.f1 { left: 25px; }
+        .af-basket .af-foot.f2, .af-window .af-foot.f2 { right: 25px; }
+        .af-basket .af-air, .af-window .af-air { left: 28px; top: -1px; width: 40px; height: 22px; }
+
+        .af-window .af-body { left: 20px; right: 20px; top: 18px; bottom: 9px; }
+        .af-window .af-vent { left: 34px; right: 34px; top: 22px; }
+        .af-window .mini-lcd { left: 36px; top: 29px; min-width: 22px; }
+        .af-window .af-led { left: 46.5px; top: 40px; }
+        .af-window .af-seam { left: 20px; right: 20px; top: 47px; }
+        .af-window .af-gap { left: 22px; right: 22px; top: 47px; height: 6px; }
+        .af-window .af-drawer { left: 20px; right: 20px; top: 48px; bottom: 9px; }
+        .af-window .af-handle { left: 12px; width: 32px; top: 33px; height: 7px; }
+        .af-window .af-btn { left: 13.5px; top: 1px; }
+        .af-win { position: absolute; left: 7px; right: 7px; top: 4px; height: 25px; border-radius: 5px; overflow: hidden; background: #15181c; box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.15); }
+        .af-glow { position: absolute; inset: 0; opacity: 0; background: radial-gradient(ellipse at 50% 10%, #ffb74d, #ff7043 40%, rgba(120, 30, 10, 0.6) 75%, transparent); }
+        .machine.z1-hot .af-glow { opacity: 1; animation: af-pulse 2s ease-in-out infinite; animation-delay: var(--anim-offset, 0s); }
+        .machine.z1-warm .af-glow { opacity: 0.55; background: radial-gradient(ellipse at 50% 10%, #ffd54f, #ffb300 45%, transparent 80%); }
+        .af-coil { position: absolute; left: 4px; right: 4px; top: 2px; height: 2px; border-radius: 1px; background: #5d4037; }
+        .machine.z1-hot .af-coil { background: #ff5722; box-shadow: 0 0 3px #ff5722; }
+        .af-fries { position: absolute; left: 4px; right: 4px; bottom: 2px; height: 12px; }
+        .af-fries i { position: absolute; bottom: 0; width: 3px; height: 10px; border-radius: 1px; background: linear-gradient(180deg, #ffe082, #f9a825); }
+        .af-fries i:nth-child(1) { left: 4px; }
+        .af-fries i:nth-child(2) { left: 9px; height: 8px; }
+        .af-fries i:nth-child(3) { left: 14px; }
+        .af-fries i:nth-child(4) { left: 19px; height: 9px; }
+        .af-fries i:nth-child(5) { left: 24px; height: 7px; }
+        .machine.z1-ready .af-fries i, .machine.z1-warm .af-fries i { background: linear-gradient(180deg, #ffcc80, #e08a1e); }
+        .machine.mode-cooking .af-fries i { animation: af-toss 0.9s ease-in-out infinite; animation-delay: var(--anim-offset, 0s); }
+        .machine.mode-cooking .af-fries i:nth-child(2) { animation-delay: calc(-0.3s + var(--anim-offset, 0s)); }
+        .machine.mode-cooking .af-fries i:nth-child(3) { animation-delay: calc(-0.6s + var(--anim-offset, 0s)); }
+        .machine.mode-cooking .af-fries i:nth-child(4) { animation-delay: calc(-0.15s + var(--anim-offset, 0s)); }
+        .machine.mode-cooking .af-fries i:nth-child(5) { animation-delay: calc(-0.45s + var(--anim-offset, 0s)); }
+
+        .af-dual .af-body { left: 6px; right: 6px; top: 30px; bottom: 9px; border-radius: 12px 12px 6px 6px; }
+        .af-dual .af-vent { left: 14px; width: 20px; top: 34px; }
+        .af-dual .af-vent.v2 { left: auto; right: 14px; }
+        .af-dual .mini-lcd { left: 37px; top: 33px; min-width: 22px; }
+        .af-dual .af-seam { top: 52px; width: 40px; }
+        .af-dual .af-seam.s1, .af-dual .af-drawer.d1, .af-dual .af-gap.g1 { left: 6px; }
+        .af-dual .af-seam.s2, .af-dual .af-drawer.d2, .af-dual .af-gap.g2 { right: 6px; }
+        .af-dual .af-gap { top: 52px; width: 38px; height: 6px; }
+        .af-dual .af-drawer { top: 53px; bottom: 9px; width: 40px; }
+        .af-div { position: absolute; left: 47.25px; top: 52px; bottom: 9px; width: 1.5px; background: rgba(0, 0, 0, 0.35); }
+        .af-dual .af-handle { left: 9px; width: 22px; top: 11px; height: 12px; }
+        .af-dual .af-btn { left: 8.5px; top: 1.5px; }
+        .af-zn { position: absolute; left: 18px; top: 3px; font: 700 5px/6px sans-serif; color: rgba(140, 146, 152, 0.9); }
+        .af-dual .af-led { top: 47px; }
+        .af-dual .af-led.l1 { left: 24.5px; }
+        .af-dual .af-led.l2 { right: 24.5px; }
+        .af-dual .af-foot.f1 { left: 12px; }
+        .af-dual .af-foot.f2 { right: 12px; }
+        .af-dual .af-air { top: 9px; width: 34px; height: 22px; }
+        .af-dual .af-air.a1 { left: 7px; }
+        .af-dual .af-air.a2 { right: 7px; }
+        @keyframes af-pulse { 50% { opacity: 0.35; } }
+        @keyframes af-blink { 50% { opacity: 0.2; } }
+        @keyframes af-shake { 0%, 100% { transform: rotate(0); } 20% { transform: rotate(-4deg); } 40% { transform: rotate(4deg); } 60% { transform: rotate(-3deg); } 80% { transform: rotate(3deg); } }
+        @keyframes af-toss { 0%, 100% { transform: translateY(0) rotate(0); } 30% { transform: translateY(-3px) rotate(25deg); } 60% { transform: translateY(-1px) rotate(-15deg); } }
+  `,
   pellet_stove: () => `
         .ps-pipe {
           position: absolute; left: 43px; top: 0; width: 10px; height: 14px; border-radius: 2px 2px 0 0;
@@ -6569,6 +6771,40 @@ function illustrationHtml(type, ctx) {
           ${towel}
           <div class="tw-box"></div>
           ${miniLcd("tw-lcd", w.icon, w.screen)}
+        </div>`;
+  }
+
+  if (type === "air_fryer") {
+    const f = ctx.fryer || {};
+    const mode = f.mode || "off";
+    const layout = f.layout || "basket";
+    const z1 = fryerZoneOf(mode);
+    const z2 = fryerZoneOf(f.mode2 || mode);
+    // A dual fryer is on as long as one of its baskets is.
+    const shown = layout === "dual" && mode === "off" ? f.mode2 || "off" : mode;
+    const drawer = (n, inner) => `<div class="af-gap g${n}"></div>`
+      + `<div class="af-drawer d${n}">${inner}<div class="af-handle"><div class="af-btn"></div></div></div>`;
+    const top = `<div class="af-body"></div><div class="af-vent"></div>${miniLcd("af-lcd", f.icon, f.screen)}`;
+    const feet = `<div class="af-foot f1"></div><div class="af-foot f2"></div>`;
+    if (layout === "dual") {
+      return `
+        <div class="machine ${cls} af-dual mode-${shown} z1-${z1} z2-${z2}">
+          ${airFlow("af-air a1", 34, 22, false)}${airFlow("af-air a2", 34, 22, false)}
+          ${top}<div class="af-vent v2"></div>
+          <div class="af-led l1"></div><div class="af-led l2"></div>
+          <div class="af-seam s1"></div><div class="af-seam s2"></div>
+          ${drawer(1, `<div class="af-zn">1</div>`)}${drawer(2, `<div class="af-zn">2</div>`)}
+          <div class="af-div"></div>${feet}
+        </div>`;
+    }
+    const win = layout === "window"
+      ? `<div class="af-win"><div class="af-glow"></div><div class="af-coil"></div><div class="af-fries"><i></i><i></i><i></i><i></i><i></i></div></div>`
+      : "";
+    return `
+        <div class="machine ${cls} af-${layout} mode-${mode} z1-${z1}">
+          ${airFlow("af-air a1", 40, 22, false)}
+          ${top}<div class="af-led l1"></div><div class="af-seam s1"></div>
+          ${drawer(1, win)}${feet}
         </div>`;
   }
 
@@ -8654,6 +8890,54 @@ class ApplianceCard extends HTMLElement {
       };
     }
 
+    // Air fryer. Its own words first, then the shared state, and last the
+    // sensors that know better than the state: a basket pulled out, and the
+    // reminder to shake it.
+    let fryer = null;
+    if (cap.airFryer) {
+      const mappedRaw = !!(st && cfg.state_map && Object.prototype.hasOwnProperty.call(cfg.state_map, rawState));
+      let mode = !powerDerived && !mappedRaw ? fryerModeOf(rawState) : "";
+      if (!mode) mode = FRYER_FROM_NORM[norm] || "off";
+      const flag = (id) => {
+        const s = id ? stateObj(hass, id) : null;
+        return !!s && ["on", "true", "open", "opened"].includes(String(s.state).toLowerCase());
+      };
+      if (flag(cfg.basket_entity) && ["preheating", "preheated", "cooking", "shake", "paused", "keep_warm"].includes(mode)) mode = "basket_out";
+      else if (mode === "cooking" && flag(cfg.shake_entity)) mode = "shake";
+      if (!cfg.state_show_raw && FRYER_LABELS[mode]) stateLabel = t(hass, FRYER_LABELS[mode]);
+      if (mode === "shake" || mode === "basket_out") color = STATE_COLORS.paused;
+
+      const target = cfg.target_temperature_entity ? numericState(hass, cfg.target_temperature_entity) : null;
+      const clock = remSec !== null && remSec > 0 ? formatClock(remSec) : "";
+      const temp = target !== null ? `${Math.round(target)}\u00b0` : "";
+      const screen = ["preheating", "keep_warm"].includes(mode) ? temp || clock
+        : ["cooking", "shake", "paused", "basket_out", "delayed"].includes(mode) ? clock || temp
+        : "";
+
+      // The second basket of a dual fryer, when it reports on its own.
+      const layout = ["window", "dual"].includes(cfg.fryer_layout) ? cfg.fryer_layout : "basket";
+      let mode2 = mode;
+      if (layout === "dual" && cfg.basket2_state_entity) {
+        const s2 = stateObj(hass, cfg.basket2_state_entity);
+        const raw2 = s2 ? s2.state : null;
+        mode2 = fryerModeOf(raw2) || FRYER_FROM_NORM[normalizeState(raw2, cfg.state_map)] || "off";
+        if (s2 && !["unknown", "unavailable"].includes(s2.state)) {
+          extraLines.push({
+            key: "basket2",
+            icon: "mdi:numeric-2-box-outline",
+            label: t(hass, "af_basket2"),
+            value: t(hass, FRYER_LABELS[mode2] || FRYER_NORMS[mode2] || "idle"),
+            entity: cfg.basket2_state_entity,
+          });
+        }
+      }
+      // With basket 1 at rest, the screen of a dual fryer shows basket 2.
+      const lead = layout === "dual" && mode === "off" ? mode2 : mode;
+      // Its time left is basket 1's, so only the temperature carries over.
+      const leadScreen = lead === mode ? screen : lead === "done" ? "" : temp;
+      fryer = { mode, mode2, layout, icon: FRYER_ICONS[lead] || "", screen: leadScreen };
+    }
+
     // An iron, read from the plug it is on: heating or off, and the state line
     // says so in its own words, since "running" says nothing of an iron.
     let leftOn = false;
@@ -8744,6 +9028,7 @@ class ApplianceCard extends HTMLElement {
       dh,
       heater,
       towel,
+      fryer,
     };
 
     // A plain on/off control, for the types that have no cycle to start or
@@ -8801,6 +9086,7 @@ class ApplianceCard extends HTMLElement {
       illustrationCtx.dh && illustrationCtx.dh.mode,
       illustrationCtx.heater && illustrationCtx.heater.mode,
       illustrationCtx.towel && illustrationCtx.towel.mode,
+      illustrationCtx.fryer && [illustrationCtx.fryer.mode, illustrationCtx.fryer.mode2, illustrationCtx.fryer.layout].join("/"),
     ].join(",");
     if (animKey !== this._animKey) {
       this._animKey = animKey;
@@ -9144,7 +9430,7 @@ const START_DOMAINS = ACTION_DOMAINS.concat(["automation", "select", "input_sele
 // Which types a section applies to. Anything cycle-shaped keeps the original
 // program/time/door/controls set; a hood or a cooktop would only be cluttered
 // by fields it can never fill.
-const CYCLE_TYPES = ["washer", "dryer", "dishwasher", "oven", "microwave", "cooker", "coffee", "rice_cooker", "printer_3d"];
+const CYCLE_TYPES = ["washer", "dryer", "dishwasher", "oven", "microwave", "cooker", "coffee", "rice_cooker", "air_fryer", "printer_3d"];
 // A coffee machine has no door and a cooker's lid has no sensor, so neither
 // belongs in the door section even though both run programs.
 const DOOR_TYPES = ["washer", "dryer", "dishwasher", "oven", "microwave", "fridge"];
@@ -9179,9 +9465,14 @@ const SECTIONS = [
       c._row("door_hide_in_list", "door_hide_in_list", { type: "checkbox" }) },
 
   // Oven
-  { field: "target_temperature_entity", types: ["oven", "cooker", "rice_cooker"], labelKey: "section_target_temperature", includeDomains: ["number", "sensor", "input_number"] },
-  { field: "current_temperature_entity", types: ["oven", "cooker", "rice_cooker"], labelKey: "section_current_temperature", includeDomains: ["sensor", "number"] },
+  { field: "target_temperature_entity", types: ["oven", "cooker", "rice_cooker", "air_fryer"], labelKey: "section_target_temperature", includeDomains: ["number", "sensor", "input_number"] },
+  { field: "current_temperature_entity", types: ["oven", "cooker", "rice_cooker", "air_fryer"], labelKey: "section_current_temperature", includeDomains: ["sensor", "number"] },
   { field: "heating_entity", types: ["oven", "cooker", "rice_cooker"], labelKey: "section_heating", includeDomains: ["binary_sensor", "sensor", "switch"] },
+
+  // Air fryer
+  { field: "basket_entity", types: ["air_fryer"], labelKey: "section_basket", includeDomains: ["binary_sensor", "sensor"] },
+  { field: "shake_entity", types: ["air_fryer"], labelKey: "section_shake", includeDomains: ["binary_sensor", "sensor"] },
+  { field: "basket2_state_entity", types: ["air_fryer"], labelKey: "section_basket2", includeDomains: ["sensor", "binary_sensor", "select"] },
 
   // Microwave
   { field: "power_level_entity", types: ["microwave", "cooktop"], labelKey: "section_power_level", includeDomains: ["number", "select", "sensor", "input_number", "input_select"] },
@@ -9984,6 +10275,7 @@ class ApplianceCardEditor extends HTMLElement {
             { value: "cooker", label: t(hass, "type_cooker") },
             { value: "coffee", label: t(hass, "type_coffee") },
             { value: "rice_cooker", label: t(hass, "type_rice_cooker") },
+            { value: "air_fryer", label: t(hass, "type_air_fryer") },
             { value: "water_heater", label: t(hass, "type_water_heater") },
             { value: "boiler", label: t(hass, "type_boiler") },
             { value: "heat_pump", label: t(hass, "type_heat_pump") },
@@ -10016,6 +10308,14 @@ class ApplianceCardEditor extends HTMLElement {
             { value: "tower", label: t(hass, "layout_tower") },
             { value: "canister", label: t(hass, "layout_canister") },
             { value: "double", label: t(hass, "layout_double") },
+          ],
+        }) : ""}
+        ${this._type === "air_fryer" ? this._row("section_fryer_layout", "fryer_layout", {
+          type: "select",
+          options: [
+            { value: "basket", label: t(hass, "layout_basket") },
+            { value: "window", label: t(hass, "layout_window") },
+            { value: "dual", label: t(hass, "layout_dual") },
           ],
         }) : ""}
         ${this._type === "space_heater" ? this._row("section_heater_layout", "heater_layout", {
@@ -10137,7 +10437,7 @@ class ApplianceCardEditor extends HTMLElement {
       includeDomains: ["sensor", "binary_sensor"].concat({
         water_heater: ["water_heater"], boiler: ["water_heater"], heat_pump: ["climate", "water_heater"],
         pellet_stove: ["climate"], air_conditioner: ["climate", "select", "switch"], dehumidifier: ["humidifier", "switch"],
-        space_heater: ["climate", "switch"], towel_warmer: ["climate", "select", "switch"], iron: ["switch"],
+        space_heater: ["climate", "switch"], towel_warmer: ["climate", "select", "switch"], iron: ["switch"], air_fryer: ["switch"],
       }[this._type] || []),
     });
     for (const s of this._sections()) {

@@ -20,8 +20,8 @@ demo page takes ?phase=<ms> and pins every animation to that offset through the
 Web Animations API, so each frame is captured at a chosen point of the cycle and
 the result actually moves.
 
-The screenshots come back at exactly the committed size, 2608x3133 and
-2608x3100. The animated strip lands within a few pixels of the committed one:
+The screenshots come back at exactly the committed size, 1628x1936 and
+1628x1921. The animated strip lands within a few pixels of the committed one:
 the remainder is content rather than framing, since the demo prints a clock
 time that moves and label widths differ from one run to the next.
 
@@ -46,10 +46,11 @@ PORT = 8801
 
 # The page gives itself 32px of padding, handed back after cropping to the
 # content so the framing matches what the demo page itself shows.
-# The README shows the gallery 640px wide. Rendering at 0.8 keeps it twice
-# that, and rendering small beats shrinking afterwards: the page is drawn at
-# the size it is saved, so the flat colours stay flat and the palette holds.
-SCALE = 0.8
+# The README shows the gallery as wide as its column, like the animated strip.
+# Rendering at 1 keeps it sharp on a high-density screen, and rendering at size
+# beats shrinking afterwards: the page is drawn at the size it is saved, so the
+# flat colours stay flat and the palette holds.
+SCALE = 1
 
 # The animated strip is a subset of the gallery, one row wide. It deliberately
 # leaves out the oven and the laundry family: five appliances that all animate

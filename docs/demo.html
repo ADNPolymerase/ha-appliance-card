@@ -52,8 +52,8 @@ customElements.define("ha-icon", StubIcon);
 const params = new URLSearchParams(location.search);
 const uiLang = params.get("lang") === "fr" ? "fr" : "en";
 const view = params.get("view") === "types" ? "types" : "hero";
-// Twenty-three types in twenty-three cards, the iron on its steam generator:
-// five across and five down, the last row three short.
+// Twenty-four types in twenty-four cards, the iron on its steam generator:
+// five across and five down, the last row one short.
 document.documentElement.style.setProperty("--cols", params.get("cols") || 5);
 const fr = uiLang === "fr";
 const L = (en, f) => (fr ? f : en);
@@ -316,6 +316,24 @@ const riceCooker = () => card({
   st("sensor.rice_temp", 72, { unit_of_measurement: "°C" }),
 ]);
 
+// A Philips air fryer on its HomeID integration, with the window onto the
+// basket: cooking at 180, the time left counting down.
+const airFryer = () => card({
+  name: L("Air fryer", "Friteuse \u00e0 air"),
+  appliance_type: "air_fryer",
+  fryer_layout: "window",
+  state_entity: "sensor.airfryer_status",
+  remaining_time_entity: "sensor.airfryer_time_remaining",
+  target_temperature_entity: "sensor.airfryer_temperature",
+  program_entity: "sensor.airfryer_recipe",
+  program_format: "raw",
+}, [
+  st("sensor.airfryer_status", "cooking"),
+  st("sensor.airfryer_time_remaining", 750, { unit_of_measurement: "s" }),
+  st("sensor.airfryer_temperature", 180, { unit_of_measurement: "\u00b0C" }),
+  st("sensor.airfryer_recipe", L("Fries", "Frites")),
+]);
+
 const waterHeater = () => card({
   illustration_color: "white",
   name: L("Water heater", "Chauffe-eau"),
@@ -502,7 +520,7 @@ const steamGenerator = () => card({
 // Grouped by kind: the laundry, the kitchen, heating and climate, then the
 // rest.
 const ALL = { washer, dryer, steam_generator: steamGenerator,
-              dishwasher, oven, microwave, hood, cooktop, fridge, kettle, cooker, coffee, rice_cooker: riceCooker,
+              dishwasher, oven, microwave, hood, cooktop, fridge, kettle, cooker, coffee, rice_cooker: riceCooker, air_fryer: airFryer,
               water_heater: waterHeater, boiler, heat_pump: heatPump, pellet_stove: pelletStove,
               space_heater: spaceHeater, towel_warmer: towelWarmer, air_conditioner: airConditioner, dehumidifier,
               pet_feeder: petFeeder, printer_3d: printer3d };
