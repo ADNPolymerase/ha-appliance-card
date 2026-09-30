@@ -86,7 +86,7 @@ const T = {
     power_level_entity: "Power level entity", fan_entity: "Fan entity",
     filter_life_entity: "Filter life % entity", filter_reset_entity: "Reset filter button entity",
     boost_entity: "Boost mode entity", child_lock_entity: "Child lock entity",
-    power_entity: "Power (W) entity", power_on_threshold: "Running above this power (W)",
+    power_entity: "Power (W) entity", power_on_threshold: "Running above this power (W)", power_max_threshold: "Ignore above this power (W)",
     zones_count: "Number of cooking zones", zone_level_entity: "Level entity",
     section_toggle: "Power switch", toggle: "Power",
     off_short: "Off", toggle_entity: "Power switch entity",
@@ -224,7 +224,7 @@ const T = {
     power_level_entity: "Entit\u00e9 niveau de puissance", fan_entity: "Entit\u00e9 ventilation",
     filter_life_entity: "Entit\u00e9 usure du filtre (%)", filter_reset_entity: "Entit\u00e9 bouton de r\u00e9initialisation du filtre",
     boost_entity: "Entit\u00e9 mode intensif", child_lock_entity: "Entit\u00e9 s\u00e9curit\u00e9 enfant",
-    power_entity: "Entit\u00e9 puissance (W)", power_on_threshold: "En marche au-dessus de cette puissance (W)",
+    power_entity: "Entit\u00e9 puissance (W)", power_on_threshold: "En marche au-dessus de cette puissance (W)", power_max_threshold: "Ignorer au-dessus de cette puissance (W)",
     zones_count: "Nombre de foyers", zone_level_entity: "Entit\u00e9 niveau",
     section_toggle: "Interrupteur", toggle: "Marche / Arr\u00eat",
     off_short: "Arr\u00eat", toggle_entity: "Entit\u00e9 interrupteur",
@@ -362,7 +362,7 @@ const T = {
     power_level_entity: "\u041e\u0431\u044a\u0435\u043a\u0442 \u0443\u0440\u043e\u0432\u043d\u044f \u043c\u043e\u0449\u043d\u043e\u0441\u0442\u0438", fan_entity: "\u041e\u0431\u044a\u0435\u043a\u0442 \u0432\u0435\u043d\u0442\u0438\u043b\u044f\u0442\u043e\u0440\u0430",
     filter_life_entity: "\u041e\u0431\u044a\u0435\u043a\u0442 \u0440\u0435\u0441\u0443\u0440\u0441\u0430 \u0444\u0438\u043b\u044c\u0442\u0440\u0430 (%)", filter_reset_entity: "\u041e\u0431\u044a\u0435\u043a\u0442 \u043a\u043d\u043e\u043f\u043a\u0438 \u0441\u0431\u0440\u043e\u0441\u0430 \u0444\u0438\u043b\u044c\u0442\u0440\u0430",
     boost_entity: "\u041e\u0431\u044a\u0435\u043a\u0442 \u0438\u043d\u0442\u0435\u043d\u0441\u0438\u0432\u043d\u043e\u0433\u043e \u0440\u0435\u0436\u0438\u043c\u0430", child_lock_entity: "\u041e\u0431\u044a\u0435\u043a\u0442 \u0437\u0430\u0449\u0438\u0442\u044b \u043e\u0442 \u0434\u0435\u0442\u0435\u0439",
-    power_entity: "\u041e\u0431\u044a\u0435\u043a\u0442 \u043c\u043e\u0449\u043d\u043e\u0441\u0442\u0438 (\u0412\u0442)", power_on_threshold: "\u0420\u0430\u0431\u043e\u0442\u0430\u0435\u0442 \u0432\u044b\u0448\u0435 \u044d\u0442\u043e\u0439 \u043c\u043e\u0449\u043d\u043e\u0441\u0442\u0438 (\u0412\u0442)",
+    power_entity: "\u041e\u0431\u044a\u0435\u043a\u0442 \u043c\u043e\u0449\u043d\u043e\u0441\u0442\u0438 (\u0412\u0442)", power_on_threshold: "\u0420\u0430\u0431\u043e\u0442\u0430\u0435\u0442 \u0432\u044b\u0448\u0435 \u044d\u0442\u043e\u0439 \u043c\u043e\u0449\u043d\u043e\u0441\u0442\u0438 (\u0412\u0442)", power_max_threshold: "Ignore above this power (W)",
     zones_count: "\u041a\u043e\u043b\u0438\u0447\u0435\u0441\u0442\u0432\u043e \u043a\u043e\u043d\u0444\u043e\u0440\u043e\u043a", zone_level_entity: "\u041e\u0431\u044a\u0435\u043a\u0442 \u0443\u0440\u043e\u0432\u043d\u044f",
     section_toggle: "\u0412\u044b\u043a\u043b\u044e\u0447\u0430\u0442\u0435\u043b\u044c", toggle: "\u041f\u0438\u0442\u0430\u043d\u0438\u0435",
     off_short: "\u0412\u044b\u043a\u043b.", toggle_entity: "\u041e\u0431\u044a\u0435\u043a\u0442 \u0432\u044b\u043a\u043b\u044e\u0447\u0430\u0442\u0435\u043b\u044f",
@@ -500,7 +500,7 @@ const T = {
     power_level_entity: "Entit\u00e4t Leistungsstufe", fan_entity: "Entit\u00e4t L\u00fcfter",
     filter_life_entity: "Entit\u00e4t Filterlebensdauer (%)", filter_reset_entity: "Entit\u00e4t Filter-Reset-Taste",
     boost_entity: "Entit\u00e4t Intensivstufe", child_lock_entity: "Entit\u00e4t Kindersicherung",
-    power_entity: "Entit\u00e4t Leistung (W)", power_on_threshold: "L\u00e4uft oberhalb dieser Leistung (W)",
+    power_entity: "Entit\u00e4t Leistung (W)", power_on_threshold: "L\u00e4uft oberhalb dieser Leistung (W)", power_max_threshold: "Ignore above this power (W)",
     zones_count: "Anzahl der Kochzonen", zone_level_entity: "Entit\u00e4t Stufe",
     section_toggle: "Ein/Aus-Schalter", toggle: "Ein/Aus",
     off_short: "Aus", toggle_entity: "Entit\u00e4t Ein/Aus-Schalter",
@@ -638,7 +638,7 @@ const T = {
     power_level_entity: "Entidad de nivel de potencia", fan_entity: "Entidad de ventilador",
     filter_life_entity: "Entidad de vida del filtro (%)", filter_reset_entity: "Entidad del bot\u00f3n de reinicio del filtro",
     boost_entity: "Entidad de modo intensivo", child_lock_entity: "Entidad de bloqueo infantil",
-    power_entity: "Entidad de potencia (W)", power_on_threshold: "En marcha por encima de esta potencia (W)",
+    power_entity: "Entidad de potencia (W)", power_on_threshold: "En marcha por encima de esta potencia (W)", power_max_threshold: "Ignore above this power (W)",
     zones_count: "N\u00famero de zonas de cocci\u00f3n", zone_level_entity: "Entidad de nivel",
     section_toggle: "Interruptor", toggle: "Encendido",
     off_short: "Apagado", toggle_entity: "Entidad del interruptor",
@@ -776,7 +776,7 @@ const T = {
     power_level_entity: "Entit\u00e0 livello di potenza", fan_entity: "Entit\u00e0 ventola",
     filter_life_entity: "Entit\u00e0 durata del filtro (%)", filter_reset_entity: "Entit\u00e0 pulsante di reset del filtro",
     boost_entity: "Entit\u00e0 modalit\u00e0 intensiva", child_lock_entity: "Entit\u00e0 sicurezza bambini",
-    power_entity: "Entit\u00e0 potenza (W)", power_on_threshold: "In funzione sopra questa potenza (W)",
+    power_entity: "Entit\u00e0 potenza (W)", power_on_threshold: "In funzione sopra questa potenza (W)", power_max_threshold: "Ignora sopra questa potenza (W)",
     zones_count: "Numero di zone di cottura", zone_level_entity: "Entit\u00e0 livello",
     section_toggle: "Interruttore", toggle: "Accensione",
     off_short: "Spento", toggle_entity: "Entit\u00e0 interruttore",
@@ -914,7 +914,7 @@ const T = {
     power_level_entity: "Entiteit vermogensstand", fan_entity: "Entiteit ventilator",
     filter_life_entity: "Entiteit filterlevensduur (%)", filter_reset_entity: "Entiteit filter-resetknop",
     boost_entity: "Entiteit intensiefstand", child_lock_entity: "Entiteit kinderslot",
-    power_entity: "Entiteit vermogen (W)", power_on_threshold: "Draait boven dit vermogen (W)",
+    power_entity: "Entiteit vermogen (W)", power_on_threshold: "Draait boven dit vermogen (W)", power_max_threshold: "Ignore above this power (W)",
     zones_count: "Aantal kookzones", zone_level_entity: "Entiteit stand",
     section_toggle: "Aan/uit-schakelaar", toggle: "Aan/uit",
     off_short: "Uit", toggle_entity: "Entiteit aan/uit-schakelaar",
@@ -1052,7 +1052,7 @@ const T = {
     power_level_entity: "Entidade de n\u00edvel de pot\u00eancia", fan_entity: "Entidade de ventilador",
     filter_life_entity: "Entidade de vida do filtro (%)", filter_reset_entity: "Entidade do bot\u00e3o de reposi\u00e7\u00e3o do filtro",
     boost_entity: "Entidade de modo intensivo", child_lock_entity: "Entidade de bloqueio para crian\u00e7as",
-    power_entity: "Entidade de pot\u00eancia (W)", power_on_threshold: "Em funcionamento acima desta pot\u00eancia (W)",
+    power_entity: "Entidade de pot\u00eancia (W)", power_on_threshold: "Em funcionamento acima desta pot\u00eancia (W)", power_max_threshold: "Ignore above this power (W)",
     zones_count: "N\u00famero de zonas de cozedura", zone_level_entity: "Entidade de n\u00edvel",
     section_toggle: "Interruptor", toggle: "Ligar/Desligar",
     off_short: "Desligado", toggle_entity: "Entidade do interruptor",
@@ -1190,7 +1190,7 @@ const T = {
     power_level_entity: "Entitet f\u00f6r effektl\u00e4ge", fan_entity: "Entitet f\u00f6r fl\u00e4kt",
     filter_life_entity: "Entitet f\u00f6r filterlivsl\u00e4ngd (%)", filter_reset_entity: "Entitet f\u00f6r filter\u00e5terst\u00e4llningsknapp",
     boost_entity: "Entitet f\u00f6r intensivl\u00e4ge", child_lock_entity: "Entitet f\u00f6r barnl\u00e5s",
-    power_entity: "Entitet f\u00f6r effekt (W)", power_on_threshold: "I drift \u00f6ver denna effekt (W)",
+    power_entity: "Entitet f\u00f6r effekt (W)", power_on_threshold: "I drift \u00f6ver denna effekt (W)", power_max_threshold: "Ignore above this power (W)",
     zones_count: "Antal kokzoner", zone_level_entity: "Entitet f\u00f6r l\u00e4ge",
     section_toggle: "Str\u00f6mbrytare", toggle: "P\u00e5/av",
     off_short: "Av", toggle_entity: "Entitet f\u00f6r str\u00f6mbrytare",
@@ -1328,7 +1328,7 @@ const T = {
     power_level_entity: "Enhet for effekttrinn", fan_entity: "Enhet for vifte",
     filter_life_entity: "Enhet for filterlevetid (%)", filter_reset_entity: "Enhet for filtertilbakestillingsknapp",
     boost_entity: "Enhet for intensivmodus", child_lock_entity: "Enhet for barnesikring",
-    power_entity: "Enhet for effekt (W)", power_on_threshold: "I drift over denne effekten (W)",
+    power_entity: "Enhet for effekt (W)", power_on_threshold: "I drift over denne effekten (W)", power_max_threshold: "Ignore above this power (W)",
     zones_count: "Antall kokesoner", zone_level_entity: "Enhet for trinn",
     section_toggle: "Av/p\u00e5-bryter", toggle: "Av/p\u00e5",
     off_short: "Av", toggle_entity: "Enhet for av/p\u00e5-bryter",
@@ -1466,7 +1466,7 @@ const T = {
     power_level_entity: "Enhed for effekttrin", fan_entity: "Enhed for ventilator",
     filter_life_entity: "Enhed for filterlevetid (%)", filter_reset_entity: "Enhed for filternulstillingsknap",
     boost_entity: "Enhed for intensivtilstand", child_lock_entity: "Enhed for b\u00f8rnesikring",
-    power_entity: "Enhed for effekt (W)", power_on_threshold: "K\u00f8rer over denne effekt (W)",
+    power_entity: "Enhed for effekt (W)", power_on_threshold: "K\u00f8rer over denne effekt (W)", power_max_threshold: "Ignore above this power (W)",
     zones_count: "Antal kogezoner", zone_level_entity: "Enhed for trin",
     section_toggle: "T\u00e6nd/sluk-knap", toggle: "T\u00e6nd/sluk",
     off_short: "Slukket", toggle_entity: "Enhed for t\u00e6nd/sluk-knap",
@@ -1604,7 +1604,7 @@ const T = {
     power_level_entity: "Encja poziomu mocy", fan_entity: "Encja wentylatora",
     filter_life_entity: "Encja \u017cywotno\u015bci filtra (%)", filter_reset_entity: "Encja przycisku resetu filtra",
     boost_entity: "Encja trybu intensywnego", child_lock_entity: "Encja blokady rodzicielskiej",
-    power_entity: "Encja mocy (W)", power_on_threshold: "Pracuje powy\u017cej tej mocy (W)",
+    power_entity: "Encja mocy (W)", power_on_threshold: "Pracuje powy\u017cej tej mocy (W)", power_max_threshold: "Ignore above this power (W)",
     zones_count: "Liczba p\u00f3l grzejnych", zone_level_entity: "Encja poziomu",
     section_toggle: "W\u0142\u0105cznik", toggle: "Zasilanie",
     off_short: "Wy\u0142.", toggle_entity: "Encja w\u0142\u0105cznika",
@@ -1742,7 +1742,7 @@ const T = {
     power_level_entity: "\u52a0\u70ed\u6863\u4f4d\u5b9e\u4f53", fan_entity: "\u98ce\u6247\u5b9e\u4f53",
     filter_life_entity: "\u6ee4\u82af\u5bff\u547d\u767e\u5206\u6bd4\u5b9e\u4f53", filter_reset_entity: "\u91cd\u7f6e\u6ee4\u82af\u6309\u952e\u5b9e\u4f53",
     boost_entity: "\u5f3a\u529b\u6a21\u5f0f\u5b9e\u4f53", child_lock_entity: "\u7ae5\u9501\u5b9e\u4f53",
-    power_entity: "\u80fd\u91cf (W) \u5b9e\u4f53", power_on_threshold: "\u5728\u6b64\u529f\u7387 (W) \u4ee5\u4e0a\u8fd0\u884c",
+    power_entity: "\u80fd\u91cf (W) \u5b9e\u4f53", power_on_threshold: "\u5728\u6b64\u529f\u7387 (W) \u4ee5\u4e0a\u8fd0\u884c", power_max_threshold: "Ignore above this power (W)",
     zones_count: "\u52a0\u70ed\u533a\u57df\u6570\u91cf", zone_level_entity: "\u52a0\u70ed\u533a\u57df\u5b9e\u4f53",
     section_toggle: "\u7535\u6e90\u5f00\u5173", toggle: "\u7535\u6e90",
     off_short: "\u5173", toggle_entity: "\u7535\u6e90\u5f00\u5173\u5b9e\u4f53",
@@ -1880,7 +1880,7 @@ const T = {
     power_level_entity: "Entita stupn\u011b v\u00fdkonu", fan_entity: "Entita ventil\u00e1toru",
     filter_life_entity: "Entita \u017eivotnosti filtru v %", filter_reset_entity: "Entita tla\u010d\u00edtka resetov\u00e1n\u00ed filtru",
     boost_entity: "Entita zv\u00fd\u0161en\u00e9ho v\u00fdkonu", child_lock_entity: "Entita d\u011btsk\u00e9 pojistky",
-    power_entity: "Entita p\u0159\u00edkonu (W)", power_on_threshold: "V provozu nad t\u00edmto p\u0159\u00edkonem (W)",
+    power_entity: "Entita p\u0159\u00edkonu (W)", power_on_threshold: "V provozu nad t\u00edmto p\u0159\u00edkonem (W)", power_max_threshold: "Ignore above this power (W)",
     zones_count: "Po\u010det varn\u00fdch z\u00f3n", zone_level_entity: "Entita stupn\u011b v\u00fdkonu",
     section_toggle: "Vyp\u00edna\u010d", toggle: "Nap\u00e1jen\u00ed",
     off_short: "Vypnuto", toggle_entity: "Entita vyp\u00edna\u010de",
@@ -2091,7 +2091,7 @@ function stateRuns(entries, normOf, windowStartMs) {
 // The runs of a power meter, as { start, end }: above the threshold, with the
 // dips shorter than gapMs counted as pauses of the same run. The last one has
 // no end while the plug still draws, or while its dip is shorter than gapMs.
-function powerRuns(entries, threshold, gapMs, nowMs, windowStartMs) {
+function powerRuns(entries, threshold, maxThreshold, gapMs, nowMs, windowStartMs) {
   if (!Array.isArray(entries)) return [];
   const runs = [];
   let cur = null;
@@ -2099,7 +2099,7 @@ function powerRuns(entries, threshold, gapMs, nowMs, windowStartMs) {
     const t = 1000 * Number(e && (e.lc !== undefined ? e.lc : e.lu));
     const w = parseFloat(e && e.s);
     if (!Number.isFinite(t) || !Number.isFinite(w)) return;
-    if (w >= threshold) {
+    if (w >= threshold && (!Number.isFinite(maxThreshold) || w <= maxThreshold)) {
       if (cur && cur.end !== null && t - cur.end < gapMs) cur.end = null;
       else if (!cur || cur.end !== null) {
         cur = { start: t, end: null, cut: t <= windowStartMs + 1000 };
@@ -4158,8 +4158,9 @@ function fridgeHealth(unplugged, noPower, doorOpen, tempHigh) {
 // drop back below the threshold is the only "finished" signal such a setup can
 // ever give. "done" is deliberately sticky until the next run, the same
 // way a real appliance integration keeps reporting "finished" until restarted.
-function powerDerivedState(watts, threshold, wasRunning) {
+function powerDerivedState(watts, threshold, maxThreshold, wasRunning) {
   if (watts === null || !isFinite(threshold)) return null;
+  if (isFinite(maxThreshold) && watts > maxThreshold) return "idle";
   if (watts >= threshold) return "running";
   return wasRunning ? "done" : "idle";
 }
@@ -7339,13 +7340,13 @@ class ApplianceCard extends HTMLElement {
 
   // Reads the history for the last cycle that ran to its end: once, again
   // when a cycle ends before the card's eyes, and at most every half hour.
-  _lookUpLastCycle(cfg, type, fromPower, threshold) {
+  _lookUpLastCycle(cfg, type, fromPower, threshold, maxThreshold) {
     const hass = this._hass;
     if (this._inert || !hass || typeof hass.callWS !== "function") return;
     const entity = fromPower ? cfg.power_entity : cfg.state_entity;
     if (!entity) return;
     const gapMs = fromPower ? Math.max(0, parseFloat(cfg.power_off_delay) || 0) * 60000 : 0;
-    const key = [entity, type, fromPower ? threshold : "", gapMs].join("|");
+    const key = [entity, type, fromPower ? threshold : "", fromPower ? maxThreshold : "", gapMs].join("|");
     const end = Date.now();
     const from = end - (fromPower ? LAST_CYCLE_POWER_MS : LAST_CYCLE_STATE_MS);
     if (this._lastCycleKey === key && !this._lastCycleStale && end - this._lastCycleAt < 30 * 60 * 1000) return;
@@ -7370,7 +7371,7 @@ class ApplianceCard extends HTMLElement {
     Promise.resolve(req).then((res) => {
       if (this._lastCycleKey !== key) return;
       const rows = res && res[entity];
-      const runs = fromPower ? powerRuns(rows, threshold, gapMs, Date.now(), from)
+      const runs = fromPower ? powerRuns(rows, threshold, maxThreshold, gapMs, Date.now(), from)
         : stateRuns(rows, (raw) => normFor(type, raw, cfg.state_map), from);
       this._lastCycle = lastFinishedRun(runs);
       this._render();
@@ -7538,12 +7539,15 @@ class ApplianceCard extends HTMLElement {
         : cfg.power_entity === cfg.state_entity
           ? 10
           : NaN;
+    const maxThreshold = cfg.power_max_threshold !== undefined && cfg.power_max_threshold !== ""
+      ? parseFloat(cfg.power_max_threshold)
+      : NaN;
     // A fridge is excluded here on purpose: its compressor cycles all day, so
     // reading the meter as a cycle state would report "finished" every twenty
     // minutes. What the meter says on a fridge is whether it is still plugged
     // in, and that is decided further down with the health summary.
     if (!cap.fridgeTemp && cfg.power_entity && isFinite(threshold)) {
-      let derived = powerDerivedState(watts, threshold, this._powerWasRunning);
+      let derived = powerDerivedState(watts, threshold, maxThreshold, this._powerWasRunning);
       // A pause under the threshold is not the end: a dishwasher drying, a
       // washer soaking. With power_off_delay the card waits that many minutes
       // below the threshold before it calls the cycle finished.
@@ -9146,7 +9150,7 @@ class ApplianceCard extends HTMLElement {
     if (this._lcPrevRole && this._lcPrevRole !== "out" && lcRole === "out") this._lastCycleStale = true;
     this._lcPrevRole = lcRole;
     if (cfg.show_last_cycle) {
-      this._lookUpLastCycle(cfg, applianceType, powerDerived, threshold);
+      this._lookUpLastCycle(cfg, applianceType, powerDerived, threshold, maxThreshold);
       const lc = this._lastCycle;
       if (lc && lcRole === "out") {
         extraLines.push({
@@ -9831,6 +9835,7 @@ const SECTIONS = [
   // Any type: a plug's power meter, optionally driving the state itself.
   { field: "power_entity", types: APPLIANCE_TYPES, labelKey: "section_power", includeDomains: ["sensor"], extra: (c) =>
       c._row("power_on_threshold", "power_on_threshold", { placeholder: caps(c._currentType()).fridgeTemp ? "1" : "10" })
+      + (caps(c._currentType()).fridgeTemp ? "" : c._row("power_max_threshold", "power_max_threshold", { placeholder: "0" }))
       + (caps(c._currentType()).fridgeTemp ? c._row("no_power_after", "no_power_after", { placeholder: "30" })
         : c._row("power_off_delay", "power_off_delay", { placeholder: "0" })) },
 
@@ -10739,6 +10744,7 @@ class ApplianceCardEditor extends HTMLElement {
           if (field === "connectivity_entity") delete this._config.connectivity_connected_state;
           if (field === "power_entity") {
             delete this._config.power_on_threshold;
+            delete this._config.power_max_threshold;
             delete this._config.no_power_after;
             delete this._config.power_off_delay;
           }

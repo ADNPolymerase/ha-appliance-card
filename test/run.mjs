@@ -609,6 +609,18 @@ check('seuil de puissance : retombee sous le seuil = termine',
 check('seuil de puissance : jamais la valeur brute comme etat',
   /1850/.test(stateLine(plug.html)), false);
 
+const boundedPlugCfg = { ...plugCfg, power_max_threshold: 2000 };
+check('seuil haut : une puissance dans la plage = en marche',
+  stateLine(build(boundedPlugCfg, plugStates(1850)).html), 'Running');
+check('seuil haut : la borne superieure est incluse',
+  stateLine(build(boundedPlugCfg, plugStates(2000)).html), 'Running');
+check('seuil haut : au-dessus de la borne = veille',
+  stateLine(build(boundedPlugCfg, plugStates(2500)).html), 'Idle');
+check('seuil haut : un pic au-dessus ne termine pas le cycle',
+  stateLine(rerender(build(boundedPlugCfg, plugStates(1850)).card, plugStates(2500))), 'Idle');
+check('seuil haut : senza configurazione mantiene il comportamento precedente',
+  stateLine(build(plugCfg, plugStates(2500)).html), 'Running');
+
 check('seuil de puissance : sans passage en marche prealable = veille',
   stateLine(build(plugCfg, plugStates(2)).html), 'Idle');
 
@@ -2843,6 +2855,9 @@ check('editeur : le delai sans consommation sur un frigo',
     .test(edLayout({ power_entity: 'sensor.p' })), true);
 check('editeur : pas de delai sur un lave-linge',
   /data-field="no_power_after"/.test(markup(newEditor({ appliance_type: 'washer', state_entity: 'sensor.w', power_entity: 'sensor.p' }))), false);
+check('editeur : propose la soglia alta della puissance',
+  markup(newEditor({ state_entity: 'switch.p', appliance_type: 'oven', power_entity: 'sensor.p' }))
+    .includes('data-field="power_max_threshold"'), true);
 check('editeur : masquer les temperatures sous la sonde du frigo',
   /data-field="temperature_hide_in_list"/.test(edLayout({ fridge_temperature_entity: 'sensor.fr_t' })), true);
 {
