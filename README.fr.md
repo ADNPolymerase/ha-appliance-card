@@ -54,10 +54,10 @@ Seule `state_entity` est obligatoire, sauf sur un réfrigérateur où une sonde 
 |---|---|
 | `state_entity` | **Obligatoire**, sauf sur un frigo. Entité portant l'état de l'appareil, de n'importe quel domaine. |
 | `state_map` | Table état brut → `idle` \| `running` \| `preheating` \| `keep_warm` \| `paused` \| `done` \| `delayed` \| `error`. Fixe le libellé, la couleur et l'animation. La clé `"*"` ramasse tous les états qui dépassent (voir plus bas), et sur un lave-linge, un sèche-linge ou un lave-vaisselle les étapes (`washing`, `spinning`...) sont aussi des cibles. Aussi dans l'éditeur visuel. |
-| `state_show_raw` | `true` affiche le texte brut plutôt que le libellé traduit. |
+| `state_show_raw` | `true` affiche le texte de l'entité plutôt que le libellé de la card, tel que Home Assistant l'affiche (un climatiseur lit `Froid`, pas `cool`). |
 | `name` | Titre de la card. Par défaut, le nom de l'entité d'état. |
 | `compact` | `true` masque l'illustration. |
-| `illustration_color` | `auto` (défaut, suit le thème) \| `white` \| `grey` \| `black`. Ne change que la carrosserie, pas les couleurs d'état. |
+| `illustration_color` | `auto` (défaut, suit le thème) \| `white` \| `grey` \| `black` \| `red` (rouge foncé). Ne change que la carrosserie, pas les couleurs d'état. |
 | `language` | `auto` (défaut, suit Home Assistant) ou l'un des 14 codes : `en`, `fr`, `de`, `es`, `it`, `nl`, `pt`, `sv`, `no`, `da`, `pl`, `ru`, `zh`, `cs`. `nb` et `nb-NO` donnent le norvégien. |
 | `appliance_type` | `auto` (défaut) \| `washer` \| `dryer` \| `dishwasher` \| `oven` \| `microwave` \| `hood` \| `cooktop` \| `fridge` \| `kettle` \| `cooker` \| `coffee` \| `rice_cooker` \| `air_fryer` \| `water_heater` \| `boiler` \| `heat_pump` \| `printer_3d` \| `pet_feeder` \| `iron` \| `pellet_stove` \| `air_conditioner` \| `dehumidifier` \| `space_heater` \| `towel_warmer`. |
 | `tap_action` | Ce que fait un appui sur la carte, dans les mots de Home Assistant : `more-info` (défaut), `none`, `navigate`, `url`, `toggle`, `perform-action` ou `fire-dom-event`, celle qu'écoutent les cartes popup bâties sur browser_mod. En YAML seulement. |

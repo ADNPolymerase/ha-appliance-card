@@ -6714,4 +6714,35 @@ for (const type of ['fridge', 'heat_pump', 'hood', 'air_conditioner'])
 check('editeur : le delai avec la puissance', markup(newEditor({ state_entity: 'switch.p', appliance_type: 'dishwasher', power_entity: 'sensor.p_w' })).includes('data-field="power_off_delay"'), true);
 check('editeur : pas de delai sur un frigo', markup(newEditor({ state_entity: 'sensor.f', appliance_type: 'fridge', power_entity: 'sensor.p_w' })).includes('data-field="power_off_delay"'), false);
 
+
+// ── Issue #24 : rouge fonce, texte brut traduit par Home Assistant ────────────
+
+const dwRed = render({ appliance_type: 'dishwasher', state_entity: 'sensor.dw',
+                       illustration_color: 'red' },
+  { 'sensor.dw': { state: 'Idle', attributes: {} } });
+contains('couleur du corps : le preset rouge fonce est injecte', dwRed, '--ac-body: #7f2a2e;');
+{
+  const ed = newEditor({ type: 'custom:ha-appliance-card', appliance_type: 'washer', state_entity: 'sensor.w' });
+  const html = markup(ed);
+  check('editeur : rouge fonce propose dans la couleur', /value="red"/.test(html), true);
+}
+
+// state_show_raw on a climate: the frontend's own words, not the English key.
+const itFmt = (st) => ({ cool: 'Raffreddamento', heat: 'Riscaldamento' })[st.state] || st.state;
+function rawAc(extra, hassExtra) {
+  const c = new Card();
+  c.setConfig({ type: 'custom:ha-appliance-card', appliance_type: 'air_conditioner',
+                state_entity: 'climate.split', state_show_raw: true, ...extra });
+  c._hass = { ...HASS({ 'climate.split': { state: 'cool', attributes: { hvac_action: 'cooling' } } }), ...hassExtra };
+  c._render();
+  return stateLine(markup(c));
+}
+check('texte brut : climat traduit par Home Assistant', rawAc({}, { formatEntityState: itFmt }), 'Raffreddamento');
+check('texte brut : sans formatEntityState, la cle brute', rawAc({}, {}), 'cool');
+check('texte brut : langue epinglee, la cle brute', rawAc({ language: 'fr' }, { formatEntityState: itFmt }), 'cool');
+check('texte brut : formatEntityState qui plante, la cle brute',
+  rawAc({}, { formatEntityState: () => { throw new Error('x'); } }), 'cool');
+check('texte brut decoche : le libelle de la card',
+  rawAc({ state_show_raw: false }, { formatEntityState: itFmt }), 'Cooling');
+
 report();
