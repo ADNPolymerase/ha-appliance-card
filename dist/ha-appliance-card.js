@@ -1,4 +1,4 @@
-const CARD_VERSION = "2.21.2";
+const CARD_VERSION = "2.21.3";
 
 console.info(
   "%c HA-APPLIANCE-CARD %c v" + CARD_VERSION + " ",
@@ -7324,6 +7324,8 @@ class ApplianceCard extends HTMLElement {
     this._clearCountdownTimer();
     if (this._offDelayTimer) clearTimeout(this._offDelayTimer);
     this._offDelayTimer = null;
+    if (this._lcRetryTimer) clearTimeout(this._lcRetryTimer);
+    this._lcRetryTimer = null;
   }
 
   // Nothing changes on a plug that has stopped drawing, so nothing would
@@ -7372,9 +7374,33 @@ class ApplianceCard extends HTMLElement {
       const rows = res && res[entity];
       const runs = fromPower ? powerRuns(rows, threshold, gapMs, Date.now(), from)
         : stateRuns(rows, (raw) => normFor(type, raw, cfg.state_map), from);
-      this._lastCycle = lastFinishedRun(runs);
+      const lc = lastFinishedRun(runs);
+      this._lastCycle = lc;
+      // The recorder writes in batches, so the history read the moment a
+      // cycle ends may not hold its last rows yet: the cycle still looks
+      // open and the one before it is shown (#24). Until the cycle the card
+      // saw end is in the history, it reads it again a little later.
+      const seen = this._lcEndSeenAt;
+      if (seen && !(lc && lc.end >= seen - gapMs - 5 * 60000)) this._armLastCycleRetry();
+      else this._lcEndSeenAt = null;
       this._render();
     }, () => {});
+  }
+
+  _armLastCycleRetry() {
+    if (this._inert || this._lcRetryTimer) return;
+    if ((this._lcRetries || 0) >= 5) {
+      this._lcEndSeenAt = null;
+      return;
+    }
+    this._lcRetries = (this._lcRetries || 0) + 1;
+    this._lcRetryTimer = setTimeout(() => this._retryLastCycle(), 30000);
+  }
+
+  _retryLastCycle() {
+    this._lcRetryTimer = null;
+    this._lastCycleStale = true;
+    this._render();
   }
 
   // Reads the state history once per cycle to find where it really began.
@@ -9143,7 +9169,11 @@ class ApplianceCard extends HTMLElement {
     // The last cycle, on request: how long it ran and when it ended. Shown
     // between cycles only, where the time left has nothing to say.
     const lcRole = cycleRole(norm);
-    if (this._lcPrevRole && this._lcPrevRole !== "out" && lcRole === "out") this._lastCycleStale = true;
+    if (this._lcPrevRole && this._lcPrevRole !== "out" && lcRole === "out") {
+      this._lastCycleStale = true;
+      this._lcEndSeenAt = Date.now();
+      this._lcRetries = 0;
+    }
     this._lcPrevRole = lcRole;
     if (cfg.show_last_cycle) {
       this._lookUpLastCycle(cfg, applianceType, powerDerived, threshold);

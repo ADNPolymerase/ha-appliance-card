@@ -6745,4 +6745,65 @@ check('texte brut : formatEntityState qui plante, la cle brute',
 check('texte brut decoche : le libelle de la card',
   rawAc({ state_show_raw: false }, { formatEntityState: itFmt }), 'Cooling');
 
+
+// ── Issue #24 : l'historique lu a la fin d'un cycle peut etre en retard ──────
+{
+  let rows = [H('Running', -200), H('Finished', -120), H('Running', -30)];
+  const h = withHistory(LC, { 'sensor.w': { state: 'Running', attributes: {} } },
+    msg => Promise.resolve({ [msg.entity_ids[0]]: rows }));
+  await settle();
+  const ws = h.card._hass.callWS;
+  h.card._hass = { ...HASS({ 'sensor.w': { state: 'Finished', attributes: {} } }), callWS: ws };
+  h.card._render();
+  await settle();
+  check('cycle en retard : le recorder n\'a pas encore ecrit la fin, l\'ancien cycle', /^1h20 · /.test(lastLine(markup(h.card)) || ''), true);
+  check('cycle en retard : une relecture est programmee', h.card._lcRetryTimer !== null && h.card._lcRetryTimer !== undefined, true);
+  rows = [H('Running', -200), H('Finished', -120), H('Running', -30), H('Finished', 0)];
+  const before = h.calls.length;
+  clearTimeout(h.card._lcRetryTimer);
+  h.card._retryLastCycle();
+  await settle();
+  check('cycle en retard : la relecture interroge l\'historique', h.calls.length, before + 1);
+  check('cycle en retard : puis le bon cycle', /^30 min · /.test(lastLine(markup(h.card)) || ''), true);
+  check('cycle en retard : plus de relecture une fois trouve', h.card._lcRetryTimer, null);
+  check('cycle en retard : l\'attente est levee', h.card._lcEndSeenAt, null);
+}
+{
+  const h = lcHist([H('Running', -200), H('Finished', -120), H('Running', -30)], { 'sensor.w': { state: 'Running', attributes: {} } });
+  await settle();
+  check('cycle en retard : sans fin vue, aucune relecture', h.card._lcRetryTimer === null || h.card._lcRetryTimer === undefined, true);
+  const ws = h.card._hass.callWS;
+  h.card._hass = { ...HASS({ 'sensor.w': { state: 'Finished', attributes: {} } }), callWS: ws };
+  h.card._render();
+  await settle();
+  for (let i = 0; i < 6; i++) {
+    if (!h.card._lcRetryTimer) break;
+    clearTimeout(h.card._lcRetryTimer);
+    h.card._retryLastCycle();
+    await settle();
+  }
+  check('cycle en retard : cinq relectures au plus', h.calls.length, 1 + 1 + 5);
+  check('cycle en retard : puis on abandonne', h.card._lcRetryTimer, null);
+  h.card._hass = { ...HASS({ 'sensor.w': { state: 'Running', attributes: {} } }), callWS: ws };
+  h.card._render();
+  h.card._hass = { ...HASS({ 'sensor.w': { state: 'Finished', attributes: {} } }), callWS: ws };
+  h.card._render();
+  await settle();
+  check('cycle en retard : le cycle suivant a de nouveau ses relectures', h.card._lcRetryTimer !== null && h.card._lcRetryTimer !== undefined, true);
+  clearTimeout(h.card._lcRetryTimer);
+  h.card._lcRetryTimer = setTimeout(() => {}, 100000);
+  h.card.disconnectedCallback();
+  check('cycle en retard : la relecture est annulee au retrait', h.card._lcRetryTimer, null);
+}
+{
+  const h = lcHist([H('Running', -200), H('Finished', -120), H('Running', -30), H('Finished', 0)], { 'sensor.w': { state: 'Running', attributes: {} } });
+  await settle();
+  const ws = h.card._hass.callWS;
+  h.card._hass = { ...HASS({ 'sensor.w': { state: 'Finished', attributes: {} } }), callWS: ws };
+  h.card._render();
+  await settle();
+  check('cycle a jour : pas de relecture si l\'historique a deja la fin', h.card._lcRetryTimer === null || h.card._lcRetryTimer === undefined, true);
+  check('cycle a jour : le bon cycle tout de suite', /^30 min · /.test(lastLine(markup(h.card)) || ''), true);
+}
+
 report();
