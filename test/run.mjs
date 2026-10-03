@@ -275,6 +275,61 @@ const splitDone = render({ appliance_type: 'oven', state_entity: 'sensor.oven_st
 check('split : cycle termine, une seule ligne', infoLine(splitDone, 'Remaining time'), 'Done');
 check('split : cycle termine, pas d heure de fin', infoLine(splitDone, 'Ready at'), null);
 
+// The end time follows the user's profile, not the browser (issue #26): its
+// 12 or 24 hour choice, its language, and the server's time zone on request.
+// The clock is frozen at 10:00 UTC, so the oven ends at 10:24 UTC.
+function readyAt(locale, config = {}, cardCfg = {}) {
+  const c = new Card();
+  c.setConfig({ type: 'custom:ha-appliance-card', appliance_type: 'oven', state_entity: 'sensor.oven_state',
+                remaining_time_entity: 'sensor.oven_rem', remaining_time_split: true, ...cardCfg });
+  c._hass = { ...HASS(OVEN), locale, config: { ...HASS(OVEN).config, ...config } };
+  c._render();
+  const m = /icon="mdi:clock-end"[\s\S]*?<span class="label">[^<]*<\/span><span>([^<]*)<\/span>/.exec(markup(c));
+  return m ? m[1] : null;
+}
+const TOKYO = { time_zone: 'Asia/Tokyo' };
+{
+  // A timestamp info line obeys the same profile choice as the end time.
+  const c = new Card();
+  c.setConfig({ type: 'custom:ha-appliance-card', appliance_type: 'washer', state_entity: 'sensor.w',
+                info_entities: [{ entity: 'sensor.ts', label: 'Next' }] });
+  const st = { 'sensor.w': { state: 'off', attributes: {} },
+               'sensor.ts': { state: '2026-08-12T10:24:00Z', attributes: { device_class: 'timestamp' } },
+               'sensor.d': { state: '2026-08-12', attributes: { device_class: 'date' } } };
+  c._hass = { ...HASS(st), locale: { language: 'en', time_format: '24', time_zone: 'server' },
+              config: { ...HASS(st).config, time_zone: 'Asia/Tokyo' } };
+  c._render();
+  const v = infoLine(markup(c), 'Next') || '';
+  check('horodatage : profil 24 h et fuseau serveur', /19:24$/.test(v) && !/PM/.test(v), true);
+}
+const NY = { time_zone: 'America/New_York' };
+check('heure de fin : profil 24 h, meme en anglais',
+  readyAt({ language: 'en', time_format: '24', time_zone: 'server' }, TOKYO), '19:24');
+check('heure de fin : profil 12 h, meme en francais',
+  /^07:24\u00a0(PM|pm)$/.test(readyAt({ language: 'fr', time_format: '12', time_zone: 'server' }, TOKYO)), true);
+check('heure de fin : format de la langue, en-US en 12 h',
+  /^06:24\u00a0AM$/.test(readyAt({ language: 'en-US', time_format: 'language', time_zone: 'server' }, NY)), true);
+check('heure de fin : format de la langue, en-GB en 24 h',
+  readyAt({ language: 'en-GB', time_format: 'language', time_zone: 'server' }, NY), '06:24');
+check('heure de fin : sans time_format, la langue decide comme dans HA',
+  readyAt({ language: 'da', time_zone: 'server' }, TOKYO), '19.24');
+check('heure de fin : fuseau local par defaut, pas celui du serveur',
+  readyAt({ language: 'en', time_format: '24', time_zone: 'local' }, TOKYO) === '19:24', false);
+check('heure de fin : fuseau serveur inconnu, l heure reste lisible',
+  /^\d\d\.\d\d$/.test(readyAt({ language: 'da', time_format: '24', time_zone: 'server' }, { time_zone: 'Nowhere/Void' }) || ''), true);
+{
+  const c = new Card();
+  c.setConfig({ type: 'custom:ha-appliance-card', appliance_type: 'oven', state_entity: 'sensor.oven_state',
+                remaining_time_entity: 'sensor.oven_rem' });
+  c._hass = { ...HASS(OVEN), locale: { language: 'en', time_format: '24', time_zone: 'server' },
+              config: { ...HASS(OVEN).config, ...TOKYO } };
+  c._render();
+  check('heure de fin : la ligne combinee suit aussi le profil',
+    (infoLine(markup(c), 'Remaining time') || '').endsWith('ready\u00a0at\u00a019:24'), true);
+}
+check('heure de fin : langue forcee, le profil 24 h tient',
+  readyAt({ language: 'en', time_format: '24', time_zone: 'server' }, TOKYO, { language: 'fr' }), '19:24');
+
 // Progress is the time the cycle has run over that time plus what is left.
 // The start is when the state turned to running, pauses are taken out, and a
 // change of phase or a gap in the data does not restart it.
@@ -4663,6 +4718,24 @@ check('ecran : sans taille de portion, l\'heure',
   /^\d\d:\d\d$/.test(lcd(feeder({ state_entity: 'binary_sensor.b', serving_size_entity: undefined },
     { 'binary_sensor.b': { state: 'on', attributes: {} } }))), true);
 check('ecran : en erreur, l\'heure aussi', /^\d\d:\d\d$/.test(lcd(fJam)), true);
+{
+  // The screen keeps the profile's clock too (issue #26), still without AM/PM.
+  const c = new Card();
+  c.setConfig({ type: 'custom:ha-appliance-card', ...CFG_IN });
+  // A zone where it is afternoon, so 12 and 24 hours cannot read the same.
+  const hourIn = z => Number(new Date().toLocaleTimeString('en-GB', { hour: '2-digit', hourCycle: 'h23', timeZone: z }));
+  const zone = ['Asia/Tokyo', 'Europe/London', 'America/New_York', 'Pacific/Honolulu'].find(z => hourIn(z) >= 13);
+  c._hass = { ...HASS(FEEDER_IN), locale: { language: 'en-US', time_format: '24', time_zone: 'server' },
+              config: { time_zone: zone } };
+  c._render();
+  const tokyo = cycle => new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit',
+    hourCycle: cycle, timeZone: zone }).replace(/[^\d:]/g, '');
+  check('ecran : l\'heure du profil, en 24 h', lcd(markup(c)), tokyo('h23'));
+  c._hass = { ...c._hass, locale: { ...c._hass.locale, time_format: '12' } };
+  c._render();
+  check('ecran : en 12 h, sans AM ni PM', lcd(markup(c)), tokyo('h12'));
+  check('ecran : les deux heures different bien', tokyo('h12') !== tokyo('h23'), true);
+}
 check('ecran : bleu pendant la distribution', /\.machine\.feeding \.pf-lcd \{[^}]*background: #1e88e5/.test(fBusy), true);
 check('ecran : rouge quand ca ne va pas', /\.machine\.alert \.pf-lcd \{[^}]*background: #e53935/.test(fJam), true);
 check('ecran : l\'alerte se porte sur la machine', machineCls(fJam).split(' ').includes('alert'), true);

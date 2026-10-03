@@ -1,4 +1,4 @@
-const CARD_VERSION = "2.21.3";
+const CARD_VERSION = "2.21.4";
 
 console.info(
   "%c HA-APPLIANCE-CARD %c v" + CARD_VERSION + " ",
@@ -2887,13 +2887,57 @@ function keepTogether(s) {
 
 // The time a feeder's screen shows: hours and minutes only, since the screen
 // has no room for a 12-hour clock's AM or PM.
-function feederClock() {
-  return new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }).replace(/[^\d:]/g, "");
+function feederClock(hass) {
+  return clockTime(new Date(), hass).replace(/[^\d:]/g, "");
 }
 
-function formatEta(totalSeconds) {
-  const eta = new Date(Date.now() + totalSeconds * 1000);
-  return eta.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+// A clock time the way the user's Home Assistant profile asks for it, not the
+// way the browser would: the profile language, its 12 or 24 hour choice, and
+// the server's time zone when the profile says so. The browser default showed
+// 09:05 PM to someone whose profile asked for 21:05.
+function timeLocale(hass) {
+  const l = hass && ((hass.locale && hass.locale.language) || hass.language);
+  return l ? [l] : [];
+}
+
+// Home Assistant's own rule: "12" and "24" are outright choices; "language"
+// (the default) follows the profile language and "system" the browser.
+function hourCycle(hass) {
+  const f = hass && hass.locale && hass.locale.time_format;
+  if (f === "12") return "h12";
+  if (f === "24") return "h23";
+  if (!hass || !hass.locale) return undefined;
+  try {
+    const probe = new Date(2023, 0, 1, 22, 0, 0).toLocaleString(f === "system" ? [] : timeLocale(hass));
+    return probe.includes("10") ? "h12" : "h23";
+  } catch (e) {
+    return undefined;
+  }
+}
+
+function timeOptions(hass, options) {
+  const out = { ...options };
+  const cycle = hourCycle(hass);
+  if (cycle) out.hourCycle = cycle;
+  const zone = hass && hass.locale && hass.locale.time_zone === "server" && hass.config && hass.config.time_zone;
+  if (zone) out.timeZone = zone;
+  return out;
+}
+
+// A time zone or language the browser does not know only costs that part of
+// the choice: the 12 or 24 hour setting still holds.
+function clockTime(date, hass) {
+  const options = { hour: "2-digit", minute: "2-digit" };
+  const full = timeOptions(hass, options);
+  const { timeZone, ...noZone } = full;
+  for (const [locale, opts] of [[timeLocale(hass), full], [timeLocale(hass), noZone], [[], noZone]]) {
+    try { return date.toLocaleTimeString(locale, opts); } catch (e) { /* try the next */ }
+  }
+  return date.toLocaleTimeString([], options);
+}
+
+function formatEta(totalSeconds, hass) {
+  return clockTime(new Date(Date.now() + totalSeconds * 1000), hass);
 }
 
 function unitOf(hass, entityId) {
@@ -3241,7 +3285,7 @@ function formatInfoValue(st, hass, valueMap, cfg, entityId, hideUnit) {
     if (!isNaN(d.getTime())) {
       const options = dc === "date" ? { dateStyle: "long" } : { dateStyle: "long", timeStyle: "short" };
       try {
-        return new Intl.DateTimeFormat(lang(hass), options).format(d);
+        return new Intl.DateTimeFormat(lang(hass), dc === "date" ? options : timeOptions(hass, options)).format(d);
       } catch (e) {
         // Unsupported locale/options: fall through to the raw formatting below.
       }
@@ -8704,7 +8748,7 @@ class ApplianceCard extends HTMLElement {
       // The screen shows what the real ones show: the time. While it serves it
       // shows the portion being served, when the card knows the serving size.
       const serving = cfg.serving_size_entity ? numericState(hass, cfg.serving_size_entity) : null;
-      feederScreen = feeding && serving !== null ? `P ${Math.round(serving)}` : feederClock();
+      feederScreen = feeding && serving !== null ? `P ${Math.round(serving)}` : feederClock(hass);
       // A clock has to tick on its own: nothing in the states changes when a
       // minute goes by.
       this._clearClockTimer();
@@ -9431,7 +9475,7 @@ class ApplianceCard extends HTMLElement {
           key: "ready_at",
           icon: "mdi:clock-end",
           label: t(hass, "section_ready_at"),
-          value: keepTogether(formatEta(remSec)),
+          value: keepTogether(formatEta(remSec, hass)),
         });
       } else {
         lines.push({
@@ -9439,7 +9483,7 @@ class ApplianceCard extends HTMLElement {
           icon: "mdi:timer-outline",
           label: t(hass, "section_remaining"),
           value: remRounded > 0
-            ? `${keepTogether(formatDuration(remSec, hass))}\u00a0\u00b7 ${keepTogether(`${t(hass, "ready_at")} ${formatEta(remSec)}`)}`
+            ? `${keepTogether(formatDuration(remSec, hass))}\u00a0\u00b7 ${keepTogether(`${t(hass, "ready_at")} ${formatEta(remSec, hass)}`)}`
             : t(hass, "time_done"),
         });
       }
