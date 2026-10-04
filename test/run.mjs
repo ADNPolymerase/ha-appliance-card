@@ -6921,7 +6921,7 @@ check('texte brut decoche : le libelle de la card',
     const calls = [];
     const c = new Card();
     c.setConfig({ type: 'custom:ha-appliance-card', appliance_type: 'washer', state_entity: 'sensor.w',
-      stop_entity: 'button.stop', corner_entities: ['switch.lock'], ...(mode ? { controls_activation: mode } : {}) });
+      stop_entity: 'button.stop', corner_entities: ['switch.lock'], ...(mode !== undefined ? { controls_activation: mode } : {}) });
     c._hass = { ...HASS(ST), callService: (domain, service, data) => calls.push({ domain, service, data }) };
     c._render();
     const btn = () => c._root.querySelectorAll('.action-btn, .light-badge').find(n => n.getAttribute('data-entity') === 'button.stop');
@@ -6987,6 +6987,22 @@ check('texte brut decoche : le libelle de la card',
   gone.c.disconnectedCallback();
   await wait(650);
   check('appui long : annule au retrait', gone.calls.length, 0);
+
+  // A bare off in YAML arrives as false: it must still lock.
+  const bare = mk(false);
+  fire(bare.btn(), 'click', ev);
+  check('off sans guillemets (false) : un tap ne fait rien', bare.calls.length + bare.c.events.length, 0);
+  fire(bare.btn(), 'pointerdown', ev);
+  await wait(650);
+  check('off sans guillemets (false) : jamais actionne', bare.calls.length, 0);
+  check('off sans guillemets (false) : tenu, la fiche s ouvre', bare.c.events.at(-1)?.type, 'hass-more-info');
+  const upper = mk('Hold');
+  fire(upper.btn(), 'click', ev);
+  check('Hold en majuscule : un tap ne fait rien', upper.calls.length, 0);
+  check('editeur : false affiche Jamais',
+    /<option value="off" selected/.test(markup(newEditor({ state_entity: 'sensor.w', appliance_type: 'washer', controls_activation: false }))), true);
+  check('editeur : rien choisi affiche Toucher',
+    /<option value="tap" selected/.test(markup(newEditor({ state_entity: 'sensor.w', appliance_type: 'washer' }))), true);
 
   const odd = mk('banana');
   fire(odd.btn(), 'click', ev);

@@ -1,4 +1,4 @@
-const CARD_VERSION = "2.21.6";
+const CARD_VERSION = "2.21.7";
 
 console.info(
   "%c HA-APPLIANCE-CARD %c v" + CARD_VERSION + " ",
@@ -2072,6 +2072,13 @@ function cycleFromHistory(entries, normOf) {
 
 // Home Assistant's own long press lasts half a second.
 const HOLD_MS = 500;
+// YAML reads a bare off as false (issue #28): the card takes it for the lock
+// it was meant to be, never for the default.
+function activationOf(v) {
+  if (v === false) return "off";
+  const s = String(v == null ? "" : v).trim().toLowerCase();
+  return s === "hold" || s === "off" ? s : "tap";
+}
 
 // The last cycle is looked for further back than a cycle in progress: a
 // washing machine may sit for days between two. A power meter reports every
@@ -7569,7 +7576,8 @@ class ApplianceCard extends HTMLElement {
   // button, because a state update redraws the buttons mid-press and the
   // release would then land on a new one that knows nothing of the old timer.
   _wireControl(el, mode, entityId, run) {
-    if (mode !== "hold" && mode !== "off") {
+    mode = activationOf(mode);
+    if (mode === "tap") {
       el.addEventListener("click", (ev) => {
         if (ev && ev.stopPropagation) ev.stopPropagation();
         run();
@@ -10260,7 +10268,7 @@ class ApplianceCardEditor extends HTMLElement {
   _row(labelKey, field, opts) {
     opts = opts || {};
     const hass = this._l10n;
-    const value = this._config[field] || "";
+    const value = opts.value !== undefined ? opts.value : this._config[field] || "";
     if (opts.type === "checkbox") {
       return `
         <div class="row row-inline">
@@ -10702,6 +10710,7 @@ class ApplianceCardEditor extends HTMLElement {
           ${this._row("state_show_raw", "state_show_raw", { type: "checkbox" })}
           ${caps(this._type).readOnly ? "" : this._row("controls_activation", "controls_activation", {
             type: "select",
+            value: activationOf(this._config.controls_activation),
             options: ["tap", "hold", "off"].map((v) => ({ value: v, label: t(hass, `activation_${v}`) })),
           })}
           ${LAST_CYCLE_TYPES.includes(this._type) ? this._row("show_last_cycle", "show_last_cycle", { type: "checkbox" }) : ""}
