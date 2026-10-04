@@ -413,7 +413,7 @@ power_on_threshold: 30
 
 ### Bornes de recharge
 
-Une wallbox au mur, son voyant dans la couleur de ce que fait la borne : *Aucun véhicule*, *Véhicule branché* (une voiture qui attend), *En attente d'autorisation* (un badge ou l'appli), *En charge*, *Charge en pause* (par la borne ou par la voiture), *Charge programmée*, *Charge terminée* (la voiture encore branchée), *Erreur* ou *Hors ligne*. N'importe quelle wallbox fait l'affaire : la card lit le statut dans les mots d'OCPP et des intégrations de Home Assistant lui-même, `state_map` lui apprend tous les autres, et une borne sans statut se lit sur sa prise et son compteur.
+Une wallbox au mur, son voyant dans la couleur de ce que fait la borne : *Aucun véhicule*, *Véhicule branché* (une voiture qui attend), *En attente d'autorisation* (un badge ou l'appli), *En charge*, *Charge en pause* (par la borne ou par la voiture), *Charge programmée*, *Charge terminée* (la voiture encore branchée), *Erreur* ou *Hors ligne*. Avec une voiture branchée, la prise quitte son étui et le câble part vers la voiture ; pendant la charge, il prend la couleur de l'état. N'importe quelle wallbox fait l'affaire : la card lit le statut dans les mots d'OCPP et des intégrations de Home Assistant lui-même, `state_map` lui apprend tous les autres, et une borne sans statut se lit sur sa prise et son compteur.
 
 | Intégration | Statut | Mots lus |
 |---|---|---|

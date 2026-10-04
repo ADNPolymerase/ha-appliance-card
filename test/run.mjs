@@ -7311,6 +7311,32 @@ check('repli : une prise connectee lit encore un lave-linge', stateLine(render({
   check('repli : puis branchee, pas terminee', stateLine(rerender(card, { 'binary_sensor.plug': { state: 'on', attributes: {} }, 'sensor.p': W(0) })), 'Plugged in');
 }
 
+// With a car at it, the plug leaves its holster and the cable runs off to
+// the car; while it charges, the cable carries the state's colour. Nothing
+// moves: the plug's coming and going is for later.
+for (const [raw, out] of [['Available', false], ['Preparing', true], ['pending_approval', true], ['Charging', true], ['SuspendedEVSE', true],
+  ['SuspendedEV', true], ['paused_by_scheduler', true], ['Finishing', true], ['Reserved', false], ['Faulted', false], ['unavailable', false], ['Zzz', false]])
+  check(`borne : ${raw}, la prise ${out ? 'sort de son etui' : 'reste dans son etui'}`, hasCls(evR(raw), 'plugged'), out);
+check('borne : en erreur avec une voiture, la prise sort', hasCls(vehR('Faulted', 'on'), 'plugged'), true);
+check('borne : en erreur sans voiture, elle reste', hasCls(vehR('Faulted', 'off'), 'plugged'), false);
+check('borne : la prise dit pas de voiture, elle reste', hasCls(vehR('Charging', 'off'), 'plugged'), false);
+check('repli : en charge, la prise sort', hasCls(fbR('on', 3000), 'plugged'), true);
+check('repli : branchee, la prise sort', hasCls(fbR('on', 0), 'plugged'), true);
+check('repli : sans voiture, elle reste', hasCls(fbR('off', 0), 'plugged'), false);
+contains('borne : le cable part vers la voiture', evR('Charging'), '<path class="ev-out" d="M42 69 C42 98 62 102 88 102"/>');
+contains('borne : sans voiture, il reste en boucle', evR('Available'), '<path class="ev-loop" d="M42 69 C42 104 69 104 69 56"/>');
+contains('borne : la boucle cede la place au cable tendu', evR('Charging'), '.ev-cable .ev-out, .ev-cable .ev-live, .machine.plugged .ev-cable .ev-loop { display: none; }');
+contains('borne : la prise quitte son etui', evR('Charging'), '.machine.plugged .ev-plug {');
+contains('borne : en charge, le cable prend la couleur de l etat', evR('Charging'), '.ev-cable .ev-live { stroke: var(--info-color, #2196f3);');
+contains('borne : seulement en charge', evR('Charging'), '.machine.plugged.mode-charging .ev-cable .ev-live { display: inline; }');
+{
+  const plugSt = on => evSt('Faulted', { 'binary_sensor.cp_plug': { state: on, attributes: {} } });
+  const { card } = build({ ...EVC, vehicle_entity: 'binary_sensor.cp_plug' }, plugSt('on'));
+  const k1 = card._animKey;
+  rerender(card, plugSt('off'));
+  check('borne : la prise qui change redessine le cable', card._animKey !== k1, true);
+}
+
 // Detection: the fields that only a charger has, its names and its states.
 const isEv = (id, attrs = {}, cfg = {}, state = 'Charging') => /class="ev-box"/.test(render({ state_entity: id, ...cfg }, { [id]: { state, attributes: attrs } }));
 for (const f of ['vehicle_entity', 'session_energy_entity', 'current_limit_entity'])

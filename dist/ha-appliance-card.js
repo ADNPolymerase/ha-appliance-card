@@ -2680,6 +2680,8 @@ const EV_STATES = {
 // bare "suspended" does not say which: both stay a pause whatever the
 // session holds.
 const EV_SUSPENDED_BY_CAR = ["suspendedev", "suspended_ev", "waiting_car"];
+// The states with a car at the plug.
+const EV_CAR_STATES = ["connected", "awaiting_auth", "charging", "paused", "scheduled", "done"];
 // How each state runs the rest of the card.
 const EV_NORMS = {
   no_vehicle: "idle", connected: "idle", awaiting_auth: "idle", charging: "running", paused: "paused",
@@ -6639,7 +6641,9 @@ const ILLUSTRATION_CSS = {
   // bolt and the light above it, the holster on its side with the plug parked
   // in it, and the cable looping down between the two. The light takes the
   // colour of the state, the one the state line is written in, and goes dark
-  // when the charger is offline. Nothing moves yet.
+  // when the charger is offline. With a car at it, the plug leaves its holster
+  // and the cable runs off towards the car; while it charges, the cable
+  // carries the state's colour. Nothing moves yet.
   ev_charger: (color) => `
         .ev-box {
           position: absolute; left: 20px; width: 44px; top: 4px; height: 66px; border-radius: 10px;
@@ -6667,6 +6671,14 @@ const ILLUSTRATION_CSS = {
         }
         .ev-cable { position: absolute; left: 0; top: 0; width: 96px; height: 108px; overflow: visible; }
         .ev-cable path { fill: none; stroke: #3b4048; stroke-width: 3.5; stroke-linecap: round; }
+        .ev-cable .ev-out, .ev-cable .ev-live, .machine.plugged .ev-cable .ev-loop { display: none; }
+        .machine.plugged .ev-cable .ev-out { display: inline; }
+        .ev-cable .ev-live { stroke: ${color}; stroke-width: 1.3; }
+        .machine.plugged.mode-charging .ev-cable .ev-live { display: inline; }
+        .machine.plugged .ev-plug {
+          left: 84px; top: 98px; width: 12px; height: 8px; border-radius: 2px 4px 4px 2px;
+          background: linear-gradient(180deg, #2f3439, #50565d 50%, #2f3439);
+        }
   `,
 };
 
@@ -7199,8 +7211,8 @@ function illustrationHtml(type, ctx) {
   if (type === "ev_charger") {
     const e = ctx.ev || {};
     return `
-        <div class="machine ${cls} mode-${e.mode || "unknown"}">
-          <svg class="ev-cable" viewBox="0 0 96 108" aria-hidden="true"><path d="M42 69 C42 104 69 104 69 56"/></svg>
+        <div class="machine ${cls} mode-${e.mode || "unknown"}${e.plugged ? " plugged" : ""}">
+          <svg class="ev-cable" viewBox="0 0 96 108" aria-hidden="true"><path class="ev-loop" d="M42 69 C42 104 69 104 69 56"/><path class="ev-out" d="M42 69 C42 98 62 102 88 102"/><path class="ev-live" d="M42 69 C42 98 62 102 88 102"/></svg>
           <div class="ev-box"><div class="ev-face"><div class="ev-led"></div>
             <svg class="ev-bolt" viewBox="0 0 24 24" aria-hidden="true"><path d="M11 15H6L13 1V9H18L11 23V15Z"/></svg>
           </div></div>
@@ -9570,7 +9582,10 @@ class ApplianceCard extends HTMLElement {
           wrap: true,
         });
       }
-      ev = { mode: mode || norm };
+      // A car at the plug, as far as the card can tell: every state that has
+      // one, and an error the plug says has one too. The drawing takes the
+      // plug out of its holster for it.
+      ev = { mode: mode || norm, plugged: EV_CAR_STATES.includes(mode) || (mode === "error" && plugged === true) };
     }
 
     // An iron, read from the plug it is on: heating or off, and the state line
@@ -9747,7 +9762,7 @@ class ApplianceCard extends HTMLElement {
       illustrationCtx.heater && illustrationCtx.heater.mode,
       illustrationCtx.towel && illustrationCtx.towel.mode,
       illustrationCtx.fryer && [illustrationCtx.fryer.mode, illustrationCtx.fryer.mode2, illustrationCtx.fryer.layout].join("/"),
-      illustrationCtx.ev && illustrationCtx.ev.mode,
+      illustrationCtx.ev && [illustrationCtx.ev.mode, illustrationCtx.ev.plugged].join("/"),
     ].join(",");
     if (animKey !== this._animKey) {
       this._animKey = animKey;

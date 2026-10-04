@@ -413,7 +413,7 @@ power_on_threshold: 30
 
 ### EV chargers
 
-A wallbox on the wall, its light in the colour of what the charger is doing: *No vehicle*, *Plugged in* (a car waiting), *Awaiting authorisation* (a card or the app), *Charging*, *Charging paused* (by the box or by the car), *Scheduled*, *Charging complete* (the car still plugged in), *Error* or *Offline*. Any wallbox will do: the card reads the status in the words of OCPP and of the integrations in Home Assistant itself, `state_map` teaches it any other, and a box with no status at all is read from its plug and its power meter.
+A wallbox on the wall, its light in the colour of what the charger is doing: *No vehicle*, *Plugged in* (a car waiting), *Awaiting authorisation* (a card or the app), *Charging*, *Charging paused* (by the box or by the car), *Scheduled*, *Charging complete* (the car still plugged in), *Error* or *Offline*. With a car plugged in, the plug leaves its holster and the cable runs off to the car; while it charges, the cable carries the state's colour. Any wallbox will do: the card reads the status in the words of OCPP and of the integrations in Home Assistant itself, `state_map` teaches it any other, and a box with no status at all is read from its plug and its power meter.
 
 | Integration | Status | Words read |
 |---|---|---|
