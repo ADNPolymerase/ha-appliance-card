@@ -52,8 +52,8 @@ customElements.define("ha-icon", StubIcon);
 const params = new URLSearchParams(location.search);
 const uiLang = params.get("lang") === "fr" ? "fr" : "en";
 const view = params.get("view") === "types" ? "types" : "hero";
-// Twenty-four types in twenty-four cards, the iron on its steam generator:
-// five across and five down, the last row one short.
+// Twenty-five types in twenty-five cards, the iron on its steam generator:
+// five across and five down.
 document.documentElement.style.setProperty("--cols", params.get("cols") || 5);
 const fr = uiLang === "fr";
 const L = (en, f) => (fr ? f : en);
@@ -517,13 +517,32 @@ const steamGenerator = () => card({
   st("sensor.steam_plug_power", 1900, { unit_of_measurement: "W" }),
 ]);
 
+// A wallbox on OCPP halfway through a charge, named the way the ocpp
+// integration names it: the connector status as the charger sends it, the
+// power in kilowatts, the session's energy, and its charge control switch.
+const evCharger = () => card({
+  name: L("Wallbox", "Borne de recharge"),
+  appliance_type: "ev_charger",
+  state_entity: "sensor.wallbox_status_connector",
+  power_entity: "sensor.wallbox_power_active_import",
+  session_energy_entity: "sensor.wallbox_energy_session",
+  current_limit_entity: "number.wallbox_maximum_current",
+  toggle_entity: "switch.wallbox_charge_control",
+}, [
+  st("sensor.wallbox_status_connector", "Charging"),
+  st("sensor.wallbox_power_active_import", 7.4, { unit_of_measurement: "kW" }),
+  st("sensor.wallbox_energy_session", 12.6, { unit_of_measurement: "kWh" }),
+  st("number.wallbox_maximum_current", 16, { unit_of_measurement: "A" }),
+  st("switch.wallbox_charge_control", "on"),
+]);
+
 // Grouped by kind: the laundry, the kitchen, heating and climate, then the
 // rest.
 const ALL = { washer, dryer, steam_generator: steamGenerator,
               dishwasher, oven, microwave, hood, cooktop, fridge, kettle, cooker, coffee, rice_cooker: riceCooker, air_fryer: airFryer,
               water_heater: waterHeater, boiler, heat_pump: heatPump, pellet_stove: pelletStove,
               space_heater: spaceHeater, towel_warmer: towelWarmer, air_conditioner: airConditioner, dehumidifier,
-              pet_feeder: petFeeder, printer_3d: printer3d };
+              pet_feeder: petFeeder, printer_3d: printer3d, ev_charger: evCharger };
 const only = (params.get("only") || "").split(",").map((k) => k.trim()).filter(Boolean);
 if (only.length) {
   document.documentElement.style.setProperty("--cols", only.length);
