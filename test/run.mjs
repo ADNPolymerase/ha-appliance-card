@@ -6912,4 +6912,90 @@ check('texte brut decoche : le libelle de la card',
   check('cycle a jour : le bon cycle tout de suite', /^30 min · /.test(lastLine(markup(h.card)) || ''), true);
 }
 
+// ── Issue #28 : appui long pour les commandes ───────────────────────────────
+{
+  const wait = ms => new Promise(r => setTimeout(r, ms));
+  const ST = { 'sensor.w': { state: 'Running', attributes: {} }, 'button.stop': { state: 'unknown', attributes: {} },
+               'switch.lock': { state: 'off', attributes: {} } };
+  const mk = (mode) => {
+    const calls = [];
+    const c = new Card();
+    c.setConfig({ type: 'custom:ha-appliance-card', appliance_type: 'washer', state_entity: 'sensor.w',
+      stop_entity: 'button.stop', corner_entities: ['switch.lock'], ...(mode ? { controls_activation: mode } : {}) });
+    c._hass = { ...HASS(ST), callService: (domain, service, data) => calls.push({ domain, service, data }) };
+    c._render();
+    const btn = () => c._root.querySelectorAll('.action-btn, .light-badge').find(n => n.getAttribute('data-entity') === 'button.stop');
+    return { c, calls, btn };
+  };
+  const ev = { stopPropagation() {}, preventDefault() {} };
+
+  const def = mk();
+  fire(def.btn(), 'click', ev);
+  check('commandes : par defaut, un tap actionne', def.calls.at(-1)?.service, 'press');
+
+  const hold = mk('hold');
+  fire(hold.btn(), 'click', ev);
+  check('appui long : un tap ne fait rien', hold.calls.length, 0);
+  fire(hold.btn(), 'pointerdown', ev);
+  await wait(300);
+  fire(hold.btn(), 'pointerup', ev);
+  await wait(400);
+  check('appui long : relache trop tot, rien', hold.calls.length, 0);
+  fire(hold.btn(), 'pointerdown', ev);
+  await wait(650);
+  check('appui long : tenu, il actionne', hold.calls.at(-1)?.service, 'press');
+  check('appui long : la fiche ne s ouvre pas', hold.c.events.length, 0);
+
+  // A state update redraws the buttons mid-press: the release lands on a new
+  // node, and the timer must still be cancelled.
+  const redraw = mk('hold');
+  fire(redraw.btn(), 'pointerdown', ev);
+  redraw.c._root.__qsa = null;
+  redraw.c._render();
+  await wait(200);
+  fire(redraw.c._root.querySelectorAll('.action-btn, .light-badge').find(n => n.getAttribute('data-entity') === 'button.stop'), 'pointerup', ev);
+  await wait(500);
+  check('appui long : un redessin pendant l appui ne lance rien', redraw.calls.length, 0);
+
+  const twice = mk('hold');
+  fire(twice.btn(), 'pointerdown', ev);
+  fire(twice.btn(), 'pointerdown', ev);
+  await wait(100);
+  fire(twice.btn(), 'pointerup', ev);
+  await wait(650);
+  check('appui long : deux appuis puis relache, rien', twice.calls.length, 0);
+
+  const corner = mk('hold');
+  const cn = corner.c._root.querySelectorAll('[data-corner]').find(n => n.getAttribute('data-corner') === 'switch.lock');
+  fire(cn, 'click', ev);
+  check('appui long : un coin ne bascule pas au tap', corner.calls.length, 0);
+  fire(cn, 'pointerdown', ev);
+  await wait(650);
+  check('appui long : un coin bascule tenu', corner.calls.at(-1)?.service, 'toggle');
+
+  const off = mk('off');
+  fire(off.btn(), 'click', ev);
+  check('verrouille : un tap ne fait rien', off.calls.length + off.c.events.length, 0);
+  fire(off.btn(), 'pointerdown', ev);
+  await wait(650);
+  check('verrouille : jamais actionne', off.calls.length, 0);
+  check('verrouille : tenu, la fiche s ouvre', off.c.events.at(-1)?.type, 'hass-more-info');
+  check('verrouille : sur l entite du bouton', off.c.events.at(-1)?.detail?.entityId, 'button.stop');
+
+  const gone = mk('hold');
+  fire(gone.btn(), 'pointerdown', ev);
+  gone.c.disconnectedCallback();
+  await wait(650);
+  check('appui long : annule au retrait', gone.calls.length, 0);
+
+  const odd = mk('banana');
+  fire(odd.btn(), 'click', ev);
+  check('commandes : valeur inconnue, comme par defaut', odd.calls.at(-1)?.service, 'press');
+
+  check('editeur : choix des commandes propose',
+    /data-field="controls_activation"/.test(markup(newEditor({ state_entity: 'sensor.w', appliance_type: 'washer' }))), true);
+  check('editeur : pas sur un frigo',
+    /data-field="controls_activation"/.test(markup(newEditor({ state_entity: 'sensor.f', appliance_type: 'fridge' }))), false);
+}
+
 report();

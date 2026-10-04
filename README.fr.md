@@ -55,6 +55,7 @@ Seule `state_entity` est obligatoire, sauf sur un réfrigérateur où une sonde 
 | `state_entity` | **Obligatoire**, sauf sur un frigo. Entité portant l'état de l'appareil, de n'importe quel domaine. |
 | `state_map` | Table état brut → `idle` \| `running` \| `preheating` \| `keep_warm` \| `paused` \| `done` \| `delayed` \| `error`. Fixe le libellé, la couleur et l'animation. La clé `"*"` ramasse tous les états qui dépassent (voir plus bas), et sur un lave-linge, un sèche-linge ou un lave-vaisselle les étapes (`washing`, `spinning`...) sont aussi des cibles. Aussi dans l'éditeur visuel. |
 | `state_show_raw` | `true` affiche le texte de l'entité plutôt que le libellé de la card, tel que Home Assistant l'affiche (un climatiseur lit `Froid`, pas `cool`). |
+| `controls_activation` | Comment les boutons de commande réagissent : `tap` (par défaut) les actionne tout de suite, `hold` seulement après un appui long, `off` jamais depuis la card (un appui long ouvre l'entité). Utile contre les appuis accidentels et les petits doigts. |
 | `name` | Titre de la card. Par défaut, le nom de l'entité d'état. |
 | `compact` | `true` masque l'illustration. |
 | `illustration_color` | `auto` (défaut, suit le thème) \| `white` \| `grey` \| `black` \| `red` (rouge foncé). Ne change que la carrosserie, pas les couleurs d'état. |
