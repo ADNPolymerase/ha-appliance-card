@@ -6765,6 +6765,39 @@ const plugHist = cfg => withHistory({ ...PLUG, show_last_cycle: true, ...cfg }, 
   const h = withHistory({ ...PLUG, show_last_cycle: true, power_off_delay: 10 }, plugSt(1), msg => Promise.resolve({ [msg.entity_ids[0]]: rows }));
   await settle();
   check('dernier cycle prise : une pause en cours ne finit pas le cycle', /^1h40 · /.test(lastLine(markup(h.card)) || ''), true);
+  // Opened inside the delay, the card never sees the end: it reads again when
+  // the delay runs out instead of waiting half an hour (#24).
+  check('fin dans le delai : une relecture est programmee', !!h.card._lcCloseTimer, true);
+  await new Promise(r => setTimeout(r, 2300));
+  check('fin dans le delai : pas avant la fin du delai', h.calls.length, 1);
+  clearTimeout(h.card._lcCloseTimer);
+  h.card._lcCloseTimer = null;
+  const was = now();
+  freezeClock(new Date(T0 + 8 * MIN).toISOString());
+  h.card._lastCycleStale = true;
+  h.card._render();
+  await settle();
+  check('fin dans le delai : la relecture interroge l historique', h.calls.length, 2);
+  check('fin dans le delai : puis le nouveau cycle', /^17 min · /.test(lastLine(markup(h.card)) || ''), true);
+  check('fin dans le delai : plus rien a attendre', h.card._lcCloseTimer, null);
+  freezeClock(new Date(was).toISOString());
+}
+{
+  // The timer fires on its own, at the end of the delay plus a margin.
+  const rows = [P(0, -300), P(1500, -200), P(2, -100), P(1500, -20), P(2, -9.99)];
+  const h = withHistory({ ...PLUG, show_last_cycle: true, power_off_delay: 10 }, plugSt(1), msg => Promise.resolve({ [msg.entity_ids[0]]: rows }));
+  await settle();
+  check('fin dans le delai : avant l echeance, une seule lecture', h.calls.length, 1);
+  await new Promise(r => setTimeout(r, 2700));
+  check('fin dans le delai : le minuteur relit l historique', h.calls.length, 2);
+  h.card._lcCloseTimer = setTimeout(() => {}, 100000);
+  h.card.disconnectedCallback();
+  check('fin dans le delai : le minuteur est annule au retrait', h.card._lcCloseTimer, null);
+}
+{
+  const h = plugHist({ power_off_delay: 10 });
+  await settle();
+  check('fin dans le delai : cycle deja clos, aucun minuteur', h.card._lcCloseTimer, null);
 }
 
 {

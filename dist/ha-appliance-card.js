@@ -1,4 +1,4 @@
-const CARD_VERSION = "2.21.4";
+const CARD_VERSION = "2.21.5";
 
 console.info(
   "%c HA-APPLIANCE-CARD %c v" + CARD_VERSION + " ",
@@ -2090,7 +2090,8 @@ function stateRuns(entries, normOf, windowStartMs) {
 
 // The runs of a power meter, as { start, end }: above the threshold, with the
 // dips shorter than gapMs counted as pauses of the same run. The last one has
-// no end while the plug still draws, or while its dip is shorter than gapMs.
+// no end while the plug still draws, or while its dip is shorter than gapMs;
+// in that second case closesAt says when the dip becomes the end.
 function powerRuns(entries, threshold, gapMs, nowMs, windowStartMs) {
   if (!Array.isArray(entries)) return [];
   const runs = [];
@@ -2110,7 +2111,10 @@ function powerRuns(entries, threshold, gapMs, nowMs, windowStartMs) {
     }
   });
   runs.forEach((r) => {
-    if (r.end !== null && nowMs - r.end < gapMs) r.end = null;
+    if (r.end !== null && nowMs - r.end < gapMs) {
+      r.closesAt = r.end + gapMs;
+      r.end = null;
+    }
   });
   return runs;
 }
@@ -7370,6 +7374,8 @@ class ApplianceCard extends HTMLElement {
     this._offDelayTimer = null;
     if (this._lcRetryTimer) clearTimeout(this._lcRetryTimer);
     this._lcRetryTimer = null;
+    if (this._lcCloseTimer) clearTimeout(this._lcCloseTimer);
+    this._lcCloseTimer = null;
   }
 
   // Nothing changes on a plug that has stopped drawing, so nothing would
@@ -7427,8 +7433,25 @@ class ApplianceCard extends HTMLElement {
       const seen = this._lcEndSeenAt;
       if (seen && !(lc && lc.end >= seen - gapMs - 5 * 60000)) this._armLastCycleRetry();
       else this._lcEndSeenAt = null;
+      // A cycle that stopped drawing less than power_off_delay ago is not over
+      // yet, so the one before it is shown. A card opened in that window never
+      // sees the end happen, and kept the old cycle until its half-hourly read
+      // (#24). It reads again the moment the delay runs out.
+      const last = runs[runs.length - 1];
+      this._armLastCycleClose(last && last.closesAt);
       this._render();
     }, () => {});
+  }
+
+  _armLastCycleClose(at) {
+    if (this._lcCloseTimer) clearTimeout(this._lcCloseTimer);
+    this._lcCloseTimer = null;
+    if (this._inert || !Number.isFinite(at)) return;
+    this._lcCloseTimer = setTimeout(() => {
+      this._lcCloseTimer = null;
+      this._lastCycleStale = true;
+      this._render();
+    }, Math.max(0, at - Date.now()) + 2000);
   }
 
   _armLastCycleRetry() {
