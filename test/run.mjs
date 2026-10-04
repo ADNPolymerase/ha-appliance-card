@@ -7084,7 +7084,8 @@ contains('borne : hors ligne, la diode s eteint', evR('unavailable'), '.machine.
 check('borne : hors ligne, la machine le dit', hasCls(evR('unavailable'), 'mode-offline'), true);
 contains('borne : la boite est dessinee', evR('Charging'), '<div class="ev-box"><div class="ev-face"><div class="ev-led"></div>');
 contains('borne : le cable aussi', evR('Charging'), '<svg class="ev-cable"');
-contains('borne : et la prise dans son etui', evR('Charging'), '<div class="ev-plug"></div>');
+contains('borne : et la prise, une CCS', evR('Charging'), '<div class="ev-plug"><i class="pl-boot"></i><i class="pl-grip"></i>'
+  + '<i class="pl-collar"></i><i class="pl-head"></i><i class="pl-ac"></i><i class="pl-dc"></i><i class="pl-latch"></i></div>');
 check('borne : aucune animation propre', /@keyframes ev-/.test(evR('Charging')), false);
 check('borne : la charge compte comme en marche', hasCls(evR('Charging'), 'spinning'), true);
 check('borne : en pause, rien ne tourne', hasCls(evR('SuspendedEVSE'), 'spinning'), false);
@@ -7331,8 +7332,32 @@ check('borne : la prise dit pas de voiture, elle reste', hasCls(vehR('Charging',
 check('repli : en charge, la prise sort', hasCls(fbR('on', 3000), 'plugged'), true);
 check('repli : branchee, la prise sort', hasCls(fbR('on', 0), 'plugged'), true);
 check('repli : sans voiture, elle reste', hasCls(fbR('off', 0), 'plugged'), false);
-contains('borne : le cable part vers la voiture', evR('Charging'), '<path class="ev-out" d="M42 69 C42 98 62 102 88 102"/>');
-contains('borne : sans voiture, il reste en boucle', evR('Available'), '<path class="ev-loop" d="M42 69 C42 104 69 104 69 56"/>');
+contains('borne : le cable part vers la voiture', evR('Charging'), '<path class="ev-out" d="M42 69 C42 96 50 102 70 102"/>');
+contains('borne : sans voiture, il reste en boucle', evR('Available'), '<path class="ev-loop" d="M42 69 C42 104 69 104 69 57"/>');
+// The plug turns about the point where the cable enters it: the cable ends
+// there in both places, the head goes up into the holster, and at the car it
+// lies flat with its head at the edge, where the car is.
+{
+  const h = evR('Charging');
+  const st = (/<style>([\s\S]*?)<\/style>/.exec(h) || [, ''])[1];
+  const num = (re) => Number((re.exec(st) || [, NaN])[1]);
+  const end = cls => (new RegExp(`<path class="${cls}" d="[^"]* (\\S+) (\\S+)"/>`).exec(h) || []).slice(1).map(Number);
+  const origin = /\.ev-plug \{[^}]*transform-origin: 0 6px;/.test(st);
+  const parked = [num(/\.ev-plug \{[^}]*left: ([\d.]+)px;/), num(/\.ev-plug \{[^}]*top: ([\d.]+)px;/) + 6];
+  const atCar = [num(/\.machine\.plugged \.ev-plug \{ left: ([\d.]+)px;/), num(/\.machine\.plugged \.ev-plug \{[^}]*top: ([\d.]+)px;/) + 6];
+  const length = num(/\.ev-plug \{[^}]*width: ([\d.]+)px;/);
+  check('prise : elle tourne autour de l entree du cable', origin, true);
+  check('prise : dans son etui, au bout de la boucle', parked.join(), end('ev-loop').join());
+  check('prise : a la voiture, au bout du cable', atCar.join(), end('ev-out').join());
+  check('prise : la tete en haut dans l etui', /\.ev-plug \{[^}]*transform: rotate\(-90deg\);/.test(st), true);
+  check('prise : a plat a la voiture', /\.machine\.plugged \.ev-plug \{[^}]*transform: none;/.test(st), true);
+  check('prise : la tete au bord, cote voiture', atCar[0] + length, 96);
+  const holsterTop = num(/\.ev-holster \{[^}]*top: ([\d.]+)px;/), holsterH = num(/\.ev-holster \{[^}]*height: ([\d.]+)px;/);
+  const headFrom = num(/\.pl-head \{[^}]*left: ([\d.]+)px;/);
+  check('prise : l etui couvre la tete', holsterTop <= parked[1] - length && holsterTop + holsterH >= parked[1] - headFrom, true);
+  check('prise : le col dans la couleur de la borne', /\.pl-collar \{[^}]*var\(--ac-body,/.test(st), true);
+  check('prise : la partie DC sous la partie AC', num(/\.pl-dc \{ top: ([\d.]+)px;/) > num(/\.pl-ac \{ top: ([\d.]+)px;/) + num(/\.pl-ac \{[^}]*height: ([\d.]+)px;/), true);
+}
 contains('borne : la boucle cede la place au cable tendu', evR('Charging'), '.ev-cable .ev-out, .ev-cable .ev-live, .machine.plugged .ev-cable .ev-loop { display: none; }');
 contains('borne : la prise quitte son etui', evR('Charging'), '.machine.plugged .ev-plug {');
 contains('borne : en charge, le cable prend la couleur de l etat', evR('Charging'), '.ev-cable .ev-live { stroke: var(--info-color, #2196f3);');

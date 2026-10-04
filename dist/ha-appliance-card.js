@@ -6639,8 +6639,8 @@ const ILLUSTRATION_CSS = {
         }
   `,
   // An EV charger on the wall, from the front: the box, its dark face with a
-  // bolt and the light above it, the holster on its side with the plug parked
-  // in it, and the cable looping down between the two. The light takes the
+  // bolt and the light above it, the holster on its side with a CCS plug
+  // parked in it head first, and the cable looping down between the two. The light takes the
   // colour of the state, the one the state line is written in, and goes dark
   // when the charger is offline. With a car at it, the plug leaves its holster
   // and the cable runs off towards the car; while it charges, the cable
@@ -6662,26 +6662,50 @@ const ILLUSTRATION_CSS = {
         .machine.mode-offline .ev-led, .machine.mode-unknown .ev-led { background: #4a5057; box-shadow: none; }
         .ev-bolt { position: absolute; left: 50%; top: 19px; width: 14px; height: 18px; margin-left: -7px; fill: rgba(255, 255, 255, 0.5); }
         .ev-holster {
-          position: absolute; left: 63px; top: 24px; width: 12px; height: 18px; border-radius: 3px 6px 6px 3px;
+          position: absolute; left: 61px; top: 27px; width: 16px; height: 16px; border-radius: 3px 6px 6px 3px;
           background: linear-gradient(160deg, var(--ac-body-hi, #ffffff), var(--ac-body, #eef0f1) 50%, var(--ac-body-lo, #c9ced2));
-          box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.12);
+          box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.14);
         }
-        .ev-plug {
-          position: absolute; left: 65px; top: 34px; width: 8px; height: 22px; border-radius: 3px 3px 4px 4px;
-          background: linear-gradient(90deg, #2f3439, #50565d 50%, #2f3439);
+        /* A CCS plug, drawn lying down with the cable on the left: the strain
+           relief, the grip, a collar in the colour of the box, and the taller
+           head, its Type 2 part above the two DC pins and the release latch
+           on top. It turns about the point where the cable enters it: head up
+           into the holster, head first into the car. */
+        .ev-plug { position: absolute; left: 69px; top: 51px; width: 26px; height: 12px; transform-origin: 0 6px; transform: rotate(-90deg); }
+        .ev-plug > i { position: absolute; display: block; }
+        .pl-boot {
+          left: 0; top: 3px; width: 6px; height: 6px; clip-path: polygon(0 25%, 100% 0, 100% 100%, 0 75%);
+          background: linear-gradient(180deg, #4a5056, #2b2f34);
         }
+        .pl-grip {
+          left: 5px; top: 2.5px; width: 10px; height: 7px; border-radius: 3px;
+          background: linear-gradient(180deg, #5b6168, #3a3f45 45%, #24282c);
+        }
+        .pl-collar {
+          left: 14.5px; top: 1px; width: 2px; height: 10px; border-radius: 1px; box-shadow: 0 0 0 0.5px rgba(0, 0, 0, 0.3);
+          background: linear-gradient(180deg, var(--ac-body-hi, #ffffff), var(--ac-body, #eef0f1) 50%, var(--ac-body-lo, #c9ced2));
+        }
+        .pl-head {
+          left: 16px; top: 0.5px; width: 9px; height: 11px; border-radius: 2px 3px 3px 2px;
+          background: linear-gradient(180deg, #50565c, #2f3439 50%, #1d2125);
+        }
+        .pl-ac, .pl-dc { left: 24.5px; width: 1.5px; background: #15181b; }
+        .pl-ac { top: 1.2px; height: 5.6px; border-radius: 0 2px 2px 0; }
+        .pl-dc { top: 7.6px; height: 3.2px; border-radius: 0 1.5px 1.5px 0; }
+        .pl-latch { left: 18px; top: -0.5px; width: 4px; height: 1.5px; border-radius: 1px 1px 0 0; background: #5f656c; }
         .ev-cable { position: absolute; left: 0; top: 0; width: 96px; height: 108px; overflow: visible; }
         .ev-cable path { fill: none; stroke: #3b4048; stroke-width: 3.5; stroke-linecap: round; }
         .ev-cable .ev-out, .ev-cable .ev-live, .machine.plugged .ev-cable .ev-loop { display: none; }
         .machine.plugged .ev-cable .ev-out { display: inline; }
         .ev-cable .ev-live { stroke: ${color}; stroke-width: 1.3; }
         .machine.plugged.mode-charging .ev-cable .ev-live { display: inline; }
-        .machine.plugged .ev-plug {
-          left: 84px; top: 98px; width: 12px; height: 8px; border-radius: 2px 4px 4px 2px;
-          background: linear-gradient(180deg, #2f3439, #50565d 50%, #2f3439);
-        }
+        .machine.plugged .ev-plug { left: 70px; top: 96px; transform: none; }
   `,
 };
+
+// The parts of the CCS plug, as the CSS above lays them out.
+const EV_PLUG_PARTS = '<i class="pl-boot"></i><i class="pl-grip"></i><i class="pl-collar"></i><i class="pl-head"></i>'
+  + '<i class="pl-ac"></i><i class="pl-dc"></i><i class="pl-latch"></i>';
 
 function illustrationCss(type, color) {
   const family = type === "dishwasher" ? "dishwasher" : LAUNDRY_TYPES.includes(type) ? "laundry" : type;
@@ -7213,11 +7237,11 @@ function illustrationHtml(type, ctx) {
     const e = ctx.ev || {};
     return `
         <div class="machine ${cls} mode-${e.mode || "unknown"}${e.plugged ? " plugged" : ""}">
-          <svg class="ev-cable" viewBox="0 0 96 108" aria-hidden="true"><path class="ev-loop" d="M42 69 C42 104 69 104 69 56"/><path class="ev-out" d="M42 69 C42 98 62 102 88 102"/><path class="ev-live" d="M42 69 C42 98 62 102 88 102"/></svg>
+          <svg class="ev-cable" viewBox="0 0 96 108" aria-hidden="true"><path class="ev-loop" d="M42 69 C42 104 69 104 69 57"/><path class="ev-out" d="M42 69 C42 96 50 102 70 102"/><path class="ev-live" d="M42 69 C42 96 50 102 70 102"/></svg>
           <div class="ev-box"><div class="ev-face"><div class="ev-led"></div>
             <svg class="ev-bolt" viewBox="0 0 24 24" aria-hidden="true"><path d="M11 15H6L13 1V9H18L11 23V15Z"/></svg>
           </div></div>
-          <div class="ev-plug"></div>
+          <div class="ev-plug">${EV_PLUG_PARTS}</div>
           <div class="ev-holster"></div>
         </div>`;
   }
