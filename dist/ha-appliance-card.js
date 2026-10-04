@@ -2659,8 +2659,9 @@ const EV_STATES = {
   // Ohme.
   unplugged: "no_vehicle", pending_approval: "awaiting_auth", plugged_in: "connected", paused: "paused", finished: "done",
   // Tesla Wall Connector. Waiting for the car is a car not taking what the
-  // box offers, OCPP's SuspendedEV.
-  not_connected: "no_vehicle", connected: "connected", ready: "connected", negotiating: "connected",
+  // box offers, OCPP's SuspendedEV. Its ready, a car plugged in, is left to
+  // the shared words: on a Wallbox, Ready is a box with no car at it.
+  not_connected: "no_vehicle", connected: "connected", negotiating: "connected",
   waiting_car: "paused", charging_reduced: "charging", charging_finished: "done",
   // NRGkick.
   standby: "no_vehicle",
@@ -2717,7 +2718,7 @@ function evModeOf(raw, stateMap) {
 // entity cannot say, which leaves the status alone. IEC 61851's letters are
 // not read here either.
 const EV_PLUGGED = ["on", "true", "yes", "plugged", "plugged_in", "connected", "vehicle_connected", "vehicle_locked",
-  "vehicle_detected", "ev_connected", "car_connected", "ready"];
+  "vehicle_detected", "ev_connected", "car_connected"];
 const EV_UNPLUGGED = ["off", "false", "no", "unplugged", "not_plugged", "disconnected", "not_connected", "cable_only",
   "no_vehicle", "no_ev_connected", "no_car"];
 function evPluggedOf(st) {

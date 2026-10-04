@@ -7035,7 +7035,7 @@ const EV_SOURCES = {
     ['fault', 'error'], ['invalid', 'error']],
   Ohme: [['unplugged', 'no_vehicle'], ['pending_approval', 'awaiting_auth'], ['charging', 'charging'], ['plugged_in', 'connected'],
     ['paused', 'paused'], ['finished', 'done']],
-  'Tesla Wall Connector': [['not_connected', 'no_vehicle'], ['connected', 'connected'], ['ready', 'connected'], ['negotiating', 'connected'],
+  'Tesla Wall Connector': [['not_connected', 'no_vehicle'], ['connected', 'connected'], ['negotiating', 'connected'],
     ['error', 'error'], ['charging_finished', 'done'], ['waiting_car', 'paused'], ['charging_reduced', 'charging'], ['charging', 'charging']],
   NRGkick: [['standby', 'no_vehicle'], ['connected', 'connected'], ['charging', 'charging'], ['error', 'error']],
   OpenEVSE: [['not_connected', 'no_vehicle'], ['connected', 'connected'], ['charging', 'charging'], ['vent_required', 'error'],
@@ -7066,6 +7066,12 @@ for (const raw of ['booting', 'wakeup', 'updating_firmware', 'locked'])
   check(`borne : ${raw} n est pas devine`, evKnown(evR(raw)), 'unknown');
 check('borne : booting reste ecrit', stateLine(evR('booting')), 'booting');
 check('borne : updating_firmware nettoye', stateLine(evR('updating_firmware')), 'updating firmware');
+// Ready is a car plugged in on a Tesla and a box with no car on a Wallbox:
+// neither is guessed, the word reads as on any appliance, at rest.
+check('borne : ready n est pas devine', evKnown(evR('ready')), 'unknown');
+check('borne : ready se lit comme ailleurs', stateLine(evR('ready')), 'Idle');
+check('borne : ready, la prise reste dans son etui', hasCls(evR('ready'), 'plugged'), false);
+check('borne : ready se mappe pour une Tesla', evMode(evR('ready', { state_map: { ready: 'connected' } })), 'connected');
 
 // Each state has its colour, on the state line and on the light alike.
 for (const [raw, mode] of [['Available', 'no_vehicle'], ['Preparing', 'connected'], ['X', 'awaiting_auth'], ['Charging', 'charging'],
@@ -7261,6 +7267,8 @@ check('repli : sans voiture, meme si le compteur bouge', evMode(fbR('off', 3000)
 check('repli : voiture et puissance au-dessus du seuil, en charge', evMode(fbR('on', 3000)), 'charging');
 check('repli : voiture sans puissance, branchee', evMode(fbR('on', 0)), 'connected');
 check('repli : les trois se lisent', [fbR('off', 0), fbR('on', 3000), fbR('on', 0)].map(stateLine).join('|'), 'No vehicle|Charging|Plugged in');
+// A plug in words reads only the words that cannot mean the opposite.
+check('repli : une prise qui dit ready ne dit rien', stateLine(fbR('ready', 0)), 'Idle');
 check('repli : seuil par defaut, 99 W branchee', evMode(fbR('on', 99)), 'connected');
 check('repli : seuil par defaut, 100 W en charge', evMode(fbR('on', 100)), 'charging');
 check('repli : seuil choisi, en dessous', evMode(fbR('on', 1200, { power_on_threshold: 1300 })), 'connected');
