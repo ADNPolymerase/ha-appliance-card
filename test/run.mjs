@@ -8046,4 +8046,73 @@ check('borne : ni un statut reconnu', evMode(evR('SuspendedEVSE', { power_entity
   }
 }
 
+// == Pet fountain ==============================================================
+// The water runs or it does not; the filter, the pump and the water left take
+// the state line over while they need a hand, the water first.
+{
+  const FT = {
+    'switch.fountain_power': { state: 'on', attributes: { friendly_name: 'Fountain' } },
+    'sensor.fountain_filter_days': { state: '19', attributes: { unit_of_measurement: 'd' } },
+    'sensor.fountain_pump_days': { state: '12', attributes: { unit_of_measurement: 'd' } },
+    'button.fountain_reset_filter': { state: 'unknown', attributes: {} },
+    'button.fountain_reset_pump': { state: 'unknown', attributes: {} },
+  };
+  const CFG_FT = { appliance_type: 'pet_fountain', state_entity: 'switch.fountain_power',
+    filter_life_entity: 'sensor.fountain_filter_days', filter_reset_entity: 'button.fountain_reset_filter',
+    pump_clean_entity: 'sensor.fountain_pump_days', pump_reset_entity: 'button.fountain_reset_pump' };
+  const ft = (extra = {}, more = {}) => render({ ...CFG_FT, ...extra }, { ...FT, ...more });
+  const on = ft();
+  check('fontaine : allumee, l\'eau coule', stateLine(on), 'Flowing');
+  check('fontaine : le jet et le remous', machineCls(on).split(' ').includes('flowing'), true);
+  check('fontaine : la lumiere bleue', machineCls(on).split(' ').includes('led-on'), true);
+  check('fontaine : reservoir, vasque, bec, jet et lumiere',
+    hasAll(on, ['ft-body', 'ft-win', 'ft-water', 'ft-rim', 'ft-pool', 'ft-spout', 'ft-jet', 'ft-led']), '');
+  check('fontaine : sans niveau, le reservoir garde sa hauteur', /--ft-fill: 55%/.test(on), true);
+  check('fontaine : le filtre en jours', infoLine(on, 'Filter').replace(/\s/g, ' '), '19 d');
+  check('fontaine : la pompe en jours', infoLine(on, 'Pump').replace(/\s/g, ' '), '12 d');
+  check('fontaine : un bouton pour le filtre', /data-entity="button.fountain_reset_filter"/.test(on), true);
+  check('fontaine : un bouton pour la pompe', /data-entity="button.fountain_reset_pump"/.test(on), true);
+  const off = ft({}, { 'switch.fountain_power': { state: 'off', attributes: {} } });
+  check('fontaine : eteinte', stateLine(off), 'Off');
+  check('fontaine : eteinte, l\'eau ne coule pas', machineCls(off).split(' ').includes('flowing'), false);
+  const filt = ft({}, { 'sensor.fountain_filter_days': { state: '3', attributes: { unit_of_measurement: 'd' } } });
+  check('fontaine : filtre a trois jours, a changer', stateLine(filt), 'Filter due');
+  check('fontaine : l\'eau coule quand meme', machineCls(filt).split(' ').includes('flowing'), true);
+  check('fontaine : lumiere orange', machineCls(filt).split(' ').includes('led-due'), true);
+  check('fontaine : quatre jours, rien a dire', stateLine(ft({}, { 'sensor.fountain_filter_days': { state: '4', attributes: { unit_of_measurement: 'd' } } })), 'Flowing');
+  check('fontaine : en pourcent, dix par defaut',
+    stateLine(ft({}, { 'sensor.fountain_filter_days': { state: '9', attributes: { unit_of_measurement: '%' } } })), 'Filter due');
+  check('fontaine : le seuil se choisit', stateLine(ft({ filter_due_below: '5' }, { 'sensor.fountain_filter_days': { state: '5', attributes: { unit_of_measurement: 'd' } } })), 'Filter due');
+  check('fontaine : la pompe a nettoyer', stateLine(ft({}, { 'sensor.fountain_pump_days': { state: '0', attributes: { unit_of_measurement: 'd' } } })), 'Clean the pump');
+  check('fontaine : le filtre passe avant la pompe',
+    stateLine(ft({}, { 'sensor.fountain_filter_days': { state: '1', attributes: { unit_of_measurement: 'd' } },
+      'sensor.fountain_pump_days': { state: '0', attributes: { unit_of_measurement: 'd' } } })), 'Filter due');
+  const low = ft({ water_level_entity: 'binary_sensor.fountain_low' },
+    { 'binary_sensor.fountain_low': { state: 'on', attributes: {} }, 'sensor.fountain_filter_days': { state: '1', attributes: { unit_of_measurement: 'd' } } });
+  check('fontaine : peu d\'eau passe avant tout', stateLine(low), 'Low water');
+  check('fontaine : lumiere rouge', machineCls(low).split(' ').includes('led-low'), true);
+  check('fontaine : le reservoir presque vide', /--ft-fill: 8%/.test(low), true);
+  const lvl = ft({ water_level_entity: 'sensor.fountain_water' }, { 'sensor.fountain_water': { state: '70', attributes: { unit_of_measurement: '%' } } });
+  check('fontaine : le niveau remplit le reservoir', /--ft-fill: 70%/.test(lvl), true);
+  check('fontaine : et a sa ligne', infoLine(lvl, 'Water').replace(/\s/g, ' '), '70 %');
+  check('fontaine : dix pourcent, peu d\'eau', stateLine(ft({ water_level_entity: 'sensor.fountain_water' },
+    { 'sensor.fountain_water': { state: '10', attributes: { unit_of_measurement: '%' } } })), 'Low water');
+  check('fontaine : en allemand', stateLine(ft({ language: 'de' })), 'Fließt');
+  check('fontaine : reconnue a son nom', machineCls(render({ state_entity: 'switch.petsnowy_water_fountain_power' },
+    { 'switch.petsnowy_water_fountain_power': { state: 'on', attributes: {} } })).split(' ').includes('flowing'), true);
+  check('fontaine : la pompe designe une fontaine', machineCls(render({ state_entity: 'switch.x', pump_clean_entity: 'sensor.fountain_pump_days' },
+    { 'switch.x': { state: 'on', attributes: {} }, ...FT })).split(' ').includes('led-on'), true);
+  check('fontaine : comme partout, une entite d\'etat', accepts({ appliance_type: 'pet_fountain' }), false);
+  check('fontaine : la hotte garde son filtre en pourcent',
+    infoLine(render({ appliance_type: 'hood', state_entity: 'fan.hood', filter_life_entity: 'sensor.hood_filter' },
+      { 'fan.hood': { state: 'off', attributes: {} }, 'sensor.hood_filter': { state: '40', attributes: { unit_of_measurement: '%' } } }), 'Filter').replace(/\s/g, ' '), '40 %');
+  const ed = new Editor();
+  ed.setConfig({ type: 'custom:ha-appliance-card', appliance_type: 'pet_fountain', state_entity: 'switch.fountain_power' });
+  ed.hass = HASS(FT);
+  const eh = markup(ed._root);
+  check('editeur fontaine : le type se choisit', /<option value="pet_fountain"\s*selected>Pet fountain</.test(eh), true);
+  check('editeur fontaine : nettoyage de la pompe', /Pump cleaning/.test(eh), true);
+  check('editeur fontaine : niveau d\'eau', /Water level/.test(eh), true);
+}
+
 report();

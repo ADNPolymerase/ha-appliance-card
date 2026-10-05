@@ -93,6 +93,9 @@ Par type :
 | `fan_entity` | hotte | Vitesse : pourcentage ou preset d'un `fan`, ou `select`, `sensor` ou `number` ramené sur 1 à 3. Un clic sur la ligne ouvre l'entité pour la changer. |
 | `boost_entity` | hotte | Mode intensif, quand le preset ne le dit pas. |
 | `filter_life_entity` / `filter_reset_entity` | hotte | Usure du filtre en barre, et bouton de remise à zéro. |
+| `filter_life_entity` / `filter_reset_entity` / `filter_due_below` | fontaine | Les jours ou le pourcentage restants du filtre, sur une ligne, et un bouton de réinitialisation. À `filter_due_below` ou en dessous (3 pour des jours, 10 pour un pourcentage par défaut), l'état lit *Filtre à changer* et le voyant passe à l'orange. |
+| `pump_clean_entity` / `pump_reset_entity` | fontaine | Pareil pour la pompe : les jours ou le pourcentage avant son nettoyage, avec le même seuil, et un bouton de réinitialisation. L'état lit *Pompe à nettoyer*. |
+| `water_level_entity` / `level_empty_below` | fontaine | L'eau restante, un pourcentage qui remplit le réservoir sur le dessin, ou un contact allumé quand elle manque. À `level_empty_below` ou en dessous (10 par défaut), l'état lit *Peu d'eau*, en rouge, avant tout le reste : une pompe à sec grille. |
 | `zones` / `zones_layout` / `zones_count` | plaque | Jusqu'à 6 foyers `{ level_entity, residual_heat_entity?, name? }`, niveau en chiffre ou en mot (`boost`), `H` pour la chaleur résiduelle. Disposition `2x1` \| `2x2` \| `3x2`, et nombre de foyers à dessiner sans entité (4 par défaut). |
 | `child_lock_entity` | plaque | Cadenas sur l'illustration. |
 | `fridge_layout` | frigo | `freezer_bottom` (défaut) \| `freezer_top` \| `side_by_side` \| `single` \| `wine` (porte vitrée et bouteilles, pour une cave à vin). |
@@ -347,6 +350,26 @@ corner_entities:
   - switch.distributeur_auto_lock
   - switch.distributeur_child_lock
 ```
+
+### Fontaines à eau
+
+Une fontaine tourne toute la journée, alors comme un distributeur elle se lit plus qu'elle ne se commande. L'eau sort du bec en bouillonnant et se ride dans la vasque tant que la pompe tourne, d'après un interrupteur ou la prise sur laquelle elle est branchée. Le reste de ce qu'elle dit, c'est ce qui demande un coup de main : l'eau d'abord, puis le filtre, puis la pompe, chacun prenant la ligne d'état et le voyant en façade, orange pour le filtre et la pompe, rouge et clignotant pour l'eau.
+
+```yaml
+type: custom:ha-appliance-card
+appliance_type: pet_fountain
+state_entity: switch.fontaine_alimentation
+filter_life_entity: sensor.fontaine_jours_filtre
+filter_reset_entity: button.fontaine_reinitialiser_filtre
+pump_clean_entity: sensor.fontaine_jours_nettoyage_pompe
+pump_reset_entity: button.fontaine_reinitialiser_pompe
+corner_entities:
+  - switch.fontaine_voyant
+info_entities:
+  - select.fontaine_mode
+```
+
+Une fontaine qui ne connaît pas son niveau d'eau garde un réservoir à mi-hauteur sur le dessin plutôt que de le montrer vide.
 
 ### Poêles à granulés
 

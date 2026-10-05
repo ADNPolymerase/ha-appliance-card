@@ -93,6 +93,9 @@ Per type:
 | `fan_entity` | hood | Speed: a `fan`'s percentage or preset, or a `select`, `sensor` or `number` mapped onto 1 to 3. Clicking the line opens the entity to change it. |
 | `boost_entity` | hood | Intensive mode, when the preset doesn't say so. |
 | `filter_life_entity` / `filter_reset_entity` | hood | Filter wear as a bar, and a reset button. |
+| `filter_life_entity` / `filter_reset_entity` / `filter_due_below` | pet fountain | The filter's days or percent left, on a line, and a reset button. At or below `filter_due_below` (3 for days, 10 for percent by default) the state reads *Filter due* and the light turns orange. |
+| `pump_clean_entity` / `pump_reset_entity` | pet fountain | The same for the pump: days or percent until it wants cleaning, against the same threshold, and a reset button. The state reads *Clean the pump*. |
+| `water_level_entity` / `level_empty_below` | pet fountain | The water left, a percentage that fills the tank on the drawing, or a contact on when it runs low. At or below `level_empty_below` (10 by default) the state reads *Low water*, in red, ahead of everything else: a dry pump burns out. |
 | `zones` / `zones_layout` / `zones_count` | cooktop | Up to 6 zones `{ level_entity, residual_heat_entity?, name? }`, level as a number or a word (`boost`), `H` for residual heat. Layout `2x1` \| `2x2` \| `3x2`, and how many zones to draw without entities (default 4). |
 | `child_lock_entity` | cooktop | Padlock on the illustration. |
 | `fridge_layout` | fridge | `freezer_bottom` (default) \| `freezer_top` \| `side_by_side` \| `single` \| `wine` (glass door and bottles, for a wine cooler). |
@@ -347,6 +350,26 @@ corner_entities:
   - switch.feeder_auto_lock
   - switch.feeder_child_lock
 ```
+
+### Pet fountains
+
+A fountain runs all day, so like a feeder it is read rather than run. The water bubbles out of the spout and ripples across the dish while the pump runs, from a switch or the plug the fountain sits on. What it says otherwise is what needs a hand: the water first, then the filter, then the pump, each taking the state line and the light on its front over, orange for the filter and the pump, red and blinking for the water.
+
+```yaml
+type: custom:ha-appliance-card
+appliance_type: pet_fountain
+state_entity: switch.fountain_power
+filter_life_entity: sensor.fountain_filter_days
+filter_reset_entity: button.fountain_reset_filter
+pump_clean_entity: sensor.fountain_pump_cleaning_days
+pump_reset_entity: button.fountain_reset_pump
+corner_entities:
+  - switch.fountain_indicator_light
+info_entities:
+  - select.fountain_work_mode
+```
+
+A fountain that does not know its water level keeps the tank at a resting height on the drawing rather than reading as empty.
 
 ### Pellet stoves
 
