@@ -124,7 +124,8 @@ Par type :
 | `printed_part` | imprimante 3D | La pièce sur le plateau : `cube` (défaut), `pyramid` (pyramide) ou `duck` (un canard en plastique). Elle apparaît de bas en haut au fil de l'impression. |
 | `iron_layout` | fer | `iron` (défaut, le fer seul) \| `generator` (le même fer sur le socle d'une centrale vapeur). |
 | `left_on_after` | fer | Minutes allumé au bout desquelles la ligne d'état affiche *Resté allumé*, en rouge. Vide, cela n'arrive jamais. |
-| `feeder_layout` | distributeur | `tower` (défaut, un réservoir carré sur son socle) \| `canister` (un réservoir rond sur un socle rond) \| `double` (deux sorties et deux gamelles). |
+| `feeder_layout` | distributeur | `tower` (défaut, un réservoir carré sur son socle) \| `canister` (un réservoir rond sur un socle rond) \| `double` (deux sorties et deux gamelles) \| `dual_split` (deux réservoirs au-dessus d'une gamelle partagée par le milieu) \| `rotary` (des assiettes sur un plateau tournant sous un couvercle, pour la pâtée). |
+| `level_b_entity` | distributeur | Le niveau du second réservoir, sur un distributeur qui en a deux (`dual_split`), lu comme `level_entity` et avec les mêmes `level_empty_below` et `level_max`. Il remplit la fenêtre de droite, a sa propre ligne, et vide il fait passer l'état à *Réservoir vide* en ne vidant que sa moitié. |
 | `portions_today_entity` / `weight_today_entity` | distributeur | Ce qui a été servi aujourd'hui, sur une seule ligne. Sans entité de poids, la carte calcule les grammes à partir de `portion_weight_entity` : rien n'est supposé sur la taille d'un repas. |
 | `serving_size_entity` / `portion_weight_entity` | distributeur | Combien de portions par distribution, et ce que pèse une portion. |
 | `schedule_entity` | distributeur | Le planning, dans les mots de l'intégration, sur une ligne qui s'enroule. |
@@ -346,6 +347,24 @@ feeder_layout: canister
 corner_entities:
   - switch.distributeur_auto_lock
   - switch.distributeur_child_lock
+```
+
+Deux autres couvrent les distributeurs qui n'entrent dans aucun des trois. `dual_split` a deux réservoirs côte à côte, par exemple les friandises à gauche et les croquettes à droite, chacun avec sa sortie au-dessus de sa moitié d'une seule gamelle large. Chaque réservoir lit son propre niveau, et celui qui se vide ne laisse nues que sa fenêtre et sa moitié de gamelle :
+
+```yaml
+feeder_layout: dual_split
+state_entity: binary_sensor.distributeur_en_cours
+level_entity: binary_sensor.distributeur_reservoir_1_bas
+level_b_entity: binary_sensor.distributeur_reservoir_2_bas
+```
+
+`rotary` est un distributeur de pâtée : des assiettes sur un plateau tournant sous un couvercle percé d'une ouverture. Servir, c'est ouvrir, donc l'entité d'état est celle qui dit que le couvercle est ouvert, et la trappe se lève sur l'assiette de devant. Son niveau est le nombre d'assiettes restantes, compté sur celles qu'il contient :
+
+```yaml
+feeder_layout: rotary
+state_entity: switch.distributeur_patee_couvercle
+level_entity: counter.distributeur_patee_assiettes
+level_max: 3
 ```
 
 ### Poêles à granulés

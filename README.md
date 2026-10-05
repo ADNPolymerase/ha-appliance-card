@@ -124,7 +124,8 @@ Per type:
 | `printed_part` | 3D printer | The part on the bed: `cube` (default), `pyramid` or `duck` (a rubber duck). It shows from the bottom up as it prints. |
 | `iron_layout` | iron | `iron` (default, the iron alone) \| `generator` (the same iron on the base of a steam generator). |
 | `left_on_after` | iron | Minutes switched on after which the state line reads *Left on*, in red. Empty, it never does. |
-| `feeder_layout` | pet feeder | `tower` (default, a square tank on its base) \| `canister` (a round tank on a round base) \| `double` (two outlets and two bowls). |
+| `feeder_layout` | pet feeder | `tower` (default, a square tank on its base) \| `canister` (a round tank on a round base) \| `double` (two outlets and two bowls) \| `dual_split` (two hoppers over one bowl split down the middle) \| `rotary` (plates on a turntable under a lid, for wet food). |
+| `level_b_entity` | pet feeder | The second hopper's level, on a feeder with two (`dual_split`), read like `level_entity` and against the same `level_empty_below` and `level_max`. It fills the right-hand window, gets its own line, and empty it turns the state to *Tank empty* and leaves only its own half bare. |
 | `portions_today_entity` / `weight_today_entity` | pet feeder | What was served today, on one line. Without a weight entity the card works the grams out from `portion_weight_entity`, so nothing is assumed about the size of a meal. |
 | `serving_size_entity` / `portion_weight_entity` | pet feeder | How many portions a serving holds, and what one weighs. |
 | `schedule_entity` | pet feeder | The feeding plan, as the integration words it, on a line that wraps. |
@@ -346,6 +347,24 @@ feeder_layout: canister
 corner_entities:
   - switch.feeder_auto_lock
   - switch.feeder_child_lock
+```
+
+Two more cover feeders that do not fit those three. `dual_split` has two hoppers side by side, say snacks on the left and kibble on the right, each with its own outlet over its own half of one wide bowl. Each hopper reads its own level, and one running empty leaves only its window and its half of the bowl bare:
+
+```yaml
+feeder_layout: dual_split
+state_entity: binary_sensor.feeder_dispensing
+level_entity: binary_sensor.feeder_hopper_1_low
+level_b_entity: binary_sensor.feeder_hopper_2_low
+```
+
+`rotary` is a wet-food feeder: plates on a turntable under a lid with one opening. Serving opens it, so the state entity is whatever says the lid is open, and the flap lifts on the plate in front. Its level is the plates left, counted out of the plates it holds:
+
+```yaml
+feeder_layout: rotary
+state_entity: switch.wet_feeder_lid
+level_entity: counter.wet_feeder_plates_left
+level_max: 3
 ```
 
 ### Pellet stoves

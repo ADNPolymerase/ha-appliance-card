@@ -4708,6 +4708,70 @@ check('double : pas de reservoir fume', /class="pf-tank/.test(dbl50), false);
 check('double : le chat a toujours son corps', /class="body"/.test(fDbl(0)) && !/\.pf-dbody[^{]*\.body|\.double \.body/.test(fDbl(0)), true);
 check('double : le chat vient a droite', /class="pf-cat"/.test(fDbl(0)), true);
 
+// Two hoppers over one split bowl: a level for each hopper, an outlet for
+// each over its own half, and one hopper can run empty on its own.
+const fDs = (a, b, extra, more) => feeder({ feeder_layout: 'dual_split', level_entity: 'sensor.food_level', level_b_entity: 'sensor.food_level_b', ...extra },
+  { 'sensor.food_level': { state: String(a), attributes: { unit_of_measurement: '%' } },
+    'sensor.food_level_b': { state: String(b), attributes: { unit_of_measurement: '%' } }, ...more });
+const ds = fDs(50, 100);
+check('deux reservoirs : le modele se choisit', machineCls(ds).split(' ').includes('dual_split'), true);
+check('deux reservoirs : deux fenetres', (ds.match(/class="pf-tank [ab]"/g) || []).length, 2);
+check('deux reservoirs : deux sorties', (ds.match(/class="pf-chute [ab]"/g) || []).length, 2);
+check('deux reservoirs : deux chutes', (ds.match(/class="pf-fall [ab]"/g) || []).length, 2);
+check('deux reservoirs : une seule gamelle, partagee', (ds.match(/class="pf-bowl[^"]*"/g) || []).join(' '), 'class="pf-bowl split"');
+check('deux reservoirs : une cloison au milieu', /class="pf-divider"/.test(ds), true);
+check('deux reservoirs : chaque niveau remplit sa fenetre', /--pf-fill:20\.0px;--pf-fill-b:36\.0px/.test(ds), true);
+check('deux reservoirs : le second niveau a sa ligne', infoLine(ds, 'Food level, second hopper').replace(/\s/g, ' '), '100 %');
+check('deux reservoirs : le premier garde la sienne', infoLine(ds, 'Food level').replace(/\s/g, ' '), '50 %');
+check('deux reservoirs : au repos, le premier donne l\'etat', stateLine(ds), 'Tank at 50%');
+check('deux reservoirs : un seul vide suffit', stateLine(fDs(0, 80)), 'Tank empty');
+check('deux reservoirs : le second aussi', stateLine(fDs(80, 0)), 'Tank empty');
+check('deux reservoirs : seul le premier se dessine vide',
+  machineCls(fDs(0, 80)).split(' ').filter(c => c.startsWith('empty')).join(' '), 'empty empty-a');
+check('deux reservoirs : seul le second se dessine vide',
+  machineCls(fDs(80, 0)).split(' ').filter(c => c.startsWith('empty')).join(' '), 'empty empty-b');
+check('deux reservoirs : un vide sans nom vide les deux',
+  machineCls(feeder({ feeder_layout: 'dual_split', error_entity: 'sensor.feeder_error' },
+    { 'sensor.feeder_error': { state: 'no_food', attributes: {} } })).split(' ').filter(c => c.startsWith('empty')).join(' '),
+  'empty empty-a empty-b');
+check('deux reservoirs : seule la ligne du second avertit',
+  /class="info-line[^"]*warn[^"]*"[^>]*>[\s\S]{0,400}Food level, second hopper/.test(fDs(80, 0))
+  && !/class="info-line[^"]*warn[^"]*"[^>]*>[\s\S]{0,200}>Food level</.test(fDs(80, 0)), true);
+check('deux reservoirs : sans second niveau, la fenetre garde sa hauteur', /style="[^"]*--pf-fill-b/.test(fDs(50, 50, { level_b_entity: undefined })), false);
+check('deux reservoirs : ailleurs, le second niveau ne dessine rien', /style="[^"]*--pf-fill-b/.test(fDs(50, 100, { feeder_layout: 'double' })), false);
+check('deux reservoirs : le second niveau suffit a la config', accepts({ level_b_entity: 'sensor.food_level_b' }), true);
+{
+  const sbTop = cssPx(ds, '.pf-sbase', 'top'), sbLeft = cssPx(ds, '.pf-sbase', 'left');
+  const sbW = 96 - sbLeft - cssPx(ds, '.pf-sbase', 'right');
+  const chuteW = cssPx(ds, '.pf-sbase .pf-chute', 'width') || 11;
+  const aLeft = sbLeft + cssPx(ds, '.pf-sbase .pf-chute.a', 'left');
+  const bLeft = sbLeft + sbW - cssPx(ds, '.pf-sbase .pf-chute.b', 'right') - chuteW;
+  const fa = cssPx(ds, '.machine.dual_split .pf-fall.a i', 'left'), fb = cssPx(ds, '.machine.dual_split .pf-fall.b i', 'left');
+  const bL = cssPx(ds, '.machine.dual_split .pf-bowl', 'left'), bW = cssPx(ds, '.machine.dual_split .pf-bowl', 'width');
+  const fallTop = cssPx(ds, '.machine.dual_split .pf-fall i', 'top');
+  const chuteBottom = sbTop + cssPx(ds, '.pf-sbase .pf-chute', 'top') + 13;
+  check('deux reservoirs : chaque chute part de sa sortie',
+    fa >= aLeft && fa + 3 <= aLeft + chuteW && fb >= bLeft && fb + 3 <= bLeft + chuteW && fallTop >= chuteBottom - 2, true);
+  check('deux reservoirs : et tombe dans sa moitie de gamelle',
+    fa >= bL && fa + 3 <= bL + bW / 2 && fb >= bL + bW / 2 && fb + 3 <= bL + bW, true);
+}
+
+// The rotating wet-food feeder: plates on a turntable under a lid with one
+// opening, the flap lifting while a meal is served. Its level is the plates
+// left, counted out of the plates it holds.
+const fRo = (left, open) => feeder({ feeder_layout: 'rotary', state_entity: 'switch.lid', level_entity: 'counter.plates', level_max: '3' },
+  { 'switch.lid': { state: open ? 'on' : 'off', attributes: {} }, 'counter.plates': { state: String(left), attributes: {} } });
+const ro = fRo(2, false);
+check('plateau : le modele se choisit', machineCls(ro).split(' ').includes('rotary'), true);
+check('plateau : socle, couvercle, ouverture, trappe et assiette',
+  hasAll(ro, ['pf-rwall', 'pf-rtop', 'pf-rhub', 'pf-rwin', 'pf-rplate', 'pf-wet', 'pf-rflap', 'pf-lcd']), '');
+check('plateau : ni gamelle ni chute', /class="pf-bowl|class="pf-fall|class="pf-tank/.test(ro), false);
+check('plateau : la trappe se leve en servant', /\.machine\.rotary\.feeding \.pf-rflap \{[^}]*opacity: 0/.test(ro), true);
+check('plateau : servir, c\'est ouvrir', machineCls(fRo(2, true)).split(' ').includes('feeding'), true);
+check('plateau : deux assiettes sur trois', stateLine(ro), 'Tank at 67%');
+check('plateau : plus d\'assiette, vide', stateLine(fRo(0, false)), 'Tank empty');
+check('plateau : et l\'assiette se dessine vide', /\.machine\.rotary\.empty \.pf-wet \{ display: none; \}/.test(fRo(0, false)), true);
+
 // The screen shows the time, as the real ones do; blue while it serves, red
 // when something is wrong. While it serves it shows the portion instead, when
 // the card knows the serving size.
@@ -5636,7 +5700,8 @@ contains('editeur coins : titre en anglais', markup(cornerEditor()._root), '<sum
   const models = h => [...((/<select data-field="feeder_layout">([\s\S]*?)<\/select>/.exec(h) || [, ''])[1])
     .matchAll(/<option value="([^"]*)"\s*(selected)?>([^<]*)</g)].map(m => `${m[1]}${m[2] ? '*' : ''}:${m[3]}`);
   const h = modelOf({ appliance_type: 'pet_feeder' });
-  check('editeur modele : les trois dessins', models(h).join(' / '), 'tower:Square tank / canister:Round tank / double:Two bowls');
+  check('editeur modele : les cinq dessins', models(h).join(' / '),
+    'tower:Square tank / canister:Round tank / double:Two bowls / dual_split:Two hoppers, split bowl / rotary:Rotating plates (wet food)');
   check('editeur modele : son titre', /<label>Model<\/label>\s*<select data-field="feeder_layout">/.test(h), true);
   check('editeur modele : le choix se relit', models(modelOf({ appliance_type: 'pet_feeder', feeder_layout: 'canister' }))[1],
     'canister*:Round tank');
@@ -5646,7 +5711,7 @@ contains('editeur coins : titre en anglais', markup(cornerEditor()._root), '<sum
   for (const language of ['fr', 'ru', 'de', 'es', 'it', 'nl', 'pt', 'sv', 'no', 'da', 'pl', 'zh', 'cs']) {
     const opts = models(modelOf({ appliance_type: 'pet_feeder', language }));
     check(`editeur modele : traduit en ${language}`,
-      opts.length === 3 && !opts.some(o => /Square tank|Round tank|Two bowls/.test(o)), true);
+      opts.length === 5 && !opts.some(o => /Square tank|Round tank|Two bowls|Two hoppers|Rotating plates/.test(o)), true);
   }
 }
 
