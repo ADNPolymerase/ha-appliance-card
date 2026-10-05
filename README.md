@@ -10,7 +10,7 @@
 <a href="https://buymeacoffee.com/adnpolymerase" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-orange.png" alt="Buy Me A Coffee" height="60"></a>
 <a href="https://adnpolymerase.github.io/HA/" target="_blank"><img src="https://raw.githubusercontent.com/ADNPolymerase/HA/main/assets/site-button.svg" alt="Link to my github.io for my other projects" height="60"></a>
 
-A Lovelace card for household appliances: washers, dryers, dishwashers, ovens, microwaves, cooker hoods, cooktops, fridges, kettles, cookers, coffee machines, rice cookers, air fryers, water heaters, boilers, heat pumps, 3D printers, pet feeders, irons, pellet stoves, air conditioners, dehumidifiers, space heaters and towel warmers. Cycle in progress, program, remaining time, temperature, alerts and controls.
+A Lovelace card for household appliances: washers, dryers, dishwashers, ovens, microwaves, cooker hoods, cooktops, fridges, kettles, cookers, coffee machines, rice cookers, air fryers, water heaters, boilers, heat pumps, 3D printers, pet feeders, irons, pellet stoves, air conditioners, dehumidifiers, space heaters, towel warmers and EV chargers. Cycle in progress, program, remaining time, temperature, alerts and controls.
 
 No brand assumed: every field is an entity you pick, so it works with **any** integration (Electrolux, Samsung, LG, Home Connect, Miele, a plain smart plug…).
 
@@ -21,11 +21,11 @@ No brand assumed: every field is an entity you pick, so it works with **any** in
 
 ## Features
 
-- **Twenty-four appliance types**, each with a CSS illustration that animates on the appliance's own data and stays still when idle. The type is detected on its own or set via `appliance_type`, and `compact: true` keeps only the text.
+- **Twenty-five appliance types**, each with a CSS illustration that animates on the appliance's own data and stays still when idle. The type is detected on its own or set via `appliance_type`, and `compact: true` keeps only the text.
 - **State normalization**: `Idle`, `RUNNING`, `wash`, `En marche`… are recognised (accent-insensitive) and sorted into idle, preheating, running, paused, done, delayed or error. An unknown state is shown as it came, minus the integration's namespace, and `state_map` sorts the rest, `"*"` catching everything left over.
 - **The step, not an hour of *Running***: a washer, a dryer or a dishwasher names the step it is at (*Pre-wash*, *Washing*, *Rinsing*, *Spinning*, *Drying* and seven more), from a phase entity or from its own state, and the drum whirls while it spins. The time left is still the whole cycle's.
 - **A washer-dryer is a washer that dries**: `washer_dryer: true`, and the drum shows water while it washes, then clothes turning in hot air while it dries. The step comes from the state itself or from a phase entity, and the state line reads *Washing* or *Drying*.
-- **Each appliance says what matters for it**: a coffee machine what it is missing (water, beans, tray, descaling), a fridge its health (unplugged, door open, temperature high), a combi boiler what it is heating (central heating, hot water or standby), a 3D printer what the job is doing (preheating, bed levelling, changing filament), a pellet stove the phase of its fire (ignition, modulating, eco, cleaning), an air conditioner its mode and where it blows.
+- **Each appliance says what matters for it**: a coffee machine what it is missing (water, beans, tray, descaling), a fridge its health (unplugged, door open, temperature high), a combi boiler what it is heating (central heating, hot water or standby), a 3D printer what the job is doing (preheating, bed levelling, changing filament), a pellet stove the phase of its fire (ignition, modulating, eco, cleaning), an air conditioner its mode and where it blows, an EV charger whether a car is plugged in and what the charge is doing (waiting for authorisation, charging, paused, scheduled, complete).
 - **Works from a smart plug alone**: `power_entity` and `power_on_threshold` are enough to derive the state from consumption; `power_off_delay` keeps a pause from reading as the end, and `show_last_cycle` shows how long the last cycle ran.
 - **Program, remaining time, progress bar, info lines, door, alerts, connectivity and controls** (start, pause, resume, stop), each optional.
 - **14 languages** (EN, FR, DE, ES, IT, NL, PT, SV, NO, DA, PL, RU, ZH, CS), Home Assistant's or pinned on the card.
@@ -48,11 +48,11 @@ No brand assumed: every field is an entity you pick, so it works with **any** in
 
 ## Configuration
 
-Only `state_entity` is required, except on a fridge where a probe or a door contact is enough. In the visual editor, picking the state entity pre-fills the other fields.
+Only `state_entity` is required, except on a fridge where a probe or a door contact is enough, and on an EV charger where its plug or its power meter is enough. In the visual editor, picking the state entity pre-fills the other fields.
 
 | Option | Description |
 |---|---|
-| `state_entity` | **Required**, except on a fridge. Entity carrying the appliance's state, any domain. |
+| `state_entity` | **Required**, except on a fridge or an EV charger. Entity carrying the appliance's state, any domain. |
 | `state_map` | Map raw state → `idle` \| `running` \| `preheating` \| `keep_warm` \| `paused` \| `done` \| `delayed` \| `error`. Sets the label, the colour and the animation. The key `"*"` catches every state left over (see below), and on a washer, a dryer or a dishwasher the steps (`washing`, `spinning`...) are targets too. Also in the visual editor. |
 | `state_show_raw` | `true` shows the entity's own text instead of the card's label, as Home Assistant displays it (a climate reads `Cooling`, not `cool`). |
 | `controls_activation` | How the control buttons answer a finger: `tap` (default) runs them at once, `hold` runs them only after a long press, `off` never runs them from the card (a long press opens the entity). In YAML, write it in quotes, `controls_activation: "off"`: a bare `off` is read as `false` (the card still takes it as `off`). Handy against stray taps and small fingers. |
@@ -60,7 +60,7 @@ Only `state_entity` is required, except on a fridge where a probe or a door cont
 | `compact` | `true` hides the illustration. |
 | `illustration_color` | `auto` (default, follows the theme) \| `white` \| `grey` \| `black` \| `red` (dark red). Only changes the casing, not the state colours. |
 | `language` | `auto` (default, follows Home Assistant) or one of the 14 codes: `en`, `fr`, `de`, `es`, `it`, `nl`, `pt`, `sv`, `no`, `da`, `pl`, `ru`, `zh`, `cs`. `nb` and `nb-NO` give Norwegian. |
-| `appliance_type` | `auto` (default) \| `washer` \| `dryer` \| `dishwasher` \| `oven` \| `microwave` \| `hood` \| `cooktop` \| `fridge` \| `kettle` \| `cooker` \| `coffee` \| `rice_cooker` \| `air_fryer` \| `water_heater` \| `boiler` \| `heat_pump` \| `printer_3d` \| `pet_feeder` \| `iron` \| `pellet_stove` \| `air_conditioner` \| `dehumidifier` \| `space_heater` \| `towel_warmer`. |
+| `appliance_type` | `auto` (default) \| `washer` \| `dryer` \| `dishwasher` \| `oven` \| `microwave` \| `hood` \| `cooktop` \| `fridge` \| `kettle` \| `cooker` \| `coffee` \| `rice_cooker` \| `air_fryer` \| `water_heater` \| `boiler` \| `heat_pump` \| `printer_3d` \| `pet_feeder` \| `iron` \| `pellet_stove` \| `air_conditioner` \| `dehumidifier` \| `space_heater` \| `towel_warmer` \| `ev_charger`. |
 | `tap_action` | What a tap on the card does, in Home Assistant's own words: `more-info` (default), `none`, `navigate`, `url`, `toggle`, `perform-action` or `fire-dom-event`, which is what the popup cards built on browser_mod listen for. In YAML only. |
 | `toggle_entity` | Power button (`switch`, `button`, `script`, `input_boolean`, `fan`), highlighted while on. |
 | `power_entity` / `power_on_threshold` / `power_icon` | Power sensor. With a threshold, the state is derived from it: *running* above, then *finished* when it falls back. Pointing `state_entity` at the same sensor enables it with a 10 W threshold. `power_icon` replaces `mdi:power-plug`. |
@@ -152,6 +152,12 @@ Per type:
 | `beans_entity` / `tray_entity` / `descaling_entity` | coffee | Beans empty, tray full, descaling due. |
 | `cups_entity` | coffee | Number of cups: a count, a boolean or a beverage name (*2 Espressi*). |
 | `strength_entity` | coffee | Coffee strength, as a number or a word. |
+| `state_entity` | EV charger | The charger's status: *No vehicle*, *Plugged in*, *Awaiting authorisation*, *Charging*, *Charging paused*, *Scheduled*, *Charging complete*, *Error* or *Offline*, read in the words of OCPP and of the integrations in Home Assistant (see *EV chargers*). `state_map` accepts the nine as `no_vehicle`, `connected`, `awaiting_auth`, `charging`, `paused`, `scheduled`, `done`, `error` and `offline`. Optional: without it the plug and the power meter say it. |
+| `vehicle_entity` | EV charger | Whether a car is plugged in: a plug's contact, or a cable state in words (`disconnected`, `cable_only`, `vehicle_connected`, `vehicle_locked`). No car turns a recognised status into *No vehicle*, unless the status is an error. |
+| `power_entity` / `power_on_threshold` | EV charger | The power, in the meter's own unit and precision (*7.4 kW*). The threshold is in W whatever that unit, 100 W by default: power flows above it. It only stands in for a missing status, and tells a car that has its charge from one that paused. |
+| `session_energy_entity` | EV charger | The energy of the session, as *Charged 12.4 kWh*. |
+| `current_limit_entity` | EV charger | The current limit, as *Current limit 16 A*. A tap opens the entity, which is where it is changed. |
+| `error_entity` | EV charger | A contact on, a code other than 0, or a word other than *no error* (OCPP's `NoError`, `ok`, `none`) turns the state into *Error*, with the charger's words on a line. |
 
 ### Examples
 
@@ -404,6 +410,74 @@ state_entity: switch.heater_plug
 power_entity: sensor.heater_plug_power
 power_on_threshold: 30
 ```
+
+### EV chargers
+
+A wallbox on the wall, its light in the colour of what the charger is doing: *No vehicle*, *Plugged in* (a car waiting), *Awaiting authorisation* (a card or the app), *Charging*, *Charging paused* (by the box or by the car), *Scheduled*, *Charging complete* (the car still plugged in), *Error* or *Offline*. With a car plugged in, the plug leaves its holster and the cable runs off to the car; while it charges, the cable carries the state's colour. Any wallbox will do: the card reads the status in the words of OCPP and of the integrations in Home Assistant itself, `state_map` teaches it any other, and a box with no status at all is read from its plug and its power meter.
+
+| Integration | Status | Words read |
+|---|---|---|
+| OCPP ([ocpp](https://github.com/lbbrhzn/ocpp), 1.6 and 2.0.1) | Status Connector | `Available`, `Reserved` → no vehicle; `Preparing` → plugged in; `Charging`; `SuspendedEVSE`, `SuspendedEV` → paused; `Finishing` → complete; `Faulted` → error |
+| Peblar | State | `no_ev_connected` → no vehicle; `charging`; `suspended` → paused; `error`, `fault`, `invalid` → error |
+| Ohme | Status | `unplugged` → no vehicle; `plugged_in` → plugged in; `pending_approval` → awaiting authorisation; `charging`; `paused`; `finished` → complete |
+| Tesla Wall Connector | Status | `not_connected` → no vehicle; `connected`, `negotiating` → plugged in; `charging`, `charging_reduced`; `waiting_car` → paused; `charging_finished` → complete; `error` |
+| NRGkick | Status | `standby` → no vehicle; `connected` → plugged in; `charging`; `error` |
+| OpenEVSE | Charging status | `not_connected` → no vehicle; `connected` → plugged in; `charging`; `sleeping`, `disabled` → paused; `vent_required` and the faults (`gfci_fault`, `no_ground`, `stuck_relay`…) → error |
+| Lektrico | State | `available` → no vehicle; `connected` → plugged in; `need_auth` → awaiting authorisation; `charging`; `paused`; `paused_by_scheduler` → scheduled; `error` |
+| Blue Current | Activity | `available` → no vehicle; `charging`; `error`; `offline` |
+| Webasto Next and Unite ([Modbus](https://github.com/tomwellnitz/Webasto-Next-Modbus)) | Charge Point State | `available`, `reserved` → no vehicle; `preparing` → plugged in; `charging`; `suspended`, `suspended_evse`, `suspended_ev` → paused; `finishing` → complete; `error`, `faulted` → error |
+
+A word with no clear meaning stays as it comes, as on any other appliance: the Tesla's `booting`, the NRGkick's `wakeup`, the Lektrico's `updating_firmware` and `locked`. So does a word that means one thing on one charger and another elsewhere: the Tesla's `ready` is a car plugged in, a Wallbox's `Ready` a box with no car, and both read *Idle* (`state_map: {ready: connected}` for the Tesla). A car that stops taking energy (`SuspendedEV`, `suspended_ev`, the Tesla's `waiting_car`) reads *Charging complete* once the session holds energy and no power flows, which takes `session_energy_entity` and `power_entity`; otherwise it is a pause. A box that holds the energy back (`SuspendedEVSE`, a bare `suspended`) stays paused: it resumes on its own.
+
+Home Assistant's own `unavailable` and `unknown` read *Offline*. A charger that reports OCPP's `Unavailable` as a word is mapped with `state_map`, since only the capital letter tells it apart (Blue Current's and the Unite's lowercase `unavailable` cannot be told apart, and read *Offline*). What wins, in order: an `error_entity` reporting an error, then *Offline*, then a `vehicle_entity` saying there is no car, which turns any recognised status but an error into *No vehicle*, then the status itself.
+
+The Webasto Next, with the [Modbus integration](https://github.com/tomwellnitz/Webasto-Next-Modbus):
+
+```yaml
+type: custom:ha-appliance-card
+appliance_type: ev_charger
+state_entity: sensor.webasto_next_charge_point_state
+vehicle_entity: sensor.webasto_next_cable_state
+power_entity: sensor.webasto_next_active_power_total
+session_energy_entity: sensor.webasto_next_charged_energy
+current_limit_entity: number.webasto_next_charging_current_limit
+start_entity: button.webasto_next_start_charging
+stop_entity: button.webasto_next_stop_charging
+```
+
+A box with no status, from its plug and its meter: no car reads *No vehicle*, a car with the power above `power_on_threshold` *Charging*, a car without it *Plugged in*.
+
+```yaml
+type: custom:ha-appliance-card
+appliance_type: ev_charger
+vehicle_entity: binary_sensor.wallbox_plug
+power_entity: sensor.wallbox_power
+power_on_threshold: 500
+```
+
+A charger that reports the control pilot's letters of IEC 61851 is read through `state_map`, since a bare letter could mean anything on another entity:
+
+```yaml
+type: custom:ha-appliance-card
+appliance_type: ev_charger
+state_entity: sensor.wallbox_cp_state
+state_map:
+  A: no_vehicle
+  B: connected
+  C: charging
+  D: charging
+  E: error
+  F: error
+```
+
+And OCPP's `Unavailable`, a connector taken out of service, the same way:
+
+```yaml
+state_map:
+  Unavailable: offline
+```
+
+An entity named after a wallbox in the card's languages, after its maker or after OCPP is recognised on its own, as is an enum status that lists a charger's words. The editor fills the plug, the meter, the session, the current limit, the error and the start and stop buttons from the charger's own entities, never its restart or reset button.
 
 ### Cycle steps
 

@@ -7014,4 +7014,546 @@ check('texte brut decoche : le libelle de la card',
     /data-field="controls_activation"/.test(markup(newEditor({ state_entity: 'sensor.f', appliance_type: 'fridge' }))), false);
 }
 
+// =============================================================================
+// EV charger (issue #27)
+// =============================================================================
+// Any wallbox, not one brand: OCPP's connector status, the integrations of
+// Home Assistant itself, Webasto's Modbus integration, state_map for the
+// rest, and the plug with the power meter when there is no status at all.
+
+const EVC = { appliance_type: 'ev_charger', state_entity: 'sensor.cp' };
+const evSt = (raw, extra = {}) => ({ 'sensor.cp': { state: raw, attributes: {} }, ...extra });
+const evR = (raw, cfg = {}, extra = {}) => render({ ...EVC, ...cfg }, evSt(raw, extra));
+const evMode = h => (/\bmode-(\w+)/.exec(machineCls(h)) || [, null])[1];
+const evLine = (h, label) => {
+  const v = infoLine(h, label);
+  return v === null ? null : v.replace(/ /g, ' ');
+};
+const evLed = h => (/\.ev-led \{[^}]*background: ([^;]+);/.exec(h) || [, null])[1];
+// One of the nine, or unknown for a word the card left as it came.
+const evKnown = h => (EV_STATE_NAMES.includes(evMode(h)) ? evMode(h) : 'unknown');
+const kW = v => ({ state: String(v), attributes: { unit_of_measurement: 'kW' } });
+const kWh = v => ({ state: String(v), attributes: { unit_of_measurement: 'kWh' } });
+const W = v => ({ state: String(v), attributes: { unit_of_measurement: 'W' } });
+const EV_LABEL = { no_vehicle: 'No vehicle', connected: 'Plugged in', awaiting_auth: 'Awaiting authorisation', charging: 'Charging',
+  paused: 'Charging paused', scheduled: 'Scheduled', done: 'Charging complete', error: 'Error', offline: 'Offline' };
+const EV_STATE_NAMES = ['no_vehicle', 'connected', 'awaiting_auth', 'charging', 'paused', 'scheduled', 'done', 'error', 'offline'];
+const EV_COLOR = { no_vehicle: 'var(--disabled-text-color, #9e9e9e)', connected: '#26a69a', awaiting_auth: '#ffb300',
+  charging: 'var(--info-color, #2196f3)', paused: 'var(--warning-color, #ff9800)', scheduled: '#9c27b0',
+  done: 'var(--success-color, #4caf50)', error: 'var(--error-color, #f44336)', offline: 'var(--disabled-text-color, #9e9e9e)' };
+
+// Every word each source reports, read in its code, and what the card makes
+// of it. A word the source leaves to the card's judgement is not here.
+const EV_SOURCES = {
+  'OCPP 1.6': [['Available', 'no_vehicle'], ['Preparing', 'connected'], ['Charging', 'charging'], ['SuspendedEVSE', 'paused'],
+    ['SuspendedEV', 'paused'], ['Finishing', 'done'], ['Reserved', 'no_vehicle'], ['Faulted', 'error']],
+  Peblar: [['no_ev_connected', 'no_vehicle'], ['suspended', 'paused'], ['charging', 'charging'], ['error', 'error'],
+    ['fault', 'error'], ['invalid', 'error']],
+  Ohme: [['unplugged', 'no_vehicle'], ['pending_approval', 'awaiting_auth'], ['charging', 'charging'], ['plugged_in', 'connected'],
+    ['paused', 'paused'], ['finished', 'done']],
+  'Tesla Wall Connector': [['not_connected', 'no_vehicle'], ['connected', 'connected'], ['negotiating', 'connected'],
+    ['error', 'error'], ['charging_finished', 'done'], ['waiting_car', 'paused'], ['charging_reduced', 'charging'], ['charging', 'charging']],
+  NRGkick: [['standby', 'no_vehicle'], ['connected', 'connected'], ['charging', 'charging'], ['error', 'error']],
+  OpenEVSE: [['not_connected', 'no_vehicle'], ['connected', 'connected'], ['charging', 'charging'], ['vent_required', 'error'],
+    ['diode_check_failed', 'error'], ['gfci_fault', 'error'], ['no_ground', 'error'], ['stuck_relay', 'error'],
+    ['gfci_self_test_failure', 'error'], ['over_temperature', 'error'], ['sleeping', 'paused'], ['disabled', 'paused']],
+  Lektrico: [['available', 'no_vehicle'], ['connected', 'connected'], ['need_auth', 'awaiting_auth'], ['paused', 'paused'],
+    ['paused_by_scheduler', 'scheduled'], ['charging', 'charging'], ['error', 'error']],
+  'Blue Current': [['available', 'no_vehicle'], ['charging', 'charging'], ['error', 'error'], ['offline', 'offline']],
+  'Webasto Next': [['available', 'no_vehicle'], ['preparing', 'connected'], ['charging', 'charging'], ['suspended', 'paused'],
+    ['error', 'error'], ['reserved', 'no_vehicle']],
+  'Webasto Unite': [['available', 'no_vehicle'], ['preparing', 'connected'], ['charging', 'charging'], ['suspended_evse', 'paused'],
+    ['suspended_ev', 'paused'], ['finishing', 'done'], ['reserved', 'no_vehicle'], ['faulted', 'error']],
+};
+for (const [source, pairs] of Object.entries(EV_SOURCES)) {
+  for (const [raw, mode] of pairs) {
+    const h = evR(raw);
+    check(`borne ${source} : ${raw} -> ${mode}`, evMode(h), mode);
+    check(`borne ${source} : ${raw} se lit ${EV_LABEL[mode]}`, stateLine(h), EV_LABEL[mode]);
+  }
+}
+// The Unite says out of service in Home Assistant's own word, and Blue
+// Current a blocked charge point: nothing tells them apart from an entity
+// Home Assistant cannot read, so both are offline.
+check('borne Webasto Unite : unavailable -> offline', evMode(evR('unavailable')), 'offline');
+check('borne Blue Current : unavailable se lit Offline', stateLine(evR('unavailable')), 'Offline');
+// The words with no clear meaning stay the source's own, as on any appliance.
+for (const raw of ['booting', 'wakeup', 'updating_firmware', 'locked'])
+  check(`borne : ${raw} n est pas devine`, evKnown(evR(raw)), 'unknown');
+check('borne : booting reste ecrit', stateLine(evR('booting')), 'booting');
+check('borne : updating_firmware nettoye', stateLine(evR('updating_firmware')), 'updating firmware');
+// Ready is a car plugged in on a Tesla and a box with no car on a Wallbox:
+// neither is guessed, the word reads as on any appliance, at rest.
+check('borne : ready n est pas devine', evKnown(evR('ready')), 'unknown');
+check('borne : ready se lit comme ailleurs', stateLine(evR('ready')), 'Idle');
+check('borne : ready, la prise reste dans son etui', hasCls(evR('ready'), 'plugged'), false);
+check('borne : ready se mappe pour une Tesla', evMode(evR('ready', { state_map: { ready: 'connected' } })), 'connected');
+
+// Each state has its colour, on the state line and on the light alike.
+for (const [raw, mode] of [['Available', 'no_vehicle'], ['Preparing', 'connected'], ['X', 'awaiting_auth'], ['Charging', 'charging'],
+  ['SuspendedEVSE', 'paused'], ['Y', 'scheduled'], ['Finishing', 'done'], ['Faulted', 'error'], ['unavailable', 'offline']]) {
+  const h = evR(raw, { state_map: { X: 'awaiting_auth', Y: 'scheduled' } });
+  check(`borne : ${mode} a sa couleur`, stateColor(h), EV_COLOR[mode]);
+  check(`borne : la diode en ${mode}`, evLed(h), EV_COLOR[mode]);
+}
+contains('borne : hors ligne, la diode s eteint', evR('unavailable'), '.machine.mode-offline .ev-led, .machine.mode-unknown .ev-led { background: #4a5057; box-shadow: none; }');
+check('borne : hors ligne, la machine le dit', hasCls(evR('unavailable'), 'mode-offline'), true);
+contains('borne : la boite est dessinee', evR('Charging'), '<div class="ev-box"><div class="ev-face"><div class="ev-led"></div>');
+contains('borne : le cable aussi', evR('Charging'), '<svg class="ev-cable"');
+contains('borne : et la prise, une CCS', evR('Charging'), '<div class="ev-plug"><i class="pl-boot"></i><i class="pl-grip"></i>'
+  + '<i class="pl-collar"></i><i class="pl-head"></i><i class="pl-ac"></i><i class="pl-dc"></i><i class="pl-latch"></i></div>');
+check('borne : aucune animation propre', /@keyframes ev-/.test(evR('Charging')), false);
+check('borne : la charge compte comme en marche', hasCls(evR('Charging'), 'spinning'), true);
+check('borne : en pause, rien ne tourne', hasCls(evR('SuspendedEVSE'), 'spinning'), false);
+check('borne : terminee, la machine le dit', hasCls(evR('Finishing'), 'done'), true);
+check('borne : pas de barre de progression', /class="bar-fill"/.test(evR('Charging')), false);
+
+// In the card's other languages.
+check('borne : en francais', stateLine(evR('Charging', { language: 'fr' })), 'En charge');
+check('borne : en allemand', stateLine(evR('SuspendedEV', { language: 'de' })), 'Laden pausiert');
+check('borne : en tcheque', stateLine(evR('Available', { language: 'cs' })), 'Žádné vozidlo');
+
+// state_map: the letters of IEC 61851, and OCPP's Unavailable.
+const IEC = { A: 'no_vehicle', B: 'connected', C: 'charging', D: 'charging', E: 'error', F: 'error' };
+for (const [letter, mode] of Object.entries(IEC)) {
+  check(`borne IEC 61851 : ${letter} n est pas lu seul`, evKnown(evR(letter)), 'unknown');
+  check(`borne IEC 61851 : ${letter} par state_map -> ${mode}`, evMode(evR(letter, { state_map: IEC })), mode);
+  check(`borne IEC 61851 : ${letter} se lit ${EV_LABEL[mode]}`, stateLine(evR(letter, { state_map: IEC })), EV_LABEL[mode]);
+}
+check('borne IEC 61851 : la lettre reste ecrite sans state_map', stateLine(evR('C')), 'C');
+check('borne OCPP : Unavailable n est pas reconnu seul', evKnown(evR('Unavailable')), 'unknown');
+check('borne OCPP : ni pris pour un hors ligne', stateLine(evR('Unavailable')) === 'Offline', false);
+check('borne OCPP : Unavailable par state_map', evMode(evR('Unavailable', { state_map: { Unavailable: 'offline' } })), 'offline');
+check('borne OCPP : et il se lit Offline', stateLine(evR('Unavailable', { state_map: { Unavailable: 'offline' } })), 'Offline');
+check('borne OCPP : ou ce que l on veut', evMode(evR('Unavailable', { state_map: { Unavailable: 'error' } })), 'error');
+check('borne : le unavailable de HA ne se remappe pas', evMode(evR('unavailable', { state_map: { unavailable: 'charging' } })), 'offline');
+check('borne : ni le unknown de HA', evMode(evR('unknown', { state_map: { unknown: 'charging' } })), 'offline');
+check('borne : state_map l emporte sur les mots de la card', evMode(evR('Charging', { state_map: { Charging: 'scheduled' } })), 'scheduled');
+check('borne : state_map nomme chacun des neuf', Object.keys(EV_LABEL).every(m => evMode(evR('Z', { state_map: { Z: m } })) === m), true);
+check('borne : une cible inconnue ne devient rien', evKnown(evR('Z', { state_map: { Z: 'boiling' } })), 'unknown');
+check('borne : la cle * attrape le reste', evMode(evR('Zzz', { state_map: { '*': 'charging' } })), 'charging');
+check('borne : sans voler un mot connu', evMode(evR('Finishing', { state_map: { '*': 'charging' } })), 'done');
+check('borne : une cible commune garde son sens', stateLine(evR('Z', { state_map: { Z: 'running' } })), 'Running');
+
+// Home Assistant's own unavailable and unknown: offline, as the other types
+// read an entity they cannot see, grey and still.
+const washerGone = render({ appliance_type: 'washer', state_entity: 'sensor.w' }, { 'sensor.w': { state: 'unavailable', attributes: {} } });
+for (const raw of ['unavailable', 'unknown']) {
+  const h = evR(raw);
+  check(`borne : ${raw} de HA est hors ligne`, evMode(h), 'offline');
+  check(`borne : ${raw} se lit Offline`, stateLine(h), 'Offline');
+  check(`borne : ${raw} en gris, comme un lave-linge`, stateColor(h), stateColor(washerGone));
+  check(`borne : ${raw}, rien ne tourne`, hasCls(h, 'spinning'), false);
+}
+check('borne : hors ligne en francais', stateLine(evR('unavailable', { language: 'fr' })), 'Hors ligne');
+check('borne : une entite d etat absente, hors ligne', evMode(render(EVC, {})), 'offline');
+check('borne : texte brut, hors ligne quand meme', stateLine(evR('unavailable', { state_show_raw: true })), 'Offline');
+check('borne : texte brut, le mot de la borne', stateLine(evR('SuspendedEV', { state_show_raw: true })), 'SuspendedEV');
+
+// Unknown words and missing entities: never an error.
+const evNoThrow = (fn) => { try { fn(); return true; } catch (e) { return false; } };
+for (const raw of ['Zzz', 'charging_mode_7', '', ' ', 'none', '42', 'A1', 'état', 'null'])
+  check(`borne : « ${raw} » ne plante pas`, evNoThrow(() => evR(raw)), true);
+check('borne : un mot inconnu est ecrit tel quel', stateLine(evR('Zzz')), 'Zzz');
+check('borne : comme sur un lave-linge', stateLine(evR('Zzz')), stateLine(render({ appliance_type: 'washer', state_entity: 'sensor.cp' }, evSt('Zzz'))));
+check('borne : un mot inconnu en gris', stateColor(evR('Zzz')), 'var(--disabled-text-color, #9e9e9e)');
+check('borne : et la diode s eteint', hasCls(evR('Zzz'), 'mode-unknown'), true);
+check('borne : le vocabulaire commun garde son sens', stateLine(evR('Charging complete')), 'Finished');
+const ghosts = { vehicle_entity: 'binary_sensor.none', power_entity: 'sensor.none_p', session_energy_entity: 'sensor.none_e',
+  current_limit_entity: 'number.none', error_entity: 'sensor.none_err', start_entity: 'button.none', stop_entity: 'button.none2' };
+check('borne : des entites qui n existent pas ne plantent pas', evNoThrow(() => evR('Charging', ghosts)), true);
+check('borne : et le statut reste lu', evMode(evR('Charging', ghosts)), 'charging');
+check('borne : sans ligne fantome', evLine(evR('Charging', ghosts), 'Power'), null);
+const gone = { 'sensor.p': { state: 'unavailable', attributes: {} }, 'sensor.e': { state: 'unknown', attributes: {} },
+  'number.l': { state: 'unavailable', attributes: {} }, 'sensor.err': { state: 'unavailable', attributes: {} },
+  'binary_sensor.plug': { state: 'unavailable', attributes: {} } };
+const goneCfg = { power_entity: 'sensor.p', session_energy_entity: 'sensor.e', current_limit_entity: 'number.l', error_entity: 'sensor.err', vehicle_entity: 'binary_sensor.plug' };
+check('borne : des entites indisponibles ne plantent pas', evNoThrow(() => evR('SuspendedEV', goneCfg, gone)), true);
+check('borne : et ne changent rien', evMode(evR('SuspendedEV', goneCfg, gone)), 'paused');
+check('borne : sans lignes', ['Power', 'Charged', 'Current limit', 'Error'].map(l => evLine(evR('Charging', goneCfg, gone), l)).join(), ',,,');
+
+// The options.
+const OPT = { power_entity: 'sensor.p', session_energy_entity: 'sensor.e', current_limit_entity: 'number.l' };
+const optSt = { 'sensor.p': kW(7.36), 'sensor.e': kWh(12.4), 'number.l': { state: '16', attributes: { unit_of_measurement: 'A' } } };
+const opt = evR('Charging', OPT, optSt);
+check('borne : la puissance en kW', evLine(opt, 'Power'), '7.36 kW');
+check('borne : une seule ligne de puissance', (opt.match(/<span class="label">Power<\/span>/g) || []).length, 1);
+check('borne : la puissance en W reste en W', evLine(evR('Charging', OPT, { ...optSt, 'sensor.p': W(3680) }), 'Power'), '3680 W');
+check('borne : l icone de la puissance se change', /icon="mdi:car-electric"/.test(evR('Charging', { ...OPT, power_icon: 'mdi:car-electric' }, optSt)), true);
+check('borne : l energie de la session', evLine(opt, 'Charged'), '12.4 kWh');
+check('borne : la limite de courant', evLine(opt, 'Current limit'), '16 A');
+check('borne : la limite ouvre son entite', /data-more="number.l"/.test(opt), true);
+check('borne : la session ouvre la sienne', /data-more="sensor.e"/.test(opt), true);
+check('borne : les lignes en francais', evLine(evR('Charging', { ...OPT, language: 'fr' }, optSt), 'Limite de courant'), '16 A');
+check('borne : l ordre des lignes se choisit', [...evR('Charging', { ...OPT, lines_order: ['current_limit', 'session_energy'] }, optSt)
+  .matchAll(/<span class="label">([^<]*)<\/span>/g)].map(m => m[1]).join('|'), 'Current limit|Charged|Power');
+check('borne : sans option, aucune ligne', /class="info-lines"/.test(evR('Charging')), false);
+check('borne : la puissance au repos se lit encore', evLine(evR('Available', OPT, { ...optSt, 'sensor.p': kW(0) }), 'Power'), '0 kW');
+
+// The controls the card already had.
+{
+  const ctl = { start_entity: 'button.cp_start', pause_entity: 'button.cp_pause', resume_entity: 'button.cp_resume',
+    stop_entity: 'button.cp_stop', toggle_entity: 'switch.cp_enable' };
+  const st = { 'switch.cp_enable': { state: 'on', attributes: {} } };
+  check('borne : les cinq commandes', actionBtns(evR('Charging', ctl, st)).join('|'), 'Power:on|Start:|Pause:|Resume:|Stop:');
+  const calls = [];
+  const c = new Card();
+  c.setConfig({ type: 'custom:ha-appliance-card', ...EVC, ...ctl });
+  c._hass = { ...HASS(evSt('Charging', st)), callService: (domain, service, data) => calls.push({ domain, service, data }) };
+  c._render();
+  const btn = id => c._root.querySelectorAll('.action-btn, .light-badge').find(n => n.getAttribute('data-entity') === id);
+  fire(btn('button.cp_stop'), 'click', { stopPropagation() {} });
+  check('borne : arreter la charge', `${calls.at(-1)?.domain}.${calls.at(-1)?.service}`, 'button.press');
+  check('borne : sur le bon bouton', calls.at(-1)?.data?.entity_id, 'button.cp_stop');
+  fire(btn('switch.cp_enable'), 'click', { stopPropagation() {} });
+  check('borne : basculer la borne', `${calls.at(-1)?.domain}.${calls.at(-1)?.service}`, 'switch.toggle');
+}
+
+// error_entity: an error wins over everything else, said in many ways.
+const errR = (state, domain = 'sensor', raw = 'Charging', extra = {}) =>
+  evR(raw, { error_entity: `${domain}.cp_error`, ...extra.cfg }, { [`${domain}.cp_error`]: { state, attributes: {} }, ...extra.st });
+for (const none of ['NoError', 'no_error', 'No error', 'none', 'OK', 'ok', '0', '0.0', 'off', 'false', '', '--', 'unknown', 'unavailable', 'Kein Fehler', 'Aucune erreur'])
+  check(`borne : « ${none} » n est pas une erreur`, evMode(errR(none)), 'charging');
+check('borne : un code OCPP est une erreur', evMode(errR('GroundFailure')), 'error');
+check('borne : et il est ecrit lisiblement', evLine(errR('GroundFailure'), 'Error'), 'Ground Failure');
+check('borne : un code Webasto aussi', evLine(errR('over_temperature'), 'Error'), 'Over temperature');
+check('borne : la ligne d erreur est en rouge', /class="info-line warn[^"]*"[^>]*><ha-icon icon="mdi:alert-circle-outline"><\/ha-icon><span class="label">Error/.test(errR('GroundFailure')), true);
+check('borne : un code chiffre', evMode(errR('12')), 'error');
+check('borne : un contact de probleme', evMode(errR('on', 'binary_sensor')), 'error');
+check('borne : un contact au repos', evMode(errR('off', 'binary_sensor')), 'charging');
+check('borne : un contact n ecrit rien', evLine(errR('on', 'binary_sensor'), 'Error'), null);
+check('borne : l erreur se lit Error', stateLine(errR('GroundFailure')), 'Error');
+check('borne : l erreur l emporte sur hors ligne', evMode(errR('GroundFailure', 'sensor', 'unavailable')), 'error');
+check('borne : sur un mot inconnu', evMode(errR('GroundFailure', 'sensor', 'Zzz')), 'error');
+check('borne : sur une voiture absente', evMode(errR('on', 'binary_sensor', 'Charging',
+  { cfg: { vehicle_entity: 'binary_sensor.plug' }, st: { 'binary_sensor.plug': { state: 'off', attributes: {} } } })), 'error');
+check('borne : sans erreur, le statut reste', evMode(errR('NoError', 'sensor', 'Finishing')), 'done');
+
+// vehicle_entity: no car is no vehicle, for any status the card recognised,
+// an error and offline aside. A car being there changes nothing.
+const vehR = (raw, plug, domain = 'binary_sensor') =>
+  evR(raw, { vehicle_entity: `${domain}.cp_plug` }, { [`${domain}.cp_plug`]: { state: plug, attributes: {} } });
+for (const raw of ['Preparing', 'Charging', 'SuspendedEVSE', 'SuspendedEV', 'Finishing', 'pending_approval', 'paused_by_scheduler', 'Available'])
+  check(`borne : sans voiture, ${raw} devient pas de vehicule`, evMode(vehR(raw, 'off')), 'no_vehicle');
+check('borne : sans voiture, une erreur reste une erreur', evMode(vehR('Faulted', 'off')), 'error');
+check('borne : sans voiture, hors ligne reste hors ligne', evMode(vehR('unavailable', 'off')), 'offline');
+check('borne : sans voiture, un mot inconnu reste ecrit', stateLine(vehR('Zzz', 'off')), 'Zzz');
+check('borne : une voiture ne fait pas un statut', evMode(vehR('Available', 'on')), 'no_vehicle');
+check('borne : une voiture ne change pas la charge', evMode(vehR('Charging', 'on')), 'charging');
+check('borne : une prise illisible ne change rien', evMode(vehR('Charging', 'unavailable')), 'charging');
+for (const word of ['disconnected', 'cable_only', 'unplugged', 'not_connected', 'no_vehicle', 'No vehicle', 'false'])
+  check(`borne : la prise dit « ${word} »`, evMode(vehR('Charging', word, 'sensor')), 'no_vehicle');
+for (const word of ['vehicle_connected', 'vehicle_locked', 'connected', 'plugged_in', 'vehicle_detected', 'true'])
+  check(`borne : la prise dit « ${word} », rien ne change`, evMode(vehR('Charging', word, 'sensor')), 'charging');
+for (const word of ['A', 'B', 'standby', '0', '1', 'Zzz'])
+  check(`borne : la prise dit « ${word} », rien a en tirer`, evMode(vehR('Charging', word, 'sensor')), 'charging');
+
+// SuspendedEV is a finished charge once the session holds energy and no
+// power flows; SuspendedEVSE and a bare suspended never are.
+const suspR = (raw, energy, power, cfg = {}) => evR(raw, { session_energy_entity: 'sensor.e', power_entity: 'sensor.p', ...cfg },
+  { 'sensor.e': kWh(energy), 'sensor.p': kW(power) });
+for (const raw of ['SuspendedEV', 'suspended_ev', 'waiting_car']) {
+  check(`${raw} : de l energie et plus de puissance, terminee`, evMode(suspR(raw, 12.4, 0)), 'done');
+  check(`${raw} : et elle se lit Charging complete`, stateLine(suspR(raw, 12.4, 0)), 'Charging complete');
+  check(`${raw} : pas d energie, en pause`, evMode(suspR(raw, 0, 0)), 'paused');
+  check(`${raw} : la puissance passe encore, en pause`, evMode(suspR(raw, 12.4, 1.2)), 'paused');
+}
+for (const raw of ['SuspendedEVSE', 'suspended_evse', 'suspended', 'paused', 'sleeping'])
+  check(`${raw} : la borne retient, toujours en pause`, evMode(suspR(raw, 12.4, 0)), 'paused');
+check('SuspendedEV : sans compteur, en pause', evMode(evR('SuspendedEV', { session_energy_entity: 'sensor.e' }, { 'sensor.e': kWh(12) })), 'paused');
+check('SuspendedEV : sans energie de session, en pause', evMode(evR('SuspendedEV', { power_entity: 'sensor.p' }, { 'sensor.p': kW(0) })), 'paused');
+check('SuspendedEV : une energie illisible, en pause', evMode(evR('SuspendedEV', { session_energy_entity: 'sensor.e', power_entity: 'sensor.p' },
+  { 'sensor.e': { state: 'unavailable', attributes: {} }, 'sensor.p': kW(0) })), 'paused');
+check('SuspendedEV : un compteur illisible, en pause', evMode(evR('SuspendedEV', { session_energy_entity: 'sensor.e', power_entity: 'sensor.p' },
+  { 'sensor.e': kWh(12), 'sensor.p': { state: 'unknown', attributes: {} } })), 'paused');
+check('SuspendedEV : une energie en Wh compte aussi', evMode(evR('SuspendedEV', { session_energy_entity: 'sensor.e', power_entity: 'sensor.p' },
+  { 'sensor.e': { state: '850', attributes: { unit_of_measurement: 'Wh' } }, 'sensor.p': W(0) })), 'done');
+check('SuspendedEV : le seuil par defaut, 99 W ne passe pas', evMode(suspR('SuspendedEV', 12.4, 0.099)), 'done');
+check('SuspendedEV : le seuil par defaut, 100 W passent', evMode(suspR('SuspendedEV', 12.4, 0.1)), 'paused');
+check('SuspendedEV : le seuil choisi compte', evMode(suspR('SuspendedEV', 12.4, 0.05, { power_on_threshold: 10 })), 'paused');
+check('SuspendedEV : state_map n est pas remis en cause', evMode(suspR('SuspendedEV', 12.4, 0, { state_map: { SuspendedEV: 'paused' } })), 'paused');
+check('SuspendedEV : sans voiture, pas de vehicule', evMode(evR('SuspendedEV', { session_energy_entity: 'sensor.e', power_entity: 'sensor.p', vehicle_entity: 'binary_sensor.plug' },
+  { 'sensor.e': kWh(12), 'sensor.p': kW(0), 'binary_sensor.plug': { state: 'off', attributes: {} } })), 'no_vehicle');
+
+// No status: the plug and the meter, the way a smart plug reads a washer.
+const FB = { appliance_type: 'ev_charger', vehicle_entity: 'binary_sensor.plug', power_entity: 'sensor.p' };
+const fbR = (plug, w, cfg = {}, unit = 'W') => render({ ...FB, ...cfg },
+  { 'binary_sensor.plug': { state: plug, attributes: { device_class: 'plug' } }, 'sensor.p': { state: String(w), attributes: { unit_of_measurement: unit } } });
+check('repli : sans voiture, pas de vehicule', evMode(fbR('off', 0)), 'no_vehicle');
+check('repli : sans voiture, meme si le compteur bouge', evMode(fbR('off', 3000)), 'no_vehicle');
+check('repli : voiture et puissance au-dessus du seuil, en charge', evMode(fbR('on', 3000)), 'charging');
+check('repli : voiture sans puissance, branchee', evMode(fbR('on', 0)), 'connected');
+check('repli : les trois se lisent', [fbR('off', 0), fbR('on', 3000), fbR('on', 0)].map(stateLine).join('|'), 'No vehicle|Charging|Plugged in');
+// A plug in words reads only the words that cannot mean the opposite.
+check('repli : une prise qui dit ready ne dit rien', stateLine(fbR('ready', 0)), 'Idle');
+check('repli : seuil par defaut, 99 W branchee', evMode(fbR('on', 99)), 'connected');
+check('repli : seuil par defaut, 100 W en charge', evMode(fbR('on', 100)), 'charging');
+check('repli : seuil choisi, en dessous', evMode(fbR('on', 1200, { power_on_threshold: 1300 })), 'connected');
+check('repli : seuil choisi, au seuil', evMode(fbR('on', 1300, { power_on_threshold: 1300 })), 'charging');
+check('repli : seuil choisi en texte, comme l editeur l ecrit', evMode(fbR('on', 1200, { power_on_threshold: '1300' })), 'connected');
+check('repli : seuil vide, celui par defaut', evMode(fbR('on', 150, { power_on_threshold: '' })), 'charging');
+check('repli : seuil illisible, celui par defaut', evMode(fbR('on', 150, { power_on_threshold: 'abc' })), 'charging');
+check('repli : des kW comptes en W', evMode(fbR('on', 0.09, {}, 'kW')), 'connected');
+check('repli : 7,4 kW en charge', evMode(fbR('on', 7.4, {}, 'kW')), 'charging');
+check('repli : le seuil en W sur un compteur en kW', evMode(fbR('on', 1.2, { power_on_threshold: 1500 }, 'kW')), 'connected');
+check('repli : des MW aussi', evMode(fbR('on', 0.0002, {}, 'MW')), 'charging');
+check('repli : la prise illisible, la puissance decide', evMode(fbR('unavailable', 3000)), 'charging');
+check('repli : la prise illisible sans puissance, au repos', stateLine(fbR('unavailable', 0)), 'Idle');
+check('repli : rien de lisible, hors ligne', evMode(render(FB, { 'binary_sensor.plug': { state: 'unavailable', attributes: {} },
+  'sensor.p': { state: 'unavailable', attributes: {} } })), 'offline');
+check('repli : rien du tout, hors ligne', evMode(render(FB, {})), 'offline');
+check('repli : la prise seule, branchee', evMode(render({ appliance_type: 'ev_charger', vehicle_entity: 'binary_sensor.plug' },
+  { 'binary_sensor.plug': { state: 'on', attributes: {} } })), 'connected');
+check('repli : le compteur seul, en charge', evMode(render({ appliance_type: 'ev_charger', power_entity: 'sensor.p' }, { 'sensor.p': W(2300) })), 'charging');
+check('repli : le compteur seul au repos, jamais des watts comme etat', stateLine(render({ appliance_type: 'ev_charger', power_entity: 'sensor.p' }, { 'sensor.p': W(0) })), 'Idle');
+check('repli : le compteur en etat, comme une prise', evMode(render({ ...FB, state_entity: 'sensor.p' },
+  { 'binary_sensor.plug': { state: 'on', attributes: {} }, 'sensor.p': W(3000) })), 'charging');
+check('repli : le compteur en etat, ni ses watts', stateLine(render({ appliance_type: 'ev_charger', state_entity: 'sensor.p', power_entity: 'sensor.p' }, { 'sensor.p': W(0) })), 'Idle');
+check('repli : la prise en etat', evMode(render({ ...FB, state_entity: 'binary_sensor.plug' },
+  { 'binary_sensor.plug': { state: 'on', attributes: {} }, 'sensor.p': W(0) })), 'connected');
+check('repli : un contact de prise en etat, sans vehicle_entity', evMode(render({ appliance_type: 'ev_charger', state_entity: 'binary_sensor.plug', power_entity: 'sensor.p' },
+  { 'binary_sensor.plug': { state: 'off', attributes: { device_class: 'plug' } }, 'sensor.p': W(0) })), 'no_vehicle');
+check('repli : un interrupteur en etat, comme une prise connectee', evMode(render({ ...FB, state_entity: 'switch.wallbox' },
+  { 'switch.wallbox': { state: 'on', attributes: {} }, 'binary_sensor.plug': { state: 'on', attributes: {} }, 'sensor.p': W(7000) })), 'charging');
+check('repli : l interrupteur ne dit pas en marche', stateLine(render({ appliance_type: 'ev_charger', state_entity: 'switch.wallbox', power_entity: 'sensor.p' },
+  { 'switch.wallbox': { state: 'on', attributes: {} }, 'sensor.p': W(0) })), 'Idle');
+check('repli : une erreur l emporte', evMode(render({ ...FB, error_entity: 'binary_sensor.err' },
+  { 'binary_sensor.plug': { state: 'on', attributes: {} }, 'sensor.p': W(3000), 'binary_sensor.err': { state: 'on', attributes: {} } })), 'error');
+check('repli : texte brut, jamais des watts', stateLine(render({ appliance_type: 'ev_charger', state_entity: 'sensor.p', power_entity: 'sensor.p', state_show_raw: true }, { 'sensor.p': W(3000) })), 'Charging');
+check('repli : sans state_entity, la carte est acceptee', evNoThrow(() => new Card().setConfig({ type: 'custom:ha-appliance-card', appliance_type: 'ev_charger', vehicle_entity: 'binary_sensor.plug' })), true);
+check('repli : le compteur seul aussi', evNoThrow(() => new Card().setConfig({ type: 'custom:ha-appliance-card', appliance_type: 'ev_charger', power_entity: 'sensor.p' })), true);
+check('repli : la prise designe la borne', evNoThrow(() => new Card().setConfig({ type: 'custom:ha-appliance-card', vehicle_entity: 'binary_sensor.plug' })), true);
+check('repli : une borne sans rien est refusee', evNoThrow(() => new Card().setConfig({ type: 'custom:ha-appliance-card', appliance_type: 'ev_charger' })), false);
+check('repli : la session seule ne suffit pas', evNoThrow(() => new Card().setConfig({ type: 'custom:ha-appliance-card', appliance_type: 'ev_charger', session_energy_entity: 'sensor.e' })), false);
+check('repli : un lave-linge sans etat reste refuse', evNoThrow(() => new Card().setConfig({ type: 'custom:ha-appliance-card', appliance_type: 'washer', power_entity: 'sensor.p' })), false);
+check('repli : une prise connectee lit encore un lave-linge', stateLine(render({ appliance_type: 'washer', state_entity: 'switch.p', power_entity: 'sensor.p', power_on_threshold: 5 },
+  { 'switch.p': { state: 'on', attributes: {} }, 'sensor.p': W(1800) })), 'Running');
+{
+  // The smart plug's latch is not the charger's: a car done charging on a
+  // plug reads plugged in, not finished.
+  const { card } = build(FB, { 'binary_sensor.plug': { state: 'on', attributes: {} }, 'sensor.p': W(7000) });
+  check('repli : en charge', stateLine(markup(card)), 'Charging');
+  check('repli : puis branchee, pas terminee', stateLine(rerender(card, { 'binary_sensor.plug': { state: 'on', attributes: {} }, 'sensor.p': W(0) })), 'Plugged in');
+}
+
+// With a car at it, the plug leaves its holster and the cable runs off to
+// the car; while it charges, the cable carries the state's colour. Nothing
+// moves: the plug's coming and going is for later.
+for (const [raw, out] of [['Available', false], ['Preparing', true], ['pending_approval', true], ['Charging', true], ['SuspendedEVSE', true],
+  ['SuspendedEV', true], ['paused_by_scheduler', true], ['Finishing', true], ['Reserved', false], ['Faulted', false], ['unavailable', false], ['Zzz', false]])
+  check(`borne : ${raw}, la prise ${out ? 'sort de son etui' : 'reste dans son etui'}`, hasCls(evR(raw), 'plugged'), out);
+check('borne : en erreur avec une voiture, la prise sort', hasCls(vehR('Faulted', 'on'), 'plugged'), true);
+check('borne : en erreur sans voiture, elle reste', hasCls(vehR('Faulted', 'off'), 'plugged'), false);
+check('borne : la prise dit pas de voiture, elle reste', hasCls(vehR('Charging', 'off'), 'plugged'), false);
+check('repli : en charge, la prise sort', hasCls(fbR('on', 3000), 'plugged'), true);
+check('repli : branchee, la prise sort', hasCls(fbR('on', 0), 'plugged'), true);
+check('repli : sans voiture, elle reste', hasCls(fbR('off', 0), 'plugged'), false);
+contains('borne : le cable part vers la voiture', evR('Charging'), '<path class="ev-out" d="M42 69 C42 96 50 102 70 102"/>');
+contains('borne : sans voiture, il reste en boucle', evR('Available'), '<path class="ev-loop" d="M42 69 C42 104 69 104 69 57"/>');
+// The plug turns about the point where the cable enters it: the cable ends
+// there in both places, the head goes up into the holster, and at the car it
+// lies flat with its head at the edge, where the car is.
+{
+  const h = evR('Charging');
+  const st = (/<style>([\s\S]*?)<\/style>/.exec(h) || [, ''])[1];
+  const num = (re) => Number((re.exec(st) || [, NaN])[1]);
+  const end = cls => (new RegExp(`<path class="${cls}" d="[^"]* (\\S+) (\\S+)"/>`).exec(h) || []).slice(1).map(Number);
+  const origin = /\.ev-plug \{[^}]*transform-origin: 0 6px;/.test(st);
+  const parked = [num(/\.ev-plug \{[^}]*left: ([\d.]+)px;/), num(/\.ev-plug \{[^}]*top: ([\d.]+)px;/) + 6];
+  const atCar = [num(/\.machine\.plugged \.ev-plug \{ left: ([\d.]+)px;/), num(/\.machine\.plugged \.ev-plug \{[^}]*top: ([\d.]+)px;/) + 6];
+  const length = num(/\.ev-plug \{[^}]*width: ([\d.]+)px;/);
+  check('prise : elle tourne autour de l entree du cable', origin, true);
+  check('prise : dans son etui, au bout de la boucle', parked.join(), end('ev-loop').join());
+  check('prise : a la voiture, au bout du cable', atCar.join(), end('ev-out').join());
+  check('prise : la tete en haut dans l etui', /\.ev-plug \{[^}]*transform: rotate\(-90deg\);/.test(st), true);
+  check('prise : a plat a la voiture', /\.machine\.plugged \.ev-plug \{[^}]*transform: none;/.test(st), true);
+  check('prise : la tete au bord, cote voiture', atCar[0] + length, 96);
+  const holsterTop = num(/\.ev-holster \{[^}]*top: ([\d.]+)px;/), holsterH = num(/\.ev-holster \{[^}]*height: ([\d.]+)px;/);
+  const headFrom = num(/\.pl-head \{[^}]*left: ([\d.]+)px;/);
+  check('prise : l etui couvre la tete', holsterTop <= parked[1] - length && holsterTop + holsterH >= parked[1] - headFrom, true);
+  check('prise : le col dans la couleur de la borne', /\.pl-collar \{[^}]*var\(--ac-body,/.test(st), true);
+  check('prise : la partie DC sous la partie AC', num(/\.pl-dc \{ top: ([\d.]+)px;/) > num(/\.pl-ac \{ top: ([\d.]+)px;/) + num(/\.pl-ac \{[^}]*height: ([\d.]+)px;/), true);
+}
+contains('borne : la boucle cede la place au cable tendu', evR('Charging'), '.ev-cable .ev-out, .ev-cable .ev-live, .machine.plugged .ev-cable .ev-loop { display: none; }');
+contains('borne : la prise quitte son etui', evR('Charging'), '.machine.plugged .ev-plug {');
+contains('borne : en charge, le cable prend la couleur de l etat', evR('Charging'), '.ev-cable .ev-live { stroke: var(--info-color, #2196f3);');
+contains('borne : seulement en charge', evR('Charging'), '.machine.plugged.mode-charging .ev-cable .ev-live { display: inline; }');
+{
+  const plugSt = on => evSt('Faulted', { 'binary_sensor.cp_plug': { state: on, attributes: {} } });
+  const { card } = build({ ...EVC, vehicle_entity: 'binary_sensor.cp_plug' }, plugSt('on'));
+  const k1 = card._animKey;
+  rerender(card, plugSt('off'));
+  check('borne : la prise qui change redessine le cable', card._animKey !== k1, true);
+}
+
+// Detection: the fields that only a charger has, its names and its states.
+const isEv = (id, attrs = {}, cfg = {}, state = 'Charging') => /class="ev-box"/.test(render({ state_entity: id, ...cfg }, { [id]: { state, attributes: attrs } }));
+for (const f of ['vehicle_entity', 'session_energy_entity', 'current_limit_entity'])
+  check(`detection borne : ${f} la designe`, isEv('sensor.x', {}, { [f]: 'sensor.y' }), true);
+for (const id of ['sensor.charger_status_connector', 'sensor.charger_connector_2_status_connector', 'sensor.peblar_ev_charger_state',
+  'sensor.ohme_home_pro_status', 'sensor.tesla_wall_connector_status', 'sensor.nrgkick_status', 'sensor.openevse_charging_status',
+  'sensor.webasto_next_charge_point_state', 'sensor.garage_wallbox_status', 'sensor.evse_state', 'sensor.ev_charger_status',
+  'sensor.car_charger_state', 'sensor.easee_home_status', 'sensor.zaptec_go_charger_mode', 'sensor.go_echarger_car', 'sensor.keba_p30_state',
+  'sensor.alfen_eve_status', 'sensor.ladestation_status', 'sensor.ladesaule_garage', 'sensor.borne_de_recharge_etat',
+  'sensor.laadpaal_status', 'sensor.colonnina_stato', 'sensor.laddbox_status', 'sensor.ladeboks_status', 'sensor.stacja_ladowania_stan',
+  'sensor.nabijeci_stanice_stav', 'sensor.blue_current_activity', 'sensor.lektrico_state', 'sensor.chargepoint_home_status'])
+  check(`detection borne : ${id}`, isEv(id), true);
+check('detection borne : l icone d une borne', isEv('sensor.x', { icon: 'mdi:ev-station' }), true);
+check('detection borne : l icone d une prise de voiture', isEv('sensor.x', {}, { icon: 'mdi:ev-plug-type2' }), true);
+check('detection borne : Lektrico par ses etats', isEv('sensor.1p7k_500006_state', { options: ['available', 'charging', 'connected', 'error', 'locked',
+  'need_auth', 'paused', 'paused_by_scheduler', 'updating_firmware'] }), true);
+check('detection borne : Blue Current par ses etats', isEv('sensor.garage_activity', { options: ['available', 'charging', 'unavailable', 'error', 'offline'] }), true);
+check('detection borne : une liste sans charge, non', isEv('sensor.garage_activity', { options: ['available', 'busy', 'offline'] }), false);
+check('detection borne : charger sans ses mots, non', isEv('sensor.battery', { options: ['charging', 'discharging', 'full'] }), false);
+for (const id of ['sensor.phone_charger', 'switch.ebike_charger', 'sensor.battery_charging', 'sensor.washer_state', 'sensor.dishwasher_status',
+  'sensor.oven_state', 'sensor.reverse_osmosis', 'sensor.evening_routine', 'switch.coffee_machine', 'climate.living_room'])
+  check(`detection borne : ${id} n en est pas une`, isEv(id), false);
+check('detection borne : un poele reste un poele', /class="ps-hopper"/.test(render({ state_entity: 'climate.stufa' }, { 'climate.stufa': { state: 'heat', attributes: {} } })), true);
+check('detection borne : une imprimante reste une imprimante', isEv('sensor.bambu_p1s_print_status'), false);
+check('detection borne : le type choisi l emporte', isEv('sensor.wallbox_status', {}, { appliance_type: 'washer' }), false);
+
+// The editor: the charger's own fields, the controls, and nowhere else.
+{
+  const html = markup(newEditor({ state_entity: 'sensor.cp', appliance_type: 'ev_charger' }));
+  check('editeur borne : dans la liste des types', /<option value="ev_charger"/.test(html), true);
+  check('editeur borne : son nom', /<option value="ev_charger" [^>]*>EV charger<\/option>/.test(html), true);
+  for (const f of ['vehicle_entity', 'power_entity', 'session_energy_entity', 'current_limit_entity', 'error_entity',
+    'start_entity', 'pause_entity', 'resume_entity', 'stop_entity', 'toggle_entity', 'alerts_entity', 'connectivity_entity'])
+    check(`editeur borne : ${f}`, html.includes(`data-toggle="${f}"`), true);
+  for (const f of ['program_entity', 'remaining_time_entity', 'progress_entity', 'door_entity', 'phase_entity', 'level_entity'])
+    check(`editeur borne : pas de ${f}`, html.includes(`data-toggle="${f}"`), false);
+  check('editeur borne : le choix des commandes', /data-field="controls_activation"/.test(html), true);
+  check('editeur borne : pas de dernier cycle', /data-field="show_last_cycle"/.test(html), false);
+  check('editeur borne : en francais', /<option value="ev_charger" [^>]*>Borne de recharge<\/option>/.test(markup(newEditor({ state_entity: 'sensor.cp', appliance_type: 'ev_charger', language: 'fr' }))), true);
+}
+{
+  const html = markup(newEditor({ state_entity: 'sensor.cp', appliance_type: 'ev_charger', power_entity: 'sensor.p' }));
+  check('editeur borne : le seuil en W, 100 par defaut', /placeholder="100"/.test(html), true);
+  check('editeur borne : le seuil dit la charge', html.includes('Charging above this power (W)'), true);
+  check('editeur borne : pas de delai avant Termine', html.includes('data-field="power_off_delay"'), false);
+  check('editeur : le seuil d un lave-linge ne change pas', markup(newEditor({ state_entity: 'switch.p', appliance_type: 'washer', power_entity: 'sensor.p' }))
+    .includes('Running above this power (W)'), true);
+}
+for (const type of ['washer', 'oven', 'pellet_stove', 'air_conditioner', 'pet_feeder', 'fridge', 'iron']) {
+  const html = markup(newEditor({ state_entity: 'sensor.x', appliance_type: type }));
+  for (const f of ['vehicle_entity', 'session_energy_entity', 'current_limit_entity'])
+    check(`editeur ${type} : pas de ${f}`, html.includes(`data-toggle="${f}"`), false);
+}
+check('editeur : l erreur reste au poele', markup(newEditor({ state_entity: 'sensor.x', appliance_type: 'pellet_stove' })).includes('data-toggle="error_entity"'), true);
+check('editeur : pas d erreur sur un lave-linge', markup(newEditor({ state_entity: 'sensor.x', appliance_type: 'washer' })).includes('data-toggle="error_entity"'), false);
+check('editeur : le lave-linge garde ses commandes', ['start_entity', 'pause_entity', 'resume_entity', 'stop_entity']
+  .every(f => markup(newEditor({ state_entity: 'sensor.x', appliance_type: 'washer' })).includes(`data-toggle="${f}"`)), true);
+check('editeur : le distributeur garde son seul bouton', ['start_entity', 'pause_entity'].map(f =>
+  markup(newEditor({ state_entity: 'sensor.x', appliance_type: 'pet_feeder' })).includes(`data-toggle="${f}"`)).join(), 'true,false');
+check('editeur : pas de commande de charge sur une hotte', markup(newEditor({ state_entity: 'sensor.x', appliance_type: 'hood' })).includes('data-toggle="pause_entity"'), false);
+{
+  // The suggestions, from the entities of three integrations and Webasto's.
+  const suggest = (state, ids) => {
+    const ed = new Editor();
+    ed.setConfig({ type: 'custom:ha-appliance-card', appliance_type: 'ev_charger', state_entity: state });
+    ed.hass = { ...HASS(Object.fromEntries(ids.concat(state).map(id => [id, { state: '1', attributes: {} }]))),
+      entities: Object.fromEntries(ids.concat(state).map(id => [id, { device_id: 'cp' }])) };
+    return ed.events.at(-1)?.detail?.config || {};
+  };
+  const wb = suggest('sensor.webasto_next_charge_point_state', ['button.webasto_next_restart_wallbox', 'button.webasto_next_start_charging',
+    'button.webasto_next_stop_charging', 'sensor.webasto_next_cable_state', 'sensor.webasto_next_active_power_l1', 'sensor.webasto_next_active_power_total',
+    'sensor.webasto_next_charged_energy', 'number.webasto_next_failsafe_current', 'number.webasto_next_charging_current_limit', 'sensor.webasto_next_evse_fault_code']);
+  check('suggestion borne Webasto : le cable', wb.vehicle_entity, 'sensor.webasto_next_cable_state');
+  check('suggestion borne Webasto : la puissance totale, pas une phase', wb.power_entity, 'sensor.webasto_next_active_power_total');
+  check('suggestion borne Webasto : la session', wb.session_energy_entity, 'sensor.webasto_next_charged_energy');
+  check('suggestion borne Webasto : la limite, pas le courant de secours', wb.current_limit_entity, 'number.webasto_next_charging_current_limit');
+  check('suggestion borne Webasto : le defaut', wb.error_entity, 'sensor.webasto_next_evse_fault_code');
+  check('suggestion borne Webasto : demarrer, pas redemarrer', wb.start_entity, 'button.webasto_next_start_charging');
+  check('suggestion borne Webasto : arreter', wb.stop_entity, 'button.webasto_next_stop_charging');
+  const ocpp = suggest('sensor.charger_status_connector', ['button.charger_reset', 'button.charger_unlock', 'sensor.charger_power_active_import',
+    'sensor.charger_energy_session', 'sensor.charger_energy_active_import_register', 'number.charger_maximum_current', 'sensor.charger_error_code_connector',
+    'sensor.charger_current_offered']);
+  check('suggestion borne OCPP : la puissance', ocpp.power_entity, 'sensor.charger_power_active_import');
+  check('suggestion borne OCPP : la session, pas le compteur', ocpp.session_energy_entity, 'sensor.charger_energy_session');
+  check('suggestion borne OCPP : la limite', ocpp.current_limit_entity, 'number.charger_maximum_current');
+  check('suggestion borne OCPP : le code d erreur', ocpp.error_entity, 'sensor.charger_error_code_connector');
+  check('suggestion borne OCPP : jamais le reset comme arret', ocpp.stop_entity, undefined);
+  const tesla = suggest('sensor.tesla_wall_connector_status', ['binary_sensor.tesla_wall_connector_vehicle_connected',
+    'binary_sensor.tesla_wall_connector_contactor_closed', 'sensor.tesla_wall_connector_total_power', 'sensor.tesla_wall_connector_session_energy',
+    'sensor.tesla_wall_connector_energy', 'sensor.tesla_wall_connector_phase_a_current']);
+  check('suggestion borne Tesla : la prise', tesla.vehicle_entity, 'binary_sensor.tesla_wall_connector_vehicle_connected');
+  check('suggestion borne Tesla : la puissance', tesla.power_entity, 'sensor.tesla_wall_connector_total_power');
+  check('suggestion borne Tesla : la session', tesla.session_energy_entity, 'sensor.tesla_wall_connector_session_energy');
+  const nrg = suggest('sensor.nrgkick_status', ['sensor.nrgkick_vehicle_connected_since', 'sensor.nrgkick_total_active_power',
+    'sensor.nrgkick_charged_energy', 'number.nrgkick_charging_current', 'sensor.nrgkick_error_code']);
+  check('suggestion borne NRGkick : pas une date comme prise', nrg.vehicle_entity, undefined);
+  check('suggestion borne NRGkick : la puissance', nrg.power_entity, 'sensor.nrgkick_total_active_power');
+  check('suggestion borne NRGkick : la limite', nrg.current_limit_entity, 'number.nrgkick_charging_current');
+  check('suggestion borne NRGkick : la session', nrg.session_energy_entity, 'sensor.nrgkick_charged_energy');
+}
+
+// What the card draws follows the state it settles on, not the status alone.
+check('borne : en erreur, rien ne tourne', hasCls(errR('GroundFailure'), 'spinning'), false);
+check('borne : sans voiture, rien ne tourne', hasCls(vehR('Charging', 'off'), 'spinning'), false);
+check('SuspendedEV : la machine dit terminee', hasCls(suspR('SuspendedEV', 12.4, 0), 'done'), true);
+// A target state_map does not know leaves the word as it came.
+check('borne : une cible inconnue laisse le mot', stateLine(evR('Z', { state_map: { Z: 'boiling' } })), 'Z');
+// Only a plug's contact is a plug: any other binary sensor is a status, read
+// in the shared words.
+check('borne : un contact qui n est pas une prise', stateLine(render({ appliance_type: 'ev_charger', state_entity: 'binary_sensor.cp_charging' },
+  { 'binary_sensor.cp_charging': { state: 'on', attributes: { device_class: 'battery_charging' } } })), 'Running');
+// A threshold never stands in for a status that is there, even one the card
+// does not know.
+check('borne : le seuil ne remplace pas un statut', stateLine(evR('Zzz', { power_entity: 'sensor.p', power_on_threshold: 100 }, { 'sensor.p': W(3000) })), 'Zzz');
+check('borne : ni un statut reconnu', evMode(evR('SuspendedEVSE', { power_entity: 'sensor.p', power_on_threshold: 100 }, { 'sensor.p': W(0) })), 'paused');
+// The history reads a charger's words as the card does: a charge is a run,
+// from its start to the moment it was complete.
+{
+  const rows = [H('Available', -300), H('Preparing', -210), H('Charging', -200), H('SuspendedEVSE', -150), H('Charging', -140),
+    H('Finishing', -120), H('Available', -100)];
+  const h = withHistory({ ...EVC, show_last_cycle: true }, evSt('Available'), msg => Promise.resolve({ [msg.entity_ids[0]]: rows }));
+  await settle();
+  check('borne : l historique lit ses mots', /^1h20 · /.test(lastLine(markup(h.card)) || ''), true);
+}
+
+// Every new key in the fourteen languages: there in each, and the language's
+// own word. Only the words a language writes the way English does are left.
+{
+  const EV_KEYS = ['type_ev_charger', 'ev_no_vehicle', 'ev_connected', 'ev_awaiting_auth', 'ev_charging', 'ev_paused', 'ev_scheduled',
+    'ev_done', 'ev_error', 'ev_offline', 'section_vehicle', 'section_session_energy', 'section_current_limit', 'ev_power_threshold',
+    'ev_line_session', 'ev_line_limit'];
+  const SAME_AS_EN = new Set(['de:ev_offline', 'it:ev_offline', 'nl:ev_offline', 'pt:ev_offline', 'sv:ev_offline', 'da:ev_offline',
+    'pl:ev_offline', 'cs:ev_offline', 'es:ev_error']);
+  check('traductions borne : quatorze langues', Object.keys(TABLE).length, 14);
+  for (const code of Object.keys(TABLE)) {
+    check(`traductions borne ${code} : toutes les cles`, EV_KEYS.filter(k => typeof TABLE[code][k] !== 'string' || !TABLE[code][k].trim()).join(' ') || 'ok', 'ok');
+    if (code === 'en') continue;
+    check(`traductions borne ${code} : dans sa langue`, EV_KEYS.filter(k => TABLE[code][k] === TABLE.en[k] && !SAME_AS_EN.has(`${code}:${k}`)).join(' ') || 'ok', 'ok');
+    // The words a language shares with English are its own word for it
+    // elsewhere in the card, the same "Offline" and "Error".
+    check(`traductions borne ${code} : hors ligne comme l imprimante`, TABLE[code].ev_offline, TABLE[code].p3_offline);
+    check(`traductions borne ${code} : erreur comme partout`, TABLE[code].ev_error, TABLE[code].error);
+    // And the card speaks it.
+    const words = Object.entries({ Available: 'no_vehicle', Preparing: 'connected', Charging: 'charging', SuspendedEVSE: 'paused', Finishing: 'done' })
+      .map(([raw, mode]) => stateLine(evR(raw, { language: code })) === TABLE[code][`ev_${mode}`]);
+    check(`traductions borne ${code} : la carte les dit`, words.every(Boolean), true);
+    check(`traductions borne ${code} : l editeur aussi`, markup(newEditor({ state_entity: 'sensor.cp', appliance_type: 'ev_charger', language: code }))
+      .includes(TABLE[code].section_vehicle), true);
+  }
+}
+
+// The gallery shows it, and the README says it in both languages.
+{
+  const demo = readFileSync(join(HERE, '..', 'docs', 'demo.html'), 'utf8');
+  check('galerie : la borne y est', /ev_charger: evCharger/.test(demo), true);
+  for (const file of ['README.md', 'README.fr.md']) {
+    const md = readFileSync(join(HERE, '..', file), 'utf8');
+    check(`${file} : ev_charger dans la liste des types`, /`towel_warmer` \\\| `ev_charger`/.test(md), true);
+    check(`${file} : l exemple Webasto`, md.includes('state_entity: sensor.webasto_next_charge_point_state'), true);
+    check(`${file} : les lettres IEC 61851`, /state_map:\n  A: no_vehicle\n  B: connected\n  C: charging\n  D: charging\n  E: error\n  F: error\n/.test(md), true);
+    check(`${file} : le Unavailable d OCPP`, md.includes('state_map:\n  Unavailable: offline'), true);
+    // state_entity may be left out on a charger: the general rule says so too.
+    const charger = file === 'README.md' ? 'EV charger' : 'borne de recharge';
+    const lead = md.split('\n').find((l) => /^(Only|Seule) `state_entity`/.test(l)) || '';
+    const row = md.split('\n').find((l) => l.startsWith('| `state_entity` | **')) || '';
+    check(`${file} : state_entity facultatif sur une borne, en tete`, lead.includes(charger), true);
+    check(`${file} : state_entity facultatif sur une borne, dans le tableau`, row.includes(charger), true);
+  }
+}
+
 report();

@@ -10,7 +10,7 @@
 <a href="https://buymeacoffee.com/adnpolymerase" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-orange.png" alt="Buy Me A Coffee" height="60"></a>
 <a href="https://adnpolymerase.github.io/HA/" target="_blank"><img src="https://raw.githubusercontent.com/ADNPolymerase/HA/main/assets/site-button.svg" alt="Lien vers mon github.io pour mes autres projets" height="60"></a>
 
-Une card Lovelace pour les appareils de la maison : lave-linge, sèche-linge, lave-vaisselle, four, micro-ondes, hotte, plaque de cuisson, réfrigérateur, bouilloire, robot cuiseur, machine à café, cuiseur à riz, friteuse à air, chauffe-eau, chaudière, pompe à chaleur, imprimante 3D, distributeur de croquettes, fer à repasser, poêle à granulés, climatiseur, déshumidificateur, petit chauffage et sèche-serviettes. Cycle en cours, programme, temps restant, température, alertes et commandes.
+Une card Lovelace pour les appareils de la maison : lave-linge, sèche-linge, lave-vaisselle, four, micro-ondes, hotte, plaque de cuisson, réfrigérateur, bouilloire, robot cuiseur, machine à café, cuiseur à riz, friteuse à air, chauffe-eau, chaudière, pompe à chaleur, imprimante 3D, distributeur de croquettes, fer à repasser, poêle à granulés, climatiseur, déshumidificateur, petit chauffage, sèche-serviettes et borne de recharge. Cycle en cours, programme, temps restant, température, alertes et commandes.
 
 Aucune marque supposée : chaque champ est une entité à choisir, elle fonctionne donc avec **n'importe quelle** intégration (Electrolux, Samsung, LG, Home Connect, Miele, une simple prise connectée…).
 
@@ -21,11 +21,11 @@ Aucune marque supposée : chaque champ est une entité à choisir, elle fonction
 
 ## Fonctionnalités
 
-- **Vingt-quatre types d'appareils**, chacun avec une illustration en CSS animée sur les données de l'appareil et statique à l'arrêt. Le type est détecté tout seul ou choisi via `appliance_type`, et `compact: true` ne garde que le texte.
+- **Vingt-cinq types d'appareils**, chacun avec une illustration en CSS animée sur les données de l'appareil et statique à l'arrêt. Le type est détecté tout seul ou choisi via `appliance_type`, et `compact: true` ne garde que le texte.
 - **Normalisation d'état** : `Idle`, `RUNNING`, `wash`, `En marche`… sont reconnus (sans tenir compte des accents) et classés en veille, préchauffage, en cours, en pause, terminé, différé ou erreur. Un état inconnu s'affiche tel quel, sans l'espace de noms de l'intégration, et `state_map` classe le reste, `"*"` ramassant tout ce qui dépasse.
 - **L'étape, et non une heure d'*En cours*** : un lave-linge, un sèche-linge ou un lave-vaisselle nomme l'étape où il en est (*Prélavage*, *Lavage*, *Rinçage*, *Essorage*, *Séchage* et sept autres), d'après une entité de phase ou son propre état, et le tambour s'emballe pendant l'essorage. Le temps restant est toujours celui du cycle entier.
 - **Une lavante-séchante est un lave-linge qui sèche** : `washer_dryer: true`, et le tambour montre de l'eau pendant le lavage, puis du linge qui tourne dans l'air chaud pendant le séchage. L'étape vient de l'état lui-même ou d'une entité de phase, et la ligne d'état lit *Lavage* ou *Séchage*.
-- **Chaque appareil dit ce qui compte pour lui** : une machine à café ce qui lui manque (eau, grains, bac, détartrage), un réfrigérateur sa santé (débranché, porte ouverte, température haute), une chaudière mixte ce qu'elle chauffe (chauffage, eau chaude ou veille), une imprimante 3D ce que fait l'impression (préchauffage, nivellement, changement de filament), un poêle à granulés la phase de son feu (allumage, modulation, éco, nettoyage), un climatiseur son mode et où il souffle.
+- **Chaque appareil dit ce qui compte pour lui** : une machine à café ce qui lui manque (eau, grains, bac, détartrage), un réfrigérateur sa santé (débranché, porte ouverte, température haute), une chaudière mixte ce qu'elle chauffe (chauffage, eau chaude ou veille), une imprimante 3D ce que fait l'impression (préchauffage, nivellement, changement de filament), un poêle à granulés la phase de son feu (allumage, modulation, éco, nettoyage), un climatiseur son mode et où il souffle, une borne de recharge si une voiture est branchée et ce que fait la charge (attente d'autorisation, en charge, en pause, programmée, terminée).
 - **Fonctionne avec une simple prise connectée** : `power_entity` et `power_on_threshold` suffisent à déduire l'état de la consommation ; `power_off_delay` évite qu'une pause soit prise pour la fin, et `show_last_cycle` montre la durée du dernier cycle.
 - **Programme, temps restant, barre de progression, lignes d'info, porte, alertes, connectivité et commandes** (démarrer, pause, reprise, stop), chacun optionnel.
 - **14 langues** (EN, FR, DE, ES, IT, NL, PT, SV, NO, DA, PL, RU, ZH, CS), celle de Home Assistant ou fixée sur la card.
@@ -48,11 +48,11 @@ Aucune marque supposée : chaque champ est une entité à choisir, elle fonction
 
 ## Configuration
 
-Seule `state_entity` est obligatoire, sauf sur un réfrigérateur où une sonde ou un contact de porte suffit. Dans l'éditeur visuel, choisir l'entité d'état pré-remplit les autres champs.
+Seule `state_entity` est obligatoire, sauf sur un réfrigérateur où une sonde ou un contact de porte suffit, et sur une borne de recharge où sa prise ou son compteur suffit. Dans l'éditeur visuel, choisir l'entité d'état pré-remplit les autres champs.
 
 | Option | Description |
 |---|---|
-| `state_entity` | **Obligatoire**, sauf sur un frigo. Entité portant l'état de l'appareil, de n'importe quel domaine. |
+| `state_entity` | **Obligatoire**, sauf sur un frigo ou une borne de recharge. Entité portant l'état de l'appareil, de n'importe quel domaine. |
 | `state_map` | Table état brut → `idle` \| `running` \| `preheating` \| `keep_warm` \| `paused` \| `done` \| `delayed` \| `error`. Fixe le libellé, la couleur et l'animation. La clé `"*"` ramasse tous les états qui dépassent (voir plus bas), et sur un lave-linge, un sèche-linge ou un lave-vaisselle les étapes (`washing`, `spinning`...) sont aussi des cibles. Aussi dans l'éditeur visuel. |
 | `state_show_raw` | `true` affiche le texte de l'entité plutôt que le libellé de la card, tel que Home Assistant l'affiche (un climatiseur lit `Froid`, pas `cool`). |
 | `controls_activation` | Comment les boutons de commande réagissent : `tap` (par défaut) les actionne tout de suite, `hold` seulement après un appui long, `off` jamais depuis la card (un appui long ouvre l'entité). En YAML, l'écrire entre guillemets, `controls_activation: "off"` : un `off` nu est lu comme `false` (la card le traite quand même comme `off`). Utile contre les appuis accidentels et les petits doigts. |
@@ -60,7 +60,7 @@ Seule `state_entity` est obligatoire, sauf sur un réfrigérateur où une sonde 
 | `compact` | `true` masque l'illustration. |
 | `illustration_color` | `auto` (défaut, suit le thème) \| `white` \| `grey` \| `black` \| `red` (rouge foncé). Ne change que la carrosserie, pas les couleurs d'état. |
 | `language` | `auto` (défaut, suit Home Assistant) ou l'un des 14 codes : `en`, `fr`, `de`, `es`, `it`, `nl`, `pt`, `sv`, `no`, `da`, `pl`, `ru`, `zh`, `cs`. `nb` et `nb-NO` donnent le norvégien. |
-| `appliance_type` | `auto` (défaut) \| `washer` \| `dryer` \| `dishwasher` \| `oven` \| `microwave` \| `hood` \| `cooktop` \| `fridge` \| `kettle` \| `cooker` \| `coffee` \| `rice_cooker` \| `air_fryer` \| `water_heater` \| `boiler` \| `heat_pump` \| `printer_3d` \| `pet_feeder` \| `iron` \| `pellet_stove` \| `air_conditioner` \| `dehumidifier` \| `space_heater` \| `towel_warmer`. |
+| `appliance_type` | `auto` (défaut) \| `washer` \| `dryer` \| `dishwasher` \| `oven` \| `microwave` \| `hood` \| `cooktop` \| `fridge` \| `kettle` \| `cooker` \| `coffee` \| `rice_cooker` \| `air_fryer` \| `water_heater` \| `boiler` \| `heat_pump` \| `printer_3d` \| `pet_feeder` \| `iron` \| `pellet_stove` \| `air_conditioner` \| `dehumidifier` \| `space_heater` \| `towel_warmer` \| `ev_charger`. |
 | `tap_action` | Ce que fait un appui sur la carte, dans les mots de Home Assistant : `more-info` (défaut), `none`, `navigate`, `url`, `toggle`, `perform-action` ou `fire-dom-event`, celle qu'écoutent les cartes popup bâties sur browser_mod. En YAML seulement. |
 | `toggle_entity` | Bouton marche/arrêt (`switch`, `button`, `script`, `input_boolean`, `fan`), mis en évidence quand c'est allumé. |
 | `power_entity` / `power_on_threshold` / `power_icon` | Capteur de puissance. Avec un seuil, l'état en est déduit : *en marche* au-dessus, puis *terminé* en redescendant. Pointer `state_entity` sur ce même capteur l'active avec un seuil de 10 W. `power_icon` remplace `mdi:power-plug`. |
@@ -152,6 +152,12 @@ Par type :
 | `beans_entity` / `tray_entity` / `descaling_entity` | machine à café | Grains vides, bac plein, détartrage à faire. |
 | `cups_entity` | machine à café | Nombre de tasses : un compte, un booléen ou un nom de boisson (*2 Espressi*). |
 | `strength_entity` | machine à café | Force du café, en chiffre ou en mot. |
+| `state_entity` | borne de recharge | Le statut de la borne : *Aucun véhicule*, *Véhicule branché*, *En attente d'autorisation*, *En charge*, *Charge en pause*, *Charge programmée*, *Charge terminée*, *Erreur* ou *Hors ligne*, lu dans les mots d'OCPP et des intégrations de Home Assistant (voir *Bornes de recharge*). `state_map` accepte les neuf : `no_vehicle`, `connected`, `awaiting_auth`, `charging`, `paused`, `scheduled`, `done`, `error` et `offline`. Facultatif : sans lui, la prise et le compteur le disent. |
+| `vehicle_entity` | borne de recharge | Si une voiture est branchée : le contact d'une prise, ou l'état d'un câble en mots (`disconnected`, `cable_only`, `vehicle_connected`, `vehicle_locked`). Sans voiture, un statut reconnu devient *Aucun véhicule*, sauf une erreur. |
+| `power_entity` / `power_on_threshold` | borne de recharge | La puissance, dans l'unité et la précision du compteur (*7,4 kW*). Le seuil est en W quelle que soit cette unité, 100 W par défaut : au-dessus, la puissance passe. Il ne sert qu'à défaut de statut, et à distinguer une voiture qui a sa charge d'une voiture en pause. |
+| `session_energy_entity` | borne de recharge | L'énergie de la session, en *Chargé 12,4 kWh*. |
+| `current_limit_entity` | borne de recharge | La limite de courant, en *Limite de courant 16 A*. Un appui ouvre l'entité, qui est là où elle se règle. |
+| `error_entity` | borne de recharge | Un contact allumé, un code autre que 0 ou un mot autre que *pas d'erreur* (le `NoError` d'OCPP, `ok`, `none`) fait passer l'état en *Erreur*, avec les mots de la borne sur une ligne. |
 
 ### Exemples
 
@@ -404,6 +410,74 @@ state_entity: switch.radiateur_prise
 power_entity: sensor.radiateur_prise_power
 power_on_threshold: 30
 ```
+
+### Bornes de recharge
+
+Une wallbox au mur, son voyant dans la couleur de ce que fait la borne : *Aucun véhicule*, *Véhicule branché* (une voiture qui attend), *En attente d'autorisation* (un badge ou l'appli), *En charge*, *Charge en pause* (par la borne ou par la voiture), *Charge programmée*, *Charge terminée* (la voiture encore branchée), *Erreur* ou *Hors ligne*. Avec une voiture branchée, la prise quitte son étui et le câble part vers la voiture ; pendant la charge, il prend la couleur de l'état. N'importe quelle wallbox fait l'affaire : la card lit le statut dans les mots d'OCPP et des intégrations de Home Assistant lui-même, `state_map` lui apprend tous les autres, et une borne sans statut se lit sur sa prise et son compteur.
+
+| Intégration | Statut | Mots lus |
+|---|---|---|
+| OCPP ([ocpp](https://github.com/lbbrhzn/ocpp), 1.6 et 2.0.1) | Status Connector | `Available`, `Reserved` → aucun véhicule ; `Preparing` → véhicule branché ; `Charging` ; `SuspendedEVSE`, `SuspendedEV` → en pause ; `Finishing` → terminée ; `Faulted` → erreur |
+| Peblar | State | `no_ev_connected` → aucun véhicule ; `charging` ; `suspended` → en pause ; `error`, `fault`, `invalid` → erreur |
+| Ohme | Status | `unplugged` → aucun véhicule ; `plugged_in` → véhicule branché ; `pending_approval` → en attente d'autorisation ; `charging` ; `paused` ; `finished` → terminée |
+| Tesla Wall Connector | Status | `not_connected` → aucun véhicule ; `connected`, `negotiating` → véhicule branché ; `charging`, `charging_reduced` ; `waiting_car` → en pause ; `charging_finished` → terminée ; `error` |
+| NRGkick | Status | `standby` → aucun véhicule ; `connected` → véhicule branché ; `charging` ; `error` |
+| OpenEVSE | Charging status | `not_connected` → aucun véhicule ; `connected` → véhicule branché ; `charging` ; `sleeping`, `disabled` → en pause ; `vent_required` et les défauts (`gfci_fault`, `no_ground`, `stuck_relay`…) → erreur |
+| Lektrico | State | `available` → aucun véhicule ; `connected` → véhicule branché ; `need_auth` → en attente d'autorisation ; `charging` ; `paused` ; `paused_by_scheduler` → programmée ; `error` |
+| Blue Current | Activity | `available` → aucun véhicule ; `charging` ; `error` ; `offline` |
+| Webasto Next et Unite ([Modbus](https://github.com/tomwellnitz/Webasto-Next-Modbus)) | Charge Point State | `available`, `reserved` → aucun véhicule ; `preparing` → véhicule branché ; `charging` ; `suspended`, `suspended_evse`, `suspended_ev` → en pause ; `finishing` → terminée ; `error`, `faulted` → erreur |
+
+Un mot au sens incertain reste tel qu'il vient, comme pour tout autre appareil : le `booting` de la Tesla, le `wakeup` de la NRGkick, les `updating_firmware` et `locked` de la Lektrico. De même pour un mot qui dit une chose sur une borne et une autre ailleurs : le `ready` de la Tesla est une voiture branchée, le `Ready` d'une Wallbox une borne sans voiture, et tous deux se lisent *Inactif* (`state_map: {ready: connected}` pour la Tesla). Une voiture qui cesse de prendre l'énergie (`SuspendedEV`, `suspended_ev`, le `waiting_car` de la Tesla) se lit *Charge terminée* une fois que la session contient de l'énergie et que la puissance ne passe plus, ce qui demande `session_energy_entity` et `power_entity` ; sinon c'est une pause. Une borne qui retient l'énergie (`SuspendedEVSE`, un `suspended` seul) reste en pause : elle reprend d'elle-même.
+
+Les `unavailable` et `unknown` de Home Assistant se lisent *Hors ligne*. Une borne qui donne l'`Unavailable` d'OCPP comme un mot se règle avec `state_map`, puisque seule la majuscule l'en distingue (les `unavailable` en minuscules de Blue Current et de l'Unite ne peuvent pas l'être, et se lisent *Hors ligne*). Ce qui l'emporte, dans l'ordre : une `error_entity` qui signale une erreur, puis *Hors ligne*, puis une `vehicle_entity` qui dit qu'il n'y a pas de voiture, ce qui fait de tout statut reconnu sauf une erreur *Aucun véhicule*, puis le statut lui-même.
+
+La Webasto Next, avec l'[intégration Modbus](https://github.com/tomwellnitz/Webasto-Next-Modbus) :
+
+```yaml
+type: custom:ha-appliance-card
+appliance_type: ev_charger
+state_entity: sensor.webasto_next_charge_point_state
+vehicle_entity: sensor.webasto_next_cable_state
+power_entity: sensor.webasto_next_active_power_total
+session_energy_entity: sensor.webasto_next_charged_energy
+current_limit_entity: number.webasto_next_charging_current_limit
+start_entity: button.webasto_next_start_charging
+stop_entity: button.webasto_next_stop_charging
+```
+
+Une borne sans statut, par sa prise et son compteur : sans voiture elle se lit *Aucun véhicule*, avec une voiture et la puissance au-dessus de `power_on_threshold` *En charge*, avec une voiture sans puissance *Véhicule branché*.
+
+```yaml
+type: custom:ha-appliance-card
+appliance_type: ev_charger
+vehicle_entity: binary_sensor.wallbox_prise
+power_entity: sensor.wallbox_puissance
+power_on_threshold: 500
+```
+
+Une borne qui donne les lettres du pilote de contrôle de la norme IEC 61851 se lit par `state_map`, puisqu'une lettre seule pourrait vouloir dire n'importe quoi sur une autre entité :
+
+```yaml
+type: custom:ha-appliance-card
+appliance_type: ev_charger
+state_entity: sensor.wallbox_cp_state
+state_map:
+  A: no_vehicle
+  B: connected
+  C: charging
+  D: charging
+  E: error
+  F: error
+```
+
+Et l'`Unavailable` d'OCPP, un connecteur mis hors service, de la même façon :
+
+```yaml
+state_map:
+  Unavailable: offline
+```
+
+Une entité qui porte le nom d'une wallbox dans les langues de la card, de son fabricant ou d'OCPP est reconnue d'elle-même, comme un statut énuméré qui liste les mots d'une borne. L'éditeur remplit la prise, le compteur, la session, la limite de courant, l'erreur et les boutons de démarrage et d'arrêt depuis les entités de la borne, jamais son bouton de redémarrage ou de réinitialisation.
 
 ### Étapes du cycle
 

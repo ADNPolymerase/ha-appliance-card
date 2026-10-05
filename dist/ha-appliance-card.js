@@ -149,6 +149,7 @@ const T = {
     last_cycle: "Last cycle", show_last_cycle: "Show the last cycle", power_off_delay: "Delay before Finished (min, plug only)",
     washer_dryer: "Washer-dryer (washes and dries)", step_drying: "Drying", section_cycle_phase: "Cycle phase",
     step_prewash: "Pre-wash", step_soaking: "Soaking", step_weighing: "Weighing", step_filling: "Filling", step_washing: "Washing", step_rinsing: "Rinsing", step_draining: "Draining", step_spinning: "Spinning", step_cooling: "Cooling", step_anti_crease: "Anti-crease", step_steam: "Steam",
+    type_ev_charger: "EV charger", ev_no_vehicle: "No vehicle", ev_connected: "Plugged in", ev_awaiting_auth: "Awaiting authorisation", ev_charging: "Charging", ev_paused: "Charging paused", ev_scheduled: "Scheduled", ev_done: "Charging complete", ev_error: "Error", ev_offline: "Offline", section_vehicle: "Vehicle plugged in (plug sensor)", section_session_energy: "Session energy", section_current_limit: "Charging current limit", ev_power_threshold: "Charging above this power (W)", ev_line_session: "Charged", ev_line_limit: "Current limit",
   },
   fr: {
     idle: "En veille", running: "En cours", paused: "En pause", done: "Termin\u00e9",
@@ -288,6 +289,7 @@ const T = {
     last_cycle: "Dernier cycle", show_last_cycle: "Afficher le dernier cycle", power_off_delay: "D\u00e9lai avant \u00ab Termin\u00e9 \u00bb (min, prise seule)",
     washer_dryer: "Lavante-s\u00e9chante (lave et s\u00e8che)", step_drying: "S\u00e9chage", section_cycle_phase: "Phase du cycle",
     step_prewash: "Pr\u00e9lavage", step_soaking: "Trempage", step_weighing: "Pes\u00e9e", step_filling: "Remplissage", step_washing: "Lavage", step_rinsing: "Rin\u00e7age", step_draining: "Vidange", step_spinning: "Essorage", step_cooling: "Refroidissement", step_anti_crease: "Anti-froissage", step_steam: "Vapeur",
+    type_ev_charger: "Borne de recharge", ev_no_vehicle: "Aucun v\u00e9hicule", ev_connected: "V\u00e9hicule branch\u00e9", ev_awaiting_auth: "En attente d'autorisation", ev_charging: "En charge", ev_paused: "Charge en pause", ev_scheduled: "Charge programm\u00e9e", ev_done: "Charge termin\u00e9e", ev_error: "Erreur", ev_offline: "Hors ligne", section_vehicle: "V\u00e9hicule branch\u00e9 (capteur de prise)", section_session_energy: "\u00c9nergie de la session", section_current_limit: "Limite du courant de charge", ev_power_threshold: "En charge au-dessus de cette puissance (W)", ev_line_session: "Charg\u00e9", ev_line_limit: "Limite de courant",
   },
   ru: {
     idle: "\u041e\u0436\u0438\u0434\u0430\u043d\u0438\u0435", running: "\u0420\u0430\u0431\u043e\u0442\u0430\u0435\u0442", paused: "\u041d\u0430 \u043f\u0430\u0443\u0437\u0435", done: "\u0417\u0430\u0432\u0435\u0440\u0448\u0435\u043d\u043e",
@@ -427,6 +429,7 @@ const T = {
     last_cycle: "\u041f\u043e\u0441\u043b\u0435\u0434\u043d\u0438\u0439 \u0446\u0438\u043a\u043b", show_last_cycle: "\u041f\u043e\u043a\u0430\u0437\u044b\u0432\u0430\u0442\u044c \u043f\u043e\u0441\u043b\u0435\u0434\u043d\u0438\u0439 \u0446\u0438\u043a\u043b", power_off_delay: "\u0417\u0430\u0434\u0435\u0440\u0436\u043a\u0430 \u043f\u0435\u0440\u0435\u0434 \u00ab\u0417\u0430\u0432\u0435\u0440\u0448\u0435\u043d\u043e\u00bb (\u043c\u0438\u043d, \u0442\u043e\u043b\u044c\u043a\u043e \u0440\u043e\u0437\u0435\u0442\u043a\u0430)",
     washer_dryer: "\u0421\u0442\u0438\u0440\u0430\u043b\u044c\u043d\u043e-\u0441\u0443\u0448\u0438\u043b\u044c\u043d\u0430\u044f \u043c\u0430\u0448\u0438\u043d\u0430 (\u0441\u0442\u0438\u0440\u0430\u0435\u0442 \u0438 \u0441\u0443\u0448\u0438\u0442)", step_drying: "\u0421\u0443\u0448\u043a\u0430", section_cycle_phase: "\u0424\u0430\u0437\u0430 \u0446\u0438\u043a\u043b\u0430",
     step_prewash: "\u041f\u0440\u0435\u0434\u0441\u0442\u0438\u0440\u043a\u0430", step_soaking: "\u0417\u0430\u043c\u0430\u0447\u0438\u0432\u0430\u043d\u0438\u0435", step_weighing: "\u0412\u0437\u0432\u0435\u0448\u0438\u0432\u0430\u043d\u0438\u0435", step_filling: "\u041d\u0430\u0431\u043e\u0440 \u0432\u043e\u0434\u044b", step_washing: "\u0421\u0442\u0438\u0440\u043a\u0430", step_rinsing: "\u041f\u043e\u043b\u043e\u0441\u043a\u0430\u043d\u0438\u0435", step_draining: "\u0421\u043b\u0438\u0432", step_spinning: "\u041e\u0442\u0436\u0438\u043c", step_cooling: "\u041e\u0445\u043b\u0430\u0436\u0434\u0435\u043d\u0438\u0435", step_anti_crease: "\u0417\u0430\u0449\u0438\u0442\u0430 \u043e\u0442 \u0441\u043c\u0438\u043d\u0430\u043d\u0438\u044f", step_steam: "\u041f\u0430\u0440",
+    type_ev_charger: "\u0417\u0430\u0440\u044f\u0434\u043d\u0430\u044f \u0441\u0442\u0430\u043d\u0446\u0438\u044f", ev_no_vehicle: "\u041d\u0435\u0442 \u0430\u0432\u0442\u043e\u043c\u043e\u0431\u0438\u043b\u044f", ev_connected: "\u0410\u0432\u0442\u043e\u043c\u043e\u0431\u0438\u043b\u044c \u043f\u043e\u0434\u043a\u043b\u044e\u0447\u0451\u043d", ev_awaiting_auth: "\u041e\u0436\u0438\u0434\u0430\u043d\u0438\u0435 \u0430\u0432\u0442\u043e\u0440\u0438\u0437\u0430\u0446\u0438\u0438", ev_charging: "\u0417\u0430\u0440\u044f\u0434\u043a\u0430", ev_paused: "\u0417\u0430\u0440\u044f\u0434\u043a\u0430 \u043f\u0440\u0438\u043e\u0441\u0442\u0430\u043d\u043e\u0432\u043b\u0435\u043d\u0430", ev_scheduled: "\u0417\u0430\u043f\u043b\u0430\u043d\u0438\u0440\u043e\u0432\u0430\u043d\u043e", ev_done: "\u0417\u0430\u0440\u044f\u0434\u043a\u0430 \u0437\u0430\u0432\u0435\u0440\u0448\u0435\u043d\u0430", ev_error: "\u041e\u0448\u0438\u0431\u043a\u0430", ev_offline: "\u041d\u0435 \u0432 \u0441\u0435\u0442\u0438", section_vehicle: "\u0410\u0432\u0442\u043e\u043c\u043e\u0431\u0438\u043b\u044c \u043f\u043e\u0434\u043a\u043b\u044e\u0447\u0451\u043d (\u0434\u0430\u0442\u0447\u0438\u043a \u0440\u0430\u0437\u044a\u0451\u043c\u0430)", section_session_energy: "\u042d\u043d\u0435\u0440\u0433\u0438\u044f \u0441\u0435\u0430\u043d\u0441\u0430", section_current_limit: "\u041e\u0433\u0440\u0430\u043d\u0438\u0447\u0435\u043d\u0438\u0435 \u0442\u043e\u043a\u0430 \u0437\u0430\u0440\u044f\u0434\u043a\u0438", ev_power_threshold: "\u0417\u0430\u0440\u044f\u0434\u043a\u0430 \u0432\u044b\u0448\u0435 \u044d\u0442\u043e\u0439 \u043c\u043e\u0449\u043d\u043e\u0441\u0442\u0438 (\u0412\u0442)", ev_line_session: "\u0417\u0430\u0440\u044f\u0436\u0435\u043d\u043e", ev_line_limit: "\u041e\u0433\u0440\u0430\u043d\u0438\u0447\u0435\u043d\u0438\u0435 \u0442\u043e\u043a\u0430",
   },
   de: {
     idle: "Inaktiv", running: "L\u00e4uft", paused: "Pausiert", done: "Fertig",
@@ -566,6 +569,7 @@ const T = {
     last_cycle: "Letzter Zyklus", show_last_cycle: "Letzten Zyklus anzeigen", power_off_delay: "Verz\u00f6gerung vor \u201eFertig\u201c (Min., nur Steckdose)",
     washer_dryer: "Waschtrockner (w\u00e4scht und trocknet)", step_drying: "Trocknen", section_cycle_phase: "Programmphase",
     step_prewash: "Vorw\u00e4sche", step_soaking: "Einweichen", step_weighing: "Wiegen", step_filling: "Bef\u00fcllen", step_washing: "Waschen", step_rinsing: "Sp\u00fclen", step_draining: "Abpumpen", step_spinning: "Schleudern", step_cooling: "Abk\u00fchlen", step_anti_crease: "Knitterschutz", step_steam: "Dampf",
+    type_ev_charger: "Wallbox", ev_no_vehicle: "Kein Fahrzeug", ev_connected: "Fahrzeug angesteckt", ev_awaiting_auth: "Wartet auf Freigabe", ev_charging: "L\u00e4dt", ev_paused: "Laden pausiert", ev_scheduled: "Geplant", ev_done: "Laden abgeschlossen", ev_error: "Fehler", ev_offline: "Offline", section_vehicle: "Fahrzeug angesteckt (Steckersensor)", section_session_energy: "Energie des Ladevorgangs", section_current_limit: "Ladestrombegrenzung", ev_power_threshold: "L\u00e4dt oberhalb dieser Leistung (W)", ev_line_session: "Geladen", ev_line_limit: "Stromgrenze",
   },
   es: {
     idle: "Inactivo", running: "En marcha", paused: "En pausa", done: "Finalizado",
@@ -705,6 +709,7 @@ const T = {
     last_cycle: "\u00daltimo ciclo", show_last_cycle: "Mostrar el \u00faltimo ciclo", power_off_delay: "Retraso antes de \u00abTerminado\u00bb (min, solo enchufe)",
     washer_dryer: "Lavasecadora (lava y seca)", step_drying: "Secado", section_cycle_phase: "Fase del ciclo",
     step_prewash: "Prelavado", step_soaking: "Remojo", step_weighing: "Pesaje", step_filling: "Llenado", step_washing: "Lavado", step_rinsing: "Aclarado", step_draining: "Desag\u00fce", step_spinning: "Centrifugado", step_cooling: "Enfriamiento", step_anti_crease: "Antiarrugas", step_steam: "Vapor",
+    type_ev_charger: "Cargador de VE", ev_no_vehicle: "Sin veh\u00edculo", ev_connected: "Veh\u00edculo conectado", ev_awaiting_auth: "Esperando autorizaci\u00f3n", ev_charging: "Cargando", ev_paused: "Carga en pausa", ev_scheduled: "Carga programada", ev_done: "Carga completada", ev_error: "Error", ev_offline: "Sin conexi\u00f3n", section_vehicle: "Veh\u00edculo conectado (sensor del conector)", section_session_energy: "Energ\u00eda de la sesi\u00f3n", section_current_limit: "L\u00edmite de corriente de carga", ev_power_threshold: "Cargando por encima de esta potencia (W)", ev_line_session: "Cargado", ev_line_limit: "L\u00edmite de corriente",
   },
   it: {
     idle: "Inattivo", running: "In funzione", paused: "In pausa", done: "Terminato",
@@ -844,6 +849,7 @@ const T = {
     last_cycle: "Ultimo ciclo", show_last_cycle: "Mostra l'ultimo ciclo", power_off_delay: "Ritardo prima di \u00abTerminato\u00bb (min, solo presa)",
     washer_dryer: "Lavasciuga (lava e asciuga)", step_drying: "Asciugatura", section_cycle_phase: "Fase del ciclo",
     step_prewash: "Prelavaggio", step_soaking: "Ammollo", step_weighing: "Pesatura", step_filling: "Carico acqua", step_washing: "Lavaggio", step_rinsing: "Risciacquo", step_draining: "Scarico", step_spinning: "Centrifuga", step_cooling: "Raffreddamento", step_anti_crease: "Antipiega", step_steam: "Vapore",
+    type_ev_charger: "Stazione di ricarica", ev_no_vehicle: "Nessun veicolo", ev_connected: "Veicolo collegato", ev_awaiting_auth: "In attesa di autorizzazione", ev_charging: "In carica", ev_paused: "Ricarica in pausa", ev_scheduled: "Ricarica programmata", ev_done: "Ricarica completata", ev_error: "Errore", ev_offline: "Offline", section_vehicle: "Veicolo collegato (sensore della presa)", section_session_energy: "Energia della sessione", section_current_limit: "Limite di corrente di ricarica", ev_power_threshold: "In carica sopra questa potenza (W)", ev_line_session: "Ricaricato", ev_line_limit: "Limite di corrente",
   },
   nl: {
     idle: "Inactief", running: "Actief", paused: "Gepauzeerd", done: "Klaar",
@@ -983,6 +989,7 @@ const T = {
     last_cycle: "Laatste cyclus", show_last_cycle: "Laatste cyclus tonen", power_off_delay: "Vertraging v\u00f3\u00f3r \u201eKlaar\u201d (min, alleen stekker)",
     washer_dryer: "Was-droogcombinatie (wast en droogt)", step_drying: "Drogen", section_cycle_phase: "Programmafase",
     step_prewash: "Voorwas", step_soaking: "Weken", step_weighing: "Wegen", step_filling: "Vullen", step_washing: "Wassen", step_rinsing: "Spoelen", step_draining: "Afpompen", step_spinning: "Centrifugeren", step_cooling: "Afkoelen", step_anti_crease: "Anti-kreuk", step_steam: "Stoom",
+    type_ev_charger: "Laadpaal", ev_no_vehicle: "Geen voertuig", ev_connected: "Voertuig aangesloten", ev_awaiting_auth: "Wacht op autorisatie", ev_charging: "Laden", ev_paused: "Laden gepauzeerd", ev_scheduled: "Gepland", ev_done: "Laden voltooid", ev_error: "Fout", ev_offline: "Offline", section_vehicle: "Voertuig aangesloten (stekkersensor)", section_session_energy: "Energie van de laadsessie", section_current_limit: "Laadstroomlimiet", ev_power_threshold: "Laadt boven dit vermogen (W)", ev_line_session: "Geladen", ev_line_limit: "Stroomlimiet",
   },
   pt: {
     idle: "Inativo", running: "Em funcionamento", paused: "Em pausa", done: "Conclu\u00eddo",
@@ -1122,6 +1129,7 @@ const T = {
     last_cycle: "\u00daltimo ciclo", show_last_cycle: "Mostrar o \u00faltimo ciclo", power_off_delay: "Atraso antes de \u00abTerminado\u00bb (min, s\u00f3 tomada)",
     washer_dryer: "M\u00e1quina de lavar e secar (lava e seca)", step_drying: "Secagem", section_cycle_phase: "Fase do ciclo",
     step_prewash: "Pr\u00e9-lavagem", step_soaking: "Molho", step_weighing: "Pesagem", step_filling: "Enchimento", step_washing: "Lavagem", step_rinsing: "Enxaguamento", step_draining: "Escoamento", step_spinning: "Centrifuga\u00e7\u00e3o", step_cooling: "Arrefecimento", step_anti_crease: "Anti-vincos", step_steam: "Vapor",
+    type_ev_charger: "Carregador de VE", ev_no_vehicle: "Sem ve\u00edculo", ev_connected: "Ve\u00edculo ligado", ev_awaiting_auth: "A aguardar autoriza\u00e7\u00e3o", ev_charging: "A carregar", ev_paused: "Carregamento em pausa", ev_scheduled: "Carregamento agendado", ev_done: "Carregamento conclu\u00eddo", ev_error: "Erro", ev_offline: "Offline", section_vehicle: "Ve\u00edculo ligado (sensor da ficha)", section_session_energy: "Energia da sess\u00e3o", section_current_limit: "Limite da corrente de carregamento", ev_power_threshold: "A carregar acima desta pot\u00eancia (W)", ev_line_session: "Carregado", ev_line_limit: "Limite de corrente",
   },
   sv: {
     idle: "Inaktiv", running: "Ig\u00e5ng", paused: "Pausad", done: "Klar",
@@ -1261,6 +1269,7 @@ const T = {
     last_cycle: "Senaste cykel", show_last_cycle: "Visa senaste cykeln", power_off_delay: "F\u00f6rdr\u00f6jning f\u00f6re \u201dKlar\u201d (min, endast uttag)",
     washer_dryer: "Kombinerad tv\u00e4tt/tork (tv\u00e4ttar och torkar)", step_drying: "Torkning", section_cycle_phase: "Programfas",
     step_prewash: "F\u00f6rtv\u00e4tt", step_soaking: "Bl\u00f6tl\u00e4ggning", step_weighing: "V\u00e4gning", step_filling: "P\u00e5fyllning", step_washing: "Tv\u00e4tt", step_rinsing: "Sk\u00f6ljning", step_draining: "T\u00f6mning", step_spinning: "Centrifugering", step_cooling: "Avsvalning", step_anti_crease: "Skrynkelskydd", step_steam: "\u00c5nga",
+    type_ev_charger: "Laddbox", ev_no_vehicle: "Inget fordon", ev_connected: "Fordon anslutet", ev_awaiting_auth: "V\u00e4ntar p\u00e5 auktorisering", ev_charging: "Laddar", ev_paused: "Laddning pausad", ev_scheduled: "Schemalagd", ev_done: "Laddning klar", ev_error: "Fel", ev_offline: "Offline", section_vehicle: "Fordon anslutet (kontaktsensor)", section_session_energy: "Laddsessionens energi", section_current_limit: "Gr\u00e4ns f\u00f6r laddstr\u00f6m", ev_power_threshold: "Laddar \u00f6ver denna effekt (W)", ev_line_session: "Laddat", ev_line_limit: "Str\u00f6mgr\u00e4ns",
   },
   no: {
     idle: "Inaktiv", running: "I gang", paused: "Pauset", done: "Ferdig",
@@ -1400,6 +1409,7 @@ const T = {
     last_cycle: "Siste syklus", show_last_cycle: "Vis siste syklus", power_off_delay: "Forsinkelse f\u00f8r \u00abFerdig\u00bb (min, kun stikkontakt)",
     washer_dryer: "Kombinert vaske-/t\u00f8rkemaskin (vasker og t\u00f8rker)", step_drying: "T\u00f8rking", section_cycle_phase: "Programfase",
     step_prewash: "Forvask", step_soaking: "Bl\u00f8tlegging", step_weighing: "Veiing", step_filling: "Vannfylling", step_washing: "Vask", step_rinsing: "Skylling", step_draining: "T\u00f8mming", step_spinning: "Sentrifugering", step_cooling: "Avkj\u00f8ling", step_anti_crease: "Antikr\u00f8ll", step_steam: "Damp",
+    type_ev_charger: "Ladeboks", ev_no_vehicle: "Ingen bil", ev_connected: "Bil tilkoblet", ev_awaiting_auth: "Venter p\u00e5 autorisering", ev_charging: "Lader", ev_paused: "Lading satt p\u00e5 pause", ev_scheduled: "Planlagt", ev_done: "Lading fullf\u00f8rt", ev_error: "Feil", ev_offline: "Frakoblet", section_vehicle: "Bil tilkoblet (kontaktsensor)", section_session_energy: "Energi denne lade\u00f8kten", section_current_limit: "Grense for ladestr\u00f8m", ev_power_threshold: "Lader over denne effekten (W)", ev_line_session: "Ladet", ev_line_limit: "Str\u00f8mgrense",
   },
   da: {
     idle: "Inaktiv", running: "I gang", paused: "Sat p\u00e5 pause", done: "F\u00e6rdig",
@@ -1539,6 +1549,7 @@ const T = {
     last_cycle: "Seneste cyklus", show_last_cycle: "Vis seneste cyklus", power_off_delay: "Forsinkelse f\u00f8r \u00bbF\u00e6rdig\u00ab (min, kun stikkontakt)",
     washer_dryer: "Vaske-t\u00f8rremaskine (vasker og t\u00f8rrer)", step_drying: "T\u00f8rring", section_cycle_phase: "Programfase",
     step_prewash: "Forvask", step_soaking: "Ibl\u00f8ds\u00e6tning", step_weighing: "Vejning", step_filling: "P\u00e5fyldning", step_washing: "Vask", step_rinsing: "Skylning", step_draining: "Udpumpning", step_spinning: "Centrifugering", step_cooling: "Afk\u00f8ling", step_anti_crease: "Antikr\u00f8l", step_steam: "Damp",
+    type_ev_charger: "Ladeboks", ev_no_vehicle: "Ingen bil", ev_connected: "Bil tilsluttet", ev_awaiting_auth: "Venter p\u00e5 godkendelse", ev_charging: "Oplader", ev_paused: "Opladning sat p\u00e5 pause", ev_scheduled: "Planlagt", ev_done: "Opladning fuldf\u00f8rt", ev_error: "Fejl", ev_offline: "Offline", section_vehicle: "Bil tilsluttet (stiksensor)", section_session_energy: "Energi i ladesessionen", section_current_limit: "Gr\u00e6nse for ladestr\u00f8m", ev_power_threshold: "Oplader over denne effekt (W)", ev_line_session: "Opladet", ev_line_limit: "Str\u00f8mgr\u00e6nse",
   },
   pl: {
     idle: "Bezczynny", running: "W trakcie", paused: "Wstrzymany", done: "Zako\u0144czony",
@@ -1678,6 +1689,7 @@ const T = {
     last_cycle: "Ostatni cykl", show_last_cycle: "Poka\u017c ostatni cykl", power_off_delay: "Op\u00f3\u017anienie przed \u201eZako\u0144czono\u201d (min, tylko gniazdko)",
     washer_dryer: "Pralko-suszarka (pierze i suszy)", step_drying: "Suszenie", section_cycle_phase: "Faza programu",
     step_prewash: "Pranie wst\u0119pne", step_soaking: "Namaczanie", step_weighing: "Wa\u017cenie", step_filling: "Nape\u0142nianie", step_washing: "Pranie", step_rinsing: "P\u0142ukanie", step_draining: "Odpompowanie", step_spinning: "Wirowanie", step_cooling: "Sch\u0142adzanie", step_anti_crease: "Przeciw zagnieceniom", step_steam: "Para",
+    type_ev_charger: "Stacja \u0142adowania", ev_no_vehicle: "Brak pojazdu", ev_connected: "Pojazd pod\u0142\u0105czony", ev_awaiting_auth: "Oczekiwanie na autoryzacj\u0119", ev_charging: "\u0141adowanie", ev_paused: "\u0141adowanie wstrzymane", ev_scheduled: "Zaplanowane", ev_done: "\u0141adowanie zako\u0144czone", ev_error: "B\u0142\u0105d", ev_offline: "Offline", section_vehicle: "Pojazd pod\u0142\u0105czony (czujnik wtyczki)", section_session_energy: "Energia sesji \u0142adowania", section_current_limit: "Limit pr\u0105du \u0142adowania", ev_power_threshold: "\u0141aduje powy\u017cej tej mocy (W)", ev_line_session: "Na\u0142adowano", ev_line_limit: "Limit pr\u0105du",
   },
   zh: {
     idle: "\u7a7a\u95f2", running: "\u8fd0\u884c\u4e2d", paused: "\u6682\u505c", done: "\u5b8c\u6210",
@@ -1817,6 +1829,7 @@ const T = {
     last_cycle: "\u4e0a\u6b21\u5468\u671f", show_last_cycle: "\u663e\u793a\u4e0a\u6b21\u5468\u671f", power_off_delay: "\u201c\u5b8c\u6210\u201d\u524d\u7684\u5ef6\u8fdf\uff08\u5206\u949f\uff0c\u4ec5\u63d2\u5ea7\uff09",
     washer_dryer: "\u6d17\u70d8\u4e00\u4f53\u673a\uff08\u6d17\u6da4\u5e76\u70d8\u5e72\uff09", step_drying: "\u70d8\u5e72\u4e2d", section_cycle_phase: "\u7a0b\u5e8f\u9636\u6bb5",
     step_prewash: "\u9884\u6d17\u4e2d", step_soaking: "\u6d78\u6ce1\u4e2d", step_weighing: "\u79f0\u91cd\u4e2d", step_filling: "\u8fdb\u6c34\u4e2d", step_washing: "\u6d17\u6da4\u4e2d", step_rinsing: "\u6f02\u6d17\u4e2d", step_draining: "\u6392\u6c34\u4e2d", step_spinning: "\u8131\u6c34\u4e2d", step_cooling: "\u51b7\u5374\u4e2d", step_anti_crease: "\u9632\u76b1\u4e2d", step_steam: "\u84b8\u6c7d\u4e2d",
+    type_ev_charger: "\u7535\u52a8\u8f66\u5145\u7535\u6869", ev_no_vehicle: "\u65e0\u8f66\u8f86", ev_connected: "\u8f66\u8f86\u5df2\u8fde\u63a5", ev_awaiting_auth: "\u7b49\u5f85\u6388\u6743", ev_charging: "\u5145\u7535\u4e2d", ev_paused: "\u5145\u7535\u5df2\u6682\u505c", ev_scheduled: "\u5df2\u9884\u7ea6", ev_done: "\u5145\u7535\u5b8c\u6210", ev_error: "\u9519\u8bef", ev_offline: "\u79bb\u7ebf", section_vehicle: "\u8f66\u8f86\u5df2\u8fde\u63a5\uff08\u63d2\u5934\u4f20\u611f\u5668\uff09", section_session_energy: "\u672c\u6b21\u5145\u7535\u7535\u91cf", section_current_limit: "\u5145\u7535\u7535\u6d41\u9650\u5236", ev_power_threshold: "\u529f\u7387\u9ad8\u4e8e\u6b64\u503c (W) \u5373\u4e3a\u5145\u7535", ev_line_session: "\u5df2\u5145\u7535\u91cf", ev_line_limit: "\u7535\u6d41\u9650\u5236",
   },
   cs: {
     idle: "Ne\u010dinn\u00e9", running: "V provozu", paused: "Pozastaveno", done: "Dokon\u010deno",
@@ -1956,6 +1969,7 @@ const T = {
     last_cycle: "Posledn\u00ed cyklus", show_last_cycle: "Zobrazit posledn\u00ed cyklus", power_off_delay: "Zpo\u017ed\u011bn\u00ed p\u0159ed \u201eHotovo\u201c (min, jen z\u00e1suvka)",
     washer_dryer: "Pra\u010dka se su\u0161i\u010dkou (pere a su\u0161\u00ed)", step_drying: "Su\u0161en\u00ed", section_cycle_phase: "F\u00e1ze programu",
     step_prewash: "P\u0159edp\u00edrka", step_soaking: "Nam\u00e1\u010den\u00ed", step_weighing: "V\u00e1\u017een\u00ed", step_filling: "Napou\u0161t\u011bn\u00ed", step_washing: "Pran\u00ed", step_rinsing: "M\u00e1ch\u00e1n\u00ed", step_draining: "Vypou\u0161t\u011bn\u00ed", step_spinning: "Odst\u0159e\u010fov\u00e1n\u00ed", step_cooling: "Chlazen\u00ed", step_anti_crease: "Proti poma\u010dk\u00e1n\u00ed", step_steam: "P\u00e1ra",
+    type_ev_charger: "Nab\u00edjec\u00ed stanice", ev_no_vehicle: "\u017d\u00e1dn\u00e9 vozidlo", ev_connected: "Vozidlo p\u0159ipojeno", ev_awaiting_auth: "\u010cek\u00e1 na autorizaci", ev_charging: "Nab\u00edj\u00ed", ev_paused: "Nab\u00edjen\u00ed pozastaveno", ev_scheduled: "Napl\u00e1nov\u00e1no", ev_done: "Nab\u00edjen\u00ed dokon\u010deno", ev_error: "Chyba", ev_offline: "Offline", section_vehicle: "Vozidlo p\u0159ipojeno (senzor konektoru)", section_session_energy: "Energie nab\u00edjec\u00ed relace", section_current_limit: "Limit nab\u00edjec\u00edho proudu", ev_power_threshold: "Nab\u00edj\u00ed nad t\u00edmto v\u00fdkonem (W)", ev_line_session: "Nabito", ev_line_limit: "Limit proudu",
   },
 };
 
@@ -2619,6 +2633,148 @@ function fryerZoneOf(mode) {
   return "off";
 }
 
+// An EV charger (issue #27). Its status says whether a car is there, whether
+// it waits for its owner to authorise it, charges, is paused by the box or by
+// the car, waits for a schedule or is done, and each integration says it in
+// its own words: OCPP's connector status as the charger sends it (Available,
+// SuspendedEVSE), the enum keys of the integrations in Home Assistant itself.
+// They are read once, lowercased. Where an integration stretches a word, the
+// word keeps its own meaning: Peblar's "suspended" also covers a car waiting
+// to be authorised, Blue Current's "available" a charge point with no session
+// yet. A word that only says the car is waiting is "connected", never a pause
+// or a wait for authorisation it does not name.
+// IEC 61851's letters are left to state_map, since a bare "C" could be
+// anything on another entity, and so is OCPP's Unavailable: Home Assistant's
+// own unavailable means the entity is offline, and nothing else.
+const EV_MODES = ["no_vehicle", "connected", "awaiting_auth", "charging", "paused", "scheduled", "done", "error", "offline"];
+const EV_STATES = {
+  // OCPP 1.6, ChargePointStatus, as the ocpp integration passes it on: the
+  // OCPP 2.0.1 chargers it reads come out in the same words. Reserved can
+  // only follow Available, so no car is plugged in yet. Preparing is a car
+  // plugged in or a tag presented before a transaction starts: the car is
+  // there or about to be, and nothing says it waits for its owner.
+  // Unavailable is not here, see above.
+  available: "no_vehicle", reserved: "no_vehicle", preparing: "connected", charging: "charging",
+  suspendedevse: "paused", suspendedev: "paused", finishing: "done", faulted: "error",
+  // The same states in snake case, the way a Modbus integration hands them
+  // over (Webasto's Unite), and a bare "suspended" for a box that does not
+  // say who suspended the charge (Webasto's Next, and Peblar's State B,
+  // "suspended by either EV or charger").
+  suspended_evse: "paused", suspended_ev: "paused", suspended: "paused", error: "error",
+  // Peblar, the control pilot's letters in words.
+  no_ev_connected: "no_vehicle", fault: "error", invalid: "error",
+  // Ohme.
+  unplugged: "no_vehicle", pending_approval: "awaiting_auth", plugged_in: "connected", paused: "paused", finished: "done",
+  // Tesla Wall Connector. Waiting for the car is a car not taking what the
+  // box offers, OCPP's SuspendedEV. Its ready, a car plugged in, is left to
+  // the shared words: on a Wallbox, Ready is a box with no car at it.
+  not_connected: "no_vehicle", connected: "connected", negotiating: "connected",
+  waiting_car: "paused", charging_reduced: "charging", charging_finished: "done",
+  // NRGkick.
+  standby: "no_vehicle",
+  // OpenEVSE: sleeping and disabled are its two ways of pausing, and every
+  // fault has a word of its own.
+  sleeping: "paused", disabled: "paused", vent_required: "error", diode_check_failed: "error", gfci_fault: "error",
+  gfci_self_test_failure: "error", no_ground: "error", stuck_relay: "error", over_temperature: "error",
+  // Lektrico, the one that says when it waits for its schedule.
+  need_auth: "awaiting_auth", paused_by_scheduler: "scheduled",
+  // Blue Current, whose charge point can be offline in its cloud.
+  offline: "offline",
+};
+// The pause that may be the end. SuspendedEV is a car that stopped taking the
+// energy the box offers; with energy already in the session and no power
+// flowing, it has its charge. SuspendedEVSE is the box holding back (a
+// schedule, the solar surplus, load balancing) and resumes on its own, and a
+// bare "suspended" does not say which: both stay a pause whatever the
+// session holds.
+const EV_SUSPENDED_BY_CAR = ["suspendedev", "suspended_ev", "waiting_car"];
+// The states with a car at the plug.
+const EV_CAR_STATES = ["connected", "awaiting_auth", "charging", "paused", "scheduled", "done"];
+// How each state runs the rest of the card.
+const EV_NORMS = {
+  no_vehicle: "idle", connected: "idle", awaiting_auth: "idle", charging: "running", paused: "paused",
+  scheduled: "delayed", done: "done", error: "error", offline: "unknown",
+};
+// The card's own colours wherever a state is one of its own: charging is the
+// blue of running, a pause orange, the schedule the purple of a delayed start,
+// done green. A car plugged in and waiting is teal, one waiting for its owner
+// amber, the colour of something to do.
+const EV_COLORS = {
+  no_vehicle: "var(--disabled-text-color, #9e9e9e)", connected: "#26a69a", awaiting_auth: "#ffb300",
+  charging: "var(--info-color, #2196f3)", paused: "var(--warning-color, #ff9800)", scheduled: "#9c27b0",
+  done: "var(--success-color, #4caf50)", error: "var(--error-color, #f44336)", offline: "var(--disabled-text-color, #9e9e9e)",
+};
+// Home Assistant's own words for an entity it cannot read, in its own
+// spelling. An integration's "Unavailable" is a word of the charger's.
+const HA_OFFLINE_STATES = ["unavailable", "unknown"];
+// The status as the charger means it, or "" for a word the card does not know,
+// which then reads as on any other appliance. An entry of state_map wins, as
+// everywhere, and names one of the nine; "*" catches what is left.
+function evModeOf(raw, stateMap) {
+  if (raw === undefined || raw === null) return "";
+  const s = String(raw).trim();
+  if (HA_OFFLINE_STATES.includes(s)) return "offline";
+  if (stateMap && Object.prototype.hasOwnProperty.call(stateMap, s)) return EV_MODES.includes(stateMap[s]) ? stateMap[s] : "";
+  const k = s.toLowerCase();
+  if (Object.prototype.hasOwnProperty.call(EV_STATES, k)) return EV_STATES[k];
+  if (stateMap && Object.prototype.hasOwnProperty.call(stateMap, "*")) return EV_MODES.includes(stateMap["*"]) ? stateMap["*"] : "";
+  return "";
+}
+// Whether a car is plugged in: a plug's contact, or a cable or vehicle state
+// in words (a cable at the box with no car on it is no car). null when the
+// entity cannot say, which leaves the status alone. IEC 61851's letters are
+// not read here either.
+const EV_PLUGGED = ["on", "true", "yes", "plugged", "plugged_in", "connected", "vehicle_connected", "vehicle_locked",
+  "vehicle_detected", "ev_connected", "car_connected"];
+const EV_UNPLUGGED = ["off", "false", "no", "unplugged", "not_plugged", "disconnected", "not_connected", "cable_only",
+  "no_vehicle", "no_ev_connected", "no_car"];
+function evPluggedOf(st) {
+  if (!st) return null;
+  const k = String(st.state).trim().toLowerCase().replace(/[\s-]+/g, "_");
+  if (EV_PLUGGED.includes(k)) return true;
+  if (EV_UNPLUGGED.includes(k)) return false;
+  return null;
+}
+// What an error entity says: a contact on, a code other than zero, or a word
+// other than one of the ways of saying there is none, OCPP's NoError first.
+const EV_NO_ERROR_RE = /^(no.?error|no.?errors|no.?fault|none|ok|off|false|0|-+|kein.?fehler|aucune?.?erreur|pas.?d.?erreur|sin.?error|nessun.?errore|geen.?fout|ingen.?fel|ingen.?feil|ingen.?fejl|brak.?bledu|zadna.?chyba)$/;
+function evErrorOf(st) {
+  if (!st) return { active: false, text: "" };
+  const s = String(st.state).trim();
+  const f = stripAccents(s).toLowerCase();
+  if (["", "unknown", "unavailable"].includes(f) || EV_NO_ERROR_RE.test(f)) return { active: false, text: "" };
+  if (["on", "true", "problem"].includes(f)) return { active: true, text: "" };
+  const n = Number(f);
+  if (Number.isFinite(n)) return { active: n !== 0, text: n !== 0 ? s : "" };
+  return { active: true, text: s };
+}
+// A charger's power in watts, whichever unit its meter reports: most of them
+// count in kilowatts, and the threshold is written in watts.
+function wattsOf(hass, entityId) {
+  const v = numericState(hass, entityId);
+  if (v === null) return null;
+  const unit = String(unitOf(hass, entityId)).trim().toLowerCase();
+  return unit === "kw" ? v * 1000 : unit === "mw" ? v * 1e6 : v;
+}
+// The threshold a charger's power has to pass to be charging, when none is
+// given: well above what a box draws at rest, well under the 1.4 kW of the
+// slowest charge.
+const EV_POWER_THRESHOLD = 100;
+// An enum sensor whose list of states says it charges cars: "charging" next
+// to a word only a charger uses, as Home Assistant publishes the list with the
+// entity. Lektrico names its device after its model and its serial, Blue
+// Current after the charge point.
+const EV_OPTION_WORDS = ["available", "no_ev_connected", "unplugged", "not_connected", "plugged_in", "pending_approval",
+  "need_auth", "paused_by_scheduler", "waiting_car", "charging_finished", "suspended_ev", "suspended_evse", "vent_required", "wakeup"];
+function evOptionsSayCharger(st) {
+  const options = st && st.attributes && Array.isArray(st.attributes.options) ? st.attributes.options.map((o) => String(o).toLowerCase()) : [];
+  return options.includes("charging") && options.some((o) => EV_OPTION_WORDS.includes(o));
+}
+// The names a charger goes by: what it is, in the languages of the card, its
+// makers and the integrations that read it, and the icons Home Assistant
+// draws charging stations with.
+const EV_NAME_RE = /wall.?box|ev.?charg|car.?charg|evse|charge.?point|charging.?station|wall.?connector|ocpp|status.?connector|peblar|nrgkick|openevse|lektrico|blue.?current|webasto|easee|zaptec|go.?e.?charger|(^|[^a-z])(ohme|keba|alfen)([^a-z]|$)|ladestation|lades(a|ae|\u00e4)ule|ladepunkt|borne.?(de.?)?recharge|laadpaal|laadpunt|laadstation|punto.?de.?recarga|estacion.?de.?carga|cargador.?(de.?)?(ve|coche|vehiculo)|colonnina|stazione.?di.?ricarica|posto.?de.?carregamento|carregador.?(de.?)?(ve|carro)|laddbox|laddstolpe|ladeboks|ladestasjon|stacja.?ladowania|nab(i|\u00ed)jec(i|\u00ed).?stanic|\u0437\u0430\u0440\u044f\u0434\u043d\u0430\u044f.?\u0441\u0442\u0430\u043d\u0446|\u5145\u7535\u6869|ev-station|ev-plug/;
+
 // What a heat pump's valve says. HeishaMon reads its 2-way valve Heating or
 // Cooling and its 3-way valve Room or Tank: a position, which names the mode
 // the water is going to, whatever field the valve was put in. Room names
@@ -2731,6 +2887,12 @@ function printerNorm(raw, stateMap) {
 // other appliance with the shared one.
 function normFor(type, raw, stateMap) {
   if (type === "printer_3d") return printerNorm(raw, stateMap);
+  // A charger's words are its own, state_map first; a word the card does not
+  // know falls back on the shared vocabulary, as anywhere else.
+  if (type === "ev_charger") {
+    const mode = evModeOf(raw, stateMap);
+    if (mode) return EV_NORMS[mode];
+  }
   // An air fryer's firmware words come first, unless state_map says otherwise.
   if (type === "air_fryer" && !(stateMap && raw !== undefined && raw !== null
     && Object.prototype.hasOwnProperty.call(stateMap, String(raw).trim()))) {
@@ -3830,6 +3992,20 @@ const TYPE_AUTO_PATTERNS = {
     defrost_entity: /defrost|degivr|abtau/i,
     power_entity: /(current|real).?power|power_w$|watt/i,
   },
+  // Names read in the integrations: the plug of the Tesla Wall Connector and
+  // OpenEVSE, the cable of a Modbus box, the session of OCPP, Peblar, Tesla,
+  // NRGkick and OpenEVSE, their current limits and their meters. A box can
+  // be restarted or reset by a button: neither is the start or the stop of a
+  // charge, and a phase's power is not the total.
+  ev_charger: {
+    vehicle_entity: /vehicle.?connected(?!.?since)|cable.?state|plug.?state|vehicle.?status|(ev|car).?connected/i,
+    session_energy_entity: /session.?energy|energy.?session|charged.?energy|(usage|energy).?this.?session/i,
+    current_limit_entity: /^(number|input_number)\..*(current.?limit|charge.?limit|max(imum)?.?current|charging.?current|charge.?rate|dynamic.?limit)/i,
+    error_entity: /error.?code|fault.?code|active.?errors/i,
+    power_entity: /^sensor\.(?!.*(factor|limit|offered|reactive|apparent|phase|_l[123](_|$))).*(active.?power|charging.?power|total.?power|current.?power|power.?active.?import|power.?total|_power$|power_w$)/i,
+    start_entity: /^(button|script|switch)\.(?!.*(restart|delay)).*start/i,
+    stop_entity: /^(button|script|switch)\.(?!.*(restart|reset)).*stop/i,
+  },
   coffee: {
     water_entity: /water.?tank|water.?level|reservoir/i,
     beans_entity: /bean.?container|bean.?empty/i,
@@ -3965,6 +4141,10 @@ const TYPE_CAPS = {
   // An air fryer: a cycle with a temperature, a basket that comes out and,
   // on the Philips, a reminder to shake it.
   air_fryer: { cycle: true, temperature: true, airFryer: true },
+  // An EV charger on the wall: no cycle to count down, but a car that is
+  // there or not, a charge that runs, pauses or is done, and the energy and
+  // the current that go with it.
+  ev_charger: { evCharger: true },
 };
 const APPLIANCE_TYPES = Object.keys(TYPE_CAPS);
 const LAUNDRY_TYPES = ["washer", "dryer", "dishwasher"];
@@ -4000,6 +4180,10 @@ const AC_ONLY_FIELDS = ["vane_vertical_entity", "vane_horizontal_entity", "purif
 const DEHUMIDIFIER_ONLY_FIELDS = ["tank_entity", "current_humidity_entity"];
 // A basket, and the reminder to shake it, belong to an air fryer.
 const FRYER_ONLY_FIELDS = ["fryer_layout", "basket_entity", "shake_entity", "basket2_state_entity"];
+// A car at the plug, the energy of a charging session and a current limit
+// belong to a charger. Like a fridge, it can do without a state entity: the
+// plug and the power meter are enough.
+const EV_ONLY_FIELDS = ["vehicle_entity", "session_energy_entity", "current_limit_entity"];
 const PRINTER_ONLY_FIELDS = [
   "nozzle_temperature_entity",
   "nozzle_target_entity",
@@ -4029,10 +4213,16 @@ function detectApplianceType(cfg, st) {
   if (DEHUMIDIFIER_ONLY_FIELDS.some((f) => cfg[f])) return "dehumidifier";
   if (cfg.heater_layout) return "space_heater";
   if (FRYER_ONLY_FIELDS.some((f) => cfg[f])) return "air_fryer";
+  if (EV_ONLY_FIELDS.some((f) => cfg[f])) return "ev_charger";
   const hay = `${cfg.icon || ""} ${cfg.state_entity || ""} ${(st && st.attributes.icon) || ""}`.toLowerCase();
   // Before everything else: a printer's entities are named after its maker or
   // its software, and a Bambu Lab one after its model ("p1s_...", "a1_...").
   if (/3d.?print|print.?3d|printer-3d|octoprint|prusa|bambu|klipper|moonraker|creality|elegoo|centauri|anycubic|kobra|flashforge|snapmaker|voron|reprap|duet3d|(^|[\s._])(x1c|x1e|p1s|p1p|p2s|a1|a1_mini|h2d|h2s)_|(^|[\s._-])ender[._-]?\d/.test(hay)) return "printer_3d";
+  // An EV charger, by its name in any language, by its maker's or its
+  // integration's, or by the icon of a charging station. "Charger" alone
+  // could be a phone's on a plug, so it needs its car. An integration that
+  // names its device after its model or its serial still lists its states.
+  if (EV_NAME_RE.test(hay) || evOptionsSayCharger(st)) return "ev_charger";
   // An air fryer, by its name in any language, by Cosori's maker name, or by
   // the cook_status VeSync gives it. Before the oven and the microwave, since
   // plenty of them are sold as air fryer ovens.
@@ -6455,7 +6645,74 @@ const ILLUSTRATION_CSS = {
           border-radius: 0 0 12px 0;
         }
   `,
+  // An EV charger on the wall, from the front: the box, its dark face with a
+  // bolt and the light above it, the holster on its side with a CCS plug
+  // parked in it head first, and the cable looping down between the two. The light takes the
+  // colour of the state, the one the state line is written in, and goes dark
+  // when the charger is offline. With a car at it, the plug leaves its holster
+  // and the cable runs off towards the car; while it charges, the cable
+  // carries the state's colour. Nothing moves yet.
+  ev_charger: (color) => `
+        .ev-box {
+          position: absolute; left: 20px; width: 44px; top: 4px; height: 66px; border-radius: 10px;
+          background: linear-gradient(160deg, var(--ac-body-hi, #ffffff), var(--ac-body, #eef0f1) 50%, var(--ac-body-lo, #c9ced2));
+          box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.14);
+        }
+        .ev-face {
+          position: absolute; left: 6px; right: 6px; top: 7px; bottom: 10px; border-radius: 7px;
+          background: linear-gradient(180deg, #30353b, #16191d); box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.4);
+        }
+        .ev-led {
+          position: absolute; left: 50%; top: 6px; width: 18px; height: 3px; margin-left: -9px; border-radius: 2px;
+          background: ${color}; box-shadow: 0 0 4px ${color}, 0 0 9px ${color};
+        }
+        .machine.mode-offline .ev-led, .machine.mode-unknown .ev-led { background: #4a5057; box-shadow: none; }
+        .ev-bolt { position: absolute; left: 50%; top: 19px; width: 14px; height: 18px; margin-left: -7px; fill: rgba(255, 255, 255, 0.5); }
+        .ev-holster {
+          position: absolute; left: 61px; top: 27px; width: 16px; height: 16px; border-radius: 3px 6px 6px 3px;
+          background: linear-gradient(160deg, var(--ac-body-hi, #ffffff), var(--ac-body, #eef0f1) 50%, var(--ac-body-lo, #c9ced2));
+          box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.14);
+        }
+        /* A CCS plug, drawn lying down with the cable on the left: the strain
+           relief, the grip, a collar in the colour of the box, and the taller
+           head, its Type 2 part above the two DC pins and the release latch
+           on top. It turns about the point where the cable enters it: head up
+           into the holster, head first into the car. */
+        .ev-plug { position: absolute; left: 69px; top: 51px; width: 26px; height: 12px; transform-origin: 0 6px; transform: rotate(-90deg); }
+        .ev-plug > i { position: absolute; display: block; }
+        .pl-boot {
+          left: 0; top: 3px; width: 6px; height: 6px; clip-path: polygon(0 25%, 100% 0, 100% 100%, 0 75%);
+          background: linear-gradient(180deg, #4a5056, #2b2f34);
+        }
+        .pl-grip {
+          left: 5px; top: 2.5px; width: 10px; height: 7px; border-radius: 3px;
+          background: linear-gradient(180deg, #5b6168, #3a3f45 45%, #24282c);
+        }
+        .pl-collar {
+          left: 14.5px; top: 1px; width: 2px; height: 10px; border-radius: 1px; box-shadow: 0 0 0 0.5px rgba(0, 0, 0, 0.3);
+          background: linear-gradient(180deg, var(--ac-body-hi, #ffffff), var(--ac-body, #eef0f1) 50%, var(--ac-body-lo, #c9ced2));
+        }
+        .pl-head {
+          left: 16px; top: 0.5px; width: 9px; height: 11px; border-radius: 2px 3px 3px 2px;
+          background: linear-gradient(180deg, #50565c, #2f3439 50%, #1d2125);
+        }
+        .pl-ac, .pl-dc { left: 24.5px; width: 1.5px; background: #15181b; }
+        .pl-ac { top: 1.2px; height: 5.6px; border-radius: 0 2px 2px 0; }
+        .pl-dc { top: 7.6px; height: 3.2px; border-radius: 0 1.5px 1.5px 0; }
+        .pl-latch { left: 18px; top: -0.5px; width: 4px; height: 1.5px; border-radius: 1px 1px 0 0; background: #5f656c; }
+        .ev-cable { position: absolute; left: 0; top: 0; width: 96px; height: 108px; overflow: visible; }
+        .ev-cable path { fill: none; stroke: #3b4048; stroke-width: 3.5; stroke-linecap: round; }
+        .ev-cable .ev-out, .ev-cable .ev-live, .machine.plugged .ev-cable .ev-loop { display: none; }
+        .machine.plugged .ev-cable .ev-out { display: inline; }
+        .ev-cable .ev-live { stroke: ${color}; stroke-width: 1.3; }
+        .machine.plugged.mode-charging .ev-cable .ev-live { display: inline; }
+        .machine.plugged .ev-plug { left: 70px; top: 96px; transform: none; }
+  `,
 };
+
+// The parts of the CCS plug, as the CSS above lays them out.
+const EV_PLUG_PARTS = '<i class="pl-boot"></i><i class="pl-grip"></i><i class="pl-collar"></i><i class="pl-head"></i>'
+  + '<i class="pl-ac"></i><i class="pl-dc"></i><i class="pl-latch"></i>';
 
 function illustrationCss(type, color) {
   const family = type === "dishwasher" ? "dishwasher" : LAUNDRY_TYPES.includes(type) ? "laundry" : type;
@@ -6983,6 +7240,19 @@ function illustrationHtml(type, ctx) {
         </div>`;
   }
 
+  if (type === "ev_charger") {
+    const e = ctx.ev || {};
+    return `
+        <div class="machine ${cls} mode-${e.mode || "unknown"}${e.plugged ? " plugged" : ""}">
+          <svg class="ev-cable" viewBox="0 0 96 108" aria-hidden="true"><path class="ev-loop" d="M42 69 C42 104 69 104 69 57"/><path class="ev-out" d="M42 69 C42 96 50 102 70 102"/><path class="ev-live" d="M42 69 C42 96 50 102 70 102"/></svg>
+          <div class="ev-box"><div class="ev-face"><div class="ev-led"></div>
+            <svg class="ev-bolt" viewBox="0 0 24 24" aria-hidden="true"><path d="M11 15H6L13 1V9H18L11 23V15Z"/></svg>
+          </div></div>
+          <div class="ev-plug">${EV_PLUG_PARTS}</div>
+          <div class="ev-holster"></div>
+        </div>`;
+  }
+
   if (type === "pellet_stove") {
     // The hopper keeps a resting level when the card cannot know one, rather
     // than reading a stove with no level entity as an empty one.
@@ -7264,7 +7534,11 @@ class ApplianceCard extends HTMLElement {
     const feederOnly = config && FEEDER_ONLY_FIELDS.some((f) => config[f]);
     const asFeeder = config && (config.appliance_type === "pet_feeder" || feederOnly);
     const hasFeederSource = feederOnly || (asFeeder && !!config.start_entity);
-    if (!config || (!config.state_entity && !hasFridgeSource && !hasFeederSource)) {
+    // And for a charger with no status to read: the plug says whether a car
+    // is there, the power meter whether it charges.
+    const asCharger = config && (config.appliance_type === "ev_charger" || EV_ONLY_FIELDS.some((f) => config[f]));
+    const hasChargerSource = asCharger && !!(config.vehicle_entity || config.power_entity);
+    if (!config || (!config.state_entity && !hasFridgeSource && !hasFeederSource && !hasChargerSource)) {
       throw new Error("ha-appliance-card: 'state_entity' is required");
     }
     this._config = config;
@@ -7693,8 +7967,10 @@ class ApplianceCard extends HTMLElement {
     // A fridge is excluded here on purpose: its compressor cycles all day, so
     // reading the meter as a cycle state would report "finished" every twenty
     // minutes. What the meter says on a fridge is whether it is still plugged
-    // in, and that is decided further down with the health summary.
-    if (!cap.fridgeTemp && cfg.power_entity && isFinite(threshold)) {
+    // in, and that is decided further down with the health summary. A charger
+    // too: its meter only stands in for a status it does not have, together
+    // with the plug, further down.
+    if (!cap.fridgeTemp && !cap.evCharger && cfg.power_entity && isFinite(threshold)) {
       let derived = powerDerivedState(watts, threshold, this._powerWasRunning);
       // A pause under the threshold is not the end: a dishwasher drying, a
       // washer soaking. With power_off_delay the card waits that many minutes
@@ -9259,6 +9535,92 @@ class ApplianceCard extends HTMLElement {
       fryer = { mode, mode2, layout, icon: FRYER_ICONS[lead] || "", screen: leadScreen };
     }
 
+    // EV charger. The status says what the charger does, in its own words or
+    // through state_map. Two entities may say more, and only where they cannot
+    // be wrong: an error entity reporting an error makes it an error, whatever
+    // else is known, and a plug with no car makes a recognised status a
+    // charger with no vehicle, unless that status is an error or offline.
+    // Without a status entity, the plug and the power meter say it between
+    // them, the way a smart plug says a washing machine runs: no car, then
+    // charging above the threshold, then plugged in. A plug's contact, the
+    // meter or a switch put in the state is not a status either.
+    let ev = null;
+    if (cap.evCharger) {
+      const plugAsState = !cfg.vehicle_entity && !!st && domainOf(cfg.state_entity) === "binary_sensor"
+        && st.attributes.device_class === "plug";
+      const plugged = evPluggedOf(cfg.vehicle_entity ? stateObj(hass, cfg.vehicle_entity) : plugAsState ? st : null);
+      const errSt = cfg.error_entity ? stateObj(hass, cfg.error_entity) : null;
+      const fault = evErrorOf(errSt);
+      const evThreshold = hasThreshold && Number.isFinite(parseFloat(cfg.power_on_threshold))
+        ? parseFloat(cfg.power_on_threshold) : EV_POWER_THRESHOLD;
+      const w = cfg.power_entity ? wattsOf(hass, cfg.power_entity) : null;
+      const flowing = w === null ? null : w >= evThreshold;
+      const fromPlug = !cfg.state_entity || plugAsState
+        || cfg.state_entity === cfg.power_entity || cfg.state_entity === cfg.vehicle_entity
+        || ["switch", "input_boolean"].includes(domainOf(cfg.state_entity));
+      let mode = "";
+      if (fromPlug) {
+        if (plugged === false) mode = "no_vehicle";
+        else if (flowing) mode = "charging";
+        else if (plugged) mode = "connected";
+        else if (flowing === null) mode = "offline";
+      } else {
+        mode = evModeOf(rawState, cfg.state_map);
+        // A car that stopped taking energy after taking some has its charge,
+        // once both the session and the meter can be read. An entry of
+        // state_map says what the state is, and is not second-guessed.
+        const key = String(rawState).trim();
+        const mapped = !!cfg.state_map && Object.prototype.hasOwnProperty.call(cfg.state_map, key);
+        if (mode === "paused" && !mapped && EV_SUSPENDED_BY_CAR.includes(key.toLowerCase())) {
+          const energy = cfg.session_energy_entity ? numericState(hass, cfg.session_energy_entity) : null;
+          if (energy !== null && energy > 0 && flowing === false) mode = "done";
+        }
+        if (plugged === false && mode && mode !== "error" && mode !== "offline") mode = "no_vehicle";
+      }
+      if (fault.active) mode = "error";
+      // The entity's own words on request, while it has some.
+      const showRaw = cfg.state_show_raw && !fromPlug && !!st && !HA_OFFLINE_STATES.includes(String(rawState).trim());
+      if (mode) {
+        if (!showRaw) stateLabel = t(hass, `ev_${mode}`);
+        color = EV_COLORS[mode];
+        norm = EV_NORMS[mode];
+      } else if (fromPlug) {
+        // A meter at rest and no plug to ask: not charging, which is all that
+        // can be said. Never the wattage as a state.
+        stateLabel = t(hass, "idle");
+        color = STATE_COLORS.idle;
+        norm = "idle";
+      }
+
+      // The power, the session's energy and the current limit, as Home
+      // Assistant prints them: a charger counts in kilowatts and kilowatt
+      // hours, and the decimals are what makes them worth reading.
+      const evLine = (entity, key, icon, label) => {
+        const s = entity ? stateObj(hass, entity) : null;
+        if (!s || HA_OFFLINE_STATES.includes(s.state)) return;
+        extraLines.push({ key, icon, label, value: keepTogether(formatInfoValue(s, hass, null, cfg, entity)), entity });
+      };
+      evLine(cfg.power_entity, "power", cfg.power_icon || "mdi:flash", t(hass, "power"));
+      evLine(cfg.session_energy_entity, "session_energy", "mdi:battery-charging", t(hass, "ev_line_session"));
+      evLine(cfg.current_limit_entity, "current_limit", "mdi:current-ac", t(hass, "ev_line_limit"));
+      // The error in the charger's words, when it has some.
+      if (fault.active && fault.text) {
+        extraLines.push({
+          key: "error",
+          icon: "mdi:alert-circle-outline",
+          label: t(hass, "error"),
+          value: modeLabel(hass, errSt, fault.text, cfg),
+          entity: cfg.error_entity,
+          warn: true,
+          wrap: true,
+        });
+      }
+      // A car at the plug, as far as the card can tell: every state that has
+      // one, and an error the plug says has one too. The drawing takes the
+      // plug out of its holster for it.
+      ev = { mode: mode || norm, plugged: EV_CAR_STATES.includes(mode) || (mode === "error" && plugged === true) };
+    }
+
     // An iron, read from the plug it is on: heating or off, and the state line
     // says so in its own words, since "running" says nothing of an iron.
     let leftOn = false;
@@ -9315,8 +9677,9 @@ class ApplianceCard extends HTMLElement {
       }
     }
 
-    // Power draw is worth showing on any type once the entity is there.
-    if (!cap.fridgeTemp && !cap.heatPump && cfg.power_entity && watts !== null) {
+    // Power draw is worth showing on any type once the entity is there. A
+    // charger prints its own, in kilowatts.
+    if (!cap.fridgeTemp && !cap.heatPump && !cap.evCharger && cfg.power_entity && watts !== null) {
       extraLines.push({
         key: "power",
         icon: cfg.power_icon || "mdi:power-plug",
@@ -9373,6 +9736,7 @@ class ApplianceCard extends HTMLElement {
       heater,
       towel,
       fryer,
+      ev,
     };
 
     // A plain on/off control, for the types that have no cycle to start or
@@ -9431,6 +9795,7 @@ class ApplianceCard extends HTMLElement {
       illustrationCtx.heater && illustrationCtx.heater.mode,
       illustrationCtx.towel && illustrationCtx.towel.mode,
       illustrationCtx.fryer && [illustrationCtx.fryer.mode, illustrationCtx.fryer.mode2, illustrationCtx.fryer.layout].join("/"),
+      illustrationCtx.ev && [illustrationCtx.ev.mode, illustrationCtx.ev.plugged].join("/"),
     ].join(",");
     if (animKey !== this._animKey) {
       this._animKey = animKey;
@@ -9773,8 +10138,10 @@ const CYCLE_TYPES = ["washer", "dryer", "dishwasher", "oven", "microwave", "cook
 // A coffee machine has no door and a cooker's lid has no sensor, so neither
 // belongs in the door section even though both run programs.
 const DOOR_TYPES = ["washer", "dryer", "dishwasher", "oven", "microwave", "fridge"];
+// A charger has no cycle either, but it starts, pauses and stops a charge.
+const CONTROL_TYPES = CYCLE_TYPES.concat(["ev_charger"]);
 // A pet feeder has no cycle, but it does have one thing to press.
-const START_TYPES = CYCLE_TYPES.concat(["pet_feeder"]);
+const START_TYPES = CONTROL_TYPES.concat(["pet_feeder"]);
 // The types a last cycle means something for: the ones that run a cycle, and
 // the kettle and the iron, which a plug reads the same way.
 const LAST_CYCLE_TYPES = CYCLE_TYPES.concat(["kettle", "iron"]);
@@ -9962,6 +10329,14 @@ const SECTIONS = [
       + c._row("level_max", "level_max", { placeholder: "100" }) },
   { field: "error_entity", types: ["pet_feeder"], labelKey: "section_error", includeDomains: ["binary_sensor", "sensor"] },
 
+  // EV charger. The plug says whether a car is there; the session's energy,
+  // the current limit and an error entity are read as they come, and the
+  // current limit opens its entity, which is where it is changed.
+  { field: "vehicle_entity", types: ["ev_charger"], labelKey: "section_vehicle", includeDomains: ["binary_sensor", "sensor", "input_boolean"] },
+  { field: "session_energy_entity", types: ["ev_charger"], labelKey: "section_session_energy", includeDomains: ["sensor", "input_number"] },
+  { field: "current_limit_entity", types: ["ev_charger"], labelKey: "section_current_limit", includeDomains: ["number", "sensor", "select", "input_number"] },
+  { field: "error_entity", types: ["ev_charger"], labelKey: "section_error", includeDomains: ["binary_sensor", "sensor"] },
+
   // Cooker
   { field: "speed_entity", types: ["cooker"], labelKey: "section_speed", includeDomains: ["sensor", "number", "select", "input_number", "input_select"] },
 
@@ -9980,10 +10355,16 @@ const SECTIONS = [
   { field: "toggle_entity", types: APPLIANCE_TYPES.filter((ty) => !caps(ty).readOnly), labelKey: "section_toggle", includeDomains: ACTION_DOMAINS.concat(["fan"]) },
 
   // Any type: a plug's power meter, optionally driving the state itself.
-  { field: "power_entity", types: APPLIANCE_TYPES, labelKey: "section_power", includeDomains: ["sensor"], extra: (c) =>
-      c._row("power_on_threshold", "power_on_threshold", { placeholder: caps(c._currentType()).fridgeTemp ? "1" : "10" })
-      + (caps(c._currentType()).fridgeTemp ? c._row("no_power_after", "no_power_after", { placeholder: "30" })
-        : c._row("power_off_delay", "power_off_delay", { placeholder: "0" })) },
+  // A charger's threshold says when power flows: it stands in for a missing
+  // status and tells a finished charge from a pause. There is no cycle whose
+  // end it would have to wait for.
+  { field: "power_entity", types: APPLIANCE_TYPES, labelKey: "section_power", includeDomains: ["sensor"], extra: (c) => {
+      const cap = caps(c._currentType());
+      return c._row(cap.evCharger ? "ev_power_threshold" : "power_on_threshold", "power_on_threshold",
+        { placeholder: cap.fridgeTemp ? "1" : cap.evCharger ? String(EV_POWER_THRESHOLD) : "10" })
+        + (cap.fridgeTemp ? c._row("no_power_after", "no_power_after", { placeholder: "30" })
+          : cap.evCharger ? "" : c._row("power_off_delay", "power_off_delay", { placeholder: "0" }));
+    } },
 
   // Two sections read as alerts, and only their pickers tell them apart: one
   // entity carrying them in its attributes here, a list of entities of
@@ -10004,9 +10385,9 @@ const SECTIONS = [
       }
       return d === "number" || d === "input_number" ? c._row("start_value", "start_value", {}) : "";
     } },
-  { field: "pause_entity", types: CYCLE_TYPES, labelKey: "section_pause", includeDomains: ACTION_DOMAINS },
-  { field: "resume_entity", types: CYCLE_TYPES, labelKey: "section_resume", includeDomains: ACTION_DOMAINS },
-  { field: "stop_entity", types: CYCLE_TYPES, labelKey: "section_stop", includeDomains: ACTION_DOMAINS },
+  { field: "pause_entity", types: CONTROL_TYPES, labelKey: "section_pause", includeDomains: ACTION_DOMAINS },
+  { field: "resume_entity", types: CONTROL_TYPES, labelKey: "section_resume", includeDomains: ACTION_DOMAINS },
+  { field: "stop_entity", types: CONTROL_TYPES, labelKey: "section_stop", includeDomains: ACTION_DOMAINS },
 ];
 
 function sectionsForType(type) {
@@ -10630,6 +11011,7 @@ class ApplianceCardEditor extends HTMLElement {
             { value: "dehumidifier", label: t(hass, "type_dehumidifier") },
             { value: "space_heater", label: t(hass, "type_space_heater") },
             { value: "towel_warmer", label: t(hass, "type_towel_warmer") },
+            { value: "ev_charger", label: t(hass, "type_ev_charger") },
           ],
         })}
         ${this._type === "washer" ? this._row("washer_dryer", "washer_dryer", { type: "checkbox" }) : ""}
