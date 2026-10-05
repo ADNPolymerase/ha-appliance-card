@@ -4723,7 +4723,12 @@ check('deux reservoirs : une cloison au milieu', /class="pf-divider"/.test(ds), 
 check('deux reservoirs : chaque niveau remplit sa fenetre', /--pf-fill:20\.0px;--pf-fill-b:36\.0px/.test(ds), true);
 check('deux reservoirs : le second niveau a sa ligne', infoLine(ds, 'Food level, second hopper').replace(/\s/g, ' '), '100 %');
 check('deux reservoirs : le premier garde la sienne', infoLine(ds, 'Food level').replace(/\s/g, ' '), '50 %');
-check('deux reservoirs : au repos, le premier donne l\'etat', stateLine(ds), 'Tank at 50%');
+check('deux reservoirs : au repos, le plus bas donne l\'etat', stateLine(ds), 'Tank at 50%');
+check('deux reservoirs : meme quand c\'est le second', stateLine(fDs(90, 30)), 'Tank at 30%');
+check('deux reservoirs : a egalite, le meme chiffre', stateLine(fDs(60, 60)), 'Tank at 60%');
+check('deux reservoirs : sans premier niveau, le second suffit', stateLine(fDs(50, 40, { level_entity: undefined })), 'Tank at 40%');
+check('deux reservoirs : sans second niveau, le premier seul', stateLine(fDs(70, 20, { level_b_entity: undefined })), 'Tank at 70%');
+check('deux reservoirs : ailleurs, le second ne compte pas', stateLine(fDs(70, 20, { feeder_layout: 'double' })), 'Tank at 70%');
 check('deux reservoirs : un seul vide suffit', stateLine(fDs(0, 80)), 'Tank empty');
 check('deux reservoirs : le second aussi', stateLine(fDs(80, 0)), 'Tank empty');
 check('deux reservoirs : seul le premier se dessine vide',
@@ -5708,6 +5713,26 @@ contains('editeur coins : titre en anglais', markup(cornerEditor()._root), '<sum
   check('editeur modele : le double se relit', models(modelOf({ appliance_type: 'pet_feeder', feeder_layout: 'double' }))[2],
     'double*:Two bowls');
   check('editeur modele : seulement pour un distributeur', /data-field="feeder_layout"/.test(modelOf({ appliance_type: 'washer' })), false);
+  // The second hopper is only a field on the model that has one.
+  const hasLevelB = h => /Food level, second hopper/.test(h);
+  check('editeur second reservoir : pour dual_split', hasLevelB(modelOf({ appliance_type: 'pet_feeder', feeder_layout: 'dual_split' })), true);
+  check('editeur second reservoir : pas pour le modele par defaut', hasLevelB(modelOf({ appliance_type: 'pet_feeder' })), false);
+  for (const m of ['tower', 'canister', 'double', 'rotary'])
+    check(`editeur second reservoir : pas pour ${m}`, hasLevelB(modelOf({ appliance_type: 'pet_feeder', feeder_layout: m })), false);
+  check('editeur second reservoir : le premier reste partout', /Food level</.test(modelOf({ appliance_type: 'pet_feeder', feeder_layout: 'rotary' })), true);
+  {
+    // Changing the model alone fills no field, and the field still has to come.
+    const ed = new Editor();
+    ed.setConfig({ type: 'custom:ha-appliance-card', start_entity: 'script.feed', appliance_type: 'pet_feeder', feeder_layout: 'tower' });
+    ed.hass = HASS({ 'script.feed': { state: 'off', attributes: {} } });
+    const before = hasLevelB(markup(ed._root));
+    ed.setConfig({ type: 'custom:ha-appliance-card', start_entity: 'script.feed', appliance_type: 'pet_feeder', feeder_layout: 'dual_split' });
+    const after = hasLevelB(markup(ed._root));
+    ed.setConfig({ type: 'custom:ha-appliance-card', start_entity: 'script.feed', appliance_type: 'pet_feeder', feeder_layout: 'double' });
+    check('editeur second reservoir : absent avant', before, false);
+    check('editeur second reservoir : apparait quand on choisit dual_split', after, true);
+    check('editeur second reservoir : et repart avec un autre modele', hasLevelB(markup(ed._root)), false);
+  }
   for (const language of ['fr', 'ru', 'de', 'es', 'it', 'nl', 'pt', 'sv', 'no', 'da', 'pl', 'zh', 'cs']) {
     const opts = models(modelOf({ appliance_type: 'pet_feeder', language }));
     check(`editeur modele : traduit en ${language}`,

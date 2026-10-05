@@ -4127,7 +4127,7 @@ function autoSuggest(hass, cfg) {
   // Only ever fill fields the current type actually shows: a suggestion the
   // editor then hides is just a stray key in the user's YAML. Nor one its own
   // picker would refuse: a sensor whose name says start is no start button.
-  const sections = sectionsForType(type);
+  const sections = sectionsForType(type, cfg);
   const allowed = new Set(sections.map((s) => s.field));
   const domains = Object.fromEntries(sections.map((s) => [s.field, s.includeDomains]));
   const patterns = { ...AUTO_PATTERNS, ...(TYPE_AUTO_PATTERNS[type] || {}) };
@@ -9519,12 +9519,15 @@ class ApplianceCard extends HTMLElement {
       // "Ready" is what a feeder is nearly all day long, so saying it says
       // nothing. At rest the line tells how full the tank is when that is
       // known and stays empty otherwise; serving, empty and a fault keep their
-      // own words.
+      // own words. With two hoppers it is the lower one that counts, being
+      // the one to refill first.
+      const restFill = cfg.feeder_layout !== "dual_split" || feederFillB === null ? feederFill
+        : feederFill === null ? feederFillB : Math.min(feederFill, feederFillB);
       if (!cfg.state_show_raw) {
         stateLabel = norm !== "feeder_ready" ? t(hass, norm)
-          : feederFill === null ? ""
+          : restFill === null ? ""
           : t(hass, "feeder_level").replace("{pct}",
-            new Intl.NumberFormat(lang(hass), { style: "percent", maximumFractionDigits: 0 }).format(feederFill / 100));
+            new Intl.NumberFormat(lang(hass), { style: "percent", maximumFractionDigits: 0 }).format(restFill / 100));
       }
 
       const portionsSt = cfg.portions_today_entity ? stateObj(hass, cfg.portions_today_entity) : null;
@@ -10759,7 +10762,8 @@ const SECTIONS = [
   { field: "level_entity", types: ["pet_feeder"], labelKey: "section_level", includeDomains: ["sensor", "binary_sensor", "number", "input_number"], extra: (c) =>
       c._row("level_empty_below", "level_empty_below", { placeholder: "0" })
       + c._row("level_max", "level_max", { placeholder: "100" }) },
-  { field: "level_b_entity", types: ["pet_feeder"], labelKey: "section_level_b", includeDomains: ["sensor", "binary_sensor", "number", "input_number"] },
+  { field: "level_b_entity", types: ["pet_feeder"], labelKey: "section_level_b", includeDomains: ["sensor", "binary_sensor", "number", "input_number"],
+    when: (c) => c.feeder_layout === "dual_split" },
   { field: "error_entity", types: ["pet_feeder"], labelKey: "section_error", includeDomains: ["binary_sensor", "sensor"] },
 
   // EV charger. The plug says whether a car is there; the session's energy,
@@ -10824,8 +10828,10 @@ const SECTIONS = [
   { field: "stop_entity", types: CONTROL_TYPES, labelKey: "section_stop", includeDomains: ACTION_DOMAINS },
 ];
 
-function sectionsForType(type) {
-  return SECTIONS.filter((s) => !s.types || s.types.includes(type));
+// A section can also hang on the rest of the config: the second hopper only
+// exists on the model that has one.
+function sectionsForType(type, cfg = {}) {
+  return SECTIONS.filter((s) => (!s.types || s.types.includes(type)) && (!s.when || s.when(cfg)));
 }
 
 function setsEqual(a, b) {
@@ -10841,7 +10847,7 @@ class ApplianceCardEditor extends HTMLElement {
   }
 
   _sections() {
-    return sectionsForType(this._currentType());
+    return sectionsForType(this._currentType(), this._config || {});
   }
 
   _computeOpen(cfg) {
@@ -10858,6 +10864,13 @@ class ApplianceCardEditor extends HTMLElement {
     const type = this._currentType();
     if (this._type !== type) {
       this._type = type;
+      this._needsBuild = true;
+    }
+    // Nor would it see a section appear or go with the rest of the config,
+    // such as the second hopper when the model changes.
+    const shown = this._sections().map((s) => s.field).join(",");
+    if (this._shown !== shown) {
+      this._shown = shown;
       this._needsBuild = true;
     }
     this._open = newOpen;
