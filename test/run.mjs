@@ -7681,7 +7681,7 @@ check('borne : ni un statut reconnu', evMode(evR('SuspendedEVSE', { power_entity
     check('borne anime : la ligne de couleur s eteint a la fin', stE.includes('.machine.just-done.plugged .ev-cable .ev-live { display: inline; animation: ev-drain 1.4s ease-in both;'), true);
     check('borne anime : et l energie avec', stE.includes('.machine.just-done.plugged .ev-cable .ev-flow {\n          display: inline; animation: ev-flow var(--ev-flow, 0.6s) linear infinite, ev-drain 1.4s ease-in both;'), true);
     // The halo fades with them, rather than going at once.
-    check('borne anime : et le halo aussi', stE.includes('.machine.just-done.plugged .ev-halo .eh-out { display: inline; animation: ev-drain 1.4s ease-in both; animation-delay: var(--anim-offset, 0s); }'), true);
+    check('borne anime : et le halo aussi', stE.includes('.machine.just-done.from-charging.plugged .ev-halo .eh-out { display: inline; animation: ev-drain 1.4s ease-in both; animation-delay: var(--anim-offset, 0s); }'), true);
   }
   contains('borne anime : et clignote', css, '@keyframes ev-blink { 0%, 40% { opacity: 1; } 50%, 90% { opacity: 0.15; } 100% { opacity: 1; } }');
   check('borne anime : le flash de fin prend la couleur de l etat',
@@ -7806,6 +7806,23 @@ check('borne : ni un statut reconnu', evMode(evR('SuspendedEVSE', { power_entity
     at(3000);
     check('borne anime : une horloge remise en arriere clot le geste', shotOf(rerender(card, evSt('Charging'))), 'none');
     card.disconnectedCallback();
+  }
+
+  // The end of a charge says where it came from: the halo, there only while
+  // charging, fades after a charge, and does not appear out of a pause only
+  // to fade.
+  {
+    at(0);
+    const { card } = build(EVC, evSt('Charging'));
+    at(100);
+    const h1 = rerender(card, evSt('Finishing'));
+    check('borne anime : la fin d une charge dit d ou elle vient', [hasCls(h1, 'just-done'), hasCls(h1, 'from-charging')].join(), 'true,true');
+    const { card: c2 } = build(EVC, evSt('SuspendedEVSE'));
+    at(200);
+    const h2 = rerender(c2, evSt('Finishing'));
+    check('borne anime : d une pause aussi', [hasCls(h2, 'from-paused'), hasCls(h2, 'from-charging')].join(), 'true,false');
+    check('borne anime : le halo ne s eteint qu apres une charge', /\.machine\.just-done\.plugged \.ev-halo/.test(styleOf(h2)), false);
+    for (const c of [card, c2]) c.disconnectedCallback();
   }
 
   const pathOf = cls => (new RegExp(`<path class="${cls}" d="M(\\S+) (\\S+) C(\\S+) (\\S+) (\\S+) (\\S+) (\\S+) (\\S+)"/>`).exec(css) || []).slice(1).map(Number);
