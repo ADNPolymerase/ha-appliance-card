@@ -7385,6 +7385,8 @@ contains('borne : en charge, le cable prend la couleur de l etat', evR('Charging
 contains('borne : seulement en charge', evR('Charging'), '.machine.plugged.mode-charging .ev-cable .ev-live { display: inline; }');
 contains('borne : en charge, l energie court le long du cable', evR('Charging'), '.machine.plugged.mode-charging .ev-cable .ev-flow {\n          display: inline; animation: ev-flow 0.6s linear infinite;');
 contains('borne : de la borne vers la voiture', evR('Charging'), '@keyframes ev-flow { to { stroke-dashoffset: -10; } }');
+contains('borne : en erreur, tout le cable en rouge', evR('Faulted'), '.machine.mode-error .ev-cable .ev-loop, .machine.mode-error .ev-cable .ev-out {\n          stroke: var(--error-color, #f44336);');
+check('borne : en erreur, la machine le dit', hasCls(evR('Faulted'), 'mode-error'), true);
 contains('borne : le flux suit le cable tendu', evR('Charging'), '<path class="ev-flow" d="M42 69 C42 96 50 102 70 102"/>');
 contains('borne : le flux est cache hors charge', evR('Charging'), '.ev-cable .ev-flow { display: none;');
 contains('borne : mouvement reduit respecte', evR('Charging'), '.machine.plugged.mode-charging .ev-cable .ev-flow { animation-play-state: paused; }');

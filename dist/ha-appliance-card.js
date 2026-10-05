@@ -6719,6 +6719,10 @@ const ILLUSTRATION_CSS = {
           display: inline; animation: ev-flow 0.6s linear infinite; animation-delay: var(--anim-offset, 0s);
         }
         @keyframes ev-flow { to { stroke-dashoffset: -10; } }
+        /* A fault turns the whole cable red, in its holster or at the car. */
+        .machine.mode-error .ev-cable .ev-loop, .machine.mode-error .ev-cable .ev-out {
+          stroke: ${color}; filter: drop-shadow(0 0 1.5px ${color});
+        }
         @media (prefers-reduced-motion: reduce) {
           .machine.plugged.mode-charging .ev-cable .ev-flow { animation-play-state: paused; }
         }
