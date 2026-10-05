@@ -8046,4 +8046,64 @@ check('borne : ni un statut reconnu', evMode(evR('SuspendedEVSE', { power_entity
   }
 }
 
+// =============================================================================
+// A card with no state entity, and a meter in milliwatts
+// =============================================================================
+// A charger read from its meter and plug, a fridge from its probes, a feeder
+// from its counters have no state entity to be named after or to open: the
+// card names its type, and a tap opens what it reads in its place.
+{
+  const tapOf = (cfg, states) => {
+    const { card, html } = build(cfg, states);
+    fire(card._root.getElementById('header'), 'click', {});
+    const ev = card.events.at(-1);
+    return { html, tap: ev && ev.type === 'hass-more-info' ? ev.detail.entityId : null };
+  };
+  const nameOf = h => (/<div class="name">([^<]*)<\/div>/.exec(h) || [, null])[1];
+  const plug = { state: 'on', attributes: { device_class: 'plug' } };
+  const wb = tapOf({ appliance_type: 'ev_charger', vehicle_entity: 'binary_sensor.plug', power_entity: 'sensor.p' },
+    { 'binary_sensor.plug': plug, 'sensor.p': W(7400) });
+  check('sans etat, borne : le nom de son type', nameOf(wb.html), 'EV charger');
+  check('sans etat, borne : un toucher ouvre le compteur', wb.tap, 'sensor.p');
+  check('sans etat, borne : ou la prise, sans compteur',
+    tapOf({ appliance_type: 'ev_charger', vehicle_entity: 'binary_sensor.plug' }, { 'binary_sensor.plug': plug }).tap, 'binary_sensor.plug');
+  check('sans etat, borne : dans la langue de la card',
+    nameOf(tapOf({ appliance_type: 'ev_charger', power_entity: 'sensor.p', language: 'de' }, { 'sensor.p': W(0) }).html), 'Wallbox');
+  check('sans etat, borne : le nom choisi l emporte',
+    nameOf(tapOf({ appliance_type: 'ev_charger', power_entity: 'sensor.p', name: 'Garage' }, { 'sensor.p': W(0) }).html), 'Garage');
+  const fr = tapOf({ appliance_type: 'fridge', fridge_temperature_entity: 'sensor.ft', door_entity: 'binary_sensor.door' },
+    { 'sensor.ft': { state: '4', attributes: { unit_of_measurement: '°C' } }, 'binary_sensor.door': { state: 'off', attributes: {} } });
+  check('sans etat, frigo : le nom de son type', nameOf(fr.html), 'Fridge');
+  check('sans etat, frigo : un toucher ouvre la sonde', fr.tap, 'sensor.ft');
+  check('sans etat, frigo : ou la porte, sans sonde', tapOf({ appliance_type: 'fridge', door_entity: 'binary_sensor.door' },
+    { 'binary_sensor.door': { state: 'off', attributes: {} } }).tap, 'binary_sensor.door');
+  const fd = tapOf({ appliance_type: 'pet_feeder', portions_today_entity: 'sensor.portions', start_entity: 'button.feed' },
+    { 'sensor.portions': { state: '3', attributes: {} }, 'button.feed': { state: 'unknown', attributes: {} } });
+  check('sans etat, distributeur : le nom de son type', nameOf(fd.html), 'Pet feeder');
+  check('sans etat, distributeur : un toucher ouvre le compteur', fd.tap, 'sensor.portions');
+  check('sans etat, distributeur : ou le bouton, seul', tapOf({ appliance_type: 'pet_feeder', start_entity: 'button.feed' },
+    { 'button.feed': { state: 'unknown', attributes: {} } }).tap, 'button.feed');
+  // With a state entity, or an entity in tap_action, nothing changes.
+  const ws = tapOf({ appliance_type: 'ev_charger', state_entity: 'sensor.cp', power_entity: 'sensor.p' },
+    { 'sensor.cp': { state: 'Charging', attributes: { friendly_name: 'Garage charger' } }, 'sensor.p': W(7400) });
+  check('avec etat : le nom de son entite', nameOf(ws.html), 'Garage charger');
+  check('avec etat : un toucher ouvre l etat', ws.tap, 'sensor.cp');
+  check('sans etat : l entite de tap_action l emporte', tapOf({ appliance_type: 'ev_charger', power_entity: 'sensor.p',
+    tap_action: { action: 'more-info', entity: 'sensor.other' } }, { 'sensor.p': W(0) }).tap, 'sensor.other');
+
+  // The README says it in both languages.
+  for (const [file, nameRe, tapRe] of [['README.md', /\| `name` \| [^\n]*the type's name/, /\| `tap_action` \| [^\n]*in its place/],
+    ['README.fr.md', /\| `name` \| [^\n]*le nom du type/, /\| `tap_action` \| [^\n]*à sa place/]]) {
+    const md = readFileSync(join(HERE, '..', file), 'utf8');
+    check(`${file} : le titre sans entite d etat`, nameRe.test(md), true);
+    check(`${file} : le toucher sans entite d etat`, tapRe.test(md), true);
+  }
+
+  // Milliwatts are not megawatts: mW and MW differ by the case of their M.
+  check('repli : des mW, en charge', evMode(fbR('on', 7400000, {}, 'mW')), 'charging');
+  check('repli : 50 W en mW, sous le seuil', evMode(fbR('on', 50000, {}, 'mW')), 'connected');
+  check('repli : des MW toujours en megawatts', evMode(fbR('on', 0.0074, {}, 'MW')), 'charging');
+  check('repli : des mW, l allure de 7.4 kW', (/--ev-flow: ([\d.]+)s/.exec(fbR('on', 7400000, {}, 'mW')) || [, null])[1], '0.4');
+}
+
 report();

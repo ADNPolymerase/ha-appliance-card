@@ -2825,11 +2825,14 @@ function evErrorOf(st) {
   return { active: true, text: s };
 }
 // A charger's power in watts, whichever unit its meter reports: most of them
-// count in kilowatts, and the threshold is written in watts.
+// count in kilowatts, and the threshold is written in watts. Milliwatts and
+// megawatts differ by the case of their M alone, so mW is read as written.
 function wattsOf(hass, entityId) {
   const v = numericState(hass, entityId);
   if (v === null) return null;
-  const unit = String(unitOf(hass, entityId)).trim().toLowerCase();
+  const written = String(unitOf(hass, entityId)).trim();
+  if (written === "mW") return v / 1000;
+  const unit = written.toLowerCase();
   return unit === "kw" ? v * 1000 : unit === "mw" ? v * 1e6 : v;
 }
 // The threshold a charger's power has to pass to be charging, when none is
@@ -4276,6 +4279,20 @@ const FRYER_ONLY_FIELDS = ["fryer_layout", "basket_entity", "shake_entity", "bas
 // belong to a charger. Like a fridge, it can do without a state entity: the
 // plug and the power meter are enough.
 const EV_ONLY_FIELDS = ["vehicle_entity", "session_energy_entity", "current_limit_entity", "discharge_power_entity"];
+// What a card with no state entity reads in its place, first to last, and
+// so what a tap on it opens: a charger's meter or plug, a fridge's probes,
+// doors or meter, a feeder's counters or its button.
+const NO_STATE_SOURCES = {
+  ev_charger: ["power_entity", "vehicle_entity"],
+  fridge: ["fridge_temperature_entity", "freezer_temperature_entity", "door_entity", "freezer_door_entity", "ice_maker_entity",
+    "power_entity"],
+  pet_feeder: ["portions_today_entity", "weight_today_entity", "last_feed_entity", "portion_weight_entity", "serving_size_entity",
+    "start_entity"],
+};
+function noStateSourceOf(cfg, type) {
+  const field = (NO_STATE_SOURCES[type] || []).find((f) => cfg[f]);
+  return field ? cfg[field] : undefined;
+}
 const PRINTER_ONLY_FIELDS = [
   "nozzle_temperature_entity",
   "nozzle_target_entity",
@@ -8150,10 +8167,10 @@ class ApplianceCard extends HTMLElement {
   // opens the entity unless the YAML says otherwise (HACF). fire-dom-event is
   // the one the popup cards are built on: browser_mod listens for ll-custom
   // and reads the action itself, so the card hands it over whole.
-  _tap(cfg) {
+  _tap(cfg, fallback) {
     const action = cfg.tap_action || {};
     const kind = action.action || "more-info";
-    const entityId = action.entity || cfg.state_entity;
+    const entityId = action.entity || cfg.state_entity || fallback;
     if (kind === "none") return;
     if (kind === "fire-dom-event") {
       this.dispatchEvent(new CustomEvent("ll-custom", { detail: action, bubbles: true, composed: true }));
@@ -8275,7 +8292,10 @@ class ApplianceCard extends HTMLElement {
       ? (cfg.state_show_raw ? rawStateText(hass, st, rawState, cfg) : cleanStateLabel(rawState))
       : t(hass, norm);
 
-    const name = cfg.name || (st && st.attributes.friendly_name) || cfg.state_entity;
+    // A card with no state entity is named after its type, and a tap opens
+    // what it reads in its place.
+    const name = cfg.name || (st && st.attributes.friendly_name) || cfg.state_entity || t(hass, `type_${applianceType}`);
+    const tapFallback = noStateSourceOf(cfg, applianceType);
 
     // Program
     let programText = null;
@@ -10397,7 +10417,7 @@ class ApplianceCard extends HTMLElement {
     `;
 
     const header = this._root.getElementById("header");
-    if (header) header.addEventListener("click", () => this._tap(cfg));
+    if (header) header.addEventListener("click", () => this._tap(cfg, tapFallback));
     this._root.querySelectorAll(".action-btn, .light-badge").forEach((el) => {
       const id = el.getAttribute("data-entity");
       this._wireControl(el, cfg.controls_activation, id, () => this._call(id, {
