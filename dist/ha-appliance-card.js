@@ -2760,6 +2760,20 @@ function wattsOf(hass, entityId) {
 // given: well above what a box draws at rest, well under the 1.4 kW of the
 // slowest charge.
 const EV_POWER_THRESHOLD = 100;
+// How fast the energy runs along the cable, in seconds per lap of its
+// dashes, by the power going into the car: a solar surplus or a socket, a
+// single phase, a three-phase box, and 22 kW or a DC box. In steps rather
+// than in proportion, so that the cable does not jump at every reading of
+// the meter. Without a meter it runs at the single phase's pace.
+const EV_FLOW_STEPS = [[15000, 0.3], [6000, 0.4], [3000, 0.6], [0, 1]];
+const EV_FLOW_DEFAULT = 0.6;
+function evFlowSeconds(watts) {
+  if (watts === null || !Number.isFinite(watts)) return EV_FLOW_DEFAULT;
+  return EV_FLOW_STEPS.find(([min]) => Math.abs(watts) >= min)[1];
+}
+// How long the plug going in or out, or the end of a charge, is played for,
+// in milliseconds. Past it, a redraw shows the state as it is.
+const EV_ONE_SHOT_MS = 1600;
 // An enum sensor whose list of states says it charges cars: "charging" next
 // to a word only a charger uses, as Home Assistant publishes the list with the
 // entity. Lektrico names its device after its model and its serial, Blue
@@ -6651,7 +6665,7 @@ const ILLUSTRATION_CSS = {
   // colour of the state, the one the state line is written in, and goes dark
   // when the charger is offline. With a car at it, the plug leaves its holster
   // and the cable runs off towards the car; while it charges, the cable
-  // carries the state's colour. Nothing moves yet.
+  // carries the state's colour and the energy runs along it.
   ev_charger: (color) => `
         .ev-box {
           position: absolute; left: 20px; width: 44px; top: 4px; height: 66px; border-radius: 10px;
@@ -6713,20 +6727,121 @@ const ILLUSTRATION_CSS = {
         .ev-cable .ev-live { stroke: ${color}; stroke-width: 2.4; filter: drop-shadow(0 0 1.5px ${color}); }
         .machine.plugged.mode-charging .ev-cable .ev-live { display: inline; }
         /* While it charges, the energy runs down the cable from the box to the
-           car: light dashes on the coloured core, the path drawn in that order. */
+           car: light dashes on the coloured core, the path drawn in that order,
+           a lap of the dashes the faster the more power goes through. */
         .ev-cable .ev-flow { display: none; stroke: rgba(255, 255, 255, 0.9); stroke-width: 1.6; stroke-dasharray: 3 7; }
         .machine.plugged.mode-charging .ev-cable .ev-flow {
-          display: inline; animation: ev-flow 0.6s linear infinite; animation-delay: var(--anim-offset, 0s);
+          display: inline; animation: ev-flow var(--ev-flow, 0.6s) linear infinite; animation-delay: var(--anim-offset, 0s);
         }
         @keyframes ev-flow { to { stroke-dashoffset: -10; } }
+        /* Paused, the energy stands still on the cable, in the pause's colour
+           and without the halo: nothing flows. */
+        .machine.plugged.mode-paused .ev-cable .ev-live, .machine.plugged.mode-paused .ev-cable .ev-flow { display: inline; }
+        .machine.mode-paused .ev-cable .ev-live { filter: none; }
+        .machine.mode-paused .ev-cable .ev-flow { opacity: 0.6; }
         /* A fault turns the whole cable red, in its holster or at the car. */
         .machine.mode-error .ev-cable .ev-loop, .machine.mode-error .ev-cable .ev-out {
           stroke: ${color}; filter: drop-shadow(0 0 1.5px ${color});
         }
         @media (prefers-reduced-motion: reduce) {
           .machine.plugged.mode-charging .ev-cable .ev-flow { animation-play-state: paused; }
+          .ev-led, .ev-cable path, .ev-energy, .ev-plug, .ev-ghost {
+            animation-duration: 0.001ms !important; animation-iteration-count: 1 !important;
+          }
         }
         .machine.plugged .ev-plug { left: 70px; top: 96px; transform: none; }
+        /* The light speaks as a real box's does: it breathes while the car
+           charges, and slowly while it waits for its start time; it blinks
+           for a card at the reader, and faster on a fault. */
+        .machine.mode-charging .ev-led { animation: ev-breathe 2.6s ease-in-out infinite; animation-delay: var(--anim-offset, 0s); }
+        .machine.mode-scheduled .ev-led { animation: ev-breathe 4.8s ease-in-out infinite; animation-delay: var(--anim-offset, 0s); }
+        .machine.mode-awaiting_auth .ev-led { animation: ev-blink 1.4s linear infinite; animation-delay: var(--anim-offset, 0s); }
+        .machine.mode-error .ev-led { animation: ev-blink 0.8s linear infinite; animation-delay: var(--anim-offset, 0s); }
+        @keyframes ev-breathe { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+        @keyframes ev-blink { 0%, 40% { opacity: 1; } 50%, 90% { opacity: 0.15; } 100% { opacity: 1; } }
+        /* What happens while the card is open plays once, from the moment it
+           happened: the plug pulled down out of its holster and riding the
+           cable out to the car, then clicking in; back the other way, the
+           cable winding in to the box and the plug pushed up into its holster;
+           at the end of a charge, the light flashing and the energy fading. */
+        .ev-ghost {
+          display: none; position: absolute; left: 69px; top: 51px; width: 26px; height: 12px;
+          transform-origin: 0 6px; transform: rotate(-90deg);
+        }
+        .ev-ghost > i { position: absolute; display: block; }
+        .machine.plug-in .ev-ghost, .machine.plug-in .ev-plug, .machine.plug-in .ev-loop, .machine.plug-in .ev-out, .machine.plug-in .ev-energy,
+        .machine.plug-out .ev-ghost, .machine.plug-out .ev-plug, .machine.plug-out .ev-cable path,
+        .machine.just-done .ev-led, .machine.just-done .ev-cable path { --anim-offset: var(--ev-since, 0s); }
+        .machine.plug-in .ev-ghost { display: block; animation: ev-pull 0.9s linear both; animation-delay: var(--anim-offset, 0s); }
+        .machine.plug-in .ev-cable .ev-loop { display: inline; animation: ev-fade 0.9s linear both; animation-delay: var(--anim-offset, 0s); }
+        .machine.plug-in .ev-cable .ev-out { stroke-dasharray: 80; animation: ev-run-out 0.9s linear both; animation-delay: var(--anim-offset, 0s); }
+        .machine.plug-in .ev-plug { animation: ev-ride-in 0.9s linear both; animation-delay: var(--anim-offset, 0s); }
+        /* A car that charges as soon as it is plugged in gets its energy once
+           the cable has reached it. */
+        .machine.plug-in .ev-energy { animation: ev-reach 0.9s linear both; animation-delay: var(--anim-offset, 0s); }
+        .machine.plug-out .ev-ghost {
+          display: block; left: 70px; top: 96px; transform: none;
+          animation: ev-ride-back 0.9s linear both; animation-delay: var(--anim-offset, 0s);
+        }
+        .machine.plug-out .ev-cable .ev-out { display: inline; stroke-dasharray: 80; animation: ev-wind-in 0.9s linear both; animation-delay: var(--anim-offset, 0s); }
+        .machine.plug-out .ev-cable .ev-loop { stroke-dasharray: 80; animation: ev-coil 0.9s linear both; animation-delay: var(--anim-offset, 0s); }
+        .machine.plug-out .ev-plug { animation: ev-stow 0.9s linear both; animation-delay: var(--anim-offset, 0s); }
+        .machine.just-done .ev-led { animation: ev-done 1.4s ease-out both; animation-delay: var(--anim-offset, 0s); }
+        .machine.just-done.plugged .ev-cable .ev-live { display: inline; animation: ev-drain 1.4s ease-in both; animation-delay: var(--anim-offset, 0s); }
+        .machine.just-done.plugged .ev-cable .ev-flow {
+          display: inline; animation: ev-flow var(--ev-flow, 0.6s) linear infinite, ev-drain 1.4s ease-in both; animation-delay: var(--anim-offset, 0s);
+        }
+        @keyframes ev-pull { 0% { opacity: 1; transform: rotate(-90deg); } 12%, 100% { opacity: 0; transform: translateY(6px) rotate(-90deg); } }
+        @keyframes ev-fade { 0% { opacity: 1; } 12%, 100% { opacity: 0; } }
+        @keyframes ev-drain { from { opacity: 1; } to { opacity: 0; } }
+        @keyframes ev-reach { 0%, 80% { opacity: 0; } 100% { opacity: 1; } }
+        @keyframes ev-run-out {
+          0%, 12% { stroke-dashoffset: 80; } 19% { stroke-dashoffset: 69.43; } 26% { stroke-dashoffset: 60.18; } 33% { stroke-dashoffset: 52.22; } 40% { stroke-dashoffset: 45.51; } 47% { stroke-dashoffset: 40.03; } 54% { stroke-dashoffset: 35.71; } 61% { stroke-dashoffset: 32.52; } 68% { stroke-dashoffset: 30.39; } 75% { stroke-dashoffset: 29.23; } 82% { stroke-dashoffset: 28.91; } 100% { stroke-dashoffset: 0; }
+        }
+        /* The plug's pose along the cable, worked out from the curve the
+           cable is drawn with, so that it stays on the tip of the line. */
+        @keyframes ev-ride-in {
+          0%, 12% { opacity: 0; transform: translate(-28px, -32.98px) rotate(89.99deg); }
+          19% { opacity: 1; transform: translate(-27.47px, -22.44px) rotate(83.45deg); }
+          26% { transform: translate(-25.55px, -13.42px) rotate(70.71deg); }
+          33% { transform: translate(-21.65px, -6.54px) rotate(48.07deg); }
+          40% { transform: translate(-16.27px, -2.61px) rotate(24.87deg); }
+          47% { transform: translate(-11.05px, -0.93px) rotate(11.87deg); }
+          54% { transform: translate(-6.79px, -0.3px) rotate(5.62deg); }
+          61% { transform: translate(-3.61px, -0.07px) rotate(2.5deg); }
+          68% { transform: translate(-1.48px, -0.01px) rotate(0.91deg); }
+          75% { transform: translate(-0.31px, 0px) rotate(0.18deg); }
+          82% { transform: translate(0px, 0px) rotate(0deg); }
+          90% { transform: translate(1.5px, 0px) rotate(0deg); }
+          100% { opacity: 1; transform: translate(0px, 0px) rotate(0deg); }
+        }
+        @keyframes ev-ride-back {
+          0% { opacity: 1; transform: translate(0px, 0px) rotate(0deg); }
+          5.6% { transform: translate(-1.59px, -0.01px) rotate(0.99deg); }
+          11.3% { transform: translate(-6.38px, -0.26px) rotate(5.16deg); }
+          16.9% { transform: translate(-14.19px, -1.78px) rotate(18.77deg); }
+          22.5% { transform: translate(-23.02px, -8.3px) rotate(55.69deg); }
+          28.1% { transform: translate(-26.92px, -18.69px) rotate(79.44deg); }
+          33.8% { opacity: 1; transform: translate(-27.83px, -26.61px) rotate(86.66deg); }
+          39.4% { transform: translate(-27.99px, -31.39px) rotate(89.29deg); }
+          45%, 100% { opacity: 0; transform: translate(-28px, -32.98px) rotate(89.99deg); }
+        }
+        @keyframes ev-wind-in {
+          0% { stroke-dashoffset: 28.91; } 5.6% { stroke-dashoffset: 30.5; } 11.3% { stroke-dashoffset: 35.29; } 16.9% { stroke-dashoffset: 43.28; } 22.5% { stroke-dashoffset: 54.45; } 28.1% { stroke-dashoffset: 65.63; } 33.8% { stroke-dashoffset: 73.61; } 39.4% { stroke-dashoffset: 78.4; } 45%, 100% { stroke-dashoffset: 80; }
+        }
+        @keyframes ev-coil {
+          0%, 40% { stroke-dashoffset: 80; animation-timing-function: ease-out; }
+          85%, 100% { stroke-dashoffset: 0; }
+        }
+        @keyframes ev-stow {
+          0%, 55% { opacity: 0; transform: translateY(9px) rotate(-90deg); animation-timing-function: ease-out; }
+          85% { opacity: 1; transform: translateY(-1px) rotate(-90deg); }
+          100% { opacity: 1; transform: rotate(-90deg); }
+        }
+        @keyframes ev-done {
+          0%, 36%, 72%, 100% { box-shadow: 0 0 4px ${color}, 0 0 9px ${color}; filter: none; }
+          18%, 54% { box-shadow: 0 0 6px ${color}, 0 0 20px ${color}; filter: brightness(1.7); }
+        }
   `,
 };
 
@@ -7262,13 +7377,16 @@ function illustrationHtml(type, ctx) {
 
   if (type === "ev_charger") {
     const e = ctx.ev || {};
+    const shot = e.shot ? ` ${e.shot}` : "";
+    const since = e.shot ? `; --ev-since: ${e.since}s` : "";
     return `
-        <div class="machine ${cls} mode-${e.mode || "unknown"}${e.plugged ? " plugged" : ""}">
-          <svg class="ev-cable" viewBox="0 0 96 108" aria-hidden="true"><path class="ev-loop" d="M42 69 C42 104 69 104 69 57"/><path class="ev-out" d="M42 69 C42 96 50 102 70 102"/><path class="ev-live" d="M42 69 C42 96 50 102 70 102"/><path class="ev-flow" d="M42 69 C42 96 50 102 70 102"/></svg>
+        <div class="machine ${cls} mode-${e.mode || "unknown"}${e.plugged ? " plugged" : ""}${shot}" style="--ev-flow: ${e.flow || EV_FLOW_DEFAULT}s${since}">
+          <svg class="ev-cable" viewBox="0 0 96 108" aria-hidden="true"><path class="ev-loop" d="M42 69 C42 104 69 104 69 57"/><path class="ev-out" d="M42 69 C42 96 50 102 70 102"/><g class="ev-energy"><path class="ev-live" d="M42 69 C42 96 50 102 70 102"/><path class="ev-flow" d="M42 69 C42 96 50 102 70 102"/></g></svg>
           <div class="ev-box"><div class="ev-face"><div class="ev-led"></div>
             <svg class="ev-bolt" viewBox="0 0 24 24" aria-hidden="true"><path d="M11 15H6L13 1V9H18L11 23V15Z"/></svg>
           </div></div>
           <div class="ev-plug">${EV_PLUG_PARTS}</div>
+          <div class="ev-ghost">${EV_PLUG_PARTS}</div>
           <div class="ev-holster"></div>
         </div>`;
   }
@@ -7567,6 +7685,8 @@ class ApplianceCard extends HTMLElement {
     this._lastSignature = undefined;
     this._cycle = null;
     this._prevNormState = null;
+    this._evPrev = null;
+    this._evShot = null;
     if (!this._root) {
       this.attachShadow({ mode: "open" });
       this._root = this.shadowRoot;
@@ -9639,6 +9759,34 @@ class ApplianceCard extends HTMLElement {
       // one, and an error the plug says has one too. The drawing takes the
       // plug out of its holster for it.
       ev = { mode: mode || norm, plugged: EV_CAR_STATES.includes(mode) || (mode === "error" && plugged === true) };
+      // The energy runs along the cable at the pace of the power.
+      ev.flow = evFlowSeconds(w);
+      // A plug that moved, or a charge that ended, while the card was open is
+      // played once: the plug going into the car or back to its holster, the
+      // light flashing at the end of a charge. Only from a state that says
+      // so: a card that opens, or a charger coming back online, shows the
+      // state as it is, not a change nobody saw happen. The shot lasts while
+      // what it shows holds, so a charge starting right after the plug went
+      // in does not cut it short.
+      const prev = this._evPrev;
+      const now = Date.now();
+      if (prev) {
+        const name = prev.mode === "no_vehicle" && ev.plugged ? "plug-in"
+          : prev.plugged && ev.mode === "no_vehicle" ? "plug-out"
+          : ["charging", "paused"].includes(prev.mode) && ev.mode === "done" ? "just-done"
+          : "";
+        if (name) this._evShot = { name, at: now };
+      }
+      this._evPrev = { mode: ev.mode, plugged: ev.plugged };
+      const shot = this._evShot;
+      const holds = shot && (shot.name === "plug-in" ? ev.plugged
+        : shot.name === "plug-out" ? ev.mode === "no_vehicle" : ev.mode === "done");
+      if (holds && now - shot.at < EV_ONE_SHOT_MS) {
+        ev.shot = shot.name;
+        ev.since = (shot.at - now) / 1000;
+      } else {
+        this._evShot = null;
+      }
     }
 
     // An iron, read from the plug it is on: heating or off, and the state line
@@ -9815,7 +9963,8 @@ class ApplianceCard extends HTMLElement {
       illustrationCtx.heater && illustrationCtx.heater.mode,
       illustrationCtx.towel && illustrationCtx.towel.mode,
       illustrationCtx.fryer && [illustrationCtx.fryer.mode, illustrationCtx.fryer.mode2, illustrationCtx.fryer.layout].join("/"),
-      illustrationCtx.ev && [illustrationCtx.ev.mode, illustrationCtx.ev.plugged].join("/"),
+      illustrationCtx.ev && [illustrationCtx.ev.mode, illustrationCtx.ev.plugged,
+        illustrationCtx.ev.mode === "charging" ? illustrationCtx.ev.flow : ""].join("/"),
     ].join(",");
     if (animKey !== this._animKey) {
       this._animKey = animKey;

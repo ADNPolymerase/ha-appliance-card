@@ -7106,8 +7106,9 @@ contains('borne : la boite est dessinee', evR('Charging'), '<div class="ev-box">
 contains('borne : le cable aussi', evR('Charging'), '<svg class="ev-cable"');
 contains('borne : et la prise, une CCS', evR('Charging'), '<div class="ev-plug"><i class="pl-boot"></i><i class="pl-grip"></i>'
   + '<i class="pl-collar"></i><i class="pl-head"></i><i class="pl-ac"></i><i class="pl-dc"></i><i class="pl-latch"></i></div>');
-// One animation only, the energy along the cable; the rest stays still.
-check('borne : une seule animation, le flux du cable', (evR('Charging').match(/@keyframes ev-[\w-]+/g) || []).join(), '@keyframes ev-flow');
+// The box's animations, and no other.
+check('borne : ses animations, et aucune autre', (evR('Charging').match(/@keyframes ev-[\w-]+/g) || []).map(k => k.slice(11)).sort().join(),
+  'ev-blink,ev-breathe,ev-coil,ev-done,ev-drain,ev-fade,ev-flow,ev-pull,ev-reach,ev-ride-back,ev-ride-in,ev-run-out,ev-stow,ev-wind-in');
 check('borne : la charge compte comme en marche', hasCls(evR('Charging'), 'spinning'), true);
 check('borne : en pause, rien ne tourne', hasCls(evR('SuspendedEVSE'), 'spinning'), false);
 check('borne : terminee, la machine le dit', hasCls(evR('Finishing'), 'done'), true);
@@ -7342,8 +7343,8 @@ check('repli : une prise connectee lit encore un lave-linge', stateLine(render({
 }
 
 // With a car at it, the plug leaves its holster and the cable runs off to
-// the car; while it charges, the cable carries the state's colour. Nothing
-// moves: the plug's coming and going is for later.
+// the car; while it charges, the cable carries the state's colour. How it
+// moves is tested with the animations, at the end.
 for (const [raw, out] of [['Available', false], ['Preparing', true], ['pending_approval', true], ['Charging', true], ['SuspendedEVSE', true],
   ['SuspendedEV', true], ['paused_by_scheduler', true], ['Finishing', true], ['Reserved', false], ['Faulted', false], ['unavailable', false], ['Zzz', false]])
   check(`borne : ${raw}, la prise ${out ? 'sort de son etui' : 'reste dans son etui'}`, hasCls(evR(raw), 'plugged'), out);
@@ -7383,7 +7384,7 @@ contains('borne : la boucle cede la place au cable tendu', evR('Charging'), '.ev
 contains('borne : la prise quitte son etui', evR('Charging'), '.machine.plugged .ev-plug {');
 contains('borne : en charge, le cable prend la couleur de l etat', evR('Charging'), '.ev-cable .ev-live { stroke: var(--info-color, #2196f3);');
 contains('borne : seulement en charge', evR('Charging'), '.machine.plugged.mode-charging .ev-cable .ev-live { display: inline; }');
-contains('borne : en charge, l energie court le long du cable', evR('Charging'), '.machine.plugged.mode-charging .ev-cable .ev-flow {\n          display: inline; animation: ev-flow 0.6s linear infinite;');
+contains('borne : en charge, l energie court le long du cable', evR('Charging'), '.machine.plugged.mode-charging .ev-cable .ev-flow {\n          display: inline; animation: ev-flow var(--ev-flow, 0.6s) linear infinite;');
 contains('borne : de la borne vers la voiture', evR('Charging'), '@keyframes ev-flow { to { stroke-dashoffset: -10; } }');
 contains('borne : en erreur, tout le cable en rouge', evR('Faulted'), '.machine.mode-error .ev-cable .ev-loop, .machine.mode-error .ev-cable .ev-out {\n          stroke: var(--error-color, #f44336);');
 check('borne : en erreur, la machine le dit', hasCls(evR('Faulted'), 'mode-error'), true);
@@ -7567,6 +7568,209 @@ check('borne : ni un statut reconnu', evMode(evR('SuspendedEVSE', { power_entity
     check(`${file} : state_entity facultatif sur une borne, en tete`, lead.includes(charger), true);
     check(`${file} : state_entity facultatif sur une borne, dans le tableau`, row.includes(charger), true);
   }
+}
+
+// =============================================================================
+// EV charger animations
+// =============================================================================
+// The energy runs along the cable at the pace of the power, the light speaks
+// the state, and what happens while the card is open is played once.
+{
+  const flowOf = h => (/--ev-flow: ([\d.]+)s/.exec(h) || [, null])[1];
+  const sinceOf = h => (/--ev-since: (-?[\d.]+)s/.exec(h) || [, null])[1];
+  const evP = (raw, power) => evR(raw, { power_entity: 'sensor.p' }, { 'sensor.p': power });
+  for (const [power, pace] of [[kW(1.4), '1'], [kW(2.99), '1'], [kW(3), '0.6'], [kW(3.7), '0.6'], [kW(5.99), '0.6'], [kW(6), '0.4'],
+    [kW(7.4), '0.4'], [kW(11), '0.4'], [kW(14.99), '0.4'], [kW(15), '0.3'], [kW(22), '0.3'], [W(1400), '1'], [W(7400), '0.4'],
+    [kW(-7.4), '0.4'], [kW('unavailable'), '0.6']])
+    check(`borne anime : ${power.state} ${power.attributes.unit_of_measurement}, un tour en ${pace} s`, flowOf(evP('Charging', power)), pace);
+  check('borne anime : sans compteur, au rythme d une phase', flowOf(evR('Charging')), '0.6');
+
+  const css = evR('Charging');
+  contains('borne anime : le trace porte le flux', css, '<path class="ev-flow" d="M42 69 C42 96 50 102 70 102"/>');
+  contains('borne anime : en pause, le cable garde sa couleur et son energie', css,
+    '.machine.plugged.mode-paused .ev-cable .ev-live, .machine.plugged.mode-paused .ev-cable .ev-flow { display: inline; }');
+  contains('borne anime : sans le halo', css, '.machine.mode-paused .ev-cable .ev-live { filter: none; }');
+  contains('borne anime : l energie y palit', css, '.machine.mode-paused .ev-cable .ev-flow { opacity: 0.6; }');
+  check('borne anime : et s y arrete', /mode-paused[^{]*\{[^}]*animation/.test(styleOf(css)), false);
+  check('borne anime : seule la charge la fait courir', /\n\s*\.ev-cable \.ev-flow \{[^}]*animation/.test(styleOf(css)), false);
+  for (const [mode, rule] of [['charging', 'ev-breathe 2.6s'], ['scheduled', 'ev-breathe 4.8s'], ['awaiting_auth', 'ev-blink 1.4s'],
+    ['error', 'ev-blink 0.8s']])
+    contains(`borne anime : la diode ${mode}`, css, `.machine.mode-${mode} .ev-led { animation: ${rule} `);
+  check('borne anime : ailleurs, la diode reste fixe',
+    (styleOf(css).match(/\.machine\.mode-\w+ \.ev-led \{ animation:/g) || []).length, 4);
+  contains('borne anime : la diode respire', css, '@keyframes ev-breathe { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }');
+  {
+    const stE = styleOf(css);
+    check('borne anime : l energie attend que le cable soit arrive', stE.includes('.machine.plug-in .ev-energy { animation: ev-reach 0.9s linear both;'), true);
+    check('borne anime : la ligne de couleur s eteint a la fin', stE.includes('.machine.just-done.plugged .ev-cable .ev-live { display: inline; animation: ev-drain 1.4s ease-in both;'), true);
+    check('borne anime : et l energie avec', stE.includes('.machine.just-done.plugged .ev-cable .ev-flow {\n          display: inline; animation: ev-flow var(--ev-flow, 0.6s) linear infinite, ev-drain 1.4s ease-in both;'), true);
+  }
+  contains('borne anime : et clignote', css, '@keyframes ev-blink { 0%, 40% { opacity: 1; } 50%, 90% { opacity: 0.15; } 100% { opacity: 1; } }');
+  check('borne anime : le flash de fin prend la couleur de l etat',
+    /@keyframes ev-done \{[^@]*0 0 20px var\(--success-color, #4caf50\)/.test(styleOf(evR('Finishing'))), true);
+  check('borne anime : rien ne bouge pour qui le demande',
+    /@media \(prefers-reduced-motion: reduce\) \{\s*\.machine\.plugged\.mode-charging \.ev-cable \.ev-flow \{ animation-play-state: paused; \}\s*\.ev-led, \.ev-cable path, \.ev-energy, \.ev-plug, \.ev-ghost \{\s*animation-duration: 0\.001ms !important; animation-iteration-count: 1 !important;/
+      .test(styleOf(css)), true);
+
+  // A new pace starts the cable's lap over, the same pace does not, and the
+  // power is no reason to restart anything while nothing flows.
+  {
+    const at = (raw, power) => evSt(raw, { 'sensor.p': power });
+    const { card } = build({ ...EVC, power_entity: 'sensor.p' }, at('Charging', kW(7.4)));
+    const k1 = card._animKey;
+    rerender(card, at('Charging', kW(11)));
+    check('borne anime : meme allure, rien ne repart', card._animKey, k1);
+    rerender(card, at('Charging', kW(22)));
+    check('borne anime : une autre allure repart', card._animKey !== k1, true);
+    const { card: c2 } = build({ ...EVC, power_entity: 'sensor.p' }, at('Preparing', kW(0)));
+    const k2 = c2._animKey;
+    rerender(c2, at('Preparing', kW(16)));
+    check('borne anime : hors charge, la puissance ne relance rien', c2._animKey, k2);
+  }
+
+  // Once, from the moment it happened, and only for what the card saw happen.
+  const shotOf = h => ['plug-in', 'plug-out', 'just-done'].filter(c => hasCls(h, c)).join() || 'none';
+  const T = freezeClock('2026-09-02T08:00:00Z');
+  const at = ms => freezeClock(new Date(T + ms).toISOString());
+  {
+    const { card, html } = build(EVC, evSt('Available'));
+    check('borne anime : a l ouverture, rien ne se rejoue', shotOf(html), 'none');
+    const h1 = rerender(card, evSt('Preparing'));
+    check('borne anime : la prise branchee se rejoue', shotOf(h1), 'plug-in');
+    check('borne anime : depuis cet instant', sinceOf(h1), '0');
+    at(500);
+    const h2 = rerender(card, evSt('Charging'));
+    check('borne anime : la charge qui suit ne la coupe pas', shotOf(h2), 'plug-in');
+    check('borne anime : elle reprend ou elle en etait', sinceOf(h2), '-0.5');
+    at(1700);
+    const h3 = rerender(card, evSt('Charging'));
+    check('borne anime : puis la borne se tient tranquille', shotOf(h3), 'none');
+    check('borne anime : sans decalage a part', sinceOf(h3), null);
+    at(5000);
+    check('borne anime : la fin d une charge se rejoue', shotOf(rerender(card, evSt('Finishing'))), 'just-done');
+    at(5400);
+    const h5 = rerender(card, evSt('Available'));
+    check('borne anime : la prise debranchee aussi, a la place', shotOf(h5), 'plug-out');
+    at(5600);
+    const h6 = rerender(card, evSt('Preparing'));
+    check('borne anime : rebranchee aussitot, elle repart dans l autre sens', shotOf(h6), 'plug-in');
+    check('borne anime : depuis le nouveau geste', sinceOf(h6), '0');
+    at(5800);
+    check('borne anime : debranchee pendant le geste, elle repart encore', shotOf(rerender(card, evSt('Available'))), 'plug-out');
+  }
+  const seq = (cfg, steps) => {
+    const { card } = build(cfg, steps[0]);
+    let h = '';
+    for (let i = 1; i < steps.length; i++) { at(i * 100); h = rerender(card, steps[i]); }
+    return shotOf(h);
+  };
+  at(0);
+  check('borne anime : ouverte en charge, rien', shotOf(build(EVC, evSt('Charging')).html), 'none');
+  check('borne anime : revenue en ligne, rien', seq(EVC, [evSt('unavailable'), evSt('Charging')]), 'none');
+  check('borne anime : revenue en ligne terminee, rien', seq(EVC, [evSt('unavailable'), evSt('Finishing')]), 'none');
+  check('borne anime : partie hors ligne, rien', seq(EVC, [evSt('Charging'), evSt('unavailable')]), 'none');
+  check('borne anime : branchee sans charger, puis terminee, rien', seq(EVC, [evSt('Preparing'), evSt('Finishing')]), 'none');
+  check('borne anime : en pause, puis terminee', seq(EVC, [evSt('SuspendedEVSE'), evSt('Finishing')]), 'just-done');
+  check('borne anime : de la charge a la pause, rien', seq(EVC, [evSt('Charging'), evSt('SuspendedEVSE')]), 'none');
+  check('borne anime : terminee, puis la charge reprend', seq(EVC, [evSt('Charging'), evSt('Finishing'), evSt('Charging')]), 'none');
+  check('borne anime : la voiture qui a fini sa charge', seq({ ...EVC, session_energy_entity: 'sensor.e', power_entity: 'sensor.p' },
+    [evSt('Charging', { 'sensor.e': kWh(12), 'sensor.p': kW(7.4) }), evSt('SuspendedEV', { 'sensor.e': kWh(12.1), 'sensor.p': kW(0) })]), 'just-done');
+  check('borne anime : d une erreur avec voiture a pas de voiture', seq({ ...EVC, vehicle_entity: 'binary_sensor.cp_plug' },
+    [evSt('Faulted', { 'binary_sensor.cp_plug': { state: 'on', attributes: {} } }),
+      evSt('Available', { 'binary_sensor.cp_plug': { state: 'off', attributes: {} } })]), 'plug-out');
+  check('borne anime : d une erreur sans voiture, rien', seq(EVC, [evSt('Faulted'), evSt('Available')]), 'none');
+  // A shot stops with what it shows: a charger that goes offline mid-way is
+  // drawn offline, not still plugging in or out.
+  check('borne anime : branchee puis hors ligne, le geste s arrete', seq(EVC, [evSt('Available'), evSt('Preparing'), evSt('unavailable')]), 'none');
+  check('borne anime : debranchee puis hors ligne, aussi', seq(EVC, [evSt('Charging'), evSt('Available'), evSt('unavailable')]), 'none');
+  check('borne anime : une erreur avec la voiture garde le geste', seq({ ...EVC, vehicle_entity: 'binary_sensor.cp_plug' },
+    [evSt('Available', { 'binary_sensor.cp_plug': { state: 'off', attributes: {} } }),
+      evSt('Preparing', { 'binary_sensor.cp_plug': { state: 'on', attributes: {} } }),
+      evSt('Faulted', { 'binary_sensor.cp_plug': { state: 'on', attributes: {} } })]), 'plug-in');
+  check('borne anime : sans voiture, puis une erreur sans elle, rien', seq(EVC, [evSt('Available'), evSt('Faulted')]), 'none');
+  const plugAt = (on, w) => ({ 'binary_sensor.plug': { state: on, attributes: {} }, 'sensor.p': W(w) });
+  check('repli anime : la prise branchee', seq(FB, [plugAt('off', 0), plugAt('on', 0)]), 'plug-in');
+  check('repli anime : branchee et en charge d un coup', seq(FB, [plugAt('off', 0), plugAt('on', 7000)]), 'plug-in');
+  check('repli anime : debranchee', seq(FB, [plugAt('on', 0), plugAt('off', 0)]), 'plug-out');
+  {
+    const { card } = build(EVC, evSt('Available'));
+    card.setConfig({ type: 'custom:ha-appliance-card', ...EVC, name: 'Garage' });
+    check('borne anime : une nouvelle configuration repart de rien', shotOf(rerender(card, evSt('Preparing'))), 'none');
+  }
+
+  const pathOf = cls => (new RegExp(`<path class="${cls}" d="M(\\S+) (\\S+) C(\\S+) (\\S+) (\\S+) (\\S+) (\\S+) (\\S+)"/>`).exec(css) || []).slice(1).map(Number);
+  const bezLenOf = p => { let L = 0, x0 = p[0], y0 = p[1]; for (let i = 1; i <= 400; i++) { const t = i / 400, u = 1 - t;
+    const x = u*u*u*p[0] + 3*u*u*t*p[2] + 3*u*t*t*p[4] + t*t*t*p[6], y = u*u*u*p[1] + 3*u*u*t*p[3] + 3*u*t*t*p[5] + t*t*t*p[7];
+    L += Math.hypot(x - x0, y - y0); x0 = x; y0 = y; } return L; };
+  // What the shots play, from their own moment rather than from the lap of
+  // the cable, and with the drawing they end on.
+  const st = styleOf(css);
+  contains('borne anime : un fantome pour la prise qui part', css, '<div class="ev-ghost"><i class="pl-boot"></i><i class="pl-grip"></i>'
+    + '<i class="pl-collar"></i><i class="pl-head"></i><i class="pl-ac"></i><i class="pl-dc"></i><i class="pl-latch"></i></div>');
+  // The energy is one group, faded in once the cable has (nearly) reached
+  // the car: hidden at least until the line covers 95% of the cable.
+  contains('borne anime : l energie du cable va ensemble', css,
+    '<g class="ev-energy"><path class="ev-live" d="M42 69 C42 96 50 102 70 102"/><path class="ev-flow" d="M42 69 C42 96 50 102 70 102"/></g>');
+  {
+    const runOut = [...(/@keyframes ev-run-out \{([^@]*?)\n        \}/.exec(st) || [, ''])[1]
+      .matchAll(/([\d.]+)% \{ stroke-dashoffset: ([\d.]+); \}/g)].map(m => [Number(m[1]), Number(m[2])]);
+    const outLen = bezLenOf(pathOf('ev-out'));
+    const p95 = (runOut.find(([, off]) => 80 - off >= 0.95 * outLen) || [100])[0];
+    const hidden = Number((/@keyframes ev-reach \{ 0%, ([\d.]+)% \{ opacity: 0; \}/.exec(st) || [, 0])[1]);
+    check('borne anime : l energie attend que le cable soit arrive', runOut.length > 5 && hidden >= p95, true);
+  }
+  check('borne anime : rejoue depuis son propre instant', st.includes('.machine.just-done .ev-led, .machine.just-done .ev-cable path { --anim-offset: var(--ev-since, 0s); }'), true);
+  // Everything a shot moves plays from the shot's moment, the energy that
+  // waits for the cable included, or it would pick up the lap of the loops.
+  {
+    const own = (/\n\s*([^{}]*)\{ --anim-offset: var\(--ev-since, 0s\); \}/.exec(st) || [, ''])[1].split(',').map(x => x.trim());
+    for (const sel of ['.machine.plug-in .ev-ghost', '.machine.plug-in .ev-plug', '.machine.plug-in .ev-loop', '.machine.plug-in .ev-out',
+      '.machine.plug-in .ev-energy', '.machine.plug-out .ev-ghost', '.machine.plug-out .ev-plug', '.machine.plug-out .ev-cable path',
+      '.machine.just-done .ev-led', '.machine.just-done .ev-cable path'])
+      check(`borne anime : ${sel} depuis l instant du geste`, own.includes(sel), true);
+  }
+  for (const [cls, names] of [['plug-in', ['ev-pull', 'ev-fade', 'ev-run-out', 'ev-ride-in', 'ev-reach']],
+    ['plug-out', ['ev-ride-back', 'ev-wind-in', 'ev-coil', 'ev-stow']], ['just-done', ['ev-done', 'ev-drain']]]) {
+    for (const n of names) {
+      check(`borne anime : ${cls} joue ${n}`, new RegExp(`\\.machine\\.${cls}[^{]*\\{[^}]*animation: ${n} [^;]*both;`).test(st), true);
+      check(`borne anime : ${n} est declaree`, st.includes(`@keyframes ${n} {`), true);
+    }
+  }
+  // The plug rides the tip of the cable: it sets off from the box end of
+  // the line and lands where the drawing leaves it, and the line is drawn
+  // with a dash long enough to cover the whole cable.
+  const out = pathOf('ev-out'), loop = pathOf('ev-loop');
+  const bezLen = bezLenOf;
+  // A dash as long as its gap draws the cable on: at the largest offset of
+  // the animation the whole cable must lie in the gap, at the smallest the
+  // whole cable in the dash, or a piece of it shows before its time.
+  for (const [anim, path, name] of [['ev-run-out', out, 'le cable qui sort'], ['ev-wind-in', out, 'le cable qui rentre'], ['ev-coil', loop, 'la boucle']]) {
+    const dash = Number((new RegExp(`stroke-dasharray: ([\\d.]+); animation: ${anim} `).exec(st) || [, 0])[1]);
+    const offsets = [...((new RegExp(`@keyframes ${anim} \\{([^@]*?)\\n        \\}`).exec(st) || [, ''])[1])
+      .matchAll(/stroke-dashoffset: ([\d.]+);/g)].map(m => Number(m[1]));
+    const L = bezLen(path), hide = Math.max(...offsets), show = Math.min(...offsets);
+    check(`borne anime : le trait cache ${name} au depart`, offsets.length > 1 && dash <= hide && hide + L <= 2 * dash, true);
+    check(`borne anime : et le montre en entier a la fin`.replace('le montre', `montre ${name}`), show + L <= dash + 0.05, true);
+  }
+  // Where the cable enters the plug at the car: its place, plus the point
+  // it turns about.
+  const plugAnchor = [Number((/\.machine\.plugged \.ev-plug \{ left: ([\d.]+)px;/.exec(st) || [, NaN])[1]),
+    Number((/\.machine\.plugged \.ev-plug \{[^}]*top: ([\d.]+)px;/.exec(st) || [, NaN])[1]) + 6];
+  check('borne anime : la prise ancree au bout du cable', plugAnchor.join(), [out[6], out[7]].join());
+  const pose = (name, pctRe) => (new RegExp(`@keyframes ${name} \\{[^@]*?${pctRe} \\{[^}]*transform: translate\\((-?[\\d.]+)px, (-?[\\d.]+)px\\) rotate\\((-?[\\d.]+)deg\\)`).exec(st) || []).slice(1).map(Number);
+  const near = (a, b) => Math.abs(a - b) < 0.1;
+  const start = pose('ev-ride-in', '0%, 12%');
+  check('borne anime : la prise part du bas de la borne', near(plugAnchor[0] + start[0], out[0]) && near(plugAnchor[1] + start[1], out[1]), true);
+  check('borne anime : tournee comme le cable qui descend', near(start[2], 90), true);
+  check('borne anime : et arrive a plat, la ou le dessin la laisse', pose('ev-ride-in', '100%').join(), '0,0,0');
+  const back = pose('ev-ride-back', '45%, 100%');
+  check('borne anime : au retour, elle remonte au bas de la borne', near(plugAnchor[0] + back[0], out[0]) && near(plugAnchor[1] + back[1], out[1]), true);
+  check('borne anime : la prise du retour se range dans son etui',
+    /@keyframes ev-stow \{[^@]*100% \{ opacity: 1; transform: rotate\(-90deg\); \}/.test(st), true);
+  check('borne anime : elle remonte dans l etui, par en dessous', /@keyframes ev-stow \{\s*0%, 55% \{ opacity: 0; transform: translateY\(\d+px\) rotate\(-90deg\);/.test(st), true);
+  check('borne anime : et en sort par en dessous', /@keyframes ev-pull \{[^@]*12%, 100% \{ opacity: 0; transform: translateY\(\d+px\) rotate\(-90deg\); \}/.test(st), true);
+  check('borne anime : le fantome est la meme prise', /\.ev-ghost \{[^}]*left: 69px; top: 51px; width: 26px; height: 12px;\s*transform-origin: 0 6px; transform: rotate\(-90deg\);/.test(st), true);
+  freezeClock(new Date(T0).toISOString());
 }
 
 report();
