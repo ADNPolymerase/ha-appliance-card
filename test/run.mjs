@@ -7449,6 +7449,14 @@ contains('borne : en charge, le cable prend la couleur de l etat', evR('Charging
 contains('borne : seulement en charge', evR('Charging'), '.machine.plugged.mode-charging .ev-cable .ev-live { display: inline; }');
 contains('borne : en charge, l energie court le long du cable', evR('Charging'), '.machine.plugged.mode-charging .ev-cable .ev-flow {\n          display: inline; animation: ev-flow var(--ev-flow, 0.6s) linear infinite;');
 contains('borne : de la borne vers la voiture', evR('Charging'), '@keyframes ev-flow { to { stroke-dashoffset: -10; } }');
+// The glow is a blurred svg of its own: WebKit does not filter a path inside one.
+contains('borne : le halo, une copie floutee du cable', evR('Charging'), '<svg class="ev-halo" viewBox="0 0 96 108" aria-hidden="true"><path class="eh-loop" d="M42 69 C42 104 69 104 69 57"/><path class="eh-out" d="M42 69 C42 96 50 102 70 102"/></svg>');
+contains('borne : le flou sur le svg lui-meme', evR('Charging'), '.ev-halo { position: absolute; left: 0; top: 0; width: 96px; height: 108px; overflow: visible; filter: blur(1.5px); }');
+contains('borne : le halo prend la couleur de l etat', evR('Charging'), '.ev-halo path { display: none; fill: none; stroke: var(--info-color, #2196f3);');
+contains('borne : le halo en charge et en erreur', evR('Charging'), '.machine.plugged.mode-charging .ev-halo .eh-out, .machine.plugged.mode-error .ev-halo .eh-out,\n        .machine.mode-error:not(.plugged) .ev-halo .eh-loop { display: inline; }');
+check('borne : plus aucun filtre sur un trace du cable', /\.ev-cable[^{]*\{[^}]*filter/.test(evR('Charging')) || /\.ev-cable[^{]*\{[^}]*filter/.test(evR('Faulted')), false);
+contains('borne : le halo rejoue depuis le branchement', evR('Charging'), '.machine.plug-in .ev-energy, .machine.plug-in .ev-halo,\n');
+check('borne : le halo passe sous le cable', evR('Charging').indexOf('class="ev-halo"') < evR('Charging').indexOf('class="ev-cable"'), true);
 contains('borne : en erreur, tout le cable en rouge', evR('Faulted'), '.machine.mode-error .ev-cable .ev-loop, .machine.mode-error .ev-cable .ev-out {\n          stroke: var(--error-color, #f44336);');
 check('borne : en erreur, la machine le dit', hasCls(evR('Faulted'), 'mode-error'), true);
 contains('borne : le flux suit le cable tendu', evR('Charging'), '<path class="ev-flow" d="M42 69 C42 96 50 102 70 102"/>');
@@ -7657,7 +7665,7 @@ check('borne : ni un statut reconnu', evMode(evR('SuspendedEVSE', { power_entity
   contains('borne anime : le trace porte le flux', css, '<path class="ev-flow" d="M42 69 C42 96 50 102 70 102"/>');
   contains('borne anime : en pause, le cable garde sa couleur et son energie', css,
     '.machine.plugged.mode-paused .ev-cable .ev-live, .machine.plugged.mode-paused .ev-cable .ev-flow { display: inline; }');
-  contains('borne anime : sans le halo', css, '.machine.mode-paused .ev-cable .ev-live { filter: none; }');
+  check('borne anime : sans le halo', /mode-paused[^{]*ev-halo/.test(styleOf(css)), false);
   contains('borne anime : l energie y palit', css, '.machine.mode-paused .ev-cable .ev-flow { opacity: 0.6; }');
   check('borne anime : et s y arrete', /mode-paused[^{]*\{[^}]*animation/.test(styleOf(css)), false);
   check('borne anime : seule la charge la fait courir', /\n\s*\.ev-cable \.ev-flow \{[^}]*animation/.test(styleOf(css)), false);
@@ -7669,7 +7677,7 @@ check('borne : ni un statut reconnu', evMode(evR('SuspendedEVSE', { power_entity
   contains('borne anime : la diode respire', css, '@keyframes ev-breathe { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }');
   {
     const stE = styleOf(css);
-    check('borne anime : l energie attend que le cable soit arrive', stE.includes('.machine.plug-in .ev-energy { animation: ev-reach 0.9s linear both;'), true);
+    check('borne anime : l energie attend que le cable soit arrive', stE.includes('.machine.plug-in .ev-energy, .machine.plug-in .ev-halo { animation: ev-reach 0.9s linear both;'), true);
     check('borne anime : la ligne de couleur s eteint a la fin', stE.includes('.machine.just-done.plugged .ev-cable .ev-live { display: inline; animation: ev-drain 1.4s ease-in both;'), true);
     check('borne anime : et l energie avec', stE.includes('.machine.just-done.plugged .ev-cable .ev-flow {\n          display: inline; animation: ev-flow var(--ev-flow, 0.6s) linear infinite, ev-drain 1.4s ease-in both;'), true);
   }
@@ -7677,7 +7685,7 @@ check('borne : ni un statut reconnu', evMode(evR('SuspendedEVSE', { power_entity
   check('borne anime : le flash de fin prend la couleur de l etat',
     /@keyframes ev-done \{[^@]*0 0 20px var\(--success-color, #4caf50\)/.test(styleOf(evR('Finishing'))), true);
   check('borne anime : rien ne bouge pour qui le demande',
-    /@media \(prefers-reduced-motion: reduce\) \{\s*\.machine\.plugged\.mode-charging \.ev-cable \.ev-flow \{ animation-play-state: paused; \}\s*\.ev-led, \.ev-cable path, \.ev-energy, \.ev-plug, \.ev-ghost \{\s*animation-duration: 0\.001ms !important; animation-iteration-count: 1 !important;/
+    /@media \(prefers-reduced-motion: reduce\) \{\s*\.machine\.plugged\.mode-charging \.ev-cable \.ev-flow \{ animation-play-state: paused; \}\s*\.ev-led, \.ev-cable path, \.ev-energy, \.ev-halo, \.ev-plug, \.ev-ghost \{\s*animation-duration: 0\.001ms !important; animation-iteration-count: 1 !important;/
       .test(styleOf(css)), true);
 
   // A new pace starts the cable's lap over, the same pace does not, and the

@@ -1,4 +1,4 @@
-const CARD_VERSION = "2.22.0";
+const CARD_VERSION = "2.22.1";
 
 console.info(
   "%c HA-APPLIANCE-CARD %c v" + CARD_VERSION + " ",
@@ -6778,7 +6778,7 @@ const ILLUSTRATION_CSS = {
         .ev-cable path { fill: none; stroke: #3b4048; stroke-width: 3.5; stroke-linecap: round; }
         .ev-cable .ev-out, .ev-cable .ev-live, .machine.plugged .ev-cable .ev-loop { display: none; }
         .machine.plugged .ev-cable .ev-out { display: inline; }
-        .ev-cable .ev-live { stroke: ${color}; stroke-width: 2.4; filter: drop-shadow(0 0 1.5px ${color}); }
+        .ev-cable .ev-live { stroke: ${color}; stroke-width: 2.4; }
         .machine.plugged.mode-charging .ev-cable .ev-live { display: inline; }
         /* While it charges, the energy runs down the cable from the box to the
            car: light dashes on the coloured core, the path drawn in that order,
@@ -6791,15 +6791,22 @@ const ILLUSTRATION_CSS = {
         /* Paused, the energy stands still on the cable, in the pause's colour
            and without the halo: nothing flows. */
         .machine.plugged.mode-paused .ev-cable .ev-live, .machine.plugged.mode-paused .ev-cable .ev-flow { display: inline; }
-        .machine.mode-paused .ev-cable .ev-live { filter: none; }
-        .machine.mode-paused .ev-cable .ev-flow { opacity: 0.6; }
+                .machine.mode-paused .ev-cable .ev-flow { opacity: 0.6; }
         /* A fault turns the whole cable red, in its holster or at the car. */
         .machine.mode-error .ev-cable .ev-loop, .machine.mode-error .ev-cable .ev-out {
-          stroke: ${color}; filter: drop-shadow(0 0 1.5px ${color});
+          stroke: ${color};
         }
+        /* The glow is a blurred copy of the cable in an svg of its own, under
+           it: WebKit (Safari and the Home Assistant apps) blurs an svg but not
+           a path inside one, so a filter on the cable's own paths shows
+           nowhere there. It lights while charging, and on a fault. */
+        .ev-halo { position: absolute; left: 0; top: 0; width: 96px; height: 108px; overflow: visible; filter: blur(1.5px); }
+        .ev-halo path { display: none; fill: none; stroke: ${color}; stroke-width: 3.5; stroke-linecap: round; }
+        .machine.plugged.mode-charging .ev-halo .eh-out, .machine.plugged.mode-error .ev-halo .eh-out,
+        .machine.mode-error:not(.plugged) .ev-halo .eh-loop { display: inline; }
         @media (prefers-reduced-motion: reduce) {
           .machine.plugged.mode-charging .ev-cable .ev-flow { animation-play-state: paused; }
-          .ev-led, .ev-cable path, .ev-energy, .ev-plug, .ev-ghost {
+          .ev-led, .ev-cable path, .ev-energy, .ev-halo, .ev-plug, .ev-ghost {
             animation-duration: 0.001ms !important; animation-iteration-count: 1 !important;
           }
         }
@@ -6823,7 +6830,7 @@ const ILLUSTRATION_CSS = {
           transform-origin: 0 6px; transform: rotate(-90deg);
         }
         .ev-ghost > i { position: absolute; display: block; }
-        .machine.plug-in .ev-ghost, .machine.plug-in .ev-plug, .machine.plug-in .ev-loop, .machine.plug-in .ev-out, .machine.plug-in .ev-energy,
+        .machine.plug-in .ev-ghost, .machine.plug-in .ev-plug, .machine.plug-in .ev-loop, .machine.plug-in .ev-out, .machine.plug-in .ev-energy, .machine.plug-in .ev-halo,
         .machine.plug-out .ev-ghost, .machine.plug-out .ev-plug, .machine.plug-out .ev-cable path,
         .machine.just-done .ev-led, .machine.just-done .ev-cable path { --anim-offset: var(--ev-since, 0s); }
         .machine.plug-in .ev-ghost { display: block; animation: ev-pull 0.9s linear both; animation-delay: var(--anim-offset, 0s); }
@@ -6832,7 +6839,7 @@ const ILLUSTRATION_CSS = {
         .machine.plug-in .ev-plug { animation: ev-ride-in 0.9s linear both; animation-delay: var(--anim-offset, 0s); }
         /* A car that charges as soon as it is plugged in gets its energy once
            the cable has reached it. */
-        .machine.plug-in .ev-energy { animation: ev-reach 0.9s linear both; animation-delay: var(--anim-offset, 0s); }
+        .machine.plug-in .ev-energy, .machine.plug-in .ev-halo { animation: ev-reach 0.9s linear both; animation-delay: var(--anim-offset, 0s); }
         .machine.plug-out .ev-ghost {
           display: block; left: 70px; top: 96px; transform: none;
           animation: ev-ride-back 0.9s linear both; animation-delay: var(--anim-offset, 0s);
@@ -7435,6 +7442,7 @@ function illustrationHtml(type, ctx) {
     const since = e.shot ? `; --ev-since: ${e.since}s` : "";
     return `
         <div class="machine ${cls} mode-${e.mode || "unknown"}${e.plugged ? " plugged" : ""}${shot}" style="--ev-flow: ${e.flow || EV_FLOW_DEFAULT}s${since}">
+          <svg class="ev-halo" viewBox="0 0 96 108" aria-hidden="true"><path class="eh-loop" d="M42 69 C42 104 69 104 69 57"/><path class="eh-out" d="M42 69 C42 96 50 102 70 102"/></svg>
           <svg class="ev-cable" viewBox="0 0 96 108" aria-hidden="true"><path class="ev-loop" d="M42 69 C42 104 69 104 69 57"/><path class="ev-out" d="M42 69 C42 96 50 102 70 102"/><g class="ev-energy"><path class="ev-live" d="M42 69 C42 96 50 102 70 102"/><path class="ev-flow" d="M42 69 C42 96 50 102 70 102"/></g></svg>
           <div class="ev-box"><div class="ev-face"><div class="ev-led"></div>
             <svg class="ev-bolt" viewBox="0 0 24 24" aria-hidden="true"><path d="M11 15H6L13 1V9H18L11 23V15Z"/></svg>
