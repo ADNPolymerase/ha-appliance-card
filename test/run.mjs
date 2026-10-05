@@ -7265,6 +7265,66 @@ for (const raw of ['SuspendedEV', 'suspended_ev', 'waiting_car']) {
 }
 for (const raw of ['SuspendedEVSE', 'suspended_evse', 'suspended', 'paused', 'sleeping'])
   check(`${raw} : la borne retient, toujours en pause`, evMode(suspR(raw, 12.4, 0)), 'paused');
+// The other chargers, as each integration writes its status (read in their
+// source code): spaces, hyphens, commas and capitals fold to one spelling.
+for (const [raw, mode] of [
+  // Wallbox (core), a plain string with spaces.
+  ['Waiting for car demand', 'paused'], ['Waiting in queue by Power Sharing', 'paused'], ['Waiting in queue by Power Boost', 'paused'],
+  ['Waiting in queue by Eco-Smart', 'paused'], ['Locked, car connected', 'awaiting_auth'], ['Waiting MID failed', 'error'],
+  ['Waiting MID safety margin exceeded', 'error'], ['Charging', 'charging'], ['Scheduled', 'scheduled'],
+  // Tessie, Greencell, Nexblue, TechnoVE, Shelly EVE01, Besen, Victron (core enums).
+  ['disconnected', 'no_vehicle'], ['idle', 'no_vehicle'], ['waiting_for_car', 'paused'], ['error_car', 'error'], ['error_evse', 'error'],
+  ['lb_waiting', 'paused'], ['delay_waiting', 'scheduled'], ['ev_waiting', 'paused'], ['plugged_waiting', 'connected'],
+  ['plugged_charging', 'charging'], ['ventilation_required', 'charging'], ['pilot_fault', 'error'], ['evse_fault', 'error'],
+  ['ground_fault', 'error'], ['out_of_activation_period', 'scheduled'], ['high_tariff_period', 'scheduled'],
+  ['charger_free', 'no_vehicle'], ['charger_insert', 'connected'], ['charger_charging', 'charging'], ['charger_pause', 'paused'],
+  ['charger_wait', 'paused'], ['charger_end', 'done'], ['charger_fault', 'error'], ['charger_free_fault', 'error'],
+  ['waiting_for_swipe', 'awaiting_auth'], ['waiting_for_button', 'awaiting_auth'], ['ready_to_charge', 'connected'],
+  ['completed_full_charge', 'done'], ['charging_reservation', 'scheduled'], ['charging_fault_1', 'error'], ['charging_fault_2', 'error'],
+  ['ev_connected_press_start', 'awaiting_auth'], ['waiting_for_ev', 'paused'], ['charging_completed', 'done'],
+  ['plug_not_connected', 'no_vehicle'], ['see_error_state', 'error'], ['charged', 'done'], ['waiting_for_rfid', 'awaiting_auth'],
+  ['waiting_for_start', 'connected'], ['waiting_for_sun', 'scheduled'], ['low_soc', 'paused'], ['start_charging', 'charging'],
+  ['switching_to_1_phase', 'charging'], ['switching_to_3_phase', 'charging'],
+  // Easee, Zaptec.
+  ['awaiting_start', 'connected'], ['completed', 'done'], ['awaiting_authorization', 'awaiting_auth'], ['authenticating', 'awaiting_auth'],
+  ['awaiting_smart_start', 'scheduled'], ['awaiting_scheduled_start', 'scheduled'], ['awaiting_load_balancing', 'paused'],
+  ['paused_due_to_equalizer', 'paused'], ['erratic_ev', 'error'], ['error_temperature_too_high', 'error'],
+  ['error_dead_powerboard', 'error'], ['error_overcurrent', 'error'], ['error_pen_fault', 'error'],
+  ['connected_requesting', 'connected'], ['connected_charging', 'charging'], ['connected_finished', 'done'],
+  // go-e, the two integrations, in English.
+  ['Wait for car', 'connected'], ['Complete', 'done'], ['Charger ready, no vehicle', 'no_vehicle'], ['Waiting for vehicle', 'connected'],
+  ['Charging finished, vehicle still connected', 'done'],
+  // Alfen, display strings.
+  ['Cable connected', 'no_vehicle'], ['Authorizing', 'awaiting_auth'], ['EV connected', 'connected'], ['Preparing charging', 'connected'],
+  ['Charging normal', 'charging'], ['Charging simplified', 'charging'], ['Solar charging', 'charging'], ['Partial solar charging', 'charging'],
+  ['Wait vehicle charging', 'paused'], ['Suspended over-current', 'paused'], ['Suspended HF switching', 'paused'],
+  ['Load balancing forced off', 'paused'], ['Solar charging wait', 'paused'], ['Waiting for power', 'paused'],
+  ['Finish wait vehicle', 'done'], ['Finish wait disconnect', 'done'],
+  // myenergi Zappi, its plug status and status.
+  ['EV Disconnected', 'no_vehicle'], ['EV Connected', 'connected'], ['Waiting for EV', 'paused'], ['EV ready to charge', 'paused'],
+  ['Boosting', 'charging'],
+  // Wattpilot, Hypervolt, SMA, Pod Point.
+  ['wait car', 'connected'], ['no car', 'no_vehicle'], ['not ready - force stopped', 'paused'], ['not_connected', 'no_vehicle'],
+  ['sleep_mode', 'connected'], ['active_mode', 'charging'], ['station_locked', 'awaiting_auth'], ['station_fault', 'error'],
+  ['suspended-ev', 'paused'], ['suspended-evse', 'paused'], ['out-of-service', 'error'],
+  ['connected-waiting-for-schedule', 'scheduled'],
+]) check(`borne : « ${raw} »`, evMode(evR(raw)), mode);
+check('borne : des tirets en bord de mot', evMode(evR('-- Charging normal --')), 'charging');
+// What stays out on purpose: a word two chargers use for two things.
+for (const raw of ['ready', 'Ready', 'waiting', 'locked', 'pending', '2'])
+  check(`borne : « ${raw} » reste tel quel`, evKnown(evR(raw)), 'unknown');
+// The waits the car is responsible for may be the end of the charge.
+for (const raw of ['Waiting for car demand', 'ev_waiting', 'charger_wait', 'waiting_for_car', 'Waiting for EV', 'Wait vehicle charging', 'suspended-ev'])
+  check(`${raw} : de l energie et plus de puissance, terminee`, evMode(suspR(raw, 12.4, 0)), 'done');
+for (const raw of ['lb_waiting', 'charger_pause', 'suspended-evse', 'Waiting in queue by Power Sharing'])
+  check(`${raw} : la borne retient, toujours en pause`, evMode(suspR(raw, 12.4, 0)), 'paused');
+// The plug in the words of Besen and Zappi.
+for (const word of ['connected_locked', 'connected_unlocked', 'EV Connected'])
+  check(`borne : la prise dit « ${word} », rien ne change`, evMode(vehR('Charging', word, 'sensor')), 'charging');
+check('borne : la prise dit « EV Disconnected »', evMode(vehR('Charging', 'EV Disconnected', 'sensor')), 'no_vehicle');
+// state_map is still read on the word as it comes, before any folding.
+check('borne : state_map sur le mot brut', evMode(evR('Disconnected', { state_map: { Disconnected: 'offline' } })), 'offline');
+
 check('SuspendedEV : sans compteur, en pause', evMode(evR('SuspendedEV', { session_energy_entity: 'sensor.e' }, { 'sensor.e': kWh(12) })), 'paused');
 check('SuspendedEV : sans energie de session, en pause', evMode(evR('SuspendedEV', { power_entity: 'sensor.p' }, { 'sensor.p': kW(0) })), 'paused');
 check('SuspendedEV : une energie illisible, en pause', evMode(evR('SuspendedEV', { session_energy_entity: 'sensor.e', power_entity: 'sensor.p' },
@@ -7306,6 +7366,9 @@ check('repli : la prise illisible, la puissance decide', evMode(fbR('unavailable
 check('repli : la prise illisible sans puissance, au repos', stateLine(fbR('unavailable', 0)), 'Idle');
 check('repli : rien de lisible, hors ligne', evMode(render(FB, { 'binary_sensor.plug': { state: 'unavailable', attributes: {} },
   'sensor.p': { state: 'unavailable', attributes: {} } })), 'offline');
+for (const word of ['connected_locked', 'connected_unlocked', 'EV Connected'])
+  check(`repli : la prise dit « ${word} », branchee`, evMode(render({ appliance_type: 'ev_charger', vehicle_entity: 'sensor.plug' },
+    { 'sensor.plug': { state: word, attributes: {} } })), 'connected');
 check('repli : rien du tout, hors ligne', evMode(render(FB, {})), 'offline');
 check('repli : la prise seule, branchee', evMode(render({ appliance_type: 'ev_charger', vehicle_entity: 'binary_sensor.plug' },
   { 'binary_sensor.plug': { state: 'on', attributes: {} } })), 'connected');
@@ -7411,6 +7474,11 @@ for (const id of ['sensor.charger_status_connector', 'sensor.charger_connector_2
   'sensor.laadpaal_status', 'sensor.colonnina_stato', 'sensor.laddbox_status', 'sensor.ladeboks_status', 'sensor.stacja_ladowania_stan',
   'sensor.nabijeci_stanice_stav', 'sensor.blue_current_activity', 'sensor.lektrico_state', 'sensor.chargepoint_home_status'])
   check(`detection borne : ${id}`, isEv(id), true);
+for (const id of ['sensor.wattpilot_car_state', 'sensor.zappi_plug_status', 'sensor.hypervolt_charging_readiness', 'sensor.nexblue_charging_state',
+  'sensor.technove_status', 'sensor.pod_point_status', 'sensor.charge_amps_status'])
+  check(`detection borne : ${id}`, isEv(id), true);
+check('detection borne : Shelly EVE01 par ses etats', isEv('sensor.garage_state', { options: ['charger_free', 'charger_insert', 'charging', 'charger_end'] }), true);
+check('detection borne : Victron par ses etats, mise en forme', isEv('sensor.garage_state', { options: ['disconnected', 'connected', 'Charging', 'Waiting-For-RFID', 'Station Locked'] }), true);
 check('detection borne : l icone d une borne', isEv('sensor.x', { icon: 'mdi:ev-station' }), true);
 check('detection borne : l icone d une prise de voiture', isEv('sensor.x', {}, { icon: 'mdi:ev-plug-type2' }), true);
 check('detection borne : Lektrico par ses etats', isEv('sensor.1p7k_500006_state', { options: ['available', 'charging', 'connected', 'error', 'locked',

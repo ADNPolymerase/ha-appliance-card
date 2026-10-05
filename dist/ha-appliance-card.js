@@ -2680,14 +2680,67 @@ const EV_STATES = {
   need_auth: "awaiting_auth", paused_by_scheduler: "scheduled",
   // Blue Current, whose charge point can be offline in its cloud.
   offline: "offline",
+  // The words of the other chargers, read in their source code: no car at
+  // the box. Idle and disconnected say no car on every charger that uses
+  // them (Greencell, Nexblue, Pod Point, Wattpilot, go-e; Tessie, Victron,
+  // Easee, Zaptec); on a Wallbox, disconnected may be the box off its cloud,
+  // which state_map sets right.
+  idle: "no_vehicle", disconnected: "no_vehicle", charger_free: "no_vehicle", plug_not_connected: "no_vehicle",
+  ev_disconnected: "no_vehicle", no_car: "no_vehicle", charger_ready_no_vehicle: "no_vehicle",
+  // A cable in an Alfen's socket with no car on it is no car either.
+  cable_connected: "no_vehicle",
+  // A car at the box, nothing asked of it yet.
+  charger_insert: "connected", plugged_waiting: "connected", ready_to_charge: "connected", ev_connected: "connected",
+  preparing_charging: "connected", waiting_for_vehicle: "connected", wait_for_car: "connected", wait_car: "connected",
+  connected_requesting: "connected", awaiting_start: "connected", waiting_for_start: "connected", sleep_mode: "connected",
+  // Waiting for a tag, a card, a button or an app.
+  awaiting_authorization: "awaiting_auth", authenticating: "awaiting_auth", authorizing: "awaiting_auth",
+  waiting_for_rfid: "awaiting_auth", waiting_for_swipe: "awaiting_auth", waiting_for_button: "awaiting_auth",
+  station_locked: "awaiting_auth", locked_car_connected: "awaiting_auth", ev_connected_press_start: "awaiting_auth",
+  // Charging, in all its flavours.
+  active_mode: "charging", charger_charging: "charging", plugged_charging: "charging", connected_charging: "charging",
+  start_charging: "charging", boosting: "charging", charging_normal: "charging", charging_simplified: "charging",
+  solar_charging: "charging", partial_solar_charging: "charging", switching_to_1_phase: "charging",
+  switching_to_3_phase: "charging",
+  // J1772's state D, a car charging that asks for ventilation: not a fault.
+  ventilation_required: "charging",
+  // Held back, by the box or by the car.
+  charger_pause: "paused", charger_wait: "paused", ev_waiting: "paused", waiting_for_car: "paused",
+  waiting_for_ev: "paused", waiting_for_car_demand: "paused", wait_vehicle_charging: "paused", lb_waiting: "paused",
+  awaiting_load_balancing: "paused", paused_due_to_equalizer: "paused", waiting_in_queue_by_power_sharing: "paused",
+  waiting_in_queue_by_power_boost: "paused", waiting_in_queue_by_eco_smart: "paused", not_ready_force_stopped: "paused",
+  ev_ready_to_charge: "paused", waiting_for_power: "paused", solar_charging_wait: "paused", low_soc: "paused",
+  suspended_over_current: "paused", suspended_hf_switching: "paused", load_balancing_forced_off: "paused",
+  // Waiting for its hour, a cheaper tariff or the sun.
+  scheduled: "scheduled",
+  awaiting_scheduled_start: "scheduled", awaiting_smart_start: "scheduled", delay_waiting: "scheduled",
+  charging_reservation: "scheduled", connected_waiting_for_schedule: "scheduled", high_tariff_period: "scheduled",
+  out_of_activation_period: "scheduled", waiting_for_sun: "scheduled",
+  // Done, the car still at the box.
+  completed: "done", complete: "done", completed_full_charge: "done", charged: "done", charger_end: "done",
+  connected_finished: "done", charging_completed: "done", finish_wait_vehicle: "done", finish_wait_disconnect: "done",
+  charging_finished_vehicle_still_connected: "done",
+  // Faults.
+  station_fault: "error", out_of_service: "error", charger_fault: "error", charger_free_fault: "error",
+  pilot_fault: "error", evse_fault: "error", ground_fault: "error", error_car: "error", error_evse: "error",
+  erratic_ev: "error", error_temperature_too_high: "error", error_dead_powerboard: "error",
+  error_overcurrent: "error", error_pen_fault: "error", charging_fault_1: "error", charging_fault_2: "error",
+  see_error_state: "error", waiting_mid_failed: "error", waiting_mid_safety_margin_exceeded: "error",
 };
+// Chargers write the same word in many ways: Waiting for car demand,
+// suspended-ev, charging normal. Folded to one spelling, lower case with
+// underscores, they meet the table above.
+function evKey(raw) {
+  return String(raw).trim().toLowerCase().replace(/[\s,\-]+/g, "_").replace(/^_+|_+$/g, "");
+}
 // The pause that may be the end. SuspendedEV is a car that stopped taking the
 // energy the box offers; with energy already in the session and no power
 // flowing, it has its charge. SuspendedEVSE is the box holding back (a
 // schedule, the solar surplus, load balancing) and resumes on its own, and a
 // bare "suspended" does not say which: both stay a pause whatever the
 // session holds.
-const EV_SUSPENDED_BY_CAR = ["suspendedev", "suspended_ev", "waiting_car"];
+const EV_SUSPENDED_BY_CAR = ["suspendedev", "suspended_ev", "waiting_car", "waiting_for_car_demand", "ev_waiting",
+  "charger_wait", "waiting_for_car", "waiting_for_ev", "wait_vehicle_charging"];
 // The states with a car at the plug.
 const EV_CAR_STATES = ["connected", "awaiting_auth", "charging", "paused", "scheduled", "done"];
 // How each state runs the rest of the card.
@@ -2715,7 +2768,7 @@ function evModeOf(raw, stateMap) {
   const s = String(raw).trim();
   if (HA_OFFLINE_STATES.includes(s)) return "offline";
   if (stateMap && Object.prototype.hasOwnProperty.call(stateMap, s)) return EV_MODES.includes(stateMap[s]) ? stateMap[s] : "";
-  const k = s.toLowerCase();
+  const k = evKey(s);
   if (Object.prototype.hasOwnProperty.call(EV_STATES, k)) return EV_STATES[k];
   if (stateMap && Object.prototype.hasOwnProperty.call(stateMap, "*")) return EV_MODES.includes(stateMap["*"]) ? stateMap["*"] : "";
   return "";
@@ -2725,9 +2778,9 @@ function evModeOf(raw, stateMap) {
 // entity cannot say, which leaves the status alone. IEC 61851's letters are
 // not read here either.
 const EV_PLUGGED = ["on", "true", "yes", "plugged", "plugged_in", "connected", "vehicle_connected", "vehicle_locked",
-  "vehicle_detected", "ev_connected", "car_connected"];
+  "vehicle_detected", "ev_connected", "car_connected", "connected_locked", "connected_unlocked"];
 const EV_UNPLUGGED = ["off", "false", "no", "unplugged", "not_plugged", "disconnected", "not_connected", "cable_only",
-  "no_vehicle", "no_ev_connected", "no_car"];
+  "no_vehicle", "no_ev_connected", "no_car", "ev_disconnected"];
 function evPluggedOf(st) {
   if (!st) return null;
   const k = String(st.state).trim().toLowerCase().replace(/[\s-]+/g, "_");
@@ -2765,15 +2818,16 @@ const EV_POWER_THRESHOLD = 100;
 // entity. Lektrico names its device after its model and its serial, Blue
 // Current after the charge point.
 const EV_OPTION_WORDS = ["available", "no_ev_connected", "unplugged", "not_connected", "plugged_in", "pending_approval",
-  "need_auth", "paused_by_scheduler", "waiting_car", "charging_finished", "suspended_ev", "suspended_evse", "vent_required", "wakeup"];
+  "need_auth", "paused_by_scheduler", "waiting_car", "charging_finished", "suspended_ev", "suspended_evse", "vent_required", "wakeup",
+  "charger_free", "charger_insert", "plugged_waiting", "waiting_for_car", "ev_waiting", "lb_waiting", "station_locked", "awaiting_authorization"];
 function evOptionsSayCharger(st) {
-  const options = st && st.attributes && Array.isArray(st.attributes.options) ? st.attributes.options.map((o) => String(o).toLowerCase()) : [];
+  const options = st && st.attributes && Array.isArray(st.attributes.options) ? st.attributes.options.map(evKey) : [];
   return options.includes("charging") && options.some((o) => EV_OPTION_WORDS.includes(o));
 }
 // The names a charger goes by: what it is, in the languages of the card, its
 // makers and the integrations that read it, and the icons Home Assistant
 // draws charging stations with.
-const EV_NAME_RE = /wall.?box|ev.?charg|car.?charg|evse|charge.?point|charging.?station|wall.?connector|ocpp|status.?connector|peblar|nrgkick|openevse|lektrico|blue.?current|webasto|easee|zaptec|go.?e.?charger|(^|[^a-z])(ohme|keba|alfen)([^a-z]|$)|ladestation|lades(a|ae|\u00e4)ule|ladepunkt|borne.?(de.?)?recharge|laadpaal|laadpunt|laadstation|punto.?de.?recarga|estacion.?de.?carga|cargador.?(de.?)?(ve|coche|vehiculo)|colonnina|stazione.?di.?ricarica|posto.?de.?carregamento|carregador.?(de.?)?(ve|carro)|laddbox|laddstolpe|ladeboks|ladestasjon|stacja.?ladowania|nab(i|\u00ed)jec(i|\u00ed).?stanic|\u0437\u0430\u0440\u044f\u0434\u043d\u0430\u044f.?\u0441\u0442\u0430\u043d\u0446|\u5145\u7535\u6869|ev-station|ev-plug/;
+const EV_NAME_RE = /wall.?box|ev.?charg|car.?charg|evse|charge.?point|charging.?station|wall.?connector|ocpp|status.?connector|peblar|nrgkick|openevse|lektrico|blue.?current|webasto|easee|zaptec|go.?e.?charger|wattpilot|zappi|hypervolt|nexblue|technove|pod.?point|charge.?amps|(^|[^a-z])(ohme|keba|alfen)([^a-z]|$)|ladestation|lades(a|ae|\u00e4)ule|ladepunkt|borne.?(de.?)?recharge|laadpaal|laadpunt|laadstation|punto.?de.?recarga|estacion.?de.?carga|cargador.?(de.?)?(ve|coche|vehiculo)|colonnina|stazione.?di.?ricarica|posto.?de.?carregamento|carregador.?(de.?)?(ve|carro)|laddbox|laddstolpe|ladeboks|ladestasjon|stacja.?ladowania|nab(i|\u00ed)jec(i|\u00ed).?stanic|\u0437\u0430\u0440\u044f\u0434\u043d\u0430\u044f.?\u0441\u0442\u0430\u043d\u0446|\u5145\u7535\u6869|ev-station|ev-plug/;
 
 // What a heat pump's valve says. HeishaMon reads its 2-way valve Heating or
 // Cooling and its 3-way valve Room or Tank: a position, which names the mode
@@ -9591,7 +9645,7 @@ class ApplianceCard extends HTMLElement {
         // state_map says what the state is, and is not second-guessed.
         const key = String(rawState).trim();
         const mapped = !!cfg.state_map && Object.prototype.hasOwnProperty.call(cfg.state_map, key);
-        if (mode === "paused" && !mapped && EV_SUSPENDED_BY_CAR.includes(key.toLowerCase())) {
+        if (mode === "paused" && !mapped && EV_SUSPENDED_BY_CAR.includes(evKey(key))) {
           const energy = cfg.session_energy_entity ? numericState(hass, cfg.session_energy_entity) : null;
           if (energy !== null && energy > 0 && flowing === false) mode = "done";
         }
