@@ -8095,6 +8095,25 @@ check('borne : ni un statut reconnu', evMode(evR('SuspendedEVSE', { power_entity
   const lvl = ft({ water_level_entity: 'sensor.fountain_water' }, { 'sensor.fountain_water': { state: '70', attributes: { unit_of_measurement: '%' } } });
   check('fontaine : le niveau remplit le reservoir', /--ft-fill: 70%/.test(lvl), true);
   check('fontaine : et a sa ligne', infoLine(lvl, 'Water').replace(/\s/g, ' '), '70 %');
+  // The jet only runs on a pump that has water to lift. Off or dry, nothing
+  // stands over the dish, and a dry tank leaves the dish low.
+  const cls = h => machineCls(h).split(' ');
+  const lowPct = ft({ water_level_entity: 'sensor.fountain_water' }, { 'sensor.fountain_water': { state: '5', attributes: { unit_of_measurement: '%' } } });
+  check('fontaine : peu d\'eau, le jet s\'arrete', cls(low).includes('flowing'), false);
+  check('fontaine : en pourcent aussi', cls(lowPct).includes('flowing'), false);
+  check('fontaine : peu d\'eau, la vasque baisse', cls(low).includes('ft-dry'), true);
+  check('fontaine : en pourcent aussi, la vasque baisse', cls(lowPct).includes('ft-dry'), true);
+  check('fontaine : assez d\'eau, la vasque reste pleine', cls(lvl).includes('ft-dry'), false);
+  check('fontaine : eteinte avec de l\'eau, la vasque reste pleine', cls(off).includes('ft-dry'), false);
+  check('fontaine : eteinte et a sec, ni jet ni vasque pleine',
+    cls(ft({ water_level_entity: 'binary_sensor.fountain_low' }, { 'switch.fountain_power': { state: 'off', attributes: {} }, 'binary_sensor.fountain_low': { state: 'on', attributes: {} } })).filter(c => c === 'flowing' || c === 'ft-dry').join(' '), 'ft-dry');
+  {
+    const FT_CSS = SRC.slice(SRC.indexOf('pet_fountain: () => `'), SRC.indexOf('dehumidifier: () => `'));
+    check('fontaine : les gouttes ne s\'animent qu\'avec le jet', /\.ft-jet i \{[^}]*opacity: 0;/.test(FT_CSS) && !/\.machine:not\(\.flowing\)[^{]*\.ft-jet/.test(FT_CSS), true);
+    check('fontaine : a l\'arret, le bec ne fait plus de goutte sur la vasque', /\.machine:not\(\.flowing\) \.ft-spout \{[^}]*top: 32px; height: 3px;/.test(FT_CSS), true);
+    check('fontaine : a sec, la vasque est plus basse et plus petite',
+      /\.machine\.ft-dry \.ft-pool \{[^}]*left: 24px; right: 24px; top: 31px; height: 7px;/.test(FT_CSS), true);
+  }
   check('fontaine : dix pourcent, peu d\'eau', stateLine(ft({ water_level_entity: 'sensor.fountain_water' },
     { 'sensor.fountain_water': { state: '10', attributes: { unit_of_measurement: '%' } } })), 'Low water');
   check('fontaine : en allemand', stateLine(ft({ language: 'de' })), 'Fließt');

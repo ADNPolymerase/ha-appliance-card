@@ -95,7 +95,7 @@ Per type:
 | `filter_life_entity` / `filter_reset_entity` | hood | Filter wear as a bar, and a reset button. |
 | `filter_life_entity` / `filter_reset_entity` / `filter_due_below` | pet fountain | The filter's days or percent left, on a line, and a reset button. At or below `filter_due_below` (3 for days, 10 for percent by default) the state reads *Filter due* and the light turns orange. |
 | `pump_clean_entity` / `pump_reset_entity` | pet fountain | The same for the pump: days or percent until it wants cleaning, against the same threshold, and a reset button. The state reads *Clean the pump*. |
-| `water_level_entity` / `level_empty_below` | pet fountain | The water left, a percentage that fills the tank on the drawing, or a contact on when it runs low. At or below `level_empty_below` (10 by default) the state reads *Low water*, in red, ahead of everything else: a dry pump burns out. |
+| `water_level_entity` / `level_empty_below` | pet fountain | The water left, a percentage that fills the tank on the drawing, or a contact on when it runs low. At or below `level_empty_below` (10 by default) the state reads *Low water*, in red, ahead of everything else: a dry pump burns out. The jet then stops, as it does with the pump off, and the dish drops with the tank. |
 | `zones` / `zones_layout` / `zones_count` | cooktop | Up to 6 zones `{ level_entity, residual_heat_entity?, name? }`, level as a number or a word (`boost`), `H` for residual heat. Layout `2x1` \| `2x2` \| `3x2`, and how many zones to draw without entities (default 4). |
 | `child_lock_entity` | cooktop | Padlock on the illustration. |
 | `fridge_layout` | fridge | `freezer_bottom` (default) \| `freezer_top` \| `side_by_side` \| `single` \| `wine` (glass door and bottles, for a wine cooler). |

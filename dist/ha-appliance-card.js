@@ -5686,6 +5686,11 @@ const ILLUSTRATION_CSS = {
         }
         .machine.flowing .ft-pool::after { animation: ft-ripple 1.6s ease-out infinite; animation-delay: var(--anim-offset, 0s); }
         .ft-spout { position: absolute; left: 43px; width: 10px; top: 30px; height: 5px; border-radius: 50%; background: radial-gradient(ellipse at 50% 35%, #ffffff, #c4ccd2); box-shadow: inset 0 0 0 0.6px rgba(0, 0, 0, 0.2); }
+        /* Still, the spout is a flat outlet under the surface rather than a
+           bubble standing over the dish: only running water lifts it. */
+        .machine:not(.flowing) .ft-spout { top: 32px; height: 3px; background: radial-gradient(ellipse at 50% 50%, #7fa9c4, #5e8eaf); box-shadow: none; }
+        .machine.ft-dry .ft-pool { left: 24px; right: 24px; top: 31px; height: 7px; background: radial-gradient(ellipse at 50% 40%, #c3e6f8, #8cc6ea 70%, #6eb0dc); }
+        .machine.ft-dry .ft-spout { top: 31px; background: radial-gradient(ellipse at 50% 35%, #e2e6ea, #b5bec5); }
         .ft-jet i { position: absolute; left: 46.5px; top: 28px; width: 3px; height: 3px; border-radius: 50%; background: #8fd0f5; opacity: 0; }
         .machine.flowing .ft-jet i { animation: ft-jet 1s ease-in-out infinite; animation-delay: var(--anim-offset, 0s); }
         .machine.flowing .ft-jet i:nth-child(2) { --ft-dx: -5px; animation-delay: calc(-0.33s + var(--anim-offset, 0s)); }
@@ -7459,8 +7464,11 @@ function illustrationHtml(type, ctx) {
     const f = ctx.fountain || {};
     const fill = f.low ? 8 : f.fill === null || f.fill === undefined ? 55 : Math.round(f.fill);
     const led = f.low ? "led-low" : f.due ? "led-due" : f.flowing ? "led-on" : "";
+    // No water comes up a pump that is off or that has run dry: the jet stops,
+    // and with the tank low the dish goes low with it.
+    const running = f.flowing && !f.low;
     return `
-        <div class="machine ${cls} ${f.flowing ? "flowing" : ""} ${led}" style="--ft-fill: ${fill}%">
+        <div class="machine ${cls} ${running ? "flowing" : ""} ${f.low ? "ft-dry" : ""} ${led}" style="--ft-fill: ${fill}%">
           <div class="ft-floor"></div>
           <div class="ft-body"></div>
           <div class="ft-win"><div class="ft-water"></div></div>
