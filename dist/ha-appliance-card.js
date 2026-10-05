@@ -7867,11 +7867,20 @@ class ApplianceCard extends HTMLElement {
     }
   }
 
+  // Back on the page with a shot still remembered, the card draws again: the
+  // shot picks up where it was, or gives way to the state if it is over,
+  // rather than the browser playing it again from the start.
+  connectedCallback() {
+    if (this._evShot && this._hass) this._render();
+  }
+
   disconnectedCallback() {
     this._clearClockTimer();
     this._clearCountdownTimer();
     if (this._offDelayTimer) clearTimeout(this._offDelayTimer);
     this._offDelayTimer = null;
+    if (this._evShotTimer) clearTimeout(this._evShotTimer);
+    this._evShotTimer = null;
     if (this._lcRetryTimer) clearTimeout(this._lcRetryTimer);
     this._lcRetryTimer = null;
     if (this._lcCloseTimer) clearTimeout(this._lcCloseTimer);
@@ -7888,6 +7897,19 @@ class ApplianceCard extends HTMLElement {
       this._offDelayTimer = null;
       this._render();
     }, ms + 500);
+  }
+
+  // Nothing need change on a charger once a plug has gone in or out, so
+  // nothing would tell the card that the shot is over: it wakes itself up to
+  // draw the state as it is. Left drawn, the shot would play again whenever
+  // the browser shows the card anew, back from another view.
+  _armEvShotEnd(ms) {
+    if (this._inert) return;
+    if (this._evShotTimer) clearTimeout(this._evShotTimer);
+    this._evShotTimer = setTimeout(() => {
+      this._evShotTimer = null;
+      this._render();
+    }, ms + 50);
   }
 
   // Reads the history for the last cycle that ran to its end: once, again
@@ -9829,7 +9851,7 @@ class ApplianceCard extends HTMLElement {
       // so: a card that opens, or a charger coming back online, shows the
       // state as it is, not a change nobody saw happen. The shot lasts while
       // what it shows holds, so a charge starting right after the plug went
-      // in does not cut it short.
+      // in does not cut it short, and the card redraws itself once it is over.
       const prev = this._evPrev;
       const now = Date.now();
       if (prev) {
@@ -9843,9 +9865,10 @@ class ApplianceCard extends HTMLElement {
       const shot = this._evShot;
       const holds = shot && (shot.name === "plug-in" ? ev.plugged
         : shot.name === "plug-out" ? ev.mode === "no_vehicle" : ev.mode === "done");
-      if (holds && now - shot.at < EV_ONE_SHOT_MS) {
+      if (holds && now >= shot.at && now - shot.at < EV_ONE_SHOT_MS) {
         ev.shot = shot.name;
         ev.since = (shot.at - now) / 1000;
+        this._armEvShotEnd(EV_ONE_SHOT_MS - (now - shot.at));
       } else {
         this._evShot = null;
       }
