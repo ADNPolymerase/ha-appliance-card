@@ -7036,11 +7036,11 @@ const evKnown = h => (EV_STATE_NAMES.includes(evMode(h)) ? evMode(h) : 'unknown'
 const kW = v => ({ state: String(v), attributes: { unit_of_measurement: 'kW' } });
 const kWh = v => ({ state: String(v), attributes: { unit_of_measurement: 'kWh' } });
 const W = v => ({ state: String(v), attributes: { unit_of_measurement: 'W' } });
-const EV_LABEL = { no_vehicle: 'No vehicle', connected: 'Plugged in', awaiting_auth: 'Awaiting authorisation', charging: 'Charging',
+const EV_LABEL = { no_vehicle: 'No vehicle', connected: 'Plugged in', awaiting_auth: 'Awaiting authorisation', charging: 'Charging', discharging: 'Discharging',
   paused: 'Charging paused', scheduled: 'Scheduled', done: 'Charging complete', error: 'Error', offline: 'Offline' };
-const EV_STATE_NAMES = ['no_vehicle', 'connected', 'awaiting_auth', 'charging', 'paused', 'scheduled', 'done', 'error', 'offline'];
+const EV_STATE_NAMES = ['no_vehicle', 'connected', 'awaiting_auth', 'charging', 'discharging', 'paused', 'scheduled', 'done', 'error', 'offline'];
 const EV_COLOR = { no_vehicle: 'var(--disabled-text-color, #9e9e9e)', connected: '#26a69a', awaiting_auth: '#ffb300',
-  charging: 'var(--info-color, #2196f3)', paused: 'var(--warning-color, #ff9800)', scheduled: '#9c27b0',
+  charging: 'var(--info-color, #2196f3)', discharging: 'var(--energy-grid-return-color, #8353d1)', paused: 'var(--warning-color, #ff9800)', scheduled: '#9c27b0',
   done: 'var(--success-color, #4caf50)', error: 'var(--error-color, #f44336)', offline: 'var(--disabled-text-color, #9e9e9e)' };
 
 // Every word each source reports, read in its code, and what the card makes
@@ -7108,7 +7108,7 @@ contains('borne : et la prise, une CCS', evR('Charging'), '<div class="ev-plug">
   + '<i class="pl-collar"></i><i class="pl-head"></i><i class="pl-ac"></i><i class="pl-dc"></i><i class="pl-latch"></i></div>');
 // The box's animations, and no other.
 check('borne : ses animations, et aucune autre', (evR('Charging').match(/@keyframes ev-[\w-]+/g) || []).map(k => k.slice(11)).sort().join(),
-  'ev-blink,ev-breathe,ev-coil,ev-done,ev-drain,ev-fade,ev-flow,ev-pull,ev-reach,ev-ride-back,ev-ride-in,ev-run-out,ev-stow,ev-wind-in');
+  'ev-blink,ev-breathe,ev-coil,ev-done,ev-drain,ev-fade,ev-flow,ev-pull,ev-reach,ev-ride-back,ev-ride-in,ev-run-out,ev-shimmer,ev-stow,ev-wind-in');
 check('borne : la charge compte comme en marche', hasCls(evR('Charging'), 'spinning'), true);
 check('borne : en pause, rien ne tourne', hasCls(evR('SuspendedEVSE'), 'spinning'), false);
 check('borne : terminee, la machine le dit', hasCls(evR('Finishing'), 'done'), true);
@@ -7673,7 +7673,7 @@ check('borne : ni un statut reconnu', evMode(evR('SuspendedEVSE', { power_entity
     ['error', 'ev-blink 0.8s']])
     contains(`borne anime : la diode ${mode}`, css, `.machine.mode-${mode} .ev-led { animation: ${rule} `);
   check('borne anime : ailleurs, la diode reste fixe',
-    (styleOf(css).match(/\.machine\.mode-\w+ \.ev-led \{ animation:/g) || []).length, 4);
+    (styleOf(css).match(/\.machine\.mode-\w+ \.ev-led \{ animation:/g) || []).length, 5);
   contains('borne anime : la diode respire', css, '@keyframes ev-breathe { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }');
   {
     const stE = styleOf(css);
@@ -7685,7 +7685,7 @@ check('borne : ni un statut reconnu', evMode(evR('SuspendedEVSE', { power_entity
   check('borne anime : le flash de fin prend la couleur de l etat',
     /@keyframes ev-done \{[^@]*0 0 20px var\(--success-color, #4caf50\)/.test(styleOf(evR('Finishing'))), true);
   check('borne anime : rien ne bouge pour qui le demande',
-    /@media \(prefers-reduced-motion: reduce\) \{\s*\.machine\.plugged\.mode-charging \.ev-cable \.ev-flow \{ animation-play-state: paused; \}\s*\.ev-led, \.ev-cable path, \.ev-energy, \.ev-halo, \.ev-plug, \.ev-ghost \{\s*animation-duration: 0\.001ms !important; animation-iteration-count: 1 !important;/
+    /@media \(prefers-reduced-motion: reduce\) \{\s*\.machine\.plugged\.mode-charging \.ev-cable \.ev-flow \{ animation-play-state: paused; \}\s*\.ev-led, \.ev-cable path, \.ev-energy, \.ev-halo, \.ev-halo path, \.ev-plug, \.ev-ghost \{\s*animation-duration: 0\.001ms !important; animation-iteration-count: 1 !important;/
       .test(styleOf(css)), true);
 
   // A new pace starts the cable's lap over, the same pace does not, and the
@@ -7847,6 +7847,171 @@ check('borne : ni un statut reconnu', evMode(evR('SuspendedEVSE', { power_entity
   check('borne anime : et en sort par en dessous', /@keyframes ev-pull \{[^@]*12%, 100% \{ opacity: 0; transform: translateY\(\d+px\) rotate\(-90deg\); \}/.test(st), true);
   check('borne anime : le fantome est la meme prise', /\.ev-ghost \{[^}]*left: 69px; top: 51px; width: 26px; height: 12px;\s*transform-origin: 0 6px; transform: rotate\(-90deg\);/.test(st), true);
   freezeClock(new Date(T0).toISOString());
+}
+
+// =============================================================================
+// EV charger: the car giving energy back (V2H, V2G)
+// =============================================================================
+// No standard has a status for it: OCPP up to 2.1 reports a charge, ISO
+// 15118-20 has no such EVSE state, IEC 61851's pilot has no direction. So
+// the card reads it where it is said: in a word (the Wallbox Quasar,
+// Sigenergy, Volvo, Volkswagen; Renault's grid word), on a meter of its own
+// (OCPP's Power.Active.Export), or below zero on a signed meter.
+{
+  for (const raw of ['Discharging', 'discharging', 'DISCHARGING', ' Discharging ', 'v2g_discharging'])
+    check(`borne bidirectionnelle : « ${raw} » -> discharging`, evMode(evR(raw)), 'discharging');
+  check('borne bidirectionnelle : se lit Discharging', stateLine(evR('Discharging')), 'Discharging');
+  check('borne bidirectionnelle : en violet', stateColor(evR('Discharging')), 'var(--energy-grid-return-color, #8353d1)');
+  check('borne bidirectionnelle : la diode aussi', evLed(evR('Discharging')), 'var(--energy-grid-return-color, #8353d1)');
+  check('borne bidirectionnelle : la voiture est la', hasCls(evR('Discharging'), 'plugged'), true);
+  check('borne bidirectionnelle : en marche', hasCls(evR('Discharging'), 'spinning'), true);
+  check('borne bidirectionnelle : state_map peut la nommer', evMode(evR('V2H', { state_map: { V2H: 'discharging' } })), 'discharging');
+  // A word that only holds it is something else: the home battery feeding the
+  // box, a mode to choose, a battery that is empty.
+  for (const raw of ['ChargingBecauseDischargingPvBattery', 'immediateDischarging', 'homeStorageCharging', 'discharge', 'Discharged', 'v2l_connected'])
+    check(`borne bidirectionnelle : ${raw} n est pas devine`, evMode(evR(raw)) === 'discharging', false);
+
+  // From the meters.
+  const bidi = (raw, w, back, cfg = {}, unit = 'kW') => evR(raw,
+    { power_entity: 'sensor.p', ...(back === undefined ? {} : { discharge_power_entity: 'sensor.out' }), ...cfg },
+    { 'sensor.p': { state: String(w), attributes: { unit_of_measurement: unit } },
+      ...(back === undefined ? {} : { 'sensor.out': { state: String(back), attributes: { unit_of_measurement: unit } } }) });
+  check('borne bidirectionnelle : OCPP dit Charging, l export dit le contraire', evMode(bidi('Charging', 0, 7.4)), 'discharging');
+  check('borne bidirectionnelle : et se lit ainsi', stateLine(bidi('Charging', 0, 7.4)), 'Discharging');
+  check('borne bidirectionnelle : sous le seuil, la charge reste', evMode(bidi('Charging', 7.4, 0.09)), 'charging');
+  check('borne bidirectionnelle : au seuil', evMode(bidi('Charging', 0, 0.1)), 'discharging');
+  check('borne bidirectionnelle : le seuil choisi', evMode(bidi('Charging', 0, 0.4, { power_on_threshold: 500 })), 'charging');
+  check('borne bidirectionnelle : au-dessus du seuil choisi', evMode(bidi('Charging', 0, 0.6, { power_on_threshold: 500 })), 'discharging');
+  check('borne bidirectionnelle : en W', evMode(bidi('Charging', 0, 7400, {}, 'W')), 'discharging');
+  check('borne bidirectionnelle : une puissance negative', evMode(bidi('Charging', -7.4)), 'discharging');
+  check('borne bidirectionnelle : un peu sous zero, rien', evMode(bidi('Charging', -0.05)), 'charging');
+  check('borne bidirectionnelle : juste au seuil sous zero', evMode(bidi('Charging', -0.1)), 'discharging');
+  check('borne bidirectionnelle : export illisible, rien', evMode(bidi('Charging', 7.4, 'unavailable')), 'charging');
+  for (const [raw, from] of [['SuspendedEVSE', 'en pause'], ['Finishing', 'terminee'], ['Preparing', 'branchee'],
+    ['paused_by_scheduler', 'programmee'], ['pending_approval', 'en attente']])
+    check(`borne bidirectionnelle : ${from}, mais l energie revient`, evMode(bidi(raw, 0, 3)), 'discharging');
+  check('borne bidirectionnelle : une lettre mappee aussi', evMode(bidi('C', 0, 3, { state_map: { C: 'charging' } })), 'discharging');
+  check('borne bidirectionnelle : pas sans voiture', evMode(bidi('Available', -3)), 'no_vehicle');
+  check('borne bidirectionnelle : pas sur un mot inconnu', evMode(bidi('Zzz', -3)) === 'discharging', false);
+  check('borne bidirectionnelle : l erreur l emporte', evMode(bidi('Faulted', -3)), 'error');
+  check('borne bidirectionnelle : hors ligne aussi', evMode(bidi('unavailable', -3)), 'offline');
+  check('borne bidirectionnelle : une erreur signalee aussi', evMode(evR('Discharging', { error_entity: 'sensor.err' }, { 'sensor.err': { state: 'GroundFailure', attributes: {} } })), 'error');
+  check('borne bidirectionnelle : la prise dit pas de voiture', evMode(evR('Discharging', { vehicle_entity: 'binary_sensor.cp_plug' },
+    { 'binary_sensor.cp_plug': { state: 'off', attributes: {} } })), 'no_vehicle');
+  // The power given back has its line, as Home Assistant prints it.
+  check('borne bidirectionnelle : la puissance rendue a sa ligne', evLine(bidi('Charging', 0, 7.4), 'Discharge'), '7.4 kW');
+  check('borne bidirectionnelle : avec son icone', /<ha-icon icon="mdi:battery-arrow-up-outline"><\/ha-icon><span class="label">Discharge<\/span>/.test(bidi('Charging', 0, 7.4)), true);
+  check('borne bidirectionnelle : sans option, pas de ligne', infoLine(evR('Charging'), 'Discharge'), null);
+  check('borne bidirectionnelle : illisible, pas de ligne', infoLine(bidi('Charging', 0, 'unavailable'), 'Discharge'), null);
+
+  // Without a status: the plug, the meter and the meter of what comes back.
+  const fbBidi = (plug, w, back) => render({ ...FB, discharge_power_entity: 'sensor.out' },
+    { 'binary_sensor.plug': { state: plug, attributes: { device_class: 'plug' } }, 'sensor.p': W(w), 'sensor.out': W(back) });
+  check('repli bidirectionnel : une voiture qui rend de l energie', evMode(fbBidi('on', 0, 3000)), 'discharging');
+  check('repli bidirectionnel : sans voiture, rien', evMode(fbBidi('off', 0, 3000)), 'no_vehicle');
+  check('repli bidirectionnel : la charge si rien ne revient', evMode(fbBidi('on', 3000, 0)), 'charging');
+  check('repli bidirectionnel : branchee si rien ne passe', evMode(fbBidi('on', 0, 0)), 'connected');
+  check('repli : une puissance negative', evMode(fbR('on', -3000)), 'discharging');
+  check('repli : la puissance rendue comme etat se lit aussi', evMode(render({ appliance_type: 'ev_charger', state_entity: 'sensor.out',
+    discharge_power_entity: 'sensor.out', vehicle_entity: 'binary_sensor.plug' },
+    { 'sensor.out': W(3000), 'binary_sensor.plug': { state: 'on', attributes: { device_class: 'plug' } } })), 'discharging');
+
+  // The drawing: the energy the other way along the cable, at the pace of
+  // what comes back, the halo turned into a wider, lighter glow along the
+  // whole cable that shimmers, and the light breathing as for a charge.
+  const css = bidi('Charging', 0, 7.4);
+  const flowOf = h => (/--ev-flow: ([\d.]+)s/.exec(h) || [, null])[1];
+  contains('borne bidirectionnelle : le cable porte l energie', css, '.machine.plugged.mode-discharging .ev-cable .ev-live { display: inline; }');
+  contains('borne bidirectionnelle : dans l autre sens', css, '.machine.plugged.mode-discharging .ev-cable .ev-flow {\n'
+    + '          display: inline; animation: ev-flow var(--ev-flow, 0.6s) linear infinite reverse; animation-delay: var(--anim-offset, 0s);');
+  {
+    const stB = styleOf(css);
+    const glow = (/\.machine\.plugged\.mode-discharging \.ev-halo \.eh-out \{([^}]*)\}/.exec(stB) || [, ''])[1];
+    const halo = (/\n\s*\.ev-halo path \{([^}]*)\}/.exec(stB) || [, ''])[1];
+    const widthOf = r => Number((/stroke-width: ([\d.]+);/.exec(r) || [, 0])[1]);
+    check('borne bidirectionnelle : une lueur le long du cable', /display: inline;/.test(glow), true);
+    check('borne bidirectionnelle : plus claire que l etat', glow.includes('stroke: #a886df; stroke: color-mix(in srgb, var(--energy-grid-return-color, #8353d1) 70%, #ffffff);'), true);
+    check('borne bidirectionnelle : plus large que le halo d une charge', widthOf(glow) > widthOf(halo) && widthOf(halo) > 0, true);
+    check('borne bidirectionnelle : qui scintille', /animation: ev-shimmer [^;]*infinite;/.test(glow), true);
+    // Blurred as the whole layer, which WebKit draws, never inside it.
+    check('borne bidirectionnelle : plus floue, comme couche', /\.machine\.plugged\.mode-discharging \.ev-halo \{ filter: blur\([\d.]+px\); \}/.test(stB), true);
+    check('borne bidirectionnelle : pas de filtre dans le SVG', /filter/.test(glow), false);
+    check('borne bidirectionnelle : le scintillement est declare', /@keyframes ev-shimmer \{/.test(stB), true);
+    const flicker = [...((/@keyframes ev-shimmer \{([^\n]*)\}/.exec(stB) || [, ''])[1]).matchAll(/opacity: ([\d.]+);/g)].map(m => Number(m[1]));
+    check('borne bidirectionnelle : et il vacille vraiment', flicker.length > 1 && Math.min(...flicker) < 1 && Math.max(...flicker) === 1, true);
+    check('borne bidirectionnelle : et s arrete pour qui le demande',
+      /@media \(prefers-reduced-motion: reduce\) \{[^@]*\.ev-halo path[^{]*\{\s*animation-duration: 0\.001ms !important;/.test(stB), true);
+    check('borne bidirectionnelle : le halo d une charge garde la couleur de l etat', halo.includes('stroke: var(--energy-grid-return-color, #8353d1);'), true);
+  }
+  contains('borne bidirectionnelle : la diode respire', css, '.machine.mode-discharging .ev-led { animation: ev-breathe 2.6s ');
+  check('borne bidirectionnelle : a l allure de ce qui revient', flowOf(bidi('Charging', 0, 22)), '0.3');
+  check('borne bidirectionnelle : pas du compteur de charge', flowOf(bidi('Charging', 0.05, 1.4)), '1');
+  check('borne bidirectionnelle : ou de la puissance negative', flowOf(bidi('Charging', -7.4)), '0.4');
+  check('borne bidirectionnelle : le mot seul, au rythme du compteur', flowOf(bidi('Discharging', 11)), '0.4');
+  {
+    const at = (raw, back) => evSt(raw, { 'sensor.p': kW(0), 'sensor.out': kW(back) });
+    const { card } = build({ ...EVC, power_entity: 'sensor.p', discharge_power_entity: 'sensor.out' }, at('Charging', 7.4));
+    const k1 = card._animKey;
+    rerender(card, at('Charging', 11));
+    check('borne bidirectionnelle : meme allure, rien ne repart', card._animKey, k1);
+    rerender(card, at('Charging', 22));
+    check('borne bidirectionnelle : une autre allure repart', card._animKey !== k1, true);
+  }
+  {
+    const T = freezeClock('2026-09-03T08:00:00Z');
+    const plugSt = (on, back) => ({ 'binary_sensor.plug': { state: on, attributes: { device_class: 'plug' } }, 'sensor.p': W(0), 'sensor.out': W(back) });
+    const { card } = build({ ...FB, discharge_power_entity: 'sensor.out' }, plugSt('off', 0));
+    freezeClock(new Date(T + 100).toISOString());
+    check('repli bidirectionnel : branchee pour rendre, la prise sort', hasCls(rerender(card, plugSt('on', 3000)), 'plug-in'), true);
+    freezeClock(new Date(T0).toISOString());
+  }
+
+  // The editor: the field for a charger only, and the export meter found by
+  // its name.
+  const html = markup(newEditor({ state_entity: 'sensor.cp', appliance_type: 'ev_charger' }));
+  check('editeur borne : la puissance rendue', html.includes('data-toggle="discharge_power_entity"'), true);
+  check('editeur borne : son libelle', html.includes('Power the car gives back (to the home or the grid)'), true);
+  for (const type of ['washer', 'fridge', 'air_conditioner'])
+    check(`editeur ${type} : pas de puissance rendue`, markup(newEditor({ state_entity: 'sensor.x', appliance_type: type })).includes('data-toggle="discharge_power_entity"'), false);
+  check('detection borne : la puissance rendue la designe', isEv('sensor.x', {}, { discharge_power_entity: 'sensor.y' }), true);
+  const suggest = (state, ids) => {
+    const ed = new Editor();
+    ed.setConfig({ type: 'custom:ha-appliance-card', appliance_type: 'ev_charger', state_entity: state });
+    ed.hass = { ...HASS(Object.fromEntries(ids.concat(state).map(id => [id, { state: '1', attributes: {} }]))),
+      entities: Object.fromEntries(ids.concat(state).map(id => [id, { device_id: 'cp' }])) };
+    return ed.events.at(-1)?.detail?.config || {};
+  };
+  const ocpp = suggest('sensor.charger_status_connector', ['sensor.charger_power_active_import', 'sensor.charger_power_active_export',
+    'sensor.charger_power_export_offered', 'sensor.charger_power_export_minimum', 'sensor.charger_energy_active_export_register']);
+  check('suggestion borne OCPP : la puissance rendue', ocpp.discharge_power_entity, 'sensor.charger_power_active_export');
+  check('suggestion borne OCPP : la puissance tiree reste la puissance', ocpp.power_entity, 'sensor.charger_power_active_import');
+  check('suggestion borne : ni une offre ni un compteur comme puissance rendue', suggest('sensor.charger_status_connector',
+    ['sensor.charger_power_export_offered', 'sensor.charger_power_export_minimum', 'sensor.charger_energy_active_export_register']).discharge_power_entity, undefined);
+  // A V2X limit is not a flow: the most or the least the car may give back.
+  for (const id of ['sensor.charger_maximum_discharge_power', 'sensor.charger_max_discharge_power', 'sensor.charger_min_discharge_power',
+    'sensor.charger_minimum_discharge_power', 'sensor.charger_discharge_power_limit'])
+    check(`suggestion borne : pas une limite, ${id}`, suggest('sensor.charger_status_connector', [id]).discharge_power_entity, undefined);
+  check('suggestion borne : une puissance rendue nommee ainsi', suggest('sensor.terminal_status_connector', ['sensor.terminal_discharge_power'])
+    .discharge_power_entity, 'sensor.terminal_discharge_power');
+  check('suggestion borne : la puissance Powershare', suggest('sensor.cybertruck_charging', ['sensor.cybertruck_powershare_instantaneous_power'])
+    .discharge_power_entity, 'sensor.cybertruck_powershare_instantaneous_power');
+
+  // In the card's fourteen languages.
+  for (const code of Object.keys(TABLE)) {
+    check(`traductions bidirectionnel ${code} : les trois cles`, ['ev_discharging', 'section_discharge_power', 'ev_line_discharge']
+      .filter(k => typeof TABLE[code][k] !== 'string' || !TABLE[code][k].trim()).join(' ') || 'ok', 'ok');
+    if (code !== 'en') check(`traductions bidirectionnel ${code} : dans sa langue`, ['ev_discharging', 'section_discharge_power', 'ev_line_discharge']
+      .filter(k => TABLE[code][k] === TABLE.en[k]).join(' ') || 'ok', 'ok');
+    check(`traductions bidirectionnel ${code} : la carte le dit`, stateLine(evR('Discharging', { language: code })), TABLE[code].ev_discharging);
+  }
+
+  // The README says it in both languages.
+  for (const file of ['README.md', 'README.fr.md']) {
+    const md = readFileSync(join(HERE, '..', file), 'utf8');
+    check(`${file} : l option discharge_power_entity`, md.includes('`discharge_power_entity`'), true);
+    check(`${file} : les mots qui disent la decharge`, md.includes('`Discharging`') && md.includes('`v2g_discharging`'), true);
+    check(`${file} : l exemple OCPP`, md.includes('discharge_power_entity: sensor.wallbox_power_active_export'), true);
+  }
 }
 
 report();
