@@ -7030,6 +7030,7 @@ const evLine = (h, label) => {
   return v === null ? null : v.replace(/ /g, ' ');
 };
 const evLed = h => (/\.ev-led \{[^}]*background: ([^;]+);/.exec(h) || [, null])[1];
+const evBolt = h => (/\.ev-bolt \{[^}]*fill: ([^;]+);/.exec(h) || [, null])[1];
 // One of the nine, or unknown for a word the card left as it came.
 const evKnown = h => (EV_STATE_NAMES.includes(evMode(h)) ? evMode(h) : 'unknown');
 const kW = v => ({ state: String(v), attributes: { unit_of_measurement: 'kW' } });
@@ -7095,7 +7096,10 @@ for (const [raw, mode] of [['Available', 'no_vehicle'], ['Preparing', 'connected
   const h = evR(raw, { state_map: { X: 'awaiting_auth', Y: 'scheduled' } });
   check(`borne : ${mode} a sa couleur`, stateColor(h), EV_COLOR[mode]);
   check(`borne : la diode en ${mode}`, evLed(h), EV_COLOR[mode]);
+  check(`borne : l eclair en ${mode}`, evBolt(h), EV_COLOR[mode]);
 }
+contains('borne : hors ligne, l eclair s eteint', evR('unavailable'), '.machine.mode-offline .ev-bolt, .machine.mode-unknown .ev-bolt { fill: #4a5057; filter: none; }');
+check('borne : l eclair est grand', /\.ev-bolt \{[^}]*width: 24px; height: 30px;/.test(evR('Charging')), true);
 contains('borne : hors ligne, la diode s eteint', evR('unavailable'), '.machine.mode-offline .ev-led, .machine.mode-unknown .ev-led { background: #4a5057; box-shadow: none; }');
 check('borne : hors ligne, la machine le dit', hasCls(evR('unavailable'), 'mode-offline'), true);
 contains('borne : la boite est dessinee', evR('Charging'), '<div class="ev-box"><div class="ev-face"><div class="ev-led"></div>');

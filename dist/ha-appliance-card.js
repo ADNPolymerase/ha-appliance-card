@@ -6667,7 +6667,13 @@ const ILLUSTRATION_CSS = {
           background: ${color}; box-shadow: 0 0 4px ${color}, 0 0 9px ${color};
         }
         .machine.mode-offline .ev-led, .machine.mode-unknown .ev-led { background: #4a5057; box-shadow: none; }
-        .ev-bolt { position: absolute; left: 50%; top: 19px; width: 14px; height: 18px; margin-left: -7px; fill: rgba(255, 255, 255, 0.5); }
+        /* The bolt is the box's sign: large on the face and in the state's
+           colour, like the light, so the state reads from across the room. */
+        .ev-bolt {
+          position: absolute; left: 50%; top: 15px; width: 24px; height: 30px; margin-left: -12px;
+          fill: ${color}; filter: drop-shadow(0 0 2px ${color}) drop-shadow(0 0 5px ${color});
+        }
+        .machine.mode-offline .ev-bolt, .machine.mode-unknown .ev-bolt { fill: #4a5057; filter: none; }
         .ev-holster {
           position: absolute; left: 61px; top: 27px; width: 16px; height: 16px; border-radius: 3px 6px 6px 3px;
           background: linear-gradient(160deg, var(--ac-body-hi, #ffffff), var(--ac-body, #eef0f1) 50%, var(--ac-body-lo, #c9ced2));
