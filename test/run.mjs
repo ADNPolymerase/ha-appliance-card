@@ -7773,6 +7773,38 @@ check('borne : ni un statut reconnu', evMode(evR('SuspendedEVSE', { power_entity
     card.setConfig({ type: 'custom:ha-appliance-card', ...EVC, name: 'Garage' });
     check('borne anime : une nouvelle configuration repart de rien', shotOf(rerender(card, evSt('Preparing'))), 'none');
   }
+  // Nothing need change once a shot is over: the card wakes itself up and
+  // draws the state as it is, or the browser would play the shot again when
+  // it shows the card anew. Back on the page, it draws again too.
+  {
+    at(0);
+    const { card } = build(EVC, evSt('Available'));
+    check('borne anime : sans geste, pas de reveil', card._evShotTimer ?? null, null);
+    rerender(card, evSt('Preparing'));
+    check('borne anime : un reveil pour la fin du geste', !!card._evShotTimer, true);
+    at(1700);
+    await new Promise(r => setTimeout(r, 1700));
+    check('borne anime : le geste fini, la borne se redessine seule', shotOf(markup(card)), 'none');
+    check('borne anime : et le reveil s eteint', card._evShotTimer, null);
+    at(2000);
+    rerender(card, evSt('Available'));
+    card.disconnectedCallback();
+    check('borne anime : le reveil est annule au retrait', card._evShotTimer, null);
+    at(3700);
+    card.connectedCallback();
+    check('borne anime : de retour apres le geste, l etat tel qu il est', shotOf(markup(card)), 'none');
+    at(3800);
+    rerender(card, evSt('Preparing'));
+    card.disconnectedCallback();
+    at(4300);
+    card.connectedCallback();
+    check('borne anime : de retour pendant le geste, il reprend', shotOf(markup(card)), 'plug-in');
+    check('borne anime : la ou il en etait', sinceOf(markup(card)), '-0.5');
+    // A clock put back makes no shot of the future: it is over.
+    at(3000);
+    check('borne anime : une horloge remise en arriere clot le geste', shotOf(rerender(card, evSt('Charging'))), 'none');
+    card.disconnectedCallback();
+  }
 
   const pathOf = cls => (new RegExp(`<path class="${cls}" d="M(\\S+) (\\S+) C(\\S+) (\\S+) (\\S+) (\\S+) (\\S+) (\\S+)"/>`).exec(css) || []).slice(1).map(Number);
   const bezLenOf = p => { let L = 0, x0 = p[0], y0 = p[1]; for (let i = 1; i <= 400; i++) { const t = i / 400, u = 1 - t;
