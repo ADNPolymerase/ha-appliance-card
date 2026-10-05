@@ -152,10 +152,11 @@ Per type:
 | `beans_entity` / `tray_entity` / `descaling_entity` | coffee | Beans empty, tray full, descaling due. |
 | `cups_entity` | coffee | Number of cups: a count, a boolean or a beverage name (*2 Espressi*). |
 | `strength_entity` | coffee | Coffee strength, as a number or a word. |
-| `state_entity` | EV charger | The charger's status: *No vehicle*, *Plugged in*, *Awaiting authorisation*, *Charging*, *Charging paused*, *Scheduled*, *Charging complete*, *Error* or *Offline*, read in the words of OCPP and of the integrations in Home Assistant (see *EV chargers*). `state_map` accepts the nine as `no_vehicle`, `connected`, `awaiting_auth`, `charging`, `paused`, `scheduled`, `done`, `error` and `offline`. Optional: without it the plug and the power meter say it. |
+| `state_entity` | EV charger | The charger's status: *No vehicle*, *Plugged in*, *Awaiting authorisation*, *Charging*, *Discharging*, *Charging paused*, *Scheduled*, *Charging complete*, *Error* or *Offline*, read in the words of OCPP and of the integrations in Home Assistant (see *EV chargers*). `state_map` accepts the ten as `no_vehicle`, `connected`, `awaiting_auth`, `charging`, `discharging`, `paused`, `scheduled`, `done`, `error` and `offline`. Optional: without it the plug and the power meter say it. |
 | `vehicle_entity` | EV charger | Whether a car is plugged in: a plug's contact, or a cable state in words (`disconnected`, `cable_only`, `vehicle_connected`, `vehicle_locked`). No car turns a recognised status into *No vehicle*, unless the status is an error. |
 | `power_entity` / `power_on_threshold` | EV charger | The power, in the meter's own unit and precision (*7.4 kW*). The threshold is in W whatever that unit, 100 W by default: power flows above it. It only stands in for a missing status, and tells a car that has its charge from one that paused. |
 | `session_energy_entity` | EV charger | The energy of the session, as *Charged 12.4 kWh*. |
+| `discharge_power_entity` | EV charger | The power the car gives back (V2H, V2G), such as OCPP's `Power.Active.Export`, as *Discharge 7.4 kW*. Above `power_on_threshold`, the car is *Discharging* (see *Bidirectional charging*). |
 | `current_limit_entity` | EV charger | The current limit, as *Current limit 16 A*. A tap opens the entity, which is where it is changed. |
 | `error_entity` | EV charger | A contact on, a code other than 0, or a word other than *no error* (OCPP's `NoError`, `ok`, `none`) turns the state into *Error*, with the charger's words on a line. |
 
@@ -413,7 +414,7 @@ power_on_threshold: 30
 
 ### EV chargers
 
-A wallbox on the wall, its light in the colour of what the charger is doing: *No vehicle*, *Plugged in* (a car waiting), *Awaiting authorisation* (a card or the app), *Charging*, *Charging paused* (by the box or by the car), *Scheduled*, *Charging complete* (the car still plugged in), *Error* or *Offline*. With a car plugged in, the plug leaves its holster and the cable runs off to the car; while it charges, the energy runs down the cable, glowing in the state's colour and faster the more power goes through (four paces, from a solar surplus to 22 kW), and stands still in a pause. The light breathes while charging and slowly while scheduled, and blinks for authorisation and, faster, on a fault. Seen live, a car being plugged in shows the plug riding the cable out to it, an unplugged one the cable winding back, and the end of a charge a flash of the light. With *reduce motion* set on the device, everything stays still. Any wallbox will do: the card reads the status in the words of OCPP and of the integrations in Home Assistant itself, `state_map` teaches it any other, and a box with no status at all is read from its plug and its power meter.
+A wallbox on the wall, its light in the colour of what the charger is doing: *No vehicle*, *Plugged in* (a car waiting), *Awaiting authorisation* (a card or the app), *Charging*, *Discharging* (the car giving energy back), *Charging paused* (by the box or by the car), *Scheduled*, *Charging complete* (the car still plugged in), *Error* or *Offline*. With a car plugged in, the plug leaves its holster and the cable runs off to the car; while it charges, the energy runs down the cable, glowing in the state's colour and faster the more power goes through (four paces, from a solar surplus to 22 kW), and stands still in a pause. The light breathes while charging and slowly while scheduled, and blinks for authorisation and, faster, on a fault. Seen live, a car being plugged in shows the plug riding the cable out to it, an unplugged one the cable winding back, and the end of a charge a flash of the light. With *reduce motion* set on the device, everything stays still. Any wallbox will do: the card reads the status in the words of OCPP and of the integrations in Home Assistant itself, `state_map` teaches it any other, and a box with no status at all is read from its plug and its power meter.
 
 | Integration | Status | Words read |
 |---|---|---|
@@ -426,7 +427,7 @@ A wallbox on the wall, its light in the colour of what the charger is doing: *No
 | Lektrico | State | `available` → no vehicle; `connected` → plugged in; `need_auth` → awaiting authorisation; `charging`; `paused`; `paused_by_scheduler` → scheduled; `error` |
 | Blue Current | Activity | `available` → no vehicle; `charging`; `error`; `offline` |
 | Webasto Next and Unite ([Modbus](https://github.com/tomwellnitz/Webasto-Next-Modbus)) | Charge Point State | `available`, `reserved` → no vehicle; `preparing` → plugged in; `charging`; `suspended`, `suspended_evse`, `suspended_ev` → paused; `finishing` → complete; `error`, `faulted` → error |
-| Wallbox | Status description | `Charging`; `Paused`, `Waiting for car demand`, `Waiting in queue by …` → paused; `Scheduled`; `Locked, car connected` → awaiting authorisation; `Error`, `Waiting MID failed` → error |
+| Wallbox | Status description | `Charging`; `Discharging`; `Paused`, `Waiting for car demand`, `Waiting in queue by …` → paused; `Scheduled`; `Locked, car connected` → awaiting authorisation; `Error`, `Waiting MID failed` → error |
 | Easee ([easee_hass](https://github.com/nordicopen/easee_hass)) | Status | `disconnected` → no vehicle; `awaiting_start` → plugged in; `awaiting_authorization` → awaiting authorisation; `charging`; `awaiting_load_balancing` → paused; `awaiting_scheduled_start`, `awaiting_smart_start` → scheduled; `completed` → complete; `error_*` → error |
 | Zaptec ([zaptec](https://github.com/custom-components/zaptec)) | Charger mode | `disconnected` → no vehicle; `connected_requesting` → plugged in; `connected_charging` → charging; `connected_finished` → complete |
 | go-e Charger | Car state | `Idle`, `Charger ready, no vehicle` → no vehicle; `Wait for car`, `Waiting for vehicle` → plugged in; `Charging`; `Complete` → complete; `Error` |
@@ -487,7 +488,35 @@ state_map:
   Unavailable: offline
 ```
 
-An entity named after a wallbox in the card's languages, after its maker or after OCPP is recognised on its own, as is an enum status that lists a charger's words. The editor fills the plug, the meter, the session, the current limit, the error and the start and stop buttons from the charger's own entities, never its restart or reset button.
+#### Bidirectional charging (V2H, V2G)
+
+A car that gives energy back, to the home or to the grid, reads *Discharging*, in the violet of energy returned in Home Assistant's energy dashboard, and the energy runs up the cable from the car into the box, in a glow along the whole cable that shimmers. No standard gives a charger a status for it: OCPP keeps reporting a charge up to 2.1, ISO 15118-20 has no such state, and IEC 61851's control pilot carries no direction. So the card reads it where it is said:
+
+- in a word, whole: `Discharging` (the Wallbox Quasar, Sigenergy's DC charger, the Volvo and Volkswagen integrations) and `v2g_discharging` (Renault);
+- on a meter of its own, `discharge_power_entity`, above `power_on_threshold`: OCPP's `Power.Active.Export`, Tesla's Powershare power;
+- below zero on `power_entity`, for a meter that counts the energy given back as negative (a Quasar over Modbus). A meter that counts both ways alike, such as the Wallbox cloud's, says nothing of the direction: the status does.
+
+A car giving energy back discharges whatever the status calls it, since OCPP reports a charge; an error, *Offline* and a plug with no car still come first. A word that only contains the word is something else: a mode to choose (`immediateDischarging`), the home battery feeding the box (`ChargingBecauseDischargingPvBattery`). Nor is V2L read: a car powering a device through its own socket has no wallbox in the way.
+
+An OCPP wallbox that can discharge, and a Wallbox Quasar:
+
+```yaml
+type: custom:ha-appliance-card
+appliance_type: ev_charger
+state_entity: sensor.wallbox_status_connector
+power_entity: sensor.wallbox_power_active_import
+discharge_power_entity: sensor.wallbox_power_active_export
+```
+
+```yaml
+type: custom:ha-appliance-card
+appliance_type: ev_charger
+state_entity: sensor.wallbox_quasar_status_description
+power_entity: sensor.wallbox_quasar_charging_power
+current_limit_entity: number.wallbox_quasar_maximum_charging_current
+```
+
+An entity named after a wallbox in the card's languages, after its maker or after OCPP is recognised on its own, as is an enum status that lists a charger's words. The editor fills the plug, the meter, the power given back, the session, the current limit, the error and the start and stop buttons from the charger's own entities, never its restart or reset button.
 
 ### Cycle steps
 

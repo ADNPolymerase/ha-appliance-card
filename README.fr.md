@@ -152,10 +152,11 @@ Par type :
 | `beans_entity` / `tray_entity` / `descaling_entity` | machine à café | Grains vides, bac plein, détartrage à faire. |
 | `cups_entity` | machine à café | Nombre de tasses : un compte, un booléen ou un nom de boisson (*2 Espressi*). |
 | `strength_entity` | machine à café | Force du café, en chiffre ou en mot. |
-| `state_entity` | borne de recharge | Le statut de la borne : *Aucun véhicule*, *Véhicule branché*, *En attente d'autorisation*, *En charge*, *Charge en pause*, *Charge programmée*, *Charge terminée*, *Erreur* ou *Hors ligne*, lu dans les mots d'OCPP et des intégrations de Home Assistant (voir *Bornes de recharge*). `state_map` accepte les neuf : `no_vehicle`, `connected`, `awaiting_auth`, `charging`, `paused`, `scheduled`, `done`, `error` et `offline`. Facultatif : sans lui, la prise et le compteur le disent. |
+| `state_entity` | borne de recharge | Le statut de la borne : *Aucun véhicule*, *Véhicule branché*, *En attente d'autorisation*, *En charge*, *En décharge*, *Charge en pause*, *Charge programmée*, *Charge terminée*, *Erreur* ou *Hors ligne*, lu dans les mots d'OCPP et des intégrations de Home Assistant (voir *Bornes de recharge*). `state_map` accepte les dix : `no_vehicle`, `connected`, `awaiting_auth`, `charging`, `discharging`, `paused`, `scheduled`, `done`, `error` et `offline`. Facultatif : sans lui, la prise et le compteur le disent. |
 | `vehicle_entity` | borne de recharge | Si une voiture est branchée : le contact d'une prise, ou l'état d'un câble en mots (`disconnected`, `cable_only`, `vehicle_connected`, `vehicle_locked`). Sans voiture, un statut reconnu devient *Aucun véhicule*, sauf une erreur. |
 | `power_entity` / `power_on_threshold` | borne de recharge | La puissance, dans l'unité et la précision du compteur (*7,4 kW*). Le seuil est en W quelle que soit cette unité, 100 W par défaut : au-dessus, la puissance passe. Il ne sert qu'à défaut de statut, et à distinguer une voiture qui a sa charge d'une voiture en pause. |
 | `session_energy_entity` | borne de recharge | L'énergie de la session, en *Chargé 12,4 kWh*. |
+| `discharge_power_entity` | borne de recharge | La puissance que rend la voiture (V2H, V2G), comme le `Power.Active.Export` d'OCPP, en *Décharge 7,4 kW*. Au-dessus de `power_on_threshold`, la voiture est *En décharge* (voir *Charge bidirectionnelle*). |
 | `current_limit_entity` | borne de recharge | La limite de courant, en *Limite de courant 16 A*. Un appui ouvre l'entité, qui est là où elle se règle. |
 | `error_entity` | borne de recharge | Un contact allumé, un code autre que 0 ou un mot autre que *pas d'erreur* (le `NoError` d'OCPP, `ok`, `none`) fait passer l'état en *Erreur*, avec les mots de la borne sur une ligne. |
 
@@ -413,7 +414,7 @@ power_on_threshold: 30
 
 ### Bornes de recharge
 
-Une wallbox au mur, son voyant dans la couleur de ce que fait la borne : *Aucun véhicule*, *Véhicule branché* (une voiture qui attend), *En attente d'autorisation* (un badge ou l'appli), *En charge*, *Charge en pause* (par la borne ou par la voiture), *Charge programmée*, *Charge terminée* (la voiture encore branchée), *Erreur* ou *Hors ligne*. Avec une voiture branchée, la prise quitte son étui et le câble part vers la voiture ; pendant la charge, l'énergie court le long du câble, lumineuse dans la couleur de l'état et d'autant plus vite que la puissance est forte (quatre allures, d'un surplus solaire à 22 kW), et s'arrête pendant une pause. Le voyant respire pendant la charge et lentement quand elle est programmée, et clignote pour une autorisation et, plus vite, sur un défaut. Sous vos yeux, une voiture qu'on branche montre la prise qui suit le câble jusqu'à elle, une voiture qu'on débranche le câble qui revient, et la fin d'une charge un éclat du voyant. Avec *réduire les animations* activé sur l'appareil, rien ne bouge. N'importe quelle wallbox fait l'affaire : la card lit le statut dans les mots d'OCPP et des intégrations de Home Assistant lui-même, `state_map` lui apprend tous les autres, et une borne sans statut se lit sur sa prise et son compteur.
+Une wallbox au mur, son voyant dans la couleur de ce que fait la borne : *Aucun véhicule*, *Véhicule branché* (une voiture qui attend), *En attente d'autorisation* (un badge ou l'appli), *En charge*, *En décharge* (la voiture qui rend de l'énergie), *Charge en pause* (par la borne ou par la voiture), *Charge programmée*, *Charge terminée* (la voiture encore branchée), *Erreur* ou *Hors ligne*. Avec une voiture branchée, la prise quitte son étui et le câble part vers la voiture ; pendant la charge, l'énergie court le long du câble, lumineuse dans la couleur de l'état et d'autant plus vite que la puissance est forte (quatre allures, d'un surplus solaire à 22 kW), et s'arrête pendant une pause. Le voyant respire pendant la charge et lentement quand elle est programmée, et clignote pour une autorisation et, plus vite, sur un défaut. Sous vos yeux, une voiture qu'on branche montre la prise qui suit le câble jusqu'à elle, une voiture qu'on débranche le câble qui revient, et la fin d'une charge un éclat du voyant. Avec *réduire les animations* activé sur l'appareil, rien ne bouge. N'importe quelle wallbox fait l'affaire : la card lit le statut dans les mots d'OCPP et des intégrations de Home Assistant lui-même, `state_map` lui apprend tous les autres, et une borne sans statut se lit sur sa prise et son compteur.
 
 | Intégration | Statut | Mots lus |
 |---|---|---|
@@ -426,7 +427,7 @@ Une wallbox au mur, son voyant dans la couleur de ce que fait la borne : *Aucun 
 | Lektrico | State | `available` → aucun véhicule ; `connected` → véhicule branché ; `need_auth` → en attente d'autorisation ; `charging` ; `paused` ; `paused_by_scheduler` → programmée ; `error` |
 | Blue Current | Activity | `available` → aucun véhicule ; `charging` ; `error` ; `offline` |
 | Webasto Next et Unite ([Modbus](https://github.com/tomwellnitz/Webasto-Next-Modbus)) | Charge Point State | `available`, `reserved` → aucun véhicule ; `preparing` → véhicule branché ; `charging` ; `suspended`, `suspended_evse`, `suspended_ev` → en pause ; `finishing` → terminée ; `error`, `faulted` → erreur |
-| Wallbox | Status description | `Charging` ; `Paused`, `Waiting for car demand`, `Waiting in queue by …` → en pause ; `Scheduled` ; `Locked, car connected` → en attente d'autorisation ; `Error`, `Waiting MID failed` → erreur |
+| Wallbox | Status description | `Charging` ; `Discharging` ; `Paused`, `Waiting for car demand`, `Waiting in queue by …` → en pause ; `Scheduled` ; `Locked, car connected` → en attente d'autorisation ; `Error`, `Waiting MID failed` → erreur |
 | Easee ([easee_hass](https://github.com/nordicopen/easee_hass)) | Status | `disconnected` → aucun véhicule ; `awaiting_start` → véhicule branché ; `awaiting_authorization` → en attente d'autorisation ; `charging` ; `awaiting_load_balancing` → en pause ; `awaiting_scheduled_start`, `awaiting_smart_start` → programmée ; `completed` → terminée ; `error_*` → erreur |
 | Zaptec ([zaptec](https://github.com/custom-components/zaptec)) | Charger mode | `disconnected` → aucun véhicule ; `connected_requesting` → véhicule branché ; `connected_charging` → en charge ; `connected_finished` → terminée |
 | go-e Charger | Car state | `Idle`, `Charger ready, no vehicle` → aucun véhicule ; `Wait for car`, `Waiting for vehicle` → véhicule branché ; `Charging` ; `Complete` → terminée ; `Error` |
@@ -487,7 +488,35 @@ state_map:
   Unavailable: offline
 ```
 
-Une entité qui porte le nom d'une wallbox dans les langues de la card, de son fabricant ou d'OCPP est reconnue d'elle-même, comme un statut énuméré qui liste les mots d'une borne. L'éditeur remplit la prise, le compteur, la session, la limite de courant, l'erreur et les boutons de démarrage et d'arrêt depuis les entités de la borne, jamais son bouton de redémarrage ou de réinitialisation.
+#### Charge bidirectionnelle (V2H, V2G)
+
+Une voiture qui rend de l'énergie, à la maison ou au réseau, se lit *En décharge*, dans le violet de l'énergie restituée du tableau de bord Énergie de Home Assistant, et l'énergie remonte le câble de la voiture vers la borne, dans une lueur qui scintille tout le long du câble. Aucune norme ne donne de statut à une borne pour cela : OCPP continue d'annoncer une charge jusqu'à la 2.1, l'ISO 15118-20 n'a pas d'état pour cela, et le fil pilote de l'IEC 61851 n'a pas de sens. La card le lit donc là où il se dit :
+
+- dans un mot, entier : `Discharging` (la Wallbox Quasar, la borne DC de Sigenergy, les intégrations Volvo et Volkswagen) et `v2g_discharging` (Renault) ;
+- sur un compteur à part, `discharge_power_entity`, au-dessus de `power_on_threshold` : le `Power.Active.Export` d'OCPP, la puissance Powershare de Tesla ;
+- sous zéro sur `power_entity`, pour un compteur qui compte en négatif l'énergie rendue (une Quasar en Modbus). Un compteur qui compte les deux sens de la même façon, comme celui du cloud Wallbox, ne dit rien du sens : le statut le dit.
+
+Une voiture qui rend de l'énergie est en décharge quel que soit le nom que lui donne le statut, puisque OCPP annonce une charge ; une erreur, *Hors ligne* et une prise sans voiture passent toujours avant. Un mot qui ne fait que contenir le mot est autre chose : un mode à choisir (`immediateDischarging`), la batterie de la maison qui alimente la borne (`ChargingBecauseDischargingPvBattery`). Le V2L n'est pas lu non plus : une voiture qui alimente un appareil par sa propre prise n'a pas de wallbox sur son chemin.
+
+Une wallbox OCPP qui sait se décharger, et une Wallbox Quasar :
+
+```yaml
+type: custom:ha-appliance-card
+appliance_type: ev_charger
+state_entity: sensor.wallbox_status_connector
+power_entity: sensor.wallbox_power_active_import
+discharge_power_entity: sensor.wallbox_power_active_export
+```
+
+```yaml
+type: custom:ha-appliance-card
+appliance_type: ev_charger
+state_entity: sensor.wallbox_quasar_status_description
+power_entity: sensor.wallbox_quasar_charging_power
+current_limit_entity: number.wallbox_quasar_maximum_charging_current
+```
+
+Une entité qui porte le nom d'une wallbox dans les langues de la card, de son fabricant ou d'OCPP est reconnue d'elle-même, comme un statut énuméré qui liste les mots d'une borne. L'éditeur remplit la prise, le compteur, la puissance rendue, la session, la limite de courant, l'erreur et les boutons de démarrage et d'arrêt depuis les entités de la borne, jamais son bouton de redémarrage ou de réinitialisation.
 
 ### Étapes du cycle
 

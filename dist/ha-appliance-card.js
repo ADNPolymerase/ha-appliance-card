@@ -150,6 +150,7 @@ const T = {
     washer_dryer: "Washer-dryer (washes and dries)", step_drying: "Drying", section_cycle_phase: "Cycle phase",
     step_prewash: "Pre-wash", step_soaking: "Soaking", step_weighing: "Weighing", step_filling: "Filling", step_washing: "Washing", step_rinsing: "Rinsing", step_draining: "Draining", step_spinning: "Spinning", step_cooling: "Cooling", step_anti_crease: "Anti-crease", step_steam: "Steam",
     type_ev_charger: "EV charger", ev_no_vehicle: "No vehicle", ev_connected: "Plugged in", ev_awaiting_auth: "Awaiting authorisation", ev_charging: "Charging", ev_paused: "Charging paused", ev_scheduled: "Scheduled", ev_done: "Charging complete", ev_error: "Error", ev_offline: "Offline", section_vehicle: "Vehicle plugged in (plug sensor)", section_session_energy: "Session energy", section_current_limit: "Charging current limit", ev_power_threshold: "Charging above this power (W)", ev_line_session: "Charged", ev_line_limit: "Current limit",
+    ev_discharging: "Discharging", section_discharge_power: "Power the car gives back (to the home or the grid)", ev_line_discharge: "Discharge",
   },
   fr: {
     idle: "En veille", running: "En cours", paused: "En pause", done: "Termin\u00e9",
@@ -290,6 +291,7 @@ const T = {
     washer_dryer: "Lavante-s\u00e9chante (lave et s\u00e8che)", step_drying: "S\u00e9chage", section_cycle_phase: "Phase du cycle",
     step_prewash: "Pr\u00e9lavage", step_soaking: "Trempage", step_weighing: "Pes\u00e9e", step_filling: "Remplissage", step_washing: "Lavage", step_rinsing: "Rin\u00e7age", step_draining: "Vidange", step_spinning: "Essorage", step_cooling: "Refroidissement", step_anti_crease: "Anti-froissage", step_steam: "Vapeur",
     type_ev_charger: "Borne de recharge", ev_no_vehicle: "Aucun v\u00e9hicule", ev_connected: "V\u00e9hicule branch\u00e9", ev_awaiting_auth: "En attente d'autorisation", ev_charging: "En charge", ev_paused: "Charge en pause", ev_scheduled: "Charge programm\u00e9e", ev_done: "Charge termin\u00e9e", ev_error: "Erreur", ev_offline: "Hors ligne", section_vehicle: "V\u00e9hicule branch\u00e9 (capteur de prise)", section_session_energy: "\u00c9nergie de la session", section_current_limit: "Limite du courant de charge", ev_power_threshold: "En charge au-dessus de cette puissance (W)", ev_line_session: "Charg\u00e9", ev_line_limit: "Limite de courant",
+    ev_discharging: "En d\u00e9charge", section_discharge_power: "Puissance rendue par la voiture (\u00e0 la maison ou au r\u00e9seau)", ev_line_discharge: "D\u00e9charge",
   },
   ru: {
     idle: "\u041e\u0436\u0438\u0434\u0430\u043d\u0438\u0435", running: "\u0420\u0430\u0431\u043e\u0442\u0430\u0435\u0442", paused: "\u041d\u0430 \u043f\u0430\u0443\u0437\u0435", done: "\u0417\u0430\u0432\u0435\u0440\u0448\u0435\u043d\u043e",
@@ -430,6 +432,7 @@ const T = {
     washer_dryer: "\u0421\u0442\u0438\u0440\u0430\u043b\u044c\u043d\u043e-\u0441\u0443\u0448\u0438\u043b\u044c\u043d\u0430\u044f \u043c\u0430\u0448\u0438\u043d\u0430 (\u0441\u0442\u0438\u0440\u0430\u0435\u0442 \u0438 \u0441\u0443\u0448\u0438\u0442)", step_drying: "\u0421\u0443\u0448\u043a\u0430", section_cycle_phase: "\u0424\u0430\u0437\u0430 \u0446\u0438\u043a\u043b\u0430",
     step_prewash: "\u041f\u0440\u0435\u0434\u0441\u0442\u0438\u0440\u043a\u0430", step_soaking: "\u0417\u0430\u043c\u0430\u0447\u0438\u0432\u0430\u043d\u0438\u0435", step_weighing: "\u0412\u0437\u0432\u0435\u0448\u0438\u0432\u0430\u043d\u0438\u0435", step_filling: "\u041d\u0430\u0431\u043e\u0440 \u0432\u043e\u0434\u044b", step_washing: "\u0421\u0442\u0438\u0440\u043a\u0430", step_rinsing: "\u041f\u043e\u043b\u043e\u0441\u043a\u0430\u043d\u0438\u0435", step_draining: "\u0421\u043b\u0438\u0432", step_spinning: "\u041e\u0442\u0436\u0438\u043c", step_cooling: "\u041e\u0445\u043b\u0430\u0436\u0434\u0435\u043d\u0438\u0435", step_anti_crease: "\u0417\u0430\u0449\u0438\u0442\u0430 \u043e\u0442 \u0441\u043c\u0438\u043d\u0430\u043d\u0438\u044f", step_steam: "\u041f\u0430\u0440",
     type_ev_charger: "\u0417\u0430\u0440\u044f\u0434\u043d\u0430\u044f \u0441\u0442\u0430\u043d\u0446\u0438\u044f", ev_no_vehicle: "\u041d\u0435\u0442 \u0430\u0432\u0442\u043e\u043c\u043e\u0431\u0438\u043b\u044f", ev_connected: "\u0410\u0432\u0442\u043e\u043c\u043e\u0431\u0438\u043b\u044c \u043f\u043e\u0434\u043a\u043b\u044e\u0447\u0451\u043d", ev_awaiting_auth: "\u041e\u0436\u0438\u0434\u0430\u043d\u0438\u0435 \u0430\u0432\u0442\u043e\u0440\u0438\u0437\u0430\u0446\u0438\u0438", ev_charging: "\u0417\u0430\u0440\u044f\u0434\u043a\u0430", ev_paused: "\u0417\u0430\u0440\u044f\u0434\u043a\u0430 \u043f\u0440\u0438\u043e\u0441\u0442\u0430\u043d\u043e\u0432\u043b\u0435\u043d\u0430", ev_scheduled: "\u0417\u0430\u043f\u043b\u0430\u043d\u0438\u0440\u043e\u0432\u0430\u043d\u043e", ev_done: "\u0417\u0430\u0440\u044f\u0434\u043a\u0430 \u0437\u0430\u0432\u0435\u0440\u0448\u0435\u043d\u0430", ev_error: "\u041e\u0448\u0438\u0431\u043a\u0430", ev_offline: "\u041d\u0435 \u0432 \u0441\u0435\u0442\u0438", section_vehicle: "\u0410\u0432\u0442\u043e\u043c\u043e\u0431\u0438\u043b\u044c \u043f\u043e\u0434\u043a\u043b\u044e\u0447\u0451\u043d (\u0434\u0430\u0442\u0447\u0438\u043a \u0440\u0430\u0437\u044a\u0451\u043c\u0430)", section_session_energy: "\u042d\u043d\u0435\u0440\u0433\u0438\u044f \u0441\u0435\u0430\u043d\u0441\u0430", section_current_limit: "\u041e\u0433\u0440\u0430\u043d\u0438\u0447\u0435\u043d\u0438\u0435 \u0442\u043e\u043a\u0430 \u0437\u0430\u0440\u044f\u0434\u043a\u0438", ev_power_threshold: "\u0417\u0430\u0440\u044f\u0434\u043a\u0430 \u0432\u044b\u0448\u0435 \u044d\u0442\u043e\u0439 \u043c\u043e\u0449\u043d\u043e\u0441\u0442\u0438 (\u0412\u0442)", ev_line_session: "\u0417\u0430\u0440\u044f\u0436\u0435\u043d\u043e", ev_line_limit: "\u041e\u0433\u0440\u0430\u043d\u0438\u0447\u0435\u043d\u0438\u0435 \u0442\u043e\u043a\u0430",
+    ev_discharging: "\u0420\u0430\u0437\u0440\u044f\u0434\u043a\u0430", section_discharge_power: "\u041c\u043e\u0449\u043d\u043e\u0441\u0442\u044c, \u043e\u0442\u0434\u0430\u0432\u0430\u0435\u043c\u0430\u044f \u0430\u0432\u0442\u043e\u043c\u043e\u0431\u0438\u043b\u0435\u043c (\u0432 \u0434\u043e\u043c \u0438\u043b\u0438 \u0432 \u0441\u0435\u0442\u044c)", ev_line_discharge: "\u0420\u0430\u0437\u0440\u044f\u0434",
   },
   de: {
     idle: "Inaktiv", running: "L\u00e4uft", paused: "Pausiert", done: "Fertig",
@@ -570,6 +573,7 @@ const T = {
     washer_dryer: "Waschtrockner (w\u00e4scht und trocknet)", step_drying: "Trocknen", section_cycle_phase: "Programmphase",
     step_prewash: "Vorw\u00e4sche", step_soaking: "Einweichen", step_weighing: "Wiegen", step_filling: "Bef\u00fcllen", step_washing: "Waschen", step_rinsing: "Sp\u00fclen", step_draining: "Abpumpen", step_spinning: "Schleudern", step_cooling: "Abk\u00fchlen", step_anti_crease: "Knitterschutz", step_steam: "Dampf",
     type_ev_charger: "Wallbox", ev_no_vehicle: "Kein Fahrzeug", ev_connected: "Fahrzeug angesteckt", ev_awaiting_auth: "Wartet auf Freigabe", ev_charging: "L\u00e4dt", ev_paused: "Laden pausiert", ev_scheduled: "Geplant", ev_done: "Laden abgeschlossen", ev_error: "Fehler", ev_offline: "Offline", section_vehicle: "Fahrzeug angesteckt (Steckersensor)", section_session_energy: "Energie des Ladevorgangs", section_current_limit: "Ladestrombegrenzung", ev_power_threshold: "L\u00e4dt oberhalb dieser Leistung (W)", ev_line_session: "Geladen", ev_line_limit: "Stromgrenze",
+    ev_discharging: "Entl\u00e4dt", section_discharge_power: "Leistung, die das Auto abgibt (ins Haus oder ins Netz)", ev_line_discharge: "Entladung",
   },
   es: {
     idle: "Inactivo", running: "En marcha", paused: "En pausa", done: "Finalizado",
@@ -710,6 +714,7 @@ const T = {
     washer_dryer: "Lavasecadora (lava y seca)", step_drying: "Secado", section_cycle_phase: "Fase del ciclo",
     step_prewash: "Prelavado", step_soaking: "Remojo", step_weighing: "Pesaje", step_filling: "Llenado", step_washing: "Lavado", step_rinsing: "Aclarado", step_draining: "Desag\u00fce", step_spinning: "Centrifugado", step_cooling: "Enfriamiento", step_anti_crease: "Antiarrugas", step_steam: "Vapor",
     type_ev_charger: "Cargador de VE", ev_no_vehicle: "Sin veh\u00edculo", ev_connected: "Veh\u00edculo conectado", ev_awaiting_auth: "Esperando autorizaci\u00f3n", ev_charging: "Cargando", ev_paused: "Carga en pausa", ev_scheduled: "Carga programada", ev_done: "Carga completada", ev_error: "Error", ev_offline: "Sin conexi\u00f3n", section_vehicle: "Veh\u00edculo conectado (sensor del conector)", section_session_energy: "Energ\u00eda de la sesi\u00f3n", section_current_limit: "L\u00edmite de corriente de carga", ev_power_threshold: "Cargando por encima de esta potencia (W)", ev_line_session: "Cargado", ev_line_limit: "L\u00edmite de corriente",
+    ev_discharging: "Descargando", section_discharge_power: "Potencia que devuelve el coche (a la casa o a la red)", ev_line_discharge: "Descarga",
   },
   it: {
     idle: "Inattivo", running: "In funzione", paused: "In pausa", done: "Terminato",
@@ -850,6 +855,7 @@ const T = {
     washer_dryer: "Lavasciuga (lava e asciuga)", step_drying: "Asciugatura", section_cycle_phase: "Fase del ciclo",
     step_prewash: "Prelavaggio", step_soaking: "Ammollo", step_weighing: "Pesatura", step_filling: "Carico acqua", step_washing: "Lavaggio", step_rinsing: "Risciacquo", step_draining: "Scarico", step_spinning: "Centrifuga", step_cooling: "Raffreddamento", step_anti_crease: "Antipiega", step_steam: "Vapore",
     type_ev_charger: "Stazione di ricarica", ev_no_vehicle: "Nessun veicolo", ev_connected: "Veicolo collegato", ev_awaiting_auth: "In attesa di autorizzazione", ev_charging: "In carica", ev_paused: "Ricarica in pausa", ev_scheduled: "Ricarica programmata", ev_done: "Ricarica completata", ev_error: "Errore", ev_offline: "Offline", section_vehicle: "Veicolo collegato (sensore della presa)", section_session_energy: "Energia della sessione", section_current_limit: "Limite di corrente di ricarica", ev_power_threshold: "In carica sopra questa potenza (W)", ev_line_session: "Ricaricato", ev_line_limit: "Limite di corrente",
+    ev_discharging: "In scarica", section_discharge_power: "Potenza restituita dall'auto (alla casa o alla rete)", ev_line_discharge: "Scarica",
   },
   nl: {
     idle: "Inactief", running: "Actief", paused: "Gepauzeerd", done: "Klaar",
@@ -990,6 +996,7 @@ const T = {
     washer_dryer: "Was-droogcombinatie (wast en droogt)", step_drying: "Drogen", section_cycle_phase: "Programmafase",
     step_prewash: "Voorwas", step_soaking: "Weken", step_weighing: "Wegen", step_filling: "Vullen", step_washing: "Wassen", step_rinsing: "Spoelen", step_draining: "Afpompen", step_spinning: "Centrifugeren", step_cooling: "Afkoelen", step_anti_crease: "Anti-kreuk", step_steam: "Stoom",
     type_ev_charger: "Laadpaal", ev_no_vehicle: "Geen voertuig", ev_connected: "Voertuig aangesloten", ev_awaiting_auth: "Wacht op autorisatie", ev_charging: "Laden", ev_paused: "Laden gepauzeerd", ev_scheduled: "Gepland", ev_done: "Laden voltooid", ev_error: "Fout", ev_offline: "Offline", section_vehicle: "Voertuig aangesloten (stekkersensor)", section_session_energy: "Energie van de laadsessie", section_current_limit: "Laadstroomlimiet", ev_power_threshold: "Laadt boven dit vermogen (W)", ev_line_session: "Geladen", ev_line_limit: "Stroomlimiet",
+    ev_discharging: "Ontladen", section_discharge_power: "Vermogen dat de auto teruglevert (aan het huis of het net)", ev_line_discharge: "Ontlading",
   },
   pt: {
     idle: "Inativo", running: "Em funcionamento", paused: "Em pausa", done: "Conclu\u00eddo",
@@ -1130,6 +1137,7 @@ const T = {
     washer_dryer: "M\u00e1quina de lavar e secar (lava e seca)", step_drying: "Secagem", section_cycle_phase: "Fase do ciclo",
     step_prewash: "Pr\u00e9-lavagem", step_soaking: "Molho", step_weighing: "Pesagem", step_filling: "Enchimento", step_washing: "Lavagem", step_rinsing: "Enxaguamento", step_draining: "Escoamento", step_spinning: "Centrifuga\u00e7\u00e3o", step_cooling: "Arrefecimento", step_anti_crease: "Anti-vincos", step_steam: "Vapor",
     type_ev_charger: "Carregador de VE", ev_no_vehicle: "Sem ve\u00edculo", ev_connected: "Ve\u00edculo ligado", ev_awaiting_auth: "A aguardar autoriza\u00e7\u00e3o", ev_charging: "A carregar", ev_paused: "Carregamento em pausa", ev_scheduled: "Carregamento agendado", ev_done: "Carregamento conclu\u00eddo", ev_error: "Erro", ev_offline: "Offline", section_vehicle: "Ve\u00edculo ligado (sensor da ficha)", section_session_energy: "Energia da sess\u00e3o", section_current_limit: "Limite da corrente de carregamento", ev_power_threshold: "A carregar acima desta pot\u00eancia (W)", ev_line_session: "Carregado", ev_line_limit: "Limite de corrente",
+    ev_discharging: "A descarregar", section_discharge_power: "Pot\u00eancia devolvida pelo carro (\u00e0 casa ou \u00e0 rede)", ev_line_discharge: "Descarga",
   },
   sv: {
     idle: "Inaktiv", running: "Ig\u00e5ng", paused: "Pausad", done: "Klar",
@@ -1270,6 +1278,7 @@ const T = {
     washer_dryer: "Kombinerad tv\u00e4tt/tork (tv\u00e4ttar och torkar)", step_drying: "Torkning", section_cycle_phase: "Programfas",
     step_prewash: "F\u00f6rtv\u00e4tt", step_soaking: "Bl\u00f6tl\u00e4ggning", step_weighing: "V\u00e4gning", step_filling: "P\u00e5fyllning", step_washing: "Tv\u00e4tt", step_rinsing: "Sk\u00f6ljning", step_draining: "T\u00f6mning", step_spinning: "Centrifugering", step_cooling: "Avsvalning", step_anti_crease: "Skrynkelskydd", step_steam: "\u00c5nga",
     type_ev_charger: "Laddbox", ev_no_vehicle: "Inget fordon", ev_connected: "Fordon anslutet", ev_awaiting_auth: "V\u00e4ntar p\u00e5 auktorisering", ev_charging: "Laddar", ev_paused: "Laddning pausad", ev_scheduled: "Schemalagd", ev_done: "Laddning klar", ev_error: "Fel", ev_offline: "Offline", section_vehicle: "Fordon anslutet (kontaktsensor)", section_session_energy: "Laddsessionens energi", section_current_limit: "Gr\u00e4ns f\u00f6r laddstr\u00f6m", ev_power_threshold: "Laddar \u00f6ver denna effekt (W)", ev_line_session: "Laddat", ev_line_limit: "Str\u00f6mgr\u00e4ns",
+    ev_discharging: "Laddar ur", section_discharge_power: "Effekt som bilen ger tillbaka (till hemmet eller eln\u00e4tet)", ev_line_discharge: "Urladdning",
   },
   no: {
     idle: "Inaktiv", running: "I gang", paused: "Pauset", done: "Ferdig",
@@ -1410,6 +1419,7 @@ const T = {
     washer_dryer: "Kombinert vaske-/t\u00f8rkemaskin (vasker og t\u00f8rker)", step_drying: "T\u00f8rking", section_cycle_phase: "Programfase",
     step_prewash: "Forvask", step_soaking: "Bl\u00f8tlegging", step_weighing: "Veiing", step_filling: "Vannfylling", step_washing: "Vask", step_rinsing: "Skylling", step_draining: "T\u00f8mming", step_spinning: "Sentrifugering", step_cooling: "Avkj\u00f8ling", step_anti_crease: "Antikr\u00f8ll", step_steam: "Damp",
     type_ev_charger: "Ladeboks", ev_no_vehicle: "Ingen bil", ev_connected: "Bil tilkoblet", ev_awaiting_auth: "Venter p\u00e5 autorisering", ev_charging: "Lader", ev_paused: "Lading satt p\u00e5 pause", ev_scheduled: "Planlagt", ev_done: "Lading fullf\u00f8rt", ev_error: "Feil", ev_offline: "Frakoblet", section_vehicle: "Bil tilkoblet (kontaktsensor)", section_session_energy: "Energi denne lade\u00f8kten", section_current_limit: "Grense for ladestr\u00f8m", ev_power_threshold: "Lader over denne effekten (W)", ev_line_session: "Ladet", ev_line_limit: "Str\u00f8mgrense",
+    ev_discharging: "Lader ut", section_discharge_power: "Effekt bilen gir tilbake (til hjemmet eller str\u00f8mnettet)", ev_line_discharge: "Utlading",
   },
   da: {
     idle: "Inaktiv", running: "I gang", paused: "Sat p\u00e5 pause", done: "F\u00e6rdig",
@@ -1550,6 +1560,7 @@ const T = {
     washer_dryer: "Vaske-t\u00f8rremaskine (vasker og t\u00f8rrer)", step_drying: "T\u00f8rring", section_cycle_phase: "Programfase",
     step_prewash: "Forvask", step_soaking: "Ibl\u00f8ds\u00e6tning", step_weighing: "Vejning", step_filling: "P\u00e5fyldning", step_washing: "Vask", step_rinsing: "Skylning", step_draining: "Udpumpning", step_spinning: "Centrifugering", step_cooling: "Afk\u00f8ling", step_anti_crease: "Antikr\u00f8l", step_steam: "Damp",
     type_ev_charger: "Ladeboks", ev_no_vehicle: "Ingen bil", ev_connected: "Bil tilsluttet", ev_awaiting_auth: "Venter p\u00e5 godkendelse", ev_charging: "Oplader", ev_paused: "Opladning sat p\u00e5 pause", ev_scheduled: "Planlagt", ev_done: "Opladning fuldf\u00f8rt", ev_error: "Fejl", ev_offline: "Offline", section_vehicle: "Bil tilsluttet (stiksensor)", section_session_energy: "Energi i ladesessionen", section_current_limit: "Gr\u00e6nse for ladestr\u00f8m", ev_power_threshold: "Oplader over denne effekt (W)", ev_line_session: "Opladet", ev_line_limit: "Str\u00f8mgr\u00e6nse",
+    ev_discharging: "Aflader", section_discharge_power: "Effekt, bilen giver tilbage (til hjemmet eller elnettet)", ev_line_discharge: "Afladning",
   },
   pl: {
     idle: "Bezczynny", running: "W trakcie", paused: "Wstrzymany", done: "Zako\u0144czony",
@@ -1690,6 +1701,7 @@ const T = {
     washer_dryer: "Pralko-suszarka (pierze i suszy)", step_drying: "Suszenie", section_cycle_phase: "Faza programu",
     step_prewash: "Pranie wst\u0119pne", step_soaking: "Namaczanie", step_weighing: "Wa\u017cenie", step_filling: "Nape\u0142nianie", step_washing: "Pranie", step_rinsing: "P\u0142ukanie", step_draining: "Odpompowanie", step_spinning: "Wirowanie", step_cooling: "Sch\u0142adzanie", step_anti_crease: "Przeciw zagnieceniom", step_steam: "Para",
     type_ev_charger: "Stacja \u0142adowania", ev_no_vehicle: "Brak pojazdu", ev_connected: "Pojazd pod\u0142\u0105czony", ev_awaiting_auth: "Oczekiwanie na autoryzacj\u0119", ev_charging: "\u0141adowanie", ev_paused: "\u0141adowanie wstrzymane", ev_scheduled: "Zaplanowane", ev_done: "\u0141adowanie zako\u0144czone", ev_error: "B\u0142\u0105d", ev_offline: "Offline", section_vehicle: "Pojazd pod\u0142\u0105czony (czujnik wtyczki)", section_session_energy: "Energia sesji \u0142adowania", section_current_limit: "Limit pr\u0105du \u0142adowania", ev_power_threshold: "\u0141aduje powy\u017cej tej mocy (W)", ev_line_session: "Na\u0142adowano", ev_line_limit: "Limit pr\u0105du",
+    ev_discharging: "Roz\u0142adowywanie", section_discharge_power: "Moc oddawana przez samoch\u00f3d (do domu lub do sieci)", ev_line_discharge: "Roz\u0142adowanie",
   },
   zh: {
     idle: "\u7a7a\u95f2", running: "\u8fd0\u884c\u4e2d", paused: "\u6682\u505c", done: "\u5b8c\u6210",
@@ -1830,6 +1842,7 @@ const T = {
     washer_dryer: "\u6d17\u70d8\u4e00\u4f53\u673a\uff08\u6d17\u6da4\u5e76\u70d8\u5e72\uff09", step_drying: "\u70d8\u5e72\u4e2d", section_cycle_phase: "\u7a0b\u5e8f\u9636\u6bb5",
     step_prewash: "\u9884\u6d17\u4e2d", step_soaking: "\u6d78\u6ce1\u4e2d", step_weighing: "\u79f0\u91cd\u4e2d", step_filling: "\u8fdb\u6c34\u4e2d", step_washing: "\u6d17\u6da4\u4e2d", step_rinsing: "\u6f02\u6d17\u4e2d", step_draining: "\u6392\u6c34\u4e2d", step_spinning: "\u8131\u6c34\u4e2d", step_cooling: "\u51b7\u5374\u4e2d", step_anti_crease: "\u9632\u76b1\u4e2d", step_steam: "\u84b8\u6c7d\u4e2d",
     type_ev_charger: "\u7535\u52a8\u8f66\u5145\u7535\u6869", ev_no_vehicle: "\u65e0\u8f66\u8f86", ev_connected: "\u8f66\u8f86\u5df2\u8fde\u63a5", ev_awaiting_auth: "\u7b49\u5f85\u6388\u6743", ev_charging: "\u5145\u7535\u4e2d", ev_paused: "\u5145\u7535\u5df2\u6682\u505c", ev_scheduled: "\u5df2\u9884\u7ea6", ev_done: "\u5145\u7535\u5b8c\u6210", ev_error: "\u9519\u8bef", ev_offline: "\u79bb\u7ebf", section_vehicle: "\u8f66\u8f86\u5df2\u8fde\u63a5\uff08\u63d2\u5934\u4f20\u611f\u5668\uff09", section_session_energy: "\u672c\u6b21\u5145\u7535\u7535\u91cf", section_current_limit: "\u5145\u7535\u7535\u6d41\u9650\u5236", ev_power_threshold: "\u529f\u7387\u9ad8\u4e8e\u6b64\u503c (W) \u5373\u4e3a\u5145\u7535", ev_line_session: "\u5df2\u5145\u7535\u91cf", ev_line_limit: "\u7535\u6d41\u9650\u5236",
+    ev_discharging: "\u653e\u7535\u4e2d", section_discharge_power: "\u8f66\u8f86\u56de\u9988\u529f\u7387\uff08\u5411\u5bb6\u5ead\u6216\u7535\u7f51\uff09", ev_line_discharge: "\u653e\u7535",
   },
   cs: {
     idle: "Ne\u010dinn\u00e9", running: "V provozu", paused: "Pozastaveno", done: "Dokon\u010deno",
@@ -1970,6 +1983,7 @@ const T = {
     washer_dryer: "Pra\u010dka se su\u0161i\u010dkou (pere a su\u0161\u00ed)", step_drying: "Su\u0161en\u00ed", section_cycle_phase: "F\u00e1ze programu",
     step_prewash: "P\u0159edp\u00edrka", step_soaking: "Nam\u00e1\u010den\u00ed", step_weighing: "V\u00e1\u017een\u00ed", step_filling: "Napou\u0161t\u011bn\u00ed", step_washing: "Pran\u00ed", step_rinsing: "M\u00e1ch\u00e1n\u00ed", step_draining: "Vypou\u0161t\u011bn\u00ed", step_spinning: "Odst\u0159e\u010fov\u00e1n\u00ed", step_cooling: "Chlazen\u00ed", step_anti_crease: "Proti poma\u010dk\u00e1n\u00ed", step_steam: "P\u00e1ra",
     type_ev_charger: "Nab\u00edjec\u00ed stanice", ev_no_vehicle: "\u017d\u00e1dn\u00e9 vozidlo", ev_connected: "Vozidlo p\u0159ipojeno", ev_awaiting_auth: "\u010cek\u00e1 na autorizaci", ev_charging: "Nab\u00edj\u00ed", ev_paused: "Nab\u00edjen\u00ed pozastaveno", ev_scheduled: "Napl\u00e1nov\u00e1no", ev_done: "Nab\u00edjen\u00ed dokon\u010deno", ev_error: "Chyba", ev_offline: "Offline", section_vehicle: "Vozidlo p\u0159ipojeno (senzor konektoru)", section_session_energy: "Energie nab\u00edjec\u00ed relace", section_current_limit: "Limit nab\u00edjec\u00edho proudu", ev_power_threshold: "Nab\u00edj\u00ed nad t\u00edmto v\u00fdkonem (W)", ev_line_session: "Nabito", ev_line_limit: "Limit proudu",
+    ev_discharging: "Vyb\u00edj\u00ed", section_discharge_power: "V\u00fdkon, kter\u00fd auto vrac\u00ed (do domu nebo do s\u00edt\u011b)", ev_line_discharge: "Vyb\u00edjen\u00ed",
   },
 };
 
@@ -2646,7 +2660,8 @@ function fryerZoneOf(mode) {
 // IEC 61851's letters are left to state_map, since a bare "C" could be
 // anything on another entity, and so is OCPP's Unavailable: Home Assistant's
 // own unavailable means the entity is offline, and nothing else.
-const EV_MODES = ["no_vehicle", "connected", "awaiting_auth", "charging", "paused", "scheduled", "done", "error", "offline"];
+const EV_MODES = ["no_vehicle", "connected", "awaiting_auth", "charging", "discharging", "paused", "scheduled", "done", "error",
+  "offline"];
 const EV_STATES = {
   // OCPP 1.6, ChargePointStatus, as the ocpp integration passes it on: the
   // OCPP 2.0.1 chargers it reads come out in the same words. Reserved can
@@ -2726,6 +2741,11 @@ const EV_STATES = {
   erratic_ev: "error", error_temperature_too_high: "error", error_dead_powerboard: "error",
   error_overcurrent: "error", error_pen_fault: "error", charging_fault_1: "error", charging_fault_2: "error",
   see_error_state: "error", waiting_mid_failed: "error", waiting_mid_safety_margin_exceeded: "error",
+  // The car giving energy back, to the home or the grid (V2H, V2G). No
+  // standard has a status for it, neither OCPP up to 2.1 nor ISO 15118-20:
+  // the Wallbox Quasar says it in a word, as do Sigenergy's DC charger and
+  // the Volvo and Volkswagen integrations, and Renault for the grid.
+  discharging: "discharging", v2g_discharging: "discharging",
 };
 // Chargers write the same word in many ways: Waiting for car demand,
 // suspended-ev, charging normal. Folded to one spelling, lower case with
@@ -2742,19 +2762,22 @@ function evKey(raw) {
 const EV_SUSPENDED_BY_CAR = ["suspendedev", "suspended_ev", "waiting_car", "waiting_for_car_demand", "ev_waiting",
   "charger_wait", "waiting_for_car", "waiting_for_ev", "wait_vehicle_charging"];
 // The states with a car at the plug.
-const EV_CAR_STATES = ["connected", "awaiting_auth", "charging", "paused", "scheduled", "done"];
+const EV_CAR_STATES = ["connected", "awaiting_auth", "charging", "discharging", "paused", "scheduled", "done"];
 // How each state runs the rest of the card.
 const EV_NORMS = {
-  no_vehicle: "idle", connected: "idle", awaiting_auth: "idle", charging: "running", paused: "paused",
+  no_vehicle: "idle", connected: "idle", awaiting_auth: "idle", charging: "running", discharging: "running", paused: "paused",
   scheduled: "delayed", done: "done", error: "error", offline: "unknown",
 };
 // The card's own colours wherever a state is one of its own: charging is the
 // blue of running, a pause orange, the schedule the purple of a delayed start,
 // done green. A car plugged in and waiting is teal, one waiting for its owner
-// amber, the colour of something to do.
+// amber, the colour of something to do. A car giving energy back takes the
+// violet of energy returned in Home Assistant's energy dashboard, which is
+// also the colour of a discharging Quasar's light.
 const EV_COLORS = {
   no_vehicle: "var(--disabled-text-color, #9e9e9e)", connected: "#26a69a", awaiting_auth: "#ffb300",
-  charging: "var(--info-color, #2196f3)", paused: "var(--warning-color, #ff9800)", scheduled: "#9c27b0",
+  charging: "var(--info-color, #2196f3)", discharging: "var(--energy-grid-return-color, #8353d1)",
+  paused: "var(--warning-color, #ff9800)", scheduled: "#9c27b0",
   done: "var(--success-color, #4caf50)", error: "var(--error-color, #f44336)", offline: "var(--disabled-text-color, #9e9e9e)",
 };
 // Home Assistant's own words for an entity it cannot read, in its own
@@ -2762,7 +2785,7 @@ const EV_COLORS = {
 const HA_OFFLINE_STATES = ["unavailable", "unknown"];
 // The status as the charger means it, or "" for a word the card does not know,
 // which then reads as on any other appliance. An entry of state_map wins, as
-// everywhere, and names one of the nine; "*" catches what is left.
+// everywhere, and names one of the ten; "*" catches what is left.
 function evModeOf(raw, stateMap) {
   if (raw === undefined || raw === null) return "";
   const s = String(raw).trim();
@@ -4071,6 +4094,7 @@ const TYPE_AUTO_PATTERNS = {
     current_limit_entity: /^(number|input_number)\..*(current.?limit|charge.?limit|max(imum)?.?current|charging.?current|charge.?rate|dynamic.?limit)/i,
     error_entity: /error.?code|fault.?code|active.?errors/i,
     power_entity: /^sensor\.(?!.*(factor|limit|offered|reactive|apparent|phase|_l[123](_|$))).*(active.?power|charging.?power|total.?power|current.?power|power.?active.?import|power.?total|_power$|power_w$)/i,
+    discharge_power_entity: /^sensor\.(?!.*(factor|limit|reactive|apparent|[._]m(ax|in)(imum)?[._]|_l[123](_|$))).*(power.?active.?export|export.?power|discharg\w*.?power|powershare.*power)/i,
     start_entity: /^(button|script|switch)\.(?!.*(restart|delay)).*start/i,
     stop_entity: /^(button|script|switch)\.(?!.*(restart|reset)).*stop/i,
   },
@@ -4251,7 +4275,7 @@ const FRYER_ONLY_FIELDS = ["fryer_layout", "basket_entity", "shake_entity", "bas
 // A car at the plug, the energy of a charging session and a current limit
 // belong to a charger. Like a fridge, it can do without a state entity: the
 // plug and the power meter are enough.
-const EV_ONLY_FIELDS = ["vehicle_entity", "session_energy_entity", "current_limit_entity"];
+const EV_ONLY_FIELDS = ["vehicle_entity", "session_energy_entity", "current_limit_entity", "discharge_power_entity"];
 const PRINTER_ONLY_FIELDS = [
   "nozzle_temperature_entity",
   "nozzle_target_entity",
@@ -6804,9 +6828,23 @@ const ILLUSTRATION_CSS = {
         .ev-halo path { display: none; fill: none; stroke: ${color}; stroke-width: 3.5; stroke-linecap: round; }
         .machine.plugged.mode-charging .ev-halo .eh-out, .machine.plugged.mode-error .ev-halo .eh-out,
         .machine.mode-error:not(.plugged) .ev-halo .eh-loop { display: inline; }
+        /* Discharging, the energy runs the other way, from the car to the box,
+           at the pace of the power given back, and the halo turns into a glow
+           along the whole cable, wider and lighter than the state's colour,
+           that shimmers. */
+        .machine.plugged.mode-discharging .ev-cable .ev-live { display: inline; }
+        .machine.plugged.mode-discharging .ev-cable .ev-flow {
+          display: inline; animation: ev-flow var(--ev-flow, 0.6s) linear infinite reverse; animation-delay: var(--anim-offset, 0s);
+        }
+        .machine.plugged.mode-discharging .ev-halo { filter: blur(2px); }
+        .machine.plugged.mode-discharging .ev-halo .eh-out {
+          display: inline; stroke: #a886df; stroke: color-mix(in srgb, ${color} 70%, #ffffff); stroke-width: 9;
+          animation: ev-shimmer 1.3s linear infinite; animation-delay: var(--anim-offset, 0s);
+        }
+        @keyframes ev-shimmer { 0%, 31%, 64%, 100% { opacity: 1; } 23% { opacity: 0.7; } 57% { opacity: 0.8; } 86% { opacity: 0.75; } }
         @media (prefers-reduced-motion: reduce) {
           .machine.plugged.mode-charging .ev-cable .ev-flow { animation-play-state: paused; }
-          .ev-led, .ev-cable path, .ev-energy, .ev-halo, .ev-plug, .ev-ghost {
+          .ev-led, .ev-cable path, .ev-energy, .ev-halo, .ev-halo path, .ev-plug, .ev-ghost {
             animation-duration: 0.001ms !important; animation-iteration-count: 1 !important;
           }
         }
@@ -6815,6 +6853,7 @@ const ILLUSTRATION_CSS = {
            charges, and slowly while it waits for its start time; it blinks
            for a card at the reader, and faster on a fault. */
         .machine.mode-charging .ev-led { animation: ev-breathe 2.6s ease-in-out infinite; animation-delay: var(--anim-offset, 0s); }
+        .machine.mode-discharging .ev-led { animation: ev-breathe 2.6s ease-in-out infinite; animation-delay: var(--anim-offset, 0s); }
         .machine.mode-scheduled .ev-led { animation: ev-breathe 4.8s ease-in-out infinite; animation-delay: var(--anim-offset, 0s); }
         .machine.mode-awaiting_auth .ev-led { animation: ev-blink 1.4s linear infinite; animation-delay: var(--anim-offset, 0s); }
         .machine.mode-error .ev-led { animation: ev-blink 0.8s linear infinite; animation-delay: var(--anim-offset, 0s); }
@@ -9779,12 +9818,20 @@ class ApplianceCard extends HTMLElement {
         ? parseFloat(cfg.power_on_threshold) : EV_POWER_THRESHOLD;
       const w = cfg.power_entity ? wattsOf(hass, cfg.power_entity) : null;
       const flowing = w === null ? null : w >= evThreshold;
+      // The energy going the other way, from the car: on a meter of its own
+      // (OCPP's Power.Active.Export) above the threshold, or below zero on a
+      // meter that counts it that way (a Quasar over Modbus). A meter that
+      // counts both ways alike says nothing of the direction; the status does.
+      const back = cfg.discharge_power_entity ? wattsOf(hass, cfg.discharge_power_entity) : null;
+      const feeding = (back !== null && back >= evThreshold) || (w !== null && w <= -evThreshold);
       const fromPlug = !cfg.state_entity || plugAsState
         || cfg.state_entity === cfg.power_entity || cfg.state_entity === cfg.vehicle_entity
+        || cfg.state_entity === cfg.discharge_power_entity
         || ["switch", "input_boolean"].includes(domainOf(cfg.state_entity));
       let mode = "";
       if (fromPlug) {
         if (plugged === false) mode = "no_vehicle";
+        else if (feeding) mode = "discharging";
         else if (flowing) mode = "charging";
         else if (plugged) mode = "connected";
         else if (flowing === null) mode = "offline";
@@ -9799,6 +9846,9 @@ class ApplianceCard extends HTMLElement {
           const energy = cfg.session_energy_entity ? numericState(hass, cfg.session_energy_entity) : null;
           if (energy !== null && energy > 0 && flowing === false) mode = "done";
         }
+        // A car giving energy back discharges, whatever the status calls it:
+        // OCPP has no word for it and reports a charge.
+        if (feeding && EV_CAR_STATES.includes(mode)) mode = "discharging";
         if (plugged === false && mode && mode !== "error" && mode !== "offline") mode = "no_vehicle";
       }
       if (fault.active) mode = "error";
@@ -9825,6 +9875,7 @@ class ApplianceCard extends HTMLElement {
         extraLines.push({ key, icon, label, value: keepTogether(formatInfoValue(s, hass, null, cfg, entity)), entity });
       };
       evLine(cfg.power_entity, "power", cfg.power_icon || "mdi:flash", t(hass, "power"));
+      evLine(cfg.discharge_power_entity, "discharge_power", "mdi:battery-arrow-up-outline", t(hass, "ev_line_discharge"));
       evLine(cfg.session_energy_entity, "session_energy", "mdi:battery-charging", t(hass, "ev_line_session"));
       evLine(cfg.current_limit_entity, "current_limit", "mdi:current-ac", t(hass, "ev_line_limit"));
       // The error in the charger's words, when it has some.
@@ -9843,8 +9894,9 @@ class ApplianceCard extends HTMLElement {
       // one, and an error the plug says has one too. The drawing takes the
       // plug out of its holster for it.
       ev = { mode: mode || norm, plugged: EV_CAR_STATES.includes(mode) || (mode === "error" && plugged === true) };
-      // The energy runs along the cable at the pace of the power.
-      ev.flow = evFlowSeconds(w);
+      // The energy runs along the cable at the pace of the power, the power
+      // given back when the car discharges on a meter of its own.
+      ev.flow = evFlowSeconds(back !== null && back >= evThreshold ? back : w);
       // A plug that moved, or a charge that ended, while the card was open is
       // played once: the plug going into the car or back to its holster, the
       // light flashing at the end of a charge. Only from a state that says
@@ -10049,7 +10101,7 @@ class ApplianceCard extends HTMLElement {
       illustrationCtx.towel && illustrationCtx.towel.mode,
       illustrationCtx.fryer && [illustrationCtx.fryer.mode, illustrationCtx.fryer.mode2, illustrationCtx.fryer.layout].join("/"),
       illustrationCtx.ev && [illustrationCtx.ev.mode, illustrationCtx.ev.plugged,
-        illustrationCtx.ev.mode === "charging" ? illustrationCtx.ev.flow : ""].join("/"),
+        ["charging", "discharging"].includes(illustrationCtx.ev.mode) ? illustrationCtx.ev.flow : ""].join("/"),
     ].join(",");
     if (animKey !== this._animKey) {
       this._animKey = animKey;
@@ -10588,6 +10640,7 @@ const SECTIONS = [
   // current limit opens its entity, which is where it is changed.
   { field: "vehicle_entity", types: ["ev_charger"], labelKey: "section_vehicle", includeDomains: ["binary_sensor", "sensor", "input_boolean"] },
   { field: "session_energy_entity", types: ["ev_charger"], labelKey: "section_session_energy", includeDomains: ["sensor", "input_number"] },
+  { field: "discharge_power_entity", types: ["ev_charger"], labelKey: "section_discharge_power", includeDomains: ["sensor", "input_number"] },
   { field: "current_limit_entity", types: ["ev_charger"], labelKey: "section_current_limit", includeDomains: ["number", "sensor", "select", "input_number"] },
   { field: "error_entity", types: ["ev_charger"], labelKey: "section_error", includeDomains: ["binary_sensor", "sensor"] },
 
