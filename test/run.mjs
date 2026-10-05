@@ -7106,7 +7106,8 @@ contains('borne : la boite est dessinee', evR('Charging'), '<div class="ev-box">
 contains('borne : le cable aussi', evR('Charging'), '<svg class="ev-cable"');
 contains('borne : et la prise, une CCS', evR('Charging'), '<div class="ev-plug"><i class="pl-boot"></i><i class="pl-grip"></i>'
   + '<i class="pl-collar"></i><i class="pl-head"></i><i class="pl-ac"></i><i class="pl-dc"></i><i class="pl-latch"></i></div>');
-check('borne : aucune animation propre', /@keyframes ev-/.test(evR('Charging')), false);
+// One animation only, the energy along the cable; the rest stays still.
+check('borne : une seule animation, le flux du cable', (evR('Charging').match(/@keyframes ev-[\w-]+/g) || []).join(), '@keyframes ev-flow');
 check('borne : la charge compte comme en marche', hasCls(evR('Charging'), 'spinning'), true);
 check('borne : en pause, rien ne tourne', hasCls(evR('SuspendedEVSE'), 'spinning'), false);
 check('borne : terminee, la machine le dit', hasCls(evR('Finishing'), 'done'), true);
@@ -7382,6 +7383,12 @@ contains('borne : la boucle cede la place au cable tendu', evR('Charging'), '.ev
 contains('borne : la prise quitte son etui', evR('Charging'), '.machine.plugged .ev-plug {');
 contains('borne : en charge, le cable prend la couleur de l etat', evR('Charging'), '.ev-cable .ev-live { stroke: var(--info-color, #2196f3);');
 contains('borne : seulement en charge', evR('Charging'), '.machine.plugged.mode-charging .ev-cable .ev-live { display: inline; }');
+contains('borne : en charge, l energie court le long du cable', evR('Charging'), '.machine.plugged.mode-charging .ev-cable .ev-flow {\n          display: inline; animation: ev-flow 0.6s linear infinite;');
+contains('borne : de la borne vers la voiture', evR('Charging'), '@keyframes ev-flow { to { stroke-dashoffset: -10; } }');
+contains('borne : le flux suit le cable tendu', evR('Charging'), '<path class="ev-flow" d="M42 69 C42 96 50 102 70 102"/>');
+contains('borne : le flux est cache hors charge', evR('Charging'), '.ev-cable .ev-flow { display: none;');
+contains('borne : mouvement reduit respecte', evR('Charging'), '.machine.plugged.mode-charging .ev-cable .ev-flow { animation-play-state: paused; }');
+check('borne : le coeur du cable est plus epais', /\.ev-cable \.ev-live \{[^}]*stroke-width: 2\.4;/.test(evR('Charging')), true);
 {
   const plugSt = on => evSt('Faulted', { 'binary_sensor.cp_plug': { state: on, attributes: {} } });
   const { card } = build({ ...EVC, vehicle_entity: 'binary_sensor.cp_plug' }, plugSt('on'));

@@ -6710,8 +6710,18 @@ const ILLUSTRATION_CSS = {
         .ev-cable path { fill: none; stroke: #3b4048; stroke-width: 3.5; stroke-linecap: round; }
         .ev-cable .ev-out, .ev-cable .ev-live, .machine.plugged .ev-cable .ev-loop { display: none; }
         .machine.plugged .ev-cable .ev-out { display: inline; }
-        .ev-cable .ev-live { stroke: ${color}; stroke-width: 1.3; }
+        .ev-cable .ev-live { stroke: ${color}; stroke-width: 2.4; filter: drop-shadow(0 0 1.5px ${color}); }
         .machine.plugged.mode-charging .ev-cable .ev-live { display: inline; }
+        /* While it charges, the energy runs down the cable from the box to the
+           car: light dashes on the coloured core, the path drawn in that order. */
+        .ev-cable .ev-flow { display: none; stroke: rgba(255, 255, 255, 0.9); stroke-width: 1.6; stroke-dasharray: 3 7; }
+        .machine.plugged.mode-charging .ev-cable .ev-flow {
+          display: inline; animation: ev-flow 0.6s linear infinite; animation-delay: var(--anim-offset, 0s);
+        }
+        @keyframes ev-flow { to { stroke-dashoffset: -10; } }
+        @media (prefers-reduced-motion: reduce) {
+          .machine.plugged.mode-charging .ev-cable .ev-flow { animation-play-state: paused; }
+        }
         .machine.plugged .ev-plug { left: 70px; top: 96px; transform: none; }
   `,
 };
@@ -7250,7 +7260,7 @@ function illustrationHtml(type, ctx) {
     const e = ctx.ev || {};
     return `
         <div class="machine ${cls} mode-${e.mode || "unknown"}${e.plugged ? " plugged" : ""}">
-          <svg class="ev-cable" viewBox="0 0 96 108" aria-hidden="true"><path class="ev-loop" d="M42 69 C42 104 69 104 69 57"/><path class="ev-out" d="M42 69 C42 96 50 102 70 102"/><path class="ev-live" d="M42 69 C42 96 50 102 70 102"/></svg>
+          <svg class="ev-cable" viewBox="0 0 96 108" aria-hidden="true"><path class="ev-loop" d="M42 69 C42 104 69 104 69 57"/><path class="ev-out" d="M42 69 C42 96 50 102 70 102"/><path class="ev-live" d="M42 69 C42 96 50 102 70 102"/><path class="ev-flow" d="M42 69 C42 96 50 102 70 102"/></svg>
           <div class="ev-box"><div class="ev-face"><div class="ev-led"></div>
             <svg class="ev-bolt" viewBox="0 0 24 24" aria-hidden="true"><path d="M11 15H6L13 1V9H18L11 23V15Z"/></svg>
           </div></div>
