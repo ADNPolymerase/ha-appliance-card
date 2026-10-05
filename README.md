@@ -48,11 +48,11 @@ No brand assumed: every field is an entity you pick, so it works with **any** in
 
 ## Configuration
 
-Only `state_entity` is required, except on a fridge where a probe or a door contact is enough. In the visual editor, picking the state entity pre-fills the other fields.
+Only `state_entity` is required, except on a fridge where a probe or a door contact is enough, and on an EV charger where its plug or its power meter is enough. In the visual editor, picking the state entity pre-fills the other fields.
 
 | Option | Description |
 |---|---|
-| `state_entity` | **Required**, except on a fridge. Entity carrying the appliance's state, any domain. |
+| `state_entity` | **Required**, except on a fridge or an EV charger. Entity carrying the appliance's state, any domain. |
 | `state_map` | Map raw state → `idle` \| `running` \| `preheating` \| `keep_warm` \| `paused` \| `done` \| `delayed` \| `error`. Sets the label, the colour and the animation. The key `"*"` catches every state left over (see below), and on a washer, a dryer or a dishwasher the steps (`washing`, `spinning`...) are targets too. Also in the visual editor. |
 | `state_show_raw` | `true` shows the entity's own text instead of the card's label, as Home Assistant displays it (a climate reads `Cooling`, not `cool`). |
 | `controls_activation` | How the control buttons answer a finger: `tap` (default) runs them at once, `hold` runs them only after a long press, `off` never runs them from the card (a long press opens the entity). Handy against stray taps and small fingers. |

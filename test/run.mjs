@@ -7531,6 +7531,12 @@ check('borne : ni un statut reconnu', evMode(evR('SuspendedEVSE', { power_entity
     check(`${file} : l exemple Webasto`, md.includes('state_entity: sensor.webasto_next_charge_point_state'), true);
     check(`${file} : les lettres IEC 61851`, /state_map:\n  A: no_vehicle\n  B: connected\n  C: charging\n  D: charging\n  E: error\n  F: error\n/.test(md), true);
     check(`${file} : le Unavailable d OCPP`, md.includes('state_map:\n  Unavailable: offline'), true);
+    // state_entity may be left out on a charger: the general rule says so too.
+    const charger = file === 'README.md' ? 'EV charger' : 'borne de recharge';
+    const lead = md.split('\n').find((l) => /^(Only|Seule) `state_entity`/.test(l)) || '';
+    const row = md.split('\n').find((l) => l.startsWith('| `state_entity` | **')) || '';
+    check(`${file} : state_entity facultatif sur une borne, en tete`, lead.includes(charger), true);
+    check(`${file} : state_entity facultatif sur une borne, dans le tableau`, row.includes(charger), true);
   }
 }
 
