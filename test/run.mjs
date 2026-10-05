@@ -7680,6 +7680,8 @@ check('borne : ni un statut reconnu', evMode(evR('SuspendedEVSE', { power_entity
     check('borne anime : l energie attend que le cable soit arrive', stE.includes('.machine.plug-in .ev-energy, .machine.plug-in .ev-halo { animation: ev-reach 0.9s linear both;'), true);
     check('borne anime : la ligne de couleur s eteint a la fin', stE.includes('.machine.just-done.plugged .ev-cable .ev-live { display: inline; animation: ev-drain 1.4s ease-in both;'), true);
     check('borne anime : et l energie avec', stE.includes('.machine.just-done.plugged .ev-cable .ev-flow {\n          display: inline; animation: ev-flow var(--ev-flow, 0.6s) linear infinite, ev-drain 1.4s ease-in both;'), true);
+    // The halo fades with them, rather than going at once.
+    check('borne anime : et le halo aussi', stE.includes('.machine.just-done.plugged .ev-halo .eh-out { display: inline; animation: ev-drain 1.4s ease-in both; animation-delay: var(--anim-offset, 0s); }'), true);
   }
   contains('borne anime : et clignote', css, '@keyframes ev-blink { 0%, 40% { opacity: 1; } 50%, 90% { opacity: 0.15; } 100% { opacity: 1; } }');
   check('borne anime : le flash de fin prend la couleur de l etat',
@@ -7827,14 +7829,14 @@ check('borne : ni un statut reconnu', evMode(evR('SuspendedEVSE', { power_entity
     const hidden = Number((/@keyframes ev-reach \{ 0%, ([\d.]+)% \{ opacity: 0; \}/.exec(st) || [, 0])[1]);
     check('borne anime : l energie attend que le cable soit arrive', runOut.length > 5 && hidden >= p95, true);
   }
-  check('borne anime : rejoue depuis son propre instant', st.includes('.machine.just-done .ev-led, .machine.just-done .ev-cable path { --anim-offset: var(--ev-since, 0s); }'), true);
+  check('borne anime : rejoue depuis son propre instant', st.includes('.machine.just-done .ev-led, .machine.just-done .ev-cable path, .machine.just-done .ev-halo { --anim-offset: var(--ev-since, 0s); }'), true);
   // Everything a shot moves plays from the shot's moment, the energy that
   // waits for the cable included, or it would pick up the lap of the loops.
   {
     const own = (/\n\s*([^{}]*)\{ --anim-offset: var\(--ev-since, 0s\); \}/.exec(st) || [, ''])[1].split(',').map(x => x.trim());
     for (const sel of ['.machine.plug-in .ev-ghost', '.machine.plug-in .ev-plug', '.machine.plug-in .ev-loop', '.machine.plug-in .ev-out',
       '.machine.plug-in .ev-energy', '.machine.plug-out .ev-ghost', '.machine.plug-out .ev-plug', '.machine.plug-out .ev-cable path',
-      '.machine.just-done .ev-led', '.machine.just-done .ev-cable path'])
+      '.machine.just-done .ev-led', '.machine.just-done .ev-cable path', '.machine.just-done .ev-halo'])
       check(`borne anime : ${sel} depuis l instant du geste`, own.includes(sel), true);
   }
   for (const [cls, names] of [['plug-in', ['ev-pull', 'ev-fade', 'ev-run-out', 'ev-ride-in', 'ev-reach']],
