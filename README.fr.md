@@ -93,9 +93,10 @@ Par type :
 | `fan_entity` | hotte | Vitesse : pourcentage ou preset d'un `fan`, ou `select`, `sensor` ou `number` ramené sur 1 à 3. Un clic sur la ligne ouvre l'entité pour la changer. |
 | `boost_entity` | hotte | Mode intensif, quand le preset ne le dit pas. |
 | `filter_life_entity` / `filter_reset_entity` | hotte | Usure du filtre en barre, et bouton de remise à zéro. |
-| `filter_life_entity` / `filter_reset_entity` / `filter_due_below` | fontaine | Les jours ou le pourcentage restants du filtre, sur une ligne, et un bouton de réinitialisation. À `filter_due_below` ou en dessous (3 pour des jours, 10 pour un pourcentage par défaut), l'état lit *Filtre à changer* et le voyant passe à l'orange. |
-| `pump_clean_entity` / `pump_reset_entity` | fontaine | Pareil pour la pompe : les jours ou le pourcentage avant son nettoyage, avec le même seuil, et un bouton de réinitialisation. L'état lit *Pompe à nettoyer*. |
-| `water_level_entity` / `level_empty_below` | fontaine | L'eau restante, un pourcentage qui remplit le réservoir sur le dessin, ou un contact allumé quand elle manque. À `level_empty_below` ou en dessous (10 par défaut), l'état lit *Peu d'eau*, en rouge, avant tout le reste : une pompe à sec grille. Le jet s'arrête alors, comme pompe arrêtée, et la vasque baisse avec le réservoir. |
+| `filter_life_entity` / `filter_reset_entity` / `filter_due_below` | fontaine | La durée de vie restante du filtre, sur une ligne, et un bouton de réinitialisation (un bouton, un interrupteur ou un script). Jours, heures, minutes et secondes se comptent en jours, un pourcentage reste un pourcentage, et une date (le prochain changement) donne les jours qui restent. À `filter_due_below` ou en dessous (3 pour des jours, 10 pour un pourcentage par défaut), l'état lit *Filtre à changer*, et la ligne et le voyant passent à l'orange. |
+| `pump_clean_entity` / `pump_reset_entity` | fontaine | Pareil pour la pompe : la durée ou la date avant son nettoyage, avec le même seuil, et un bouton de réinitialisation. L'état lit *Pompe à nettoyer*. |
+| `pump_running_entity` | fontaine | La pompe, quand l'intégration la lit à part de l'alimentation (le *Pump running* de Petkit, le statut *watering* de Xiaomi) : l'eau ne coule que si les deux le disent. |
+| `water_level_entity` / `level_empty_below` | fontaine | L'eau restante : un pourcentage, qui remplit le réservoir sur le dessin ; un mot (`low`, `lack`, `shortage`, `level_1`… ou `normal`, `medium`, `full`) ; ou un contact, allumé quand elle manque, ou allumé tant qu'il y a de l'eau pour un contact d'humidité (Petlibro). Un nombre dans une autre unité (un niveau de 1 à 4, des millilitres) ne se lit contre `level_empty_below` que si celui-ci est réglé. À `level_empty_below` ou en dessous (10 par défaut), l'état lit *Peu d'eau*, en rouge, avant tout le reste : une pompe à sec grille. Le jet s'arrête alors, comme pompe arrêtée, et la vasque baisse avec le réservoir. |
 | `zones` / `zones_layout` / `zones_count` | plaque | Jusqu'à 6 foyers `{ level_entity, residual_heat_entity?, name? }`, niveau en chiffre ou en mot (`boost`), `H` pour la chaleur résiduelle. Disposition `2x1` \| `2x2` \| `3x2`, et nombre de foyers à dessiner sans entité (4 par défaut). |
 | `child_lock_entity` | plaque | Cadenas sur l'illustration. |
 | `fridge_layout` | frigo | `freezer_bottom` (défaut) \| `freezer_top` \| `side_by_side` \| `single` \| `wine` (porte vitrée et bouteilles, pour une cave à vin). |
@@ -389,6 +390,18 @@ info_entities:
 ```
 
 Une fontaine qui ne connaît pas son niveau d'eau garde un réservoir à mi-hauteur sur le dessin plutôt que de le montrer vide.
+
+Une fontaine hors ligne lit *Hors ligne*, sans voyant et son eau dessinée en gris.
+
+L'état de la pompe se lit dans les mots des intégrations de fontaines, si bien qu'un mode marche aussi bien qu'un interrupteur : ce qui l'arrête d'abord (`off`, `Do not flow`, `closed`, `waterless`), puis ce qui la fait tourner (`on`, `flowing`, `constant`, `intermittent`, `smart`, `auto`, `motion`, `open`…).
+
+| Intégration | Pompe ou mode | Eau | Filtre et pompe |
+|---|---|---|---|
+| Petkit ([Jezza34000](https://github.com/Jezza34000/homeassistant_petkit), [RobertD502](https://github.com/RobertD502/home-assistant-petkit)) | Interrupteur ; *Pump running* dans `pump_running_entity` ; `Continuous`, `Intermittent`, `Motion activated` | *Water lack warning*, ou `normal`/`low`/`empty` | Filtre en % ou en jours, prochain rinçage en date |
+| Xiaomi ([xiaomi_miot](https://github.com/al-one/hass-xiaomi-miot), Xiaomi Home) | Interrupteur ; `Common`/`Smart`, `Auto`/`Interval`/`Constant` ; statut `watering`/`waterless` | Contact de manque d'eau | Filtre et nettoyage en jours ou en heures |
+| Petlibro | `Flowing Water (Constant)`, `Intermittent Water (Scheduled)`, `Off` | Poids en %, ou le contact d'humidité de l'eau | Jours de filtre et de nettoyage |
+| Catlink | `Flowing mode`, `Eco-mode`, `Smart mode` | Niveau d'eau en % | Vie du filtre en % |
+| Tuya, tuya-local | Interrupteur ou vanne (`open`/`closed`) ; `normal`, `smart`, `night`, `motion` | `level_1`…`level_3`, `low`/`medium`/`full`, ou un contact | Filtre et pompe en minutes ou en jours ; interrupteurs de réinitialisation |
 
 ### Poêles à granulés
 

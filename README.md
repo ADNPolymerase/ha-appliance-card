@@ -93,9 +93,10 @@ Per type:
 | `fan_entity` | hood | Speed: a `fan`'s percentage or preset, or a `select`, `sensor` or `number` mapped onto 1 to 3. Clicking the line opens the entity to change it. |
 | `boost_entity` | hood | Intensive mode, when the preset doesn't say so. |
 | `filter_life_entity` / `filter_reset_entity` | hood | Filter wear as a bar, and a reset button. |
-| `filter_life_entity` / `filter_reset_entity` / `filter_due_below` | pet fountain | The filter's days or percent left, on a line, and a reset button. At or below `filter_due_below` (3 for days, 10 for percent by default) the state reads *Filter due* and the light turns orange. |
-| `pump_clean_entity` / `pump_reset_entity` | pet fountain | The same for the pump: days or percent until it wants cleaning, against the same threshold, and a reset button. The state reads *Clean the pump*. |
-| `water_level_entity` / `level_empty_below` | pet fountain | The water left, a percentage that fills the tank on the drawing, or a contact on when it runs low. At or below `level_empty_below` (10 by default) the state reads *Low water*, in red, ahead of everything else: a dry pump burns out. The jet then stops, as it does with the pump off, and the dish drops with the tank. |
+| `filter_life_entity` / `filter_reset_entity` / `filter_due_below` | pet fountain | The filter's life left, on a line, and a reset button (a button, a switch or a script). Days, hours, minutes and seconds are counted in days, a percentage stays one, and a date (the next change) gives the days left until it. At or below `filter_due_below` (3 for days, 10 for percent by default) the state reads *Filter due*, and the line and the light turn orange. |
+| `pump_clean_entity` / `pump_reset_entity` | pet fountain | The same for the pump: the time or the date until it wants cleaning, against the same threshold, and a reset button. The state reads *Clean the pump*. |
+| `pump_running_entity` | pet fountain | The pump, when the integration reads it apart from the power (Petkit's *Pump running*, Xiaomi's *watering* status): the water runs only while both say so. |
+| `water_level_entity` / `level_empty_below` | pet fountain | The water left: a percentage, which fills the tank on the drawing; a word (`low`, `lack`, `shortage`, `level_1`… or `normal`, `medium`, `full`); or a contact, on when it runs low, or on while there is water for a moisture contact (Petlibro). A number in another unit (a level from 1 to 4, millilitres) is only read against `level_empty_below` when it is set. At or below `level_empty_below` (10 by default) the state reads *Low water*, in red, ahead of everything else: a dry pump burns out. The jet then stops, as it does with the pump off, and the dish drops with the tank. |
 | `zones` / `zones_layout` / `zones_count` | cooktop | Up to 6 zones `{ level_entity, residual_heat_entity?, name? }`, level as a number or a word (`boost`), `H` for residual heat. Layout `2x1` \| `2x2` \| `3x2`, and how many zones to draw without entities (default 4). |
 | `child_lock_entity` | cooktop | Padlock on the illustration. |
 | `fridge_layout` | fridge | `freezer_bottom` (default) \| `freezer_top` \| `side_by_side` \| `single` \| `wine` (glass door and bottles, for a wine cooler). |
@@ -388,7 +389,17 @@ info_entities:
   - select.fountain_work_mode
 ```
 
-A fountain that does not know its water level keeps the tank at a resting height on the drawing rather than reading as empty.
+A fountain that does not know its water level keeps the tank at a resting height on the drawing rather than reading as empty. One that is offline reads *Offline*, with no light and its water drawn grey.
+
+The pump's state is read in the words of the fountain integrations, so a mode works as well as a switch: what stops it first (`off`, `Do not flow`, `closed`, `waterless`), then what runs it (`on`, `flowing`, `constant`, `intermittent`, `smart`, `auto`, `motion`, `open`…).
+
+| Integration | Pump or mode | Water | Filter and pump |
+|---|---|---|---|
+| Petkit ([Jezza34000](https://github.com/Jezza34000/homeassistant_petkit), [RobertD502](https://github.com/RobertD502/home-assistant-petkit)) | Power switch; *Pump running* in `pump_running_entity`; `Continuous`, `Intermittent`, `Motion activated` | *Water lack warning*, or `normal`/`low`/`empty` | Filter in % or days, next flush as a date |
+| Xiaomi ([xiaomi_miot](https://github.com/al-one/hass-xiaomi-miot), Xiaomi Home) | Switch; `Common`/`Smart`, `Auto`/`Interval`/`Constant`; status `watering`/`waterless` | No-water or water-shortage contact | Filter and cleaning in days or hours |
+| Petlibro | `Flowing Water (Constant)`, `Intermittent Water (Scheduled)`, `Off` | Weight in %, or the water-state moisture contact | Filter and cleaning days |
+| Catlink | `Flowing mode`, `Eco-mode`, `Smart mode` | Water level in % | Filter life in % |
+| Tuya, tuya-local | Switch or valve (`open`/`closed`); `normal`, `smart`, `night`, `motion` | `level_1`…`level_3`, `low`/`medium`/`full`, or a contact | Filter and pump in minutes or days; reset switches |
 
 ### Pellet stoves
 

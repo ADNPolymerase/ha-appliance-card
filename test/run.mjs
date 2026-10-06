@@ -8278,7 +8278,7 @@ check('borne : ni un statut reconnu', evMode(evR('SuspendedEVSE', { power_entity
     cls(ft({ water_level_entity: 'binary_sensor.fountain_low' }, { 'switch.fountain_power': { state: 'off', attributes: {} }, 'binary_sensor.fountain_low': { state: 'on', attributes: {} } })).filter(c => c === 'flowing' || c === 'ft-dry').join(' '), 'ft-dry');
   {
     const FT_CSS = SRC.slice(SRC.indexOf('pet_fountain: () => `'), SRC.indexOf('dehumidifier: () => `'));
-    check('fontaine : les gouttes ne s\'animent qu\'avec le jet', /\.ft-jet i \{[^}]*opacity: 0;/.test(FT_CSS) && !/\.machine:not\(\.flowing\)[^{]*\.ft-jet/.test(FT_CSS), true);
+    check('fontaine : la gerbe ne parait qu\'avec le jet', /\.ft-jet \{[^}]*display: none;/.test(FT_CSS) && /\.machine\.flowing \.ft-jet \{ display: block; \}/.test(FT_CSS), true);
     check('fontaine : a l\'arret, le bec ne fait plus de goutte sur la vasque', /\.machine:not\(\.flowing\) \.ft-spout \{[^}]*top: 32px; height: 3px;/.test(FT_CSS), true);
     check('fontaine : a sec, la vasque est plus basse et plus petite',
       /\.machine\.ft-dry \.ft-pool \{[^}]*left: 24px; right: 24px; top: 31px; height: 7px;/.test(FT_CSS), true);
@@ -8301,6 +8301,92 @@ check('borne : ni un statut reconnu', evMode(evR('SuspendedEVSE', { power_entity
   check('editeur fontaine : le type se choisit', /<option value="pet_fountain"\s*selected>Pet fountain</.test(eh), true);
   check('editeur fontaine : nettoyage de la pompe', /Pump cleaning/.test(eh), true);
   check('editeur fontaine : niveau d\'eau', /Water level/.test(eh), true);
+}
+
+// == Pet fountain, every model =================================================
+// The words of Petkit, Xiaomi, Petlibro, Catlink and Tuya, read in their
+// source code; a jet in two pairs of arcs; offline; the wear in any unit.
+{
+  const base = { appliance_type: 'pet_fountain', state_entity: 'sensor.ft' };
+  const F = (raw, cfg = {}, st = {}) => render({ ...base, ...cfg }, { 'sensor.ft': { state: raw, attributes: {} }, ...st });
+  const flows = h => machineCls(h).split(' ').includes('flowing');
+  for (const raw of ['on', 'Flowing Water (Constant)', 'Intermittent Water (Scheduled)', 'Flowing mode', 'Eco-mode', 'Smart mode',
+    'watering', 'Constant', 'Interval', 'Auto', 'Common', 'Smart', 'Continuous', 'Intermittent', 'Motion activated', 'night', 'motion', 'open', 'normal'])
+    check(`fontaine : « ${raw} », l eau coule`, flows(F(raw)), true);
+  for (const raw of ['off', 'Off', 'Do not flow', 'waterless', 'closed', 'paused', 'Zzz'])
+    check(`fontaine : « ${raw} », l eau ne coule pas`, flows(F(raw)), false);
+  // Offline: grey, no light, no jet.
+  for (const raw of ['unavailable', 'unknown', 'offline', 'Offline']) {
+    check(`fontaine : « ${raw} », hors ligne`, stateLine(F(raw)), 'Offline');
+    check(`fontaine : « ${raw} », sans jet`, flows(F(raw)), false);
+  }
+  check('fontaine : hors ligne, l eau grisee', machineCls(F('unavailable')).split(' ').includes('ft-offline'), true);
+  check('fontaine : hors ligne, la lumiere eteinte', /led-(on|due|low)/.test(machineCls(F('unavailable'))), false);
+  check('fontaine : hors ligne en gris', stateColor(F('unavailable')), 'var(--disabled-text-color, #9e9e9e)');
+  // A pump read apart from the power.
+  const pr = (pump) => F('on', { pump_running_entity: 'binary_sensor.pump' }, { 'binary_sensor.pump': { state: pump, attributes: {} } });
+  check('fontaine : la pompe tourne', flows(pr('on')), true);
+  check('fontaine : alimentee, la pompe arretee', flows(pr('off')), false);
+  check('fontaine : la pompe illisible ne change rien', flows(pr('unavailable')), true);
+  check('fontaine : Xiaomi, statut watering', flows(F('on', { pump_running_entity: 'sensor.st' }, { 'sensor.st': { state: 'watering', attributes: {} } })), true);
+  check('fontaine : Xiaomi, statut waterless', flows(F('on', { pump_running_entity: 'sensor.st' }, { 'sensor.st': { state: 'waterless', attributes: {} } })), false);
+  // The water, in every form it comes in.
+  const W = (state, attrs = {}, cfg = {}) => F('on', { water_level_entity: 'sensor.w', ...cfg }, { 'sensor.w': { state, attributes: attrs } });
+  for (const st of ['low', 'empty', 'Lack', 'shortage', 'No water', 'level_1', 'tank_empty', 'waterless', 'Water low', 'insufficient'])
+    check(`fontaine : eau « ${st} », peu d eau`, stateLine(W(st)), 'Low water');
+  for (const st of ['normal', 'medium', 'Middle', 'high', 'full', 'level_2', 'level_3', 'OK'])
+    check(`fontaine : eau « ${st} », rien a signaler`, stateLine(W(st)), 'Flowing');
+  check('fontaine : un mot d eau s affiche', infoLine(W('medium'), 'Water'), 'medium');
+  check('fontaine : contact probleme allume, peu d eau', stateLine(W('on', { device_class: 'problem' })), 'Low water');
+  check('fontaine : contact humidite allume, de l eau', stateLine(W('on', { device_class: 'moisture' })), 'Flowing');
+  check('fontaine : contact humidite allume, pas de ligne', infoLine(W('on', { device_class: 'moisture' }), 'Water'), null);
+  check('fontaine : contact probleme eteint, pas de ligne', infoLine(W('off', { device_class: 'problem' }), 'Water'), null);
+  check('fontaine : contact humidite eteint, peu d eau', stateLine(W('off', { device_class: 'moisture' })), 'Low water');
+  check('fontaine : un niveau de 1 a 4 n est pas un pourcentage', stateLine(W('1')), 'Flowing');
+  check('fontaine : des mL non plus', stateLine(W('8', { unit_of_measurement: 'mL' })), 'Flowing');
+  check('fontaine : un seuil choisi les lit', stateLine(W('1', {}, { level_empty_below: 1 })), 'Low water');
+  check('fontaine : un pourcentage reste un pourcentage', stateLine(W('8', { unit_of_measurement: '%' })), 'Low water');
+  check('fontaine : seul un pourcentage remplit le reservoir', /--ft-fill: 55%/.test(W('80', { unit_of_measurement: 'mL' })), true);
+  // The wear, in days whatever the unit.
+  const filt = (state, unit, cfg = {}) => stateLine(F('on', { filter_life_entity: 'sensor.fl', ...cfg },
+    { 'sensor.fl': { state: String(state), attributes: unit ? { unit_of_measurement: unit } : {} } }));
+  check('fontaine : 43200 min, 30 jours', filt(43200, 'min'), 'Flowing');
+  check('fontaine : 2880 min, 2 jours, a changer', filt(2880, 'min'), 'Filter due');
+  check('fontaine : 72 h, 3 jours, a changer', filt(72, 'h'), 'Filter due');
+  check('fontaine : 100 h, plus de 4 jours', filt(100, 'h'), 'Flowing');
+  check('fontaine : en secondes', filt(172800, 's'), 'Filter due');
+  check('fontaine : en jours', filt(3, 'd'), 'Filter due');
+  check('fontaine : en pourcent', filt(8, '%'), 'Filter due');
+  check('fontaine : un seuil choisi en jours, pour des heures', filt(100, 'h', { filter_due_below: 5 }), 'Filter due');
+  const soon = new Date(Date.now() + 2 * 86400000).toISOString();
+  const later = new Date(Date.now() + 9 * 86400000).toISOString();
+  check('fontaine : une date dans deux jours, due', filt(soon, null), 'Filter due');
+  check('fontaine : une date dans neuf jours', filt(later, null), 'Flowing');
+  check('fontaine : la pompe aussi par date', stateLine(F('on', { pump_clean_entity: 'sensor.pc' },
+    { 'sensor.pc': { state: soon, attributes: { device_class: 'timestamp' } } })), 'Clean the pump');
+  // The colours match: the wear in orange, the water in red.
+  const due = F('on', { filter_life_entity: 'sensor.fl' }, { 'sensor.fl': { state: '1', attributes: { unit_of_measurement: 'd' } } });
+  check('fontaine : la ligne du filtre en orange', /class="info-line caution[^"]*"[^>]*><ha-icon icon="mdi:air-filter"/.test(due), true);
+  check('fontaine : et pas en rouge', /class="info-line warn[^"]*"[^>]*><ha-icon icon="mdi:air-filter"/.test(due), false);
+  const pdue = F('on', { pump_clean_entity: 'sensor.pc' }, { 'sensor.pc': { state: '1', attributes: { unit_of_measurement: 'd' } } });
+  check('fontaine : la ligne de la pompe en orange', /class="info-line caution[^"]*"[^>]*><ha-icon icon="mdi:pump"/.test(pdue), true);
+  check('fontaine : hors ligne, pas de voyant meme a sec', /led-/.test(machineCls(F('offline', { water_level_entity: 'sensor.w' },
+    { 'sensor.w': { state: 'low', attributes: {} } }))), false);
+  check('fontaine : l eau reste en rouge', /class="info-line warn[^"]*"[^>]*><ha-icon icon="mdi:alert-circle-outline"/.test(W('low')), true);
+  // The jet: a column and two pairs of arcs, light dashes running out, a
+  // splash where they land.
+  const on = F('on');
+  check('fontaine : une gerbe, colonne et quatre arcs', (on.match(/<path class="ft-arc[ "]/g) || []).length, 5);
+  check('fontaine : les tirets courent sur chaque arc', (on.match(/<path class="ft-arc-hi"/g) || []).length, 5);
+  check('fontaine : quatre remous', (on.match(/<ellipse class="ft-splash/g) || []).length, 4);
+  contains('fontaine : les tirets courent', on, '.machine.flowing .ft-jet .ft-arc-hi { animation: ft-run 0.6s linear infinite; animation-delay: var(--anim-offset, 0s); }');
+  check('fontaine : la gerbe sous le bec', on.indexOf('class="ft-jet"') < on.indexOf('class="ft-spout"'), true);
+  // The editor and the detection.
+  check('fontaine : pump_running designe une fontaine', /pet_fountain/.test(machineCls(render({ state_entity: 'switch.x', pump_running_entity: 'binary_sensor.p' },
+    { 'switch.x': { state: 'on', attributes: {} }, 'binary_sensor.p': { state: 'on', attributes: {} } }))) || stateLine(render({ state_entity: 'switch.x', pump_running_entity: 'binary_sensor.p' },
+    { 'switch.x': { state: 'on', attributes: {} }, 'binary_sensor.p': { state: 'on', attributes: {} } })) === 'Flowing', true);
+  check('fontaine : l editeur propose la pompe en marche',
+    /data-slot="pump_running_entity"|Pump running/.test(markup(newEditor({ state_entity: 'switch.f', appliance_type: 'pet_fountain' }))), true);
 }
 
 report();
