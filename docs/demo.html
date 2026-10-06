@@ -52,9 +52,9 @@ customElements.define("ha-icon", StubIcon);
 const params = new URLSearchParams(location.search);
 const uiLang = params.get("lang") === "fr" ? "fr" : "en";
 const view = params.get("view") === "types" ? "types" : "hero";
-// Twenty-five types in twenty-five cards, the iron on its steam generator:
-// five across and five down.
-document.documentElement.style.setProperty("--cols", params.get("cols") || 5);
+// Twenty-six types and the two other feeders, twenty-eight cards with the
+// iron on its steam generator: seven across and four down.
+document.documentElement.style.setProperty("--cols", params.get("cols") || 7);
 const fr = uiLang === "fr";
 const L = (en, f) => (fr ? f : en);
 
@@ -502,6 +502,48 @@ const petFeeder = () => card({
   st("sensor.feeder_schedule", "07:00 | 12:00 | 19:00"),
 ]);
 
+// The feeder with two hoppers over one split bowl, the right one running low,
+// and the wet-food feeder with its plates on a turntable.
+const dualFeeder = () => card({
+  name: L("Two-hopper feeder", "Double r\u00e9servoir"),
+  appliance_type: "pet_feeder",
+  feeder_layout: "dual_split",
+  state_entity: "binary_sensor.dual_feeder_dispensing",
+  level_entity: "sensor.dual_feeder_hopper_1",
+  level_b_entity: "sensor.dual_feeder_hopper_2",
+}, [
+  st("binary_sensor.dual_feeder_dispensing", "off"),
+  st("sensor.dual_feeder_hopper_1", 80, { unit_of_measurement: "%" }),
+  st("sensor.dual_feeder_hopper_2", 35, { unit_of_measurement: "%" }),
+]);
+const wetFeeder = () => card({
+  name: L("Wet-food feeder", "Distributeur de p\u00e2t\u00e9e"),
+  appliance_type: "pet_feeder",
+  feeder_layout: "rotary",
+  state_entity: "switch.wet_feeder_lid",
+  level_entity: "counter.wet_feeder_plates_left",
+  level_max: 3,
+}, [
+  st("switch.wet_feeder_lid", "on"),
+  st("counter.wet_feeder_plates_left", 2),
+]);
+
+// A fountain on its power switch, the water running, the filter good for a
+// while and the tank three quarters full.
+const petFountain = () => card({
+  name: L("Water fountain", "Fontaine \u00e0 eau"),
+  appliance_type: "pet_fountain",
+  state_entity: "switch.fountain_power",
+  water_level_entity: "sensor.fountain_water_level",
+  filter_life_entity: "sensor.fountain_filter_days",
+  filter_reset_entity: "button.fountain_reset_filter",
+}, [
+  st("switch.fountain_power", "on"),
+  st("sensor.fountain_water_level", 75, { unit_of_measurement: "%" }),
+  st("sensor.fountain_filter_days", 18, { unit_of_measurement: "d" }),
+  st("button.fountain_reset_filter", "unknown"),
+]);
+
 // An iron reaches Home Assistant through the plug it sits on, and nothing
 // else: the state is what it draws. The one that rests on a steam generator
 // shows the iron as well.
@@ -515,6 +557,51 @@ const steamGenerator = () => card({
 }, [
   st("switch.steam_plug", "on"),
   st("sensor.steam_plug_power", 1900, { unit_of_measurement: "W" }),
+]);
+
+// The iron alone on its plug, heating.
+const iron = () => card({
+  name: L("Iron", "Fer \u00e0 repasser"),
+  appliance_type: "iron",
+  state_entity: "switch.iron_plug",
+  power_entity: "sensor.iron_plug_power",
+  power_on_threshold: 20,
+}, [
+  st("switch.iron_plug", "on"),
+  st("sensor.iron_plug_power", 2200, { unit_of_measurement: "W" }),
+]);
+
+// The round feeder serving, and the one with two bowls at rest.
+const roundFeeder = () => card({
+  name: L("Round feeder", "Distributeur rond"),
+  appliance_type: "pet_feeder",
+  feeder_layout: "canister",
+  state_entity: "binary_sensor.round_feeder_dispensing",
+  level_entity: "sensor.round_feeder_level",
+}, [
+  st("binary_sensor.round_feeder_dispensing", "on"),
+  st("sensor.round_feeder_level", 60, { unit_of_measurement: "%" }),
+]);
+const doubleFeeder = () => card({
+  name: L("Two-bowl feeder", "Deux gamelles"),
+  appliance_type: "pet_feeder",
+  feeder_layout: "double",
+  state_entity: "binary_sensor.double_feeder_dispensing",
+  level_entity: "sensor.double_feeder_level",
+}, [
+  st("binary_sensor.double_feeder_dispensing", "off"),
+  st("sensor.double_feeder_level", 45, { unit_of_measurement: "%" }),
+]);
+
+// A Wallbox Quasar giving energy back to the home.
+const evDischarging = () => card({
+  name: L("Bidirectional wallbox", "Borne bidirectionnelle"),
+  appliance_type: "ev_charger",
+  state_entity: "sensor.quasar_status_description",
+  power_entity: "sensor.quasar_charging_power",
+}, [
+  st("sensor.quasar_status_description", "Discharging"),
+  st("sensor.quasar_charging_power", 4.6, { unit_of_measurement: "kW" }),
 ]);
 
 // A wallbox on OCPP halfway through a charge, named the way the ocpp
@@ -542,11 +629,15 @@ const ALL = { washer, dryer, steam_generator: steamGenerator,
               dishwasher, oven, microwave, hood, cooktop, fridge, kettle, cooker, coffee, rice_cooker: riceCooker, air_fryer: airFryer,
               water_heater: waterHeater, boiler, heat_pump: heatPump, pellet_stove: pelletStove,
               space_heater: spaceHeater, towel_warmer: towelWarmer, air_conditioner: airConditioner, dehumidifier,
-              pet_feeder: petFeeder, printer_3d: printer3d, ev_charger: evCharger };
+              pet_feeder: petFeeder, dual_feeder: dualFeeder, wet_feeder: wetFeeder, pet_fountain: petFountain,
+              printer_3d: printer3d, ev_charger: evCharger };
+// The variants the family captures fill their grids with; the gallery of all
+// types leaves them out.
+const EXTRA = { iron, round_feeder: roundFeeder, double_feeder: doubleFeeder, ev_discharging: evDischarging };
 const only = (params.get("only") || "").split(",").map((k) => k.trim()).filter(Boolean);
 if (only.length) {
-  document.documentElement.style.setProperty("--cols", only.length);
-  only.forEach((k) => ALL[k] && ALL[k]());
+  document.documentElement.style.setProperty("--cols", params.get("cols") || only.length);
+  only.forEach((k) => (ALL[k] || EXTRA[k]) && (ALL[k] || EXTRA[k])());
 } else if (view === "types") {
   Object.values(ALL).forEach((f) => f());
 } else {
