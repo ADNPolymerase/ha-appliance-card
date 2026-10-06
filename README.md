@@ -33,26 +33,42 @@ No brand assumed: every field is an entity you pick, so it works with **any** in
 
 ## Gallery
 
-### Laundry and dishes
+Click a family to see its appliances at work.
+
+<details>
+<summary><b>Laundry and dishes</b></summary>
 
 <img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-laundry.gif" alt="Laundry and dishes" width="100%">
 
-### Kitchen
+</details>
+
+<details>
+<summary><b>Kitchen</b></summary>
 
 <img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-kitchen.gif" alt="Kitchen" width="100%">
 
-### Heating and climate
+</details>
+
+<details>
+<summary><b>Heating and climate</b></summary>
 
 <img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-climate.gif" alt="Heating and climate" width="80%">
 
-### Pets
+</details>
+
+<details>
+<summary><b>Pets</b></summary>
 
 <img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-pets.gif" alt="Pets" width="60%">
 
-### Garage and workshop
+</details>
+
+<details>
+<summary><b>Garage and workshop</b></summary>
 
 <img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-garage.gif" alt="Garage and workshop" width="60%">
 
+</details>
 
 ## Installation
 
@@ -70,6 +86,9 @@ No brand assumed: every field is an entity you pick, so it works with **any** in
 ## Configuration
 
 Only `state_entity` is required, except on a fridge where a probe or a door contact is enough, and on an EV charger where its plug or its power meter is enough. In the visual editor, picking the state entity pre-fills the other fields.
+
+<details>
+<summary><b>Common options</b></summary>
 
 | Option | Description |
 |---|---|
@@ -101,7 +120,10 @@ Only `state_entity` is required, except on a fridge where a probe or a door cont
 | `lines_order` | The order of the info lines, as a list of their keys: `program`, `remaining`, `door`, the ones each type brings (`level`, `last_feed`, `flow_return`, `nozzle`…) and, for the lines you add, their entity id. The visual editor writes it for you by dragging. Lines left out keep their place after the ones named, and a line that is not showing is skipped. |
 | `start_entity` / `pause_entity` / `resume_entity` / `stop_entity` | Controls, only shown when configured. A control is usually a `button`, a `script` or an `automation`, which is triggered rather than switched off, and can also be a `select` or a `number`: `start_option` says which option to pick (the card takes it on its own when the list holds only one), `start_value` what to write. The same goes for the other three, as `pause_option`, `stop_value` and so on. `start_icon` swaps the button's icon, as do `pause_icon`, `resume_icon`, `stop_icon`, `toggle_icon` and `filter_reset_icon`: `mdi:play` reads as a programme starting, which is not what every press does. In YAML only. |
 
-Per type:
+</details>
+
+<details>
+<summary><b>Options per type</b></summary>
 
 | Option | Types | Description |
 |---|---|---|
@@ -186,7 +208,14 @@ Per type:
 | `current_limit_entity` | EV charger | The current limit, as *Current limit 16 A*. A tap opens the entity, which is where it is changed. |
 | `error_entity` | EV charger | A contact on, a code other than 0, or a word other than *no error* (OCPP's `NoError`, `ok`, `none`) turns the state into *Error*, with the charger's words on a line. |
 
-### Examples
+</details>
+
+## Examples and guides
+
+One section per topic: click to open it.
+
+<details>
+<summary><b>Examples</b></summary>
 
 ```yaml
 type: custom:ha-appliance-card
@@ -286,7 +315,10 @@ power_entity: sensor.water_heater_plug_power
 power_on_threshold: 10
 ```
 
-### Relabeling raw values (`value_map`)
+</details>
+
+<details>
+<summary><b>Relabeling raw values (<code>value_map</code>)</b></summary>
 
 When an integration reports a phase as a code or an untranslated token, `value_map` relabels it, per info line:
 
@@ -302,7 +334,10 @@ info_entities:
 
 Case is ignored and a value missing from the map is shown as-is. In the visual editor, it is one `code: label` line per entry.
 
-### Dishwasher phases
+</details>
+
+<details>
+<summary><b>Dishwasher phases</b></summary>
 
 With a `phase_entity`, `Drying` and `Ado Drying` replace the wash with orange steam rising up the door, higher for `Ado Drying`. `Prewash`, `Mainwash` and `Rinsing` keep the wash animation. These values are recognised out of the box, as are `Pre Wash`, `Wash`, `Rinse` and `Dry`, and `phase_map` translates the others:
 
@@ -316,7 +351,10 @@ phase_map:
 
 An unrecognised value leaves the illustration as it is, and the phase also names the step on the state line (see *Cycle steps*).
 
-### Irons
+</details>
+
+<details>
+<summary><b>Irons</b></summary>
 
 Nothing connects an iron to Home Assistant, which is why it is on a smart plug: the state comes from what it draws, and the drawing does the rest. Heating, the soleplate glows and steam leaves the nose. Two models are drawn, the iron alone and the same iron on the base of a steam generator.
 
@@ -334,7 +372,10 @@ left_on_after: 30
 
 The card shows the alert; turning the iron off is an automation's job, on the same entity.
 
-### Pet feeders
+</details>
+
+<details>
+<summary><b>Pet feeders</b></summary>
 
 A feeder is read rather than run: no cycle, no programme, no door. Its state is worked out from what it reports, *Tank empty*, *Error* or *Dispensing*, and at rest the line tells how full the tank is, or nothing when the card cannot know. The card carries what was served today and when the last meal was. An empty tank is the one thing a feeder cannot fix by itself, so it takes the state line and empties the tank and the bowl on the drawing. A red warning triangle goes up with it, and it goes up for a jam as well, that time with the kibble still in the tank.
 
@@ -392,7 +433,10 @@ level_entity: counter.wet_feeder_plates_left
 level_max: 3
 ```
 
-### Pet fountains
+</details>
+
+<details>
+<summary><b>Pet fountains</b></summary>
 
 A fountain runs all day, so like a feeder it is read rather than run. The water bubbles out of the spout and ripples across the dish while the pump runs, from a switch or the plug the fountain sits on. What it says otherwise is what needs a hand: the water first, then the filter, then the pump, each taking the state line and the light on its front over, orange for the filter and the pump, red and blinking for the water.
 
@@ -422,7 +466,10 @@ The pump's state is read in the words of the fountain integrations, so a mode wo
 | Catlink | `Flowing mode`, `Eco-mode`, `Smart mode` | Water level in % | Filter life in % |
 | Tuya, tuya-local | Switch or valve (`open`/`closed`); `normal`, `smart`, `night`, `motion` | `level_1`…`level_3`, `low`/`medium`/`full`, or a contact | Filter and pump in minutes or days; reset switches |
 
-### Pellet stoves
+</details>
+
+<details>
+<summary><b>Pellet stoves</b></summary>
 
 A stove says more than on and off: it lights, burns, modulates, rests in eco once the room is warm, cools down and cleans its burn pot. The card reads that phase from the stove's status and draws it: the flame in the glass, the warm air above the grille, smoke at the flue while it lights, ash while it cleans, embers while it rests. The hopper beside the door shows the pellets left.
 
@@ -440,7 +487,10 @@ level_max: 40
 
 The editor fills most of it from the stove's own entities, on Agua IOT (Extraflame, Ravelli, MCZ, Piazzetta and thirty more), Edilkamin, Rika and Duepi as well.
 
-### Air conditioners
+</details>
+
+<details>
+<summary><b>Air conditioners</b></summary>
 
 A split's indoor unit, with its mode's symbol and the setpoint on its screen. The air leaves as far down and as far to the side as the vanes point, faster with the fan, and swings with them; drying, the water goes back up into the unit, and defrosting, frost covers it. Panasonic Comfort Cloud:
 
@@ -455,7 +505,10 @@ outdoor_temperature_entity: sensor.living_room_outside_temperature
 
 A `climate` entity that can cool is recognised on its own, and the editor fills the rest from the unit's entities.
 
-### Air fryers
+</details>
+
+<details>
+<summary><b>Air fryers</b></summary>
 
 The screen shows the temperature while the fryer heats up or keeps the food warm, and the time left while it cooks. The heat rises above it and the seam over the basket glows; a basket pulled out comes forward, and one to shake wobbles. Through the window the fries toss in the heat, and on a dual fryer each basket shows its own state. Philips HomeID:
 
@@ -471,7 +524,10 @@ shake_entity: binary_sensor.airfryer_shake_reminder
 
 An entity named after an air fryer (or Cosori's `cook_status`) is recognised on its own, and the editor fills the rest. On a smart plug alone, it reads *Cooking*, then *Finished*.
 
-### Dehumidifiers, space heaters and towel warmers
+</details>
+
+<details>
+<summary><b>Dehumidifiers, space heaters and towel warmers</b></summary>
 
 A dehumidifier shows the humidity on its screen and the water it has taken in its tank; a fan heater glows behind its grille, an oil-filled radiator warms up its fins; a towel warmer shows the pilot wire's mode with the symbols of French radiators (sun, moon, snowflake). Warm air rises, the air a dehumidifier or a fan blows goes the other way.
 
@@ -486,7 +542,10 @@ power_entity: sensor.heater_plug_power
 power_on_threshold: 30
 ```
 
-### EV chargers
+</details>
+
+<details>
+<summary><b>EV chargers</b></summary>
 
 A wallbox on the wall, its light in the colour of what the charger is doing: *No vehicle*, *Plugged in* (a car waiting), *Awaiting authorisation* (a card or the app), *Charging*, *Discharging* (the car giving energy back), *Charging paused* (by the box or by the car), *Scheduled*, *Charging complete* (the car still plugged in), *Error* or *Offline*. With a car plugged in, the plug leaves its holster and the cable runs off to the car; while it charges, the energy runs down the cable, glowing in the state's colour and faster the more power goes through (four paces, from a solar surplus to 22 kW), and stands still in a pause. The light breathes while charging and slowly while scheduled, and blinks for authorisation and, faster, on a fault. Seen live, a car being plugged in shows the plug riding the cable out to it, an unplugged one the cable winding back, and the end of a charge a flash of the light. With *reduce motion* set on the device, everything stays still. Any wallbox will do: the card reads the status in the words of OCPP and of the integrations in Home Assistant itself, `state_map` teaches it any other, and a box with no status at all is read from its plug and its power meter.
 
@@ -592,7 +651,10 @@ current_limit_entity: number.wallbox_quasar_maximum_charging_current
 
 An entity named after a wallbox in the card's languages, after its maker or after OCPP is recognised on its own, as is an enum status that lists a charger's words. The editor fills the plug, the meter, the power given back, the session, the current limit, the error and the start and stop buttons from the charger's own entities, never its restart or reset button.
 
-### Cycle steps
+</details>
+
+<details>
+<summary><b>Cycle steps</b></summary>
 
 While a washer, a dryer or a dishwasher runs, the state line names the step it is at rather than *Running* all the way through: *Pre-wash*, *Soaking*, *Weighing*, *Filling*, *Washing*, *Rinsing*, *Draining*, *Spinning*, *Drying*, *Cooling*, *Anti-crease* or *Steam*. While a washer spins, its drum empties and the laundry whirls. A paused, finished or delayed machine keeps its word, and the time left and the progress bar stay those of the whole cycle.
 
@@ -619,7 +681,10 @@ phase_map:
   9: Anti-allergy
 ```
 
-### Washer-dryers
+</details>
+
+<details>
+<summary><b>Washer-dryers</b></summary>
 
 A washer-dryer is a washer with `washer_dryer: true`, not a type of its own: the option is a checkbox under the appliance type. Ticked, the drum shows water while the machine washes and clothes turning in hot air while it dries, read from the same step as the state line. A machine whose name says it washes and dries is recognised on its own.
 
@@ -632,7 +697,10 @@ state_entity: sensor.washer_dryer_machine_state
 phase_entity: sensor.washer_dryer_program_phase
 ```
 
-### Alert entities
+</details>
+
+<details>
+<summary><b>Alert entities</b></summary>
 
 Home Connect gives each alert an entity of its own: salt or rinse aid nearly empty, an i-Dos tank running low, a filter to clean. Listed in `alerts_entities`, each one shows while it is *present* or *confirmed* (acknowledged on the appliance, the salt still low), and goes once the appliance says *off*. A single alert shows in red under its own name; several gather behind their count, *2 alerts*, which opens their list. A tap on an alert opens its entity.
 
@@ -649,7 +717,10 @@ alerts_entities:
 
 Home Assistant creates these entities disabled: enable the ones you want on the device page first. The visual editor then finds them on its own, whatever language they were named in, and leaves out the events that only report on a program (finished, aborted). Its *Add an alert…* menu offers the appliance's own alerts only: its events, and the binary sensors that report a problem, a leak or a low battery. *Other entity…*, at the end of the menu, takes any entity from any appliance, a pet feeder's desiccant `binary_sensor` for instance, raised while it is on.
 
-### Too many states (`"*"`)
+</details>
+
+<details>
+<summary><b>Too many states (<code>"*"</code>)</b></summary>
 
 A washer-dryer runs one long programme in a dozen named steps, and nearly all of them mean *running*. Rather than naming every one, name the few that are not and send the rest to a single category:
 
@@ -661,6 +732,8 @@ state_map:
 ```
 
 The catch-all comes last, so the states the card already knows keep their own meaning and only what is left over lands on it. The quotes are YAML's: a bare `*` starts an alias.
+
+</details>
 
 ## Thanks
 

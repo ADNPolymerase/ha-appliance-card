@@ -33,26 +33,42 @@ Aucune marque supposée : chaque champ est une entité à choisir, elle fonction
 
 ## Galerie
 
-### Linge et vaisselle
+Clique sur une famille pour voir ses appareils en marche.
+
+<details>
+<summary><b>Linge et vaisselle</b></summary>
 
 <img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-laundry.fr.gif" alt="Linge et vaisselle" width="100%">
 
-### Cuisine
+</details>
+
+<details>
+<summary><b>Cuisine</b></summary>
 
 <img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-kitchen.fr.gif" alt="Cuisine" width="100%">
 
-### Chauffage et climat
+</details>
+
+<details>
+<summary><b>Chauffage et climat</b></summary>
 
 <img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-climate.fr.gif" alt="Chauffage et climat" width="80%">
 
-### Animaux
+</details>
+
+<details>
+<summary><b>Animaux</b></summary>
 
 <img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-pets.fr.gif" alt="Animaux" width="60%">
 
-### Garage et atelier
+</details>
+
+<details>
+<summary><b>Garage et atelier</b></summary>
 
 <img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-garage.fr.gif" alt="Garage et atelier" width="60%">
 
+</details>
 
 ## Installation
 
@@ -70,6 +86,9 @@ Aucune marque supposée : chaque champ est une entité à choisir, elle fonction
 ## Configuration
 
 Seule `state_entity` est obligatoire, sauf sur un réfrigérateur où une sonde ou un contact de porte suffit, et sur une borne de recharge où sa prise ou son compteur suffit. Dans l'éditeur visuel, choisir l'entité d'état pré-remplit les autres champs.
+
+<details>
+<summary><b>Options communes</b></summary>
 
 | Option | Description |
 |---|---|
@@ -101,7 +120,10 @@ Seule `state_entity` est obligatoire, sauf sur un réfrigérateur où une sonde 
 | `lines_order` | L'ordre des lignes d'info, donné par leurs clés : `program`, `remaining`, `door`, celles que chaque type apporte (`level`, `last_feed`, `flow_return`, `nozzle`…) et, pour les lignes ajoutées, leur identifiant d'entité. L'éditeur visuel l'écrit tout seul au glisser. Les lignes non citées gardent leur place après celles qui le sont, et une ligne qui ne s'affiche pas est ignorée. |
 | `start_entity` / `pause_entity` / `resume_entity` / `stop_entity` | Commandes, affichées seulement si configurées. Une commande est d'ordinaire un `button`, un `script` ou une `automation`, qui est déclenchée et non désactivée, et peut aussi être un `select` ou un `number` : `start_option` dit quelle option choisir (la carte la prend toute seule quand la liste n'en propose qu'une), `start_value` ce qu'il faut écrire. Idem pour les trois autres, en `pause_option`, `stop_value` et ainsi de suite. `start_icon` remplace l'icône du bouton, comme `pause_icon`, `resume_icon`, `stop_icon`, `toggle_icon` et `filter_reset_icon` : `mdi:play` se lit comme un programme qui démarre, ce que tout appui n'est pas. En YAML seulement. |
 
-Par type :
+</details>
+
+<details>
+<summary><b>Options par type</b></summary>
 
 | Option | Types | Description |
 |---|---|---|
@@ -186,7 +208,14 @@ Par type :
 | `current_limit_entity` | borne de recharge | La limite de courant, en *Limite de courant 16 A*. Un appui ouvre l'entité, qui est là où elle se règle. |
 | `error_entity` | borne de recharge | Un contact allumé, un code autre que 0 ou un mot autre que *pas d'erreur* (le `NoError` d'OCPP, `ok`, `none`) fait passer l'état en *Erreur*, avec les mots de la borne sur une ligne. |
 
-### Exemples
+</details>
+
+## Exemples et guides
+
+Une section par sujet : clique pour l'ouvrir.
+
+<details>
+<summary><b>Exemples</b></summary>
 
 ```yaml
 type: custom:ha-appliance-card
@@ -286,7 +315,10 @@ power_entity: sensor.prise_cumulus_puissance
 power_on_threshold: 10
 ```
 
-### Renommer des valeurs brutes (`value_map`)
+</details>
+
+<details>
+<summary><b>Renommer des valeurs brutes (<code>value_map</code>)</b></summary>
 
 Quand une intégration expose une phase en code ou en terme non traduit, `value_map` la renomme, ligne d'info par ligne d'info :
 
@@ -302,7 +334,10 @@ info_entities:
 
 La casse est ignorée et une valeur absente de la table s'affiche telle quelle. Dans l'éditeur visuel, c'est une ligne `code: libellé` par correspondance.
 
-### Phases du lave-vaisselle
+</details>
+
+<details>
+<summary><b>Phases du lave-vaisselle</b></summary>
 
 Avec une `phase_entity`, `Drying` et `Ado Drying` remplacent le lavage par de la vapeur orange qui monte le long de la porte, plus haut pour `Ado Drying`. `Prewash`, `Mainwash` et `Rinsing` gardent l'animation de lavage. Ces valeurs sont reconnues d'office, comme `Pre Wash`, `Wash`, `Rinse` et `Dry`, et `phase_map` traduit les autres :
 
@@ -316,7 +351,10 @@ phase_map:
 
 Une valeur non reconnue laisse l'illustration en l'état, et la phase nomme aussi l'étape sur la ligne d'état (voir *Étapes du cycle*).
 
-### Fers à repasser
+</details>
+
+<details>
+<summary><b>Fers à repasser</b></summary>
 
 Rien ne relie un fer à Home Assistant, et c'est bien pourquoi il est sur une prise connectée : l'état vient de ce qu'il consomme, le dessin fait le reste. En chauffe, la semelle rougit et la vapeur sort du nez. Deux modèles sont dessinés, le fer seul et le même fer sur le socle d'une centrale vapeur.
 
@@ -334,7 +372,10 @@ left_on_after: 30
 
 La carte montre l'alerte ; éteindre le fer reste le travail d'une automatisation, sur la même entité.
 
-### Distributeurs de croquettes
+</details>
+
+<details>
+<summary><b>Distributeurs de croquettes</b></summary>
 
 Un distributeur se lit, il ne se pilote pas : pas de cycle, pas de programme, pas de porte. Son état est calculé à partir de ce qu'il rapporte, *Réservoir vide*, *Erreur* ou *Distribution*, et au repos la ligne dit à quel point le réservoir est plein, ou rien quand la carte ne peut pas le savoir. La carte porte ce qui a été servi aujourd'hui et l'heure du dernier repas. Un réservoir vide est la seule chose qu'un distributeur ne peut pas régler tout seul : il prend la ligne d'état, et vide le réservoir et la gamelle sur le dessin. Un triangle rouge se lève avec lui, et il se lève aussi pour un blocage, avec les croquettes toujours dans le réservoir cette fois.
 
@@ -392,7 +433,10 @@ level_entity: counter.distributeur_patee_assiettes
 level_max: 3
 ```
 
-### Fontaines à eau
+</details>
+
+<details>
+<summary><b>Fontaines à eau</b></summary>
 
 Une fontaine tourne toute la journée, alors comme un distributeur elle se lit plus qu'elle ne se commande. L'eau sort du bec en bouillonnant et se ride dans la vasque tant que la pompe tourne, d'après un interrupteur ou la prise sur laquelle elle est branchée. Le reste de ce qu'elle dit, c'est ce qui demande un coup de main : l'eau d'abord, puis le filtre, puis la pompe, chacun prenant la ligne d'état et le voyant en façade, orange pour le filtre et la pompe, rouge et clignotant pour l'eau.
 
@@ -424,7 +468,10 @@ L'état de la pompe se lit dans les mots des intégrations de fontaines, si bien
 | Catlink | `Flowing mode`, `Eco-mode`, `Smart mode` | Niveau d'eau en % | Vie du filtre en % |
 | Tuya, tuya-local | Interrupteur ou vanne (`open`/`closed`) ; `normal`, `smart`, `night`, `motion` | `level_1`…`level_3`, `low`/`medium`/`full`, ou un contact | Filtre et pompe en minutes ou en jours ; interrupteurs de réinitialisation |
 
-### Poêles à granulés
+</details>
+
+<details>
+<summary><b>Poêles à granulés</b></summary>
 
 Un poêle en dit plus qu'allumé ou éteint : il s'allume, chauffe, module, se met en veille éco une fois la pièce chaude, refroidit et nettoie son brasier. La card lit cette phase sur le statut du poêle et la dessine : la flamme derrière la vitre, l'air chaud au-dessus de la grille, la fumée au conduit à l'allumage, les cendres au nettoyage, les braises en veille. La trémie à côté de la porte montre les granulés qui restent.
 
@@ -442,7 +489,10 @@ level_max: 40
 
 L'éditeur en remplit l'essentiel depuis les entités du poêle, aussi sur Agua IOT (Extraflame, Ravelli, MCZ, Piazzetta et une trentaine d'autres), Edilkamin, Rika et Duepi.
 
-### Climatiseurs
+</details>
+
+<details>
+<summary><b>Climatiseurs</b></summary>
 
 L'unité intérieure d'un split, avec le symbole du mode et la consigne sur son écran. L'air part aussi bas et aussi loin sur le côté que les volets le dirigent, plus vite avec la ventilation, et balaie avec eux ; en déshumidification l'eau remonte dans l'unité, au dégivrage le givre la recouvre. Panasonic Comfort Cloud :
 
@@ -457,7 +507,10 @@ outdoor_temperature_entity: sensor.salon_outside_temperature
 
 Une entité `climate` qui sait refroidir est reconnue d'elle-même, et l'éditeur remplit le reste depuis les entités de l'unité.
 
-### Friteuses à air
+</details>
+
+<details>
+<summary><b>Friteuses à air</b></summary>
 
 L'écran montre la température pendant la chauffe et le maintien au chaud, et le temps restant pendant la cuisson. La chaleur monte au-dessus et la jointure du panier rougeoie ; un panier sorti avance, un panier à secouer tremble. Derrière le hublot les frites sautent dans la chaleur, et sur une friteuse double chaque panier montre son propre état. Philips HomeID :
 
@@ -473,7 +526,10 @@ shake_entity: binary_sensor.airfryer_shake_reminder
 
 Une entité qui porte le nom d'une friteuse (ou le `cook_status` de Cosori) est reconnue d'elle-même, et l'éditeur remplit le reste. Avec une simple prise connectée, elle affiche *Cuisson*, puis *Terminé*.
 
-### Déshumidificateurs, petits chauffages et sèche-serviettes
+</details>
+
+<details>
+<summary><b>Déshumidificateurs, petits chauffages et sèche-serviettes</b></summary>
 
 Un déshumidificateur montre l'humidité sur son écran et l'eau récupérée dans son réservoir ; un radiateur soufflant rougeoie derrière sa grille, un bain d'huile chauffe ses ailettes ; un sèche-serviettes montre le mode du fil pilote avec les symboles des radiateurs (soleil, lune, flocon). L'air chaud monte, l'air soufflé par un déshumidificateur ou un ventilateur va dans l'autre sens.
 
@@ -488,7 +544,10 @@ power_entity: sensor.radiateur_prise_power
 power_on_threshold: 30
 ```
 
-### Bornes de recharge
+</details>
+
+<details>
+<summary><b>Bornes de recharge</b></summary>
 
 Une wallbox au mur, son voyant dans la couleur de ce que fait la borne : *Aucun véhicule*, *Véhicule branché* (une voiture qui attend), *En attente d'autorisation* (un badge ou l'appli), *En charge*, *En décharge* (la voiture qui rend de l'énergie), *Charge en pause* (par la borne ou par la voiture), *Charge programmée*, *Charge terminée* (la voiture encore branchée), *Erreur* ou *Hors ligne*. Avec une voiture branchée, la prise quitte son étui et le câble part vers la voiture ; pendant la charge, l'énergie court le long du câble, lumineuse dans la couleur de l'état et d'autant plus vite que la puissance est forte (quatre allures, d'un surplus solaire à 22 kW), et s'arrête pendant une pause. Le voyant respire pendant la charge et lentement quand elle est programmée, et clignote pour une autorisation et, plus vite, sur un défaut. Sous vos yeux, une voiture qu'on branche montre la prise qui suit le câble jusqu'à elle, une voiture qu'on débranche le câble qui revient, et la fin d'une charge un éclat du voyant. Avec *réduire les animations* activé sur l'appareil, rien ne bouge. N'importe quelle wallbox fait l'affaire : la card lit le statut dans les mots d'OCPP et des intégrations de Home Assistant lui-même, `state_map` lui apprend tous les autres, et une borne sans statut se lit sur sa prise et son compteur.
 
@@ -594,7 +653,10 @@ current_limit_entity: number.wallbox_quasar_maximum_charging_current
 
 Une entité qui porte le nom d'une wallbox dans les langues de la card, de son fabricant ou d'OCPP est reconnue d'elle-même, comme un statut énuméré qui liste les mots d'une borne. L'éditeur remplit la prise, le compteur, la puissance rendue, la session, la limite de courant, l'erreur et les boutons de démarrage et d'arrêt depuis les entités de la borne, jamais son bouton de redémarrage ou de réinitialisation.
 
-### Étapes du cycle
+</details>
+
+<details>
+<summary><b>Étapes du cycle</b></summary>
 
 Pendant qu'un lave-linge, un sèche-linge ou un lave-vaisselle tourne, la ligne d'état nomme l'étape où il en est au lieu d'*En cours* du début à la fin : *Prélavage*, *Trempage*, *Pesée*, *Remplissage*, *Lavage*, *Rinçage*, *Vidange*, *Essorage*, *Séchage*, *Refroidissement*, *Anti-froissage* ou *Vapeur*. Pendant l'essorage d'un lave-linge, le tambour se vide et le linge s'emballe. Une machine en pause, terminée ou en départ différé garde son mot, et le temps restant comme la barre de progression restent ceux du cycle entier.
 
@@ -621,7 +683,10 @@ phase_map:
   9: Anti-allergie
 ```
 
-### Lavantes-séchantes
+</details>
+
+<details>
+<summary><b>Lavantes-séchantes</b></summary>
 
 Une lavante-séchante est un lave-linge avec `washer_dryer: true`, et non un type à part : l'option est une case sous le type d'appareil. Cochée, le tambour montre de l'eau pendant le lavage et du linge qui tourne dans l'air chaud pendant le séchage, d'après la même étape que la ligne d'état. Une machine dont le nom dit qu'elle lave et sèche est reconnue toute seule.
 
@@ -634,7 +699,10 @@ state_entity: sensor.lavante_sechante_etat
 phase_entity: sensor.lavante_sechante_phase
 ```
 
-### Entités d'alerte
+</details>
+
+<details>
+<summary><b>Entités d'alerte</b></summary>
 
 Home Connect donne à chaque alerte une entité à part : sel ou liquide de rinçage presque vide, réservoir i-Dos bas, filtre à nettoyer. Listées dans `alerts_entities`, chacune s'affiche tant qu'elle est *present* ou *confirmed* (acquittée sur l'appareil, le sel toujours bas), et disparaît quand l'appareil passe à *off*. Une seule alerte s'affiche en rouge sous son propre nom ; plusieurs se rangent derrière leur nombre, *2 alertes*, qui ouvre leur liste. Un appui sur une alerte ouvre son entité.
 
@@ -651,7 +719,10 @@ alerts_entities:
 
 Home Assistant crée ces entités désactivées : activez d'abord celles qui vous intéressent sur la page de l'appareil. L'éditeur visuel les trouve ensuite tout seul, quelle que soit la langue de leur nom, et laisse de côté les événements qui ne font que rendre compte d'un programme (terminé, interrompu). Son menu *Ajouter une alerte…* ne propose que les alertes de l'appareil : ses événements, et les capteurs binaires qui signalent un problème, une fuite ou une batterie faible. *Autre entité…*, en bas du menu, accepte n'importe quelle entité de n'importe quel appareil, le `binary_sensor` du déshydratant d'un distributeur par exemple, en alerte tant qu'il est à on.
 
-### Trop d'états (`"*"`)
+</details>
+
+<details>
+<summary><b>Trop d'états (<code>"*"</code>)</b></summary>
 
 Une lavante-séchante déroule un seul long programme en une dizaine d'étapes nommées, qui veulent presque toutes dire *en cours*. Plutôt que de les nommer une par une, on nomme les quelques-unes qui n'en sont pas et on envoie le reste dans une seule catégorie :
 
@@ -663,6 +734,8 @@ state_map:
 ```
 
 Le fourre-tout passe en dernier : les états que la carte connaît déjà gardent leur sens, et seul ce qui dépasse y atterrit. Les guillemets sont ceux du YAML : un `*` nu ouvre un alias.
+
+</details>
 
 ## Remerciements
 
