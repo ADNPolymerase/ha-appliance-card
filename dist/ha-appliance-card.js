@@ -6871,7 +6871,7 @@ const ILLUSTRATION_CSS = {
         .ev-ghost > i { position: absolute; display: block; }
         .machine.plug-in .ev-ghost, .machine.plug-in .ev-plug, .machine.plug-in .ev-loop, .machine.plug-in .ev-out, .machine.plug-in .ev-energy, .machine.plug-in .ev-halo,
         .machine.plug-out .ev-ghost, .machine.plug-out .ev-plug, .machine.plug-out .ev-cable path,
-        .machine.just-done .ev-led, .machine.just-done .ev-cable path { --anim-offset: var(--ev-since, 0s); }
+        .machine.just-done .ev-led, .machine.just-done .ev-cable path, .machine.just-done .ev-halo { --anim-offset: var(--ev-since, 0s); }
         .machine.plug-in .ev-ghost { display: block; animation: ev-pull 0.9s linear both; animation-delay: var(--anim-offset, 0s); }
         .machine.plug-in .ev-cable .ev-loop { display: inline; animation: ev-fade 0.9s linear both; animation-delay: var(--anim-offset, 0s); }
         .machine.plug-in .ev-cable .ev-out { stroke-dasharray: 80; animation: ev-run-out 0.9s linear both; animation-delay: var(--anim-offset, 0s); }
@@ -6891,6 +6891,9 @@ const ILLUSTRATION_CSS = {
         .machine.just-done.plugged .ev-cable .ev-flow {
           display: inline; animation: ev-flow var(--ev-flow, 0.6s) linear infinite, ev-drain 1.4s ease-in both; animation-delay: var(--anim-offset, 0s);
         }
+        /* The halo fades with them after a charge; out of a pause, where it was
+           not lit, it stays out. */
+        .machine.just-done.from-charging.plugged .ev-halo .eh-out { display: inline; animation: ev-drain 1.4s ease-in both; animation-delay: var(--anim-offset, 0s); }
         @keyframes ev-pull { 0% { opacity: 1; transform: rotate(-90deg); } 12%, 100% { opacity: 0; transform: translateY(6px) rotate(-90deg); } }
         @keyframes ev-fade { 0% { opacity: 1; } 12%, 100% { opacity: 0; } }
         @keyframes ev-drain { from { opacity: 1; } to { opacity: 0; } }
@@ -7477,7 +7480,7 @@ function illustrationHtml(type, ctx) {
 
   if (type === "ev_charger") {
     const e = ctx.ev || {};
-    const shot = e.shot ? ` ${e.shot}` : "";
+    const shot = e.shot ? ` ${e.shot} from-${e.from}` : "";
     const since = e.shot ? `; --ev-since: ${e.since}s` : "";
     return `
         <div class="machine ${cls} mode-${e.mode || "unknown"}${e.plugged ? " plugged" : ""}${shot}" style="--ev-flow: ${e.flow || EV_FLOW_DEFAULT}s${since}">
@@ -9911,7 +9914,7 @@ class ApplianceCard extends HTMLElement {
           : prev.plugged && ev.mode === "no_vehicle" ? "plug-out"
           : ["charging", "paused"].includes(prev.mode) && ev.mode === "done" ? "just-done"
           : "";
-        if (name) this._evShot = { name, at: now };
+        if (name) this._evShot = { name, at: now, from: prev.mode };
       }
       this._evPrev = { mode: ev.mode, plugged: ev.plugged };
       const shot = this._evShot;
@@ -9919,6 +9922,7 @@ class ApplianceCard extends HTMLElement {
         : shot.name === "plug-out" ? ev.mode === "no_vehicle" : ev.mode === "done");
       if (holds && now >= shot.at && now - shot.at < EV_ONE_SHOT_MS) {
         ev.shot = shot.name;
+        ev.from = shot.from;
         ev.since = (shot.at - now) / 1000;
         this._armEvShotEnd(EV_ONE_SHOT_MS - (now - shot.at));
       } else {
