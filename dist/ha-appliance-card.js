@@ -138,6 +138,15 @@ const T = {
     feeder_empty: "Tank empty", feeder_level: "Tank at {pct}", section_level: "Food level", section_level_b: "Food level, second hopper", level_empty_below: "Empty at or below", level_max: "Tank capacity",
     section_feeder_layout: "Model", layout_tower: "Square tank", layout_canister: "Round tank", layout_double: "Two bowls", layout_dual_split: "Two hoppers, split bowl", layout_rotary: "Rotating plates (wet food)",
     type_iron: "Iron", section_iron_layout: "Model", layout_iron: "Iron", layout_generator: "Steam generator",
+    type_toaster: "Toaster", section_toaster_layout: "Model", layout_toaster_two: "Two slots", layout_toaster_four: "Four slots",
+    layout_toaster_long: "Long slot", toaster_toasting: "Toasting", toaster_done: "Toast ready", type_air_purifier: "Air purifier",
+    section_purifier_layout: "Model", layout_purifier_cylinder: "Cylinder", layout_purifier_box: "Square box", layout_purifier_ring: "Bladeless ring",
+    pf_purifying: "Purifying", pf_auto: "Auto", pf_night: "Night mode", section_air_quality: "Air quality",
+    section_screen: "Screen", section_heater: "Heating (thermostat)", aq_good: "Good", aq_fair: "Fair",
+    aq_poor: "Poor", aq_bad: "Very poor", type_fan: "Fan", layout_fan_stand: "Pedestal",
+    layout_fan_table: "Desk", layout_fan_ceiling: "Ceiling", fan_natural: "Natural wind", fan_summer: "Summer",
+    fan_winter: "Winter", oscillating: "Oscillates", fan_direction_inverted: "Swap summer and winter", fan_wood_blades: "Wood blades", fan_on: "On",
+    section_fan_layout: "Model",
     iron_heating: "Heating", iron_off: "Off", left_on: "Left on", left_on_after: "Warn after (minutes switched on)",
     type_pellet_stove: "Pellet stove", ps_off: "Off", ps_ignition: "Ignition", ps_burning: "Burning", ps_modulating: "Modulating",
     ps_eco: "Eco standby", ps_cooling: "Cooling down", ps_cleaning: "Cleaning", ps_alarm: "Alarm", ps_no_pellets: "Out of pellets",
@@ -279,6 +288,15 @@ const T = {
     feeder_empty: "R\u00e9servoir vide", feeder_level: "R\u00e9servoir \u00e0 {pct}", section_level: "Niveau de croquettes", section_level_b: "Niveau du second r\u00e9servoir", level_empty_below: "Vide \u00e0 ce niveau ou moins", level_max: "Contenance du r\u00e9servoir",
     section_feeder_layout: "Mod\u00e8le", layout_tower: "R\u00e9servoir carr\u00e9", layout_canister: "R\u00e9servoir rond", layout_double: "Deux gamelles", layout_dual_split: "Deux r\u00e9servoirs, gamelle partag\u00e9e", layout_rotary: "Plateau tournant (p\u00e2t\u00e9e)",
     type_iron: "Fer \u00e0 repasser", section_iron_layout: "Mod\u00e8le", layout_iron: "Fer seul", layout_generator: "Centrale vapeur",
+    type_toaster: "Grille-pain", section_toaster_layout: "Mod\u00e8le", layout_toaster_two: "Deux fentes", layout_toaster_four: "Quatre fentes",
+    layout_toaster_long: "Fente longue", toaster_toasting: "Grillage", toaster_done: "Pr\u00eat", type_air_purifier: "Purificateur d'air",
+    section_purifier_layout: "Mod\u00e8le", layout_purifier_cylinder: "Cylindre", layout_purifier_box: "Bo\u00eetier carr\u00e9", layout_purifier_ring: "Anneau sans pales",
+    pf_purifying: "Purification", pf_auto: "Auto", pf_night: "Mode nuit", section_air_quality: "Qualit\u00e9 de l'air",
+    section_screen: "\u00c9cran", section_heater: "Chauffage (thermostat)", aq_good: "Bonne", aq_fair: "Moyenne",
+    aq_poor: "Mauvaise", aq_bad: "Tr\u00e8s mauvaise", type_fan: "Ventilateur", layout_fan_stand: "Sur pied",
+    layout_fan_table: "De table", layout_fan_ceiling: "De plafond", fan_natural: "Vent naturel", fan_summer: "\u00c9t\u00e9",
+    fan_winter: "Hiver", oscillating: "Oscillant", fan_direction_inverted: "Inverser \u00e9t\u00e9 et hiver", fan_wood_blades: "Pales en bois", fan_on: "En marche",
+    section_fan_layout: "Mod\u00e8le",
     iron_heating: "En chauffe", iron_off: "\u00c0 l'arr\u00eat", left_on: "Rest\u00e9 allum\u00e9", left_on_after: "Alerter apr\u00e8s (minutes allum\u00e9)",
     type_pellet_stove: "Po\u00eale \u00e0 granul\u00e9s", ps_off: "\u00c9teint", ps_ignition: "Allumage", ps_burning: "En chauffe", ps_modulating: "Modulation",
     ps_eco: "Veille \u00e9co", ps_cooling: "Refroidissement", ps_cleaning: "Nettoyage", ps_alarm: "Alarme", ps_no_pellets: "Granul\u00e9s \u00e9puis\u00e9s",
@@ -420,6 +438,15 @@ const T = {
     feeder_empty: "\u0411\u0443\u043d\u043a\u0435\u0440 \u043f\u0443\u0441\u0442", feeder_level: "\u0411\u0443\u043d\u043a\u0435\u0440 \u0437\u0430\u043f\u043e\u043b\u043d\u0435\u043d \u043d\u0430 {pct}", section_level: "\u0423\u0440\u043e\u0432\u0435\u043d\u044c \u043a\u043e\u0440\u043c\u0430", section_level_b: "\u0423\u0440\u043e\u0432\u0435\u043d\u044c \u0432\u0442\u043e\u0440\u043e\u0433\u043e \u0431\u0443\u043d\u043a\u0435\u0440\u0430", level_empty_below: "\u041f\u0443\u0441\u0442\u043e \u043f\u0440\u0438 \u0437\u043d\u0430\u0447\u0435\u043d\u0438\u0438 \u043d\u0435 \u0432\u044b\u0448\u0435", level_max: "\u0401\u043c\u043a\u043e\u0441\u0442\u044c \u0431\u0443\u043d\u043a\u0435\u0440\u0430",
     section_feeder_layout: "\u041c\u043e\u0434\u0435\u043b\u044c", layout_tower: "\u041a\u0432\u0430\u0434\u0440\u0430\u0442\u043d\u044b\u0439 \u0431\u0443\u043d\u043a\u0435\u0440", layout_canister: "\u041a\u0440\u0443\u0433\u043b\u044b\u0439 \u0431\u0443\u043d\u043a\u0435\u0440", layout_double: "\u0414\u0432\u0435 \u043c\u0438\u0441\u043a\u0438", layout_dual_split: "\u0414\u0432\u0430 \u0431\u0443\u043d\u043a\u0435\u0440\u0430, \u043e\u0431\u0449\u0430\u044f \u043c\u0438\u0441\u043a\u0430", layout_rotary: "\u0412\u0440\u0430\u0449\u0430\u044e\u0449\u0438\u0435\u0441\u044f \u0442\u0430\u0440\u0435\u043b\u043a\u0438 (\u0432\u043b\u0430\u0436\u043d\u044b\u0439 \u043a\u043e\u0440\u043c)",
     type_iron: "\u0423\u0442\u044e\u0433", section_iron_layout: "\u041c\u043e\u0434\u0435\u043b\u044c", layout_iron: "\u0423\u0442\u044e\u0433", layout_generator: "\u041f\u0430\u0440\u043e\u0433\u0435\u043d\u0435\u0440\u0430\u0442\u043e\u0440",
+    type_toaster: "\u0422\u043e\u0441\u0442\u0435\u0440", section_toaster_layout: "\u041c\u043e\u0434\u0435\u043b\u044c", layout_toaster_two: "\u0414\u0432\u0430 \u0441\u043b\u043e\u0442\u0430", layout_toaster_four: "\u0427\u0435\u0442\u044b\u0440\u0435 \u0441\u043b\u043e\u0442\u0430",
+    layout_toaster_long: "\u0414\u043b\u0438\u043d\u043d\u044b\u0439 \u0441\u043b\u043e\u0442", toaster_toasting: "\u041f\u043e\u0434\u0436\u0430\u0440\u0438\u0432\u0430\u043d\u0438\u0435", toaster_done: "\u0413\u043e\u0442\u043e\u0432\u043e", type_air_purifier: "\u041e\u0447\u0438\u0441\u0442\u0438\u0442\u0435\u043b\u044c \u0432\u043e\u0437\u0434\u0443\u0445\u0430",
+    section_purifier_layout: "\u041c\u043e\u0434\u0435\u043b\u044c", layout_purifier_cylinder: "\u0426\u0438\u043b\u0438\u043d\u0434\u0440", layout_purifier_box: "\u041a\u0432\u0430\u0434\u0440\u0430\u0442\u043d\u044b\u0439 \u043a\u043e\u0440\u043f\u0443\u0441", layout_purifier_ring: "\u0411\u0435\u0437\u043b\u043e\u043f\u0430\u0441\u0442\u043d\u043e\u0435 \u043a\u043e\u043b\u044c\u0446\u043e",
+    pf_purifying: "\u041e\u0447\u0438\u0441\u0442\u043a\u0430", pf_auto: "\u0410\u0432\u0442\u043e", pf_night: "\u041d\u043e\u0447\u043d\u043e\u0439 \u0440\u0435\u0436\u0438\u043c", section_air_quality: "\u041a\u0430\u0447\u0435\u0441\u0442\u0432\u043e \u0432\u043e\u0437\u0434\u0443\u0445\u0430",
+    section_screen: "\u042d\u043a\u0440\u0430\u043d", section_heater: "\u041e\u0431\u043e\u0433\u0440\u0435\u0432 (\u0442\u0435\u0440\u043c\u043e\u0441\u0442\u0430\u0442)", aq_good: "\u0425\u043e\u0440\u043e\u0448\u0435\u0435", aq_fair: "\u0423\u0434\u043e\u0432\u043b\u0435\u0442\u0432\u043e\u0440\u0438\u0442\u0435\u043b\u044c\u043d\u043e\u0435",
+    aq_poor: "\u041f\u043b\u043e\u0445\u043e\u0435", aq_bad: "\u041e\u0447\u0435\u043d\u044c \u043f\u043b\u043e\u0445\u043e\u0435", type_fan: "\u0412\u0435\u043d\u0442\u0438\u043b\u044f\u0442\u043e\u0440", layout_fan_stand: "\u041d\u0430\u043f\u043e\u043b\u044c\u043d\u044b\u0439",
+    layout_fan_table: "\u041d\u0430\u0441\u0442\u043e\u043b\u044c\u043d\u044b\u0439", layout_fan_ceiling: "\u041f\u043e\u0442\u043e\u043b\u043e\u0447\u043d\u044b\u0439", fan_natural: "\u0415\u0441\u0442\u0435\u0441\u0442\u0432\u0435\u043d\u043d\u044b\u0439 \u0432\u0435\u0442\u0435\u0440", fan_summer: "\u041b\u0435\u0442\u043e",
+    fan_winter: "\u0417\u0438\u043c\u0430", oscillating: "\u041f\u043e\u0432\u043e\u0440\u043e\u0442\u043d\u044b\u0439", fan_direction_inverted: "\u041f\u043e\u043c\u0435\u043d\u044f\u0442\u044c \u043b\u0435\u0442\u043e \u0438 \u0437\u0438\u043c\u0443", fan_wood_blades: "\u0414\u0435\u0440\u0435\u0432\u044f\u043d\u043d\u044b\u0435 \u043b\u043e\u043f\u0430\u0441\u0442\u0438", fan_on: "\u0420\u0430\u0431\u043e\u0442\u0430\u0435\u0442",
+    section_fan_layout: "\u041c\u043e\u0434\u0435\u043b\u044c",
     iron_heating: "\u041d\u0430\u0433\u0440\u0435\u0432", iron_off: "\u0412\u044b\u043a\u043b\u044e\u0447\u0435\u043d", left_on: "\u041e\u0441\u0442\u0430\u043b\u0441\u044f \u0432\u043a\u043b\u044e\u0447\u0451\u043d\u043d\u044b\u043c", left_on_after: "\u041f\u0440\u0435\u0434\u0443\u043f\u0440\u0435\u0434\u0438\u0442\u044c \u0447\u0435\u0440\u0435\u0437 (\u043c\u0438\u043d\u0443\u0442 \u0432\u043a\u043b\u044e\u0447\u0435\u043d\u0438\u044f)",
     type_pellet_stove: "\u041f\u0435\u043b\u043b\u0435\u0442\u043d\u0430\u044f \u043f\u0435\u0447\u044c", ps_off: "\u0412\u044b\u043a\u043b\u044e\u0447\u0435\u043d\u0430", ps_ignition: "\u0420\u043e\u0437\u0436\u0438\u0433", ps_burning: "\u0413\u043e\u0440\u0435\u043d\u0438\u0435", ps_modulating: "\u041c\u043e\u0434\u0443\u043b\u044f\u0446\u0438\u044f",
     ps_eco: "\u042d\u043a\u043e-\u043e\u0436\u0438\u0434\u0430\u043d\u0438\u0435", ps_cooling: "\u041e\u0445\u043b\u0430\u0436\u0434\u0435\u043d\u0438\u0435", ps_cleaning: "\u041e\u0447\u0438\u0441\u0442\u043a\u0430", ps_alarm: "\u0410\u0432\u0430\u0440\u0438\u044f", ps_no_pellets: "\u041d\u0435\u0442 \u043f\u0435\u043b\u043b\u0435\u0442",
@@ -561,6 +588,15 @@ const T = {
     feeder_empty: "Beh\u00e4lter leer", feeder_level: "Beh\u00e4lter zu {pct} voll", section_level: "F\u00fcllstand", section_level_b: "F\u00fcllstand zweite Kammer", level_empty_below: "Leer ab oder unter", level_max: "Fassungsverm\u00f6gen",
     section_feeder_layout: "Modell", layout_tower: "Eckiger Beh\u00e4lter", layout_canister: "Runder Beh\u00e4lter", layout_double: "Zwei N\u00e4pfe", layout_dual_split: "Zwei Kammern, geteilter Napf", layout_rotary: "Drehteller (Nassfutter)",
     type_iron: "B\u00fcgeleisen", section_iron_layout: "Modell", layout_iron: "B\u00fcgeleisen", layout_generator: "Dampfstation",
+    type_toaster: "Toaster", section_toaster_layout: "Modell", layout_toaster_two: "Zwei Schlitze", layout_toaster_four: "Vier Schlitze",
+    layout_toaster_long: "Langschlitz", toaster_toasting: "Toastet", toaster_done: "Fertig", type_air_purifier: "Luftreiniger",
+    section_purifier_layout: "Modell", layout_purifier_cylinder: "Zylinder", layout_purifier_box: "Quaderform", layout_purifier_ring: "Rotorloser Ring",
+    pf_purifying: "Reinigt", pf_auto: "Auto", pf_night: "Nachtmodus", section_air_quality: "Luftqualit\u00e4t",
+    section_screen: "Anzeige", section_heater: "Heizung (Thermostat)", aq_good: "Gut", aq_fair: "M\u00e4\u00dfig",
+    aq_poor: "Schlecht", aq_bad: "Sehr schlecht", type_fan: "Ventilator", layout_fan_stand: "Standventilator",
+    layout_fan_table: "Tischventilator", layout_fan_ceiling: "Deckenventilator", fan_natural: "Naturwind", fan_summer: "Sommer",
+    fan_winter: "Winter", oscillating: "Oszilliert", fan_direction_inverted: "Sommer und Winter tauschen", fan_wood_blades: "Holzfl\u00fcgel", fan_on: "L\u00e4uft",
+    section_fan_layout: "Modell",
     iron_heating: "Heizt", iron_off: "Aus", left_on: "Eingeschaltet geblieben", left_on_after: "Warnen nach (Minuten eingeschaltet)",
     type_pellet_stove: "Pelletofen", ps_off: "Aus", ps_ignition: "Z\u00fcndung", ps_burning: "Brennt", ps_modulating: "Modulation",
     ps_eco: "Eco-Standby", ps_cooling: "Abk\u00fchlung", ps_cleaning: "Reinigung", ps_alarm: "Alarm", ps_no_pellets: "Pellets leer",
@@ -702,6 +738,15 @@ const T = {
     feeder_empty: "Dep\u00f3sito vac\u00edo", feeder_level: "Dep\u00f3sito al {pct}", section_level: "Nivel de comida", section_level_b: "Nivel del segundo dep\u00f3sito", level_empty_below: "Vac\u00edo en o por debajo de", level_max: "Capacidad del dep\u00f3sito",
     section_feeder_layout: "Modelo", layout_tower: "Dep\u00f3sito cuadrado", layout_canister: "Dep\u00f3sito redondo", layout_double: "Dos cuencos", layout_dual_split: "Dos dep\u00f3sitos, cuenco dividido", layout_rotary: "Platos giratorios (comida h\u00fameda)",
     type_iron: "Plancha", section_iron_layout: "Modelo", layout_iron: "Plancha", layout_generator: "Centro de planchado",
+    type_toaster: "Tostadora", section_toaster_layout: "Modelo", layout_toaster_two: "Dos ranuras", layout_toaster_four: "Cuatro ranuras",
+    layout_toaster_long: "Ranura larga", toaster_toasting: "Tostando", toaster_done: "Listo", type_air_purifier: "Purificador de aire",
+    section_purifier_layout: "Modelo", layout_purifier_cylinder: "Cilindro", layout_purifier_box: "Caja cuadrada", layout_purifier_ring: "Anillo sin aspas",
+    pf_purifying: "Purificando", pf_auto: "Auto", pf_night: "Modo nocturno", section_air_quality: "Calidad del aire",
+    section_screen: "Pantalla", section_heater: "Calefacci\u00f3n (termostato)", aq_good: "Buena", aq_fair: "Aceptable",
+    aq_poor: "Mala", aq_bad: "Muy mala", type_fan: "Ventilador", layout_fan_stand: "De pie",
+    layout_fan_table: "De sobremesa", layout_fan_ceiling: "De techo", fan_natural: "Brisa natural", fan_summer: "Verano",
+    fan_winter: "Invierno", oscillating: "Oscilante", fan_direction_inverted: "Invertir verano e invierno", fan_wood_blades: "Aspas de madera", fan_on: "Encendido",
+    section_fan_layout: "Modelo",
     iron_heating: "Calentando", iron_off: "Apagado", left_on: "Sigue encendida", left_on_after: "Avisar tras (minutos encendida)",
     type_pellet_stove: "Estufa de pellets", ps_off: "Apagada", ps_ignition: "Encendido", ps_burning: "En marcha", ps_modulating: "Modulando",
     ps_eco: "Espera eco", ps_cooling: "Enfriando", ps_cleaning: "Limpieza", ps_alarm: "Alarma", ps_no_pellets: "Sin pellets",
@@ -843,6 +888,15 @@ const T = {
     feeder_empty: "Serbatoio vuoto", feeder_level: "Serbatoio al {pct}", section_level: "Livello del cibo", section_level_b: "Livello del secondo serbatoio", level_empty_below: "Vuoto a questo livello o meno", level_max: "Capacit\u00e0 del serbatoio",
     section_feeder_layout: "Modello", layout_tower: "Serbatoio quadrato", layout_canister: "Serbatoio tondo", layout_double: "Due ciotole", layout_dual_split: "Due serbatoi, ciotola divisa", layout_rotary: "Piatti rotanti (cibo umido)",
     type_iron: "Ferro da stiro", section_iron_layout: "Modello", layout_iron: "Ferro da stiro", layout_generator: "Ferro con caldaia",
+    type_toaster: "Tostapane", section_toaster_layout: "Modello", layout_toaster_two: "Due fessure", layout_toaster_four: "Quattro fessure",
+    layout_toaster_long: "Fessura lunga", toaster_toasting: "Tostatura", toaster_done: "Pronto", type_air_purifier: "Purificatore d'aria",
+    section_purifier_layout: "Modello", layout_purifier_cylinder: "Cilindro", layout_purifier_box: "Scatola quadrata", layout_purifier_ring: "Anello senza pale",
+    pf_purifying: "Purificazione", pf_auto: "Auto", pf_night: "Modalit\u00e0 notte", section_air_quality: "Qualit\u00e0 dell'aria",
+    section_screen: "Display", section_heater: "Riscaldamento (termostato)", aq_good: "Buona", aq_fair: "Discreta",
+    aq_poor: "Scarsa", aq_bad: "Pessima", type_fan: "Ventilatore", layout_fan_stand: "A piantana",
+    layout_fan_table: "Da tavolo", layout_fan_ceiling: "A soffitto", fan_natural: "Vento naturale", fan_summer: "Estate",
+    fan_winter: "Inverno", oscillating: "Oscillante", fan_direction_inverted: "Inverti estate e inverno", fan_wood_blades: "Pale in legno", fan_on: "Acceso",
+    section_fan_layout: "Modello",
     iron_heating: "In riscaldamento", iron_off: "Spento", left_on: "Rimasto acceso", left_on_after: "Avvisa dopo (minuti acceso)",
     type_pellet_stove: "Stufa a pellet", ps_off: "Spenta", ps_ignition: "Accensione", ps_burning: "In funzione", ps_modulating: "Modulazione",
     ps_eco: "Stand-by eco", ps_cooling: "Raffreddamento", ps_cleaning: "Pulizia", ps_alarm: "Allarme", ps_no_pellets: "Pellet esaurito",
@@ -984,6 +1038,15 @@ const T = {
     feeder_empty: "Reservoir leeg", feeder_level: "Reservoir voor {pct} vol", section_level: "Voerniveau", section_level_b: "Niveau tweede reservoir", level_empty_below: "Leeg bij of onder", level_max: "Inhoud van het reservoir",
     section_feeder_layout: "Model", layout_tower: "Vierkant reservoir", layout_canister: "Rond reservoir", layout_double: "Twee bakken", layout_dual_split: "Twee reservoirs, gedeelde bak", layout_rotary: "Draaiende bakjes (natvoer)",
     type_iron: "Strijkijzer", section_iron_layout: "Model", layout_iron: "Strijkijzer", layout_generator: "Stoomgenerator",
+    type_toaster: "Broodrooster", section_toaster_layout: "Model", layout_toaster_two: "Twee sleuven", layout_toaster_four: "Vier sleuven",
+    layout_toaster_long: "Lange sleuf", toaster_toasting: "Roostert", toaster_done: "Klaar", type_air_purifier: "Luchtreiniger",
+    section_purifier_layout: "Model", layout_purifier_cylinder: "Cilinder", layout_purifier_box: "Vierkante kast", layout_purifier_ring: "Bladloze ring",
+    pf_purifying: "Zuivert", pf_auto: "Auto", pf_night: "Nachtmodus", section_air_quality: "Luchtkwaliteit",
+    section_screen: "Scherm", section_heater: "Verwarming (thermostaat)", aq_good: "Goed", aq_fair: "Matig",
+    aq_poor: "Slecht", aq_bad: "Zeer slecht", type_fan: "Ventilator", layout_fan_stand: "Staand",
+    layout_fan_table: "Tafelmodel", layout_fan_ceiling: "Plafondventilator", fan_natural: "Natuurlijke wind", fan_summer: "Zomer",
+    fan_winter: "Winter", oscillating: "Draait heen en weer", fan_direction_inverted: "Zomer en winter omwisselen", fan_wood_blades: "Houten bladen", fan_on: "Aan",
+    section_fan_layout: "Model",
     iron_heating: "Aan het koken", iron_off: "Uit", left_on: "Blijft aan", left_on_after: "Waarschuwen na (minuten aan)",
     type_pellet_stove: "Pelletkachel", ps_off: "Uit", ps_ignition: "Ontsteking", ps_burning: "Brandt", ps_modulating: "Moduleert",
     ps_eco: "Eco-stand-by", ps_cooling: "Afkoelen", ps_cleaning: "Reiniging", ps_alarm: "Alarm", ps_no_pellets: "Pellets op",
@@ -1125,6 +1188,15 @@ const T = {
     feeder_empty: "Dep\u00f3sito vazio", feeder_level: "Dep\u00f3sito a {pct}", section_level: "N\u00edvel de comida", section_level_b: "N\u00edvel do segundo dep\u00f3sito", level_empty_below: "Vazio em ou abaixo de", level_max: "Capacidade do dep\u00f3sito",
     section_feeder_layout: "Modelo", layout_tower: "Dep\u00f3sito quadrado", layout_canister: "Dep\u00f3sito redondo", layout_double: "Duas ta\u00e7as", layout_dual_split: "Dois dep\u00f3sitos, ta\u00e7a dividida", layout_rotary: "Pratos rotativos (comida h\u00famida)",
     type_iron: "Ferro de engomar", section_iron_layout: "Modelo", layout_iron: "Ferro de engomar", layout_generator: "Gerador de vapor",
+    type_toaster: "Torradeira", section_toaster_layout: "Modelo", layout_toaster_two: "Duas ranhuras", layout_toaster_four: "Quatro ranhuras",
+    layout_toaster_long: "Ranhura longa", toaster_toasting: "A torrar", toaster_done: "Pronto", type_air_purifier: "Purificador de ar",
+    section_purifier_layout: "Modelo", layout_purifier_cylinder: "Cilindro", layout_purifier_box: "Caixa quadrada", layout_purifier_ring: "Anel sem p\u00e1s",
+    pf_purifying: "A purificar", pf_auto: "Auto", pf_night: "Modo noturno", section_air_quality: "Qualidade do ar",
+    section_screen: "Ecr\u00e3", section_heater: "Aquecimento (term\u00f3stato)", aq_good: "Boa", aq_fair: "Razo\u00e1vel",
+    aq_poor: "M\u00e1", aq_bad: "Muito m\u00e1", type_fan: "Ventoinha", layout_fan_stand: "De p\u00e9",
+    layout_fan_table: "De mesa", layout_fan_ceiling: "De teto", fan_natural: "Vento natural", fan_summer: "Ver\u00e3o",
+    fan_winter: "Inverno", oscillating: "Oscilante", fan_direction_inverted: "Inverter ver\u00e3o e inverno", fan_wood_blades: "P\u00e1s de madeira", fan_on: "Ligado",
+    section_fan_layout: "Modelo",
     iron_heating: "A aquecer", iron_off: "Desligada", left_on: "Ficou ligado", left_on_after: "Avisar ap\u00f3s (minutos ligado)",
     type_pellet_stove: "Salamandra a pellets", ps_off: "Desligada", ps_ignition: "Igni\u00e7\u00e3o", ps_burning: "A funcionar", ps_modulating: "Em modula\u00e7\u00e3o",
     ps_eco: "Espera eco", ps_cooling: "A arrefecer", ps_cleaning: "Limpeza", ps_alarm: "Alarme", ps_no_pellets: "Sem pellets",
@@ -1266,6 +1338,15 @@ const T = {
     feeder_empty: "Beh\u00e5llaren tom", feeder_level: "Beh\u00e5llaren {pct} full", section_level: "Foderm\u00e4ngd", section_level_b: "Niv\u00e5 i andra beh\u00e5llaren", level_empty_below: "Tom vid eller under", level_max: "Beh\u00e5llarens volym",
     section_feeder_layout: "Modell", layout_tower: "Fyrkantig beh\u00e5llare", layout_canister: "Rund beh\u00e5llare", layout_double: "Tv\u00e5 sk\u00e5lar", layout_dual_split: "Tv\u00e5 beh\u00e5llare, delad sk\u00e5l", layout_rotary: "Roterande sk\u00e5lar (v\u00e5tfoder)",
     type_iron: "Strykj\u00e4rn", section_iron_layout: "Modell", layout_iron: "Strykj\u00e4rn", layout_generator: "\u00c5ngstation",
+    type_toaster: "Br\u00f6drost", section_toaster_layout: "Modell", layout_toaster_two: "Tv\u00e5 fack", layout_toaster_four: "Fyra fack",
+    layout_toaster_long: "L\u00e5ngt fack", toaster_toasting: "Rostar", toaster_done: "Klart", type_air_purifier: "Luftrenare",
+    section_purifier_layout: "Modell", layout_purifier_cylinder: "Cylinder", layout_purifier_box: "Fyrkantig", layout_purifier_ring: "Bladl\u00f6s ring",
+    pf_purifying: "Renar", pf_auto: "Auto", pf_night: "Nattl\u00e4ge", section_air_quality: "Luftkvalitet",
+    section_screen: "Sk\u00e4rm", section_heater: "V\u00e4rme (termostat)", aq_good: "Bra", aq_fair: "M\u00e5ttlig",
+    aq_poor: "D\u00e5lig", aq_bad: "Mycket d\u00e5lig", type_fan: "Fl\u00e4kt", layout_fan_stand: "Golvfl\u00e4kt",
+    layout_fan_table: "Bordsfl\u00e4kt", layout_fan_ceiling: "Takfl\u00e4kt", fan_natural: "Naturlig vind", fan_summer: "Sommar",
+    fan_winter: "Vinter", oscillating: "Sv\u00e4nger", fan_direction_inverted: "Byt sommar och vinter", fan_wood_blades: "Tr\u00e4blad", fan_on: "P\u00e5",
+    section_fan_layout: "Modell",
     iron_heating: "V\u00e4rmer", iron_off: "Av", left_on: "St\u00e5r p\u00e5", left_on_after: "Varna efter (minuter p\u00e5slagen)",
     type_pellet_stove: "Pelletskamin", ps_off: "Av", ps_ignition: "T\u00e4ndning", ps_burning: "Eldar", ps_modulating: "Modulerar",
     ps_eco: "Eco-vila", ps_cooling: "Avsvalning", ps_cleaning: "Reng\u00f6ring", ps_alarm: "Larm", ps_no_pellets: "Slut p\u00e5 pellets",
@@ -1407,6 +1488,15 @@ const T = {
     feeder_empty: "Beholder tom", feeder_level: "Beholder {pct} full", section_level: "F\u00f4rniv\u00e5", section_level_b: "Niv\u00e5 i andre beholder", level_empty_below: "Tom ved eller under", level_max: "Beholderens volum",
     section_feeder_layout: "Modell", layout_tower: "Firkantet beholder", layout_canister: "Rund beholder", layout_double: "To sk\u00e5ler", layout_dual_split: "To beholdere, delt sk\u00e5l", layout_rotary: "Roterende sk\u00e5ler (v\u00e5tf\u00f4r)",
     type_iron: "Strykejern", section_iron_layout: "Modell", layout_iron: "Strykejern", layout_generator: "Dampstasjon",
+    type_toaster: "Br\u00f8drister", section_toaster_layout: "Modell", layout_toaster_two: "To spor", layout_toaster_four: "Fire spor",
+    layout_toaster_long: "Langt spor", toaster_toasting: "Rister", toaster_done: "Ferdig", type_air_purifier: "Luftrenser",
+    section_purifier_layout: "Modell", layout_purifier_cylinder: "Sylinder", layout_purifier_box: "Firkantet", layout_purifier_ring: "Vingel\u00f8s ring",
+    pf_purifying: "Renser", pf_auto: "Auto", pf_night: "Nattmodus", section_air_quality: "Luftkvalitet",
+    section_screen: "Skjerm", section_heater: "Varme (termostat)", aq_good: "God", aq_fair: "Moderat",
+    aq_poor: "D\u00e5rlig", aq_bad: "Sv\u00e6rt d\u00e5rlig", type_fan: "Vifte", layout_fan_stand: "Gulvvifte",
+    layout_fan_table: "Bordvifte", layout_fan_ceiling: "Takvifte", fan_natural: "Naturlig vind", fan_summer: "Sommer",
+    fan_winter: "Vinter", oscillating: "Svinger", fan_direction_inverted: "Bytt sommer og vinter", fan_wood_blades: "Treblader", fan_on: "P\u00e5",
+    section_fan_layout: "Modell",
     iron_heating: "Varmer", iron_off: "Av", left_on: "St\u00e5r p\u00e5", left_on_after: "Varsle etter (minutter p\u00e5sl\u00e5tt)",
     type_pellet_stove: "Pelletsovn", ps_off: "Av", ps_ignition: "Tenning", ps_burning: "Fyrer", ps_modulating: "Modulerer",
     ps_eco: "Eco-hvile", ps_cooling: "Nedkj\u00f8ling", ps_cleaning: "Rengj\u00f8ring", ps_alarm: "Alarm", ps_no_pellets: "Tom for pellets",
@@ -1548,6 +1638,15 @@ const T = {
     feeder_empty: "Beholder tom", feeder_level: "Beholder {pct} fuld", section_level: "Foderm\u00e6ngde", section_level_b: "Niveau i anden beholder", level_empty_below: "Tom ved eller under", level_max: "Beholderens rumfang",
     section_feeder_layout: "Model", layout_tower: "Firkantet beholder", layout_canister: "Rund beholder", layout_double: "To sk\u00e5le", layout_dual_split: "To beholdere, delt sk\u00e5l", layout_rotary: "Roterende sk\u00e5le (v\u00e5dfoder)",
     type_iron: "Strygejern", section_iron_layout: "Model", layout_iron: "Strygejern", layout_generator: "Dampstation",
+    type_toaster: "Br\u00f8drister", section_toaster_layout: "Model", layout_toaster_two: "To spalter", layout_toaster_four: "Fire spalter",
+    layout_toaster_long: "Lang spalte", toaster_toasting: "Rister", toaster_done: "F\u00e6rdig", type_air_purifier: "Luftrenser",
+    section_purifier_layout: "Model", layout_purifier_cylinder: "Cylinder", layout_purifier_box: "Firkantet", layout_purifier_ring: "Vingel\u00f8s ring",
+    pf_purifying: "Renser", pf_auto: "Auto", pf_night: "Nattilstand", section_air_quality: "Luftkvalitet",
+    section_screen: "Sk\u00e6rm", section_heater: "Varme (termostat)", aq_good: "God", aq_fair: "Moderat",
+    aq_poor: "D\u00e5rlig", aq_bad: "Meget d\u00e5rlig", type_fan: "Ventilator", layout_fan_stand: "Gulvventilator",
+    layout_fan_table: "Bordventilator", layout_fan_ceiling: "Loftventilator", fan_natural: "Naturlig vind", fan_summer: "Sommer",
+    fan_winter: "Vinter", oscillating: "Svinger", fan_direction_inverted: "Byt sommer og vinter", fan_wood_blades: "Tr\u00e6blade", fan_on: "T\u00e6ndt",
+    section_fan_layout: "Model",
     iron_heating: "Varmer", iron_off: "Slukket", left_on: "St\u00e5r t\u00e6ndt", left_on_after: "Advar efter (minutter t\u00e6ndt)",
     type_pellet_stove: "Pilleovn", ps_off: "Slukket", ps_ignition: "T\u00e6nding", ps_burning: "Fyrer", ps_modulating: "Modulerer",
     ps_eco: "Eco-standby", ps_cooling: "Afk\u00f8ling", ps_cleaning: "Reng\u00f8ring", ps_alarm: "Alarm", ps_no_pellets: "Ingen piller",
@@ -1689,6 +1788,15 @@ const T = {
     feeder_empty: "Pusty zasobnik", feeder_level: "Zasobnik nape\u0142niony w {pct}", section_level: "Poziom karmy", section_level_b: "Poziom drugiego zasobnika", level_empty_below: "Pusty przy tej warto\u015bci lub ni\u017cej", level_max: "Pojemno\u015b\u0107 zasobnika",
     section_feeder_layout: "Model", layout_tower: "Kwadratowy zasobnik", layout_canister: "Okr\u0105g\u0142y zasobnik", layout_double: "Dwie miski", layout_dual_split: "Dwa zasobniki, dzielona miska", layout_rotary: "Obrotowe miseczki (mokra karma)",
     type_iron: "\u017belazko", section_iron_layout: "Model", layout_iron: "\u017belazko", layout_generator: "Generator pary",
+    type_toaster: "Toster", section_toaster_layout: "Model", layout_toaster_two: "Dwa otwory", layout_toaster_four: "Cztery otwory",
+    layout_toaster_long: "D\u0142ugi otw\u00f3r", toaster_toasting: "Opiekanie", toaster_done: "Gotowe", type_air_purifier: "Oczyszczacz powietrza",
+    section_purifier_layout: "Model", layout_purifier_cylinder: "Walec", layout_purifier_box: "Kwadratowa obudowa", layout_purifier_ring: "Pier\u015bcie\u0144 bez \u0142opatek",
+    pf_purifying: "Oczyszczanie", pf_auto: "Auto", pf_night: "Tryb nocny", section_air_quality: "Jako\u015b\u0107 powietrza",
+    section_screen: "Ekran", section_heater: "Ogrzewanie (termostat)", aq_good: "Dobra", aq_fair: "Umiarkowana",
+    aq_poor: "Z\u0142a", aq_bad: "Bardzo z\u0142a", type_fan: "Wentylator", layout_fan_stand: "Stoj\u0105cy",
+    layout_fan_table: "Biurkowy", layout_fan_ceiling: "Sufitowy", fan_natural: "Naturalny wiatr", fan_summer: "Lato",
+    fan_winter: "Zima", oscillating: "Obrotowy", fan_direction_inverted: "Zamie\u0144 lato i zim\u0119", fan_wood_blades: "Drewniane \u0142opaty", fan_on: "W\u0142\u0105czony",
+    section_fan_layout: "Model",
     iron_heating: "Grzeje", iron_off: "Wy\u0142\u0105czony", left_on: "Pozosta\u0142o w\u0142\u0105czone", left_on_after: "Ostrze\u017c po (minutach w\u0142\u0105czenia)",
     type_pellet_stove: "Piec na pellet", ps_off: "Wy\u0142\u0105czony", ps_ignition: "Rozpalanie", ps_burning: "Pracuje", ps_modulating: "Modulacja",
     ps_eco: "Czuwanie eko", ps_cooling: "Wygaszanie", ps_cleaning: "Czyszczenie", ps_alarm: "Alarm", ps_no_pellets: "Brak pelletu",
@@ -1830,6 +1938,15 @@ const T = {
     feeder_empty: "\u6599\u6876\u5df2\u7a7a", feeder_level: "\u6599\u6876\u4f59\u91cf {pct}", section_level: "\u4f59\u91cf", section_level_b: "\u7b2c\u4e8c\u6599\u4ed3\u4f59\u91cf", level_empty_below: "\u4f4e\u4e8e\u6216\u7b49\u4e8e\u6b64\u503c\u89c6\u4e3a\u7a7a", level_max: "\u6599\u6876\u5bb9\u91cf",
     section_feeder_layout: "\u578b\u53f7", layout_tower: "\u65b9\u5f62\u6599\u6876", layout_canister: "\u5706\u5f62\u6599\u6876", layout_double: "\u53cc\u98df\u76c6", layout_dual_split: "\u53cc\u6599\u4ed3\uff0c\u5206\u9694\u98df\u76c6", layout_rotary: "\u65cb\u8f6c\u9910\u76d8\uff08\u6e7f\u7cae\uff09",
     type_iron: "\u71a8\u6597", section_iron_layout: "\u578b\u53f7", layout_iron: "\u71a8\u6597", layout_generator: "\u84b8\u6c7d\u53d1\u751f\u5668",
+    type_toaster: "\u70e4\u9762\u5305\u673a", section_toaster_layout: "\u578b\u53f7", layout_toaster_two: "\u53cc\u69fd", layout_toaster_four: "\u56db\u69fd",
+    layout_toaster_long: "\u957f\u69fd", toaster_toasting: "\u70d8\u70e4\u4e2d", toaster_done: "\u5df2\u5b8c\u6210", type_air_purifier: "\u7a7a\u6c14\u51c0\u5316\u5668",
+    section_purifier_layout: "\u578b\u53f7", layout_purifier_cylinder: "\u5706\u67f1\u5f62", layout_purifier_box: "\u65b9\u5f62", layout_purifier_ring: "\u65e0\u53f6\u73af\u5f62",
+    pf_purifying: "\u51c0\u5316\u4e2d", pf_auto: "\u81ea\u52a8", pf_night: "\u591c\u95f4\u6a21\u5f0f", section_air_quality: "\u7a7a\u6c14\u8d28\u91cf",
+    section_screen: "\u5c4f\u5e55", section_heater: "\u52a0\u70ed\uff08\u6e29\u63a7\uff09", aq_good: "\u826f\u597d", aq_fair: "\u4e00\u822c",
+    aq_poor: "\u5dee", aq_bad: "\u5f88\u5dee", type_fan: "\u98ce\u6247", layout_fan_stand: "\u843d\u5730\u6247",
+    layout_fan_table: "\u53f0\u6247", layout_fan_ceiling: "\u540a\u6247", fan_natural: "\u81ea\u7136\u98ce", fan_summer: "\u590f\u5b63",
+    fan_winter: "\u51ac\u5b63", oscillating: "\u6447\u5934", fan_direction_inverted: "\u4e92\u6362\u590f\u5b63\u4e0e\u51ac\u5b63", fan_wood_blades: "\u6728\u8d28\u6247\u53f6", fan_on: "\u8fd0\u884c\u4e2d",
+    section_fan_layout: "\u578b\u53f7",
     iron_heating: "\u52a0\u70ed\u4e2d", iron_off: "\u5df2\u5173\u95ed", left_on: "\u4ecd\u7136\u5f00\u7740", left_on_after: "\u5f00\u542f\u591a\u5c11\u5206\u949f\u540e\u63d0\u9192",
     type_pellet_stove: "\u9897\u7c92\u7089", ps_off: "\u5df2\u5173\u95ed", ps_ignition: "\u70b9\u706b\u4e2d", ps_burning: "\u71c3\u70e7\u4e2d", ps_modulating: "\u8c03\u8282\u4e2d",
     ps_eco: "\u8282\u80fd\u5f85\u673a", ps_cooling: "\u51b7\u5374\u4e2d", ps_cleaning: "\u6e05\u6d01\u4e2d", ps_alarm: "\u62a5\u8b66", ps_no_pellets: "\u9897\u7c92\u8017\u5c3d",
@@ -1971,6 +2088,15 @@ const T = {
     feeder_empty: "Z\u00e1sobn\u00edk pr\u00e1zdn\u00fd", feeder_level: "Z\u00e1sobn\u00edk napln\u011bn na {pct}", section_level: "Mno\u017estv\u00ed krmiva", section_level_b: "Hladina druh\u00e9ho z\u00e1sobn\u00edku", level_empty_below: "Pr\u00e1zdn\u00fd p\u0159i t\u00e9to hodnot\u011b nebo ni\u017e\u0161\u00ed", level_max: "Objem z\u00e1sobn\u00edku",
     section_feeder_layout: "Model", layout_tower: "Hranat\u00fd z\u00e1sobn\u00edk", layout_canister: "Kulat\u00fd z\u00e1sobn\u00edk", layout_double: "Dv\u011b misky", layout_dual_split: "Dva z\u00e1sobn\u00edky, d\u011blen\u00e1 miska", layout_rotary: "Oto\u010dn\u00e9 misky (kapsi\u010dky)",
     type_iron: "\u017dehli\u010dka", section_iron_layout: "Model", layout_iron: "\u017dehli\u010dka", layout_generator: "Parn\u00ed gener\u00e1tor",
+    type_toaster: "Topinkova\u010d", section_toaster_layout: "Model", layout_toaster_two: "Dva otvory", layout_toaster_four: "\u010cty\u0159i otvory",
+    layout_toaster_long: "Dlouh\u00fd otvor", toaster_toasting: "Op\u00e9k\u00e1", toaster_done: "Hotovo", type_air_purifier: "\u010cisti\u010dka vzduchu",
+    section_purifier_layout: "Model", layout_purifier_cylinder: "V\u00e1lec", layout_purifier_box: "Hranat\u00e1 sk\u0159\u00ed\u0148", layout_purifier_ring: "Bezlopatkov\u00fd prstenec",
+    pf_purifying: "\u010cist\u00ed", pf_auto: "Auto", pf_night: "No\u010dn\u00ed re\u017eim", section_air_quality: "Kvalita vzduchu",
+    section_screen: "Displej", section_heater: "Topen\u00ed (termostat)", aq_good: "Dobr\u00e1", aq_fair: "P\u0159ijateln\u00e1",
+    aq_poor: "\u0160patn\u00e1", aq_bad: "Velmi \u0161patn\u00e1", type_fan: "Ventil\u00e1tor", layout_fan_stand: "Stojanov\u00fd",
+    layout_fan_table: "Stoln\u00ed", layout_fan_ceiling: "Stropn\u00ed", fan_natural: "P\u0159irozen\u00fd v\u00edtr", fan_summer: "L\u00e9to",
+    fan_winter: "Zima", oscillating: "Oto\u010dn\u00fd", fan_direction_inverted: "Prohodit l\u00e9to a zimu", fan_wood_blades: "D\u0159ev\u011bn\u00e9 lopatky", fan_on: "Zapnuto",
+    section_fan_layout: "Model",
     iron_heating: "Oh\u0159\u00edv\u00e1n\u00ed", iron_off: "Vypnuto", left_on: "Z\u016fstala zapnut\u00e1", left_on_after: "Upozornit po (minut\u00e1ch zapnut\u00ed)",
     type_pellet_stove: "Kamna na pelety", ps_off: "Vypnuto", ps_ignition: "Zapalov\u00e1n\u00ed", ps_burning: "Top\u00ed", ps_modulating: "Modulace",
     ps_eco: "Eko pohotovost", ps_cooling: "Chladnut\u00ed", ps_cleaning: "\u010ci\u0161t\u011bn\u00ed", ps_alarm: "Alarm", ps_no_pellets: "Do\u0161ly pelety",
@@ -2584,6 +2710,123 @@ function spaceHeaterModeOf(st) {
   return ["heat", "auto", "heat_cool", "on"].includes(state) ? "heating" : "";
 }
 
+// Air purifiers and fans. Every integration names its presets its own way
+// (Levoit says sleep, Philips night, Sharp silent, Matter sleep_wind, Xiaomi
+// Home translates them), so they are read by family, lowercased.
+const AIR_PRESETS = {
+  heat: /^(heat|heating|warm|hot)$/,
+  night: /sleep|night|silent|quiet|mute|baby|gentle|idle|displayoff|nacht|nuit|noche|notte|nocturn|sommeil|schlaf|sueno|slaap|natt|sen|spanek|\u7761\u7720|\u591c\u95f4/,
+  natural: /natur|breeze|brise/,
+  turbo: /turbo|rapid|strong|storm|boost|max|power|realize|fast|super/,
+  auto: /auto|smart|allergen|bacteria|pollution|^gas$/,
+};
+function airPresetOf(raw) {
+  if (raw === undefined || raw === null) return "";
+  const p = stripAccents(String(raw)).toLowerCase().trim();
+  if (!p || p === "none" || p === "off") return "";
+  for (const [family, re] of Object.entries(AIR_PRESETS)) if (re.test(p)) return family;
+  return "manual";
+}
+// Speeds that come as presets rather than as a percentage: low, medium and
+// high, or the levels SwitchBot numbers.
+function presetSpeedOf(raw) {
+  const p = String(raw || "").toLowerCase();
+  if (/^(low|level_1|speed_1|1)$/.test(p)) return 1;
+  if (/^(medium|mid|middle|level_2|speed_2|2)$/.test(p)) return 2;
+  if (/^(high|level_3|speed_3|3)$/.test(p)) return 3;
+  return 0;
+}
+// How busy the air is, from 1 to 3: two lines, three, or five.
+function airLevelOf(pct, preset, presetRaw) {
+  if (preset === "night") return 1;
+  if (preset === "turbo") return 3;
+  const named = presetSpeedOf(presetRaw);
+  if (named) return named;
+  if (Number.isFinite(pct) && pct > 0) return pct <= 40 ? 1 : pct <= 75 ? 2 : 3;
+  return 2;
+}
+// The seconds a dash of air takes, and a blade a turn, at each level.
+const AIR_SPEEDS = { 1: 2.4, 2: 1.6, 3: 0.9 };
+const ROTOR_SPEEDS = { 1: 1.1, 2: 0.6, 3: 0.35 };
+
+// Air quality on four levels: good, fair, poor, bad. A PM2.5 reading in
+// micrograms, a US AQI, Philips's allergen index from 1 to 12, or the words of
+// the integrations, which run from VeSync's four to Matter's six. A small
+// whole number on an AQI sensor is an index of its own (Govee's), and a scale
+// the card cannot place says nothing rather than something wrong.
+const AQ_COLORS = { 1: "#4caf50", 2: "#fdd835", 3: "#ff9800", 4: "#f44336" };
+const AQ_LABELS = { 1: "aq_good", 2: "aq_fair", 3: "aq_poor", 4: "aq_bad" };
+const AQ_WORDS = {
+  excellent: 1, good: 1, very_good: 1, great: 1,
+  fair: 2, moderate: 2, normal: 2, average: 2, acceptable: 2, satisfactory: 2,
+  poor: 3, bad: 3, unhealthy: 3, slightly_unhealthy: 3, unhealthy_for_sensitive_groups: 3,
+  very_poor: 4, very_bad: 4, very_unhealthy: 4, extremely_poor: 4, severe: 4, hazardous: 4, danger: 4,
+};
+const VESYNC_AQ = ["excellent", "good", "moderate", "poor"];
+function aqLevelOf(st, entityId) {
+  if (!st) return null;
+  const raw = String(st.state).trim();
+  const word = stripAccents(raw).toLowerCase().replace(/[\s-]+/g, "_");
+  if (["", "unknown", "unavailable", "none", "invalid", "out_of_range"].includes(word)) return null;
+  const a = st.attributes || {};
+  const num = parseFloat(raw);
+  if (!/^-?\d+(\.\d+)?$/.test(raw)) {
+    // VeSync counts four steps from excellent to poor, where everyone else
+    // calls poor the third: its own options say which scale it is.
+    const opts = Array.isArray(a.options) ? a.options.map((o) => String(o).toLowerCase()).filter((o) => o !== "unknown") : [];
+    if (opts.length === 4 && VESYNC_AQ.every((o, i) => opts[i] === o)) return VESYNC_AQ.indexOf(word) + 1 || null;
+    return AQ_WORDS[word] || null;
+  }
+  const id = String(entityId || st.entity_id || "").toLowerCase();
+  const unit = String(a.unit_of_measurement || "").toLowerCase();
+  if (/allergen|(^|_)iai(_|$)/.test(id)) return num <= 3 ? 1 : num <= 6 ? 2 : num <= 9 ? 3 : 4;
+  if (a.device_class === "pm25" || /g\/m/.test(unit)) return num <= 12 ? 1 : num <= 35.4 ? 2 : num <= 55.4 ? 3 : 4;
+  if (a.device_class === "aqi" || /aqi/.test(id)) {
+    if (num <= 6 && Number.isInteger(num)) return null;
+    return num <= 50 ? 1 : num <= 100 ? 2 : num <= 150 ? 3 : 4;
+  }
+  return null;
+}
+
+// The air lines a purifier and a fan blow: five of them, listed so that the
+// first two, then three, are evenly spread; the speed hides the rest. Up, down
+// or sideways, the dashes run from the start of each line to its end.
+function windLines(cls, x, y, w, h, dir) {
+  const at = [0.08, 0.92, 0.5, 0.29, 0.71];
+  const line = (f) => {
+    if (dir === "side") {
+      const v = (h * f).toFixed(1);
+      return `<path d="M1 ${v} C${w * 0.3} ${v - 4} ${w * 0.6} ${+v + 4} ${w - 1} ${v - 1}"/>`;
+    }
+    const u = (w * f).toFixed(1);
+    return dir === "up"
+      ? `<path d="M${u} ${h - 1} C${u - 4} ${h * 0.66} ${+u + 4} ${h * 0.33} ${u} 1"/>`
+      : `<path d="M${u} 1 C${u - 4} ${h * 0.33} ${+u + 4} ${h * 0.66} ${u} ${h - 1}"/>`;
+  };
+  return `<svg class="wind ${cls}" style="left: ${x}px; top: ${y}px; width: ${w}px; height: ${h}px" viewBox="0 0 ${w} ${h}">${at.map(line).join("")}</svg>`;
+}
+// Blades round a hub, in an SVG of their own: an invisible circle keeps the
+// group centred on the hub, so a turn does not make them wobble, and r0 lets
+// them start at the rim of a motor rather than at its centre.
+function fanBlades(cx, cy, n, len, w, r0) {
+  return `<g class="fn-rot"><circle cx="${cx}" cy="${cy}" r="${r0 + len + w}" fill="none"/>`
+    + Array.from({ length: n }, (_, k) => `<path class="fn-blade" transform="rotate(${k * 360 / n} ${cx} ${cy}) translate(0 ${-r0})" d="M${cx} ${cy} `
+      + `C${cx - w} ${cy - len * 0.35} ${cx - w * 0.8} ${cy - len} ${cx + w * 0.25} ${cy - len} C${cx + w * 0.9} ${cy - len * 0.7} ${cx + w * 0.5} ${cy - len * 0.3} ${cx} ${cy}Z"/>`).join("")
+    + `</g>`;
+}
+const AIR_COLORS = { off: "var(--disabled-text-color, #9e9e9e)", run: "#42a5f5", night: "#7986cb", heat: "#ff7043", offline: "var(--disabled-text-color, #9e9e9e)" };
+// What the optional screen prints: a number without its unit, a temperature
+// with its degree sign.
+function airScreenOf(st) {
+  if (!st || ["unknown", "unavailable"].includes(st.state)) return "";
+  const n = parseFloat(st.state);
+  if (!Number.isFinite(n)) return String(st.state).slice(0, 4);
+  const unit = String((st.attributes || {}).unit_of_measurement || "");
+  return /\u00b0/.test(unit) ? `${Math.round(n)}\u00b0` : String(Math.round(n));
+}
+
+// A fan on the ceiling, by its name in any language.
+const FAN_CEILING_RE = /ceiling|plafond|decken|techo|soffitto|plafon|teto|takfl|takvif|loftvent|sufit|stropn|\u5438\u9876|\u540a\u6247|\u043f\u043e\u0442\u043e\u043b/;
 // A towel warmer on a pilot wire, the French way of driving an electric
 // radiator: comfort, eco, frost protection and off, plus the boost and the
 // towel drying of Atlantic, Thermor and Acova. Heatzy and Atlantic say it in
@@ -4125,6 +4368,17 @@ const TYPE_AUTO_PATTERNS = {
     fan_speed_entity: /fan.?(speed|mode|level)|wind.?speed/i,
     power_entity: /power$|power_w$|watt/i,
   },
+  // The air a purifier measures, its night mode and its heater, by the names
+  // VeSync, Philips, Dyson, Winix and Xiaomi give them.
+  air_purifier: {
+    air_quality_entity: /^sensor\..*(pm2.?5|air.?quality|aqi|allergen)/i,
+    night_mode_entity: /^(switch|binary_sensor)\..*(night|sleep)/i,
+    heater_entity: /^climate\./i,
+  },
+  fan: {
+    light_entity: /^light\./i,
+    night_mode_entity: /^(switch|binary_sensor)\..*(night|sleep)/i,
+  },
   // Names read in the integrations: Panasonic Comfort Cloud keeps its vanes
   // and nanoe in selects and switches, Midea LAN its wind angles, and most
   // report the outdoor unit's temperature apart. Gree calls its ioniser the
@@ -4274,6 +4528,15 @@ const TYPE_CAPS = {
   // one to Home Assistant, so it is read from the smart plug it is on, which
   // is why it is there: an iron left on is the one an owner worries about.
   iron: { iron: true },
+  // A toaster, read from its plug like the iron: it waits, it toasts, and the
+  // slices pop up. Nothing reports a toaster to Home Assistant on its own.
+  toaster: { toaster: true },
+  // An air purifier: it runs, sleeps or heats, its fan blows forward or back
+  // and turns from side to side, and its gauge reads the air it cleans.
+  air_purifier: { airPurifier: true },
+  // A fan on its stand, on a desk or on the ceiling: a speed, a preset, an
+  // oscillation, and for the ceiling a direction and often a light.
+  fan: { fanAppliance: true },
   // A pellet stove: a fire behind glass, a hopper of pellets beside it, and a
   // display that names the phase. No cycle and no programme, but a status that
   // says more than on and off: lighting, burning, modulating, the eco pause,
@@ -4330,6 +4593,10 @@ const FOUNTAIN_ONLY_FIELDS = ["pump_clean_entity", "pump_reset_entity", "water_l
 const STOVE_ONLY_FIELDS = ["flue_temperature_entity"];
 // And vanes point the air of an air conditioner only.
 const AC_ONLY_FIELDS = ["vane_vertical_entity", "vane_horizontal_entity", "purifier_entity"];
+// A gauge of the air and the shape of a purifier belong to a purifier, and
+// the shape of a fan, its blades and its oscillation to a fan.
+const PURIFIER_ONLY_FIELDS = ["purifier_layout", "air_quality_entity", "display_entity"];
+const FAN_ONLY_FIELDS = ["fan_layout", "wood_blades", "fan_direction_inverted", "oscillating"];
 // A water tank and a humidity reading belong to a dehumidifier, and the
 // choice of a heater's model to a heater.
 const DEHUMIDIFIER_ONLY_FIELDS = ["tank_entity", "current_humidity_entity"];
@@ -4382,6 +4649,9 @@ function detectApplianceType(cfg, st) {
   if (AC_ONLY_FIELDS.some((f) => cfg[f])) return "air_conditioner";
   if (DEHUMIDIFIER_ONLY_FIELDS.some((f) => cfg[f])) return "dehumidifier";
   if (cfg.heater_layout) return "space_heater";
+  if (cfg.toaster_layout) return "toaster";
+  if (PURIFIER_ONLY_FIELDS.some((f) => cfg[f])) return "air_purifier";
+  if (FAN_ONLY_FIELDS.some((f) => cfg[f])) return "fan";
   if (FRYER_ONLY_FIELDS.some((f) => cfg[f])) return "air_fryer";
   if (EV_ONLY_FIELDS.some((f) => cfg[f])) return "ev_charger";
   const hay = `${cfg.icon || ""} ${cfg.state_entity || ""} ${(st && st.attributes.icon) || ""}`.toLowerCase();
@@ -4414,6 +4684,8 @@ function detectApplianceType(cfg, st) {
   // Portuguese call a griddle a plancha as well, so theirs is the ironing one:
   // plancha de ropa, centro de planchado, ferro de engomar.
   if (/\biron(ing)?\b|steam.?(generator|station)|fer.?a.?repasser|centrale.?vapeur|bugeleisen|dampfstation|dampfbugel|plancha.?de.?ropa|planchado|ferro.?(da.?stiro|de.?engomar|de.?passar)|strijkijzer|stoomgenerator|stryk(jarn|ejern)|strygejern|zelazko|generator.?pary|zehlicka|parni.?generator|\u0443\u0442\u044e\u0433|\u043f\u0430\u0440\u043e\u0433\u0435\u043d\u0435\u0440\u0430\u0442\u043e\u0440|\u71a8\u6597/.test(hay)) return "iron";
+  // A toaster, but not a toaster oven, which is an oven.
+  if (/toaster(?!.?oven)|grille.?pain|tostador|tostapane|broodrooster|br(o|\u00f6)drost|br(o|\u00f8)drister|toster|topinkova|\u70e4\u9762\u5305|\u0442\u043e\u0441\u0442\u0435\u0440/.test(hay)) return "toaster";
   // A pellet stove, by its own name or by its maker's and its integration's.
   // "Stove" alone is a cooktop to an American, so the word needs its pellets.
   // A towel warmer, a dehumidifier and a small heater, by their names. They
@@ -4423,6 +4695,9 @@ function detectApplianceType(cfg, st) {
   if (/dehumid|deshumid|d\u00e9shumid|entfeucht|deumidif|ontvocht|avfukt|affugt|osuszacz|odvlh|\u9664\u6e7f/.test(hay)) return "dehumidifier";
   if (st && /^humidifier\./.test(String(cfg.state_entity || "")) && st.attributes.device_class === "dehumidifier") return "dehumidifier";
   if (/space.?heater|fan.?heater|ceramic.?heater|oil.?(filled|heater|radiator)|panel.?heater|soufflant|bain.?d.?huile|chauffage.?d.?appoint|petit.?chauffage|convecteur|heizl(u|ue|\u00fc)fter|(o|oe|\u00f6)lradiator|calefactor|termoventil|stufetta|stufa.?elettric|scaldino|termoconvett|ventilatorkachel|varmefl|termowentyl|\u6696\u98ce\u673a|\u6cb9\u6c40/.test(hay)) return "space_heater";
+  // An air purifier, by its name in any language or by Dyson's, which makes
+  // little else for Home Assistant. Before the heater, since a Dyson heats too.
+  if (/purif|air.?clean|luftrein|depura|luchtrein|luftren|oczyszcz|cisticka|\u51c0\u5316|\u043e\u0447\u0438\u0441\u0442\u0438\u0442|dyson/.test(hay)) return "air_purifier";
   if (/pellet|stufa|poele|po\u00eale|granule|granul\u00e9|pilleovn|palazzetti|micronova|aguaiot|extraflame|ravelli|piazzetta|edilkamin|duepi|(^|[^a-z])(rika|mcz)([^a-z]|$)|\u043f\u0435\u043b\u043b\u0435\u0442|\u9897\u7c92\u7089/.test(hay)) return "pellet_stove";
   // InComfort exposes an Intergas combi boiler as water_heater.boiler: the
   // domain says tank, the name says boiler, and the name is the one that knows.
@@ -4442,6 +4717,9 @@ function detectApplianceType(cfg, st) {
   if (/water.?heater|water.?boiler|chauffe.?eau|cumulus|warmwasserspeicher|termo.?electrico|scaldabagno|varmvattenberedare|varmtvannsbereder|podgrzewacz/.test(hay)) return "water_heater";
   if (/\bboiler|chaudiere|chaudi\u00e8re|heizkessel|gaskessel|caldaia|caldera|cv.?ketel|kocio\u0142|nefit/.test(hay)) return "boiler";
   if (/hood|hotte|abzug|extractor|exaustor|afzuigkap|emh|okap/.test(hay)) return "hood";
+  // A fan, by its name in any language, which a fan.* entity id carries; not
+  // ventilation, which is a building's.
+  if (/ventilat(eur|or|ore)|ventilador|wentylator|fl(a|\u00e4)kt|vifte|ceiling.?fan|(^|[\s._])fan([\s._]|$)|\u98ce\u6247|\u540a\u6247|\u0432\u0435\u043d\u0442\u0438\u043b\u044f\u0442\u043e\u0440/.test(hay)) return "fan";
   if (/cooktop|hotplate|plaque|kochfeld|kookplaat|induction|induktion|kogeplade/.test(hay)) return "cooktop";
   if (/oven|four|backofen|horno|forno|piekarnik/.test(hay)) return "oven";
   // Before the dryer: a washer-dryer says "dry" in every language, and it is a
@@ -4466,6 +4744,10 @@ const P3_PART_MAX = 40;
 // iron left on, redraws on this beat: the count is shown in whole minutes, so
 // half a minute is close enough to keep it honest.
 const CLOCK_TICK_MS = 30 * 1000;
+// How long a toaster says its toast is ready once it has popped up.
+const TOASTER_READY_MS = 5 * 60 * 1000;
+const TOASTER_LABELS = { off: "ac_off", idle: "standby", toasting: "toaster_toasting", done: "toaster_done" };
+const TOASTER_COLORS = { off: "var(--disabled-text-color, #9e9e9e)", idle: "var(--disabled-text-color, #9e9e9e)", toasting: "#ff7043", done: "var(--success-color, #4caf50)" };
 // Same beat for a cycle counting down to a finish time.
 const COUNTDOWN_TICK_MS = 30 * 1000;
 
@@ -6835,6 +7117,192 @@ const ILLUSTRATION_CSS = {
   // An iron in profile, nose to the left: the soleplate, the shell rising to
   // the back, the tank inside it and the handle over the top. The same iron is
   // drawn smaller on the base of a steam generator.
+  // An air purifier in one of three shapes: a cylinder blowing out of its
+  // top, a square box with its fan on top, or a bladeless ring that blows
+  // forward, sideways while it oscillates, or backwards. Clean air is blue,
+  // warm air orange, the night dims both, and a four-step gauge reads the
+  // quality of the air.
+  air_purifier: () => `${AIR_CSS}
+        .pf-bar { position: absolute; z-index: 5; display: flex; gap: 0.8px; }
+        .pf-bar i { flex: 1; border-radius: 1px; background: rgba(0, 0, 0, 0.16); }
+        .machine.on.aq1 .pf-bar i:nth-child(-n+1), .machine.on.aq2 .pf-bar i:nth-child(-n+2), .machine.on.aq3 .pf-bar i:nth-child(-n+3), .machine.on.aq4 .pf-bar i,
+        .machine.on.aq1 .dy-disp i:nth-child(-n+1), .machine.on.aq2 .dy-disp i:nth-child(-n+2), .machine.on.aq3 .dy-disp i:nth-child(-n+3), .machine.on.aq4 .dy-disp i {
+          background: var(--aq); box-shadow: 0 0 2px var(--aq);
+        }
+        .pf-lcd {
+          position: absolute; z-index: 5; border-radius: 2px; background: rgba(10, 14, 18, 0.92); color: #e3f2fd; text-align: center;
+          font: 700 6.5px/9px ui-monospace, "SF Mono", Menlo, monospace; text-shadow: 0 0 2px currentColor;
+        }
+        .dy-round {
+          position: absolute; z-index: 6; border-radius: 50%; background: radial-gradient(circle at 50% 40%, #1b2025, #07090b);
+          box-shadow: 0 0 0 0.9px #b9bfc4, 0 0 0 1.4px rgba(0, 0, 0, 0.3);
+        }
+        .dy-round span {
+          position: absolute; inset: 0; color: #e3f2fd; text-align: center; text-shadow: 0 0 1.5px currentColor;
+          font: 700 4.2px/11px ui-monospace, "SF Mono", Menlo, monospace;
+        }
+        .machine:not(.on) .pf-lcd span, .machine:not(.on) .dy-round span { display: none; }
+        .machine.mode-night .pf-bar, .machine.mode-night .pf-lcd, .machine.mode-night .dy-disp i, .machine.mode-night .dy-round span { opacity: 0.35; }
+        .cy-body, .cy-ring, .cy-ctrl, .cy-perf, .co-top, .co-fan, .co-hub, .co-lid, .co-body, .co-perf { position: absolute; }
+        .cy-body {
+          z-index: 2; border-radius: 14px 14px 11px 11px / 10px 10px 7px 7px;
+          background: linear-gradient(90deg, var(--ac-body-lo, #cfd6db), var(--ac-body-hi, #ffffff) 30%, var(--ac-body, #eceff1) 66%, var(--ac-body-lo, #cfd6db));
+          box-shadow: inset 0 0 0 0.8px rgba(0, 0, 0, 0.14), 0 2px 3px rgba(0, 0, 0, 0.14);
+        }
+        .cy-ring { z-index: 3; border-radius: 50%; background: repeating-conic-gradient(from 0deg, #6b7379 0 3deg, #c4cacf 3deg 8deg); box-shadow: 0 0 0 1.2px #8a9298, inset 0 0 0 1px rgba(0, 0, 0, 0.25); }
+        .cy-ctrl { z-index: 4; border-radius: 50%; background: radial-gradient(ellipse at 50% 40%, #3a4147, #15191c); box-shadow: 0 0 0 0.8px #6f777d; }
+        .cy-perf { z-index: 3; -webkit-mask-image: linear-gradient(90deg, transparent, #000 16%, #000 84%, transparent); mask-image: linear-gradient(90deg, transparent, #000 16%, #000 84%, transparent); }
+        .cy-perf i {
+          position: absolute; inset: 0; background: radial-gradient(circle, rgba(0, 0, 0, 0.42) 0.75px, transparent 1px) 0 0 / 3px 3px;
+          -webkit-mask-image: linear-gradient(180deg, transparent, #000 45%); mask-image: linear-gradient(180deg, transparent, #000 45%);
+        }
+        .co-top {
+          z-index: 3; border-radius: 7px 7px 2px 2px / 5px 5px 1px 1px;
+          background: linear-gradient(180deg, var(--ac-body, #eceff1), var(--ac-body-hi, #ffffff) 80%); box-shadow: inset 0 0 0 0.8px rgba(0, 0, 0, 0.14);
+        }
+        .co-fan { z-index: 4; border-radius: 50%; background: repeating-conic-gradient(from 0deg, #8e969c 0 3deg, #e3e7ea 3deg 9deg); box-shadow: 0 0 0 1px #b3babf, inset 0 0 0 1px rgba(0, 0, 0, 0.15); }
+        .co-fan::before { content: ""; position: absolute; inset: 22%; border-radius: 50%; box-shadow: 0 0 0 0.8px rgba(0, 0, 0, 0.25); }
+        .co-hub { z-index: 5; border-radius: 50%; background: radial-gradient(ellipse at 50% 35%, #ffffff, #d5dadd); box-shadow: 0 0 0 0.7px rgba(0, 0, 0, 0.25); }
+        .co-lid {
+          z-index: 3; border-radius: 1px; box-shadow: inset 0 0 0 0.8px rgba(0, 0, 0, 0.14), 0 1px 0 rgba(0, 0, 0, 0.18);
+          background: linear-gradient(90deg, var(--ac-body-lo, #cfd6db), var(--ac-body-hi, #ffffff) 22%, var(--ac-body, #eceff1) 75%, var(--ac-body-lo, #cfd6db));
+        }
+        .co-body {
+          z-index: 2; border-radius: 1px 1px 5px 5px / 1px 1px 3px 3px; box-shadow: inset 0 0 0 0.8px rgba(0, 0, 0, 0.12), 0 2px 3px rgba(0, 0, 0, 0.14);
+          background: linear-gradient(90deg, var(--ac-body-lo, #cfd6db), var(--ac-body-hi, #ffffff) 18%, var(--ac-body, #eceff1) 75%, var(--ac-body-lo, #cfd6db));
+        }
+        .co-perf {
+          z-index: 3; background: radial-gradient(circle, rgba(0, 0, 0, 0.42) 0.7px, transparent 0.95px) 0 0 / 2.8px 2.8px;
+          -webkit-mask-image: linear-gradient(180deg, transparent, #000 40%); mask-image: linear-gradient(180deg, transparent, #000 40%);
+        }
+        .dy-foot, .dy-base, .dy-cap, .dy-disp, .dy-loop, .dy-back { position: absolute; }
+        .dy-foot {
+          z-index: 3; border-radius: 50%; box-shadow: 0 1.5px 2px rgba(0, 0, 0, 0.25), inset 0 0 0 0.6px rgba(0, 0, 0, 0.3);
+          background: radial-gradient(ellipse at 50% 35%, var(--ac-body-hi, #ffffff), var(--ac-body, #eceff1) 55%, var(--ac-body-lo, #cfd6db));
+        }
+        .dy-base {
+          z-index: 4; border-radius: 3px 3px 2px 2px / 2px 2px 1px 1px; box-shadow: inset 0 0 0 0.6px rgba(0, 0, 0, 0.3);
+          background: linear-gradient(90deg, var(--ac-body-lo, #cfd6db), var(--ac-body-hi, #ffffff) 30%, var(--ac-body, #eceff1) 62%, var(--ac-body-lo, #cfd6db));
+        }
+        .dy-cap { z-index: 4; border-radius: 50%; background: linear-gradient(180deg, var(--ac-body-hi, #ffffff), var(--ac-body, #eceff1)); box-shadow: inset 0 0 0 0.6px rgba(0, 0, 0, 0.3); }
+        .dy-disp {
+          z-index: 5; display: flex; gap: 0.6px; padding: 1.5px 1.3px; box-sizing: border-box; border-radius: 1px;
+          background: #0d1013; box-shadow: 0 0 0 0.6px rgba(255, 255, 255, 0.25);
+        }
+        .dy-disp i { flex: 1; border-radius: 0.4px; background: rgba(255, 255, 255, 0.1); }
+        .dy-head { position: absolute; left: 0; top: 0; width: 96px; height: 108px; z-index: 5; transform-origin: 48px 50%; }
+        .dy-loop {
+          z-index: 5; box-sizing: border-box; border: 4px solid; border-radius: 12px;
+          border-color: var(--ac-body-hi, #ffffff) var(--ac-body-lo, #cfd6db) var(--ac-body-lo, #cfd6db) var(--ac-body, #eceff1);
+          box-shadow: 0 0 0 0.8px rgba(0, 0, 0, 0.35), inset 0 0 0 1.7px #c9ced3, inset 0.6px 0.6px 0 2.2px rgba(255, 255, 255, 0.75), inset 0 0 0 2.6px rgba(0, 0, 0, 0.25);
+        }
+        .dy-back { z-index: 4; overflow: hidden; border-radius: 8px; display: none; }
+        .dy-back b {
+          position: absolute; inset: 0; border: 1.6px solid var(--air, #42a5f5); border-radius: 8px; opacity: 0;
+          animation: pf-aspire var(--spd, 1.6s) ease-in infinite; animation-delay: var(--anim-offset, 0s);
+        }
+        .dy-back b:nth-child(2) { animation-delay: calc(var(--spd, 1.6s) * -0.5 + var(--anim-offset, 0s)); }
+        .dy-back b:nth-child(3) { animation-delay: calc(var(--spd, 1.6s) * -0.25 + var(--anim-offset, 0s)); }
+        .dy-back b:nth-child(4) { animation-delay: calc(var(--spd, 1.6s) * -0.75 + var(--anim-offset, 0s)); }
+        .machine.on.back .dy-back { display: block; }
+        .machine.lv1 .dy-back b:nth-child(n+3), .machine.lv2 .dy-back b:nth-child(n+4) { display: none; }
+        .machine.mode-night .dy-back { opacity: 0.45; }
+        .machine.pf-ring .wind.l { transform: scaleX(-1); display: none; }
+        .machine.on.osc .dy-head { animation: pf-pivot 5s ease-in-out infinite; animation-delay: var(--anim-offset, 0s); }
+        .machine.on.osc .wind.r { animation: wind-r 5s ease-in-out infinite; animation-delay: var(--anim-offset, 0s); }
+        .machine.on.osc .wind.l { display: block; animation: wind-l 5s ease-in-out infinite; animation-delay: var(--anim-offset, 0s); }
+        .machine.back .wind, .machine.back.osc .wind.l { display: none; }
+        @keyframes pf-pivot { 0%, 50%, 100% { transform: scaleX(1); } 25%, 75% { transform: scaleX(0.68); } }
+        @keyframes pf-aspire { 0% { transform: scale(1); opacity: 0.95; } 100% { transform: scale(0.08); opacity: 0; } }
+  `,
+  // A fan on its stand or on a desk, a cage with its blades turning behind
+  // it, or a ceiling fan seen from a little below: in summer it draws the air
+  // up, in winter it sends the warm air under the ceiling back down.
+  fan: () => `${AIR_CSS}
+        .fn-rot { transform-origin: 50% 50%; transform-box: fill-box; }
+        .machine.on .fn-rot { animation: fn-spin var(--rot, 0.6s) linear infinite; animation-delay: var(--anim-offset, 0s); }
+        .machine.on.nat .fn-rot { animation: fn-spin-nat 3s ease-in-out infinite; animation-delay: var(--anim-offset, 0s); }
+        .machine.fn-ceiling .fn-rot { animation-direction: reverse; }
+        .machine.fn-ceiling.rev .fn-rot { animation-direction: normal; }
+        .machine.fn-ceiling.nat .fn-rot { animation-direction: reverse; }
+        .machine.fn-ceiling.rev.nat .fn-rot { animation-direction: normal; }
+        .machine.nat .wind path { animation-name: wind-flow, fn-gust; animation-duration: var(--spd, 1.6s), 3s; animation-timing-function: linear, ease-in-out; }
+        .fn-blade { fill: var(--ac-body-lo, #cfd6db); fill-opacity: 0.85; stroke: rgba(0, 0, 0, 0.35); stroke-width: 0.6; }
+        .fn-cage { fill: none; stroke: var(--ac-body-lo, #cfd6db); stroke-width: 0.6; opacity: 0.9; }
+        .fn-cage .rim { stroke-width: 2.2; }
+        .fn-hub { fill: var(--ac-body, #eceff1); stroke: rgba(0, 0, 0, 0.3); stroke-width: 0.6; }
+        .fn-head { position: absolute; z-index: 2; transform-origin: 50% 50%; }
+        .fn-pole, .fn-foot, .fn-ceil, .fn-canopy, .fn-housing, .fn-globe, .fn-plane, .fn-halo { position: absolute; }
+        .fn-pole { z-index: 1; background: linear-gradient(90deg, var(--ac-body-lo, #cfd6db), var(--ac-body-hi, #ffffff) 40%, var(--ac-body-lo, #cfd6db)); box-shadow: inset 0 0 0 0.5px rgba(0, 0, 0, 0.2); }
+        .fn-foot {
+          z-index: 1; border-radius: 50%; box-shadow: 0 1.5px 2px rgba(0, 0, 0, 0.25), inset 0 0 0 0.6px rgba(0, 0, 0, 0.3);
+          background: radial-gradient(ellipse at 50% 35%, var(--ac-body-hi, #ffffff), var(--ac-body, #eceff1) 55%, var(--ac-body-lo, #cfd6db));
+        }
+        .machine.fn-stand .wind.l, .machine.fn-table .wind.l { transform: scaleX(-1); display: none; }
+        .machine.on.osc .fn-head { animation: fn-turn 5s ease-in-out infinite; animation-delay: var(--anim-offset, 0s); }
+        .machine.on.osc .wind.r { animation: wind-r 5s ease-in-out infinite; animation-delay: var(--anim-offset, 0s); }
+        .machine.on.osc .wind.l { display: block; animation: wind-l 5s ease-in-out infinite; animation-delay: var(--anim-offset, 0s); }
+        .fn-ceil { z-index: 1; height: 1px; background: rgba(0, 0, 0, 0.18); }
+        .fn-canopy { z-index: 2; border-radius: 0 0 6px 6px / 0 0 3px 3px; background: linear-gradient(90deg, var(--ac-body-lo, #cfd6db), var(--ac-body-hi, #ffffff) 40%, var(--ac-body-lo, #cfd6db)); box-shadow: inset 0 0 0 0.5px rgba(0, 0, 0, 0.25); }
+        .fn-plane { z-index: 3; transform: scaleY(0.26); }
+        .fn-plane.front { z-index: 5; clip-path: path(evenodd, "M-60 -60H148V44H-60Z M37 28.6H51V44H37Z"); }
+        .fn-plane .fn-blade { fill: var(--ac-body, #eceff1); fill-opacity: 1; stroke-width: 1.4; }
+        .machine.wood .fn-plane .fn-blade { fill: url(#fn-wood); stroke: #4e2c14; }
+        .fn-housing {
+          z-index: 4; border-radius: 45% 45% 20% 20% / 40% 40% 30% 30%; box-shadow: inset 0 0 0 0.6px rgba(0, 0, 0, 0.25), 0 1px 2px rgba(0, 0, 0, 0.15);
+          background: linear-gradient(90deg, var(--ac-body-lo, #cfd6db), var(--ac-body-hi, #ffffff) 35%, var(--ac-body, #eceff1) 68%, var(--ac-body-lo, #cfd6db));
+        }
+        .fn-globe { z-index: 6; border-radius: 0 0 50% 50% / 0 0 100% 100%; background: linear-gradient(180deg, #eef1f3, #c9d0d5); box-shadow: inset 0 0 0 0.6px rgba(0, 0, 0, 0.25); }
+        .machine.lit .fn-globe { background: radial-gradient(ellipse at 50% 30%, #fffde7, #ffd54f 70%); box-shadow: 0 0 6px 2px rgba(255, 213, 79, 0.75), inset 0 0 0 0.6px rgba(0, 0, 0, 0.15); }
+        .fn-halo { display: none; z-index: 0; border-radius: 50%; background: radial-gradient(circle, rgba(255, 213, 79, 0.28), transparent 70%); }
+        .machine.lit .fn-halo { display: block; }
+        .machine.fn-ceiling.rev { --air: #ff7043; }
+        @keyframes fn-spin { to { transform: rotate(360deg); } }
+        @keyframes fn-spin-nat { to { transform: rotate(1080deg); } }
+        @keyframes fn-gust { 0%, 100% { stroke-opacity: 0.2; } 50% { stroke-opacity: 1; } }
+        @keyframes fn-turn { 0%, 35%, 100% { transform: translateX(2px) scaleX(0.78); } 50%, 85% { transform: translateX(-2px) scaleX(0.78); } }
+  `,
+  // A toaster seen from a little above: the slots open in its top, the lever
+  // and the browning dial on its face. The slots glow while it toasts, the
+  // heat rises above them, and the slices pop up once it is done.
+  toaster: () => `${MINI_LCD_CSS}
+        .tp-top, .tp-face, .tp-slot, .tp-toast, .tp-track, .tp-lever, .tp-dial, .tp-btn, .tp-led, .tp-tray, .tp-foot { position: absolute; }
+        .tp-top { z-index: 2; background: linear-gradient(180deg, var(--ac-body, #eceff1), var(--ac-body-hi, #ffffff) 70%); box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.14); }
+        .tp-face {
+          z-index: 2; background: linear-gradient(180deg, var(--ac-body-hi, #ffffff), var(--ac-body, #eceff1) 45%, var(--ac-body-lo, #cfd6db));
+          box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.14), 0 2px 3px rgba(0, 0, 0, 0.12);
+        }
+        .tp-slot { z-index: 3; height: 3.5px; border-radius: 2px; background: linear-gradient(180deg, #0b0d10, #2c3137); box-shadow: inset 0 1px 1px #000; }
+        .machine.mode-toasting .tp-slot {
+          background: linear-gradient(180deg, #ffb74d, #e64a19); box-shadow: 0 0 4px #ff7043;
+          animation: tp-glow 1.6s ease-in-out infinite; animation-delay: var(--anim-offset, 0s);
+        }
+        .tp-toast {
+          z-index: 4; display: none; border-radius: 45% 45% 3px 3px / 35% 35% 3px 3px;
+          background: radial-gradient(ellipse at 50% 55%, #e8b06a 0 40%, #c98443 72%, #93521f 100%); box-shadow: inset 0 0 0 1.5px #7c4219;
+        }
+        .tp-toast.back { filter: brightness(0.88); }
+        .machine.mode-done .tp-toast { display: block; animation: tp-pop 0.55s cubic-bezier(0.3, 1.7, 0.6, 1) both; animation-delay: var(--anim-offset, 0s); }
+        .tp-track { z-index: 3; width: 2.5px; border-radius: 1.5px; background: rgba(0, 0, 0, 0.45); }
+        .tp-lever { z-index: 4; width: 10px; height: 5px; border-radius: 2px; background: linear-gradient(#e3e8eb, #8a99a3); box-shadow: 0 1px 1px rgba(0, 0, 0, 0.45); }
+        .machine.mode-toasting .tp-lever { top: var(--tp-low) !important; }
+        .tp-dial { z-index: 3; border-radius: 50%; background: radial-gradient(circle at 35% 30%, #ffffff, #b7c1c7 70%); box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.3), 0 1px 1px rgba(0, 0, 0, 0.2); }
+        .tp-dial::after {
+          content: ""; position: absolute; left: 50%; top: 1.5px; width: 1.4px; height: 42%; border-radius: 1px; background: #455a64;
+          transform: translateX(-50%) rotate(40deg); transform-origin: 50% 100%;
+        }
+        .tp-btn { z-index: 3; width: 8px; height: 4px; border-radius: 2px; background: rgba(0, 0, 0, 0.18); }
+        .tp-led { z-index: 3; width: 3px; height: 3px; border-radius: 50%; background: rgba(0, 0, 0, 0.25); }
+        .machine.mode-idle .tp-led { background: #4db6ac; box-shadow: 0 0 3px #4db6ac; }
+        .machine.mode-toasting .tp-led { background: #ff7043; box-shadow: 0 0 3px #ff7043; }
+        .machine.mode-done .tp-led { background: #66bb6a; box-shadow: 0 0 3px #66bb6a; }
+        .tp-tray { z-index: 3; height: 2px; border-radius: 1px; background: rgba(0, 0, 0, 0.28); }
+        .tp-foot { z-index: 1; top: 93px; width: 8px; height: 4px; border-radius: 0 0 3px 3px; background: #2b2f33; }
+        .machine.mode-toasting .air-flow { display: block; }
+        .air-flow path { stroke: #ff7043; }
+        @keyframes tp-glow { 50% { opacity: 0.6; } }
+        @keyframes tp-pop { from { transform: translateY(20px); } to { transform: none; } }
+  `,
   iron: () => `
         .ir { position: absolute; left: 0; right: 0; top: 0; bottom: 0; }
         .ir-shell {
@@ -7300,6 +7768,156 @@ function fridgeHtml(ctx) {
       ${panel(`left:0;right:0;top:0;height:${cut}%`, door[0], topOpen)}
       ${panel(`left:0;right:0;top:${cut}%;bottom:0`, door[1], bottomOpen)}
     </div>`;
+}
+
+// The air lines, shared by the purifier and the fan. How many show depends on
+// the speed (lv1 to lv3), how fast they run on --spd; the night dims them and
+// heat turns them orange.
+const AIR_CSS = `
+        .wind { position: absolute; display: none; overflow: visible; z-index: 7; }
+        .wind path {
+          fill: none; stroke: var(--air, #42a5f5); stroke-width: 2; stroke-linecap: round; stroke-dasharray: 4 6;
+          animation: wind-flow var(--spd, 1.6s) linear infinite; animation-delay: var(--anim-offset, 0s);
+        }
+        .wind path:nth-child(2) { animation-delay: calc(var(--spd, 1.6s) * -0.33 + var(--anim-offset, 0s)); }
+        .wind path:nth-child(3) { animation-delay: calc(var(--spd, 1.6s) * -0.66 + var(--anim-offset, 0s)); }
+        .wind path:nth-child(4) { animation-delay: calc(var(--spd, 1.6s) * -0.5 + var(--anim-offset, 0s)); }
+        .wind path:nth-child(5) { animation-delay: calc(var(--spd, 1.6s) * -0.16 + var(--anim-offset, 0s)); }
+        .machine.lv1 .wind path:nth-child(n+3), .machine.lv2 .wind path:nth-child(n+4) { display: none; }
+        .machine.on .wind { display: block; }
+        .machine.mode-heat, .machine.warm { --air: #ff7043; }
+        .machine.mode-night .wind { opacity: 0.45; }
+        .machine.mode-offline { opacity: 0.45; filter: grayscale(1); }
+        @keyframes wind-flow { to { stroke-dashoffset: -20; } }
+        @keyframes wind-r { 0%, 35%, 100% { opacity: 1; } 50%, 85% { opacity: 0; } }
+        @keyframes wind-l { 0%, 35%, 100% { opacity: 0; } 50%, 85% { opacity: 1; } }
+`;
+
+// Inline geometry: left, top, width, height.
+function airBox(cls, x, y, w, h, inner = "") {
+  return `<div class="${cls}" style="left: ${x}px; top: ${y}px; width: ${w}px; height: ${h}px">${inner}</div>`;
+}
+const AQ_BAR = "<i></i><i></i><i></i><i></i>";
+// The classes and the variables every purifier and fan drawing carries.
+function airMachine(cls, a, extra) {
+  const on = ["run", "night", "heat"].includes(a.mode);
+  const c = [cls, extra, `mode-${a.mode || "off"}`, on ? "on" : "", `lv${a.level || 2}`, a.aq ? `aq${a.aq}` : "",
+    a.osc ? "osc" : "", a.back ? "back" : "", a.warm ? "warm" : "", a.natural ? "nat" : "", a.winter ? "rev" : "",
+    a.lamp ? "lamp" : "", a.lit ? "lit" : "", a.wood ? "wood" : ""].filter(Boolean).join(" ");
+  const style = `--spd: ${a.spd || 1.6}s; --rot: ${a.rot || 0.6}s${a.aq ? `; --aq: ${AQ_COLORS[a.aq]}` : ""}`;
+  return `<div class="machine ${c}" style="${style}">`;
+}
+
+function purifierHtml(cls, p) {
+  const layout = p.layout || "cylinder";
+  const open = airMachine(cls, p, `pf-${layout}`);
+  if (layout === "ring") {
+    // The loop pivots on itself while it oscillates; the stand stays put. The
+    // round screen above the gauge is the optional one.
+    return `${open}
+          ${airBox("dy-foot", 33, 99, 30, 7)}${airBox("dy-base", 40, 70, 16, 31)}${airBox("dy-cap", 40, 68.5, 16, 3.5)}
+          ${airBox("dy-disp", 42, 88, 12, 5, AQ_BAR)}
+          ${p.screen !== undefined ? airBox("dy-round", 42.5, 74.5, 11, 11, `<span>${esc(p.screen)}</span>`) : ""}
+          <div class="dy-head">${airBox("dy-loop", 36, 1, 24, 72)}${airBox("dy-back", 40, 5, 16, 64, "<b></b><b></b><b></b><b></b>")}</div>
+          ${windLines("r", 61, 13, 32, 48, "side")}${windLines("l", 3, 13, 32, 48, "side")}
+        </div>`;
+  }
+  if (layout === "box") {
+    return `${open}
+          ${windLines("", 28, 0, 40, 15, "up")}
+          ${airBox("co-body", 23, 34, 50, 70)}${airBox("co-lid", 22, 27, 52, 8)}${airBox("co-top", 22, 13, 52, 15)}
+          ${airBox("co-fan", 31, 14.5, 34, 12)}${airBox("co-hub", 42, 18.6, 12, 4)}
+          ${airBox("pf-bar", 40.5, 38.5, 15, 2.4, AQ_BAR)}
+          ${p.screen !== undefined ? airBox("pf-lcd", 38, 45, 20, 9, `<span>${esc(p.screen)}</span>`) : ""}
+          ${airBox("co-perf", 27, 62, 42, 38)}
+        </div>`;
+  }
+  return `${open}
+          ${windLines("", 28, 0, 40, 20, "up")}
+          ${airBox("cy-body", 25, 21, 46, 83)}${airBox("cy-ring", 28, 21.5, 40, 9)}${airBox("cy-ctrl", 40, 23.8, 16, 4.4)}
+          ${airBox("pf-bar", 40.5, 39.5, 15, 2.4, AQ_BAR)}
+          ${p.screen !== undefined ? airBox("pf-lcd", 40, 45, 16, 9, `<span>${esc(p.screen)}</span>`) : ""}
+          ${airBox("cy-perf", 26, 62, 44, 38, "<i></i>")}
+        </div>`;
+}
+
+// The wood of a ceiling fan's blades: a grain along each blade, which turns
+// with it.
+const FAN_WOOD = `<defs><pattern id="fn-wood" width="3.2" height="88" patternUnits="userSpaceOnUse"><rect width="3.2" height="88" fill="#a86b3c"/>`
+  + `<rect x="2.2" width=".7" height="88" fill="#7d4a24" opacity=".7"/><rect x=".6" width=".4" height="88" fill="#c88a55" opacity=".6"/></pattern></defs>`;
+function fanHtml(cls, f) {
+  const layout = f.layout || "stand";
+  const open = airMachine(cls, f, `fn-${layout}`);
+  if (layout === "ceiling") {
+    // The blades turn in a flattened plane. The half nearer the ceiling passes
+    // in front of the motor, the other half behind it, and they start at the
+    // motor's rim so its inside never shows.
+    const plane = (front) => `<div class="fn-plane${front ? " front" : ""}" style="left: 4px; top: -5px; width: 88px; height: 88px">`
+      + `<svg width="88" height="88" viewBox="0 0 88 88">${front ? "" : FAN_WOOD}${fanBlades(44, 44, 5, 34, 9, 6)}</svg></div>`;
+    return `${open}
+          ${airBox("fn-halo", 18, 40, 60, 60)}${airBox("fn-ceil", 2, 8, 92, 1)}${airBox("fn-canopy", 43, 9, 10, 3.5)}${airBox("fn-pole", 46.75, 12, 2.5, 21)}
+          ${plane(false)}${plane(true)}
+          ${airBox("fn-housing", 41, 32, 14, 9)}${f.lamp ? airBox("fn-globe", 42.5, 40.6, 11, 5.2) : ""}
+          ${windLines("", 12, 49, 72, 57, f.winter ? "down" : "up")}
+        </div>`;
+  }
+  // A cage on a pole: a tall one for the floor, a short one for a desk.
+  const table = layout === "table";
+  const spokes = Array.from({ length: 16 }, (_, k) => {
+    const a = k * Math.PI / 8;
+    return `<line x1="${(30 + 5 * Math.cos(a)).toFixed(2)}" y1="${(28.5 + 5 * Math.sin(a)).toFixed(2)}" x2="${(30 + 27 * Math.cos(a)).toFixed(2)}" y2="${(28.5 + 27 * Math.sin(a)).toFixed(2)}"/>`;
+  }).join("");
+  const top = table ? 26 : 2;
+  return `${open}
+          ${table ? airBox("fn-pole", 46, 52, 4, 46) + airBox("fn-foot", 33, 96, 30, 7) : airBox("fn-pole", 46, 28, 4, 70) + airBox("fn-foot", 29, 96, 38, 8)}
+          ${airBox("fn-head", 21, top, 54, 52, `<svg width="54" height="52" viewBox="0 0 60 58">${fanBlades(30, 28.5, 3, 23, 10, 0)}`
+            + `<g class="fn-cage"><circle class="rim" cx="30" cy="28.5" r="27"/><circle cx="30" cy="28.5" r="18"/><circle cx="30" cy="28.5" r="9"/>${spokes}</g>`
+            + `<circle class="fn-hub" cx="30" cy="28.5" r="5"/></svg>`)}
+          ${windLines("r", 72, top + 4, 24, 44, "side")}${windLines("l", 0, top + 4, 24, 44, "side")}
+        </div>`;
+}
+
+// Where each part of a toaster sits: [left, top, width, height] and the
+// corners of its top, the slots as [left, top, width], the slices as [class,
+// left, top, width, height], the levers as [left, raised, lowered].
+const TOASTER_LAYOUTS = {
+  two: {
+    top: [16, 38, 64, 13, "9px 9px 3px 3px"], face: [16, 49, 64, 45],
+    slots: [[23, 40.5, 50], [22, 45.5, 52]], toasts: [["back", 26, 21, 44, 22], ["", 24, 26, 48, 21.5]],
+    levers: [[68, 55, 78]], dials: [[22, 63, 11]], btns: [[38, 65], [38, 71]], led: [50, 66],
+    tray: [26, 88, 44], feet: [20, 68], air: [18, 2, 60, 36],
+  },
+  four: {
+    top: [4, 38, 88, 13, "9px 9px 3px 3px"], face: [4, 49, 88, 45],
+    slots: [[10, 40.5, 34], [9, 45.5, 36], [52, 40.5, 34], [51, 45.5, 36]],
+    toasts: [["back", 12, 21, 30, 22], ["", 11, 26, 32, 21.5], ["back", 54, 21, 30, 22], ["", 53, 26, 32, 21.5]],
+    levers: [[8, 55, 78], [78, 55, 78]], dials: [[26, 63, 10], [60, 63, 10]], btns: [], led: [46.5, 66],
+    tray: [26, 88, 44], feet: [10, 78], air: [6, 2, 84, 36],
+  },
+  long: {
+    top: [4, 47, 88, 10, "8px 8px 2px 2px"], face: [4, 55, 88, 39],
+    slots: [[11, 50, 74]], toasts: [["", 13, 32, 34, 20], ["", 49, 32, 34, 20]],
+    levers: [[78, 60, 79]], dials: [[13, 66, 10]], btns: [[28, 69]], led: [40, 69.5],
+    tray: [30, 88, 36], feet: [10, 78], air: [6, 12, 84, 36],
+  },
+};
+function toasterHtml(cls, tp) {
+  const L = TOASTER_LAYOUTS[tp.layout] || TOASTER_LAYOUTS.two;
+  const box = (c, x, y, w, h, r) => `<div class="${c}" style="left: ${x}px; top: ${y}px; width: ${w}px; height: ${h}px;${r ? ` border-radius: ${r};` : ""}"></div>`;
+  const [ax, ay, aw, ah] = L.air;
+  return `
+        <div class="machine ${cls} tp-${tp.layout || "two"} mode-${tp.mode || "off"}">
+          <div style="position: absolute; left: ${ax}px; top: ${ay}px; width: ${aw}px; height: ${ah}px">${airFlow("tp-air", aw, ah, false).replace("<svg ", '<svg style="width: 100%; height: 100%" ')}</div>
+          ${box("tp-top", ...L.top)}${box("tp-face", ...L.face, "3px 3px 9px 9px")}
+          ${L.slots.map(([x, y, w]) => box("tp-slot", x, y, w, 3.5)).join("")}
+          ${L.toasts.map(([c, x, y, w, h]) => box(`tp-toast${c ? ` ${c}` : ""}`, x, y, w, h)).join("")}
+          ${L.levers.map(([x, up, low]) => `${box("tp-track", x + 3.7, up + 1, 2.5, low - up + 3)}<div class="tp-lever" style="left: ${x}px; top: ${up}px; --tp-low: ${low}px"></div>`).join("")}
+          ${L.dials.map(([x, y, d]) => box("tp-dial", x, y, d, d)).join("")}
+          ${L.btns.map(([x, y]) => `<div class="tp-btn" style="left: ${x}px; top: ${y}px"></div>`).join("")}
+          <div class="tp-led" style="left: ${L.led[0]}px; top: ${L.led[1]}px"></div>
+          ${box("tp-tray", L.tray[0], L.tray[1], L.tray[2], 2)}
+          ${L.feet.map((x) => `<div class="tp-foot" style="left: ${x}px"></div>`).join("")}
+        </div>`;
 }
 
 function illustrationHtml(type, ctx) {
@@ -7861,6 +8479,10 @@ function illustrationHtml(type, ctx) {
           <div class="p3-foot f2"></div>
         </div>`;
   }
+
+  if (type === "toaster") return toasterHtml(cls, ctx.toaster || {});
+  if (type === "air_purifier") return purifierHtml(cls, ctx.purifier || {});
+  if (type === "fan") return fanHtml(cls, ctx.fan || {});
 
   if (type === "iron") {
     // The iron alone, or the same iron on the base of a steam generator. The
@@ -10346,6 +10968,133 @@ class ApplianceCard extends HTMLElement {
       }
     }
 
+    // Air purifier and fan. The fan entity says on or off, its speed, its
+    // preset, whether it oscillates and which way it blows; a select names the
+    // mode of the purifiers that have no fan entity (LG, Haier, Midea), and a
+    // plug only says whether it runs. Night mode may be a switch of its own,
+    // and heat a thermostat of its own.
+    const airState = () => {
+      const a = (st && st.attributes) || {};
+      const dom = domainOf(cfg.state_entity);
+      const raw = String(rawState === undefined || rawState === null ? "" : rawState).trim().toLowerCase();
+      const isSelect = dom === "select" || dom === "input_select";
+      const presetRaw = isSelect ? rawState : a.preset_mode;
+      const preset = airPresetOf(presetRaw);
+      const offline = !powerDerived && (!st || ["unavailable", "unknown"].includes(raw));
+      const on = powerDerived ? isActiveState(norm)
+        : isSelect ? !/^(off|standby|power_?off|stop|0|none)$/.test(raw)
+        : dom === "climate" ? raw !== "off"
+        : ["on", "true", "1"].includes(raw) || isActiveState(norm);
+      const nightSt = cfg.night_mode_entity ? stateObj(hass, cfg.night_mode_entity) : null;
+      const night = preset === "night" || (!!nightSt && ["on", "true"].includes(String(nightSt.state).toLowerCase()));
+      const heaterSt = cfg.heater_entity ? stateObj(hass, cfg.heater_entity) : null;
+      // A Dyson Hot+Cool may be its climate entity: heating is then its own.
+      const action = String(a.hvac_action || "").toLowerCase();
+      let heat = preset === "heat" || (dom === "climate" && (action ? ["heating", "preheating"].includes(action) : raw === "heat"));
+      if (heaterSt) {
+        const hs = String(heaterSt.state).toLowerCase();
+        const ha = String((heaterSt.attributes || {}).hvac_action || "").toLowerCase();
+        heat = heat || (domainOf(cfg.heater_entity) === "climate"
+          ? hs !== "off" && (ha ? ["heating", "preheating"].includes(ha) : hs === "heat")
+          : ["on", "true", "heat", "heating"].includes(hs));
+      }
+      let mode = offline ? "offline" : !on ? "off" : night ? "night" : heat ? "heat" : "run";
+      const mapped = mappedMode(["off", "run", "night", "heat"]);
+      if (mapped) mode = mapped;
+      const pct = numberOrNull(a.percentage);
+      const level = airLevelOf(pct, mode === "night" ? "night" : preset, presetRaw);
+      if (["run", "night", "heat"].includes(mode)) {
+        if (pct !== null && pct > 0) {
+          extraLines.push({ key: "speed", icon: "mdi:fan", label: t(hass, "section_fan_speed"), value: `${Math.round(pct)} %`, entity: cfg.state_entity });
+        }
+        // The preset gets a line of its own only when the state line does not
+        // already say it: not for the night, the heat, auto or the natural wind,
+        // nor for manual.
+        if (!isSelect && !["night", "heat", "auto", "natural"].includes(preset)
+          && !/^(manual|normal|none|direct|customize)$/i.test(String(presetRaw || ""))) modeLine(st, "preset_mode");
+      }
+      return { a, mode, preset, presetRaw, level, heat, night, pct,
+        spd: mode === "night" ? 3 : AIR_SPEEDS[level], warm: mode === "night" && heat };
+    };
+    const airLabel = (mode, runKey) => (mode === "offline" ? "ev_offline" : mode === "off" ? "ac_off"
+      : mode === "night" ? "pf_night" : mode === "heat" ? "ac_heating" : runKey);
+
+    let purifier = null;
+    if (cap.airPurifier) {
+      const s = airState();
+      // The quality of the air: its four steps on the gauge, and a line that
+      // names the step and gives the reading.
+      const aqSt = cfg.air_quality_entity ? stateObj(hass, cfg.air_quality_entity) : null;
+      const aq = aqLevelOf(aqSt, cfg.air_quality_entity);
+      if (aqSt && !["unknown", "unavailable"].includes(aqSt.state)) {
+        const n = parseFloat(aqSt.state);
+        const reading = /^-?\d+(\.\d+)?$/.test(String(aqSt.state).trim())
+          ? `${Math.round(n)}${unitOf(hass, cfg.air_quality_entity) ? ` ${unitOf(hass, cfg.air_quality_entity)}` : ""}` : "";
+        const word = aq ? t(hass, AQ_LABELS[aq]) : reading ? "" : cleanStateLabel(aqSt.state);
+        extraLines.push({
+          key: "air_quality", icon: "mdi:air-filter", label: t(hass, "section_air_quality"),
+          value: [word, reading].filter(Boolean).map(keepTogether).join(" \u00b7 "), entity: cfg.air_quality_entity,
+        });
+      }
+      if (!cfg.state_show_raw) stateLabel = t(hass, airLabel(s.mode, s.preset === "auto" ? "pf_auto" : "pf_purifying"));
+      color = AIR_COLORS[s.mode];
+      const name = `${cfg.state_entity || ""} ${(st && st.attributes.friendly_name) || ""}`.toLowerCase();
+      purifier = {
+        mode: s.mode, level: s.level, spd: s.spd, warm: s.warm, aq,
+        osc: s.a.oscillating === true, back: String(s.a.direction || "").toLowerCase() === "reverse",
+        layout: ["cylinder", "box", "ring"].includes(cfg.purifier_layout) ? cfg.purifier_layout : /dyson/.test(name) ? "ring" : "cylinder",
+        screen: cfg.display_entity ? airScreenOf(stateObj(hass, cfg.display_entity)) : undefined,
+      };
+    }
+
+    let fanCtx = null;
+    if (cap.fanAppliance) {
+      const s = airState();
+      const name = `${cfg.state_entity || ""} ${(st && st.attributes.friendly_name) || ""}`.toLowerCase();
+      const layout = ["stand", "table", "ceiling"].includes(cfg.fan_layout) ? cfg.fan_layout : FAN_CEILING_RE.test(stripAccents(name)) ? "ceiling" : "stand";
+      const ceiling = layout === "ceiling";
+      // Summer draws the air up, winter sends it down. Most integrations call
+      // winter reverse, Dreo puts it in a preset, and a brand that does it the
+      // other way round has its own box to tick.
+      const reverse = String(s.a.direction || "").toLowerCase() === "reverse" || /^reverse$/i.test(String(s.presetRaw || ""));
+      const winter = ceiling && reverse !== !!cfg.fan_direction_inverted;
+      const natural = s.preset === "natural" && s.mode === "run";
+      const lightSt = ceiling && cfg.light_entity ? stateObj(hass, cfg.light_entity) : null;
+      const runKey = natural ? "fan_natural" : ceiling ? (winter ? "fan_winter" : "fan_summer") : "fan_on";
+      if (!cfg.state_show_raw) stateLabel = t(hass, airLabel(s.mode, runKey));
+      color = s.mode === "run" && winter ? "#ff7043" : AIR_COLORS[s.mode];
+      const slow = ceiling ? 1.3 : 1;
+      fanCtx = {
+        mode: s.mode, level: s.level, spd: s.spd, warm: s.warm, natural, winter, layout,
+        rot: ((s.mode === "night" ? 1.6 : ROTOR_SPEEDS[s.level]) * slow).toFixed(2),
+        // An entity that says whether it oscillates is believed; a fan on a
+        // plug cannot say, so the box says it for it.
+        osc: !ceiling && (typeof s.a.oscillating === "boolean" ? s.a.oscillating : !!cfg.oscillating),
+        lamp: !!lightSt, lit: !!lightSt && ["on", "true"].includes(String(lightSt.state).toLowerCase()),
+        wood: ceiling && !!cfg.wood_blades,
+      };
+    }
+
+    // A toaster, read from its plug. Toasting above the threshold, then the
+    // slices are up: ready for a few minutes, after which it waits again,
+    // since nobody leaves their toast in the toaster for the afternoon.
+    let toaster = null;
+    if (cap.toaster) {
+      const sw = st && ["switch", "input_boolean"].includes(domainOf(cfg.state_entity)) ? String(st.state).toLowerCase() : "";
+      let mode = isActiveState(norm) ? "toasting" : norm === "done" ? "done" : sw === "off" || rawIsMeaningless ? "off" : "idle";
+      if (mode === "done") {
+        if (!this._toastDoneAt) this._toastDoneAt = Date.now();
+        if (Date.now() - this._toastDoneAt >= TOASTER_READY_MS) mode = "idle";
+      } else {
+        this._toastDoneAt = null;
+      }
+      this._clearClockTimer();
+      if (mode === "done" && !this._inert) this._clockTimer = setInterval(() => this._render(), CLOCK_TICK_MS);
+      if (!cfg.state_show_raw) stateLabel = t(hass, TOASTER_LABELS[mode]);
+      color = TOASTER_COLORS[mode];
+      toaster = { mode, layout: TOASTER_LAYOUTS[cfg.toaster_layout] ? cfg.toaster_layout : "two" };
+    }
+
     // The last cycle, on request: how long it ran and when it ended. Shown
     // between cycles only, where the time left has nothing to say.
     const lcRole = cycleRole(norm);
@@ -10417,6 +11166,9 @@ class ApplianceCard extends HTMLElement {
       feederLayout: ["canister", "double", "dual_split", "rotary"].includes(cfg.feeder_layout) ? cfg.feeder_layout : "",
       feederScreen,
       ironLayout: cfg.iron_layout === "generator" ? "generator" : "",
+      toaster,
+      purifier,
+      fan: fanCtx,
       leftOn,
       tankTemp,
       boilerMode,
@@ -10493,6 +11245,9 @@ class ApplianceCard extends HTMLElement {
       illustrationCtx.ac && [illustrationCtx.ac.mode, illustrationCtx.ac.swingV, illustrationCtx.ac.swingH, illustrationCtx.ac.speed].join("/"),
       illustrationCtx.dh && illustrationCtx.dh.mode,
       illustrationCtx.heater && illustrationCtx.heater.mode,
+      illustrationCtx.toaster && illustrationCtx.toaster.mode,
+      illustrationCtx.purifier && [illustrationCtx.purifier.mode, illustrationCtx.purifier.osc, illustrationCtx.purifier.back].join("/"),
+      illustrationCtx.fan && [illustrationCtx.fan.mode, illustrationCtx.fan.osc, illustrationCtx.fan.natural, illustrationCtx.fan.winter].join("/"),
       illustrationCtx.towel && illustrationCtx.towel.mode,
       illustrationCtx.fountain && [illustrationCtx.fountain.mode, illustrationCtx.fountain.flowing, illustrationCtx.fountain.fill].join("/"),
       illustrationCtx.fryer && [illustrationCtx.fryer.mode, illustrationCtx.fryer.mode2, illustrationCtx.fryer.layout].join("/"),
@@ -10845,8 +11600,8 @@ const CONTROL_TYPES = CYCLE_TYPES.concat(["ev_charger"]);
 // A pet feeder has no cycle, but it does have one thing to press.
 const START_TYPES = CONTROL_TYPES.concat(["pet_feeder"]);
 // The types a last cycle means something for: the ones that run a cycle, and
-// the kettle and the iron, which a plug reads the same way.
-const LAST_CYCLE_TYPES = CYCLE_TYPES.concat(["kettle", "iron"]);
+// the kettle, the iron and the toaster, which a plug reads the same way.
+const LAST_CYCLE_TYPES = CYCLE_TYPES.concat(["kettle", "iron", "toaster"]);
 
 const SECTIONS = [
   { field: "program_entity", types: CYCLE_TYPES.filter((ty) => ty !== "printer_3d"), labelKey: "section_program", includeDomains: ["select", "sensor", "input_select"], extra: (c, hass) => c._row("program_format", "program_format", {
@@ -10902,8 +11657,14 @@ const SECTIONS = [
   { field: "water_level_entity", types: ["pet_fountain"], labelKey: "section_water_level", includeDomains: ["sensor", "binary_sensor", "number"], extra: (c) =>
       c._row("level_empty_below", "level_empty_below", { placeholder: "10" }) },
 
+  // Air purifier and fan
+  { field: "air_quality_entity", types: ["air_purifier"], labelKey: "section_air_quality", includeDomains: ["sensor"] },
+  { field: "display_entity", types: ["air_purifier"], labelKey: "section_screen", includeDomains: ["sensor", "number"] },
+  { field: "night_mode_entity", types: ["air_purifier", "fan"], labelKey: "pf_night", includeDomains: ["switch", "binary_sensor", "input_boolean"] },
+  { field: "heater_entity", types: ["air_purifier", "fan"], labelKey: "section_heater", includeDomains: ["climate", "switch", "select", "binary_sensor"] },
+
   // Oven + hood
-  { field: "light_entity", types: ["oven", "hood", "printer_3d"], labelKey: "section_light", includeDomains: ["light", "switch", "input_boolean", "binary_sensor"] },
+  { field: "light_entity", types: ["oven", "hood", "printer_3d", "fan"], labelKey: "section_light", includeDomains: ["light", "switch", "input_boolean", "binary_sensor"] },
 
   // Cooktop
   { field: "child_lock_entity", types: ["cooktop"], labelKey: "section_child_lock", includeDomains: ["binary_sensor", "switch", "lock"] },
@@ -11729,6 +12490,9 @@ class ApplianceCardEditor extends HTMLElement {
             { value: "pet_feeder", label: t(hass, "type_pet_feeder") },
             { value: "pet_fountain", label: t(hass, "type_pet_fountain") },
             { value: "iron", label: t(hass, "type_iron") },
+            { value: "toaster", label: t(hass, "type_toaster") },
+            { value: "air_purifier", label: t(hass, "type_air_purifier") },
+            { value: "fan", label: t(hass, "type_fan") },
             { value: "pellet_stove", label: t(hass, "type_pellet_stove") },
             { value: "air_conditioner", label: t(hass, "type_air_conditioner") },
             { value: "dehumidifier", label: t(hass, "type_dehumidifier") },
@@ -11782,6 +12546,32 @@ class ApplianceCardEditor extends HTMLElement {
             { value: "generator", label: t(hass, "layout_generator") },
           ],
         }) + this._row("left_on_after", "left_on_after", { placeholder: "30" }) : ""}
+        ${this._type === "toaster" ? this._row("section_toaster_layout", "toaster_layout", {
+          type: "select",
+          options: [
+            { value: "two", label: t(hass, "layout_toaster_two") },
+            { value: "four", label: t(hass, "layout_toaster_four") },
+            { value: "long", label: t(hass, "layout_toaster_long") },
+          ],
+        }) : ""}
+        ${this._type === "air_purifier" ? this._row("section_purifier_layout", "purifier_layout", {
+          type: "select",
+          options: [
+            { value: "cylinder", label: t(hass, "layout_purifier_cylinder") },
+            { value: "box", label: t(hass, "layout_purifier_box") },
+            { value: "ring", label: t(hass, "layout_purifier_ring") },
+          ],
+        }) : ""}
+        ${this._type === "fan" ? this._row("section_fan_layout", "fan_layout", {
+          type: "select",
+          options: [
+            { value: "stand", label: t(hass, "layout_fan_stand") },
+            { value: "table", label: t(hass, "layout_fan_table") },
+            { value: "ceiling", label: t(hass, "layout_fan_ceiling") },
+          ],
+        }) + (this._config.fan_layout === "ceiling"
+          ? this._row("fan_direction_inverted", "fan_direction_inverted", { type: "checkbox" }) + this._row("fan_wood_blades", "wood_blades", { type: "checkbox" })
+          : this._row("oscillating", "oscillating", { type: "checkbox" })) : ""}
         ${this._type === "printer_3d" ? this._row("section_printer_layout", "printer_layout", {
           type: "select",
           options: [
@@ -11893,7 +12683,8 @@ class ApplianceCardEditor extends HTMLElement {
       includeDomains: ["sensor", "binary_sensor"].concat({
         water_heater: ["water_heater"], boiler: ["water_heater"], heat_pump: ["climate", "water_heater"],
         pellet_stove: ["climate"], air_conditioner: ["climate", "select", "switch"], dehumidifier: ["humidifier", "switch"],
-        space_heater: ["climate", "switch"], towel_warmer: ["climate", "select", "switch"], iron: ["switch"], air_fryer: ["switch"],
+        space_heater: ["climate", "switch"], towel_warmer: ["climate", "select", "switch"], iron: ["switch"], toaster: ["switch"], air_fryer: ["switch"],
+        air_purifier: ["fan", "switch", "select", "climate"], fan: ["fan", "switch"],
         pet_fountain: ["switch", "fan", "input_boolean"],
       }[this._type] || []),
     });

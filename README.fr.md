@@ -10,7 +10,7 @@
 <a href="https://buymeacoffee.com/adnpolymerase" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-orange.png" alt="Buy Me A Coffee" height="60"></a>
 <a href="https://adnpolymerase.github.io/HA/" target="_blank"><img src="https://raw.githubusercontent.com/ADNPolymerase/HA/main/assets/site-button.svg" alt="Lien vers mon github.io pour mes autres projets" height="60"></a>
 
-Une card Lovelace pour les appareils de la maison : lave-linge, sèche-linge, lave-vaisselle, four, micro-ondes, hotte, plaque de cuisson, réfrigérateur, bouilloire, robot cuiseur, machine à café, cuiseur à riz, friteuse à air, chauffe-eau, chaudière, pompe à chaleur, imprimante 3D, distributeur de croquettes, fer à repasser, poêle à granulés, climatiseur, déshumidificateur, petit chauffage, sèche-serviettes et borne de recharge. Cycle en cours, programme, temps restant, température, alertes et commandes.
+Une card Lovelace pour les appareils de la maison : lave-linge, sèche-linge, lave-vaisselle, four, micro-ondes, hotte, plaque de cuisson, réfrigérateur, bouilloire, robot cuiseur, machine à café, cuiseur à riz, friteuse à air, chauffe-eau, chaudière, pompe à chaleur, imprimante 3D, distributeur de croquettes, fer à repasser, grille-pain, poêle à granulés, climatiseur, déshumidificateur, petit chauffage, sèche-serviettes, purificateur d'air, ventilateur et borne de recharge. Cycle en cours, programme, temps restant, température, alertes et commandes.
 
 Aucune marque supposée : chaque champ est une entité à choisir, elle fonctionne donc avec **n'importe quelle** intégration (Electrolux, Samsung, LG, Home Connect, Miele, une simple prise connectée…).
 
@@ -21,7 +21,7 @@ Aucune marque supposée : chaque champ est une entité à choisir, elle fonction
 
 ## Fonctionnalités
 
-- **Vingt-six types d'appareils**, chacun avec une illustration en CSS animée sur les données de l'appareil et statique à l'arrêt. Le type est détecté tout seul ou choisi via `appliance_type`, et `compact: true` ne garde que le texte.
+- **Vingt-neuf types d'appareils**, chacun avec une illustration en CSS animée sur les données de l'appareil et statique à l'arrêt. Le type est détecté tout seul ou choisi via `appliance_type`, et `compact: true` ne garde que le texte.
 - **Normalisation d'état** : `Idle`, `RUNNING`, `wash`, `En marche`… sont reconnus (sans tenir compte des accents) et classés en veille, préchauffage, en cours, en pause, terminé, différé ou erreur. Un état inconnu s'affiche tel quel, sans l'espace de noms de l'intégration, et `state_map` classe le reste, `"*"` ramassant tout ce qui dépasse.
 - **L'étape, et non une heure d'*En cours*** : un lave-linge, un sèche-linge ou un lave-vaisselle nomme l'étape où il en est (*Prélavage*, *Lavage*, *Rinçage*, *Essorage*, *Séchage* et sept autres), d'après une entité de phase ou son propre état, et le tambour s'emballe pendant l'essorage. Le temps restant est toujours celui du cycle entier.
 - **Une lavante-séchante est un lave-linge qui sèche** : `washer_dryer: true`, et le tambour montre de l'eau pendant le lavage, puis du linge qui tourne dans l'air chaud pendant le séchage. L'étape vient de l'état lui-même ou d'une entité de phase, et la ligne d'état lit *Lavage* ou *Séchage*.
@@ -53,6 +53,13 @@ Clique sur une famille pour voir ses appareils en marche.
 <summary><b>Chauffage et climat</b></summary>
 
 <img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-climate.fr.gif" alt="Chauffage et climat" width="80%">
+
+</details>
+
+<details>
+<summary><b>Purificateurs et ventilateurs</b></summary>
+
+<img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-air.fr.gif" alt="Purificateurs et ventilateurs" width="100%">
 
 </details>
 
@@ -100,12 +107,12 @@ Seule `state_entity` est obligatoire, sauf sur un réfrigérateur où une sonde 
 | `compact` | `true` masque l'illustration. |
 | `illustration_color` | `auto` (défaut, suit le thème) \| `white` \| `grey` \| `black` \| `red` (rouge foncé). Ne change que la carrosserie, pas les couleurs d'état. |
 | `language` | `auto` (défaut, suit Home Assistant) ou l'un des 14 codes : `en`, `fr`, `de`, `es`, `it`, `nl`, `pt`, `sv`, `no`, `da`, `pl`, `ru`, `zh`, `cs`. `nb` et `nb-NO` donnent le norvégien. |
-| `appliance_type` | `auto` (défaut) \| `washer` \| `dryer` \| `dishwasher` \| `oven` \| `microwave` \| `hood` \| `cooktop` \| `fridge` \| `kettle` \| `cooker` \| `coffee` \| `rice_cooker` \| `air_fryer` \| `water_heater` \| `boiler` \| `heat_pump` \| `printer_3d` \| `pet_feeder` \| `iron` \| `pellet_stove` \| `air_conditioner` \| `dehumidifier` \| `space_heater` \| `towel_warmer` \| `ev_charger`. |
+| `appliance_type` | `auto` (défaut) \| `washer` \| `dryer` \| `dishwasher` \| `oven` \| `microwave` \| `hood` \| `cooktop` \| `fridge` \| `kettle` \| `cooker` \| `coffee` \| `rice_cooker` \| `air_fryer` \| `water_heater` \| `boiler` \| `heat_pump` \| `printer_3d` \| `pet_feeder` \| `pet_fountain` \| `iron` \| `toaster` \| `pellet_stove` \| `air_conditioner` \| `dehumidifier` \| `space_heater` \| `towel_warmer` \| `air_purifier` \| `fan` \| `ev_charger`. |
 | `tap_action` | Ce que fait un appui sur la carte, dans les mots de Home Assistant : `more-info` (défaut : l'entité d'état, ou sur une carte sans elle ce qu'elle lit à sa place), `none`, `navigate`, `url`, `toggle`, `perform-action` ou `fire-dom-event`, celle qu'écoutent les cartes popup bâties sur browser_mod. En YAML seulement. |
 | `toggle_entity` | Bouton marche/arrêt (`switch`, `button`, `script`, `input_boolean`, `fan`), mis en évidence quand c'est allumé. |
 | `power_entity` / `power_on_threshold` / `power_icon` | Capteur de puissance. Avec un seuil, l'état en est déduit : *en marche* au-dessus, puis *terminé* en redescendant. Pointer `state_entity` sur ce même capteur l'active avec un seuil de 10 W. `power_icon` remplace `mdi:power-plug`. |
 | `power_off_delay` | Nombre de minutes sous `power_on_threshold` avant que le cycle passe à *Terminé*, pour qu'une pause (un lave-vaisselle qui sèche, un lave-linge qui trempe) ne soit pas prise pour la fin. Seulement quand l'état vient de la prise : une intégration signale ses pauses elle-même. 0 par défaut. |
-| `show_last_cycle` | Ajoute une ligne *Dernier cycle* entre deux cycles : sa durée et son heure de fin, lues dans l'historique de Home Assistant (sept jours de l'état, deux jours de la puissance d'une prise, pauses plus courtes que `power_off_delay` comprises). Appareils à cycle, bouilloire et fer à repasser. |
+| `show_last_cycle` | Ajoute une ligne *Dernier cycle* entre deux cycles : sa durée et son heure de fin, lues dans l'historique de Home Assistant (sept jours de l'état, deux jours de la puissance d'une prise, pauses plus courtes que `power_off_delay` comprises). Appareils à cycle, bouilloire, fer à repasser et grille-pain. |
 | `program_entity` / `program_format` | Programme. `clean` (défaut) le rend lisible (`LaundryCare.Washer.Program.Auto40` devient *Auto 40*, `Rapid20Min` devient *Rapid 20 Min*), `raw` l'affiche tel quel. |
 | `remaining_time_entity` / `remaining_time_unit` | Temps restant, en `auto` (défaut, d'après l'unité de l'entité : s, min, h, ms, d, ou `1:02:03`), `seconds`, `minutes` ou `hours`, ou une heure de fin (`timestamp`). Il donne aussi la barre de progression : le temps écoulé depuis le début du cycle, pauses retirées, sur ce temps plus ce qui reste. Ouverte en plein cycle, la carte retrouve le début dans l'historique de l'état. |
 | `remaining_time_hide_when_idle` | `true` n'affiche le temps restant qu'en marche, contre les heures de fin périmées (SmartThings). |
@@ -170,6 +177,7 @@ Seule `state_entity` est obligatoire, sauf sur un réfrigérateur où une sonde 
 | `printer_layout` | imprimante 3D | `enclosed` (défaut : une enceinte dont le plateau descend quand la pièce monte) \| `open` (un cadre ouvert dont le portique monte). La pièce grandit avec la progression, dans la couleur de l'état, et la tête va et vient pendant l'impression. |
 | `printed_part` | imprimante 3D | La pièce sur le plateau : `cube` (défaut), `pyramid` (pyramide) ou `duck` (un canard en plastique). Elle apparaît de bas en haut au fil de l'impression. |
 | `iron_layout` | fer | `iron` (défaut, le fer seul) \| `generator` (le même fer sur le socle d'une centrale vapeur). |
+| `toaster_layout` | grille-pain | `two` (défaut, deux fentes) \| `four` (quatre fentes, deux leviers) \| `long` (une fente longue pour deux tranches bout à bout). |
 | `left_on_after` | fer | Minutes allumé au bout desquelles la ligne d'état affiche *Resté allumé*, en rouge. Vide, cela n'arrive jamais. |
 | `feeder_layout` | distributeur | `tower` (défaut, un réservoir carré sur son socle) \| `canister` (un réservoir rond sur un socle rond) \| `double` (deux sorties et deux gamelles) \| `dual_split` (deux réservoirs au-dessus d'une gamelle partagée par le milieu) \| `rotary` (des assiettes sur un plateau tournant sous un couvercle, pour la pâtée). |
 | `level_b_entity` | distributeur | Le niveau du second réservoir, sur un distributeur qui en a deux (`dual_split`), lu comme `level_entity` et avec les mêmes `level_empty_below` et `level_max`. Il remplit la fenêtre de droite, a sa propre ligne, et vide il fait passer l'état à *Réservoir vide* en ne vidant que sa moitié. Au repos, la ligne d'état donne le plus bas des deux niveaux, celui à remplir en premier. L'éditeur ne le propose que pour `dual_split`. |
@@ -193,6 +201,14 @@ Seule `state_entity` est obligatoire, sauf sur un réfrigérateur où une sonde 
 | `state_entity` | sèche-serviettes | Le mode du fil pilote : *Confort*, *Éco*, *Hors-gel*, *Boost*, *Séchage*, lu sur le preset d'une entité `climate` (Heatzy, Atlantic) ou sur un select (NodOn). |
 | `current_temperature_entity` / `target_temperature_entity` | petit chauffage, sèche-serviettes | La pièce et la consigne, quand une entité `climate` ne les porte pas. |
 | `fan_speed_entity` / `purifier_entity` / `outdoor_temperature_entity` / `defrost_entity` | climatiseur | La ventilation quand l'entité `climate` ne la porte pas ; le purificateur (nanoe, plasma), allumé sur l'unité ; la température extérieure ; un contact de dégivrage. |
+| `state_entity` | purificateur | Une entité `fan` : *Purification*, *Auto*, *Mode nuit*, *Chauffage* ou *Éteint*, d'après son état et son `preset_mode`, dans les mots de chaque intégration (*sleep*, *night*, *Silent*, *Quiet*...). Une entité `climate` (un Dyson Hot+Cool), un `select` qui nomme le mode (LG, Haier, Midea) ou une prise conviennent aussi. `state_map` accepte `off`, `run`, `night` et `heat`. |
+| `purifier_layout` | purificateur | `cylinder` (défaut, l'air sort par le dessus) \| `box` (un boîtier carré, ventilateur sur le dessus) \| `ring` (un anneau sans pales, par défaut pour un Dyson). L'anneau souffle devant lui, pivote en oscillation et aspire l'air vers son centre en souffle arrière (`direction: reverse`). |
+| `air_quality_entity` | purificateur | La qualité de l'air sur une jauge à quatre niveaux (*Bonne*, *Moyenne*, *Mauvaise*, *Très mauvaise*) et une ligne : PM2.5 en µg/m³ (12, 35 et 55), un AQI américain (50, 100, 150), l'indice d'allergènes Philips de 1 à 12, ou les mots de VeSync, Winix, Coway, Dyson, IKEA, SmartThings, Matter et tuya-local. Une échelle que la carte ne sait pas placer n'allume aucun niveau. |
+| `display_entity` | purificateur | Un écran facultatif qui affiche la valeur de cette entité, un PM2.5 ou une température : en façade du cylindre et du boîtier, rond au-dessus de la jauge sur l'anneau. |
+| `night_mode_entity` / `heater_entity` | purificateur, ventilateur | Le mode nuit quand c'est un interrupteur à part (Dyson, Duux) ; le chauffage, d'après le `hvac_action` d'une entité `climate`, un interrupteur ou un select. La nuit atténue et ralentit l'air, la chaleur le rend orange, les deux ensemble donnent un orange atténué. |
+| `fan_layout` | ventilateur | `stand` (défaut, sur pied) \| `table` \| `ceiling` (plafond, par défaut pour un ventilateur nommé d'après le plafond). |
+| `oscillating` | ventilateur | `true` pour un ventilateur sur prise qui oscille : la tête tourne et l'air la suit. Une entité `fan` qui donne `oscillating` fait foi à la place. |
+| `light_entity` / `wood_blades` / `fan_direction_inverted` | ventilateur de plafond | La lumière du ventilateur, dessinée en globe sous le moteur qui s'allume (sans lumière, pas de globe) ; des pales en bois ; été et hiver inversés, pour un ventilateur dont `direction: forward` veut dire hiver. L'été aspire l'air vers le haut, l'hiver renvoie vers le sol l'air chaud du plafond, en orange. |
 | `speed_entity` | robot cuiseur | Vitesse du couteau, ramenée sur trois vitesses. |
 | `state_entity` / `fryer_layout` | friteuse à air | Les mots de la friteuse, tels que Philips (HomeID et l'ancienne intégration HACS), Xiaomi et Cosori (VeSync) les donnent : *Préchauffage*, *Préchauffée*, *Cuisson*, *Secouer le panier*, *Panier sorti*, *En pause*, *Maintien au chaud*, *Terminé*, *Départ différé*. `fryer_layout` : `basket` (par défaut), `window` (panier à hublot) ou `dual` (double panier). |
 | `basket_entity` / `shake_entity` / `basket2_state_entity` | friteuse à air | Le capteur du panier, allumé quand il est sorti (le tiroir Philips, la cuve Xiaomi), qui fait passer un cycle en *Panier sorti* ; le rappel pour secouer, qui fait passer la cuisson en *Secouer le panier* ; l'état du second panier d'une friteuse double, dessiné à part et nommé sur une ligne. |
@@ -375,6 +391,22 @@ La carte montre l'alerte ; éteindre le fer reste le travail d'une automatisatio
 </details>
 
 <details>
+<summary><b>Grille-pain</b></summary>
+
+Lu sur sa prise connectée, comme le fer : *En veille*, *Grillage* tant qu'il consomme, puis *Prêt* pendant cinq minutes une fois les tranches sorties. Pendant le grillage, les fentes rougeoient, la chaleur monte au-dessus et le levier est baissé. Trois modèles : deux fentes, quatre fentes et fente longue.
+
+```yaml
+type: custom:ha-appliance-card
+appliance_type: toaster
+toaster_layout: four
+state_entity: switch.prise_grille_pain
+power_entity: sensor.prise_grille_pain_puissance
+power_on_threshold: 30
+```
+
+</details>
+
+<details>
 <summary><b>Distributeurs de croquettes</b></summary>
 
 Un distributeur se lit, il ne se pilote pas : pas de cycle, pas de programme, pas de porte. Son état est calculé à partir de ce qu'il rapporte, *Réservoir vide*, *Erreur* ou *Distribution*, et au repos la ligne dit à quel point le réservoir est plein, ou rien quand la carte ne peut pas le savoir. La carte porte ce qui a été servi aujourd'hui et l'heure du dernier repas. Un réservoir vide est la seule chose qu'un distributeur ne peut pas régler tout seul : il prend la ligne d'état, et vide le réservoir et la gamelle sur le dessin. Un triangle rouge se lève avec lui, et il se lève aussi pour un blocage, avec les croquettes toujours dans le réservoir cette fois.
@@ -542,6 +574,34 @@ heater_layout: oil
 state_entity: switch.radiateur_prise
 power_entity: sensor.radiateur_prise_power
 power_on_threshold: 30
+```
+
+</details>
+
+<details>
+<summary><b>Purificateurs d'air et ventilateurs</b></summary>
+
+L'air que soufflent un purificateur ou un ventilateur est dessiné en lignes pointillées : bleues, orange quand il chauffe, atténuées et lentes la nuit. Plus il souffle, plus il y a de lignes : deux jusqu'à 40 %, trois jusqu'à 75 %, cinq au-delà, ou d'après le préréglage quand il n'y a pas de pourcentage (nuit, turbo, low, medium, high). Un purificateur porte aussi une jauge à quatre niveaux de la qualité de l'air, allumée dans sa couleur, et un écran facultatif.
+
+Un ventilateur existe sur pied, de table ou de plafond. Son vent naturel souffle par vagues, les pales accélèrent puis ralentissent. Un ventilateur de plafond aspire l'air vers le haut en été et renvoie l'air chaud vers le sol en hiver, et sa lumière apparaît en globe sous le moteur.
+
+```yaml
+type: custom:ha-appliance-card
+appliance_type: air_purifier
+purifier_layout: ring
+state_entity: fan.purificateur_salon
+air_quality_entity: sensor.salon_pm2_5
+display_entity: sensor.salon_temperature
+heater_entity: climate.purificateur_salon
+```
+
+```yaml
+type: custom:ha-appliance-card
+appliance_type: fan
+fan_layout: ceiling
+state_entity: fan.plafond_chambre
+light_entity: light.plafond_chambre
+wood_blades: true
 ```
 
 </details>

@@ -7723,7 +7723,9 @@ check('borne : ni un statut reconnu', evMode(evR('SuspendedEVSE', { power_entity
   check('galerie : la borne y est', /ev_charger: evCharger/.test(demo), true);
   for (const file of ['README.md', 'README.fr.md']) {
     const md = readFileSync(join(HERE, '..', file), 'utf8');
-    check(`${file} : ev_charger dans la liste des types`, /`towel_warmer` \\\| `ev_charger`/.test(md), true);
+    check(`${file} : ev_charger dans la liste des types`, /`fan` \\\| `ev_charger`/.test(md), true);
+    for (const ty of ['toaster', 'air_purifier', 'fan', 'pet_fountain'])
+      check(`${file} : ${ty} dans la liste des types`, md.includes(`\\| \`${ty}\` \\|`), true);
     check(`${file} : l exemple Webasto`, md.includes('state_entity: sensor.webasto_next_charge_point_state'), true);
     check(`${file} : les lettres IEC 61851`, /state_map:\n  A: no_vehicle\n  B: connected\n  C: charging\n  D: charging\n  E: error\n  F: error\n/.test(md), true);
     check(`${file} : le Unavailable d OCPP`, md.includes('state_map:\n  Unavailable: offline'), true);
@@ -8387,6 +8389,351 @@ check('borne : ni un statut reconnu', evMode(evR('SuspendedEVSE', { power_entity
     { 'switch.x': { state: 'on', attributes: {} }, 'binary_sensor.p': { state: 'on', attributes: {} } })) === 'Flowing', true);
   check('fontaine : l editeur propose la pompe en marche',
     /data-slot="pump_running_entity"|Pump running/.test(markup(newEditor({ state_entity: 'switch.f', appliance_type: 'pet_fountain' }))), true);
+}
+
+// =============================================================================
+// Toaster
+// =============================================================================
+
+{
+  const TP = { appliance_type: 'toaster', state_entity: 'switch.gp', power_entity: 'sensor.gp_w', power_on_threshold: 30 };
+  const gp = (w, sw = 'on') => ({ 'switch.gp': { state: sw, attributes: {} }, 'sensor.gp_w': { state: String(w), attributes: { unit_of_measurement: 'W' } } });
+  const tpMode = h => (/\bmode-(\w+)/.exec(machineCls(h)) || [, null])[1];
+  check('grille-pain : il grille', tpMode(render(TP, gp(920))), 'toasting');
+  check('grille-pain : la ligne', stateLine(render(TP, gp(920))), 'Toasting');
+  check('grille-pain : orange', stateColor(render(TP, gp(920))), '#ff7043');
+  check('grille-pain : branche sans consommer, en veille', tpMode(render(TP, gp(0))), 'idle');
+  check('grille-pain : en veille se dit', stateLine(render(TP, gp(0))), 'Standby');
+  check('grille-pain : prise coupee', tpMode(render(TP, gp(0, 'off'))), 'off');
+  check('grille-pain : prise coupee se dit', stateLine(render(TP, gp(0, 'off'))), 'Off');
+  check('grille-pain : en francais', stateLine(render({ ...TP, language: 'fr' }, gp(920))), 'Grillage');
+  {
+    const { card } = build(TP, gp(920));
+    const done = rerender(card, gp(1));
+    check('grille-pain : les tranches sautent', tpMode(done), 'done');
+    check('grille-pain : pret', stateLine(done), 'Toast ready');
+    check('grille-pain : pret en vert', stateColor(done), 'var(--success-color, #4caf50)');
+    check('grille-pain : en francais, pret', stateLine(rerender(build({ ...TP, language: 'fr' }, gp(920)).card, gp(1))), 'Prêt');
+    check('grille-pain : un reveil pour ne pas rester pret', !!card._clockTimer, true);
+    setClock(4);
+    check('grille-pain : 4 minutes apres, encore pret', tpMode(rerender(card, gp(1))), 'done');
+    setClock(5.5);
+    check('grille-pain : passe 5 minutes, en veille', tpMode(rerender(card, gp(1))), 'idle');
+    check('grille-pain : plus de reveil', !!card._clockTimer, false);
+    setClock(6);
+    check('grille-pain : une autre tranche', tpMode(rerender(card, gp(900))), 'toasting');
+    check('grille-pain : pret a nouveau', tpMode(rerender(card, gp(1))), 'done');
+    setClock(10);
+    check('grille-pain : le compte repart de la nouvelle tranche', tpMode(rerender(card, gp(1))), 'done');
+    card.disconnectedCallback();
+    freezeClock(new Date(T0).toISOString());
+  }
+  // The drawing.
+  const two = render(TP, gp(920));
+  check('grille-pain : deux fentes par defaut', /tp-two/.test(machineCls(two)), true);
+  check('grille-pain : deux fentes dessinees', (two.match(/class="tp-slot"/g) || []).length, 2);
+  check('grille-pain : deux tranches', (two.match(/class="tp-toast/g) || []).length, 2);
+  check('grille-pain : un levier', (two.match(/class="tp-lever"/g) || []).length, 1);
+  const four = render({ ...TP, toaster_layout: 'four' }, gp(920));
+  check('grille-pain : quatre fentes', (four.match(/class="tp-slot"/g) || []).length, 4);
+  check('grille-pain : quatre tranches', (four.match(/class="tp-toast/g) || []).length, 4);
+  check('grille-pain : deux leviers', (four.match(/class="tp-lever"/g) || []).length, 2);
+  const long = render({ ...TP, toaster_layout: 'long' }, gp(920));
+  check('grille-pain : fente longue, une fente', (long.match(/class="tp-slot"/g) || []).length, 1);
+  check('grille-pain : fente longue, deux tranches bout a bout', (long.match(/class="tp-toast"/g) || []).length, 2);
+  check('grille-pain : modele inconnu, deux fentes', /tp-two/.test(machineCls(render({ ...TP, toaster_layout: 'x' }, gp(920)))), true);
+  check('grille-pain : le levier descend en grillant', /--tp-low: 78px/.test(two), true);
+  contains('grille-pain : les fentes rougeoient', two, '.machine.mode-toasting .tp-slot {');
+  contains('grille-pain : les tranches sautent une fois', two, '.machine.mode-done .tp-toast { display: block; animation: tp-pop');
+  contains('grille-pain : la chaleur monte', two, '.machine.mode-toasting .air-flow { display: block; }');
+  check('grille-pain : la chaleur monte, pas descend', /<svg [^>]*class="air-flow tp-air "/.test(two), true);
+  // Detection.
+  const tpType = id => /class="tp-top"/.test(render({ state_entity: id }, { [id]: { state: 'on', attributes: {} } }));
+  for (const id of ['switch.toaster', 'switch.grille_pain', 'switch.tostadora', 'switch.tostapane', 'switch.broodrooster', 'switch.brodrost', 'switch.toster_kuchnia'])
+    check(`detection grille-pain : ${id}`, tpType(id), true);
+  check('detection : un four grille-pain reste un four', tpType('switch.toaster_oven'), false);
+  check('detection : le modele designe un grille-pain', /class="tp-top"/.test(render({ state_entity: 'switch.x', toaster_layout: 'long' },
+    { 'switch.x': { state: 'on', attributes: {} } })), true);
+  // Editor.
+  const ed = newEditor({ state_entity: 'switch.gp', appliance_type: 'toaster' });
+  check('editeur grille-pain : dans la liste', /<option value="toaster"/.test(markup(ed)), true);
+  check('editeur grille-pain : le modele', /toaster_layout/.test(markup(ed)), true);
+  check('editeur grille-pain : la puissance', markup(ed).includes('data-toggle="power_entity"'), true);
+  check('editeur grille-pain : pas de programme', markup(ed).includes('data-toggle="program_entity"'), false);
+  check('editeur : pas de modele de grille-pain ailleurs', /toaster_layout/.test(markup(newEditor({ state_entity: 'sensor.w', appliance_type: 'washer' }))), false);
+}
+
+// =============================================================================
+// Air purifier and fan
+// =============================================================================
+
+{
+  const mc = h => machineCls(h);
+  const has = (h, c) => mc(h).split(' ').includes(c);
+  const md = h => (/\bmode-(\w+)/.exec(mc(h)) || [, null])[1];
+  const lvl = h => (/\blv(\d)/.exec(mc(h)) || [, null])[1];
+  const aqOf = h => (/\baq(\d)/.exec(mc(h)) || [, null])[1];
+  const ln = (h, l) => { const v = infoLine(h, l); return v === null ? null : v.replace(/[\u00a0\u202f]/g, ' ').replace(/\u2060/g, ''); };
+  const PF = { appliance_type: 'air_purifier', state_entity: 'fan.salon' };
+  const pf = (state, attrs = {}, extra = {}, cfg = {}) => render({ ...PF, ...cfg }, { 'fan.salon': { state, attributes: attrs }, ...extra });
+
+  // ---- State -----------------------------------------------------------------
+  check('purificateur : eteint', md(pf('off')), 'off');
+  check('purificateur : eteint se dit', stateLine(pf('off')), 'Off');
+  check('purificateur : en marche', md(pf('on', { percentage: 40 })), 'run');
+  check('purificateur : en marche se dit', stateLine(pf('on', { percentage: 40 })), 'Purifying');
+  check('purificateur : en marche en bleu', stateColor(pf('on')), '#42a5f5');
+  check('purificateur : auto se dit Auto', stateLine(pf('on', { preset_mode: 'auto' })), 'Auto');
+  check('purificateur : Auto (PlasmaWave off) de Winix', stateLine(pf('on', { preset_mode: 'Auto (PlasmaWave off)' })), 'Auto');
+  check('purificateur : en francais', stateLine(pf('on', {}, {}, { language: 'fr' })), 'Purification');
+  check('purificateur : hors ligne', md(pf('unavailable')), 'offline');
+  check('purificateur : hors ligne se dit', stateLine(pf('unavailable')), 'Offline');
+  check('purificateur : inconnu, hors ligne', md(pf('unknown')), 'offline');
+  for (const p of ['sleep', 'Sleep', 'night', 'Night', 'Silent', 'sleep_allergy', 'sleep_wind', 'baby', 'Quiet'])
+    check(`purificateur : preset nuit « ${p} »`, md(pf('on', { preset_mode: p })), 'night');
+  check('purificateur : nuit se dit', stateLine(pf('on', { preset_mode: 'sleep' })), 'Night mode');
+  check('purificateur : nuit en indigo', stateColor(pf('on', { preset_mode: 'sleep' })), '#7986cb');
+  check('purificateur : interrupteur de nuit (Dyson)', md(pf('on', { preset_mode: 'manual' }, { 'switch.salon_night_mode': { state: 'on', attributes: {} } },
+    { night_mode_entity: 'switch.salon_night_mode' })), 'night');
+  check('purificateur : interrupteur de nuit coupe', md(pf('on', {}, { 'switch.salon_night_mode': { state: 'off', attributes: {} } },
+    { night_mode_entity: 'switch.salon_night_mode' })), 'run');
+  check('purificateur : eteint meme en mode nuit', md(pf('off', { preset_mode: 'sleep' })), 'off');
+  // Heat: a thermostat of its own, or a heat preset.
+  const heater = (state, action) => ({ 'climate.salon': { state, attributes: action ? { hvac_action: action } : {} } });
+  check('purificateur : il chauffe (thermostat)', md(pf('on', {}, heater('heat', 'heating'), { heater_entity: 'climate.salon' })), 'heat');
+  check('purificateur : chauffage se dit', stateLine(pf('on', {}, heater('heat', 'heating'), { heater_entity: 'climate.salon' })), 'Heating');
+  check('purificateur : chauffage en orange', stateColor(pf('on', {}, heater('heat', 'heating'), { heater_entity: 'climate.salon' })), '#ff7043');
+  check('purificateur : consigne atteinte, il ventile', md(pf('on', {}, heater('heat', 'idle'), { heater_entity: 'climate.salon' })), 'run');
+  check('purificateur : thermostat eteint, il ventile', md(pf('on', {}, heater('off'), { heater_entity: 'climate.salon' })), 'run');
+  check('purificateur : thermostat sans action, en chauffe', md(pf('on', {}, heater('heat'), { heater_entity: 'climate.salon' })), 'heat');
+  check('purificateur : preset heat (Dyson)', md(pf('on', { preset_mode: 'heat' })), 'heat');
+  check('purificateur : nuit et chauffage, nuit orange', has(pf('on', { preset_mode: 'sleep' }, heater('heat', 'heating'), { heater_entity: 'climate.salon' }), 'warm'), true);
+  check('purificateur : nuit seule, pas orange', has(pf('on', { preset_mode: 'sleep' }), 'warm'), false);
+  // The Dyson Hot+Cool as its climate entity.
+  const dy = (state, attrs) => render({ appliance_type: 'air_purifier', state_entity: 'climate.jardin_dyson' }, { 'climate.jardin_dyson': { state, attributes: attrs } });
+  check('purificateur climate : chauffe', md(dy('heat', { hvac_action: 'heating' })), 'heat');
+  check('purificateur climate : ventilation', md(dy('fan_only', { hvac_action: 'fan' })), 'run');
+  check('purificateur climate : eteint', md(dy('off', {})), 'off');
+  // A select names the mode (LG, Haier, Midea).
+  const sel = (s) => render({ appliance_type: 'air_purifier', state_entity: 'select.ap_mode' }, { 'select.ap_mode': { state: s, attributes: {} } });
+  check('purificateur select : auto', stateLine(sel('auto')), 'Auto');
+  check('purificateur select : nuit', md(sel('sleep')), 'night');
+  check('purificateur select : standby eteint', md(sel('standby')), 'off');
+  check('purificateur select : PowerOff eteint', md(sel('PowerOff')), 'off');
+  check('purificateur select : pas de ligne de mode', ln(sel('turbo'), 'Mode'), null);
+  check('purificateur : state_map', md(pf('Pure', {}, {}, { state_map: { Pure: 'heat' } })), 'heat');
+  // A plug.
+  const plugP = (w, sw = 'on') => render({ appliance_type: 'air_purifier', state_entity: 'switch.p', power_entity: 'sensor.p_w', power_on_threshold: 5 },
+    { 'switch.p': { state: sw, attributes: {} }, 'sensor.p_w': { state: String(w), attributes: { unit_of_measurement: 'W' } } });
+  check('purificateur sur prise : il tourne', md(plugP(25)), 'run');
+  check('purificateur sur prise : il ne tourne pas', md(plugP(1)), 'off');
+
+  // ---- Speed: the number of air lines ------------------------------------------
+  check('vitesse : 30 % deux lignes', lvl(pf('on', { percentage: 30 })), '1');
+  check('vitesse : 40 % encore deux', lvl(pf('on', { percentage: 40 })), '1');
+  check('vitesse : 41 % trois', lvl(pf('on', { percentage: 41 })), '2');
+  check('vitesse : 75 % trois', lvl(pf('on', { percentage: 75 })), '2');
+  check('vitesse : 76 % cinq', lvl(pf('on', { percentage: 76 })), '3');
+  check('vitesse : sans pourcentage, trois', lvl(pf('on', {})), '2');
+  check('vitesse : turbo, cinq', lvl(pf('on', { preset_mode: 'turbo', percentage: null })), '3');
+  check('vitesse : Rapid de Coway, cinq', lvl(pf('on', { preset_mode: 'Rapid' })), '3');
+  check('vitesse : nuit, deux', lvl(pf('on', { preset_mode: 'sleep', percentage: 90 })), '1');
+  check('vitesse : level_3 de SwitchBot', lvl(pf('on', { preset_mode: 'level_3' })), '3');
+  check('vitesse : low', lvl(pf('on', { preset_mode: 'low' })), '1');
+  check('vitesse : les lignes en trop se cachent', pf('on').includes('.machine.lv1 .wind path:nth-child(n+3), .machine.lv2 .wind path:nth-child(n+4) { display: none; }'), true);
+  check('vitesse : cinq lignes dessinees', (/<svg class="wind [^"]*"[^>]*>(.*?)<\/svg>/.exec(pf('on')) || [, ''])[1].split('<path').length - 1, 5);
+  check('vitesse : la ligne', ln(pf('on', { percentage: 60 }), 'Fan speed'), '60 %');
+  check('vitesse : eteint, pas de ligne', ln(pf('off', { percentage: 60 }), 'Fan speed'), null);
+  check('vitesse : la nuit va lentement', /--spd: 3s/.test(pf('on', { preset_mode: 'sleep' })), true);
+  check('vitesse : vite a 100 %', /--spd: 0.9s/.test(pf('on', { percentage: 100 })), true);
+  check('mode : un preset qui ne se lit pas dans l\'etat a sa ligne', ln(pf('on', { preset_mode: 'pet' }), 'Mode'), 'Pet');
+  check('mode : manual n\'a pas de ligne', ln(pf('on', { preset_mode: 'manual' }), 'Mode'), null);
+  check('mode : auto n\'a pas de ligne', ln(pf('on', { preset_mode: 'auto' }), 'Mode'), null);
+
+  // ---- Air quality ------------------------------------------------------------
+  const aqS = (state, attrs, id = 'sensor.salon_pm25') => render({ ...PF, air_quality_entity: id },
+    { 'fan.salon': { state: 'on', attributes: {} }, [id]: { state: String(state), attributes: attrs } });
+  const PM = { device_class: 'pm25', unit_of_measurement: 'µg/m³' };
+  for (const [v, l] of [[4, '1'], [12, '1'], [12.1, '2'], [35, '2'], [36, '3'], [55, '3'], [56, '4']])
+    check(`qualite : PM2.5 ${v}`, aqOf(aqS(v, PM)), l);
+  for (const [v, l] of [[50, '1'], [51, '2'], [100, '2'], [101, '3'], [150, '3'], [151, '4']])
+    check(`qualite : AQI ${v}`, aqOf(aqS(v, { device_class: 'aqi' }, 'sensor.salon_aqi')), l);
+  check('qualite : un petit indice AQI ne se lit pas (Govee)', aqOf(aqS(2, { device_class: 'aqi' }, 'sensor.salon_aqi')), null);
+  check('qualite : le aqi de Xiaomi est en PM2.5', aqOf(aqS(40, PM, 'sensor.salon_aqi')), '3');
+  check('qualite : la classe pm25 seule suffit', aqOf(aqS(40, { device_class: 'pm25' }, 'sensor.salon_aqi')), '3');
+  check('qualite : l\'unite seule suffit', aqOf(aqS(40, { unit_of_measurement: 'µg/m³' }, 'sensor.salon_aqi')), '3');
+  for (const [v, l] of [[3, '1'], [4, '2'], [6, '2'], [7, '3'], [9, '3'], [10, '4']])
+    check(`qualite : indice Philips ${v}`, aqOf(aqS(v, {}, 'sensor.salon_indoor_allergen_index')), l);
+  for (const [w, l] of [['good', '1'], ['excellent', '1'], ['Fair', '2'], ['moderate', '2'], ['poor', '3'], ['Unhealthy', '3'], ['very_poor', '4'],
+    ['Very Unhealthy', '4'], ['severe', '4'], ['very bad', '4'], ['normal', '2'], ['bad', '3']])
+    check(`qualite : mot « ${w} »`, aqOf(aqS(w, {}, 'sensor.salon_air_quality')), l);
+  const vesync = { device_class: 'enum', options: ['excellent', 'good', 'moderate', 'poor', 'unknown'] };
+  for (const [w, l] of [['excellent', '1'], ['good', '2'], ['moderate', '3'], ['poor', '4']])
+    check(`qualite VeSync : « ${w} »`, aqOf(aqS(w, vesync, 'sensor.salon_air_quality')), l);
+  check('qualite : inconnu, pas de niveau', aqOf(aqS('unknown', {}, 'sensor.salon_air_quality')), null);
+  check('qualite : un mot inconnu, pas de niveau', aqOf(aqS('lowest', {}, 'sensor.salon_air_quality')), null);
+  check('qualite : la couleur du niveau', /--aq: #ff9800/.test(aqS(40, PM)), true);
+  check('qualite : la ligne', ln(aqS(18, PM), 'Air quality'), 'Fair · 18 µg/m³');
+  check('qualite : la ligne d\'un mot', ln(aqS('good', {}, 'sensor.salon_air_quality'), 'Air quality'), 'Good');
+  check('qualite : la ligne en francais', ln(render({ ...PF, air_quality_entity: 'sensor.salon_pm25', language: 'fr' },
+    { 'fan.salon': { state: 'on', attributes: {} }, 'sensor.salon_pm25': { state: '62', attributes: PM } }), 'Qualité de l&#39;air'), 'Très mauvaise · 62 µg/m³');
+  check('qualite : jauge allumee seulement en marche', aqS(18, PM).includes('.machine.on.aq2 .pf-bar i:nth-child(-n+2)'), true);
+  check('qualite : quatre segments', (pf('on').match(/<div class="pf-bar"[^>]*><i><\/i><i><\/i><i><\/i><i><\/i><\/div>/g) || []).length, 1);
+
+  // ---- Shapes, oscillation, direction, screen --------------------------------
+  check('forme : cylindre par defaut', has(pf('on'), 'pf-cylinder'), true);
+  check('forme : un Dyson est un anneau', has(render({ appliance_type: 'air_purifier', state_entity: 'fan.dyson_salon' }, { 'fan.dyson_salon': { state: 'on', attributes: {} } }), 'pf-ring'), true);
+  check('forme : boitier carre', /class="co-fan"/.test(pf('on', {}, {}, { purifier_layout: 'box' })), true);
+  check('forme : anneau', /class="dy-loop"/.test(pf('on', {}, {}, { purifier_layout: 'ring' })), true);
+  check('forme : inconnue, cylindre', has(pf('on', {}, {}, { purifier_layout: 'x' }), 'pf-cylinder'), true);
+  const ring = (attrs, extra = {}) => pf('on', attrs, extra, { purifier_layout: 'ring' });
+  check('anneau : oscillation', has(ring({ oscillating: true }), 'osc'), true);
+  check('anneau : pas d\'oscillation', has(ring({ oscillating: false }), 'osc'), false);
+  check('anneau : souffle arriere', has(ring({ direction: 'reverse' }), 'back'), true);
+  check('anneau : souffle avant', has(ring({ direction: 'forward' }), 'back'), false);
+  contains('anneau : la boucle pivote sur elle-meme', ring({ oscillating: true }), '@keyframes pf-pivot { 0%, 50%, 100% { transform: scaleX(1); } 25%, 75% { transform: scaleX(0.68); } }');
+  contains('anneau : en arriere, aucune ligne meme en oscillation', ring({}), '.machine.back .wind, .machine.back.osc .wind.l { display: none; }');
+  contains('anneau : les anneaux vont vers le centre', ring({}), '100% { transform: scale(0.08); opacity: 0; }');
+  check('anneau : les anneaux ont la forme de la boucle', /class="dy-back"[^>]*><b>/.test(ring({ direction: 'reverse' })), true);
+  check('anneau : quatre anneaux', (ring({}).match(/<b><\/b>/g) || []).length, 4);
+  check('anneau : la jauge en bas', /class="dy-disp"/.test(ring({})), true);
+  check('ecran : sans option, pas d\'ecran', /class="pf-lcd"/.test(pf('on')), false);
+  check('ecran : sans option, pas d\'ecran rond', /class="dy-round"/.test(ring({})), false);
+  const scr = (layout, sensor) => render({ ...PF, purifier_layout: layout, display_entity: 'sensor.salon_x' },
+    { 'fan.salon': { state: 'on', attributes: {} }, 'sensor.salon_x': sensor });
+  check('ecran : le chiffre', /class="pf-lcd"[^>]*><span>18<\/span>/.test(scr('cylinder', { state: '18.4', attributes: PM })), true);
+  check('ecran : la temperature', /class="dy-round"[^>]*><span>21°<\/span>/.test(scr('ring', { state: '21.3', attributes: { unit_of_measurement: '°C' } })), true);
+  check('ecran : le boitier', /class="pf-lcd"/.test(scr('box', { state: '5', attributes: {} })), true);
+  check('ecran : indisponible, vide', /class="pf-lcd"[^>]*><span><\/span>/.test(scr('cylinder', { state: 'unavailable', attributes: {} })), true);
+  check('ecran : echappe', scr('cylinder', { state: '<b>', attributes: {} }).includes('<span>&lt;b&gt;</span>'), true);
+  contains('ecran : eteint, l\'ecran se tait', pf('on'), '.machine:not(.on) .pf-lcd span, .machine:not(.on) .dy-round span { display: none; }');
+  contains('chaleur : orange', pf('on'), '.machine.mode-heat, .machine.warm { --air: #ff7043; }');
+  contains('nuit : attenue', pf('on'), '.machine.mode-night .wind { opacity: 0.45; }');
+  check('air : il monte d\'un cylindre', /<svg class="wind "[^>]*><path d="M3.2 19/.test(pf('on')), true);
+
+  // ---- Fans -------------------------------------------------------------------
+  const FN = { appliance_type: 'fan', state_entity: 'fan.bureau' };
+  const fn = (state, attrs = {}, extra = {}, cfg = {}) => render({ ...FN, ...cfg }, { 'fan.bureau': { state, attributes: attrs }, ...extra });
+  check('ventilateur : eteint', md(fn('off')), 'off');
+  check('ventilateur : en marche', md(fn('on', { percentage: 50 })), 'run');
+  check('ventilateur : en marche se dit', stateLine(fn('on')), 'On');
+  check('ventilateur : en francais', stateLine(fn('on', {}, {}, { language: 'fr' })), 'En marche');
+  check('ventilateur : sur pied par defaut', has(fn('on'), 'fn-stand'), true);
+  check('ventilateur : de table', has(fn('on', {}, {}, { fan_layout: 'table' }), 'fn-table'), true);
+  check('ventilateur : la table a un pied court', /class="fn-pole" style="left: 46px; top: 52px; width: 4px; height: 46px"/.test(fn('on', {}, {}, { fan_layout: 'table' })), true);
+  check('ventilateur : le pied monte au moteur', /class="fn-pole" style="left: 46px; top: 28px; width: 4px; height: 70px"/.test(fn('on')), true);
+  check('ventilateur : trois pales', (fn('on').match(/class="fn-blade"/g) || []).length, 3);
+  check('ventilateur : vent naturel', has(fn('on', { preset_mode: 'nature' }), 'nat'), true);
+  check('ventilateur : Breeze de Bond', has(fn('on', { preset_mode: 'Breeze' }), 'nat'), true);
+  check('ventilateur : natural_wind de Matter', has(fn('on', { preset_mode: 'natural_wind' }), 'nat'), true);
+  check('ventilateur : naturel se dit', stateLine(fn('on', { preset_mode: 'natural' })), 'Natural wind');
+  check('ventilateur : pas de ligne de mode en naturel', ln(fn('on', { preset_mode: 'nature' }), 'Mode'), null);
+  contains('ventilateur : le naturel souffle par vagues', fn('on', { preset_mode: 'nature' }), '@keyframes fn-gust { 0%, 100% { stroke-opacity: 0.2; } 50% { stroke-opacity: 1; } }');
+  contains('ventilateur : les pales accelerent et ralentissent', fn('on', { preset_mode: 'nature' }), '.machine.on.nat .fn-rot { animation: fn-spin-nat 3s ease-in-out infinite;');
+  check('ventilateur : nuit', md(fn('on', { preset_mode: 'sleep' })), 'night');
+  check('ventilateur : nuit, rotation lente', /--rot: 1.60s/.test(fn('on', { preset_mode: 'sleep' })), true);
+  check('ventilateur : preset warm de Midea', md(fn('on', { preset_mode: 'warm' })), 'heat');
+  check('ventilateur : nuit et chaleur', has(fn('on', { preset_mode: 'sleep' }, { 'climate.bureau': { state: 'heat', attributes: { hvac_action: 'heating' } } },
+    { heater_entity: 'climate.bureau' }), 'warm'), true);
+  check('ventilateur : rotation rapide a 100 %', /--rot: 0.35s/.test(fn('on', { percentage: 100 })), true);
+  check('ventilateur : rotation lente a 30 %', /--rot: 1.10s/.test(fn('on', { percentage: 30 })), true);
+  // Oscillation: the entity is believed, a plug needs the box.
+  check('oscillation : de l\'entite', has(fn('on', { oscillating: true }), 'osc'), true);
+  check('oscillation : l\'entite dit non, la case ne compte pas', has(fn('on', { oscillating: false }, {}, { oscillating: true }), 'osc'), false);
+  check('oscillation : sur prise, la case', has(render({ appliance_type: 'fan', state_entity: 'switch.vent', oscillating: true },
+    { 'switch.vent': { state: 'on', attributes: {} } }), 'osc'), true);
+  check('oscillation : sur prise, sans case', has(render({ appliance_type: 'fan', state_entity: 'switch.vent' },
+    { 'switch.vent': { state: 'on', attributes: {} } }), 'osc'), false);
+  contains('oscillation : la tete tourne', fn('on', { oscillating: true }), '.machine.on.osc .fn-head { animation: fn-turn 5s');
+  contains('oscillation : le vent change de cote', fn('on', { oscillating: true }), '.machine.on.osc .wind.l { display: block; animation: wind-l 5s');
+  // Ceiling.
+  const CL = { ...FN, fan_layout: 'ceiling' };
+  const cl = (state, attrs = {}, extra = {}, cfg = {}) => render({ ...CL, ...cfg }, { 'fan.bureau': { state, attributes: attrs }, ...extra });
+  check('plafond : ete', stateLine(cl('on', { direction: 'forward' })), 'Summer');
+  check('plafond : hiver', stateLine(cl('on', { direction: 'reverse' })), 'Winter');
+  check('plafond : hiver en francais', stateLine(cl('on', { direction: 'reverse' }, {}, { language: 'fr' })), 'Hiver');
+  check('plafond : hiver en orange', stateColor(cl('on', { direction: 'reverse' })), '#ff7043');
+  check('plafond : ete, l\'air monte', /<svg class="wind "[^>]*><path d="M5.8 56/.test(cl('on', { direction: 'forward' })), true);
+  check('plafond : hiver, l\'air descend', /<svg class="wind "[^>]*><path d="M5.8 1 /.test(cl('on', { direction: 'reverse' })), true);
+  check('plafond : hiver, classe rev', has(cl('on', { direction: 'reverse' }), 'rev'), true);
+  contains('plafond : l\'hiver en orange', cl('on'), '.machine.fn-ceiling.rev { --air: #ff7043; }');
+  contains('plafond : l\'ete tourne a l\'envers des aiguilles', cl('on'), '.machine.fn-ceiling .fn-rot { animation-direction: reverse; }');
+  contains('plafond : l\'hiver dans le sens des aiguilles', cl('on'), '.machine.fn-ceiling.rev .fn-rot { animation-direction: normal; }');
+  check('plafond : inverser ete et hiver', stateLine(cl('on', { direction: 'forward' }, {}, { fan_direction_inverted: true })), 'Winter');
+  check('plafond : inverser, reverse devient ete', stateLine(cl('on', { direction: 'reverse' }, {}, { fan_direction_inverted: true })), 'Summer');
+  check('plafond : le preset reverse de Dreo', stateLine(cl('on', { preset_mode: 'reverse' })), 'Winter');
+  check('plafond : pas d\'oscillation', has(cl('on', { oscillating: true }), 'osc'), false);
+  check('plafond : naturel', stateLine(cl('on', { preset_mode: 'Breeze' })), 'Natural wind');
+  check('plafond : cinq pales, devant et derriere le moteur', (cl('on').match(/class="fn-blade"/g) || []).length, 10);
+  contains('plafond : la moitie haute passe devant', cl('on'), '.fn-plane.front { z-index: 5; clip-path: path(evenodd, "M-60 -60H148V44H-60Z M37 28.6H51V44H37Z"); }');
+  check('plafond : rotation plus lente', /--rot: 1.43s/.test(cl('on', { percentage: 30 })), true);
+  check('plafond : nom de plafond, forme de plafond', has(render({ appliance_type: 'fan', state_entity: 'fan.ventilateur_plafond' },
+    { 'fan.ventilateur_plafond': { state: 'on', attributes: {} } }), 'fn-ceiling'), true);
+  // Light.
+  const lamp = (ls, fs = 'on') => cl(fs, {}, { 'light.bureau': { state: ls, attributes: {} } }, { light_entity: 'light.bureau' });
+  check('lumiere : sans lumiere, pas de globe', /class="fn-globe"/.test(cl('on')), false);
+  check('lumiere : avec lumiere, un globe', /class="fn-globe"/.test(lamp('off')), true);
+  check('lumiere : eteinte', has(lamp('off'), 'lit'), false);
+  check('lumiere : allumee', has(lamp('on'), 'lit'), true);
+  check('lumiere : allumee ventilateur eteint', has(lamp('on', 'off'), 'lit'), true);
+  check('lumiere : ventilateur eteint reste eteint', md(lamp('on', 'off')), 'off');
+  check('lumiere : pas de globe sur pied', /class="fn-globe"/.test(fn('on', {}, { 'light.bureau': { state: 'on', attributes: {} } }, { light_entity: 'light.bureau' })), false);
+  // Wood blades.
+  check('bois : la case', has(cl('on', {}, {}, { wood_blades: true }), 'wood'), true);
+  check('bois : sans la case', has(cl('on'), 'wood'), false);
+  check('bois : pas sur pied', has(fn('on', {}, {}, { wood_blades: true }), 'wood'), false);
+  check('bois : le veinage', /<pattern id="fn-wood"/.test(cl('on')), true);
+  contains('bois : les pales en bois', cl('on', {}, {}, { wood_blades: true }), '.machine.wood .fn-plane .fn-blade { fill: url(#fn-wood); stroke: #4e2c14; }');
+
+  // ---- Detection --------------------------------------------------------------
+  const kind = (id, attrs = {}) => {
+    const h = render({ state_entity: id }, { [id]: { state: 'on', attributes: attrs } });
+    return /class="cy-body"|class="co-body"|class="dy-loop"/.test(h) ? 'air_purifier' : /class="fn-head"|class="fn-plane/.test(h) ? 'fan' : 'other';
+  };
+  for (const id of ['fan.levoit_core_300s_air_purifier', 'fan.salon_dyson_purificateur', 'fan.luftreiniger', 'fan.purificatore', 'fan.air_cleaner', 'switch.purificateur_d_air'])
+    check(`detection purificateur : ${id}`, kind(id), 'air_purifier');
+  for (const id of ['fan.salon', 'fan.ceiling_fan', 'switch.ventilateur_bureau', 'switch.ventilator', 'switch.ventilador', 'switch.wentylator'])
+    check(`detection ventilateur : ${id}`, kind(id), 'fan');
+  check('detection : une VMC n\'est pas un ventilateur', kind('switch.ventilation_cave'), 'other');
+  check('detection : une hotte reste une hotte', kind('fan.hood'), 'other');
+  check('detection : un radiateur soufflant reste un radiateur', kind('switch.fan_heater'), 'other');
+  check('detection : la jauge designe un purificateur', /class="cy-body"/.test(render({ state_entity: 'switch.x', air_quality_entity: 'sensor.y' },
+    { 'switch.x': { state: 'on', attributes: {} } })), true);
+  check('detection : le modele designe un ventilateur', /class="fn-plane/.test(render({ state_entity: 'switch.x', fan_layout: 'ceiling' },
+    { 'switch.x': { state: 'on', attributes: {} } })), true);
+
+  // ---- Editor -----------------------------------------------------------------
+  const edP = markup(newEditor({ state_entity: 'fan.salon', appliance_type: 'air_purifier' }));
+  check('editeur purificateur : dans la liste', /<option value="air_purifier"/.test(edP), true);
+  check('editeur purificateur : la forme', /purifier_layout/.test(edP), true);
+  for (const f of ['air_quality_entity', 'display_entity', 'night_mode_entity', 'heater_entity', 'power_entity'])
+    check(`editeur purificateur : ${f}`, edP.includes(`data-toggle="${f}"`), true);
+  check('editeur purificateur : pas de lumiere', edP.includes('data-toggle="light_entity"'), false);
+  check('editeur purificateur : pas d\'oscillation a cocher', /oscillating/.test(edP), false);
+  const edF = markup(newEditor({ state_entity: 'fan.bureau', appliance_type: 'fan' }));
+  check('editeur ventilateur : dans la liste', /<option value="fan"/.test(edF), true);
+  check('editeur ventilateur : la forme', /fan_layout/.test(edF), true);
+  check('editeur ventilateur : oscillation sur pied', /oscillating/.test(edF), true);
+  check('editeur ventilateur : pas de bois sur pied', /wood_blades/.test(edF), false);
+  for (const f of ['light_entity', 'night_mode_entity', 'heater_entity'])
+    check(`editeur ventilateur : ${f}`, edF.includes(`data-toggle="${f}"`), true);
+  check('editeur ventilateur : pas de jauge', edF.includes('data-toggle="air_quality_entity"'), false);
+  const edC = markup(newEditor({ state_entity: 'fan.bureau', appliance_type: 'fan', fan_layout: 'ceiling' }));
+  check('editeur plafond : le bois', /wood_blades/.test(edC), true);
+  check('editeur plafond : inverser', /fan_direction_inverted/.test(edC), true);
+  check('editeur plafond : pas d\'oscillation', /"oscillating"/.test(edC), false);
+  check('editeur : pas de forme de purificateur ailleurs', /purifier_layout/.test(markup(newEditor({ state_entity: 'sensor.w', appliance_type: 'washer' }))), false);
+  {
+    const ids = ['fan.salon', 'sensor.salon_pm2_5', 'switch.salon_night_mode', 'climate.salon'];
+    const ed = new Editor();
+    ed.setConfig({ type: 'custom:ha-appliance-card', appliance_type: 'air_purifier', state_entity: 'fan.salon' });
+    ed.hass = { ...HASS(Object.fromEntries(ids.map(id => [id, { state: '1', attributes: {} }]))),
+      entities: Object.fromEntries(ids.map(id => [id, { device_id: 'salon' }])) };
+    const sug = ed.events.at(-1)?.detail?.config || {};
+    check('suggestion purificateur : la qualite de l\'air', sug.air_quality_entity, 'sensor.salon_pm2_5');
+    check('suggestion purificateur : le mode nuit', sug.night_mode_entity, 'switch.salon_night_mode');
+    check('suggestion purificateur : le chauffage', sug.heater_entity, 'climate.salon');
+  }
 }
 
 report();

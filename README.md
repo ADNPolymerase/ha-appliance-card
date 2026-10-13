@@ -10,7 +10,7 @@
 <a href="https://buymeacoffee.com/adnpolymerase" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-orange.png" alt="Buy Me A Coffee" height="60"></a>
 <a href="https://adnpolymerase.github.io/HA/" target="_blank"><img src="https://raw.githubusercontent.com/ADNPolymerase/HA/main/assets/site-button.svg" alt="Link to my github.io for my other projects" height="60"></a>
 
-A Lovelace card for household appliances: washers, dryers, dishwashers, ovens, microwaves, cooker hoods, cooktops, fridges, kettles, cookers, coffee machines, rice cookers, air fryers, water heaters, boilers, heat pumps, 3D printers, pet feeders, irons, pellet stoves, air conditioners, dehumidifiers, space heaters, towel warmers and EV chargers. Cycle in progress, program, remaining time, temperature, alerts and controls.
+A Lovelace card for household appliances: washers, dryers, dishwashers, ovens, microwaves, cooker hoods, cooktops, fridges, kettles, cookers, coffee machines, rice cookers, air fryers, water heaters, boilers, heat pumps, 3D printers, pet feeders, irons, toasters, pellet stoves, air conditioners, dehumidifiers, space heaters, towel warmers, air purifiers, fans and EV chargers. Cycle in progress, program, remaining time, temperature, alerts and controls.
 
 No brand assumed: every field is an entity you pick, so it works with **any** integration (Electrolux, Samsung, LG, Home Connect, Miele, a plain smart plug…).
 
@@ -21,7 +21,7 @@ No brand assumed: every field is an entity you pick, so it works with **any** in
 
 ## Features
 
-- **Twenty-six appliance types**, each with a CSS illustration that animates on the appliance's own data and stays still when idle. The type is detected on its own or set via `appliance_type`, and `compact: true` keeps only the text.
+- **Twenty-nine appliance types**, each with a CSS illustration that animates on the appliance's own data and stays still when idle. The type is detected on its own or set via `appliance_type`, and `compact: true` keeps only the text.
 - **State normalization**: `Idle`, `RUNNING`, `wash`, `En marche`… are recognised (accent-insensitive) and sorted into idle, preheating, running, paused, done, delayed or error. An unknown state is shown as it came, minus the integration's namespace, and `state_map` sorts the rest, `"*"` catching everything left over.
 - **The step, not an hour of *Running***: a washer, a dryer or a dishwasher names the step it is at (*Pre-wash*, *Washing*, *Rinsing*, *Spinning*, *Drying* and seven more), from a phase entity or from its own state, and the drum whirls while it spins. The time left is still the whole cycle's.
 - **A washer-dryer is a washer that dries**: `washer_dryer: true`, and the drum shows water while it washes, then clothes turning in hot air while it dries. The step comes from the state itself or from a phase entity, and the state line reads *Washing* or *Drying*.
@@ -53,6 +53,13 @@ Click a family to see its appliances at work.
 <summary><b>Heating and climate</b></summary>
 
 <img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-climate.gif" alt="Heating and climate" width="80%">
+
+</details>
+
+<details>
+<summary><b>Air purifiers and fans</b></summary>
+
+<img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-air.gif" alt="Air purifiers and fans" width="100%">
 
 </details>
 
@@ -100,12 +107,12 @@ Only `state_entity` is required, except on a fridge where a probe or a door cont
 | `compact` | `true` hides the illustration. |
 | `illustration_color` | `auto` (default, follows the theme) \| `white` \| `grey` \| `black` \| `red` (dark red). Only changes the casing, not the state colours. |
 | `language` | `auto` (default, follows Home Assistant) or one of the 14 codes: `en`, `fr`, `de`, `es`, `it`, `nl`, `pt`, `sv`, `no`, `da`, `pl`, `ru`, `zh`, `cs`. `nb` and `nb-NO` give Norwegian. |
-| `appliance_type` | `auto` (default) \| `washer` \| `dryer` \| `dishwasher` \| `oven` \| `microwave` \| `hood` \| `cooktop` \| `fridge` \| `kettle` \| `cooker` \| `coffee` \| `rice_cooker` \| `air_fryer` \| `water_heater` \| `boiler` \| `heat_pump` \| `printer_3d` \| `pet_feeder` \| `iron` \| `pellet_stove` \| `air_conditioner` \| `dehumidifier` \| `space_heater` \| `towel_warmer` \| `ev_charger`. |
+| `appliance_type` | `auto` (default) \| `washer` \| `dryer` \| `dishwasher` \| `oven` \| `microwave` \| `hood` \| `cooktop` \| `fridge` \| `kettle` \| `cooker` \| `coffee` \| `rice_cooker` \| `air_fryer` \| `water_heater` \| `boiler` \| `heat_pump` \| `printer_3d` \| `pet_feeder` \| `pet_fountain` \| `iron` \| `toaster` \| `pellet_stove` \| `air_conditioner` \| `dehumidifier` \| `space_heater` \| `towel_warmer` \| `air_purifier` \| `fan` \| `ev_charger`. |
 | `tap_action` | What a tap on the card does, in Home Assistant's own words: `more-info` (default: the state entity, or on a card without one what it reads in its place), `none`, `navigate`, `url`, `toggle`, `perform-action` or `fire-dom-event`, which is what the popup cards built on browser_mod listen for. In YAML only. |
 | `toggle_entity` | Power button (`switch`, `button`, `script`, `input_boolean`, `fan`), highlighted while on. |
 | `power_entity` / `power_on_threshold` / `power_icon` | Power sensor. With a threshold, the state is derived from it: *running* above, then *finished* when it falls back. Pointing `state_entity` at the same sensor enables it with a 10 W threshold. `power_icon` replaces `mdi:power-plug`. |
 | `power_off_delay` | Minutes the power must stay under `power_on_threshold` before the cycle reads *Finished*, so a pause (a dishwasher drying, a washer soaking) is not taken for the end. Only when the state comes from the plug: an integration reports its pauses itself. 0 by default. |
-| `show_last_cycle` | Adds a *Last cycle* line between cycles: how long it ran and when it ended, read from Home Assistant's history (seven days of the state, two days of a plug's power, pauses shorter than `power_off_delay` included). Appliances that run a cycle, the kettle and the iron. |
+| `show_last_cycle` | Adds a *Last cycle* line between cycles: how long it ran and when it ended, read from Home Assistant's history (seven days of the state, two days of a plug's power, pauses shorter than `power_off_delay` included). Appliances that run a cycle, the kettle, the iron and the toaster. |
 | `program_entity` / `program_format` | Program. `clean` (default) makes it readable (`LaundryCare.Washer.Program.Auto40` becomes *Auto 40*, `Rapid20Min` becomes *Rapid 20 Min*), `raw` shows it as-is. |
 | `remaining_time_entity` / `remaining_time_unit` | Remaining time, in `auto` (default, from the entity's unit: s, min, h, ms, d, or `1:02:03`), `seconds`, `minutes` or `hours`, or a finish time (`timestamp`). It also draws the progress bar: the time run since the cycle began, pauses left out, over that time plus what is left. Opened mid-cycle, the card finds the start in the state history. |
 | `remaining_time_hide_when_idle` | `true` only shows the remaining time while running, against stale finish times (SmartThings). |
@@ -170,6 +177,7 @@ Only `state_entity` is required, except on a fridge where a probe or a door cont
 | `printer_layout` | 3D printer | `enclosed` (default: a chamber whose bed drops as the part grows) \| `open` (an open frame whose gantry climbs). The part grows with the progress, in the state's colour, and the head moves while it prints. |
 | `printed_part` | 3D printer | The part on the bed: `cube` (default), `pyramid` or `duck` (a rubber duck). It shows from the bottom up as it prints. |
 | `iron_layout` | iron | `iron` (default, the iron alone) \| `generator` (the same iron on the base of a steam generator). |
+| `toaster_layout` | toaster | `two` (default, two slots) \| `four` (four slots, two levers) \| `long` (one long slot for two slices end to end). |
 | `left_on_after` | iron | Minutes switched on after which the state line reads *Left on*, in red. Empty, it never does. |
 | `feeder_layout` | pet feeder | `tower` (default, a square tank on its base) \| `canister` (a round tank on a round base) \| `double` (two outlets and two bowls) \| `dual_split` (two hoppers over one bowl split down the middle) \| `rotary` (plates on a turntable under a lid, for wet food). |
 | `level_b_entity` | pet feeder | The second hopper's level, on a feeder with two (`dual_split`), read like `level_entity` and against the same `level_empty_below` and `level_max`. It fills the right-hand window, gets its own line, and empty it turns the state to *Tank empty* and leaves only its own half bare. At rest the state line shows the lower of the two levels, the hopper to refill first. The editor offers it only for `dual_split`. |
@@ -193,6 +201,14 @@ Only `state_entity` is required, except on a fridge where a probe or a door cont
 | `state_entity` | towel warmer | The pilot wire's mode: *Comfort*, *Eco*, *Frost protection*, *Boost*, *Drying*, read from a `climate` entity's preset (Heatzy, Atlantic) or from a select (NodOn). |
 | `current_temperature_entity` / `target_temperature_entity` | space heater, towel warmer | Room and setpoint, when a `climate` entity does not carry them. |
 | `fan_speed_entity` / `purifier_entity` / `outdoor_temperature_entity` / `defrost_entity` | air conditioner | The fan when the `climate` entity does not carry it; the purifier (nanoe, plasma), lit on the unit; the outdoor temperature; a defrost contact. |
+| `state_entity` | air purifier | A `fan` entity: *Purifying*, *Auto*, *Night mode*, *Heating* or *Off*, from its state and its `preset_mode`, in the words of each integration (*sleep*, *night*, *Silent*, *Quiet*...). A `climate` entity (a Dyson Hot+Cool), a `select` naming the mode (LG, Haier, Midea) or a plug work too. `state_map` accepts `off`, `run`, `night` and `heat`. |
+| `purifier_layout` | air purifier | `cylinder` (default, blowing out of its top) \| `box` (a square box with its fan on top) \| `ring` (a bladeless ring, the default for a Dyson). The ring blows forward, turns from side to side while it oscillates and draws the air in while it blows backwards (`direction: reverse`). |
+| `air_quality_entity` | air purifier | The air's quality on a four-step gauge (*Good*, *Fair*, *Poor*, *Very poor*) and a line: PM2.5 in µg/m³ (12, 35 and 55), a US AQI (50, 100, 150), Philips's allergen index from 1 to 12, or the words of VeSync, Winix, Coway, Dyson, IKEA, SmartThings, Matter and tuya-local. A scale the card cannot place shows no step. |
+| `display_entity` | air purifier | An optional screen showing that entity's value, a PM2.5 reading or a temperature: on the front of the cylinder and the box, round above the gauge on the ring. |
+| `night_mode_entity` / `heater_entity` | air purifier, fan | Night mode when it is a switch of its own (Dyson, Duux); the heating, from a `climate` entity's `hvac_action`, a switch or a select. Night dims the air and slows it, heat turns it orange, and both together give dim orange air. |
+| `fan_layout` | fan | `stand` (default) \| `table` \| `ceiling` (the default for a fan named after the ceiling). |
+| `oscillating` | fan | `true` for a fan on a plug that oscillates: the head turns and the air follows it. A `fan` entity that reports `oscillating` is believed instead. |
+| `light_entity` / `wood_blades` / `fan_direction_inverted` | ceiling fan | The fan's light, drawn as a globe under the motor that lights up (no light, no globe); wooden blades; summer and winter swapped, for a fan whose `direction: forward` means winter. Summer draws the air up, winter sends the warm air under the ceiling back down, in orange. |
 | `speed_entity` | cooker | Blade speed, banded onto three speeds. |
 | `state_entity` / `fryer_layout` | air fryer | The fryer's own words, as Philips (HomeID and the older HACS integration), Xiaomi and Cosori (VeSync) report them: *Preheating*, *Preheated*, *Cooking*, *Shake the basket*, *Basket out*, *Paused*, *Keeping warm*, *Finished*, *Delayed start*. `fryer_layout`: `basket` (the default), `window` (a window onto the basket) or `dual` (two baskets). |
 | `basket_entity` / `shake_entity` / `basket2_state_entity` | air fryer | The basket sensor, on while it is out (Philips' drawer, Xiaomi's pot), which turns a cycle into *Basket out*; the shake reminder, which turns cooking into *Shake the basket*; the state of the second basket of a dual fryer, drawn apart and named on a line. |
@@ -375,6 +391,22 @@ The card shows the alert; turning the iron off is an automation's job, on the sa
 </details>
 
 <details>
+<summary><b>Toasters</b></summary>
+
+Read from its smart plug, like the iron: *Standby*, *Toasting* while it draws, then *Toast ready* for five minutes once the slices pop up. Toasting, the slots glow and the heat rises above them, and the lever is down. Three models: two slots, four slots and a long slot.
+
+```yaml
+type: custom:ha-appliance-card
+appliance_type: toaster
+toaster_layout: four
+state_entity: switch.toaster_plug
+power_entity: sensor.toaster_plug_power
+power_on_threshold: 30
+```
+
+</details>
+
+<details>
 <summary><b>Pet feeders</b></summary>
 
 A feeder is read rather than run: no cycle, no programme, no door. Its state is worked out from what it reports, *Tank empty*, *Error* or *Dispensing*, and at rest the line tells how full the tank is, or nothing when the card cannot know. The card carries what was served today and when the last meal was. An empty tank is the one thing a feeder cannot fix by itself, so it takes the state line and empties the tank and the bowl on the drawing. A red warning triangle goes up with it, and it goes up for a jam as well, that time with the kibble still in the tank.
@@ -540,6 +572,34 @@ heater_layout: oil
 state_entity: switch.heater_plug
 power_entity: sensor.heater_plug_power
 power_on_threshold: 30
+```
+
+</details>
+
+<details>
+<summary><b>Air purifiers and fans</b></summary>
+
+The air a purifier or a fan blows is drawn as dashed lines: blue, orange while it heats, dimmed and slow at night. The more it blows, the more lines: two up to 40 %, three up to 75 %, five above, or from the preset when there is no percentage (night, turbo, low, medium, high). A purifier also carries a four-step gauge of the air's quality, lit in its colour, and an optional screen.
+
+A fan comes on a stand, on a desk or on the ceiling. Its natural wind blows in gusts, the blades speeding up and slowing down. A ceiling fan draws the air up in summer and sends the warm air back down in winter, and its light shows as a globe under the motor.
+
+```yaml
+type: custom:ha-appliance-card
+appliance_type: air_purifier
+purifier_layout: ring
+state_entity: fan.living_room_purifier
+air_quality_entity: sensor.living_room_pm2_5
+display_entity: sensor.living_room_temperature
+heater_entity: climate.living_room_purifier
+```
+
+```yaml
+type: custom:ha-appliance-card
+appliance_type: fan
+fan_layout: ceiling
+state_entity: fan.bedroom_ceiling
+light_entity: light.bedroom_ceiling
+wood_blades: true
 ```
 
 </details>

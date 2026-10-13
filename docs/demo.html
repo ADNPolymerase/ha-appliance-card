@@ -52,9 +52,9 @@ customElements.define("ha-icon", StubIcon);
 const params = new URLSearchParams(location.search);
 const uiLang = params.get("lang") === "fr" ? "fr" : "en";
 const view = params.get("view") === "types" ? "types" : "hero";
-// Twenty-six types and the two other feeders, twenty-eight cards with the
-// iron on its steam generator: seven across and four down.
-document.documentElement.style.setProperty("--cols", params.get("cols") || 7);
+// Twenty-nine types, the two other feeders and a ceiling fan, thirty-two
+// cards with the iron on its steam generator: eight across and four down.
+document.documentElement.style.setProperty("--cols", params.get("cols") || 8);
 const fr = uiLang === "fr";
 const L = (en, f) => (fr ? f : en);
 
@@ -623,17 +623,98 @@ const evCharger = () => card({
   st("switch.wallbox_charge_control", "on"),
 ]);
 
+// A toaster on its plug, toasting.
+const toaster = () => card({
+  illustration_color: "white",
+  name: L("Toaster", "Grille-pain"),
+  appliance_type: "toaster",
+  toaster_layout: "two",
+  state_entity: "switch.toaster_plug",
+  power_entity: "sensor.toaster_plug_power",
+  power_on_threshold: 30,
+}, [
+  st("switch.toaster_plug", "on"),
+  st("sensor.toaster_plug_power", 920, { unit_of_measurement: "W" }),
+]);
+
+// Three purifiers: a Levoit cylinder on auto, a Philips 3-in-1 heating, and a
+// Dyson oscillating with the temperature on its round screen.
+const pm25 = (id, v) => st(id, v, { device_class: "pm25", unit_of_measurement: "\u00b5g/m\u00b3" });
+const purifier = () => card({
+  illustration_color: "white",
+  name: L("Air purifier", "Purificateur"),
+  appliance_type: "air_purifier",
+  purifier_layout: "cylinder",
+  state_entity: "fan.levoit_core_300s",
+  air_quality_entity: "sensor.levoit_core_300s_pm2_5",
+  display_entity: "sensor.levoit_core_300s_pm2_5",
+}, [
+  st("fan.levoit_core_300s", "on", { preset_mode: "auto", percentage: 66 }),
+  pm25("sensor.levoit_core_300s_pm2_5", 18),
+]);
+const boxPurifier = () => card({
+  illustration_color: "white",
+  name: L("Heater purifier", "Purificateur chauffant"),
+  appliance_type: "air_purifier",
+  purifier_layout: "box",
+  state_entity: "fan.philips_amf870",
+  air_quality_entity: "sensor.philips_amf870_pm25",
+  heater_entity: "climate.philips_amf870",
+}, [
+  st("fan.philips_amf870", "on", { percentage: 40 }),
+  pm25("sensor.philips_amf870_pm25", 6),
+  st("climate.philips_amf870", "heat", { hvac_action: "heating", current_temperature: 19, temperature: 22 }),
+]);
+const ringPurifier = () => card({
+  illustration_color: "black",
+  name: "Dyson",
+  appliance_type: "air_purifier",
+  purifier_layout: "ring",
+  state_entity: "fan.dyson_purifier",
+  air_quality_entity: "sensor.dyson_purifier_pm2_5",
+  display_entity: "sensor.dyson_purifier_temperature",
+}, [
+  st("fan.dyson_purifier", "on", { percentage: 80, oscillating: true, direction: "forward" }),
+  pm25("sensor.dyson_purifier_pm2_5", 42),
+  st("sensor.dyson_purifier_temperature", 21.4, { unit_of_measurement: "\u00b0C" }),
+]);
+// A pedestal fan oscillating, and a ceiling fan with wooden blades and its
+// light on, in summer.
+const fan = () => card({
+  illustration_color: "white",
+  name: L("Fan", "Ventilateur"),
+  appliance_type: "fan",
+  fan_layout: "stand",
+  state_entity: "fan.office",
+}, [
+  st("fan.office", "on", { percentage: 66, oscillating: true }),
+]);
+const ceilingFan = () => card({
+  illustration_color: "black",
+  name: L("Ceiling fan", "Ventilateur de plafond"),
+  appliance_type: "fan",
+  fan_layout: "ceiling",
+  wood_blades: true,
+  state_entity: "fan.bedroom_ceiling",
+  light_entity: "light.bedroom_ceiling",
+}, [
+  st("fan.bedroom_ceiling", "on", { percentage: 50, direction: "forward" }),
+  st("light.bedroom_ceiling", "on"),
+]);
+
 // Grouped by kind: the laundry, the kitchen, heating and climate, then the
 // rest.
 const ALL = { washer, dryer, steam_generator: steamGenerator,
-              dishwasher, oven, microwave, hood, cooktop, fridge, kettle, cooker, coffee, rice_cooker: riceCooker, air_fryer: airFryer,
+              dishwasher, oven, microwave, hood, cooktop, fridge, kettle, cooker, coffee, rice_cooker: riceCooker, air_fryer: airFryer, toaster,
               water_heater: waterHeater, boiler, heat_pump: heatPump, pellet_stove: pelletStove,
               space_heater: spaceHeater, towel_warmer: towelWarmer, air_conditioner: airConditioner, dehumidifier,
+              air_purifier: purifier, fan, ceiling_fan: ceilingFan,
               pet_feeder: petFeeder, dual_feeder: dualFeeder, wet_feeder: wetFeeder, pet_fountain: petFountain,
               printer_3d: printer3d, ev_charger: evCharger };
 // The variants the family captures fill their grids with; the gallery of all
 // types leaves them out.
-const EXTRA = { iron, round_feeder: roundFeeder, double_feeder: doubleFeeder, ev_discharging: evDischarging };
+const EXTRA = { iron, round_feeder: roundFeeder, double_feeder: doubleFeeder, ev_discharging: evDischarging,
+                box_purifier: boxPurifier, ring_purifier: ringPurifier };
 const only = (params.get("only") || "").split(",").map((k) => k.trim()).filter(Boolean);
 if (only.length) {
   document.documentElement.style.setProperty("--cols", params.get("cols") || only.length);

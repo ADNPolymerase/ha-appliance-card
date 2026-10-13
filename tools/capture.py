@@ -59,8 +59,9 @@ SCALE = 1
 # the grids out.
 FAMILIES = (
     ("laundry", "washer,dryer,dishwasher,iron,steam_generator", 5),
-    ("kitchen", "oven,microwave,hood,cooktop,fridge,kettle,cooker,coffee,rice_cooker,air_fryer", 5),
+    ("kitchen", "oven,microwave,hood,cooktop,fridge,kettle,cooker,coffee,rice_cooker,air_fryer,toaster", 6),
     ("climate", "water_heater,boiler,heat_pump,pellet_stove,space_heater,towel_warmer,air_conditioner,dehumidifier", 4),
+    ("air", "air_purifier,box_purifier,ring_purifier,fan,ceiling_fan", 5),
     ("pets", "pet_feeder,round_feeder,double_feeder,dual_feeder,wet_feeder,pet_fountain", 3),
     ("garage", "ev_charger,ev_discharging,printer_3d", 3),
 )
@@ -135,10 +136,10 @@ def squeeze(im, out):
 def screenshots():
     for lang, name in (("", "screenshot.png"), ("&lang=fr", "screenshot.fr.png")):
         out = DOCS / name
-        # Seven columns of four: twenty-eight cards fill the band exactly,
-        # and a wide band reads better than a ragged square. 7 x 300 px and
-        # six gaps of 24 make 2244 px, plus the page's padding.
-        im = shoot(f"http://127.0.0.1:{PORT}/docs/demo.html?view=types{lang}", str(out), window=(2400, 2300))
+        # Eight columns of four: thirty-two cards fill the band exactly,
+        # and a wide band reads better than a ragged square. 8 x 300 px and
+        # seven gaps of 24 make 2568 px, plus the page's padding.
+        im = shoot(f"http://127.0.0.1:{PORT}/docs/demo.html?view=types{lang}", str(out), window=(2700, 2300))
         print(f"  {name}  {im.size[0]}x{im.size[1]}")
 
 
