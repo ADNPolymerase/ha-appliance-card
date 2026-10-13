@@ -2496,6 +2496,14 @@ for (const [id, want, icon] of [
     ['towel_warmer', 'climate'], ['towel_warmer', 'select'], ['towel_warmer', 'switch'], ['iron', 'switch'], ['air_fryer', 'switch']])
     check(`editeur : ${type} propose ${dom} dans la liste`, domainsOf(type).includes(dom), true);
   check('editeur : un lave-linge ne propose pas humidifier', domainsOf('washer').includes('humidifier'), false);
+  // A new card has no type yet: its main entity may be a fan, a thermostat or
+  // a plug, and the type is then guessed from it.
+  const freshDomains = newEditor({ state_entity: '' })._root.querySelector('[data-slot="state_entity"]')?.children.at(-1)?.includeDomains || [];
+  for (const dom of ['sensor', 'binary_sensor', 'fan', 'climate', 'switch', 'select', 'water_heater', 'humidifier', 'input_boolean'])
+    check(`editeur sans type : propose ${dom}`, freshDomains.includes(dom), true);
+  check('editeur : un purificateur propose fan', domainsOf('air_purifier').includes('fan'), true);
+  check('editeur : un ventilateur propose fan', domainsOf('fan').includes('fan'), true);
+  check('editeur : un purificateur ne propose pas water_heater', domainsOf('air_purifier').includes('water_heater'), false);
 }
 
 // Auto-suggestion on the pump's own device: the live readings, never the

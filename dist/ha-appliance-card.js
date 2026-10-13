@@ -1,4 +1,4 @@
-const CARD_VERSION = "2.24.0";
+const CARD_VERSION = "2.24.1";
 
 console.info(
   "%c HA-APPLIANCE-CARD %c v" + CARD_VERSION + " ",
@@ -4595,6 +4595,19 @@ const STOVE_ONLY_FIELDS = ["flue_temperature_entity"];
 const AC_ONLY_FIELDS = ["vane_vertical_entity", "vane_horizontal_entity", "purifier_entity"];
 // A gauge of the air and the shape of a purifier belong to a purifier, and
 // the shape of a fan, its blades and its oscillation to a fan.
+// The domains a type's main entity may be, besides a sensor: a tank, a
+// combi boiler and a heat pump are often their integration's own water_heater
+// or climate entity, a stove, an air conditioner and a heater their climate
+// entity, a dehumidifier its humidifier entity, a towel warmer a select on
+// its pilot wire; and the ones that live on a smart plug may be read from the
+// plug itself.
+const STATE_DOMAINS = {
+  water_heater: ["water_heater"], boiler: ["water_heater"], heat_pump: ["climate", "water_heater"],
+  pellet_stove: ["climate"], air_conditioner: ["climate", "select", "switch"], dehumidifier: ["humidifier", "switch"],
+  space_heater: ["climate", "switch"], towel_warmer: ["climate", "select", "switch"], iron: ["switch"], toaster: ["switch"], air_fryer: ["switch"],
+  air_purifier: ["fan", "switch", "select", "climate"], fan: ["fan", "switch"],
+  pet_fountain: ["switch", "fan", "input_boolean"],
+};
 const PURIFIER_ONLY_FIELDS = ["purifier_layout", "air_quality_entity", "display_entity"];
 const FAN_ONLY_FIELDS = ["fan_layout", "wood_blades", "fan_direction_inverted", "oscillating"];
 // A water tank and a humidity reading belong to a dehumidifier, and the
@@ -7139,10 +7152,11 @@ const ILLUSTRATION_CSS = {
         }
         .dy-round span {
           position: absolute; inset: 0; color: #e3f2fd; text-align: center; text-shadow: 0 0 1.5px currentColor;
-          font: 700 4.2px/11px ui-monospace, "SF Mono", Menlo, monospace;
+          font: 700 10px/20px system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif; letter-spacing: -0.2px;
         }
         .machine:not(.on) .pf-lcd span, .machine:not(.on) .dy-round span { display: none; }
-        .machine.mode-night .pf-bar, .machine.mode-night .pf-lcd, .machine.mode-night .dy-disp i, .machine.mode-night .dy-round span { opacity: 0.35; }
+        .machine.mode-night .pf-bar, .machine.mode-night .dy-disp i { opacity: 0.35; }
+        .machine.mode-night .pf-lcd, .machine.mode-night .dy-round span { opacity: 0.7; }
         .cy-body, .cy-ring, .cy-ctrl, .cy-perf, .co-top, .co-fan, .co-hub, .co-lid, .co-body, .co-perf { position: absolute; }
         .cy-body {
           z-index: 2; border-radius: 14px 14px 11px 11px / 10px 10px 7px 7px;
@@ -7192,13 +7206,13 @@ const ILLUSTRATION_CSS = {
         .dy-disp i { flex: 1; border-radius: 0.4px; background: rgba(255, 255, 255, 0.1); }
         .dy-head { position: absolute; left: 0; top: 0; width: 96px; height: 108px; z-index: 5; transform-origin: 48px 50%; }
         .dy-loop {
-          z-index: 5; box-sizing: border-box; border: 4px solid; border-radius: 12px;
+          z-index: 5; box-sizing: border-box; border: 4.5px solid; border-radius: 16px;
           border-color: var(--ac-body-hi, #ffffff) var(--ac-body-lo, #cfd6db) var(--ac-body-lo, #cfd6db) var(--ac-body, #eceff1);
           box-shadow: 0 0 0 0.8px rgba(0, 0, 0, 0.35), inset 0 0 0 1.7px #c9ced3, inset 0.6px 0.6px 0 2.2px rgba(255, 255, 255, 0.75), inset 0 0 0 2.6px rgba(0, 0, 0, 0.25);
         }
-        .dy-back { z-index: 4; overflow: hidden; border-radius: 8px; display: none; }
+        .dy-back { z-index: 4; overflow: hidden; border-radius: 12px; display: none; }
         .dy-back b {
-          position: absolute; inset: 0; border: 1.6px solid var(--air, #42a5f5); border-radius: 8px; opacity: 0;
+          position: absolute; inset: 0; border: 1.6px solid var(--air, #42a5f5); border-radius: 12px; opacity: 0;
           animation: pf-aspire var(--spd, 1.6s) ease-in infinite; animation-delay: var(--anim-offset, 0s);
         }
         .dy-back b:nth-child(2) { animation-delay: calc(var(--spd, 1.6s) * -0.5 + var(--anim-offset, 0s)); }
@@ -7815,11 +7829,11 @@ function purifierHtml(cls, p) {
     // The loop pivots on itself while it oscillates; the stand stays put. The
     // round screen above the gauge is the optional one.
     return `${open}
-          ${airBox("dy-foot", 33, 99, 30, 7)}${airBox("dy-base", 40, 70, 16, 31)}${airBox("dy-cap", 40, 68.5, 16, 3.5)}
-          ${airBox("dy-disp", 42, 88, 12, 5, AQ_BAR)}
-          ${p.screen !== undefined ? airBox("dy-round", 42.5, 74.5, 11, 11, `<span>${esc(p.screen)}</span>`) : ""}
-          <div class="dy-head">${airBox("dy-loop", 36, 1, 24, 72)}${airBox("dy-back", 40, 5, 16, 64, "<b></b><b></b><b></b><b></b>")}</div>
-          ${windLines("r", 61, 13, 32, 48, "side")}${windLines("l", 3, 13, 32, 48, "side")}
+          ${airBox("dy-foot", 29, 99, 38, 7)}${airBox("dy-base", 36, 70, 24, 31)}${airBox("dy-cap", 36, 68.5, 24, 3.5)}
+          ${airBox("dy-disp", 40, 94, 16, 4.5, AQ_BAR)}
+          ${p.screen !== undefined ? airBox("dy-round", 38, 73, 20, 20, `<span>${esc(p.screen)}</span>`) : ""}
+          <div class="dy-head">${airBox("dy-loop", 32, 1, 32, 72)}${airBox("dy-back", 36, 5, 24, 64, "<b></b><b></b><b></b><b></b>")}</div>
+          ${windLines("r", 65, 13, 30, 48, "side")}${windLines("l", 1, 13, 30, 48, "side")}
         </div>`;
   }
   if (layout === "box") {
@@ -12675,18 +12689,12 @@ class ApplianceCardEditor extends HTMLElement {
     this._mountStateMap(this._root.querySelector('[data-slot="__state_map"]'));
     this._mountPicker(this._root.querySelector('[data-slot="state_entity"]'), "state_entity", {
       label: t(hass, "state_entity"),
-      // A tank, a combi boiler and a heat pump are often their integration's
-      // own water_heater or climate entity, a stove, an air conditioner and a
-      // heater their climate entity, a dehumidifier its humidifier entity, a
-      // towel warmer a select on its pilot wire; and the ones that live on a
-      // smart plug may be read from the plug itself.
-      includeDomains: ["sensor", "binary_sensor"].concat({
-        water_heater: ["water_heater"], boiler: ["water_heater"], heat_pump: ["climate", "water_heater"],
-        pellet_stove: ["climate"], air_conditioner: ["climate", "select", "switch"], dehumidifier: ["humidifier", "switch"],
-        space_heater: ["climate", "switch"], towel_warmer: ["climate", "select", "switch"], iron: ["switch"], toaster: ["switch"], air_fryer: ["switch"],
-        air_purifier: ["fan", "switch", "select", "climate"], fan: ["fan", "switch"],
-        pet_fountain: ["switch", "fan", "input_boolean"],
-      }[this._type] || []),
+      // Until a type is chosen the card guesses it from the entity, so the
+      // list offers every domain a type can live on: limited to sensors, a
+      // purifier's fan entity could never be picked to begin with.
+      includeDomains: ["sensor", "binary_sensor"].concat(this._config.appliance_type
+        ? STATE_DOMAINS[this._type] || []
+        : [...new Set(Object.values(STATE_DOMAINS).flat())]),
     });
     for (const s of this._sections()) {
       if (this._open.has(s.field)) {
