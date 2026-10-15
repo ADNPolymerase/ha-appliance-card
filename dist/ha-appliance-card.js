@@ -1,4 +1,4 @@
-const CARD_VERSION = "2.24.1";
+const CARD_VERSION = "2.25.0";
 
 console.info(
   "%c HA-APPLIANCE-CARD %c v" + CARD_VERSION + " ",
@@ -3348,6 +3348,10 @@ const STATE_COLORS = {
   // Fridge health. "fridge_ok" is the cold blue of the temperature displays,
   // so a healthy fridge reads as cold rather than as "idle" grey.
   fridge_ok: "#4fc3f7",
+  fridge_cooling: "#4fc3f7",
+  // A fridge between two cycles is at rest, the grey every other appliance
+  // uses for standby.
+  fridge_standby: "var(--disabled-text-color, #9e9e9e)",
   // A feeder at rest is idle, and a feeder serving is doing something: the
   // same two colours as everywhere else on the card.
   feeder_ready: "var(--disabled-text-color, #9e9e9e)",
@@ -4875,11 +4879,16 @@ function feedTime(hass, ts) {
   return d.toLocaleString(lang(hass), opts);
 }
 
-function fridgeHealth(unplugged, noPower, doorOpen, tempHigh) {
+// With nothing wrong, a power meter can still say what the fridge is doing:
+// above the threshold the compressor runs, below it the fridge rests. Without
+// a meter there is nothing to tell, and "Normal" is all the card can say.
+function fridgeHealth(unplugged, noPower, doorOpen, tempHigh, cooling = null) {
   if (unplugged) return "unplugged";
   if (noPower) return "no_power";
   if (doorOpen) return "door_open";
   if (tempHigh) return "temp_high";
+  if (cooling === true) return "fridge_cooling";
+  if (cooling === false) return "fridge_standby";
   return "fridge_ok";
 }
 
@@ -9553,9 +9562,14 @@ class ApplianceCard extends HTMLElement {
         if (!this._inert) this._clockTimer = setInterval(() => this._render(), CLOCK_TICK_MS);
       }
 
-      norm = fridgeHealth(unplugged, noPower, doorOpen || freezerDoorOpen, tempHigh);
+      // The same threshold that starts the count of minutes without power
+      // tells cooling from resting: no second setting to get wrong.
+      const cooling = cfg.power_entity && watts !== null && isFinite(threshold) ? watts >= threshold : null;
+      norm = fridgeHealth(unplugged, noPower, doorOpen || freezerDoorOpen, tempHigh, cooling);
       color = STATE_COLORS[norm];
-      stateLabel = t(hass, norm);
+      // Both words already exist: the air conditioner's "Cooling" and "Standby",
+      // so every language has them.
+      stateLabel = t(hass, { fridge_cooling: "ac_cooling", fridge_standby: "ac_idle" }[norm] || norm);
 
       const twoDoors = !!(cfg.door_entity && cfg.freezer_door_entity);
       const doorLine = (open, openKey) => ({

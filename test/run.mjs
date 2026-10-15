@@ -1602,14 +1602,14 @@ check('frigo : une porte ouverte passe devant la temperature', stateLine(frDoor)
 // a fridge below 1 W is unplugged, a fridge at 5 W is merely between cycles.
 const frLow = build(fridgeCfg({ fridge_temperature_entity: 'sensor.fr_t', power_entity: 'sensor.plug' }),
   withStates({ 'sensor.plug': { state: '0', attributes: { unit_of_measurement: 'W' } } }));
-check('frigo : 0 W depuis 0 min ne declenche rien', stateLine(frLow.html), 'Normal');
+check('frigo : 0 W depuis 0 min ne declenche rien', stateLine(frLow.html), 'Standby');
 
 // Measured on a real fridge, isolated 0 W runs last up to 15 minutes while
 // everything is fine. Ten minutes must therefore still read Normal.
 freezeClock(new Date(T0 + 10 * 60 * 1000).toISOString());
-check('frigo : 10 min sous le seuil, toujours Normal',
+check('frigo : 10 min sous le seuil, en veille',
   stateLine(rerender(frLow.card, withStates({ 'sensor.plug': { state: '0', attributes: { unit_of_measurement: 'W' } } }))),
-  'Normal');
+  'Standby');
 freezeClock(new Date(T0 + 31 * 60 * 1000).toISOString());
 const frUnplugged = rerender(frLow.card,
   withStates({ 'sensor.plug': { state: '0', attributes: { unit_of_measurement: 'W' } } }));
@@ -1639,14 +1639,39 @@ check('frigo : aucune consommation passe devant une porte ouverte',
 freezeClock(new Date(T0 + 31 * 60 * 1000).toISOString());
 
 const frBack = rerender(frLow.card, FRIDGE);
-check('frigo : le retour au-dessus du seuil efface l\'alarme', stateLine(frBack), 'Normal');
+check('frigo : le retour au-dessus du seuil efface l\'alarme et refroidit', stateLine(frBack), 'Cooling');
 freezeClock(new Date(T0).toISOString());
 
 // The generic power-derived cycle state must never apply to a fridge: its
 // compressor stops every twenty minutes and would report "Finished" each time.
 const frCycle = render(fridgeCfg({ fridge_temperature_entity: 'sensor.fr_t', power_entity: 'sensor.plug',
   power_on_threshold: 50 }), withStates({ 'sensor.plug': { state: '2', attributes: { unit_of_measurement: 'W' } } }));
-check('frigo : le compteur ne fabrique pas d\'etat de cycle', stateLine(frCycle), 'Normal');
+check('frigo : le compteur ne fabrique pas d\'etat de cycle', stateLine(frCycle), 'Standby');
+
+// With nothing wrong, the meter tells cooling from resting. One threshold does
+// both jobs: pascal_ha's American fridge draws 150 W cooling and 6 W at rest.
+{
+  const fr = (w, extra = {}, more = {}) => render(fridgeCfg({ power_entity: 'sensor.plug', power_on_threshold: 10, ...extra }),
+    withStates({ 'sensor.plug': { state: String(w), attributes: { unit_of_measurement: 'W' } }, ...more }));
+  check('frigo : 150 W au-dessus du seuil, refroidit', stateLine(fr(150)), 'Cooling');
+  check('frigo : 6 W sous le seuil, en veille', stateLine(fr(6)), 'Standby');
+  check('frigo : pile au seuil, refroidit', stateLine(fr(10)), 'Cooling');
+  check('frigo : juste sous le seuil, en veille', stateLine(fr(9.9)), 'Standby');
+  check('frigo : refroidit en bleu froid', stateColor(fr(150)), '#4fc3f7');
+  check('frigo : en veille en gris', stateColor(fr(6)), 'var(--disabled-text-color, #9e9e9e)');
+  check('frigo : compteur injoignable, Normal', stateLine(fr('unavailable')), 'Normal');
+  check('frigo : sans compteur, Normal', stateLine(render(fridgeCfg({ fridge_temperature_entity: 'sensor.fr_t' }), FRIDGE)), 'Normal');
+  check('frigo : une porte ouverte passe devant le froid',
+    stateLine(fr(150, { door_entity: 'binary_sensor.fr_d' }, { 'binary_sensor.fr_d': { state: 'on', attributes: {} } })), 'Door open');
+  check('frigo : la temperature haute passe devant la veille',
+    stateLine(fr(6, { fridge_temperature_entity: 'sensor.fr_t' },
+      { 'sensor.fr_t': { state: '11', attributes: { unit_of_measurement: '°C' } } })), 'Temperature high');
+  check('frigo : refroidit en francais', stateLine(fr(150, { language: 'fr' })), 'Refroidissement');
+  check('frigo : en veille en francais', stateLine(fr(6, { language: 'fr' })), 'En veille');
+  check('frigo : seuil par defaut 1 W, 2 W refroidit',
+    stateLine(render(fridgeCfg({ power_entity: 'sensor.plug' }),
+      withStates({ 'sensor.plug': { state: '2', attributes: { unit_of_measurement: 'W' } } }))), 'Cooling');
+}
 
 // A Zigbee probe keeps reporting after the plug is pulled; one that stops must
 // show dashes rather than a stale number, and must not read as too warm.
@@ -3253,11 +3278,11 @@ const frFresh = build({ appliance_type: 'fridge', power_entity: 'sensor.p' }, pl
 check('frigo : une carte neuve reprend le compte depuis le changement', stateLine(frFresh.html), 'No power draw');
 contains('frigo : la duree part du changement d\'etat', infoLine(frFresh.html, 'Power'), '45 min');
 const frRecent = build({ appliance_type: 'fridge', power_entity: 'sensor.p' }, plugFrom(10));
-check('frigo : 10 min depuis le changement, toujours Normal', stateLine(frRecent.html), 'Normal');
+check('frigo : 10 min depuis le changement, en veille', stateLine(frRecent.html), 'Standby');
 // A browser clock behind the server's puts last_changed in the future. The
 // count then starts now, rather than from a moment that has not come yet.
 const frAhead = build({ appliance_type: 'fridge', power_entity: 'sensor.p' }, plugFrom(-60));
-check('frigo : un horodatage dans le futur, Normal au depart', stateLine(frAhead.html), 'Normal');
+check('frigo : un horodatage dans le futur, en veille au depart', stateLine(frAhead.html), 'Standby');
 freezeClock(new Date(TP + 31 * 60000).toISOString());
 check('frigo : un horodatage dans le futur compte depuis maintenant',
   stateLine(rerender(frAhead.card, plugFrom(-60))), 'No power draw');
@@ -3285,20 +3310,20 @@ freezeClock(new Date(TP).toISOString());
   const on45 = withPlug('on', 45);
   check('prise allumee, 45 min a 0 W : aucune consommation', stateLine(on45.html), 'No power draw');
   check('prise allumee : l\'ecran du frigo reste normal', /class="fr-lcd warn"/.test(on45.html), false);
-  check('prise allumee, 10 min a 0 W : Normal', stateLine(withPlug('on', 10).html), 'Normal');
+  check('prise allumee, 10 min a 0 W : en veille', stateLine(withPlug('on', 10).html), 'Standby');
   const gone = build({ appliance_type: 'fridge', power_entity: 'sensor.p', plug_entity: 'switch.plug' },
     { 'sensor.p': { state: '72', attributes: { unit_of_measurement: 'W' } }, 'switch.plug': { state: 'unavailable', attributes: {} } });
-  check('prise injoignable : ignoree', stateLine(gone.html), 'Normal');
+  check('prise injoignable : ignoree, le compteur decide', stateLine(gone.html), 'Cooling');
   // The delay is the owner's to set: a chest freezer can rest an hour.
   const delay = (v, minutesAgo) => stateLine(build({ appliance_type: 'fridge', power_entity: 'sensor.p', no_power_after: v },
     plugFrom(minutesAgo)).html);
-  check('delai 90 min : a 45 min, Normal', delay(90, 45), 'Normal');
+  check('delai 90 min : a 45 min, en veille', delay(90, 45), 'Standby');
   check('delai 90 min : a 91 min, alerte', delay(90, 91), 'No power draw');
-  check('delai 90 en texte : compris', delay('90', 45), 'Normal');
+  check('delai 90 en texte : compris', delay('90', 45), 'Standby');
   check('delai 5 min : a 6 min, alerte', delay(5, 6), 'No power draw');
   for (const bad of ['abc', 0, -5, '']) check(`delai invalide ${JSON.stringify(bad)} : 30 min par defaut`, delay(bad, 31), 'No power draw');
-  check('delai invalide : pas avant 30 min', delay('abc', 29), 'Normal');
-  check('delai 0 : pas une alerte immediate', delay(0, 1), 'Normal');
+  check('delai invalide : pas avant 30 min', delay('abc', 29), 'Standby');
+  check('delai 0 : pas une alerte immediate', delay(0, 1), 'Standby');
   contains('aucune consommation : en francais', build({ appliance_type: 'fridge', power_entity: 'sensor.p', language: 'fr' },
     plugFrom(45)).html, 'Aucune consommation');
   for (const b of [off, offDraw, on45, gone]) b.card.disconnectedCallback();
