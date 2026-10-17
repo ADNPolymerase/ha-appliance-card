@@ -8538,6 +8538,10 @@ check('borne : ni un statut reconnu', evMode(evR('SuspendedEVSE', { power_entity
   check('ecran : pied central', /class="scr-neck"[\s\S]*class="scr-base"/.test(render({ ...SC, screen_layout: 'tv_stand' }, tv(142))), true);
   check('ecran : projecteur, le faisceau', /class="scr-beam"/.test(render({ ...SC, screen_layout: 'projector' }, tv(142))), true);
   check('ecran : ordinateur, la tour', /class="scr-tower"/.test(render({ ...SC, screen_layout: 'computer' }, tv(142))), true);
+  const mSize = h => (/<div class="machine [^"]*" style="([^"]*)"/.exec(h) || [, ''])[1];
+  check('ecran : la tele en plus grand', mSize(render(SC, tv(142))), 'width: 144px; height: 99px');
+  check('ecran : l ordinateur aussi', /width: 124\.8px;/.test(mSize(render({ ...SC, screen_layout: 'computer' }, tv(142)))), true);
+  check('ecran : le projecteur aussi', mSize(render({ ...SC, screen_layout: 'projector' }, tv(142))), 'width: 144px; height: 130.5px');
   contains('ecran : en veille, le temoin rouge', render(SC, tv(17)), '.machine.mode-standby .scr-led { background: #ff3b30;');
   // The picture: fixed, or drawn at random each time the screen comes on.
   check('ecran : image fixe', scImage(render({ ...SC, screen_image: 'pong' }, tv(142))), 'pong');

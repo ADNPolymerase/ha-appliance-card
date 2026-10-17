@@ -1,4 +1,4 @@
-const CARD_VERSION = "2.26.0";
+const CARD_VERSION = "2.26.1-beta.1";
 
 console.info(
   "%c HA-APPLIANCE-CARD %c v" + CARD_VERSION + " ",
@@ -4805,6 +4805,8 @@ const SCREEN_COLORS = {
   paused: "var(--warning-color, #ff9800)", locked: "var(--warning-color, #ff9800)",
 };
 const SCREEN_LIT = ["on", "playing", "paused", "home", "locked"];
+// [top of the drawing, its height, how much larger it is drawn].
+const SCREEN_BANDS = { tv_feet: [28, 66, 1.5], tv_stand: [26, 68, 1.5], tv_wall: [25, 62, 1.5], projector: [0, 87, 1.5], computer: [24, 62, 1.3] };
 // The pictures a lit screen shows, one drawn at random each time it comes on:
 // the first six suit a television or a projector, the last three a computer.
 const SCREEN_IMAGES = ["sunset", "aquarium", "bars", "football", "space", "bounce", "desktop", "code", "pong"];
@@ -7395,6 +7397,7 @@ const ILLUSTRATION_CSS = {
   // projector under its screen, or a computer and its tower. Lit, the glass
   // shows a picture; on standby only its light is on.
   screen: () => `
+        .scr-zoom { position: absolute; width: 96px; height: 108px; transform-origin: 0 0; }
         .scr-bezel, .scr-glass, .scr-led, .scr-foot, .scr-neck, .scr-base, .scr-shade, .scr-wall, .scr-rod, .scr-beam,
         .scr-body, .scr-lens, .scr-vent, .scr-feet, .scr-tower, .scr-slot { position: absolute; }
         .scr-bezel {
@@ -7436,7 +7439,7 @@ const ILLUSTRATION_CSS = {
         .scr-shade { border-radius: 4px; background: rgba(0, 0, 0, 0.1); filter: blur(2.5px); }
         .scr-wall { overflow: hidden; border-radius: 1px; background: #f6f7f9; box-shadow: inset 0 0 0 1px #d4d9df, 0 1px 2px rgba(0, 0, 0, 0.12); }
         .scr-rod { background: #9aa2ab; }
-        .scr-beam { opacity: 0; transition: opacity 0.4s; clip-path: polygon(0 0, 100% 0, 62% 100%, 54% 100%); background: linear-gradient(0deg, rgba(255, 250, 230, 0.85), rgba(255, 250, 230, 0.12)); }
+        .scr-beam { opacity: 0; transition: opacity 0.4s; clip-path: polygon(0 0, 100% 0, 57% 100%, 51% 100%); background: linear-gradient(0deg, rgba(255, 250, 230, 0.85), rgba(255, 250, 230, 0.12)); }
         .machine.scr-lit .scr-beam { opacity: 0.9; }
         .scr-body {
           border-radius: 4px 4px 3px 3px; background: linear-gradient(180deg, var(--ac-body-hi, #515860), var(--ac-body, #3b4045) 45%, var(--ac-body-lo, #22262a));
@@ -8223,18 +8226,28 @@ function screenHtml(cls, sc) {
   if (layout === "tv_stand") body = tv(28) + box("scr-neck", 44, 82, 8, 7) + box("scr-base", 28, 88, 40, 5);
   else if (layout === "tv_wall") body = box("scr-shade", 3, 31, 92, 54) + tv(27);
   else if (layout === "projector") {
-    body = box("scr-rod", 16, 2, 1, 4) + box("scr-rod", 79, 2, 1, 4)
-      + `<div class="scr-wall" style="left: 8px; top: 5px; width: 80px; height: 46px">${glassInner}</div>`
-      + box("scr-beam", 8, 51, 80, 34) + box("scr-body", 24, 84, 48, 16) + box("scr-vent", 56, 89, 12, 7)
-      + box("scr-lens", 46, 85.5, 11, 11) + box("scr-led", 29, 88, 2.4, 2.4) + box("scr-feet", 28, 100, 4, 2) + box("scr-feet", 64, 100, 4, 2);
+    body = box("scr-rod", 10, 0, 1, 3) + box("scr-rod", 85, 0, 1, 3)
+      + `<div class="scr-wall" style="left: 1px; top: 3px; width: 94px; height: 50px">${glassInner}</div>`
+      + box("scr-beam", 1, 53, 94, 18) + box("scr-body", 24, 69, 48, 15) + box("scr-vent", 56, 73, 12, 7)
+      + box("scr-lens", 46, 70, 11, 11) + box("scr-led", 29, 73, 2.4, 2.4) + box("scr-feet", 28, 84, 4, 2) + box("scr-feet", 64, 84, 4, 2);
   } else if (layout === "computer") {
     body = box("scr-bezel", 2, 26, 64, 42) + `<div class="scr-glass" style="left: 5px; top: 29px; width: 58px; height: 35px">${glassInner}</div>`
       + box("scr-neck", 30, 68, 8, 13) + box("scr-base", 20, 80, 28, 4) + box("scr-tower", 72, 34, 20, 50)
       + box("scr-slot", 75, 40, 14, 1.5) + box("scr-slot", 75, 44, 14, 1.5) + box("scr-led", 80.8, 76, 2.4, 2.4);
   } else body = tv(30) + box("scr-foot l", 12, 84, 3, 8) + box("scr-foot r", 81, 84, 3, 8);
   const lit = SCREEN_LIT.includes(mode) ? " scr-lit" : "";
+  // A television is wider than it is tall, and a computer too with its
+  // tower, so in the box every other appliance fits in they came out small.
+  // They are drawn larger, in a box cut to their own height, and so is the
+  // projector's screen, as large as a television's.
+  const band = SCREEN_BANDS[layout];
+  const px = (v) => Math.round(v * 10) / 10;
+  const inner = band
+    ? `<div class="scr-zoom" style="left: 0; top: ${px(-band[0] * band[2])}px; transform: scale(${band[2]})">${body}</div>`
+    : body;
+  const size = band ? ` style="width: ${px(96 * band[2])}px; height: ${px(band[1] * band[2])}px"` : "";
   return `
-        <div class="machine ${cls} scr-${layout} mode-${mode}${lit}${sc.muted ? " muted" : ""}">${body}</div>`;
+        <div class="machine ${cls} scr-${layout} mode-${mode}${lit}${sc.muted ? " muted" : ""}"${size}>${inner}</div>`;
 }
 
 function illustrationHtml(type, ctx) {
