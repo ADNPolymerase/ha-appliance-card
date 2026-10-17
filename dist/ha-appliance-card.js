@@ -1,4 +1,4 @@
-const CARD_VERSION = "2.26.1-beta.1";
+const CARD_VERSION = "2.26.1-beta.2";
 
 console.info(
   "%c HA-APPLIANCE-CARD %c v" + CARD_VERSION + " ",
@@ -4806,7 +4806,7 @@ const SCREEN_COLORS = {
 };
 const SCREEN_LIT = ["on", "playing", "paused", "home", "locked"];
 // [top of the drawing, its height, how much larger it is drawn].
-const SCREEN_BANDS = { tv_feet: [28, 66, 1.5], tv_stand: [26, 68, 1.5], tv_wall: [25, 62, 1.5], projector: [0, 87, 1.5], computer: [24, 62, 1.3] };
+const SCREEN_BANDS = { tv_feet: [28, 66, 2], tv_stand: [26, 68, 2], tv_wall: [25, 62, 2], projector: [0, 87, 1.8], computer: [24, 62, 1.6] };
 // The pictures a lit screen shows, one drawn at random each time it comes on:
 // the first six suit a television or a projector, the last three a computer.
 const SCREEN_IMAGES = ["sunset", "aquarium", "bars", "football", "space", "bounce", "desktop", "code", "pong"];
