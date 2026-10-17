@@ -8497,6 +8497,156 @@ check('borne : ni un statut reconnu', evMode(evR('SuspendedEVSE', { power_entity
 }
 
 // =============================================================================
+// Screen: television, projector, computer
+// =============================================================================
+
+{
+  const SC = { appliance_type: 'screen', state_entity: 'switch.tv', power_entity: 'sensor.tv_w' };
+  const tv = (w, sw = 'on', extra = {}) => ({ 'switch.tv': { state: sw, attributes: {} },
+    'sensor.tv_w': { state: String(w), attributes: { unit_of_measurement: 'W' } }, ...extra });
+  const scMode = h => (/\bmode-(\w+)/.exec(machineCls(h)) || [, null])[1];
+  const scLayout = h => (/\bscr-(tv_feet|tv_stand|tv_wall|projector|computer)\b/.exec(machineCls(h)) || [, null])[1];
+  const scImage = h => (/<div class="si-(\w+)"/.exec(h) || [, null])[1];
+  // The plug alone.
+  check('ecran : 0 W, eteint', scMode(render(SC, tv(0))), 'off');
+  check('ecran : 0,3 W, encore eteint', scMode(render(SC, tv(0.3))), 'off');
+  check('ecran : 17 W, en veille', scMode(render(SC, tv(17))), 'standby');
+  check('ecran : 20 W pile, encore en veille', scMode(render(SC, tv(20))), 'standby');
+  check('ecran : 142 W, allume', scMode(render(SC, tv(142))), 'on');
+  check('ecran : prise coupee, eteint', scMode(render(SC, tv(142, 'off'))), 'off');
+  check('ecran : seuil reglable', scMode(render({ ...SC, power_on_threshold: 30 }, tv(25))), 'standby');
+  check('ecran : seuil reglable, au-dessus', scMode(render({ ...SC, power_on_threshold: 30 }, tv(31))), 'on');
+  check('ecran : eteint se dit', stateLine(render(SC, tv(0))), 'Off');
+  check('ecran : en veille se dit', stateLine(render(SC, tv(17))), 'Standby');
+  check('ecran : allume se dit', stateLine(render(SC, tv(142))), 'On');
+  check('ecran : en francais', [0, 17, 142].map(w => stateLine(render({ ...SC, language: 'fr' }, tv(w)))).join('/'), 'Éteint/En veille/Allumé');
+  check('ecran : la veille en orange', stateColor(render(SC, tv(17))), 'var(--warning-color, #ff9800)');
+  check('ecran : allume en bleu', stateColor(render(SC, tv(142))), 'var(--info-color, #2196f3)');
+  check('ecran : la puissance de veille est affichee', infoLine(render(SC, tv(17)), 'Power'), '17 W');
+  check('ecran : pas de cycle tire de la prise', /Finished|Running/.test(stateLine(render(SC, tv(0)))), false);
+  check('ecran : hors de portee', stateLine(render(SC, { 'switch.tv': { state: 'unavailable', attributes: {} } })), 'Offline');
+  // The drawing.
+  check('ecran : allume, l image s allume', /\bscr-lit\b/.test(machineCls(render(SC, tv(142)))), true);
+  check('ecran : en veille, pas d image', /\bscr-lit\b/.test(machineCls(render(SC, tv(17)))), false);
+  check('ecran : en veille, aucune image dessinee', scImage(render(SC, tv(17))), null);
+  check('ecran : sur pieds par defaut', scLayout(render(SC, tv(142))), 'tv_feet');
+  for (const l of ['tv_feet', 'tv_stand', 'tv_wall', 'projector', 'computer'])
+    check(`ecran : modele ${l}`, scLayout(render({ ...SC, screen_layout: l }, tv(142))), l);
+  check('ecran : modele inconnu, sur pieds', scLayout(render({ ...SC, screen_layout: 'x' }, tv(142))), 'tv_feet');
+  check('ecran : sur pieds, deux pieds', (render(SC, tv(142)).match(/class="scr-foot /g) || []).length, 2);
+  check('ecran : mural, aucun pied', /class="scr-(foot|neck)/.test(render({ ...SC, screen_layout: 'tv_wall' }, tv(142))), false);
+  check('ecran : pied central', /class="scr-neck"[\s\S]*class="scr-base"/.test(render({ ...SC, screen_layout: 'tv_stand' }, tv(142))), true);
+  check('ecran : projecteur, le faisceau', /class="scr-beam"/.test(render({ ...SC, screen_layout: 'projector' }, tv(142))), true);
+  check('ecran : ordinateur, la tour', /class="scr-tower"/.test(render({ ...SC, screen_layout: 'computer' }, tv(142))), true);
+  contains('ecran : en veille, le temoin rouge', render(SC, tv(17)), '.machine.mode-standby .scr-led { background: #ff3b30;');
+  // The picture: fixed, or drawn at random each time the screen comes on.
+  check('ecran : image fixe', scImage(render({ ...SC, screen_image: 'pong' }, tv(142))), 'pong');
+  check('ecran : image inconnue, au hasard parmi celles de la tele',
+    ['sunset', 'aquarium', 'bars', 'football', 'space', 'bounce'].includes(scImage(render({ ...SC, screen_image: 'x' }, tv(142)))), true);
+  {
+    const realRandom = Math.random;
+    let k = 0;
+    Math.random = () => [0.05, 0.5, 0.95][k++ % 3];
+    const { card, html } = build(SC, tv(142));
+    const first = scImage(html);
+    check('ecran : au hasard, une image de tele', first, 'sunset');
+    check('ecran : la meme image tant qu il reste allume', scImage(rerender(card, tv(150))), first);
+    rerender(card, tv(17));
+    check('ecran : rallume, une autre image', scImage(rerender(card, tv(142))), 'football');
+    const pc = build({ ...SC, screen_layout: 'computer' }, tv(142)).html;
+    check('ecran : au hasard, l ordinateur a les siennes', ['desktop', 'code', 'pong'].includes(scImage(pc)), true);
+    Math.random = realRandom;
+  }
+  // The bouncing logo: its moves, its flash and its confetti share one delay,
+  // so it reaches the corner exactly when they go off.
+  {
+    const b = render({ ...SC, screen_image: 'bounce' }, tv(142));
+    const delays = [...b.matchAll(/class="(logo|flash|bit)"[^>]*animation-delay: calc\((-?[\d.]+)s/g)].map(m => m[2]);
+    check('ecran : logo, flash et confettis', delays.length, 9);
+    check('ecran : un seul decalage pour tous', new Set(delays).size, 1);
+    contains('ecran : le coin revient toutes les 118,9 s', b, 'scr-pop 118.9s linear infinite');
+    check('ecran : 4,1 s et 2,9 s se retrouvent en 118,9 s', Math.round(4.1 * 29 * 10) / 10 === 118.9 && Math.round(2.9 * 41 * 10) / 10 === 118.9, true);
+  }
+  // The players.
+  const lg = (state, a = {}) => ({ 'media_player.lg': { state, attributes: { friendly_name: 'LG TV', source: 'HDMI 1', ...a } } });
+  const atv = (state, a = {}) => ({ 'media_player.atv': { state, attributes: { friendly_name: 'Apple TV', app_name: 'Netflix', media_title: 'The Crown', ...a } } });
+  const MP = { ...SC, media_entity: 'media_player.lg', media2_entity: 'media_player.atv' };
+  const both = (w, l, a, aa) => ({ ...tv(w), ...lg(l), ...atv(a, aa) });
+  check('ecran : l apple tv joue', scMode(render(MP, both(142, 'on', 'playing'))), 'playing');
+  check('ecran : lecture se dit', stateLine(render(MP, both(142, 'on', 'playing'))), 'Playing');
+  contains('ecran : la ligne du lecteur qui joue', infoLine(render(MP, both(142, 'on', 'playing')), 'Apple TV'), 'Netflix');
+  contains('ecran : avec le titre', infoLine(render(MP, both(142, 'on', 'playing')), 'Apple TV'), 'Crown');
+  check('ecran : en pause', scMode(render(MP, both(142, 'on', 'paused'))), 'paused');
+  check('ecran : en pause se dit', stateLine(render({ ...MP, language: 'fr' }, both(142, 'on', 'paused'))), 'En pause');
+  contains('ecran : en pause, l image se fige', render(MP, both(142, 'on', 'paused')), '.machine.mode-paused .scr-pic * { animation-play-state: paused; }');
+  check('ecran : apple tv a l accueil, l accueil', scMode(render(MP, both(142, 'on', 'idle'))), 'home');
+  check('ecran : l accueil dessine', scImage(render(MP, both(142, 'on', 'idle'))), 'home');
+  check('ecran : la tele seule allumee', scMode(render(MP, both(142, 'on', 'off'))), 'on');
+  contains('ecran : la tele seule, sa source', infoLine(render(MP, both(142, 'on', 'off')), 'LG TV'), 'HDMI');
+  check('ecran : a egalite, l ordre de saisie', infoLine(render(MP, both(142, 'playing', 'playing')), 'LG TV') !== null, true);
+  check('ecran : son coupe', /\bmuted\b/.test(machineCls(render(MP, both(142, 'on', 'playing', { is_volume_muted: true })))), true);
+  contains('ecran : son coupe se lit', infoLine(render(MP, both(142, 'on', 'playing', { is_volume_muted: true })), 'Apple TV'), 'Muted');
+  check('ecran : la prise en veille passe avant le lecteur', scMode(render(MP, both(17, 'off', 'playing'))), 'standby');
+  check('ecran : en veille, pas de ligne de lecteur', infoLine(render(MP, both(17, 'off', 'playing')), 'Apple TV'), null);
+  {
+    const h = render(MP, both(142, 'on', 'playing', { entity_picture: '/api/media_player_proxy/media_player.atv?token=a&cache=b' }));
+    check('ecran : la jaquette a la place de l image', /<img class="scr-cover" src="\/api\/media_player_proxy\/media_player\.atv\?token=a&amp;cache=b"/.test(h), true);
+    check('ecran : la jaquette remplace l image au hasard', scImage(h), null);
+    check('ecran : pas de jaquette a l accueil', /<img class="scr-cover"/.test(render(MP, both(142, 'on', 'idle', { entity_picture: '/x.jpg' }))), false);
+    check('ecran : la jaquette est echappee', /<img src=x/.test(render(MP, both(142, 'on', 'playing', { entity_picture: '"><img src=x onerror=alert(1)>' }))), false);
+  }
+  // Without a plug: the players say it all.
+  const PO = { appliance_type: 'screen', media_entity: 'media_player.lg' };
+  check('ecran : sans prise, la tele eteinte', scMode(render(PO, lg('off'))), 'off');
+  check('ecran : sans prise, la tele allumee', scMode(render(PO, lg('on'))), 'on');
+  check('ecran : sans prise, la tele en veille', scMode(render(PO, lg('standby'))), 'standby');
+  check('ecran : sans prise, la tele joue', scMode(render(PO, lg('playing'))), 'playing');
+  check('ecran : la tele en entite d etat', scMode(render({ appliance_type: 'screen', state_entity: 'media_player.lg' }, lg('playing'))), 'playing');
+  check('ecran : sans entite d etat, une prise suffit', (() => { try { render({ appliance_type: 'screen', power_entity: 'sensor.tv_w' }, tv(0)); return true; } catch { return false; } })(), true);
+  check('ecran : sans rien, refuse', (() => { try { render({ appliance_type: 'screen' }, {}); return true; } catch { return false; } })(), false);
+  // A computer's session lock.
+  const PC = { ...SC, screen_layout: 'computer', lock_entity: 'sensor.lock' };
+  check('ecran : session verrouillee', scMode(render(PC, { ...tv(64), 'sensor.lock': { state: 'Locked', attributes: {} } })), 'locked');
+  check('ecran : verrouille se dit', stateLine(render({ ...PC, language: 'fr' }, { ...tv(64), 'sensor.lock': { state: 'Locked', attributes: {} } })), 'Verrouillé');
+  check('ecran : le cadenas', /class="scr-lock"/.test(render(PC, { ...tv(64), 'sensor.lock': { state: 'Locked', attributes: {} } })), true);
+  check('ecran : session ouverte', scMode(render(PC, { ...tv(64), 'sensor.lock': { state: 'Unlocked', attributes: {} } })), 'on');
+  const lk = (state) => ({ ...tv(64), 'binary_sensor.l': { state, attributes: { device_class: 'lock' } } });
+  check('ecran : capteur de verrou, off veut dire verrouille', scMode(render({ ...PC, lock_entity: 'binary_sensor.l' }, lk('off'))), 'locked');
+  check('ecran : capteur de verrou, on veut dire ouvert', scMode(render({ ...PC, lock_entity: 'binary_sensor.l' }, lk('on'))), 'on');
+  check('ecran : verrouille mais eteint reste eteint', scMode(render(PC, { ...tv(0), 'sensor.lock': { state: 'Locked', attributes: {} } })), 'off');
+  // The players are part of what is watched: a new title redraws the card.
+  {
+    const { card } = build(MP, both(142, 'on', 'playing'));
+    card.hass = HASS(both(142, 'on', 'playing'));
+    const before = card._lastSignature;
+    card.hass = HASS(both(142, 'on', 'playing', { media_title: 'Dune' }));
+    check('ecran : un nouveau titre se voit', card._lastSignature !== before, true);
+  }
+  // Detection.
+  const scType = (id, attrs = {}) => /class="machine [^"]*scr-/.test(render({ state_entity: id }, { [id]: { state: 'on', attributes: attrs } }));
+  for (const id of ['switch.tv_salon', 'switch.prise_tv', 'switch.television', 'switch.tele_salon', 'switch.fernseher', 'switch.videoprojecteur', 'switch.beamer', 'switch.ordinateur', 'switch.desktop_pc'])
+    check(`detection ecran : ${id}`, scType(id), true);
+  check('detection ecran : un media player qui se dit tele', scType('media_player.x', { device_class: 'tv' }), true);
+  check('detection ecran : une enceinte reste autre chose', scType('media_player.x', { device_class: 'speaker' }), false);
+  check('detection ecran : un lecteur designe un ecran', /scr-/.test(machineCls(render({ state_entity: 'switch.x', media_entity: 'media_player.lg' }, { 'switch.x': { state: 'on', attributes: {} }, ...lg('on') }))), true);
+  check('detection ecran : le nom dit projecteur', scLayout(render({ appliance_type: 'screen', state_entity: 'switch.videoprojecteur' }, { 'switch.videoprojecteur': { state: 'on', attributes: {} } })), 'projector');
+  check('detection ecran : le nom dit ordinateur', scLayout(render({ appliance_type: 'screen', state_entity: 'switch.pc_bureau' }, { 'switch.pc_bureau': { state: 'on', attributes: {} } })), 'computer');
+  check('detection ecran : un verrou dit ordinateur', scLayout(render(PC, { ...tv(64), 'sensor.lock': { state: 'Unlocked', attributes: {} } })), 'computer');
+  // Editor.
+  const ed = newEditor({ state_entity: 'switch.tv', appliance_type: 'screen', power_entity: 'sensor.tv_w' });
+  const em = markup(ed);
+  check('editeur ecran : dans la liste', /<option value="screen"/.test(em), true);
+  check('editeur ecran : le modele', /screen_layout/.test(em), true);
+  check('editeur ecran : l image', /screen_image/.test(em), true);
+  check('editeur ecran : au hasard en premier', /<option value="random"[^>]*>Random/.test(em), true);
+  for (const f of ['media_entity', 'media2_entity', 'media3_entity', 'lock_entity'])
+    check(`editeur ecran : ${f}`, em.includes(`data-toggle="${f}"`), true);
+  check('editeur ecran : le seuil de veille', em.includes('Standby up to this power (W)'), true);
+  check('editeur ecran : pas de delai de fin de cycle', em.includes('power_off_delay'), false);
+  check('editeur : pas de lecteur ailleurs', markup(newEditor({ state_entity: 'sensor.w', appliance_type: 'washer' })).includes('data-toggle="media_entity"'), false);
+}
+
+// =============================================================================
 // Air purifier and fan
 // =============================================================================
 

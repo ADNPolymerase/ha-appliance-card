@@ -10,7 +10,7 @@
 <a href="https://buymeacoffee.com/adnpolymerase" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-orange.png" alt="Buy Me A Coffee" height="60"></a>
 <a href="https://adnpolymerase.github.io/HA/" target="_blank"><img src="https://raw.githubusercontent.com/ADNPolymerase/HA/main/assets/site-button.svg" alt="Lien vers mon github.io pour mes autres projets" height="60"></a>
 
-Une card Lovelace pour les appareils de la maison : lave-linge, sèche-linge, lave-vaisselle, four, micro-ondes, hotte, plaque de cuisson, réfrigérateur, bouilloire, robot cuiseur, machine à café, cuiseur à riz, friteuse à air, chauffe-eau, chaudière, pompe à chaleur, imprimante 3D, distributeur de croquettes, fer à repasser, grille-pain, poêle à granulés, climatiseur, déshumidificateur, petit chauffage, sèche-serviettes, purificateur d'air, ventilateur et borne de recharge. Cycle en cours, programme, temps restant, température, alertes et commandes.
+Une card Lovelace pour les appareils de la maison : lave-linge, sèche-linge, lave-vaisselle, four, micro-ondes, hotte, plaque de cuisson, réfrigérateur, bouilloire, robot cuiseur, machine à café, cuiseur à riz, friteuse à air, chauffe-eau, chaudière, pompe à chaleur, imprimante 3D, distributeur de croquettes, fer à repasser, grille-pain, poêle à granulés, climatiseur, déshumidificateur, petit chauffage, sèche-serviettes, purificateur d'air, ventilateur, borne de recharge, télévision, vidéoprojecteur et ordinateur. Cycle en cours, programme, temps restant, température, alertes et commandes.
 
 Aucune marque supposée : chaque champ est une entité à choisir, elle fonctionne donc avec **n'importe quelle** intégration (Electrolux, Samsung, LG, Home Connect, Miele, une simple prise connectée…).
 
@@ -107,7 +107,7 @@ Seule `state_entity` est obligatoire, sauf sur un réfrigérateur où une sonde 
 | `compact` | `true` masque l'illustration. |
 | `illustration_color` | `auto` (défaut, suit le thème) \| `white` \| `grey` \| `black` \| `red` (rouge foncé). Ne change que la carrosserie, pas les couleurs d'état. |
 | `language` | `auto` (défaut, suit Home Assistant) ou l'un des 14 codes : `en`, `fr`, `de`, `es`, `it`, `nl`, `pt`, `sv`, `no`, `da`, `pl`, `ru`, `zh`, `cs`. `nb` et `nb-NO` donnent le norvégien. |
-| `appliance_type` | `auto` (défaut) \| `washer` \| `dryer` \| `dishwasher` \| `oven` \| `microwave` \| `hood` \| `cooktop` \| `fridge` \| `kettle` \| `cooker` \| `coffee` \| `rice_cooker` \| `air_fryer` \| `water_heater` \| `boiler` \| `heat_pump` \| `printer_3d` \| `pet_feeder` \| `pet_fountain` \| `iron` \| `toaster` \| `pellet_stove` \| `air_conditioner` \| `dehumidifier` \| `space_heater` \| `towel_warmer` \| `air_purifier` \| `fan` \| `ev_charger`. |
+| `appliance_type` | `auto` (défaut) \| `washer` \| `dryer` \| `dishwasher` \| `oven` \| `microwave` \| `hood` \| `cooktop` \| `fridge` \| `kettle` \| `cooker` \| `coffee` \| `rice_cooker` \| `air_fryer` \| `water_heater` \| `boiler` \| `heat_pump` \| `printer_3d` \| `pet_feeder` \| `pet_fountain` \| `iron` \| `toaster` \| `pellet_stove` \| `air_conditioner` \| `dehumidifier` \| `space_heater` \| `towel_warmer` \| `air_purifier` \| `fan` \| `ev_charger` \| `screen`. |
 | `tap_action` | Ce que fait un appui sur la carte, dans les mots de Home Assistant : `more-info` (défaut : l'entité d'état, ou sur une carte sans elle ce qu'elle lit à sa place), `none`, `navigate`, `url`, `toggle`, `perform-action` ou `fire-dom-event`, celle qu'écoutent les cartes popup bâties sur browser_mod. En YAML seulement. |
 | `toggle_entity` | Bouton marche/arrêt (`switch`, `button`, `script`, `input_boolean`, `fan`), mis en évidence quand c'est allumé. |
 | `power_entity` / `power_on_threshold` / `power_icon` | Capteur de puissance. Avec un seuil, l'état en est déduit : *en marche* au-dessus, puis *terminé* en redescendant. Pointer `state_entity` sur ce même capteur l'active avec un seuil de 10 W. `power_icon` remplace `mdi:power-plug`. |
@@ -178,6 +178,10 @@ Seule `state_entity` est obligatoire, sauf sur un réfrigérateur où une sonde 
 | `printed_part` | imprimante 3D | La pièce sur le plateau : `cube` (défaut), `pyramid` (pyramide) ou `duck` (un canard en plastique). Elle apparaît de bas en haut au fil de l'impression. |
 | `iron_layout` | fer | `iron` (défaut, le fer seul) \| `generator` (le même fer sur le socle d'une centrale vapeur). |
 | `toaster_layout` | grille-pain | `two` (défaut, deux fentes) \| `four` (quatre fentes, deux leviers) \| `long` (une fente longue pour deux tranches bout à bout). |
+| `screen_layout` | écran | `tv_feet` (défaut, télévision sur deux pieds) \| `tv_stand` (télévision sur pied central) \| `tv_wall` (télévision murale) \| `projector` (vidéoprojecteur sous sa toile) \| `computer` (écran et tour). Sans réglage, un nom qui dit projecteur ou ordinateur choisit le modèle, tout comme un `lock_entity`. |
+| `screen_image` | écran | L'image d'un écran allumé : `random` (défaut, une nouvelle à chaque allumage) ou l'une de `sunset`, `aquarium`, `bars`, `football`, `space`, `bounce`, `desktop`, `code`, `pong`. Un lecteur qui fournit une jaquette l'affiche à la place pendant la lecture. |
+| `media_entity` / `media2_entity` / `media3_entity` | écran | Jusqu'à trois `media_player` qui affichent quelque chose sur cet écran : la télé elle-même, et le boîtier ou la console qui a vraiment l'image. La card suit celui qui joue, puis celui en pause, puis celui à l'accueil, puis celui allumé ; à égalité, le premier. Sa ligne le nomme et donne l'application ou la source, le titre et *Son coupé*. Sans mesure de puissance, les lecteurs disent aussi si l'écran est éteint, en veille ou allumé. |
+| `lock_entity` | écran | Le verrouillage de session d'un ordinateur : un `lock`, un `binary_sensor` de classe verrou (off veut dire verrouillé) ou un capteur qui vaut `locked`, comme les remontent HASS.Agent, Go Hass Agent ou l'app macOS. Verrouillé, l'écran montre un cadenas. |
 | `left_on_after` | fer | Minutes allumé au bout desquelles la ligne d'état affiche *Resté allumé*, en rouge. Vide, cela n'arrive jamais. |
 | `feeder_layout` | distributeur | `tower` (défaut, un réservoir carré sur son socle) \| `canister` (un réservoir rond sur un socle rond) \| `double` (deux sorties et deux gamelles) \| `dual_split` (deux réservoirs au-dessus d'une gamelle partagée par le milieu) \| `rotary` (des assiettes sur un plateau tournant sous un couvercle, pour la pâtée). |
 | `level_b_entity` | distributeur | Le niveau du second réservoir, sur un distributeur qui en a deux (`dual_split`), lu comme `level_entity` et avec les mêmes `level_empty_below` et `level_max`. Il remplit la fenêtre de droite, a sa propre ligne, et vide il fait passer l'état à *Réservoir vide* en ne vidant que sa moitié. Au repos, la ligne d'état donne le plus bas des deux niveaux, celui à remplir en premier. L'éditeur ne le propose que pour `dual_split`. |
@@ -402,6 +406,24 @@ toaster_layout: four
 state_entity: switch.prise_grille_pain
 power_entity: sensor.prise_grille_pain_puissance
 power_on_threshold: 30
+```
+
+</details>
+
+<details>
+<summary><b>Écrans : télévision, vidéoprojecteur, ordinateur</b></summary>
+
+Lu sur sa prise connectée : *Éteint* à 0 W (un demi-watt compte encore pour rien), *En veille* jusqu'à `power_on_threshold` (20 W par défaut), *Allumé* au-dessus. En veille, le témoin s'allume et la ligne de puissance dit ce que coûte la veille ; allumé, l'écran montre une image tirée au hasard, ou celle choisie dans `screen_image`. Ajoutez les lecteurs qui affichent quelque chose dessus, et la card dit *Lecture*, *En pause* ou *Accueil*, avec l'application et le titre. Cinq modèles : télévision sur pieds, sur pied central ou murale, vidéoprojecteur, ordinateur. Regardez le logo qui rebondit assez longtemps, il finit par tomber dans un coin.
+
+```yaml
+type: custom:ha-appliance-card
+appliance_type: screen
+screen_layout: tv_wall
+state_entity: switch.prise_tv
+power_entity: sensor.prise_tv_power
+power_on_threshold: 30
+media_entity: media_player.lg_tv
+media2_entity: media_player.apple_tv
 ```
 
 </details>

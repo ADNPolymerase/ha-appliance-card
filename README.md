@@ -10,7 +10,7 @@
 <a href="https://buymeacoffee.com/adnpolymerase" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-orange.png" alt="Buy Me A Coffee" height="60"></a>
 <a href="https://adnpolymerase.github.io/HA/" target="_blank"><img src="https://raw.githubusercontent.com/ADNPolymerase/HA/main/assets/site-button.svg" alt="Link to my github.io for my other projects" height="60"></a>
 
-A Lovelace card for household appliances: washers, dryers, dishwashers, ovens, microwaves, cooker hoods, cooktops, fridges, kettles, cookers, coffee machines, rice cookers, air fryers, water heaters, boilers, heat pumps, 3D printers, pet feeders, irons, toasters, pellet stoves, air conditioners, dehumidifiers, space heaters, towel warmers, air purifiers, fans and EV chargers. Cycle in progress, program, remaining time, temperature, alerts and controls.
+A Lovelace card for household appliances: washers, dryers, dishwashers, ovens, microwaves, cooker hoods, cooktops, fridges, kettles, cookers, coffee machines, rice cookers, air fryers, water heaters, boilers, heat pumps, 3D printers, pet feeders, irons, toasters, pellet stoves, air conditioners, dehumidifiers, space heaters, towel warmers, air purifiers, fans, EV chargers, TVs, projectors and computers. Cycle in progress, program, remaining time, temperature, alerts and controls.
 
 No brand assumed: every field is an entity you pick, so it works with **any** integration (Electrolux, Samsung, LG, Home Connect, Miele, a plain smart plug…).
 
@@ -107,7 +107,7 @@ Only `state_entity` is required, except on a fridge where a probe or a door cont
 | `compact` | `true` hides the illustration. |
 | `illustration_color` | `auto` (default, follows the theme) \| `white` \| `grey` \| `black` \| `red` (dark red). Only changes the casing, not the state colours. |
 | `language` | `auto` (default, follows Home Assistant) or one of the 14 codes: `en`, `fr`, `de`, `es`, `it`, `nl`, `pt`, `sv`, `no`, `da`, `pl`, `ru`, `zh`, `cs`. `nb` and `nb-NO` give Norwegian. |
-| `appliance_type` | `auto` (default) \| `washer` \| `dryer` \| `dishwasher` \| `oven` \| `microwave` \| `hood` \| `cooktop` \| `fridge` \| `kettle` \| `cooker` \| `coffee` \| `rice_cooker` \| `air_fryer` \| `water_heater` \| `boiler` \| `heat_pump` \| `printer_3d` \| `pet_feeder` \| `pet_fountain` \| `iron` \| `toaster` \| `pellet_stove` \| `air_conditioner` \| `dehumidifier` \| `space_heater` \| `towel_warmer` \| `air_purifier` \| `fan` \| `ev_charger`. |
+| `appliance_type` | `auto` (default) \| `washer` \| `dryer` \| `dishwasher` \| `oven` \| `microwave` \| `hood` \| `cooktop` \| `fridge` \| `kettle` \| `cooker` \| `coffee` \| `rice_cooker` \| `air_fryer` \| `water_heater` \| `boiler` \| `heat_pump` \| `printer_3d` \| `pet_feeder` \| `pet_fountain` \| `iron` \| `toaster` \| `pellet_stove` \| `air_conditioner` \| `dehumidifier` \| `space_heater` \| `towel_warmer` \| `air_purifier` \| `fan` \| `ev_charger` \| `screen`. |
 | `tap_action` | What a tap on the card does, in Home Assistant's own words: `more-info` (default: the state entity, or on a card without one what it reads in its place), `none`, `navigate`, `url`, `toggle`, `perform-action` or `fire-dom-event`, which is what the popup cards built on browser_mod listen for. In YAML only. |
 | `toggle_entity` | Power button (`switch`, `button`, `script`, `input_boolean`, `fan`), highlighted while on. |
 | `power_entity` / `power_on_threshold` / `power_icon` | Power sensor. With a threshold, the state is derived from it: *running* above, then *finished* when it falls back. Pointing `state_entity` at the same sensor enables it with a 10 W threshold. `power_icon` replaces `mdi:power-plug`. |
@@ -178,6 +178,10 @@ Only `state_entity` is required, except on a fridge where a probe or a door cont
 | `printed_part` | 3D printer | The part on the bed: `cube` (default), `pyramid` or `duck` (a rubber duck). It shows from the bottom up as it prints. |
 | `iron_layout` | iron | `iron` (default, the iron alone) \| `generator` (the same iron on the base of a steam generator). |
 | `toaster_layout` | toaster | `two` (default, two slots) \| `four` (four slots, two levers) \| `long` (one long slot for two slices end to end). |
+| `screen_layout` | screen | `tv_feet` (default, a TV on two feet) \| `tv_stand` (a TV on a central stand) \| `tv_wall` (a wall-mounted TV) \| `projector` (a projector under its screen) \| `computer` (a monitor and its tower). Left out, a name that says projector or computer picks the model, and so does a `lock_entity`. |
+| `screen_image` | screen | The picture a lit screen shows: `random` (default, a new one each time it comes on) or one of `sunset`, `aquarium`, `bars`, `football`, `space`, `bounce`, `desktop`, `code`, `pong`. A player that sends a cover shows it instead while it plays. |
+| `media_entity` / `media2_entity` / `media3_entity` | screen | Up to three `media_player` entities that show something on this screen: the TV itself, and the box or console that actually has the picture. The card follows the one that plays, then the one paused, then the one on its home screen, then the one on; on a tie, the first. Its line names it and gives the app or source, the title, and *Muted*. Without a power meter, the players also say whether the screen is off, on standby or on. |
+| `lock_entity` | screen | A computer's session lock: a `lock`, a `binary_sensor` of the lock class (off means locked) or a sensor that reads `locked`, as HASS.Agent, Go Hass Agent or the macOS app report it. Locked, the screen shows a padlock. |
 | `left_on_after` | iron | Minutes switched on after which the state line reads *Left on*, in red. Empty, it never does. |
 | `feeder_layout` | pet feeder | `tower` (default, a square tank on its base) \| `canister` (a round tank on a round base) \| `double` (two outlets and two bowls) \| `dual_split` (two hoppers over one bowl split down the middle) \| `rotary` (plates on a turntable under a lid, for wet food). |
 | `level_b_entity` | pet feeder | The second hopper's level, on a feeder with two (`dual_split`), read like `level_entity` and against the same `level_empty_below` and `level_max`. It fills the right-hand window, gets its own line, and empty it turns the state to *Tank empty* and leaves only its own half bare. At rest the state line shows the lower of the two levels, the hopper to refill first. The editor offers it only for `dual_split`. |
@@ -402,6 +406,24 @@ toaster_layout: four
 state_entity: switch.toaster_plug
 power_entity: sensor.toaster_plug_power
 power_on_threshold: 30
+```
+
+</details>
+
+<details>
+<summary><b>Screens: TVs, projectors and computers</b></summary>
+
+Read from its smart plug: *Off* at 0 W (half a watt still counts as nothing), *Standby* up to `power_on_threshold` (20 W by default), *On* above it. On standby the light glows and the power line says what the standby costs; on, the screen shows a picture drawn at random, or the one set in `screen_image`. Add the players that show something on it and the card says *Playing*, *Paused* or *Home screen*, with the app and the title. Five models: a TV on feet, on a stand or on the wall, a projector, a computer. Watch the bouncing logo long enough and it lands in a corner.
+
+```yaml
+type: custom:ha-appliance-card
+appliance_type: screen
+screen_layout: tv_wall
+state_entity: switch.tv_plug
+power_entity: sensor.tv_plug_power
+power_on_threshold: 30
+media_entity: media_player.lg_tv
+media2_entity: media_player.apple_tv
 ```
 
 </details>

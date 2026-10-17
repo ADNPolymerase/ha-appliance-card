@@ -1,4 +1,4 @@
-const CARD_VERSION = "2.25.0";
+const CARD_VERSION = "2.26.0";
 
 console.info(
   "%c HA-APPLIANCE-CARD %c v" + CARD_VERSION + " ",
@@ -140,6 +140,7 @@ const T = {
     type_iron: "Iron", section_iron_layout: "Model", layout_iron: "Iron", layout_generator: "Steam generator",
     type_toaster: "Toaster", section_toaster_layout: "Model", layout_toaster_two: "Two slots", layout_toaster_four: "Four slots",
     layout_toaster_long: "Long slot", toaster_toasting: "Toasting", toaster_done: "Toast ready", type_air_purifier: "Air purifier",
+    type_screen: "Screen", section_screen_layout: "Model", layout_tv_feet: "TV on feet", layout_tv_stand: "TV on a stand", layout_tv_wall: "Wall-mounted TV", layout_projector: "Projector", layout_computer: "Computer", section_screen_image: "Picture on screen", img_random: "Random", img_sunset: "Sunset", img_aquarium: "Aquarium", img_bars: "Test card", img_football: "Football match", img_space: "Space", img_bounce: "Bouncing logo", img_desktop: "Desktop", img_code: "Scrolling code", img_pong: "Pong", screen_on: "On", screen_playing: "Playing", screen_home: "Home screen", screen_locked: "Locked", screen_muted: "Muted", screen_standby_threshold: "Standby up to this power (W)", section_media: "Media player", section_media2: "Second media player", section_media3: "Third media player", section_lock: "Session lock",
     section_purifier_layout: "Model", layout_purifier_cylinder: "Cylinder", layout_purifier_box: "Square box", layout_purifier_ring: "Bladeless ring",
     pf_purifying: "Purifying", pf_auto: "Auto", pf_night: "Night mode", section_air_quality: "Air quality",
     section_screen: "Screen", section_heater: "Heating (thermostat)", aq_good: "Good", aq_fair: "Fair",
@@ -290,6 +291,7 @@ const T = {
     type_iron: "Fer \u00e0 repasser", section_iron_layout: "Mod\u00e8le", layout_iron: "Fer seul", layout_generator: "Centrale vapeur",
     type_toaster: "Grille-pain", section_toaster_layout: "Mod\u00e8le", layout_toaster_two: "Deux fentes", layout_toaster_four: "Quatre fentes",
     layout_toaster_long: "Fente longue", toaster_toasting: "Grillage", toaster_done: "Pr\u00eat", type_air_purifier: "Purificateur d'air",
+    type_screen: "\u00c9cran", section_screen_layout: "Mod\u00e8le", layout_tv_feet: "T\u00e9l\u00e9vision sur pieds", layout_tv_stand: "T\u00e9l\u00e9vision sur pied central", layout_tv_wall: "T\u00e9l\u00e9vision murale", layout_projector: "Vid\u00e9oprojecteur", layout_computer: "Ordinateur", section_screen_image: "Image \u00e0 l'\u00e9cran", img_random: "Au hasard", img_sunset: "Coucher de soleil", img_aquarium: "Aquarium", img_bars: "Mire", img_football: "Match de foot", img_space: "Espace", img_bounce: "Logo qui rebondit", img_desktop: "Bureau", img_code: "Code qui d\u00e9file", img_pong: "Pong", screen_on: "Allum\u00e9", screen_playing: "Lecture", screen_home: "Accueil", screen_locked: "Verrouill\u00e9", screen_muted: "Son coup\u00e9", screen_standby_threshold: "En veille jusqu'\u00e0 cette puissance (W)", section_media: "Lecteur multim\u00e9dia", section_media2: "Deuxi\u00e8me lecteur", section_media3: "Troisi\u00e8me lecteur", section_lock: "Verrouillage de session",
     section_purifier_layout: "Mod\u00e8le", layout_purifier_cylinder: "Cylindre", layout_purifier_box: "Bo\u00eetier carr\u00e9", layout_purifier_ring: "Anneau sans pales",
     pf_purifying: "Purification", pf_auto: "Auto", pf_night: "Mode nuit", section_air_quality: "Qualit\u00e9 de l'air",
     section_screen: "\u00c9cran", section_heater: "Chauffage (thermostat)", aq_good: "Bonne", aq_fair: "Moyenne",
@@ -440,6 +442,7 @@ const T = {
     type_iron: "\u0423\u0442\u044e\u0433", section_iron_layout: "\u041c\u043e\u0434\u0435\u043b\u044c", layout_iron: "\u0423\u0442\u044e\u0433", layout_generator: "\u041f\u0430\u0440\u043e\u0433\u0435\u043d\u0435\u0440\u0430\u0442\u043e\u0440",
     type_toaster: "\u0422\u043e\u0441\u0442\u0435\u0440", section_toaster_layout: "\u041c\u043e\u0434\u0435\u043b\u044c", layout_toaster_two: "\u0414\u0432\u0430 \u0441\u043b\u043e\u0442\u0430", layout_toaster_four: "\u0427\u0435\u0442\u044b\u0440\u0435 \u0441\u043b\u043e\u0442\u0430",
     layout_toaster_long: "\u0414\u043b\u0438\u043d\u043d\u044b\u0439 \u0441\u043b\u043e\u0442", toaster_toasting: "\u041f\u043e\u0434\u0436\u0430\u0440\u0438\u0432\u0430\u043d\u0438\u0435", toaster_done: "\u0413\u043e\u0442\u043e\u0432\u043e", type_air_purifier: "\u041e\u0447\u0438\u0441\u0442\u0438\u0442\u0435\u043b\u044c \u0432\u043e\u0437\u0434\u0443\u0445\u0430",
+    type_screen: "\u042d\u043a\u0440\u0430\u043d", section_screen_layout: "\u041c\u043e\u0434\u0435\u043b\u044c", layout_tv_feet: "\u0422\u0435\u043b\u0435\u0432\u0438\u0437\u043e\u0440 \u043d\u0430 \u043d\u043e\u0436\u043a\u0430\u0445", layout_tv_stand: "\u0422\u0435\u043b\u0435\u0432\u0438\u0437\u043e\u0440 \u043d\u0430 \u043f\u043e\u0434\u0441\u0442\u0430\u0432\u043a\u0435", layout_tv_wall: "\u041d\u0430\u0441\u0442\u0435\u043d\u043d\u044b\u0439 \u0442\u0435\u043b\u0435\u0432\u0438\u0437\u043e\u0440", layout_projector: "\u041f\u0440\u043e\u0435\u043a\u0442\u043e\u0440", layout_computer: "\u041a\u043e\u043c\u043f\u044c\u044e\u0442\u0435\u0440", section_screen_image: "\u0418\u0437\u043e\u0431\u0440\u0430\u0436\u0435\u043d\u0438\u0435 \u043d\u0430 \u044d\u043a\u0440\u0430\u043d\u0435", img_random: "\u0421\u043b\u0443\u0447\u0430\u0439\u043d\u043e\u0435", img_sunset: "\u0417\u0430\u043a\u0430\u0442", img_aquarium: "\u0410\u043a\u0432\u0430\u0440\u0438\u0443\u043c", img_bars: "\u0418\u0441\u043f\u044b\u0442\u0430\u0442\u0435\u043b\u044c\u043d\u0430\u044f \u0442\u0430\u0431\u043b\u0438\u0446\u0430", img_football: "\u0424\u0443\u0442\u0431\u043e\u043b\u044c\u043d\u044b\u0439 \u043c\u0430\u0442\u0447", img_space: "\u041a\u043e\u0441\u043c\u043e\u0441", img_bounce: "\u041f\u0440\u044b\u0433\u0430\u044e\u0449\u0438\u0439 \u043b\u043e\u0433\u043e\u0442\u0438\u043f", img_desktop: "\u0420\u0430\u0431\u043e\u0447\u0438\u0439 \u0441\u0442\u043e\u043b", img_code: "\u0411\u0435\u0433\u0443\u0449\u0438\u0439 \u043a\u043e\u0434", img_pong: "\u041f\u043e\u043d\u0433", screen_on: "\u0412\u043a\u043b\u044e\u0447\u0451\u043d", screen_playing: "\u0412\u043e\u0441\u043f\u0440\u043e\u0438\u0437\u0432\u0435\u0434\u0435\u043d\u0438\u0435", screen_home: "\u0413\u043b\u0430\u0432\u043d\u044b\u0439 \u044d\u043a\u0440\u0430\u043d", screen_locked: "\u0417\u0430\u0431\u043b\u043e\u043a\u0438\u0440\u043e\u0432\u0430\u043d", screen_muted: "\u0411\u0435\u0437 \u0437\u0432\u0443\u043a\u0430", screen_standby_threshold: "\u0420\u0435\u0436\u0438\u043c \u043e\u0436\u0438\u0434\u0430\u043d\u0438\u044f \u0434\u043e \u044d\u0442\u043e\u0439 \u043c\u043e\u0449\u043d\u043e\u0441\u0442\u0438 (\u0412\u0442)", section_media: "\u041c\u0435\u0434\u0438\u0430\u043f\u043b\u0435\u0435\u0440", section_media2: "\u0412\u0442\u043e\u0440\u043e\u0439 \u043c\u0435\u0434\u0438\u0430\u043f\u043b\u0435\u0435\u0440", section_media3: "\u0422\u0440\u0435\u0442\u0438\u0439 \u043c\u0435\u0434\u0438\u0430\u043f\u043b\u0435\u0435\u0440", section_lock: "\u0411\u043b\u043e\u043a\u0438\u0440\u043e\u0432\u043a\u0430 \u0441\u0435\u0430\u043d\u0441\u0430",
     section_purifier_layout: "\u041c\u043e\u0434\u0435\u043b\u044c", layout_purifier_cylinder: "\u0426\u0438\u043b\u0438\u043d\u0434\u0440", layout_purifier_box: "\u041a\u0432\u0430\u0434\u0440\u0430\u0442\u043d\u044b\u0439 \u043a\u043e\u0440\u043f\u0443\u0441", layout_purifier_ring: "\u0411\u0435\u0437\u043b\u043e\u043f\u0430\u0441\u0442\u043d\u043e\u0435 \u043a\u043e\u043b\u044c\u0446\u043e",
     pf_purifying: "\u041e\u0447\u0438\u0441\u0442\u043a\u0430", pf_auto: "\u0410\u0432\u0442\u043e", pf_night: "\u041d\u043e\u0447\u043d\u043e\u0439 \u0440\u0435\u0436\u0438\u043c", section_air_quality: "\u041a\u0430\u0447\u0435\u0441\u0442\u0432\u043e \u0432\u043e\u0437\u0434\u0443\u0445\u0430",
     section_screen: "\u042d\u043a\u0440\u0430\u043d", section_heater: "\u041e\u0431\u043e\u0433\u0440\u0435\u0432 (\u0442\u0435\u0440\u043c\u043e\u0441\u0442\u0430\u0442)", aq_good: "\u0425\u043e\u0440\u043e\u0448\u0435\u0435", aq_fair: "\u0423\u0434\u043e\u0432\u043b\u0435\u0442\u0432\u043e\u0440\u0438\u0442\u0435\u043b\u044c\u043d\u043e\u0435",
@@ -590,6 +593,7 @@ const T = {
     type_iron: "B\u00fcgeleisen", section_iron_layout: "Modell", layout_iron: "B\u00fcgeleisen", layout_generator: "Dampfstation",
     type_toaster: "Toaster", section_toaster_layout: "Modell", layout_toaster_two: "Zwei Schlitze", layout_toaster_four: "Vier Schlitze",
     layout_toaster_long: "Langschlitz", toaster_toasting: "Toastet", toaster_done: "Fertig", type_air_purifier: "Luftreiniger",
+    type_screen: "Bildschirm", section_screen_layout: "Modell", layout_tv_feet: "Fernseher auf F\u00fc\u00dfen", layout_tv_stand: "Fernseher mit Standfu\u00df", layout_tv_wall: "Wandfernseher", layout_projector: "Beamer", layout_computer: "Computer", section_screen_image: "Bild auf dem Bildschirm", img_random: "Zuf\u00e4llig", img_sunset: "Sonnenuntergang", img_aquarium: "Aquarium", img_bars: "Testbild", img_football: "Fu\u00dfballspiel", img_space: "Weltall", img_bounce: "H\u00fcpfendes Logo", img_desktop: "Desktop", img_code: "Scrollender Code", img_pong: "Pong", screen_on: "Ein", screen_playing: "Wiedergabe", screen_home: "Startbildschirm", screen_locked: "Gesperrt", screen_muted: "Stumm", screen_standby_threshold: "Standby bis zu dieser Leistung (W)", section_media: "Mediaplayer", section_media2: "Zweiter Mediaplayer", section_media3: "Dritter Mediaplayer", section_lock: "Sitzungssperre",
     section_purifier_layout: "Modell", layout_purifier_cylinder: "Zylinder", layout_purifier_box: "Quaderform", layout_purifier_ring: "Rotorloser Ring",
     pf_purifying: "Reinigt", pf_auto: "Auto", pf_night: "Nachtmodus", section_air_quality: "Luftqualit\u00e4t",
     section_screen: "Anzeige", section_heater: "Heizung (Thermostat)", aq_good: "Gut", aq_fair: "M\u00e4\u00dfig",
@@ -740,6 +744,7 @@ const T = {
     type_iron: "Plancha", section_iron_layout: "Modelo", layout_iron: "Plancha", layout_generator: "Centro de planchado",
     type_toaster: "Tostadora", section_toaster_layout: "Modelo", layout_toaster_two: "Dos ranuras", layout_toaster_four: "Cuatro ranuras",
     layout_toaster_long: "Ranura larga", toaster_toasting: "Tostando", toaster_done: "Listo", type_air_purifier: "Purificador de aire",
+    type_screen: "Pantalla", section_screen_layout: "Modelo", layout_tv_feet: "Televisor con patas", layout_tv_stand: "Televisor con pie central", layout_tv_wall: "Televisor de pared", layout_projector: "Proyector", layout_computer: "Ordenador", section_screen_image: "Imagen en pantalla", img_random: "Aleatoria", img_sunset: "Puesta de sol", img_aquarium: "Acuario", img_bars: "Carta de ajuste", img_football: "Partido de f\u00fatbol", img_space: "Espacio", img_bounce: "Logo que rebota", img_desktop: "Escritorio", img_code: "C\u00f3digo en movimiento", img_pong: "Pong", screen_on: "Encendido", screen_playing: "Reproduciendo", screen_home: "Pantalla de inicio", screen_locked: "Bloqueado", screen_muted: "Silenciado", screen_standby_threshold: "En espera hasta esta potencia (W)", section_media: "Reproductor multimedia", section_media2: "Segundo reproductor", section_media3: "Tercer reproductor", section_lock: "Bloqueo de sesi\u00f3n",
     section_purifier_layout: "Modelo", layout_purifier_cylinder: "Cilindro", layout_purifier_box: "Caja cuadrada", layout_purifier_ring: "Anillo sin aspas",
     pf_purifying: "Purificando", pf_auto: "Auto", pf_night: "Modo nocturno", section_air_quality: "Calidad del aire",
     section_screen: "Pantalla", section_heater: "Calefacci\u00f3n (termostato)", aq_good: "Buena", aq_fair: "Aceptable",
@@ -890,6 +895,7 @@ const T = {
     type_iron: "Ferro da stiro", section_iron_layout: "Modello", layout_iron: "Ferro da stiro", layout_generator: "Ferro con caldaia",
     type_toaster: "Tostapane", section_toaster_layout: "Modello", layout_toaster_two: "Due fessure", layout_toaster_four: "Quattro fessure",
     layout_toaster_long: "Fessura lunga", toaster_toasting: "Tostatura", toaster_done: "Pronto", type_air_purifier: "Purificatore d'aria",
+    type_screen: "Schermo", section_screen_layout: "Modello", layout_tv_feet: "TV con piedini", layout_tv_stand: "TV con piedistallo", layout_tv_wall: "TV a parete", layout_projector: "Proiettore", layout_computer: "Computer", section_screen_image: "Immagine sullo schermo", img_random: "Casuale", img_sunset: "Tramonto", img_aquarium: "Acquario", img_bars: "Monoscopio", img_football: "Partita di calcio", img_space: "Spazio", img_bounce: "Logo che rimbalza", img_desktop: "Desktop", img_code: "Codice che scorre", img_pong: "Pong", screen_on: "Acceso", screen_playing: "In riproduzione", screen_home: "Schermata iniziale", screen_locked: "Bloccato", screen_muted: "Audio disattivato", screen_standby_threshold: "In standby fino a questa potenza (W)", section_media: "Lettore multimediale", section_media2: "Secondo lettore", section_media3: "Terzo lettore", section_lock: "Blocco sessione",
     section_purifier_layout: "Modello", layout_purifier_cylinder: "Cilindro", layout_purifier_box: "Scatola quadrata", layout_purifier_ring: "Anello senza pale",
     pf_purifying: "Purificazione", pf_auto: "Auto", pf_night: "Modalit\u00e0 notte", section_air_quality: "Qualit\u00e0 dell'aria",
     section_screen: "Display", section_heater: "Riscaldamento (termostato)", aq_good: "Buona", aq_fair: "Discreta",
@@ -1040,6 +1046,7 @@ const T = {
     type_iron: "Strijkijzer", section_iron_layout: "Model", layout_iron: "Strijkijzer", layout_generator: "Stoomgenerator",
     type_toaster: "Broodrooster", section_toaster_layout: "Model", layout_toaster_two: "Twee sleuven", layout_toaster_four: "Vier sleuven",
     layout_toaster_long: "Lange sleuf", toaster_toasting: "Roostert", toaster_done: "Klaar", type_air_purifier: "Luchtreiniger",
+    type_screen: "Scherm", section_screen_layout: "Model", layout_tv_feet: "Tv op pootjes", layout_tv_stand: "Tv op voet", layout_tv_wall: "Tv aan de muur", layout_projector: "Projector", layout_computer: "Computer", section_screen_image: "Beeld op het scherm", img_random: "Willekeurig", img_sunset: "Zonsondergang", img_aquarium: "Aquarium", img_bars: "Testbeeld", img_football: "Voetbalwedstrijd", img_space: "Ruimte", img_bounce: "Stuiterend logo", img_desktop: "Bureaublad", img_code: "Scrollende code", img_pong: "Pong", screen_on: "Aan", screen_playing: "Speelt af", screen_home: "Startscherm", screen_locked: "Vergrendeld", screen_muted: "Gedempt", screen_standby_threshold: "Stand-by tot dit vermogen (W)", section_media: "Mediaspeler", section_media2: "Tweede mediaspeler", section_media3: "Derde mediaspeler", section_lock: "Sessievergrendeling",
     section_purifier_layout: "Model", layout_purifier_cylinder: "Cilinder", layout_purifier_box: "Vierkante kast", layout_purifier_ring: "Bladloze ring",
     pf_purifying: "Zuivert", pf_auto: "Auto", pf_night: "Nachtmodus", section_air_quality: "Luchtkwaliteit",
     section_screen: "Scherm", section_heater: "Verwarming (thermostaat)", aq_good: "Goed", aq_fair: "Matig",
@@ -1190,6 +1197,7 @@ const T = {
     type_iron: "Ferro de engomar", section_iron_layout: "Modelo", layout_iron: "Ferro de engomar", layout_generator: "Gerador de vapor",
     type_toaster: "Torradeira", section_toaster_layout: "Modelo", layout_toaster_two: "Duas ranhuras", layout_toaster_four: "Quatro ranhuras",
     layout_toaster_long: "Ranhura longa", toaster_toasting: "A torrar", toaster_done: "Pronto", type_air_purifier: "Purificador de ar",
+    type_screen: "Ecr\u00e3", section_screen_layout: "Modelo", layout_tv_feet: "TV com p\u00e9s", layout_tv_stand: "TV com base central", layout_tv_wall: "TV de parede", layout_projector: "Projetor", layout_computer: "Computador", section_screen_image: "Imagem no ecr\u00e3", img_random: "Aleat\u00f3ria", img_sunset: "P\u00f4r do sol", img_aquarium: "Aqu\u00e1rio", img_bars: "Padr\u00e3o de teste", img_football: "Jogo de futebol", img_space: "Espa\u00e7o", img_bounce: "Log\u00f3tipo a saltar", img_desktop: "Ambiente de trabalho", img_code: "C\u00f3digo a deslizar", img_pong: "Pong", screen_on: "Ligado", screen_playing: "A reproduzir", screen_home: "Ecr\u00e3 inicial", screen_locked: "Bloqueado", screen_muted: "Sem som", screen_standby_threshold: "Em espera at\u00e9 esta pot\u00eancia (W)", section_media: "Leitor multim\u00e9dia", section_media2: "Segundo leitor", section_media3: "Terceiro leitor", section_lock: "Bloqueio de sess\u00e3o",
     section_purifier_layout: "Modelo", layout_purifier_cylinder: "Cilindro", layout_purifier_box: "Caixa quadrada", layout_purifier_ring: "Anel sem p\u00e1s",
     pf_purifying: "A purificar", pf_auto: "Auto", pf_night: "Modo noturno", section_air_quality: "Qualidade do ar",
     section_screen: "Ecr\u00e3", section_heater: "Aquecimento (term\u00f3stato)", aq_good: "Boa", aq_fair: "Razo\u00e1vel",
@@ -1340,6 +1348,7 @@ const T = {
     type_iron: "Strykj\u00e4rn", section_iron_layout: "Modell", layout_iron: "Strykj\u00e4rn", layout_generator: "\u00c5ngstation",
     type_toaster: "Br\u00f6drost", section_toaster_layout: "Modell", layout_toaster_two: "Tv\u00e5 fack", layout_toaster_four: "Fyra fack",
     layout_toaster_long: "L\u00e5ngt fack", toaster_toasting: "Rostar", toaster_done: "Klart", type_air_purifier: "Luftrenare",
+    type_screen: "Sk\u00e4rm", section_screen_layout: "Modell", layout_tv_feet: "Tv p\u00e5 f\u00f6tter", layout_tv_stand: "Tv p\u00e5 fot", layout_tv_wall: "V\u00e4ggmonterad tv", layout_projector: "Projektor", layout_computer: "Dator", section_screen_image: "Bild p\u00e5 sk\u00e4rmen", img_random: "Slumpm\u00e4ssig", img_sunset: "Solnedg\u00e5ng", img_aquarium: "Akvarium", img_bars: "Testbild", img_football: "Fotbollsmatch", img_space: "Rymden", img_bounce: "Studsande logga", img_desktop: "Skrivbord", img_code: "Rullande kod", img_pong: "Pong", screen_on: "P\u00e5", screen_playing: "Spelar", screen_home: "Startsk\u00e4rm", screen_locked: "L\u00e5st", screen_muted: "Ljud av", screen_standby_threshold: "Standby upp till denna effekt (W)", section_media: "Mediaspelare", section_media2: "Andra mediaspelaren", section_media3: "Tredje mediaspelaren", section_lock: "Sessionsl\u00e5s",
     section_purifier_layout: "Modell", layout_purifier_cylinder: "Cylinder", layout_purifier_box: "Fyrkantig", layout_purifier_ring: "Bladl\u00f6s ring",
     pf_purifying: "Renar", pf_auto: "Auto", pf_night: "Nattl\u00e4ge", section_air_quality: "Luftkvalitet",
     section_screen: "Sk\u00e4rm", section_heater: "V\u00e4rme (termostat)", aq_good: "Bra", aq_fair: "M\u00e5ttlig",
@@ -1490,6 +1499,7 @@ const T = {
     type_iron: "Strykejern", section_iron_layout: "Modell", layout_iron: "Strykejern", layout_generator: "Dampstasjon",
     type_toaster: "Br\u00f8drister", section_toaster_layout: "Modell", layout_toaster_two: "To spor", layout_toaster_four: "Fire spor",
     layout_toaster_long: "Langt spor", toaster_toasting: "Rister", toaster_done: "Ferdig", type_air_purifier: "Luftrenser",
+    type_screen: "Skjerm", section_screen_layout: "Modell", layout_tv_feet: "TV p\u00e5 f\u00f8tter", layout_tv_stand: "TV p\u00e5 fot", layout_tv_wall: "Veggmontert TV", layout_projector: "Projektor", layout_computer: "Datamaskin", section_screen_image: "Bilde p\u00e5 skjermen", img_random: "Tilfeldig", img_sunset: "Solnedgang", img_aquarium: "Akvarium", img_bars: "Testbilde", img_football: "Fotballkamp", img_space: "Verdensrommet", img_bounce: "Sprettende logo", img_desktop: "Skrivebord", img_code: "Rullende kode", img_pong: "Pong", screen_on: "P\u00e5", screen_playing: "Spiller", screen_home: "Startskjerm", screen_locked: "L\u00e5st", screen_muted: "Lyd av", screen_standby_threshold: "Standby opp til denne effekten (W)", section_media: "Mediespiller", section_media2: "Andre mediespiller", section_media3: "Tredje mediespiller", section_lock: "\u00d8ktl\u00e5s",
     section_purifier_layout: "Modell", layout_purifier_cylinder: "Sylinder", layout_purifier_box: "Firkantet", layout_purifier_ring: "Vingel\u00f8s ring",
     pf_purifying: "Renser", pf_auto: "Auto", pf_night: "Nattmodus", section_air_quality: "Luftkvalitet",
     section_screen: "Skjerm", section_heater: "Varme (termostat)", aq_good: "God", aq_fair: "Moderat",
@@ -1640,6 +1650,7 @@ const T = {
     type_iron: "Strygejern", section_iron_layout: "Model", layout_iron: "Strygejern", layout_generator: "Dampstation",
     type_toaster: "Br\u00f8drister", section_toaster_layout: "Model", layout_toaster_two: "To spalter", layout_toaster_four: "Fire spalter",
     layout_toaster_long: "Lang spalte", toaster_toasting: "Rister", toaster_done: "F\u00e6rdig", type_air_purifier: "Luftrenser",
+    type_screen: "Sk\u00e6rm", section_screen_layout: "Model", layout_tv_feet: "TV p\u00e5 f\u00f8dder", layout_tv_stand: "TV p\u00e5 fod", layout_tv_wall: "V\u00e6gmonteret TV", layout_projector: "Projektor", layout_computer: "Computer", section_screen_image: "Billede p\u00e5 sk\u00e6rmen", img_random: "Tilf\u00e6ldig", img_sunset: "Solnedgang", img_aquarium: "Akvarium", img_bars: "Testbillede", img_football: "Fodboldkamp", img_space: "Rummet", img_bounce: "Hoppende logo", img_desktop: "Skrivebord", img_code: "Rullende kode", img_pong: "Pong", screen_on: "T\u00e6ndt", screen_playing: "Afspiller", screen_home: "Startsk\u00e6rm", screen_locked: "L\u00e5st", screen_muted: "Lyd sl\u00e5et fra", screen_standby_threshold: "Standby op til denne effekt (W)", section_media: "Medieafspiller", section_media2: "Anden medieafspiller", section_media3: "Tredje medieafspiller", section_lock: "Sessionsl\u00e5s",
     section_purifier_layout: "Model", layout_purifier_cylinder: "Cylinder", layout_purifier_box: "Firkantet", layout_purifier_ring: "Vingel\u00f8s ring",
     pf_purifying: "Renser", pf_auto: "Auto", pf_night: "Nattilstand", section_air_quality: "Luftkvalitet",
     section_screen: "Sk\u00e6rm", section_heater: "Varme (termostat)", aq_good: "God", aq_fair: "Moderat",
@@ -1790,6 +1801,7 @@ const T = {
     type_iron: "\u017belazko", section_iron_layout: "Model", layout_iron: "\u017belazko", layout_generator: "Generator pary",
     type_toaster: "Toster", section_toaster_layout: "Model", layout_toaster_two: "Dwa otwory", layout_toaster_four: "Cztery otwory",
     layout_toaster_long: "D\u0142ugi otw\u00f3r", toaster_toasting: "Opiekanie", toaster_done: "Gotowe", type_air_purifier: "Oczyszczacz powietrza",
+    type_screen: "Ekran", section_screen_layout: "Model", layout_tv_feet: "Telewizor na n\u00f3\u017ckach", layout_tv_stand: "Telewizor na podstawie", layout_tv_wall: "Telewizor na \u015bcianie", layout_projector: "Projektor", layout_computer: "Komputer", section_screen_image: "Obraz na ekranie", img_random: "Losowy", img_sunset: "Zach\u00f3d s\u0142o\u0144ca", img_aquarium: "Akwarium", img_bars: "Plansza testowa", img_football: "Mecz pi\u0142ki no\u017cnej", img_space: "Kosmos", img_bounce: "Odbijaj\u0105ce si\u0119 logo", img_desktop: "Pulpit", img_code: "Przewijany kod", img_pong: "Pong", screen_on: "W\u0142\u0105czony", screen_playing: "Odtwarzanie", screen_home: "Ekran g\u0142\u00f3wny", screen_locked: "Zablokowany", screen_muted: "Wyciszony", screen_standby_threshold: "Czuwanie do tej mocy (W)", section_media: "Odtwarzacz multimedialny", section_media2: "Drugi odtwarzacz", section_media3: "Trzeci odtwarzacz", section_lock: "Blokada sesji",
     section_purifier_layout: "Model", layout_purifier_cylinder: "Walec", layout_purifier_box: "Kwadratowa obudowa", layout_purifier_ring: "Pier\u015bcie\u0144 bez \u0142opatek",
     pf_purifying: "Oczyszczanie", pf_auto: "Auto", pf_night: "Tryb nocny", section_air_quality: "Jako\u015b\u0107 powietrza",
     section_screen: "Ekran", section_heater: "Ogrzewanie (termostat)", aq_good: "Dobra", aq_fair: "Umiarkowana",
@@ -1940,6 +1952,7 @@ const T = {
     type_iron: "\u71a8\u6597", section_iron_layout: "\u578b\u53f7", layout_iron: "\u71a8\u6597", layout_generator: "\u84b8\u6c7d\u53d1\u751f\u5668",
     type_toaster: "\u70e4\u9762\u5305\u673a", section_toaster_layout: "\u578b\u53f7", layout_toaster_two: "\u53cc\u69fd", layout_toaster_four: "\u56db\u69fd",
     layout_toaster_long: "\u957f\u69fd", toaster_toasting: "\u70d8\u70e4\u4e2d", toaster_done: "\u5df2\u5b8c\u6210", type_air_purifier: "\u7a7a\u6c14\u51c0\u5316\u5668",
+    type_screen: "\u5c4f\u5e55", section_screen_layout: "\u578b\u53f7", layout_tv_feet: "\u5e26\u811a\u7535\u89c6", layout_tv_stand: "\u5e26\u5e95\u5ea7\u7535\u89c6", layout_tv_wall: "\u58c1\u6302\u7535\u89c6", layout_projector: "\u6295\u5f71\u4eea", layout_computer: "\u7535\u8111", section_screen_image: "\u5c4f\u5e55\u753b\u9762", img_random: "\u968f\u673a", img_sunset: "\u65e5\u843d", img_aquarium: "\u6c34\u65cf\u7bb1", img_bars: "\u6d4b\u8bd5\u56fe", img_football: "\u8db3\u7403\u6bd4\u8d5b", img_space: "\u592a\u7a7a", img_bounce: "\u5f39\u8df3\u6807\u5fd7", img_desktop: "\u684c\u9762", img_code: "\u6eda\u52a8\u4ee3\u7801", img_pong: "\u4e52\u4e53", screen_on: "\u5df2\u5f00\u542f", screen_playing: "\u64ad\u653e\u4e2d", screen_home: "\u4e3b\u5c4f\u5e55", screen_locked: "\u5df2\u9501\u5b9a", screen_muted: "\u5df2\u9759\u97f3", screen_standby_threshold: "\u5f85\u673a\u529f\u7387\u4e0a\u9650 (W)", section_media: "\u5a92\u4f53\u64ad\u653e\u5668", section_media2: "\u7b2c\u4e8c\u4e2a\u5a92\u4f53\u64ad\u653e\u5668", section_media3: "\u7b2c\u4e09\u4e2a\u5a92\u4f53\u64ad\u653e\u5668", section_lock: "\u4f1a\u8bdd\u9501\u5b9a",
     section_purifier_layout: "\u578b\u53f7", layout_purifier_cylinder: "\u5706\u67f1\u5f62", layout_purifier_box: "\u65b9\u5f62", layout_purifier_ring: "\u65e0\u53f6\u73af\u5f62",
     pf_purifying: "\u51c0\u5316\u4e2d", pf_auto: "\u81ea\u52a8", pf_night: "\u591c\u95f4\u6a21\u5f0f", section_air_quality: "\u7a7a\u6c14\u8d28\u91cf",
     section_screen: "\u5c4f\u5e55", section_heater: "\u52a0\u70ed\uff08\u6e29\u63a7\uff09", aq_good: "\u826f\u597d", aq_fair: "\u4e00\u822c",
@@ -2090,6 +2103,7 @@ const T = {
     type_iron: "\u017dehli\u010dka", section_iron_layout: "Model", layout_iron: "\u017dehli\u010dka", layout_generator: "Parn\u00ed gener\u00e1tor",
     type_toaster: "Topinkova\u010d", section_toaster_layout: "Model", layout_toaster_two: "Dva otvory", layout_toaster_four: "\u010cty\u0159i otvory",
     layout_toaster_long: "Dlouh\u00fd otvor", toaster_toasting: "Op\u00e9k\u00e1", toaster_done: "Hotovo", type_air_purifier: "\u010cisti\u010dka vzduchu",
+    type_screen: "Obrazovka", section_screen_layout: "Model", layout_tv_feet: "Televize na no\u017ei\u010dk\u00e1ch", layout_tv_stand: "Televize na stojanu", layout_tv_wall: "Televize na zdi", layout_projector: "Projektor", layout_computer: "Po\u010d\u00edta\u010d", section_screen_image: "Obraz na obrazovce", img_random: "N\u00e1hodn\u00fd", img_sunset: "Z\u00e1pad slunce", img_aquarium: "Akv\u00e1rium", img_bars: "Monoskop", img_football: "Fotbalov\u00fd z\u00e1pas", img_space: "Vesm\u00edr", img_bounce: "Odr\u00e1\u017eej\u00edc\u00ed se logo", img_desktop: "Plocha", img_code: "Roluj\u00edc\u00ed k\u00f3d", img_pong: "Pong", screen_on: "Zapnuto", screen_playing: "P\u0159ehr\u00e1v\u00e1", screen_home: "Domovsk\u00e1 obrazovka", screen_locked: "Zam\u010deno", screen_muted: "Ztlumeno", screen_standby_threshold: "Pohotovost a\u017e do tohoto p\u0159\u00edkonu (W)", section_media: "P\u0159ehr\u00e1va\u010d m\u00e9di\u00ed", section_media2: "Druh\u00fd p\u0159ehr\u00e1va\u010d", section_media3: "T\u0159et\u00ed p\u0159ehr\u00e1va\u010d", section_lock: "Z\u00e1mek relace",
     section_purifier_layout: "Model", layout_purifier_cylinder: "V\u00e1lec", layout_purifier_box: "Hranat\u00e1 sk\u0159\u00ed\u0148", layout_purifier_ring: "Bezlopatkov\u00fd prstenec",
     pf_purifying: "\u010cist\u00ed", pf_auto: "Auto", pf_night: "No\u010dn\u00ed re\u017eim", section_air_quality: "Kvalita vzduchu",
     section_screen: "Displej", section_heater: "Topen\u00ed (termostat)", aq_good: "Dobr\u00e1", aq_fair: "P\u0159ijateln\u00e1",
@@ -4535,6 +4549,9 @@ const TYPE_CAPS = {
   // A toaster, read from its plug like the iron: it waits, it toasts, and the
   // slices pop up. Nothing reports a toaster to Home Assistant on its own.
   toaster: { toaster: true },
+  // A television, a projector or a computer, read from its plug: what it
+  // draws at rest is its standby, and a media player says what it shows.
+  screen: { screen: true },
   // An air purifier: it runs, sleeps or heats, its fan blows forward or back
   // and turns from side to side, and its gauge reads the air it cleans.
   air_purifier: { airPurifier: true },
@@ -4609,9 +4626,14 @@ const STATE_DOMAINS = {
   water_heater: ["water_heater"], boiler: ["water_heater"], heat_pump: ["climate", "water_heater"],
   pellet_stove: ["climate"], air_conditioner: ["climate", "select", "switch"], dehumidifier: ["humidifier", "switch"],
   space_heater: ["climate", "switch"], towel_warmer: ["climate", "select", "switch"], iron: ["switch"], toaster: ["switch"], air_fryer: ["switch"],
+  screen: ["switch", "media_player", "input_boolean", "binary_sensor"],
   air_purifier: ["fan", "switch", "select", "climate"], fan: ["fan", "switch"],
   pet_fountain: ["switch", "fan", "input_boolean"],
 };
+// A model, a picture, the players it shows and a session lock belong to a
+// screen.
+const SCREEN_ONLY_FIELDS = ["screen_layout", "screen_image", "media_entity", "media2_entity", "media3_entity", "lock_entity"];
+const SCREEN_MEDIA_FIELDS = ["media_entity", "media2_entity", "media3_entity"];
 const PURIFIER_ONLY_FIELDS = ["purifier_layout", "air_quality_entity", "display_entity"];
 const FAN_ONLY_FIELDS = ["fan_layout", "wood_blades", "fan_direction_inverted", "oscillating"];
 // A water tank and a humidity reading belong to a dehumidifier, and the
@@ -4632,6 +4654,7 @@ const NO_STATE_SOURCES = {
     "power_entity"],
   pet_feeder: ["portions_today_entity", "weight_today_entity", "last_feed_entity", "portion_weight_entity", "serving_size_entity",
     "start_entity"],
+  screen: ["power_entity", "media_entity", "media2_entity", "media3_entity"],
 };
 function noStateSourceOf(cfg, type) {
   const field = (NO_STATE_SOURCES[type] || []).find((f) => cfg[f]);
@@ -4667,6 +4690,7 @@ function detectApplianceType(cfg, st) {
   if (DEHUMIDIFIER_ONLY_FIELDS.some((f) => cfg[f])) return "dehumidifier";
   if (cfg.heater_layout) return "space_heater";
   if (cfg.toaster_layout) return "toaster";
+  if (SCREEN_ONLY_FIELDS.some((f) => cfg[f])) return "screen";
   if (PURIFIER_ONLY_FIELDS.some((f) => cfg[f])) return "air_purifier";
   if (FAN_ONLY_FIELDS.some((f) => cfg[f])) return "fan";
   if (FRYER_ONLY_FIELDS.some((f) => cfg[f])) return "air_fryer";
@@ -4702,6 +4726,10 @@ function detectApplianceType(cfg, st) {
   // plancha de ropa, centro de planchado, ferro de engomar.
   if (/\biron(ing)?\b|steam.?(generator|station)|fer.?a.?repasser|centrale.?vapeur|bugeleisen|dampfstation|dampfbugel|plancha.?de.?ropa|planchado|ferro.?(da.?stiro|de.?engomar|de.?passar)|strijkijzer|stoomgenerator|stryk(jarn|ejern)|strygejern|zelazko|generator.?pary|zehlicka|parni.?generator|\u0443\u0442\u044e\u0433|\u043f\u0430\u0440\u043e\u0433\u0435\u043d\u0435\u0440\u0430\u0442\u043e\u0440|\u71a8\u6597/.test(hay)) return "iron";
   // A toaster, but not a toaster oven, which is an oven.
+  // A screen, by its name in any language or by a media player that calls
+  // itself a television. "TV" alone, since it hides in so many names.
+  if (st && domainOf(cfg.state_entity) === "media_player" && st.attributes.device_class === "tv") return "screen";
+  if (SCREEN_NAME_RE.test(hay)) return "screen";
   if (/toaster(?!.?oven)|grille.?pain|tostador|tostapane|broodrooster|br(o|\u00f6)drost|br(o|\u00f8)drister|toster|topinkova|\u70e4\u9762\u5305|\u0442\u043e\u0441\u0442\u0435\u0440/.test(hay)) return "toaster";
   // A pellet stove, by its own name or by its maker's and its integration's.
   // "Stove" alone is a cooktop to an American, so the word needs its pellets.
@@ -4761,6 +4789,43 @@ const P3_PART_MAX = 40;
 // iron left on, redraws on this beat: the count is shown in whole minutes, so
 // half a minute is close enough to keep it honest.
 const CLOCK_TICK_MS = 30 * 1000;
+// A screen at 0 W is off, up to its threshold it is on standby, above it it
+// is on. Half a watt is still nothing: plenty of plugs read 0.2 or 0.3 W with
+// the screen unplugged behind them.
+const SCREEN_OFF_W = 0.5;
+const SCREEN_STANDBY_W = 20;
+const SCREEN_LAYOUTS = ["tv_feet", "tv_stand", "tv_wall", "projector", "computer"];
+const SCREEN_NAME_RE = /(^|[^a-z])tv([^a-z]|$)|(^|[^a-z])t(e|\u00e9)l(e|\u00e9)([^a-z]|$)|t(e|\u00e9)l(e|\u00e9)vis|fernseher|televize|telewizor|\u0442\u0435\u043b\u0435\u0432\u0438\u0437\u043e\u0440|\u7535\u89c6|beamer|project(or|eur)|proyector|proiettore|projektor|\u6295\u5f71|\u043f\u0440\u043e\u0435\u043a\u0442\u043e\u0440|computer|ordinateur|desktop|imac|ordenador|computador|komputer|po(c|\u010d)(i|\u00ed)ta(c|\u010d)|\u7535\u8111|\u043a\u043e\u043c\u043f\u044c\u044e\u0442\u0435\u0440/;
+const SCREEN_PROJECTOR_RE = /beamer|project(or|eur)|proyector|proiettore|projektor|\u6295\u5f71|\u043f\u0440\u043e\u0435\u043a\u0442\u043e\u0440/;
+const SCREEN_COMPUTER_RE = /computer|ordinateur|desktop|imac|ordenador|computador|komputer|po(c|\u010d)(i|\u00ed)ta(c|\u010d)|\u7535\u8111|\u043a\u043e\u043c\u043f\u044c\u044e\u0442\u0435\u0440|(^|[^a-z])pc([^a-z]|$)/;
+const SCREEN_LABELS = { off: "ac_off", standby: "standby", on: "screen_on", playing: "screen_playing", paused: "paused", home: "screen_home", locked: "screen_locked" };
+const SCREEN_COLORS = {
+  off: "var(--disabled-text-color, #9e9e9e)", standby: "var(--warning-color, #ff9800)",
+  on: "var(--info-color, #2196f3)", playing: "var(--info-color, #2196f3)", home: "var(--info-color, #2196f3)",
+  paused: "var(--warning-color, #ff9800)", locked: "var(--warning-color, #ff9800)",
+};
+const SCREEN_LIT = ["on", "playing", "paused", "home", "locked"];
+// The pictures a lit screen shows, one drawn at random each time it comes on:
+// the first six suit a television or a projector, the last three a computer.
+const SCREEN_IMAGES = ["sunset", "aquarium", "bars", "football", "space", "bounce", "desktop", "code", "pong"];
+const SCREEN_TV_IMAGES = SCREEN_IMAGES.slice(0, 6);
+const SCREEN_PC_IMAGES = SCREEN_IMAGES.slice(6);
+// The order a screen's players are read in: one playing wins over one paused,
+// which wins over one at rest. Several on one screen is the usual case: the
+// television, and the box or the console that actually has the picture.
+// A box on its home screen tells more than a television that is merely on.
+const MEDIA_RANK = { playing: 4, buffering: 4, paused: 3, idle: 2.5, on: 2 };
+// A session lock, whatever reports it: a lock entity, a binary sensor of the
+// lock class (on means unlocked), or a sensor that says "locked".
+function screenLocked(lst, id) {
+  if (!lst) return false;
+  const v = String(lst.state).toLowerCase();
+  const d = domainOf(id);
+  if (d === "lock") return v === "locked";
+  if (d === "binary_sensor" && (lst.attributes || {}).device_class === "lock") return v === "off";
+  return ["on", "locked", "true"].includes(v);
+}
+
 // How long a toaster says its toast is ready once it has popped up.
 const TOASTER_READY_MS = 5 * 60 * 1000;
 const TOASTER_LABELS = { off: "ac_off", idle: "standby", toasting: "toaster_toasting", done: "toaster_done" };
@@ -7326,6 +7391,155 @@ const ILLUSTRATION_CSS = {
         @keyframes tp-glow { 50% { opacity: 0.6; } }
         @keyframes tp-pop { from { transform: translateY(20px); } to { transform: none; } }
   `,
+  // A screen: a television on its feet, on a stand or on the wall, a
+  // projector under its screen, or a computer and its tower. Lit, the glass
+  // shows a picture; on standby only its light is on.
+  screen: () => `
+        .scr-bezel, .scr-glass, .scr-led, .scr-foot, .scr-neck, .scr-base, .scr-shade, .scr-wall, .scr-rod, .scr-beam,
+        .scr-body, .scr-lens, .scr-vent, .scr-feet, .scr-tower, .scr-slot { position: absolute; }
+        .scr-bezel {
+          border-radius: 2px; background: linear-gradient(180deg, var(--ac-body-hi, #515860), var(--ac-body, #3b4045) 50%, var(--ac-body-lo, #22262a));
+          box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.25), 0 2px 4px rgba(0, 0, 0, 0.18);
+        }
+        .scr-glass { border-radius: 1.5px; overflow: hidden; background: linear-gradient(155deg, #2a2f36 0%, #0c0e11 55%, #16191d 100%); }
+        .scr-glass::after, .scr-wall::after {
+          content: ""; position: absolute; inset: 0; z-index: 5; pointer-events: none;
+          background: linear-gradient(120deg, rgba(255, 255, 255, 0.13) 0 22%, transparent 22% 100%);
+        }
+        .scr-wall::after { display: none; }
+        .scr-pic { position: absolute; inset: 0; opacity: 0; transition: opacity 0.4s; overflow: hidden; }
+        .scr-pic > * { position: absolute; inset: 0; overflow: hidden; }
+        .machine.scr-lit .scr-pic { opacity: 1; }
+        .machine.mode-paused .scr-pic * { animation-play-state: paused; }
+        .scr-cover { object-fit: cover; width: 100%; height: 100%; }
+        .scr-led { width: 2.4px; height: 2.4px; border-radius: 50%; background: #3a3f46; }
+        .machine.mode-standby .scr-led { background: #ff3b30; box-shadow: 0 0 3px #ff3b30; }
+        .machine.scr-lit .scr-led { background: transparent; }
+        .machine.scr-computer.mode-standby .scr-led { background: #ffb300; box-shadow: 0 0 3px #ffb300; animation: scr-breathe 2.4s ease-in-out infinite; animation-delay: var(--anim-offset, 0s); }
+        .machine.scr-computer.scr-lit .scr-led { background: #e3f2fd; box-shadow: 0 0 3px #90caf9; }
+        .scr-badge { position: absolute; z-index: 6; right: 4%; bottom: 6%; width: 16%; max-width: 9px; opacity: 0.9; display: none; }
+        .scr-badge svg { display: block; width: 100%; height: auto; }
+        .machine.mode-playing .scr-badge.play, .machine.mode-paused .scr-badge.pause, .machine.scr-lit.muted .scr-badge.mute { display: block; }
+        .machine.muted .scr-badge.play { display: none !important; }
+        .machine.mode-paused .scr-badge.pause { right: auto; bottom: auto; left: 50%; top: 50%; transform: translate(-50%, -50%); width: 22%; max-width: 12px; }
+        .scr-lock { position: absolute; inset: 0; z-index: 4; background: linear-gradient(160deg, #263238, #37474f); }
+        .scr-lock::before {
+          content: ""; position: absolute; left: 50%; top: 26%; width: 14%; height: 20%; transform: translateX(-50%); box-sizing: border-box;
+          border: 1.5px solid #cfd8dc; border-bottom: none; border-radius: 50% 50% 0 0;
+        }
+        .scr-lock::after { content: ""; position: absolute; left: 50%; top: 44%; width: 22%; height: 26%; transform: translateX(-50%); background: #cfd8dc; border-radius: 1px; }
+        .scr-foot { border-radius: 1px; background: linear-gradient(180deg, var(--ac-body-hi, #515860), var(--ac-body-lo, #22262a)); box-shadow: 0 1px 2px rgba(0, 0, 0, 0.25); }
+        .scr-foot.l { transform: skewX(-28deg); } .scr-foot.r { transform: skewX(28deg); }
+        .scr-neck { background: linear-gradient(90deg, var(--ac-body-lo, #22262a), var(--ac-body, #3b4045), var(--ac-body-lo, #22262a)); }
+        .scr-base { border-radius: 50%; background: radial-gradient(ellipse at 50% 30%, var(--ac-body-hi, #515860), var(--ac-body-lo, #22262a)); box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3); }
+        .scr-computer .scr-base { border-radius: 2px; background: linear-gradient(180deg, var(--ac-body-hi, #515860), var(--ac-body-lo, #22262a)); }
+        .scr-shade { border-radius: 4px; background: rgba(0, 0, 0, 0.1); filter: blur(2.5px); }
+        .scr-wall { overflow: hidden; border-radius: 1px; background: #f6f7f9; box-shadow: inset 0 0 0 1px #d4d9df, 0 1px 2px rgba(0, 0, 0, 0.12); }
+        .scr-rod { background: #9aa2ab; }
+        .scr-beam { opacity: 0; transition: opacity 0.4s; clip-path: polygon(0 0, 100% 0, 62% 100%, 54% 100%); background: linear-gradient(0deg, rgba(255, 250, 230, 0.85), rgba(255, 250, 230, 0.12)); }
+        .machine.scr-lit .scr-beam { opacity: 0.9; }
+        .scr-body {
+          border-radius: 4px 4px 3px 3px; background: linear-gradient(180deg, var(--ac-body-hi, #515860), var(--ac-body, #3b4045) 45%, var(--ac-body-lo, #22262a));
+          box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.18), 0 2px 3px rgba(0, 0, 0, 0.12);
+        }
+        .scr-lens { border-radius: 50%; background: radial-gradient(circle at 40% 38%, #5d6670, #15181c 70%); box-shadow: 0 0 0 1.5px var(--ac-body-lo, #22262a), inset 0 0 0 1px #000; }
+        .machine.scr-lit .scr-lens { background: radial-gradient(circle at 50% 50%, #fffbe8 0 30%, #ffe7a3 55%, #8d7a4a 80%); box-shadow: 0 0 0 1.5px var(--ac-body-lo, #22262a), 0 0 6px #ffe7a3; }
+        .scr-vent { opacity: 0.6; background: repeating-linear-gradient(90deg, rgba(0, 0, 0, 0.35) 0 1px, transparent 1px 3px); }
+        .scr-feet { border-radius: 0 0 1px 1px; background: #2b2f34; }
+        .scr-tower { border-radius: 2px; background: linear-gradient(90deg, var(--ac-body-lo, #22262a), var(--ac-body, #3b4045) 30%, var(--ac-body-hi, #515860) 60%, var(--ac-body-lo, #22262a)); }
+        .scr-slot { border-radius: 0.5px; background: rgba(0, 0, 0, 0.35); }
+
+        /* The pictures. */
+        .si-sunset { background: linear-gradient(115deg, #1e3c72, #2a7fba 25%, #f4a261 50%, #e76f51 70%, #264653); background-size: 300% 300%; animation: scr-drift 9s ease-in-out infinite alternate; animation-delay: var(--anim-offset, 0s); }
+        .si-sunset b { position: absolute; width: 16%; aspect-ratio: 1; border-radius: 50%; left: 58%; top: 24%; background: #ffe9a8; box-shadow: 0 0 8px #ffd166; }
+        .si-sunset i { position: absolute; left: -10%; width: 120%; bottom: -30%; height: 62%; border-radius: 50%; background: #1d3b2a; opacity: 0.9; }
+        .si-aquarium { background: linear-gradient(180deg, #4fc3f7, #0277bd 70%, #01579b); }
+        .si-aquarium .sand { position: absolute; left: 0; right: 0; bottom: 0; height: 14%; background: #e0c38c; border-radius: 40% 60% 0 0 / 100% 100% 0 0; }
+        .si-aquarium .weed { position: absolute; bottom: 8%; width: 3%; height: 40%; border-radius: 50% 50% 0 0; background: #2e7d32; transform-origin: bottom; animation: scr-sway 3s ease-in-out infinite alternate; animation-delay: var(--anim-offset, 0s); }
+        .si-aquarium .fish { position: absolute; width: 13%; height: 12%; border-radius: 50%; background: var(--f); animation: scr-swim var(--sw) linear infinite; animation-delay: var(--anim-offset, 0s); }
+        .si-aquarium .fish::after { content: ""; position: absolute; left: -30%; top: 10%; width: 40%; height: 80%; background: var(--f); clip-path: polygon(0 0, 100% 50%, 0 100%); }
+        .si-aquarium .fish::before { content: ""; position: absolute; right: 18%; top: 28%; width: 12%; aspect-ratio: 1; border-radius: 50%; background: #111; }
+        .si-aquarium .bub { position: absolute; bottom: 10%; width: 3%; aspect-ratio: 1; border-radius: 50%; border: 1px solid rgba(255, 255, 255, 0.7); animation: scr-rise 3s ease-in infinite; animation-delay: var(--anim-offset, 0s); }
+        .si-bars { background: linear-gradient(90deg, #c0c0c0 0 14.3%, #c0c000 0 28.6%, #00c0c0 0 42.9%, #00c000 0 57.2%, #c000c0 0 71.5%, #c00000 0 85.8%, #0000c0 0); }
+        .si-bars::before {
+          content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 22%;
+          background: linear-gradient(90deg, #0000c0 0 14.3%, #131313 0 28.6%, #c000c0 0 42.9%, #131313 0 57.2%, #00c0c0 0 71.5%, #131313 0 85.8%, #c0c0c0 0);
+        }
+        .si-bars b { position: absolute; left: 50%; top: 40%; width: 30%; aspect-ratio: 1; transform: translate(-50%, -50%); border-radius: 50%; border: 1px solid #fff; box-shadow: 0 0 0 1px #000; }
+        /* The match as television shows it: the stand full, the pitch mown in
+           stripes, a goal at each end and two teams after the ball. */
+        .si-football { background: repeating-linear-gradient(180deg, #43a047 0 9%, #388e3c 9% 18%); }
+        .si-football .crowd {
+          position: absolute; left: 0; right: 0; top: 0; height: 22%; background-color: #263238;
+          background-image: radial-gradient(circle, #ef5350 0 0.7px, transparent 0.9px), radial-gradient(circle, #ffee58 0 0.7px, transparent 0.9px), radial-gradient(circle, #e0e0e0 0 0.7px, transparent 0.9px), radial-gradient(circle, #42a5f5 0 0.7px, transparent 0.9px);
+          background-size: 4px 3px, 5px 3px, 3px 4px, 6px 3px; background-position: 0 0, 2px 1px, 1px 2px, 3px 0;
+        }
+        .si-football .lines { position: absolute; left: 6%; right: 6%; top: 30%; bottom: 8%; border: 1px solid rgba(255, 255, 255, 0.8); }
+        .si-football .lines::before { content: ""; position: absolute; left: 50%; top: 0; bottom: 0; border-left: 1px solid rgba(255, 255, 255, 0.8); }
+        .si-football .lines::after { content: ""; position: absolute; left: 50%; top: 50%; width: 20%; height: 44%; transform: translate(-50%, -50%); border: 1px solid rgba(255, 255, 255, 0.8); border-radius: 50%; }
+        .si-football .goal { position: absolute; top: 48%; width: 4%; height: 24%; border: 1px solid #fff; background: repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.35) 0 1px, transparent 1px 2px); }
+        .si-football .goal.l { left: 2%; border-right: none; } .si-football .goal.r { right: 2%; border-left: none; }
+        .si-football .pl { position: absolute; width: 3.4%; height: 13%; border-radius: 1px 1px 0.5px 0.5px; background: linear-gradient(180deg, transparent 0 30%, var(--k) 30% 72%, #f5f5f5 72% 84%, #222 84%); animation: scr-chase 3.4s ease-in-out infinite alternate; animation-delay: var(--anim-offset, 0s); }
+        .si-football .pl::before { content: ""; position: absolute; left: 12%; top: 0; width: 76%; height: 30%; border-radius: 50%; background: #f1c27d; }
+        .si-football .ball { position: absolute; width: 3.6%; aspect-ratio: 1; border-radius: 50%; background: radial-gradient(circle at 50% 50%, #222 0 22%, #fff 26%); box-shadow: 0 0 0 0.4px #222; animation: scr-chase 3.4s ease-in-out infinite alternate, scr-hop 0.85s ease-in-out infinite alternate; animation-delay: var(--anim-offset, 0s); }
+        .si-football .score { position: absolute; left: 3%; top: 3%; padding: 0 1.5px; background: #111; color: #fff; font: 700 4.5px/1.4 Arial, sans-serif; border-left: 2px solid #e53935; }
+        .si-space {
+          background: radial-gradient(circle at 20% 30%, #fff 0 0.6%, transparent 0.8%), radial-gradient(circle at 70% 20%, #fff 0 0.5%, transparent 0.7%), radial-gradient(circle at 85% 70%, #fff 0 0.6%, transparent 0.8%),
+            radial-gradient(circle at 40% 80%, #fff 0 0.4%, transparent 0.6%), radial-gradient(circle at 55% 45%, #fff 0 0.4%, transparent 0.6%), radial-gradient(circle at 10% 75%, #fff 0 0.5%, transparent 0.7%), linear-gradient(160deg, #0b1030, #1a0f3a);
+        }
+        .si-space b { position: absolute; right: 8%; top: 18%; width: 26%; aspect-ratio: 1; border-radius: 50%; background: radial-gradient(circle at 35% 35%, #ffcc80, #e65100); }
+        .si-space b::after { content: ""; position: absolute; left: -30%; right: -30%; top: 42%; height: 16%; border: 1px solid rgba(255, 224, 178, 0.8); border-radius: 50%; transform: rotate(-15deg); }
+        .si-space i { position: absolute; width: 5%; height: 16%; border-radius: 50% 50% 15% 15%; background: #eceff1; animation: scr-fly 5s linear infinite; animation-delay: var(--anim-offset, 0s); }
+        .si-space i::after { content: ""; position: absolute; left: 20%; right: 20%; top: 100%; height: 60%; border-radius: 0 0 50% 50%; background: linear-gradient(#ffeb3b, #ff5722 60%, transparent); }
+        /* The old screensaver of a DVD player: the logo bounces off the
+           edges, and once in about two minutes it lands right in a corner. */
+        .si-bounce { background: #050505; }
+        .si-bounce .logo {
+          position: absolute; width: 14px; height: 9px; box-sizing: border-box; display: flex; align-items: center; justify-content: center;
+          font: 900 6px/1 Arial, sans-serif; letter-spacing: -0.3px; border-radius: 2px; color: #03a9f4; border: 1px solid currentColor;
+          animation: scr-bx 4.1s linear infinite alternate, scr-by 2.9s linear infinite alternate, scr-hue 5.4s steps(6) infinite, scr-pop 118.9s linear infinite; animation-delay: var(--anim-offset, 0s);
+        }
+        .si-bounce .flash { position: absolute; inset: 0; z-index: 2; background: #fff; opacity: 0; animation: scr-flash 118.9s linear infinite; animation-delay: var(--anim-offset, 0s); }
+        .si-bounce .bit { position: absolute; top: -12%; width: 3%; height: 5%; background: var(--c); opacity: 0; animation: scr-confetti 118.9s linear infinite; animation-delay: var(--anim-offset, 0s); }
+        .si-desktop { background: linear-gradient(160deg, #5b8def, #7e57c2 60%, #4a3a8a); }
+        .si-desktop i { position: absolute; border-radius: 1px; background: rgba(255, 255, 255, 0.92); box-shadow: 0 1px 2px rgba(0, 0, 0, 0.25); }
+        .si-desktop i::before { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 2px; background: #cfd8e3; }
+        .si-desktop i.mv { animation: scr-drag 4s ease-in-out infinite alternate; animation-delay: var(--anim-offset, 0s); }
+        .si-desktop u { position: absolute; left: 0; right: 0; bottom: 0; height: 3px; background: rgba(20, 22, 30, 0.55); }
+        .si-code { background: #1e1e2e; }
+        .si-code .lines { position: absolute; left: 6%; right: 6%; top: 0; height: 200%; animation: scr-scroll 6s linear infinite; animation-delay: var(--anim-offset, 0s); }
+        .si-code .lines i { display: block; height: 1.6px; margin: 0 0 2.2px var(--x); width: var(--w); border-radius: 1px; background: var(--c); }
+        .si-pong { background: #000; }
+        .si-pong::before { content: ""; position: absolute; left: 50%; top: 0; bottom: 0; border-left: 1px dashed rgba(255, 255, 255, 0.5); }
+        .si-pong .pad { position: absolute; width: 3%; height: 24%; background: #fff; animation: scr-pad 1.9s ease-in-out infinite alternate; animation-delay: var(--anim-offset, 0s); }
+        .si-pong .pad.r { animation-duration: 2.3s; animation-direction: alternate-reverse; }
+        .si-pong .ball { position: absolute; width: 4%; aspect-ratio: 1; background: #fff; animation: scr-pbx 1.6s linear infinite alternate, scr-pby 1.1s linear infinite alternate; animation-delay: var(--anim-offset, 0s); }
+        .si-pong .score { position: absolute; top: 6%; left: 0; right: 0; text-align: center; color: #fff; font: 700 5px/1 monospace; letter-spacing: 6px; }
+        .si-home { background: linear-gradient(160deg, #141821, #232a38); }
+        .si-home i { position: absolute; width: 20%; height: 24%; border-radius: 1.5px; background: var(--c); }
+        .si-home i.f { outline: 1px solid #fff; outline-offset: 0.5px; }
+        .si-home u { position: absolute; left: 6%; top: 9%; width: 40%; height: 7%; border-radius: 1px; background: rgba(255, 255, 255, 0.35); }
+        @keyframes scr-breathe { 50% { opacity: 0.25; } }
+        @keyframes scr-drift { to { background-position: 100% 50%; } }
+        @keyframes scr-sway { from { transform: rotate(-8deg); } to { transform: rotate(8deg); } }
+        @keyframes scr-swim { from { left: -20%; } to { left: 110%; } }
+        @keyframes scr-rise { to { bottom: 105%; opacity: 0.2; } }
+        @keyframes scr-chase { from { left: 14%; } to { left: 80%; } }
+        @keyframes scr-hop { from { top: 58%; } to { top: 74%; } }
+        @keyframes scr-fly { from { left: -10%; top: 90%; transform: rotate(55deg); } to { left: 105%; top: -20%; transform: rotate(55deg); } }
+        @keyframes scr-bx { from { left: 0; } to { left: calc(100% - 14px); } }
+        @keyframes scr-by { from { top: 0; } to { top: calc(100% - 9px); } }
+        @keyframes scr-hue { to { filter: hue-rotate(360deg); } }
+        @keyframes scr-pop { 0% { transform: scale(1.5); } 1.2%, 100% { transform: none; } }
+        @keyframes scr-flash { 0% { opacity: 0.85; } 0.8%, 100% { opacity: 0; } }
+        @keyframes scr-confetti { 0% { opacity: 1; transform: translateY(0) rotate(0); } 1.6% { opacity: 1; transform: translateY(70px) rotate(540deg); } 1.61%, 100% { opacity: 0; } }
+        @keyframes scr-drag { to { transform: translate(-20%, -8%); } }
+        @keyframes scr-scroll { to { transform: translateY(-50%); } }
+        @keyframes scr-pad { from { top: 10%; } to { top: 66%; } }
+        @keyframes scr-pbx { from { left: 8%; } to { left: 88%; } }
+        @keyframes scr-pby { from { top: 6%; } to { top: 88%; } }
+        @media (prefers-reduced-motion: reduce) { .machine .scr-pic *, .machine .scr-led { animation: none !important; animation-delay: var(--anim-offset, 0s); } }
+  `,
   iron: () => `
         .ir { position: absolute; left: 0; right: 0; top: 0; bottom: 0; }
         .ir-shell {
@@ -7943,6 +8157,86 @@ function toasterHtml(cls, tp) {
         </div>`;
 }
 
+// The pictures a lit screen can show. The logo's three animations share one
+// delay, so it reaches a corner exactly when the flash and the confetti go
+// off: the two bounces take 4.1 s and 2.9 s, and they meet at an end together
+// every 118.9 s. Starting 30 s in, the first corner is a minute and a half
+// away rather than right away.
+const SCREEN_CODE_COLORS = ["#c792ea", "#82aaff", "#ffcb6b", "#c3e88d", "#89ddff", "#f78c6c"];
+function screenPictureHtml(img) {
+  const at = (x, y, w, h) => `left: ${x}%; top: ${y}%; width: ${w}%; height: ${h}%`;
+  switch (img) {
+    case "aquarium":
+      return `<div class="si-aquarium"><span class="sand"></span>`
+        + `<span class="weed" style="left: 12%"></span><span class="weed" style="left: 17%; height: 28%; animation-delay: calc(-1s + var(--anim-offset, 0s))"></span><span class="weed" style="left: 80%; height: 34%; animation-delay: calc(-2s + var(--anim-offset, 0s))"></span>`
+        + `<span class="fish" style="top: 28%; --f: #ff9800; --sw: 6s"></span><span class="fish" style="top: 52%; --f: #ffeb3b; --sw: 8.5s; animation-delay: calc(-4s + var(--anim-offset, 0s))"></span>`
+        + `<span class="fish" style="top: 40%; --f: #f06292; --sw: 7s; animation-delay: calc(-2s + var(--anim-offset, 0s)); width: 9%; height: 9%"></span>`
+        + `<span class="bub" style="left: 20%"></span><span class="bub" style="left: 22%; animation-delay: calc(-1.4s + var(--anim-offset, 0s))"></span><span class="bub" style="left: 84%; animation-delay: calc(-0.7s + var(--anim-offset, 0s))"></span></div>`;
+    case "bars":
+      return `<div class="si-bars"><b></b></div>`;
+    case "football":
+      return `<div class="si-football"><span class="crowd"></span><span class="lines"></span><span class="goal l"></span><span class="goal r"></span>`
+        + [["#e53935", 52, -0.4], ["#e53935", 66, -1.6], ["#e53935", 44, -2.6], ["#1e88e5", 58, -0.9], ["#1e88e5", 70, -2.1], ["#1e88e5", 46, -3]]
+          .map(([k, y, d]) => `<span class="pl" style="--k: ${k}; top: ${y}%; animation-delay: calc(${d}s + var(--anim-offset, 0s))"></span>`).join("")
+        + `<span class="ball"></span><span class="score">2-1</span></div>`;
+    case "space":
+      return `<div class="si-space"><b></b><i></i></div>`;
+    case "bounce":
+      return `<div class="si-bounce"><span class="logo" style="animation-delay: calc(-30s + var(--anim-offset, 0s))">HA</span><span class="flash" style="animation-delay: calc(-30s + var(--anim-offset, 0s))"></span>`
+        + [["#ef5350", 8], ["#ffee58", 22], ["#66bb6a", 36], ["#42a5f5", 50], ["#ab47bc", 64], ["#ffa726", 78], ["#26c6da", 90]]
+          .map(([c, x], k) => `<span class="bit" style="--c: ${c}; left: ${x}%; top: ${-12 - (k % 3) * 9}%; animation-delay: calc(-30s + var(--anim-offset, 0s))"></span>`).join("")
+        + `</div>`;
+    case "desktop":
+      return `<div class="si-desktop"><i style="${at(10, 14, 45, 48)}"></i><i class="mv" style="${at(40, 32, 48, 46)}"></i><u></u></div>`;
+    case "code": {
+      let rows = "";
+      for (let k = 0; k < 24; k++) {
+        rows += `<i style="--c: ${SCREEN_CODE_COLORS[(k * 7) % 6]}; --w: ${20 + ((k * 37) % 55)}%; --x: ${[0, 8, 8, 16, 8, 0][k % 6]}%"></i>`;
+      }
+      return `<div class="si-code"><div class="lines">${rows}${rows}</div></div>`;
+    }
+    case "pong":
+      return `<div class="si-pong"><span class="score">3 2</span><span class="pad" style="left: 4%"></span><span class="pad r" style="right: 4%"></span><span class="ball"></span></div>`;
+    case "home":
+      return `<div class="si-home"><u></u>`
+        + [["#e50914", 4, 30, "f"], ["#1db954", 28, 30], ["#0f79af", 52, 30], ["#ff0000", 76, 30], ["#f5c518", 4, 60], ["#7b1fa2", 28, 60], ["#00a8e1", 52, 60], ["#ff6d00", 76, 60]]
+          .map(([c, x, y, f]) => `<i${f ? ' class="f"' : ""} style="--c: ${c}; left: ${x}%; top: ${y}%"></i>`).join("")
+        + `</div>`;
+    default:
+      return `<div class="si-sunset"><b></b><i></i></div>`;
+  }
+}
+const SCREEN_BADGE = (cls, d) => `<span class="scr-badge ${cls}"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="11" fill="rgba(0,0,0,.55)"/><path fill="#fff" d="${d}"/></svg></span>`;
+const SCREEN_BADGES = SCREEN_BADGE("play", "M9 7v10l8-5z") + SCREEN_BADGE("pause", "M8 7h3v10H8zM13 7h3v10h-3z")
+  + SCREEN_BADGE("mute", "M5 10v4h3l4 3V7L8 10zM14.6 9.7l1-1 2.4 2.4 2.4-2.4 1 1-2.4 2.4 2.4 2.4-1 1-2.4-2.4-2.4 2.4-1-1 2.4-2.4z");
+function screenHtml(cls, sc) {
+  const layout = SCREEN_LAYOUTS.includes(sc.layout) ? sc.layout : "tv_feet";
+  const mode = sc.mode || "off";
+  const box = (c, x, y, w, h, extra = "") => `<div class="${c}" style="left: ${x}px; top: ${y}px; width: ${w}px; height: ${h}px${extra}"></div>`;
+  const picture = mode === "home" ? screenPictureHtml("home")
+    : sc.cover ? `<img class="scr-cover" src="${esc(sc.cover)}" alt="">`
+      : screenPictureHtml(sc.image);
+  const glassInner = `<div class="scr-pic">${SCREEN_LIT.includes(mode) ? picture : ""}</div>${mode === "locked" ? '<div class="scr-lock"></div>' : ""}${SCREEN_BADGES}`;
+  const tv = (y) => `${box("scr-bezel", 1, y, 94, 54)}<div class="scr-glass" style="left: 3px; top: ${y + 2}px; width: 90px; height: 49px">${glassInner}</div>`
+    + box("scr-led", 46.8, y + 51.8, 2.4, 2.4);
+  let body;
+  if (layout === "tv_stand") body = tv(28) + box("scr-neck", 44, 82, 8, 7) + box("scr-base", 28, 88, 40, 5);
+  else if (layout === "tv_wall") body = box("scr-shade", 3, 31, 92, 54) + tv(27);
+  else if (layout === "projector") {
+    body = box("scr-rod", 16, 2, 1, 4) + box("scr-rod", 79, 2, 1, 4)
+      + `<div class="scr-wall" style="left: 8px; top: 5px; width: 80px; height: 46px">${glassInner}</div>`
+      + box("scr-beam", 8, 51, 80, 34) + box("scr-body", 24, 84, 48, 16) + box("scr-vent", 56, 89, 12, 7)
+      + box("scr-lens", 46, 85.5, 11, 11) + box("scr-led", 29, 88, 2.4, 2.4) + box("scr-feet", 28, 100, 4, 2) + box("scr-feet", 64, 100, 4, 2);
+  } else if (layout === "computer") {
+    body = box("scr-bezel", 2, 26, 64, 42) + `<div class="scr-glass" style="left: 5px; top: 29px; width: 58px; height: 35px">${glassInner}</div>`
+      + box("scr-neck", 30, 68, 8, 13) + box("scr-base", 20, 80, 28, 4) + box("scr-tower", 72, 34, 20, 50)
+      + box("scr-slot", 75, 40, 14, 1.5) + box("scr-slot", 75, 44, 14, 1.5) + box("scr-led", 80.8, 76, 2.4, 2.4);
+  } else body = tv(30) + box("scr-foot l", 12, 84, 3, 8) + box("scr-foot r", 81, 84, 3, 8);
+  const lit = SCREEN_LIT.includes(mode) ? " scr-lit" : "";
+  return `
+        <div class="machine ${cls} scr-${layout} mode-${mode}${lit}${sc.muted ? " muted" : ""}">${body}</div>`;
+}
+
 function illustrationHtml(type, ctx) {
   const cls = [
     ctx.spinning ? "spinning" : "",
@@ -8504,6 +8798,7 @@ function illustrationHtml(type, ctx) {
   }
 
   if (type === "toaster") return toasterHtml(cls, ctx.toaster || {});
+  if (type === "screen") return screenHtml(cls, ctx.screen || {});
   if (type === "air_purifier") return purifierHtml(cls, ctx.purifier || {});
   if (type === "fan") return fanHtml(cls, ctx.fan || {});
 
@@ -8688,7 +8983,10 @@ class ApplianceCard extends HTMLElement {
     // is there, the power meter whether it charges.
     const asCharger = config && (config.appliance_type === "ev_charger" || EV_ONLY_FIELDS.some((f) => config[f]));
     const hasChargerSource = asCharger && !!(config.vehicle_entity || config.power_entity);
-    if (!config || (!config.state_entity && !hasFridgeSource && !hasFeederSource && !hasChargerSource)) {
+    // And for a screen: its plug's meter or one of its players is enough.
+    const asScreen = config && (config.appliance_type === "screen" || SCREEN_ONLY_FIELDS.some((f) => config[f]));
+    const hasScreenSource = asScreen && !!(config.power_entity || SCREEN_MEDIA_FIELDS.some((f) => config[f]));
+    if (!config || (!config.state_entity && !hasFridgeSource && !hasFeederSource && !hasChargerSource && !hasScreenSource)) {
       throw new Error("ha-appliance-card: 'state_entity' is required");
     }
     this._config = config;
@@ -8779,6 +9077,7 @@ class ApplianceCard extends HTMLElement {
       parts.push([a.friendly_name, a.icon, a.unit_of_measurement, a.device_class,
                   Array.isArray(a.options) ? a.options.join(",") : ""].join("~"));
       if (id === this._config.alerts_entity) parts.push(JSON.stringify(a));
+      if (domainOf(id) === "media_player") parts.push([a.app_name, a.source, a.media_title, a.is_volume_muted, a.entity_picture].join("~"));
     }
     // While a fridge counts the minutes since its plug went quiet, the minute
     // is part of what is displayed even though no state carries it. The card
@@ -9144,7 +9443,7 @@ class ApplianceCard extends HTMLElement {
     // in, and that is decided further down with the health summary. A charger
     // too: its meter only stands in for a status it does not have, together
     // with the plug, further down.
-    if (!cap.fridgeTemp && !cap.evCharger && cfg.power_entity && isFinite(threshold)) {
+    if (!cap.fridgeTemp && !cap.evCharger && !cap.screen && cfg.power_entity && isFinite(threshold)) {
       let derived = powerDerivedState(watts, threshold, this._powerWasRunning);
       // A pause under the threshold is not the end: a dishwasher drying, a
       // washer soaking. With power_off_delay the card waits that many minutes
@@ -11123,6 +11422,68 @@ class ApplianceCard extends HTMLElement {
       toaster = { mode, layout: TOASTER_LAYOUTS[cfg.toaster_layout] ? cfg.toaster_layout : "two" };
     }
 
+    // A screen, read from its plug first: nothing at all is off, a trickle up
+    // to the threshold is standby, above it the screen is on. Its players then
+    // say what it shows; without a meter, they say whether it is on at all.
+    let screen = null;
+    if (cap.screen) {
+      const ids = [domainOf(cfg.state_entity) === "media_player" ? cfg.state_entity : null]
+        .concat(SCREEN_MEDIA_FIELDS.map((f) => cfg[f]));
+      const players = [...new Set(ids.filter(Boolean))].map((id) => stateObj(hass, id)).filter(Boolean);
+      const rank = (p) => MEDIA_RANK[String(p.state).toLowerCase()] || 0;
+      const active = players.reduce((best, p) => (rank(p) > (best ? rank(best) : 0) ? p : best), null);
+      const ms = active ? String(active.state).toLowerCase() : "";
+      const sw = st && ["switch", "input_boolean", "binary_sensor"].includes(domainOf(cfg.state_entity)) ? String(st.state).toLowerCase() : "";
+      const limit = hasThreshold && isFinite(threshold) ? threshold : SCREEN_STANDBY_W;
+      let power = null;
+      if (sw === "off") power = "off";
+      else if (watts !== null) power = watts <= SCREEN_OFF_W ? "off" : watts <= limit ? "standby" : "on";
+      else if (active) power = "on";
+      else if (players.some((p) => String(p.state).toLowerCase() === "standby")) power = "standby";
+      else if (players.some((p) => String(p.state).toLowerCase() === "off")) power = "off";
+      else if (sw === "on") power = "on";
+      let mode = power || "off";
+      if (power === "on") {
+        if (cfg.lock_entity && screenLocked(stateObj(hass, cfg.lock_entity), cfg.lock_entity)) mode = "locked";
+        else if (ms === "playing" || ms === "buffering") mode = "playing";
+        else if (ms === "paused") mode = "paused";
+        else if (ms === "idle") mode = "home";
+      }
+      const name = stripAccents(`${cfg.state_entity || ""} ${cfg.media_entity || ""} ${(st && st.attributes.friendly_name) || ""}`.toLowerCase());
+      const layout = SCREEN_LAYOUTS.includes(cfg.screen_layout) ? cfg.screen_layout
+        : cfg.lock_entity || SCREEN_COMPUTER_RE.test(name) ? "computer" : SCREEN_PROJECTOR_RE.test(name) ? "projector" : "tv_feet";
+      // A new picture each time the screen comes on, unless one was chosen.
+      const lit = SCREEN_LIT.includes(mode);
+      const pool = layout === "computer" ? SCREEN_PC_IMAGES : SCREEN_TV_IMAGES;
+      if (SCREEN_IMAGES.includes(cfg.screen_image)) this._screenImage = cfg.screen_image;
+      else if (lit && (!this._screenLit || !pool.includes(this._screenImage))) {
+        this._screenImage = pool[Math.floor(Math.random() * pool.length)];
+      }
+      this._screenLit = lit;
+      const a = (active && active.attributes) || {};
+      // What a player is playing has its cover, which says it better than
+      // any picture of the card's.
+      const pic = (mode === "playing" || mode === "paused") && a.entity_picture ? String(a.entity_picture) : "";
+      const cover = pic && this._hass && typeof this._hass.hassUrl === "function" ? this._hass.hassUrl(pic) : pic;
+      if (power !== null && !cfg.state_show_raw) stateLabel = t(hass, SCREEN_LABELS[mode]);
+      if (power !== null) color = SCREEN_COLORS[mode];
+      // Nothing it reads answers: the plug, the meter and the players are all
+      // unavailable. That is a screen out of reach, not one whose state is
+      // unknown.
+      else if (rawIsMeaningless && watts === null && players.every((p) => ["unavailable", "unknown"].includes(String(p.state).toLowerCase()))) {
+        stateLabel = t(hass, "ev_offline");
+        color = SCREEN_COLORS.off;
+      }
+      const muted = !!active && a.is_volume_muted === true && lit;
+      if (active && lit && mode !== "locked") {
+        const value = [a.app_name || a.source, a.media_title, muted ? t(hass, "screen_muted") : ""].filter(Boolean).map((v) => keepTogether(String(v))).join(" \u00b7 ");
+        if (value) {
+          extraLines.push({ key: "media", icon: "mdi:television-play", label: a.friendly_name || active.entity_id, value, entity: active.entity_id });
+        }
+      }
+      screen = { mode, layout, image: this._screenImage || pool[0], cover, muted };
+    }
+
     // The last cycle, on request: how long it ran and when it ended. Shown
     // between cycles only, where the time left has nothing to say.
     const lcRole = cycleRole(norm);
@@ -11196,6 +11557,7 @@ class ApplianceCard extends HTMLElement {
       ironLayout: cfg.iron_layout === "generator" ? "generator" : "",
       toaster,
       purifier,
+      screen,
       fan: fanCtx,
       leftOn,
       tankTemp,
@@ -11274,6 +11636,7 @@ class ApplianceCard extends HTMLElement {
       illustrationCtx.dh && illustrationCtx.dh.mode,
       illustrationCtx.heater && illustrationCtx.heater.mode,
       illustrationCtx.toaster && illustrationCtx.toaster.mode,
+      illustrationCtx.screen && [illustrationCtx.screen.mode, illustrationCtx.screen.layout, illustrationCtx.screen.image, illustrationCtx.screen.cover].join("/"),
       illustrationCtx.purifier && [illustrationCtx.purifier.mode, illustrationCtx.purifier.osc, illustrationCtx.purifier.back].join("/"),
       illustrationCtx.fan && [illustrationCtx.fan.mode, illustrationCtx.fan.osc, illustrationCtx.fan.natural, illustrationCtx.fan.winter].join("/"),
       illustrationCtx.towel && illustrationCtx.towel.mode,
@@ -11688,6 +12051,12 @@ const SECTIONS = [
   // Air purifier and fan
   { field: "air_quality_entity", types: ["air_purifier"], labelKey: "section_air_quality", includeDomains: ["sensor"] },
   { field: "display_entity", types: ["air_purifier"], labelKey: "section_screen", includeDomains: ["sensor", "number"] },
+  // A screen: the players that show something on it, and on a computer the
+  // lock of its session.
+  { field: "media_entity", types: ["screen"], labelKey: "section_media", includeDomains: ["media_player"] },
+  { field: "media2_entity", types: ["screen"], labelKey: "section_media2", includeDomains: ["media_player"] },
+  { field: "media3_entity", types: ["screen"], labelKey: "section_media3", includeDomains: ["media_player"] },
+  { field: "lock_entity", types: ["screen"], labelKey: "section_lock", includeDomains: ["binary_sensor", "sensor", "lock", "input_boolean"] },
   { field: "night_mode_entity", types: ["air_purifier", "fan"], labelKey: "pf_night", includeDomains: ["switch", "binary_sensor", "input_boolean"] },
   { field: "heater_entity", types: ["air_purifier", "fan"], labelKey: "section_heater", includeDomains: ["climate", "switch", "select", "binary_sensor"] },
 
@@ -11862,10 +12231,10 @@ const SECTIONS = [
   // end it would have to wait for.
   { field: "power_entity", types: APPLIANCE_TYPES, labelKey: "section_power", includeDomains: ["sensor"], extra: (c) => {
       const cap = caps(c._currentType());
-      return c._row(cap.evCharger ? "ev_power_threshold" : "power_on_threshold", "power_on_threshold",
-        { placeholder: cap.fridgeTemp ? "1" : cap.evCharger ? String(EV_POWER_THRESHOLD) : "10" })
+      return c._row(cap.evCharger ? "ev_power_threshold" : cap.screen ? "screen_standby_threshold" : "power_on_threshold", "power_on_threshold",
+        { placeholder: cap.fridgeTemp ? "1" : cap.evCharger ? String(EV_POWER_THRESHOLD) : cap.screen ? String(SCREEN_STANDBY_W) : "10" })
         + (cap.fridgeTemp ? c._row("no_power_after", "no_power_after", { placeholder: "30" })
-          : cap.evCharger ? "" : c._row("power_off_delay", "power_off_delay", { placeholder: "0" }));
+          : cap.evCharger || cap.screen ? "" : c._row("power_off_delay", "power_off_delay", { placeholder: "0" }));
     } },
 
   // Two sections read as alerts, and only their pickers tell them apart: one
@@ -12521,6 +12890,7 @@ class ApplianceCardEditor extends HTMLElement {
             { value: "toaster", label: t(hass, "type_toaster") },
             { value: "air_purifier", label: t(hass, "type_air_purifier") },
             { value: "fan", label: t(hass, "type_fan") },
+            { value: "screen", label: t(hass, "type_screen") },
             { value: "pellet_stove", label: t(hass, "type_pellet_stove") },
             { value: "air_conditioner", label: t(hass, "type_air_conditioner") },
             { value: "dehumidifier", label: t(hass, "type_dehumidifier") },
@@ -12600,6 +12970,13 @@ class ApplianceCardEditor extends HTMLElement {
         }) + (this._config.fan_layout === "ceiling"
           ? this._row("fan_direction_inverted", "fan_direction_inverted", { type: "checkbox" }) + this._row("fan_wood_blades", "wood_blades", { type: "checkbox" })
           : this._row("oscillating", "oscillating", { type: "checkbox" })) : ""}
+        ${this._type === "screen" ? this._row("section_screen_layout", "screen_layout", {
+          type: "select",
+          options: SCREEN_LAYOUTS.map((v) => ({ value: v, label: t(hass, `layout_${v}`) })),
+        }) + this._row("section_screen_image", "screen_image", {
+          type: "select",
+          options: ["random"].concat(SCREEN_IMAGES).map((v) => ({ value: v, label: t(hass, `img_${v}`) })),
+        }) : ""}
         ${this._type === "printer_3d" ? this._row("section_printer_layout", "printer_layout", {
           type: "select",
           options: [
