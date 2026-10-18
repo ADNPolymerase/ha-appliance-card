@@ -8672,7 +8672,15 @@ check('borne : ni un statut reconnu', evMode(evR('SuspendedEVSE', { power_entity
   }
   const side = render({ ...W, compact: 'side' }, ws);
   check('compact side : le dessin a gauche', /<div class="cmp-pic" data-tap="1">\s*<div class="machine /.test(side), true);
-  check('compact side : le nom a droite', /<div class="cmp-body">[^]*<div class="name">/.test(side), true);
+  check('compact side : le nom a cote du dessin', /<div class="cmp-wrap">[^]*<div class="name">[^]*<\/div>\s*<\/div>\s*<\/div>/.test(side), true);
+  {
+    const sl = render({ ...W, compact: 'side', power_entity: 'sensor.wp' }, { ...ws, 'sensor.wp': { state: '850', attributes: { unit_of_measurement: 'W' } } });
+    const body = sl.slice(sl.indexOf('<div class="cmp-wrap">'));
+    const wrapEnd = body.search(/<\/div>\s*<\/div>\s*<\/div>\s*<\/div>\s*<div class="info-lines"/);
+    check('compact side : les lignes sous le haut, pleine largeur', wrapEnd > 0 && body.includes('850'), true);
+  }
+  check('compact side : plus de colonne de droite', side.includes('class="cmp-body"'), false);
+  contains('compact : les interrupteurs de coin ronds', side, '.cmp-icons .corner-btn { border: 1px solid');
   check('compact side : les boutons sur la ligne du nom', /<div class="cmp-icons">[^]*class="action-btn/.test(side), true);
   check('compact side : plus de rangee de boutons', /class="actions-row"/.test(side), false);
   contains('compact side : le dessin a 72 px', side, '.cmp-side .machine { zoom: 0.75; margin: 0; }');
@@ -8748,6 +8756,49 @@ check('borne : ni un statut reconnu', evMode(evR('SuspendedEVSE', { power_entity
   check('ordre des lignes : deux portes fermees, placees', labels(render({ ...F2, lines_order: ['doors'] }, fs('off', 'off')))[0], 'Doors closed');
   check('ordre des lignes : le congelateur s ouvre, il reste a sa place', labels(render({ ...F2, lines_order: ['power', 'doors', 'fridge_temp'] }, fs('off', 'on'))).slice(0, 3).join('|'), 'Power|Freezer door open|Fridge');
   check('ordre des lignes : la porte du congelateur se propose', build(F2, fs('off', 'on')).card._drawnLines.some(l => l.key === 'freezer_door'), true);
+}
+
+// =============================================================================
+// Drawing size and a screen's ping
+// =============================================================================
+
+{
+  const W = { appliance_type: 'washer', state_entity: 'sensor.w' };
+  const ws = { 'sensor.w': { state: 'Running', attributes: {} } };
+  contains('taille : 1 par defaut', render(W, ws), 'margin: 0 auto 8px; zoom: 1; }');
+  contains('taille : 0.5', render({ ...W, illustration_size: 0.5 }, ws), 'margin: 0 auto 8px; zoom: 0.5; }');
+  contains('taille : texte accepte', render({ ...W, illustration_size: '0.8' }, ws), 'margin: 0 auto 8px; zoom: 0.8; }');
+  contains('taille : bornee en haut', render({ ...W, illustration_size: 3 }, ws), 'zoom: 1.2; }');
+  contains('taille : bornee en bas', render({ ...W, illustration_size: 0.1 }, ws), 'zoom: 0.3; }');
+  contains('taille : invalide, 1', render({ ...W, illustration_size: 'x' }, ws), 'margin: 0 auto 8px; zoom: 1; }');
+  contains('taille : de cote aussi', render({ ...W, compact: 'side', illustration_size: 0.8 }, ws), '.cmp-side .machine { zoom: 0.6; margin: 0; }');
+  check('taille : le texte ne bouge pas', /\.name \{ font-size: 1\.2em;/.test(render({ ...W, illustration_size: 0.5 }, ws)), true);
+  {
+    const { card } = build({ appliance_type: 'screen', power_entity: 'sensor.tv_w', illustration_size: 0.5 },
+      { 'sensor.tv_w': { state: '142', attributes: { unit_of_measurement: 'W' } } });
+    let fit = null;
+    card.style = { setProperty: (k, v) => { if (k === '--scr-fit') fit = v; } };
+    card._card.classList = { contains: () => false, toggle() {} };
+    card._root = { querySelector: () => ({ getAttribute: () => '192', parentElement: { clientWidth: 150 } }) };
+    card._fitDrawing();
+    check('taille : la tele reduite tient sans retrecir', fit, '1');
+  }
+  const ed = newEditor({ state_entity: 'sensor.w', appliance_type: 'washer' });
+  const em = markup(ed);
+  check('editeur : le curseur de taille', /type="range" data-field="illustration_size"[^>]*min="0.3" max="1.2"/.test(em), true);
+  check('editeur : curseur a 1 par defaut', /data-field="illustration_size"[^>]*value="1"/.test(em), true);
+  check('editeur : la taille traduite', markup(newEditor({ state_entity: 'sensor.w', appliance_type: 'washer', language: 'fr' })).includes('Taille du dessin'), true);
+
+  // A ping says the screen answers; a box on standby no longer says otherwise.
+  const P = { appliance_type: 'screen', state_entity: 'binary_sensor.tv_ping', media_entity: 'media_player.box' };
+  const ps = (ping, box) => ({ 'binary_sensor.tv_ping': { state: ping, attributes: {} }, 'media_player.box': { state: box, attributes: {} } });
+  check('ecran ping : on, box en veille, allume', stateLine(render(P, ps('on', 'standby'))), 'On');
+  check('ecran ping : on, box eteinte, allume', stateLine(render(P, ps('on', 'off'))), 'On');
+  check('ecran ping : off, eteint', stateLine(render(P, ps('off', 'playing'))), 'Off');
+  check('ecran ping : seul, allume', stateLine(render({ appliance_type: 'screen', state_entity: 'binary_sensor.tv_ping' }, ps('on', 'off'))), 'On');
+  check('ecran ping : on, box qui joue', stateLine(render(P, ps('on', 'playing'))), 'Playing');
+  const S = { appliance_type: 'screen', state_entity: 'switch.tv_plug', media_entity: 'media_player.box' };
+  check('ecran prise : on, box en veille, en veille', stateLine(render(S, { 'switch.tv_plug': { state: 'on', attributes: {} }, 'media_player.box': { state: 'standby', attributes: {} } })), 'Standby');
 }
 
 // =============================================================================
