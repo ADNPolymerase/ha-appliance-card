@@ -8538,10 +8538,12 @@ check('borne : ni un statut reconnu', evMode(evR('SuspendedEVSE', { power_entity
   check('ecran : pied central', /class="scr-neck"[\s\S]*class="scr-base"/.test(render({ ...SC, screen_layout: 'tv_stand' }, tv(142))), true);
   check('ecran : projecteur, le faisceau', /class="scr-beam"/.test(render({ ...SC, screen_layout: 'projector' }, tv(142))), true);
   check('ecran : ordinateur, la tour', /class="scr-tower"/.test(render({ ...SC, screen_layout: 'computer' }, tv(142))), true);
-  const mSize = h => (/<div class="machine [^"]*" style="([^"]*)"/.exec(h) || [, ''])[1];
-  check('ecran : la tele en plus grand', mSize(render(SC, tv(142))), 'width: 192px; height: 132px');
-  check('ecran : l ordinateur aussi', /width: 153\.6px;/.test(mSize(render({ ...SC, screen_layout: 'computer' }, tv(142)))), true);
-  check('ecran : le projecteur aussi', mSize(render({ ...SC, screen_layout: 'projector' }, tv(142))), 'width: 172.8px; height: 156.6px');
+  const mSize = h => (/<div class="machine [^"]*"[^>]*? style="([^"]*)"/.exec(h) || [, ''])[1];
+  check('ecran : la tele en plus grand', mSize(render(SC, tv(142))), 'width: calc(192px * var(--scr-fit, 1)); height: calc(132px * var(--scr-fit, 1))');
+  check('ecran : l ordinateur aussi', /width: calc\(153\.6px \* var\(--scr-fit, 1\)\);/.test(mSize(render({ ...SC, screen_layout: 'computer' }, tv(142)))), true);
+  check('ecran : le projecteur aussi', mSize(render({ ...SC, screen_layout: 'projector' }, tv(142))), 'width: calc(172.8px * var(--scr-fit, 1)); height: calc(156.6px * var(--scr-fit, 1))');
+  check('ecran : la largeur voulue est donnee', /data-fit-w="192"/.test(render(SC, tv(142))), true);
+  check('ecran : le dessin suit --scr-fit', /transform: scale\(calc\(2 \* var\(--scr-fit, 1\)\)\)/.test(render(SC, tv(142))), true);
   contains('ecran : en veille, le temoin rouge', render(SC, tv(17)), '.machine.mode-standby .scr-led { background: #ff3b30;');
   // The picture: fixed, or drawn at random each time the screen comes on.
   check('ecran : image fixe', scImage(render({ ...SC, screen_image: 'pong' }, tv(142))), 'pong');
@@ -8648,6 +8650,82 @@ check('borne : ni un statut reconnu', evMode(evR('SuspendedEVSE', { power_entity
   check('editeur ecran : le seuil de veille', em.includes('Standby up to this power (W)'), true);
   check('editeur ecran : pas de delai de fin de cycle', em.includes('power_off_delay'), false);
   check('editeur : pas de lecteur ailleurs', markup(newEditor({ state_entity: 'sensor.w', appliance_type: 'washer' })).includes('data-toggle="media_entity"'), false);
+}
+
+// =============================================================================
+// Compact modes and the type menu
+// =============================================================================
+
+{
+  const W = { appliance_type: 'washer', state_entity: 'sensor.w', pause_entity: 'button.p', corner_entities: ['switch.lk'] };
+  const ws = { 'sensor.w': { state: 'Running', attributes: {} }, 'button.p': { state: 'unknown', attributes: {} },
+    'switch.lk': { state: 'on', attributes: { friendly_name: 'Lock' } } };
+  const normal = render(W, ws);
+  check('compact : normal, la rangee de boutons', /class="actions-row"/.test(normal), true);
+  check('compact : normal, le dessin', /<div class="machine /.test(normal), true);
+  for (const v of [true, 'true', 'hide']) {
+    const h = render({ ...W, compact: v }, ws);
+    check(`compact ${v} : sans dessin, comme avant`, /<div class="machine /.test(h), false);
+    check(`compact ${v} : plus de rangee de boutons`, /class="actions-row"/.test(h), false);
+    check(`compact ${v} : le bouton sur la ligne du nom`, /<div class="cmp-icons right">[^]*class="action-btn/.test(h), true);
+    check(`compact ${v} : l interrupteur de coin aussi`, /<div class="cmp-icons left">[^]*data-corner="switch\.lk"/.test(h), true);
+  }
+  const side = render({ ...W, compact: 'side' }, ws);
+  check('compact side : le dessin a gauche', /<div class="cmp-pic" data-tap="1">\s*<div class="machine /.test(side), true);
+  check('compact side : le nom a droite', /<div class="cmp-body">[^]*<div class="name">/.test(side), true);
+  check('compact side : les boutons sur la ligne du nom', /<div class="cmp-icons">[^]*class="action-btn/.test(side), true);
+  check('compact side : plus de rangee de boutons', /class="actions-row"/.test(side), false);
+  contains('compact side : le dessin a 72 px', side, '.cmp-side .machine { zoom: 0.75; margin: 0; }');
+  check('compact : valeur inconnue, normal', /class="actions-row"/.test(render({ ...W, compact: 'x' }, ws)), true);
+  check('compact : false, normal', /class="actions-row"/.test(render({ ...W, compact: false }, ws)), true);
+  // A screen beside the text is drawn the size of every other appliance.
+  {
+    const { card } = build({ appliance_type: 'screen', power_entity: 'sensor.tv_w', compact: 'side' },
+      { 'sensor.tv_w': { state: '142', attributes: { unit_of_measurement: 'W' } } });
+    let fit = null;
+    card.style = { setProperty: (k, v) => { if (k === '--scr-fit') fit = v; } };
+    card._card.classList = { contains: c => c === 'cmp-side', toggle() {} };
+    const m = { getAttribute: () => '192', parentElement: { clientWidth: 500 } };
+    card._root = { querySelector: () => m };
+    card._fitDrawing();
+    check('compact side : la tele ramenee a 96 px', fit, '0.5');
+    card._card.classList = { contains: () => false, toggle() {} };
+    card._fitDrawing();
+    check('pleine largeur : la tele garde sa taille', fit, '1');
+    m.parentElement.clientWidth = 150;
+    card._fitDrawing();
+    check('carte etroite : la tele retrecit', fit, '0.781');
+  }
+  // The editor: a menu of three, written the way it always was.
+  const ed = newEditor({ state_entity: 'sensor.w', appliance_type: 'washer', compact: true });
+  const em = markup(ed);
+  check('editeur compact : un menu', /<select data-field="compact">/.test(em), true);
+  check('editeur compact : true se lit sans dessin', /<option value="hide" selected>/.test(em), true);
+  check('editeur compact : les trois choix', (em.match(/<select data-field="compact">([^]*?)<\/select>/) || [, ''])[1].match(/<option/g)?.length, 3);
+  const pick = (v) => {
+    const e = newEditor({ state_entity: 'sensor.w', appliance_type: 'washer' });
+    const f = e._root.querySelectorAll('[data-field]').find(n => n.getAttribute('data-field') === 'compact');
+    f.value = v;
+    fire(f, 'change', { target: f });
+    return e._config;
+  };
+  check('editeur compact : sans dessin ecrit true', pick('hide').compact, true);
+  check('editeur compact : sur le cote ecrit side', pick('side').compact, 'side');
+  check('editeur compact : desactive retire la cle', 'compact' in pick('off'), false);
+  // The type menu, by family.
+  const tm = markup(newEditor({ state_entity: 'sensor.w', appliance_type: 'washer' }));
+  const menu = (tm.match(/<select data-field="appliance_type">([^]*?)<\/select>/) || [, ''])[1];
+  check('menu des types : six familles', (menu.match(/<optgroup /g) || []).length, 6);
+  const listed = [...menu.matchAll(/<option value="([a-z_0-9]+)"/g)].map(m => m[1]);
+  check('menu des types : auto en tete', listed[0], 'auto');
+  const typesInCard = [...SRC.matchAll(/^  ([a-z_0-9]+): \{ [a-zA-Z]+: true/gm)].map(m => m[1]);
+  check('menu des types : chaque type une fois', listed.length === new Set(listed).size, true);
+  check('menu des types : aucun type oublie', typesInCard.filter(t => !listed.includes(t)).join(','), '');
+  check('menu des types : l ecran dit ce qu il couvre', /<option value="screen"[^>]*>Screen \(TV, projector, computer\)/.test(menu), true);
+  const kitchen = (menu.match(/<optgroup label="Kitchen">([^]*?)<\/optgroup>/) || [, ''])[1];
+  const kl = [...kitchen.matchAll(/>([^<]+)<\/option>/g)].map(m => m[1]);
+  check('menu des types : trie par nom', kl.join('|'), [...kl].sort((a, b) => a.localeCompare(b)).join('|'));
+  check('menu des types : en francais', /<optgroup label="Maison et multimédia">/.test(markup(newEditor({ state_entity: 'sensor.w', appliance_type: 'washer', language: 'fr' }))), true);
 }
 
 // =============================================================================
