@@ -8728,6 +8728,28 @@ check('borne : ni un statut reconnu', evMode(evR('SuspendedEVSE', { power_entity
   check('menu des types : en francais', /<optgroup label="Maison et multimédia">/.test(markup(newEditor({ state_entity: 'sensor.w', appliance_type: 'washer', language: 'fr' }))), true);
 }
 
+// The fridge's door lines join the line order (HACF 81728 post 82).
+{
+  const labels = h => [...h.matchAll(/<span class="label">([^<]*)<\/span>/g)].map(m => m[1]);
+  const FR = { appliance_type: 'fridge', power_entity: 'sensor.p', power_on_threshold: 1,
+    door_entity: 'binary_sensor.d', fridge_temperature_entity: 'sensor.ft', freezer_temperature_entity: 'sensor.zt' };
+  const fs = (d = 'off', z) => ({ 'sensor.p': { state: '62', attributes: { unit_of_measurement: 'W' } },
+    'binary_sensor.d': { state: d, attributes: { device_class: 'door' } },
+    'sensor.ft': { state: '4.8', attributes: { unit_of_measurement: '°C' } },
+    'sensor.zt': { state: '-20.2', attributes: { unit_of_measurement: '°C' } },
+    ...(z ? { 'binary_sensor.z': { state: z, attributes: { device_class: 'door' } } } : {}) });
+  const { card } = build(FR, fs());
+  check('ordre des lignes : la porte du frigo se propose', card._drawnLines.some(l => l.key === 'door'), true);
+  check('ordre des lignes : la porte du frigo se place', labels(render({ ...FR, lines_order: ['door', 'power'] }, fs()))[0], 'Door closed');
+  check('ordre des lignes : la porte ouverte aussi', labels(render({ ...FR, lines_order: ['door'] }, fs('on')))[0], 'Door open');
+  const F2 = { ...FR, freezer_door_entity: 'binary_sensor.z' };
+  const both = build(F2, fs('off', 'off')).card;
+  check('ordre des lignes : deux portes fermees, une ligne a placer', both._drawnLines.filter(l => /door/.test(l.key)).map(l => l.key).join(','), 'doors');
+  check('ordre des lignes : deux portes fermees, placees', labels(render({ ...F2, lines_order: ['doors'] }, fs('off', 'off')))[0], 'Doors closed');
+  check('ordre des lignes : le congelateur s ouvre, il reste a sa place', labels(render({ ...F2, lines_order: ['power', 'doors', 'fridge_temp'] }, fs('off', 'on'))).slice(0, 3).join('|'), 'Power|Freezer door open|Fridge');
+  check('ordre des lignes : la porte du congelateur se propose', build(F2, fs('off', 'on')).card._drawnLines.some(l => l.key === 'freezer_door'), true);
+}
+
 // =============================================================================
 // Air purifier and fan
 // =============================================================================

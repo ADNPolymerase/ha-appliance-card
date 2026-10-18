@@ -1,4 +1,4 @@
-const CARD_VERSION = "2.27.0";
+const CARD_VERSION = "2.27.1";
 
 console.info(
   "%c HA-APPLIANCE-CARD %c v" + CARD_VERSION + " ",
@@ -9945,7 +9945,10 @@ class ApplianceCard extends HTMLElement {
       stateLabel = t(hass, { fridge_cooling: "ac_cooling", fridge_standby: "ac_idle" }[norm] || norm);
 
       const twoDoors = !!(cfg.door_entity && cfg.freezer_door_entity);
-      const doorLine = (open, openKey) => ({
+      // Each door line has its key, so the line order can place it: the
+      // fridge's door, the freezer's, and the one line both make once shut.
+      const doorLine = (key, open, openKey) => ({
+        key,
         icon: open ? "mdi:door-open" : "mdi:door-closed",
         label: t(hass, open ? openKey : "door_closed"),
         value: "",
@@ -9958,10 +9961,10 @@ class ApplianceCard extends HTMLElement {
           extraLines.push({ key: "doors", icon: "mdi:door-closed", label: t(hass, "doors_closed"), value: "" });
         } else {
           if (cfg.door_entity && (!twoDoors || doorOpen)) {
-            extraLines.push(doorLine(doorOpen, twoDoors ? "fridge_door_open" : "door_open"));
+            extraLines.push(doorLine("door", doorOpen, twoDoors ? "fridge_door_open" : "door_open"));
           }
           if (cfg.freezer_door_entity && (!twoDoors || freezerDoorOpen)) {
-            extraLines.push(doorLine(freezerDoorOpen, twoDoors ? "freezer_door_open" : "door_open"));
+            extraLines.push(doorLine(twoDoors ? "freezer_door" : "door", freezerDoorOpen, twoDoors ? "freezer_door_open" : "door_open"));
           }
         }
       }
@@ -11905,9 +11908,14 @@ class ApplianceCard extends HTMLElement {
     // keeps the order it had.
     const order = (Array.isArray(cfg.lines_order) ? cfg.lines_order : []).filter(Boolean);
     if (order.length) {
+      // A fridge's two doors make one line while both are shut and two once
+      // one opens: either stands in for the other, so a door that opens
+      // stays where the line was put.
+      const aliases = { doors: ["door", "freezer_door"], door: ["doors"], freezer_door: ["doors"] };
       const rank = (l) => {
-        const at = l.key ? order.indexOf(l.key) : -1;
-        return at === -1 ? order.length : at;
+        const keys = l.key ? [l.key].concat(aliases[l.key] || []) : [];
+        const at = keys.map((k) => order.indexOf(k)).filter((i) => i !== -1);
+        return at.length ? Math.min(...at) : order.length;
       };
       lines = lines
         .map((line, at) => ({ line, at }))
