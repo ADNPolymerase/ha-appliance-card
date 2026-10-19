@@ -8802,6 +8802,72 @@ check('borne : ni un statut reconnu', evMode(evR('SuspendedEVSE', { power_entity
 }
 
 // =============================================================================
+// Filling the slot, and a finished cycle that flashes
+// =============================================================================
+
+{
+  const L = { appliance_type: 'washer', state_entity: 'sensor.lv', door_entity: 'binary_sensor.porte', done_alert: true };
+  const ls = (state, door) => ({ 'sensor.lv': { state, attributes: {} }, 'binary_sensor.porte': { state: door, attributes: {} } });
+  const badge = h => /class="done-badge"/.test(h);
+  check('fin de cycle : le badge, porte fermee', badge(render(L, ls('Finished', 'off'))), true);
+  check('fin de cycle : le badge est sur le dessin', /<div class="machine [^]*class="done-badge"/.test(render(L, ls('Finished', 'off'))), true);
+  check('fin de cycle : porte ouverte, plus de badge', badge(render(L, ls('Finished', 'on'))), false);
+  check('fin de cycle : en marche, pas de badge', badge(render(L, ls('Running', 'off'))), false);
+  check('fin de cycle : sans l option, pas de badge', badge(render({ ...L, done_alert: false }, ls('Finished', 'off'))), false);
+  check('fin de cycle : texte inchange', stateLine(render(L, ls('Finished', 'off'))), 'Finished');
+  {
+    // Seen once, it stays seen: the door closing again does not relight it,
+    // until the next cycle ends.
+    const { card } = build(L, ls('Finished', 'off'));
+    check('fin de cycle : porte ouverte puis refermee, toujours vu', badge(rerender(card, ls('Finished', 'on')) && rerender(card, ls('Finished', 'off'))), false);
+    rerender(card, ls('Running', 'off'));
+    check('fin de cycle : le cycle suivant rallume le badge', badge(rerender(card, ls('Finished', 'off'))), true);
+  }
+  {
+    // After a reload, a door that moved after the cycle ended counts as seen.
+    const st = { 'sensor.lv': { state: 'Finished', attributes: {}, last_changed: '2026-10-19T08:00:00Z' },
+      'binary_sensor.porte': { state: 'off', attributes: {}, last_changed: '2026-10-19T08:05:00Z' } };
+    check('fin de cycle : porte bougee depuis la fin, vu', badge(render(L, st)), false);
+    st['binary_sensor.porte'].last_changed = '2026-10-19T07:00:00Z';
+    check('fin de cycle : porte immobile depuis, badge', badge(render(L, st)), true);
+  }
+  {
+    const { card } = build(L, ls('Finished', 'off'));
+    card._doneSeen = true;
+    card._render();
+    check('fin de cycle : vu par un appui, plus de badge', badge(markup(card)), false);
+  }
+  check('fin de cycle : sans dessin, sur la ligne du nom', /<div class="cmp-icons right">[^]*class="done-badge"/.test(render({ ...L, compact: true }, ls('Finished', 'off'))), true);
+  check('fin de cycle : a cote du dessin, sur le dessin', /<div class="cmp-pic"[^]*class="done-badge"/.test(render({ ...L, compact: 'side' }, ls('Finished', 'off'))), true);
+  contains('fin de cycle : le badge pulse', render(L, ls('Finished', 'off')), 'animation: ac-done-pulse 1.6s ease-out infinite; animation-delay: var(--anim-offset, 0s);');
+  contains('fin de cycle : immobile si on reduit les animations', render(L, ls('Finished', 'off')), '.done-badge { animation-name: none; }');
+
+  // fill_height: the card stretches to its slot and its buttons go down.
+  const F = { appliance_type: 'dryer', state_entity: 'sensor.sl', toggle_entity: 'switch.sl' };
+  const fs = { 'sensor.sl': { state: 'Idle', attributes: {} }, 'switch.sl': { state: 'on', attributes: {} } };
+  const fh = render({ ...F, fill_height: true }, fs);
+  contains('hauteur : la carte remplit sa case', fh, 'ha-card.fill { height: 100%; box-sizing: border-box; display: flex; flex-direction: column; }');
+  check('hauteur : un vide avant les boutons', /<div class="fill-gap"><\/div>\s*<div class="actions-row">/.test(fh), true);
+  {
+    const { card } = build({ ...F, fill_height: true }, fs);
+    const set = {};
+    card.style = { setProperty: (k, v) => { set[k] = v; }, removeProperty: (k) => { delete set[k]; } };
+    card._render();
+    check('hauteur : l hote prend 100 %', set.height, '100%');
+    card.setConfig({ type: 'custom:ha-appliance-card', ...F });
+    card._render();
+    check('hauteur : sans l option, rien', set.height, undefined);
+  }
+
+  const em = markup(newEditor({ state_entity: 'sensor.lv', appliance_type: 'washer' }));
+  check('editeur : case fill_height', /data-field="fill_height" data-type="checkbox"/.test(em), true);
+  check('editeur : case done_alert', /data-field="done_alert" data-type="checkbox"/.test(em), true);
+  check('editeur : pas de done_alert pour un frigo', /data-field="done_alert"/.test(markup(newEditor({ state_entity: 'sensor.f', appliance_type: 'fridge' }))), false);
+  const fr = markup(newEditor({ state_entity: 'sensor.lv', appliance_type: 'washer', language: 'fr' }));
+  check('editeur : traduit', fr.includes('Clignoter') && fr.includes('Occuper toute la hauteur'), true);
+}
+
+// =============================================================================
 // Air purifier and fan
 // =============================================================================
 
