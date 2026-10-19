@@ -10,7 +10,7 @@
 <a href="https://buymeacoffee.com/adnpolymerase" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-orange.png" alt="Buy Me A Coffee" height="60"></a>
 <a href="https://adnpolymerase.github.io/HA/" target="_blank"><img src="https://raw.githubusercontent.com/ADNPolymerase/HA/main/assets/site-button.svg" alt="Lien vers mon github.io pour mes autres projets" height="60"></a>
 
-Une card Lovelace pour les appareils de la maison : lave-linge, sèche-linge, lave-vaisselle, four, micro-ondes, hotte, plaque de cuisson, réfrigérateur, bouilloire, robot cuiseur, machine à café, cuiseur à riz, friteuse à air, chauffe-eau, chaudière, pompe à chaleur, imprimante 3D, distributeur de croquettes, fer à repasser, grille-pain, poêle à granulés, climatiseur, déshumidificateur, petit chauffage, sèche-serviettes, purificateur d'air, ventilateur, borne de recharge, télévision, vidéoprojecteur et ordinateur. Cycle en cours, programme, temps restant, température, alertes et commandes.
+Une card Lovelace pour les appareils de la maison : lave-linge, sèche-linge, lave-vaisselle, four, micro-ondes, hotte, plaque de cuisson, réfrigérateur, bouilloire, robot cuiseur, machine à café, cuiseur à riz, friteuse à air, chauffe-eau, chaudière, pompe à chaleur, imprimante 3D, distributeur de croquettes, fer à repasser, grille-pain, sèche-cheveux, poêle à granulés, climatiseur, déshumidificateur, petit chauffage, sèche-serviettes, purificateur d'air, ventilateur, borne de recharge, télévision, vidéoprojecteur et ordinateur. Cycle en cours, programme, temps restant, température, alertes et commandes.
 
 Aucune marque supposée : chaque champ est une entité à choisir, elle fonctionne donc avec **n'importe quelle** intégration (Electrolux, Samsung, LG, Home Connect, Miele, une simple prise connectée…).
 
@@ -110,12 +110,12 @@ Seule `state_entity` est obligatoire, sauf sur un réfrigérateur où une sonde 
 | `done_alert` | `true` fait pulser un badge vert sur le dessin en fin de cycle, jusqu'à l'ouverture de la porte ou un appui sur le badge. Pour les appareils à cycle (lave-linge, sèche-linge, lave-vaisselle, four…). |
 | `illustration_color` | `auto` (défaut, suit le thème) \| `white` \| `grey` \| `black` \| `red` (rouge foncé). Ne change que la carrosserie, pas les couleurs d'état. |
 | `language` | `auto` (défaut, suit Home Assistant) ou l'un des 14 codes : `en`, `fr`, `de`, `es`, `it`, `nl`, `pt`, `sv`, `no`, `da`, `pl`, `ru`, `zh`, `cs`. `nb` et `nb-NO` donnent le norvégien. |
-| `appliance_type` | `auto` (défaut) \| `washer` \| `dryer` \| `dishwasher` \| `oven` \| `microwave` \| `hood` \| `cooktop` \| `fridge` \| `kettle` \| `cooker` \| `coffee` \| `rice_cooker` \| `air_fryer` \| `water_heater` \| `boiler` \| `heat_pump` \| `printer_3d` \| `pet_feeder` \| `pet_fountain` \| `iron` \| `toaster` \| `pellet_stove` \| `air_conditioner` \| `dehumidifier` \| `space_heater` \| `towel_warmer` \| `air_purifier` \| `fan` \| `ev_charger` \| `screen`. |
+| `appliance_type` | `auto` (défaut) \| `washer` \| `dryer` \| `dishwasher` \| `oven` \| `microwave` \| `hood` \| `cooktop` \| `fridge` \| `kettle` \| `cooker` \| `coffee` \| `rice_cooker` \| `air_fryer` \| `water_heater` \| `boiler` \| `heat_pump` \| `printer_3d` \| `pet_feeder` \| `pet_fountain` \| `iron` \| `toaster` \| `pellet_stove` \| `air_conditioner` \| `dehumidifier` \| `space_heater` \| `towel_warmer` \| `air_purifier` \| `fan` \| `ev_charger` \| `hair_dryer` \| `screen`. |
 | `tap_action` | Ce que fait un appui sur la carte, dans les mots de Home Assistant : `more-info` (défaut : l'entité d'état, ou sur une carte sans elle ce qu'elle lit à sa place), `none`, `navigate`, `url`, `toggle`, `perform-action` ou `fire-dom-event`, celle qu'écoutent les cartes popup bâties sur browser_mod. En YAML seulement. |
 | `toggle_entity` | Bouton marche/arrêt (`switch`, `button`, `script`, `input_boolean`, `fan`), mis en évidence quand c'est allumé. |
 | `power_entity` / `power_on_threshold` / `power_icon` | Capteur de puissance. Avec un seuil, l'état en est déduit : *en marche* au-dessus, puis *terminé* en redescendant. Pointer `state_entity` sur ce même capteur l'active avec un seuil de 10 W. `power_icon` remplace `mdi:power-plug`. |
 | `power_off_delay` | Nombre de minutes sous `power_on_threshold` avant que le cycle passe à *Terminé*, pour qu'une pause (un lave-vaisselle qui sèche, un lave-linge qui trempe) ne soit pas prise pour la fin. Seulement quand l'état vient de la prise : une intégration signale ses pauses elle-même. 0 par défaut. |
-| `show_last_cycle` | Ajoute une ligne *Dernier cycle* entre deux cycles : sa durée et son heure de fin, lues dans l'historique de Home Assistant (sept jours de l'état, deux jours de la puissance d'une prise, pauses plus courtes que `power_off_delay` comprises). Appareils à cycle, bouilloire, fer à repasser et grille-pain. |
+| `show_last_cycle` | Ajoute une ligne *Dernier cycle* entre deux cycles : sa durée et son heure de fin, lues dans l'historique de Home Assistant (sept jours de l'état, deux jours de la puissance d'une prise, pauses plus courtes que `power_off_delay` comprises). Appareils à cycle, bouilloire, fer à repasser, grille-pain et sèche-cheveux. |
 | `program_entity` / `program_format` | Programme. `clean` (défaut) le rend lisible (`LaundryCare.Washer.Program.Auto40` devient *Auto 40*, `Rapid20Min` devient *Rapid 20 Min*), `raw` l'affiche tel quel. |
 | `remaining_time_entity` / `remaining_time_unit` | Temps restant, en `auto` (défaut, d'après l'unité de l'entité : s, min, h, ms, d, ou `1:02:03`), `seconds`, `minutes` ou `hours`, ou une heure de fin (`timestamp`). Il donne aussi la barre de progression : le temps écoulé depuis le début du cycle, pauses retirées, sur ce temps plus ce qui reste. Ouverte en plein cycle, la carte retrouve le début dans l'historique de l'état. |
 | `remaining_time_hide_when_idle` | `true` n'affiche le temps restant qu'en marche, contre les heures de fin périmées (SmartThings). |
@@ -181,6 +181,8 @@ Seule `state_entity` est obligatoire, sauf sur un réfrigérateur où une sonde 
 | `printed_part` | imprimante 3D | La pièce sur le plateau : `cube` (défaut), `pyramid` (pyramide) ou `duck` (un canard en plastique). Elle apparaît de bas en haut au fil de l'impression. |
 | `iron_layout` | fer | `iron` (défaut, le fer seul) \| `generator` (le même fer sur le socle d'une centrale vapeur). |
 | `toaster_layout` | grille-pain | `two` (défaut, deux fentes) \| `four` (quatre fentes, deux leviers) \| `long` (une fente longue pour deux tranches bout à bout). |
+| `hair_dryer_layout` | sèche-cheveux | `pistol` (défaut, sèche-cheveux classique vu de profil) \| `ring` (sèche-cheveux en anneau vu de face). |
+| `heat_threshold` | sèche-cheveux | Puissance à partir de laquelle il souffle de l'air chaud (300 W par défaut). En dessous, seul le ventilateur tourne. |
 | `screen_layout` | écran | `tv_feet` (défaut, télévision sur deux pieds) \| `tv_stand` (télévision sur pied central) \| `tv_wall` (télévision murale) \| `projector` (vidéoprojecteur sous sa toile) \| `computer` (écran et tour). Sans réglage, un nom qui dit projecteur ou ordinateur choisit le modèle, tout comme un `lock_entity`. |
 | `screen_image` | écran | L'image d'un écran allumé : `random` (défaut, une nouvelle à chaque allumage) ou l'une de `sunset`, `aquarium`, `bars`, `football`, `space`, `bounce`, `desktop`, `code`, `pong`. Un lecteur qui fournit une jaquette l'affiche à la place pendant la lecture. |
 | `media_entity` / `media2_entity` / `media3_entity` | écran | Jusqu'à trois `media_player` qui affichent quelque chose sur cet écran : la télé elle-même, et le boîtier ou la console qui a vraiment l'image. La card suit celui qui joue, puis celui en pause, puis celui à l'accueil, puis celui allumé ; à égalité, le premier. Sa ligne le nomme et donne l'application ou la source, le titre et *Son coupé*. Sans mesure de puissance, les lecteurs disent aussi si l'écran est éteint, en veille ou allumé. |
@@ -409,6 +411,21 @@ toaster_layout: four
 state_entity: switch.prise_grille_pain
 power_entity: sensor.prise_grille_pain_puissance
 power_on_threshold: 30
+```
+
+</details>
+
+<details>
+<summary><b>Sèche-cheveux</b></summary>
+
+Lu sur sa prise connectée : *Éteint* à `power_on_threshold` ou moins (10 W par défaut), *Air froid* quand seul le ventilateur tourne, *Air chaud* à partir de `heat_threshold` (300 W par défaut). L'air sort de l'embout, bleu à froid, orange à chaud, et plus fort en position haute (à partir de 1200 W). Sans mesure, son interrupteur dit seulement *Allumé* ou *Éteint*. Deux modèles : classique et en anneau.
+
+```yaml
+type: custom:ha-appliance-card
+appliance_type: hair_dryer
+hair_dryer_layout: ring
+state_entity: switch.prise_seche_cheveux
+power_entity: sensor.prise_seche_cheveux_puissance
 ```
 
 </details>

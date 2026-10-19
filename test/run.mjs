@@ -7757,7 +7757,7 @@ check('borne : ni un statut reconnu', evMode(evR('SuspendedEVSE', { power_entity
   for (const file of ['README.md', 'README.fr.md']) {
     const md = readFileSync(join(HERE, '..', file), 'utf8');
     check(`${file} : ev_charger dans la liste des types`, /`fan` \\\| `ev_charger`/.test(md), true);
-    for (const ty of ['toaster', 'air_purifier', 'fan', 'pet_fountain'])
+    for (const ty of ['toaster', 'air_purifier', 'fan', 'pet_fountain', 'hair_dryer'])
       check(`${file} : ${ty} dans la liste des types`, md.includes(`\\| \`${ty}\` \\|`), true);
     check(`${file} : l exemple Webasto`, md.includes('state_entity: sensor.webasto_next_charge_point_state'), true);
     check(`${file} : les lettres IEC 61851`, /state_map:\n  A: no_vehicle\n  B: connected\n  C: charging\n  D: charging\n  E: error\n  F: error\n/.test(md), true);
@@ -8494,6 +8494,70 @@ check('borne : ni un statut reconnu', evMode(evR('SuspendedEVSE', { power_entity
   check('editeur grille-pain : la puissance', markup(ed).includes('data-toggle="power_entity"'), true);
   check('editeur grille-pain : pas de programme', markup(ed).includes('data-toggle="program_entity"'), false);
   check('editeur : pas de modele de grille-pain ailleurs', /toaster_layout/.test(markup(newEditor({ state_entity: 'sensor.w', appliance_type: 'washer' }))), false);
+}
+
+// =============================================================================
+// Hair dryer
+// =============================================================================
+
+{
+  const HD = { appliance_type: 'hair_dryer', state_entity: 'switch.sc', power_entity: 'sensor.sc_w' };
+  const sc = (w, sw = 'on') => ({ 'switch.sc': { state: sw, attributes: {} }, 'sensor.sc_w': { state: String(w), attributes: { unit_of_measurement: 'W' } } });
+  const hdMode = h => (/\bmode-(\w+)/.exec(machineCls(h)) || [, null])[1];
+  const airLines = h => ((/<g class="hd-air"[^>]*>([\s\S]*?)<\/g>/.exec(h) || [, ''])[1].match(/<path /g) || []).length;
+  check('seche-cheveux : branche sans consommer, eteint', hdMode(render(HD, sc(0))), 'off');
+  check('seche-cheveux : eteint se dit', stateLine(render(HD, sc(0))), 'Off');
+  check('seche-cheveux : 10 W, encore eteint', hdMode(render(HD, sc(10))), 'off');
+  check('seche-cheveux : prise coupee', hdMode(render(HD, sc(0, 'off'))), 'off');
+  check('seche-cheveux : le ventilateur seul, air froid', hdMode(render(HD, sc(60))), 'cool');
+  check('seche-cheveux : air froid se dit', stateLine(render(HD, sc(60))), 'Cool air');
+  check('seche-cheveux : air froid en bleu', stateColor(render(HD, sc(60))), '#29b6f6');
+  check('seche-cheveux : la resistance, air chaud', hdMode(render(HD, sc(900))), 'hot');
+  check('seche-cheveux : air chaud se dit', stateLine(render(HD, sc(900))), 'Hot air');
+  check('seche-cheveux : air chaud en orange', stateColor(render(HD, sc(900))), '#ff7043');
+  check('seche-cheveux : 300 W, deja chaud', hdMode(render(HD, sc(300))), 'hot');
+  check('seche-cheveux : en francais', stateLine(render({ ...HD, language: 'fr' }, sc(900))), 'Air chaud');
+  check('seche-cheveux : en francais, froid', stateLine(render({ ...HD, language: 'fr' }, sc(60))), 'Air froid');
+  check('seche-cheveux : seuil de chaleur reglable', hdMode(render({ ...HD, heat_threshold: 1000 }, sc(900))), 'cool');
+  check('seche-cheveux : seuil d allumage reglable', hdMode(render({ ...HD, power_on_threshold: 80 }, sc(60))), 'off');
+  check('seche-cheveux : sans mesure, l interrupteur dit allume', hdMode(render({ appliance_type: 'hair_dryer', state_entity: 'switch.sc' }, { 'switch.sc': { state: 'on', attributes: {} } })), 'on');
+  check('seche-cheveux : sans mesure, allume se dit', stateLine(render({ appliance_type: 'hair_dryer', state_entity: 'switch.sc' }, { 'switch.sc': { state: 'on', attributes: {} } })), 'On');
+  // The air.
+  check('seche-cheveux : eteint, pas d air', airLines(render(HD, sc(0))), 0);
+  check('seche-cheveux : froid, deux filets', airLines(render(HD, sc(60))), 2);
+  check('seche-cheveux : chaud, trois filets', airLines(render(HD, sc(900))), 3);
+  check('seche-cheveux : position haute, cinq filets', airLines(render(HD, sc(1800))), 5);
+  check('seche-cheveux : l air part de l embout', /<path d="M72\.5 /.test(render(HD, sc(900))), true);
+  check('seche-cheveux : classique par defaut', /hd-pistol/.test(machineCls(render(HD, sc(900)))), true);
+  const ring = render({ ...HD, hair_dryer_layout: 'ring' }, sc(900));
+  check('seche-cheveux : en anneau', /hd-ring/.test(machineCls(ring)), true);
+  check('seche-cheveux : l anneau est perce', /fill-rule="evenodd"/.test(ring), true);
+  check('seche-cheveux : l anneau souffle des cercles', (ring.match(/<g class="hd-rings"><circle/g) || []).length, 1);
+  check('seche-cheveux : eteint, l anneau ne souffle pas', /<g class="hd-rings"><\/g>/.test(render({ ...HD, hair_dryer_layout: 'ring' }, sc(0))), true);
+  check('seche-cheveux : modele inconnu, classique', /hd-pistol/.test(machineCls(render({ ...HD, hair_dryer_layout: 'x' }, sc(900)))), true);
+  contains('seche-cheveux : l air est anime', ring, '.hd-air path {');
+  contains('seche-cheveux : la resistance rougeoie', ring, '.machine.mode-hot .hd-heat');
+  {
+    const { card } = build(HD, sc(60));
+    const before = markup(card);
+    check('seche-cheveux : le dessin suit le passage au chaud', rerender(card, sc(900)) !== before, true);
+  }
+  // Detection.
+  const hdType = id => /hd-pistol/.test(render({ state_entity: id }, { [id]: { state: 'on', attributes: {} } }));
+  for (const id of ['switch.hair_dryer', 'switch.seche_cheveux', 'switch.haartrockner', 'switch.fohn_bad', 'switch.secador_de_pelo', 'switch.asciugacapelli', 'switch.haardroger', 'switch.dyson_supersonic_hair_dryer'])
+    check(`detection seche-cheveux : ${id}`, hdType(id), true);
+  check('detection : un seche-linge reste un seche-linge', hdType('switch.seche_linge'), false);
+  check('detection : un iphone n est pas un phon', hdType('switch.chargeur_iphone'), false);
+  check('detection : le modele designe un seche-cheveux', /hd-ring/.test(render({ state_entity: 'switch.x', hair_dryer_layout: 'ring' },
+    { 'switch.x': { state: 'on', attributes: {} } })), true);
+  // Editor.
+  const ed = newEditor({ state_entity: 'switch.sc', appliance_type: 'hair_dryer' });
+  check('editeur seche-cheveux : dans la liste', /<option value="hair_dryer"/.test(markup(ed)), true);
+  check('editeur seche-cheveux : le modele', /hair_dryer_layout/.test(markup(ed)), true);
+  check('editeur seche-cheveux : le seuil de chaleur', /heat_threshold/.test(markup(ed)), true);
+  check('editeur seche-cheveux : la puissance', markup(ed).includes('data-toggle="power_entity"'), true);
+  check('editeur seche-cheveux : pas de programme', markup(ed).includes('data-toggle="program_entity"'), false);
+  check('editeur : pas de modele de seche-cheveux ailleurs', /hair_dryer_layout/.test(markup(newEditor({ state_entity: 'sensor.w', appliance_type: 'washer' }))), false);
 }
 
 // =============================================================================

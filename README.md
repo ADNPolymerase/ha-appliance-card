@@ -10,7 +10,7 @@
 <a href="https://buymeacoffee.com/adnpolymerase" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-orange.png" alt="Buy Me A Coffee" height="60"></a>
 <a href="https://adnpolymerase.github.io/HA/" target="_blank"><img src="https://raw.githubusercontent.com/ADNPolymerase/HA/main/assets/site-button.svg" alt="Link to my github.io for my other projects" height="60"></a>
 
-A Lovelace card for household appliances: washers, dryers, dishwashers, ovens, microwaves, cooker hoods, cooktops, fridges, kettles, cookers, coffee machines, rice cookers, air fryers, water heaters, boilers, heat pumps, 3D printers, pet feeders, irons, toasters, pellet stoves, air conditioners, dehumidifiers, space heaters, towel warmers, air purifiers, fans, EV chargers, TVs, projectors and computers. Cycle in progress, program, remaining time, temperature, alerts and controls.
+A Lovelace card for household appliances: washers, dryers, dishwashers, ovens, microwaves, cooker hoods, cooktops, fridges, kettles, cookers, coffee machines, rice cookers, air fryers, water heaters, boilers, heat pumps, 3D printers, pet feeders, irons, toasters, hair dryers, pellet stoves, air conditioners, dehumidifiers, space heaters, towel warmers, air purifiers, fans, EV chargers, TVs, projectors and computers. Cycle in progress, program, remaining time, temperature, alerts and controls.
 
 No brand assumed: every field is an entity you pick, so it works with **any** integration (Electrolux, Samsung, LG, Home Connect, Miele, a plain smart plug…).
 
@@ -110,12 +110,12 @@ Only `state_entity` is required, except on a fridge where a probe or a door cont
 | `done_alert` | `true` makes a green badge pulse on the drawing when a cycle has finished, until the door opens or the badge is tapped. For appliances with a cycle (washer, dryer, dishwasher, oven…). |
 | `illustration_color` | `auto` (default, follows the theme) \| `white` \| `grey` \| `black` \| `red` (dark red). Only changes the casing, not the state colours. |
 | `language` | `auto` (default, follows Home Assistant) or one of the 14 codes: `en`, `fr`, `de`, `es`, `it`, `nl`, `pt`, `sv`, `no`, `da`, `pl`, `ru`, `zh`, `cs`. `nb` and `nb-NO` give Norwegian. |
-| `appliance_type` | `auto` (default) \| `washer` \| `dryer` \| `dishwasher` \| `oven` \| `microwave` \| `hood` \| `cooktop` \| `fridge` \| `kettle` \| `cooker` \| `coffee` \| `rice_cooker` \| `air_fryer` \| `water_heater` \| `boiler` \| `heat_pump` \| `printer_3d` \| `pet_feeder` \| `pet_fountain` \| `iron` \| `toaster` \| `pellet_stove` \| `air_conditioner` \| `dehumidifier` \| `space_heater` \| `towel_warmer` \| `air_purifier` \| `fan` \| `ev_charger` \| `screen`. |
+| `appliance_type` | `auto` (default) \| `washer` \| `dryer` \| `dishwasher` \| `oven` \| `microwave` \| `hood` \| `cooktop` \| `fridge` \| `kettle` \| `cooker` \| `coffee` \| `rice_cooker` \| `air_fryer` \| `water_heater` \| `boiler` \| `heat_pump` \| `printer_3d` \| `pet_feeder` \| `pet_fountain` \| `iron` \| `toaster` \| `pellet_stove` \| `air_conditioner` \| `dehumidifier` \| `space_heater` \| `towel_warmer` \| `air_purifier` \| `fan` \| `ev_charger` \| `hair_dryer` \| `screen`. |
 | `tap_action` | What a tap on the card does, in Home Assistant's own words: `more-info` (default: the state entity, or on a card without one what it reads in its place), `none`, `navigate`, `url`, `toggle`, `perform-action` or `fire-dom-event`, which is what the popup cards built on browser_mod listen for. In YAML only. |
 | `toggle_entity` | Power button (`switch`, `button`, `script`, `input_boolean`, `fan`), highlighted while on. |
 | `power_entity` / `power_on_threshold` / `power_icon` | Power sensor. With a threshold, the state is derived from it: *running* above, then *finished* when it falls back. Pointing `state_entity` at the same sensor enables it with a 10 W threshold. `power_icon` replaces `mdi:power-plug`. |
 | `power_off_delay` | Minutes the power must stay under `power_on_threshold` before the cycle reads *Finished*, so a pause (a dishwasher drying, a washer soaking) is not taken for the end. Only when the state comes from the plug: an integration reports its pauses itself. 0 by default. |
-| `show_last_cycle` | Adds a *Last cycle* line between cycles: how long it ran and when it ended, read from Home Assistant's history (seven days of the state, two days of a plug's power, pauses shorter than `power_off_delay` included). Appliances that run a cycle, the kettle, the iron and the toaster. |
+| `show_last_cycle` | Adds a *Last cycle* line between cycles: how long it ran and when it ended, read from Home Assistant's history (seven days of the state, two days of a plug's power, pauses shorter than `power_off_delay` included). Appliances that run a cycle, the kettle, the iron, the toaster and the hair dryer. |
 | `program_entity` / `program_format` | Program. `clean` (default) makes it readable (`LaundryCare.Washer.Program.Auto40` becomes *Auto 40*, `Rapid20Min` becomes *Rapid 20 Min*), `raw` shows it as-is. |
 | `remaining_time_entity` / `remaining_time_unit` | Remaining time, in `auto` (default, from the entity's unit: s, min, h, ms, d, or `1:02:03`), `seconds`, `minutes` or `hours`, or a finish time (`timestamp`). It also draws the progress bar: the time run since the cycle began, pauses left out, over that time plus what is left. Opened mid-cycle, the card finds the start in the state history. |
 | `remaining_time_hide_when_idle` | `true` only shows the remaining time while running, against stale finish times (SmartThings). |
@@ -181,6 +181,8 @@ Only `state_entity` is required, except on a fridge where a probe or a door cont
 | `printed_part` | 3D printer | The part on the bed: `cube` (default), `pyramid` or `duck` (a rubber duck). It shows from the bottom up as it prints. |
 | `iron_layout` | iron | `iron` (default, the iron alone) \| `generator` (the same iron on the base of a steam generator). |
 | `toaster_layout` | toaster | `two` (default, two slots) \| `four` (four slots, two levers) \| `long` (one long slot for two slices end to end). |
+| `hair_dryer_layout` | hair dryer | `pistol` (default, a classic dryer seen from the side) \| `ring` (a ring dryer seen from the front). |
+| `heat_threshold` | hair dryer | Power from which the dryer blows hot air (300 W by default). Below it, only the fan runs. |
 | `screen_layout` | screen | `tv_feet` (default, a TV on two feet) \| `tv_stand` (a TV on a central stand) \| `tv_wall` (a wall-mounted TV) \| `projector` (a projector under its screen) \| `computer` (a monitor and its tower). Left out, a name that says projector or computer picks the model, and so does a `lock_entity`. |
 | `screen_image` | screen | The picture a lit screen shows: `random` (default, a new one each time it comes on) or one of `sunset`, `aquarium`, `bars`, `football`, `space`, `bounce`, `desktop`, `code`, `pong`. A player that sends a cover shows it instead while it plays. |
 | `media_entity` / `media2_entity` / `media3_entity` | screen | Up to three `media_player` entities that show something on this screen: the TV itself, and the box or console that actually has the picture. The card follows the one that plays, then the one paused, then the one on its home screen, then the one on; on a tie, the first. Its line names it and gives the app or source, the title, and *Muted*. Without a power meter, the players also say whether the screen is off, on standby or on. |
@@ -409,6 +411,21 @@ toaster_layout: four
 state_entity: switch.toaster_plug
 power_entity: sensor.toaster_plug_power
 power_on_threshold: 30
+```
+
+</details>
+
+<details>
+<summary><b>Hair dryers</b></summary>
+
+Read from its smart plug: *Off* at `power_on_threshold` or below (10 W by default), *Cool air* while only the fan runs, *Hot air* from `heat_threshold` (300 W by default). The air leaves the nozzle, blue when cool, orange when hot, and harder on the high setting (from 1200 W). Without a meter, its switch only says *On* or *Off*. Two models: a classic dryer and a ring dryer.
+
+```yaml
+type: custom:ha-appliance-card
+appliance_type: hair_dryer
+hair_dryer_layout: ring
+state_entity: switch.hair_dryer_plug
+power_entity: sensor.hair_dryer_plug_power
 ```
 
 </details>

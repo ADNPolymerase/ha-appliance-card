@@ -1,4 +1,4 @@
-const CARD_VERSION = "2.29.0";
+const CARD_VERSION = "2.30.0";
 
 console.info(
   "%c HA-APPLIANCE-CARD %c v" + CARD_VERSION + " ",
@@ -141,7 +141,7 @@ const T = {
     type_toaster: "Toaster", section_toaster_layout: "Model", layout_toaster_two: "Two slots", layout_toaster_four: "Four slots",
     layout_toaster_long: "Long slot", toaster_toasting: "Toasting", toaster_done: "Toast ready", type_air_purifier: "Air purifier",
     type_screen: "Screen (TV, projector, computer)", section_screen_layout: "Model", layout_tv_feet: "TV on feet", layout_tv_stand: "TV on a stand", layout_tv_wall: "Wall-mounted TV", layout_projector: "Projector", layout_computer: "Computer", section_screen_image: "Picture on screen", img_random: "Random", img_sunset: "Sunset", img_aquarium: "Aquarium", img_bars: "Test card", img_football: "Football match", img_space: "Space", img_bounce: "Bouncing logo", img_desktop: "Desktop", img_code: "Scrolling code", img_pong: "Pong", screen_on: "On", screen_playing: "Playing", screen_home: "Home screen", screen_locked: "Locked", screen_muted: "Muted", screen_standby_threshold: "Standby up to this power (W)", section_media: "Media player", section_media2: "Second media player", section_media3: "Third media player", section_lock: "Session lock",
-    fill_height: "Fill the height of its slot", done_alert: "Flash at the end of the cycle", done_seen: "Seen", illustration_size: "Drawing size", compact_mode: "Compact mode", compact_off: "Off", compact_hide: "No drawing", compact_side: "Drawing on the side", group_laundry: "Laundry", group_kitchen: "Kitchen", group_heating: "Heating and hot water", group_air: "Air and climate", group_home: "Home and media", group_pets: "Pets",
+    type_hair_dryer: "Hair dryer", layout_hd_pistol: "Classic", layout_hd_ring: "Ring", hd_cool: "Cool air", hd_hot: "Hot air", hd_heat_threshold: "Hot air above this power (W)", fill_height: "Fill the height of its slot", done_alert: "Flash at the end of the cycle", done_seen: "Seen", illustration_size: "Drawing size", compact_mode: "Compact mode", compact_off: "Off", compact_hide: "No drawing", compact_side: "Drawing on the side", group_laundry: "Laundry", group_kitchen: "Kitchen", group_heating: "Heating and hot water", group_air: "Air and climate", group_home: "Home and media", group_pets: "Pets",
     section_purifier_layout: "Model", layout_purifier_cylinder: "Cylinder", layout_purifier_box: "Square box", layout_purifier_ring: "Bladeless ring",
     pf_purifying: "Purifying", pf_auto: "Auto", pf_night: "Night mode", section_air_quality: "Air quality",
     section_screen: "Screen", section_heater: "Heating (thermostat)", aq_good: "Good", aq_fair: "Fair",
@@ -293,7 +293,7 @@ const T = {
     type_toaster: "Grille-pain", section_toaster_layout: "Mod\u00e8le", layout_toaster_two: "Deux fentes", layout_toaster_four: "Quatre fentes",
     layout_toaster_long: "Fente longue", toaster_toasting: "Grillage", toaster_done: "Pr\u00eat", type_air_purifier: "Purificateur d'air",
     type_screen: "\u00c9cran (TV, projecteur, ordinateur)", section_screen_layout: "Mod\u00e8le", layout_tv_feet: "T\u00e9l\u00e9vision sur pieds", layout_tv_stand: "T\u00e9l\u00e9vision sur pied central", layout_tv_wall: "T\u00e9l\u00e9vision murale", layout_projector: "Vid\u00e9oprojecteur", layout_computer: "Ordinateur", section_screen_image: "Image \u00e0 l'\u00e9cran", img_random: "Au hasard", img_sunset: "Coucher de soleil", img_aquarium: "Aquarium", img_bars: "Mire", img_football: "Match de foot", img_space: "Espace", img_bounce: "Logo qui rebondit", img_desktop: "Bureau", img_code: "Code qui d\u00e9file", img_pong: "Pong", screen_on: "Allum\u00e9", screen_playing: "Lecture", screen_home: "Accueil", screen_locked: "Verrouill\u00e9", screen_muted: "Son coup\u00e9", screen_standby_threshold: "En veille jusqu'\u00e0 cette puissance (W)", section_media: "Lecteur multim\u00e9dia", section_media2: "Deuxi\u00e8me lecteur", section_media3: "Troisi\u00e8me lecteur", section_lock: "Verrouillage de session",
-    fill_height: "Occuper toute la hauteur de sa case", done_alert: "Clignoter \u00e0 la fin du cycle", done_seen: "Vu", illustration_size: "Taille du dessin", compact_mode: "Mode compact", compact_off: "D\u00e9sactiv\u00e9", compact_hide: "Sans dessin", compact_side: "Dessin sur le c\u00f4t\u00e9", group_laundry: "Linge", group_kitchen: "Cuisine", group_heating: "Chauffage et eau chaude", group_air: "Air et climat", group_home: "Maison et multim\u00e9dia", group_pets: "Animaux",
+    type_hair_dryer: "S\u00e8che-cheveux", layout_hd_pistol: "Classique", layout_hd_ring: "Anneau", hd_cool: "Air froid", hd_hot: "Air chaud", hd_heat_threshold: "Air chaud au-dessus de cette puissance (W)", fill_height: "Occuper toute la hauteur de sa case", done_alert: "Clignoter \u00e0 la fin du cycle", done_seen: "Vu", illustration_size: "Taille du dessin", compact_mode: "Mode compact", compact_off: "D\u00e9sactiv\u00e9", compact_hide: "Sans dessin", compact_side: "Dessin sur le c\u00f4t\u00e9", group_laundry: "Linge", group_kitchen: "Cuisine", group_heating: "Chauffage et eau chaude", group_air: "Air et climat", group_home: "Maison et multim\u00e9dia", group_pets: "Animaux",
     section_purifier_layout: "Mod\u00e8le", layout_purifier_cylinder: "Cylindre", layout_purifier_box: "Bo\u00eetier carr\u00e9", layout_purifier_ring: "Anneau sans pales",
     pf_purifying: "Purification", pf_auto: "Auto", pf_night: "Mode nuit", section_air_quality: "Qualit\u00e9 de l'air",
     section_screen: "\u00c9cran", section_heater: "Chauffage (thermostat)", aq_good: "Bonne", aq_fair: "Moyenne",
@@ -445,7 +445,7 @@ const T = {
     type_toaster: "\u0422\u043e\u0441\u0442\u0435\u0440", section_toaster_layout: "\u041c\u043e\u0434\u0435\u043b\u044c", layout_toaster_two: "\u0414\u0432\u0430 \u0441\u043b\u043e\u0442\u0430", layout_toaster_four: "\u0427\u0435\u0442\u044b\u0440\u0435 \u0441\u043b\u043e\u0442\u0430",
     layout_toaster_long: "\u0414\u043b\u0438\u043d\u043d\u044b\u0439 \u0441\u043b\u043e\u0442", toaster_toasting: "\u041f\u043e\u0434\u0436\u0430\u0440\u0438\u0432\u0430\u043d\u0438\u0435", toaster_done: "\u0413\u043e\u0442\u043e\u0432\u043e", type_air_purifier: "\u041e\u0447\u0438\u0441\u0442\u0438\u0442\u0435\u043b\u044c \u0432\u043e\u0437\u0434\u0443\u0445\u0430",
     type_screen: "\u042d\u043a\u0440\u0430\u043d (\u0422\u0412, \u043f\u0440\u043e\u0435\u043a\u0442\u043e\u0440, \u043a\u043e\u043c\u043f\u044c\u044e\u0442\u0435\u0440)", section_screen_layout: "\u041c\u043e\u0434\u0435\u043b\u044c", layout_tv_feet: "\u0422\u0435\u043b\u0435\u0432\u0438\u0437\u043e\u0440 \u043d\u0430 \u043d\u043e\u0436\u043a\u0430\u0445", layout_tv_stand: "\u0422\u0435\u043b\u0435\u0432\u0438\u0437\u043e\u0440 \u043d\u0430 \u043f\u043e\u0434\u0441\u0442\u0430\u0432\u043a\u0435", layout_tv_wall: "\u041d\u0430\u0441\u0442\u0435\u043d\u043d\u044b\u0439 \u0442\u0435\u043b\u0435\u0432\u0438\u0437\u043e\u0440", layout_projector: "\u041f\u0440\u043e\u0435\u043a\u0442\u043e\u0440", layout_computer: "\u041a\u043e\u043c\u043f\u044c\u044e\u0442\u0435\u0440", section_screen_image: "\u0418\u0437\u043e\u0431\u0440\u0430\u0436\u0435\u043d\u0438\u0435 \u043d\u0430 \u044d\u043a\u0440\u0430\u043d\u0435", img_random: "\u0421\u043b\u0443\u0447\u0430\u0439\u043d\u043e\u0435", img_sunset: "\u0417\u0430\u043a\u0430\u0442", img_aquarium: "\u0410\u043a\u0432\u0430\u0440\u0438\u0443\u043c", img_bars: "\u0418\u0441\u043f\u044b\u0442\u0430\u0442\u0435\u043b\u044c\u043d\u0430\u044f \u0442\u0430\u0431\u043b\u0438\u0446\u0430", img_football: "\u0424\u0443\u0442\u0431\u043e\u043b\u044c\u043d\u044b\u0439 \u043c\u0430\u0442\u0447", img_space: "\u041a\u043e\u0441\u043c\u043e\u0441", img_bounce: "\u041f\u0440\u044b\u0433\u0430\u044e\u0449\u0438\u0439 \u043b\u043e\u0433\u043e\u0442\u0438\u043f", img_desktop: "\u0420\u0430\u0431\u043e\u0447\u0438\u0439 \u0441\u0442\u043e\u043b", img_code: "\u0411\u0435\u0433\u0443\u0449\u0438\u0439 \u043a\u043e\u0434", img_pong: "\u041f\u043e\u043d\u0433", screen_on: "\u0412\u043a\u043b\u044e\u0447\u0451\u043d", screen_playing: "\u0412\u043e\u0441\u043f\u0440\u043e\u0438\u0437\u0432\u0435\u0434\u0435\u043d\u0438\u0435", screen_home: "\u0413\u043b\u0430\u0432\u043d\u044b\u0439 \u044d\u043a\u0440\u0430\u043d", screen_locked: "\u0417\u0430\u0431\u043b\u043e\u043a\u0438\u0440\u043e\u0432\u0430\u043d", screen_muted: "\u0411\u0435\u0437 \u0437\u0432\u0443\u043a\u0430", screen_standby_threshold: "\u0420\u0435\u0436\u0438\u043c \u043e\u0436\u0438\u0434\u0430\u043d\u0438\u044f \u0434\u043e \u044d\u0442\u043e\u0439 \u043c\u043e\u0449\u043d\u043e\u0441\u0442\u0438 (\u0412\u0442)", section_media: "\u041c\u0435\u0434\u0438\u0430\u043f\u043b\u0435\u0435\u0440", section_media2: "\u0412\u0442\u043e\u0440\u043e\u0439 \u043c\u0435\u0434\u0438\u0430\u043f\u043b\u0435\u0435\u0440", section_media3: "\u0422\u0440\u0435\u0442\u0438\u0439 \u043c\u0435\u0434\u0438\u0430\u043f\u043b\u0435\u0435\u0440", section_lock: "\u0411\u043b\u043e\u043a\u0438\u0440\u043e\u0432\u043a\u0430 \u0441\u0435\u0430\u043d\u0441\u0430",
-    fill_height: "\u0417\u0430\u043d\u0438\u043c\u0430\u0442\u044c \u0432\u0441\u044e \u0432\u044b\u0441\u043e\u0442\u0443 \u044f\u0447\u0435\u0439\u043a\u0438", done_alert: "\u041c\u0438\u0433\u0430\u0442\u044c \u0432 \u043a\u043e\u043d\u0446\u0435 \u0446\u0438\u043a\u043b\u0430", done_seen: "\u041f\u0440\u043e\u0441\u043c\u043e\u0442\u0440\u0435\u043d\u043e", illustration_size: "\u0420\u0430\u0437\u043c\u0435\u0440 \u0440\u0438\u0441\u0443\u043d\u043a\u0430", compact_mode: "\u041a\u043e\u043c\u043f\u0430\u043a\u0442\u043d\u044b\u0439 \u0440\u0435\u0436\u0438\u043c", compact_off: "\u0412\u044b\u043a\u043b.", compact_hide: "\u0411\u0435\u0437 \u0440\u0438\u0441\u0443\u043d\u043a\u0430", compact_side: "\u0420\u0438\u0441\u0443\u043d\u043e\u043a \u0441\u0431\u043e\u043a\u0443", group_laundry: "\u0421\u0442\u0438\u0440\u043a\u0430", group_kitchen: "\u041a\u0443\u0445\u043d\u044f", group_heating: "\u041e\u0442\u043e\u043f\u043b\u0435\u043d\u0438\u0435 \u0438 \u0433\u043e\u0440\u044f\u0447\u0430\u044f \u0432\u043e\u0434\u0430", group_air: "\u0412\u043e\u0437\u0434\u0443\u0445 \u0438 \u043a\u043b\u0438\u043c\u0430\u0442", group_home: "\u0414\u043e\u043c \u0438 \u043c\u0443\u043b\u044c\u0442\u0438\u043c\u0435\u0434\u0438\u0430", group_pets: "\u041f\u0438\u0442\u043e\u043c\u0446\u044b",
+    type_hair_dryer: "\u0424\u0435\u043d", layout_hd_pistol: "\u041a\u043b\u0430\u0441\u0441\u0438\u0447\u0435\u0441\u043a\u0438\u0439", layout_hd_ring: "\u041a\u043e\u043b\u044c\u0446\u043e", hd_cool: "\u0425\u043e\u043b\u043e\u0434\u043d\u044b\u0439 \u0432\u043e\u0437\u0434\u0443\u0445", hd_hot: "\u0413\u043e\u0440\u044f\u0447\u0438\u0439 \u0432\u043e\u0437\u0434\u0443\u0445", hd_heat_threshold: "\u0413\u043e\u0440\u044f\u0447\u0438\u0439 \u0432\u043e\u0437\u0434\u0443\u0445 \u0432\u044b\u0448\u0435 \u044d\u0442\u043e\u0439 \u043c\u043e\u0449\u043d\u043e\u0441\u0442\u0438 (\u0412\u0442)", fill_height: "\u0417\u0430\u043d\u0438\u043c\u0430\u0442\u044c \u0432\u0441\u044e \u0432\u044b\u0441\u043e\u0442\u0443 \u044f\u0447\u0435\u0439\u043a\u0438", done_alert: "\u041c\u0438\u0433\u0430\u0442\u044c \u0432 \u043a\u043e\u043d\u0446\u0435 \u0446\u0438\u043a\u043b\u0430", done_seen: "\u041f\u0440\u043e\u0441\u043c\u043e\u0442\u0440\u0435\u043d\u043e", illustration_size: "\u0420\u0430\u0437\u043c\u0435\u0440 \u0440\u0438\u0441\u0443\u043d\u043a\u0430", compact_mode: "\u041a\u043e\u043c\u043f\u0430\u043a\u0442\u043d\u044b\u0439 \u0440\u0435\u0436\u0438\u043c", compact_off: "\u0412\u044b\u043a\u043b.", compact_hide: "\u0411\u0435\u0437 \u0440\u0438\u0441\u0443\u043d\u043a\u0430", compact_side: "\u0420\u0438\u0441\u0443\u043d\u043e\u043a \u0441\u0431\u043e\u043a\u0443", group_laundry: "\u0421\u0442\u0438\u0440\u043a\u0430", group_kitchen: "\u041a\u0443\u0445\u043d\u044f", group_heating: "\u041e\u0442\u043e\u043f\u043b\u0435\u043d\u0438\u0435 \u0438 \u0433\u043e\u0440\u044f\u0447\u0430\u044f \u0432\u043e\u0434\u0430", group_air: "\u0412\u043e\u0437\u0434\u0443\u0445 \u0438 \u043a\u043b\u0438\u043c\u0430\u0442", group_home: "\u0414\u043e\u043c \u0438 \u043c\u0443\u043b\u044c\u0442\u0438\u043c\u0435\u0434\u0438\u0430", group_pets: "\u041f\u0438\u0442\u043e\u043c\u0446\u044b",
     section_purifier_layout: "\u041c\u043e\u0434\u0435\u043b\u044c", layout_purifier_cylinder: "\u0426\u0438\u043b\u0438\u043d\u0434\u0440", layout_purifier_box: "\u041a\u0432\u0430\u0434\u0440\u0430\u0442\u043d\u044b\u0439 \u043a\u043e\u0440\u043f\u0443\u0441", layout_purifier_ring: "\u0411\u0435\u0437\u043b\u043e\u043f\u0430\u0441\u0442\u043d\u043e\u0435 \u043a\u043e\u043b\u044c\u0446\u043e",
     pf_purifying: "\u041e\u0447\u0438\u0441\u0442\u043a\u0430", pf_auto: "\u0410\u0432\u0442\u043e", pf_night: "\u041d\u043e\u0447\u043d\u043e\u0439 \u0440\u0435\u0436\u0438\u043c", section_air_quality: "\u041a\u0430\u0447\u0435\u0441\u0442\u0432\u043e \u0432\u043e\u0437\u0434\u0443\u0445\u0430",
     section_screen: "\u042d\u043a\u0440\u0430\u043d", section_heater: "\u041e\u0431\u043e\u0433\u0440\u0435\u0432 (\u0442\u0435\u0440\u043c\u043e\u0441\u0442\u0430\u0442)", aq_good: "\u0425\u043e\u0440\u043e\u0448\u0435\u0435", aq_fair: "\u0423\u0434\u043e\u0432\u043b\u0435\u0442\u0432\u043e\u0440\u0438\u0442\u0435\u043b\u044c\u043d\u043e\u0435",
@@ -597,7 +597,7 @@ const T = {
     type_toaster: "Toaster", section_toaster_layout: "Modell", layout_toaster_two: "Zwei Schlitze", layout_toaster_four: "Vier Schlitze",
     layout_toaster_long: "Langschlitz", toaster_toasting: "Toastet", toaster_done: "Fertig", type_air_purifier: "Luftreiniger",
     type_screen: "Bildschirm (TV, Beamer, Computer)", section_screen_layout: "Modell", layout_tv_feet: "Fernseher auf F\u00fc\u00dfen", layout_tv_stand: "Fernseher mit Standfu\u00df", layout_tv_wall: "Wandfernseher", layout_projector: "Beamer", layout_computer: "Computer", section_screen_image: "Bild auf dem Bildschirm", img_random: "Zuf\u00e4llig", img_sunset: "Sonnenuntergang", img_aquarium: "Aquarium", img_bars: "Testbild", img_football: "Fu\u00dfballspiel", img_space: "Weltall", img_bounce: "H\u00fcpfendes Logo", img_desktop: "Desktop", img_code: "Scrollender Code", img_pong: "Pong", screen_on: "Ein", screen_playing: "Wiedergabe", screen_home: "Startbildschirm", screen_locked: "Gesperrt", screen_muted: "Stumm", screen_standby_threshold: "Standby bis zu dieser Leistung (W)", section_media: "Mediaplayer", section_media2: "Zweiter Mediaplayer", section_media3: "Dritter Mediaplayer", section_lock: "Sitzungssperre",
-    fill_height: "Ganze H\u00f6he des Platzes f\u00fcllen", done_alert: "Am Ende des Programms blinken", done_seen: "Gesehen", illustration_size: "Zeichnungsgr\u00f6\u00dfe", compact_mode: "Kompaktmodus", compact_off: "Aus", compact_hide: "Ohne Zeichnung", compact_side: "Zeichnung seitlich", group_laundry: "W\u00e4sche", group_kitchen: "K\u00fcche", group_heating: "Heizung und Warmwasser", group_air: "Luft und Klima", group_home: "Haus und Multimedia", group_pets: "Haustiere",
+    type_hair_dryer: "Haartrockner", layout_hd_pistol: "Klassisch", layout_hd_ring: "Ring", hd_cool: "Kaltluft", hd_hot: "Warmluft", hd_heat_threshold: "Warmluft oberhalb dieser Leistung (W)", fill_height: "Ganze H\u00f6he des Platzes f\u00fcllen", done_alert: "Am Ende des Programms blinken", done_seen: "Gesehen", illustration_size: "Zeichnungsgr\u00f6\u00dfe", compact_mode: "Kompaktmodus", compact_off: "Aus", compact_hide: "Ohne Zeichnung", compact_side: "Zeichnung seitlich", group_laundry: "W\u00e4sche", group_kitchen: "K\u00fcche", group_heating: "Heizung und Warmwasser", group_air: "Luft und Klima", group_home: "Haus und Multimedia", group_pets: "Haustiere",
     section_purifier_layout: "Modell", layout_purifier_cylinder: "Zylinder", layout_purifier_box: "Quaderform", layout_purifier_ring: "Rotorloser Ring",
     pf_purifying: "Reinigt", pf_auto: "Auto", pf_night: "Nachtmodus", section_air_quality: "Luftqualit\u00e4t",
     section_screen: "Anzeige", section_heater: "Heizung (Thermostat)", aq_good: "Gut", aq_fair: "M\u00e4\u00dfig",
@@ -749,7 +749,7 @@ const T = {
     type_toaster: "Tostadora", section_toaster_layout: "Modelo", layout_toaster_two: "Dos ranuras", layout_toaster_four: "Cuatro ranuras",
     layout_toaster_long: "Ranura larga", toaster_toasting: "Tostando", toaster_done: "Listo", type_air_purifier: "Purificador de aire",
     type_screen: "Pantalla (TV, proyector, ordenador)", section_screen_layout: "Modelo", layout_tv_feet: "Televisor con patas", layout_tv_stand: "Televisor con pie central", layout_tv_wall: "Televisor de pared", layout_projector: "Proyector", layout_computer: "Ordenador", section_screen_image: "Imagen en pantalla", img_random: "Aleatoria", img_sunset: "Puesta de sol", img_aquarium: "Acuario", img_bars: "Carta de ajuste", img_football: "Partido de f\u00fatbol", img_space: "Espacio", img_bounce: "Logo que rebota", img_desktop: "Escritorio", img_code: "C\u00f3digo en movimiento", img_pong: "Pong", screen_on: "Encendido", screen_playing: "Reproduciendo", screen_home: "Pantalla de inicio", screen_locked: "Bloqueado", screen_muted: "Silenciado", screen_standby_threshold: "En espera hasta esta potencia (W)", section_media: "Reproductor multimedia", section_media2: "Segundo reproductor", section_media3: "Tercer reproductor", section_lock: "Bloqueo de sesi\u00f3n",
-    fill_height: "Ocupar toda la altura de su hueco", done_alert: "Parpadear al final del ciclo", done_seen: "Visto", illustration_size: "Tama\u00f1o del dibujo", compact_mode: "Modo compacto", compact_off: "Desactivado", compact_hide: "Sin dibujo", compact_side: "Dibujo al lado", group_laundry: "Lavander\u00eda", group_kitchen: "Cocina", group_heating: "Calefacci\u00f3n y agua caliente", group_air: "Aire y climatizaci\u00f3n", group_home: "Hogar y multimedia", group_pets: "Mascotas",
+    type_hair_dryer: "Secador de pelo", layout_hd_pistol: "Cl\u00e1sico", layout_hd_ring: "Anillo", hd_cool: "Aire fr\u00edo", hd_hot: "Aire caliente", hd_heat_threshold: "Aire caliente por encima de esta potencia (W)", fill_height: "Ocupar toda la altura de su hueco", done_alert: "Parpadear al final del ciclo", done_seen: "Visto", illustration_size: "Tama\u00f1o del dibujo", compact_mode: "Modo compacto", compact_off: "Desactivado", compact_hide: "Sin dibujo", compact_side: "Dibujo al lado", group_laundry: "Lavander\u00eda", group_kitchen: "Cocina", group_heating: "Calefacci\u00f3n y agua caliente", group_air: "Aire y climatizaci\u00f3n", group_home: "Hogar y multimedia", group_pets: "Mascotas",
     section_purifier_layout: "Modelo", layout_purifier_cylinder: "Cilindro", layout_purifier_box: "Caja cuadrada", layout_purifier_ring: "Anillo sin aspas",
     pf_purifying: "Purificando", pf_auto: "Auto", pf_night: "Modo nocturno", section_air_quality: "Calidad del aire",
     section_screen: "Pantalla", section_heater: "Calefacci\u00f3n (termostato)", aq_good: "Buena", aq_fair: "Aceptable",
@@ -901,7 +901,7 @@ const T = {
     type_toaster: "Tostapane", section_toaster_layout: "Modello", layout_toaster_two: "Due fessure", layout_toaster_four: "Quattro fessure",
     layout_toaster_long: "Fessura lunga", toaster_toasting: "Tostatura", toaster_done: "Pronto", type_air_purifier: "Purificatore d'aria",
     type_screen: "Schermo (TV, proiettore, computer)", section_screen_layout: "Modello", layout_tv_feet: "TV con piedini", layout_tv_stand: "TV con piedistallo", layout_tv_wall: "TV a parete", layout_projector: "Proiettore", layout_computer: "Computer", section_screen_image: "Immagine sullo schermo", img_random: "Casuale", img_sunset: "Tramonto", img_aquarium: "Acquario", img_bars: "Monoscopio", img_football: "Partita di calcio", img_space: "Spazio", img_bounce: "Logo che rimbalza", img_desktop: "Desktop", img_code: "Codice che scorre", img_pong: "Pong", screen_on: "Acceso", screen_playing: "In riproduzione", screen_home: "Schermata iniziale", screen_locked: "Bloccato", screen_muted: "Audio disattivato", screen_standby_threshold: "In standby fino a questa potenza (W)", section_media: "Lettore multimediale", section_media2: "Secondo lettore", section_media3: "Terzo lettore", section_lock: "Blocco sessione",
-    fill_height: "Occupare tutta l'altezza dello spazio", done_alert: "Lampeggiare a fine ciclo", done_seen: "Visto", illustration_size: "Dimensione del disegno", compact_mode: "Modalit\u00e0 compatta", compact_off: "Disattivata", compact_hide: "Senza disegno", compact_side: "Disegno di lato", group_laundry: "Bucato", group_kitchen: "Cucina", group_heating: "Riscaldamento e acqua calda", group_air: "Aria e clima", group_home: "Casa e multimedia", group_pets: "Animali",
+    type_hair_dryer: "Asciugacapelli", layout_hd_pistol: "Classico", layout_hd_ring: "Anello", hd_cool: "Aria fredda", hd_hot: "Aria calda", hd_heat_threshold: "Aria calda sopra questa potenza (W)", fill_height: "Occupare tutta l'altezza dello spazio", done_alert: "Lampeggiare a fine ciclo", done_seen: "Visto", illustration_size: "Dimensione del disegno", compact_mode: "Modalit\u00e0 compatta", compact_off: "Disattivata", compact_hide: "Senza disegno", compact_side: "Disegno di lato", group_laundry: "Bucato", group_kitchen: "Cucina", group_heating: "Riscaldamento e acqua calda", group_air: "Aria e clima", group_home: "Casa e multimedia", group_pets: "Animali",
     section_purifier_layout: "Modello", layout_purifier_cylinder: "Cilindro", layout_purifier_box: "Scatola quadrata", layout_purifier_ring: "Anello senza pale",
     pf_purifying: "Purificazione", pf_auto: "Auto", pf_night: "Modalit\u00e0 notte", section_air_quality: "Qualit\u00e0 dell'aria",
     section_screen: "Display", section_heater: "Riscaldamento (termostato)", aq_good: "Buona", aq_fair: "Discreta",
@@ -1053,7 +1053,7 @@ const T = {
     type_toaster: "Broodrooster", section_toaster_layout: "Model", layout_toaster_two: "Twee sleuven", layout_toaster_four: "Vier sleuven",
     layout_toaster_long: "Lange sleuf", toaster_toasting: "Roostert", toaster_done: "Klaar", type_air_purifier: "Luchtreiniger",
     type_screen: "Scherm (tv, projector, computer)", section_screen_layout: "Model", layout_tv_feet: "Tv op pootjes", layout_tv_stand: "Tv op voet", layout_tv_wall: "Tv aan de muur", layout_projector: "Projector", layout_computer: "Computer", section_screen_image: "Beeld op het scherm", img_random: "Willekeurig", img_sunset: "Zonsondergang", img_aquarium: "Aquarium", img_bars: "Testbeeld", img_football: "Voetbalwedstrijd", img_space: "Ruimte", img_bounce: "Stuiterend logo", img_desktop: "Bureaublad", img_code: "Scrollende code", img_pong: "Pong", screen_on: "Aan", screen_playing: "Speelt af", screen_home: "Startscherm", screen_locked: "Vergrendeld", screen_muted: "Gedempt", screen_standby_threshold: "Stand-by tot dit vermogen (W)", section_media: "Mediaspeler", section_media2: "Tweede mediaspeler", section_media3: "Derde mediaspeler", section_lock: "Sessievergrendeling",
-    fill_height: "De volledige hoogte van het vak vullen", done_alert: "Knipperen aan het einde van de cyclus", done_seen: "Gezien", illustration_size: "Grootte van de tekening", compact_mode: "Compacte modus", compact_off: "Uit", compact_hide: "Zonder tekening", compact_side: "Tekening opzij", group_laundry: "Was", group_kitchen: "Keuken", group_heating: "Verwarming en warm water", group_air: "Lucht en klimaat", group_home: "Huis en multimedia", group_pets: "Huisdieren",
+    type_hair_dryer: "Haardroger", layout_hd_pistol: "Klassiek", layout_hd_ring: "Ring", hd_cool: "Koude lucht", hd_hot: "Warme lucht", hd_heat_threshold: "Warme lucht boven dit vermogen (W)", fill_height: "De volledige hoogte van het vak vullen", done_alert: "Knipperen aan het einde van de cyclus", done_seen: "Gezien", illustration_size: "Grootte van de tekening", compact_mode: "Compacte modus", compact_off: "Uit", compact_hide: "Zonder tekening", compact_side: "Tekening opzij", group_laundry: "Was", group_kitchen: "Keuken", group_heating: "Verwarming en warm water", group_air: "Lucht en klimaat", group_home: "Huis en multimedia", group_pets: "Huisdieren",
     section_purifier_layout: "Model", layout_purifier_cylinder: "Cilinder", layout_purifier_box: "Vierkante kast", layout_purifier_ring: "Bladloze ring",
     pf_purifying: "Zuivert", pf_auto: "Auto", pf_night: "Nachtmodus", section_air_quality: "Luchtkwaliteit",
     section_screen: "Scherm", section_heater: "Verwarming (thermostaat)", aq_good: "Goed", aq_fair: "Matig",
@@ -1205,7 +1205,7 @@ const T = {
     type_toaster: "Torradeira", section_toaster_layout: "Modelo", layout_toaster_two: "Duas ranhuras", layout_toaster_four: "Quatro ranhuras",
     layout_toaster_long: "Ranhura longa", toaster_toasting: "A torrar", toaster_done: "Pronto", type_air_purifier: "Purificador de ar",
     type_screen: "Ecr\u00e3 (TV, projetor, computador)", section_screen_layout: "Modelo", layout_tv_feet: "TV com p\u00e9s", layout_tv_stand: "TV com base central", layout_tv_wall: "TV de parede", layout_projector: "Projetor", layout_computer: "Computador", section_screen_image: "Imagem no ecr\u00e3", img_random: "Aleat\u00f3ria", img_sunset: "P\u00f4r do sol", img_aquarium: "Aqu\u00e1rio", img_bars: "Padr\u00e3o de teste", img_football: "Jogo de futebol", img_space: "Espa\u00e7o", img_bounce: "Log\u00f3tipo a saltar", img_desktop: "Ambiente de trabalho", img_code: "C\u00f3digo a deslizar", img_pong: "Pong", screen_on: "Ligado", screen_playing: "A reproduzir", screen_home: "Ecr\u00e3 inicial", screen_locked: "Bloqueado", screen_muted: "Sem som", screen_standby_threshold: "Em espera at\u00e9 esta pot\u00eancia (W)", section_media: "Leitor multim\u00e9dia", section_media2: "Segundo leitor", section_media3: "Terceiro leitor", section_lock: "Bloqueio de sess\u00e3o",
-    fill_height: "Ocupar toda a altura do espa\u00e7o", done_alert: "Piscar no fim do ciclo", done_seen: "Visto", illustration_size: "Tamanho do desenho", compact_mode: "Modo compacto", compact_off: "Desligado", compact_hide: "Sem desenho", compact_side: "Desenho ao lado", group_laundry: "Roupa", group_kitchen: "Cozinha", group_heating: "Aquecimento e \u00e1gua quente", group_air: "Ar e climatiza\u00e7\u00e3o", group_home: "Casa e multim\u00e9dia", group_pets: "Animais",
+    type_hair_dryer: "Secador de cabelo", layout_hd_pistol: "Cl\u00e1ssico", layout_hd_ring: "Anel", hd_cool: "Ar frio", hd_hot: "Ar quente", hd_heat_threshold: "Ar quente acima desta pot\u00eancia (W)", fill_height: "Ocupar toda a altura do espa\u00e7o", done_alert: "Piscar no fim do ciclo", done_seen: "Visto", illustration_size: "Tamanho do desenho", compact_mode: "Modo compacto", compact_off: "Desligado", compact_hide: "Sem desenho", compact_side: "Desenho ao lado", group_laundry: "Roupa", group_kitchen: "Cozinha", group_heating: "Aquecimento e \u00e1gua quente", group_air: "Ar e climatiza\u00e7\u00e3o", group_home: "Casa e multim\u00e9dia", group_pets: "Animais",
     section_purifier_layout: "Modelo", layout_purifier_cylinder: "Cilindro", layout_purifier_box: "Caixa quadrada", layout_purifier_ring: "Anel sem p\u00e1s",
     pf_purifying: "A purificar", pf_auto: "Auto", pf_night: "Modo noturno", section_air_quality: "Qualidade do ar",
     section_screen: "Ecr\u00e3", section_heater: "Aquecimento (term\u00f3stato)", aq_good: "Boa", aq_fair: "Razo\u00e1vel",
@@ -1357,7 +1357,7 @@ const T = {
     type_toaster: "Br\u00f6drost", section_toaster_layout: "Modell", layout_toaster_two: "Tv\u00e5 fack", layout_toaster_four: "Fyra fack",
     layout_toaster_long: "L\u00e5ngt fack", toaster_toasting: "Rostar", toaster_done: "Klart", type_air_purifier: "Luftrenare",
     type_screen: "Sk\u00e4rm (tv, projektor, dator)", section_screen_layout: "Modell", layout_tv_feet: "Tv p\u00e5 f\u00f6tter", layout_tv_stand: "Tv p\u00e5 fot", layout_tv_wall: "V\u00e4ggmonterad tv", layout_projector: "Projektor", layout_computer: "Dator", section_screen_image: "Bild p\u00e5 sk\u00e4rmen", img_random: "Slumpm\u00e4ssig", img_sunset: "Solnedg\u00e5ng", img_aquarium: "Akvarium", img_bars: "Testbild", img_football: "Fotbollsmatch", img_space: "Rymden", img_bounce: "Studsande logga", img_desktop: "Skrivbord", img_code: "Rullande kod", img_pong: "Pong", screen_on: "P\u00e5", screen_playing: "Spelar", screen_home: "Startsk\u00e4rm", screen_locked: "L\u00e5st", screen_muted: "Ljud av", screen_standby_threshold: "Standby upp till denna effekt (W)", section_media: "Mediaspelare", section_media2: "Andra mediaspelaren", section_media3: "Tredje mediaspelaren", section_lock: "Sessionsl\u00e5s",
-    fill_height: "Fyll hela platsens h\u00f6jd", done_alert: "Blinka n\u00e4r programmet \u00e4r klart", done_seen: "Sett", illustration_size: "Teckningens storlek", compact_mode: "Kompakt l\u00e4ge", compact_off: "Av", compact_hide: "Utan teckning", compact_side: "Teckning vid sidan", group_laundry: "Tv\u00e4tt", group_kitchen: "K\u00f6k", group_heating: "V\u00e4rme och varmvatten", group_air: "Luft och klimat", group_home: "Hem och media", group_pets: "Husdjur",
+    type_hair_dryer: "H\u00e5rtork", layout_hd_pistol: "Klassisk", layout_hd_ring: "Ring", hd_cool: "Kalluft", hd_hot: "Varmluft", hd_heat_threshold: "Varmluft \u00f6ver denna effekt (W)", fill_height: "Fyll hela platsens h\u00f6jd", done_alert: "Blinka n\u00e4r programmet \u00e4r klart", done_seen: "Sett", illustration_size: "Teckningens storlek", compact_mode: "Kompakt l\u00e4ge", compact_off: "Av", compact_hide: "Utan teckning", compact_side: "Teckning vid sidan", group_laundry: "Tv\u00e4tt", group_kitchen: "K\u00f6k", group_heating: "V\u00e4rme och varmvatten", group_air: "Luft och klimat", group_home: "Hem och media", group_pets: "Husdjur",
     section_purifier_layout: "Modell", layout_purifier_cylinder: "Cylinder", layout_purifier_box: "Fyrkantig", layout_purifier_ring: "Bladl\u00f6s ring",
     pf_purifying: "Renar", pf_auto: "Auto", pf_night: "Nattl\u00e4ge", section_air_quality: "Luftkvalitet",
     section_screen: "Sk\u00e4rm", section_heater: "V\u00e4rme (termostat)", aq_good: "Bra", aq_fair: "M\u00e5ttlig",
@@ -1509,7 +1509,7 @@ const T = {
     type_toaster: "Br\u00f8drister", section_toaster_layout: "Modell", layout_toaster_two: "To spor", layout_toaster_four: "Fire spor",
     layout_toaster_long: "Langt spor", toaster_toasting: "Rister", toaster_done: "Ferdig", type_air_purifier: "Luftrenser",
     type_screen: "Skjerm (TV, projektor, datamaskin)", section_screen_layout: "Modell", layout_tv_feet: "TV p\u00e5 f\u00f8tter", layout_tv_stand: "TV p\u00e5 fot", layout_tv_wall: "Veggmontert TV", layout_projector: "Projektor", layout_computer: "Datamaskin", section_screen_image: "Bilde p\u00e5 skjermen", img_random: "Tilfeldig", img_sunset: "Solnedgang", img_aquarium: "Akvarium", img_bars: "Testbilde", img_football: "Fotballkamp", img_space: "Verdensrommet", img_bounce: "Sprettende logo", img_desktop: "Skrivebord", img_code: "Rullende kode", img_pong: "Pong", screen_on: "P\u00e5", screen_playing: "Spiller", screen_home: "Startskjerm", screen_locked: "L\u00e5st", screen_muted: "Lyd av", screen_standby_threshold: "Standby opp til denne effekten (W)", section_media: "Mediespiller", section_media2: "Andre mediespiller", section_media3: "Tredje mediespiller", section_lock: "\u00d8ktl\u00e5s",
-    fill_height: "Fyll hele h\u00f8yden p\u00e5 plassen", done_alert: "Blinke n\u00e5r programmet er ferdig", done_seen: "Sett", illustration_size: "Tegningens st\u00f8rrelse", compact_mode: "Kompakt modus", compact_off: "Av", compact_hide: "Uten tegning", compact_side: "Tegning p\u00e5 siden", group_laundry: "Klesvask", group_kitchen: "Kj\u00f8kken", group_heating: "Oppvarming og varmtvann", group_air: "Luft og klima", group_home: "Hjem og multimedia", group_pets: "Kj\u00e6ledyr",
+    type_hair_dryer: "H\u00e5rf\u00f8ner", layout_hd_pistol: "Klassisk", layout_hd_ring: "Ring", hd_cool: "Kald luft", hd_hot: "Varm luft", hd_heat_threshold: "Varm luft over denne effekten (W)", fill_height: "Fyll hele h\u00f8yden p\u00e5 plassen", done_alert: "Blinke n\u00e5r programmet er ferdig", done_seen: "Sett", illustration_size: "Tegningens st\u00f8rrelse", compact_mode: "Kompakt modus", compact_off: "Av", compact_hide: "Uten tegning", compact_side: "Tegning p\u00e5 siden", group_laundry: "Klesvask", group_kitchen: "Kj\u00f8kken", group_heating: "Oppvarming og varmtvann", group_air: "Luft og klima", group_home: "Hjem og multimedia", group_pets: "Kj\u00e6ledyr",
     section_purifier_layout: "Modell", layout_purifier_cylinder: "Sylinder", layout_purifier_box: "Firkantet", layout_purifier_ring: "Vingel\u00f8s ring",
     pf_purifying: "Renser", pf_auto: "Auto", pf_night: "Nattmodus", section_air_quality: "Luftkvalitet",
     section_screen: "Skjerm", section_heater: "Varme (termostat)", aq_good: "God", aq_fair: "Moderat",
@@ -1661,7 +1661,7 @@ const T = {
     type_toaster: "Br\u00f8drister", section_toaster_layout: "Model", layout_toaster_two: "To spalter", layout_toaster_four: "Fire spalter",
     layout_toaster_long: "Lang spalte", toaster_toasting: "Rister", toaster_done: "F\u00e6rdig", type_air_purifier: "Luftrenser",
     type_screen: "Sk\u00e6rm (TV, projektor, computer)", section_screen_layout: "Model", layout_tv_feet: "TV p\u00e5 f\u00f8dder", layout_tv_stand: "TV p\u00e5 fod", layout_tv_wall: "V\u00e6gmonteret TV", layout_projector: "Projektor", layout_computer: "Computer", section_screen_image: "Billede p\u00e5 sk\u00e6rmen", img_random: "Tilf\u00e6ldig", img_sunset: "Solnedgang", img_aquarium: "Akvarium", img_bars: "Testbillede", img_football: "Fodboldkamp", img_space: "Rummet", img_bounce: "Hoppende logo", img_desktop: "Skrivebord", img_code: "Rullende kode", img_pong: "Pong", screen_on: "T\u00e6ndt", screen_playing: "Afspiller", screen_home: "Startsk\u00e6rm", screen_locked: "L\u00e5st", screen_muted: "Lyd sl\u00e5et fra", screen_standby_threshold: "Standby op til denne effekt (W)", section_media: "Medieafspiller", section_media2: "Anden medieafspiller", section_media3: "Tredje medieafspiller", section_lock: "Sessionsl\u00e5s",
-    fill_height: "Fyld hele pladsens h\u00f8jde", done_alert: "Blinke n\u00e5r programmet er f\u00e6rdigt", done_seen: "Set", illustration_size: "Tegningens st\u00f8rrelse", compact_mode: "Kompakt tilstand", compact_off: "Fra", compact_hide: "Uden tegning", compact_side: "Tegning i siden", group_laundry: "T\u00f8jvask", group_kitchen: "K\u00f8kken", group_heating: "Opvarmning og varmt vand", group_air: "Luft og klima", group_home: "Hjem og multimedie", group_pets: "K\u00e6ledyr",
+    type_hair_dryer: "H\u00e5rt\u00f8rrer", layout_hd_pistol: "Klassisk", layout_hd_ring: "Ring", hd_cool: "Kold luft", hd_hot: "Varm luft", hd_heat_threshold: "Varm luft over denne effekt (W)", fill_height: "Fyld hele pladsens h\u00f8jde", done_alert: "Blinke n\u00e5r programmet er f\u00e6rdigt", done_seen: "Set", illustration_size: "Tegningens st\u00f8rrelse", compact_mode: "Kompakt tilstand", compact_off: "Fra", compact_hide: "Uden tegning", compact_side: "Tegning i siden", group_laundry: "T\u00f8jvask", group_kitchen: "K\u00f8kken", group_heating: "Opvarmning og varmt vand", group_air: "Luft og klima", group_home: "Hjem og multimedie", group_pets: "K\u00e6ledyr",
     section_purifier_layout: "Model", layout_purifier_cylinder: "Cylinder", layout_purifier_box: "Firkantet", layout_purifier_ring: "Vingel\u00f8s ring",
     pf_purifying: "Renser", pf_auto: "Auto", pf_night: "Nattilstand", section_air_quality: "Luftkvalitet",
     section_screen: "Sk\u00e6rm", section_heater: "Varme (termostat)", aq_good: "God", aq_fair: "Moderat",
@@ -1813,7 +1813,7 @@ const T = {
     type_toaster: "Toster", section_toaster_layout: "Model", layout_toaster_two: "Dwa otwory", layout_toaster_four: "Cztery otwory",
     layout_toaster_long: "D\u0142ugi otw\u00f3r", toaster_toasting: "Opiekanie", toaster_done: "Gotowe", type_air_purifier: "Oczyszczacz powietrza",
     type_screen: "Ekran (TV, projektor, komputer)", section_screen_layout: "Model", layout_tv_feet: "Telewizor na n\u00f3\u017ckach", layout_tv_stand: "Telewizor na podstawie", layout_tv_wall: "Telewizor na \u015bcianie", layout_projector: "Projektor", layout_computer: "Komputer", section_screen_image: "Obraz na ekranie", img_random: "Losowy", img_sunset: "Zach\u00f3d s\u0142o\u0144ca", img_aquarium: "Akwarium", img_bars: "Plansza testowa", img_football: "Mecz pi\u0142ki no\u017cnej", img_space: "Kosmos", img_bounce: "Odbijaj\u0105ce si\u0119 logo", img_desktop: "Pulpit", img_code: "Przewijany kod", img_pong: "Pong", screen_on: "W\u0142\u0105czony", screen_playing: "Odtwarzanie", screen_home: "Ekran g\u0142\u00f3wny", screen_locked: "Zablokowany", screen_muted: "Wyciszony", screen_standby_threshold: "Czuwanie do tej mocy (W)", section_media: "Odtwarzacz multimedialny", section_media2: "Drugi odtwarzacz", section_media3: "Trzeci odtwarzacz", section_lock: "Blokada sesji",
-    fill_height: "Wype\u0142nij ca\u0142\u0105 wysoko\u015b\u0107 miejsca", done_alert: "Miga\u0107 po zako\u0144czeniu cyklu", done_seen: "Widziane", illustration_size: "Rozmiar rysunku", compact_mode: "Tryb kompaktowy", compact_off: "Wy\u0142\u0105czony", compact_hide: "Bez rysunku", compact_side: "Rysunek z boku", group_laundry: "Pranie", group_kitchen: "Kuchnia", group_heating: "Ogrzewanie i ciep\u0142a woda", group_air: "Powietrze i klimat", group_home: "Dom i multimedia", group_pets: "Zwierz\u0119ta",
+    type_hair_dryer: "Suszarka do w\u0142os\u00f3w", layout_hd_pistol: "Klasyczna", layout_hd_ring: "Pier\u015bcie\u0144", hd_cool: "Zimne powietrze", hd_hot: "Gor\u0105ce powietrze", hd_heat_threshold: "Gor\u0105ce powietrze powy\u017cej tej mocy (W)", fill_height: "Wype\u0142nij ca\u0142\u0105 wysoko\u015b\u0107 miejsca", done_alert: "Miga\u0107 po zako\u0144czeniu cyklu", done_seen: "Widziane", illustration_size: "Rozmiar rysunku", compact_mode: "Tryb kompaktowy", compact_off: "Wy\u0142\u0105czony", compact_hide: "Bez rysunku", compact_side: "Rysunek z boku", group_laundry: "Pranie", group_kitchen: "Kuchnia", group_heating: "Ogrzewanie i ciep\u0142a woda", group_air: "Powietrze i klimat", group_home: "Dom i multimedia", group_pets: "Zwierz\u0119ta",
     section_purifier_layout: "Model", layout_purifier_cylinder: "Walec", layout_purifier_box: "Kwadratowa obudowa", layout_purifier_ring: "Pier\u015bcie\u0144 bez \u0142opatek",
     pf_purifying: "Oczyszczanie", pf_auto: "Auto", pf_night: "Tryb nocny", section_air_quality: "Jako\u015b\u0107 powietrza",
     section_screen: "Ekran", section_heater: "Ogrzewanie (termostat)", aq_good: "Dobra", aq_fair: "Umiarkowana",
@@ -1965,7 +1965,7 @@ const T = {
     type_toaster: "\u70e4\u9762\u5305\u673a", section_toaster_layout: "\u578b\u53f7", layout_toaster_two: "\u53cc\u69fd", layout_toaster_four: "\u56db\u69fd",
     layout_toaster_long: "\u957f\u69fd", toaster_toasting: "\u70d8\u70e4\u4e2d", toaster_done: "\u5df2\u5b8c\u6210", type_air_purifier: "\u7a7a\u6c14\u51c0\u5316\u5668",
     type_screen: "\u5c4f\u5e55\uff08\u7535\u89c6\u3001\u6295\u5f71\u4eea\u3001\u7535\u8111\uff09", section_screen_layout: "\u578b\u53f7", layout_tv_feet: "\u5e26\u811a\u7535\u89c6", layout_tv_stand: "\u5e26\u5e95\u5ea7\u7535\u89c6", layout_tv_wall: "\u58c1\u6302\u7535\u89c6", layout_projector: "\u6295\u5f71\u4eea", layout_computer: "\u7535\u8111", section_screen_image: "\u5c4f\u5e55\u753b\u9762", img_random: "\u968f\u673a", img_sunset: "\u65e5\u843d", img_aquarium: "\u6c34\u65cf\u7bb1", img_bars: "\u6d4b\u8bd5\u56fe", img_football: "\u8db3\u7403\u6bd4\u8d5b", img_space: "\u592a\u7a7a", img_bounce: "\u5f39\u8df3\u6807\u5fd7", img_desktop: "\u684c\u9762", img_code: "\u6eda\u52a8\u4ee3\u7801", img_pong: "\u4e52\u4e53", screen_on: "\u5df2\u5f00\u542f", screen_playing: "\u64ad\u653e\u4e2d", screen_home: "\u4e3b\u5c4f\u5e55", screen_locked: "\u5df2\u9501\u5b9a", screen_muted: "\u5df2\u9759\u97f3", screen_standby_threshold: "\u5f85\u673a\u529f\u7387\u4e0a\u9650 (W)", section_media: "\u5a92\u4f53\u64ad\u653e\u5668", section_media2: "\u7b2c\u4e8c\u4e2a\u5a92\u4f53\u64ad\u653e\u5668", section_media3: "\u7b2c\u4e09\u4e2a\u5a92\u4f53\u64ad\u653e\u5668", section_lock: "\u4f1a\u8bdd\u9501\u5b9a",
-    fill_height: "\u586b\u6ee1\u6240\u5728\u4f4d\u7f6e\u7684\u9ad8\u5ea6", done_alert: "\u7a0b\u5e8f\u7ed3\u675f\u65f6\u95ea\u70c1", done_seen: "\u5df2\u67e5\u770b", illustration_size: "\u56fe\u793a\u5927\u5c0f", compact_mode: "\u7d27\u51d1\u6a21\u5f0f", compact_off: "\u5173\u95ed", compact_hide: "\u4e0d\u663e\u793a\u56fe\u793a", compact_side: "\u56fe\u793a\u5728\u4fa7\u8fb9", group_laundry: "\u6d17\u8863", group_kitchen: "\u53a8\u623f", group_heating: "\u4f9b\u6696\u4e0e\u70ed\u6c34", group_air: "\u7a7a\u6c14\u4e0e\u6c14\u5019", group_home: "\u5bb6\u5c45\u4e0e\u591a\u5a92\u4f53", group_pets: "\u5ba0\u7269",
+    type_hair_dryer: "\u5439\u98ce\u673a", layout_hd_pistol: "\u7ecf\u5178", layout_hd_ring: "\u73af\u5f62", hd_cool: "\u51b7\u98ce", hd_hot: "\u70ed\u98ce", hd_heat_threshold: "\u9ad8\u4e8e\u6b64\u529f\u7387\u65f6\u4e3a\u70ed\u98ce (W)", fill_height: "\u586b\u6ee1\u6240\u5728\u4f4d\u7f6e\u7684\u9ad8\u5ea6", done_alert: "\u7a0b\u5e8f\u7ed3\u675f\u65f6\u95ea\u70c1", done_seen: "\u5df2\u67e5\u770b", illustration_size: "\u56fe\u793a\u5927\u5c0f", compact_mode: "\u7d27\u51d1\u6a21\u5f0f", compact_off: "\u5173\u95ed", compact_hide: "\u4e0d\u663e\u793a\u56fe\u793a", compact_side: "\u56fe\u793a\u5728\u4fa7\u8fb9", group_laundry: "\u6d17\u8863", group_kitchen: "\u53a8\u623f", group_heating: "\u4f9b\u6696\u4e0e\u70ed\u6c34", group_air: "\u7a7a\u6c14\u4e0e\u6c14\u5019", group_home: "\u5bb6\u5c45\u4e0e\u591a\u5a92\u4f53", group_pets: "\u5ba0\u7269",
     section_purifier_layout: "\u578b\u53f7", layout_purifier_cylinder: "\u5706\u67f1\u5f62", layout_purifier_box: "\u65b9\u5f62", layout_purifier_ring: "\u65e0\u53f6\u73af\u5f62",
     pf_purifying: "\u51c0\u5316\u4e2d", pf_auto: "\u81ea\u52a8", pf_night: "\u591c\u95f4\u6a21\u5f0f", section_air_quality: "\u7a7a\u6c14\u8d28\u91cf",
     section_screen: "\u5c4f\u5e55", section_heater: "\u52a0\u70ed\uff08\u6e29\u63a7\uff09", aq_good: "\u826f\u597d", aq_fair: "\u4e00\u822c",
@@ -2117,7 +2117,7 @@ const T = {
     type_toaster: "Topinkova\u010d", section_toaster_layout: "Model", layout_toaster_two: "Dva otvory", layout_toaster_four: "\u010cty\u0159i otvory",
     layout_toaster_long: "Dlouh\u00fd otvor", toaster_toasting: "Op\u00e9k\u00e1", toaster_done: "Hotovo", type_air_purifier: "\u010cisti\u010dka vzduchu",
     type_screen: "Obrazovka (TV, projektor, po\u010d\u00edta\u010d)", section_screen_layout: "Model", layout_tv_feet: "Televize na no\u017ei\u010dk\u00e1ch", layout_tv_stand: "Televize na stojanu", layout_tv_wall: "Televize na zdi", layout_projector: "Projektor", layout_computer: "Po\u010d\u00edta\u010d", section_screen_image: "Obraz na obrazovce", img_random: "N\u00e1hodn\u00fd", img_sunset: "Z\u00e1pad slunce", img_aquarium: "Akv\u00e1rium", img_bars: "Monoskop", img_football: "Fotbalov\u00fd z\u00e1pas", img_space: "Vesm\u00edr", img_bounce: "Odr\u00e1\u017eej\u00edc\u00ed se logo", img_desktop: "Plocha", img_code: "Roluj\u00edc\u00ed k\u00f3d", img_pong: "Pong", screen_on: "Zapnuto", screen_playing: "P\u0159ehr\u00e1v\u00e1", screen_home: "Domovsk\u00e1 obrazovka", screen_locked: "Zam\u010deno", screen_muted: "Ztlumeno", screen_standby_threshold: "Pohotovost a\u017e do tohoto p\u0159\u00edkonu (W)", section_media: "P\u0159ehr\u00e1va\u010d m\u00e9di\u00ed", section_media2: "Druh\u00fd p\u0159ehr\u00e1va\u010d", section_media3: "T\u0159et\u00ed p\u0159ehr\u00e1va\u010d", section_lock: "Z\u00e1mek relace",
-    fill_height: "Vyplnit celou v\u00fd\u0161ku m\u00edsta", done_alert: "Blikat na konci cyklu", done_seen: "Vid\u011bno", illustration_size: "Velikost kresby", compact_mode: "Kompaktn\u00ed re\u017eim", compact_off: "Vypnuto", compact_hide: "Bez kresby", compact_side: "Kresba po stran\u011b", group_laundry: "Pran\u00ed", group_kitchen: "Kuchyn\u011b", group_heating: "Vyt\u00e1p\u011bn\u00ed a tepl\u00e1 voda", group_air: "Vzduch a klima", group_home: "Dom\u00e1cnost a multim\u00e9dia", group_pets: "Mazl\u00ed\u010dci",
+    type_hair_dryer: "F\u00e9n", layout_hd_pistol: "Klasick\u00fd", layout_hd_ring: "Prstenec", hd_cool: "Studen\u00fd vzduch", hd_hot: "Tepl\u00fd vzduch", hd_heat_threshold: "Tepl\u00fd vzduch nad t\u00edmto p\u0159\u00edkonem (W)", fill_height: "Vyplnit celou v\u00fd\u0161ku m\u00edsta", done_alert: "Blikat na konci cyklu", done_seen: "Vid\u011bno", illustration_size: "Velikost kresby", compact_mode: "Kompaktn\u00ed re\u017eim", compact_off: "Vypnuto", compact_hide: "Bez kresby", compact_side: "Kresba po stran\u011b", group_laundry: "Pran\u00ed", group_kitchen: "Kuchyn\u011b", group_heating: "Vyt\u00e1p\u011bn\u00ed a tepl\u00e1 voda", group_air: "Vzduch a klima", group_home: "Dom\u00e1cnost a multim\u00e9dia", group_pets: "Mazl\u00ed\u010dci",
     section_purifier_layout: "Model", layout_purifier_cylinder: "V\u00e1lec", layout_purifier_box: "Hranat\u00e1 sk\u0159\u00ed\u0148", layout_purifier_ring: "Bezlopatkov\u00fd prstenec",
     pf_purifying: "\u010cist\u00ed", pf_auto: "Auto", pf_night: "No\u010dn\u00ed re\u017eim", section_air_quality: "Kvalita vzduchu",
     section_screen: "Displej", section_heater: "Topen\u00ed (termostat)", aq_good: "Dobr\u00e1", aq_fair: "P\u0159ijateln\u00e1",
@@ -4563,6 +4563,9 @@ const TYPE_CAPS = {
   // A toaster, read from its plug like the iron: it waits, it toasts, and the
   // slices pop up. Nothing reports a toaster to Home Assistant on its own.
   toaster: { toaster: true },
+  // A hair dryer, read from its plug: the fan alone draws a few dozen watts,
+  // the heater a thousand more, so the meter tells cool air from hot.
+  hair_dryer: { hairDryer: true },
   // A television, a projector or a computer, read from its plug: what it
   // draws at rest is its standby, and a media player says what it shows.
   screen: { screen: true },
@@ -4639,7 +4642,7 @@ const AC_ONLY_FIELDS = ["vane_vertical_entity", "vane_horizontal_entity", "purif
 const STATE_DOMAINS = {
   water_heater: ["water_heater"], boiler: ["water_heater"], heat_pump: ["climate", "water_heater"],
   pellet_stove: ["climate"], air_conditioner: ["climate", "select", "switch"], dehumidifier: ["humidifier", "switch"],
-  space_heater: ["climate", "switch"], towel_warmer: ["climate", "select", "switch"], iron: ["switch"], toaster: ["switch"], air_fryer: ["switch"],
+  space_heater: ["climate", "switch"], towel_warmer: ["climate", "select", "switch"], iron: ["switch"], toaster: ["switch"], hair_dryer: ["switch"], air_fryer: ["switch"],
   screen: ["switch", "media_player", "input_boolean", "binary_sensor"],
   air_purifier: ["fan", "switch", "select", "climate"], fan: ["fan", "switch"],
   pet_fountain: ["switch", "fan", "input_boolean"],
@@ -4669,6 +4672,7 @@ const NO_STATE_SOURCES = {
   pet_feeder: ["portions_today_entity", "weight_today_entity", "last_feed_entity", "portion_weight_entity", "serving_size_entity",
     "start_entity"],
   screen: ["power_entity", "media_entity", "media2_entity", "media3_entity"],
+  hair_dryer: ["power_entity"],
 };
 function noStateSourceOf(cfg, type) {
   const field = (NO_STATE_SOURCES[type] || []).find((f) => cfg[f]);
@@ -4709,7 +4713,7 @@ const TYPE_GROUPS = [
   ["kitchen", ["dishwasher", "oven", "microwave", "hood", "cooktop", "fridge", "kettle", "cooker", "coffee", "rice_cooker", "air_fryer", "toaster"]],
   ["heating", ["water_heater", "boiler", "heat_pump", "pellet_stove", "space_heater", "towel_warmer"]],
   ["air", ["air_conditioner", "dehumidifier", "air_purifier", "fan"]],
-  ["home", ["screen", "iron", "printer_3d", "ev_charger"]],
+  ["home", ["screen", "iron", "hair_dryer", "printer_3d", "ev_charger"]],
   ["pets", ["pet_feeder", "pet_fountain"]],
 ];
 
@@ -4731,6 +4735,7 @@ function detectApplianceType(cfg, st) {
   if (DEHUMIDIFIER_ONLY_FIELDS.some((f) => cfg[f])) return "dehumidifier";
   if (cfg.heater_layout) return "space_heater";
   if (cfg.toaster_layout) return "toaster";
+  if (cfg.hair_dryer_layout || cfg.heat_threshold) return "hair_dryer";
   if (SCREEN_ONLY_FIELDS.some((f) => cfg[f])) return "screen";
   if (PURIFIER_ONLY_FIELDS.some((f) => cfg[f])) return "air_purifier";
   if (FAN_ONLY_FIELDS.some((f) => cfg[f])) return "fan";
@@ -4748,6 +4753,9 @@ function detectApplianceType(cfg, st) {
   // An air fryer, by its name in any language, by Cosori's maker name, or by
   // the cook_status VeSync gives it. Before the oven and the microwave, since
   // plenty of them are sold as air fryer ovens.
+  // A hair dryer, before the tumble dryer that "dryer" and "seche" would make
+  // of it.
+  if (HAIR_DRYER_RE.test(hay)) return "hair_dryer";
   if (/air.?fr[iy]er|airfryer|friteuse|fritteuse|hei(ss|\u00df)luft|freidora|fritadeira|friggitrice|frituurpan|frytkownic|frit[e\u00e9]z|cosori|cook.?status|\u7a7a\u6c14\u70b8|\u0430\u044d\u0440\u043e\u0433\u0440\u0438\u043b|\u0430\u044d\u0440\u043e\u0444\u0440\u0438\u0442/.test(hay)) return "air_fryer";
   // A pet fountain, by its name in any language. Before the feeder, since a
   // maker that sells both often puts the word pet in front of each.
@@ -4868,6 +4876,16 @@ function screenLocked(lst, id) {
   if (d === "binary_sensor" && (lst.attributes || {}).device_class === "lock") return v === "off";
   return ["on", "locked", "true"].includes(v);
 }
+
+// A hair dryer, by its name in any language. Phon and Fohn on their own,
+// since they hide in other words (an iPhone).
+const HAIR_DRYER_RE = /hair.?dryer|blow.?dryer|s(e|\u00e8)che.?cheveux|haartrockner|(^|[^a-z])(f(o|\u00f6)hn|phon)([^a-z]|$)|secador.?de.?(pelo|cabelo)|asciugacapelli|haardroger|h(a|\u00e5)rtork|h\u00e5rf\u00f8ner|h\u00e5rt\u00f8rrer|suszark.?do.?w(l|\u0142)os|vysou\u0161e\u010d.?vlas|(^|[^a-z])f\u00e9n([^a-z]|$)|\u5439\u98ce\u673a|(^|[^\u0430-\u044f])\u0444\u0435\u043d([^\u0430-\u044f]|$)/;
+// A hair dryer's fan alone stays well under this; its heater goes well over.
+const HD_HEAT_W = 300;
+// Above this the heater is on its high setting, and the air comes out harder.
+const HD_HIGH_W = 1200;
+const HD_LABELS = { off: "ac_off", cool: "hd_cool", hot: "hd_hot", on: "screen_on" };
+const HD_COLORS = { off: "var(--disabled-text-color, #9e9e9e)", cool: "#29b6f6", hot: "#ff7043", on: "#ff7043" };
 
 // How long a toaster says its toast is ready once it has popped up.
 const TOASTER_READY_MS = 5 * 60 * 1000;
@@ -7393,6 +7411,44 @@ const ILLUSTRATION_CSS = {
         @keyframes fn-gust { 0%, 100% { stroke-opacity: 0.2; } 50% { stroke-opacity: 1; } }
         @keyframes fn-turn { 0%, 35%, 100% { transform: translateX(2px) scaleX(0.78); } 50%, 85% { transform: translateX(-2px) scaleX(0.78); } }
   `,
+  // A hair dryer: its body in the appliance colour, the heater glowing in the
+  // nozzle or the ring, and the air it blows.
+  hair_dryer: () => `
+        .hd-svg { position: absolute; left: 0; top: 0; width: 96px; height: 108px; overflow: visible; }
+        .hd-s-hi { stop-color: var(--ac-body-hi, #ffffff); }
+        .hd-s-body { stop-color: var(--ac-body, #e3e6ea); }
+        .hd-part { fill: url(#hd-body); stroke: var(--ac-body-lo, #b9bec6); stroke-width: 1; }
+        .hd-nozzle, .hd-grille { fill: var(--ac-body, #e3e6ea); stroke: var(--ac-body-lo, #b9bec6); stroke-width: 1; }
+        .hd-btn { fill: var(--ac-body-lo, #b9bec6); }
+        .hd-grip { stroke: var(--ac-body-lo, #b9bec6); stroke-width: 1.2; opacity: 0.8; }
+        .hd-cord { fill: none; stroke: var(--ac-body-lo, #b9bec6); stroke-width: 2.2; stroke-linecap: round; }
+        .hd-inner { fill: none; stroke: var(--ac-body-lo, #b9bec6); stroke-width: 1; opacity: 0.5; }
+        .hd-led { fill: #9e9e9e; }
+        .machine.mode-cool { --hd-air: #29b6f6; }
+        .machine.mode-hot, .machine.mode-on { --hd-air: #ff7a2f; }
+        .machine.mode-cool .hd-led { fill: #4fc3f7; }
+        .machine.mode-hot .hd-led, .machine.mode-on .hd-led { fill: #ff8a3d; }
+        .hd-a0 { stop-color: var(--hd-air, #ff7a2f); stop-opacity: 1; }
+        .hd-a1 { stop-color: var(--hd-air, #ff7a2f); stop-opacity: 0; }
+        .hd-air path {
+          fill: none; stroke-width: 2.4; stroke-linecap: round; stroke-dasharray: 5 6;
+          animation: hd-flow 0.55s linear infinite; animation-delay: var(--anim-offset, 0s);
+        }
+        .machine.mode-cool .hd-air path { animation-duration: 0.9s; }
+        .hd-heat { opacity: 0; }
+        .machine.mode-hot .hd-heat, .machine.mode-on .hd-heat {
+          opacity: 1; animation: hd-glow 1.4s ease-in-out infinite alternate; animation-delay: var(--anim-offset, 0s);
+        }
+        .hd-rings circle {
+          fill: none; stroke: var(--hd-air, #ff7a2f); stroke-width: 2; opacity: 0.5;
+          transform-box: fill-box; transform-origin: center;
+          animation: hd-ring 1.4s ease-out infinite; animation-delay: var(--anim-offset, 0s);
+        }
+        @keyframes hd-flow { to { stroke-dashoffset: -11; } }
+        @keyframes hd-glow { from { opacity: 0.55; } to { opacity: 1; } }
+        @keyframes hd-ring { 0% { transform: scale(0.9); opacity: 0.9; } 100% { transform: scale(1.45); opacity: 0; } }
+        @media (prefers-reduced-motion: reduce) { .hd-air path, .hd-heat, .hd-rings circle { animation-name: none; } }
+  `,
   // A toaster seen from a little above: the slots open in its top, the lever
   // and the browning dial on its face. The slots glow while it toasts, the
   // heat rises above them, and the slices pop up once it is done.
@@ -8158,6 +8214,62 @@ function fanHtml(cls, f) {
         </div>`;
 }
 
+// A hair dryer seen from the side, nozzle to the right, or a ring dryer seen
+// from the front. The air leaves the nozzle in a fan of lines, or the ring in
+// widening circles: blue while cool, orange while hot, more of it on high.
+function hairDryerHtml(cls, hd) {
+  const mode = hd.mode || "off";
+  const level = hd.level || 0;
+  const defs = `<defs>
+            <linearGradient id="hd-body" x1="0" y1="0" x2="0" y2="1"><stop offset="0" class="hd-s-hi"/><stop offset="1" class="hd-s-body"/></linearGradient>
+            <linearGradient id="hd-air" gradientUnits="userSpaceOnUse" x1="72" y1="0" x2="96" y2="0"><stop offset="0" class="hd-a0"/><stop offset="1" class="hd-a1"/></linearGradient>
+            <radialGradient id="hd-heat"><stop offset="0" stop-color="#ffb74d"/><stop offset="1" stop-color="#ff5722" stop-opacity="0"/></radialGradient>
+            <radialGradient id="hd-rheat"><stop offset="0.55" stop-color="#ff5722" stop-opacity="0"/><stop offset="0.8" stop-color="#ff9800" stop-opacity="0.9"/><stop offset="1" stop-color="#ff5722" stop-opacity="0"/></radialGradient>
+          </defs>`;
+  if (hd.layout === "ring") {
+    const ring = "M20 34a22 22 0 1 0 44 0a22 22 0 1 0 -44 0ZM30 34a12 12 0 1 1 24 0a12 12 0 1 1 -24 0Z";
+    const circles = level ? Array.from({ length: level >= 3 ? 3 : 2 }, (_, i) =>
+      `<circle cx="42" cy="34" r="24" style="animation-delay: calc(${(i * 0.45).toFixed(2)}s + var(--anim-offset, 0s))"/>`).join("") : "";
+    return `
+        <div class="machine ${cls} hd-ring mode-${mode}">
+          <svg class="hd-svg" viewBox="0 0 96 108">${defs}
+            <g class="hd-rings">${circles}</g>
+            <path class="hd-part" d="M36 52L48 52L50 96Q50 101 45 101L39 101Q34 101 34 96Z"/>
+            ${[0, 1, 2, 3, 4].map((i) => `<line class="hd-grip" x1="36.5" y1="${80 + i * 3.5}" x2="47.5" y2="${80 + i * 3.5}"/>`).join("")}
+            <circle class="hd-led" cx="42" cy="62" r="1.8"/><rect class="hd-btn" x="39.5" y="66" width="5" height="8" rx="2.5"/>
+            <path class="hd-part" fill-rule="evenodd" d="${ring}"/>
+            <path class="hd-heat" fill-rule="evenodd" fill="url(#hd-rheat)" d="${ring}"/>
+            <circle class="hd-inner" cx="42" cy="34" r="17"/>
+          </svg>
+        </div>`;
+  }
+  // The lines start at the mouth of the nozzle and fan out to the edge.
+  const lines = [];
+  for (let i = 0; i < level; i++) {
+    const f = level === 1 ? 0.5 : i / (level - 1);
+    const y0 = (24.5 + f * 10).toFixed(1);
+    const y1 = (17 + f * 25).toFixed(1);
+    lines.push(`<path d="M72.5 ${y0}C80 ${y0} 86 ${y1} 95 ${y1}" style="animation-delay: calc(${(-i * 0.17).toFixed(2)}s + var(--anim-offset, 0s))"/>`);
+  }
+  return `
+        <div class="machine ${cls} hd-pistol mode-${mode}">
+          <svg class="hd-svg" viewBox="0 0 96 108">${defs}
+            <g transform="translate(-2 2) scale(0.9)">
+              <path class="hd-part" d="M40 46L50 46L56 92Q56 98 50 98L44 98Q38 98 38 92Z"/>
+              <rect class="hd-btn" x="44.5" y="58" width="5" height="11" rx="2.5"/><circle class="hd-led" cx="47" cy="75" r="1.8"/>
+              <path class="hd-cord" d="M47 98q0 6 -6 9"/>
+              <rect class="hd-part" x="8" y="14" width="58" height="34" rx="16"/>
+              <path class="hd-nozzle" d="M64 18L80 22Q82 23 82 25L82 35Q82 37 80 38L64 44Z"/>
+              <ellipse class="hd-heat" cx="76" cy="30" rx="7" ry="9" fill="url(#hd-heat)"/>
+              <rect class="hd-btn" x="80" y="23" width="2.5" height="14" rx="1"/>
+              <circle class="hd-grille" cx="14" cy="31" r="10"/>
+              ${[0, 1, 2].map((i) => `<line class="hd-grip" x1="${9 + i * 5}" y1="24" x2="${9 + i * 5}" y2="38"/>`).join("")}
+            </g>
+            <g class="hd-air" stroke="url(#hd-air)">${lines.join("")}</g>
+          </svg>
+        </div>`;
+}
+
 // Where each part of a toaster sits: [left, top, width, height] and the
 // corners of its top, the slots as [left, top, width], the slices as [class,
 // left, top, width, height], the levers as [left, raised, lowered].
@@ -8857,6 +8969,7 @@ function illustrationHtml(type, ctx) {
   }
 
   if (type === "toaster") return toasterHtml(cls, ctx.toaster || {});
+  if (type === "hair_dryer") return hairDryerHtml(cls, ctx.hairDryer || {});
   if (type === "screen") return screenHtml(cls, ctx.screen || {});
   if (type === "air_purifier") return purifierHtml(cls, ctx.purifier || {});
   if (type === "fan") return fanHtml(cls, ctx.fan || {});
@@ -9515,6 +9628,8 @@ class ApplianceCard extends HTMLElement {
       ? parseFloat(cfg.power_on_threshold)
       : cap.fridgeTemp
         ? 1
+        : cap.hairDryer && cfg.power_entity
+          ? 10
         : cfg.power_entity === cfg.state_entity
           ? 10
           : NaN;
@@ -11506,6 +11621,25 @@ class ApplianceCard extends HTMLElement {
       toaster = { mode, layout: TOASTER_LAYOUTS[cfg.toaster_layout] ? cfg.toaster_layout : "two" };
     }
 
+    // A hair dryer, read from its plug: nothing is off, the fan alone is cool
+    // air, the heater on is hot air, and the air comes out harder on high.
+    // Without a meter, its switch only says whether it is on.
+    let hairDryer = null;
+    if (cap.hairDryer) {
+      const sw = st && ["switch", "input_boolean"].includes(domainOf(cfg.state_entity)) ? String(st.state).toLowerCase() : "";
+      const onAt = isFinite(threshold) ? threshold : 10;
+      const heatCfg = parseFloat(cfg.heat_threshold);
+      const heatAt = isFinite(heatCfg) && heatCfg > 0 ? heatCfg : HD_HEAT_W;
+      let mode;
+      if (sw === "off") mode = "off";
+      else if (watts !== null) mode = watts <= onAt ? "off" : watts < heatAt ? "cool" : "hot";
+      else mode = sw === "on" || isActiveState(norm) ? "on" : "off";
+      const level = mode === "cool" ? 2 : mode === "hot" ? (watts >= Math.max(HD_HIGH_W, heatAt * 2) ? 5 : 3) : mode === "on" ? 3 : 0;
+      if (!cfg.state_show_raw) stateLabel = t(hass, HD_LABELS[mode]);
+      color = HD_COLORS[mode];
+      hairDryer = { mode, level, layout: cfg.hair_dryer_layout === "ring" ? "ring" : "pistol" };
+    }
+
     // A screen, read from its plug first: nothing at all is off, a trickle up
     // to the threshold is standby, above it the screen is on. Its players then
     // say what it shows; without a meter, they say whether it is on at all.
@@ -11643,6 +11777,7 @@ class ApplianceCard extends HTMLElement {
       feederScreen,
       ironLayout: cfg.iron_layout === "generator" ? "generator" : "",
       toaster,
+      hairDryer,
       purifier,
       screen,
       fan: fanCtx,
@@ -11723,6 +11858,7 @@ class ApplianceCard extends HTMLElement {
       illustrationCtx.dh && illustrationCtx.dh.mode,
       illustrationCtx.heater && illustrationCtx.heater.mode,
       illustrationCtx.toaster && illustrationCtx.toaster.mode,
+      illustrationCtx.hairDryer && [illustrationCtx.hairDryer.mode, illustrationCtx.hairDryer.level, illustrationCtx.hairDryer.layout].join("/"),
       illustrationCtx.screen && [illustrationCtx.screen.mode, illustrationCtx.screen.layout, illustrationCtx.screen.image, illustrationCtx.screen.cover].join("/"),
       illustrationCtx.purifier && [illustrationCtx.purifier.mode, illustrationCtx.purifier.osc, illustrationCtx.purifier.back].join("/"),
       illustrationCtx.fan && [illustrationCtx.fan.mode, illustrationCtx.fan.osc, illustrationCtx.fan.natural, illustrationCtx.fan.winter].join("/"),
@@ -12185,7 +12321,7 @@ const CONTROL_TYPES = CYCLE_TYPES.concat(["ev_charger"]);
 const START_TYPES = CONTROL_TYPES.concat(["pet_feeder"]);
 // The types a last cycle means something for: the ones that run a cycle, and
 // the kettle, the iron and the toaster, which a plug reads the same way.
-const LAST_CYCLE_TYPES = CYCLE_TYPES.concat(["kettle", "iron", "toaster"]);
+const LAST_CYCLE_TYPES = CYCLE_TYPES.concat(["kettle", "iron", "toaster", "hair_dryer"]);
 
 const SECTIONS = [
   { field: "program_entity", types: CYCLE_TYPES.filter((ty) => ty !== "printer_3d"), labelKey: "section_program", includeDomains: ["select", "sensor", "input_select"], extra: (c, hass) => c._row("program_format", "program_format", {
@@ -12427,7 +12563,7 @@ const SECTIONS = [
       return c._row(cap.evCharger ? "ev_power_threshold" : cap.screen ? "screen_standby_threshold" : "power_on_threshold", "power_on_threshold",
         { placeholder: cap.fridgeTemp ? "1" : cap.evCharger ? String(EV_POWER_THRESHOLD) : cap.screen ? String(SCREEN_STANDBY_W) : "10" })
         + (cap.fridgeTemp ? c._row("no_power_after", "no_power_after", { placeholder: "30" })
-          : cap.evCharger || cap.screen ? "" : c._row("power_off_delay", "power_off_delay", { placeholder: "0" }));
+          : cap.evCharger || cap.screen || cap.hairDryer ? "" : c._row("power_off_delay", "power_off_delay", { placeholder: "0" }));
     } },
 
   // Two sections read as alerts, and only their pickers tell them apart: one
@@ -13126,6 +13262,13 @@ class ApplianceCardEditor extends HTMLElement {
             { value: "long", label: t(hass, "layout_toaster_long") },
           ],
         }) : ""}
+        ${this._type === "hair_dryer" ? this._row("section_screen_layout", "hair_dryer_layout", {
+          type: "select",
+          options: [
+            { value: "pistol", label: t(hass, "layout_hd_pistol") },
+            { value: "ring", label: t(hass, "layout_hd_ring") },
+          ],
+        }) + this._row("hd_heat_threshold", "heat_threshold", { placeholder: String(HD_HEAT_W) }) : ""}
         ${this._type === "air_purifier" ? this._row("section_purifier_layout", "purifier_layout", {
           type: "select",
           options: [
