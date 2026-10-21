@@ -3324,6 +3324,20 @@ freezeClock(new Date(TP).toISOString());
   for (const bad of ['abc', 0, -5, '']) check(`delai invalide ${JSON.stringify(bad)} : 30 min par defaut`, delay(bad, 31), 'No power draw');
   check('delai invalide : pas avant 30 min', delay('abc', 29), 'Standby');
   check('delai 0 : pas une alerte immediate', delay(0, 1), 'Standby');
+  // No power draw has its own threshold: a fridge resting at 18 W under a
+  // 20 W cooling threshold draws power, it is not off.
+  const rest = (w, extra) => stateLine(build({ appliance_type: 'fridge', power_entity: 'sensor.p', power_on_threshold: 20, no_power_after: 30, ...extra },
+    { 'sensor.p': { state: String(w), attributes: { unit_of_measurement: 'W' }, last_changed: new Date(TP - 120 * 60000).toISOString() } }).html);
+  check('seuil 20 W, 18 W depuis 2 h : en veille, pas aucune consommation', rest(18), 'Standby');
+  check('seuil 20 W, 0 W depuis 2 h : aucune consommation', rest(0), 'No power draw');
+  check('seuil 20 W, 0,5 W : sous le 1 W par defaut', rest(0.5), 'No power draw');
+  check('seuil 20 W, 25 W : refroidit', rest(25), 'Cooling');
+  check('no_power_threshold 5 : 3 W compte comme aucune consommation', rest(3, { no_power_threshold: 5 }), 'No power draw');
+  check('no_power_threshold 5 : 6 W en veille', rest(6, { no_power_threshold: 5 }), 'Standby');
+  check('no_power_threshold en texte', rest(3, { no_power_threshold: '5' }), 'No power draw');
+  check('no_power_threshold invalide : 1 W', rest(3, { no_power_threshold: 'abc' }), 'Standby');
+  check('editeur frigo : champ no_power_threshold',
+    /data-field="no_power_threshold"[^>]*placeholder="1"/.test(markup(newEditor({ appliance_type: 'fridge', power_entity: 'sensor.p' }))), true);
   contains('aucune consommation : en francais', build({ appliance_type: 'fridge', power_entity: 'sensor.p', language: 'fr' },
     plugFrom(45)).html, 'Aucune consommation');
   for (const b of [off, offDraw, on45, gone]) b.card.disconnectedCallback();
@@ -8929,6 +8943,75 @@ check('borne : ni un statut reconnu', evMode(evR('SuspendedEVSE', { power_entity
   check('editeur : pas de done_alert pour un frigo', /data-field="done_alert"/.test(markup(newEditor({ state_entity: 'sensor.f', appliance_type: 'fridge' }))), false);
   const fr = markup(newEditor({ state_entity: 'sensor.lv', appliance_type: 'washer', language: 'fr' }));
   check('editeur : traduit', fr.includes('Clignoter') && fr.includes('Occuper toute la hauteur'), true);
+
+  // Appearance: the name and the state can go, the card can lose its
+  // background, the text can grow or shrink.
+  const A = { appliance_type: 'washer', state_entity: 'sensor.lv', name: 'Lave-linge' };
+  const as = { 'sensor.lv': { state: 'Running', attributes: {} } };
+  const base = render(A, as);
+  check('apparence : nom affiche par defaut', base.includes('<div class="name">Lave-linge</div>'), true);
+  check('apparence : etat affiche par defaut', /class="state-line"/.test(base), true);
+  const noName = render({ ...A, show_name: false }, as);
+  check('apparence : show_name false retire le nom', /class="name"/.test(noName), false);
+  check('apparence : show_name false garde l etat', /class="state-line"/.test(noName), true);
+  const noState = render({ ...A, show_state: false }, as);
+  check('apparence : show_state false retire l etat', /class="state-line"/.test(noState), false);
+  check('apparence : show_state false garde le nom', /class="name"/.test(noState), true);
+  check('apparence : show_name true affiche le nom', /class="name"/.test(render({ ...A, show_name: true }, as)), true);
+  const both = render({ ...A, show_name: false, show_state: false, compact: 'side' }, as);
+  check('apparence : ni nom ni etat en mode cote', /class="name"|class="state-line"/.test(both), false);
+  contains('apparence : fond transparent', render({ ...A, transparent: true }, as), 'ha-card.clear { background: none; box-shadow: none; border: none; --ha-card-border-width: 0; }');
+  {
+    // The test DOM has no classList: a stub records what the card toggles.
+    const { card } = build({ ...A, transparent: true }, as);
+    const on = new Set();
+    card._card.classList = { toggle: (c, v) => (v ? on.add(c) : on.delete(c)) };
+    card._render();
+    check('apparence : classe clear posee', on.has('clear'), true);
+    card.setConfig({ type: 'custom:ha-appliance-card', ...A });
+    card._render();
+    check('apparence : classe clear retiree', on.has('clear'), false);
+  }
+  contains('apparence : taille du texte par defaut 16 px', base, ':host { font-size: 16px;');
+  contains('apparence : font_scale 1.25 donne 20 px', render({ ...A, font_scale: 1.25 }, as), ':host { font-size: 20px;');
+  contains('apparence : font_scale borne a 0.7', render({ ...A, font_scale: 0.2 }, as), ':host { font-size: 11.2px;');
+  contains('apparence : font_scale borne a 1.4', render({ ...A, font_scale: 3 }, as), ':host { font-size: 22.4px;');
+  contains('apparence : font_scale invalide = 16 px', render({ ...A, font_scale: 'abc' }, as), ':host { font-size: 16px;');
+
+  // The editor: one panel holds them, shown is the default and not written.
+  const ae = newEditor({ state_entity: 'sensor.lv', appliance_type: 'washer' });
+  const am = markup(ae);
+  check('editeur : panneau apparence', /data-panel="appearance"/.test(am), true);
+  const panel = am.slice(am.indexOf('data-panel="appearance"'));
+  for (const f of ['illustration_color', 'compact', 'illustration_size', 'font_scale', 'show_name', 'show_state', 'transparent', 'fill_height'])
+    check(`editeur : ${f} dans apparence`, panel.slice(0, panel.indexOf('</details>')).includes(`data-field="${f}"`), true);
+  const general = am.slice(am.indexOf('data-panel="general"'), am.indexOf('data-panel="appearance"'));
+  check('editeur : plus de compact dans general', general.includes('data-field="compact"'), false);
+  check('editeur : show_name coche par defaut', /data-field="show_name" data-type="checkbox" checked/.test(am), true);
+  check('editeur : transparent decoche par defaut', /data-field="transparent" data-type="checkbox" checked/.test(am), false);
+  check('editeur : show_name false decoche', /data-field="show_name" data-type="checkbox" checked/.test(markup(newEditor({ state_entity: 'sensor.lv', appliance_type: 'washer', show_name: false }))), false);
+  const field = (ed, f) => ed._root.querySelectorAll('[data-field]').find(n => n.getAttribute('data-field') === f);
+  {
+    const ed = newEditor({ state_entity: 'sensor.lv', appliance_type: 'washer' });
+    const box = field(ed, 'show_name');
+    // The stubs only carry the attribute they were found by.
+    box.setAttribute('data-type', 'checkbox');
+    box.checked = false;
+    fire(box, 'change', { target: box });
+    check('editeur : decocher le nom ecrit false', ed._config.show_name, false);
+    box.checked = true;
+    fire(box, 'change', { target: box });
+    check('editeur : recocher le nom retire la cle', 'show_name' in ed._config, false);
+    const fsz = field(ed, 'font_scale');
+    fsz.value = '1.2';
+    fire(fsz, 'change', { target: fsz });
+    check('editeur : taille du texte ecrite', ed._config.font_scale, 1.2);
+    fsz.value = '1';
+    fire(fsz, 'change', { target: fsz });
+    check('editeur : taille 1 retiree', 'font_scale' in ed._config, false);
+  }
+  const afr = markup(newEditor({ state_entity: 'sensor.lv', appliance_type: 'washer', language: 'fr' }));
+  check('editeur : apparence traduite', afr.includes('Apparence') && afr.includes('Fond transparent') && afr.includes('Taille du texte') && afr.includes('Afficher le nom'), true);
 }
 
 // =============================================================================
