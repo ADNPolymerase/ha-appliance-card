@@ -10,7 +10,7 @@
 <a href="https://buymeacoffee.com/adnpolymerase" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-orange.png" alt="Buy Me A Coffee" height="60"></a>
 <a href="https://adnpolymerase.github.io/HA/" target="_blank"><img src="https://raw.githubusercontent.com/ADNPolymerase/HA/main/assets/site-button.svg" alt="Lien vers mon github.io pour mes autres projets" height="60"></a>
 
-Une card Lovelace pour les appareils de la maison : lave-linge, sèche-linge, lave-vaisselle, four, micro-ondes, hotte, plaque de cuisson, réfrigérateur, bouilloire, robot cuiseur, machine à café, cuiseur à riz, friteuse à air, chauffe-eau, chaudière, pompe à chaleur, imprimante 3D, distributeur de croquettes, fer à repasser, grille-pain, sèche-cheveux, poêle à granulés, climatiseur, déshumidificateur, petit chauffage, sèche-serviettes, purificateur d'air, ventilateur, borne de recharge, télévision, vidéoprojecteur et ordinateur. Cycle en cours, programme, temps restant, température, alertes et commandes.
+Une card Lovelace pour les appareils de la maison : lave-linge, sèche-linge, lave-vaisselle, four, micro-ondes, hotte, plaque de cuisson, réfrigérateur, bouilloire, robot cuiseur, machine à café, cuiseur à riz, friteuse à air, chauffe-eau, chaudière, pompe à chaleur, imprimante 3D, distributeur de croquettes, fer à repasser, grille-pain, sèche-cheveux, poêle à granulés, climatiseur, déshumidificateur, petit chauffage, sèche-serviettes, purificateur d'air, ventilateur, borne de recharge, télévision, vidéoprojecteur, ordinateur, et switch, serveur, NAS et baie réseau. Cycle en cours, programme, temps restant, température, alertes et commandes.
 
 Aucune marque supposée : chaque champ est une entité à choisir, elle fonctionne donc avec **n'importe quelle** intégration (Electrolux, Samsung, LG, Home Connect, Miele, une simple prise connectée…).
 
@@ -21,11 +21,12 @@ Aucune marque supposée : chaque champ est une entité à choisir, elle fonction
 
 ## Fonctionnalités
 
-- **Vingt-neuf types d'appareils**, chacun avec une illustration en CSS animée sur les données de l'appareil et statique à l'arrêt. Le type est détecté tout seul ou choisi via `appliance_type`, et `compact: true` ne garde que le texte.
+- **Trente-deux types d'appareils**, chacun avec une illustration en CSS animée sur les données de l'appareil et statique à l'arrêt. Le type est détecté tout seul ou choisi via `appliance_type`, et `compact: true` ne garde que le texte.
 - **Normalisation d'état** : `Idle`, `RUNNING`, `wash`, `En marche`… sont reconnus (sans tenir compte des accents) et classés en veille, préchauffage, en cours, en pause, terminé, différé ou erreur. Un état inconnu s'affiche tel quel, sans l'espace de noms de l'intégration, et `state_map` classe le reste, `"*"` ramassant tout ce qui dépasse.
 - **L'étape, et non une heure d'*En cours*** : un lave-linge, un sèche-linge ou un lave-vaisselle nomme l'étape où il en est (*Prélavage*, *Lavage*, *Rinçage*, *Essorage*, *Séchage* et sept autres), d'après une entité de phase ou son propre état, et le tambour s'emballe pendant l'essorage. Le temps restant est toujours celui du cycle entier.
 - **Une lavante-séchante est un lave-linge qui sèche** : `washer_dryer: true`, et le tambour montre de l'eau pendant le lavage, puis du linge qui tourne dans l'air chaud pendant le séchage. L'étape vient de l'état lui-même ou d'une entité de phase, et la ligne d'état lit *Lavage* ou *Séchage*.
 - **Chaque appareil dit ce qui compte pour lui** : une machine à café ce qui lui manque (eau, grains, bac, détartrage), un réfrigérateur sa santé (débranché, porte ouverte, température haute), une chaudière mixte ce qu'elle chauffe (chauffage, eau chaude ou veille), une imprimante 3D ce que fait l'impression (préchauffage, nivellement, changement de filament), un poêle à granulés la phase de son feu (allumage, modulation, éco, nettoyage), un climatiseur son mode et où il souffle, une borne de recharge si une voiture est branchée et ce que fait la charge (attente d'autorisation, en charge, en pause, programmée, terminée).
+- **Le réseau aussi** : un switch, un serveur, un NAS ou une baie, *En ligne*, en *Activité* ou en *Alerte*. Une diode par port utilisé, une par disque dans sa baie (sain, en lecture, en veille, à surveiller, en panne), et les mesures trouvées toutes seules sur Synology, UGREEN, Unraid ou Glances.
 - **Fonctionne avec une simple prise connectée** : `power_entity` et `power_on_threshold` suffisent à déduire l'état de la consommation ; `power_off_delay` évite qu'une pause soit prise pour la fin, et `show_last_cycle` montre la durée du dernier cycle.
 - **Programme, temps restant, barre de progression, lignes d'info, porte, alertes, connectivité et commandes** (démarrer, pause, reprise, stop), chacun optionnel.
 - **14 langues** (EN, FR, DE, ES, IT, NL, PT, SV, NO, DA, PL, RU, ZH, CS), celle de Home Assistant ou fixée sur la card.
@@ -74,6 +75,13 @@ Clique sur une famille pour voir ses appareils en marche.
 <summary><b>Garage et atelier</b></summary>
 
 <img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-garage.fr.gif" alt="Garage et atelier" width="60%">
+
+</details>
+
+<details>
+<summary><b>Réseau et serveurs</b></summary>
+
+<img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-network.fr.gif" alt="Réseau et serveurs" width="100%">
 
 </details>
 
@@ -464,7 +472,9 @@ media2_entity: media_player.apple_tv
 <details>
 <summary><b>Réseau : switchs, serveurs, NAS et baies</b></summary>
 
-Lu à partir de ce qu'il remonte. Son `state_entity`, un ping, le suivi du routeur ou un état, dit *En ligne* ou *Éteint*. Un trafic au-delà de 10 Mbit/s, un processeur chargé ou un disque au travail le mettent en *Activité* ; un problème, un disque en panne ou une température de 70 °C le mettent en *Alerte* : toutes les diodes passent au rouge et le ventilateur démarre et s'arrête. Un disque à surveiller le dit en orange. Ses lignes donnent le trafic, la charge, le volume et les ports. Choisi dans l'éditeur, la carte trouve les mesures sur l'appareil et sur les appareils qui en dépendent, disques compris (Synology, UGREEN, Unraid, Glances). Quatre modèles : un switch de 8 à 32 ports, un serveur tour, un NAS de 1 à 4 baies, une baie.
+Lu à partir de ce qu'il remonte. Son `state_entity`, un ping, le suivi du routeur ou un état, dit *En ligne* ou *Éteint*. Un trafic au-delà de 10 Mbit/s, un processeur chargé ou un disque au travail le mettent en *Activité* ; un problème, un disque en panne ou une température de 70 °C le mettent en *Alerte* : toutes les diodes passent au rouge et le ventilateur démarre et s'arrête. Un disque à surveiller le dit en orange. Ses lignes donnent le trafic, la charge, le volume et les ports. Dans l'éditeur, la carte trouve les mesures sur l'appareil et sur les appareils qui en dépendent, disques compris (Synology, UGREEN, Unraid, Glances). Quatre modèles : un switch de 8 à 32 ports, un serveur tour, un NAS de 1 à 4 baies, une baie.
+
+<img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-network-models.fr.gif" alt="Switchs de 8 à 32 ports et NAS de 1 à 4 baies" width="100%">
 
 ```yaml
 type: custom:ha-appliance-card

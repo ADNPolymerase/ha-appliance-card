@@ -702,6 +702,88 @@ const ceilingFan = () => card({
   st("light.bedroom_ceiling", "on"),
 ]);
 
+// Network devices: a 24-port switch with traffic, a Synology with four disks
+// (one reading, one asleep), a server and a rack.
+const netSwitch = () => card({
+  name: L("Switch", "Switch"),
+  appliance_type: "network",
+  network_layout: "switch",
+  state_entity: "device_tracker.switch",
+  ports_entity: "sensor.switch_ports_up",
+  ports_total: 24,
+  poe_entity: "sensor.switch_poe_power",
+  download_entity: "sensor.switch_rx",
+  upload_entity: "sensor.switch_tx",
+}, [
+  st("device_tracker.switch", "home"),
+  st("sensor.switch_ports_up", 19),
+  st("sensor.switch_poe_power", 41.2, { unit_of_measurement: "W" }),
+  st("sensor.switch_rx", 312, { unit_of_measurement: "Mbit/s", device_class: "data_rate" }),
+  st("sensor.switch_tx", 48, { unit_of_measurement: "Mbit/s", device_class: "data_rate" }),
+]);
+const netNas = () => card({
+  name: L("NAS", "NAS"),
+  appliance_type: "network",
+  network_layout: "nas",
+  state_entity: "device_tracker.nas",
+  volume_entity: "sensor.nas_volume_1_used",
+  temperature_entity: "sensor.nas_temperature",
+  disk1_entity: "sensor.nas_disk_1_status",
+  disk2_entity: "sensor.nas_disk_2_status",
+  disk3_entity: "sensor.nas_disk_3_status",
+  disk4_entity: "sensor.nas_disk_4_status",
+}, [
+  st("device_tracker.nas", "home"),
+  st("sensor.nas_volume_1_used", 61.4, { unit_of_measurement: "%" }),
+  st("sensor.nas_temperature", 41, { unit_of_measurement: "°C" }),
+  st("sensor.nas_disk_1_status", "normal"),
+  st("sensor.nas_disk_2_status", "normal"),
+  st("sensor.nas_disk_2_read_rate", 18, { unit_of_measurement: "MB/s", device_class: "data_rate" }),
+  st("sensor.nas_disk_3_status", "normal"),
+  st("sensor.nas_disk_3_standby", "on"),
+  st("sensor.nas_disk_4_status", "normal"),
+]);
+const netServer = () => card({
+  name: L("Server", "Serveur"),
+  appliance_type: "network",
+  network_layout: "server",
+  state_entity: "binary_sensor.server_ping",
+  cpu_entity: "sensor.server_cpu",
+  memory_entity: "sensor.server_memory",
+}, [
+  st("binary_sensor.server_ping", "on"),
+  st("sensor.server_cpu", 86, { unit_of_measurement: "%" }),
+  st("sensor.server_memory", 62, { unit_of_measurement: "%" }),
+]);
+const netRack = () => card({
+  name: L("Rack", "Baie"),
+  appliance_type: "network",
+  network_layout: "rack",
+  state_entity: "binary_sensor.rack_ping",
+  temperature_entity: "sensor.rack_temperature",
+}, [
+  st("binary_sensor.rack_ping", "on"),
+  st("sensor.rack_temperature", 74, { unit_of_measurement: "°C" }),
+]);
+
+// Every model of the network type: the switches by port count, the NAS by bays.
+const netSw = (n, up) => () => card({
+  name: L(`Switch ${n} ports`, `Switch ${n} ports`),
+  appliance_type: "network",
+  network_layout: "switch",
+  state_entity: "device_tracker.switch",
+  ports_entity: "sensor.switch_ports_up",
+  ports_total: n,
+}, [st("device_tracker.switch", "home"), st("sensor.switch_ports_up", up)]);
+const netBays = (bays, disks, name) => () => card({
+  name,
+  appliance_type: "network",
+  network_layout: "nas",
+  bays: String(bays),
+  state_entity: "device_tracker.nas",
+  ...Object.fromEntries(disks.map((d, i) => [`disk${i + 1}_entity`, d ? `sensor.nas_disk_${i + 1}_status` : undefined])),
+}, [st("device_tracker.nas", "home")].concat(disks.map((d, i) => st(`sensor.nas_disk_${i + 1}_status`, d || "normal"))));
+
 // Grouped by kind: the laundry, the kitchen, heating and climate, then the
 // rest.
 const ALL = { washer, dryer, steam_generator: steamGenerator,
@@ -714,7 +796,12 @@ const ALL = { washer, dryer, steam_generator: steamGenerator,
 // The variants the family captures fill their grids with; the gallery of all
 // types leaves them out.
 const EXTRA = { iron, round_feeder: roundFeeder, double_feeder: doubleFeeder, ev_discharging: evDischarging,
-                box_purifier: boxPurifier, ring_purifier: ringPurifier };
+                box_purifier: boxPurifier, ring_purifier: ringPurifier,
+                net_switch: netSwitch, net_nas: netNas, net_server: netServer, net_rack: netRack,
+                net_sw8: netSw(8, 6), net_sw16: netSw(16, 11), net_sw24: netSw(24, 20), net_sw32: netSw(32, 27),
+                net_nas1: netBays(1, ["normal"], L("NAS, 1 bay", "NAS 1 baie")),
+                net_nas2: netBays(2, ["normal", null], L("NAS, 2 bays, 1 disk", "NAS 2 baies, 1 disque")),
+                net_nas4: netBays(4, ["normal", "normal", "normal", "warning"], L("NAS, 4 bays", "NAS 4 baies")) };
 const only = (params.get("only") || "").split(",").map((k) => k.trim()).filter(Boolean);
 if (only.length) {
   document.documentElement.style.setProperty("--cols", params.get("cols") || only.length);

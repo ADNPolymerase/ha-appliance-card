@@ -10,7 +10,7 @@
 <a href="https://buymeacoffee.com/adnpolymerase" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-orange.png" alt="Buy Me A Coffee" height="60"></a>
 <a href="https://adnpolymerase.github.io/HA/" target="_blank"><img src="https://raw.githubusercontent.com/ADNPolymerase/HA/main/assets/site-button.svg" alt="Link to my github.io for my other projects" height="60"></a>
 
-A Lovelace card for household appliances: washers, dryers, dishwashers, ovens, microwaves, cooker hoods, cooktops, fridges, kettles, cookers, coffee machines, rice cookers, air fryers, water heaters, boilers, heat pumps, 3D printers, pet feeders, irons, toasters, hair dryers, pellet stoves, air conditioners, dehumidifiers, space heaters, towel warmers, air purifiers, fans, EV chargers, TVs, projectors and computers. Cycle in progress, program, remaining time, temperature, alerts and controls.
+A Lovelace card for household appliances: washers, dryers, dishwashers, ovens, microwaves, cooker hoods, cooktops, fridges, kettles, cookers, coffee machines, rice cookers, air fryers, water heaters, boilers, heat pumps, 3D printers, pet feeders, irons, toasters, hair dryers, pellet stoves, air conditioners, dehumidifiers, space heaters, towel warmers, air purifiers, fans, EV chargers, TVs, projectors and computers, and network switches, servers, NAS and racks. Cycle in progress, program, remaining time, temperature, alerts and controls.
 
 No brand assumed: every field is an entity you pick, so it works with **any** integration (Electrolux, Samsung, LG, Home Connect, Miele, a plain smart plug…).
 
@@ -21,11 +21,12 @@ No brand assumed: every field is an entity you pick, so it works with **any** in
 
 ## Features
 
-- **Twenty-nine appliance types**, each with a CSS illustration that animates on the appliance's own data and stays still when idle. The type is detected on its own or set via `appliance_type`, and `compact: true` keeps only the text.
+- **Thirty-two appliance types**, each with a CSS illustration that animates on the appliance's own data and stays still when idle. The type is detected on its own or set via `appliance_type`, and `compact: true` keeps only the text.
 - **State normalization**: `Idle`, `RUNNING`, `wash`, `En marche`… are recognised (accent-insensitive) and sorted into idle, preheating, running, paused, done, delayed or error. An unknown state is shown as it came, minus the integration's namespace, and `state_map` sorts the rest, `"*"` catching everything left over.
 - **The step, not an hour of *Running***: a washer, a dryer or a dishwasher names the step it is at (*Pre-wash*, *Washing*, *Rinsing*, *Spinning*, *Drying* and seven more), from a phase entity or from its own state, and the drum whirls while it spins. The time left is still the whole cycle's.
 - **A washer-dryer is a washer that dries**: `washer_dryer: true`, and the drum shows water while it washes, then clothes turning in hot air while it dries. The step comes from the state itself or from a phase entity, and the state line reads *Washing* or *Drying*.
 - **Each appliance says what matters for it**: a coffee machine what it is missing (water, beans, tray, descaling), a fridge its health (unplugged, door open, temperature high), a combi boiler what it is heating (central heating, hot water or standby), a 3D printer what the job is doing (preheating, bed levelling, changing filament), a pellet stove the phase of its fire (ignition, modulating, eco, cleaning), an air conditioner its mode and where it blows, an EV charger whether a car is plugged in and what the charge is doing (waiting for authorisation, charging, paused, scheduled, complete).
+- **The network as well**: a switch, a server, a NAS or a rack, *Online*, *Busy* or in *Alert*. One LED per port in use, one per disk in its bay (fine, reading, asleep, to watch, failed), and the readings found on their own from Synology, UGREEN, Unraid or Glances.
 - **Works from a smart plug alone**: `power_entity` and `power_on_threshold` are enough to derive the state from consumption; `power_off_delay` keeps a pause from reading as the end, and `show_last_cycle` shows how long the last cycle ran.
 - **Program, remaining time, progress bar, info lines, door, alerts, connectivity and controls** (start, pause, resume, stop), each optional.
 - **14 languages** (EN, FR, DE, ES, IT, NL, PT, SV, NO, DA, PL, RU, ZH, CS), Home Assistant's or pinned on the card.
@@ -74,6 +75,13 @@ Click a family to see its appliances at work.
 <summary><b>Garage and workshop</b></summary>
 
 <img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-garage.gif" alt="Garage and workshop" width="60%">
+
+</details>
+
+<details>
+<summary><b>Network and servers</b></summary>
+
+<img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-network.gif" alt="Network and servers" width="100%">
 
 </details>
 
@@ -464,7 +472,9 @@ media2_entity: media_player.apple_tv
 <details>
 <summary><b>Network: switches, servers, NAS and racks</b></summary>
 
-Read from whatever it reports. Its `state_entity`, a ping, a router's tracker or a status, says *Online* or *Off*. Traffic above 10 Mbit/s, a busy processor or a disk at work make it *Busy*; a problem, a failed disk or a temperature of 70 °C make it *Alert*, and every LED turns red while the fan starts and stops. A disk to watch says so in orange. Its lines give the traffic, the load, the volume and the ports. Picked in the editor, the card finds the readings on the device and on the devices that hang from it, disks included (Synology, UGREEN, Unraid, Glances). Four models: a switch of 8 to 32 ports, a server tower, a NAS of 1 to 4 bays, a rack.
+Read from whatever it reports. Its `state_entity`, a ping, a router's tracker or a status, says *Online* or *Off*. Traffic above 10 Mbit/s, a busy processor or a disk at work make it *Busy*; a problem, a failed disk or a temperature of 70 °C make it *Alert*, and every LED turns red while the fan starts and stops. A disk to watch says so in orange. Its lines give the traffic, the load, the volume and the ports. In the editor, the card finds the readings on the device and on the devices that hang from it, disks included (Synology, UGREEN, Unraid, Glances). Four models: a switch of 8 to 32 ports, a server tower, a NAS of 1 to 4 bays, a rack.
+
+<img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-network-models.gif" alt="Switches of 8 to 32 ports and NAS of 1 to 4 bays" width="100%">
 
 ```yaml
 type: custom:ha-appliance-card

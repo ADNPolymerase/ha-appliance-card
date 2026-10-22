@@ -3,6 +3,7 @@
 
     python3 tools/capture.py screenshots   # docs/screenshot.png + .fr.png
     python3 tools/capture.py gifs          # docs/family-*.gif + .fr.gif
+    python3 tools/capture.py gifs network  # one family only
     python3 tools/capture.py all
 
 Two things make this harder than pointing a browser at the demo page.
@@ -64,6 +65,8 @@ FAMILIES = (
     ("air", "air_purifier,box_purifier,ring_purifier,fan,ceiling_fan", 5),
     ("pets", "pet_feeder,round_feeder,double_feeder,dual_feeder,wet_feeder,pet_fountain", 3),
     ("garage", "ev_charger,ev_discharging,printer_3d", 3),
+    ("network", "net_switch,net_nas,net_server,net_rack", 4),
+    ("network-models", "net_sw8,net_sw16,net_sw24,net_sw32,net_nas1,net_nas2,net_nas4", 4),
 )
 # Sixteen frames a tenth of a second apart over a 1.6 s loop, on a 128-colour
 # palette: the five families weigh about 1.4 MB per language, where 32 frames
@@ -143,8 +146,10 @@ def screenshots():
         print(f"  {name}  {im.size[0]}x{im.size[1]}")
 
 
-def gifs():
+def gifs(only=None):
     for slug, types, cols in FAMILIES:
+        if only and slug != only:
+            continue
         for lang, name in (("", f"family-{slug}.gif"), ("&lang=fr", f"family-{slug}.fr.gif")):
             frames, box = [], None
             for i in range(GIF_FRAMES):
@@ -179,7 +184,7 @@ def main():
         if what in ("screenshots", "all"):
             screenshots()
         if what in ("gifs", "all"):
-            gifs()
+            gifs(sys.argv[2] if len(sys.argv) > 2 else None)
     finally:
         httpd.shutdown()
 
