@@ -142,6 +142,7 @@ const T = {
     layout_toaster_long: "Long slot", toaster_toasting: "Toasting", toaster_done: "Toast ready", type_air_purifier: "Air purifier",
     type_screen: "Screen (TV, projector, computer)", section_screen_layout: "Model", layout_tv_feet: "TV on feet", layout_tv_stand: "TV on a stand", layout_tv_wall: "Wall-mounted TV", layout_projector: "Projector", layout_computer: "Computer", section_screen_image: "Picture on screen", img_random: "Random", img_sunset: "Sunset", img_aquarium: "Aquarium", img_bars: "Test card", img_football: "Football match", img_space: "Space", img_bounce: "Bouncing logo", img_desktop: "Desktop", img_code: "Scrolling code", img_pong: "Pong", screen_on: "On", screen_playing: "Playing", screen_home: "Home screen", screen_locked: "Locked", screen_muted: "Muted", screen_standby_threshold: "Standby up to this power (W)", section_media: "Media player", section_media2: "Second media player", section_media3: "Third media player", section_lock: "Session lock",
     type_hair_dryer: "Hair dryer", layout_hd_pistol: "Classic", layout_hd_ring: "Ring", hd_cool: "Cool air", hd_hot: "Hot air", hd_heat_threshold: "Hot air above this power (W)", fill_height: "Fill the height of its slot", done_alert: "Flash at the end of the cycle", done_seen: "Seen", no_power_threshold: "No power draw below (W)", group_appearance: "Appearance", show_name: "Show the name", show_state: "Show the state", transparent: "Transparent background", font_scale: "Text size", illustration_size: "Drawing size", compact_mode: "Compact mode", compact_off: "Off", compact_hide: "No drawing", compact_side: "Drawing on the side", group_laundry: "Laundry", group_kitchen: "Kitchen", group_heating: "Heating and hot water", group_air: "Air and climate", group_home: "Home and media", group_pets: "Pets",
+    type_network: "Network device (switch, NAS, server)", group_network: "Network and servers", layout_net_switch: "Switch", layout_net_server: "Server", layout_net_nas: "NAS", layout_net_rack: "Rack", net_ports_count: "Ports drawn", net_bays: "NAS bays", net_online: "Online", net_busy: "Busy", net_alert: "Alert", net_warn: "Disk to watch", section_net_cpu: "CPU usage (%)", section_net_memory: "Memory usage (%)", section_net_volume: "Volume used (%)", section_net_download: "Download rate", section_net_upload: "Upload rate", section_net_ports: "Active ports", net_ports_total: "Port count", section_net_poe: "PoE power", section_net_problem: "Problem alert", section_net_temperature: "Temperature", net_temp_alert: "Alert above this temperature (\u00b0C)", net_busy_threshold: "Busy above this rate (Mbit/s)", net_line_rate: "Throughput", net_line_load: "Load", net_line_volume: "Volume", section_net_disk1: "Disk 1", section_net_disk2: "Disk 2", section_net_disk3: "Disk 3", section_net_disk4: "Disk 4",
     section_purifier_layout: "Model", layout_purifier_cylinder: "Cylinder", layout_purifier_box: "Square box", layout_purifier_ring: "Bladeless ring",
     pf_purifying: "Purifying", pf_auto: "Auto", pf_night: "Night mode", section_air_quality: "Air quality",
     section_screen: "Screen", section_heater: "Heating (thermostat)", aq_good: "Good", aq_fair: "Fair",
@@ -294,6 +295,7 @@ const T = {
     layout_toaster_long: "Fente longue", toaster_toasting: "Grillage", toaster_done: "Pr\u00eat", type_air_purifier: "Purificateur d'air",
     type_screen: "\u00c9cran (TV, projecteur, ordinateur)", section_screen_layout: "Mod\u00e8le", layout_tv_feet: "T\u00e9l\u00e9vision sur pieds", layout_tv_stand: "T\u00e9l\u00e9vision sur pied central", layout_tv_wall: "T\u00e9l\u00e9vision murale", layout_projector: "Vid\u00e9oprojecteur", layout_computer: "Ordinateur", section_screen_image: "Image \u00e0 l'\u00e9cran", img_random: "Au hasard", img_sunset: "Coucher de soleil", img_aquarium: "Aquarium", img_bars: "Mire", img_football: "Match de foot", img_space: "Espace", img_bounce: "Logo qui rebondit", img_desktop: "Bureau", img_code: "Code qui d\u00e9file", img_pong: "Pong", screen_on: "Allum\u00e9", screen_playing: "Lecture", screen_home: "Accueil", screen_locked: "Verrouill\u00e9", screen_muted: "Son coup\u00e9", screen_standby_threshold: "En veille jusqu'\u00e0 cette puissance (W)", section_media: "Lecteur multim\u00e9dia", section_media2: "Deuxi\u00e8me lecteur", section_media3: "Troisi\u00e8me lecteur", section_lock: "Verrouillage de session",
     type_hair_dryer: "S\u00e8che-cheveux", layout_hd_pistol: "Classique", layout_hd_ring: "Anneau", hd_cool: "Air froid", hd_hot: "Air chaud", hd_heat_threshold: "Air chaud au-dessus de cette puissance (W)", fill_height: "Occuper toute la hauteur de sa case", done_alert: "Clignoter \u00e0 la fin du cycle", done_seen: "Vu", no_power_threshold: "Aucune consommation en dessous de (W)", group_appearance: "Apparence", show_name: "Afficher le nom", show_state: "Afficher l'\u00e9tat", transparent: "Fond transparent", font_scale: "Taille du texte", illustration_size: "Taille du dessin", compact_mode: "Mode compact", compact_off: "D\u00e9sactiv\u00e9", compact_hide: "Sans dessin", compact_side: "Dessin sur le c\u00f4t\u00e9", group_laundry: "Linge", group_kitchen: "Cuisine", group_heating: "Chauffage et eau chaude", group_air: "Air et climat", group_home: "Maison et multim\u00e9dia", group_pets: "Animaux",
+    type_network: "R\u00e9seau (switch, NAS, serveur)", group_network: "R\u00e9seau et serveurs", layout_net_switch: "Switch", layout_net_server: "Serveur", layout_net_nas: "NAS", layout_net_rack: "Baie", net_ports_count: "Ports dessin\u00e9s", net_bays: "Baies du NAS", net_online: "En ligne", net_busy: "Activit\u00e9", net_alert: "Alerte", net_warn: "Disque \u00e0 surveiller", section_net_cpu: "Processeur (%)", section_net_memory: "M\u00e9moire (%)", section_net_volume: "Volume occup\u00e9 (%)", section_net_download: "D\u00e9bit descendant", section_net_upload: "D\u00e9bit montant", section_net_ports: "Ports actifs", net_ports_total: "Nombre de ports", section_net_poe: "Puissance PoE", section_net_problem: "Alerte (probl\u00e8me)", section_net_temperature: "Temp\u00e9rature", net_temp_alert: "Alerte au-dessus de cette temp\u00e9rature (\u00b0C)", net_busy_threshold: "Activit\u00e9 au-dessus de ce d\u00e9bit (Mbit/s)", net_line_rate: "D\u00e9bit", net_line_load: "Charge", net_line_volume: "Volume", section_net_disk1: "Disque 1", section_net_disk2: "Disque 2", section_net_disk3: "Disque 3", section_net_disk4: "Disque 4",
     section_purifier_layout: "Mod\u00e8le", layout_purifier_cylinder: "Cylindre", layout_purifier_box: "Bo\u00eetier carr\u00e9", layout_purifier_ring: "Anneau sans pales",
     pf_purifying: "Purification", pf_auto: "Auto", pf_night: "Mode nuit", section_air_quality: "Qualit\u00e9 de l'air",
     section_screen: "\u00c9cran", section_heater: "Chauffage (thermostat)", aq_good: "Bonne", aq_fair: "Moyenne",
@@ -446,6 +448,7 @@ const T = {
     layout_toaster_long: "\u0414\u043b\u0438\u043d\u043d\u044b\u0439 \u0441\u043b\u043e\u0442", toaster_toasting: "\u041f\u043e\u0434\u0436\u0430\u0440\u0438\u0432\u0430\u043d\u0438\u0435", toaster_done: "\u0413\u043e\u0442\u043e\u0432\u043e", type_air_purifier: "\u041e\u0447\u0438\u0441\u0442\u0438\u0442\u0435\u043b\u044c \u0432\u043e\u0437\u0434\u0443\u0445\u0430",
     type_screen: "\u042d\u043a\u0440\u0430\u043d (\u0422\u0412, \u043f\u0440\u043e\u0435\u043a\u0442\u043e\u0440, \u043a\u043e\u043c\u043f\u044c\u044e\u0442\u0435\u0440)", section_screen_layout: "\u041c\u043e\u0434\u0435\u043b\u044c", layout_tv_feet: "\u0422\u0435\u043b\u0435\u0432\u0438\u0437\u043e\u0440 \u043d\u0430 \u043d\u043e\u0436\u043a\u0430\u0445", layout_tv_stand: "\u0422\u0435\u043b\u0435\u0432\u0438\u0437\u043e\u0440 \u043d\u0430 \u043f\u043e\u0434\u0441\u0442\u0430\u0432\u043a\u0435", layout_tv_wall: "\u041d\u0430\u0441\u0442\u0435\u043d\u043d\u044b\u0439 \u0442\u0435\u043b\u0435\u0432\u0438\u0437\u043e\u0440", layout_projector: "\u041f\u0440\u043e\u0435\u043a\u0442\u043e\u0440", layout_computer: "\u041a\u043e\u043c\u043f\u044c\u044e\u0442\u0435\u0440", section_screen_image: "\u0418\u0437\u043e\u0431\u0440\u0430\u0436\u0435\u043d\u0438\u0435 \u043d\u0430 \u044d\u043a\u0440\u0430\u043d\u0435", img_random: "\u0421\u043b\u0443\u0447\u0430\u0439\u043d\u043e\u0435", img_sunset: "\u0417\u0430\u043a\u0430\u0442", img_aquarium: "\u0410\u043a\u0432\u0430\u0440\u0438\u0443\u043c", img_bars: "\u0418\u0441\u043f\u044b\u0442\u0430\u0442\u0435\u043b\u044c\u043d\u0430\u044f \u0442\u0430\u0431\u043b\u0438\u0446\u0430", img_football: "\u0424\u0443\u0442\u0431\u043e\u043b\u044c\u043d\u044b\u0439 \u043c\u0430\u0442\u0447", img_space: "\u041a\u043e\u0441\u043c\u043e\u0441", img_bounce: "\u041f\u0440\u044b\u0433\u0430\u044e\u0449\u0438\u0439 \u043b\u043e\u0433\u043e\u0442\u0438\u043f", img_desktop: "\u0420\u0430\u0431\u043e\u0447\u0438\u0439 \u0441\u0442\u043e\u043b", img_code: "\u0411\u0435\u0433\u0443\u0449\u0438\u0439 \u043a\u043e\u0434", img_pong: "\u041f\u043e\u043d\u0433", screen_on: "\u0412\u043a\u043b\u044e\u0447\u0451\u043d", screen_playing: "\u0412\u043e\u0441\u043f\u0440\u043e\u0438\u0437\u0432\u0435\u0434\u0435\u043d\u0438\u0435", screen_home: "\u0413\u043b\u0430\u0432\u043d\u044b\u0439 \u044d\u043a\u0440\u0430\u043d", screen_locked: "\u0417\u0430\u0431\u043b\u043e\u043a\u0438\u0440\u043e\u0432\u0430\u043d", screen_muted: "\u0411\u0435\u0437 \u0437\u0432\u0443\u043a\u0430", screen_standby_threshold: "\u0420\u0435\u0436\u0438\u043c \u043e\u0436\u0438\u0434\u0430\u043d\u0438\u044f \u0434\u043e \u044d\u0442\u043e\u0439 \u043c\u043e\u0449\u043d\u043e\u0441\u0442\u0438 (\u0412\u0442)", section_media: "\u041c\u0435\u0434\u0438\u0430\u043f\u043b\u0435\u0435\u0440", section_media2: "\u0412\u0442\u043e\u0440\u043e\u0439 \u043c\u0435\u0434\u0438\u0430\u043f\u043b\u0435\u0435\u0440", section_media3: "\u0422\u0440\u0435\u0442\u0438\u0439 \u043c\u0435\u0434\u0438\u0430\u043f\u043b\u0435\u0435\u0440", section_lock: "\u0411\u043b\u043e\u043a\u0438\u0440\u043e\u0432\u043a\u0430 \u0441\u0435\u0430\u043d\u0441\u0430",
     type_hair_dryer: "\u0424\u0435\u043d", layout_hd_pistol: "\u041a\u043b\u0430\u0441\u0441\u0438\u0447\u0435\u0441\u043a\u0438\u0439", layout_hd_ring: "\u041a\u043e\u043b\u044c\u0446\u043e", hd_cool: "\u0425\u043e\u043b\u043e\u0434\u043d\u044b\u0439 \u0432\u043e\u0437\u0434\u0443\u0445", hd_hot: "\u0413\u043e\u0440\u044f\u0447\u0438\u0439 \u0432\u043e\u0437\u0434\u0443\u0445", hd_heat_threshold: "\u0413\u043e\u0440\u044f\u0447\u0438\u0439 \u0432\u043e\u0437\u0434\u0443\u0445 \u0432\u044b\u0448\u0435 \u044d\u0442\u043e\u0439 \u043c\u043e\u0449\u043d\u043e\u0441\u0442\u0438 (\u0412\u0442)", fill_height: "\u0417\u0430\u043d\u0438\u043c\u0430\u0442\u044c \u0432\u0441\u044e \u0432\u044b\u0441\u043e\u0442\u0443 \u044f\u0447\u0435\u0439\u043a\u0438", done_alert: "\u041c\u0438\u0433\u0430\u0442\u044c \u0432 \u043a\u043e\u043d\u0446\u0435 \u0446\u0438\u043a\u043b\u0430", done_seen: "\u041f\u0440\u043e\u0441\u043c\u043e\u0442\u0440\u0435\u043d\u043e", no_power_threshold: "\u041d\u0435\u0442 \u043f\u043e\u0442\u0440\u0435\u0431\u043b\u0435\u043d\u0438\u044f \u043d\u0438\u0436\u0435 (\u0412\u0442)", group_appearance: "\u0412\u043d\u0435\u0448\u043d\u0438\u0439 \u0432\u0438\u0434", show_name: "\u041f\u043e\u043a\u0430\u0437\u044b\u0432\u0430\u0442\u044c \u043d\u0430\u0437\u0432\u0430\u043d\u0438\u0435", show_state: "\u041f\u043e\u043a\u0430\u0437\u044b\u0432\u0430\u0442\u044c \u0441\u043e\u0441\u0442\u043e\u044f\u043d\u0438\u0435", transparent: "\u041f\u0440\u043e\u0437\u0440\u0430\u0447\u043d\u044b\u0439 \u0444\u043e\u043d", font_scale: "\u0420\u0430\u0437\u043c\u0435\u0440 \u0442\u0435\u043a\u0441\u0442\u0430", illustration_size: "\u0420\u0430\u0437\u043c\u0435\u0440 \u0440\u0438\u0441\u0443\u043d\u043a\u0430", compact_mode: "\u041a\u043e\u043c\u043f\u0430\u043a\u0442\u043d\u044b\u0439 \u0440\u0435\u0436\u0438\u043c", compact_off: "\u0412\u044b\u043a\u043b.", compact_hide: "\u0411\u0435\u0437 \u0440\u0438\u0441\u0443\u043d\u043a\u0430", compact_side: "\u0420\u0438\u0441\u0443\u043d\u043e\u043a \u0441\u0431\u043e\u043a\u0443", group_laundry: "\u0421\u0442\u0438\u0440\u043a\u0430", group_kitchen: "\u041a\u0443\u0445\u043d\u044f", group_heating: "\u041e\u0442\u043e\u043f\u043b\u0435\u043d\u0438\u0435 \u0438 \u0433\u043e\u0440\u044f\u0447\u0430\u044f \u0432\u043e\u0434\u0430", group_air: "\u0412\u043e\u0437\u0434\u0443\u0445 \u0438 \u043a\u043b\u0438\u043c\u0430\u0442", group_home: "\u0414\u043e\u043c \u0438 \u043c\u0443\u043b\u044c\u0442\u0438\u043c\u0435\u0434\u0438\u0430", group_pets: "\u041f\u0438\u0442\u043e\u043c\u0446\u044b",
+    type_network: "\u0421\u0435\u0442\u044c (\u043a\u043e\u043c\u043c\u0443\u0442\u0430\u0442\u043e\u0440, NAS, \u0441\u0435\u0440\u0432\u0435\u0440)", group_network: "\u0421\u0435\u0442\u044c \u0438 \u0441\u0435\u0440\u0432\u0435\u0440\u044b", layout_net_switch: "\u041a\u043e\u043c\u043c\u0443\u0442\u0430\u0442\u043e\u0440", layout_net_server: "\u0421\u0435\u0440\u0432\u0435\u0440", layout_net_nas: "NAS", layout_net_rack: "\u0421\u0442\u043e\u0439\u043a\u0430", net_ports_count: "\u041f\u043e\u0440\u0442\u043e\u0432 \u043d\u0430 \u0440\u0438\u0441\u0443\u043d\u043a\u0435", net_bays: "\u041e\u0442\u0441\u0435\u043a\u0438 NAS", net_online: "\u0412 \u0441\u0435\u0442\u0438", net_busy: "\u0410\u043a\u0442\u0438\u0432\u043d\u043e\u0441\u0442\u044c", net_alert: "\u0422\u0440\u0435\u0432\u043e\u0433\u0430", net_warn: "\u0414\u0438\u0441\u043a \u043f\u043e\u0434 \u043d\u0430\u0431\u043b\u044e\u0434\u0435\u043d\u0438\u0435\u043c", section_net_cpu: "\u0417\u0430\u0433\u0440\u0443\u0437\u043a\u0430 \u0426\u041f (%)", section_net_memory: "\u0417\u0430\u0433\u0440\u0443\u0437\u043a\u0430 \u043f\u0430\u043c\u044f\u0442\u0438 (%)", section_net_volume: "\u0417\u0430\u043d\u044f\u0442\u043e \u043d\u0430 \u0442\u043e\u043c\u0435 (%)", section_net_download: "\u0421\u043a\u043e\u0440\u043e\u0441\u0442\u044c \u0437\u0430\u0433\u0440\u0443\u0437\u043a\u0438", section_net_upload: "\u0421\u043a\u043e\u0440\u043e\u0441\u0442\u044c \u043e\u0442\u0434\u0430\u0447\u0438", section_net_ports: "\u0410\u043a\u0442\u0438\u0432\u043d\u044b\u0435 \u043f\u043e\u0440\u0442\u044b", net_ports_total: "\u0427\u0438\u0441\u043b\u043e \u043f\u043e\u0440\u0442\u043e\u0432", section_net_poe: "\u041c\u043e\u0449\u043d\u043e\u0441\u0442\u044c PoE", section_net_problem: "\u0421\u0438\u0433\u043d\u0430\u043b \u043e \u043f\u0440\u043e\u0431\u043b\u0435\u043c\u0435", section_net_temperature: "\u0422\u0435\u043c\u043f\u0435\u0440\u0430\u0442\u0443\u0440\u0430", net_temp_alert: "\u0422\u0440\u0435\u0432\u043e\u0433\u0430 \u0432\u044b\u0448\u0435 \u044d\u0442\u043e\u0439 \u0442\u0435\u043c\u043f\u0435\u0440\u0430\u0442\u0443\u0440\u044b (\u00b0C)", net_busy_threshold: "\u0410\u043a\u0442\u0438\u0432\u043d\u043e\u0441\u0442\u044c \u0432\u044b\u0448\u0435 \u044d\u0442\u043e\u0439 \u0441\u043a\u043e\u0440\u043e\u0441\u0442\u0438 (\u041c\u0431\u0438\u0442/\u0441)", net_line_rate: "\u041f\u0440\u043e\u043f\u0443\u0441\u043a\u043d\u0430\u044f \u0441\u043f\u043e\u0441\u043e\u0431\u043d\u043e\u0441\u0442\u044c", net_line_load: "\u041d\u0430\u0433\u0440\u0443\u0437\u043a\u0430", net_line_volume: "\u0422\u043e\u043c", section_net_disk1: "\u0414\u0438\u0441\u043a 1", section_net_disk2: "\u0414\u0438\u0441\u043a 2", section_net_disk3: "\u0414\u0438\u0441\u043a 3", section_net_disk4: "\u0414\u0438\u0441\u043a 4",
     section_purifier_layout: "\u041c\u043e\u0434\u0435\u043b\u044c", layout_purifier_cylinder: "\u0426\u0438\u043b\u0438\u043d\u0434\u0440", layout_purifier_box: "\u041a\u0432\u0430\u0434\u0440\u0430\u0442\u043d\u044b\u0439 \u043a\u043e\u0440\u043f\u0443\u0441", layout_purifier_ring: "\u0411\u0435\u0437\u043b\u043e\u043f\u0430\u0441\u0442\u043d\u043e\u0435 \u043a\u043e\u043b\u044c\u0446\u043e",
     pf_purifying: "\u041e\u0447\u0438\u0441\u0442\u043a\u0430", pf_auto: "\u0410\u0432\u0442\u043e", pf_night: "\u041d\u043e\u0447\u043d\u043e\u0439 \u0440\u0435\u0436\u0438\u043c", section_air_quality: "\u041a\u0430\u0447\u0435\u0441\u0442\u0432\u043e \u0432\u043e\u0437\u0434\u0443\u0445\u0430",
     section_screen: "\u042d\u043a\u0440\u0430\u043d", section_heater: "\u041e\u0431\u043e\u0433\u0440\u0435\u0432 (\u0442\u0435\u0440\u043c\u043e\u0441\u0442\u0430\u0442)", aq_good: "\u0425\u043e\u0440\u043e\u0448\u0435\u0435", aq_fair: "\u0423\u0434\u043e\u0432\u043b\u0435\u0442\u0432\u043e\u0440\u0438\u0442\u0435\u043b\u044c\u043d\u043e\u0435",
@@ -598,6 +601,7 @@ const T = {
     layout_toaster_long: "Langschlitz", toaster_toasting: "Toastet", toaster_done: "Fertig", type_air_purifier: "Luftreiniger",
     type_screen: "Bildschirm (TV, Beamer, Computer)", section_screen_layout: "Modell", layout_tv_feet: "Fernseher auf F\u00fc\u00dfen", layout_tv_stand: "Fernseher mit Standfu\u00df", layout_tv_wall: "Wandfernseher", layout_projector: "Beamer", layout_computer: "Computer", section_screen_image: "Bild auf dem Bildschirm", img_random: "Zuf\u00e4llig", img_sunset: "Sonnenuntergang", img_aquarium: "Aquarium", img_bars: "Testbild", img_football: "Fu\u00dfballspiel", img_space: "Weltall", img_bounce: "H\u00fcpfendes Logo", img_desktop: "Desktop", img_code: "Scrollender Code", img_pong: "Pong", screen_on: "Ein", screen_playing: "Wiedergabe", screen_home: "Startbildschirm", screen_locked: "Gesperrt", screen_muted: "Stumm", screen_standby_threshold: "Standby bis zu dieser Leistung (W)", section_media: "Mediaplayer", section_media2: "Zweiter Mediaplayer", section_media3: "Dritter Mediaplayer", section_lock: "Sitzungssperre",
     type_hair_dryer: "Haartrockner", layout_hd_pistol: "Klassisch", layout_hd_ring: "Ring", hd_cool: "Kaltluft", hd_hot: "Warmluft", hd_heat_threshold: "Warmluft oberhalb dieser Leistung (W)", fill_height: "Ganze H\u00f6he des Platzes f\u00fcllen", done_alert: "Am Ende des Programms blinken", done_seen: "Gesehen", no_power_threshold: "Kein Verbrauch unter (W)", group_appearance: "Darstellung", show_name: "Namen anzeigen", show_state: "Status anzeigen", transparent: "Transparenter Hintergrund", font_scale: "Textgr\u00f6\u00dfe", illustration_size: "Zeichnungsgr\u00f6\u00dfe", compact_mode: "Kompaktmodus", compact_off: "Aus", compact_hide: "Ohne Zeichnung", compact_side: "Zeichnung seitlich", group_laundry: "W\u00e4sche", group_kitchen: "K\u00fcche", group_heating: "Heizung und Warmwasser", group_air: "Luft und Klima", group_home: "Haus und Multimedia", group_pets: "Haustiere",
+    type_network: "Netzwerk (Switch, NAS, Server)", group_network: "Netzwerk und Server", layout_net_switch: "Switch", layout_net_server: "Server", layout_net_nas: "NAS", layout_net_rack: "Rack", net_ports_count: "Gezeichnete Ports", net_bays: "NAS-Sch\u00e4chte", net_online: "Online", net_busy: "Aktiv", net_alert: "Alarm", net_warn: "Festplatte beobachten", section_net_cpu: "CPU-Auslastung (%)", section_net_memory: "Speicherauslastung (%)", section_net_volume: "Volume belegt (%)", section_net_download: "Download-Rate", section_net_upload: "Upload-Rate", section_net_ports: "Aktive Ports", net_ports_total: "Anzahl der Ports", section_net_poe: "PoE-Leistung", section_net_problem: "Problemmeldung", section_net_temperature: "Temperatur", net_temp_alert: "Alarm oberhalb dieser Temperatur (\u00b0C)", net_busy_threshold: "Aktiv oberhalb dieser Rate (Mbit/s)", net_line_rate: "Durchsatz", net_line_load: "Last", net_line_volume: "Volume", section_net_disk1: "Festplatte 1", section_net_disk2: "Festplatte 2", section_net_disk3: "Festplatte 3", section_net_disk4: "Festplatte 4",
     section_purifier_layout: "Modell", layout_purifier_cylinder: "Zylinder", layout_purifier_box: "Quaderform", layout_purifier_ring: "Rotorloser Ring",
     pf_purifying: "Reinigt", pf_auto: "Auto", pf_night: "Nachtmodus", section_air_quality: "Luftqualit\u00e4t",
     section_screen: "Anzeige", section_heater: "Heizung (Thermostat)", aq_good: "Gut", aq_fair: "M\u00e4\u00dfig",
@@ -750,6 +754,7 @@ const T = {
     layout_toaster_long: "Ranura larga", toaster_toasting: "Tostando", toaster_done: "Listo", type_air_purifier: "Purificador de aire",
     type_screen: "Pantalla (TV, proyector, ordenador)", section_screen_layout: "Modelo", layout_tv_feet: "Televisor con patas", layout_tv_stand: "Televisor con pie central", layout_tv_wall: "Televisor de pared", layout_projector: "Proyector", layout_computer: "Ordenador", section_screen_image: "Imagen en pantalla", img_random: "Aleatoria", img_sunset: "Puesta de sol", img_aquarium: "Acuario", img_bars: "Carta de ajuste", img_football: "Partido de f\u00fatbol", img_space: "Espacio", img_bounce: "Logo que rebota", img_desktop: "Escritorio", img_code: "C\u00f3digo en movimiento", img_pong: "Pong", screen_on: "Encendido", screen_playing: "Reproduciendo", screen_home: "Pantalla de inicio", screen_locked: "Bloqueado", screen_muted: "Silenciado", screen_standby_threshold: "En espera hasta esta potencia (W)", section_media: "Reproductor multimedia", section_media2: "Segundo reproductor", section_media3: "Tercer reproductor", section_lock: "Bloqueo de sesi\u00f3n",
     type_hair_dryer: "Secador de pelo", layout_hd_pistol: "Cl\u00e1sico", layout_hd_ring: "Anillo", hd_cool: "Aire fr\u00edo", hd_hot: "Aire caliente", hd_heat_threshold: "Aire caliente por encima de esta potencia (W)", fill_height: "Ocupar toda la altura de su hueco", done_alert: "Parpadear al final del ciclo", done_seen: "Visto", no_power_threshold: "Sin consumo por debajo de (W)", group_appearance: "Apariencia", show_name: "Mostrar el nombre", show_state: "Mostrar el estado", transparent: "Fondo transparente", font_scale: "Tama\u00f1o del texto", illustration_size: "Tama\u00f1o del dibujo", compact_mode: "Modo compacto", compact_off: "Desactivado", compact_hide: "Sin dibujo", compact_side: "Dibujo al lado", group_laundry: "Lavander\u00eda", group_kitchen: "Cocina", group_heating: "Calefacci\u00f3n y agua caliente", group_air: "Aire y climatizaci\u00f3n", group_home: "Hogar y multimedia", group_pets: "Mascotas",
+    type_network: "Red (switch, NAS, servidor)", group_network: "Red y servidores", layout_net_switch: "Switch", layout_net_server: "Servidor", layout_net_nas: "NAS", layout_net_rack: "Rack", net_ports_count: "Puertos dibujados", net_bays: "Bah\u00edas del NAS", net_online: "En l\u00ednea", net_busy: "Actividad", net_alert: "Alerta", net_warn: "Disco a vigilar", section_net_cpu: "Uso de CPU (%)", section_net_memory: "Uso de memoria (%)", section_net_volume: "Volumen ocupado (%)", section_net_download: "Velocidad de descarga", section_net_upload: "Velocidad de subida", section_net_ports: "Puertos activos", net_ports_total: "N\u00famero de puertos", section_net_poe: "Potencia PoE", section_net_problem: "Alerta (problema)", section_net_temperature: "Temperatura", net_temp_alert: "Alerta por encima de esta temperatura (\u00b0C)", net_busy_threshold: "Actividad por encima de esta velocidad (Mbit/s)", net_line_rate: "Caudal", net_line_load: "Carga", net_line_volume: "Volumen", section_net_disk1: "Disco 1", section_net_disk2: "Disco 2", section_net_disk3: "Disco 3", section_net_disk4: "Disco 4",
     section_purifier_layout: "Modelo", layout_purifier_cylinder: "Cilindro", layout_purifier_box: "Caja cuadrada", layout_purifier_ring: "Anillo sin aspas",
     pf_purifying: "Purificando", pf_auto: "Auto", pf_night: "Modo nocturno", section_air_quality: "Calidad del aire",
     section_screen: "Pantalla", section_heater: "Calefacci\u00f3n (termostato)", aq_good: "Buena", aq_fair: "Aceptable",
@@ -902,6 +907,7 @@ const T = {
     layout_toaster_long: "Fessura lunga", toaster_toasting: "Tostatura", toaster_done: "Pronto", type_air_purifier: "Purificatore d'aria",
     type_screen: "Schermo (TV, proiettore, computer)", section_screen_layout: "Modello", layout_tv_feet: "TV con piedini", layout_tv_stand: "TV con piedistallo", layout_tv_wall: "TV a parete", layout_projector: "Proiettore", layout_computer: "Computer", section_screen_image: "Immagine sullo schermo", img_random: "Casuale", img_sunset: "Tramonto", img_aquarium: "Acquario", img_bars: "Monoscopio", img_football: "Partita di calcio", img_space: "Spazio", img_bounce: "Logo che rimbalza", img_desktop: "Desktop", img_code: "Codice che scorre", img_pong: "Pong", screen_on: "Acceso", screen_playing: "In riproduzione", screen_home: "Schermata iniziale", screen_locked: "Bloccato", screen_muted: "Audio disattivato", screen_standby_threshold: "In standby fino a questa potenza (W)", section_media: "Lettore multimediale", section_media2: "Secondo lettore", section_media3: "Terzo lettore", section_lock: "Blocco sessione",
     type_hair_dryer: "Asciugacapelli", layout_hd_pistol: "Classico", layout_hd_ring: "Anello", hd_cool: "Aria fredda", hd_hot: "Aria calda", hd_heat_threshold: "Aria calda sopra questa potenza (W)", fill_height: "Occupare tutta l'altezza dello spazio", done_alert: "Lampeggiare a fine ciclo", done_seen: "Visto", no_power_threshold: "Nessun consumo sotto (W)", group_appearance: "Aspetto", show_name: "Mostra il nome", show_state: "Mostra lo stato", transparent: "Sfondo trasparente", font_scale: "Dimensione del testo", illustration_size: "Dimensione del disegno", compact_mode: "Modalit\u00e0 compatta", compact_off: "Disattivata", compact_hide: "Senza disegno", compact_side: "Disegno di lato", group_laundry: "Bucato", group_kitchen: "Cucina", group_heating: "Riscaldamento e acqua calda", group_air: "Aria e clima", group_home: "Casa e multimedia", group_pets: "Animali",
+    type_network: "Rete (switch, NAS, server)", group_network: "Rete e server", layout_net_switch: "Switch", layout_net_server: "Server", layout_net_nas: "NAS", layout_net_rack: "Rack", net_ports_count: "Porte disegnate", net_bays: "Alloggiamenti del NAS", net_online: "Online", net_busy: "Attivit\u00e0", net_alert: "Allarme", net_warn: "Disco da tenere d'occhio", section_net_cpu: "Uso CPU (%)", section_net_memory: "Uso memoria (%)", section_net_volume: "Volume occupato (%)", section_net_download: "Velocit\u00e0 di download", section_net_upload: "Velocit\u00e0 di upload", section_net_ports: "Porte attive", net_ports_total: "Numero di porte", section_net_poe: "Potenza PoE", section_net_problem: "Avviso (problema)", section_net_temperature: "Temperatura", net_temp_alert: "Allarme sopra questa temperatura (\u00b0C)", net_busy_threshold: "Attivit\u00e0 sopra questa velocit\u00e0 (Mbit/s)", net_line_rate: "Velocit\u00e0", net_line_load: "Carico", net_line_volume: "Volume", section_net_disk1: "Disco 1", section_net_disk2: "Disco 2", section_net_disk3: "Disco 3", section_net_disk4: "Disco 4",
     section_purifier_layout: "Modello", layout_purifier_cylinder: "Cilindro", layout_purifier_box: "Scatola quadrata", layout_purifier_ring: "Anello senza pale",
     pf_purifying: "Purificazione", pf_auto: "Auto", pf_night: "Modalit\u00e0 notte", section_air_quality: "Qualit\u00e0 dell'aria",
     section_screen: "Display", section_heater: "Riscaldamento (termostato)", aq_good: "Buona", aq_fair: "Discreta",
@@ -1054,6 +1060,7 @@ const T = {
     layout_toaster_long: "Lange sleuf", toaster_toasting: "Roostert", toaster_done: "Klaar", type_air_purifier: "Luchtreiniger",
     type_screen: "Scherm (tv, projector, computer)", section_screen_layout: "Model", layout_tv_feet: "Tv op pootjes", layout_tv_stand: "Tv op voet", layout_tv_wall: "Tv aan de muur", layout_projector: "Projector", layout_computer: "Computer", section_screen_image: "Beeld op het scherm", img_random: "Willekeurig", img_sunset: "Zonsondergang", img_aquarium: "Aquarium", img_bars: "Testbeeld", img_football: "Voetbalwedstrijd", img_space: "Ruimte", img_bounce: "Stuiterend logo", img_desktop: "Bureaublad", img_code: "Scrollende code", img_pong: "Pong", screen_on: "Aan", screen_playing: "Speelt af", screen_home: "Startscherm", screen_locked: "Vergrendeld", screen_muted: "Gedempt", screen_standby_threshold: "Stand-by tot dit vermogen (W)", section_media: "Mediaspeler", section_media2: "Tweede mediaspeler", section_media3: "Derde mediaspeler", section_lock: "Sessievergrendeling",
     type_hair_dryer: "Haardroger", layout_hd_pistol: "Klassiek", layout_hd_ring: "Ring", hd_cool: "Koude lucht", hd_hot: "Warme lucht", hd_heat_threshold: "Warme lucht boven dit vermogen (W)", fill_height: "De volledige hoogte van het vak vullen", done_alert: "Knipperen aan het einde van de cyclus", done_seen: "Gezien", no_power_threshold: "Geen verbruik onder (W)", group_appearance: "Weergave", show_name: "Naam tonen", show_state: "Status tonen", transparent: "Transparante achtergrond", font_scale: "Tekstgrootte", illustration_size: "Grootte van de tekening", compact_mode: "Compacte modus", compact_off: "Uit", compact_hide: "Zonder tekening", compact_side: "Tekening opzij", group_laundry: "Was", group_kitchen: "Keuken", group_heating: "Verwarming en warm water", group_air: "Lucht en klimaat", group_home: "Huis en multimedia", group_pets: "Huisdieren",
+    type_network: "Netwerk (switch, NAS, server)", group_network: "Netwerk en servers", layout_net_switch: "Switch", layout_net_server: "Server", layout_net_nas: "NAS", layout_net_rack: "Rack", net_ports_count: "Getekende poorten", net_bays: "NAS-sleuven", net_online: "Online", net_busy: "Actief", net_alert: "Alarm", net_warn: "Schijf in de gaten houden", section_net_cpu: "CPU-gebruik (%)", section_net_memory: "Geheugengebruik (%)", section_net_volume: "Volume bezet (%)", section_net_download: "Downloadsnelheid", section_net_upload: "Uploadsnelheid", section_net_ports: "Actieve poorten", net_ports_total: "Aantal poorten", section_net_poe: "PoE-vermogen", section_net_problem: "Probleemmelding", section_net_temperature: "Temperatuur", net_temp_alert: "Alarm boven deze temperatuur (\u00b0C)", net_busy_threshold: "Actief boven deze snelheid (Mbit/s)", net_line_rate: "Doorvoer", net_line_load: "Belasting", net_line_volume: "Volume", section_net_disk1: "Schijf 1", section_net_disk2: "Schijf 2", section_net_disk3: "Schijf 3", section_net_disk4: "Schijf 4",
     section_purifier_layout: "Model", layout_purifier_cylinder: "Cilinder", layout_purifier_box: "Vierkante kast", layout_purifier_ring: "Bladloze ring",
     pf_purifying: "Zuivert", pf_auto: "Auto", pf_night: "Nachtmodus", section_air_quality: "Luchtkwaliteit",
     section_screen: "Scherm", section_heater: "Verwarming (thermostaat)", aq_good: "Goed", aq_fair: "Matig",
@@ -1206,6 +1213,7 @@ const T = {
     layout_toaster_long: "Ranhura longa", toaster_toasting: "A torrar", toaster_done: "Pronto", type_air_purifier: "Purificador de ar",
     type_screen: "Ecr\u00e3 (TV, projetor, computador)", section_screen_layout: "Modelo", layout_tv_feet: "TV com p\u00e9s", layout_tv_stand: "TV com base central", layout_tv_wall: "TV de parede", layout_projector: "Projetor", layout_computer: "Computador", section_screen_image: "Imagem no ecr\u00e3", img_random: "Aleat\u00f3ria", img_sunset: "P\u00f4r do sol", img_aquarium: "Aqu\u00e1rio", img_bars: "Padr\u00e3o de teste", img_football: "Jogo de futebol", img_space: "Espa\u00e7o", img_bounce: "Log\u00f3tipo a saltar", img_desktop: "Ambiente de trabalho", img_code: "C\u00f3digo a deslizar", img_pong: "Pong", screen_on: "Ligado", screen_playing: "A reproduzir", screen_home: "Ecr\u00e3 inicial", screen_locked: "Bloqueado", screen_muted: "Sem som", screen_standby_threshold: "Em espera at\u00e9 esta pot\u00eancia (W)", section_media: "Leitor multim\u00e9dia", section_media2: "Segundo leitor", section_media3: "Terceiro leitor", section_lock: "Bloqueio de sess\u00e3o",
     type_hair_dryer: "Secador de cabelo", layout_hd_pistol: "Cl\u00e1ssico", layout_hd_ring: "Anel", hd_cool: "Ar frio", hd_hot: "Ar quente", hd_heat_threshold: "Ar quente acima desta pot\u00eancia (W)", fill_height: "Ocupar toda a altura do espa\u00e7o", done_alert: "Piscar no fim do ciclo", done_seen: "Visto", no_power_threshold: "Sem consumo abaixo de (W)", group_appearance: "Apar\u00eancia", show_name: "Mostrar o nome", show_state: "Mostrar o estado", transparent: "Fundo transparente", font_scale: "Tamanho do texto", illustration_size: "Tamanho do desenho", compact_mode: "Modo compacto", compact_off: "Desligado", compact_hide: "Sem desenho", compact_side: "Desenho ao lado", group_laundry: "Roupa", group_kitchen: "Cozinha", group_heating: "Aquecimento e \u00e1gua quente", group_air: "Ar e climatiza\u00e7\u00e3o", group_home: "Casa e multim\u00e9dia", group_pets: "Animais",
+    type_network: "Rede (switch, NAS, servidor)", group_network: "Rede e servidores", layout_net_switch: "Switch", layout_net_server: "Servidor", layout_net_nas: "NAS", layout_net_rack: "Bastidor", net_ports_count: "Portas desenhadas", net_bays: "Ba\u00edas do NAS", net_online: "Online", net_busy: "Atividade", net_alert: "Alerta", net_warn: "Disco a vigiar", section_net_cpu: "Uso de CPU (%)", section_net_memory: "Uso de mem\u00f3ria (%)", section_net_volume: "Volume ocupado (%)", section_net_download: "Velocidade de download", section_net_upload: "Velocidade de upload", section_net_ports: "Portas ativas", net_ports_total: "N\u00famero de portas", section_net_poe: "Pot\u00eancia PoE", section_net_problem: "Alerta (problema)", section_net_temperature: "Temperatura", net_temp_alert: "Alerta acima desta temperatura (\u00b0C)", net_busy_threshold: "Atividade acima deste d\u00e9bito (Mbit/s)", net_line_rate: "D\u00e9bito", net_line_load: "Carga", net_line_volume: "Volume", section_net_disk1: "Disco 1", section_net_disk2: "Disco 2", section_net_disk3: "Disco 3", section_net_disk4: "Disco 4",
     section_purifier_layout: "Modelo", layout_purifier_cylinder: "Cilindro", layout_purifier_box: "Caixa quadrada", layout_purifier_ring: "Anel sem p\u00e1s",
     pf_purifying: "A purificar", pf_auto: "Auto", pf_night: "Modo noturno", section_air_quality: "Qualidade do ar",
     section_screen: "Ecr\u00e3", section_heater: "Aquecimento (term\u00f3stato)", aq_good: "Boa", aq_fair: "Razo\u00e1vel",
@@ -1358,6 +1366,7 @@ const T = {
     layout_toaster_long: "L\u00e5ngt fack", toaster_toasting: "Rostar", toaster_done: "Klart", type_air_purifier: "Luftrenare",
     type_screen: "Sk\u00e4rm (tv, projektor, dator)", section_screen_layout: "Modell", layout_tv_feet: "Tv p\u00e5 f\u00f6tter", layout_tv_stand: "Tv p\u00e5 fot", layout_tv_wall: "V\u00e4ggmonterad tv", layout_projector: "Projektor", layout_computer: "Dator", section_screen_image: "Bild p\u00e5 sk\u00e4rmen", img_random: "Slumpm\u00e4ssig", img_sunset: "Solnedg\u00e5ng", img_aquarium: "Akvarium", img_bars: "Testbild", img_football: "Fotbollsmatch", img_space: "Rymden", img_bounce: "Studsande logga", img_desktop: "Skrivbord", img_code: "Rullande kod", img_pong: "Pong", screen_on: "P\u00e5", screen_playing: "Spelar", screen_home: "Startsk\u00e4rm", screen_locked: "L\u00e5st", screen_muted: "Ljud av", screen_standby_threshold: "Standby upp till denna effekt (W)", section_media: "Mediaspelare", section_media2: "Andra mediaspelaren", section_media3: "Tredje mediaspelaren", section_lock: "Sessionsl\u00e5s",
     type_hair_dryer: "H\u00e5rtork", layout_hd_pistol: "Klassisk", layout_hd_ring: "Ring", hd_cool: "Kalluft", hd_hot: "Varmluft", hd_heat_threshold: "Varmluft \u00f6ver denna effekt (W)", fill_height: "Fyll hela platsens h\u00f6jd", done_alert: "Blinka n\u00e4r programmet \u00e4r klart", done_seen: "Sett", no_power_threshold: "Ingen f\u00f6rbrukning under (W)", group_appearance: "Utseende", show_name: "Visa namnet", show_state: "Visa status", transparent: "Genomskinlig bakgrund", font_scale: "Textstorlek", illustration_size: "Teckningens storlek", compact_mode: "Kompakt l\u00e4ge", compact_off: "Av", compact_hide: "Utan teckning", compact_side: "Teckning vid sidan", group_laundry: "Tv\u00e4tt", group_kitchen: "K\u00f6k", group_heating: "V\u00e4rme och varmvatten", group_air: "Luft och klimat", group_home: "Hem och media", group_pets: "Husdjur",
+    type_network: "N\u00e4tverk (switch, NAS, server)", group_network: "N\u00e4tverk och servrar", layout_net_switch: "Switch", layout_net_server: "Server", layout_net_nas: "NAS", layout_net_rack: "Rack", net_ports_count: "Ritade portar", net_bays: "NAS-fack", net_online: "Online", net_busy: "Aktiv", net_alert: "Larm", net_warn: "Disk att bevaka", section_net_cpu: "CPU-anv\u00e4ndning (%)", section_net_memory: "Minnesanv\u00e4ndning (%)", section_net_volume: "Volym anv\u00e4nd (%)", section_net_download: "Nedladdningshastighet", section_net_upload: "Uppladdningshastighet", section_net_ports: "Aktiva portar", net_ports_total: "Antal portar", section_net_poe: "PoE-effekt", section_net_problem: "Problemvarning", section_net_temperature: "Temperatur", net_temp_alert: "Larm \u00f6ver denna temperatur (\u00b0C)", net_busy_threshold: "Aktiv \u00f6ver denna hastighet (Mbit/s)", net_line_rate: "Genomstr\u00f6mning", net_line_load: "Belastning", net_line_volume: "Volym", section_net_disk1: "Disk 1", section_net_disk2: "Disk 2", section_net_disk3: "Disk 3", section_net_disk4: "Disk 4",
     section_purifier_layout: "Modell", layout_purifier_cylinder: "Cylinder", layout_purifier_box: "Fyrkantig", layout_purifier_ring: "Bladl\u00f6s ring",
     pf_purifying: "Renar", pf_auto: "Auto", pf_night: "Nattl\u00e4ge", section_air_quality: "Luftkvalitet",
     section_screen: "Sk\u00e4rm", section_heater: "V\u00e4rme (termostat)", aq_good: "Bra", aq_fair: "M\u00e5ttlig",
@@ -1510,6 +1519,7 @@ const T = {
     layout_toaster_long: "Langt spor", toaster_toasting: "Rister", toaster_done: "Ferdig", type_air_purifier: "Luftrenser",
     type_screen: "Skjerm (TV, projektor, datamaskin)", section_screen_layout: "Modell", layout_tv_feet: "TV p\u00e5 f\u00f8tter", layout_tv_stand: "TV p\u00e5 fot", layout_tv_wall: "Veggmontert TV", layout_projector: "Projektor", layout_computer: "Datamaskin", section_screen_image: "Bilde p\u00e5 skjermen", img_random: "Tilfeldig", img_sunset: "Solnedgang", img_aquarium: "Akvarium", img_bars: "Testbilde", img_football: "Fotballkamp", img_space: "Verdensrommet", img_bounce: "Sprettende logo", img_desktop: "Skrivebord", img_code: "Rullende kode", img_pong: "Pong", screen_on: "P\u00e5", screen_playing: "Spiller", screen_home: "Startskjerm", screen_locked: "L\u00e5st", screen_muted: "Lyd av", screen_standby_threshold: "Standby opp til denne effekten (W)", section_media: "Mediespiller", section_media2: "Andre mediespiller", section_media3: "Tredje mediespiller", section_lock: "\u00d8ktl\u00e5s",
     type_hair_dryer: "H\u00e5rf\u00f8ner", layout_hd_pistol: "Klassisk", layout_hd_ring: "Ring", hd_cool: "Kald luft", hd_hot: "Varm luft", hd_heat_threshold: "Varm luft over denne effekten (W)", fill_height: "Fyll hele h\u00f8yden p\u00e5 plassen", done_alert: "Blinke n\u00e5r programmet er ferdig", done_seen: "Sett", no_power_threshold: "Ikke noe forbruk under (W)", group_appearance: "Utseende", show_name: "Vis navnet", show_state: "Vis status", transparent: "Gjennomsiktig bakgrunn", font_scale: "Tekstst\u00f8rrelse", illustration_size: "Tegningens st\u00f8rrelse", compact_mode: "Kompakt modus", compact_off: "Av", compact_hide: "Uten tegning", compact_side: "Tegning p\u00e5 siden", group_laundry: "Klesvask", group_kitchen: "Kj\u00f8kken", group_heating: "Oppvarming og varmtvann", group_air: "Luft og klima", group_home: "Hjem og multimedia", group_pets: "Kj\u00e6ledyr",
+    type_network: "Nettverk (switch, NAS, server)", group_network: "Nettverk og servere", layout_net_switch: "Switch", layout_net_server: "Server", layout_net_nas: "NAS", layout_net_rack: "Rack", net_ports_count: "Tegnede porter", net_bays: "NAS-br\u00f8nner", net_online: "Tilkoblet", net_busy: "Aktiv", net_alert: "Alarm", net_warn: "Disk \u00e5 f\u00f8lge med p\u00e5", section_net_cpu: "CPU-bruk (%)", section_net_memory: "Minnebruk (%)", section_net_volume: "Volum brukt (%)", section_net_download: "Nedlastingshastighet", section_net_upload: "Opplastingshastighet", section_net_ports: "Aktive porter", net_ports_total: "Antall porter", section_net_poe: "PoE-effekt", section_net_problem: "Problemvarsel", section_net_temperature: "Temperatur", net_temp_alert: "Alarm over denne temperaturen (\u00b0C)", net_busy_threshold: "Aktiv over denne hastigheten (Mbit/s)", net_line_rate: "Gjennomstr\u00f8mning", net_line_load: "Belastning", net_line_volume: "Volum", section_net_disk1: "Disk 1", section_net_disk2: "Disk 2", section_net_disk3: "Disk 3", section_net_disk4: "Disk 4",
     section_purifier_layout: "Modell", layout_purifier_cylinder: "Sylinder", layout_purifier_box: "Firkantet", layout_purifier_ring: "Vingel\u00f8s ring",
     pf_purifying: "Renser", pf_auto: "Auto", pf_night: "Nattmodus", section_air_quality: "Luftkvalitet",
     section_screen: "Skjerm", section_heater: "Varme (termostat)", aq_good: "God", aq_fair: "Moderat",
@@ -1662,6 +1672,7 @@ const T = {
     layout_toaster_long: "Lang spalte", toaster_toasting: "Rister", toaster_done: "F\u00e6rdig", type_air_purifier: "Luftrenser",
     type_screen: "Sk\u00e6rm (TV, projektor, computer)", section_screen_layout: "Model", layout_tv_feet: "TV p\u00e5 f\u00f8dder", layout_tv_stand: "TV p\u00e5 fod", layout_tv_wall: "V\u00e6gmonteret TV", layout_projector: "Projektor", layout_computer: "Computer", section_screen_image: "Billede p\u00e5 sk\u00e6rmen", img_random: "Tilf\u00e6ldig", img_sunset: "Solnedgang", img_aquarium: "Akvarium", img_bars: "Testbillede", img_football: "Fodboldkamp", img_space: "Rummet", img_bounce: "Hoppende logo", img_desktop: "Skrivebord", img_code: "Rullende kode", img_pong: "Pong", screen_on: "T\u00e6ndt", screen_playing: "Afspiller", screen_home: "Startsk\u00e6rm", screen_locked: "L\u00e5st", screen_muted: "Lyd sl\u00e5et fra", screen_standby_threshold: "Standby op til denne effekt (W)", section_media: "Medieafspiller", section_media2: "Anden medieafspiller", section_media3: "Tredje medieafspiller", section_lock: "Sessionsl\u00e5s",
     type_hair_dryer: "H\u00e5rt\u00f8rrer", layout_hd_pistol: "Klassisk", layout_hd_ring: "Ring", hd_cool: "Kold luft", hd_hot: "Varm luft", hd_heat_threshold: "Varm luft over denne effekt (W)", fill_height: "Fyld hele pladsens h\u00f8jde", done_alert: "Blinke n\u00e5r programmet er f\u00e6rdigt", done_seen: "Set", no_power_threshold: "Intet forbrug under (W)", group_appearance: "Udseende", show_name: "Vis navnet", show_state: "Vis status", transparent: "Gennemsigtig baggrund", font_scale: "Tekstst\u00f8rrelse", illustration_size: "Tegningens st\u00f8rrelse", compact_mode: "Kompakt tilstand", compact_off: "Fra", compact_hide: "Uden tegning", compact_side: "Tegning i siden", group_laundry: "T\u00f8jvask", group_kitchen: "K\u00f8kken", group_heating: "Opvarmning og varmt vand", group_air: "Luft og klima", group_home: "Hjem og multimedie", group_pets: "K\u00e6ledyr",
+    type_network: "Netv\u00e6rk (switch, NAS, server)", group_network: "Netv\u00e6rk og servere", layout_net_switch: "Switch", layout_net_server: "Server", layout_net_nas: "NAS", layout_net_rack: "Rack", net_ports_count: "Tegnede porte", net_bays: "NAS-b\u00e5se", net_online: "Online", net_busy: "Aktiv", net_alert: "Alarm", net_warn: "Disk at holde \u00f8je med", section_net_cpu: "CPU-forbrug (%)", section_net_memory: "Hukommelsesforbrug (%)", section_net_volume: "Volumen brugt (%)", section_net_download: "Downloadhastighed", section_net_upload: "Uploadhastighed", section_net_ports: "Aktive porte", net_ports_total: "Antal porte", section_net_poe: "PoE-effekt", section_net_problem: "Problemadvarsel", section_net_temperature: "Temperatur", net_temp_alert: "Alarm over denne temperatur (\u00b0C)", net_busy_threshold: "Aktiv over denne hastighed (Mbit/s)", net_line_rate: "Gennemstr\u00f8mning", net_line_load: "Belastning", net_line_volume: "Volumen", section_net_disk1: "Disk 1", section_net_disk2: "Disk 2", section_net_disk3: "Disk 3", section_net_disk4: "Disk 4",
     section_purifier_layout: "Model", layout_purifier_cylinder: "Cylinder", layout_purifier_box: "Firkantet", layout_purifier_ring: "Vingel\u00f8s ring",
     pf_purifying: "Renser", pf_auto: "Auto", pf_night: "Nattilstand", section_air_quality: "Luftkvalitet",
     section_screen: "Sk\u00e6rm", section_heater: "Varme (termostat)", aq_good: "God", aq_fair: "Moderat",
@@ -1814,6 +1825,7 @@ const T = {
     layout_toaster_long: "D\u0142ugi otw\u00f3r", toaster_toasting: "Opiekanie", toaster_done: "Gotowe", type_air_purifier: "Oczyszczacz powietrza",
     type_screen: "Ekran (TV, projektor, komputer)", section_screen_layout: "Model", layout_tv_feet: "Telewizor na n\u00f3\u017ckach", layout_tv_stand: "Telewizor na podstawie", layout_tv_wall: "Telewizor na \u015bcianie", layout_projector: "Projektor", layout_computer: "Komputer", section_screen_image: "Obraz na ekranie", img_random: "Losowy", img_sunset: "Zach\u00f3d s\u0142o\u0144ca", img_aquarium: "Akwarium", img_bars: "Plansza testowa", img_football: "Mecz pi\u0142ki no\u017cnej", img_space: "Kosmos", img_bounce: "Odbijaj\u0105ce si\u0119 logo", img_desktop: "Pulpit", img_code: "Przewijany kod", img_pong: "Pong", screen_on: "W\u0142\u0105czony", screen_playing: "Odtwarzanie", screen_home: "Ekran g\u0142\u00f3wny", screen_locked: "Zablokowany", screen_muted: "Wyciszony", screen_standby_threshold: "Czuwanie do tej mocy (W)", section_media: "Odtwarzacz multimedialny", section_media2: "Drugi odtwarzacz", section_media3: "Trzeci odtwarzacz", section_lock: "Blokada sesji",
     type_hair_dryer: "Suszarka do w\u0142os\u00f3w", layout_hd_pistol: "Klasyczna", layout_hd_ring: "Pier\u015bcie\u0144", hd_cool: "Zimne powietrze", hd_hot: "Gor\u0105ce powietrze", hd_heat_threshold: "Gor\u0105ce powietrze powy\u017cej tej mocy (W)", fill_height: "Wype\u0142nij ca\u0142\u0105 wysoko\u015b\u0107 miejsca", done_alert: "Miga\u0107 po zako\u0144czeniu cyklu", done_seen: "Widziane", no_power_threshold: "Brak poboru poni\u017cej (W)", group_appearance: "Wygl\u0105d", show_name: "Poka\u017c nazw\u0119", show_state: "Poka\u017c stan", transparent: "Przezroczyste t\u0142o", font_scale: "Rozmiar tekstu", illustration_size: "Rozmiar rysunku", compact_mode: "Tryb kompaktowy", compact_off: "Wy\u0142\u0105czony", compact_hide: "Bez rysunku", compact_side: "Rysunek z boku", group_laundry: "Pranie", group_kitchen: "Kuchnia", group_heating: "Ogrzewanie i ciep\u0142a woda", group_air: "Powietrze i klimat", group_home: "Dom i multimedia", group_pets: "Zwierz\u0119ta",
+    type_network: "Sie\u0107 (switch, NAS, serwer)", group_network: "Sie\u0107 i serwery", layout_net_switch: "Switch", layout_net_server: "Serwer", layout_net_nas: "NAS", layout_net_rack: "Szafa rack", net_ports_count: "Rysowane porty", net_bays: "Kieszenie NAS", net_online: "Online", net_busy: "Aktywno\u015b\u0107", net_alert: "Alarm", net_warn: "Dysk do obserwacji", section_net_cpu: "U\u017cycie CPU (%)", section_net_memory: "U\u017cycie pami\u0119ci (%)", section_net_volume: "Zaj\u0119to\u015b\u0107 woluminu (%)", section_net_download: "Pr\u0119dko\u015b\u0107 pobierania", section_net_upload: "Pr\u0119dko\u015b\u0107 wysy\u0142ania", section_net_ports: "Aktywne porty", net_ports_total: "Liczba port\u00f3w", section_net_poe: "Moc PoE", section_net_problem: "Alert (problem)", section_net_temperature: "Temperatura", net_temp_alert: "Alarm powy\u017cej tej temperatury (\u00b0C)", net_busy_threshold: "Aktywno\u015b\u0107 powy\u017cej tej pr\u0119dko\u015bci (Mbit/s)", net_line_rate: "Przepustowo\u015b\u0107", net_line_load: "Obci\u0105\u017cenie", net_line_volume: "Wolumin", section_net_disk1: "Dysk 1", section_net_disk2: "Dysk 2", section_net_disk3: "Dysk 3", section_net_disk4: "Dysk 4",
     section_purifier_layout: "Model", layout_purifier_cylinder: "Walec", layout_purifier_box: "Kwadratowa obudowa", layout_purifier_ring: "Pier\u015bcie\u0144 bez \u0142opatek",
     pf_purifying: "Oczyszczanie", pf_auto: "Auto", pf_night: "Tryb nocny", section_air_quality: "Jako\u015b\u0107 powietrza",
     section_screen: "Ekran", section_heater: "Ogrzewanie (termostat)", aq_good: "Dobra", aq_fair: "Umiarkowana",
@@ -1966,6 +1978,7 @@ const T = {
     layout_toaster_long: "\u957f\u69fd", toaster_toasting: "\u70d8\u70e4\u4e2d", toaster_done: "\u5df2\u5b8c\u6210", type_air_purifier: "\u7a7a\u6c14\u51c0\u5316\u5668",
     type_screen: "\u5c4f\u5e55\uff08\u7535\u89c6\u3001\u6295\u5f71\u4eea\u3001\u7535\u8111\uff09", section_screen_layout: "\u578b\u53f7", layout_tv_feet: "\u5e26\u811a\u7535\u89c6", layout_tv_stand: "\u5e26\u5e95\u5ea7\u7535\u89c6", layout_tv_wall: "\u58c1\u6302\u7535\u89c6", layout_projector: "\u6295\u5f71\u4eea", layout_computer: "\u7535\u8111", section_screen_image: "\u5c4f\u5e55\u753b\u9762", img_random: "\u968f\u673a", img_sunset: "\u65e5\u843d", img_aquarium: "\u6c34\u65cf\u7bb1", img_bars: "\u6d4b\u8bd5\u56fe", img_football: "\u8db3\u7403\u6bd4\u8d5b", img_space: "\u592a\u7a7a", img_bounce: "\u5f39\u8df3\u6807\u5fd7", img_desktop: "\u684c\u9762", img_code: "\u6eda\u52a8\u4ee3\u7801", img_pong: "\u4e52\u4e53", screen_on: "\u5df2\u5f00\u542f", screen_playing: "\u64ad\u653e\u4e2d", screen_home: "\u4e3b\u5c4f\u5e55", screen_locked: "\u5df2\u9501\u5b9a", screen_muted: "\u5df2\u9759\u97f3", screen_standby_threshold: "\u5f85\u673a\u529f\u7387\u4e0a\u9650 (W)", section_media: "\u5a92\u4f53\u64ad\u653e\u5668", section_media2: "\u7b2c\u4e8c\u4e2a\u5a92\u4f53\u64ad\u653e\u5668", section_media3: "\u7b2c\u4e09\u4e2a\u5a92\u4f53\u64ad\u653e\u5668", section_lock: "\u4f1a\u8bdd\u9501\u5b9a",
     type_hair_dryer: "\u5439\u98ce\u673a", layout_hd_pistol: "\u7ecf\u5178", layout_hd_ring: "\u73af\u5f62", hd_cool: "\u51b7\u98ce", hd_hot: "\u70ed\u98ce", hd_heat_threshold: "\u9ad8\u4e8e\u6b64\u529f\u7387\u65f6\u4e3a\u70ed\u98ce (W)", fill_height: "\u586b\u6ee1\u6240\u5728\u4f4d\u7f6e\u7684\u9ad8\u5ea6", done_alert: "\u7a0b\u5e8f\u7ed3\u675f\u65f6\u95ea\u70c1", done_seen: "\u5df2\u67e5\u770b", no_power_threshold: "\u4f4e\u4e8e\u6b64\u529f\u7387\u89c6\u4e3a\u65e0\u8017\u7535 (W)", group_appearance: "\u5916\u89c2", show_name: "\u663e\u793a\u540d\u79f0", show_state: "\u663e\u793a\u72b6\u6001", transparent: "\u900f\u660e\u80cc\u666f", font_scale: "\u6587\u5b57\u5927\u5c0f", illustration_size: "\u56fe\u793a\u5927\u5c0f", compact_mode: "\u7d27\u51d1\u6a21\u5f0f", compact_off: "\u5173\u95ed", compact_hide: "\u4e0d\u663e\u793a\u56fe\u793a", compact_side: "\u56fe\u793a\u5728\u4fa7\u8fb9", group_laundry: "\u6d17\u8863", group_kitchen: "\u53a8\u623f", group_heating: "\u4f9b\u6696\u4e0e\u70ed\u6c34", group_air: "\u7a7a\u6c14\u4e0e\u6c14\u5019", group_home: "\u5bb6\u5c45\u4e0e\u591a\u5a92\u4f53", group_pets: "\u5ba0\u7269",
+    type_network: "\u7f51\u7edc\u8bbe\u5907\uff08\u4ea4\u6362\u673a\u3001NAS\u3001\u670d\u52a1\u5668\uff09", group_network: "\u7f51\u7edc\u4e0e\u670d\u52a1\u5668", layout_net_switch: "\u4ea4\u6362\u673a", layout_net_server: "\u670d\u52a1\u5668", layout_net_nas: "NAS", layout_net_rack: "\u673a\u67dc", net_ports_count: "\u7ed8\u5236\u7684\u7aef\u53e3\u6570", net_bays: "NAS \u76d8\u4f4d", net_online: "\u5728\u7ebf", net_busy: "\u6d3b\u52a8", net_alert: "\u8b66\u62a5", net_warn: "\u9700\u5173\u6ce8\u7684\u786c\u76d8", section_net_cpu: "CPU \u4f7f\u7528\u7387 (%)", section_net_memory: "\u5185\u5b58\u4f7f\u7528\u7387 (%)", section_net_volume: "\u5377\u5df2\u7528 (%)", section_net_download: "\u4e0b\u8f7d\u901f\u7387", section_net_upload: "\u4e0a\u4f20\u901f\u7387", section_net_ports: "\u6d3b\u52a8\u7aef\u53e3", net_ports_total: "\u7aef\u53e3\u6570\u91cf", section_net_poe: "PoE \u529f\u7387", section_net_problem: "\u95ee\u9898\u8b66\u62a5", section_net_temperature: "\u6e29\u5ea6", net_temp_alert: "\u9ad8\u4e8e\u6b64\u6e29\u5ea6\u62a5\u8b66 (\u00b0C)", net_busy_threshold: "\u9ad8\u4e8e\u6b64\u901f\u7387\u663e\u793a\u6d3b\u52a8 (Mbit/s)", net_line_rate: "\u541e\u5410\u91cf", net_line_load: "\u8d1f\u8f7d", net_line_volume: "\u5377", section_net_disk1: "\u786c\u76d8 1", section_net_disk2: "\u786c\u76d8 2", section_net_disk3: "\u786c\u76d8 3", section_net_disk4: "\u786c\u76d8 4",
     section_purifier_layout: "\u578b\u53f7", layout_purifier_cylinder: "\u5706\u67f1\u5f62", layout_purifier_box: "\u65b9\u5f62", layout_purifier_ring: "\u65e0\u53f6\u73af\u5f62",
     pf_purifying: "\u51c0\u5316\u4e2d", pf_auto: "\u81ea\u52a8", pf_night: "\u591c\u95f4\u6a21\u5f0f", section_air_quality: "\u7a7a\u6c14\u8d28\u91cf",
     section_screen: "\u5c4f\u5e55", section_heater: "\u52a0\u70ed\uff08\u6e29\u63a7\uff09", aq_good: "\u826f\u597d", aq_fair: "\u4e00\u822c",
@@ -2118,6 +2131,7 @@ const T = {
     layout_toaster_long: "Dlouh\u00fd otvor", toaster_toasting: "Op\u00e9k\u00e1", toaster_done: "Hotovo", type_air_purifier: "\u010cisti\u010dka vzduchu",
     type_screen: "Obrazovka (TV, projektor, po\u010d\u00edta\u010d)", section_screen_layout: "Model", layout_tv_feet: "Televize na no\u017ei\u010dk\u00e1ch", layout_tv_stand: "Televize na stojanu", layout_tv_wall: "Televize na zdi", layout_projector: "Projektor", layout_computer: "Po\u010d\u00edta\u010d", section_screen_image: "Obraz na obrazovce", img_random: "N\u00e1hodn\u00fd", img_sunset: "Z\u00e1pad slunce", img_aquarium: "Akv\u00e1rium", img_bars: "Monoskop", img_football: "Fotbalov\u00fd z\u00e1pas", img_space: "Vesm\u00edr", img_bounce: "Odr\u00e1\u017eej\u00edc\u00ed se logo", img_desktop: "Plocha", img_code: "Roluj\u00edc\u00ed k\u00f3d", img_pong: "Pong", screen_on: "Zapnuto", screen_playing: "P\u0159ehr\u00e1v\u00e1", screen_home: "Domovsk\u00e1 obrazovka", screen_locked: "Zam\u010deno", screen_muted: "Ztlumeno", screen_standby_threshold: "Pohotovost a\u017e do tohoto p\u0159\u00edkonu (W)", section_media: "P\u0159ehr\u00e1va\u010d m\u00e9di\u00ed", section_media2: "Druh\u00fd p\u0159ehr\u00e1va\u010d", section_media3: "T\u0159et\u00ed p\u0159ehr\u00e1va\u010d", section_lock: "Z\u00e1mek relace",
     type_hair_dryer: "F\u00e9n", layout_hd_pistol: "Klasick\u00fd", layout_hd_ring: "Prstenec", hd_cool: "Studen\u00fd vzduch", hd_hot: "Tepl\u00fd vzduch", hd_heat_threshold: "Tepl\u00fd vzduch nad t\u00edmto p\u0159\u00edkonem (W)", fill_height: "Vyplnit celou v\u00fd\u0161ku m\u00edsta", done_alert: "Blikat na konci cyklu", done_seen: "Vid\u011bno", no_power_threshold: "\u017d\u00e1dn\u00fd odb\u011br pod (W)", group_appearance: "Vzhled", show_name: "Zobrazit n\u00e1zev", show_state: "Zobrazit stav", transparent: "Pr\u016fhledn\u00e9 pozad\u00ed", font_scale: "Velikost textu", illustration_size: "Velikost kresby", compact_mode: "Kompaktn\u00ed re\u017eim", compact_off: "Vypnuto", compact_hide: "Bez kresby", compact_side: "Kresba po stran\u011b", group_laundry: "Pran\u00ed", group_kitchen: "Kuchyn\u011b", group_heating: "Vyt\u00e1p\u011bn\u00ed a tepl\u00e1 voda", group_air: "Vzduch a klima", group_home: "Dom\u00e1cnost a multim\u00e9dia", group_pets: "Mazl\u00ed\u010dci",
+    type_network: "S\u00ed\u0165 (switch, NAS, server)", group_network: "S\u00ed\u0165 a servery", layout_net_switch: "Switch", layout_net_server: "Server", layout_net_nas: "NAS", layout_net_rack: "Rack", net_ports_count: "Kreslen\u00e9 porty", net_bays: "Pozice NAS", net_online: "Online", net_busy: "Aktivita", net_alert: "V\u00fdstraha", net_warn: "Disk ke sledov\u00e1n\u00ed", section_net_cpu: "Vyu\u017eit\u00ed CPU (%)", section_net_memory: "Vyu\u017eit\u00ed pam\u011bti (%)", section_net_volume: "Obsazenost svazku (%)", section_net_download: "Rychlost stahov\u00e1n\u00ed", section_net_upload: "Rychlost odes\u00edl\u00e1n\u00ed", section_net_ports: "Aktivn\u00ed porty", net_ports_total: "Po\u010det port\u016f", section_net_poe: "V\u00fdkon PoE", section_net_problem: "Upozorn\u011bn\u00ed (probl\u00e9m)", section_net_temperature: "Teplota", net_temp_alert: "V\u00fdstraha nad touto teplotou (\u00b0C)", net_busy_threshold: "Aktivita nad touto rychlost\u00ed (Mbit/s)", net_line_rate: "Propustnost", net_line_load: "Z\u00e1t\u011b\u017e", net_line_volume: "Svazek", section_net_disk1: "Disk 1", section_net_disk2: "Disk 2", section_net_disk3: "Disk 3", section_net_disk4: "Disk 4",
     section_purifier_layout: "Model", layout_purifier_cylinder: "V\u00e1lec", layout_purifier_box: "Hranat\u00e1 sk\u0159\u00ed\u0148", layout_purifier_ring: "Bezlopatkov\u00fd prstenec",
     pf_purifying: "\u010cist\u00ed", pf_auto: "Auto", pf_night: "No\u010dn\u00ed re\u017eim", section_air_quality: "Kvalita vzduchu",
     section_screen: "Displej", section_heater: "Topen\u00ed (termostat)", aq_good: "Dobr\u00e1", aq_fair: "P\u0159ijateln\u00e1",
@@ -4463,6 +4477,70 @@ const INFO_PATTERNS = [
   { re: /steam/i, icon: "mdi:weather-fog" },
 ];
 
+// A network device's readings, found on its own device and on the devices that
+// hang from it: Synology gives each disk and each volume a device of its own,
+// UGREEN, Unraid and Glances name them on the device itself.
+function netSuggest(hass, cfg) {
+  const anchor = anchorEntity(hass, { ...cfg, disk1_entity: undefined, disk2_entity: undefined, disk3_entity: undefined, disk4_entity: undefined });
+  if (!anchor) return {};
+  const reg = hass.entities && hass.entities[anchor];
+  const dev = reg && reg.device_id;
+  const devices = hass.devices || {};
+  const ofDevice = (d) => Object.keys(hass.entities || {}).filter((id) => hass.entities[id].device_id === d && hass.states[id]);
+  const nameOf = (d) => String((devices[d] && (devices[d].name_by_user || devices[d].name)) || "").trim().toLowerCase();
+  // A router's tracker makes a device of its own for the NAS, under the same
+  // name: the readings are on the other one.
+  const devs = dev ? [dev].concat(Object.keys(devices).filter((d) => d !== dev && nameOf(d) && nameOf(d) === nameOf(dev)
+    && !devices[d].via_device_id)) : [];
+  const own = devs.length ? [...new Set(devs.flatMap(ofDevice))] : siblingEntityIds(hass, anchor).filter((id) => hass.states[id]);
+  const children = Object.keys(devices).filter((d) => devs.includes(devices[d].via_device_id));
+  const pool = [...new Set(own.concat(...children.map(ofDevice)))];
+  const attr = (id) => hass.states[id].attributes || {};
+  const words = (id) => stripAccents(`${id.split(".")[1] || ""} ${String(attr(id).friendly_name || "")}`.toLowerCase());
+  const sensor = (id) => domainOf(id) === "sensor";
+  const pct = (id) => sensor(id) && attr(id).unit_of_measurement === "%";
+  const notDisk = (id) => !NET_DISK_TOKEN_RE.test(id.split(".")[1] || "");
+  const patch = {};
+  const set = (field, id) => { if (id && !cfg[field]) patch[field] = id; };
+  const cpu = (id) => pct(id) && /cpu|processor|processeur|prozessor/.test(words(id)) && !/user|utilisateur|system|iowait|temp|freq/.test(words(id));
+  set("cpu_entity", pool.find((id) => cpu(id) && /total/.test(words(id))) || pool.find(cpu));
+  set("memory_entity", pool.find((id) => pct(id) && /memory|memoire|(^|[\s_])(ram|mem)([\s_]|$)|speicher/.test(words(id)) && !/swap|echange/.test(words(id))));
+  set("volume_entity", pool.find((id) => pct(id) && /volume|pool|storage|stockage|disk_use|array/.test(words(id)) && !/memory|memoire|swap|cpu/.test(words(id))));
+  const rate = (id) => sensor(id) && notDisk(id) && (attr(id).device_class === "data_rate" || NET_RATE_BITS[attr(id).unit_of_measurement] !== undefined)
+    && !/read|write|lecture|ecriture|iops/.test(words(id));
+  set("download_entity", pool.find((id) => rate(id) && /download|telecharg|(^|[\s_])rx|receiv|recu|ingress|(^|_)in(_|$)/.test(words(id))));
+  set("upload_entity", pool.find((id) => rate(id) && /upload|transfert|(^|[\s_])tx|sent|send|envoi|egress|(^|_)out(_|$)/.test(words(id))));
+  set("temperature_entity", own.find((id) => sensor(id) && attr(id).device_class === "temperature" && notDisk(id)));
+  set("fan_speed_entity", pool.find((id) => sensor(id) && /rpm/i.test(String(attr(id).unit_of_measurement || ""))));
+  set("ports_entity", pool.find((id) => sensor(id) && /ports?_?(up|active|actifs|connected|online|in_use)|(active|connected|up)_?ports/.test(words(id))));
+  set("poe_entity", pool.find((id) => sensor(id) && /poe/.test(words(id)) && /^k?W$/.test(String(attr(id).unit_of_measurement || ""))));
+  set("problem_entity", own.find((id) => domainOf(id) === "binary_sensor" && notDisk(id) && ["problem", "safety"].includes(attr(id).device_class)));
+  if (![1, 2, 3, 4].some((i) => cfg[`disk${i}_entity`])) {
+    // A disk is best shown by its status, else by its temperature.
+    const pick = (ids) => ids.find((id) => sensor(id) && !Number.isFinite(Number(hass.states[id].state)) && !/temp/.test(id))
+      || ids.find((id) => sensor(id) && attr(id).device_class === "temperature") || ids[0];
+    const lastNumber = (str) => { const m = String(str).match(/(\d+)\D*$/); return m ? parseInt(m[1], 10) : 0; };
+    let disks = children
+      .map((d) => ({ d, name: stripAccents(String(hass.devices[d].name_by_user || hass.devices[d].name || "").toLowerCase()) }))
+      .filter((x) => /(disk|disque|drive|laufwerk|festplatte|disco|dysk|hdd|ssd|bay|baie)\D*\d+/.test(x.name))
+      .sort((a, b) => lastNumber(a.name) - lastNumber(b.name))
+      .map((x) => pick(ofDevice(x.d)));
+    if (!disks.length) {
+      const groups = new Map();
+      for (const id of own) {
+        const m = (id.split(".")[1] || "").match(NET_DISK_TOKEN_RE);
+        if (!m) continue;
+        const key = m[0].replace(/^_/, "");
+        if (!groups.has(key)) groups.set(key, []);
+        groups.get(key).push(id);
+      }
+      disks = [...groups.keys()].sort((a, b) => (lastNumber(a) - lastNumber(b)) || a.localeCompare(b)).map((k) => pick(groups.get(k)));
+    }
+    disks.filter(Boolean).slice(0, 4).forEach((id, i) => { patch[`disk${i + 1}_entity`] = id; });
+  }
+  return patch;
+}
+
 function autoSuggest(hass, cfg) {
   if (!cfg.state_entity || !hass.states[cfg.state_entity]) return {};
   const siblings = siblingEntityIds(hass, cfg.state_entity).filter((id) => id !== cfg.state_entity);
@@ -4486,6 +4564,7 @@ function autoSuggest(hass, cfg) {
     const match = siblings.find((id) => re.test(id) && domains[field].includes(domainOf(id)));
     if (match) patch[field] = match;
   }
+  if (type === "network") Object.assign(patch, netSuggest(hass, cfg));
   // An entity already given a field of its own would only repeat itself.
   const takenIds = () => new Set(Object.values(patch).concat(Object.values(cfg)).flat());
   // Home Connect's alerts, on an empty list only.
@@ -4568,6 +4647,9 @@ const TYPE_CAPS = {
   // A hair dryer, read from its plug: the fan alone draws a few dozen watts,
   // the heater a thousand more, so the meter tells cool air from hot.
   hair_dryer: { hairDryer: true },
+  // A switch, a server, a NAS or a rack: nothing to run, only to read. It is
+  // online, busy or in alert, and its LEDs say why.
+  network: { network: true, readOnly: true },
   // A television, a projector or a computer, read from its plug: what it
   // draws at rest is its standby, and a media player says what it shows.
   screen: { screen: true },
@@ -4648,10 +4730,15 @@ const STATE_DOMAINS = {
   screen: ["switch", "media_player", "input_boolean", "binary_sensor"],
   air_purifier: ["fan", "switch", "select", "climate"], fan: ["fan", "switch"],
   pet_fountain: ["switch", "fan", "input_boolean"],
+  network: ["device_tracker", "switch", "input_boolean"],
 };
 // A model, a picture, the players it shows and a session lock belong to a
 // screen.
 const SCREEN_ONLY_FIELDS = ["screen_layout", "screen_image", "media_entity", "media2_entity", "media3_entity", "lock_entity"];
+// Ports, bays, disks and traffic belong to a network device.
+const NETWORK_ONLY_FIELDS = ["network_layout", "switch_ports", "bays", "busy_threshold", "temperature_alert", "cpu_entity",
+  "memory_entity", "volume_entity", "download_entity", "upload_entity", "ports_entity", "ports_total", "poe_entity",
+  "problem_entity", "disk1_entity", "disk2_entity", "disk3_entity", "disk4_entity"];
 const SCREEN_MEDIA_FIELDS = ["media_entity", "media2_entity", "media3_entity"];
 const PURIFIER_ONLY_FIELDS = ["purifier_layout", "air_quality_entity", "display_entity"];
 const FAN_ONLY_FIELDS = ["fan_layout", "wood_blades", "fan_direction_inverted", "oscillating"];
@@ -4675,6 +4762,7 @@ const NO_STATE_SOURCES = {
     "start_entity"],
   screen: ["power_entity", "media_entity", "media2_entity", "media3_entity"],
   hair_dryer: ["power_entity"],
+  network: ["cpu_entity", "download_entity", "volume_entity", "ports_entity", "power_entity"],
 };
 function noStateSourceOf(cfg, type) {
   const field = (NO_STATE_SOURCES[type] || []).find((f) => cfg[f]);
@@ -4724,6 +4812,7 @@ const TYPE_GROUPS = [
   ["air", ["air_conditioner", "dehumidifier", "air_purifier", "fan"]],
   ["home", ["screen", "iron", "hair_dryer", "printer_3d", "ev_charger"]],
   ["pets", ["pet_feeder", "pet_fountain"]],
+  ["network", ["network"]],
 ];
 
 function caps(type) {
@@ -4746,6 +4835,7 @@ function detectApplianceType(cfg, st) {
   if (cfg.toaster_layout) return "toaster";
   if (cfg.hair_dryer_layout || cfg.heat_threshold) return "hair_dryer";
   if (SCREEN_ONLY_FIELDS.some((f) => cfg[f])) return "screen";
+  if (NETWORK_ONLY_FIELDS.some((f) => cfg[f])) return "network";
   if (PURIFIER_ONLY_FIELDS.some((f) => cfg[f])) return "air_purifier";
   if (FAN_ONLY_FIELDS.some((f) => cfg[f])) return "fan";
   if (FRYER_ONLY_FIELDS.some((f) => cfg[f])) return "air_fryer";
@@ -4788,6 +4878,9 @@ function detectApplianceType(cfg, st) {
   // itself a television. "TV" alone, since it hides in so many names.
   if (st && domainOf(cfg.state_entity) === "media_player" && st.attributes.device_class === "tv") return "screen";
   if (SCREEN_NAME_RE.test(hay)) return "screen";
+  // A switch, a server or a NAS, by its name or its maker's. Read without
+  // the entities' domains, since a plug's own entity is a switch.
+  if (NET_NAME_RE.test(stripAccents(hay.replace(/\b[a-z_]+\./g, " ")))) return "network";
   if (/toaster(?!.?oven)|grille.?pain|tostador|tostapane|broodrooster|br(o|\u00f6)drost|br(o|\u00f8)drister|toster|topinkova|\u70e4\u9762\u5305|\u0442\u043e\u0441\u0442\u0435\u0440/.test(hay)) return "toaster";
   // A pellet stove, by its own name or by its maker's and its integration's.
   // "Stove" alone is a cooktop to an American, so the word needs its pellets.
@@ -4894,6 +4987,144 @@ const HD_HEAT_W = 300;
 // Above this the heater is on its high setting, and the air comes out harder.
 const HD_HIGH_W = 1200;
 const HD_LABELS = { off: "ac_off", cool: "hd_cool", hot: "hd_hot", on: "screen_on" };
+// A network device. Its name says which drawing it gets when none is chosen:
+// a NAS by its maker or its system, a switch by its name, a rack by its own.
+// A Nintendo Switch is a console, not a switch.
+const NET_LAYOUTS = ["switch", "server", "nas", "rack"];
+const NET_NAS_RE = /(^|[\s._-])(nas|synology|diskstation|qnap|ugreen|unraid|truenas|freenas|openmediavault|omv|asustor|terramaster|ds\d{3})/;
+const NET_SWITCH_RE = /(?<!nintendo.?)switch|(^|[\s._-])(usw|edgeswitch|poe)([\s._-]|$)/;
+const NET_RACK_RE = /(^|[\s._-])(rack|baie|homelab)([\s._-]|$)/;
+const NET_SERVER_RE = /(^|[\s._-])(server|serveur|servidor|serwer|proxmox|pve|esxi|unifi|udm|router|routeur)([\s._-]|\d|$)/;
+const NET_NAME_RE = new RegExp([NET_NAS_RE, NET_SWITCH_RE, NET_RACK_RE, NET_SERVER_RE].map((r) => `(${r.source})`).join("|"));
+// The switches drawn: one row of eight, then two rows of eight, twelve and
+// sixteen, numbered like the real ones, odd on top and even below.
+const SWITCH_PORTS = [8, 16, 24, 32];
+const NET_BAYS = [1, 2, 4];
+// Busy above 10 Mbit/s of traffic, or a processor above 80 %; in alert at
+// 70 degrees, where a NAS or a switch is running hot.
+const NET_BUSY_MBIT = 10;
+const NET_BUSY_CPU = 80;
+const NET_TEMP_ALERT = 70;
+const NET_OFF_STATES = ["off", "not_home", "offline", "false", "disconnected", "down", "stopped", "shutdown", "away"];
+const NET_LABELS = { off: "ac_off", on: "net_online", busy: "net_busy", alert: "net_alert", unav: "ev_offline" };
+const NET_COLORS = { off: "var(--disabled-text-color, #9e9e9e)", on: "#43a047", busy: "#1e88e5", alert: "#f44336", warn: "#fb8c00", unav: "var(--disabled-text-color, #9e9e9e)" };
+// Rates come in every unit there is: bytes or bits, decimal or binary.
+const NET_RATE_BITS = {
+  "bit/s": 1, "bps": 1, "kbit/s": 1e3, "kbps": 1e3, "Mbit/s": 1e6, "Mbps": 1e6, "Gbit/s": 1e9, "Gbps": 1e9,
+  "B/s": 8, "kB/s": 8e3, "KB/s": 8e3, "MB/s": 8e6, "GB/s": 8e9, "KiB/s": 8192, "MiB/s": 8388608, "GiB/s": 8589934592,
+};
+
+function netLayoutOf(cfg, st) {
+  if (NET_LAYOUTS.includes(cfg.network_layout)) return cfg.network_layout;
+  const name = stripAccents(`${(cfg.state_entity || "").split(".")[1] || ""} ${(st && st.attributes.friendly_name) || ""} ${cfg.name || ""}`.toLowerCase());
+  if (NET_RACK_RE.test(name)) return "rack";
+  if (NET_NAS_RE.test(name)) return "nas";
+  if (NET_SWITCH_RE.test(name) || cfg.ports_entity || cfg.poe_entity || cfg.switch_ports) return "switch";
+  if (cfg.bays || [1, 2, 3, 4].some((i) => cfg[`disk${i}_entity`])) return "nas";
+  return "server";
+}
+
+// The ports drawn: the model chosen, or the smallest one that holds them all.
+function netPortsOf(cfg) {
+  const n = parseInt(cfg.switch_ports, 10);
+  if (SWITCH_PORTS.includes(n)) return n;
+  const total = parseFloat(cfg.ports_total);
+  if (isFinite(total) && total > 0) return SWITCH_PORTS.find((p) => p >= total) || 32;
+  return 8;
+}
+
+// The bays drawn: the number chosen, or enough for the disks given.
+function netBaysOf(cfg) {
+  const n = parseInt(cfg.bays, 10);
+  if (NET_BAYS.includes(n)) return n;
+  let last = 0;
+  [1, 2, 3, 4].forEach((i) => { if (cfg[`disk${i}_entity`]) last = i; });
+  return last <= 1 ? (last ? 1 : 2) : last === 2 ? 2 : 4;
+}
+
+function netRateBits(hass, entityId) {
+  const st = numericEntity(hass, entityId);
+  if (!st) return null;
+  const unit = st.attributes.unit_of_measurement;
+  return Math.max(0, Number(st.state)) * (NET_RATE_BITS[unit] || 1e6);
+}
+
+function netNumber(hass, v, digits) {
+  try {
+    return new Intl.NumberFormat(lang(hass), { maximumFractionDigits: digits }).format(v);
+  } catch (e) {
+    return String(Math.round(v));
+  }
+}
+
+function netRateText(hass, bits) {
+  const [div, unit] = bits >= 1e9 ? [1e9, "Gbit/s"] : bits >= 1e6 ? [1e6, "Mbit/s"] : bits >= 1e3 ? [1e3, "kbit/s"] : [1, "bit/s"];
+  const v = bits / div;
+  return keepTogether(`${netNumber(hass, v, v < 10 ? 1 : 0)} ${unit}`);
+}
+
+// A disk's entities: its own device's when the integration gives each disk
+// one (Synology), else those named after it on the device (UGREEN, Unraid,
+// Glances: "disk_1_...", "sda_...").
+const NET_DISK_TOKEN_RE = /(?:^|_)(?:(?:disk|disque|drive|laufwerk|festplatte|disco|dysk|hdd|ssd|bay|baie|nvme)_?\d+|sd[a-z])(?=_|$)/;
+function netDiskEntities(hass, entityId, anchorDevice) {
+  const reg = hass.entities && hass.entities[entityId];
+  if (reg && reg.device_id && reg.device_id !== anchorDevice) return siblingEntityIds(hass, entityId);
+  const obj = entityId.split(".")[1] || "";
+  const m = obj.match(NET_DISK_TOKEN_RE);
+  if (!m) return [entityId];
+  const stem = obj.slice(0, m.index + m[0].length);
+  return Object.keys(hass.states).filter((id) => {
+    const o = id.split(".")[1] || "";
+    return o === stem || o.startsWith(`${stem}_`);
+  });
+}
+
+const NET_SLEEP_NAME_RE = /sleep|standby|spin|hibernat|veille/;
+const NET_FAIL_RE = /crash|fail|fault|degrad|broken|critical|abnormal|defect|missing|disabled|dead/;
+const NET_WARN_RE = /warn|attention|caution|not_?initiali/;
+// A disk's LED: failed, to watch, reading or writing, asleep or fine. Each
+// integration says it its own way, so every entity of the disk is read.
+function netDiskState(hass, entityId, anchorDevice) {
+  const own = stateObj(hass, entityId);
+  if (!own) return "empty";
+  if (["unavailable", "unknown"].includes(String(own.state).toLowerCase())) return "unknown";
+  let fail = false, warn = false, busy = false, sleep = false;
+  for (const id of netDiskEntities(hass, entityId, anchorDevice)) {
+    const s = hass.states[id];
+    if (!s) continue;
+    const v = String(s.state).trim().toLowerCase();
+    if (["unavailable", "unknown", ""].includes(v)) continue;
+    const a = s.attributes || {};
+    const obj = id.split(".")[1] || "";
+    const dom = domainOf(id);
+    if (a.spin_state === "standby" || a.standby === true || a.spinning === false) sleep = true;
+    if (dom === "binary_sensor") {
+      if (v !== "on") continue;
+      if (NET_SLEEP_NAME_RE.test(obj)) sleep = true;
+      else if (a.device_class === "problem") fail = true;
+      else warn = true;
+      continue;
+    }
+    if (dom !== "sensor") continue;
+    if (NET_SLEEP_NAME_RE.test(obj)) {
+      if (["on", "true", "yes", "1"].includes(v) || /sleep|standby|spun|hibernat|veille/.test(v)) sleep = true;
+      continue;
+    }
+    const num = Number(s.state);
+    if (Number.isFinite(num)) {
+      if (a.device_class === "data_rate" || /iops|read|write|lecture|ecriture/.test(obj)) {
+        if (num > 0) busy = true;
+      } else if (/error|erreur|bad_?sector|reallocat/.test(obj) && num > 0) warn = true;
+      continue;
+    }
+    if (/temp/.test(obj)) continue;
+    if (NET_FAIL_RE.test(v)) fail = true;
+    else if (NET_WARN_RE.test(v)) warn = true;
+  }
+  return fail ? "fail" : warn ? "warn" : busy ? "busy" : sleep ? "sleep" : "ok";
+}
+
 const HD_COLORS = { off: "var(--disabled-text-color, #9e9e9e)", cool: "#29b6f6", hot: "#ff7043", on: "#ff7043" };
 
 // How long a toaster says its toast is ready once it has popped up.
@@ -7420,6 +7651,60 @@ const ILLUSTRATION_CSS = {
         @keyframes fn-gust { 0%, 100% { stroke-opacity: 0.2; } 50% { stroke-opacity: 1; } }
         @keyframes fn-turn { 0%, 35%, 100% { transform: translateX(2px) scaleX(0.78); } 50%, 85% { transform: translateX(-2px) scaleX(0.78); } }
   `,
+  // A network device, dark like most of them: the LEDs say everything.
+  network: () => `
+        .machine.nt > * { position: absolute; }
+        .nt-body {
+          background: linear-gradient(180deg, var(--ac-body-hi, #4a5157), var(--ac-body, #33383d) 45%, var(--ac-body-lo, #1f2327));
+          box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.22), 0 2px 3px rgba(0, 0, 0, 0.14); border-radius: 3px;
+        }
+        .nt-u {
+          background: linear-gradient(180deg, var(--ac-body-hi, #4a5157), var(--ac-body, #33383d) 55%, var(--ac-body-lo, #1f2327));
+          box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.28); border-radius: 1px;
+        }
+        .nt-hi { height: 1px; background: rgba(255, 255, 255, 0.12); }
+        .nt-led { width: 2.6px; height: 2.6px; border-radius: 50%; background: #3d434a; }
+        .nt-port { background: #111417; border-radius: 0.8px; }
+        .nt-port i { position: absolute; height: 1.5px; border-radius: 0.5px; background: #3d434a; }
+        .nt-bay { background: #16191c; border-radius: 1.5px; }
+        .nt-tray { background: repeating-linear-gradient(180deg, rgba(255, 255, 255, 0.07) 0 1px, transparent 1px 3px); }
+        .nt-handle { background: rgba(255, 255, 255, 0.16); border-radius: 1px; }
+        .nt-key { border-radius: 50%; box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.45); background: var(--ac-body-lo, #2a2e33); }
+        .nt-dark { background: #121417; border-radius: 1px; }
+        .nt-jack { background: #0d0f11; border-radius: 0.5px; }
+        .nt-vent { background: repeating-linear-gradient(90deg, rgba(0, 0, 0, 0.45) 0 1.2px, transparent 1.2px 3px); opacity: 0.6; }
+        .nt-fan {
+          border-radius: 50%;
+          background: radial-gradient(circle, #2a2e33 0 18%, transparent 19%),
+            conic-gradient(#555c63 0 12%, #1b1e21 12% 25%, #555c63 25% 37%, #1b1e21 37% 50%, #555c63 50% 62%, #1b1e21 62% 75%, #555c63 75% 87%, #1b1e21 87%);
+        }
+        .nt-glass { border-radius: 2px; background: linear-gradient(115deg, rgba(255, 255, 255, 0.18) 0 20%, rgba(255, 255, 255, 0.03) 20% 100%); box-shadow: inset 0 0 0 1.5px rgba(0, 0, 0, 0.35); }
+        .nt-floor { height: 5px; border-radius: 50%; background: radial-gradient(closest-side, rgba(0, 0, 0, 0.22), transparent); }
+        .nt-on .nt-pw, .nt-busy .nt-pw { background: #2ecc71; box-shadow: 0 0 3px #2ecc71; }
+        .nt-on .nt-lan { background: #2ecc71; animation: nt-flick 2.4s infinite; animation-delay: var(--anim-offset, 0s); }
+        .nt-busy .nt-lan { background: #2ecc71; animation: nt-flick 0.4s infinite; animation-delay: var(--anim-offset, 0s); }
+        .nt-on .nt-port.up i.a, .nt-busy .nt-port.up i.a { background: #2ecc71; }
+        .nt-on .nt-port.up i.b { background: #ffb300; animation: nt-flick 3.2s infinite; animation-delay: var(--anim-offset, 0s); }
+        .nt-busy .nt-port.up i.b { background: #ffb300; animation: nt-flick 0.45s infinite; animation-delay: var(--anim-offset, 0s); }
+        .nt-on .d-ok, .nt-busy .d-ok { background: #2ecc71; }
+        .nt-on .d-sleep, .nt-busy .d-sleep { background: #2ecc71; animation: nt-breathe 4s ease-in-out infinite; animation-delay: var(--anim-offset, 0s); }
+        .nt-on .d-gen { background: #4fc3f7; animation: nt-flick 2.8s infinite; animation-delay: var(--anim-offset, 0s); }
+        .nt-on .d-busy, .nt-busy .d-busy, .nt-busy .d-gen { background: #4fc3f7; animation: nt-flick 0.35s infinite; animation-delay: var(--anim-offset, 0s); }
+        .nt-on .d-warn, .nt-busy .d-warn { background: #ff9800; box-shadow: 0 0 3px #ff9800; }
+        .nt-on .d-fail, .nt-busy .d-fail { background: #f44336; box-shadow: 0 0 3px #f44336; animation: nt-blink 1s steps(1) infinite; animation-delay: var(--anim-offset, 0s); }
+        .nt-on .nt-fan:not(.stop) { animation: nt-spin 1.6s linear infinite; animation-delay: var(--anim-offset, 0s); }
+        .nt-busy .nt-fan:not(.stop) { animation: nt-spin 0.5s linear infinite; animation-delay: var(--anim-offset, 0s); }
+        .nt-alert .nt-fan { animation: nt-spinstop 3.2s cubic-bezier(0.3, 0, 0.35, 1) infinite; animation-delay: var(--anim-offset, 0s); }
+        .nt-alert .nt-led, .nt-alert .nt-port.up i { background: #f44336; box-shadow: 0 0 3px #f44336; animation: nt-blink 1s steps(1) infinite; animation-delay: var(--anim-offset, 0s); }
+        .nt-alert .nt-led.d-empty { background: #3d434a; box-shadow: none; animation: none; animation-delay: var(--anim-offset, 0s); }
+        .machine.nt-unav { opacity: 0.45; filter: grayscale(1); }
+        @keyframes nt-blink { 50% { opacity: 0.15; } }
+        @keyframes nt-flick { 0%, 100% { opacity: 1; } 30% { opacity: 0.1; } 55% { opacity: 1; } 70% { opacity: 0.2; } }
+        @keyframes nt-breathe { 0%, 100% { opacity: 0.25; } 50% { opacity: 0.8; } }
+        @keyframes nt-spin { to { transform: rotate(360deg); } }
+        @keyframes nt-spinstop { 0% { transform: rotate(0); } 55%, 100% { transform: rotate(900deg); } }
+        @media (prefers-reduced-motion: reduce) { .machine.nt * { animation-name: none !important; } }
+  `,
   // A hair dryer: its body in the appliance colour, the heater glowing in the
   // nozzle or the ring, and the air it blows.
   hair_dryer: () => `
@@ -8279,6 +8564,113 @@ function hairDryerHtml(cls, hd) {
         </div>`;
 }
 
+// The LEDs of one device do not blink in step.
+function ntDelay(i, step, mod) {
+  return `animation-delay: calc(-${((i * step) % mod).toFixed(2)}s + var(--anim-offset, 0s))`;
+}
+
+// A switch: its ports in one or two rows, the first `lit` of them up. A real
+// one numbers them odd on top and even below, with the LEDs of the bottom row
+// under its ports.
+function ntSwitch(n, lit) {
+  const rows = n <= 8 ? 1 : 2, per = n / rows, x0 = 14, span = 79, pitch = span / per;
+  const pw = +(pitch * 0.78).toFixed(2), ph = n >= 32 ? 5 : 6, lw = Math.max(1, +(pw * 0.32).toFixed(2));
+  const top = rows === 1 ? 42 : 33, h = rows === 1 ? 24 : 38, ys = rows === 1 ? [51] : [42, 55];
+  let html = `<div class="nt-body" style="left:0;top:${top}px;width:96px;height:${h}px"></div>
+          <div class="nt-hi" style="left:4px;top:${top + 2.5}px;width:88px"></div>
+          <div class="nt-led nt-pw" style="left:5px;top:${top + 7}px"></div>
+          <div class="nt-led" style="left:5px;top:${top + 13}px"></div>`;
+  for (let i = 0; i < n; i++) {
+    const r = rows === 1 ? 0 : i % 2, c = rows === 1 ? i : Math.floor(i / 2);
+    const x = +(x0 + c * pitch + (pitch - pw) / 2).toFixed(2), ly = r === 0 ? -2.4 : ph + 0.9;
+    html += `<div class="nt-port${i < lit ? " up" : ""}" style="left:${x}px;top:${ys[r]}px;width:${pw}px;height:${ph}px">`
+      + `<i class="a" style="left:0.2px;top:${ly}px;width:${lw}px"></i>`
+      + `<i class="b" style="right:0.2px;top:${ly}px;width:${lw}px;${ntDelay(i, 0.37, 1.3)}"></i></div>`;
+  }
+  return `${html}<div class="nt-vent" style="left:${x0}px;top:${top + h - 4}px;width:${span}px;height:2.5px"></div>
+          <div class="nt-floor" style="left:6px;width:84px;top:${top + h}px"></div>`;
+}
+
+// A NAS seen from the front, the way Synology draws theirs: the LEDs down the
+// left, one per bay, then the bays. An empty bay has no tray and its LED stays
+// dark.
+function ntNas(bays, disks) {
+  const tw = 13, gap = 2, strip = 11, w = strip + bays * tw + (bays - 1) * gap + 6, h = 74;
+  const x = Math.round((96 - w) / 2), y = 104 - h - 4;
+  const leds = ["nt-pw", "nt-lan"].concat(Array.from({ length: bays }, (_, i) => `d-${disks[i] || "gen"}`));
+  let html = `<div class="nt-body" style="left:${x}px;top:${y}px;width:${w}px;height:${h}px;border-radius:4px"></div>`;
+  html += leds.map((k, i) => `<div class="nt-led ${k}" style="left:${x + 4}px;top:${y + 8 + i * 6}px;${ntDelay(i, 0.45, 2.8)}"></div>`).join("");
+  html += `<div class="nt-led" style="left:${x + 4}px;top:${y + 8 + leds.length * 6}px"></div>
+          <div class="nt-key" style="left:${x + 2.5}px;top:${y + h - 11}px;width:6px;height:6px"></div>`;
+  for (let i = 0; i < bays; i++) {
+    const tx = x + strip + i * (tw + gap);
+    html += `<div class="nt-bay" style="left:${tx}px;top:${y + 5}px;width:${tw}px;height:${h - 10}px"></div>`;
+    if (disks[i] !== "empty") {
+      html += `<div class="nt-handle" style="left:${tx + 3}px;top:${y + 8}px;width:${tw - 6}px;height:3px"></div>
+          <div class="nt-tray" style="left:${tx + 3}px;top:${y + 16}px;width:${tw - 6}px;height:${h - 28}px"></div>`;
+    }
+  }
+  return `${html}<div class="nt-floor" style="left:${x + 4}px;width:${w - 8}px;top:${y + h}px"></div>`;
+}
+
+// A server tower: four drive bays, a fan behind its grille and the power
+// button.
+function ntServer(disks, fanOff) {
+  let html = `<div class="nt-body" style="left:28px;top:6px;width:40px;height:98px"></div>
+          <div class="nt-vent" style="left:33px;top:11px;width:30px;height:12px"></div>`;
+  for (let i = 0; i < 4; i++) {
+    const y = 28 + i * 13;
+    html += `<div class="nt-bay" style="left:33px;top:${y}px;width:30px;height:10px"></div>`;
+    if (disks[i] !== "empty") html += `<div class="nt-handle" style="left:36px;top:${y + 4}px;width:14px;height:1.4px"></div>`;
+    html += `<div class="nt-led d-${disks[i] || "gen"}" style="left:58px;top:${y + 3.5}px;${ntDelay(i, 0.6, 2.8)}"></div>`;
+  }
+  return `${html}<div class="nt-fan${fanOff ? " stop" : ""}" style="left:38px;top:81px;width:20px;height:20px"></div>
+          <div class="nt-key" style="left:59px;top:84px;width:6px;height:6px"></div>
+          <div class="nt-led nt-pw" style="left:60.7px;top:85.7px"></div>
+          <div class="nt-led" style="left:60.7px;top:94px"></div>
+          <div class="nt-floor" style="left:24px;width:48px;bottom:0"></div>`;
+}
+
+// A rack behind its glass door: fans on top, a patch panel, a switch, a NAS
+// and a server.
+function ntRack(fanOff) {
+  const fan = fanOff ? " stop" : "";
+  const ports = [1, 1, 1, 0, 1, 1].map((up, i) => `<div class="nt-port${up ? " up" : ""}" style="left:${30 + i * 7}px;top:41.5px;width:5.5px;height:5px">`
+    + `<i class="a" style="left:0.2px;top:-2.4px;width:1.6px"></i><i class="b" style="right:0.2px;top:-2.4px;width:1.6px;${ntDelay(i, 0.37, 1.3)}"></i></div>`).join("");
+  const bays = [0, 1, 2].map((i) => `<div class="nt-bay" style="left:${24 + i * 15}px;top:52px;width:13px;height:12px"></div>`
+    + `<div class="nt-led d-gen" style="left:${33 + i * 15}px;top:54px;${ntDelay(i, 0.5, 2.8)}"></div>`).join("");
+  const jacks = Array.from({ length: 8 }, (_, i) => `<div class="nt-jack" style="left:${25 + i * 6}px;top:27px;width:4px;height:3px"></div>`).join("");
+  return `<div class="nt-body" style="left:14px;top:2px;width:68px;height:102px"></div>
+          <div class="nt-dark" style="left:19px;top:7px;width:58px;height:92px"></div>
+          <div class="nt-fan${fan}" style="left:28px;top:9px;width:11px;height:11px"></div>
+          <div class="nt-fan${fan}" style="left:57px;top:9px;width:11px;height:11px"></div>
+          <div class="nt-u" style="left:21px;top:24px;width:54px;height:9px"></div>${jacks}
+          <div class="nt-u" style="left:21px;top:35px;width:54px;height:11px"></div>
+          <div class="nt-led nt-pw" style="left:24px;top:39px"></div>${ports}
+          <div class="nt-u" style="left:21px;top:49px;width:54px;height:18px"></div>${bays}
+          <div class="nt-led nt-pw" style="left:70px;top:53px"></div>
+          <div class="nt-led" style="left:70px;top:59px"></div>
+          <div class="nt-u" style="left:21px;top:70px;width:54px;height:12px"></div>
+          <div class="nt-vent" style="left:24px;top:73px;width:30px;height:6px"></div>
+          <div class="nt-led nt-lan" style="left:70px;top:75px"></div>
+          <div class="nt-u" style="left:21px;top:85px;width:54px;height:11px;opacity:0.55"></div>
+          <div class="nt-glass" style="left:19px;top:7px;width:58px;height:92px"></div>
+          <div class="nt-handle" style="left:78px;top:46px;width:2px;height:14px;background:#8a929c"></div>
+          <div class="nt-floor" style="left:10px;width:76px;bottom:0"></div>`;
+}
+
+function networkHtml(cls, n) {
+  const layout = NET_LAYOUTS.includes(n.layout) ? n.layout : "nas";
+  const disks = n.disks || [];
+  const inner = layout === "switch" ? ntSwitch(n.ports || 8, n.lit || 0)
+    : layout === "server" ? ntServer(disks, n.fanOff)
+      : layout === "rack" ? ntRack(n.fanOff)
+        : ntNas(n.bays || 2, disks);
+  return `
+        <div class="machine ${cls} nt nt-${n.mode || "off"} nt-l-${layout}">${inner}
+        </div>`;
+}
+
 // Where each part of a toaster sits: [left, top, width, height] and the
 // corners of its top, the slots as [left, top, width], the slices as [class,
 // left, top, width, height], the levers as [left, raised, lowered].
@@ -8979,6 +9371,7 @@ function illustrationHtml(type, ctx) {
 
   if (type === "toaster") return toasterHtml(cls, ctx.toaster || {});
   if (type === "hair_dryer") return hairDryerHtml(cls, ctx.hairDryer || {});
+  if (type === "network") return networkHtml(cls, ctx.network || {});
   if (type === "screen") return screenHtml(cls, ctx.screen || {});
   if (type === "air_purifier") return purifierHtml(cls, ctx.purifier || {});
   if (type === "fan") return fanHtml(cls, ctx.fan || {});
@@ -9686,7 +10079,7 @@ class ApplianceCard extends HTMLElement {
     // in, and that is decided further down with the health summary. A charger
     // too: its meter only stands in for a status it does not have, together
     // with the plug, further down.
-    if (!cap.fridgeTemp && !cap.evCharger && !cap.screen && cfg.power_entity && isFinite(threshold)) {
+    if (!cap.fridgeTemp && !cap.evCharger && !cap.screen && !cap.network && cfg.power_entity && isFinite(threshold)) {
       let derived = powerDerivedState(watts, threshold, this._powerWasRunning);
       // A pause under the threshold is not the end: a dishwasher drying, a
       // washer soaking. With power_off_delay the card waits that many minutes
@@ -11756,6 +12149,93 @@ class ApplianceCard extends HTMLElement {
       screen = { mode, layout, image: this._screenImage || pool[0], cover, muted };
     }
 
+    // A network device, read from whatever it reports: off or online from its
+    // state, busy from its traffic, its disks or its processor, in alert from
+    // a problem, a failed disk or a temperature too high.
+    let network = null;
+    if (cap.network) {
+      // The device itself, found without its disks: a disk on a device of its
+      // own is read from that device, not taken for the NAS.
+      const anchor = anchorEntity(hass, { ...cfg, disk1_entity: undefined, disk2_entity: undefined, disk3_entity: undefined, disk4_entity: undefined });
+      const anchorReg = anchor && hass.entities ? hass.entities[anchor] : null;
+      const anchorDevice = anchorReg ? anchorReg.device_id : null;
+      const num = (f) => (cfg[f] ? numericState(hass, cfg[f]) : null);
+      const down = cfg.download_entity ? netRateBits(hass, cfg.download_entity) : null;
+      const up = cfg.upload_entity ? netRateBits(hass, cfg.upload_entity) : null;
+      const cpu = num("cpu_entity"), mem = num("memory_entity"), vol = num("volume_entity");
+      const temp = num("temperature_entity"), ports = num("ports_entity"), poe = num("poe_entity"), fan = num("fan_speed_entity");
+      const reading = [down, up, cpu, mem, vol, temp, ports, poe, watts].some((v) => v !== null);
+      const raw = st ? String(st.state).trim().toLowerCase() : "";
+      const layout = netLayoutOf(cfg, st);
+      const bays = netBaysOf(cfg);
+      const ids = [1, 2, 3, 4].map((i) => cfg[`disk${i}_entity`]);
+      const anyDisk = ids.some(Boolean);
+      // Without any disk given, the bays only blink with the device's activity.
+      const disks = ids.map((id) => (id ? netDiskState(hass, id, anchorDevice) : anyDisk ? "empty" : "gen"))
+        .slice(0, layout === "nas" ? bays : 4);
+      let mode;
+      if (st && NET_OFF_STATES.includes(raw)) mode = "off";
+      else if (watts !== null && hasThreshold && isFinite(threshold) && watts <= threshold) mode = "off";
+      else if ((!st || rawIsMeaningless) && !reading) mode = "unav";
+      else mode = "on";
+      let warn = false;
+      if (mode === "on") {
+        const tCfg = parseFloat(cfg.temperature_alert);
+        const tMax = isFinite(tCfg) && tCfg > 0 ? tCfg : NET_TEMP_ALERT;
+        const bCfg = parseFloat(cfg.busy_threshold);
+        const busyBits = (isFinite(bCfg) && bCfg > 0 ? bCfg : NET_BUSY_MBIT) * 1e6;
+        const pst = cfg.problem_entity ? stateObj(hass, cfg.problem_entity) : null;
+        const problem = !!pst && ALERT_ON_STATES.includes(String(pst.state).trim().toLowerCase());
+        const watched = layout === "switch" || layout === "rack" ? [] : disks;
+        if (problem || watched.includes("fail") || (temp !== null && temp >= tMax)) mode = "alert";
+        else if ((down || 0) + (up || 0) >= busyBits || watched.includes("busy") || (cpu !== null && cpu >= NET_BUSY_CPU)) mode = "busy";
+        warn = mode !== "alert" && watched.includes("warn");
+      }
+      if (!cfg.state_show_raw || mode === "unav") stateLabel = t(hass, warn ? "net_warn" : NET_LABELS[mode]);
+      color = warn ? NET_COLORS.warn : NET_COLORS[mode];
+      const live = mode !== "off" && mode !== "unav";
+      const pct = (v) => keepTogether(`${netNumber(hass, v, v < 10 ? 1 : 0)} %`);
+      const total = parseFloat(cfg.ports_total);
+      if (live) {
+        if (down !== null || up !== null) {
+          extraLines.push({ key: "net_rate", icon: "mdi:swap-vertical", label: t(hass, "net_line_rate"),
+            value: [down !== null ? `\u2193\u00a0${netRateText(hass, down)}` : "", up !== null ? `\u2191\u00a0${netRateText(hass, up)}` : ""]
+              .filter(Boolean).join(" \u00b7 "),
+            entity: cfg.download_entity || cfg.upload_entity });
+        }
+        if (cpu !== null || mem !== null) {
+          extraLines.push({ key: "net_load", icon: "mdi:chip", label: t(hass, "net_line_load"),
+            value: [cpu !== null ? `CPU\u00a0${pct(cpu)}` : "", mem !== null ? `RAM\u00a0${pct(mem)}` : ""].filter(Boolean).join(" \u00b7 "),
+            entity: cfg.cpu_entity || cfg.memory_entity });
+        }
+        if (vol !== null) {
+          extraLines.push({ key: "net_volume", icon: "mdi:harddisk", label: t(hass, "net_line_volume"), value: pct(vol), entity: cfg.volume_entity });
+        }
+        if (ports !== null || poe !== null) {
+          const p = ports !== null ? `${Math.round(ports)}${isFinite(total) && total > 0 ? `/${Math.round(total)}` : ""}` : "";
+          extraLines.push({ key: "net_ports", icon: "mdi:ethernet", label: t(hass, "section_net_ports"),
+            value: [p, poe !== null ? keepTogether(`PoE ${netNumber(hass, poe, 1)} W`) : ""].filter(Boolean).join(" \u00b7 "),
+            entity: cfg.ports_entity || cfg.poe_entity });
+        }
+        if (temp !== null) {
+          const tst = numericEntity(hass, cfg.temperature_entity);
+          const unit = (tst && tst.attributes.unit_of_measurement) || "\u00b0C";
+          extraLines.push({ key: "net_temperature", icon: "mdi:thermometer", label: t(hass, "temperature"),
+            value: keepTogether(`${netNumber(hass, temp, 1)} ${unit}`), entity: cfg.temperature_entity });
+        }
+      }
+      // The ports lit: as many as are up, or in proportion when the switch has
+      // more than are drawn; all of them when nothing counts them.
+      const drawn = netPortsOf(cfg);
+      let lit = 0;
+      if (live) {
+        if (ports === null) lit = drawn;
+        else if (isFinite(total) && total > drawn) lit = Math.round((ports * drawn) / total);
+        else lit = Math.min(drawn, Math.max(0, Math.round(ports)));
+      }
+      network = { mode, layout, ports: drawn, lit, bays, disks, fanOff: fan !== null && fan <= 0 };
+    }
+
     // The last cycle, on request: how long it ran and when it ended. Shown
     // between cycles only, where the time left has nothing to say.
     const lcRole = cycleRole(norm);
@@ -11829,6 +12309,7 @@ class ApplianceCard extends HTMLElement {
       ironLayout: cfg.iron_layout === "generator" ? "generator" : "",
       toaster,
       hairDryer,
+      network,
       purifier,
       screen,
       fan: fanCtx,
@@ -11912,6 +12393,8 @@ class ApplianceCard extends HTMLElement {
       illustrationCtx.heater && illustrationCtx.heater.mode,
       illustrationCtx.toaster && illustrationCtx.toaster.mode,
       illustrationCtx.hairDryer && [illustrationCtx.hairDryer.mode, illustrationCtx.hairDryer.level, illustrationCtx.hairDryer.layout].join("/"),
+      illustrationCtx.network && [illustrationCtx.network.mode, illustrationCtx.network.layout, illustrationCtx.network.lit,
+        illustrationCtx.network.disks.join("")].join("/"),
       illustrationCtx.screen && [illustrationCtx.screen.mode, illustrationCtx.screen.layout, illustrationCtx.screen.image, illustrationCtx.screen.cover].join("/"),
       illustrationCtx.purifier && [illustrationCtx.purifier.mode, illustrationCtx.purifier.osc, illustrationCtx.purifier.back].join("/"),
       illustrationCtx.fan && [illustrationCtx.fan.mode, illustrationCtx.fan.osc, illustrationCtx.fan.natural, illustrationCtx.fan.winter].join("/"),
@@ -12448,6 +12931,24 @@ const SECTIONS = [
   { field: "media2_entity", types: ["screen"], labelKey: "section_media2", includeDomains: ["media_player"] },
   { field: "media3_entity", types: ["screen"], labelKey: "section_media3", includeDomains: ["media_player"] },
   { field: "lock_entity", types: ["screen"], labelKey: "section_lock", includeDomains: ["binary_sensor", "sensor", "lock", "input_boolean"] },
+  // A network device: what it reports, each disk in its bay.
+  { field: "download_entity", types: ["network"], labelKey: "section_net_download", includeDomains: ["sensor"], extra: (c) =>
+      c._row("net_busy_threshold", "busy_threshold", { placeholder: String(NET_BUSY_MBIT) }) },
+  { field: "upload_entity", types: ["network"], labelKey: "section_net_upload", includeDomains: ["sensor"] },
+  { field: "cpu_entity", types: ["network"], labelKey: "section_net_cpu", includeDomains: ["sensor"] },
+  { field: "memory_entity", types: ["network"], labelKey: "section_net_memory", includeDomains: ["sensor"] },
+  { field: "volume_entity", types: ["network"], labelKey: "section_net_volume", includeDomains: ["sensor"] },
+  { field: "ports_entity", types: ["network"], labelKey: "section_net_ports", includeDomains: ["sensor"], extra: (c) =>
+      c._row("net_ports_total", "ports_total", { placeholder: "8" }) },
+  { field: "poe_entity", types: ["network"], labelKey: "section_net_poe", includeDomains: ["sensor"] },
+  { field: "temperature_entity", types: ["network"], labelKey: "section_net_temperature", includeDomains: ["sensor"], extra: (c) =>
+      c._row("net_temp_alert", "temperature_alert", { placeholder: String(NET_TEMP_ALERT) }) },
+  { field: "fan_speed_entity", types: ["network"], labelKey: "section_fan_speed", includeDomains: ["sensor"] },
+  { field: "problem_entity", types: ["network"], labelKey: "section_net_problem", includeDomains: ["binary_sensor", "sensor"] },
+  { field: "disk1_entity", types: ["network"], labelKey: "section_net_disk1", includeDomains: ["sensor", "binary_sensor"] },
+  { field: "disk2_entity", types: ["network"], labelKey: "section_net_disk2", includeDomains: ["sensor", "binary_sensor"] },
+  { field: "disk3_entity", types: ["network"], labelKey: "section_net_disk3", includeDomains: ["sensor", "binary_sensor"] },
+  { field: "disk4_entity", types: ["network"], labelKey: "section_net_disk4", includeDomains: ["sensor", "binary_sensor"] },
   { field: "night_mode_entity", types: ["air_purifier", "fan"], labelKey: "pf_night", includeDomains: ["switch", "binary_sensor", "input_boolean"] },
   { field: "heater_entity", types: ["air_purifier", "fan"], labelKey: "section_heater", includeDomains: ["climate", "switch", "select", "binary_sensor"] },
 
@@ -12625,7 +13126,7 @@ const SECTIONS = [
       return c._row(cap.evCharger ? "ev_power_threshold" : cap.screen ? "screen_standby_threshold" : "power_on_threshold", "power_on_threshold",
         { placeholder: cap.fridgeTemp ? "1" : cap.evCharger ? String(EV_POWER_THRESHOLD) : cap.screen ? String(SCREEN_STANDBY_W) : "10" })
         + (cap.fridgeTemp ? c._row("no_power_threshold", "no_power_threshold", { placeholder: "1" }) + c._row("no_power_after", "no_power_after", { placeholder: "30" })
-          : cap.evCharger || cap.screen || cap.hairDryer ? "" : c._row("power_off_delay", "power_off_delay", { placeholder: "0" }));
+          : cap.evCharger || cap.screen || cap.hairDryer || cap.network ? "" : c._row("power_off_delay", "power_off_delay", { placeholder: "0" }));
     } },
 
   // Two sections read as alerts, and only their pickers tell them apart: one
@@ -13331,6 +13832,19 @@ class ApplianceCardEditor extends HTMLElement {
             { value: "ring", label: t(hass, "layout_hd_ring") },
           ],
         }) + this._row("hd_heat_threshold", "heat_threshold", { placeholder: String(HD_HEAT_W) }) : ""}
+        ${this._type === "network" ? (() => {
+          const layout = netLayoutOf(this._config, stateObj(hass, this._config.state_entity));
+          return this._row("section_screen_layout", "network_layout", {
+            type: "select",
+            options: [{ value: "auto", label: t(hass, "unit_auto") }].concat(NET_LAYOUTS.map((v) => ({ value: v, label: t(hass, `layout_net_${v}`) }))),
+          }) + (layout === "switch" ? this._row("net_ports_count", "switch_ports", {
+            type: "select",
+            options: [{ value: "auto", label: t(hass, "unit_auto") }].concat(SWITCH_PORTS.map((v) => ({ value: String(v), label: String(v) }))),
+          }) : "") + (layout === "nas" ? this._row("net_bays", "bays", {
+            type: "select",
+            options: [{ value: "auto", label: t(hass, "unit_auto") }].concat(NET_BAYS.map((v) => ({ value: String(v), label: String(v) }))),
+          }) : "");
+        })() : ""}
         ${this._type === "air_purifier" ? this._row("section_purifier_layout", "purifier_layout", {
           type: "select",
           options: [

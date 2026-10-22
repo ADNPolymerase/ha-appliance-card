@@ -113,7 +113,7 @@ Seule `state_entity` est obligatoire, sauf sur un réfrigérateur où une sonde 
 | `done_alert` | `true` fait pulser un badge vert sur le dessin en fin de cycle, jusqu'à l'ouverture de la porte ou un appui sur le badge. Pour les appareils à cycle (lave-linge, sèche-linge, lave-vaisselle, four…). |
 | `illustration_color` | `auto` (défaut, suit le thème) \| `white` \| `grey` \| `black` \| `red` (rouge foncé). Ne change que la carrosserie, pas les couleurs d'état. |
 | `language` | `auto` (défaut, suit Home Assistant) ou l'un des 14 codes : `en`, `fr`, `de`, `es`, `it`, `nl`, `pt`, `sv`, `no`, `da`, `pl`, `ru`, `zh`, `cs`. `nb` et `nb-NO` donnent le norvégien. |
-| `appliance_type` | `auto` (défaut) \| `washer` \| `dryer` \| `dishwasher` \| `oven` \| `microwave` \| `hood` \| `cooktop` \| `fridge` \| `kettle` \| `cooker` \| `coffee` \| `rice_cooker` \| `air_fryer` \| `water_heater` \| `boiler` \| `heat_pump` \| `printer_3d` \| `pet_feeder` \| `pet_fountain` \| `iron` \| `toaster` \| `pellet_stove` \| `air_conditioner` \| `dehumidifier` \| `space_heater` \| `towel_warmer` \| `air_purifier` \| `fan` \| `ev_charger` \| `hair_dryer` \| `screen`. |
+| `appliance_type` | `auto` (défaut) \| `washer` \| `dryer` \| `dishwasher` \| `oven` \| `microwave` \| `hood` \| `cooktop` \| `fridge` \| `kettle` \| `cooker` \| `coffee` \| `rice_cooker` \| `air_fryer` \| `water_heater` \| `boiler` \| `heat_pump` \| `printer_3d` \| `pet_feeder` \| `pet_fountain` \| `iron` \| `toaster` \| `pellet_stove` \| `air_conditioner` \| `dehumidifier` \| `space_heater` \| `towel_warmer` \| `air_purifier` \| `fan` \| `ev_charger` \| `hair_dryer` \| `screen` \| `network`. |
 | `tap_action` | Ce que fait un appui sur la carte, dans les mots de Home Assistant : `more-info` (défaut : l'entité d'état, ou sur une carte sans elle ce qu'elle lit à sa place), `none`, `navigate`, `url`, `toggle`, `perform-action` ou `fire-dom-event`, celle qu'écoutent les cartes popup bâties sur browser_mod. En YAML seulement. |
 | `toggle_entity` | Bouton marche/arrêt (`switch`, `button`, `script`, `input_boolean`, `fan`), mis en évidence quand c'est allumé. Sur tous les types, frigo compris, où c'est le seul bouton ; à associer à `controls_activation: confirm` pour un appareil qu'il ne faut pas couper par erreur. |
 | `power_entity` / `power_on_threshold` / `power_icon` | Capteur de puissance. Avec un seuil, l'état en est déduit : *en marche* au-dessus, puis *terminé* en redescendant. Pointer `state_entity` sur ce même capteur l'active avec un seuil de 10 W. `power_icon` remplace `mdi:power-plug`. |
@@ -190,6 +190,16 @@ Seule `state_entity` est obligatoire, sauf sur un réfrigérateur où une sonde 
 | `screen_image` | écran | L'image d'un écran allumé : `random` (défaut, une nouvelle à chaque allumage) ou l'une de `sunset`, `aquarium`, `bars`, `football`, `space`, `bounce`, `desktop`, `code`, `pong`. Un lecteur qui fournit une jaquette l'affiche à la place pendant la lecture. |
 | `media_entity` / `media2_entity` / `media3_entity` | écran | Jusqu'à trois `media_player` qui affichent quelque chose sur cet écran : la télé elle-même, et le boîtier ou la console qui a vraiment l'image. La card suit celui qui joue, puis celui en pause, puis celui à l'accueil, puis celui allumé ; à égalité, le premier. Sa ligne le nomme et donne l'application ou la source, le titre et *Son coupé*. Sans mesure de puissance, les lecteurs disent aussi si l'écran est éteint, en veille ou allumé. |
 | `lock_entity` | écran | Le verrouillage de session d'un ordinateur : un `lock`, un `binary_sensor` de classe verrou (off veut dire verrouillé) ou un capteur qui vaut `locked`, comme les remontent HASS.Agent, Go Hass Agent ou l'app macOS. Verrouillé, l'écran montre un cadenas. |
+| `network_layout` | réseau | `switch` \| `server` \| `nas` \| `rack`. Sans lui, un nom qui dit NAS, Synology, QNAP, Unraid, switch, serveur ou baie choisit le modèle, et des disques en font un NAS. |
+| `switch_ports` | réseau | Les ports dessinés sur un switch : `8`, `16`, `24` ou `32`. Sans lui, le plus petit qui contient `ports_total`. |
+| `ports_entity` / `ports_total` | réseau | Les ports utilisés, et combien le switch en a : une diode par port utilisé, en proportion au-delà de 32. Affiché *24/32*. |
+| `poe_entity` | réseau | La puissance PoE fournie, ajoutée à la ligne des ports. |
+| `download_entity` / `upload_entity` | réseau | Le trafic, dans n'importe quelle unité (B/s, kB/s, MiB/s, Mbit/s…). Au-delà de `busy_threshold` (10 Mbit/s par défaut), l'appareil est en *Activité*. |
+| `cpu_entity` / `memory_entity` / `volume_entity` | réseau | Processeur et mémoire, en %, et le volume occupé. Un processeur au-delà de 80 % est en *Activité*. |
+| `temperature_entity` | réseau | La température de l'appareil. À `temperature_alert` (70 °C par défaut) ou plus, il est en *Alerte*. |
+| `fan_speed_entity` | réseau | La vitesse d'un ventilateur : à 0 tr/min, le ventilateur dessiné s'arrête. |
+| `problem_entity` | réseau | Tout ce qui doit déclencher l'*Alerte* : un état de sécurité, un capteur de santé. |
+| `disk1_entity` … `disk4_entity` / `bays` | réseau | Une entité par disque, n'importe laquelle des siennes : la carte les lit toutes. Sa diode est verte quand tout va bien, bleue quand il lit ou écrit, faible quand il dort, orange quand il est à surveiller, rouge quand il est en panne. `bays` : `1`, `2` ou `4` baies dessinées sur un NAS, une baie vide n'a pas de tiroir. |
 | `left_on_after` | fer | Minutes allumé au bout desquelles la ligne d'état affiche *Resté allumé*, en rouge. Vide, cela n'arrive jamais. |
 | `feeder_layout` | distributeur | `tower` (défaut, un réservoir carré sur son socle) \| `canister` (un réservoir rond sur un socle rond) \| `double` (deux sorties et deux gamelles) \| `dual_split` (deux réservoirs au-dessus d'une gamelle partagée par le milieu) \| `rotary` (des assiettes sur un plateau tournant sous un couvercle, pour la pâtée). |
 | `level_b_entity` | distributeur | Le niveau du second réservoir, sur un distributeur qui en a deux (`dual_split`), lu comme `level_entity` et avec les mêmes `level_empty_below` et `level_max`. Il remplit la fenêtre de droite, a sa propre ligne, et vide il fait passer l'état à *Réservoir vide* en ne vidant que sa moitié. Au repos, la ligne d'état donne le plus bas des deux niveaux, celui à remplir en premier. L'éditeur ne le propose que pour `dual_split`. |
@@ -447,6 +457,25 @@ power_entity: sensor.prise_tv_power
 power_on_threshold: 30
 media_entity: media_player.lg_tv
 media2_entity: media_player.apple_tv
+```
+
+</details>
+
+<details>
+<summary><b>Réseau : switchs, serveurs, NAS et baies</b></summary>
+
+Lu à partir de ce qu'il remonte. Son `state_entity`, un ping, le suivi du routeur ou un état, dit *En ligne* ou *Éteint*. Un trafic au-delà de 10 Mbit/s, un processeur chargé ou un disque au travail le mettent en *Activité* ; un problème, un disque en panne ou une température de 70 °C le mettent en *Alerte* : toutes les diodes passent au rouge et le ventilateur démarre et s'arrête. Un disque à surveiller le dit en orange. Ses lignes donnent le trafic, la charge, le volume et les ports. Choisi dans l'éditeur, la carte trouve les mesures sur l'appareil et sur les appareils qui en dépendent, disques compris (Synology, UGREEN, Unraid, Glances). Quatre modèles : un switch de 8 à 32 ports, un serveur tour, un NAS de 1 à 4 baies, une baie.
+
+```yaml
+type: custom:ha-appliance-card
+appliance_type: network
+network_layout: nas
+state_entity: device_tracker.nas
+cpu_entity: sensor.nas_cpu_utilization_total
+volume_entity: sensor.nas_volume_1_volume_used
+download_entity: sensor.nas_download_throughput
+disk1_entity: sensor.nas_drive_1_status
+disk2_entity: sensor.nas_drive_2_status
 ```
 
 </details>

@@ -113,7 +113,7 @@ Only `state_entity` is required, except on a fridge where a probe or a door cont
 | `done_alert` | `true` makes a green badge pulse on the drawing when a cycle has finished, until the door opens or the badge is tapped. For appliances with a cycle (washer, dryer, dishwasher, oven…). |
 | `illustration_color` | `auto` (default, follows the theme) \| `white` \| `grey` \| `black` \| `red` (dark red). Only changes the casing, not the state colours. |
 | `language` | `auto` (default, follows Home Assistant) or one of the 14 codes: `en`, `fr`, `de`, `es`, `it`, `nl`, `pt`, `sv`, `no`, `da`, `pl`, `ru`, `zh`, `cs`. `nb` and `nb-NO` give Norwegian. |
-| `appliance_type` | `auto` (default) \| `washer` \| `dryer` \| `dishwasher` \| `oven` \| `microwave` \| `hood` \| `cooktop` \| `fridge` \| `kettle` \| `cooker` \| `coffee` \| `rice_cooker` \| `air_fryer` \| `water_heater` \| `boiler` \| `heat_pump` \| `printer_3d` \| `pet_feeder` \| `pet_fountain` \| `iron` \| `toaster` \| `pellet_stove` \| `air_conditioner` \| `dehumidifier` \| `space_heater` \| `towel_warmer` \| `air_purifier` \| `fan` \| `ev_charger` \| `hair_dryer` \| `screen`. |
+| `appliance_type` | `auto` (default) \| `washer` \| `dryer` \| `dishwasher` \| `oven` \| `microwave` \| `hood` \| `cooktop` \| `fridge` \| `kettle` \| `cooker` \| `coffee` \| `rice_cooker` \| `air_fryer` \| `water_heater` \| `boiler` \| `heat_pump` \| `printer_3d` \| `pet_feeder` \| `pet_fountain` \| `iron` \| `toaster` \| `pellet_stove` \| `air_conditioner` \| `dehumidifier` \| `space_heater` \| `towel_warmer` \| `air_purifier` \| `fan` \| `ev_charger` \| `hair_dryer` \| `screen` \| `network`. |
 | `tap_action` | What a tap on the card does, in Home Assistant's own words: `more-info` (default: the state entity, or on a card without one what it reads in its place), `none`, `navigate`, `url`, `toggle`, `perform-action` or `fire-dom-event`, which is what the popup cards built on browser_mod listen for. In YAML only. |
 | `toggle_entity` | Power button (`switch`, `button`, `script`, `input_boolean`, `fan`), highlighted while on. On every type, the fridge included, where it is the only button; pair it with `controls_activation: confirm` for an appliance that must not be switched off by mistake. |
 | `power_entity` / `power_on_threshold` / `power_icon` | Power sensor. With a threshold, the state is derived from it: *running* above, then *finished* when it falls back. Pointing `state_entity` at the same sensor enables it with a 10 W threshold. `power_icon` replaces `mdi:power-plug`. |
@@ -190,6 +190,16 @@ Only `state_entity` is required, except on a fridge where a probe or a door cont
 | `screen_image` | screen | The picture a lit screen shows: `random` (default, a new one each time it comes on) or one of `sunset`, `aquarium`, `bars`, `football`, `space`, `bounce`, `desktop`, `code`, `pong`. A player that sends a cover shows it instead while it plays. |
 | `media_entity` / `media2_entity` / `media3_entity` | screen | Up to three `media_player` entities that show something on this screen: the TV itself, and the box or console that actually has the picture. The card follows the one that plays, then the one paused, then the one on its home screen, then the one on; on a tie, the first. Its line names it and gives the app or source, the title, and *Muted*. Without a power meter, the players also say whether the screen is off, on standby or on. |
 | `lock_entity` | screen | A computer's session lock: a `lock`, a `binary_sensor` of the lock class (off means locked) or a sensor that reads `locked`, as HASS.Agent, Go Hass Agent or the macOS app report it. Locked, the screen shows a padlock. |
+| `network_layout` | network | `switch` \| `server` \| `nas` \| `rack`. Left out, a name that says NAS, Synology, QNAP, Unraid, switch, server or rack picks the model, and disks make it a NAS. |
+| `switch_ports` | network | The ports drawn on a switch: `8`, `16`, `24` or `32`. Left out, the smallest one that holds `ports_total`. |
+| `ports_entity` / `ports_total` | network | The ports in use, and how many the switch has: one LED per port in use, in proportion past 32. Shown as *24/32*. |
+| `poe_entity` | network | The PoE power drawn, added to the ports line. |
+| `download_entity` / `upload_entity` | network | The traffic, in any unit (B/s, kB/s, MiB/s, Mbit/s…). Above `busy_threshold` (10 Mbit/s by default) the device is *Busy*. |
+| `cpu_entity` / `memory_entity` / `volume_entity` | network | Processor and memory use, in %, and the volume used. A processor above 80 % is *Busy*. |
+| `temperature_entity` | network | The device's temperature. At `temperature_alert` (70 °C by default) or above it is in *Alert*. |
+| `fan_speed_entity` | network | A fan's speed: at 0 rpm the drawn fan stops. |
+| `problem_entity` | network | Anything that should raise the *Alert*: a security status, a health sensor. |
+| `disk1_entity` … `disk4_entity` / `bays` | network | One entity per disk, any of its own: the card reads all of them. Its LED is green when fine, blue while it reads or writes, dim while asleep, orange when to watch, red when it fails. `bays`: `1`, `2` or `4` bays drawn on a NAS, an empty bay has no tray. |
 | `left_on_after` | iron | Minutes switched on after which the state line reads *Left on*, in red. Empty, it never does. |
 | `feeder_layout` | pet feeder | `tower` (default, a square tank on its base) \| `canister` (a round tank on a round base) \| `double` (two outlets and two bowls) \| `dual_split` (two hoppers over one bowl split down the middle) \| `rotary` (plates on a turntable under a lid, for wet food). |
 | `level_b_entity` | pet feeder | The second hopper's level, on a feeder with two (`dual_split`), read like `level_entity` and against the same `level_empty_below` and `level_max`. It fills the right-hand window, gets its own line, and empty it turns the state to *Tank empty* and leaves only its own half bare. At rest the state line shows the lower of the two levels, the hopper to refill first. The editor offers it only for `dual_split`. |
@@ -447,6 +457,25 @@ power_entity: sensor.tv_plug_power
 power_on_threshold: 30
 media_entity: media_player.lg_tv
 media2_entity: media_player.apple_tv
+```
+
+</details>
+
+<details>
+<summary><b>Network: switches, servers, NAS and racks</b></summary>
+
+Read from whatever it reports. Its `state_entity`, a ping, a router's tracker or a status, says *Online* or *Off*. Traffic above 10 Mbit/s, a busy processor or a disk at work make it *Busy*; a problem, a failed disk or a temperature of 70 °C make it *Alert*, and every LED turns red while the fan starts and stops. A disk to watch says so in orange. Its lines give the traffic, the load, the volume and the ports. Picked in the editor, the card finds the readings on the device and on the devices that hang from it, disks included (Synology, UGREEN, Unraid, Glances). Four models: a switch of 8 to 32 ports, a server tower, a NAS of 1 to 4 bays, a rack.
+
+```yaml
+type: custom:ha-appliance-card
+appliance_type: network
+network_layout: nas
+state_entity: device_tracker.nas
+cpu_entity: sensor.nas_cpu_utilization_total
+volume_entity: sensor.nas_volume_1_volume_used
+download_entity: sensor.nas_download_throughput
+disk1_entity: sensor.nas_drive_1_status
+disk2_entity: sensor.nas_drive_2_status
 ```
 
 </details>

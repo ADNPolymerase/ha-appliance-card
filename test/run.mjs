@@ -8855,7 +8855,7 @@ check('borne : ni un statut reconnu', evMode(evR('SuspendedEVSE', { power_entity
   // The type menu, by family.
   const tm = markup(newEditor({ state_entity: 'sensor.w', appliance_type: 'washer' }));
   const menu = (tm.match(/<select data-field="appliance_type">([^]*?)<\/select>/) || [, ''])[1];
-  check('menu des types : six familles', (menu.match(/<optgroup /g) || []).length, 6);
+  check('menu des types : sept familles', (menu.match(/<optgroup /g) || []).length, 7);
   const listed = [...menu.matchAll(/<option value="([a-z_0-9]+)"/g)].map(m => m[1]);
   check('menu des types : auto en tete', listed[0], 'auto');
   const typesInCard = [...SRC.matchAll(/^  ([a-z_0-9]+): \{ [a-zA-Z]+: true/gm)].map(m => m[1]);
@@ -9339,6 +9339,175 @@ check('borne : ni un statut reconnu', evMode(evR('SuspendedEVSE', { power_entity
     check('suggestion purificateur : le mode nuit', sug.night_mode_entity, 'switch.salon_night_mode');
     check('suggestion purificateur : le chauffage', sug.heater_entity, 'climate.salon');
   }
+}
+
+
+// =============================================================================
+// Network devices: a switch, a server, a NAS and a rack.
+// =============================================================================
+{
+  const NB = ' ';
+  const netHass = (states, entities = {}, devices = {}) => ({ ...HASS(states), entities, devices });
+  const netBuild = (config, states, entities, devices) => {
+    const c = new Card();
+    c.setConfig({ type: 'custom:ha-appliance-card', ...config });
+    c._hass = netHass(states, entities, devices);
+    c._render();
+    return markup(c);
+  };
+  const s = (state, attributes = {}) => ({ state: String(state), attributes });
+  const rate = (v, unit = 'Mbit/s') => s(v, { unit_of_measurement: unit, device_class: 'data_rate' });
+  const pctS = (v) => s(v, { unit_of_measurement: '%' });
+  const count = (h, re) => (h.match(re) || []).length;
+  const leds = (h) => [...h.matchAll(/class="nt-led (d-[a-z]+)"/g)].map((m) => m[1]);
+
+  // The type, from a field of its own or from a name.
+  const typeOf = (cfg, st) => {
+    const h = render(cfg, st || {});
+    return /class="machine [^"]*\bnt\b/.test(h);
+  };
+  check('reseau : un champ de disque suffit', typeOf({ state_entity: 'sensor.x', disk1_entity: 'sensor.d1' }), true);
+  check('reseau : un NAS Synology par son nom', typeOf({ state_entity: 'sensor.synology_temperature' }), true);
+  check('reseau : un switch par son nom', typeOf({ state_entity: 'device_tracker.switch_salon' }), true);
+  check('reseau : une prise n\'est pas un switch', typeOf({ state_entity: 'switch.prise_lave_linge' }), false);
+  check('reseau : une Nintendo Switch n\'en est pas un', typeOf({ state_entity: 'sensor.nintendo_switch_status' }), false);
+
+  // The drawings.
+  const draw = (extra, states = {}) => render({ appliance_type: 'network', state_entity: 'binary_sensor.up', ...extra },
+    { 'binary_sensor.up': s('on'), ...states });
+  check('reseau : NAS par defaut quand des disques sont donnes', /nt-l-nas/.test(draw({ disk1_entity: 'sensor.d1' }, { 'sensor.d1': s('normal') })), true);
+  check('reseau : serveur sans autre indice', /nt-l-server/.test(draw({})), true);
+  check('reseau : baie choisie', /nt-l-rack/.test(draw({ network_layout: 'rack' })), true);
+  check('reseau : switch 8 ports par defaut', count(draw({ network_layout: 'switch' }), /class="nt-port/g), 8);
+  for (const [total, drawn] of [[5, 8], [16, 16], [24, 24], [28, 32], [48, 32]])
+    check(`reseau : ${total} ports dessines sur ${drawn}`, count(draw({ network_layout: 'switch', ports_total: total }), /class="nt-port/g), drawn);
+  check('reseau : 16 ports choisis', count(draw({ network_layout: 'switch', switch_ports: '16', ports_total: 8 }), /class="nt-port/g), 16);
+  const lit = (extra, v) => count(draw({ network_layout: 'switch', ports_entity: 'sensor.p', ...extra }, { 'sensor.p': s(v) }), /class="nt-port up"/g);
+  check('reseau : un port allume par port actif', lit({ ports_total: 24 }, 20), 20);
+  check('reseau : en proportion au-dela du dessin', lit({ ports_total: 48 }, 24), 16);
+  check('reseau : tous allumes sans compte', count(draw({ network_layout: 'switch' }), /class="nt-port up"/g), 8);
+  check('reseau : aucun port allume eteint', count(render({ appliance_type: 'network', network_layout: 'switch', state_entity: 'device_tracker.sw' },
+    { 'device_tracker.sw': s('not_home') }), /class="nt-port up"/g), 0);
+  check('reseau : NAS 2 baies par defaut', count(draw({ network_layout: 'nas' }), /class="nt-bay"/g), 2);
+  check('reseau : NAS 1 baie', count(draw({ network_layout: 'nas', bays: '1' }), /class="nt-bay"/g), 1);
+  check('reseau : NAS 4 baies pour 3 disques', count(draw({ network_layout: 'nas', disk3_entity: 'sensor.d3' }, { 'sensor.d3': s('normal') }), /class="nt-bay"/g), 4);
+
+  // The state: off, online, busy, in alert.
+  const state = (extra, states) => stateLine(render({ appliance_type: 'network', state_entity: 'device_tracker.n', ...extra },
+    { 'device_tracker.n': s('home'), ...states }));
+  check('reseau : en ligne', state({}, {}), 'Online');
+  check('reseau : eteint', stateLine(render({ appliance_type: 'network', state_entity: 'device_tracker.n' }, { 'device_tracker.n': s('not_home') })), 'Off');
+  check('reseau : hors ligne sans rien', stateLine(render({ appliance_type: 'network', state_entity: 'device_tracker.n' }, { 'device_tracker.n': s('unavailable') })), 'Offline');
+  check('reseau : activite au-dela de 10 Mbit/s', state({ download_entity: 'sensor.dl' }, { 'sensor.dl': rate(12) }), 'Busy');
+  check('reseau : en ligne sous 10 Mbit/s', state({ download_entity: 'sensor.dl' }, { 'sensor.dl': rate(9) }), 'Online');
+  check('reseau : 2 Mo/s font 16 Mbit/s', state({ download_entity: 'sensor.dl' }, { 'sensor.dl': rate(2, 'MB/s') }), 'Busy');
+  check('reseau : seuil d\'activite choisi', state({ download_entity: 'sensor.dl', busy_threshold: 50 }, { 'sensor.dl': rate(12) }), 'Online');
+  check('reseau : processeur charge', state({ cpu_entity: 'sensor.cpu' }, { 'sensor.cpu': pctS(85) }), 'Busy');
+  check('reseau : alerte d\'un probleme', state({ problem_entity: 'binary_sensor.pb' }, { 'binary_sensor.pb': s('on') }), 'Alert');
+  check('reseau : alerte de temperature', state({ temperature_entity: 'sensor.t' }, { 'sensor.t': s(72, { unit_of_measurement: '°C' }) }), 'Alert');
+  check('reseau : seuil de temperature choisi', state({ temperature_entity: 'sensor.t', temperature_alert: 80 }, { 'sensor.t': s(72) }), 'Online');
+  check('reseau : l\'alerte se dessine', /nt-alert/.test(render({ appliance_type: 'network', state_entity: 'device_tracker.n', problem_entity: 'binary_sensor.pb' },
+    { 'device_tracker.n': s('home'), 'binary_sensor.pb': s('on') })), true);
+
+  // The lines.
+  const lines = render({ appliance_type: 'network', state_entity: 'device_tracker.n', download_entity: 'sensor.dl', upload_entity: 'sensor.ul',
+    cpu_entity: 'sensor.cpu', memory_entity: 'sensor.mem', volume_entity: 'sensor.vol', ports_entity: 'sensor.p', ports_total: 32, poe_entity: 'sensor.poe' },
+  { 'device_tracker.n': s('home'), 'sensor.dl': rate(312), 'sensor.ul': rate(2.283, 'kB/s'), 'sensor.cpu': pctS(37), 'sensor.mem': pctS(62),
+    'sensor.vol': pctS(61.4), 'sensor.p': s(24), 'sensor.poe': s(41, { unit_of_measurement: 'W' }) });
+  check('reseau : ligne de debit', infoLine(lines, 'Throughput'), `↓${NB}312${NB}Mbit/s · ↑${NB}18${NB}kbit/s`);
+  check('reseau : ligne de charge', infoLine(lines, 'Load'), `CPU${NB}37${NB}% · RAM${NB}62${NB}%`);
+  check('reseau : ligne de volume', infoLine(lines, 'Volume'), `61${NB}%`);
+  check('reseau : ligne des ports', infoLine(lines, 'Active ports'), `24/32 · PoE${NB}41${NB}W`);
+  check('reseau : pas de ligne eteint', infoLine(render({ appliance_type: 'network', state_entity: 'device_tracker.n', volume_entity: 'sensor.vol' },
+    { 'device_tracker.n': s('not_home'), 'sensor.vol': pctS(61) }), 'Volume'), null);
+
+  // The disks, each read from its own device like Synology's.
+  const syno = {
+    'device_tracker.nas': s('home'),
+    'sensor.nas_disk_1_status': s('normal'), 'sensor.nas_disk_1_temperature': s(35, { device_class: 'temperature' }),
+    'binary_sensor.nas_disk_1_below_min_remaining_life': s('off', { device_class: 'safety' }),
+    'sensor.nas_disk_2_status': s('normal'), 'binary_sensor.nas_disk_2_exceeded_max_bad_sectors': s('on', { device_class: 'safety' }),
+  };
+  const synoEnt = {
+    'device_tracker.nas': { device_id: 'trk' },
+    'sensor.nas_disk_1_status': { device_id: 'd1' }, 'sensor.nas_disk_1_temperature': { device_id: 'd1' },
+    'binary_sensor.nas_disk_1_below_min_remaining_life': { device_id: 'd1' },
+    'sensor.nas_disk_2_status': { device_id: 'd2' }, 'binary_sensor.nas_disk_2_exceeded_max_bad_sectors': { device_id: 'd2' },
+  };
+  const nasCfg = { appliance_type: 'network', state_entity: 'device_tracker.nas', disk1_entity: 'sensor.nas_disk_1_status', disk2_entity: 'sensor.nas_disk_2_status' };
+  const nasH = netBuild(nasCfg, syno, synoEnt);
+  check('reseau : disque sain, disque a surveiller', leds(nasH).join(' '), 'd-ok d-warn');
+  check('reseau : un disque a surveiller se dit', stateLine(nasH), 'Disk to watch');
+  const crashed = netBuild(nasCfg, { ...syno, 'sensor.nas_disk_1_status': s('crashed') }, synoEnt);
+  check('reseau : un disque en panne met en alerte', stateLine(crashed), 'Alert');
+  check('reseau : la panne passe avant l\'avertissement', leds(crashed).join(' '), 'd-fail d-warn');
+  const one = netBuild({ ...nasCfg, disk2_entity: undefined, bays: '2' }, syno, synoEnt);
+  check('reseau : baie vide sans tiroir', count(one, /class="nt-tray"/g), 1);
+  check('reseau : sa diode reste eteinte', leds(one).join(' '), 'd-ok d-empty');
+  const lone = netBuild({ appliance_type: 'network', network_layout: 'nas', state_entity: 'binary_sensor.up', disk1_entity: 'sensor.left' },
+    { 'binary_sensor.up': s('on'), 'sensor.left': s('normal'), 'binary_sensor.worn': s('on', { device_class: 'safety' }) },
+    { 'sensor.left': { device_id: 'dl' }, 'binary_sensor.worn': { device_id: 'dl' } });
+  check('reseau : un etat sans appareil lit quand meme le disque', leds(lone)[0], 'd-warn');
+  check('reseau : sans disque les baies suivent l\'activite', leds(draw({ network_layout: 'nas' })).join(' '), 'd-gen d-gen');
+
+  // Disks named on the device itself: Unraid asleep, UGREEN reading.
+  const flat = {
+    'binary_sensor.up': s('on'),
+    'sensor.tower_disk1_temperature': s(30, { device_class: 'temperature', spinning: false }),
+    'sensor.tower_disk2_temperature': s(38, { device_class: 'temperature' }),
+    'sensor.tower_disk2_read_rate': rate(4, 'MB/s'),
+    'sensor.tower_disk2_write_rate': rate(0, 'MB/s'),
+  };
+  const flatH = render({ appliance_type: 'network', network_layout: 'nas', state_entity: 'binary_sensor.up',
+    disk1_entity: 'sensor.tower_disk1_temperature', disk2_entity: 'sensor.tower_disk2_temperature' }, flat);
+  check('reseau : disque endormi, disque qui lit', leds(flatH).join(' '), 'd-sleep d-busy');
+  check('reseau : un disque qui lit, c\'est de l\'activite', stateLine(flatH), 'Busy');
+
+  // The editor suggests it all from a Synology seen through a router's tracker.
+  {
+    const states = {
+      ...syno,
+      'sensor.nas_cpu_utilization_total': pctS(6), 'sensor.nas_cpu_utilization_user': pctS(3),
+      'sensor.nas_memory_usage_real': pctS(51), 'sensor.nas_memory_available_swap': s(1751, { unit_of_measurement: 'MB' }),
+      'sensor.nas_download_throughput': rate(2.3, 'kB/s'), 'sensor.nas_upload_throughput': s(0.3, { unit_of_measurement: 'kB/s' }),
+      'sensor.nas_temperature': s(40, { device_class: 'temperature', unit_of_measurement: '°C' }),
+      'binary_sensor.nas_security_status': s('off', { device_class: 'safety' }),
+      'sensor.nas_volume_1_volume_used': pctS(61.4),
+    };
+    const ents = { ...synoEnt };
+    for (const id of ['sensor.nas_cpu_utilization_total', 'sensor.nas_cpu_utilization_user', 'sensor.nas_memory_usage_real',
+      'sensor.nas_memory_available_swap', 'sensor.nas_download_throughput', 'sensor.nas_upload_throughput', 'sensor.nas_temperature',
+      'binary_sensor.nas_security_status']) ents[id] = { device_id: 'nas' };
+    ents['sensor.nas_volume_1_volume_used'] = { device_id: 'v1' };
+    const devices = { trk: { name: 'NAS' }, nas: { name: 'NAS' }, d1: { name: 'NAS (Disk 1)', via_device_id: 'nas' },
+      d2: { name: 'NAS (Disk 2)', via_device_id: 'nas' }, v1: { name: 'NAS (Volume 1)', via_device_id: 'nas' } };
+    const ed = new Editor();
+    ed.setConfig({ type: 'custom:ha-appliance-card', appliance_type: 'network', state_entity: 'device_tracker.nas' });
+    ed.hass = netHass(states, ents, devices);
+    const sug = ed.events.at(-1)?.detail?.config || {};
+    check('suggestion reseau : le processeur total', sug.cpu_entity, 'sensor.nas_cpu_utilization_total');
+    check('suggestion reseau : la memoire, pas le swap', sug.memory_entity, 'sensor.nas_memory_usage_real');
+    check('suggestion reseau : le volume', sug.volume_entity, 'sensor.nas_volume_1_volume_used');
+    check('suggestion reseau : le debit descendant', sug.download_entity, 'sensor.nas_download_throughput');
+    check('suggestion reseau : le debit montant', sug.upload_entity, 'sensor.nas_upload_throughput');
+    check('suggestion reseau : la temperature du NAS', sug.temperature_entity, 'sensor.nas_temperature');
+    check('suggestion reseau : l\'alerte', sug.problem_entity, 'binary_sensor.nas_security_status');
+    check('suggestion reseau : le disque 1 par son etat', sug.disk1_entity, 'sensor.nas_disk_1_status');
+    check('suggestion reseau : le disque 2', sug.disk2_entity, 'sensor.nas_disk_2_status');
+    check('suggestion reseau : pas de troisieme disque', sug.disk3_entity, undefined);
+  }
+
+  // The editor: the model, then the ports of a switch or the bays of a NAS.
+  const edSw = markup(newEditor({ state_entity: 'binary_sensor.up', appliance_type: 'network', network_layout: 'switch' }));
+  check('editeur reseau : le modele', /data-field="network_layout"/.test(edSw), true);
+  check('editeur reseau : les ports du switch', /data-field="switch_ports"/.test(edSw), true);
+  check('editeur reseau : pas de baies sur un switch', /data-field="bays"/.test(edSw), false);
+  const edNas = markup(newEditor({ state_entity: 'binary_sensor.up', appliance_type: 'network', network_layout: 'nas' }));
+  check('editeur reseau : les baies du NAS', /data-field="bays"/.test(edNas), true);
+  for (const f of ['download_entity', 'cpu_entity', 'volume_entity', 'ports_entity', 'problem_entity', 'disk1_entity', 'disk4_entity'])
+    check(`editeur reseau : ${f}`, edNas.includes(`data-toggle="${f}"`), true);
+  check('editeur reseau : pas de delai d\'arret', /power_off_delay/.test(edNas), false);
+  check('editeur : pas de modele reseau ailleurs', /network_layout/.test(markup(newEditor({ state_entity: 'sensor.w', appliance_type: 'washer' }))), false);
 }
 
 report();
