@@ -1,4 +1,4 @@
-const CARD_VERSION = "2.31.0";
+const CARD_VERSION = "2.32.0";
 
 console.info(
   "%c HA-APPLIANCE-CARD %c v" + CARD_VERSION + " ",
@@ -116,7 +116,7 @@ const T = {
     language: "Language", language_auto: "Follow Home Assistant",
     illustration_color: "Appliance colour", color_auto: "Follow the theme",
     color_white: "White", color_grey: "Grey", color_black: "Black", color_red: "Dark red",
-    controls_activation: "Controls", activation_tap: "Tap to run", activation_hold: "Hold to run", activation_off: "Locked (hold opens the entity)",
+    controls_activation: "Controls", activation_tap: "Tap to run", activation_hold: "Hold to run", activation_confirm: "Tap twice to confirm", confirm_again: "Tap again to confirm", activation_off: "Locked (hold opens the entity)",
     type_water_heater: "Water heater", type_boiler: "Boiler", type_heat_pump: "Heat pump",
     boiler_space_heating: "Heating", boiler_hot_water: "Hot water", boiler_burner: "Burner on", boiler_starting: "Ignition", boiler_waiting: "Waiting", hp_cooling: "Cooling", hp_defrost: "Defrosting",
     section_space_heating: "Central heating indicator", section_hot_water: "Hot water indicator", section_flow_temperature: "Flow temperature", section_heat_output: "Heat output", section_cop: "Coefficient of performance (COP)", section_outdoor_temperature: "Outdoor temperature",
@@ -268,7 +268,7 @@ const T = {
     language: "Langue", language_auto: "Suivre Home Assistant",
     illustration_color: "Couleur de l'appareil", color_auto: "Suivre le th\u00e8me",
     color_white: "Blanc", color_grey: "Gris", color_black: "Noir", color_red: "Rouge fonc\u00e9",
-    controls_activation: "Commandes", activation_tap: "Appui court pour lancer", activation_hold: "Appui long pour lancer", activation_off: "Verrouill\u00e9es (appui long ouvre l'entit\u00e9)",
+    controls_activation: "Commandes", activation_tap: "Appui court pour lancer", activation_hold: "Appui long pour lancer", activation_confirm: "Deux appuis pour confirmer", confirm_again: "Appuyez encore pour confirmer", activation_off: "Verrouill\u00e9es (appui long ouvre l'entit\u00e9)",
     type_water_heater: "Chauffe-eau", type_boiler: "Chaudi\u00e8re", type_heat_pump: "Pompe \u00e0 chaleur",
     boiler_space_heating: "Chauffage", boiler_hot_water: "Eau chaude", boiler_burner: "Br\u00fbleur allum\u00e9", boiler_starting: "Allumage", boiler_waiting: "En attente", hp_cooling: "Rafra\u00eechissement", hp_defrost: "D\u00e9givrage",
     section_space_heating: "Indicateur de chauffage", section_hot_water: "Indicateur d'eau chaude", section_flow_temperature: "Temp\u00e9rature de d\u00e9part", section_heat_output: "Chaleur produite", section_cop: "Coefficient de performance (COP)", section_outdoor_temperature: "Temp\u00e9rature ext\u00e9rieure",
@@ -420,7 +420,7 @@ const T = {
     language: "\u042f\u0437\u044b\u043a", language_auto: "\u0421\u043b\u0435\u0434\u043e\u0432\u0430\u0442\u044c Home Assistant",
     illustration_color: "\u0426\u0432\u0435\u0442 \u043f\u0440\u0438\u0431\u043e\u0440\u0430", color_auto: "\u041a\u0430\u043a \u0432 \u0442\u0435\u043c\u0435",
     color_white: "\u0411\u0435\u043b\u044b\u0439", color_grey: "\u0421\u0435\u0440\u044b\u0439", color_black: "\u0427\u0451\u0440\u043d\u044b\u0439", color_red: "\u0422\u0451\u043c\u043d\u043e-\u043a\u0440\u0430\u0441\u043d\u044b\u0439",
-    controls_activation: "\u041a\u043d\u043e\u043f\u043a\u0438 \u0443\u043f\u0440\u0430\u0432\u043b\u0435\u043d\u0438\u044f", activation_tap: "\u041d\u0430\u0436\u0430\u0442\u0438\u0435 \u0437\u0430\u043f\u0443\u0441\u043a\u0430\u0435\u0442", activation_hold: "\u0414\u043e\u043b\u0433\u043e\u0435 \u043d\u0430\u0436\u0430\u0442\u0438\u0435 \u0437\u0430\u043f\u0443\u0441\u043a\u0430\u0435\u0442", activation_off: "\u0417\u0430\u0431\u043b\u043e\u043a\u0438\u0440\u043e\u0432\u0430\u043d\u044b (\u0434\u043e\u043b\u0433\u043e\u0435 \u043d\u0430\u0436\u0430\u0442\u0438\u0435 \u043e\u0442\u043a\u0440\u044b\u0432\u0430\u0435\u0442 \u043e\u0431\u044a\u0435\u043a\u0442)",
+    controls_activation: "\u041a\u043d\u043e\u043f\u043a\u0438 \u0443\u043f\u0440\u0430\u0432\u043b\u0435\u043d\u0438\u044f", activation_tap: "\u041d\u0430\u0436\u0430\u0442\u0438\u0435 \u0437\u0430\u043f\u0443\u0441\u043a\u0430\u0435\u0442", activation_hold: "\u0414\u043e\u043b\u0433\u043e\u0435 \u043d\u0430\u0436\u0430\u0442\u0438\u0435 \u0437\u0430\u043f\u0443\u0441\u043a\u0430\u0435\u0442", activation_confirm: "\u0414\u0432\u0430 \u043d\u0430\u0436\u0430\u0442\u0438\u044f \u0434\u043b\u044f \u043f\u043e\u0434\u0442\u0432\u0435\u0440\u0436\u0434\u0435\u043d\u0438\u044f", confirm_again: "\u041d\u0430\u0436\u043c\u0438\u0442\u0435 \u0435\u0449\u0451 \u0440\u0430\u0437 \u0434\u043b\u044f \u043f\u043e\u0434\u0442\u0432\u0435\u0440\u0436\u0434\u0435\u043d\u0438\u044f", activation_off: "\u0417\u0430\u0431\u043b\u043e\u043a\u0438\u0440\u043e\u0432\u0430\u043d\u044b (\u0434\u043e\u043b\u0433\u043e\u0435 \u043d\u0430\u0436\u0430\u0442\u0438\u0435 \u043e\u0442\u043a\u0440\u044b\u0432\u0430\u0435\u0442 \u043e\u0431\u044a\u0435\u043a\u0442)",
     type_water_heater: "\u0412\u043e\u0434\u043e\u043d\u0430\u0433\u0440\u0435\u0432\u0430\u0442\u0435\u043b\u044c", type_boiler: "\u041a\u043e\u0442\u0451\u043b", type_heat_pump: "\u0422\u0435\u043f\u043b\u043e\u0432\u043e\u0439 \u043d\u0430\u0441\u043e\u0441",
     boiler_space_heating: "\u041e\u0442\u043e\u043f\u043b\u0435\u043d\u0438\u0435", boiler_hot_water: "\u0413\u043e\u0440\u044f\u0447\u0430\u044f \u0432\u043e\u0434\u0430", boiler_burner: "\u0413\u043e\u0440\u0435\u043b\u043a\u0430 \u0432\u043a\u043b\u044e\u0447\u0435\u043d\u0430", boiler_starting: "\u0420\u043e\u0437\u0436\u0438\u0433", boiler_waiting: "\u041f\u0430\u0443\u0437\u0430 \u0433\u043e\u0440\u0435\u043b\u043a\u0438", hp_cooling: "\u041e\u0445\u043b\u0430\u0436\u0434\u0435\u043d\u0438\u0435", hp_defrost: "\u041e\u0442\u0442\u0430\u0439\u043a\u0430",
     section_space_heating: "\u0418\u043d\u0434\u0438\u043a\u0430\u0442\u043e\u0440 \u043e\u0442\u043e\u043f\u043b\u0435\u043d\u0438\u044f", section_hot_water: "\u0418\u043d\u0434\u0438\u043a\u0430\u0442\u043e\u0440 \u0433\u043e\u0440\u044f\u0447\u0435\u0439 \u0432\u043e\u0434\u044b", section_flow_temperature: "\u0422\u0435\u043c\u043f\u0435\u0440\u0430\u0442\u0443\u0440\u0430 \u043f\u043e\u0434\u0430\u0447\u0438", section_heat_output: "\u0422\u0435\u043f\u043b\u043e\u0432\u0430\u044f \u043c\u043e\u0449\u043d\u043e\u0441\u0442\u044c", section_cop: "\u041a\u043e\u044d\u0444\u0444\u0438\u0446\u0438\u0435\u043d\u0442 \u044d\u0444\u0444\u0435\u043a\u0442\u0438\u0432\u043d\u043e\u0441\u0442\u0438 (COP)", section_outdoor_temperature: "\u041d\u0430\u0440\u0443\u0436\u043d\u0430\u044f \u0442\u0435\u043c\u043f\u0435\u0440\u0430\u0442\u0443\u0440\u0430",
@@ -572,7 +572,7 @@ const T = {
     language: "Sprache", language_auto: "Home Assistant folgen",
     illustration_color: "Ger\u00e4tefarbe", color_auto: "Theme folgen",
     color_white: "Wei\u00df", color_grey: "Grau", color_black: "Schwarz", color_red: "Dunkelrot",
-    controls_activation: "Bedienelemente", activation_tap: "Tippen zum Ausf\u00fchren", activation_hold: "Gedr\u00fcckt halten zum Ausf\u00fchren", activation_off: "Gesperrt (Halten \u00f6ffnet die Entit\u00e4t)",
+    controls_activation: "Bedienelemente", activation_tap: "Tippen zum Ausf\u00fchren", activation_hold: "Gedr\u00fcckt halten zum Ausf\u00fchren", activation_confirm: "Zweimal tippen zum Best\u00e4tigen", confirm_again: "Zum Best\u00e4tigen erneut tippen", activation_off: "Gesperrt (Halten \u00f6ffnet die Entit\u00e4t)",
     type_water_heater: "Warmwasserspeicher", type_boiler: "Heizkessel", type_heat_pump: "W\u00e4rmepumpe",
     boiler_space_heating: "Heizung", boiler_hot_water: "Warmwasser", boiler_burner: "Brenner an", boiler_starting: "Z\u00fcndung", boiler_waiting: "Wartezeit", hp_cooling: "K\u00fchlen", hp_defrost: "Abtauen",
     section_space_heating: "Heizungsanzeige", section_hot_water: "Warmwasseranzeige", section_flow_temperature: "Vorlauftemperatur", section_heat_output: "Heizleistung", section_cop: "Leistungszahl (COP)", section_outdoor_temperature: "Au\u00dfentemperatur",
@@ -724,7 +724,7 @@ const T = {
     language: "Idioma", language_auto: "Seguir a Home Assistant",
     illustration_color: "Color del aparato", color_auto: "Seguir el tema",
     color_white: "Blanco", color_grey: "Gris", color_black: "Negro", color_red: "Rojo oscuro",
-    controls_activation: "Controles", activation_tap: "Tocar para ejecutar", activation_hold: "Mantener pulsado para ejecutar", activation_off: "Bloqueados (mantener pulsado abre la entidad)",
+    controls_activation: "Controles", activation_tap: "Tocar para ejecutar", activation_hold: "Mantener pulsado para ejecutar", activation_confirm: "Dos toques para confirmar", confirm_again: "Toque de nuevo para confirmar", activation_off: "Bloqueados (mantener pulsado abre la entidad)",
     type_water_heater: "Termo", type_boiler: "Caldera", type_heat_pump: "Bomba de calor",
     boiler_space_heating: "Calefacci\u00f3n", boiler_hot_water: "Agua caliente", boiler_burner: "Quemador encendido", boiler_starting: "Ignici\u00f3n", boiler_waiting: "Pausa del quemador", hp_cooling: "Refrigeraci\u00f3n", hp_defrost: "Desescarche",
     section_space_heating: "Indicador de calefacci\u00f3n", section_hot_water: "Indicador de agua caliente", section_flow_temperature: "Temperatura de impulsi\u00f3n", section_heat_output: "Calor producido", section_cop: "Coeficiente de rendimiento (COP)", section_outdoor_temperature: "Temperatura exterior",
@@ -876,7 +876,7 @@ const T = {
     language: "Lingua", language_auto: "Segui Home Assistant",
     illustration_color: "Colore dell'elettrodomestico", color_auto: "Segui il tema",
     color_white: "Bianco", color_grey: "Grigio", color_black: "Nero", color_red: "Rosso scuro",
-    controls_activation: "Comandi", activation_tap: "Tocca per avviare", activation_hold: "Tieni premuto per avviare", activation_off: "Bloccati (tenere premuto apre l'entit\u00e0)",
+    controls_activation: "Comandi", activation_tap: "Tocca per avviare", activation_hold: "Tieni premuto per avviare", activation_confirm: "Due tocchi per confermare", confirm_again: "Tocca di nuovo per confermare", activation_off: "Bloccati (tenere premuto apre l'entit\u00e0)",
     type_water_heater: "Scaldabagno", type_boiler: "Caldaia", type_heat_pump: "Pompa di calore",
     boiler_space_heating: "Riscaldamento", boiler_hot_water: "Acqua calda", boiler_burner: "Bruciatore acceso", boiler_starting: "Accensione", boiler_waiting: "Pausa bruciatore", hp_cooling: "Raffrescamento", hp_defrost: "Sbrinamento",
     section_space_heating: "Indicatore riscaldamento", section_hot_water: "Indicatore acqua calda", section_flow_temperature: "Temperatura di mandata", section_heat_output: "Calore prodotto", section_cop: "Coefficiente di prestazione (COP)", section_outdoor_temperature: "Temperatura esterna",
@@ -1028,7 +1028,7 @@ const T = {
     language: "Taal", language_auto: "Home Assistant volgen",
     illustration_color: "Kleur van het apparaat", color_auto: "Thema volgen",
     color_white: "Wit", color_grey: "Grijs", color_black: "Zwart", color_red: "Donkerrood",
-    controls_activation: "Bediening", activation_tap: "Tikken om uit te voeren", activation_hold: "Ingedrukt houden om uit te voeren", activation_off: "Vergrendeld (ingedrukt houden opent de entiteit)",
+    controls_activation: "Bediening", activation_tap: "Tikken om uit te voeren", activation_hold: "Ingedrukt houden om uit te voeren", activation_confirm: "Twee keer tikken om te bevestigen", confirm_again: "Tik nogmaals om te bevestigen", activation_off: "Vergrendeld (ingedrukt houden opent de entiteit)",
     type_water_heater: "Boiler", type_boiler: "Cv-ketel", type_heat_pump: "Warmtepomp",
     boiler_space_heating: "Verwarming", boiler_hot_water: "Warm water", boiler_burner: "Brander aan", boiler_starting: "Ontsteking", boiler_waiting: "Wachten", hp_cooling: "Koelen", hp_defrost: "Ontdooien",
     section_space_heating: "Cv-indicator", section_hot_water: "Warmwaterindicator", section_flow_temperature: "Aanvoertemperatuur", section_heat_output: "Warmteafgifte", section_cop: "Prestatieco\u00ebffici\u00ebnt (COP)", section_outdoor_temperature: "Buitentemperatuur",
@@ -1180,7 +1180,7 @@ const T = {
     language: "Idioma", language_auto: "Seguir o Home Assistant",
     illustration_color: "Cor do eletrodom\u00e9stico", color_auto: "Seguir o tema",
     color_white: "Branco", color_grey: "Cinzento", color_black: "Preto", color_red: "Vermelho escuro",
-    controls_activation: "Comandos", activation_tap: "Tocar para executar", activation_hold: "Manter premido para executar", activation_off: "Bloqueados (manter premido abre a entidade)",
+    controls_activation: "Comandos", activation_tap: "Tocar para executar", activation_hold: "Manter premido para executar", activation_confirm: "Dois toques para confirmar", confirm_again: "Toque novamente para confirmar", activation_off: "Bloqueados (manter premido abre a entidade)",
     type_water_heater: "Termoacumulador", type_boiler: "Caldeira", type_heat_pump: "Bomba de calor",
     boiler_space_heating: "Aquecimento", boiler_hot_water: "\u00c1gua quente", boiler_burner: "Queimador ligado", boiler_starting: "Igni\u00e7\u00e3o", boiler_waiting: "Pausa do queimador", hp_cooling: "Arrefecimento", hp_defrost: "Descongela\u00e7\u00e3o",
     section_space_heating: "Indicador de aquecimento central", section_hot_water: "Indicador de \u00e1gua quente", section_flow_temperature: "Temperatura de ida", section_heat_output: "Calor produzido", section_cop: "Coeficiente de desempenho (COP)", section_outdoor_temperature: "Temperatura exterior",
@@ -1332,7 +1332,7 @@ const T = {
     language: "Spr\u00e5k", language_auto: "F\u00f6lj Home Assistant",
     illustration_color: "Apparatens f\u00e4rg", color_auto: "F\u00f6lj temat",
     color_white: "Vit", color_grey: "Gr\u00e5", color_black: "Svart", color_red: "M\u00f6rkr\u00f6d",
-    controls_activation: "Kontroller", activation_tap: "Tryck f\u00f6r att k\u00f6ra", activation_hold: "H\u00e5ll in f\u00f6r att k\u00f6ra", activation_off: "L\u00e5sta (h\u00e5ll in \u00f6ppnar entiteten)",
+    controls_activation: "Kontroller", activation_tap: "Tryck f\u00f6r att k\u00f6ra", activation_hold: "H\u00e5ll in f\u00f6r att k\u00f6ra", activation_confirm: "Tryck tv\u00e5 g\u00e5nger f\u00f6r att bekr\u00e4fta", confirm_again: "Tryck igen f\u00f6r att bekr\u00e4fta", activation_off: "L\u00e5sta (h\u00e5ll in \u00f6ppnar entiteten)",
     type_water_heater: "Varmvattenberedare", type_boiler: "Panna", type_heat_pump: "V\u00e4rmepump",
     boiler_space_heating: "Uppv\u00e4rmning", boiler_hot_water: "Varmvatten", boiler_burner: "Br\u00e4nnare p\u00e5", boiler_starting: "T\u00e4ndning", boiler_waiting: "V\u00e4ntar", hp_cooling: "Kylning", hp_defrost: "Avfrostning",
     section_space_heating: "Indikator f\u00f6r uppv\u00e4rmning", section_hot_water: "Indikator f\u00f6r varmvatten", section_flow_temperature: "Framledningstemperatur", section_heat_output: "V\u00e4rmeeffekt", section_cop: "V\u00e4rmefaktor (COP)", section_outdoor_temperature: "Utomhustemperatur",
@@ -1484,7 +1484,7 @@ const T = {
     language: "Spr\u00e5k", language_auto: "F\u00f8lg Home Assistant",
     illustration_color: "Farge p\u00e5 apparatet", color_auto: "F\u00f8lg temaet",
     color_white: "Hvit", color_grey: "Gr\u00e5", color_black: "Svart", color_red: "M\u00f8rker\u00f8d",
-    controls_activation: "Kontroller", activation_tap: "Trykk for \u00e5 kj\u00f8re", activation_hold: "Hold inne for \u00e5 kj\u00f8re", activation_off: "L\u00e5st (hold inne \u00e5pner enheten)",
+    controls_activation: "Kontroller", activation_tap: "Trykk for \u00e5 kj\u00f8re", activation_hold: "Hold inne for \u00e5 kj\u00f8re", activation_confirm: "Trykk to ganger for \u00e5 bekrefte", confirm_again: "Trykk igjen for \u00e5 bekrefte", activation_off: "L\u00e5st (hold inne \u00e5pner enheten)",
     type_water_heater: "Varmtvannsbereder", type_boiler: "Kjele", type_heat_pump: "Varmepumpe",
     boiler_space_heating: "Oppvarming", boiler_hot_water: "Varmtvann", boiler_burner: "Brenner p\u00e5", boiler_starting: "Tenning", boiler_waiting: "Venter", hp_cooling: "Kj\u00f8ling", hp_defrost: "Avriming",
     section_space_heating: "Indikator for oppvarming", section_hot_water: "Indikator for varmtvann", section_flow_temperature: "Turtemperatur", section_heat_output: "Varmeeffekt", section_cop: "Effektfaktor (COP)", section_outdoor_temperature: "Utetemperatur",
@@ -1636,7 +1636,7 @@ const T = {
     language: "Sprog", language_auto: "F\u00f8lg Home Assistant",
     illustration_color: "Apparatets farve", color_auto: "F\u00f8lg temaet",
     color_white: "Hvid", color_grey: "Gr\u00e5", color_black: "Sort", color_red: "M\u00f8rker\u00f8d",
-    controls_activation: "Betjening", activation_tap: "Tryk for at k\u00f8re", activation_hold: "Hold nede for at k\u00f8re", activation_off: "L\u00e5st (hold nede \u00e5bner enheden)",
+    controls_activation: "Betjening", activation_tap: "Tryk for at k\u00f8re", activation_hold: "Hold nede for at k\u00f8re", activation_confirm: "Tryk to gange for at bekr\u00e6fte", confirm_again: "Tryk igen for at bekr\u00e6fte", activation_off: "L\u00e5st (hold nede \u00e5bner enheden)",
     type_water_heater: "Varmtvandsbeholder", type_boiler: "Kedel", type_heat_pump: "Varmepumpe",
     boiler_space_heating: "Opvarmning", boiler_hot_water: "Varmt vand", boiler_burner: "Br\u00e6nder t\u00e6ndt", boiler_starting: "T\u00e6nding", boiler_waiting: "Venter", hp_cooling: "K\u00f8ling", hp_defrost: "Afrimning",
     section_space_heating: "Indikator for opvarmning", section_hot_water: "Indikator for varmt vand", section_flow_temperature: "Freml\u00f8bstemperatur", section_heat_output: "Varmeydelse", section_cop: "Effektfaktor (COP)", section_outdoor_temperature: "Udetemperatur",
@@ -1788,7 +1788,7 @@ const T = {
     language: "J\u0119zyk", language_auto: "Zgodnie z Home Assistant",
     illustration_color: "Kolor urz\u0105dzenia", color_auto: "Zgodnie z motywem",
     color_white: "Bia\u0142y", color_grey: "Szary", color_black: "Czarny", color_red: "Ciemnoczerwony",
-    controls_activation: "Sterowanie", activation_tap: "Dotknij, aby uruchomi\u0107", activation_hold: "Przytrzymaj, aby uruchomi\u0107", activation_off: "Zablokowane (przytrzymanie otwiera encj\u0119)",
+    controls_activation: "Sterowanie", activation_tap: "Dotknij, aby uruchomi\u0107", activation_hold: "Przytrzymaj, aby uruchomi\u0107", activation_confirm: "Dwa dotkni\u0119cia, aby potwierdzi\u0107", confirm_again: "Dotknij ponownie, aby potwierdzi\u0107", activation_off: "Zablokowane (przytrzymanie otwiera encj\u0119)",
     type_water_heater: "Podgrzewacz wody", type_boiler: "Kocio\u0142", type_heat_pump: "Pompa ciep\u0142a",
     boiler_space_heating: "Ogrzewanie", boiler_hot_water: "Ciep\u0142a woda", boiler_burner: "Palnik w\u0142\u0105czony", boiler_starting: "Zap\u0142on", boiler_waiting: "Oczekiwanie", hp_cooling: "Ch\u0142odzenie", hp_defrost: "Odszranianie",
     section_space_heating: "Wska\u017anik ogrzewania", section_hot_water: "Wska\u017anik ciep\u0142ej wody", section_flow_temperature: "Temperatura zasilania", section_heat_output: "Moc grzewcza", section_cop: "Wsp\u00f3\u0142czynnik efektywno\u015bci (COP)", section_outdoor_temperature: "Temperatura zewn\u0119trzna",
@@ -1940,7 +1940,7 @@ const T = {
     language: "\u8bed\u8a00", language_auto: "\u8ddf\u968f Home Assistant",
     illustration_color: "\u8bbe\u5907\u989c\u8272", color_auto: "\u8ddf\u968f\u4e3b\u9898",
     color_white: "\u767d\u8272", color_grey: "\u7070\u8272", color_black: "\u9ed1\u8272", color_red: "\u6df1\u7ea2\u8272",
-    controls_activation: "\u63a7\u5236\u6309\u94ae", activation_tap: "\u70b9\u51fb\u6267\u884c", activation_hold: "\u957f\u6309\u6267\u884c", activation_off: "\u9501\u5b9a\uff08\u957f\u6309\u6253\u5f00\u5b9e\u4f53\uff09",
+    controls_activation: "\u63a7\u5236\u6309\u94ae", activation_tap: "\u70b9\u51fb\u6267\u884c", activation_hold: "\u957f\u6309\u6267\u884c", activation_confirm: "\u70b9\u51fb\u4e24\u6b21\u4ee5\u786e\u8ba4", confirm_again: "\u518d\u6b21\u70b9\u51fb\u4ee5\u786e\u8ba4", activation_off: "\u9501\u5b9a\uff08\u957f\u6309\u6253\u5f00\u5b9e\u4f53\uff09",
     type_water_heater: "\u70ed\u6c34\u5668", type_boiler: "\u9505\u7089", type_heat_pump: "\u70ed\u6cf5",
     boiler_space_heating: "\u4f9b\u6696", boiler_hot_water: "\u70ed\u6c34", boiler_burner: "\u71c3\u70e7\u5668\u5df2\u70b9\u706b", boiler_starting: "\u70b9\u706b\u4e2d", boiler_waiting: "\u7b49\u5f85\u4e2d", hp_cooling: "\u5236\u51b7", hp_defrost: "\u9664\u971c",
     section_space_heating: "\u4f9b\u6696\u6307\u793a", section_hot_water: "\u70ed\u6c34\u6307\u793a", section_flow_temperature: "\u4f9b\u6c34\u6e29\u5ea6", section_heat_output: "\u5236\u70ed\u91cf", section_cop: "\u80fd\u6548\u6bd4 (COP)", section_outdoor_temperature: "\u5ba4\u5916\u6e29\u5ea6",
@@ -2092,7 +2092,7 @@ const T = {
     language: "Jazyk", language_auto: "Podle Home Assistantu",
     illustration_color: "Barva spot\u0159ebi\u010de", color_auto: "Podle motivu",
     color_white: "B\u00edl\u00e1", color_grey: "\u0160ed\u00e1", color_black: "\u010cern\u00e1", color_red: "Tmav\u011b \u010derven\u00e1",
-    controls_activation: "Ovl\u00e1d\u00e1n\u00ed", activation_tap: "Klepnut\u00edm spustit", activation_hold: "Podr\u017een\u00edm spustit", activation_off: "Uzam\u010deno (podr\u017een\u00ed otev\u0159e entitu)",
+    controls_activation: "Ovl\u00e1d\u00e1n\u00ed", activation_tap: "Klepnut\u00edm spustit", activation_hold: "Podr\u017een\u00edm spustit", activation_confirm: "Dv\u011b klepnut\u00ed pro potvrzen\u00ed", confirm_again: "Klepn\u011bte znovu pro potvrzen\u00ed", activation_off: "Uzam\u010deno (podr\u017een\u00ed otev\u0159e entitu)",
     type_water_heater: "Oh\u0159\u00edva\u010d vody", type_boiler: "Kotel", type_heat_pump: "Tepeln\u00e9 \u010derpadlo",
     boiler_space_heating: "Topen\u00ed", boiler_hot_water: "Tepl\u00e1 voda", boiler_burner: "Ho\u0159\u00e1k zapnut", boiler_starting: "Zapalov\u00e1n\u00ed", boiler_waiting: "\u010cek\u00e1n\u00ed", hp_cooling: "Chlazen\u00ed", hp_defrost: "Odmrazov\u00e1n\u00ed",
     section_space_heating: "Indik\u00e1tor topen\u00ed", section_hot_water: "Indik\u00e1tor tepl\u00e9 vody", section_flow_temperature: "Teplota topn\u00e9 vody", section_heat_output: "Tepeln\u00fd v\u00fdkon", section_cop: "Topn\u00fd faktor (COP)", section_outdoor_temperature: "Venkovn\u00ed teplota",
@@ -2254,12 +2254,14 @@ function cycleFromHistory(entries, normOf) {
 
 // Home Assistant's own long press lasts half a second.
 const HOLD_MS = 500;
+// How long a control asking to be confirmed waits for the second tap.
+const CONFIRM_MS = 3000;
 // YAML reads a bare off as false (issue #28): the card takes it for the lock
 // it was meant to be, never for the default.
 function activationOf(v) {
   if (v === false) return "off";
   const s = String(v == null ? "" : v).trim().toLowerCase();
-  return s === "hold" || s === "off" ? s : "tap";
+  return s === "hold" || s === "off" || s === "confirm" ? s : "tap";
 }
 
 // The last cycle is looked for further back than a cycle in progress: a
@@ -9336,6 +9338,7 @@ class ApplianceCard extends HTMLElement {
     if (this._lcCloseTimer) clearTimeout(this._lcCloseTimer);
     this._lcCloseTimer = null;
     this._cancelHold();
+    this._disarm();
   }
 
   // Nothing changes on a plug that has stopped drawing, so nothing would
@@ -9525,6 +9528,30 @@ class ApplianceCard extends HTMLElement {
   // release would then land on a new one that knows nothing of the old timer.
   _wireControl(el, mode, entityId, run) {
     mode = activationOf(mode);
+    // "confirm": the first tap arms the control, a second one within three
+    // seconds runs it. The armed key outlives a redraw, so a state update
+    // between the two taps does not lose it.
+    if (mode === "confirm") {
+      const key = [entityId, el.getAttribute("data-option") || "", el.getAttribute("data-value") || ""].join("|");
+      if (this._armedKey === key && Date.now() < this._armedUntil) this._showArmed(el);
+      el.addEventListener("click", (ev) => {
+        if (ev && ev.stopPropagation) ev.stopPropagation();
+        if (this._armedKey === key && Date.now() < this._armedUntil) {
+          this._disarm();
+          run();
+          return;
+        }
+        this._disarm();
+        this._armedKey = key;
+        this._armedUntil = Date.now() + CONFIRM_MS;
+        this._armTimer = setTimeout(() => {
+          this._disarm();
+          this._render();
+        }, CONFIRM_MS);
+        this._render();
+      });
+      return;
+    }
     if (mode === "tap") {
       el.addEventListener("click", (ev) => {
         if (ev && ev.stopPropagation) ev.stopPropagation();
@@ -9544,6 +9571,19 @@ class ApplianceCard extends HTMLElement {
     // A long press on a phone would otherwise bring up the copy menu.
     el.addEventListener("contextmenu", (ev) => { if (ev && ev.preventDefault) ev.preventDefault(); });
     el.addEventListener("click", (ev) => { if (ev && ev.stopPropagation) ev.stopPropagation(); });
+  }
+
+  _showArmed(el) {
+    if (el.classList) el.classList.add("armed");
+    const icon = el.querySelector && el.querySelector("ha-icon");
+    if (icon) icon.setAttribute("icon", "mdi:check-bold");
+    el.setAttribute("title", t(this._hass, "confirm_again"));
+  }
+
+  _disarm() {
+    if (this._armTimer) clearTimeout(this._armTimer);
+    this._armTimer = null;
+    this._armedKey = null;
   }
 
   _cancelHold() {
@@ -11835,7 +11875,9 @@ class ApplianceCard extends HTMLElement {
       // editor does not offer it, since a menu long enough to hold every
       // icon of the card would be a menu nobody reads.
       .map((a) => (a.key && cfg[`${a.key}_icon`] ? { ...a, icon: cfg[`${a.key}_icon`] } : a))
-      .filter((a) => a.entity && !cap.readOnly);
+      // A fridge offers no cycle to drive, only its plug: the switch shows
+      // when one is set, and nothing else does.
+      .filter((a) => a.entity && (!cap.readOnly || a.key === "toggle"));
 
     const spinning = isActiveState(norm);
 
@@ -11977,6 +12019,13 @@ class ApplianceCard extends HTMLElement {
         }
         .action-btn:hover { background: var(--secondary-background-color, rgba(0,0,0,0.04)); }
         .action-btn.on { color: var(--primary-color, #03a9f4); border-color: var(--primary-color, #03a9f4); }
+        /* confirm: an armed control turns red and waits for its second tap. */
+        .armed, .action-btn.armed, .cmp-icons .armed {
+          color: #fff; background: var(--error-color, #f44336); border-color: var(--error-color, #f44336); border-radius: 50%;
+          animation: ac-armed 0.8s ease-in-out infinite alternate; animation-delay: var(--anim-offset, 0s);
+        }
+        @keyframes ac-armed { to { opacity: 0.65; } }
+        @media (prefers-reduced-motion: reduce) { .armed { animation-name: none; } }
         .action-btn ha-icon { --mdc-icon-size: 20px; }
         /* The compact modes. The name's line carries every icon, so none of
            them sits on top of anything. */
@@ -12565,7 +12614,7 @@ const SECTIONS = [
   // Any type: the on/off control. Named toggle_entity rather than
   // power_switch_entity so it cannot be confused with power_entity below,
   // which is the wattage meter.
-  { field: "toggle_entity", types: APPLIANCE_TYPES.filter((ty) => !caps(ty).readOnly), labelKey: "section_toggle", includeDomains: ACTION_DOMAINS.concat(["fan"]) },
+  { field: "toggle_entity", types: APPLIANCE_TYPES, labelKey: "section_toggle", includeDomains: ACTION_DOMAINS.concat(["fan"]) },
 
   // Any type: a plug's power meter, optionally driving the state itself.
   // A charger's threshold says when power flows: it stands in for a missing
@@ -13334,10 +13383,10 @@ class ApplianceCardEditor extends HTMLElement {
           })}
           ${CYCLE_TYPES.includes(this._type) ? this._row("done_alert", "done_alert", { type: "checkbox" }) : ""}
           ${this._row("state_show_raw", "state_show_raw", { type: "checkbox" })}
-          ${caps(this._type).readOnly ? "" : this._row("controls_activation", "controls_activation", {
+          ${caps(this._type).readOnly && !this._config.toggle_entity ? "" : this._row("controls_activation", "controls_activation", {
             type: "select",
             value: activationOf(this._config.controls_activation),
-            options: ["tap", "hold", "off"].map((v) => ({ value: v, label: t(hass, `activation_${v}`) })),
+            options: ["tap", "confirm", "hold", "off"].map((v) => ({ value: v, label: t(hass, `activation_${v}`) })),
           })}
           ${LAST_CYCLE_TYPES.includes(this._type) ? this._row("show_last_cycle", "show_last_cycle", { type: "checkbox" }) : ""}
         </div>

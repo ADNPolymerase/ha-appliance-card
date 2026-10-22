@@ -1903,7 +1903,10 @@ for (const id of ['sensor.cave_a_vin_etat', 'sensor.wine_cooler_status', 'binary
 // entity left in the YAML must not grow a button row.
 const frButtons = render(fridgeCfg({ fridge_temperature_entity: 'sensor.fr_t',
   toggle_entity: 'switch.ice', start_entity: 'switch.ice' }), FRIDGE);
-check('frigo : aucun bouton, meme avec des entites d\'action', actionBtns(frButtons).length, 0);
+check('frigo : seul l interrupteur, jamais les entites de cycle', actionBtns(frButtons).length, 1);
+check('frigo : le bouton garde est l interrupteur', /data-entity="switch.ice"[^>]*>|class="action-btn[^"]*"[^>]*data-entity="switch.ice"/.test(frButtons) && !/mdi:play"/.test(frButtons), true);
+check('frigo : sans interrupteur, aucun bouton',
+  actionBtns(render(fridgeCfg({ fridge_temperature_entity: 'sensor.fr_t', start_entity: 'switch.ice' }), FRIDGE)).length, 0);
 check('frigo : le lave-linge garde les siens',
   actionBtns(render({ appliance_type: 'washer', state_entity: 'sensor.w', start_entity: 'switch.ice' },
     { ...FRIDGE, 'sensor.w': { state: 'Running', attributes: {} } })).length, 1);
@@ -7147,8 +7150,59 @@ check('texte brut decoche : le libelle de la card',
 
   check('editeur : choix des commandes propose',
     /data-field="controls_activation"/.test(markup(newEditor({ state_entity: 'sensor.w', appliance_type: 'washer' }))), true);
-  check('editeur : pas sur un frigo',
+  check('editeur : pas sur un frigo sans interrupteur',
     /data-field="controls_activation"/.test(markup(newEditor({ state_entity: 'sensor.f', appliance_type: 'fridge' }))), false);
+  check('editeur : sur un frigo avec interrupteur',
+    /data-field="controls_activation"/.test(markup(newEditor({ state_entity: 'sensor.f', appliance_type: 'fridge', toggle_entity: 'switch.f' }))), true);
+  check('editeur : section interrupteur proposee sur un frigo',
+    /data-toggle="toggle_entity"/.test(markup(newEditor({ appliance_type: 'fridge' }))), true);
+  check('editeur : interrupteur du frigo decoche par defaut',
+    /data-toggle="toggle_entity"[^>]*checked/.test(markup(newEditor({ appliance_type: 'fridge' }))), false);
+  check('editeur : choix Confirmer propose', /<option value="confirm"/.test(markup(newEditor({ state_entity: 'sensor.w', appliance_type: 'washer' }))), true);
+  check('editeur : confirm selectionne', /<option value="confirm" selected/.test(markup(newEditor({ state_entity: 'sensor.w', appliance_type: 'washer', controls_activation: 'confirm' }))), true);
+  check('editeur : Confirmer traduit',
+    markup(newEditor({ state_entity: 'sensor.w', appliance_type: 'washer', language: 'fr' })).includes('Deux appuis pour confirmer'), true);
+
+  // confirm: a first tap arms, a second within three seconds runs.
+  const cf = mk('confirm');
+  fire(cf.btn(), 'click', ev);
+  check('confirmer : un tap ne fait rien', cf.calls.length, 0);
+  check('confirmer : le bouton est arme', cf.c._armedKey, 'button.stop||');
+  fire(cf.btn(), 'click', ev);
+  check('confirmer : le second tap actionne', cf.calls.at(-1)?.service, 'press');
+  check('confirmer : desarme apres', cf.c._armedKey, null);
+  fire(cf.btn(), 'click', ev);
+  check('confirmer : un 3e tap rearme sans actionner', cf.calls.length, 1);
+  cf.c._armedUntil = Date.now() - 1;
+  fire(cf.btn(), 'click', ev);
+  check('confirmer : delai passe, le tap rearme au lieu d actionner', cf.calls.length, 1);
+  cf.c.disconnectedCallback();
+  check('confirmer : desarme au retrait', cf.c._armedKey, null);
+  // The armed key survives a redraw: the second tap lands on a new node.
+  const cr = mk('confirm');
+  fire(cr.btn(), 'click', ev);
+  cr.c._root.__qsa = null;
+  cr.c._render();
+  fire(cr.c._root.querySelectorAll('.action-btn, .light-badge').find(n => n.getAttribute('data-entity') === 'button.stop'), 'click', ev);
+  check('confirmer : un redessin entre les deux taps ne perd rien', cr.calls.at(-1)?.service, 'press');
+  cr.c.disconnectedCallback();
+  // Two controls do not confirm each other.
+  const cc = mk('confirm');
+  fire(cc.btn(), 'click', ev);
+  const ccn = cc.c._root.querySelectorAll('[data-corner]').find(n => n.getAttribute('data-corner') === 'switch.lock');
+  fire(ccn, 'click', ev);
+  check('confirmer : un autre bouton ne valide pas le premier', cc.calls.length, 0);
+  fire(ccn, 'click', ev);
+  check('confirmer : le coin se confirme lui-meme', cc.calls.at(-1)?.service, 'toggle');
+  cc.c.disconnectedCallback();
+  contains('confirmer : style rouge', render({ appliance_type: 'washer', state_entity: 'sensor.w', controls_activation: 'confirm' }, ST), '@keyframes ac-armed');
+  {
+    const t0 = mk('confirm');
+    fire(t0.btn(), 'click', ev);
+    await wait(10);
+    check('confirmer : un timer de 3 s est pose', !!t0.c._armTimer, true);
+    t0.c.disconnectedCallback();
+  }
 }
 
 // =============================================================================
