@@ -799,6 +799,24 @@ const rbtMower = robot("Landroid", "lawn_mower.landroid", "mowing", {}, { batter
 const rbtRain = robot("Landroid", "lawn_mower.landroid", "docked", {}, { battery_entity: "sensor.landroid_battery", robot_status_entity: "sensor.landroid_status", robot_shelter: true },
   [st("sensor.landroid_battery", 100, { unit_of_measurement: "%" }), st("sensor.landroid_status", "rain_delayed")]);
 
+// Pool pumps: filtering, injecting chlorine, backwashing, frost protection,
+// at rest with the light on, and in error.
+const POOL_BASE = { appliance_type: "pool_pump", state_entity: "binary_sensor.pool_pump", water_temperature_entity: "sensor.pool_water",
+  ph_entity: "sensor.pool_ph", redox_entity: "sensor.pool_redox", light_entity: "switch.pool_light" };
+const POOL_STATES = (pump, light = "off") => [st("binary_sensor.pool_pump", pump), st("switch.pool_light", light),
+  st("sensor.pool_water", 24.6, { unit_of_measurement: "°C" }), st("sensor.pool_ph", 7.42, { unit_of_measurement: "pH" }),
+  st("sensor.pool_redox", 735, { unit_of_measurement: "mV" })];
+const pool = (extra, more, pump = "on", light) => () => card({ name: L("Pool", "Piscine"), ...POOL_BASE, ...extra }, POOL_STATES(pump, light).concat(more || []));
+const poolRunning = pool({});
+const poolChlorine = pool({ chlorine_pump_entity: "binary_sensor.pool_chlorine", chlorine_level_entity: "sensor.pool_chlorine_level" },
+  [st("binary_sensor.pool_chlorine", "on"), st("sensor.pool_chlorine_level", 62, { unit_of_measurement: "%" })]);
+const poolBackwash = pool({ backwash_entity: "binary_sensor.pool_backwash", pressure_entity: "sensor.pool_pressure" },
+  [st("binary_sensor.pool_backwash", "on"), st("sensor.pool_pressure", 1.4, { unit_of_measurement: "bar" })]);
+const poolFrost = pool({ frost_entity: "binary_sensor.pool_frost", air_temperature_entity: "sensor.pool_air" },
+  [st("binary_sensor.pool_frost", "on"), st("sensor.pool_air", -2, { unit_of_measurement: "°C" })]);
+const poolLight = pool({}, [], "off", "on");
+const poolError = pool({ pressure_entity: "sensor.pool_pressure" }, [st("sensor.pool_pressure", 2.1, { unit_of_measurement: "bar" })]);
+
 // Grouped by kind: the laundry, the kitchen, heating and climate, then the
 // rest.
 const ALL = { washer, dryer, steam_generator: steamGenerator,
@@ -815,6 +833,8 @@ const EXTRA = { iron, round_feeder: roundFeeder, double_feeder: doubleFeeder, ev
                 net_switch: netSwitch, net_nas: netNas, net_server: netServer, net_rack: netRack,
                 robot_vacuum: rbtVacuum, robot_emptying: rbtEmptying, robot_mop: rbtMop, robot_drying: rbtDrying,
                 robot_mower: rbtMower, robot_rain: rbtRain,
+                pool_running: poolRunning, pool_chlorine: poolChlorine, pool_backwash: poolBackwash, pool_frost: poolFrost,
+                pool_light: poolLight, pool_error: poolError,
                 net_sw8: netSw(8, 6), net_sw16: netSw(16, 11), net_sw24: netSw(24, 20), net_sw32: netSw(32, 27),
                 net_nas1: netBays(1, ["normal"], L("NAS, 1 bay", "NAS 1 baie")),
                 net_nas2: netBays(2, ["normal", null], L("NAS, 2 bays, 1 disk", "NAS 2 baies, 1 disque")),

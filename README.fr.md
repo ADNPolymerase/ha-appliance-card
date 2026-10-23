@@ -10,7 +10,7 @@
 <a href="https://buymeacoffee.com/adnpolymerase" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-orange.png" alt="Buy Me A Coffee" height="60"></a>
 <a href="https://adnpolymerase.github.io/HA/" target="_blank"><img src="https://raw.githubusercontent.com/ADNPolymerase/HA/main/assets/site-button.svg" alt="Lien vers mon github.io pour mes autres projets" height="60"></a>
 
-Une card Lovelace pour les appareils de la maison : lave-linge, sèche-linge, lave-vaisselle, four, micro-ondes, hotte, plaque de cuisson, réfrigérateur, bouilloire, robot cuiseur, machine à café, cuiseur à riz, friteuse à air, chauffe-eau, chaudière, pompe à chaleur, imprimante 3D, distributeur de croquettes, fer à repasser, grille-pain, sèche-cheveux, poêle à granulés, climatiseur, déshumidificateur, petit chauffage, sèche-serviettes, purificateur d'air, ventilateur, borne de recharge, télévision, vidéoprojecteur, ordinateur, switch, serveur, NAS et baie réseau, et robot aspirateur, laveur et tondeuse. Cycle en cours, programme, temps restant, température, alertes et commandes.
+Une card Lovelace pour les appareils de la maison : lave-linge, sèche-linge, lave-vaisselle, four, micro-ondes, hotte, plaque de cuisson, réfrigérateur, bouilloire, robot cuiseur, machine à café, cuiseur à riz, friteuse à air, chauffe-eau, chaudière, pompe à chaleur, imprimante 3D, distributeur de croquettes, fer à repasser, grille-pain, sèche-cheveux, poêle à granulés, climatiseur, déshumidificateur, petit chauffage, sèche-serviettes, purificateur d'air, ventilateur, borne de recharge, télévision, vidéoprojecteur, ordinateur, switch, serveur, NAS et baie réseau, robot aspirateur, laveur et tondeuse, et pompe de piscine. Cycle en cours, programme, temps restant, température, alertes et commandes.
 
 Aucune marque supposée : chaque champ est une entité à choisir, elle fonctionne donc avec **n'importe quelle** intégration (Electrolux, Samsung, LG, Home Connect, Miele, une simple prise connectée…).
 
@@ -21,13 +21,14 @@ Aucune marque supposée : chaque champ est une entité à choisir, elle fonction
 
 ## Fonctionnalités
 
-- **Trente-trois types d'appareils**, chacun avec une illustration en CSS animée sur les données de l'appareil et statique à l'arrêt. Le type est détecté tout seul ou choisi via `appliance_type`, et `compact: true` ne garde que le texte.
+- **Trente-quatre types d'appareils**, chacun avec une illustration en CSS animée sur les données de l'appareil et statique à l'arrêt. Le type est détecté tout seul ou choisi via `appliance_type`, et `compact: true` ne garde que le texte.
 - **Normalisation d'état** : `Idle`, `RUNNING`, `wash`, `En marche`… sont reconnus (sans tenir compte des accents) et classés en veille, préchauffage, en cours, en pause, terminé, différé ou erreur. Un état inconnu s'affiche tel quel, sans l'espace de noms de l'intégration, et `state_map` classe le reste, `"*"` ramassant tout ce qui dépasse.
 - **L'étape, et non une heure d'*En cours*** : un lave-linge, un sèche-linge ou un lave-vaisselle nomme l'étape où il en est (*Prélavage*, *Lavage*, *Rinçage*, *Essorage*, *Séchage* et sept autres), d'après une entité de phase ou son propre état, et le tambour s'emballe pendant l'essorage. Le temps restant est toujours celui du cycle entier.
 - **Une lavante-séchante est un lave-linge qui sèche** : `washer_dryer: true`, et le tambour montre de l'eau pendant le lavage, puis du linge qui tourne dans l'air chaud pendant le séchage. L'étape vient de l'état lui-même ou d'une entité de phase, et la ligne d'état lit *Lavage* ou *Séchage*.
 - **Chaque appareil dit ce qui compte pour lui** : une machine à café ce qui lui manque (eau, grains, bac, détartrage), un réfrigérateur sa santé (débranché, porte ouverte, température haute), une chaudière mixte ce qu'elle chauffe (chauffage, eau chaude ou veille), une imprimante 3D ce que fait l'impression (préchauffage, nivellement, changement de filament), un poêle à granulés la phase de son feu (allumage, modulation, éco, nettoyage), un climatiseur son mode et où il souffle, une borne de recharge si une voiture est branchée et ce que fait la charge (attente d'autorisation, en charge, en pause, programmée, terminée).
 - **Le réseau aussi** : un switch, un serveur, un NAS ou une baie, *En ligne*, en *Activité* ou en *Alerte*. Une diode par port utilisé, une par disque dans sa baie (sain, en lecture, en veille, à surveiller, en panne), et les mesures trouvées toutes seules sur Synology, UGREEN, Unraid ou Glances.
 - **Les robots aussi** : un aspirateur, un laveur ou une tondeuse quitte sa base et parcourt son sol, revient, et dit quand sa station vide le bac ou lave les patins, quand la pluie le garde à la base ou quand il est coincé.
+- **Et la piscine** : le filtre à sable, la pompe et le bassin, en *Filtration*, en *Injection de chlore* avec une pompe doseuse en option, en *Contre-lavage* vers l'égout, en *Hors-gel*, et le projecteur, l'eau, le pH et le RedOx dans les lignes.
 - **Fonctionne avec une simple prise connectée** : `power_entity` et `power_on_threshold` suffisent à déduire l'état de la consommation ; `power_off_delay` évite qu'une pause soit prise pour la fin, et `show_last_cycle` montre la durée du dernier cycle.
 - **Programme, temps restant, barre de progression, lignes d'info, porte, alertes, connectivité et commandes** (démarrer, pause, reprise, stop), chacun optionnel.
 - **14 langues** (EN, FR, DE, ES, IT, NL, PT, SV, NO, DA, PL, RU, ZH, CS), celle de Home Assistant ou fixée sur la card.
@@ -93,6 +94,13 @@ Clique sur une famille pour voir ses appareils en marche.
 
 </details>
 
+<details>
+<summary><b>Pompes de piscine</b></summary>
+
+<img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-pool.fr.gif" alt="Pompes de piscine" width="100%">
+
+</details>
+
 ## Installation
 
 ### Par HACS
@@ -129,7 +137,7 @@ Seule `state_entity` est obligatoire, sauf sur un réfrigérateur où une sonde 
 | `done_alert` | `true` fait pulser un badge vert sur le dessin en fin de cycle, jusqu'à l'ouverture de la porte ou un appui sur le badge. Pour les appareils à cycle (lave-linge, sèche-linge, lave-vaisselle, four…). |
 | `illustration_color` | `auto` (défaut, suit le thème) \| `white` \| `grey` \| `black` \| `red` (rouge foncé). Ne change que la carrosserie, pas les couleurs d'état. |
 | `language` | `auto` (défaut, suit Home Assistant) ou l'un des 14 codes : `en`, `fr`, `de`, `es`, `it`, `nl`, `pt`, `sv`, `no`, `da`, `pl`, `ru`, `zh`, `cs`. `nb` et `nb-NO` donnent le norvégien. |
-| `appliance_type` | `auto` (défaut) \| `washer` \| `dryer` \| `dishwasher` \| `oven` \| `microwave` \| `hood` \| `cooktop` \| `fridge` \| `kettle` \| `cooker` \| `coffee` \| `rice_cooker` \| `air_fryer` \| `water_heater` \| `boiler` \| `heat_pump` \| `printer_3d` \| `pet_feeder` \| `pet_fountain` \| `iron` \| `toaster` \| `pellet_stove` \| `air_conditioner` \| `dehumidifier` \| `space_heater` \| `towel_warmer` \| `air_purifier` \| `fan` \| `ev_charger` \| `hair_dryer` \| `screen` \| `network` \| `robot`. |
+| `appliance_type` | `auto` (défaut) \| `washer` \| `dryer` \| `dishwasher` \| `oven` \| `microwave` \| `hood` \| `cooktop` \| `fridge` \| `kettle` \| `cooker` \| `coffee` \| `rice_cooker` \| `air_fryer` \| `water_heater` \| `boiler` \| `heat_pump` \| `printer_3d` \| `pet_feeder` \| `pet_fountain` \| `iron` \| `toaster` \| `pellet_stove` \| `air_conditioner` \| `dehumidifier` \| `space_heater` \| `towel_warmer` \| `air_purifier` \| `fan` \| `ev_charger` \| `hair_dryer` \| `screen` \| `network` \| `robot` \| `pool_pump`. |
 | `tap_action` | Ce que fait un appui sur la carte, dans les mots de Home Assistant : `more-info` (défaut : l'entité d'état, ou sur une carte sans elle ce qu'elle lit à sa place), `none`, `navigate`, `url`, `toggle`, `perform-action` ou `fire-dom-event`, celle qu'écoutent les cartes popup bâties sur browser_mod. En YAML seulement. |
 | `toggle_entity` | Bouton marche/arrêt (`switch`, `button`, `script`, `input_boolean`, `fan`), mis en évidence quand c'est allumé. Sur tous les types, frigo compris, où c'est le seul bouton ; à associer à `controls_activation: confirm` pour un appareil qu'il ne faut pas couper par erreur. |
 | `power_entity` / `power_on_threshold` / `power_icon` | Capteur de puissance. Avec un seuil, l'état en est déduit : *en marche* au-dessus, puis *terminé* en redescendant. Pointer `state_entity` sur ce même capteur l'active avec un seuil de 10 W. `power_icon` remplace `mdi:power-plug`. |
@@ -216,6 +224,15 @@ Seule `state_entity` est obligatoire, sauf sur un réfrigérateur où une sonde 
 | `fan_speed_entity` | réseau | La vitesse d'un ventilateur : à 0 tr/min, le ventilateur dessiné s'arrête. |
 | `problem_entity` | réseau | Tout ce qui doit déclencher l'*Alerte* : un état de sécurité, un capteur de santé. |
 | `disk1_entity` … `disk4_entity` / `bays` | réseau | Une entité par disque, n'importe laquelle des siennes : la carte les lit toutes. Sa diode est verte quand tout va bien, bleue quand il lit ou écrit, faible quand il dort, orange quand il est à surveiller, rouge quand il est en panne. `bays` : `1`, `2` ou `4` baies dessinées sur un NAS, une baie vide n'a pas de tiroir. |
+| `water_temperature_entity` / `air_temperature_entity` | piscine | L'eau et l'air, affichés en lignes. |
+| `ph_entity` / `redox_entity` | piscine | Le pH et le RedOx (ORP), affichés en lignes. |
+| `filtration_time_entity` | piscine | La durée de filtration du jour, en heures, minutes ou secondes : *4h30*. |
+| `pressure_entity` / `pressure_alert` | piscine | La pression du filtre : l'aiguille du manomètre la suit, et à `pressure_alert` (1,8 bar par défaut) ou plus, pompe en marche, c'est une *Erreur*. |
+| `pool_mode_entity` | piscine | Le mode de la pompe (auto, manuel…), affiché en ligne. En `state_entity`, un mode ne dit que la pompe tourne que si un `power_entity` dépasse `power_on_threshold` (50 W par défaut). |
+| `chlorine_pump_entity` / `chlorine_level_entity` | piscine | Une pompe doseuse de chlore, en option : son bidon et sa longue tubulure vers le tuyau de retour n'apparaissent que si elle est donnée, et des gouttes y descendent pendant l'injection. Son niveau, en %, remplit le bidon et passe en orange à 15 % ou moins. |
+| `backwash_entity` / `frost_entity` | piscine | Un contre-lavage envoie l'eau sale à l'égout, le bassin ne bouge pas ; le hors-gel givre les tuyaux. Un état qui dit contre-lavage ou hors-gel fait de même. |
+| `pool_alert_entity` | piscine | Tout ce qui doit déclencher l'*Erreur* : la pompe fume et l'aiguille du manomètre s'affole. |
+| `light_entity` | piscine | Le projecteur du bassin : il éclaire la paroi du fond, et son interrupteur se met dans le coin de la carte. |
 | `robot_layout` | robot | `vacuum` \| `mop` \| `mower`. Sans lui, une entité `lawn_mower` ou un nom qui dit tondeuse, Landroid ou Automower en fait une tondeuse, et Braava ou laveur un robot laveur. |
 | `robot_station` | robot | `station` (défaut : la station de vidage de l'aspirateur, la station de lavage du laveur) \| `base` (une base de charge seule). |
 | `robot_shelter` | robot | `true` dessine un abri au-dessus de la base d'une tondeuse. |
@@ -518,6 +535,25 @@ robot_status_entity: sensor.landroid_status
 battery_entity: sensor.landroid_battery
 robot_error_entity: sensor.landroid_error
 robot_shelter: true
+```
+
+</details>
+
+<details>
+<summary><b>Pompes de piscine</b></summary>
+
+Un filtre à sable avec sa vanne multivoies et son manomètre, la pompe et son préfiltre à couvercle transparent, les tuyaux et le bassin. Son `state_entity` est la pompe, un interrupteur ou un capteur binaire : *Filtration* quand elle tourne, avec l'eau qui circule dans les tuyaux, un jet dans le préfiltre et l'aiguille qui monte ; *Éteint* au repos. Avec une pompe à chlore, *Injection de chlore* pendant le dosage. Le *Contre-lavage* envoie l'eau sale à l'égout, le *Hors-gel* givre les tuyaux, et une alerte ou une pression trop haute est une *Erreur*. Le projecteur, l'eau, l'air, le pH, le RedOx, la durée de filtration du jour, la pression et le mode de la pompe sont chacun en option. Le compteur d'une prise connectée suffit à lui seul.
+
+```yaml
+type: custom:ha-appliance-card
+appliance_type: pool_pump
+state_entity: binary_sensor.pompe_piscine
+light_entity: switch.projecteur_piscine
+water_temperature_entity: sensor.piscine_temperature_eau
+ph_entity: sensor.piscine_ph
+redox_entity: sensor.piscine_redox
+filtration_time_entity: sensor.piscine_filtration_aujourd_hui
+chlorine_pump_entity: binary_sensor.piscine_pompe_chlore
 ```
 
 </details>

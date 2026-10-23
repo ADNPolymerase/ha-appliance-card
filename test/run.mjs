@@ -9612,4 +9612,91 @@ check('borne : ni un statut reconnu', evMode(evR('SuspendedEVSE', { power_entity
   check('editeur : pas de modele robot ailleurs', /robot_layout/.test(markup(newEditor({ state_entity: 'sensor.w', appliance_type: 'washer' }))), false);
 }
 
+
+// =============================================================================
+// Pool pumps: the filter, the pump, the pool and the chlorine pump.
+// =============================================================================
+{
+  const NB = ' ';
+  const s = (state, attributes = {}) => ({ state: String(state), attributes });
+  const isPool = (cfg, states = {}) => /class="machine [^"]*\bpl\b/.test(render(cfg, states));
+
+  // The type: a field of its own or a name.
+  check('piscine : un champ suffit', isPool({ state_entity: 'switch.x', ph_entity: 'sensor.ph' }, { 'switch.x': s('on') }), true);
+  check('piscine : par son nom', isPool({ state_entity: 'binary_sensor.piscine_pompe' }, { 'binary_sensor.piscine_pompe': s('on') }), true);
+  check('piscine : une Oklyn', isPool({ state_entity: 'binary_sensor.oklyn_pompe' }, { 'binary_sensor.oklyn_pompe': s('off') }), true);
+  check('piscine : pool en anglais', isPool({ state_entity: 'switch.pool_pump' }, { 'switch.pool_pump': s('off') }), true);
+  check('piscine : une prise de lave-linge n\'en est pas une', isPool({ state_entity: 'switch.prise_lave_linge' }, { 'switch.prise_lave_linge': s('off') }), false);
+
+  // The state line.
+  const P = { appliance_type: 'pool_pump', state_entity: 'binary_sensor.p' };
+  const st = (pump, cfg = {}, more = {}) => stateLine(render({ ...P, ...cfg }, { 'binary_sensor.p': s(pump), ...more }));
+  check('piscine : arret', st('off'), 'Off');
+  check('piscine : filtration', st('on'), 'Filtering');
+  check('piscine : hors ligne', st('unavailable'), 'Offline');
+  check('piscine : injection de chlore', st('on', { chlorine_pump_entity: 'binary_sensor.cl' }, { 'binary_sensor.cl': s('on') }), 'Chlorine injection');
+  check('piscine : chlore arrete', st('on', { chlorine_pump_entity: 'binary_sensor.cl' }, { 'binary_sensor.cl': s('off') }), 'Filtering');
+  check('piscine : contre-lavage', st('on', { backwash_entity: 'binary_sensor.bw' }, { 'binary_sensor.bw': s('on') }), 'Backwash');
+  check('piscine : hors-gel', st('on', { frost_entity: 'binary_sensor.f' }, { 'binary_sensor.f': s('on') }), 'Frost protection');
+  check('piscine : hors-gel pompe arretee', st('off', { frost_entity: 'binary_sensor.f' }, { 'binary_sensor.f': s('on') }), 'Frost protection');
+  check('piscine : alerte', st('on', { pool_alert_entity: 'binary_sensor.a' }, { 'binary_sensor.a': s('on') }), 'Error');
+  check('piscine : pression trop haute', st('on', { pressure_entity: 'sensor.p' }, { 'sensor.p': s(1.9, { unit_of_measurement: 'bar' }) }), 'Error');
+  check('piscine : pression normale', st('on', { pressure_entity: 'sensor.p' }, { 'sensor.p': s(1.1, { unit_of_measurement: 'bar' }) }), 'Filtering');
+  check('piscine : seuil de pression choisi', st('on', { pressure_entity: 'sensor.p', pressure_alert: 2.2 }, { 'sensor.p': s(1.9) }), 'Filtering');
+  check('piscine : pas d\'alerte de pression a l\'arret', st('off', { pressure_entity: 'sensor.p' }, { 'sensor.p': s(1.9) }), 'Off');
+  check('piscine : la lumiere s\'ajoute', st('off', { light_entity: 'switch.l' }, { 'switch.l': s('on') }), 'Off · light on');
+  check('piscine : un mot de contre-lavage', stateLine(render({ ...P, state_entity: 'sensor.etat' }, { 'sensor.etat': s('Backwash') })), 'Backwash');
+  check('piscine : un mode auto sans compteur reste a l\'arret', stateLine(render({ ...P, state_entity: 'select.m' }, { 'select.m': s('auto') })), 'Off');
+  check('piscine : un mode auto qui consomme filtre', stateLine(render({ ...P, state_entity: 'select.m', power_entity: 'sensor.w' },
+    { 'select.m': s('auto'), 'sensor.w': s(650) })), 'Filtering');
+  check('piscine : sur une prise seule', stateLine(render({ appliance_type: 'pool_pump', power_entity: 'sensor.w' }, { 'sensor.w': s(650) })), 'Filtering');
+  check('piscine : prise sous le seuil', stateLine(render({ appliance_type: 'pool_pump', power_entity: 'sensor.w' }, { 'sensor.w': s(3) })), 'Off');
+
+  // The drawing.
+  const cls = (cfg, more) => machineCls(render({ ...P, ...cfg }, more));
+  check('piscine : la filtration se dessine', cls({}, { 'binary_sensor.p': s('on') }).includes('pl-m-running'), true);
+  check('piscine : pas de bidon sans pompe a chlore', cls({}, { 'binary_sensor.p': s('on') }).includes('pl-nocl'), true);
+  check('piscine : le bidon avec une pompe a chlore', cls({ chlorine_pump_entity: 'binary_sensor.cl' }, { 'binary_sensor.p': s('on'), 'binary_sensor.cl': s('off') }).includes('pl-nocl'), false);
+  check('piscine : le chlore coule', cls({ chlorine_pump_entity: 'binary_sensor.cl' }, { 'binary_sensor.p': s('on'), 'binary_sensor.cl': s('on') }).includes('pl-chlore'), true);
+  check('piscine : le projecteur', cls({ light_entity: 'switch.l' }, { 'binary_sensor.p': s('off'), 'switch.l': s('on') }).includes('pl-lamp'), true);
+  check('piscine : l\'aiguille suit la pression', /class="pl-needle" style="transform: rotate\(0deg\)"/.test(render({ ...P, pressure_entity: 'sensor.p' },
+    { 'binary_sensor.p': s('on'), 'sensor.p': s(1.25) })), true);
+  check('piscine : l\'aiguille s\'affole en erreur', /class="pl-needle" style=/.test(render({ ...P, pressure_entity: 'sensor.p' },
+    { 'binary_sensor.p': s('on'), 'sensor.p': s(2.4) })), false);
+  check('piscine : niveau du bidon', /class="pl-can-l" x="68.1" y="56.5" width="11.8" height="3"/.test(render({ ...P, chlorine_pump_entity: 'binary_sensor.cl', chlorine_level_entity: 'sensor.cl' },
+    { 'binary_sensor.p': s('on'), 'binary_sensor.cl': s('off'), 'sensor.cl': s(40, { unit_of_measurement: '%' }) })), true);
+
+  // The lines.
+  const lines = render({ ...P, water_temperature_entity: 'sensor.w', air_temperature_entity: 'sensor.a', ph_entity: 'sensor.ph', redox_entity: 'sensor.orp',
+    filtration_time_entity: 'sensor.ft', pressure_entity: 'sensor.pr', pool_mode_entity: 'select.m', chlorine_pump_entity: 'binary_sensor.cl', chlorine_level_entity: 'sensor.cl' },
+  { 'binary_sensor.p': s('on'), 'sensor.w': s(24.6, { unit_of_measurement: '°C' }), 'sensor.a': s(-2, { unit_of_measurement: '°C' }), 'sensor.ph': s(7.42, { unit_of_measurement: 'pH' }),
+    'sensor.orp': s(735, { unit_of_measurement: 'mV' }), 'sensor.ft': s(4.5, { unit_of_measurement: 'h' }), 'sensor.pr': s(1.1, { unit_of_measurement: 'bar' }),
+    'select.m': s('auto'), 'binary_sensor.cl': s('off'), 'sensor.cl': s(12, { unit_of_measurement: '%' }) });
+  check('piscine : ligne eau', infoLine(lines, 'Water'), `24.6${NB}°C`);
+  check('piscine : ligne air', infoLine(lines, 'Air'), `-2${NB}°C`);
+  check('piscine : ligne pH sans unite', infoLine(lines, 'pH'), '7.42');
+  check('piscine : ligne RedOx', infoLine(lines, 'RedOx'), `735${NB}mV`);
+  check('piscine : ligne filtration', infoLine(lines, 'Filtered today'), '4h30');
+  check('piscine : ligne pression', infoLine(lines, 'Pressure'), `1.1${NB}bar`);
+  check('piscine : ligne bidon', infoLine(lines, 'Chlorine tank'), `12${NB}%`);
+  check('piscine : bidon bas en orange', /info-line caution[^>]*><ha-icon icon="mdi:flask-outline"/.test(lines), true);
+  check('piscine : ligne mode', infoLine(lines, 'Mode'), 'auto');
+  check('piscine : pas de bidon sans pompe a chlore dans les lignes', infoLine(render({ ...P, chlorine_level_entity: 'sensor.cl' },
+    { 'binary_sensor.p': s('on'), 'sensor.cl': s(40, { unit_of_measurement: '%' }) }), 'Chlorine tank'), null);
+  check('piscine : filtration en minutes', infoLine(render({ ...P, filtration_time_entity: 'sensor.ft' }, { 'binary_sensor.p': s('off'), 'sensor.ft': s(90, { unit_of_measurement: 'min' }) }), 'Filtered today'), '1h30');
+  check('piscine : pas de ligne hors ligne', infoLine(render({ ...P, water_temperature_entity: 'sensor.w' }, { 'binary_sensor.p': s('unavailable'), 'sensor.w': s(20) }), 'Water'), null);
+
+  // The editor.
+  const ed = markup(newEditor({ state_entity: 'binary_sensor.p', appliance_type: 'pool_pump' }));
+  for (const f of ['water_temperature_entity', 'air_temperature_entity', 'ph_entity', 'redox_entity', 'filtration_time_entity', 'pressure_entity',
+    'pool_mode_entity', 'chlorine_pump_entity', 'backwash_entity', 'frost_entity', 'pool_alert_entity', 'light_entity'])
+    check(`editeur piscine : ${f}`, ed.includes(`data-toggle="${f}"`), true);
+  check('editeur piscine : pas de bidon sans pompe a chlore', ed.includes('data-toggle="chlorine_level_entity"'), false);
+  check('editeur piscine : le bidon avec la pompe a chlore', markup(newEditor({ state_entity: 'binary_sensor.p', appliance_type: 'pool_pump', chlorine_pump_entity: 'binary_sensor.cl' }))
+    .includes('data-toggle="chlorine_level_entity"'), true);
+  check('editeur piscine : pas de delai d\'arret', /power_off_delay/.test(markup(newEditor({ state_entity: 'binary_sensor.p', appliance_type: 'pool_pump', power_entity: 'sensor.w' }))), false);
+  check('editeur lave-linge : le delai d\'arret reste', /power_off_delay/.test(markup(newEditor({ state_entity: 'sensor.w', appliance_type: 'washer', power_entity: 'sensor.p' }))), true);
+  check('editeur : pas de champ piscine ailleurs', /ph_entity/.test(markup(newEditor({ state_entity: 'sensor.w', appliance_type: 'washer' }))), false);
+}
+
 report();

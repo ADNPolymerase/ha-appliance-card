@@ -68,6 +68,7 @@ FAMILIES = (
     ("network", "net_switch,net_nas,net_server,net_rack", 4),
     ("network-models", "net_sw8,net_sw16,net_sw24,net_sw32,net_nas1,net_nas2,net_nas4", 4),
     ("robots", "robot_vacuum,robot_emptying,robot_mop,robot_drying,robot_mower,robot_rain", 6),
+    ("pool", "pool_running,pool_chlorine,pool_backwash,pool_frost,pool_light,pool_error", 6),
 )
 # Sixteen frames a tenth of a second apart over a 1.6 s loop, on a 128-colour
 # palette: the five families weigh about 1.4 MB per language, where 32 frames

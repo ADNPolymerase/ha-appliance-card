@@ -144,6 +144,7 @@ const T = {
     type_hair_dryer: "Hair dryer", layout_hd_pistol: "Classic", layout_hd_ring: "Ring", hd_cool: "Cool air", hd_hot: "Hot air", hd_heat_threshold: "Hot air above this power (W)", fill_height: "Fill the height of its slot", done_alert: "Flash at the end of the cycle", done_seen: "Seen", no_power_threshold: "No power draw below (W)", group_appearance: "Appearance", show_name: "Show the name", show_state: "Show the state", transparent: "Transparent background", font_scale: "Text size", illustration_size: "Drawing size", compact_mode: "Compact mode", compact_off: "Off", compact_hide: "No drawing", compact_side: "Drawing on the side", group_laundry: "Laundry", group_kitchen: "Kitchen", group_heating: "Heating and hot water", group_air: "Air and climate", group_home: "Home and media", group_pets: "Pets",
     type_network: "Network device (switch, NAS, server)", group_network: "Network and servers", layout_net_switch: "Switch", layout_net_server: "Server", layout_net_nas: "NAS", layout_net_rack: "Rack", net_ports_count: "Ports drawn", net_bays: "NAS bays", net_online: "Online", net_busy: "Busy", net_alert: "Alert", net_warn: "Disk to watch", section_net_cpu: "CPU usage (%)", section_net_memory: "Memory usage (%)", section_net_volume: "Volume used (%)", section_net_download: "Download rate", section_net_upload: "Upload rate", section_net_ports: "Active ports", net_ports_total: "Port count", section_net_poe: "PoE power", section_net_problem: "Problem alert", section_net_temperature: "Temperature", net_temp_alert: "Alert above this temperature (\u00b0C)", net_busy_threshold: "Busy above this rate (Mbit/s)", net_line_rate: "Throughput", net_line_load: "Load", net_line_volume: "Volume", section_net_disk1: "Disk 1", section_net_disk2: "Disk 2", section_net_disk3: "Disk 3", section_net_disk4: "Disk 4",
     type_robot: "Robot (vacuum, mop, mower)", layout_robot_vacuum: "Robot vacuum", layout_robot_mop: "Mopping robot", layout_robot_mower: "Robot mower", section_robot_station: "Base", robot_station_station: "Emptying or washing station", robot_station_base: "Charging base only", robot_shelter: "Shelter over the base", robot_charging: "Charging", robot_docked: "Docked", robot_cleaning: "Cleaning", robot_mopping: "Mopping", robot_mowing: "Mowing", robot_edgecut: "Edge cutting", robot_returning: "Returning to base", robot_emptying: "Emptying the bin", robot_bin_full: "Bin full", robot_washing: "Washing the pads", robot_drying: "Drying the pads", robot_water_empty: "Water tank empty", robot_rain: "Rain delay", robot_idle: "Stopped", section_robot_status: "Detailed status", section_battery: "Battery", section_robot_bin: "Bin full alert", section_robot_water: "Water tank", section_robot_rain: "Rain", section_robot_error: "Error",
+    type_pool_pump: "Pool pump", pool_filtering: "Filtering", pool_chlorinating: "Chlorine injection", pool_backwash: "Backwash", pool_frost: "Frost protection", pool_light_on: "light on", section_water_temperature: "Water temperature", section_air_temperature: "Air temperature", section_ph: "pH", section_redox: "RedOx (ORP)", section_filtration_time: "Filtration time today", section_pressure: "Filter pressure", pool_pressure_alert: "Alert above this pressure (bar)", section_pool_mode: "Pump mode", section_chlorine_pump: "Chlorine pump", section_chlorine_level: "Chlorine tank level", section_backwash: "Backwash", section_frost: "Frost protection", section_pool_alert: "Alert", pool_line_water: "Water", pool_line_air: "Air", pool_line_filtered: "Filtered today", pool_line_pressure: "Pressure", pool_line_chlorine: "Chlorine tank", pool_line_mode: "Mode",
     section_purifier_layout: "Model", layout_purifier_cylinder: "Cylinder", layout_purifier_box: "Square box", layout_purifier_ring: "Bladeless ring",
     pf_purifying: "Purifying", pf_auto: "Auto", pf_night: "Night mode", section_air_quality: "Air quality",
     section_screen: "Screen", section_heater: "Heating (thermostat)", aq_good: "Good", aq_fair: "Fair",
@@ -298,6 +299,7 @@ const T = {
     type_hair_dryer: "S\u00e8che-cheveux", layout_hd_pistol: "Classique", layout_hd_ring: "Anneau", hd_cool: "Air froid", hd_hot: "Air chaud", hd_heat_threshold: "Air chaud au-dessus de cette puissance (W)", fill_height: "Occuper toute la hauteur de sa case", done_alert: "Clignoter \u00e0 la fin du cycle", done_seen: "Vu", no_power_threshold: "Aucune consommation en dessous de (W)", group_appearance: "Apparence", show_name: "Afficher le nom", show_state: "Afficher l'\u00e9tat", transparent: "Fond transparent", font_scale: "Taille du texte", illustration_size: "Taille du dessin", compact_mode: "Mode compact", compact_off: "D\u00e9sactiv\u00e9", compact_hide: "Sans dessin", compact_side: "Dessin sur le c\u00f4t\u00e9", group_laundry: "Linge", group_kitchen: "Cuisine", group_heating: "Chauffage et eau chaude", group_air: "Air et climat", group_home: "Maison et multim\u00e9dia", group_pets: "Animaux",
     type_network: "R\u00e9seau (switch, NAS, serveur)", group_network: "R\u00e9seau et serveurs", layout_net_switch: "Switch", layout_net_server: "Serveur", layout_net_nas: "NAS", layout_net_rack: "Baie", net_ports_count: "Ports dessin\u00e9s", net_bays: "Baies du NAS", net_online: "En ligne", net_busy: "Activit\u00e9", net_alert: "Alerte", net_warn: "Disque \u00e0 surveiller", section_net_cpu: "Processeur (%)", section_net_memory: "M\u00e9moire (%)", section_net_volume: "Volume occup\u00e9 (%)", section_net_download: "D\u00e9bit descendant", section_net_upload: "D\u00e9bit montant", section_net_ports: "Ports actifs", net_ports_total: "Nombre de ports", section_net_poe: "Puissance PoE", section_net_problem: "Alerte (probl\u00e8me)", section_net_temperature: "Temp\u00e9rature", net_temp_alert: "Alerte au-dessus de cette temp\u00e9rature (\u00b0C)", net_busy_threshold: "Activit\u00e9 au-dessus de ce d\u00e9bit (Mbit/s)", net_line_rate: "D\u00e9bit", net_line_load: "Charge", net_line_volume: "Volume", section_net_disk1: "Disque 1", section_net_disk2: "Disque 2", section_net_disk3: "Disque 3", section_net_disk4: "Disque 4",
     type_robot: "Robot (aspirateur, laveur, tondeuse)", layout_robot_vacuum: "Aspirateur robot", layout_robot_mop: "Robot laveur", layout_robot_mower: "Tondeuse robot", section_robot_station: "Base", robot_station_station: "Station de vidage ou de lavage", robot_station_base: "Base de charge seule", robot_shelter: "Abri au-dessus de la base", robot_charging: "En charge", robot_docked: "\u00c0 la base", robot_cleaning: "Nettoyage", robot_mopping: "Lavage", robot_mowing: "Tonte", robot_edgecut: "Coupe des bordures", robot_returning: "Retour \u00e0 la base", robot_emptying: "Vidage du bac", robot_bin_full: "Bac plein", robot_washing: "Lavage des patins", robot_drying: "S\u00e9chage des patins", robot_water_empty: "R\u00e9servoir vide", robot_rain: "Pluie", robot_idle: "\u00c0 l'arr\u00eat", section_robot_status: "\u00c9tat d\u00e9taill\u00e9", section_battery: "Batterie", section_robot_bin: "Alerte bac plein", section_robot_water: "R\u00e9servoir d'eau", section_robot_rain: "Pluie", section_robot_error: "Erreur",
+    type_pool_pump: "Pompe de piscine", pool_filtering: "Filtration", pool_chlorinating: "Injection de chlore", pool_backwash: "Contre-lavage", pool_frost: "Hors-gel", pool_light_on: "lumi\u00e8re", section_water_temperature: "Temp\u00e9rature de l'eau", section_air_temperature: "Temp\u00e9rature de l'air", section_ph: "pH", section_redox: "RedOx (ORP)", section_filtration_time: "Dur\u00e9e de filtration du jour", section_pressure: "Pression du filtre", pool_pressure_alert: "Alerte au-dessus de cette pression (bar)", section_pool_mode: "Mode de la pompe", section_chlorine_pump: "Pompe \u00e0 chlore", section_chlorine_level: "Niveau du bidon de chlore", section_backwash: "Contre-lavage", section_frost: "Hors-gel", section_pool_alert: "Alerte", pool_line_water: "Eau", pool_line_air: "Air", pool_line_filtered: "Filtr\u00e9 aujourd'hui", pool_line_pressure: "Pression", pool_line_chlorine: "Bidon de chlore", pool_line_mode: "Mode",
     section_purifier_layout: "Mod\u00e8le", layout_purifier_cylinder: "Cylindre", layout_purifier_box: "Bo\u00eetier carr\u00e9", layout_purifier_ring: "Anneau sans pales",
     pf_purifying: "Purification", pf_auto: "Auto", pf_night: "Mode nuit", section_air_quality: "Qualit\u00e9 de l'air",
     section_screen: "\u00c9cran", section_heater: "Chauffage (thermostat)", aq_good: "Bonne", aq_fair: "Moyenne",
@@ -452,6 +454,7 @@ const T = {
     type_hair_dryer: "\u0424\u0435\u043d", layout_hd_pistol: "\u041a\u043b\u0430\u0441\u0441\u0438\u0447\u0435\u0441\u043a\u0438\u0439", layout_hd_ring: "\u041a\u043e\u043b\u044c\u0446\u043e", hd_cool: "\u0425\u043e\u043b\u043e\u0434\u043d\u044b\u0439 \u0432\u043e\u0437\u0434\u0443\u0445", hd_hot: "\u0413\u043e\u0440\u044f\u0447\u0438\u0439 \u0432\u043e\u0437\u0434\u0443\u0445", hd_heat_threshold: "\u0413\u043e\u0440\u044f\u0447\u0438\u0439 \u0432\u043e\u0437\u0434\u0443\u0445 \u0432\u044b\u0448\u0435 \u044d\u0442\u043e\u0439 \u043c\u043e\u0449\u043d\u043e\u0441\u0442\u0438 (\u0412\u0442)", fill_height: "\u0417\u0430\u043d\u0438\u043c\u0430\u0442\u044c \u0432\u0441\u044e \u0432\u044b\u0441\u043e\u0442\u0443 \u044f\u0447\u0435\u0439\u043a\u0438", done_alert: "\u041c\u0438\u0433\u0430\u0442\u044c \u0432 \u043a\u043e\u043d\u0446\u0435 \u0446\u0438\u043a\u043b\u0430", done_seen: "\u041f\u0440\u043e\u0441\u043c\u043e\u0442\u0440\u0435\u043d\u043e", no_power_threshold: "\u041d\u0435\u0442 \u043f\u043e\u0442\u0440\u0435\u0431\u043b\u0435\u043d\u0438\u044f \u043d\u0438\u0436\u0435 (\u0412\u0442)", group_appearance: "\u0412\u043d\u0435\u0448\u043d\u0438\u0439 \u0432\u0438\u0434", show_name: "\u041f\u043e\u043a\u0430\u0437\u044b\u0432\u0430\u0442\u044c \u043d\u0430\u0437\u0432\u0430\u043d\u0438\u0435", show_state: "\u041f\u043e\u043a\u0430\u0437\u044b\u0432\u0430\u0442\u044c \u0441\u043e\u0441\u0442\u043e\u044f\u043d\u0438\u0435", transparent: "\u041f\u0440\u043e\u0437\u0440\u0430\u0447\u043d\u044b\u0439 \u0444\u043e\u043d", font_scale: "\u0420\u0430\u0437\u043c\u0435\u0440 \u0442\u0435\u043a\u0441\u0442\u0430", illustration_size: "\u0420\u0430\u0437\u043c\u0435\u0440 \u0440\u0438\u0441\u0443\u043d\u043a\u0430", compact_mode: "\u041a\u043e\u043c\u043f\u0430\u043a\u0442\u043d\u044b\u0439 \u0440\u0435\u0436\u0438\u043c", compact_off: "\u0412\u044b\u043a\u043b.", compact_hide: "\u0411\u0435\u0437 \u0440\u0438\u0441\u0443\u043d\u043a\u0430", compact_side: "\u0420\u0438\u0441\u0443\u043d\u043e\u043a \u0441\u0431\u043e\u043a\u0443", group_laundry: "\u0421\u0442\u0438\u0440\u043a\u0430", group_kitchen: "\u041a\u0443\u0445\u043d\u044f", group_heating: "\u041e\u0442\u043e\u043f\u043b\u0435\u043d\u0438\u0435 \u0438 \u0433\u043e\u0440\u044f\u0447\u0430\u044f \u0432\u043e\u0434\u0430", group_air: "\u0412\u043e\u0437\u0434\u0443\u0445 \u0438 \u043a\u043b\u0438\u043c\u0430\u0442", group_home: "\u0414\u043e\u043c \u0438 \u043c\u0443\u043b\u044c\u0442\u0438\u043c\u0435\u0434\u0438\u0430", group_pets: "\u041f\u0438\u0442\u043e\u043c\u0446\u044b",
     type_network: "\u0421\u0435\u0442\u044c (\u043a\u043e\u043c\u043c\u0443\u0442\u0430\u0442\u043e\u0440, NAS, \u0441\u0435\u0440\u0432\u0435\u0440)", group_network: "\u0421\u0435\u0442\u044c \u0438 \u0441\u0435\u0440\u0432\u0435\u0440\u044b", layout_net_switch: "\u041a\u043e\u043c\u043c\u0443\u0442\u0430\u0442\u043e\u0440", layout_net_server: "\u0421\u0435\u0440\u0432\u0435\u0440", layout_net_nas: "NAS", layout_net_rack: "\u0421\u0442\u043e\u0439\u043a\u0430", net_ports_count: "\u041f\u043e\u0440\u0442\u043e\u0432 \u043d\u0430 \u0440\u0438\u0441\u0443\u043d\u043a\u0435", net_bays: "\u041e\u0442\u0441\u0435\u043a\u0438 NAS", net_online: "\u0412 \u0441\u0435\u0442\u0438", net_busy: "\u0410\u043a\u0442\u0438\u0432\u043d\u043e\u0441\u0442\u044c", net_alert: "\u0422\u0440\u0435\u0432\u043e\u0433\u0430", net_warn: "\u0414\u0438\u0441\u043a \u043f\u043e\u0434 \u043d\u0430\u0431\u043b\u044e\u0434\u0435\u043d\u0438\u0435\u043c", section_net_cpu: "\u0417\u0430\u0433\u0440\u0443\u0437\u043a\u0430 \u0426\u041f (%)", section_net_memory: "\u0417\u0430\u0433\u0440\u0443\u0437\u043a\u0430 \u043f\u0430\u043c\u044f\u0442\u0438 (%)", section_net_volume: "\u0417\u0430\u043d\u044f\u0442\u043e \u043d\u0430 \u0442\u043e\u043c\u0435 (%)", section_net_download: "\u0421\u043a\u043e\u0440\u043e\u0441\u0442\u044c \u0437\u0430\u0433\u0440\u0443\u0437\u043a\u0438", section_net_upload: "\u0421\u043a\u043e\u0440\u043e\u0441\u0442\u044c \u043e\u0442\u0434\u0430\u0447\u0438", section_net_ports: "\u0410\u043a\u0442\u0438\u0432\u043d\u044b\u0435 \u043f\u043e\u0440\u0442\u044b", net_ports_total: "\u0427\u0438\u0441\u043b\u043e \u043f\u043e\u0440\u0442\u043e\u0432", section_net_poe: "\u041c\u043e\u0449\u043d\u043e\u0441\u0442\u044c PoE", section_net_problem: "\u0421\u0438\u0433\u043d\u0430\u043b \u043e \u043f\u0440\u043e\u0431\u043b\u0435\u043c\u0435", section_net_temperature: "\u0422\u0435\u043c\u043f\u0435\u0440\u0430\u0442\u0443\u0440\u0430", net_temp_alert: "\u0422\u0440\u0435\u0432\u043e\u0433\u0430 \u0432\u044b\u0448\u0435 \u044d\u0442\u043e\u0439 \u0442\u0435\u043c\u043f\u0435\u0440\u0430\u0442\u0443\u0440\u044b (\u00b0C)", net_busy_threshold: "\u0410\u043a\u0442\u0438\u0432\u043d\u043e\u0441\u0442\u044c \u0432\u044b\u0448\u0435 \u044d\u0442\u043e\u0439 \u0441\u043a\u043e\u0440\u043e\u0441\u0442\u0438 (\u041c\u0431\u0438\u0442/\u0441)", net_line_rate: "\u041f\u0440\u043e\u043f\u0443\u0441\u043a\u043d\u0430\u044f \u0441\u043f\u043e\u0441\u043e\u0431\u043d\u043e\u0441\u0442\u044c", net_line_load: "\u041d\u0430\u0433\u0440\u0443\u0437\u043a\u0430", net_line_volume: "\u0422\u043e\u043c", section_net_disk1: "\u0414\u0438\u0441\u043a 1", section_net_disk2: "\u0414\u0438\u0441\u043a 2", section_net_disk3: "\u0414\u0438\u0441\u043a 3", section_net_disk4: "\u0414\u0438\u0441\u043a 4",
     type_robot: "\u0420\u043e\u0431\u043e\u0442 (\u043f\u044b\u043b\u0435\u0441\u043e\u0441, \u043c\u043e\u0439\u0449\u0438\u043a, \u0433\u0430\u0437\u043e\u043d\u043e\u043a\u043e\u0441\u0438\u043b\u043a\u0430)", layout_robot_vacuum: "\u0420\u043e\u0431\u043e\u0442-\u043f\u044b\u043b\u0435\u0441\u043e\u0441", layout_robot_mop: "\u041c\u043e\u044e\u0449\u0438\u0439 \u0440\u043e\u0431\u043e\u0442", layout_robot_mower: "\u0420\u043e\u0431\u043e\u0442-\u0433\u0430\u0437\u043e\u043d\u043e\u043a\u043e\u0441\u0438\u043b\u043a\u0430", section_robot_station: "\u0411\u0430\u0437\u0430", robot_station_station: "\u0421\u0442\u0430\u043d\u0446\u0438\u044f \u043e\u0447\u0438\u0441\u0442\u043a\u0438 \u0438\u043b\u0438 \u043c\u043e\u0439\u043a\u0438", robot_station_base: "\u0422\u043e\u043b\u044c\u043a\u043e \u0437\u0430\u0440\u044f\u0434\u043d\u0430\u044f \u0431\u0430\u0437\u0430", robot_shelter: "\u041d\u0430\u0432\u0435\u0441 \u043d\u0430\u0434 \u0431\u0430\u0437\u043e\u0439", robot_charging: "\u0417\u0430\u0440\u044f\u0434\u043a\u0430", robot_docked: "\u041d\u0430 \u0431\u0430\u0437\u0435", robot_cleaning: "\u0423\u0431\u043e\u0440\u043a\u0430", robot_mopping: "\u041c\u044b\u0442\u044c\u0435", robot_mowing: "\u0421\u0442\u0440\u0438\u0436\u043a\u0430", robot_edgecut: "\u041e\u0431\u0440\u0435\u0437\u043a\u0430 \u043a\u0440\u0430\u0451\u0432", robot_returning: "\u0412\u043e\u0437\u0432\u0440\u0430\u0442 \u043d\u0430 \u0431\u0430\u0437\u0443", robot_emptying: "\u041e\u0447\u0438\u0441\u0442\u043a\u0430 \u043a\u043e\u043d\u0442\u0435\u0439\u043d\u0435\u0440\u0430", robot_bin_full: "\u041a\u043e\u043d\u0442\u0435\u0439\u043d\u0435\u0440 \u043f\u043e\u043b\u043e\u043d", robot_washing: "\u041c\u043e\u0439\u043a\u0430 \u0441\u0430\u043b\u0444\u0435\u0442\u043e\u043a", robot_drying: "\u0421\u0443\u0448\u043a\u0430 \u0441\u0430\u043b\u0444\u0435\u0442\u043e\u043a", robot_water_empty: "\u0420\u0435\u0437\u0435\u0440\u0432\u0443\u0430\u0440 \u043f\u0443\u0441\u0442", robot_rain: "\u0414\u043e\u0436\u0434\u044c", robot_idle: "\u041e\u0441\u0442\u0430\u043d\u043e\u0432\u043b\u0435\u043d", section_robot_status: "\u041f\u043e\u0434\u0440\u043e\u0431\u043d\u044b\u0439 \u0441\u0442\u0430\u0442\u0443\u0441", section_battery: "\u0411\u0430\u0442\u0430\u0440\u0435\u044f", section_robot_bin: "\u041a\u043e\u043d\u0442\u0435\u0439\u043d\u0435\u0440 \u043f\u043e\u043b\u043e\u043d", section_robot_water: "\u0420\u0435\u0437\u0435\u0440\u0432\u0443\u0430\u0440 \u0434\u043b\u044f \u0432\u043e\u0434\u044b", section_robot_rain: "\u0414\u043e\u0436\u0434\u044c", section_robot_error: "\u041e\u0448\u0438\u0431\u043a\u0430",
+    type_pool_pump: "\u041d\u0430\u0441\u043e\u0441 \u0431\u0430\u0441\u0441\u0435\u0439\u043d\u0430", pool_filtering: "\u0424\u0438\u043b\u044c\u0442\u0440\u0430\u0446\u0438\u044f", pool_chlorinating: "\u041f\u043e\u0434\u0430\u0447\u0430 \u0445\u043b\u043e\u0440\u0430", pool_backwash: "\u041e\u0431\u0440\u0430\u0442\u043d\u0430\u044f \u043f\u0440\u043e\u043c\u044b\u0432\u043a\u0430", pool_frost: "\u0417\u0430\u0449\u0438\u0442\u0430 \u043e\u0442 \u0437\u0430\u043c\u0435\u0440\u0437\u0430\u043d\u0438\u044f", pool_light_on: "\u0441\u0432\u0435\u0442", section_water_temperature: "\u0422\u0435\u043c\u043f\u0435\u0440\u0430\u0442\u0443\u0440\u0430 \u0432\u043e\u0434\u044b", section_air_temperature: "\u0422\u0435\u043c\u043f\u0435\u0440\u0430\u0442\u0443\u0440\u0430 \u0432\u043e\u0437\u0434\u0443\u0445\u0430", section_ph: "pH", section_redox: "RedOx (\u041e\u0412\u041f)", section_filtration_time: "\u0412\u0440\u0435\u043c\u044f \u0444\u0438\u043b\u044c\u0442\u0440\u0430\u0446\u0438\u0438 \u0441\u0435\u0433\u043e\u0434\u043d\u044f", section_pressure: "\u0414\u0430\u0432\u043b\u0435\u043d\u0438\u0435 \u0444\u0438\u043b\u044c\u0442\u0440\u0430", pool_pressure_alert: "\u0422\u0440\u0435\u0432\u043e\u0433\u0430 \u0432\u044b\u0448\u0435 \u044d\u0442\u043e\u0433\u043e \u0434\u0430\u0432\u043b\u0435\u043d\u0438\u044f (\u0431\u0430\u0440)", section_pool_mode: "\u0420\u0435\u0436\u0438\u043c \u043d\u0430\u0441\u043e\u0441\u0430", section_chlorine_pump: "\u041d\u0430\u0441\u043e\u0441 \u0445\u043b\u043e\u0440\u0430", section_chlorine_level: "\u0423\u0440\u043e\u0432\u0435\u043d\u044c \u0445\u043b\u043e\u0440\u0430 \u0432 \u043a\u0430\u043d\u0438\u0441\u0442\u0440\u0435", section_backwash: "\u041e\u0431\u0440\u0430\u0442\u043d\u0430\u044f \u043f\u0440\u043e\u043c\u044b\u0432\u043a\u0430", section_frost: "\u0417\u0430\u0449\u0438\u0442\u0430 \u043e\u0442 \u0437\u0430\u043c\u0435\u0440\u0437\u0430\u043d\u0438\u044f", section_pool_alert: "\u0422\u0440\u0435\u0432\u043e\u0433\u0430", pool_line_water: "\u0412\u043e\u0434\u0430", pool_line_air: "\u0412\u043e\u0437\u0434\u0443\u0445", pool_line_filtered: "\u041e\u0442\u0444\u0438\u043b\u044c\u0442\u0440\u043e\u0432\u0430\u043d\u043e \u0441\u0435\u0433\u043e\u0434\u043d\u044f", pool_line_pressure: "\u0414\u0430\u0432\u043b\u0435\u043d\u0438\u0435", pool_line_chlorine: "\u041a\u0430\u043d\u0438\u0441\u0442\u0440\u0430 \u0445\u043b\u043e\u0440\u0430", pool_line_mode: "\u0420\u0435\u0436\u0438\u043c",
     section_purifier_layout: "\u041c\u043e\u0434\u0435\u043b\u044c", layout_purifier_cylinder: "\u0426\u0438\u043b\u0438\u043d\u0434\u0440", layout_purifier_box: "\u041a\u0432\u0430\u0434\u0440\u0430\u0442\u043d\u044b\u0439 \u043a\u043e\u0440\u043f\u0443\u0441", layout_purifier_ring: "\u0411\u0435\u0437\u043b\u043e\u043f\u0430\u0441\u0442\u043d\u043e\u0435 \u043a\u043e\u043b\u044c\u0446\u043e",
     pf_purifying: "\u041e\u0447\u0438\u0441\u0442\u043a\u0430", pf_auto: "\u0410\u0432\u0442\u043e", pf_night: "\u041d\u043e\u0447\u043d\u043e\u0439 \u0440\u0435\u0436\u0438\u043c", section_air_quality: "\u041a\u0430\u0447\u0435\u0441\u0442\u0432\u043e \u0432\u043e\u0437\u0434\u0443\u0445\u0430",
     section_screen: "\u042d\u043a\u0440\u0430\u043d", section_heater: "\u041e\u0431\u043e\u0433\u0440\u0435\u0432 (\u0442\u0435\u0440\u043c\u043e\u0441\u0442\u0430\u0442)", aq_good: "\u0425\u043e\u0440\u043e\u0448\u0435\u0435", aq_fair: "\u0423\u0434\u043e\u0432\u043b\u0435\u0442\u0432\u043e\u0440\u0438\u0442\u0435\u043b\u044c\u043d\u043e\u0435",
@@ -606,6 +609,7 @@ const T = {
     type_hair_dryer: "Haartrockner", layout_hd_pistol: "Klassisch", layout_hd_ring: "Ring", hd_cool: "Kaltluft", hd_hot: "Warmluft", hd_heat_threshold: "Warmluft oberhalb dieser Leistung (W)", fill_height: "Ganze H\u00f6he des Platzes f\u00fcllen", done_alert: "Am Ende des Programms blinken", done_seen: "Gesehen", no_power_threshold: "Kein Verbrauch unter (W)", group_appearance: "Darstellung", show_name: "Namen anzeigen", show_state: "Status anzeigen", transparent: "Transparenter Hintergrund", font_scale: "Textgr\u00f6\u00dfe", illustration_size: "Zeichnungsgr\u00f6\u00dfe", compact_mode: "Kompaktmodus", compact_off: "Aus", compact_hide: "Ohne Zeichnung", compact_side: "Zeichnung seitlich", group_laundry: "W\u00e4sche", group_kitchen: "K\u00fcche", group_heating: "Heizung und Warmwasser", group_air: "Luft und Klima", group_home: "Haus und Multimedia", group_pets: "Haustiere",
     type_network: "Netzwerk (Switch, NAS, Server)", group_network: "Netzwerk und Server", layout_net_switch: "Switch", layout_net_server: "Server", layout_net_nas: "NAS", layout_net_rack: "Rack", net_ports_count: "Gezeichnete Ports", net_bays: "NAS-Sch\u00e4chte", net_online: "Online", net_busy: "Aktiv", net_alert: "Alarm", net_warn: "Festplatte beobachten", section_net_cpu: "CPU-Auslastung (%)", section_net_memory: "Speicherauslastung (%)", section_net_volume: "Volume belegt (%)", section_net_download: "Download-Rate", section_net_upload: "Upload-Rate", section_net_ports: "Aktive Ports", net_ports_total: "Anzahl der Ports", section_net_poe: "PoE-Leistung", section_net_problem: "Problemmeldung", section_net_temperature: "Temperatur", net_temp_alert: "Alarm oberhalb dieser Temperatur (\u00b0C)", net_busy_threshold: "Aktiv oberhalb dieser Rate (Mbit/s)", net_line_rate: "Durchsatz", net_line_load: "Last", net_line_volume: "Volume", section_net_disk1: "Festplatte 1", section_net_disk2: "Festplatte 2", section_net_disk3: "Festplatte 3", section_net_disk4: "Festplatte 4",
     type_robot: "Roboter (Sauger, Wischer, M\u00e4her)", layout_robot_vacuum: "Saugroboter", layout_robot_mop: "Wischroboter", layout_robot_mower: "M\u00e4hroboter", section_robot_station: "Basis", robot_station_station: "Absaug- oder Waschstation", robot_station_base: "Nur Ladestation", robot_shelter: "Garage \u00fcber der Station", robot_charging: "L\u00e4dt", robot_docked: "In der Station", robot_cleaning: "Reinigt", robot_mopping: "Wischt", robot_mowing: "M\u00e4ht", robot_edgecut: "Kantenschnitt", robot_returning: "Kehrt zur Station zur\u00fcck", robot_emptying: "Beh\u00e4lter wird geleert", robot_bin_full: "Beh\u00e4lter voll", robot_washing: "Pads werden gewaschen", robot_drying: "Pads werden getrocknet", robot_water_empty: "Wassertank leer", robot_rain: "Regenpause", robot_idle: "Gestoppt", section_robot_status: "Detaillierter Status", section_battery: "Akku", section_robot_bin: "Beh\u00e4lter voll", section_robot_water: "Wassertank", section_robot_rain: "Regen", section_robot_error: "Fehler",
+    type_pool_pump: "Poolpumpe", pool_filtering: "Filterung", pool_chlorinating: "Chlordosierung", pool_backwash: "R\u00fccksp\u00fclung", pool_frost: "Frostschutz", pool_light_on: "Licht an", section_water_temperature: "Wassertemperatur", section_air_temperature: "Lufttemperatur", section_ph: "pH", section_redox: "RedOx (ORP)", section_filtration_time: "Filterzeit heute", section_pressure: "Filterdruck", pool_pressure_alert: "Alarm \u00fcber diesem Druck (bar)", section_pool_mode: "Pumpenmodus", section_chlorine_pump: "Chlorpumpe", section_chlorine_level: "F\u00fcllstand Chlorkanister", section_backwash: "R\u00fccksp\u00fclung", section_frost: "Frostschutz", section_pool_alert: "Alarm", pool_line_water: "Wasser", pool_line_air: "Luft", pool_line_filtered: "Heute gefiltert", pool_line_pressure: "Druck", pool_line_chlorine: "Chlorkanister", pool_line_mode: "Modus",
     section_purifier_layout: "Modell", layout_purifier_cylinder: "Zylinder", layout_purifier_box: "Quaderform", layout_purifier_ring: "Rotorloser Ring",
     pf_purifying: "Reinigt", pf_auto: "Auto", pf_night: "Nachtmodus", section_air_quality: "Luftqualit\u00e4t",
     section_screen: "Anzeige", section_heater: "Heizung (Thermostat)", aq_good: "Gut", aq_fair: "M\u00e4\u00dfig",
@@ -760,6 +764,7 @@ const T = {
     type_hair_dryer: "Secador de pelo", layout_hd_pistol: "Cl\u00e1sico", layout_hd_ring: "Anillo", hd_cool: "Aire fr\u00edo", hd_hot: "Aire caliente", hd_heat_threshold: "Aire caliente por encima de esta potencia (W)", fill_height: "Ocupar toda la altura de su hueco", done_alert: "Parpadear al final del ciclo", done_seen: "Visto", no_power_threshold: "Sin consumo por debajo de (W)", group_appearance: "Apariencia", show_name: "Mostrar el nombre", show_state: "Mostrar el estado", transparent: "Fondo transparente", font_scale: "Tama\u00f1o del texto", illustration_size: "Tama\u00f1o del dibujo", compact_mode: "Modo compacto", compact_off: "Desactivado", compact_hide: "Sin dibujo", compact_side: "Dibujo al lado", group_laundry: "Lavander\u00eda", group_kitchen: "Cocina", group_heating: "Calefacci\u00f3n y agua caliente", group_air: "Aire y climatizaci\u00f3n", group_home: "Hogar y multimedia", group_pets: "Mascotas",
     type_network: "Red (switch, NAS, servidor)", group_network: "Red y servidores", layout_net_switch: "Switch", layout_net_server: "Servidor", layout_net_nas: "NAS", layout_net_rack: "Rack", net_ports_count: "Puertos dibujados", net_bays: "Bah\u00edas del NAS", net_online: "En l\u00ednea", net_busy: "Actividad", net_alert: "Alerta", net_warn: "Disco a vigilar", section_net_cpu: "Uso de CPU (%)", section_net_memory: "Uso de memoria (%)", section_net_volume: "Volumen ocupado (%)", section_net_download: "Velocidad de descarga", section_net_upload: "Velocidad de subida", section_net_ports: "Puertos activos", net_ports_total: "N\u00famero de puertos", section_net_poe: "Potencia PoE", section_net_problem: "Alerta (problema)", section_net_temperature: "Temperatura", net_temp_alert: "Alerta por encima de esta temperatura (\u00b0C)", net_busy_threshold: "Actividad por encima de esta velocidad (Mbit/s)", net_line_rate: "Caudal", net_line_load: "Carga", net_line_volume: "Volumen", section_net_disk1: "Disco 1", section_net_disk2: "Disco 2", section_net_disk3: "Disco 3", section_net_disk4: "Disco 4",
     type_robot: "Robot (aspirador, fregasuelos, cortac\u00e9sped)", layout_robot_vacuum: "Robot aspirador", layout_robot_mop: "Robot fregasuelos", layout_robot_mower: "Robot cortac\u00e9sped", section_robot_station: "Base", robot_station_station: "Estaci\u00f3n de vaciado o lavado", robot_station_base: "Solo base de carga", robot_shelter: "Techo sobre la base", robot_charging: "Cargando", robot_docked: "En la base", robot_cleaning: "Limpiando", robot_mopping: "Fregando", robot_mowing: "Cortando", robot_edgecut: "Corte de bordes", robot_returning: "Volviendo a la base", robot_emptying: "Vaciando el dep\u00f3sito", robot_bin_full: "Dep\u00f3sito lleno", robot_washing: "Lavando las mopas", robot_drying: "Secando las mopas", robot_water_empty: "Dep\u00f3sito de agua vac\u00edo", robot_rain: "Pausa por lluvia", robot_idle: "Detenido", section_robot_status: "Estado detallado", section_battery: "Bater\u00eda", section_robot_bin: "Dep\u00f3sito lleno", section_robot_water: "Dep\u00f3sito de agua", section_robot_rain: "Lluvia", section_robot_error: "Error",
+    type_pool_pump: "Bomba de piscina", pool_filtering: "Filtrando", pool_chlorinating: "Inyecci\u00f3n de cloro", pool_backwash: "Contralavado", pool_frost: "Antihielo", pool_light_on: "luz encendida", section_water_temperature: "Temperatura del agua", section_air_temperature: "Temperatura del aire", section_ph: "pH", section_redox: "RedOx (ORP)", section_filtration_time: "Tiempo de filtraci\u00f3n hoy", section_pressure: "Presi\u00f3n del filtro", pool_pressure_alert: "Alerta por encima de esta presi\u00f3n (bar)", section_pool_mode: "Modo de la bomba", section_chlorine_pump: "Bomba de cloro", section_chlorine_level: "Nivel del bid\u00f3n de cloro", section_backwash: "Contralavado", section_frost: "Antihielo", section_pool_alert: "Alerta", pool_line_water: "Agua", pool_line_air: "Aire", pool_line_filtered: "Filtrado hoy", pool_line_pressure: "Presi\u00f3n", pool_line_chlorine: "Bid\u00f3n de cloro", pool_line_mode: "Modo",
     section_purifier_layout: "Modelo", layout_purifier_cylinder: "Cilindro", layout_purifier_box: "Caja cuadrada", layout_purifier_ring: "Anillo sin aspas",
     pf_purifying: "Purificando", pf_auto: "Auto", pf_night: "Modo nocturno", section_air_quality: "Calidad del aire",
     section_screen: "Pantalla", section_heater: "Calefacci\u00f3n (termostato)", aq_good: "Buena", aq_fair: "Aceptable",
@@ -914,6 +919,7 @@ const T = {
     type_hair_dryer: "Asciugacapelli", layout_hd_pistol: "Classico", layout_hd_ring: "Anello", hd_cool: "Aria fredda", hd_hot: "Aria calda", hd_heat_threshold: "Aria calda sopra questa potenza (W)", fill_height: "Occupare tutta l'altezza dello spazio", done_alert: "Lampeggiare a fine ciclo", done_seen: "Visto", no_power_threshold: "Nessun consumo sotto (W)", group_appearance: "Aspetto", show_name: "Mostra il nome", show_state: "Mostra lo stato", transparent: "Sfondo trasparente", font_scale: "Dimensione del testo", illustration_size: "Dimensione del disegno", compact_mode: "Modalit\u00e0 compatta", compact_off: "Disattivata", compact_hide: "Senza disegno", compact_side: "Disegno di lato", group_laundry: "Bucato", group_kitchen: "Cucina", group_heating: "Riscaldamento e acqua calda", group_air: "Aria e clima", group_home: "Casa e multimedia", group_pets: "Animali",
     type_network: "Rete (switch, NAS, server)", group_network: "Rete e server", layout_net_switch: "Switch", layout_net_server: "Server", layout_net_nas: "NAS", layout_net_rack: "Rack", net_ports_count: "Porte disegnate", net_bays: "Alloggiamenti del NAS", net_online: "Online", net_busy: "Attivit\u00e0", net_alert: "Allarme", net_warn: "Disco da tenere d'occhio", section_net_cpu: "Uso CPU (%)", section_net_memory: "Uso memoria (%)", section_net_volume: "Volume occupato (%)", section_net_download: "Velocit\u00e0 di download", section_net_upload: "Velocit\u00e0 di upload", section_net_ports: "Porte attive", net_ports_total: "Numero di porte", section_net_poe: "Potenza PoE", section_net_problem: "Avviso (problema)", section_net_temperature: "Temperatura", net_temp_alert: "Allarme sopra questa temperatura (\u00b0C)", net_busy_threshold: "Attivit\u00e0 sopra questa velocit\u00e0 (Mbit/s)", net_line_rate: "Velocit\u00e0", net_line_load: "Carico", net_line_volume: "Volume", section_net_disk1: "Disco 1", section_net_disk2: "Disco 2", section_net_disk3: "Disco 3", section_net_disk4: "Disco 4",
     type_robot: "Robot (aspirapolvere, lavapavimenti, tosaerba)", layout_robot_vacuum: "Robot aspirapolvere", layout_robot_mop: "Robot lavapavimenti", layout_robot_mower: "Robot tosaerba", section_robot_station: "Base", robot_station_station: "Stazione di svuotamento o lavaggio", robot_station_base: "Solo base di ricarica", robot_shelter: "Tettoia sopra la base", robot_charging: "In carica", robot_docked: "Alla base", robot_cleaning: "Pulizia", robot_mopping: "Lavaggio", robot_mowing: "Taglio", robot_edgecut: "Taglio dei bordi", robot_returning: "Ritorno alla base", robot_emptying: "Svuotamento del contenitore", robot_bin_full: "Contenitore pieno", robot_washing: "Lavaggio dei panni", robot_drying: "Asciugatura dei panni", robot_water_empty: "Serbatoio dell'acqua vuoto", robot_rain: "Pausa pioggia", robot_idle: "Fermo", section_robot_status: "Stato dettagliato", section_battery: "Batteria", section_robot_bin: "Contenitore pieno", section_robot_water: "Serbatoio dell'acqua", section_robot_rain: "Pioggia", section_robot_error: "Errore",
+    type_pool_pump: "Pompa piscina", pool_filtering: "Filtrazione", pool_chlorinating: "Iniezione di cloro", pool_backwash: "Controlavaggio", pool_frost: "Antigelo", pool_light_on: "luce accesa", section_water_temperature: "Temperatura dell'acqua", section_air_temperature: "Temperatura dell'aria", section_ph: "pH", section_redox: "RedOx (ORP)", section_filtration_time: "Tempo di filtrazione oggi", section_pressure: "Pressione del filtro", pool_pressure_alert: "Allarme sopra questa pressione (bar)", section_pool_mode: "Modalit\u00e0 della pompa", section_chlorine_pump: "Pompa del cloro", section_chlorine_level: "Livello della tanica di cloro", section_backwash: "Controlavaggio", section_frost: "Antigelo", section_pool_alert: "Allarme", pool_line_water: "Acqua", pool_line_air: "Aria", pool_line_filtered: "Filtrato oggi", pool_line_pressure: "Pressione", pool_line_chlorine: "Tanica di cloro", pool_line_mode: "Modalit\u00e0",
     section_purifier_layout: "Modello", layout_purifier_cylinder: "Cilindro", layout_purifier_box: "Scatola quadrata", layout_purifier_ring: "Anello senza pale",
     pf_purifying: "Purificazione", pf_auto: "Auto", pf_night: "Modalit\u00e0 notte", section_air_quality: "Qualit\u00e0 dell'aria",
     section_screen: "Display", section_heater: "Riscaldamento (termostato)", aq_good: "Buona", aq_fair: "Discreta",
@@ -1068,6 +1074,7 @@ const T = {
     type_hair_dryer: "Haardroger", layout_hd_pistol: "Klassiek", layout_hd_ring: "Ring", hd_cool: "Koude lucht", hd_hot: "Warme lucht", hd_heat_threshold: "Warme lucht boven dit vermogen (W)", fill_height: "De volledige hoogte van het vak vullen", done_alert: "Knipperen aan het einde van de cyclus", done_seen: "Gezien", no_power_threshold: "Geen verbruik onder (W)", group_appearance: "Weergave", show_name: "Naam tonen", show_state: "Status tonen", transparent: "Transparante achtergrond", font_scale: "Tekstgrootte", illustration_size: "Grootte van de tekening", compact_mode: "Compacte modus", compact_off: "Uit", compact_hide: "Zonder tekening", compact_side: "Tekening opzij", group_laundry: "Was", group_kitchen: "Keuken", group_heating: "Verwarming en warm water", group_air: "Lucht en klimaat", group_home: "Huis en multimedia", group_pets: "Huisdieren",
     type_network: "Netwerk (switch, NAS, server)", group_network: "Netwerk en servers", layout_net_switch: "Switch", layout_net_server: "Server", layout_net_nas: "NAS", layout_net_rack: "Rack", net_ports_count: "Getekende poorten", net_bays: "NAS-sleuven", net_online: "Online", net_busy: "Actief", net_alert: "Alarm", net_warn: "Schijf in de gaten houden", section_net_cpu: "CPU-gebruik (%)", section_net_memory: "Geheugengebruik (%)", section_net_volume: "Volume bezet (%)", section_net_download: "Downloadsnelheid", section_net_upload: "Uploadsnelheid", section_net_ports: "Actieve poorten", net_ports_total: "Aantal poorten", section_net_poe: "PoE-vermogen", section_net_problem: "Probleemmelding", section_net_temperature: "Temperatuur", net_temp_alert: "Alarm boven deze temperatuur (\u00b0C)", net_busy_threshold: "Actief boven deze snelheid (Mbit/s)", net_line_rate: "Doorvoer", net_line_load: "Belasting", net_line_volume: "Volume", section_net_disk1: "Schijf 1", section_net_disk2: "Schijf 2", section_net_disk3: "Schijf 3", section_net_disk4: "Schijf 4",
     type_robot: "Robot (stofzuiger, dweil, maaier)", layout_robot_vacuum: "Robotstofzuiger", layout_robot_mop: "Dweilrobot", layout_robot_mower: "Robotmaaier", section_robot_station: "Basis", robot_station_station: "Leeg- of wasstation", robot_station_base: "Alleen laadstation", robot_shelter: "Afdak boven de basis", robot_charging: "Opladen", robot_docked: "In de basis", robot_cleaning: "Reinigen", robot_mopping: "Dweilen", robot_mowing: "Maaien", robot_edgecut: "Randen maaien", robot_returning: "Terug naar de basis", robot_emptying: "Bak legen", robot_bin_full: "Bak vol", robot_washing: "Pads wassen", robot_drying: "Pads drogen", robot_water_empty: "Waterreservoir leeg", robot_rain: "Regenpauze", robot_idle: "Gestopt", section_robot_status: "Gedetailleerde status", section_battery: "Batterij", section_robot_bin: "Bak vol", section_robot_water: "Waterreservoir", section_robot_rain: "Regen", section_robot_error: "Fout",
+    type_pool_pump: "Zwembadpomp", pool_filtering: "Filteren", pool_chlorinating: "Chloorinjectie", pool_backwash: "Terugspoelen", pool_frost: "Vorstbeveiliging", pool_light_on: "licht aan", section_water_temperature: "Watertemperatuur", section_air_temperature: "Luchttemperatuur", section_ph: "pH", section_redox: "RedOx (ORP)", section_filtration_time: "Filtertijd vandaag", section_pressure: "Filterdruk", pool_pressure_alert: "Alarm boven deze druk (bar)", section_pool_mode: "Pompmodus", section_chlorine_pump: "Chloorpomp", section_chlorine_level: "Niveau chloorvat", section_backwash: "Terugspoelen", section_frost: "Vorstbeveiliging", section_pool_alert: "Alarm", pool_line_water: "Water", pool_line_air: "Lucht", pool_line_filtered: "Vandaag gefilterd", pool_line_pressure: "Druk", pool_line_chlorine: "Chloorvat", pool_line_mode: "Modus",
     section_purifier_layout: "Model", layout_purifier_cylinder: "Cilinder", layout_purifier_box: "Vierkante kast", layout_purifier_ring: "Bladloze ring",
     pf_purifying: "Zuivert", pf_auto: "Auto", pf_night: "Nachtmodus", section_air_quality: "Luchtkwaliteit",
     section_screen: "Scherm", section_heater: "Verwarming (thermostaat)", aq_good: "Goed", aq_fair: "Matig",
@@ -1222,6 +1229,7 @@ const T = {
     type_hair_dryer: "Secador de cabelo", layout_hd_pistol: "Cl\u00e1ssico", layout_hd_ring: "Anel", hd_cool: "Ar frio", hd_hot: "Ar quente", hd_heat_threshold: "Ar quente acima desta pot\u00eancia (W)", fill_height: "Ocupar toda a altura do espa\u00e7o", done_alert: "Piscar no fim do ciclo", done_seen: "Visto", no_power_threshold: "Sem consumo abaixo de (W)", group_appearance: "Apar\u00eancia", show_name: "Mostrar o nome", show_state: "Mostrar o estado", transparent: "Fundo transparente", font_scale: "Tamanho do texto", illustration_size: "Tamanho do desenho", compact_mode: "Modo compacto", compact_off: "Desligado", compact_hide: "Sem desenho", compact_side: "Desenho ao lado", group_laundry: "Roupa", group_kitchen: "Cozinha", group_heating: "Aquecimento e \u00e1gua quente", group_air: "Ar e climatiza\u00e7\u00e3o", group_home: "Casa e multim\u00e9dia", group_pets: "Animais",
     type_network: "Rede (switch, NAS, servidor)", group_network: "Rede e servidores", layout_net_switch: "Switch", layout_net_server: "Servidor", layout_net_nas: "NAS", layout_net_rack: "Bastidor", net_ports_count: "Portas desenhadas", net_bays: "Ba\u00edas do NAS", net_online: "Online", net_busy: "Atividade", net_alert: "Alerta", net_warn: "Disco a vigiar", section_net_cpu: "Uso de CPU (%)", section_net_memory: "Uso de mem\u00f3ria (%)", section_net_volume: "Volume ocupado (%)", section_net_download: "Velocidade de download", section_net_upload: "Velocidade de upload", section_net_ports: "Portas ativas", net_ports_total: "N\u00famero de portas", section_net_poe: "Pot\u00eancia PoE", section_net_problem: "Alerta (problema)", section_net_temperature: "Temperatura", net_temp_alert: "Alerta acima desta temperatura (\u00b0C)", net_busy_threshold: "Atividade acima deste d\u00e9bito (Mbit/s)", net_line_rate: "D\u00e9bito", net_line_load: "Carga", net_line_volume: "Volume", section_net_disk1: "Disco 1", section_net_disk2: "Disco 2", section_net_disk3: "Disco 3", section_net_disk4: "Disco 4",
     type_robot: "Rob\u00f4 (aspirador, mopa, corta-relva)", layout_robot_vacuum: "Rob\u00f4 aspirador", layout_robot_mop: "Rob\u00f4 de mopa", layout_robot_mower: "Rob\u00f4 corta-relva", section_robot_station: "Base", robot_station_station: "Esta\u00e7\u00e3o de esvaziamento ou lavagem", robot_station_base: "S\u00f3 base de carga", robot_shelter: "Abrigo sobre a base", robot_charging: "A carregar", robot_docked: "Na base", robot_cleaning: "A limpar", robot_mopping: "A passar a mopa", robot_mowing: "A cortar", robot_edgecut: "Corte de bordas", robot_returning: "A voltar \u00e0 base", robot_emptying: "A esvaziar o dep\u00f3sito", robot_bin_full: "Dep\u00f3sito cheio", robot_washing: "A lavar as mopas", robot_drying: "A secar as mopas", robot_water_empty: "Dep\u00f3sito de \u00e1gua vazio", robot_rain: "Pausa de chuva", robot_idle: "Parado", section_robot_status: "Estado detalhado", section_battery: "Bateria", section_robot_bin: "Dep\u00f3sito cheio", section_robot_water: "Dep\u00f3sito de \u00e1gua", section_robot_rain: "Chuva", section_robot_error: "Erro",
+    type_pool_pump: "Bomba da piscina", pool_filtering: "A filtrar", pool_chlorinating: "Inje\u00e7\u00e3o de cloro", pool_backwash: "Contralavagem", pool_frost: "Antigelo", pool_light_on: "luz acesa", section_water_temperature: "Temperatura da \u00e1gua", section_air_temperature: "Temperatura do ar", section_ph: "pH", section_redox: "RedOx (ORP)", section_filtration_time: "Tempo de filtra\u00e7\u00e3o hoje", section_pressure: "Press\u00e3o do filtro", pool_pressure_alert: "Alerta acima desta press\u00e3o (bar)", section_pool_mode: "Modo da bomba", section_chlorine_pump: "Bomba de cloro", section_chlorine_level: "N\u00edvel do bid\u00e3o de cloro", section_backwash: "Contralavagem", section_frost: "Antigelo", section_pool_alert: "Alerta", pool_line_water: "\u00c1gua", pool_line_air: "Ar", pool_line_filtered: "Filtrado hoje", pool_line_pressure: "Press\u00e3o", pool_line_chlorine: "Bid\u00e3o de cloro", pool_line_mode: "Modo",
     section_purifier_layout: "Modelo", layout_purifier_cylinder: "Cilindro", layout_purifier_box: "Caixa quadrada", layout_purifier_ring: "Anel sem p\u00e1s",
     pf_purifying: "A purificar", pf_auto: "Auto", pf_night: "Modo noturno", section_air_quality: "Qualidade do ar",
     section_screen: "Ecr\u00e3", section_heater: "Aquecimento (term\u00f3stato)", aq_good: "Boa", aq_fair: "Razo\u00e1vel",
@@ -1376,6 +1384,7 @@ const T = {
     type_hair_dryer: "H\u00e5rtork", layout_hd_pistol: "Klassisk", layout_hd_ring: "Ring", hd_cool: "Kalluft", hd_hot: "Varmluft", hd_heat_threshold: "Varmluft \u00f6ver denna effekt (W)", fill_height: "Fyll hela platsens h\u00f6jd", done_alert: "Blinka n\u00e4r programmet \u00e4r klart", done_seen: "Sett", no_power_threshold: "Ingen f\u00f6rbrukning under (W)", group_appearance: "Utseende", show_name: "Visa namnet", show_state: "Visa status", transparent: "Genomskinlig bakgrund", font_scale: "Textstorlek", illustration_size: "Teckningens storlek", compact_mode: "Kompakt l\u00e4ge", compact_off: "Av", compact_hide: "Utan teckning", compact_side: "Teckning vid sidan", group_laundry: "Tv\u00e4tt", group_kitchen: "K\u00f6k", group_heating: "V\u00e4rme och varmvatten", group_air: "Luft och klimat", group_home: "Hem och media", group_pets: "Husdjur",
     type_network: "N\u00e4tverk (switch, NAS, server)", group_network: "N\u00e4tverk och servrar", layout_net_switch: "Switch", layout_net_server: "Server", layout_net_nas: "NAS", layout_net_rack: "Rack", net_ports_count: "Ritade portar", net_bays: "NAS-fack", net_online: "Online", net_busy: "Aktiv", net_alert: "Larm", net_warn: "Disk att bevaka", section_net_cpu: "CPU-anv\u00e4ndning (%)", section_net_memory: "Minnesanv\u00e4ndning (%)", section_net_volume: "Volym anv\u00e4nd (%)", section_net_download: "Nedladdningshastighet", section_net_upload: "Uppladdningshastighet", section_net_ports: "Aktiva portar", net_ports_total: "Antal portar", section_net_poe: "PoE-effekt", section_net_problem: "Problemvarning", section_net_temperature: "Temperatur", net_temp_alert: "Larm \u00f6ver denna temperatur (\u00b0C)", net_busy_threshold: "Aktiv \u00f6ver denna hastighet (Mbit/s)", net_line_rate: "Genomstr\u00f6mning", net_line_load: "Belastning", net_line_volume: "Volym", section_net_disk1: "Disk 1", section_net_disk2: "Disk 2", section_net_disk3: "Disk 3", section_net_disk4: "Disk 4",
     type_robot: "Robot (dammsugare, mopp, gr\u00e4sklippare)", layout_robot_vacuum: "Robotdammsugare", layout_robot_mop: "Moppningsrobot", layout_robot_mower: "Robotgr\u00e4sklippare", section_robot_station: "Bas", robot_station_station: "T\u00f6mnings- eller tv\u00e4ttstation", robot_station_base: "Endast laddbas", robot_shelter: "Tak \u00f6ver basen", robot_charging: "Laddar", robot_docked: "I basen", robot_cleaning: "St\u00e4dar", robot_mopping: "Moppar", robot_mowing: "Klipper", robot_edgecut: "Kantklippning", robot_returning: "\u00c5terv\u00e4nder till basen", robot_emptying: "T\u00f6mmer beh\u00e5llaren", robot_bin_full: "Beh\u00e5llaren full", robot_washing: "Tv\u00e4ttar moppdukarna", robot_drying: "Torkar moppdukarna", robot_water_empty: "Vattentanken tom", robot_rain: "Regnpaus", robot_idle: "Stoppad", section_robot_status: "Detaljerad status", section_battery: "Batteri", section_robot_bin: "Beh\u00e5llaren full", section_robot_water: "Vattentank", section_robot_rain: "Regn", section_robot_error: "Fel",
+    type_pool_pump: "Poolpump", pool_filtering: "Filtrerar", pool_chlorinating: "Klorinjektion", pool_backwash: "Backspolning", pool_frost: "Frostskydd", pool_light_on: "ljus p\u00e5", section_water_temperature: "Vattentemperatur", section_air_temperature: "Lufttemperatur", section_ph: "pH", section_redox: "RedOx (ORP)", section_filtration_time: "Filtreringstid idag", section_pressure: "Filtertryck", pool_pressure_alert: "Larm \u00f6ver detta tryck (bar)", section_pool_mode: "Pumpl\u00e4ge", section_chlorine_pump: "Klorpump", section_chlorine_level: "Niv\u00e5 i klordunken", section_backwash: "Backspolning", section_frost: "Frostskydd", section_pool_alert: "Larm", pool_line_water: "Vatten", pool_line_air: "Luft", pool_line_filtered: "Filtrerat idag", pool_line_pressure: "Tryck", pool_line_chlorine: "Klordunk", pool_line_mode: "L\u00e4ge",
     section_purifier_layout: "Modell", layout_purifier_cylinder: "Cylinder", layout_purifier_box: "Fyrkantig", layout_purifier_ring: "Bladl\u00f6s ring",
     pf_purifying: "Renar", pf_auto: "Auto", pf_night: "Nattl\u00e4ge", section_air_quality: "Luftkvalitet",
     section_screen: "Sk\u00e4rm", section_heater: "V\u00e4rme (termostat)", aq_good: "Bra", aq_fair: "M\u00e5ttlig",
@@ -1530,6 +1539,7 @@ const T = {
     type_hair_dryer: "H\u00e5rf\u00f8ner", layout_hd_pistol: "Klassisk", layout_hd_ring: "Ring", hd_cool: "Kald luft", hd_hot: "Varm luft", hd_heat_threshold: "Varm luft over denne effekten (W)", fill_height: "Fyll hele h\u00f8yden p\u00e5 plassen", done_alert: "Blinke n\u00e5r programmet er ferdig", done_seen: "Sett", no_power_threshold: "Ikke noe forbruk under (W)", group_appearance: "Utseende", show_name: "Vis navnet", show_state: "Vis status", transparent: "Gjennomsiktig bakgrunn", font_scale: "Tekstst\u00f8rrelse", illustration_size: "Tegningens st\u00f8rrelse", compact_mode: "Kompakt modus", compact_off: "Av", compact_hide: "Uten tegning", compact_side: "Tegning p\u00e5 siden", group_laundry: "Klesvask", group_kitchen: "Kj\u00f8kken", group_heating: "Oppvarming og varmtvann", group_air: "Luft og klima", group_home: "Hjem og multimedia", group_pets: "Kj\u00e6ledyr",
     type_network: "Nettverk (switch, NAS, server)", group_network: "Nettverk og servere", layout_net_switch: "Switch", layout_net_server: "Server", layout_net_nas: "NAS", layout_net_rack: "Rack", net_ports_count: "Tegnede porter", net_bays: "NAS-br\u00f8nner", net_online: "Tilkoblet", net_busy: "Aktiv", net_alert: "Alarm", net_warn: "Disk \u00e5 f\u00f8lge med p\u00e5", section_net_cpu: "CPU-bruk (%)", section_net_memory: "Minnebruk (%)", section_net_volume: "Volum brukt (%)", section_net_download: "Nedlastingshastighet", section_net_upload: "Opplastingshastighet", section_net_ports: "Aktive porter", net_ports_total: "Antall porter", section_net_poe: "PoE-effekt", section_net_problem: "Problemvarsel", section_net_temperature: "Temperatur", net_temp_alert: "Alarm over denne temperaturen (\u00b0C)", net_busy_threshold: "Aktiv over denne hastigheten (Mbit/s)", net_line_rate: "Gjennomstr\u00f8mning", net_line_load: "Belastning", net_line_volume: "Volum", section_net_disk1: "Disk 1", section_net_disk2: "Disk 2", section_net_disk3: "Disk 3", section_net_disk4: "Disk 4",
     type_robot: "Robot (st\u00f8vsuger, mopp, gressklipper)", layout_robot_vacuum: "Robotst\u00f8vsuger", layout_robot_mop: "Moppe-robot", layout_robot_mower: "Robotgressklipper", section_robot_station: "Base", robot_station_station: "T\u00f8mme- eller vaskestasjon", robot_station_base: "Bare ladebase", robot_shelter: "Tak over basen", robot_charging: "Lader", robot_docked: "I basen", robot_cleaning: "Rengj\u00f8r", robot_mopping: "Mopper", robot_mowing: "Klipper", robot_edgecut: "Kantklipping", robot_returning: "Returnerer til basen", robot_emptying: "T\u00f8mmer beholderen", robot_bin_full: "Beholderen full", robot_washing: "Vasker moppeputene", robot_drying: "T\u00f8rker moppeputene", robot_water_empty: "Vanntanken tom", robot_rain: "Regnpause", robot_idle: "Stoppet", section_robot_status: "Detaljert status", section_battery: "Batteri", section_robot_bin: "Beholderen full", section_robot_water: "Vanntank", section_robot_rain: "Regn", section_robot_error: "Feil",
+    type_pool_pump: "Bassengpumpe", pool_filtering: "Filtrerer", pool_chlorinating: "Klorinjeksjon", pool_backwash: "Tilbakespyling", pool_frost: "Frostbeskyttelse", pool_light_on: "lys p\u00e5", section_water_temperature: "Vanntemperatur", section_air_temperature: "Lufttemperatur", section_ph: "pH", section_redox: "RedOx (ORP)", section_filtration_time: "Filtreringstid i dag", section_pressure: "Filtertrykk", pool_pressure_alert: "Alarm over dette trykket (bar)", section_pool_mode: "Pumpemodus", section_chlorine_pump: "Klorpumpe", section_chlorine_level: "Niv\u00e5 i klorkanne", section_backwash: "Tilbakespyling", section_frost: "Frostbeskyttelse", section_pool_alert: "Alarm", pool_line_water: "Vann", pool_line_air: "Luft", pool_line_filtered: "Filtrert i dag", pool_line_pressure: "Trykk", pool_line_chlorine: "Klorkanne", pool_line_mode: "Modus",
     section_purifier_layout: "Modell", layout_purifier_cylinder: "Sylinder", layout_purifier_box: "Firkantet", layout_purifier_ring: "Vingel\u00f8s ring",
     pf_purifying: "Renser", pf_auto: "Auto", pf_night: "Nattmodus", section_air_quality: "Luftkvalitet",
     section_screen: "Skjerm", section_heater: "Varme (termostat)", aq_good: "God", aq_fair: "Moderat",
@@ -1684,6 +1694,7 @@ const T = {
     type_hair_dryer: "H\u00e5rt\u00f8rrer", layout_hd_pistol: "Klassisk", layout_hd_ring: "Ring", hd_cool: "Kold luft", hd_hot: "Varm luft", hd_heat_threshold: "Varm luft over denne effekt (W)", fill_height: "Fyld hele pladsens h\u00f8jde", done_alert: "Blinke n\u00e5r programmet er f\u00e6rdigt", done_seen: "Set", no_power_threshold: "Intet forbrug under (W)", group_appearance: "Udseende", show_name: "Vis navnet", show_state: "Vis status", transparent: "Gennemsigtig baggrund", font_scale: "Tekstst\u00f8rrelse", illustration_size: "Tegningens st\u00f8rrelse", compact_mode: "Kompakt tilstand", compact_off: "Fra", compact_hide: "Uden tegning", compact_side: "Tegning i siden", group_laundry: "T\u00f8jvask", group_kitchen: "K\u00f8kken", group_heating: "Opvarmning og varmt vand", group_air: "Luft og klima", group_home: "Hjem og multimedie", group_pets: "K\u00e6ledyr",
     type_network: "Netv\u00e6rk (switch, NAS, server)", group_network: "Netv\u00e6rk og servere", layout_net_switch: "Switch", layout_net_server: "Server", layout_net_nas: "NAS", layout_net_rack: "Rack", net_ports_count: "Tegnede porte", net_bays: "NAS-b\u00e5se", net_online: "Online", net_busy: "Aktiv", net_alert: "Alarm", net_warn: "Disk at holde \u00f8je med", section_net_cpu: "CPU-forbrug (%)", section_net_memory: "Hukommelsesforbrug (%)", section_net_volume: "Volumen brugt (%)", section_net_download: "Downloadhastighed", section_net_upload: "Uploadhastighed", section_net_ports: "Aktive porte", net_ports_total: "Antal porte", section_net_poe: "PoE-effekt", section_net_problem: "Problemadvarsel", section_net_temperature: "Temperatur", net_temp_alert: "Alarm over denne temperatur (\u00b0C)", net_busy_threshold: "Aktiv over denne hastighed (Mbit/s)", net_line_rate: "Gennemstr\u00f8mning", net_line_load: "Belastning", net_line_volume: "Volumen", section_net_disk1: "Disk 1", section_net_disk2: "Disk 2", section_net_disk3: "Disk 3", section_net_disk4: "Disk 4",
     type_robot: "Robot (st\u00f8vsuger, moppe, pl\u00e6neklipper)", layout_robot_vacuum: "Robotst\u00f8vsuger", layout_robot_mop: "Mopperobot", layout_robot_mower: "Robotpl\u00e6neklipper", section_robot_station: "Base", robot_station_station: "T\u00f8mnings- eller vaskestation", robot_station_base: "Kun ladebase", robot_shelter: "Tag over basen", robot_charging: "Lader", robot_docked: "I basen", robot_cleaning: "Rensning", robot_mopping: "Mopper", robot_mowing: "Sl\u00e5r", robot_edgecut: "Kantklipning", robot_returning: "Vender tilbage til basen", robot_emptying: "T\u00f8mmer beholderen", robot_bin_full: "Beholderen fuld", robot_washing: "Vasker moppepuderne", robot_drying: "T\u00f8rrer moppepuderne", robot_water_empty: "Vandtanken tom", robot_rain: "Regnpause", robot_idle: "Stoppet", section_robot_status: "Detaljeret status", section_battery: "Batteri", section_robot_bin: "Beholderen fuld", section_robot_water: "Vandtank", section_robot_rain: "Regn", section_robot_error: "Fejl",
+    type_pool_pump: "Poolpumpe", pool_filtering: "Filtrerer", pool_chlorinating: "Klorinjektion", pool_backwash: "Returskylning", pool_frost: "Frostbeskyttelse", pool_light_on: "lys t\u00e6ndt", section_water_temperature: "Vandtemperatur", section_air_temperature: "Lufttemperatur", section_ph: "pH", section_redox: "RedOx (ORP)", section_filtration_time: "Filtreringstid i dag", section_pressure: "Filtertryk", pool_pressure_alert: "Alarm over dette tryk (bar)", section_pool_mode: "Pumpetilstand", section_chlorine_pump: "Klorpumpe", section_chlorine_level: "Niveau i klordunk", section_backwash: "Returskylning", section_frost: "Frostbeskyttelse", section_pool_alert: "Alarm", pool_line_water: "Vand", pool_line_air: "Luft", pool_line_filtered: "Filtreret i dag", pool_line_pressure: "Tryk", pool_line_chlorine: "Klordunk", pool_line_mode: "Tilstand",
     section_purifier_layout: "Model", layout_purifier_cylinder: "Cylinder", layout_purifier_box: "Firkantet", layout_purifier_ring: "Vingel\u00f8s ring",
     pf_purifying: "Renser", pf_auto: "Auto", pf_night: "Nattilstand", section_air_quality: "Luftkvalitet",
     section_screen: "Sk\u00e6rm", section_heater: "Varme (termostat)", aq_good: "God", aq_fair: "Moderat",
@@ -1838,6 +1849,7 @@ const T = {
     type_hair_dryer: "Suszarka do w\u0142os\u00f3w", layout_hd_pistol: "Klasyczna", layout_hd_ring: "Pier\u015bcie\u0144", hd_cool: "Zimne powietrze", hd_hot: "Gor\u0105ce powietrze", hd_heat_threshold: "Gor\u0105ce powietrze powy\u017cej tej mocy (W)", fill_height: "Wype\u0142nij ca\u0142\u0105 wysoko\u015b\u0107 miejsca", done_alert: "Miga\u0107 po zako\u0144czeniu cyklu", done_seen: "Widziane", no_power_threshold: "Brak poboru poni\u017cej (W)", group_appearance: "Wygl\u0105d", show_name: "Poka\u017c nazw\u0119", show_state: "Poka\u017c stan", transparent: "Przezroczyste t\u0142o", font_scale: "Rozmiar tekstu", illustration_size: "Rozmiar rysunku", compact_mode: "Tryb kompaktowy", compact_off: "Wy\u0142\u0105czony", compact_hide: "Bez rysunku", compact_side: "Rysunek z boku", group_laundry: "Pranie", group_kitchen: "Kuchnia", group_heating: "Ogrzewanie i ciep\u0142a woda", group_air: "Powietrze i klimat", group_home: "Dom i multimedia", group_pets: "Zwierz\u0119ta",
     type_network: "Sie\u0107 (switch, NAS, serwer)", group_network: "Sie\u0107 i serwery", layout_net_switch: "Switch", layout_net_server: "Serwer", layout_net_nas: "NAS", layout_net_rack: "Szafa rack", net_ports_count: "Rysowane porty", net_bays: "Kieszenie NAS", net_online: "Online", net_busy: "Aktywno\u015b\u0107", net_alert: "Alarm", net_warn: "Dysk do obserwacji", section_net_cpu: "U\u017cycie CPU (%)", section_net_memory: "U\u017cycie pami\u0119ci (%)", section_net_volume: "Zaj\u0119to\u015b\u0107 woluminu (%)", section_net_download: "Pr\u0119dko\u015b\u0107 pobierania", section_net_upload: "Pr\u0119dko\u015b\u0107 wysy\u0142ania", section_net_ports: "Aktywne porty", net_ports_total: "Liczba port\u00f3w", section_net_poe: "Moc PoE", section_net_problem: "Alert (problem)", section_net_temperature: "Temperatura", net_temp_alert: "Alarm powy\u017cej tej temperatury (\u00b0C)", net_busy_threshold: "Aktywno\u015b\u0107 powy\u017cej tej pr\u0119dko\u015bci (Mbit/s)", net_line_rate: "Przepustowo\u015b\u0107", net_line_load: "Obci\u0105\u017cenie", net_line_volume: "Wolumin", section_net_disk1: "Dysk 1", section_net_disk2: "Dysk 2", section_net_disk3: "Dysk 3", section_net_disk4: "Dysk 4",
     type_robot: "Robot (odkurzacz, mop, kosiarka)", layout_robot_vacuum: "Robot odkurzaj\u0105cy", layout_robot_mop: "Robot mopuj\u0105cy", layout_robot_mower: "Robot kosz\u0105cy", section_robot_station: "Baza", robot_station_station: "Stacja opr\u00f3\u017cniania lub mycia", robot_station_base: "Tylko baza \u0142aduj\u0105ca", robot_shelter: "Daszek nad baz\u0105", robot_charging: "\u0141adowanie", robot_docked: "W bazie", robot_cleaning: "Sprz\u0105tanie", robot_mopping: "Mopowanie", robot_mowing: "Koszenie", robot_edgecut: "Przycinanie kraw\u0119dzi", robot_returning: "Powr\u00f3t do bazy", robot_emptying: "Opr\u00f3\u017cnianie pojemnika", robot_bin_full: "Pojemnik pe\u0142ny", robot_washing: "Mycie nak\u0142adek", robot_drying: "Suszenie nak\u0142adek", robot_water_empty: "Pusty zbiornik wody", robot_rain: "Przerwa z powodu deszczu", robot_idle: "Zatrzymany", section_robot_status: "Szczeg\u00f3\u0142owy stan", section_battery: "Bateria", section_robot_bin: "Pojemnik pe\u0142ny", section_robot_water: "Zbiornik wody", section_robot_rain: "Deszcz", section_robot_error: "B\u0142\u0105d",
+    type_pool_pump: "Pompa basenowa", pool_filtering: "Filtracja", pool_chlorinating: "Dozowanie chloru", pool_backwash: "P\u0142ukanie wsteczne", pool_frost: "Ochrona przed mrozem", pool_light_on: "\u015bwiat\u0142o w\u0142\u0105czone", section_water_temperature: "Temperatura wody", section_air_temperature: "Temperatura powietrza", section_ph: "pH", section_redox: "RedOx (ORP)", section_filtration_time: "Czas filtracji dzi\u015b", section_pressure: "Ci\u015bnienie filtra", pool_pressure_alert: "Alarm powy\u017cej tego ci\u015bnienia (bar)", section_pool_mode: "Tryb pompy", section_chlorine_pump: "Pompa chloru", section_chlorine_level: "Poziom w kanistrze chloru", section_backwash: "P\u0142ukanie wsteczne", section_frost: "Ochrona przed mrozem", section_pool_alert: "Alarm", pool_line_water: "Woda", pool_line_air: "Powietrze", pool_line_filtered: "Przefiltrowano dzi\u015b", pool_line_pressure: "Ci\u015bnienie", pool_line_chlorine: "Kanister chloru", pool_line_mode: "Tryb",
     section_purifier_layout: "Model", layout_purifier_cylinder: "Walec", layout_purifier_box: "Kwadratowa obudowa", layout_purifier_ring: "Pier\u015bcie\u0144 bez \u0142opatek",
     pf_purifying: "Oczyszczanie", pf_auto: "Auto", pf_night: "Tryb nocny", section_air_quality: "Jako\u015b\u0107 powietrza",
     section_screen: "Ekran", section_heater: "Ogrzewanie (termostat)", aq_good: "Dobra", aq_fair: "Umiarkowana",
@@ -1992,6 +2004,7 @@ const T = {
     type_hair_dryer: "\u5439\u98ce\u673a", layout_hd_pistol: "\u7ecf\u5178", layout_hd_ring: "\u73af\u5f62", hd_cool: "\u51b7\u98ce", hd_hot: "\u70ed\u98ce", hd_heat_threshold: "\u9ad8\u4e8e\u6b64\u529f\u7387\u65f6\u4e3a\u70ed\u98ce (W)", fill_height: "\u586b\u6ee1\u6240\u5728\u4f4d\u7f6e\u7684\u9ad8\u5ea6", done_alert: "\u7a0b\u5e8f\u7ed3\u675f\u65f6\u95ea\u70c1", done_seen: "\u5df2\u67e5\u770b", no_power_threshold: "\u4f4e\u4e8e\u6b64\u529f\u7387\u89c6\u4e3a\u65e0\u8017\u7535 (W)", group_appearance: "\u5916\u89c2", show_name: "\u663e\u793a\u540d\u79f0", show_state: "\u663e\u793a\u72b6\u6001", transparent: "\u900f\u660e\u80cc\u666f", font_scale: "\u6587\u5b57\u5927\u5c0f", illustration_size: "\u56fe\u793a\u5927\u5c0f", compact_mode: "\u7d27\u51d1\u6a21\u5f0f", compact_off: "\u5173\u95ed", compact_hide: "\u4e0d\u663e\u793a\u56fe\u793a", compact_side: "\u56fe\u793a\u5728\u4fa7\u8fb9", group_laundry: "\u6d17\u8863", group_kitchen: "\u53a8\u623f", group_heating: "\u4f9b\u6696\u4e0e\u70ed\u6c34", group_air: "\u7a7a\u6c14\u4e0e\u6c14\u5019", group_home: "\u5bb6\u5c45\u4e0e\u591a\u5a92\u4f53", group_pets: "\u5ba0\u7269",
     type_network: "\u7f51\u7edc\u8bbe\u5907\uff08\u4ea4\u6362\u673a\u3001NAS\u3001\u670d\u52a1\u5668\uff09", group_network: "\u7f51\u7edc\u4e0e\u670d\u52a1\u5668", layout_net_switch: "\u4ea4\u6362\u673a", layout_net_server: "\u670d\u52a1\u5668", layout_net_nas: "NAS", layout_net_rack: "\u673a\u67dc", net_ports_count: "\u7ed8\u5236\u7684\u7aef\u53e3\u6570", net_bays: "NAS \u76d8\u4f4d", net_online: "\u5728\u7ebf", net_busy: "\u6d3b\u52a8", net_alert: "\u8b66\u62a5", net_warn: "\u9700\u5173\u6ce8\u7684\u786c\u76d8", section_net_cpu: "CPU \u4f7f\u7528\u7387 (%)", section_net_memory: "\u5185\u5b58\u4f7f\u7528\u7387 (%)", section_net_volume: "\u5377\u5df2\u7528 (%)", section_net_download: "\u4e0b\u8f7d\u901f\u7387", section_net_upload: "\u4e0a\u4f20\u901f\u7387", section_net_ports: "\u6d3b\u52a8\u7aef\u53e3", net_ports_total: "\u7aef\u53e3\u6570\u91cf", section_net_poe: "PoE \u529f\u7387", section_net_problem: "\u95ee\u9898\u8b66\u62a5", section_net_temperature: "\u6e29\u5ea6", net_temp_alert: "\u9ad8\u4e8e\u6b64\u6e29\u5ea6\u62a5\u8b66 (\u00b0C)", net_busy_threshold: "\u9ad8\u4e8e\u6b64\u901f\u7387\u663e\u793a\u6d3b\u52a8 (Mbit/s)", net_line_rate: "\u541e\u5410\u91cf", net_line_load: "\u8d1f\u8f7d", net_line_volume: "\u5377", section_net_disk1: "\u786c\u76d8 1", section_net_disk2: "\u786c\u76d8 2", section_net_disk3: "\u786c\u76d8 3", section_net_disk4: "\u786c\u76d8 4",
     type_robot: "\u673a\u5668\u4eba\uff08\u626b\u5730\u3001\u62d6\u5730\u3001\u5272\u8349\uff09", layout_robot_vacuum: "\u626b\u5730\u673a\u5668\u4eba", layout_robot_mop: "\u62d6\u5730\u673a\u5668\u4eba", layout_robot_mower: "\u5272\u8349\u673a\u5668\u4eba", section_robot_station: "\u5e95\u5ea7", robot_station_station: "\u96c6\u5c18\u6216\u6e05\u6d17\u57fa\u7ad9", robot_station_base: "\u4ec5\u5145\u7535\u5ea7", robot_shelter: "\u5e95\u5ea7\u906e\u68da", robot_charging: "\u5145\u7535\u4e2d", robot_docked: "\u5728\u5e95\u5ea7", robot_cleaning: "\u6e05\u626b\u4e2d", robot_mopping: "\u62d6\u5730\u4e2d", robot_mowing: "\u5272\u8349\u4e2d", robot_edgecut: "\u4fee\u8fb9", robot_returning: "\u6b63\u5728\u56de\u5145", robot_emptying: "\u6b63\u5728\u96c6\u5c18", robot_bin_full: "\u5c18\u76d2\u5df2\u6ee1", robot_washing: "\u6b63\u5728\u6e05\u6d17\u62d6\u5e03", robot_drying: "\u6b63\u5728\u70d8\u5e72\u62d6\u5e03", robot_water_empty: "\u6c34\u7bb1\u7f3a\u6c34", robot_rain: "\u96e8\u5929\u6682\u505c", robot_idle: "\u5df2\u505c\u6b62", section_robot_status: "\u8be6\u7ec6\u72b6\u6001", section_battery: "\u7535\u91cf", section_robot_bin: "\u5c18\u76d2\u5df2\u6ee1", section_robot_water: "\u6c34\u7bb1", section_robot_rain: "\u4e0b\u96e8", section_robot_error: "\u9519\u8bef",
+    type_pool_pump: "\u6cf3\u6c60\u6cf5", pool_filtering: "\u8fc7\u6ee4\u4e2d", pool_chlorinating: "\u52a0\u6c2f\u4e2d", pool_backwash: "\u53cd\u51b2\u6d17", pool_frost: "\u9632\u51bb", pool_light_on: "\u706f\u5df2\u5f00", section_water_temperature: "\u6c34\u6e29", section_air_temperature: "\u6c14\u6e29", section_ph: "pH", section_redox: "RedOx (ORP)", section_filtration_time: "\u4eca\u65e5\u8fc7\u6ee4\u65f6\u957f", section_pressure: "\u8fc7\u6ee4\u5668\u538b\u529b", pool_pressure_alert: "\u9ad8\u4e8e\u6b64\u538b\u529b\u62a5\u8b66 (bar)", section_pool_mode: "\u6cf5\u6a21\u5f0f", section_chlorine_pump: "\u52a0\u6c2f\u6cf5", section_chlorine_level: "\u6c2f\u6876\u6db2\u4f4d", section_backwash: "\u53cd\u51b2\u6d17", section_frost: "\u9632\u51bb", section_pool_alert: "\u62a5\u8b66", pool_line_water: "\u6c34", pool_line_air: "\u7a7a\u6c14", pool_line_filtered: "\u4eca\u65e5\u5df2\u8fc7\u6ee4", pool_line_pressure: "\u538b\u529b", pool_line_chlorine: "\u6c2f\u6876", pool_line_mode: "\u6a21\u5f0f",
     section_purifier_layout: "\u578b\u53f7", layout_purifier_cylinder: "\u5706\u67f1\u5f62", layout_purifier_box: "\u65b9\u5f62", layout_purifier_ring: "\u65e0\u53f6\u73af\u5f62",
     pf_purifying: "\u51c0\u5316\u4e2d", pf_auto: "\u81ea\u52a8", pf_night: "\u591c\u95f4\u6a21\u5f0f", section_air_quality: "\u7a7a\u6c14\u8d28\u91cf",
     section_screen: "\u5c4f\u5e55", section_heater: "\u52a0\u70ed\uff08\u6e29\u63a7\uff09", aq_good: "\u826f\u597d", aq_fair: "\u4e00\u822c",
@@ -2146,6 +2159,7 @@ const T = {
     type_hair_dryer: "F\u00e9n", layout_hd_pistol: "Klasick\u00fd", layout_hd_ring: "Prstenec", hd_cool: "Studen\u00fd vzduch", hd_hot: "Tepl\u00fd vzduch", hd_heat_threshold: "Tepl\u00fd vzduch nad t\u00edmto p\u0159\u00edkonem (W)", fill_height: "Vyplnit celou v\u00fd\u0161ku m\u00edsta", done_alert: "Blikat na konci cyklu", done_seen: "Vid\u011bno", no_power_threshold: "\u017d\u00e1dn\u00fd odb\u011br pod (W)", group_appearance: "Vzhled", show_name: "Zobrazit n\u00e1zev", show_state: "Zobrazit stav", transparent: "Pr\u016fhledn\u00e9 pozad\u00ed", font_scale: "Velikost textu", illustration_size: "Velikost kresby", compact_mode: "Kompaktn\u00ed re\u017eim", compact_off: "Vypnuto", compact_hide: "Bez kresby", compact_side: "Kresba po stran\u011b", group_laundry: "Pran\u00ed", group_kitchen: "Kuchyn\u011b", group_heating: "Vyt\u00e1p\u011bn\u00ed a tepl\u00e1 voda", group_air: "Vzduch a klima", group_home: "Dom\u00e1cnost a multim\u00e9dia", group_pets: "Mazl\u00ed\u010dci",
     type_network: "S\u00ed\u0165 (switch, NAS, server)", group_network: "S\u00ed\u0165 a servery", layout_net_switch: "Switch", layout_net_server: "Server", layout_net_nas: "NAS", layout_net_rack: "Rack", net_ports_count: "Kreslen\u00e9 porty", net_bays: "Pozice NAS", net_online: "Online", net_busy: "Aktivita", net_alert: "V\u00fdstraha", net_warn: "Disk ke sledov\u00e1n\u00ed", section_net_cpu: "Vyu\u017eit\u00ed CPU (%)", section_net_memory: "Vyu\u017eit\u00ed pam\u011bti (%)", section_net_volume: "Obsazenost svazku (%)", section_net_download: "Rychlost stahov\u00e1n\u00ed", section_net_upload: "Rychlost odes\u00edl\u00e1n\u00ed", section_net_ports: "Aktivn\u00ed porty", net_ports_total: "Po\u010det port\u016f", section_net_poe: "V\u00fdkon PoE", section_net_problem: "Upozorn\u011bn\u00ed (probl\u00e9m)", section_net_temperature: "Teplota", net_temp_alert: "V\u00fdstraha nad touto teplotou (\u00b0C)", net_busy_threshold: "Aktivita nad touto rychlost\u00ed (Mbit/s)", net_line_rate: "Propustnost", net_line_load: "Z\u00e1t\u011b\u017e", net_line_volume: "Svazek", section_net_disk1: "Disk 1", section_net_disk2: "Disk 2", section_net_disk3: "Disk 3", section_net_disk4: "Disk 4",
     type_robot: "Robot (vysava\u010d, mop, seka\u010dka)", layout_robot_vacuum: "Robotick\u00fd vysava\u010d", layout_robot_mop: "Mopovac\u00ed robot", layout_robot_mower: "Robotick\u00e1 seka\u010dka", section_robot_station: "Z\u00e1kladna", robot_station_station: "Vys\u00e1vac\u00ed nebo myc\u00ed stanice", robot_station_base: "Jen nab\u00edjec\u00ed z\u00e1kladna", robot_shelter: "St\u0159\u00ed\u0161ka nad z\u00e1kladnou", robot_charging: "Nab\u00edj\u00ed se", robot_docked: "V z\u00e1kladn\u011b", robot_cleaning: "Ukl\u00edz\u00ed", robot_mopping: "Mopuje", robot_mowing: "Seka\u010d\u00ed", robot_edgecut: "Za\u0159ez\u00e1v\u00e1n\u00ed okraj\u016f", robot_returning: "N\u00e1vrat do z\u00e1kladny", robot_emptying: "Vyprazd\u0148ov\u00e1n\u00ed n\u00e1doby", robot_bin_full: "N\u00e1doba pln\u00e1", robot_washing: "Myt\u00ed mop\u016f", robot_drying: "Su\u0161en\u00ed mop\u016f", robot_water_empty: "N\u00e1dr\u017e na vodu pr\u00e1zdn\u00e1", robot_rain: "Pauza kv\u016fli de\u0161ti", robot_idle: "Zastaveno", section_robot_status: "Podrobn\u00fd stav", section_battery: "Baterie", section_robot_bin: "N\u00e1doba pln\u00e1", section_robot_water: "N\u00e1dr\u017e na vodu", section_robot_rain: "D\u00e9\u0161\u0165", section_robot_error: "Chyba",
+    type_pool_pump: "Baz\u00e9nov\u00e9 \u010derpadlo", pool_filtering: "Filtrace", pool_chlorinating: "D\u00e1vkov\u00e1n\u00ed chloru", pool_backwash: "Zp\u011btn\u00fd proplach", pool_frost: "Ochrana proti mrazu", pool_light_on: "sv\u011btlo zapnuto", section_water_temperature: "Teplota vody", section_air_temperature: "Teplota vzduchu", section_ph: "pH", section_redox: "RedOx (ORP)", section_filtration_time: "Doba filtrace dnes", section_pressure: "Tlak filtru", pool_pressure_alert: "V\u00fdstraha nad t\u00edmto tlakem (bar)", section_pool_mode: "Re\u017eim \u010derpadla", section_chlorine_pump: "\u010cerpadlo chloru", section_chlorine_level: "Hladina v kanystru chloru", section_backwash: "Zp\u011btn\u00fd proplach", section_frost: "Ochrana proti mrazu", section_pool_alert: "V\u00fdstraha", pool_line_water: "Voda", pool_line_air: "Vzduch", pool_line_filtered: "Dnes p\u0159efiltrov\u00e1no", pool_line_pressure: "Tlak", pool_line_chlorine: "Kanystr chloru", pool_line_mode: "Re\u017eim",
     section_purifier_layout: "Model", layout_purifier_cylinder: "V\u00e1lec", layout_purifier_box: "Hranat\u00e1 sk\u0159\u00ed\u0148", layout_purifier_ring: "Bezlopatkov\u00fd prstenec",
     pf_purifying: "\u010cist\u00ed", pf_auto: "Auto", pf_night: "No\u010dn\u00ed re\u017eim", section_air_quality: "Kvalita vzduchu",
     section_screen: "Displej", section_heater: "Topen\u00ed (termostat)", aq_good: "Dobr\u00e1", aq_fair: "P\u0159ijateln\u00e1",
@@ -4281,6 +4295,19 @@ const PHASE_ENTITY_RE = /program.?phase|cycle.?phase|job.?state|pr.?phase|machin
 // Suggested only for the types that can actually use them, so a washing
 // machine doesn't end up with a "filter life" field pre-filled.
 const TYPE_AUTO_PATTERNS = {
+  pool_pump: {
+    water_temperature_entity: /(water|eau|wasser|agua|acqua).*temp|temp.*(water|eau|wasser|agua|acqua)/i,
+    air_temperature_entity: /(air|luft|aire|aria).*temp|temp.*(air|luft|aire|aria)/i,
+    ph_entity: /(^|[._])ph([._]|$)|ph_corr/i,
+    redox_entity: /redox|orp/i,
+    filtration_time_entity: /filtration|filter_?time|run_?time/i,
+    pressure_entity: /pressure|pression|druck/i,
+    pool_mode_entity: /mode/i,
+    chlorine_pump_entity: /chlor|electroly|dosing|dosage/i,
+    backwash_entity: /backwash|contre_?lavage/i,
+    frost_entity: /frost|hors_?gel|antigel/i,
+    light_entity: /light|lamp|lampe|projecteur|spot/i,
+  },
   robot: {
     robot_status_entity: /status|activity|phase|etat/i,
     battery_entity: /batter|akku/i,
@@ -4676,6 +4703,9 @@ const TYPE_CAPS = {
   // it leaves and comes back to, and a station that sometimes has work of its
   // own.
   robot: { robot: true },
+  // A pool pump: it filters, rests, backwashes or keeps the frost out, and its
+  // pool has a light.
+  pool_pump: { poolPump: true, light: true },
   // A television, a projector or a computer, read from its plug: what it
   // draws at rest is its standby, and a media player says what it shows.
   screen: { screen: true },
@@ -4758,6 +4788,7 @@ const STATE_DOMAINS = {
   pet_fountain: ["switch", "fan", "input_boolean"],
   network: ["device_tracker", "switch", "input_boolean"],
   robot: ["vacuum", "lawn_mower", "select", "input_select"],
+  pool_pump: ["switch", "binary_sensor", "select", "input_select", "input_boolean", "fan"],
 };
 // A model, a picture, the players it shows and a session lock belong to a
 // screen.
@@ -4790,6 +4821,7 @@ const NO_STATE_SOURCES = {
   screen: ["power_entity", "media_entity", "media2_entity", "media3_entity"],
   hair_dryer: ["power_entity"],
   network: ["cpu_entity", "download_entity", "volume_entity", "ports_entity", "power_entity"],
+  pool_pump: ["power_entity", "water_temperature_entity"],
 };
 function noStateSourceOf(cfg, type) {
   const field = (NO_STATE_SOURCES[type] || []).find((f) => cfg[f]);
@@ -4837,7 +4869,7 @@ const TYPE_GROUPS = [
   ["kitchen", ["dishwasher", "oven", "microwave", "hood", "cooktop", "fridge", "kettle", "cooker", "coffee", "rice_cooker", "air_fryer", "toaster"]],
   ["heating", ["water_heater", "boiler", "heat_pump", "pellet_stove", "space_heater", "towel_warmer"]],
   ["air", ["air_conditioner", "dehumidifier", "air_purifier", "fan"]],
-  ["home", ["screen", "iron", "hair_dryer", "printer_3d", "ev_charger", "robot"]],
+  ["home", ["screen", "iron", "hair_dryer", "printer_3d", "ev_charger", "robot", "pool_pump"]],
   ["pets", ["pet_feeder", "pet_fountain"]],
   ["network", ["network"]],
 ];
@@ -4864,6 +4896,7 @@ function detectApplianceType(cfg, st) {
   if (SCREEN_ONLY_FIELDS.some((f) => cfg[f])) return "screen";
   if (NETWORK_ONLY_FIELDS.some((f) => cfg[f])) return "network";
   if (ROBOT_ONLY_FIELDS.some((f) => cfg[f])) return "robot";
+  if (POOL_ONLY_FIELDS.some((f) => cfg[f])) return "pool_pump";
   // Home Assistant has a domain of its own for each of them.
   if (["vacuum", "lawn_mower"].includes(domainOf(cfg.state_entity))) return "robot";
   if (PURIFIER_ONLY_FIELDS.some((f) => cfg[f])) return "air_purifier";
@@ -4894,6 +4927,8 @@ function detectApplianceType(cfg, st) {
   // A robot vacuum, mop or mower by its name or its maker's, read without
   // the entities' domains.
   if (ROBOT_NAME_RE.test(stripAccents(hay.replace(/\b[a-z_]+\./g, " ")))) return "robot";
+  // A pool pump, by its name in any language or by Oklyn's.
+  if (POOL_NAME_RE.test(stripAccents(hay.replace(/\b[a-z_]+\./g, " ")))) return "pool_pump";
   // "microwave" before "oven": plenty of devices are named "microwave_oven".
   if (/microwave|micro.?onde|mikrowelle|magnetron|mikrob/.test(hay)) return "microwave";
   if (/coffee|cafeti|cafe|kaffee|espresso|cafetera|macchina.?caff|koffie|kaffemask|ekspres.?do.?kawy/.test(hay)) return "coffee";
@@ -5286,6 +5321,82 @@ function robotBatteryIcon(pct, charging) {
   const step = Math.max(1, Math.min(10, Math.round(pct / 10)));
   if (charging) return step >= 10 ? "mdi:battery-charging-100" : `mdi:battery-charging-${step * 10}`;
   return step >= 10 ? "mdi:battery" : `mdi:battery-${step * 10}`;
+}
+
+// A pool pump: a sand filter with its multiport valve and its gauge, the pump
+// and its strainer, and the pool the water goes back to. It filters or it
+// rests, and sometimes it backwashes the filter into the drain or runs to
+// keep the pipes from freezing. A chlorine dosing pump is an option: its tank
+// and its long tube only show when one is given.
+const POOL_ONLY_FIELDS = ["water_temperature_entity", "air_temperature_entity", "ph_entity", "redox_entity",
+  "filtration_time_entity", "pressure_entity", "pressure_alert", "pool_mode_entity", "chlorine_pump_entity",
+  "chlorine_level_entity", "backwash_entity", "frost_entity", "pool_alert_entity"];
+const POOL_NAME_RE = /pool.?pump|swimming.?pool|(^|[^a-z])pool([^a-z]|$)|piscine|pompe.?(de.?)?piscine|oklyn|poolstation|(^|[^a-z])pisc|schwimmbad|poolpumpe|filterpumpe|bomba.?de.?(piscina|filtra)|piscina|pompa.?(piscina|filtraz)|zwembad|zwempomp|bassengpump|poolpump|pompa.?basen|basen|baz(e|\u00e9)n|\u6cf3\u6c60|\u0431\u0430\u0441\u0441\u0435\u0439\u043d/;
+const POOL_OFF_STATES = ["off", "false", "0", "stopped", "stop", "idle", "standby", "closed"];
+// What a pump's state or status says, first match wins.
+const POOL_WORDS = [
+  ["error", /error|fault|alarm|defaut|failure|blocked|dry.?run|overload|panne|fehler/],
+  ["backwash", /backwash|back.?wash|contre.?lavage|ruckspul|r\u00fcckspul|contralavado|controlavaggio|terugspoel/],
+  ["frost", /frost|freez|gel|antigel|hors.?gel|frostschutz|antihielo|antigelo|vorst/],
+  ["off", /^(off|stop(ped)?|idle|standby|arret|aus|apagad|spento|uit|false|0)$/],
+  ["running", /^(on|true|1|running|run|filtering|filtration|filtrage|marche|en.?marche|ein|an|encendid|acceso|aan|boost|eco|manual|manuel)$/],
+];
+const POOL_LABELS = { off: "ac_off", running: "pool_filtering", chlorinating: "pool_chlorinating", backwash: "pool_backwash",
+  frost: "pool_frost", error: "error", unav: "ev_offline" };
+const POOL_COLORS = {
+  off: "var(--disabled-text-color, #9e9e9e)", running: "#1e88e5", chlorinating: "#7cb342", backwash: "#8d6e63",
+  frost: "#03a9f4", error: "#f44336", unav: "var(--disabled-text-color, #9e9e9e)",
+};
+// A pump draws hundreds of watts: below this one it is off.
+const POOL_POWER_W = 50;
+// The gauge reads up to 2.5 bar; a filter that needs washing is past 1.5.
+const POOL_GAUGE_MAX_BAR = 2.5;
+const POOL_PRESSURE_ALERT = 1.8;
+
+function poolWord(v) {
+  const s = stripAccents(String(v === undefined || v === null ? "" : v)).trim().toLowerCase();
+  if (!s || ["unknown", "unavailable"].includes(s)) return "";
+  const hit = POOL_WORDS.find(([, re]) => re.test(s));
+  return hit ? hit[0] : "";
+}
+
+// An entity that says yes: on, true, a word that says so, a number above 0.
+function poolOn(hass, entityId) {
+  const s = stateObj(hass, entityId);
+  if (!s) return false;
+  const v = String(s.state).trim().toLowerCase();
+  if (["on", "true", "1", "yes", "open", "running", "active"].includes(v)) return true;
+  const n = Number(v);
+  return Number.isFinite(n) && n > 0;
+}
+
+// What the pump does, from its own state, then from what raises something.
+function poolModeOf(hass, cfg, st, watts) {
+  const raw = st ? String(st.state).trim().toLowerCase() : "";
+  let mode = "";
+  if (st && !["unavailable", "unknown", ""].includes(raw)) {
+    mode = poolWord(raw);
+    // A pump's mode (auto, a schedule) does not say whether it runs: its
+    // meter does, when there is one.
+    const isMode = ["select", "input_select"].includes(domainOf(cfg.state_entity));
+    if (!mode && isMode) {
+      const th = parseFloat(cfg.power_on_threshold);
+      mode = watts !== null && watts > (isFinite(th) ? th : POOL_POWER_W) ? "running" : "off";
+    }
+    if (!mode) mode = POOL_OFF_STATES.includes(raw) ? "off" : "running";
+  } else if (watts !== null) {
+    const th = parseFloat(cfg.power_on_threshold);
+    mode = watts > (isFinite(th) ? th : POOL_POWER_W) ? "running" : "off";
+  } else return "unav";
+  if (mode !== "error" && cfg.pool_alert_entity && poolOn(hass, cfg.pool_alert_entity)) mode = "error";
+  if (mode !== "error" && cfg.pressure_entity) {
+    const p = numericState(hass, cfg.pressure_entity);
+    const lim = parseFloat(cfg.pressure_alert);
+    if (p !== null && mode !== "off" && p >= (isFinite(lim) && lim > 0 ? lim : POOL_PRESSURE_ALERT)) mode = "error";
+  }
+  if (mode !== "error" && cfg.backwash_entity && poolOn(hass, cfg.backwash_entity)) mode = "backwash";
+  if (["off", "running"].includes(mode) && cfg.frost_entity && poolOn(hass, cfg.frost_entity)) mode = "frost";
+  return mode;
 }
 
 const HD_COLORS = { off: "var(--disabled-text-color, #9e9e9e)", cool: "#29b6f6", hot: "#ff7043", on: "#ff7043" };
@@ -7868,6 +7979,81 @@ const ILLUSTRATION_CSS = {
         @keyframes nt-spinstop { 0% { transform: rotate(0); } 55%, 100% { transform: rotate(900deg); } }
         @media (prefers-reduced-motion: reduce) { .machine.nt * { animation-name: none !important; } }
   `,
+  // A pool pump, its sand filter, its pipes and its pool.
+  pool_pump: () => `
+        .machine.pl { --b: var(--ac-body, #3f4a54); --bh: var(--ac-body-hi, #62707c); --bl: var(--ac-body-lo, #252c33); }
+        svg.pl-pp{position:absolute;left:0;top:0;width:96px;height:108px;overflow:visible}
+        .pl-body{fill:url(#pl-g-body)}
+        .pl-body-d{fill:var(--bl)}
+        .pl-ring{fill:none;stroke:var(--bl);stroke-width:1;opacity:.6}
+        .pl-pvc{fill:none;stroke:#cfd5da;stroke-width:4.6;stroke-linecap:butt}
+        .pl-pvc-o{fill:none;stroke:#8e979f;stroke-width:6;stroke-linecap:butt}
+        .pl-pvc-j{fill:#dfe3e6;stroke:#8e979f;stroke-width:.8}
+        .pl-flow{fill:none;stroke:#4fc3f7;stroke-width:2.2;stroke-dasharray:3 4;stroke-linecap:round;opacity:0}
+        .pl-m-running .pl-flow,.pl-m-backwash .pl-flow.pl-o,.pl-m-frost .pl-flow{opacity:1;animation:pl-flow .6s linear infinite}
+        .pl-m-running .pl-flow.pl-w,.pl-m-frost .pl-flow.pl-w{opacity:0;animation:none}
+        .pl-m-backwash .pl-flow.pl-w{opacity:1;stroke:#8d6e63;animation:pl-flow .45s linear infinite}
+        .pl-m-backwash .pl-flow.pl-s{opacity:1;animation:pl-flow .45s linear infinite}
+        .pl-m-backwash .pl-flow.pl-o{animation-duration:.45s}
+        .pl-m-frost .pl-flow{stroke:#b3e5fc;animation-duration:1.2s}
+        @keyframes pl-flow{to{stroke-dashoffset:-14}}
+        @keyframes pl-spin{to{transform:rotate(360deg)}}
+        .pl-needle{transform-box:view-box;transform-origin:34px 14.5px;transform:rotate(-120deg);stroke:#c62828;stroke-width:1;stroke-linecap:round;transition:transform .6s}
+        .pl-m-running .pl-needle,.pl-m-frost .pl-needle{transform:rotate(-20deg)}
+        .pl-m-backwash .pl-needle{transform:rotate(25deg)}
+        .pl-m-error .pl-needle{transition:none;animation:pl-gauge 1.2s ease-in-out infinite}
+        @keyframes pl-gauge{0%,100%{transform:rotate(-120deg)}50%{transform:rotate(120deg)}}
+        .pl-lid-water{fill:url(#pl-g-water);opacity:.85}
+        .pl-swirl{opacity:0}
+        .pl-swirl path{fill:none;stroke:rgba(255,255,255,.9);stroke-width:.75;stroke-linecap:round;stroke-dasharray:1.6 1.6}
+        .pl-m-running .pl-swirl,.pl-m-backwash .pl-swirl,.pl-m-frost .pl-swirl{opacity:1}
+        .pl-m-running .pl-swirl path,.pl-m-backwash .pl-swirl path,.pl-m-frost .pl-swirl path{animation:pl-jet .5s linear infinite}
+        @keyframes pl-jet{to{stroke-dashoffset:-3.2}}
+        .pl-pool{fill:url(#pl-g-pool)}
+        .pl-rip{fill:none;stroke:rgba(255,255,255,.7);stroke-width:.7;stroke-linecap:round;stroke-dasharray:3 4}
+        .pl-m-running .pl-rip,.pl-m-frost .pl-rip{animation:pl-flow 2.2s linear infinite}
+        .pl-spot{fill:#cfd8dc;stroke:#90a4ae;stroke-width:.8}
+        .pl-glow{opacity:0}
+        .pl-lamp .pl-spot{fill:#fff6c2;stroke:#ffd54f}
+        .pl-lamp .pl-glow{opacity:1;animation:pl-breathe 3s ease-in-out infinite}
+        .pl-can{fill:#f4f6f7;stroke:#9aa3ab;stroke-width:.8}
+        .pl-can-l{fill:#d4e157}
+        .pl-tube{fill:none;stroke:rgba(140,150,160,.85);stroke-width:1.2}
+        .pl-drip{fill:none;stroke:#cddc39;stroke-width:1.6;stroke-dasharray:1.6 3.4;stroke-linecap:round;opacity:0}
+        .pl-chlore .pl-drip{opacity:1;animation:pl-flow .9s linear infinite}
+        .pl-chlore .pl-can-led{fill:#2ecc71;animation:pl-breathe 1.2s ease-in-out infinite}
+        .pl-can-led{fill:#7c858d}
+        .pl-ice{opacity:0}
+        .pl-m-frost .pl-ice{opacity:1}
+        .pl-snow{opacity:0}
+        .pl-m-frost .pl-snow{opacity:1;animation:pl-breathe 2.4s ease-in-out infinite}
+        .pl-sand{opacity:0}
+        .pl-m-backwash .pl-sand{opacity:1}
+        .pl-sand circle{fill:#d9c08f;animation:pl-churn 1.2s ease-in-out infinite}
+        .pl-sand circle:nth-child(2){--d0:-.4s}
+        .pl-sand circle:nth-child(3){--d0:-.8s}
+        @keyframes pl-churn{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+        .machine.pl-m-unav{opacity:.45;filter:grayscale(1)}
+        @keyframes pl-blink{50%{opacity:.15}}
+        @keyframes pl-breathe{0%,100%{opacity:.4}50%{opacity:1}}
+        .pl-led{fill:#5a636b}
+        .pl-m-running .pl-led,.pl-m-backwash .pl-led,.pl-m-frost .pl-led{fill:#2ecc71}
+        .pl-m-error .pl-led{fill:#f44336;animation:pl-blink 1s steps(1) infinite}
+        .pl-smoke{display:none}
+        .pl-m-error .pl-smoke{display:block}
+        .pl-smoke .pl-pf{transform-box:fill-box;transform-origin:50% 100%;animation:pl-puff 2s ease-out infinite}
+        .pl-smoke .pl-pf2{--d0:-1s}
+        .pl-smoke .pl-o{fill:#111417}
+        .pl-smoke .pl-f{fill:#6b737b}
+        .pl-smoke .pl-hl{fill:none;stroke:rgba(255,255,255,.75);stroke-width:1;stroke-linecap:round}
+        @keyframes pl-puff{0%{transform:translateY(5px) scale(.45);opacity:0}20%{opacity:1}75%{opacity:1}100%{transform:translateY(-7px) scale(1.08);opacity:0}}
+        .pl-ang{display:none;fill:none;stroke:#e53935;stroke-width:1.9;stroke-linecap:round;transform-box:fill-box;transform-origin:center;animation:pl-ang .7s ease-in-out infinite alternate}
+        .pl-m-error .pl-ang{display:block}
+        @keyframes pl-ang{from{transform:scale(.8)}to{transform:scale(1.15)}}
+        .pl-nocl .pl-cl { display: none; }
+        .machine.pl * { animation-delay: calc(var(--d0, 0s) + var(--anim-offset, 0s)) !important; }
+        @media (prefers-reduced-motion: reduce) { .machine.pl * { animation-name: none !important; } }
+  `,
   // A robot and its floor, its base and its station.
   robot: () => `${MINI_LCD_CSS}
         .machine.rbt { --b: var(--ac-body, #3a3f45); --bh: var(--ac-body-hi, #5a6168); --bl: var(--ac-body-lo, #1d2024); --dk: #2b2f34; --dkh: #41474e; }
@@ -9027,6 +9213,99 @@ function networkHtml(cls, n) {
         </div>`;
 }
 
+// A pool pump's drawing: the sand filter on the left with its valve and its
+// gauge, the pump in front of the pool, the pipes between them, and the tank
+// and long tube of a chlorine dosing pump when there is one. The water flows
+// while the pump filters, a jet turns in the strainer, the gauge reads the
+// pressure. A backwash sends the dirty water to the drain, never to the pool.
+const POOL_SVG = `<svg class="pl-pp" viewBox="0 -6 96 108">
+<defs>
+<linearGradient id="pl-g-body" x1="0" x2="1"><stop offset="0" stop-color="var(--bl)"/><stop offset=".25" stop-color="var(--b)"/><stop offset=".45" stop-color="var(--bh)"/><stop offset=".7" stop-color="var(--b)"/><stop offset="1" stop-color="var(--bl)"/></linearGradient>
+<linearGradient id="pl-g-motor" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#555d65"/><stop offset=".35" stop-color="#3a4147"/><stop offset="1" stop-color="#1f2327"/></linearGradient>
+<linearGradient id="pl-g-alu" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#eef1f3"/><stop offset=".35" stop-color="#c4cbd1"/><stop offset="1" stop-color="#7d868e"/></linearGradient>
+<linearGradient id="pl-g-water" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#b3e5fc"/><stop offset="1" stop-color="#29b6f6"/></linearGradient>
+<linearGradient id="pl-g-pool" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#4fc3f7"/><stop offset="1" stop-color="#0288d1"/></linearGradient>
+<radialGradient id="pl-g-glow"><stop offset="0" stop-color="#fff59d" stop-opacity=".95"/><stop offset="1" stop-color="#fff59d" stop-opacity="0"/></radialGradient>
+</defs>
+<ellipse cx="48" cy="94.6" rx="46" ry="2.6" fill="rgba(0,0,0,.18)"/>
+<path d="M57 1 H95 L97 22 H55 Z" fill="#e7e1d3" stroke="#c9c1ae" stroke-width=".6"/>
+<path class="pl-pool" d="M60 4 H92 L93.4 19.5 H58.6 Z"/>
+<path d="M60 4 H92 L91.2 7.2 H60.8 Z" fill="rgba(0,60,110,.38)"/>
+<ellipse class="pl-glow" cx="76" cy="10" rx="13" ry="9" fill="url(#pl-g-glow)"/>
+<path class="pl-rip" d="M63 8.5 q2.5 -1.2 5 0 t5 0 t5 0 t5 0 t5 0"/><path class="pl-rip" d="M63 13 q2.5 -1.2 5 0 t5 0 t5 0 t5 0 t5 0" style="animation-delay:-.8s"/>
+<ellipse class="pl-spot" cx="76" cy="5.7" rx="2.6" ry="1.4"/><ellipse cx="76" cy="5.7" rx="1.1" ry=".6" fill="rgba(255,255,255,.65)"/>
+<path d="M84 3 Q84 0 86 0 Q88 0 88 3 V13 M88.5 3 Q88.5 0 90.5 0 Q92.5 0 92.5 3 V13" fill="none" stroke="#b7c0c7" stroke-width="1.1"/>
+<path d="M88 7 H92.5 M88 10.5 H92.5" stroke="#b7c0c7" stroke-width=".9"/>
+<path class="pl-pvc-o" d="M13 26 H8 Q5.5 26 5.5 23.5 V8.5 Q5.5 6 8 6 H55"/><path class="pl-pvc" d="M13 26 H8 Q5.5 26 5.5 23.5 V8.5 Q5.5 6 8 6 H55"/>
+<path class="pl-pvc-o" d="M31 26 H36 Q40 26 40 30 V36 Q40 40 44 40 H59.5 Q63.5 40 63.5 44 V53"/><path class="pl-pvc" d="M31 26 H36 Q40 26 40 30 V36 Q40 40 44 40 H59.5 Q63.5 40 63.5 44 V53"/>
+<path d="M15 31 H4.5 Q2.2 31 2.2 33.3 V93" fill="none" stroke="#8e979f" stroke-width="4.6"/><path d="M15 31 H4.5 Q2.2 31 2.2 33.3 V93" fill="none" stroke="#bfc6cc" stroke-width="3.2"/>
+<rect x="-2.3" y="92.6" width="9" height="3" rx=".8" fill="#2b3137"/><path d="M-.8 94.1 H5.2" stroke="#596169" stroke-width=".7" stroke-dasharray="1 .8"/>
+<path class="pl-flow pl-o" d="M63.5 53 V44 Q63.5 40 59.5 40 H44 Q40 40 40 36 V30 Q40 26 36 26 H31"/>
+<path class="pl-flow pl-r" d="M13 26 H8 Q5.5 26 5.5 23.5 V8.5 Q5.5 6 8 6 H55"/>
+<path class="pl-flow pl-w" d="M15 31 H4.5 Q2.2 31 2.2 33.3 V93"/>
+<rect class="pl-pvc-j" x="30" y="3.1" width="3" height="5.8" rx=".8"/>
+<rect x="53.6" y="1.6" width="3.6" height="8.8" rx="1" fill="#b6bec5" stroke="#7d868e" stroke-width=".7"/><circle cx="55.4" cy="3.3" r=".45" fill="#7d868e"/><circle cx="55.4" cy="8.7" r=".45" fill="#7d868e"/>
+<ellipse cx="61.6" cy="6" rx="1.2" ry="1.6" fill="#e9eef1" stroke="#9aa3ab" stroke-width=".5"/>
+<g class="pl-ice"><path d="M10 3.5 l2 -2 M20 4 l1.5 -2.5 M38 3.5 l2 -2.4 M46 4 l1.5 -2.5 M54 3.5 l2 -2.4 M48 37.5 l1.5 -2.5 M58 38 l2 -2.4 M66 47 l2 -1.5" stroke="#e1f5fe" stroke-width="1.2" stroke-linecap="round"/></g>
+<rect class="pl-body-d" x="6" y="87" width="32" height="7" rx="2"/>
+<path class="pl-body" d="M8 41 Q8 31 22 30 Q36 31 36 41 L36 89 Q22 92 8 89 Z"/>
+<path class="pl-ring" d="M8 52 Q22 55 36 52 M8 76 Q22 79 36 76"/>
+<g class="pl-sand"><circle cx="15" cy="70" r="1.3"/><circle cx="22" cy="66" r="1.1"/><circle cx="29" cy="71" r="1.3"/></g>
+<rect x="11" y="23" width="3" height="6" rx="1" fill="var(--bl)"/><rect x="30" y="23" width="3" height="6" rx="1" fill="var(--bl)"/>
+<rect x="14" y="20.5" width="16" height="10" rx="2.5" fill="#2b3137"/>
+<rect x="12" y="16.5" width="20" height="3.2" rx="1.6" fill="#1f2428"/><rect x="20.5" y="18.5" width="3" height="3" fill="#1f2428"/>
+<path d="M30 20.5 L33 17.5" stroke="#8e979f" stroke-width="1.2"/>
+<circle cx="34" cy="14.5" r="4.6" fill="#f5f6f7" stroke="#8e979f" stroke-width=".9"/>
+<path d="M30.8 14.5 A3.2 3.2 0 0 1 37.2 14.5" fill="none" stroke="#c0c6cb" stroke-width=".6"/>
+<path class="pl-needle" d="M34 14.5 L34 11.5"/><circle cx="34" cy="14.5" r=".7" fill="#333"/>
+<path class="pl-pvc-o" d="M41.5 73 H41 Q39 73 39 75 V95"/><path class="pl-pvc" d="M41.5 73 H41 Q39 73 39 75 V95"/>
+<path class="pl-flow pl-s" d="M39 95 V75 Q39 73 41 73 H41.5"/>
+<ellipse cx="39" cy="95" rx="3.6" ry="1" fill="#2b3137"/>
+<g class="pl-cl"><path class="pl-tube" d="M74 46 V36.5 Q74 34 71.5 34 H52.5 Q50 34 50 31.5 V8.4"/>
+<path class="pl-drip" d="M74 46 V36.5 Q74 34 71.5 34 H52.5 Q50 34 50 31.5 V8.4"/>
+<rect x="48.3" y="7.6" width="3.4" height="2.4" rx=".6" fill="#2b3137"/>
+<path class="pl-can" d="M69 47 h10 a1.5 1.5 0 0 1 1.5 1.5 v10 a1.5 1.5 0 0 1 -1.5 1.5 h-10 a1.5 1.5 0 0 1 -1.5 -1.5 v-10 a1.5 1.5 0 0 1 1.5 -1.5z"/>
+<rect class="pl-can-l" x="68.1" y="52" width="11.8" height="7.5" rx="1"/><rect x="72.6" y="45.2" width="2.8" height="2.2" rx=".6" fill="#ef6c00"/>
+<circle class="pl-can-led" cx="70.4" cy="49" r=".9"/></g>
+<path d="M44 89 H61 V93.5 H44 Z M70 88 H90 L91 93.5 H69 Z" fill="#1d2125"/>
+<path class="pl-body" d="M44 66 H61 V86 Q61 90.5 56 90.5 H49 Q44 90.5 44 86 Z"/>
+<path d="M44.5 77.5 H60.5 M44.5 80.5 H60.5 M44.5 83.5 H60.5 M45 86.5 H60" stroke="rgba(0,0,0,.45)" stroke-width=".8"/>
+<path d="M44.5 78.3 H60.5 M44.5 81.3 H60.5 M44.5 84.3 H60.5" stroke="rgba(255,255,255,.08)" stroke-width=".5"/>
+<rect class="pl-body" x="40.5" y="69.5" width="5" height="7" rx="1"/><rect x="39.8" y="69" width="1.8" height="8" rx=".6" fill="#aeb6bd"/>
+<path d="M42.6 62 H62.4 V66.4 H42.6 Z" fill="#23282d"/>
+<path d="M44 62 V56 Q44 50.5 52.5 50.5 Q61 50.5 61 56 V62 Z" fill="rgba(220,235,245,.5)" stroke="#9fb0bd" stroke-width=".8"/>
+<rect class="pl-lid-water" x="44.8" y="54" width="15.4" height="8" rx="1.2"/>
+<path d="M47 55 V61.5 M50.5 55 V61.5 M54 55 V61.5 M57.5 55 V61.5" stroke="rgba(255,255,255,.4)" stroke-width=".6"/>
+<path d="M47.5 51.8 Q52.5 49.6 57.5 51.8 M49 51.2 V53.4 M52.5 50.6 V53 M56 51.2 V53.4" fill="none" stroke="rgba(255,255,255,.85)" stroke-width=".7"/>
+<g class="pl-swirl"><path d="M52.5 61.5 V54.2"/><path d="M52.5 54.2 Q49 53 47.4 60"/><path d="M52.5 54.2 Q56 53 57.6 60"/><path d="M52.5 54.8 Q50.6 54.6 49.8 60.5"/><path d="M52.5 54.8 Q54.4 54.6 55.2 60.5"/></g>
+<path class="pl-body" d="M59 62 H67.5 Q71 62 71 66 V90.5 H59 Z"/>
+<circle cx="65" cy="77" r="6" fill="none" stroke="var(--bl)" stroke-width=".8" opacity=".6"/>
+<rect class="pl-body" x="60.6" y="52.5" width="5.8" height="10" rx=".8"/><rect x="60.2" y="51.6" width="6.6" height="2.4" rx=".6" fill="#aeb6bd"/>
+<rect x="70" y="69" width="2.5" height="18" rx=".6" fill="#23282d"/>
+<rect x="72" y="68" width="15" height="20" rx="2" fill="url(#pl-g-alu)"/>
+<path d="M72.5 71 H86.5 M72.5 73.5 H86.5 M72.5 76 H86.5 M72.5 78.5 H86.5 M72.5 81 H86.5 M72.5 83.5 H86.5 M72.5 86 H86.5" stroke="rgba(60,70,78,.55)" stroke-width=".55"/>
+<path d="M86.5 69 H90 Q93.5 69 93.5 73 V83 Q93.5 87 90 87 H86.5 Z" fill="#1d2125"/>
+<path d="M89.5 70.5 V85.5 M91.5 71.5 V84.5" stroke="#3b4248" stroke-width=".6"/>
+<rect x="73" y="62.5" width="11" height="6" rx="1" fill="#22272b"/><circle cx="75" cy="64.3" r=".5" fill="#69727a"/><circle cx="82" cy="64.3" r=".5" fill="#69727a"/>
+<circle class="pl-led" cx="78.5" cy="65.6" r=".9"/>
+<g class="pl-snow" transform="translate(89 42)"><path d="M0 -4.5 V4.5 M-3.9 -2.25 L3.9 2.25 M-3.9 2.25 L3.9 -2.25 M-1.2 -3.4 L0 -2.4 L1.2 -3.4 M-1.2 3.4 L0 2.4 L1.2 3.4" stroke="#4fc3f7" stroke-width="1.2" stroke-linecap="round" fill="none"/></g>
+<g transform="translate(79 43) scale(.55)"><g class="pl-smoke"><g class="pl-pf pl-pf1"><circle class="pl-o" cx="13" cy="23" r="6.9"/><circle class="pl-o" cx="20" cy="18" r="7.9"/><circle class="pl-o" cx="27" cy="22" r="6.4"/><circle class="pl-o" cx="17" cy="12" r="5.9"/><circle class="pl-o" cx="24" cy="11" r="5.4"/><circle class="pl-f" cx="13" cy="23" r="5.5"/><circle class="pl-f" cx="20" cy="18" r="6.5"/><circle class="pl-f" cx="27" cy="22" r="5"/><circle class="pl-f" cx="17" cy="12" r="4.5"/><circle class="pl-f" cx="24" cy="11" r="4"/><path class="pl-hl" d="M15 9 q2 -2 4 -1 M17 15 q2 -2.5 5 -1.5"/></g><g class="pl-pf pl-pf2"><circle class="pl-o" cx="9.049999999999999" cy="21.55" r="6.074999999999999"/><circle class="pl-o" cx="15" cy="17.299999999999997" r="6.924999999999999"/><circle class="pl-o" cx="20.95" cy="20.7" r="5.65"/><circle class="pl-o" cx="12.45" cy="12.2" r="5.225"/><circle class="pl-o" cx="18.4" cy="11.35" r="4.8"/><circle class="pl-f" cx="9.049999999999999" cy="21.55" r="4.675"/><circle class="pl-f" cx="15" cy="17.299999999999997" r="5.5249999999999995"/><circle class="pl-f" cx="20.95" cy="20.7" r="4.25"/><circle class="pl-f" cx="12.45" cy="12.2" r="3.8249999999999997"/><circle class="pl-f" cx="18.4" cy="11.35" r="3.4"/><path class="pl-hl" d="M10.75 9.649999999999999 q2 -2 4 -1 M12.45 14.75 q2 -2.5 5 -1.5"/></g></g></g><g transform="translate(89.5 63.5)"><g class="pl-ang"><path d="M3.5 1.5 Q3.5 4 1 4"/><path d="M6 1.5 Q6 4 8.5 4"/><path d="M3.5 9.5 Q3.5 7 1 7"/><path d="M6 9.5 Q6 7 8.5 7"/></g></g>
+</svg>`;
+function poolHtml(cls, p) {
+  const mode = p.mode || "off";
+  let svg = POOL_SVG;
+  if (p.needle !== null && p.needle !== undefined && mode !== "error") {
+    svg = svg.replace('<path class="pl-needle"', `<path class="pl-needle" style="transform: rotate(${p.needle}deg)"`);
+  }
+  if (p.can !== null && p.can !== undefined) {
+    const h = Math.round(7.5 * Math.max(0, Math.min(100, p.can))) / 100;
+    svg = svg.replace('<rect class="pl-can-l" x="68.1" y="52" width="11.8" height="7.5"',
+      `<rect class="pl-can-l" x="68.1" y="${Math.round((59.5 - h) * 100) / 100}" width="11.8" height="${h}"`);
+  }
+  return `
+        <div class="machine ${cls} pl pl-m-${mode}${p.dosing ? " pl-chlore" : ""}${p.lit ? " pl-lamp" : ""}${p.chlorine ? "" : " pl-nocl"}">${svg}</div>`;
+}
+
 // A robot's drawing. It leaves its base and goes back and forth over its
 // floor: a rug for a vacuum, tiles for a mop, a lawn for a mower, which is
 // drawn in profile with the grass cut under it. Its ring says what it does,
@@ -9796,6 +10075,7 @@ function illustrationHtml(type, ctx) {
   if (type === "hair_dryer") return hairDryerHtml(cls, ctx.hairDryer || {});
   if (type === "network") return networkHtml(cls, ctx.network || {});
   if (type === "robot") return robotHtml(cls, ctx.robot || {});
+  if (type === "pool_pump") return poolHtml(cls, ctx.pool || {});
   if (type === "screen") return screenHtml(cls, ctx.screen || {});
   if (type === "air_purifier") return purifierHtml(cls, ctx.purifier || {});
   if (type === "fan") return fanHtml(cls, ctx.fan || {});
@@ -9984,7 +10264,10 @@ class ApplianceCard extends HTMLElement {
     // And for a screen: its plug's meter or one of its players is enough.
     const asScreen = config && (config.appliance_type === "screen" || SCREEN_ONLY_FIELDS.some((f) => config[f]));
     const hasScreenSource = asScreen && !!(config.power_entity || SCREEN_MEDIA_FIELDS.some((f) => config[f]));
-    if (!config || (!config.state_entity && !hasFridgeSource && !hasFeederSource && !hasChargerSource && !hasScreenSource)) {
+    // And for a pool pump on a smart plug: the meter says whether it filters.
+    const asPool = config && (config.appliance_type === "pool_pump" || POOL_ONLY_FIELDS.some((f) => config[f]));
+    const hasPoolSource = asPool && !!config.power_entity;
+    if (!config || (!config.state_entity && !hasFridgeSource && !hasFeederSource && !hasChargerSource && !hasScreenSource && !hasPoolSource)) {
       throw new Error("ha-appliance-card: 'state_entity' is required");
     }
     this._config = config;
@@ -12660,6 +12943,63 @@ class ApplianceCard extends HTMLElement {
       network = { mode, layout, ports: drawn, lit, bays, disks, fanOff: fan !== null && fan <= 0 };
     }
 
+    // A pool pump: off, filtering, injecting chlorine, backwashing, running
+    // against the frost, in error. Its lines give the water, the air, the pH,
+    // the RedOx, the time filtered today, the pressure and the pump's mode.
+    let pool = null;
+    if (cap.poolPump) {
+      const mode = poolModeOf(hass, cfg, st, watts);
+      const chlorine = !!cfg.chlorine_pump_entity;
+      const dosing = chlorine && poolOn(hass, cfg.chlorine_pump_entity);
+      const shown = dosing && mode === "running" ? "chlorinating" : mode;
+      if (!cfg.state_show_raw || mode === "unav") {
+        stateLabel = t(hass, POOL_LABELS[shown]);
+        if (lit && mode !== "unav") stateLabel += ` \u00b7 ${t(hass, "pool_light_on")}`;
+      }
+      color = POOL_COLORS[shown];
+      const pressure = cfg.pressure_entity ? numericState(hass, cfg.pressure_entity) : null;
+      const can = cfg.chlorine_level_entity ? numericState(hass, cfg.chlorine_level_entity) : null;
+      if (mode !== "unav") {
+        const reading = (key, field, icon, label, digits, fallbackUnit) => {
+          const e = numericEntity(hass, cfg[field]);
+          if (!e) return;
+          // pH has no unit, whatever the integration writes after it.
+          const unit = key === "pool_ph" ? "" : e.attributes.unit_of_measurement || fallbackUnit;
+          extraLines.push({ key, icon, label, entity: cfg[field],
+            value: keepTogether(`${netNumber(hass, Number(e.state), digits)}${unit ? ` ${unit}` : ""}`) });
+        };
+        reading("pool_water", "water_temperature_entity", "mdi:pool-thermometer", t(hass, "pool_line_water"), 1, "\u00b0C");
+        reading("pool_air", "air_temperature_entity", "mdi:thermometer", t(hass, "pool_line_air"), 1, "\u00b0C");
+        reading("pool_ph", "ph_entity", "mdi:ph", "pH", 2, "");
+        reading("pool_redox", "redox_entity", "mdi:lightning-bolt-outline", "RedOx", 0, "mV");
+        const ft = numericEntity(hass, cfg.filtration_time_entity);
+        if (ft) {
+          const u = String(ft.attributes.unit_of_measurement || "h").toLowerCase();
+          const secs = Number(ft.state) * (u === "s" ? 1 : u === "min" ? 60 : u === "d" ? 86400 : 3600);
+          extraLines.push({ key: "pool_filtered", icon: "mdi:timer-outline", label: t(hass, "pool_line_filtered"),
+            value: keepTogether(formatDuration(Math.max(0, secs), hass)), entity: cfg.filtration_time_entity });
+        }
+        reading("pool_pressure", "pressure_entity", "mdi:gauge", t(hass, "pool_line_pressure"), 1, "bar");
+        if (chlorine && can !== null) {
+          extraLines.push({ key: "pool_chlorine", icon: "mdi:flask-outline", label: t(hass, "pool_line_chlorine"),
+            value: keepTogether(`${Math.round(can)} %`), entity: cfg.chlorine_level_entity, caution: can <= 15 });
+        }
+        const pm = stateObj(hass, cfg.pool_mode_entity);
+        if (pm && entityUsable(hass, cfg.pool_mode_entity)) {
+          let text = String(pm.state);
+          try {
+            if (typeof hass.formatEntityState === "function") text = hass.formatEntityState(pm) || text;
+          } catch (e) { /* the raw word, then */ }
+          extraLines.push({ key: "pool_mode", icon: "mdi:tune-variant", label: t(hass, "pool_line_mode"), value: text, entity: cfg.pool_mode_entity });
+        }
+      }
+      // The gauge reads the pressure when it is known, else where the mode
+      // puts it.
+      const needle = pressure !== null && mode !== "unav"
+        ? Math.round(-120 + Math.max(0, Math.min(1, pressure / POOL_GAUGE_MAX_BAR)) * 240) : null;
+      pool = { mode, chlorine, dosing, lit, needle, can };
+    }
+
     // A robot, from its own state and its status: the work, the way home, a
     // pause, the station busy with the bin or the pads, rain on a mower's
     // lawn. On the base it is charging until its battery is full, docked
@@ -12781,6 +13121,7 @@ class ApplianceCard extends HTMLElement {
       hairDryer,
       network,
       robot,
+      pool,
       purifier,
       screen,
       fan: fanCtx,
@@ -12867,6 +13208,7 @@ class ApplianceCard extends HTMLElement {
       illustrationCtx.network && [illustrationCtx.network.mode, illustrationCtx.network.layout, illustrationCtx.network.lit,
         illustrationCtx.network.disks.join("")].join("/"),
       illustrationCtx.robot && [illustrationCtx.robot.mode, illustrationCtx.robot.layout].join("/"),
+      illustrationCtx.pool && [illustrationCtx.pool.mode, illustrationCtx.pool.dosing, illustrationCtx.pool.lit].join("/"),
       illustrationCtx.screen && [illustrationCtx.screen.mode, illustrationCtx.screen.layout, illustrationCtx.screen.image, illustrationCtx.screen.cover].join("/"),
       illustrationCtx.purifier && [illustrationCtx.purifier.mode, illustrationCtx.purifier.osc, illustrationCtx.purifier.back].join("/"),
       illustrationCtx.fan && [illustrationCtx.fan.mode, illustrationCtx.fan.osc, illustrationCtx.fan.natural, illustrationCtx.fan.winter].join("/"),
@@ -13423,6 +13765,21 @@ const SECTIONS = [
   { field: "disk4_entity", types: ["network"], labelKey: "section_net_disk4", includeDomains: ["sensor", "binary_sensor"] },
   // A robot: its detailed status, its battery, and what raises something:
   // a full bin or an empty tank on a vacuum or a mop, rain on a mower.
+  // A pool pump: the readings of its water, its filter and its chlorine pump.
+  { field: "water_temperature_entity", types: ["pool_pump"], labelKey: "section_water_temperature", includeDomains: ["sensor"] },
+  { field: "air_temperature_entity", types: ["pool_pump"], labelKey: "section_air_temperature", includeDomains: ["sensor"] },
+  { field: "ph_entity", types: ["pool_pump"], labelKey: "section_ph", includeDomains: ["sensor"] },
+  { field: "redox_entity", types: ["pool_pump"], labelKey: "section_redox", includeDomains: ["sensor"] },
+  { field: "filtration_time_entity", types: ["pool_pump"], labelKey: "section_filtration_time", includeDomains: ["sensor"] },
+  { field: "pressure_entity", types: ["pool_pump"], labelKey: "section_pressure", includeDomains: ["sensor"], extra: (c) =>
+      c._row("pool_pressure_alert", "pressure_alert", { placeholder: String(POOL_PRESSURE_ALERT) }) },
+  { field: "pool_mode_entity", types: ["pool_pump"], labelKey: "section_pool_mode", includeDomains: ["select", "input_select", "sensor"] },
+  { field: "chlorine_pump_entity", types: ["pool_pump"], labelKey: "section_chlorine_pump", includeDomains: ["binary_sensor", "switch", "sensor", "input_boolean"] },
+  { field: "chlorine_level_entity", types: ["pool_pump"], labelKey: "section_chlorine_level", includeDomains: ["sensor", "number", "input_number"],
+    when: (c) => !!c.chlorine_pump_entity },
+  { field: "backwash_entity", types: ["pool_pump"], labelKey: "section_backwash", includeDomains: ["binary_sensor", "switch", "sensor", "input_boolean"] },
+  { field: "frost_entity", types: ["pool_pump"], labelKey: "section_frost", includeDomains: ["binary_sensor", "switch", "sensor", "input_boolean"] },
+  { field: "pool_alert_entity", types: ["pool_pump"], labelKey: "section_pool_alert", includeDomains: ["binary_sensor", "sensor"] },
   { field: "robot_status_entity", types: ["robot"], labelKey: "section_robot_status", includeDomains: ["sensor", "select", "input_select"] },
   { field: "battery_entity", types: ["robot"], labelKey: "section_battery", includeDomains: ["sensor"] },
   { field: "robot_bin_entity", types: ["robot"], labelKey: "section_robot_bin", includeDomains: ["binary_sensor", "sensor"],
@@ -13436,7 +13793,7 @@ const SECTIONS = [
   { field: "heater_entity", types: ["air_purifier", "fan"], labelKey: "section_heater", includeDomains: ["climate", "switch", "select", "binary_sensor"] },
 
   // Oven + hood
-  { field: "light_entity", types: ["oven", "hood", "printer_3d", "fan"], labelKey: "section_light", includeDomains: ["light", "switch", "input_boolean", "binary_sensor"] },
+  { field: "light_entity", types: ["oven", "hood", "printer_3d", "fan", "pool_pump"], labelKey: "section_light", includeDomains: ["light", "switch", "input_boolean", "binary_sensor"] },
 
   // Cooktop
   { field: "child_lock_entity", types: ["cooktop"], labelKey: "section_child_lock", includeDomains: ["binary_sensor", "switch", "lock"] },
@@ -13609,7 +13966,7 @@ const SECTIONS = [
       return c._row(cap.evCharger ? "ev_power_threshold" : cap.screen ? "screen_standby_threshold" : "power_on_threshold", "power_on_threshold",
         { placeholder: cap.fridgeTemp ? "1" : cap.evCharger ? String(EV_POWER_THRESHOLD) : cap.screen ? String(SCREEN_STANDBY_W) : "10" })
         + (cap.fridgeTemp ? c._row("no_power_threshold", "no_power_threshold", { placeholder: "1" }) + c._row("no_power_after", "no_power_after", { placeholder: "30" })
-          : cap.evCharger || cap.screen || cap.hairDryer || cap.network ? "" : c._row("power_off_delay", "power_off_delay", { placeholder: "0" }));
+          : cap.evCharger || cap.screen || cap.hairDryer || cap.network || cap.poolPump ? "" : c._row("power_off_delay", "power_off_delay", { placeholder: "0" }));
     } },
 
   // Two sections read as alerts, and only their pickers tell them apart: one

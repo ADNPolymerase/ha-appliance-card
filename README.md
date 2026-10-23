@@ -10,7 +10,7 @@
 <a href="https://buymeacoffee.com/adnpolymerase" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-orange.png" alt="Buy Me A Coffee" height="60"></a>
 <a href="https://adnpolymerase.github.io/HA/" target="_blank"><img src="https://raw.githubusercontent.com/ADNPolymerase/HA/main/assets/site-button.svg" alt="Link to my github.io for my other projects" height="60"></a>
 
-A Lovelace card for household appliances: washers, dryers, dishwashers, ovens, microwaves, cooker hoods, cooktops, fridges, kettles, cookers, coffee machines, rice cookers, air fryers, water heaters, boilers, heat pumps, 3D printers, pet feeders, irons, toasters, hair dryers, pellet stoves, air conditioners, dehumidifiers, space heaters, towel warmers, air purifiers, fans, EV chargers, TVs, projectors and computers, network switches, servers, NAS and racks, and robot vacuums, mops and mowers. Cycle in progress, program, remaining time, temperature, alerts and controls.
+A Lovelace card for household appliances: washers, dryers, dishwashers, ovens, microwaves, cooker hoods, cooktops, fridges, kettles, cookers, coffee machines, rice cookers, air fryers, water heaters, boilers, heat pumps, 3D printers, pet feeders, irons, toasters, hair dryers, pellet stoves, air conditioners, dehumidifiers, space heaters, towel warmers, air purifiers, fans, EV chargers, TVs, projectors and computers, network switches, servers, NAS and racks, robot vacuums, mops and mowers, and pool pumps. Cycle in progress, program, remaining time, temperature, alerts and controls.
 
 No brand assumed: every field is an entity you pick, so it works with **any** integration (Electrolux, Samsung, LG, Home Connect, Miele, a plain smart plug…).
 
@@ -21,13 +21,14 @@ No brand assumed: every field is an entity you pick, so it works with **any** in
 
 ## Features
 
-- **Thirty-three appliance types**, each with a CSS illustration that animates on the appliance's own data and stays still when idle. The type is detected on its own or set via `appliance_type`, and `compact: true` keeps only the text.
+- **Thirty-four appliance types**, each with a CSS illustration that animates on the appliance's own data and stays still when idle. The type is detected on its own or set via `appliance_type`, and `compact: true` keeps only the text.
 - **State normalization**: `Idle`, `RUNNING`, `wash`, `En marche`… are recognised (accent-insensitive) and sorted into idle, preheating, running, paused, done, delayed or error. An unknown state is shown as it came, minus the integration's namespace, and `state_map` sorts the rest, `"*"` catching everything left over.
 - **The step, not an hour of *Running***: a washer, a dryer or a dishwasher names the step it is at (*Pre-wash*, *Washing*, *Rinsing*, *Spinning*, *Drying* and seven more), from a phase entity or from its own state, and the drum whirls while it spins. The time left is still the whole cycle's.
 - **A washer-dryer is a washer that dries**: `washer_dryer: true`, and the drum shows water while it washes, then clothes turning in hot air while it dries. The step comes from the state itself or from a phase entity, and the state line reads *Washing* or *Drying*.
 - **Each appliance says what matters for it**: a coffee machine what it is missing (water, beans, tray, descaling), a fridge its health (unplugged, door open, temperature high), a combi boiler what it is heating (central heating, hot water or standby), a 3D printer what the job is doing (preheating, bed levelling, changing filament), a pellet stove the phase of its fire (ignition, modulating, eco, cleaning), an air conditioner its mode and where it blows, an EV charger whether a car is plugged in and what the charge is doing (waiting for authorisation, charging, paused, scheduled, complete).
 - **The network as well**: a switch, a server, a NAS or a rack, *Online*, *Busy* or in *Alert*. One LED per port in use, one per disk in its bay (fine, reading, asleep, to watch, failed), and the readings found on their own from Synology, UGREEN, Unraid or Glances.
 - **Robots too**: a vacuum, a mop or a mower leaves its base and goes over its floor, comes back, and says when its station empties the bin or washes the pads, when rain keeps it home or when it is stuck.
+- **And the pool**: the sand filter, the pump and the pool, *Filtering*, *Chlorine injection* with an optional dosing pump, *Backwash* to the drain, *Frost protection*, and the light, the water, the pH and the RedOx in the lines.
 - **Works from a smart plug alone**: `power_entity` and `power_on_threshold` are enough to derive the state from consumption; `power_off_delay` keeps a pause from reading as the end, and `show_last_cycle` shows how long the last cycle ran.
 - **Program, remaining time, progress bar, info lines, door, alerts, connectivity and controls** (start, pause, resume, stop), each optional.
 - **14 languages** (EN, FR, DE, ES, IT, NL, PT, SV, NO, DA, PL, RU, ZH, CS), Home Assistant's or pinned on the card.
@@ -93,6 +94,13 @@ Click a family to see its appliances at work.
 
 </details>
 
+<details>
+<summary><b>Pool pumps</b></summary>
+
+<img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-pool.gif" alt="Pool pumps" width="100%">
+
+</details>
+
 ## Installation
 
 ### HACS
@@ -129,7 +137,7 @@ Only `state_entity` is required, except on a fridge where a probe or a door cont
 | `done_alert` | `true` makes a green badge pulse on the drawing when a cycle has finished, until the door opens or the badge is tapped. For appliances with a cycle (washer, dryer, dishwasher, oven…). |
 | `illustration_color` | `auto` (default, follows the theme) \| `white` \| `grey` \| `black` \| `red` (dark red). Only changes the casing, not the state colours. |
 | `language` | `auto` (default, follows Home Assistant) or one of the 14 codes: `en`, `fr`, `de`, `es`, `it`, `nl`, `pt`, `sv`, `no`, `da`, `pl`, `ru`, `zh`, `cs`. `nb` and `nb-NO` give Norwegian. |
-| `appliance_type` | `auto` (default) \| `washer` \| `dryer` \| `dishwasher` \| `oven` \| `microwave` \| `hood` \| `cooktop` \| `fridge` \| `kettle` \| `cooker` \| `coffee` \| `rice_cooker` \| `air_fryer` \| `water_heater` \| `boiler` \| `heat_pump` \| `printer_3d` \| `pet_feeder` \| `pet_fountain` \| `iron` \| `toaster` \| `pellet_stove` \| `air_conditioner` \| `dehumidifier` \| `space_heater` \| `towel_warmer` \| `air_purifier` \| `fan` \| `ev_charger` \| `hair_dryer` \| `screen` \| `network` \| `robot`. |
+| `appliance_type` | `auto` (default) \| `washer` \| `dryer` \| `dishwasher` \| `oven` \| `microwave` \| `hood` \| `cooktop` \| `fridge` \| `kettle` \| `cooker` \| `coffee` \| `rice_cooker` \| `air_fryer` \| `water_heater` \| `boiler` \| `heat_pump` \| `printer_3d` \| `pet_feeder` \| `pet_fountain` \| `iron` \| `toaster` \| `pellet_stove` \| `air_conditioner` \| `dehumidifier` \| `space_heater` \| `towel_warmer` \| `air_purifier` \| `fan` \| `ev_charger` \| `hair_dryer` \| `screen` \| `network` \| `robot` \| `pool_pump`. |
 | `tap_action` | What a tap on the card does, in Home Assistant's own words: `more-info` (default: the state entity, or on a card without one what it reads in its place), `none`, `navigate`, `url`, `toggle`, `perform-action` or `fire-dom-event`, which is what the popup cards built on browser_mod listen for. In YAML only. |
 | `toggle_entity` | Power button (`switch`, `button`, `script`, `input_boolean`, `fan`), highlighted while on. On every type, the fridge included, where it is the only button; pair it with `controls_activation: confirm` for an appliance that must not be switched off by mistake. |
 | `power_entity` / `power_on_threshold` / `power_icon` | Power sensor. With a threshold, the state is derived from it: *running* above, then *finished* when it falls back. Pointing `state_entity` at the same sensor enables it with a 10 W threshold. `power_icon` replaces `mdi:power-plug`. |
@@ -216,6 +224,15 @@ Only `state_entity` is required, except on a fridge where a probe or a door cont
 | `fan_speed_entity` | network | A fan's speed: at 0 rpm the drawn fan stops. |
 | `problem_entity` | network | Anything that should raise the *Alert*: a security status, a health sensor. |
 | `disk1_entity` … `disk4_entity` / `bays` | network | One entity per disk, any of its own: the card reads all of them. Its LED is green when fine, blue while it reads or writes, dim while asleep, orange when to watch, red when it fails. `bays`: `1`, `2` or `4` bays drawn on a NAS, an empty bay has no tray. |
+| `water_temperature_entity` / `air_temperature_entity` | pool pump | The water and the air, shown as lines. |
+| `ph_entity` / `redox_entity` | pool pump | The pH and the RedOx (ORP), shown as lines. |
+| `filtration_time_entity` | pool pump | Time filtered today, in hours, minutes or seconds: *4h30*. |
+| `pressure_entity` / `pressure_alert` | pool pump | The filter's pressure: the gauge's needle follows it, and at `pressure_alert` (1.8 bar by default) or above, with the pump running, it is an *Error*. |
+| `pool_mode_entity` | pool pump | The pump's mode (auto, manual…), shown as a line. As the `state_entity`, a mode only says the pump runs when a `power_entity` draws over `power_on_threshold` (50 W by default). |
+| `chlorine_pump_entity` / `chlorine_level_entity` | pool pump | An optional chlorine dosing pump: its tank and its long tube to the return pipe only show when it is given, and drops run down the tube while it injects. Its level, in %, fills the tank and turns orange at 15 % or less. |
+| `backwash_entity` / `frost_entity` | pool pump | A backwash sends the dirty water to the drain, the pool stays still; frost protection frosts the pipes. A state that says backwash or frost does the same. |
+| `pool_alert_entity` | pool pump | Anything that should raise the *Error*: the pump smokes and the gauge's needle swings. |
+| `light_entity` | pool pump | The pool's light: it shines on the far wall, and the light switch sits in the corner of the card. |
 | `robot_layout` | robot | `vacuum` \| `mop` \| `mower`. Left out, a `lawn_mower` entity or a name that says mower, Landroid or Automower makes a mower, and Braava or mop a mopping robot. |
 | `robot_station` | robot | `station` (default: the vacuum's emptying station, the mop's washing station) \| `base` (a charging base alone). |
 | `robot_shelter` | robot | `true` draws a shelter over a mower's base. |
@@ -518,6 +535,25 @@ robot_status_entity: sensor.landroid_status
 battery_entity: sensor.landroid_battery
 robot_error_entity: sensor.landroid_error
 robot_shelter: true
+```
+
+</details>
+
+<details>
+<summary><b>Pool pumps</b></summary>
+
+A sand filter with its multiport valve and its gauge, the pump with its clear strainer lid, the pipes and the pool. Its `state_entity` is the pump, a switch or a binary sensor: *Filtering* while it runs, the water flowing in the pipes, a jet turning in the strainer and the needle up; *Off* at rest. With a chlorine pump, *Chlorine injection* while it doses. *Backwash* sends the dirty water to the drain, *Frost protection* frosts the pipes, and an alert or a pressure too high is an *Error*. The light, the water, the air, the pH, the RedOx, the time filtered today, the pressure and the pump's mode are each optional. A smart plug's meter alone is enough.
+
+```yaml
+type: custom:ha-appliance-card
+appliance_type: pool_pump
+state_entity: binary_sensor.pool_pump
+light_entity: switch.pool_light
+water_temperature_entity: sensor.pool_water_temperature
+ph_entity: sensor.pool_ph
+redox_entity: sensor.pool_redox
+filtration_time_entity: sensor.pool_filtration_today
+chlorine_pump_entity: binary_sensor.pool_chlorine_pump
 ```
 
 </details>
