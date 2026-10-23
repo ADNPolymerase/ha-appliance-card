@@ -784,6 +784,21 @@ const netBays = (bays, disks, name) => () => card({
   ...Object.fromEntries(disks.map((d, i) => [`disk${i + 1}_entity`, d ? `sensor.nas_disk_${i + 1}_status` : undefined])),
 }, [st("device_tracker.nas", "home")].concat(disks.map((d, i) => st(`sensor.nas_disk_${i + 1}_status`, d || "normal"))));
 
+// Robots: a vacuum at work and one emptying into its station, a mop at work
+// and one drying its pads, a mower at work and one kept home by the rain.
+const robot = (name, entity, state, attrs, extra = {}, more = []) => () => card({ name, state_entity: entity, ...extra },
+  [st(entity, state, attrs), ...more]);
+const rbtVacuum = robot("Roomba", "vacuum.roomba", "cleaning", { battery_level: 81 });
+const rbtEmptying = robot("Roomba", "vacuum.roomba", "docked", { battery_level: 96, status: "Emptying the bin" });
+const rbtMop = robot("Braava", "vacuum.braava", "cleaning", { battery_level: 74 }, { robot_water_entity: "sensor.braava_water" },
+  [st("sensor.braava_water", 60, { unit_of_measurement: "%" })]);
+const rbtDrying = robot("Braava", "vacuum.braava", "docked", { battery_level: 100 }, { robot_status_entity: "sensor.braava_status" },
+  [st("sensor.braava_status", "drying_mop")]);
+const rbtMower = robot("Landroid", "lawn_mower.landroid", "mowing", {}, { battery_entity: "sensor.landroid_battery" },
+  [st("sensor.landroid_battery", 68, { unit_of_measurement: "%" })]);
+const rbtRain = robot("Landroid", "lawn_mower.landroid", "docked", {}, { battery_entity: "sensor.landroid_battery", robot_status_entity: "sensor.landroid_status", robot_shelter: true },
+  [st("sensor.landroid_battery", 100, { unit_of_measurement: "%" }), st("sensor.landroid_status", "rain_delayed")]);
+
 // Grouped by kind: the laundry, the kitchen, heating and climate, then the
 // rest.
 const ALL = { washer, dryer, steam_generator: steamGenerator,
@@ -798,6 +813,8 @@ const ALL = { washer, dryer, steam_generator: steamGenerator,
 const EXTRA = { iron, round_feeder: roundFeeder, double_feeder: doubleFeeder, ev_discharging: evDischarging,
                 box_purifier: boxPurifier, ring_purifier: ringPurifier,
                 net_switch: netSwitch, net_nas: netNas, net_server: netServer, net_rack: netRack,
+                robot_vacuum: rbtVacuum, robot_emptying: rbtEmptying, robot_mop: rbtMop, robot_drying: rbtDrying,
+                robot_mower: rbtMower, robot_rain: rbtRain,
                 net_sw8: netSw(8, 6), net_sw16: netSw(16, 11), net_sw24: netSw(24, 20), net_sw32: netSw(32, 27),
                 net_nas1: netBays(1, ["normal"], L("NAS, 1 bay", "NAS 1 baie")),
                 net_nas2: netBays(2, ["normal", null], L("NAS, 2 bays, 1 disk", "NAS 2 baies, 1 disque")),

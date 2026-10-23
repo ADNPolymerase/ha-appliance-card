@@ -86,6 +86,13 @@ Click a family to see its appliances at work.
 
 </details>
 
+<details>
+<summary><b>Robots: vacuums, mops and mowers</b></summary>
+
+<img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-robots.gif" alt="Robots: vacuums, mops and mowers" width="100%">
+
+</details>
+
 ## Installation
 
 ### HACS

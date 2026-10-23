@@ -86,6 +86,13 @@ Clique sur une famille pour voir ses appareils en marche.
 
 </details>
 
+<details>
+<summary><b>Robots : aspirateurs, laveurs et tondeuses</b></summary>
+
+<img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-robots.fr.gif" alt="Robots : aspirateurs, laveurs et tondeuses" width="100%">
+
+</details>
+
 ## Installation
 
 ### Par HACS
