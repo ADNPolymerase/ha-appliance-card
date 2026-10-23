@@ -143,6 +143,7 @@ const T = {
     type_screen: "Screen (TV, projector, computer)", section_screen_layout: "Model", layout_tv_feet: "TV on feet", layout_tv_stand: "TV on a stand", layout_tv_wall: "Wall-mounted TV", layout_projector: "Projector", layout_computer: "Computer", section_screen_image: "Picture on screen", img_random: "Random", img_sunset: "Sunset", img_aquarium: "Aquarium", img_bars: "Test card", img_football: "Football match", img_space: "Space", img_bounce: "Bouncing logo", img_desktop: "Desktop", img_code: "Scrolling code", img_pong: "Pong", screen_on: "On", screen_playing: "Playing", screen_home: "Home screen", screen_locked: "Locked", screen_muted: "Muted", screen_standby_threshold: "Standby up to this power (W)", section_media: "Media player", section_media2: "Second media player", section_media3: "Third media player", section_lock: "Session lock",
     type_hair_dryer: "Hair dryer", layout_hd_pistol: "Classic", layout_hd_ring: "Ring", hd_cool: "Cool air", hd_hot: "Hot air", hd_heat_threshold: "Hot air above this power (W)", fill_height: "Fill the height of its slot", done_alert: "Flash at the end of the cycle", done_seen: "Seen", no_power_threshold: "No power draw below (W)", group_appearance: "Appearance", show_name: "Show the name", show_state: "Show the state", transparent: "Transparent background", font_scale: "Text size", illustration_size: "Drawing size", compact_mode: "Compact mode", compact_off: "Off", compact_hide: "No drawing", compact_side: "Drawing on the side", group_laundry: "Laundry", group_kitchen: "Kitchen", group_heating: "Heating and hot water", group_air: "Air and climate", group_home: "Home and media", group_pets: "Pets",
     type_network: "Network device (switch, NAS, server)", group_network: "Network and servers", layout_net_switch: "Switch", layout_net_server: "Server", layout_net_nas: "NAS", layout_net_rack: "Rack", net_ports_count: "Ports drawn", net_bays: "NAS bays", net_online: "Online", net_busy: "Busy", net_alert: "Alert", net_warn: "Disk to watch", section_net_cpu: "CPU usage (%)", section_net_memory: "Memory usage (%)", section_net_volume: "Volume used (%)", section_net_download: "Download rate", section_net_upload: "Upload rate", section_net_ports: "Active ports", net_ports_total: "Port count", section_net_poe: "PoE power", section_net_problem: "Problem alert", section_net_temperature: "Temperature", net_temp_alert: "Alert above this temperature (\u00b0C)", net_busy_threshold: "Busy above this rate (Mbit/s)", net_line_rate: "Throughput", net_line_load: "Load", net_line_volume: "Volume", section_net_disk1: "Disk 1", section_net_disk2: "Disk 2", section_net_disk3: "Disk 3", section_net_disk4: "Disk 4",
+    type_robot: "Robot (vacuum, mop, mower)", layout_robot_vacuum: "Robot vacuum", layout_robot_mop: "Mopping robot", layout_robot_mower: "Robot mower", section_robot_station: "Base", robot_station_station: "Emptying or washing station", robot_station_base: "Charging base only", robot_shelter: "Shelter over the base", robot_charging: "Charging", robot_docked: "Docked", robot_cleaning: "Cleaning", robot_mopping: "Mopping", robot_mowing: "Mowing", robot_edgecut: "Edge cutting", robot_returning: "Returning to base", robot_emptying: "Emptying the bin", robot_bin_full: "Bin full", robot_washing: "Washing the pads", robot_drying: "Drying the pads", robot_water_empty: "Water tank empty", robot_rain: "Rain delay", robot_idle: "Stopped", section_robot_status: "Detailed status", section_battery: "Battery", section_robot_bin: "Bin full alert", section_robot_water: "Water tank", section_robot_rain: "Rain", section_robot_error: "Error",
     section_purifier_layout: "Model", layout_purifier_cylinder: "Cylinder", layout_purifier_box: "Square box", layout_purifier_ring: "Bladeless ring",
     pf_purifying: "Purifying", pf_auto: "Auto", pf_night: "Night mode", section_air_quality: "Air quality",
     section_screen: "Screen", section_heater: "Heating (thermostat)", aq_good: "Good", aq_fair: "Fair",
@@ -296,6 +297,7 @@ const T = {
     type_screen: "\u00c9cran (TV, projecteur, ordinateur)", section_screen_layout: "Mod\u00e8le", layout_tv_feet: "T\u00e9l\u00e9vision sur pieds", layout_tv_stand: "T\u00e9l\u00e9vision sur pied central", layout_tv_wall: "T\u00e9l\u00e9vision murale", layout_projector: "Vid\u00e9oprojecteur", layout_computer: "Ordinateur", section_screen_image: "Image \u00e0 l'\u00e9cran", img_random: "Au hasard", img_sunset: "Coucher de soleil", img_aquarium: "Aquarium", img_bars: "Mire", img_football: "Match de foot", img_space: "Espace", img_bounce: "Logo qui rebondit", img_desktop: "Bureau", img_code: "Code qui d\u00e9file", img_pong: "Pong", screen_on: "Allum\u00e9", screen_playing: "Lecture", screen_home: "Accueil", screen_locked: "Verrouill\u00e9", screen_muted: "Son coup\u00e9", screen_standby_threshold: "En veille jusqu'\u00e0 cette puissance (W)", section_media: "Lecteur multim\u00e9dia", section_media2: "Deuxi\u00e8me lecteur", section_media3: "Troisi\u00e8me lecteur", section_lock: "Verrouillage de session",
     type_hair_dryer: "S\u00e8che-cheveux", layout_hd_pistol: "Classique", layout_hd_ring: "Anneau", hd_cool: "Air froid", hd_hot: "Air chaud", hd_heat_threshold: "Air chaud au-dessus de cette puissance (W)", fill_height: "Occuper toute la hauteur de sa case", done_alert: "Clignoter \u00e0 la fin du cycle", done_seen: "Vu", no_power_threshold: "Aucune consommation en dessous de (W)", group_appearance: "Apparence", show_name: "Afficher le nom", show_state: "Afficher l'\u00e9tat", transparent: "Fond transparent", font_scale: "Taille du texte", illustration_size: "Taille du dessin", compact_mode: "Mode compact", compact_off: "D\u00e9sactiv\u00e9", compact_hide: "Sans dessin", compact_side: "Dessin sur le c\u00f4t\u00e9", group_laundry: "Linge", group_kitchen: "Cuisine", group_heating: "Chauffage et eau chaude", group_air: "Air et climat", group_home: "Maison et multim\u00e9dia", group_pets: "Animaux",
     type_network: "R\u00e9seau (switch, NAS, serveur)", group_network: "R\u00e9seau et serveurs", layout_net_switch: "Switch", layout_net_server: "Serveur", layout_net_nas: "NAS", layout_net_rack: "Baie", net_ports_count: "Ports dessin\u00e9s", net_bays: "Baies du NAS", net_online: "En ligne", net_busy: "Activit\u00e9", net_alert: "Alerte", net_warn: "Disque \u00e0 surveiller", section_net_cpu: "Processeur (%)", section_net_memory: "M\u00e9moire (%)", section_net_volume: "Volume occup\u00e9 (%)", section_net_download: "D\u00e9bit descendant", section_net_upload: "D\u00e9bit montant", section_net_ports: "Ports actifs", net_ports_total: "Nombre de ports", section_net_poe: "Puissance PoE", section_net_problem: "Alerte (probl\u00e8me)", section_net_temperature: "Temp\u00e9rature", net_temp_alert: "Alerte au-dessus de cette temp\u00e9rature (\u00b0C)", net_busy_threshold: "Activit\u00e9 au-dessus de ce d\u00e9bit (Mbit/s)", net_line_rate: "D\u00e9bit", net_line_load: "Charge", net_line_volume: "Volume", section_net_disk1: "Disque 1", section_net_disk2: "Disque 2", section_net_disk3: "Disque 3", section_net_disk4: "Disque 4",
+    type_robot: "Robot (aspirateur, laveur, tondeuse)", layout_robot_vacuum: "Aspirateur robot", layout_robot_mop: "Robot laveur", layout_robot_mower: "Tondeuse robot", section_robot_station: "Base", robot_station_station: "Station de vidage ou de lavage", robot_station_base: "Base de charge seule", robot_shelter: "Abri au-dessus de la base", robot_charging: "En charge", robot_docked: "\u00c0 la base", robot_cleaning: "Nettoyage", robot_mopping: "Lavage", robot_mowing: "Tonte", robot_edgecut: "Coupe des bordures", robot_returning: "Retour \u00e0 la base", robot_emptying: "Vidage du bac", robot_bin_full: "Bac plein", robot_washing: "Lavage des patins", robot_drying: "S\u00e9chage des patins", robot_water_empty: "R\u00e9servoir vide", robot_rain: "Pluie", robot_idle: "\u00c0 l'arr\u00eat", section_robot_status: "\u00c9tat d\u00e9taill\u00e9", section_battery: "Batterie", section_robot_bin: "Alerte bac plein", section_robot_water: "R\u00e9servoir d'eau", section_robot_rain: "Pluie", section_robot_error: "Erreur",
     section_purifier_layout: "Mod\u00e8le", layout_purifier_cylinder: "Cylindre", layout_purifier_box: "Bo\u00eetier carr\u00e9", layout_purifier_ring: "Anneau sans pales",
     pf_purifying: "Purification", pf_auto: "Auto", pf_night: "Mode nuit", section_air_quality: "Qualit\u00e9 de l'air",
     section_screen: "\u00c9cran", section_heater: "Chauffage (thermostat)", aq_good: "Bonne", aq_fair: "Moyenne",
@@ -449,6 +451,7 @@ const T = {
     type_screen: "\u042d\u043a\u0440\u0430\u043d (\u0422\u0412, \u043f\u0440\u043e\u0435\u043a\u0442\u043e\u0440, \u043a\u043e\u043c\u043f\u044c\u044e\u0442\u0435\u0440)", section_screen_layout: "\u041c\u043e\u0434\u0435\u043b\u044c", layout_tv_feet: "\u0422\u0435\u043b\u0435\u0432\u0438\u0437\u043e\u0440 \u043d\u0430 \u043d\u043e\u0436\u043a\u0430\u0445", layout_tv_stand: "\u0422\u0435\u043b\u0435\u0432\u0438\u0437\u043e\u0440 \u043d\u0430 \u043f\u043e\u0434\u0441\u0442\u0430\u0432\u043a\u0435", layout_tv_wall: "\u041d\u0430\u0441\u0442\u0435\u043d\u043d\u044b\u0439 \u0442\u0435\u043b\u0435\u0432\u0438\u0437\u043e\u0440", layout_projector: "\u041f\u0440\u043e\u0435\u043a\u0442\u043e\u0440", layout_computer: "\u041a\u043e\u043c\u043f\u044c\u044e\u0442\u0435\u0440", section_screen_image: "\u0418\u0437\u043e\u0431\u0440\u0430\u0436\u0435\u043d\u0438\u0435 \u043d\u0430 \u044d\u043a\u0440\u0430\u043d\u0435", img_random: "\u0421\u043b\u0443\u0447\u0430\u0439\u043d\u043e\u0435", img_sunset: "\u0417\u0430\u043a\u0430\u0442", img_aquarium: "\u0410\u043a\u0432\u0430\u0440\u0438\u0443\u043c", img_bars: "\u0418\u0441\u043f\u044b\u0442\u0430\u0442\u0435\u043b\u044c\u043d\u0430\u044f \u0442\u0430\u0431\u043b\u0438\u0446\u0430", img_football: "\u0424\u0443\u0442\u0431\u043e\u043b\u044c\u043d\u044b\u0439 \u043c\u0430\u0442\u0447", img_space: "\u041a\u043e\u0441\u043c\u043e\u0441", img_bounce: "\u041f\u0440\u044b\u0433\u0430\u044e\u0449\u0438\u0439 \u043b\u043e\u0433\u043e\u0442\u0438\u043f", img_desktop: "\u0420\u0430\u0431\u043e\u0447\u0438\u0439 \u0441\u0442\u043e\u043b", img_code: "\u0411\u0435\u0433\u0443\u0449\u0438\u0439 \u043a\u043e\u0434", img_pong: "\u041f\u043e\u043d\u0433", screen_on: "\u0412\u043a\u043b\u044e\u0447\u0451\u043d", screen_playing: "\u0412\u043e\u0441\u043f\u0440\u043e\u0438\u0437\u0432\u0435\u0434\u0435\u043d\u0438\u0435", screen_home: "\u0413\u043b\u0430\u0432\u043d\u044b\u0439 \u044d\u043a\u0440\u0430\u043d", screen_locked: "\u0417\u0430\u0431\u043b\u043e\u043a\u0438\u0440\u043e\u0432\u0430\u043d", screen_muted: "\u0411\u0435\u0437 \u0437\u0432\u0443\u043a\u0430", screen_standby_threshold: "\u0420\u0435\u0436\u0438\u043c \u043e\u0436\u0438\u0434\u0430\u043d\u0438\u044f \u0434\u043e \u044d\u0442\u043e\u0439 \u043c\u043e\u0449\u043d\u043e\u0441\u0442\u0438 (\u0412\u0442)", section_media: "\u041c\u0435\u0434\u0438\u0430\u043f\u043b\u0435\u0435\u0440", section_media2: "\u0412\u0442\u043e\u0440\u043e\u0439 \u043c\u0435\u0434\u0438\u0430\u043f\u043b\u0435\u0435\u0440", section_media3: "\u0422\u0440\u0435\u0442\u0438\u0439 \u043c\u0435\u0434\u0438\u0430\u043f\u043b\u0435\u0435\u0440", section_lock: "\u0411\u043b\u043e\u043a\u0438\u0440\u043e\u0432\u043a\u0430 \u0441\u0435\u0430\u043d\u0441\u0430",
     type_hair_dryer: "\u0424\u0435\u043d", layout_hd_pistol: "\u041a\u043b\u0430\u0441\u0441\u0438\u0447\u0435\u0441\u043a\u0438\u0439", layout_hd_ring: "\u041a\u043e\u043b\u044c\u0446\u043e", hd_cool: "\u0425\u043e\u043b\u043e\u0434\u043d\u044b\u0439 \u0432\u043e\u0437\u0434\u0443\u0445", hd_hot: "\u0413\u043e\u0440\u044f\u0447\u0438\u0439 \u0432\u043e\u0437\u0434\u0443\u0445", hd_heat_threshold: "\u0413\u043e\u0440\u044f\u0447\u0438\u0439 \u0432\u043e\u0437\u0434\u0443\u0445 \u0432\u044b\u0448\u0435 \u044d\u0442\u043e\u0439 \u043c\u043e\u0449\u043d\u043e\u0441\u0442\u0438 (\u0412\u0442)", fill_height: "\u0417\u0430\u043d\u0438\u043c\u0430\u0442\u044c \u0432\u0441\u044e \u0432\u044b\u0441\u043e\u0442\u0443 \u044f\u0447\u0435\u0439\u043a\u0438", done_alert: "\u041c\u0438\u0433\u0430\u0442\u044c \u0432 \u043a\u043e\u043d\u0446\u0435 \u0446\u0438\u043a\u043b\u0430", done_seen: "\u041f\u0440\u043e\u0441\u043c\u043e\u0442\u0440\u0435\u043d\u043e", no_power_threshold: "\u041d\u0435\u0442 \u043f\u043e\u0442\u0440\u0435\u0431\u043b\u0435\u043d\u0438\u044f \u043d\u0438\u0436\u0435 (\u0412\u0442)", group_appearance: "\u0412\u043d\u0435\u0448\u043d\u0438\u0439 \u0432\u0438\u0434", show_name: "\u041f\u043e\u043a\u0430\u0437\u044b\u0432\u0430\u0442\u044c \u043d\u0430\u0437\u0432\u0430\u043d\u0438\u0435", show_state: "\u041f\u043e\u043a\u0430\u0437\u044b\u0432\u0430\u0442\u044c \u0441\u043e\u0441\u0442\u043e\u044f\u043d\u0438\u0435", transparent: "\u041f\u0440\u043e\u0437\u0440\u0430\u0447\u043d\u044b\u0439 \u0444\u043e\u043d", font_scale: "\u0420\u0430\u0437\u043c\u0435\u0440 \u0442\u0435\u043a\u0441\u0442\u0430", illustration_size: "\u0420\u0430\u0437\u043c\u0435\u0440 \u0440\u0438\u0441\u0443\u043d\u043a\u0430", compact_mode: "\u041a\u043e\u043c\u043f\u0430\u043a\u0442\u043d\u044b\u0439 \u0440\u0435\u0436\u0438\u043c", compact_off: "\u0412\u044b\u043a\u043b.", compact_hide: "\u0411\u0435\u0437 \u0440\u0438\u0441\u0443\u043d\u043a\u0430", compact_side: "\u0420\u0438\u0441\u0443\u043d\u043e\u043a \u0441\u0431\u043e\u043a\u0443", group_laundry: "\u0421\u0442\u0438\u0440\u043a\u0430", group_kitchen: "\u041a\u0443\u0445\u043d\u044f", group_heating: "\u041e\u0442\u043e\u043f\u043b\u0435\u043d\u0438\u0435 \u0438 \u0433\u043e\u0440\u044f\u0447\u0430\u044f \u0432\u043e\u0434\u0430", group_air: "\u0412\u043e\u0437\u0434\u0443\u0445 \u0438 \u043a\u043b\u0438\u043c\u0430\u0442", group_home: "\u0414\u043e\u043c \u0438 \u043c\u0443\u043b\u044c\u0442\u0438\u043c\u0435\u0434\u0438\u0430", group_pets: "\u041f\u0438\u0442\u043e\u043c\u0446\u044b",
     type_network: "\u0421\u0435\u0442\u044c (\u043a\u043e\u043c\u043c\u0443\u0442\u0430\u0442\u043e\u0440, NAS, \u0441\u0435\u0440\u0432\u0435\u0440)", group_network: "\u0421\u0435\u0442\u044c \u0438 \u0441\u0435\u0440\u0432\u0435\u0440\u044b", layout_net_switch: "\u041a\u043e\u043c\u043c\u0443\u0442\u0430\u0442\u043e\u0440", layout_net_server: "\u0421\u0435\u0440\u0432\u0435\u0440", layout_net_nas: "NAS", layout_net_rack: "\u0421\u0442\u043e\u0439\u043a\u0430", net_ports_count: "\u041f\u043e\u0440\u0442\u043e\u0432 \u043d\u0430 \u0440\u0438\u0441\u0443\u043d\u043a\u0435", net_bays: "\u041e\u0442\u0441\u0435\u043a\u0438 NAS", net_online: "\u0412 \u0441\u0435\u0442\u0438", net_busy: "\u0410\u043a\u0442\u0438\u0432\u043d\u043e\u0441\u0442\u044c", net_alert: "\u0422\u0440\u0435\u0432\u043e\u0433\u0430", net_warn: "\u0414\u0438\u0441\u043a \u043f\u043e\u0434 \u043d\u0430\u0431\u043b\u044e\u0434\u0435\u043d\u0438\u0435\u043c", section_net_cpu: "\u0417\u0430\u0433\u0440\u0443\u0437\u043a\u0430 \u0426\u041f (%)", section_net_memory: "\u0417\u0430\u0433\u0440\u0443\u0437\u043a\u0430 \u043f\u0430\u043c\u044f\u0442\u0438 (%)", section_net_volume: "\u0417\u0430\u043d\u044f\u0442\u043e \u043d\u0430 \u0442\u043e\u043c\u0435 (%)", section_net_download: "\u0421\u043a\u043e\u0440\u043e\u0441\u0442\u044c \u0437\u0430\u0433\u0440\u0443\u0437\u043a\u0438", section_net_upload: "\u0421\u043a\u043e\u0440\u043e\u0441\u0442\u044c \u043e\u0442\u0434\u0430\u0447\u0438", section_net_ports: "\u0410\u043a\u0442\u0438\u0432\u043d\u044b\u0435 \u043f\u043e\u0440\u0442\u044b", net_ports_total: "\u0427\u0438\u0441\u043b\u043e \u043f\u043e\u0440\u0442\u043e\u0432", section_net_poe: "\u041c\u043e\u0449\u043d\u043e\u0441\u0442\u044c PoE", section_net_problem: "\u0421\u0438\u0433\u043d\u0430\u043b \u043e \u043f\u0440\u043e\u0431\u043b\u0435\u043c\u0435", section_net_temperature: "\u0422\u0435\u043c\u043f\u0435\u0440\u0430\u0442\u0443\u0440\u0430", net_temp_alert: "\u0422\u0440\u0435\u0432\u043e\u0433\u0430 \u0432\u044b\u0448\u0435 \u044d\u0442\u043e\u0439 \u0442\u0435\u043c\u043f\u0435\u0440\u0430\u0442\u0443\u0440\u044b (\u00b0C)", net_busy_threshold: "\u0410\u043a\u0442\u0438\u0432\u043d\u043e\u0441\u0442\u044c \u0432\u044b\u0448\u0435 \u044d\u0442\u043e\u0439 \u0441\u043a\u043e\u0440\u043e\u0441\u0442\u0438 (\u041c\u0431\u0438\u0442/\u0441)", net_line_rate: "\u041f\u0440\u043e\u043f\u0443\u0441\u043a\u043d\u0430\u044f \u0441\u043f\u043e\u0441\u043e\u0431\u043d\u043e\u0441\u0442\u044c", net_line_load: "\u041d\u0430\u0433\u0440\u0443\u0437\u043a\u0430", net_line_volume: "\u0422\u043e\u043c", section_net_disk1: "\u0414\u0438\u0441\u043a 1", section_net_disk2: "\u0414\u0438\u0441\u043a 2", section_net_disk3: "\u0414\u0438\u0441\u043a 3", section_net_disk4: "\u0414\u0438\u0441\u043a 4",
+    type_robot: "\u0420\u043e\u0431\u043e\u0442 (\u043f\u044b\u043b\u0435\u0441\u043e\u0441, \u043c\u043e\u0439\u0449\u0438\u043a, \u0433\u0430\u0437\u043e\u043d\u043e\u043a\u043e\u0441\u0438\u043b\u043a\u0430)", layout_robot_vacuum: "\u0420\u043e\u0431\u043e\u0442-\u043f\u044b\u043b\u0435\u0441\u043e\u0441", layout_robot_mop: "\u041c\u043e\u044e\u0449\u0438\u0439 \u0440\u043e\u0431\u043e\u0442", layout_robot_mower: "\u0420\u043e\u0431\u043e\u0442-\u0433\u0430\u0437\u043e\u043d\u043e\u043a\u043e\u0441\u0438\u043b\u043a\u0430", section_robot_station: "\u0411\u0430\u0437\u0430", robot_station_station: "\u0421\u0442\u0430\u043d\u0446\u0438\u044f \u043e\u0447\u0438\u0441\u0442\u043a\u0438 \u0438\u043b\u0438 \u043c\u043e\u0439\u043a\u0438", robot_station_base: "\u0422\u043e\u043b\u044c\u043a\u043e \u0437\u0430\u0440\u044f\u0434\u043d\u0430\u044f \u0431\u0430\u0437\u0430", robot_shelter: "\u041d\u0430\u0432\u0435\u0441 \u043d\u0430\u0434 \u0431\u0430\u0437\u043e\u0439", robot_charging: "\u0417\u0430\u0440\u044f\u0434\u043a\u0430", robot_docked: "\u041d\u0430 \u0431\u0430\u0437\u0435", robot_cleaning: "\u0423\u0431\u043e\u0440\u043a\u0430", robot_mopping: "\u041c\u044b\u0442\u044c\u0435", robot_mowing: "\u0421\u0442\u0440\u0438\u0436\u043a\u0430", robot_edgecut: "\u041e\u0431\u0440\u0435\u0437\u043a\u0430 \u043a\u0440\u0430\u0451\u0432", robot_returning: "\u0412\u043e\u0437\u0432\u0440\u0430\u0442 \u043d\u0430 \u0431\u0430\u0437\u0443", robot_emptying: "\u041e\u0447\u0438\u0441\u0442\u043a\u0430 \u043a\u043e\u043d\u0442\u0435\u0439\u043d\u0435\u0440\u0430", robot_bin_full: "\u041a\u043e\u043d\u0442\u0435\u0439\u043d\u0435\u0440 \u043f\u043e\u043b\u043e\u043d", robot_washing: "\u041c\u043e\u0439\u043a\u0430 \u0441\u0430\u043b\u0444\u0435\u0442\u043e\u043a", robot_drying: "\u0421\u0443\u0448\u043a\u0430 \u0441\u0430\u043b\u0444\u0435\u0442\u043e\u043a", robot_water_empty: "\u0420\u0435\u0437\u0435\u0440\u0432\u0443\u0430\u0440 \u043f\u0443\u0441\u0442", robot_rain: "\u0414\u043e\u0436\u0434\u044c", robot_idle: "\u041e\u0441\u0442\u0430\u043d\u043e\u0432\u043b\u0435\u043d", section_robot_status: "\u041f\u043e\u0434\u0440\u043e\u0431\u043d\u044b\u0439 \u0441\u0442\u0430\u0442\u0443\u0441", section_battery: "\u0411\u0430\u0442\u0430\u0440\u0435\u044f", section_robot_bin: "\u041a\u043e\u043d\u0442\u0435\u0439\u043d\u0435\u0440 \u043f\u043e\u043b\u043e\u043d", section_robot_water: "\u0420\u0435\u0437\u0435\u0440\u0432\u0443\u0430\u0440 \u0434\u043b\u044f \u0432\u043e\u0434\u044b", section_robot_rain: "\u0414\u043e\u0436\u0434\u044c", section_robot_error: "\u041e\u0448\u0438\u0431\u043a\u0430",
     section_purifier_layout: "\u041c\u043e\u0434\u0435\u043b\u044c", layout_purifier_cylinder: "\u0426\u0438\u043b\u0438\u043d\u0434\u0440", layout_purifier_box: "\u041a\u0432\u0430\u0434\u0440\u0430\u0442\u043d\u044b\u0439 \u043a\u043e\u0440\u043f\u0443\u0441", layout_purifier_ring: "\u0411\u0435\u0437\u043b\u043e\u043f\u0430\u0441\u0442\u043d\u043e\u0435 \u043a\u043e\u043b\u044c\u0446\u043e",
     pf_purifying: "\u041e\u0447\u0438\u0441\u0442\u043a\u0430", pf_auto: "\u0410\u0432\u0442\u043e", pf_night: "\u041d\u043e\u0447\u043d\u043e\u0439 \u0440\u0435\u0436\u0438\u043c", section_air_quality: "\u041a\u0430\u0447\u0435\u0441\u0442\u0432\u043e \u0432\u043e\u0437\u0434\u0443\u0445\u0430",
     section_screen: "\u042d\u043a\u0440\u0430\u043d", section_heater: "\u041e\u0431\u043e\u0433\u0440\u0435\u0432 (\u0442\u0435\u0440\u043c\u043e\u0441\u0442\u0430\u0442)", aq_good: "\u0425\u043e\u0440\u043e\u0448\u0435\u0435", aq_fair: "\u0423\u0434\u043e\u0432\u043b\u0435\u0442\u0432\u043e\u0440\u0438\u0442\u0435\u043b\u044c\u043d\u043e\u0435",
@@ -602,6 +605,7 @@ const T = {
     type_screen: "Bildschirm (TV, Beamer, Computer)", section_screen_layout: "Modell", layout_tv_feet: "Fernseher auf F\u00fc\u00dfen", layout_tv_stand: "Fernseher mit Standfu\u00df", layout_tv_wall: "Wandfernseher", layout_projector: "Beamer", layout_computer: "Computer", section_screen_image: "Bild auf dem Bildschirm", img_random: "Zuf\u00e4llig", img_sunset: "Sonnenuntergang", img_aquarium: "Aquarium", img_bars: "Testbild", img_football: "Fu\u00dfballspiel", img_space: "Weltall", img_bounce: "H\u00fcpfendes Logo", img_desktop: "Desktop", img_code: "Scrollender Code", img_pong: "Pong", screen_on: "Ein", screen_playing: "Wiedergabe", screen_home: "Startbildschirm", screen_locked: "Gesperrt", screen_muted: "Stumm", screen_standby_threshold: "Standby bis zu dieser Leistung (W)", section_media: "Mediaplayer", section_media2: "Zweiter Mediaplayer", section_media3: "Dritter Mediaplayer", section_lock: "Sitzungssperre",
     type_hair_dryer: "Haartrockner", layout_hd_pistol: "Klassisch", layout_hd_ring: "Ring", hd_cool: "Kaltluft", hd_hot: "Warmluft", hd_heat_threshold: "Warmluft oberhalb dieser Leistung (W)", fill_height: "Ganze H\u00f6he des Platzes f\u00fcllen", done_alert: "Am Ende des Programms blinken", done_seen: "Gesehen", no_power_threshold: "Kein Verbrauch unter (W)", group_appearance: "Darstellung", show_name: "Namen anzeigen", show_state: "Status anzeigen", transparent: "Transparenter Hintergrund", font_scale: "Textgr\u00f6\u00dfe", illustration_size: "Zeichnungsgr\u00f6\u00dfe", compact_mode: "Kompaktmodus", compact_off: "Aus", compact_hide: "Ohne Zeichnung", compact_side: "Zeichnung seitlich", group_laundry: "W\u00e4sche", group_kitchen: "K\u00fcche", group_heating: "Heizung und Warmwasser", group_air: "Luft und Klima", group_home: "Haus und Multimedia", group_pets: "Haustiere",
     type_network: "Netzwerk (Switch, NAS, Server)", group_network: "Netzwerk und Server", layout_net_switch: "Switch", layout_net_server: "Server", layout_net_nas: "NAS", layout_net_rack: "Rack", net_ports_count: "Gezeichnete Ports", net_bays: "NAS-Sch\u00e4chte", net_online: "Online", net_busy: "Aktiv", net_alert: "Alarm", net_warn: "Festplatte beobachten", section_net_cpu: "CPU-Auslastung (%)", section_net_memory: "Speicherauslastung (%)", section_net_volume: "Volume belegt (%)", section_net_download: "Download-Rate", section_net_upload: "Upload-Rate", section_net_ports: "Aktive Ports", net_ports_total: "Anzahl der Ports", section_net_poe: "PoE-Leistung", section_net_problem: "Problemmeldung", section_net_temperature: "Temperatur", net_temp_alert: "Alarm oberhalb dieser Temperatur (\u00b0C)", net_busy_threshold: "Aktiv oberhalb dieser Rate (Mbit/s)", net_line_rate: "Durchsatz", net_line_load: "Last", net_line_volume: "Volume", section_net_disk1: "Festplatte 1", section_net_disk2: "Festplatte 2", section_net_disk3: "Festplatte 3", section_net_disk4: "Festplatte 4",
+    type_robot: "Roboter (Sauger, Wischer, M\u00e4her)", layout_robot_vacuum: "Saugroboter", layout_robot_mop: "Wischroboter", layout_robot_mower: "M\u00e4hroboter", section_robot_station: "Basis", robot_station_station: "Absaug- oder Waschstation", robot_station_base: "Nur Ladestation", robot_shelter: "Garage \u00fcber der Station", robot_charging: "L\u00e4dt", robot_docked: "In der Station", robot_cleaning: "Reinigt", robot_mopping: "Wischt", robot_mowing: "M\u00e4ht", robot_edgecut: "Kantenschnitt", robot_returning: "Kehrt zur Station zur\u00fcck", robot_emptying: "Beh\u00e4lter wird geleert", robot_bin_full: "Beh\u00e4lter voll", robot_washing: "Pads werden gewaschen", robot_drying: "Pads werden getrocknet", robot_water_empty: "Wassertank leer", robot_rain: "Regenpause", robot_idle: "Gestoppt", section_robot_status: "Detaillierter Status", section_battery: "Akku", section_robot_bin: "Beh\u00e4lter voll", section_robot_water: "Wassertank", section_robot_rain: "Regen", section_robot_error: "Fehler",
     section_purifier_layout: "Modell", layout_purifier_cylinder: "Zylinder", layout_purifier_box: "Quaderform", layout_purifier_ring: "Rotorloser Ring",
     pf_purifying: "Reinigt", pf_auto: "Auto", pf_night: "Nachtmodus", section_air_quality: "Luftqualit\u00e4t",
     section_screen: "Anzeige", section_heater: "Heizung (Thermostat)", aq_good: "Gut", aq_fair: "M\u00e4\u00dfig",
@@ -755,6 +759,7 @@ const T = {
     type_screen: "Pantalla (TV, proyector, ordenador)", section_screen_layout: "Modelo", layout_tv_feet: "Televisor con patas", layout_tv_stand: "Televisor con pie central", layout_tv_wall: "Televisor de pared", layout_projector: "Proyector", layout_computer: "Ordenador", section_screen_image: "Imagen en pantalla", img_random: "Aleatoria", img_sunset: "Puesta de sol", img_aquarium: "Acuario", img_bars: "Carta de ajuste", img_football: "Partido de f\u00fatbol", img_space: "Espacio", img_bounce: "Logo que rebota", img_desktop: "Escritorio", img_code: "C\u00f3digo en movimiento", img_pong: "Pong", screen_on: "Encendido", screen_playing: "Reproduciendo", screen_home: "Pantalla de inicio", screen_locked: "Bloqueado", screen_muted: "Silenciado", screen_standby_threshold: "En espera hasta esta potencia (W)", section_media: "Reproductor multimedia", section_media2: "Segundo reproductor", section_media3: "Tercer reproductor", section_lock: "Bloqueo de sesi\u00f3n",
     type_hair_dryer: "Secador de pelo", layout_hd_pistol: "Cl\u00e1sico", layout_hd_ring: "Anillo", hd_cool: "Aire fr\u00edo", hd_hot: "Aire caliente", hd_heat_threshold: "Aire caliente por encima de esta potencia (W)", fill_height: "Ocupar toda la altura de su hueco", done_alert: "Parpadear al final del ciclo", done_seen: "Visto", no_power_threshold: "Sin consumo por debajo de (W)", group_appearance: "Apariencia", show_name: "Mostrar el nombre", show_state: "Mostrar el estado", transparent: "Fondo transparente", font_scale: "Tama\u00f1o del texto", illustration_size: "Tama\u00f1o del dibujo", compact_mode: "Modo compacto", compact_off: "Desactivado", compact_hide: "Sin dibujo", compact_side: "Dibujo al lado", group_laundry: "Lavander\u00eda", group_kitchen: "Cocina", group_heating: "Calefacci\u00f3n y agua caliente", group_air: "Aire y climatizaci\u00f3n", group_home: "Hogar y multimedia", group_pets: "Mascotas",
     type_network: "Red (switch, NAS, servidor)", group_network: "Red y servidores", layout_net_switch: "Switch", layout_net_server: "Servidor", layout_net_nas: "NAS", layout_net_rack: "Rack", net_ports_count: "Puertos dibujados", net_bays: "Bah\u00edas del NAS", net_online: "En l\u00ednea", net_busy: "Actividad", net_alert: "Alerta", net_warn: "Disco a vigilar", section_net_cpu: "Uso de CPU (%)", section_net_memory: "Uso de memoria (%)", section_net_volume: "Volumen ocupado (%)", section_net_download: "Velocidad de descarga", section_net_upload: "Velocidad de subida", section_net_ports: "Puertos activos", net_ports_total: "N\u00famero de puertos", section_net_poe: "Potencia PoE", section_net_problem: "Alerta (problema)", section_net_temperature: "Temperatura", net_temp_alert: "Alerta por encima de esta temperatura (\u00b0C)", net_busy_threshold: "Actividad por encima de esta velocidad (Mbit/s)", net_line_rate: "Caudal", net_line_load: "Carga", net_line_volume: "Volumen", section_net_disk1: "Disco 1", section_net_disk2: "Disco 2", section_net_disk3: "Disco 3", section_net_disk4: "Disco 4",
+    type_robot: "Robot (aspirador, fregasuelos, cortac\u00e9sped)", layout_robot_vacuum: "Robot aspirador", layout_robot_mop: "Robot fregasuelos", layout_robot_mower: "Robot cortac\u00e9sped", section_robot_station: "Base", robot_station_station: "Estaci\u00f3n de vaciado o lavado", robot_station_base: "Solo base de carga", robot_shelter: "Techo sobre la base", robot_charging: "Cargando", robot_docked: "En la base", robot_cleaning: "Limpiando", robot_mopping: "Fregando", robot_mowing: "Cortando", robot_edgecut: "Corte de bordes", robot_returning: "Volviendo a la base", robot_emptying: "Vaciando el dep\u00f3sito", robot_bin_full: "Dep\u00f3sito lleno", robot_washing: "Lavando las mopas", robot_drying: "Secando las mopas", robot_water_empty: "Dep\u00f3sito de agua vac\u00edo", robot_rain: "Pausa por lluvia", robot_idle: "Detenido", section_robot_status: "Estado detallado", section_battery: "Bater\u00eda", section_robot_bin: "Dep\u00f3sito lleno", section_robot_water: "Dep\u00f3sito de agua", section_robot_rain: "Lluvia", section_robot_error: "Error",
     section_purifier_layout: "Modelo", layout_purifier_cylinder: "Cilindro", layout_purifier_box: "Caja cuadrada", layout_purifier_ring: "Anillo sin aspas",
     pf_purifying: "Purificando", pf_auto: "Auto", pf_night: "Modo nocturno", section_air_quality: "Calidad del aire",
     section_screen: "Pantalla", section_heater: "Calefacci\u00f3n (termostato)", aq_good: "Buena", aq_fair: "Aceptable",
@@ -908,6 +913,7 @@ const T = {
     type_screen: "Schermo (TV, proiettore, computer)", section_screen_layout: "Modello", layout_tv_feet: "TV con piedini", layout_tv_stand: "TV con piedistallo", layout_tv_wall: "TV a parete", layout_projector: "Proiettore", layout_computer: "Computer", section_screen_image: "Immagine sullo schermo", img_random: "Casuale", img_sunset: "Tramonto", img_aquarium: "Acquario", img_bars: "Monoscopio", img_football: "Partita di calcio", img_space: "Spazio", img_bounce: "Logo che rimbalza", img_desktop: "Desktop", img_code: "Codice che scorre", img_pong: "Pong", screen_on: "Acceso", screen_playing: "In riproduzione", screen_home: "Schermata iniziale", screen_locked: "Bloccato", screen_muted: "Audio disattivato", screen_standby_threshold: "In standby fino a questa potenza (W)", section_media: "Lettore multimediale", section_media2: "Secondo lettore", section_media3: "Terzo lettore", section_lock: "Blocco sessione",
     type_hair_dryer: "Asciugacapelli", layout_hd_pistol: "Classico", layout_hd_ring: "Anello", hd_cool: "Aria fredda", hd_hot: "Aria calda", hd_heat_threshold: "Aria calda sopra questa potenza (W)", fill_height: "Occupare tutta l'altezza dello spazio", done_alert: "Lampeggiare a fine ciclo", done_seen: "Visto", no_power_threshold: "Nessun consumo sotto (W)", group_appearance: "Aspetto", show_name: "Mostra il nome", show_state: "Mostra lo stato", transparent: "Sfondo trasparente", font_scale: "Dimensione del testo", illustration_size: "Dimensione del disegno", compact_mode: "Modalit\u00e0 compatta", compact_off: "Disattivata", compact_hide: "Senza disegno", compact_side: "Disegno di lato", group_laundry: "Bucato", group_kitchen: "Cucina", group_heating: "Riscaldamento e acqua calda", group_air: "Aria e clima", group_home: "Casa e multimedia", group_pets: "Animali",
     type_network: "Rete (switch, NAS, server)", group_network: "Rete e server", layout_net_switch: "Switch", layout_net_server: "Server", layout_net_nas: "NAS", layout_net_rack: "Rack", net_ports_count: "Porte disegnate", net_bays: "Alloggiamenti del NAS", net_online: "Online", net_busy: "Attivit\u00e0", net_alert: "Allarme", net_warn: "Disco da tenere d'occhio", section_net_cpu: "Uso CPU (%)", section_net_memory: "Uso memoria (%)", section_net_volume: "Volume occupato (%)", section_net_download: "Velocit\u00e0 di download", section_net_upload: "Velocit\u00e0 di upload", section_net_ports: "Porte attive", net_ports_total: "Numero di porte", section_net_poe: "Potenza PoE", section_net_problem: "Avviso (problema)", section_net_temperature: "Temperatura", net_temp_alert: "Allarme sopra questa temperatura (\u00b0C)", net_busy_threshold: "Attivit\u00e0 sopra questa velocit\u00e0 (Mbit/s)", net_line_rate: "Velocit\u00e0", net_line_load: "Carico", net_line_volume: "Volume", section_net_disk1: "Disco 1", section_net_disk2: "Disco 2", section_net_disk3: "Disco 3", section_net_disk4: "Disco 4",
+    type_robot: "Robot (aspirapolvere, lavapavimenti, tosaerba)", layout_robot_vacuum: "Robot aspirapolvere", layout_robot_mop: "Robot lavapavimenti", layout_robot_mower: "Robot tosaerba", section_robot_station: "Base", robot_station_station: "Stazione di svuotamento o lavaggio", robot_station_base: "Solo base di ricarica", robot_shelter: "Tettoia sopra la base", robot_charging: "In carica", robot_docked: "Alla base", robot_cleaning: "Pulizia", robot_mopping: "Lavaggio", robot_mowing: "Taglio", robot_edgecut: "Taglio dei bordi", robot_returning: "Ritorno alla base", robot_emptying: "Svuotamento del contenitore", robot_bin_full: "Contenitore pieno", robot_washing: "Lavaggio dei panni", robot_drying: "Asciugatura dei panni", robot_water_empty: "Serbatoio dell'acqua vuoto", robot_rain: "Pausa pioggia", robot_idle: "Fermo", section_robot_status: "Stato dettagliato", section_battery: "Batteria", section_robot_bin: "Contenitore pieno", section_robot_water: "Serbatoio dell'acqua", section_robot_rain: "Pioggia", section_robot_error: "Errore",
     section_purifier_layout: "Modello", layout_purifier_cylinder: "Cilindro", layout_purifier_box: "Scatola quadrata", layout_purifier_ring: "Anello senza pale",
     pf_purifying: "Purificazione", pf_auto: "Auto", pf_night: "Modalit\u00e0 notte", section_air_quality: "Qualit\u00e0 dell'aria",
     section_screen: "Display", section_heater: "Riscaldamento (termostato)", aq_good: "Buona", aq_fair: "Discreta",
@@ -1061,6 +1067,7 @@ const T = {
     type_screen: "Scherm (tv, projector, computer)", section_screen_layout: "Model", layout_tv_feet: "Tv op pootjes", layout_tv_stand: "Tv op voet", layout_tv_wall: "Tv aan de muur", layout_projector: "Projector", layout_computer: "Computer", section_screen_image: "Beeld op het scherm", img_random: "Willekeurig", img_sunset: "Zonsondergang", img_aquarium: "Aquarium", img_bars: "Testbeeld", img_football: "Voetbalwedstrijd", img_space: "Ruimte", img_bounce: "Stuiterend logo", img_desktop: "Bureaublad", img_code: "Scrollende code", img_pong: "Pong", screen_on: "Aan", screen_playing: "Speelt af", screen_home: "Startscherm", screen_locked: "Vergrendeld", screen_muted: "Gedempt", screen_standby_threshold: "Stand-by tot dit vermogen (W)", section_media: "Mediaspeler", section_media2: "Tweede mediaspeler", section_media3: "Derde mediaspeler", section_lock: "Sessievergrendeling",
     type_hair_dryer: "Haardroger", layout_hd_pistol: "Klassiek", layout_hd_ring: "Ring", hd_cool: "Koude lucht", hd_hot: "Warme lucht", hd_heat_threshold: "Warme lucht boven dit vermogen (W)", fill_height: "De volledige hoogte van het vak vullen", done_alert: "Knipperen aan het einde van de cyclus", done_seen: "Gezien", no_power_threshold: "Geen verbruik onder (W)", group_appearance: "Weergave", show_name: "Naam tonen", show_state: "Status tonen", transparent: "Transparante achtergrond", font_scale: "Tekstgrootte", illustration_size: "Grootte van de tekening", compact_mode: "Compacte modus", compact_off: "Uit", compact_hide: "Zonder tekening", compact_side: "Tekening opzij", group_laundry: "Was", group_kitchen: "Keuken", group_heating: "Verwarming en warm water", group_air: "Lucht en klimaat", group_home: "Huis en multimedia", group_pets: "Huisdieren",
     type_network: "Netwerk (switch, NAS, server)", group_network: "Netwerk en servers", layout_net_switch: "Switch", layout_net_server: "Server", layout_net_nas: "NAS", layout_net_rack: "Rack", net_ports_count: "Getekende poorten", net_bays: "NAS-sleuven", net_online: "Online", net_busy: "Actief", net_alert: "Alarm", net_warn: "Schijf in de gaten houden", section_net_cpu: "CPU-gebruik (%)", section_net_memory: "Geheugengebruik (%)", section_net_volume: "Volume bezet (%)", section_net_download: "Downloadsnelheid", section_net_upload: "Uploadsnelheid", section_net_ports: "Actieve poorten", net_ports_total: "Aantal poorten", section_net_poe: "PoE-vermogen", section_net_problem: "Probleemmelding", section_net_temperature: "Temperatuur", net_temp_alert: "Alarm boven deze temperatuur (\u00b0C)", net_busy_threshold: "Actief boven deze snelheid (Mbit/s)", net_line_rate: "Doorvoer", net_line_load: "Belasting", net_line_volume: "Volume", section_net_disk1: "Schijf 1", section_net_disk2: "Schijf 2", section_net_disk3: "Schijf 3", section_net_disk4: "Schijf 4",
+    type_robot: "Robot (stofzuiger, dweil, maaier)", layout_robot_vacuum: "Robotstofzuiger", layout_robot_mop: "Dweilrobot", layout_robot_mower: "Robotmaaier", section_robot_station: "Basis", robot_station_station: "Leeg- of wasstation", robot_station_base: "Alleen laadstation", robot_shelter: "Afdak boven de basis", robot_charging: "Opladen", robot_docked: "In de basis", robot_cleaning: "Reinigen", robot_mopping: "Dweilen", robot_mowing: "Maaien", robot_edgecut: "Randen maaien", robot_returning: "Terug naar de basis", robot_emptying: "Bak legen", robot_bin_full: "Bak vol", robot_washing: "Pads wassen", robot_drying: "Pads drogen", robot_water_empty: "Waterreservoir leeg", robot_rain: "Regenpauze", robot_idle: "Gestopt", section_robot_status: "Gedetailleerde status", section_battery: "Batterij", section_robot_bin: "Bak vol", section_robot_water: "Waterreservoir", section_robot_rain: "Regen", section_robot_error: "Fout",
     section_purifier_layout: "Model", layout_purifier_cylinder: "Cilinder", layout_purifier_box: "Vierkante kast", layout_purifier_ring: "Bladloze ring",
     pf_purifying: "Zuivert", pf_auto: "Auto", pf_night: "Nachtmodus", section_air_quality: "Luchtkwaliteit",
     section_screen: "Scherm", section_heater: "Verwarming (thermostaat)", aq_good: "Goed", aq_fair: "Matig",
@@ -1214,6 +1221,7 @@ const T = {
     type_screen: "Ecr\u00e3 (TV, projetor, computador)", section_screen_layout: "Modelo", layout_tv_feet: "TV com p\u00e9s", layout_tv_stand: "TV com base central", layout_tv_wall: "TV de parede", layout_projector: "Projetor", layout_computer: "Computador", section_screen_image: "Imagem no ecr\u00e3", img_random: "Aleat\u00f3ria", img_sunset: "P\u00f4r do sol", img_aquarium: "Aqu\u00e1rio", img_bars: "Padr\u00e3o de teste", img_football: "Jogo de futebol", img_space: "Espa\u00e7o", img_bounce: "Log\u00f3tipo a saltar", img_desktop: "Ambiente de trabalho", img_code: "C\u00f3digo a deslizar", img_pong: "Pong", screen_on: "Ligado", screen_playing: "A reproduzir", screen_home: "Ecr\u00e3 inicial", screen_locked: "Bloqueado", screen_muted: "Sem som", screen_standby_threshold: "Em espera at\u00e9 esta pot\u00eancia (W)", section_media: "Leitor multim\u00e9dia", section_media2: "Segundo leitor", section_media3: "Terceiro leitor", section_lock: "Bloqueio de sess\u00e3o",
     type_hair_dryer: "Secador de cabelo", layout_hd_pistol: "Cl\u00e1ssico", layout_hd_ring: "Anel", hd_cool: "Ar frio", hd_hot: "Ar quente", hd_heat_threshold: "Ar quente acima desta pot\u00eancia (W)", fill_height: "Ocupar toda a altura do espa\u00e7o", done_alert: "Piscar no fim do ciclo", done_seen: "Visto", no_power_threshold: "Sem consumo abaixo de (W)", group_appearance: "Apar\u00eancia", show_name: "Mostrar o nome", show_state: "Mostrar o estado", transparent: "Fundo transparente", font_scale: "Tamanho do texto", illustration_size: "Tamanho do desenho", compact_mode: "Modo compacto", compact_off: "Desligado", compact_hide: "Sem desenho", compact_side: "Desenho ao lado", group_laundry: "Roupa", group_kitchen: "Cozinha", group_heating: "Aquecimento e \u00e1gua quente", group_air: "Ar e climatiza\u00e7\u00e3o", group_home: "Casa e multim\u00e9dia", group_pets: "Animais",
     type_network: "Rede (switch, NAS, servidor)", group_network: "Rede e servidores", layout_net_switch: "Switch", layout_net_server: "Servidor", layout_net_nas: "NAS", layout_net_rack: "Bastidor", net_ports_count: "Portas desenhadas", net_bays: "Ba\u00edas do NAS", net_online: "Online", net_busy: "Atividade", net_alert: "Alerta", net_warn: "Disco a vigiar", section_net_cpu: "Uso de CPU (%)", section_net_memory: "Uso de mem\u00f3ria (%)", section_net_volume: "Volume ocupado (%)", section_net_download: "Velocidade de download", section_net_upload: "Velocidade de upload", section_net_ports: "Portas ativas", net_ports_total: "N\u00famero de portas", section_net_poe: "Pot\u00eancia PoE", section_net_problem: "Alerta (problema)", section_net_temperature: "Temperatura", net_temp_alert: "Alerta acima desta temperatura (\u00b0C)", net_busy_threshold: "Atividade acima deste d\u00e9bito (Mbit/s)", net_line_rate: "D\u00e9bito", net_line_load: "Carga", net_line_volume: "Volume", section_net_disk1: "Disco 1", section_net_disk2: "Disco 2", section_net_disk3: "Disco 3", section_net_disk4: "Disco 4",
+    type_robot: "Rob\u00f4 (aspirador, mopa, corta-relva)", layout_robot_vacuum: "Rob\u00f4 aspirador", layout_robot_mop: "Rob\u00f4 de mopa", layout_robot_mower: "Rob\u00f4 corta-relva", section_robot_station: "Base", robot_station_station: "Esta\u00e7\u00e3o de esvaziamento ou lavagem", robot_station_base: "S\u00f3 base de carga", robot_shelter: "Abrigo sobre a base", robot_charging: "A carregar", robot_docked: "Na base", robot_cleaning: "A limpar", robot_mopping: "A passar a mopa", robot_mowing: "A cortar", robot_edgecut: "Corte de bordas", robot_returning: "A voltar \u00e0 base", robot_emptying: "A esvaziar o dep\u00f3sito", robot_bin_full: "Dep\u00f3sito cheio", robot_washing: "A lavar as mopas", robot_drying: "A secar as mopas", robot_water_empty: "Dep\u00f3sito de \u00e1gua vazio", robot_rain: "Pausa de chuva", robot_idle: "Parado", section_robot_status: "Estado detalhado", section_battery: "Bateria", section_robot_bin: "Dep\u00f3sito cheio", section_robot_water: "Dep\u00f3sito de \u00e1gua", section_robot_rain: "Chuva", section_robot_error: "Erro",
     section_purifier_layout: "Modelo", layout_purifier_cylinder: "Cilindro", layout_purifier_box: "Caixa quadrada", layout_purifier_ring: "Anel sem p\u00e1s",
     pf_purifying: "A purificar", pf_auto: "Auto", pf_night: "Modo noturno", section_air_quality: "Qualidade do ar",
     section_screen: "Ecr\u00e3", section_heater: "Aquecimento (term\u00f3stato)", aq_good: "Boa", aq_fair: "Razo\u00e1vel",
@@ -1367,6 +1375,7 @@ const T = {
     type_screen: "Sk\u00e4rm (tv, projektor, dator)", section_screen_layout: "Modell", layout_tv_feet: "Tv p\u00e5 f\u00f6tter", layout_tv_stand: "Tv p\u00e5 fot", layout_tv_wall: "V\u00e4ggmonterad tv", layout_projector: "Projektor", layout_computer: "Dator", section_screen_image: "Bild p\u00e5 sk\u00e4rmen", img_random: "Slumpm\u00e4ssig", img_sunset: "Solnedg\u00e5ng", img_aquarium: "Akvarium", img_bars: "Testbild", img_football: "Fotbollsmatch", img_space: "Rymden", img_bounce: "Studsande logga", img_desktop: "Skrivbord", img_code: "Rullande kod", img_pong: "Pong", screen_on: "P\u00e5", screen_playing: "Spelar", screen_home: "Startsk\u00e4rm", screen_locked: "L\u00e5st", screen_muted: "Ljud av", screen_standby_threshold: "Standby upp till denna effekt (W)", section_media: "Mediaspelare", section_media2: "Andra mediaspelaren", section_media3: "Tredje mediaspelaren", section_lock: "Sessionsl\u00e5s",
     type_hair_dryer: "H\u00e5rtork", layout_hd_pistol: "Klassisk", layout_hd_ring: "Ring", hd_cool: "Kalluft", hd_hot: "Varmluft", hd_heat_threshold: "Varmluft \u00f6ver denna effekt (W)", fill_height: "Fyll hela platsens h\u00f6jd", done_alert: "Blinka n\u00e4r programmet \u00e4r klart", done_seen: "Sett", no_power_threshold: "Ingen f\u00f6rbrukning under (W)", group_appearance: "Utseende", show_name: "Visa namnet", show_state: "Visa status", transparent: "Genomskinlig bakgrund", font_scale: "Textstorlek", illustration_size: "Teckningens storlek", compact_mode: "Kompakt l\u00e4ge", compact_off: "Av", compact_hide: "Utan teckning", compact_side: "Teckning vid sidan", group_laundry: "Tv\u00e4tt", group_kitchen: "K\u00f6k", group_heating: "V\u00e4rme och varmvatten", group_air: "Luft och klimat", group_home: "Hem och media", group_pets: "Husdjur",
     type_network: "N\u00e4tverk (switch, NAS, server)", group_network: "N\u00e4tverk och servrar", layout_net_switch: "Switch", layout_net_server: "Server", layout_net_nas: "NAS", layout_net_rack: "Rack", net_ports_count: "Ritade portar", net_bays: "NAS-fack", net_online: "Online", net_busy: "Aktiv", net_alert: "Larm", net_warn: "Disk att bevaka", section_net_cpu: "CPU-anv\u00e4ndning (%)", section_net_memory: "Minnesanv\u00e4ndning (%)", section_net_volume: "Volym anv\u00e4nd (%)", section_net_download: "Nedladdningshastighet", section_net_upload: "Uppladdningshastighet", section_net_ports: "Aktiva portar", net_ports_total: "Antal portar", section_net_poe: "PoE-effekt", section_net_problem: "Problemvarning", section_net_temperature: "Temperatur", net_temp_alert: "Larm \u00f6ver denna temperatur (\u00b0C)", net_busy_threshold: "Aktiv \u00f6ver denna hastighet (Mbit/s)", net_line_rate: "Genomstr\u00f6mning", net_line_load: "Belastning", net_line_volume: "Volym", section_net_disk1: "Disk 1", section_net_disk2: "Disk 2", section_net_disk3: "Disk 3", section_net_disk4: "Disk 4",
+    type_robot: "Robot (dammsugare, mopp, gr\u00e4sklippare)", layout_robot_vacuum: "Robotdammsugare", layout_robot_mop: "Moppningsrobot", layout_robot_mower: "Robotgr\u00e4sklippare", section_robot_station: "Bas", robot_station_station: "T\u00f6mnings- eller tv\u00e4ttstation", robot_station_base: "Endast laddbas", robot_shelter: "Tak \u00f6ver basen", robot_charging: "Laddar", robot_docked: "I basen", robot_cleaning: "St\u00e4dar", robot_mopping: "Moppar", robot_mowing: "Klipper", robot_edgecut: "Kantklippning", robot_returning: "\u00c5terv\u00e4nder till basen", robot_emptying: "T\u00f6mmer beh\u00e5llaren", robot_bin_full: "Beh\u00e5llaren full", robot_washing: "Tv\u00e4ttar moppdukarna", robot_drying: "Torkar moppdukarna", robot_water_empty: "Vattentanken tom", robot_rain: "Regnpaus", robot_idle: "Stoppad", section_robot_status: "Detaljerad status", section_battery: "Batteri", section_robot_bin: "Beh\u00e5llaren full", section_robot_water: "Vattentank", section_robot_rain: "Regn", section_robot_error: "Fel",
     section_purifier_layout: "Modell", layout_purifier_cylinder: "Cylinder", layout_purifier_box: "Fyrkantig", layout_purifier_ring: "Bladl\u00f6s ring",
     pf_purifying: "Renar", pf_auto: "Auto", pf_night: "Nattl\u00e4ge", section_air_quality: "Luftkvalitet",
     section_screen: "Sk\u00e4rm", section_heater: "V\u00e4rme (termostat)", aq_good: "Bra", aq_fair: "M\u00e5ttlig",
@@ -1520,6 +1529,7 @@ const T = {
     type_screen: "Skjerm (TV, projektor, datamaskin)", section_screen_layout: "Modell", layout_tv_feet: "TV p\u00e5 f\u00f8tter", layout_tv_stand: "TV p\u00e5 fot", layout_tv_wall: "Veggmontert TV", layout_projector: "Projektor", layout_computer: "Datamaskin", section_screen_image: "Bilde p\u00e5 skjermen", img_random: "Tilfeldig", img_sunset: "Solnedgang", img_aquarium: "Akvarium", img_bars: "Testbilde", img_football: "Fotballkamp", img_space: "Verdensrommet", img_bounce: "Sprettende logo", img_desktop: "Skrivebord", img_code: "Rullende kode", img_pong: "Pong", screen_on: "P\u00e5", screen_playing: "Spiller", screen_home: "Startskjerm", screen_locked: "L\u00e5st", screen_muted: "Lyd av", screen_standby_threshold: "Standby opp til denne effekten (W)", section_media: "Mediespiller", section_media2: "Andre mediespiller", section_media3: "Tredje mediespiller", section_lock: "\u00d8ktl\u00e5s",
     type_hair_dryer: "H\u00e5rf\u00f8ner", layout_hd_pistol: "Klassisk", layout_hd_ring: "Ring", hd_cool: "Kald luft", hd_hot: "Varm luft", hd_heat_threshold: "Varm luft over denne effekten (W)", fill_height: "Fyll hele h\u00f8yden p\u00e5 plassen", done_alert: "Blinke n\u00e5r programmet er ferdig", done_seen: "Sett", no_power_threshold: "Ikke noe forbruk under (W)", group_appearance: "Utseende", show_name: "Vis navnet", show_state: "Vis status", transparent: "Gjennomsiktig bakgrunn", font_scale: "Tekstst\u00f8rrelse", illustration_size: "Tegningens st\u00f8rrelse", compact_mode: "Kompakt modus", compact_off: "Av", compact_hide: "Uten tegning", compact_side: "Tegning p\u00e5 siden", group_laundry: "Klesvask", group_kitchen: "Kj\u00f8kken", group_heating: "Oppvarming og varmtvann", group_air: "Luft og klima", group_home: "Hjem og multimedia", group_pets: "Kj\u00e6ledyr",
     type_network: "Nettverk (switch, NAS, server)", group_network: "Nettverk og servere", layout_net_switch: "Switch", layout_net_server: "Server", layout_net_nas: "NAS", layout_net_rack: "Rack", net_ports_count: "Tegnede porter", net_bays: "NAS-br\u00f8nner", net_online: "Tilkoblet", net_busy: "Aktiv", net_alert: "Alarm", net_warn: "Disk \u00e5 f\u00f8lge med p\u00e5", section_net_cpu: "CPU-bruk (%)", section_net_memory: "Minnebruk (%)", section_net_volume: "Volum brukt (%)", section_net_download: "Nedlastingshastighet", section_net_upload: "Opplastingshastighet", section_net_ports: "Aktive porter", net_ports_total: "Antall porter", section_net_poe: "PoE-effekt", section_net_problem: "Problemvarsel", section_net_temperature: "Temperatur", net_temp_alert: "Alarm over denne temperaturen (\u00b0C)", net_busy_threshold: "Aktiv over denne hastigheten (Mbit/s)", net_line_rate: "Gjennomstr\u00f8mning", net_line_load: "Belastning", net_line_volume: "Volum", section_net_disk1: "Disk 1", section_net_disk2: "Disk 2", section_net_disk3: "Disk 3", section_net_disk4: "Disk 4",
+    type_robot: "Robot (st\u00f8vsuger, mopp, gressklipper)", layout_robot_vacuum: "Robotst\u00f8vsuger", layout_robot_mop: "Moppe-robot", layout_robot_mower: "Robotgressklipper", section_robot_station: "Base", robot_station_station: "T\u00f8mme- eller vaskestasjon", robot_station_base: "Bare ladebase", robot_shelter: "Tak over basen", robot_charging: "Lader", robot_docked: "I basen", robot_cleaning: "Rengj\u00f8r", robot_mopping: "Mopper", robot_mowing: "Klipper", robot_edgecut: "Kantklipping", robot_returning: "Returnerer til basen", robot_emptying: "T\u00f8mmer beholderen", robot_bin_full: "Beholderen full", robot_washing: "Vasker moppeputene", robot_drying: "T\u00f8rker moppeputene", robot_water_empty: "Vanntanken tom", robot_rain: "Regnpause", robot_idle: "Stoppet", section_robot_status: "Detaljert status", section_battery: "Batteri", section_robot_bin: "Beholderen full", section_robot_water: "Vanntank", section_robot_rain: "Regn", section_robot_error: "Feil",
     section_purifier_layout: "Modell", layout_purifier_cylinder: "Sylinder", layout_purifier_box: "Firkantet", layout_purifier_ring: "Vingel\u00f8s ring",
     pf_purifying: "Renser", pf_auto: "Auto", pf_night: "Nattmodus", section_air_quality: "Luftkvalitet",
     section_screen: "Skjerm", section_heater: "Varme (termostat)", aq_good: "God", aq_fair: "Moderat",
@@ -1673,6 +1683,7 @@ const T = {
     type_screen: "Sk\u00e6rm (TV, projektor, computer)", section_screen_layout: "Model", layout_tv_feet: "TV p\u00e5 f\u00f8dder", layout_tv_stand: "TV p\u00e5 fod", layout_tv_wall: "V\u00e6gmonteret TV", layout_projector: "Projektor", layout_computer: "Computer", section_screen_image: "Billede p\u00e5 sk\u00e6rmen", img_random: "Tilf\u00e6ldig", img_sunset: "Solnedgang", img_aquarium: "Akvarium", img_bars: "Testbillede", img_football: "Fodboldkamp", img_space: "Rummet", img_bounce: "Hoppende logo", img_desktop: "Skrivebord", img_code: "Rullende kode", img_pong: "Pong", screen_on: "T\u00e6ndt", screen_playing: "Afspiller", screen_home: "Startsk\u00e6rm", screen_locked: "L\u00e5st", screen_muted: "Lyd sl\u00e5et fra", screen_standby_threshold: "Standby op til denne effekt (W)", section_media: "Medieafspiller", section_media2: "Anden medieafspiller", section_media3: "Tredje medieafspiller", section_lock: "Sessionsl\u00e5s",
     type_hair_dryer: "H\u00e5rt\u00f8rrer", layout_hd_pistol: "Klassisk", layout_hd_ring: "Ring", hd_cool: "Kold luft", hd_hot: "Varm luft", hd_heat_threshold: "Varm luft over denne effekt (W)", fill_height: "Fyld hele pladsens h\u00f8jde", done_alert: "Blinke n\u00e5r programmet er f\u00e6rdigt", done_seen: "Set", no_power_threshold: "Intet forbrug under (W)", group_appearance: "Udseende", show_name: "Vis navnet", show_state: "Vis status", transparent: "Gennemsigtig baggrund", font_scale: "Tekstst\u00f8rrelse", illustration_size: "Tegningens st\u00f8rrelse", compact_mode: "Kompakt tilstand", compact_off: "Fra", compact_hide: "Uden tegning", compact_side: "Tegning i siden", group_laundry: "T\u00f8jvask", group_kitchen: "K\u00f8kken", group_heating: "Opvarmning og varmt vand", group_air: "Luft og klima", group_home: "Hjem og multimedie", group_pets: "K\u00e6ledyr",
     type_network: "Netv\u00e6rk (switch, NAS, server)", group_network: "Netv\u00e6rk og servere", layout_net_switch: "Switch", layout_net_server: "Server", layout_net_nas: "NAS", layout_net_rack: "Rack", net_ports_count: "Tegnede porte", net_bays: "NAS-b\u00e5se", net_online: "Online", net_busy: "Aktiv", net_alert: "Alarm", net_warn: "Disk at holde \u00f8je med", section_net_cpu: "CPU-forbrug (%)", section_net_memory: "Hukommelsesforbrug (%)", section_net_volume: "Volumen brugt (%)", section_net_download: "Downloadhastighed", section_net_upload: "Uploadhastighed", section_net_ports: "Aktive porte", net_ports_total: "Antal porte", section_net_poe: "PoE-effekt", section_net_problem: "Problemadvarsel", section_net_temperature: "Temperatur", net_temp_alert: "Alarm over denne temperatur (\u00b0C)", net_busy_threshold: "Aktiv over denne hastighed (Mbit/s)", net_line_rate: "Gennemstr\u00f8mning", net_line_load: "Belastning", net_line_volume: "Volumen", section_net_disk1: "Disk 1", section_net_disk2: "Disk 2", section_net_disk3: "Disk 3", section_net_disk4: "Disk 4",
+    type_robot: "Robot (st\u00f8vsuger, moppe, pl\u00e6neklipper)", layout_robot_vacuum: "Robotst\u00f8vsuger", layout_robot_mop: "Mopperobot", layout_robot_mower: "Robotpl\u00e6neklipper", section_robot_station: "Base", robot_station_station: "T\u00f8mnings- eller vaskestation", robot_station_base: "Kun ladebase", robot_shelter: "Tag over basen", robot_charging: "Lader", robot_docked: "I basen", robot_cleaning: "Rensning", robot_mopping: "Mopper", robot_mowing: "Sl\u00e5r", robot_edgecut: "Kantklipning", robot_returning: "Vender tilbage til basen", robot_emptying: "T\u00f8mmer beholderen", robot_bin_full: "Beholderen fuld", robot_washing: "Vasker moppepuderne", robot_drying: "T\u00f8rrer moppepuderne", robot_water_empty: "Vandtanken tom", robot_rain: "Regnpause", robot_idle: "Stoppet", section_robot_status: "Detaljeret status", section_battery: "Batteri", section_robot_bin: "Beholderen fuld", section_robot_water: "Vandtank", section_robot_rain: "Regn", section_robot_error: "Fejl",
     section_purifier_layout: "Model", layout_purifier_cylinder: "Cylinder", layout_purifier_box: "Firkantet", layout_purifier_ring: "Vingel\u00f8s ring",
     pf_purifying: "Renser", pf_auto: "Auto", pf_night: "Nattilstand", section_air_quality: "Luftkvalitet",
     section_screen: "Sk\u00e6rm", section_heater: "Varme (termostat)", aq_good: "God", aq_fair: "Moderat",
@@ -1826,6 +1837,7 @@ const T = {
     type_screen: "Ekran (TV, projektor, komputer)", section_screen_layout: "Model", layout_tv_feet: "Telewizor na n\u00f3\u017ckach", layout_tv_stand: "Telewizor na podstawie", layout_tv_wall: "Telewizor na \u015bcianie", layout_projector: "Projektor", layout_computer: "Komputer", section_screen_image: "Obraz na ekranie", img_random: "Losowy", img_sunset: "Zach\u00f3d s\u0142o\u0144ca", img_aquarium: "Akwarium", img_bars: "Plansza testowa", img_football: "Mecz pi\u0142ki no\u017cnej", img_space: "Kosmos", img_bounce: "Odbijaj\u0105ce si\u0119 logo", img_desktop: "Pulpit", img_code: "Przewijany kod", img_pong: "Pong", screen_on: "W\u0142\u0105czony", screen_playing: "Odtwarzanie", screen_home: "Ekran g\u0142\u00f3wny", screen_locked: "Zablokowany", screen_muted: "Wyciszony", screen_standby_threshold: "Czuwanie do tej mocy (W)", section_media: "Odtwarzacz multimedialny", section_media2: "Drugi odtwarzacz", section_media3: "Trzeci odtwarzacz", section_lock: "Blokada sesji",
     type_hair_dryer: "Suszarka do w\u0142os\u00f3w", layout_hd_pistol: "Klasyczna", layout_hd_ring: "Pier\u015bcie\u0144", hd_cool: "Zimne powietrze", hd_hot: "Gor\u0105ce powietrze", hd_heat_threshold: "Gor\u0105ce powietrze powy\u017cej tej mocy (W)", fill_height: "Wype\u0142nij ca\u0142\u0105 wysoko\u015b\u0107 miejsca", done_alert: "Miga\u0107 po zako\u0144czeniu cyklu", done_seen: "Widziane", no_power_threshold: "Brak poboru poni\u017cej (W)", group_appearance: "Wygl\u0105d", show_name: "Poka\u017c nazw\u0119", show_state: "Poka\u017c stan", transparent: "Przezroczyste t\u0142o", font_scale: "Rozmiar tekstu", illustration_size: "Rozmiar rysunku", compact_mode: "Tryb kompaktowy", compact_off: "Wy\u0142\u0105czony", compact_hide: "Bez rysunku", compact_side: "Rysunek z boku", group_laundry: "Pranie", group_kitchen: "Kuchnia", group_heating: "Ogrzewanie i ciep\u0142a woda", group_air: "Powietrze i klimat", group_home: "Dom i multimedia", group_pets: "Zwierz\u0119ta",
     type_network: "Sie\u0107 (switch, NAS, serwer)", group_network: "Sie\u0107 i serwery", layout_net_switch: "Switch", layout_net_server: "Serwer", layout_net_nas: "NAS", layout_net_rack: "Szafa rack", net_ports_count: "Rysowane porty", net_bays: "Kieszenie NAS", net_online: "Online", net_busy: "Aktywno\u015b\u0107", net_alert: "Alarm", net_warn: "Dysk do obserwacji", section_net_cpu: "U\u017cycie CPU (%)", section_net_memory: "U\u017cycie pami\u0119ci (%)", section_net_volume: "Zaj\u0119to\u015b\u0107 woluminu (%)", section_net_download: "Pr\u0119dko\u015b\u0107 pobierania", section_net_upload: "Pr\u0119dko\u015b\u0107 wysy\u0142ania", section_net_ports: "Aktywne porty", net_ports_total: "Liczba port\u00f3w", section_net_poe: "Moc PoE", section_net_problem: "Alert (problem)", section_net_temperature: "Temperatura", net_temp_alert: "Alarm powy\u017cej tej temperatury (\u00b0C)", net_busy_threshold: "Aktywno\u015b\u0107 powy\u017cej tej pr\u0119dko\u015bci (Mbit/s)", net_line_rate: "Przepustowo\u015b\u0107", net_line_load: "Obci\u0105\u017cenie", net_line_volume: "Wolumin", section_net_disk1: "Dysk 1", section_net_disk2: "Dysk 2", section_net_disk3: "Dysk 3", section_net_disk4: "Dysk 4",
+    type_robot: "Robot (odkurzacz, mop, kosiarka)", layout_robot_vacuum: "Robot odkurzaj\u0105cy", layout_robot_mop: "Robot mopuj\u0105cy", layout_robot_mower: "Robot kosz\u0105cy", section_robot_station: "Baza", robot_station_station: "Stacja opr\u00f3\u017cniania lub mycia", robot_station_base: "Tylko baza \u0142aduj\u0105ca", robot_shelter: "Daszek nad baz\u0105", robot_charging: "\u0141adowanie", robot_docked: "W bazie", robot_cleaning: "Sprz\u0105tanie", robot_mopping: "Mopowanie", robot_mowing: "Koszenie", robot_edgecut: "Przycinanie kraw\u0119dzi", robot_returning: "Powr\u00f3t do bazy", robot_emptying: "Opr\u00f3\u017cnianie pojemnika", robot_bin_full: "Pojemnik pe\u0142ny", robot_washing: "Mycie nak\u0142adek", robot_drying: "Suszenie nak\u0142adek", robot_water_empty: "Pusty zbiornik wody", robot_rain: "Przerwa z powodu deszczu", robot_idle: "Zatrzymany", section_robot_status: "Szczeg\u00f3\u0142owy stan", section_battery: "Bateria", section_robot_bin: "Pojemnik pe\u0142ny", section_robot_water: "Zbiornik wody", section_robot_rain: "Deszcz", section_robot_error: "B\u0142\u0105d",
     section_purifier_layout: "Model", layout_purifier_cylinder: "Walec", layout_purifier_box: "Kwadratowa obudowa", layout_purifier_ring: "Pier\u015bcie\u0144 bez \u0142opatek",
     pf_purifying: "Oczyszczanie", pf_auto: "Auto", pf_night: "Tryb nocny", section_air_quality: "Jako\u015b\u0107 powietrza",
     section_screen: "Ekran", section_heater: "Ogrzewanie (termostat)", aq_good: "Dobra", aq_fair: "Umiarkowana",
@@ -1979,6 +1991,7 @@ const T = {
     type_screen: "\u5c4f\u5e55\uff08\u7535\u89c6\u3001\u6295\u5f71\u4eea\u3001\u7535\u8111\uff09", section_screen_layout: "\u578b\u53f7", layout_tv_feet: "\u5e26\u811a\u7535\u89c6", layout_tv_stand: "\u5e26\u5e95\u5ea7\u7535\u89c6", layout_tv_wall: "\u58c1\u6302\u7535\u89c6", layout_projector: "\u6295\u5f71\u4eea", layout_computer: "\u7535\u8111", section_screen_image: "\u5c4f\u5e55\u753b\u9762", img_random: "\u968f\u673a", img_sunset: "\u65e5\u843d", img_aquarium: "\u6c34\u65cf\u7bb1", img_bars: "\u6d4b\u8bd5\u56fe", img_football: "\u8db3\u7403\u6bd4\u8d5b", img_space: "\u592a\u7a7a", img_bounce: "\u5f39\u8df3\u6807\u5fd7", img_desktop: "\u684c\u9762", img_code: "\u6eda\u52a8\u4ee3\u7801", img_pong: "\u4e52\u4e53", screen_on: "\u5df2\u5f00\u542f", screen_playing: "\u64ad\u653e\u4e2d", screen_home: "\u4e3b\u5c4f\u5e55", screen_locked: "\u5df2\u9501\u5b9a", screen_muted: "\u5df2\u9759\u97f3", screen_standby_threshold: "\u5f85\u673a\u529f\u7387\u4e0a\u9650 (W)", section_media: "\u5a92\u4f53\u64ad\u653e\u5668", section_media2: "\u7b2c\u4e8c\u4e2a\u5a92\u4f53\u64ad\u653e\u5668", section_media3: "\u7b2c\u4e09\u4e2a\u5a92\u4f53\u64ad\u653e\u5668", section_lock: "\u4f1a\u8bdd\u9501\u5b9a",
     type_hair_dryer: "\u5439\u98ce\u673a", layout_hd_pistol: "\u7ecf\u5178", layout_hd_ring: "\u73af\u5f62", hd_cool: "\u51b7\u98ce", hd_hot: "\u70ed\u98ce", hd_heat_threshold: "\u9ad8\u4e8e\u6b64\u529f\u7387\u65f6\u4e3a\u70ed\u98ce (W)", fill_height: "\u586b\u6ee1\u6240\u5728\u4f4d\u7f6e\u7684\u9ad8\u5ea6", done_alert: "\u7a0b\u5e8f\u7ed3\u675f\u65f6\u95ea\u70c1", done_seen: "\u5df2\u67e5\u770b", no_power_threshold: "\u4f4e\u4e8e\u6b64\u529f\u7387\u89c6\u4e3a\u65e0\u8017\u7535 (W)", group_appearance: "\u5916\u89c2", show_name: "\u663e\u793a\u540d\u79f0", show_state: "\u663e\u793a\u72b6\u6001", transparent: "\u900f\u660e\u80cc\u666f", font_scale: "\u6587\u5b57\u5927\u5c0f", illustration_size: "\u56fe\u793a\u5927\u5c0f", compact_mode: "\u7d27\u51d1\u6a21\u5f0f", compact_off: "\u5173\u95ed", compact_hide: "\u4e0d\u663e\u793a\u56fe\u793a", compact_side: "\u56fe\u793a\u5728\u4fa7\u8fb9", group_laundry: "\u6d17\u8863", group_kitchen: "\u53a8\u623f", group_heating: "\u4f9b\u6696\u4e0e\u70ed\u6c34", group_air: "\u7a7a\u6c14\u4e0e\u6c14\u5019", group_home: "\u5bb6\u5c45\u4e0e\u591a\u5a92\u4f53", group_pets: "\u5ba0\u7269",
     type_network: "\u7f51\u7edc\u8bbe\u5907\uff08\u4ea4\u6362\u673a\u3001NAS\u3001\u670d\u52a1\u5668\uff09", group_network: "\u7f51\u7edc\u4e0e\u670d\u52a1\u5668", layout_net_switch: "\u4ea4\u6362\u673a", layout_net_server: "\u670d\u52a1\u5668", layout_net_nas: "NAS", layout_net_rack: "\u673a\u67dc", net_ports_count: "\u7ed8\u5236\u7684\u7aef\u53e3\u6570", net_bays: "NAS \u76d8\u4f4d", net_online: "\u5728\u7ebf", net_busy: "\u6d3b\u52a8", net_alert: "\u8b66\u62a5", net_warn: "\u9700\u5173\u6ce8\u7684\u786c\u76d8", section_net_cpu: "CPU \u4f7f\u7528\u7387 (%)", section_net_memory: "\u5185\u5b58\u4f7f\u7528\u7387 (%)", section_net_volume: "\u5377\u5df2\u7528 (%)", section_net_download: "\u4e0b\u8f7d\u901f\u7387", section_net_upload: "\u4e0a\u4f20\u901f\u7387", section_net_ports: "\u6d3b\u52a8\u7aef\u53e3", net_ports_total: "\u7aef\u53e3\u6570\u91cf", section_net_poe: "PoE \u529f\u7387", section_net_problem: "\u95ee\u9898\u8b66\u62a5", section_net_temperature: "\u6e29\u5ea6", net_temp_alert: "\u9ad8\u4e8e\u6b64\u6e29\u5ea6\u62a5\u8b66 (\u00b0C)", net_busy_threshold: "\u9ad8\u4e8e\u6b64\u901f\u7387\u663e\u793a\u6d3b\u52a8 (Mbit/s)", net_line_rate: "\u541e\u5410\u91cf", net_line_load: "\u8d1f\u8f7d", net_line_volume: "\u5377", section_net_disk1: "\u786c\u76d8 1", section_net_disk2: "\u786c\u76d8 2", section_net_disk3: "\u786c\u76d8 3", section_net_disk4: "\u786c\u76d8 4",
+    type_robot: "\u673a\u5668\u4eba\uff08\u626b\u5730\u3001\u62d6\u5730\u3001\u5272\u8349\uff09", layout_robot_vacuum: "\u626b\u5730\u673a\u5668\u4eba", layout_robot_mop: "\u62d6\u5730\u673a\u5668\u4eba", layout_robot_mower: "\u5272\u8349\u673a\u5668\u4eba", section_robot_station: "\u5e95\u5ea7", robot_station_station: "\u96c6\u5c18\u6216\u6e05\u6d17\u57fa\u7ad9", robot_station_base: "\u4ec5\u5145\u7535\u5ea7", robot_shelter: "\u5e95\u5ea7\u906e\u68da", robot_charging: "\u5145\u7535\u4e2d", robot_docked: "\u5728\u5e95\u5ea7", robot_cleaning: "\u6e05\u626b\u4e2d", robot_mopping: "\u62d6\u5730\u4e2d", robot_mowing: "\u5272\u8349\u4e2d", robot_edgecut: "\u4fee\u8fb9", robot_returning: "\u6b63\u5728\u56de\u5145", robot_emptying: "\u6b63\u5728\u96c6\u5c18", robot_bin_full: "\u5c18\u76d2\u5df2\u6ee1", robot_washing: "\u6b63\u5728\u6e05\u6d17\u62d6\u5e03", robot_drying: "\u6b63\u5728\u70d8\u5e72\u62d6\u5e03", robot_water_empty: "\u6c34\u7bb1\u7f3a\u6c34", robot_rain: "\u96e8\u5929\u6682\u505c", robot_idle: "\u5df2\u505c\u6b62", section_robot_status: "\u8be6\u7ec6\u72b6\u6001", section_battery: "\u7535\u91cf", section_robot_bin: "\u5c18\u76d2\u5df2\u6ee1", section_robot_water: "\u6c34\u7bb1", section_robot_rain: "\u4e0b\u96e8", section_robot_error: "\u9519\u8bef",
     section_purifier_layout: "\u578b\u53f7", layout_purifier_cylinder: "\u5706\u67f1\u5f62", layout_purifier_box: "\u65b9\u5f62", layout_purifier_ring: "\u65e0\u53f6\u73af\u5f62",
     pf_purifying: "\u51c0\u5316\u4e2d", pf_auto: "\u81ea\u52a8", pf_night: "\u591c\u95f4\u6a21\u5f0f", section_air_quality: "\u7a7a\u6c14\u8d28\u91cf",
     section_screen: "\u5c4f\u5e55", section_heater: "\u52a0\u70ed\uff08\u6e29\u63a7\uff09", aq_good: "\u826f\u597d", aq_fair: "\u4e00\u822c",
@@ -2132,6 +2145,7 @@ const T = {
     type_screen: "Obrazovka (TV, projektor, po\u010d\u00edta\u010d)", section_screen_layout: "Model", layout_tv_feet: "Televize na no\u017ei\u010dk\u00e1ch", layout_tv_stand: "Televize na stojanu", layout_tv_wall: "Televize na zdi", layout_projector: "Projektor", layout_computer: "Po\u010d\u00edta\u010d", section_screen_image: "Obraz na obrazovce", img_random: "N\u00e1hodn\u00fd", img_sunset: "Z\u00e1pad slunce", img_aquarium: "Akv\u00e1rium", img_bars: "Monoskop", img_football: "Fotbalov\u00fd z\u00e1pas", img_space: "Vesm\u00edr", img_bounce: "Odr\u00e1\u017eej\u00edc\u00ed se logo", img_desktop: "Plocha", img_code: "Roluj\u00edc\u00ed k\u00f3d", img_pong: "Pong", screen_on: "Zapnuto", screen_playing: "P\u0159ehr\u00e1v\u00e1", screen_home: "Domovsk\u00e1 obrazovka", screen_locked: "Zam\u010deno", screen_muted: "Ztlumeno", screen_standby_threshold: "Pohotovost a\u017e do tohoto p\u0159\u00edkonu (W)", section_media: "P\u0159ehr\u00e1va\u010d m\u00e9di\u00ed", section_media2: "Druh\u00fd p\u0159ehr\u00e1va\u010d", section_media3: "T\u0159et\u00ed p\u0159ehr\u00e1va\u010d", section_lock: "Z\u00e1mek relace",
     type_hair_dryer: "F\u00e9n", layout_hd_pistol: "Klasick\u00fd", layout_hd_ring: "Prstenec", hd_cool: "Studen\u00fd vzduch", hd_hot: "Tepl\u00fd vzduch", hd_heat_threshold: "Tepl\u00fd vzduch nad t\u00edmto p\u0159\u00edkonem (W)", fill_height: "Vyplnit celou v\u00fd\u0161ku m\u00edsta", done_alert: "Blikat na konci cyklu", done_seen: "Vid\u011bno", no_power_threshold: "\u017d\u00e1dn\u00fd odb\u011br pod (W)", group_appearance: "Vzhled", show_name: "Zobrazit n\u00e1zev", show_state: "Zobrazit stav", transparent: "Pr\u016fhledn\u00e9 pozad\u00ed", font_scale: "Velikost textu", illustration_size: "Velikost kresby", compact_mode: "Kompaktn\u00ed re\u017eim", compact_off: "Vypnuto", compact_hide: "Bez kresby", compact_side: "Kresba po stran\u011b", group_laundry: "Pran\u00ed", group_kitchen: "Kuchyn\u011b", group_heating: "Vyt\u00e1p\u011bn\u00ed a tepl\u00e1 voda", group_air: "Vzduch a klima", group_home: "Dom\u00e1cnost a multim\u00e9dia", group_pets: "Mazl\u00ed\u010dci",
     type_network: "S\u00ed\u0165 (switch, NAS, server)", group_network: "S\u00ed\u0165 a servery", layout_net_switch: "Switch", layout_net_server: "Server", layout_net_nas: "NAS", layout_net_rack: "Rack", net_ports_count: "Kreslen\u00e9 porty", net_bays: "Pozice NAS", net_online: "Online", net_busy: "Aktivita", net_alert: "V\u00fdstraha", net_warn: "Disk ke sledov\u00e1n\u00ed", section_net_cpu: "Vyu\u017eit\u00ed CPU (%)", section_net_memory: "Vyu\u017eit\u00ed pam\u011bti (%)", section_net_volume: "Obsazenost svazku (%)", section_net_download: "Rychlost stahov\u00e1n\u00ed", section_net_upload: "Rychlost odes\u00edl\u00e1n\u00ed", section_net_ports: "Aktivn\u00ed porty", net_ports_total: "Po\u010det port\u016f", section_net_poe: "V\u00fdkon PoE", section_net_problem: "Upozorn\u011bn\u00ed (probl\u00e9m)", section_net_temperature: "Teplota", net_temp_alert: "V\u00fdstraha nad touto teplotou (\u00b0C)", net_busy_threshold: "Aktivita nad touto rychlost\u00ed (Mbit/s)", net_line_rate: "Propustnost", net_line_load: "Z\u00e1t\u011b\u017e", net_line_volume: "Svazek", section_net_disk1: "Disk 1", section_net_disk2: "Disk 2", section_net_disk3: "Disk 3", section_net_disk4: "Disk 4",
+    type_robot: "Robot (vysava\u010d, mop, seka\u010dka)", layout_robot_vacuum: "Robotick\u00fd vysava\u010d", layout_robot_mop: "Mopovac\u00ed robot", layout_robot_mower: "Robotick\u00e1 seka\u010dka", section_robot_station: "Z\u00e1kladna", robot_station_station: "Vys\u00e1vac\u00ed nebo myc\u00ed stanice", robot_station_base: "Jen nab\u00edjec\u00ed z\u00e1kladna", robot_shelter: "St\u0159\u00ed\u0161ka nad z\u00e1kladnou", robot_charging: "Nab\u00edj\u00ed se", robot_docked: "V z\u00e1kladn\u011b", robot_cleaning: "Ukl\u00edz\u00ed", robot_mopping: "Mopuje", robot_mowing: "Seka\u010d\u00ed", robot_edgecut: "Za\u0159ez\u00e1v\u00e1n\u00ed okraj\u016f", robot_returning: "N\u00e1vrat do z\u00e1kladny", robot_emptying: "Vyprazd\u0148ov\u00e1n\u00ed n\u00e1doby", robot_bin_full: "N\u00e1doba pln\u00e1", robot_washing: "Myt\u00ed mop\u016f", robot_drying: "Su\u0161en\u00ed mop\u016f", robot_water_empty: "N\u00e1dr\u017e na vodu pr\u00e1zdn\u00e1", robot_rain: "Pauza kv\u016fli de\u0161ti", robot_idle: "Zastaveno", section_robot_status: "Podrobn\u00fd stav", section_battery: "Baterie", section_robot_bin: "N\u00e1doba pln\u00e1", section_robot_water: "N\u00e1dr\u017e na vodu", section_robot_rain: "D\u00e9\u0161\u0165", section_robot_error: "Chyba",
     section_purifier_layout: "Model", layout_purifier_cylinder: "V\u00e1lec", layout_purifier_box: "Hranat\u00e1 sk\u0159\u00ed\u0148", layout_purifier_ring: "Bezlopatkov\u00fd prstenec",
     pf_purifying: "\u010cist\u00ed", pf_auto: "Auto", pf_night: "No\u010dn\u00ed re\u017eim", section_air_quality: "Kvalita vzduchu",
     section_screen: "Displej", section_heater: "Topen\u00ed (termostat)", aq_good: "Dobr\u00e1", aq_fair: "P\u0159ijateln\u00e1",
@@ -4267,6 +4281,14 @@ const PHASE_ENTITY_RE = /program.?phase|cycle.?phase|job.?state|pr.?phase|machin
 // Suggested only for the types that can actually use them, so a washing
 // machine doesn't end up with a "filter life" field pre-filled.
 const TYPE_AUTO_PATTERNS = {
+  robot: {
+    robot_status_entity: /status|activity|phase|etat/i,
+    battery_entity: /batter|akku/i,
+    robot_bin_entity: /bin_?full|dust_?bin_?full|box_?full/i,
+    robot_water_entity: /water_?(shortage|box|tank|level)|mop_?water|clean_?water/i,
+    robot_error_entity: /error|erreur|fault/i,
+    robot_rain_entity: /rain|pluie|regen/i,
+  },
   oven: {
     target_temperature_entity: /target.?temp|setpoint|temperature_setting/i,
     current_temperature_entity: /current.?temp|cavity.?temp|^(?!.*target).*temperature/i,
@@ -4650,6 +4672,10 @@ const TYPE_CAPS = {
   // A switch, a server, a NAS or a rack: nothing to run, only to read. It is
   // online, busy or in alert, and its LEDs say why.
   network: { network: true, readOnly: true },
+  // A robot: a vacuum, a mop or a mower. Nothing to count down, but a base
+  // it leaves and comes back to, and a station that sometimes has work of its
+  // own.
+  robot: { robot: true },
   // A television, a projector or a computer, read from its plug: what it
   // draws at rest is its standby, and a media player says what it shows.
   screen: { screen: true },
@@ -4731,6 +4757,7 @@ const STATE_DOMAINS = {
   air_purifier: ["fan", "switch", "select", "climate"], fan: ["fan", "switch"],
   pet_fountain: ["switch", "fan", "input_boolean"],
   network: ["device_tracker", "switch", "input_boolean"],
+  robot: ["vacuum", "lawn_mower", "select", "input_select"],
 };
 // A model, a picture, the players it shows and a session lock belong to a
 // screen.
@@ -4810,7 +4837,7 @@ const TYPE_GROUPS = [
   ["kitchen", ["dishwasher", "oven", "microwave", "hood", "cooktop", "fridge", "kettle", "cooker", "coffee", "rice_cooker", "air_fryer", "toaster"]],
   ["heating", ["water_heater", "boiler", "heat_pump", "pellet_stove", "space_heater", "towel_warmer"]],
   ["air", ["air_conditioner", "dehumidifier", "air_purifier", "fan"]],
-  ["home", ["screen", "iron", "hair_dryer", "printer_3d", "ev_charger"]],
+  ["home", ["screen", "iron", "hair_dryer", "printer_3d", "ev_charger", "robot"]],
   ["pets", ["pet_feeder", "pet_fountain"]],
   ["network", ["network"]],
 ];
@@ -4836,6 +4863,9 @@ function detectApplianceType(cfg, st) {
   if (cfg.hair_dryer_layout || cfg.heat_threshold) return "hair_dryer";
   if (SCREEN_ONLY_FIELDS.some((f) => cfg[f])) return "screen";
   if (NETWORK_ONLY_FIELDS.some((f) => cfg[f])) return "network";
+  if (ROBOT_ONLY_FIELDS.some((f) => cfg[f])) return "robot";
+  // Home Assistant has a domain of its own for each of them.
+  if (["vacuum", "lawn_mower"].includes(domainOf(cfg.state_entity))) return "robot";
   if (PURIFIER_ONLY_FIELDS.some((f) => cfg[f])) return "air_purifier";
   if (FAN_ONLY_FIELDS.some((f) => cfg[f])) return "fan";
   if (FRYER_ONLY_FIELDS.some((f) => cfg[f])) return "air_fryer";
@@ -4861,6 +4891,9 @@ function detectApplianceType(cfg, st) {
   if (/fountain|trinkbrunnen|wasserbrunnen|fontaine|abreuvoir|fuente|bebedero|fontanella|drinkfontein|font(a|\u00e4)n|vannfontene|font(a|\u00e6)ne|poide(l|\u0142)ko|font(a|\u00e1)nk|\u996e\u6c34\u673a|\u043f\u043e\u0438\u043b\u043a/.test(hay)) return "pet_fountain";
   // A feeder names itself after what it holds as often as after what it is.
   if (/feeder|pet.?feed|croquette|kibble|futterautomat|comedero|alimentador|voerautomaat|foderautomat|f\u00f4rautomat|forautomat|karmnik|krmitko|\u5582\u98df|\u043a\u043e\u0440\u043c\u0443\u0448\u043a/.test(hay)) return "pet_feeder";
+  // A robot vacuum, mop or mower by its name or its maker's, read without
+  // the entities' domains.
+  if (ROBOT_NAME_RE.test(stripAccents(hay.replace(/\b[a-z_]+\./g, " ")))) return "robot";
   // "microwave" before "oven": plenty of devices are named "microwave_oven".
   if (/microwave|micro.?onde|mikrowelle|magnetron|mikrob/.test(hay)) return "microwave";
   if (/coffee|cafeti|cafe|kaffee|espresso|cafetera|macchina.?caff|koffie|kaffemask|ekspres.?do.?kawy/.test(hay)) return "coffee";
@@ -5123,6 +5156,136 @@ function netDiskState(hass, entityId, anchorDevice) {
     else if (NET_WARN_RE.test(v)) warn = true;
   }
   return fail ? "fail" : warn ? "warn" : busy ? "busy" : sleep ? "sleep" : "ok";
+}
+
+// A robot: a vacuum, a mop or a mower. Home Assistant gives the first its
+// vacuum entity and the last its lawn_mower entity, with the same few words
+// (cleaning or mowing, docked, returning, paused, idle, error). The
+// integrations say more in a status of their own, read here for what the
+// drawing can show: the station emptying the bin or washing and drying the
+// pads, rain keeping a mower home, its edge cut.
+const ROBOT_LAYOUTS = ["vacuum", "mop", "mower"];
+const ROBOT_STATIONS = ["station", "base"];
+const ROBOT_ONLY_FIELDS = ["robot_layout", "robot_station", "robot_shelter", "robot_status_entity", "robot_bin_entity",
+  "robot_water_entity", "robot_rain_entity", "robot_error_entity"];
+// A robot by its name, its maker's or its integration's. A robot cook is a
+// cooker, so the word robot needs what it does.
+const ROBOT_NAME_RE = /roomba|braava|roborock|ecovacs|deebot|dreame|neato|eufy.?clean|robovac|xiaomi.?vacuum|conga|robot.?(vacuum|aspir|mop|laveur|mower|tondeuse)|robot.?(clean|sweep)|vacuum|aspirateur|saugroboter|staubsauger|wischroboter|aspiradora|aspirapolvere|robotstofzuiger|stofzuiger|dammsugare|st(o|\u00f8)vsuger|odkurzacz|vysavac|landroid|automower|mammotion|navimow|(^|[^a-z])luba([^a-z]|$)|lawn.?mower|(^|[^a-z])mower|tondeuse|m(a|ae|\u00e4)hroboter|robotmaaier|grasmaaier|cortac(e|\u00e9)sped|tosaerba|corta.?relva|robotgr(a|\u00e4)sklipp|robotgressklipp|robotpl(a|\u00e6)neklipp|kosiarka|sekacka|\u626b\u5730|\u5438\u5c18|\u62d6\u5730|\u5272\u8349|\u043f\u044b\u043b\u0435\u0441\u043e\u0441|\u0433\u0430\u0437\u043e\u043d\u043e\u043a\u043e\u0441/;
+const ROBOT_MOWER_RE = /mow|m(a|ae|\u00e4)h|tondeuse|maaier|cortac|tosaerba|relva|klipp|kosiark|sekack|landroid|automower|worx|mammotion|navimow|(^|[^a-z])luba([^a-z]|$)|\u5272\u8349|\u0433\u0430\u0437\u043e\u043d\u043e\u043a\u043e\u0441/;
+const ROBOT_MOP_RE = /(^|[^a-z])mop|braava|wisch|serpill|laveur|fregas|lavapavim|dweil|moppe|mopuj|mopov|\u62d6\u5730/;
+// Home Assistant's own words, the same for a vacuum and a mower.
+const ROBOT_STATES = { cleaning: "cleaning", mowing: "cleaning", docked: "charging", returning: "returning", paused: "paused", idle: "idle", error: "error" };
+// A status that says all is well is not an error, whatever it is called.
+const ROBOT_OK_RE = /^(no_?error|none|ok|normal|0|null|no_?fault|false|off)$/;
+// What a status says, first match wins: an error before anything else, then
+// what the station does, then the way home, a pause, the work and the base.
+const ROBOT_WORDS = [
+  ["error", /error|fault|problem|stuck|trapped|jam|blocked|cliff|lifted|wheel_?susp|erreur|fehler/],
+  ["empty", /water_?(shortage|empty|low|lack)|no_?water|lack_?of_?water|tank_?empty|manque_?d_?eau/],
+  ["full", /bin_?full|(dust_?)?bin_?full|box_?full|full_?bin|bac_?plein/],
+  ["emptying", /emptying|empty_?(dust|bin|box)|evac|auto_?empt|dust_?collect|collecting_?dust|vidage/],
+  ["washing", /wash|(clean(ing)?|rins(e|ing))_?(the_?)?(mop|pad)|self_?clean|lavage/],
+  ["drying", /dry|sechage|trockn/],
+  ["rain", /(^|_)rain|pluie|regen/],
+  ["returning", /return|back_?to|go(ing)?_?(home|back|to_?(dock|base|station))|homing|hm_?(usr|mid|post)?_?(dock|msn)|searching_?(base|dock|station)|retour/],
+  ["paused", /pause/],
+  ["edgecut", /edge_?cut|edgecut|border|bordure|kante/],
+  ["cleaning", /clean|mow|vacuum|sweep|mop|zon|spot|segment|room|(^|_)run|work|leav|starting|edge/],
+  ["charging", /charg|dock|base|home|station/],
+  ["idle", /idle|ready|standby|stop|sleep|wait/],
+];
+const ROBOT_LABELS = {
+  charging: "robot_charging", docked: "robot_docked", returning: "robot_returning", paused: "paused", idle: "robot_idle",
+  error: "error", emptying: "robot_emptying", full: "robot_bin_full", washing: "robot_washing", drying: "robot_drying",
+  empty: "robot_water_empty", rain: "robot_rain", edgecut: "robot_edgecut", unav: "ev_offline",
+};
+const ROBOT_WORK_LABELS = { vacuum: "robot_cleaning", mop: "robot_mopping", mower: "robot_mowing" };
+const ROBOT_COLORS = {
+  charging: "#43a047", docked: "#43a047", emptying: "#43a047",
+  cleaning: "#1e88e5", edgecut: "#1e88e5", returning: "#1e88e5", washing: "#1e88e5",
+  paused: "#fb8c00", full: "#fb8c00", empty: "#fb8c00", drying: "#fb8c00",
+  rain: "#5c6bc0", error: "#f44336",
+  idle: "var(--disabled-text-color, #9e9e9e)", unav: "var(--disabled-text-color, #9e9e9e)",
+};
+
+function robotWord(v) {
+  const s = stripAccents(String(v === undefined || v === null ? "" : v)).trim().toLowerCase().replace(/[\s.:-]+/g, "_");
+  if (!s || ["unknown", "unavailable"].includes(s) || ROBOT_OK_RE.test(s)) return "";
+  const hit = ROBOT_WORDS.find(([, re]) => re.test(s));
+  return hit ? hit[0] : "";
+}
+
+function robotLayoutOf(cfg, st) {
+  if (ROBOT_LAYOUTS.includes(cfg.robot_layout)) return cfg.robot_layout;
+  if (domainOf(cfg.state_entity) === "lawn_mower") return "mower";
+  const name = stripAccents(`${(cfg.state_entity || "").split(".")[1] || ""} ${(st && st.attributes.friendly_name) || ""} ${cfg.name || ""}`.toLowerCase());
+  if (ROBOT_MOWER_RE.test(name)) return "mower";
+  if (ROBOT_MOP_RE.test(name)) return "mop";
+  return "vacuum";
+}
+
+// An entity that raises something: a binary sensor on, a sensor that says
+// so. A number is read by whoever asked.
+function robotRaised(hass, entityId, re) {
+  const s = stateObj(hass, entityId);
+  if (!s) return false;
+  const v = stripAccents(String(s.state)).trim().toLowerCase();
+  if (["unknown", "unavailable", ""].includes(v) || ROBOT_OK_RE.test(v.replace(/[\s-]+/g, "_"))) return false;
+  if (["on", "true", "1", "yes"].includes(v)) return true;
+  return !!re && re.test(v);
+}
+
+// Where the robot is and what it does, from its own state first, then from
+// its status, then from the entities that raise something: an error, a full
+// bin, an empty tank, rain on a mower's lawn.
+function robotModeOf(hass, cfg, st, layout) {
+  const raw = st ? String(st.state).trim().toLowerCase() : "";
+  if (!st || ["unavailable", "unknown", ""].includes(raw)) {
+    if (!cfg.robot_status_entity || !entityUsable(hass, cfg.robot_status_entity)) return "unav";
+  }
+  let mode = ROBOT_STATES[raw] || robotWord(raw) || "";
+  const statusSt = cfg.robot_status_entity ? stateObj(hass, cfg.robot_status_entity) : null;
+  const detail = robotWord(statusSt ? statusSt.state : st && st.attributes ? st.attributes.status : "");
+  if (!mode) mode = detail || "idle";
+  const edge = mode === "edgecut" || detail === "edgecut";
+  if (mode === "edgecut") mode = "cleaning";
+  if (detail === "error") mode = "error";
+  else if (mode !== "error") {
+    if (["emptying", "washing", "drying"].includes(detail)) mode = detail;
+    else if (detail === "returning" && ["cleaning", "idle"].includes(mode)) mode = "returning";
+    else if (edge && mode === "cleaning" && layout === "mower") mode = "edgecut";
+    else if (["full", "empty", "rain"].includes(detail) && ["charging", "idle", "paused"].includes(mode)) mode = detail;
+  }
+  if (mode === "rain" && layout !== "mower") mode = "charging";
+  if (mode !== "error" && cfg.robot_error_entity && robotRaised(hass, cfg.robot_error_entity, /./)) mode = "error";
+  const atRest = ["charging", "idle", "paused"].includes(mode);
+  if (atRest && layout === "mower" && cfg.robot_rain_entity && robotRaised(hass, cfg.robot_rain_entity, /rain|pluie|regen|delay/)) mode = "rain";
+  if (atRest && cfg.robot_bin_entity && robotRaised(hass, cfg.robot_bin_entity, /full|plein|voll/)) mode = "full";
+  if (atRest && cfg.robot_water_entity) {
+    const w = numericEntity(hass, cfg.robot_water_entity);
+    const low = w ? Number(w.state) <= 5 : robotRaised(hass, cfg.robot_water_entity, /empty|low|short|lack|vide/);
+    if (low) mode = "empty";
+  }
+  return mode;
+}
+
+// The tank's level, when a number says it.
+function robotWaterPct(hass, cfg) {
+  const w = cfg.robot_water_entity ? numericEntity(hass, cfg.robot_water_entity) : null;
+  return w ? Math.max(0, Math.min(100, Number(w.state))) : null;
+}
+
+function robotBattery(hass, cfg, st) {
+  const b = cfg.battery_entity ? numericState(hass, cfg.battery_entity) : null;
+  if (b !== null) return b;
+  const a = st && st.attributes ? Number(st.attributes.battery_level) : NaN;
+  return Number.isFinite(a) ? a : null;
+}
+
+function robotBatteryIcon(pct, charging) {
+  const step = Math.max(1, Math.min(10, Math.round(pct / 10)));
+  if (charging) return step >= 10 ? "mdi:battery-charging-100" : `mdi:battery-charging-${step * 10}`;
+  return step >= 10 ? "mdi:battery" : `mdi:battery-${step * 10}`;
 }
 
 const HD_COLORS = { off: "var(--disabled-text-color, #9e9e9e)", cool: "#29b6f6", hot: "#ff7043", on: "#ff7043" };
@@ -7705,6 +7868,199 @@ const ILLUSTRATION_CSS = {
         @keyframes nt-spinstop { 0% { transform: rotate(0); } 55%, 100% { transform: rotate(900deg); } }
         @media (prefers-reduced-motion: reduce) { .machine.nt * { animation-name: none !important; } }
   `,
+  // A robot and its floor, its base and its station.
+  robot: () => `${MINI_LCD_CSS}
+        .machine.rbt { --b: var(--ac-body, #3a3f45); --bh: var(--ac-body-hi, #5a6168); --bl: var(--ac-body-lo, #1d2024); --dk: #2b2f34; --dkh: #41474e; }
+        .machine.rbt > *, .rbt-dock > *, .rbt-mdock > *, .rbt-bin > *, .rbt-tk > * { position: absolute; }
+        .rbt-rug{left:2px;right:2px;top:72px;height:34px;clip-path:polygon(12% 0,88% 0,100% 100%,0 100%);background:repeating-linear-gradient(90deg,#c8b79c 0 3px,#bfae92 3px 6px)}
+        .rbt-tiles{left:2px;right:2px;top:72px;height:34px;clip-path:polygon(12% 0,88% 0,100% 100%,0 100%);background:linear-gradient(90deg,rgba(0,0,0,.08) 1px,transparent 1px) 0 0/12px 100%,linear-gradient(180deg,rgba(0,0,0,.08) 1px,transparent 1px) 0 0/100% 9px,#dfe4e8}
+        .rbt-lawn{left:0;right:0;top:60px;height:46px;clip-path:polygon(10% 0,90% 0,100% 100%,0 100%);background:radial-gradient(ellipse at 50% 0,#6db457,#559d41 70%,#4a8f37)}
+        .rbt-trace{height:9px;width:0;opacity:0}
+        .rbt-trace.rbt-t1{left:6px;top:80px}
+        .rbt-trace.rbt-t2{right:6px;top:88px}
+        .rbt-tiles .rbt-trace{position:absolute}
+        .rbt-tiles .rbt-trace.rbt-t1{left:2px;top:8px}
+        .rbt-tiles .rbt-trace.rbt-t2{right:2px;top:16px}
+        .rbt-rugtrace{background:repeating-linear-gradient(90deg,#d6c7ae 0 3px,#cdbca1 3px 6px)}
+        .rbt-wet{background:linear-gradient(180deg,rgba(79,195,247,.15),rgba(79,195,247,.45),rgba(79,195,247,.15));border-radius:3px}
+        .rbt-cut{background:repeating-linear-gradient(90deg,#8fcf6f 0 1.5px,#9fd97e 1.5px 3.5px)}
+        .rbt-m-cleaning .rbt-t1{animation:rbt-t1 9s linear infinite}
+        .rbt-m-cleaning .rbt-t2{animation:rbt-t2 9s linear infinite}
+        @keyframes rbt-t1{0%{width:0;opacity:1}45%{width:84px;opacity:1}95%{width:84px;opacity:.5}100%{width:84px;opacity:0}}
+        @keyframes rbt-t2{0%,50%{width:0;opacity:1}95%{width:84px;opacity:1}100%{width:84px;opacity:0}}
+        @keyframes rbt-path{0%{transform:translate(-20px,8px)}45%{transform:translate(20px,8px)}50%{transform:translate(20px,16px)}95%{transform:translate(-20px,16px)}100%{transform:translate(-20px,8px)}}
+        @keyframes rbt-ret{0%{transform:translate(20px,16px)}65%,100%{transform:translate(0,0)}}
+        .rbt-dock{left:28px;top:14px;width:40px;height:56px;border-radius:0 0 20px 20px/0 0 6px 6px;background:linear-gradient(90deg,var(--bl),var(--b) 18%,var(--bh) 38%,var(--b) 68%,var(--bl))}
+        .rbt-dcap{left:28px;top:8px;width:40px;height:12px;border-radius:50%;background:radial-gradient(ellipse at 45% 40%,var(--bh),var(--b) 80%);box-shadow:inset 0 0 0 1px rgba(0,0,0,.15)}
+        .rbt-plate{left:30px;top:72px;width:36px;height:5px;border-radius:0 0 18px 18px/0 0 4px 4px;background:linear-gradient(90deg,var(--bl),var(--dk) 40%,var(--bl))}
+        .rbt-pcap{left:30px;top:66px;width:36px;height:9px;border-radius:50%;background:radial-gradient(ellipse at 50% 35%,var(--dkh),var(--dk) 80%);box-shadow:inset 0 0 0 1px rgba(0,0,0,.2)}
+        .rbt-pcap::before,.rbt-pcap::after{content:"";position:absolute;top:4px;width:6px;height:1.5px;border-radius:1px;background:#b0b7be}
+        .rbt-pcap::before{left:9px}
+        .rbt-pcap::after{right:9px}
+        .rbt-dled{left:18px;top:4px;width:4px;height:2px;border-radius:1px;background:#3d434a}
+        .rbt-bin{left:9px;top:10px;width:22px;height:24px;border-radius:4px;background:rgba(15,18,22,.55);overflow:hidden;box-shadow:inset 0 0 0 1px rgba(255,255,255,.12)}
+        .rbt-bin .rbt-fill{left:0;right:0;bottom:0;height:var(--fill,30%);background:linear-gradient(180deg,#a99b86,#8d806d);transition:height 1s}
+        .rbt-bin b{position:absolute;bottom:0;width:2px;height:2px;border-radius:50%;background:#bdb09a;opacity:0}
+        .rbt-bin b:nth-child(2){left:6px}
+        .rbt-bin b:nth-child(3){left:11px;--d0:.3s}
+        .rbt-bin b:nth-child(4){left:16px;--d0:.6s}
+        .rbt-m-emptying .rbt-bin b{animation:rbt-dust .9s linear infinite}
+        .rbt-m-emptying .rbt-bin .rbt-fill{animation:rbt-fillup 6s ease-in-out infinite}
+        @keyframes rbt-dust{0%{transform:translateY(0);opacity:0}20%{opacity:1}100%{transform:translateY(-22px);opacity:0}}
+        @keyframes rbt-fillup{0%{height:30%}100%{height:62%}}
+        .rbt-m-charging .rbt-dled,.rbt-m-emptying .rbt-dled{background:#2ecc71;box-shadow:0 0 3px #2ecc71;animation:rbt-breathe 2.4s ease-in-out infinite}
+        .rbt-rb{left:22px;top:60px;width:52px;height:27px}
+        .rbt-rb>*{position:absolute}
+        .rbt-rb .rbt-sd{left:0;top:9px;width:52px;height:18px;border-radius:0 0 26px 26px/0 0 9px 9px;background:linear-gradient(90deg,var(--bl),var(--b) 20%,var(--bh) 40%,var(--b) 65%,var(--bl));box-shadow:0 2px 3px rgba(0,0,0,.25)}
+        .rbt-rb .rbt-bmp{left:0;top:9px;width:52px;height:14px;box-sizing:border-box;border-radius:0 0 26px 26px/0 0 9px 9px;border-bottom:1px solid rgba(0,0,0,.4)}
+        .rbt-rb .rbt-tp{left:0;top:0;width:52px;height:18px;border-radius:50%;background:radial-gradient(ellipse at 45% 40%,var(--bh),var(--b) 80%);box-shadow:inset 0 0 0 1px rgba(0,0,0,.2)}
+        .rbt-rb .rbt-lidw{left:20px;top:3px;width:12px;height:5px;border-radius:0 0 6px 6px/0 0 2.5px 2.5px;background:linear-gradient(90deg,#15181b,#3b4148 40%,#15181b)}
+        .rbt-rb .rbt-lid{left:20px;top:.5px;width:12px;height:5px;border-radius:50%;background:radial-gradient(ellipse at 45% 40%,#4a5057,#24282c 80%)}
+        .rbt-rb .rbt-ring{left:20px;top:10px;width:12px;height:4.5px;border-radius:50%;box-shadow:0 0 0 1.3px #59606a;background:var(--dk)}
+        .rbt-rb .rbt-brush{left:0;bottom:0;width:24px;height:24px;transform:scaleY(.38);transform-origin:bottom}
+        .rbt-rb .rbt-brush i{position:absolute;inset:0;border-radius:50%;background:conic-gradient(#1c1f23 0 6%,transparent 6% 33%,#1c1f23 33% 39%,transparent 39% 66%,#1c1f23 66% 72%,transparent 72%)}
+        .rbt-m-cleaning .rbt-rb{animation:rbt-path 9s linear infinite}
+        .rbt-m-cleaning .rbt-rb .rbt-brush i{animation:rbt-spin .35s linear infinite}
+        .rbt-m-returning .rbt-rb{animation:rbt-ret 4.5s ease-in-out infinite}
+        .rbt-m-paused .rbt-rb,.rbt-m-error .rbt-rb{transform:translate(-16px,14px)}
+        .rbt-m-error .rbt-rb{transform:translate(-16px,14px) rotate(-9deg)}
+        .rbt-ring{box-shadow:0 0 0 1.3px #59606a}
+        .rbt-m-charging .rbt-ring{box-shadow:0 0 0 1.3px #2ecc71,0 0 4px #2ecc71;animation:rbt-breathe 2.4s ease-in-out infinite}
+        .rbt-m-cleaning .rbt-ring{box-shadow:0 0 0 1.3px #4fc3f7,0 0 4px #4fc3f7}
+        .rbt-m-returning .rbt-ring{box-shadow:0 0 0 1.3px #4fc3f7,0 0 4px #4fc3f7;animation:rbt-blink 1.2s steps(1) infinite}
+        .rbt-m-paused .rbt-ring{box-shadow:0 0 0 1.3px #ffb300}
+        .rbt-m-full .rbt-ring,.rbt-m-empty .rbt-ring{box-shadow:0 0 0 1.3px #ff9800,0 0 4px #ff9800}
+        .rbt-m-emptying .rbt-ring{box-shadow:0 0 0 1.3px #2ecc71}
+        .rbt-m-error .rbt-ring{box-shadow:0 0 0 1.3px #f44336,0 0 5px #f44336;animation:rbt-blink 1s steps(1) infinite}
+        .rbt-rm{left:24px;top:60px;width:48px;height:27px}
+        .rbt-rm>*{position:absolute}
+        .rbt-rm .rbt-sd{left:0;top:9px;width:48px;height:16px;border-radius:0 0 12px 12px/0 0 8px 8px;background:linear-gradient(90deg,var(--bl),var(--b) 20%,var(--bh) 40%,var(--b) 65%,var(--bl));box-shadow:0 2px 3px rgba(0,0,0,.25)}
+        .rbt-rm .rbt-pad{left:4px;bottom:-1px;width:40px;height:4px;border-radius:0 0 6px 6px;background:#cfd8dc}
+        .rbt-m-cleaning .rbt-rm .rbt-pad{background:#81d4fa}
+        .rbt-rm .rbt-tp{left:0;top:0;width:48px;height:18px;border-radius:12px/8px;background:radial-gradient(ellipse at 40% 30%,var(--bh),var(--b) 70%);box-shadow:inset 0 0 0 1px rgba(0,0,0,.18)}
+        .rbt-rm .rbt-tank{left:6px;top:4px;width:18px;height:9px;border-radius:3px;background:rgba(15,18,22,.35);overflow:hidden;box-shadow:inset 0 0 0 1px rgba(255,255,255,.18)}
+        .rbt-rm .rbt-tank i{position:absolute;left:0;right:0;bottom:0;height:var(--lvl,70%);background:linear-gradient(180deg,#81d4fa,#29b6f6)}
+        .rbt-m-empty .rbt-rm .rbt-tank i{background:#ff9800;height:12%}
+        .rbt-rm .rbt-ring{left:30px;top:6px;width:11px;height:5px;border-radius:50%;background:var(--dk)}
+        .rbt-m-cleaning .rbt-rm{animation:rbt-path 9s linear infinite}
+        .rbt-m-returning .rbt-rm{animation:rbt-ret 4.5s ease-in-out infinite}
+        .rbt-m-paused .rbt-rm,.rbt-m-empty .rbt-rm{transform:translate(-16px,14px)}
+        .rbt-m-error .rbt-rm{transform:translate(-16px,14px) rotate(-9deg)}
+        .rbt-mdock{left:22px;top:16px;width:52px;height:56px;border-radius:0 0 6px 6px;background:linear-gradient(90deg,var(--bl),var(--bh) 35%,var(--b) 70%,var(--bl));box-shadow:inset 0 0 0 1px rgba(0,0,0,.25)}
+        .rbt-mdock .rbt-tk{top:4px;width:19px;height:26px;border-radius:4px;overflow:hidden;background:rgba(15,18,22,.45);box-shadow:inset 0 0 0 1px rgba(255,255,255,.14)}
+        .rbt-mdock .rbt-tk.rbt-c{left:5px}
+        .rbt-mdock .rbt-tk.rbt-d{right:5px}
+        .rbt-mdock .rbt-tk i{position:absolute;left:0;right:0;bottom:0}
+        .rbt-mdock .rbt-tk.rbt-c i{height:var(--clean,75%);background:linear-gradient(180deg,#81d4fa,#29b6f6)}
+        .rbt-mdock .rbt-tk.rbt-d i{height:var(--dirty,20%);background:linear-gradient(180deg,#a1887f,#795548)}
+        .rbt-mdock .rbt-dled{left:24px;top:35px}
+        .rbt-mcap{left:22px;top:9px;width:52px;height:13px;border-radius:8px/6px;background:linear-gradient(180deg,var(--bh),var(--b));box-shadow:inset 0 0 0 1px rgba(0,0,0,.15)}
+        .rbt-m-washing .rbt-mdock .rbt-tk.rbt-c i{animation:rbt-drain 6s linear infinite}
+        .rbt-m-washing .rbt-mdock .rbt-tk.rbt-d i{animation:rbt-fillup 6s linear infinite}
+        @keyframes rbt-drain{0%{height:75%}100%{height:45%}}
+        .rbt-bubbles{left:24px;top:76px;width:48px;height:8px;opacity:0}
+        .rbt-m-washing .rbt-bubbles{opacity:1}
+        .rbt-bubbles b{position:absolute;bottom:0;width:4px;height:4px;border-radius:50%;border:1px solid rgba(129,212,250,.9);animation:rbt-bub 1.3s ease-out infinite}
+        .rbt-bubbles b:nth-child(1){left:4px}
+        .rbt-bubbles b:nth-child(2){left:16px;--d0:.4s}
+        .rbt-bubbles b:nth-child(3){left:28px;--d0:.8s}
+        .rbt-bubbles b:nth-child(4){left:40px;--d0:.2s}
+        @keyframes rbt-bub{0%{transform:translateY(0) scale(.5);opacity:0}30%{opacity:1}100%{transform:translateY(-12px) scale(1);opacity:0}}
+        .rbt-vapor{left:26px;top:70px;width:44px;height:17px}
+        .rbt-m-drying .rbt-vapor{display:block}
+        .rbt-vapor path{stroke:#ff8a65}
+        .rbt-smoke{position:absolute;display:none;overflow:visible;left:6px;top:-30px;width:40px;height:30px}
+        .rbt-m-error .rbt-smoke{display:block}
+        .rbt-smoke .rbt-pf{transform-box:fill-box;transform-origin:50% 100%;animation:rbt-puff 2s ease-out infinite}
+        .rbt-smoke .rbt-pf2{--d0:-1s}
+        .rbt-smoke .rbt-o{fill:#111417}
+        .rbt-smoke .rbt-f{fill:#6b737b}
+        .rbt-smoke .rbt-hl{fill:none;stroke:rgba(255,255,255,.75);stroke-width:1;stroke-linecap:round}
+        @keyframes rbt-puff{0%{transform:translateY(5px) scale(.45);opacity:0}20%{opacity:1}75%{opacity:1}100%{transform:translateY(-7px) scale(1.08);opacity:0}}
+        .rbt-angm{position:absolute;display:none;width:12px;height:12px;overflow:visible;z-index:2}
+        .rbt-m-error .rbt-angm{display:block}
+        .rbt-rb .rbt-angm{left:38px;top:-4px}
+        .rbt-rm .rbt-angm{left:35px;top:-3px}
+        .rbt-mw .rbt-angm{left:44px;top:6px;width:12px;height:12px}
+        .rbt-angm .rbt-ang{fill:none;stroke:#e53935;stroke-width:1.9;stroke-linecap:round;transform-box:fill-box;transform-origin:center;animation:rbt-ang .7s ease-in-out infinite alternate}
+        @keyframes rbt-ang{from{transform:scale(.8)}to{transform:scale(1.15)}}
+        .rbt-rb .rbt-smoke,.rbt-rm .rbt-smoke{left:2px;top:-26px}
+        .rbt-mw .rbt-smoke{left:4px;top:-22px}
+        .rbt-smoke{transform-origin:50% 100%}
+        .rbt-m-error .rbt-rb .rbt-smoke,.rbt-m-error .rbt-rm .rbt-smoke{transform:rotate(9deg)}
+        .rbt-m-error .rbt-mw .rbt-smoke{transform:rotate(7deg)}
+        .rbt-vapor{opacity:.8}
+        .rbt-m-drying .rbt-ring{box-shadow:0 0 0 1.3px #4fc3f7;animation:rbt-breathe 2.4s ease-in-out infinite}
+        .rbt-m-washing .rbt-ring{box-shadow:0 0 0 1.3px #4fc3f7;animation:rbt-breathe 1.2s ease-in-out infinite}
+        .rbt-st-roof{left:38px;top:40px;width:58px;height:16px;clip-path:polygon(0 70%,100% 0,100% 30%,3% 100%);background:linear-gradient(180deg,var(--bh),var(--b) 60%,var(--bl))}
+        .rbt-st-post{left:89px;top:42px;width:5px;height:46px;border-radius:1px;background:linear-gradient(90deg,var(--bl),var(--b),var(--bl))}
+        .rbt-st-base{left:40px;top:83px;width:56px;height:8px;border-radius:50%;background:radial-gradient(ellipse at 50% 35%,var(--dkh),var(--dk) 80%);box-shadow:inset 0 0 0 1px rgba(0,0,0,.25)}
+        .rbt-st-tower{left:80px;top:66px;width:14px;height:22px;border-radius:7px 7px 2px 2px;background:linear-gradient(90deg,var(--bl),var(--b) 30%,var(--bh) 50%,var(--b) 75%,var(--bl))}
+        .rbt-st-tower::after{content:"";position:absolute;left:-3px;top:13px;width:4px;height:3px;border-radius:1px;background:#b0b7be}
+        .rbt-st-roof,.rbt-st-post{display:none}
+        .rbt-roof .rbt-st-roof,.rbt-roof .rbt-st-post{display:block}
+        .rbt-roof .rbt-st-tower{display:none}
+        .rbt-roof .rbt-st-led{left:90.5px;top:50px}
+        .rbt-st-led{left:86px;top:70px;width:2px;height:4px;border-radius:1px;background:#3d434a}
+        .rbt-m-charging .rbt-st-led{background:#2ecc71;box-shadow:0 0 3px #2ecc71;animation:rbt-breathe 2.4s ease-in-out infinite}
+        .rbt-mw{left:30px;top:53px;width:62px;height:35px;transform-origin:50% 100%}
+        .rbt-mw svg{position:absolute;left:0;top:0;width:62px;height:35px;overflow:visible}
+        .rbt-mw .rbt-whl{transform-box:fill-box;transform-origin:center}
+        .rbt-mw .rbt-led{fill:#59606a}
+        .rbt-m-charging .rbt-mw .rbt-led{fill:#2ecc71;animation:rbt-breathe 2.4s ease-in-out infinite}
+        .rbt-m-cleaning .rbt-mw .rbt-led{fill:#4fc3f7}
+        .rbt-m-returning .rbt-mw .rbt-led{fill:#4fc3f7;animation:rbt-blink 1.2s steps(1) infinite}
+        .rbt-m-paused .rbt-mw .rbt-led{fill:#ffb300}
+        .rbt-m-error .rbt-mw .rbt-led{fill:#f44336;animation:rbt-blink 1s steps(1) infinite}
+        @keyframes rbt-mowpath{0%{transform:translate(-40px,8px)}45%{transform:translate(-4px,8px)}48%{transform:translate(-4px,8px) scaleX(-1)}95%{transform:translate(-40px,8px) scaleX(-1)}98%,100%{transform:translate(-40px,8px)}}
+        @keyframes rbt-mowret{0%{transform:translate(-32px,8px)}70%,100%{transform:translate(0,0)}}
+        .rbt-m-cleaning .rbt-mw{transform:translate(-14px,8px);animation:rbt-bob .5s ease-in-out infinite}
+        @keyframes rbt-bob{50%{transform:translate(-14px,7.6px)}}
+        .rbt-m-cleaning .rbt-st-base,.rbt-m-cleaning .rbt-st-tower,.rbt-m-cleaning .rbt-st-led,.rbt-m-cleaning .rbt-st-roof,.rbt-m-cleaning .rbt-st-post{display:none}
+        .rbt-m-cleaning .rbt-mw .rbt-whl{animation:rbt-spin .9s linear infinite}
+        .rbt-m-returning .rbt-mw{animation:rbt-mowret 4.5s ease-in-out infinite}
+        .rbt-m-returning .rbt-mw .rbt-whl{animation:rbt-whlret 4.5s ease-in-out infinite}
+        @keyframes rbt-whlret{0%{transform:rotate(0)}70%,100%{transform:rotate(1080deg)}}
+        .rbt-m-paused .rbt-mw{transform:translate(-30px,8px)}
+        .rbt-m-error .rbt-mw{transform:translate(-30px,8px) rotate(-7deg)}
+        .rbt-stub{left:2px;top:92px;height:5px;width:46px;border-radius:2px;background:repeating-linear-gradient(90deg,#8bcf6c 0 1px,#79bf5c 1px 2.5px);display:none}
+        .rbt-m-cleaning .rbt-stub{display:block;animation:rbt-scroll 1.4s linear infinite}
+        .rbt-tall{left:48px;top:81px;width:47px;height:16px;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='16'%3E%3Cpath d='M0.0 16 Q-0.7 10.2 -0.9 6.4 Q1.2 11.2 1.7 16Z' fill='%233f8a2e'/%3E%3Cpath d='M1.8 16 Q2.0 11.3 3.2 8.2 Q3.8 12.1 3.7 16Z' fill='%234f9b3a'/%3E%3Cpath d='M2.6 16 Q1.8 9.7 1.1 5.5 Q3.3 10.8 3.9 16Z' fill='%236fbd55'/%3E%3Cpath d='M3.5 16 Q4.4 9.1 6.6 4.5 Q5.9 10.2 5.2 16Z' fill='%23468f33'/%3E%3Cpath d='M5.4 16 Q5.2 9.0 5.9 4.4 Q7.3 10.2 7.4 16Z' fill='%233f8a2e'/%3E%3Cpath d='M6.9 16 Q6.7 11.2 7.3 7.9 Q8.4 12.0 8.5 16Z' fill='%23468f33'/%3E%3Cpath d='M8.1 16 Q7.4 7.9 7.3 2.5 Q9.3 9.2 9.7 16Z' fill='%234f9b3a'/%3E%3Cpath d='M9.3 16 Q8.4 9.2 7.8 4.6 Q9.9 10.3 10.6 16Z' fill='%234f9b3a'/%3E%3Cpath d='M10.7 16 Q11.3 9.2 12.9 4.7 Q12.7 10.4 12.3 16Z' fill='%236fbd55'/%3E%3Cpath d='M12.0 16 Q11.3 10.6 11.3 7.0 Q13.3 11.5 13.8 16Z' fill='%233f8a2e'/%3E%3Cpath d='M13.4 16 Q14.2 9.3 16.2 4.8 Q15.8 10.4 15.2 16Z' fill='%235fae47'/%3E%3Cpath d='M15.0 16 Q15.0 11.4 15.7 8.4 Q16.3 12.2 16.3 16Z' fill='%235fae47'/%3E%3Cpath d='M16.0 16 Q15.0 9.5 14.5 5.1 Q17.0 10.5 17.7 16Z' fill='%23468f33'/%3E%3Cpath d='M17.4 16 Q17.1 7.6 17.4 2.0 Q18.9 9.0 19.2 16Z' fill='%23468f33'/%3E%3Cpath d='M18.8 16 Q18.0 8.0 17.3 2.6 Q19.5 9.3 20.1 16Z' fill='%235fae47'/%3E%3Cpath d='M20.2 16 Q19.3 8.6 18.9 3.7 Q21.3 9.8 22.0 16Z' fill='%23468f33'/%3E%3Cpath d='M22.2 16 Q21.8 7.9 21.9 2.4 Q23.4 9.2 23.7 16Z' fill='%235fae47'/%3E%3Cpath d='M23.0 16 Q22.4 9.6 22.0 5.3 Q23.8 10.7 24.3 16Z' fill='%233f8a2e'/%3E%3Cpath d='M24.1 16 Q24.6 10.4 26.0 6.7 Q26.0 11.4 25.6 16Z' fill='%236fbd55'/%3E%3Cpath d='M25.0 16 Q25.1 9.6 26.2 5.4 Q27.0 10.7 26.9 16Z' fill='%236fbd55'/%3E%3Cpath d='M26.8 16 Q26.7 10.5 27.1 6.8 Q28.2 11.4 28.3 16Z' fill='%236fbd55'/%3E%3Cpath d='M28.8 16 Q28.1 11.1 27.8 7.8 Q29.7 11.9 30.2 16Z' fill='%234f9b3a'/%3E%3Cpath d='M29.6 16 Q29.0 7.8 28.7 2.4 Q30.5 9.2 31.0 16Z' fill='%234f9b3a'/%3E%3Cpath d='M30.9 16 Q31.0 10.0 32.2 6.0 Q33.0 11.0 32.9 16Z' fill='%23468f33'/%3E%3Cpath d='M32.8 16 Q33.3 8.7 34.8 3.8 Q34.8 9.9 34.4 16Z' fill='%23468f33'/%3E%3Cpath d='M34.1 16 Q33.3 9.9 33.0 5.8 Q35.2 10.9 35.8 16Z' fill='%233f8a2e'/%3E%3Cpath d='M35.1 16 Q35.0 7.1 35.5 1.1 Q36.3 8.6 36.4 16Z' fill='%23468f33'/%3E%3Cpath d='M36.0 16 Q35.3 11.8 34.9 9.0 Q36.7 12.5 37.3 16Z' fill='%235fae47'/%3E%3Cpath d='M37.5 16 Q36.9 11.5 36.8 8.4 Q38.6 12.2 39.0 16Z' fill='%235fae47'/%3E%3C/svg%3E") repeat-x 0 0/40px 16px;display:none}
+        .rbt-m-cleaning .rbt-tall{display:block;animation:rbt-scroll 1.4s linear infinite}
+        @keyframes rbt-scroll{to{background-position-x:-40px}}
+        .rbt-clip{left:22px;top:24px;width:20px;height:12px;opacity:0}
+        .rbt-m-cleaning .rbt-clip{opacity:1}
+        .rbt-clip b{position:absolute;bottom:0;width:2.2px;height:1.1px;border-radius:1px;background:#8fdc6f;animation:rbt-clip .8s ease-out infinite}
+        .rbt-clip b:nth-child(1){left:12px}
+        .rbt-clip b:nth-child(2){left:14px;--d0:.13s}
+        .rbt-clip b:nth-child(3){left:16px;--d0:.27s}
+        .rbt-clip b:nth-child(4){left:13px;--d0:.4s}
+        .rbt-clip b:nth-child(5){left:15px;--d0:.53s}
+        .rbt-clip b:nth-child(6){left:17px;--d0:.67s}
+        @keyframes rbt-clip{0%{transform:translate(0,2px) rotate(0);opacity:1}60%{opacity:1}100%{transform:translate(-9px,-4px) rotate(160deg);opacity:0}}
+        .rbt-cloud{left:12px;top:2px;width:72px;height:26px;display:none}
+        .rbt-m-raining .rbt-cloud{display:block}
+        .rbt-cloud svg{position:absolute;left:0;top:0;width:100%;height:100%;overflow:visible}
+        .rbt-rain{left:0;top:0;width:96px;height:100px;display:none;overflow:hidden}
+        .rbt-m-raining .rbt-rain{display:block}
+        .rbt-rain b{position:absolute;top:24px;width:.8px;height:7px;border-radius:1px;background:linear-gradient(180deg,rgba(160,200,240,0),rgba(150,195,240,.9));transform:rotate(12deg);animation:rbt-drop var(--d,.6s) linear infinite}
+        .rbt-rain u{position:absolute;width:6px;height:2px;border-radius:50%;border:.8px solid rgba(180,215,245,.9);opacity:0;animation:rbt-splash var(--d,.6s) ease-out infinite}
+        @keyframes rbt-drop{0%{transform:translate(0,0) rotate(12deg);opacity:0}10%{opacity:1}100%{transform:translate(-13px,64px) rotate(12deg);opacity:1}}
+        @keyframes rbt-splash{0%,80%{transform:scale(.2);opacity:0}85%{opacity:1}100%{transform:scale(1.3);opacity:0}}
+        .rbt-vapor path:nth-child(2) { --d0: -0.45s; }
+        .rbt-vapor path:nth-child(3) { --d0: -0.9s; }
+        .machine.rbt.rbt-base:not(.rbt-l-mower) { height: 80px; }
+        .machine.rbt.rbt-base:not(.rbt-l-mower) > * { margin-top: -28px; }
+        .rbt-base .rbt-dock, .rbt-base .rbt-dcap, .rbt-base .rbt-mdock, .rbt-base .rbt-mcap, .rbt-base .rbt-bubbles, .rbt-base .rbt-vapor { display: none; }
+        .rbt-m-idle .rbt-rb, .rbt-m-idle .rbt-rm { transform: translate(-16px, 14px); }
+        .rbt-m-idle .rbt-mw { transform: translate(-30px, 8px); }
+        .machine.rbt-m-unav { opacity: 0.45; filter: grayscale(1); }
+        @keyframes rbt-blink { 50% { opacity: 0.15; } }
+        @keyframes rbt-breathe { 0%, 100% { opacity: 0.35; } 50% { opacity: 1; } }
+        @keyframes rbt-spin { to { transform: rotate(360deg); } }
+        .machine.rbt * { animation-delay: calc(var(--d0, 0s) + var(--anim-offset, 0s)) !important; }
+        @media (prefers-reduced-motion: reduce) { .machine.rbt * { animation-name: none !important; } }
+  `,
   // A hair dryer: its body in the appliance colour, the heater glowing in the
   // nozzle or the ring, and the air it blows.
   hair_dryer: () => `
@@ -8671,6 +9027,73 @@ function networkHtml(cls, n) {
         </div>`;
 }
 
+// A robot's drawing. It leaves its base and goes back and forth over its
+// floor: a rug for a vacuum, tiles for a mop, a lawn for a mower, which is
+// drawn in profile with the grass cut under it. Its ring says what it does,
+// like the real ones: green on the base, blue at work, amber in a pause,
+// orange for a full bin or an empty tank, red in an error, where a puff of
+// smoke and an anger mark say it the way a cartoon would.
+const ROBOT_MANGA = `<svg class="rbt-smoke" viewBox="0 0 40 30"><g class="rbt-pf rbt-pf1"><circle class="rbt-o" cx="13.0" cy="23.0" r="6.9"/><circle class="rbt-o" cx="20.0" cy="18.0" r="7.9"/><circle class="rbt-o" cx="27.0" cy="22.0" r="6.4"/><circle class="rbt-o" cx="17.0" cy="12.0" r="5.9"/><circle class="rbt-o" cx="24.0" cy="11.0" r="5.4"/><circle class="rbt-f" cx="13.0" cy="23.0" r="5.5"/><circle class="rbt-f" cx="20.0" cy="18.0" r="6.5"/><circle class="rbt-f" cx="27.0" cy="22.0" r="5.0"/><circle class="rbt-f" cx="17.0" cy="12.0" r="4.5"/><circle class="rbt-f" cx="24.0" cy="11.0" r="4.0"/><path class="rbt-hl" d="M15.0 9.0 q2 -2 4 -1 M17.0 15.0 q2 -2.5 5 -1.5"/></g><g class="rbt-pf rbt-pf2"><circle class="rbt-o" cx="9.0" cy="21.6" r="6.1"/><circle class="rbt-o" cx="15.0" cy="17.3" r="6.9"/><circle class="rbt-o" cx="20.9" cy="20.7" r="5.7"/><circle class="rbt-o" cx="12.4" cy="12.2" r="5.2"/><circle class="rbt-o" cx="18.4" cy="11.3" r="4.8"/><circle class="rbt-f" cx="9.0" cy="21.6" r="4.7"/><circle class="rbt-f" cx="15.0" cy="17.3" r="5.5"/><circle class="rbt-f" cx="20.9" cy="20.7" r="4.2"/><circle class="rbt-f" cx="12.4" cy="12.2" r="3.8"/><circle class="rbt-f" cx="18.4" cy="11.3" r="3.4"/><path class="rbt-hl" d="M10.8 9.6 q2 -2 4 -1 M12.4 14.8 q2 -2.5 5 -1.5"/></g></svg>`;
+const ROBOT_ANGER = `<svg class="rbt-angm" viewBox="29.5 0.5 9.5 10"><g class="rbt-ang"><path d="M33 1.5 Q33 4 30.5 4"/><path d="M35.5 1.5 Q35.5 4 38 4"/><path d="M33 9.5 Q33 7 30.5 7"/><path d="M35.5 9.5 Q35.5 7 38 7"/></g></svg>`;
+const ROBOT_MOWER_SVG = `<svg viewBox="0 0 62 35">
+ <ellipse cx="31" cy="34" rx="29" ry="2" fill="rgba(0,0,0,.25)"/>
+ <path d="M5 27 C3 20 6 12 14 10 L33 8 C41 8 47 12 53 18 C57 21 59 24 58 27 Z" style="fill: var(--b)"/>
+ <path d="M11 13 C17 10 29 9 35 9.5 C41 10 46 13 50 16.5 C42 15 28 14.5 12 16 Z" style="fill:var(--bh)" opacity=".9"/>
+ <rect x="5" y="25" width="54" height="3.5" rx="1.5" fill="#1b1e21"/>
+ <path d="M24 21.5 H53" stroke="#ff8f1f" stroke-width="1.6" stroke-linecap="round"/>
+ <ellipse cx="25" cy="10.2" rx="7" ry="1.5" style="fill:var(--bl)"/>
+ <ellipse class="rbt-led" cx="35" cy="10" rx="1.6" ry=".9"/>
+ <path d="M48 13.2 l4.5 3.4 l-1.6 1.5 l-4.4 -3 Z" fill="#1b1e21"/><circle cx="50.2" cy="15.6" r=".8" fill="#4fc3f7"/>
+ <path d="M3.5 22 A12.5 12.5 0 0 1 28.5 22" fill="none" style="stroke:var(--bl)" stroke-width="2.4"/>
+ <g class="rbt-whl"><circle cx="16" cy="25.5" r="9" fill="#1b1e21"/><circle cx="16" cy="25.5" r="8.2" fill="none" stroke="#3a3f45" stroke-width="1.8" stroke-dasharray="1.5 1.2"/>
+  <circle cx="16" cy="25.5" r="4" fill="#4a5057"/><path d="M16 21.5 V29.5 M12 25.5 H20" stroke="#2b2f34" stroke-width="1.2"/><circle cx="16" cy="25.5" r="1.3" fill="#ff8f1f"/></g>
+ <g class="rbt-whl"><circle cx="51" cy="31.3" r="3.4" fill="#1b1e21"/><circle cx="51" cy="31.3" r="1.3" fill="#555c63"/></g>
+</svg>`;
+let robotCloudN = 0;
+function robotRain() {
+  const cg = `rbt-cg${robotCloudN++}`;
+  let drops = "";
+  for (let i = 0; i < 18; i++) {
+    const x = 18 + ((i * 37) % 60);
+    const d = 0.5 + ((i * 7) % 5) * 0.06;
+    const dl = -((i * 0.23) % d);
+    drops += `<b style="left: ${x}px; --d: ${d.toFixed(2)}s; --d0: ${dl.toFixed(2)}s"></b>`
+      + `<u style="left: ${x - 15}px; top: ${86 + (i % 4) * 3}px; --d: ${d.toFixed(2)}s; --d0: ${dl.toFixed(2)}s"></u>`;
+  }
+  return `<div class="rbt-cloud"><svg viewBox="0 0 72 26"><defs><linearGradient id="${cg}" x1="0" y1="0" x2="0" y2="26" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#d7dde2"/><stop offset=".55" stop-color="#a9b2ba"/><stop offset="1" stop-color="#7f8a94"/></linearGradient></defs><path d="M12 25.5 C5 25.5 3 18 9 15.5 C8 9 15 6 20 9 C23 2 35 0 40 7 C45 3 54 6 54 12 C61 11 67 16 64 21 C66 24 63 25.5 60 25.5 Z" fill="url(#${cg})"/><path d="M14 13 C15 10 18 9 21 10.5 M27 7 C30 4 35 4 38 7.5" fill="none" stroke="rgba(255,255,255,.55)" stroke-width="1.4" stroke-linecap="round"/></svg></div><div class="rbt-rain">${drops}</div>`;
+}
+
+function robotHtml(cls, r) {
+  const layout = ROBOT_LAYOUTS.includes(r.layout) ? r.layout : "vacuum";
+  const mode = r.mode || "idle";
+  const draw = mode === "edgecut" ? "cleaning" : mode === "docked" ? "charging" : mode === "rain" ? "charging rbt-m-raining" : mode;
+  const err = ROBOT_MANGA + ROBOT_ANGER;
+  let inner;
+  if (layout === "mower") {
+    inner = `<div class="rbt-lawn"></div><div class="rbt-stub"></div>${robotRain()}
+          <div class="rbt-st-base"></div><div class="rbt-st-post"></div><div class="rbt-st-tower"></div><i class="rbt-st-led"></i>
+          <div class="rbt-mw">${ROBOT_MOWER_SVG}${err}<div class="rbt-clip">${"<b></b>".repeat(6)}</div></div>
+          <div class="rbt-tall"></div><div class="rbt-st-roof"></div>`;
+  } else if (layout === "mop") {
+    const lvl = r.water !== null && r.water !== undefined ? ` style="--lvl: ${Math.round(r.water)}%"` : "";
+    inner = `<div class="rbt-tiles"><i class="rbt-trace rbt-t1 rbt-wet"></i><i class="rbt-trace rbt-t2 rbt-wet"></i></div>
+          <div class="rbt-mcap"></div><div class="rbt-mdock"><div class="rbt-tk rbt-c"><i></i></div><div class="rbt-tk rbt-d"><i></i></div><i class="rbt-dled"></i></div>
+          <div class="rbt-plate"></div><div class="rbt-pcap"></div>
+          <div class="rbt-rm"${lvl}><div class="rbt-pad"></div><div class="rbt-sd"></div><div class="rbt-tp"></div><div class="rbt-tank"><i></i></div><div class="rbt-ring"></div>${err}</div>
+          ${airFlow("rbt-vapor", 44, 17)}
+          <div class="rbt-bubbles">${"<b></b>".repeat(4)}</div>`;
+  } else {
+    inner = `<div class="rbt-rug"></div>
+          <div class="rbt-dock"><i class="rbt-dled"></i><div class="rbt-bin"><div class="rbt-fill"></div>${"<b></b>".repeat(3)}</div></div><div class="rbt-dcap"></div>
+          <div class="rbt-plate"></div><div class="rbt-pcap"></div>
+          <div class="rbt-rb"><div class="rbt-brush"><i></i></div><div class="rbt-sd"></div><div class="rbt-bmp"></div><div class="rbt-tp"></div><div class="rbt-lidw"></div><div class="rbt-lid"></div><div class="rbt-ring"></div>${err}</div>`;
+  }
+  return `
+        <div class="machine ${cls} rbt rbt-l-${layout} rbt-m-${draw}${r.base ? " rbt-base" : ""}${r.shelter ? " rbt-roof" : ""}">
+          ${inner}
+        </div>`;
+}
+
 // Where each part of a toaster sits: [left, top, width, height] and the
 // corners of its top, the slots as [left, top, width], the slices as [class,
 // left, top, width, height], the levers as [left, raised, lowered].
@@ -9372,6 +9795,7 @@ function illustrationHtml(type, ctx) {
   if (type === "toaster") return toasterHtml(cls, ctx.toaster || {});
   if (type === "hair_dryer") return hairDryerHtml(cls, ctx.hairDryer || {});
   if (type === "network") return networkHtml(cls, ctx.network || {});
+  if (type === "robot") return robotHtml(cls, ctx.robot || {});
   if (type === "screen") return screenHtml(cls, ctx.screen || {});
   if (type === "air_purifier") return purifierHtml(cls, ctx.purifier || {});
   if (type === "fan") return fanHtml(cls, ctx.fan || {});
@@ -12236,6 +12660,52 @@ class ApplianceCard extends HTMLElement {
       network = { mode, layout, ports: drawn, lit, bays, disks, fanOff: fan !== null && fan <= 0 };
     }
 
+    // A robot, from its own state and its status: the work, the way home, a
+    // pause, the station busy with the bin or the pads, rain on a mower's
+    // lawn. On the base it is charging until its battery is full, docked
+    // after that.
+    let robot = null;
+    if (cap.robot) {
+      const layout = robotLayoutOf(cfg, st);
+      let mode = robotModeOf(hass, cfg, st, layout);
+      const battery = robotBattery(hass, cfg, st);
+      if (mode === "charging" && (battery === null || battery >= 100)) mode = "docked";
+      if (!cfg.state_show_raw || mode === "unav") {
+        stateLabel = t(hass, mode === "cleaning" ? ROBOT_WORK_LABELS[layout] : ROBOT_LABELS[mode]);
+      }
+      color = ROBOT_COLORS[mode];
+      const water = robotWaterPct(hass, cfg);
+      if (mode !== "unav") {
+        if (battery !== null) {
+          extraLines.push({ key: "robot_battery", icon: robotBatteryIcon(battery, mode === "charging"), label: t(hass, "section_battery"),
+            value: keepTogether(`${Math.round(battery)} %`), entity: cfg.battery_entity || cfg.state_entity });
+        }
+        if (water !== null) {
+          extraLines.push({ key: "robot_water", icon: "mdi:water", label: t(hass, "section_robot_water"),
+            value: keepTogether(`${Math.round(water)} %`), entity: cfg.robot_water_entity });
+        }
+      }
+      // An error says which one when an entity words it: the error entity's
+      // text first, then the status, never a bare on or a number.
+      if (mode === "error") {
+        const id = [cfg.robot_error_entity, cfg.robot_status_entity].find((e) => {
+          const s = stateObj(hass, e);
+          if (!s || numericEntity(hass, e)) return false;
+          const v = String(s.state).trim().toLowerCase();
+          return !["on", "off", "true", "false", "error", "unknown", "unavailable", ""].includes(v) && !ROBOT_OK_RE.test(v.replace(/[\s-]+/g, "_"));
+        });
+        if (id) {
+          const s = stateObj(hass, id);
+          let text = String(s.state);
+          try {
+            if (typeof hass.formatEntityState === "function") text = hass.formatEntityState(s) || text;
+          } catch (e) { /* the raw word, then */ }
+          extraLines.push({ key: "robot_error", icon: "mdi:alert-circle-outline", label: t(hass, "error"), value: text, entity: id, warn: true });
+        }
+      }
+      robot = { layout, mode, water, base: cfg.robot_station === "base", shelter: !!cfg.robot_shelter };
+    }
+
     // The last cycle, on request: how long it ran and when it ended. Shown
     // between cycles only, where the time left has nothing to say.
     const lcRole = cycleRole(norm);
@@ -12310,6 +12780,7 @@ class ApplianceCard extends HTMLElement {
       toaster,
       hairDryer,
       network,
+      robot,
       purifier,
       screen,
       fan: fanCtx,
@@ -12395,6 +12866,7 @@ class ApplianceCard extends HTMLElement {
       illustrationCtx.hairDryer && [illustrationCtx.hairDryer.mode, illustrationCtx.hairDryer.level, illustrationCtx.hairDryer.layout].join("/"),
       illustrationCtx.network && [illustrationCtx.network.mode, illustrationCtx.network.layout, illustrationCtx.network.lit,
         illustrationCtx.network.disks.join("")].join("/"),
+      illustrationCtx.robot && [illustrationCtx.robot.mode, illustrationCtx.robot.layout].join("/"),
       illustrationCtx.screen && [illustrationCtx.screen.mode, illustrationCtx.screen.layout, illustrationCtx.screen.image, illustrationCtx.screen.cover].join("/"),
       illustrationCtx.purifier && [illustrationCtx.purifier.mode, illustrationCtx.purifier.osc, illustrationCtx.purifier.back].join("/"),
       illustrationCtx.fan && [illustrationCtx.fan.mode, illustrationCtx.fan.osc, illustrationCtx.fan.natural, illustrationCtx.fan.winter].join("/"),
@@ -12949,6 +13421,17 @@ const SECTIONS = [
   { field: "disk2_entity", types: ["network"], labelKey: "section_net_disk2", includeDomains: ["sensor", "binary_sensor"] },
   { field: "disk3_entity", types: ["network"], labelKey: "section_net_disk3", includeDomains: ["sensor", "binary_sensor"] },
   { field: "disk4_entity", types: ["network"], labelKey: "section_net_disk4", includeDomains: ["sensor", "binary_sensor"] },
+  // A robot: its detailed status, its battery, and what raises something:
+  // a full bin or an empty tank on a vacuum or a mop, rain on a mower.
+  { field: "robot_status_entity", types: ["robot"], labelKey: "section_robot_status", includeDomains: ["sensor", "select", "input_select"] },
+  { field: "battery_entity", types: ["robot"], labelKey: "section_battery", includeDomains: ["sensor"] },
+  { field: "robot_bin_entity", types: ["robot"], labelKey: "section_robot_bin", includeDomains: ["binary_sensor", "sensor"],
+    when: (c) => robotLayoutOf(c, null) !== "mower" },
+  { field: "robot_water_entity", types: ["robot"], labelKey: "section_robot_water", includeDomains: ["binary_sensor", "sensor"],
+    when: (c) => robotLayoutOf(c, null) !== "mower" },
+  { field: "robot_rain_entity", types: ["robot"], labelKey: "section_robot_rain", includeDomains: ["binary_sensor", "sensor", "switch"],
+    when: (c) => robotLayoutOf(c, null) === "mower" },
+  { field: "robot_error_entity", types: ["robot"], labelKey: "section_robot_error", includeDomains: ["sensor", "binary_sensor"] },
   { field: "night_mode_entity", types: ["air_purifier", "fan"], labelKey: "pf_night", includeDomains: ["switch", "binary_sensor", "input_boolean"] },
   { field: "heater_entity", types: ["air_purifier", "fan"], labelKey: "section_heater", includeDomains: ["climate", "switch", "select", "binary_sensor"] },
 
@@ -13844,6 +14327,17 @@ class ApplianceCardEditor extends HTMLElement {
             type: "select",
             options: [{ value: "auto", label: t(hass, "unit_auto") }].concat(NET_BAYS.map((v) => ({ value: String(v), label: String(v) }))),
           }) : "");
+        })() : ""}
+        ${this._type === "robot" ? (() => {
+          const layout = robotLayoutOf(this._config, stateObj(hass, this._config.state_entity));
+          return this._row("section_screen_layout", "robot_layout", {
+            type: "select",
+            options: [{ value: "auto", label: t(hass, "unit_auto") }].concat(ROBOT_LAYOUTS.map((v) => ({ value: v, label: t(hass, `layout_robot_${v}`) }))),
+          }) + (layout === "mower" ? this._row("robot_shelter", "robot_shelter", { type: "checkbox" })
+            : this._row("section_robot_station", "robot_station", {
+              type: "select",
+              options: ROBOT_STATIONS.map((v) => ({ value: v, label: t(hass, `robot_station_${v}`) })),
+            }));
         })() : ""}
         ${this._type === "air_purifier" ? this._row("section_purifier_layout", "purifier_layout", {
           type: "select",

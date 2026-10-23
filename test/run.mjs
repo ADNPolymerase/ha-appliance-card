@@ -9510,4 +9510,106 @@ check('borne : ni un statut reconnu', evMode(evR('SuspendedEVSE', { power_entity
   check('editeur : pas de modele reseau ailleurs', /network_layout/.test(markup(newEditor({ state_entity: 'sensor.w', appliance_type: 'washer' }))), false);
 }
 
+
+// =============================================================================
+// Robots: a vacuum, a mop and a mower.
+// =============================================================================
+{
+  const NB = ' ';
+  const s = (state, attributes = {}) => ({ state: String(state), attributes });
+  const isRobot = (cfg, states = {}) => /class="machine [^"]*\brbt\b/.test(render(cfg, states));
+
+  // The type: a domain of its own, a field of its own, or a name.
+  check('robot : un aspirateur par son domaine', isRobot({ state_entity: 'vacuum.salon' }, { 'vacuum.salon': s('docked') }), true);
+  check('robot : une tondeuse par son domaine', isRobot({ state_entity: 'lawn_mower.jardin' }, { 'lawn_mower.jardin': s('docked') }), true);
+  check('robot : un champ de robot suffit', isRobot({ state_entity: 'sensor.x', robot_bin_entity: 'binary_sensor.b' }, { 'sensor.x': s('docked') }), true);
+  check('robot : un Roomba par son nom', isRobot({ state_entity: 'sensor.roomba_phase' }, { 'sensor.roomba_phase': s('charge') }), true);
+  check('robot : un robot cuiseur n\'en est pas un', isRobot({ state_entity: 'sensor.robot_cuiseur_etat' }, { 'sensor.robot_cuiseur_etat': s('idle') }), false);
+
+  // The drawing: which robot, and where it is.
+  const draw = (cfg, states) => machineCls(render(cfg, states));
+  check('robot : aspirateur par defaut', draw({ state_entity: 'vacuum.salon' }, { 'vacuum.salon': s('docked') }).includes('rbt-l-vacuum'), true);
+  check('robot : un Braava est un laveur', draw({ state_entity: 'vacuum.braava_jet' }, { 'vacuum.braava_jet': s('docked') }).includes('rbt-l-mop'), true);
+  check('robot : un lawn_mower est une tondeuse', draw({ state_entity: 'lawn_mower.x' }, { 'lawn_mower.x': s('docked') }).includes('rbt-l-mower'), true);
+  check('robot : une Landroid sur un capteur est une tondeuse', draw({ appliance_type: 'robot', state_entity: 'sensor.landroid_status' }, { 'sensor.landroid_status': s('idle') }).includes('rbt-l-mower'), true);
+  check('robot : modele choisi', draw({ state_entity: 'vacuum.x', robot_layout: 'mop' }, { 'vacuum.x': s('docked') }).includes('rbt-l-mop'), true);
+  check('robot : au travail', draw({ state_entity: 'vacuum.x' }, { 'vacuum.x': s('cleaning') }).includes('rbt-m-cleaning'), true);
+  check('robot : la pluie se dessine sur la base', draw({ state_entity: 'lawn_mower.x', robot_rain_entity: 'binary_sensor.r' },
+    { 'lawn_mower.x': s('docked'), 'binary_sensor.r': s('on') }), 'rbt rbt-l-mower rbt-m-charging rbt-m-raining');
+  check('robot : la bordure se dessine comme la tonte', draw({ state_entity: 'lawn_mower.x', robot_status_entity: 'sensor.st' },
+    { 'lawn_mower.x': s('mowing'), 'sensor.st': s('edgecut') }).includes('rbt-m-cleaning'), true);
+  check('robot : base de charge seule', draw({ state_entity: 'vacuum.x', robot_station: 'base' }, { 'vacuum.x': s('docked') }).includes('rbt-base'), true);
+  check('robot : station par defaut', draw({ state_entity: 'vacuum.x' }, { 'vacuum.x': s('docked') }).includes('rbt-base'), false);
+  check('robot : abri de la tondeuse', draw({ state_entity: 'lawn_mower.x', robot_shelter: true }, { 'lawn_mower.x': s('docked') }).includes('rbt-roof'), true);
+  check('robot : niveau du reservoir dessine', /rbt-rm" style="--lvl: 42%"/.test(render({ state_entity: 'vacuum.braava', robot_water_entity: 'sensor.w' },
+    { 'vacuum.braava': s('cleaning'), 'sensor.w': s(42, { unit_of_measurement: '%' }) })), true);
+
+  // The state line, from Home Assistant's own words.
+  const vac = (state, attrs = {}, cfg = {}, more = {}) => stateLine(render({ state_entity: 'vacuum.x', ...cfg }, { 'vacuum.x': s(state, attrs), ...more }));
+  check('robot : en charge sous 100 %', vac('docked', { battery_level: 64 }), 'Charging');
+  check('robot : a la base a 100 %', vac('docked', { battery_level: 100 }), 'Docked');
+  check('robot : a la base sans batterie connue', vac('docked'), 'Docked');
+  check('robot : nettoyage', vac('cleaning'), 'Cleaning');
+  check('robot : lavage pour un laveur', vac('cleaning', {}, { robot_layout: 'mop' }), 'Mopping');
+  check('robot : retour', vac('returning'), 'Returning to base');
+  check('robot : pause', vac('paused'), 'Paused');
+  check('robot : a l\'arret', vac('idle'), 'Stopped');
+  check('robot : erreur', vac('error'), 'Error');
+  check('robot : hors ligne', vac('unavailable'), 'Offline');
+  const mow = (state, cfg = {}, more = {}) => stateLine(render({ state_entity: 'lawn_mower.x', ...cfg }, { 'lawn_mower.x': s(state), ...more }));
+  check('robot : tonte', mow('mowing'), 'Mowing');
+  check('robot : tondeuse a la base', mow('docked'), 'Docked');
+
+  // A status says more: the station, the way home, an edge cut, rain.
+  check('robot : vidage par l\'attribut status', vac('docked', { battery_level: 90, status: 'Emptying the bin' }), 'Emptying the bin');
+  check('robot : Roomba en vidage (evac)', vac('docked', { status: 'evac' }), 'Emptying the bin');
+  check('robot : retour Roomba (hmUsrDock)', vac('cleaning', { status: 'hmUsrDock' }), 'Returning to base');
+  check('robot : lavage des patins', vac('docked', {}, { robot_status_entity: 'sensor.st' }, { 'sensor.st': s('washing_mop') }), 'Washing the pads');
+  check('robot : sechage des patins', vac('docked', {}, { robot_status_entity: 'sensor.st' }, { 'sensor.st': s('drying_mop') }), 'Drying the pads');
+  check('robot : erreur dans le statut', vac('docked', {}, { robot_status_entity: 'sensor.st' }, { 'sensor.st': s('charging_problem') }), 'Error');
+  check('robot : "no error" n\'en est pas une', vac('docked', { battery_level: 100 }, { robot_status_entity: 'sensor.st' }, { 'sensor.st': s('no error') }), 'Docked');
+  check('robot : coupe des bordures', mow('mowing', { robot_status_entity: 'sensor.st' }, { 'sensor.st': s('edgecut') }), 'Edge cutting');
+  check('robot : pas de bordure pour un aspirateur', vac('cleaning', {}, { robot_status_entity: 'sensor.st' }, { 'sensor.st': s('edgecut') }), 'Cleaning');
+  check('robot : pluie par le statut', mow('docked', { robot_status_entity: 'sensor.st' }, { 'sensor.st': s('rain_delayed') }), 'Rain delay');
+  check('robot : pas de pluie pour un aspirateur', vac('docked', { battery_level: 100 }, { robot_status_entity: 'sensor.st' }, { 'sensor.st': s('rain') }), 'Docked');
+  check('robot : statut seul quand le robot est indisponible', vac('unavailable', {}, { robot_status_entity: 'sensor.st' }, { 'sensor.st': s('Cleaning') }), 'Cleaning');
+
+  // What raises something.
+  check('robot : bac plein', vac('docked', {}, { robot_bin_entity: 'binary_sensor.b' }, { 'binary_sensor.b': s('on') }), 'Bin full');
+  check('robot : bac plein ignore au travail', vac('cleaning', {}, { robot_bin_entity: 'binary_sensor.b' }, { 'binary_sensor.b': s('on') }), 'Cleaning');
+  check('robot : reservoir vide', vac('idle', {}, { robot_water_entity: 'binary_sensor.w' }, { 'binary_sensor.w': s('on') }), 'Water tank empty');
+  check('robot : reservoir a 3 %', vac('docked', {}, { robot_water_entity: 'sensor.w' }, { 'sensor.w': s(3, { unit_of_measurement: '%' }) }), 'Water tank empty');
+  check('robot : reservoir a 40 %', vac('docked', { battery_level: 100 }, { robot_water_entity: 'sensor.w' }, { 'sensor.w': s(40, { unit_of_measurement: '%' }) }), 'Docked');
+  check('robot : pluie par son capteur', mow('docked', { robot_rain_entity: 'binary_sensor.r' }, { 'binary_sensor.r': s('on') }), 'Rain delay');
+  check('robot : erreur par son entite', mow('mowing', { robot_error_entity: 'sensor.e' }, { 'sensor.e': s('trapped timeout') }), 'Error');
+  check('robot : pas de pluie par capteur sur un aspirateur', vac('docked', { battery_level: 100 }, { robot_rain_entity: 'binary_sensor.r' }, { 'binary_sensor.r': s('on') }), 'Docked');
+  check('robot : pas de ligne d\'erreur pour un simple on', infoLine(render({ state_entity: 'lawn_mower.x', robot_error_entity: 'binary_sensor.e' },
+    { 'lawn_mower.x': s('error'), 'binary_sensor.e': s('on') }), 'Error'), null);
+  check('robot : "no error" de Worx', mow('mowing', { robot_error_entity: 'sensor.e' }, { 'sensor.e': s('no error') }), 'Mowing');
+
+  // The lines.
+  const lines = render({ state_entity: 'vacuum.x', robot_water_entity: 'sensor.w' }, { 'vacuum.x': s('cleaning', { battery_level: 81 }), 'sensor.w': s(60, { unit_of_measurement: '%' }) });
+  check('robot : ligne de batterie', infoLine(lines, 'Battery'), `81${NB}%`);
+  check('robot : ligne du reservoir', infoLine(lines, 'Water tank'), `60${NB}%`);
+  check('robot : batterie d\'une entite', infoLine(render({ state_entity: 'lawn_mower.x', battery_entity: 'sensor.b' }, { 'lawn_mower.x': s('docked'), 'sensor.b': s(54) }), 'Battery'), `54${NB}%`);
+  check('robot : texte de l\'erreur', infoLine(render({ state_entity: 'lawn_mower.x', robot_error_entity: 'sensor.e' },
+    { 'lawn_mower.x': s('error'), 'sensor.e': s('trapped timeout') }), 'Error'), 'trapped timeout');
+  check('robot : pas de ligne hors ligne', infoLine(render({ state_entity: 'vacuum.x' }, { 'vacuum.x': s('unavailable', { battery_level: 50 }) }), 'Battery'), null);
+
+  // The editor.
+  const edVac = markup(newEditor({ state_entity: 'vacuum.x', appliance_type: 'robot' }));
+  check('editeur robot : le modele', /data-field="robot_layout"/.test(edVac), true);
+  check('editeur robot : la station', /data-field="robot_station"/.test(edVac), true);
+  check('editeur robot : pas d\'abri sur un aspirateur', /data-field="robot_shelter"/.test(edVac), false);
+  for (const f of ['robot_status_entity', 'battery_entity', 'robot_bin_entity', 'robot_water_entity', 'robot_error_entity'])
+    check(`editeur robot : ${f}`, edVac.includes(`data-toggle="${f}"`), true);
+  check('editeur robot : pas de pluie sur un aspirateur', edVac.includes('data-toggle="robot_rain_entity"'), false);
+  const edMow = markup(newEditor({ state_entity: 'lawn_mower.x', appliance_type: 'robot' }));
+  check('editeur robot : l\'abri de la tondeuse', /data-field="robot_shelter"/.test(edMow), true);
+  check('editeur robot : pas de station sur une tondeuse', /data-field="robot_station"/.test(edMow), false);
+  check('editeur robot : la pluie', edMow.includes('data-toggle="robot_rain_entity"'), true);
+  check('editeur robot : pas de bac sur une tondeuse', edMow.includes('data-toggle="robot_bin_entity"'), false);
+  check('editeur : pas de modele robot ailleurs', /robot_layout/.test(markup(newEditor({ state_entity: 'sensor.w', appliance_type: 'washer' }))), false);
+}
+
 report();
