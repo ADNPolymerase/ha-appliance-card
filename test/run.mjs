@@ -10067,4 +10067,67 @@ check('borne : ni un statut reconnu', evMode(evR('SuspendedEVSE', { power_entity
   check('menu : la famille energie', ['solar', 'home_battery', 'ev_charger'].every((v) => energy.includes(`value="${v}"`)), true);
 }
 
+
+// =============================================================================
+// Bathroom scales: the last weight, the goal, the body.
+// =============================================================================
+{
+  const NB = ' ';
+  const KG = { unit_of_measurement: 'kg', device_class: 'weight' };
+  const s = (state, attributes = {}, last_changed) => ({ state: String(state), attributes, ...(last_changed ? { last_changed } : {}) });
+  const isScale = (cfg, states = {}) => /class="machine [^"]*\bsc\b/.test(render(cfg, states));
+  const ago = (min) => new Date(Date.now() - min * 60000).toISOString();
+
+  // The type: a name, its maker's, a field of its own, or a weight in kilograms.
+  check('balance : Withings', isScale({ state_entity: 'sensor.withings_poids' }, { 'sensor.withings_poids': s(86.36, KG) }), true);
+  check('balance : par son nom', isScale({ state_entity: 'sensor.bathroom_scale_weight' }, { 'sensor.bathroom_scale_weight': s(70) }), true);
+  check('balance : un poids en kg', isScale({ state_entity: 'sensor.david_weight' }, { 'sensor.david_weight': s(80, KG) }), true);
+  check('balance : un champ suffit', isScale({ state_entity: 'sensor.x', weight_goal: 80 }, { 'sensor.x': s(82) }), true);
+  check('balance : un poids en grammes n en est pas une', isScale({ state_entity: 'sensor.croquettes_restantes' },
+    { 'sensor.croquettes_restantes': s(350, { unit_of_measurement: 'g', device_class: 'weight' }) }), false);
+
+  // The state line.
+  const B = { appliance_type: 'scale', state_entity: 'sensor.w' };
+  const line = (w, cfg = {}, more = {}, lc) => stateLine(render({ ...B, ...cfg }, { 'sensor.w': s(w, KG, lc), ...more }));
+  check('balance : pesee, l heure du jour', line(86.4, {}, {}, ago(30)).startsWith('Weighed '), true);
+  check('balance : hors ligne', line('unavailable'), 'Offline');
+  check('balance : objectif atteint', line(81.3, { weight_goal: 81 }), 'Goal reached');
+  check('balance : objectif par un capteur', line(81.3, { weight_goal_entity: 'sensor.g' }, { 'sensor.g': s(81, KG) }), 'Goal reached');
+  check('balance : le capteur passe avant le chiffre', line(81.3, { weight_goal_entity: 'sensor.g', weight_goal: 70 }, { 'sensor.g': s(81, KG) }), 'Goal reached');
+  check('balance : loin de l objectif', line(86.4, { weight_goal: 81 }, {}, ago(30)).startsWith('Weighed '), true);
+  check('balance : en francais', stateLine(render({ ...B, language: 'fr' }, { 'sensor.w': s(86.4, KG, ago(30)) })).startsWith('Pesée '), true);
+
+  // The drawing.
+  const html = (w, cfg = {}, lc) => render({ ...B, ...cfg }, { 'sensor.w': s(w, KG, lc) });
+  check('balance : le poids a l ecran', /class="sc-lcd" x="47" y="62">86.4</.test(html(86.36)), true);
+  check('balance : l unite a l ecran', /class="sc-unit" x="69" y="62">kg</.test(html(86.36)), true);
+  check('balance : chiffres en 11 px, unite en 6 px', /\.sc-lcd\{[^}]*font:700 11px\/1/.test(SRC) && /\.sc-unit\{[^}]*font:600 6px\/1/.test(SRC), true);
+  check('balance : ecran allume apres une pesee', machineCls(html(86.4, {}, ago(10))).includes('sc-fresh'), true);
+  check('balance : ecran eteint le lendemain', machineCls(html(86.4, {}, ago(60 * 20))).includes('sc-fresh'), false);
+  check('balance : objectif dessine', machineCls(html(81.2, { weight_goal: 81 })).includes('sc-m-goal'), true);
+  check('balance : hors ligne dessine', machineCls(html('unavailable')).includes('sc-m-unav'), true);
+
+  // The lines.
+  const lines = render({ ...B, weight_goal_entity: 'sensor.g', fat_ratio_entity: 'sensor.fr', fat_mass_entity: 'sensor.fm',
+    muscle_mass_entity: 'sensor.mm', bone_mass_entity: 'sensor.bm' },
+  { 'sensor.w': s(86.36, KG), 'sensor.g': s(81, KG), 'sensor.fr': s(26.748, { unit_of_measurement: '%' }), 'sensor.fm': s(23.1, KG),
+    'sensor.mm': s(60.09, KG), 'sensor.bm': s(3.15, KG) });
+  check('balance : ligne objectif, a perdre', infoLine(lines, 'Goal'), `81${NB}kg · 5.4${NB}kg to lose`);
+  check('balance : ligne objectif, a prendre', infoLine(render({ ...B, weight_goal: 70 }, { 'sensor.w': s(65, KG) }), 'Goal'), `70${NB}kg · 5${NB}kg to gain`);
+  check('balance : ligne objectif atteint', infoLine(render({ ...B, weight_goal: 81 }, { 'sensor.w': s(81.2, KG) }), 'Goal'), `81${NB}kg`);
+  check('balance : ligne graisse', infoLine(lines, 'Fat'), `26.7${NB}% · 23.1${NB}kg`);
+  check('balance : ligne muscles', infoLine(lines, 'Muscle'), `60.1${NB}kg`);
+  check('balance : ligne os', infoLine(lines, 'Bone'), `3.2${NB}kg`);
+  check('balance : pas de ligne hors ligne', infoLine(render({ ...B, weight_goal: 81 }, { 'sensor.w': s('unavailable') }), 'Goal'), null);
+  check('balance : en livres', infoLine(render({ ...B, weight_goal: 180 }, { 'sensor.w': s(190, { unit_of_measurement: 'lb' }) }), 'Goal'),
+    `180${NB}lb · 10${NB}lb to lose`);
+
+  // The editor.
+  const ed = markup(newEditor({ state_entity: 'sensor.w', appliance_type: 'scale' }));
+  for (const f of ['weight_goal_entity', 'fat_ratio_entity', 'fat_mass_entity', 'muscle_mass_entity', 'bone_mass_entity'])
+    check(`editeur balance : ${f}`, ed.includes(`data-toggle="${f}"`), true);
+  check('editeur balance : objectif sans capteur', /weight_goal"/.test(markup(newEditor({ state_entity: 'sensor.w', appliance_type: 'scale', weight_goal_entity: 'sensor.g' }))), true);
+  check('editeur : pas de champ balance ailleurs', /muscle_mass_entity/.test(markup(newEditor({ state_entity: 'sensor.w', appliance_type: 'washer' }))), false);
+}
+
 report();

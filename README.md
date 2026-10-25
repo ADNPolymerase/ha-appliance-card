@@ -10,7 +10,7 @@
 <a href="https://buymeacoffee.com/adnpolymerase" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-orange.png" alt="Buy Me A Coffee" height="60"></a>
 <a href="https://adnpolymerase.github.io/HA/" target="_blank"><img src="https://raw.githubusercontent.com/ADNPolymerase/HA/main/assets/site-button.svg" alt="Link to my github.io for my other projects" height="60"></a>
 
-A Lovelace card for household appliances: washers, dryers, dishwashers, ovens, microwaves, cooker hoods, cooktops, fridges, kettles, cookers, coffee machines, rice cookers, air fryers, water heaters, boilers, heat pumps, 3D printers, pet feeders, irons, toasters, hair dryers, pellet stoves, air conditioners, dehumidifiers, space heaters, towel warmers, air purifiers, fans, EV chargers, TVs, projectors and computers, network switches, servers, NAS and racks, robot vacuums, mops and mowers, pool pumps, solar panels and home batteries. Cycle in progress, program, remaining time, temperature, alerts and controls.
+A Lovelace card for household appliances: washers, dryers, dishwashers, ovens, microwaves, cooker hoods, cooktops, fridges, kettles, cookers, coffee machines, rice cookers, air fryers, water heaters, boilers, heat pumps, 3D printers, pet feeders, irons, toasters, hair dryers, pellet stoves, air conditioners, dehumidifiers, space heaters, towel warmers, air purifiers, fans, EV chargers, TVs, projectors and computers, network switches, servers, NAS and racks, robot vacuums, mops and mowers, pool pumps, bathroom scales, solar panels and home batteries. Cycle in progress, program, remaining time, temperature, alerts and controls.
 
 No brand assumed: every field is an entity you pick, so it works with **any** integration (Electrolux, Samsung, LG, Home Connect, Miele, a plain smart plug…).
 
@@ -21,7 +21,7 @@ No brand assumed: every field is an entity you pick, so it works with **any** in
 
 ## Features
 
-- **Thirty-six appliance types**, each with a CSS illustration that animates on the appliance's own data and stays still when idle. The type is detected on its own or set via `appliance_type`, and `compact: true` keeps only the text.
+- **Thirty-seven appliance types**, each with a CSS illustration that animates on the appliance's own data and stays still when idle. The type is detected on its own or set via `appliance_type`, and `compact: true` keeps only the text.
 - **State normalization**: `Idle`, `RUNNING`, `wash`, `En marche`… are recognised (accent-insensitive) and sorted into idle, preheating, running, paused, done, delayed or error. An unknown state is shown as it came, minus the integration's namespace, and `state_map` sorts the rest, `"*"` catching everything left over.
 - **The step, not an hour of *Running***: a washer, a dryer or a dishwasher names the step it is at (*Pre-wash*, *Washing*, *Rinsing*, *Spinning*, *Drying* and seven more), from a phase entity or from its own state, and the drum whirls while it spins. The time left is still the whole cycle's.
 - **A washer-dryer is a washer that dries**: `washer_dryer: true`, and the drum shows water while it washes, then clothes turning in hot air while it dries. The step comes from the state itself or from a phase entity, and the state line reads *Washing* or *Drying*.
@@ -30,6 +30,7 @@ No brand assumed: every field is an entity you pick, so it works with **any** in
 - **Robots too**: a vacuum, a mop or a mower leaves its base and goes over its floor, comes back, and says when its station empties the bin or washes the pads, when rain keeps it home or when it is stuck.
 - **And the pool**: the sand filter, the pump and the pool, *Filtering*, *Chlorine injection* with an optional dosing pump, *Backwash* to the drain, *Frost protection*, and the light, the water, the pH and the RedOx in the lines.
 - **Energy**: solar panels on the ground or on a roof, under the sun, a few clouds or the moon, *Producing*, *Low production* or *Night*; a home battery on the wall or a portable station, *Charging*, *Discharging*, *Idle*, *Full* or *Low battery*, its reserve drawn on its gauge and the time to full or until the reserve in the lines.
+- **And the bathroom scale**: the last weight on its screen, lit for an hour after a weighing, what is left to the goal, and the fat, the muscles and the bones in the lines, from Withings or any weight sensor.
 - **Works from a smart plug alone**: `power_entity` and `power_on_threshold` are enough to derive the state from consumption; `power_off_delay` keeps a pause from reading as the end, and `show_last_cycle` shows how long the last cycle ran.
 - **Program, remaining time, progress bar, info lines, door, alerts, connectivity and controls** (start, pause, resume, stop), each optional.
 - **14 languages** (EN, FR, DE, ES, IT, NL, PT, SV, NO, DA, PL, RU, ZH, CS), Home Assistant's or pinned on the card.
@@ -147,7 +148,7 @@ Only `state_entity` is required, except on a fridge where a probe or a door cont
 | `done_alert` | `true` makes a green badge pulse on the drawing when a cycle has finished, until the door opens or the badge is tapped. For appliances with a cycle (washer, dryer, dishwasher, oven…). |
 | `illustration_color` | `auto` (default, follows the theme) \| `white` \| `grey` \| `black` \| `red` (dark red). Only changes the casing, not the state colours. |
 | `language` | `auto` (default, follows Home Assistant) or one of the 14 codes: `en`, `fr`, `de`, `es`, `it`, `nl`, `pt`, `sv`, `no`, `da`, `pl`, `ru`, `zh`, `cs`. `nb` and `nb-NO` give Norwegian. |
-| `appliance_type` | `auto` (default) \| `washer` \| `dryer` \| `dishwasher` \| `oven` \| `microwave` \| `hood` \| `cooktop` \| `fridge` \| `kettle` \| `cooker` \| `coffee` \| `rice_cooker` \| `air_fryer` \| `water_heater` \| `boiler` \| `heat_pump` \| `printer_3d` \| `pet_feeder` \| `pet_fountain` \| `iron` \| `toaster` \| `pellet_stove` \| `air_conditioner` \| `dehumidifier` \| `space_heater` \| `towel_warmer` \| `air_purifier` \| `fan` \| `ev_charger` \| `hair_dryer` \| `screen` \| `network` \| `robot` \| `pool_pump` \| `solar` \| `home_battery`. |
+| `appliance_type` | `auto` (default) \| `washer` \| `dryer` \| `dishwasher` \| `oven` \| `microwave` \| `hood` \| `cooktop` \| `fridge` \| `kettle` \| `cooker` \| `coffee` \| `rice_cooker` \| `air_fryer` \| `water_heater` \| `boiler` \| `heat_pump` \| `printer_3d` \| `pet_feeder` \| `pet_fountain` \| `iron` \| `toaster` \| `pellet_stove` \| `air_conditioner` \| `dehumidifier` \| `space_heater` \| `towel_warmer` \| `air_purifier` \| `fan` \| `ev_charger` \| `hair_dryer` \| `screen` \| `network` \| `robot` \| `pool_pump` \| `scale` \| `solar` \| `home_battery`. |
 | `tap_action` | What a tap on the card does, in Home Assistant's own words: `more-info` (default: the state entity, or on a card without one what it reads in its place), `none`, `navigate`, `url`, `toggle`, `perform-action` or `fire-dom-event`, which is what the popup cards built on browser_mod listen for. In YAML only. |
 | `toggle_entity` | Power button (`switch`, `button`, `script`, `input_boolean`, `fan`), highlighted while on. On every type, the fridge included, where it is the only button; pair it with `controls_activation: confirm` for an appliance that must not be switched off by mistake. |
 | `power_entity` / `power_on_threshold` / `power_icon` | Power sensor. With a threshold, the state is derived from it: *running* above, then *finished* when it falls back. Pointing `state_entity` at the same sensor enables it with a 10 W threshold. `power_icon` replaces `mdi:power-plug`. |
@@ -246,6 +247,9 @@ Only `state_entity` is required, except on a fridge where a probe or a door cont
 | `backwash_entity` / `frost_entity` | pool pump | A backwash sends the dirty water to the drain, the pool stays still; frost protection frosts the pipes. A state that says backwash or frost does the same. |
 | `pool_alert_entity` | pool pump | Anything that should raise the *Error*: the pump smokes and the gauge's needle swings. |
 | `light_entity` | pool pump | The pool's light: it shines on the far wall, and the light switch sits in the corner of the card. |
+| `weight_goal_entity` / `weight_goal` | scale | The weight goal, from a sensor or as a number (the sensor wins): a *Goal* line with what is left to lose or to gain, and *Goal reached* within half a unit. |
+| `fat_ratio_entity` / `fat_mass_entity` | scale | Body fat, in % and in mass, on one *Fat* line. |
+| `muscle_mass_entity` / `bone_mass_entity` | scale | Muscle and bone mass, as lines. |
 | `robot_layout` | robot | `vacuum` \| `mop` \| `mower`. Left out, a `lawn_mower` entity or a name that says mower, Landroid or Automower makes a mower, and Braava or mop a mopping robot. |
 | `robot_station` | robot | `station` (default: the vacuum's emptying station, the mop's washing station) \| `base` (a charging base alone). |
 | `robot_shelter` | robot | `true` draws a shelter over a mower's base. |
@@ -611,6 +615,23 @@ discharge_power_entity: sensor.delta_pro_total_out_power
 reserve_entity: number.delta_pro_backup_reserve_level
 battery_capacity: 3.6
 battery_layout: station
+```
+
+</details>
+
+<details>
+<summary><b>Bathroom scales</b></summary>
+
+A glass bathroom scale with its screen. Its `state_entity` is the weight sensor (Withings, Xiaomi, Eufy, a template...): the screen shows the last weight and glows for an hour after a weighing, and the state line says when it was (*Weighed 07:42*, or the date). With a goal, from a sensor (`weight_goal_entity`) or a number (`weight_goal`), the line gives what is left to lose or to gain, and within half a unit the screen turns green with a tick: *Goal reached*. Fat, muscle and bone are lines. A weight sensor in kg, lb or st, or a name that says scale or Withings, picks the type on its own.
+
+```yaml
+type: custom:ha-appliance-card
+appliance_type: scale
+state_entity: sensor.withings_weight
+weight_goal_entity: sensor.withings_weight_goal
+fat_ratio_entity: sensor.withings_fat_ratio
+muscle_mass_entity: sensor.withings_muscle_mass
+bone_mass_entity: sensor.withings_bone_mass
 ```
 
 </details>

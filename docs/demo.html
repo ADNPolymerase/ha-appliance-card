@@ -853,6 +853,15 @@ const battery = (pct, w, extra) => () => card({ name: L("Home battery", "Batteri
 const batteryCharging = battery(76, 380);
 const batteryStation = battery(54, -210, { battery_layout: "station", illustration_color: "grey" });
 const batteryLow = battery(8, -180, { illustration_color: "white" });
+// Bathroom scales: just weighed, on the goal, and weighed yesterday.
+const scaleCard = (w, minutesAgo) => () => card({ name: L("Scale", "Balance"), appliance_type: "scale", state_entity: "sensor.scale_weight",
+  weight_goal_entity: "sensor.scale_goal", fat_ratio_entity: "sensor.scale_fat", muscle_mass_entity: "sensor.scale_muscle", bone_mass_entity: "sensor.scale_bone" },
+  [{ ...st("sensor.scale_weight", w, { unit_of_measurement: "kg", device_class: "weight" }), last_changed: new Date(Date.now() - minutesAgo * 60000).toISOString() },
+    st("sensor.scale_goal", 81, { unit_of_measurement: "kg" }), st("sensor.scale_fat", 26.7, { unit_of_measurement: "%" }),
+    st("sensor.scale_muscle", 60.1, { unit_of_measurement: "kg" }), st("sensor.scale_bone", 3.2, { unit_of_measurement: "kg" })]);
+const scaleFresh = scaleCard(86.4, 5);
+const scaleGoal = scaleCard(81.2, 5);
+const scaleOld = scaleCard(86.4, 60 * 26);
 
 // Grouped by kind: the laundry, the kitchen, heating and climate, then the
 // rest.
@@ -875,6 +884,7 @@ const EXTRA = { iron, round_feeder: roundFeeder, double_feeder: doubleFeeder, ev
                 pool_light: poolLight, pool_error: poolError,
                 solar_day: solarDay, solar_roof: solarRoof, solar_night: solarNight,
                 battery_charging: batteryCharging, battery_station: batteryStation, battery_low: batteryLow,
+                scale_fresh: scaleFresh, scale_goal: scaleGoal, scale_old: scaleOld,
                 net_sw8: netSw(8, 6), net_sw16: netSw(16, 11), net_sw24: netSw(24, 20), net_sw32: netSw(32, 27),
                 net_nas1: netBays(1, ["normal"], L("NAS, 1 bay", "NAS 1 baie")),
                 net_nas2: netBays(2, ["normal", null], L("NAS, 2 bays, 1 disk", "NAS 2 baies, 1 disque")),
