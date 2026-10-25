@@ -111,6 +111,20 @@ Click a family to see its appliances at work.
 
 </details>
 
+<details>
+<summary><b>Bathroom scales</b></summary>
+
+<img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-scales.gif" alt="Bathroom scales" width="50%">
+
+</details>
+
+<details>
+<summary><b>UPSes</b></summary>
+
+<img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-ups.gif" alt="UPSes" width="100%">
+
+</details>
+
 ## Installation
 
 ### HACS

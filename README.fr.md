@@ -111,6 +111,20 @@ Clique sur une famille pour voir ses appareils en marche.
 
 </details>
 
+<details>
+<summary><b>Pèse-personnes</b></summary>
+
+<img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-scales.fr.gif" alt="Pèse-personnes" width="50%">
+
+</details>
+
+<details>
+<summary><b>Onduleurs</b></summary>
+
+<img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-ups.fr.gif" alt="Onduleurs" width="100%">
+
+</details>
+
 ## Installation
 
 ### Par HACS
