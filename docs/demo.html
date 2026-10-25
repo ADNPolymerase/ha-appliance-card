@@ -862,6 +862,20 @@ const scaleCard = (w, minutesAgo) => () => card({ name: L("Scale", "Balance"), a
 const scaleFresh = scaleCard(86.4, 5);
 const scaleGoal = scaleCard(81.2, 5);
 const scaleOld = scaleCard(86.4, 60 * 26);
+// UPSes on NUT: on mains, charging, on battery, low battery, a battery to
+// replace, and off.
+const UPS_BASE = { appliance_type: "ups", state_entity: "sensor.ups_status", battery_entity: "sensor.ups_battery",
+  runtime_entity: "sensor.ups_runtime", load_entity: "sensor.ups_load", input_voltage_entity: "sensor.ups_input", nominal_power: 520 };
+const upsCard = (code, battery, runtime, load, volts) => () => card({ name: L("UPS", "Onduleur"), ...UPS_BASE },
+  [st("sensor.ups_status", code), st("sensor.ups_battery", battery, { unit_of_measurement: "%", device_class: "battery" }),
+    st("sensor.ups_runtime", runtime, { unit_of_measurement: "s", device_class: "duration" }), st("sensor.ups_load", load, { unit_of_measurement: "%" }),
+    st("sensor.ups_input", volts, { unit_of_measurement: "V" })]);
+const upsOnline = upsCard("OL", 100, 1500, 7, 241);
+const upsCharging = upsCard("OL CHRG", 62, 900, 12, 238);
+const upsBattery = upsCard("OB DISCHRG", 80, 754, 7, 0);
+const upsLow = upsCard("OB DISCHRG LB", 9, 120, 31, 0);
+const upsReplace = upsCard("OL RB", 100, 300, 18, 236);
+const upsOff = upsCard("OFF", 100, 1500, 0, 241);
 
 // Grouped by kind: the laundry, the kitchen, heating and climate, then the
 // rest.
@@ -885,6 +899,8 @@ const EXTRA = { iron, round_feeder: roundFeeder, double_feeder: doubleFeeder, ev
                 solar_day: solarDay, solar_roof: solarRoof, solar_night: solarNight,
                 battery_charging: batteryCharging, battery_station: batteryStation, battery_low: batteryLow,
                 scale_fresh: scaleFresh, scale_goal: scaleGoal, scale_old: scaleOld,
+                ups_online: upsOnline, ups_charging: upsCharging, ups_battery: upsBattery, ups_low: upsLow,
+                ups_replace: upsReplace, ups_off: upsOff,
                 net_sw8: netSw(8, 6), net_sw16: netSw(16, 11), net_sw24: netSw(24, 20), net_sw32: netSw(32, 27),
                 net_nas1: netBays(1, ["normal"], L("NAS, 1 bay", "NAS 1 baie")),
                 net_nas2: netBays(2, ["normal", null], L("NAS, 2 bays, 1 disk", "NAS 2 baies, 1 disque")),

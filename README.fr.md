@@ -10,7 +10,7 @@
 <a href="https://buymeacoffee.com/adnpolymerase" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-orange.png" alt="Buy Me A Coffee" height="60"></a>
 <a href="https://adnpolymerase.github.io/HA/" target="_blank"><img src="https://raw.githubusercontent.com/ADNPolymerase/HA/main/assets/site-button.svg" alt="Lien vers mon github.io pour mes autres projets" height="60"></a>
 
-Une card Lovelace pour les appareils de la maison : lave-linge, sèche-linge, lave-vaisselle, four, micro-ondes, hotte, plaque de cuisson, réfrigérateur, bouilloire, robot cuiseur, machine à café, cuiseur à riz, friteuse à air, chauffe-eau, chaudière, pompe à chaleur, imprimante 3D, distributeur de croquettes, fer à repasser, grille-pain, sèche-cheveux, poêle à granulés, climatiseur, déshumidificateur, petit chauffage, sèche-serviettes, purificateur d'air, ventilateur, borne de recharge, télévision, vidéoprojecteur, ordinateur, switch, serveur, NAS et baie réseau, robot aspirateur, laveur et tondeuse, pompe de piscine, pèse-personne, panneaux solaires et batterie domestique. Cycle en cours, programme, temps restant, température, alertes et commandes.
+Une card Lovelace pour les appareils de la maison : lave-linge, sèche-linge, lave-vaisselle, four, micro-ondes, hotte, plaque de cuisson, réfrigérateur, bouilloire, robot cuiseur, machine à café, cuiseur à riz, friteuse à air, chauffe-eau, chaudière, pompe à chaleur, imprimante 3D, distributeur de croquettes, fer à repasser, grille-pain, sèche-cheveux, poêle à granulés, climatiseur, déshumidificateur, petit chauffage, sèche-serviettes, purificateur d'air, ventilateur, borne de recharge, télévision, vidéoprojecteur, ordinateur, switch, serveur, NAS et baie réseau, robot aspirateur, laveur et tondeuse, pompe de piscine, pèse-personne, onduleur, panneaux solaires et batterie domestique. Cycle en cours, programme, temps restant, température, alertes et commandes.
 
 Aucune marque supposée : chaque champ est une entité à choisir, elle fonctionne donc avec **n'importe quelle** intégration (Electrolux, Samsung, LG, Home Connect, Miele, une simple prise connectée…).
 
@@ -21,7 +21,7 @@ Aucune marque supposée : chaque champ est une entité à choisir, elle fonction
 
 ## Fonctionnalités
 
-- **Trente-sept types d'appareils**, chacun avec une illustration en CSS animée sur les données de l'appareil et statique à l'arrêt. Le type est détecté tout seul ou choisi via `appliance_type`, et `compact: true` ne garde que le texte.
+- **Trente-huit types d'appareils**, chacun avec une illustration en CSS animée sur les données de l'appareil et statique à l'arrêt. Le type est détecté tout seul ou choisi via `appliance_type`, et `compact: true` ne garde que le texte.
 - **Normalisation d'état** : `Idle`, `RUNNING`, `wash`, `En marche`… sont reconnus (sans tenir compte des accents) et classés en veille, préchauffage, en cours, en pause, terminé, différé ou erreur. Un état inconnu s'affiche tel quel, sans l'espace de noms de l'intégration, et `state_map` classe le reste, `"*"` ramassant tout ce qui dépasse.
 - **L'étape, et non une heure d'*En cours*** : un lave-linge, un sèche-linge ou un lave-vaisselle nomme l'étape où il en est (*Prélavage*, *Lavage*, *Rinçage*, *Essorage*, *Séchage* et sept autres), d'après une entité de phase ou son propre état, et le tambour s'emballe pendant l'essorage. Le temps restant est toujours celui du cycle entier.
 - **Une lavante-séchante est un lave-linge qui sèche** : `washer_dryer: true`, et le tambour montre de l'eau pendant le lavage, puis du linge qui tourne dans l'air chaud pendant le séchage. L'étape vient de l'état lui-même ou d'une entité de phase, et la ligne d'état lit *Lavage* ou *Séchage*.
@@ -31,6 +31,7 @@ Aucune marque supposée : chaque champ est une entité à choisir, elle fonction
 - **Et la piscine** : le filtre à sable, la pompe et le bassin, en *Filtration*, en *Injection de chlore* avec une pompe doseuse en option, en *Contre-lavage* vers l'égout, en *Hors-gel*, et le projecteur, l'eau, le pH et le RedOx dans les lignes.
 - **L'énergie** : des panneaux solaires au sol ou sur un toit, sous le soleil, quelques nuages ou la lune, en *Production*, *Production faible* ou *Nuit* ; une batterie domestique murale ou une station portable, *En charge*, *En décharge*, *Au repos*, *Pleine* ou *Batterie basse*, sa réserve tracée sur sa jauge et le temps jusqu'au plein ou jusqu'à la réserve dans les lignes.
 - **Et le pèse-personne** : le dernier poids sur son écran, allumé une heure après une pesée, ce qu'il reste jusqu'à l'objectif, et la graisse, les muscles et les os dans les lignes, depuis Withings ou n'importe quel capteur de poids.
+- **Et l'onduleur** : la prise murale, l'onduleur et le boîtier qu'il protège, *Sur secteur* avec l'énergie qui le traverse, *Sur batterie* avec la prise barrée, l'onduleur qui bipe et son écran qui compte l'autonomie, *Batterie faible*, *Surcharge* et *Batterie à remplacer* lus dans les codes de NUT, et la batterie, l'autonomie, la charge et la tension d'entrée dans les lignes.
 - **Fonctionne avec une simple prise connectée** : `power_entity` et `power_on_threshold` suffisent à déduire l'état de la consommation ; `power_off_delay` évite qu'une pause soit prise pour la fin, et `show_last_cycle` montre la durée du dernier cycle.
 - **Programme, temps restant, barre de progression, lignes d'info, porte, alertes, connectivité et commandes** (démarrer, pause, reprise, stop), chacun optionnel.
 - **14 langues** (EN, FR, DE, ES, IT, NL, PT, SV, NO, DA, PL, RU, ZH, CS), celle de Home Assistant ou fixée sur la card.
@@ -148,7 +149,7 @@ Seule `state_entity` est obligatoire, sauf sur un réfrigérateur où une sonde 
 | `done_alert` | `true` fait pulser un badge vert sur le dessin en fin de cycle, jusqu'à l'ouverture de la porte ou un appui sur le badge. Pour les appareils à cycle (lave-linge, sèche-linge, lave-vaisselle, four…). |
 | `illustration_color` | `auto` (défaut, suit le thème) \| `white` \| `grey` \| `black` \| `red` (rouge foncé). Ne change que la carrosserie, pas les couleurs d'état. |
 | `language` | `auto` (défaut, suit Home Assistant) ou l'un des 14 codes : `en`, `fr`, `de`, `es`, `it`, `nl`, `pt`, `sv`, `no`, `da`, `pl`, `ru`, `zh`, `cs`. `nb` et `nb-NO` donnent le norvégien. |
-| `appliance_type` | `auto` (défaut) \| `washer` \| `dryer` \| `dishwasher` \| `oven` \| `microwave` \| `hood` \| `cooktop` \| `fridge` \| `kettle` \| `cooker` \| `coffee` \| `rice_cooker` \| `air_fryer` \| `water_heater` \| `boiler` \| `heat_pump` \| `printer_3d` \| `pet_feeder` \| `pet_fountain` \| `iron` \| `toaster` \| `pellet_stove` \| `air_conditioner` \| `dehumidifier` \| `space_heater` \| `towel_warmer` \| `air_purifier` \| `fan` \| `ev_charger` \| `hair_dryer` \| `screen` \| `network` \| `robot` \| `pool_pump` \| `scale` \| `solar` \| `home_battery`. |
+| `appliance_type` | `auto` (défaut) \| `washer` \| `dryer` \| `dishwasher` \| `oven` \| `microwave` \| `hood` \| `cooktop` \| `fridge` \| `kettle` \| `cooker` \| `coffee` \| `rice_cooker` \| `air_fryer` \| `water_heater` \| `boiler` \| `heat_pump` \| `printer_3d` \| `pet_feeder` \| `pet_fountain` \| `iron` \| `toaster` \| `pellet_stove` \| `air_conditioner` \| `dehumidifier` \| `space_heater` \| `towel_warmer` \| `air_purifier` \| `fan` \| `ev_charger` \| `hair_dryer` \| `screen` \| `network` \| `robot` \| `pool_pump` \| `scale` \| `ups` \| `solar` \| `home_battery`. |
 | `tap_action` | Ce que fait un appui sur la carte, dans les mots de Home Assistant : `more-info` (défaut : l'entité d'état, ou sur une carte sans elle ce qu'elle lit à sa place), `none`, `navigate`, `url`, `toggle`, `perform-action` ou `fire-dom-event`, celle qu'écoutent les cartes popup bâties sur browser_mod. En YAML seulement. |
 | `toggle_entity` | Bouton marche/arrêt (`switch`, `button`, `script`, `input_boolean`, `fan`), mis en évidence quand c'est allumé. Sur tous les types, frigo compris, où c'est le seul bouton ; à associer à `controls_activation: confirm` pour un appareil qu'il ne faut pas couper par erreur. |
 | `power_entity` / `power_on_threshold` / `power_icon` | Capteur de puissance. Avec un seuil, l'état en est déduit : *en marche* au-dessus, puis *terminé* en redescendant. Pointer `state_entity` sur ce même capteur l'active avec un seuil de 10 W. `power_icon` remplace `mdi:power-plug`. |
@@ -250,6 +251,10 @@ Seule `state_entity` est obligatoire, sauf sur un réfrigérateur où une sonde 
 | `weight_goal_entity` / `weight_goal` | pèse-personne | L'objectif de poids, par un capteur ou un nombre (le capteur l'emporte) : une ligne *Objectif* avec ce qu'il reste à perdre ou à prendre, et *Objectif atteint* à moins d'une demi-unité. |
 | `fat_ratio_entity` / `fat_mass_entity` | pèse-personne | La graisse, en % et en masse, sur une ligne *Graisse*. |
 | `muscle_mass_entity` / `bone_mass_entity` | pèse-personne | Les masses musculaire et osseuse, en lignes. |
+| `battery_entity` / `battery_low` | onduleur | La charge de la batterie, en % : la jauge de l'onduleur se remplit par cinquièmes, orange à 40 % ou moins, rouge à `battery_low` (20 % par défaut) ou moins. Sur batterie, à ce niveau ou avec le `LB` de NUT, il affiche *Batterie faible*. |
+| `runtime_entity` | onduleur | L'autonomie restante, en secondes comme NUT la donne, ou en minutes ou en heures : une ligne, et l'écran de l'onduleur quand il est sur batterie. |
+| `load_entity` / `nominal_power` | onduleur | La charge, en % : l'énergie circule plus vite quand elle monte, et à 100 % ou plus c'est une *Surcharge*. Avec `nominal_power` (en W) et sans `power_entity`, la ligne la donne aussi en watts. |
+| `input_voltage_entity` | onduleur | La tension à la prise, en ligne. Sans `state_entity`, sous 100 V l'onduleur est sur batterie. |
 | `robot_layout` | robot | `vacuum` \| `mop` \| `mower`. Sans lui, une entité `lawn_mower` ou un nom qui dit tondeuse, Landroid ou Automower en fait une tondeuse, et Braava ou laveur un robot laveur. |
 | `robot_station` | robot | `station` (défaut : la station de vidage de l'aspirateur, la station de lavage du laveur) \| `base` (une base de charge seule). |
 | `robot_shelter` | robot | `true` dessine un abri au-dessus de la base d'une tondeuse. |
@@ -632,6 +637,24 @@ weight_goal_entity: sensor.withings_weight_goal
 fat_ratio_entity: sensor.withings_taux_de_graisse
 muscle_mass_entity: sensor.withings_masse_musculaire
 bone_mass_entity: sensor.withings_bone_mass
+```
+
+</details>
+
+<details>
+<summary><b>Onduleurs</b></summary>
+
+Un onduleur entre la prise murale et le boîtier qu'il protège, avec son écran, ses trois voyants et sa jauge de batterie. Son `state_entity` est le capteur d'état de NUT, celui qui affiche `OL`, `OB DISCHRG` ou `OL CHRG`, ou le capteur en texte de l'intégration (*Online*, *On Battery*) : *Sur secteur* avec l'énergie qui va de la prise à l'onduleur, *en charge* pendant qu'il remplit sa batterie ; *Sur batterie* quand le secteur a disparu, la prise barrée, l'onduleur qui bipe et son écran qui compte l'autonomie ; *Bypass* et *Arrêt*. `LB` ou une charge basse sur batterie, `OVER` ou une charge de 100 %, et `RB` déclenchent *Batterie faible*, *Surcharge* et *Batterie à remplacer*. La batterie, l'autonomie, la charge et la tension d'entrée sont des lignes. L'intégration NUT de Home Assistant laisse `battery.runtime` désactivé : activez-le pour avoir l'autonomie.
+
+```yaml
+type: custom:ha-appliance-card
+appliance_type: ups
+state_entity: sensor.ups_code_d_etat
+battery_entity: sensor.ups_charge_de_la_batterie
+runtime_entity: sensor.ups_autonomie_de_la_batterie
+load_entity: sensor.ups_charge
+input_voltage_entity: sensor.ups_tension_d_entree
+nominal_power: 520
 ```
 
 </details>

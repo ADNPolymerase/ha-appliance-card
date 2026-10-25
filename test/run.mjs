@@ -10130,4 +10130,106 @@ check('borne : ni un statut reconnu', evMode(evR('SuspendedEVSE', { power_entity
   check('editeur : pas de champ balance ailleurs', /muscle_mass_entity/.test(markup(newEditor({ state_entity: 'sensor.w', appliance_type: 'washer' }))), false);
 }
 
+
+// =============================================================================
+// UPS: on mains or on battery, from NUT's ups.status codes or from its words.
+// =============================================================================
+{
+  const NB = ' ';
+  const s = (state, attributes = {}) => ({ state: String(state), attributes });
+  const isUps = (cfg, states = {}) => /class="machine [^"]*\bup\b/.test(render(cfg, states));
+
+  // The type: a field of its own or a name.
+  check('onduleur : un champ suffit', isUps({ state_entity: 'sensor.x', runtime_entity: 'sensor.rt' }, { 'sensor.x': s('OL') }), true);
+  check('onduleur : NUT en francais', isUps({ state_entity: 'sensor.ups_code_d_etat' }, { 'sensor.ups_code_d_etat': s('OL') }), true);
+  check('onduleur : par son nom', isUps({ state_entity: 'sensor.onduleur_bureau' }, { 'sensor.onduleur_bureau': s('OL') }), true);
+  check('onduleur : une Back-UPS', isUps({ state_entity: 'sensor.back_ups_es_700_status' }, { 'sensor.back_ups_es_700_status': s('OL') }), true);
+  check('onduleur : une USV', isUps({ state_entity: 'sensor.usv_keller' }, { 'sensor.usv_keller': s('OL') }), true);
+  check('onduleur : groups n en est pas un', isUps({ state_entity: 'sensor.groups_status' }, { 'sensor.groups_status': s('ok') }), false);
+  check('onduleur : une prise de lave-linge n en est pas un', isUps({ state_entity: 'switch.prise_lave_linge' }, { 'switch.prise_lave_linge': s('off') }), false);
+
+  // The state line, from the NUT codes.
+  const U = { appliance_type: 'ups', state_entity: 'sensor.u', battery_entity: 'sensor.b', runtime_entity: 'sensor.rt', load_entity: 'sensor.l' };
+  const ST = (code, b = 100, rt = 1500, l = 7) => ({ 'sensor.u': s(code),
+    'sensor.b': s(b, { unit_of_measurement: '%', device_class: 'battery' }),
+    'sensor.rt': s(rt, { unit_of_measurement: 's', device_class: 'duration' }), 'sensor.l': s(l, { unit_of_measurement: '%' }) });
+  const line = (code, ...a) => stateLine(render(U, ST(code, ...a)));
+  check('onduleur : sur secteur', line('OL'), 'On mains');
+  check('onduleur : en charge', line('OL CHRG', 62), 'On mains · charging');
+  check('onduleur : sur batterie', line('OB DISCHRG', 80, 754), 'On battery');
+  check('onduleur : batterie faible (LB)', line('OB LB', 30, 120), 'Battery low');
+  check('onduleur : batterie faible sous le seuil', line('OB', 15), 'Battery low');
+  check('onduleur : sur secteur a 15 %, pas d alerte', line('OL CHRG', 15), 'On mains · charging');
+  check('onduleur : seuil de batterie choisi', stateLine(render({ ...U, battery_low: 10 }, ST('OB', 15))), 'On battery');
+  check('onduleur : batterie a remplacer', line('OL RB'), 'Replace battery');
+  check('onduleur : la surcharge d abord', line('OL OVER RB'), 'Overload');
+  check('onduleur : surcharge par la charge', line('OL', 100, 1500, 104), 'Overload');
+  check('onduleur : bypass', line('OL BYPASS'), 'Bypass');
+  check('onduleur : arrete', line('OFF'), 'Off');
+  check('onduleur : hors ligne', line('unavailable'), 'Offline');
+  check('onduleur : arrete, pas d alerte', line('OFF RB'), 'Off');
+
+  // The state line, from the words of NUT's text sensor or another integration.
+  check('onduleur : le texte, sur batterie', line('On Battery Discharging'), 'On battery');
+  check('onduleur : le texte, en charge', line('Online Battery Charging'), 'On mains · charging');
+  check('onduleur : en francais', stateLine(render({ ...U, language: 'fr' }, ST('OB'))), 'Sur batterie');
+  check('onduleur : sans etat, plus de tension', stateLine(render({ appliance_type: 'ups', input_voltage_entity: 'sensor.v' },
+    { 'sensor.v': s(0, { unit_of_measurement: 'V' }) })), 'On battery');
+  check('onduleur : sans etat, la tension du secteur', stateLine(render({ appliance_type: 'ups', input_voltage_entity: 'sensor.v' },
+    { 'sensor.v': s(231, { unit_of_measurement: 'V' }) })), 'On mains');
+  check('onduleur : sans etat, une tension suffit', (() => {
+    try { new Card().setConfig({ type: 'custom:ha-appliance-card', appliance_type: 'ups', input_voltage_entity: 'sensor.v' }); return true; }
+    catch { return false; } })(), true);
+  check('onduleur : le compteur ne fait pas l etat', stateLine(render({ ...U, power_entity: 'sensor.p', power_on_threshold: 50 },
+    { ...ST('OL'), 'sensor.p': s(36, { unit_of_measurement: 'W' }) })), 'On mains');
+
+  // The drawing.
+  const html = (code, ...a) => render(U, ST(code, ...a));
+  const cls = (code, ...a) => machineCls(html(code, ...a));
+  check('onduleur : dessin sur secteur', cls('OL').includes('up-m-online'), true);
+  check('onduleur : dessin sur batterie', cls('OB').includes('up-m-battery'), true);
+  check('onduleur : dessin hors ligne', cls('unavailable').includes('up-m-unav'), true);
+  check('onduleur : alerte dessinee', cls('OB LB', 9).includes('up-alert'), true);
+  check('onduleur : pas d alerte sur secteur', cls('OL').includes('up-alert'), false);
+  check('onduleur : charge dessinee', cls('OL CHRG', 62).includes('up-charging'), true);
+  check('onduleur : niveau bas en rouge', cls('OB', 15).includes('up-lv-low'), true);
+  check('onduleur : niveau moyen en orange', cls('OB', 35).includes('up-lv-mid'), true);
+  check('onduleur : ecran en pourcent', /class="up-lcd" x="49" y="36">100%</.test(html('OL')), true);
+  check('onduleur : ecran autonomie sur batterie', /class="up-lcd" x="49" y="36">13m</.test(html('OB', 80, 754)), true);
+  check('onduleur : ecran autonomie en heures', /class="up-lcd" x="49" y="36">1h05</.test(html('OB', 80, 3900)), true);
+  check('onduleur : ecran OFF', /class="up-lcd" x="49" y="36">OFF</.test(html('OFF')), true);
+  check('onduleur : une seule ligne a l ecran', (html('OL CHRG', 62).match(/class="up-lcd/g) || []).length, 1);
+  check('onduleur : ecran en 11 px sur pixels entiers', /\.up-lcd\{[^}]*font:700 11px\/1/.test(SRC), true);
+  check('onduleur : quatre segments a 62 %', (html('OL CHRG', 62).match(/up-seg up-lit/g) || []).length, 4);
+  check('onduleur : un segment a 3 %', (html('OB', 3).match(/up-seg up-lit/g) || []).length, 1);
+  check('onduleur : rythme selon la charge', /--up-pace: 1.48s/.test(html('OL', 100, 1500, 10)), true);
+
+  // The lines.
+  const lines = render({ ...U, input_voltage_entity: 'sensor.v', nominal_power: 520 }, { ...ST('OL'), 'sensor.v': s(241, { unit_of_measurement: 'V' }) });
+  check('onduleur : ligne batterie', infoLine(lines, 'Battery'), `100${NB}%`);
+  check('onduleur : ligne autonomie', infoLine(lines, 'Runtime'), `25${NB}min`);
+  check('onduleur : ligne charge, en watts', infoLine(lines, 'Load'), `7${NB}% · 36${NB}W`);
+  check('onduleur : ligne entree', infoLine(lines, 'Input'), `241${NB}V`);
+  check('onduleur : autonomie en minutes', infoLine(render(U, { ...ST('OL'), 'sensor.rt': s(90, { unit_of_measurement: 'min' }) }), 'Runtime'), '1h30');
+  check('onduleur : pas de watts deduits avec un compteur', infoLine(render({ ...U, nominal_power: 520, power_entity: 'sensor.p' },
+    { ...ST('OL'), 'sensor.p': s(36, { unit_of_measurement: 'W' }) }), 'Load'), `7${NB}%`);
+  check('onduleur : batterie faible en orange', /info-line caution[^>]*><ha-icon icon="mdi:battery-10"/.test(html('OB LB', 9)), true);
+  check('onduleur : icone de charge', /icon="mdi:battery-charging-60"/.test(html('OL CHRG', 62)), true);
+  check('onduleur : pas de ligne hors ligne', infoLine(html('unavailable'), 'Battery'), null);
+
+  // The editor.
+  const ed = markup(newEditor({ state_entity: 'sensor.u', appliance_type: 'ups' }));
+  for (const f of ['battery_entity', 'runtime_entity', 'load_entity', 'input_voltage_entity', 'power_entity'])
+    check(`editeur onduleur : ${f}`, ed.includes(`data-toggle="${f}"`), true);
+  check('editeur onduleur : ni seuil ni delai de puissance', /power_on_threshold|power_off_delay/.test(
+    markup(newEditor({ state_entity: 'sensor.u', appliance_type: 'ups', power_entity: 'sensor.p' }))), false);
+  check('editeur onduleur : seuil de batterie faible', /battery_low/.test(
+    markup(newEditor({ state_entity: 'sensor.u', appliance_type: 'ups', battery_entity: 'sensor.b' }))), true);
+  check('editeur onduleur : puissance nominale', /nominal_power/.test(
+    markup(newEditor({ state_entity: 'sensor.u', appliance_type: 'ups', load_entity: 'sensor.l' }))), true);
+  check('editeur robot : pas de seuil de batterie faible', /battery_low/.test(
+    markup(newEditor({ state_entity: 'vacuum.r', appliance_type: 'robot', battery_entity: 'sensor.b' }))), false);
+  check('editeur : pas de champ onduleur ailleurs', /runtime_entity/.test(markup(newEditor({ state_entity: 'sensor.w', appliance_type: 'washer' }))), false);
+}
+
 report();
