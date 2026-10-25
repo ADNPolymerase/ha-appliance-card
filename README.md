@@ -127,6 +127,8 @@ Only `state_entity` is required, except on a fridge where a probe or a door cont
 | `state_map` | Map raw state → `idle` \| `running` \| `preheating` \| `keep_warm` \| `paused` \| `done` \| `delayed` \| `error`. Sets the label, the colour and the animation. The key `"*"` catches every state left over (see below), and on a washer, a dryer or a dishwasher the steps (`washing`, `spinning`...) are targets too. Also in the visual editor. |
 | `state_show_raw` | `true` shows the entity's own text instead of the card's label, as Home Assistant displays it (a climate reads `Cooling`, not `cool`). |
 | `controls_activation` | How the control buttons answer a finger: `tap` (default) runs them at once, `confirm` asks for a second tap within 3 seconds (the button turns red in between), `hold` runs them only after a long press, `off` never runs them from the card (a long press opens the entity). In YAML, write it in quotes, `controls_activation: "off"`: a bare `off` is read as `false` (the card still takes it as `off`). Handy against stray taps and small fingers. |
+| `controls_always` | On a machine that runs a cycle, each button only shows when it can act: start at rest, pause while running, resume in a pause, stop during a cycle or a delayed start, the power switch outside a cycle, and with the power switch off only the power switch. `true` shows every button all the time. |
+| `show_unavailable_controls` | A button whose entity is missing or unavailable is left out. `true` shows it anyway. |
 | `name` | Card title. Defaults to the state entity's name; without one (a fridge, a pet feeder or an EV charger read from their other entities), the type's name. |
 | `compact` | `true` hides the illustration. `side` draws it small (72 px) on the left, with the name and the state beside it, and the lines under them the width of the card. In both, the buttons and the corner switches move up onto the name's line, so the card has no row of buttons of its own. |
 | `illustration_size` | The drawing's size, from `0.3` to `1.2` times its own (default `1`), in every mode. The text keeps its size. A slider in the editor. |
@@ -148,7 +150,7 @@ Only `state_entity` is required, except on a fridge where a probe or a door cont
 | `remaining_time_hide_when_idle` | `true` only shows the remaining time while running, against stale finish times (SmartThings). |
 | `remaining_time_split` | `true` puts the end time on its own line, for a narrow card. |
 | `progress_entity` | 0-100 sensor replacing the estimate drawn from the remaining time. |
-| `door_entity` / `door_open_state` / `door_invert` / `door_hide_in_list` | Door sensor, "open" state (default `on`), inversion, and hiding the line (the door is still drawn). |
+| `door_entity` / `door_open_state` / `door_invert` / `door_hide_in_list` / `door_corner` | Door sensor, "open" state (default `on`), inversion, and hiding the line (the door is still drawn). `door_corner: true` shows the door as an icon in a top corner instead of a line, green when shut and orange when open. |
 | `alerts_entity` | Entity whose every *attribute* at on, true or active shows as an alert. |
 | `alerts_entities` | Up to 8 alerts with an entity each (Home Connect's salt, rinse aid, i-Dos, filters…), as `{ entity, label?, icon? }` or a plain id, shown while on, true, active, *present* or *confirmed*: one under its own name, several behind their count (see *Alert entities*). |
 | `connectivity_entity` / `connectivity_connected_state` | Connectivity, as a wifi icon, and the "connected" state (default `on`). |

@@ -774,7 +774,7 @@ check('interrupteur : absent si l\'option n\'est pas configuree',
 // programme", which is not what every press does. YAML only, no editor field.
 {
   const btnIcon = (cfg, extra) => (/<div class="action-btn[^"]*"[^>]*><ha-icon icon="([^"]*)"/
-    .exec(render({ appliance_type: 'washer', state_entity: 'sensor.w', ...cfg },
+    .exec(render({ appliance_type: 'washer', state_entity: 'sensor.w', controls_always: true, show_unavailable_controls: true, ...cfg },
       { 'sensor.w': { state: 'Idle', attributes: {} }, ...(extra || {}) })) || [, ''])[1];
   check('icone de bouton : mdi:play par defaut', btnIcon({ start_entity: 'button.b' }), 'mdi:play');
   check('icone de bouton : celle du YAML',
@@ -790,7 +790,7 @@ check('interrupteur : absent si l\'option n\'est pas configuree',
   check('icone de bouton : le filtre d\'une hotte aussi',
     (/<div class="action-btn[^"]*"[^>]*><ha-icon icon="([^"]*)"/.exec(render({ appliance_type: 'hood',
       state_entity: 'switch.hood', filter_reset_entity: 'button.b', filter_reset_icon: 'mdi:broom' },
-      { 'switch.hood': { state: 'on', attributes: {} } })) || [, ''])[1], 'mdi:broom');
+      { 'switch.hood': { state: 'on', attributes: {} }, 'button.b': { state: 'unknown', attributes: {} } })) || [, ''])[1], 'mdi:broom');
 }
 
 // Cooktop zones: numeric levels, worded levels and residual heat.
@@ -1343,7 +1343,7 @@ noInjection('etat brut affiche tel quel',
     { 'sensor.w': { state: XSS, attributes: {} } }));
 
 noInjection('icone de bouton choisie', render({ appliance_type: 'washer', state_entity: 'sensor.w',
-  start_entity: 'button.b', start_icon: XSS }, { 'sensor.w': { state: 'Idle', attributes: {} } }));
+  start_entity: 'button.b', start_icon: XSS }, { 'sensor.w': { state: 'Idle', attributes: {} }, 'button.b': { state: 'unknown', attributes: {} } }));
 
 // A payload carrying no state keyword, so it really goes down the raw-echo
 // path: '<img ... onerror=...>' would normalise to running on the leading
@@ -1909,7 +1909,7 @@ check('frigo : sans interrupteur, aucun bouton',
   actionBtns(render(fridgeCfg({ fridge_temperature_entity: 'sensor.fr_t', start_entity: 'switch.ice' }), FRIDGE)).length, 0);
 check('frigo : le lave-linge garde les siens',
   actionBtns(render({ appliance_type: 'washer', state_entity: 'sensor.w', start_entity: 'switch.ice' },
-    { ...FRIDGE, 'sensor.w': { state: 'Running', attributes: {} } })).length, 1);
+    { ...FRIDGE, 'sensor.w': { state: 'Idle', attributes: {} } })).length, 1);
 
 // ── Kettle ───────────────────────────────────────────────────────────────────
 const KETTLE = {
@@ -7391,7 +7391,8 @@ check('borne : la puissance au repos se lit encore', evLine(evR('Available', OPT
 {
   const ctl = { start_entity: 'button.cp_start', pause_entity: 'button.cp_pause', resume_entity: 'button.cp_resume',
     stop_entity: 'button.cp_stop', toggle_entity: 'switch.cp_enable' };
-  const st = { 'switch.cp_enable': { state: 'on', attributes: {} } };
+  const st = { 'switch.cp_enable': { state: 'on', attributes: {} },
+    ...Object.fromEntries(['start', 'pause', 'resume', 'stop'].map((k) => [`button.cp_${k}`, { state: 'unknown', attributes: {} }])) };
   check('borne : les cinq commandes', actionBtns(evR('Charging', ctl, st)).join('|'), 'Power:on|Start:|Pause:|Resume:|Stop:');
   const calls = [];
   const c = new Card();
@@ -9697,6 +9698,54 @@ check('borne : ni un statut reconnu', evMode(evR('SuspendedEVSE', { power_entity
   check('editeur piscine : pas de delai d\'arret', /power_off_delay/.test(markup(newEditor({ state_entity: 'binary_sensor.p', appliance_type: 'pool_pump', power_entity: 'sensor.w' }))), false);
   check('editeur lave-linge : le delai d\'arret reste', /power_off_delay/.test(markup(newEditor({ state_entity: 'sensor.w', appliance_type: 'washer', power_entity: 'sensor.p' }))), true);
   check('editeur : pas de champ piscine ailleurs', /ph_entity/.test(markup(newEditor({ state_entity: 'sensor.w', appliance_type: 'washer' }))), false);
+}
+
+
+// =============================================================================
+// Buttons that fit the state (issue #41), unavailable ones left out (#48), and
+// the door in a corner (#41).
+// =============================================================================
+{
+  const s = (state, attributes = {}) => ({ state: String(state), attributes });
+  const BTN = { start_entity: 'button.s', pause_entity: 'button.p', resume_entity: 'button.r', stop_entity: 'button.x', toggle_entity: 'switch.dw' };
+  const BTN_ST = { 'button.s': s('unknown'), 'button.p': s('unknown'), 'button.r': s('unknown'), 'button.x': s('unknown'), 'switch.dw': s('on') };
+  const keys = (state, cfg = {}, more = {}) => actionBtns(render({ appliance_type: 'dishwasher', state_entity: 'sensor.dw', ...BTN, ...cfg },
+    { 'sensor.dw': s(state), ...BTN_ST, ...more })).map((b) => b.split(':')[0]).join('|');
+  check('boutons : a l\'arret, marche et demarrer', keys('Idle'), 'Power|Start');
+  check('boutons : en marche, pause et stop', keys('Running'), 'Pause|Stop');
+  check('boutons : en pause, reprendre et stop', keys('Paused'), 'Resume|Stop');
+  check('boutons : depart differe, marche, demarrer et stop', keys('Delayed start'), 'Power|Start|Stop');
+  check('boutons : termine, marche et demarrer', keys('Finished'), 'Power|Start');
+  check('boutons : eteint, seulement marche', keys('Idle', {}, { 'switch.dw': s('off') }), 'Power');
+  check('boutons : tous avec controls_always', keys('Running', { controls_always: true }), 'Power|Start|Pause|Resume|Stop');
+  check('boutons : une hotte garde son interrupteur', actionBtns(render({ appliance_type: 'hood', state_entity: 'switch.h', toggle_entity: 'switch.h' },
+    { 'switch.h': s('on') })).length, 1);
+  check('boutons : indisponible masque', keys('Running', {}, { 'button.p': s('unavailable') }), 'Stop');
+  check('boutons : absent masque', keys('Idle', { start_entity: 'button.missing' }), 'Power');
+  check('boutons : indisponible garde sur demande', keys('Running', { show_unavailable_controls: true }, { 'button.p': s('unavailable') }), 'Pause|Stop');
+  check('boutons : un bouton jamais presse reste', keys('Idle'), 'Power|Start');
+
+  // The door in a corner.
+  const dw = (open, cfg = {}) => render({ appliance_type: 'dishwasher', state_entity: 'sensor.dw', door_entity: 'binary_sensor.door', door_corner: true, ...cfg },
+    { 'sensor.dw': s('Idle'), 'binary_sensor.door': s(open ? 'on' : 'off'), 'light.l': s('on') });
+  check('porte en coin : fermee en vert', /class="door-badge left"[^>]*><ha-icon icon="mdi:door-closed"/.test(dw(false)), true);
+  check('porte en coin : ouverte en orange', /class="door-badge left open"[^>]*><ha-icon icon="mdi:door-open"/.test(dw(true)), true);
+  check('porte en coin : plus dans les lignes', infoLine(dw(true), 'Door open'), null);
+  check('porte en coin : sans l\'option, dans les lignes', infoLine(render({ appliance_type: 'dishwasher', state_entity: 'sensor.dw', door_entity: 'binary_sensor.door' },
+    { 'sensor.dw': s('Idle'), 'binary_sensor.door': s('on') }), 'Door open'), '');
+  check('porte en coin : a droite quand la lumiere a la gauche', /class="door-badge right"/.test(render({ appliance_type: 'oven', state_entity: 'sensor.o',
+    door_entity: 'binary_sensor.door', door_corner: true, light_entity: 'light.l' }, { 'sensor.o': s('Idle'), 'binary_sensor.door': s('off'), 'light.l': s('on') })), true);
+  check('porte en coin : ouvre son entite', /class="door-badge[^"]*"[^>]*data-more="binary_sensor.door"/.test(dw(false)), true);
+  check('porte en coin : l\'interrupteur de gauche descend', /class="corner-btn left" style="top:36px"/.test(render({ appliance_type: 'dishwasher', state_entity: 'sensor.dw',
+    door_entity: 'binary_sensor.door', door_corner: true, corner_entities: ['switch.lock'] },
+    { 'sensor.dw': s('Idle'), 'binary_sensor.door': s('off'), 'switch.lock': s('off') })), true);
+
+  // The editor.
+  const ed = markup(newEditor({ state_entity: 'sensor.dw', appliance_type: 'dishwasher', door_entity: 'binary_sensor.door', start_entity: 'button.s' }));
+  check('editeur : porte en coin', /data-field="door_corner"/.test(ed), true);
+  check('editeur : tous les boutons', /data-field="controls_always"/.test(ed), true);
+  check('editeur : boutons indisponibles', /data-field="show_unavailable_controls"/.test(ed), true);
+  check('editeur : pas de tous les boutons sans cycle', /data-field="controls_always"/.test(markup(newEditor({ state_entity: 'switch.h', appliance_type: 'hood' }))), false);
 }
 
 report();
