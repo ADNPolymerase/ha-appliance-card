@@ -8856,7 +8856,7 @@ check('borne : ni un statut reconnu', evMode(evR('SuspendedEVSE', { power_entity
   // The type menu, by family.
   const tm = markup(newEditor({ state_entity: 'sensor.w', appliance_type: 'washer' }));
   const menu = (tm.match(/<select data-field="appliance_type">([^]*?)<\/select>/) || [, ''])[1];
-  check('menu des types : sept familles', (menu.match(/<optgroup /g) || []).length, 7);
+  check('menu des types : huit familles', (menu.match(/<optgroup /g) || []).length, 8);
   const listed = [...menu.matchAll(/<option value="([a-z_0-9]+)"/g)].map(m => m[1]);
   check('menu des types : auto en tete', listed[0], 'auto');
   const typesInCard = [...SRC.matchAll(/^  ([a-z_0-9]+): \{ [a-zA-Z]+: true/gm)].map(m => m[1]);
@@ -9804,6 +9804,267 @@ check('borne : ni un statut reconnu', evMode(evR('SuspendedEVSE', { power_entity
   check('editeur routeur : le modele dans le menu', /<option value="router"[^>]*>Router \/ box</.test(ed), true);
   check('editeur NAS : pas de champ routeur', /clients_entity|wan_entity|wifi_entity/.test(
     markup(newEditor({ state_entity: 'sensor.n', appliance_type: 'network', network_layout: 'nas' }))), false);
+}
+
+
+// =============================================================================
+// Robots (#49): the floor, the battery in a corner, the robot's own buttons.
+// =============================================================================
+{
+  const NB = ' ';
+  const s = (state, attributes = {}) => ({ state: String(state), attributes });
+  const floorOf = (cfg, states) => (/class="rbt-floor rbt-([a-z]+)"/.exec(render(cfg, states)) || [])[1];
+  check('sol : tapis par defaut pour un aspirateur', floorOf({ state_entity: 'vacuum.x' }, { 'vacuum.x': s('cleaning') }), 'rug');
+  check('sol : carrelage par defaut pour un laveur', floorOf({ state_entity: 'vacuum.braava' }, { 'vacuum.braava': s('cleaning') }), 'tiles');
+  check('sol : parquet choisi', floorOf({ state_entity: 'vacuum.x', robot_floor: 'parquet' }, { 'vacuum.x': s('cleaning') }), 'parquet');
+  check('sol : lisse choisi pour un laveur', floorOf({ state_entity: 'vacuum.braava', robot_floor: 'smooth' }, { 'vacuum.braava': s('cleaning') }), 'smooth');
+  check('sol : une valeur inconnue revient au defaut', floorOf({ state_entity: 'vacuum.x', robot_floor: 'none' }, { 'vacuum.x': s('cleaning') }), 'rug');
+  check('sol : auto revient au defaut', floorOf({ state_entity: 'vacuum.braava', robot_floor: 'auto' }, { 'vacuum.braava': s('cleaning') }), 'tiles');
+  check('sol : les traces du laveur restent sur le parquet',
+    /rbt-floor rbt-parquet"><i class="rbt-trace/.test(render({ state_entity: 'vacuum.braava', robot_floor: 'parquet' }, { 'vacuum.braava': s('cleaning') })), true);
+  check('sol : la tondeuse garde sa pelouse', /class="rbt-floor/.test(render({ state_entity: 'lawn_mower.x', robot_floor: 'parquet' }, { 'lawn_mower.x': s('mowing') })), false);
+  check('sol : un champ de robot', /class="machine [^"]*\brbt\b/.test(render({ state_entity: 'sensor.x', robot_floor: 'parquet' }, { 'sensor.x': s('idle') })), true);
+
+  // The battery in a corner.
+  const corner = render({ state_entity: 'vacuum.x', battery_corner: true }, { 'vacuum.x': s('cleaning', { battery_level: 72 }) });
+  check('batterie en coin : le badge', /class="batt-badge left"/.test(corner), true);
+  check('batterie en coin : le pourcentage', corner.includes(`<span>72 %</span>`), true);
+  check('batterie en coin : plus dans les lignes', infoLine(corner, 'Battery'), null);
+  check('batterie en coin : l\'icone de la batterie', /batt-badge[^>]*><ha-icon icon="mdi:battery-70"/.test(corner), true);
+  check('batterie en coin : ouvre l\'entite', /batt-badge[^>]*data-more="vacuum\.x"/.test(corner), true);
+  check('batterie en coin : son entite si elle existe', /batt-badge[^>]*data-more="sensor\.b"/.test(render({ state_entity: 'lawn_mower.x', battery_entity: 'sensor.b', battery_corner: true },
+    { 'lawn_mower.x': s('docked'), 'sensor.b': s(54) })), true);
+  check('batterie en coin : orange quand elle est basse', /batt-badge left low/.test(render({ state_entity: 'vacuum.x', battery_corner: true }, { 'vacuum.x': s('cleaning', { battery_level: 15 }) })), true);
+  check('batterie en coin : pas orange a 21 %', /batt-badge left low/.test(render({ state_entity: 'vacuum.x', battery_corner: true }, { 'vacuum.x': s('cleaning', { battery_level: 21 }) })), false);
+  check('batterie en coin : en charge', /mdi:battery-charging-60/.test(render({ state_entity: 'vacuum.x', battery_corner: true }, { 'vacuum.x': s('docked', { battery_level: 60 }) })), true);
+  check('batterie en coin : rien sans batterie', /class="batt-badge/.test(render({ state_entity: 'vacuum.x', battery_corner: true }, { 'vacuum.x': s('cleaning') })), false);
+  check('batterie en coin : rien hors ligne', /class="batt-badge/.test(render({ state_entity: 'vacuum.x', battery_corner: true }, { 'vacuum.x': s('unavailable', { battery_level: 50 }) })), false);
+  check('batterie : dans les lignes par defaut', infoLine(render({ state_entity: 'vacuum.x' }, { 'vacuum.x': s('cleaning', { battery_level: 72 }) }), 'Battery'), `72${NB}%`);
+  check('batterie : pas de badge par defaut', /class="batt-badge/.test(render({ state_entity: 'vacuum.x' }, { 'vacuum.x': s('cleaning', { battery_level: 72 }) })), false);
+  check('batterie en coin : un interrupteur de coin passe dessous',
+    /corner-btn left[^"]*" style="top:36px"/.test(render({ state_entity: 'vacuum.x', battery_corner: true, corner_entities: ['switch.a'] },
+      { 'vacuum.x': s('cleaning', { battery_level: 72 }), 'switch.a': s('on') })), true);
+  check('batterie en coin : dans la ligne du nom en compact',
+    /cmp-icons[^]*batt-badge/.test(render({ state_entity: 'vacuum.x', battery_corner: true, compact_mode: true }, { 'vacuum.x': s('cleaning', { battery_level: 72 }) })), true);
+
+  // The robot's own buttons, on its entity.
+  const btns = (state, cfg = {}, ent = 'vacuum.x') => actionBtns(render({ state_entity: ent, robot_controls: true, ...cfg }, { [ent]: s(state, { battery_level: 50 }) }))
+    .map((b) => b.split(':')[0]);
+  check('boutons robot : au travail, pause et retour', btns('cleaning').join(','), 'Pause,Return to base');
+  check('boutons robot : a la base, demarrer', btns('docked').join(','), 'Start');
+  check('boutons robot : en pause, demarrer et retour', btns('paused').join(','), 'Start,Return to base');
+  check('boutons robot : au retour, demarrer seul', btns('returning').join(','), 'Start');
+  check('boutons robot : a l\'arret hors base, demarrer et retour', btns('idle').join(','), 'Start,Return to base');
+  check('boutons robot : en erreur, demarrer et retour', btns('error').join(','), 'Start,Return to base');
+  check('boutons robot : tous si demande', btns('docked', { controls_always: true }).join(','), 'Start,Pause,Return to base');
+  check('boutons robot : tondeuse au travail', btns('mowing', {}, 'lawn_mower.x').join(','), 'Pause,Return to base');
+  check('boutons robot : rien sans l\'option', actionBtns(render({ state_entity: 'vacuum.x' }, { 'vacuum.x': s('docked') })).length, 0);
+  check('boutons robot : rien hors ligne', btns('unavailable').length, 0);
+  check('boutons robot : rien sur un capteur', actionBtns(render({ appliance_type: 'robot', state_entity: 'sensor.x', robot_controls: true }, { 'sensor.x': s('cleaning') })).length, 0);
+  check('boutons robot : le service sur le bouton', /data-service="return_to_base"/.test(render({ state_entity: 'vacuum.x', robot_controls: true }, { 'vacuum.x': s('cleaning') })), true);
+  check('boutons robot : dock pour une tondeuse', /data-service="dock"/.test(render({ state_entity: 'lawn_mower.x', robot_controls: true }, { 'lawn_mower.x': s('mowing') })), true);
+  const robotCall = (ent, service) => {
+    const calls = [];
+    const c = new Card();
+    c.setConfig({ type: 'custom:ha-appliance-card', state_entity: ent, robot_controls: true });
+    c._hass = { ...HASS({ [ent]: s('docked') }), callService: (domain, sv, data) => calls.push(`${domain}.${sv} ${data.entity_id}`) };
+    c._call(ent, { service });
+    return calls.join('|');
+  };
+  check('boutons robot : vacuum.start', robotCall('vacuum.x', 'start'), 'vacuum.start vacuum.x');
+  check('boutons robot : vacuum.return_to_base', robotCall('vacuum.x', 'return_to_base'), 'vacuum.return_to_base vacuum.x');
+  check('boutons robot : lawn_mower.start_mowing', robotCall('lawn_mower.x', 'start_mowing'), 'lawn_mower.start_mowing lawn_mower.x');
+  check('boutons robot : lawn_mower.dock', robotCall('lawn_mower.x', 'dock'), 'lawn_mower.dock lawn_mower.x');
+  // The click carries its service to the call.
+  {
+    const calls = [];
+    const c = new Card();
+    c.setConfig({ type: 'custom:ha-appliance-card', state_entity: 'vacuum.x', robot_controls: true });
+    c._hass = { ...HASS({ 'vacuum.x': s('cleaning', { battery_level: 50 }) }), callService: (domain, sv, data) => calls.push(`${domain}.${sv} ${data.entity_id}`) };
+    c._render();
+    const btn2 = c._root.querySelectorAll('.action-btn, .light-badge').find((b) => b.getAttribute('data-service') === 'pause');
+    if (btn2) fire(btn2, 'click', { stopPropagation() {} });
+    check('boutons robot : un clic appelle le service', calls.join('|'), 'vacuum.pause vacuum.x');
+  }
+
+  // The editor.
+  const ed = markup(newEditor({ state_entity: 'vacuum.x' }));
+  check('editeur robot : le sol', /data-field="robot_floor"/.test(ed), true);
+  check('editeur robot : les boutons', /data-field="robot_controls"/.test(ed), true);
+  check('editeur robot : la batterie en coin', /data-field="battery_corner"/.test(ed), true);
+  check('editeur robot : pas de sans sol', /value="none"/.test(ed), false);
+  const edMow = markup(newEditor({ state_entity: 'lawn_mower.x' }));
+  check('editeur tondeuse : pas de sol', /data-field="robot_floor"/.test(edMow), false);
+  check('editeur tondeuse : les boutons', /data-field="robot_controls"/.test(edMow), true);
+  check('editeur robot sur un capteur : pas de boutons', /data-field="robot_controls"/.test(markup(newEditor({ appliance_type: 'robot', state_entity: 'sensor.x' }))), false);
+  check('editeur : pas de sol ailleurs', /robot_floor/.test(markup(newEditor({ state_entity: 'sensor.w', appliance_type: 'washer' }))), false);
+}
+
+
+// =============================================================================
+// Solar panels and a home battery: what they produce, store and give back.
+// =============================================================================
+{
+  const NB = ' ';
+  const MINUS = '−';
+  const s = (state, attributes = {}) => ({ state: String(state), attributes });
+  const W = (v) => s(v, { unit_of_measurement: 'W' });
+  const sun = (up) => s(up ? 'above_horizon' : 'below_horizon');
+  const isSolar = (cfg, states = {}) => /class="machine [^"]*\bsol\b/.test(render(cfg, states));
+  const isBattery = (cfg, states = {}) => /class="machine [^"]*\bbat\b/.test(render(cfg, states));
+
+  // The type: a field of its own, or a name.
+  check('solaire : un champ suffit', isSolar({ state_entity: 'sensor.x', energy_today_entity: 'sensor.t' }, { 'sensor.x': W(10) }), true);
+  check('solaire : par son nom', isSolar({ state_entity: 'sensor.solar_power' }, { 'sensor.solar_power': W(300) }), true);
+  check('solaire : un PowerStream', isSolar({ state_entity: 'sensor.powerstream_solar_total' }, { 'sensor.powerstream_solar_total': W(300) }), true);
+  check('solaire : des panneaux solaires', isSolar({ state_entity: 'sensor.panneaux_solaires' }, { 'sensor.panneaux_solaires': W(300) }), true);
+  check('solaire : un micro-onduleur Hoymiles', isSolar({ state_entity: 'sensor.hoymiles_power' }, { 'sensor.hoymiles_power': W(300) }), true);
+  check('solaire : un lave-linge n\'en est pas', isSolar({ state_entity: 'sensor.lave_linge' }, { 'sensor.lave_linge': s('idle') }), false);
+  check('batterie : un champ suffit', isBattery({ state_entity: 'sensor.x', reserve_entity: 'number.r' }, { 'sensor.x': s(50) }), true);
+  check('batterie : une Delta Pro', isBattery({ state_entity: 'sensor.delta_pro_battery_level' }, { 'sensor.delta_pro_battery_level': s(50) }), true);
+  check('batterie : un Powerwall', isBattery({ state_entity: 'sensor.powerwall_charge' }, { 'sensor.powerwall_charge': s(50) }), true);
+  check('batterie : une batterie d\'aspirateur n\'en est pas', isBattery({ state_entity: 'vacuum.x', battery_entity: 'sensor.vb' }, { 'vacuum.x': s('docked'), 'sensor.vb': s(50) }), false);
+  check('solaire : sur son seul compteur', (() => { try { render({ appliance_type: 'solar', power_entity: 'sensor.pv' }, { 'sensor.pv': W(5) }); return true; } catch (e) { return false; } })(), true);
+  check('batterie : sur son seul niveau', (() => { try { render({ appliance_type: 'home_battery', battery_entity: 'sensor.b' }, { 'sensor.b': s(50) }); return true; } catch (e) { return false; } })(), true);
+  check('solaire : rien a lire, une erreur', (() => { try { render({ appliance_type: 'solar' }, {}); return false; } catch (e) { return true; } })(), true);
+
+  // The panels' state.
+  const SOL = { appliance_type: 'solar', power_entity: 'sensor.pv', peak_power: 800 };
+  const sol = (w, up, cfg = {}, more = {}) => render({ ...SOL, ...cfg }, { 'sensor.pv': W(w), ...(up === null ? {} : { 'sun.sun': sun(up) }), ...more });
+  check('solaire : production', stateLine(sol(412, true)), 'Producing');
+  check('solaire : production faible', stateLine(sol(62, true)), 'Low production');
+  check('solaire : faible au seuil de 15 %', stateLine(sol(120, true)), 'Low production');
+  check('solaire : au-dessus du seuil', stateLine(sol(121, true)), 'Producing');
+  check('solaire : nuit', stateLine(sol(0, false)), 'Night');
+  check('solaire : un reste de courant au coucher', stateLine(sol(40, false)), 'Night');
+  check('solaire : nuit sans soleil connu', stateLine(sol(0, null)), 'Night');
+  check('solaire : un peu de courant sans soleil connu', stateLine(sol(5, null)), 'Low production');
+  check('solaire : zero en plein jour', stateLine(sol(0, true)), 'Low production');
+  check('solaire : seuil de 100 W sans puissance crete', stateLine(render({ appliance_type: 'solar', power_entity: 'sensor.pv' }, { 'sensor.pv': W(150), 'sun.sun': sun(true) })), 'Producing');
+  check('solaire : sous 100 W sans puissance crete', stateLine(render({ appliance_type: 'solar', power_entity: 'sensor.pv' }, { 'sensor.pv': W(90), 'sun.sun': sun(true) })), 'Low production');
+  check('solaire : en kilowatts', stateLine(render({ ...SOL }, { 'sensor.pv': s(0.5, { unit_of_measurement: 'kW' }), 'sun.sun': sun(true) })), 'Producing');
+  check('solaire : alerte', stateLine(sol(300, true, { solar_alert_entity: 'binary_sensor.a' }, { 'binary_sensor.a': s('on') })), 'Error');
+  check('solaire : alerte eteinte', stateLine(sol(300, true, { solar_alert_entity: 'binary_sensor.a' }, { 'binary_sensor.a': s('off') })), 'Producing');
+  check('solaire : l\'onduleur en defaut', stateLine(render({ ...SOL, state_entity: 'sensor.inv' }, { 'sensor.inv': s('Fault'), 'sensor.pv': W(0), 'sun.sun': sun(true) })), 'Error');
+  check('solaire : hors ligne', stateLine(render({ ...SOL }, { 'sensor.pv': s('unavailable') })), 'Offline');
+  check('solaire : sa couleur', stateColor(sol(412, true)), '#f9a825');
+
+  // The panels' lines.
+  const day = sol(412, true, { energy_today_entity: 'sensor.t' }, { 'sensor.t': s(2.8, { unit_of_measurement: 'kWh' }) });
+  check('solaire : ligne puissance', infoLine(day, 'Power'), `412${NB}W`);
+  check('solaire : une seule ligne de puissance', (day.match(/<span class="label">Power<\/span>/g) || []).length, 1);
+  check('solaire : ligne du jour', infoLine(day, 'Today'), `2.8${NB}kWh`);
+  check('solaire : ligne en kilowatts', infoLine(sol(1530, true), 'Power'), `1.53${NB}kW`);
+  check('solaire : pas de ligne hors ligne', infoLine(render({ ...SOL, energy_today_entity: 'sensor.t' }, { 'sensor.pv': s('unavailable'), 'sensor.t': s(2) }), 'Today'), null);
+  check('solaire : rien a demarrer', actionBtns(render({ ...SOL, start_entity: 'button.go' }, { 'sensor.pv': W(300), 'button.go': s('unknown') })).length, 0);
+
+  // The panels' drawing.
+  check('solaire : au sol par defaut', machineCls(sol(412, true)).includes('sol-l-ground'), true);
+  check('solaire : sur un toit', machineCls(sol(412, true, { solar_layout: 'roof' })).includes('sol-l-roof'), true);
+  check('solaire : le toit a ses tuiles', /url\(#en-tile\)/.test(sol(412, true, { solar_layout: 'roof' })), true);
+  check('solaire : le sol n\'en a pas', /url\(#en-tile\)/.test(sol(412, true)), false);
+  check('solaire : un modele inconnu revient au sol', machineCls(sol(412, true, { solar_layout: 'balcony' })).includes('sol-l-ground'), true);
+  check('solaire : le soleil en production', machineCls(sol(412, true)).includes('en-sky-day'), true);
+  check('solaire : des nuages quand c\'est faible', machineCls(sol(62, true)).includes('en-sky-low'), true);
+  check('solaire : la lune la nuit', machineCls(sol(0, false)).includes('en-sky-night'), true);
+  check('solaire : l\'erreur garde le ciel du moment', machineCls(sol(0, false, { solar_alert_entity: 'binary_sensor.a' }, { 'binary_sensor.a': s('on') })).includes('en-sky-night'), true);
+  check('solaire : l\'erreur se dessine', machineCls(sol(300, true, { solar_alert_entity: 'binary_sensor.a' }, { 'binary_sensor.a': s('on') })).includes('sol-m-error'), true);
+  check('solaire : hors ligne en gris', machineCls(render({ ...SOL }, { 'sensor.pv': s('unavailable') })).includes('sol-m-unav'), true);
+
+  // The battery's state.
+  const BAT = { appliance_type: 'home_battery', battery_entity: 'sensor.soc', power_entity: 'sensor.bp' };
+  const bat = (pct, w, cfg = {}, more = {}) => render({ ...BAT, ...cfg }, { 'sensor.soc': s(pct, { unit_of_measurement: '%' }), 'sensor.bp': W(w), ...more });
+  check('batterie : en charge', stateLine(bat(76, 380)), 'Charging');
+  check('batterie : en decharge', stateLine(bat(54, -210)), 'Discharging');
+  check('batterie : au repos', stateLine(bat(45, 3)), 'Idle');
+  check('batterie : au repos sous le seuil', stateLine(bat(45, 10)), 'Idle');
+  check('batterie : en charge au-dessus du seuil', stateLine(bat(45, 11)), 'Charging');
+  check('batterie : seuil choisi', stateLine(bat(45, 25, { power_on_threshold: 30 })), 'Idle');
+  check('batterie : pleine', stateLine(bat(100, 0)), 'Full');
+  check('batterie : pleine a sa limite de charge', stateLine(bat(95, 0, { charge_limit_entity: 'number.l' }, { 'number.l': s(95) })), 'Full');
+  check('batterie : sous sa limite, au repos', stateLine(bat(93, 0, { charge_limit_entity: 'number.l' }, { 'number.l': s(95) })), 'Idle');
+  check('batterie : en charge a 99 %', stateLine(bat(99, 300)), 'Charging');
+  check('batterie : basse en decharge', stateLine(bat(8, -180)), 'Low battery');
+  check('batterie : basse au repos', stateLine(bat(10, 0)), 'Low battery');
+  check('batterie : pas basse a 11 %', stateLine(bat(11, 0)), 'Idle');
+  check('batterie : basse mais en charge', stateLine(bat(8, 300)), 'Charging');
+  check('batterie : alerte', stateLine(bat(60, 0, { battery_alert_entity: 'binary_sensor.e' }, { 'binary_sensor.e': s('on') })), 'Error');
+  check('batterie : son etat en defaut', stateLine(render({ ...BAT, state_entity: 'sensor.st' }, { 'sensor.st': s('BMS fault'), 'sensor.soc': s(60), 'sensor.bp': W(0) })), 'Error');
+  check('batterie : hors ligne', stateLine(render({ ...BAT }, { 'sensor.soc': s('unavailable') })), 'Offline');
+  check('batterie : puissance positive en decharge', stateLine(bat(54, 210, { power_inverted: true })), 'Discharging');
+  check('batterie : puissance negative en charge', stateLine(bat(54, -210, { power_inverted: true })), 'Charging');
+  const split = (cin, cout) => stateLine(render({ appliance_type: 'home_battery', battery_entity: 'sensor.soc', charge_power_entity: 'sensor.in', discharge_power_entity: 'sensor.out' },
+    { 'sensor.soc': s(50), 'sensor.in': W(cin), 'sensor.out': W(cout) }));
+  check('batterie : entree et sortie, decharge', split(0, 230), 'Discharging');
+  check('batterie : entree et sortie, charge', split(400, 0), 'Charging');
+  check('batterie : entree et sortie, au repos', split(17, 15), 'Idle');
+  check('batterie : son mot de charge', stateLine(render({ appliance_type: 'home_battery', state_entity: 'sensor.st' }, { 'sensor.st': s('charging') })), 'Charging');
+  check('batterie : son mot de decharge', stateLine(render({ appliance_type: 'home_battery', state_entity: 'sensor.st' }, { 'sensor.st': s('discharging') })), 'Discharging');
+  check('batterie : la couleur de la decharge', stateColor(bat(54, -210)), '#fb8c00');
+  check('batterie : la couleur basse', stateColor(bat(8, -180)), '#f44336');
+
+  // The battery's lines.
+  const full = { battery_capacity: 3.6, reserve_entity: 'number.r' };
+  const r45 = { 'number.r': s(45, { unit_of_measurement: '%' }) };
+  const ch = bat(76, 380, full, r45);
+  const dis = bat(54, -210, full, r45);
+  check('batterie : ligne niveau', infoLine(ch, 'Battery'), `76${NB}%`);
+  check('batterie : ligne puissance en charge', infoLine(ch, 'Power'), `+380${NB}W`);
+  check('batterie : ligne puissance en decharge', infoLine(dis, 'Power'), `${MINUS}210${NB}W`);
+  check('batterie : une seule ligne de puissance', (ch.match(/<span class="label">Power<\/span>/g) || []).length, 1);
+  check('batterie : au repos sans signe', infoLine(bat(45, 3), 'Power'), `3${NB}W`);
+  check('batterie : en kilowatts', infoLine(bat(45, 2500), 'Power'), `+2.5${NB}kW`);
+  check('batterie : pleine dans', infoLine(ch, 'Full in'), '2h16');
+  check('batterie : restant jusqu\'a la reserve', infoLine(dis, 'Remaining'), '1h33');
+  check('batterie : restant sans reserve', infoLine(bat(54, -210, { battery_capacity: 3.6 }), 'Remaining'), '9h15');
+  check('batterie : pleine dans jusqu\'a la limite', infoLine(bat(76, 380, { battery_capacity: 3.6, charge_limit_entity: 'number.l' }, { 'number.l': s(95) }), 'Full in'), '1h48');
+  check('batterie : pas de temps sans capacite', infoLine(bat(76, 380), 'Full in'), null);
+  check('batterie : pas de temps au repos', infoLine(bat(45, 3, full, r45), 'Remaining'), null);
+  check('batterie : pas de temps sous la reserve', infoLine(bat(40, -200, full, r45), 'Remaining'), null);
+  check('batterie : ligne reserve', infoLine(ch, 'Reserve'), `45${NB}%`);
+  check('batterie : basse en orange', /info-line caution[^>]*><ha-icon icon="mdi:battery-10"/.test(bat(8, -180)), true);
+  check('batterie : pas de ligne hors ligne', infoLine(render({ ...BAT, reserve_entity: 'number.r' }, { 'sensor.soc': s('unavailable'), ...r45 }), 'Reserve'), null);
+
+  // The battery's drawing.
+  check('batterie : murale par defaut', machineCls(bat(76, 380)).includes('bat-l-wall'), true);
+  check('batterie : station pour une EcoFlow', machineCls(render({ ...BAT, battery_entity: 'sensor.ecoflow_soc' }, { 'sensor.ecoflow_soc': s(50), 'sensor.bp': W(0) })).includes('bat-l-station'), true);
+  check('batterie : murale choisie pour une EcoFlow', machineCls(render({ ...BAT, battery_entity: 'sensor.ecoflow_soc', battery_layout: 'wall' }, { 'sensor.ecoflow_soc': s(50), 'sensor.bp': W(0) })).includes('bat-l-wall'), true);
+  check('batterie : station choisie', machineCls(bat(76, 380, { battery_layout: 'station' })).includes('bat-l-station'), true);
+  check('batterie : la charge se dessine', machineCls(bat(76, 380)).includes('bat-m-charging'), true);
+  check('batterie : basse en rouge', machineCls(bat(8, -180)).split(' ').includes('bat-low'), true);
+  check('batterie : pas basse a 50 %', machineCls(bat(50, -180)).split(' ').includes('bat-low'), false);
+  check('batterie : le pourcentage a l\'ecran', /<text class="bat-lcd"[^>]*>76%<\/text>/.test(bat(76, 380)), true);
+  check('batterie : deux tirets hors ligne', /<text class="bat-lcd"[^>]*>--<\/text>/.test(render({ ...BAT }, { 'sensor.soc': s('unavailable') })), true);
+  check('batterie : la jauge suit le niveau', /class="bat-lvl" x="39" y="49.5" width="12" height="36.5"/.test(bat(76, 380)), true);
+  check('batterie : la barre de la station suit le niveau', /class="bat-lvl" x="36" y="64" width="18.2"/.test(bat(76, 380, { battery_layout: 'station' })), true);
+  check('batterie : la reserve en pointilles', /class="bat-reserve" d="M35.5 64.4 /.test(bat(76, 380, full, r45)), true);
+  check('batterie : pas de reserve sans entite', /class="bat-reserve"/.test(bat(76, 380)), false);
+  check('batterie : la couleur choisie', /--ac-body/.test(bat(76, 380, { illustration_color: 'red' })), true);
+
+  // The editor.
+  const edS = markup(newEditor({ appliance_type: 'solar', power_entity: 'sensor.pv' }));
+  for (const f of ['energy_today_entity', 'solar_alert_entity'])
+    check(`editeur solaire : ${f}`, edS.includes(`data-toggle="${f}"`), true);
+  check('editeur solaire : l\'installation', /data-field="solar_layout"/.test(edS), true);
+  check('editeur solaire : la puissance crete', /data-field="peak_power"/.test(edS), true);
+  check('editeur solaire : la puissance produite', edS.includes('Power produced'), true);
+  check('editeur solaire : pas de seuil', /data-field="power_on_threshold"/.test(edS), false);
+  check('editeur solaire : pas de reserve', edS.includes('data-toggle="reserve_entity"'), false);
+  const edB = markup(newEditor({ appliance_type: 'home_battery', battery_entity: 'sensor.soc', power_entity: 'sensor.bp' }));
+  for (const f of ['battery_entity', 'charge_power_entity', 'discharge_power_entity', 'reserve_entity', 'charge_limit_entity', 'battery_alert_entity'])
+    check(`editeur batterie : ${f}`, edB.includes(`data-toggle="${f}"`), true);
+  check('editeur batterie : le modele', /data-field="battery_layout"/.test(edB), true);
+  check('editeur batterie : la capacite', /data-field="battery_capacity"/.test(edB), true);
+  check('editeur batterie : le sens de la puissance', /data-field="power_inverted"/.test(edB), true);
+  check('editeur batterie : le seuil du repos', /data-field="power_on_threshold"/.test(edB), true);
+  check('editeur batterie : la puissance de la batterie', edB.includes('Battery power'), true);
+  check('editeur batterie : pas de delai d\'arret', /power_off_delay/.test(edB), false);
+  check('editeur borne : la decharge reste', markup(newEditor({ appliance_type: 'ev_charger', power_entity: 'sensor.w' })).includes('data-toggle="discharge_power_entity"'), true);
+  check('editeur lave-linge : la puissance consommee', markup(newEditor({ appliance_type: 'washer', state_entity: 'sensor.w', power_entity: 'sensor.p' })).includes('Power consumption'), true);
+  check('editeur : pas de champ batterie ailleurs', /reserve_entity|energy_today_entity/.test(markup(newEditor({ state_entity: 'sensor.w', appliance_type: 'washer' }))), false);
+  const menu = (markup(newEditor({ state_entity: 'sensor.w', appliance_type: 'washer' })).match(/<select data-field="appliance_type">([^]*?)<\/select>/) || [, ''])[1];
+  const energy = (menu.match(/<optgroup label="Energy">([^]*?)<\/optgroup>/) || [, ''])[1];
+  check('menu : la famille energie', ['solar', 'home_battery', 'ev_charger'].every((v) => energy.includes(`value="${v}"`)), true);
 }
 
 report();

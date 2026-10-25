@@ -836,6 +836,24 @@ const poolFrost = pool({ frost_entity: "binary_sensor.pool_frost", air_temperatu
 const poolLight = pool({}, [], "off", "on");
 const poolError = pool({ pressure_entity: "sensor.pool_pressure" }, [st("sensor.pool_pressure", 2.1, { unit_of_measurement: "bar" })]);
 
+// Solar panels under the sun, the clouds and the moon, and home batteries
+// charging, discharging and running low.
+const SOLAR_BASE = { appliance_type: "solar", power_entity: "sensor.solar_power", energy_today_entity: "sensor.solar_today", peak_power: 800 };
+const solar = (w, up, today, extra) => () => card({ name: L("Solar panels", "Panneaux solaires"), ...SOLAR_BASE, ...extra },
+  [st("sensor.solar_power", w, { unit_of_measurement: "W" }), st("sensor.solar_today", today, { unit_of_measurement: "kWh" }),
+    st("sun.sun", up ? "above_horizon" : "below_horizon")]);
+const solarDay = solar(612, true, 2.8);
+const solarRoof = solar(74, true, 0.9, { solar_layout: "roof" });
+const solarNight = solar(0, false, 3.2, { solar_layout: "roof" });
+const BATTERY_BASE = { appliance_type: "home_battery", battery_entity: "sensor.battery_level", power_entity: "sensor.battery_power",
+  reserve_entity: "number.battery_reserve", battery_capacity: 3.6 };
+const battery = (pct, w, extra) => () => card({ name: L("Home battery", "Batterie"), ...BATTERY_BASE, ...extra },
+  [st("sensor.battery_level", pct, { unit_of_measurement: "%" }), st("sensor.battery_power", w, { unit_of_measurement: "W" }),
+    st("number.battery_reserve", 20, { unit_of_measurement: "%" })]);
+const batteryCharging = battery(76, 380);
+const batteryStation = battery(54, -210, { battery_layout: "station", illustration_color: "grey" });
+const batteryLow = battery(8, -180, { illustration_color: "white" });
+
 // Grouped by kind: the laundry, the kitchen, heating and climate, then the
 // rest.
 const ALL = { washer, dryer, steam_generator: steamGenerator,
@@ -855,6 +873,8 @@ const EXTRA = { iron, round_feeder: roundFeeder, double_feeder: doubleFeeder, ev
                 robot_mower: rbtMower, robot_rain: rbtRain,
                 pool_running: poolRunning, pool_chlorine: poolChlorine, pool_backwash: poolBackwash, pool_frost: poolFrost,
                 pool_light: poolLight, pool_error: poolError,
+                solar_day: solarDay, solar_roof: solarRoof, solar_night: solarNight,
+                battery_charging: batteryCharging, battery_station: batteryStation, battery_low: batteryLow,
                 net_sw8: netSw(8, 6), net_sw16: netSw(16, 11), net_sw24: netSw(24, 20), net_sw32: netSw(32, 27),
                 net_nas1: netBays(1, ["normal"], L("NAS, 1 bay", "NAS 1 baie")),
                 net_nas2: netBays(2, ["normal", null], L("NAS, 2 bays, 1 disk", "NAS 2 baies, 1 disque")),

@@ -146,6 +146,8 @@ const T = {
     type_robot: "Robot (vacuum, mop, mower)", layout_robot_vacuum: "Robot vacuum", layout_robot_mop: "Mopping robot", layout_robot_mower: "Robot mower", section_robot_station: "Base", robot_station_station: "Emptying or washing station", robot_station_base: "Charging base only", robot_shelter: "Shelter over the base", robot_charging: "Charging", robot_docked: "Docked", robot_cleaning: "Cleaning", robot_mopping: "Mopping", robot_mowing: "Mowing", robot_edgecut: "Edge cutting", robot_returning: "Returning to base", robot_emptying: "Emptying the bin", robot_bin_full: "Bin full", robot_washing: "Washing the pads", robot_drying: "Drying the pads", robot_water_empty: "Water tank empty", robot_rain: "Rain delay", robot_idle: "Stopped", section_robot_status: "Detailed status", section_battery: "Battery", section_robot_bin: "Bin full alert", section_robot_water: "Water tank", section_robot_rain: "Rain", section_robot_error: "Error",
     type_pool_pump: "Pool pump", pool_filtering: "Filtering", pool_chlorinating: "Chlorine injection", pool_backwash: "Backwash", pool_frost: "Frost protection", pool_light_on: "light on", section_water_temperature: "Water temperature", section_air_temperature: "Air temperature", section_ph: "pH", section_redox: "RedOx (ORP)", section_filtration_time: "Filtration time today", section_pressure: "Filter pressure", pool_pressure_alert: "Alert above this pressure (bar)", section_pool_mode: "Pump mode", section_chlorine_pump: "Chlorine pump", section_chlorine_level: "Chlorine tank level", section_backwash: "Backwash", section_frost: "Frost protection", section_pool_alert: "Alert", pool_line_water: "Water", pool_line_air: "Air", pool_line_filtered: "Filtered today", pool_line_pressure: "Pressure", pool_line_chlorine: "Chlorine tank", pool_line_mode: "Mode",
     door_corner: "Show it in a corner of the card", controls_always: "Always show every button", show_unavailable_controls: "Show buttons whose entity is unavailable",
+    group_energy: "Energy", type_solar: "Solar panels", type_home_battery: "Home battery", solar_producing: "Producing", solar_low: "Low production", solar_night: "Night", section_solar_layout: "Mounting", layout_solar_ground: "On the ground", layout_solar_roof: "On a roof", section_solar_power: "Power produced", section_energy_today: "Energy produced today", solar_line_today: "Today", solar_peak_power: "Peak power of the panels (W)", section_battery_power: "Battery power (+ charging, \u2212 discharging)", power_inverted: "Positive power means discharging", section_charge_power: "Charge power", section_battery_discharge: "Discharge power", section_reserve: "Backup reserve", section_charge_limit: "Charge limit", battery_capacity: "Capacity (kWh)", layout_battery_wall: "Wall battery", layout_battery_station: "Portable power station", bat_idle: "Idle", bat_full: "Full", bat_low: "Low battery", bat_line_full_in: "Full in", bat_line_left: "Remaining", bat_line_reserve: "Reserve",
+    robot_controls: "Start, pause and return buttons", robot_go_home: "Return to base", battery_corner: "Show the battery in a corner of the card", section_robot_floor: "Floor", floor_rug: "Rug", floor_tiles: "Tiles", floor_parquet: "Parquet", floor_smooth: "Smooth floor",
     layout_net_router: "Router / box", section_net_clients: "Connected clients", section_net_wan: "Internet link", section_net_wifi: "Wi-Fi", net_line_clients: "Clients", net_no_internet: "No internet",
     section_purifier_layout: "Model", layout_purifier_cylinder: "Cylinder", layout_purifier_box: "Square box", layout_purifier_ring: "Bladeless ring",
     pf_purifying: "Purifying", pf_auto: "Auto", pf_night: "Night mode", section_air_quality: "Air quality",
@@ -303,6 +305,8 @@ const T = {
     type_robot: "Robot (aspirateur, laveur, tondeuse)", layout_robot_vacuum: "Aspirateur robot", layout_robot_mop: "Robot laveur", layout_robot_mower: "Tondeuse robot", section_robot_station: "Base", robot_station_station: "Station de vidage ou de lavage", robot_station_base: "Base de charge seule", robot_shelter: "Abri au-dessus de la base", robot_charging: "En charge", robot_docked: "\u00c0 la base", robot_cleaning: "Nettoyage", robot_mopping: "Lavage", robot_mowing: "Tonte", robot_edgecut: "Coupe des bordures", robot_returning: "Retour \u00e0 la base", robot_emptying: "Vidage du bac", robot_bin_full: "Bac plein", robot_washing: "Lavage des patins", robot_drying: "S\u00e9chage des patins", robot_water_empty: "R\u00e9servoir vide", robot_rain: "Pluie", robot_idle: "\u00c0 l'arr\u00eat", section_robot_status: "\u00c9tat d\u00e9taill\u00e9", section_battery: "Batterie", section_robot_bin: "Alerte bac plein", section_robot_water: "R\u00e9servoir d'eau", section_robot_rain: "Pluie", section_robot_error: "Erreur",
     type_pool_pump: "Pompe de piscine", pool_filtering: "Filtration", pool_chlorinating: "Injection de chlore", pool_backwash: "Contre-lavage", pool_frost: "Hors-gel", pool_light_on: "lumi\u00e8re", section_water_temperature: "Temp\u00e9rature de l'eau", section_air_temperature: "Temp\u00e9rature de l'air", section_ph: "pH", section_redox: "RedOx (ORP)", section_filtration_time: "Dur\u00e9e de filtration du jour", section_pressure: "Pression du filtre", pool_pressure_alert: "Alerte au-dessus de cette pression (bar)", section_pool_mode: "Mode de la pompe", section_chlorine_pump: "Pompe \u00e0 chlore", section_chlorine_level: "Niveau du bidon de chlore", section_backwash: "Contre-lavage", section_frost: "Hors-gel", section_pool_alert: "Alerte", pool_line_water: "Eau", pool_line_air: "Air", pool_line_filtered: "Filtr\u00e9 aujourd'hui", pool_line_pressure: "Pression", pool_line_chlorine: "Bidon de chlore", pool_line_mode: "Mode",
     door_corner: "L'afficher dans un coin de la carte", controls_always: "Toujours afficher tous les boutons", show_unavailable_controls: "Afficher les boutons dont l'entit\u00e9 est indisponible",
+    group_energy: "\u00c9nergie", type_solar: "Panneaux solaires", type_home_battery: "Batterie domestique", solar_producing: "Production", solar_low: "Production faible", solar_night: "Nuit", section_solar_layout: "Installation", layout_solar_ground: "Au sol", layout_solar_roof: "Sur un toit", section_solar_power: "Puissance produite", section_energy_today: "\u00c9nergie produite aujourd'hui", solar_line_today: "Aujourd'hui", solar_peak_power: "Puissance cr\u00eate des panneaux (W)", section_battery_power: "Puissance de la batterie (+ charge, \u2212 d\u00e9charge)", power_inverted: "Une puissance positive veut dire d\u00e9charge", section_charge_power: "Puissance de charge", section_battery_discharge: "Puissance de d\u00e9charge", section_reserve: "R\u00e9serve de secours", section_charge_limit: "Limite de charge", battery_capacity: "Capacit\u00e9 (kWh)", layout_battery_wall: "Batterie murale", layout_battery_station: "Station portable", bat_idle: "Au repos", bat_full: "Pleine", bat_low: "Batterie basse", bat_line_full_in: "Pleine dans", bat_line_left: "Restant", bat_line_reserve: "R\u00e9serve",
+    robot_controls: "Boutons d\u00e9marrer, pause et retour", robot_go_home: "Retour \u00e0 la base", battery_corner: "Afficher la batterie dans un coin de la carte", section_robot_floor: "Sol", floor_rug: "Tapis", floor_tiles: "Carrelage", floor_parquet: "Parquet", floor_smooth: "Sol lisse",
     layout_net_router: "Routeur / box", section_net_clients: "Appareils connect\u00e9s", section_net_wan: "Lien internet", section_net_wifi: "Wi-Fi", net_line_clients: "Appareils", net_no_internet: "Pas d'internet",
     section_purifier_layout: "Mod\u00e8le", layout_purifier_cylinder: "Cylindre", layout_purifier_box: "Bo\u00eetier carr\u00e9", layout_purifier_ring: "Anneau sans pales",
     pf_purifying: "Purification", pf_auto: "Auto", pf_night: "Mode nuit", section_air_quality: "Qualit\u00e9 de l'air",
@@ -460,6 +464,8 @@ const T = {
     type_robot: "\u0420\u043e\u0431\u043e\u0442 (\u043f\u044b\u043b\u0435\u0441\u043e\u0441, \u043c\u043e\u0439\u0449\u0438\u043a, \u0433\u0430\u0437\u043e\u043d\u043e\u043a\u043e\u0441\u0438\u043b\u043a\u0430)", layout_robot_vacuum: "\u0420\u043e\u0431\u043e\u0442-\u043f\u044b\u043b\u0435\u0441\u043e\u0441", layout_robot_mop: "\u041c\u043e\u044e\u0449\u0438\u0439 \u0440\u043e\u0431\u043e\u0442", layout_robot_mower: "\u0420\u043e\u0431\u043e\u0442-\u0433\u0430\u0437\u043e\u043d\u043e\u043a\u043e\u0441\u0438\u043b\u043a\u0430", section_robot_station: "\u0411\u0430\u0437\u0430", robot_station_station: "\u0421\u0442\u0430\u043d\u0446\u0438\u044f \u043e\u0447\u0438\u0441\u0442\u043a\u0438 \u0438\u043b\u0438 \u043c\u043e\u0439\u043a\u0438", robot_station_base: "\u0422\u043e\u043b\u044c\u043a\u043e \u0437\u0430\u0440\u044f\u0434\u043d\u0430\u044f \u0431\u0430\u0437\u0430", robot_shelter: "\u041d\u0430\u0432\u0435\u0441 \u043d\u0430\u0434 \u0431\u0430\u0437\u043e\u0439", robot_charging: "\u0417\u0430\u0440\u044f\u0434\u043a\u0430", robot_docked: "\u041d\u0430 \u0431\u0430\u0437\u0435", robot_cleaning: "\u0423\u0431\u043e\u0440\u043a\u0430", robot_mopping: "\u041c\u044b\u0442\u044c\u0435", robot_mowing: "\u0421\u0442\u0440\u0438\u0436\u043a\u0430", robot_edgecut: "\u041e\u0431\u0440\u0435\u0437\u043a\u0430 \u043a\u0440\u0430\u0451\u0432", robot_returning: "\u0412\u043e\u0437\u0432\u0440\u0430\u0442 \u043d\u0430 \u0431\u0430\u0437\u0443", robot_emptying: "\u041e\u0447\u0438\u0441\u0442\u043a\u0430 \u043a\u043e\u043d\u0442\u0435\u0439\u043d\u0435\u0440\u0430", robot_bin_full: "\u041a\u043e\u043d\u0442\u0435\u0439\u043d\u0435\u0440 \u043f\u043e\u043b\u043e\u043d", robot_washing: "\u041c\u043e\u0439\u043a\u0430 \u0441\u0430\u043b\u0444\u0435\u0442\u043e\u043a", robot_drying: "\u0421\u0443\u0448\u043a\u0430 \u0441\u0430\u043b\u0444\u0435\u0442\u043e\u043a", robot_water_empty: "\u0420\u0435\u0437\u0435\u0440\u0432\u0443\u0430\u0440 \u043f\u0443\u0441\u0442", robot_rain: "\u0414\u043e\u0436\u0434\u044c", robot_idle: "\u041e\u0441\u0442\u0430\u043d\u043e\u0432\u043b\u0435\u043d", section_robot_status: "\u041f\u043e\u0434\u0440\u043e\u0431\u043d\u044b\u0439 \u0441\u0442\u0430\u0442\u0443\u0441", section_battery: "\u0411\u0430\u0442\u0430\u0440\u0435\u044f", section_robot_bin: "\u041a\u043e\u043d\u0442\u0435\u0439\u043d\u0435\u0440 \u043f\u043e\u043b\u043e\u043d", section_robot_water: "\u0420\u0435\u0437\u0435\u0440\u0432\u0443\u0430\u0440 \u0434\u043b\u044f \u0432\u043e\u0434\u044b", section_robot_rain: "\u0414\u043e\u0436\u0434\u044c", section_robot_error: "\u041e\u0448\u0438\u0431\u043a\u0430",
     type_pool_pump: "\u041d\u0430\u0441\u043e\u0441 \u0431\u0430\u0441\u0441\u0435\u0439\u043d\u0430", pool_filtering: "\u0424\u0438\u043b\u044c\u0442\u0440\u0430\u0446\u0438\u044f", pool_chlorinating: "\u041f\u043e\u0434\u0430\u0447\u0430 \u0445\u043b\u043e\u0440\u0430", pool_backwash: "\u041e\u0431\u0440\u0430\u0442\u043d\u0430\u044f \u043f\u0440\u043e\u043c\u044b\u0432\u043a\u0430", pool_frost: "\u0417\u0430\u0449\u0438\u0442\u0430 \u043e\u0442 \u0437\u0430\u043c\u0435\u0440\u0437\u0430\u043d\u0438\u044f", pool_light_on: "\u0441\u0432\u0435\u0442", section_water_temperature: "\u0422\u0435\u043c\u043f\u0435\u0440\u0430\u0442\u0443\u0440\u0430 \u0432\u043e\u0434\u044b", section_air_temperature: "\u0422\u0435\u043c\u043f\u0435\u0440\u0430\u0442\u0443\u0440\u0430 \u0432\u043e\u0437\u0434\u0443\u0445\u0430", section_ph: "pH", section_redox: "RedOx (\u041e\u0412\u041f)", section_filtration_time: "\u0412\u0440\u0435\u043c\u044f \u0444\u0438\u043b\u044c\u0442\u0440\u0430\u0446\u0438\u0438 \u0441\u0435\u0433\u043e\u0434\u043d\u044f", section_pressure: "\u0414\u0430\u0432\u043b\u0435\u043d\u0438\u0435 \u0444\u0438\u043b\u044c\u0442\u0440\u0430", pool_pressure_alert: "\u0422\u0440\u0435\u0432\u043e\u0433\u0430 \u0432\u044b\u0448\u0435 \u044d\u0442\u043e\u0433\u043e \u0434\u0430\u0432\u043b\u0435\u043d\u0438\u044f (\u0431\u0430\u0440)", section_pool_mode: "\u0420\u0435\u0436\u0438\u043c \u043d\u0430\u0441\u043e\u0441\u0430", section_chlorine_pump: "\u041d\u0430\u0441\u043e\u0441 \u0445\u043b\u043e\u0440\u0430", section_chlorine_level: "\u0423\u0440\u043e\u0432\u0435\u043d\u044c \u0445\u043b\u043e\u0440\u0430 \u0432 \u043a\u0430\u043d\u0438\u0441\u0442\u0440\u0435", section_backwash: "\u041e\u0431\u0440\u0430\u0442\u043d\u0430\u044f \u043f\u0440\u043e\u043c\u044b\u0432\u043a\u0430", section_frost: "\u0417\u0430\u0449\u0438\u0442\u0430 \u043e\u0442 \u0437\u0430\u043c\u0435\u0440\u0437\u0430\u043d\u0438\u044f", section_pool_alert: "\u0422\u0440\u0435\u0432\u043e\u0433\u0430", pool_line_water: "\u0412\u043e\u0434\u0430", pool_line_air: "\u0412\u043e\u0437\u0434\u0443\u0445", pool_line_filtered: "\u041e\u0442\u0444\u0438\u043b\u044c\u0442\u0440\u043e\u0432\u0430\u043d\u043e \u0441\u0435\u0433\u043e\u0434\u043d\u044f", pool_line_pressure: "\u0414\u0430\u0432\u043b\u0435\u043d\u0438\u0435", pool_line_chlorine: "\u041a\u0430\u043d\u0438\u0441\u0442\u0440\u0430 \u0445\u043b\u043e\u0440\u0430", pool_line_mode: "\u0420\u0435\u0436\u0438\u043c",
     door_corner: "\u041f\u043e\u043a\u0430\u0437\u044b\u0432\u0430\u0442\u044c \u0432 \u0443\u0433\u043b\u0443 \u043a\u0430\u0440\u0442\u043e\u0447\u043a\u0438", controls_always: "\u0412\u0441\u0435\u0433\u0434\u0430 \u043f\u043e\u043a\u0430\u0437\u044b\u0432\u0430\u0442\u044c \u0432\u0441\u0435 \u043a\u043d\u043e\u043f\u043a\u0438", show_unavailable_controls: "\u041f\u043e\u043a\u0430\u0437\u044b\u0432\u0430\u0442\u044c \u043a\u043d\u043e\u043f\u043a\u0438 \u043d\u0435\u0434\u043e\u0441\u0442\u0443\u043f\u043d\u044b\u0445 \u0441\u0443\u0449\u043d\u043e\u0441\u0442\u0435\u0439",
+    group_energy: "\u042d\u043d\u0435\u0440\u0433\u0438\u044f", type_solar: "\u0421\u043e\u043b\u043d\u0435\u0447\u043d\u044b\u0435 \u043f\u0430\u043d\u0435\u043b\u0438", type_home_battery: "\u0414\u043e\u043c\u0430\u0448\u043d\u0438\u0439 \u0430\u043a\u043a\u0443\u043c\u0443\u043b\u044f\u0442\u043e\u0440", solar_producing: "\u0412\u044b\u0440\u0430\u0431\u043e\u0442\u043a\u0430", solar_low: "\u0421\u043b\u0430\u0431\u0430\u044f \u0432\u044b\u0440\u0430\u0431\u043e\u0442\u043a\u0430", solar_night: "\u041d\u043e\u0447\u044c", section_solar_layout: "\u0423\u0441\u0442\u0430\u043d\u043e\u0432\u043a\u0430", layout_solar_ground: "\u041d\u0430 \u0437\u0435\u043c\u043b\u0435", layout_solar_roof: "\u041d\u0430 \u043a\u0440\u044b\u0448\u0435", section_solar_power: "\u0412\u044b\u0440\u0430\u0431\u0430\u0442\u044b\u0432\u0430\u0435\u043c\u0430\u044f \u043c\u043e\u0449\u043d\u043e\u0441\u0442\u044c", section_energy_today: "\u0412\u044b\u0440\u0430\u0431\u043e\u0442\u0430\u043d\u043e \u0441\u0435\u0433\u043e\u0434\u043d\u044f", solar_line_today: "\u0421\u0435\u0433\u043e\u0434\u043d\u044f", solar_peak_power: "\u041f\u0438\u043a\u043e\u0432\u0430\u044f \u043c\u043e\u0449\u043d\u043e\u0441\u0442\u044c \u043f\u0430\u043d\u0435\u043b\u0435\u0439 (\u0412\u0442)", section_battery_power: "\u041c\u043e\u0449\u043d\u043e\u0441\u0442\u044c \u0430\u043a\u043a\u0443\u043c\u0443\u043b\u044f\u0442\u043e\u0440\u0430 (+ \u0437\u0430\u0440\u044f\u0434, \u2212 \u0440\u0430\u0437\u0440\u044f\u0434)", power_inverted: "\u041f\u043e\u043b\u043e\u0436\u0438\u0442\u0435\u043b\u044c\u043d\u0430\u044f \u043c\u043e\u0449\u043d\u043e\u0441\u0442\u044c \u043e\u0437\u043d\u0430\u0447\u0430\u0435\u0442 \u0440\u0430\u0437\u0440\u044f\u0434", section_charge_power: "\u041c\u043e\u0449\u043d\u043e\u0441\u0442\u044c \u0437\u0430\u0440\u044f\u0434\u0430", section_battery_discharge: "\u041c\u043e\u0449\u043d\u043e\u0441\u0442\u044c \u0440\u0430\u0437\u0440\u044f\u0434\u0430", section_reserve: "\u0420\u0435\u0437\u0435\u0440\u0432\u043d\u044b\u0439 \u0437\u0430\u043f\u0430\u0441", section_charge_limit: "\u041f\u0440\u0435\u0434\u0435\u043b \u0437\u0430\u0440\u044f\u0434\u0430", battery_capacity: "\u0401\u043c\u043a\u043e\u0441\u0442\u044c (\u043a\u0412\u0442\u00b7\u0447)", layout_battery_wall: "\u041d\u0430\u0441\u0442\u0435\u043d\u043d\u044b\u0439 \u0430\u043a\u043a\u0443\u043c\u0443\u043b\u044f\u0442\u043e\u0440", layout_battery_station: "\u041f\u043e\u0440\u0442\u0430\u0442\u0438\u0432\u043d\u0430\u044f \u044d\u043b\u0435\u043a\u0442\u0440\u043e\u0441\u0442\u0430\u043d\u0446\u0438\u044f", bat_idle: "\u0412 \u043f\u043e\u043a\u043e\u0435", bat_full: "\u0417\u0430\u0440\u044f\u0436\u0435\u043d", bat_low: "\u041d\u0438\u0437\u043a\u0438\u0439 \u0437\u0430\u0440\u044f\u0434", bat_line_full_in: "\u041f\u043e\u043b\u043d\u044b\u0439 \u0447\u0435\u0440\u0435\u0437", bat_line_left: "\u041e\u0441\u0442\u0430\u043b\u043e\u0441\u044c", bat_line_reserve: "\u0420\u0435\u0437\u0435\u0440\u0432",
+    robot_controls: "\u041a\u043d\u043e\u043f\u043a\u0438 \u0441\u0442\u0430\u0440\u0442, \u043f\u0430\u0443\u0437\u0430 \u0438 \u0432\u043e\u0437\u0432\u0440\u0430\u0442", robot_go_home: "\u0412\u0435\u0440\u043d\u0443\u0442\u044c\u0441\u044f \u043d\u0430 \u0431\u0430\u0437\u0443", battery_corner: "\u041f\u043e\u043a\u0430\u0437\u044b\u0432\u0430\u0442\u044c \u0431\u0430\u0442\u0430\u0440\u0435\u044e \u0432 \u0443\u0433\u043b\u0443 \u043a\u0430\u0440\u0442\u043e\u0447\u043a\u0438", section_robot_floor: "\u041f\u043e\u043b", floor_rug: "\u041a\u043e\u0432\u0451\u0440", floor_tiles: "\u041f\u043b\u0438\u0442\u043a\u0430", floor_parquet: "\u041f\u0430\u0440\u043a\u0435\u0442", floor_smooth: "\u0413\u043b\u0430\u0434\u043a\u0438\u0439 \u043f\u043e\u043b",
     layout_net_router: "\u0420\u043e\u0443\u0442\u0435\u0440 / \u043c\u043e\u0434\u0435\u043c", section_net_clients: "\u041f\u043e\u0434\u043a\u043b\u044e\u0447\u0451\u043d\u043d\u044b\u0435 \u043a\u043b\u0438\u0435\u043d\u0442\u044b", section_net_wan: "\u041f\u043e\u0434\u043a\u043b\u044e\u0447\u0435\u043d\u0438\u0435 \u043a \u0438\u043d\u0442\u0435\u0440\u043d\u0435\u0442\u0443", section_net_wifi: "Wi-Fi", net_line_clients: "\u041a\u043b\u0438\u0435\u043d\u0442\u044b", net_no_internet: "\u041d\u0435\u0442 \u0438\u043d\u0442\u0435\u0440\u043d\u0435\u0442\u0430",
     section_purifier_layout: "\u041c\u043e\u0434\u0435\u043b\u044c", layout_purifier_cylinder: "\u0426\u0438\u043b\u0438\u043d\u0434\u0440", layout_purifier_box: "\u041a\u0432\u0430\u0434\u0440\u0430\u0442\u043d\u044b\u0439 \u043a\u043e\u0440\u043f\u0443\u0441", layout_purifier_ring: "\u0411\u0435\u0437\u043b\u043e\u043f\u0430\u0441\u0442\u043d\u043e\u0435 \u043a\u043e\u043b\u044c\u0446\u043e",
     pf_purifying: "\u041e\u0447\u0438\u0441\u0442\u043a\u0430", pf_auto: "\u0410\u0432\u0442\u043e", pf_night: "\u041d\u043e\u0447\u043d\u043e\u0439 \u0440\u0435\u0436\u0438\u043c", section_air_quality: "\u041a\u0430\u0447\u0435\u0441\u0442\u0432\u043e \u0432\u043e\u0437\u0434\u0443\u0445\u0430",
@@ -617,6 +623,8 @@ const T = {
     type_robot: "Roboter (Sauger, Wischer, M\u00e4her)", layout_robot_vacuum: "Saugroboter", layout_robot_mop: "Wischroboter", layout_robot_mower: "M\u00e4hroboter", section_robot_station: "Basis", robot_station_station: "Absaug- oder Waschstation", robot_station_base: "Nur Ladestation", robot_shelter: "Garage \u00fcber der Station", robot_charging: "L\u00e4dt", robot_docked: "In der Station", robot_cleaning: "Reinigt", robot_mopping: "Wischt", robot_mowing: "M\u00e4ht", robot_edgecut: "Kantenschnitt", robot_returning: "Kehrt zur Station zur\u00fcck", robot_emptying: "Beh\u00e4lter wird geleert", robot_bin_full: "Beh\u00e4lter voll", robot_washing: "Pads werden gewaschen", robot_drying: "Pads werden getrocknet", robot_water_empty: "Wassertank leer", robot_rain: "Regenpause", robot_idle: "Gestoppt", section_robot_status: "Detaillierter Status", section_battery: "Akku", section_robot_bin: "Beh\u00e4lter voll", section_robot_water: "Wassertank", section_robot_rain: "Regen", section_robot_error: "Fehler",
     type_pool_pump: "Poolpumpe", pool_filtering: "Filterung", pool_chlorinating: "Chlordosierung", pool_backwash: "R\u00fccksp\u00fclung", pool_frost: "Frostschutz", pool_light_on: "Licht an", section_water_temperature: "Wassertemperatur", section_air_temperature: "Lufttemperatur", section_ph: "pH", section_redox: "RedOx (ORP)", section_filtration_time: "Filterzeit heute", section_pressure: "Filterdruck", pool_pressure_alert: "Alarm \u00fcber diesem Druck (bar)", section_pool_mode: "Pumpenmodus", section_chlorine_pump: "Chlorpumpe", section_chlorine_level: "F\u00fcllstand Chlorkanister", section_backwash: "R\u00fccksp\u00fclung", section_frost: "Frostschutz", section_pool_alert: "Alarm", pool_line_water: "Wasser", pool_line_air: "Luft", pool_line_filtered: "Heute gefiltert", pool_line_pressure: "Druck", pool_line_chlorine: "Chlorkanister", pool_line_mode: "Modus",
     door_corner: "In einer Ecke der Karte anzeigen", controls_always: "Immer alle Tasten anzeigen", show_unavailable_controls: "Tasten mit nicht verf\u00fcgbarer Entit\u00e4t anzeigen",
+    group_energy: "Energie", type_solar: "Solarmodule", type_home_battery: "Heimspeicher", solar_producing: "Erzeugung", solar_low: "Geringe Erzeugung", solar_night: "Nacht", section_solar_layout: "Montage", layout_solar_ground: "Am Boden", layout_solar_roof: "Auf dem Dach", section_solar_power: "Erzeugte Leistung", section_energy_today: "Heute erzeugte Energie", solar_line_today: "Heute", solar_peak_power: "Spitzenleistung der Module (W)", section_battery_power: "Akkuleistung (+ Laden, \u2212 Entladen)", power_inverted: "Positive Leistung bedeutet Entladen", section_charge_power: "Ladeleistung", section_battery_discharge: "Entladeleistung", section_reserve: "Notstromreserve", section_charge_limit: "Ladegrenze", battery_capacity: "Kapazit\u00e4t (kWh)", layout_battery_wall: "Wandspeicher", layout_battery_station: "Powerstation", bat_idle: "Bereit", bat_full: "Voll", bat_low: "Akku schwach", bat_line_full_in: "Voll in", bat_line_left: "Verbleibend", bat_line_reserve: "Reserve",
+    robot_controls: "Tasten Start, Pause und R\u00fcckkehr", robot_go_home: "Zur Station zur\u00fcck", battery_corner: "Akku in einer Ecke der Karte anzeigen", section_robot_floor: "Boden", floor_rug: "Teppich", floor_tiles: "Fliesen", floor_parquet: "Parkett", floor_smooth: "Glatter Boden",
     layout_net_router: "Router / Box", section_net_clients: "Verbundene Ger\u00e4te", section_net_wan: "Internetverbindung", section_net_wifi: "WLAN", net_line_clients: "Ger\u00e4te", net_no_internet: "Kein Internet",
     section_purifier_layout: "Modell", layout_purifier_cylinder: "Zylinder", layout_purifier_box: "Quaderform", layout_purifier_ring: "Rotorloser Ring",
     pf_purifying: "Reinigt", pf_auto: "Auto", pf_night: "Nachtmodus", section_air_quality: "Luftqualit\u00e4t",
@@ -774,6 +782,8 @@ const T = {
     type_robot: "Robot (aspirador, fregasuelos, cortac\u00e9sped)", layout_robot_vacuum: "Robot aspirador", layout_robot_mop: "Robot fregasuelos", layout_robot_mower: "Robot cortac\u00e9sped", section_robot_station: "Base", robot_station_station: "Estaci\u00f3n de vaciado o lavado", robot_station_base: "Solo base de carga", robot_shelter: "Techo sobre la base", robot_charging: "Cargando", robot_docked: "En la base", robot_cleaning: "Limpiando", robot_mopping: "Fregando", robot_mowing: "Cortando", robot_edgecut: "Corte de bordes", robot_returning: "Volviendo a la base", robot_emptying: "Vaciando el dep\u00f3sito", robot_bin_full: "Dep\u00f3sito lleno", robot_washing: "Lavando las mopas", robot_drying: "Secando las mopas", robot_water_empty: "Dep\u00f3sito de agua vac\u00edo", robot_rain: "Pausa por lluvia", robot_idle: "Detenido", section_robot_status: "Estado detallado", section_battery: "Bater\u00eda", section_robot_bin: "Dep\u00f3sito lleno", section_robot_water: "Dep\u00f3sito de agua", section_robot_rain: "Lluvia", section_robot_error: "Error",
     type_pool_pump: "Bomba de piscina", pool_filtering: "Filtrando", pool_chlorinating: "Inyecci\u00f3n de cloro", pool_backwash: "Contralavado", pool_frost: "Antihielo", pool_light_on: "luz encendida", section_water_temperature: "Temperatura del agua", section_air_temperature: "Temperatura del aire", section_ph: "pH", section_redox: "RedOx (ORP)", section_filtration_time: "Tiempo de filtraci\u00f3n hoy", section_pressure: "Presi\u00f3n del filtro", pool_pressure_alert: "Alerta por encima de esta presi\u00f3n (bar)", section_pool_mode: "Modo de la bomba", section_chlorine_pump: "Bomba de cloro", section_chlorine_level: "Nivel del bid\u00f3n de cloro", section_backwash: "Contralavado", section_frost: "Antihielo", section_pool_alert: "Alerta", pool_line_water: "Agua", pool_line_air: "Aire", pool_line_filtered: "Filtrado hoy", pool_line_pressure: "Presi\u00f3n", pool_line_chlorine: "Bid\u00f3n de cloro", pool_line_mode: "Modo",
     door_corner: "Mostrarla en una esquina de la tarjeta", controls_always: "Mostrar siempre todos los botones", show_unavailable_controls: "Mostrar los botones cuya entidad no est\u00e1 disponible",
+    group_energy: "Energ\u00eda", type_solar: "Paneles solares", type_home_battery: "Bater\u00eda dom\u00e9stica", solar_producing: "Produciendo", solar_low: "Producci\u00f3n baja", solar_night: "Noche", section_solar_layout: "Instalaci\u00f3n", layout_solar_ground: "En el suelo", layout_solar_roof: "En un tejado", section_solar_power: "Potencia producida", section_energy_today: "Energ\u00eda producida hoy", solar_line_today: "Hoy", solar_peak_power: "Potencia pico de los paneles (W)", section_battery_power: "Potencia de la bater\u00eda (+ carga, \u2212 descarga)", power_inverted: "Una potencia positiva significa descarga", section_charge_power: "Potencia de carga", section_battery_discharge: "Potencia de descarga", section_reserve: "Reserva de respaldo", section_charge_limit: "L\u00edmite de carga", battery_capacity: "Capacidad (kWh)", layout_battery_wall: "Bater\u00eda de pared", layout_battery_station: "Estaci\u00f3n port\u00e1til", bat_idle: "En reposo", bat_full: "Llena", bat_low: "Bater\u00eda baja", bat_line_full_in: "Llena en", bat_line_left: "Restante", bat_line_reserve: "Reserva",
+    robot_controls: "Botones iniciar, pausa y volver", robot_go_home: "Volver a la base", battery_corner: "Mostrar la bater\u00eda en una esquina de la tarjeta", section_robot_floor: "Suelo", floor_rug: "Alfombra", floor_tiles: "Baldosas", floor_parquet: "Parqu\u00e9", floor_smooth: "Suelo liso",
     layout_net_router: "Router / box", section_net_clients: "Clientes conectados", section_net_wan: "Conexi\u00f3n a internet", section_net_wifi: "Wi-Fi", net_line_clients: "Clientes", net_no_internet: "Sin internet",
     section_purifier_layout: "Modelo", layout_purifier_cylinder: "Cilindro", layout_purifier_box: "Caja cuadrada", layout_purifier_ring: "Anillo sin aspas",
     pf_purifying: "Purificando", pf_auto: "Auto", pf_night: "Modo nocturno", section_air_quality: "Calidad del aire",
@@ -931,6 +941,8 @@ const T = {
     type_robot: "Robot (aspirapolvere, lavapavimenti, tosaerba)", layout_robot_vacuum: "Robot aspirapolvere", layout_robot_mop: "Robot lavapavimenti", layout_robot_mower: "Robot tosaerba", section_robot_station: "Base", robot_station_station: "Stazione di svuotamento o lavaggio", robot_station_base: "Solo base di ricarica", robot_shelter: "Tettoia sopra la base", robot_charging: "In carica", robot_docked: "Alla base", robot_cleaning: "Pulizia", robot_mopping: "Lavaggio", robot_mowing: "Taglio", robot_edgecut: "Taglio dei bordi", robot_returning: "Ritorno alla base", robot_emptying: "Svuotamento del contenitore", robot_bin_full: "Contenitore pieno", robot_washing: "Lavaggio dei panni", robot_drying: "Asciugatura dei panni", robot_water_empty: "Serbatoio dell'acqua vuoto", robot_rain: "Pausa pioggia", robot_idle: "Fermo", section_robot_status: "Stato dettagliato", section_battery: "Batteria", section_robot_bin: "Contenitore pieno", section_robot_water: "Serbatoio dell'acqua", section_robot_rain: "Pioggia", section_robot_error: "Errore",
     type_pool_pump: "Pompa piscina", pool_filtering: "Filtrazione", pool_chlorinating: "Iniezione di cloro", pool_backwash: "Controlavaggio", pool_frost: "Antigelo", pool_light_on: "luce accesa", section_water_temperature: "Temperatura dell'acqua", section_air_temperature: "Temperatura dell'aria", section_ph: "pH", section_redox: "RedOx (ORP)", section_filtration_time: "Tempo di filtrazione oggi", section_pressure: "Pressione del filtro", pool_pressure_alert: "Allarme sopra questa pressione (bar)", section_pool_mode: "Modalit\u00e0 della pompa", section_chlorine_pump: "Pompa del cloro", section_chlorine_level: "Livello della tanica di cloro", section_backwash: "Controlavaggio", section_frost: "Antigelo", section_pool_alert: "Allarme", pool_line_water: "Acqua", pool_line_air: "Aria", pool_line_filtered: "Filtrato oggi", pool_line_pressure: "Pressione", pool_line_chlorine: "Tanica di cloro", pool_line_mode: "Modalit\u00e0",
     door_corner: "Mostrarla in un angolo della scheda", controls_always: "Mostra sempre tutti i pulsanti", show_unavailable_controls: "Mostra i pulsanti con entit\u00e0 non disponibile",
+    group_energy: "Energia", type_solar: "Pannelli solari", type_home_battery: "Batteria domestica", solar_producing: "In produzione", solar_low: "Produzione bassa", solar_night: "Notte", section_solar_layout: "Installazione", layout_solar_ground: "A terra", layout_solar_roof: "Su un tetto", section_solar_power: "Potenza prodotta", section_energy_today: "Energia prodotta oggi", solar_line_today: "Oggi", solar_peak_power: "Potenza di picco dei pannelli (W)", section_battery_power: "Potenza della batteria (+ carica, \u2212 scarica)", power_inverted: "Una potenza positiva indica la scarica", section_charge_power: "Potenza di carica", section_battery_discharge: "Potenza di scarica", section_reserve: "Riserva di emergenza", section_charge_limit: "Limite di carica", battery_capacity: "Capacit\u00e0 (kWh)", layout_battery_wall: "Batteria a parete", layout_battery_station: "Power station portatile", bat_idle: "A riposo", bat_full: "Piena", bat_low: "Batteria bassa", bat_line_full_in: "Piena tra", bat_line_left: "Rimanente", bat_line_reserve: "Riserva",
+    robot_controls: "Pulsanti avvia, pausa e ritorno", robot_go_home: "Torna alla base", battery_corner: "Mostra la batteria in un angolo della scheda", section_robot_floor: "Pavimento", floor_rug: "Tappeto", floor_tiles: "Piastrelle", floor_parquet: "Parquet", floor_smooth: "Pavimento liscio",
     layout_net_router: "Router / modem", section_net_clients: "Client connessi", section_net_wan: "Connessione internet", section_net_wifi: "Wi-Fi", net_line_clients: "Client", net_no_internet: "Nessuna connessione",
     section_purifier_layout: "Modello", layout_purifier_cylinder: "Cilindro", layout_purifier_box: "Scatola quadrata", layout_purifier_ring: "Anello senza pale",
     pf_purifying: "Purificazione", pf_auto: "Auto", pf_night: "Modalit\u00e0 notte", section_air_quality: "Qualit\u00e0 dell'aria",
@@ -1088,6 +1100,8 @@ const T = {
     type_robot: "Robot (stofzuiger, dweil, maaier)", layout_robot_vacuum: "Robotstofzuiger", layout_robot_mop: "Dweilrobot", layout_robot_mower: "Robotmaaier", section_robot_station: "Basis", robot_station_station: "Leeg- of wasstation", robot_station_base: "Alleen laadstation", robot_shelter: "Afdak boven de basis", robot_charging: "Opladen", robot_docked: "In de basis", robot_cleaning: "Reinigen", robot_mopping: "Dweilen", robot_mowing: "Maaien", robot_edgecut: "Randen maaien", robot_returning: "Terug naar de basis", robot_emptying: "Bak legen", robot_bin_full: "Bak vol", robot_washing: "Pads wassen", robot_drying: "Pads drogen", robot_water_empty: "Waterreservoir leeg", robot_rain: "Regenpauze", robot_idle: "Gestopt", section_robot_status: "Gedetailleerde status", section_battery: "Batterij", section_robot_bin: "Bak vol", section_robot_water: "Waterreservoir", section_robot_rain: "Regen", section_robot_error: "Fout",
     type_pool_pump: "Zwembadpomp", pool_filtering: "Filteren", pool_chlorinating: "Chloorinjectie", pool_backwash: "Terugspoelen", pool_frost: "Vorstbeveiliging", pool_light_on: "licht aan", section_water_temperature: "Watertemperatuur", section_air_temperature: "Luchttemperatuur", section_ph: "pH", section_redox: "RedOx (ORP)", section_filtration_time: "Filtertijd vandaag", section_pressure: "Filterdruk", pool_pressure_alert: "Alarm boven deze druk (bar)", section_pool_mode: "Pompmodus", section_chlorine_pump: "Chloorpomp", section_chlorine_level: "Niveau chloorvat", section_backwash: "Terugspoelen", section_frost: "Vorstbeveiliging", section_pool_alert: "Alarm", pool_line_water: "Water", pool_line_air: "Lucht", pool_line_filtered: "Vandaag gefilterd", pool_line_pressure: "Druk", pool_line_chlorine: "Chloorvat", pool_line_mode: "Modus",
     door_corner: "In een hoek van de kaart tonen", controls_always: "Altijd alle knoppen tonen", show_unavailable_controls: "Knoppen tonen waarvan de entiteit niet beschikbaar is",
+    group_energy: "Energie", type_solar: "Zonnepanelen", type_home_battery: "Thuisbatterij", solar_producing: "Productie", solar_low: "Lage productie", solar_night: "Nacht", section_solar_layout: "Montage", layout_solar_ground: "Op de grond", layout_solar_roof: "Op een dak", section_solar_power: "Opgewekt vermogen", section_energy_today: "Vandaag opgewekte energie", solar_line_today: "Vandaag", solar_peak_power: "Piekvermogen van de panelen (W)", section_battery_power: "Batterijvermogen (+ laden, \u2212 ontladen)", power_inverted: "Positief vermogen betekent ontladen", section_charge_power: "Laadvermogen", section_battery_discharge: "Ontlaadvermogen", section_reserve: "Noodreserve", section_charge_limit: "Laadlimiet", battery_capacity: "Capaciteit (kWh)", layout_battery_wall: "Wandbatterij", layout_battery_station: "Draagbaar powerstation", bat_idle: "In rust", bat_full: "Vol", bat_low: "Batterij bijna leeg", bat_line_full_in: "Vol over", bat_line_left: "Resterend", bat_line_reserve: "Reserve",
+    robot_controls: "Knoppen start, pauze en terug", robot_go_home: "Terug naar de basis", battery_corner: "Batterij in een hoek van de kaart tonen", section_robot_floor: "Vloer", floor_rug: "Tapijt", floor_tiles: "Tegels", floor_parquet: "Parket", floor_smooth: "Gladde vloer",
     layout_net_router: "Router / modem", section_net_clients: "Verbonden apparaten", section_net_wan: "Internetverbinding", section_net_wifi: "Wifi", net_line_clients: "Apparaten", net_no_internet: "Geen internet",
     section_purifier_layout: "Model", layout_purifier_cylinder: "Cilinder", layout_purifier_box: "Vierkante kast", layout_purifier_ring: "Bladloze ring",
     pf_purifying: "Zuivert", pf_auto: "Auto", pf_night: "Nachtmodus", section_air_quality: "Luchtkwaliteit",
@@ -1245,6 +1259,8 @@ const T = {
     type_robot: "Rob\u00f4 (aspirador, mopa, corta-relva)", layout_robot_vacuum: "Rob\u00f4 aspirador", layout_robot_mop: "Rob\u00f4 de mopa", layout_robot_mower: "Rob\u00f4 corta-relva", section_robot_station: "Base", robot_station_station: "Esta\u00e7\u00e3o de esvaziamento ou lavagem", robot_station_base: "S\u00f3 base de carga", robot_shelter: "Abrigo sobre a base", robot_charging: "A carregar", robot_docked: "Na base", robot_cleaning: "A limpar", robot_mopping: "A passar a mopa", robot_mowing: "A cortar", robot_edgecut: "Corte de bordas", robot_returning: "A voltar \u00e0 base", robot_emptying: "A esvaziar o dep\u00f3sito", robot_bin_full: "Dep\u00f3sito cheio", robot_washing: "A lavar as mopas", robot_drying: "A secar as mopas", robot_water_empty: "Dep\u00f3sito de \u00e1gua vazio", robot_rain: "Pausa de chuva", robot_idle: "Parado", section_robot_status: "Estado detalhado", section_battery: "Bateria", section_robot_bin: "Dep\u00f3sito cheio", section_robot_water: "Dep\u00f3sito de \u00e1gua", section_robot_rain: "Chuva", section_robot_error: "Erro",
     type_pool_pump: "Bomba da piscina", pool_filtering: "A filtrar", pool_chlorinating: "Inje\u00e7\u00e3o de cloro", pool_backwash: "Contralavagem", pool_frost: "Antigelo", pool_light_on: "luz acesa", section_water_temperature: "Temperatura da \u00e1gua", section_air_temperature: "Temperatura do ar", section_ph: "pH", section_redox: "RedOx (ORP)", section_filtration_time: "Tempo de filtra\u00e7\u00e3o hoje", section_pressure: "Press\u00e3o do filtro", pool_pressure_alert: "Alerta acima desta press\u00e3o (bar)", section_pool_mode: "Modo da bomba", section_chlorine_pump: "Bomba de cloro", section_chlorine_level: "N\u00edvel do bid\u00e3o de cloro", section_backwash: "Contralavagem", section_frost: "Antigelo", section_pool_alert: "Alerta", pool_line_water: "\u00c1gua", pool_line_air: "Ar", pool_line_filtered: "Filtrado hoje", pool_line_pressure: "Press\u00e3o", pool_line_chlorine: "Bid\u00e3o de cloro", pool_line_mode: "Modo",
     door_corner: "Mostr\u00e1-la num canto do cart\u00e3o", controls_always: "Mostrar sempre todos os bot\u00f5es", show_unavailable_controls: "Mostrar bot\u00f5es cuja entidade est\u00e1 indispon\u00edvel",
+    group_energy: "Energia", type_solar: "Pain\u00e9is solares", type_home_battery: "Bateria dom\u00e9stica", solar_producing: "A produzir", solar_low: "Produ\u00e7\u00e3o baixa", solar_night: "Noite", section_solar_layout: "Instala\u00e7\u00e3o", layout_solar_ground: "No ch\u00e3o", layout_solar_roof: "Num telhado", section_solar_power: "Pot\u00eancia produzida", section_energy_today: "Energia produzida hoje", solar_line_today: "Hoje", solar_peak_power: "Pot\u00eancia de pico dos pain\u00e9is (W)", section_battery_power: "Pot\u00eancia da bateria (+ carga, \u2212 descarga)", power_inverted: "Uma pot\u00eancia positiva significa descarga", section_charge_power: "Pot\u00eancia de carga", section_battery_discharge: "Pot\u00eancia de descarga", section_reserve: "Reserva de emerg\u00eancia", section_charge_limit: "Limite de carga", battery_capacity: "Capacidade (kWh)", layout_battery_wall: "Bateria de parede", layout_battery_station: "Esta\u00e7\u00e3o port\u00e1til", bat_idle: "Em repouso", bat_full: "Cheia", bat_low: "Bateria fraca", bat_line_full_in: "Cheia em", bat_line_left: "Restante", bat_line_reserve: "Reserva",
+    robot_controls: "Bot\u00f5es iniciar, pausa e voltar", robot_go_home: "Voltar \u00e0 base", battery_corner: "Mostrar a bateria num canto do cart\u00e3o", section_robot_floor: "Ch\u00e3o", floor_rug: "Tapete", floor_tiles: "Azulejo", floor_parquet: "Parquet", floor_smooth: "Ch\u00e3o liso",
     layout_net_router: "Router / box", section_net_clients: "Clientes ligados", section_net_wan: "Liga\u00e7\u00e3o \u00e0 internet", section_net_wifi: "Wi-Fi", net_line_clients: "Clientes", net_no_internet: "Sem internet",
     section_purifier_layout: "Modelo", layout_purifier_cylinder: "Cilindro", layout_purifier_box: "Caixa quadrada", layout_purifier_ring: "Anel sem p\u00e1s",
     pf_purifying: "A purificar", pf_auto: "Auto", pf_night: "Modo noturno", section_air_quality: "Qualidade do ar",
@@ -1402,6 +1418,8 @@ const T = {
     type_robot: "Robot (dammsugare, mopp, gr\u00e4sklippare)", layout_robot_vacuum: "Robotdammsugare", layout_robot_mop: "Moppningsrobot", layout_robot_mower: "Robotgr\u00e4sklippare", section_robot_station: "Bas", robot_station_station: "T\u00f6mnings- eller tv\u00e4ttstation", robot_station_base: "Endast laddbas", robot_shelter: "Tak \u00f6ver basen", robot_charging: "Laddar", robot_docked: "I basen", robot_cleaning: "St\u00e4dar", robot_mopping: "Moppar", robot_mowing: "Klipper", robot_edgecut: "Kantklippning", robot_returning: "\u00c5terv\u00e4nder till basen", robot_emptying: "T\u00f6mmer beh\u00e5llaren", robot_bin_full: "Beh\u00e5llaren full", robot_washing: "Tv\u00e4ttar moppdukarna", robot_drying: "Torkar moppdukarna", robot_water_empty: "Vattentanken tom", robot_rain: "Regnpaus", robot_idle: "Stoppad", section_robot_status: "Detaljerad status", section_battery: "Batteri", section_robot_bin: "Beh\u00e5llaren full", section_robot_water: "Vattentank", section_robot_rain: "Regn", section_robot_error: "Fel",
     type_pool_pump: "Poolpump", pool_filtering: "Filtrerar", pool_chlorinating: "Klorinjektion", pool_backwash: "Backspolning", pool_frost: "Frostskydd", pool_light_on: "ljus p\u00e5", section_water_temperature: "Vattentemperatur", section_air_temperature: "Lufttemperatur", section_ph: "pH", section_redox: "RedOx (ORP)", section_filtration_time: "Filtreringstid idag", section_pressure: "Filtertryck", pool_pressure_alert: "Larm \u00f6ver detta tryck (bar)", section_pool_mode: "Pumpl\u00e4ge", section_chlorine_pump: "Klorpump", section_chlorine_level: "Niv\u00e5 i klordunken", section_backwash: "Backspolning", section_frost: "Frostskydd", section_pool_alert: "Larm", pool_line_water: "Vatten", pool_line_air: "Luft", pool_line_filtered: "Filtrerat idag", pool_line_pressure: "Tryck", pool_line_chlorine: "Klordunk", pool_line_mode: "L\u00e4ge",
     door_corner: "Visa i ett h\u00f6rn av kortet", controls_always: "Visa alltid alla knappar", show_unavailable_controls: "Visa knappar vars entitet inte \u00e4r tillg\u00e4nglig",
+    group_energy: "Energi", type_solar: "Solpaneler", type_home_battery: "Hembatteri", solar_producing: "Producerar", solar_low: "L\u00e5g produktion", solar_night: "Natt", section_solar_layout: "Montering", layout_solar_ground: "P\u00e5 marken", layout_solar_roof: "P\u00e5 ett tak", section_solar_power: "Producerad effekt", section_energy_today: "Producerad energi i dag", solar_line_today: "I dag", solar_peak_power: "Panelernas toppeffekt (W)", section_battery_power: "Batterieffekt (+ laddning, \u2212 urladdning)", power_inverted: "Positiv effekt betyder urladdning", section_charge_power: "Laddeffekt", section_battery_discharge: "Urladdningseffekt", section_reserve: "Reservkapacitet", section_charge_limit: "Laddgr\u00e4ns", battery_capacity: "Kapacitet (kWh)", layout_battery_wall: "V\u00e4ggbatteri", layout_battery_station: "B\u00e4rbar kraftstation", bat_idle: "Vilar", bat_full: "Fullt", bat_low: "L\u00e5gt batteri", bat_line_full_in: "Fullt om", bat_line_left: "\u00c5terst\u00e5r", bat_line_reserve: "Reserv",
+    robot_controls: "Knappar start, paus och \u00e5terg\u00e5", robot_go_home: "\u00c5ter till basen", battery_corner: "Visa batteriet i ett h\u00f6rn av kortet", section_robot_floor: "Golv", floor_rug: "Matta", floor_tiles: "Kakel", floor_parquet: "Parkett", floor_smooth: "Sl\u00e4tt golv",
     layout_net_router: "Router / box", section_net_clients: "Anslutna enheter", section_net_wan: "Internetanslutning", section_net_wifi: "Wi-Fi", net_line_clients: "Enheter", net_no_internet: "Inget internet",
     section_purifier_layout: "Modell", layout_purifier_cylinder: "Cylinder", layout_purifier_box: "Fyrkantig", layout_purifier_ring: "Bladl\u00f6s ring",
     pf_purifying: "Renar", pf_auto: "Auto", pf_night: "Nattl\u00e4ge", section_air_quality: "Luftkvalitet",
@@ -1559,6 +1577,8 @@ const T = {
     type_robot: "Robot (st\u00f8vsuger, mopp, gressklipper)", layout_robot_vacuum: "Robotst\u00f8vsuger", layout_robot_mop: "Moppe-robot", layout_robot_mower: "Robotgressklipper", section_robot_station: "Base", robot_station_station: "T\u00f8mme- eller vaskestasjon", robot_station_base: "Bare ladebase", robot_shelter: "Tak over basen", robot_charging: "Lader", robot_docked: "I basen", robot_cleaning: "Rengj\u00f8r", robot_mopping: "Mopper", robot_mowing: "Klipper", robot_edgecut: "Kantklipping", robot_returning: "Returnerer til basen", robot_emptying: "T\u00f8mmer beholderen", robot_bin_full: "Beholderen full", robot_washing: "Vasker moppeputene", robot_drying: "T\u00f8rker moppeputene", robot_water_empty: "Vanntanken tom", robot_rain: "Regnpause", robot_idle: "Stoppet", section_robot_status: "Detaljert status", section_battery: "Batteri", section_robot_bin: "Beholderen full", section_robot_water: "Vanntank", section_robot_rain: "Regn", section_robot_error: "Feil",
     type_pool_pump: "Bassengpumpe", pool_filtering: "Filtrerer", pool_chlorinating: "Klorinjeksjon", pool_backwash: "Tilbakespyling", pool_frost: "Frostbeskyttelse", pool_light_on: "lys p\u00e5", section_water_temperature: "Vanntemperatur", section_air_temperature: "Lufttemperatur", section_ph: "pH", section_redox: "RedOx (ORP)", section_filtration_time: "Filtreringstid i dag", section_pressure: "Filtertrykk", pool_pressure_alert: "Alarm over dette trykket (bar)", section_pool_mode: "Pumpemodus", section_chlorine_pump: "Klorpumpe", section_chlorine_level: "Niv\u00e5 i klorkanne", section_backwash: "Tilbakespyling", section_frost: "Frostbeskyttelse", section_pool_alert: "Alarm", pool_line_water: "Vann", pool_line_air: "Luft", pool_line_filtered: "Filtrert i dag", pool_line_pressure: "Trykk", pool_line_chlorine: "Klorkanne", pool_line_mode: "Modus",
     door_corner: "Vis i et hj\u00f8rne av kortet", controls_always: "Vis alltid alle knapper", show_unavailable_controls: "Vis knapper der entiteten ikke er tilgjengelig",
+    group_energy: "Energi", type_solar: "Solcellepaneler", type_home_battery: "Hjemmebatteri", solar_producing: "Produserer", solar_low: "Lav produksjon", solar_night: "Natt", section_solar_layout: "Montering", layout_solar_ground: "P\u00e5 bakken", layout_solar_roof: "P\u00e5 et tak", section_solar_power: "Produsert effekt", section_energy_today: "Produsert energi i dag", solar_line_today: "I dag", solar_peak_power: "Panelenes toppeffekt (W)", section_battery_power: "Batterieffekt (+ lading, \u2212 utlading)", power_inverted: "Positiv effekt betyr utlading", section_charge_power: "Ladeeffekt", section_battery_discharge: "Utladingseffekt", section_reserve: "Reservekapasitet", section_charge_limit: "Ladegrense", battery_capacity: "Kapasitet (kWh)", layout_battery_wall: "Veggbatteri", layout_battery_station: "B\u00e6rbar kraftstasjon", bat_idle: "Hviler", bat_full: "Fullt", bat_low: "Lavt batteri", bat_line_full_in: "Fullt om", bat_line_left: "Gjenst\u00e5r", bat_line_reserve: "Reserve",
+    robot_controls: "Knapper start, pause og retur", robot_go_home: "Tilbake til basen", battery_corner: "Vis batteriet i et hj\u00f8rne av kortet", section_robot_floor: "Gulv", floor_rug: "Teppe", floor_tiles: "Fliser", floor_parquet: "Parkett", floor_smooth: "Glatt gulv",
     layout_net_router: "Ruter / boks", section_net_clients: "Tilkoblede enheter", section_net_wan: "Internettforbindelse", section_net_wifi: "Wi-Fi", net_line_clients: "Enheter", net_no_internet: "Ingen internett",
     section_purifier_layout: "Modell", layout_purifier_cylinder: "Sylinder", layout_purifier_box: "Firkantet", layout_purifier_ring: "Vingel\u00f8s ring",
     pf_purifying: "Renser", pf_auto: "Auto", pf_night: "Nattmodus", section_air_quality: "Luftkvalitet",
@@ -1716,6 +1736,8 @@ const T = {
     type_robot: "Robot (st\u00f8vsuger, moppe, pl\u00e6neklipper)", layout_robot_vacuum: "Robotst\u00f8vsuger", layout_robot_mop: "Mopperobot", layout_robot_mower: "Robotpl\u00e6neklipper", section_robot_station: "Base", robot_station_station: "T\u00f8mnings- eller vaskestation", robot_station_base: "Kun ladebase", robot_shelter: "Tag over basen", robot_charging: "Lader", robot_docked: "I basen", robot_cleaning: "Rensning", robot_mopping: "Mopper", robot_mowing: "Sl\u00e5r", robot_edgecut: "Kantklipning", robot_returning: "Vender tilbage til basen", robot_emptying: "T\u00f8mmer beholderen", robot_bin_full: "Beholderen fuld", robot_washing: "Vasker moppepuderne", robot_drying: "T\u00f8rrer moppepuderne", robot_water_empty: "Vandtanken tom", robot_rain: "Regnpause", robot_idle: "Stoppet", section_robot_status: "Detaljeret status", section_battery: "Batteri", section_robot_bin: "Beholderen fuld", section_robot_water: "Vandtank", section_robot_rain: "Regn", section_robot_error: "Fejl",
     type_pool_pump: "Poolpumpe", pool_filtering: "Filtrerer", pool_chlorinating: "Klorinjektion", pool_backwash: "Returskylning", pool_frost: "Frostbeskyttelse", pool_light_on: "lys t\u00e6ndt", section_water_temperature: "Vandtemperatur", section_air_temperature: "Lufttemperatur", section_ph: "pH", section_redox: "RedOx (ORP)", section_filtration_time: "Filtreringstid i dag", section_pressure: "Filtertryk", pool_pressure_alert: "Alarm over dette tryk (bar)", section_pool_mode: "Pumpetilstand", section_chlorine_pump: "Klorpumpe", section_chlorine_level: "Niveau i klordunk", section_backwash: "Returskylning", section_frost: "Frostbeskyttelse", section_pool_alert: "Alarm", pool_line_water: "Vand", pool_line_air: "Luft", pool_line_filtered: "Filtreret i dag", pool_line_pressure: "Tryk", pool_line_chlorine: "Klordunk", pool_line_mode: "Tilstand",
     door_corner: "Vis i et hj\u00f8rne af kortet", controls_always: "Vis altid alle knapper", show_unavailable_controls: "Vis knapper, hvis entitet ikke er tilg\u00e6ngelig",
+    group_energy: "Energi", type_solar: "Solpaneler", type_home_battery: "Hjemmebatteri", solar_producing: "Producerer", solar_low: "Lav produktion", solar_night: "Nat", section_solar_layout: "Montering", layout_solar_ground: "P\u00e5 jorden", layout_solar_roof: "P\u00e5 et tag", section_solar_power: "Produceret effekt", section_energy_today: "Produceret energi i dag", solar_line_today: "I dag", solar_peak_power: "Panelernes spidseffekt (W)", section_battery_power: "Batterieffekt (+ opladning, \u2212 afladning)", power_inverted: "Positiv effekt betyder afladning", section_charge_power: "Ladeeffekt", section_battery_discharge: "Afladningseffekt", section_reserve: "N\u00f8dreserve", section_charge_limit: "Opladningsgr\u00e6nse", battery_capacity: "Kapacitet (kWh)", layout_battery_wall: "V\u00e6gbatteri", layout_battery_station: "B\u00e6rbar powerstation", bat_idle: "I hvile", bat_full: "Fuldt", bat_low: "Lavt batteri", bat_line_full_in: "Fuldt om", bat_line_left: "Tilbage", bat_line_reserve: "Reserve",
+    robot_controls: "Knapper start, pause og retur", robot_go_home: "Tilbage til basen", battery_corner: "Vis batteriet i et hj\u00f8rne af kortet", section_robot_floor: "Gulv", floor_rug: "T\u00e6ppe", floor_tiles: "Fliser", floor_parquet: "Parket", floor_smooth: "Glat gulv",
     layout_net_router: "Router / boks", section_net_clients: "Tilsluttede enheder", section_net_wan: "Internetforbindelse", section_net_wifi: "Wi-Fi", net_line_clients: "Enheder", net_no_internet: "Intet internet",
     section_purifier_layout: "Model", layout_purifier_cylinder: "Cylinder", layout_purifier_box: "Firkantet", layout_purifier_ring: "Vingel\u00f8s ring",
     pf_purifying: "Renser", pf_auto: "Auto", pf_night: "Nattilstand", section_air_quality: "Luftkvalitet",
@@ -1873,6 +1895,8 @@ const T = {
     type_robot: "Robot (odkurzacz, mop, kosiarka)", layout_robot_vacuum: "Robot odkurzaj\u0105cy", layout_robot_mop: "Robot mopuj\u0105cy", layout_robot_mower: "Robot kosz\u0105cy", section_robot_station: "Baza", robot_station_station: "Stacja opr\u00f3\u017cniania lub mycia", robot_station_base: "Tylko baza \u0142aduj\u0105ca", robot_shelter: "Daszek nad baz\u0105", robot_charging: "\u0141adowanie", robot_docked: "W bazie", robot_cleaning: "Sprz\u0105tanie", robot_mopping: "Mopowanie", robot_mowing: "Koszenie", robot_edgecut: "Przycinanie kraw\u0119dzi", robot_returning: "Powr\u00f3t do bazy", robot_emptying: "Opr\u00f3\u017cnianie pojemnika", robot_bin_full: "Pojemnik pe\u0142ny", robot_washing: "Mycie nak\u0142adek", robot_drying: "Suszenie nak\u0142adek", robot_water_empty: "Pusty zbiornik wody", robot_rain: "Przerwa z powodu deszczu", robot_idle: "Zatrzymany", section_robot_status: "Szczeg\u00f3\u0142owy stan", section_battery: "Bateria", section_robot_bin: "Pojemnik pe\u0142ny", section_robot_water: "Zbiornik wody", section_robot_rain: "Deszcz", section_robot_error: "B\u0142\u0105d",
     type_pool_pump: "Pompa basenowa", pool_filtering: "Filtracja", pool_chlorinating: "Dozowanie chloru", pool_backwash: "P\u0142ukanie wsteczne", pool_frost: "Ochrona przed mrozem", pool_light_on: "\u015bwiat\u0142o w\u0142\u0105czone", section_water_temperature: "Temperatura wody", section_air_temperature: "Temperatura powietrza", section_ph: "pH", section_redox: "RedOx (ORP)", section_filtration_time: "Czas filtracji dzi\u015b", section_pressure: "Ci\u015bnienie filtra", pool_pressure_alert: "Alarm powy\u017cej tego ci\u015bnienia (bar)", section_pool_mode: "Tryb pompy", section_chlorine_pump: "Pompa chloru", section_chlorine_level: "Poziom w kanistrze chloru", section_backwash: "P\u0142ukanie wsteczne", section_frost: "Ochrona przed mrozem", section_pool_alert: "Alarm", pool_line_water: "Woda", pool_line_air: "Powietrze", pool_line_filtered: "Przefiltrowano dzi\u015b", pool_line_pressure: "Ci\u015bnienie", pool_line_chlorine: "Kanister chloru", pool_line_mode: "Tryb",
     door_corner: "Poka\u017c w rogu karty", controls_always: "Zawsze pokazuj wszystkie przyciski", show_unavailable_controls: "Poka\u017c przyciski niedost\u0119pnych encji",
+    group_energy: "Energia", type_solar: "Panele s\u0142oneczne", type_home_battery: "Magazyn energii", solar_producing: "Produkcja", solar_low: "Niska produkcja", solar_night: "Noc", section_solar_layout: "Monta\u017c", layout_solar_ground: "Na ziemi", layout_solar_roof: "Na dachu", section_solar_power: "Moc produkowana", section_energy_today: "Energia wyprodukowana dzi\u015b", solar_line_today: "Dzi\u015b", solar_peak_power: "Moc szczytowa paneli (W)", section_battery_power: "Moc akumulatora (+ \u0142adowanie, \u2212 roz\u0142adowanie)", power_inverted: "Dodatnia moc oznacza roz\u0142adowanie", section_charge_power: "Moc \u0142adowania", section_battery_discharge: "Moc roz\u0142adowania", section_reserve: "Rezerwa awaryjna", section_charge_limit: "Limit \u0142adowania", battery_capacity: "Pojemno\u015b\u0107 (kWh)", layout_battery_wall: "Akumulator \u015bcienny", layout_battery_station: "Przeno\u015bna stacja zasilania", bat_idle: "Spoczynek", bat_full: "Pe\u0142ny", bat_low: "Niski poziom baterii", bat_line_full_in: "Pe\u0142ny za", bat_line_left: "Pozosta\u0142o", bat_line_reserve: "Rezerwa",
+    robot_controls: "Przyciski start, pauza i powr\u00f3t", robot_go_home: "Powr\u00f3t do bazy", battery_corner: "Poka\u017c bateri\u0119 w rogu karty", section_robot_floor: "Pod\u0142oga", floor_rug: "Dywan", floor_tiles: "P\u0142ytki", floor_parquet: "Parkiet", floor_smooth: "G\u0142adka pod\u0142oga",
     layout_net_router: "Router / modem", section_net_clients: "Pod\u0142\u0105czone urz\u0105dzenia", section_net_wan: "Po\u0142\u0105czenie z internetem", section_net_wifi: "Wi-Fi", net_line_clients: "Urz\u0105dzenia", net_no_internet: "Brak internetu",
     section_purifier_layout: "Model", layout_purifier_cylinder: "Walec", layout_purifier_box: "Kwadratowa obudowa", layout_purifier_ring: "Pier\u015bcie\u0144 bez \u0142opatek",
     pf_purifying: "Oczyszczanie", pf_auto: "Auto", pf_night: "Tryb nocny", section_air_quality: "Jako\u015b\u0107 powietrza",
@@ -2030,6 +2054,8 @@ const T = {
     type_robot: "\u673a\u5668\u4eba\uff08\u626b\u5730\u3001\u62d6\u5730\u3001\u5272\u8349\uff09", layout_robot_vacuum: "\u626b\u5730\u673a\u5668\u4eba", layout_robot_mop: "\u62d6\u5730\u673a\u5668\u4eba", layout_robot_mower: "\u5272\u8349\u673a\u5668\u4eba", section_robot_station: "\u5e95\u5ea7", robot_station_station: "\u96c6\u5c18\u6216\u6e05\u6d17\u57fa\u7ad9", robot_station_base: "\u4ec5\u5145\u7535\u5ea7", robot_shelter: "\u5e95\u5ea7\u906e\u68da", robot_charging: "\u5145\u7535\u4e2d", robot_docked: "\u5728\u5e95\u5ea7", robot_cleaning: "\u6e05\u626b\u4e2d", robot_mopping: "\u62d6\u5730\u4e2d", robot_mowing: "\u5272\u8349\u4e2d", robot_edgecut: "\u4fee\u8fb9", robot_returning: "\u6b63\u5728\u56de\u5145", robot_emptying: "\u6b63\u5728\u96c6\u5c18", robot_bin_full: "\u5c18\u76d2\u5df2\u6ee1", robot_washing: "\u6b63\u5728\u6e05\u6d17\u62d6\u5e03", robot_drying: "\u6b63\u5728\u70d8\u5e72\u62d6\u5e03", robot_water_empty: "\u6c34\u7bb1\u7f3a\u6c34", robot_rain: "\u96e8\u5929\u6682\u505c", robot_idle: "\u5df2\u505c\u6b62", section_robot_status: "\u8be6\u7ec6\u72b6\u6001", section_battery: "\u7535\u91cf", section_robot_bin: "\u5c18\u76d2\u5df2\u6ee1", section_robot_water: "\u6c34\u7bb1", section_robot_rain: "\u4e0b\u96e8", section_robot_error: "\u9519\u8bef",
     type_pool_pump: "\u6cf3\u6c60\u6cf5", pool_filtering: "\u8fc7\u6ee4\u4e2d", pool_chlorinating: "\u52a0\u6c2f\u4e2d", pool_backwash: "\u53cd\u51b2\u6d17", pool_frost: "\u9632\u51bb", pool_light_on: "\u706f\u5df2\u5f00", section_water_temperature: "\u6c34\u6e29", section_air_temperature: "\u6c14\u6e29", section_ph: "pH", section_redox: "RedOx (ORP)", section_filtration_time: "\u4eca\u65e5\u8fc7\u6ee4\u65f6\u957f", section_pressure: "\u8fc7\u6ee4\u5668\u538b\u529b", pool_pressure_alert: "\u9ad8\u4e8e\u6b64\u538b\u529b\u62a5\u8b66 (bar)", section_pool_mode: "\u6cf5\u6a21\u5f0f", section_chlorine_pump: "\u52a0\u6c2f\u6cf5", section_chlorine_level: "\u6c2f\u6876\u6db2\u4f4d", section_backwash: "\u53cd\u51b2\u6d17", section_frost: "\u9632\u51bb", section_pool_alert: "\u62a5\u8b66", pool_line_water: "\u6c34", pool_line_air: "\u7a7a\u6c14", pool_line_filtered: "\u4eca\u65e5\u5df2\u8fc7\u6ee4", pool_line_pressure: "\u538b\u529b", pool_line_chlorine: "\u6c2f\u6876", pool_line_mode: "\u6a21\u5f0f",
     door_corner: "\u663e\u793a\u5728\u5361\u7247\u89d2\u843d", controls_always: "\u59cb\u7ec8\u663e\u793a\u6240\u6709\u6309\u94ae", show_unavailable_controls: "\u663e\u793a\u5b9e\u4f53\u4e0d\u53ef\u7528\u7684\u6309\u94ae",
+    group_energy: "\u80fd\u6e90", type_solar: "\u592a\u9633\u80fd\u677f", type_home_battery: "\u5bb6\u7528\u7535\u6c60", solar_producing: "\u53d1\u7535\u4e2d", solar_low: "\u53d1\u7535\u8f83\u5f31", solar_night: "\u591c\u95f4", section_solar_layout: "\u5b89\u88c5\u65b9\u5f0f", layout_solar_ground: "\u5730\u9762", layout_solar_roof: "\u5c4b\u9876", section_solar_power: "\u53d1\u7535\u529f\u7387", section_energy_today: "\u4eca\u65e5\u53d1\u7535\u91cf", solar_line_today: "\u4eca\u65e5", solar_peak_power: "\u9762\u677f\u5cf0\u503c\u529f\u7387 (W)", section_battery_power: "\u7535\u6c60\u529f\u7387\uff08+ \u5145\u7535\uff0c\u2212 \u653e\u7535\uff09", power_inverted: "\u6b63\u529f\u7387\u8868\u793a\u653e\u7535", section_charge_power: "\u5145\u7535\u529f\u7387", section_battery_discharge: "\u653e\u7535\u529f\u7387", section_reserve: "\u5907\u7528\u7535\u91cf", section_charge_limit: "\u5145\u7535\u4e0a\u9650", battery_capacity: "\u5bb9\u91cf (kWh)", layout_battery_wall: "\u58c1\u6302\u7535\u6c60", layout_battery_station: "\u4fbf\u643a\u7535\u6e90\u7ad9", bat_idle: "\u5f85\u673a", bat_full: "\u5df2\u5145\u6ee1", bat_low: "\u7535\u91cf\u4f4e", bat_line_full_in: "\u5145\u6ee1\u8fd8\u9700", bat_line_left: "\u5269\u4f59", bat_line_reserve: "\u5907\u7528",
+    robot_controls: "\u5f00\u59cb\u3001\u6682\u505c\u548c\u56de\u5145\u6309\u94ae", robot_go_home: "\u56de\u5145", battery_corner: "\u5728\u5361\u7247\u89d2\u843d\u663e\u793a\u7535\u91cf", section_robot_floor: "\u5730\u9762", floor_rug: "\u5730\u6bef", floor_tiles: "\u74f7\u7816", floor_parquet: "\u6728\u5730\u677f", floor_smooth: "\u5149\u6ed1\u5730\u9762",
     layout_net_router: "\u8def\u7531\u5668 / \u5149\u732b", section_net_clients: "\u5df2\u8fde\u63a5\u8bbe\u5907", section_net_wan: "\u4e92\u8054\u7f51\u8fde\u63a5", section_net_wifi: "Wi-Fi", net_line_clients: "\u8bbe\u5907", net_no_internet: "\u65e0\u7f51\u7edc",
     section_purifier_layout: "\u578b\u53f7", layout_purifier_cylinder: "\u5706\u67f1\u5f62", layout_purifier_box: "\u65b9\u5f62", layout_purifier_ring: "\u65e0\u53f6\u73af\u5f62",
     pf_purifying: "\u51c0\u5316\u4e2d", pf_auto: "\u81ea\u52a8", pf_night: "\u591c\u95f4\u6a21\u5f0f", section_air_quality: "\u7a7a\u6c14\u8d28\u91cf",
@@ -2187,6 +2213,8 @@ const T = {
     type_robot: "Robot (vysava\u010d, mop, seka\u010dka)", layout_robot_vacuum: "Robotick\u00fd vysava\u010d", layout_robot_mop: "Mopovac\u00ed robot", layout_robot_mower: "Robotick\u00e1 seka\u010dka", section_robot_station: "Z\u00e1kladna", robot_station_station: "Vys\u00e1vac\u00ed nebo myc\u00ed stanice", robot_station_base: "Jen nab\u00edjec\u00ed z\u00e1kladna", robot_shelter: "St\u0159\u00ed\u0161ka nad z\u00e1kladnou", robot_charging: "Nab\u00edj\u00ed se", robot_docked: "V z\u00e1kladn\u011b", robot_cleaning: "Ukl\u00edz\u00ed", robot_mopping: "Mopuje", robot_mowing: "Seka\u010d\u00ed", robot_edgecut: "Za\u0159ez\u00e1v\u00e1n\u00ed okraj\u016f", robot_returning: "N\u00e1vrat do z\u00e1kladny", robot_emptying: "Vyprazd\u0148ov\u00e1n\u00ed n\u00e1doby", robot_bin_full: "N\u00e1doba pln\u00e1", robot_washing: "Myt\u00ed mop\u016f", robot_drying: "Su\u0161en\u00ed mop\u016f", robot_water_empty: "N\u00e1dr\u017e na vodu pr\u00e1zdn\u00e1", robot_rain: "Pauza kv\u016fli de\u0161ti", robot_idle: "Zastaveno", section_robot_status: "Podrobn\u00fd stav", section_battery: "Baterie", section_robot_bin: "N\u00e1doba pln\u00e1", section_robot_water: "N\u00e1dr\u017e na vodu", section_robot_rain: "D\u00e9\u0161\u0165", section_robot_error: "Chyba",
     type_pool_pump: "Baz\u00e9nov\u00e9 \u010derpadlo", pool_filtering: "Filtrace", pool_chlorinating: "D\u00e1vkov\u00e1n\u00ed chloru", pool_backwash: "Zp\u011btn\u00fd proplach", pool_frost: "Ochrana proti mrazu", pool_light_on: "sv\u011btlo zapnuto", section_water_temperature: "Teplota vody", section_air_temperature: "Teplota vzduchu", section_ph: "pH", section_redox: "RedOx (ORP)", section_filtration_time: "Doba filtrace dnes", section_pressure: "Tlak filtru", pool_pressure_alert: "V\u00fdstraha nad t\u00edmto tlakem (bar)", section_pool_mode: "Re\u017eim \u010derpadla", section_chlorine_pump: "\u010cerpadlo chloru", section_chlorine_level: "Hladina v kanystru chloru", section_backwash: "Zp\u011btn\u00fd proplach", section_frost: "Ochrana proti mrazu", section_pool_alert: "V\u00fdstraha", pool_line_water: "Voda", pool_line_air: "Vzduch", pool_line_filtered: "Dnes p\u0159efiltrov\u00e1no", pool_line_pressure: "Tlak", pool_line_chlorine: "Kanystr chloru", pool_line_mode: "Re\u017eim",
     door_corner: "Zobrazit v rohu karty", controls_always: "V\u017edy zobrazit v\u0161echna tla\u010d\u00edtka", show_unavailable_controls: "Zobrazit tla\u010d\u00edtka nedostupn\u00fdch entit",
+    group_energy: "Energie", type_solar: "Sol\u00e1rn\u00ed panely", type_home_battery: "Dom\u00e1c\u00ed baterie", solar_producing: "V\u00fdroba", solar_low: "N\u00edzk\u00e1 v\u00fdroba", solar_night: "Noc", section_solar_layout: "Mont\u00e1\u017e", layout_solar_ground: "Na zemi", layout_solar_roof: "Na st\u0159e\u0161e", section_solar_power: "Vyr\u00e1b\u011bn\u00fd v\u00fdkon", section_energy_today: "Dnes vyroben\u00e1 energie", solar_line_today: "Dnes", solar_peak_power: "\u0160pi\u010dkov\u00fd v\u00fdkon panel\u016f (W)", section_battery_power: "V\u00fdkon baterie (+ nab\u00edjen\u00ed, \u2212 vyb\u00edjen\u00ed)", power_inverted: "Kladn\u00fd v\u00fdkon znamen\u00e1 vyb\u00edjen\u00ed", section_charge_power: "Nab\u00edjec\u00ed v\u00fdkon", section_battery_discharge: "Vyb\u00edjec\u00ed v\u00fdkon", section_reserve: "Z\u00e1lo\u017en\u00ed rezerva", section_charge_limit: "Limit nab\u00edjen\u00ed", battery_capacity: "Kapacita (kWh)", layout_battery_wall: "N\u00e1st\u011bnn\u00e1 baterie", layout_battery_station: "P\u0159enosn\u00e1 elektr\u00e1rna", bat_idle: "V klidu", bat_full: "Pln\u00e1", bat_low: "Slab\u00e1 baterie", bat_line_full_in: "Pln\u00e1 za", bat_line_left: "Zb\u00fdv\u00e1", bat_line_reserve: "Rezerva",
+    robot_controls: "Tla\u010d\u00edtka start, pauza a n\u00e1vrat", robot_go_home: "N\u00e1vrat do z\u00e1kladny", battery_corner: "Zobrazit baterii v rohu karty", section_robot_floor: "Podlaha", floor_rug: "Koberec", floor_tiles: "Dla\u017edice", floor_parquet: "Parkety", floor_smooth: "Hladk\u00e1 podlaha",
     layout_net_router: "Router / modem", section_net_clients: "P\u0159ipojen\u00e1 za\u0159\u00edzen\u00ed", section_net_wan: "P\u0159ipojen\u00ed k internetu", section_net_wifi: "Wi-Fi", net_line_clients: "Za\u0159\u00edzen\u00ed", net_no_internet: "Bez internetu",
     section_purifier_layout: "Model", layout_purifier_cylinder: "V\u00e1lec", layout_purifier_box: "Hranat\u00e1 sk\u0159\u00ed\u0148", layout_purifier_ring: "Bezlopatkov\u00fd prstenec",
     pf_purifying: "\u010cist\u00ed", pf_auto: "Auto", pf_night: "No\u010dn\u00ed re\u017eim", section_air_quality: "Kvalita vzduchu",
@@ -4323,6 +4351,19 @@ const PHASE_ENTITY_RE = /program.?phase|cycle.?phase|job.?state|pr.?phase|machin
 // Suggested only for the types that can actually use them, so a washing
 // machine doesn't end up with a "filter life" field pre-filled.
 const TYPE_AUTO_PATTERNS = {
+  solar: {
+    power_entity: /(solar|pv|production|produced|inverter|onduleur).*(power|watt)|(power|watt).*(solar|pv)/i,
+    energy_today_entity: /(today|daily|aujourd|heute|_day_|jour).*(energy|kwh|production|yield)|(energy|production|yield).*(today|daily|aujourd|heute|jour)/i,
+    solar_alert_entity: /error|fault|alarm|defaut/i,
+  },
+  home_battery: {
+    battery_entity: /battery_?level|state_?of_?charge|(^|[._])soc([._]|$)|batter/i,
+    charge_power_entity: /^(?!.*dis)(?!.*out).*(charg|input|_in_|total_in).*(power|watt)/i,
+    discharge_power_entity: /(discharg|output|_out_|total_out).*(power|watt)/i,
+    reserve_entity: /reserve|backup/i,
+    charge_limit_entity: /charge_?limit|max_?charge|charge_?level_?max/i,
+    battery_alert_entity: /error|fault|alarm|defaut/i,
+  },
   pool_pump: {
     water_temperature_entity: /(water|eau|wasser|agua|acqua).*temp|temp.*(water|eau|wasser|agua|acqua)/i,
     air_temperature_entity: /(air|luft|aire|aria).*temp|temp.*(air|luft|aire|aria)/i,
@@ -4743,6 +4784,12 @@ const TYPE_CAPS = {
   // A pool pump: it filters, rests, backwashes or keeps the frost out, and its
   // pool has a light.
   pool_pump: { poolPump: true, light: true },
+  // Solar panels: they produce, a little or a lot, or rest at night. Nothing
+  // to start or stop, only to read.
+  solar: { solar: true, readOnly: true },
+  // A home battery, on a wall or on wheels: it charges, discharges or rests,
+  // and keeps a reserve for a power cut.
+  home_battery: { homeBattery: true, readOnly: true },
   // A television, a projector or a computer, read from its plug: what it
   // draws at rest is its standby, and a media player says what it shows.
   screen: { screen: true },
@@ -4859,6 +4906,8 @@ const NO_STATE_SOURCES = {
   hair_dryer: ["power_entity"],
   network: ["cpu_entity", "download_entity", "volume_entity", "ports_entity", "power_entity"],
   pool_pump: ["power_entity", "water_temperature_entity"],
+  solar: ["power_entity", "energy_today_entity"],
+  home_battery: ["battery_entity", "power_entity", "charge_power_entity", "discharge_power_entity"],
 };
 function noStateSourceOf(cfg, type) {
   const field = (NO_STATE_SOURCES[type] || []).find((f) => cfg[f]);
@@ -4906,7 +4955,8 @@ const TYPE_GROUPS = [
   ["kitchen", ["dishwasher", "oven", "microwave", "hood", "cooktop", "fridge", "kettle", "cooker", "coffee", "rice_cooker", "air_fryer", "toaster"]],
   ["heating", ["water_heater", "boiler", "heat_pump", "pellet_stove", "space_heater", "towel_warmer"]],
   ["air", ["air_conditioner", "dehumidifier", "air_purifier", "fan"]],
-  ["home", ["screen", "iron", "hair_dryer", "printer_3d", "ev_charger", "robot", "pool_pump"]],
+  ["home", ["screen", "iron", "hair_dryer", "printer_3d", "robot", "pool_pump"]],
+  ["energy", ["solar", "home_battery", "ev_charger"]],
   ["pets", ["pet_feeder", "pet_fountain"]],
   ["network", ["network"]],
 ];
@@ -4934,6 +4984,8 @@ function detectApplianceType(cfg, st) {
   if (NETWORK_ONLY_FIELDS.some((f) => cfg[f])) return "network";
   if (ROBOT_ONLY_FIELDS.some((f) => cfg[f])) return "robot";
   if (POOL_ONLY_FIELDS.some((f) => cfg[f])) return "pool_pump";
+  if (SOLAR_ONLY_FIELDS.some((f) => cfg[f])) return "solar";
+  if (BATTERY_ONLY_FIELDS.some((f) => cfg[f])) return "home_battery";
   // Home Assistant has a domain of its own for each of them.
   if (["vacuum", "lawn_mower"].includes(domainOf(cfg.state_entity))) return "robot";
   if (PURIFIER_ONLY_FIELDS.some((f) => cfg[f])) return "air_purifier";
@@ -4966,6 +5018,10 @@ function detectApplianceType(cfg, st) {
   if (ROBOT_NAME_RE.test(stripAccents(hay.replace(/\b[a-z_]+\./g, " ")))) return "robot";
   // A pool pump, by its name in any language or by Oklyn's.
   if (POOL_NAME_RE.test(stripAccents(hay.replace(/\b[a-z_]+\./g, " ")))) return "pool_pump";
+  // Solar panels by their name or their inverter's maker, before a home
+  // battery: an EcoFlow PowerStream is the inverter of a battery's panels.
+  if (SOLAR_NAME_RE.test(stripAccents(hay.replace(/\b[a-z_]+\./g, " ")))) return "solar";
+  if (BATTERY_NAME_RE.test(stripAccents(hay.replace(/\b[a-z_]+\./g, " ")))) return "home_battery";
   // "microwave" before "oven": plenty of devices are named "microwave_oven".
   if (/microwave|micro.?onde|mikrowelle|magnetron|mikrob/.test(hay)) return "microwave";
   if (/coffee|cafeti|cafe|kaffee|espresso|cafetera|macchina.?caff|koffie|kaffemask|ekspres.?do.?kawy/.test(hay)) return "coffee";
@@ -5258,7 +5314,7 @@ function netDiskState(hass, entityId, anchorDevice) {
 // pads, rain keeping a mower home, its edge cut.
 const ROBOT_LAYOUTS = ["vacuum", "mop", "mower"];
 const ROBOT_STATIONS = ["station", "base"];
-const ROBOT_ONLY_FIELDS = ["robot_layout", "robot_station", "robot_shelter", "robot_status_entity", "robot_bin_entity",
+const ROBOT_ONLY_FIELDS = ["robot_layout", "robot_station", "robot_shelter", "robot_floor", "robot_controls", "robot_status_entity", "robot_bin_entity",
   "robot_water_entity", "robot_rain_entity", "robot_error_entity"];
 // A robot by its name, its maker's or its integration's. A robot cook is a
 // cooker, so the word robot needs what it does.
@@ -5299,6 +5355,29 @@ const ROBOT_COLORS = {
   rain: "#5c6bc0", error: "#f44336",
   idle: "var(--disabled-text-color, #9e9e9e)", unav: "var(--disabled-text-color, #9e9e9e)",
 };
+
+// The floors a vacuum or a mop can be drawn on. A mower has its lawn.
+const ROBOT_FLOORS = ["rug", "tiles", "parquet", "smooth"];
+// The robot's own controls, called on its entity (#49): Home Assistant names
+// them differently for a vacuum and a mower, and each shows when it has
+// something to do.
+const ROBOT_SERVICES = {
+  vacuum: { r_start: "start", r_pause: "pause", r_home: "return_to_base" },
+  lawn_mower: { r_start: "start_mowing", r_pause: "pause", r_home: "dock" },
+};
+const ROBOT_AT_WORK = ["cleaning", "edgecut", "returning"];
+const ROBOT_AT_BASE = ["charging", "docked", "emptying", "washing", "drying"];
+function robotControls(hass, cfg, robot) {
+  const services = ROBOT_SERVICES[domainOf(cfg.state_entity)];
+  if (!cfg.robot_controls || !services || !robot || robot.mode === "unav") return [];
+  const all = !!cfg.controls_always;
+  const m = robot.mode;
+  const out = [];
+  if (all || !ROBOT_AT_WORK.includes(m) || m === "returning") out.push({ key: "r_start", icon: "mdi:play", label: t(hass, "start") });
+  if (all || (ROBOT_AT_WORK.includes(m) && m !== "returning")) out.push({ key: "r_pause", icon: "mdi:pause", label: t(hass, "pause") });
+  if (all || (!ROBOT_AT_BASE.includes(m) && m !== "returning")) out.push({ key: "r_home", icon: "mdi:home-import-outline", label: t(hass, "robot_go_home") });
+  return out.map((a) => ({ ...a, entity: cfg.state_entity, service: services[a.key] }));
+}
 
 function robotWord(v) {
   const s = stripAccents(String(v === undefined || v === null ? "" : v)).trim().toLowerCase().replace(/[\s.:-]+/g, "_");
@@ -5454,6 +5533,116 @@ function poolModeOf(hass, cfg, st, watts) {
   if (mode !== "error" && cfg.backwash_entity && poolOn(hass, cfg.backwash_entity)) mode = "backwash";
   if (["off", "running"].includes(mode) && cfg.frost_entity && poolOn(hass, cfg.frost_entity)) mode = "frost";
   return mode;
+}
+
+// Solar panels: on their frame on the ground or on the slope of a roof,
+// with their inverter. The sun shines, a few clouds pass, or the moon is up;
+// in production a gleam runs over the cells and the energy down the cable.
+const SOLAR_ONLY_FIELDS = ["solar_layout", "energy_today_entity", "peak_power", "solar_alert_entity"];
+const SOLAR_NAME_RE = /solar|photovolt|(^|[^a-z])pv([^a-z]|$)|panneaux?.?solaires?|powerstream|hoymiles|enphase|apsystems|fronius|solaredge|growatt|solax|wechselrichter|zonnepane|fotovolt|fotowolt|solcell|solpanel|\u592a\u9633\u80fd|\u0441\u043e\u043b\u043d\u0435\u0447/;
+const SOLAR_LAYOUTS = ["ground", "roof"];
+// What an inverter says when it is in trouble.
+const ENERGY_ERROR_RE = /error|fault|alarm|defaut|panne|fehler|failure|storung|st\u00f6rung|guasto|averia|fout/;
+// Below this share of the panels' peak power, the sun is weak.
+const SOLAR_LOW_SHARE = 0.15;
+const SOLAR_LOW_W = 100;
+const SOLAR_LABELS = { day: "solar_producing", low: "solar_low", night: "solar_night", error: "error", unav: "ev_offline" };
+const SOLAR_COLORS = { day: "#f9a825", low: "#9e9d24", night: "#5c6bc0", error: "#f44336", unav: "var(--disabled-text-color, #9e9e9e)" };
+
+// A home battery: a block on the wall with its gauge, or a portable station
+// with its sockets. It charges in green, discharges in orange, and a dashed
+// line marks the reserve it keeps for a power cut.
+const BATTERY_ONLY_FIELDS = ["battery_layout", "charge_power_entity", "reserve_entity", "charge_limit_entity", "battery_capacity",
+  "power_inverted", "battery_alert_entity"];
+const BATTERY_NAME_RE = /home.?battery|house.?battery|powerwall|delta.?(pro|max|2)|ecoflow|bluetti|anker.?solix|solix|jackery|zendure|marstek|sonnen|power.?station|station.?(d.?)?energie|batterie.?(domestique|maison|murale|solaire)|hausbatterie|stromspeicher|heimspeicher|batteriespeicher|thuisbatterij|bateria.?domestica|batteria.?domestica|hemmabatteri|hjemmebatteri|magazyn.?energii|domaci.?baterie|\u5bb6\u7528\u7535\u6c60|\u0434\u043e\u043c\u0430\u0448\u043d.?\u0430\u043a\u043a\u0443\u043c/;
+const BATTERY_STATION_RE = /delta|ecoflow|bluetti|jackery|anker|solix|zendure|river|power.?station|station/;
+const BATTERY_LAYOUTS = ["wall", "station"];
+// Under this power either way, the battery rests: a station feeding its own
+// screen or a router through draws a few watts.
+const BATTERY_IDLE_W = 10;
+const BATTERY_LOW_PCT = 10;
+const BATTERY_LABELS = { charging: "ev_charging", discharging: "ev_discharging", idle: "bat_idle", full: "bat_full", low: "bat_low",
+  error: "error", unav: "ev_offline" };
+const BATTERY_COLORS = { charging: "#43a047", discharging: "#fb8c00", idle: "var(--disabled-text-color, #9e9e9e)",
+  full: "var(--success-color, #43a047)", low: "#f44336", error: "#f44336", unav: "var(--disabled-text-color, #9e9e9e)" };
+
+// A power in watts, in kilowatts from a thousand, signed when asked.
+function energyPowerText(hass, w, signed) {
+  const a = Math.abs(w);
+  const num = a >= 1000 ? `${netNumber(hass, a / 1000, 2)}\u00a0kW` : `${Math.round(a)}\u00a0W`;
+  if (!signed || Math.round(a) === 0) return num;
+  return `${w < 0 ? "\u2212" : "+"}${num}`;
+}
+
+// What the panels do: the inverter's word for an error first, then the
+// power against the sun.
+function solarReadOf(hass, cfg, st) {
+  const powerId = cfg.power_entity || (numericEntity(hass, cfg.state_entity) ? cfg.state_entity : "");
+  const watts = powerId ? wattsOf(hass, powerId) : null;
+  const raw = st ? stripAccents(String(st.state)).trim().toLowerCase() : "";
+  const stOk = !!st && !["unavailable", "unknown", ""].includes(raw);
+  const sun = stateObj(hass, "sun.sun");
+  const sunUp = sun ? sun.state === "above_horizon" : null;
+  let mode;
+  if (watts === null && !stOk) mode = "unav";
+  else if ((stOk && ENERGY_ERROR_RE.test(raw)) || (cfg.solar_alert_entity && poolOn(hass, cfg.solar_alert_entity))) mode = "error";
+  else {
+    const w = watts === null ? 0 : watts;
+    const peak = parseFloat(cfg.peak_power);
+    const low = isFinite(peak) && peak > 0 ? peak * SOLAR_LOW_SHARE : SOLAR_LOW_W;
+    if (w > low) mode = "day";
+    else if (sunUp === false) mode = "night";
+    else if (w > 2 || sunUp === true) mode = "low";
+    else mode = "night";
+  }
+  const sky = ["day", "low", "night"].includes(mode) ? mode : sunUp === false ? "night" : "day";
+  return { mode, sky, watts, powerId };
+}
+
+function batteryLayoutOf(cfg, st) {
+  if (BATTERY_LAYOUTS.includes(cfg.battery_layout)) return cfg.battery_layout;
+  const hay = stripAccents(`${cfg.name || ""} ${cfg.state_entity || ""} ${cfg.battery_entity || ""} ${(st && st.attributes.friendly_name) || ""}`.toLowerCase());
+  return BATTERY_STATION_RE.test(hay) ? "station" : "wall";
+}
+
+// What the battery does: its level, the power going in or out, its word for
+// an error, and whether it has reached the top it is allowed.
+function batteryReadOf(hass, cfg, st) {
+  const levelId = cfg.battery_entity || (numericEntity(hass, cfg.state_entity) ? cfg.state_entity : "");
+  const level = levelId ? numericState(hass, levelId) : null;
+  let net = null;
+  let powerId = "";
+  const cin = cfg.charge_power_entity ? wattsOf(hass, cfg.charge_power_entity) : null;
+  const cout = cfg.discharge_power_entity ? wattsOf(hass, cfg.discharge_power_entity) : null;
+  if (cin !== null || cout !== null) {
+    net = (cin || 0) - Math.abs(cout || 0);
+    powerId = net < 0 ? cfg.discharge_power_entity || cfg.charge_power_entity : cfg.charge_power_entity || cfg.discharge_power_entity;
+  } else if (cfg.power_entity) {
+    const p = wattsOf(hass, cfg.power_entity);
+    if (p !== null) {
+      net = cfg.power_inverted ? -p : p;
+      powerId = cfg.power_entity;
+    }
+  }
+  const raw = st ? stripAccents(String(st.state)).trim().toLowerCase() : "";
+  const stOk = !!st && !["unavailable", "unknown", ""].includes(raw);
+  const limit = cfg.charge_limit_entity ? numericState(hass, cfg.charge_limit_entity) : null;
+  const top = limit !== null && limit > 0 && limit <= 100 ? limit : 100;
+  const reserve = cfg.reserve_entity ? numericState(hass, cfg.reserve_entity) : null;
+  let mode;
+  if (level === null && net === null && !stOk) mode = "unav";
+  else if ((stOk && ENERGY_ERROR_RE.test(raw)) || (cfg.battery_alert_entity && poolOn(hass, cfg.battery_alert_entity))) mode = "error";
+  else {
+    const th = parseFloat(cfg.power_on_threshold);
+    const idleW = isFinite(th) && th >= 0 ? th : BATTERY_IDLE_W;
+    if (net !== null) mode = net > idleW ? "charging" : net < -idleW ? "discharging" : "idle";
+    else if (stOk && /dis.?charg|decharg|entlad|descarg|scaric|ontlad|urladd|utlad|aflad|rozlad|vybij/.test(raw)) mode = "discharging";
+    else if (stOk && /charg|laden|ladt|cargand|carica|carregand|opladen|laddar|lader|ladowan|nabij/.test(raw)) mode = "charging";
+    else mode = "idle";
+    if (mode === "idle" && level !== null && level >= top - 1) mode = "full";
+  }
+  const low = level !== null && !["unav", "error"].includes(mode) && level <= BATTERY_LOW_PCT;
+  return { mode, level, net, powerId, top, reserve, low, levelId };
 }
 
 const HD_COLORS = { off: "var(--disabled-text-color, #9e9e9e)", cool: "#29b6f6", hot: "#ff7043", on: "#ff7043" };
@@ -5744,6 +5933,74 @@ const BODY_COLORS = {
 // lines up with the next.
 const KIBBLE_TILE = "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='12'%3E%3Crect width='18' height='12' fill='%233a2211'/%3E%3Cg transform='translate(1.2 1.5) rotate(-2)'%3E%3Cellipse cy='0.6' rx='1.6' ry='0.9' fill='%235a361e'/%3E%3Cellipse rx='1.6' ry='0.9' fill='%23a67a52'/%3E%3C/g%3E%3Cg transform='translate(1.2 13.5) rotate(-2)'%3E%3Cellipse cy='0.6' rx='1.6' ry='0.9' fill='%235a361e'/%3E%3Cellipse rx='1.6' ry='0.9' fill='%23a67a52'/%3E%3C/g%3E%3Cg transform='translate(19.2 1.5) rotate(-2)'%3E%3Cellipse cy='0.6' rx='1.6' ry='0.9' fill='%235a361e'/%3E%3Cellipse rx='1.6' ry='0.9' fill='%23a67a52'/%3E%3C/g%3E%3Cg transform='translate(19.2 13.5) rotate(-2)'%3E%3Cellipse cy='0.6' rx='1.6' ry='0.9' fill='%235a361e'/%3E%3Cellipse rx='1.6' ry='0.9' fill='%23a67a52'/%3E%3C/g%3E%3Cg transform='translate(4.1 1) rotate(4)'%3E%3Cellipse cy='0.6' rx='1.7' ry='1.5' fill='%235a361e'/%3E%3Cellipse rx='1.7' ry='1.5' fill='%23a27449'/%3E%3C/g%3E%3Cg transform='translate(4.1 13) rotate(4)'%3E%3Cellipse cy='0.6' rx='1.7' ry='1.5' fill='%235a361e'/%3E%3Cellipse rx='1.7' ry='1.5' fill='%23a27449'/%3E%3C/g%3E%3Cg transform='translate(8 1.5) rotate(-8)'%3E%3Cellipse cy='0.6' rx='1.7' ry='1.2' fill='%235a361e'/%3E%3Cellipse rx='1.7' ry='1.2' fill='%23a27449'/%3E%3C/g%3E%3Cg transform='translate(8 13.5) rotate(-8)'%3E%3Cellipse cy='0.6' rx='1.7' ry='1.2' fill='%235a361e'/%3E%3Cellipse rx='1.7' ry='1.2' fill='%23a27449'/%3E%3C/g%3E%3Cg transform='translate(10.2 1.2) rotate(19)'%3E%3Cellipse cy='0.6' rx='1.8' ry='1.2' fill='%235a361e'/%3E%3Cellipse rx='1.8' ry='1.2' fill='%23b0835c'/%3E%3C/g%3E%3Cg transform='translate(10.2 13.2) rotate(19)'%3E%3Cellipse cy='0.6' rx='1.8' ry='1.2' fill='%235a361e'/%3E%3Cellipse rx='1.8' ry='1.2' fill='%23b0835c'/%3E%3C/g%3E%3Cg transform='translate(13.2 2) rotate(26)'%3E%3Cellipse cy='0.5' rx='1.5' ry='1.5' fill='%235a361e'/%3E%3Cellipse rx='1.5' ry='1.5' fill='%23976a44'/%3E%3C/g%3E%3Cg transform='translate(13.2 14) rotate(26)'%3E%3Cellipse cy='0.5' rx='1.5' ry='1.5' fill='%235a361e'/%3E%3Cellipse rx='1.5' ry='1.5' fill='%23976a44'/%3E%3C/g%3E%3Cg transform='translate(-1.5 1.7) rotate(-8)'%3E%3Cellipse cy='0.6' rx='1.8' ry='1.2' fill='%235a361e'/%3E%3Cellipse rx='1.8' ry='1.2' fill='%23a67a52'/%3E%3C/g%3E%3Cg transform='translate(-1.5 13.7) rotate(-8)'%3E%3Cellipse cy='0.6' rx='1.8' ry='1.2' fill='%235a361e'/%3E%3Cellipse rx='1.8' ry='1.2' fill='%23a67a52'/%3E%3C/g%3E%3Cg transform='translate(16.5 1.7) rotate(-8)'%3E%3Cellipse cy='0.6' rx='1.8' ry='1.2' fill='%235a361e'/%3E%3Cellipse rx='1.8' ry='1.2' fill='%23a67a52'/%3E%3C/g%3E%3Cg transform='translate(16.5 13.7) rotate(-8)'%3E%3Cellipse cy='0.6' rx='1.8' ry='1.2' fill='%235a361e'/%3E%3Cellipse rx='1.8' ry='1.2' fill='%23a67a52'/%3E%3C/g%3E%3Cg transform='translate(2.9 4.9) rotate(-37)'%3E%3Cellipse cy='0.6' rx='1.8' ry='1.8' fill='%235a361e'/%3E%3Cellipse rx='1.8' ry='1.8' fill='%23b98c65'/%3E%3C/g%3E%3Cg transform='translate(20.9 4.9) rotate(-37)'%3E%3Cellipse cy='0.6' rx='1.8' ry='1.8' fill='%235a361e'/%3E%3Cellipse rx='1.8' ry='1.8' fill='%23b98c65'/%3E%3C/g%3E%3Cg transform='translate(5.7 5) rotate(-6)'%3E%3Cellipse cy='0.6' rx='1.6' ry='1.4' fill='%235a361e'/%3E%3Cellipse rx='1.6' ry='1.4' fill='%23b98c65'/%3E%3C/g%3E%3Cg transform='translate(9.1 4.5) rotate(32)'%3E%3Cellipse cy='0.6' rx='1.6' ry='1.5' fill='%235a361e'/%3E%3Cellipse rx='1.6' ry='1.5' fill='%23b0835c'/%3E%3C/g%3E%3Cg transform='translate(12.4 5) rotate(16)'%3E%3Cellipse cy='0.6' rx='1.7' ry='1.6' fill='%235a361e'/%3E%3Cellipse rx='1.7' ry='1.6' fill='%23976a44'/%3E%3C/g%3E%3Cg transform='translate(-2.5 4.9) rotate(11)'%3E%3Cellipse cy='0.6' rx='1.6' ry='1.6' fill='%235a361e'/%3E%3Cellipse rx='1.6' ry='1.6' fill='%23a67a52'/%3E%3C/g%3E%3Cg transform='translate(15.5 4.9) rotate(11)'%3E%3Cellipse cy='0.6' rx='1.6' ry='1.6' fill='%235a361e'/%3E%3Cellipse rx='1.6' ry='1.6' fill='%23a67a52'/%3E%3C/g%3E%3Cg transform='translate(-0.2 4.1) rotate(-33)'%3E%3Cellipse cy='0.6' rx='1.6' ry='1.1' fill='%235a361e'/%3E%3Cellipse rx='1.6' ry='1.1' fill='%23b0835c'/%3E%3C/g%3E%3Cg transform='translate(17.8 4.1) rotate(-33)'%3E%3Cellipse cy='0.6' rx='1.6' ry='1.1' fill='%235a361e'/%3E%3Cellipse rx='1.6' ry='1.1' fill='%23b0835c'/%3E%3C/g%3E%3Cg transform='translate(1.4 7.2) rotate(30)'%3E%3Cellipse cy='0.5' rx='1.6' ry='1.1' fill='%235a361e'/%3E%3Cellipse rx='1.6' ry='1.1' fill='%23b0835c'/%3E%3C/g%3E%3Cg transform='translate(19.4 7.2) rotate(30)'%3E%3Cellipse cy='0.5' rx='1.6' ry='1.1' fill='%235a361e'/%3E%3Cellipse rx='1.6' ry='1.1' fill='%23b0835c'/%3E%3C/g%3E%3Cg transform='translate(4.6 7.8) rotate(-14)'%3E%3Cellipse cy='0.6' rx='1.6' ry='0.9' fill='%235a361e'/%3E%3Cellipse rx='1.6' ry='0.9' fill='%23976a44'/%3E%3C/g%3E%3Cg transform='translate(7.5 8) rotate(-31)'%3E%3Cellipse cy='0.5' rx='1.6' ry='1.6' fill='%235a361e'/%3E%3Cellipse rx='1.6' ry='1.6' fill='%23a67a52'/%3E%3C/g%3E%3Cg transform='translate(10 7.2) rotate(-19)'%3E%3Cellipse cy='0.6' rx='1.6' ry='0.9' fill='%235a361e'/%3E%3Cellipse rx='1.6' ry='0.9' fill='%23b0835c'/%3E%3C/g%3E%3Cg transform='translate(14 7.3) rotate(32)'%3E%3Cellipse cy='0.6' rx='1.6' ry='1.5' fill='%235a361e'/%3E%3Cellipse rx='1.6' ry='1.5' fill='%23b98c65'/%3E%3C/g%3E%3Cg transform='translate(-1.6 7.9) rotate(14)'%3E%3Cellipse cy='0.6' rx='1.6' ry='0.9' fill='%235a361e'/%3E%3Cellipse rx='1.6' ry='0.9' fill='%23b0835c'/%3E%3C/g%3E%3Cg transform='translate(16.4 7.9) rotate(14)'%3E%3Cellipse cy='0.6' rx='1.6' ry='0.9' fill='%235a361e'/%3E%3Cellipse rx='1.6' ry='0.9' fill='%23b0835c'/%3E%3C/g%3E%3Cg transform='translate(3.1 -1.1) rotate(11)'%3E%3Cellipse cy='0.6' rx='1.6' ry='1.1' fill='%235a361e'/%3E%3Cellipse rx='1.6' ry='1.1' fill='%23a27449'/%3E%3C/g%3E%3Cg transform='translate(3.1 10.9) rotate(11)'%3E%3Cellipse cy='0.6' rx='1.6' ry='1.1' fill='%235a361e'/%3E%3Cellipse rx='1.6' ry='1.1' fill='%23a27449'/%3E%3C/g%3E%3Cg transform='translate(6.4 -1.6) rotate(4)'%3E%3Cellipse cy='0.5' rx='1.5' ry='1.3' fill='%235a361e'/%3E%3Cellipse rx='1.5' ry='1.3' fill='%23b0835c'/%3E%3C/g%3E%3Cg transform='translate(6.4 10.4) rotate(4)'%3E%3Cellipse cy='0.5' rx='1.5' ry='1.3' fill='%235a361e'/%3E%3Cellipse rx='1.5' ry='1.3' fill='%23b0835c'/%3E%3C/g%3E%3Cg transform='translate(9.3 -1) rotate(9)'%3E%3Cellipse cy='0.5' rx='1.6' ry='1.1' fill='%235a361e'/%3E%3Cellipse rx='1.6' ry='1.1' fill='%23a27449'/%3E%3C/g%3E%3Cg transform='translate(9.3 11) rotate(9)'%3E%3Cellipse cy='0.5' rx='1.6' ry='1.1' fill='%235a361e'/%3E%3Cellipse rx='1.6' ry='1.1' fill='%23a27449'/%3E%3C/g%3E%3Cg transform='translate(11.6 -1.4) rotate(9)'%3E%3Cellipse cy='0.6' rx='1.6' ry='1.4' fill='%235a361e'/%3E%3Cellipse rx='1.6' ry='1.4' fill='%23976a44'/%3E%3C/g%3E%3Cg transform='translate(11.6 10.6) rotate(9)'%3E%3Cellipse cy='0.6' rx='1.6' ry='1.4' fill='%235a361e'/%3E%3Cellipse rx='1.6' ry='1.4' fill='%23976a44'/%3E%3C/g%3E%3Cg transform='translate(-2.8 -2) rotate(37)'%3E%3Cellipse cy='0.5' rx='1.5' ry='1.5' fill='%235a361e'/%3E%3Cellipse rx='1.5' ry='1.5' fill='%23976a44'/%3E%3C/g%3E%3Cg transform='translate(-2.8 10) rotate(37)'%3E%3Cellipse cy='0.5' rx='1.5' ry='1.5' fill='%235a361e'/%3E%3Cellipse rx='1.5' ry='1.5' fill='%23976a44'/%3E%3C/g%3E%3Cg transform='translate(15.2 -2) rotate(37)'%3E%3Cellipse cy='0.5' rx='1.5' ry='1.5' fill='%235a361e'/%3E%3Cellipse rx='1.5' ry='1.5' fill='%23976a44'/%3E%3C/g%3E%3Cg transform='translate(15.2 10) rotate(37)'%3E%3Cellipse cy='0.5' rx='1.5' ry='1.5' fill='%235a361e'/%3E%3Cellipse rx='1.5' ry='1.5' fill='%23976a44'/%3E%3C/g%3E%3Cg transform='translate(0.1 -1.7) rotate(-11)'%3E%3Cellipse cy='0.6' rx='1.7' ry='1.6' fill='%235a361e'/%3E%3Cellipse rx='1.7' ry='1.6' fill='%23976a44'/%3E%3C/g%3E%3Cg transform='translate(0.1 10.3) rotate(-11)'%3E%3Cellipse cy='0.6' rx='1.7' ry='1.6' fill='%235a361e'/%3E%3Cellipse rx='1.7' ry='1.6' fill='%23976a44'/%3E%3C/g%3E%3Cg transform='translate(18.1 -1.7) rotate(-11)'%3E%3Cellipse cy='0.6' rx='1.7' ry='1.6' fill='%235a361e'/%3E%3Cellipse rx='1.7' ry='1.6' fill='%23976a44'/%3E%3C/g%3E%3Cg transform='translate(18.1 10.3) rotate(-11)'%3E%3Cellipse cy='0.6' rx='1.7' ry='1.6' fill='%235a361e'/%3E%3Cellipse rx='1.7' ry='1.6' fill='%23976a44'/%3E%3C/g%3E%3C/svg%3E\")";
 const KIBBLE_TOP = "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='4'%3E%3Cg transform='translate(1.6 1.2) rotate(-38)'%3E%3Cellipse cy='0.6' rx='1.7' ry='1' fill='%235a361e'/%3E%3Cellipse rx='1.7' ry='1' fill='%23b98c65'/%3E%3C/g%3E%3Cg transform='translate(19.6 1.2) rotate(-38)'%3E%3Cellipse cy='0.6' rx='1.7' ry='1' fill='%235a361e'/%3E%3Cellipse rx='1.7' ry='1' fill='%23b98c65'/%3E%3C/g%3E%3Cg transform='translate(4.8 1.9) rotate(-31)'%3E%3Cellipse cy='0.5' rx='1.5' ry='1.4' fill='%235a361e'/%3E%3Cellipse rx='1.5' ry='1.4' fill='%23b98c65'/%3E%3C/g%3E%3Cg transform='translate(7.9 1.7) rotate(-39)'%3E%3Cellipse cy='0.5' rx='1.5' ry='1.4' fill='%235a361e'/%3E%3Cellipse rx='1.5' ry='1.4' fill='%23a27449'/%3E%3C/g%3E%3Cg transform='translate(10.4 1.9) rotate(-27)'%3E%3Cellipse cy='0.6' rx='1.8' ry='1.2' fill='%235a361e'/%3E%3Cellipse rx='1.8' ry='1.2' fill='%23b0835c'/%3E%3C/g%3E%3Cg transform='translate(13.1 1.3) rotate(38)'%3E%3Cellipse cy='0.5' rx='1.5' ry='1.5' fill='%235a361e'/%3E%3Cellipse rx='1.5' ry='1.5' fill='%23b0835c'/%3E%3C/g%3E%3Cg transform='translate(-1.8 1.9) rotate(-17)'%3E%3Cellipse cy='0.6' rx='1.8' ry='1.7' fill='%235a361e'/%3E%3Cellipse rx='1.8' ry='1.7' fill='%23a27449'/%3E%3C/g%3E%3Cg transform='translate(16.2 1.9) rotate(-17)'%3E%3Cellipse cy='0.6' rx='1.8' ry='1.7' fill='%235a361e'/%3E%3Cellipse rx='1.8' ry='1.7' fill='%23a27449'/%3E%3C/g%3E%3C/svg%3E\")";
+
+const ENERGY_CSS = `
+        svg.en-e{position:absolute;left:0;top:0;width:96px;height:108px;overflow:visible}
+        .en-sun,.en-moon,.en-stars,.en-clouds{display:none}
+        .en-sky-day .en-sun,.en-sky-low .en-sun{display:block}
+        .en-sky-low .en-clouds{display:block}
+        .en-sky-night .en-moon,.en-sky-night .en-stars{display:block}
+        .en-rays{transform-box:fill-box;transform-origin:center;animation:en-spin 12s linear infinite}
+        .en-sky-low .en-rays{animation:none;opacity:.5}
+        .en-cloud{animation:en-drift 6s ease-in-out infinite}
+        .en-cloud.en-c2{--d0:-3s}
+        .en-stars circle{fill:#f5d76e;animation:en-twinkle 2.4s ease-in-out infinite}
+        .en-stars circle:nth-child(2){--d0:-.8s}
+        .en-stars circle:nth-child(3){--d0:-1.6s}
+        .en-shine{opacity:0;animation:en-shine 4s ease-in-out infinite}
+        .sol-m-day .en-shine{opacity:.55}
+        .sol-m-low .en-shine{opacity:.25;animation-duration:7s}
+        .en-wire{fill:none;stroke:#2b3137;stroke-width:1.4}
+        .sol-ef{fill:none;stroke:#ffca28;stroke-width:1.8;stroke-dasharray:2.4 3.6;stroke-linecap:round;opacity:0}
+        .sol-m-day .sol-ef{opacity:1;animation:en-flow .6s linear infinite}
+        .sol-m-low .sol-ef{opacity:1;animation:en-flow 1.6s linear infinite}
+        .sol-led{fill:#5a636b}
+        .sol-m-day .sol-led,.sol-m-low .sol-led{fill:#2ecc71}
+        .sol-m-error .sol-led{fill:#f44336;animation:en-blink 1s steps(1) infinite}
+        .machine.sol-m-unav,.machine.bat-m-unav{opacity:.45;filter:grayscale(1)}
+        .bat-lvl{fill:#43a047}
+        .bat-m-discharging .bat-lvl{fill:#fb8c00}
+        .bat-low .bat-lvl{fill:#f44336}
+        .bat-m-error .bat-lvl{fill:#9aa1a8}
+        .bat-m-unav .bat-lvl{fill:none}
+        .bat-sweep{opacity:0}
+        .bat-m-charging .bat-sweep{opacity:1;animation:en-sweep 2.2s ease-in-out infinite}
+        .bat-reserve{stroke:#ffb300}
+        .bat-bf{fill:none;stroke-width:2;stroke-dasharray:3 4;stroke-linecap:round;opacity:0}
+        .bat-m-charging .bat-bf.bat-in{opacity:1;stroke:#43a047;animation:en-flow .7s linear infinite}
+        .bat-m-discharging .bat-bf.bat-out{opacity:1;stroke:#ff9800;animation:en-flow .7s linear infinite}
+        .bat-led{fill:#5a636b}
+        .bat-m-charging .bat-led{fill:#43a047;animation:en-breathe 1.6s ease-in-out infinite}
+        .bat-m-discharging .bat-led{fill:#ff9800}
+        .bat-m-idle .bat-led,.bat-m-full .bat-led{fill:#43a047}
+        .bat-m-error .bat-led{fill:#f44336;animation:en-blink 1s steps(1) infinite}
+        .bat-lcd{font:700 10px/1 Roboto,Arial,sans-serif;fill:#7fe3ff;text-anchor:middle}
+        .bat-m-charging .bat-lcd,.bat-m-full .bat-lcd{fill:#9cf09a}
+        .bat-m-discharging .bat-lcd{fill:#ffcc80}
+        .bat-low .bat-lcd{fill:#ff8a80}
+        .bat-bolt{display:none}
+        .bat-m-charging .bat-bolt{display:block;animation:en-breathe 1.6s ease-in-out infinite}
+        .en-smoke,.en-ang{display:none}
+        .sol-m-error .en-smoke,.sol-m-error .en-ang,.bat-m-error .en-smoke,.bat-m-error .en-ang{display:block}
+        .en-smoke .en-pf{transform-box:fill-box;transform-origin:50% 100%;animation:en-puff 2s ease-out infinite}
+        .en-smoke .en-pf2{--d0:-1s}
+        .en-smoke .en-o{fill:#111417}
+        .en-smoke .en-f{fill:#6b737b}
+        .en-ang path{fill:none;stroke:#e53935;stroke-width:1.9;stroke-linecap:round}
+        .en-ang{transform-box:fill-box;transform-origin:center;animation:en-angp .7s ease-in-out infinite alternate}
+        @keyframes en-spin{to{transform:rotate(360deg)}}
+        @keyframes en-drift{0%,100%{transform:translateX(0)}50%{transform:translateX(5px)}}
+        @keyframes en-twinkle{0%,100%{opacity:.25}50%{opacity:1}}
+        @keyframes en-shine{0%{transform:translateX(-70px)}60%,100%{transform:translateX(90px)}}
+        @keyframes en-flow{to{stroke-dashoffset:-14}}
+        @keyframes en-blink{50%{opacity:.15}}
+        @keyframes en-breathe{0%,100%{opacity:.4}50%{opacity:1}}
+        @keyframes en-sweep{from{transform:translateY(0)}to{transform:translateY(-40px)}}
+        @keyframes en-puff{0%{transform:translateY(5px) scale(.45);opacity:0}20%{opacity:1}75%{opacity:1}100%{transform:translateY(-7px) scale(1.08);opacity:0}}
+        @keyframes en-angp{from{transform:scale(.8)}to{transform:scale(1.15)}}
+        .machine.en * { animation-delay: calc(var(--d0, 0s) + var(--anim-offset, 0s)) !important; }
+        @media (prefers-reduced-motion: reduce) { .machine.en * { animation-name: none !important; } }
+`;
 
 const ILLUSTRATION_CSS = {
   printer_3d: (color) => `
@@ -8120,19 +8377,26 @@ const ILLUSTRATION_CSS = {
         .machine.pl * { animation-delay: calc(var(--d0, 0s) + var(--anim-offset, 0s)) !important; }
         @media (prefers-reduced-motion: reduce) { .machine.pl * { animation-name: none !important; } }
   `,
+  // Solar panels and a home battery share their sky, their cables and their
+  // cartoon error.
+  solar: () => ENERGY_CSS,
+  home_battery: () => ENERGY_CSS,
   // A robot and its floor, its base and its station.
   robot: () => `${MINI_LCD_CSS}
         .machine.rbt { --b: var(--ac-body, #3a3f45); --bh: var(--ac-body-hi, #5a6168); --bl: var(--ac-body-lo, #1d2024); --dk: #2b2f34; --dkh: #41474e; }
         .machine.rbt > *, .rbt-dock > *, .rbt-mdock > *, .rbt-bin > *, .rbt-tk > * { position: absolute; }
-        .rbt-rug{left:2px;right:2px;top:72px;height:34px;clip-path:polygon(12% 0,88% 0,100% 100%,0 100%);background:repeating-linear-gradient(90deg,#c8b79c 0 3px,#bfae92 3px 6px)}
-        .rbt-tiles{left:2px;right:2px;top:72px;height:34px;clip-path:polygon(12% 0,88% 0,100% 100%,0 100%);background:linear-gradient(90deg,rgba(0,0,0,.08) 1px,transparent 1px) 0 0/12px 100%,linear-gradient(180deg,rgba(0,0,0,.08) 1px,transparent 1px) 0 0/100% 9px,#dfe4e8}
+        .rbt-floor{left:2px;right:2px;top:72px;height:34px;clip-path:polygon(12% 0,88% 0,100% 100%,0 100%)}
+        .rbt-parquet{background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='30' height='12'%3E%3Crect width='30' height='6' fill='%23c99b67'/%3E%3Crect y='6' width='30' height='6' fill='%23b98854'/%3E%3Cpath d='M0 0 V6 M15 6 V12 M0 6 H30 M0 12 H30' stroke='%237a5130' stroke-opacity='.45' stroke-width='.8'/%3E%3Cpath d='M3 2 H11 M19 3.5 H27 M6 9 H13 M20 8.5 H25' stroke='%239c6c3c' stroke-opacity='.35' stroke-width='.5'/%3E%3C/svg%3E") 0 0/30px 12px}
+        .rbt-smooth{background:radial-gradient(ellipse at 50% 15%,rgba(255,255,255,.75),transparent 60%),linear-gradient(180deg,#e7ebee,#cfd6dc)}
+        .rbt-rug{background:repeating-linear-gradient(90deg,#c8b79c 0 3px,#bfae92 3px 6px)}
+        .rbt-tiles{background:linear-gradient(90deg,rgba(0,0,0,.08) 1px,transparent 1px) 0 0/12px 100%,linear-gradient(180deg,rgba(0,0,0,.08) 1px,transparent 1px) 0 0/100% 9px,#dfe4e8}
         .rbt-lawn{left:0;right:0;top:60px;height:46px;clip-path:polygon(10% 0,90% 0,100% 100%,0 100%);background:radial-gradient(ellipse at 50% 0,#6db457,#559d41 70%,#4a8f37)}
         .rbt-trace{height:9px;width:0;opacity:0}
         .rbt-trace.rbt-t1{left:6px;top:80px}
         .rbt-trace.rbt-t2{right:6px;top:88px}
-        .rbt-tiles .rbt-trace{position:absolute}
-        .rbt-tiles .rbt-trace.rbt-t1{left:2px;top:8px}
-        .rbt-tiles .rbt-trace.rbt-t2{right:2px;top:16px}
+        .rbt-floor .rbt-trace{position:absolute}
+        .rbt-floor .rbt-trace.rbt-t1{left:2px;top:8px}
+        .rbt-floor .rbt-trace.rbt-t2{right:2px;top:16px}
         .rbt-rugtrace{background:repeating-linear-gradient(90deg,#d6c7ae 0 3px,#cdbca1 3px 6px)}
         .rbt-wet{background:linear-gradient(180deg,rgba(79,195,247,.15),rgba(79,195,247,.45),rgba(79,195,247,.15));border-radius:3px}
         .rbt-cut{background:repeating-linear-gradient(90deg,#8fcf6f 0 1.5px,#9fd97e 1.5px 3.5px)}
@@ -9394,6 +9658,167 @@ function poolHtml(cls, p) {
         <div class="machine ${cls} pl pl-m-${mode}${p.dosing ? " pl-chlore" : ""}${p.lit ? " pl-lamp" : ""}${p.chlorine ? "" : " pl-nocl"}">${svg}</div>`;
 }
 
+// The drawings of the panels and the battery, built once: only their classes
+// change with what they do, and the battery's level and reserve.
+const ENERGY_SMOKE = (x, y, k) => {
+  const C = [[13, 23, 5.5], [20, 18, 6.5], [27, 22, 5], [17, 12, 4.5], [24, 11, 4]];
+  const puff = (c, dx, dy, kk) => `<g class="en-pf ${c}">${C.map(([cx, cy, r]) => `<circle class="en-o" cx="${(cx * kk + dx).toFixed(1)}" cy="${(cy * kk + dy).toFixed(1)}" r="${(r * kk + 1.4).toFixed(1)}"/>`).join("")}${C.map(([cx, cy, r]) => `<circle class="en-f" cx="${(cx * kk + dx).toFixed(1)}" cy="${(cy * kk + dy).toFixed(1)}" r="${(r * kk).toFixed(1)}"/>`).join("")}</g>`;
+  return `<g transform="translate(${x} ${y}) scale(${k})"><g class="en-smoke">${puff("en-pf1", 0, 0, 1)}${puff("en-pf2", -2, 2, 0.85)}</g></g>`;
+};
+const ENERGY_ANGER = (x, y) => `<g transform="translate(${x} ${y})"><g class="en-ang"><path d="M3.5 1.5 Q3.5 4 1 4"/><path d="M6 1.5 Q6 4 8.5 4"/><path d="M3.5 9.5 Q3.5 7 1 7"/><path d="M6 9.5 Q6 7 8.5 7"/></g></g>`;
+const ENERGY_SKY = `<g class="en-sun"><g class="en-rays"><path d="M18 3 V7 M18 29 V33 M3 18 H7 M29 18 H33 M7.4 7.4 L10.2 10.2 M25.8 25.8 L28.6 28.6 M7.4 28.6 L10.2 25.8 M25.8 10.2 L28.6 7.4" stroke="#ffb300" stroke-width="2" stroke-linecap="round"/></g><circle cx="18" cy="18" r="7.5" fill="#ffca28"/></g>
+<g class="en-clouds"><g class="en-cloud"><path d="M16 26 C10 26 10 19 15 18.5 C15 13 23 12 25 16.5 C28 14 33 16.5 32 21 C36 21 36 26 32 26 Z" fill="#cfd8dc" stroke="#9aa6ad" stroke-width=".7"/></g>
+<g class="en-cloud en-c2"><path d="M52 18 C47 18 47 12 51.5 11.5 C52 7 58.5 6.5 60 10.5 C62.5 8.5 67 10.5 66 14 C69.5 14 69.5 18 66 18 Z" fill="#e3e9ec" stroke="#a9b4ba" stroke-width=".6"/></g></g>
+<g class="en-moon"><path d="M22 6 A11 11 0 1 0 30 24 A8.5 8.5 0 1 1 22 6 Z" fill="#fff3c4" stroke="#e0c97a" stroke-width=".6"/></g>
+<g class="en-stars"><circle cx="48" cy="9" r="1"/><circle cx="64" cy="18" r=".9"/><circle cx="78" cy="7" r="1.1"/></g>`;
+const SOLAR_SVGS = (() => {
+  const L = (a, b, k) => [a[0] + (b[0] - a[0]) * k, a[1] + (b[1] - a[1]) * k];
+  const f1 = (p) => `${p[0].toFixed(1)} ${p[1].toFixed(1)}`;
+  // A panel: its aluminium frame, its dark blue glass and its grid of cells.
+  const panel = (tl, tr, br, bl, cols, rows) => {
+    let d = "";
+    for (let i = 1; i < cols; i++) d += `M${f1(L(tl, tr, i / cols))} L${f1(L(bl, br, i / cols))} `;
+    for (let j = 1; j < rows; j++) d += `M${f1(L(tl, bl, j / rows))} L${f1(L(tr, br, j / rows))} `;
+    return `<path d="M${f1(tl)} L${f1(tr)} L${f1(br)} L${f1(bl)} Z" fill="url(#en-cell)" stroke="#d5dbe0" stroke-width="1.2" stroke-linejoin="round"/><path d="${d.trim()}" stroke="#6f8fb5" stroke-opacity=".55" stroke-width=".45"/>`;
+  };
+  const Q = (q, u, v) => L(L(q[0], q[1], u), L(q[3], q[2], u), v);
+  const grid = (q, nc, nr, gap, cols, rows) => {
+    let o = "";
+    for (let c = 0; c < nc; c++) {
+      for (let r = 0; r < nr; r++) {
+        const u0 = c / nc + gap / 2, u1 = (c + 1) / nc - gap / 2, v0 = r / nr + gap / 2, v1 = (r + 1) / nr - gap / 2;
+        o += panel(Q(q, u0, v0), Q(q, u1, v0), Q(q, u1, v1), Q(q, u0, v1), cols, rows);
+      }
+    }
+    return o;
+  };
+  const defs = `<defs><linearGradient id="en-cell" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#34598a"/><stop offset=".55" stop-color="#1d3a62"/><stop offset="1" stop-color="#152a47"/></linearGradient>
+<linearGradient id="en-shineg" x1="0" x2="1"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset=".5" stop-color="#fff" stop-opacity=".85"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>
+<linearGradient id="en-wall" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e9dfcb"/><stop offset="1" stop-color="#ddd1b8"/></linearGradient>
+<linearGradient id="en-tile" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#b84d36"/><stop offset="1" stop-color="#cf6648"/></linearGradient></defs>`;
+  // Two panels on their frame on the ground, seen from the front, tilted to the sky.
+  const ground = `<svg class="en-e" viewBox="0 0 96 108">${defs}${ENERGY_SKY}
+<ellipse cx="48" cy="98.5" rx="42" ry="3" fill="rgba(0,0,0,.14)"/>
+<path d="M27 74 V96 M69 74 V96" stroke="#7d868e" stroke-width="2"/>
+<path d="M27 86 L16 74 M69 86 L80 74" stroke="#7d868e" stroke-width="1.3"/>
+<path d="M15 74 V97 M81 74 V97" stroke="#aeb6bd" stroke-width="2.4" stroke-linecap="round"/>
+<path d="M11 97 H22 M74 97 H85" stroke="#8b939a" stroke-width="2" stroke-linecap="round"/>
+<path d="M9.5 74.8 H86.5" stroke="#9aa3aa" stroke-width="2"/>
+${grid([[20, 44], [76, 44], [85, 74], [11, 74]], 2, 1, 0.018, 4, 6)}
+<clipPath id="en-pc"><path d="M20 44 L76 44 L85 74 L11 74 Z"/></clipPath>
+<g clip-path="url(#en-pc)"><path class="en-shine" d="M32 40 L42 40 L30 78 L20 78 Z" fill="url(#en-shineg)"/></g>
+<path class="en-wire" d="M48 75 V82"/><rect x="41" y="81" width="14" height="10" rx="1.6" fill="#3a4148" stroke="#262b30" stroke-width=".6"/><path d="M43.5 84 H52.5 M43.5 86 H52.5" stroke="#566069" stroke-width=".6"/><circle class="sol-led" cx="52" cy="88.6" r="1"/>
+<path class="en-wire" d="M55 86 H61 Q64 86 64 89 V97 H100"/><path class="sol-ef" d="M48 75 V82 M55 86 H61 Q64 86 64 89 V97 H100"/>
+${ENERGY_SMOKE(37, 64, 0.55)}${ENERGY_ANGER(53, 76)}</svg>`;
+  // A house seen three quarters on: the slope of its roof towards us carries
+  // the panels, and the energy goes into the house's electrical panel.
+  const R = [[24, 44], [80, 44], [95, 66], [39, 66]];
+  const tiles = [49.5, 54, 58.5, 63].map((y) => {
+    const k = (y - 44) / 22;
+    return `M${(24 + 15 * k).toFixed(1)} ${y} H${(80 + 15 * k).toFixed(1)}`;
+  }).join(" ");
+  const roof = `<svg class="en-e" viewBox="0 0 96 108">${defs}${ENERGY_SKY}
+<ellipse cx="52" cy="99.5" rx="44" ry="2.6" fill="rgba(0,0,0,.14)"/>
+<rect x="67" y="34" width="7" height="12" fill="#a4553f" stroke="#7d3a29" stroke-width=".6"/><rect x="66" y="32.5" width="9" height="2.5" rx=".5" fill="#7d3a29"/>
+<rect x="38" y="64" width="53" height="34" fill="url(#en-wall)" stroke="#bfb196" stroke-width=".7"/>
+<path d="M12 98 V64 L24 47 L37 64 V98 Z" fill="#f6eedf" stroke="#cbbfa6" stroke-width=".7" stroke-linejoin="round"/>
+<path d="M9.5 66.5 L24 45 L39 66.5" fill="none" stroke="#8f3d2b" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M${R.map(f1).join(" L")} Z" fill="url(#en-tile)"/><path d="${tiles}" stroke="#a14430" stroke-width=".6"/>
+<path d="M24 44 H80" stroke="#8f3d2b" stroke-width="2.2" stroke-linecap="round"/><path d="M39 66.5 H95" stroke="#8f3d2b" stroke-width="1.8" stroke-linecap="round"/>
+${grid([Q(R, 0.12, 0.14), Q(R, 0.9, 0.14), Q(R, 0.9, 0.86), Q(R, 0.12, 0.86)], 3, 2, 0.03, 3, 2)}
+<clipPath id="en-pc2"><path d="M${R.map(f1).join(" L")} Z"/></clipPath>
+<g clip-path="url(#en-pc2)"><path class="en-shine" d="M42 40 L52 40 L64 70 L54 70 Z" fill="url(#en-shineg)"/></g>
+<circle cx="24.5" cy="56" r="3" fill="#a9cbe6" stroke="#7d8e9b" stroke-width=".7"/>
+<rect x="17" y="72" width="15" height="12" rx="1" fill="#a9cbe6" stroke="#7d8e9b" stroke-width=".8"/><path d="M24.5 72 V84 M17 78 H32" stroke="#7d8e9b" stroke-width=".7"/>
+<rect x="44" y="77" width="10" height="21" rx="1" fill="#8d6e63" stroke="#6d5249" stroke-width=".6"/><circle cx="52" cy="88" r=".8" fill="#e0c36a"/>
+<rect x="60" y="72" width="14" height="12" rx="1" fill="#a9cbe6" stroke="#7d8e9b" stroke-width=".8"/><path d="M67 72 V84 M60 78 H74" stroke="#7d8e9b" stroke-width=".7"/>
+<rect x="79" y="76" width="9" height="9" rx="1.3" fill="#3a4148" stroke="#262b30" stroke-width=".6"/><circle class="sol-led" cx="85.8" cy="82.8" r=".9"/>
+<rect x="66" y="86.5" width="9" height="10" rx="1.2" fill="#f2f2ef" stroke="#8f979e" stroke-width=".7"/><rect x="67.6" y="88" width="5.8" height="2.6" rx=".5" fill="#27303a"/><path d="M70.9 91.6 L69.4 94 H70.6 L70.1 95.8 L71.8 93.4 H70.6 Z" fill="#f9a825"/>
+<path class="en-wire" d="M83.5 67 V76 M83.5 85 V91.5 H75"/><path class="sol-ef" d="M83.5 67 V76 M83.5 85 V91.5 H75"/>
+${ENERGY_SMOKE(73, 64, 0.48)}${ENERGY_ANGER(85.5, 72)}</svg>`;
+  return { ground, roof };
+})();
+
+function solarHtml(cls, p) {
+  const layout = SOLAR_LAYOUTS.includes(p.layout) ? p.layout : "ground";
+  const mode = p.mode || "night";
+  return `
+        <div class="machine ${cls} en sol sol-l-${layout} sol-m-${mode} en-sky-${p.sky || "day"}">${SOLAR_SVGS[layout]}</div>`;
+}
+
+// The battery's drawing, with its level and its reserve drawn in.
+function batterySvg(layout, level, reserve) {
+  const pct = level === null || level === undefined ? null : Math.max(0, Math.min(100, level));
+  const res = reserve === null || reserve === undefined ? null : Math.max(0, Math.min(100, reserve));
+  const shown = pct === null ? "--" : `${Math.round(pct)}%`;
+  if (layout === "station") {
+    // A portable station: its metal top with its handles, its screen with the
+    // percentage and a bar, its sockets and its wheels.
+    const bw = 24;
+    const fw = pct === null ? 0 : Math.round(pct / 100 * bw * 10) / 10;
+    const rx = res === null ? null : Math.round((36 + res / 100 * bw) * 10) / 10;
+    const sock = (x) => `<circle cx="${x}" cy="80" r="3.6" fill="#1a1e22" stroke="#59626a" stroke-width=".6"/><rect x="${x - 1.9}" y="79.3" width="1" height="2.2" rx=".4" fill="#7b848c"/><rect x="${x + 0.9}" y="79.3" width="1" height="2.2" rx=".4" fill="#7b848c"/>`;
+    return `<svg class="en-e" viewBox="0 0 96 108">
+<defs><linearGradient id="en-sb" x1="0" y1="0" x2="1" y2="1"><stop offset="0" style="stop-color:var(--ac-body-hi,#e6e6e6)"/><stop offset=".45" style="stop-color:var(--ac-body,#d7d7d7)"/><stop offset="1" style="stop-color:var(--ac-body-lo,#aeb2b5)"/></linearGradient>
+<linearGradient id="en-st" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#b8c0c7"/><stop offset="1" stop-color="#8f989f"/></linearGradient></defs>
+<ellipse cx="48" cy="99" rx="38" ry="2.6" fill="rgba(0,0,0,.16)"/>
+<rect x="12" y="37" width="72" height="10" rx="4" fill="url(#en-st)" stroke="#7c858c" stroke-width=".6"/>
+<rect x="19" y="39.5" width="20" height="4" rx="2" fill="#2a2f34"/><rect x="57" y="39.5" width="20" height="4" rx="2" fill="#2a2f34"/>
+<rect x="12" y="44" width="72" height="50" rx="5" fill="url(#en-sb)" stroke="rgba(0,0,0,.3)" stroke-width=".7"/>
+<rect x="16" y="48" width="64" height="42" rx="3" fill="rgba(0,0,0,.06)" stroke="rgba(0,0,0,.2)" stroke-width=".7"/>
+<rect x="32" y="51" width="32" height="18" rx="2.5" fill="#0c1014"/>
+<text class="bat-lcd" x="51.5" y="61.5">${shown}</text>
+<path class="bat-bolt" d="M36.6 53.6 L34.6 57.2 H36.2 L35.7 60 L37.8 56.4 H36.2 Z" fill="#43a047"/>
+<rect x="36" y="64" width="${bw}" height="2.6" rx="1.3" fill="#2a3036"/><rect class="bat-lvl" x="36" y="64" width="${fw}" height="2.6" rx="1.3"/>
+${rx === null ? "" : `<path class="bat-reserve" d="M${rx} 62.6 V68" stroke-width="1"/>`}
+${sock(26)}${sock(36)}${sock(60)}${sock(70)}
+<rect x="44" y="77.5" width="3" height="5" rx=".6" fill="#1a1e22"/><rect x="49" y="77.5" width="3" height="5" rx=".6" fill="#1a1e22"/>
+<circle cx="22" cy="58" r="2.4" fill="#22272b" stroke="#5c656d" stroke-width=".6"/><circle class="bat-led" cx="22" cy="58" r="1"/>
+<rect x="15" y="93" width="9" height="4" rx="1" fill="#1d2125"/><circle cx="74" cy="94.5" r="4" fill="#1d2125"/><circle cx="74" cy="94.5" r="1.5" fill="#5c656d"/>
+<path class="en-wire" d="M-4 88 H12"/><path class="en-wire" d="M84 88 H100"/>
+<path class="bat-bf bat-in" d="M-4 88 H12"/><path class="bat-bf bat-out" d="M84 88 H100"/>
+${ENERGY_SMOKE(52, 12, 0.55)}${ENERGY_ANGER(80, 33)}</svg>`;
+  }
+  // A block on the wall, seen three quarters on, with its screen and a tall
+  // gauge that fills from the bottom inside its window.
+  const gx = 38, gy = 37, gw = 14, gh = 50, inner = gh - 2;
+  const fh = pct === null ? 0 : Math.round(pct / 100 * inner * 10) / 10;
+  const fy = Math.round((gy + 1 + inner - fh) * 10) / 10;
+  const ry = res === null ? null : Math.round((gy + 1 + inner - res / 100 * inner) * 10) / 10;
+  let ticks = "";
+  for (let k = 1; k < 10; k++) ticks += `M${gx + 2} ${Math.round((gy + 1 + inner * k / 10) * 10) / 10} H${gx + gw - 2} `;
+  return `<svg class="en-e" viewBox="0 0 96 108">
+<defs><linearGradient id="en-wf" x1="0" y1="0" x2="1" y2="1"><stop offset="0" style="stop-color:var(--ac-body-hi,#e6e6e6)"/><stop offset=".45" style="stop-color:var(--ac-body,#d7d7d7)"/><stop offset="1" style="stop-color:var(--ac-body-lo,#aeb2b5)"/></linearGradient>
+<linearGradient id="en-lv" x1="0" x2="1"><stop offset="0" stop-color="#fff" stop-opacity=".35"/><stop offset=".5" stop-color="#fff" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".12"/></linearGradient>
+<linearGradient id="en-sw" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset=".5" stop-color="#fff" stop-opacity=".7"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>
+<clipPath id="en-gclip"><rect x="${gx + 1}" y="${gy + 1}" width="${gw - 2}" height="${inner}" rx="4"/></clipPath></defs>
+<ellipse cx="49" cy="100.5" rx="30" ry="2.4" fill="rgba(0,0,0,.15)"/>
+<rect x="32" y="15" width="37" height="83" rx="7" style="fill:var(--ac-body-lo,#aeb2b5)"/><rect x="32" y="15" width="37" height="83" rx="7" fill="rgba(0,0,0,.16)"/>
+<rect x="28" y="12" width="35" height="84" rx="7" fill="url(#en-wf)" stroke="rgba(0,0,0,.18)" stroke-width=".8"/>
+<rect x="32" y="17" width="27" height="15" rx="3.5" fill="#12171c"/>
+<text class="bat-lcd" x="48.5" y="28">${shown}</text>
+<path class="bat-bolt" d="M35.6 20 L33.6 24 H35.3 L34.8 28.6 L37.3 23.6 H35.6 Z" fill="#43a047"/>
+<rect x="${gx}" y="${gy}" width="${gw}" height="${gh}" rx="5" fill="#e1e6ea" stroke="rgba(0,0,0,.25)" stroke-width=".8"/>
+<g clip-path="url(#en-gclip)">
+<rect class="bat-lvl" x="${gx + 1}" y="${fy}" width="${gw - 2}" height="${fh}"/>
+<rect x="${gx + 1}" y="${gy + 1}" width="${gw - 2}" height="${inner}" fill="url(#en-lv)"/>
+<rect class="bat-sweep" x="${gx + 1}" y="${gy + 1 + inner - 14}" width="${gw - 2}" height="14" fill="url(#en-sw)"/>
+<path d="${ticks.trim()}" stroke="#fff" stroke-opacity=".55" stroke-width=".6"/>
+</g>
+${ry === null ? "" : `<path class="bat-reserve" d="M${gx - 2.5} ${ry} H${gx + gw + 2.5}" stroke-dasharray="1.6 1.2" stroke-width="1.1"/>`}
+<circle class="bat-led" cx="45.5" cy="91.5" r="1.3"/>
+<path class="en-wire" d="M-4 100 H34 V96"/><path class="en-wire" d="M57 96 V100 H100"/>
+<path class="bat-bf bat-in" d="M-4 100 H34 V96"/><path class="bat-bf bat-out" d="M57 96 V100 H100"/>
+${ENERGY_SMOKE(50, -2, 0.55)}${ENERGY_ANGER(61, 7)}</svg>`;
+}
+
+function batteryHtml(cls, b) {
+  const layout = BATTERY_LAYOUTS.includes(b.layout) ? b.layout : "wall";
+  const mode = b.mode || "idle";
+  return `
+        <div class="machine ${cls} en bat bat-l-${layout} bat-m-${mode}${b.low ? " bat-low" : ""}">${batterySvg(layout, b.level, b.reserve)}</div>`;
+}
+
 // A robot's drawing. It leaves its base and goes back and forth over its
 // floor: a rug for a vacuum, tiles for a mop, a lawn for a mower, which is
 // drawn in profile with the grass cut under it. Its ring says what it does,
@@ -9432,6 +9857,9 @@ function robotRain() {
 
 function robotHtml(cls, r) {
   const layout = ROBOT_LAYOUTS.includes(r.layout) ? r.layout : "vacuum";
+  // The floor it works on: the one of its kind, or the one chosen (#49).
+  const floor = ROBOT_FLOORS.includes(r.floor) ? r.floor : layout === "mop" ? "tiles" : "rug";
+  const floorCls = `rbt-floor rbt-${floor}`;
   const mode = r.mode || "idle";
   const draw = mode === "edgecut" ? "cleaning" : mode === "docked" ? "charging" : mode === "rain" ? "charging rbt-m-raining" : mode;
   const err = ROBOT_MANGA + ROBOT_ANGER;
@@ -9443,14 +9871,14 @@ function robotHtml(cls, r) {
           <div class="rbt-tall"></div><div class="rbt-st-roof"></div>`;
   } else if (layout === "mop") {
     const lvl = r.water !== null && r.water !== undefined ? ` style="--lvl: ${Math.round(r.water)}%"` : "";
-    inner = `<div class="rbt-tiles"><i class="rbt-trace rbt-t1 rbt-wet"></i><i class="rbt-trace rbt-t2 rbt-wet"></i></div>
+    inner = `<div class="${floorCls}"><i class="rbt-trace rbt-t1 rbt-wet"></i><i class="rbt-trace rbt-t2 rbt-wet"></i></div>
           <div class="rbt-mcap"></div><div class="rbt-mdock"><div class="rbt-tk rbt-c"><i></i></div><div class="rbt-tk rbt-d"><i></i></div><i class="rbt-dled"></i></div>
           <div class="rbt-plate"></div><div class="rbt-pcap"></div>
           <div class="rbt-rm"${lvl}><div class="rbt-pad"></div><div class="rbt-sd"></div><div class="rbt-tp"></div><div class="rbt-tank"><i></i></div><div class="rbt-ring"></div>${err}</div>
           ${airFlow("rbt-vapor", 44, 17)}
           <div class="rbt-bubbles">${"<b></b>".repeat(4)}</div>`;
   } else {
-    inner = `<div class="rbt-rug"></div>
+    inner = `<div class="${floorCls}"></div>
           <div class="rbt-dock"><i class="rbt-dled"></i><div class="rbt-bin"><div class="rbt-fill"></div>${"<b></b>".repeat(3)}</div></div><div class="rbt-dcap"></div>
           <div class="rbt-plate"></div><div class="rbt-pcap"></div>
           <div class="rbt-rb"><div class="rbt-brush"><i></i></div><div class="rbt-sd"></div><div class="rbt-bmp"></div><div class="rbt-tp"></div><div class="rbt-lidw"></div><div class="rbt-lid"></div><div class="rbt-ring"></div>${err}</div>`;
@@ -10164,6 +10592,8 @@ function illustrationHtml(type, ctx) {
   if (type === "network") return networkHtml(cls, ctx.network || {});
   if (type === "robot") return robotHtml(cls, ctx.robot || {});
   if (type === "pool_pump") return poolHtml(cls, ctx.pool || {});
+  if (type === "solar") return solarHtml(cls, ctx.solar || {});
+  if (type === "home_battery") return batteryHtml(cls, ctx.battery || {});
   if (type === "screen") return screenHtml(cls, ctx.screen || {});
   if (type === "air_purifier") return purifierHtml(cls, ctx.purifier || {});
   if (type === "fan") return fanHtml(cls, ctx.fan || {});
@@ -10355,7 +10785,14 @@ class ApplianceCard extends HTMLElement {
     // And for a pool pump on a smart plug: the meter says whether it filters.
     const asPool = config && (config.appliance_type === "pool_pump" || POOL_ONLY_FIELDS.some((f) => config[f]));
     const hasPoolSource = asPool && !!config.power_entity;
-    if (!config || (!config.state_entity && !hasFridgeSource && !hasFeederSource && !hasChargerSource && !hasScreenSource && !hasPoolSource)) {
+    // And for panels, whose power is all there is to read, and a battery,
+    // read from its level or its power.
+    const asSolar = config && (config.appliance_type === "solar" || SOLAR_ONLY_FIELDS.some((f) => config[f]));
+    const hasSolarSource = asSolar && !!config.power_entity;
+    const asBattery = config && (config.appliance_type === "home_battery" || BATTERY_ONLY_FIELDS.some((f) => config[f]));
+    const hasBatterySource = asBattery && !!(config.battery_entity || config.power_entity || config.charge_power_entity || config.discharge_power_entity);
+    if (!config || (!config.state_entity && !hasFridgeSource && !hasFeederSource && !hasChargerSource && !hasScreenSource && !hasPoolSource
+      && !hasSolarSource && !hasBatterySource)) {
       throw new Error("ha-appliance-card: 'state_entity' is required");
     }
     this._config = config;
@@ -10674,6 +11111,8 @@ class ApplianceCard extends HTMLElement {
   _call(entityId, opts) {
     if (!this._hass || !entityId) return;
     const domain = domainOf(entityId);
+    // A robot's own controls name their service: start, pause, the way home.
+    if (opts && opts.service) return this._hass.callService(domain, opts.service, { entity_id: entityId });
     if (domain === "select" || domain === "input_select") {
       const option = (opts && opts.option) || soleOption(this._hass, entityId);
       // Without an option there is nothing to pick, and picking the wrong one
@@ -10874,7 +11313,7 @@ class ApplianceCard extends HTMLElement {
     // in, and that is decided further down with the health summary. A charger
     // too: its meter only stands in for a status it does not have, together
     // with the plug, further down.
-    if (!cap.fridgeTemp && !cap.evCharger && !cap.screen && !cap.network && cfg.power_entity && isFinite(threshold)) {
+    if (!cap.fridgeTemp && !cap.evCharger && !cap.screen && !cap.network && !cap.solar && !cap.homeBattery && cfg.power_entity && isFinite(threshold)) {
       let derived = powerDerivedState(watts, threshold, this._powerWasRunning);
       // A pause under the threshold is not the end: a dishwasher drying, a
       // washer soaking. With power_off_delay the card waits that many minutes
@@ -13099,6 +13538,69 @@ class ApplianceCard extends HTMLElement {
       pool = { mode, chlorine, dosing, lit, needle, can };
     }
 
+    // Solar panels: they produce, produce little, rest at night or are in
+    // error. Their lines give the power and the energy of the day.
+    let solar = null;
+    if (cap.solar) {
+      const r = solarReadOf(hass, cfg, st);
+      if (!cfg.state_show_raw || r.mode === "unav" || !st) stateLabel = t(hass, SOLAR_LABELS[r.mode]);
+      color = SOLAR_COLORS[r.mode];
+      if (r.mode !== "unav") {
+        if (r.watts !== null) {
+          extraLines.push({ key: "power", icon: cfg.power_icon || "mdi:solar-power", label: t(hass, "power"),
+            value: keepTogether(energyPowerText(hass, r.watts, false)), entity: r.powerId });
+        }
+        const today = cfg.energy_today_entity ? stateObj(hass, cfg.energy_today_entity) : null;
+        if (today && entityUsable(hass, cfg.energy_today_entity)) {
+          extraLines.push({ key: "energy_today", icon: "mdi:solar-power-variant", label: t(hass, "solar_line_today"),
+            value: keepTogether(formatInfoValue(today, hass, null, cfg, cfg.energy_today_entity)), entity: cfg.energy_today_entity });
+        }
+      }
+      solar = { mode: r.mode, sky: r.sky, layout: cfg.solar_layout };
+    }
+
+    // A home battery: it charges, discharges, rests, is full or low, or is in
+    // error. Its lines give its level, its power, the time to full or until
+    // the reserve, and the reserve itself.
+    let battery = null;
+    if (cap.homeBattery) {
+      const b = batteryReadOf(hass, cfg, st);
+      const shown = b.low && ["idle", "discharging"].includes(b.mode) ? "low" : b.mode;
+      if (!cfg.state_show_raw || b.mode === "unav" || !st) stateLabel = t(hass, BATTERY_LABELS[shown]);
+      color = BATTERY_COLORS[shown];
+      if (b.mode !== "unav") {
+        if (b.level !== null) {
+          extraLines.push({ key: "battery", icon: robotBatteryIcon(b.level, b.mode === "charging"), label: t(hass, "section_battery"),
+            value: keepTogether(`${Math.round(b.level)} %`), entity: b.levelId, caution: b.low });
+        }
+        if (b.net !== null) {
+          extraLines.push({ key: "power", icon: cfg.power_icon || (b.mode === "discharging" ? "mdi:battery-arrow-down-outline" : "mdi:battery-arrow-up-outline"),
+            label: t(hass, "power"), value: keepTogether(energyPowerText(hass, b.net, ["charging", "discharging"].includes(b.mode))), entity: b.powerId });
+        }
+        const cap_ = parseFloat(cfg.battery_capacity);
+        if (isFinite(cap_) && cap_ > 0 && b.level !== null && b.net !== null) {
+          let hours = null;
+          let key = "";
+          if (b.mode === "charging") {
+            hours = ((b.top - b.level) / 100 * cap_ * 1000) / b.net;
+            key = "bat_line_full_in";
+          } else if (b.mode === "discharging") {
+            hours = ((b.level - (b.reserve !== null ? b.reserve : 0)) / 100 * cap_ * 1000) / -b.net;
+            key = "bat_line_left";
+          }
+          if (hours !== null && hours > 0 && hours < 100) {
+            extraLines.push({ key: "battery_time", icon: "mdi:timer-sand", label: t(hass, key),
+              value: keepTogether(formatDuration(hours * 3600, hass)), entity: b.powerId || b.levelId });
+          }
+        }
+        if (b.reserve !== null) {
+          extraLines.push({ key: "battery_reserve", icon: "mdi:shield-half-full", label: t(hass, "bat_line_reserve"),
+            value: keepTogether(`${Math.round(b.reserve)} %`), entity: cfg.reserve_entity });
+        }
+      }
+      battery = { mode: b.mode, layout: batteryLayoutOf(cfg, st), level: b.level, reserve: b.reserve, low: b.low };
+    }
+
     // A robot, from its own state and its status: the work, the way home, a
     // pause, the station busy with the bin or the pads, rain on a mower's
     // lawn. On the base it is charging until its battery is full, docked
@@ -13115,7 +13617,7 @@ class ApplianceCard extends HTMLElement {
       color = ROBOT_COLORS[mode];
       const water = robotWaterPct(hass, cfg);
       if (mode !== "unav") {
-        if (battery !== null) {
+        if (battery !== null && !cfg.battery_corner) {
           extraLines.push({ key: "robot_battery", icon: robotBatteryIcon(battery, mode === "charging"), label: t(hass, "section_battery"),
             value: keepTogether(`${Math.round(battery)} %`), entity: cfg.battery_entity || cfg.state_entity });
         }
@@ -13142,7 +13644,7 @@ class ApplianceCard extends HTMLElement {
           extraLines.push({ key: "robot_error", icon: "mdi:alert-circle-outline", label: t(hass, "error"), value: text, entity: id, warn: true });
         }
       }
-      robot = { layout, mode, water, base: cfg.robot_station === "base", shelter: !!cfg.robot_shelter };
+      robot = { layout, mode, water, battery, floor: cfg.robot_floor, base: cfg.robot_station === "base", shelter: !!cfg.robot_shelter };
     }
 
     // The last cycle, on request: how long it ran and when it ended. Shown
@@ -13170,7 +13672,7 @@ class ApplianceCard extends HTMLElement {
 
     // Power draw is worth showing on any type once the entity is there. A
     // charger prints its own, in kilowatts.
-    if (!cap.fridgeTemp && !cap.heatPump && !cap.evCharger && cfg.power_entity && watts !== null) {
+    if (!cap.fridgeTemp && !cap.heatPump && !cap.evCharger && !cap.solar && !cap.homeBattery && cfg.power_entity && watts !== null) {
       extraLines.push({
         key: "power",
         icon: cfg.power_icon || "mdi:power-plug",
@@ -13221,6 +13723,8 @@ class ApplianceCard extends HTMLElement {
       network,
       robot,
       pool,
+      solar,
+      battery,
       purifier,
       screen,
       fan: fanCtx,
@@ -13259,6 +13763,7 @@ class ApplianceCard extends HTMLElement {
       { key: "stop", entity: cfg.stop_entity, icon: "mdi:stop", label: t(hass, "stop") },
       cap.filter || cap.petFountain ? { key: "filter_reset", entity: cfg.filter_reset_entity, icon: "mdi:air-filter", label: t(hass, "filter_reset") } : {},
       cap.petFountain ? { key: "pump_reset", entity: cfg.pump_reset_entity, icon: "mdi:pump", label: t(hass, "ft_pump_reset") } : {},
+      ...robotControls(hass, cfg, robot),
     ]
       .map((a) => (a.key && a.key !== "toggle" ? { ...a, option: cfg[`${a.key}_option`], value: cfg[`${a.key}_value`] } : a))
       // A button's icon can be swapped for another, `start_icon` and its
@@ -13317,6 +13822,8 @@ class ApplianceCard extends HTMLElement {
         illustrationCtx.network.disks.join(""), illustrationCtx.network.wifiOff].join("/"),
       illustrationCtx.robot && [illustrationCtx.robot.mode, illustrationCtx.robot.layout].join("/"),
       illustrationCtx.pool && [illustrationCtx.pool.mode, illustrationCtx.pool.dosing, illustrationCtx.pool.lit].join("/"),
+      illustrationCtx.solar && [illustrationCtx.solar.mode, illustrationCtx.solar.sky, illustrationCtx.solar.layout].join("/"),
+      illustrationCtx.battery && [illustrationCtx.battery.mode, illustrationCtx.battery.layout, illustrationCtx.battery.low].join("/"),
       illustrationCtx.screen && [illustrationCtx.screen.mode, illustrationCtx.screen.layout, illustrationCtx.screen.image, illustrationCtx.screen.cover].join("/"),
       illustrationCtx.purifier && [illustrationCtx.purifier.mode, illustrationCtx.purifier.osc, illustrationCtx.purifier.back].join("/"),
       illustrationCtx.fan && [illustrationCtx.fan.mode, illustrationCtx.fan.osc, illustrationCtx.fan.natural, illustrationCtx.fan.winter].join("/"),
@@ -13363,6 +13870,13 @@ class ApplianceCard extends HTMLElement {
         .door-badge.left { left: 12px; }
         .door-badge.right { right: 12px; }
         .door-badge.open { color: var(--warning-color, #ff9800); }
+        .batt-badge {
+          position: absolute; cursor: pointer; display: flex; align-items: center; gap: 2px;
+          --mdc-icon-size: 22px; color: var(--secondary-text-color, #767676); font-size: 0.85em; font-weight: 500;
+        }
+        .batt-badge.left { left: 10px; }
+        .batt-badge.right { right: 10px; }
+        .batt-badge.low { color: var(--warning-color, #ff9800); }
         /* Switches at hand, lined up under the light on the left and under
            the connection on the right, centred on the same axis. */
         .corner-btn {
@@ -13443,8 +13957,8 @@ class ApplianceCard extends HTMLElement {
            them sits on top of anything. */
         .cmp-head { display: flex; align-items: center; gap: 6px; min-height: 32px; }
         .cmp-icons { display: flex; align-items: center; gap: 2px; flex-shrink: 0; }
-        .cmp-icons .light-badge, .cmp-icons .conn-badge, .cmp-icons .corner-btn, .cmp-icons .door-badge { position: static; }
-        .cmp-icons .door-badge { display: flex; padding: 4px; }
+        .cmp-icons .light-badge, .cmp-icons .conn-badge, .cmp-icons .corner-btn, .cmp-icons .door-badge, .cmp-icons .batt-badge { position: static; }
+        .cmp-icons .door-badge, .cmp-icons .batt-badge { display: flex; padding: 4px; }
         .cmp-icons .conn-badge, .cmp-icons .light-badge { display: flex; padding: 4px; }
         .cmp-icons .action-btn { width: 32px; height: 32px; }
         .cmp-icons .action-btn ha-icon { --mdc-icon-size: 18px; }
@@ -13623,7 +14137,7 @@ class ApplianceCard extends HTMLElement {
       ? `<div class="actions-row">${actions
           .map(
             (a) =>
-              `<div class="action-btn ${a.on ? "on" : ""}" data-entity="${esc(a.entity)}"${a.option ? ` data-option="${esc(a.option)}"` : ""}${a.value !== undefined && a.value !== null && a.value !== "" ? ` data-value="${esc(a.value)}"` : ""} title="${esc(a.label)}" aria-label="${esc(a.label)}"><ha-icon icon="${esc(a.icon)}"></ha-icon></div>`
+              `<div class="action-btn ${a.on ? "on" : ""}" data-entity="${esc(a.entity)}"${a.service ? ` data-service="${esc(a.service)}"` : ""}${a.option ? ` data-option="${esc(a.option)}"` : ""}${a.value !== undefined && a.value !== null && a.value !== "" ? ` data-value="${esc(a.value)}"` : ""} title="${esc(a.label)}" aria-label="${esc(a.label)}"><ha-icon icon="${esc(a.icon)}"></ha-icon></div>`
           )
           .join("")}</div>`
       : "";
@@ -13646,6 +14160,14 @@ class ApplianceCard extends HTMLElement {
       ? `<div class="door-badge ${doorSide}${doorOpen ? " open" : ""}" style="top:${doorSide === "right" && connBadgeHtml ? 40 : 10}px" data-more="${esc(cfg.door_entity)}" title="${esc(doorLabel)}" aria-label="${esc(doorLabel)}"><ha-icon icon="${doorOpen ? "mdi:door-open" : "mdi:door-closed"}"></ha-icon></div>`
       : "";
 
+    // A robot's battery, in a corner rather than in the lines when asked
+    // (#49): an icon that fills and its percentage, orange when it runs low.
+    const battSide = robot && cfg.battery_corner && robot.battery !== null && robot.mode !== "unav"
+      ? (lightBadgeHtml || doorSide === "left" ? "right" : "left") : "";
+    const battBadgeHtml = battSide
+      ? `<div class="batt-badge ${battSide}${robot.battery <= 20 ? " low" : ""}" style="top:${battSide === "right" && connBadgeHtml ? 40 : 10}px" data-more="${esc(cfg.battery_entity || cfg.state_entity)}" title="${esc(t(hass, "section_battery"))}" aria-label="${esc(t(hass, "section_battery"))}"><ha-icon icon="${robotBatteryIcon(robot.battery, robot.mode === "charging")}"></ha-icon><span>${Math.round(robot.battery)} %</span></div>`
+      : "";
+
     // The switches the user wants at hand: the first on the left, the second
     // on the right, each under what already sits in its corner. The icon says
     // what each one does and whether it holds.
@@ -13657,8 +14179,8 @@ class ApplianceCard extends HTMLElement {
         const icon = cornerIcon(hass, c);
         const label = c.label || stripNamePrefix(cst.attributes.friendly_name, c.entity);
         const side = i ? "right" : "left";
-        const top = side === "left" ? (lightBadgeHtml || doorSide === "left" ? 36 : 6)
-          : (connBadgeHtml ? 36 : 6) + (doorSide === "right" ? 30 : 0);
+        const top = side === "left" ? (lightBadgeHtml || doorSide === "left" || battSide === "left" ? 36 : 6)
+          : (connBadgeHtml ? 36 : 6) + (doorSide === "right" || battSide === "right" ? 30 : 0);
         return `<div class="corner-btn ${side}${on ? " on" : ""}" style="top:${top}px" data-corner="${esc(c.entity)}" title="${esc(label)}" aria-label="${esc(label)}"><ha-icon icon="${esc(icon)}"></ha-icon></div>`;
       });
     const cornersHtml = cornerList.join("");
@@ -13695,8 +14217,8 @@ class ApplianceCard extends HTMLElement {
     // A compact card has no row of its own for its buttons: they join the
     // corner switches, the light and the connection on the name's line.
     const buttonsInline = actionsHtml.replace('<div class="actions-row">', "").replace(/<\/div>$/, "");
-    const leftIcons = lightBadgeHtml + (doorSide === "left" ? doorBadgeHtml : "") + (cornerList[0] || "");
-    const rightIcons = (compact === "hide" ? doneBadge : "") + (cornerList[1] || "") + (doorSide === "right" ? doorBadgeHtml : "") + connBadgeHtml
+    const leftIcons = lightBadgeHtml + (doorSide === "left" ? doorBadgeHtml : "") + (battSide === "left" ? battBadgeHtml : "") + (cornerList[0] || "");
+    const rightIcons = (compact === "hide" ? doneBadge : "") + (cornerList[1] || "") + (doorSide === "right" ? doorBadgeHtml : "") + (battSide === "right" ? battBadgeHtml : "") + connBadgeHtml
       + (compact ? buttonsInline : "");
     // Classes rather than a className: a theme or card_mod may add its own.
     if (this._card.classList) {
@@ -13732,6 +14254,7 @@ class ApplianceCard extends HTMLElement {
         ${lightBadgeHtml}
         ${connBadgeHtml}
         ${doorBadgeHtml}
+        ${battBadgeHtml}
         ${cornersHtml}
         <div class="top" id="header">
           ${iconHtml}
@@ -13760,11 +14283,12 @@ class ApplianceCard extends HTMLElement {
     this._root.querySelectorAll(".action-btn, .light-badge").forEach((el) => {
       const id = el.getAttribute("data-entity");
       this._wireControl(el, cfg.controls_activation, id, () => this._call(id, {
+        service: el.getAttribute("data-service"),
         option: el.getAttribute("data-option"),
         value: el.getAttribute("data-value"),
       }));
     });
-    this._root.querySelectorAll(".info-line[data-more], .alert-row[data-more], .alerts-pill[data-more], .door-badge[data-more]").forEach((el) => {
+    this._root.querySelectorAll(".info-line[data-more], .alert-row[data-more], .alerts-pill[data-more], .door-badge[data-more], .batt-badge[data-more]").forEach((el) => {
       el.addEventListener("click", (ev) => {
         ev.stopPropagation();
         this._moreInfo(el.getAttribute("data-more"));
@@ -13917,8 +14441,17 @@ const SECTIONS = [
   { field: "backwash_entity", types: ["pool_pump"], labelKey: "section_backwash", includeDomains: ["binary_sensor", "switch", "sensor", "input_boolean"] },
   { field: "frost_entity", types: ["pool_pump"], labelKey: "section_frost", includeDomains: ["binary_sensor", "switch", "sensor", "input_boolean"] },
   { field: "pool_alert_entity", types: ["pool_pump"], labelKey: "section_pool_alert", includeDomains: ["binary_sensor", "sensor"] },
+  // Solar panels: the energy of the day and an alert. A battery: what goes
+  // in and out, its reserve, its charge limit and an alert.
+  { field: "energy_today_entity", types: ["solar"], labelKey: "section_energy_today", includeDomains: ["sensor"] },
+  { field: "solar_alert_entity", types: ["solar"], labelKey: "section_pool_alert", includeDomains: ["binary_sensor", "sensor"] },
+  { field: "charge_power_entity", types: ["home_battery"], labelKey: "section_charge_power", includeDomains: ["sensor"] },
+  { field: "discharge_power_entity", types: ["home_battery"], labelKey: "section_battery_discharge", includeDomains: ["sensor"] },
+  { field: "reserve_entity", types: ["home_battery"], labelKey: "section_reserve", includeDomains: ["sensor", "number", "input_number"] },
+  { field: "charge_limit_entity", types: ["home_battery"], labelKey: "section_charge_limit", includeDomains: ["sensor", "number", "input_number"] },
+  { field: "battery_alert_entity", types: ["home_battery"], labelKey: "section_pool_alert", includeDomains: ["binary_sensor", "sensor"] },
   { field: "robot_status_entity", types: ["robot"], labelKey: "section_robot_status", includeDomains: ["sensor", "select", "input_select"] },
-  { field: "battery_entity", types: ["robot"], labelKey: "section_battery", includeDomains: ["sensor"] },
+  { field: "battery_entity", types: ["robot", "home_battery"], labelKey: "section_battery", includeDomains: ["sensor"] },
   { field: "robot_bin_entity", types: ["robot"], labelKey: "section_robot_bin", includeDomains: ["binary_sensor", "sensor"],
     when: (c) => robotLayoutOf(c, null) !== "mower" },
   { field: "robot_water_entity", types: ["robot"], labelKey: "section_robot_water", includeDomains: ["binary_sensor", "sensor"],
@@ -14098,8 +14631,15 @@ const SECTIONS = [
   // A charger's threshold says when power flows: it stands in for a missing
   // status and tells a finished charge from a pause. There is no cycle whose
   // end it would have to wait for.
-  { field: "power_entity", types: APPLIANCE_TYPES, labelKey: "section_power", includeDomains: ["sensor"], extra: (c) => {
+  { field: "power_entity", types: APPLIANCE_TYPES, includeDomains: ["sensor"],
+    labelKey: (type) => (type === "solar" ? "section_solar_power" : type === "home_battery" ? "section_battery_power" : "section_power"), extra: (c) => {
       const cap = caps(c._currentType());
+      // Panels need no threshold; a battery's tells a rest from a charge.
+      if (cap.solar) return "";
+      if (cap.homeBattery) {
+        return c._row("power_on_threshold", "power_on_threshold", { placeholder: String(BATTERY_IDLE_W) })
+          + c._row("power_inverted", "power_inverted", { type: "checkbox" });
+      }
       return c._row(cap.evCharger ? "ev_power_threshold" : cap.screen ? "screen_standby_threshold" : "power_on_threshold", "power_on_threshold",
         { placeholder: cap.fridgeTemp ? "1" : cap.evCharger ? String(EV_POWER_THRESHOLD) : cap.screen ? String(SCREEN_STANDBY_W) : "10" })
         + (cap.fridgeTemp ? c._row("no_power_threshold", "no_power_threshold", { placeholder: "1" }) + c._row("no_power_after", "no_power_after", { placeholder: "30" })
@@ -14652,7 +15192,7 @@ class ApplianceCardEditor extends HTMLElement {
     const open = this._open.has(section.field);
     return `
       <div class="section">
-        <label class="row-inline"><input type="checkbox" data-toggle="${section.field}" ${open ? "checked" : ""} /> ${t(hass, section.labelKey)}</label>
+        <label class="row-inline"><input type="checkbox" data-toggle="${section.field}" ${open ? "checked" : ""} /> ${t(hass, typeof section.labelKey === "function" ? section.labelKey(this._type) : section.labelKey)}</label>
         ${open ? `<div class="picker-slot" data-slot="${section.field}"></div>${section.extra ? section.extra(this, hass) : ""}` : ""}
       </div>`;
   }
@@ -14831,8 +15371,21 @@ class ApplianceCardEditor extends HTMLElement {
             : this._row("section_robot_station", "robot_station", {
               type: "select",
               options: ROBOT_STATIONS.map((v) => ({ value: v, label: t(hass, `robot_station_${v}`) })),
-            }));
+            }) + this._row("section_robot_floor", "robot_floor", {
+              type: "select",
+              options: [{ value: "auto", label: t(hass, "unit_auto") }].concat(ROBOT_FLOORS.map((v) => ({ value: v, label: t(hass, `floor_${v}`) }))),
+            }))
+            + (ROBOT_SERVICES[domainOf(this._config.state_entity)] ? this._row("robot_controls", "robot_controls", { type: "checkbox" }) : "")
+            + this._row("battery_corner", "battery_corner", { type: "checkbox" });
         })() : ""}
+        ${this._type === "solar" ? this._row("section_solar_layout", "solar_layout", {
+          type: "select",
+          options: SOLAR_LAYOUTS.map((v) => ({ value: v, label: t(hass, `layout_solar_${v}`) })),
+        }) + this._row("solar_peak_power", "peak_power", { placeholder: "1000" }) : ""}
+        ${this._type === "home_battery" ? this._row("section_screen_layout", "battery_layout", {
+          type: "select",
+          options: [{ value: "auto", label: t(hass, "unit_auto") }].concat(BATTERY_LAYOUTS.map((v) => ({ value: v, label: t(hass, `layout_battery_${v}`) }))),
+        }) + this._row("battery_capacity", "battery_capacity", { placeholder: "5" }) : ""}
         ${this._type === "air_purifier" ? this._row("section_purifier_layout", "purifier_layout", {
           type: "select",
           options: [

@@ -10,7 +10,7 @@
 <a href="https://buymeacoffee.com/adnpolymerase" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-orange.png" alt="Buy Me A Coffee" height="60"></a>
 <a href="https://adnpolymerase.github.io/HA/" target="_blank"><img src="https://raw.githubusercontent.com/ADNPolymerase/HA/main/assets/site-button.svg" alt="Lien vers mon github.io pour mes autres projets" height="60"></a>
 
-Une card Lovelace pour les appareils de la maison : lave-linge, sèche-linge, lave-vaisselle, four, micro-ondes, hotte, plaque de cuisson, réfrigérateur, bouilloire, robot cuiseur, machine à café, cuiseur à riz, friteuse à air, chauffe-eau, chaudière, pompe à chaleur, imprimante 3D, distributeur de croquettes, fer à repasser, grille-pain, sèche-cheveux, poêle à granulés, climatiseur, déshumidificateur, petit chauffage, sèche-serviettes, purificateur d'air, ventilateur, borne de recharge, télévision, vidéoprojecteur, ordinateur, switch, serveur, NAS et baie réseau, robot aspirateur, laveur et tondeuse, et pompe de piscine. Cycle en cours, programme, temps restant, température, alertes et commandes.
+Une card Lovelace pour les appareils de la maison : lave-linge, sèche-linge, lave-vaisselle, four, micro-ondes, hotte, plaque de cuisson, réfrigérateur, bouilloire, robot cuiseur, machine à café, cuiseur à riz, friteuse à air, chauffe-eau, chaudière, pompe à chaleur, imprimante 3D, distributeur de croquettes, fer à repasser, grille-pain, sèche-cheveux, poêle à granulés, climatiseur, déshumidificateur, petit chauffage, sèche-serviettes, purificateur d'air, ventilateur, borne de recharge, télévision, vidéoprojecteur, ordinateur, switch, serveur, NAS et baie réseau, robot aspirateur, laveur et tondeuse, pompe de piscine, panneaux solaires et batterie domestique. Cycle en cours, programme, temps restant, température, alertes et commandes.
 
 Aucune marque supposée : chaque champ est une entité à choisir, elle fonctionne donc avec **n'importe quelle** intégration (Electrolux, Samsung, LG, Home Connect, Miele, une simple prise connectée…).
 
@@ -21,7 +21,7 @@ Aucune marque supposée : chaque champ est une entité à choisir, elle fonction
 
 ## Fonctionnalités
 
-- **Trente-quatre types d'appareils**, chacun avec une illustration en CSS animée sur les données de l'appareil et statique à l'arrêt. Le type est détecté tout seul ou choisi via `appliance_type`, et `compact: true` ne garde que le texte.
+- **Trente-six types d'appareils**, chacun avec une illustration en CSS animée sur les données de l'appareil et statique à l'arrêt. Le type est détecté tout seul ou choisi via `appliance_type`, et `compact: true` ne garde que le texte.
 - **Normalisation d'état** : `Idle`, `RUNNING`, `wash`, `En marche`… sont reconnus (sans tenir compte des accents) et classés en veille, préchauffage, en cours, en pause, terminé, différé ou erreur. Un état inconnu s'affiche tel quel, sans l'espace de noms de l'intégration, et `state_map` classe le reste, `"*"` ramassant tout ce qui dépasse.
 - **L'étape, et non une heure d'*En cours*** : un lave-linge, un sèche-linge ou un lave-vaisselle nomme l'étape où il en est (*Prélavage*, *Lavage*, *Rinçage*, *Essorage*, *Séchage* et sept autres), d'après une entité de phase ou son propre état, et le tambour s'emballe pendant l'essorage. Le temps restant est toujours celui du cycle entier.
 - **Une lavante-séchante est un lave-linge qui sèche** : `washer_dryer: true`, et le tambour montre de l'eau pendant le lavage, puis du linge qui tourne dans l'air chaud pendant le séchage. L'étape vient de l'état lui-même ou d'une entité de phase, et la ligne d'état lit *Lavage* ou *Séchage*.
@@ -29,6 +29,7 @@ Aucune marque supposée : chaque champ est une entité à choisir, elle fonction
 - **Le réseau aussi** : un switch, un serveur, un NAS, une baie ou un routeur (la box du fournisseur aussi), *En ligne*, en *Activité* ou en *Alerte*, et *Pas d'internet* quand un routeur perd son lien. Une diode par port utilisé, une par disque dans sa baie (sain, en lecture, en veille, à surveiller, en panne), et les mesures trouvées toutes seules sur Synology, UGREEN, Unraid ou Glances.
 - **Les robots aussi** : un aspirateur, un laveur ou une tondeuse quitte sa base et parcourt son sol, revient, et dit quand sa station vide le bac ou lave les patins, quand la pluie le garde à la base ou quand il est coincé.
 - **Et la piscine** : le filtre à sable, la pompe et le bassin, en *Filtration*, en *Injection de chlore* avec une pompe doseuse en option, en *Contre-lavage* vers l'égout, en *Hors-gel*, et le projecteur, l'eau, le pH et le RedOx dans les lignes.
+- **L'énergie** : des panneaux solaires au sol ou sur un toit, sous le soleil, quelques nuages ou la lune, en *Production*, *Production faible* ou *Nuit* ; une batterie domestique murale ou une station portable, *En charge*, *En décharge*, *Au repos*, *Pleine* ou *Batterie basse*, sa réserve tracée sur sa jauge et le temps jusqu'au plein ou jusqu'à la réserve dans les lignes.
 - **Fonctionne avec une simple prise connectée** : `power_entity` et `power_on_threshold` suffisent à déduire l'état de la consommation ; `power_off_delay` évite qu'une pause soit prise pour la fin, et `show_last_cycle` montre la durée du dernier cycle.
 - **Programme, temps restant, barre de progression, lignes d'info, porte, alertes, connectivité et commandes** (démarrer, pause, reprise, stop), chacun optionnel.
 - **14 langues** (EN, FR, DE, ES, IT, NL, PT, SV, NO, DA, PL, RU, ZH, CS), celle de Home Assistant ou fixée sur la card.
@@ -101,6 +102,13 @@ Clique sur une famille pour voir ses appareils en marche.
 
 </details>
 
+<details>
+<summary><b>Énergie : panneaux solaires et batteries domestiques</b></summary>
+
+<img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-energy.fr.gif" alt="Énergie : panneaux solaires et batteries domestiques" width="100%">
+
+</details>
+
 ## Installation
 
 ### Par HACS
@@ -139,7 +147,7 @@ Seule `state_entity` est obligatoire, sauf sur un réfrigérateur où une sonde 
 | `done_alert` | `true` fait pulser un badge vert sur le dessin en fin de cycle, jusqu'à l'ouverture de la porte ou un appui sur le badge. Pour les appareils à cycle (lave-linge, sèche-linge, lave-vaisselle, four…). |
 | `illustration_color` | `auto` (défaut, suit le thème) \| `white` \| `grey` \| `black` \| `red` (rouge foncé). Ne change que la carrosserie, pas les couleurs d'état. |
 | `language` | `auto` (défaut, suit Home Assistant) ou l'un des 14 codes : `en`, `fr`, `de`, `es`, `it`, `nl`, `pt`, `sv`, `no`, `da`, `pl`, `ru`, `zh`, `cs`. `nb` et `nb-NO` donnent le norvégien. |
-| `appliance_type` | `auto` (défaut) \| `washer` \| `dryer` \| `dishwasher` \| `oven` \| `microwave` \| `hood` \| `cooktop` \| `fridge` \| `kettle` \| `cooker` \| `coffee` \| `rice_cooker` \| `air_fryer` \| `water_heater` \| `boiler` \| `heat_pump` \| `printer_3d` \| `pet_feeder` \| `pet_fountain` \| `iron` \| `toaster` \| `pellet_stove` \| `air_conditioner` \| `dehumidifier` \| `space_heater` \| `towel_warmer` \| `air_purifier` \| `fan` \| `ev_charger` \| `hair_dryer` \| `screen` \| `network` \| `robot` \| `pool_pump`. |
+| `appliance_type` | `auto` (défaut) \| `washer` \| `dryer` \| `dishwasher` \| `oven` \| `microwave` \| `hood` \| `cooktop` \| `fridge` \| `kettle` \| `cooker` \| `coffee` \| `rice_cooker` \| `air_fryer` \| `water_heater` \| `boiler` \| `heat_pump` \| `printer_3d` \| `pet_feeder` \| `pet_fountain` \| `iron` \| `toaster` \| `pellet_stove` \| `air_conditioner` \| `dehumidifier` \| `space_heater` \| `towel_warmer` \| `air_purifier` \| `fan` \| `ev_charger` \| `hair_dryer` \| `screen` \| `network` \| `robot` \| `pool_pump` \| `solar` \| `home_battery`. |
 | `tap_action` | Ce que fait un appui sur la carte, dans les mots de Home Assistant : `more-info` (défaut : l'entité d'état, ou sur une carte sans elle ce qu'elle lit à sa place), `none`, `navigate`, `url`, `toggle`, `perform-action` ou `fire-dom-event`, celle qu'écoutent les cartes popup bâties sur browser_mod. En YAML seulement. |
 | `toggle_entity` | Bouton marche/arrêt (`switch`, `button`, `script`, `input_boolean`, `fan`), mis en évidence quand c'est allumé. Sur tous les types, frigo compris, où c'est le seul bouton ; à associer à `controls_activation: confirm` pour un appareil qu'il ne faut pas couper par erreur. |
 | `power_entity` / `power_on_threshold` / `power_icon` | Capteur de puissance. Avec un seuil, l'état en est déduit : *en marche* au-dessus, puis *terminé* en redescendant. Pointer `state_entity` sur ce même capteur l'active avec un seuil de 10 W. `power_icon` remplace `mdi:power-plug`. |
@@ -241,11 +249,26 @@ Seule `state_entity` est obligatoire, sauf sur un réfrigérateur où une sonde 
 | `robot_layout` | robot | `vacuum` \| `mop` \| `mower`. Sans lui, une entité `lawn_mower` ou un nom qui dit tondeuse, Landroid ou Automower en fait une tondeuse, et Braava ou laveur un robot laveur. |
 | `robot_station` | robot | `station` (défaut : la station de vidage de l'aspirateur, la station de lavage du laveur) \| `base` (une base de charge seule). |
 | `robot_shelter` | robot | `true` dessine un abri au-dessus de la base d'une tondeuse. |
+| `robot_floor` | robot | Le sol sur lequel travaille un aspirateur ou un laveur : `rug` (tapis, défaut de l'aspirateur) \| `tiles` (carrelage, défaut du laveur) \| `parquet` \| `smooth` (sol lisse). |
+| `robot_controls` | robot | `true` ajoute les boutons du robot, sur une entité `vacuum` ou `lawn_mower` : *Démarrer* hors du travail, *Pause* au travail, *Retour à la base* loin d'elle. `controls_always: true` montre les trois en permanence. |
+| `battery_corner` | robot | `true` déplace la batterie des lignes vers un coin de la carte, en icône et en pourcentage, orange à 20 % ou moins. Un appui ouvre son entité. |
 | `robot_status_entity` | robot | L'état détaillé de l'intégration, lu pour ce que le dessin sait montrer : la station qui vide le bac, lave ou sèche les patins, la pluie qui garde une tondeuse à la base, la coupe des bordures. L'attribut `status` d'une entité aspirateur est lu sans lui. |
 | `battery_entity` | robot | La batterie, en %, quand l'entité du robot ne la porte pas. Sur la base, *En charge* sous 100 %, *À la base* au-dessus. |
 | `robot_bin_entity` / `robot_water_entity` | robot | Un bac plein, un réservoir d'eau vide : un capteur binaire allumé, un capteur qui le dit, ou un niveau en % (vide à 5 % ou moins, son niveau dessiné dans le robot). |
 | `robot_rain_entity` | robot | La pluie qui garde une tondeuse sur sa base : un nuage et sa pluie sur la pelouse. |
 | `robot_error_entity` | robot | L'erreur, en mots : le robot fume et son texte s'affiche. *no error* et ses semblables n'en sont pas. |
+| `power_entity` | solaire | La puissance produite par les panneaux, en W ou en kW : *Production* au-dessus de 15 % de `peak_power` (100 W sans lui), *Production faible* en dessous en plein jour, *Nuit* une fois le soleil couché (`sun.sun`, ou aucune puissance du tout sans lui). Le `state_entity` est facultatif : l'état d'un onduleur, dont les mots pour une panne font une *Erreur*. |
+| `peak_power` | solaire | La puissance crête des panneaux, en W, dont le seuil de la *Production faible* est tiré. |
+| `energy_today_entity` | solaire | L'énergie produite aujourd'hui, en ligne. |
+| `solar_layout` | solaire | `ground` (défaut, deux panneaux sur leur support) \| `roof` (une maison avec ses panneaux sur le toit). |
+| `solar_alert_entity` | solaire | Tout ce qui doit lever l'*Erreur* : l'onduleur fume. |
+| `battery_entity` | batterie domestique | Le niveau, en %. Il remplit la jauge et l'écran, et à 10 % ou moins la batterie est en *Batterie basse*, en rouge. |
+| `power_entity` / `power_inverted` / `power_on_threshold` | batterie domestique | Une seule puissance, positive en charge et négative en décharge, ou l'inverse avec `power_inverted: true`. Sous `power_on_threshold` (10 W par défaut) dans un sens comme dans l'autre, elle est *Au repos*, et *Pleine* à sa limite de charge. |
+| `charge_power_entity` / `discharge_power_entity` | batterie domestique | Ce qui entre et ce qui sort, pour les batteries qui les mesurent à part (EcoFlow, Bluetti), à la place de `power_entity`. |
+| `reserve_entity` / `charge_limit_entity` | batterie domestique | La réserve de secours, tracée en pointillés sur la jauge et donnée en ligne, et la limite de charge, *Pleine* une fois atteinte. |
+| `battery_capacity` | batterie domestique | La capacité, en kWh : avec elle, les lignes disent dans combien de temps elle sera pleine, ou jusqu'à la réserve. |
+| `battery_layout` | batterie domestique | `wall` (une batterie murale) \| `station` (une station portable). Sans lui, un nom qui dit EcoFlow, Delta, Bluetti, Jackery, Anker ou station en fait une station. |
+| `battery_alert_entity` | batterie domestique | Tout ce qui doit lever l'*Erreur* : un défaut du BMS. Un état qui dit panne fait de même. |
 | `left_on_after` | fer | Minutes allumé au bout desquelles la ligne d'état affiche *Resté allumé*, en rouge. Vide, cela n'arrive jamais. |
 | `feeder_layout` | distributeur | `tower` (défaut, un réservoir carré sur son socle) \| `canister` (un réservoir rond sur un socle rond) \| `double` (deux sorties et deux gamelles) \| `dual_split` (deux réservoirs au-dessus d'une gamelle partagée par le milieu) \| `rotary` (des assiettes sur un plateau tournant sous un couvercle, pour la pâtée). |
 | `level_b_entity` | distributeur | Le niveau du second réservoir, sur un distributeur qui en a deux (`dual_split`), lu comme `level_entity` et avec les mêmes `level_empty_below` et `level_max`. Il remplit la fenêtre de droite, a sa propre ligne, et vide il fait passer l'état à *Réservoir vide* en ne vidant que sa moitié. Au repos, la ligne d'état donne le plus bas des deux niveaux, celui à remplir en premier. L'éditeur ne le propose que pour `dual_split`. |
@@ -559,6 +582,35 @@ ph_entity: sensor.piscine_ph
 redox_entity: sensor.piscine_redox
 filtration_time_entity: sensor.piscine_filtration_aujourd_hui
 chlorine_pump_entity: binary_sensor.piscine_pompe_chlore
+```
+
+</details>
+
+<details>
+<summary><b>Panneaux solaires et batteries domestiques</b></summary>
+
+Des panneaux solaires sur leur support au sol, ou sur le toit d'une maison. En production, un reflet passe sur les cellules et l'énergie descend le câble jusqu'à l'onduleur, plus vite quand le soleil est fort ; avec peu de puissance quelques nuages passent, et la nuit la lune et les étoiles se lèvent. La puissance et l'énergie du jour sont données en lignes.
+
+```yaml
+type: custom:ha-appliance-card
+appliance_type: solar
+power_entity: sensor.puissance_solaire
+energy_today_entity: sensor.energie_solaire_aujourd_hui
+peak_power: 800
+solar_layout: roof
+```
+
+Une batterie domestique murale, ou une station portable. Sa jauge se remplit avec son niveau, l'énergie entre en vert pendant la charge et sort en orange pendant la décharge, et l'écran donne le pourcentage. La réserve est une ligne en pointillés sur la jauge, et avec `battery_capacity` les lignes disent dans combien de temps elle sera pleine, ou jusqu'à la réserve. `illustration_color` peint son boîtier.
+
+```yaml
+type: custom:ha-appliance-card
+appliance_type: home_battery
+battery_entity: sensor.delta_pro_battery_level
+charge_power_entity: sensor.delta_pro_total_in_power
+discharge_power_entity: sensor.delta_pro_total_out_power
+reserve_entity: number.delta_pro_backup_reserve_level
+battery_capacity: 3.6
+battery_layout: station
 ```
 
 </details>
