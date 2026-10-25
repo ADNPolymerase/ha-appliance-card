@@ -10,7 +10,7 @@
 <a href="https://buymeacoffee.com/adnpolymerase" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-orange.png" alt="Buy Me A Coffee" height="60"></a>
 <a href="https://adnpolymerase.github.io/HA/" target="_blank"><img src="https://raw.githubusercontent.com/ADNPolymerase/HA/main/assets/site-button.svg" alt="Link to my github.io for my other projects" height="60"></a>
 
-A Lovelace card for household appliances: washers, dryers, dishwashers, ovens, microwaves, cooker hoods, cooktops, fridges, kettles, cookers, coffee machines, rice cookers, air fryers, water heaters, boilers, heat pumps, 3D printers, pet feeders, irons, toasters, hair dryers, pellet stoves, air conditioners, dehumidifiers, space heaters, towel warmers, air purifiers, fans, EV chargers, TVs, projectors and computers, network switches, servers, NAS and racks, robot vacuums, mops and mowers, and pool pumps. Cycle in progress, program, remaining time, temperature, alerts and controls.
+A Lovelace card for household appliances: washers, dryers, dishwashers, ovens, microwaves, cooker hoods, cooktops, fridges, kettles, cookers, coffee machines, rice cookers, air fryers, water heaters, boilers, heat pumps, 3D printers, pet feeders, irons, toasters, hair dryers, pellet stoves, air conditioners, dehumidifiers, space heaters, towel warmers, air purifiers, fans, EV chargers, TVs, projectors and computers, network switches, servers, NAS and racks, robot vacuums, mops and mowers, pool pumps, and UPSes. Cycle in progress, program, remaining time, temperature, alerts and controls.
 
 No brand assumed: every field is an entity you pick, so it works with **any** integration (Electrolux, Samsung, LG, Home Connect, Miele, a plain smart plug…).
 
@@ -21,7 +21,7 @@ No brand assumed: every field is an entity you pick, so it works with **any** in
 
 ## Features
 
-- **Thirty-four appliance types**, each with a CSS illustration that animates on the appliance's own data and stays still when idle. The type is detected on its own or set via `appliance_type`, and `compact: true` keeps only the text.
+- **Thirty-five appliance types**, each with a CSS illustration that animates on the appliance's own data and stays still when idle. The type is detected on its own or set via `appliance_type`, and `compact: true` keeps only the text.
 - **State normalization**: `Idle`, `RUNNING`, `wash`, `En marche`… are recognised (accent-insensitive) and sorted into idle, preheating, running, paused, done, delayed or error. An unknown state is shown as it came, minus the integration's namespace, and `state_map` sorts the rest, `"*"` catching everything left over.
 - **The step, not an hour of *Running***: a washer, a dryer or a dishwasher names the step it is at (*Pre-wash*, *Washing*, *Rinsing*, *Spinning*, *Drying* and seven more), from a phase entity or from its own state, and the drum whirls while it spins. The time left is still the whole cycle's.
 - **A washer-dryer is a washer that dries**: `washer_dryer: true`, and the drum shows water while it washes, then clothes turning in hot air while it dries. The step comes from the state itself or from a phase entity, and the state line reads *Washing* or *Drying*.
@@ -29,6 +29,7 @@ No brand assumed: every field is an entity you pick, so it works with **any** in
 - **The network as well**: a switch, a server, a NAS, a rack or a router (the box an ISP lends too), *Online*, *Busy* or in *Alert*, and *No internet* when a router loses its link. One LED per port in use, one per disk in its bay (fine, reading, asleep, to watch, failed), and the readings found on their own from Synology, UGREEN, Unraid or Glances.
 - **Robots too**: a vacuum, a mop or a mower leaves its base and goes over its floor, comes back, and says when its station empties the bin or washes the pads, when rain keeps it home or when it is stuck.
 - **And the pool**: the sand filter, the pump and the pool, *Filtering*, *Chlorine injection* with an optional dosing pump, *Backwash* to the drain, *Frost protection*, and the light, the water, the pH and the RedOx in the lines.
+- **And the UPS**: the wall socket, the UPS and the box it keeps alive, *On mains* with the energy flowing through it, *On battery* with the wall crossed out, the UPS beeping and its screen counting the time left, *Battery low*, *Overload* and *Replace battery* read from NUT's own codes, and the battery, the runtime, the load and the input voltage in the lines.
 - **Works from a smart plug alone**: `power_entity` and `power_on_threshold` are enough to derive the state from consumption; `power_off_delay` keeps a pause from reading as the end, and `show_last_cycle` shows how long the last cycle ran.
 - **Program, remaining time, progress bar, info lines, door, alerts, connectivity and controls** (start, pause, resume, stop), each optional.
 - **14 languages** (EN, FR, DE, ES, IT, NL, PT, SV, NO, DA, PL, RU, ZH, CS), Home Assistant's or pinned on the card.
@@ -139,7 +140,7 @@ Only `state_entity` is required, except on a fridge where a probe or a door cont
 | `done_alert` | `true` makes a green badge pulse on the drawing when a cycle has finished, until the door opens or the badge is tapped. For appliances with a cycle (washer, dryer, dishwasher, oven…). |
 | `illustration_color` | `auto` (default, follows the theme) \| `white` \| `grey` \| `black` \| `red` (dark red). Only changes the casing, not the state colours. |
 | `language` | `auto` (default, follows Home Assistant) or one of the 14 codes: `en`, `fr`, `de`, `es`, `it`, `nl`, `pt`, `sv`, `no`, `da`, `pl`, `ru`, `zh`, `cs`. `nb` and `nb-NO` give Norwegian. |
-| `appliance_type` | `auto` (default) \| `washer` \| `dryer` \| `dishwasher` \| `oven` \| `microwave` \| `hood` \| `cooktop` \| `fridge` \| `kettle` \| `cooker` \| `coffee` \| `rice_cooker` \| `air_fryer` \| `water_heater` \| `boiler` \| `heat_pump` \| `printer_3d` \| `pet_feeder` \| `pet_fountain` \| `iron` \| `toaster` \| `pellet_stove` \| `air_conditioner` \| `dehumidifier` \| `space_heater` \| `towel_warmer` \| `air_purifier` \| `fan` \| `ev_charger` \| `hair_dryer` \| `screen` \| `network` \| `robot` \| `pool_pump`. |
+| `appliance_type` | `auto` (default) \| `washer` \| `dryer` \| `dishwasher` \| `oven` \| `microwave` \| `hood` \| `cooktop` \| `fridge` \| `kettle` \| `cooker` \| `coffee` \| `rice_cooker` \| `air_fryer` \| `water_heater` \| `boiler` \| `heat_pump` \| `printer_3d` \| `pet_feeder` \| `pet_fountain` \| `iron` \| `toaster` \| `pellet_stove` \| `air_conditioner` \| `dehumidifier` \| `space_heater` \| `towel_warmer` \| `air_purifier` \| `fan` \| `ev_charger` \| `hair_dryer` \| `screen` \| `network` \| `robot` \| `pool_pump` \| `ups`. |
 | `tap_action` | What a tap on the card does, in Home Assistant's own words: `more-info` (default: the state entity, or on a card without one what it reads in its place), `none`, `navigate`, `url`, `toggle`, `perform-action` or `fire-dom-event`, which is what the popup cards built on browser_mod listen for. In YAML only. |
 | `toggle_entity` | Power button (`switch`, `button`, `script`, `input_boolean`, `fan`), highlighted while on. On every type, the fridge included, where it is the only button; pair it with `controls_activation: confirm` for an appliance that must not be switched off by mistake. |
 | `power_entity` / `power_on_threshold` / `power_icon` | Power sensor. With a threshold, the state is derived from it: *running* above, then *finished* when it falls back. Pointing `state_entity` at the same sensor enables it with a 10 W threshold. `power_icon` replaces `mdi:power-plug`. |
@@ -238,6 +239,10 @@ Only `state_entity` is required, except on a fridge where a probe or a door cont
 | `backwash_entity` / `frost_entity` | pool pump | A backwash sends the dirty water to the drain, the pool stays still; frost protection frosts the pipes. A state that says backwash or frost does the same. |
 | `pool_alert_entity` | pool pump | Anything that should raise the *Error*: the pump smokes and the gauge's needle swings. |
 | `light_entity` | pool pump | The pool's light: it shines on the far wall, and the light switch sits in the corner of the card. |
+| `battery_entity` / `battery_low` | UPS | The battery's charge, in %: the gauge on the UPS fills by fifths, orange at 40 % or less, red at `battery_low` (20 % by default) or less. On battery, at that level or with NUT's `LB`, it reads *Battery low*. |
+| `runtime_entity` | UPS | The time left on the battery, in seconds as NUT gives it, or in minutes or hours: a line, and the UPS's screen while on battery. |
+| `load_entity` / `nominal_power` | UPS | The load, in %: the energy flows faster as it grows, and 100 % or more is an *Overload*. With `nominal_power` (in W) and no `power_entity`, the line gives it in watts too. |
+| `input_voltage_entity` | UPS | The voltage at the wall, as a line. Without a `state_entity`, below 100 V the UPS is on battery. |
 | `robot_layout` | robot | `vacuum` \| `mop` \| `mower`. Left out, a `lawn_mower` entity or a name that says mower, Landroid or Automower makes a mower, and Braava or mop a mopping robot. |
 | `robot_station` | robot | `station` (default: the vacuum's emptying station, the mop's washing station) \| `base` (a charging base alone). |
 | `robot_shelter` | robot | `true` draws a shelter over a mower's base. |
@@ -559,6 +564,24 @@ ph_entity: sensor.pool_ph
 redox_entity: sensor.pool_redox
 filtration_time_entity: sensor.pool_filtration_today
 chlorine_pump_entity: binary_sensor.pool_chlorine_pump
+```
+
+</details>
+
+<details>
+<summary><b>UPSes</b></summary>
+
+A UPS between the wall socket and the box it protects, with its screen, its three lights and its battery gauge. Its `state_entity` is NUT's status sensor, the one that reads `OL`, `OB DISCHRG` or `OL CHRG`, or the integration's text sensor (*Online*, *On Battery*): *On mains* with the energy flowing from the wall through the UPS, *charging* while it fills its battery; *On battery* once the mains is gone, the wall crossed out, the UPS beeping and its screen counting the time left; *Bypass* and *Off*. `LB` or a low charge on battery, `OVER` or a load of 100 %, and `RB` raise *Battery low*, *Overload* and *Replace battery*. The battery, the runtime, the load and the input voltage are lines. Home Assistant's NUT integration leaves `battery.runtime` disabled: enable it to get the time left.
+
+```yaml
+type: custom:ha-appliance-card
+appliance_type: ups
+state_entity: sensor.ups_status
+battery_entity: sensor.ups_battery_charge
+runtime_entity: sensor.ups_battery_runtime
+load_entity: sensor.ups_load
+input_voltage_entity: sensor.ups_input_voltage
+nominal_power: 520
 ```
 
 </details>
