@@ -765,6 +765,25 @@ const netRack = () => card({
   st("binary_sensor.rack_ping", "on"),
   st("sensor.rack_temperature", 74, { unit_of_measurement: "°C" }),
 ]);
+// A router or an ISP's box: online with its clients, then with the internet down.
+const netRouter = (link) => () => card({
+  name: L("Router", "Box internet"),
+  appliance_type: "network",
+  network_layout: "router",
+  state_entity: "sensor.router_status",
+  wan_entity: "binary_sensor.router_wan",
+  wifi_entity: "switch.router_wifi",
+  clients_entity: "sensor.router_clients",
+  download_entity: "sensor.router_download",
+  upload_entity: "sensor.router_upload",
+}, [
+  st("sensor.router_status", "online"),
+  st("binary_sensor.router_wan", link),
+  st("switch.router_wifi", "on"),
+  st("sensor.router_clients", 29),
+  st("sensor.router_download", 7043, { unit_of_measurement: "kbit/s" }),
+  st("sensor.router_upload", 390, { unit_of_measurement: "kbit/s" }),
+]);
 
 // Every model of the network type: the switches by port count, the NAS by bays.
 const netSw = (n, up) => () => card({
@@ -831,6 +850,7 @@ const ALL = { washer, dryer, steam_generator: steamGenerator,
 const EXTRA = { iron, round_feeder: roundFeeder, double_feeder: doubleFeeder, ev_discharging: evDischarging,
                 box_purifier: boxPurifier, ring_purifier: ringPurifier,
                 net_switch: netSwitch, net_nas: netNas, net_server: netServer, net_rack: netRack,
+                net_router: netRouter("on"), net_router_down: netRouter("off"),
                 robot_vacuum: rbtVacuum, robot_emptying: rbtEmptying, robot_mop: rbtMop, robot_drying: rbtDrying,
                 robot_mower: rbtMower, robot_rain: rbtRain,
                 pool_running: poolRunning, pool_chlorine: poolChlorine, pool_backwash: poolBackwash, pool_frost: poolFrost,

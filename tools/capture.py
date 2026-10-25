@@ -66,6 +66,7 @@ FAMILIES = (
     ("pets", "pet_feeder,round_feeder,double_feeder,dual_feeder,wet_feeder,pet_fountain", 3),
     ("garage", "ev_charger,ev_discharging,printer_3d", 3),
     ("network", "net_switch,net_nas,net_server,net_rack", 4),
+    ("network-routers", "net_router,net_router_down", 2),
     ("network-models", "net_sw8,net_sw16,net_sw24,net_sw32,net_nas1,net_nas2,net_nas4", 4),
     ("robots", "robot_vacuum,robot_emptying,robot_mop,robot_drying,robot_mower,robot_rain", 6),
     ("pool", "pool_running,pool_chlorine,pool_backwash,pool_frost,pool_light,pool_error", 6),

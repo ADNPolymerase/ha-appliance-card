@@ -9748,4 +9748,62 @@ check('borne : ni un statut reconnu', evMode(evR('SuspendedEVSE', { power_entity
   check('editeur : pas de tous les boutons sans cycle', /data-field="controls_always"/.test(markup(newEditor({ state_entity: 'switch.h', appliance_type: 'hood' }))), false);
 }
 
+
+// =============================================================================
+// Network: routers and ISP boxes, their internet link, their Wi-Fi and clients.
+// =============================================================================
+{
+  const s = (state, attributes = {}) => ({ state: String(state), attributes });
+  const layoutOf = (cfg, states) => (/\bnt-l-([a-z]+)/.exec(machineCls(render(cfg, states))) || [, ''])[1];
+
+  // The model: a name, a field of its own, or chosen.
+  check('routeur : par son nom', layoutOf({ appliance_type: 'network', state_entity: 'sensor.tp_link_router_status' },
+    { 'sensor.tp_link_router_status': s('online') }), 'router');
+  check('routeur : une Bbox, type et modele', layoutOf({ state_entity: 'binary_sensor.bbox_link_status' },
+    { 'binary_sensor.bbox_link_status': s('on') }), 'router');
+  check('routeur : une Livebox', layoutOf({ state_entity: 'sensor.livebox_status' }, { 'sensor.livebox_status': s('online') }), 'router');
+  check('routeur : une Freebox', layoutOf({ state_entity: 'device_tracker.freebox_server' }, { 'device_tracker.freebox_server': s('home') }), 'router');
+  check('routeur : un champ suffit', layoutOf({ appliance_type: 'network', state_entity: 'switch.x', clients_entity: 'sensor.c' },
+    { 'switch.x': s('on'), 'sensor.c': s(5) }), 'router');
+  check('routeur : choisi', layoutOf({ appliance_type: 'network', network_layout: 'router', state_entity: 'switch.x' }, { 'switch.x': s('on') }), 'router');
+  check('serveur : un Proxmox reste un serveur', layoutOf({ appliance_type: 'network', state_entity: 'switch.proxmox' }, { 'switch.proxmox': s('on') }), 'server');
+  check('NAS : un Synology reste un NAS', layoutOf({ appliance_type: 'network', state_entity: 'device_tracker.synology_ds220' },
+    { 'device_tracker.synology_ds220': s('home') }), 'nas');
+
+  // The state line: the internet link first.
+  const RC = { appliance_type: 'network', network_layout: 'router', state_entity: 'sensor.r', wan_entity: 'binary_sensor.wan' };
+  const ST = (link, more = {}) => ({ 'sensor.r': s('online'), 'binary_sensor.wan': s(link), ...more });
+  check('routeur : en ligne', stateLine(render(RC, ST('on'))), 'Online');
+  check('routeur : pas d internet', stateLine(render(RC, ST('off'))), 'No internet');
+  check('routeur : pas d internet, en alerte', machineCls(render(RC, ST('off'))).includes('nt-alert'), true);
+  check('routeur : pas d internet, dit par un texte', stateLine(render({ ...RC, wan_entity: 'sensor.i' },
+    { 'sensor.r': s('online'), 'sensor.i': s('offline') })), 'No internet');
+  check('routeur : eteint, pas d alerte internet', stateLine(render(RC, { 'sensor.r': s('off'), 'binary_sensor.wan': s('off') })), 'Off');
+  check('routeur : en francais', stateLine(render({ ...RC, language: 'fr' }, ST('off'))), 'Pas d&#39;internet');
+  check('switch : le lien internet ne compte pas', stateLine(render({ ...RC, network_layout: 'switch' }, ST('off'))), 'Online');
+
+  // The drawing.
+  check('routeur : les ondes', (render(RC, ST('on')).match(/class="nt-wave"/g) || []).length, 3);
+  check('routeur : les antennes', (render(RC, ST('on')).match(/class="nt-ant"/g) || []).length, 3);
+  check('routeur : voyant internet', /class="nt-led nt-wan"/.test(render(RC, ST('on'))), true);
+  check('routeur : wifi coupe', machineCls(render({ ...RC, wifi_entity: 'switch.w' }, ST('on', { 'switch.w': s('off') }))).includes('nt-nowifi'), true);
+  check('routeur : wifi allume', machineCls(render({ ...RC, wifi_entity: 'switch.w' }, ST('on', { 'switch.w': s('on') }))).includes('nt-nowifi'), false);
+
+  // The lines.
+  const lines = render({ ...RC, clients_entity: 'sensor.c', cpu_entity: 'sensor.cpu' },
+    ST('on', { 'sensor.c': s(29), 'sensor.cpu': s(4, { unit_of_measurement: '%' }) }));
+  check('routeur : ligne appareils', infoLine(lines, 'Clients'), '29');
+  check('routeur : pas de ligne appareils sans internet ni rien', infoLine(render(RC, ST('on')), 'Clients'), null);
+  check('switch : pas de ligne appareils', infoLine(render({ ...RC, network_layout: 'switch', clients_entity: 'sensor.c' },
+    ST('on', { 'sensor.c': s(29) })), 'Clients'), null);
+
+  // The editor.
+  const ed = markup(newEditor({ state_entity: 'sensor.r', appliance_type: 'network', network_layout: 'router' }));
+  for (const f of ['clients_entity', 'wan_entity', 'wifi_entity'])
+    check(`editeur routeur : ${f}`, ed.includes(`data-toggle="${f}"`), true);
+  check('editeur routeur : le modele dans le menu', /<option value="router"[^>]*>Router \/ box</.test(ed), true);
+  check('editeur NAS : pas de champ routeur', /clients_entity|wan_entity|wifi_entity/.test(
+    markup(newEditor({ state_entity: 'sensor.n', appliance_type: 'network', network_layout: 'nas' }))), false);
+}
+
 report();
