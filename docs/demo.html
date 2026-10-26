@@ -25,6 +25,9 @@
   body.live nav a { padding: 5px 12px; border-radius: 16px; border: 1px solid var(--divider-color); color: var(--primary-text-color); text-decoration: none; font-size: 14px; background: var(--card-background-color); }
   body.live nav a.on { background: var(--primary-color, #03a9f4); border-color: transparent; color: #fff; }
   html.live { padding: 0; }
+  header p.hint { margin: 8px 0 0; font-size: 13px; opacity: .8; }
+  .cell .sim { font-size: 12px; text-align: center; opacity: 0; transition: opacity .2s; height: 0; overflow: visible; color: var(--primary-text-color); }
+  .cell .sim.on { opacity: .75; }
   body.live details { margin-top: 12px; border-radius: 12px; background: var(--card-background-color); box-shadow: 0 1px 3px rgba(0,0,0,.08); }
   body.live summary { display: flex; align-items: center; gap: 10px; padding: 14px 16px; cursor: pointer; list-style: none;
     font-size: 18px; font-weight: 500; color: var(--primary-text-color); }
@@ -37,6 +40,20 @@
   html.dark body.live details ha-card { --card-background-color: #22272d; }
   body.live .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 16px; align-items: start; }
   body.live ha-card { width: auto; }
+  body.live .cell { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+  body.live .values { font-size: 13px; color: var(--secondary-text-color); }
+  body.live .values summary { cursor: pointer; padding: 6px 8px; list-style: none; text-align: center; font-size: 13px; }
+  body.live .values summary::-webkit-details-marker { display: none; }
+  body.live .values summary::before { content: "\270E  "; }
+  body.live .values[open] { background: var(--card-background-color); border-radius: 12px; padding-bottom: 8px; }
+  body.live .val { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 4px 8px; padding: 4px 12px; }
+  body.live .val span { grid-column: 1 / -1; color: var(--primary-text-color); font-size: 12px; overflow-wrap: anywhere; }
+  body.live .val input[type=range] { width: 100%; }
+  body.live .val input[type=number] { width: 72px; }
+  body.live .val input[list] { grid-column: 1 / -1; width: 100%; box-sizing: border-box; }
+  body.live .val input[type=checkbox] { grid-column: 1; justify-self: start; }
+  body.live .val em { display: none; }
+  body.live .val input { font: inherit; color: var(--primary-text-color); background: var(--card-background-color); border: 1px solid var(--divider-color); border-radius: 6px; padding: 3px 6px; }
   html.dark, html.dark body {
     background: #111418;
     --primary-text-color: #e4e7eb; --secondary-text-color: #9aa3ad; --divider-color: #2c3238;
@@ -94,15 +111,220 @@ function mkHass(states) {
   return { language: uiLang, locale: { language: uiLang }, states, entities: {}, devices: {}, callService: () => {} };
 }
 
+// The plug-only view: every appliance that can be read from a smart plug,
+// configured with nothing else than the plug's switch and its meter, drawing
+// what it draws at work. The visitor moves the power to see the card follow.
+const PLUG_WATTS = { washer: 450, dryer: 2000, dishwasher: 1800, oven: 2400, microwave: 900, kettle: 2200, coffee: 1200, cooker: 800,
+  rice_cooker: 500, air_fryer: 1500, toaster: 900, iron: 2200, fridge: 70, water_heater: 2000, space_heater: 1500, towel_warmer: 600,
+  dehumidifier: 250, air_purifier: 30, fan: 35, screen: 120, hair_dryer: 1200, printer_3d: 200, pool_pump: 750, robot: 24 };
+// The types whose threshold reads a cycle out of the meter: 10 W is enough.
+const PLUG_CYCLE = ["washer", "dryer", "dishwasher", "oven", "microwave", "kettle", "coffee", "cooker", "rice_cooker", "air_fryer", "printer_3d", "water_heater"];
+const plugOnly = params.get("plug") === "1";
+const plugSeen = new Set();
+function plugConfig(config) {
+  const type = config.appliance_type || (/^(vacuum|lawn_mower)\./.test(config.state_entity || "") ? "robot" : "");
+  if (!PLUG_WATTS[type] || (type === "robot" && !["stick", "floor_washer"].includes(config.robot_layout))) return null;
+  // Six pool pumps on a plug draw the same pump: one of each is enough.
+  const seen = [type, config.robot_layout, config.purifier_layout, config.fan_layout, config.iron_layout].join("/");
+  if (plugSeen.has(seen)) return null;
+  plugSeen.add(seen);
+  const keep = {};
+  for (const [k, v] of Object.entries(config)) if (/_layout$|^illustration_color$|^name$|^washer_dryer$/.test(k)) keep[k] = v;
+  const out = { ...keep, appliance_type: type, state_entity: "switch.smart_plug", power_entity: "sensor.smart_plug_power", toggle_entity: "switch.smart_plug" };
+  if (PLUG_CYCLE.includes(type)) out.power_on_threshold = 10;
+  return [out, [st("switch.smart_plug", "on"), st("sensor.smart_plug_power", PLUG_WATTS[type], { unit_of_measurement: "W", device_class: "power" })]];
+}
+
+// What a button of the live demo does: there is no appliance behind it, so
+// the demo plays the part, writing the state the real one would report.
+const RUN_WORDS = ["running", "cleaning", "mowing", "printing", "cooking", "charging", "in_operation", "heat", "on", "playing"];
+function pickWord(words, wanted, fallback) {
+  for (const w of wanted) {
+    const hit = words.find((x) => String(x).toLowerCase() === w);
+    if (hit !== undefined) return hit;
+  }
+  return fallback;
+}
+function simulate(sim, domain, service, data) {
+  const { states, config } = sim;
+  const id = (data && data.entity_id) || "";
+  const flip = (eid) => {
+    const now = states[eid] ? states[eid].state : "off";
+    sim.set(eid, ["on", "open", "true"].includes(String(now).toLowerCase()) ? "off" : "on");
+  };
+  const later = (eid, value, ms) => setTimeout(() => sim.set(eid, value, null, true), ms);
+  if (domain === "vacuum" || domain === "lawn_mower") {
+    const go = { start: "cleaning", start_mowing: "mowing", pause: "paused", return_to_base: "returning", dock: "returning", stop: "idle" }[service];
+    if (go) sim.set(id, go);
+    if (go === "returning") later(id, "docked", 4000);
+    return;
+  }
+  if (service === "select_option") return sim.set(id, data.option);
+  if (service === "set_value") return sim.set(id, data.value);
+  if (service === "toggle") {
+    flip(id);
+    // A plug switched off draws nothing, switched back on it draws again.
+    if (id === "switch.smart_plug" && states["sensor.smart_plug_power"]) {
+      sim.set("sensor.smart_plug_power", states[id].state === "on" ? PLUG_WATTS[config.appliance_type] || 50 : 0);
+    }
+    return;
+  }
+  // A button, a script or an automation: the key it stands for in the
+  // configuration says what the appliance would do.
+  const key = (Object.entries(config).find(([k, v]) => v === id && /_entity$/.test(k)) || [""])[0].replace(/_entity$/, "");
+  const sid = config.state_entity;
+  if (key === "filter_reset" && config.filter_life_entity) return sim.set(config.filter_life_entity, 100);
+  if (key === "pump_reset" && config.pump_clean_entity) return sim.set(config.pump_clean_entity, 100);
+  if (!sid || !states[sid]) return sim.note(service);
+  const words = wordsFor(sid, states[sid], config);
+  const cur = String(states[sid].state);
+  const cap = (w) => (/^[A-Z]/.test(cur) ? w[0].toUpperCase() + w.slice(1) : w);
+  if (key === "start" || key === "resume") sim.set(sid, pickWord(words, RUN_WORDS, cap("running")));
+  else if (key === "pause") sim.set(sid, pickWord(words, ["paused", "pause"], cap("paused")));
+  else if (key === "stop") sim.set(sid, pickWord(words, ["idle", "standby", "off", "docked"], cap("idle")));
+  else sim.note(key || service);
+}
+
 let row = document.getElementById("row");
 function card(config, entities) {
+  if (view === "live" && plugOnly) {
+    const plug = plugConfig(config);
+    if (!plug) return null;
+    [config, entities] = plug;
+  }
   const states = {};
   entities.forEach((s) => (states[s.entity_id] = s));
   const el = document.createElement("ha-appliance-card");
+  if (view === "live") {
+    const cell = document.createElement("div");
+    cell.className = "cell";
+    cell.appendChild(el);
+    row.appendChild(cell);
+    el.setConfig({ type: "custom:ha-appliance-card", ...config });
+    const sim = { states, config, refresh: () => {}, note: () => {} };
+    sim.push = () => { el.hass = { ...mkHass({ ...states }), callService: (d, s, data) => simulate(sim, d, s, data) }; };
+    sim.set = (id, value, attr, fromTimer) => {
+      const old = states[id] || st(id, "");
+      states[id] = attr ? { ...old, attributes: { ...old.attributes, [attr]: value } } : { ...old, state: String(value), last_changed: new Date().toISOString() };
+      sim.push();
+      if (!attr) sim.refresh();
+    };
+    sim.push();
+    valueEditor(cell, sim);
+    return el;
+  }
   row.appendChild(el);
   el.setConfig({ type: "custom:ha-appliance-card", ...config });
   el.hass = mkHass(states);
   return el;
+}
+
+// The live demo lets a visitor change what each card reads: a slider for a
+// number, a list for a state (any other word can be typed), a switch for on
+// and off. The card redraws at once, as it would in Home Assistant.
+const ON_OFF_DOMAINS = ["binary_sensor", "switch", "input_boolean", "light", "fan", "humidifier", "lock"];
+const CYCLE_WORDS = ["Idle", "Running", "Paused", "Delayed", "Finished", "Error"];
+const STATE_WORDS = {
+  vacuum: ["cleaning", "returning", "paused", "docked", "idle", "error"],
+  lawn_mower: ["mowing", "returning", "paused", "docked", "error"],
+  media_player: ["playing", "paused", "idle", "on", "standby", "off"],
+  device_tracker: ["home", "not_home"],
+  ups: ["OL", "OL CHRG", "OB DISCHRG", "OB DISCHRG LB", "OL RB", "OL BYPASS", "OFF"],
+  floor_washer: ["idle", "in_operation", "self_cleaning"],
+};
+const TYPE_WORDS = { washer: CYCLE_WORDS, dryer: CYCLE_WORDS, dishwasher: CYCLE_WORDS, oven: ["Idle", "Preheating", "Running", "Finished"],
+  microwave: CYCLE_WORDS, coffee: ["Idle", "Running", "Finished", "Error"], cooker: CYCLE_WORDS, air_fryer: ["idle", "cooking", "paused", "finished"],
+  rice_cooker: ["idle", "cooking", "keep_warm"], printer_3d: ["idle", "preheating", "printing", "paused", "finished", "error"],
+  ev_charger: ["available", "connected", "charging", "suspended", "finished", "error"], pellet_stove: ["off", "ignition", "on", "modulating", "eco", "cooling", "cleaning", "alarm"] };
+function wordsFor(id, st, config) {
+  const a = st.attributes || {};
+  const domain = id.split(".")[0];
+  if (domain === "climate" && Array.isArray(a.hvac_modes)) return a.hvac_modes;
+  if (domain === "water_heater" && Array.isArray(a.operation_list)) return a.operation_list;
+  if (Array.isArray(a.options)) return a.options;
+  if (STATE_WORDS[domain]) return STATE_WORDS[domain];
+  if (id === config.state_entity) {
+    return STATE_WORDS[config.robot_layout] || STATE_WORDS[config.appliance_type] || TYPE_WORDS[config.appliance_type] || [];
+  }
+  return [];
+}
+function rangeFor(v, unit) {
+  const u = String(unit || "").toLowerCase();
+  if (u === "%") return [0, 100, 1];
+  if (/\u00b0|^k$/.test(u)) return [Math.floor(Math.min(v, 0) - 20), Math.ceil(Math.max(v, 0) + 40), 0.5];
+  if (u === "s") return [0, Math.max(3600, v * 2), 30];
+  if (u === "min") return [0, Math.max(120, v * 2), 1];
+  if (u === "w" || u === "kw" || u === "mbit/s") { const hi = Math.max(u === "kw" ? 10 : 100, Math.abs(v) * 3); return [v < 0 ? -hi : 0, hi, u === "kw" ? 0.1 : 1]; }
+  const hi = Math.max(10, Math.abs(v) * 3);
+  return [v < 0 ? -hi : 0, hi, Math.abs(v) < 10 && v % 1 ? 0.1 : 1];
+}
+let editorN = 0;
+function valueEditor(cell, sim) {
+  const { config, states } = sim;
+  const box = document.createElement("details");
+  box.className = "values";
+  box.innerHTML = `<summary>${L("Change the values", "Modifier les valeurs")}</summary>`;
+  const list = document.createElement("div");
+  box.appendChild(list);
+  cell.appendChild(box);
+  // A typed value only redraws the card; a pressed button also redraws the
+  // list, so the field shows what the button wrote.
+  let typing = false;
+  const set = (id, value, attr) => { typing = true; sim.set(id, value, attr); typing = false; };
+  const toast = document.createElement("div");
+  toast.className = "sim";
+  cell.insertBefore(toast, box);
+  let toastT;
+  sim.note = (what) => {
+    toast.textContent = `${L("Pressed", "Appui")} : ${String(what).replace(/_/g, " ")}`;
+    toast.classList.add("on");
+    clearTimeout(toastT);
+    toastT = setTimeout(() => toast.classList.remove("on"), 1800);
+  };
+  sim.refresh = () => { if (!typing) build(); };
+  const field = (label, id, value, unit, attr, words) => {
+    const row = document.createElement("label");
+    row.className = "val";
+    const name = `<span>${label}</span>`;
+    const domain = id.split(".")[0];
+    const n = Number(value);
+    if (!attr && ON_OFF_DOMAINS.includes(domain) && ["on", "off"].includes(String(value))) {
+      row.innerHTML = `${name}<input type="checkbox"${value === "on" ? " checked" : ""}>`;
+      row.querySelector("input").addEventListener("change", (e) => set(id, e.target.checked ? "on" : "off"));
+    } else if (String(value).trim() !== "" && Number.isFinite(n) && !words.length) {
+      const [lo, hi, step] = rangeFor(n, unit);
+      row.innerHTML = `${name}<input type="range" min="${lo}" max="${hi}" step="${step}" value="${n}"><input type="number" step="${step}" value="${n}"><em>${unit || ""}</em>`;
+      const [r, num] = row.querySelectorAll("input");
+      r.addEventListener("input", () => { num.value = r.value; set(id, r.value, attr); });
+      num.addEventListener("change", () => { r.value = num.value; set(id, num.value, attr); });
+    } else {
+      const dl = `dl${editorN++}`;
+      const opts = [...new Set([...words, String(value), "unavailable"])];
+      row.innerHTML = `${name}<input list="${dl}" value="${String(value).replace(/"/g, "&quot;")}"><datalist id="${dl}">${opts.map((o) => `<option value="${String(o).replace(/"/g, "&quot;")}">`).join("")}</datalist>`;
+      const inp = row.querySelector("input");
+      inp.addEventListener("change", () => set(id, inp.value, attr));
+      inp.addEventListener("focus", () => { inp.dataset.was = inp.value; inp.value = ""; });
+      inp.addEventListener("blur", () => { if (!inp.value) inp.value = inp.dataset.was || ""; });
+    }
+    list.appendChild(row);
+  };
+  const build = () => {
+  list.innerHTML = "";
+  for (const [id, st] of Object.entries(states)) {
+    if (["button", "script", "scene"].includes(id.split(".")[0])) continue;
+    const short = id.split(".")[1].replace(/_/g, " ");
+    field(short, id, st.state, st.attributes && st.attributes.unit_of_measurement, null, wordsFor(id, st, config));
+    for (const [k, v] of Object.entries(st.attributes || {})) {
+      if (["unit_of_measurement", "friendly_name", "device_class", "icon", "options", "entity_picture", "supported_features"].includes(k) || Array.isArray(v) || typeof v === "object") continue;
+      const listed = st.attributes[`${k}s`] || st.attributes[`${k.replace(/_mode$/, "")}_modes`];
+      if (typeof v === "number") field(`${short} \u00b7 ${k.replace(/_/g, " ")}`, id, v, k.includes("temperature") ? "\u00b0C" : k.includes("battery") ? "%" : "", k, []);
+      else if (Array.isArray(listed)) field(`${short} \u00b7 ${k.replace(/_/g, " ")}`, id, v, "", k, listed);
+      else if (["hvac_action", "status"].includes(k)) field(`${short} \u00b7 ${k.replace(/_/g, " ")}`, id, v, "", k,
+        k === "hvac_action" ? ["heating", "cooling", "drying", "fan", "idle", "off", "defrosting", "preheating"] : []);
+    }
+  }
+  };
+  build();
 }
 
 // Every appliance runs the programs it actually has. A "Cotton 40" on an oven
@@ -124,7 +346,9 @@ const washer = () => card({
     { entity: "select.washer_temperature", icon: "mdi:thermometer", value_map: { "40 Celsius": "40 \u00b0C" } },
     { entity: "select.washer_spin", icon: "mdi:rotate-3d-variant", value_map: { "1200 Rpm": "1200 rpm" } },
   ],
+  start_entity: "button.washer_start",
   pause_entity: "button.washer_pause",
+  resume_entity: "button.washer_resume",
   stop_entity: "button.washer_stop",
 }, [
   st("sensor.washer_state", "Running"),
@@ -134,7 +358,9 @@ const washer = () => card({
   st("binary_sensor.washer_connectivity", "on"),
   st("select.washer_temperature", "40 Celsius", { friendly_name: L("Temperature", "Température") }),
   st("select.washer_spin", "1200 Rpm", { friendly_name: L("Spin speed", "Essorage") }),
+  st("button.washer_start", "unknown"),
   st("button.washer_pause", "unknown"),
+  st("button.washer_resume", "unknown"),
   st("button.washer_stop", "unknown"),
 ]);
 
@@ -969,7 +1195,12 @@ function liveGallery() {
     <h1>HA Appliance Card</h1>
     <p>${L("A Lovelace card for 38 kinds of home appliances, each drawn and animated from its own data. These cards run on made-up states: in Home Assistant every field is an entity you pick.",
       "Une card Lovelace pour 38 types d'appareils, chacun dessiné et animé à partir de ses propres données. Ces cartes tournent sur des états inventés : dans Home Assistant, chaque champ est une entité que vous choisissez.")}</p>
-    <nav>${link("lang", "en", "English", !fr)}${link("lang", "fr", "Français", fr)}<span></span>${link("theme", "light", L("Light", "Clair"), !dark)}${link("theme", "dark", L("Dark", "Sombre"), dark)}<span></span><a href="https://github.com/ADNPolymerase/ha-appliance-card">GitHub</a></nav>
+    <nav>${link("lang", "en", "English", !fr)}${link("lang", "fr", "Français", fr)}<span></span>${link("theme", "light", L("Light", "Clair"), !dark)}${link("theme", "dark", L("Dark", "Sombre"), dark)}<span></span>${link("plug", "0", L("Integrations", "Intégrations"), !plugOnly)}${link("plug", "1", L("Smart plug only", "Prise connectée seule"), plugOnly)}<span></span><a href="https://github.com/ADNPolymerase/ha-appliance-card">GitHub</a></nav>
+    <p class="hint">${plugOnly
+      ? L("Each card below has nothing but a smart plug: its switch and its power meter. Open “Change the values” and move the power, or press the power button.",
+        "Chaque carte ci-dessous n’a qu’une prise connectée : son interrupteur et sa mesure de puissance. Ouvrez « Modifier les valeurs » et faites varier la puissance, ou appuyez sur le bouton d’alimentation.")
+      : L("Press the buttons of a card (pause, start, back to base) or open “Change the values”: the demo plays the appliance.",
+        "Appuyez sur les boutons d’une carte (pause, départ, retour à la base) ou ouvrez « Modifier les valeurs » : la démo joue le rôle de l’appareil.")}</p>
   </header>`;
   const FAMILIES = [
     [L("Laundry", "Linge"), [washer, dryer, EXTRA.iron, steamGenerator]],
@@ -995,6 +1226,9 @@ function liveGallery() {
     wrap.appendChild(sec);
     row = grid;
     makers.forEach((f) => f());
+    // A family with nothing on a plug is left out of the plug-only view.
+    if (!grid.children.length) sec.remove();
+    else sec.querySelector("small").textContent = grid.children.length;
   });
 }
 const only = (params.get("only") || "").split(",").map((k) => k.trim()).filter(Boolean);
