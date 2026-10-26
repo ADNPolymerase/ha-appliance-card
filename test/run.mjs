@@ -10422,4 +10422,42 @@ check('borne : ni un statut reconnu', evMode(evR('SuspendedEVSE', { power_entity
   check('editeur aspirateur robot : pas de seuil hors base', /data-field="away_threshold"/.test(markup(newEditor({ state_entity: 'vacuum.roomba' }))), false);
 }
 
+// =============================================================================
+// A fan's speed read from its plug: thirds of the top power, or steps set by
+// hand.
+// =============================================================================
+{
+  const s = (state, attributes = {}) => ({ state: String(state), attributes });
+  const W = (v) => s(v, { unit_of_measurement: 'W' });
+  const fan = (type, w, cfg = {}) => render({ appliance_type: type, state_entity: 'switch.prise', power_entity: 'sensor.prise_w', speed_power_max: '36', ...cfg },
+    { 'switch.prise': s('on'), 'sensor.prise_w': W(w) });
+  const spd = (html) => (/--spd: ([\d.]+)s/.exec(html) || [])[1];
+  check('vitesse prise : ventilateur, un tiers', spd(fan('fan', 10)), '2.4');
+  check('vitesse prise : ventilateur, deux tiers', spd(fan('fan', 20)), '1.6');
+  check('vitesse prise : ventilateur, au maximum', spd(fan('fan', 30)), '0.9');
+  check('vitesse prise : la ligne', infoLine(fan('fan', 30), 'Fan speed'), '3 / 3');
+  check('vitesse prise : purificateur', spd(fan('air_purifier', 5)), '2.4');
+  check('vitesse prise : sans maximum, vitesse moyenne', spd(fan('fan', 30, { speed_power_max: '' })), '1.6');
+  check('vitesse prise : sans maximum, pas de ligne', infoLine(fan('fan', 30, { speed_power_max: '' }), 'Fan speed'), null);
+  check('vitesse prise : seuils choisis', spd(fan('fan', 15, { speed_power_custom: true, speed_power_2: '12', speed_power_3: '14' })), '0.9');
+  check('vitesse prise : premier seuil choisi', spd(fan('fan', 6, { speed_power_custom: true, speed_power_2: '5', speed_power_3: '30' })), '1.6');
+  check('vitesse prise : seuils choisis mais decoches', spd(fan('fan', 15, { speed_power_2: '12', speed_power_3: '14' })), '1.6');
+  check('vitesse prise : seuils sans maximum', spd(fan('fan', 13, { speed_power_max: '', speed_power_custom: true, speed_power_2: '12', speed_power_3: '14' })), '1.6');
+  check('vitesse prise : en kW', spd(render({ appliance_type: 'fan', state_entity: 'switch.prise', power_entity: 'sensor.kw', speed_power_max: '36' },
+    { 'switch.prise': s('on'), 'sensor.kw': s(0.03, { unit_of_measurement: 'kW' }) })), '0.9');
+  check('vitesse prise : un pourcentage gagne', spd(render({ appliance_type: 'fan', state_entity: 'fan.f', power_entity: 'sensor.prise_w', speed_power_max: '36' },
+    { 'fan.f': s('on', { percentage: 20 }), 'sensor.prise_w': W(35) })), '2.4');
+  const hood = (w) => render({ appliance_type: 'hood', state_entity: 'switch.hotte', power_entity: 'sensor.hotte_w', power_on_threshold: '5', speed_power_max: '150' },
+    { 'switch.hotte': s('on'), 'sensor.hotte_w': W(w) });
+  check('vitesse prise : hotte au maximum', machineCls(hood(140)).includes('v3'), true);
+  check('vitesse prise : hotte au premier', machineCls(hood(30)).includes('v1'), true);
+  check('vitesse prise : hotte, la ligne', infoLine(hood(80), 'Fan speed'), '2 / 3');
+  const ed = (cfg) => markup(newEditor({ state_entity: 'switch.prise', power_entity: 'sensor.prise_w', ...cfg }));
+  check('editeur vitesse : le maximum pour un ventilateur', /data-field="speed_power_max"/.test(ed({ appliance_type: 'fan' })), true);
+  check('editeur vitesse : la case', /data-field="speed_power_custom"/.test(ed({ appliance_type: 'hood' })), true);
+  check('editeur vitesse : seuils caches sans la case', /data-field="speed_power_2"/.test(ed({ appliance_type: 'fan' })), false);
+  check('editeur vitesse : seuils avec la case', /data-field="speed_power_3"/.test(ed({ appliance_type: 'fan', speed_power_custom: true })), true);
+  check('editeur vitesse : pas pour un lave-linge', /data-field="speed_power_max"/.test(ed({ appliance_type: 'washer' })), false);
+}
+
 report();

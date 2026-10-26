@@ -1,4 +1,4 @@
-const CARD_VERSION = "2.39.0";
+const CARD_VERSION = "2.40.0";
 
 console.info(
   "%c HA-APPLIANCE-CARD %c v" + CARD_VERSION + " ",
@@ -151,6 +151,7 @@ const T = {
     door_corner: "Show it in a corner of the card", controls_always: "Always show every button", show_unavailable_controls: "Show buttons whose entity is unavailable",
     layout_robot_stick: "Stick vacuum", stick_charged: "Charged",
     layout_robot_floor_washer: "Floor washer", stick_away: "Off the base", stick_away_threshold: "Off the base below this power (W)",
+    speed_power_max: "Power at top speed (W)", speed_power_custom: "Custom speed thresholds", speed_power_2: "Speed 2 from (W)", speed_power_3: "Speed 3 from (W)",
     fw_self_cleaning: "Self-cleaning", fw_dirty_full: "Dirty water tank full", fw_clean_empty: "Clean water tank empty",
     group_energy: "Energy", type_solar: "Solar panels", type_home_battery: "Home battery", solar_producing: "Producing", solar_low: "Low production", solar_night: "Night", section_solar_layout: "Mounting", layout_solar_ground: "On the ground", layout_solar_roof: "On a roof", section_solar_power: "Power produced", section_energy_today: "Energy produced today", solar_line_today: "Today", solar_peak_power: "Peak power of the panels (W)", section_battery_power: "Battery power (+ charging, \u2212 discharging)", power_inverted: "Positive power means discharging", section_charge_power: "Charge power", section_battery_discharge: "Discharge power", section_reserve: "Backup reserve", section_charge_limit: "Charge limit", battery_capacity: "Capacity (kWh)", layout_battery_wall: "Wall battery", layout_battery_station: "Portable power station", bat_idle: "Idle", bat_full: "Full", bat_low: "Low battery", bat_line_full_in: "Full in", bat_line_left: "Remaining", bat_line_reserve: "Reserve",
     robot_controls: "Start, pause and return buttons", robot_go_home: "Return to base", battery_corner: "Show the battery in a corner of the card", section_robot_floor: "Floor", floor_rug: "Rug", floor_tiles: "Tiles", floor_parquet: "Parquet", floor_smooth: "Smooth floor",
@@ -316,6 +317,7 @@ const T = {
     door_corner: "L'afficher dans un coin de la carte", controls_always: "Toujours afficher tous les boutons", show_unavailable_controls: "Afficher les boutons dont l'entit\u00e9 est indisponible",
     layout_robot_stick: "Aspirateur balai", stick_charged: "Charg\u00e9",
     layout_robot_floor_washer: "Laveur de sol", stick_away: "Hors de la base", stick_away_threshold: "Hors de la base sous cette puissance (W)",
+    speed_power_max: "Puissance \u00e0 la vitesse maxi (W)", speed_power_custom: "Personnaliser les seuils de vitesse", speed_power_2: "Vitesse 2 \u00e0 partir de (W)", speed_power_3: "Vitesse 3 \u00e0 partir de (W)",
     fw_self_cleaning: "Autonettoyage", fw_dirty_full: "R\u00e9servoir d'eau sale plein", fw_clean_empty: "R\u00e9servoir d'eau propre vide",
     group_energy: "\u00c9nergie", type_solar: "Panneaux solaires", type_home_battery: "Batterie domestique", solar_producing: "Production", solar_low: "Production faible", solar_night: "Nuit", section_solar_layout: "Installation", layout_solar_ground: "Au sol", layout_solar_roof: "Sur un toit", section_solar_power: "Puissance produite", section_energy_today: "\u00c9nergie produite aujourd'hui", solar_line_today: "Aujourd'hui", solar_peak_power: "Puissance cr\u00eate des panneaux (W)", section_battery_power: "Puissance de la batterie (+ charge, \u2212 d\u00e9charge)", power_inverted: "Une puissance positive veut dire d\u00e9charge", section_charge_power: "Puissance de charge", section_battery_discharge: "Puissance de d\u00e9charge", section_reserve: "R\u00e9serve de secours", section_charge_limit: "Limite de charge", battery_capacity: "Capacit\u00e9 (kWh)", layout_battery_wall: "Batterie murale", layout_battery_station: "Station portable", bat_idle: "Au repos", bat_full: "Pleine", bat_low: "Batterie basse", bat_line_full_in: "Pleine dans", bat_line_left: "Restant", bat_line_reserve: "R\u00e9serve",
     robot_controls: "Boutons d\u00e9marrer, pause et retour", robot_go_home: "Retour \u00e0 la base", battery_corner: "Afficher la batterie dans un coin de la carte", section_robot_floor: "Sol", floor_rug: "Tapis", floor_tiles: "Carrelage", floor_parquet: "Parquet", floor_smooth: "Sol lisse",
@@ -481,6 +483,7 @@ const T = {
     door_corner: "\u041f\u043e\u043a\u0430\u0437\u044b\u0432\u0430\u0442\u044c \u0432 \u0443\u0433\u043b\u0443 \u043a\u0430\u0440\u0442\u043e\u0447\u043a\u0438", controls_always: "\u0412\u0441\u0435\u0433\u0434\u0430 \u043f\u043e\u043a\u0430\u0437\u044b\u0432\u0430\u0442\u044c \u0432\u0441\u0435 \u043a\u043d\u043e\u043f\u043a\u0438", show_unavailable_controls: "\u041f\u043e\u043a\u0430\u0437\u044b\u0432\u0430\u0442\u044c \u043a\u043d\u043e\u043f\u043a\u0438 \u043d\u0435\u0434\u043e\u0441\u0442\u0443\u043f\u043d\u044b\u0445 \u0441\u0443\u0449\u043d\u043e\u0441\u0442\u0435\u0439",
     layout_robot_stick: "\u0412\u0435\u0440\u0442\u0438\u043a\u0430\u043b\u044c\u043d\u044b\u0439 \u043f\u044b\u043b\u0435\u0441\u043e\u0441", stick_charged: "\u0417\u0430\u0440\u044f\u0436\u0435\u043d",
     layout_robot_floor_washer: "\u041c\u043e\u044e\u0449\u0438\u0439 \u043f\u044b\u043b\u0435\u0441\u043e\u0441", stick_away: "\u041d\u0435 \u043d\u0430 \u0431\u0430\u0437\u0435", stick_away_threshold: "\u041d\u0435 \u043d\u0430 \u0431\u0430\u0437\u0435 \u043d\u0438\u0436\u0435 \u044d\u0442\u043e\u0439 \u043c\u043e\u0449\u043d\u043e\u0441\u0442\u0438 (\u0412\u0442)",
+    speed_power_max: "\u041c\u043e\u0449\u043d\u043e\u0441\u0442\u044c \u043d\u0430 \u043c\u0430\u043a\u0441\u0438\u043c\u0430\u043b\u044c\u043d\u043e\u0439 \u0441\u043a\u043e\u0440\u043e\u0441\u0442\u0438 (\u0412\u0442)", speed_power_custom: "\u0421\u0432\u043e\u0438 \u043f\u043e\u0440\u043e\u0433\u0438 \u0441\u043a\u043e\u0440\u043e\u0441\u0442\u0438", speed_power_2: "\u0421\u043a\u043e\u0440\u043e\u0441\u0442\u044c 2 \u043e\u0442 (\u0412\u0442)", speed_power_3: "\u0421\u043a\u043e\u0440\u043e\u0441\u0442\u044c 3 \u043e\u0442 (\u0412\u0442)",
     fw_self_cleaning: "\u0421\u0430\u043c\u043e\u043e\u0447\u0438\u0441\u0442\u043a\u0430", fw_dirty_full: "\u0411\u0430\u043a \u0433\u0440\u044f\u0437\u043d\u043e\u0439 \u0432\u043e\u0434\u044b \u043f\u043e\u043b\u043e\u043d", fw_clean_empty: "\u0411\u0430\u043a \u0447\u0438\u0441\u0442\u043e\u0439 \u0432\u043e\u0434\u044b \u043f\u0443\u0441\u0442",
     group_energy: "\u042d\u043d\u0435\u0440\u0433\u0438\u044f", type_solar: "\u0421\u043e\u043b\u043d\u0435\u0447\u043d\u044b\u0435 \u043f\u0430\u043d\u0435\u043b\u0438", type_home_battery: "\u0414\u043e\u043c\u0430\u0448\u043d\u0438\u0439 \u0430\u043a\u043a\u0443\u043c\u0443\u043b\u044f\u0442\u043e\u0440", solar_producing: "\u0412\u044b\u0440\u0430\u0431\u043e\u0442\u043a\u0430", solar_low: "\u0421\u043b\u0430\u0431\u0430\u044f \u0432\u044b\u0440\u0430\u0431\u043e\u0442\u043a\u0430", solar_night: "\u041d\u043e\u0447\u044c", section_solar_layout: "\u0423\u0441\u0442\u0430\u043d\u043e\u0432\u043a\u0430", layout_solar_ground: "\u041d\u0430 \u0437\u0435\u043c\u043b\u0435", layout_solar_roof: "\u041d\u0430 \u043a\u0440\u044b\u0448\u0435", section_solar_power: "\u0412\u044b\u0440\u0430\u0431\u0430\u0442\u044b\u0432\u0430\u0435\u043c\u0430\u044f \u043c\u043e\u0449\u043d\u043e\u0441\u0442\u044c", section_energy_today: "\u0412\u044b\u0440\u0430\u0431\u043e\u0442\u0430\u043d\u043e \u0441\u0435\u0433\u043e\u0434\u043d\u044f", solar_line_today: "\u0421\u0435\u0433\u043e\u0434\u043d\u044f", solar_peak_power: "\u041f\u0438\u043a\u043e\u0432\u0430\u044f \u043c\u043e\u0449\u043d\u043e\u0441\u0442\u044c \u043f\u0430\u043d\u0435\u043b\u0435\u0439 (\u0412\u0442)", section_battery_power: "\u041c\u043e\u0449\u043d\u043e\u0441\u0442\u044c \u0430\u043a\u043a\u0443\u043c\u0443\u043b\u044f\u0442\u043e\u0440\u0430 (+ \u0437\u0430\u0440\u044f\u0434, \u2212 \u0440\u0430\u0437\u0440\u044f\u0434)", power_inverted: "\u041f\u043e\u043b\u043e\u0436\u0438\u0442\u0435\u043b\u044c\u043d\u0430\u044f \u043c\u043e\u0449\u043d\u043e\u0441\u0442\u044c \u043e\u0437\u043d\u0430\u0447\u0430\u0435\u0442 \u0440\u0430\u0437\u0440\u044f\u0434", section_charge_power: "\u041c\u043e\u0449\u043d\u043e\u0441\u0442\u044c \u0437\u0430\u0440\u044f\u0434\u0430", section_battery_discharge: "\u041c\u043e\u0449\u043d\u043e\u0441\u0442\u044c \u0440\u0430\u0437\u0440\u044f\u0434\u0430", section_reserve: "\u0420\u0435\u0437\u0435\u0440\u0432\u043d\u044b\u0439 \u0437\u0430\u043f\u0430\u0441", section_charge_limit: "\u041f\u0440\u0435\u0434\u0435\u043b \u0437\u0430\u0440\u044f\u0434\u0430", battery_capacity: "\u0401\u043c\u043a\u043e\u0441\u0442\u044c (\u043a\u0412\u0442\u00b7\u0447)", layout_battery_wall: "\u041d\u0430\u0441\u0442\u0435\u043d\u043d\u044b\u0439 \u0430\u043a\u043a\u0443\u043c\u0443\u043b\u044f\u0442\u043e\u0440", layout_battery_station: "\u041f\u043e\u0440\u0442\u0430\u0442\u0438\u0432\u043d\u0430\u044f \u044d\u043b\u0435\u043a\u0442\u0440\u043e\u0441\u0442\u0430\u043d\u0446\u0438\u044f", bat_idle: "\u0412 \u043f\u043e\u043a\u043e\u0435", bat_full: "\u0417\u0430\u0440\u044f\u0436\u0435\u043d", bat_low: "\u041d\u0438\u0437\u043a\u0438\u0439 \u0437\u0430\u0440\u044f\u0434", bat_line_full_in: "\u041f\u043e\u043b\u043d\u044b\u0439 \u0447\u0435\u0440\u0435\u0437", bat_line_left: "\u041e\u0441\u0442\u0430\u043b\u043e\u0441\u044c", bat_line_reserve: "\u0420\u0435\u0437\u0435\u0440\u0432",
     robot_controls: "\u041a\u043d\u043e\u043f\u043a\u0438 \u0441\u0442\u0430\u0440\u0442, \u043f\u0430\u0443\u0437\u0430 \u0438 \u0432\u043e\u0437\u0432\u0440\u0430\u0442", robot_go_home: "\u0412\u0435\u0440\u043d\u0443\u0442\u044c\u0441\u044f \u043d\u0430 \u0431\u0430\u0437\u0443", battery_corner: "\u041f\u043e\u043a\u0430\u0437\u044b\u0432\u0430\u0442\u044c \u0431\u0430\u0442\u0430\u0440\u0435\u044e \u0432 \u0443\u0433\u043b\u0443 \u043a\u0430\u0440\u0442\u043e\u0447\u043a\u0438", section_robot_floor: "\u041f\u043e\u043b", floor_rug: "\u041a\u043e\u0432\u0451\u0440", floor_tiles: "\u041f\u043b\u0438\u0442\u043a\u0430", floor_parquet: "\u041f\u0430\u0440\u043a\u0435\u0442", floor_smooth: "\u0413\u043b\u0430\u0434\u043a\u0438\u0439 \u043f\u043e\u043b",
@@ -646,6 +649,7 @@ const T = {
     door_corner: "In einer Ecke der Karte anzeigen", controls_always: "Immer alle Tasten anzeigen", show_unavailable_controls: "Tasten mit nicht verf\u00fcgbarer Entit\u00e4t anzeigen",
     layout_robot_stick: "Akku-Stielsauger", stick_charged: "Geladen",
     layout_robot_floor_washer: "Nass-Trocken-Sauger", stick_away: "Nicht in der Station", stick_away_threshold: "Nicht in der Station unter dieser Leistung (W)",
+    speed_power_max: "Leistung bei h\u00f6chster Stufe (W)", speed_power_custom: "Eigene Stufenschwellen", speed_power_2: "Stufe 2 ab (W)", speed_power_3: "Stufe 3 ab (W)",
     fw_self_cleaning: "Selbstreinigung", fw_dirty_full: "Schmutzwassertank voll", fw_clean_empty: "Frischwassertank leer",
     group_energy: "Energie", type_solar: "Solarmodule", type_home_battery: "Heimspeicher", solar_producing: "Erzeugung", solar_low: "Geringe Erzeugung", solar_night: "Nacht", section_solar_layout: "Montage", layout_solar_ground: "Am Boden", layout_solar_roof: "Auf dem Dach", section_solar_power: "Erzeugte Leistung", section_energy_today: "Heute erzeugte Energie", solar_line_today: "Heute", solar_peak_power: "Spitzenleistung der Module (W)", section_battery_power: "Akkuleistung (+ Laden, \u2212 Entladen)", power_inverted: "Positive Leistung bedeutet Entladen", section_charge_power: "Ladeleistung", section_battery_discharge: "Entladeleistung", section_reserve: "Notstromreserve", section_charge_limit: "Ladegrenze", battery_capacity: "Kapazit\u00e4t (kWh)", layout_battery_wall: "Wandspeicher", layout_battery_station: "Powerstation", bat_idle: "Bereit", bat_full: "Voll", bat_low: "Akku schwach", bat_line_full_in: "Voll in", bat_line_left: "Verbleibend", bat_line_reserve: "Reserve",
     robot_controls: "Tasten Start, Pause und R\u00fcckkehr", robot_go_home: "Zur Station zur\u00fcck", battery_corner: "Akku in einer Ecke der Karte anzeigen", section_robot_floor: "Boden", floor_rug: "Teppich", floor_tiles: "Fliesen", floor_parquet: "Parkett", floor_smooth: "Glatter Boden",
@@ -811,6 +815,7 @@ const T = {
     door_corner: "Mostrarla en una esquina de la tarjeta", controls_always: "Mostrar siempre todos los botones", show_unavailable_controls: "Mostrar los botones cuya entidad no est\u00e1 disponible",
     layout_robot_stick: "Aspiradora escoba", stick_charged: "Cargada",
     layout_robot_floor_washer: "Fregona el\u00e9ctrica", stick_away: "Fuera de la base", stick_away_threshold: "Fuera de la base por debajo de esta potencia (W)",
+    speed_power_max: "Potencia a velocidad m\u00e1xima (W)", speed_power_custom: "Umbrales de velocidad propios", speed_power_2: "Velocidad 2 desde (W)", speed_power_3: "Velocidad 3 desde (W)",
     fw_self_cleaning: "Autolimpieza", fw_dirty_full: "Dep\u00f3sito de agua sucia lleno", fw_clean_empty: "Dep\u00f3sito de agua limpia vac\u00edo",
     group_energy: "Energ\u00eda", type_solar: "Paneles solares", type_home_battery: "Bater\u00eda dom\u00e9stica", solar_producing: "Produciendo", solar_low: "Producci\u00f3n baja", solar_night: "Noche", section_solar_layout: "Instalaci\u00f3n", layout_solar_ground: "En el suelo", layout_solar_roof: "En un tejado", section_solar_power: "Potencia producida", section_energy_today: "Energ\u00eda producida hoy", solar_line_today: "Hoy", solar_peak_power: "Potencia pico de los paneles (W)", section_battery_power: "Potencia de la bater\u00eda (+ carga, \u2212 descarga)", power_inverted: "Una potencia positiva significa descarga", section_charge_power: "Potencia de carga", section_battery_discharge: "Potencia de descarga", section_reserve: "Reserva de respaldo", section_charge_limit: "L\u00edmite de carga", battery_capacity: "Capacidad (kWh)", layout_battery_wall: "Bater\u00eda de pared", layout_battery_station: "Estaci\u00f3n port\u00e1til", bat_idle: "En reposo", bat_full: "Llena", bat_low: "Bater\u00eda baja", bat_line_full_in: "Llena en", bat_line_left: "Restante", bat_line_reserve: "Reserva",
     robot_controls: "Botones iniciar, pausa y volver", robot_go_home: "Volver a la base", battery_corner: "Mostrar la bater\u00eda en una esquina de la tarjeta", section_robot_floor: "Suelo", floor_rug: "Alfombra", floor_tiles: "Baldosas", floor_parquet: "Parqu\u00e9", floor_smooth: "Suelo liso",
@@ -976,6 +981,7 @@ const T = {
     door_corner: "Mostrarla in un angolo della scheda", controls_always: "Mostra sempre tutti i pulsanti", show_unavailable_controls: "Mostra i pulsanti con entit\u00e0 non disponibile",
     layout_robot_stick: "Scopa elettrica", stick_charged: "Carica",
     layout_robot_floor_washer: "Lavapavimenti", stick_away: "Fuori dalla base", stick_away_threshold: "Fuori dalla base sotto questa potenza (W)",
+    speed_power_max: "Potenza alla velocit\u00e0 massima (W)", speed_power_custom: "Soglie di velocit\u00e0 personalizzate", speed_power_2: "Velocit\u00e0 2 da (W)", speed_power_3: "Velocit\u00e0 3 da (W)",
     fw_self_cleaning: "Autopulizia", fw_dirty_full: "Serbatoio acqua sporca pieno", fw_clean_empty: "Serbatoio acqua pulita vuoto",
     group_energy: "Energia", type_solar: "Pannelli solari", type_home_battery: "Batteria domestica", solar_producing: "In produzione", solar_low: "Produzione bassa", solar_night: "Notte", section_solar_layout: "Installazione", layout_solar_ground: "A terra", layout_solar_roof: "Su un tetto", section_solar_power: "Potenza prodotta", section_energy_today: "Energia prodotta oggi", solar_line_today: "Oggi", solar_peak_power: "Potenza di picco dei pannelli (W)", section_battery_power: "Potenza della batteria (+ carica, \u2212 scarica)", power_inverted: "Una potenza positiva indica la scarica", section_charge_power: "Potenza di carica", section_battery_discharge: "Potenza di scarica", section_reserve: "Riserva di emergenza", section_charge_limit: "Limite di carica", battery_capacity: "Capacit\u00e0 (kWh)", layout_battery_wall: "Batteria a parete", layout_battery_station: "Power station portatile", bat_idle: "A riposo", bat_full: "Piena", bat_low: "Batteria bassa", bat_line_full_in: "Piena tra", bat_line_left: "Rimanente", bat_line_reserve: "Riserva",
     robot_controls: "Pulsanti avvia, pausa e ritorno", robot_go_home: "Torna alla base", battery_corner: "Mostra la batteria in un angolo della scheda", section_robot_floor: "Pavimento", floor_rug: "Tappeto", floor_tiles: "Piastrelle", floor_parquet: "Parquet", floor_smooth: "Pavimento liscio",
@@ -1141,6 +1147,7 @@ const T = {
     door_corner: "In een hoek van de kaart tonen", controls_always: "Altijd alle knoppen tonen", show_unavailable_controls: "Knoppen tonen waarvan de entiteit niet beschikbaar is",
     layout_robot_stick: "Steelstofzuiger", stick_charged: "Opgeladen",
     layout_robot_floor_washer: "Vloerwasser", stick_away: "Niet op de basis", stick_away_threshold: "Niet op de basis onder dit vermogen (W)",
+    speed_power_max: "Vermogen op hoogste stand (W)", speed_power_custom: "Eigen standdrempels", speed_power_2: "Stand 2 vanaf (W)", speed_power_3: "Stand 3 vanaf (W)",
     fw_self_cleaning: "Zelfreiniging", fw_dirty_full: "Vuilwatertank vol", fw_clean_empty: "Schoonwatertank leeg",
     group_energy: "Energie", type_solar: "Zonnepanelen", type_home_battery: "Thuisbatterij", solar_producing: "Productie", solar_low: "Lage productie", solar_night: "Nacht", section_solar_layout: "Montage", layout_solar_ground: "Op de grond", layout_solar_roof: "Op een dak", section_solar_power: "Opgewekt vermogen", section_energy_today: "Vandaag opgewekte energie", solar_line_today: "Vandaag", solar_peak_power: "Piekvermogen van de panelen (W)", section_battery_power: "Batterijvermogen (+ laden, \u2212 ontladen)", power_inverted: "Positief vermogen betekent ontladen", section_charge_power: "Laadvermogen", section_battery_discharge: "Ontlaadvermogen", section_reserve: "Noodreserve", section_charge_limit: "Laadlimiet", battery_capacity: "Capaciteit (kWh)", layout_battery_wall: "Wandbatterij", layout_battery_station: "Draagbaar powerstation", bat_idle: "In rust", bat_full: "Vol", bat_low: "Batterij bijna leeg", bat_line_full_in: "Vol over", bat_line_left: "Resterend", bat_line_reserve: "Reserve",
     robot_controls: "Knoppen start, pauze en terug", robot_go_home: "Terug naar de basis", battery_corner: "Batterij in een hoek van de kaart tonen", section_robot_floor: "Vloer", floor_rug: "Tapijt", floor_tiles: "Tegels", floor_parquet: "Parket", floor_smooth: "Gladde vloer",
@@ -1306,6 +1313,7 @@ const T = {
     door_corner: "Mostr\u00e1-la num canto do cart\u00e3o", controls_always: "Mostrar sempre todos os bot\u00f5es", show_unavailable_controls: "Mostrar bot\u00f5es cuja entidade est\u00e1 indispon\u00edvel",
     layout_robot_stick: "Aspirador vertical", stick_charged: "Carregado",
     layout_robot_floor_washer: "Lavadora de pavimentos", stick_away: "Fora da base", stick_away_threshold: "Fora da base abaixo desta pot\u00eancia (W)",
+    speed_power_max: "Pot\u00eancia na velocidade m\u00e1xima (W)", speed_power_custom: "Limiares de velocidade pr\u00f3prios", speed_power_2: "Velocidade 2 a partir de (W)", speed_power_3: "Velocidade 3 a partir de (W)",
     fw_self_cleaning: "Autolimpeza", fw_dirty_full: "Dep\u00f3sito de \u00e1gua suja cheio", fw_clean_empty: "Dep\u00f3sito de \u00e1gua limpa vazio",
     group_energy: "Energia", type_solar: "Pain\u00e9is solares", type_home_battery: "Bateria dom\u00e9stica", solar_producing: "A produzir", solar_low: "Produ\u00e7\u00e3o baixa", solar_night: "Noite", section_solar_layout: "Instala\u00e7\u00e3o", layout_solar_ground: "No ch\u00e3o", layout_solar_roof: "Num telhado", section_solar_power: "Pot\u00eancia produzida", section_energy_today: "Energia produzida hoje", solar_line_today: "Hoje", solar_peak_power: "Pot\u00eancia de pico dos pain\u00e9is (W)", section_battery_power: "Pot\u00eancia da bateria (+ carga, \u2212 descarga)", power_inverted: "Uma pot\u00eancia positiva significa descarga", section_charge_power: "Pot\u00eancia de carga", section_battery_discharge: "Pot\u00eancia de descarga", section_reserve: "Reserva de emerg\u00eancia", section_charge_limit: "Limite de carga", battery_capacity: "Capacidade (kWh)", layout_battery_wall: "Bateria de parede", layout_battery_station: "Esta\u00e7\u00e3o port\u00e1til", bat_idle: "Em repouso", bat_full: "Cheia", bat_low: "Bateria fraca", bat_line_full_in: "Cheia em", bat_line_left: "Restante", bat_line_reserve: "Reserva",
     robot_controls: "Bot\u00f5es iniciar, pausa e voltar", robot_go_home: "Voltar \u00e0 base", battery_corner: "Mostrar a bateria num canto do cart\u00e3o", section_robot_floor: "Ch\u00e3o", floor_rug: "Tapete", floor_tiles: "Azulejo", floor_parquet: "Parquet", floor_smooth: "Ch\u00e3o liso",
@@ -1471,6 +1479,7 @@ const T = {
     door_corner: "Visa i ett h\u00f6rn av kortet", controls_always: "Visa alltid alla knappar", show_unavailable_controls: "Visa knappar vars entitet inte \u00e4r tillg\u00e4nglig",
     layout_robot_stick: "Skaftdammsugare", stick_charged: "Laddad",
     layout_robot_floor_washer: "Golvtv\u00e4ttare", stick_away: "Inte i basen", stick_away_threshold: "Inte i basen under denna effekt (W)",
+    speed_power_max: "Effekt vid h\u00f6gsta l\u00e4ge (W)", speed_power_custom: "Egna hastighetsgr\u00e4nser", speed_power_2: "L\u00e4ge 2 fr\u00e5n (W)", speed_power_3: "L\u00e4ge 3 fr\u00e5n (W)",
     fw_self_cleaning: "Sj\u00e4lvreng\u00f6ring", fw_dirty_full: "Smutsvattentanken full", fw_clean_empty: "Rentvattentanken tom",
     group_energy: "Energi", type_solar: "Solpaneler", type_home_battery: "Hembatteri", solar_producing: "Producerar", solar_low: "L\u00e5g produktion", solar_night: "Natt", section_solar_layout: "Montering", layout_solar_ground: "P\u00e5 marken", layout_solar_roof: "P\u00e5 ett tak", section_solar_power: "Producerad effekt", section_energy_today: "Producerad energi i dag", solar_line_today: "I dag", solar_peak_power: "Panelernas toppeffekt (W)", section_battery_power: "Batterieffekt (+ laddning, \u2212 urladdning)", power_inverted: "Positiv effekt betyder urladdning", section_charge_power: "Laddeffekt", section_battery_discharge: "Urladdningseffekt", section_reserve: "Reservkapacitet", section_charge_limit: "Laddgr\u00e4ns", battery_capacity: "Kapacitet (kWh)", layout_battery_wall: "V\u00e4ggbatteri", layout_battery_station: "B\u00e4rbar kraftstation", bat_idle: "Vilar", bat_full: "Fullt", bat_low: "L\u00e5gt batteri", bat_line_full_in: "Fullt om", bat_line_left: "\u00c5terst\u00e5r", bat_line_reserve: "Reserv",
     robot_controls: "Knappar start, paus och \u00e5terg\u00e5", robot_go_home: "\u00c5ter till basen", battery_corner: "Visa batteriet i ett h\u00f6rn av kortet", section_robot_floor: "Golv", floor_rug: "Matta", floor_tiles: "Kakel", floor_parquet: "Parkett", floor_smooth: "Sl\u00e4tt golv",
@@ -1636,6 +1645,7 @@ const T = {
     door_corner: "Vis i et hj\u00f8rne av kortet", controls_always: "Vis alltid alle knapper", show_unavailable_controls: "Vis knapper der entiteten ikke er tilgjengelig",
     layout_robot_stick: "Stavst\u00f8vsuger", stick_charged: "Ladet",
     layout_robot_floor_washer: "Gulvvasker", stick_away: "Ikke i basen", stick_away_threshold: "Ikke i basen under denne effekten (W)",
+    speed_power_max: "Effekt p\u00e5 h\u00f8yeste trinn (W)", speed_power_custom: "Egne hastighetsgrenser", speed_power_2: "Trinn 2 fra (W)", speed_power_3: "Trinn 3 fra (W)",
     fw_self_cleaning: "Selvrengj\u00f8ring", fw_dirty_full: "Skittentvannstanken full", fw_clean_empty: "Rentvannstanken tom",
     group_energy: "Energi", type_solar: "Solcellepaneler", type_home_battery: "Hjemmebatteri", solar_producing: "Produserer", solar_low: "Lav produksjon", solar_night: "Natt", section_solar_layout: "Montering", layout_solar_ground: "P\u00e5 bakken", layout_solar_roof: "P\u00e5 et tak", section_solar_power: "Produsert effekt", section_energy_today: "Produsert energi i dag", solar_line_today: "I dag", solar_peak_power: "Panelenes toppeffekt (W)", section_battery_power: "Batterieffekt (+ lading, \u2212 utlading)", power_inverted: "Positiv effekt betyr utlading", section_charge_power: "Ladeeffekt", section_battery_discharge: "Utladingseffekt", section_reserve: "Reservekapasitet", section_charge_limit: "Ladegrense", battery_capacity: "Kapasitet (kWh)", layout_battery_wall: "Veggbatteri", layout_battery_station: "B\u00e6rbar kraftstasjon", bat_idle: "Hviler", bat_full: "Fullt", bat_low: "Lavt batteri", bat_line_full_in: "Fullt om", bat_line_left: "Gjenst\u00e5r", bat_line_reserve: "Reserve",
     robot_controls: "Knapper start, pause og retur", robot_go_home: "Tilbake til basen", battery_corner: "Vis batteriet i et hj\u00f8rne av kortet", section_robot_floor: "Gulv", floor_rug: "Teppe", floor_tiles: "Fliser", floor_parquet: "Parkett", floor_smooth: "Glatt gulv",
@@ -1801,6 +1811,7 @@ const T = {
     door_corner: "Vis i et hj\u00f8rne af kortet", controls_always: "Vis altid alle knapper", show_unavailable_controls: "Vis knapper, hvis entitet ikke er tilg\u00e6ngelig",
     layout_robot_stick: "St\u00f8vsuger p\u00e5 skaft", stick_charged: "Opladet",
     layout_robot_floor_washer: "Gulvvasker", stick_away: "Ikke i basen", stick_away_threshold: "Ikke i basen under denne effekt (W)",
+    speed_power_max: "Effekt p\u00e5 h\u00f8jeste trin (W)", speed_power_custom: "Egne hastighedsgr\u00e6nser", speed_power_2: "Trin 2 fra (W)", speed_power_3: "Trin 3 fra (W)",
     fw_self_cleaning: "Selvrensning", fw_dirty_full: "Snavsevandstank fuld", fw_clean_empty: "Rentvandstank tom",
     group_energy: "Energi", type_solar: "Solpaneler", type_home_battery: "Hjemmebatteri", solar_producing: "Producerer", solar_low: "Lav produktion", solar_night: "Nat", section_solar_layout: "Montering", layout_solar_ground: "P\u00e5 jorden", layout_solar_roof: "P\u00e5 et tag", section_solar_power: "Produceret effekt", section_energy_today: "Produceret energi i dag", solar_line_today: "I dag", solar_peak_power: "Panelernes spidseffekt (W)", section_battery_power: "Batterieffekt (+ opladning, \u2212 afladning)", power_inverted: "Positiv effekt betyder afladning", section_charge_power: "Ladeeffekt", section_battery_discharge: "Afladningseffekt", section_reserve: "N\u00f8dreserve", section_charge_limit: "Opladningsgr\u00e6nse", battery_capacity: "Kapacitet (kWh)", layout_battery_wall: "V\u00e6gbatteri", layout_battery_station: "B\u00e6rbar powerstation", bat_idle: "I hvile", bat_full: "Fuldt", bat_low: "Lavt batteri", bat_line_full_in: "Fuldt om", bat_line_left: "Tilbage", bat_line_reserve: "Reserve",
     robot_controls: "Knapper start, pause og retur", robot_go_home: "Tilbage til basen", battery_corner: "Vis batteriet i et hj\u00f8rne af kortet", section_robot_floor: "Gulv", floor_rug: "T\u00e6ppe", floor_tiles: "Fliser", floor_parquet: "Parket", floor_smooth: "Glat gulv",
@@ -1966,6 +1977,7 @@ const T = {
     door_corner: "Poka\u017c w rogu karty", controls_always: "Zawsze pokazuj wszystkie przyciski", show_unavailable_controls: "Poka\u017c przyciski niedost\u0119pnych encji",
     layout_robot_stick: "Odkurzacz pionowy", stick_charged: "Na\u0142adowany",
     layout_robot_floor_washer: "Mop elektryczny", stick_away: "Poza baz\u0105", stick_away_threshold: "Poza baz\u0105 poni\u017cej tej mocy (W)",
+    speed_power_max: "Moc na najwy\u017cszym biegu (W)", speed_power_custom: "W\u0142asne progi pr\u0119dko\u015bci", speed_power_2: "Bieg 2 od (W)", speed_power_3: "Bieg 3 od (W)",
     fw_self_cleaning: "Samooczyszczanie", fw_dirty_full: "Zbiornik na brudn\u0105 wod\u0119 pe\u0142ny", fw_clean_empty: "Zbiornik na czyst\u0105 wod\u0119 pusty",
     group_energy: "Energia", type_solar: "Panele s\u0142oneczne", type_home_battery: "Magazyn energii", solar_producing: "Produkcja", solar_low: "Niska produkcja", solar_night: "Noc", section_solar_layout: "Monta\u017c", layout_solar_ground: "Na ziemi", layout_solar_roof: "Na dachu", section_solar_power: "Moc produkowana", section_energy_today: "Energia wyprodukowana dzi\u015b", solar_line_today: "Dzi\u015b", solar_peak_power: "Moc szczytowa paneli (W)", section_battery_power: "Moc akumulatora (+ \u0142adowanie, \u2212 roz\u0142adowanie)", power_inverted: "Dodatnia moc oznacza roz\u0142adowanie", section_charge_power: "Moc \u0142adowania", section_battery_discharge: "Moc roz\u0142adowania", section_reserve: "Rezerwa awaryjna", section_charge_limit: "Limit \u0142adowania", battery_capacity: "Pojemno\u015b\u0107 (kWh)", layout_battery_wall: "Akumulator \u015bcienny", layout_battery_station: "Przeno\u015bna stacja zasilania", bat_idle: "Spoczynek", bat_full: "Pe\u0142ny", bat_low: "Niski poziom baterii", bat_line_full_in: "Pe\u0142ny za", bat_line_left: "Pozosta\u0142o", bat_line_reserve: "Rezerwa",
     robot_controls: "Przyciski start, pauza i powr\u00f3t", robot_go_home: "Powr\u00f3t do bazy", battery_corner: "Poka\u017c bateri\u0119 w rogu karty", section_robot_floor: "Pod\u0142oga", floor_rug: "Dywan", floor_tiles: "P\u0142ytki", floor_parquet: "Parkiet", floor_smooth: "G\u0142adka pod\u0142oga",
@@ -2131,6 +2143,7 @@ const T = {
     door_corner: "\u663e\u793a\u5728\u5361\u7247\u89d2\u843d", controls_always: "\u59cb\u7ec8\u663e\u793a\u6240\u6709\u6309\u94ae", show_unavailable_controls: "\u663e\u793a\u5b9e\u4f53\u4e0d\u53ef\u7528\u7684\u6309\u94ae",
     layout_robot_stick: "\u65e0\u7ebf\u5438\u5c18\u5668", stick_charged: "\u5df2\u5145\u6ee1",
     layout_robot_floor_washer: "\u6d17\u5730\u673a", stick_away: "\u4e0d\u5728\u5e95\u5ea7\u4e0a", stick_away_threshold: "\u4f4e\u4e8e\u6b64\u529f\u7387\u5373\u4e0d\u5728\u5e95\u5ea7\u4e0a (W)",
+    speed_power_max: "\u6700\u9ad8\u6863\u529f\u7387 (W)", speed_power_custom: "\u81ea\u5b9a\u4e49\u6863\u4f4d\u9608\u503c", speed_power_2: "2 \u6863\u8d77\u59cb (W)", speed_power_3: "3 \u6863\u8d77\u59cb (W)",
     fw_self_cleaning: "\u81ea\u6e05\u6d01\u4e2d", fw_dirty_full: "\u6c61\u6c34\u7bb1\u5df2\u6ee1", fw_clean_empty: "\u6e05\u6c34\u7bb1\u5df2\u7a7a",
     group_energy: "\u80fd\u6e90", type_solar: "\u592a\u9633\u80fd\u677f", type_home_battery: "\u5bb6\u7528\u7535\u6c60", solar_producing: "\u53d1\u7535\u4e2d", solar_low: "\u53d1\u7535\u8f83\u5f31", solar_night: "\u591c\u95f4", section_solar_layout: "\u5b89\u88c5\u65b9\u5f0f", layout_solar_ground: "\u5730\u9762", layout_solar_roof: "\u5c4b\u9876", section_solar_power: "\u53d1\u7535\u529f\u7387", section_energy_today: "\u4eca\u65e5\u53d1\u7535\u91cf", solar_line_today: "\u4eca\u65e5", solar_peak_power: "\u9762\u677f\u5cf0\u503c\u529f\u7387 (W)", section_battery_power: "\u7535\u6c60\u529f\u7387\uff08+ \u5145\u7535\uff0c\u2212 \u653e\u7535\uff09", power_inverted: "\u6b63\u529f\u7387\u8868\u793a\u653e\u7535", section_charge_power: "\u5145\u7535\u529f\u7387", section_battery_discharge: "\u653e\u7535\u529f\u7387", section_reserve: "\u5907\u7528\u7535\u91cf", section_charge_limit: "\u5145\u7535\u4e0a\u9650", battery_capacity: "\u5bb9\u91cf (kWh)", layout_battery_wall: "\u58c1\u6302\u7535\u6c60", layout_battery_station: "\u4fbf\u643a\u7535\u6e90\u7ad9", bat_idle: "\u5f85\u673a", bat_full: "\u5df2\u5145\u6ee1", bat_low: "\u7535\u91cf\u4f4e", bat_line_full_in: "\u5145\u6ee1\u8fd8\u9700", bat_line_left: "\u5269\u4f59", bat_line_reserve: "\u5907\u7528",
     robot_controls: "\u5f00\u59cb\u3001\u6682\u505c\u548c\u56de\u5145\u6309\u94ae", robot_go_home: "\u56de\u5145", battery_corner: "\u5728\u5361\u7247\u89d2\u843d\u663e\u793a\u7535\u91cf", section_robot_floor: "\u5730\u9762", floor_rug: "\u5730\u6bef", floor_tiles: "\u74f7\u7816", floor_parquet: "\u6728\u5730\u677f", floor_smooth: "\u5149\u6ed1\u5730\u9762",
@@ -2296,6 +2309,7 @@ const T = {
     door_corner: "Zobrazit v rohu karty", controls_always: "V\u017edy zobrazit v\u0161echna tla\u010d\u00edtka", show_unavailable_controls: "Zobrazit tla\u010d\u00edtka nedostupn\u00fdch entit",
     layout_robot_stick: "Ty\u010dov\u00fd vysava\u010d", stick_charged: "Nabito",
     layout_robot_floor_washer: "Myc\u00ed vysava\u010d", stick_away: "Mimo z\u00e1kladnu", stick_away_threshold: "Mimo z\u00e1kladnu pod t\u00edmto v\u00fdkonem (W)",
+    speed_power_max: "P\u0159\u00edkon na nejvy\u0161\u0161\u00ed stupe\u0148 (W)", speed_power_custom: "Vlastn\u00ed prahy rychlosti", speed_power_2: "Stupe\u0148 2 od (W)", speed_power_3: "Stupe\u0148 3 od (W)",
     fw_self_cleaning: "Samo\u010di\u0161t\u011bn\u00ed", fw_dirty_full: "N\u00e1dr\u017e na \u0161pinavou vodu pln\u00e1", fw_clean_empty: "N\u00e1dr\u017e na \u010distou vodu pr\u00e1zdn\u00e1",
     group_energy: "Energie", type_solar: "Sol\u00e1rn\u00ed panely", type_home_battery: "Dom\u00e1c\u00ed baterie", solar_producing: "V\u00fdroba", solar_low: "N\u00edzk\u00e1 v\u00fdroba", solar_night: "Noc", section_solar_layout: "Mont\u00e1\u017e", layout_solar_ground: "Na zemi", layout_solar_roof: "Na st\u0159e\u0161e", section_solar_power: "Vyr\u00e1b\u011bn\u00fd v\u00fdkon", section_energy_today: "Dnes vyroben\u00e1 energie", solar_line_today: "Dnes", solar_peak_power: "\u0160pi\u010dkov\u00fd v\u00fdkon panel\u016f (W)", section_battery_power: "V\u00fdkon baterie (+ nab\u00edjen\u00ed, \u2212 vyb\u00edjen\u00ed)", power_inverted: "Kladn\u00fd v\u00fdkon znamen\u00e1 vyb\u00edjen\u00ed", section_charge_power: "Nab\u00edjec\u00ed v\u00fdkon", section_battery_discharge: "Vyb\u00edjec\u00ed v\u00fdkon", section_reserve: "Z\u00e1lo\u017en\u00ed rezerva", section_charge_limit: "Limit nab\u00edjen\u00ed", battery_capacity: "Kapacita (kWh)", layout_battery_wall: "N\u00e1st\u011bnn\u00e1 baterie", layout_battery_station: "P\u0159enosn\u00e1 elektr\u00e1rna", bat_idle: "V klidu", bat_full: "Pln\u00e1", bat_low: "Slab\u00e1 baterie", bat_line_full_in: "Pln\u00e1 za", bat_line_left: "Zb\u00fdv\u00e1", bat_line_reserve: "Rezerva",
     robot_controls: "Tla\u010d\u00edtka start, pauza a n\u00e1vrat", robot_go_home: "N\u00e1vrat do z\u00e1kladny", battery_corner: "Zobrazit baterii v rohu karty", section_robot_floor: "Podlaha", floor_rug: "Koberec", floor_tiles: "Dla\u017edice", floor_parquet: "Parkety", floor_smooth: "Hladk\u00e1 podlaha",
@@ -6169,6 +6183,23 @@ function levelFromChoice(st) {
   return { level: boost ? 3 : 2, boost, label: null };
 }
 
+// A fan on a plug says how fast it runs only through what it draws: under a
+// third of its top power it is on its first speed, under two thirds on its
+// second, above that on its third. Fans differ, so the owner gives the top
+// power, and may set the two steps by hand when the thirds do not fit.
+function powerSpeedLevel(hass, cfg) {
+  if (!cfg.power_entity) return 0;
+  const max = parseFloat(cfg.speed_power_max);
+  let t2 = cfg.speed_power_custom ? parseFloat(cfg.speed_power_2) : NaN;
+  let t3 = cfg.speed_power_custom ? parseFloat(cfg.speed_power_3) : NaN;
+  if (!(t2 > 0)) t2 = max > 0 ? max / 3 : NaN;
+  if (!(t3 > 0)) t3 = max > 0 ? (max * 2) / 3 : NaN;
+  if (!(t2 > 0) || !(t3 > 0)) return 0;
+  const w = wattsOf(hass, cfg.power_entity);
+  if (w === null || !(w > 0)) return 0;
+  return w >= t3 ? 3 : w >= t2 ? 2 : 1;
+}
+
 function hoodFanState(hass, cfg, norm) {
   const out = { level: 0, boost: false, percentage: null, preset: null, label: null };
   const fst = cfg.fan_entity ? stateObj(hass, cfg.fan_entity) : null;
@@ -6201,8 +6232,10 @@ function hoodFanState(hass, cfg, norm) {
     }
   } else if (isActiveState(norm)) {
     // No fan entity: we know it runs, not how fast. Mid speed reads as "on"
-    // without pretending to know a level we don't have.
-    out.level = 2;
+    // without pretending to know a level we don't have, unless the plug's
+    // power says it.
+    out.powerLevel = powerSpeedLevel(hass, cfg);
+    out.level = out.powerLevel || 2;
   }
   if (out.preset && /boost|turbo|intensiv|intensif|max/i.test(out.preset)) out.boost = true;
   if (cfg.boost_entity) {
@@ -12228,6 +12261,9 @@ class ApplianceCard extends HTMLElement {
       fan = hoodFanState(hass, cfg, norm);
       // Shown even at rest: this line is what opens the speed entity, so
       // hiding it while the hood is off removes the only way to set it.
+      if (!cfg.fan_entity && fan.powerLevel && isActiveState(norm)) {
+        extraLines.push({ key: "fan_speed", icon: "mdi:fan", label: t(hass, "fan_speed"), value: `${fan.powerLevel} / 3`, entity: cfg.power_entity });
+      }
       if (cfg.fan_entity) {
         // A speed entity that dropped out while the hood runs is unknown, not
         // zero; once the hood is off, "off" is the truthful reading.
@@ -13856,10 +13892,16 @@ class ApplianceCard extends HTMLElement {
       const mapped = mappedMode(["off", "run", "night", "heat"]);
       if (mapped) mode = mapped;
       const pct = numberOrNull(a.percentage);
-      const level = airLevelOf(pct, mode === "night" ? "night" : preset, presetRaw);
+      let level = airLevelOf(pct, mode === "night" ? "night" : preset, presetRaw);
+      // Nothing says the speed but the plug: its power does, when told how
+      // much the fan draws at the top.
+      const byPower = pct === null && !presetSpeedOf(presetRaw) && !["night", "turbo"].includes(preset) ? powerSpeedLevel(hass, cfg) : 0;
+      if (byPower) level = byPower;
       if (["run", "night", "heat"].includes(mode)) {
         if (pct !== null && pct > 0) {
           extraLines.push({ key: "speed", icon: "mdi:fan", label: t(hass, "section_fan_speed"), value: `${Math.round(pct)} %`, entity: cfg.state_entity });
+        } else if (byPower) {
+          extraLines.push({ key: "speed", icon: "mdi:fan", label: t(hass, "section_fan_speed"), value: `${byPower} / 3`, entity: cfg.power_entity });
         }
         // The preset gets a line of its own only when the state line does not
         // already say it: not for the night, the heat, auto or the natural wind,
@@ -15462,7 +15504,16 @@ const SECTIONS = [
           + c._row("power_inverted", "power_inverted", { type: "checkbox" });
       }
       if (cap.ups) return "";
-      return c._row(cap.evCharger ? "ev_power_threshold" : cap.screen ? "screen_standby_threshold" : "power_on_threshold", "power_on_threshold",
+      // A fan's speed, read from what it draws.
+      const speedRows = cap.fan || cap.airPurifier || cap.fanAppliance
+        ? c._row("speed_power_max", "speed_power_max", { placeholder: "" })
+          + c._row("speed_power_custom", "speed_power_custom", { type: "checkbox" })
+          + (c._config.speed_power_custom
+            ? c._row("speed_power_2", "speed_power_2", { placeholder: c._config.speed_power_max > 0 ? String(Math.round(c._config.speed_power_max / 3)) : "" })
+              + c._row("speed_power_3", "speed_power_3", { placeholder: c._config.speed_power_max > 0 ? String(Math.round((c._config.speed_power_max * 2) / 3)) : "" })
+            : "")
+        : "";
+      return speedRows + c._row(cap.evCharger ? "ev_power_threshold" : cap.screen ? "screen_standby_threshold" : "power_on_threshold", "power_on_threshold",
         { placeholder: cap.fridgeTemp ? "1" : cap.evCharger ? String(EV_POWER_THRESHOLD) : cap.screen ? String(SCREEN_STANDBY_W) : "10" })
         + (cap.fridgeTemp ? c._row("no_power_threshold", "no_power_threshold", { placeholder: "1" }) + c._row("no_power_after", "no_power_after", { placeholder: "30" })
           : cap.evCharger || cap.screen || cap.hairDryer || cap.network || cap.poolPump ? "" : c._row("power_off_delay", "power_off_delay", { placeholder: "0" }));
@@ -16470,6 +16521,12 @@ class ApplianceCardEditor extends HTMLElement {
           const n = fontScaleOf(value);
           if (n === 1) delete this._config.font_scale;
           else this._config.font_scale = n;
+        }
+        // Custom speed steps that are switched off go with their values.
+        if (field === "speed_power_custom" && !value) {
+          delete this._config.speed_power_custom;
+          delete this._config.speed_power_2;
+          delete this._config.speed_power_3;
         }
         // Shown is the default and is not written: only false is.
         if ((field === "show_name" || field === "show_state") && value) delete this._config[field];

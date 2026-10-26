@@ -46,10 +46,12 @@
   body.live .values summary::-webkit-details-marker { display: none; }
   body.live .values summary::before { content: "\270E  "; }
   body.live .values[open] { background: var(--card-background-color); border-radius: 12px; padding-bottom: 8px; }
-  body.live .val { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 4px 8px; padding: 4px 12px; }
+  body.live .val { display: grid; grid-template-columns: minmax(0, 1fr) auto auto; align-items: center; gap: 4px 8px; padding: 4px 12px; }
   body.live .val span { grid-column: 1 / -1; color: var(--primary-text-color); font-size: 12px; overflow-wrap: anywhere; }
-  body.live .val input[type=range] { width: 100%; }
-  body.live .val input[type=number] { width: 72px; }
+  body.live .val input[type=range] { width: 100%; min-width: 0; margin: 0; box-sizing: border-box; }
+  body.live .val input[type=number] { width: 64px; box-sizing: border-box; }
+  body.live .val em { font-style: normal; font-size: 12px; min-width: 1em; }
+  body.live .val input[type=checkbox] { justify-self: start; margin: 0; }
   body.live .val input[list] { grid-column: 1 / -1; width: 100%; box-sizing: border-box; }
   body.live .val input[type=checkbox] { grid-column: 1; justify-self: start; }
   body.live .val em { display: none; }
@@ -116,7 +118,7 @@ function mkHass(states) {
 // what it draws at work. The visitor moves the power to see the card follow.
 const PLUG_WATTS = { washer: 450, dryer: 2000, dishwasher: 1800, oven: 2400, microwave: 900, kettle: 2200, coffee: 1200, cooker: 800,
   rice_cooker: 500, air_fryer: 1500, toaster: 900, iron: 2200, fridge: 70, water_heater: 2000, space_heater: 1500, towel_warmer: 600,
-  dehumidifier: 250, air_purifier: 30, fan: 35, screen: 120, hair_dryer: 1200, printer_3d: 200, pool_pump: 750, robot: 24 };
+  dehumidifier: 250, air_purifier: 30, fan: 35, hood: 120, screen: 120, hair_dryer: 1200, printer_3d: 200, pool_pump: 750, robot: 24 };
 // The types whose threshold reads a cycle out of the meter: 10 W is enough.
 const PLUG_CYCLE = ["washer", "dryer", "dishwasher", "oven", "microwave", "kettle", "coffee", "cooker", "rice_cooker", "air_fryer", "printer_3d", "water_heater"];
 const plugOnly = params.get("plug") === "1";
@@ -132,6 +134,9 @@ function plugConfig(config) {
   for (const [k, v] of Object.entries(config)) if (/_layout$|^illustration_color$|^name$|^washer_dryer$/.test(k)) keep[k] = v;
   const out = { ...keep, appliance_type: type, state_entity: "switch.smart_plug", power_entity: "sensor.smart_plug_power", toggle_entity: "switch.smart_plug" };
   if (PLUG_CYCLE.includes(type)) out.power_on_threshold = 10;
+  // A fan reads its speed from what it draws: started at mid speed, the
+  // slider goes from the first to the third.
+  if (["fan", "air_purifier", "hood"].includes(type)) out.speed_power_max = PLUG_WATTS[type] * 2;
   return [out, [st("switch.smart_plug", "on"), st("sensor.smart_plug_power", PLUG_WATTS[type], { unit_of_measurement: "W", device_class: "power" })]];
 }
 
@@ -251,7 +256,7 @@ function wordsFor(id, st, config) {
 function rangeFor(v, unit) {
   const u = String(unit || "").toLowerCase();
   if (u === "%") return [0, 100, 1];
-  if (/\u00b0|^k$/.test(u)) return [Math.floor(Math.min(v, 0) - 20), Math.ceil(Math.max(v, 0) + 40), 0.5];
+  if (/\u00b0|^k$/.test(u)) return [v < 0 ? Math.floor(v - 20) : 0, Math.ceil(Math.max(v, 0) + 40), 0.5];
   if (u === "s") return [0, Math.max(3600, v * 2), 30];
   if (u === "min") return [0, Math.max(120, v * 2), 1];
   if (u === "w" || u === "kw" || u === "mbit/s") { const hi = Math.max(u === "kw" ? 10 : 100, Math.abs(v) * 3); return [v < 0 ? -hi : 0, hi, u === "kw" ? 0.1 : 1]; }
