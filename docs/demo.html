@@ -1155,6 +1155,28 @@ const camDome = camCard(L("Garage", "Garage"), "idle", { camera_layout: "dome", 
   [st("binary_sensor.cam_motion", "on")]);
 const camPrivacy = camCard(L("Bedroom", "Chambre"), "idle", { camera_layout: "indoor", privacy_entity: "switch.cam_privacy", toggle_entity: "switch.cam_privacy" }, {},
   [st("switch.cam_privacy", "on")]);
+// Diffusers: a Meross on its spray select, Tuya ones on a fan or a switch,
+// each with its light.
+const difCard = (name, layout, spray, light, more = {}) => () => card({ name, appliance_type: "diffuser", diffuser_layout: layout,
+  state_entity: "select.dif_spray", light_entity: "light.dif_light", ...more },
+  [st("select.dif_spray", spray, { options: ["off", "eco", "on"] }), st("light.dif_light", light ? "on" : "off", light ? { rgb_color: light } : {})]);
+const difDrop = difCard(L("Living room", "Salon"), "drop", "on", [255, 183, 77]);
+const difCone = difCard(L("Bedroom", "Chambre"), "cone", "eco", null);
+const difStone = difCard(L("Office", "Bureau"), "stone", "on", [179, 136, 255]);
+const difFlame = difCard(L("Hall", "Entr\u00e9e"), "flame", "on", [255, 145, 0]);
+const difNebulizer = difCard(L("Bathroom", "Salle de bain"), "nebulizer", "eco", [129, 212, 250]);
+// Ventilation: a Zehnder ComfoAir Q on its fan entity, a single-room unit and
+// a pair of through-wall units.
+const hrvCard = (name, layout, state, attrs, more = [], cfg = {}) => () => card({ name, appliance_type: "hrv", hrv_layout: layout, state_entity: "fan.vmc",
+  outdoor_temperature_entity: "sensor.vmc_outdoor", supply_temperature_entity: "sensor.vmc_supply", extract_temperature_entity: "sensor.vmc_extract",
+  exhaust_temperature_entity: "sensor.vmc_exhaust", airflow_entity: "sensor.vmc_airflow", filter_life_entity: "sensor.vmc_filter", ...cfg },
+  [st("fan.vmc", state, attrs), st("sensor.vmc_outdoor", 3, { unit_of_measurement: "\u00b0C" }), st("sensor.vmc_supply", 18, { unit_of_measurement: "\u00b0C" }),
+   st("sensor.vmc_extract", 21, { unit_of_measurement: "\u00b0C" }), st("sensor.vmc_exhaust", 6, { unit_of_measurement: "\u00b0C" }),
+   st("sensor.vmc_airflow", 85, { unit_of_measurement: "m\u00b3/h" }), st("sensor.vmc_filter", 72, { unit_of_measurement: "days" }), ...more]);
+const hrvDiagram = hrvCard(L("Ventilation", "VMC double flux"), "diagram", "on", { percentage: 50 });
+const hrvOneDuct = hrvCard(L("Bedroom ventilation", "VMC chambre"), "one_duct", "on", { percentage: 90, preset_mode: "boost" });
+const hrvPair = hrvCard(L("Studio ventilation", "VMC studio"), "pair", "on", { percentage: 40 }, [st("binary_sensor.vmc_bypass", "off")], { bypass_entity: "binary_sensor.vmc_bypass" });
+const hrvBypass = hrvCard(L("Summer night", "Nuit d'\u00e9t\u00e9"), "diagram", "on", { percentage: 70 }, [st("binary_sensor.vmc_bypass", "on")], { bypass_entity: "binary_sensor.vmc_bypass" });
 const camOffline = camCard(L("Driveway", "All\u00e9e"), "unavailable", { camera_layout: "outdoor" }, {});
 const upsReplace = upsCard("OL RB", 100, 300, 18, 236);
 const upsOff = upsCard("OFF", 100, 1500, 0, 241);
@@ -1183,6 +1205,8 @@ const EXTRA = { iron, round_feeder: roundFeeder, double_feeder: doubleFeeder, ev
                 scale_fresh: scaleFresh, scale_goal: scaleGoal, scale_old: scaleOld,
                 ups_online: upsOnline, ups_charging: upsCharging, ups_battery: upsBattery, ups_low: upsLow,
                 ups_replace: upsReplace, ups_off: upsOff,
+                dif_drop: difDrop, dif_cone: difCone, dif_stone: difStone, dif_flame: difFlame, dif_nebulizer: difNebulizer,
+                hrv_diagram: hrvDiagram, hrv_one_duct: hrvOneDuct, hrv_pair: hrvPair, hrv_bypass: hrvBypass,
                 cam_indoor: camIndoor, cam_tube: camTube, cam_outdoor: camOutdoor, cam_dome: camDome, cam_privacy: camPrivacy, cam_offline: camOffline,
                 net_sw8: netSw(8, 6), net_sw16: netSw(16, 11), net_sw24: netSw(24, 20), net_sw32: netSw(32, 27),
                 net_nas1: netBays(1, ["normal"], L("NAS, 1 bay", "NAS 1 baie")),
@@ -1215,8 +1239,8 @@ function liveGallery() {
   const wrap = document.getElementById("wrap");
   wrap.innerHTML = `<header>
     <h1>HA Appliance Card</h1>
-    <p>${L("A Lovelace card for 39 kinds of home appliances, each drawn and animated from its own data. These cards run on made-up states: in Home Assistant every field is an entity you pick.",
-      "Une card Lovelace pour 39 types d'appareils, chacun dessiné et animé à partir de ses propres données. Ces cartes tournent sur des états inventés : dans Home Assistant, chaque champ est une entité que vous choisissez.")}</p>
+    <p>${L("A Lovelace card for 41 kinds of home appliances, each drawn and animated from its own data. These cards run on made-up states: in Home Assistant every field is an entity you pick.",
+      "Une card Lovelace pour 41 types d'appareils, chacun dessiné et animé à partir de ses propres données. Ces cartes tournent sur des états inventés : dans Home Assistant, chaque champ est une entité que vous choisissez.")}</p>
     <nav>${link("lang", "en", "English", !fr)}${link("lang", "fr", "Français", fr)}<span></span>${link("theme", "light", L("Light", "Clair"), !dark)}${link("theme", "dark", L("Dark", "Sombre"), dark)}<span></span>${link("plug", "0", L("Integrations", "Intégrations"), !plugOnly)}${link("plug", "1", L("Smart plug only", "Prise connectée seule"), plugOnly)}<span></span><a href="https://github.com/ADNPolymerase/ha-appliance-card">GitHub</a></nav>
     <p class="hint">${plugOnly
       ? L("Each card below has nothing but a smart plug: its switch and its power meter. Open “Change the values” and move the power, or press the power button.",
@@ -1234,6 +1258,7 @@ function liveGallery() {
     [L("Energy", "Énergie"), [solarDay, solarRoof, solarNight, batteryCharging, batteryStation, batteryLow, evCharger, evDischarging]],
     [L("Network and servers", "Réseau et serveurs"), [netSwitch, netRouter("on"), netNas, netServer, netRack, upsOnline, upsBattery, upsLow]],
     [L("Home and media", "Maison et multimédia"), [printer3d, scaleFresh, scaleGoal]],
+    [L("Diffusers and ventilation", "Diffuseurs et ventilation"), [difDrop, difCone, difStone, difFlame, difNebulizer, hrvDiagram, hrvOneDuct, hrvPair, hrvBypass]],
     [L("Cameras", "Cam\u00e9ras"), [camIndoor, camTube, camOutdoor, camDome, camPrivacy, camOffline]],
     [L("Pets", "Animaux"), [petFeeder, roundFeeder, doubleFeeder, dualFeeder, wetFeeder, petFountain]],
   ];

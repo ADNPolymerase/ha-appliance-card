@@ -23,7 +23,7 @@ Aucune marque supposée : chaque champ est une entité à choisir, elle fonction
 
 ## Fonctionnalités
 
-- **Trente-neuf types d'appareils**, chacun avec une illustration en CSS animée sur les données de l'appareil et statique à l'arrêt. Le type est détecté tout seul ou choisi via `appliance_type`, et `compact: true` ne garde que le texte.
+- **Quarante et un types d'appareils**, chacun avec une illustration en CSS animée sur les données de l'appareil et statique à l'arrêt. Le type est détecté tout seul ou choisi via `appliance_type`, et `compact: true` ne garde que le texte.
 - **Normalisation d'état** : `Idle`, `RUNNING`, `wash`, `En marche`… sont reconnus (sans tenir compte des accents) et classés en veille, préchauffage, en cours, en pause, terminé, différé ou erreur. Un état inconnu s'affiche tel quel, sans l'espace de noms de l'intégration, et `state_map` classe le reste, `"*"` ramassant tout ce qui dépasse.
 - **L'étape, et non une heure d'*En cours*** : un lave-linge, un sèche-linge ou un lave-vaisselle nomme l'étape où il en est (*Prélavage*, *Lavage*, *Rinçage*, *Essorage*, *Séchage* et sept autres), d'après une entité de phase ou son propre état, et le tambour s'emballe pendant l'essorage. Le temps restant est toujours celui du cycle entier.
 - **Une lavante-séchante est un lave-linge qui sèche** : `washer_dryer: true`, et le tambour montre de l'eau pendant le lavage, puis du linge qui tourne dans l'air chaud pendant le séchage. L'étape vient de l'état lui-même ou d'une entité de phase, et la ligne d'état lit *Lavage* ou *Séchage*.
@@ -124,6 +124,15 @@ Clique sur une famille pour voir ses appareils en marche.
 <summary><b>Onduleurs</b></summary>
 
 <img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-ups.fr.gif" alt="Onduleurs" width="100%">
+
+</details>
+
+<details>
+<summary><b>Diffuseurs et ventilation</b></summary>
+
+<img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-diffusers.fr.gif" alt="Diffuseurs et ventilation" width="100%">
+
+<img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-ventilation.fr.gif" alt="VMC" width="100%">
 
 </details>
 
@@ -281,6 +290,12 @@ Seule `state_entity` est obligatoire, sauf sur un réfrigérateur où une sonde 
 | `runtime_entity` | onduleur | L'autonomie restante, en secondes comme NUT la donne, ou en minutes ou en heures : une ligne, et l'écran de l'onduleur quand il est sur batterie. |
 | `load_entity` / `nominal_power` | onduleur | La charge, en % : l'énergie circule plus vite quand elle monte, et à 100 % ou plus c'est une *Surcharge*. Avec `nominal_power` (en W) et sans `power_entity`, la ligne la donne aussi en watts. |
 | `input_voltage_entity` | onduleur | La tension à la prise, en ligne. Sans `state_entity`, sous 100 V l'onduleur est sur batterie. |
+| `diffuser_layout` | diffuseur | `drop` (une goutte en bois, Meross, Asakuki) \| `cone` \| `stone` (galet, Vitruvi, Govee) \| `flame` (un diffuseur effet flamme) \| `nebulizer` (verre sur socle en bois). Sans réglage, le nom décide, sinon une goutte. Bois par défaut pour la goutte, la flamme et le nébuliseur, blanc pour les autres, ou `illustration_color`. |
+| `light_entity` / `tank_empty_entity` | diffuseur | La lumière du diffuseur : sa couleur éclaire l'anneau et le sol. Un capteur de réservoir vide l'affiche *Réservoir vide*. Son `state_entity` est la brume : un interrupteur, un ventilateur (50 % ou moins = *Intermittent*), le select de Meross (`eco` = *Intermittent*) ou une entité humidificateur. Un select a un bouton qui passe d'un mode au suivant, un interrupteur ou un ventilateur un bouton marche/arrêt. |
+| `hrv_layout` | VMC | `diagram` (les deux flux qui se croisent dans l'échangeur) \| `one_duct` (VMC murale à un seul conduit, Lunos eGO, Zehnder ComfoAir 70) \| `pair` (paire décentralisée traversant le mur, Lunos e2, Vents TwinFresh, qui s'inverse toutes les 70 s). |
+| `outdoor_temperature_entity` / `supply_temperature_entity` / `extract_temperature_entity` / `exhaust_temperature_entity` | VMC | Les quatre températures, dessinées au bout des gaines. |
+| `bypass_entity` | VMC | Le bypass : un interrupteur ou un capteur binaire actif, une ouverture en %, ou l'état de l'échangeur de Vallox, dont *Defrosting* affiche *Dégivrage*. |
+| `airflow_entity` / `filter_life_entity` | VMC | Le débit et le filtre, en jours ou en %, en lignes. À 7 jours ou 10 % (ou `filter_due_below`), *Filtre à changer*. Le `state_entity` est l'entité ventilateur, climat ou select de la VMC : sa vitesse, ses préréglages *Boost* et *Absence*. |
 | `camera_layout` | caméra | `indoor` (caméra orientable) \| `tube` (Netatmo Welcome) \| `outdoor` (sur son bras mural) \| `dome` (au plafond). Sans réglage, une caméra intérieure Netatmo est un tube, un nom qui dit dôme un dôme, et un nom ou une marque qui dit extérieur, jardin, avant, arrière, Arlo ou spotlight une caméra extérieure. |
 | `motion_entity` | caméra | Un capteur de mouvement : *Mouvement détecté* tant qu'il est actif, des ondes orange devant l'objectif, puis une ligne *Dernier mouvement*. |
 | `recording_entity` | caméra | Un capteur d'enregistrement, pour les intégrations dont l'entité caméra ne dit pas *recording*. |

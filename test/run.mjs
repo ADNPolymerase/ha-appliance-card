@@ -10501,4 +10501,70 @@ check('borne : ni un statut reconnu', evMode(evR('SuspendedEVSE', { power_entity
   check('editeur camera : dans la liste', /value="camera"/.test(ed), true);
 }
 
+// =============================================================================
+// Essential oil diffusers: their mist, their light, their tank.
+// =============================================================================
+{
+  const s = (state, attributes = {}) => ({ state: String(state), attributes });
+  const dif = (state, cfg = {}, more = {}, attrs = {}) => render({ appliance_type: 'diffuser', state_entity: 'select.dif_spray', ...cfg },
+    { 'select.dif_spray': s(state, { options: ['off', 'eco', 'on'], ...attrs }), ...more });
+  check('diffuseur : eteint', stateLine(dif('off')), 'Off');
+  check('diffuseur : continu', stateLine(dif('on')), 'Diffusing');
+  check('diffuseur : eco = intermittent', stateLine(dif('eco')), 'Intermittent');
+  check('diffuseur : hors ligne', stateLine(dif('unavailable')), 'Offline');
+  check('diffuseur : reservoir vide', stateLine(dif('on', { tank_empty_entity: 'binary_sensor.t' }, { 'binary_sensor.t': s('on') })), 'Tank empty');
+  check('diffuseur : reservoir plein', stateLine(dif('on', { tank_empty_entity: 'binary_sensor.t' }, { 'binary_sensor.t': s('off') })), 'Diffusing');
+  check('diffuseur : la brume monte', machineCls(dif('on')).includes('dif-m-mist'), true);
+  const fan = (pct) => render({ appliance_type: 'diffuser', state_entity: 'fan.dif' }, { 'fan.dif': s('on', { percentage: pct }) });
+  check('diffuseur : ventilateur a 50 %, intermittent', stateLine(fan(50)), 'Intermittent');
+  check('diffuseur : ventilateur a 100 %, continu', stateLine(fan(100)), 'Diffusing');
+  check('diffuseur : sur un interrupteur', stateLine(render({ appliance_type: 'diffuser', state_entity: 'switch.dif' }, { 'switch.dif': s('on') })), 'Diffusing');
+  const lit = dif('on', { light_entity: 'light.dif' }, { 'light.dif': s('on', { rgb_color: [255, 0, 128] }) });
+  check('diffuseur : lumiere allumee', machineCls(lit).includes('dif-lit'), true);
+  check('diffuseur : sa couleur', /--dif-lc:rgb\(255,0,128\)/.test(lit), true);
+  check('diffuseur : lumiere eteinte', machineCls(dif('on', { light_entity: 'light.dif' }, { 'light.dif': s('off') })).includes('dif-lit'), false);
+  check('diffuseur : forme goutte par defaut', machineCls(dif('on')).includes('dif-l-drop'), true);
+  check('diffuseur : forme choisie', machineCls(dif('on', { diffuser_layout: 'flame' })).includes('dif-l-flame'), true);
+  check('diffuseur : par son nom', machineCls(render({ state_entity: 'switch.aroma_diffuser' }, { 'switch.aroma_diffuser': s('on') })).includes('dif'), true);
+  check('diffuseur : nebuliseur par son nom', machineCls(render({ state_entity: 'switch.nebulizer_diffuser' }, { 'switch.nebulizer_diffuser': s('on') })).includes('dif-l-nebulizer'), true);
+  check('diffuseur : le bouton de brume', /data-entity="select.dif_spray"[^>]*data-option="on"/.test(dif('eco')), true);
+  check('diffuseur : le bouton marche', /data-entity="fan.dif"/.test(fan(100)), true);
+  check('cafe : arome n\'est pas un diffuseur', machineCls(render({ state_entity: 'select.coffee_aroma' }, { 'select.coffee_aroma': s('strong') })).includes('dif'), false);
+}
+
+// =============================================================================
+// Heat recovery ventilation: its mode, its bypass, its filter, its ducts.
+// =============================================================================
+{
+  const s = (state, attributes = {}) => ({ state: String(state), attributes });
+  const hrv = (state, attrs = {}, cfg = {}, more = {}) => render({ appliance_type: 'hrv', state_entity: 'fan.vmc', ...cfg }, { 'fan.vmc': s(state, attrs), ...more });
+  check('vmc : en marche', stateLine(hrv('on', { percentage: 50 })), 'Ventilating');
+  check('vmc : arret', stateLine(hrv('off')), 'Off');
+  check('vmc : hors ligne', stateLine(hrv('unavailable')), 'Offline');
+  check('vmc : boost', stateLine(hrv('on', { preset_mode: 'Boost' })), 'Boost');
+  check('vmc : absence', stateLine(hrv('on', { preset_mode: 'Away' })), 'Away');
+  check('vmc : bypass binaire', stateLine(hrv('on', {}, { bypass_entity: 'binary_sensor.b' }, { 'binary_sensor.b': s('on') })), 'Bypass');
+  check('vmc : bypass en %', stateLine(hrv('on', {}, { bypass_entity: 'sensor.b' }, { 'sensor.b': s(40, { unit_of_measurement: '%' }) })), 'Bypass');
+  check('vmc : bypass ferme', stateLine(hrv('on', {}, { bypass_entity: 'sensor.b' }, { 'sensor.b': s(0, { unit_of_measurement: '%' }) })), 'Ventilating');
+  check('vmc : Vallox degivre', stateLine(hrv('on', {}, { bypass_entity: 'sensor.cell' }, { 'sensor.cell': s('Defrosting') })), 'Defrosting');
+  check('vmc : Vallox recuperation', stateLine(hrv('on', {}, { bypass_entity: 'sensor.cell' }, { 'sensor.cell': s('Heat Recovery') })), 'Ventilating');
+  check('vmc : Vallox bypass', stateLine(hrv('on', {}, { bypass_entity: 'sensor.cell' }, { 'sensor.cell': s('Bypass') })), 'Bypass');
+  check('vmc : filtre en jours', stateLine(hrv('on', {}, { filter_life_entity: 'sensor.f' }, { 'sensor.f': s(5, { unit_of_measurement: 'days' }) })), 'Replace filter');
+  check('vmc : filtre en jours, pas encore', stateLine(hrv('on', {}, { filter_life_entity: 'sensor.f' }, { 'sensor.f': s(60, { unit_of_measurement: 'days' }) })), 'Ventilating');
+  check('vmc : filtre en %', stateLine(hrv('on', {}, { filter_life_entity: 'sensor.f' }, { 'sensor.f': s(8, { unit_of_measurement: '%' }) })), 'Replace filter');
+  check('vmc : vitesse', infoLine(hrv('on', { percentage: 66 }), 'Fan speed'), '66 %');
+  check('vmc : debit', infoLine(hrv('on', {}, { airflow_entity: 'sensor.q' }, { 'sensor.q': s(85, { unit_of_measurement: 'm³/h' }) }), 'Airflow').replace(/\s/g, ' '), '85 m³/h');
+  const temps = hrv('on', {}, { outdoor_temperature_entity: 'sensor.o', supply_temperature_entity: 'sensor.s' }, { 'sensor.o': s(3), 'sensor.s': s(18.4) });
+  check('vmc : la temperature exterieure dessinee', /class="hv-t"[^>]*>3°/.test(temps), true);
+  check('vmc : le soufflage dessine', /18°<\/text>/.test(temps), true);
+  check('vmc : le bypass se dessine', machineCls(hrv('on', {}, { bypass_entity: 'binary_sensor.b' }, { 'binary_sensor.b': s('on') })).includes('hv-by'), true);
+  check('vmc : schema par defaut', machineCls(hrv('on')).includes('hv-l-diagram'), true);
+  check('vmc : Lunos e2 en paire', machineCls(render({ state_entity: 'fan.lunos_e2' }, { 'fan.lunos_e2': s('on') })).includes('hv-l-pair'), true);
+  check('vmc : par son nom', machineCls(render({ state_entity: 'fan.vallox' }, { 'fan.vallox': s('on') })).includes('hv'), true);
+  check('vmc : vitesse lente, pas lent', /--hv-pace:2.2s/.test(hrv('on', { percentage: 20 })), true);
+  const ed = markup(newEditor({ appliance_type: 'hrv', state_entity: 'fan.vmc' }));
+  check('editeur vmc : la forme', /data-field="hrv_layout"/.test(ed), true);
+  check('editeur diffuseur : la forme', /data-field="diffuser_layout"/.test(markup(newEditor({ appliance_type: 'diffuser', state_entity: 'switch.d' }))), true);
+}
+
 report();

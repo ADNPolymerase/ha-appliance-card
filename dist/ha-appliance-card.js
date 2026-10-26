@@ -1,4 +1,4 @@
-const CARD_VERSION = "2.41.0";
+const CARD_VERSION = "2.42.0";
 
 console.info(
   "%c HA-APPLIANCE-CARD %c v" + CARD_VERSION + " ",
@@ -151,6 +151,7 @@ const T = {
     door_corner: "Show it in a corner of the card", controls_always: "Always show every button", show_unavailable_controls: "Show buttons whose entity is unavailable",
     layout_robot_stick: "Stick vacuum", stick_charged: "Charged",
     layout_robot_floor_washer: "Floor washer", stick_away: "Off the base", stick_away_threshold: "Off the base below this power (W)",
+    type_diffuser: "Essential oil diffuser", dif_mist: "Diffusing", dif_inter: "Intermittent", dif_empty: "Tank empty", dif_mode: "Mist mode", layout_dif_drop: "Teardrop", layout_dif_cone: "Cone", layout_dif_stone: "Pebble", layout_dif_flame: "Flame", layout_dif_nebulizer: "Nebulizer", section_tank_empty: "Empty tank sensor", type_hrv: "Heat recovery ventilation (HRV/ERV)", hrv_run: "Ventilating", hrv_boost: "Boost", hrv_bypass: "Bypass", hrv_defrost: "Defrosting", hrv_filter: "Replace filter", hrv_away: "Away", layout_hrv_diagram: "Air flows", layout_hrv_one_duct: "Wall unit, one duct", layout_hrv_pair: "Through-wall pair", section_supply_temperature: "Supply air temperature", section_extract_temperature: "Extract air temperature", section_exhaust_temperature: "Exhaust air temperature", section_bypass: "Bypass", section_airflow: "Airflow", hrv_t_outdoor: "fresh air", hrv_t_supply: "supply", hrv_t_extract: "extract", hrv_t_exhaust: "exhaust", hrv_outside: "outside", hrv_room: "room",
     type_camera: "Camera", cam_idle: "Idle", cam_live: "Streaming", cam_rec: "Recording", cam_motion: "Motion detected", cam_off: "Off", cam_line_last_motion: "Last motion", cam_line_night: "Night vision", cam_line_signal: "Signal", section_motion: "Motion sensor", section_recording: "Recording sensor", section_night_vision: "Night vision", section_privacy: "Privacy mode", section_signal: "Signal strength", layout_cam_indoor: "Indoor, pan and tilt", layout_cam_tube: "Indoor tube", layout_cam_outdoor: "Outdoor", layout_cam_dome: "Dome",
     speed_power_max: "Power at top speed (W)", speed_power_custom: "Custom speed thresholds", speed_power_2: "Speed 2 from (W)", speed_power_3: "Speed 3 from (W)",
     fw_self_cleaning: "Self-cleaning", fw_dirty_full: "Dirty water tank full", fw_clean_empty: "Clean water tank empty",
@@ -318,6 +319,7 @@ const T = {
     door_corner: "L'afficher dans un coin de la carte", controls_always: "Toujours afficher tous les boutons", show_unavailable_controls: "Afficher les boutons dont l'entit\u00e9 est indisponible",
     layout_robot_stick: "Aspirateur balai", stick_charged: "Charg\u00e9",
     layout_robot_floor_washer: "Laveur de sol", stick_away: "Hors de la base", stick_away_threshold: "Hors de la base sous cette puissance (W)",
+    type_diffuser: "Diffuseur d'huiles essentielles", dif_mist: "Diffusion", dif_inter: "Intermittent", dif_empty: "R\u00e9servoir vide", dif_mode: "Mode de brume", layout_dif_drop: "Goutte", layout_dif_cone: "C\u00f4ne", layout_dif_stone: "Galet", layout_dif_flame: "Flamme", layout_dif_nebulizer: "N\u00e9buliseur", section_tank_empty: "Capteur de r\u00e9servoir vide", type_hrv: "VMC double flux", hrv_run: "En marche", hrv_boost: "Boost", hrv_bypass: "Bypass", hrv_defrost: "D\u00e9givrage", hrv_filter: "Filtre \u00e0 changer", hrv_away: "Absence", layout_hrv_diagram: "Sch\u00e9ma des flux", layout_hrv_one_duct: "Murale, un seul conduit", layout_hrv_pair: "Paire d\u00e9centralis\u00e9e", section_supply_temperature: "Temp\u00e9rature de soufflage", section_extract_temperature: "Temp\u00e9rature d'extraction", section_exhaust_temperature: "Temp\u00e9rature de rejet", section_bypass: "Bypass", section_airflow: "D\u00e9bit d'air", hrv_t_outdoor: "air neuf", hrv_t_supply: "soufflage", hrv_t_extract: "extraction", hrv_t_exhaust: "rejet", hrv_outside: "dehors", hrv_room: "pi\u00e8ce",
     type_camera: "Cam\u00e9ra", cam_idle: "En veille", cam_live: "En direct", cam_rec: "Enregistrement", cam_motion: "Mouvement d\u00e9tect\u00e9", cam_off: "D\u00e9sactiv\u00e9e", cam_line_last_motion: "Dernier mouvement", cam_line_night: "Vision nocturne", cam_line_signal: "Signal", section_motion: "Capteur de mouvement", section_recording: "Capteur d'enregistrement", section_night_vision: "Vision nocturne", section_privacy: "Mode confidentialit\u00e9", section_signal: "Force du signal", layout_cam_indoor: "Int\u00e9rieure orientable", layout_cam_tube: "Int\u00e9rieure tube", layout_cam_outdoor: "Ext\u00e9rieure", layout_cam_dome: "D\u00f4me",
     speed_power_max: "Puissance \u00e0 la vitesse maxi (W)", speed_power_custom: "Personnaliser les seuils de vitesse", speed_power_2: "Vitesse 2 \u00e0 partir de (W)", speed_power_3: "Vitesse 3 \u00e0 partir de (W)",
     fw_self_cleaning: "Autonettoyage", fw_dirty_full: "R\u00e9servoir d'eau sale plein", fw_clean_empty: "R\u00e9servoir d'eau propre vide",
@@ -485,6 +487,7 @@ const T = {
     door_corner: "\u041f\u043e\u043a\u0430\u0437\u044b\u0432\u0430\u0442\u044c \u0432 \u0443\u0433\u043b\u0443 \u043a\u0430\u0440\u0442\u043e\u0447\u043a\u0438", controls_always: "\u0412\u0441\u0435\u0433\u0434\u0430 \u043f\u043e\u043a\u0430\u0437\u044b\u0432\u0430\u0442\u044c \u0432\u0441\u0435 \u043a\u043d\u043e\u043f\u043a\u0438", show_unavailable_controls: "\u041f\u043e\u043a\u0430\u0437\u044b\u0432\u0430\u0442\u044c \u043a\u043d\u043e\u043f\u043a\u0438 \u043d\u0435\u0434\u043e\u0441\u0442\u0443\u043f\u043d\u044b\u0445 \u0441\u0443\u0449\u043d\u043e\u0441\u0442\u0435\u0439",
     layout_robot_stick: "\u0412\u0435\u0440\u0442\u0438\u043a\u0430\u043b\u044c\u043d\u044b\u0439 \u043f\u044b\u043b\u0435\u0441\u043e\u0441", stick_charged: "\u0417\u0430\u0440\u044f\u0436\u0435\u043d",
     layout_robot_floor_washer: "\u041c\u043e\u044e\u0449\u0438\u0439 \u043f\u044b\u043b\u0435\u0441\u043e\u0441", stick_away: "\u041d\u0435 \u043d\u0430 \u0431\u0430\u0437\u0435", stick_away_threshold: "\u041d\u0435 \u043d\u0430 \u0431\u0430\u0437\u0435 \u043d\u0438\u0436\u0435 \u044d\u0442\u043e\u0439 \u043c\u043e\u0449\u043d\u043e\u0441\u0442\u0438 (\u0412\u0442)",
+    type_diffuser: "\u0410\u0440\u043e\u043c\u0430\u0434\u0438\u0444\u0444\u0443\u0437\u043e\u0440", dif_mist: "\u0420\u0430\u0441\u043f\u044b\u043b\u0435\u043d\u0438\u0435", dif_inter: "\u041f\u0440\u0435\u0440\u044b\u0432\u0438\u0441\u0442\u043e", dif_empty: "\u0420\u0435\u0437\u0435\u0440\u0432\u0443\u0430\u0440 \u043f\u0443\u0441\u0442", dif_mode: "\u0420\u0435\u0436\u0438\u043c \u0442\u0443\u043c\u0430\u043d\u0430", layout_dif_drop: "\u041a\u0430\u043f\u043b\u044f", layout_dif_cone: "\u041a\u043e\u043d\u0443\u0441", layout_dif_stone: "\u0413\u0430\u043b\u044c\u043a\u0430", layout_dif_flame: "\u041f\u043b\u0430\u043c\u044f", layout_dif_nebulizer: "\u041d\u0435\u0431\u0443\u043b\u0430\u0439\u0437\u0435\u0440", section_tank_empty: "\u0414\u0430\u0442\u0447\u0438\u043a \u043f\u0443\u0441\u0442\u043e\u0433\u043e \u0440\u0435\u0437\u0435\u0440\u0432\u0443\u0430\u0440\u0430", type_hrv: "\u041f\u0440\u0438\u0442\u043e\u0447\u043d\u043e-\u0432\u044b\u0442\u044f\u0436\u043d\u0430\u044f \u0432\u0435\u043d\u0442\u0438\u043b\u044f\u0446\u0438\u044f", hrv_run: "\u0412\u0435\u043d\u0442\u0438\u043b\u044f\u0446\u0438\u044f", hrv_boost: "\u0411\u0443\u0441\u0442", hrv_bypass: "\u0411\u0430\u0439\u043f\u0430\u0441", hrv_defrost: "\u0420\u0430\u0437\u043c\u043e\u0440\u0430\u0436\u0438\u0432\u0430\u043d\u0438\u0435", hrv_filter: "\u0417\u0430\u043c\u0435\u043d\u0438\u0442\u0435 \u0444\u0438\u043b\u044c\u0442\u0440", hrv_away: "\u041d\u0435\u0442 \u0434\u043e\u043c\u0430", layout_hrv_diagram: "\u0421\u0445\u0435\u043c\u0430 \u043f\u043e\u0442\u043e\u043a\u043e\u0432", layout_hrv_one_duct: "\u041d\u0430\u0441\u0442\u0435\u043d\u043d\u0430\u044f, \u043e\u0434\u0438\u043d \u043a\u0430\u043d\u0430\u043b", layout_hrv_pair: "\u041f\u0430\u0440\u0430 \u0432 \u0441\u0442\u0435\u043d\u0435", section_supply_temperature: "\u0422\u0435\u043c\u043f\u0435\u0440\u0430\u0442\u0443\u0440\u0430 \u043f\u0440\u0438\u0442\u043e\u043a\u0430", section_extract_temperature: "\u0422\u0435\u043c\u043f\u0435\u0440\u0430\u0442\u0443\u0440\u0430 \u0432\u044b\u0442\u044f\u0436\u043a\u0438", section_exhaust_temperature: "\u0422\u0435\u043c\u043f\u0435\u0440\u0430\u0442\u0443\u0440\u0430 \u0432\u044b\u0431\u0440\u043e\u0441\u0430", section_bypass: "\u0411\u0430\u0439\u043f\u0430\u0441", section_airflow: "\u0420\u0430\u0441\u0445\u043e\u0434 \u0432\u043e\u0437\u0434\u0443\u0445\u0430", hrv_t_outdoor: "\u0441\u0432\u0435\u0436\u0438\u0439", hrv_t_supply: "\u043f\u0440\u0438\u0442\u043e\u043a", hrv_t_extract: "\u0432\u044b\u0442\u044f\u0436\u043a\u0430", hrv_t_exhaust: "\u0432\u044b\u0431\u0440\u043e\u0441", hrv_outside: "\u0443\u043b\u0438\u0446\u0430", hrv_room: "\u043a\u043e\u043c\u043d\u0430\u0442\u0430",
     type_camera: "\u041a\u0430\u043c\u0435\u0440\u0430", cam_idle: "\u041e\u0436\u0438\u0434\u0430\u043d\u0438\u0435", cam_live: "\u0422\u0440\u0430\u043d\u0441\u043b\u044f\u0446\u0438\u044f", cam_rec: "\u0417\u0430\u043f\u0438\u0441\u044c", cam_motion: "\u0414\u0432\u0438\u0436\u0435\u043d\u0438\u0435", cam_off: "\u0412\u044b\u043a\u043b.", cam_line_last_motion: "\u041f\u043e\u0441\u043b\u0435\u0434\u043d\u0435\u0435 \u0434\u0432\u0438\u0436\u0435\u043d\u0438\u0435", cam_line_night: "\u041d\u043e\u0447\u043d\u043e\u0435 \u0432\u0438\u0434\u0435\u043d\u0438\u0435", cam_line_signal: "\u0421\u0438\u0433\u043d\u0430\u043b", section_motion: "\u0414\u0430\u0442\u0447\u0438\u043a \u0434\u0432\u0438\u0436\u0435\u043d\u0438\u044f", section_recording: "\u0414\u0430\u0442\u0447\u0438\u043a \u0437\u0430\u043f\u0438\u0441\u0438", section_night_vision: "\u041d\u043e\u0447\u043d\u043e\u0435 \u0432\u0438\u0434\u0435\u043d\u0438\u0435", section_privacy: "\u0420\u0435\u0436\u0438\u043c \u043f\u0440\u0438\u0432\u0430\u0442\u043d\u043e\u0441\u0442\u0438", section_signal: "\u0423\u0440\u043e\u0432\u0435\u043d\u044c \u0441\u0438\u0433\u043d\u0430\u043b\u0430", layout_cam_indoor: "\u0412\u043d\u0443\u0442\u0440\u0435\u043d\u043d\u044f\u044f \u043f\u043e\u0432\u043e\u0440\u043e\u0442\u043d\u0430\u044f", layout_cam_tube: "\u0412\u043d\u0443\u0442\u0440\u0435\u043d\u043d\u044f\u044f \u0442\u0440\u0443\u0431\u043a\u0430", layout_cam_outdoor: "\u0423\u043b\u0438\u0447\u043d\u0430\u044f", layout_cam_dome: "\u041a\u0443\u043f\u043e\u043b\u044c\u043d\u0430\u044f",
     speed_power_max: "\u041c\u043e\u0449\u043d\u043e\u0441\u0442\u044c \u043d\u0430 \u043c\u0430\u043a\u0441\u0438\u043c\u0430\u043b\u044c\u043d\u043e\u0439 \u0441\u043a\u043e\u0440\u043e\u0441\u0442\u0438 (\u0412\u0442)", speed_power_custom: "\u0421\u0432\u043e\u0438 \u043f\u043e\u0440\u043e\u0433\u0438 \u0441\u043a\u043e\u0440\u043e\u0441\u0442\u0438", speed_power_2: "\u0421\u043a\u043e\u0440\u043e\u0441\u0442\u044c 2 \u043e\u0442 (\u0412\u0442)", speed_power_3: "\u0421\u043a\u043e\u0440\u043e\u0441\u0442\u044c 3 \u043e\u0442 (\u0412\u0442)",
     fw_self_cleaning: "\u0421\u0430\u043c\u043e\u043e\u0447\u0438\u0441\u0442\u043a\u0430", fw_dirty_full: "\u0411\u0430\u043a \u0433\u0440\u044f\u0437\u043d\u043e\u0439 \u0432\u043e\u0434\u044b \u043f\u043e\u043b\u043e\u043d", fw_clean_empty: "\u0411\u0430\u043a \u0447\u0438\u0441\u0442\u043e\u0439 \u0432\u043e\u0434\u044b \u043f\u0443\u0441\u0442",
@@ -652,6 +655,7 @@ const T = {
     door_corner: "In einer Ecke der Karte anzeigen", controls_always: "Immer alle Tasten anzeigen", show_unavailable_controls: "Tasten mit nicht verf\u00fcgbarer Entit\u00e4t anzeigen",
     layout_robot_stick: "Akku-Stielsauger", stick_charged: "Geladen",
     layout_robot_floor_washer: "Nass-Trocken-Sauger", stick_away: "Nicht in der Station", stick_away_threshold: "Nicht in der Station unter dieser Leistung (W)",
+    type_diffuser: "Aroma-Diffusor", dif_mist: "Vernebelt", dif_inter: "Intervall", dif_empty: "Tank leer", dif_mode: "Nebelmodus", layout_dif_drop: "Tropfen", layout_dif_cone: "Kegel", layout_dif_stone: "Kiesel", layout_dif_flame: "Flamme", layout_dif_nebulizer: "Vernebler", section_tank_empty: "Sensor leerer Tank", type_hrv: "L\u00fcftung mit W\u00e4rmer\u00fcckgewinnung", hrv_run: "L\u00fcftet", hrv_boost: "Boost", hrv_bypass: "Bypass", hrv_defrost: "Abtauen", hrv_filter: "Filter wechseln", hrv_away: "Abwesend", layout_hrv_diagram: "Luftstr\u00f6me", layout_hrv_one_duct: "Wandger\u00e4t, ein Kanal", layout_hrv_pair: "Paar in der Wand", section_supply_temperature: "Zulufttemperatur", section_extract_temperature: "Ablufttemperatur", section_exhaust_temperature: "Fortlufttemperatur", section_bypass: "Bypass", section_airflow: "Luftmenge", hrv_t_outdoor: "Au\u00dfenluft", hrv_t_supply: "Zuluft", hrv_t_extract: "Abluft", hrv_t_exhaust: "Fortluft", hrv_outside: "drau\u00dfen", hrv_room: "Raum",
     type_camera: "Kamera", cam_idle: "Bereit", cam_live: "Live", cam_rec: "Aufnahme", cam_motion: "Bewegung erkannt", cam_off: "Aus", cam_line_last_motion: "Letzte Bewegung", cam_line_night: "Nachtsicht", cam_line_signal: "Signal", section_motion: "Bewegungssensor", section_recording: "Aufnahmesensor", section_night_vision: "Nachtsicht", section_privacy: "Privatsph\u00e4re-Modus", section_signal: "Signalst\u00e4rke", layout_cam_indoor: "Innen, schwenkbar", layout_cam_tube: "Innen, Zylinder", layout_cam_outdoor: "Au\u00dfen", layout_cam_dome: "Kuppel",
     speed_power_max: "Leistung bei h\u00f6chster Stufe (W)", speed_power_custom: "Eigene Stufenschwellen", speed_power_2: "Stufe 2 ab (W)", speed_power_3: "Stufe 3 ab (W)",
     fw_self_cleaning: "Selbstreinigung", fw_dirty_full: "Schmutzwassertank voll", fw_clean_empty: "Frischwassertank leer",
@@ -819,6 +823,7 @@ const T = {
     door_corner: "Mostrarla en una esquina de la tarjeta", controls_always: "Mostrar siempre todos los botones", show_unavailable_controls: "Mostrar los botones cuya entidad no est\u00e1 disponible",
     layout_robot_stick: "Aspiradora escoba", stick_charged: "Cargada",
     layout_robot_floor_washer: "Fregona el\u00e9ctrica", stick_away: "Fuera de la base", stick_away_threshold: "Fuera de la base por debajo de esta potencia (W)",
+    type_diffuser: "Difusor de aceites esenciales", dif_mist: "Difundiendo", dif_inter: "Intermitente", dif_empty: "Dep\u00f3sito vac\u00edo", dif_mode: "Modo de niebla", layout_dif_drop: "Gota", layout_dif_cone: "Cono", layout_dif_stone: "Piedra", layout_dif_flame: "Llama", layout_dif_nebulizer: "Nebulizador", section_tank_empty: "Sensor de dep\u00f3sito vac\u00edo", type_hrv: "Ventilaci\u00f3n con recuperaci\u00f3n de calor", hrv_run: "Ventilando", hrv_boost: "Boost", hrv_bypass: "Bypass", hrv_defrost: "Descongelando", hrv_filter: "Cambiar filtro", hrv_away: "Ausente", layout_hrv_diagram: "Flujos de aire", layout_hrv_one_duct: "Mural, un conducto", layout_hrv_pair: "Pareja en el muro", section_supply_temperature: "Temperatura de impulsi\u00f3n", section_extract_temperature: "Temperatura de extracci\u00f3n", section_exhaust_temperature: "Temperatura de expulsi\u00f3n", section_bypass: "Bypass", section_airflow: "Caudal de aire", hrv_t_outdoor: "aire nuevo", hrv_t_supply: "impulsi\u00f3n", hrv_t_extract: "extracci\u00f3n", hrv_t_exhaust: "expulsi\u00f3n", hrv_outside: "fuera", hrv_room: "estancia",
     type_camera: "C\u00e1mara", cam_idle: "En reposo", cam_live: "En directo", cam_rec: "Grabando", cam_motion: "Movimiento detectado", cam_off: "Apagada", cam_line_last_motion: "\u00daltimo movimiento", cam_line_night: "Visi\u00f3n nocturna", cam_line_signal: "Se\u00f1al", section_motion: "Sensor de movimiento", section_recording: "Sensor de grabaci\u00f3n", section_night_vision: "Visi\u00f3n nocturna", section_privacy: "Modo privacidad", section_signal: "Intensidad de se\u00f1al", layout_cam_indoor: "Interior motorizada", layout_cam_tube: "Interior cil\u00edndrica", layout_cam_outdoor: "Exterior", layout_cam_dome: "Domo",
     speed_power_max: "Potencia a velocidad m\u00e1xima (W)", speed_power_custom: "Umbrales de velocidad propios", speed_power_2: "Velocidad 2 desde (W)", speed_power_3: "Velocidad 3 desde (W)",
     fw_self_cleaning: "Autolimpieza", fw_dirty_full: "Dep\u00f3sito de agua sucia lleno", fw_clean_empty: "Dep\u00f3sito de agua limpia vac\u00edo",
@@ -986,6 +991,7 @@ const T = {
     door_corner: "Mostrarla in un angolo della scheda", controls_always: "Mostra sempre tutti i pulsanti", show_unavailable_controls: "Mostra i pulsanti con entit\u00e0 non disponibile",
     layout_robot_stick: "Scopa elettrica", stick_charged: "Carica",
     layout_robot_floor_washer: "Lavapavimenti", stick_away: "Fuori dalla base", stick_away_threshold: "Fuori dalla base sotto questa potenza (W)",
+    type_diffuser: "Diffusore di oli essenziali", dif_mist: "Diffusione", dif_inter: "Intermittente", dif_empty: "Serbatoio vuoto", dif_mode: "Modalit\u00e0 nebbia", layout_dif_drop: "Goccia", layout_dif_cone: "Cono", layout_dif_stone: "Ciottolo", layout_dif_flame: "Fiamma", layout_dif_nebulizer: "Nebulizzatore", section_tank_empty: "Sensore serbatoio vuoto", type_hrv: "VMC a doppio flusso", hrv_run: "In funzione", hrv_boost: "Boost", hrv_bypass: "Bypass", hrv_defrost: "Sbrinamento", hrv_filter: "Sostituire il filtro", hrv_away: "Assente", layout_hrv_diagram: "Flussi d'aria", layout_hrv_one_duct: "A parete, un condotto", layout_hrv_pair: "Coppia a parete", section_supply_temperature: "Temperatura di mandata", section_extract_temperature: "Temperatura di ripresa", section_exhaust_temperature: "Temperatura di espulsione", section_bypass: "Bypass", section_airflow: "Portata d'aria", hrv_t_outdoor: "aria nuova", hrv_t_supply: "mandata", hrv_t_extract: "ripresa", hrv_t_exhaust: "espulsione", hrv_outside: "fuori", hrv_room: "stanza",
     type_camera: "Telecamera", cam_idle: "In attesa", cam_live: "In diretta", cam_rec: "Registrazione", cam_motion: "Movimento rilevato", cam_off: "Spenta", cam_line_last_motion: "Ultimo movimento", cam_line_night: "Visione notturna", cam_line_signal: "Segnale", section_motion: "Sensore di movimento", section_recording: "Sensore di registrazione", section_night_vision: "Visione notturna", section_privacy: "Modalit\u00e0 privacy", section_signal: "Potenza del segnale", layout_cam_indoor: "Interna motorizzata", layout_cam_tube: "Interna a cilindro", layout_cam_outdoor: "Esterna", layout_cam_dome: "Dome",
     speed_power_max: "Potenza alla velocit\u00e0 massima (W)", speed_power_custom: "Soglie di velocit\u00e0 personalizzate", speed_power_2: "Velocit\u00e0 2 da (W)", speed_power_3: "Velocit\u00e0 3 da (W)",
     fw_self_cleaning: "Autopulizia", fw_dirty_full: "Serbatoio acqua sporca pieno", fw_clean_empty: "Serbatoio acqua pulita vuoto",
@@ -1153,6 +1159,7 @@ const T = {
     door_corner: "In een hoek van de kaart tonen", controls_always: "Altijd alle knoppen tonen", show_unavailable_controls: "Knoppen tonen waarvan de entiteit niet beschikbaar is",
     layout_robot_stick: "Steelstofzuiger", stick_charged: "Opgeladen",
     layout_robot_floor_washer: "Vloerwasser", stick_away: "Niet op de basis", stick_away_threshold: "Niet op de basis onder dit vermogen (W)",
+    type_diffuser: "Aromadiffuser", dif_mist: "Verneveling", dif_inter: "Interval", dif_empty: "Tank leeg", dif_mode: "Nevelstand", layout_dif_drop: "Druppel", layout_dif_cone: "Kegel", layout_dif_stone: "Kiezel", layout_dif_flame: "Vlam", layout_dif_nebulizer: "Vernevelaar", section_tank_empty: "Sensor lege tank", type_hrv: "Balansventilatie (WTW)", hrv_run: "Ventileert", hrv_boost: "Boost", hrv_bypass: "Bypass", hrv_defrost: "Ontdooien", hrv_filter: "Filter vervangen", hrv_away: "Afwezig", layout_hrv_diagram: "Luchtstromen", layout_hrv_one_duct: "Wandunit, \u00e9\u00e9n kanaal", layout_hrv_pair: "Paar in de muur", section_supply_temperature: "Toevoertemperatuur", section_extract_temperature: "Afzuigtemperatuur", section_exhaust_temperature: "Afvoertemperatuur", section_bypass: "Bypass", section_airflow: "Luchtdebiet", hrv_t_outdoor: "verse lucht", hrv_t_supply: "toevoer", hrv_t_extract: "afzuiging", hrv_t_exhaust: "afvoer", hrv_outside: "buiten", hrv_room: "kamer",
     type_camera: "Camera", cam_idle: "Stand-by", cam_live: "Live", cam_rec: "Opname", cam_motion: "Beweging gedetecteerd", cam_off: "Uit", cam_line_last_motion: "Laatste beweging", cam_line_night: "Nachtzicht", cam_line_signal: "Signaal", section_motion: "Bewegingssensor", section_recording: "Opnamesensor", section_night_vision: "Nachtzicht", section_privacy: "Privacymodus", section_signal: "Signaalsterkte", layout_cam_indoor: "Binnen, draaibaar", layout_cam_tube: "Binnen, cilinder", layout_cam_outdoor: "Buiten", layout_cam_dome: "Dome",
     speed_power_max: "Vermogen op hoogste stand (W)", speed_power_custom: "Eigen standdrempels", speed_power_2: "Stand 2 vanaf (W)", speed_power_3: "Stand 3 vanaf (W)",
     fw_self_cleaning: "Zelfreiniging", fw_dirty_full: "Vuilwatertank vol", fw_clean_empty: "Schoonwatertank leeg",
@@ -1320,6 +1327,7 @@ const T = {
     door_corner: "Mostr\u00e1-la num canto do cart\u00e3o", controls_always: "Mostrar sempre todos os bot\u00f5es", show_unavailable_controls: "Mostrar bot\u00f5es cuja entidade est\u00e1 indispon\u00edvel",
     layout_robot_stick: "Aspirador vertical", stick_charged: "Carregado",
     layout_robot_floor_washer: "Lavadora de pavimentos", stick_away: "Fora da base", stick_away_threshold: "Fora da base abaixo desta pot\u00eancia (W)",
+    type_diffuser: "Difusor de \u00f3leos essenciais", dif_mist: "Difundindo", dif_inter: "Intermitente", dif_empty: "Reservat\u00f3rio vazio", dif_mode: "Modo de n\u00e9voa", layout_dif_drop: "Gota", layout_dif_cone: "Cone", layout_dif_stone: "Seixo", layout_dif_flame: "Chama", layout_dif_nebulizer: "Nebulizador", section_tank_empty: "Sensor de reservat\u00f3rio vazio", type_hrv: "Ventila\u00e7\u00e3o com recupera\u00e7\u00e3o de calor", hrv_run: "Ventilando", hrv_boost: "Boost", hrv_bypass: "Bypass", hrv_defrost: "Descongelando", hrv_filter: "Trocar filtro", hrv_away: "Ausente", layout_hrv_diagram: "Fluxos de ar", layout_hrv_one_duct: "Mural, uma conduta", layout_hrv_pair: "Par na parede", section_supply_temperature: "Temperatura de insufla\u00e7\u00e3o", section_extract_temperature: "Temperatura de extra\u00e7\u00e3o", section_exhaust_temperature: "Temperatura de rejei\u00e7\u00e3o", section_bypass: "Bypass", section_airflow: "Caudal de ar", hrv_t_outdoor: "ar novo", hrv_t_supply: "insufla\u00e7\u00e3o", hrv_t_extract: "extra\u00e7\u00e3o", hrv_t_exhaust: "rejei\u00e7\u00e3o", hrv_outside: "fora", hrv_room: "divis\u00e3o",
     type_camera: "C\u00e2mera", cam_idle: "Em espera", cam_live: "Ao vivo", cam_rec: "Gravando", cam_motion: "Movimento detetado", cam_off: "Desligada", cam_line_last_motion: "\u00daltimo movimento", cam_line_night: "Vis\u00e3o noturna", cam_line_signal: "Sinal", section_motion: "Sensor de movimento", section_recording: "Sensor de grava\u00e7\u00e3o", section_night_vision: "Vis\u00e3o noturna", section_privacy: "Modo privacidade", section_signal: "Intensidade do sinal", layout_cam_indoor: "Interior motorizada", layout_cam_tube: "Interior cil\u00edndrica", layout_cam_outdoor: "Exterior", layout_cam_dome: "Dome",
     speed_power_max: "Pot\u00eancia na velocidade m\u00e1xima (W)", speed_power_custom: "Limiares de velocidade pr\u00f3prios", speed_power_2: "Velocidade 2 a partir de (W)", speed_power_3: "Velocidade 3 a partir de (W)",
     fw_self_cleaning: "Autolimpeza", fw_dirty_full: "Dep\u00f3sito de \u00e1gua suja cheio", fw_clean_empty: "Dep\u00f3sito de \u00e1gua limpa vazio",
@@ -1487,6 +1495,7 @@ const T = {
     door_corner: "Visa i ett h\u00f6rn av kortet", controls_always: "Visa alltid alla knappar", show_unavailable_controls: "Visa knappar vars entitet inte \u00e4r tillg\u00e4nglig",
     layout_robot_stick: "Skaftdammsugare", stick_charged: "Laddad",
     layout_robot_floor_washer: "Golvtv\u00e4ttare", stick_away: "Inte i basen", stick_away_threshold: "Inte i basen under denna effekt (W)",
+    type_diffuser: "Doftspridare", dif_mist: "Sprider", dif_inter: "Intervall", dif_empty: "Tanken tom", dif_mode: "Diml\u00e4ge", layout_dif_drop: "Droppe", layout_dif_cone: "Kon", layout_dif_stone: "Sten", layout_dif_flame: "L\u00e5ga", layout_dif_nebulizer: "Nebulisator", section_tank_empty: "Sensor f\u00f6r tom tank", type_hrv: "FTX-ventilation", hrv_run: "Ventilerar", hrv_boost: "Boost", hrv_bypass: "Bypass", hrv_defrost: "Avfrostning", hrv_filter: "Byt filter", hrv_away: "Borta", layout_hrv_diagram: "Luftfl\u00f6den", layout_hrv_one_duct: "V\u00e4ggaggregat, en kanal", layout_hrv_pair: "Par i v\u00e4ggen", section_supply_temperature: "Tilluftstemperatur", section_extract_temperature: "Fr\u00e5nluftstemperatur", section_exhaust_temperature: "Avluftstemperatur", section_bypass: "Bypass", section_airflow: "Luftfl\u00f6de", hrv_t_outdoor: "uteluft", hrv_t_supply: "tilluft", hrv_t_extract: "fr\u00e5nluft", hrv_t_exhaust: "avluft", hrv_outside: "ute", hrv_room: "rum",
     type_camera: "Kamera", cam_idle: "Vilar", cam_live: "Direkt", cam_rec: "Spelar in", cam_motion: "R\u00f6relse uppt\u00e4ckt", cam_off: "Av", cam_line_last_motion: "Senaste r\u00f6relse", cam_line_night: "Nattseende", cam_line_signal: "Signal", section_motion: "R\u00f6relsesensor", section_recording: "Inspelningssensor", section_night_vision: "Nattseende", section_privacy: "Integritetsl\u00e4ge", section_signal: "Signalstyrka", layout_cam_indoor: "Inomhus, vridbar", layout_cam_tube: "Inomhus, cylinder", layout_cam_outdoor: "Utomhus", layout_cam_dome: "Dom",
     speed_power_max: "Effekt vid h\u00f6gsta l\u00e4ge (W)", speed_power_custom: "Egna hastighetsgr\u00e4nser", speed_power_2: "L\u00e4ge 2 fr\u00e5n (W)", speed_power_3: "L\u00e4ge 3 fr\u00e5n (W)",
     fw_self_cleaning: "Sj\u00e4lvreng\u00f6ring", fw_dirty_full: "Smutsvattentanken full", fw_clean_empty: "Rentvattentanken tom",
@@ -1654,6 +1663,7 @@ const T = {
     door_corner: "Vis i et hj\u00f8rne av kortet", controls_always: "Vis alltid alle knapper", show_unavailable_controls: "Vis knapper der entiteten ikke er tilgjengelig",
     layout_robot_stick: "Stavst\u00f8vsuger", stick_charged: "Ladet",
     layout_robot_floor_washer: "Gulvvasker", stick_away: "Ikke i basen", stick_away_threshold: "Ikke i basen under denne effekten (W)",
+    type_diffuser: "Duftspreder", dif_mist: "Sprer", dif_inter: "Intervall", dif_empty: "Tanken er tom", dif_mode: "T\u00e5kemodus", layout_dif_drop: "Dr\u00e5pe", layout_dif_cone: "Kjegle", layout_dif_stone: "Stein", layout_dif_flame: "Flamme", layout_dif_nebulizer: "Nebulisator", section_tank_empty: "Sensor for tom tank", type_hrv: "Balansert ventilasjon", hrv_run: "Ventilerer", hrv_boost: "Boost", hrv_bypass: "Bypass", hrv_defrost: "Avriming", hrv_filter: "Bytt filter", hrv_away: "Borte", layout_hrv_diagram: "Luftstr\u00f8mmer", layout_hrv_one_duct: "Veggaggregat, \u00e9n kanal", layout_hrv_pair: "Par i veggen", section_supply_temperature: "Tillufttemperatur", section_extract_temperature: "Avtrekkstemperatur", section_exhaust_temperature: "Avkasttemperatur", section_bypass: "Bypass", section_airflow: "Luftmengde", hrv_t_outdoor: "uteluft", hrv_t_supply: "tilluft", hrv_t_extract: "avtrekk", hrv_t_exhaust: "avkast", hrv_outside: "ute", hrv_room: "rom",
     type_camera: "Kamera", cam_idle: "Hviler", cam_live: "Direkte", cam_rec: "Tar opp", cam_motion: "Bevegelse oppdaget", cam_off: "Av", cam_line_last_motion: "Siste bevegelse", cam_line_night: "Nattsyn", cam_line_signal: "Signal", section_motion: "Bevegelsessensor", section_recording: "Opptakssensor", section_night_vision: "Nattsyn", section_privacy: "Personvernmodus", section_signal: "Signalstyrke", layout_cam_indoor: "Innend\u00f8rs, dreibar", layout_cam_tube: "Innend\u00f8rs, sylinder", layout_cam_outdoor: "Utend\u00f8rs", layout_cam_dome: "Kuppel",
     speed_power_max: "Effekt p\u00e5 h\u00f8yeste trinn (W)", speed_power_custom: "Egne hastighetsgrenser", speed_power_2: "Trinn 2 fra (W)", speed_power_3: "Trinn 3 fra (W)",
     fw_self_cleaning: "Selvrengj\u00f8ring", fw_dirty_full: "Skittentvannstanken full", fw_clean_empty: "Rentvannstanken tom",
@@ -1821,6 +1831,7 @@ const T = {
     door_corner: "Vis i et hj\u00f8rne af kortet", controls_always: "Vis altid alle knapper", show_unavailable_controls: "Vis knapper, hvis entitet ikke er tilg\u00e6ngelig",
     layout_robot_stick: "St\u00f8vsuger p\u00e5 skaft", stick_charged: "Opladet",
     layout_robot_floor_washer: "Gulvvasker", stick_away: "Ikke i basen", stick_away_threshold: "Ikke i basen under denne effekt (W)",
+    type_diffuser: "Duftspreder", dif_mist: "Spreder", dif_inter: "Interval", dif_empty: "Tanken er tom", dif_mode: "T\u00e5getilstand", layout_dif_drop: "Dr\u00e5be", layout_dif_cone: "Kegle", layout_dif_stone: "Sten", layout_dif_flame: "Flamme", layout_dif_nebulizer: "Nebulisator", section_tank_empty: "Sensor for tom tank", type_hrv: "Ventilation med varmegenvinding", hrv_run: "Ventilerer", hrv_boost: "Boost", hrv_bypass: "Bypass", hrv_defrost: "Afrimning", hrv_filter: "Skift filter", hrv_away: "Ude", layout_hrv_diagram: "Luftstr\u00f8mme", layout_hrv_one_duct: "V\u00e6gaggregat, \u00e9n kanal", layout_hrv_pair: "Par i v\u00e6ggen", section_supply_temperature: "Indbl\u00e6sningstemperatur", section_extract_temperature: "Udsugningstemperatur", section_exhaust_temperature: "Afkasttemperatur", section_bypass: "Bypass", section_airflow: "Luftm\u00e6ngde", hrv_t_outdoor: "udeluft", hrv_t_supply: "indbl\u00e6sning", hrv_t_extract: "udsugning", hrv_t_exhaust: "afkast", hrv_outside: "ude", hrv_room: "rum",
     type_camera: "Kamera", cam_idle: "Hviler", cam_live: "Direkte", cam_rec: "Optager", cam_motion: "Bev\u00e6gelse registreret", cam_off: "Slukket", cam_line_last_motion: "Seneste bev\u00e6gelse", cam_line_night: "Nattesyn", cam_line_signal: "Signal", section_motion: "Bev\u00e6gelsessensor", section_recording: "Optagesensor", section_night_vision: "Nattesyn", section_privacy: "Privatlivstilstand", section_signal: "Signalstyrke", layout_cam_indoor: "Indend\u00f8rs, drejelig", layout_cam_tube: "Indend\u00f8rs, cylinder", layout_cam_outdoor: "Udend\u00f8rs", layout_cam_dome: "Kuppel",
     speed_power_max: "Effekt p\u00e5 h\u00f8jeste trin (W)", speed_power_custom: "Egne hastighedsgr\u00e6nser", speed_power_2: "Trin 2 fra (W)", speed_power_3: "Trin 3 fra (W)",
     fw_self_cleaning: "Selvrensning", fw_dirty_full: "Snavsevandstank fuld", fw_clean_empty: "Rentvandstank tom",
@@ -1988,6 +1999,7 @@ const T = {
     door_corner: "Poka\u017c w rogu karty", controls_always: "Zawsze pokazuj wszystkie przyciski", show_unavailable_controls: "Poka\u017c przyciski niedost\u0119pnych encji",
     layout_robot_stick: "Odkurzacz pionowy", stick_charged: "Na\u0142adowany",
     layout_robot_floor_washer: "Mop elektryczny", stick_away: "Poza baz\u0105", stick_away_threshold: "Poza baz\u0105 poni\u017cej tej mocy (W)",
+    type_diffuser: "Dyfuzor olejk\u00f3w eterycznych", dif_mist: "Rozpylanie", dif_inter: "Przerywany", dif_empty: "Pusty zbiornik", dif_mode: "Tryb mgie\u0142ki", layout_dif_drop: "Kropla", layout_dif_cone: "Sto\u017cek", layout_dif_stone: "Kamie\u0144", layout_dif_flame: "P\u0142omie\u0144", layout_dif_nebulizer: "Nebulizator", section_tank_empty: "Czujnik pustego zbiornika", type_hrv: "Wentylacja z rekuperacj\u0105", hrv_run: "Wentyluje", hrv_boost: "Boost", hrv_bypass: "Bypass", hrv_defrost: "Odszranianie", hrv_filter: "Wymie\u0144 filtr", hrv_away: "Nieobecno\u015b\u0107", layout_hrv_diagram: "Przep\u0142ywy powietrza", layout_hrv_one_duct: "\u015acienny, jeden kana\u0142", layout_hrv_pair: "Para w \u015bcianie", section_supply_temperature: "Temperatura nawiewu", section_extract_temperature: "Temperatura wywiewu", section_exhaust_temperature: "Temperatura wyrzutu", section_bypass: "Bypass", section_airflow: "Przep\u0142yw powietrza", hrv_t_outdoor: "czerpnia", hrv_t_supply: "nawiew", hrv_t_extract: "wywiew", hrv_t_exhaust: "wyrzut", hrv_outside: "na zewn\u0105trz", hrv_room: "pok\u00f3j",
     type_camera: "Kamera", cam_idle: "Czuwanie", cam_live: "Na \u017cywo", cam_rec: "Nagrywanie", cam_motion: "Wykryto ruch", cam_off: "Wy\u0142\u0105czona", cam_line_last_motion: "Ostatni ruch", cam_line_night: "Widzenie nocne", cam_line_signal: "Sygna\u0142", section_motion: "Czujnik ruchu", section_recording: "Czujnik nagrywania", section_night_vision: "Widzenie nocne", section_privacy: "Tryb prywatno\u015bci", section_signal: "Si\u0142a sygna\u0142u", layout_cam_indoor: "Wewn\u0119trzna obrotowa", layout_cam_tube: "Wewn\u0119trzna tuba", layout_cam_outdoor: "Zewn\u0119trzna", layout_cam_dome: "Kopu\u0142a",
     speed_power_max: "Moc na najwy\u017cszym biegu (W)", speed_power_custom: "W\u0142asne progi pr\u0119dko\u015bci", speed_power_2: "Bieg 2 od (W)", speed_power_3: "Bieg 3 od (W)",
     fw_self_cleaning: "Samooczyszczanie", fw_dirty_full: "Zbiornik na brudn\u0105 wod\u0119 pe\u0142ny", fw_clean_empty: "Zbiornik na czyst\u0105 wod\u0119 pusty",
@@ -2155,6 +2167,7 @@ const T = {
     door_corner: "\u663e\u793a\u5728\u5361\u7247\u89d2\u843d", controls_always: "\u59cb\u7ec8\u663e\u793a\u6240\u6709\u6309\u94ae", show_unavailable_controls: "\u663e\u793a\u5b9e\u4f53\u4e0d\u53ef\u7528\u7684\u6309\u94ae",
     layout_robot_stick: "\u65e0\u7ebf\u5438\u5c18\u5668", stick_charged: "\u5df2\u5145\u6ee1",
     layout_robot_floor_washer: "\u6d17\u5730\u673a", stick_away: "\u4e0d\u5728\u5e95\u5ea7\u4e0a", stick_away_threshold: "\u4f4e\u4e8e\u6b64\u529f\u7387\u5373\u4e0d\u5728\u5e95\u5ea7\u4e0a (W)",
+    type_diffuser: "\u9999\u85b0\u673a", dif_mist: "\u55b7\u96fe\u4e2d", dif_inter: "\u95f4\u6b47", dif_empty: "\u6c34\u7bb1\u7f3a\u6c34", dif_mode: "\u55b7\u96fe\u6a21\u5f0f", layout_dif_drop: "\u6c34\u6ef4", layout_dif_cone: "\u5706\u9525", layout_dif_stone: "\u9e45\u5375\u77f3", layout_dif_flame: "\u706b\u7130", layout_dif_nebulizer: "\u96fe\u5316\u5668", section_tank_empty: "\u7f3a\u6c34\u4f20\u611f\u5668", type_hrv: "\u70ed\u56de\u6536\u65b0\u98ce", hrv_run: "\u8fd0\u884c\u4e2d", hrv_boost: "\u5f3a\u52b2", hrv_bypass: "\u65c1\u901a", hrv_defrost: "\u9664\u971c\u4e2d", hrv_filter: "\u66f4\u6362\u6ee4\u7f51", hrv_away: "\u79bb\u5bb6", layout_hrv_diagram: "\u6c14\u6d41\u793a\u610f", layout_hrv_one_duct: "\u58c1\u6302\u5f0f\uff0c\u5355\u7ba1", layout_hrv_pair: "\u7a7f\u5899\u6210\u5bf9", section_supply_temperature: "\u9001\u98ce\u6e29\u5ea6", section_extract_temperature: "\u56de\u98ce\u6e29\u5ea6", section_exhaust_temperature: "\u6392\u98ce\u6e29\u5ea6", section_bypass: "\u65c1\u901a", section_airflow: "\u98ce\u91cf", hrv_t_outdoor: "\u65b0\u98ce", hrv_t_supply: "\u9001\u98ce", hrv_t_extract: "\u56de\u98ce", hrv_t_exhaust: "\u6392\u98ce", hrv_outside: "\u5ba4\u5916", hrv_room: "\u5ba4\u5185",
     type_camera: "\u6444\u50cf\u5934", cam_idle: "\u5f85\u673a", cam_live: "\u76f4\u64ad\u4e2d", cam_rec: "\u5f55\u50cf\u4e2d", cam_motion: "\u68c0\u6d4b\u5230\u79fb\u52a8", cam_off: "\u5df2\u5173\u95ed", cam_line_last_motion: "\u4e0a\u6b21\u79fb\u52a8", cam_line_night: "\u591c\u89c6", cam_line_signal: "\u4fe1\u53f7", section_motion: "\u79fb\u52a8\u4f20\u611f\u5668", section_recording: "\u5f55\u50cf\u4f20\u611f\u5668", section_night_vision: "\u591c\u89c6", section_privacy: "\u9690\u79c1\u6a21\u5f0f", section_signal: "\u4fe1\u53f7\u5f3a\u5ea6", layout_cam_indoor: "\u5ba4\u5185\u4e91\u53f0", layout_cam_tube: "\u5ba4\u5185\u5706\u67f1", layout_cam_outdoor: "\u5ba4\u5916", layout_cam_dome: "\u534a\u7403",
     speed_power_max: "\u6700\u9ad8\u6863\u529f\u7387 (W)", speed_power_custom: "\u81ea\u5b9a\u4e49\u6863\u4f4d\u9608\u503c", speed_power_2: "2 \u6863\u8d77\u59cb (W)", speed_power_3: "3 \u6863\u8d77\u59cb (W)",
     fw_self_cleaning: "\u81ea\u6e05\u6d01\u4e2d", fw_dirty_full: "\u6c61\u6c34\u7bb1\u5df2\u6ee1", fw_clean_empty: "\u6e05\u6c34\u7bb1\u5df2\u7a7a",
@@ -2322,6 +2335,7 @@ const T = {
     door_corner: "Zobrazit v rohu karty", controls_always: "V\u017edy zobrazit v\u0161echna tla\u010d\u00edtka", show_unavailable_controls: "Zobrazit tla\u010d\u00edtka nedostupn\u00fdch entit",
     layout_robot_stick: "Ty\u010dov\u00fd vysava\u010d", stick_charged: "Nabito",
     layout_robot_floor_washer: "Myc\u00ed vysava\u010d", stick_away: "Mimo z\u00e1kladnu", stick_away_threshold: "Mimo z\u00e1kladnu pod t\u00edmto v\u00fdkonem (W)",
+    type_diffuser: "Aroma difuz\u00e9r", dif_mist: "Rozpra\u0161uje", dif_inter: "P\u0159eru\u0161ovan\u011b", dif_empty: "Pr\u00e1zdn\u00e1 n\u00e1dr\u017eka", dif_mode: "Re\u017eim mlhy", layout_dif_drop: "Kapka", layout_dif_cone: "Ku\u017eel", layout_dif_stone: "Obl\u00e1zek", layout_dif_flame: "Plamen", layout_dif_nebulizer: "Nebuliz\u00e9r", section_tank_empty: "Senzor pr\u00e1zdn\u00e9 n\u00e1dr\u017eky", type_hrv: "Rekupera\u010dn\u00ed v\u011btr\u00e1n\u00ed", hrv_run: "V\u011btr\u00e1", hrv_boost: "Boost", hrv_bypass: "Bypass", hrv_defrost: "Odmrazov\u00e1n\u00ed", hrv_filter: "Vym\u011bnit filtr", hrv_away: "Pry\u010d", layout_hrv_diagram: "Proudy vzduchu", layout_hrv_one_duct: "N\u00e1st\u011bnn\u00e1, jeden kan\u00e1l", layout_hrv_pair: "P\u00e1r ve zdi", section_supply_temperature: "Teplota p\u0159\u00edvodu", section_extract_temperature: "Teplota odvodu", section_exhaust_temperature: "Teplota odpadn\u00edho vzduchu", section_bypass: "Bypass", section_airflow: "Pr\u016ftok vzduchu", hrv_t_outdoor: "\u010derstv\u00fd", hrv_t_supply: "p\u0159\u00edvod", hrv_t_extract: "odvod", hrv_t_exhaust: "odpad", hrv_outside: "venku", hrv_room: "m\u00edstnost",
     type_camera: "Kamera", cam_idle: "Ne\u010dinn\u00e1", cam_live: "\u017div\u011b", cam_rec: "Nahr\u00e1v\u00e1", cam_motion: "Zji\u0161t\u011bn pohyb", cam_off: "Vypnut\u00e1", cam_line_last_motion: "Posledn\u00ed pohyb", cam_line_night: "No\u010dn\u00ed vid\u011bn\u00ed", cam_line_signal: "Sign\u00e1l", section_motion: "Senzor pohybu", section_recording: "Senzor nahr\u00e1v\u00e1n\u00ed", section_night_vision: "No\u010dn\u00ed vid\u011bn\u00ed", section_privacy: "Re\u017eim soukrom\u00ed", section_signal: "S\u00edla sign\u00e1lu", layout_cam_indoor: "Vnit\u0159n\u00ed oto\u010dn\u00e1", layout_cam_tube: "Vnit\u0159n\u00ed v\u00e1lec", layout_cam_outdoor: "Venkovn\u00ed", layout_cam_dome: "Kopule",
     speed_power_max: "P\u0159\u00edkon na nejvy\u0161\u0161\u00ed stupe\u0148 (W)", speed_power_custom: "Vlastn\u00ed prahy rychlosti", speed_power_2: "Stupe\u0148 2 od (W)", speed_power_3: "Stupe\u0148 3 od (W)",
     fw_self_cleaning: "Samo\u010di\u0161t\u011bn\u00ed", fw_dirty_full: "N\u00e1dr\u017e na \u0161pinavou vodu pln\u00e1", fw_clean_empty: "N\u00e1dr\u017e na \u010distou vodu pr\u00e1zdn\u00e1",
@@ -4463,6 +4477,21 @@ const PHASE_ENTITY_RE = /program.?phase|cycle.?phase|job.?state|pr.?phase|machin
 // Suggested only for the types that can actually use them, so a washing
 // machine doesn't end up with a "filter life" field pre-filled.
 const TYPE_AUTO_PATTERNS = {
+  diffuser: {
+    light_entity: /light|lumiere|licht|luz|luce|lamp|led|night/i,
+    tank_empty_entity: /tank|water|lack|empty|vide|leer|vacio/i,
+  },
+  // Vallox, Zehnder, Danfoss: four temperatures, a bypass or a cell state, a
+  // filter, an airflow.
+  hrv: {
+    outdoor_temperature_entity: /outdoor|outside|exterieur|aussen|frisch|fresh/i,
+    supply_temperature_entity: /supply|soufflage|zuluft|insufl|impuls|mandata|toevoer|tillu/i,
+    extract_temperature_entity: /^(?!.*fan).*(extract|reprise|abluft|extrac|ripresa|afzuig|franlu|indoor)/i,
+    exhaust_temperature_entity: /^(?!.*fan).*(exhaust|rejet|fortluft|expuls|espuls|afvoer|avlu)/i,
+    bypass_entity: /bypass|cell.?state|by.?pass/i,
+    filter_life_entity: /filter|filtre/i,
+    airflow_entity: /air.?flow|debit|luftmenge|caudal|portata|m3/i,
+  },
   // Arlo calls its sensors motion_camera_x and connected_camera_x, Reolink
   // and Tapo name a privacy switch, and most of them an infrared mode.
   camera: {
@@ -4939,6 +4968,12 @@ const TYPE_CAPS = {
   // A camera: whether it watches, streams or records, what it has seen, and
   // its privacy mode. Never its picture: Home Assistant has cards for that.
   camera: { camera: true },
+  // An essential oil diffuser: its mist, continuous or now and then, its
+  // light, and its tank.
+  diffuser: { diffuser: true, light: true },
+  // Heat recovery ventilation: fresh air in through the exchanger, stale air
+  // out, a bypass for the summer nights and a filter to change.
+  hrv: { hrv: true },
   // A television, a projector or a computer, read from its plug: what it
   // draws at rest is its standby, and a media player says what it shows.
   screen: { screen: true },
@@ -5023,6 +5058,8 @@ const STATE_DOMAINS = {
   robot: ["vacuum", "lawn_mower", "select", "input_select"],
   pool_pump: ["switch", "binary_sensor", "select", "input_select", "input_boolean", "fan"],
   camera: ["camera", "switch", "binary_sensor", "input_boolean"],
+  diffuser: ["fan", "switch", "select", "input_select", "humidifier", "input_boolean"],
+  hrv: ["fan", "climate", "select", "input_select", "switch", "input_boolean"],
 };
 // A model, a picture, the players it shows and a session lock belong to a
 // screen.
@@ -5105,7 +5142,7 @@ const TYPE_GROUPS = [
   ["laundry", ["washer", "dryer"]],
   ["kitchen", ["dishwasher", "oven", "microwave", "hood", "cooktop", "fridge", "kettle", "cooker", "coffee", "rice_cooker", "air_fryer", "toaster"]],
   ["heating", ["water_heater", "boiler", "heat_pump", "pellet_stove", "space_heater", "towel_warmer"]],
-  ["air", ["air_conditioner", "dehumidifier", "air_purifier", "fan"]],
+  ["air", ["air_conditioner", "dehumidifier", "air_purifier", "fan", "diffuser", "hrv"]],
   ["home", ["screen", "iron", "hair_dryer", "printer_3d", "robot", "pool_pump", "scale", "camera"]],
   ["energy", ["solar", "home_battery", "ev_charger"]],
   ["pets", ["pet_feeder", "pet_fountain"]],
@@ -5140,9 +5177,17 @@ function detectApplianceType(cfg, st) {
   if (SCALE_ONLY_FIELDS.some((f) => cfg[f])) return "scale";
   if (UPS_ONLY_FIELDS.some((f) => cfg[f])) return "ups";
   if (CAMERA_ONLY_FIELDS.some((f) => cfg[f])) return "camera";
+  if (DIFFUSER_ONLY_FIELDS.some((f) => cfg[f])) return "diffuser";
+  if (HRV_ONLY_FIELDS.some((f) => cfg[f])) return "hrv";
   // Home Assistant has a domain of its own for each of them.
   if (["vacuum", "lawn_mower"].includes(domainOf(cfg.state_entity))) return "robot";
   if (domainOf(cfg.state_entity) === "camera") return "camera";
+  {
+    // A diffuser and a ventilation unit by their name or their maker's.
+    const named = stripAccents(`${cfg.icon || ""} ${cfg.state_entity || ""} ${(st && st.attributes.friendly_name) || ""}`).toLowerCase();
+    if (DIFFUSER_NAME_RE.test(named)) return "diffuser";
+    if (HRV_NAME_RE.test(named)) return "hrv";
+  }
   if (PURIFIER_ONLY_FIELDS.some((f) => cfg[f])) return "air_purifier";
   if (FAN_ONLY_FIELDS.some((f) => cfg[f])) return "fan";
   if (FRYER_ONLY_FIELDS.some((f) => cfg[f])) return "air_fryer";
@@ -5860,6 +5905,258 @@ function batteryReadOf(hass, cfg, st) {
   const low = level !== null && !["unav", "error"].includes(mode) && level <= BATTERY_LOW_PCT;
   return { mode, level, net, powerId, top, reserve, low, levelId };
 }
+// An essential oil diffuser: its mist from a switch, a fan (Tuya, a low
+// speed is its intermittent mode), a select (Meross: off, eco, on) or a
+// humidifier entity; its light from a light entity, coloured; an empty tank
+// from a sensor.
+const DIFFUSER_ONLY_FIELDS = ["diffuser_layout", "tank_empty_entity"];
+const DIFFUSER_LAYOUTS = ["drop", "cone", "stone", "flame", "nebulizer"];
+const DIFFUSER_NAME_RE = /diffus(er|eur|or|ore)|aroma.?(diffus|therap)|duftspender|essential.?oil|huiles?.?essentielles?|doftspridare|duftspreder/;
+const DIFFUSER_LABELS = { mist: "dif_mist", inter: "dif_inter", empty: "dif_empty", off: "ac_off", unav: "ev_offline" };
+const DIFFUSER_COLORS = { mist: "#26a69a", inter: "#26a69a", empty: "#f44336", off: "var(--disabled-text-color, #9e9e9e)", unav: "var(--disabled-text-color, #9e9e9e)" };
+const DIFFUSER_INTER_RE = /eco|interm|interval|low|small|gentle|weak|sleep|^1$|level_?1/;
+function diffuserLightOf(hass, cfg) {
+  const lst = cfg.light_entity ? stateObj(hass, cfg.light_entity) : null;
+  if (!lst || !["on", "true"].includes(String(lst.state).toLowerCase())) return { lit: false, color: "" };
+  const a = lst.attributes || {};
+  if (Array.isArray(a.rgb_color) && a.rgb_color.length === 3) return { lit: true, color: `rgb(${a.rgb_color.map((v) => Math.round(Number(v) || 0)).join(",")})` };
+  if (Array.isArray(a.hs_color) && a.hs_color.length === 2) return { lit: true, color: `hsl(${Math.round(a.hs_color[0])}, ${Math.round(a.hs_color[1])}%, 60%)` };
+  return { lit: true, color: "#ffd180" };
+}
+function diffuserReadOf(hass, cfg, st, norm, powerDerived) {
+  const raw = st ? stripAccents(String(st.state)).trim().toLowerCase() : "";
+  const a = (st && st.attributes) || {};
+  const dom = domainOf(cfg.state_entity);
+  const tank = cfg.tank_empty_entity ? stateObj(hass, cfg.tank_empty_entity) : null;
+  const tankRaw = tank ? String(tank.state).toLowerCase() : "";
+  const tankNum = tank ? parseFloat(tank.state) : NaN;
+  const empty = !!tank && (["on", "true", "empty", "low", "lack", "lack_water", "no_water"].includes(tankRaw) || (isFinite(tankNum) && tankNum <= 5));
+  let mode;
+  if (!powerDerived && (!st || ["unavailable", "unknown", ""].includes(raw))) mode = "unav";
+  else {
+    const on = powerDerived ? isActiveState(norm)
+      : dom === "select" || dom === "input_select" ? !/^(off|stop|0|none|standby|close|closed)$/.test(raw)
+      : ["on", "true"].includes(raw) || isActiveState(norm);
+    const pct = numberOrNull(a.percentage);
+    const inter = (dom === "select" || dom === "input_select") ? DIFFUSER_INTER_RE.test(raw)
+      : (pct !== null && pct > 0 && pct <= 50) || DIFFUSER_INTER_RE.test(String(a.preset_mode || a.mode || "").toLowerCase());
+    mode = empty ? "empty" : !on ? "off" : inter ? "inter" : "mist";
+  }
+  const light = diffuserLightOf(hass, cfg);
+  return { mode, lit: mode !== "unav" && light.lit, lightColor: light.color };
+}
+function diffuserLayoutOf(cfg, st) {
+  if (DIFFUSER_LAYOUTS.includes(cfg.diffuser_layout)) return cfg.diffuser_layout;
+  const a = (st && st.attributes) || {};
+  const hay = stripAccents(`${cfg.state_entity || ""} ${cfg.name || ""} ${a.friendly_name || ""}`).toLowerCase();
+  if (/nebuli|waterless|sans.?eau/.test(hay)) return "nebulizer";
+  if (/flame|flamme|flamm|llama|fiamma/.test(hay)) return "flame";
+  if (/stone|galet|pebble|vitruvi|govee/.test(hay)) return "stone";
+  if (/cone|cono|kegel|muji|ceramic|ceramique/.test(hay)) return "cone";
+  return "drop";
+}
+// The cycle of a mist select: tapping the button picks the next option.
+function diffuserControls(hass, cfg) {
+  const dom = domainOf(cfg.state_entity);
+  const st = stateObj(hass, cfg.state_entity);
+  if (!st) return [];
+  if ((dom === "select" || dom === "input_select") && Array.isArray(st.attributes.options) && st.attributes.options.length > 1) {
+    const opts = st.attributes.options;
+    const next = opts[(opts.indexOf(st.state) + 1) % opts.length];
+    return [{ key: "dif_mode", entity: cfg.state_entity, icon: "mdi:weather-fog", label: t(hass, "dif_mode"), option: next }];
+  }
+  if (!cfg.toggle_entity && ["fan", "switch", "humidifier", "input_boolean"].includes(dom)) {
+    return [{ key: "toggle", entity: cfg.state_entity, icon: "mdi:power", label: t(hass, "toggle"), on: String(st.state).toLowerCase() === "on" }];
+  }
+  return [];
+}
+
+// The palettes of a diffuser: wood, the default for the shapes that are made
+// of it, or the card's colour.
+const DIF_WOOD = ["#c98f55", "#a8693a", "#7d4a26", "#e3b07a"];
+const DIF_WHITE = ["#ffffff", "#eceef0", "#c9cfd5", "#ffffff"];
+const DIF_PAL = { white: DIF_WHITE, grey: ["#b6bbbf", "#9ea4a8", "#7e8488", "#d0d5d8"], black: ["#4a4f55", "#2c3035", "#16191c", "#5c636a"], red: ["#8a3035", "#6d2226", "#4a1518", "#a3434a"] };
+function difGrain(clip) {
+  let g = "";
+  for (let i = 0; i < 9; i++) {
+    const x = 26 + i * 8.5, w = 3 + (i % 3) * 2;
+    g += `<path d="M${x} 20 C${x + w} 40 ${x - w} 60 ${x + w / 2} 80 S${x - w} 96 ${x} 104" stroke="#7a4522" stroke-width="${(0.6 + (i % 2) * 0.5).toFixed(1)}" fill="none" opacity=".35"/>`;
+  }
+  return `<g clip-path="url(#${clip})">${g}<ellipse cx="72" cy="66" rx="9" ry="14" fill="none" stroke="#7a4522" stroke-width=".7" opacity=".35"/></g>`;
+}
+const DIF_PUFFS = (x, y) => `<g class="dif-puffs">${[0, 1, 2, 3].map(() => `<ellipse cx="${x}" cy="${y}" rx="6" ry="4.5"/>`).join("")}</g>`;
+const DIF_DROP_BADGE = `<g class="dif-empty"><circle cx="104" cy="16" r="9" fill="#f44336"/><path d="M104 10 Q100 15.5 100 18 A4 4 0 0 0 108 18 Q108 15.5 104 10 Z" fill="#fff"/></g>`;
+const DIF_HALO = (cx, cy, rx, ry) => `<ellipse class="dif-halo" cx="${cx}" cy="${cy}" rx="${rx}" ry="${ry}" fill="url(#dif-g-halo)"/>`;
+const DIFFUSER_SVGS = {
+  drop: (wood, b) => {
+    const d = "M56.5 14 H63.5 C63.5 30 71 40 85 50 C100 60 103 79 97 91 Q94 99 85 99 H35 Q26 99 23 91 C17 79 20 60 35 50 C49 40 56.5 30 56.5 14 Z";
+    return `<defs><radialGradient id="dif-g-b" cx=".38" cy=".38" r=".75"><stop offset="0" stop-color="${b[3]}"/><stop offset=".55" stop-color="${b[0]}"/><stop offset="1" stop-color="${b[2]}"/></radialGradient><clipPath id="dif-c"><path d="${d}"/></clipPath></defs>
+<g transform="translate(12 20) scale(.8)">${DIF_HALO(60, 104, 66, 15)}<ellipse cx="60" cy="106" rx="34" ry="3.5" fill="#000" opacity=".16"/>
+<rect x="33" y="99" width="7" height="4" rx="1.5" fill="${b[2]}"/><rect x="80" y="99" width="7" height="4" rx="1.5" fill="${b[2]}"/>
+<path d="${d}" fill="url(#dif-g-b)"/>${wood ? difGrain("dif-c") : ""}
+<path d="M30 60 Q38 50 50 46" stroke="#fff" stroke-width="3" opacity=".25" fill="none" stroke-linecap="round"/>
+<path class="dif-band" d="M21 82 Q60 88 99 82 L98.6 84.4 Q60 90.4 21.4 84.4 Z"/>
+<rect x="47" y="88" width="12" height="4" rx="2" fill="none" stroke="#f4f4f2" stroke-width=".9"/><rect x="61" y="88" width="12" height="4" rx="2" fill="none" stroke="#f4f4f2" stroke-width=".9"/></g>${DIF_PUFFS(60, 30)}`;
+  },
+  cone: (wood, b) => `<defs><linearGradient id="dif-g-b" x1="0" x2="1"><stop offset="0" stop-color="${b[2]}"/><stop offset=".35" stop-color="${b[3]}"/><stop offset=".75" stop-color="${b[0]}"/><stop offset="1" stop-color="${b[2]}"/></linearGradient></defs>
+<g transform="translate(12 20) scale(.8)">${DIF_HALO(60, 102, 62, 15)}<ellipse cx="60" cy="104" rx="32" ry="3.5" fill="#000" opacity=".16"/>
+<path d="M30 92 Q60 101 90 92 L91 98 Q60 107 29 98 Z" fill="${wood ? "#a8693a" : b[2]}"/>
+<path d="M50 22 Q60 18 70 22 L88 92 Q60 100 32 92 Z" fill="url(#dif-g-b)"/>
+<path class="dif-band" d="M40 70 Q60 75 80 70 L83 82 Q60 88 37 82 Z"/>
+<ellipse cx="60" cy="21" rx="9" ry="2.6" fill="${b[2]}"/><ellipse cx="60" cy="20.4" rx="3" ry="1" fill="#555"/></g>${DIF_PUFFS(60, 33)}`,
+  stone: (wood, b) => {
+    const c = wood ? ["#efe9e1", "#d8cfc3", "#b9ad9f"] : [b[3], b[1], b[2]];
+    const d = "M60 34 C82 34 92 60 90 80 C88 98 76 104 60 104 C44 104 32 98 30 80 C28 60 38 34 60 34 Z";
+    return `<defs><radialGradient id="dif-g-b" cx=".38" cy=".3" r=".8"><stop offset="0" stop-color="${c[0]}"/><stop offset=".6" stop-color="${c[1]}"/><stop offset="1" stop-color="${c[2]}"/></radialGradient></defs>
+${DIF_HALO(60, 105, 54, 13)}<ellipse cx="60" cy="106" rx="30" ry="3.5" fill="#000" opacity=".16"/>
+<path class="dif-band" d="M36 102 Q60 108 84 102 L84 104 Q60 110 36 104 Z"/>
+<path d="${d}" fill="url(#dif-g-b)"/>
+<path d="M41 56 Q46 44 56 40" stroke="#fff" stroke-width="3" opacity=".3" fill="none" stroke-linecap="round"/>
+<ellipse cx="60" cy="36" rx="4" ry="1.4" fill="#6d655c"/>${DIF_PUFFS(60, 32)}`;
+  },
+  flame: (wood, b) => `<defs><linearGradient id="dif-g-b" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${b[3]}"/><stop offset="1" stop-color="${b[2]}"/></linearGradient>
+<linearGradient id="dif-g-fl" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#ffcc80"/><stop offset=".4" stop-color="#ff9100"/><stop offset=".85" stop-color="#ff6d00" stop-opacity=".5"/><stop offset="1" stop-color="#ff6d00" stop-opacity="0"/></linearGradient></defs>
+${DIF_HALO(60, 106, 58, 12)}<ellipse cx="60" cy="107" rx="40" ry="3.5" fill="#000" opacity=".16"/>
+<g class="dif-fl"><path d="M60 72 C50 62 54 50 58 40 C60 48 66 50 64 40 C74 52 72 64 60 72 Z" fill="url(#dif-g-fl)"/></g>
+<g class="dif-fl dif-f2"><path d="M50 72 C44 64 46 56 50 50 C52 58 56 60 55 52 C62 60 60 68 50 72 Z" fill="url(#dif-g-fl)" opacity=".8"/><path d="M70 72 C64 64 66 58 70 52 C72 60 76 62 75 54 C82 62 80 68 70 72 Z" fill="url(#dif-g-fl)" opacity=".8"/></g>
+<path d="M22 72 H98 Q102 72 102 76 V100 Q102 104 98 104 H22 Q18 104 18 100 V76 Q18 72 22 72 Z" fill="url(#dif-g-b)"/>
+<rect x="40" y="68" width="40" height="6" rx="3" fill="#2b2f34"/>
+<circle cx="34" cy="90" r="2.4" fill="none" stroke="${b[2]}" stroke-width=".8"/><circle cx="86" cy="90" r="2.4" fill="none" stroke="${b[2]}" stroke-width=".8"/>
+<path class="dif-band" d="M18 98 H102 V100 Q102 104 98 104 H22 Q18 104 18 100 Z"/>`,
+  nebulizer: (wood, b) => {
+    const base = wood ? ["#c98f55", "#7d4a26"] : [b[0], b[2]];
+    return `<defs><linearGradient id="dif-g-b" x1="0" x2="1"><stop offset="0" stop-color="${base[1]}"/><stop offset=".45" stop-color="${base[0]}"/><stop offset="1" stop-color="${base[1]}"/></linearGradient>
+<radialGradient id="dif-g-gl" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#fff" stop-opacity=".9"/><stop offset=".5" stop-color="#e3f0f6" stop-opacity=".35"/><stop offset="1" stop-color="#a7c0cc" stop-opacity=".5"/></radialGradient></defs>
+${DIF_HALO(60, 106, 52, 12)}<ellipse cx="60" cy="107" rx="28" ry="3.5" fill="#000" opacity=".16"/>
+<path d="M34 84 H86 L82 104 H38 Z" fill="url(#dif-g-b)"/>
+<path d="M57 30 H63 V44 C78 48 84 60 82 70 C80 80 72 84 60 84 C48 84 40 80 38 70 C36 60 42 48 57 44 Z" fill="url(#dif-g-gl)" stroke="#9fb6c2" stroke-width=".8"/>
+<path d="M42 74 Q60 78 78 74 C76 80 70 83 60 83 C50 83 44 80 42 74 Z" fill="#e0a64b" opacity=".75"/>
+<path class="dif-glass" d="M40 72 Q60 64 80 72 C78 80 70 84 60 84 C50 84 42 80 40 72 Z"/>
+<path d="M47 56 Q50 50 56 48" stroke="#fff" stroke-width="2" opacity=".7" fill="none" stroke-linecap="round"/>
+<circle cx="60" cy="96" r="2" fill="none" stroke="${base[1]}" stroke-width=".8"/>${DIF_PUFFS(60, 27)}`;
+  },
+};
+function diffuserHtml(cls, d) {
+  const layout = DIFFUSER_LAYOUTS.includes(d.layout) ? d.layout : "drop";
+  const pal = DIF_PAL[d.palette];
+  const wood = !pal && ["drop", "flame", "nebulizer"].includes(layout);
+  const b = pal || (wood ? DIF_WOOD : DIF_WHITE);
+  const flags = ["dif", `dif-l-${layout}`, `dif-m-${d.mode || "unav"}`, d.lit ? "dif-lit" : ""].filter(Boolean).join(" ");
+  return `
+        <div class="machine ${cls} ${flags}" style="--dif-lc:${d.lightColor || "#ffd180"}"><svg class="dif-svg" viewBox="0 0 120 120">
+<defs><radialGradient id="dif-g-halo" r=".5"><stop offset="0" stop-color="var(--dif-lc)" stop-opacity="1"/><stop offset=".45" stop-color="var(--dif-lc)" stop-opacity=".55"/><stop offset="1" stop-color="var(--dif-lc)" stop-opacity="0"/></radialGradient></defs>
+${DIFFUSER_SVGS[layout](wood, b)}${DIF_DROP_BADGE}</svg></div>`;
+}
+
+// Heat recovery ventilation, read from its fan (or climate, or select) entity:
+// on or off, its speed and its preset (boost, away); a bypass or Vallox's
+// cell state (heat recovery, cool recovery, bypass, defrosting); a filter in
+// days or in percent; four temperatures drawn at the ends of the ducts.
+const HRV_ONLY_FIELDS = ["hrv_layout", "supply_temperature_entity", "extract_temperature_entity", "exhaust_temperature_entity", "bypass_entity", "airflow_entity"];
+const HRV_LAYOUTS = ["diagram", "one_duct", "pair"];
+const HRV_NAME_RE = /(^|[^a-z])(hrv|erv|vmc|wtw|ftx|mvhr)([^a-z]|$)|double.?flux|heat.?recovery|recuperat|comfoair|comfoconnect|vallox|zehnder|lunos|twinfresh|danfoss.?air|renson|endura|brink.?(flair|renovent)|wohnraumluft/;
+const HRV_LABELS = { run: "hrv_run", boost: "hrv_boost", bypass: "hrv_bypass", defrost: "hrv_defrost", filter: "hrv_filter", away: "hrv_away", off: "ac_off", unav: "ev_offline" };
+const HRV_COLORS = { run: "#03a9f4", boost: "#ff9800", bypass: "#26a69a", defrost: "#4fc3f7", filter: "#ff9800", away: "#607d8b",
+  off: "var(--disabled-text-color, #9e9e9e)", unav: "var(--disabled-text-color, #9e9e9e)" };
+const HRV_LCD = { run: "", boost: "BST", bypass: "BYP", defrost: "DEF", filter: "FIL", away: "AWY", off: "OFF", unav: "--" };
+const HRV_PACE = { 1: "2.2s", 2: "1.4s", 3: ".7s" };
+function hrvReadOf(hass, cfg, st, norm, powerDerived) {
+  const raw = st ? stripAccents(String(st.state)).trim().toLowerCase() : "";
+  const a = (st && st.attributes) || {};
+  const dom = domainOf(cfg.state_entity);
+  if (!powerDerived && (!st || ["unavailable", "unknown", ""].includes(raw))) return { mode: "unav", level: 0 };
+  const on = powerDerived ? isActiveState(norm)
+    : dom === "climate" ? raw !== "off"
+    : dom === "select" || dom === "input_select" ? !/^(off|stop|standby|0|none)$/.test(raw)
+    : dom === "sensor" ? !/^(off|stop|standby)$/.test(raw)
+    : ["on", "true"].includes(raw) || isActiveState(norm);
+  if (!on) return { mode: "off", level: 0 };
+  const preset = stripAccents(String(dom === "select" || dom === "input_select" ? raw : a.preset_mode || a.fan_mode || "")).toLowerCase();
+  const pct = numberOrNull(a.percentage);
+  const boost = /boost|turbo|max|party|intensiv|fireplace|cheminee|kamin/.test(preset);
+  const away = /away|absen|holiday|vacan|urlaub/.test(preset);
+  // The bypass: a switch or a binary sensor that is on, a percentage open, or
+  // a state that names it; Vallox's cell state also says when it defrosts.
+  const bst = cfg.bypass_entity ? stateObj(hass, cfg.bypass_entity) : null;
+  const braw = bst ? stripAccents(String(bst.state)).toLowerCase() : "";
+  const bnum = bst ? parseFloat(bst.state) : NaN;
+  const defrost = /defrost|degivr|abtau|frost/.test(braw) || /defrost|degivr|abtau/.test(raw);
+  const bypass = !defrost && (["on", "true", "open", "opened", "bypass", "active"].includes(braw) || /bypass|cool.?recovery/.test(braw) || (isFinite(bnum) && bnum > 0));
+  // The filter: days or percent left, or a sensor that says it is due.
+  let filterDue = false, filterText = "";
+  const fst = cfg.filter_life_entity ? stateObj(hass, cfg.filter_life_entity) : null;
+  if (fst) {
+    const fv = parseFloat(fst.state);
+    const unit = String((fst.attributes || {}).unit_of_measurement || "").toLowerCase();
+    if (isFinite(fv)) {
+      const days = /^(d|day|days|jours?|tage?|dias?|giorni)$/.test(unit);
+      const due = parseFloat(cfg.filter_due_below);
+      filterDue = fv <= (isFinite(due) ? due : days ? 7 : 10);
+      filterText = `${Math.round(fv)}${days ? ` ${unit}` : " %"}`;
+    } else filterDue = ["on", "true", "due", "replace", "dirty"].includes(String(fst.state).toLowerCase());
+  }
+  const named = presetSpeedOf(preset);
+  const level = boost ? 3 : pct !== null && pct > 0 ? (pct <= 40 ? 1 : pct <= 75 ? 2 : 3) : named || 2;
+  const mode = defrost ? "defrost" : bypass ? "bypass" : boost ? "boost" : filterDue ? "filter" : away ? "away" : "run";
+  return { mode, level, pct, bypass, defrost, filterDue, filterText };
+}
+function hrvLayoutOf(cfg, st) {
+  if (HRV_LAYOUTS.includes(cfg.hrv_layout)) return cfg.hrv_layout;
+  const a = (st && st.attributes) || {};
+  const hay = stripAccents(`${cfg.state_entity || ""} ${cfg.name || ""} ${a.friendly_name || ""}`).toLowerCase();
+  if (/lunos.?e2|e\u00b2|twinfresh|pair|paire|decentral|dezentral/.test(hay)) return "pair";
+  if (/ego|comfoair.?70|single.?room|monotube|un.?conduit/.test(hay)) return "one_duct";
+  return "diagram";
+}
+const hvLab = (x, y, temp, name, anchor) => `<text class="hv-t" x="${x}" y="${y}" text-anchor="${anchor}">${anchor === "start"
+  ? `${temp} <tspan class="hv-n">${name}</tspan>` : `<tspan class="hv-n">${name}</tspan> ${temp}`}</text>`;
+const hvFan = (x, y, r) => `<circle cx="${x}" cy="${y}" r="${r}" class="hv-fanbody"/><g class="hv-fan">${[0, 120, 240].map((d) => `<path d="M${x} ${y} q${(r * 0.45).toFixed(1)} -${(r * 0.85).toFixed(1)} 0 -${(r * 0.85).toFixed(1)} q-${(r * 0.45).toFixed(1)} ${(r * 0.3).toFixed(1)} 0 ${(r * 0.85).toFixed(1)}z" transform="rotate(${d} ${x} ${y})"/>`).join("")}</g>`;
+const HRV_SVGS = {
+  diagram: (h) => `<defs><linearGradient id="hv-g-fa" x1="0" x2="1"><stop offset="0" stop-color="#42a5f5"/><stop offset="1" stop-color="#ff9800"/></linearGradient>
+<linearGradient id="hv-g-ex" x1="1" x2="0"><stop offset="0" stop-color="#ef5350"/><stop offset="1" stop-color="#78909c"/></linearGradient></defs>
+<path d="M10 74 a9 9 0 0 1 4 -17 a11 11 0 0 1 20 3 a8 8 0 0 1 2 14 z" fill="#90caf9"/><path d="M208 64 L220 53 L232 64 V78 H208 Z" fill="#ef9a9a"/>
+<rect x="62" y="20" width="112" height="92" rx="8" class="hv-box"/>
+<path d="M118 36 L148 66 L118 96 L88 66 Z" fill="#2c3238" stroke="#7b858f"/>${hvFan(76, 34, 8)}${hvFan(160, 98, 8)}
+<g class="hv-through"><path class="hv-flow" d="M10 34 H62 C90 34 96 52 118 66 C140 80 146 98 174 98 H226" stroke="url(#hv-g-fa)"/><path class="hv-dash" d="M10 34 H62 C90 34 96 52 118 66 C140 80 146 98 174 98 H226"/></g>
+<g class="hv-bypass"><path class="hv-flow" d="M10 98 H226" stroke="#42a5f5"/><path class="hv-dash" d="M10 98 H226"/></g>
+<path class="hv-flow" d="M226 34 H174 C146 34 140 52 118 66 C96 80 90 98 62 98 H10" stroke="url(#hv-g-ex)"/><path class="hv-dash" d="M226 34 H174 C146 34 140 52 118 66 C96 80 90 98 62 98 H10"/>
+${hvLab(8, 26, h.t.o, "", "start")}${hvLab(228, 118, h.t.s, "", "end")}${hvLab(228, 26, h.t.e, "", "end")}${hvLab(8, 118, h.t.x, "", "start")}
+<text class="hv-frost" x="118" y="16" text-anchor="middle">\u2744</text><g class="hv-filt"><circle cx="168" cy="27" r="6"/><text x="168" y="30.5" text-anchor="middle">!</text></g>`,
+  one_duct: (h) => `<defs><linearGradient id="hv-g-fa" gradientUnits="userSpaceOnUse" x1="130" x2="182"><stop offset="0" stop-color="#42a5f5"/><stop offset="1" stop-color="#ff9800"/></linearGradient>
+<linearGradient id="hv-g-ex" gradientUnits="userSpaceOnUse" x1="182" x2="130"><stop offset="0" stop-color="#ef5350"/><stop offset="1" stop-color="#78909c"/></linearGradient></defs>
+<rect x="56" y="4" width="54" height="124" class="hv-wall"/><path d="M56 4 V128 M110 4 V128" stroke="#b7a68e"/>
+<rect x="44" y="47" width="78" height="34" rx="3" class="hv-tube"/><path d="M44 64 H122" stroke="#aab3bb" stroke-width="1.4"/><path d="M44 43 V85 L36 81 V47 Z" fill="#9aa3ad"/>
+<rect x="118" y="28" width="78" height="72" rx="7" class="hv-box"/>
+<rect x="132" y="50" width="46" height="28" rx="2" fill="#3a4148" stroke="#7b858f"/>${Array.from({ length: 11 }, (_, i) => `<path d="M${136 + i * 4} 51 V77" stroke="#7b858f" stroke-width=".7"/>`).join("")}
+${hvFan(188, 56, 6.5)}${hvFan(126, 72, 6.5)}
+<g class="hv-through"><path class="hv-flow" d="M22 56 H214" stroke="url(#hv-g-fa)"/><path class="hv-dash" d="M22 56 H214"/></g>
+<g class="hv-bypass"><path class="hv-flow" d="M22 56 H124 C130 56 130 40 140 40 H170 C180 40 180 56 186 56 H214" stroke="#42a5f5"/><path class="hv-dash" d="M22 56 H124 C130 56 130 40 140 40 H170 C180 40 180 56 186 56 H214"/></g>
+<path class="hv-flow" d="M214 72 H22" stroke="url(#hv-g-ex)"/><path class="hv-dash hv-rev" d="M22 72 H214"/>
+<path d="M214 50 l9 6 -9 6z" fill="#ff9800"/><path d="M22 66 l-9 6 9 6z" fill="#78909c"/>
+<rect x="140" y="86" width="32" height="8" rx="1.5" fill="#0e1b2c"/><text class="hv-lcd" x="156" y="92.3" text-anchor="middle">${h.lcd}</text>
+<g class="hv-filt"><circle cx="188" cy="34" r="6"/><text x="188" y="37.5" text-anchor="middle">!</text></g><text class="hv-frost" x="156" y="22" text-anchor="middle">\u2744</text>
+${hvLab(4, 20, h.t.o, h.n.o, "start")}${hvLab(4, 114, h.t.x, h.n.x, "start")}${hvLab(232, 20, h.t.s, h.n.s, "end")}${hvLab(232, 114, h.t.e, h.n.e, "end")}`,
+  pair: (h) => {
+    const unit = (cy) => `<rect x="72" y="${cy - 12}" width="92" height="24" rx="3" class="hv-tube"/>${Array.from({ length: 18 }, (_, i) => `<rect x="${104 + (i % 6) * 5}" y="${cy - 7 + Math.floor(i / 6) * 5}" width="4" height="4" fill="#e9dccb" stroke="#bfae96" stroke-width=".5"/>`).join("")}
+${hvFan(146, cy, 8.5)}<path d="M72 ${cy - 15} V${cy + 15} L64 ${cy + 12} V${cy - 12} Z" fill="#9aa3ad"/><rect x="164" y="${cy - 16}" width="6" height="32" rx="3" class="hv-box"/>`;
+    const inF = (cy) => `<path class="hv-flow" d="M28 ${cy} H118" stroke="#42a5f5"/><path class="hv-flow" d="M118 ${cy} H200" stroke="#ff9800"/><path class="hv-dash" d="M28 ${cy} H200"/><path d="M200 ${cy - 6} l9 6 -9 6z" fill="#ff9800"/>`;
+    const outF = (cy) => `<path class="hv-flow" d="M200 ${cy} H118" stroke="#ef5350"/><path class="hv-flow" d="M118 ${cy} H28" stroke="#78909c"/><path class="hv-dash hv-rev" d="M28 ${cy} H200"/><path d="M28 ${cy - 6} l-9 6 9 6z" fill="#78909c"/>`;
+    return `<path d="M4 70 a9 9 0 0 1 4 -17 a11 11 0 0 1 20 3 a8 8 0 0 1 2 14 z" fill="#90caf9" opacity=".85"/><path d="M208 60 L220 49 L232 60 V74 H208 Z" fill="#ef9a9a" opacity=".85"/>
+<rect x="80" y="4" width="76" height="124" class="hv-wall"/><path d="M80 4 V128 M156 4 V128" stroke="#b7a68e"/>${unit(34)}${unit(98)}
+<g class="hv-pa">${inF(34)}${outF(98)}</g><g class="hv-pb">${outF(34)}${inF(98)}</g>
+${hvLab(6, 16, h.t.o, "", "start")}${hvLab(230, 16, h.t.s, "", "end")}
+<text class="hv-n" x="6" y="126">${h.n.out}</text><text class="hv-n" x="230" y="126" text-anchor="end">${h.n.room}</text>
+<g class="hv-filt"><circle cx="118" cy="66" r="6"/><text x="118" y="69.5" text-anchor="middle">!</text></g>`;
+  },
+};
+function hrvHtml(cls, h) {
+  const layout = HRV_LAYOUTS.includes(h.layout) ? h.layout : "diagram";
+  const live = !["off", "unav"].includes(h.mode);
+  const flags = ["hv", `hv-l-${layout}`, `hv-m-${h.mode || "unav"}`, live ? "hv-on" : "", h.bypass ? "hv-by" : "", h.defrost ? "hv-df" : "", h.filterDue ? "hv-fd" : "", h.dark ? "hv-dark" : ""].filter(Boolean).join(" ");
+  return `
+        <div class="machine ${cls} ${flags}" style="--hv-pace:${HRV_PACE[h.level] || "1.4s"}"><svg class="hv-svg" viewBox="0 0 236 132">${HRV_SVGS[layout](h)}</svg></div>`;
+}
+
 // A camera, read from its camera entity: idle, streaming or recording, and
 // off once it is switched off. A motion sensor, a recording sensor and an
 // infrared mode say more when the integration has them, a privacy switch (or
@@ -6060,6 +6357,7 @@ const HISTORY_SOURCES = {
   scale: ["state_entity"],
   home_battery: ["battery_entity"],
   camera: ["battery_entity", "signal_entity"],
+  hrv: ["outdoor_temperature_entity", "supply_temperature_entity"],
 };
 
 function historyEntityOf(hass, cfg, type) {
@@ -8905,6 +9203,80 @@ const ILLUSTRATION_CSS = {
         @keyframes sc-glow { 0%, 100% { opacity: 1; } 50% { opacity: 0.7; } }
         @media (prefers-reduced-motion: reduce) { .machine.sc * { animation-name: none !important; } }
   `,
+  // A diffuser: its mist rising, steadily or in puffs, its light on the
+  // floor and in its band, the flames of a flame diffuser.
+  diffuser: () => `
+        svg.dif-svg{position:absolute;left:-12px;top:-6px;width:120px;height:120px;overflow:hidden}
+        .dif-puffs ellipse{fill:color-mix(in srgb,var(--secondary-text-color,#727272) 45%,transparent);opacity:0;transform-box:fill-box;transform-origin:50% 50%;filter:blur(1.2px)}
+        .dif-m-mist .dif-puffs ellipse{animation:dif-mist 2.6s ease-out infinite}
+        .dif-m-inter .dif-puffs ellipse{animation:dif-puff 5s ease-out infinite}
+        .dif-puffs ellipse:nth-child(2){--dx:-6px;animation-delay:.6s!important}
+        .dif-puffs ellipse:nth-child(3){--dx:7px;animation-delay:1.2s!important}
+        .dif-puffs ellipse:nth-child(4){--dx:-2px;animation-delay:1.8s!important}
+        .dif-halo{opacity:0}
+        .dif-lit .dif-halo{opacity:1;animation:dif-breathe 3s ease-in-out infinite}
+        .dif-band{fill:#f4f4f2}
+        .dif-lit .dif-band{fill:var(--dif-lc)}
+        .dif-glass{fill:var(--dif-lc);opacity:0}
+        .dif-lit .dif-glass{opacity:.85}
+        .dif-empty{display:none}
+        .dif-m-empty .dif-empty{display:inline;animation:dif-blink 1s steps(1) infinite}
+        .dif-fl{opacity:0;transform-box:fill-box;transform-origin:50% 100%}
+        .dif-m-mist .dif-fl{opacity:.95;animation:dif-flame .9s ease-in-out infinite}
+        .dif-m-inter .dif-fl{opacity:.95;animation:dif-flame .9s ease-in-out infinite,dif-breathe 5s ease-in-out infinite}
+        .dif-fl.dif-f2{animation-delay:.3s}
+        .machine.dif-m-unav{opacity:.45;filter:grayscale(1)}
+        @keyframes dif-mist{0%{opacity:0;transform:translate(0,6px) scale(.5)}25%{opacity:.85}100%{opacity:0;transform:translate(var(--dx,0px),-28px) scale(1.7)}}
+        @keyframes dif-puff{0%,55%{opacity:0;transform:translate(0,6px) scale(.5)}62%{opacity:.85}100%{opacity:0;transform:translate(var(--dx,0px),-28px) scale(1.7)}}
+        @keyframes dif-flame{0%,100%{transform:scaleY(1) skewX(0)}30%{transform:scaleY(1.12) skewX(4deg)}60%{transform:scaleY(.92) skewX(-3deg)}}
+        @keyframes dif-breathe{0%,100%{opacity:.45}50%{opacity:1}}
+        @keyframes dif-blink{50%{opacity:.15}}
+        @media (prefers-reduced-motion: reduce) { .machine.dif * { animation-name: none !important; } }
+  `,
+  // A ventilation unit: two streams through the exchanger, their fans, the
+  // bypass, the frost of a defrost, the filter's warning. Wider than the
+  // others, since four temperatures sit at the ends of its ducts.
+  hrv: () => `
+        .machine.hv{width:200px;height:112px}
+        svg.hv-svg{position:absolute;left:0;top:0;width:200px;height:112px;overflow:hidden}
+        .hv-box{fill:var(--ac-body,#f1f3f4);stroke:var(--ac-body-lo,#b9c1c8)}
+        .hv-wall{fill:#d9cbb7}
+        .hv-tube{fill:#eef1f3;stroke:#aab3bb}
+        .hv-fanbody{fill:var(--ac-body-lo,#d5dade);stroke:#9aa3ad;stroke-width:.8}
+        .hv-fan{transform-box:fill-box;transform-origin:50% 50%}
+        .hv-fan path{fill:#5d6873}
+        .hv-on .hv-fan{animation:hv-spin var(--hv-pace,1.4s) linear infinite}
+        .hv-flow{fill:none;stroke-width:5;stroke-linecap:round}
+        .hv-dash{fill:none;stroke:#fff;stroke-width:2;stroke-dasharray:4 8;opacity:.75}
+        .hv-on .hv-dash{animation:hv-flow var(--hv-pace,1.4s) linear infinite}
+        .hv-on .hv-dash.hv-rev{animation-name:hv-flowr}
+        .machine.hv:not(.hv-on) .hv-flow{opacity:.2}
+        .machine.hv:not(.hv-on) .hv-dash{display:none}
+        .hv-bypass{display:none}
+        .hv-by .hv-bypass{display:inline}
+        .hv-by .hv-through{opacity:.15}
+        .hv-frost{display:none;font-size:12px;fill:#4fc3f7}
+        .hv-df .hv-frost{display:inline;animation:hv-breathe 1.6s ease-in-out infinite}
+        .hv-filt{display:none}
+        .hv-filt circle{fill:#ff9800}
+        .hv-filt text{font:700 9px Arial,sans-serif;fill:#fff}
+        .hv-fd .hv-filt{display:inline;animation:hv-blink 1s steps(1) infinite}
+        .hv-t{font:600 9px Arial,sans-serif;fill:var(--primary-text-color,#212121)}
+        .hv-n{font:400 8px Arial,sans-serif;fill:var(--secondary-text-color,#727272)}
+        .hv-lcd{font:700 6px Arial,sans-serif;fill:#7fe3ff}
+        .hv-pa,.hv-pb{opacity:0}
+        .hv-on .hv-pa{animation:hv-pa 140s linear infinite;animation-delay:var(--anim-offset,0s)}
+        .hv-on .hv-pb{animation:hv-pb 140s linear infinite;animation-delay:var(--anim-offset,0s)}
+        .machine.hv-m-unav{opacity:.45;filter:grayscale(1)}
+        @keyframes hv-spin{to{transform:rotate(360deg)}}
+        @keyframes hv-flow{to{stroke-dashoffset:-24}}
+        @keyframes hv-flowr{to{stroke-dashoffset:24}}
+        @keyframes hv-breathe{0%,100%{opacity:.4}50%{opacity:1}}
+        @keyframes hv-blink{50%{opacity:.15}}
+        @keyframes hv-pa{0%,49.5%{opacity:1}50%,100%{opacity:0}}
+        @keyframes hv-pb{0%,49.5%{opacity:0}50%,100%{opacity:1}}
+        @media (prefers-reduced-motion: reduce) { .machine.hv * { animation-name: none !important; } .hv-on .hv-pa{opacity:1} }
+  `,
   // A camera: its status light, the glow of a live view, the REC tag, the
   // waves of a motion and the red ring of its infrared.
   camera: () => `
@@ -11431,6 +11803,8 @@ function illustrationHtml(type, ctx) {
   if (type === "scale") return scaleHtml(cls, ctx.scale || {});
   if (type === "ups") return upsHtml(cls, ctx.ups || { segs: 0 });
   if (type === "camera") return cameraHtml(cls, ctx.camera || {});
+  if (type === "diffuser") return diffuserHtml(cls, ctx.diffuser || {});
+  if (type === "hrv") return hrvHtml(cls, ctx.hrv || {});
   if (type === "screen") return screenHtml(cls, ctx.screen || {});
   if (type === "air_purifier") return purifierHtml(cls, ctx.purifier || {});
   if (type === "fan") return fanHtml(cls, ctx.fan || {});
@@ -14493,6 +14867,46 @@ class ApplianceCard extends HTMLElement {
       battery = { mode: b.mode, layout: batteryLayoutOf(cfg, st), level: b.level, reserve: b.reserve, low: b.low };
     }
 
+    // A diffuser: its mist and its light.
+    let diffuser = null;
+    if (cap.diffuser) {
+      const d = diffuserReadOf(hass, cfg, st, norm, powerDerived);
+      if (!cfg.state_show_raw || d.mode === "unav") stateLabel = t(hass, DIFFUSER_LABELS[d.mode]);
+      color = DIFFUSER_COLORS[d.mode];
+      diffuser = { ...d, layout: diffuserLayoutOf(cfg, st), palette: cfg.illustration_color };
+    }
+
+    // Heat recovery ventilation: the mode, its speed, its airflow and its
+    // filter as lines, the four temperatures on the drawing.
+    let hrv = null;
+    if (cap.hrv) {
+      const h = hrvReadOf(hass, cfg, st, norm, powerDerived);
+      if (!cfg.state_show_raw || h.mode === "unav") stateLabel = t(hass, HRV_LABELS[h.mode]);
+      color = HRV_COLORS[h.mode];
+      const live = !["off", "unav"].includes(h.mode);
+      if (live) {
+        if (h.pct !== null && h.pct > 0) {
+          extraLines.push({ key: "hrv_speed", icon: "mdi:fan", label: t(hass, "section_fan_speed"), value: keepTogether(`${Math.round(h.pct)} %`), entity: cfg.state_entity });
+        }
+        const flow = cfg.airflow_entity ? numericState(hass, cfg.airflow_entity) : null;
+        if (flow !== null) {
+          extraLines.push({ key: "hrv_airflow", icon: "mdi:weather-windy", label: t(hass, "section_airflow"),
+            value: keepTogether(`${netNumber(hass, flow, 0)} ${unitOf(hass, cfg.airflow_entity) || "m\u00b3/h"}`), entity: cfg.airflow_entity });
+        }
+      }
+      if (h.filterText) {
+        extraLines.push({ key: "hrv_filter", icon: "mdi:air-filter", label: t(hass, "filter"), value: keepTogether(h.filterText), entity: cfg.filter_life_entity, caution: h.filterDue });
+      }
+      const temp = (id) => {
+        const v = id ? numericState(hass, id) : null;
+        return v === null ? "" : `${netNumber(hass, v, 0)}\u00b0`;
+      };
+      hrv = { ...h, layout: hrvLayoutOf(cfg, st), dark: cfg.illustration_color === "black",
+        lcd: h.mode === "run" ? `V${h.level}` : HRV_LCD[h.mode] || "",
+        t: { o: temp(cfg.outdoor_temperature_entity), s: temp(cfg.supply_temperature_entity), e: temp(cfg.extract_temperature_entity), x: temp(cfg.exhaust_temperature_entity) },
+        n: { o: t(hass, "hrv_t_outdoor"), s: t(hass, "hrv_t_supply"), e: t(hass, "hrv_t_extract"), x: t(hass, "hrv_t_exhaust"), out: t(hass, "hrv_outside"), room: t(hass, "hrv_room") } };
+    }
+
     // A camera: what it does, and lines for its battery, its signal, the last
     // motion and its night vision.
     let camera = null;
@@ -14762,6 +15176,8 @@ class ApplianceCard extends HTMLElement {
       battery,
       scale,
       camera,
+      diffuser,
+      hrv,
       ups,
       purifier,
       screen,
@@ -14802,8 +15218,9 @@ class ApplianceCard extends HTMLElement {
       cap.filter || cap.petFountain ? { key: "filter_reset", entity: cfg.filter_reset_entity, icon: "mdi:air-filter", label: t(hass, "filter_reset") } : {},
       cap.petFountain ? { key: "pump_reset", entity: cfg.pump_reset_entity, icon: "mdi:pump", label: t(hass, "ft_pump_reset") } : {},
       ...robotControls(hass, cfg, robot),
+      ...(cap.diffuser ? diffuserControls(hass, cfg) : []),
     ]
-      .map((a) => (a.key && a.key !== "toggle" ? { ...a, option: cfg[`${a.key}_option`], value: cfg[`${a.key}_value`] } : a))
+      .map((a) => (a.key && a.key !== "toggle" ? { ...a, option: cfg[`${a.key}_option`] ?? a.option, value: cfg[`${a.key}_value`] ?? a.value } : a))
       // A button's icon can be swapped for another, `start_icon` and its
       // siblings: what a press does is the owner's business, and mdi:play
       // reads as "run a programme" where a feeder only drops a portion. The
@@ -14862,6 +15279,8 @@ class ApplianceCard extends HTMLElement {
       illustrationCtx.pool && [illustrationCtx.pool.mode, illustrationCtx.pool.dosing, illustrationCtx.pool.lit].join("/"),
       illustrationCtx.solar && [illustrationCtx.solar.mode, illustrationCtx.solar.sky, illustrationCtx.solar.layout].join("/"),
       illustrationCtx.battery && [illustrationCtx.battery.mode, illustrationCtx.battery.layout, illustrationCtx.battery.low].join("/"),
+      illustrationCtx.diffuser && [illustrationCtx.diffuser.mode, illustrationCtx.diffuser.lit, illustrationCtx.diffuser.layout].join("/"),
+      illustrationCtx.hrv && [illustrationCtx.hrv.mode, illustrationCtx.hrv.level, illustrationCtx.hrv.layout].join("/"),
       illustrationCtx.camera && [illustrationCtx.camera.mode, illustrationCtx.camera.night, illustrationCtx.camera.layout].join("/"),
       illustrationCtx.scale && [illustrationCtx.scale.mode, illustrationCtx.scale.text, illustrationCtx.scale.unit, illustrationCtx.scale.fresh].join("/"),
       illustrationCtx.ups && [illustrationCtx.ups.mode, illustrationCtx.ups.alert, illustrationCtx.ups.charging, illustrationCtx.ups.segs,
@@ -15461,7 +15880,7 @@ const SECTIONS = [
   // Hood
   { field: "fan_entity", types: ["hood"], labelKey: "section_fan", includeDomains: ["fan", "select", "input_select", "sensor", "number", "input_number"] },
   { field: "boost_entity", types: ["hood"], labelKey: "section_boost", includeDomains: ["switch", "binary_sensor", "input_boolean"] },
-  { field: "filter_life_entity", types: ["hood", "pet_fountain"], labelKey: "section_filter_life", includeDomains: ["sensor", "number"], extra: (c) =>
+  { field: "filter_life_entity", types: ["hood", "pet_fountain", "hrv"], labelKey: "section_filter_life", includeDomains: ["sensor", "number"], extra: (c) =>
       c._type === "pet_fountain" ? c._row("filter_due_below", "filter_due_below", { placeholder: "3" }) : "" },
   { field: "filter_reset_entity", types: ["hood", "pet_fountain"], labelKey: "section_filter_reset", includeDomains: ACTION_DOMAINS },
 
@@ -15540,6 +15959,15 @@ const SECTIONS = [
   { field: "muscle_mass_entity", types: ["scale"], labelKey: "section_muscle_mass", includeDomains: ["sensor"] },
   { field: "bone_mass_entity", types: ["scale"], labelKey: "section_bone_mass", includeDomains: ["sensor"] },
   { field: "robot_status_entity", types: ["robot"], labelKey: "section_robot_status", includeDomains: ["sensor", "select", "input_select"] },
+  // A diffuser's empty tank.
+  { field: "tank_empty_entity", types: ["diffuser"], labelKey: "section_tank_empty", includeDomains: ["binary_sensor", "sensor"] },
+  // A ventilation unit: the other three temperatures, its bypass, its
+  // airflow and its filter.
+  { field: "supply_temperature_entity", types: ["hrv"], labelKey: "section_supply_temperature", includeDomains: ["sensor"] },
+  { field: "extract_temperature_entity", types: ["hrv"], labelKey: "section_extract_temperature", includeDomains: ["sensor"] },
+  { field: "exhaust_temperature_entity", types: ["hrv"], labelKey: "section_exhaust_temperature", includeDomains: ["sensor"] },
+  { field: "bypass_entity", types: ["hrv"], labelKey: "section_bypass", includeDomains: ["binary_sensor", "switch", "sensor", "select"] },
+  { field: "airflow_entity", types: ["hrv"], labelKey: "section_airflow", includeDomains: ["sensor"] },
   // A camera: what it sees, whether it records, its night vision, its
   // privacy switch and its signal.
   { field: "motion_entity", types: ["camera"], labelKey: "section_motion", includeDomains: ["binary_sensor", "sensor"] },
@@ -15565,7 +15993,7 @@ const SECTIONS = [
   { field: "heater_entity", types: ["air_purifier", "fan"], labelKey: "section_heater", includeDomains: ["climate", "switch", "select", "binary_sensor"] },
 
   // Oven + hood
-  { field: "light_entity", types: ["oven", "hood", "printer_3d", "fan", "pool_pump"], labelKey: "section_light", includeDomains: ["light", "switch", "input_boolean", "binary_sensor"] },
+  { field: "light_entity", types: ["oven", "hood", "printer_3d", "fan", "pool_pump", "diffuser"], labelKey: "section_light", includeDomains: ["light", "switch", "input_boolean", "binary_sensor"] },
 
   // Cooktop
   { field: "child_lock_entity", types: ["cooktop"], labelKey: "section_child_lock", includeDomains: ["binary_sensor", "switch", "lock"] },
@@ -15619,7 +16047,7 @@ const SECTIONS = [
 
   // Heat pump
   { field: "return_temperature_entity", types: ["heat_pump"], labelKey: "section_return_temperature", includeDomains: ["sensor", "number", "input_number"] },
-  { field: "outdoor_temperature_entity", types: ["heat_pump"], labelKey: "section_outdoor_temperature", includeDomains: ["sensor"] },
+  { field: "outdoor_temperature_entity", types: ["heat_pump", "hrv"], labelKey: "section_outdoor_temperature", includeDomains: ["sensor"] },
   { field: "water_flow_entity", types: ["heat_pump"], labelKey: "section_water_flow", includeDomains: ["sensor"] },
   { field: "compressor_entity", types: ["heat_pump"], labelKey: "section_compressor", includeDomains: ["sensor", "binary_sensor", "switch", "input_boolean"] },
   { field: "fan_speed_entity", types: ["heat_pump"], labelKey: "section_fan_speed", includeDomains: ["sensor", "number"] },
@@ -16477,6 +16905,14 @@ class ApplianceCardEditor extends HTMLElement {
             options: [{ value: "auto", label: t(hass, "unit_auto") }].concat(NET_BAYS.map((v) => ({ value: String(v), label: String(v) }))),
           }) : "");
         })() : ""}
+        ${this._type === "diffuser" ? this._row("section_screen_layout", "diffuser_layout", {
+          type: "select",
+          options: [{ value: "auto", label: t(hass, "unit_auto") }].concat(DIFFUSER_LAYOUTS.map((v) => ({ value: v, label: t(hass, `layout_dif_${v}`) }))),
+        }) : ""}
+        ${this._type === "hrv" ? this._row("section_screen_layout", "hrv_layout", {
+          type: "select",
+          options: [{ value: "auto", label: t(hass, "unit_auto") }].concat(HRV_LAYOUTS.map((v) => ({ value: v, label: t(hass, `layout_hrv_${v}`) }))),
+        }) : ""}
         ${this._type === "camera" ? this._row("section_screen_layout", "camera_layout", {
           type: "select",
           options: [{ value: "auto", label: t(hass, "unit_auto") }].concat(CAMERA_LAYOUTS.map((v) => ({ value: v, label: t(hass, `layout_cam_${v}`) }))),
