@@ -10232,4 +10232,83 @@ check('borne : ni un statut reconnu', evMode(evR('SuspendedEVSE', { power_entity
   check('editeur : pas de champ onduleur ailleurs', /runtime_entity/.test(markup(newEditor({ state_entity: 'sensor.w', appliance_type: 'washer' }))), false);
 }
 
+
+// =============================================================================
+// History: a collapsible curve under the lines, read only once unfolded.
+// =============================================================================
+{
+  const NB = ' ';
+  const W = { unit_of_measurement: 'W' };
+  const P = { appliance_type: 'washer', state_entity: 'sensor.w', power_entity: 'sensor.p', show_history: true };
+  const ST = { 'sensor.w': { state: 'Running', attributes: {} }, 'sensor.p': { state: '1500', attributes: W } };
+  const ROWS = { 'sensor.p': [H('200', -24 * 60), H('1500', -60), H('unavailable', -30), H('1400', -20)] };
+
+  // Off by default, and nothing to plot without a number.
+  check('historique 24 h : rien par defaut', /data-history-toggle/.test(render({ ...P, show_history: undefined }, ST)), false);
+  check('historique 24 h : rien sans valeur numerique', /data-history-toggle/.test(render({ appliance_type: 'washer', state_entity: 'sensor.w', show_history: true }, ST)), false);
+
+  // Folded: the button, and no request.
+  const h = withHistory(P, ST, ROWS);
+  check('historique 24 h : le bouton', /data-history-toggle="1" aria-expanded="false">.*<span>Last 24 h<\/span>/.test(h.html), true);
+  check('historique 24 h : rien de lu tant que plie', h.calls.length, 0);
+
+  // Unfolded: one request on the right sensor and window, then the curve.
+  h.card._historyOpen = true;
+  h.card._render();
+  check('historique 24 h : lu une fois deplie', h.calls.length, 1);
+  check('historique 24 h : la bonne demande', h.calls[0]?.type, 'history/history_during_period');
+  check('historique 24 h : sur le compteur par defaut', h.calls[0]?.entity_ids?.join(','), 'sensor.p');
+  check('historique 24 h : sur 24 heures', h.calls[0]?.start_time, new Date(T0 - 24 * 60 * MIN).toISOString());
+  check('historique 24 h : sans attributs', h.calls[0]?.no_attributes, true);
+  check('historique 24 h : en attendant', /<div class="h-empty">…<\/div>/.test(markup(h.card)), true);
+  await settle();
+  const m = markup(h.card);
+  check('historique 24 h : la courbe', /<div class="history" style="--h-color:[^"]+"><span class="h-max">/.test(m), true);
+  check('historique 24 h : le maximum', (/<span class="h-max">([^<]*)</.exec(m) || [])[1], `1,500${NB}W`);
+  check('historique 24 h : le minimum', (/<span class="h-min">([^<]*)</.exec(m) || [])[1], `200${NB}W`);
+  check('historique 24 h : un trou ou le capteur manquait', (m.match(/class="h-line"/g) || []).length, 2);
+  check('historique 24 h : deplie', /aria-expanded="true"/.test(m), true);
+  h.card._render();
+  check('historique 24 h : garde cinq minutes', h.calls.length, 1);
+
+  // The sensor and the hours chosen, and a type's own default.
+  const own = withHistory({ ...P, history_entity: 'sensor.t', history_hours: 6 }, { ...ST, 'sensor.t': { state: '21', attributes: {} } }, {});
+  own.card._historyOpen = true;
+  own.card._render();
+  check('historique 24 h : le capteur choisi', own.calls[0]?.entity_ids?.join(','), 'sensor.t');
+  check('historique 24 h : les heures choisies', own.calls[0]?.start_time, new Date(T0 - 6 * 60 * MIN).toISOString());
+  check('historique 24 h : le bouton dit les heures', /<span>Last 6 h<\/span>/.test(markup(own.card)), true);
+  await settle();
+  check('historique 24 h : pas encore d historique', /<div class="h-empty">No history yet<\/div>/.test(markup(own.card)), true);
+  const fridge = withHistory({ appliance_type: 'fridge', fridge_temperature_entity: 'sensor.ft', power_entity: 'sensor.p', show_history: true },
+    { 'sensor.ft': { state: '4', attributes: { unit_of_measurement: '°C' } }, 'sensor.p': { state: '80', attributes: W } }, {});
+  fridge.card._historyOpen = true;
+  fridge.card._render();
+  check('historique 24 h : un frigo trace sa temperature', fridge.calls[0]?.entity_ids?.join(','), 'sensor.ft');
+  const upsH = withHistory({ appliance_type: 'ups', state_entity: 'sensor.u', battery_entity: 'sensor.b', load_entity: 'sensor.l', show_history: true },
+    { 'sensor.u': { state: 'OL', attributes: {} }, 'sensor.b': { state: '100', attributes: { unit_of_measurement: '%' } }, 'sensor.l': { state: '8', attributes: { unit_of_measurement: '%' } } }, {});
+  upsH.card._historyOpen = true;
+  upsH.card._render();
+  check('historique 24 h : un onduleur trace sa charge', upsH.calls[0]?.entity_ids?.join(','), 'sensor.l');
+  const scaleH = withHistory({ appliance_type: 'scale', state_entity: 'sensor.kg', show_history: true },
+    { 'sensor.kg': { state: '86.4', attributes: { unit_of_measurement: 'kg', device_class: 'weight' } } }, {});
+  scaleH.card._historyOpen = true;
+  scaleH.card._render();
+  check('historique 24 h : une balance trace le poids', scaleH.calls[0]?.entity_ids?.join(','), 'sensor.kg');
+  // A one-minute peak between two ten-minute steps stays in the maximum.
+  const peak = withHistory({ ...P, history_entity: 'sensor.l' }, { ...ST, 'sensor.l': { state: '8', attributes: { unit_of_measurement: '%' } } },
+    { 'sensor.l': [H('8', -24 * 60), H('11', -95), H('8', -94)] });
+  peak.card._historyOpen = true;
+  peak.card._render();
+  await settle();
+  check('historique 24 h : un pic d une minute reste le maximum', (/<span class="h-max">([^<]*)</.exec(markup(peak.card)) || [])[1], `11${NB}%`);
+  check('historique 24 h : la ligne reste continue', (markup(peak.card).match(/class="h-line"/g) || []).length, 1);
+  check('historique 24 h : en francais', /<span>Dernières 24 h<\/span>/.test(render({ ...P, language: 'fr' }, ST)), true);
+
+  // The editor.
+  check('editeur historique : la case', /show_history/.test(markup(newEditor({ state_entity: 'sensor.w', appliance_type: 'washer' }))), true);
+  check('editeur historique : pas de capteur sans la case', markup(newEditor({ state_entity: 'sensor.w', appliance_type: 'washer' })).includes('data-toggle="history_entity"'), false);
+  check('editeur historique : le capteur avec la case', markup(newEditor({ state_entity: 'sensor.w', appliance_type: 'washer', show_history: true })).includes('data-toggle="history_entity"'), true);
+}
+
 report();
