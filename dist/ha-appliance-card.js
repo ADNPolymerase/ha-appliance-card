@@ -149,6 +149,9 @@ const T = {
     type_scale: "Bathroom scale", scale_weighed: "Weighed", scale_goal_reached: "Goal reached", section_weight_goal: "Weight goal", scale_goal_value: "Weight goal, without a sensor", section_fat_ratio: "Body fat (%)", section_fat_mass: "Fat mass", section_muscle_mass: "Muscle mass", section_bone_mass: "Bone mass", scale_line_goal: "Goal", scale_line_fat: "Fat", scale_line_muscle: "Muscle", scale_line_bone: "Bone", scale_to_lose: "to lose", scale_to_gain: "to gain",
     type_ups: "UPS (uninterruptible power supply)", ups_online: "On mains", ups_battery: "On battery", ups_bypass: "Bypass", ups_charging: "charging", ups_low: "Battery low", ups_replace: "Replace battery", ups_overload: "Overload", section_ups_runtime: "Runtime", section_ups_load: "Load (%)", section_ups_input_voltage: "Input voltage", ups_nominal_power: "Nominal power, for the load in watts (W)", ups_battery_low: "Battery low below (%)", ups_line_battery: "Battery", ups_line_runtime: "Runtime", ups_line_load: "Load", ups_line_input: "Input",
     door_corner: "Show it in a corner of the card", controls_always: "Always show every button", show_unavailable_controls: "Show buttons whose entity is unavailable",
+    layout_robot_stick: "Stick vacuum", stick_charged: "Charged",
+    layout_robot_floor_washer: "Floor washer", stick_away: "Off the base", stick_away_threshold: "Off the base below this power (W)",
+    fw_self_cleaning: "Self-cleaning", fw_dirty_full: "Dirty water tank full", fw_clean_empty: "Clean water tank empty",
     group_energy: "Energy", type_solar: "Solar panels", type_home_battery: "Home battery", solar_producing: "Producing", solar_low: "Low production", solar_night: "Night", section_solar_layout: "Mounting", layout_solar_ground: "On the ground", layout_solar_roof: "On a roof", section_solar_power: "Power produced", section_energy_today: "Energy produced today", solar_line_today: "Today", solar_peak_power: "Peak power of the panels (W)", section_battery_power: "Battery power (+ charging, \u2212 discharging)", power_inverted: "Positive power means discharging", section_charge_power: "Charge power", section_battery_discharge: "Discharge power", section_reserve: "Backup reserve", section_charge_limit: "Charge limit", battery_capacity: "Capacity (kWh)", layout_battery_wall: "Wall battery", layout_battery_station: "Portable power station", bat_idle: "Idle", bat_full: "Full", bat_low: "Low battery", bat_line_full_in: "Full in", bat_line_left: "Remaining", bat_line_reserve: "Reserve",
     robot_controls: "Start, pause and return buttons", robot_go_home: "Return to base", battery_corner: "Show the battery in a corner of the card", section_robot_floor: "Floor", floor_rug: "Rug", floor_tiles: "Tiles", floor_parquet: "Parquet", floor_smooth: "Smooth floor",
     layout_net_router: "Router / box", section_net_clients: "Connected clients", section_net_wan: "Internet link", section_net_wifi: "Wi-Fi", net_line_clients: "Clients", net_no_internet: "No internet",
@@ -311,6 +314,9 @@ const T = {
     type_scale: "P\u00e8se-personne", scale_weighed: "Pes\u00e9e", scale_goal_reached: "Objectif atteint", section_weight_goal: "Objectif de poids", scale_goal_value: "Objectif de poids, sans capteur", section_fat_ratio: "Taux de graisse (%)", section_fat_mass: "Masse grasse", section_muscle_mass: "Masse musculaire", section_bone_mass: "Masse osseuse", scale_line_goal: "Objectif", scale_line_fat: "Graisse", scale_line_muscle: "Muscles", scale_line_bone: "Os", scale_to_lose: "\u00e0 perdre", scale_to_gain: "\u00e0 prendre",
     type_ups: "Onduleur (UPS)", ups_online: "Sur secteur", ups_battery: "Sur batterie", ups_bypass: "Bypass", ups_charging: "en charge", ups_low: "Batterie faible", ups_replace: "Batterie \u00e0 remplacer", ups_overload: "Surcharge", section_ups_runtime: "Autonomie", section_ups_load: "Charge (%)", section_ups_input_voltage: "Tension d'entr\u00e9e", ups_nominal_power: "Puissance nominale, pour la charge en watts (W)", ups_battery_low: "Batterie faible en dessous de (%)", ups_line_battery: "Batterie", ups_line_runtime: "Autonomie", ups_line_load: "Charge", ups_line_input: "Entr\u00e9e",
     door_corner: "L'afficher dans un coin de la carte", controls_always: "Toujours afficher tous les boutons", show_unavailable_controls: "Afficher les boutons dont l'entit\u00e9 est indisponible",
+    layout_robot_stick: "Aspirateur balai", stick_charged: "Charg\u00e9",
+    layout_robot_floor_washer: "Laveur de sol", stick_away: "Hors de la base", stick_away_threshold: "Hors de la base sous cette puissance (W)",
+    fw_self_cleaning: "Autonettoyage", fw_dirty_full: "R\u00e9servoir d'eau sale plein", fw_clean_empty: "R\u00e9servoir d'eau propre vide",
     group_energy: "\u00c9nergie", type_solar: "Panneaux solaires", type_home_battery: "Batterie domestique", solar_producing: "Production", solar_low: "Production faible", solar_night: "Nuit", section_solar_layout: "Installation", layout_solar_ground: "Au sol", layout_solar_roof: "Sur un toit", section_solar_power: "Puissance produite", section_energy_today: "\u00c9nergie produite aujourd'hui", solar_line_today: "Aujourd'hui", solar_peak_power: "Puissance cr\u00eate des panneaux (W)", section_battery_power: "Puissance de la batterie (+ charge, \u2212 d\u00e9charge)", power_inverted: "Une puissance positive veut dire d\u00e9charge", section_charge_power: "Puissance de charge", section_battery_discharge: "Puissance de d\u00e9charge", section_reserve: "R\u00e9serve de secours", section_charge_limit: "Limite de charge", battery_capacity: "Capacit\u00e9 (kWh)", layout_battery_wall: "Batterie murale", layout_battery_station: "Station portable", bat_idle: "Au repos", bat_full: "Pleine", bat_low: "Batterie basse", bat_line_full_in: "Pleine dans", bat_line_left: "Restant", bat_line_reserve: "R\u00e9serve",
     robot_controls: "Boutons d\u00e9marrer, pause et retour", robot_go_home: "Retour \u00e0 la base", battery_corner: "Afficher la batterie dans un coin de la carte", section_robot_floor: "Sol", floor_rug: "Tapis", floor_tiles: "Carrelage", floor_parquet: "Parquet", floor_smooth: "Sol lisse",
     layout_net_router: "Routeur / box", section_net_clients: "Appareils connect\u00e9s", section_net_wan: "Lien internet", section_net_wifi: "Wi-Fi", net_line_clients: "Appareils", net_no_internet: "Pas d'internet",
@@ -473,6 +479,9 @@ const T = {
     type_scale: "\u041d\u0430\u043f\u043e\u043b\u044c\u043d\u044b\u0435 \u0432\u0435\u0441\u044b", scale_weighed: "\u0412\u0437\u0432\u0435\u0448\u0438\u0432\u0430\u043d\u0438\u0435", scale_goal_reached: "\u0426\u0435\u043b\u044c \u0434\u043e\u0441\u0442\u0438\u0433\u043d\u0443\u0442\u0430", section_weight_goal: "\u0426\u0435\u043b\u0435\u0432\u043e\u0439 \u0432\u0435\u0441", scale_goal_value: "\u0426\u0435\u043b\u0435\u0432\u043e\u0439 \u0432\u0435\u0441 \u0431\u0435\u0437 \u0434\u0430\u0442\u0447\u0438\u043a\u0430", section_fat_ratio: "\u041f\u0440\u043e\u0446\u0435\u043d\u0442 \u0436\u0438\u0440\u0430 (%)", section_fat_mass: "\u0416\u0438\u0440\u043e\u0432\u0430\u044f \u043c\u0430\u0441\u0441\u0430", section_muscle_mass: "\u041c\u044b\u0448\u0435\u0447\u043d\u0430\u044f \u043c\u0430\u0441\u0441\u0430", section_bone_mass: "\u041a\u043e\u0441\u0442\u043d\u0430\u044f \u043c\u0430\u0441\u0441\u0430", scale_line_goal: "\u0426\u0435\u043b\u044c", scale_line_fat: "\u0416\u0438\u0440", scale_line_muscle: "\u041c\u044b\u0448\u0446\u044b", scale_line_bone: "\u041a\u043e\u0441\u0442\u0438", scale_to_lose: "\u0441\u0431\u0440\u043e\u0441\u0438\u0442\u044c", scale_to_gain: "\u043d\u0430\u0431\u0440\u0430\u0442\u044c",
     type_ups: "\u0418\u0411\u041f (\u0438\u0441\u0442\u043e\u0447\u043d\u0438\u043a \u0431\u0435\u0441\u043f\u0435\u0440\u0435\u0431\u043e\u0439\u043d\u043e\u0433\u043e \u043f\u0438\u0442\u0430\u043d\u0438\u044f)", ups_online: "\u041e\u0442 \u0441\u0435\u0442\u0438", ups_battery: "\u041e\u0442 \u0431\u0430\u0442\u0430\u0440\u0435\u0438", ups_bypass: "\u0411\u0430\u0439\u043f\u0430\u0441", ups_charging: "\u0437\u0430\u0440\u044f\u0436\u0430\u0435\u0442\u0441\u044f", ups_low: "\u041d\u0438\u0437\u043a\u0438\u0439 \u0437\u0430\u0440\u044f\u0434 \u0431\u0430\u0442\u0430\u0440\u0435\u0438", ups_replace: "\u0417\u0430\u043c\u0435\u043d\u0438\u0442\u0435 \u0431\u0430\u0442\u0430\u0440\u0435\u044e", ups_overload: "\u041f\u0435\u0440\u0435\u0433\u0440\u0443\u0437\u043a\u0430", section_ups_runtime: "\u0412\u0440\u0435\u043c\u044f \u0440\u0430\u0431\u043e\u0442\u044b", section_ups_load: "\u041d\u0430\u0433\u0440\u0443\u0437\u043a\u0430 (%)", section_ups_input_voltage: "\u0412\u0445\u043e\u0434\u043d\u043e\u0435 \u043d\u0430\u043f\u0440\u044f\u0436\u0435\u043d\u0438\u0435", ups_nominal_power: "\u041d\u043e\u043c\u0438\u043d\u0430\u043b\u044c\u043d\u0430\u044f \u043c\u043e\u0449\u043d\u043e\u0441\u0442\u044c, \u0434\u043b\u044f \u043d\u0430\u0433\u0440\u0443\u0437\u043a\u0438 \u0432 \u0432\u0430\u0442\u0442\u0430\u0445 (\u0412\u0442)", ups_battery_low: "\u041d\u0438\u0437\u043a\u0438\u0439 \u0437\u0430\u0440\u044f\u0434 \u043d\u0438\u0436\u0435 (%)", ups_line_battery: "\u0411\u0430\u0442\u0430\u0440\u0435\u044f", ups_line_runtime: "\u0412\u0440\u0435\u043c\u044f \u0440\u0430\u0431\u043e\u0442\u044b", ups_line_load: "\u041d\u0430\u0433\u0440\u0443\u0437\u043a\u0430", ups_line_input: "\u0412\u0445\u043e\u0434",
     door_corner: "\u041f\u043e\u043a\u0430\u0437\u044b\u0432\u0430\u0442\u044c \u0432 \u0443\u0433\u043b\u0443 \u043a\u0430\u0440\u0442\u043e\u0447\u043a\u0438", controls_always: "\u0412\u0441\u0435\u0433\u0434\u0430 \u043f\u043e\u043a\u0430\u0437\u044b\u0432\u0430\u0442\u044c \u0432\u0441\u0435 \u043a\u043d\u043e\u043f\u043a\u0438", show_unavailable_controls: "\u041f\u043e\u043a\u0430\u0437\u044b\u0432\u0430\u0442\u044c \u043a\u043d\u043e\u043f\u043a\u0438 \u043d\u0435\u0434\u043e\u0441\u0442\u0443\u043f\u043d\u044b\u0445 \u0441\u0443\u0449\u043d\u043e\u0441\u0442\u0435\u0439",
+    layout_robot_stick: "\u0412\u0435\u0440\u0442\u0438\u043a\u0430\u043b\u044c\u043d\u044b\u0439 \u043f\u044b\u043b\u0435\u0441\u043e\u0441", stick_charged: "\u0417\u0430\u0440\u044f\u0436\u0435\u043d",
+    layout_robot_floor_washer: "\u041c\u043e\u044e\u0449\u0438\u0439 \u043f\u044b\u043b\u0435\u0441\u043e\u0441", stick_away: "\u041d\u0435 \u043d\u0430 \u0431\u0430\u0437\u0435", stick_away_threshold: "\u041d\u0435 \u043d\u0430 \u0431\u0430\u0437\u0435 \u043d\u0438\u0436\u0435 \u044d\u0442\u043e\u0439 \u043c\u043e\u0449\u043d\u043e\u0441\u0442\u0438 (\u0412\u0442)",
+    fw_self_cleaning: "\u0421\u0430\u043c\u043e\u043e\u0447\u0438\u0441\u0442\u043a\u0430", fw_dirty_full: "\u0411\u0430\u043a \u0433\u0440\u044f\u0437\u043d\u043e\u0439 \u0432\u043e\u0434\u044b \u043f\u043e\u043b\u043e\u043d", fw_clean_empty: "\u0411\u0430\u043a \u0447\u0438\u0441\u0442\u043e\u0439 \u0432\u043e\u0434\u044b \u043f\u0443\u0441\u0442",
     group_energy: "\u042d\u043d\u0435\u0440\u0433\u0438\u044f", type_solar: "\u0421\u043e\u043b\u043d\u0435\u0447\u043d\u044b\u0435 \u043f\u0430\u043d\u0435\u043b\u0438", type_home_battery: "\u0414\u043e\u043c\u0430\u0448\u043d\u0438\u0439 \u0430\u043a\u043a\u0443\u043c\u0443\u043b\u044f\u0442\u043e\u0440", solar_producing: "\u0412\u044b\u0440\u0430\u0431\u043e\u0442\u043a\u0430", solar_low: "\u0421\u043b\u0430\u0431\u0430\u044f \u0432\u044b\u0440\u0430\u0431\u043e\u0442\u043a\u0430", solar_night: "\u041d\u043e\u0447\u044c", section_solar_layout: "\u0423\u0441\u0442\u0430\u043d\u043e\u0432\u043a\u0430", layout_solar_ground: "\u041d\u0430 \u0437\u0435\u043c\u043b\u0435", layout_solar_roof: "\u041d\u0430 \u043a\u0440\u044b\u0448\u0435", section_solar_power: "\u0412\u044b\u0440\u0430\u0431\u0430\u0442\u044b\u0432\u0430\u0435\u043c\u0430\u044f \u043c\u043e\u0449\u043d\u043e\u0441\u0442\u044c", section_energy_today: "\u0412\u044b\u0440\u0430\u0431\u043e\u0442\u0430\u043d\u043e \u0441\u0435\u0433\u043e\u0434\u043d\u044f", solar_line_today: "\u0421\u0435\u0433\u043e\u0434\u043d\u044f", solar_peak_power: "\u041f\u0438\u043a\u043e\u0432\u0430\u044f \u043c\u043e\u0449\u043d\u043e\u0441\u0442\u044c \u043f\u0430\u043d\u0435\u043b\u0435\u0439 (\u0412\u0442)", section_battery_power: "\u041c\u043e\u0449\u043d\u043e\u0441\u0442\u044c \u0430\u043a\u043a\u0443\u043c\u0443\u043b\u044f\u0442\u043e\u0440\u0430 (+ \u0437\u0430\u0440\u044f\u0434, \u2212 \u0440\u0430\u0437\u0440\u044f\u0434)", power_inverted: "\u041f\u043e\u043b\u043e\u0436\u0438\u0442\u0435\u043b\u044c\u043d\u0430\u044f \u043c\u043e\u0449\u043d\u043e\u0441\u0442\u044c \u043e\u0437\u043d\u0430\u0447\u0430\u0435\u0442 \u0440\u0430\u0437\u0440\u044f\u0434", section_charge_power: "\u041c\u043e\u0449\u043d\u043e\u0441\u0442\u044c \u0437\u0430\u0440\u044f\u0434\u0430", section_battery_discharge: "\u041c\u043e\u0449\u043d\u043e\u0441\u0442\u044c \u0440\u0430\u0437\u0440\u044f\u0434\u0430", section_reserve: "\u0420\u0435\u0437\u0435\u0440\u0432\u043d\u044b\u0439 \u0437\u0430\u043f\u0430\u0441", section_charge_limit: "\u041f\u0440\u0435\u0434\u0435\u043b \u0437\u0430\u0440\u044f\u0434\u0430", battery_capacity: "\u0401\u043c\u043a\u043e\u0441\u0442\u044c (\u043a\u0412\u0442\u00b7\u0447)", layout_battery_wall: "\u041d\u0430\u0441\u0442\u0435\u043d\u043d\u044b\u0439 \u0430\u043a\u043a\u0443\u043c\u0443\u043b\u044f\u0442\u043e\u0440", layout_battery_station: "\u041f\u043e\u0440\u0442\u0430\u0442\u0438\u0432\u043d\u0430\u044f \u044d\u043b\u0435\u043a\u0442\u0440\u043e\u0441\u0442\u0430\u043d\u0446\u0438\u044f", bat_idle: "\u0412 \u043f\u043e\u043a\u043e\u0435", bat_full: "\u0417\u0430\u0440\u044f\u0436\u0435\u043d", bat_low: "\u041d\u0438\u0437\u043a\u0438\u0439 \u0437\u0430\u0440\u044f\u0434", bat_line_full_in: "\u041f\u043e\u043b\u043d\u044b\u0439 \u0447\u0435\u0440\u0435\u0437", bat_line_left: "\u041e\u0441\u0442\u0430\u043b\u043e\u0441\u044c", bat_line_reserve: "\u0420\u0435\u0437\u0435\u0440\u0432",
     robot_controls: "\u041a\u043d\u043e\u043f\u043a\u0438 \u0441\u0442\u0430\u0440\u0442, \u043f\u0430\u0443\u0437\u0430 \u0438 \u0432\u043e\u0437\u0432\u0440\u0430\u0442", robot_go_home: "\u0412\u0435\u0440\u043d\u0443\u0442\u044c\u0441\u044f \u043d\u0430 \u0431\u0430\u0437\u0443", battery_corner: "\u041f\u043e\u043a\u0430\u0437\u044b\u0432\u0430\u0442\u044c \u0431\u0430\u0442\u0430\u0440\u0435\u044e \u0432 \u0443\u0433\u043b\u0443 \u043a\u0430\u0440\u0442\u043e\u0447\u043a\u0438", section_robot_floor: "\u041f\u043e\u043b", floor_rug: "\u041a\u043e\u0432\u0451\u0440", floor_tiles: "\u041f\u043b\u0438\u0442\u043a\u0430", floor_parquet: "\u041f\u0430\u0440\u043a\u0435\u0442", floor_smooth: "\u0413\u043b\u0430\u0434\u043a\u0438\u0439 \u043f\u043e\u043b",
     layout_net_router: "\u0420\u043e\u0443\u0442\u0435\u0440 / \u043c\u043e\u0434\u0435\u043c", section_net_clients: "\u041f\u043e\u0434\u043a\u043b\u044e\u0447\u0451\u043d\u043d\u044b\u0435 \u043a\u043b\u0438\u0435\u043d\u0442\u044b", section_net_wan: "\u041f\u043e\u0434\u043a\u043b\u044e\u0447\u0435\u043d\u0438\u0435 \u043a \u0438\u043d\u0442\u0435\u0440\u043d\u0435\u0442\u0443", section_net_wifi: "Wi-Fi", net_line_clients: "\u041a\u043b\u0438\u0435\u043d\u0442\u044b", net_no_internet: "\u041d\u0435\u0442 \u0438\u043d\u0442\u0435\u0440\u043d\u0435\u0442\u0430",
@@ -635,6 +644,9 @@ const T = {
     type_scale: "Personenwaage", scale_weighed: "Gewogen", scale_goal_reached: "Ziel erreicht", section_weight_goal: "Zielgewicht", scale_goal_value: "Zielgewicht ohne Sensor", section_fat_ratio: "K\u00f6rperfett (%)", section_fat_mass: "Fettmasse", section_muscle_mass: "Muskelmasse", section_bone_mass: "Knochenmasse", scale_line_goal: "Ziel", scale_line_fat: "Fett", scale_line_muscle: "Muskeln", scale_line_bone: "Knochen", scale_to_lose: "abzunehmen", scale_to_gain: "zuzunehmen",
     type_ups: "USV (unterbrechungsfreie Stromversorgung)", ups_online: "Netzbetrieb", ups_battery: "Batteriebetrieb", ups_bypass: "Bypass", ups_charging: "l\u00e4dt", ups_low: "Batterie schwach", ups_replace: "Batterie ersetzen", ups_overload: "\u00dcberlast", section_ups_runtime: "Laufzeit", section_ups_load: "Last (%)", section_ups_input_voltage: "Eingangsspannung", ups_nominal_power: "Nennleistung, f\u00fcr die Last in Watt (W)", ups_battery_low: "Batterie schwach unter (%)", ups_line_battery: "Batterie", ups_line_runtime: "Laufzeit", ups_line_load: "Last", ups_line_input: "Eingang",
     door_corner: "In einer Ecke der Karte anzeigen", controls_always: "Immer alle Tasten anzeigen", show_unavailable_controls: "Tasten mit nicht verf\u00fcgbarer Entit\u00e4t anzeigen",
+    layout_robot_stick: "Akku-Stielsauger", stick_charged: "Geladen",
+    layout_robot_floor_washer: "Nass-Trocken-Sauger", stick_away: "Nicht in der Station", stick_away_threshold: "Nicht in der Station unter dieser Leistung (W)",
+    fw_self_cleaning: "Selbstreinigung", fw_dirty_full: "Schmutzwassertank voll", fw_clean_empty: "Frischwassertank leer",
     group_energy: "Energie", type_solar: "Solarmodule", type_home_battery: "Heimspeicher", solar_producing: "Erzeugung", solar_low: "Geringe Erzeugung", solar_night: "Nacht", section_solar_layout: "Montage", layout_solar_ground: "Am Boden", layout_solar_roof: "Auf dem Dach", section_solar_power: "Erzeugte Leistung", section_energy_today: "Heute erzeugte Energie", solar_line_today: "Heute", solar_peak_power: "Spitzenleistung der Module (W)", section_battery_power: "Akkuleistung (+ Laden, \u2212 Entladen)", power_inverted: "Positive Leistung bedeutet Entladen", section_charge_power: "Ladeleistung", section_battery_discharge: "Entladeleistung", section_reserve: "Notstromreserve", section_charge_limit: "Ladegrenze", battery_capacity: "Kapazit\u00e4t (kWh)", layout_battery_wall: "Wandspeicher", layout_battery_station: "Powerstation", bat_idle: "Bereit", bat_full: "Voll", bat_low: "Akku schwach", bat_line_full_in: "Voll in", bat_line_left: "Verbleibend", bat_line_reserve: "Reserve",
     robot_controls: "Tasten Start, Pause und R\u00fcckkehr", robot_go_home: "Zur Station zur\u00fcck", battery_corner: "Akku in einer Ecke der Karte anzeigen", section_robot_floor: "Boden", floor_rug: "Teppich", floor_tiles: "Fliesen", floor_parquet: "Parkett", floor_smooth: "Glatter Boden",
     layout_net_router: "Router / Box", section_net_clients: "Verbundene Ger\u00e4te", section_net_wan: "Internetverbindung", section_net_wifi: "WLAN", net_line_clients: "Ger\u00e4te", net_no_internet: "Kein Internet",
@@ -797,6 +809,9 @@ const T = {
     type_scale: "B\u00e1scula de ba\u00f1o", scale_weighed: "Pesado", scale_goal_reached: "Objetivo alcanzado", section_weight_goal: "Peso objetivo", scale_goal_value: "Peso objetivo, sin sensor", section_fat_ratio: "Grasa corporal (%)", section_fat_mass: "Masa grasa", section_muscle_mass: "Masa muscular", section_bone_mass: "Masa \u00f3sea", scale_line_goal: "Objetivo", scale_line_fat: "Grasa", scale_line_muscle: "M\u00fasculo", scale_line_bone: "Hueso", scale_to_lose: "por perder", scale_to_gain: "por ganar",
     type_ups: "SAI (sistema de alimentaci\u00f3n ininterrumpida)", ups_online: "En red", ups_battery: "En bater\u00eda", ups_bypass: "Bypass", ups_charging: "cargando", ups_low: "Bater\u00eda baja", ups_replace: "Sustituir la bater\u00eda", ups_overload: "Sobrecarga", section_ups_runtime: "Autonom\u00eda", section_ups_load: "Carga (%)", section_ups_input_voltage: "Tensi\u00f3n de entrada", ups_nominal_power: "Potencia nominal, para la carga en vatios (W)", ups_battery_low: "Bater\u00eda baja por debajo de (%)", ups_line_battery: "Bater\u00eda", ups_line_runtime: "Autonom\u00eda", ups_line_load: "Carga", ups_line_input: "Entrada",
     door_corner: "Mostrarla en una esquina de la tarjeta", controls_always: "Mostrar siempre todos los botones", show_unavailable_controls: "Mostrar los botones cuya entidad no est\u00e1 disponible",
+    layout_robot_stick: "Aspiradora escoba", stick_charged: "Cargada",
+    layout_robot_floor_washer: "Fregona el\u00e9ctrica", stick_away: "Fuera de la base", stick_away_threshold: "Fuera de la base por debajo de esta potencia (W)",
+    fw_self_cleaning: "Autolimpieza", fw_dirty_full: "Dep\u00f3sito de agua sucia lleno", fw_clean_empty: "Dep\u00f3sito de agua limpia vac\u00edo",
     group_energy: "Energ\u00eda", type_solar: "Paneles solares", type_home_battery: "Bater\u00eda dom\u00e9stica", solar_producing: "Produciendo", solar_low: "Producci\u00f3n baja", solar_night: "Noche", section_solar_layout: "Instalaci\u00f3n", layout_solar_ground: "En el suelo", layout_solar_roof: "En un tejado", section_solar_power: "Potencia producida", section_energy_today: "Energ\u00eda producida hoy", solar_line_today: "Hoy", solar_peak_power: "Potencia pico de los paneles (W)", section_battery_power: "Potencia de la bater\u00eda (+ carga, \u2212 descarga)", power_inverted: "Una potencia positiva significa descarga", section_charge_power: "Potencia de carga", section_battery_discharge: "Potencia de descarga", section_reserve: "Reserva de respaldo", section_charge_limit: "L\u00edmite de carga", battery_capacity: "Capacidad (kWh)", layout_battery_wall: "Bater\u00eda de pared", layout_battery_station: "Estaci\u00f3n port\u00e1til", bat_idle: "En reposo", bat_full: "Llena", bat_low: "Bater\u00eda baja", bat_line_full_in: "Llena en", bat_line_left: "Restante", bat_line_reserve: "Reserva",
     robot_controls: "Botones iniciar, pausa y volver", robot_go_home: "Volver a la base", battery_corner: "Mostrar la bater\u00eda en una esquina de la tarjeta", section_robot_floor: "Suelo", floor_rug: "Alfombra", floor_tiles: "Baldosas", floor_parquet: "Parqu\u00e9", floor_smooth: "Suelo liso",
     layout_net_router: "Router / box", section_net_clients: "Clientes conectados", section_net_wan: "Conexi\u00f3n a internet", section_net_wifi: "Wi-Fi", net_line_clients: "Clientes", net_no_internet: "Sin internet",
@@ -959,6 +974,9 @@ const T = {
     type_scale: "Bilancia pesapersone", scale_weighed: "Pesata", scale_goal_reached: "Obiettivo raggiunto", section_weight_goal: "Peso obiettivo", scale_goal_value: "Peso obiettivo, senza sensore", section_fat_ratio: "Grasso corporeo (%)", section_fat_mass: "Massa grassa", section_muscle_mass: "Massa muscolare", section_bone_mass: "Massa ossea", scale_line_goal: "Obiettivo", scale_line_fat: "Grasso", scale_line_muscle: "Muscoli", scale_line_bone: "Ossa", scale_to_lose: "da perdere", scale_to_gain: "da prendere",
     type_ups: "UPS (gruppo di continuit\u00e0)", ups_online: "Da rete", ups_battery: "A batteria", ups_bypass: "Bypass", ups_charging: "in carica", ups_low: "Batteria scarica", ups_replace: "Sostituire la batteria", ups_overload: "Sovraccarico", section_ups_runtime: "Autonomia", section_ups_load: "Carico (%)", section_ups_input_voltage: "Tensione di ingresso", ups_nominal_power: "Potenza nominale, per il carico in watt (W)", ups_battery_low: "Batteria scarica sotto (%)", ups_line_battery: "Batteria", ups_line_runtime: "Autonomia", ups_line_load: "Carico", ups_line_input: "Ingresso",
     door_corner: "Mostrarla in un angolo della scheda", controls_always: "Mostra sempre tutti i pulsanti", show_unavailable_controls: "Mostra i pulsanti con entit\u00e0 non disponibile",
+    layout_robot_stick: "Scopa elettrica", stick_charged: "Carica",
+    layout_robot_floor_washer: "Lavapavimenti", stick_away: "Fuori dalla base", stick_away_threshold: "Fuori dalla base sotto questa potenza (W)",
+    fw_self_cleaning: "Autopulizia", fw_dirty_full: "Serbatoio acqua sporca pieno", fw_clean_empty: "Serbatoio acqua pulita vuoto",
     group_energy: "Energia", type_solar: "Pannelli solari", type_home_battery: "Batteria domestica", solar_producing: "In produzione", solar_low: "Produzione bassa", solar_night: "Notte", section_solar_layout: "Installazione", layout_solar_ground: "A terra", layout_solar_roof: "Su un tetto", section_solar_power: "Potenza prodotta", section_energy_today: "Energia prodotta oggi", solar_line_today: "Oggi", solar_peak_power: "Potenza di picco dei pannelli (W)", section_battery_power: "Potenza della batteria (+ carica, \u2212 scarica)", power_inverted: "Una potenza positiva indica la scarica", section_charge_power: "Potenza di carica", section_battery_discharge: "Potenza di scarica", section_reserve: "Riserva di emergenza", section_charge_limit: "Limite di carica", battery_capacity: "Capacit\u00e0 (kWh)", layout_battery_wall: "Batteria a parete", layout_battery_station: "Power station portatile", bat_idle: "A riposo", bat_full: "Piena", bat_low: "Batteria bassa", bat_line_full_in: "Piena tra", bat_line_left: "Rimanente", bat_line_reserve: "Riserva",
     robot_controls: "Pulsanti avvia, pausa e ritorno", robot_go_home: "Torna alla base", battery_corner: "Mostra la batteria in un angolo della scheda", section_robot_floor: "Pavimento", floor_rug: "Tappeto", floor_tiles: "Piastrelle", floor_parquet: "Parquet", floor_smooth: "Pavimento liscio",
     layout_net_router: "Router / modem", section_net_clients: "Client connessi", section_net_wan: "Connessione internet", section_net_wifi: "Wi-Fi", net_line_clients: "Client", net_no_internet: "Nessuna connessione",
@@ -1121,6 +1139,9 @@ const T = {
     type_scale: "Personenweegschaal", scale_weighed: "Gewogen", scale_goal_reached: "Doel bereikt", section_weight_goal: "Streefgewicht", scale_goal_value: "Streefgewicht, zonder sensor", section_fat_ratio: "Vetpercentage (%)", section_fat_mass: "Vetmassa", section_muscle_mass: "Spiermassa", section_bone_mass: "Botmassa", scale_line_goal: "Doel", scale_line_fat: "Vet", scale_line_muscle: "Spieren", scale_line_bone: "Botten", scale_to_lose: "af te vallen", scale_to_gain: "aan te komen",
     type_ups: "UPS (noodstroomvoeding)", ups_online: "Op het net", ups_battery: "Op batterij", ups_bypass: "Bypass", ups_charging: "laadt", ups_low: "Batterij bijna leeg", ups_replace: "Batterij vervangen", ups_overload: "Overbelasting", section_ups_runtime: "Looptijd", section_ups_load: "Belasting (%)", section_ups_input_voltage: "Ingangsspanning", ups_nominal_power: "Nominaal vermogen, voor de belasting in watt (W)", ups_battery_low: "Batterij bijna leeg onder (%)", ups_line_battery: "Batterij", ups_line_runtime: "Looptijd", ups_line_load: "Belasting", ups_line_input: "Ingang",
     door_corner: "In een hoek van de kaart tonen", controls_always: "Altijd alle knoppen tonen", show_unavailable_controls: "Knoppen tonen waarvan de entiteit niet beschikbaar is",
+    layout_robot_stick: "Steelstofzuiger", stick_charged: "Opgeladen",
+    layout_robot_floor_washer: "Vloerwasser", stick_away: "Niet op de basis", stick_away_threshold: "Niet op de basis onder dit vermogen (W)",
+    fw_self_cleaning: "Zelfreiniging", fw_dirty_full: "Vuilwatertank vol", fw_clean_empty: "Schoonwatertank leeg",
     group_energy: "Energie", type_solar: "Zonnepanelen", type_home_battery: "Thuisbatterij", solar_producing: "Productie", solar_low: "Lage productie", solar_night: "Nacht", section_solar_layout: "Montage", layout_solar_ground: "Op de grond", layout_solar_roof: "Op een dak", section_solar_power: "Opgewekt vermogen", section_energy_today: "Vandaag opgewekte energie", solar_line_today: "Vandaag", solar_peak_power: "Piekvermogen van de panelen (W)", section_battery_power: "Batterijvermogen (+ laden, \u2212 ontladen)", power_inverted: "Positief vermogen betekent ontladen", section_charge_power: "Laadvermogen", section_battery_discharge: "Ontlaadvermogen", section_reserve: "Noodreserve", section_charge_limit: "Laadlimiet", battery_capacity: "Capaciteit (kWh)", layout_battery_wall: "Wandbatterij", layout_battery_station: "Draagbaar powerstation", bat_idle: "In rust", bat_full: "Vol", bat_low: "Batterij bijna leeg", bat_line_full_in: "Vol over", bat_line_left: "Resterend", bat_line_reserve: "Reserve",
     robot_controls: "Knoppen start, pauze en terug", robot_go_home: "Terug naar de basis", battery_corner: "Batterij in een hoek van de kaart tonen", section_robot_floor: "Vloer", floor_rug: "Tapijt", floor_tiles: "Tegels", floor_parquet: "Parket", floor_smooth: "Gladde vloer",
     layout_net_router: "Router / modem", section_net_clients: "Verbonden apparaten", section_net_wan: "Internetverbinding", section_net_wifi: "Wifi", net_line_clients: "Apparaten", net_no_internet: "Geen internet",
@@ -1283,6 +1304,9 @@ const T = {
     type_scale: "Balan\u00e7a de casa de banho", scale_weighed: "Pesado", scale_goal_reached: "Objetivo atingido", section_weight_goal: "Peso objetivo", scale_goal_value: "Peso objetivo, sem sensor", section_fat_ratio: "Gordura corporal (%)", section_fat_mass: "Massa gorda", section_muscle_mass: "Massa muscular", section_bone_mass: "Massa \u00f3ssea", scale_line_goal: "Objetivo", scale_line_fat: "Gordura", scale_line_muscle: "M\u00fasculo", scale_line_bone: "Osso", scale_to_lose: "a perder", scale_to_gain: "a ganhar",
     type_ups: "UPS (alimenta\u00e7\u00e3o ininterrupta)", ups_online: "Na rede", ups_battery: "Na bateria", ups_bypass: "Bypass", ups_charging: "a carregar", ups_low: "Bateria fraca", ups_replace: "Substituir a bateria", ups_overload: "Sobrecarga", section_ups_runtime: "Autonomia", section_ups_load: "Carga (%)", section_ups_input_voltage: "Tens\u00e3o de entrada", ups_nominal_power: "Pot\u00eancia nominal, para a carga em watts (W)", ups_battery_low: "Bateria fraca abaixo de (%)", ups_line_battery: "Bateria", ups_line_runtime: "Autonomia", ups_line_load: "Carga", ups_line_input: "Entrada",
     door_corner: "Mostr\u00e1-la num canto do cart\u00e3o", controls_always: "Mostrar sempre todos os bot\u00f5es", show_unavailable_controls: "Mostrar bot\u00f5es cuja entidade est\u00e1 indispon\u00edvel",
+    layout_robot_stick: "Aspirador vertical", stick_charged: "Carregado",
+    layout_robot_floor_washer: "Lavadora de pavimentos", stick_away: "Fora da base", stick_away_threshold: "Fora da base abaixo desta pot\u00eancia (W)",
+    fw_self_cleaning: "Autolimpeza", fw_dirty_full: "Dep\u00f3sito de \u00e1gua suja cheio", fw_clean_empty: "Dep\u00f3sito de \u00e1gua limpa vazio",
     group_energy: "Energia", type_solar: "Pain\u00e9is solares", type_home_battery: "Bateria dom\u00e9stica", solar_producing: "A produzir", solar_low: "Produ\u00e7\u00e3o baixa", solar_night: "Noite", section_solar_layout: "Instala\u00e7\u00e3o", layout_solar_ground: "No ch\u00e3o", layout_solar_roof: "Num telhado", section_solar_power: "Pot\u00eancia produzida", section_energy_today: "Energia produzida hoje", solar_line_today: "Hoje", solar_peak_power: "Pot\u00eancia de pico dos pain\u00e9is (W)", section_battery_power: "Pot\u00eancia da bateria (+ carga, \u2212 descarga)", power_inverted: "Uma pot\u00eancia positiva significa descarga", section_charge_power: "Pot\u00eancia de carga", section_battery_discharge: "Pot\u00eancia de descarga", section_reserve: "Reserva de emerg\u00eancia", section_charge_limit: "Limite de carga", battery_capacity: "Capacidade (kWh)", layout_battery_wall: "Bateria de parede", layout_battery_station: "Esta\u00e7\u00e3o port\u00e1til", bat_idle: "Em repouso", bat_full: "Cheia", bat_low: "Bateria fraca", bat_line_full_in: "Cheia em", bat_line_left: "Restante", bat_line_reserve: "Reserva",
     robot_controls: "Bot\u00f5es iniciar, pausa e voltar", robot_go_home: "Voltar \u00e0 base", battery_corner: "Mostrar a bateria num canto do cart\u00e3o", section_robot_floor: "Ch\u00e3o", floor_rug: "Tapete", floor_tiles: "Azulejo", floor_parquet: "Parquet", floor_smooth: "Ch\u00e3o liso",
     layout_net_router: "Router / box", section_net_clients: "Clientes ligados", section_net_wan: "Liga\u00e7\u00e3o \u00e0 internet", section_net_wifi: "Wi-Fi", net_line_clients: "Clientes", net_no_internet: "Sem internet",
@@ -1445,6 +1469,9 @@ const T = {
     type_scale: "Personv\u00e5g", scale_weighed: "V\u00e4gd", scale_goal_reached: "M\u00e5l uppn\u00e5tt", section_weight_goal: "M\u00e5lvikt", scale_goal_value: "M\u00e5lvikt utan sensor", section_fat_ratio: "Kroppsfett (%)", section_fat_mass: "Fettmassa", section_muscle_mass: "Muskelmassa", section_bone_mass: "Benmassa", scale_line_goal: "M\u00e5l", scale_line_fat: "Fett", scale_line_muscle: "Muskler", scale_line_bone: "Ben", scale_to_lose: "att g\u00e5 ner", scale_to_gain: "att g\u00e5 upp",
     type_ups: "UPS (avbrottsfri kraft)", ups_online: "P\u00e5 eln\u00e4tet", ups_battery: "P\u00e5 batteri", ups_bypass: "Bypass", ups_charging: "laddar", ups_low: "L\u00e5g batteriniv\u00e5", ups_replace: "Byt batteri", ups_overload: "\u00d6verbelastning", section_ups_runtime: "Drifttid", section_ups_load: "Belastning (%)", section_ups_input_voltage: "Insp\u00e4nning", ups_nominal_power: "M\u00e4rkeffekt, f\u00f6r belastningen i watt (W)", ups_battery_low: "L\u00e5g batteriniv\u00e5 under (%)", ups_line_battery: "Batteri", ups_line_runtime: "Drifttid", ups_line_load: "Belastning", ups_line_input: "Ing\u00e5ng",
     door_corner: "Visa i ett h\u00f6rn av kortet", controls_always: "Visa alltid alla knappar", show_unavailable_controls: "Visa knappar vars entitet inte \u00e4r tillg\u00e4nglig",
+    layout_robot_stick: "Skaftdammsugare", stick_charged: "Laddad",
+    layout_robot_floor_washer: "Golvtv\u00e4ttare", stick_away: "Inte i basen", stick_away_threshold: "Inte i basen under denna effekt (W)",
+    fw_self_cleaning: "Sj\u00e4lvreng\u00f6ring", fw_dirty_full: "Smutsvattentanken full", fw_clean_empty: "Rentvattentanken tom",
     group_energy: "Energi", type_solar: "Solpaneler", type_home_battery: "Hembatteri", solar_producing: "Producerar", solar_low: "L\u00e5g produktion", solar_night: "Natt", section_solar_layout: "Montering", layout_solar_ground: "P\u00e5 marken", layout_solar_roof: "P\u00e5 ett tak", section_solar_power: "Producerad effekt", section_energy_today: "Producerad energi i dag", solar_line_today: "I dag", solar_peak_power: "Panelernas toppeffekt (W)", section_battery_power: "Batterieffekt (+ laddning, \u2212 urladdning)", power_inverted: "Positiv effekt betyder urladdning", section_charge_power: "Laddeffekt", section_battery_discharge: "Urladdningseffekt", section_reserve: "Reservkapacitet", section_charge_limit: "Laddgr\u00e4ns", battery_capacity: "Kapacitet (kWh)", layout_battery_wall: "V\u00e4ggbatteri", layout_battery_station: "B\u00e4rbar kraftstation", bat_idle: "Vilar", bat_full: "Fullt", bat_low: "L\u00e5gt batteri", bat_line_full_in: "Fullt om", bat_line_left: "\u00c5terst\u00e5r", bat_line_reserve: "Reserv",
     robot_controls: "Knappar start, paus och \u00e5terg\u00e5", robot_go_home: "\u00c5ter till basen", battery_corner: "Visa batteriet i ett h\u00f6rn av kortet", section_robot_floor: "Golv", floor_rug: "Matta", floor_tiles: "Kakel", floor_parquet: "Parkett", floor_smooth: "Sl\u00e4tt golv",
     layout_net_router: "Router / box", section_net_clients: "Anslutna enheter", section_net_wan: "Internetanslutning", section_net_wifi: "Wi-Fi", net_line_clients: "Enheter", net_no_internet: "Inget internet",
@@ -1607,6 +1634,9 @@ const T = {
     type_scale: "Personvekt", scale_weighed: "Veid", scale_goal_reached: "M\u00e5l n\u00e5dd", section_weight_goal: "M\u00e5lvekt", scale_goal_value: "M\u00e5lvekt uten sensor", section_fat_ratio: "Kroppsfett (%)", section_fat_mass: "Fettmasse", section_muscle_mass: "Muskelmasse", section_bone_mass: "Benmasse", scale_line_goal: "M\u00e5l", scale_line_fat: "Fett", scale_line_muscle: "Muskler", scale_line_bone: "Bein", scale_to_lose: "\u00e5 g\u00e5 ned", scale_to_gain: "\u00e5 g\u00e5 opp",
     type_ups: "UPS (avbruddsfri str\u00f8mforsyning)", ups_online: "P\u00e5 str\u00f8mnettet", ups_battery: "P\u00e5 batteri", ups_bypass: "Bypass", ups_charging: "lader", ups_low: "Lavt batteri", ups_replace: "Bytt batteri", ups_overload: "Overbelastning", section_ups_runtime: "Driftstid", section_ups_load: "Belastning (%)", section_ups_input_voltage: "Inngangsspenning", ups_nominal_power: "Merkeeffekt, for belastningen i watt (W)", ups_battery_low: "Lavt batteri under (%)", ups_line_battery: "Batteri", ups_line_runtime: "Driftstid", ups_line_load: "Belastning", ups_line_input: "Inngang",
     door_corner: "Vis i et hj\u00f8rne av kortet", controls_always: "Vis alltid alle knapper", show_unavailable_controls: "Vis knapper der entiteten ikke er tilgjengelig",
+    layout_robot_stick: "Stavst\u00f8vsuger", stick_charged: "Ladet",
+    layout_robot_floor_washer: "Gulvvasker", stick_away: "Ikke i basen", stick_away_threshold: "Ikke i basen under denne effekten (W)",
+    fw_self_cleaning: "Selvrengj\u00f8ring", fw_dirty_full: "Skittentvannstanken full", fw_clean_empty: "Rentvannstanken tom",
     group_energy: "Energi", type_solar: "Solcellepaneler", type_home_battery: "Hjemmebatteri", solar_producing: "Produserer", solar_low: "Lav produksjon", solar_night: "Natt", section_solar_layout: "Montering", layout_solar_ground: "P\u00e5 bakken", layout_solar_roof: "P\u00e5 et tak", section_solar_power: "Produsert effekt", section_energy_today: "Produsert energi i dag", solar_line_today: "I dag", solar_peak_power: "Panelenes toppeffekt (W)", section_battery_power: "Batterieffekt (+ lading, \u2212 utlading)", power_inverted: "Positiv effekt betyr utlading", section_charge_power: "Ladeeffekt", section_battery_discharge: "Utladingseffekt", section_reserve: "Reservekapasitet", section_charge_limit: "Ladegrense", battery_capacity: "Kapasitet (kWh)", layout_battery_wall: "Veggbatteri", layout_battery_station: "B\u00e6rbar kraftstasjon", bat_idle: "Hviler", bat_full: "Fullt", bat_low: "Lavt batteri", bat_line_full_in: "Fullt om", bat_line_left: "Gjenst\u00e5r", bat_line_reserve: "Reserve",
     robot_controls: "Knapper start, pause og retur", robot_go_home: "Tilbake til basen", battery_corner: "Vis batteriet i et hj\u00f8rne av kortet", section_robot_floor: "Gulv", floor_rug: "Teppe", floor_tiles: "Fliser", floor_parquet: "Parkett", floor_smooth: "Glatt gulv",
     layout_net_router: "Ruter / boks", section_net_clients: "Tilkoblede enheter", section_net_wan: "Internettforbindelse", section_net_wifi: "Wi-Fi", net_line_clients: "Enheter", net_no_internet: "Ingen internett",
@@ -1769,6 +1799,9 @@ const T = {
     type_scale: "Personv\u00e6gt", scale_weighed: "Vejet", scale_goal_reached: "M\u00e5l n\u00e5et", section_weight_goal: "M\u00e5lv\u00e6gt", scale_goal_value: "M\u00e5lv\u00e6gt uden sensor", section_fat_ratio: "Kropsfedt (%)", section_fat_mass: "Fedtmasse", section_muscle_mass: "Muskelmasse", section_bone_mass: "Knoglemasse", scale_line_goal: "M\u00e5l", scale_line_fat: "Fedt", scale_line_muscle: "Muskler", scale_line_bone: "Knogler", scale_to_lose: "at tabe", scale_to_gain: "at tage p\u00e5",
     type_ups: "UPS (n\u00f8dstr\u00f8msforsyning)", ups_online: "P\u00e5 elnettet", ups_battery: "P\u00e5 batteri", ups_bypass: "Bypass", ups_charging: "lader", ups_low: "Lavt batteri", ups_replace: "Udskift batteriet", ups_overload: "Overbelastning", section_ups_runtime: "Driftstid", section_ups_load: "Belastning (%)", section_ups_input_voltage: "Indgangssp\u00e6nding", ups_nominal_power: "Nominel effekt, for belastningen i watt (W)", ups_battery_low: "Lavt batteri under (%)", ups_line_battery: "Batteri", ups_line_runtime: "Driftstid", ups_line_load: "Belastning", ups_line_input: "Indgang",
     door_corner: "Vis i et hj\u00f8rne af kortet", controls_always: "Vis altid alle knapper", show_unavailable_controls: "Vis knapper, hvis entitet ikke er tilg\u00e6ngelig",
+    layout_robot_stick: "St\u00f8vsuger p\u00e5 skaft", stick_charged: "Opladet",
+    layout_robot_floor_washer: "Gulvvasker", stick_away: "Ikke i basen", stick_away_threshold: "Ikke i basen under denne effekt (W)",
+    fw_self_cleaning: "Selvrensning", fw_dirty_full: "Snavsevandstank fuld", fw_clean_empty: "Rentvandstank tom",
     group_energy: "Energi", type_solar: "Solpaneler", type_home_battery: "Hjemmebatteri", solar_producing: "Producerer", solar_low: "Lav produktion", solar_night: "Nat", section_solar_layout: "Montering", layout_solar_ground: "P\u00e5 jorden", layout_solar_roof: "P\u00e5 et tag", section_solar_power: "Produceret effekt", section_energy_today: "Produceret energi i dag", solar_line_today: "I dag", solar_peak_power: "Panelernes spidseffekt (W)", section_battery_power: "Batterieffekt (+ opladning, \u2212 afladning)", power_inverted: "Positiv effekt betyder afladning", section_charge_power: "Ladeeffekt", section_battery_discharge: "Afladningseffekt", section_reserve: "N\u00f8dreserve", section_charge_limit: "Opladningsgr\u00e6nse", battery_capacity: "Kapacitet (kWh)", layout_battery_wall: "V\u00e6gbatteri", layout_battery_station: "B\u00e6rbar powerstation", bat_idle: "I hvile", bat_full: "Fuldt", bat_low: "Lavt batteri", bat_line_full_in: "Fuldt om", bat_line_left: "Tilbage", bat_line_reserve: "Reserve",
     robot_controls: "Knapper start, pause og retur", robot_go_home: "Tilbage til basen", battery_corner: "Vis batteriet i et hj\u00f8rne af kortet", section_robot_floor: "Gulv", floor_rug: "T\u00e6ppe", floor_tiles: "Fliser", floor_parquet: "Parket", floor_smooth: "Glat gulv",
     layout_net_router: "Router / boks", section_net_clients: "Tilsluttede enheder", section_net_wan: "Internetforbindelse", section_net_wifi: "Wi-Fi", net_line_clients: "Enheder", net_no_internet: "Intet internet",
@@ -1931,6 +1964,9 @@ const T = {
     type_scale: "Waga \u0142azienkowa", scale_weighed: "Zwa\u017cono", scale_goal_reached: "Cel osi\u0105gni\u0119ty", section_weight_goal: "Docelowa waga", scale_goal_value: "Docelowa waga bez czujnika", section_fat_ratio: "Tkanka t\u0142uszczowa (%)", section_fat_mass: "Masa t\u0142uszczowa", section_muscle_mass: "Masa mi\u0119\u015bniowa", section_bone_mass: "Masa kostna", scale_line_goal: "Cel", scale_line_fat: "T\u0142uszcz", scale_line_muscle: "Mi\u0119\u015bnie", scale_line_bone: "Ko\u015bci", scale_to_lose: "do zrzucenia", scale_to_gain: "do przybrania",
     type_ups: "UPS (zasilacz awaryjny)", ups_online: "Z sieci", ups_battery: "Na baterii", ups_bypass: "Bypass", ups_charging: "\u0142adowanie", ups_low: "Niski poziom baterii", ups_replace: "Wymie\u0144 bateri\u0119", ups_overload: "Przeci\u0105\u017cenie", section_ups_runtime: "Czas pracy", section_ups_load: "Obci\u0105\u017cenie (%)", section_ups_input_voltage: "Napi\u0119cie wej\u015bciowe", ups_nominal_power: "Moc znamionowa, dla obci\u0105\u017cenia w watach (W)", ups_battery_low: "Niski poziom baterii poni\u017cej (%)", ups_line_battery: "Bateria", ups_line_runtime: "Czas pracy", ups_line_load: "Obci\u0105\u017cenie", ups_line_input: "Wej\u015bcie",
     door_corner: "Poka\u017c w rogu karty", controls_always: "Zawsze pokazuj wszystkie przyciski", show_unavailable_controls: "Poka\u017c przyciski niedost\u0119pnych encji",
+    layout_robot_stick: "Odkurzacz pionowy", stick_charged: "Na\u0142adowany",
+    layout_robot_floor_washer: "Mop elektryczny", stick_away: "Poza baz\u0105", stick_away_threshold: "Poza baz\u0105 poni\u017cej tej mocy (W)",
+    fw_self_cleaning: "Samooczyszczanie", fw_dirty_full: "Zbiornik na brudn\u0105 wod\u0119 pe\u0142ny", fw_clean_empty: "Zbiornik na czyst\u0105 wod\u0119 pusty",
     group_energy: "Energia", type_solar: "Panele s\u0142oneczne", type_home_battery: "Magazyn energii", solar_producing: "Produkcja", solar_low: "Niska produkcja", solar_night: "Noc", section_solar_layout: "Monta\u017c", layout_solar_ground: "Na ziemi", layout_solar_roof: "Na dachu", section_solar_power: "Moc produkowana", section_energy_today: "Energia wyprodukowana dzi\u015b", solar_line_today: "Dzi\u015b", solar_peak_power: "Moc szczytowa paneli (W)", section_battery_power: "Moc akumulatora (+ \u0142adowanie, \u2212 roz\u0142adowanie)", power_inverted: "Dodatnia moc oznacza roz\u0142adowanie", section_charge_power: "Moc \u0142adowania", section_battery_discharge: "Moc roz\u0142adowania", section_reserve: "Rezerwa awaryjna", section_charge_limit: "Limit \u0142adowania", battery_capacity: "Pojemno\u015b\u0107 (kWh)", layout_battery_wall: "Akumulator \u015bcienny", layout_battery_station: "Przeno\u015bna stacja zasilania", bat_idle: "Spoczynek", bat_full: "Pe\u0142ny", bat_low: "Niski poziom baterii", bat_line_full_in: "Pe\u0142ny za", bat_line_left: "Pozosta\u0142o", bat_line_reserve: "Rezerwa",
     robot_controls: "Przyciski start, pauza i powr\u00f3t", robot_go_home: "Powr\u00f3t do bazy", battery_corner: "Poka\u017c bateri\u0119 w rogu karty", section_robot_floor: "Pod\u0142oga", floor_rug: "Dywan", floor_tiles: "P\u0142ytki", floor_parquet: "Parkiet", floor_smooth: "G\u0142adka pod\u0142oga",
     layout_net_router: "Router / modem", section_net_clients: "Pod\u0142\u0105czone urz\u0105dzenia", section_net_wan: "Po\u0142\u0105czenie z internetem", section_net_wifi: "Wi-Fi", net_line_clients: "Urz\u0105dzenia", net_no_internet: "Brak internetu",
@@ -2093,6 +2129,9 @@ const T = {
     type_scale: "\u4f53\u91cd\u79e4", scale_weighed: "\u79f0\u91cd", scale_goal_reached: "\u5df2\u8fbe\u6210\u76ee\u6807", section_weight_goal: "\u76ee\u6807\u4f53\u91cd", scale_goal_value: "\u76ee\u6807\u4f53\u91cd\uff08\u65e0\u4f20\u611f\u5668\uff09", section_fat_ratio: "\u4f53\u8102\u7387 (%)", section_fat_mass: "\u8102\u80aa\u91cf", section_muscle_mass: "\u808c\u8089\u91cf", section_bone_mass: "\u9aa8\u91cf", scale_line_goal: "\u76ee\u6807", scale_line_fat: "\u8102\u80aa", scale_line_muscle: "\u808c\u8089", scale_line_bone: "\u9aa8\u9abc", scale_to_lose: "\u5f85\u51cf", scale_to_gain: "\u5f85\u589e",
     type_ups: "UPS\uff08\u4e0d\u95f4\u65ad\u7535\u6e90\uff09", ups_online: "\u5e02\u7535\u4f9b\u7535", ups_battery: "\u7535\u6c60\u4f9b\u7535", ups_bypass: "\u65c1\u8def", ups_charging: "\u5145\u7535\u4e2d", ups_low: "\u7535\u6c60\u7535\u91cf\u4f4e", ups_replace: "\u9700\u66f4\u6362\u7535\u6c60", ups_overload: "\u8fc7\u8f7d", section_ups_runtime: "\u7eed\u822a\u65f6\u95f4", section_ups_load: "\u8d1f\u8f7d (%)", section_ups_input_voltage: "\u8f93\u5165\u7535\u538b", ups_nominal_power: "\u989d\u5b9a\u529f\u7387\uff0c\u7528\u4e8e\u5c06\u8d1f\u8f7d\u6362\u7b97\u4e3a\u74e6 (W)", ups_battery_low: "\u7535\u6c60\u7535\u91cf\u4f4e\u4e8e (%)", ups_line_battery: "\u7535\u6c60", ups_line_runtime: "\u7eed\u822a", ups_line_load: "\u8d1f\u8f7d", ups_line_input: "\u8f93\u5165",
     door_corner: "\u663e\u793a\u5728\u5361\u7247\u89d2\u843d", controls_always: "\u59cb\u7ec8\u663e\u793a\u6240\u6709\u6309\u94ae", show_unavailable_controls: "\u663e\u793a\u5b9e\u4f53\u4e0d\u53ef\u7528\u7684\u6309\u94ae",
+    layout_robot_stick: "\u65e0\u7ebf\u5438\u5c18\u5668", stick_charged: "\u5df2\u5145\u6ee1",
+    layout_robot_floor_washer: "\u6d17\u5730\u673a", stick_away: "\u4e0d\u5728\u5e95\u5ea7\u4e0a", stick_away_threshold: "\u4f4e\u4e8e\u6b64\u529f\u7387\u5373\u4e0d\u5728\u5e95\u5ea7\u4e0a (W)",
+    fw_self_cleaning: "\u81ea\u6e05\u6d01\u4e2d", fw_dirty_full: "\u6c61\u6c34\u7bb1\u5df2\u6ee1", fw_clean_empty: "\u6e05\u6c34\u7bb1\u5df2\u7a7a",
     group_energy: "\u80fd\u6e90", type_solar: "\u592a\u9633\u80fd\u677f", type_home_battery: "\u5bb6\u7528\u7535\u6c60", solar_producing: "\u53d1\u7535\u4e2d", solar_low: "\u53d1\u7535\u8f83\u5f31", solar_night: "\u591c\u95f4", section_solar_layout: "\u5b89\u88c5\u65b9\u5f0f", layout_solar_ground: "\u5730\u9762", layout_solar_roof: "\u5c4b\u9876", section_solar_power: "\u53d1\u7535\u529f\u7387", section_energy_today: "\u4eca\u65e5\u53d1\u7535\u91cf", solar_line_today: "\u4eca\u65e5", solar_peak_power: "\u9762\u677f\u5cf0\u503c\u529f\u7387 (W)", section_battery_power: "\u7535\u6c60\u529f\u7387\uff08+ \u5145\u7535\uff0c\u2212 \u653e\u7535\uff09", power_inverted: "\u6b63\u529f\u7387\u8868\u793a\u653e\u7535", section_charge_power: "\u5145\u7535\u529f\u7387", section_battery_discharge: "\u653e\u7535\u529f\u7387", section_reserve: "\u5907\u7528\u7535\u91cf", section_charge_limit: "\u5145\u7535\u4e0a\u9650", battery_capacity: "\u5bb9\u91cf (kWh)", layout_battery_wall: "\u58c1\u6302\u7535\u6c60", layout_battery_station: "\u4fbf\u643a\u7535\u6e90\u7ad9", bat_idle: "\u5f85\u673a", bat_full: "\u5df2\u5145\u6ee1", bat_low: "\u7535\u91cf\u4f4e", bat_line_full_in: "\u5145\u6ee1\u8fd8\u9700", bat_line_left: "\u5269\u4f59", bat_line_reserve: "\u5907\u7528",
     robot_controls: "\u5f00\u59cb\u3001\u6682\u505c\u548c\u56de\u5145\u6309\u94ae", robot_go_home: "\u56de\u5145", battery_corner: "\u5728\u5361\u7247\u89d2\u843d\u663e\u793a\u7535\u91cf", section_robot_floor: "\u5730\u9762", floor_rug: "\u5730\u6bef", floor_tiles: "\u74f7\u7816", floor_parquet: "\u6728\u5730\u677f", floor_smooth: "\u5149\u6ed1\u5730\u9762",
     layout_net_router: "\u8def\u7531\u5668 / \u5149\u732b", section_net_clients: "\u5df2\u8fde\u63a5\u8bbe\u5907", section_net_wan: "\u4e92\u8054\u7f51\u8fde\u63a5", section_net_wifi: "Wi-Fi", net_line_clients: "\u8bbe\u5907", net_no_internet: "\u65e0\u7f51\u7edc",
@@ -2255,6 +2294,9 @@ const T = {
     type_scale: "Osobn\u00ed v\u00e1ha", scale_weighed: "Zv\u00e1\u017eeno", scale_goal_reached: "C\u00edl spln\u011bn", section_weight_goal: "C\u00edlov\u00e1 hmotnost", scale_goal_value: "C\u00edlov\u00e1 hmotnost bez senzoru", section_fat_ratio: "T\u011blesn\u00fd tuk (%)", section_fat_mass: "Tukov\u00e1 hmota", section_muscle_mass: "Svalov\u00e1 hmota", section_bone_mass: "Kostn\u00ed hmota", scale_line_goal: "C\u00edl", scale_line_fat: "Tuk", scale_line_muscle: "Svaly", scale_line_bone: "Kosti", scale_to_lose: "zhubnout", scale_to_gain: "nabrat",
     type_ups: "UPS (z\u00e1lo\u017en\u00ed zdroj)", ups_online: "Ze s\u00edt\u011b", ups_battery: "Na baterii", ups_bypass: "Bypass", ups_charging: "nab\u00edj\u00ed se", ups_low: "Slab\u00e1 baterie", ups_replace: "Vym\u011b\u0148te baterii", ups_overload: "P\u0159et\u00ed\u017een\u00ed", section_ups_runtime: "Doba provozu", section_ups_load: "Zat\u00ed\u017een\u00ed (%)", section_ups_input_voltage: "Vstupn\u00ed nap\u011bt\u00ed", ups_nominal_power: "Jmenovit\u00fd v\u00fdkon, pro zat\u00ed\u017een\u00ed ve wattech (W)", ups_battery_low: "Slab\u00e1 baterie pod (%)", ups_line_battery: "Baterie", ups_line_runtime: "Doba provozu", ups_line_load: "Zat\u00ed\u017een\u00ed", ups_line_input: "Vstup",
     door_corner: "Zobrazit v rohu karty", controls_always: "V\u017edy zobrazit v\u0161echna tla\u010d\u00edtka", show_unavailable_controls: "Zobrazit tla\u010d\u00edtka nedostupn\u00fdch entit",
+    layout_robot_stick: "Ty\u010dov\u00fd vysava\u010d", stick_charged: "Nabito",
+    layout_robot_floor_washer: "Myc\u00ed vysava\u010d", stick_away: "Mimo z\u00e1kladnu", stick_away_threshold: "Mimo z\u00e1kladnu pod t\u00edmto v\u00fdkonem (W)",
+    fw_self_cleaning: "Samo\u010di\u0161t\u011bn\u00ed", fw_dirty_full: "N\u00e1dr\u017e na \u0161pinavou vodu pln\u00e1", fw_clean_empty: "N\u00e1dr\u017e na \u010distou vodu pr\u00e1zdn\u00e1",
     group_energy: "Energie", type_solar: "Sol\u00e1rn\u00ed panely", type_home_battery: "Dom\u00e1c\u00ed baterie", solar_producing: "V\u00fdroba", solar_low: "N\u00edzk\u00e1 v\u00fdroba", solar_night: "Noc", section_solar_layout: "Mont\u00e1\u017e", layout_solar_ground: "Na zemi", layout_solar_roof: "Na st\u0159e\u0161e", section_solar_power: "Vyr\u00e1b\u011bn\u00fd v\u00fdkon", section_energy_today: "Dnes vyroben\u00e1 energie", solar_line_today: "Dnes", solar_peak_power: "\u0160pi\u010dkov\u00fd v\u00fdkon panel\u016f (W)", section_battery_power: "V\u00fdkon baterie (+ nab\u00edjen\u00ed, \u2212 vyb\u00edjen\u00ed)", power_inverted: "Kladn\u00fd v\u00fdkon znamen\u00e1 vyb\u00edjen\u00ed", section_charge_power: "Nab\u00edjec\u00ed v\u00fdkon", section_battery_discharge: "Vyb\u00edjec\u00ed v\u00fdkon", section_reserve: "Z\u00e1lo\u017en\u00ed rezerva", section_charge_limit: "Limit nab\u00edjen\u00ed", battery_capacity: "Kapacita (kWh)", layout_battery_wall: "N\u00e1st\u011bnn\u00e1 baterie", layout_battery_station: "P\u0159enosn\u00e1 elektr\u00e1rna", bat_idle: "V klidu", bat_full: "Pln\u00e1", bat_low: "Slab\u00e1 baterie", bat_line_full_in: "Pln\u00e1 za", bat_line_left: "Zb\u00fdv\u00e1", bat_line_reserve: "Rezerva",
     robot_controls: "Tla\u010d\u00edtka start, pauza a n\u00e1vrat", robot_go_home: "N\u00e1vrat do z\u00e1kladny", battery_corner: "Zobrazit baterii v rohu karty", section_robot_floor: "Podlaha", floor_rug: "Koberec", floor_tiles: "Dla\u017edice", floor_parquet: "Parkety", floor_smooth: "Hladk\u00e1 podlaha",
     layout_net_router: "Router / modem", section_net_clients: "P\u0159ipojen\u00e1 za\u0159\u00edzen\u00ed", section_net_wan: "P\u0159ipojen\u00ed k internetu", section_net_wifi: "Wi-Fi", net_line_clients: "Za\u0159\u00edzen\u00ed", net_no_internet: "Bez internetu",
@@ -5387,13 +5429,13 @@ function netDiskState(hass, entityId, anchorDevice) {
 // integrations say more in a status of their own, read here for what the
 // drawing can show: the station emptying the bin or washing and drying the
 // pads, rain keeping a mower home, its edge cut.
-const ROBOT_LAYOUTS = ["vacuum", "mop", "mower"];
+const ROBOT_LAYOUTS = ["vacuum", "mop", "mower", "stick", "floor_washer"];
 const ROBOT_STATIONS = ["station", "base"];
-const ROBOT_ONLY_FIELDS = ["robot_layout", "robot_station", "robot_shelter", "robot_floor", "robot_controls", "robot_status_entity", "robot_bin_entity",
+const ROBOT_ONLY_FIELDS = ["robot_layout", "robot_station", "robot_shelter", "robot_floor", "robot_controls", "away_threshold", "robot_status_entity", "robot_bin_entity",
   "robot_water_entity", "robot_rain_entity", "robot_error_entity"];
 // A robot by its name, its maker's or its integration's. A robot cook is a
 // cooker, so the word robot needs what it does.
-const ROBOT_NAME_RE = /roomba|braava|roborock|ecovacs|deebot|dreame|neato|eufy.?clean|robovac|xiaomi.?vacuum|conga|robot.?(vacuum|aspir|mop|laveur|mower|tondeuse)|robot.?(clean|sweep)|vacuum|aspirateur|saugroboter|staubsauger|wischroboter|aspiradora|aspirapolvere|robotstofzuiger|stofzuiger|dammsugare|st(o|\u00f8)vsuger|odkurzacz|vysavac|landroid|automower|mammotion|navimow|(^|[^a-z])luba([^a-z]|$)|lawn.?mower|(^|[^a-z])mower|tondeuse|m(a|ae|\u00e4)hroboter|robotmaaier|grasmaaier|cortac(e|\u00e9)sped|tosaerba|corta.?relva|robotgr(a|\u00e4)sklipp|robotgressklipp|robotpl(a|\u00e6)neklipp|kosiarka|sekacka|\u626b\u5730|\u5438\u5c18|\u62d6\u5730|\u5272\u8349|\u043f\u044b\u043b\u0435\u0441\u043e\u0441|\u0433\u0430\u0437\u043e\u043d\u043e\u043a\u043e\u0441/;
+const ROBOT_NAME_RE = /tineco|aspirateur.?balai|floor.?one|ifloor|laveur.?de.?sol|floor.?washer|nass.?trocken|lavapavimenti|stick.?vac|cordless.?vac|akkusauger|stielsauger|roomba|braava|roborock|ecovacs|deebot|dreame|neato|eufy.?clean|robovac|xiaomi.?vacuum|conga|robot.?(vacuum|aspir|mop|laveur|mower|tondeuse)|robot.?(clean|sweep)|vacuum|aspirateur|saugroboter|staubsauger|wischroboter|aspiradora|aspirapolvere|robotstofzuiger|stofzuiger|dammsugare|st(o|\u00f8)vsuger|odkurzacz|vysavac|landroid|automower|mammotion|navimow|(^|[^a-z])luba([^a-z]|$)|lawn.?mower|(^|[^a-z])mower|tondeuse|m(a|ae|\u00e4)hroboter|robotmaaier|grasmaaier|cortac(e|\u00e9)sped|tosaerba|corta.?relva|robotgr(a|\u00e4)sklipp|robotgressklipp|robotpl(a|\u00e6)neklipp|kosiarka|sekacka|\u626b\u5730|\u5438\u5c18|\u62d6\u5730|\u5272\u8349|\u043f\u044b\u043b\u0435\u0441\u043e\u0441|\u0433\u0430\u0437\u043e\u043d\u043e\u043a\u043e\u0441/;
 const ROBOT_MOWER_RE = /mow|m(a|ae|\u00e4)h|tondeuse|maaier|cortac|tosaerba|relva|klipp|kosiark|sekack|landroid|automower|worx|mammotion|navimow|(^|[^a-z])luba([^a-z]|$)|\u5272\u8349|\u0433\u0430\u0437\u043e\u043d\u043e\u043a\u043e\u0441/;
 const ROBOT_MOP_RE = /(^|[^a-z])mop|braava|wisch|serpill|laveur|fregas|lavapavim|dweil|moppe|mopuj|mopov|\u62d6\u5730/;
 // Home Assistant's own words, the same for a vacuum and a mower.
@@ -5420,15 +5462,15 @@ const ROBOT_WORDS = [
 const ROBOT_LABELS = {
   charging: "robot_charging", docked: "robot_docked", returning: "robot_returning", paused: "paused", idle: "robot_idle",
   error: "error", emptying: "robot_emptying", full: "robot_bin_full", washing: "robot_washing", drying: "robot_drying",
-  empty: "robot_water_empty", rain: "robot_rain", edgecut: "robot_edgecut", unav: "ev_offline",
+  empty: "robot_water_empty", rain: "robot_rain", edgecut: "robot_edgecut", unav: "ev_offline", off: "ac_off", away: "stick_away",
 };
-const ROBOT_WORK_LABELS = { vacuum: "robot_cleaning", mop: "robot_mopping", mower: "robot_mowing" };
+const ROBOT_WORK_LABELS = { vacuum: "robot_cleaning", mop: "robot_mopping", mower: "robot_mowing", stick: "robot_cleaning", floor_washer: "robot_cleaning" };
 const ROBOT_COLORS = {
   charging: "#43a047", docked: "#43a047", emptying: "#43a047",
   cleaning: "#1e88e5", edgecut: "#1e88e5", returning: "#1e88e5", washing: "#1e88e5",
   paused: "#fb8c00", full: "#fb8c00", empty: "#fb8c00", drying: "#fb8c00",
   rain: "#5c6bc0", error: "#f44336",
-  idle: "var(--disabled-text-color, #9e9e9e)", unav: "var(--disabled-text-color, #9e9e9e)",
+  idle: "var(--disabled-text-color, #9e9e9e)", unav: "var(--disabled-text-color, #9e9e9e)", off: "var(--disabled-text-color, #9e9e9e)", away: "#1e88e5",
 };
 
 // The floors a vacuum or a mop can be drawn on. A mower has its lawn.
@@ -5461,11 +5503,65 @@ function robotWord(v) {
   return hit ? hit[0] : "";
 }
 
+// A stick vacuum on its wall dock, and a floor washer standing in its
+// station, read from the plug the dock is on: above a few watts it charges,
+// a little less and it rests charged, almost nothing and it is off its base,
+// in use or badly seated. Off is the plug itself switched off. A floor
+// washer's integration says more: in use, washing itself, a full dirty
+// tank, an empty clean one, a tangled brush.
+const ROBOT_STICK_RE = /dyson|balai|stick|cordless|sans.?fil|akkusauger|stielsauger|escoba|scopa|steelstofzuiger|skaftdammsugare|stavstovsuger|pionowy|tycovy/;
+const ROBOT_WASHER_RE = /tineco|floor.?one|ifloor|laveur|floor.?washer|wet.?dry|nass|lavapavimenti|fregona|vloerwasser|myci|\u6d17\u5730/;
+const STICK_CHARGE_W = 5;
+const STICK_AWAY_W = 1;
+const STICK_AT_WORK = /^(in_operation|operating|working|cleaning|running|in_use)$/;
+const STICK_SELF_CLEAN = /self.?clean|washing|auto.?clean/;
+function stickModeOf(hass, cfg, st, layout) {
+  const raw = st ? stripAccents(String(st.state)).trim().toLowerCase() : "";
+  const plug = ["switch", "input_boolean"].includes(domainOf(cfg.state_entity));
+  if (plug && ["off", "false"].includes(raw)) return "off";
+  let mode = "";
+  if (st && !plug && STICK_SELF_CLEAN.test(raw)) mode = "washing";
+  else if (st && !plug && STICK_AT_WORK.test(raw.replace(/\s+/g, "_"))) mode = "away";
+  const w = cfg.power_entity ? wattsOf(hass, cfg.power_entity) : null;
+  if (!mode && w !== null) {
+    const th = parseFloat(cfg.power_on_threshold);
+    const away = parseFloat(cfg.away_threshold);
+    if (w > (isFinite(th) && th >= 0 ? th : STICK_CHARGE_W)) mode = "charging";
+    else if (w <= (isFinite(away) && away >= 0 ? away : STICK_AWAY_W)) mode = "away";
+    else mode = "docked";
+  }
+  if (!mode) {
+    if (plug && ["on", "true"].includes(raw)) mode = "docked";
+    else if (st && ["idle", "docked", "charging", "standby"].includes(raw)) mode = raw === "charging" ? "charging" : "docked";
+    else {
+      mode = robotModeOf(hass, cfg, st, layout);
+      return mode === "idle" ? "docked" : mode;
+    }
+  }
+  if (["docked", "charging", "washing"].includes(mode)) {
+    if (cfg.robot_error_entity && robotRaised(hass, cfg.robot_error_entity, /./)) return "error";
+    if (mode !== "washing" && cfg.robot_bin_entity && robotRaised(hass, cfg.robot_bin_entity, /full|plein|voll/)) return "full";
+    if (mode !== "washing" && cfg.robot_water_entity) {
+      const wa = numericEntity(hass, cfg.robot_water_entity);
+      if (wa ? Number(wa.state) <= 5 : robotRaised(hass, cfg.robot_water_entity, /empty|low|short|lack|vide/)) return "empty";
+    }
+  }
+  return mode;
+}
+
+function haptic(kind) {
+  try {
+    if (typeof window !== "undefined" && window.dispatchEvent) window.dispatchEvent(new CustomEvent("haptic", { detail: kind }));
+  } catch (e) { /* no window to tell */ }
+}
+
 function robotLayoutOf(cfg, st) {
   if (ROBOT_LAYOUTS.includes(cfg.robot_layout)) return cfg.robot_layout;
   if (domainOf(cfg.state_entity) === "lawn_mower") return "mower";
   const name = stripAccents(`${(cfg.state_entity || "").split(".")[1] || ""} ${(st && st.attributes.friendly_name) || ""} ${cfg.name || ""}`.toLowerCase());
   if (ROBOT_MOWER_RE.test(name)) return "mower";
+  if (ROBOT_WASHER_RE.test(name)) return "floor_washer";
+  if (ROBOT_STICK_RE.test(name)) return "stick";
   if (ROBOT_MOP_RE.test(name)) return "mop";
   return "vacuum";
 }
@@ -5787,6 +5883,7 @@ const HISTORY_SOURCES = {
   pool_pump: ["water_temperature_entity"],
   ups: ["load_entity", "battery_entity"],
   scale: ["state_entity"],
+  home_battery: ["battery_entity"],
 };
 
 function historyEntityOf(hass, cfg, type) {
@@ -8657,6 +8754,57 @@ const ILLUSTRATION_CSS = {
   robot: () => `${MINI_LCD_CSS}
         .machine.rbt { --b: var(--ac-body, #3a3f45); --bh: var(--ac-body-hi, #5a6168); --bl: var(--ac-body-lo, #1d2024); --dk: #2b2f34; --dkh: #41474e; }
         .machine.rbt > *, .rbt-dock > *, .rbt-mdock > *, .rbt-bin > *, .rbt-tk > * { position: absolute; }
+        .stk-svg{position:absolute;left:0;top:0;width:96px;height:108px;overflow:visible}
+        .rbt-l-stick { --b: var(--ac-body, #c3c9ce); --bh: var(--ac-body-hi, #eef0f2); --bl: var(--ac-body-lo, #7d858c); }
+        .rbt-l-floor_washer { --b: var(--ac-body, #2a2f34); --bh: var(--ac-body-hi, #50575e); --bl: var(--ac-body-lo, #16191c); }
+        .stk-cab{fill:none;stroke:#2b3137;stroke-width:1.4;stroke-linecap:round}
+        .stk-ef{fill:none;stroke:#ffca28;stroke-width:1.8;stroke-dasharray:2.4 3.6;stroke-linecap:round;opacity:0}
+        .rbt-m-charging .stk-ef{opacity:1;animation:stk-flow .6s linear infinite}
+        @keyframes stk-flow{to{stroke-dashoffset:-12}}
+        .rbt-m-away .stk-mach{display:none}
+        .stk-bar{fill:#1f2a1f}
+        .stk-bar.on,.rbt-m-docked .stk-bar.full{fill:#43d65a}
+        .rbt-m-charging .stk-bar{animation:stk-bar1 2.4s steps(1) infinite}
+        .rbt-m-charging .stk-bar.b2{animation-name:stk-bar2}
+        .rbt-m-charging .stk-bar.b3{animation-name:stk-bar3}
+        @keyframes stk-bar1{0%,100%{fill:#43d65a}}
+        @keyframes stk-bar2{0%{fill:#1f2a1f}33%,100%{fill:#43d65a}}
+        @keyframes stk-bar3{0%{fill:#1f2a1f}66%,100%{fill:#43d65a}}
+        .fw-ring{fill:none;stroke:#2a3036;stroke-width:1.2}
+        .fw-ringf{fill:none;stroke:#43a047;stroke-width:1.2;stroke-linecap:round;stroke-dasharray:18.9;stroke-dashoffset:var(--fw-off,0)}
+        .rbt-m-charging .fw-ringf{animation:fw-fill 2.4s ease-in-out infinite}
+        .rbt-m-off .fw-ringf,.rbt-m-unav .fw-ringf{stroke-dashoffset:18.9}
+        .rbt-m-washing .fw-ringf{stroke:#29b6f6;animation:fw-spin 1.2s linear infinite;stroke-dasharray:6 12.9}
+        @keyframes fw-fill{0%{stroke-dashoffset:18.9}80%,100%{stroke-dashoffset:0}}
+        @keyframes fw-spin{to{stroke-dashoffset:-18.9}}
+        .fw-dirt{display:none}
+        .rbt-m-full .fw-dirt{display:block}
+        .rbt-m-empty .fw-clean{fill:#5c656d}
+        .fw-fz{animation:none}
+        .rbt-m-washing .fw-roll{animation:fw-roll .5s linear infinite}
+        @keyframes fw-roll{to{transform:translateX(-3px)}}
+        .fw-bub{opacity:0}
+        .rbt-m-washing .fw-bub{opacity:1}
+        .fw-bub circle{fill:rgba(170,220,255,.85);stroke:rgba(80,160,220,.6);stroke-width:.3;animation:fw-bub 1.4s ease-in infinite}
+        .fw-bub circle:nth-child(2){--d0:-.5s}
+        .fw-bub circle:nth-child(3){--d0:-.9s}
+        @keyframes fw-bub{0%{transform:translateY(0);opacity:0}20%{opacity:1}100%{transform:translateY(-9px);opacity:0}}
+        .stk-led{fill:#5a636b}
+        .rbt-m-charging .stk-led{fill:#43a047;animation:stk-breathe 1.6s ease-in-out infinite}
+        .rbt-m-docked .stk-led,.rbt-m-away .stk-led,.rbt-m-washing .stk-led{fill:#43a047}
+        .rbt-m-error .stk-led{fill:#f44336;animation:rbt-blink 1s steps(1) infinite}
+        @keyframes stk-breathe{0%,100%{opacity:.35}50%{opacity:1}}
+        .rbt-l-stick .en-smoke,.rbt-l-stick .en-ang,.rbt-l-floor_washer .en-smoke,.rbt-l-floor_washer .en-ang{display:none}
+        .rbt-m-error .en-smoke,.rbt-m-error .en-ang{display:block}
+        .en-smoke .en-pf{transform-box:fill-box;transform-origin:50% 100%;animation:en-puff 2s ease-out infinite}
+        .en-smoke .en-pf2{--d0:-1s}
+        .en-smoke .en-o{fill:#111417}
+        .en-smoke .en-f{fill:#6b737b}
+        .en-ang path{fill:none;stroke:#e53935;stroke-width:1.9;stroke-linecap:round}
+        .en-ang{transform-box:fill-box;transform-origin:center;animation:en-angp .7s ease-in-out infinite alternate}
+        @keyframes en-puff{0%{transform:translateY(5px) scale(.45);opacity:0}20%{opacity:1}75%{opacity:1}100%{transform:translateY(-7px) scale(1.08);opacity:0}}
+        @keyframes en-angp{from{transform:scale(.8)}to{transform:scale(1.15)}}
+        .machine.rbt-l-stick.rbt-m-unav,.machine.rbt-l-floor_washer.rbt-m-unav{opacity:.45;filter:grayscale(1)}
         .rbt-floor{left:2px;right:2px;top:72px;height:34px;clip-path:polygon(12% 0,88% 0,100% 100%,0 100%)}
         .rbt-parquet{background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='30' height='12'%3E%3Crect width='30' height='6' fill='%23c99b67'/%3E%3Crect y='6' width='30' height='6' fill='%23b98854'/%3E%3Cpath d='M0 0 V6 M15 6 V12 M0 6 H30 M0 12 H30' stroke='%237a5130' stroke-opacity='.45' stroke-width='.8'/%3E%3Cpath d='M3 2 H11 M19 3.5 H27 M6 9 H13 M20 8.5 H25' stroke='%239c6c3c' stroke-opacity='.35' stroke-width='.5'/%3E%3C/svg%3E") 0 0/30px 12px}
         .rbt-smooth{background:radial-gradient(ellipse at 50% 15%,rgba(255,255,255,.75),transparent 60%),linear-gradient(180deg,#e7ebee,#cfd6dc)}
@@ -10189,7 +10337,127 @@ function robotRain() {
   return `<div class="rbt-cloud"><svg viewBox="0 0 72 26"><defs><linearGradient id="${cg}" x1="0" y1="0" x2="0" y2="26" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#d7dde2"/><stop offset=".55" stop-color="#a9b2ba"/><stop offset="1" stop-color="#7f8a94"/></linearGradient></defs><path d="M12 25.5 C5 25.5 3 18 9 15.5 C8 9 15 6 20 9 C23 2 35 0 40 7 C45 3 54 6 54 12 C61 11 67 16 64 21 C66 24 63 25.5 60 25.5 Z" fill="url(#${cg})"/><path d="M14 13 C15 10 18 9 21 10.5 M27 7 C30 4 35 4 38 7.5" fill="none" stroke="rgba(255,255,255,.55)" stroke-width="1.4" stroke-linecap="round"/></svg></div><div class="rbt-rain">${drops}</div>`;
 }
 
+// A wall socket the stand's cable goes into: the stand stays plugged in
+// whether the vacuum is on it or not.
+const STICK_SOCKET = (x, y) => `<rect x="${x}" y="${y}" width="7" height="9" rx="1.6" fill="#f4f5f6" stroke="#9aa1a7" stroke-width=".6"/><circle cx="${x + 3.5}" cy="${y + 4.5}" r="2.2" fill="#e2e5e8" stroke="#b5bbc0" stroke-width=".4"/><rect x="${x + 1.4}" y="${y + 3.2}" width="4.2" height="2.6" rx="1" fill="#2b3137"/>`;
+
+// A Dyson-like stick vacuum on its wall dock, leaning: the purple filter,
+// the gold cyclone, the clear bin, the handle with its screen, the long
+// wand and the soft roller head. Its screen's three bars fill while it
+// charges.
+function dysonSvg(battery) {
+  const lit = battery === null || battery === undefined ? null : Math.max(0, Math.min(3, Math.ceil(battery / 34)));
+  const bar = (n, y) => `<rect class="stk-bar b${n}${lit === null ? " full" : lit >= n ? " on" : ""}" x="7" y="${y}" width="3.6" height="1.4" rx=".4"/>`;
+  return `<svg class="stk-svg" viewBox="0 0 96 108"><defs>
+<linearGradient id="stk-nk" x1="0" x2="1"><stop offset="0" style="stop-color:var(--bl)"/><stop offset=".35" style="stop-color:var(--bh)"/><stop offset=".6" style="stop-color:var(--b)"/><stop offset="1" style="stop-color:var(--bl)"/></linearGradient>
+<linearGradient id="stk-gm" x1="0" x2="1"><stop offset="0" stop-color="#3f454b"/><stop offset=".4" stop-color="#8f979e"/><stop offset="1" stop-color="#3a4046"/></linearGradient>
+<linearGradient id="stk-pu" x1="0" x2="1"><stop offset="0" stop-color="#5b3fe0"/><stop offset=".4" stop-color="#c7b8ff"/><stop offset=".7" stop-color="#8e74ff"/><stop offset="1" stop-color="#4f36c8"/></linearGradient>
+<linearGradient id="stk-au" x1="0" x2="1"><stop offset="0" stop-color="#a87a14"/><stop offset=".4" stop-color="#f7d870"/><stop offset=".7" stop-color="#d9a92e"/><stop offset="1" stop-color="#9a6f10"/></linearGradient>
+<linearGradient id="stk-cl" x1="0" x2="1"><stop offset="0" stop-color="rgba(170,185,195,.55)"/><stop offset=".3" stop-color="rgba(250,252,253,.85)"/><stop offset=".7" stop-color="rgba(215,225,232,.6)"/><stop offset="1" stop-color="rgba(150,165,178,.6)"/></linearGradient>
+<linearGradient id="stk-gd" x1="0" x2="1"><stop offset="0" stop-color="#8d959c"/><stop offset=".5" stop-color="#bfc5ca"/><stop offset="1" stop-color="#7d858c"/></linearGradient>
+<linearGradient id="stk-yr" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffe36b"/><stop offset=".5" stop-color="#f2c21b"/><stop offset="1" stop-color="#c89a08"/></linearGradient>
+<clipPath id="stk-rc"><rect x="16" y="94" width="31" height="7.5" rx="3.75"/></clipPath></defs>
+${STICK_SOCKET(85, 59)}
+<path class="stk-cab" d="M88.5 63.5 H86 Q82 63.5 80.5 57 Q78.5 49 72 44"/><path class="stk-ef" d="M88.5 63.5 H86 Q82 63.5 80.5 57 Q78.5 49 72 44"/>
+<g transform="translate(60 30) rotate(22) scale(.76)">
+<rect x="13" y="-20" width="8" height="30" rx="2" fill="url(#stk-gd)" stroke="rgba(0,0,0,.3)" stroke-width=".6"/>
+<rect x="14.6" y="-17" width="4.8" height="24" rx="1.2" fill="rgba(255,255,255,.12)"/>
+<circle class="stk-led" cx="17" cy="5" r="1.1"/>
+</g>
+<g class="stk-mach">
+<ellipse cx="40" cy="103.5" rx="30" ry="2" fill="rgba(0,0,0,.14)"/>
+<g transform="translate(60 30) rotate(22) scale(.76)">
+<path d="M12 -6 H14 V2 H12" fill="#5f666d"/>
+<path d="M5 -16 Q13 -16 13 -8 V10 Q13 14 9 14 H5 Z" fill="url(#stk-gm)" stroke="rgba(0,0,0,.3)" stroke-width=".6"/>
+<rect x="5.5" y="-23" width="6.5" height="8" rx="1.5" fill="#0d1210" stroke="#2b2f34" stroke-width=".6"/>
+${bar(1, -17.6)}${bar(2, -19.6)}${bar(3, -21.6)}
+<path d="M5 -2 L2.5 2" stroke="#d32f2f" stroke-width="2" stroke-linecap="round"/>
+<rect x="-6.5" y="-34" width="13" height="13" rx="4" fill="url(#stk-pu)" stroke="rgba(40,20,120,.5)" stroke-width=".6"/>
+<path d="M0 -32 V-23 M2 -32 V-23 M4 -31.5 V-23.5" stroke="rgba(255,255,255,.45)" stroke-width=".5"/>
+<ellipse cx="0" cy="-33.4" rx="5.2" ry="1.1" fill="rgba(255,255,255,.35)"/>
+<rect x="-6.5" y="-22" width="13" height="8" fill="url(#stk-nk)" stroke="rgba(0,0,0,.25)" stroke-width=".5"/>
+<path d="M-9.5 -14 H9.5 V-8.5 Q8.1 -6.3 6.6 -8.5 Q5.2 -6.3 3.7 -8.5 Q2.3 -6.3 .8 -8.5 Q-.6 -6.3 -2 -8.5 Q-3.4 -6.3 -4.9 -8.5 Q-6.3 -6.3 -7.8 -8.5 Q-8.6 -7.3 -9.5 -8.5 Z" fill="url(#stk-au)" stroke="rgba(110,70,0,.55)" stroke-width=".5"/>
+<path d="M-9.5 -12 H9.5" stroke="rgba(255,240,180,.6)" stroke-width=".6"/>
+<rect x="-8.5" y="-7.5" width="17" height="1.6" fill="#d32f2f"/>
+<rect x="-8.5" y="-6" width="17" height="25" rx="2.5" fill="url(#stk-cl)" stroke="rgba(0,0,0,.3)" stroke-width=".6"/>
+<rect x="-4.2" y="-6" width="8.4" height="19" fill="url(#stk-nk)" stroke="rgba(0,0,0,.2)" stroke-width=".4"/>
+<rect x="-4.2" y="4" width="8.4" height="1" fill="#d32f2f"/>
+<path d="M-7.5 14 Q0 11.5 7.5 14 V18 H-7.5 Z" fill="rgba(150,135,110,.45)"/>
+<rect x="-8.5" y="17.5" width="17" height="3.2" rx="1.4" fill="url(#stk-gm)"/>
+<rect x="-1.6" y="20.5" width="3.2" height="3" rx="1" fill="#d32f2f"/>
+<rect x="-2.2" y="23" width="4.4" height="63" rx="2.2" fill="url(#stk-gm)"/>
+<rect x="-2.5" y="74" width="5" height="3.2" rx="1" fill="#d32f2f"/>
+<rect x="-2.8" y="82" width="5.6" height="8" rx="1.6" fill="url(#stk-nk)"/>
+</g>
+<path d="M15 95.5 Q15 91.5 20 91.5 H45 Q49 91.5 50 95 L49 96.5 H16 Z" fill="url(#stk-nk)" stroke="rgba(0,0,0,.35)" stroke-width=".5"/>
+<path d="M18 93 H46" stroke="rgba(255,255,255,.6)" stroke-width=".6"/>
+<path d="M31.5 93 Q33 89 35.5 89.5" stroke="#3a4046" stroke-width="3.2" fill="none" stroke-linecap="round"/>
+<circle cx="31.5" cy="92.6" r="2" fill="#3d4fd6" stroke="rgba(0,0,0,.3)" stroke-width=".4"/>
+<g clip-path="url(#stk-rc)"><rect x="16" y="94" width="31" height="7.5" fill="url(#stk-yr)"/>
+<path d="M14 103 L26 92 M30 103 L42 92" stroke="#1b1e21" stroke-width="1.6"/>
+<path d="M22 103 L34 92 M38 103 L50 92" stroke="#1b1e21" stroke-width=".7" opacity=".7"/>
+<rect x="16" y="94" width="31" height="2.2" fill="rgba(255,255,255,.35)"/><rect x="16" y="99.5" width="31" height="2" fill="rgba(0,0,0,.18)"/></g>
+<rect x="16" y="94" width="31" height="7.5" rx="3.75" fill="none" stroke="rgba(0,0,0,.35)" stroke-width=".5"/>
+<ellipse cx="47.3" cy="97.75" rx="2.1" ry="3.9" fill="url(#stk-nk)" stroke="rgba(0,0,0,.35)" stroke-width=".5"/>
+<ellipse cx="16" cy="97.75" rx="1.6" ry="3.6" fill="#3d4fd6" stroke="rgba(0,0,0,.3)" stroke-width=".4"/>
+${ENERGY_SMOKE(44, -4, 0.55)}${ENERGY_ANGER(62, 4)}
+</g></svg>`;
+}
+
+// A Tineco-like floor washer standing in its station: the handle, the wand,
+// the head with its round screen, the dark dirty water tank, and the soft
+// roller in the station's tray. The screen's ring fills while it charges and
+// turns while the station washes the roller.
+function washerSvg(battery) {
+  const pct = battery === null || battery === undefined ? null : Math.max(0, Math.min(100, battery));
+  const off = pct === null ? "" : ` style="--fw-off: ${Math.round((1 - pct / 100) * 189) / 10}"`;
+  return `<svg class="stk-svg" viewBox="0 0 96 108"><defs>
+<linearGradient id="fw-tb" x1="0" x2="1"><stop offset="0" style="stop-color:var(--bl)"/><stop offset=".45" style="stop-color:var(--bh)"/><stop offset="1" style="stop-color:var(--b)"/></linearGradient>
+<linearGradient id="fw-tw" x1="0" x2="1"><stop offset="0" stop-color="#c9ced2"/><stop offset=".5" stop-color="#ffffff"/><stop offset="1" stop-color="#d5dade"/></linearGradient>
+<linearGradient id="fw-tk" x1="0" x2="1"><stop offset="0" stop-color="rgba(60,66,72,.9)"/><stop offset=".3" stop-color="rgba(150,160,168,.55)"/><stop offset=".55" stop-color="rgba(40,45,50,.85)"/><stop offset="1" stop-color="rgba(25,28,32,.95)"/></linearGradient>
+<linearGradient id="fw-ro" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e9ecee"/><stop offset=".55" stop-color="#c3c9ce"/><stop offset="1" stop-color="#9aa2a9"/></linearGradient>
+<pattern id="fw-fz" width="3" height="3" patternUnits="userSpaceOnUse"><circle cx="1" cy="1" r=".45" fill="rgba(255,255,255,.55)"/><circle cx="2.4" cy="2.2" r=".4" fill="rgba(110,120,128,.35)"/></pattern>
+<clipPath id="fw-rc"><rect x="21.5" y="93" width="31" height="6" rx="3"/></clipPath></defs>
+${STICK_SOCKET(84, 90)}
+<path class="stk-cab" d="M87.5 94.5 Q80 95 76 101.5 H68"/><path class="stk-ef" d="M87.5 94.5 Q80 95 76 101.5 H68"/>
+<ellipse cx="42" cy="104.5" rx="30" ry="1.6" fill="rgba(0,0,0,.15)"/>
+<path d="M14 100 Q14 97 18 97 H64 Q68 97 68 100 V102 Q68 104 64 104 H18 Q14 104 14 102 Z" fill="url(#fw-tb)" stroke="rgba(0,0,0,.4)" stroke-width=".5"/>
+<path d="M20 98.6 H58" stroke="rgba(255,255,255,.18)" stroke-width=".6"/>
+<circle class="stk-led" cx="62" cy="100.5" r="1"/>
+<g class="fw-bub"><circle cx="30" cy="96.5" r=".9"/><circle cx="38" cy="97" r=".7"/><circle cx="46" cy="96.6" r=".8"/></g>
+<g class="stk-mach">
+<g transform="translate(39 90) rotate(14) scale(.84)">
+<rect x="1.4" y="-104" width="3" height="40" rx="1.5" fill="url(#fw-tb)"/>
+<path d="M-.5 -106 Q-.5 -114 4.5 -114 Q9.5 -114 9.5 -108 L8.2 -97 Q7.6 -94 5.3 -94 H3 Z" fill="url(#fw-tb)" stroke="rgba(0,0,0,.4)" stroke-width=".5"/>
+<path d="M2.6 -110.5 Q4.6 -112 7.2 -110 L6.4 -99 Q6 -97 4.6 -97.5 Z" fill="url(#fw-tw)"/>
+<rect x="-8.5" y="-70" width="16" height="25" rx="5.5" fill="url(#fw-tb)" stroke="rgba(0,0,0,.4)" stroke-width=".5"/>
+<path d="M5 -67 V-47" stroke="rgba(255,255,255,.18)" stroke-width="1.2"/>
+<circle cx="-1" cy="-59" r="4.4" fill="#0b0e11" stroke="#565e66" stroke-width=".5"/>
+<circle class="fw-ring" cx="-1" cy="-59" r="3"/><circle class="fw-ringf" cx="-1" cy="-59" r="3" transform="rotate(-90 -1 -59)"${off}/>
+<rect x="-8.5" y="-46" width="17" height="4.5" rx="1" fill="url(#fw-tb)"/>
+<rect class="fw-clean" x="-3" y="-51" width="5" height="2.5" rx="1" fill="#7fd0ff"/>
+<rect x="-9.5" y="-42" width="13.5" height="35" rx="3" fill="url(#fw-tk)" stroke="rgba(0,0,0,.45)" stroke-width=".5"/>
+<path class="fw-dirt" d="M-9 -26 Q-3 -28 3.5 -26 V-10 Q3.5 -7.5 1 -7.5 H-6.5 Q-9 -7.5 -9 -10 Z" fill="rgba(125,95,55,.75)"/>
+<path d="M-7 -39 V-11" stroke="rgba(255,255,255,.35)" stroke-width="1"/>
+<rect x="-6" y="-31" width="5.5" height="4" rx="1.4" fill="url(#fw-tb)"/>
+<path d="M4 -41.5 H8.5 V-6 Q8.5 -4 6.5 -4 H4 Z" fill="url(#fw-tw)" stroke="rgba(0,0,0,.25)" stroke-width=".5"/>
+<path d="M-9 -8 H8.5 L7 -1 H-6 Z" fill="url(#fw-tw)" stroke="rgba(0,0,0,.25)" stroke-width=".5"/>
+</g>
+<path d="M22 92 L27 88.5 H51 L54 91.5 V94 H22 Z" fill="url(#fw-tb)" stroke="rgba(0,0,0,.45)" stroke-width=".5"/>
+<path d="M28 89.8 H50" stroke="rgba(255,255,255,.22)" stroke-width=".6"/>
+<rect x="21.5" y="93" width="31" height="6" rx="3" fill="url(#fw-ro)"/>
+<g clip-path="url(#fw-rc)"><rect class="fw-roll" x="18.5" y="93" width="37" height="6" fill="url(#fw-fz)"/></g>
+<circle cx="53.5" cy="96" r="3.6" fill="url(#fw-tw)" stroke="rgba(0,0,0,.3)" stroke-width=".5"/>
+<circle cx="53.5" cy="96" r="1.9" fill="url(#fw-tb)"/>
+${ENERGY_SMOKE(30, 14, 0.55)}${ENERGY_ANGER(56, 22)}
+</g></svg>`;
+}
+
 function robotHtml(cls, r) {
+  if (r.layout === "stick" || r.layout === "floor_washer") {
+    return `
+        <div class="machine ${cls} rbt rbt-l-${r.layout} rbt-m-${r.mode || "docked"}">${r.layout === "stick" ? dysonSvg(r.battery) : washerSvg(r.battery)}</div>`;
+  }
   const layout = ROBOT_LAYOUTS.includes(r.layout) ? r.layout : "vacuum";
   // The floor it works on: the one of its kind, or the one chosen (#49).
   const floor = ROBOT_FLOORS.includes(r.floor) ? r.floor : layout === "mop" ? "tiles" : "rug";
@@ -11529,6 +11797,13 @@ class ApplianceCard extends HTMLElement {
   // release would then land on a new one that knows nothing of the old timer.
   _wireControl(el, mode, entityId, run) {
     mode = activationOf(mode);
+    // The phone vibrates when a control acts, as Home Assistant's own
+    // buttons do: the Companion app listens for a haptic event on the window.
+    const act = run;
+    run = () => {
+      haptic("light");
+      act();
+    };
     // "confirm": the first tap arms the control, a second one within three
     // seconds runs it. The armed key outlives a redraw, so a state update
     // between the two taps does not lose it.
@@ -11543,6 +11818,7 @@ class ApplianceCard extends HTMLElement {
           return;
         }
         this._disarm();
+        haptic("selection");
         this._armedKey = key;
         this._armedUntil = Date.now() + CONFIRM_MS;
         this._armTimer = setTimeout(() => {
@@ -14088,11 +14364,15 @@ class ApplianceCard extends HTMLElement {
     let robot = null;
     if (cap.robot) {
       const layout = robotLayoutOf(cfg, st);
-      let mode = robotModeOf(hass, cfg, st, layout);
+      const stick = layout === "stick" || layout === "floor_washer";
+      let mode = stick ? stickModeOf(hass, cfg, st, layout) : robotModeOf(hass, cfg, st, layout);
       const battery = robotBattery(hass, cfg, st);
-      if (mode === "charging" && (battery === null || battery >= 100)) mode = "docked";
+      // A stick vacuum's plug says it charges: only its own battery can say
+      // it is full.
+      if (mode === "charging" && (stick ? battery !== null && battery >= 100 : battery === null || battery >= 100)) mode = "docked";
       if (!cfg.state_show_raw || mode === "unav") {
-        stateLabel = t(hass, mode === "cleaning" ? ROBOT_WORK_LABELS[layout] : ROBOT_LABELS[mode]);
+        const washer = layout === "floor_washer" ? { washing: "fw_self_cleaning", full: "fw_dirty_full", empty: "fw_clean_empty" } : {};
+        stateLabel = t(hass, mode === "cleaning" ? ROBOT_WORK_LABELS[layout] : stick && mode === "docked" ? "stick_charged" : washer[mode] || ROBOT_LABELS[mode]);
       }
       color = ROBOT_COLORS[mode];
       const water = robotWaterPct(hass, cfg);
@@ -15910,6 +16190,8 @@ class ApplianceCardEditor extends HTMLElement {
             type: "select",
             options: [{ value: "auto", label: t(hass, "unit_auto") }].concat(ROBOT_LAYOUTS.map((v) => ({ value: v, label: t(hass, `layout_robot_${v}`) }))),
           }) + (layout === "mower" ? this._row("robot_shelter", "robot_shelter", { type: "checkbox" })
+            : layout === "stick" || layout === "floor_washer"
+              ? this._row("stick_away_threshold", "away_threshold", { placeholder: String(STICK_AWAY_W) })
             : this._row("section_robot_station", "robot_station", {
               type: "select",
               options: ROBOT_STATIONS.map((v) => ({ value: v, label: t(hass, `robot_station_${v}`) })),

@@ -10311,4 +10311,115 @@ check('borne : ni un statut reconnu', evMode(evR('SuspendedEVSE', { power_entity
   check('editeur historique : le capteur avec la case', markup(newEditor({ state_entity: 'sensor.w', appliance_type: 'washer', show_history: true })).includes('data-toggle="history_entity"'), true);
 }
 
+
+// =============================================================================
+// Stick vacuums on their stand, and the phone's vibration on a control.
+// =============================================================================
+{
+  check('historique : le niveau d\'une batterie domestique', (() => {
+    const c = new Card();
+    c.setConfig({ type: 'custom:ha-appliance-card', appliance_type: 'home_battery', battery_entity: 'sensor.soc', power_entity: 'sensor.bp', show_history: true });
+    const asked = [];
+    c._hass = { ...HASS({ 'sensor.soc': { state: '50', attributes: {} }, 'sensor.bp': { state: '120', attributes: {} } }), callWS: (m) => { asked.push(m.entity_ids[0]); return Promise.resolve({}); } };
+    c._historyOpen = true;
+    c._render();
+    return asked.join(',');
+  })(), 'sensor.soc');
+  const s = (state, attributes = {}) => ({ state: String(state), attributes });
+  const W = (v) => s(v, { unit_of_measurement: 'W' });
+  const ST = { appliance_type: 'robot', robot_layout: 'stick', state_entity: 'switch.balai', power_entity: 'sensor.balai_w' };
+  const stk = (plug, w, cfg = {}, more = {}) => render({ ...ST, ...cfg }, { 'switch.balai': s(plug), 'sensor.balai_w': W(w), ...more });
+  check('balai : en charge', stateLine(stk('on', 24)), 'Charging');
+  check('balai : charge', stateLine(stk('on', 1.5)), 'Charged');
+  check('balai : au seuil, charge', stateLine(stk('on', 5)), 'Charged');
+  check('balai : seuil choisi', stateLine(stk('on', 8, { power_on_threshold: 10 })), 'Charged');
+  check('balai : en kilowatts', stateLine(stk('on', 0.02, {}, { 'sensor.balai_w': s(0.02, { unit_of_measurement: 'kW' }) })), 'Charging');
+  check('balai : prise coupee', stateLine(stk('off', 0)), 'Off');
+  check('balai : hors ligne', stateLine(render({ ...ST }, { 'switch.balai': s('unavailable'), 'sensor.balai_w': s('unavailable') })), 'Offline');
+  check('balai : sans compteur, prise allumee', stateLine(render({ ...ST, power_entity: undefined }, { 'switch.balai': s('on') })), 'Charged');
+  check('balai : sa batterie pleine', stateLine(stk('on', 24, { battery_entity: 'sensor.b' }, { 'sensor.b': s(100) })), 'Charged');
+  check('balai : sa batterie a 60 %', stateLine(stk('on', 24, { battery_entity: 'sensor.b' }, { 'sensor.b': s(60) })), 'Charging');
+  check('balai : la couleur de la charge', stateColor(stk('on', 24)), '#43a047');
+  check('balai : son dessin', machineCls(stk('on', 24)).includes('rbt-l-stick'), true);
+  check('balai : la charge se dessine', machineCls(stk('on', 24)).includes('rbt-m-charging'), true);
+  check('balai : pas de sol', /class="rbt-floor/.test(stk('on', 24)), false);
+  check('balai : deux barres a 60 %', (stk('on', 3, { battery_entity: 'sensor.b' }, { 'sensor.b': s(60) }).match(/class="stk-bar b\d on"/g) || []).length, 2);
+  check('balai : toutes les barres sans batterie connue', (stk('on', 3).match(/class="stk-bar b\d full"/g) || []).length, 3);
+  check('balai : par son nom', machineCls(render({ state_entity: 'switch.aspirateur_balai', power_entity: 'sensor.w' }, { 'switch.aspirateur_balai': s('on'), 'sensor.w': W(20) })).includes('rbt-l-stick'), true);
+  check('balai : un Dyson', machineCls(render({ appliance_type: 'robot', state_entity: 'switch.dyson_v15', power_entity: 'sensor.w' }, { 'switch.dyson_v15': s('on'), 'sensor.w': W(20) })).includes('rbt-l-stick'), true);
+  check('balai : une tondeuse sans fil reste une tondeuse', machineCls(render({ state_entity: 'lawn_mower.tondeuse_sans_fil' }, { 'lawn_mower.tondeuse_sans_fil': s('docked') })).includes('rbt-l-mower'), true);
+  check('balai : un Roomba reste un aspirateur', machineCls(render({ state_entity: 'vacuum.roomba' }, { 'vacuum.roomba': s('docked') })).includes('rbt-l-vacuum'), true);
+  const edS = markup(newEditor({ ...ST }));
+  check('editeur balai : dans la liste des modeles', /value="stick"/.test(edS), true);
+  check('editeur balai : pas de station', /data-field="robot_station"/.test(edS), false);
+  check('editeur balai : pas de sol', /data-field="robot_floor"/.test(edS), false);
+
+  // The vibration, through the Companion app's haptic event.
+  const vibrations = [];
+  const prevWindow = globalThis.window;
+  globalThis.window = { dispatchEvent: (e) => vibrations.push(e.type + ':' + e.detail) };
+  try {
+    const run = (activation) => {
+      vibrations.length = 0;
+      const c = new Card();
+      c.setConfig({ type: 'custom:ha-appliance-card', appliance_type: 'pet_feeder', start_entity: 'button.go', controls_activation: activation });
+      c._hass = { ...HASS({ 'button.go': s('unknown') }), callService: () => {} };
+      c._render();
+      const btn = c._root.querySelectorAll('.action-btn, .light-badge').find((n) => n.getAttribute('data-entity') === 'button.go');
+      fire(btn, 'click', { stopPropagation() {} });
+      return vibrations.join(',');
+    };
+    check('vibration : un appui', run('tap'), 'haptic:light');
+    check('vibration : la confirmation s\'arme', run('confirm'), 'haptic:selection');
+  } finally {
+    globalThis.window = prevWindow;
+  }
+}
+
+
+// =============================================================================
+// Stick vacuums and floor washers off their base, and a Tineco's own states.
+// =============================================================================
+{
+  const s = (state, attributes = {}) => ({ state: String(state), attributes });
+  const W = (v) => s(v, { unit_of_measurement: 'W' });
+  const ST = { appliance_type: 'robot', robot_layout: 'stick', state_entity: 'switch.balai', power_entity: 'sensor.balai_w' };
+  const stk = (w, cfg = {}, more = {}) => render({ ...ST, ...cfg }, { 'switch.balai': s('on'), 'sensor.balai_w': W(w), ...more });
+  check('hors base : presque rien a la prise', stateLine(stk(0.4)), 'Off the base');
+  check('hors base : au seuil', stateLine(stk(1)), 'Off the base');
+  check('hors base : juste au-dessus, charge', stateLine(stk(1.2)), 'Charged');
+  check('hors base : seuil choisi', stateLine(stk(2, { away_threshold: 3 })), 'Off the base');
+  check('hors base : la couleur', stateColor(stk(0)), '#1e88e5');
+  check('hors base : l\'aspirateur n\'est plus dessine', machineCls(stk(0)).includes('rbt-m-away'), true);
+  check('hors base : le cable reste', /class="stk-cab"/.test(stk(0)), true);
+  check('prise coupee : le cable reste', /class="stk-cab"/.test(render({ ...ST }, { 'switch.balai': s('off'), 'sensor.balai_w': W(0) })), true);
+  check('hors base : prise coupee, eteint', stateLine(render({ ...ST }, { 'switch.balai': s('off'), 'sensor.balai_w': W(0) })), 'Off');
+
+  const FW = { appliance_type: 'robot', robot_layout: 'floor_washer', state_entity: 'sensor.tineco_vacuum_status' };
+  const fw = (state, cfg = {}, more = {}) => render({ ...FW, ...cfg }, { 'sensor.tineco_vacuum_status': s(state), ...more });
+  check('laveur : au repos, charge', stateLine(fw('idle')), 'Charged');
+  check('laveur : en utilisation, hors de la base', stateLine(fw('in_operation')), 'Off the base');
+  check('laveur : autonettoyage', stateLine(fw('self_cleaning')), 'Self-cleaning');
+  check('laveur : autonettoyage meme quand la station consomme', stateLine(fw('self_cleaning', { power_entity: 'sensor.w' }, { 'sensor.w': W(45) })), 'Self-cleaning');
+  check('hors base : la feuille de style cache l\'aspirateur', /\.rbt-m-away \.stk-mach\{display:none\}/.test(stk(0)), true);
+  check('laveur : les bulles de l\'autonettoyage', machineCls(fw('self_cleaning')).includes('rbt-m-washing'), true);
+  check('laveur : eau sale pleine', stateLine(fw('idle', { robot_bin_entity: 'sensor.waste' }, { 'sensor.waste': s('full') })), 'Dirty water tank full');
+  check('laveur : eau sale propre', stateLine(fw('idle', { robot_bin_entity: 'sensor.waste' }, { 'sensor.waste': s('clean') })), 'Charged');
+  check('laveur : eau propre vide', stateLine(fw('idle', { robot_water_entity: 'sensor.fresh' }, { 'sensor.fresh': s('empty') })), 'Clean water tank empty');
+  check('laveur : eau propre pleine', stateLine(fw('idle', { robot_water_entity: 'sensor.fresh' }, { 'sensor.fresh': s('full') })), 'Charged');
+  check('laveur : brosse emmelee', stateLine(fw('idle', { robot_error_entity: 'sensor.brush' }, { 'sensor.brush': s('tangled') })), 'Error');
+  check('laveur : brosse normale', stateLine(fw('idle', { robot_error_entity: 'sensor.brush' }, { 'sensor.brush': s('normal') })), 'Charged');
+  check('laveur : le reservoir sale se dessine plein', machineCls(fw('idle', { robot_bin_entity: 'sensor.waste' }, { 'sensor.waste': s('full') })).includes('rbt-m-full'), true);
+  check('laveur : sur sa prise, en charge', stateLine(render({ appliance_type: 'robot', robot_layout: 'floor_washer', state_entity: 'switch.station', power_entity: 'sensor.w' },
+    { 'switch.station': s('on'), 'sensor.w': W(30) })), 'Charging');
+  check('laveur : l\'anneau suit la batterie', /class="fw-ringf"[^>]*style="--fw-off: 7.6"/.test(fw('idle', { battery_entity: 'sensor.b' }, { 'sensor.b': s(60) })), true);
+  check('laveur : par son nom', machineCls(render({ state_entity: 'sensor.tineco_floor_one_status' }, { 'sensor.tineco_floor_one_status': s('idle') })).includes('rbt-l-floor_washer'), true);
+  check('laveur : erreur en fumee', /class="en-smoke"/.test(fw('idle', { robot_error_entity: 'sensor.brush' }, { 'sensor.brush': s('stuck') })), true);
+  const ed = markup(newEditor({ ...FW }));
+  check('editeur laveur : dans la liste', /value="floor_washer"/.test(ed), true);
+  check('editeur laveur : le seuil hors base', /data-field="away_threshold"/.test(ed), true);
+  check('editeur laveur : pas de station', /data-field="robot_station"/.test(ed), false);
+  check('editeur aspirateur robot : pas de seuil hors base', /data-field="away_threshold"/.test(markup(newEditor({ state_entity: 'vacuum.roomba' }))), false);
+}
+
 report();

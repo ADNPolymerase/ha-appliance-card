@@ -10,9 +10,11 @@
 <a href="https://buymeacoffee.com/adnpolymerase" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-orange.png" alt="Buy Me A Coffee" height="60"></a>
 <a href="https://adnpolymerase.github.io/HA/" target="_blank"><img src="https://raw.githubusercontent.com/ADNPolymerase/HA/main/assets/site-button.svg" alt="Lien vers mon github.io pour mes autres projets" height="60"></a>
 
-Une card Lovelace pour les appareils de la maison : lave-linge, sèche-linge, lave-vaisselle, four, micro-ondes, hotte, plaque de cuisson, réfrigérateur, bouilloire, robot cuiseur, machine à café, cuiseur à riz, friteuse à air, chauffe-eau, chaudière, pompe à chaleur, imprimante 3D, distributeur de croquettes, fer à repasser, grille-pain, sèche-cheveux, poêle à granulés, climatiseur, déshumidificateur, petit chauffage, sèche-serviettes, purificateur d'air, ventilateur, borne de recharge, télévision, vidéoprojecteur, ordinateur, switch, serveur, NAS et baie réseau, robot aspirateur, laveur et tondeuse, pompe de piscine, pèse-personne, onduleur, panneaux solaires et batterie domestique. Cycle en cours, programme, temps restant, température, alertes et commandes.
+Une card Lovelace pour les appareils de la maison : lave-linge, sèche-linge, lave-vaisselle, four, micro-ondes, hotte, plaque de cuisson, réfrigérateur, bouilloire, robot cuiseur, machine à café, cuiseur à riz, friteuse à air, chauffe-eau, chaudière, pompe à chaleur, imprimante 3D, distributeur de croquettes, fer à repasser, grille-pain, sèche-cheveux, poêle à granulés, climatiseur, déshumidificateur, petit chauffage, sèche-serviettes, purificateur d'air, ventilateur, borne de recharge, télévision, vidéoprojecteur, ordinateur, switch, serveur, NAS et baie réseau, robot aspirateur, laveur et tondeuse, aspirateur balai et laveur de sol, pompe de piscine, pèse-personne, onduleur, panneaux solaires et batterie domestique. Cycle en cours, programme, temps restant, température, alertes et commandes.
 
 Aucune marque supposée : chaque champ est une entité à choisir, elle fonctionne donc avec **n'importe quelle** intégration (Electrolux, Samsung, LG, Home Connect, Miele, une simple prise connectée…).
+
+**[Essayer la démo en ligne](https://adnpolymerase.github.io/ha-appliance-card/docs/demo.html?view=live&lang=fr)** : tous les appareils animés dans votre navigateur, en clair ou en sombre, sans Home Assistant.
 
 > Retours et issues bienvenus.
 > 🇬🇧 [Read in English](README.md)
@@ -27,7 +29,7 @@ Aucune marque supposée : chaque champ est une entité à choisir, elle fonction
 - **Une lavante-séchante est un lave-linge qui sèche** : `washer_dryer: true`, et le tambour montre de l'eau pendant le lavage, puis du linge qui tourne dans l'air chaud pendant le séchage. L'étape vient de l'état lui-même ou d'une entité de phase, et la ligne d'état lit *Lavage* ou *Séchage*.
 - **Chaque appareil dit ce qui compte pour lui** : une machine à café ce qui lui manque (eau, grains, bac, détartrage), un réfrigérateur sa santé (débranché, porte ouverte, température haute), une chaudière mixte ce qu'elle chauffe (chauffage, eau chaude ou veille), une imprimante 3D ce que fait l'impression (préchauffage, nivellement, changement de filament), un poêle à granulés la phase de son feu (allumage, modulation, éco, nettoyage), un climatiseur son mode et où il souffle, une borne de recharge si une voiture est branchée et ce que fait la charge (attente d'autorisation, en charge, en pause, programmée, terminée).
 - **Le réseau aussi** : un switch, un serveur, un NAS, une baie ou un routeur (la box du fournisseur aussi), *En ligne*, en *Activité* ou en *Alerte*, et *Pas d'internet* quand un routeur perd son lien. Une diode par port utilisé, une par disque dans sa baie (sain, en lecture, en veille, à surveiller, en panne), et les mesures trouvées toutes seules sur Synology, UGREEN, Unraid ou Glances.
-- **Les robots aussi** : un aspirateur, un laveur ou une tondeuse quitte sa base et parcourt son sol, revient, et dit quand sa station vide le bac ou lave les patins, quand la pluie le garde à la base ou quand il est coincé.
+- **Les robots aussi** : un aspirateur, un laveur ou une tondeuse quitte sa base et parcourt son sol, revient, et dit quand sa station vide le bac ou lave les patins, quand la pluie le garde à la base ou quand il est coincé. Un aspirateur balai sur son support mural et un laveur de sol dans sa station se chargent par un câble où l'on voit passer le courant.
 - **Et la piscine** : le filtre à sable, la pompe et le bassin, en *Filtration*, en *Injection de chlore* avec une pompe doseuse en option, en *Contre-lavage* vers l'égout, en *Hors-gel*, et le projecteur, l'eau, le pH et le RedOx dans les lignes.
 - **L'énergie** : des panneaux solaires au sol ou sur un toit, sous le soleil, quelques nuages ou la lune, en *Production*, *Production faible* ou *Nuit* ; une batterie domestique murale ou une station portable, *En charge*, *En décharge*, *Au repos*, *Pleine* ou *Batterie basse*, sa réserve tracée sur sa jauge et le temps jusqu'au plein ou jusqu'à la réserve dans les lignes.
 - **Et le pèse-personne** : le dernier poids sur son écran, allumé une heure après une pesée, ce qu'il reste jusqu'à l'objectif, et la graisse, les muscles et les os dans les lignes, depuis Withings ou n'importe quel capteur de poids.
@@ -91,9 +93,9 @@ Clique sur une famille pour voir ses appareils en marche.
 </details>
 
 <details>
-<summary><b>Robots : aspirateurs, laveurs et tondeuses</b></summary>
+<summary><b>Robots et aspirateurs : robots, tondeuses, aspirateurs balais et laveurs de sol</b></summary>
 
-<img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-robots.fr.gif" alt="Robots : aspirateurs, laveurs et tondeuses" width="100%">
+<img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-robots.fr.gif" alt="Robots et aspirateurs : robots, tondeuses, aspirateurs balais et laveurs de sol" width="100%">
 
 </details>
 
@@ -150,7 +152,7 @@ Seule `state_entity` est obligatoire, sauf sur un réfrigérateur où une sonde 
 | `state_entity` | **Obligatoire**, sauf sur un frigo ou une borne de recharge. Entité portant l'état de l'appareil, de n'importe quel domaine. |
 | `state_map` | Table état brut → `idle` \| `running` \| `preheating` \| `keep_warm` \| `paused` \| `done` \| `delayed` \| `error`. Fixe le libellé, la couleur et l'animation. La clé `"*"` ramasse tous les états qui dépassent (voir plus bas), et sur un lave-linge, un sèche-linge ou un lave-vaisselle les étapes (`washing`, `spinning`...) sont aussi des cibles. Aussi dans l'éditeur visuel. |
 | `state_show_raw` | `true` affiche le texte de l'entité plutôt que le libellé de la card, tel que Home Assistant l'affiche (un climatiseur lit `Froid`, pas `cool`). |
-| `controls_activation` | Comment les boutons de commande réagissent : `tap` (par défaut) les actionne tout de suite, `confirm` demande un second appui dans les 3 secondes (le bouton passe au rouge entre les deux), `hold` seulement après un appui long, `off` jamais depuis la card (un appui long ouvre l'entité). En YAML, l'écrire entre guillemets, `controls_activation: "off"` : un `off` nu est lu comme `false` (la card le traite quand même comme `off`). Utile contre les appuis accidentels et les petits doigts. |
+| `controls_activation` | Comment les boutons de commande réagissent : `tap` (par défaut) les actionne tout de suite, `confirm` demande un second appui dans les 3 secondes (le bouton passe au rouge entre les deux), `hold` seulement après un appui long, `off` jamais depuis la card (un appui long ouvre l'entité). En YAML, l'écrire entre guillemets, `controls_activation: "off"` : un `off` nu est lu comme `false` (la card le traite quand même comme `off`). Utile contre les appuis accidentels et les petits doigts. Sur téléphone, l'application Companion vibre quand une commande agit. |
 | `controls_always` | Sur une machine à cycle, chaque bouton n'apparaît que quand il peut agir : démarrer à l'arrêt, pause en marche, reprendre en pause, stop pendant un cycle ou un départ différé, marche/arrêt hors cycle, et seulement marche/arrêt quand l'appareil est éteint. `true` affiche tous les boutons tout le temps. |
 | `show_unavailable_controls` | Un bouton dont l'entité est absente ou indisponible est masqué. `true` l'affiche quand même. |
 | `name` | Titre de la card. Par défaut, le nom de l'entité d'état ; sans elle (un frigo, un distributeur ou une borne lus par leurs autres entités), le nom du type. |
@@ -270,9 +272,10 @@ Seule `state_entity` est obligatoire, sauf sur un réfrigérateur où une sonde 
 | `runtime_entity` | onduleur | L'autonomie restante, en secondes comme NUT la donne, ou en minutes ou en heures : une ligne, et l'écran de l'onduleur quand il est sur batterie. |
 | `load_entity` / `nominal_power` | onduleur | La charge, en % : l'énergie circule plus vite quand elle monte, et à 100 % ou plus c'est une *Surcharge*. Avec `nominal_power` (en W) et sans `power_entity`, la ligne la donne aussi en watts. |
 | `input_voltage_entity` | onduleur | La tension à la prise, en ligne. Sans `state_entity`, sous 100 V l'onduleur est sur batterie. |
-| `robot_layout` | robot | `vacuum` \| `mop` \| `mower`. Sans lui, une entité `lawn_mower` ou un nom qui dit tondeuse, Landroid ou Automower en fait une tondeuse, et Braava ou laveur un robot laveur. |
+| `robot_layout` | robot | `vacuum` \| `mop` \| `mower` \| `stick` (un aspirateur balai sur son support mural) \| `floor_washer` (un laveur de sol dans sa station). Sans lui, un nom qui dit balai, sans fil ou Dyson en fait un aspirateur balai, Tineco ou laveur de sol un laveur de sol, une entité `lawn_mower` ou un nom qui dit tondeuse, Landroid ou Automower en fait une tondeuse, et Braava ou laveur un robot laveur. |
 | `robot_station` | robot | `station` (défaut : la station de vidage de l'aspirateur, la station de lavage du laveur) \| `base` (une base de charge seule). |
 | `robot_shelter` | robot | `true` dessine un abri au-dessus de la base d'une tondeuse. |
+| `away_threshold` | robot | Un aspirateur balai ou un laveur de sol lu sur la prise de son support : au-dessus de `power_on_threshold` (5 W par défaut) il est *En charge*, en dessous *Chargé*, et à `away_threshold` (1 W par défaut) ou moins *Hors de la base*, en utilisation ou mal accroché, son support dessiné vide. La prise coupée affiche *Éteint*. |
 | `robot_floor` | robot | Le sol sur lequel travaille un aspirateur ou un laveur : `rug` (tapis, défaut de l'aspirateur) \| `tiles` (carrelage, défaut du laveur) \| `parquet` \| `smooth` (sol lisse). |
 | `robot_controls` | robot | `true` ajoute les boutons du robot, sur une entité `vacuum` ou `lawn_mower` : *Démarrer* hors du travail, *Pause* au travail, *Retour à la base* loin d'elle. `controls_always: true` montre les trois en permanence. |
 | `battery_corner` | robot | `true` déplace la batterie des lignes vers un coin de la carte, en icône et en pourcentage, orange à 20 % ou moins. Un appui ouvre son entité. |
@@ -576,7 +579,7 @@ disk2_entity: sensor.nas_drive_2_status
 </details>
 
 <details>
-<summary><b>Robots : aspirateurs, laveurs et tondeuses</b></summary>
+<summary><b>Robots et aspirateurs : robots, tondeuses, aspirateurs balais et laveurs de sol</b></summary>
 
 Lu depuis l'entité `vacuum` ou `lawn_mower` de Home Assistant : *Nettoyage*, *Lavage* ou *Tonte*, *Retour à la base*, *En pause*, *À l'arrêt*, *En charge* puis *À la base* une fois plein, *Erreur*. Le robot quitte sa base et fait des allers-retours sur son sol, un tapis, du carrelage ou une pelouse dont l'herbe est coupée sous la tondeuse, et son anneau prend la couleur de son état. Un état détaillé en dit plus : la station qui vide le bac, lave ou sèche les patins, la *Coupe des bordures*, la *Pluie*. Un bac plein ou un réservoir vide le passent en orange ; une erreur le fait fumer, avec une marque de colère. Ses lignes donnent la batterie, le réservoir d'eau et le texte de l'erreur.
 
@@ -587,6 +590,19 @@ robot_status_entity: sensor.landroid_status
 battery_entity: sensor.landroid_battery
 robot_error_entity: sensor.landroid_error
 robot_shelter: true
+```
+
+Un aspirateur balai ou un laveur de sol se lit sur la prise de son support ou de sa station, et le courant parcourt le câble pendant la charge. L'intégration d'un laveur de sol (Tineco) en dit plus : hors de la base pendant l'utilisation, *Autonettoyage* avec des bulles dans la station, réservoir d'eau sale plein, réservoir d'eau propre vide, brosse emmêlée en *Erreur*.
+
+```yaml
+type: custom:ha-appliance-card
+appliance_type: robot
+robot_layout: floor_washer
+state_entity: sensor.tineco_vacuum_status
+battery_entity: sensor.tineco_battery
+robot_bin_entity: sensor.tineco_waste_water_tank
+robot_water_entity: sensor.tineco_fresh_water_tank
+robot_error_entity: sensor.tineco_brush_roller
 ```
 
 </details>

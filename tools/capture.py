@@ -68,7 +68,7 @@ FAMILIES = (
     ("network", "net_switch,net_nas,net_server,net_rack,net_router", 5),
     ("network-routers", "net_router,net_router_down", 2),
     ("network-models", "net_sw8,net_sw16,net_sw24,net_sw32,net_nas1,net_nas2,net_nas4", 4),
-    ("robots", "robot_vacuum,robot_emptying,robot_mop,robot_drying,robot_mower,robot_rain", 6),
+    ("robots", "robot_vacuum,robot_emptying,robot_mop,robot_drying,robot_mower,robot_rain,robot_stick,robot_washer", 4),
     ("pool", "pool_running,pool_chlorine,pool_backwash,pool_frost,pool_light,pool_error", 6),
     ("energy", "solar_day,solar_roof,solar_night,battery_charging,battery_station,battery_low", 6),
     ("scales", "scale_fresh,scale_goal,scale_old", 3),

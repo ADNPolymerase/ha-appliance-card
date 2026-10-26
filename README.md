@@ -10,9 +10,11 @@
 <a href="https://buymeacoffee.com/adnpolymerase" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-orange.png" alt="Buy Me A Coffee" height="60"></a>
 <a href="https://adnpolymerase.github.io/HA/" target="_blank"><img src="https://raw.githubusercontent.com/ADNPolymerase/HA/main/assets/site-button.svg" alt="Link to my github.io for my other projects" height="60"></a>
 
-A Lovelace card for household appliances: washers, dryers, dishwashers, ovens, microwaves, cooker hoods, cooktops, fridges, kettles, cookers, coffee machines, rice cookers, air fryers, water heaters, boilers, heat pumps, 3D printers, pet feeders, irons, toasters, hair dryers, pellet stoves, air conditioners, dehumidifiers, space heaters, towel warmers, air purifiers, fans, EV chargers, TVs, projectors and computers, network switches, servers, NAS and racks, robot vacuums, mops and mowers, pool pumps, bathroom scales, UPSes, solar panels and home batteries. Cycle in progress, program, remaining time, temperature, alerts and controls.
+A Lovelace card for household appliances: washers, dryers, dishwashers, ovens, microwaves, cooker hoods, cooktops, fridges, kettles, cookers, coffee machines, rice cookers, air fryers, water heaters, boilers, heat pumps, 3D printers, pet feeders, irons, toasters, hair dryers, pellet stoves, air conditioners, dehumidifiers, space heaters, towel warmers, air purifiers, fans, EV chargers, TVs, projectors and computers, network switches, servers, NAS and racks, robot vacuums, mops and mowers, stick vacuums and floor washers, pool pumps, bathroom scales, UPSes, solar panels and home batteries. Cycle in progress, program, remaining time, temperature, alerts and controls.
 
 No brand assumed: every field is an entity you pick, so it works with **any** integration (Electrolux, Samsung, LG, Home Connect, Miele, a plain smart plug…).
+
+**[Try the live demo](https://adnpolymerase.github.io/ha-appliance-card/docs/demo.html?view=live)**: every appliance animated in your browser, light or dark, no Home Assistant needed.
 
 > Feedback and issues welcome.
 > 🇫🇷 [Lire en français](README.fr.md)
@@ -27,7 +29,7 @@ No brand assumed: every field is an entity you pick, so it works with **any** in
 - **A washer-dryer is a washer that dries**: `washer_dryer: true`, and the drum shows water while it washes, then clothes turning in hot air while it dries. The step comes from the state itself or from a phase entity, and the state line reads *Washing* or *Drying*.
 - **Each appliance says what matters for it**: a coffee machine what it is missing (water, beans, tray, descaling), a fridge its health (unplugged, door open, temperature high), a combi boiler what it is heating (central heating, hot water or standby), a 3D printer what the job is doing (preheating, bed levelling, changing filament), a pellet stove the phase of its fire (ignition, modulating, eco, cleaning), an air conditioner its mode and where it blows, an EV charger whether a car is plugged in and what the charge is doing (waiting for authorisation, charging, paused, scheduled, complete).
 - **The network as well**: a switch, a server, a NAS, a rack or a router (the box an ISP lends too), *Online*, *Busy* or in *Alert*, and *No internet* when a router loses its link. One LED per port in use, one per disk in its bay (fine, reading, asleep, to watch, failed), and the readings found on their own from Synology, UGREEN, Unraid or Glances.
-- **Robots too**: a vacuum, a mop or a mower leaves its base and goes over its floor, comes back, and says when its station empties the bin or washes the pads, when rain keeps it home or when it is stuck.
+- **Robots too**: a vacuum, a mop or a mower leaves its base and goes over its floor, comes back, and says when its station empties the bin or washes the pads, when rain keeps it home or when it is stuck. A stick vacuum on its wall dock and a floor washer in its station charge from a cable you see the current run along.
 - **And the pool**: the sand filter, the pump and the pool, *Filtering*, *Chlorine injection* with an optional dosing pump, *Backwash* to the drain, *Frost protection*, and the light, the water, the pH and the RedOx in the lines.
 - **Energy**: solar panels on the ground or on a roof, under the sun, a few clouds or the moon, *Producing*, *Low production* or *Night*; a home battery on the wall or a portable station, *Charging*, *Discharging*, *Idle*, *Full* or *Low battery*, its reserve drawn on its gauge and the time to full or until the reserve in the lines.
 - **And the bathroom scale**: the last weight on its screen, lit for an hour after a weighing, what is left to the goal, and the fat, the muscles and the bones in the lines, from Withings or any weight sensor.
@@ -91,9 +93,9 @@ Click a family to see its appliances at work.
 </details>
 
 <details>
-<summary><b>Robots: vacuums, mops and mowers</b></summary>
+<summary><b>Robots and vacuums: robots, mowers, stick vacuums and floor washers</b></summary>
 
-<img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-robots.gif" alt="Robots: vacuums, mops and mowers" width="100%">
+<img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-robots.gif" alt="Robots and vacuums: robots, mowers, stick vacuums and floor washers" width="100%">
 
 </details>
 
@@ -150,7 +152,7 @@ Only `state_entity` is required, except on a fridge where a probe or a door cont
 | `state_entity` | **Required**, except on a fridge or an EV charger. Entity carrying the appliance's state, any domain. |
 | `state_map` | Map raw state → `idle` \| `running` \| `preheating` \| `keep_warm` \| `paused` \| `done` \| `delayed` \| `error`. Sets the label, the colour and the animation. The key `"*"` catches every state left over (see below), and on a washer, a dryer or a dishwasher the steps (`washing`, `spinning`...) are targets too. Also in the visual editor. |
 | `state_show_raw` | `true` shows the entity's own text instead of the card's label, as Home Assistant displays it (a climate reads `Cooling`, not `cool`). |
-| `controls_activation` | How the control buttons answer a finger: `tap` (default) runs them at once, `confirm` asks for a second tap within 3 seconds (the button turns red in between), `hold` runs them only after a long press, `off` never runs them from the card (a long press opens the entity). In YAML, write it in quotes, `controls_activation: "off"`: a bare `off` is read as `false` (the card still takes it as `off`). Handy against stray taps and small fingers. |
+| `controls_activation` | How the control buttons answer a finger: `tap` (default) runs them at once, `confirm` asks for a second tap within 3 seconds (the button turns red in between), `hold` runs them only after a long press, `off` never runs them from the card (a long press opens the entity). In YAML, write it in quotes, `controls_activation: "off"`: a bare `off` is read as `false` (the card still takes it as `off`). Handy against stray taps and small fingers. On a phone, the Companion app vibrates when a control acts. |
 | `controls_always` | On a machine that runs a cycle, each button only shows when it can act: start at rest, pause while running, resume in a pause, stop during a cycle or a delayed start, the power switch outside a cycle, and with the power switch off only the power switch. `true` shows every button all the time. |
 | `show_unavailable_controls` | A button whose entity is missing or unavailable is left out. `true` shows it anyway. |
 | `name` | Card title. Defaults to the state entity's name; without one (a fridge, a pet feeder or an EV charger read from their other entities), the type's name. |
@@ -270,9 +272,10 @@ Only `state_entity` is required, except on a fridge where a probe or a door cont
 | `runtime_entity` | UPS | The time left on the battery, in seconds as NUT gives it, or in minutes or hours: a line, and the UPS's screen while on battery. |
 | `load_entity` / `nominal_power` | UPS | The load, in %: the energy flows faster as it grows, and 100 % or more is an *Overload*. With `nominal_power` (in W) and no `power_entity`, the line gives it in watts too. |
 | `input_voltage_entity` | UPS | The voltage at the wall, as a line. Without a `state_entity`, below 100 V the UPS is on battery. |
-| `robot_layout` | robot | `vacuum` \| `mop` \| `mower`. Left out, a `lawn_mower` entity or a name that says mower, Landroid or Automower makes a mower, and Braava or mop a mopping robot. |
+| `robot_layout` | robot | `vacuum` \| `mop` \| `mower` \| `stick` (a stick vacuum on its wall dock) \| `floor_washer` (a wet and dry floor washer in its station). Left out, a name that says stick, cordless or Dyson makes a stick vacuum, Tineco or floor washer a floor washer, a `lawn_mower` entity or a name that says mower, Landroid or Automower makes a mower, and Braava or mop a mopping robot. |
 | `robot_station` | robot | `station` (default: the vacuum's emptying station, the mop's washing station) \| `base` (a charging base alone). |
 | `robot_shelter` | robot | `true` draws a shelter over a mower's base. |
+| `away_threshold` | robot | A stick vacuum or a floor washer read from the plug its dock is on: above `power_on_threshold` (5 W by default) it is *Charging*, below it *Charged*, and at `away_threshold` (1 W by default) or less *Off the base*, in use or badly seated, its dock drawn empty. The plug switched off reads *Off*. |
 | `robot_floor` | robot | The floor a vacuum or a mop works on: `rug` (default for a vacuum) \| `tiles` (default for a mop) \| `parquet` \| `smooth`. |
 | `robot_controls` | robot | `true` adds the robot's own buttons, on a `vacuum` or `lawn_mower` entity: *Start* away from work, *Pause* at work, *Return to base* away from it. `controls_always: true` shows all three all the time. |
 | `battery_corner` | robot | `true` moves the battery from the lines to a corner of the card, as an icon and its percentage, orange at 20 % or less. A tap opens its entity. |
@@ -576,7 +579,7 @@ disk2_entity: sensor.nas_drive_2_status
 </details>
 
 <details>
-<summary><b>Robots: vacuums, mops and mowers</b></summary>
+<summary><b>Robots and vacuums: robots, mowers, stick vacuums and floor washers</b></summary>
 
 Read from Home Assistant's own `vacuum` or `lawn_mower` entity: *Cleaning*, *Mopping* or *Mowing*, *Returning to base*, *Paused*, *Stopped*, *Charging* then *Docked* once full, *Error*. The robot leaves its base and goes back and forth over its floor, a rug, tiles or a lawn whose grass is cut under the mower, and its ring takes the colour of its state. A detailed status says more: the station emptying the bin, washing or drying the pads, *Edge cutting*, *Rain delay*. A full bin or an empty tank turns it orange; an error makes it smoke, with an anger mark. Its lines give the battery, the water tank and the error's text.
 
@@ -587,6 +590,19 @@ robot_status_entity: sensor.landroid_status
 battery_entity: sensor.landroid_battery
 robot_error_entity: sensor.landroid_error
 robot_shelter: true
+```
+
+A stick vacuum or a floor washer is read from the plug its dock or station is on, and the cable runs with current while it charges. A floor washer's own integration (Tineco) says more: off the base while in use, *Self-cleaning* with bubbles in the station, a full dirty water tank, an empty clean one, a tangled brush as an *Error*.
+
+```yaml
+type: custom:ha-appliance-card
+appliance_type: robot
+robot_layout: floor_washer
+state_entity: sensor.tineco_vacuum_status
+battery_entity: sensor.tineco_battery
+robot_bin_entity: sensor.tineco_waste_water_tank
+robot_water_entity: sensor.tineco_fresh_water_tank
+robot_error_entity: sensor.tineco_brush_roller
 ```
 
 </details>

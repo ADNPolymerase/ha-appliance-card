@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>ha-appliance-card demo</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@mdi/font@7.4.47/css/materialdesignicons.min.css">
 <style>
@@ -15,6 +16,34 @@
   #wrap { display: inline-block; }
   .row { display: grid; grid-template-columns: repeat(var(--cols, 5), 300px); gap: 24px; align-items: start; }
   ha-card { display: block; width: 300px; background: #ffffff; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.08); }
+  body.live { padding: 16px; }
+  body.live #wrap { display: block; max-width: 1280px; margin: 0 auto; }
+  body.live header h1 { margin: 8px 0 4px; font-size: 26px; font-weight: 500; color: var(--primary-text-color); }
+  body.live header p { margin: 0 0 12px; max-width: 760px; color: var(--secondary-text-color); line-height: 1.45; }
+  body.live nav { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin-bottom: 8px; }
+  body.live nav span { width: 10px; }
+  body.live nav a { padding: 5px 12px; border-radius: 16px; border: 1px solid var(--divider-color); color: var(--primary-text-color); text-decoration: none; font-size: 14px; background: var(--card-background-color); }
+  body.live nav a.on { background: var(--primary-color, #03a9f4); border-color: transparent; color: #fff; }
+  html.live { padding: 0; }
+  body.live details { margin-top: 12px; border-radius: 12px; background: var(--card-background-color); box-shadow: 0 1px 3px rgba(0,0,0,.08); }
+  body.live summary { display: flex; align-items: center; gap: 10px; padding: 14px 16px; cursor: pointer; list-style: none;
+    font-size: 18px; font-weight: 500; color: var(--primary-text-color); }
+  body.live summary::-webkit-details-marker { display: none; }
+  body.live summary::before { content: "\203A"; display: inline-block; width: 12px; font-size: 22px; line-height: 1; color: var(--secondary-text-color); transition: transform .2s; }
+  body.live details[open] summary::before { transform: rotate(90deg); }
+  body.live summary small { margin-left: auto; font-size: 13px; font-weight: 400; color: var(--secondary-text-color); background: var(--divider-color); border-radius: 10px; padding: 1px 8px; }
+  body.live details .grid { padding: 0 16px 16px; }
+  html.dark body.live details { background: #171a1e; }
+  html.dark body.live details ha-card { --card-background-color: #22272d; }
+  body.live .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 16px; align-items: start; }
+  body.live ha-card { width: auto; }
+  html.dark, html.dark body {
+    background: #111418;
+    --primary-text-color: #e4e7eb; --secondary-text-color: #9aa3ad; --divider-color: #2c3238;
+    --card-background-color: #1c2025; --disabled-text-color: #6b737c;
+  }
+  html.dark ha-card { background: #1c2025; box-shadow: none; }
+  @media (max-width: 560px) { body.live .grid { grid-template-columns: 1fr; } }
 </style>
 </head>
 <body>
@@ -51,7 +80,7 @@ customElements.define("ha-icon", StubIcon);
 // plus ?lang=fr for the French screenshots.
 const params = new URLSearchParams(location.search);
 const uiLang = params.get("lang") === "fr" ? "fr" : "en";
-const view = params.get("view") === "types" ? "types" : "hero";
+const view = ["types", "live"].includes(params.get("view")) ? params.get("view") : "hero";
 // Twenty-nine types, the two other feeders and a ceiling fan, thirty-two
 // cards with the iron on its steam generator: eight across and four down.
 document.documentElement.style.setProperty("--cols", params.get("cols") || 8);
@@ -65,7 +94,7 @@ function mkHass(states) {
   return { language: uiLang, locale: { language: uiLang }, states, entities: {}, devices: {}, callService: () => {} };
 }
 
-const row = document.getElementById("row");
+let row = document.getElementById("row");
 function card(config, entities) {
   const states = {};
   entities.forEach((s) => (states[s.entity_id] = s));
@@ -817,6 +846,12 @@ const rbtMower = robot("Landroid", "lawn_mower.landroid", "mowing", {}, { batter
   [st("sensor.landroid_battery", 68, { unit_of_measurement: "%" })]);
 const rbtRain = robot("Landroid", "lawn_mower.landroid", "docked", {}, { battery_entity: "sensor.landroid_battery", robot_status_entity: "sensor.landroid_status", robot_shelter: true },
   [st("sensor.landroid_battery", 100, { unit_of_measurement: "%" }), st("sensor.landroid_status", "rain_delayed")]);
+// A stick vacuum on its wall dock, read from its plug, and a floor washer in
+// its station, from its own integration.
+const rbtStick = robot(L("Stick vacuum", "Aspirateur balai"), "switch.stick_dock", "on", {}, { appliance_type: "robot", robot_layout: "stick", power_entity: "sensor.stick_dock_power" },
+  [st("sensor.stick_dock_power", 24, { unit_of_measurement: "W" })]);
+const rbtWasher = robot(L("Floor washer", "Laveur de sol"), "sensor.tineco_status", "self_cleaning", {}, { appliance_type: "robot", robot_layout: "floor_washer", battery_entity: "sensor.tineco_battery" },
+  [st("sensor.tineco_battery", 100, { unit_of_measurement: "%" })]);
 
 // Pool pumps: filtering, injecting chlorine, backwashing, frost protection,
 // at rest with the light on, and in error.
@@ -893,7 +928,7 @@ const EXTRA = { iron, round_feeder: roundFeeder, double_feeder: doubleFeeder, ev
                 net_switch: netSwitch, net_nas: netNas, net_server: netServer, net_rack: netRack,
                 net_router: netRouter("on"), net_router_down: netRouter("off"),
                 robot_vacuum: rbtVacuum, robot_emptying: rbtEmptying, robot_mop: rbtMop, robot_drying: rbtDrying,
-                robot_mower: rbtMower, robot_rain: rbtRain,
+                robot_mower: rbtMower, robot_rain: rbtRain, robot_stick: rbtStick, robot_washer: rbtWasher,
                 pool_running: poolRunning, pool_chlorine: poolChlorine, pool_backwash: poolBackwash, pool_frost: poolFrost,
                 pool_light: poolLight, pool_error: poolError,
                 solar_day: solarDay, solar_roof: solarRoof, solar_night: solarNight,
@@ -905,12 +940,71 @@ const EXTRA = { iron, round_feeder: roundFeeder, double_feeder: doubleFeeder, ev
                 net_nas1: netBays(1, ["normal"], L("NAS, 1 bay", "NAS 1 baie")),
                 net_nas2: netBays(2, ["normal", null], L("NAS, 2 bays, 1 disk", "NAS 2 baies, 1 disque")),
                 net_nas4: netBays(4, ["normal", "normal", "normal", "warning"], L("NAS, 4 bays", "NAS 4 baies")) };
+// ?view=live: the public demo, linked from the README. Every family under
+// its own title, a grid that fits a phone, the language and the theme to
+// pick. The other views stay as they are: the captures depend on them.
+function liveGallery() {
+  document.body.classList.add("live");
+  document.documentElement.classList.add("live");
+  // Home Assistant's card frame, which the other views do without.
+  if (!customElements.get("ha-card")) {
+    customElements.define("ha-card", class extends HTMLElement {
+      constructor() {
+        super();
+        this.attachShadow({ mode: "open" }).innerHTML = "<style>:host{display:block;background:var(--card-background-color);border-radius:12px;"
+          + "box-shadow:0 1px 3px rgba(0,0,0,.12),0 1px 2px rgba(0,0,0,.08);color:var(--primary-text-color)}</style><slot></slot>";
+      }
+    });
+  }
+  const dark = params.get("theme") === "dark";
+  if (dark) document.documentElement.classList.add("dark");
+  const link = (key, value, label, on) => {
+    const q = new URLSearchParams(location.search);
+    q.set("view", "live");
+    q.set(key, value);
+    return `<a href="?${q}"${on ? ' class="on"' : ""}>${label}</a>`;
+  };
+  const wrap = document.getElementById("wrap");
+  wrap.innerHTML = `<header>
+    <h1>HA Appliance Card</h1>
+    <p>${L("A Lovelace card for 38 kinds of home appliances, each drawn and animated from its own data. These cards run on made-up states: in Home Assistant every field is an entity you pick.",
+      "Une card Lovelace pour 38 types d'appareils, chacun dessiné et animé à partir de ses propres données. Ces cartes tournent sur des états inventés : dans Home Assistant, chaque champ est une entité que vous choisissez.")}</p>
+    <nav>${link("lang", "en", "English", !fr)}${link("lang", "fr", "Français", fr)}<span></span>${link("theme", "light", L("Light", "Clair"), !dark)}${link("theme", "dark", L("Dark", "Sombre"), dark)}<span></span><a href="https://github.com/ADNPolymerase/ha-appliance-card">GitHub</a></nav>
+  </header>`;
+  const FAMILIES = [
+    [L("Laundry", "Linge"), [washer, dryer, EXTRA.iron, steamGenerator]],
+    [L("Kitchen", "Cuisine"), [dishwasher, oven, microwave, hood, cooktop, fridge, kettle, cooker, coffee, riceCooker, airFryer, toaster]],
+    [L("Heating and climate", "Chauffage et climat"), [waterHeater, boiler, heatPump, pelletStove, spaceHeater, towelWarmer, airConditioner, dehumidifier]],
+    [L("Air purifiers and fans", "Purificateurs et ventilateurs"), [purifier, boxPurifier, ringPurifier, fan, ceilingFan]],
+    [L("Robots and vacuums", "Robots et aspirateurs"), [rbtVacuum, rbtEmptying, rbtMop, rbtDrying, rbtMower, rbtRain, rbtStick, rbtWasher]],
+    [L("Pool", "Piscine"), [poolRunning, poolChlorine, poolBackwash, poolFrost, poolLight, poolError]],
+    [L("Energy", "Énergie"), [solarDay, solarRoof, solarNight, batteryCharging, batteryStation, batteryLow, evCharger, evDischarging]],
+    [L("Network and servers", "Réseau et serveurs"), [netSwitch, netRouter("on"), netNas, netServer, netRack, upsOnline, upsBattery, upsLow]],
+    [L("Home and media", "Maison et multimédia"), [printer3d, scaleFresh, scaleGoal]],
+    [L("Pets", "Animaux"), [petFeeder, roundFeeder, doubleFeeder, dualFeeder, wetFeeder, petFountain]],
+  ];
+  // Each family folds, the first one open: forty cards in a row are hard to
+  // read, a list of families is not.
+  FAMILIES.forEach(([title, makers], n) => {
+    const sec = document.createElement("details");
+    if (n === 0) sec.open = true;
+    sec.innerHTML = `<summary><span>${title}</span><small>${makers.length}</small></summary>`;
+    const grid = document.createElement("div");
+    grid.className = "grid";
+    sec.appendChild(grid);
+    wrap.appendChild(sec);
+    row = grid;
+    makers.forEach((f) => f());
+  });
+}
 const only = (params.get("only") || "").split(",").map((k) => k.trim()).filter(Boolean);
 if (only.length) {
   document.documentElement.style.setProperty("--cols", params.get("cols") || only.length);
   only.forEach((k) => (ALL[k] || EXTRA[k]) && (ALL[k] || EXTRA[k])());
 } else if (view === "types") {
   Object.values(ALL).forEach((f) => f());
+} else if (view === "live") {
+  liveGallery();
 } else {
   [washer, oven, coffee, fridge].forEach((f) => f());
   // The washer counts down, so the header image is alive when opened by hand.
