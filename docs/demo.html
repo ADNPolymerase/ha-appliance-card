@@ -263,6 +263,15 @@ function rangeFor(v, unit) {
   const hi = Math.max(10, Math.abs(v) * 3);
   return [v < 0 ? -hi : 0, hi, Math.abs(v) < 10 && v % 1 ? 0.1 : 1];
 }
+// Values with a known scale but no unit: a percentage, a hob level, a blender
+// speed, signal bars. Without this their slider would run to three times the
+// current value.
+const KNOWN_RANGES = [
+  [/progress$/, [0, 100, 1]],
+  [/^sensor\.hob_z\d$/, [0, 9, 1]],
+  [/^sensor\.cooker_speed$/, [0, 10, 1]],
+  [/\.signal_strength$/, [0, 5, 1]],
+];
 let editorN = 0;
 function valueEditor(cell, sim) {
   const { config, states } = sim;
@@ -287,7 +296,7 @@ function valueEditor(cell, sim) {
     toastT = setTimeout(() => toast.classList.remove("on"), 1800);
   };
   sim.refresh = () => { if (!typing) build(); };
-  const field = (label, id, value, unit, attr, words) => {
+  const field = (label, id, value, unit, attr, words, attrs) => {
     const row = document.createElement("label");
     row.className = "val";
     const name = `<span>${label}</span>`;
@@ -297,7 +306,10 @@ function valueEditor(cell, sim) {
       row.innerHTML = `${name}<input type="checkbox"${value === "on" ? " checked" : ""}>`;
       row.querySelector("input").addEventListener("change", (e) => set(id, e.target.checked ? "on" : "off"));
     } else if (String(value).trim() !== "" && Number.isFinite(n) && !words.length) {
-      const [lo, hi, step] = rangeFor(n, unit);
+      // A number entity carries its own bounds: use them rather than a guess.
+      const own = attrs && Number.isFinite(Number(attrs.min)) && Number.isFinite(Number(attrs.max));
+      const known = KNOWN_RANGES.find(([re]) => re.test(attr ? `${id}.${attr}` : id));
+      const [lo, hi, step] = known ? known[1] : own ? [Number(attrs.min), Number(attrs.max), Number(attrs.step) || 1] : rangeFor(n, unit);
       row.innerHTML = `${name}<input type="range" min="${lo}" max="${hi}" step="${step}" value="${n}"><input type="number" step="${step}" value="${n}"><em>${unit || ""}</em>`;
       const [r, num] = row.querySelectorAll("input");
       r.addEventListener("input", () => { num.value = r.value; set(id, r.value, attr); });
@@ -318,11 +330,11 @@ function valueEditor(cell, sim) {
   for (const [id, st] of Object.entries(states)) {
     if (["button", "script", "scene"].includes(id.split(".")[0])) continue;
     const short = id.split(".")[1].replace(/_/g, " ");
-    field(short, id, st.state, st.attributes && st.attributes.unit_of_measurement, null, wordsFor(id, st, config));
+    field(short, id, st.state, st.attributes && st.attributes.unit_of_measurement, null, wordsFor(id, st, config), st.attributes);
     for (const [k, v] of Object.entries(st.attributes || {})) {
       if (["unit_of_measurement", "friendly_name", "device_class", "icon", "options", "entity_picture", "supported_features"].includes(k) || Array.isArray(v) || typeof v === "object") continue;
       const listed = st.attributes[`${k}s`] || st.attributes[`${k.replace(/_mode$/, "")}_modes`];
-      if (typeof v === "number") field(`${short} \u00b7 ${k.replace(/_/g, " ")}`, id, v, k.includes("temperature") ? "\u00b0C" : k.includes("battery") ? "%" : "", k, []);
+      if (typeof v === "number") field(`${short} \u00b7 ${k.replace(/_/g, " ")}`, id, v, k.includes("temperature") ? "\u00b0C" : /battery|percent|humidity|position/.test(k) ? "%" : "", k, []);
       else if (Array.isArray(listed)) field(`${short} \u00b7 ${k.replace(/_/g, " ")}`, id, v, "", k, listed);
       else if (["hvac_action", "status"].includes(k)) field(`${short} \u00b7 ${k.replace(/_/g, " ")}`, id, v, "", k,
         k === "hvac_action" ? ["heating", "cooling", "drying", "fan", "idle", "off", "defrosting", "preheating"] : []);
