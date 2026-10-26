@@ -23,7 +23,7 @@ Aucune marque supposée : chaque champ est une entité à choisir, elle fonction
 
 ## Fonctionnalités
 
-- **Trente-huit types d'appareils**, chacun avec une illustration en CSS animée sur les données de l'appareil et statique à l'arrêt. Le type est détecté tout seul ou choisi via `appliance_type`, et `compact: true` ne garde que le texte.
+- **Trente-neuf types d'appareils**, chacun avec une illustration en CSS animée sur les données de l'appareil et statique à l'arrêt. Le type est détecté tout seul ou choisi via `appliance_type`, et `compact: true` ne garde que le texte.
 - **Normalisation d'état** : `Idle`, `RUNNING`, `wash`, `En marche`… sont reconnus (sans tenir compte des accents) et classés en veille, préchauffage, en cours, en pause, terminé, différé ou erreur. Un état inconnu s'affiche tel quel, sans l'espace de noms de l'intégration, et `state_map` classe le reste, `"*"` ramassant tout ce qui dépasse.
 - **L'étape, et non une heure d'*En cours*** : un lave-linge, un sèche-linge ou un lave-vaisselle nomme l'étape où il en est (*Prélavage*, *Lavage*, *Rinçage*, *Essorage*, *Séchage* et sept autres), d'après une entité de phase ou son propre état, et le tambour s'emballe pendant l'essorage. Le temps restant est toujours celui du cycle entier.
 - **Une lavante-séchante est un lave-linge qui sèche** : `washer_dryer: true`, et le tambour montre de l'eau pendant le lavage, puis du linge qui tourne dans l'air chaud pendant le séchage. L'étape vient de l'état lui-même ou d'une entité de phase, et la ligne d'état lit *Lavage* ou *Séchage*.
@@ -124,6 +124,13 @@ Clique sur une famille pour voir ses appareils en marche.
 <summary><b>Onduleurs</b></summary>
 
 <img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-ups.fr.gif" alt="Onduleurs" width="100%">
+
+</details>
+
+<details>
+<summary><b>Caméras</b></summary>
+
+<img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-cameras.fr.gif" alt="Caméras" width="100%">
 
 </details>
 
@@ -274,6 +281,12 @@ Seule `state_entity` est obligatoire, sauf sur un réfrigérateur où une sonde 
 | `runtime_entity` | onduleur | L'autonomie restante, en secondes comme NUT la donne, ou en minutes ou en heures : une ligne, et l'écran de l'onduleur quand il est sur batterie. |
 | `load_entity` / `nominal_power` | onduleur | La charge, en % : l'énergie circule plus vite quand elle monte, et à 100 % ou plus c'est une *Surcharge*. Avec `nominal_power` (en W) et sans `power_entity`, la ligne la donne aussi en watts. |
 | `input_voltage_entity` | onduleur | La tension à la prise, en ligne. Sans `state_entity`, sous 100 V l'onduleur est sur batterie. |
+| `camera_layout` | caméra | `indoor` (caméra orientable) \| `tube` (Netatmo Welcome) \| `outdoor` (sur son bras mural) \| `dome` (au plafond). Sans réglage, une caméra intérieure Netatmo est un tube, un nom qui dit dôme un dôme, et un nom ou une marque qui dit extérieur, jardin, avant, arrière, Arlo ou spotlight une caméra extérieure. |
+| `motion_entity` | caméra | Un capteur de mouvement : *Mouvement détecté* tant qu'il est actif, des ondes orange devant l'objectif, puis une ligne *Dernier mouvement*. |
+| `recording_entity` | caméra | Un capteur d'enregistrement, pour les intégrations dont l'entité caméra ne dit pas *recording*. |
+| `night_entity` | caméra | Le mode infrarouge : la couronne de LED autour de l'objectif s'allume en rouge, et une ligne *Vision nocturne*. |
+| `privacy_entity` | caméra | Un interrupteur de confidentialité (Reolink, Tapo) : activé, la caméra est *Désactivée*, tête baissée ou volet fermé. L'attribut `monitoring` de Netatmo fait de même. Mettez-le aussi en `toggle_entity` pour avoir un bouton. |
+| `signal_entity` / `battery_entity` | caméra | Le signal Wi-Fi et la batterie, en lignes. Les attributs d'une caméra Arlo sont lus sans eux. |
 | `robot_layout` | robot | `vacuum` \| `mop` \| `mower` \| `stick` (un aspirateur balai sur son support mural) \| `floor_washer` (un laveur de sol dans sa station). Sans lui, un nom qui dit balai, sans fil ou Dyson en fait un aspirateur balai, Tineco ou laveur de sol un laveur de sol, une entité `lawn_mower` ou un nom qui dit tondeuse, Landroid ou Automower en fait une tondeuse, et Braava ou laveur un robot laveur. |
 | `robot_station` | robot | `station` (défaut : la station de vidage de l'aspirateur, la station de lavage du laveur) \| `base` (une base de charge seule). |
 | `robot_shelter` | robot | `true` dessine un abri au-dessus de la base d'une tondeuse. |
@@ -688,6 +701,20 @@ runtime_entity: sensor.ups_autonomie_de_la_batterie
 load_entity: sensor.ups_charge
 input_voltage_entity: sensor.ups_tension_d_entree
 nominal_power: 520
+```
+
+</details>
+
+<details>
+<summary><b>Caméras</b></summary>
+
+L'état d'une caméra, pas son image : Home Assistant a ses cartes pour ça. Son `state_entity` est l'entité caméra : *En veille*, *En direct*, *Enregistrement* et *Désactivée* en viennent, *Mouvement détecté* d'un capteur de mouvement, et *Hors ligne* d'un capteur de connectivité éteint. Quatre formes, trouvées d'après le nom et la marque : une caméra intérieure orientable, le tube d'une Netatmo Welcome, une caméra extérieure sur son bras et un dôme.
+
+```yaml
+type: custom:ha-appliance-card
+state_entity: camera.aarlo_camera_avant
+motion_entity: binary_sensor.aarlo_motion_camera_avant
+connectivity_entity: binary_sensor.aarlo_connected_camera_avant
 ```
 
 </details>

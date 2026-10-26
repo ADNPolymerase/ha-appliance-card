@@ -1140,6 +1140,22 @@ const upsOnline = upsCard("OL", 100, 1500, 7, 241);
 const upsCharging = upsCard("OL CHRG", 62, 900, 12, 238);
 const upsBattery = upsCard("OB DISCHRG", 80, 754, 7, 0);
 const upsLow = upsCard("OB DISCHRG LB", 9, 120, 31, 0);
+
+// Cameras: the four shapes, read from their camera entity and the sensors an
+// Arlo, a Netatmo or a Reolink gives beside it.
+const ago = (min) => new Date(Date.now() - min * 60000).toISOString();
+const camCard = (name, state, cfg, attrs, more = []) => () => card({ name, state_entity: "camera.cam", ...cfg },
+  [{ ...st("camera.cam", state, attrs || {}), last_changed: ago(1) }, ...more]);
+const camIndoor = camCard(L("Living room", "Salon"), "idle", { camera_layout: "indoor", motion_entity: "binary_sensor.cam_motion" }, {},
+  [{ ...st("binary_sensor.cam_motion", "off"), last_changed: ago(42) }]);
+const camTube = camCard(L("Hall", "Entr\u00e9e"), "streaming", {}, { brand: "Netatmo", monitoring: true });
+const camOutdoor = camCard(L("Garden", "Jardin"), "recording", { night_entity: "switch.cam_ir" }, { brand: "Arlo", battery_level: 78, signal_strength: 3 },
+  [st("switch.cam_ir", "on")]);
+const camDome = camCard(L("Garage", "Garage"), "idle", { camera_layout: "dome", motion_entity: "binary_sensor.cam_motion" }, {},
+  [st("binary_sensor.cam_motion", "on")]);
+const camPrivacy = camCard(L("Bedroom", "Chambre"), "idle", { camera_layout: "indoor", privacy_entity: "switch.cam_privacy", toggle_entity: "switch.cam_privacy" }, {},
+  [st("switch.cam_privacy", "on")]);
+const camOffline = camCard(L("Driveway", "All\u00e9e"), "unavailable", { camera_layout: "outdoor" }, {});
 const upsReplace = upsCard("OL RB", 100, 300, 18, 236);
 const upsOff = upsCard("OFF", 100, 1500, 0, 241);
 
@@ -1167,6 +1183,7 @@ const EXTRA = { iron, round_feeder: roundFeeder, double_feeder: doubleFeeder, ev
                 scale_fresh: scaleFresh, scale_goal: scaleGoal, scale_old: scaleOld,
                 ups_online: upsOnline, ups_charging: upsCharging, ups_battery: upsBattery, ups_low: upsLow,
                 ups_replace: upsReplace, ups_off: upsOff,
+                cam_indoor: camIndoor, cam_tube: camTube, cam_outdoor: camOutdoor, cam_dome: camDome, cam_privacy: camPrivacy, cam_offline: camOffline,
                 net_sw8: netSw(8, 6), net_sw16: netSw(16, 11), net_sw24: netSw(24, 20), net_sw32: netSw(32, 27),
                 net_nas1: netBays(1, ["normal"], L("NAS, 1 bay", "NAS 1 baie")),
                 net_nas2: netBays(2, ["normal", null], L("NAS, 2 bays, 1 disk", "NAS 2 baies, 1 disque")),
@@ -1198,8 +1215,8 @@ function liveGallery() {
   const wrap = document.getElementById("wrap");
   wrap.innerHTML = `<header>
     <h1>HA Appliance Card</h1>
-    <p>${L("A Lovelace card for 38 kinds of home appliances, each drawn and animated from its own data. These cards run on made-up states: in Home Assistant every field is an entity you pick.",
-      "Une card Lovelace pour 38 types d'appareils, chacun dessiné et animé à partir de ses propres données. Ces cartes tournent sur des états inventés : dans Home Assistant, chaque champ est une entité que vous choisissez.")}</p>
+    <p>${L("A Lovelace card for 39 kinds of home appliances, each drawn and animated from its own data. These cards run on made-up states: in Home Assistant every field is an entity you pick.",
+      "Une card Lovelace pour 39 types d'appareils, chacun dessiné et animé à partir de ses propres données. Ces cartes tournent sur des états inventés : dans Home Assistant, chaque champ est une entité que vous choisissez.")}</p>
     <nav>${link("lang", "en", "English", !fr)}${link("lang", "fr", "Français", fr)}<span></span>${link("theme", "light", L("Light", "Clair"), !dark)}${link("theme", "dark", L("Dark", "Sombre"), dark)}<span></span>${link("plug", "0", L("Integrations", "Intégrations"), !plugOnly)}${link("plug", "1", L("Smart plug only", "Prise connectée seule"), plugOnly)}<span></span><a href="https://github.com/ADNPolymerase/ha-appliance-card">GitHub</a></nav>
     <p class="hint">${plugOnly
       ? L("Each card below has nothing but a smart plug: its switch and its power meter. Open “Change the values” and move the power, or press the power button.",
@@ -1217,6 +1234,7 @@ function liveGallery() {
     [L("Energy", "Énergie"), [solarDay, solarRoof, solarNight, batteryCharging, batteryStation, batteryLow, evCharger, evDischarging]],
     [L("Network and servers", "Réseau et serveurs"), [netSwitch, netRouter("on"), netNas, netServer, netRack, upsOnline, upsBattery, upsLow]],
     [L("Home and media", "Maison et multimédia"), [printer3d, scaleFresh, scaleGoal]],
+    [L("Cameras", "Cam\u00e9ras"), [camIndoor, camTube, camOutdoor, camDome, camPrivacy, camOffline]],
     [L("Pets", "Animaux"), [petFeeder, roundFeeder, doubleFeeder, dualFeeder, wetFeeder, petFountain]],
   ];
   // Each family folds, the first one open: forty cards in a row are hard to

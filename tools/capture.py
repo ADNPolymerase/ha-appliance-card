@@ -73,6 +73,7 @@ FAMILIES = (
     ("energy", "solar_day,solar_roof,solar_night,battery_charging,battery_station,battery_low", 6),
     ("scales", "scale_fresh,scale_goal,scale_old", 3),
     ("ups", "ups_online,ups_charging,ups_battery,ups_low,ups_replace,ups_off", 6),
+    ("cameras", "cam_indoor,cam_tube,cam_outdoor,cam_dome,cam_privacy,cam_offline", 6),
 )
 # Sixteen frames a tenth of a second apart over a 1.6 s loop, on a 128-colour
 # palette: the five families weigh about 1.4 MB per language, where 32 frames

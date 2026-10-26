@@ -1,4 +1,4 @@
-const CARD_VERSION = "2.40.0";
+const CARD_VERSION = "2.41.0";
 
 console.info(
   "%c HA-APPLIANCE-CARD %c v" + CARD_VERSION + " ",
@@ -151,6 +151,7 @@ const T = {
     door_corner: "Show it in a corner of the card", controls_always: "Always show every button", show_unavailable_controls: "Show buttons whose entity is unavailable",
     layout_robot_stick: "Stick vacuum", stick_charged: "Charged",
     layout_robot_floor_washer: "Floor washer", stick_away: "Off the base", stick_away_threshold: "Off the base below this power (W)",
+    type_camera: "Camera", cam_idle: "Idle", cam_live: "Streaming", cam_rec: "Recording", cam_motion: "Motion detected", cam_off: "Off", cam_line_last_motion: "Last motion", cam_line_night: "Night vision", cam_line_signal: "Signal", section_motion: "Motion sensor", section_recording: "Recording sensor", section_night_vision: "Night vision", section_privacy: "Privacy mode", section_signal: "Signal strength", layout_cam_indoor: "Indoor, pan and tilt", layout_cam_tube: "Indoor tube", layout_cam_outdoor: "Outdoor", layout_cam_dome: "Dome",
     speed_power_max: "Power at top speed (W)", speed_power_custom: "Custom speed thresholds", speed_power_2: "Speed 2 from (W)", speed_power_3: "Speed 3 from (W)",
     fw_self_cleaning: "Self-cleaning", fw_dirty_full: "Dirty water tank full", fw_clean_empty: "Clean water tank empty",
     group_energy: "Energy", type_solar: "Solar panels", type_home_battery: "Home battery", solar_producing: "Producing", solar_low: "Low production", solar_night: "Night", section_solar_layout: "Mounting", layout_solar_ground: "On the ground", layout_solar_roof: "On a roof", section_solar_power: "Power produced", section_energy_today: "Energy produced today", solar_line_today: "Today", solar_peak_power: "Peak power of the panels (W)", section_battery_power: "Battery power (+ charging, \u2212 discharging)", power_inverted: "Positive power means discharging", section_charge_power: "Charge power", section_battery_discharge: "Discharge power", section_reserve: "Backup reserve", section_charge_limit: "Charge limit", battery_capacity: "Capacity (kWh)", layout_battery_wall: "Wall battery", layout_battery_station: "Portable power station", bat_idle: "Idle", bat_full: "Full", bat_low: "Low battery", bat_line_full_in: "Full in", bat_line_left: "Remaining", bat_line_reserve: "Reserve",
@@ -317,6 +318,7 @@ const T = {
     door_corner: "L'afficher dans un coin de la carte", controls_always: "Toujours afficher tous les boutons", show_unavailable_controls: "Afficher les boutons dont l'entit\u00e9 est indisponible",
     layout_robot_stick: "Aspirateur balai", stick_charged: "Charg\u00e9",
     layout_robot_floor_washer: "Laveur de sol", stick_away: "Hors de la base", stick_away_threshold: "Hors de la base sous cette puissance (W)",
+    type_camera: "Cam\u00e9ra", cam_idle: "En veille", cam_live: "En direct", cam_rec: "Enregistrement", cam_motion: "Mouvement d\u00e9tect\u00e9", cam_off: "D\u00e9sactiv\u00e9e", cam_line_last_motion: "Dernier mouvement", cam_line_night: "Vision nocturne", cam_line_signal: "Signal", section_motion: "Capteur de mouvement", section_recording: "Capteur d'enregistrement", section_night_vision: "Vision nocturne", section_privacy: "Mode confidentialit\u00e9", section_signal: "Force du signal", layout_cam_indoor: "Int\u00e9rieure orientable", layout_cam_tube: "Int\u00e9rieure tube", layout_cam_outdoor: "Ext\u00e9rieure", layout_cam_dome: "D\u00f4me",
     speed_power_max: "Puissance \u00e0 la vitesse maxi (W)", speed_power_custom: "Personnaliser les seuils de vitesse", speed_power_2: "Vitesse 2 \u00e0 partir de (W)", speed_power_3: "Vitesse 3 \u00e0 partir de (W)",
     fw_self_cleaning: "Autonettoyage", fw_dirty_full: "R\u00e9servoir d'eau sale plein", fw_clean_empty: "R\u00e9servoir d'eau propre vide",
     group_energy: "\u00c9nergie", type_solar: "Panneaux solaires", type_home_battery: "Batterie domestique", solar_producing: "Production", solar_low: "Production faible", solar_night: "Nuit", section_solar_layout: "Installation", layout_solar_ground: "Au sol", layout_solar_roof: "Sur un toit", section_solar_power: "Puissance produite", section_energy_today: "\u00c9nergie produite aujourd'hui", solar_line_today: "Aujourd'hui", solar_peak_power: "Puissance cr\u00eate des panneaux (W)", section_battery_power: "Puissance de la batterie (+ charge, \u2212 d\u00e9charge)", power_inverted: "Une puissance positive veut dire d\u00e9charge", section_charge_power: "Puissance de charge", section_battery_discharge: "Puissance de d\u00e9charge", section_reserve: "R\u00e9serve de secours", section_charge_limit: "Limite de charge", battery_capacity: "Capacit\u00e9 (kWh)", layout_battery_wall: "Batterie murale", layout_battery_station: "Station portable", bat_idle: "Au repos", bat_full: "Pleine", bat_low: "Batterie basse", bat_line_full_in: "Pleine dans", bat_line_left: "Restant", bat_line_reserve: "R\u00e9serve",
@@ -483,6 +485,7 @@ const T = {
     door_corner: "\u041f\u043e\u043a\u0430\u0437\u044b\u0432\u0430\u0442\u044c \u0432 \u0443\u0433\u043b\u0443 \u043a\u0430\u0440\u0442\u043e\u0447\u043a\u0438", controls_always: "\u0412\u0441\u0435\u0433\u0434\u0430 \u043f\u043e\u043a\u0430\u0437\u044b\u0432\u0430\u0442\u044c \u0432\u0441\u0435 \u043a\u043d\u043e\u043f\u043a\u0438", show_unavailable_controls: "\u041f\u043e\u043a\u0430\u0437\u044b\u0432\u0430\u0442\u044c \u043a\u043d\u043e\u043f\u043a\u0438 \u043d\u0435\u0434\u043e\u0441\u0442\u0443\u043f\u043d\u044b\u0445 \u0441\u0443\u0449\u043d\u043e\u0441\u0442\u0435\u0439",
     layout_robot_stick: "\u0412\u0435\u0440\u0442\u0438\u043a\u0430\u043b\u044c\u043d\u044b\u0439 \u043f\u044b\u043b\u0435\u0441\u043e\u0441", stick_charged: "\u0417\u0430\u0440\u044f\u0436\u0435\u043d",
     layout_robot_floor_washer: "\u041c\u043e\u044e\u0449\u0438\u0439 \u043f\u044b\u043b\u0435\u0441\u043e\u0441", stick_away: "\u041d\u0435 \u043d\u0430 \u0431\u0430\u0437\u0435", stick_away_threshold: "\u041d\u0435 \u043d\u0430 \u0431\u0430\u0437\u0435 \u043d\u0438\u0436\u0435 \u044d\u0442\u043e\u0439 \u043c\u043e\u0449\u043d\u043e\u0441\u0442\u0438 (\u0412\u0442)",
+    type_camera: "\u041a\u0430\u043c\u0435\u0440\u0430", cam_idle: "\u041e\u0436\u0438\u0434\u0430\u043d\u0438\u0435", cam_live: "\u0422\u0440\u0430\u043d\u0441\u043b\u044f\u0446\u0438\u044f", cam_rec: "\u0417\u0430\u043f\u0438\u0441\u044c", cam_motion: "\u0414\u0432\u0438\u0436\u0435\u043d\u0438\u0435", cam_off: "\u0412\u044b\u043a\u043b.", cam_line_last_motion: "\u041f\u043e\u0441\u043b\u0435\u0434\u043d\u0435\u0435 \u0434\u0432\u0438\u0436\u0435\u043d\u0438\u0435", cam_line_night: "\u041d\u043e\u0447\u043d\u043e\u0435 \u0432\u0438\u0434\u0435\u043d\u0438\u0435", cam_line_signal: "\u0421\u0438\u0433\u043d\u0430\u043b", section_motion: "\u0414\u0430\u0442\u0447\u0438\u043a \u0434\u0432\u0438\u0436\u0435\u043d\u0438\u044f", section_recording: "\u0414\u0430\u0442\u0447\u0438\u043a \u0437\u0430\u043f\u0438\u0441\u0438", section_night_vision: "\u041d\u043e\u0447\u043d\u043e\u0435 \u0432\u0438\u0434\u0435\u043d\u0438\u0435", section_privacy: "\u0420\u0435\u0436\u0438\u043c \u043f\u0440\u0438\u0432\u0430\u0442\u043d\u043e\u0441\u0442\u0438", section_signal: "\u0423\u0440\u043e\u0432\u0435\u043d\u044c \u0441\u0438\u0433\u043d\u0430\u043b\u0430", layout_cam_indoor: "\u0412\u043d\u0443\u0442\u0440\u0435\u043d\u043d\u044f\u044f \u043f\u043e\u0432\u043e\u0440\u043e\u0442\u043d\u0430\u044f", layout_cam_tube: "\u0412\u043d\u0443\u0442\u0440\u0435\u043d\u043d\u044f\u044f \u0442\u0440\u0443\u0431\u043a\u0430", layout_cam_outdoor: "\u0423\u043b\u0438\u0447\u043d\u0430\u044f", layout_cam_dome: "\u041a\u0443\u043f\u043e\u043b\u044c\u043d\u0430\u044f",
     speed_power_max: "\u041c\u043e\u0449\u043d\u043e\u0441\u0442\u044c \u043d\u0430 \u043c\u0430\u043a\u0441\u0438\u043c\u0430\u043b\u044c\u043d\u043e\u0439 \u0441\u043a\u043e\u0440\u043e\u0441\u0442\u0438 (\u0412\u0442)", speed_power_custom: "\u0421\u0432\u043e\u0438 \u043f\u043e\u0440\u043e\u0433\u0438 \u0441\u043a\u043e\u0440\u043e\u0441\u0442\u0438", speed_power_2: "\u0421\u043a\u043e\u0440\u043e\u0441\u0442\u044c 2 \u043e\u0442 (\u0412\u0442)", speed_power_3: "\u0421\u043a\u043e\u0440\u043e\u0441\u0442\u044c 3 \u043e\u0442 (\u0412\u0442)",
     fw_self_cleaning: "\u0421\u0430\u043c\u043e\u043e\u0447\u0438\u0441\u0442\u043a\u0430", fw_dirty_full: "\u0411\u0430\u043a \u0433\u0440\u044f\u0437\u043d\u043e\u0439 \u0432\u043e\u0434\u044b \u043f\u043e\u043b\u043e\u043d", fw_clean_empty: "\u0411\u0430\u043a \u0447\u0438\u0441\u0442\u043e\u0439 \u0432\u043e\u0434\u044b \u043f\u0443\u0441\u0442",
     group_energy: "\u042d\u043d\u0435\u0440\u0433\u0438\u044f", type_solar: "\u0421\u043e\u043b\u043d\u0435\u0447\u043d\u044b\u0435 \u043f\u0430\u043d\u0435\u043b\u0438", type_home_battery: "\u0414\u043e\u043c\u0430\u0448\u043d\u0438\u0439 \u0430\u043a\u043a\u0443\u043c\u0443\u043b\u044f\u0442\u043e\u0440", solar_producing: "\u0412\u044b\u0440\u0430\u0431\u043e\u0442\u043a\u0430", solar_low: "\u0421\u043b\u0430\u0431\u0430\u044f \u0432\u044b\u0440\u0430\u0431\u043e\u0442\u043a\u0430", solar_night: "\u041d\u043e\u0447\u044c", section_solar_layout: "\u0423\u0441\u0442\u0430\u043d\u043e\u0432\u043a\u0430", layout_solar_ground: "\u041d\u0430 \u0437\u0435\u043c\u043b\u0435", layout_solar_roof: "\u041d\u0430 \u043a\u0440\u044b\u0448\u0435", section_solar_power: "\u0412\u044b\u0440\u0430\u0431\u0430\u0442\u044b\u0432\u0430\u0435\u043c\u0430\u044f \u043c\u043e\u0449\u043d\u043e\u0441\u0442\u044c", section_energy_today: "\u0412\u044b\u0440\u0430\u0431\u043e\u0442\u0430\u043d\u043e \u0441\u0435\u0433\u043e\u0434\u043d\u044f", solar_line_today: "\u0421\u0435\u0433\u043e\u0434\u043d\u044f", solar_peak_power: "\u041f\u0438\u043a\u043e\u0432\u0430\u044f \u043c\u043e\u0449\u043d\u043e\u0441\u0442\u044c \u043f\u0430\u043d\u0435\u043b\u0435\u0439 (\u0412\u0442)", section_battery_power: "\u041c\u043e\u0449\u043d\u043e\u0441\u0442\u044c \u0430\u043a\u043a\u0443\u043c\u0443\u043b\u044f\u0442\u043e\u0440\u0430 (+ \u0437\u0430\u0440\u044f\u0434, \u2212 \u0440\u0430\u0437\u0440\u044f\u0434)", power_inverted: "\u041f\u043e\u043b\u043e\u0436\u0438\u0442\u0435\u043b\u044c\u043d\u0430\u044f \u043c\u043e\u0449\u043d\u043e\u0441\u0442\u044c \u043e\u0437\u043d\u0430\u0447\u0430\u0435\u0442 \u0440\u0430\u0437\u0440\u044f\u0434", section_charge_power: "\u041c\u043e\u0449\u043d\u043e\u0441\u0442\u044c \u0437\u0430\u0440\u044f\u0434\u0430", section_battery_discharge: "\u041c\u043e\u0449\u043d\u043e\u0441\u0442\u044c \u0440\u0430\u0437\u0440\u044f\u0434\u0430", section_reserve: "\u0420\u0435\u0437\u0435\u0440\u0432\u043d\u044b\u0439 \u0437\u0430\u043f\u0430\u0441", section_charge_limit: "\u041f\u0440\u0435\u0434\u0435\u043b \u0437\u0430\u0440\u044f\u0434\u0430", battery_capacity: "\u0401\u043c\u043a\u043e\u0441\u0442\u044c (\u043a\u0412\u0442\u00b7\u0447)", layout_battery_wall: "\u041d\u0430\u0441\u0442\u0435\u043d\u043d\u044b\u0439 \u0430\u043a\u043a\u0443\u043c\u0443\u043b\u044f\u0442\u043e\u0440", layout_battery_station: "\u041f\u043e\u0440\u0442\u0430\u0442\u0438\u0432\u043d\u0430\u044f \u044d\u043b\u0435\u043a\u0442\u0440\u043e\u0441\u0442\u0430\u043d\u0446\u0438\u044f", bat_idle: "\u0412 \u043f\u043e\u043a\u043e\u0435", bat_full: "\u0417\u0430\u0440\u044f\u0436\u0435\u043d", bat_low: "\u041d\u0438\u0437\u043a\u0438\u0439 \u0437\u0430\u0440\u044f\u0434", bat_line_full_in: "\u041f\u043e\u043b\u043d\u044b\u0439 \u0447\u0435\u0440\u0435\u0437", bat_line_left: "\u041e\u0441\u0442\u0430\u043b\u043e\u0441\u044c", bat_line_reserve: "\u0420\u0435\u0437\u0435\u0440\u0432",
@@ -649,6 +652,7 @@ const T = {
     door_corner: "In einer Ecke der Karte anzeigen", controls_always: "Immer alle Tasten anzeigen", show_unavailable_controls: "Tasten mit nicht verf\u00fcgbarer Entit\u00e4t anzeigen",
     layout_robot_stick: "Akku-Stielsauger", stick_charged: "Geladen",
     layout_robot_floor_washer: "Nass-Trocken-Sauger", stick_away: "Nicht in der Station", stick_away_threshold: "Nicht in der Station unter dieser Leistung (W)",
+    type_camera: "Kamera", cam_idle: "Bereit", cam_live: "Live", cam_rec: "Aufnahme", cam_motion: "Bewegung erkannt", cam_off: "Aus", cam_line_last_motion: "Letzte Bewegung", cam_line_night: "Nachtsicht", cam_line_signal: "Signal", section_motion: "Bewegungssensor", section_recording: "Aufnahmesensor", section_night_vision: "Nachtsicht", section_privacy: "Privatsph\u00e4re-Modus", section_signal: "Signalst\u00e4rke", layout_cam_indoor: "Innen, schwenkbar", layout_cam_tube: "Innen, Zylinder", layout_cam_outdoor: "Au\u00dfen", layout_cam_dome: "Kuppel",
     speed_power_max: "Leistung bei h\u00f6chster Stufe (W)", speed_power_custom: "Eigene Stufenschwellen", speed_power_2: "Stufe 2 ab (W)", speed_power_3: "Stufe 3 ab (W)",
     fw_self_cleaning: "Selbstreinigung", fw_dirty_full: "Schmutzwassertank voll", fw_clean_empty: "Frischwassertank leer",
     group_energy: "Energie", type_solar: "Solarmodule", type_home_battery: "Heimspeicher", solar_producing: "Erzeugung", solar_low: "Geringe Erzeugung", solar_night: "Nacht", section_solar_layout: "Montage", layout_solar_ground: "Am Boden", layout_solar_roof: "Auf dem Dach", section_solar_power: "Erzeugte Leistung", section_energy_today: "Heute erzeugte Energie", solar_line_today: "Heute", solar_peak_power: "Spitzenleistung der Module (W)", section_battery_power: "Akkuleistung (+ Laden, \u2212 Entladen)", power_inverted: "Positive Leistung bedeutet Entladen", section_charge_power: "Ladeleistung", section_battery_discharge: "Entladeleistung", section_reserve: "Notstromreserve", section_charge_limit: "Ladegrenze", battery_capacity: "Kapazit\u00e4t (kWh)", layout_battery_wall: "Wandspeicher", layout_battery_station: "Powerstation", bat_idle: "Bereit", bat_full: "Voll", bat_low: "Akku schwach", bat_line_full_in: "Voll in", bat_line_left: "Verbleibend", bat_line_reserve: "Reserve",
@@ -815,6 +819,7 @@ const T = {
     door_corner: "Mostrarla en una esquina de la tarjeta", controls_always: "Mostrar siempre todos los botones", show_unavailable_controls: "Mostrar los botones cuya entidad no est\u00e1 disponible",
     layout_robot_stick: "Aspiradora escoba", stick_charged: "Cargada",
     layout_robot_floor_washer: "Fregona el\u00e9ctrica", stick_away: "Fuera de la base", stick_away_threshold: "Fuera de la base por debajo de esta potencia (W)",
+    type_camera: "C\u00e1mara", cam_idle: "En reposo", cam_live: "En directo", cam_rec: "Grabando", cam_motion: "Movimiento detectado", cam_off: "Apagada", cam_line_last_motion: "\u00daltimo movimiento", cam_line_night: "Visi\u00f3n nocturna", cam_line_signal: "Se\u00f1al", section_motion: "Sensor de movimiento", section_recording: "Sensor de grabaci\u00f3n", section_night_vision: "Visi\u00f3n nocturna", section_privacy: "Modo privacidad", section_signal: "Intensidad de se\u00f1al", layout_cam_indoor: "Interior motorizada", layout_cam_tube: "Interior cil\u00edndrica", layout_cam_outdoor: "Exterior", layout_cam_dome: "Domo",
     speed_power_max: "Potencia a velocidad m\u00e1xima (W)", speed_power_custom: "Umbrales de velocidad propios", speed_power_2: "Velocidad 2 desde (W)", speed_power_3: "Velocidad 3 desde (W)",
     fw_self_cleaning: "Autolimpieza", fw_dirty_full: "Dep\u00f3sito de agua sucia lleno", fw_clean_empty: "Dep\u00f3sito de agua limpia vac\u00edo",
     group_energy: "Energ\u00eda", type_solar: "Paneles solares", type_home_battery: "Bater\u00eda dom\u00e9stica", solar_producing: "Produciendo", solar_low: "Producci\u00f3n baja", solar_night: "Noche", section_solar_layout: "Instalaci\u00f3n", layout_solar_ground: "En el suelo", layout_solar_roof: "En un tejado", section_solar_power: "Potencia producida", section_energy_today: "Energ\u00eda producida hoy", solar_line_today: "Hoy", solar_peak_power: "Potencia pico de los paneles (W)", section_battery_power: "Potencia de la bater\u00eda (+ carga, \u2212 descarga)", power_inverted: "Una potencia positiva significa descarga", section_charge_power: "Potencia de carga", section_battery_discharge: "Potencia de descarga", section_reserve: "Reserva de respaldo", section_charge_limit: "L\u00edmite de carga", battery_capacity: "Capacidad (kWh)", layout_battery_wall: "Bater\u00eda de pared", layout_battery_station: "Estaci\u00f3n port\u00e1til", bat_idle: "En reposo", bat_full: "Llena", bat_low: "Bater\u00eda baja", bat_line_full_in: "Llena en", bat_line_left: "Restante", bat_line_reserve: "Reserva",
@@ -981,6 +986,7 @@ const T = {
     door_corner: "Mostrarla in un angolo della scheda", controls_always: "Mostra sempre tutti i pulsanti", show_unavailable_controls: "Mostra i pulsanti con entit\u00e0 non disponibile",
     layout_robot_stick: "Scopa elettrica", stick_charged: "Carica",
     layout_robot_floor_washer: "Lavapavimenti", stick_away: "Fuori dalla base", stick_away_threshold: "Fuori dalla base sotto questa potenza (W)",
+    type_camera: "Telecamera", cam_idle: "In attesa", cam_live: "In diretta", cam_rec: "Registrazione", cam_motion: "Movimento rilevato", cam_off: "Spenta", cam_line_last_motion: "Ultimo movimento", cam_line_night: "Visione notturna", cam_line_signal: "Segnale", section_motion: "Sensore di movimento", section_recording: "Sensore di registrazione", section_night_vision: "Visione notturna", section_privacy: "Modalit\u00e0 privacy", section_signal: "Potenza del segnale", layout_cam_indoor: "Interna motorizzata", layout_cam_tube: "Interna a cilindro", layout_cam_outdoor: "Esterna", layout_cam_dome: "Dome",
     speed_power_max: "Potenza alla velocit\u00e0 massima (W)", speed_power_custom: "Soglie di velocit\u00e0 personalizzate", speed_power_2: "Velocit\u00e0 2 da (W)", speed_power_3: "Velocit\u00e0 3 da (W)",
     fw_self_cleaning: "Autopulizia", fw_dirty_full: "Serbatoio acqua sporca pieno", fw_clean_empty: "Serbatoio acqua pulita vuoto",
     group_energy: "Energia", type_solar: "Pannelli solari", type_home_battery: "Batteria domestica", solar_producing: "In produzione", solar_low: "Produzione bassa", solar_night: "Notte", section_solar_layout: "Installazione", layout_solar_ground: "A terra", layout_solar_roof: "Su un tetto", section_solar_power: "Potenza prodotta", section_energy_today: "Energia prodotta oggi", solar_line_today: "Oggi", solar_peak_power: "Potenza di picco dei pannelli (W)", section_battery_power: "Potenza della batteria (+ carica, \u2212 scarica)", power_inverted: "Una potenza positiva indica la scarica", section_charge_power: "Potenza di carica", section_battery_discharge: "Potenza di scarica", section_reserve: "Riserva di emergenza", section_charge_limit: "Limite di carica", battery_capacity: "Capacit\u00e0 (kWh)", layout_battery_wall: "Batteria a parete", layout_battery_station: "Power station portatile", bat_idle: "A riposo", bat_full: "Piena", bat_low: "Batteria bassa", bat_line_full_in: "Piena tra", bat_line_left: "Rimanente", bat_line_reserve: "Riserva",
@@ -1147,6 +1153,7 @@ const T = {
     door_corner: "In een hoek van de kaart tonen", controls_always: "Altijd alle knoppen tonen", show_unavailable_controls: "Knoppen tonen waarvan de entiteit niet beschikbaar is",
     layout_robot_stick: "Steelstofzuiger", stick_charged: "Opgeladen",
     layout_robot_floor_washer: "Vloerwasser", stick_away: "Niet op de basis", stick_away_threshold: "Niet op de basis onder dit vermogen (W)",
+    type_camera: "Camera", cam_idle: "Stand-by", cam_live: "Live", cam_rec: "Opname", cam_motion: "Beweging gedetecteerd", cam_off: "Uit", cam_line_last_motion: "Laatste beweging", cam_line_night: "Nachtzicht", cam_line_signal: "Signaal", section_motion: "Bewegingssensor", section_recording: "Opnamesensor", section_night_vision: "Nachtzicht", section_privacy: "Privacymodus", section_signal: "Signaalsterkte", layout_cam_indoor: "Binnen, draaibaar", layout_cam_tube: "Binnen, cilinder", layout_cam_outdoor: "Buiten", layout_cam_dome: "Dome",
     speed_power_max: "Vermogen op hoogste stand (W)", speed_power_custom: "Eigen standdrempels", speed_power_2: "Stand 2 vanaf (W)", speed_power_3: "Stand 3 vanaf (W)",
     fw_self_cleaning: "Zelfreiniging", fw_dirty_full: "Vuilwatertank vol", fw_clean_empty: "Schoonwatertank leeg",
     group_energy: "Energie", type_solar: "Zonnepanelen", type_home_battery: "Thuisbatterij", solar_producing: "Productie", solar_low: "Lage productie", solar_night: "Nacht", section_solar_layout: "Montage", layout_solar_ground: "Op de grond", layout_solar_roof: "Op een dak", section_solar_power: "Opgewekt vermogen", section_energy_today: "Vandaag opgewekte energie", solar_line_today: "Vandaag", solar_peak_power: "Piekvermogen van de panelen (W)", section_battery_power: "Batterijvermogen (+ laden, \u2212 ontladen)", power_inverted: "Positief vermogen betekent ontladen", section_charge_power: "Laadvermogen", section_battery_discharge: "Ontlaadvermogen", section_reserve: "Noodreserve", section_charge_limit: "Laadlimiet", battery_capacity: "Capaciteit (kWh)", layout_battery_wall: "Wandbatterij", layout_battery_station: "Draagbaar powerstation", bat_idle: "In rust", bat_full: "Vol", bat_low: "Batterij bijna leeg", bat_line_full_in: "Vol over", bat_line_left: "Resterend", bat_line_reserve: "Reserve",
@@ -1313,6 +1320,7 @@ const T = {
     door_corner: "Mostr\u00e1-la num canto do cart\u00e3o", controls_always: "Mostrar sempre todos os bot\u00f5es", show_unavailable_controls: "Mostrar bot\u00f5es cuja entidade est\u00e1 indispon\u00edvel",
     layout_robot_stick: "Aspirador vertical", stick_charged: "Carregado",
     layout_robot_floor_washer: "Lavadora de pavimentos", stick_away: "Fora da base", stick_away_threshold: "Fora da base abaixo desta pot\u00eancia (W)",
+    type_camera: "C\u00e2mera", cam_idle: "Em espera", cam_live: "Ao vivo", cam_rec: "Gravando", cam_motion: "Movimento detetado", cam_off: "Desligada", cam_line_last_motion: "\u00daltimo movimento", cam_line_night: "Vis\u00e3o noturna", cam_line_signal: "Sinal", section_motion: "Sensor de movimento", section_recording: "Sensor de grava\u00e7\u00e3o", section_night_vision: "Vis\u00e3o noturna", section_privacy: "Modo privacidade", section_signal: "Intensidade do sinal", layout_cam_indoor: "Interior motorizada", layout_cam_tube: "Interior cil\u00edndrica", layout_cam_outdoor: "Exterior", layout_cam_dome: "Dome",
     speed_power_max: "Pot\u00eancia na velocidade m\u00e1xima (W)", speed_power_custom: "Limiares de velocidade pr\u00f3prios", speed_power_2: "Velocidade 2 a partir de (W)", speed_power_3: "Velocidade 3 a partir de (W)",
     fw_self_cleaning: "Autolimpeza", fw_dirty_full: "Dep\u00f3sito de \u00e1gua suja cheio", fw_clean_empty: "Dep\u00f3sito de \u00e1gua limpa vazio",
     group_energy: "Energia", type_solar: "Pain\u00e9is solares", type_home_battery: "Bateria dom\u00e9stica", solar_producing: "A produzir", solar_low: "Produ\u00e7\u00e3o baixa", solar_night: "Noite", section_solar_layout: "Instala\u00e7\u00e3o", layout_solar_ground: "No ch\u00e3o", layout_solar_roof: "Num telhado", section_solar_power: "Pot\u00eancia produzida", section_energy_today: "Energia produzida hoje", solar_line_today: "Hoje", solar_peak_power: "Pot\u00eancia de pico dos pain\u00e9is (W)", section_battery_power: "Pot\u00eancia da bateria (+ carga, \u2212 descarga)", power_inverted: "Uma pot\u00eancia positiva significa descarga", section_charge_power: "Pot\u00eancia de carga", section_battery_discharge: "Pot\u00eancia de descarga", section_reserve: "Reserva de emerg\u00eancia", section_charge_limit: "Limite de carga", battery_capacity: "Capacidade (kWh)", layout_battery_wall: "Bateria de parede", layout_battery_station: "Esta\u00e7\u00e3o port\u00e1til", bat_idle: "Em repouso", bat_full: "Cheia", bat_low: "Bateria fraca", bat_line_full_in: "Cheia em", bat_line_left: "Restante", bat_line_reserve: "Reserva",
@@ -1479,6 +1487,7 @@ const T = {
     door_corner: "Visa i ett h\u00f6rn av kortet", controls_always: "Visa alltid alla knappar", show_unavailable_controls: "Visa knappar vars entitet inte \u00e4r tillg\u00e4nglig",
     layout_robot_stick: "Skaftdammsugare", stick_charged: "Laddad",
     layout_robot_floor_washer: "Golvtv\u00e4ttare", stick_away: "Inte i basen", stick_away_threshold: "Inte i basen under denna effekt (W)",
+    type_camera: "Kamera", cam_idle: "Vilar", cam_live: "Direkt", cam_rec: "Spelar in", cam_motion: "R\u00f6relse uppt\u00e4ckt", cam_off: "Av", cam_line_last_motion: "Senaste r\u00f6relse", cam_line_night: "Nattseende", cam_line_signal: "Signal", section_motion: "R\u00f6relsesensor", section_recording: "Inspelningssensor", section_night_vision: "Nattseende", section_privacy: "Integritetsl\u00e4ge", section_signal: "Signalstyrka", layout_cam_indoor: "Inomhus, vridbar", layout_cam_tube: "Inomhus, cylinder", layout_cam_outdoor: "Utomhus", layout_cam_dome: "Dom",
     speed_power_max: "Effekt vid h\u00f6gsta l\u00e4ge (W)", speed_power_custom: "Egna hastighetsgr\u00e4nser", speed_power_2: "L\u00e4ge 2 fr\u00e5n (W)", speed_power_3: "L\u00e4ge 3 fr\u00e5n (W)",
     fw_self_cleaning: "Sj\u00e4lvreng\u00f6ring", fw_dirty_full: "Smutsvattentanken full", fw_clean_empty: "Rentvattentanken tom",
     group_energy: "Energi", type_solar: "Solpaneler", type_home_battery: "Hembatteri", solar_producing: "Producerar", solar_low: "L\u00e5g produktion", solar_night: "Natt", section_solar_layout: "Montering", layout_solar_ground: "P\u00e5 marken", layout_solar_roof: "P\u00e5 ett tak", section_solar_power: "Producerad effekt", section_energy_today: "Producerad energi i dag", solar_line_today: "I dag", solar_peak_power: "Panelernas toppeffekt (W)", section_battery_power: "Batterieffekt (+ laddning, \u2212 urladdning)", power_inverted: "Positiv effekt betyder urladdning", section_charge_power: "Laddeffekt", section_battery_discharge: "Urladdningseffekt", section_reserve: "Reservkapacitet", section_charge_limit: "Laddgr\u00e4ns", battery_capacity: "Kapacitet (kWh)", layout_battery_wall: "V\u00e4ggbatteri", layout_battery_station: "B\u00e4rbar kraftstation", bat_idle: "Vilar", bat_full: "Fullt", bat_low: "L\u00e5gt batteri", bat_line_full_in: "Fullt om", bat_line_left: "\u00c5terst\u00e5r", bat_line_reserve: "Reserv",
@@ -1645,6 +1654,7 @@ const T = {
     door_corner: "Vis i et hj\u00f8rne av kortet", controls_always: "Vis alltid alle knapper", show_unavailable_controls: "Vis knapper der entiteten ikke er tilgjengelig",
     layout_robot_stick: "Stavst\u00f8vsuger", stick_charged: "Ladet",
     layout_robot_floor_washer: "Gulvvasker", stick_away: "Ikke i basen", stick_away_threshold: "Ikke i basen under denne effekten (W)",
+    type_camera: "Kamera", cam_idle: "Hviler", cam_live: "Direkte", cam_rec: "Tar opp", cam_motion: "Bevegelse oppdaget", cam_off: "Av", cam_line_last_motion: "Siste bevegelse", cam_line_night: "Nattsyn", cam_line_signal: "Signal", section_motion: "Bevegelsessensor", section_recording: "Opptakssensor", section_night_vision: "Nattsyn", section_privacy: "Personvernmodus", section_signal: "Signalstyrke", layout_cam_indoor: "Innend\u00f8rs, dreibar", layout_cam_tube: "Innend\u00f8rs, sylinder", layout_cam_outdoor: "Utend\u00f8rs", layout_cam_dome: "Kuppel",
     speed_power_max: "Effekt p\u00e5 h\u00f8yeste trinn (W)", speed_power_custom: "Egne hastighetsgrenser", speed_power_2: "Trinn 2 fra (W)", speed_power_3: "Trinn 3 fra (W)",
     fw_self_cleaning: "Selvrengj\u00f8ring", fw_dirty_full: "Skittentvannstanken full", fw_clean_empty: "Rentvannstanken tom",
     group_energy: "Energi", type_solar: "Solcellepaneler", type_home_battery: "Hjemmebatteri", solar_producing: "Produserer", solar_low: "Lav produksjon", solar_night: "Natt", section_solar_layout: "Montering", layout_solar_ground: "P\u00e5 bakken", layout_solar_roof: "P\u00e5 et tak", section_solar_power: "Produsert effekt", section_energy_today: "Produsert energi i dag", solar_line_today: "I dag", solar_peak_power: "Panelenes toppeffekt (W)", section_battery_power: "Batterieffekt (+ lading, \u2212 utlading)", power_inverted: "Positiv effekt betyr utlading", section_charge_power: "Ladeeffekt", section_battery_discharge: "Utladingseffekt", section_reserve: "Reservekapasitet", section_charge_limit: "Ladegrense", battery_capacity: "Kapasitet (kWh)", layout_battery_wall: "Veggbatteri", layout_battery_station: "B\u00e6rbar kraftstasjon", bat_idle: "Hviler", bat_full: "Fullt", bat_low: "Lavt batteri", bat_line_full_in: "Fullt om", bat_line_left: "Gjenst\u00e5r", bat_line_reserve: "Reserve",
@@ -1811,6 +1821,7 @@ const T = {
     door_corner: "Vis i et hj\u00f8rne af kortet", controls_always: "Vis altid alle knapper", show_unavailable_controls: "Vis knapper, hvis entitet ikke er tilg\u00e6ngelig",
     layout_robot_stick: "St\u00f8vsuger p\u00e5 skaft", stick_charged: "Opladet",
     layout_robot_floor_washer: "Gulvvasker", stick_away: "Ikke i basen", stick_away_threshold: "Ikke i basen under denne effekt (W)",
+    type_camera: "Kamera", cam_idle: "Hviler", cam_live: "Direkte", cam_rec: "Optager", cam_motion: "Bev\u00e6gelse registreret", cam_off: "Slukket", cam_line_last_motion: "Seneste bev\u00e6gelse", cam_line_night: "Nattesyn", cam_line_signal: "Signal", section_motion: "Bev\u00e6gelsessensor", section_recording: "Optagesensor", section_night_vision: "Nattesyn", section_privacy: "Privatlivstilstand", section_signal: "Signalstyrke", layout_cam_indoor: "Indend\u00f8rs, drejelig", layout_cam_tube: "Indend\u00f8rs, cylinder", layout_cam_outdoor: "Udend\u00f8rs", layout_cam_dome: "Kuppel",
     speed_power_max: "Effekt p\u00e5 h\u00f8jeste trin (W)", speed_power_custom: "Egne hastighedsgr\u00e6nser", speed_power_2: "Trin 2 fra (W)", speed_power_3: "Trin 3 fra (W)",
     fw_self_cleaning: "Selvrensning", fw_dirty_full: "Snavsevandstank fuld", fw_clean_empty: "Rentvandstank tom",
     group_energy: "Energi", type_solar: "Solpaneler", type_home_battery: "Hjemmebatteri", solar_producing: "Producerer", solar_low: "Lav produktion", solar_night: "Nat", section_solar_layout: "Montering", layout_solar_ground: "P\u00e5 jorden", layout_solar_roof: "P\u00e5 et tag", section_solar_power: "Produceret effekt", section_energy_today: "Produceret energi i dag", solar_line_today: "I dag", solar_peak_power: "Panelernes spidseffekt (W)", section_battery_power: "Batterieffekt (+ opladning, \u2212 afladning)", power_inverted: "Positiv effekt betyder afladning", section_charge_power: "Ladeeffekt", section_battery_discharge: "Afladningseffekt", section_reserve: "N\u00f8dreserve", section_charge_limit: "Opladningsgr\u00e6nse", battery_capacity: "Kapacitet (kWh)", layout_battery_wall: "V\u00e6gbatteri", layout_battery_station: "B\u00e6rbar powerstation", bat_idle: "I hvile", bat_full: "Fuldt", bat_low: "Lavt batteri", bat_line_full_in: "Fuldt om", bat_line_left: "Tilbage", bat_line_reserve: "Reserve",
@@ -1977,6 +1988,7 @@ const T = {
     door_corner: "Poka\u017c w rogu karty", controls_always: "Zawsze pokazuj wszystkie przyciski", show_unavailable_controls: "Poka\u017c przyciski niedost\u0119pnych encji",
     layout_robot_stick: "Odkurzacz pionowy", stick_charged: "Na\u0142adowany",
     layout_robot_floor_washer: "Mop elektryczny", stick_away: "Poza baz\u0105", stick_away_threshold: "Poza baz\u0105 poni\u017cej tej mocy (W)",
+    type_camera: "Kamera", cam_idle: "Czuwanie", cam_live: "Na \u017cywo", cam_rec: "Nagrywanie", cam_motion: "Wykryto ruch", cam_off: "Wy\u0142\u0105czona", cam_line_last_motion: "Ostatni ruch", cam_line_night: "Widzenie nocne", cam_line_signal: "Sygna\u0142", section_motion: "Czujnik ruchu", section_recording: "Czujnik nagrywania", section_night_vision: "Widzenie nocne", section_privacy: "Tryb prywatno\u015bci", section_signal: "Si\u0142a sygna\u0142u", layout_cam_indoor: "Wewn\u0119trzna obrotowa", layout_cam_tube: "Wewn\u0119trzna tuba", layout_cam_outdoor: "Zewn\u0119trzna", layout_cam_dome: "Kopu\u0142a",
     speed_power_max: "Moc na najwy\u017cszym biegu (W)", speed_power_custom: "W\u0142asne progi pr\u0119dko\u015bci", speed_power_2: "Bieg 2 od (W)", speed_power_3: "Bieg 3 od (W)",
     fw_self_cleaning: "Samooczyszczanie", fw_dirty_full: "Zbiornik na brudn\u0105 wod\u0119 pe\u0142ny", fw_clean_empty: "Zbiornik na czyst\u0105 wod\u0119 pusty",
     group_energy: "Energia", type_solar: "Panele s\u0142oneczne", type_home_battery: "Magazyn energii", solar_producing: "Produkcja", solar_low: "Niska produkcja", solar_night: "Noc", section_solar_layout: "Monta\u017c", layout_solar_ground: "Na ziemi", layout_solar_roof: "Na dachu", section_solar_power: "Moc produkowana", section_energy_today: "Energia wyprodukowana dzi\u015b", solar_line_today: "Dzi\u015b", solar_peak_power: "Moc szczytowa paneli (W)", section_battery_power: "Moc akumulatora (+ \u0142adowanie, \u2212 roz\u0142adowanie)", power_inverted: "Dodatnia moc oznacza roz\u0142adowanie", section_charge_power: "Moc \u0142adowania", section_battery_discharge: "Moc roz\u0142adowania", section_reserve: "Rezerwa awaryjna", section_charge_limit: "Limit \u0142adowania", battery_capacity: "Pojemno\u015b\u0107 (kWh)", layout_battery_wall: "Akumulator \u015bcienny", layout_battery_station: "Przeno\u015bna stacja zasilania", bat_idle: "Spoczynek", bat_full: "Pe\u0142ny", bat_low: "Niski poziom baterii", bat_line_full_in: "Pe\u0142ny za", bat_line_left: "Pozosta\u0142o", bat_line_reserve: "Rezerwa",
@@ -2143,6 +2155,7 @@ const T = {
     door_corner: "\u663e\u793a\u5728\u5361\u7247\u89d2\u843d", controls_always: "\u59cb\u7ec8\u663e\u793a\u6240\u6709\u6309\u94ae", show_unavailable_controls: "\u663e\u793a\u5b9e\u4f53\u4e0d\u53ef\u7528\u7684\u6309\u94ae",
     layout_robot_stick: "\u65e0\u7ebf\u5438\u5c18\u5668", stick_charged: "\u5df2\u5145\u6ee1",
     layout_robot_floor_washer: "\u6d17\u5730\u673a", stick_away: "\u4e0d\u5728\u5e95\u5ea7\u4e0a", stick_away_threshold: "\u4f4e\u4e8e\u6b64\u529f\u7387\u5373\u4e0d\u5728\u5e95\u5ea7\u4e0a (W)",
+    type_camera: "\u6444\u50cf\u5934", cam_idle: "\u5f85\u673a", cam_live: "\u76f4\u64ad\u4e2d", cam_rec: "\u5f55\u50cf\u4e2d", cam_motion: "\u68c0\u6d4b\u5230\u79fb\u52a8", cam_off: "\u5df2\u5173\u95ed", cam_line_last_motion: "\u4e0a\u6b21\u79fb\u52a8", cam_line_night: "\u591c\u89c6", cam_line_signal: "\u4fe1\u53f7", section_motion: "\u79fb\u52a8\u4f20\u611f\u5668", section_recording: "\u5f55\u50cf\u4f20\u611f\u5668", section_night_vision: "\u591c\u89c6", section_privacy: "\u9690\u79c1\u6a21\u5f0f", section_signal: "\u4fe1\u53f7\u5f3a\u5ea6", layout_cam_indoor: "\u5ba4\u5185\u4e91\u53f0", layout_cam_tube: "\u5ba4\u5185\u5706\u67f1", layout_cam_outdoor: "\u5ba4\u5916", layout_cam_dome: "\u534a\u7403",
     speed_power_max: "\u6700\u9ad8\u6863\u529f\u7387 (W)", speed_power_custom: "\u81ea\u5b9a\u4e49\u6863\u4f4d\u9608\u503c", speed_power_2: "2 \u6863\u8d77\u59cb (W)", speed_power_3: "3 \u6863\u8d77\u59cb (W)",
     fw_self_cleaning: "\u81ea\u6e05\u6d01\u4e2d", fw_dirty_full: "\u6c61\u6c34\u7bb1\u5df2\u6ee1", fw_clean_empty: "\u6e05\u6c34\u7bb1\u5df2\u7a7a",
     group_energy: "\u80fd\u6e90", type_solar: "\u592a\u9633\u80fd\u677f", type_home_battery: "\u5bb6\u7528\u7535\u6c60", solar_producing: "\u53d1\u7535\u4e2d", solar_low: "\u53d1\u7535\u8f83\u5f31", solar_night: "\u591c\u95f4", section_solar_layout: "\u5b89\u88c5\u65b9\u5f0f", layout_solar_ground: "\u5730\u9762", layout_solar_roof: "\u5c4b\u9876", section_solar_power: "\u53d1\u7535\u529f\u7387", section_energy_today: "\u4eca\u65e5\u53d1\u7535\u91cf", solar_line_today: "\u4eca\u65e5", solar_peak_power: "\u9762\u677f\u5cf0\u503c\u529f\u7387 (W)", section_battery_power: "\u7535\u6c60\u529f\u7387\uff08+ \u5145\u7535\uff0c\u2212 \u653e\u7535\uff09", power_inverted: "\u6b63\u529f\u7387\u8868\u793a\u653e\u7535", section_charge_power: "\u5145\u7535\u529f\u7387", section_battery_discharge: "\u653e\u7535\u529f\u7387", section_reserve: "\u5907\u7528\u7535\u91cf", section_charge_limit: "\u5145\u7535\u4e0a\u9650", battery_capacity: "\u5bb9\u91cf (kWh)", layout_battery_wall: "\u58c1\u6302\u7535\u6c60", layout_battery_station: "\u4fbf\u643a\u7535\u6e90\u7ad9", bat_idle: "\u5f85\u673a", bat_full: "\u5df2\u5145\u6ee1", bat_low: "\u7535\u91cf\u4f4e", bat_line_full_in: "\u5145\u6ee1\u8fd8\u9700", bat_line_left: "\u5269\u4f59", bat_line_reserve: "\u5907\u7528",
@@ -2309,6 +2322,7 @@ const T = {
     door_corner: "Zobrazit v rohu karty", controls_always: "V\u017edy zobrazit v\u0161echna tla\u010d\u00edtka", show_unavailable_controls: "Zobrazit tla\u010d\u00edtka nedostupn\u00fdch entit",
     layout_robot_stick: "Ty\u010dov\u00fd vysava\u010d", stick_charged: "Nabito",
     layout_robot_floor_washer: "Myc\u00ed vysava\u010d", stick_away: "Mimo z\u00e1kladnu", stick_away_threshold: "Mimo z\u00e1kladnu pod t\u00edmto v\u00fdkonem (W)",
+    type_camera: "Kamera", cam_idle: "Ne\u010dinn\u00e1", cam_live: "\u017div\u011b", cam_rec: "Nahr\u00e1v\u00e1", cam_motion: "Zji\u0161t\u011bn pohyb", cam_off: "Vypnut\u00e1", cam_line_last_motion: "Posledn\u00ed pohyb", cam_line_night: "No\u010dn\u00ed vid\u011bn\u00ed", cam_line_signal: "Sign\u00e1l", section_motion: "Senzor pohybu", section_recording: "Senzor nahr\u00e1v\u00e1n\u00ed", section_night_vision: "No\u010dn\u00ed vid\u011bn\u00ed", section_privacy: "Re\u017eim soukrom\u00ed", section_signal: "S\u00edla sign\u00e1lu", layout_cam_indoor: "Vnit\u0159n\u00ed oto\u010dn\u00e1", layout_cam_tube: "Vnit\u0159n\u00ed v\u00e1lec", layout_cam_outdoor: "Venkovn\u00ed", layout_cam_dome: "Kopule",
     speed_power_max: "P\u0159\u00edkon na nejvy\u0161\u0161\u00ed stupe\u0148 (W)", speed_power_custom: "Vlastn\u00ed prahy rychlosti", speed_power_2: "Stupe\u0148 2 od (W)", speed_power_3: "Stupe\u0148 3 od (W)",
     fw_self_cleaning: "Samo\u010di\u0161t\u011bn\u00ed", fw_dirty_full: "N\u00e1dr\u017e na \u0161pinavou vodu pln\u00e1", fw_clean_empty: "N\u00e1dr\u017e na \u010distou vodu pr\u00e1zdn\u00e1",
     group_energy: "Energie", type_solar: "Sol\u00e1rn\u00ed panely", type_home_battery: "Dom\u00e1c\u00ed baterie", solar_producing: "V\u00fdroba", solar_low: "N\u00edzk\u00e1 v\u00fdroba", solar_night: "Noc", section_solar_layout: "Mont\u00e1\u017e", layout_solar_ground: "Na zemi", layout_solar_roof: "Na st\u0159e\u0161e", section_solar_power: "Vyr\u00e1b\u011bn\u00fd v\u00fdkon", section_energy_today: "Dnes vyroben\u00e1 energie", solar_line_today: "Dnes", solar_peak_power: "\u0160pi\u010dkov\u00fd v\u00fdkon panel\u016f (W)", section_battery_power: "V\u00fdkon baterie (+ nab\u00edjen\u00ed, \u2212 vyb\u00edjen\u00ed)", power_inverted: "Kladn\u00fd v\u00fdkon znamen\u00e1 vyb\u00edjen\u00ed", section_charge_power: "Nab\u00edjec\u00ed v\u00fdkon", section_battery_discharge: "Vyb\u00edjec\u00ed v\u00fdkon", section_reserve: "Z\u00e1lo\u017en\u00ed rezerva", section_charge_limit: "Limit nab\u00edjen\u00ed", battery_capacity: "Kapacita (kWh)", layout_battery_wall: "N\u00e1st\u011bnn\u00e1 baterie", layout_battery_station: "P\u0159enosn\u00e1 elektr\u00e1rna", bat_idle: "V klidu", bat_full: "Pln\u00e1", bat_low: "Slab\u00e1 baterie", bat_line_full_in: "Pln\u00e1 za", bat_line_left: "Zb\u00fdv\u00e1", bat_line_reserve: "Rezerva",
@@ -4449,6 +4463,17 @@ const PHASE_ENTITY_RE = /program.?phase|cycle.?phase|job.?state|pr.?phase|machin
 // Suggested only for the types that can actually use them, so a washing
 // machine doesn't end up with a "filter life" field pre-filled.
 const TYPE_AUTO_PATTERNS = {
+  // Arlo calls its sensors motion_camera_x and connected_camera_x, Reolink
+  // and Tapo name a privacy switch, and most of them an infrared mode.
+  camera: {
+    motion_entity: /motion|mouvement|bewegung|movimiento|movimento|person|human/i,
+    recording_entity: /record|enregistr|aufnahme|grabac/i,
+    night_entity: /night|nuit|infra.?red|(^|[._])ir([._]|$)|nacht|notte|noche/i,
+    privacy_entity: /privacy|confidential|privat|lens.?mask/i,
+    battery_entity: /batter|akku/i,
+    signal_entity: /signal|rssi|wifi/i,
+    connectivity_entity: /connect|online/i,
+  },
   solar: {
     power_entity: /(solar|pv|production|produced|inverter|onduleur).*(power|watt)|(power|watt).*(solar|pv)/i,
     energy_today_entity: /(today|daily|aujourd|heute|_day_|jour).*(energy|kwh|production|yield)|(energy|production|yield).*(today|daily|aujourd|heute|jour)/i,
@@ -4911,6 +4936,9 @@ const TYPE_CAPS = {
   // A UPS: on mains or on its battery, how long that battery would last, and
   // what it carries.
   ups: { ups: true },
+  // A camera: whether it watches, streams or records, what it has seen, and
+  // its privacy mode. Never its picture: Home Assistant has cards for that.
+  camera: { camera: true },
   // A television, a projector or a computer, read from its plug: what it
   // draws at rest is its standby, and a media player says what it shows.
   screen: { screen: true },
@@ -4994,6 +5022,7 @@ const STATE_DOMAINS = {
   network: ["device_tracker", "switch", "input_boolean"],
   robot: ["vacuum", "lawn_mower", "select", "input_select"],
   pool_pump: ["switch", "binary_sensor", "select", "input_select", "input_boolean", "fan"],
+  camera: ["camera", "switch", "binary_sensor", "input_boolean"],
 };
 // A model, a picture, the players it shows and a session lock belong to a
 // screen.
@@ -5077,7 +5106,7 @@ const TYPE_GROUPS = [
   ["kitchen", ["dishwasher", "oven", "microwave", "hood", "cooktop", "fridge", "kettle", "cooker", "coffee", "rice_cooker", "air_fryer", "toaster"]],
   ["heating", ["water_heater", "boiler", "heat_pump", "pellet_stove", "space_heater", "towel_warmer"]],
   ["air", ["air_conditioner", "dehumidifier", "air_purifier", "fan"]],
-  ["home", ["screen", "iron", "hair_dryer", "printer_3d", "robot", "pool_pump", "scale"]],
+  ["home", ["screen", "iron", "hair_dryer", "printer_3d", "robot", "pool_pump", "scale", "camera"]],
   ["energy", ["solar", "home_battery", "ev_charger"]],
   ["pets", ["pet_feeder", "pet_fountain"]],
   ["network", ["network", "ups"]],
@@ -5110,8 +5139,10 @@ function detectApplianceType(cfg, st) {
   if (BATTERY_ONLY_FIELDS.some((f) => cfg[f])) return "home_battery";
   if (SCALE_ONLY_FIELDS.some((f) => cfg[f])) return "scale";
   if (UPS_ONLY_FIELDS.some((f) => cfg[f])) return "ups";
+  if (CAMERA_ONLY_FIELDS.some((f) => cfg[f])) return "camera";
   // Home Assistant has a domain of its own for each of them.
   if (["vacuum", "lawn_mower"].includes(domainOf(cfg.state_entity))) return "robot";
+  if (domainOf(cfg.state_entity) === "camera") return "camera";
   if (PURIFIER_ONLY_FIELDS.some((f) => cfg[f])) return "air_purifier";
   if (FAN_ONLY_FIELDS.some((f) => cfg[f])) return "fan";
   if (FRYER_ONLY_FIELDS.some((f) => cfg[f])) return "air_fryer";
@@ -5829,6 +5860,136 @@ function batteryReadOf(hass, cfg, st) {
   const low = level !== null && !["unav", "error"].includes(mode) && level <= BATTERY_LOW_PCT;
   return { mode, level, net, powerId, top, reserve, low, levelId };
 }
+// A camera, read from its camera entity: idle, streaming or recording, and
+// off once it is switched off. A motion sensor, a recording sensor and an
+// infrared mode say more when the integration has them, a privacy switch (or
+// Netatmo's monitoring attribute) says it is off, and a connectivity sensor
+// that it is gone.
+const CAMERA_ONLY_FIELDS = ["camera_layout", "motion_entity", "recording_entity", "night_entity", "privacy_entity", "signal_entity"];
+const CAMERA_LAYOUTS = ["indoor", "tube", "outdoor", "dome"];
+const CAMERA_LABELS = { idle: "cam_idle", live: "cam_live", rec: "cam_rec", motion: "cam_motion", off: "cam_off", unav: "ev_offline" };
+const CAMERA_COLORS = { idle: "var(--secondary-text-color, #727272)", live: "#03a9f4", rec: "#f44336", motion: "#ff9800",
+  off: "var(--disabled-text-color, #9e9e9e)", unav: "var(--disabled-text-color, #9e9e9e)" };
+const CAMERA_ON = ["on", "true", "1", "yes", "detected", "recording", "motion", "home"];
+function camOn(hass, id) {
+  const st = id ? stateObj(hass, id) : null;
+  return !!st && CAMERA_ON.includes(String(st.state).toLowerCase());
+}
+function cameraReadOf(hass, cfg, st) {
+  const raw = st ? String(st.state).trim().toLowerCase() : "";
+  const a = (st && st.attributes) || {};
+  const conn = cfg.connectivity_entity ? stateObj(hass, cfg.connectivity_entity) : null;
+  const gone = !!conn && ["off", "false", "disconnected", "offline", "unavailable"].includes(String(conn.state).toLowerCase());
+  let mode;
+  if (!st || ["unavailable", "unknown", "none", ""].includes(raw) || gone) mode = "unav";
+  else if (raw === "off" || a.monitoring === false || camOn(hass, cfg.privacy_entity)) mode = "off";
+  else if (raw === "recording" || camOn(hass, cfg.recording_entity)) mode = "rec";
+  else if (raw === "motion" || camOn(hass, cfg.motion_entity)) mode = "motion";
+  else if (raw === "streaming") mode = "live";
+  else mode = "idle";
+  return { mode, night: mode !== "off" && mode !== "unav" && camOn(hass, cfg.night_entity) };
+}
+// The shape: picked, or read from the name, the brand and the model. A
+// Netatmo indoor camera is its aluminium tube; the outdoor ones and the
+// battery cameras that live on a wall are drawn on their arm.
+function cameraLayoutOf(cfg, st) {
+  if (CAMERA_LAYOUTS.includes(cfg.camera_layout)) return cfg.camera_layout;
+  const a = (st && st.attributes) || {};
+  const hay = stripAccents(`${cfg.state_entity || ""} ${cfg.name || ""} ${a.friendly_name || ""} ${a.brand || ""} ${a.model_name || a.model || ""}`).toLowerCase();
+  if (/dome|kuppel|domo|cupola|turret/.test(hay)) return "dome";
+  if (/netatmo/.test(hay) && !/presence|outdoor|exterieur|exterior/.test(hay)) return "tube";
+  if (/outdoor|exterieur|exterior|aussen|garden|jardin|garage|driveway|porch|terrasse|street|front|back|arriere|avant|entree|portail|gate|spotlight|bullet|presence|arlo|doorbell|sonnette/.test(hay)) return "outdoor";
+  return "indoor";
+}
+
+// The camera, drawn in its colour: the lens, its glint, the blue of a live
+// view, an infrared ring that glows red at night, the status light, the REC
+// tag and the waves of a motion.
+const CAM_DEFS = `<defs>
+<linearGradient id="cam-g-sh" x1="0" y1="0" x2="1" y2="1"><stop offset="0" style="stop-color:var(--ac-body-hi,#fff)"/><stop offset=".55" style="stop-color:var(--ac-body,#eef1f4)"/><stop offset="1" style="stop-color:var(--ac-body-lo,#c9d0d7)"/></linearGradient>
+<linearGradient id="cam-g-shv" x1="0" y1="0" x2="0" y2="1"><stop offset="0" style="stop-color:var(--ac-body-hi,#fff)"/><stop offset="1" style="stop-color:var(--ac-body-lo,#c9d0d7)"/></linearGradient>
+<radialGradient id="cam-g-sph" cx=".38" cy=".32" r=".75"><stop offset="0" style="stop-color:var(--ac-body-hi,#fff)"/><stop offset=".6" style="stop-color:var(--ac-body,#eef1f4)"/><stop offset="1" style="stop-color:var(--ac-body-lo,#c9d0d7)"/></radialGradient>
+<radialGradient id="cam-g-glass" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#3a4552"/><stop offset=".55" stop-color="#11161c"/><stop offset="1" stop-color="#05070a"/></radialGradient>
+<radialGradient id="cam-g-lens" cx=".4" cy=".35" r=".7"><stop offset="0" stop-color="#4f6b8a"/><stop offset=".45" stop-color="#16263a"/><stop offset="1" stop-color="#020407"/></radialGradient>
+<radialGradient id="cam-g-glow" r=".5"><stop offset="0" stop-color="#4fc3f7" stop-opacity=".95"/><stop offset="1" stop-color="#4fc3f7" stop-opacity="0"/></radialGradient>
+<radialGradient id="cam-g-smoke" cx=".4" cy=".25" r=".85"><stop offset="0" stop-color="#56606b" stop-opacity=".85"/><stop offset=".6" stop-color="#1c2228" stop-opacity=".9"/><stop offset="1" stop-color="#0b0e11" stop-opacity=".95"/></radialGradient>
+<linearGradient id="cam-g-al" x1="0" y1="0" x2="1" y2="0"><stop offset="0" class="cam-al0"/><stop offset=".32" class="cam-al1"/><stop offset=".7" class="cam-al2"/><stop offset="1" class="cam-al3"/></linearGradient>
+<linearGradient id="cam-g-blk" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#05070a"/><stop offset=".35" stop-color="#2a3138"/><stop offset=".6" stop-color="#0d1014"/><stop offset="1" stop-color="#030405"/></linearGradient>
+</defs>`;
+const CAM_EDGE = 'stroke="rgba(0,0,0,.28)"';
+function camLens(x, y, r, irR) {
+  const irs = irR ? `<g class="cam-ir">${Array.from({ length: 8 }, (_, i) => {
+    const t = (i / 8) * Math.PI * 2;
+    return `<circle cx="${(x + Math.cos(t) * irR).toFixed(1)}" cy="${(y + Math.sin(t) * irR).toFixed(1)}" r="1.1"/>`;
+  }).join("")}</g>` : "";
+  const gx = x - r * 0.35, gy = y - r * 0.38;
+  return `${irs}<circle cx="${x}" cy="${y}" r="${r + 1.6}" fill="#05070a"/><circle cx="${x}" cy="${y}" r="${r}" fill="url(#cam-g-lens)"/>`
+    + `<circle cx="${x}" cy="${y}" r="${(r * 0.42).toFixed(2)}" fill="#03060a"/><circle class="cam-glow" cx="${x}" cy="${y}" r="${(r * 1.9).toFixed(2)}" fill="url(#cam-g-glow)"/>`
+    + `<ellipse cx="${gx.toFixed(2)}" cy="${gy.toFixed(2)}" rx="${(r * 0.32).toFixed(2)}" ry="${(r * 0.2).toFixed(2)}" fill="#fff" opacity=".55" transform="rotate(-30 ${gx.toFixed(2)} ${gy.toFixed(2)})"/>`;
+}
+const camWaves = (x, y) => `<g class="cam-waves" transform="translate(${x} ${y})"><path d="M6 -7 Q11 0 6 7"/><path d="M12 -12 Q20 0 12 12"/><path d="M18 -17 Q29 0 18 17"/></g>`;
+const CAM_REC = `<g class="cam-rec"><rect x="4" y="4" width="25" height="11" rx="3" fill="#000" opacity=".55"/><circle cx="9.5" cy="9.5" r="2.4" fill="#ff3b30"/><text x="13.5" y="12.4" font-size="7.5" font-family="Arial, sans-serif" font-weight="700" fill="#fff">REC</text></g>`;
+const CAMERA_SVGS = {
+  indoor: () => `<ellipse cx="60" cy="110" rx="30" ry="4" fill="#000" opacity=".15"/>
+<path d="M38 88 Q38 82 44 81 H76 Q82 82 82 88 V104 Q82 109 76 109 H44 Q38 109 38 104 Z" fill="url(#cam-g-sh)" ${CAM_EDGE} stroke-width=".6"/>
+<ellipse cx="60" cy="83" rx="21" ry="3.6" style="fill:var(--ac-body-hi,#fff)" opacity=".7"/>
+<rect x="52" y="76" width="16" height="8" rx="3" fill="url(#cam-g-shv)" ${CAM_EDGE} stroke-width=".5"/>
+<circle cx="60" cy="47" r="31" fill="url(#cam-g-sph)" ${CAM_EDGE} stroke-width=".7"/>
+<g class="cam-on"><ellipse cx="60" cy="47" rx="21" ry="18.5" fill="#111418"/><ellipse cx="60" cy="47" rx="21" ry="18.5" fill="url(#cam-g-glass)" opacity=".9"/>
+${camLens(60, 46, 7.2, 12.5)}<circle cx="49" cy="38" r="1.3" fill="#2b3946"/><circle class="cam-led" cx="60" cy="61" r="1.5"/>
+<path d="M44 36 Q52 31 62 31" stroke="#fff" stroke-width="1.4" opacity=".18" fill="none" stroke-linecap="round"/></g>
+<g class="cam-off"><path d="M41 70 Q60 80 79 70 Q74 77 60 78 Q46 77 41 70 Z" fill="#111418"/><path d="M36 44 Q60 38 84 44" fill="none" ${CAM_EDGE} stroke-width=".7"/></g>
+${camWaves(84, 46)}${CAM_REC}`,
+  tube: () => `<ellipse cx="60" cy="110" rx="22" ry="3.6" fill="#000" opacity=".18"/>
+<path d="M43 16 V104 A17 5 0 0 0 77 104 V16 Z" fill="url(#cam-g-al)"/>
+<ellipse cx="60" cy="16" rx="17" ry="5" class="cam-al-top"/><ellipse cx="60" cy="16" rx="15.5" ry="4.2" fill="url(#cam-g-al)" opacity=".8"/>
+<path d="M47 22 Q60 26 73 22 V60 Q60 64 47 60 Z" fill="url(#cam-g-blk)"/>
+<path d="M50 25 Q56 27 62 27" stroke="#fff" stroke-width="1.2" opacity=".2" fill="none" stroke-linecap="round"/>
+<g class="cam-on">${camLens(60, 38, 6.2, 9.5)}</g>
+<g class="cam-off"><circle cx="60" cy="38" r="7.8" fill="#2a3037"/><circle cx="60" cy="38" r="5" fill="#1c2127"/></g>
+<circle class="cam-led" cx="60" cy="54" r="1.4"/>
+<path d="M48 68 V100 M52 68 V102 M68 68 V102 M72 68 V100" stroke="#fff" stroke-width=".5" opacity=".25"/>
+${camWaves(74, 38)}${CAM_REC}`,
+  outdoor: () => `<g transform="translate(-4 4)">
+<rect x="-4" y="-8" width="13" height="132" class="cam-wall"/>
+<rect x="7" y="56" width="11" height="34" rx="3" fill="url(#cam-g-shv)" ${CAM_EDGE} stroke-width=".6"/>
+<circle cx="12.5" cy="61" r="1.2" fill="rgba(0,0,0,.3)"/><circle cx="12.5" cy="85" r="1.2" fill="rgba(0,0,0,.3)"/>
+<path d="M17 70 Q30 70 34 62" style="stroke:var(--ac-body-lo,#c9d0d7)" stroke-width="7" fill="none" stroke-linecap="round"/>
+<path d="M17 70 Q30 70 34 62" style="stroke:var(--ac-body,#eef1f4)" stroke-width="4" fill="none" stroke-linecap="round"/>
+<circle cx="36" cy="60" r="5.5" fill="url(#cam-g-sph)" ${CAM_EDGE} stroke-width=".6"/>
+<g transform="rotate(10 60 50)">
+<rect x="30" y="38" width="66" height="25" rx="12" fill="url(#cam-g-shv)" ${CAM_EDGE} stroke-width=".7"/>
+<path d="M38 41 H90" stroke="#fff" stroke-width="2" opacity=".35" stroke-linecap="round"/>
+<path d="M44 37 Q44 31 52 31 H106 Q110 31 110 35 V38 H44 Z" fill="url(#cam-g-shv)" ${CAM_EDGE} stroke-width=".7"/>
+<ellipse cx="96" cy="50.5" rx="7" ry="12.5" style="fill:var(--ac-body-lo,#c9d0d7)"/>
+<ellipse cx="97.5" cy="50.5" rx="6" ry="11.3" fill="#111418"/>
+<g class="cam-on">${camLens(98.5, 50.5, 5.2, 0)}<g class="cam-ir"><circle cx="98.5" cy="41.5" r="1"/><circle cx="98.5" cy="59.5" r="1"/><circle cx="95" cy="44" r=".9"/><circle cx="95" cy="57" r=".9"/></g></g>
+<g class="cam-off"><ellipse cx="97.5" cy="50.5" rx="6" ry="11.3" style="fill:var(--ac-body,#eef1f4)" ${CAM_EDGE} stroke-width=".6"/><path d="M93 50.5 H102" ${CAM_EDGE} stroke-width=".8"/></g>
+<circle class="cam-led" cx="88" cy="58" r="1.3"/>
+<rect x="32" y="22" width="3" height="18" rx="1.5" style="fill:var(--ac-body-lo,#c9d0d7)"/>
+</g></g>${camWaves(100, 64)}${CAM_REC}`,
+  dome: () => `<g transform="translate(60 0) scale(1.45) translate(-60 0)">
+<rect x="-40" y="-6" width="200" height="20" class="cam-ceiling"/>
+<rect x="-40" y="13" width="200" height="1.5" fill="#000" opacity=".08"/>
+<path d="M18 14 H102 Q102 24 92 30 H28 Q18 24 18 14 Z" fill="url(#cam-g-shv)" ${CAM_EDGE} stroke-width=".7"/>
+<circle cx="30" cy="20" r="1.3" fill="rgba(0,0,0,.3)"/><circle cx="90" cy="20" r="1.3" fill="rgba(0,0,0,.3)"/>
+<rect x="26" y="29" width="68" height="5" rx="2" style="fill:var(--ac-body-lo,#c9d0d7)"/>
+<path d="M30 34 A30 30 0 0 0 90 34 Z" fill="#0d1115"/>
+<g class="cam-on"><ellipse cx="66" cy="52" rx="15" ry="13" fill="#1a1f25"/>${camLens(67, 53, 6.4, 10.5)}</g>
+<g class="cam-off"><path d="M38 40 Q60 56 82 40" fill="#2a3037"/><path d="M46 46 Q60 52 74 46" stroke="#3b434c" stroke-width="1.2" fill="none"/></g>
+<path d="M30 34 A30 30 0 0 0 90 34 Z" fill="url(#cam-g-smoke)" opacity=".55"/>
+<path d="M37 40 Q42 56 56 61" stroke="#fff" stroke-width="2.4" fill="none" opacity=".3" stroke-linecap="round"/>
+<path d="M30 34 A30 30 0 0 0 90 34" fill="none" ${CAM_EDGE} stroke-width=".7"/>
+<circle class="cam-led" cx="46" cy="45" r="1.3"/>
+</g>${camWaves(86, 82)}<g transform="translate(0 24)">${CAM_REC}</g>`,
+};
+function cameraHtml(cls, c) {
+  const layout = CAMERA_LAYOUTS.includes(c.layout) ? c.layout : "indoor";
+  const flags = ["cam", `cam-l-${layout}`, `cam-m-${c.mode || "unav"}`, c.night ? "cam-night" : "", c.dark ? "cam-dark" : ""].filter(Boolean).join(" ");
+  return `
+        <div class="machine ${cls} ${flags}"><svg class="cam-svg" viewBox="0 -8 120 135">${CAM_DEFS}${CAMERA_SVGS[layout]()}</svg></div>`;
+}
+
 // A bathroom scale: its state entity is the weight. Weighed, and when; the
 // goal reached within half a unit; offline when there is no weight to show.
 const SCALE_ONLY_FIELDS = ["weight_goal_entity", "weight_goal", "fat_ratio_entity", "fat_mass_entity", "muscle_mass_entity", "bone_mass_entity"];
@@ -5898,6 +6059,7 @@ const HISTORY_SOURCES = {
   ups: ["load_entity", "battery_entity"],
   scale: ["state_entity"],
   home_battery: ["battery_entity"],
+  camera: ["battery_entity", "signal_entity"],
 };
 
 function historyEntityOf(hass, cfg, type) {
@@ -8743,6 +8905,43 @@ const ILLUSTRATION_CSS = {
         @keyframes sc-glow { 0%, 100% { opacity: 1; } 50% { opacity: 0.7; } }
         @media (prefers-reduced-motion: reduce) { .machine.sc * { animation-name: none !important; } }
   `,
+  // A camera: its status light, the glow of a live view, the REC tag, the
+  // waves of a motion and the red ring of its infrared.
+  camera: () => `
+        svg.cam-svg{position:absolute;left:0;top:0;width:96px;height:108px;overflow:hidden}
+        .cam-led{fill:#9aa3ad}
+        .cam-m-idle .cam-led{fill:#4caf50}
+        .cam-m-live .cam-led{fill:#03a9f4}
+        .cam-m-rec .cam-led{fill:#f44336;animation:cam-blink 1s steps(1) infinite;animation-delay:var(--anim-offset,0s)}
+        .cam-m-motion .cam-led{fill:#ff9800;animation:cam-blink .5s steps(1) infinite;animation-delay:var(--anim-offset,0s)}
+        .cam-glow{opacity:0}
+        .cam-m-live .cam-glow{opacity:1;animation:cam-breathe 2s ease-in-out infinite;animation-delay:var(--anim-offset,0s)}
+        .cam-waves{opacity:0}
+        .cam-m-motion .cam-waves{opacity:1}
+        .cam-waves path{fill:none;stroke:#ff9800;stroke-width:2.4;stroke-linecap:round;transform-box:fill-box;transform-origin:0% 50%;opacity:0;animation:cam-wave 1.6s ease-out infinite}
+        .cam-waves path:nth-child(2){animation-delay:.4s}
+        .cam-waves path:nth-child(3){animation-delay:.8s}
+        .cam-rec{opacity:0}
+        .cam-m-rec .cam-rec{opacity:1}
+        .cam-rec circle{animation:cam-blink 1s steps(1) infinite}
+        .cam-ir circle{fill:#5a1a1a}
+        .cam-night .cam-ir circle{fill:#ff3b30;animation:cam-ir 1.6s ease-in-out infinite;filter:drop-shadow(0 0 1.5px #ff3b30)}
+        .cam-off{display:none}
+        .cam-m-off .cam-on{display:none}
+        .cam-m-off .cam-off{display:inline}
+        .machine.cam-m-unav{opacity:.45;filter:grayscale(1)}
+        .cam-wall{fill:#c9c2b6}
+        .cam-ceiling{fill:#d9d4cb}
+        .cam-al0{stop-color:#8d959d}.cam-al1{stop-color:#eef1f3}.cam-al2{stop-color:#c3c9cf}.cam-al3{stop-color:#848c94}
+        .cam-al-top{fill:#c3c9cf}
+        .cam-dark .cam-al0{stop-color:#25292d}.cam-dark .cam-al1{stop-color:#4c535a}.cam-dark .cam-al2{stop-color:#33393f}.cam-dark .cam-al3{stop-color:#1a1d20}
+        .cam-dark .cam-al-top{fill:#33393f}
+        @keyframes cam-blink { 50% { opacity: .15; } }
+        @keyframes cam-breathe { 0%, 100% { opacity: .35; } 50% { opacity: 1; } }
+        @keyframes cam-wave { 0% { opacity: 0; transform: scale(.6); } 30% { opacity: 1; } 100% { opacity: 0; transform: scale(1.25); } }
+        @keyframes cam-ir { 0%, 100% { opacity: .55; } 50% { opacity: 1; } }
+        @media (prefers-reduced-motion: reduce) { .machine.cam * { animation-name: none !important; } }
+  `,
   // A UPS between the wall socket and the box it protects.
   ups: () => `
         .machine.up { --b: var(--ac-body, #2f343b); --bh: var(--ac-body-hi, #4a515b); --bl: var(--ac-body-lo, #1a1d22); }
@@ -11231,6 +11430,7 @@ function illustrationHtml(type, ctx) {
   if (type === "home_battery") return batteryHtml(cls, ctx.battery || {});
   if (type === "scale") return scaleHtml(cls, ctx.scale || {});
   if (type === "ups") return upsHtml(cls, ctx.ups || { segs: 0 });
+  if (type === "camera") return cameraHtml(cls, ctx.camera || {});
   if (type === "screen") return screenHtml(cls, ctx.screen || {});
   if (type === "air_purifier") return purifierHtml(cls, ctx.purifier || {});
   if (type === "fan") return fanHtml(cls, ctx.fan || {});
@@ -14293,6 +14493,39 @@ class ApplianceCard extends HTMLElement {
       battery = { mode: b.mode, layout: batteryLayoutOf(cfg, st), level: b.level, reserve: b.reserve, low: b.low };
     }
 
+    // A camera: what it does, and lines for its battery, its signal, the last
+    // motion and its night vision.
+    let camera = null;
+    if (cap.camera) {
+      const { mode, night } = cameraReadOf(hass, cfg, st);
+      if (!cfg.state_show_raw || mode === "unav") stateLabel = t(hass, CAMERA_LABELS[mode]);
+      color = CAMERA_COLORS[mode];
+      const a = (st && st.attributes) || {};
+      if (mode !== "unav") {
+        const batt = cfg.battery_entity ? numericState(hass, cfg.battery_entity) : numberOrNull(a.battery_level);
+        if (batt !== null) {
+          extraLines.push({ key: "cam_battery", icon: robotBatteryIcon(batt, a.charging === true), label: t(hass, "section_battery"),
+            value: keepTogether(`${Math.round(batt)} %`), entity: cfg.battery_entity || cfg.state_entity, caution: batt <= 15 });
+        }
+        const sig = cfg.signal_entity ? numericState(hass, cfg.signal_entity) : numberOrNull(a.signal_strength);
+        if (sig !== null) {
+          const unit = cfg.signal_entity ? unitOf(hass, cfg.signal_entity) : "";
+          extraLines.push({ key: "cam_signal", icon: "mdi:wifi", label: t(hass, "cam_line_signal"),
+            value: keepTogether(`${netNumber(hass, sig, 0)}${unit ? ` ${unit}` : ""}`), entity: cfg.signal_entity || cfg.state_entity });
+        }
+        const mst = cfg.motion_entity ? stateObj(hass, cfg.motion_entity) : null;
+        const seen = mst && mode !== "motion" ? Date.parse(mst.last_changed) : NaN;
+        if (isFinite(seen)) {
+          extraLines.push({ key: "cam_motion", icon: "mdi:motion-sensor", label: t(hass, "cam_line_last_motion"),
+            value: keepTogether(feedTime(hass, seen)), entity: cfg.motion_entity });
+        }
+        if (night) {
+          extraLines.push({ key: "cam_night", icon: "mdi:weather-night", label: t(hass, "cam_line_night"), value: "IR", entity: cfg.night_entity });
+        }
+      }
+      camera = { mode, night, layout: cameraLayoutOf(cfg, st), dark: cfg.illustration_color === "black" };
+    }
+
     // A bathroom scale: its state entity is the weight, shown on its screen.
     // The goal, the fat, the muscles and the bones are lines.
     let scale = null;
@@ -14528,6 +14761,7 @@ class ApplianceCard extends HTMLElement {
       solar,
       battery,
       scale,
+      camera,
       ups,
       purifier,
       screen,
@@ -14628,6 +14862,7 @@ class ApplianceCard extends HTMLElement {
       illustrationCtx.pool && [illustrationCtx.pool.mode, illustrationCtx.pool.dosing, illustrationCtx.pool.lit].join("/"),
       illustrationCtx.solar && [illustrationCtx.solar.mode, illustrationCtx.solar.sky, illustrationCtx.solar.layout].join("/"),
       illustrationCtx.battery && [illustrationCtx.battery.mode, illustrationCtx.battery.layout, illustrationCtx.battery.low].join("/"),
+      illustrationCtx.camera && [illustrationCtx.camera.mode, illustrationCtx.camera.night, illustrationCtx.camera.layout].join("/"),
       illustrationCtx.scale && [illustrationCtx.scale.mode, illustrationCtx.scale.text, illustrationCtx.scale.unit, illustrationCtx.scale.fresh].join("/"),
       illustrationCtx.ups && [illustrationCtx.ups.mode, illustrationCtx.ups.alert, illustrationCtx.ups.charging, illustrationCtx.ups.segs,
         illustrationCtx.ups.lcd, illustrationCtx.ups.level, illustrationCtx.ups.pace].join("/"),
@@ -15305,7 +15540,14 @@ const SECTIONS = [
   { field: "muscle_mass_entity", types: ["scale"], labelKey: "section_muscle_mass", includeDomains: ["sensor"] },
   { field: "bone_mass_entity", types: ["scale"], labelKey: "section_bone_mass", includeDomains: ["sensor"] },
   { field: "robot_status_entity", types: ["robot"], labelKey: "section_robot_status", includeDomains: ["sensor", "select", "input_select"] },
-  { field: "battery_entity", types: ["robot", "home_battery", "ups"], labelKey: "section_battery", includeDomains: ["sensor"], extra: (c) =>
+  // A camera: what it sees, whether it records, its night vision, its
+  // privacy switch and its signal.
+  { field: "motion_entity", types: ["camera"], labelKey: "section_motion", includeDomains: ["binary_sensor", "sensor"] },
+  { field: "recording_entity", types: ["camera"], labelKey: "section_recording", includeDomains: ["binary_sensor", "switch", "sensor"] },
+  { field: "night_entity", types: ["camera"], labelKey: "section_night_vision", includeDomains: ["binary_sensor", "switch", "select", "sensor", "input_boolean"] },
+  { field: "privacy_entity", types: ["camera"], labelKey: "section_privacy", includeDomains: ["switch", "binary_sensor", "input_boolean"] },
+  { field: "signal_entity", types: ["camera"], labelKey: "section_signal", includeDomains: ["sensor"] },
+  { field: "battery_entity", types: ["robot", "home_battery", "ups", "camera"], labelKey: "section_battery", includeDomains: ["sensor"], extra: (c) =>
       (caps(c._currentType()).ups ? c._row("ups_battery_low", "battery_low", { placeholder: String(UPS_BATTERY_LOW) }) : "") },
   // A UPS: the time left on its battery, its load and the mains voltage.
   { field: "runtime_entity", types: ["ups"], labelKey: "section_ups_runtime", includeDomains: ["sensor"] },
@@ -16235,6 +16477,10 @@ class ApplianceCardEditor extends HTMLElement {
             options: [{ value: "auto", label: t(hass, "unit_auto") }].concat(NET_BAYS.map((v) => ({ value: String(v), label: String(v) }))),
           }) : "");
         })() : ""}
+        ${this._type === "camera" ? this._row("section_screen_layout", "camera_layout", {
+          type: "select",
+          options: [{ value: "auto", label: t(hass, "unit_auto") }].concat(CAMERA_LAYOUTS.map((v) => ({ value: v, label: t(hass, `layout_cam_${v}`) }))),
+        }) : ""}
         ${this._type === "robot" ? (() => {
           const layout = robotLayoutOf(this._config, stateObj(hass, this._config.state_entity));
           return this._row("section_screen_layout", "robot_layout", {

@@ -23,7 +23,7 @@ No brand assumed: every field is an entity you pick, so it works with **any** in
 
 ## Features
 
-- **Thirty-eight appliance types**, each with a CSS illustration that animates on the appliance's own data and stays still when idle. The type is detected on its own or set via `appliance_type`, and `compact: true` keeps only the text.
+- **Thirty-nine appliance types**, each with a CSS illustration that animates on the appliance's own data and stays still when idle. The type is detected on its own or set via `appliance_type`, and `compact: true` keeps only the text.
 - **State normalization**: `Idle`, `RUNNING`, `wash`, `En marche`… are recognised (accent-insensitive) and sorted into idle, preheating, running, paused, done, delayed or error. An unknown state is shown as it came, minus the integration's namespace, and `state_map` sorts the rest, `"*"` catching everything left over.
 - **The step, not an hour of *Running***: a washer, a dryer or a dishwasher names the step it is at (*Pre-wash*, *Washing*, *Rinsing*, *Spinning*, *Drying* and seven more), from a phase entity or from its own state, and the drum whirls while it spins. The time left is still the whole cycle's.
 - **A washer-dryer is a washer that dries**: `washer_dryer: true`, and the drum shows water while it washes, then clothes turning in hot air while it dries. The step comes from the state itself or from a phase entity, and the state line reads *Washing* or *Drying*.
@@ -124,6 +124,13 @@ Click a family to see its appliances at work.
 <summary><b>UPSes</b></summary>
 
 <img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-ups.gif" alt="UPSes" width="100%">
+
+</details>
+
+<details>
+<summary><b>Cameras</b></summary>
+
+<img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-cameras.gif" alt="Cameras" width="100%">
 
 </details>
 
@@ -274,6 +281,12 @@ Only `state_entity` is required, except on a fridge where a probe or a door cont
 | `runtime_entity` | UPS | The time left on the battery, in seconds as NUT gives it, or in minutes or hours: a line, and the UPS's screen while on battery. |
 | `load_entity` / `nominal_power` | UPS | The load, in %: the energy flows faster as it grows, and 100 % or more is an *Overload*. With `nominal_power` (in W) and no `power_entity`, the line gives it in watts too. |
 | `input_voltage_entity` | UPS | The voltage at the wall, as a line. Without a `state_entity`, below 100 V the UPS is on battery. |
+| `camera_layout` | camera | `indoor` (a pan and tilt camera) \| `tube` (Netatmo Welcome) \| `outdoor` (on its wall arm) \| `dome` (on the ceiling). Left out, a Netatmo indoor camera is a tube, a name that says dome a dome, and a name or a brand that says outdoor, garden, front, back, Arlo or spotlight an outdoor camera. |
+| `motion_entity` | camera | A motion sensor: *Motion detected* while it is on, orange waves in front of the lens, then a *Last motion* line. |
+| `recording_entity` | camera | A recording sensor, for the integrations whose camera entity does not say *recording*. |
+| `night_entity` | camera | The infrared mode: the ring of LEDs around the lens glows red, and a *Night vision* line. |
+| `privacy_entity` | camera | A privacy switch (Reolink, Tapo): on, the camera is *Off*, its head bowed or its shutter closed. Netatmo's `monitoring` attribute does the same. Set it as `toggle_entity` too for a button. |
+| `signal_entity` / `battery_entity` | camera | The Wi-Fi signal and the battery, as lines. An Arlo camera's own attributes are read without them. |
 | `robot_layout` | robot | `vacuum` \| `mop` \| `mower` \| `stick` (a stick vacuum on its wall dock) \| `floor_washer` (a wet and dry floor washer in its station). Left out, a name that says stick, cordless or Dyson makes a stick vacuum, Tineco or floor washer a floor washer, a `lawn_mower` entity or a name that says mower, Landroid or Automower makes a mower, and Braava or mop a mopping robot. |
 | `robot_station` | robot | `station` (default: the vacuum's emptying station, the mop's washing station) \| `base` (a charging base alone). |
 | `robot_shelter` | robot | `true` draws a shelter over a mower's base. |
@@ -688,6 +701,20 @@ runtime_entity: sensor.ups_battery_runtime
 load_entity: sensor.ups_load
 input_voltage_entity: sensor.ups_input_voltage
 nominal_power: 520
+```
+
+</details>
+
+<details>
+<summary><b>Cameras</b></summary>
+
+A camera's state, not its picture: Home Assistant has cards for that. Its `state_entity` is the camera entity: *Idle*, *Streaming*, *Recording* and *Off* come from it, *Motion detected* from a motion sensor, and *Offline* from a connectivity sensor that is off. Four shapes, found from the name and the brand: a pan and tilt indoor camera, a Netatmo Welcome tube, an outdoor camera on its arm and a dome.
+
+```yaml
+type: custom:ha-appliance-card
+state_entity: camera.aarlo_camera_avant
+motion_entity: binary_sensor.aarlo_motion_camera_avant
+connectivity_entity: binary_sensor.aarlo_connected_camera_avant
 ```
 
 </details>

@@ -10460,4 +10460,45 @@ check('borne : ni un statut reconnu', evMode(evR('SuspendedEVSE', { power_entity
   check('editeur vitesse : pas pour un lave-linge', /data-field="speed_power_max"/.test(ed({ appliance_type: 'washer' })), false);
 }
 
+// =============================================================================
+// Cameras: what they do, read from the camera entity and its sensors.
+// =============================================================================
+{
+  const s = (state, attributes = {}) => ({ state: String(state), attributes, last_changed: '2026-10-26T10:00:00Z' });
+  const cam = (state, cfg = {}, more = {}, attrs = {}) => render({ state_entity: 'camera.salon', ...cfg }, { 'camera.salon': s(state, attrs), ...more });
+  check('camera : par son domaine', machineCls(cam('idle')).includes('cam'), true);
+  check('camera : en veille', stateLine(cam('idle')), 'Idle');
+  check('camera : en direct', stateLine(cam('streaming')), 'Streaming');
+  check('camera : enregistrement', stateLine(cam('recording')), 'Recording');
+  check('camera : eteinte', stateLine(cam('off')), 'Off');
+  check('camera : hors ligne', stateLine(cam('unavailable')), 'Offline');
+  check('camera : mouvement', stateLine(cam('idle', { motion_entity: 'binary_sensor.m' }, { 'binary_sensor.m': s('on') })), 'Motion detected');
+  check('camera : pas de mouvement', stateLine(cam('idle', { motion_entity: 'binary_sensor.m' }, { 'binary_sensor.m': s('off') })), 'Idle');
+  check('camera : capteur d\'enregistrement', stateLine(cam('idle', { recording_entity: 'binary_sensor.r' }, { 'binary_sensor.r': s('on') })), 'Recording');
+  check('camera : enregistrement avant mouvement', stateLine(cam('recording', { motion_entity: 'binary_sensor.m' }, { 'binary_sensor.m': s('on') })), 'Recording');
+  check('camera : confidentialite', stateLine(cam('idle', { privacy_entity: 'switch.p' }, { 'switch.p': s('on') })), 'Off');
+  check('camera : Netatmo sans surveillance', stateLine(cam('streaming', {}, {}, { monitoring: false })), 'Off');
+  check('camera : deconnectee', stateLine(cam('idle', { connectivity_entity: 'binary_sensor.c' }, { 'binary_sensor.c': s('off') })), 'Offline');
+  check('camera : la couleur de l\'enregistrement', stateColor(cam('recording')), '#f44336');
+  check('camera : le dessin enregistre', machineCls(cam('recording')).includes('cam-m-rec'), true);
+  check('camera : vision nocturne', machineCls(cam('idle', { night_entity: 'switch.ir' }, { 'switch.ir': s('on') })).includes('cam-night'), true);
+  check('camera : pas de nuit eteinte', machineCls(cam('off', { night_entity: 'switch.ir' }, { 'switch.ir': s('on') })).includes('cam-night'), false);
+  check('camera : batterie d\'Arlo', infoLine(cam('idle', {}, {}, { battery_level: 80 }), 'Battery'), '80\u00a0%');
+  check('camera : signal', infoLine(cam('idle', { signal_entity: 'sensor.sig' }, { 'sensor.sig': s(-52, { unit_of_measurement: 'dBm' }) }), 'Signal').replace(/\s/g, ' '), '-52 dBm');
+  check('camera : dernier mouvement', infoLine(cam('idle', { motion_entity: 'binary_sensor.m' }, { 'binary_sensor.m': s('off') }), 'Last motion') !== null, true);
+  check('camera : pas de lignes hors ligne', infoLine(cam('unavailable', {}, {}, { battery_level: 80 }), 'Battery'), null);
+  // The shape, read from the name, the brand or the model.
+  check('camera : interieure par defaut', machineCls(cam('idle')).includes('cam-l-indoor'), true);
+  check('camera : Netatmo en tube', machineCls(cam('idle', {}, {}, { brand: 'Netatmo' })).includes('cam-l-tube'), true);
+  check('camera : Arlo dehors', machineCls(cam('idle', {}, {}, { brand: 'Arlo' })).includes('cam-l-outdoor'), true);
+  check('camera : par son nom, jardin', machineCls(render({ state_entity: 'camera.jardin' }, { 'camera.jardin': s('idle') })).includes('cam-l-outdoor'), true);
+  check('camera : dome', machineCls(cam('idle', { camera_layout: 'dome' })).includes('cam-l-dome'), true);
+  check('camera : forme choisie', machineCls(cam('idle', { camera_layout: 'tube' }, {}, { brand: 'Arlo' })).includes('cam-l-tube'), true);
+  check('camera : sur une prise', stateLine(render({ appliance_type: 'camera', state_entity: 'switch.cam' }, { 'switch.cam': s('on') })), 'Idle');
+  check('camera : prise coupee', stateLine(render({ appliance_type: 'camera', state_entity: 'switch.cam' }, { 'switch.cam': s('off') })), 'Off');
+  const ed = markup(newEditor({ state_entity: 'camera.salon' }));
+  check('editeur camera : la forme', /data-field="camera_layout"/.test(ed), true);
+  check('editeur camera : dans la liste', /value="camera"/.test(ed), true);
+}
+
 report();
