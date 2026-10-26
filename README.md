@@ -152,7 +152,7 @@ Click a family to see its appliances at work.
 
 ### Manually
 
-1. Download `ha-appliance-card.js` from the [latest release](https://github.com/ADNPolymerase/ha-appliance-card/releases/latest) and drop it in `config/www/`.
+1. Download every file of the [latest release](https://github.com/ADNPolymerase/ha-appliance-card/releases/latest) (`ha-appliance-card.js`, its editor and its language files) and drop them together in `config/www/`. Without the language files the card speaks English.
 2. Add the resource `/local/ha-appliance-card.js`, type **JavaScript module**, under **Settings > Dashboards > Resources**.
 3. Add a `custom:ha-appliance-card` card. A manual install has to be repeated at every release.
 

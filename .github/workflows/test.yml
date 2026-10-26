@@ -14,6 +14,10 @@ jobs:
         with:
           node-version: '22'
       - name: Syntax check
-        run: node --check dist/ha-appliance-card.js
+        run: node --check src/ha-appliance-card.js
+      - name: dist/ is what the source builds
+        run: node tools/build.mjs --check
       - name: Behaviour tests
         run: node test/run.mjs
+      - name: Release as split
+        run: node test/split.mjs

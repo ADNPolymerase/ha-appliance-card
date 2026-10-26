@@ -9,14 +9,16 @@ permissions:
 
 jobs:
   upload-asset:
-    name: Attach ha-appliance-card.js to release
+    name: Attach the card, its editor and its languages to release
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
         with:
           ref: ${{ github.event.release.tag_name }}
-      - name: Upload card asset
-        run: gh release upload "$TAG" dist/ha-appliance-card.js --clobber
+      # HACS downloads every asset of a release, so the editor and the language
+      # files land beside the card, which fetches them from there.
+      - name: Upload card assets
+        run: gh release upload "$TAG" dist/ha-appliance-card*.js dist/ha-appliance-card-*.json --clobber
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           TAG: ${{ github.event.release.tag_name }}

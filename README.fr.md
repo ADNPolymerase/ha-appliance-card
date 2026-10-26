@@ -152,7 +152,7 @@ Clique sur une famille pour voir ses appareils en marche.
 
 ### À la main
 
-1. Télécharge `ha-appliance-card.js` depuis la [dernière release](https://github.com/ADNPolymerase/ha-appliance-card/releases/latest) et dépose-le dans `config/www/`.
+1. Télécharge tous les fichiers de la [dernière release](https://github.com/ADNPolymerase/ha-appliance-card/releases/latest) (`ha-appliance-card.js`, son éditeur et ses fichiers de langue) et dépose-les ensemble dans `config/www/`. Sans les fichiers de langue, la carte s'affiche en anglais.
 2. Ajoute la ressource `/local/ha-appliance-card.js`, type **Module JavaScript**, dans **Paramètres > Tableaux de bord > Ressources**.
 3. Ajoute une card `custom:ha-appliance-card`. Une installation manuelle est à refaire à chaque release.
 

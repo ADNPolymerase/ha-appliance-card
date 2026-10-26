@@ -19,7 +19,7 @@ import { loadCard, markup, freezeClock, now, check, contains, report }
   from './harness.mjs';
 
 const HERE     = dirname(fileURLToPath(import.meta.url));
-const registry = await loadCard(join(HERE, '..', 'dist', 'ha-appliance-card.js'));
+const registry = await loadCard(join(HERE, '..', 'src', 'ha-appliance-card.js'));
 const Card     = registry.get('ha-appliance-card');
 const Editor   = registry.get('ha-appliance-card-editor');
 
@@ -1233,7 +1233,7 @@ check('carte : state_entity manquante est refusee',
 // is a static check on the table itself, which is what a contributed language
 // needs before it can be trusted.
 
-const SRC    = readFileSync(join(HERE, '..', 'dist', 'ha-appliance-card.js'), 'utf8');
+const SRC    = readFileSync(join(HERE, '..', 'src', 'ha-appliance-card.js'), 'utf8');
 const tStart = SRC.indexOf('const T = {');
 const TABLE  = eval('(' + SRC.slice(tStart + 'const T ='.length, SRC.indexOf('\n};', tStart) + 2) + ')');
 const EN_KEYS = Object.keys(TABLE.en);
