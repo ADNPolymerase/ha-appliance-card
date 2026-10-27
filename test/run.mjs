@@ -87,7 +87,9 @@ FakeNodeProto.querySelectorAll = function (sel) {
   // option to pick or the value to write. Without this the whole click path
   // would be unreachable, which is exactly where such a payload gets lost.
   if (sel === '.action-btn, .light-badge') {
-    const memo = (this.__qsa ||= new Map());
+    // Kept while the markup stays the same, made again once it changes.
+    if (!this.__qsa || this.__qsaHtml !== this.markup) { this.__qsaHtml = this.markup; this.__qsa = new Map(); }
+    const memo = this.__qsa;
     if (memo.has(sel)) return memo.get(sel);
     const out = [];
     for (const m of String(this.markup || '').matchAll(/<div class="(?:action-btn|light-badge)[^"]*"([^>]*)>/g)) {
@@ -121,7 +123,8 @@ FakeNodeProto.querySelectorAll = function (sel) {
   }
   const attr = /^\[([a-z-]+)\]$/.exec(sel)?.[1];
   if (!attr) return [];
-  const memo = (this.__qsa ||= new Map());
+  if (!this.__qsa || this.__qsaHtml !== this.markup) { this.__qsaHtml = this.markup; this.__qsa = new Map(); }
+  const memo = this.__qsa;
   if (memo.has(sel)) return memo.get(sel);
   const seen = new Set(), out = [];
   for (const m of String(this.markup || '').matchAll(new RegExp(`${attr}="([^"]*)"`, 'g'))) {
@@ -10631,6 +10634,85 @@ check('borne : ni un statut reconnu', evMode(evR('SuspendedEVSE', { power_entity
   check('vmc : Lunos e2 en paire', machineCls(render({ state_entity: 'fan.lunos_e2' }, { 'fan.lunos_e2': s('on') })).includes('hv-l-pair'), true);
   check('vmc : par son nom', machineCls(render({ state_entity: 'fan.vallox' }, { 'fan.vallox': s('on') })).includes('hv'), true);
   check('vmc : vitesse lente, pas lent', /--hv-pace:2.2s/.test(hrv('on', { percentage: 20 })), true);
+
+  // #54: a Broan / Venmar ERV over ESPHome (nspitko/broan_erv_uart).
+  const BROAN_OPTS = ['off', 'min', 'max', 'int', 'manual', 'turbo', 'humidity', 'recirculate', 'smart', 'ovr'];
+  const bcfg = { appliance_type: 'hrv', state_entity: 'select.erv_mode', supply_fan_entity: 'sensor.erv_supply_rpm', exhaust_fan_entity: 'sensor.erv_exhaust_rpm',
+    airflow_entity: 'sensor.erv_supply_cfm', exhaust_airflow_entity: 'sensor.erv_exhaust_cfm', fan_speed_entity: 'number.erv_fan_speed',
+    current_humidity_entity: 'sensor.home_humidity', target_humidity_entity: 'number.erv_humidity_setpoint', humidity_control_entity: 'switch.erv_humidity_control' };
+  const bst = (mode, o = {}) => ({
+    'select.erv_mode': s(mode, { options: BROAN_OPTS }),
+    'sensor.erv_supply_rpm': s(o.sr ?? 1084, { unit_of_measurement: 'RPM' }), 'sensor.erv_exhaust_rpm': s(o.er ?? 1362, { unit_of_measurement: 'RPM' }),
+    'sensor.erv_supply_cfm': s(50, { unit_of_measurement: 'CFM' }), 'sensor.erv_exhaust_cfm': s(50, { unit_of_measurement: 'CFM' }),
+    'number.erv_fan_speed': s(50, { unit_of_measurement: '%' }),
+    'sensor.home_humidity': s(58, { unit_of_measurement: '%' }), 'number.erv_humidity_setpoint': s(52, { unit_of_measurement: '%' }),
+    'switch.erv_humidity_control': s(o.hc ?? 'off'),
+  });
+  const broan = (mode, o, extra = {}) => render({ ...bcfg, ...extra }, bst(mode, o));
+  check('broan : min ventile', stateLine(broan('min')), 'Ventilating');
+  check('broan : sans type, reste une vmc malgre le capteur d humidite', machineCls(render({ ...bcfg, appliance_type: undefined }, bst('min'))).includes('hv'), true);
+  check('broan : arret', stateLine(broan('off')), 'Off');
+  check('broan : recirculation', stateLine(broan('recirculate')), 'Recirculation');
+  check('broan : la recirculation ferme les volets', machineCls(broan('recirculate')).includes('hv-m-rec'), true);
+  check('broan : mode humidite', stateLine(broan('humidity')), 'Humidity control');
+  check('broan : l interrupteur d humidite suffit', stateLine(broan('min', { hc: 'on' })), 'Humidity control');
+  check('broan : la pastille d humidite', machineCls(broan('humidity')).includes('hv-hb'), true);
+  check('broan : humidite et consigne sur la pastille', /58 → 52 %/.test(broan('humidity')), true);
+  check('broan : humidite et consigne en ligne', infoLine(broan('min'), 'Humidity').replace(/\s/g, ' '), '58 % → 52 %');
+  check('broan : intermittent en marche', stateLine(broan('int')), 'Intermittent');
+  check('broan : intermittent en pause, ventilateurs a l arret', stateLine(broan('int', { sr: 0, er: 0 })), 'Intermittent, paused');
+  check('broan : en pause, rien ne tourne', machineCls(broan('int', { sr: 0, er: 0 })).split(' ').includes('hv-on'), false);
+  check('broan : turbo', stateLine(broan('turbo')), 'Boost');
+  check('broan : la ligne du mode', infoLine(broan('smart'), 'Mode'), 'Smart');
+  check('broan : soufflage en tr/min et debit', infoLine(broan('min'), 'Supply fan').replace(/\s/g, ' '), '1,084 RPM · 50 CFM');
+  check('broan : extraction en tr/min et debit', infoLine(broan('min'), 'Exhaust fan').replace(/\s/g, ' '), '1,362 RPM · 50 CFM');
+  check('broan : la vitesse en % depuis un number', infoLine(broan('manual'), 'Fan speed').replace(/\s/g, ' '), '50 %');
+  const paces = broan('min');
+  check('broan : chaque ventilateur a sa vitesse (soufflage)', /--hv-sp:1\.52s/.test(paces), true);
+  check('broan : chaque ventilateur a sa vitesse (extraction)', /--hv-ep:1\.24s/.test(paces), true);
+  check('broan : la vitesse max reglable', /--hv-sp:2\.06s/.test(broan('min', {}, { fan_max_rpm: 4000 })), true);
+  check('broan : un ventilateur arrete ne tourne pas', machineCls(broan('min', { er: 0 })).includes('hv-ex'), true);
+  // The controls: the mode menu and the humidity switch.
+  const bcalls = [];
+  const bc = new Card();
+  bc.setConfig({ type: 'custom:ha-appliance-card', ...bcfg });
+  bc._hass = { ...HASS(bst('min')), callService: (domain, service, data) => bcalls.push({ domain, service, data }) };
+  bc._render();
+  const btns = () => bc._root.querySelectorAll('.action-btn, .light-badge');
+  const modeBtn = btns().find((n) => n.getAttribute('data-menu'));
+  check('broan : le bouton des modes', !!modeBtn, true);
+  check('broan : le bouton d humidite', !!btns().find((n) => n.getAttribute('data-entity') === 'switch.erv_humidity_control'), true);
+  check('broan : le menu est ferme', /class="mode-menu"/.test(markup(bc)), false);
+  fire(modeBtn, 'click', { stopPropagation() {} });
+  const opened = markup(bc);
+  check('broan : un appui ouvre le menu', /class="mode-menu"/.test(opened), true);
+  check('broan : tous les modes du select', (opened.match(/data-mode-option=/g) || []).length, 10);
+  check('broan : le mode courant coche', /class="mode-row sel"[^>]*data-mode-option="min"/.test(opened), true);
+  check('broan : les modes en mots', /<span>Recirculation<\/span>/.test(opened), true);
+  check('broan : aucun appel a l ouverture', bcalls.length, 0);
+  const rec = bc._root.querySelectorAll('[data-mode-option]').find((n) => n.getAttribute('data-mode-option') === 'recirculate');
+  fire(rec, 'click', { stopPropagation() {} });
+  check('broan : choisir un mode', JSON.stringify(bcalls.at(-1)), JSON.stringify({ domain: 'select', service: 'select_option', data: { entity_id: 'select.erv_mode', option: 'recirculate' } }));
+  check('broan : le menu se referme', /class="mode-menu"/.test(markup(bc)), false);
+  const humBtn = bc._root.querySelectorAll('.action-btn, .light-badge').find((n) => n.getAttribute('data-entity') === 'switch.erv_humidity_control');
+  fire(humBtn, 'click', { stopPropagation() {} });
+  check('broan : l humidite se bascule', JSON.stringify(bcalls.at(-1)), JSON.stringify({ domain: 'switch', service: 'toggle', data: { entity_id: 'switch.erv_humidity_control' } }));
+  bc.disconnectedCallback();
+  // A fan with presets gets the same menu.
+  const fcalls = [];
+  const fc = new Card();
+  fc.setConfig({ type: 'custom:ha-appliance-card', appliance_type: 'hrv', state_entity: 'fan.vmc' });
+  fc._hass = { ...HASS({ 'fan.vmc': s('on', { preset_mode: 'Home', preset_modes: ['Home', 'Away', 'Boost'] }) }), callService: (domain, service, data) => fcalls.push({ domain, service, data }) };
+  fc._render();
+  fire(fc._root.querySelectorAll('.action-btn, .light-badge').find((n) => n.getAttribute('data-menu')), 'click', { stopPropagation() {} });
+  fire(fc._root.querySelectorAll('[data-mode-option]').find((n) => n.getAttribute('data-mode-option') === 'Boost'), 'click', { stopPropagation() {} });
+  check('vmc : un ventilateur prend son preset', JSON.stringify(fcalls.at(-1)), JSON.stringify({ domain: 'fan', service: 'set_preset_mode', data: { entity_id: 'fan.vmc', preset_mode: 'Boost' } }));
+  fc.disconnectedCallback();
+  check('vmc : sans modes, pas de menu', /data-menu/.test(hrv('on', { percentage: 50 })), false);
+  const edB = markup(newEditor({ appliance_type: 'hrv', state_entity: 'select.erv_mode' }));
+  for (const f of ['supply_fan_entity', 'exhaust_fan_entity', 'exhaust_airflow_entity', 'fan_speed_entity', 'current_humidity_entity', 'target_humidity_entity', 'humidity_control_entity']) {
+    check(`editeur vmc : ${f}`, edB.includes(f), true);
+  }
   const ed = markup(newEditor({ appliance_type: 'hrv', state_entity: 'fan.vmc' }));
   check('editeur vmc : la forme', /data-field="hrv_layout"/.test(ed), true);
   check('editeur diffuseur : la forme', /data-field="diffuser_layout"/.test(markup(newEditor({ appliance_type: 'diffuser', state_entity: 'switch.d' }))), true);

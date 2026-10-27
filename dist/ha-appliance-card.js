@@ -152,7 +152,7 @@ const T = {
     door_corner: "Show it in a corner of the card", controls_always: "Always show every button", show_unavailable_controls: "Show buttons whose entity is unavailable",
     layout_robot_stick: "Stick vacuum", stick_charged: "Charged",
     layout_robot_floor_washer: "Floor washer", stick_away: "Off the base", stick_away_threshold: "Off the base below this power (W)",
-    type_diffuser: "Essential oil diffuser", dif_mist: "Diffusing", dif_inter: "Intermittent", dif_low: "Light mist", dif_empty: "Tank empty", dif_mode: "Mist mode", layout_dif_drop: "Teardrop", layout_dif_cone: "Cone", layout_dif_stone: "Pebble", layout_dif_flame: "Flame", layout_dif_nebulizer: "Nebulizer", section_tank_empty: "Empty tank sensor", type_hrv: "Heat recovery ventilation (HRV/ERV)", hrv_run: "Ventilating", hrv_boost: "Boost", hrv_bypass: "Bypass", hrv_defrost: "Defrosting", hrv_filter: "Replace filter", hrv_away: "Away", layout_hrv_diagram: "Air flows", layout_hrv_one_duct: "Wall unit, one duct", layout_hrv_pair: "Through-wall pair", section_supply_temperature: "Supply air temperature", section_extract_temperature: "Extract air temperature", section_exhaust_temperature: "Exhaust air temperature", section_bypass: "Bypass", section_airflow: "Airflow", hrv_t_outdoor: "fresh air", hrv_t_supply: "supply", hrv_t_extract: "extract", hrv_t_exhaust: "exhaust", hrv_outside: "outside", hrv_room: "room",
+    type_diffuser: "Essential oil diffuser", dif_mist: "Diffusing", dif_inter: "Intermittent", dif_low: "Light mist", dif_empty: "Tank empty", dif_mode: "Mist mode", layout_dif_drop: "Teardrop", layout_dif_cone: "Cone", layout_dif_stone: "Pebble", layout_dif_flame: "Flame", layout_dif_nebulizer: "Nebulizer", section_tank_empty: "Empty tank sensor", type_hrv: "Heat recovery ventilation (HRV/ERV)", hrv_run: "Ventilating", hrv_boost: "Boost", hrv_bypass: "Bypass", hrv_defrost: "Defrosting", hrv_filter: "Replace filter", hrv_away: "Away", hrv_recirc: "Recirculation", hrv_humidity: "Humidity control", hrv_inter: "Intermittent", hrv_inter_paused: "Intermittent, paused", hrv_mode: "Mode", hrv_supply_fan: "Supply fan", hrv_exhaust_fan: "Exhaust fan", section_supply_fan: "Supply fan speed (rpm)", section_exhaust_fan: "Exhaust fan speed (rpm)", fan_max_rpm: "Fan top speed (rpm)", section_exhaust_airflow: "Exhaust airflow", section_target_humidity: "Humidity setpoint", section_humidity_control: "Humidity control switch", layout_hrv_diagram: "Air flows", layout_hrv_one_duct: "Wall unit, one duct", layout_hrv_pair: "Through-wall pair", section_supply_temperature: "Supply air temperature", section_extract_temperature: "Extract air temperature", section_exhaust_temperature: "Exhaust air temperature", section_bypass: "Bypass", section_airflow: "Airflow", hrv_t_outdoor: "fresh air", hrv_t_supply: "supply", hrv_t_extract: "extract", hrv_t_exhaust: "exhaust", hrv_outside: "outside", hrv_room: "room",
     type_camera: "Camera", cam_idle: "Idle", cam_live: "Streaming", cam_rec: "Recording", cam_motion: "Motion detected", cam_off: "Off", cam_line_last_motion: "Last motion", cam_line_night: "Night vision", cam_line_signal: "Signal", section_motion: "Motion sensor", section_recording: "Recording sensor", section_night_vision: "Night vision", section_privacy: "Privacy mode", section_signal: "Signal strength", layout_cam_indoor: "Indoor, pan and tilt", layout_cam_tube: "Indoor tube", layout_cam_outdoor: "Outdoor", layout_cam_dome: "Dome",
     speed_power_max: "Power at top speed (W)", speed_power_custom: "Custom speed thresholds", speed_power_2: "Speed 2 from (W)", speed_power_3: "Speed 3 from (W)",
     fw_self_cleaning: "Self-cleaning", fw_dirty_full: "Dirty water tank full", fw_clean_empty: "Clean water tank empty",
@@ -3067,7 +3067,9 @@ function detectApplianceType(cfg, st) {
   if (FOUNTAIN_ONLY_FIELDS.some((f) => cfg[f])) return "pet_fountain";
   if (STOVE_ONLY_FIELDS.some((f) => cfg[f])) return "pellet_stove";
   if (AC_ONLY_FIELDS.some((f) => cfg[f])) return "air_conditioner";
-  if (DEHUMIDIFIER_ONLY_FIELDS.some((f) => cfg[f])) return "dehumidifier";
+  // A humidity sensor is a dehumidifier's, unless the fields of a
+  // ventilation unit say otherwise (#54).
+  if (DEHUMIDIFIER_ONLY_FIELDS.some((f) => cfg[f]) && !HRV_ONLY_FIELDS.some((f) => cfg[f])) return "dehumidifier";
   if (cfg.heater_layout) return "space_heater";
   if (cfg.toaster_layout) return "toaster";
   if (cfg.kettle_layout) return "kettle";
@@ -3879,6 +3881,17 @@ function diffuserControls(hass, cfg) {
   return [];
 }
 
+// A ventilation unit's controls: its mode, picked from a menu in the card
+// (#54), and its humidity control switch.
+function hrvControls(hass, cfg) {
+  const out = [];
+  const menu = hrvModeOptions(hass, cfg);
+  if (menu) out.push({ key: "hrv_mode", entity: menu.entity, icon: "mdi:tune-variant", label: t(hass, "hrv_mode"), menu: true });
+  const hst = cfg.humidity_control_entity ? stateObj(hass, cfg.humidity_control_entity) : null;
+  if (hst) out.push({ key: "hrv_humidity", entity: cfg.humidity_control_entity, icon: "mdi:water-percent", label: t(hass, "hrv_humidity"), on: ["on", "true"].includes(String(hst.state).toLowerCase()) });
+  return out;
+}
+
 // The palettes of a diffuser: wood, the default for the shapes that are made
 // of it, or the card's colour.
 const DIF_WOOD = ["#c98f55", "#a8693a", "#7d4a26", "#e3b07a"];
@@ -3960,13 +3973,55 @@ ${DIFFUSER_SVGS[layout](wood, b)}${DIF_DROP_BADGE}</svg></div>`;
 // on or off, its speed and its preset (boost, away); a bypass or Vallox's
 // cell state (heat recovery, cool recovery, bypass, defrosting); a filter in
 // days or in percent; four temperatures drawn at the ends of the ducts.
-const HRV_ONLY_FIELDS = ["hrv_layout", "supply_temperature_entity", "extract_temperature_entity", "exhaust_temperature_entity", "bypass_entity", "airflow_entity"];
+const HRV_ONLY_FIELDS = ["hrv_layout", "supply_temperature_entity", "extract_temperature_entity", "exhaust_temperature_entity", "bypass_entity", "airflow_entity",
+  "supply_fan_entity", "exhaust_fan_entity", "exhaust_airflow_entity", "fan_max_rpm", "humidity_control_entity"];
 const HRV_LAYOUTS = ["diagram", "one_duct", "pair"];
 const HRV_NAME_RE = /(^|[^a-z])(hrv|erv|vmc|wtw|ftx|mvhr)([^a-z]|$)|double.?flux|heat.?recovery|recuperat|comfoair|comfoconnect|vallox|zehnder|lunos|twinfresh|danfoss.?air|renson|endura|brink.?(flair|renovent)|wohnraumluft/;
-const HRV_LABELS = { run: "hrv_run", boost: "hrv_boost", bypass: "hrv_bypass", defrost: "hrv_defrost", filter: "hrv_filter", away: "hrv_away", off: "ac_off", unav: "ev_offline" };
+const HRV_LABELS = { run: "hrv_run", boost: "hrv_boost", bypass: "hrv_bypass", defrost: "hrv_defrost", filter: "hrv_filter", away: "hrv_away",
+  rec: "hrv_recirc", hum: "hrv_humidity", inter: "hrv_inter", off: "ac_off", unav: "ev_offline" };
 const HRV_COLORS = { run: "#03a9f4", boost: "#ff9800", bypass: "#26a69a", defrost: "#4fc3f7", filter: "#ff9800", away: "#607d8b",
+  rec: "#ff9800", hum: "#1e88e5", inter: "#607d8b",
   off: "var(--disabled-text-color, #9e9e9e)", unav: "var(--disabled-text-color, #9e9e9e)" };
-const HRV_LCD = { run: "", boost: "BST", bypass: "BYP", defrost: "DEF", filter: "FIL", away: "AWY", off: "OFF", unav: "--" };
+const HRV_LCD = { run: "", boost: "BST", bypass: "BYP", defrost: "DEF", filter: "FIL", away: "AWY", rec: "REC", hum: "HUM", inter: "INT", off: "OFF", unav: "--" };
+// A fan read in revolutions per minute turns as fast as its motor: the top
+// speed, the owner's or 2000 rpm, spins in 0.6 s, a crawl in 2.6 s (#54).
+const HRV_MAX_RPM = 2000;
+function hrvPace(rpm, max) {
+  if (rpm === null) return "";
+  if (rpm <= 0) return "0s";
+  return `${(2.6 - 2 * Math.min(1, rpm / (max > 0 ? max : HRV_MAX_RPM))).toFixed(2)}s`;
+}
+// The modes a select offers, in the words of the integration when it has
+// them, and the card's when it does not (Broan's ESPHome: off, min, max, int,
+// manual, turbo, humidity, recirculate, smart, ovr).
+function hrvModeLabel(hass, st, option) {
+  const raw = stripAccents(String(option)).trim().toLowerCase();
+  if (st && typeof hass.formatEntityState === "function") {
+    try {
+      const own = hass.formatEntityState(st, option);
+      if (own && own !== option) return own;
+    } catch (e) { /* the card's word, then */ }
+  }
+  if (/^(off|stop|standby)$/.test(raw)) return t(hass, "ac_off");
+  if (/^int$|intermit|interval/.test(raw)) return t(hass, "hrv_inter");
+  if (/recirc|umluft/.test(raw)) return t(hass, "hrv_recirc");
+  if (/^humid|humidity|feucht/.test(raw)) return t(hass, "hrv_humidity");
+  return String(option).charAt(0).toUpperCase() + String(option).slice(1);
+}
+// The mode menu: the options of a select, or the presets of a fan.
+function hrvModeOptions(hass, cfg) {
+  const st = stateObj(hass, cfg.state_entity);
+  if (!st) return null;
+  const dom = domainOf(cfg.state_entity);
+  const a = st.attributes || {};
+  if ((dom === "select" || dom === "input_select") && Array.isArray(a.options) && a.options.length > 1) {
+    return { entity: cfg.state_entity, current: st.state, options: a.options.filter((o) => String(o).trim() !== ""), dom };
+  }
+  if (dom === "fan" && Array.isArray(a.preset_modes) && a.preset_modes.length > 1) {
+    return { entity: cfg.state_entity, current: a.preset_mode, options: a.preset_modes, dom };
+  }
+  return null;
+}
 const HRV_PACE = { 1: "2.2s", 2: "1.4s", 3: ".7s" };
 function hrvReadOf(hass, cfg, st, norm, powerDerived) {
   const raw = st ? stripAccents(String(st.state)).trim().toLowerCase() : "";
@@ -3980,7 +4035,21 @@ function hrvReadOf(hass, cfg, st, norm, powerDerived) {
     : ["on", "true"].includes(raw) || isActiveState(norm);
   if (!on) return { mode: "off", level: 0 };
   const preset = stripAccents(String(dom === "select" || dom === "input_select" ? raw : a.preset_mode || a.fan_mode || "")).toLowerCase();
-  const pct = numberOrNull(a.percentage);
+  // The speed in percent: the fan's own, or a number of its own (Broan).
+  const pct = numberOrNull(a.percentage) ?? (cfg.fan_speed_entity ? numericState(hass, cfg.fan_speed_entity) : null);
+  // Recirculation closes the outdoor dampers, humidity control runs the unit
+  // until the air is dry enough, intermittent runs it part of each hour.
+  const recirc = /recirc|umluft/.test(preset);
+  const hst = cfg.humidity_control_entity ? stateObj(hass, cfg.humidity_control_entity) : null;
+  const humidity = /^humid|humidity|feucht/.test(preset) || (!!hst && ["on", "true"].includes(String(hst.state).toLowerCase()));
+  const inter = /^int$|intermit|interval/.test(preset);
+  // Each fan at the speed of its motor, when the unit reports it.
+  const max = parseFloat(cfg.fan_max_rpm);
+  const sRpm = cfg.supply_fan_entity ? numericState(hass, cfg.supply_fan_entity) : null;
+  const eRpm = cfg.exhaust_fan_entity ? numericState(hass, cfg.exhaust_fan_entity) : null;
+  const rpms = [sRpm, eRpm].filter((v) => v !== null);
+  // Intermittent between two runs: both fans still.
+  const paused = inter && rpms.length > 0 && rpms.every((v) => v <= 0);
   const boost = /boost|turbo|max|party|intensiv|fireplace|cheminee|kamin/.test(preset);
   const away = /away|absen|holiday|vacan|urlaub/.test(preset);
   // The bypass: a switch or a binary sensor that is on, a percentage open, or
@@ -4005,8 +4074,10 @@ function hrvReadOf(hass, cfg, st, norm, powerDerived) {
   }
   const named = presetSpeedOf(preset);
   const level = boost ? 3 : pct !== null && pct > 0 ? (pct <= 40 ? 1 : pct <= 75 ? 2 : 3) : named || 2;
-  const mode = defrost ? "defrost" : bypass ? "bypass" : boost ? "boost" : filterDue ? "filter" : away ? "away" : "run";
-  return { mode, level, pct, bypass, defrost, filterDue, filterText };
+  const mode = defrost ? "defrost" : recirc ? "rec" : bypass ? "bypass" : boost ? "boost" : humidity ? "hum" : inter ? "inter"
+    : filterDue ? "filter" : away ? "away" : "run";
+  return { mode, level, pct, bypass, defrost, filterDue, filterText, paused,
+    sRpm, eRpm, sPace: hrvPace(sRpm, max), ePace: hrvPace(eRpm, max) };
 }
 function hrvLayoutOf(cfg, st) {
   if (HRV_LAYOUTS.includes(cfg.hrv_layout)) return cfg.hrv_layout;
@@ -4018,32 +4089,36 @@ function hrvLayoutOf(cfg, st) {
 }
 const hvLab = (x, y, temp, name, anchor) => `<text class="hv-t" x="${x}" y="${y}" text-anchor="${anchor}">${anchor === "start"
   ? `${temp} <tspan class="hv-n">${name}</tspan>` : `<tspan class="hv-n">${name}</tspan> ${temp}`}</text>`;
-const hvFan = (x, y, r) => `<circle cx="${x}" cy="${y}" r="${r}" class="hv-fanbody"/><g class="hv-fan">${[0, 120, 240].map((d) => `<path d="M${x} ${y} q${(r * 0.45).toFixed(1)} -${(r * 0.85).toFixed(1)} 0 -${(r * 0.85).toFixed(1)} q-${(r * 0.45).toFixed(1)} ${(r * 0.3).toFixed(1)} 0 ${(r * 0.85).toFixed(1)}z" transform="rotate(${d} ${x} ${y})"/>`).join("")}</g>`;
+const hvFan = (x, y, r, cls) => `<circle cx="${x}" cy="${y}" r="${r}" class="hv-fanbody"/><g class="hv-fan${cls ? ` ${cls}` : ""}">${[0, 120, 240].map((d) => `<path d="M${x} ${y} q${(r * 0.45).toFixed(1)} -${(r * 0.85).toFixed(1)} 0 -${(r * 0.85).toFixed(1)} q-${(r * 0.45).toFixed(1)} ${(r * 0.3).toFixed(1)} 0 ${(r * 0.85).toFixed(1)}z" transform="rotate(${d} ${x} ${y})"/>`).join("")}</g>`;
+const hvBadges = (h, cx, y) => `<g class="hv-hum"><rect x="${cx - 34}" y="${y}" width="68" height="13" rx="6.5" fill="#1e88e5"/><path d="M${cx - 26} ${y + 2.5} C${cx - 24} ${y + 5.5} ${cx - 22.5} ${y + 7} ${cx - 22.5} ${y + 8.6} a3.5 3.5 0 0 1 -7 0 C${cx - 29.5} ${y + 7} ${cx - 28} ${y + 5.5} ${cx - 26} ${y + 2.5}Z" fill="#fff"/><text class="hv-badge" x="${cx + 4}" y="${y + 9.6}" text-anchor="middle">${h.humText || ""}</text></g>
+<g class="hv-int"><rect x="${cx - 20}" y="${y}" width="40" height="13" rx="6.5" fill="#607d8b"/><circle cx="${cx - 12}" cy="${y + 6.5}" r="4" fill="none" stroke="#fff" stroke-width="1.2"/><path d="M${cx - 12} ${y + 4} V${y + 6.5} L${cx - 10} ${y + 7.6}" stroke="#fff" stroke-width="1.1" fill="none" stroke-linecap="round"/><text class="hv-badge" x="${cx + 4}" y="${y + 9.6}" text-anchor="middle">INT</text></g>`;
 const HRV_SVGS = {
   diagram: (h) => `<defs><linearGradient id="hv-g-fa" x1="0" x2="1"><stop offset="0" stop-color="#42a5f5"/><stop offset="1" stop-color="#ff9800"/></linearGradient>
 <linearGradient id="hv-g-ex" x1="1" x2="0"><stop offset="0" stop-color="#ef5350"/><stop offset="1" stop-color="#78909c"/></linearGradient></defs>
 <path d="M10 74 a9 9 0 0 1 4 -17 a11 11 0 0 1 20 3 a8 8 0 0 1 2 14 z" fill="#90caf9"/><path d="M208 64 L220 53 L232 64 V78 H208 Z" fill="#ef9a9a"/>
 <rect x="62" y="20" width="112" height="92" rx="8" class="hv-box"/>
-<path d="M118 36 L148 66 L118 96 L88 66 Z" fill="#2c3238" stroke="#7b858f"/>${hvFan(76, 34, 8)}${hvFan(160, 98, 8)}
-<g class="hv-through"><path class="hv-flow" d="M10 34 H62 C90 34 96 52 118 66 C140 80 146 98 174 98 H226" stroke="url(#hv-g-fa)"/><path class="hv-dash" d="M10 34 H62 C90 34 96 52 118 66 C140 80 146 98 174 98 H226"/></g>
-<g class="hv-bypass"><path class="hv-flow" d="M10 98 H226" stroke="#42a5f5"/><path class="hv-dash" d="M10 98 H226"/></g>
-<path class="hv-flow" d="M226 34 H174 C146 34 140 52 118 66 C96 80 90 98 62 98 H10" stroke="url(#hv-g-ex)"/><path class="hv-dash" d="M226 34 H174 C146 34 140 52 118 66 C96 80 90 98 62 98 H10"/>
+<path d="M118 36 L148 66 L118 96 L88 66 Z" fill="#2c3238" stroke="#7b858f"/>
+<g class="hv-out"><g class="hv-through"><path class="hv-flow" d="M10 34 H62 C90 34 96 52 118 66 C140 80 146 98 174 98 H226" stroke="url(#hv-g-fa)"/><path class="hv-dash hv-ds" d="M10 34 H62 C90 34 96 52 118 66 C140 80 146 98 174 98 H226"/></g>
+<g class="hv-bypass"><path class="hv-flow" d="M10 98 H226" stroke="#42a5f5"/><path class="hv-dash hv-ds" d="M10 98 H226"/></g>
+<path class="hv-flow" d="M226 34 H174 C146 34 140 52 118 66 C96 80 90 98 62 98 H10" stroke="url(#hv-g-ex)"/><path class="hv-dash hv-de" d="M226 34 H174 C146 34 140 52 118 66 C96 80 90 98 62 98 H10"/></g>
+<g class="hv-rc"><path class="hv-flow" d="M226 34 H170 C128 34 128 98 170 98 H226" stroke="#ff9800"/><path class="hv-dash hv-ds" d="M226 34 H170 C128 34 128 98 170 98 H226"/></g>
+<path class="hv-damper" d="M58 27 L66 41 M58 91 L66 105"/>${hvFan(160, 98, 8, "hv-fs")}${hvFan(76, 98, 8, "hv-fe")}
 ${hvLab(8, 26, h.t.o, "", "start")}${hvLab(228, 118, h.t.s, "", "end")}${hvLab(228, 26, h.t.e, "", "end")}${hvLab(8, 118, h.t.x, "", "start")}
-<text class="hv-frost" x="118" y="16" text-anchor="middle">\u2744</text><g class="hv-filt"><circle cx="168" cy="27" r="6"/><text x="168" y="30.5" text-anchor="middle">!</text></g>`,
+<text class="hv-frost" x="118" y="16" text-anchor="middle">\u2744</text><g class="hv-filt"><circle cx="168" cy="27" r="6"/><text x="168" y="30.5" text-anchor="middle">!</text></g>${hvBadges(h, 118, 4)}`,
   one_duct: (h) => `<defs><linearGradient id="hv-g-fa" gradientUnits="userSpaceOnUse" x1="130" x2="182"><stop offset="0" stop-color="#42a5f5"/><stop offset="1" stop-color="#ff9800"/></linearGradient>
 <linearGradient id="hv-g-ex" gradientUnits="userSpaceOnUse" x1="182" x2="130"><stop offset="0" stop-color="#ef5350"/><stop offset="1" stop-color="#78909c"/></linearGradient></defs>
 <rect x="56" y="4" width="54" height="124" class="hv-wall"/><path d="M56 4 V128 M110 4 V128" stroke="#b7a68e"/>
 <rect x="44" y="47" width="78" height="34" rx="3" class="hv-tube"/><path d="M44 64 H122" stroke="#aab3bb" stroke-width="1.4"/><path d="M44 43 V85 L36 81 V47 Z" fill="#9aa3ad"/>
 <rect x="118" y="28" width="78" height="72" rx="7" class="hv-box"/>
 <rect x="132" y="50" width="46" height="28" rx="2" fill="#3a4148" stroke="#7b858f"/>${Array.from({ length: 11 }, (_, i) => `<path d="M${136 + i * 4} 51 V77" stroke="#7b858f" stroke-width=".7"/>`).join("")}
-${hvFan(188, 56, 6.5)}${hvFan(126, 72, 6.5)}
-<g class="hv-through"><path class="hv-flow" d="M22 56 H214" stroke="url(#hv-g-fa)"/><path class="hv-dash" d="M22 56 H214"/></g>
-<g class="hv-bypass"><path class="hv-flow" d="M22 56 H124 C130 56 130 40 140 40 H170 C180 40 180 56 186 56 H214" stroke="#42a5f5"/><path class="hv-dash" d="M22 56 H124 C130 56 130 40 140 40 H170 C180 40 180 56 186 56 H214"/></g>
-<path class="hv-flow" d="M214 72 H22" stroke="url(#hv-g-ex)"/><path class="hv-dash hv-rev" d="M22 72 H214"/>
+${hvFan(188, 56, 6.5, "hv-fs")}${hvFan(126, 72, 6.5, "hv-fe")}
+<g class="hv-through"><path class="hv-flow" d="M22 56 H214" stroke="url(#hv-g-fa)"/><path class="hv-dash hv-ds" d="M22 56 H214"/></g>
+<g class="hv-bypass"><path class="hv-flow" d="M22 56 H124 C130 56 130 40 140 40 H170 C180 40 180 56 186 56 H214" stroke="#42a5f5"/><path class="hv-dash hv-ds" d="M22 56 H124 C130 56 130 40 140 40 H170 C180 40 180 56 186 56 H214"/></g>
+<path class="hv-flow" d="M214 72 H22" stroke="url(#hv-g-ex)"/><path class="hv-dash hv-rev hv-de" d="M22 72 H214"/>
 <path d="M214 50 l9 6 -9 6z" fill="#ff9800"/><path d="M22 66 l-9 6 9 6z" fill="#78909c"/>
 <rect x="140" y="86" width="32" height="8" rx="1.5" fill="#0e1b2c"/><text class="hv-lcd" x="156" y="92.3" text-anchor="middle">${h.lcd}</text>
 <g class="hv-filt"><circle cx="188" cy="34" r="6"/><text x="188" y="37.5" text-anchor="middle">!</text></g><text class="hv-frost" x="156" y="22" text-anchor="middle">\u2744</text>
-${hvLab(4, 20, h.t.o, h.n.o, "start")}${hvLab(4, 114, h.t.x, h.n.x, "start")}${hvLab(232, 20, h.t.s, h.n.s, "end")}${hvLab(232, 114, h.t.e, h.n.e, "end")}`,
+${hvLab(4, 20, h.t.o, h.n.o, "start")}${hvLab(4, 114, h.t.x, h.n.x, "start")}${hvLab(232, 20, h.t.s, h.n.s, "end")}${hvLab(232, 114, h.t.e, h.n.e, "end")}${hvBadges(h, 157, 104)}`,
   pair: (h) => {
     const unit = (cy) => `<rect x="72" y="${cy - 12}" width="92" height="24" rx="3" class="hv-tube"/>${Array.from({ length: 18 }, (_, i) => `<rect x="${104 + (i % 6) * 5}" y="${cy - 7 + Math.floor(i / 6) * 5}" width="4" height="4" fill="#e9dccb" stroke="#bfae96" stroke-width=".5"/>`).join("")}
 ${hvFan(146, cy, 8.5)}<path d="M72 ${cy - 15} V${cy + 15} L64 ${cy + 12} V${cy - 12} Z" fill="#9aa3ad"/><rect x="164" y="${cy - 16}" width="6" height="32" rx="3" class="hv-box"/>`;
@@ -4054,15 +4129,18 @@ ${hvFan(146, cy, 8.5)}<path d="M72 ${cy - 15} V${cy + 15} L64 ${cy + 12} V${cy -
 <g class="hv-pa">${inF(34)}${outF(98)}</g><g class="hv-pb">${outF(34)}${inF(98)}</g>
 ${hvLab(6, 16, h.t.o, "", "start")}${hvLab(230, 16, h.t.s, "", "end")}
 <text class="hv-n" x="6" y="126">${h.n.out}</text><text class="hv-n" x="230" y="126" text-anchor="end">${h.n.room}</text>
-<g class="hv-filt"><circle cx="118" cy="66" r="6"/><text x="118" y="69.5" text-anchor="middle">!</text></g>`;
+<g class="hv-filt"><circle cx="118" cy="66" r="6"/><text x="118" y="69.5" text-anchor="middle">!</text></g>${hvBadges(h, 118, 58)}`;
   },
 };
 function hrvHtml(cls, h) {
   const layout = HRV_LAYOUTS.includes(h.layout) ? h.layout : "diagram";
-  const live = !["off", "unav"].includes(h.mode);
-  const flags = ["hv", `hv-l-${layout}`, `hv-m-${h.mode || "unav"}`, live ? "hv-on" : "", h.bypass ? "hv-by" : "", h.defrost ? "hv-df" : "", h.filterDue ? "hv-fd" : "", h.dark ? "hv-dark" : ""].filter(Boolean).join(" ");
+  const live = !["off", "unav"].includes(h.mode) && !h.paused;
+  const flags = ["hv", `hv-l-${layout}`, `hv-m-${h.mode || "unav"}`, live ? "hv-on" : "", h.bypass ? "hv-by" : "", h.defrost ? "hv-df" : "", h.filterDue ? "hv-fd" : "", h.dark ? "hv-dark" : "",
+    h.sPace === "0s" ? "hv-sx" : "", h.ePace === "0s" ? "hv-ex" : "", h.humBadge ? "hv-hb" : ""].filter(Boolean).join(" ");
+  const pace = HRV_PACE[h.level] || "1.4s";
+  const fans = `${h.sPace && h.sPace !== "0s" ? `;--hv-sp:${h.sPace}` : ""}${h.ePace && h.ePace !== "0s" ? `;--hv-ep:${h.ePace}` : ""}`;
   return `
-        <div class="machine ${cls} ${flags}" style="--hv-pace:${HRV_PACE[h.level] || "1.4s"}"><svg class="hv-svg" viewBox="0 0 236 132">${HRV_SVGS[layout](h)}</svg></div>`;
+        <div class="machine ${cls} ${flags}" style="--hv-pace:${pace}${fans}"><svg class="hv-svg" viewBox="0 0 236 132">${HRV_SVGS[layout](h)}</svg></div>`;
 }
 
 // A camera, read from its camera entity: idle, streaming or recording, and
@@ -7137,6 +7215,16 @@ const ILLUSTRATION_CSS = {
         .hv-dash{fill:none;stroke:#fff;stroke-width:2;stroke-dasharray:4 8;opacity:.75}
         .hv-on .hv-dash{animation:hv-flow var(--hv-pace,1.4s) linear infinite}
         .hv-on .hv-dash.hv-rev{animation-name:hv-flowr}
+        .hv-on .hv-fan.hv-fs,.hv-on .hv-dash.hv-ds{animation-duration:var(--hv-sp,var(--hv-pace,1.4s))}
+        .hv-on .hv-fan.hv-fe,.hv-on .hv-dash.hv-de{animation-duration:var(--hv-ep,var(--hv-pace,1.4s))}
+        .hv-sx .hv-fs,.hv-sx .hv-ds,.hv-ex .hv-fe,.hv-ex .hv-de{animation-play-state:paused}
+        .hv-rc,.hv-damper{display:none}
+        .hv-m-rec .hv-rc{display:inline}
+        .hv-m-rec .hv-damper{display:inline;fill:none;stroke:#5d6873;stroke-width:2.4;stroke-linecap:round}
+        .hv-m-rec .hv-out{opacity:.12}
+        .hv-hum,.hv-int{display:none}
+        .hv-hb .hv-hum,.hv-m-inter .hv-int{display:inline}
+        .hv-badge{font:700 8px Arial,sans-serif;fill:#fff}
         .machine.hv:not(.hv-on) .hv-flow{opacity:.2}
         .machine.hv:not(.hv-on) .hv-dash{display:none}
         .hv-bypass{display:none}
@@ -10128,6 +10216,16 @@ class ApplianceCard extends HTMLElement {
     if (redraw) this._render();
   }
 
+  // A mode picked in the menu: a select's option, or a fan's preset.
+  _pickMode(option) {
+    const cfg = this._config || {};
+    const menu = this._hass ? hrvModeOptions(this._hass, cfg) : null;
+    if (!menu || !menu.options.includes(option)) return this._render();
+    if (menu.dom === "fan") this._hass.callService("fan", "set_preset_mode", { entity_id: menu.entity, preset_mode: option });
+    else this._hass.callService(menu.dom, "select_option", { entity_id: menu.entity, option });
+    this._render();
+  }
+
   _clearClockTimer() {
     if (this._clockTimer) {
       clearInterval(this._clockTimer);
@@ -12904,19 +13002,49 @@ class ApplianceCard extends HTMLElement {
     let hrv = null;
     if (cap.hrv) {
       const h = hrvReadOf(hass, cfg, st, norm, powerDerived);
-      if (!cfg.state_show_raw || h.mode === "unav") stateLabel = t(hass, HRV_LABELS[h.mode]);
+      if (!cfg.state_show_raw || h.mode === "unav") stateLabel = t(hass, h.paused ? "hrv_inter_paused" : HRV_LABELS[h.mode]);
       color = HRV_COLORS[h.mode];
       const live = !["off", "unav"].includes(h.mode);
+      // The mode of a select, in words, since the state line only says what
+      // the unit is doing.
+      const menu = hrvModeOptions(hass, cfg);
+      if (menu && live && menu.dom !== "fan") {
+        extraLines.push({ key: "hrv_mode", icon: "mdi:tune-variant", label: t(hass, "hrv_mode"), value: keepTogether(hrvModeLabel(hass, st, menu.current)), entity: cfg.state_entity });
+      }
+      const flowText = (id) => {
+        const v = id ? numericState(hass, id) : null;
+        return v === null ? "" : `${netNumber(hass, v, 0)} ${unitOf(hass, id) || "m\u00b3/h"}`;
+      };
+      const rpmText = (v, id) => `${netNumber(hass, v, 0)} ${unitOf(hass, id) || "rpm"}`;
       if (live) {
         if (h.pct !== null && h.pct > 0) {
-          extraLines.push({ key: "hrv_speed", icon: "mdi:fan", label: t(hass, "section_fan_speed"), value: keepTogether(`${Math.round(h.pct)} %`), entity: cfg.state_entity });
+          extraLines.push({ key: "hrv_speed", icon: "mdi:fan", label: t(hass, "section_fan_speed"), value: keepTogether(`${Math.round(h.pct)} %`), entity: cfg.fan_speed_entity || cfg.state_entity });
         }
-        const flow = cfg.airflow_entity ? numericState(hass, cfg.airflow_entity) : null;
-        if (flow !== null) {
-          extraLines.push({ key: "hrv_airflow", icon: "mdi:weather-windy", label: t(hass, "section_airflow"),
-            value: keepTogether(`${netNumber(hass, flow, 0)} ${unitOf(hass, cfg.airflow_entity) || "m\u00b3/h"}`), entity: cfg.airflow_entity });
+        // Each fan on a line of its own when it reports its speed, with the
+        // air it moves; otherwise the airflow alone.
+        if (h.sRpm !== null) {
+          const f = flowText(cfg.airflow_entity);
+          extraLines.push({ key: "hrv_supply", icon: "mdi:fan", label: t(hass, "hrv_supply_fan"), value: keepTogether(`${rpmText(h.sRpm, cfg.supply_fan_entity)}${f ? ` \u00b7 ${f}` : ""}`), entity: cfg.supply_fan_entity });
+        } else if (flowText(cfg.airflow_entity)) {
+          extraLines.push({ key: "hrv_airflow", icon: "mdi:weather-windy", label: t(hass, "section_airflow"), value: keepTogether(flowText(cfg.airflow_entity)), entity: cfg.airflow_entity });
+        }
+        if (h.eRpm !== null) {
+          const f = flowText(cfg.exhaust_airflow_entity);
+          extraLines.push({ key: "hrv_exhaust", icon: "mdi:fan", label: t(hass, "hrv_exhaust_fan"), value: keepTogether(`${rpmText(h.eRpm, cfg.exhaust_fan_entity)}${f ? ` \u00b7 ${f}` : ""}`), entity: cfg.exhaust_fan_entity });
+        } else if (flowText(cfg.exhaust_airflow_entity)) {
+          extraLines.push({ key: "hrv_exhaust_airflow", icon: "mdi:weather-windy", label: t(hass, "section_exhaust_airflow"), value: keepTogether(flowText(cfg.exhaust_airflow_entity)), entity: cfg.exhaust_airflow_entity });
         }
       }
+      // The humidity and its setpoint: on a line, and on the drawing while
+      // humidity control runs the unit.
+      const hum = cfg.current_humidity_entity ? numericState(hass, cfg.current_humidity_entity) : null;
+      const target = cfg.target_humidity_entity ? numericState(hass, cfg.target_humidity_entity) : null;
+      if (hum !== null || target !== null) {
+        const v = [hum, target].filter((x) => x !== null).map((x) => `${netNumber(hass, x, 0)} %`).join(" \u2192 ");
+        extraLines.push({ key: "hrv_humidity", icon: "mdi:water-percent", label: t(hass, "ac_line_humidity"), value: keepTogether(v), entity: cfg.current_humidity_entity || cfg.target_humidity_entity });
+      }
+      h.humText = [hum, target].filter((x) => x !== null).map((x) => netNumber(hass, x, 0)).join(" \u2192 ") + (hum !== null || target !== null ? " %" : "");
+      h.humBadge = h.mode === "hum";
       if (h.filterText) {
         extraLines.push({ key: "hrv_filter", icon: "mdi:air-filter", label: t(hass, "filter"), value: keepTogether(h.filterText), entity: cfg.filter_life_entity, caution: h.filterDue });
       }
@@ -13244,6 +13372,7 @@ class ApplianceCard extends HTMLElement {
       cap.petFountain ? { key: "pump_reset", entity: cfg.pump_reset_entity, icon: "mdi:pump", label: t(hass, "ft_pump_reset") } : {},
       ...robotControls(hass, cfg, robot),
       ...(cap.diffuser ? diffuserControls(hass, cfg) : []),
+      ...(cap.hrv ? hrvControls(hass, cfg) : []),
     ]
       .map((a) => (a.key && a.key !== "toggle" ? { ...a, option: cfg[`${a.key}_option`] ?? a.option, value: cfg[`${a.key}_value`] ?? a.value } : a))
       // A button's icon can be swapped for another, `start_icon` and its
@@ -13305,7 +13434,7 @@ class ApplianceCard extends HTMLElement {
       illustrationCtx.solar && [illustrationCtx.solar.mode, illustrationCtx.solar.sky, illustrationCtx.solar.layout].join("/"),
       illustrationCtx.battery && [illustrationCtx.battery.mode, illustrationCtx.battery.layout, illustrationCtx.battery.low].join("/"),
       illustrationCtx.diffuser && [illustrationCtx.diffuser.mode, illustrationCtx.diffuser.lit, illustrationCtx.diffuser.layout].join("/"),
-      illustrationCtx.hrv && [illustrationCtx.hrv.mode, illustrationCtx.hrv.level, illustrationCtx.hrv.layout].join("/"),
+      illustrationCtx.hrv && [illustrationCtx.hrv.mode, illustrationCtx.hrv.level, illustrationCtx.hrv.layout, illustrationCtx.hrv.paused, illustrationCtx.hrv.sPace, illustrationCtx.hrv.ePace].join("/"),
       illustrationCtx.camera && [illustrationCtx.camera.mode, illustrationCtx.camera.night, illustrationCtx.camera.layout].join("/"),
       illustrationCtx.scale && [illustrationCtx.scale.mode, illustrationCtx.scale.text, illustrationCtx.scale.unit, illustrationCtx.scale.fresh].join("/"),
       illustrationCtx.ups && [illustrationCtx.ups.mode, illustrationCtx.ups.alert, illustrationCtx.ups.charging, illustrationCtx.ups.segs,
@@ -13434,6 +13563,14 @@ class ApplianceCard extends HTMLElement {
         .alert-row .alert-label { flex: 1; min-width: 0; }
         .alert-row .go { color: var(--secondary-text-color, #727272); }
         .actions-row { display: flex; gap: 8px; margin-top: 12px; justify-content: center; }
+        .mode-menu {
+          margin-top: 8px; padding: 6px 0; border-radius: 10px;
+          background: var(--card-background-color, #fff);
+          box-shadow: 0 4px 14px rgba(0, 0, 0, 0.16), 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+        .mode-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 8px 14px; cursor: pointer; }
+        .mode-row.sel { color: var(--primary-color, #03a9f4); font-weight: 500; }
+        .mode-row ha-icon { --mdc-icon-size: 18px; }
         .action-btn {
           display: flex; align-items: center; justify-content: center;
           width: 40px; height: 40px; flex-shrink: 0;
@@ -13652,13 +13789,21 @@ class ApplianceCard extends HTMLElement {
         : ""}</div>`;
     }
 
+    // The mode menu, open under the buttons: every mode the unit offers, the
+    // current one ticked.
+    const menuAction = actions.find((a) => a.menu);
+    if (!menuAction) this._modeMenuOpen = false;
+    const modeMenu = menuAction && this._modeMenuOpen ? hrvModeOptions(hass, cfg) : null;
+    const modeMenuHtml = modeMenu
+      ? `<div class="mode-menu" role="listbox">${modeMenu.options.map((o) => `<div class="mode-row${o === modeMenu.current ? " sel" : ""}" role="option" aria-selected="${o === modeMenu.current}" data-mode-option="${esc(o)}"><span>${esc(hrvModeLabel(hass, stateObj(hass, modeMenu.entity), o))}</span>${o === modeMenu.current ? `<ha-icon icon="mdi:check"></ha-icon>` : ""}</div>`).join("")}</div>`
+      : "";
     const actionsHtml = actions.length
       ? `<div class="actions-row">${actions
           .map(
             (a) =>
-              `<div class="action-btn ${a.on ? "on" : ""}" data-entity="${esc(a.entity)}"${a.service ? ` data-service="${esc(a.service)}"` : ""}${a.option ? ` data-option="${esc(a.option)}"` : ""}${a.value !== undefined && a.value !== null && a.value !== "" ? ` data-value="${esc(a.value)}"` : ""} title="${esc(a.label)}" aria-label="${esc(a.label)}"><ha-icon icon="${esc(a.icon)}"></ha-icon></div>`
+              `<div class="action-btn ${a.on || (a.menu && this._modeMenuOpen) ? "on" : ""}" data-entity="${esc(a.entity)}"${a.menu ? ` data-menu="1" aria-expanded="${!!this._modeMenuOpen}"` : ""}${a.service ? ` data-service="${esc(a.service)}"` : ""}${a.option ? ` data-option="${esc(a.option)}"` : ""}${a.value !== undefined && a.value !== null && a.value !== "" ? ` data-value="${esc(a.value)}"` : ""} title="${esc(a.label)}" aria-label="${esc(a.label)}"><ha-icon icon="${esc(a.icon)}"></ha-icon></div>`
           )
-          .join("")}</div>`
+          .join("")}</div>${modeMenuHtml}`
       : "";
 
     const connBadgeHtml = connectivity !== null
@@ -13799,7 +13944,21 @@ class ApplianceCard extends HTMLElement {
       this._doneSeen = true;
       this._render();
     }));
+    this._root.querySelectorAll("[data-mode-option]").forEach((el) => el.addEventListener("click", (ev) => {
+      ev.stopPropagation();
+      this._modeMenuOpen = false;
+      this._pickMode(el.getAttribute("data-mode-option"));
+    }));
     this._root.querySelectorAll(".action-btn, .light-badge").forEach((el) => {
+      // The mode button opens its menu rather than calling anything.
+      if (el.getAttribute("data-menu")) {
+        el.addEventListener("click", (ev) => {
+          ev.stopPropagation();
+          this._modeMenuOpen = !this._modeMenuOpen;
+          this._render();
+        });
+        return;
+      }
       const id = el.getAttribute("data-entity");
       this._wireControl(el, cfg.controls_activation, id, () => this._call(id, {
         service: el.getAttribute("data-service"),
