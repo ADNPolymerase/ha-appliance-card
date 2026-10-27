@@ -135,7 +135,7 @@ const T = {
     p3_attention: "Needs attention", p3_leveling: "Bed levelling", p3_filament: "Changing filament",
     p3_cooling: "Cooling", p3_calibrating: "Calibrating", p3_homing: "Homing",
     section_printed_part: "Printed part", part_cube: "Cube", part_pyramid: "Pyramid", part_duck: "Rubber duck",
-    type_pet_feeder: "Pet feeder", type_pet_fountain: "Pet fountain", ft_flowing: "Flowing", ft_off: "Off", ft_filter_due: "Filter due", ft_pump_due: "Clean the pump", ft_low_water: "Low water", ft_line_pump: "Pump", ft_line_water: "Water", ft_pump_reset: "Reset pump", section_pump_clean: "Pump cleaning", section_pump_reset: "Reset pump button", section_pump_running: "Pump running", section_water_level: "Water level", filter_due_below: "Due at or below", feeder_ready: "Ready", feeder_feeding: "Dispensing", section_portions_today: "Portions today", section_weight_today: "Weight today", section_portion_weight: "Portion weight", section_serving_size: "Serving size", section_feeder_schedule: "Schedule", section_last_feed: "Last feed", section_error: "Error indicator", start_option: "Option to select", start_value: "Value to write", portions: "portions",
+    type_pet_feeder: "Pet feeder", type_pet_fountain: "Pet fountain", ft_flowing: "Flowing", ft_off: "Off", ft_filter_due: "Filter due", ft_pump_due: "Clean the pump", ft_low_water: "Low water", ft_line_pump: "Pump", ft_line_water: "Water", ft_pump_reset: "Reset pump", ft_last_pump: "Pump last ran", ft_pump_on: "Running", section_pump_clean: "Pump cleaning", section_pump_reset: "Reset pump button", section_pump_running: "Pump running", section_water_level: "Water level", filter_due_below: "Due at or below", feeder_ready: "Ready", feeder_feeding: "Dispensing", section_portions_today: "Portions today", section_weight_today: "Weight today", section_portion_weight: "Portion weight", section_serving_size: "Serving size", section_feeder_schedule: "Schedule", section_last_feed: "Last feed", section_error: "Error indicator", start_option: "Option to select", start_value: "Value to write", portions: "portions",
     feeder_empty: "Tank empty", feeder_level: "Tank at {pct}", section_level: "Food level", section_level_b: "Food level, second hopper", level_empty_below: "Empty at or below", level_max: "Tank capacity",
     section_feeder_layout: "Model", layout_tower: "Square tank", layout_canister: "Round tank", layout_double: "Two bowls", layout_dual_split: "Two hoppers, split bowl", layout_rotary: "Rotating plates (wet food)",
     type_iron: "Iron", section_iron_layout: "Model", layout_iron: "Iron", layout_generator: "Steam generator",
@@ -144,7 +144,7 @@ const T = {
     type_screen: "Screen (TV, projector, computer)", section_screen_layout: "Model", layout_tv_feet: "TV on feet", layout_tv_stand: "TV on a stand", layout_tv_wall: "Wall-mounted TV", layout_projector: "Projector", layout_computer: "Computer", section_screen_image: "Picture on screen", img_random: "Random", img_sunset: "Sunset", img_aquarium: "Aquarium", img_bars: "Test card", img_football: "Football match", img_space: "Space", img_bounce: "Bouncing logo", img_desktop: "Desktop", img_code: "Scrolling code", img_pong: "Pong", screen_on: "On", screen_playing: "Playing", screen_home: "Home screen", screen_locked: "Locked", screen_muted: "Muted", screen_standby_threshold: "Standby up to this power (W)", section_media: "Media player", section_media2: "Second media player", section_media3: "Third media player", section_lock: "Session lock",
     type_hair_dryer: "Hair dryer", layout_hd_pistol: "Classic", layout_hd_ring: "Ring", hd_cool: "Cool air", hd_hot: "Hot air", hd_heat_threshold: "Hot air above this power (W)", fill_height: "Fill the height of its slot", done_alert: "Flash at the end of the cycle", done_seen: "Seen", no_power_threshold: "No power draw below (W)", group_appearance: "Appearance", show_name: "Show the name", show_state: "Show the state", transparent: "Transparent background", font_scale: "Text size", illustration_size: "Drawing size", compact_mode: "Compact mode", compact_off: "Off", compact_hide: "No drawing", compact_side: "Drawing on the side", group_laundry: "Laundry", group_kitchen: "Kitchen", group_heating: "Heating and hot water", group_air: "Air and climate", group_home: "Home and media", group_pets: "Pets",
     type_network: "Network device (switch, NAS, server)", group_network: "Network and servers", layout_net_switch: "Switch", layout_net_server: "Server", layout_net_nas: "NAS", layout_net_rack: "Rack", net_ports_count: "Ports drawn", net_bays: "NAS bays", net_online: "Online", net_busy: "Busy", net_alert: "Alert", net_warn: "Disk to watch", section_net_cpu: "CPU usage (%)", section_net_memory: "Memory usage (%)", section_net_volume: "Volume used (%)", section_net_download: "Download rate", section_net_upload: "Upload rate", section_net_ports: "Active ports", net_ports_total: "Port count", section_net_poe: "PoE power", section_net_problem: "Problem alert", section_net_temperature: "Temperature", net_temp_alert: "Alert above this temperature (\u00b0C)", net_busy_threshold: "Busy above this rate (Mbit/s)", net_line_rate: "Throughput", net_line_load: "Load", net_line_volume: "Volume", section_net_disk1: "Disk 1", section_net_disk2: "Disk 2", section_net_disk3: "Disk 3", section_net_disk4: "Disk 4",
-    type_robot: "Robot (vacuum, mop, mower)", layout_robot_vacuum: "Robot vacuum", layout_robot_mop: "Mopping robot", layout_robot_mower: "Robot mower", section_robot_station: "Base", robot_station_station: "Emptying or washing station", robot_station_base: "Charging base only", robot_shelter: "Shelter over the base", robot_shelter_style: "Shelter style", shelter_lean_to: "Wooden lean-to", shelter_shell: "Shell", robot_shelter_color: "Shell colour", color_green: "Green", color_orange: "Orange", robot_charging: "Charging", robot_docked: "Docked", robot_cleaning: "Cleaning", robot_mopping: "Mopping", robot_mowing: "Mowing", robot_edgecut: "Edge cutting", robot_returning: "Returning to base", robot_emptying: "Emptying the bin", robot_bin_full: "Bin full", robot_washing: "Washing the pads", robot_drying: "Drying the pads", robot_water_empty: "Water tank empty", robot_rain: "Rain delay", robot_idle: "Stopped", section_robot_status: "Detailed status", section_battery: "Battery", section_robot_bin: "Bin full alert", section_robot_water: "Water tank", section_robot_rain: "Rain", section_robot_error: "Error",
+    type_robot: "Robot (vacuum, mop, mower)", layout_robot_vacuum: "Robot vacuum", layout_robot_mop: "Mopping robot", layout_robot_mower: "Robot mower", section_robot_station: "Base", robot_station_station: "Emptying or washing station", robot_station_base: "Charging base only", robot_shelter: "Shelter over the base", robot_shelter_style: "Shelter style", shelter_lean_to: "Wooden lean-to", shelter_shell: "Shell", robot_shelter_color: "Shell colour", delay_starts_in: "Starts in", section_delay: "Delayed start countdown", state_entity_optional: "State entity (optional)", color_green: "Green", color_orange: "Orange", robot_charging: "Charging", robot_docked: "Docked", robot_cleaning: "Cleaning", robot_mopping: "Mopping", robot_mowing: "Mowing", robot_edgecut: "Edge cutting", robot_returning: "Returning to base", robot_emptying: "Emptying the bin", robot_bin_full: "Bin full", robot_washing: "Washing the pads", robot_drying: "Drying the pads", robot_water_empty: "Water tank empty", robot_rain: "Rain delay", robot_idle: "Stopped", section_robot_status: "Detailed status", section_battery: "Battery", section_robot_bin: "Bin full alert", section_robot_water: "Water tank", section_robot_rain: "Rain", section_robot_error: "Error",
     type_pool_pump: "Pool pump", pool_filtering: "Filtering", pool_chlorinating: "Chlorine injection", pool_backwash: "Backwash", pool_frost: "Frost protection", pool_light_on: "light on", section_water_temperature: "Water temperature", section_air_temperature: "Air temperature", section_ph: "pH", section_redox: "RedOx (ORP)", section_filtration_time: "Filtration time today", section_pressure: "Filter pressure", pool_pressure_alert: "Alert above this pressure (bar)", section_pool_mode: "Pump mode", section_chlorine_pump: "Chlorine pump", section_chlorine_level: "Chlorine tank level", section_backwash: "Backwash", section_frost: "Frost protection", section_pool_alert: "Alert", pool_line_water: "Water", pool_line_air: "Air", pool_line_filtered: "Filtered today", pool_line_pressure: "Pressure", pool_line_chlorine: "Chlorine tank", pool_line_mode: "Mode",
     history_last: "Last {h} h", show_history: "Show the history", section_history: "History sensor", history_hours: "Hours of history", history_empty: "No history yet",
     type_scale: "Bathroom scale", scale_weighed: "Weighed", scale_goal_reached: "Goal reached", section_weight_goal: "Weight goal", scale_goal_value: "Weight goal, without a sensor", section_fat_ratio: "Body fat (%)", section_fat_mass: "Fat mass", section_muscle_mass: "Muscle mass", section_bone_mass: "Bone mass", scale_line_goal: "Goal", scale_line_fat: "Fat", scale_line_muscle: "Muscle", scale_line_bone: "Bone", scale_to_lose: "to lose", scale_to_gain: "to gain",
@@ -2957,6 +2957,7 @@ const STATE_DOMAINS = {
   screen: ["switch", "media_player", "input_boolean", "binary_sensor"],
   air_purifier: ["fan", "switch", "select", "climate"], fan: ["fan", "switch"],
   pet_fountain: ["switch", "fan", "input_boolean"],
+  pet_feeder: ["switch", "select", "input_select", "input_boolean"],
   network: ["device_tracker", "switch", "input_boolean"],
   robot: ["vacuum", "lawn_mower", "select", "input_select"],
   pool_pump: ["switch", "binary_sensor", "select", "input_select", "input_boolean", "fan"],
@@ -3437,7 +3438,10 @@ const ROBOT_MOP_RE = /(^|[^a-z])mop|braava|wisch|serpill|laveur|fregas|lavapavim
 // Home Assistant's own words, the same for a vacuum and a mower.
 const ROBOT_STATES = { cleaning: "cleaning", mowing: "cleaning", docked: "charging", returning: "returning", paused: "paused", idle: "idle", error: "error" };
 // A status that says all is well is not an error, whatever it is called.
-const ROBOT_OK_RE = /^(no_?error|none|ok|normal|0|null|no_?fault|false|off)$/;
+// "No error" as the integrations say it, and as people write it in a
+// template of their own (#57): in any of the card's languages.
+const ROBOT_OK_RE = /^(no_?errors?|none|ok|normal|0|null|no_?fault|false|off|all_?good|aucune_erreur|pas_d_?erreurs?|sans_erreur|keine?_fehler|fehlerfrei|sin_error(es)?|ningun_error|nessun_errore|geen_fout(en)?|nenhum_erro|sem_erros?|inga_fel|inget_fel|ingen_feil|ingen_fejl|brak_b(l|\u0142)edow|zadna_chyba|bez_chyby?|\u043d\u0435\u0442_\u043e\u0448\u0438\u0431\u043e\u043a|\u0431\u0435\u0437_\u043e\u0448\u0438\u0431\u043e\u043a|\u65e0\u9519\u8bef|\u65e0\u6545\u969c|\u6b63\u5e38)$/;
+const robotOkWord = (v) => ROBOT_OK_RE.test(stripAccents(String(v)).trim().toLowerCase().replace(/[\s.:'\u2019-]+/g, "_"));
 // What a status says, first match wins: an error before anything else, then
 // what the station does, then the way home, a pause, the work and the base.
 const ROBOT_WORDS = [
@@ -3493,7 +3497,7 @@ function robotControls(hass, cfg, robot) {
 }
 
 function robotWord(v) {
-  const s = stripAccents(String(v === undefined || v === null ? "" : v)).trim().toLowerCase().replace(/[\s.:-]+/g, "_");
+  const s = stripAccents(String(v === undefined || v === null ? "" : v)).trim().toLowerCase().replace(/[\s.:'\u2019-]+/g, "_");
   if (!s || ["unknown", "unavailable"].includes(s) || ROBOT_OK_RE.test(s)) return "";
   const hit = ROBOT_WORDS.find(([, re]) => re.test(s));
   return hit ? hit[0] : "";
@@ -3568,7 +3572,7 @@ function robotRaised(hass, entityId, re) {
   const s = stateObj(hass, entityId);
   if (!s) return false;
   const v = stripAccents(String(s.state)).trim().toLowerCase();
-  if (["unknown", "unavailable", ""].includes(v) || ROBOT_OK_RE.test(v.replace(/[\s-]+/g, "_"))) return false;
+  if (["unknown", "unavailable", ""].includes(v) || robotOkWord(v)) return false;
   if (["on", "true", "1", "yes"].includes(v)) return true;
   return !!re && re.test(v);
 }
@@ -10042,6 +10046,47 @@ function illustrationHtml(type, ctx) {
 // Card
 // ---------------------------------------------------------------------------
 
+// What makes a card complete without a state entity: a fridge's probe, a
+// feeder's control, a charger's plug, and so on. The editor asks for a state
+// entity only when nothing else will do (#55).
+function stateFreeSource(config) {
+  // Every type but the fridge is defined by a state entity. A fridge has no
+  // state to report: a temperature probe and a door contact on an ordinary
+  // fridge are a complete configuration, and demanding a state entity would
+  // only push people to point it at something meaningless.
+  const fridgeOnly = config && FRIDGE_ONLY_FIELDS.some((f) => config[f]);
+  const asFridge = config && (config.appliance_type === "fridge" || fridgeOnly);
+  const hasFridgeSource = fridgeOnly ||
+    (asFridge && !!(config.door_entity || config.power_entity));
+  // Same for a pet feeder, and for the same reason: most of them report
+  // nothing while they wait. A control to serve with, or a counter of what
+  // was served, is a complete configuration.
+  const feederOnly = config && FEEDER_ONLY_FIELDS.some((f) => config[f]);
+  const asFeeder = config && (config.appliance_type === "pet_feeder" || feederOnly);
+  const hasFeederSource = feederOnly || (asFeeder && !!config.start_entity);
+  // And for a charger with no status to read: the plug says whether a car
+  // is there, the power meter whether it charges.
+  const asCharger = config && (config.appliance_type === "ev_charger" || EV_ONLY_FIELDS.some((f) => config[f]));
+  const hasChargerSource = asCharger && !!(config.vehicle_entity || config.power_entity);
+  // And for a screen: its plug's meter or one of its players is enough.
+  const asScreen = config && (config.appliance_type === "screen" || SCREEN_ONLY_FIELDS.some((f) => config[f]));
+  const hasScreenSource = asScreen && !!(config.power_entity || SCREEN_MEDIA_FIELDS.some((f) => config[f]));
+  // And for a pool pump on a smart plug: the meter says whether it filters.
+  const asPool = config && (config.appliance_type === "pool_pump" || POOL_ONLY_FIELDS.some((f) => config[f]));
+  const hasPoolSource = asPool && !!config.power_entity;
+  // And for panels, whose power is all there is to read, and a battery,
+  // read from its level or its power.
+  const asSolar = config && (config.appliance_type === "solar" || SOLAR_ONLY_FIELDS.some((f) => config[f]));
+  const hasSolarSource = asSolar && !!config.power_entity;
+  const asBattery = config && (config.appliance_type === "home_battery" || BATTERY_ONLY_FIELDS.some((f) => config[f]));
+  const hasBatterySource = asBattery && !!(config.battery_entity || config.power_entity || config.charge_power_entity || config.discharge_power_entity);
+  // And for a UPS: its input voltage says whether the mains is there.
+  const asUps = config && (config.appliance_type === "ups" || UPS_ONLY_FIELDS.some((f) => config[f]));
+  const hasUpsSource = asUps && !!(config.input_voltage_entity || config.battery_entity);
+  return !!(hasFridgeSource || hasFeederSource || hasChargerSource || hasScreenSource || hasPoolSource
+    || hasSolarSource || hasBatterySource || hasUpsSource);
+}
+
 class ApplianceCard extends HTMLElement {
   static getStubConfig(hass) {
     const sensors = Object.keys(hass.states).filter((e) => e.startsWith("sensor."));
@@ -10050,41 +10095,7 @@ class ApplianceCard extends HTMLElement {
   }
 
   setConfig(config) {
-    // Every type but the fridge is defined by a state entity. A fridge has no
-    // state to report: a temperature probe and a door contact on an ordinary
-    // fridge are a complete configuration, and demanding a state entity would
-    // only push people to point it at something meaningless.
-    const fridgeOnly = config && FRIDGE_ONLY_FIELDS.some((f) => config[f]);
-    const asFridge = config && (config.appliance_type === "fridge" || fridgeOnly);
-    const hasFridgeSource = fridgeOnly ||
-      (asFridge && !!(config.door_entity || config.power_entity));
-    // Same for a pet feeder, and for the same reason: most of them report
-    // nothing while they wait. A control to serve with, or a counter of what
-    // was served, is a complete configuration.
-    const feederOnly = config && FEEDER_ONLY_FIELDS.some((f) => config[f]);
-    const asFeeder = config && (config.appliance_type === "pet_feeder" || feederOnly);
-    const hasFeederSource = feederOnly || (asFeeder && !!config.start_entity);
-    // And for a charger with no status to read: the plug says whether a car
-    // is there, the power meter whether it charges.
-    const asCharger = config && (config.appliance_type === "ev_charger" || EV_ONLY_FIELDS.some((f) => config[f]));
-    const hasChargerSource = asCharger && !!(config.vehicle_entity || config.power_entity);
-    // And for a screen: its plug's meter or one of its players is enough.
-    const asScreen = config && (config.appliance_type === "screen" || SCREEN_ONLY_FIELDS.some((f) => config[f]));
-    const hasScreenSource = asScreen && !!(config.power_entity || SCREEN_MEDIA_FIELDS.some((f) => config[f]));
-    // And for a pool pump on a smart plug: the meter says whether it filters.
-    const asPool = config && (config.appliance_type === "pool_pump" || POOL_ONLY_FIELDS.some((f) => config[f]));
-    const hasPoolSource = asPool && !!config.power_entity;
-    // And for panels, whose power is all there is to read, and a battery,
-    // read from its level or its power.
-    const asSolar = config && (config.appliance_type === "solar" || SOLAR_ONLY_FIELDS.some((f) => config[f]));
-    const hasSolarSource = asSolar && !!config.power_entity;
-    const asBattery = config && (config.appliance_type === "home_battery" || BATTERY_ONLY_FIELDS.some((f) => config[f]));
-    const hasBatterySource = asBattery && !!(config.battery_entity || config.power_entity || config.charge_power_entity || config.discharge_power_entity);
-    // And for a UPS: its input voltage says whether the mains is there.
-    const asUps = config && (config.appliance_type === "ups" || UPS_ONLY_FIELDS.some((f) => config[f]));
-    const hasUpsSource = asUps && !!(config.input_voltage_entity || config.battery_entity);
-    if (!config || (!config.state_entity && !hasFridgeSource && !hasFeederSource && !hasChargerSource && !hasScreenSource && !hasPoolSource
-      && !hasSolarSource && !hasBatterySource && !hasUpsSource)) {
+    if (!config || (!config.state_entity && !stateFreeSource(config))) {
       throw new Error("ha-appliance-card: 'state_entity' is required");
     }
     this._config = config;
@@ -10214,6 +10225,23 @@ class ApplianceCard extends HTMLElement {
       this._render();
     }, FEED_PULSE_MS + 50);
     if (redraw) this._render();
+  }
+
+  // How far a delayed start has counted down. The full length is the longest
+  // seen for that start time, kept in the browser, so a reload in the middle
+  // of a countdown does not start the bar again from nothing.
+  _delayProgress(entityId, left) {
+    const end = Date.now() + left * 1000;
+    const key = `ha-appliance-card-delay:${entityId}`;
+    let seen = this._delaySeen && this._delaySeen.key === key ? this._delaySeen : null;
+    if (!seen) {
+      try { seen = JSON.parse(localStorage.getItem(key) || "null"); } catch (e) { seen = null; }
+    }
+    if (!seen || Math.abs(seen.end - end) > 180000) seen = { key, end, total: left };
+    seen = { key, end, total: Math.max(seen.total, left) };
+    this._delaySeen = seen;
+    try { localStorage.setItem(key, JSON.stringify(seen)); } catch (e) { /* the bar still runs for this visit */ }
+    return seen.total > 0 ? Math.max(0, Math.min(100, (1 - left / seen.total) * 100)) : null;
   }
 
   // A mode picked in the menu: a select's option, or a fan's preset.
@@ -10708,6 +10736,17 @@ class ApplianceCard extends HTMLElement {
       }
     }
 
+    // A delayed start counting down (#56): Home Connect's StartInRelative, or
+    // any countdown in seconds, minutes or as a start time. While it runs the
+    // machine waits, whatever word its state uses for waiting.
+    let delaySec = null;
+    if (cfg.delay_entity && cap.cycle) {
+      const d = remainingSeconds(hass, cfg.delay_entity, cfg.delay_unit);
+      if (d !== null && d >= 30) {
+        delaySec = d;
+        if (!CONTROL_RUNNING.includes(norm) && !["paused", "error"].includes(norm)) norm = "delayed";
+      }
+    }
     let color = STATE_COLORS[norm] || STATE_COLORS.unknown;
     const rawIsMeaningless = ["unknown", "unavailable", "none", ""].includes(String(rawState).trim().toLowerCase());
     // When the raw state doesn't match any known vocabulary, show it as-is
@@ -12328,6 +12367,14 @@ class ApplianceCard extends HTMLElement {
           value: keepTogether(formatInfoValue(stateObj(hass, cfg.filter_life_entity), hass, null, cfg, cfg.filter_life_entity)),
           entity: cfg.filter_life_entity, caution: filter.due });
       }
+      // When the pump last ran (#58): running now, or the time it stopped.
+      if (pumpSt && pumpRuns !== null && cfg.pump_running_entity) {
+        const ts = Date.parse(pumpSt.last_changed);
+        if (pumpRuns || Number.isFinite(ts)) {
+          extraLines.push({ key: "pump_last", icon: "mdi:water-sync", label: t(hass, "ft_last_pump"),
+            value: keepTogether(pumpRuns ? t(hass, "ft_pump_on") : feedTime(hass, ts)), entity: cfg.pump_running_entity });
+        }
+      }
       if (pump) {
         extraLines.push({ key: "pump", icon: "mdi:pump", label: t(hass, "ft_line_pump"),
           value: keepTogether(formatInfoValue(stateObj(hass, cfg.pump_clean_entity), hass, null, cfg, cfg.pump_clean_entity)),
@@ -13233,7 +13280,7 @@ class ApplianceCard extends HTMLElement {
           const s = stateObj(hass, e);
           if (!s || numericEntity(hass, e)) return false;
           const v = String(s.state).trim().toLowerCase();
-          return !["on", "off", "true", "false", "error", "unknown", "unavailable", ""].includes(v) && !ROBOT_OK_RE.test(v.replace(/[\s-]+/g, "_"));
+          return !["on", "off", "true", "false", "error", "unknown", "unavailable", ""].includes(v) && !robotOkWord(v);
         });
         if (id) {
           const s = stateObj(hass, id);
@@ -13669,6 +13716,15 @@ class ApplianceCard extends HTMLElement {
         });
       }
     }
+    if (delaySec !== null) {
+      lines.push({
+        key: "delay",
+        icon: "mdi:timer-sand",
+        label: t(hass, "delay_starts_in"),
+        value: `${keepTogether(formatDuration(delaySec, hass))}\u00a0\u00b7 ${keepTogether(formatEta(delaySec, hass))}`,
+        entity: cfg.delay_entity,
+      });
+    }
     if (cap.door && !cap.fridgeTemp && cfg.door_entity && !cfg.door_hide_in_list && !cfg.door_corner) {
       lines.push({
         key: "door",
@@ -13752,6 +13808,9 @@ class ApplianceCard extends HTMLElement {
     // while an oven climbs), and a hood has no cycle so its bar is the filter.
     let barPct = progressPct;
     let barColor = color;
+    // The countdown of a delayed start, as a bar that fills up to the start.
+    const delayPct = delaySec !== null && norm === "delayed" ? this._delayProgress(cfg.delay_entity, delaySec) : null;
+    if (delayPct !== null && progressPct === null) barPct = delayPct;
     if (heatBarPct !== null) {
       barPct = heatBarPct;
       barColor = "#ff7043";
@@ -14004,7 +14063,7 @@ function loadEditor() {
   if (customElements.get("ha-appliance-card-editor")) return Promise.resolve();
   if (!editorLoading) {
     editorLoading = import(assetUrl("ha-appliance-card-editor.js"))
-      .then((m) => m.default({ t, onLanguageLoaded, LANGUAGE_NAMES, localizedHass, activationOf, EV_POWER_THRESHOLD, stateObj, parseValueMap, stringifyValueMap, alertsArray, LIST_OTHER, ENTITY_LISTS, listCandidates, stripDeviceName, domainOf, INFO_MAX, autoSuggest, APPLIANCE_TYPES, STATE_DOMAINS, illustrationSizeOf, fontScaleOf, compactModeOf, TYPE_GROUPS, caps, detectApplianceType, SCREEN_STANDBY_W, SCREEN_LAYOUTS, SCREEN_IMAGES, HD_HEAT_W, NET_LAYOUTS, SWITCH_PORTS, NET_BAYS, NET_BUSY_MBIT, NET_TEMP_ALERT, netLayoutOf, ROBOT_LAYOUTS, ROBOT_STATIONS, ROBOT_FLOORS, ROBOT_SERVICES, STICK_AWAY_W, robotLayoutOf, POOL_PRESSURE_ALERT, SOLAR_LAYOUTS, BATTERY_LAYOUTS, BATTERY_IDLE_W, DIFFUSER_LAYOUTS, HRV_LAYOUTS, CAMERA_LAYOUTS, UPS_BATTERY_LOW, HISTORY_HOURS, BODY_COLORS, esc, SHELTER_STYLES, SHELTER_COLORS }))
+      .then((m) => m.default({ t, onLanguageLoaded, LANGUAGE_NAMES, localizedHass, activationOf, EV_POWER_THRESHOLD, stateObj, parseValueMap, stringifyValueMap, alertsArray, LIST_OTHER, ENTITY_LISTS, listCandidates, stripDeviceName, domainOf, INFO_MAX, autoSuggest, APPLIANCE_TYPES, STATE_DOMAINS, illustrationSizeOf, fontScaleOf, compactModeOf, TYPE_GROUPS, caps, detectApplianceType, SCREEN_STANDBY_W, SCREEN_LAYOUTS, SCREEN_IMAGES, HD_HEAT_W, NET_LAYOUTS, SWITCH_PORTS, NET_BAYS, NET_BUSY_MBIT, NET_TEMP_ALERT, netLayoutOf, ROBOT_LAYOUTS, ROBOT_STATIONS, ROBOT_FLOORS, ROBOT_SERVICES, STICK_AWAY_W, robotLayoutOf, POOL_PRESSURE_ALERT, SOLAR_LAYOUTS, BATTERY_LAYOUTS, BATTERY_IDLE_W, DIFFUSER_LAYOUTS, HRV_LAYOUTS, CAMERA_LAYOUTS, UPS_BATTERY_LOW, HISTORY_HOURS, BODY_COLORS, esc, SHELTER_STYLES, SHELTER_COLORS, stateFreeSource }))
       .catch((err) => {
         editorLoading = null;
         throw err;

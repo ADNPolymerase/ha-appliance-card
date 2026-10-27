@@ -10718,4 +10718,57 @@ check('borne : ni un statut reconnu', evMode(evR('SuspendedEVSE', { power_entity
   check('editeur diffuseur : la forme', /data-field="diffuser_layout"/.test(markup(newEditor({ appliance_type: 'diffuser', state_entity: 'switch.d' }))), true);
 }
 
+// =============================================================================
+// Benjamin's four (#55 to #58): the editor of a feeder, "no error" in words,
+// a delayed start, and when a fountain's pump last ran.
+// =============================================================================
+{
+  const s = (state, attributes = {}, last) => ({ state: String(state), attributes, ...(last ? { last_changed: last } : {}) });
+  // #57: a robot's error sensor that says there is none.
+  const vac = (err) => render({ appliance_type: 'robot', state_entity: 'vacuum.conchita', robot_error_entity: 'sensor.err' },
+    { 'vacuum.conchita': s('docked', { battery_level: 100 }), 'sensor.err': s(err) });
+  for (const ok of ['Aucune erreur', "Pas d'erreur", 'Pas d’erreur', 'Keine Fehler', 'Nessun errore', 'Sin errores', 'Geen fout', 'Brak błędów', 'Žádná chyba', 'Нет ошибок', '无错误', 'no error', '0']) {
+    check(`robot : "${ok}" n est pas une erreur`, stateLine(vac(ok)) === 'Error', false);
+  }
+  check('robot : une vraie erreur reste une erreur', stateLine(vac('Brosse principale emmêlée')), 'Error');
+  check('robot : le texte de l erreur en ligne', infoLine(vac('Brosse principale emmêlée'), 'Error'), 'Brosse principale emmêlée');
+  check('robot : un code Ecovacs est une erreur', stateLine(vac('104')), 'Error');
+  check('robot : pas de ligne d erreur sans erreur', infoLine(vac('Aucune erreur'), 'Error'), null);
+
+  // #55: a feeder with a control needs no state entity, and the editor says so.
+  const label = (cfg) => newEditor(cfg)._root.querySelector('[data-slot="state_entity"]')?.children.at(-1)?.label;
+  check('editeur gamelle : etat facultatif avec une commande', label({ appliance_type: 'pet_feeder', start_entity: 'select.feed' }), 'State entity (optional)');
+  check('editeur lave-linge : etat obligatoire', label({ appliance_type: 'washer', state_entity: 'sensor.w' }), 'State entity (required)');
+  check('editeur gamelle : un select se choisit comme etat', (newEditor({ appliance_type: 'pet_feeder', start_entity: 'select.feed' })._root.querySelector('[data-slot="state_entity"]')?.children.at(-1)?.includeDomains || []).includes('select'), true);
+
+  // #56: a dishwasher waiting for its delayed start.
+  const dwS = (left, state = 'Ready', unit = 's') => ({ 'sensor.dw': s(state), 'sensor.dw_start': s(left, unit ? { unit_of_measurement: unit } : {}) });
+  const dwCfg = { appliance_type: 'dishwasher', state_entity: 'sensor.dw', delay_entity: 'sensor.dw_start' };
+  const waiting = render(dwCfg, dwS(9000));
+  check('differe : l etat attend', stateLine(waiting), 'Delayed start');
+  check('differe : la ligne du depart', (infoLine(waiting, 'Starts in') || '').replace(/\s/g, ' ').startsWith('2h30 · '), true);
+  check('differe : a zero, rien', infoLine(render(dwCfg, dwS(0)), 'Starts in'), null);
+  check('differe : a zero, la machine est prete', stateLine(render(dwCfg, dwS(0))) === 'Delayed start', false);
+  check('differe : en minutes', (infoLine(render(dwCfg, dwS(90, 'Ready', 'min')), 'Starts in') || '').replace(/\s/g, ' ').startsWith('1h30'), true);
+  check('differe : une machine qui tourne n attend plus', stateLine(render(dwCfg, dwS(9000, 'Running'))), 'Running');
+  {
+    const T = Date.now();
+    const b = build(dwCfg, dwS(9000));
+    const bar = (h) => { const m = /class="bar-fill" style="width:(\d+)%/.exec(h); return m ? Number(m[1]) : null; };
+    check('differe : la barre part de zero', bar(b.html), 0);
+    freezeClock(new Date(T + 4500e3).toISOString());
+    check('differe : a mi-chemin, la moitie', bar(rerender(b.card, dwS(4500))), 50);
+    freezeClock(new Date(T).toISOString());
+  }
+  check('editeur lave-vaisselle : le depart differe', /data-field="delay_entity"|data-toggle="delay_entity"/.test(markup(newEditor({ appliance_type: 'dishwasher', state_entity: 'sensor.dw' }))), true);
+
+  // #58: when the fountain's pump last ran.
+  const AT = new Date(Date.now() - 3600e3).toISOString();
+  const ft = (pump) => render({ appliance_type: 'pet_fountain', state_entity: 'switch.ft', pump_running_entity: 'binary_sensor.pump' },
+    { 'switch.ft': s('on'), 'binary_sensor.pump': s(pump, {}, AT) });
+  check('fontaine : la pompe tourne', infoLine(ft('on'), 'Pump last ran'), 'Running');
+  check('fontaine : la derniere marche a l heure', (infoLine(ft('off'), 'Pump last ran') || '').replace(/\s/g, ' '), new Date(Date.parse(AT)).toLocaleString('en', { hour: '2-digit', minute: '2-digit' }).replace(/\s/g, ' '));
+  check('fontaine : sans pompe, pas de ligne', infoLine(render({ appliance_type: 'pet_fountain', state_entity: 'switch.ft' }, { 'switch.ft': s('on') }), 'Pump last ran'), null);
+}
+
 report();
