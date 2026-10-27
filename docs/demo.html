@@ -574,6 +574,19 @@ const coffee = () => card({
   st("select.coffee_strength", L("Strong", "Fort")),
 ]);
 
+// The same machine in black and chrome, short of beans: the hopper frame and
+// a dot of its front light turn orange.
+const coffeeBlack = () => card({
+  name: L("Espresso machine", "Expresso"),
+  appliance_type: "coffee",
+  coffee_layout: "black",
+  state_entity: "sensor.espresso_state",
+  beans_entity: "binary_sensor.espresso_beans",
+}, [
+  st("sensor.espresso_state", "Idle"),
+  st("binary_sensor.espresso_beans", "on"),
+]);
+
 const riceCooker = () => card({
   illustration_color: "black",
   name: L("Rice cooker", "Cuiseur à riz"),
@@ -629,6 +642,19 @@ const boiler = () => card({
 }, [
   st("sensor.boiler_display_code", "-H"),
   st("sensor.boiler_flow_temp", 58, { unit_of_measurement: "°C" }),
+]);
+
+// A boiler whose burner shows through its window, on the heating.
+const boilerWindow = () => card({
+  illustration_color: "grey",
+  name: L("Gas boiler", "Chaudière gaz"),
+  appliance_type: "boiler",
+  boiler_layout: "window",
+  state_entity: "sensor.gas_boiler_status",
+  temperature_entity: "sensor.gas_boiler_flow",
+}, [
+  st("sensor.gas_boiler_status", "CH"),
+  st("sensor.gas_boiler_flow", 62, { unit_of_measurement: "°C" }),
 ]);
 
 // An air-to-water heat pump filling its hot water tank. The COP is worked out
@@ -726,6 +752,16 @@ const towelWarmer = () => card({
   state_entity: "climate.bathroom_towel_warmer",
 }, [
   st("climate.bathroom_towel_warmer", "heat", { preset_mode: "comfort", current_temperature: 20.2, temperature: 21 }),
+]);
+
+// Flat panels, drying a towel.
+const towelPanel = () => card({
+  name: L("Panel towel warmer", "S\u00e8che-serviettes \u00e0 lames"),
+  appliance_type: "towel_warmer",
+  towel_warmer_layout: "panel",
+  state_entity: "climate.ensuite_towel_warmer",
+}, [
+  st("climate.ensuite_towel_warmer", "heat", { preset_mode: "drying", current_temperature: 22.4, temperature: 24 }),
 ]);
 
 // A Bambu Lab printer halfway through a part, as its integration reports it:
@@ -1204,7 +1240,7 @@ const ALL = { washer, dryer, steam_generator: steamGenerator,
               printer_3d: printer3d, ev_charger: evCharger };
 // The variants the family captures fill their grids with; the gallery of all
 // types leaves them out.
-const EXTRA = { iron, round_feeder: roundFeeder, double_feeder: doubleFeeder, ev_discharging: evDischarging,
+const EXTRA = { iron, coffee_black: coffeeBlack, boiler_window: boilerWindow, towel_panel: towelPanel, round_feeder: roundFeeder, double_feeder: doubleFeeder, ev_discharging: evDischarging,
                 box_purifier: boxPurifier, ring_purifier: ringPurifier,
                 net_switch: netSwitch, net_nas: netNas, net_server: netServer, net_rack: netRack,
                 net_router: netRouter("on"), net_router_down: netRouter("off"),
@@ -1262,8 +1298,8 @@ function liveGallery() {
   </header>`;
   const FAMILIES = [
     [L("Laundry", "Linge"), [washer, dryer, EXTRA.iron, steamGenerator]],
-    [L("Kitchen", "Cuisine"), [dishwasher, oven, microwave, hood, cooktop, fridge, kettle, cooker, coffee, riceCooker, airFryer, toaster]],
-    [L("Heating and climate", "Chauffage et climat"), [waterHeater, boiler, heatPump, pelletStove, spaceHeater, towelWarmer, airConditioner, dehumidifier]],
+    [L("Kitchen", "Cuisine"), [dishwasher, oven, microwave, hood, cooktop, fridge, kettle, cooker, coffee, coffeeBlack, riceCooker, airFryer, toaster]],
+    [L("Heating and climate", "Chauffage et climat"), [waterHeater, boiler, boilerWindow, heatPump, pelletStove, spaceHeater, towelWarmer, towelPanel, airConditioner, dehumidifier]],
     [L("Air purifiers and fans", "Purificateurs et ventilateurs"), [purifier, boxPurifier, ringPurifier, fan, ceilingFan]],
     [L("Robots and vacuums", "Robots et aspirateurs"), [rbtVacuum, rbtEmptying, rbtMop, rbtDrying, rbtMower, rbtRain, rbtStick, rbtWasher]],
     [L("Pool", "Piscine"), [poolRunning, poolChlorine, poolBackwash, poolFrost, poolLight, poolError]],

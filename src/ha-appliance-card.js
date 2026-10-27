@@ -94,7 +94,7 @@ const T = {
     type_fridge: "Fridge", type_kettle: "Kettle",
     fridge_ok: "Normal", temp_high: "Temperature high",
     unplugged: "Unplugged", no_power: "No power draw", section_plug: "Plug switch", no_power_after: "Warn after (minutes without power draw)", temperature_decimals: "Temperature precision", precision_auto: "Like the entity", precision_0: "Whole degree", precision_1: "One decimal", kettle_heating: "Heating",
-    kettle_off: "Off", layout_kettle_classic: "Classic", layout_kettle_steel: "Stainless steel", fridge_compartment: "Fridge",
+    kettle_off: "Off", layout_kettle_classic: "Classic", layout_kettle_steel: "Stainless steel", layout_coffee_silver: "Silver", layout_coffee_black: "Black and chrome", layout_boiler_wall: "Wall boiler", layout_boiler_window: "Burner window", layout_towel_warmer_ladder: "Ladder", layout_towel_warmer_panel: "Flat panels", fridge_compartment: "Fridge",
     freezer_compartment: "Freezer", ice_maker: "Ice maker",
     since: "for", section_fridge_layout: "Layout",
     layout_single: "One door", layout_freezer_bottom: "Freezer at the bottom",
@@ -262,7 +262,7 @@ const T = {
     type_fridge: "R\u00e9frig\u00e9rateur", type_kettle: "Bouilloire",
     fridge_ok: "Normal", temp_high: "Temp\u00e9rature haute",
     unplugged: "D\u00e9branch\u00e9", no_power: "Aucune consommation", section_plug: "Interrupteur de la prise", no_power_after: "Alerter apr\u00e8s (minutes sans consommation)", temperature_decimals: "Pr\u00e9cision de la temp\u00e9rature", precision_auto: "Comme l'entit\u00e9", precision_0: "Au degr\u00e9", precision_1: "Au dixi\u00e8me", kettle_heating: "En chauffe",
-    kettle_off: "\u00c0 l'arr\u00eat", layout_kettle_classic: "Classique", layout_kettle_steel: "Inox", fridge_compartment: "R\u00e9frig\u00e9rateur",
+    kettle_off: "\u00c0 l'arr\u00eat", layout_kettle_classic: "Classique", layout_kettle_steel: "Inox", layout_coffee_silver: "Argent\u00e9e", layout_coffee_black: "Noire et chrome", layout_boiler_wall: "Chaudi\u00e8re murale", layout_boiler_window: "Hublot du br\u00fbleur", layout_towel_warmer_ladder: "\u00c9chelle", layout_towel_warmer_panel: "Lames plates", fridge_compartment: "R\u00e9frig\u00e9rateur",
     freezer_compartment: "Cong\u00e9lateur", ice_maker: "Gla\u00e7ons",
     since: "depuis", section_fridge_layout: "Implantation",
     layout_single: "Une porte", layout_freezer_bottom: "Cong\u00e9lateur en bas",
@@ -430,7 +430,7 @@ const T = {
     type_fridge: "\u0425\u043e\u043b\u043e\u0434\u0438\u043b\u044c\u043d\u0438\u043a", type_kettle: "\u0427\u0430\u0439\u043d\u0438\u043a",
     fridge_ok: "\u041d\u043e\u0440\u043c\u0430", temp_high: "\u0412\u044b\u0441\u043e\u043a\u0430\u044f \u0442\u0435\u043c\u043f\u0435\u0440\u0430\u0442\u0443\u0440\u0430",
     unplugged: "\u041e\u0442\u043a\u043b\u044e\u0447\u0451\u043d \u043e\u0442 \u0441\u0435\u0442\u0438", no_power: "\u041d\u0435\u0442 \u043f\u043e\u0442\u0440\u0435\u0431\u043b\u0435\u043d\u0438\u044f", section_plug: "\u0412\u044b\u043a\u043b\u044e\u0447\u0430\u0442\u0435\u043b\u044c \u0440\u043e\u0437\u0435\u0442\u043a\u0438", no_power_after: "\u041f\u0440\u0435\u0434\u0443\u043f\u0440\u0435\u0434\u0438\u0442\u044c \u0447\u0435\u0440\u0435\u0437 (\u043c\u0438\u043d\u0443\u0442 \u0431\u0435\u0437 \u043f\u043e\u0442\u0440\u0435\u0431\u043b\u0435\u043d\u0438\u044f)", temperature_decimals: "\u0422\u043e\u0447\u043d\u043e\u0441\u0442\u044c \u0442\u0435\u043c\u043f\u0435\u0440\u0430\u0442\u0443\u0440\u044b", precision_auto: "\u041a\u0430\u043a \u0443 \u0441\u0443\u0449\u043d\u043e\u0441\u0442\u0438", precision_0: "\u0414\u043e \u0433\u0440\u0430\u0434\u0443\u0441\u0430", precision_1: "\u0414\u043e \u0434\u0435\u0441\u044f\u0442\u044b\u0445", kettle_heating: "\u041d\u0430\u0433\u0440\u0435\u0432",
-    kettle_off: "\u0412\u044b\u043a\u043b\u044e\u0447\u0435\u043d", layout_kettle_classic: "\u041a\u043b\u0430\u0441\u0441\u0438\u0447\u0435\u0441\u043a\u0438\u0439", layout_kettle_steel: "\u041d\u0435\u0440\u0436\u0430\u0432\u0435\u044e\u0449\u0430\u044f \u0441\u0442\u0430\u043b\u044c", fridge_compartment: "\u0425\u043e\u043b\u043e\u0434\u0438\u043b\u044c\u043d\u0438\u043a",
+    kettle_off: "\u0412\u044b\u043a\u043b\u044e\u0447\u0435\u043d", layout_kettle_classic: "\u041a\u043b\u0430\u0441\u0441\u0438\u0447\u0435\u0441\u043a\u0438\u0439", layout_kettle_steel: "\u041d\u0435\u0440\u0436\u0430\u0432\u0435\u044e\u0449\u0430\u044f \u0441\u0442\u0430\u043b\u044c", layout_coffee_silver: "\u0421\u0435\u0440\u0435\u0431\u0440\u0438\u0441\u0442\u0430\u044f", layout_coffee_black: "\u0427\u0451\u0440\u043d\u0430\u044f \u0441 \u0445\u0440\u043e\u043c\u043e\u043c", layout_boiler_wall: "\u041d\u0430\u0441\u0442\u0435\u043d\u043d\u044b\u0439 \u043a\u043e\u0442\u0451\u043b", layout_boiler_window: "\u0421\u043c\u043e\u0442\u0440\u043e\u0432\u043e\u0435 \u043e\u043a\u043d\u043e \u0433\u043e\u0440\u0435\u043b\u043a\u0438", layout_towel_warmer_ladder: "\u041b\u0435\u0441\u0435\u043d\u043a\u0430", layout_towel_warmer_panel: "\u041f\u043b\u043e\u0441\u043a\u0438\u0435 \u043f\u0430\u043d\u0435\u043b\u0438", fridge_compartment: "\u0425\u043e\u043b\u043e\u0434\u0438\u043b\u044c\u043d\u0438\u043a",
     freezer_compartment: "\u041c\u043e\u0440\u043e\u0437\u0438\u043b\u044c\u043d\u0438\u043a", ice_maker: "\u041b\u0435\u0434\u043e\u0433\u0435\u043d\u0435\u0440\u0430\u0442\u043e\u0440",
     since: "\u0443\u0436\u0435", section_fridge_layout: "\u041a\u043e\u043c\u043f\u043e\u043d\u043e\u0432\u043a\u0430",
     layout_single: "\u041e\u0434\u043d\u0430 \u0434\u0432\u0435\u0440\u044c", layout_freezer_bottom: "\u041c\u043e\u0440\u043e\u0437\u0438\u043b\u043a\u0430 \u0441\u043d\u0438\u0437\u0443",
@@ -598,7 +598,7 @@ const T = {
     type_fridge: "K\u00fchlschrank", type_kettle: "Wasserkocher",
     fridge_ok: "Normal", temp_high: "Temperatur zu hoch",
     unplugged: "Nicht angeschlossen", no_power: "Kein Verbrauch", section_plug: "Schalter der Steckdose", no_power_after: "Warnen nach (Minuten ohne Verbrauch)", temperature_decimals: "Temperaturgenauigkeit", precision_auto: "Wie die Entit\u00e4t", precision_0: "Ganze Grad", precision_1: "Eine Nachkommastelle", kettle_heating: "Heizt",
-    kettle_off: "Aus", layout_kettle_classic: "Klassisch", layout_kettle_steel: "Edelstahl", fridge_compartment: "K\u00fchlteil",
+    kettle_off: "Aus", layout_kettle_classic: "Klassisch", layout_kettle_steel: "Edelstahl", layout_coffee_silver: "Silber", layout_coffee_black: "Schwarz und Chrom", layout_boiler_wall: "Wandger\u00e4t", layout_boiler_window: "Brennerfenster", layout_towel_warmer_ladder: "Leiter", layout_towel_warmer_panel: "Flache Lamellen", fridge_compartment: "K\u00fchlteil",
     freezer_compartment: "Gefrierteil", ice_maker: "Eisbereiter",
     since: "seit", section_fridge_layout: "Bauform",
     layout_single: "Eine T\u00fcr", layout_freezer_bottom: "Gefrierteil unten",
@@ -766,7 +766,7 @@ const T = {
     type_fridge: "Frigor\u00edfico", type_kettle: "Hervidor",
     fridge_ok: "Normal", temp_high: "Temperatura alta",
     unplugged: "Desenchufado", no_power: "Sin consumo", section_plug: "Interruptor del enchufe", no_power_after: "Avisar tras (minutos sin consumo)", temperature_decimals: "Precisi\u00f3n de la temperatura", precision_auto: "Como la entidad", precision_0: "Al grado", precision_1: "Un decimal", kettle_heating: "Calentando",
-    kettle_off: "Apagado", layout_kettle_classic: "Cl\u00e1sico", layout_kettle_steel: "Acero inoxidable", fridge_compartment: "Frigor\u00edfico",
+    kettle_off: "Apagado", layout_kettle_classic: "Cl\u00e1sico", layout_kettle_steel: "Acero inoxidable", layout_coffee_silver: "Plateada", layout_coffee_black: "Negra y cromo", layout_boiler_wall: "Caldera mural", layout_boiler_window: "Ventana del quemador", layout_towel_warmer_ladder: "Escalera", layout_towel_warmer_panel: "Lamas planas", fridge_compartment: "Frigor\u00edfico",
     freezer_compartment: "Congelador", ice_maker: "Fabricador de hielo",
     since: "desde hace", section_fridge_layout: "Distribuci\u00f3n",
     layout_single: "Una puerta", layout_freezer_bottom: "Congelador abajo",
@@ -934,7 +934,7 @@ const T = {
     type_fridge: "Frigorifero", type_kettle: "Bollitore",
     fridge_ok: "Normale", temp_high: "Temperatura alta",
     unplugged: "Scollegato", no_power: "Nessun consumo", section_plug: "Interruttore della presa", no_power_after: "Avvisa dopo (minuti senza consumo)", temperature_decimals: "Precisione della temperatura", precision_auto: "Come l'entit\u00e0", precision_0: "Al grado", precision_1: "Un decimale", kettle_heating: "In riscaldamento",
-    kettle_off: "Spento", layout_kettle_classic: "Classico", layout_kettle_steel: "Acciaio inox", fridge_compartment: "Frigorifero",
+    kettle_off: "Spento", layout_kettle_classic: "Classico", layout_kettle_steel: "Acciaio inox", layout_coffee_silver: "Argento", layout_coffee_black: "Nera e cromata", layout_boiler_wall: "Caldaia murale", layout_boiler_window: "Finestra del bruciatore", layout_towel_warmer_ladder: "Scaletta", layout_towel_warmer_panel: "Lamelle piatte", fridge_compartment: "Frigorifero",
     freezer_compartment: "Congelatore", ice_maker: "Fabbricatore di ghiaccio",
     since: "da", section_fridge_layout: "Configurazione",
     layout_single: "Una porta", layout_freezer_bottom: "Congelatore in basso",
@@ -1102,7 +1102,7 @@ const T = {
     type_fridge: "Koelkast", type_kettle: "Waterkoker",
     fridge_ok: "Normaal", temp_high: "Temperatuur te hoog",
     unplugged: "Niet aangesloten", no_power: "Geen verbruik", section_plug: "Schakelaar van de stekker", no_power_after: "Waarschuwen na (minuten zonder verbruik)", temperature_decimals: "Temperatuurnauwkeurigheid", precision_auto: "Zoals de entiteit", precision_0: "Hele graden", precision_1: "E\u00e9n decimaal", kettle_heating: "Aan het koken",
-    kettle_off: "Uit", layout_kettle_classic: "Klassiek", layout_kettle_steel: "Roestvrij staal", fridge_compartment: "Koelkast",
+    kettle_off: "Uit", layout_kettle_classic: "Klassiek", layout_kettle_steel: "Roestvrij staal", layout_coffee_silver: "Zilver", layout_coffee_black: "Zwart en chroom", layout_boiler_wall: "Wandketel", layout_boiler_window: "Brandervenster", layout_towel_warmer_ladder: "Ladder", layout_towel_warmer_panel: "Platte lamellen", fridge_compartment: "Koelkast",
     freezer_compartment: "Vriezer", ice_maker: "IJsmaker",
     since: "sinds", section_fridge_layout: "Indeling",
     layout_single: "E\u00e9n deur", layout_freezer_bottom: "Vriezer onderin",
@@ -1270,7 +1270,7 @@ const T = {
     type_fridge: "Frigor\u00edfico", type_kettle: "Chaleira",
     fridge_ok: "Normal", temp_high: "Temperatura alta",
     unplugged: "Desligado da tomada", no_power: "Sem consumo", section_plug: "Interruptor da tomada", no_power_after: "Avisar ap\u00f3s (minutos sem consumo)", temperature_decimals: "Precis\u00e3o da temperatura", precision_auto: "Como a entidade", precision_0: "Ao grau", precision_1: "Uma casa decimal", kettle_heating: "A aquecer",
-    kettle_off: "Desligada", layout_kettle_classic: "Cl\u00e1ssico", layout_kettle_steel: "A\u00e7o inoxid\u00e1vel", fridge_compartment: "Frigor\u00edfico",
+    kettle_off: "Desligada", layout_kettle_classic: "Cl\u00e1ssico", layout_kettle_steel: "A\u00e7o inoxid\u00e1vel", layout_coffee_silver: "Prateada", layout_coffee_black: "Preta e cromada", layout_boiler_wall: "Caldeira mural", layout_boiler_window: "Janela do queimador", layout_towel_warmer_ladder: "Escada", layout_towel_warmer_panel: "L\u00e2minas planas", fridge_compartment: "Frigor\u00edfico",
     freezer_compartment: "Congelador", ice_maker: "M\u00e1quina de gelo",
     since: "h\u00e1", section_fridge_layout: "Configura\u00e7\u00e3o",
     layout_single: "Uma porta", layout_freezer_bottom: "Congelador em baixo",
@@ -1438,7 +1438,7 @@ const T = {
     type_fridge: "Kylsk\u00e5p", type_kettle: "Vattenkokare",
     fridge_ok: "Normal", temp_high: "H\u00f6g temperatur",
     unplugged: "Urkopplad", no_power: "Ingen f\u00f6rbrukning", section_plug: "Uttagets str\u00f6mbrytare", no_power_after: "Varna efter (minuter utan f\u00f6rbrukning)", temperature_decimals: "Temperaturprecision", precision_auto: "Som entiteten", precision_0: "Hela grader", precision_1: "En decimal", kettle_heating: "V\u00e4rmer",
-    kettle_off: "Av", layout_kettle_classic: "Klassisk", layout_kettle_steel: "Rostfritt st\u00e5l", fridge_compartment: "Kyl",
+    kettle_off: "Av", layout_kettle_classic: "Klassisk", layout_kettle_steel: "Rostfritt st\u00e5l", layout_coffee_silver: "Silver", layout_coffee_black: "Svart och krom", layout_boiler_wall: "V\u00e4ggpanna", layout_boiler_window: "Br\u00e4nnarf\u00f6nster", layout_towel_warmer_ladder: "Stege", layout_towel_warmer_panel: "Platta lameller", fridge_compartment: "Kyl",
     freezer_compartment: "Frys", ice_maker: "Ismaskin",
     since: "sedan", section_fridge_layout: "Utf\u00f6rande",
     layout_single: "En d\u00f6rr", layout_freezer_bottom: "Frys nedtill",
@@ -1606,7 +1606,7 @@ const T = {
     type_fridge: "Kj\u00f8leskap", type_kettle: "Vannkoker",
     fridge_ok: "Normal", temp_high: "H\u00f8y temperatur",
     unplugged: "Frakoblet", no_power: "Ingen forbruk", section_plug: "Stikkontaktens bryter", no_power_after: "Varsle etter (minutter uten forbruk)", temperature_decimals: "Temperaturpresisjon", precision_auto: "Som entiteten", precision_0: "Hele grader", precision_1: "\u00c9n desimal", kettle_heating: "Varmer",
-    kettle_off: "Av", layout_kettle_classic: "Klassisk", layout_kettle_steel: "Rustfritt st\u00e5l", fridge_compartment: "Kj\u00f8l",
+    kettle_off: "Av", layout_kettle_classic: "Klassisk", layout_kettle_steel: "Rustfritt st\u00e5l", layout_coffee_silver: "S\u00f8lv", layout_coffee_black: "Svart og krom", layout_boiler_wall: "Veggkjele", layout_boiler_window: "Brennervindu", layout_towel_warmer_ladder: "Stige", layout_towel_warmer_panel: "Flate lameller", fridge_compartment: "Kj\u00f8l",
     freezer_compartment: "Frys", ice_maker: "Ismaskin",
     since: "siden", section_fridge_layout: "Utf\u00f8relse",
     layout_single: "\u00c9n d\u00f8r", layout_freezer_bottom: "Frys nederst",
@@ -1774,7 +1774,7 @@ const T = {
     type_fridge: "K\u00f8leskab", type_kettle: "Elkedel",
     fridge_ok: "Normal", temp_high: "H\u00f8j temperatur",
     unplugged: "Ikke tilsluttet", no_power: "Intet forbrug", section_plug: "Stikkontaktens afbryder", no_power_after: "Advar efter (minutter uden forbrug)", temperature_decimals: "Temperaturpr\u00e6cision", precision_auto: "Som enheden", precision_0: "Hele grader", precision_1: "\u00c9n decimal", kettle_heating: "Varmer",
-    kettle_off: "Slukket", layout_kettle_classic: "Klassisk", layout_kettle_steel: "Rustfrit st\u00e5l", fridge_compartment: "K\u00f8l",
+    kettle_off: "Slukket", layout_kettle_classic: "Klassisk", layout_kettle_steel: "Rustfrit st\u00e5l", layout_coffee_silver: "S\u00f8lv", layout_coffee_black: "Sort og krom", layout_boiler_wall: "V\u00e6gkedel", layout_boiler_window: "Br\u00e6ndervindue", layout_towel_warmer_ladder: "Stige", layout_towel_warmer_panel: "Flade lameller", fridge_compartment: "K\u00f8l",
     freezer_compartment: "Frys", ice_maker: "Ismaskine",
     since: "siden", section_fridge_layout: "Udf\u00f8relse",
     layout_single: "\u00c9n l\u00e5ge", layout_freezer_bottom: "Fryser nederst",
@@ -1942,7 +1942,7 @@ const T = {
     type_fridge: "Lod\u00f3wka", type_kettle: "Czajnik",
     fridge_ok: "Normalnie", temp_high: "Wysoka temperatura",
     unplugged: "Od\u0142\u0105czona", no_power: "Brak poboru", section_plug: "W\u0142\u0105cznik gniazdka", no_power_after: "Ostrze\u017c po (minutach bez poboru)", temperature_decimals: "Dok\u0142adno\u015b\u0107 temperatury", precision_auto: "Jak encja", precision_0: "Do stopnia", precision_1: "Do dziesi\u0105tych", kettle_heating: "Grzeje",
-    kettle_off: "Wy\u0142\u0105czony", layout_kettle_classic: "Klasyczny", layout_kettle_steel: "Stal nierdzewna", fridge_compartment: "Ch\u0142odziarka",
+    kettle_off: "Wy\u0142\u0105czony", layout_kettle_classic: "Klasyczny", layout_kettle_steel: "Stal nierdzewna", layout_coffee_silver: "Srebrny", layout_coffee_black: "Czarny z chromem", layout_boiler_wall: "Kocio\u0142 wisz\u0105cy", layout_boiler_window: "Okienko palnika", layout_towel_warmer_ladder: "Drabinka", layout_towel_warmer_panel: "P\u0142askie lamele", fridge_compartment: "Ch\u0142odziarka",
     freezer_compartment: "Zamra\u017carka", ice_maker: "Kostkarka",
     since: "od", section_fridge_layout: "Uk\u0142ad",
     layout_single: "Jedne drzwi", layout_freezer_bottom: "Zamra\u017carka na dole",
@@ -2110,7 +2110,7 @@ const T = {
     type_fridge: "\u51b0\u7bb1", type_kettle: "\u70e7\u6c34\u58f6",
     fridge_ok: "\u6b63\u5e38", temp_high: "\u6e29\u5ea6\u8fc7\u9ad8",
     unplugged: "\u5df2\u65ad\u7535", no_power: "\u65e0\u8017\u7535", section_plug: "\u63d2\u5ea7\u5f00\u5173", no_power_after: "\u65e0\u8017\u7535\u591a\u5c11\u5206\u949f\u540e\u63d0\u9192", temperature_decimals: "\u6e29\u5ea6\u7cbe\u5ea6", precision_auto: "\u8ddf\u968f\u5b9e\u4f53", precision_0: "\u6574\u6570\u5ea6", precision_1: "\u4e00\u4f4d\u5c0f\u6570", kettle_heating: "\u52a0\u70ed\u4e2d",
-    kettle_off: "\u5df2\u5173\u95ed", layout_kettle_classic: "\u7ecf\u5178", layout_kettle_steel: "\u4e0d\u9508\u94a2", fridge_compartment: "\u51b7\u85cf\u5ba4",
+    kettle_off: "\u5df2\u5173\u95ed", layout_kettle_classic: "\u7ecf\u5178", layout_kettle_steel: "\u4e0d\u9508\u94a2", layout_coffee_silver: "\u94f6\u8272", layout_coffee_black: "\u9ed1\u8272\u9540\u94ec", layout_boiler_wall: "\u58c1\u6302\u7089", layout_boiler_window: "\u71c3\u70e7\u5668\u89c6\u7a97", layout_towel_warmer_ladder: "\u68af\u5f62", layout_towel_warmer_panel: "\u6241\u5e73\u9762\u677f", fridge_compartment: "\u51b7\u85cf\u5ba4",
     freezer_compartment: "\u51b7\u51bb\u5ba4", ice_maker: "\u5236\u51b0\u673a",
     since: "\u5df2\u6301\u7eed", section_fridge_layout: "\u7ed3\u6784",
     layout_single: "\u5355\u95e8", layout_freezer_bottom: "\u4e0b\u7f6e\u51b7\u51bb\u5ba4",
@@ -2278,7 +2278,7 @@ const T = {
     type_fridge: "Lednice", type_kettle: "Rychlovarn\u00e1 konvice",
     fridge_ok: "V po\u0159\u00e1dku", temp_high: "Vysok\u00e1 teplota",
     unplugged: "Odpojeno od nap\u00e1jen\u00ed", no_power: "\u017d\u00e1dn\u00e1 spot\u0159eba", section_plug: "Vyp\u00edna\u010d z\u00e1suvky", no_power_after: "Upozornit po (minut\u00e1ch bez spot\u0159eby)", temperature_decimals: "P\u0159esnost teploty", precision_auto: "Jako entita", precision_0: "Na cel\u00e9 stupn\u011b", precision_1: "Na desetiny", kettle_heating: "Oh\u0159\u00edv\u00e1n\u00ed",
-    kettle_off: "Vypnuto", layout_kettle_classic: "Klasick\u00fd", layout_kettle_steel: "Nerezov\u00e1 ocel", fridge_compartment: "Chladni\u010dka",
+    kettle_off: "Vypnuto", layout_kettle_classic: "Klasick\u00fd", layout_kettle_steel: "Nerezov\u00e1 ocel", layout_coffee_silver: "St\u0159\u00edbrn\u00fd", layout_coffee_black: "\u010cern\u00fd s chromem", layout_boiler_wall: "N\u00e1st\u011bnn\u00fd kotel", layout_boiler_window: "Ok\u00e9nko ho\u0159\u00e1ku", layout_towel_warmer_ladder: "\u017deb\u0159\u00edk", layout_towel_warmer_panel: "Ploch\u00e9 lamely", fridge_compartment: "Chladni\u010dka",
     freezer_compartment: "Mrazni\u010dka", ice_maker: "V\u00fdrobn\u00edk ledu",
     since: "po dobu", section_fridge_layout: "Uspo\u0159\u00e1d\u00e1n\u00ed",
     layout_single: "Jedny dve\u0159e", layout_freezer_bottom: "Mrazni\u010dka dole",
@@ -3742,7 +3742,7 @@ function numberOrNull(v) {
   return Number.isFinite(n) ? n : null;
 }
 
-function remainingSeconds(hass, entityId, unitCfg) {
+function remainingSeconds(hass, entityId, unitCfg, hoursMinutes) {
   const st = stateObj(hass, entityId);
   if (!st) return null;
 
@@ -3761,6 +3761,10 @@ function remainingSeconds(hass, entityId, unitCfg) {
   // alone could be hours or minutes, so only the full form is read.
   const clock = /^(\d+):([0-5]\d):([0-5]\d)$/.exec(String(st.state).trim());
   if (clock) return Number(clock[1]) * 3600 + Number(clock[2]) * 60 + Number(clock[3]);
+  // A delayed start is set in hours and minutes, and Home Connect shows it
+  // so: "0:59" is 59 minutes away, not 59 seconds (#56).
+  const hm = hoursMinutes && /^(\d+):([0-5]\d)$/.exec(String(st.state).trim());
+  if (hm) return Number(hm[1]) * 3600 + Number(hm[2]) * 60;
   const v = parseFloat(st.state);
   if (!Number.isFinite(v) || v < 0) return null;
   let unit = unitCfg || "auto";
@@ -5257,6 +5261,9 @@ function detectApplianceType(cfg, st) {
   if (cfg.heater_layout) return "space_heater";
   if (cfg.toaster_layout) return "toaster";
   if (cfg.kettle_layout) return "kettle";
+  if (cfg.coffee_layout) return "coffee";
+  if (cfg.boiler_layout) return "boiler";
+  if (cfg.towel_warmer_layout) return "towel_warmer";
   if (cfg.hair_dryer_layout || cfg.heat_threshold) return "hair_dryer";
   if (SCREEN_ONLY_FIELDS.some((f) => cfg[f])) return "screen";
   if (NETWORK_ONLY_FIELDS.some((f) => cfg[f])) return "network";
@@ -7767,85 +7774,55 @@ const ILLUSTRATION_CSS = {
         .wh-pipe.hot { right: 37px; background: #d9674a; }
   `,
   boiler: () => `
-        .bl-box {
-          position: absolute; left: 27px; right: 27px; top: 2px; height: 58px; border-radius: 5px;
-          background: linear-gradient(160deg, var(--ac-body-hi, #e6e6e6), var(--ac-body, var(--secondary-background-color, #d7d7d7)) 45%, var(--ac-body-lo, #aeb2b5));
-          border: 1px solid var(--divider-color, #c7c7c7);
-        }
+        svg.bl-svg { position: absolute; left: 0; top: 0; width: 96px; height: 108px; overflow: visible; }
         .bl-lcd {
-          position: absolute; left: 50%; transform: translateX(-50%); top: 6px;
-          height: 10px; min-width: 20px; padding: 0 3px; border-radius: 2px;
-          background: #14161a; color: #4fc3f7; text-align: center;
-          font: 600 7px/10px ui-monospace, "SF Mono", monospace;
+          position: absolute; left: 33px; top: 47px; width: 18px; height: 10px; border-radius: 2px;
+          color: #4fc3f7; text-align: center; overflow: hidden; white-space: nowrap;
+          font: 600 6.5px/10px ui-monospace, "SF Mono", monospace;
         }
+        .bl-l-wall .bl-lcd { left: 32.5px; width: 14.5px; }
+        .bl-l-window .bl-lcd { left: 38px; top: 44px; width: 20px; height: 10px; line-height: 10px; border-radius: 4px; }
+        .bl-glow { opacity: 0; transition: opacity 0.4s; }
+        .machine.flame .bl-glow { opacity: 1; }
         .machine.flame .bl-lcd { color: #ff7043; }
-        .bl-window {
-          position: absolute; left: 50%; top: 24px; width: 20px; height: 22px; margin-left: -10px;
-          border-radius: 4px; background: #14161a; overflow: hidden;
-        }
-        .bl-flame {
-          position: absolute; left: 50%; bottom: 2px; width: 14px; height: 18px; margin-left: -7px;
-          transform-origin: 50% 100%; opacity: 0;
-          background: linear-gradient(0deg, #2979ff 0%, #42a5f5 14%, #ffca28 34%, #ff9800 62%, #ff5722 100%);
-          clip-path: polygon(46% 0%, 58% 30%, 70% 10%, 76% 44%, 90% 28%, 94% 64%, 86% 88%, 66% 100%, 34% 100%, 14% 88%, 6% 62%, 12% 32%, 26% 50%, 30% 18%, 42% 36%);
-        }
+        .bl-flame { opacity: 0; transform-box: fill-box; transform-origin: 50% 100%; }
         .machine.flame .bl-flame { opacity: 1; animation: bl-flicker 0.6s ease-in-out infinite; animation-delay: var(--anim-offset, 0s); }
-        .machine.mode-starting .bl-flame { width: 8px; height: 10px; margin-left: -4px; }
+        .machine.flame .bl-flame.f2 { animation-duration: 0.5s; animation-delay: calc(-0.2s + var(--anim-offset, 0s)); }
+        .machine.flame .bl-flame.f3 { animation-duration: 0.7s; animation-delay: calc(-0.4s + var(--anim-offset, 0s)); }
+        /* Lighting: a small flame, still growing. */
+        .machine.mode-starting .bl-flame { scale: 0.55; }
         @keyframes bl-flicker {
           0%, 100% { transform: scale(1, 1); }
           30% { transform: scale(0.92, 1.1); }
           60% { transform: scale(1.06, 0.9); }
         }
-        .bl-pipe { position: absolute; background: #8a9096; }
-        .bl-pipe.tap-down { left: 33px; top: 60px; width: 4px; height: 12px; }
-        .bl-pipe.tap-arm { left: 12px; top: 70px; width: 25px; height: 4px; border-radius: 2px 0 0 2px; }
-        .bl-pipe.tap-nose { left: 12px; top: 70px; width: 4px; height: 9px; border-radius: 2px 2px 1px 1px; }
-        .bl-knob { position: absolute; left: 20px; top: 65px; width: 8px; height: 5px; border-radius: 2px 2px 0 0; background: #d9674a; }
-        .bl-drop {
-          position: absolute; left: 12px; top: 80px; width: 4px; height: 6px; opacity: 0;
-          border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%; background: #4fc3f7;
-        }
-        .machine.mode-hot_water .bl-pipe.tap-down,
-        .machine.mode-hot_water .bl-pipe.tap-arm,
-        .machine.mode-hot_water .bl-pipe.tap-nose { background: #ef5350; }
+        .bl-needle { transform-box: view-box; transform-origin: 40px 28px; transform: rotate(-35deg); transition: transform 0.6s; }
+        .machine.flame .bl-needle { transform: rotate(15deg); }
+        .bl-ico { fill: #3d4550; }
+        .machine.mode-space_heating .bl-ico-ch, .machine.mode-hot_water .bl-ico-hw { fill: #ff8a50; }
+        /* The pipe that carries the heat turns red: to the tap for hot water,
+           to the radiator for the heating. */
+        .bl-tap, .bl-flow { stroke: #9aa3ad; }
+        .machine.mode-hot_water .bl-tap, .machine.mode-space_heating .bl-flow { stroke: #ef5350; }
+        .bl-drop { fill: #4fc3f7; opacity: 0; }
         .machine.mode-hot_water .bl-drop { animation: bl-drip 0.9s ease-in infinite; animation-delay: var(--anim-offset, 0s); }
         .machine.mode-hot_water .bl-drop.d2 { animation-delay: calc(-0.3s + var(--anim-offset, 0s)); }
         .machine.mode-hot_water .bl-drop.d3 { animation-delay: calc(-0.6s + var(--anim-offset, 0s)); }
         @keyframes bl-drip {
           0% { transform: translateY(0); opacity: 0; }
           15% { opacity: 1; }
-          100% { transform: translateY(24px); opacity: 0; }
+          100% { transform: translateY(11px); opacity: 0; }
         }
-        .bl-pipe.rad-down { left: 59px; top: 60px; width: 4px; height: 30px; }
-        .bl-pipe.rad-arm { left: 59px; top: 86px; width: 9px; height: 4px; }
-        .bl-rad { position: absolute; left: 67px; right: 1px; top: 76px; height: 29px; }
-        .bl-rad i {
-          position: absolute; top: 0; bottom: 0; width: 5px; border-radius: 2px;
-          background: var(--ac-body-lo, #aeb2b5); box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.12);
-        }
-        .bl-rad i:nth-child(1) { left: 0; }
-        .bl-rad i:nth-child(2) { left: 7px; }
-        .bl-rad i:nth-child(3) { left: 14px; }
-        .bl-rad i:nth-child(4) { left: 21px; }
-        .machine.mode-space_heating .bl-pipe.rad-down,
-        .machine.mode-space_heating .bl-pipe.rad-arm { background: #ff7043; }
-        .machine.mode-space_heating .bl-rad i { background: linear-gradient(180deg, #ffab91, #ff7043); }
-        .bl-waves { position: absolute; left: 67px; right: 1px; top: 48px; height: 28px; overflow: hidden; pointer-events: none; }
-        .bl-waves i {
-          position: absolute; bottom: 0; width: 8px; height: 24px; opacity: 0;
-          background: linear-gradient(180deg, rgba(255, 112, 67, 0), rgba(255, 112, 67, 0.85) 45%, rgba(255, 87, 34, 0.95));
-          clip-path: polygon(63% 0%, 79% 7%, 90% 14%, 93% 21%, 86% 29%, 73% 36%, 56% 43%, 42% 50%, 34% 57%, 35% 64%, 44% 71%, 60% 79%, 76% 86%, 88% 93%, 93% 100%, 67% 100%, 62% 93%, 50% 86%, 34% 79%, 18% 71%, 9% 64%, 8% 57%, 16% 50%, 30% 43%, 47% 36%, 60% 29%, 67% 21%, 64% 14%, 53% 7%, 37% 0%);
-        }
-        .bl-waves i.w1 { left: 0; }
-        .bl-waves i.w2 { left: 10px; }
-        .bl-waves i.w3 { left: 20px; }
-        .machine.mode-space_heating .bl-waves i { animation: bl-rise 2.4s ease-in infinite; animation-delay: var(--anim-offset, 0s); }
-        .machine.mode-space_heating .bl-waves i.w2 { animation-delay: calc(-0.8s + var(--anim-offset, 0s)); }
-        .machine.mode-space_heating .bl-waves i.w3 { animation-delay: calc(-1.6s + var(--anim-offset, 0s)); }
+        .bl-rad { fill: var(--ac-body-lo, #d5dbe0); }
+        .machine.mode-space_heating .bl-rad { fill: #ffb08f; }
+        .bl-wave { fill: none; stroke: #ff8a50; stroke-width: 1.6; stroke-linecap: round; opacity: 0; }
+        .machine.mode-space_heating .bl-wave { animation: bl-rise 2.4s ease-in infinite; animation-delay: var(--anim-offset, 0s); }
+        .machine.mode-space_heating .bl-wave.w2 { animation-delay: calc(-0.8s + var(--anim-offset, 0s)); }
+        .machine.mode-space_heating .bl-wave.w3 { animation-delay: calc(-1.6s + var(--anim-offset, 0s)); }
         @keyframes bl-rise {
-          0% { transform: translateY(18px); opacity: 0; }
+          0% { transform: translateY(6px); opacity: 0; }
           30% { opacity: 0.9; }
-          100% { transform: translateY(-8px); opacity: 0; }
+          100% { transform: translateY(-10px); opacity: 0; }
         }
   `,
   // A pellet stove from the front: the flue on top, a small screen, the warm
@@ -8107,29 +8084,24 @@ const ILLUSTRATION_CSS = {
         .machine.mode-comfort .mini-lcd, .machine.mode-boost .mini-lcd, .machine.mode-drying .mini-lcd { color: #ffab76; }
         .machine.mode-eco .mini-lcd { color: #b39ddb; }
         .machine.mode-frost .mini-lcd { color: #81d4fa; }
-        .tw-rail { position: absolute; top: 14px; bottom: 18px; width: 5px; border-radius: 3px; background: linear-gradient(90deg, var(--ac-body-lo, #cfd6db), var(--ac-body-hi, #ffffff), var(--ac-body, #e6eaed)); }
-        .tw-rail.r1 { left: 22px; }
-        .tw-rail.r2 { right: 22px; }
-        .tw-bar {
-          position: absolute; left: 26px; right: 26px; height: 2.6px; border-radius: 2px;
-          background: linear-gradient(180deg, var(--ac-body-hi, #ffffff), var(--ac-body, #e6eaed) 50%, var(--ac-body-lo, #bfc7cd));
-          box-shadow: 0 0.5px 0 rgba(0, 0, 0, 0.12);
-        }
-        .machine.mode-comfort .tw-bar, .machine.mode-drying .tw-bar { background: linear-gradient(180deg, #ffe0d6, #ffab91 55%, #f4511e); }
-        .machine.mode-boost .tw-bar { background: linear-gradient(180deg, #ffab91, #ff5722 55%, #bf360c); box-shadow: 0 0 3px rgba(255, 87, 34, 0.8); }
-        .machine.mode-eco .tw-bar { background: linear-gradient(180deg, #fbe9e7, #ffccbc 55%, #ffab91); }
-        .tw-towel { position: absolute; left: 33px; width: 30px; top: 31px; height: 44px; }
-        .tw-box {
-          position: absolute; left: 35px; right: 35px; top: 92px; height: 12px; border-radius: 3px;
-          background: linear-gradient(180deg, var(--ac-body-hi, #ffffff), var(--ac-body-lo, #cfd6db)); box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.12);
-        }
-        .tw-lcd { left: 39px; top: 93.5px; min-width: 16px; }
+        svg.tw-svg { position: absolute; left: 0; top: 0; width: 96px; height: 108px; overflow: visible; }
+        .tw-bar { fill: var(--ac-body, #eef1f3); }
+        .tw-l-panel .tw-bar { fill: var(--ac-body, #3a4047); }
+        .machine.mode-comfort .tw-bar, .machine.mode-drying .tw-bar { fill: #ffab91; }
+        .machine.mode-boost .tw-bar { fill: #ff5722; filter: drop-shadow(0 0 1.5px rgba(255, 87, 34, 0.8)); }
+        .machine.mode-eco .tw-bar { fill: #ffccbc; }
+        .tw-l-panel.mode-comfort .tw-bar, .tw-l-panel.mode-drying .tw-bar { fill: #8a4a3a; }
+        .tw-l-panel.mode-boost .tw-bar { fill: #c0452a; }
+        .tw-l-panel.mode-eco .tw-bar { fill: #5f4a45; }
+        .tw-lcd { left: 68.5px; top: 92.5px; min-width: 13px; }
+        .tw-l-panel .tw-lcd { left: 64px; top: 93.5px; }
         .tw-air { left: 22px; top: 0; width: 52px; height: 14px; }
         .machine.mode-comfort .tw-air, .machine.mode-boost .tw-air, .machine.mode-eco .tw-air { display: block; }
         .tw-air path, .tw-steam path { stroke: #ff8a65; }
         .machine.mode-eco .tw-air path { animation-duration: 2.6s; opacity: 0.6; }
         .machine.mode-boost .tw-air path { animation-duration: 0.7s; }
-        .tw-steam { left: 30px; top: 10px; width: 36px; height: 22px; }
+        .tw-steam { left: 33px; top: 24px; width: 30px; height: 22px; }
+        .tw-l-panel .tw-steam { left: 40px; top: -6px; }
         .machine.mode-drying .tw-steam { display: block; }
   `,
   // An air fryer, in three models: a basket under a top panel, the same with
@@ -8816,44 +8788,20 @@ const ILLUSTRATION_CSS = {
         }
   `,
   cooker: (color) => `
-        .rc-base {
-          position: absolute; left: 10px; right: 10px; top: 68px; bottom: 4px;
-          border-radius: 7px;
-          background: linear-gradient(160deg, var(--ac-body, var(--secondary-background-color, #d7d7d7)), var(--ac-body-lo, #bdbdbd));
-          border: 1px solid var(--divider-color, #c7c7c7);
-        }
+        svg.rc-svg { position: absolute; left: 0; top: 0; width: 96px; height: 108px; overflow: visible; }
         .rc-disp {
-          position: absolute; left: 8px; top: 9px; width: 30px; height: 12px;
-          border-radius: 2px; background: #14161a; color: ${color}; text-align: center;
-          font: 600 7px/11px ui-monospace, "SF Mono", monospace;
+          position: absolute; left: 28px; top: 73px; width: 40px; height: 12.5px; border-radius: 3px;
+          color: ${color}; text-align: center; overflow: hidden; white-space: nowrap;
+          font: 600 7px/12.5px ui-monospace, "SF Mono", monospace;
         }
-        .rc-dial {
-          position: absolute; right: 8px; top: 7px; width: 16px; height: 16px;
-          border-radius: 50%; background: var(--disabled-text-color, #9e9e9e);
-          box-shadow: inset 0 -1px 2px rgba(0, 0, 0, 0.35);
-        }
-        /* The bowl is drawn as a jug rather than as opaque metal: the blade is
-           the whole point of the drawing and has to be visible. */
-        .rc-bowl {
-          position: absolute; left: 20px; right: 20px; top: 19px; height: 50px; overflow: hidden;
-          background: rgba(255, 255, 255, 0.7);
-          border: 1.5px solid var(--disabled-text-color, #9e9e9e);
-          clip-path: polygon(0 0, 100% 0, 88% 100%, 12% 100%);
-        }
-        .rc-food { position: absolute; left: 0; right: 0; bottom: 0; height: 50%; background: rgba(186, 148, 96, 0.75); }
-        /* Two graduations, so the bowl reads as a measuring jug rather than as
-           a paper bag once the contents are pale. */
-        .rc-grad { position: absolute; right: 6px; width: 7px; height: 1px; background: var(--divider-color, #c7c7c7); }
-        .rc-grad.g1 { top: 14px; }
-        .rc-grad.g2 { top: 24px; }
-        .rc-blade {
-          position: absolute; left: 50%; bottom: 7px; width: 28px; height: 3.5px; margin-left: -14px;
-          border-radius: 2px; background: #5a6068;
-        }
-        .rc-blade::before {
-          content: ""; position: absolute; inset: 0; border-radius: 2px;
-          background: #5a6068; transform: rotate(72deg);
-        }
+        /* The element is under the jug, and the ring of the dial says it too. */
+        .rc-ring { stroke: rgba(0, 0, 0, 0.08); }
+        .rc-rim { stroke: rgba(0, 0, 0, 0.22); }
+        .machine.heating .rc-ring, .machine.heating .rc-rim { stroke: #ff7043; filter: drop-shadow(0 0 2px #ff7043); }
+        .machine.heating .rc-food { filter: saturate(1.35) brightness(0.95); }
+        /* The blade turns about its hub, clipped to the jug so it never shows
+           below it. */
+        .rc-blade { transform-box: fill-box; transform-origin: 50% 50%; }
         .machine.mixing .rc-blade { animation: rc-spin linear infinite; animation-delay: var(--anim-offset, 0s); }
         /* The speed shows in how often the turn comes round, not in how fast
            the blade travels: a turn too quick to follow reads as a glitch. */
@@ -8865,184 +8813,107 @@ const ILLUSTRATION_CSS = {
           68% { transform: rotate(360deg); }
           100% { transform: rotate(360deg); }
         }
-        /* Heating shows as the element under the bowl, not as a halo around the
-           whole base: a glow that big read as a rendering fault. */
-        /* Sits exactly on the seam between bowl and base, where the element is. */
-        .rc-heat {
-          position: absolute; left: 24px; right: 24px; top: 67px; height: 4px;
-          border-radius: 2px; background: transparent;
+        /* The soup goes round the jug rather than spinning like the blade: its
+           ripples travel along the surface, and it hollows the faster it goes. */
+        .machine.mixing .rc-swirl { animation: rc-swirl linear infinite; animation-delay: var(--anim-offset, 0s); }
+        .machine.mixing .rc-swirl.s2 { animation-delay: calc(-0.5s + var(--anim-offset, 0s)); }
+        .machine.s1 .rc-swirl { animation-duration: 3.2s; }
+        .machine.s2 .rc-swirl { animation-duration: 1.9s; }
+        .machine.s3 .rc-swirl { animation-duration: 1.1s; }
+        @keyframes rc-swirl {
+          to { stroke-dashoffset: -22; }
         }
-        .machine.heating .rc-heat { background: #ff7043; box-shadow: 0 0 6px 0 #ff7043; }
-        .machine.heating .rc-food { background: rgba(214, 140, 90, 0.8); }
-        .rc-lid {
-          position: absolute; left: 19px; right: 19px; top: 12px; height: 9px; border-radius: 5px;
-          background: var(--ac-body, var(--secondary-background-color, #d7d7d7)); border: 1px solid var(--divider-color, #c7c7c7);
-        }
-        .rc-cap {
-          position: absolute; left: 50%; top: 5px; width: 12px; height: 8px; margin-left: -6px;
-          border-radius: 3px 3px 0 0; background: var(--disabled-text-color, #9e9e9e);
-        }
-        .rc-steam {
-          position: absolute; top: 0; width: 4px; height: 12px; border-radius: 2px; opacity: 0;
-          background: linear-gradient(to top, rgba(200, 215, 230, 0.8), rgba(200, 215, 230, 0));
-        }
-        .rc-steam.v1 { left: 38px; }
-        .rc-steam.v2 { left: 54px; }
+        .rc-dip { transform-box: fill-box; transform-origin: 50% 0; transform: scaleY(0); transition: transform 0.5s; }
+        .machine.mixing.s1 .rc-dip { transform: scaleY(0.45); }
+        .machine.mixing.s2 .rc-dip { transform: scaleY(0.85); }
+        .machine.mixing.s3 .rc-dip { transform: scaleY(1.25); }
+        .rc-steam { fill: none; stroke: rgba(150, 165, 180, 0.7); stroke-width: 2.2; stroke-linecap: round; opacity: 0; transform-box: fill-box; transform-origin: 50% 100%; }
         .machine.heating .rc-steam { animation: rc-vapour 2.4s ease-in-out infinite; animation-delay: var(--anim-offset, 0s); }
         .machine.heating .rc-steam.v2 { animation-delay: calc(-1.2s + var(--anim-offset, 0s)); }
         @keyframes rc-vapour {
-          0% { transform: translateY(6px) scaleY(0.6); opacity: 0; }
+          0% { transform: translate(0, 6px) scale(0.7); opacity: 0; }
           40% { opacity: 0.85; }
-          100% { transform: translateY(-8px) scaleY(1.2); opacity: 0; }
+          100% { transform: translate(-2px, -10px) scale(1.2); opacity: 0; }
         }
   `,
   coffee: (color) => `
-        .cf-body {
-          position: absolute; left: 14px; right: 14px; top: 2px; height: 64px; border-radius: 8px;
-          background: linear-gradient(105deg, var(--ac-body, var(--secondary-background-color, #d7d7d7)), var(--ac-body-hi, #e6e6e6));
-          border: 1px solid var(--divider-color, #c7c7c7);
+        svg.cf-svg { position: absolute; left: 0; top: 0; width: 96px; height: 108px; overflow: visible; }
+        .cf-disp {
+          position: absolute; left: 22px; top: 19px; width: 22px; height: 10px; border-radius: 2px;
+          color: ${color}; text-align: center; overflow: hidden; white-space: nowrap;
+          font: 600 6px/10px ui-monospace, "SF Mono", monospace;
         }
-        .cf-hopper {
-          position: absolute; left: 22px; right: 22px; top: 5px; height: 12px; border-radius: 3px;
-          background: #2a2e35; overflow: hidden;
-        }
-        .cf-bean { position: absolute; top: 4px; width: 5px; height: 4px; border-radius: 50%; background: #8d6e63; }
-        .cf-bean.b1 { left: 20%; }
-        .cf-bean.b2 { left: 44%; top: 6px; }
-        .cf-bean.b3 { left: 66%; }
+        .cf-l-black .cf-disp { left: 39px; top: 21px; width: 18px; border-radius: 4px; }
+        .cf-bean { fill: #8d6e63; }
         /* Empty hopper: the beans stay, greyed, so the drawing still reads as a
            bean machine rather than losing a part. */
-        .machine.no-beans .cf-bean { background: var(--disabled-text-color, #9e9e9e); opacity: 0.35; }
+        .machine.no-beans .cf-bean { fill: var(--disabled-text-color, #9e9e9e); opacity: 0.35; }
         /* Strength shows as how full the hopper looks. */
         .machine.st1 .cf-bean.b2, .machine.st1 .cf-bean.b3 { display: none; }
         .machine.st2 .cf-bean.b3 { display: none; }
-        .cf-disp {
-          position: absolute; left: 50%; top: 23px; transform: translateX(-50%);
-          min-width: 32px; height: 11px; padding: 0 3px; border-radius: 2px;
-          background: #14161a; color: ${color}; text-align: center;
-          font: 600 7px/11px ui-monospace, "SF Mono", monospace;
-        }
-        /* Three keys under the display: without them the body is a blank slab. */
-        .cf-key { position: absolute; top: 42px; width: 7px; height: 7px; border-radius: 50%; background: var(--disabled-text-color, #9e9e9e); }
-        .cf-key.k1 { left: 32px; }
-        .cf-key.k2 { left: 44px; }
-        .cf-key.k3 { left: 56px; }
-        .machine.pouring .cf-key.k2 { background: ${color}; }
-        .cf-tank {
-          position: absolute; right: 2px; top: 14px; width: 11px; height: 44px; border-radius: 3px;
-          background: rgba(255, 255, 255, 0.5); border: 1px solid var(--divider-color, #c7c7c7); overflow: hidden;
-        }
-        .cf-water { position: absolute; left: 0; right: 0; bottom: 0; height: 62%; background: rgba(79, 195, 247, 0.45); }
-        .machine.no-water .cf-water { height: 8%; background: var(--warning-color, #ff9800); opacity: 0.7; }
-        .cf-spout { position: absolute; top: 66px; width: 4px; height: 5px; border-radius: 0 0 2px 2px; background: #4c525b; }
-        .cf-spout.p1 { left: 41px; }
-        .cf-spout.p2 { left: 51px; }
-        .cf-stream { position: absolute; top: 71px; width: 2px; height: 13px; background: #6d4c41; opacity: 0; }
-        .cf-stream.p1 { left: 42px; }
-        .cf-stream.p2 { left: 52px; }
-        .machine.pouring .cf-stream { animation: cf-pour 0.7s linear infinite; animation-delay: var(--anim-offset, 0s); }
-        .machine.pouring .cf-stream.p2 { animation-delay: calc(-0.35s + var(--anim-offset, 0s)); }
+        .cf-key { fill: #4a5158; }
+        .machine.pouring .cf-key.k2 { fill: ${color}; }
+        .cf-water { transform-box: fill-box; transform-origin: 50% 100%; transition: transform 0.6s; }
+        .machine.no-water .cf-water { transform: scaleY(0.12); fill: var(--warning-color, #ff9800); opacity: 0.7; }
+        .cf-stream { fill: none; stroke: #6d4c41; stroke-width: 1.6; stroke-linecap: round; stroke-dasharray: 3 3; opacity: 0; }
+        .machine.pouring .cf-stream { opacity: 0.95; animation: cf-pour 0.4s linear infinite; animation-delay: var(--anim-offset, 0s); }
+        .machine.pouring .cf-stream.p2 { animation-delay: calc(-0.2s + var(--anim-offset, 0s)); }
         @keyframes cf-pour {
-          0% { opacity: 0; transform: scaleY(0.2); transform-origin: top; }
-          30% { opacity: 0.9; transform: scaleY(1); }
-          100% { opacity: 0.9; transform: scaleY(1); }
+          0% { stroke-dashoffset: 6; }
+          100% { stroke-dashoffset: 0; }
         }
-        .cf-cup {
-          position: absolute; top: 83px; height: 15px; overflow: hidden;
-          background: #fafafa; border: 1px solid var(--divider-color, #c7c7c7);
-          border-radius: 2px 2px 8px 8px;
-        }
-        .cf-cup.c1 { left: 34px; right: 34px; }
-        .cf-cup.c2 { display: none; }
-        /* Two cups: the spouts move apart to stand over one each, the way the
-           machine's own swivel outlet does. */
-        .machine.two-cups .cf-cup.c1 { left: 27px; right: 49px; }
-        .machine.two-cups .cf-cup.c2 { display: block; left: 49px; right: 27px; }
-        .machine.two-cups .cf-spout.p1 { left: 35px; }
-        .machine.two-cups .cf-spout.p2 { left: 57px; }
-        .machine.two-cups .cf-stream.p1 { left: 36px; }
-        .machine.two-cups .cf-stream.p2 { left: 58px; }
-        .machine.two-cups .cf-ear { right: 20px; }
-        .cf-fill { position: absolute; left: 0; right: 0; bottom: 0; height: 0; background: #6d4c41; transition: height 0.6s linear; }
-        .machine.pouring .cf-fill { height: 62%; }
-        .cf-ear {
-          position: absolute; right: 27px; top: 86px; width: 7px; height: 9px;
-          border: 2px solid var(--divider-color, #c7c7c7); border-left: none; border-radius: 0 6px 6px 0;
-        }
-        .cf-tray {
-          position: absolute; left: 24px; right: 24px; top: 100px; height: 4px; border-radius: 2px;
-          background: var(--disabled-text-color, #9e9e9e);
-        }
-        .machine.tray-full .cf-tray { background: var(--warning-color, #ff9800); }
-        .cf-steam {
-          position: absolute; top: 72px; width: 4px; height: 10px; border-radius: 2px; opacity: 0;
-          background: linear-gradient(to top, rgba(200, 215, 230, 0.8), rgba(200, 215, 230, 0));
-        }
-        .cf-steam.p1 { left: 36px; }
-        .cf-steam.p2 { left: 56px; }
+        .cf-fill { transform-box: fill-box; transform-origin: 50% 100%; transform: scaleY(0); transition: transform 0.6s linear; }
+        .machine.pouring .cf-fill { transform: scaleY(0.62); }
+        .cf-steam { fill: none; stroke: rgba(150, 165, 180, 0.7); stroke-width: 2; stroke-linecap: round; opacity: 0; transform-box: fill-box; transform-origin: 50% 100%; }
         .machine.pouring .cf-steam { animation: cf-wisp 2s ease-in-out infinite; animation-delay: var(--anim-offset, 0s); }
         .machine.pouring .cf-steam.p2 { animation-delay: calc(-1s + var(--anim-offset, 0s)); }
         @keyframes cf-wisp {
-          0% { transform: translateY(4px) scaleY(0.6); opacity: 0; }
+          0% { transform: translate(0, 4px) scale(0.6); opacity: 0; }
           40% { opacity: 0.8; }
-          100% { transform: translateY(-7px) scaleY(1.2); opacity: 0; }
+          100% { transform: translate(-1px, -8px) scale(1.2); opacity: 0; }
         }
+        .cf-tray { fill: #3d434a; }
+        .machine.tray-full .cf-tray { fill: #8d5a3b; }
+        .cf-warn { display: none; fill: none; stroke: var(--warning-color, #ff9800); stroke-width: 1.5; }
+        .machine.no-water .cf-warn-w, .machine.tray-full .cf-warn-t, .machine.no-beans .cf-warn-b { display: inline; }
+        /* One of the panel dots turns orange and blinks while the machine
+           wants water, beans or an empty tray. */
+        .machine.no-water .cf-alert, .machine.tray-full .cf-alert, .machine.no-beans .cf-alert { fill: var(--warning-color, #ff9800); filter: drop-shadow(0 0 2.5px var(--warning-color, #ff9800)); animation: cf-blink 1.2s ease-in-out infinite; animation-delay: var(--anim-offset, 0s); }
+        @keyframes cf-blink {
+          0%, 100% { opacity: 1; }
+          50% { opacity: 0.35; }
+        }
+        /* The crema shows on the coffee while it runs. */
+        .cf-crema { opacity: 0; transition: opacity 0.6s; }
+        .machine.pouring .cf-crema { opacity: 1; }
   `,
   rice_cooker: (color) => `
-        /* Squat and round, nothing like the cooker's tall jug: a rice cooker is
-           a closed pot, so there is no interior to show. */
-        .rk-body {
-          position: absolute; left: 8px; right: 8px; top: 34px; bottom: 8px;
-          border-radius: 12px 12px 16px 16px;
-          background: linear-gradient(105deg, var(--ac-body, var(--secondary-background-color, #d7d7d7)), var(--ac-body-hi, #e9e9e9) 55%, var(--ac-body-lo, #cfcfcf));
-          border: 1px solid var(--divider-color, #c7c7c7);
-        }
-        .rk-lid {
-          position: absolute; left: 12px; right: 12px; top: 22px; height: 16px;
-          border-radius: 12px 12px 4px 4px;
-          background: linear-gradient(180deg, var(--ac-body-hi, #eeeeee), var(--ac-body, var(--secondary-background-color, #d7d7d7)));
-          border: 1px solid var(--divider-color, #c7c7c7);
-        }
-        .rk-vent {
-          position: absolute; left: 50%; top: 15px; width: 14px; height: 9px; margin-left: -7px;
-          border-radius: 4px 4px 2px 2px; background: var(--disabled-text-color, #9e9e9e);
-        }
-        .rk-handle {
-          position: absolute; left: 20px; right: 20px; top: 8px; height: 10px;
-          border: 2.5px solid var(--disabled-text-color, #9e9e9e); border-bottom: none;
-          border-radius: 10px 10px 0 0;
-        }
+        svg.rk-svg { position: absolute; left: 0; top: 0; width: 96px; height: 108px; overflow: visible; }
         .rk-disp {
-          position: absolute; left: 50%; top: 46px; transform: translateX(-50%);
-          min-width: 32px; height: 12px; padding: 0 3px; border-radius: 2px;
-          background: #14161a; color: ${color}; text-align: center;
-          font: 600 8px/12px ui-monospace, "SF Mono", monospace;
+          position: absolute; left: 29px; top: 68px; width: 24px; height: 10px; border-radius: 2px;
+          color: ${color}; text-align: center; overflow: hidden; white-space: nowrap;
+          font: 600 6.5px/10px ui-monospace, "SF Mono", monospace;
         }
-        .rk-key { position: absolute; top: 66px; width: 8px; height: 8px; border-radius: 50%; background: var(--disabled-text-color, #9e9e9e); }
-        .rk-key.k1 { left: 32px; }
-        .rk-key.k2 { left: 44px; }
-        .rk-key.k3 { left: 56px; }
-        /* The element is the plate under the pot, so the glow belongs at the
-           foot rather than around the whole body. */
-        .rk-foot {
-          position: absolute; left: 20px; right: 20px; bottom: 4px; height: 4px;
-          border-radius: 2px; background: var(--disabled-text-color, #9e9e9e);
+        /* Two lights, as on the real ones: red while it cooks, orange while it
+           keeps warm. */
+        .rk-led { fill: #5d6570; }
+        .machine.heating .rk-cook { fill: #ff5252; filter: drop-shadow(0 0 1.5px #ff5252); }
+        .machine.warm .rk-warm { fill: #ffb300; filter: drop-shadow(0 0 1.5px #ffb300); animation: rk-glow 2.4s ease-in-out infinite; animation-delay: var(--anim-offset, 0s); }
+        @keyframes rk-glow {
+          0%, 100% { opacity: 0.55; }
+          50% { opacity: 1; }
         }
-        .machine.heating .rk-foot { background: #ff7043; box-shadow: 0 0 7px 0 #ff7043; }
-        .machine.warm .rk-foot { background: #ffb300; box-shadow: 0 0 6px 0 #ffb300; }
-        .machine.warm .rk-key.k3 { background: #ffb300; }
-        .rk-steam {
-          position: absolute; top: 0; width: 5px; height: 13px; border-radius: 3px; opacity: 0;
-          background: linear-gradient(to top, rgba(200, 215, 230, 0.8), rgba(200, 215, 230, 0));
-        }
-        .rk-steam.w1 { left: 40px; }
-        .rk-steam.w2 { left: 51px; }
+        .rk-key { fill: #4a5158; }
+        .machine.heating .rk-key { fill: #ff7043; }
+        .machine.warm .rk-key { fill: #ffb300; }
+        .rk-steam { fill: none; stroke: rgba(150, 165, 180, 0.7); stroke-width: 2.2; stroke-linecap: round; opacity: 0; transform-box: fill-box; transform-origin: 50% 100%; }
         .machine.heating .rk-steam { animation: rk-puff 2.3s ease-in-out infinite; animation-delay: var(--anim-offset, 0s); }
         .machine.heating .rk-steam.w2 { animation-delay: calc(-1.15s + var(--anim-offset, 0s)); }
+        .machine.warm .rk-steam.w1 { animation: rk-puff 4.6s ease-in-out infinite; animation-delay: var(--anim-offset, 0s); }
         @keyframes rk-puff {
-          0% { transform: translateY(7px) scaleY(0.6); opacity: 0; }
+          0% { transform: translate(0, 7px) scale(0.6); opacity: 0; }
           40% { opacity: 0.9; }
-          100% { transform: translateY(-8px) scaleY(1.25); opacity: 0; }
+          100% { transform: translate(-2px, -9px) scale(1.25); opacity: 0; }
         }
   `,
   // An iron in profile, nose to the left: the soleplate, the shell rising to
@@ -11092,6 +10963,295 @@ const ROBOT_MOWER_SVG = `<svg viewBox="0 0 62 35">
   <circle cx="16" cy="25.5" r="4" fill="#4a5057"/><path d="M16 21.5 V29.5 M12 25.5 H20" stroke="#2b2f34" stroke-width="1.2"/><circle cx="16" cy="25.5" r="1.3" fill="#ff8f1f"/></g>
  <g class="rbt-whl"><circle cx="51" cy="31.3" r="3.4" fill="#1b1e21"/><circle cx="51" cy="31.3" r="1.3" fill="#555c63"/></g>
 </svg>`;
+// Five appliances drawn in volume: a cooker with a clear jug, a Japanese rice
+// cooker, a wall boiler (or one with a burner window), a bean-to-cup coffee
+// machine (silver, or black and chrome) and a towel warmer (a white ladder, or
+// flat anthracite panels). The ids carry a number of their own, as each card
+// draws its gradients again; the words on their screens stay in HTML.
+let drawN = 0;
+const svgGrad = (id, stops, x2 = 1, y2 = 0) => `<linearGradient id="${id}" x1="0" y1="0" x2="${x2}" y2="${y2}">${stops.map(([o, c]) => `<stop offset="${o}" style="stop-color:${c}"/>`).join("")}</linearGradient>`;
+const svgShadow = (cx, rx) => `<ellipse cx="${cx}" cy="103" rx="${rx}" ry="3" fill="rgba(0,0,0,.14)"/>`;
+// A soft shadow on the floor with a contact line, so the appliance stands
+// on it rather than floating above it.
+const svgFloor = (g, cx, rx, cy) => `<radialGradient id="${g}o" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#000" stop-opacity=".22"/><stop offset=".7" stop-color="#000" stop-opacity=".10"/><stop offset="1" stop-color="#000" stop-opacity="0"/></radialGradient><ellipse cx="${cx}" cy="${cy}" rx="${rx}" ry="4" fill="url(#${g}o)"/><path d="M${cx - rx + 6} ${cy + 0.4} H${cx + rx - 6}" stroke="rgba(0,0,0,.16)" stroke-width="1.2" stroke-linecap="round"/>`;
+const svgWisp = (cls, x, y) => `<path class="${cls}" d="M${x} ${y} c-3 -3 2 -6 -1 -9 c-2 -2 1 -5 0 -7"/>`;
+// The body in the appliance's colour, white unless one is chosen.
+const BODY_STOPS = [[0, "var(--ac-body-lo,#dfe4e9)"], [0.45, "var(--ac-body-hi,#ffffff)"], [0.75, "var(--ac-body,#f1f4f6)"], [1, "var(--ac-body-lo,#cdd3d8)"]];
+
+function cookerSvg() {
+  const g = `dw${drawN++}`;
+  return `<svg class="rc-svg" viewBox="0 0 96 108"><defs>${svgGrad(`${g}w`, BODY_STOPS)}${svgGrad(`${g}s`, [[0, "#ffd08a"], [1, "#e8913a"]], 0, 1)}${svgGrad(`${g}v`, [[0, "rgba(255,255,255,.9)"], [1, "rgba(0,0,0,.10)"]], 0, 1)}
+<radialGradient id="${g}d" cx=".4" cy=".35"><stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#c9d0d6"/></radialGradient>
+<radialGradient id="${g}o" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#000" stop-opacity=".22"/><stop offset=".7" stop-color="#000" stop-opacity=".10"/><stop offset="1" stop-color="#000" stop-opacity="0"/></radialGradient>
+<clipPath id="${g}c"><path d="M28.9 58.4 L26.5 28.5 H65.5 L63.1 58.4 Q46 62.4 28.9 58.4 Z"/></clipPath></defs>
+<ellipse cx="48" cy="100" rx="36" ry="4" fill="url(#${g}o)"/>
+<path d="M21 100.2 H75" stroke="rgba(0,0,0,.18)" stroke-width="1.2" stroke-linecap="round"/>
+<path class="rc-base" d="M19 99.6 Q16 99.6 17 95.6 L20 70 Q21 64 27.5 64 H68.5 Q75 64 76 70 L79 95.6 Q80 99.6 77 99.6 Z" fill="url(#${g}w)" stroke="rgba(0,0,0,.18)" stroke-width=".8"/>
+<path d="M19 95.4 H77" stroke="rgba(0,0,0,.08)" stroke-width="1"/>
+<path d="M22 71 H74" stroke="rgba(0,0,0,.05)" stroke-width=".8"/>
+<rect x="28" y="73" width="40" height="12.5" rx="3.5" fill="#14161a"/>
+<circle cx="48" cy="92" r="4.4" fill="url(#${g}d)" stroke="#aeb6bd" stroke-width=".7"/>
+<circle class="rc-ring" cx="48" cy="92" r="6" fill="none" stroke-width="1.4"/>
+<g transform="translate(46 64.5) scale(1.2) translate(-46 -58.5)">
+<path d="M65 32 C80 32 82 52 65.2 54" fill="none" stroke="rgba(0,0,0,.18)" stroke-width="7" stroke-linecap="round"/>
+<path d="M65 32 C80 32 82 52 65.2 54" fill="none" stroke="url(#${g}w)" stroke-width="5" stroke-linecap="round"/>
+<path d="M28.6 58.5 L25.4 28 Q25.4 25.5 28.4 25.5 H63.6 Q66.6 25.5 66.6 28 L63.4 58.5 Q46 63 28.6 58.5 Z" fill="rgba(200,228,245,.55)" stroke="#9fb6c6" stroke-width=".9"/>
+<g clip-path="url(#${g}c)">
+<path class="rc-food" d="M20 43.4 H72 V63 H20 Z" fill="url(#${g}s)"/>
+<ellipse class="rc-food" cx="46" cy="43.4" rx="18.6" ry="3" fill="#ffdca6" stroke="rgba(200,110,30,.35)" stroke-width=".6"/>
+<path class="rc-dip" d="M37 43.4 Q46 52 55 43.4 Q46 44.6 37 43.4 Z" fill="rgba(160,70,10,.3)"/>
+<ellipse class="rc-swirl" cx="46" cy="43.4" rx="16.6" ry="2.3" fill="none" stroke="#b4501a" stroke-width="1.5" stroke-linecap="round" stroke-dasharray="3 4.33"/>
+<ellipse class="rc-swirl s2" cx="46" cy="49.5" rx="13" ry="1.8" fill="none" stroke="rgba(170,70,15,.75)" stroke-width="1.3" stroke-linecap="round" stroke-dasharray="2.5 4.83"/>
+<g class="rc-blade"><path d="M38 54 L54 54 M46 50 L46 58" stroke="#6c757d" stroke-width="2" stroke-linecap="round"/></g>
+<circle cx="46" cy="54" r="1.6" fill="#495057"/>
+<path d="M25 28.6 H67" stroke="rgba(0,0,0,.10)" stroke-width="1.6"/>
+<path d="M20 57 Q46 61 72 57" fill="none" stroke="rgba(120,60,10,.22)" stroke-width="2.2"/>
+</g>
+<path d="M29.4 56.2 Q46 59.8 62.6 56.2" fill="none" stroke="rgba(255,255,255,.7)" stroke-width=".9"/>
+<path class="rc-rim" d="M28.4 59.4 Q46 64 63.6 59.4" fill="none" stroke-width="1.4" stroke-linecap="round"/>
+<path d="M57.5 34 H62 M58 41 H62 M58.5 48 H62 M59 55 H62" stroke="#9fb6c6" stroke-width=".7"/>
+<path d="M31 30 L29.6 55" stroke="rgba(255,255,255,.75)" stroke-width="1.4" stroke-linecap="round"/>
+<path d="M22.5 28.2 Q22.5 24.4 26.5 24 H65.5 Q69.5 24.4 69.5 28.2 Z" fill="url(#${g}w)" stroke="rgba(0,0,0,.2)" stroke-width=".8"/>
+<path d="M25.2 24.2 Q27 16.4 46 15.6 Q65 16.4 66.8 24.2 Z" fill="url(#${g}w)" stroke="rgba(0,0,0,.2)" stroke-width=".8"/>
+<path d="M25.2 24.2 Q27 16.4 46 15.6 Q65 16.4 66.8 24.2 Z" fill="url(#${g}v)" opacity=".55"/>
+<path d="M30 21.8 Q33 18.2 40 17.2" fill="none" stroke="rgba(255,255,255,.95)" stroke-width="1.2" stroke-linecap="round"/>
+<path d="M39.8 11.8 V16.6 Q46 18.4 52.2 16.6 V11.8" fill="#e3e8ec" stroke="#b9c1c8" stroke-width=".8"/>
+<ellipse cx="46" cy="11.8" rx="6.2" ry="1.8" fill="#f6f8f9" stroke="#b9c1c8" stroke-width=".8"/>
+<ellipse cx="46" cy="11.8" rx="3.6" ry=".9" fill="#c9d0d6"/>
+${svgWisp("rc-steam v1", 43, 11)}${svgWisp("rc-steam v2", 48.5, 11)}
+</g></svg>`;
+}
+
+function riceSvg() {
+  const g = `dw${drawN++}`;
+  return `<svg class="rk-svg" viewBox="0 0 96 108"><defs>${svgGrad(`${g}w`, BODY_STOPS)}${svgGrad(`${g}l`, [[0, "var(--ac-body-hi,#ffffff)"], [1, "var(--ac-body-lo,#dde2e7)"]], 0, 1)}${svgGrad(`${g}v`, [[0, "rgba(255,255,255,0)"], [0.7, "rgba(0,0,0,0)"], [1, "rgba(0,0,0,.10)"]], 0, 1)}
+<radialGradient id="${g}o" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#000" stop-opacity=".22"/><stop offset=".7" stop-color="#000" stop-opacity=".10"/><stop offset="1" stop-color="#000" stop-opacity="0"/></radialGradient></defs>
+<ellipse cx="48" cy="100.4" rx="38" ry="4" fill="url(#${g}o)"/>
+<path d="M18 100.6 H78" stroke="rgba(0,0,0,.16)" stroke-width="1.2" stroke-linecap="round"/>
+<path d="M14 50 V92 Q14 97.6 21 98.6 Q48 102 75 98.6 Q82 97.6 82 92 V50 Z" fill="url(#${g}w)" stroke="rgba(0,0,0,.18)" stroke-width=".8"/>
+<path d="M14 50 V92 Q14 97.6 21 98.6 Q48 102 75 98.6 Q82 97.6 82 92 V50 Z" fill="url(#${g}v)"/>
+<path d="M14.4 91 Q48 96.5 81.6 91 V92 Q82 97.6 75 98.6 Q48 102 21 98.6 Q14 97.6 14.4 92 Z" fill="rgba(70,80,90,.28)"/>
+<path d="M19 57 Q18.4 74 19.4 88" fill="none" stroke="rgba(255,255,255,.85)" stroke-width="1.6" stroke-linecap="round"/>
+<path d="M26 63.6 Q48 61.4 70 63.6 Q72 63.8 72 66 V84.4 Q72 86.6 70 86.8 Q48 89 26 86.8 Q24 86.6 24 84.4 V66 Q24 63.8 26 63.6 Z" fill="#2a2f35"/>
+<rect x="29" y="68" width="24" height="10" rx="2" fill="#14161a"/>
+<circle class="rk-led rk-cook" cx="60" cy="71" r="2"/><circle class="rk-led rk-warm" cx="67" cy="71" r="2"/>
+<rect x="29" y="81" width="11" height="4" rx="2" fill="#4a5158"/><rect x="43" y="81.3" width="11" height="4" rx="2" fill="#4a5158"/><rect class="rk-key" x="57" y="81" width="11" height="4" rx="2"/>
+<path d="M12 50 Q12 46.6 15.4 45 Q21 30.4 48 29.4 Q75 30.4 80.6 45 Q84 46.6 84 50 Q48 56.6 12 50 Z" fill="url(#${g}l)" stroke="rgba(0,0,0,.2)" stroke-width=".8"/>
+<path d="M13.4 50.6 Q48 57.4 82.6 50.6" fill="none" stroke="rgba(0,0,0,.14)" stroke-width="1.2"/>
+<path d="M22 41 Q27 33.6 39 31.6" fill="none" stroke="rgba(255,255,255,.95)" stroke-width="1.4" stroke-linecap="round"/>
+<path d="M42 49.4 Q48 50.6 54 49.4 V51.6 Q48 52.8 42 51.6 Z" fill="#c3cad1" stroke="rgba(0,0,0,.18)" stroke-width=".5"/>
+<path d="M58.4 28.4 V31.6 Q63.4 33 68.4 31.6 V28.4" fill="#e3e8ec" stroke="#aeb6bd" stroke-width=".7"/>
+<ellipse cx="63.4" cy="28.4" rx="5" ry="1.5" fill="#f6f8f9" stroke="#aeb6bd" stroke-width=".7"/>
+<ellipse cx="63.4" cy="28.4" rx="2.4" ry=".7" fill="#8f98a2"/>
+${svgWisp("rk-steam w1", 62, 28)}${svgWisp("rk-steam w2", 66.5, 28)}</svg>`;
+}
+
+// The boiler's installation, the same under both boilers: the flow and
+// return to a radiator, and the hot water to a tap.
+// A tube with its sheen: the coloured pipe, then a thin light line along it.
+const blTube = (cls, d, w = 2.4) => `<path class="${cls}" d="${d}" fill="none" stroke-width="${w}" stroke-linecap="round"/><path d="${d}" fill="none" stroke="rgba(255,255,255,.5)" stroke-width="${(w * 0.3).toFixed(2)}" stroke-linecap="round" transform="translate(-.4 -.4)"/>`;
+function boilerPipes(g) {
+  const tube = (d, color) => `<path d="${d}" fill="none" stroke="${color}" stroke-width="2.4" stroke-linecap="round"/><path d="${d}" fill="none" stroke="rgba(255,255,255,.5)" stroke-width=".7" stroke-linecap="round" transform="translate(-.4 0)"/>`;
+  return `${blTube("bl-tap", "M34 64 V80 Q34 84 30 84 H20")}
+${blTube("bl-flow", "M62 64 V78 Q62 82 66 82 H72")}
+${tube("M56 64 V93 Q56 97 60 97 H72", "#64b5f6")}
+${[34, 56, 62].map((x) => `<rect x="${x - 2.4}" y="64.4" width="4.8" height="2.6" rx=".8" fill="#9aa3ad"/><path d="M${x - 2} 65 H${x + 2}" stroke="rgba(255,255,255,.6)" stroke-width=".5"/>`).join("")}
+<path d="M14.4 84.8 H9.8 Q6.6 84.8 6.6 88 V89.6" fill="none" stroke="#9aa3ad" stroke-width="2.6" stroke-linecap="round"/><path d="M14 84.2 H9.8 Q6 84.2 6 88" fill="none" stroke="rgba(255,255,255,.65)" stroke-width=".7" stroke-linecap="round"/>
+<rect x="5" y="89.2" width="3.2" height="1.6" rx=".6" fill="#7d868f"/>
+<rect x="16.2" y="76.4" width="1.8" height="4" fill="#9aa3ad"/>
+<path d="M12.4 76.2 H21" stroke="#aeb6bd" stroke-width="2.2" stroke-linecap="round"/><path d="M12.6 75.6 H20.6" stroke="rgba(255,255,255,.7)" stroke-width=".6" stroke-linecap="round"/>
+<circle cx="21.4" cy="76.2" r="1.5" fill="#e53935"/>
+<rect x="13.6" y="80" width="7" height="8.4" rx="2.4" fill="url(#${g}t)" stroke="rgba(0,0,0,.2)" stroke-width=".5"/>
+<circle class="bl-drop d1" cx="6.6" cy="92.4" r="1.3"/><circle class="bl-drop d2" cx="6.6" cy="92.4" r="1.1"/><circle class="bl-drop d3" cx="6.6" cy="92.4" r="1.2"/>
+<rect x="72.5" y="78.6" width="22" height="24" rx="2" fill="rgba(0,0,0,.08)"/>
+<rect class="bl-rad" x="70" y="76" width="22" height="24" rx="2"/>
+${[72.6, 77.8, 83, 88.2].map((x) => `<rect x="${x}" y="77" width="4.4" height="22" rx="2.2" fill="rgba(255,255,255,.28)"/><path d="M${x + 1.2} 78.4 V97.6" stroke="rgba(255,255,255,.7)" stroke-width=".7" stroke-linecap="round"/><path d="M${x + 4.4} 78 V98" stroke="rgba(0,0,0,.14)" stroke-width=".7"/>`).join("")}
+${[74, 81, 88].map((x, i) => `<path class="bl-wave w${i + 1}" d="M${x} 72 c-2.5 -3 2.5 -5 0 -8 c-2.5 -3 2.5 -5 0 -8"/>`).join("")}`;
+}
+// A gas flame: blue at the root, paling towards a tip that fades out, with a
+// lighter core. Each flicks on its own.
+const blFlame = (g, x, base, w, h, n) => {
+  const tear = (ww, hh) => `M${x - ww / 2} ${base} C${x - ww * 0.62} ${base - hh * 0.45} ${x - ww * 0.18} ${base - hh * 0.78} ${x} ${base - hh} C${x + ww * 0.18} ${base - hh * 0.78} ${x + ww * 0.62} ${base - hh * 0.45} ${x + ww / 2} ${base} Q${x} ${base + ww * 0.22} ${x - ww / 2} ${base} Z`;
+  return `<path class="bl-flame f${n}" d="${tear(w, h)}" fill="url(#${g}f)"/><path class="bl-flame f${n}" d="${tear(w * 0.55, h * 0.55)}" fill="url(#${g}q)"/>`;
+};
+const blBurner = (g, l, r, y, n, w, h) => {
+  const step = (r - l) / n;
+  return `<ellipse class="bl-glow" cx="${(l + r) / 2}" cy="${y - h * 0.3}" rx="${(r - l) / 2 + 1}" ry="${h * 0.62}" fill="url(#${g}a)"/>${Array.from({ length: n }, (_, i) => blFlame(g, l + step * (i + 0.5), y, w, h * [1, 0.86, 0.94][i % 3], (i % 3) + 1)).join("")}<ellipse class="bl-glow" cx="${(l + r) / 2}" cy="${y}" rx="${(r - l) / 2}" ry="1.2" fill="rgba(170,225,255,.8)"/><rect x="${l - 1}" y="${y + 0.4}" width="${r - l + 2}" height="2.2" rx="1.1" fill="#5d6570"/>${Array.from({ length: n }, (_, i) => `<circle cx="${l + step * (i + 0.5)}" cy="${y + 1.5}" r=".5" fill="#2a2f35"/>`).join("")}`;
+};
+// The case hung on the wall: its shadow on the wall, its depth showing on the
+// top and the right, then the front.
+function blCase(g, l, t, r, b, rad) {
+  const dx = 3.6, dy = -2.4;
+  return `<rect x="${l + 2.6}" y="${t + 3.2}" width="${r - l + dx}" height="${b - t}" rx="${rad}" fill="rgba(0,0,0,.07)"/><rect x="${l + 1.4}" y="${t + 1.8}" width="${r - l + dx}" height="${b - t}" rx="${rad}" fill="rgba(0,0,0,.07)"/>
+<path d="M${l + rad * 0.3} ${t + rad * 0.3} L${l + rad * 0.3 + dx} ${t + rad * 0.3 + dy} H${r - rad * 0.3 + dx} V${b - rad * 0.3 + dy} L${r - rad * 0.3} ${b - rad * 0.3} Z" fill="url(#${g}e)"/>
+<rect x="${l + dx}" y="${t + dy}" width="${r - l}" height="${b - t}" rx="${rad}" fill="url(#${g}e)"/>`;
+}
+function boilerSvg(layout) {
+  const g = `dw${drawN++}`;
+  const defs = `<defs>${svgGrad(`${g}w`, BODY_STOPS)}${svgGrad(`${g}e`, [[0, "var(--ac-body-lo,#c3cad1)"], [1, "var(--ac-body-lo,#aeb6bd)"]])}${svgGrad(`${g}t`, [[0, "#8f98a2"], [0.35, "#f1f3f4"], [0.7, "#c3cad1"], [1, "#7d868f"]])}${svgGrad(`${g}f`, [[0, "rgba(255,160,50,0)"], [0.12, "rgba(255,140,40,.85)"], [0.3, "rgba(255,165,60,.85)"], [0.46, "rgba(255,200,110,.5)"], [0.6, "rgba(110,150,255,.65)"], [0.85, "#2b6cff"], [1, "#1438b8"]], 0, 1)}${svgGrad(`${g}q`, [[0, "rgba(200,245,255,.2)"], [0.5, "#9be4ff"], [1, "#e8fbff"]], 0, 1)}<radialGradient id="${g}a" cx=".5" cy=".75" r=".6"><stop offset="0" stop-color="#4fc3f7" stop-opacity=".35"/><stop offset="1" stop-color="#4fc3f7" stop-opacity="0"/></radialGradient><radialGradient id="${g}r" cx=".38" cy=".32"><stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#cfd5da"/></radialGradient></defs>`;
+  if (layout === "window") {
+    return `<svg class="bl-svg" viewBox="0 0 96 108">${defs}${boilerPipes(g)}${blCase(g, 24, 6, 72, 64, 4)}
+<path class="bl-box" d="M24 10 Q24 6 28 6 H68 Q72 6 72 10 V60 Q72 64 68 64 H28 Q24 64 24 60 Z" fill="url(#${g}w)" stroke="rgba(0,0,0,.25)" stroke-width=".8"/>
+<path d="M27 7.2 H69" stroke="rgba(255,255,255,.95)" stroke-width="1" stroke-linecap="round"/><path d="M25.2 10 V60" stroke="rgba(255,255,255,.8)" stroke-width=".9" stroke-linecap="round"/><path d="M27 62.9 H69" stroke="rgba(0,0,0,.14)" stroke-width="1" stroke-linecap="round"/>
+<rect x="29" y="11" width="38" height="24" rx="3.6" fill="#aeb6bd"/>
+<rect x="30" y="12" width="36" height="22" rx="3" fill="#1a1d21" stroke="#5d6570" stroke-width=".7"/>
+<path d="M31 13 H65 L62 16 H34 Z" fill="rgba(0,0,0,.45)"/>
+${blBurner(g, 33, 63, 30.2, 5, 6.4, 15)}
+<path d="M36 33.4 L45 12.6 H50 L41 33.4 Z" fill="rgba(255,255,255,.07)"/>
+<circle cx="48" cy="49" r="10.6" fill="#c3cad1"/><circle cx="48" cy="49" r="9.5" fill="#14161a" stroke="#5d6570" stroke-width=".8"/>
+<path d="M41.4 44 Q45 40.4 50 40.6" fill="none" stroke="rgba(255,255,255,.22)" stroke-width="1" stroke-linecap="round"/>
+<circle cx="34" cy="49" r="3" fill="url(#${g}r)" stroke="#8f98a2" stroke-width=".6"/><circle cx="62" cy="49" r="3" fill="url(#${g}r)" stroke="#8f98a2" stroke-width=".6"/></svg>`;
+  }
+  return `<svg class="bl-svg" viewBox="0 0 96 108">${defs}${boilerPipes(g)}${blCase(g, 26, 6, 70, 64, 5)}
+<rect class="bl-box" x="26" y="6" width="44" height="58" rx="5" fill="url(#${g}w)" stroke="rgba(0,0,0,.2)" stroke-width=".8"/>
+<path d="M29.4 7.2 H66.6" stroke="rgba(255,255,255,.95)" stroke-width="1" stroke-linecap="round"/><path d="M27.2 10.6 V59.4" stroke="rgba(255,255,255,.8)" stroke-width=".9" stroke-linecap="round"/><path d="M29.4 62.9 H66.6" stroke="rgba(0,0,0,.14)" stroke-width="1" stroke-linecap="round"/>
+<path d="M28 12 H68" stroke="rgba(0,0,0,.06)" stroke-width=".8"/>
+<rect x="29.2" y="43.2" width="37.6" height="17.6" rx="3.6" fill="rgba(0,0,0,.12)"/>
+<rect x="30" y="44" width="36" height="16" rx="3" fill="#2a2f35"/>
+<path d="M31.4 59.4 H64.6" stroke="rgba(255,255,255,.18)" stroke-width=".7"/>
+<rect x="32.5" y="47" width="14.5" height="10" rx="2" fill="#14161a"/>
+<path class="bl-ico bl-ico-ch" d="M49.2 48.6 h1.5 v6.6 h-1.5z M51.4 48.6 h1.5 v6.6 h-1.5z M53.6 48.6 h1.5 v6.6 h-1.5z M48.8 49.6 h6.7 v.9 h-6.7z M48.8 53.3 h6.7 v.9 h-6.7z M49.4 55.2 h1.1 v.9 h-1.1z M53.8 55.2 h1.1 v.9 h-1.1z"/>
+<path class="bl-ico bl-ico-hw" d="M59.2 48 h3.4 v.9 h-1.25 v1.2 h-.9 v-1.2 h-1.25z M58.6 50 h4.4 v1.8 h-2.8 v1.2 h-1.6z M63 49.3 h.9 v3.2 h-.9z M59.4 53.6 c.85 1.1 1.3 1.75 1.3 2.3 a1.3 1.3 0 0 1 -2.6 0 c0 -.55 .45 -1.2 1.3 -2.3z"/>
+<circle cx="40" cy="28" r="7" fill="#aeb6bd"/><circle cx="40" cy="28" r="6" fill="url(#${g}r)" stroke="#8f98a2" stroke-width=".7"/><path d="M36.5 31 h7" stroke="#aeb6bd" stroke-width=".5"/>
+<path class="bl-needle" d="M40 28 L40 23.5" stroke="#e53935" stroke-width="1.1" stroke-linecap="round"/><circle cx="40" cy="28" r=".9" fill="#5d6570"/>
+<rect x="50" y="17" width="12" height="16" rx="3" fill="#1a1d21" stroke="#5d6570" stroke-width=".6"/><path d="M51 18 H61 L59.4 20 H52.6 Z" fill="rgba(0,0,0,.5)"/>
+${blBurner(g, 52, 60, 29.8, 2, 4.2, 10.5)}</svg>`;
+}
+
+function coffeeCup(x, y, n) {
+  const c = x + 6.5;
+  return `<g class="cf-cup c${n}"><ellipse cx="${c}" cy="${y + 15.3}" rx="7.4" ry="1.7" fill="#e9edf0" stroke="#b9c1c8" stroke-width=".5"/>
+<path d="M${x + 13} ${y + 3.5} q4 0 4 4 q0 4 -4 4" fill="none" stroke="#c3cad1" stroke-width="1.4"/>
+<path d="M${x} ${y + 1.2} L${x + 1.5} ${y + 13} Q${x + 2} ${y + 15} ${x + 4} ${y + 15} H${x + 9} Q${x + 11} ${y + 15} ${x + 11.5} ${y + 13} L${x + 13} ${y + 1.2} Z" fill="#fafafa" stroke="#c3cad1" stroke-width=".6"/>
+<path class="cf-fill" d="M${x + 1.2} ${y + 3} H${x + 11.8} L${x + 11} ${y + 12.5} Q${x + 10.6} ${y + 14} ${x + 9} ${y + 14} H${x + 4} Q${x + 2.4} ${y + 14} ${x + 2} ${y + 12.5} Z" fill="#6d4126"/>
+<path d="M${x + 2.2} ${y + 4} Q${x + 2.8} ${y + 9} ${x + 3.6} ${y + 12.6}" fill="none" stroke="rgba(255,255,255,.9)" stroke-width=".9" stroke-linecap="round"/>
+<ellipse cx="${c}" cy="${y + 1.2}" rx="6.5" ry="1.6" fill="#d7dde2" stroke="#c3cad1" stroke-width=".6"/>
+<ellipse class="cf-crema" cx="${c}" cy="${y + 1.5}" rx="5.4" ry="1.15" fill="#b07a4f"/>
+${svgWisp(`cf-steam p${n}`, x + 6, y - 1)}</g>`;
+}
+function coffeeWater(x, top, w, h, pct) {
+  const p = pct === null || pct === undefined ? 62 : Math.max(4, Math.min(100, pct));
+  const fh = Math.round(h * p) / 100;
+  return `<rect class="cf-water" x="${x}" y="${(top + h - fh).toFixed(2)}" width="${w}" height="${fh.toFixed(2)}" rx="1.5" data-pct="${pct === null || pct === undefined ? "" : Math.round(p)}"/>`;
+}
+// The cavity the coffee runs into, drawn with its back and side walls so it
+// reads as a hollow rather than a dark patch, and the drip tray on its floor.
+function coffeeBay(g, l, t, r, b, wall, tray) {
+  const d = 5;
+  return `<path d="M${l} ${t} H${r} V${b} H${l} Z" fill="url(#${g}k)"/>
+<path d="M${l} ${t} L${l + d} ${t + 4} V${b - 4} L${l} ${b} Z" fill="${wall}"/><path d="M${r} ${t} L${r - d} ${t + 4} V${b - 4} L${r} ${b} Z" fill="${wall}" opacity=".7"/>
+<path d="M${l} ${t} H${r} L${r - d} ${t + 4} H${l + d} Z" fill="rgba(0,0,0,.45)"/>
+<path class="cf-tray" d="M${l + d} ${b - 4} H${r - d} L${r} ${b} H${l} Z"/>
+<path d="M${l + d + 3} ${b - 2.4} H${r - d - 3} M${l + d + 1} ${b - 0.9} H${r - d - 1}" stroke="rgba(0,0,0,.35)" stroke-width=".5" stroke-dasharray="1.6 1.6"/>
+${tray}`;
+}
+function coffeeSvg(layout, two, pct) {
+  const g = `dw${drawN++}`;
+  const beans = (x, y) => `<g class="cf-beans">${[0, 1, 2].map((i) => `<ellipse class="cf-bean b${i + 1}" cx="${x + i * 6}" cy="${y}" rx="2.2" ry="1.5"/>`).join("")}</g>`;
+  const water = `${svgGrad(`${g}h`, [[0, "#a4dcf9"], [1, "#3b9fd8"]], 0, 1)}${svgGrad(`${g}k`, [[0, "#050607"], [0.55, "#1a1d21"], [1, "#2a2e33"]], 0, 1)}${svgGrad(`${g}d`, [[0, "rgba(60,40,30,.75)"], [1, "rgba(25,20,18,.55)"]], 0, 1)}`;
+  if (layout === "black") {
+    const cups = two
+      ? `<path class="cf-stream p1" d="M41.5 56 V73"/><path class="cf-stream p2" d="M54.5 56 V73"/>${coffeeCup(34.5, 71, 1)}${coffeeCup(48.5, 71, 2)}`
+      : `<path class="cf-stream p1" d="M46 56 V73"/><path class="cf-stream p2" d="M50 56 V73"/>${coffeeCup(41.5, 71, 1)}`;
+    return `<svg class="cf-svg" viewBox="0 0 96 108"><defs>${svgGrad(`${g}b`, [[0, "#14161a"], [0.5, "#2c3136"], [1, "#101215"]])}${svgGrad(`${g}c`, [[0, "#6c757d"], [0.25, "#e9edf0"], [0.5, "#aeb6bd"], [0.75, "#f1f3f4"], [1, "#6c757d"]])}${water}</defs>
+${svgFloor(g, 48, 37, 101)}
+<rect class="cf-tank" x="80" y="30" width="6" height="58" rx="2" fill="rgba(200,228,245,.5)" stroke="#9fb6c6" stroke-width=".7"/>
+${coffeeWater(81, 31, 4, 56, pct).replace("<rect", `<rect fill="url(#${g}h)"`)}
+<rect x="19" y="98" width="7" height="3.4" rx="1.2" fill="#0a0b0d"/><rect x="70" y="98" width="7" height="3.4" rx="1.2" fill="#0a0b0d"/>
+<path d="M16 98 V16 Q16 8 24 8 H72 Q80 8 80 16 V98 Q80 101 77 101 H19 Q16 101 16 98 Z" fill="url(#${g}b)"/>
+<path d="M19 12 Q19.4 9.6 23 9.4 H73 Q76.6 9.6 77 12" fill="none" stroke="rgba(255,255,255,.22)" stroke-width="1"/>
+<path d="M29 8.4 Q30.4 1.8 48 1.4 Q65.6 1.8 67 8.4 Z" fill="url(#${g}d)" stroke="rgba(255,255,255,.18)" stroke-width=".6"/>${beans(42, 6)}
+<path d="M33 5 Q38 2.8 45 2.6" fill="none" stroke="rgba(255,255,255,.45)" stroke-width=".8" stroke-linecap="round"/>
+<rect x="22" y="12" width="52" height="30" rx="5" fill="url(#${g}c)"/>
+<path d="M25 13 H71" stroke="rgba(255,255,255,.8)" stroke-width=".8" stroke-linecap="round"/>
+<circle cx="48" cy="26" r="10" fill="#0d0f12" stroke="#3d434a" stroke-width=".8"/>
+<circle class="cf-key k1" cx="30" cy="20" r="2.2"/><circle class="cf-key k2" cx="30" cy="32" r="2.2"/><circle class="cf-key k3 cf-alert" cx="66" cy="20" r="2.2"/><circle class="cf-key k4" cx="66" cy="32" r="2.2"/>
+${coffeeBay(g, 22, 46, 74, 88, "#24282d", "")}
+<rect x="38" y="46" width="20" height="10" rx="3" fill="url(#${g}c)"/>
+<path d="M40 47 H56" stroke="rgba(255,255,255,.8)" stroke-width=".6"/>
+${cups}
+<rect x="20" y="88" width="56" height="7" rx="2" fill="url(#${g}c)"/><path d="M22 89 H74" stroke="rgba(255,255,255,.75)" stroke-width=".6"/>
+<path class="cf-warn cf-warn-b" d="M27.4 9.2 Q29 0.2 48 -0.2 Q67 0.2 68.6 9.2 Z"/><rect class="cf-warn cf-warn-w" x="79" y="29" width="8" height="60" rx="2.5"/><rect class="cf-warn cf-warn-t" x="19" y="83" width="58" height="13" rx="3"/></svg>`;
+  }
+  const cups = two
+    ? `<path class="cf-stream p1" d="M39.5 50 V72"/><path class="cf-stream p2" d="M54.5 50 V72"/>${coffeeCup(33, 70, 1)}${coffeeCup(48, 70, 2)}`
+    : `<path class="cf-stream p1" d="M45.5 50 V72"/><path class="cf-stream p2" d="M49.5 50 V72"/>${coffeeCup(41, 70, 1)}`;
+  return `<svg class="cf-svg" viewBox="0 0 96 108"><defs>${svgGrad(`${g}s`, [[0, "var(--ac-body-lo,#8f98a2)"], [0.3, "var(--ac-body-hi,#e9edf0)"], [0.6, "var(--ac-body,#c3cad1)"], [1, "var(--ac-body-lo,#7d868f)"]])}${water}</defs>
+${svgFloor(g, 48, 40, 100.6)}
+<rect class="cf-tank" x="80" y="22" width="10" height="68" rx="2.5" fill="rgba(200,228,245,.5)" stroke="#9fb6c6" stroke-width=".8"/>
+${coffeeWater(81.5, 23.5, 7, 65, pct).replace("<rect", `<rect fill="url(#${g}h)"`)}
+<path d="M82.6 26 V86" stroke="rgba(255,255,255,.7)" stroke-width=".8" stroke-linecap="round"/>
+<rect x="15" y="97" width="7" height="3.6" rx="1.2" fill="#4a5158"/><rect x="72" y="97" width="7" height="3.6" rx="1.2" fill="#4a5158"/>
+<path d="M12 96 V18 Q12 12 18 12 H76 Q82 12 82 18 V96 Q82 99 78 99 H16 Q12 99 12 96 Z" fill="url(#${g}s)" stroke="rgba(0,0,0,.25)" stroke-width=".8"/>
+<path d="M15 15 Q15.4 13 18 13 H76 Q78.6 13 79 15" fill="none" stroke="rgba(255,255,255,.8)" stroke-width="1"/>
+<path d="M14.6 20 V92" stroke="rgba(255,255,255,.55)" stroke-width="1.2" stroke-linecap="round"/>
+<path d="M17 12.4 Q18 4.2 34 3.8 Q50 4.2 51 12.4 Z" fill="url(#${g}d)" stroke="rgba(0,0,0,.3)" stroke-width=".6"/>${beans(28, 9.4)}
+<path d="M21 9 Q25 6 32 5.4" fill="none" stroke="rgba(255,255,255,.5)" stroke-width=".8" stroke-linecap="round"/>
+<rect x="18" y="16" width="58" height="16" rx="3" fill="#20242a"/>
+<path d="M20 17 H74" stroke="rgba(255,255,255,.18)" stroke-width=".7"/>
+<rect x="22" y="19" width="22" height="10" rx="2" fill="#0d0f12"/>
+<circle class="cf-key k1" cx="52" cy="24" r="2.6"/><circle class="cf-key k2" cx="60" cy="24" r="2.6"/><circle class="cf-key k3 cf-alert" cx="68" cy="24" r="2.6"/>
+${coffeeBay(g, 18, 38, 76, 88, "#2b2f34", "")}
+<rect x="34" y="38" width="26" height="9" rx="2" fill="url(#${g}s)" stroke="rgba(0,0,0,.3)" stroke-width=".6"/>
+<rect x="${two ? 38 : 44}" y="46" width="3" height="4" rx="1" fill="#8f98a2"/><rect x="${two ? 53 : 48}" y="46" width="3" height="4" rx="1" fill="#8f98a2"/>
+${cups}
+<rect x="16" y="88" width="62" height="7" rx="2" fill="url(#${g}s)" stroke="rgba(0,0,0,.3)" stroke-width=".6"/>
+<path d="M18 89 H76" stroke="rgba(255,255,255,.7)" stroke-width=".6"/>
+<path class="cf-warn cf-warn-b" d="M15.4 13.2 Q16.6 2.6 34 2.2 Q51.4 2.6 52.6 13.2 Z"/><rect class="cf-warn cf-warn-w" x="79" y="21" width="12" height="70" rx="3"/><rect class="cf-warn cf-warn-t" x="15" y="83" width="64" height="13" rx="3"/></svg>`;
+}
+
+// A towel over a bar: its shadow on the bars, the back half hanging a
+// little lower and wider, the front flaring from the fold to a wavy hem, a
+// woven band near the hem and a faint terry rib.
+function twTowel(x, y, w, h, color, back) {
+  const hem = (hy, r, l) => `C${r - w * 0.2} ${hy + 1.4} ${l + w * 0.55} ${hy - 1.6} ${l + w * 0.32} ${hy + 0.5} C${l + w * 0.15} ${hy + 1.1} ${l + 0.8} ${hy - 0.3} ${l} ${hy}`;
+  const ribs = Array.from({ length: Math.floor(w / 3) }, (_, i) => `M${(3 + i * 3).toFixed(1)} 4.4 V${h - 9.5}`).join(" ");
+  const vw = w + 3;
+  return `<path d="M${x + 3.4} ${y + 3} H${x + w + 1.6} L${x + w + 3} ${y + h + 3.6} H${x + 2.4} Z" fill="rgba(0,0,0,.13)"/>
+<svg class="tw-towel" x="${x}" y="${y}" width="${vw}" height="${h + 4}" viewBox="0 0 ${vw} ${h + 4}">
+<path d="M3 3 H${w} L${w + 2.6} ${h + 1.6} ${hem(h + 1.6, w + 2.6, 1.6)} Z" fill="${back}"/>
+<path d="M2.4 2.2 Q2.4 .3 5 .3 H${w - 2.4} Q${w} .3 ${w} 2.2 L${w + 1} ${h - 1} ${hem(h - 1, w + 1, 1.2)} Z" fill="${color}"/>
+<path d="${ribs}" stroke="rgba(0,0,0,.05)" stroke-width="1"/>
+<path d="M2.4 2.4 H${w} V5.4 Q${w / 2 + 1} 6.6 2.2 5.4 Z" fill="rgba(0,0,0,.14)"/><path d="M4.6 1.3 H${w - 2}" stroke="rgba(255,255,255,.6)" stroke-width=".8" stroke-linecap="round"/>
+<path d="M1.6 ${h - 8.6} H${w + 0.8} M1.5 ${h - 6.4} H${w + 0.9}" stroke="rgba(255,255,255,.6)" stroke-width="1"/>
+<path d="M3.4 7 L2.4 ${h - 3}" stroke="rgba(255,255,255,.38)" stroke-width="1.4" stroke-linecap="round"/><path d="M${w - 1.4} 7 L${w - 0.4} ${h - 3}" stroke="rgba(0,0,0,.13)" stroke-width="1.4" stroke-linecap="round"/></svg>`;
+}
+// A towel warmer: round bars in three groups between two uprights held off
+// the wall by their brackets, a towel folded over one; or flat panels on one
+// upright, a towel over the top one. The bars warm up in the colour of the
+// mode. Both cast their shadow on the wall.
+function towelSvg(layout) {
+  const g = `dw${drawN++}`;
+  const sheen = `<linearGradient id="${g}g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".85"/><stop offset=".45" stop-color="#fff" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".18"/></linearGradient>`;
+  const box = (x, y, w, h, fill) => `<rect x="${x + 1.6}" y="${y + 2}" width="${w}" height="${h}" rx="2.5" fill="rgba(0,0,0,.1)"/>
+<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="2.5" fill="${fill}" stroke="rgba(0,0,0,.18)" stroke-width=".7"/>
+<path d="M${x + 2} ${y + 0.9} H${x + w - 2}" stroke="rgba(255,255,255,.6)" stroke-width=".7" stroke-linecap="round"/>
+<path d="M${x + w / 2} ${y + h} V${y + h + 2.4} Q${x + w / 2} ${y + h + 4.6} ${x + w / 2 + 3} ${y + h + 4.6} H${x + w + 4}" fill="none" stroke="#9aa3ad" stroke-width="1.2" stroke-linecap="round"/>`;
+  if (layout === "panel") {
+    const ys = [16, 26, 36, 46, 56, 66, 76, 86];
+    const shadow = ys.map((y) => `<rect x="25" y="${y + 2.6}" width="56" height="7" rx="1.5"/>`).join("");
+    const slats = ys.map((y) => `<rect class="tw-bar" x="22" y="${y}" width="56" height="7" rx="1.5"/><rect x="22" y="${y}" width="56" height="7" rx="1.5" fill="url(#${g}g)"/><path d="M24 ${y + 0.7} H76" stroke="rgba(255,255,255,.35)" stroke-width=".6"/><path d="M23 ${y + 6.6} H77" stroke="rgba(0,0,0,.35)" stroke-width=".7"/><rect x="74" y="${y + 0.6}" width="3.4" height="5.8" rx="1.2" fill="rgba(0,0,0,.18)"/>`).join("");
+    return `<svg class="tw-svg" viewBox="0 0 96 108"><defs>${sheen}${svgGrad(`${g}r`, [[0, "var(--ac-body-lo,#22262a)"], [0.5, "var(--ac-body-hi,#4a5158)"], [1, "var(--ac-body,#2b3036)"]])}</defs>
+<g fill="rgba(0,0,0,.09)">${shadow}<rect x="23" y="16.6" width="5" height="86" rx="2"/></g>
+<rect x="17.6" y="20" width="4" height="4" rx="1" fill="#7d868f"/><rect x="17.6" y="88" width="4" height="4" rx="1" fill="#7d868f"/>
+${slats}
+<rect class="tw-rail r1" x="20" y="14" width="5" height="86" rx="2" fill="url(#${g}r)"/><path d="M21.2 16 V98" stroke="rgba(255,255,255,.35)" stroke-width=".8" stroke-linecap="round"/>
+${twTowel(40, 13, 26, 44, "#ef9a9a", "#d97f7f")}
+${box(62, 93, 18, 10, `url(#${g}r)`)}</svg>`;
+  }
+  const ys = [18, 24, 30, 36, 48, 54, 60, 72, 78, 84];
+  const shadow = ys.map((y) => `<rect x="23" y="${y + 2.6}" width="54" height="3.4" rx="1.7"/>`).join("");
+  const bars = ys.map((y) => `<rect class="tw-bar" x="21" y="${y}" width="54" height="3.4" rx="1.7"/><rect x="21" y="${y}" width="54" height="3.4" rx="1.7" fill="url(#${g}g)"/>`).join("");
+  const rail = (x, n) => `<rect class="tw-rail r${n}" x="${x}" y="12" width="6" height="86" rx="3" fill="url(#${g}r)"/><path d="M${x + 1.5} 14.4 V95.6" stroke="rgba(255,255,255,.85)" stroke-width=".9" stroke-linecap="round"/><ellipse cx="${x + 3}" cy="13.2" rx="2.4" ry=".9" fill="rgba(0,0,0,.12)"/>`;
+  const collars = ys.map((y) => `<rect x="23.6" y="${y - 0.4}" width="1.4" height="4.2" rx=".6" fill="rgba(0,0,0,.1)"/><rect x="71" y="${y - 0.4}" width="1.4" height="4.2" rx=".6" fill="rgba(0,0,0,.1)"/>`).join("");
+  return `<svg class="tw-svg" viewBox="0 0 96 108"><defs>${sheen}${svgGrad(`${g}r`, [[0, "var(--ac-body-lo,#c9d0d6)"], [0.4, "var(--ac-body-hi,#ffffff)"], [1, "var(--ac-body-lo,#b9c1c8)"]])}</defs>
+<g fill="rgba(0,0,0,.08)">${shadow}<rect x="21" y="15" width="6" height="86" rx="3"/><rect x="75" y="15" width="6" height="86" rx="3"/></g>
+${[[16, 22], [16, 90], [70, 22], [70, 90]].map(([x, y]) => `<rect x="${x}" y="${y}" width="10" height="3" rx="1.2" fill="#aeb6bd"/>`).join("")}
+${bars}${collars}${rail(18, 1)}${rail(72, 2)}
+${twTowel(33, 46.4, 30, 30, "#80cbc4", "#5fb3ab")}
+${box(66, 90, 18, 12, `url(#${g}r)`)}</svg>`;
+}
+
 // The kettle, as one drawing in two looks: the classic jug, in the colour of
 // the appliance, and a stainless one with its black handle. The ids carry a
 // number of their own, as each card draws its gradients again.
@@ -11766,25 +11926,12 @@ function illustrationHtml(type, ctx) {
 
   if (type === "boiler") {
     const mode = ctx.boilerMode || "idle";
+    const layout = ctx.boilerLayout === "window" ? "window" : "wall";
     // A burner waiting its turn is out, like one on standby.
     const flame = mode !== "idle" && mode !== "waiting";
     const lcd = ctx.display ? `<div class="bl-lcd">${esc(ctx.display)}</div>` : "";
     return `
-        <div class="machine ${cls} mode-${mode} ${flame ? "flame" : ""}">
-          <div class="bl-box">
-            ${lcd}
-            <div class="bl-window"><div class="bl-flame"></div></div>
-          </div>
-          <div class="bl-pipe tap-down"></div>
-          <div class="bl-pipe tap-arm"></div>
-          <div class="bl-pipe tap-nose"></div>
-          <div class="bl-knob"></div>
-          <i class="bl-drop d1"></i><i class="bl-drop d2"></i><i class="bl-drop d3"></i>
-          <div class="bl-pipe rad-down"></div>
-          <div class="bl-pipe rad-arm"></div>
-          <div class="bl-rad"><i></i><i></i><i></i><i></i></div>
-          <div class="bl-waves"><i class="w1"></i><i class="w2"></i><i class="w3"></i></div>
-        </div>`;
+        <div class="machine ${cls} bl-l-${layout} mode-${mode} ${flame ? "flame" : ""}">${boilerSvg(layout)}${lcd}</div>`;
   }
 
   if (type === "air_conditioner") {
@@ -11896,21 +12043,12 @@ function illustrationHtml(type, ctx) {
 
   if (type === "towel_warmer") {
     const w = ctx.towel || {};
-    const bars = [17, 23, 29, 35, 47, 53, 59, 71, 77, 83].map((y) => `<div class="tw-bar" style="top: ${y}px"></div>`).join("");
-    // The towel hangs over the fourth bar, its back half behind it.
-    const towel = `<svg class="tw-towel" viewBox="0 0 30 44">`
-      + `<path d="M3 4 H27 V24 H3Z" fill="#80cbc4" opacity=".55"/>`
-      + `<path d="M2 3 Q15 1 28 3 V38 C23 40 18 37 13 39 C8 41 5 39 2 40 Z" fill="#80cbc4"/>`
-      + `<path d="M2 3 Q15 1 28 3 V7 Q15 5 2 7Z" fill="rgba(0,0,0,.14)"/>`
-      + `<path d="M4 33 H26" stroke="rgba(255,255,255,.55)" stroke-width="1.2" stroke-dasharray="2 2"/></svg>`;
+    const layout = w.layout === "panel" ? "panel" : "ladder";
     return `
-        <div class="machine ${cls} mode-${w.mode || "off"}">
+        <div class="machine ${cls} tw-l-${layout} mode-${w.mode || "off"}">
           ${airFlow("tw-air", 52, 14, false)}
-          ${airFlow("tw-steam", 36, 22, false)}
-          <div class="tw-rail r1"></div><div class="tw-rail r2"></div>
-          ${bars}
-          ${towel}
-          <div class="tw-box"></div>
+          ${towelSvg(layout)}
+          ${airFlow("tw-steam", 30, 22, false)}
           ${miniLcd("tw-lcd", w.icon, w.screen)}
         </div>`;
   }
@@ -12125,27 +12263,13 @@ function illustrationHtml(type, ctx) {
   if (type === "cooker") {
     const sp = ctx.speed || 0;
     return `
-        <div class="machine ${cls} ${sp > 0 ? "mixing" : ""} s${sp}">
-          <div class="rc-steam v1"></div>
-          <div class="rc-steam v2"></div>
-          <div class="rc-cap"></div>
-          <div class="rc-lid"></div>
-          <div class="rc-bowl">
-            <div class="rc-food"></div>
-            <div class="rc-grad g1"></div>
-            <div class="rc-grad g2"></div>
-            <div class="rc-blade"></div>
-          </div>
-          <div class="rc-heat"></div>
-          <div class="rc-base">
-            ${ctx.display ? `<div class="rc-disp">${esc(ctx.display)}</div>` : ""}
-            <div class="rc-dial"></div>
-          </div>
-        </div>`;
+        <div class="machine ${cls} ${sp > 0 ? "mixing" : ""} s${sp}">${cookerSvg()}${ctx.display ? `<div class="rc-disp">${esc(ctx.display)}</div>` : ""}</div>`;
   }
 
   if (type === "coffee") {
+    const layout = ctx.coffeeLayout === "black" ? "black" : "silver";
     const flags = [
+      `cf-l-${layout}`,
       ctx.spinning ? "pouring" : "",
       ctx.noWater ? "no-water" : "",
       ctx.noBeans ? "no-beans" : "",
@@ -12154,50 +12278,12 @@ function illustrationHtml(type, ctx) {
       `st${ctx.strength || 3}`,
     ].filter(Boolean).join(" ");
     return `
-        <div class="machine ${cls} ${flags}">
-          <div class="cf-body">
-            <div class="cf-hopper">
-              <div class="cf-bean b1"></div><div class="cf-bean b2"></div><div class="cf-bean b3"></div>
-            </div>
-            ${ctx.display ? `<div class="cf-disp">${esc(ctx.display)}</div>` : ""}
-            <div class="cf-key k1"></div>
-            <div class="cf-key k2"></div>
-            <div class="cf-key k3"></div>
-          </div>
-          <div class="cf-tank"><div class="cf-water"${
-            ctx.waterPct === null || ctx.waterPct === undefined
-              ? ""
-              : ` style="height:${Math.max(4, ctx.waterPct).toFixed(0)}%"`
-          }></div></div>
-          <div class="cf-spout p1"></div>
-          <div class="cf-spout p2"></div>
-          <div class="cf-stream p1"></div>
-          <div class="cf-stream p2"></div>
-          <div class="cf-steam p1"></div>
-          <div class="cf-steam p2"></div>
-          <div class="cf-ear"></div>
-          <div class="cf-cup c1"><div class="cf-fill"></div></div>
-          <div class="cf-cup c2"><div class="cf-fill"></div></div>
-          <div class="cf-tray"></div>
-        </div>`;
+        <div class="machine ${cls} ${flags}">${coffeeSvg(layout, ctx.cups >= 2, ctx.waterPct)}${ctx.display ? `<div class="cf-disp">${esc(ctx.display)}</div>` : ""}</div>`;
   }
 
   if (type === "rice_cooker") {
     return `
-        <div class="machine ${cls} ${ctx.keepWarm ? "warm" : ""}">
-          <div class="rk-steam w1"></div>
-          <div class="rk-steam w2"></div>
-          <div class="rk-handle"></div>
-          <div class="rk-vent"></div>
-          <div class="rk-lid"></div>
-          <div class="rk-body">
-            ${ctx.display ? `<div class="rk-disp">${esc(ctx.display)}</div>` : ""}
-            <div class="rk-key k1"></div>
-            <div class="rk-key k2"></div>
-            <div class="rk-key k3"></div>
-          </div>
-          <div class="rk-foot"></div>
-        </div>`;
+        <div class="machine ${cls} ${ctx.keepWarm ? "warm" : ""}">${riceSvg()}${ctx.display ? `<div class="rk-disp">${esc(ctx.display)}</div>` : ""}</div>`;
   }
 
   if (type === "cooktop") {
@@ -12924,7 +13010,7 @@ class ApplianceCard extends HTMLElement {
     // machine waits, whatever word its state uses for waiting.
     let delaySec = null;
     if (cfg.delay_entity && cap.cycle) {
-      const d = remainingSeconds(hass, cfg.delay_entity, cfg.delay_unit);
+      const d = remainingSeconds(hass, cfg.delay_entity, cfg.delay_unit, true);
       if (d !== null && d >= 30) {
         delaySec = d;
         if (!CONTROL_RUNNING.includes(norm) && !["paused", "error"].includes(norm)) norm = "delayed";
@@ -14478,6 +14564,7 @@ class ApplianceCard extends HTMLElement {
       const target = roomLine(attrs, ["comfort", "eco", "frost"].includes(mode));
       towel = {
         mode,
+        layout: cfg.towel_warmer_layout,
         icon: TW_ICONS[mode] || "",
         screen: ["comfort", "eco", "frost"].includes(mode) && target !== null ? acScreenTemp(target) : "",
       };
@@ -15550,6 +15637,8 @@ class ApplianceCard extends HTMLElement {
       feederScreen,
       ironLayout: cfg.iron_layout === "generator" ? "generator" : "",
       kettleLayout: cfg.kettle_layout,
+      coffeeLayout: cfg.coffee_layout,
+      boilerLayout: cfg.boiler_layout,
       toaster,
       hairDryer,
       network,
@@ -17338,6 +17427,11 @@ class ApplianceCardEditor extends HTMLElement {
             { value: "four", label: t(hass, "layout_toaster_four") },
             { value: "long", label: t(hass, "layout_toaster_long") },
           ],
+        }) : ""}
+        ${["coffee", "boiler", "towel_warmer"].includes(this._type) ? this._row("section_screen_layout", `${this._type}_layout`, {
+          type: "select",
+          options: ({ coffee: ["silver", "black"], boiler: ["wall", "window"], towel_warmer: ["ladder", "panel"] })[this._type]
+            .map((v) => ({ value: v, label: t(hass, `layout_${this._type}_${v}`) })),
         }) : ""}
         ${this._type === "kettle" ? this._row("section_screen_layout", "kettle_layout", {
           type: "select",

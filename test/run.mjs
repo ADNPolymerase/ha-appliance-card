@@ -2042,7 +2042,7 @@ check('chaudiere : la flamme brule sur le code 201', machineCls(blOf('201')).spl
 check('chaudiere : pas de flamme sur une attente', machineCls(blOf('204')).split(' ').includes('flame'), false);
 check('chaudiere : une petite flamme a l\'allumage', machineCls(blOf('283')).split(' ').includes('flame'), true);
 contains('chaudiere : la flamme d\'allumage est plus petite', blOf('283'),
-  '.machine.mode-starting .bl-flame { width: 8px; height: 10px; margin-left: -4px; }');
+  '.machine.mode-starting .bl-flame { scale: 0.55; }');
 check('chaudiere : allumage en orange', stateColor(blOf('283')), '#ff7043');
 check('chaudiere : attente en gris', stateColor(blOf('204')), 'var(--disabled-text-color, #9e9e9e)');
 check('chaudiere : state_map passe devant un code', stateLine(blOf('201', { state_map: { 201: 'space_heating' } })), 'Heating');
@@ -2818,9 +2818,10 @@ const lvl = (v) => cafe({ 'sensor.lvl': { state: String(v), attributes: { unit_o
 contains('cafe : un niveau chiffre est affiche tel quel', infoLine(lvl(76), 'Water tank'), '76');
 check('cafe : un niveau confortable ne declenche rien', stateLine(lvl(76)), 'Idle');
 check('cafe : sous 10 %, le reservoir est vide', stateLine(lvl(6)), 'Water tank empty');
-check('cafe : le niveau pilote la hauteur dessinee', /class="cf-water" style="height:76%"/.test(lvl(76)), true);
+check('cafe : le niveau pilote la hauteur dessinee', /class="cf-water"[^>]*data-pct="76"/.test(lvl(76)), true);
+check('cafe : 76 % de la hauteur du reservoir', /class="cf-water" x="81.5" y="39.10" width="7" height="49.40"/.test(lvl(76)), true);
 check('cafe : un booleen ne dessine pas de hauteur',
-  /class="cf-water" style=/.test(cafe({ 'binary_sensor.water': ON })), false);
+  /class="cf-water"[^>]*data-pct="\d/.test(cafe({ 'binary_sensor.water': ON })), false);
 
 // Brewing shows the countdown, the way the microwave does: there is nothing
 // else worth putting on that display.
@@ -6622,7 +6623,7 @@ check('seche-serviettes sur prise : confort', modeOf(plug3('towel_warmer', 400))
 check('seche-serviettes sur prise : eteint', modeOf(plugOff3('towel_warmer')), 'off');
 contains('seche-serviettes : la vapeur en orange', twel('heat', { preset_mode: 'drying' }), '.tw-air path, .tw-steam path { stroke: #ff8a65; }');
 contains('seche-serviettes : la serviette', twel('off'), '<svg class="tw-towel"');
-contains('seche-serviettes : les barres chauffent en boost', twel('heat', { preset_mode: 'boost' }), '.machine.mode-boost .tw-bar { background:');
+contains('seche-serviettes : les barres chauffent en boost', twel('heat', { preset_mode: 'boost' }), '.machine.mode-boost .tw-bar { fill: #ff5722;');
 
 // ---- Detection and editor ----------------------------------------------------
 const typeOf = (id, attrs = {}, state = 'on') => {
@@ -10751,6 +10752,10 @@ check('borne : ni un statut reconnu', evMode(evR('SuspendedEVSE', { power_entity
   check('differe : a zero, la machine est prete', stateLine(render(dwCfg, dwS(0))) === 'Delayed start', false);
   check('differe : en minutes', (infoLine(render(dwCfg, dwS(90, 'Ready', 'min')), 'Starts in') || '').replace(/\s/g, ' ').startsWith('1h30'), true);
   check('differe : une machine qui tourne n attend plus', stateLine(render(dwCfg, dwS(9000, 'Running'))), 'Running');
+  // #56, Home Connect shows the delay as hours and minutes, without a unit.
+  check('differe : 0:59 se lit 59 minutes', (infoLine(render(dwCfg, dwS('0:59', 'Ready', '')), 'Starts in') || '').replace(/\s/g, ' ').startsWith('59 min'), true);
+  check('differe : 2:30 se lit 2 h 30', (infoLine(render(dwCfg, dwS('2:30', 'Ready', '')), 'Starts in') || '').replace(/\s/g, ' ').startsWith('2h30'), true);
+  check('differe : 0:00, plus de ligne', infoLine(render(dwCfg, dwS('0:00', 'Ready', '')), 'Starts in'), null);
   {
     const T = Date.now();
     const b = build(dwCfg, dwS(9000));
@@ -10769,6 +10774,50 @@ check('borne : ni un statut reconnu', evMode(evR('SuspendedEVSE', { power_entity
   check('fontaine : la pompe tourne', infoLine(ft('on'), 'Pump last ran'), 'Running');
   check('fontaine : la derniere marche a l heure', (infoLine(ft('off'), 'Pump last ran') || '').replace(/\s/g, ' '), new Date(Date.parse(AT)).toLocaleString('en', { hour: '2-digit', minute: '2-digit' }).replace(/\s/g, ' '));
   check('fontaine : sans pompe, pas de ligne', infoLine(render({ appliance_type: 'pet_fountain', state_entity: 'switch.ft' }, { 'switch.ft': s('on') }), 'Pump last ran'), null);
+}
+
+// =============================================================================
+// Five drawings redrawn in volume, and a second shape for three of them.
+// =============================================================================
+{
+  const s = (state, attributes = {}) => ({ state: String(state), attributes });
+  const cf = (cfg = {}) => render({ appliance_type: 'coffee', state_entity: 'sensor.k', ...cfg }, { 'sensor.k': s('running') });
+  check('cafe : argentee par defaut', machineCls(cf()).includes('cf-l-silver'), true);
+  check('cafe : noire et chrome au choix', machineCls(cf({ coffee_layout: 'black' })).includes('cf-l-black'), true);
+  check('cafe : forme inconnue, argentee', machineCls(cf({ coffee_layout: 'gold' })).includes('cf-l-silver'), true);
+  check('cafe : la forme suffit a reconnaitre une machine a cafe', /class="cf-svg"/.test(render({ coffee_layout: 'black', state_entity: 'switch.x' }, { 'switch.x': s('off') })), true);
+  check('cafe : deux tasses, deux tasses dessinees', (render({ appliance_type: 'coffee', state_entity: 'sensor.k', cups_entity: 'sensor.cups' }, { 'sensor.k': s('running'), 'sensor.cups': s(2) }).match(/class="cf-cup c/g) || []).length >= 1, true);
+  for (const lay of ['silver', 'black']) {
+    const h = render({ appliance_type: 'coffee', coffee_layout: lay, state_entity: 'sensor.k' }, { 'sensor.k': s('running') });
+    check(`cafe ${lay} : un point du bandeau sert de voyant`, /class="cf-key k3 cf-alert"/.test(h), true);
+    check(`cafe ${lay} : le reservoir a grains a son cadre d'alerte`, /class="cf-warn cf-warn-b"/.test(h), true);
+    check(`cafe ${lay} : la creme sur chaque tasse`, /class="cf-crema"/.test(h), true);
+    check(`cafe ${lay} : l'ombre touche le pied`, /<ellipse cx="48" cy="10[01]/.test(h), true);
+    contains(`cafe ${lay} : le voyant clignote aussi sans grains`, h, '.machine.no-beans .cf-alert {');
+  }
+  const bl = (cfg = {}) => render({ appliance_type: 'boiler', state_entity: 'sensor.b', ...cfg }, { 'sensor.b': s('CH') });
+  check('chaudiere : murale par defaut', machineCls(bl()).includes('bl-l-wall'), true);
+  check('chaudiere : hublot au choix', machineCls(bl({ boiler_layout: 'window' })).includes('bl-l-window'), true);
+  check('chaudiere : la forme suffit', /class="bl-svg"/.test(render({ boiler_layout: 'window', state_entity: 'sensor.x' }, { 'sensor.x': s('CH') })), true);
+  check('chaudiere : la flamme dans un trace, pas sur son groupe deplace', /<g class="bl-flame"/.test(bl()), false);
+  check('chaudiere : deux flammes sur la murale', (bl().match(/class="bl-flame f\d"/g) || []).length, 4);
+  check('chaudiere : cinq flammes au hublot', (bl({ boiler_layout: 'window' }).match(/class="bl-flame f\d"/g) || []).length, 10);
+  check('chaudiere : la lueur du bruleur', /class="bl-glow"/.test(bl()), true);
+  check('chaudiere : plus de tuyau de gaz', /#ffd54f/.test(bl()), false);
+  contains('chaudiere : les flammes ne battent pas ensemble', bl(), '.machine.flame .bl-flame.f2 {');
+  const tw = (cfg = {}) => render({ appliance_type: 'towel_warmer', state_entity: 'climate.t', ...cfg }, { 'climate.t': s('heat', { preset_mode: 'comfort' }) });
+  check('seche-serviettes : echelle par defaut', machineCls(tw()).includes('tw-l-ladder'), true);
+  check('seche-serviettes : lames au choix', machineCls(tw({ towel_warmer_layout: 'panel' })).includes('tw-l-panel'), true);
+  check('seche-serviettes : dix barreaux sur l echelle', (tw().match(/class="tw-bar"/g) || []).length, 10);
+  check('seche-serviettes : huit lames', (tw({ towel_warmer_layout: 'panel' }).match(/class="tw-bar"/g) || []).length, 8);
+  check('seche-serviettes : la forme suffit', /class="tw-svg"/.test(render({ towel_warmer_layout: 'panel', state_entity: 'climate.x' }, { 'climate.x': s('heat') })), true);
+  check('robot cuiseur : un dessin en volume', /class="rc-svg"/.test(render({ appliance_type: 'cooker', state_entity: 'sensor.c' }, { 'sensor.c': s('running') })), true);
+  check('cuiseur a riz : un dessin en volume', /class="rk-svg"/.test(render({ appliance_type: 'rice_cooker', state_entity: 'sensor.r' }, { 'sensor.r': s('running') })), true);
+  const ids = (h) => [...h.matchAll(/id="(dw\d+)/g)].map((m) => m[1]);
+  check('dessins : deux cartes, des degrades distincts', ids(cf())[0] !== ids(cf())[0], true);
+  for (const [type, field] of [['coffee', 'coffee_layout'], ['boiler', 'boiler_layout'], ['towel_warmer', 'towel_warmer_layout']]) {
+    check(`editeur ${type} : la forme`, new RegExp(`data-field="${field}"`).test(markup(newEditor({ appliance_type: type, state_entity: 'sensor.x' }))), true);
+  }
 }
 
 report();

@@ -60,7 +60,7 @@ Clique sur une famille pour voir ses appareils en marche.
 <details>
 <summary><b>Chauffage et climat</b></summary>
 
-<img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-climate.fr.gif" alt="Chauffage et climat" width="80%">
+<img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-climate.fr.gif" alt="Chauffage et climat" width="85%">
 
 </details>
 
@@ -255,6 +255,9 @@ Seule `state_entity` est obligatoire, sauf sur un réfrigérateur où une sonde 
 | `printer_layout` | imprimante 3D | `enclosed` (défaut : une enceinte dont le plateau descend quand la pièce monte) \| `open` (un cadre ouvert dont le portique monte). La pièce grandit avec la progression, dans la couleur de l'état, et la tête va et vient pendant l'impression. |
 | `printed_part` | imprimante 3D | La pièce sur le plateau : `cube` (défaut), `pyramid` (pyramide) ou `duck` (un canard en plastique). Elle apparaît de bas en haut au fil de l'impression. |
 | `kettle_layout` | bouilloire | `classic` (défaut, une bouilloire de la couleur de l'appareil) \| `steel` (une bouilloire en inox à poignée noire). |
+| `coffee_layout` | machine à café | `silver` (défaut, une machine à grains de la couleur de l'appareil, réservoir sur le côté) \| `black` (noire à façade chromée et écran rond). |
+| `boiler_layout` | chaudière | `wall` (défaut, une chaudière murale blanche avec son manomètre et son écran) \| `window` (une chaudière dont on voit le brûleur par un hublot). |
+| `towel_warmer_layout` | sèche-serviettes | `ladder` (défaut, des barreaux ronds entre deux montants) \| `panel` (des lames plates anthracite sur un montant). |
 | `iron_layout` | fer | `iron` (défaut, le fer seul) \| `generator` (le même fer sur le socle d'une centrale vapeur). |
 | `toaster_layout` | grille-pain | `two` (défaut, deux fentes) \| `four` (quatre fentes, deux leviers) \| `long` (une fente longue pour deux tranches bout à bout). |
 | `hair_dryer_layout` | sèche-cheveux | `pistol` (défaut, sèche-cheveux classique vu de profil) \| `ring` (sèche-cheveux en anneau vu de face). |
@@ -369,7 +372,7 @@ Seule `state_entity` est obligatoire, sauf sur un réfrigérateur où une sonde 
 | `state_entity` / `fryer_layout` | friteuse à air | Les mots de la friteuse, tels que Philips (HomeID et l'ancienne intégration HACS), Xiaomi et Cosori (VeSync) les donnent : *Préchauffage*, *Préchauffée*, *Cuisson*, *Secouer le panier*, *Panier sorti*, *En pause*, *Maintien au chaud*, *Terminé*, *Départ différé*. `fryer_layout` : `basket` (par défaut), `window` (panier à hublot) ou `dual` (double panier). |
 | `basket_entity` / `shake_entity` / `basket2_state_entity` | friteuse à air | Le capteur du panier, allumé quand il est sorti (le tiroir Philips, la cuve Xiaomi), qui fait passer un cycle en *Panier sorti* ; le rappel pour secouer, qui fait passer la cuisson en *Secouer le panier* ; l'état du second panier d'une friteuse double, dessiné à part et nommé sur une ligne. |
 | `water_entity` | machine à café | Réservoir : booléen Home Connect, ou niveau en % avec *vide* sous 10 %. |
-| `beans_entity` / `tray_entity` / `descaling_entity` | machine à café | Grains vides, bac plein, détartrage à faire. |
+| `beans_entity` / `tray_entity` / `descaling_entity` | machine à café | Grains vides, bac plein, détartrage à faire. Un réservoir ou des grains vides, ou un bac plein, encadrent cette partie du dessin et allument en orange un point de la façade. |
 | `cups_entity` | machine à café | Nombre de tasses : un compte, un booléen ou un nom de boisson (*2 Espressi*). |
 | `strength_entity` | machine à café | Force du café, en chiffre ou en mot. |
 | `state_entity` | borne de recharge | Le statut de la borne : *Aucun véhicule*, *Véhicule branché*, *En attente d'autorisation*, *En charge*, *En décharge*, *Charge en pause*, *Charge programmée*, *Charge terminée*, *Erreur* ou *Hors ligne*, lu dans les mots d'OCPP et des intégrations de Home Assistant (voir *Bornes de recharge*). `state_map` accepte les dix : `no_vehicle`, `connected`, `awaiting_auth`, `charging`, `discharging`, `paused`, `scheduled`, `done`, `error` et `offline`. Facultatif : sans lui, la prise et le compteur le disent. |

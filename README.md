@@ -60,7 +60,7 @@ Click a family to see its appliances at work.
 <details>
 <summary><b>Heating and climate</b></summary>
 
-<img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-climate.gif" alt="Heating and climate" width="80%">
+<img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-climate.gif" alt="Heating and climate" width="85%">
 
 </details>
 
@@ -255,6 +255,9 @@ Only `state_entity` is required, except on a fridge where a probe or a door cont
 | `printer_layout` | 3D printer | `enclosed` (default: a chamber whose bed drops as the part grows) \| `open` (an open frame whose gantry climbs). The part grows with the progress, in the state's colour, and the head moves while it prints. |
 | `printed_part` | 3D printer | The part on the bed: `cube` (default), `pyramid` or `duck` (a rubber duck). It shows from the bottom up as it prints. |
 | `kettle_layout` | kettle | `classic` (default, a jug in the appliance's colour) \| `steel` (a stainless steel kettle with a black handle). |
+| `coffee_layout` | coffee machine | `silver` (default, a bean-to-cup machine in the appliance's colour, its tank on the side) \| `black` (black with a chrome front and a round screen). |
+| `boiler_layout` | boiler | `wall` (default, a white wall boiler with its gauge and screen) \| `window` (a boiler whose burner shows through a window). |
+| `towel_warmer_layout` | towel warmer | `ladder` (default, round bars between two uprights) \| `panel` (flat anthracite panels on one upright). |
 | `iron_layout` | iron | `iron` (default, the iron alone) \| `generator` (the same iron on the base of a steam generator). |
 | `toaster_layout` | toaster | `two` (default, two slots) \| `four` (four slots, two levers) \| `long` (one long slot for two slices end to end). |
 | `hair_dryer_layout` | hair dryer | `pistol` (default, a classic dryer seen from the side) \| `ring` (a ring dryer seen from the front). |
@@ -369,7 +372,7 @@ Only `state_entity` is required, except on a fridge where a probe or a door cont
 | `state_entity` / `fryer_layout` | air fryer | The fryer's own words, as Philips (HomeID and the older HACS integration), Xiaomi and Cosori (VeSync) report them: *Preheating*, *Preheated*, *Cooking*, *Shake the basket*, *Basket out*, *Paused*, *Keeping warm*, *Finished*, *Delayed start*. `fryer_layout`: `basket` (the default), `window` (a window onto the basket) or `dual` (two baskets). |
 | `basket_entity` / `shake_entity` / `basket2_state_entity` | air fryer | The basket sensor, on while it is out (Philips' drawer, Xiaomi's pot), which turns a cycle into *Basket out*; the shake reminder, which turns cooking into *Shake the basket*; the state of the second basket of a dual fryer, drawn apart and named on a line. |
 | `water_entity` | coffee | Tank: a Home Connect boolean, or a level in % with *empty* below 10%. |
-| `beans_entity` / `tray_entity` / `descaling_entity` | coffee | Beans empty, tray full, descaling due. |
+| `beans_entity` / `tray_entity` / `descaling_entity` | coffee | Beans empty, tray full, descaling due. A missing tank or beans, or a full tray, frames that part of the drawing and lights a dot of the front panel orange. |
 | `cups_entity` | coffee | Number of cups: a count, a boolean or a beverage name (*2 Espressi*). |
 | `strength_entity` | coffee | Coffee strength, as a number or a word. |
 | `state_entity` | EV charger | The charger's status: *No vehicle*, *Plugged in*, *Awaiting authorisation*, *Charging*, *Discharging*, *Charging paused*, *Scheduled*, *Charging complete*, *Error* or *Offline*, read in the words of OCPP and of the integrations in Home Assistant (see *EV chargers*). `state_map` accepts the ten as `no_vehicle`, `connected`, `awaiting_auth`, `charging`, `discharging`, `paused`, `scheduled`, `done`, `error` and `offline`. Optional: without it the plug and the power meter say it. |

@@ -1092,6 +1092,11 @@ class ApplianceCardEditor extends HTMLElement {
             { value: "long", label: t(hass, "layout_toaster_long") },
           ],
         }) : ""}
+        ${["coffee", "boiler", "towel_warmer"].includes(this._type) ? this._row("section_screen_layout", `${this._type}_layout`, {
+          type: "select",
+          options: ({ coffee: ["silver", "black"], boiler: ["wall", "window"], towel_warmer: ["ladder", "panel"] })[this._type]
+            .map((v) => ({ value: v, label: t(hass, `layout_${this._type}_${v}`) })),
+        }) : ""}
         ${this._type === "kettle" ? this._row("section_screen_layout", "kettle_layout", {
           type: "select",
           options: [
