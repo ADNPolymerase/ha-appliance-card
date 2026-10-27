@@ -1,11 +1,11 @@
 // Built by tools/build.mjs from src/ha-appliance-card.js: edit the source, not this file.
 // The card's editor, loaded by the card the first time it is edited.
-export default function defineEditor({ t, onLanguageLoaded, LANGUAGE_NAMES, localizedHass, activationOf, EV_POWER_THRESHOLD, stateObj, parseValueMap, stringifyValueMap, alertsArray, LIST_OTHER, ENTITY_LISTS, listCandidates, stripDeviceName, domainOf, INFO_MAX, autoSuggest, APPLIANCE_TYPES, STATE_DOMAINS, illustrationSizeOf, fontScaleOf, compactModeOf, TYPE_GROUPS, caps, detectApplianceType, SCREEN_STANDBY_W, SCREEN_LAYOUTS, SCREEN_IMAGES, HD_HEAT_W, NET_LAYOUTS, SWITCH_PORTS, NET_BAYS, NET_BUSY_MBIT, NET_TEMP_ALERT, netLayoutOf, ROBOT_LAYOUTS, ROBOT_STATIONS, ROBOT_FLOORS, ROBOT_SERVICES, STICK_AWAY_W, robotLayoutOf, POOL_PRESSURE_ALERT, SOLAR_LAYOUTS, BATTERY_LAYOUTS, BATTERY_IDLE_W, DIFFUSER_LAYOUTS, HRV_LAYOUTS, CAMERA_LAYOUTS, UPS_BATTERY_LOW, HISTORY_HOURS, BODY_COLORS, esc }) {
+export default function defineEditor({ t, onLanguageLoaded, LANGUAGE_NAMES, localizedHass, activationOf, EV_POWER_THRESHOLD, stateObj, parseValueMap, stringifyValueMap, alertsArray, LIST_OTHER, ENTITY_LISTS, listCandidates, stripDeviceName, domainOf, INFO_MAX, autoSuggest, APPLIANCE_TYPES, STATE_DOMAINS, illustrationSizeOf, fontScaleOf, compactModeOf, TYPE_GROUPS, caps, detectApplianceType, SCREEN_STANDBY_W, SCREEN_LAYOUTS, SCREEN_IMAGES, HD_HEAT_W, NET_LAYOUTS, SWITCH_PORTS, NET_BAYS, NET_BUSY_MBIT, NET_TEMP_ALERT, netLayoutOf, ROBOT_LAYOUTS, ROBOT_STATIONS, ROBOT_FLOORS, ROBOT_SERVICES, STICK_AWAY_W, robotLayoutOf, POOL_PRESSURE_ALERT, SOLAR_LAYOUTS, BATTERY_LAYOUTS, BATTERY_IDLE_W, DIFFUSER_LAYOUTS, HRV_LAYOUTS, CAMERA_LAYOUTS, UPS_BATTERY_LOW, HISTORY_HOURS, BODY_COLORS, esc, SHELTER_STYLES, SHELTER_COLORS }) {
 // ---------------------------------------------------------------------------
 // Editor
 // ---------------------------------------------------------------------------
 
-const ACTION_DOMAINS = ["button", "switch", "script", "input_boolean"];
+const ACTION_DOMAINS = ["button", "input_button", "switch", "script", "input_boolean"];
 // A control can also be a list to pick from or a number to write, which is how
 // pet feeders dispense. A power switch cannot, so this list is its own.
 const START_DOMAINS = ACTION_DOMAINS.concat(["automation", "select", "input_select", "number", "input_number"]);
@@ -1083,6 +1083,13 @@ class ApplianceCardEditor extends HTMLElement {
             { value: "long", label: t(hass, "layout_toaster_long") },
           ],
         }) : ""}
+        ${this._type === "kettle" ? this._row("section_screen_layout", "kettle_layout", {
+          type: "select",
+          options: [
+            { value: "classic", label: t(hass, "layout_kettle_classic") },
+            { value: "steel", label: t(hass, "layout_kettle_steel") },
+          ],
+        }) : ""}
         ${this._type === "hair_dryer" ? this._row("section_screen_layout", "hair_dryer_layout", {
           type: "select",
           options: [
@@ -1121,6 +1128,13 @@ class ApplianceCardEditor extends HTMLElement {
             type: "select",
             options: [{ value: "auto", label: t(hass, "unit_auto") }].concat(ROBOT_LAYOUTS.map((v) => ({ value: v, label: t(hass, `layout_robot_${v}`) }))),
           }) + (layout === "mower" ? this._row("robot_shelter", "robot_shelter", { type: "checkbox" })
+              + (this._config.robot_shelter ? this._row("robot_shelter_style", "robot_shelter_style", {
+                type: "select",
+                options: SHELTER_STYLES.map((v) => ({ value: v, label: t(hass, `shelter_${v}`) })),
+              }) + (this._config.robot_shelter_style === "shell" ? this._row("robot_shelter_color", "robot_shelter_color", {
+                type: "select",
+                options: Object.keys(SHELTER_COLORS).map((v) => ({ value: v, label: t(hass, `color_${v}`) })),
+              }) : "") : "")
             : layout === "stick" || layout === "floor_washer"
               ? this._row("stick_away_threshold", "away_threshold", { placeholder: String(STICK_AWAY_W) })
             : this._row("section_robot_station", "robot_station", {

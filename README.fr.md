@@ -253,6 +253,7 @@ Seule `state_entity` est obligatoire, sauf sur un réfrigérateur où une sonde 
 | `current_layer_entity` / `total_layers_entity` | imprimante 3D | La couche, en *84 / 190*. |
 | `printer_layout` | imprimante 3D | `enclosed` (défaut : une enceinte dont le plateau descend quand la pièce monte) \| `open` (un cadre ouvert dont le portique monte). La pièce grandit avec la progression, dans la couleur de l'état, et la tête va et vient pendant l'impression. |
 | `printed_part` | imprimante 3D | La pièce sur le plateau : `cube` (défaut), `pyramid` (pyramide) ou `duck` (un canard en plastique). Elle apparaît de bas en haut au fil de l'impression. |
+| `kettle_layout` | bouilloire | `classic` (défaut, une bouilloire de la couleur de l'appareil) \| `steel` (une bouilloire en inox à poignée noire). |
 | `iron_layout` | fer | `iron` (défaut, le fer seul) \| `generator` (le même fer sur le socle d'une centrale vapeur). |
 | `toaster_layout` | grille-pain | `two` (défaut, deux fentes) \| `four` (quatre fentes, deux leviers) \| `long` (une fente longue pour deux tranches bout à bout). |
 | `hair_dryer_layout` | sèche-cheveux | `pistol` (défaut, sèche-cheveux classique vu de profil) \| `ring` (sèche-cheveux en anneau vu de face). |
@@ -291,7 +292,7 @@ Seule `state_entity` est obligatoire, sauf sur un réfrigérateur où une sonde 
 | `load_entity` / `nominal_power` | onduleur | La charge, en % : l'énergie circule plus vite quand elle monte, et à 100 % ou plus c'est une *Surcharge*. Avec `nominal_power` (en W) et sans `power_entity`, la ligne la donne aussi en watts. |
 | `input_voltage_entity` | onduleur | La tension à la prise, en ligne. Sans `state_entity`, sous 100 V l'onduleur est sur batterie. |
 | `diffuser_layout` | diffuseur | `drop` (une goutte en bois, Meross, Asakuki) \| `cone` \| `stone` (galet, Vitruvi, Govee) \| `flame` (un diffuseur effet flamme) \| `nebulizer` (verre sur socle en bois). Sans réglage, le nom décide, sinon une goutte. Bois par défaut pour la goutte, la flamme et le nébuliseur, blanc pour les autres, ou `illustration_color`. |
-| `light_entity` / `tank_empty_entity` | diffuseur | La lumière du diffuseur : sa couleur éclaire l'anneau et le sol. Un capteur de réservoir vide l'affiche *Réservoir vide*. Son `state_entity` est la brume : un interrupteur, un ventilateur (50 % ou moins = *Intermittent*), le select de Meross (`eco` = *Intermittent*) ou une entité humidificateur. Un select a un bouton qui passe d'un mode au suivant, un interrupteur ou un ventilateur un bouton marche/arrêt. |
+| `light_entity` / `tank_empty_entity` | diffuseur | La lumière du diffuseur : sa couleur éclaire l'anneau et le sol. Un capteur de réservoir vide l'affiche *Réservoir vide*. Son `state_entity` est la brume : un interrupteur, un ventilateur (50 % ou moins = *Intermittent*), le select de Meross (`eco` = *Brume légère*, une brume plus faible ; `intermittent` ou `interval` = *Intermittent*) ou une entité humidificateur. Un select a un bouton qui passe d'un mode au suivant, un interrupteur ou un ventilateur un bouton marche/arrêt. |
 | `hrv_layout` | VMC | `diagram` (les deux flux qui se croisent dans l'échangeur) \| `one_duct` (VMC murale à un seul conduit, Lunos eGO, Zehnder ComfoAir 70) \| `pair` (paire décentralisée traversant le mur, Lunos e2, Vents TwinFresh, qui s'inverse toutes les 70 s). |
 | `outdoor_temperature_entity` / `supply_temperature_entity` / `extract_temperature_entity` / `exhaust_temperature_entity` | VMC | Les quatre températures, dessinées au bout des gaines. |
 | `bypass_entity` | VMC | Le bypass : un interrupteur ou un capteur binaire actif, une ouverture en %, ou l'état de l'échangeur de Vallox, dont *Defrosting* affiche *Dégivrage*. |
@@ -304,7 +305,9 @@ Seule `state_entity` est obligatoire, sauf sur un réfrigérateur où une sonde 
 | `signal_entity` / `battery_entity` | caméra | Le signal Wi-Fi et la batterie, en lignes. Les attributs d'une caméra Arlo sont lus sans eux. |
 | `robot_layout` | robot | `vacuum` \| `mop` \| `mower` \| `stick` (un aspirateur balai sur son support mural) \| `floor_washer` (un laveur de sol dans sa station). Sans lui, un nom qui dit balai, sans fil ou Dyson en fait un aspirateur balai, Tineco ou laveur de sol un laveur de sol, une entité `lawn_mower` ou un nom qui dit tondeuse, Landroid ou Automower en fait une tondeuse, et Braava ou laveur un robot laveur. |
 | `robot_station` | robot | `station` (défaut : la station de vidage de l'aspirateur, la station de lavage du laveur) \| `base` (une base de charge seule). |
-| `robot_shelter` | robot | `true` dessine un abri au-dessus de la base d'une tondeuse. |
+| `robot_shelter` | robot | `true` dessine un abri au-dessus de la base d'une tondeuse. La pluie s'arrête sur son toit. |
+| `robot_shelter_style` | robot | `lean_to` (défaut, un appentis en bois au toit de tôle) \| `shell` (une coque moulée sur un pied). |
+| `robot_shelter_color` | robot | La couleur de la coque : `white` (défaut) \| `grey` \| `black` \| `green` \| `orange`. |
 | `away_threshold` | robot | Un aspirateur balai ou un laveur de sol lu sur la prise de son support : au-dessus de `power_on_threshold` (5 W par défaut) il est *En charge*, en dessous *Chargé*, et à `away_threshold` (1 W par défaut) ou moins *Hors de la base*, en utilisation ou mal accroché, son support dessiné vide. La prise coupée affiche *Éteint*. |
 | `robot_floor` | robot | Le sol sur lequel travaille un aspirateur ou un laveur : `rug` (tapis, défaut de l'aspirateur) \| `tiles` (carrelage, défaut du laveur) \| `parquet` \| `smooth` (sol lisse). |
 | `robot_controls` | robot | `true` ajoute les boutons du robot, sur une entité `vacuum` ou `lawn_mower` : *Démarrer* hors du travail, *Pause* au travail, *Retour à la base* loin d'elle. `controls_always: true` montre les trois en permanence. |
@@ -762,7 +765,9 @@ portions_today_entity: sensor.croquettes_distributions_du_jour
 state_entity: binary_sensor.distributeur_distribution
 ```
 
-Une automation fait aussi bien l'affaire comme commande, et un `utility_meter` fait un bon compteur : `portions_today_entity` prend ce qui compte les repas, là où l'intégration le tient.
+Une automation ou un `input_button` fait aussi bien l'affaire comme commande, et un `utility_meter` fait un bon compteur : `portions_today_entity` prend ce qui compte les repas, là où l'intégration le tient.
+
+Un distributeur qui ne dit jamais qu'il sert, comme le C1 d'Aqara en Zigbee2MQTT, est dessiné *Distribution* pendant 30 secondes après un appui sur le bouton de la carte, et quand ses portions ou son poids du jour augmentent, quel que soit celui qui a servi le repas.
 
 Trois entités se lisent aussi bien que dix : une ligne n'existe que si son entité répond.
 

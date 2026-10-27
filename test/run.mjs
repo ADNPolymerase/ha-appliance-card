@@ -1936,6 +1936,18 @@ check('lave-linge : la ligne d\'etat reste bleue en cours',
 check('bouilloire : aucune barre de progression', /class="bar-fill"/.test(ktOn), false);
 check('bouilloire : sans sonde, aucun afficheur',
   /class="kt-lcd/.test(render({ appliance_type: 'kettle', state_entity: 'switch.kt' }, KETTLE)), false);
+check('bouilloire : classique par defaut', machineCls(ktOff).includes('kt-classic'), true);
+check('bouilloire : inox au choix',
+  machineCls(render({ appliance_type: 'kettle', kettle_layout: 'steel', state_entity: 'switch.kt' }, KETTLE)).includes('kt-steel'), true);
+check('bouilloire : forme inconnue, classique',
+  machineCls(render({ appliance_type: 'kettle', kettle_layout: 'gooseneck', state_entity: 'switch.kt' }, KETTLE)).includes('kt-classic'), true);
+check('bouilloire : la forme suffit a reconnaitre une bouilloire',
+  /class="kt-body"/.test(render({ kettle_layout: 'steel', state_entity: 'switch.x' }, { 'switch.x': { state: 'off', attributes: {} } })), true);
+check('bouilloire : la classique suit la couleur de l appareil', /stop-color:var\(--ac-body-hi/.test(ktOff), true);
+check('bouilloire : le bec part du corps (un seul trace ferme)', /<path d="M32 33 C25 31\.5[^"]*Z"/.test(ktOff), true);
+check('bouilloire : trois bulles dans la jauge', (ktOn.match(/class="kt-bub/g) || []).length, 3);
+check('editeur bouilloire : la forme',
+  /data-field="kettle_layout"/.test(markup(newEditor({ appliance_type: 'kettle', state_entity: 'switch.kt' }))), true);
 
 // ── Water heater ─────────────────────────────────────────────────────────────
 // A tank heats or waits. What it must never do is look finished, or blue.
@@ -4920,6 +4932,35 @@ check('gamelle : une automation date aussi le dernier repas',
 const buttoned = pressed({ appliance_type: 'washer', state_entity: 'sensor.w', start_entity: 'button.start' },
   { 'sensor.w': { state: 'Idle', attributes: {} }, 'button.start': { state: 'unknown', attributes: {} } });
 check('commande : un bouton est toujours presse', buttoned.calls.at(-1)?.service, 'press');
+const helperButton = pressed({ appliance_type: 'pet_feeder', start_entity: 'input_button.distribution_croquette' },
+  { 'input_button.distribution_croquette': { state: 'unknown', attributes: {} } });
+check('commande : un input_button est presse', helperButton.calls.at(-1)?.service, 'press');
+check('commande : sur son domaine aussi', helperButton.calls.at(-1)?.domain, 'input_button');
+
+// #55: Aqara's C1 over Zigbee2MQTT never says it is serving. The card draws it
+// serving after it was asked to, and when the count of the day goes up.
+{
+  const C1 = (portions) => ({
+    'select.croquettes_feed': { state: 'START', attributes: { options: ['', 'START'] } },
+    'sensor.croquettes_portions_per_day': { state: String(portions), attributes: {} },
+  });
+  const cfg = { appliance_type: 'pet_feeder', start_entity: 'select.croquettes_feed', portions_today_entity: 'sensor.croquettes_portions_per_day' };
+  const serving = (h) => stateLine(h) === 'Dispensing';
+  const T = Date.now();
+  const b = build(cfg, C1(3));
+  check('gamelle C1 : au repos', serving(b.html), false);
+  check('gamelle C1 : une portion de plus, elle sert', serving(rerender(b.card, C1(6))), true);
+  freezeClock(new Date(T + 31e3).toISOString());
+  check('gamelle C1 : trente secondes plus tard, elle a fini', serving(rerender(b.card, C1(6))), false);
+  check('gamelle C1 : minuit remet a zero sans servir', serving(rerender(b.card, C1(0))), false);
+  rerender(b.card, { ...C1(0), 'sensor.croquettes_portions_per_day': { state: 'unavailable', attributes: {} } });
+  check('gamelle C1 : le retour apres un redemarrage ne sert pas', serving(rerender(b.card, C1(12))), false);
+  const p = pressed(cfg, C1(3));
+  check('gamelle C1 : servie depuis la carte, elle sert tout de suite', serving(markup(p.card)), true);
+  p.card.disconnectedCallback();
+  b.card.disconnectedCallback();
+  freezeClock(new Date(T).toISOString());
+}
 
 // The whole click path, and not just the service call underneath it: the
 // button carries the option, the handler has to hand it over.
@@ -9542,6 +9583,26 @@ check('borne : ni un statut reconnu', evMode(evR('SuspendedEVSE', { power_entity
   check('robot : base de charge seule', draw({ state_entity: 'vacuum.x', robot_station: 'base' }, { 'vacuum.x': s('docked') }).includes('rbt-base'), true);
   check('robot : station par defaut', draw({ state_entity: 'vacuum.x' }, { 'vacuum.x': s('docked') }).includes('rbt-base'), false);
   check('robot : abri de la tondeuse', draw({ state_entity: 'lawn_mower.x', robot_shelter: true }, { 'lawn_mower.x': s('docked') }).includes('rbt-roof'), true);
+  // The shelter: a wooden lean-to by default, a shell on request, in a colour.
+  const mowerH = (cfg, st = 'docked', more = {}) => render({ state_entity: 'lawn_mower.x', robot_shelter: true, ...cfg }, { 'lawn_mower.x': s(st), ...more });
+  check('abri : appentis par defaut', machineCls(mowerH({})).includes('rbt-sh-lean_to'), true);
+  check('abri : coque au choix', machineCls(mowerH({ robot_shelter_style: 'shell' })).includes('rbt-sh-shell'), true);
+  check('abri : forme inconnue, appentis', machineCls(mowerH({ robot_shelter_style: 'chalet' })).includes('rbt-sh-lean_to'), true);
+  check('abri : sans abri, aucun dessin d abri', /class="rbt-sh"/.test(render({ state_entity: 'lawn_mower.x' }, { 'lawn_mower.x': s('docked') })), false);
+  check('abri : une partie derriere et une devant la tondeuse', /class="rbt-sh"[\s\S]*class="rbt-mw"[\s\S]*class="rbt-sh"/.test(mowerH({})), true);
+  check('abri : la coque blanche par defaut', /stop-color="#ffffff"/.test(mowerH({ robot_shelter_style: 'shell' })), true);
+  check('abri : la coque verte', /stop-color="#4f9a4c"/.test(mowerH({ robot_shelter_style: 'shell', robot_shelter_color: 'green' })), true);
+  check('abri : couleur inconnue, blanche', /stop-color="#ffffff"/.test(mowerH({ robot_shelter_style: 'shell', robot_shelter_color: 'pink' })), true);
+  check('abri : l ancien toit a disparu', /rbt-st-roof|rbt-st-post/.test(SRC), false);
+  check('abri : la pluie s arrete sur le toit', /\.rbt-sh-lean_to \.rbt-rain\{clip-path:path\(evenodd/.test(mowerH({})), true);
+  check('abri : les gouttes ne tombent que sous la pluie', /\.rbt-m-raining \.rbt-sh-drip\{display:block/.test(mowerH({})), true);
+  check('abri : cache pendant la tonte', /\.rbt-m-cleaning \.rbt-sh\{display:none\}/.test(mowerH({}, 'mowing')), true);
+  check('abri : deux tondeuses, des degrades distincts', (() => { const a = /id="(rbt-sh\d+)/.exec(mowerH({}))[1]; const b = /id="(rbt-sh\d+)/.exec(mowerH({}))[1]; return a !== b; })(), true);
+  const edMower = (cfg) => markup(newEditor({ appliance_type: 'robot', state_entity: 'lawn_mower.x', ...cfg }));
+  check('editeur abri : pas de forme sans abri', /data-field="robot_shelter_style"/.test(edMower({})), false);
+  check('editeur abri : la forme avec l abri', /data-field="robot_shelter_style"/.test(edMower({ robot_shelter: true })), true);
+  check('editeur abri : pas de couleur sur l appentis', /data-field="robot_shelter_color"/.test(edMower({ robot_shelter: true })), false);
+  check('editeur abri : la couleur sur la coque', /data-field="robot_shelter_color"/.test(edMower({ robot_shelter: true, robot_shelter_style: 'shell' })), true);
   check('robot : niveau du reservoir dessine', /rbt-rm" style="--lvl: 42%"/.test(render({ state_entity: 'vacuum.braava', robot_water_entity: 'sensor.w' },
     { 'vacuum.braava': s('cleaning'), 'sensor.w': s(42, { unit_of_measurement: '%' }) })), true);
 
@@ -10510,7 +10571,15 @@ check('borne : ni un statut reconnu', evMode(evR('SuspendedEVSE', { power_entity
     { 'select.dif_spray': s(state, { options: ['off', 'eco', 'on'], ...attrs }), ...more });
   check('diffuseur : eteint', stateLine(dif('off')), 'Off');
   check('diffuseur : continu', stateLine(dif('on')), 'Diffusing');
-  check('diffuseur : eco = intermittent', stateLine(dif('eco')), 'Intermittent');
+  // #53: Meross's eco mists less, it does not pause.
+  check('diffuseur : eco = brume legere', stateLine(dif('eco')), 'Light mist');
+  check('diffuseur : eco dessine une brume plus faible', machineCls(dif('eco')).includes('dif-m-low'), true);
+  check('diffuseur : intermittent reste intermittent', stateLine(render({ appliance_type: 'diffuser', state_entity: 'select.d' },
+    { 'select.d': s('intermittent', { options: ['off', 'intermittent', 'continuous'] }) })), 'Intermittent');
+  check('diffuseur : un ventilateur a 30 % reste intermittent', stateLine(render({ appliance_type: 'diffuser', state_entity: 'fan.d' },
+    { 'fan.d': s('on', { percentage: 30 }) })), 'Intermittent');
+  check('diffuseur : un ventilateur en preset sleep, brume legere', stateLine(render({ appliance_type: 'diffuser', state_entity: 'fan.d' },
+    { 'fan.d': s('on', { percentage: 30, preset_mode: 'sleep' }) })), 'Light mist');
   check('diffuseur : hors ligne', stateLine(dif('unavailable')), 'Offline');
   check('diffuseur : reservoir vide', stateLine(dif('on', { tank_empty_entity: 'binary_sensor.t' }, { 'binary_sensor.t': s('on') })), 'Tank empty');
   check('diffuseur : reservoir plein', stateLine(dif('on', { tank_empty_entity: 'binary_sensor.t' }, { 'binary_sensor.t': s('off') })), 'Diffusing');

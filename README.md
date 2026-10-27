@@ -253,6 +253,7 @@ Only `state_entity` is required, except on a fridge where a probe or a door cont
 | `current_layer_entity` / `total_layers_entity` | 3D printer | The layer, as *84 / 190*. |
 | `printer_layout` | 3D printer | `enclosed` (default: a chamber whose bed drops as the part grows) \| `open` (an open frame whose gantry climbs). The part grows with the progress, in the state's colour, and the head moves while it prints. |
 | `printed_part` | 3D printer | The part on the bed: `cube` (default), `pyramid` or `duck` (a rubber duck). It shows from the bottom up as it prints. |
+| `kettle_layout` | kettle | `classic` (default, a jug in the appliance's colour) \| `steel` (a stainless steel kettle with a black handle). |
 | `iron_layout` | iron | `iron` (default, the iron alone) \| `generator` (the same iron on the base of a steam generator). |
 | `toaster_layout` | toaster | `two` (default, two slots) \| `four` (four slots, two levers) \| `long` (one long slot for two slices end to end). |
 | `hair_dryer_layout` | hair dryer | `pistol` (default, a classic dryer seen from the side) \| `ring` (a ring dryer seen from the front). |
@@ -291,7 +292,7 @@ Only `state_entity` is required, except on a fridge where a probe or a door cont
 | `load_entity` / `nominal_power` | UPS | The load, in %: the energy flows faster as it grows, and 100 % or more is an *Overload*. With `nominal_power` (in W) and no `power_entity`, the line gives it in watts too. |
 | `input_voltage_entity` | UPS | The voltage at the wall, as a line. Without a `state_entity`, below 100 V the UPS is on battery. |
 | `diffuser_layout` | diffuser | `drop` (a wooden teardrop, Meross, Asakuki) \| `cone` \| `stone` (Vitruvi, Govee) \| `flame` (a flame-effect diffuser) \| `nebulizer` (glass on a wooden base). Left out, the name decides, a teardrop otherwise. Wood by default for the teardrop, the flame and the nebulizer, white for the others, or `illustration_color`. |
-| `light_entity` / `tank_empty_entity` | diffuser | The diffuser's light: its colour lights the band and the floor. An empty tank sensor makes it *Tank empty*. Its `state_entity` is the mist: a switch, a fan (50 % or less is *Intermittent*), Meross's spray select (`eco` is *Intermittent*) or a humidifier entity. A select gets a button that steps through its modes, a switch or a fan an on/off button. |
+| `light_entity` / `tank_empty_entity` | diffuser | The diffuser's light: its colour lights the band and the floor. An empty tank sensor makes it *Tank empty*. Its `state_entity` is the mist: a switch, a fan (50 % or less is *Intermittent*), Meross's spray select (`eco` is *Light mist*, a lower mist; `intermittent` or `interval` is *Intermittent*) or a humidifier entity. A select gets a button that steps through its modes, a switch or a fan an on/off button. |
 | `hrv_layout` | HRV | `diagram` (the two streams crossing in the exchanger) \| `one_duct` (a single-room unit, Lunos eGO, Zehnder ComfoAir 70) \| `pair` (two through-wall units, Lunos e2, Vents TwinFresh, that swap direction every 70 s). |
 | `outdoor_temperature_entity` / `supply_temperature_entity` / `extract_temperature_entity` / `exhaust_temperature_entity` | HRV | The four temperatures, drawn at the ends of the ducts. |
 | `bypass_entity` | HRV | The bypass: a switch or a binary sensor that is on, a position in %, or Vallox's cell state, whose *Defrosting* reads *Defrosting*. |
@@ -304,7 +305,9 @@ Only `state_entity` is required, except on a fridge where a probe or a door cont
 | `signal_entity` / `battery_entity` | camera | The Wi-Fi signal and the battery, as lines. An Arlo camera's own attributes are read without them. |
 | `robot_layout` | robot | `vacuum` \| `mop` \| `mower` \| `stick` (a stick vacuum on its wall dock) \| `floor_washer` (a wet and dry floor washer in its station). Left out, a name that says stick, cordless or Dyson makes a stick vacuum, Tineco or floor washer a floor washer, a `lawn_mower` entity or a name that says mower, Landroid or Automower makes a mower, and Braava or mop a mopping robot. |
 | `robot_station` | robot | `station` (default: the vacuum's emptying station, the mop's washing station) \| `base` (a charging base alone). |
-| `robot_shelter` | robot | `true` draws a shelter over a mower's base. |
+| `robot_shelter` | robot | `true` draws a shelter over a mower's base. The rain stops on its roof. |
+| `robot_shelter_style` | robot | `lean_to` (default, a wooden lean-to with a corrugated roof) \| `shell` (a moulded shell on one leg). |
+| `robot_shelter_color` | robot | The shell's colour: `white` (default) \| `grey` \| `black` \| `green` \| `orange`. |
 | `away_threshold` | robot | A stick vacuum or a floor washer read from the plug its dock is on: above `power_on_threshold` (5 W by default) it is *Charging*, below it *Charged*, and at `away_threshold` (1 W by default) or less *Off the base*, in use or badly seated, its dock drawn empty. The plug switched off reads *Off*. |
 | `robot_floor` | robot | The floor a vacuum or a mop works on: `rug` (default for a vacuum) \| `tiles` (default for a mop) \| `parquet` \| `smooth`. |
 | `robot_controls` | robot | `true` adds the robot's own buttons, on a `vacuum` or `lawn_mower` entity: *Start* away from work, *Pause* at work, *Return to base* away from it. `controls_always: true` shows all three all the time. |
@@ -762,7 +765,9 @@ portions_today_entity: sensor.feeder_meals_today
 state_entity: binary_sensor.feeder_dispensing
 ```
 
-An automation works as a control too, and a `utility_meter` makes a fine counter: `portions_today_entity` takes whatever counts the meals, and the day's total is read where the integration keeps it.
+An automation or an `input_button` works as a control too, and a `utility_meter` makes a fine counter: `portions_today_entity` takes whatever counts the meals, and the day's total is read where the integration keeps it.
+
+A feeder that never says it is serving, like Aqara's C1 over Zigbee2MQTT, is drawn *Dispensing* for 30 seconds after the card's button is pressed, and when its portions or its weight of the day go up, whoever served the meal.
 
 Three entities read as well as ten: a line only exists when its entity answers.
 
