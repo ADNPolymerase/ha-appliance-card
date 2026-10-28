@@ -10820,4 +10820,25 @@ check('borne : ni un statut reconnu', evMode(evR('SuspendedEVSE', { power_entity
   }
 }
 
+// ── Card name from the device (forum HACF, 3.4.1) ───────────────────────────
+// A UPS whose state entity reads "UPS Status code": the card is named after
+// the device, not after the reading.
+{
+  const named = (friendly, device, cfg = {}) => {
+    const c = new Card();
+    c.setConfig({ type: 'custom:ha-appliance-card', appliance_type: 'ups', state_entity: 'sensor.u', ...cfg });
+    c._hass = { ...HASS({ 'sensor.u': { state: 'OL', attributes: { friendly_name: friendly } } }),
+      entities: device ? { 'sensor.u': { device_id: 'u' } } : {},
+      devices: device ? { u: device } : {} };
+    c._render();
+    return (/<div class="name">([^<]*)<\/div>/.exec(markup(c)) || [])[1];
+  };
+  check('nom : celui de l appareil, sans la mesure', named('UPS Status code', { name: 'UPS' }), 'UPS');
+  check('nom : le nom donne par l utilisateur a l appareil', named('Bureau Status code', { name: 'UPS', name_by_user: 'Bureau' }), 'Bureau');
+  check('nom : une entite sans appareil garde le sien', named('UPS Status code', null), 'UPS Status code');
+  check('nom : un nom qui ne commence pas par l appareil reste tel quel', named('Onduleur salon', { name: 'UPS' }), 'Onduleur salon');
+  check('nom : l entite principale porte deja le nom de l appareil', named('UPS', { name: 'UPS' }), 'UPS');
+  check('nom : le champ name passe avant', named('UPS Status code', { name: 'UPS' }, { name: 'Mon onduleur' }), 'Mon onduleur');
+}
+
 report();

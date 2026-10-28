@@ -1,5 +1,5 @@
 // Built by tools/build.mjs from src/ha-appliance-card.js: edit the source, not this file.
-const CARD_VERSION = "3.4.0";
+const CARD_VERSION = "3.4.1";
 
 console.info(
   "%c HA-APPLIANCE-CARD %c v" + CARD_VERSION + " ",
@@ -2314,6 +2314,20 @@ function raisedAlerts(hass, list) {
 function humanizeEntityId(entityId) {
   const objectId = (entityId || "").split(".")[1] || entityId || "";
   return objectId.replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
+}
+
+// A card with no name of its own takes its appliance's. Home Assistant names
+// the state entity after the device and the reading ("Eaton3S550 Status
+// code"), and the reading is not what the card is about. A name the user
+// typed that does not start with the device's is left as it is.
+function defaultCardName(hass, entityId, st) {
+  const friendlyName = st && st.attributes.friendly_name;
+  if (!friendlyName) return "";
+  const reg = hass.entities && hass.entities[entityId];
+  const device = reg && reg.device_id && hass.devices && hass.devices[reg.device_id];
+  const deviceName = device && (device.name_by_user || device.name);
+  if (deviceName && friendlyName.startsWith(`${deviceName} `)) return deviceName;
+  return friendlyName;
 }
 
 // An entity's name without its appliance's, which integrations put in front:
@@ -10851,7 +10865,7 @@ class ApplianceCard extends HTMLElement {
 
     // A card with no state entity is named after its type, and a tap opens
     // what it reads in its place.
-    const name = cfg.name || (st && st.attributes.friendly_name) || cfg.state_entity || t(hass, `type_${applianceType}`);
+    const name = cfg.name || defaultCardName(hass, cfg.state_entity, st) || cfg.state_entity || t(hass, `type_${applianceType}`);
     const tapFallback = noStateSourceOf(cfg, applianceType);
 
     // Program
@@ -14152,7 +14166,7 @@ function loadEditor() {
   if (customElements.get("ha-appliance-card-editor")) return Promise.resolve();
   if (!editorLoading) {
     editorLoading = import(assetUrl("ha-appliance-card-editor.js"))
-      .then((m) => m.default({ t, onLanguageLoaded, LANGUAGE_NAMES, localizedHass, activationOf, EV_POWER_THRESHOLD, stateObj, parseValueMap, stringifyValueMap, alertsArray, LIST_OTHER, ENTITY_LISTS, listCandidates, stripDeviceName, domainOf, INFO_MAX, autoSuggest, APPLIANCE_TYPES, STATE_DOMAINS, illustrationSizeOf, fontScaleOf, compactModeOf, TYPE_GROUPS, caps, detectApplianceType, SCREEN_STANDBY_W, SCREEN_LAYOUTS, SCREEN_IMAGES, HD_HEAT_W, NET_LAYOUTS, SWITCH_PORTS, NET_BAYS, NET_BUSY_MBIT, NET_TEMP_ALERT, netLayoutOf, ROBOT_LAYOUTS, ROBOT_STATIONS, ROBOT_FLOORS, ROBOT_SERVICES, STICK_AWAY_W, robotLayoutOf, POOL_PRESSURE_ALERT, SOLAR_LAYOUTS, BATTERY_LAYOUTS, BATTERY_IDLE_W, DIFFUSER_LAYOUTS, HRV_LAYOUTS, CAMERA_LAYOUTS, UPS_BATTERY_LOW, HISTORY_HOURS, BODY_COLORS, esc, SHELTER_STYLES, SHELTER_COLORS, stateFreeSource }))
+      .then((m) => m.default({ t, onLanguageLoaded, LANGUAGE_NAMES, localizedHass, activationOf, EV_POWER_THRESHOLD, stateObj, parseValueMap, stringifyValueMap, alertsArray, LIST_OTHER, ENTITY_LISTS, listCandidates, defaultCardName, stripDeviceName, domainOf, INFO_MAX, autoSuggest, APPLIANCE_TYPES, STATE_DOMAINS, illustrationSizeOf, fontScaleOf, compactModeOf, TYPE_GROUPS, caps, detectApplianceType, SCREEN_STANDBY_W, SCREEN_LAYOUTS, SCREEN_IMAGES, HD_HEAT_W, NET_LAYOUTS, SWITCH_PORTS, NET_BAYS, NET_BUSY_MBIT, NET_TEMP_ALERT, netLayoutOf, ROBOT_LAYOUTS, ROBOT_STATIONS, ROBOT_FLOORS, ROBOT_SERVICES, STICK_AWAY_W, robotLayoutOf, POOL_PRESSURE_ALERT, SOLAR_LAYOUTS, BATTERY_LAYOUTS, BATTERY_IDLE_W, DIFFUSER_LAYOUTS, HRV_LAYOUTS, CAMERA_LAYOUTS, UPS_BATTERY_LOW, HISTORY_HOURS, BODY_COLORS, esc, SHELTER_STYLES, SHELTER_COLORS, stateFreeSource }))
       .catch((err) => {
         editorLoading = null;
         throw err;
