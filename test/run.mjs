@@ -10930,7 +10930,8 @@ check('borne : ni un statut reconnu', evMode(evR('SuspendedEVSE', { power_entity
   check('sonnette : un binary_sensor allume fait sonner', sline(bell(['binary_sensor.visiteur', st('on')])), 'On sonne');
   check('sonnette : et la classe du dessin', /cam-m-ring/.test(mcls(bell(['binary_sensor.visiteur', st('on')]))), true);
   check('sonnette : eteint, en veille', sline(bell(['binary_sensor.visiteur', st('off')])), 'En veille');
-  check('sonnette : le dernier appel en ligne', infoLine(html(bell(['binary_sensor.visiteur', st('off', {}, '2026-08-12T09:30:00Z')])), 'Dernier appel'), '11:30');
+  // The hour depends on the machine's time zone: only its format is checked.
+  check('sonnette : le dernier appel en ligne', /^\d\d:30$/.test(infoLine(html(bell(['binary_sensor.visiteur', st('off', {}, '2026-08-12T09:30:00Z')])), 'Dernier appel') || ''), true);
   const evNow = new Date(Date.now() - 10000).toISOString();
   const evOld = new Date(Date.now() - 45000).toISOString();
   const recent = bell(['event.porte_ding', st(evNow, { event_type: 'ring' })]);
