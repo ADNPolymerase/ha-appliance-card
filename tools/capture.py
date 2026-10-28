@@ -77,6 +77,7 @@ FAMILIES = (
     ("ventilation", "hrv_diagram,hrv_one_duct,hrv_pair,hrv_bypass", 4),
     ("cameras", "cam_indoor,cam_tube,cam_outdoor,cam_dome,cam_privacy,cam_offline", 6),
     ("lamps", "lamp_bulb,lamp_bedside,lamp_floor,lamp_torch,lamp_pendant,lamp_strip,lamp_spots,lamp_panels,lamp_desk,lamp_wall", 5),
+    ("mailboxes", "mb_through,mb_postman,mb_collect,mb_right,mb_classic,mb_classic_open,cam_doorbell,cam_doorbell_idle", 4),
 )
 # Sixteen frames a tenth of a second apart over a 1.6 s loop, on a 128-colour
 # palette: the five families weigh about 1.4 MB per language, where 32 frames

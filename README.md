@@ -23,7 +23,7 @@ No brand assumed: every field is an entity you pick, so it works with **any** in
 
 ## Features
 
-- **Forty-two appliance types**, each with a CSS illustration that animates on the appliance's own data and stays still when idle. The type is detected on its own or set via `appliance_type`, and `compact: true` keeps only the text.
+- **Forty-three appliance types**, each with a CSS illustration that animates on the appliance's own data and stays still when idle. The type is detected on its own or set via `appliance_type`, and `compact: true` keeps only the text.
 - **State normalization**: `Idle`, `RUNNING`, `wash`, `En marche`… are recognised (accent-insensitive) and sorted into idle, preheating, running, paused, done, delayed or error. An unknown state is shown as it came, minus the integration's namespace, and `state_map` sorts the rest, `"*"` catching everything left over.
 - **The step, not an hour of *Running***: a washer, a dryer or a dishwasher names the step it is at (*Pre-wash*, *Washing*, *Rinsing*, *Spinning*, *Drying* and seven more), from a phase entity or from its own state, and the drum whirls while it spins. The time left is still the whole cycle's.
 - **A washer-dryer is a washer that dries**: `washer_dryer: true`, and the drum shows water while it washes, then clothes turning in hot air while it dries. The step comes from the state itself or from a phase entity, and the state line reads *Washing* or *Drying*.
@@ -35,6 +35,7 @@ No brand assumed: every field is an entity you pick, so it works with **any** in
 - **And the bathroom scale**: the last weight on its screen, lit for an hour after a weighing, what is left to the goal, and the fat, the muscles and the bones in the lines, from Withings or any weight sensor.
 - **And the UPS**: the wall socket, the UPS and the box it keeps alive, *On mains* with the energy flowing through it, *On battery* with the wall crossed out, the UPS beeping and its screen counting the time left, *Battery low*, *Overload* and *Replace battery* read from NUT's own codes, and the battery, the runtime, the load and the input voltage in the lines.
 - **And the lamps**: a bulb, a bedside lamp, an arc floor lamp, a halogen torchiere, a pendant, a LED strip, recessed spots, Nanoleaf-style panels, a desk lamp or a wall lantern, lit in the light's own colour and dimmed with its brightness; an effect turns the hue of a strip's segments or of the panels.
+- **And the mailbox**: through the wall with its street and house doors, or a classic box on its post. The letters pile up to twelve, a new one comes in through the slot, and the doors swing open on their hinges. Cameras get a doorbell too, its ring of light beating when someone rings.
 - **Works from a smart plug alone**: `power_entity` and `power_on_threshold` are enough to derive the state from consumption; `power_off_delay` keeps a pause from reading as the end, and `show_last_cycle` shows how long the last cycle ran.
 - **Program, remaining time, progress bar, info lines, door, alerts, connectivity and controls** (start, pause, resume, stop), each optional.
 - **14 languages** (EN, FR, DE, ES, IT, NL, PT, SV, NO, DA, PL, RU, ZH, CS), Home Assistant's or pinned on the card.
@@ -151,6 +152,13 @@ Click a family to see its appliances at work.
 
 </details>
 
+<details>
+<summary><b>Mailboxes and doorbells</b></summary>
+
+<img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-mailboxes.gif" alt="Mailboxes and doorbells" width="100%">
+
+</details>
+
 ## Installation
 
 ### HACS
@@ -189,7 +197,7 @@ Only `state_entity` is required, except on a fridge where a probe or a door cont
 | `done_alert` | `true` makes a green badge pulse on the drawing when a cycle has finished, until the door opens or the badge is tapped. For appliances with a cycle (washer, dryer, dishwasher, oven…). |
 | `illustration_color` | `auto` (default, follows the theme) \| `white` \| `grey` \| `black` \| `red` (dark red). Only changes the casing, not the state colours. |
 | `language` | `auto` (default, follows Home Assistant) or one of the 14 codes: `en`, `fr`, `de`, `es`, `it`, `nl`, `pt`, `sv`, `no`, `da`, `pl`, `ru`, `zh`, `cs`. `nb` and `nb-NO` give Norwegian. |
-| `appliance_type` | `auto` (default) \| `washer` \| `dryer` \| `dishwasher` \| `oven` \| `microwave` \| `hood` \| `cooktop` \| `fridge` \| `kettle` \| `cooker` \| `coffee` \| `rice_cooker` \| `air_fryer` \| `water_heater` \| `boiler` \| `heat_pump` \| `printer_3d` \| `pet_feeder` \| `pet_fountain` \| `iron` \| `toaster` \| `pellet_stove` \| `air_conditioner` \| `dehumidifier` \| `space_heater` \| `towel_warmer` \| `air_purifier` \| `fan` \| `ev_charger` \| `hair_dryer` \| `screen` \| `network` \| `robot` \| `pool_pump` \| `scale` \| `ups` \| `solar` \| `home_battery` \| `camera` \| `diffuser` \| `hrv` \| `lamp`. |
+| `appliance_type` | `auto` (default) \| `washer` \| `dryer` \| `dishwasher` \| `oven` \| `microwave` \| `hood` \| `cooktop` \| `fridge` \| `kettle` \| `cooker` \| `coffee` \| `rice_cooker` \| `air_fryer` \| `water_heater` \| `boiler` \| `heat_pump` \| `printer_3d` \| `pet_feeder` \| `pet_fountain` \| `iron` \| `toaster` \| `pellet_stove` \| `air_conditioner` \| `dehumidifier` \| `space_heater` \| `towel_warmer` \| `air_purifier` \| `fan` \| `ev_charger` \| `hair_dryer` \| `screen` \| `network` \| `robot` \| `pool_pump` \| `scale` \| `ups` \| `solar` \| `home_battery` \| `camera` \| `diffuser` \| `hrv` \| `lamp` \| `mailbox`. |
 | `tap_action` | What a tap on the card does, in Home Assistant's own words: `more-info` (default: the state entity, or on a card without one what it reads in its place), `none`, `navigate`, `url`, `toggle`, `perform-action` or `fire-dom-event`, which is what the popup cards built on browser_mod listen for. In YAML only. |
 | `toggle_entity` | Power button (`switch`, `button`, `script`, `input_boolean`, `fan`), highlighted while on. On every type, the fridge included, where it is the only button; pair it with `controls_activation: confirm` for an appliance that must not be switched off by mistake. |
 | `power_entity` / `power_on_threshold` / `power_icon` | Power sensor. With a threshold, the state is derived from it: *running* above, then *finished* when it falls back. Pointing `state_entity` at the same sensor enables it with a 10 W threshold. `power_icon` replaces `mdi:power-plug`. |
@@ -313,13 +321,18 @@ Only `state_entity` is required, except on a fridge where a probe or a door cont
 | `supply_fan_entity` / `exhaust_fan_entity` / `fan_max_rpm` | HRV | Each fan's speed in rpm: each one turns at the speed of its motor, up to `fan_max_rpm` (2000 by default), and the line gives its rpm and its airflow (`airflow_entity` for supply, `exhaust_airflow_entity` for exhaust). |
 | `fan_speed_entity` | HRV | The speed in %, when the unit keeps it in a number of its own. |
 | `current_humidity_entity` / `target_humidity_entity` / `humidity_control_entity` | HRV | The humidity and its setpoint, on a line and on the drawing while humidity control runs. The humidity control switch makes it *Humidity control* and gets a button. |
-| `camera_layout` | camera | `indoor` (a pan and tilt camera) \| `tube` (Netatmo Welcome) \| `outdoor` (on its wall arm) \| `dome` (on the ceiling). Left out, a Netatmo indoor camera is a tube, a name that says dome a dome, and a name or a brand that says outdoor, garden, front, back, Arlo or spotlight an outdoor camera. |
+| `camera_layout` | camera | `indoor` (a pan and tilt camera) \| `tube` (Netatmo Welcome) \| `outdoor` (on its wall arm) \| `dome` (on the ceiling) \| `doorbell` (a video doorbell). Left out, a camera with a `ring_entity` or a name that says doorbell is a doorbell, a Netatmo indoor camera is a tube, a name that says dome a dome, and a name or a brand that says outdoor, garden, front, back, Arlo or spotlight an outdoor camera. |
+| `ring_entity` | camera | The doorbell's button: a binary sensor on while it is pressed (Reolink's *visitor*), or an event entity (Ring, Nest, UniFi Protect), *Ringing* for 30 seconds after its last `ring`. The ring of light beats, then a *Last ring* line. |
 | `motion_entity` | camera | A motion sensor: *Motion detected* while it is on, orange waves in front of the lens, then a *Last motion* line. |
 | `recording_entity` | camera | A recording sensor, for the integrations whose camera entity does not say *recording*. |
 | `night_entity` | camera | The infrared mode: the ring of LEDs around the lens glows red, and a *Night vision* line. |
 | `privacy_entity` | camera | A privacy switch (Reolink, Tapo): on, the camera is *Off*, its head bowed or its shutter closed. Netatmo's `monitoring` attribute does the same. Set it as `toggle_entity` too for a button. |
 | `signal_entity` / `battery_entity` | camera | The Wi-Fi signal and the battery, as lines. An Arlo camera's own attributes are read without them. |
 | `lamp_layout` | lamp | `bulb` \| `bedside` \| `floor` (an arc floor lamp) \| `torch` (a halogen torchiere, its light going up) \| `pendant` \| `strip` (a LED strip under a shelf) \| `spot` (recessed spots) \| `panels` (Nanoleaf-style panels) \| `desk` \| `wall` (a lantern on an outside wall). Left out, it is read from the name and the model: strip, WLED or Govee makes a strip, Nanoleaf or panel panels, bedside a bedside lamp, desk a desk lamp, halogen or uplight a torchiere, floor or arc a floor lamp, spot or GU10 spots, pendant or chandelier a pendant, wall, outdoor or garden a lantern; a bulb otherwise. |
+| `mailbox_layout` | mailbox | `through` (through the wall, seen from the side, a door on each face) \| `classic` (a box on its post, seen from the front). Left out, a `back_door_entity` makes it a through-the-wall box. |
+| `mailbox_front` | mailbox | `left` (default) \| `right`: the side the street is on, for a through-the-wall box. |
+| `mail_count_entity` | mailbox | A counter of the mail. The pile shows up to twelve letters, and the count is a line and a badge. |
+| `front_door_entity` / `back_door_entity` | mailbox | The contacts on the street door and on the house door: *Front door open*, *Back door open*, the door swings open and daylight comes in, and a line for each. |
 | `spots` | lamp | The number of spots drawn, 1 to 4. Left out, a light group draws one spot per light, up to four. |
 | `robot_layout` | robot | `vacuum` \| `mop` \| `mower` \| `stick` (a stick vacuum on its wall dock) \| `floor_washer` (a wet and dry floor washer in its station). Left out, a name that says stick, cordless or Dyson makes a stick vacuum, Tineco or floor washer a floor washer, a `lawn_mower` entity or a name that says mower, Landroid or Automower makes a mower, and Braava or mop a mopping robot. |
 | `robot_station` | robot | `station` (default: the vacuum's emptying station, the mop's washing station) \| `base` (a charging base alone). |
@@ -764,6 +777,30 @@ Its `state_entity` is the light: *On* or *Off*, and on, its brightness, its colo
 type: custom:ha-appliance-card
 state_entity: light.bedside_lamp
 lamp_layout: bedside
+```
+
+</details>
+
+<details>
+<summary><b>Mailboxes and doorbells</b></summary>
+
+A mailbox's `state_entity` is its mail indicator (a binary sensor, a helper) or its counter: *Empty*, *Mail* with the count, *Front door open* and *Back door open* from the contacts on its doors. Up to twelve letters are drawn in the pile; a new one comes in through the slot when the count goes up. Two shapes: through the wall, the street on the left or on the right, and a classic box on its post. [ha-smart-mailbox](https://github.com/danyial/ha-smart-mailbox) gives all four entities.
+
+```yaml
+type: custom:ha-appliance-card
+state_entity: binary_sensor.mailbox_mail
+mail_count_entity: sensor.mailbox_delivery_counter
+front_door_entity: binary_sensor.mailbox_flap
+back_door_entity: binary_sensor.mailbox_door
+```
+
+A doorbell is a camera with its button in `ring_entity`:
+
+```yaml
+type: custom:ha-appliance-card
+state_entity: camera.front_door
+ring_entity: binary_sensor.front_door_visitor
+motion_entity: binary_sensor.front_door_motion
 ```
 
 </details>

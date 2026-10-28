@@ -1227,6 +1227,23 @@ const hrvPair = hrvCard(L("Studio ventilation", "VMC studio"), "pair", "on", { p
 const hrvBypass = hrvCard(L("Summer night", "Nuit d'\u00e9t\u00e9"), "diagram", "on", { percentage: 70 }, [st("binary_sensor.vmc_bypass", "on")], { bypass_entity: "binary_sensor.vmc_bypass" });
 const camOffline = camCard(L("Driveway", "All\u00e9e"), "unavailable", { camera_layout: "outdoor" }, {});
 
+// Doorbells: a camera with its button, ringing or waiting, and the mailbox:
+// its pile of letters, read from a mail indicator, a counter and its doors.
+const camDoorbell = camCard(L("Front door", "Entrée"), "idle", { camera_layout: "doorbell", ring_entity: "binary_sensor.cam_visitor" }, {},
+  [st("binary_sensor.cam_visitor", "on")]);
+const camDoorbellIdle = camCard(L("Gate", "Portail"), "idle", { camera_layout: "doorbell", ring_entity: "binary_sensor.cam_visitor", motion_entity: "binary_sensor.cam_motion" }, {},
+  [{ ...st("binary_sensor.cam_visitor", "off"), last_changed: ago(95) }, st("binary_sensor.cam_motion", "on")]);
+const mbCard = (name, n, front, back, cfg = {}) => () => card({ name, state_entity: "input_boolean.mail", mail_count_entity: "counter.mail",
+  front_door_entity: "binary_sensor.mail_front", back_door_entity: "binary_sensor.mail_back", ...cfg },
+  [{ ...st("input_boolean.mail", n > 0 ? "on" : "off"), last_changed: ago(80) }, { ...st("counter.mail", n), last_changed: ago(80) },
+   st("binary_sensor.mail_front", front ? "on" : "off"), st("binary_sensor.mail_back", back ? "on" : "off")]);
+const mbThrough = mbCard(L("Mailbox", "Boîte aux lettres"), 3, false, false);
+const mbPostman = mbCard(L("Postman", "Facteur"), 6, true, false);
+const mbCollect = mbCard(L("Collecting", "Relevé du courrier"), 0, false, true);
+const mbRight = mbCard(L("Street on the right", "Rue à droite"), 12, false, false, { mailbox_front: "right" });
+const mbClassic = mbCard(L("Front gate", "Portillon"), 2, false, false, { back_door_entity: undefined, mailbox_layout: "classic" });
+const mbClassicOpen = mbCard(L("Box open", "Boîte ouverte"), 4, true, false, { back_door_entity: undefined, mailbox_layout: "classic" });
+
 // Lamps: their shape read from the name, their colour, their brightness and
 // their effect from the light entity, as Hue, WLED or Nanoleaf give them.
 const lampCard = (name, id, attrs, cfg = {}) => () => card({ name, state_entity: id, ...cfg }, [st(id, "on", attrs)]);
@@ -1273,6 +1290,8 @@ const EXTRA = { iron, coffee_black: coffeeBlack, boiler_window: boilerWindow, to
                 cam_indoor: camIndoor, cam_tube: camTube, cam_outdoor: camOutdoor, cam_dome: camDome, cam_privacy: camPrivacy, cam_offline: camOffline,
                 lamp_bulb: lampBulb, lamp_bedside: lampBedside, lamp_floor: lampFloor, lamp_torch: lampTorch, lamp_pendant: lampPendant,
                 lamp_strip: lampStrip, lamp_spots: lampSpots, lamp_panels: lampPanels, lamp_desk: lampDesk, lamp_wall: lampWall, lamp_off: lampOff,
+                cam_doorbell: camDoorbell, cam_doorbell_idle: camDoorbellIdle, mb_through: mbThrough, mb_postman: mbPostman, mb_collect: mbCollect,
+                mb_right: mbRight, mb_classic: mbClassic, mb_classic_open: mbClassicOpen,
                 net_sw8: netSw(8, 6), net_sw16: netSw(16, 11), net_sw24: netSw(24, 20), net_sw32: netSw(32, 27),
                 net_nas1: netBays(1, ["normal"], L("NAS, 1 bay", "NAS 1 baie")),
                 net_nas2: netBays(2, ["normal", null], L("NAS, 2 bays, 1 disk", "NAS 2 baies, 1 disque")),
@@ -1304,8 +1323,8 @@ function liveGallery() {
   const wrap = document.getElementById("wrap");
   wrap.innerHTML = `<header>
     <h1>HA Appliance Card</h1>
-    <p>${L("A Lovelace card for 42 kinds of home appliances, each drawn and animated from its own data. These cards run on made-up states: in Home Assistant every field is an entity you pick.",
-      "Une card Lovelace pour 42 types d'appareils, chacun dessiné et animé à partir de ses propres données. Ces cartes tournent sur des états inventés : dans Home Assistant, chaque champ est une entité que vous choisissez.")}</p>
+    <p>${L("A Lovelace card for 43 kinds of home appliances, each drawn and animated from its own data. These cards run on made-up states: in Home Assistant every field is an entity you pick.",
+      "Une card Lovelace pour 43 types d'appareils, chacun dessiné et animé à partir de ses propres données. Ces cartes tournent sur des états inventés : dans Home Assistant, chaque champ est une entité que vous choisissez.")}</p>
     <nav>${link("lang", "en", "English", !fr)}${link("lang", "fr", "Français", fr)}<span></span>${link("theme", "light", L("Light", "Clair"), !dark)}${link("theme", "dark", L("Dark", "Sombre"), dark)}<span></span>${link("plug", "0", L("Integrations", "Intégrations"), !plugOnly)}${link("plug", "1", L("Smart plug only", "Prise connectée seule"), plugOnly)}<span></span><a href="https://github.com/ADNPolymerase/ha-appliance-card">GitHub</a></nav>
     <p class="hint">${plugOnly
       ? L("Each card below has nothing but a smart plug: its switch and its power meter. Open “Change the values” and move the power, or press the power button.",
@@ -1326,6 +1345,7 @@ function liveGallery() {
     [L("Diffusers and ventilation", "Diffuseurs et ventilation"), [difDrop, difCone, difStone, difFlame, difNebulizer, hrvDiagram, hrvOneDuct, hrvPair, hrvBypass]],
     [L("Cameras", "Cam\u00e9ras"), [camIndoor, camTube, camOutdoor, camDome, camPrivacy, camOffline]],
     [L("Lamps", "Lampes"), [lampBulb, lampBedside, lampFloor, lampTorch, lampPendant, lampStrip, lampSpots, lampPanels, lampDesk, lampWall, lampOff]],
+    [L("Mailboxes and doorbells", "Boîtes aux lettres et sonnettes"), [mbThrough, mbPostman, mbCollect, mbRight, mbClassic, mbClassicOpen, camDoorbell, camDoorbellIdle]],
     [L("Pets", "Animaux"), [petFeeder, roundFeeder, doubleFeeder, dualFeeder, wetFeeder, petFountain]],
   ];
   // Each family folds, the first one open: forty cards in a row are hard to

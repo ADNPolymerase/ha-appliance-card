@@ -10909,4 +10909,94 @@ check('borne : ni un statut reconnu', evMode(evR('SuspendedEVSE', { power_entity
   check('nom : le champ name passe avant', named('UPS Status code', { name: 'UPS' }, { name: 'Mon onduleur' }), 'Mon onduleur');
 }
 
+// ── Doorbell and mailbox (forum HACF, message 115) ──────────────────────────
+{
+  const st = (state, attributes = {}, lc = '2026-08-12T09:00:00Z') => ({ state, attributes, last_changed: lc, last_updated: lc });
+  const card = (cfg, states, lang = 'fr') => {
+    const c = new Card();
+    c.setConfig({ type: 'custom:ha-appliance-card', ...cfg });
+    c._hass = { ...HASS(states), locale: { language: lang }, language: lang };
+    c._render();
+    return c;
+  };
+  const html = (c) => markup(c);
+  const mcls = (c) => machineCls(html(c));
+  const sline = (c) => stateLine(html(c));
+  // The doorbell.
+  const bell = (ring, extra = {}) => card({ state_entity: 'camera.porte', ring_entity: ring[0], ...extra }, { 'camera.porte': st('idle'), [ring[0]]: ring[1] });
+  check('sonnette : la forme vient du bouton', /cam-l-doorbell/.test(mcls(bell(['binary_sensor.visiteur', st('off')]))), true);
+  check('sonnette : la forme vient du nom', /cam-l-doorbell/.test(mcls(card({ state_entity: 'camera.reolink_video_doorbell' }, { 'camera.reolink_video_doorbell': st('idle') }))), true);
+  check('sonnette : une camera de jardin reste exterieure', /cam-l-outdoor/.test(mcls(card({ state_entity: 'camera.jardin' }, { 'camera.jardin': st('idle') }))), true);
+  check('sonnette : un binary_sensor allume fait sonner', sline(bell(['binary_sensor.visiteur', st('on')])), 'On sonne');
+  check('sonnette : et la classe du dessin', /cam-m-ring/.test(mcls(bell(['binary_sensor.visiteur', st('on')]))), true);
+  check('sonnette : eteint, en veille', sline(bell(['binary_sensor.visiteur', st('off')])), 'En veille');
+  check('sonnette : le dernier appel en ligne', infoLine(html(bell(['binary_sensor.visiteur', st('off', {}, '2026-08-12T09:30:00Z')])), 'Dernier appel'), '11:30');
+  const evNow = new Date(Date.now() - 10000).toISOString();
+  const evOld = new Date(Date.now() - 45000).toISOString();
+  const recent = bell(['event.porte_ding', st(evNow, { event_type: 'ring' })]);
+  check('sonnette : un evenement ring recent fait sonner', sline(recent), 'On sonne');
+  check('sonnette : et la carte s arrete seule de sonner', !!recent._ringTimer, true);
+  clearTimeout(recent._ringTimer);
+  check('sonnette : un evenement de plus de 30 s ne sonne plus', sline(bell(['event.porte_ding', st(evOld, { event_type: 'ring' })])), 'En veille');
+  check('sonnette : un autre type d evenement ne sonne pas', sline(bell(['event.porte_ding', st(evNow, { event_type: 'motion' })])), 'En veille');
+  check('sonnette : la confidentialite passe avant', sline(bell(['binary_sensor.visiteur', st('on')], { privacy_entity: 'switch.priv' })), 'On sonne');
+  {
+    const c = card({ state_entity: 'camera.porte', ring_entity: 'binary_sensor.visiteur', privacy_entity: 'switch.priv' },
+      { 'camera.porte': st('idle'), 'binary_sensor.visiteur': st('on'), 'switch.priv': st('on') });
+    check('sonnette : confidentialite activee, desactivee meme si on sonne', sline(c), 'Désactivée');
+  }
+  check('sonnette : en anglais', sline(card({ state_entity: 'camera.porte', ring_entity: 'binary_sensor.v' }, { 'camera.porte': st('idle'), 'binary_sensor.v': st('on') }, 'en')), 'Ringing');
+
+  // The mailbox.
+  const BAL = { state_entity: 'input_boolean.bal', mail_count_entity: 'counter.bal', front_door_entity: 'binary_sensor.av', back_door_entity: 'binary_sensor.ar' };
+  const S = (o = {}) => ({ 'input_boolean.bal': st(o.on ? 'on' : 'off'), 'counter.bal': st(String(o.n || 0)), 'binary_sensor.av': st(o.f ? 'on' : 'off'), 'binary_sensor.ar': st(o.b ? 'on' : 'off') });
+  const letters = (h) => (h.match(/class="mb-letter/g) || []).length;
+  check('bal : le type vient des champs', /mb mb-l-through/.test(mcls(card(BAL, S()))), true);
+  check('bal : le type vient des champs, sans le nom', /mb mb-l-classic/.test(mcls(card({ state_entity: 'input_boolean.courrier', mail_count_entity: 'counter.c' }, { 'input_boolean.courrier': st('on'), 'counter.c': st('1') }))), true);
+  check('bal : le type vient du nom', /mb mb-l-classic/.test(mcls(card({ state_entity: 'sensor.boite_aux_lettres_compteur' }, { 'sensor.boite_aux_lettres_compteur': st('2') }))), true);
+  check('bal : une balance n est pas une boite', /mb-l-/.test(mcls(card({ state_entity: 'sensor.balance_poids' }, { 'sensor.balance_poids': st('2') }))), false);
+  check('bal : vide', sline(card(BAL, S())), 'Vide');
+  check('bal : vide, aucune lettre', letters(html(card(BAL, S()))), 0);
+  check('bal : avec le compte', sline(card(BAL, S({ on: true, n: 3 }))), 'Courrier · 3');
+  check('bal : trois lettres dessinees', letters(html(card(BAL, S({ on: true, n: 3 })))), 3);
+  check('bal : douze au plus', letters(html(card(BAL, S({ on: true, n: 40 })))), 12);
+  check('bal : au-dela, le courrier deborde', /class="mb-jam"/.test(html(card(BAL, S({ on: true, n: 13 })))), true);
+  check('bal : a douze, rien ne deborde', /class="mb-jam"/.test(html(card(BAL, S({ on: true, n: 12 })))), false);
+  check('bal : le badge dit le vrai nombre', />40<\/text>/.test(html(card(BAL, S({ on: true, n: 40 })))), true);
+  check('bal : le compteur seul suffit', sline(card(BAL, { ...S({ n: 2 }) })), 'Courrier · 2');
+  check('bal : un indicateur sans compteur dessine une lettre', letters(html(card({ state_entity: 'binary_sensor.courrier', appliance_type: 'mailbox' }, { 'binary_sensor.courrier': st('on') }))), 1);
+  check('bal : et dit courrier', sline(card({ state_entity: 'binary_sensor.courrier', appliance_type: 'mailbox' }, { 'binary_sensor.courrier': st('on') })), 'Courrier');
+  check('bal : porte avant ouverte', sline(card(BAL, S({ on: true, n: 1, f: true }))), 'Porte avant ouverte');
+  check('bal : porte arriere ouverte, elle passe avant', sline(card(BAL, S({ on: true, n: 1, f: true, b: true }))), 'Porte arrière ouverte');
+  check('bal : les lignes des portes', infoLine(html(card(BAL, S({ f: true }))), 'Porte avant'), 'Ouverte');
+  check('bal : et la porte fermee', infoLine(html(card(BAL, S({ f: true }))), 'Porte arrière'), 'Fermée');
+  check('bal : la ligne du courrier recu', infoLine(html(card(BAL, S({ on: true, n: 2 }))), 'Courrier reçu'), '2');
+  check('bal : hors ligne', sline(card(BAL, { ...S(), 'input_boolean.bal': st('unavailable') })), 'Hors ligne');
+  check('bal : deux portes, traversante', /mb-l-through/.test(mcls(card(BAL, S()))), true);
+  check('bal : une porte, classique', /mb-l-classic/.test(mcls(card({ ...BAL, back_door_entity: undefined }, S()))), true);
+  check('bal : le dessin choisi gagne', /mb-l-classic/.test(mcls(card({ ...BAL, mailbox_layout: 'classic' }, S()))), true);
+  check('bal : la rue a gauche par defaut', /scale\(-1 1\)/.test(html(card(BAL, S()))), false);
+  check('bal : la rue a droite', /scale\(-1 1\)/.test(html(card({ ...BAL, mailbox_front: 'right' }, S()))), true);
+  check('bal : la rue est ecrite', />rue<\/text>/.test(html(card(BAL, S()))), true);
+  {
+    const c = card(BAL, S());
+    check('bal : rien n arrive au premier dessin', /mb-arrive/.test(mcls(card(BAL, S({ on: true, n: 1 })))), false);
+    c._hass = { ...HASS(S({ on: true, n: 1 })), locale: { language: 'fr' }, language: 'fr' };
+    c._render();
+    check('bal : une lettre arrive quand le compte monte', /mb-arrive/.test(mcls(c)), true);
+    check('bal : la nouvelle lettre est la premiere', /mb-letter mb-new/.test(html(c)), true);
+    check('bal : la carte revient au dessin fixe', !!c._mbTimer, true);
+    clearTimeout(c._mbTimer);
+    c._hass = { ...HASS(S({ on: true, n: 1, f: true })), locale: { language: 'fr' }, language: 'fr' };
+    c._render();
+    check('bal : la porte qui s ouvre pivote', /mb-swing-f/.test(mcls(c)), true);
+    clearTimeout(c._mbTimer);
+  }
+  check('bal : en anglais', sline(card(BAL, S({ b: true }), 'en')), 'Back door open');
+  check('editeur bal : le dessin et le cote de la rue', ['mailbox_layout', 'mailbox_front'].every((f) => new RegExp(`data-field="${f}"`).test(markup(newEditor({ ...BAL })))), true);
+  check('editeur bal : les portes et le compteur', ['mail_count_entity', 'front_door_entity', 'back_door_entity'].every((f) => new RegExp(`data-toggle="${f}"`).test(markup(newEditor({ appliance_type: 'mailbox', state_entity: 'input_boolean.bal' })))), true);
+  check('editeur bal : le cote de la rue seulement en traversante', /data-field="mailbox_front"/.test(markup(newEditor({ ...BAL, mailbox_layout: 'classic' }))), false);
+  check('editeur camera : le bouton de sonnette', /data-toggle="ring_entity"/.test(markup(newEditor({ appliance_type: 'camera', state_entity: 'camera.porte' }))), true);
+}
+
 report();

@@ -1,5 +1,5 @@
 // Built by tools/build.mjs from src/ha-appliance-card.js: edit the source, not this file.
-const CARD_VERSION = "3.5.0";
+const CARD_VERSION = "3.6.0";
 
 console.info(
   "%c HA-APPLIANCE-CARD %c v" + CARD_VERSION + " ",
@@ -153,7 +153,7 @@ const T = {
     layout_robot_stick: "Stick vacuum", stick_charged: "Charged",
     layout_robot_floor_washer: "Floor washer", stick_away: "Off the base", stick_away_threshold: "Off the base below this power (W)",
     type_diffuser: "Essential oil diffuser", dif_mist: "Diffusing", dif_inter: "Intermittent", dif_low: "Light mist", dif_empty: "Tank empty", dif_mode: "Mist mode", layout_dif_drop: "Teardrop", layout_dif_cone: "Cone", layout_dif_stone: "Pebble", layout_dif_flame: "Flame", layout_dif_nebulizer: "Nebulizer", section_tank_empty: "Empty tank sensor", type_hrv: "Heat recovery ventilation (HRV/ERV)", hrv_run: "Ventilating", hrv_boost: "Boost", hrv_bypass: "Bypass", hrv_defrost: "Defrosting", hrv_filter: "Replace filter", hrv_away: "Away", hrv_recirc: "Recirculation", hrv_humidity: "Humidity control", hrv_inter: "Intermittent", hrv_inter_paused: "Intermittent, paused", hrv_mode: "Mode", hrv_supply_fan: "Supply fan", hrv_exhaust_fan: "Exhaust fan", section_supply_fan: "Supply fan speed (rpm)", section_exhaust_fan: "Exhaust fan speed (rpm)", fan_max_rpm: "Fan top speed (rpm)", section_exhaust_airflow: "Exhaust airflow", section_target_humidity: "Humidity setpoint", section_humidity_control: "Humidity control switch", layout_hrv_diagram: "Air flows", layout_hrv_one_duct: "Wall unit, one duct", layout_hrv_pair: "Through-wall pair", section_supply_temperature: "Supply air temperature", section_extract_temperature: "Extract air temperature", section_exhaust_temperature: "Exhaust air temperature", section_bypass: "Bypass", section_airflow: "Airflow", hrv_t_outdoor: "fresh air", hrv_t_supply: "supply", hrv_t_extract: "extract", hrv_t_exhaust: "exhaust", hrv_outside: "outside", hrv_room: "room",
-    type_camera: "Camera", cam_idle: "Idle", cam_live: "Streaming", cam_rec: "Recording", cam_motion: "Motion detected", cam_off: "Off", cam_line_last_motion: "Last motion", cam_line_night: "Night vision", cam_line_signal: "Signal", section_motion: "Motion sensor", section_recording: "Recording sensor", section_night_vision: "Night vision", section_privacy: "Privacy mode", section_signal: "Signal strength", layout_cam_indoor: "Indoor, pan and tilt", layout_cam_tube: "Indoor tube", layout_cam_outdoor: "Outdoor", layout_cam_dome: "Dome",
+    type_camera: "Camera", cam_idle: "Idle", cam_live: "Streaming", cam_rec: "Recording", cam_motion: "Motion detected", cam_off: "Off", cam_line_last_motion: "Last motion", cam_line_night: "Night vision", cam_line_signal: "Signal", section_motion: "Motion sensor", section_recording: "Recording sensor", section_night_vision: "Night vision", section_privacy: "Privacy mode", section_signal: "Signal strength", layout_cam_indoor: "Indoor, pan and tilt", layout_cam_tube: "Indoor tube", layout_cam_outdoor: "Outdoor", layout_cam_dome: "Dome", layout_cam_doorbell: "Doorbell", cam_ring: "Ringing", cam_line_last_ring: "Last ring", section_ring: "Doorbell button", type_mailbox: "Mailbox", mb_empty: "Empty", mb_mail: "Mail", mb_front_open: "Front door open", mb_back_open: "Back door open", mb_line_count: "Mail received", mb_line_last: "Last mail", mb_front_door: "Front door", mb_back_door: "Back door", mb_open: "Open", mb_closed: "Closed", section_mail_count: "Mail counter", layout_mb_through: "Through the wall", layout_mb_classic: "Classic", mb_street: "street", mb_house: "house", mb_front_side: "Street side", mb_side_left: "Left", mb_side_right: "Right",
     type_lamp: "Lamp", lamp_off: "Off", lamp_on: "On", lamp_line_brightness: "Brightness", lamp_line_color_temp: "Colour temperature", lamp_line_effect: "Effect", lamp_spots: "Number of spots", layout_lamp_bulb: "Bulb", layout_lamp_bedside: "Bedside lamp", layout_lamp_floor: "Arc floor lamp", layout_lamp_torch: "Torchiere", layout_lamp_pendant: "Pendant", layout_lamp_strip: "LED strip", layout_lamp_spot: "Recessed spots", layout_lamp_panels: "Light panels", layout_lamp_desk: "Desk lamp", layout_lamp_wall: "Wall lantern",
     speed_power_max: "Power at top speed (W)", speed_power_custom: "Custom speed thresholds", speed_power_2: "Speed 2 from (W)", speed_power_3: "Speed 3 from (W)",
     fw_self_cleaning: "Self-cleaning", fw_dirty_full: "Dirty water tank full", fw_clean_empty: "Clean water tank empty",
@@ -2419,6 +2419,13 @@ const TYPE_AUTO_PATTERNS = {
     battery_entity: /batter|akku/i,
     signal_entity: /signal|rssi|wifi/i,
     connectivity_entity: /connect|online/i,
+    ring_entity: /ring|visitor|visiteur|doorbell|sonnette|klingel|press|appui/i,
+  },
+  // A mailbox: a counter of the mail, and a contact on each door.
+  mailbox: {
+    mail_count_entity: /count|compteur|zahl|contador|contatore|teller|licznik|nombre/i,
+    front_door_entity: /front|avant|vorn|delanter|anterior|voor|flap|clapet|slot|fente/i,
+    back_door_entity: /back|rear|arriere|hinten|traser|posterior|achter|empt|vidage/i,
   },
   solar: {
     power_entity: /(solar|pv|production|produced|inverter|onduleur).*(power|watt)|(power|watt).*(solar|pv)/i,
@@ -2889,6 +2896,8 @@ const TYPE_CAPS = {
   camera: { camera: true },
   // A lamp: on or off, how bright, in what colour, and its effect.
   lamp: { lamp: true },
+  // A mailbox: empty or with mail in it, and its doors.
+  mailbox: { mailbox: true, readOnly: true },
   // An essential oil diffuser: its mist, continuous or now and then, its
   // light, and its tank.
   diffuser: { diffuser: true, light: true },
@@ -2984,6 +2993,7 @@ const STATE_DOMAINS = {
   pool_pump: ["switch", "binary_sensor", "select", "input_select", "input_boolean", "fan"],
   camera: ["camera", "switch", "binary_sensor", "input_boolean"],
   lamp: ["light", "switch", "input_boolean"],
+  mailbox: ["binary_sensor", "input_boolean", "sensor", "counter", "input_number", "switch"],
   diffuser: ["fan", "switch", "select", "input_select", "humidifier", "input_boolean"],
   hrv: ["fan", "climate", "select", "input_select", "switch", "input_boolean"],
 };
@@ -3069,7 +3079,7 @@ const TYPE_GROUPS = [
   ["kitchen", ["dishwasher", "oven", "microwave", "hood", "cooktop", "fridge", "kettle", "cooker", "coffee", "rice_cooker", "air_fryer", "toaster"]],
   ["heating", ["water_heater", "boiler", "heat_pump", "pellet_stove", "space_heater", "towel_warmer"]],
   ["air", ["air_conditioner", "dehumidifier", "air_purifier", "fan", "diffuser", "hrv"]],
-  ["home", ["screen", "iron", "hair_dryer", "printer_3d", "robot", "pool_pump", "scale", "camera", "lamp"]],
+  ["home", ["screen", "iron", "hair_dryer", "printer_3d", "robot", "pool_pump", "scale", "camera", "lamp", "mailbox"]],
   ["energy", ["solar", "home_battery", "ev_charger"]],
   ["pets", ["pet_feeder", "pet_fountain"]],
   ["network", ["network", "ups"]],
@@ -3110,6 +3120,7 @@ function detectApplianceType(cfg, st) {
   if (UPS_ONLY_FIELDS.some((f) => cfg[f])) return "ups";
   if (CAMERA_ONLY_FIELDS.some((f) => cfg[f])) return "camera";
   if (LAMP_ONLY_FIELDS.some((f) => cfg[f])) return "lamp";
+  if (MAILBOX_ONLY_FIELDS.some((f) => cfg[f])) return "mailbox";
   if (DIFFUSER_ONLY_FIELDS.some((f) => cfg[f])) return "diffuser";
   if (HRV_ONLY_FIELDS.some((f) => cfg[f])) return "hrv";
   // Home Assistant has a domain of its own for each of them.
@@ -3121,6 +3132,7 @@ function detectApplianceType(cfg, st) {
     const named = stripAccents(`${cfg.icon || ""} ${cfg.state_entity || ""} ${(st && st.attributes.friendly_name) || ""}`).toLowerCase();
     if (DIFFUSER_NAME_RE.test(named)) return "diffuser";
     if (HRV_NAME_RE.test(named)) return "hrv";
+    if (MAILBOX_NAME_RE.test(named)) return "mailbox";
   }
   if (PURIFIER_ONLY_FIELDS.some((f) => cfg[f])) return "air_purifier";
   if (FAN_ONLY_FIELDS.some((f) => cfg[f])) return "fan";
@@ -4186,15 +4198,35 @@ function hrvHtml(cls, h) {
 // infrared mode say more when the integration has them, a privacy switch (or
 // Netatmo's monitoring attribute) says it is off, and a connectivity sensor
 // that it is gone.
-const CAMERA_ONLY_FIELDS = ["camera_layout", "motion_entity", "recording_entity", "night_entity", "privacy_entity", "signal_entity"];
-const CAMERA_LAYOUTS = ["indoor", "tube", "outdoor", "dome"];
-const CAMERA_LABELS = { idle: "cam_idle", live: "cam_live", rec: "cam_rec", motion: "cam_motion", off: "cam_off", unav: "ev_offline" };
-const CAMERA_COLORS = { idle: "var(--secondary-text-color, #727272)", live: "#03a9f4", rec: "#f44336", motion: "#ff9800",
+const CAMERA_ONLY_FIELDS = ["camera_layout", "motion_entity", "recording_entity", "night_entity", "privacy_entity", "signal_entity", "ring_entity"];
+const CAMERA_LAYOUTS = ["indoor", "tube", "outdoor", "dome", "doorbell"];
+const CAMERA_LABELS = { idle: "cam_idle", live: "cam_live", rec: "cam_rec", motion: "cam_motion", ring: "cam_ring", off: "cam_off", unav: "ev_offline" };
+const CAMERA_COLORS = { idle: "var(--secondary-text-color, #727272)", live: "#03a9f4", rec: "#f44336", motion: "#ff9800", ring: "#03a9f4",
   off: "var(--disabled-text-color, #9e9e9e)", unav: "var(--disabled-text-color, #9e9e9e)" };
 const CAMERA_ON = ["on", "true", "1", "yes", "detected", "recording", "motion", "home"];
 function camOn(hass, id) {
   const st = id ? stateObj(hass, id) : null;
   return !!st && CAMERA_ON.includes(String(st.state).toLowerCase());
+}
+// A doorbell's button: a binary sensor on while it is pressed (Reolink's
+// visitor), or an event entity whose state is the time of its last ring (Ring,
+// Nest, UniFi Protect), drawn ringing for half a minute after it.
+const CAM_RING_MS = 30000;
+function camRingAt(hass, id) {
+  const st = id ? stateObj(hass, id) : null;
+  if (!st) return null;
+  if (domainOf(id) === "event") {
+    const at = Date.parse(st.state);
+    const type = String((st.attributes || {}).event_type || "").toLowerCase();
+    return isFinite(at) && (!type || /ring|press|doorbell|single|button/.test(type)) ? at : null;
+  }
+  const at = Date.parse(st.last_changed);
+  return CAMERA_ON.includes(String(st.state).toLowerCase()) ? Date.now() : isFinite(at) ? at : null;
+}
+function camRinging(hass, id) {
+  const at = camRingAt(hass, id);
+  if (at === null) return false;
+  return domainOf(id) === "event" ? Date.now() - at < CAM_RING_MS : camOn(hass, id);
 }
 function cameraReadOf(hass, cfg, st) {
   const raw = st ? String(st.state).trim().toLowerCase() : "";
@@ -4204,6 +4236,7 @@ function cameraReadOf(hass, cfg, st) {
   let mode;
   if (!st || ["unavailable", "unknown", "none", ""].includes(raw) || gone) mode = "unav";
   else if (raw === "off" || a.monitoring === false || camOn(hass, cfg.privacy_entity)) mode = "off";
+  else if (camRinging(hass, cfg.ring_entity)) mode = "ring";
   else if (raw === "recording" || camOn(hass, cfg.recording_entity)) mode = "rec";
   else if (raw === "motion" || camOn(hass, cfg.motion_entity)) mode = "motion";
   else if (raw === "streaming") mode = "live";
@@ -4217,9 +4250,10 @@ function cameraLayoutOf(cfg, st) {
   if (CAMERA_LAYOUTS.includes(cfg.camera_layout)) return cfg.camera_layout;
   const a = (st && st.attributes) || {};
   const hay = stripAccents(`${cfg.state_entity || ""} ${cfg.name || ""} ${a.friendly_name || ""} ${a.brand || ""} ${a.model_name || a.model || ""}`).toLowerCase();
+  if (cfg.ring_entity || /doorbell|sonnette|klingel|timbre|campanello|deurbel|campainha|dorrklocka|ringeklokke|dorklokke|dzwonek|zvonek|visitor/.test(hay)) return "doorbell";
   if (/dome|kuppel|domo|cupola|turret/.test(hay)) return "dome";
   if (/netatmo/.test(hay) && !/presence|outdoor|exterieur|exterior/.test(hay)) return "tube";
-  if (/outdoor|exterieur|exterior|aussen|garden|jardin|garage|driveway|porch|terrasse|street|front|back|arriere|avant|entree|portail|gate|spotlight|bullet|presence|arlo|doorbell|sonnette/.test(hay)) return "outdoor";
+  if (/outdoor|exterieur|exterior|aussen|garden|jardin|garage|driveway|porch|terrasse|street|front|back|arriere|avant|entree|portail|gate|spotlight|bullet|presence|arlo/.test(hay)) return "outdoor";
   return "indoor";
 }
 
@@ -4235,6 +4269,8 @@ const CAM_DEFS = `<defs>
 <radialGradient id="cam-g-glow" r=".5"><stop offset="0" stop-color="#4fc3f7" stop-opacity=".95"/><stop offset="1" stop-color="#4fc3f7" stop-opacity="0"/></radialGradient>
 <radialGradient id="cam-g-smoke" cx=".4" cy=".25" r=".85"><stop offset="0" stop-color="#56606b" stop-opacity=".85"/><stop offset=".6" stop-color="#1c2228" stop-opacity=".9"/><stop offset="1" stop-color="#0b0e11" stop-opacity=".95"/></radialGradient>
 <linearGradient id="cam-g-al" x1="0" y1="0" x2="1" y2="0"><stop offset="0" class="cam-al0"/><stop offset=".32" class="cam-al1"/><stop offset=".7" class="cam-al2"/><stop offset="1" class="cam-al3"/></linearGradient>
+<linearGradient id="cam-g-dbglass" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#2a323b"/><stop offset=".5" stop-color="#0e1216"/><stop offset="1" stop-color="#05070a"/></linearGradient>
+<radialGradient id="cam-g-pir" cx=".4" cy=".35" r=".7"><stop offset="0" stop-color="#6b737c"/><stop offset="1" stop-color="#1b2026"/></radialGradient>
 <linearGradient id="cam-g-blk" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#05070a"/><stop offset=".35" stop-color="#2a3138"/><stop offset=".6" stop-color="#0d1014"/><stop offset="1" stop-color="#030405"/></linearGradient>
 </defs>`;
 const CAM_EDGE = 'stroke="rgba(0,0,0,.28)"';
@@ -4303,12 +4339,164 @@ ${camWaves(74, 38)}${CAM_REC}`,
 <path d="M30 34 A30 30 0 0 0 90 34" fill="none" ${CAM_EDGE} stroke-width=".7"/>
 <circle class="cam-led" cx="46" cy="45" r="1.3"/>
 </g>${camWaves(86, 82)}<g transform="translate(0 24)">${CAM_REC}</g>`,
+  // A video doorbell on its wall: the lens at the top, the motion sensor, and
+  // the button in its ring of light, which beats when someone rings.
+  doorbell: () => `<ellipse cx="62" cy="121" rx="20" ry="2.6" fill="#000" opacity=".12"/>
+<rect x="38" y="0" width="44" height="118" rx="18" style="fill:var(--ac-body-lo,#c9d0d7)" opacity=".7"/>
+<rect x="40" y="2" width="40" height="114" rx="17" fill="url(#cam-g-shv)" ${CAM_EDGE} stroke-width=".7"/>
+<path d="M47 8 H73" stroke="#fff" stroke-width="2" opacity=".6" stroke-linecap="round"/>
+<rect x="44" y="12" width="32" height="56" rx="13" fill="url(#cam-g-dbglass)"/>
+<g class="cam-on">${camLens(60, 28, 6.6, 10.4)}</g>
+<g class="cam-off"><circle cx="60" cy="28" r="7.8" fill="#2a3037"/><circle cx="60" cy="28" r="5" fill="#1c2127"/></g>
+<circle class="cam-led" cx="60" cy="42.5" r="1.2"/>
+<circle cx="60" cy="54" r="5" fill="url(#cam-g-pir)"/><path d="M56 54 H64 M57 51.5 H63 M57 56.5 H63" stroke="#000" stroke-width=".4" opacity=".4"/>
+<path d="M49 18 Q55 14 64 14" stroke="#fff" stroke-width="1.2" opacity=".2" fill="none" stroke-linecap="round"/>
+<path d="M53 74 H67 M54.5 77 H65.5" stroke="rgba(0,0,0,.35)" stroke-width="1.1" stroke-linecap="round"/>
+<circle class="cam-dbhalo" cx="60" cy="96" r="12"/>
+<circle cx="60" cy="96" r="13" fill="#1b2026"/>
+<circle class="cam-dbring" cx="60" cy="96" r="11.6"/>
+<circle cx="60" cy="96" r="9.6" fill="url(#cam-g-sh)" ${CAM_EDGE} stroke-width=".5"/>
+<path d="M60 91.4 q-3.4 0 -3.4 3.6 v2.2 l-1.2 1.6 h9.2 l-1.2 -1.6 v-2.2 q0 -3.6 -3.4 -3.6 Z M58.8 99.6 a1.2 1.2 0 0 0 2.4 0" fill="#7b8590"/>
+<g class="cam-bell"><path d="M84 88 Q89 96 84 104" style="--dx:4px"/><path d="M90 84 Q97 96 90 108" style="--dx:5px"/><path d="M36 88 Q31 96 36 104" style="--dx:-4px"/><path d="M30 84 Q23 96 30 108" style="--dx:-5px"/></g>
+${camWaves(80, 40)}${CAM_REC}`,
 };
 function cameraHtml(cls, c) {
   const layout = CAMERA_LAYOUTS.includes(c.layout) ? c.layout : "indoor";
   const flags = ["cam", `cam-l-${layout}`, `cam-m-${c.mode || "unav"}`, c.night ? "cam-night" : "", c.dark ? "cam-dark" : ""].filter(Boolean).join(" ");
   return `
         <div class="machine ${cls} ${flags}"><svg class="cam-svg" viewBox="0 -8 120 135">${CAM_DEFS}${CAMERA_SVGS[layout]()}</svg></div>`;
+}
+
+// A mailbox, read from a mail indicator or a counter, and from the contacts on
+// its doors: empty, with mail in it, or one of its doors open. Up to twelve
+// letters are drawn in the pile.
+const MAILBOX_ONLY_FIELDS = ["mailbox_layout", "mailbox_front", "mail_count_entity", "front_door_entity", "back_door_entity"];
+const MAILBOX_LAYOUTS = ["through", "classic"];
+const MAILBOX_SIDES = ["left", "right"];
+const MAILBOX_MAX_LETTERS = 12;
+const MAILBOX_LABELS = { empty: "mb_empty", mail: "mb_mail", front: "mb_front_open", back: "mb_back_open", unav: "ev_offline" };
+const MAILBOX_COLORS = { empty: "var(--secondary-text-color, #727272)", mail: "#ffa000", front: "#03a9f4", back: "#03a9f4",
+  unav: "var(--disabled-text-color, #9e9e9e)" };
+const MAILBOX_ON = ["on", "true", "1", "yes", "open", "opened", "detected", "mail", "full"];
+// How long a letter takes to arrive, and a door to swing open.
+const MAILBOX_ARRIVE_MS = 2200;
+const MAILBOX_SWING_MS = 700;
+const MAILBOX_NAME_RE = /mail.?box|letter.?box|boite.?aux.?lettres|(^|[\s._])bal([\s._]|$)|briefkasten|buzon|brievenbus|postkasse|brevlada|skrzynka|cassetta.?postale|caixa.?de.?correio|schranka/;
+function mailboxOpen(hass, id) {
+  const st = id ? stateObj(hass, id) : null;
+  return !!st && MAILBOX_ON.includes(String(st.state).toLowerCase());
+}
+function mailboxReadOf(hass, cfg, st) {
+  const raw = st ? String(st.state).trim().toLowerCase() : "";
+  if (!st || ["unavailable", "unknown", "none", ""].includes(raw)) return { mode: "unav", count: null, present: false, front: false, back: false };
+  const own = numberOrNull(st.state);
+  const counted = cfg.mail_count_entity ? numericState(hass, cfg.mail_count_entity) : own;
+  const count = counted === null ? null : Math.max(0, Math.round(counted));
+  const present = (count !== null && count > 0) || MAILBOX_ON.includes(raw) || (own !== null && own > 0);
+  const front = mailboxOpen(hass, cfg.front_door_entity);
+  const back = mailboxOpen(hass, cfg.back_door_entity);
+  const mode = back ? "back" : front ? "front" : present ? "mail" : "empty";
+  return { mode, count, present, front, back };
+}
+// Seen from the side through its wall when it has a door on each face, from
+// the front otherwise.
+function mailboxLayoutOf(cfg) {
+  if (MAILBOX_LAYOUTS.includes(cfg.mailbox_layout)) return cfg.mailbox_layout;
+  return cfg.back_door_entity ? "through" : "classic";
+}
+
+const MB_DEFS = `<defs>
+<linearGradient id="mb-g-shv" x1="0" y1="0" x2="0" y2="1"><stop offset="0" style="stop-color:var(--ac-body-hi,#fff)"/><stop offset="1" style="stop-color:var(--ac-body-lo,#c9d0d7)"/></linearGradient>
+<linearGradient id="mb-g-sh" x1="0" y1="0" x2="1" y2="1"><stop offset="0" style="stop-color:var(--ac-body-hi,#fff)"/><stop offset=".55" style="stop-color:var(--ac-body,#eef1f4)"/><stop offset="1" style="stop-color:var(--ac-body-lo,#c9d0d7)"/></linearGradient>
+<linearGradient id="mb-g-stone" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#a89f92"/><stop offset=".5" stop-color="#cbc3b6"/><stop offset="1" stop-color="#9c9386"/></linearGradient>
+<linearGradient id="mb-g-in" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3a4249"/><stop offset="1" stop-color="#5b646d"/></linearGradient>
+<linearGradient id="mb-g-day" x1="1" y1="0" x2="0" y2="0"><stop offset="0" stop-color="#fff6d6"/><stop offset="1" stop-color="#fff6d6" stop-opacity="0"/></linearGradient>
+<linearGradient id="mb-g-dayl" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#fff6d6"/><stop offset="1" stop-color="#fff6d6" stop-opacity="0"/></linearGradient>
+<clipPath id="mb-clip-slot"><rect x="0" y="-8" width="120" height="40"/></clipPath>
+</defs>`;
+const MB_EDGE = 'stroke="rgba(0,0,0,.28)"';
+const MB_BODY = "url(#mb-g-shv)";
+const MB_ROT = [-3, 2, -1, 4, -2, 1, 3, -4, 2, -1, 0, 3];
+const MB_JIT = [0, 2, -1, 1, -2, 0, 2, 1, -1, 0, -2, 1];
+const mbEnvelope = (x, y, r, w = 22, h = 9) => `<g transform="rotate(${r} ${x + w / 2} ${y + h / 2})"><rect x="${x}" y="${y}" width="${w}" height="${h}" rx="1" fill="#fff" stroke="#c7ccd2" stroke-width=".5"/><path d="M${x} ${y} L${x + w / 2} ${y + h * 0.55} L${x + w} ${y}" fill="none" stroke="#c7ccd2" stroke-width=".6"/></g>`;
+// The pile, three letters a layer. The one just received starts at the slot
+// (sx, sy) and travels to its place.
+function mbLetters(n, x0, step, floor, newIdx, sx, sy) {
+  let out = "";
+  for (let i = 0; i < Math.min(n, MAILBOX_MAX_LETTERS); i++) {
+    const x = x0 + (i % 3) * step + MB_JIT[i], y = floor - 10 - Math.floor(i / 3) * 6.5 + (i % 2);
+    out += `<g class="mb-letter${i + 1 === newIdx ? " mb-new" : ""}" style="--dx:${sx - x}px;--dy:${sy - y}px">${mbEnvelope(x, y, MB_ROT[i])}</g>`;
+  }
+  return out;
+}
+const mbBadge = (n) => {
+  const txt = n === null || n === undefined ? "" : String(n);
+  const w = txt ? (txt.length > 1 ? 30 : 25) : 17;
+  return `<g class="mb-badge"><rect x="4" y="6" width="${w}" height="12" rx="6" fill="#ffa000"/><rect x="8" y="9" width="9" height="6" rx="1" fill="#fff"/><path d="M8 9 l4.5 3 l4.5 -3" fill="none" stroke="#ffa000" stroke-width=".9"/>${txt ? `<text x="19.5" y="15.4" font-size="8" font-family="Arial, sans-serif" font-weight="700" fill="#fff">${txt}</text>` : ""}</g>`;
+};
+// More than twelve: some no longer fit, and end up on the ground.
+const mbSpill = (spots) => `<g>${spots.map(([x, y, r]) => `<g class="mb-spill">${mbEnvelope(x, y, r)}</g>`).join("")}</g>`;
+const MB_SVGS = {
+  // Through a pillar, seen from the side: the street door on the left, the
+  // house door on the right. A door hinged on a vertical edge shows its face
+  // as it opens.
+  through: (c) => {
+    const front = c.front
+      ? `<g class="mb-swing hl"><path d="M24 34 L7 38.5 V77.5 L24 82 Z" fill="url(#mb-g-sh)" ${MB_EDGE} stroke-width=".6"/><path d="M10 43 V73" stroke="#fff" stroke-width="1.1" opacity=".5"/><path d="M21.4 40.2 L8.6 43.6 V47.6 L21.4 44.2 Z" style="fill:var(--ac-body-lo,#c9d0d7)" ${MB_EDGE} stroke-width=".4"/><path d="M20.6 41.1 L9.4 44.1 V46.5 L20.6 43.5 Z" fill="#151a20"/><path d="M20.6 41.1 L9.4 44.1 V45.6 L20.6 42.6 Z" fill="url(#mb-g-sh)" ${MB_EDGE} stroke-width=".3"/><path d="M20.2 41.5 L9.8 44.3" stroke="#fff" stroke-width=".4" opacity=".6"/><circle cx="10.6" cy="61" r="1.3" fill="#7b8590"/><rect x="10.25" y="61" width=".7" height="2.2" fill="#7b8590"/></g>`
+      : `<rect x="22" y="34" width="5" height="48" rx="1" fill="${MB_BODY}" ${MB_EDGE} stroke-width=".6"/><rect x="20.4" y="44" width="1.8" height="10" rx=".9" fill="#7b8590"/><path d="M22 36.4 L16.6 37.8 V40 H22 Z" fill="${MB_BODY}" ${MB_EDGE} stroke-width=".5"/><rect x="16.6" y="40" width="5.4" height="1.2" fill="#151a20"/>`;
+    const back = c.back
+      ? `<g class="mb-swing hr"><path d="M96 34 L113 38.5 V77.5 L96 82 Z" fill="url(#mb-g-sh)" ${MB_EDGE} stroke-width=".6"/><circle cx="109" cy="58" r="1.5" fill="#7b8590"/><rect x="108.6" y="58" width=".8" height="2.4" fill="#7b8590"/></g>`
+      : `<rect x="93" y="34" width="5" height="48" rx="1" fill="${MB_BODY}" ${MB_EDGE} stroke-width=".6"/><circle cx="99" cy="58" r="1.6" fill="#7b8590"/><rect x="98.6" y="58" width=".8" height="2.6" fill="#7b8590"/>`;
+    const box = `<ellipse cx="60" cy="124" rx="44" ry="3" fill="#000" opacity=".12"/>
+<rect x="46" y="-8" width="28" height="134" fill="url(#mb-g-stone)"/>
+<path d="M46 6 H74 M46 22 H74 M46 96 H74 M46 112 H74 M60 -8 V6 M54 6 V22 M66 22 V34 M58 82 V96 M64 96 V112 M56 112 V126" stroke="#8d8477" stroke-width=".6" opacity=".7"/>
+<rect x="26" y="34" width="68" height="48" rx="2" fill="url(#mb-g-in)"/>
+<rect class="mb-light" x="60" y="36" width="33" height="44" fill="url(#mb-g-day)"/>
+<rect class="mb-light-f" x="27" y="36" width="33" height="44" fill="url(#mb-g-dayl)"/>
+<rect x="46" y="34" width="28" height="48" fill="#000" opacity=".18"/>
+${mbLetters(c.drawn, 28, 21, 81, c.newIdx, -6, 36)}
+<rect x="24" y="30" width="72" height="5" rx="1.5" fill="${MB_BODY}" ${MB_EDGE} stroke-width=".6"/>
+<rect x="24" y="81" width="72" height="4" rx="1" style="fill:var(--ac-body-lo,#c9d0d7)" ${MB_EDGE} stroke-width=".5"/>
+${front}${back}
+${c.over ? `<g class="mb-jam">${mbEnvelope(6, 33, -12, 20, 8)}</g>${mbSpill([[2, 113, -8], [16, 116, 6], [30, 112, -3]])}` : ""}`;
+    const right = c.side === "right";
+    const lbl = (x, text) => `<text x="${x}" y="100" font-size="7" font-family="Arial, sans-serif" class="mb-lbl" text-anchor="middle">${esc(text || "")}</text>`;
+    return `${right ? `<g transform="translate(120 0) scale(-1 1)">${box}</g>` : box}
+${lbl(34, right ? c.house : c.street)}${lbl(86, right ? c.street : c.house)}`;
+  },
+  // A box on a post, seen from the front: a slot under a visor, a window, a
+  // name plate and a lock on its door.
+  classic: (c) => {
+    const door = c.front
+      ? `<g class="mb-swing hl"><path d="M30 40 L12 45 V89 L30 94 Z" fill="${MB_BODY}" ${MB_EDGE} stroke-width=".6"/><path d="M15 50 V84" stroke="#fff" stroke-width="1.2" opacity=".5"/></g>`
+      : `<rect x="30" y="40" width="60" height="54" rx="3" fill="url(#mb-g-sh)" ${MB_EDGE} stroke-width=".6"/>
+<rect x="40" y="46" width="40" height="10" rx="2" fill="#151a20"/>
+<g class="mb-glass">${c.drawn > 0 ? '<rect x="43" y="50" width="16" height="6" fill="#fff"/>' : ""}${c.drawn > 4 ? '<rect x="57" y="49" width="18" height="7" fill="#f4f1e8"/>' : ""}${c.drawn > 8 ? '<rect x="50" y="47" width="14" height="9" fill="#fff" transform="rotate(-6 57 51)"/>' : ""}</g>
+<path d="M41 47.5 H58" stroke="#fff" stroke-width=".8" opacity=".3"/>
+<rect x="44" y="62" width="32" height="8" rx="1" fill="#c8a24e"/><path d="M48 66 H72" stroke="#8a6d2a" stroke-width=".8"/>
+<circle cx="82" cy="80" r="2.2" fill="#7b8590"/><rect x="81.4" y="80" width="1.2" height="3.4" fill="#7b8590"/>`;
+    return `<ellipse cx="60" cy="124" rx="22" ry="2.6" fill="#000" opacity=".14"/>
+<rect x="55" y="98" width="10" height="27" fill="#8f979f"/><rect x="55" y="98" width="3" height="27" fill="#fff" opacity=".25"/>
+<rect x="24" y="18" width="72" height="82" rx="5" fill="${MB_BODY}" ${MB_EDGE} stroke-width=".7"/>
+<rect x="30" y="40" width="60" height="54" rx="3" fill="url(#mb-g-in)"/>
+${mbLetters(c.drawn, 31, 19, 94, 0, 0, 0)}
+<rect class="mb-light-f" x="30" y="40" width="44" height="54" fill="url(#mb-g-dayl)"/>
+${door}
+<rect x="20" y="12" width="80" height="9" rx="3" fill="${MB_BODY}" ${MB_EDGE} stroke-width=".7"/><path d="M24 14 H96" stroke="#fff" stroke-width="1.4" opacity=".7"/>
+<rect x="36" y="29.6" width="48" height="3.4" rx="1" fill="#151a20"/>
+<g clip-path="url(#mb-clip-slot)"><g class="mb-post"><rect x="47" y="21" width="26" height="10" rx="1" fill="#fff" stroke="#c7ccd2" stroke-width=".5"/><path d="M47 21 L60 27 L73 21" fill="none" stroke="#c7ccd2" stroke-width=".6"/></g></g>
+<path d="M34 30 L36.4 24.6 H83.6 L86 30 Z" fill="url(#mb-g-sh)" ${MB_EDGE} stroke-width=".5"/><path d="M37 25.6 H83" stroke="#fff" stroke-width=".8" opacity=".6"/>
+${c.over ? `<g class="mb-jam">${mbEnvelope(40, 18, -14, 18, 10)}${mbEnvelope(54, 16, 4, 18, 11)}${mbEnvelope(66, 19, 16, 17, 9)}</g>${mbSpill([[22, 114, -6], [72, 116, 8], [86, 112, -4]])}` : ""}`;
+  },
+};
+function mailboxHtml(cls, c) {
+  const layout = MAILBOX_LAYOUTS.includes(c.layout) ? c.layout : "classic";
+  const flags = ["mb", `mb-l-${layout}`, `mb-m-${c.mode || "unav"}`, c.present ? "mb-mail" : "", c.front ? "mb-front" : "", c.back ? "mb-back" : "",
+    c.arrive !== null && c.arrive !== undefined ? "mb-arrive" : "", c.swingF ? "mb-swing-f" : "", c.swingB ? "mb-swing-b" : ""].filter(Boolean).join(" ");
+  // A redraw while a letter is on its way resumes it where it was.
+  const ago = c.arrive ? `--mb-ago:${(-c.arrive / 1000).toFixed(2)}s` : "";
+  return `
+        <div class="machine ${cls} ${flags}" style="${ago}"><svg class="mb-svg" viewBox="0 -8 120 135">${MB_DEFS}${MB_SVGS[layout](c)}${c.present ? mbBadge(c.count) : ""}</svg></div>`;
 }
 
 // A lamp, read from its light entity: on or off, how bright, in what colour,
@@ -7378,7 +7566,50 @@ const ILLUSTRATION_CSS = {
         @keyframes cam-breathe { 0%, 100% { opacity: .35; } 50% { opacity: 1; } }
         @keyframes cam-wave { 0% { opacity: 0; transform: scale(.6); } 30% { opacity: 1; } 100% { opacity: 0; transform: scale(1.25); } }
         @keyframes cam-ir { 0%, 100% { opacity: .55; } 50% { opacity: 1; } }
+        .cam-dbring{fill:none;stroke:#4fc3f7;stroke-width:2.4;opacity:.45}
+        .cam-m-ring .cam-dbring{opacity:1;stroke:#29b6f6;animation:cam-dbpulse 1s ease-in-out infinite;animation-delay:var(--anim-offset,0s)}
+        .cam-m-off .cam-dbring,.cam-m-unav .cam-dbring{opacity:0}
+        .cam-dbhalo{fill:#4fc3f7;opacity:0;transform-box:fill-box;transform-origin:center}
+        .cam-m-ring .cam-dbhalo{animation:cam-dbhalo 1s ease-out infinite;animation-delay:var(--anim-offset,0s)}
+        .cam-bell{opacity:0}
+        .cam-m-ring .cam-bell{opacity:1}
+        .cam-bell path{fill:none;stroke:#29b6f6;stroke-width:1.8;stroke-linecap:round;opacity:0;animation:cam-dbwave 1s ease-out infinite}
+        .cam-bell path:nth-child(2n){animation-delay:.2s}
+        .cam-m-ring .cam-led{fill:#03a9f4}
+        @keyframes cam-dbpulse { 50% { stroke-width: 3.6; } }
+        @keyframes cam-dbhalo { 0% { opacity: .55; transform: none; } 100% { opacity: 0; transform: scale(1.75); } }
+        @keyframes cam-dbwave { 0% { opacity: 0; } 20% { opacity: 1; } 100% { opacity: 0; transform: translateX(var(--dx, 4px)); } }
         @media (prefers-reduced-motion: reduce) { .machine.cam * { animation-name: none !important; } }
+  `,
+  // A mailbox: its letters, the one that comes in, the light through an open
+  // door, and the doors swinging on their hinges.
+  mailbox: () => `
+        svg.mb-svg{position:absolute;left:0;top:0;width:96px;height:108px;overflow:hidden}
+        .mb-lbl{fill:var(--secondary-text-color,#8a929b)}
+        .mb-light,.mb-light-f{opacity:0;transition:opacity .4s}
+        .mb-back .mb-light,.mb-front .mb-light-f{opacity:.85}
+        .mb-badge{transform-box:fill-box;transform-origin:center}
+        .mb-post{opacity:0}
+        .mb-swing{transform-box:fill-box}
+        .mb-swing.hl{transform-origin:right center}
+        .mb-swing.hr{transform-origin:left center}
+        .mb-swing-f .mb-swing.hl,.mb-swing-b .mb-swing.hr{animation:mb-swing .5s ease-out both}
+        .mb-arrive .mb-new{animation:mb-in 1.5s ease-in-out both;animation-delay:var(--mb-ago,0s)}
+        .mb-arrive .mb-post{animation:mb-post 1.1s ease-in both;animation-delay:var(--mb-ago,0s)}
+        .mb-arrive .mb-glass{animation:mb-fade .4s both;animation-delay:calc(var(--mb-ago,0s) + 1s)}
+        .mb-arrive .mb-badge{animation:mb-pop .45s both;animation-delay:calc(var(--mb-ago,0s) + 1.3s)}
+        .mb-arrive .mb-jam{animation:mb-fade .3s both;animation-delay:var(--mb-ago,0s)}
+        .mb-arrive .mb-spill{animation:mb-spill .7s cubic-bezier(.5,0,1,.5) both;animation-delay:var(--mb-ago,0s)}
+        .mb-arrive .mb-spill:nth-child(2){animation-delay:calc(var(--mb-ago,0s) + .15s)}
+        .mb-arrive .mb-spill:nth-child(3){animation-delay:calc(var(--mb-ago,0s) + .3s)}
+        .machine.mb-m-unav{opacity:.45;filter:grayscale(1)}
+        @keyframes mb-swing { from { transform: scaleX(.12); } to { transform: none; } }
+        @keyframes mb-in { 0% { transform: translate(var(--dx), var(--dy)); opacity: 0; } 8% { opacity: 1; } 55% { transform: translate(0px, var(--dy)); animation-timing-function: cubic-bezier(.55,0,1,.45); } 86% { transform: translate(0px, 0px); } 93% { transform: translate(0px, -1.6px); } 100% { transform: none; } }
+        @keyframes mb-post { 0% { transform: translateY(-22px); opacity: 0; } 25% { opacity: 1; } 55% { transform: translateY(0px); } 100% { transform: translateY(13px); opacity: 1; } }
+        @keyframes mb-spill { 0% { transform: translateY(-34px); opacity: 0; } 20% { opacity: 1; } 85% { transform: translateY(1px); } 100% { transform: none; } }
+        @keyframes mb-fade { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes mb-pop { 0% { transform: scale(.4); opacity: 0; } 70% { transform: scale(1.15); opacity: 1; } 100% { transform: none; } }
+        @media (prefers-reduced-motion: reduce) { .machine.mb * { animation-name: none !important; } }
   `,
   // A lamp: the light's colour on its glass, its halo and the cone it
   // throws, dimmed with its brightness; an effect turns the segments' hue.
@@ -10276,6 +10507,7 @@ function illustrationHtml(type, ctx) {
   if (type === "ups") return upsHtml(cls, ctx.ups || { segs: 0 });
   if (type === "camera") return cameraHtml(cls, ctx.camera || {});
   if (type === "lamp") return lampHtml(cls, ctx.lampDraw || {});
+  if (type === "mailbox") return mailboxHtml(cls, ctx.mailbox || {});
   if (type === "diffuser") return diffuserHtml(cls, ctx.diffuser || {});
   if (type === "hrv") return hrvHtml(cls, ctx.hrv || {});
   if (type === "screen") return screenHtml(cls, ctx.screen || {});
@@ -13459,11 +13691,72 @@ class ApplianceCard extends HTMLElement {
           extraLines.push({ key: "cam_motion", icon: "mdi:motion-sensor", label: t(hass, "cam_line_last_motion"),
             value: keepTogether(feedTime(hass, seen)), entity: cfg.motion_entity });
         }
+        const ringAt = cfg.ring_entity ? camRingAt(hass, cfg.ring_entity) : null;
+        if (ringAt !== null && mode !== "ring") {
+          extraLines.push({ key: "cam_ring", icon: "mdi:doorbell", label: t(hass, "cam_line_last_ring"),
+            value: keepTogether(feedTime(hass, ringAt)), entity: cfg.ring_entity });
+        }
+        // An event's ring has no end of its own: the card ends it.
+        if (this._ringTimer) { clearTimeout(this._ringTimer); this._ringTimer = null; }
+        if (mode === "ring" && domainOf(cfg.ring_entity) === "event") {
+          this._ringTimer = setTimeout(() => { this._ringTimer = null; this._render(); }, Math.max(0, CAM_RING_MS - (Date.now() - ringAt)) + 50);
+        }
         if (night) {
           extraLines.push({ key: "cam_night", icon: "mdi:weather-night", label: t(hass, "cam_line_night"), value: "IR", entity: cfg.night_entity });
         }
       }
       camera = { mode, night, layout: cameraLayoutOf(cfg, st), dark: cfg.illustration_color === "black" };
+    }
+
+    // A mailbox: empty, with mail in it, or a door open. Lines for the count,
+    // the last mail and each door. A letter is drawn arriving when the count
+    // goes up, a door swinging when it opens, never on the first drawing.
+    let mailbox = null;
+    if (cap.mailbox) {
+      const m = mailboxReadOf(hass, cfg, st);
+      if (!cfg.state_show_raw || m.mode === "unav") {
+        stateLabel = m.mode === "mail" && m.count ? `${t(hass, "mb_mail")} \u00b7 ${m.count}` : t(hass, MAILBOX_LABELS[m.mode]);
+      }
+      color = MAILBOX_COLORS[m.mode];
+      const now = Date.now();
+      const prev = this._mbPrev;
+      if (prev && m.mode !== "unav") {
+        if ((m.count !== null && prev.count !== null && m.count > prev.count) || (m.present && !prev.present)) this._mbArriveAt = now;
+        if (m.front && !prev.front) this._mbSwingF = now;
+        if (m.back && !prev.back) this._mbSwingB = now;
+      }
+      this._mbPrev = m;
+      const since = (at, ms) => (at && now - at < ms ? now - at : null);
+      const arrive = m.present ? since(this._mbArriveAt, MAILBOX_ARRIVE_MS) : null;
+      const drawn = m.present ? Math.min(MAILBOX_MAX_LETTERS, m.count || 1) : 0;
+      if (m.mode !== "unav") {
+        if (m.count !== null) {
+          extraLines.push({ key: "mb_count", icon: "mdi:email-outline", label: t(hass, "mb_line_count"), value: String(m.count),
+            entity: cfg.mail_count_entity || cfg.state_entity });
+        }
+        const lastSt = m.present ? stateObj(hass, cfg.mail_count_entity || cfg.state_entity) : null;
+        const last = lastSt ? Date.parse(lastSt.last_changed) : NaN;
+        if (isFinite(last)) {
+          extraLines.push({ key: "mb_last", icon: "mdi:email-arrow-left-outline", label: t(hass, "mb_line_last"),
+            value: keepTogether(feedTime(hass, last)), entity: cfg.mail_count_entity || cfg.state_entity });
+        }
+        if (cfg.front_door_entity) {
+          extraLines.push({ key: "mb_front", icon: m.front ? "mdi:door-open" : "mdi:door-closed", label: t(hass, "mb_front_door"),
+            value: t(hass, m.front ? "mb_open" : "mb_closed"), entity: cfg.front_door_entity });
+        }
+        if (cfg.back_door_entity) {
+          extraLines.push({ key: "mb_back", icon: m.back ? "mdi:door-open" : "mdi:door-closed", label: t(hass, "mb_back_door"),
+            value: t(hass, m.back ? "mb_open" : "mb_closed"), entity: cfg.back_door_entity });
+        }
+      }
+      mailbox = { ...m, drawn, over: m.present && (m.count || 0) > MAILBOX_MAX_LETTERS,
+        newIdx: arrive !== null && (m.count || 1) <= MAILBOX_MAX_LETTERS ? drawn : 0, arrive, arriveAt: arrive !== null ? this._mbArriveAt : 0,
+        swingF: m.front && since(this._mbSwingF, MAILBOX_SWING_MS) !== null, swingB: m.back && since(this._mbSwingB, MAILBOX_SWING_MS) !== null,
+        layout: mailboxLayoutOf(cfg), side: MAILBOX_SIDES.includes(cfg.mailbox_front) ? cfg.mailbox_front : "left",
+        street: t(hass, "mb_street"), house: t(hass, "mb_house") };
+      // The arrival is drawn once: the card goes back to the still pile after it.
+      if (this._mbTimer) { clearTimeout(this._mbTimer); this._mbTimer = null; }
+      if (arrive !== null) this._mbTimer = setTimeout(() => { this._mbTimer = null; this._render(); }, MAILBOX_ARRIVE_MS - arrive + 50);
     }
 
     // A lamp: on or off, and lines for its brightness, its colour
@@ -13728,6 +14021,7 @@ class ApplianceCard extends HTMLElement {
       scale,
       camera,
       lampDraw,
+      mailbox,
       diffuser,
       hrv,
       ups,
@@ -13836,6 +14130,8 @@ class ApplianceCard extends HTMLElement {
       illustrationCtx.diffuser && [illustrationCtx.diffuser.mode, illustrationCtx.diffuser.lit, illustrationCtx.diffuser.layout].join("/"),
       illustrationCtx.hrv && [illustrationCtx.hrv.mode, illustrationCtx.hrv.level, illustrationCtx.hrv.layout, illustrationCtx.hrv.paused, illustrationCtx.hrv.sPace, illustrationCtx.hrv.ePace].join("/"),
       illustrationCtx.camera && [illustrationCtx.camera.mode, illustrationCtx.camera.night, illustrationCtx.camera.layout].join("/"),
+      illustrationCtx.mailbox && [illustrationCtx.mailbox.mode, illustrationCtx.mailbox.drawn, illustrationCtx.mailbox.count, illustrationCtx.mailbox.front,
+        illustrationCtx.mailbox.back, illustrationCtx.mailbox.layout, illustrationCtx.mailbox.side, illustrationCtx.mailbox.arriveAt].join("/"),
       illustrationCtx.lampDraw && [illustrationCtx.lampDraw.mode, illustrationCtx.lampDraw.rgb.join(","), illustrationCtx.lampDraw.pct,
         illustrationCtx.lampDraw.fx, illustrationCtx.lampDraw.layout, illustrationCtx.lampDraw.spots].join("/"),
       illustrationCtx.scale && [illustrationCtx.scale.mode, illustrationCtx.scale.text, illustrationCtx.scale.unit, illustrationCtx.scale.fresh].join("/"),
@@ -14418,7 +14714,7 @@ function loadEditor() {
   if (customElements.get("ha-appliance-card-editor")) return Promise.resolve();
   if (!editorLoading) {
     editorLoading = import(assetUrl("ha-appliance-card-editor.js"))
-      .then((m) => m.default({ t, onLanguageLoaded, LANGUAGE_NAMES, localizedHass, activationOf, EV_POWER_THRESHOLD, stateObj, parseValueMap, stringifyValueMap, alertsArray, LIST_OTHER, ENTITY_LISTS, listCandidates, defaultCardName, stripDeviceName, domainOf, INFO_MAX, autoSuggest, APPLIANCE_TYPES, STATE_DOMAINS, illustrationSizeOf, fontScaleOf, compactModeOf, TYPE_GROUPS, caps, detectApplianceType, SCREEN_STANDBY_W, SCREEN_LAYOUTS, SCREEN_IMAGES, HD_HEAT_W, NET_LAYOUTS, SWITCH_PORTS, NET_BAYS, NET_BUSY_MBIT, NET_TEMP_ALERT, netLayoutOf, ROBOT_LAYOUTS, ROBOT_STATIONS, ROBOT_FLOORS, ROBOT_SERVICES, STICK_AWAY_W, robotLayoutOf, POOL_PRESSURE_ALERT, SOLAR_LAYOUTS, BATTERY_LAYOUTS, BATTERY_IDLE_W, DIFFUSER_LAYOUTS, HRV_LAYOUTS, CAMERA_LAYOUTS, LAMP_LAYOUTS, LAMP_SPOTS, lampLayoutOf, UPS_BATTERY_LOW, HISTORY_HOURS, BODY_COLORS, esc, SHELTER_STYLES, SHELTER_COLORS, stateFreeSource }))
+      .then((m) => m.default({ t, onLanguageLoaded, LANGUAGE_NAMES, localizedHass, activationOf, EV_POWER_THRESHOLD, stateObj, parseValueMap, stringifyValueMap, alertsArray, LIST_OTHER, ENTITY_LISTS, listCandidates, defaultCardName, stripDeviceName, domainOf, INFO_MAX, autoSuggest, APPLIANCE_TYPES, STATE_DOMAINS, illustrationSizeOf, fontScaleOf, compactModeOf, TYPE_GROUPS, caps, detectApplianceType, SCREEN_STANDBY_W, SCREEN_LAYOUTS, SCREEN_IMAGES, HD_HEAT_W, NET_LAYOUTS, SWITCH_PORTS, NET_BAYS, NET_BUSY_MBIT, NET_TEMP_ALERT, netLayoutOf, ROBOT_LAYOUTS, ROBOT_STATIONS, ROBOT_FLOORS, ROBOT_SERVICES, STICK_AWAY_W, robotLayoutOf, POOL_PRESSURE_ALERT, SOLAR_LAYOUTS, BATTERY_LAYOUTS, BATTERY_IDLE_W, DIFFUSER_LAYOUTS, HRV_LAYOUTS, CAMERA_LAYOUTS, MAILBOX_LAYOUTS, MAILBOX_SIDES, mailboxLayoutOf, LAMP_LAYOUTS, LAMP_SPOTS, lampLayoutOf, UPS_BATTERY_LOW, HISTORY_HOURS, BODY_COLORS, esc, SHELTER_STYLES, SHELTER_COLORS, stateFreeSource }))
       .catch((err) => {
         editorLoading = null;
         throw err;

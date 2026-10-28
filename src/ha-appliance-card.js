@@ -1,4 +1,4 @@
-const CARD_VERSION = "3.5.0";
+const CARD_VERSION = "3.6.0";
 
 console.info(
   "%c HA-APPLIANCE-CARD %c v" + CARD_VERSION + " ",
@@ -152,7 +152,7 @@ const T = {
     layout_robot_stick: "Stick vacuum", stick_charged: "Charged",
     layout_robot_floor_washer: "Floor washer", stick_away: "Off the base", stick_away_threshold: "Off the base below this power (W)",
     type_diffuser: "Essential oil diffuser", dif_mist: "Diffusing", dif_inter: "Intermittent", dif_low: "Light mist", dif_empty: "Tank empty", dif_mode: "Mist mode", layout_dif_drop: "Teardrop", layout_dif_cone: "Cone", layout_dif_stone: "Pebble", layout_dif_flame: "Flame", layout_dif_nebulizer: "Nebulizer", section_tank_empty: "Empty tank sensor", type_hrv: "Heat recovery ventilation (HRV/ERV)", hrv_run: "Ventilating", hrv_boost: "Boost", hrv_bypass: "Bypass", hrv_defrost: "Defrosting", hrv_filter: "Replace filter", hrv_away: "Away", hrv_recirc: "Recirculation", hrv_humidity: "Humidity control", hrv_inter: "Intermittent", hrv_inter_paused: "Intermittent, paused", hrv_mode: "Mode", hrv_supply_fan: "Supply fan", hrv_exhaust_fan: "Exhaust fan", section_supply_fan: "Supply fan speed (rpm)", section_exhaust_fan: "Exhaust fan speed (rpm)", fan_max_rpm: "Fan top speed (rpm)", section_exhaust_airflow: "Exhaust airflow", section_target_humidity: "Humidity setpoint", section_humidity_control: "Humidity control switch", layout_hrv_diagram: "Air flows", layout_hrv_one_duct: "Wall unit, one duct", layout_hrv_pair: "Through-wall pair", section_supply_temperature: "Supply air temperature", section_extract_temperature: "Extract air temperature", section_exhaust_temperature: "Exhaust air temperature", section_bypass: "Bypass", section_airflow: "Airflow", hrv_t_outdoor: "fresh air", hrv_t_supply: "supply", hrv_t_extract: "extract", hrv_t_exhaust: "exhaust", hrv_outside: "outside", hrv_room: "room",
-    type_camera: "Camera", cam_idle: "Idle", cam_live: "Streaming", cam_rec: "Recording", cam_motion: "Motion detected", cam_off: "Off", cam_line_last_motion: "Last motion", cam_line_night: "Night vision", cam_line_signal: "Signal", section_motion: "Motion sensor", section_recording: "Recording sensor", section_night_vision: "Night vision", section_privacy: "Privacy mode", section_signal: "Signal strength", layout_cam_indoor: "Indoor, pan and tilt", layout_cam_tube: "Indoor tube", layout_cam_outdoor: "Outdoor", layout_cam_dome: "Dome",
+    type_camera: "Camera", cam_idle: "Idle", cam_live: "Streaming", cam_rec: "Recording", cam_motion: "Motion detected", cam_off: "Off", cam_line_last_motion: "Last motion", cam_line_night: "Night vision", cam_line_signal: "Signal", section_motion: "Motion sensor", section_recording: "Recording sensor", section_night_vision: "Night vision", section_privacy: "Privacy mode", section_signal: "Signal strength", layout_cam_indoor: "Indoor, pan and tilt", layout_cam_tube: "Indoor tube", layout_cam_outdoor: "Outdoor", layout_cam_dome: "Dome", layout_cam_doorbell: "Doorbell", cam_ring: "Ringing", cam_line_last_ring: "Last ring", section_ring: "Doorbell button", type_mailbox: "Mailbox", mb_empty: "Empty", mb_mail: "Mail", mb_front_open: "Front door open", mb_back_open: "Back door open", mb_line_count: "Mail received", mb_line_last: "Last mail", mb_front_door: "Front door", mb_back_door: "Back door", mb_open: "Open", mb_closed: "Closed", section_mail_count: "Mail counter", layout_mb_through: "Through the wall", layout_mb_classic: "Classic", mb_street: "street", mb_house: "house", mb_front_side: "Street side", mb_side_left: "Left", mb_side_right: "Right",
     type_lamp: "Lamp", lamp_off: "Off", lamp_on: "On", lamp_line_brightness: "Brightness", lamp_line_color_temp: "Colour temperature", lamp_line_effect: "Effect", lamp_spots: "Number of spots", layout_lamp_bulb: "Bulb", layout_lamp_bedside: "Bedside lamp", layout_lamp_floor: "Arc floor lamp", layout_lamp_torch: "Torchiere", layout_lamp_pendant: "Pendant", layout_lamp_strip: "LED strip", layout_lamp_spot: "Recessed spots", layout_lamp_panels: "Light panels", layout_lamp_desk: "Desk lamp", layout_lamp_wall: "Wall lantern",
     speed_power_max: "Power at top speed (W)", speed_power_custom: "Custom speed thresholds", speed_power_2: "Speed 2 from (W)", speed_power_3: "Speed 3 from (W)",
     fw_self_cleaning: "Self-cleaning", fw_dirty_full: "Dirty water tank full", fw_clean_empty: "Clean water tank empty",
@@ -321,7 +321,7 @@ const T = {
     layout_robot_stick: "Aspirateur balai", stick_charged: "Charg\u00e9",
     layout_robot_floor_washer: "Laveur de sol", stick_away: "Hors de la base", stick_away_threshold: "Hors de la base sous cette puissance (W)",
     type_diffuser: "Diffuseur d'huiles essentielles", dif_mist: "Diffusion", dif_inter: "Intermittent", dif_low: "Brume l\u00e9g\u00e8re", dif_empty: "R\u00e9servoir vide", dif_mode: "Mode de brume", layout_dif_drop: "Goutte", layout_dif_cone: "C\u00f4ne", layout_dif_stone: "Galet", layout_dif_flame: "Flamme", layout_dif_nebulizer: "N\u00e9buliseur", section_tank_empty: "Capteur de r\u00e9servoir vide", type_hrv: "VMC double flux", hrv_run: "En marche", hrv_boost: "Boost", hrv_bypass: "Bypass", hrv_defrost: "D\u00e9givrage", hrv_filter: "Filtre \u00e0 changer", hrv_away: "Absence", hrv_recirc: "Recirculation", hrv_humidity: "Contr\u00f4le d'humidit\u00e9", hrv_inter: "Intermittent", hrv_inter_paused: "Intermittent, en pause", hrv_mode: "Mode", hrv_supply_fan: "Soufflage", hrv_exhaust_fan: "Extraction", section_supply_fan: "Vitesse du ventilateur de soufflage (tr/min)", section_exhaust_fan: "Vitesse du ventilateur d'extraction (tr/min)", fan_max_rpm: "Vitesse maximale des ventilateurs (tr/min)", section_exhaust_airflow: "D\u00e9bit d'extraction", section_target_humidity: "Consigne d'humidit\u00e9", section_humidity_control: "Interrupteur du contr\u00f4le d'humidit\u00e9", layout_hrv_diagram: "Sch\u00e9ma des flux", layout_hrv_one_duct: "Murale, un seul conduit", layout_hrv_pair: "Paire d\u00e9centralis\u00e9e", section_supply_temperature: "Temp\u00e9rature de soufflage", section_extract_temperature: "Temp\u00e9rature d'extraction", section_exhaust_temperature: "Temp\u00e9rature de rejet", section_bypass: "Bypass", section_airflow: "D\u00e9bit d'air", hrv_t_outdoor: "air neuf", hrv_t_supply: "soufflage", hrv_t_extract: "extraction", hrv_t_exhaust: "rejet", hrv_outside: "dehors", hrv_room: "pi\u00e8ce",
-    type_camera: "Cam\u00e9ra", cam_idle: "En veille", cam_live: "En direct", cam_rec: "Enregistrement", cam_motion: "Mouvement d\u00e9tect\u00e9", cam_off: "D\u00e9sactiv\u00e9e", cam_line_last_motion: "Dernier mouvement", cam_line_night: "Vision nocturne", cam_line_signal: "Signal", section_motion: "Capteur de mouvement", section_recording: "Capteur d'enregistrement", section_night_vision: "Vision nocturne", section_privacy: "Mode confidentialit\u00e9", section_signal: "Force du signal", layout_cam_indoor: "Int\u00e9rieure orientable", layout_cam_tube: "Int\u00e9rieure tube", layout_cam_outdoor: "Ext\u00e9rieure", layout_cam_dome: "D\u00f4me",
+    type_camera: "Cam\u00e9ra", cam_idle: "En veille", cam_live: "En direct", cam_rec: "Enregistrement", cam_motion: "Mouvement d\u00e9tect\u00e9", cam_off: "D\u00e9sactiv\u00e9e", cam_line_last_motion: "Dernier mouvement", cam_line_night: "Vision nocturne", cam_line_signal: "Signal", section_motion: "Capteur de mouvement", section_recording: "Capteur d'enregistrement", section_night_vision: "Vision nocturne", section_privacy: "Mode confidentialit\u00e9", section_signal: "Force du signal", layout_cam_indoor: "Int\u00e9rieure orientable", layout_cam_tube: "Int\u00e9rieure tube", layout_cam_outdoor: "Ext\u00e9rieure", layout_cam_dome: "D\u00f4me", layout_cam_doorbell: "Sonnette", cam_ring: "On sonne", cam_line_last_ring: "Dernier appel", section_ring: "Bouton de la sonnette", type_mailbox: "Bo\u00eete aux lettres", mb_empty: "Vide", mb_mail: "Courrier", mb_front_open: "Porte avant ouverte", mb_back_open: "Porte arri\u00e8re ouverte", mb_line_count: "Courrier re\u00e7u", mb_line_last: "Dernier courrier", mb_front_door: "Porte avant", mb_back_door: "Porte arri\u00e8re", mb_open: "Ouverte", mb_closed: "Ferm\u00e9e", section_mail_count: "Compteur de courrier", layout_mb_through: "Traversante", layout_mb_classic: "Classique", mb_street: "rue", mb_house: "maison", mb_front_side: "C\u00f4t\u00e9 rue", mb_side_left: "Gauche", mb_side_right: "Droite",
     type_lamp: "Lampe", lamp_off: "\u00c9teinte", lamp_on: "Allum\u00e9e", lamp_line_brightness: "Luminosit\u00e9", lamp_line_color_temp: "Temp\u00e9rature de couleur", lamp_line_effect: "Effet", lamp_spots: "Nombre de spots", layout_lamp_bulb: "Ampoule", layout_lamp_bedside: "Lampe de chevet", layout_lamp_floor: "Lampadaire arc", layout_lamp_torch: "Halog\u00e8ne sur pied", layout_lamp_pendant: "Suspension", layout_lamp_strip: "Ruban LED", layout_lamp_spot: "Spots encastr\u00e9s", layout_lamp_panels: "Panneaux lumineux", layout_lamp_desk: "Lampe de bureau", layout_lamp_wall: "Applique ext\u00e9rieure",
     speed_power_max: "Puissance \u00e0 la vitesse maxi (W)", speed_power_custom: "Personnaliser les seuils de vitesse", speed_power_2: "Vitesse 2 \u00e0 partir de (W)", speed_power_3: "Vitesse 3 \u00e0 partir de (W)",
     fw_self_cleaning: "Autonettoyage", fw_dirty_full: "R\u00e9servoir d'eau sale plein", fw_clean_empty: "R\u00e9servoir d'eau propre vide",
@@ -490,7 +490,7 @@ const T = {
     layout_robot_stick: "\u0412\u0435\u0440\u0442\u0438\u043a\u0430\u043b\u044c\u043d\u044b\u0439 \u043f\u044b\u043b\u0435\u0441\u043e\u0441", stick_charged: "\u0417\u0430\u0440\u044f\u0436\u0435\u043d",
     layout_robot_floor_washer: "\u041c\u043e\u044e\u0449\u0438\u0439 \u043f\u044b\u043b\u0435\u0441\u043e\u0441", stick_away: "\u041d\u0435 \u043d\u0430 \u0431\u0430\u0437\u0435", stick_away_threshold: "\u041d\u0435 \u043d\u0430 \u0431\u0430\u0437\u0435 \u043d\u0438\u0436\u0435 \u044d\u0442\u043e\u0439 \u043c\u043e\u0449\u043d\u043e\u0441\u0442\u0438 (\u0412\u0442)",
     type_diffuser: "\u0410\u0440\u043e\u043c\u0430\u0434\u0438\u0444\u0444\u0443\u0437\u043e\u0440", dif_mist: "\u0420\u0430\u0441\u043f\u044b\u043b\u0435\u043d\u0438\u0435", dif_inter: "\u041f\u0440\u0435\u0440\u044b\u0432\u0438\u0441\u0442\u043e", dif_low: "\u0421\u043b\u0430\u0431\u044b\u0439 \u0442\u0443\u043c\u0430\u043d", dif_empty: "\u0420\u0435\u0437\u0435\u0440\u0432\u0443\u0430\u0440 \u043f\u0443\u0441\u0442", dif_mode: "\u0420\u0435\u0436\u0438\u043c \u0442\u0443\u043c\u0430\u043d\u0430", layout_dif_drop: "\u041a\u0430\u043f\u043b\u044f", layout_dif_cone: "\u041a\u043e\u043d\u0443\u0441", layout_dif_stone: "\u0413\u0430\u043b\u044c\u043a\u0430", layout_dif_flame: "\u041f\u043b\u0430\u043c\u044f", layout_dif_nebulizer: "\u041d\u0435\u0431\u0443\u043b\u0430\u0439\u0437\u0435\u0440", section_tank_empty: "\u0414\u0430\u0442\u0447\u0438\u043a \u043f\u0443\u0441\u0442\u043e\u0433\u043e \u0440\u0435\u0437\u0435\u0440\u0432\u0443\u0430\u0440\u0430", type_hrv: "\u041f\u0440\u0438\u0442\u043e\u0447\u043d\u043e-\u0432\u044b\u0442\u044f\u0436\u043d\u0430\u044f \u0432\u0435\u043d\u0442\u0438\u043b\u044f\u0446\u0438\u044f", hrv_run: "\u0412\u0435\u043d\u0442\u0438\u043b\u044f\u0446\u0438\u044f", hrv_boost: "\u0411\u0443\u0441\u0442", hrv_bypass: "\u0411\u0430\u0439\u043f\u0430\u0441", hrv_defrost: "\u0420\u0430\u0437\u043c\u043e\u0440\u0430\u0436\u0438\u0432\u0430\u043d\u0438\u0435", hrv_filter: "\u0417\u0430\u043c\u0435\u043d\u0438\u0442\u0435 \u0444\u0438\u043b\u044c\u0442\u0440", hrv_away: "\u041d\u0435\u0442 \u0434\u043e\u043c\u0430", hrv_recirc: "\u0420\u0435\u0446\u0438\u0440\u043a\u0443\u043b\u044f\u0446\u0438\u044f", hrv_humidity: "\u041a\u043e\u043d\u0442\u0440\u043e\u043b\u044c \u0432\u043b\u0430\u0436\u043d\u043e\u0441\u0442\u0438", hrv_inter: "\u041f\u0440\u0435\u0440\u044b\u0432\u0438\u0441\u0442\u043e", hrv_inter_paused: "\u041f\u0440\u0435\u0440\u044b\u0432\u0438\u0441\u0442\u043e, \u043f\u0430\u0443\u0437\u0430", hrv_mode: "\u0420\u0435\u0436\u0438\u043c", hrv_supply_fan: "\u041f\u0440\u0438\u0442\u043e\u043a", hrv_exhaust_fan: "\u0412\u044b\u0442\u044f\u0436\u043a\u0430", section_supply_fan: "\u0421\u043a\u043e\u0440\u043e\u0441\u0442\u044c \u043f\u0440\u0438\u0442\u043e\u0447\u043d\u043e\u0433\u043e \u0432\u0435\u043d\u0442\u0438\u043b\u044f\u0442\u043e\u0440\u0430 (\u043e\u0431/\u043c\u0438\u043d)", section_exhaust_fan: "\u0421\u043a\u043e\u0440\u043e\u0441\u0442\u044c \u0432\u044b\u0442\u044f\u0436\u043d\u043e\u0433\u043e \u0432\u0435\u043d\u0442\u0438\u043b\u044f\u0442\u043e\u0440\u0430 (\u043e\u0431/\u043c\u0438\u043d)", fan_max_rpm: "\u041c\u0430\u043a\u0441\u0438\u043c\u0430\u043b\u044c\u043d\u0430\u044f \u0441\u043a\u043e\u0440\u043e\u0441\u0442\u044c \u0432\u0435\u043d\u0442\u0438\u043b\u044f\u0442\u043e\u0440\u043e\u0432 (\u043e\u0431/\u043c\u0438\u043d)", section_exhaust_airflow: "\u0420\u0430\u0441\u0445\u043e\u0434 \u0432\u044b\u0442\u044f\u0436\u043a\u0438", section_target_humidity: "\u0417\u0430\u0434\u0430\u043d\u043d\u0430\u044f \u0432\u043b\u0430\u0436\u043d\u043e\u0441\u0442\u044c", section_humidity_control: "\u0412\u044b\u043a\u043b\u044e\u0447\u0430\u0442\u0435\u043b\u044c \u043a\u043e\u043d\u0442\u0440\u043e\u043b\u044f \u0432\u043b\u0430\u0436\u043d\u043e\u0441\u0442\u0438", layout_hrv_diagram: "\u0421\u0445\u0435\u043c\u0430 \u043f\u043e\u0442\u043e\u043a\u043e\u0432", layout_hrv_one_duct: "\u041d\u0430\u0441\u0442\u0435\u043d\u043d\u0430\u044f, \u043e\u0434\u0438\u043d \u043a\u0430\u043d\u0430\u043b", layout_hrv_pair: "\u041f\u0430\u0440\u0430 \u0432 \u0441\u0442\u0435\u043d\u0435", section_supply_temperature: "\u0422\u0435\u043c\u043f\u0435\u0440\u0430\u0442\u0443\u0440\u0430 \u043f\u0440\u0438\u0442\u043e\u043a\u0430", section_extract_temperature: "\u0422\u0435\u043c\u043f\u0435\u0440\u0430\u0442\u0443\u0440\u0430 \u0432\u044b\u0442\u044f\u0436\u043a\u0438", section_exhaust_temperature: "\u0422\u0435\u043c\u043f\u0435\u0440\u0430\u0442\u0443\u0440\u0430 \u0432\u044b\u0431\u0440\u043e\u0441\u0430", section_bypass: "\u0411\u0430\u0439\u043f\u0430\u0441", section_airflow: "\u0420\u0430\u0441\u0445\u043e\u0434 \u0432\u043e\u0437\u0434\u0443\u0445\u0430", hrv_t_outdoor: "\u0441\u0432\u0435\u0436\u0438\u0439", hrv_t_supply: "\u043f\u0440\u0438\u0442\u043e\u043a", hrv_t_extract: "\u0432\u044b\u0442\u044f\u0436\u043a\u0430", hrv_t_exhaust: "\u0432\u044b\u0431\u0440\u043e\u0441", hrv_outside: "\u0443\u043b\u0438\u0446\u0430", hrv_room: "\u043a\u043e\u043c\u043d\u0430\u0442\u0430",
-    type_camera: "\u041a\u0430\u043c\u0435\u0440\u0430", cam_idle: "\u041e\u0436\u0438\u0434\u0430\u043d\u0438\u0435", cam_live: "\u0422\u0440\u0430\u043d\u0441\u043b\u044f\u0446\u0438\u044f", cam_rec: "\u0417\u0430\u043f\u0438\u0441\u044c", cam_motion: "\u0414\u0432\u0438\u0436\u0435\u043d\u0438\u0435", cam_off: "\u0412\u044b\u043a\u043b.", cam_line_last_motion: "\u041f\u043e\u0441\u043b\u0435\u0434\u043d\u0435\u0435 \u0434\u0432\u0438\u0436\u0435\u043d\u0438\u0435", cam_line_night: "\u041d\u043e\u0447\u043d\u043e\u0435 \u0432\u0438\u0434\u0435\u043d\u0438\u0435", cam_line_signal: "\u0421\u0438\u0433\u043d\u0430\u043b", section_motion: "\u0414\u0430\u0442\u0447\u0438\u043a \u0434\u0432\u0438\u0436\u0435\u043d\u0438\u044f", section_recording: "\u0414\u0430\u0442\u0447\u0438\u043a \u0437\u0430\u043f\u0438\u0441\u0438", section_night_vision: "\u041d\u043e\u0447\u043d\u043e\u0435 \u0432\u0438\u0434\u0435\u043d\u0438\u0435", section_privacy: "\u0420\u0435\u0436\u0438\u043c \u043f\u0440\u0438\u0432\u0430\u0442\u043d\u043e\u0441\u0442\u0438", section_signal: "\u0423\u0440\u043e\u0432\u0435\u043d\u044c \u0441\u0438\u0433\u043d\u0430\u043b\u0430", layout_cam_indoor: "\u0412\u043d\u0443\u0442\u0440\u0435\u043d\u043d\u044f\u044f \u043f\u043e\u0432\u043e\u0440\u043e\u0442\u043d\u0430\u044f", layout_cam_tube: "\u0412\u043d\u0443\u0442\u0440\u0435\u043d\u043d\u044f\u044f \u0442\u0440\u0443\u0431\u043a\u0430", layout_cam_outdoor: "\u0423\u043b\u0438\u0447\u043d\u0430\u044f", layout_cam_dome: "\u041a\u0443\u043f\u043e\u043b\u044c\u043d\u0430\u044f",
+    type_camera: "\u041a\u0430\u043c\u0435\u0440\u0430", cam_idle: "\u041e\u0436\u0438\u0434\u0430\u043d\u0438\u0435", cam_live: "\u0422\u0440\u0430\u043d\u0441\u043b\u044f\u0446\u0438\u044f", cam_rec: "\u0417\u0430\u043f\u0438\u0441\u044c", cam_motion: "\u0414\u0432\u0438\u0436\u0435\u043d\u0438\u0435", cam_off: "\u0412\u044b\u043a\u043b.", cam_line_last_motion: "\u041f\u043e\u0441\u043b\u0435\u0434\u043d\u0435\u0435 \u0434\u0432\u0438\u0436\u0435\u043d\u0438\u0435", cam_line_night: "\u041d\u043e\u0447\u043d\u043e\u0435 \u0432\u0438\u0434\u0435\u043d\u0438\u0435", cam_line_signal: "\u0421\u0438\u0433\u043d\u0430\u043b", section_motion: "\u0414\u0430\u0442\u0447\u0438\u043a \u0434\u0432\u0438\u0436\u0435\u043d\u0438\u044f", section_recording: "\u0414\u0430\u0442\u0447\u0438\u043a \u0437\u0430\u043f\u0438\u0441\u0438", section_night_vision: "\u041d\u043e\u0447\u043d\u043e\u0435 \u0432\u0438\u0434\u0435\u043d\u0438\u0435", section_privacy: "\u0420\u0435\u0436\u0438\u043c \u043f\u0440\u0438\u0432\u0430\u0442\u043d\u043e\u0441\u0442\u0438", section_signal: "\u0423\u0440\u043e\u0432\u0435\u043d\u044c \u0441\u0438\u0433\u043d\u0430\u043b\u0430", layout_cam_indoor: "\u0412\u043d\u0443\u0442\u0440\u0435\u043d\u043d\u044f\u044f \u043f\u043e\u0432\u043e\u0440\u043e\u0442\u043d\u0430\u044f", layout_cam_tube: "\u0412\u043d\u0443\u0442\u0440\u0435\u043d\u043d\u044f\u044f \u0442\u0440\u0443\u0431\u043a\u0430", layout_cam_outdoor: "\u0423\u043b\u0438\u0447\u043d\u0430\u044f", layout_cam_dome: "\u041a\u0443\u043f\u043e\u043b\u044c\u043d\u0430\u044f", layout_cam_doorbell: "\u0414\u0432\u0435\u0440\u043d\u043e\u0439 \u0437\u0432\u043e\u043d\u043e\u043a", cam_ring: "\u0417\u0432\u043e\u043d\u044f\u0442", cam_line_last_ring: "\u041f\u043e\u0441\u043b\u0435\u0434\u043d\u0438\u0439 \u0437\u0432\u043e\u043d\u043e\u043a", section_ring: "\u041a\u043d\u043e\u043f\u043a\u0430 \u0437\u0432\u043e\u043d\u043a\u0430", type_mailbox: "\u041f\u043e\u0447\u0442\u043e\u0432\u044b\u0439 \u044f\u0449\u0438\u043a", mb_empty: "\u041f\u0443\u0441\u0442\u043e", mb_mail: "\u041f\u043e\u0447\u0442\u0430", mb_front_open: "\u041f\u0435\u0440\u0435\u0434\u043d\u044f\u044f \u0434\u0432\u0435\u0440\u0446\u0430 \u043e\u0442\u043a\u0440\u044b\u0442\u0430", mb_back_open: "\u0417\u0430\u0434\u043d\u044f\u044f \u0434\u0432\u0435\u0440\u0446\u0430 \u043e\u0442\u043a\u0440\u044b\u0442\u0430", mb_line_count: "\u041f\u043e\u043b\u0443\u0447\u0435\u043d\u043e \u043f\u0438\u0441\u0435\u043c", mb_line_last: "\u041f\u043e\u0441\u043b\u0435\u0434\u043d\u0435\u0435 \u043f\u0438\u0441\u044c\u043c\u043e", mb_front_door: "\u041f\u0435\u0440\u0435\u0434\u043d\u044f\u044f \u0434\u0432\u0435\u0440\u0446\u0430", mb_back_door: "\u0417\u0430\u0434\u043d\u044f\u044f \u0434\u0432\u0435\u0440\u0446\u0430", mb_open: "\u041e\u0442\u043a\u0440\u044b\u0442\u0430", mb_closed: "\u0417\u0430\u043a\u0440\u044b\u0442\u0430", section_mail_count: "\u0421\u0447\u0451\u0442\u0447\u0438\u043a \u043f\u0438\u0441\u0435\u043c", layout_mb_through: "\u0421\u043a\u0432\u043e\u0437\u043d\u043e\u0439", layout_mb_classic: "\u041a\u043b\u0430\u0441\u0441\u0438\u0447\u0435\u0441\u043a\u0438\u0439", mb_street: "\u0443\u043b\u0438\u0446\u0430", mb_house: "\u0434\u043e\u043c", mb_front_side: "\u0421\u0442\u043e\u0440\u043e\u043d\u0430 \u0443\u043b\u0438\u0446\u044b", mb_side_left: "\u0421\u043b\u0435\u0432\u0430", mb_side_right: "\u0421\u043f\u0440\u0430\u0432\u0430",
     type_lamp: "\u041b\u0430\u043c\u043f\u0430", lamp_off: "\u0412\u044b\u043a\u043b.", lamp_on: "\u0412\u043a\u043b.", lamp_line_brightness: "\u042f\u0440\u043a\u043e\u0441\u0442\u044c", lamp_line_color_temp: "\u0426\u0432\u0435\u0442\u043e\u0432\u0430\u044f \u0442\u0435\u043c\u043f\u0435\u0440\u0430\u0442\u0443\u0440\u0430", lamp_line_effect: "\u042d\u0444\u0444\u0435\u043a\u0442", lamp_spots: "\u041a\u043e\u043b\u0438\u0447\u0435\u0441\u0442\u0432\u043e \u0441\u043f\u043e\u0442\u043e\u0432", layout_lamp_bulb: "\u041b\u0430\u043c\u043f\u043e\u0447\u043a\u0430", layout_lamp_bedside: "\u041f\u0440\u0438\u043a\u0440\u043e\u0432\u0430\u0442\u043d\u0430\u044f \u043b\u0430\u043c\u043f\u0430", layout_lamp_floor: "\u0422\u043e\u0440\u0448\u0435\u0440-\u0434\u0443\u0433\u0430", layout_lamp_torch: "\u0422\u043e\u0440\u0448\u0435\u0440 \u0441 \u043e\u0442\u0440\u0430\u0436\u0451\u043d\u043d\u044b\u043c \u0441\u0432\u0435\u0442\u043e\u043c", layout_lamp_pendant: "\u041f\u043e\u0434\u0432\u0435\u0441\u043d\u043e\u0439 \u0441\u0432\u0435\u0442\u0438\u043b\u044c\u043d\u0438\u043a", layout_lamp_strip: "\u0421\u0432\u0435\u0442\u043e\u0434\u0438\u043e\u0434\u043d\u0430\u044f \u043b\u0435\u043d\u0442\u0430", layout_lamp_spot: "\u0412\u0441\u0442\u0440\u0430\u0438\u0432\u0430\u0435\u043c\u044b\u0435 \u0441\u043f\u043e\u0442\u044b", layout_lamp_panels: "\u0421\u0432\u0435\u0442\u043e\u0432\u044b\u0435 \u043f\u0430\u043d\u0435\u043b\u0438", layout_lamp_desk: "\u041d\u0430\u0441\u0442\u043e\u043b\u044c\u043d\u0430\u044f \u043b\u0430\u043c\u043f\u0430", layout_lamp_wall: "\u041d\u0430\u0441\u0442\u0435\u043d\u043d\u044b\u0439 \u0444\u043e\u043d\u0430\u0440\u044c",
     speed_power_max: "\u041c\u043e\u0449\u043d\u043e\u0441\u0442\u044c \u043d\u0430 \u043c\u0430\u043a\u0441\u0438\u043c\u0430\u043b\u044c\u043d\u043e\u0439 \u0441\u043a\u043e\u0440\u043e\u0441\u0442\u0438 (\u0412\u0442)", speed_power_custom: "\u0421\u0432\u043e\u0438 \u043f\u043e\u0440\u043e\u0433\u0438 \u0441\u043a\u043e\u0440\u043e\u0441\u0442\u0438", speed_power_2: "\u0421\u043a\u043e\u0440\u043e\u0441\u0442\u044c 2 \u043e\u0442 (\u0412\u0442)", speed_power_3: "\u0421\u043a\u043e\u0440\u043e\u0441\u0442\u044c 3 \u043e\u0442 (\u0412\u0442)",
     fw_self_cleaning: "\u0421\u0430\u043c\u043e\u043e\u0447\u0438\u0441\u0442\u043a\u0430", fw_dirty_full: "\u0411\u0430\u043a \u0433\u0440\u044f\u0437\u043d\u043e\u0439 \u0432\u043e\u0434\u044b \u043f\u043e\u043b\u043e\u043d", fw_clean_empty: "\u0411\u0430\u043a \u0447\u0438\u0441\u0442\u043e\u0439 \u0432\u043e\u0434\u044b \u043f\u0443\u0441\u0442",
@@ -659,7 +659,7 @@ const T = {
     layout_robot_stick: "Akku-Stielsauger", stick_charged: "Geladen",
     layout_robot_floor_washer: "Nass-Trocken-Sauger", stick_away: "Nicht in der Station", stick_away_threshold: "Nicht in der Station unter dieser Leistung (W)",
     type_diffuser: "Aroma-Diffusor", dif_mist: "Vernebelt", dif_inter: "Intervall", dif_low: "Leichter Nebel", dif_empty: "Tank leer", dif_mode: "Nebelmodus", layout_dif_drop: "Tropfen", layout_dif_cone: "Kegel", layout_dif_stone: "Kiesel", layout_dif_flame: "Flamme", layout_dif_nebulizer: "Vernebler", section_tank_empty: "Sensor leerer Tank", type_hrv: "L\u00fcftung mit W\u00e4rmer\u00fcckgewinnung", hrv_run: "L\u00fcftet", hrv_boost: "Boost", hrv_bypass: "Bypass", hrv_defrost: "Abtauen", hrv_filter: "Filter wechseln", hrv_away: "Abwesend", hrv_recirc: "Umluft", hrv_humidity: "Feuchteregelung", hrv_inter: "Intervall", hrv_inter_paused: "Intervall, Pause", hrv_mode: "Modus", hrv_supply_fan: "Zuluft", hrv_exhaust_fan: "Abluft", section_supply_fan: "Drehzahl Zuluftventilator (U/min)", section_exhaust_fan: "Drehzahl Abluftventilator (U/min)", fan_max_rpm: "H\u00f6chstdrehzahl der Ventilatoren (U/min)", section_exhaust_airflow: "Abluftmenge", section_target_humidity: "Sollfeuchte", section_humidity_control: "Schalter Feuchteregelung", layout_hrv_diagram: "Luftstr\u00f6me", layout_hrv_one_duct: "Wandger\u00e4t, ein Kanal", layout_hrv_pair: "Paar in der Wand", section_supply_temperature: "Zulufttemperatur", section_extract_temperature: "Ablufttemperatur", section_exhaust_temperature: "Fortlufttemperatur", section_bypass: "Bypass", section_airflow: "Luftmenge", hrv_t_outdoor: "Au\u00dfenluft", hrv_t_supply: "Zuluft", hrv_t_extract: "Abluft", hrv_t_exhaust: "Fortluft", hrv_outside: "drau\u00dfen", hrv_room: "Raum",
-    type_camera: "Kamera", cam_idle: "Bereit", cam_live: "Live", cam_rec: "Aufnahme", cam_motion: "Bewegung erkannt", cam_off: "Aus", cam_line_last_motion: "Letzte Bewegung", cam_line_night: "Nachtsicht", cam_line_signal: "Signal", section_motion: "Bewegungssensor", section_recording: "Aufnahmesensor", section_night_vision: "Nachtsicht", section_privacy: "Privatsph\u00e4re-Modus", section_signal: "Signalst\u00e4rke", layout_cam_indoor: "Innen, schwenkbar", layout_cam_tube: "Innen, Zylinder", layout_cam_outdoor: "Au\u00dfen", layout_cam_dome: "Kuppel",
+    type_camera: "Kamera", cam_idle: "Bereit", cam_live: "Live", cam_rec: "Aufnahme", cam_motion: "Bewegung erkannt", cam_off: "Aus", cam_line_last_motion: "Letzte Bewegung", cam_line_night: "Nachtsicht", cam_line_signal: "Signal", section_motion: "Bewegungssensor", section_recording: "Aufnahmesensor", section_night_vision: "Nachtsicht", section_privacy: "Privatsph\u00e4re-Modus", section_signal: "Signalst\u00e4rke", layout_cam_indoor: "Innen, schwenkbar", layout_cam_tube: "Innen, Zylinder", layout_cam_outdoor: "Au\u00dfen", layout_cam_dome: "Kuppel", layout_cam_doorbell: "T\u00fcrklingel", cam_ring: "Es klingelt", cam_line_last_ring: "Zuletzt geklingelt", section_ring: "Klingeltaste", type_mailbox: "Briefkasten", mb_empty: "Leer", mb_mail: "Post", mb_front_open: "Vordert\u00fcr offen", mb_back_open: "R\u00fcckt\u00fcr offen", mb_line_count: "Post erhalten", mb_line_last: "Letzte Post", mb_front_door: "Vordert\u00fcr", mb_back_door: "R\u00fcckt\u00fcr", mb_open: "Offen", mb_closed: "Geschlossen", section_mail_count: "Postz\u00e4hler", layout_mb_through: "Durchwurf", layout_mb_classic: "Klassisch", mb_street: "Stra\u00dfe", mb_house: "Haus", mb_front_side: "Stra\u00dfenseite", mb_side_left: "Links", mb_side_right: "Rechts",
     type_lamp: "Lampe", lamp_off: "Aus", lamp_on: "An", lamp_line_brightness: "Helligkeit", lamp_line_color_temp: "Farbtemperatur", lamp_line_effect: "Effekt", lamp_spots: "Anzahl der Spots", layout_lamp_bulb: "Gl\u00fchbirne", layout_lamp_bedside: "Nachttischlampe", layout_lamp_floor: "Bogenleuchte", layout_lamp_torch: "Deckenfluter", layout_lamp_pendant: "Pendelleuchte", layout_lamp_strip: "LED-Streifen", layout_lamp_spot: "Einbaustrahler", layout_lamp_panels: "Lichtpaneele", layout_lamp_desk: "Schreibtischlampe", layout_lamp_wall: "Wandlaterne",
     speed_power_max: "Leistung bei h\u00f6chster Stufe (W)", speed_power_custom: "Eigene Stufenschwellen", speed_power_2: "Stufe 2 ab (W)", speed_power_3: "Stufe 3 ab (W)",
     fw_self_cleaning: "Selbstreinigung", fw_dirty_full: "Schmutzwassertank voll", fw_clean_empty: "Frischwassertank leer",
@@ -828,7 +828,7 @@ const T = {
     layout_robot_stick: "Aspiradora escoba", stick_charged: "Cargada",
     layout_robot_floor_washer: "Fregona el\u00e9ctrica", stick_away: "Fuera de la base", stick_away_threshold: "Fuera de la base por debajo de esta potencia (W)",
     type_diffuser: "Difusor de aceites esenciales", dif_mist: "Difundiendo", dif_inter: "Intermitente", dif_low: "Bruma ligera", dif_empty: "Dep\u00f3sito vac\u00edo", dif_mode: "Modo de niebla", layout_dif_drop: "Gota", layout_dif_cone: "Cono", layout_dif_stone: "Piedra", layout_dif_flame: "Llama", layout_dif_nebulizer: "Nebulizador", section_tank_empty: "Sensor de dep\u00f3sito vac\u00edo", type_hrv: "Ventilaci\u00f3n con recuperaci\u00f3n de calor", hrv_run: "Ventilando", hrv_boost: "Boost", hrv_bypass: "Bypass", hrv_defrost: "Descongelando", hrv_filter: "Cambiar filtro", hrv_away: "Ausente", hrv_recirc: "Recirculaci\u00f3n", hrv_humidity: "Control de humedad", hrv_inter: "Intermitente", hrv_inter_paused: "Intermitente, en pausa", hrv_mode: "Modo", hrv_supply_fan: "Impulsi\u00f3n", hrv_exhaust_fan: "Extracci\u00f3n", section_supply_fan: "Velocidad del ventilador de impulsi\u00f3n (rpm)", section_exhaust_fan: "Velocidad del ventilador de extracci\u00f3n (rpm)", fan_max_rpm: "Velocidad m\u00e1xima de los ventiladores (rpm)", section_exhaust_airflow: "Caudal de extracci\u00f3n", section_target_humidity: "Consigna de humedad", section_humidity_control: "Interruptor del control de humedad", layout_hrv_diagram: "Flujos de aire", layout_hrv_one_duct: "Mural, un conducto", layout_hrv_pair: "Pareja en el muro", section_supply_temperature: "Temperatura de impulsi\u00f3n", section_extract_temperature: "Temperatura de extracci\u00f3n", section_exhaust_temperature: "Temperatura de expulsi\u00f3n", section_bypass: "Bypass", section_airflow: "Caudal de aire", hrv_t_outdoor: "aire nuevo", hrv_t_supply: "impulsi\u00f3n", hrv_t_extract: "extracci\u00f3n", hrv_t_exhaust: "expulsi\u00f3n", hrv_outside: "fuera", hrv_room: "estancia",
-    type_camera: "C\u00e1mara", cam_idle: "En reposo", cam_live: "En directo", cam_rec: "Grabando", cam_motion: "Movimiento detectado", cam_off: "Apagada", cam_line_last_motion: "\u00daltimo movimiento", cam_line_night: "Visi\u00f3n nocturna", cam_line_signal: "Se\u00f1al", section_motion: "Sensor de movimiento", section_recording: "Sensor de grabaci\u00f3n", section_night_vision: "Visi\u00f3n nocturna", section_privacy: "Modo privacidad", section_signal: "Intensidad de se\u00f1al", layout_cam_indoor: "Interior motorizada", layout_cam_tube: "Interior cil\u00edndrica", layout_cam_outdoor: "Exterior", layout_cam_dome: "Domo",
+    type_camera: "C\u00e1mara", cam_idle: "En reposo", cam_live: "En directo", cam_rec: "Grabando", cam_motion: "Movimiento detectado", cam_off: "Apagada", cam_line_last_motion: "\u00daltimo movimiento", cam_line_night: "Visi\u00f3n nocturna", cam_line_signal: "Se\u00f1al", section_motion: "Sensor de movimiento", section_recording: "Sensor de grabaci\u00f3n", section_night_vision: "Visi\u00f3n nocturna", section_privacy: "Modo privacidad", section_signal: "Intensidad de se\u00f1al", layout_cam_indoor: "Interior motorizada", layout_cam_tube: "Interior cil\u00edndrica", layout_cam_outdoor: "Exterior", layout_cam_dome: "Domo", layout_cam_doorbell: "Timbre", cam_ring: "Est\u00e1n llamando", cam_line_last_ring: "\u00daltimo timbrazo", section_ring: "Bot\u00f3n del timbre", type_mailbox: "Buz\u00f3n", mb_empty: "Vac\u00edo", mb_mail: "Correo", mb_front_open: "Puerta delantera abierta", mb_back_open: "Puerta trasera abierta", mb_line_count: "Correo recibido", mb_line_last: "\u00daltimo correo", mb_front_door: "Puerta delantera", mb_back_door: "Puerta trasera", mb_open: "Abierta", mb_closed: "Cerrada", section_mail_count: "Contador de correo", layout_mb_through: "Pasante", layout_mb_classic: "Cl\u00e1sico", mb_street: "calle", mb_house: "casa", mb_front_side: "Lado de la calle", mb_side_left: "Izquierda", mb_side_right: "Derecha",
     type_lamp: "L\u00e1mpara", lamp_off: "Apagada", lamp_on: "Encendida", lamp_line_brightness: "Brillo", lamp_line_color_temp: "Temperatura de color", lamp_line_effect: "Efecto", lamp_spots: "N\u00famero de focos", layout_lamp_bulb: "Bombilla", layout_lamp_bedside: "L\u00e1mpara de mesita", layout_lamp_floor: "L\u00e1mpara de arco", layout_lamp_torch: "L\u00e1mpara hal\u00f3gena de pie", layout_lamp_pendant: "L\u00e1mpara colgante", layout_lamp_strip: "Tira LED", layout_lamp_spot: "Focos empotrados", layout_lamp_panels: "Paneles de luz", layout_lamp_desk: "L\u00e1mpara de escritorio", layout_lamp_wall: "Farol de pared",
     speed_power_max: "Potencia a velocidad m\u00e1xima (W)", speed_power_custom: "Umbrales de velocidad propios", speed_power_2: "Velocidad 2 desde (W)", speed_power_3: "Velocidad 3 desde (W)",
     fw_self_cleaning: "Autolimpieza", fw_dirty_full: "Dep\u00f3sito de agua sucia lleno", fw_clean_empty: "Dep\u00f3sito de agua limpia vac\u00edo",
@@ -997,7 +997,7 @@ const T = {
     layout_robot_stick: "Scopa elettrica", stick_charged: "Carica",
     layout_robot_floor_washer: "Lavapavimenti", stick_away: "Fuori dalla base", stick_away_threshold: "Fuori dalla base sotto questa potenza (W)",
     type_diffuser: "Diffusore di oli essenziali", dif_mist: "Diffusione", dif_inter: "Intermittente", dif_low: "Nebbia leggera", dif_empty: "Serbatoio vuoto", dif_mode: "Modalit\u00e0 nebbia", layout_dif_drop: "Goccia", layout_dif_cone: "Cono", layout_dif_stone: "Ciottolo", layout_dif_flame: "Fiamma", layout_dif_nebulizer: "Nebulizzatore", section_tank_empty: "Sensore serbatoio vuoto", type_hrv: "VMC a doppio flusso", hrv_run: "In funzione", hrv_boost: "Boost", hrv_bypass: "Bypass", hrv_defrost: "Sbrinamento", hrv_filter: "Sostituire il filtro", hrv_away: "Assente", hrv_recirc: "Ricircolo", hrv_humidity: "Controllo umidit\u00e0", hrv_inter: "Intermittente", hrv_inter_paused: "Intermittente, in pausa", hrv_mode: "Modalit\u00e0", hrv_supply_fan: "Mandata", hrv_exhaust_fan: "Estrazione", section_supply_fan: "Velocit\u00e0 ventilatore di mandata (giri/min)", section_exhaust_fan: "Velocit\u00e0 ventilatore di estrazione (giri/min)", fan_max_rpm: "Velocit\u00e0 massima dei ventilatori (giri/min)", section_exhaust_airflow: "Portata di estrazione", section_target_humidity: "Umidit\u00e0 impostata", section_humidity_control: "Interruttore controllo umidit\u00e0", layout_hrv_diagram: "Flussi d'aria", layout_hrv_one_duct: "A parete, un condotto", layout_hrv_pair: "Coppia a parete", section_supply_temperature: "Temperatura di mandata", section_extract_temperature: "Temperatura di ripresa", section_exhaust_temperature: "Temperatura di espulsione", section_bypass: "Bypass", section_airflow: "Portata d'aria", hrv_t_outdoor: "aria nuova", hrv_t_supply: "mandata", hrv_t_extract: "ripresa", hrv_t_exhaust: "espulsione", hrv_outside: "fuori", hrv_room: "stanza",
-    type_camera: "Telecamera", cam_idle: "In attesa", cam_live: "In diretta", cam_rec: "Registrazione", cam_motion: "Movimento rilevato", cam_off: "Spenta", cam_line_last_motion: "Ultimo movimento", cam_line_night: "Visione notturna", cam_line_signal: "Segnale", section_motion: "Sensore di movimento", section_recording: "Sensore di registrazione", section_night_vision: "Visione notturna", section_privacy: "Modalit\u00e0 privacy", section_signal: "Potenza del segnale", layout_cam_indoor: "Interna motorizzata", layout_cam_tube: "Interna a cilindro", layout_cam_outdoor: "Esterna", layout_cam_dome: "Dome",
+    type_camera: "Telecamera", cam_idle: "In attesa", cam_live: "In diretta", cam_rec: "Registrazione", cam_motion: "Movimento rilevato", cam_off: "Spenta", cam_line_last_motion: "Ultimo movimento", cam_line_night: "Visione notturna", cam_line_signal: "Segnale", section_motion: "Sensore di movimento", section_recording: "Sensore di registrazione", section_night_vision: "Visione notturna", section_privacy: "Modalit\u00e0 privacy", section_signal: "Potenza del segnale", layout_cam_indoor: "Interna motorizzata", layout_cam_tube: "Interna a cilindro", layout_cam_outdoor: "Esterna", layout_cam_dome: "Dome", layout_cam_doorbell: "Campanello", cam_ring: "Stanno suonando", cam_line_last_ring: "Ultimo squillo", section_ring: "Pulsante del campanello", type_mailbox: "Cassetta postale", mb_empty: "Vuota", mb_mail: "Posta", mb_front_open: "Sportello anteriore aperto", mb_back_open: "Sportello posteriore aperto", mb_line_count: "Posta ricevuta", mb_line_last: "Ultima posta", mb_front_door: "Sportello anteriore", mb_back_door: "Sportello posteriore", mb_open: "Aperto", mb_closed: "Chiuso", section_mail_count: "Contatore della posta", layout_mb_through: "Passante", layout_mb_classic: "Classica", mb_street: "strada", mb_house: "casa", mb_front_side: "Lato strada", mb_side_left: "Sinistra", mb_side_right: "Destra",
     type_lamp: "Lampada", lamp_off: "Spenta", lamp_on: "Accesa", lamp_line_brightness: "Luminosit\u00e0", lamp_line_color_temp: "Temperatura colore", lamp_line_effect: "Effetto", lamp_spots: "Numero di faretti", layout_lamp_bulb: "Lampadina", layout_lamp_bedside: "Lampada da comodino", layout_lamp_floor: "Lampada ad arco", layout_lamp_torch: "Piantana alogena", layout_lamp_pendant: "Lampada a sospensione", layout_lamp_strip: "Striscia LED", layout_lamp_spot: "Faretti a incasso", layout_lamp_panels: "Pannelli luminosi", layout_lamp_desk: "Lampada da scrivania", layout_lamp_wall: "Lanterna a parete",
     speed_power_max: "Potenza alla velocit\u00e0 massima (W)", speed_power_custom: "Soglie di velocit\u00e0 personalizzate", speed_power_2: "Velocit\u00e0 2 da (W)", speed_power_3: "Velocit\u00e0 3 da (W)",
     fw_self_cleaning: "Autopulizia", fw_dirty_full: "Serbatoio acqua sporca pieno", fw_clean_empty: "Serbatoio acqua pulita vuoto",
@@ -1166,7 +1166,7 @@ const T = {
     layout_robot_stick: "Steelstofzuiger", stick_charged: "Opgeladen",
     layout_robot_floor_washer: "Vloerwasser", stick_away: "Niet op de basis", stick_away_threshold: "Niet op de basis onder dit vermogen (W)",
     type_diffuser: "Aromadiffuser", dif_mist: "Verneveling", dif_inter: "Interval", dif_low: "Lichte nevel", dif_empty: "Tank leeg", dif_mode: "Nevelstand", layout_dif_drop: "Druppel", layout_dif_cone: "Kegel", layout_dif_stone: "Kiezel", layout_dif_flame: "Vlam", layout_dif_nebulizer: "Vernevelaar", section_tank_empty: "Sensor lege tank", type_hrv: "Balansventilatie (WTW)", hrv_run: "Ventileert", hrv_boost: "Boost", hrv_bypass: "Bypass", hrv_defrost: "Ontdooien", hrv_filter: "Filter vervangen", hrv_away: "Afwezig", hrv_recirc: "Recirculatie", hrv_humidity: "Vochtregeling", hrv_inter: "Intermitterend", hrv_inter_paused: "Intermitterend, gepauzeerd", hrv_mode: "Modus", hrv_supply_fan: "Toevoer", hrv_exhaust_fan: "Afvoer", section_supply_fan: "Toerental toevoerventilator (tpm)", section_exhaust_fan: "Toerental afvoerventilator (tpm)", fan_max_rpm: "Maximaal toerental ventilatoren (tpm)", section_exhaust_airflow: "Afvoerdebiet", section_target_humidity: "Gewenste vochtigheid", section_humidity_control: "Schakelaar vochtregeling", layout_hrv_diagram: "Luchtstromen", layout_hrv_one_duct: "Wandunit, \u00e9\u00e9n kanaal", layout_hrv_pair: "Paar in de muur", section_supply_temperature: "Toevoertemperatuur", section_extract_temperature: "Afzuigtemperatuur", section_exhaust_temperature: "Afvoertemperatuur", section_bypass: "Bypass", section_airflow: "Luchtdebiet", hrv_t_outdoor: "verse lucht", hrv_t_supply: "toevoer", hrv_t_extract: "afzuiging", hrv_t_exhaust: "afvoer", hrv_outside: "buiten", hrv_room: "kamer",
-    type_camera: "Camera", cam_idle: "Stand-by", cam_live: "Live", cam_rec: "Opname", cam_motion: "Beweging gedetecteerd", cam_off: "Uit", cam_line_last_motion: "Laatste beweging", cam_line_night: "Nachtzicht", cam_line_signal: "Signaal", section_motion: "Bewegingssensor", section_recording: "Opnamesensor", section_night_vision: "Nachtzicht", section_privacy: "Privacymodus", section_signal: "Signaalsterkte", layout_cam_indoor: "Binnen, draaibaar", layout_cam_tube: "Binnen, cilinder", layout_cam_outdoor: "Buiten", layout_cam_dome: "Dome",
+    type_camera: "Camera", cam_idle: "Stand-by", cam_live: "Live", cam_rec: "Opname", cam_motion: "Beweging gedetecteerd", cam_off: "Uit", cam_line_last_motion: "Laatste beweging", cam_line_night: "Nachtzicht", cam_line_signal: "Signaal", section_motion: "Bewegingssensor", section_recording: "Opnamesensor", section_night_vision: "Nachtzicht", section_privacy: "Privacymodus", section_signal: "Signaalsterkte", layout_cam_indoor: "Binnen, draaibaar", layout_cam_tube: "Binnen, cilinder", layout_cam_outdoor: "Buiten", layout_cam_dome: "Dome", layout_cam_doorbell: "Deurbel", cam_ring: "Er wordt aangebeld", cam_line_last_ring: "Laatst aangebeld", section_ring: "Deurbelknop", type_mailbox: "Brievenbus", mb_empty: "Leeg", mb_mail: "Post", mb_front_open: "Voordeur open", mb_back_open: "Achterdeur open", mb_line_count: "Post ontvangen", mb_line_last: "Laatste post", mb_front_door: "Voordeur", mb_back_door: "Achterdeur", mb_open: "Open", mb_closed: "Dicht", section_mail_count: "Postteller", layout_mb_through: "Doorsteek", layout_mb_classic: "Klassiek", mb_street: "straat", mb_house: "huis", mb_front_side: "Straatkant", mb_side_left: "Links", mb_side_right: "Rechts",
     type_lamp: "Lamp", lamp_off: "Uit", lamp_on: "Aan", lamp_line_brightness: "Helderheid", lamp_line_color_temp: "Kleurtemperatuur", lamp_line_effect: "Effect", lamp_spots: "Aantal spots", layout_lamp_bulb: "Gloeilamp", layout_lamp_bedside: "Bedlampje", layout_lamp_floor: "Booglamp", layout_lamp_torch: "Halogeen staande lamp", layout_lamp_pendant: "Hanglamp", layout_lamp_strip: "Ledstrip", layout_lamp_spot: "Inbouwspots", layout_lamp_panels: "Lichtpanelen", layout_lamp_desk: "Bureaulamp", layout_lamp_wall: "Wandlantaarn",
     speed_power_max: "Vermogen op hoogste stand (W)", speed_power_custom: "Eigen standdrempels", speed_power_2: "Stand 2 vanaf (W)", speed_power_3: "Stand 3 vanaf (W)",
     fw_self_cleaning: "Zelfreiniging", fw_dirty_full: "Vuilwatertank vol", fw_clean_empty: "Schoonwatertank leeg",
@@ -1335,7 +1335,7 @@ const T = {
     layout_robot_stick: "Aspirador vertical", stick_charged: "Carregado",
     layout_robot_floor_washer: "Lavadora de pavimentos", stick_away: "Fora da base", stick_away_threshold: "Fora da base abaixo desta pot\u00eancia (W)",
     type_diffuser: "Difusor de \u00f3leos essenciais", dif_mist: "Difundindo", dif_inter: "Intermitente", dif_low: "N\u00e9voa leve", dif_empty: "Reservat\u00f3rio vazio", dif_mode: "Modo de n\u00e9voa", layout_dif_drop: "Gota", layout_dif_cone: "Cone", layout_dif_stone: "Seixo", layout_dif_flame: "Chama", layout_dif_nebulizer: "Nebulizador", section_tank_empty: "Sensor de reservat\u00f3rio vazio", type_hrv: "Ventila\u00e7\u00e3o com recupera\u00e7\u00e3o de calor", hrv_run: "Ventilando", hrv_boost: "Boost", hrv_bypass: "Bypass", hrv_defrost: "Descongelando", hrv_filter: "Trocar filtro", hrv_away: "Ausente", hrv_recirc: "Recircula\u00e7\u00e3o", hrv_humidity: "Controlo de humidade", hrv_inter: "Intermitente", hrv_inter_paused: "Intermitente, em pausa", hrv_mode: "Modo", hrv_supply_fan: "Insufla\u00e7\u00e3o", hrv_exhaust_fan: "Extra\u00e7\u00e3o", section_supply_fan: "Velocidade do ventilador de insufla\u00e7\u00e3o (rpm)", section_exhaust_fan: "Velocidade do ventilador de extra\u00e7\u00e3o (rpm)", fan_max_rpm: "Velocidade m\u00e1xima dos ventiladores (rpm)", section_exhaust_airflow: "Caudal de extra\u00e7\u00e3o", section_target_humidity: "Humidade pretendida", section_humidity_control: "Interruptor do controlo de humidade", layout_hrv_diagram: "Fluxos de ar", layout_hrv_one_duct: "Mural, uma conduta", layout_hrv_pair: "Par na parede", section_supply_temperature: "Temperatura de insufla\u00e7\u00e3o", section_extract_temperature: "Temperatura de extra\u00e7\u00e3o", section_exhaust_temperature: "Temperatura de rejei\u00e7\u00e3o", section_bypass: "Bypass", section_airflow: "Caudal de ar", hrv_t_outdoor: "ar novo", hrv_t_supply: "insufla\u00e7\u00e3o", hrv_t_extract: "extra\u00e7\u00e3o", hrv_t_exhaust: "rejei\u00e7\u00e3o", hrv_outside: "fora", hrv_room: "divis\u00e3o",
-    type_camera: "C\u00e2mera", cam_idle: "Em espera", cam_live: "Ao vivo", cam_rec: "Gravando", cam_motion: "Movimento detetado", cam_off: "Desligada", cam_line_last_motion: "\u00daltimo movimento", cam_line_night: "Vis\u00e3o noturna", cam_line_signal: "Sinal", section_motion: "Sensor de movimento", section_recording: "Sensor de grava\u00e7\u00e3o", section_night_vision: "Vis\u00e3o noturna", section_privacy: "Modo privacidade", section_signal: "Intensidade do sinal", layout_cam_indoor: "Interior motorizada", layout_cam_tube: "Interior cil\u00edndrica", layout_cam_outdoor: "Exterior", layout_cam_dome: "Dome",
+    type_camera: "C\u00e2mera", cam_idle: "Em espera", cam_live: "Ao vivo", cam_rec: "Gravando", cam_motion: "Movimento detetado", cam_off: "Desligada", cam_line_last_motion: "\u00daltimo movimento", cam_line_night: "Vis\u00e3o noturna", cam_line_signal: "Sinal", section_motion: "Sensor de movimento", section_recording: "Sensor de grava\u00e7\u00e3o", section_night_vision: "Vis\u00e3o noturna", section_privacy: "Modo privacidade", section_signal: "Intensidade do sinal", layout_cam_indoor: "Interior motorizada", layout_cam_tube: "Interior cil\u00edndrica", layout_cam_outdoor: "Exterior", layout_cam_dome: "Dome", layout_cam_doorbell: "Campainha", cam_ring: "Est\u00e3o a tocar", cam_line_last_ring: "\u00daltimo toque", section_ring: "Bot\u00e3o da campainha", type_mailbox: "Caixa de correio", mb_empty: "Vazia", mb_mail: "Correio", mb_front_open: "Porta da frente aberta", mb_back_open: "Porta de tr\u00e1s aberta", mb_line_count: "Correio recebido", mb_line_last: "\u00daltimo correio", mb_front_door: "Porta da frente", mb_back_door: "Porta de tr\u00e1s", mb_open: "Aberta", mb_closed: "Fechada", section_mail_count: "Contador de correio", layout_mb_through: "De atravessar", layout_mb_classic: "Cl\u00e1ssica", mb_street: "rua", mb_house: "casa", mb_front_side: "Lado da rua", mb_side_left: "Esquerda", mb_side_right: "Direita",
     type_lamp: "Candeeiro", lamp_off: "Apagado", lamp_on: "Aceso", lamp_line_brightness: "Brilho", lamp_line_color_temp: "Temperatura de cor", lamp_line_effect: "Efeito", lamp_spots: "N\u00famero de focos", layout_lamp_bulb: "L\u00e2mpada", layout_lamp_bedside: "Candeeiro de cabeceira", layout_lamp_floor: "Candeeiro de arco", layout_lamp_torch: "Candeeiro de p\u00e9 halog\u00e9neo", layout_lamp_pendant: "Candeeiro suspenso", layout_lamp_strip: "Fita LED", layout_lamp_spot: "Focos embutidos", layout_lamp_panels: "Pain\u00e9is de luz", layout_lamp_desk: "Candeeiro de secret\u00e1ria", layout_lamp_wall: "Lanterna de parede",
     speed_power_max: "Pot\u00eancia na velocidade m\u00e1xima (W)", speed_power_custom: "Limiares de velocidade pr\u00f3prios", speed_power_2: "Velocidade 2 a partir de (W)", speed_power_3: "Velocidade 3 a partir de (W)",
     fw_self_cleaning: "Autolimpeza", fw_dirty_full: "Dep\u00f3sito de \u00e1gua suja cheio", fw_clean_empty: "Dep\u00f3sito de \u00e1gua limpa vazio",
@@ -1504,7 +1504,7 @@ const T = {
     layout_robot_stick: "Skaftdammsugare", stick_charged: "Laddad",
     layout_robot_floor_washer: "Golvtv\u00e4ttare", stick_away: "Inte i basen", stick_away_threshold: "Inte i basen under denna effekt (W)",
     type_diffuser: "Doftspridare", dif_mist: "Sprider", dif_inter: "Intervall", dif_low: "L\u00e4tt dimma", dif_empty: "Tanken tom", dif_mode: "Diml\u00e4ge", layout_dif_drop: "Droppe", layout_dif_cone: "Kon", layout_dif_stone: "Sten", layout_dif_flame: "L\u00e5ga", layout_dif_nebulizer: "Nebulisator", section_tank_empty: "Sensor f\u00f6r tom tank", type_hrv: "FTX-ventilation", hrv_run: "Ventilerar", hrv_boost: "Boost", hrv_bypass: "Bypass", hrv_defrost: "Avfrostning", hrv_filter: "Byt filter", hrv_away: "Borta", hrv_recirc: "Recirkulation", hrv_humidity: "Fuktstyrning", hrv_inter: "Intermittent", hrv_inter_paused: "Intermittent, paus", hrv_mode: "L\u00e4ge", hrv_supply_fan: "Tilluft", hrv_exhaust_fan: "Fr\u00e5nluft", section_supply_fan: "Tilluftsfl\u00e4ktens varvtal (v/min)", section_exhaust_fan: "Fr\u00e5nluftsfl\u00e4ktens varvtal (v/min)", fan_max_rpm: "Fl\u00e4ktarnas maxvarvtal (v/min)", section_exhaust_airflow: "Fr\u00e5nluftsfl\u00f6de", section_target_humidity: "B\u00f6rv\u00e4rde fukt", section_humidity_control: "Brytare f\u00f6r fuktstyrning", layout_hrv_diagram: "Luftfl\u00f6den", layout_hrv_one_duct: "V\u00e4ggaggregat, en kanal", layout_hrv_pair: "Par i v\u00e4ggen", section_supply_temperature: "Tilluftstemperatur", section_extract_temperature: "Fr\u00e5nluftstemperatur", section_exhaust_temperature: "Avluftstemperatur", section_bypass: "Bypass", section_airflow: "Luftfl\u00f6de", hrv_t_outdoor: "uteluft", hrv_t_supply: "tilluft", hrv_t_extract: "fr\u00e5nluft", hrv_t_exhaust: "avluft", hrv_outside: "ute", hrv_room: "rum",
-    type_camera: "Kamera", cam_idle: "Vilar", cam_live: "Direkt", cam_rec: "Spelar in", cam_motion: "R\u00f6relse uppt\u00e4ckt", cam_off: "Av", cam_line_last_motion: "Senaste r\u00f6relse", cam_line_night: "Nattseende", cam_line_signal: "Signal", section_motion: "R\u00f6relsesensor", section_recording: "Inspelningssensor", section_night_vision: "Nattseende", section_privacy: "Integritetsl\u00e4ge", section_signal: "Signalstyrka", layout_cam_indoor: "Inomhus, vridbar", layout_cam_tube: "Inomhus, cylinder", layout_cam_outdoor: "Utomhus", layout_cam_dome: "Dom",
+    type_camera: "Kamera", cam_idle: "Vilar", cam_live: "Direkt", cam_rec: "Spelar in", cam_motion: "R\u00f6relse uppt\u00e4ckt", cam_off: "Av", cam_line_last_motion: "Senaste r\u00f6relse", cam_line_night: "Nattseende", cam_line_signal: "Signal", section_motion: "R\u00f6relsesensor", section_recording: "Inspelningssensor", section_night_vision: "Nattseende", section_privacy: "Integritetsl\u00e4ge", section_signal: "Signalstyrka", layout_cam_indoor: "Inomhus, vridbar", layout_cam_tube: "Inomhus, cylinder", layout_cam_outdoor: "Utomhus", layout_cam_dome: "Dom", layout_cam_doorbell: "D\u00f6rrklocka", cam_ring: "Det ringer", cam_line_last_ring: "Senaste ringning", section_ring: "Ringknapp", type_mailbox: "Brevl\u00e5da", mb_empty: "Tom", mb_mail: "Post", mb_front_open: "Fr\u00e4mre lucka \u00f6ppen", mb_back_open: "Bakre lucka \u00f6ppen", mb_line_count: "Post mottagen", mb_line_last: "Senaste post", mb_front_door: "Fr\u00e4mre lucka", mb_back_door: "Bakre lucka", mb_open: "\u00d6ppen", mb_closed: "St\u00e4ngd", section_mail_count: "Postr\u00e4knare", layout_mb_through: "Genomg\u00e5ende", layout_mb_classic: "Klassisk", mb_street: "gata", mb_house: "hus", mb_front_side: "Gatusida", mb_side_left: "V\u00e4nster", mb_side_right: "H\u00f6ger",
     type_lamp: "Lampa", lamp_off: "Av", lamp_on: "P\u00e5", lamp_line_brightness: "Ljusstyrka", lamp_line_color_temp: "F\u00e4rgtemperatur", lamp_line_effect: "Effekt", lamp_spots: "Antal spotlights", layout_lamp_bulb: "Gl\u00f6dlampa", layout_lamp_bedside: "S\u00e4nglampa", layout_lamp_floor: "B\u00e5glampa", layout_lamp_torch: "Uplight-golvlampa", layout_lamp_pendant: "Pendellampa", layout_lamp_strip: "LED-list", layout_lamp_spot: "Inf\u00e4llda spotlights", layout_lamp_panels: "Ljuspaneler", layout_lamp_desk: "Skrivbordslampa", layout_lamp_wall: "V\u00e4gglykta",
     speed_power_max: "Effekt vid h\u00f6gsta l\u00e4ge (W)", speed_power_custom: "Egna hastighetsgr\u00e4nser", speed_power_2: "L\u00e4ge 2 fr\u00e5n (W)", speed_power_3: "L\u00e4ge 3 fr\u00e5n (W)",
     fw_self_cleaning: "Sj\u00e4lvreng\u00f6ring", fw_dirty_full: "Smutsvattentanken full", fw_clean_empty: "Rentvattentanken tom",
@@ -1673,7 +1673,7 @@ const T = {
     layout_robot_stick: "Stavst\u00f8vsuger", stick_charged: "Ladet",
     layout_robot_floor_washer: "Gulvvasker", stick_away: "Ikke i basen", stick_away_threshold: "Ikke i basen under denne effekten (W)",
     type_diffuser: "Duftspreder", dif_mist: "Sprer", dif_inter: "Intervall", dif_low: "Lett t\u00e5ke", dif_empty: "Tanken er tom", dif_mode: "T\u00e5kemodus", layout_dif_drop: "Dr\u00e5pe", layout_dif_cone: "Kjegle", layout_dif_stone: "Stein", layout_dif_flame: "Flamme", layout_dif_nebulizer: "Nebulisator", section_tank_empty: "Sensor for tom tank", type_hrv: "Balansert ventilasjon", hrv_run: "Ventilerer", hrv_boost: "Boost", hrv_bypass: "Bypass", hrv_defrost: "Avriming", hrv_filter: "Bytt filter", hrv_away: "Borte", hrv_recirc: "Resirkulering", hrv_humidity: "Fuktstyring", hrv_inter: "Intermitterende", hrv_inter_paused: "Intermitterende, pause", hrv_mode: "Modus", hrv_supply_fan: "Tilluft", hrv_exhaust_fan: "Avtrekk", section_supply_fan: "Tilluftsviftens turtall (o/min)", section_exhaust_fan: "Avtrekksviftens turtall (o/min)", fan_max_rpm: "Viftenes maks turtall (o/min)", section_exhaust_airflow: "Avtrekksluftmengde", section_target_humidity: "\u00d8nsket fuktighet", section_humidity_control: "Bryter for fuktstyring", layout_hrv_diagram: "Luftstr\u00f8mmer", layout_hrv_one_duct: "Veggaggregat, \u00e9n kanal", layout_hrv_pair: "Par i veggen", section_supply_temperature: "Tillufttemperatur", section_extract_temperature: "Avtrekkstemperatur", section_exhaust_temperature: "Avkasttemperatur", section_bypass: "Bypass", section_airflow: "Luftmengde", hrv_t_outdoor: "uteluft", hrv_t_supply: "tilluft", hrv_t_extract: "avtrekk", hrv_t_exhaust: "avkast", hrv_outside: "ute", hrv_room: "rom",
-    type_camera: "Kamera", cam_idle: "Hviler", cam_live: "Direkte", cam_rec: "Tar opp", cam_motion: "Bevegelse oppdaget", cam_off: "Av", cam_line_last_motion: "Siste bevegelse", cam_line_night: "Nattsyn", cam_line_signal: "Signal", section_motion: "Bevegelsessensor", section_recording: "Opptakssensor", section_night_vision: "Nattsyn", section_privacy: "Personvernmodus", section_signal: "Signalstyrke", layout_cam_indoor: "Innend\u00f8rs, dreibar", layout_cam_tube: "Innend\u00f8rs, sylinder", layout_cam_outdoor: "Utend\u00f8rs", layout_cam_dome: "Kuppel",
+    type_camera: "Kamera", cam_idle: "Hviler", cam_live: "Direkte", cam_rec: "Tar opp", cam_motion: "Bevegelse oppdaget", cam_off: "Av", cam_line_last_motion: "Siste bevegelse", cam_line_night: "Nattsyn", cam_line_signal: "Signal", section_motion: "Bevegelsessensor", section_recording: "Opptakssensor", section_night_vision: "Nattsyn", section_privacy: "Personvernmodus", section_signal: "Signalstyrke", layout_cam_indoor: "Innend\u00f8rs, dreibar", layout_cam_tube: "Innend\u00f8rs, sylinder", layout_cam_outdoor: "Utend\u00f8rs", layout_cam_dome: "Kuppel", layout_cam_doorbell: "Ringeklokke", cam_ring: "Det ringer p\u00e5", cam_line_last_ring: "Siste ringing", section_ring: "Ringeknapp", type_mailbox: "Postkasse", mb_empty: "Tom", mb_mail: "Post", mb_front_open: "Fremre luke \u00e5pen", mb_back_open: "Bakre luke \u00e5pen", mb_line_count: "Post mottatt", mb_line_last: "Siste post", mb_front_door: "Fremre luke", mb_back_door: "Bakre luke", mb_open: "\u00c5pen", mb_closed: "Lukket", section_mail_count: "Postteller", layout_mb_through: "Gjennomg\u00e5ende", layout_mb_classic: "Klassisk", mb_street: "gate", mb_house: "hus", mb_front_side: "Gateside", mb_side_left: "Venstre", mb_side_right: "H\u00f8yre",
     type_lamp: "Lampe", lamp_off: "Av", lamp_on: "P\u00e5", lamp_line_brightness: "Lysstyrke", lamp_line_color_temp: "Fargetemperatur", lamp_line_effect: "Effekt", lamp_spots: "Antall spotter", layout_lamp_bulb: "Lysp\u00e6re", layout_lamp_bedside: "Nattbordslampe", layout_lamp_floor: "Buelampe", layout_lamp_torch: "Halogen gulvlampe", layout_lamp_pendant: "Pendellampe", layout_lamp_strip: "LED-list", layout_lamp_spot: "Innfelte spotter", layout_lamp_panels: "Lyspaneler", layout_lamp_desk: "Skrivebordslampe", layout_lamp_wall: "Vegglykt",
     speed_power_max: "Effekt p\u00e5 h\u00f8yeste trinn (W)", speed_power_custom: "Egne hastighetsgrenser", speed_power_2: "Trinn 2 fra (W)", speed_power_3: "Trinn 3 fra (W)",
     fw_self_cleaning: "Selvrengj\u00f8ring", fw_dirty_full: "Skittentvannstanken full", fw_clean_empty: "Rentvannstanken tom",
@@ -1842,7 +1842,7 @@ const T = {
     layout_robot_stick: "St\u00f8vsuger p\u00e5 skaft", stick_charged: "Opladet",
     layout_robot_floor_washer: "Gulvvasker", stick_away: "Ikke i basen", stick_away_threshold: "Ikke i basen under denne effekt (W)",
     type_diffuser: "Duftspreder", dif_mist: "Spreder", dif_inter: "Interval", dif_low: "Let t\u00e5ge", dif_empty: "Tanken er tom", dif_mode: "T\u00e5getilstand", layout_dif_drop: "Dr\u00e5be", layout_dif_cone: "Kegle", layout_dif_stone: "Sten", layout_dif_flame: "Flamme", layout_dif_nebulizer: "Nebulisator", section_tank_empty: "Sensor for tom tank", type_hrv: "Ventilation med varmegenvinding", hrv_run: "Ventilerer", hrv_boost: "Boost", hrv_bypass: "Bypass", hrv_defrost: "Afrimning", hrv_filter: "Skift filter", hrv_away: "Ude", hrv_recirc: "Recirkulation", hrv_humidity: "Fugtstyring", hrv_inter: "Intermitterende", hrv_inter_paused: "Intermitterende, pause", hrv_mode: "Tilstand", hrv_supply_fan: "Indbl\u00e6sning", hrv_exhaust_fan: "Udsugning", section_supply_fan: "Indbl\u00e6sningsventilatorens omdrejninger (o/min)", section_exhaust_fan: "Udsugningsventilatorens omdrejninger (o/min)", fan_max_rpm: "Ventilatorernes maks. omdrejninger (o/min)", section_exhaust_airflow: "Udsugningsluftm\u00e6ngde", section_target_humidity: "\u00d8nsket fugtighed", section_humidity_control: "Kontakt til fugtstyring", layout_hrv_diagram: "Luftstr\u00f8mme", layout_hrv_one_duct: "V\u00e6gaggregat, \u00e9n kanal", layout_hrv_pair: "Par i v\u00e6ggen", section_supply_temperature: "Indbl\u00e6sningstemperatur", section_extract_temperature: "Udsugningstemperatur", section_exhaust_temperature: "Afkasttemperatur", section_bypass: "Bypass", section_airflow: "Luftm\u00e6ngde", hrv_t_outdoor: "udeluft", hrv_t_supply: "indbl\u00e6sning", hrv_t_extract: "udsugning", hrv_t_exhaust: "afkast", hrv_outside: "ude", hrv_room: "rum",
-    type_camera: "Kamera", cam_idle: "Hviler", cam_live: "Direkte", cam_rec: "Optager", cam_motion: "Bev\u00e6gelse registreret", cam_off: "Slukket", cam_line_last_motion: "Seneste bev\u00e6gelse", cam_line_night: "Nattesyn", cam_line_signal: "Signal", section_motion: "Bev\u00e6gelsessensor", section_recording: "Optagesensor", section_night_vision: "Nattesyn", section_privacy: "Privatlivstilstand", section_signal: "Signalstyrke", layout_cam_indoor: "Indend\u00f8rs, drejelig", layout_cam_tube: "Indend\u00f8rs, cylinder", layout_cam_outdoor: "Udend\u00f8rs", layout_cam_dome: "Kuppel",
+    type_camera: "Kamera", cam_idle: "Hviler", cam_live: "Direkte", cam_rec: "Optager", cam_motion: "Bev\u00e6gelse registreret", cam_off: "Slukket", cam_line_last_motion: "Seneste bev\u00e6gelse", cam_line_night: "Nattesyn", cam_line_signal: "Signal", section_motion: "Bev\u00e6gelsessensor", section_recording: "Optagesensor", section_night_vision: "Nattesyn", section_privacy: "Privatlivstilstand", section_signal: "Signalstyrke", layout_cam_indoor: "Indend\u00f8rs, drejelig", layout_cam_tube: "Indend\u00f8rs, cylinder", layout_cam_outdoor: "Udend\u00f8rs", layout_cam_dome: "Kuppel", layout_cam_doorbell: "D\u00f8rklokke", cam_ring: "Det ringer", cam_line_last_ring: "Seneste ringning", section_ring: "Ringeknap", type_mailbox: "Postkasse", mb_empty: "Tom", mb_mail: "Post", mb_front_open: "Forreste l\u00e5ge \u00e5ben", mb_back_open: "Bagerste l\u00e5ge \u00e5ben", mb_line_count: "Post modtaget", mb_line_last: "Seneste post", mb_front_door: "Forreste l\u00e5ge", mb_back_door: "Bagerste l\u00e5ge", mb_open: "\u00c5ben", mb_closed: "Lukket", section_mail_count: "Postt\u00e6ller", layout_mb_through: "Gennemg\u00e5ende", layout_mb_classic: "Klassisk", mb_street: "gade", mb_house: "hus", mb_front_side: "Gadeside", mb_side_left: "Venstre", mb_side_right: "H\u00f8jre",
     type_lamp: "Lampe", lamp_off: "Slukket", lamp_on: "T\u00e6ndt", lamp_line_brightness: "Lysstyrke", lamp_line_color_temp: "Farvetemperatur", lamp_line_effect: "Effekt", lamp_spots: "Antal spots", layout_lamp_bulb: "P\u00e6re", layout_lamp_bedside: "Sengelampe", layout_lamp_floor: "Buelampe", layout_lamp_torch: "Halogen standerlampe", layout_lamp_pendant: "Pendel", layout_lamp_strip: "LED-strip", layout_lamp_spot: "Indbyggede spots", layout_lamp_panels: "Lyspaneler", layout_lamp_desk: "Skrivebordslampe", layout_lamp_wall: "V\u00e6glygte",
     speed_power_max: "Effekt p\u00e5 h\u00f8jeste trin (W)", speed_power_custom: "Egne hastighedsgr\u00e6nser", speed_power_2: "Trin 2 fra (W)", speed_power_3: "Trin 3 fra (W)",
     fw_self_cleaning: "Selvrensning", fw_dirty_full: "Snavsevandstank fuld", fw_clean_empty: "Rentvandstank tom",
@@ -2011,7 +2011,7 @@ const T = {
     layout_robot_stick: "Odkurzacz pionowy", stick_charged: "Na\u0142adowany",
     layout_robot_floor_washer: "Mop elektryczny", stick_away: "Poza baz\u0105", stick_away_threshold: "Poza baz\u0105 poni\u017cej tej mocy (W)",
     type_diffuser: "Dyfuzor olejk\u00f3w eterycznych", dif_mist: "Rozpylanie", dif_inter: "Przerywany", dif_low: "Lekka mgie\u0142ka", dif_empty: "Pusty zbiornik", dif_mode: "Tryb mgie\u0142ki", layout_dif_drop: "Kropla", layout_dif_cone: "Sto\u017cek", layout_dif_stone: "Kamie\u0144", layout_dif_flame: "P\u0142omie\u0144", layout_dif_nebulizer: "Nebulizator", section_tank_empty: "Czujnik pustego zbiornika", type_hrv: "Wentylacja z rekuperacj\u0105", hrv_run: "Wentyluje", hrv_boost: "Boost", hrv_bypass: "Bypass", hrv_defrost: "Odszranianie", hrv_filter: "Wymie\u0144 filtr", hrv_away: "Nieobecno\u015b\u0107", hrv_recirc: "Recyrkulacja", hrv_humidity: "Kontrola wilgotno\u015bci", hrv_inter: "Przerywany", hrv_inter_paused: "Przerywany, przerwa", hrv_mode: "Tryb", hrv_supply_fan: "Nawiew", hrv_exhaust_fan: "Wywiew", section_supply_fan: "Pr\u0119dko\u015b\u0107 wentylatora nawiewu (obr/min)", section_exhaust_fan: "Pr\u0119dko\u015b\u0107 wentylatora wywiewu (obr/min)", fan_max_rpm: "Maksymalna pr\u0119dko\u015b\u0107 wentylator\u00f3w (obr/min)", section_exhaust_airflow: "Przep\u0142yw wywiewu", section_target_humidity: "Zadana wilgotno\u015b\u0107", section_humidity_control: "Prze\u0142\u0105cznik kontroli wilgotno\u015bci", layout_hrv_diagram: "Przep\u0142ywy powietrza", layout_hrv_one_duct: "\u015acienny, jeden kana\u0142", layout_hrv_pair: "Para w \u015bcianie", section_supply_temperature: "Temperatura nawiewu", section_extract_temperature: "Temperatura wywiewu", section_exhaust_temperature: "Temperatura wyrzutu", section_bypass: "Bypass", section_airflow: "Przep\u0142yw powietrza", hrv_t_outdoor: "czerpnia", hrv_t_supply: "nawiew", hrv_t_extract: "wywiew", hrv_t_exhaust: "wyrzut", hrv_outside: "na zewn\u0105trz", hrv_room: "pok\u00f3j",
-    type_camera: "Kamera", cam_idle: "Czuwanie", cam_live: "Na \u017cywo", cam_rec: "Nagrywanie", cam_motion: "Wykryto ruch", cam_off: "Wy\u0142\u0105czona", cam_line_last_motion: "Ostatni ruch", cam_line_night: "Widzenie nocne", cam_line_signal: "Sygna\u0142", section_motion: "Czujnik ruchu", section_recording: "Czujnik nagrywania", section_night_vision: "Widzenie nocne", section_privacy: "Tryb prywatno\u015bci", section_signal: "Si\u0142a sygna\u0142u", layout_cam_indoor: "Wewn\u0119trzna obrotowa", layout_cam_tube: "Wewn\u0119trzna tuba", layout_cam_outdoor: "Zewn\u0119trzna", layout_cam_dome: "Kopu\u0142a",
+    type_camera: "Kamera", cam_idle: "Czuwanie", cam_live: "Na \u017cywo", cam_rec: "Nagrywanie", cam_motion: "Wykryto ruch", cam_off: "Wy\u0142\u0105czona", cam_line_last_motion: "Ostatni ruch", cam_line_night: "Widzenie nocne", cam_line_signal: "Sygna\u0142", section_motion: "Czujnik ruchu", section_recording: "Czujnik nagrywania", section_night_vision: "Widzenie nocne", section_privacy: "Tryb prywatno\u015bci", section_signal: "Si\u0142a sygna\u0142u", layout_cam_indoor: "Wewn\u0119trzna obrotowa", layout_cam_tube: "Wewn\u0119trzna tuba", layout_cam_outdoor: "Zewn\u0119trzna", layout_cam_dome: "Kopu\u0142a", layout_cam_doorbell: "Dzwonek", cam_ring: "Kto\u015b dzwoni", cam_line_last_ring: "Ostatni dzwonek", section_ring: "Przycisk dzwonka", type_mailbox: "Skrzynka pocztowa", mb_empty: "Pusta", mb_mail: "Poczta", mb_front_open: "Przednie drzwiczki otwarte", mb_back_open: "Tylne drzwiczki otwarte", mb_line_count: "Otrzymana poczta", mb_line_last: "Ostatnia poczta", mb_front_door: "Przednie drzwiczki", mb_back_door: "Tylne drzwiczki", mb_open: "Otwarte", mb_closed: "Zamkni\u0119te", section_mail_count: "Licznik poczty", layout_mb_through: "Przelotowa", layout_mb_classic: "Klasyczna", mb_street: "ulica", mb_house: "dom", mb_front_side: "Strona ulicy", mb_side_left: "Lewa", mb_side_right: "Prawa",
     type_lamp: "Lampa", lamp_off: "Wy\u0142\u0105czona", lamp_on: "W\u0142\u0105czona", lamp_line_brightness: "Jasno\u015b\u0107", lamp_line_color_temp: "Temperatura barwowa", lamp_line_effect: "Efekt", lamp_spots: "Liczba oczek", layout_lamp_bulb: "\u017bar\u00f3wka", layout_lamp_bedside: "Lampka nocna", layout_lamp_floor: "Lampa \u0142ukowa", layout_lamp_torch: "Halogenowa lampa stoj\u0105ca", layout_lamp_pendant: "Lampa wisz\u0105ca", layout_lamp_strip: "Ta\u015bma LED", layout_lamp_spot: "Oczka wpuszczane", layout_lamp_panels: "Panele \u015bwietlne", layout_lamp_desk: "Lampka biurkowa", layout_lamp_wall: "Latarnia \u015bcienna",
     speed_power_max: "Moc na najwy\u017cszym biegu (W)", speed_power_custom: "W\u0142asne progi pr\u0119dko\u015bci", speed_power_2: "Bieg 2 od (W)", speed_power_3: "Bieg 3 od (W)",
     fw_self_cleaning: "Samooczyszczanie", fw_dirty_full: "Zbiornik na brudn\u0105 wod\u0119 pe\u0142ny", fw_clean_empty: "Zbiornik na czyst\u0105 wod\u0119 pusty",
@@ -2180,7 +2180,7 @@ const T = {
     layout_robot_stick: "\u65e0\u7ebf\u5438\u5c18\u5668", stick_charged: "\u5df2\u5145\u6ee1",
     layout_robot_floor_washer: "\u6d17\u5730\u673a", stick_away: "\u4e0d\u5728\u5e95\u5ea7\u4e0a", stick_away_threshold: "\u4f4e\u4e8e\u6b64\u529f\u7387\u5373\u4e0d\u5728\u5e95\u5ea7\u4e0a (W)",
     type_diffuser: "\u9999\u85b0\u673a", dif_mist: "\u55b7\u96fe\u4e2d", dif_inter: "\u95f4\u6b47", dif_low: "\u8f7b\u96fe", dif_empty: "\u6c34\u7bb1\u7f3a\u6c34", dif_mode: "\u55b7\u96fe\u6a21\u5f0f", layout_dif_drop: "\u6c34\u6ef4", layout_dif_cone: "\u5706\u9525", layout_dif_stone: "\u9e45\u5375\u77f3", layout_dif_flame: "\u706b\u7130", layout_dif_nebulizer: "\u96fe\u5316\u5668", section_tank_empty: "\u7f3a\u6c34\u4f20\u611f\u5668", type_hrv: "\u70ed\u56de\u6536\u65b0\u98ce", hrv_run: "\u8fd0\u884c\u4e2d", hrv_boost: "\u5f3a\u52b2", hrv_bypass: "\u65c1\u901a", hrv_defrost: "\u9664\u971c\u4e2d", hrv_filter: "\u66f4\u6362\u6ee4\u7f51", hrv_away: "\u79bb\u5bb6", hrv_recirc: "\u5185\u5faa\u73af", hrv_humidity: "\u6e7f\u5ea6\u63a7\u5236", hrv_inter: "\u95f4\u6b47", hrv_inter_paused: "\u95f4\u6b47\uff0c\u6682\u505c\u4e2d", hrv_mode: "\u6a21\u5f0f", hrv_supply_fan: "\u9001\u98ce", hrv_exhaust_fan: "\u6392\u98ce", section_supply_fan: "\u9001\u98ce\u98ce\u673a\u8f6c\u901f\uff08\u8f6c/\u5206\uff09", section_exhaust_fan: "\u6392\u98ce\u98ce\u673a\u8f6c\u901f\uff08\u8f6c/\u5206\uff09", fan_max_rpm: "\u98ce\u673a\u6700\u9ad8\u8f6c\u901f\uff08\u8f6c/\u5206\uff09", section_exhaust_airflow: "\u6392\u98ce\u98ce\u91cf", section_target_humidity: "\u76ee\u6807\u6e7f\u5ea6", section_humidity_control: "\u6e7f\u5ea6\u63a7\u5236\u5f00\u5173", layout_hrv_diagram: "\u6c14\u6d41\u793a\u610f", layout_hrv_one_duct: "\u58c1\u6302\u5f0f\uff0c\u5355\u7ba1", layout_hrv_pair: "\u7a7f\u5899\u6210\u5bf9", section_supply_temperature: "\u9001\u98ce\u6e29\u5ea6", section_extract_temperature: "\u56de\u98ce\u6e29\u5ea6", section_exhaust_temperature: "\u6392\u98ce\u6e29\u5ea6", section_bypass: "\u65c1\u901a", section_airflow: "\u98ce\u91cf", hrv_t_outdoor: "\u65b0\u98ce", hrv_t_supply: "\u9001\u98ce", hrv_t_extract: "\u56de\u98ce", hrv_t_exhaust: "\u6392\u98ce", hrv_outside: "\u5ba4\u5916", hrv_room: "\u5ba4\u5185",
-    type_camera: "\u6444\u50cf\u5934", cam_idle: "\u5f85\u673a", cam_live: "\u76f4\u64ad\u4e2d", cam_rec: "\u5f55\u50cf\u4e2d", cam_motion: "\u68c0\u6d4b\u5230\u79fb\u52a8", cam_off: "\u5df2\u5173\u95ed", cam_line_last_motion: "\u4e0a\u6b21\u79fb\u52a8", cam_line_night: "\u591c\u89c6", cam_line_signal: "\u4fe1\u53f7", section_motion: "\u79fb\u52a8\u4f20\u611f\u5668", section_recording: "\u5f55\u50cf\u4f20\u611f\u5668", section_night_vision: "\u591c\u89c6", section_privacy: "\u9690\u79c1\u6a21\u5f0f", section_signal: "\u4fe1\u53f7\u5f3a\u5ea6", layout_cam_indoor: "\u5ba4\u5185\u4e91\u53f0", layout_cam_tube: "\u5ba4\u5185\u5706\u67f1", layout_cam_outdoor: "\u5ba4\u5916", layout_cam_dome: "\u534a\u7403",
+    type_camera: "\u6444\u50cf\u5934", cam_idle: "\u5f85\u673a", cam_live: "\u76f4\u64ad\u4e2d", cam_rec: "\u5f55\u50cf\u4e2d", cam_motion: "\u68c0\u6d4b\u5230\u79fb\u52a8", cam_off: "\u5df2\u5173\u95ed", cam_line_last_motion: "\u4e0a\u6b21\u79fb\u52a8", cam_line_night: "\u591c\u89c6", cam_line_signal: "\u4fe1\u53f7", section_motion: "\u79fb\u52a8\u4f20\u611f\u5668", section_recording: "\u5f55\u50cf\u4f20\u611f\u5668", section_night_vision: "\u591c\u89c6", section_privacy: "\u9690\u79c1\u6a21\u5f0f", section_signal: "\u4fe1\u53f7\u5f3a\u5ea6", layout_cam_indoor: "\u5ba4\u5185\u4e91\u53f0", layout_cam_tube: "\u5ba4\u5185\u5706\u67f1", layout_cam_outdoor: "\u5ba4\u5916", layout_cam_dome: "\u534a\u7403", layout_cam_doorbell: "\u95e8\u94c3", cam_ring: "\u6709\u4eba\u6309\u95e8\u94c3", cam_line_last_ring: "\u4e0a\u6b21\u6309\u94c3", section_ring: "\u95e8\u94c3\u6309\u94ae", type_mailbox: "\u4fe1\u7bb1", mb_empty: "\u7a7a", mb_mail: "\u6709\u4fe1\u4ef6", mb_front_open: "\u524d\u95e8\u5df2\u6253\u5f00", mb_back_open: "\u540e\u95e8\u5df2\u6253\u5f00", mb_line_count: "\u6536\u5230\u7684\u4fe1\u4ef6", mb_line_last: "\u6700\u8fd1\u7684\u4fe1\u4ef6", mb_front_door: "\u524d\u95e8", mb_back_door: "\u540e\u95e8", mb_open: "\u6253\u5f00", mb_closed: "\u5173\u95ed", section_mail_count: "\u4fe1\u4ef6\u8ba1\u6570", layout_mb_through: "\u7a7f\u5899\u5f0f", layout_mb_classic: "\u7ecf\u5178", mb_street: "\u8857\u9053", mb_house: "\u5ba4\u5185", mb_front_side: "\u8857\u9053\u4e00\u4fa7", mb_side_left: "\u5de6\u4fa7", mb_side_right: "\u53f3\u4fa7",
     type_lamp: "\u706f", lamp_off: "\u5173", lamp_on: "\u5f00", lamp_line_brightness: "\u4eae\u5ea6", lamp_line_color_temp: "\u8272\u6e29", lamp_line_effect: "\u6548\u679c", lamp_spots: "\u5c04\u706f\u6570\u91cf", layout_lamp_bulb: "\u706f\u6ce1", layout_lamp_bedside: "\u5e8a\u5934\u706f", layout_lamp_floor: "\u5f27\u5f62\u843d\u5730\u706f", layout_lamp_torch: "\u5364\u7d20\u843d\u5730\u706f", layout_lamp_pendant: "\u540a\u706f", layout_lamp_strip: "LED \u706f\u5e26", layout_lamp_spot: "\u5d4c\u5165\u5f0f\u5c04\u706f", layout_lamp_panels: "\u706f\u677f", layout_lamp_desk: "\u53f0\u706f", layout_lamp_wall: "\u58c1\u706f",
     speed_power_max: "\u6700\u9ad8\u6863\u529f\u7387 (W)", speed_power_custom: "\u81ea\u5b9a\u4e49\u6863\u4f4d\u9608\u503c", speed_power_2: "2 \u6863\u8d77\u59cb (W)", speed_power_3: "3 \u6863\u8d77\u59cb (W)",
     fw_self_cleaning: "\u81ea\u6e05\u6d01\u4e2d", fw_dirty_full: "\u6c61\u6c34\u7bb1\u5df2\u6ee1", fw_clean_empty: "\u6e05\u6c34\u7bb1\u5df2\u7a7a",
@@ -2349,7 +2349,7 @@ const T = {
     layout_robot_stick: "Ty\u010dov\u00fd vysava\u010d", stick_charged: "Nabito",
     layout_robot_floor_washer: "Myc\u00ed vysava\u010d", stick_away: "Mimo z\u00e1kladnu", stick_away_threshold: "Mimo z\u00e1kladnu pod t\u00edmto v\u00fdkonem (W)",
     type_diffuser: "Aroma difuz\u00e9r", dif_mist: "Rozpra\u0161uje", dif_inter: "P\u0159eru\u0161ovan\u011b", dif_low: "Slab\u00e1 mlha", dif_empty: "Pr\u00e1zdn\u00e1 n\u00e1dr\u017eka", dif_mode: "Re\u017eim mlhy", layout_dif_drop: "Kapka", layout_dif_cone: "Ku\u017eel", layout_dif_stone: "Obl\u00e1zek", layout_dif_flame: "Plamen", layout_dif_nebulizer: "Nebuliz\u00e9r", section_tank_empty: "Senzor pr\u00e1zdn\u00e9 n\u00e1dr\u017eky", type_hrv: "Rekupera\u010dn\u00ed v\u011btr\u00e1n\u00ed", hrv_run: "V\u011btr\u00e1", hrv_boost: "Boost", hrv_bypass: "Bypass", hrv_defrost: "Odmrazov\u00e1n\u00ed", hrv_filter: "Vym\u011bnit filtr", hrv_away: "Pry\u010d", hrv_recirc: "Recirkulace", hrv_humidity: "\u0158\u00edzen\u00ed vlhkosti", hrv_inter: "P\u0159eru\u0161ovan\u011b", hrv_inter_paused: "P\u0159eru\u0161ovan\u011b, pauza", hrv_mode: "Re\u017eim", hrv_supply_fan: "P\u0159\u00edvod", hrv_exhaust_fan: "Odtah", section_supply_fan: "Ot\u00e1\u010dky p\u0159\u00edvodn\u00edho ventil\u00e1toru (ot/min)", section_exhaust_fan: "Ot\u00e1\u010dky odtahov\u00e9ho ventil\u00e1toru (ot/min)", fan_max_rpm: "Maxim\u00e1ln\u00ed ot\u00e1\u010dky ventil\u00e1tor\u016f (ot/min)", section_exhaust_airflow: "Pr\u016ftok odtahu", section_target_humidity: "Po\u017eadovan\u00e1 vlhkost", section_humidity_control: "Sp\u00edna\u010d \u0159\u00edzen\u00ed vlhkosti", layout_hrv_diagram: "Proudy vzduchu", layout_hrv_one_duct: "N\u00e1st\u011bnn\u00e1, jeden kan\u00e1l", layout_hrv_pair: "P\u00e1r ve zdi", section_supply_temperature: "Teplota p\u0159\u00edvodu", section_extract_temperature: "Teplota odvodu", section_exhaust_temperature: "Teplota odpadn\u00edho vzduchu", section_bypass: "Bypass", section_airflow: "Pr\u016ftok vzduchu", hrv_t_outdoor: "\u010derstv\u00fd", hrv_t_supply: "p\u0159\u00edvod", hrv_t_extract: "odvod", hrv_t_exhaust: "odpad", hrv_outside: "venku", hrv_room: "m\u00edstnost",
-    type_camera: "Kamera", cam_idle: "Ne\u010dinn\u00e1", cam_live: "\u017div\u011b", cam_rec: "Nahr\u00e1v\u00e1", cam_motion: "Zji\u0161t\u011bn pohyb", cam_off: "Vypnut\u00e1", cam_line_last_motion: "Posledn\u00ed pohyb", cam_line_night: "No\u010dn\u00ed vid\u011bn\u00ed", cam_line_signal: "Sign\u00e1l", section_motion: "Senzor pohybu", section_recording: "Senzor nahr\u00e1v\u00e1n\u00ed", section_night_vision: "No\u010dn\u00ed vid\u011bn\u00ed", section_privacy: "Re\u017eim soukrom\u00ed", section_signal: "S\u00edla sign\u00e1lu", layout_cam_indoor: "Vnit\u0159n\u00ed oto\u010dn\u00e1", layout_cam_tube: "Vnit\u0159n\u00ed v\u00e1lec", layout_cam_outdoor: "Venkovn\u00ed", layout_cam_dome: "Kopule",
+    type_camera: "Kamera", cam_idle: "Ne\u010dinn\u00e1", cam_live: "\u017div\u011b", cam_rec: "Nahr\u00e1v\u00e1", cam_motion: "Zji\u0161t\u011bn pohyb", cam_off: "Vypnut\u00e1", cam_line_last_motion: "Posledn\u00ed pohyb", cam_line_night: "No\u010dn\u00ed vid\u011bn\u00ed", cam_line_signal: "Sign\u00e1l", section_motion: "Senzor pohybu", section_recording: "Senzor nahr\u00e1v\u00e1n\u00ed", section_night_vision: "No\u010dn\u00ed vid\u011bn\u00ed", section_privacy: "Re\u017eim soukrom\u00ed", section_signal: "S\u00edla sign\u00e1lu", layout_cam_indoor: "Vnit\u0159n\u00ed oto\u010dn\u00e1", layout_cam_tube: "Vnit\u0159n\u00ed v\u00e1lec", layout_cam_outdoor: "Venkovn\u00ed", layout_cam_dome: "Kopule", layout_cam_doorbell: "Zvonek", cam_ring: "N\u011bkdo zvon\u00ed", cam_line_last_ring: "Posledn\u00ed zazvon\u011bn\u00ed", section_ring: "Tla\u010d\u00edtko zvonku", type_mailbox: "Po\u0161tovn\u00ed schr\u00e1nka", mb_empty: "Pr\u00e1zdn\u00e1", mb_mail: "Po\u0161ta", mb_front_open: "P\u0159edn\u00ed dv\u00ed\u0159ka otev\u0159en\u00e1", mb_back_open: "Zadn\u00ed dv\u00ed\u0159ka otev\u0159en\u00e1", mb_line_count: "P\u0159ijat\u00e1 po\u0161ta", mb_line_last: "Posledn\u00ed po\u0161ta", mb_front_door: "P\u0159edn\u00ed dv\u00ed\u0159ka", mb_back_door: "Zadn\u00ed dv\u00ed\u0159ka", mb_open: "Otev\u0159en\u00e1", mb_closed: "Zav\u0159en\u00e1", section_mail_count: "Po\u010d\u00edtadlo po\u0161ty", layout_mb_through: "Pr\u016fchoz\u00ed", layout_mb_classic: "Klasick\u00e1", mb_street: "ulice", mb_house: "d\u016fm", mb_front_side: "Strana ulice", mb_side_left: "Vlevo", mb_side_right: "Vpravo",
     type_lamp: "Lampa", lamp_off: "Vypnut\u00e1", lamp_on: "Zapnut\u00e1", lamp_line_brightness: "Jas", lamp_line_color_temp: "Teplota barvy", lamp_line_effect: "Efekt", lamp_spots: "Po\u010det bodovek", layout_lamp_bulb: "\u017d\u00e1rovka", layout_lamp_bedside: "No\u010dn\u00ed lampi\u010dka", layout_lamp_floor: "Obloukov\u00e1 lampa", layout_lamp_torch: "Halogenov\u00e1 stojac\u00ed lampa", layout_lamp_pendant: "Z\u00e1v\u011bsn\u00e9 sv\u00edtidlo", layout_lamp_strip: "LED p\u00e1sek", layout_lamp_spot: "Vestavn\u00e9 bodovky", layout_lamp_panels: "Sv\u011bteln\u00e9 panely", layout_lamp_desk: "Stoln\u00ed lampa", layout_lamp_wall: "N\u00e1st\u011bnn\u00e1 lucerna",
     speed_power_max: "P\u0159\u00edkon na nejvy\u0161\u0161\u00ed stupe\u0148 (W)", speed_power_custom: "Vlastn\u00ed prahy rychlosti", speed_power_2: "Stupe\u0148 2 od (W)", speed_power_3: "Stupe\u0148 3 od (W)",
     fw_self_cleaning: "Samo\u010di\u0161t\u011bn\u00ed", fw_dirty_full: "N\u00e1dr\u017e na \u0161pinavou vodu pln\u00e1", fw_clean_empty: "N\u00e1dr\u017e na \u010distou vodu pr\u00e1zdn\u00e1",
@@ -4615,6 +4615,13 @@ const TYPE_AUTO_PATTERNS = {
     battery_entity: /batter|akku/i,
     signal_entity: /signal|rssi|wifi/i,
     connectivity_entity: /connect|online/i,
+    ring_entity: /ring|visitor|visiteur|doorbell|sonnette|klingel|press|appui/i,
+  },
+  // A mailbox: a counter of the mail, and a contact on each door.
+  mailbox: {
+    mail_count_entity: /count|compteur|zahl|contador|contatore|teller|licznik|nombre/i,
+    front_door_entity: /front|avant|vorn|delanter|anterior|voor|flap|clapet|slot|fente/i,
+    back_door_entity: /back|rear|arriere|hinten|traser|posterior|achter|empt|vidage/i,
   },
   solar: {
     power_entity: /(solar|pv|production|produced|inverter|onduleur).*(power|watt)|(power|watt).*(solar|pv)/i,
@@ -5085,6 +5092,8 @@ const TYPE_CAPS = {
   camera: { camera: true },
   // A lamp: on or off, how bright, in what colour, and its effect.
   lamp: { lamp: true },
+  // A mailbox: empty or with mail in it, and its doors.
+  mailbox: { mailbox: true, readOnly: true },
   // An essential oil diffuser: its mist, continuous or now and then, its
   // light, and its tank.
   diffuser: { diffuser: true, light: true },
@@ -5180,6 +5189,7 @@ const STATE_DOMAINS = {
   pool_pump: ["switch", "binary_sensor", "select", "input_select", "input_boolean", "fan"],
   camera: ["camera", "switch", "binary_sensor", "input_boolean"],
   lamp: ["light", "switch", "input_boolean"],
+  mailbox: ["binary_sensor", "input_boolean", "sensor", "counter", "input_number", "switch"],
   diffuser: ["fan", "switch", "select", "input_select", "humidifier", "input_boolean"],
   hrv: ["fan", "climate", "select", "input_select", "switch", "input_boolean"],
 };
@@ -5265,7 +5275,7 @@ const TYPE_GROUPS = [
   ["kitchen", ["dishwasher", "oven", "microwave", "hood", "cooktop", "fridge", "kettle", "cooker", "coffee", "rice_cooker", "air_fryer", "toaster"]],
   ["heating", ["water_heater", "boiler", "heat_pump", "pellet_stove", "space_heater", "towel_warmer"]],
   ["air", ["air_conditioner", "dehumidifier", "air_purifier", "fan", "diffuser", "hrv"]],
-  ["home", ["screen", "iron", "hair_dryer", "printer_3d", "robot", "pool_pump", "scale", "camera", "lamp"]],
+  ["home", ["screen", "iron", "hair_dryer", "printer_3d", "robot", "pool_pump", "scale", "camera", "lamp", "mailbox"]],
   ["energy", ["solar", "home_battery", "ev_charger"]],
   ["pets", ["pet_feeder", "pet_fountain"]],
   ["network", ["network", "ups"]],
@@ -5306,6 +5316,7 @@ function detectApplianceType(cfg, st) {
   if (UPS_ONLY_FIELDS.some((f) => cfg[f])) return "ups";
   if (CAMERA_ONLY_FIELDS.some((f) => cfg[f])) return "camera";
   if (LAMP_ONLY_FIELDS.some((f) => cfg[f])) return "lamp";
+  if (MAILBOX_ONLY_FIELDS.some((f) => cfg[f])) return "mailbox";
   if (DIFFUSER_ONLY_FIELDS.some((f) => cfg[f])) return "diffuser";
   if (HRV_ONLY_FIELDS.some((f) => cfg[f])) return "hrv";
   // Home Assistant has a domain of its own for each of them.
@@ -5317,6 +5328,7 @@ function detectApplianceType(cfg, st) {
     const named = stripAccents(`${cfg.icon || ""} ${cfg.state_entity || ""} ${(st && st.attributes.friendly_name) || ""}`).toLowerCase();
     if (DIFFUSER_NAME_RE.test(named)) return "diffuser";
     if (HRV_NAME_RE.test(named)) return "hrv";
+    if (MAILBOX_NAME_RE.test(named)) return "mailbox";
   }
   if (PURIFIER_ONLY_FIELDS.some((f) => cfg[f])) return "air_purifier";
   if (FAN_ONLY_FIELDS.some((f) => cfg[f])) return "fan";
@@ -6382,15 +6394,35 @@ function hrvHtml(cls, h) {
 // infrared mode say more when the integration has them, a privacy switch (or
 // Netatmo's monitoring attribute) says it is off, and a connectivity sensor
 // that it is gone.
-const CAMERA_ONLY_FIELDS = ["camera_layout", "motion_entity", "recording_entity", "night_entity", "privacy_entity", "signal_entity"];
-const CAMERA_LAYOUTS = ["indoor", "tube", "outdoor", "dome"];
-const CAMERA_LABELS = { idle: "cam_idle", live: "cam_live", rec: "cam_rec", motion: "cam_motion", off: "cam_off", unav: "ev_offline" };
-const CAMERA_COLORS = { idle: "var(--secondary-text-color, #727272)", live: "#03a9f4", rec: "#f44336", motion: "#ff9800",
+const CAMERA_ONLY_FIELDS = ["camera_layout", "motion_entity", "recording_entity", "night_entity", "privacy_entity", "signal_entity", "ring_entity"];
+const CAMERA_LAYOUTS = ["indoor", "tube", "outdoor", "dome", "doorbell"];
+const CAMERA_LABELS = { idle: "cam_idle", live: "cam_live", rec: "cam_rec", motion: "cam_motion", ring: "cam_ring", off: "cam_off", unav: "ev_offline" };
+const CAMERA_COLORS = { idle: "var(--secondary-text-color, #727272)", live: "#03a9f4", rec: "#f44336", motion: "#ff9800", ring: "#03a9f4",
   off: "var(--disabled-text-color, #9e9e9e)", unav: "var(--disabled-text-color, #9e9e9e)" };
 const CAMERA_ON = ["on", "true", "1", "yes", "detected", "recording", "motion", "home"];
 function camOn(hass, id) {
   const st = id ? stateObj(hass, id) : null;
   return !!st && CAMERA_ON.includes(String(st.state).toLowerCase());
+}
+// A doorbell's button: a binary sensor on while it is pressed (Reolink's
+// visitor), or an event entity whose state is the time of its last ring (Ring,
+// Nest, UniFi Protect), drawn ringing for half a minute after it.
+const CAM_RING_MS = 30000;
+function camRingAt(hass, id) {
+  const st = id ? stateObj(hass, id) : null;
+  if (!st) return null;
+  if (domainOf(id) === "event") {
+    const at = Date.parse(st.state);
+    const type = String((st.attributes || {}).event_type || "").toLowerCase();
+    return isFinite(at) && (!type || /ring|press|doorbell|single|button/.test(type)) ? at : null;
+  }
+  const at = Date.parse(st.last_changed);
+  return CAMERA_ON.includes(String(st.state).toLowerCase()) ? Date.now() : isFinite(at) ? at : null;
+}
+function camRinging(hass, id) {
+  const at = camRingAt(hass, id);
+  if (at === null) return false;
+  return domainOf(id) === "event" ? Date.now() - at < CAM_RING_MS : camOn(hass, id);
 }
 function cameraReadOf(hass, cfg, st) {
   const raw = st ? String(st.state).trim().toLowerCase() : "";
@@ -6400,6 +6432,7 @@ function cameraReadOf(hass, cfg, st) {
   let mode;
   if (!st || ["unavailable", "unknown", "none", ""].includes(raw) || gone) mode = "unav";
   else if (raw === "off" || a.monitoring === false || camOn(hass, cfg.privacy_entity)) mode = "off";
+  else if (camRinging(hass, cfg.ring_entity)) mode = "ring";
   else if (raw === "recording" || camOn(hass, cfg.recording_entity)) mode = "rec";
   else if (raw === "motion" || camOn(hass, cfg.motion_entity)) mode = "motion";
   else if (raw === "streaming") mode = "live";
@@ -6413,9 +6446,10 @@ function cameraLayoutOf(cfg, st) {
   if (CAMERA_LAYOUTS.includes(cfg.camera_layout)) return cfg.camera_layout;
   const a = (st && st.attributes) || {};
   const hay = stripAccents(`${cfg.state_entity || ""} ${cfg.name || ""} ${a.friendly_name || ""} ${a.brand || ""} ${a.model_name || a.model || ""}`).toLowerCase();
+  if (cfg.ring_entity || /doorbell|sonnette|klingel|timbre|campanello|deurbel|campainha|dorrklocka|ringeklokke|dorklokke|dzwonek|zvonek|visitor/.test(hay)) return "doorbell";
   if (/dome|kuppel|domo|cupola|turret/.test(hay)) return "dome";
   if (/netatmo/.test(hay) && !/presence|outdoor|exterieur|exterior/.test(hay)) return "tube";
-  if (/outdoor|exterieur|exterior|aussen|garden|jardin|garage|driveway|porch|terrasse|street|front|back|arriere|avant|entree|portail|gate|spotlight|bullet|presence|arlo|doorbell|sonnette/.test(hay)) return "outdoor";
+  if (/outdoor|exterieur|exterior|aussen|garden|jardin|garage|driveway|porch|terrasse|street|front|back|arriere|avant|entree|portail|gate|spotlight|bullet|presence|arlo/.test(hay)) return "outdoor";
   return "indoor";
 }
 
@@ -6431,6 +6465,8 @@ const CAM_DEFS = `<defs>
 <radialGradient id="cam-g-glow" r=".5"><stop offset="0" stop-color="#4fc3f7" stop-opacity=".95"/><stop offset="1" stop-color="#4fc3f7" stop-opacity="0"/></radialGradient>
 <radialGradient id="cam-g-smoke" cx=".4" cy=".25" r=".85"><stop offset="0" stop-color="#56606b" stop-opacity=".85"/><stop offset=".6" stop-color="#1c2228" stop-opacity=".9"/><stop offset="1" stop-color="#0b0e11" stop-opacity=".95"/></radialGradient>
 <linearGradient id="cam-g-al" x1="0" y1="0" x2="1" y2="0"><stop offset="0" class="cam-al0"/><stop offset=".32" class="cam-al1"/><stop offset=".7" class="cam-al2"/><stop offset="1" class="cam-al3"/></linearGradient>
+<linearGradient id="cam-g-dbglass" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#2a323b"/><stop offset=".5" stop-color="#0e1216"/><stop offset="1" stop-color="#05070a"/></linearGradient>
+<radialGradient id="cam-g-pir" cx=".4" cy=".35" r=".7"><stop offset="0" stop-color="#6b737c"/><stop offset="1" stop-color="#1b2026"/></radialGradient>
 <linearGradient id="cam-g-blk" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#05070a"/><stop offset=".35" stop-color="#2a3138"/><stop offset=".6" stop-color="#0d1014"/><stop offset="1" stop-color="#030405"/></linearGradient>
 </defs>`;
 const CAM_EDGE = 'stroke="rgba(0,0,0,.28)"';
@@ -6499,12 +6535,164 @@ ${camWaves(74, 38)}${CAM_REC}`,
 <path d="M30 34 A30 30 0 0 0 90 34" fill="none" ${CAM_EDGE} stroke-width=".7"/>
 <circle class="cam-led" cx="46" cy="45" r="1.3"/>
 </g>${camWaves(86, 82)}<g transform="translate(0 24)">${CAM_REC}</g>`,
+  // A video doorbell on its wall: the lens at the top, the motion sensor, and
+  // the button in its ring of light, which beats when someone rings.
+  doorbell: () => `<ellipse cx="62" cy="121" rx="20" ry="2.6" fill="#000" opacity=".12"/>
+<rect x="38" y="0" width="44" height="118" rx="18" style="fill:var(--ac-body-lo,#c9d0d7)" opacity=".7"/>
+<rect x="40" y="2" width="40" height="114" rx="17" fill="url(#cam-g-shv)" ${CAM_EDGE} stroke-width=".7"/>
+<path d="M47 8 H73" stroke="#fff" stroke-width="2" opacity=".6" stroke-linecap="round"/>
+<rect x="44" y="12" width="32" height="56" rx="13" fill="url(#cam-g-dbglass)"/>
+<g class="cam-on">${camLens(60, 28, 6.6, 10.4)}</g>
+<g class="cam-off"><circle cx="60" cy="28" r="7.8" fill="#2a3037"/><circle cx="60" cy="28" r="5" fill="#1c2127"/></g>
+<circle class="cam-led" cx="60" cy="42.5" r="1.2"/>
+<circle cx="60" cy="54" r="5" fill="url(#cam-g-pir)"/><path d="M56 54 H64 M57 51.5 H63 M57 56.5 H63" stroke="#000" stroke-width=".4" opacity=".4"/>
+<path d="M49 18 Q55 14 64 14" stroke="#fff" stroke-width="1.2" opacity=".2" fill="none" stroke-linecap="round"/>
+<path d="M53 74 H67 M54.5 77 H65.5" stroke="rgba(0,0,0,.35)" stroke-width="1.1" stroke-linecap="round"/>
+<circle class="cam-dbhalo" cx="60" cy="96" r="12"/>
+<circle cx="60" cy="96" r="13" fill="#1b2026"/>
+<circle class="cam-dbring" cx="60" cy="96" r="11.6"/>
+<circle cx="60" cy="96" r="9.6" fill="url(#cam-g-sh)" ${CAM_EDGE} stroke-width=".5"/>
+<path d="M60 91.4 q-3.4 0 -3.4 3.6 v2.2 l-1.2 1.6 h9.2 l-1.2 -1.6 v-2.2 q0 -3.6 -3.4 -3.6 Z M58.8 99.6 a1.2 1.2 0 0 0 2.4 0" fill="#7b8590"/>
+<g class="cam-bell"><path d="M84 88 Q89 96 84 104" style="--dx:4px"/><path d="M90 84 Q97 96 90 108" style="--dx:5px"/><path d="M36 88 Q31 96 36 104" style="--dx:-4px"/><path d="M30 84 Q23 96 30 108" style="--dx:-5px"/></g>
+${camWaves(80, 40)}${CAM_REC}`,
 };
 function cameraHtml(cls, c) {
   const layout = CAMERA_LAYOUTS.includes(c.layout) ? c.layout : "indoor";
   const flags = ["cam", `cam-l-${layout}`, `cam-m-${c.mode || "unav"}`, c.night ? "cam-night" : "", c.dark ? "cam-dark" : ""].filter(Boolean).join(" ");
   return `
         <div class="machine ${cls} ${flags}"><svg class="cam-svg" viewBox="0 -8 120 135">${CAM_DEFS}${CAMERA_SVGS[layout]()}</svg></div>`;
+}
+
+// A mailbox, read from a mail indicator or a counter, and from the contacts on
+// its doors: empty, with mail in it, or one of its doors open. Up to twelve
+// letters are drawn in the pile.
+const MAILBOX_ONLY_FIELDS = ["mailbox_layout", "mailbox_front", "mail_count_entity", "front_door_entity", "back_door_entity"];
+const MAILBOX_LAYOUTS = ["through", "classic"];
+const MAILBOX_SIDES = ["left", "right"];
+const MAILBOX_MAX_LETTERS = 12;
+const MAILBOX_LABELS = { empty: "mb_empty", mail: "mb_mail", front: "mb_front_open", back: "mb_back_open", unav: "ev_offline" };
+const MAILBOX_COLORS = { empty: "var(--secondary-text-color, #727272)", mail: "#ffa000", front: "#03a9f4", back: "#03a9f4",
+  unav: "var(--disabled-text-color, #9e9e9e)" };
+const MAILBOX_ON = ["on", "true", "1", "yes", "open", "opened", "detected", "mail", "full"];
+// How long a letter takes to arrive, and a door to swing open.
+const MAILBOX_ARRIVE_MS = 2200;
+const MAILBOX_SWING_MS = 700;
+const MAILBOX_NAME_RE = /mail.?box|letter.?box|boite.?aux.?lettres|(^|[\s._])bal([\s._]|$)|briefkasten|buzon|brievenbus|postkasse|brevlada|skrzynka|cassetta.?postale|caixa.?de.?correio|schranka/;
+function mailboxOpen(hass, id) {
+  const st = id ? stateObj(hass, id) : null;
+  return !!st && MAILBOX_ON.includes(String(st.state).toLowerCase());
+}
+function mailboxReadOf(hass, cfg, st) {
+  const raw = st ? String(st.state).trim().toLowerCase() : "";
+  if (!st || ["unavailable", "unknown", "none", ""].includes(raw)) return { mode: "unav", count: null, present: false, front: false, back: false };
+  const own = numberOrNull(st.state);
+  const counted = cfg.mail_count_entity ? numericState(hass, cfg.mail_count_entity) : own;
+  const count = counted === null ? null : Math.max(0, Math.round(counted));
+  const present = (count !== null && count > 0) || MAILBOX_ON.includes(raw) || (own !== null && own > 0);
+  const front = mailboxOpen(hass, cfg.front_door_entity);
+  const back = mailboxOpen(hass, cfg.back_door_entity);
+  const mode = back ? "back" : front ? "front" : present ? "mail" : "empty";
+  return { mode, count, present, front, back };
+}
+// Seen from the side through its wall when it has a door on each face, from
+// the front otherwise.
+function mailboxLayoutOf(cfg) {
+  if (MAILBOX_LAYOUTS.includes(cfg.mailbox_layout)) return cfg.mailbox_layout;
+  return cfg.back_door_entity ? "through" : "classic";
+}
+
+const MB_DEFS = `<defs>
+<linearGradient id="mb-g-shv" x1="0" y1="0" x2="0" y2="1"><stop offset="0" style="stop-color:var(--ac-body-hi,#fff)"/><stop offset="1" style="stop-color:var(--ac-body-lo,#c9d0d7)"/></linearGradient>
+<linearGradient id="mb-g-sh" x1="0" y1="0" x2="1" y2="1"><stop offset="0" style="stop-color:var(--ac-body-hi,#fff)"/><stop offset=".55" style="stop-color:var(--ac-body,#eef1f4)"/><stop offset="1" style="stop-color:var(--ac-body-lo,#c9d0d7)"/></linearGradient>
+<linearGradient id="mb-g-stone" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#a89f92"/><stop offset=".5" stop-color="#cbc3b6"/><stop offset="1" stop-color="#9c9386"/></linearGradient>
+<linearGradient id="mb-g-in" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3a4249"/><stop offset="1" stop-color="#5b646d"/></linearGradient>
+<linearGradient id="mb-g-day" x1="1" y1="0" x2="0" y2="0"><stop offset="0" stop-color="#fff6d6"/><stop offset="1" stop-color="#fff6d6" stop-opacity="0"/></linearGradient>
+<linearGradient id="mb-g-dayl" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#fff6d6"/><stop offset="1" stop-color="#fff6d6" stop-opacity="0"/></linearGradient>
+<clipPath id="mb-clip-slot"><rect x="0" y="-8" width="120" height="40"/></clipPath>
+</defs>`;
+const MB_EDGE = 'stroke="rgba(0,0,0,.28)"';
+const MB_BODY = "url(#mb-g-shv)";
+const MB_ROT = [-3, 2, -1, 4, -2, 1, 3, -4, 2, -1, 0, 3];
+const MB_JIT = [0, 2, -1, 1, -2, 0, 2, 1, -1, 0, -2, 1];
+const mbEnvelope = (x, y, r, w = 22, h = 9) => `<g transform="rotate(${r} ${x + w / 2} ${y + h / 2})"><rect x="${x}" y="${y}" width="${w}" height="${h}" rx="1" fill="#fff" stroke="#c7ccd2" stroke-width=".5"/><path d="M${x} ${y} L${x + w / 2} ${y + h * 0.55} L${x + w} ${y}" fill="none" stroke="#c7ccd2" stroke-width=".6"/></g>`;
+// The pile, three letters a layer. The one just received starts at the slot
+// (sx, sy) and travels to its place.
+function mbLetters(n, x0, step, floor, newIdx, sx, sy) {
+  let out = "";
+  for (let i = 0; i < Math.min(n, MAILBOX_MAX_LETTERS); i++) {
+    const x = x0 + (i % 3) * step + MB_JIT[i], y = floor - 10 - Math.floor(i / 3) * 6.5 + (i % 2);
+    out += `<g class="mb-letter${i + 1 === newIdx ? " mb-new" : ""}" style="--dx:${sx - x}px;--dy:${sy - y}px">${mbEnvelope(x, y, MB_ROT[i])}</g>`;
+  }
+  return out;
+}
+const mbBadge = (n) => {
+  const txt = n === null || n === undefined ? "" : String(n);
+  const w = txt ? (txt.length > 1 ? 30 : 25) : 17;
+  return `<g class="mb-badge"><rect x="4" y="6" width="${w}" height="12" rx="6" fill="#ffa000"/><rect x="8" y="9" width="9" height="6" rx="1" fill="#fff"/><path d="M8 9 l4.5 3 l4.5 -3" fill="none" stroke="#ffa000" stroke-width=".9"/>${txt ? `<text x="19.5" y="15.4" font-size="8" font-family="Arial, sans-serif" font-weight="700" fill="#fff">${txt}</text>` : ""}</g>`;
+};
+// More than twelve: some no longer fit, and end up on the ground.
+const mbSpill = (spots) => `<g>${spots.map(([x, y, r]) => `<g class="mb-spill">${mbEnvelope(x, y, r)}</g>`).join("")}</g>`;
+const MB_SVGS = {
+  // Through a pillar, seen from the side: the street door on the left, the
+  // house door on the right. A door hinged on a vertical edge shows its face
+  // as it opens.
+  through: (c) => {
+    const front = c.front
+      ? `<g class="mb-swing hl"><path d="M24 34 L7 38.5 V77.5 L24 82 Z" fill="url(#mb-g-sh)" ${MB_EDGE} stroke-width=".6"/><path d="M10 43 V73" stroke="#fff" stroke-width="1.1" opacity=".5"/><path d="M21.4 40.2 L8.6 43.6 V47.6 L21.4 44.2 Z" style="fill:var(--ac-body-lo,#c9d0d7)" ${MB_EDGE} stroke-width=".4"/><path d="M20.6 41.1 L9.4 44.1 V46.5 L20.6 43.5 Z" fill="#151a20"/><path d="M20.6 41.1 L9.4 44.1 V45.6 L20.6 42.6 Z" fill="url(#mb-g-sh)" ${MB_EDGE} stroke-width=".3"/><path d="M20.2 41.5 L9.8 44.3" stroke="#fff" stroke-width=".4" opacity=".6"/><circle cx="10.6" cy="61" r="1.3" fill="#7b8590"/><rect x="10.25" y="61" width=".7" height="2.2" fill="#7b8590"/></g>`
+      : `<rect x="22" y="34" width="5" height="48" rx="1" fill="${MB_BODY}" ${MB_EDGE} stroke-width=".6"/><rect x="20.4" y="44" width="1.8" height="10" rx=".9" fill="#7b8590"/><path d="M22 36.4 L16.6 37.8 V40 H22 Z" fill="${MB_BODY}" ${MB_EDGE} stroke-width=".5"/><rect x="16.6" y="40" width="5.4" height="1.2" fill="#151a20"/>`;
+    const back = c.back
+      ? `<g class="mb-swing hr"><path d="M96 34 L113 38.5 V77.5 L96 82 Z" fill="url(#mb-g-sh)" ${MB_EDGE} stroke-width=".6"/><circle cx="109" cy="58" r="1.5" fill="#7b8590"/><rect x="108.6" y="58" width=".8" height="2.4" fill="#7b8590"/></g>`
+      : `<rect x="93" y="34" width="5" height="48" rx="1" fill="${MB_BODY}" ${MB_EDGE} stroke-width=".6"/><circle cx="99" cy="58" r="1.6" fill="#7b8590"/><rect x="98.6" y="58" width=".8" height="2.6" fill="#7b8590"/>`;
+    const box = `<ellipse cx="60" cy="124" rx="44" ry="3" fill="#000" opacity=".12"/>
+<rect x="46" y="-8" width="28" height="134" fill="url(#mb-g-stone)"/>
+<path d="M46 6 H74 M46 22 H74 M46 96 H74 M46 112 H74 M60 -8 V6 M54 6 V22 M66 22 V34 M58 82 V96 M64 96 V112 M56 112 V126" stroke="#8d8477" stroke-width=".6" opacity=".7"/>
+<rect x="26" y="34" width="68" height="48" rx="2" fill="url(#mb-g-in)"/>
+<rect class="mb-light" x="60" y="36" width="33" height="44" fill="url(#mb-g-day)"/>
+<rect class="mb-light-f" x="27" y="36" width="33" height="44" fill="url(#mb-g-dayl)"/>
+<rect x="46" y="34" width="28" height="48" fill="#000" opacity=".18"/>
+${mbLetters(c.drawn, 28, 21, 81, c.newIdx, -6, 36)}
+<rect x="24" y="30" width="72" height="5" rx="1.5" fill="${MB_BODY}" ${MB_EDGE} stroke-width=".6"/>
+<rect x="24" y="81" width="72" height="4" rx="1" style="fill:var(--ac-body-lo,#c9d0d7)" ${MB_EDGE} stroke-width=".5"/>
+${front}${back}
+${c.over ? `<g class="mb-jam">${mbEnvelope(6, 33, -12, 20, 8)}</g>${mbSpill([[2, 113, -8], [16, 116, 6], [30, 112, -3]])}` : ""}`;
+    const right = c.side === "right";
+    const lbl = (x, text) => `<text x="${x}" y="100" font-size="7" font-family="Arial, sans-serif" class="mb-lbl" text-anchor="middle">${esc(text || "")}</text>`;
+    return `${right ? `<g transform="translate(120 0) scale(-1 1)">${box}</g>` : box}
+${lbl(34, right ? c.house : c.street)}${lbl(86, right ? c.street : c.house)}`;
+  },
+  // A box on a post, seen from the front: a slot under a visor, a window, a
+  // name plate and a lock on its door.
+  classic: (c) => {
+    const door = c.front
+      ? `<g class="mb-swing hl"><path d="M30 40 L12 45 V89 L30 94 Z" fill="${MB_BODY}" ${MB_EDGE} stroke-width=".6"/><path d="M15 50 V84" stroke="#fff" stroke-width="1.2" opacity=".5"/></g>`
+      : `<rect x="30" y="40" width="60" height="54" rx="3" fill="url(#mb-g-sh)" ${MB_EDGE} stroke-width=".6"/>
+<rect x="40" y="46" width="40" height="10" rx="2" fill="#151a20"/>
+<g class="mb-glass">${c.drawn > 0 ? '<rect x="43" y="50" width="16" height="6" fill="#fff"/>' : ""}${c.drawn > 4 ? '<rect x="57" y="49" width="18" height="7" fill="#f4f1e8"/>' : ""}${c.drawn > 8 ? '<rect x="50" y="47" width="14" height="9" fill="#fff" transform="rotate(-6 57 51)"/>' : ""}</g>
+<path d="M41 47.5 H58" stroke="#fff" stroke-width=".8" opacity=".3"/>
+<rect x="44" y="62" width="32" height="8" rx="1" fill="#c8a24e"/><path d="M48 66 H72" stroke="#8a6d2a" stroke-width=".8"/>
+<circle cx="82" cy="80" r="2.2" fill="#7b8590"/><rect x="81.4" y="80" width="1.2" height="3.4" fill="#7b8590"/>`;
+    return `<ellipse cx="60" cy="124" rx="22" ry="2.6" fill="#000" opacity=".14"/>
+<rect x="55" y="98" width="10" height="27" fill="#8f979f"/><rect x="55" y="98" width="3" height="27" fill="#fff" opacity=".25"/>
+<rect x="24" y="18" width="72" height="82" rx="5" fill="${MB_BODY}" ${MB_EDGE} stroke-width=".7"/>
+<rect x="30" y="40" width="60" height="54" rx="3" fill="url(#mb-g-in)"/>
+${mbLetters(c.drawn, 31, 19, 94, 0, 0, 0)}
+<rect class="mb-light-f" x="30" y="40" width="44" height="54" fill="url(#mb-g-dayl)"/>
+${door}
+<rect x="20" y="12" width="80" height="9" rx="3" fill="${MB_BODY}" ${MB_EDGE} stroke-width=".7"/><path d="M24 14 H96" stroke="#fff" stroke-width="1.4" opacity=".7"/>
+<rect x="36" y="29.6" width="48" height="3.4" rx="1" fill="#151a20"/>
+<g clip-path="url(#mb-clip-slot)"><g class="mb-post"><rect x="47" y="21" width="26" height="10" rx="1" fill="#fff" stroke="#c7ccd2" stroke-width=".5"/><path d="M47 21 L60 27 L73 21" fill="none" stroke="#c7ccd2" stroke-width=".6"/></g></g>
+<path d="M34 30 L36.4 24.6 H83.6 L86 30 Z" fill="url(#mb-g-sh)" ${MB_EDGE} stroke-width=".5"/><path d="M37 25.6 H83" stroke="#fff" stroke-width=".8" opacity=".6"/>
+${c.over ? `<g class="mb-jam">${mbEnvelope(40, 18, -14, 18, 10)}${mbEnvelope(54, 16, 4, 18, 11)}${mbEnvelope(66, 19, 16, 17, 9)}</g>${mbSpill([[22, 114, -6], [72, 116, 8], [86, 112, -4]])}` : ""}`;
+  },
+};
+function mailboxHtml(cls, c) {
+  const layout = MAILBOX_LAYOUTS.includes(c.layout) ? c.layout : "classic";
+  const flags = ["mb", `mb-l-${layout}`, `mb-m-${c.mode || "unav"}`, c.present ? "mb-mail" : "", c.front ? "mb-front" : "", c.back ? "mb-back" : "",
+    c.arrive !== null && c.arrive !== undefined ? "mb-arrive" : "", c.swingF ? "mb-swing-f" : "", c.swingB ? "mb-swing-b" : ""].filter(Boolean).join(" ");
+  // A redraw while a letter is on its way resumes it where it was.
+  const ago = c.arrive ? `--mb-ago:${(-c.arrive / 1000).toFixed(2)}s` : "";
+  return `
+        <div class="machine ${cls} ${flags}" style="${ago}"><svg class="mb-svg" viewBox="0 -8 120 135">${MB_DEFS}${MB_SVGS[layout](c)}${c.present ? mbBadge(c.count) : ""}</svg></div>`;
 }
 
 // A lamp, read from its light entity: on or off, how bright, in what colour,
@@ -9574,7 +9762,50 @@ const ILLUSTRATION_CSS = {
         @keyframes cam-breathe { 0%, 100% { opacity: .35; } 50% { opacity: 1; } }
         @keyframes cam-wave { 0% { opacity: 0; transform: scale(.6); } 30% { opacity: 1; } 100% { opacity: 0; transform: scale(1.25); } }
         @keyframes cam-ir { 0%, 100% { opacity: .55; } 50% { opacity: 1; } }
+        .cam-dbring{fill:none;stroke:#4fc3f7;stroke-width:2.4;opacity:.45}
+        .cam-m-ring .cam-dbring{opacity:1;stroke:#29b6f6;animation:cam-dbpulse 1s ease-in-out infinite;animation-delay:var(--anim-offset,0s)}
+        .cam-m-off .cam-dbring,.cam-m-unav .cam-dbring{opacity:0}
+        .cam-dbhalo{fill:#4fc3f7;opacity:0;transform-box:fill-box;transform-origin:center}
+        .cam-m-ring .cam-dbhalo{animation:cam-dbhalo 1s ease-out infinite;animation-delay:var(--anim-offset,0s)}
+        .cam-bell{opacity:0}
+        .cam-m-ring .cam-bell{opacity:1}
+        .cam-bell path{fill:none;stroke:#29b6f6;stroke-width:1.8;stroke-linecap:round;opacity:0;animation:cam-dbwave 1s ease-out infinite}
+        .cam-bell path:nth-child(2n){animation-delay:.2s}
+        .cam-m-ring .cam-led{fill:#03a9f4}
+        @keyframes cam-dbpulse { 50% { stroke-width: 3.6; } }
+        @keyframes cam-dbhalo { 0% { opacity: .55; transform: none; } 100% { opacity: 0; transform: scale(1.75); } }
+        @keyframes cam-dbwave { 0% { opacity: 0; } 20% { opacity: 1; } 100% { opacity: 0; transform: translateX(var(--dx, 4px)); } }
         @media (prefers-reduced-motion: reduce) { .machine.cam * { animation-name: none !important; } }
+  `,
+  // A mailbox: its letters, the one that comes in, the light through an open
+  // door, and the doors swinging on their hinges.
+  mailbox: () => `
+        svg.mb-svg{position:absolute;left:0;top:0;width:96px;height:108px;overflow:hidden}
+        .mb-lbl{fill:var(--secondary-text-color,#8a929b)}
+        .mb-light,.mb-light-f{opacity:0;transition:opacity .4s}
+        .mb-back .mb-light,.mb-front .mb-light-f{opacity:.85}
+        .mb-badge{transform-box:fill-box;transform-origin:center}
+        .mb-post{opacity:0}
+        .mb-swing{transform-box:fill-box}
+        .mb-swing.hl{transform-origin:right center}
+        .mb-swing.hr{transform-origin:left center}
+        .mb-swing-f .mb-swing.hl,.mb-swing-b .mb-swing.hr{animation:mb-swing .5s ease-out both}
+        .mb-arrive .mb-new{animation:mb-in 1.5s ease-in-out both;animation-delay:var(--mb-ago,0s)}
+        .mb-arrive .mb-post{animation:mb-post 1.1s ease-in both;animation-delay:var(--mb-ago,0s)}
+        .mb-arrive .mb-glass{animation:mb-fade .4s both;animation-delay:calc(var(--mb-ago,0s) + 1s)}
+        .mb-arrive .mb-badge{animation:mb-pop .45s both;animation-delay:calc(var(--mb-ago,0s) + 1.3s)}
+        .mb-arrive .mb-jam{animation:mb-fade .3s both;animation-delay:var(--mb-ago,0s)}
+        .mb-arrive .mb-spill{animation:mb-spill .7s cubic-bezier(.5,0,1,.5) both;animation-delay:var(--mb-ago,0s)}
+        .mb-arrive .mb-spill:nth-child(2){animation-delay:calc(var(--mb-ago,0s) + .15s)}
+        .mb-arrive .mb-spill:nth-child(3){animation-delay:calc(var(--mb-ago,0s) + .3s)}
+        .machine.mb-m-unav{opacity:.45;filter:grayscale(1)}
+        @keyframes mb-swing { from { transform: scaleX(.12); } to { transform: none; } }
+        @keyframes mb-in { 0% { transform: translate(var(--dx), var(--dy)); opacity: 0; } 8% { opacity: 1; } 55% { transform: translate(0px, var(--dy)); animation-timing-function: cubic-bezier(.55,0,1,.45); } 86% { transform: translate(0px, 0px); } 93% { transform: translate(0px, -1.6px); } 100% { transform: none; } }
+        @keyframes mb-post { 0% { transform: translateY(-22px); opacity: 0; } 25% { opacity: 1; } 55% { transform: translateY(0px); } 100% { transform: translateY(13px); opacity: 1; } }
+        @keyframes mb-spill { 0% { transform: translateY(-34px); opacity: 0; } 20% { opacity: 1; } 85% { transform: translateY(1px); } 100% { transform: none; } }
+        @keyframes mb-fade { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes mb-pop { 0% { transform: scale(.4); opacity: 0; } 70% { transform: scale(1.15); opacity: 1; } 100% { transform: none; } }
+        @media (prefers-reduced-motion: reduce) { .machine.mb * { animation-name: none !important; } }
   `,
   // A lamp: the light's colour on its glass, its halo and the cone it
   // throws, dimmed with its brightness; an effect turns the segments' hue.
@@ -12472,6 +12703,7 @@ function illustrationHtml(type, ctx) {
   if (type === "ups") return upsHtml(cls, ctx.ups || { segs: 0 });
   if (type === "camera") return cameraHtml(cls, ctx.camera || {});
   if (type === "lamp") return lampHtml(cls, ctx.lampDraw || {});
+  if (type === "mailbox") return mailboxHtml(cls, ctx.mailbox || {});
   if (type === "diffuser") return diffuserHtml(cls, ctx.diffuser || {});
   if (type === "hrv") return hrvHtml(cls, ctx.hrv || {});
   if (type === "screen") return screenHtml(cls, ctx.screen || {});
@@ -15655,11 +15887,72 @@ class ApplianceCard extends HTMLElement {
           extraLines.push({ key: "cam_motion", icon: "mdi:motion-sensor", label: t(hass, "cam_line_last_motion"),
             value: keepTogether(feedTime(hass, seen)), entity: cfg.motion_entity });
         }
+        const ringAt = cfg.ring_entity ? camRingAt(hass, cfg.ring_entity) : null;
+        if (ringAt !== null && mode !== "ring") {
+          extraLines.push({ key: "cam_ring", icon: "mdi:doorbell", label: t(hass, "cam_line_last_ring"),
+            value: keepTogether(feedTime(hass, ringAt)), entity: cfg.ring_entity });
+        }
+        // An event's ring has no end of its own: the card ends it.
+        if (this._ringTimer) { clearTimeout(this._ringTimer); this._ringTimer = null; }
+        if (mode === "ring" && domainOf(cfg.ring_entity) === "event") {
+          this._ringTimer = setTimeout(() => { this._ringTimer = null; this._render(); }, Math.max(0, CAM_RING_MS - (Date.now() - ringAt)) + 50);
+        }
         if (night) {
           extraLines.push({ key: "cam_night", icon: "mdi:weather-night", label: t(hass, "cam_line_night"), value: "IR", entity: cfg.night_entity });
         }
       }
       camera = { mode, night, layout: cameraLayoutOf(cfg, st), dark: cfg.illustration_color === "black" };
+    }
+
+    // A mailbox: empty, with mail in it, or a door open. Lines for the count,
+    // the last mail and each door. A letter is drawn arriving when the count
+    // goes up, a door swinging when it opens, never on the first drawing.
+    let mailbox = null;
+    if (cap.mailbox) {
+      const m = mailboxReadOf(hass, cfg, st);
+      if (!cfg.state_show_raw || m.mode === "unav") {
+        stateLabel = m.mode === "mail" && m.count ? `${t(hass, "mb_mail")} \u00b7 ${m.count}` : t(hass, MAILBOX_LABELS[m.mode]);
+      }
+      color = MAILBOX_COLORS[m.mode];
+      const now = Date.now();
+      const prev = this._mbPrev;
+      if (prev && m.mode !== "unav") {
+        if ((m.count !== null && prev.count !== null && m.count > prev.count) || (m.present && !prev.present)) this._mbArriveAt = now;
+        if (m.front && !prev.front) this._mbSwingF = now;
+        if (m.back && !prev.back) this._mbSwingB = now;
+      }
+      this._mbPrev = m;
+      const since = (at, ms) => (at && now - at < ms ? now - at : null);
+      const arrive = m.present ? since(this._mbArriveAt, MAILBOX_ARRIVE_MS) : null;
+      const drawn = m.present ? Math.min(MAILBOX_MAX_LETTERS, m.count || 1) : 0;
+      if (m.mode !== "unav") {
+        if (m.count !== null) {
+          extraLines.push({ key: "mb_count", icon: "mdi:email-outline", label: t(hass, "mb_line_count"), value: String(m.count),
+            entity: cfg.mail_count_entity || cfg.state_entity });
+        }
+        const lastSt = m.present ? stateObj(hass, cfg.mail_count_entity || cfg.state_entity) : null;
+        const last = lastSt ? Date.parse(lastSt.last_changed) : NaN;
+        if (isFinite(last)) {
+          extraLines.push({ key: "mb_last", icon: "mdi:email-arrow-left-outline", label: t(hass, "mb_line_last"),
+            value: keepTogether(feedTime(hass, last)), entity: cfg.mail_count_entity || cfg.state_entity });
+        }
+        if (cfg.front_door_entity) {
+          extraLines.push({ key: "mb_front", icon: m.front ? "mdi:door-open" : "mdi:door-closed", label: t(hass, "mb_front_door"),
+            value: t(hass, m.front ? "mb_open" : "mb_closed"), entity: cfg.front_door_entity });
+        }
+        if (cfg.back_door_entity) {
+          extraLines.push({ key: "mb_back", icon: m.back ? "mdi:door-open" : "mdi:door-closed", label: t(hass, "mb_back_door"),
+            value: t(hass, m.back ? "mb_open" : "mb_closed"), entity: cfg.back_door_entity });
+        }
+      }
+      mailbox = { ...m, drawn, over: m.present && (m.count || 0) > MAILBOX_MAX_LETTERS,
+        newIdx: arrive !== null && (m.count || 1) <= MAILBOX_MAX_LETTERS ? drawn : 0, arrive, arriveAt: arrive !== null ? this._mbArriveAt : 0,
+        swingF: m.front && since(this._mbSwingF, MAILBOX_SWING_MS) !== null, swingB: m.back && since(this._mbSwingB, MAILBOX_SWING_MS) !== null,
+        layout: mailboxLayoutOf(cfg), side: MAILBOX_SIDES.includes(cfg.mailbox_front) ? cfg.mailbox_front : "left",
+        street: t(hass, "mb_street"), house: t(hass, "mb_house") };
+      // The arrival is drawn once: the card goes back to the still pile after it.
+      if (this._mbTimer) { clearTimeout(this._mbTimer); this._mbTimer = null; }
+      if (arrive !== null) this._mbTimer = setTimeout(() => { this._mbTimer = null; this._render(); }, MAILBOX_ARRIVE_MS - arrive + 50);
     }
 
     // A lamp: on or off, and lines for its brightness, its colour
@@ -15924,6 +16217,7 @@ class ApplianceCard extends HTMLElement {
       scale,
       camera,
       lampDraw,
+      mailbox,
       diffuser,
       hrv,
       ups,
@@ -16032,6 +16326,8 @@ class ApplianceCard extends HTMLElement {
       illustrationCtx.diffuser && [illustrationCtx.diffuser.mode, illustrationCtx.diffuser.lit, illustrationCtx.diffuser.layout].join("/"),
       illustrationCtx.hrv && [illustrationCtx.hrv.mode, illustrationCtx.hrv.level, illustrationCtx.hrv.layout, illustrationCtx.hrv.paused, illustrationCtx.hrv.sPace, illustrationCtx.hrv.ePace].join("/"),
       illustrationCtx.camera && [illustrationCtx.camera.mode, illustrationCtx.camera.night, illustrationCtx.camera.layout].join("/"),
+      illustrationCtx.mailbox && [illustrationCtx.mailbox.mode, illustrationCtx.mailbox.drawn, illustrationCtx.mailbox.count, illustrationCtx.mailbox.front,
+        illustrationCtx.mailbox.back, illustrationCtx.mailbox.layout, illustrationCtx.mailbox.side, illustrationCtx.mailbox.arriveAt].join("/"),
       illustrationCtx.lampDraw && [illustrationCtx.lampDraw.mode, illustrationCtx.lampDraw.rgb.join(","), illustrationCtx.lampDraw.pct,
         illustrationCtx.lampDraw.fx, illustrationCtx.lampDraw.layout, illustrationCtx.lampDraw.spots].join("/"),
       illustrationCtx.scale && [illustrationCtx.scale.mode, illustrationCtx.scale.text, illustrationCtx.scale.unit, illustrationCtx.scale.fresh].join("/"),
@@ -16788,6 +17084,11 @@ const SECTIONS = [
   { field: "night_entity", types: ["camera"], labelKey: "section_night_vision", includeDomains: ["binary_sensor", "switch", "select", "sensor", "input_boolean"] },
   { field: "privacy_entity", types: ["camera"], labelKey: "section_privacy", includeDomains: ["switch", "binary_sensor", "input_boolean"] },
   { field: "signal_entity", types: ["camera"], labelKey: "section_signal", includeDomains: ["sensor"] },
+  { field: "ring_entity", types: ["camera"], labelKey: "section_ring", includeDomains: ["binary_sensor", "event", "input_boolean", "sensor"] },
+  // A mailbox: the mail counter and its two doors.
+  { field: "mail_count_entity", types: ["mailbox"], labelKey: "section_mail_count", includeDomains: ["sensor", "counter", "input_number", "number"] },
+  { field: "front_door_entity", types: ["mailbox"], labelKey: "mb_front_door", includeDomains: ["binary_sensor", "sensor", "input_boolean", "switch"] },
+  { field: "back_door_entity", types: ["mailbox"], labelKey: "mb_back_door", includeDomains: ["binary_sensor", "sensor", "input_boolean", "switch"] },
   { field: "battery_entity", types: ["robot", "home_battery", "ups", "camera"], labelKey: "section_battery", includeDomains: ["sensor"], extra: (c) =>
       (caps(c._currentType()).ups ? c._row("ups_battery_low", "battery_low", { placeholder: String(UPS_BATTERY_LOW) }) : "") },
   // A UPS: the time left on its battery, its load and the mains voltage.
@@ -17751,6 +18052,13 @@ class ApplianceCardEditor extends HTMLElement {
           type: "select",
           options: [{ value: "auto", label: t(hass, "unit_auto") }].concat(CAMERA_LAYOUTS.map((v) => ({ value: v, label: t(hass, `layout_cam_${v}`) }))),
         }) : ""}
+        ${this._type === "mailbox" ? this._row("section_screen_layout", "mailbox_layout", {
+          type: "select",
+          options: [{ value: "auto", label: t(hass, "unit_auto") }].concat(MAILBOX_LAYOUTS.map((v) => ({ value: v, label: t(hass, `layout_mb_${v}`) }))),
+        }) + (mailboxLayoutOf(this._config) === "through" ? this._row("mb_front_side", "mailbox_front", {
+          type: "select",
+          options: MAILBOX_SIDES.map((v) => ({ value: v, label: t(hass, `mb_side_${v}`) })),
+        }) : "") : ""}
         ${this._type === "lamp" ? this._row("section_screen_layout", "lamp_layout", {
           type: "select",
           options: [{ value: "auto", label: t(hass, "unit_auto") }].concat(LAMP_LAYOUTS.map((v) => ({ value: v, label: t(hass, `layout_lamp_${v}`) }))),
