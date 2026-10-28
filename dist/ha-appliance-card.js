@@ -1,5 +1,5 @@
 // Built by tools/build.mjs from src/ha-appliance-card.js: edit the source, not this file.
-const CARD_VERSION = "3.4.1";
+const CARD_VERSION = "3.5.0";
 
 console.info(
   "%c HA-APPLIANCE-CARD %c v" + CARD_VERSION + " ",
@@ -154,6 +154,7 @@ const T = {
     layout_robot_floor_washer: "Floor washer", stick_away: "Off the base", stick_away_threshold: "Off the base below this power (W)",
     type_diffuser: "Essential oil diffuser", dif_mist: "Diffusing", dif_inter: "Intermittent", dif_low: "Light mist", dif_empty: "Tank empty", dif_mode: "Mist mode", layout_dif_drop: "Teardrop", layout_dif_cone: "Cone", layout_dif_stone: "Pebble", layout_dif_flame: "Flame", layout_dif_nebulizer: "Nebulizer", section_tank_empty: "Empty tank sensor", type_hrv: "Heat recovery ventilation (HRV/ERV)", hrv_run: "Ventilating", hrv_boost: "Boost", hrv_bypass: "Bypass", hrv_defrost: "Defrosting", hrv_filter: "Replace filter", hrv_away: "Away", hrv_recirc: "Recirculation", hrv_humidity: "Humidity control", hrv_inter: "Intermittent", hrv_inter_paused: "Intermittent, paused", hrv_mode: "Mode", hrv_supply_fan: "Supply fan", hrv_exhaust_fan: "Exhaust fan", section_supply_fan: "Supply fan speed (rpm)", section_exhaust_fan: "Exhaust fan speed (rpm)", fan_max_rpm: "Fan top speed (rpm)", section_exhaust_airflow: "Exhaust airflow", section_target_humidity: "Humidity setpoint", section_humidity_control: "Humidity control switch", layout_hrv_diagram: "Air flows", layout_hrv_one_duct: "Wall unit, one duct", layout_hrv_pair: "Through-wall pair", section_supply_temperature: "Supply air temperature", section_extract_temperature: "Extract air temperature", section_exhaust_temperature: "Exhaust air temperature", section_bypass: "Bypass", section_airflow: "Airflow", hrv_t_outdoor: "fresh air", hrv_t_supply: "supply", hrv_t_extract: "extract", hrv_t_exhaust: "exhaust", hrv_outside: "outside", hrv_room: "room",
     type_camera: "Camera", cam_idle: "Idle", cam_live: "Streaming", cam_rec: "Recording", cam_motion: "Motion detected", cam_off: "Off", cam_line_last_motion: "Last motion", cam_line_night: "Night vision", cam_line_signal: "Signal", section_motion: "Motion sensor", section_recording: "Recording sensor", section_night_vision: "Night vision", section_privacy: "Privacy mode", section_signal: "Signal strength", layout_cam_indoor: "Indoor, pan and tilt", layout_cam_tube: "Indoor tube", layout_cam_outdoor: "Outdoor", layout_cam_dome: "Dome",
+    type_lamp: "Lamp", lamp_off: "Off", lamp_on: "On", lamp_line_brightness: "Brightness", lamp_line_color_temp: "Colour temperature", lamp_line_effect: "Effect", lamp_spots: "Number of spots", layout_lamp_bulb: "Bulb", layout_lamp_bedside: "Bedside lamp", layout_lamp_floor: "Arc floor lamp", layout_lamp_torch: "Torchiere", layout_lamp_pendant: "Pendant", layout_lamp_strip: "LED strip", layout_lamp_spot: "Recessed spots", layout_lamp_panels: "Light panels", layout_lamp_desk: "Desk lamp", layout_lamp_wall: "Wall lantern",
     speed_power_max: "Power at top speed (W)", speed_power_custom: "Custom speed thresholds", speed_power_2: "Speed 2 from (W)", speed_power_3: "Speed 3 from (W)",
     fw_self_cleaning: "Self-cleaning", fw_dirty_full: "Dirty water tank full", fw_clean_empty: "Clean water tank empty",
     group_energy: "Energy", type_solar: "Solar panels", type_home_battery: "Home battery", solar_producing: "Producing", solar_low: "Low production", solar_night: "Night", section_solar_layout: "Mounting", layout_solar_ground: "On the ground", layout_solar_roof: "On a roof", section_solar_power: "Power produced", section_energy_today: "Energy produced today", solar_line_today: "Today", solar_peak_power: "Peak power of the panels (W)", section_battery_power: "Battery power (+ charging, \u2212 discharging)", power_inverted: "Positive power means discharging", section_charge_power: "Charge power", section_battery_discharge: "Discharge power", section_reserve: "Backup reserve", section_charge_limit: "Charge limit", battery_capacity: "Capacity (kWh)", layout_battery_wall: "Wall battery", layout_battery_station: "Portable power station", bat_idle: "Idle", bat_full: "Full", bat_low: "Low battery", bat_line_full_in: "Full in", bat_line_left: "Remaining", bat_line_reserve: "Reserve",
@@ -2886,6 +2887,8 @@ const TYPE_CAPS = {
   // A camera: whether it watches, streams or records, what it has seen, and
   // its privacy mode. Never its picture: Home Assistant has cards for that.
   camera: { camera: true },
+  // A lamp: on or off, how bright, in what colour, and its effect.
+  lamp: { lamp: true },
   // An essential oil diffuser: its mist, continuous or now and then, its
   // light, and its tank.
   diffuser: { diffuser: true, light: true },
@@ -2980,6 +2983,7 @@ const STATE_DOMAINS = {
   robot: ["vacuum", "lawn_mower", "select", "input_select"],
   pool_pump: ["switch", "binary_sensor", "select", "input_select", "input_boolean", "fan"],
   camera: ["camera", "switch", "binary_sensor", "input_boolean"],
+  lamp: ["light", "switch", "input_boolean"],
   diffuser: ["fan", "switch", "select", "input_select", "humidifier", "input_boolean"],
   hrv: ["fan", "climate", "select", "input_select", "switch", "input_boolean"],
 };
@@ -3065,7 +3069,7 @@ const TYPE_GROUPS = [
   ["kitchen", ["dishwasher", "oven", "microwave", "hood", "cooktop", "fridge", "kettle", "cooker", "coffee", "rice_cooker", "air_fryer", "toaster"]],
   ["heating", ["water_heater", "boiler", "heat_pump", "pellet_stove", "space_heater", "towel_warmer"]],
   ["air", ["air_conditioner", "dehumidifier", "air_purifier", "fan", "diffuser", "hrv"]],
-  ["home", ["screen", "iron", "hair_dryer", "printer_3d", "robot", "pool_pump", "scale", "camera"]],
+  ["home", ["screen", "iron", "hair_dryer", "printer_3d", "robot", "pool_pump", "scale", "camera", "lamp"]],
   ["energy", ["solar", "home_battery", "ev_charger"]],
   ["pets", ["pet_feeder", "pet_fountain"]],
   ["network", ["network", "ups"]],
@@ -3105,11 +3109,13 @@ function detectApplianceType(cfg, st) {
   if (SCALE_ONLY_FIELDS.some((f) => cfg[f])) return "scale";
   if (UPS_ONLY_FIELDS.some((f) => cfg[f])) return "ups";
   if (CAMERA_ONLY_FIELDS.some((f) => cfg[f])) return "camera";
+  if (LAMP_ONLY_FIELDS.some((f) => cfg[f])) return "lamp";
   if (DIFFUSER_ONLY_FIELDS.some((f) => cfg[f])) return "diffuser";
   if (HRV_ONLY_FIELDS.some((f) => cfg[f])) return "hrv";
   // Home Assistant has a domain of its own for each of them.
   if (["vacuum", "lawn_mower"].includes(domainOf(cfg.state_entity))) return "robot";
   if (domainOf(cfg.state_entity) === "camera") return "camera";
+  if (domainOf(cfg.state_entity) === "light") return "lamp";
   {
     // A diffuser and a ventilation unit by their name or their maker's.
     const named = stripAccents(`${cfg.icon || ""} ${cfg.state_entity || ""} ${(st && st.attributes.friendly_name) || ""}`).toLowerCase();
@@ -3906,6 +3912,13 @@ function diffuserControls(hass, cfg) {
   return [];
 }
 
+// A lamp's switch, unless the card has a power switch of its own.
+function lampControls(hass, cfg) {
+  const st = stateObj(hass, cfg.state_entity);
+  if (!st || cfg.toggle_entity || !["light", "switch", "input_boolean"].includes(domainOf(cfg.state_entity))) return [];
+  return [{ key: "toggle", entity: cfg.state_entity, icon: "mdi:lightbulb", label: t(hass, "toggle"), on: String(st.state).toLowerCase() === "on" }];
+}
+
 // A ventilation unit's controls: its mode, picked from a menu in the card
 // (#54), and its humidity control switch.
 function hrvControls(hass, cfg) {
@@ -4296,6 +4309,195 @@ function cameraHtml(cls, c) {
   const flags = ["cam", `cam-l-${layout}`, `cam-m-${c.mode || "unav"}`, c.night ? "cam-night" : "", c.dark ? "cam-dark" : ""].filter(Boolean).join(" ");
   return `
         <div class="machine ${cls} ${flags}"><svg class="cam-svg" viewBox="0 -8 120 135">${CAM_DEFS}${CAMERA_SVGS[layout]()}</svg></div>`;
+}
+
+// A lamp, read from its light entity: on or off, how bright, in what colour,
+// and whether an effect runs. A switch or a helper only says on or off, and
+// the lamp is drawn in the warm white of a bulb.
+const LAMP_ONLY_FIELDS = ["lamp_layout", "spots"];
+const LAMP_LAYOUTS = ["bulb", "bedside", "floor", "torch", "pendant", "strip", "spot", "panels", "desk", "wall"];
+const LAMP_SPOTS = [1, 2, 3, 4];
+const LAMP_LABELS = { on: "lamp_on", off: "lamp_off", unav: "ev_offline" };
+const LAMP_COLORS = { on: "#ffa000", off: "var(--disabled-text-color, #9e9e9e)", unav: "var(--disabled-text-color, #9e9e9e)" };
+const LAMP_WARM = [255, 197, 107];
+// WLED calls the absence of an effect "Solid", other integrations "None".
+const LAMP_NO_EFFECT = ["", "none", "off", "solid", "null", "normal"];
+// Kelvin to RGB, Tanner Helland's fit of the black body: close enough for a
+// drawing, and it gives the 2700 K of a bulb the amber it has.
+function kelvinRgb(k) {
+  const t = Math.min(40000, Math.max(1000, k)) / 100;
+  const r = t <= 66 ? 255 : 329.698727446 * Math.pow(t - 60, -0.1332047592);
+  const g = t <= 66 ? 99.4708025861 * Math.log(t) - 161.1195681661 : 288.1221695283 * Math.pow(t - 60, -0.0755148492);
+  const b = t >= 66 ? 255 : t <= 19 ? 0 : 138.5177312231 * Math.log(t - 10) - 305.0447927307;
+  return [r, g, b].map((v) => Math.round(Math.min(255, Math.max(0, v))));
+}
+function hsRgb(h, s) {
+  const f = (n) => {
+    const k = (n + h / 60) % 6;
+    return Math.round(255 * (1 - (s / 100) * Math.max(0, Math.min(k, 4 - k, 1))));
+  };
+  return [f(5), f(3), f(1)];
+}
+function lampReadOf(hass, cfg, st) {
+  const raw = st ? String(st.state).trim().toLowerCase() : "";
+  const a = (st && st.attributes) || {};
+  let mode;
+  if (!st || ["unavailable", "unknown", "none", ""].includes(raw)) mode = "unav";
+  else mode = ["on", "true", "1", "home", "open"].includes(raw) ? "on" : "off";
+  const on = mode === "on";
+  const bri = numberOrNull(a.brightness);
+  const pct = on && bri !== null ? Math.max(1, Math.round(bri / 2.55)) : null;
+  const kelvin = on && a.color_mode === "color_temp" ? numberOrNull(a.color_temp_kelvin) : null;
+  let rgb = null;
+  if (Array.isArray(a.rgb_color) && a.rgb_color.length === 3 && a.rgb_color.every((v) => isFinite(Number(v)))) rgb = a.rgb_color.map(Number);
+  else if (kelvin) rgb = kelvinRgb(kelvin);
+  else if (Array.isArray(a.hs_color) && a.hs_color.length === 2) rgb = hsRgb(Number(a.hs_color[0]) || 0, Number(a.hs_color[1]) || 0);
+  else if (numberOrNull(a.color_temp_kelvin)) rgb = kelvinRgb(numberOrNull(a.color_temp_kelvin));
+  const effect = on && typeof a.effect === "string" && !LAMP_NO_EFFECT.includes(a.effect.trim().toLowerCase()) ? a.effect : null;
+  return { mode, pct, kelvin, effect, rgb: rgb || LAMP_WARM };
+}
+// The shape: picked, or read from the name and the model. A light strip, a
+// set of panels, a bedside or a desk lamp, a pendant, recessed spots, a lamp
+// on a wall outside; a plain bulb otherwise.
+function lampLayoutOf(cfg, st) {
+  if (LAMP_LAYOUTS.includes(cfg.lamp_layout)) return cfg.lamp_layout;
+  const a = (st && st.attributes) || {};
+  const hay = stripAccents(`${cfg.state_entity || ""} ${cfg.name || ""} ${a.friendly_name || ""} ${a.model || ""}`).toLowerCase();
+  if (/strip|ruban|bandeau|streifen|(^|[^a-z])tira|striscia|wled|govee|neon|gradient/.test(hay)) return "strip";
+  if (/nanoleaf|panel|panneau|shapes|canvas|hexagon|triangle/.test(hay)) return "panels";
+  if (/chevet|bedside|night.?stand|nachttisch|mesita|comodino|nachtkastje/.test(hay)) return "bedside";
+  if (/desk|bureau|schreibtisch|escritorio|scrivania/.test(hay)) return "desk";
+  if (/halogen|torch|uplight|deckenfluter/.test(hay)) return "torch";
+  if (/lampadaire|floor|stehlampe|piantana|vloerlamp|(^|[^a-z])arc([^a-z]|$)/.test(hay)) return "floor";
+  if (/(^|[^a-z])spots?([^a-z]|$)|gu10|downlight|einbau|faretti|encastr/.test(hay)) return "spot";
+  if (/suspension|pendant|pendel|hanging|lustre|chandelier|colgante|sospensione|hanglamp/.test(hay)) return "pendant";
+  if (/applique|lantern|wandleuchte|aplique|outdoor|exterieur|garden|jardin|terrasse|porch|facade|(^|[^a-z])wall([^a-z]|$)/.test(hay)) return "wall";
+  return "bulb";
+}
+// Recessed spots: as many as picked, or as the group has lights, up to four.
+function lampSpotsOf(cfg, st) {
+  const n = parseInt(cfg.spots, 10);
+  if (LAMP_SPOTS.includes(n)) return n;
+  const members = st && Array.isArray(st.attributes.entity_id) ? st.attributes.entity_id.length : 0;
+  return Math.min(4, Math.max(1, members));
+}
+
+// The lamp, drawn in the light's colour: its halo, the cone it throws, and
+// segments that change hue when an effect runs.
+const lpHalo = (id) => `<radialGradient id="lp-${id}" cx=".5" cy=".5" r=".5"><stop offset="0" class="lp-stop"/><stop offset="1" class="lp-stop" stop-opacity="0"/></radialGradient>`;
+const lpBeam = (id) => `<linearGradient id="lp-${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" class="lp-stop" stop-opacity=".95"/><stop offset="1" class="lp-stop" stop-opacity="0"/></linearGradient>`;
+const lpMetal = (id, a = "#6f7882", b = "#e8ecf0") => `<linearGradient id="lp-${id}" x1="0" x2="1"><stop offset="0" stop-color="${a}"/><stop offset=".45" stop-color="${b}"/><stop offset="1" stop-color="${a}"/></linearGradient>`;
+const LAMP_SVGS = {
+  bulb: () => `<defs>${lpHalo("bH")}
+<radialGradient id="lp-bG" cx=".42" cy=".38" r=".62"><stop offset="0" stop-color="#fff"/><stop offset=".45" class="lp-stop"/><stop offset="1" class="lp-stop" stop-opacity=".75"/></radialGradient>${lpMetal("bM")}</defs>
+<circle class="lp-halo" cx="48" cy="38" r="44" fill="url(#lp-bH)"/>
+<path d="M48 12 C63 12 72 23 72 36 C72 46 65 51 61 58 Q59 61 59 64 H37 Q37 61 35 58 C31 51 24 46 24 36 C24 23 33 12 48 12 Z" fill="url(#lp-bG)" stroke="#c5ccd3" stroke-width=".7"/>
+<path d="M36 22 Q40 17 46 16" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" opacity=".8"/>
+<rect x="37" y="64" width="22" height="5" rx="1.2" fill="#e9edf0" stroke="#c5ccd3" stroke-width=".6"/>
+<path d="M38 69 H58 L57 81 Q57 84 54 84 H42 Q39 84 39 81 Z" fill="url(#lp-bM)"/>
+<path d="M38.4 72 L57.6 70.6 M38.6 75.4 L57.4 74 M38.8 78.8 L57.2 77.4" stroke="#7c858f" stroke-width="1"/>
+<path d="M44 84 H52 L50.5 88 H45.5 Z" fill="#3a4047"/>`,
+  bedside: () => `<defs>${lpHalo("cH")}${lpBeam("cB")}
+<linearGradient id="lp-cS" x1="0" x2="1"><stop offset="0" stop-color="#d8cdbb"/><stop offset=".5" stop-color="#f7f1e6"/><stop offset="1" stop-color="#cfc3af"/></linearGradient>
+<radialGradient id="lp-cL" cx=".5" cy=".7" r=".7"><stop offset="0" stop-color="#fff"/><stop offset="1" class="lp-stop"/></radialGradient>
+<linearGradient id="lp-cV" x1="0" x2="1"><stop offset="0" stop-color="#3f6f8f"/><stop offset=".45" stop-color="#7fb2cf"/><stop offset="1" stop-color="#2f5670"/></linearGradient></defs>
+<circle class="lp-halo" cx="48" cy="34" r="42" fill="url(#lp-cH)"/>
+<path class="lp-beam" d="M22 50 L8 86 H88 L74 50 Z" fill="url(#lp-cB)"/>
+<path d="M14 86 H82" stroke="#8a6d52" stroke-width="3" stroke-linecap="round"/>
+<ellipse cx="48" cy="84" rx="13" ry="2" fill="#000" opacity=".18"/>
+<path d="M41 56 C33 60 33 76 40 82 H56 C63 76 63 60 55 56 Z" fill="url(#lp-cV)"/>
+<path d="M30 18 H66 L76 50 H20 Z" fill="url(#lp-cS)" stroke="#bdb09a" stroke-width=".7"/>
+<path class="lp-wash" d="M30 18 H66 L76 50 H20 Z" fill="url(#lp-cL)"/>
+<ellipse cx="48" cy="50" rx="28" ry="2.6" fill="#fff" opacity=".55"/>
+<ellipse class="lp-lit" cx="48" cy="50" rx="24" ry="1.8" opacity=".9"/>
+<rect x="46.4" y="51.2" width="3.2" height="5.8" fill="#b89a5e"/>`,
+  floor: () => `<defs>${lpHalo("fH")}${lpBeam("fB")}${lpMetal("fM", "#8b949d", "#f4f6f8")}
+<linearGradient id="lp-fD" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3b4148"/><stop offset="1" stop-color="#1e2226"/></linearGradient></defs>
+<circle class="lp-halo" cx="70" cy="36" r="36" fill="url(#lp-fH)"/>
+<path class="lp-beam" d="M60 34 L46 88 H94 L80 34 Z" fill="url(#lp-fB)"/>
+<path d="M22 84 C18 40 30 10 60 12 C68 12.5 70 18 70 24" fill="none" stroke="url(#lp-fM)" stroke-width="2.6" stroke-linecap="round"/>
+<ellipse cx="22" cy="87" rx="12" ry="3" fill="#000" opacity=".18"/>
+<path d="M12 84 Q12 80 22 80 Q32 80 32 84 Q32 87 22 87 Q12 87 12 84 Z" fill="#2b3036"/>
+<path d="M58 34 C58 25 63 22 70 22 C77 22 82 25 82 34 Z" fill="url(#lp-fD)"/>
+<ellipse class="lp-lit" cx="70" cy="34" rx="12" ry="2.2"/>`,
+  torch: () => `<defs>${lpHalo("tH")}
+<linearGradient id="lp-tU" x1="0" y1="1" x2="0" y2="0"><stop offset="0" class="lp-stop" stop-opacity=".95"/><stop offset="1" class="lp-stop" stop-opacity="0"/></linearGradient>
+${lpMetal("tM", "#8b949d", "#f4f6f8")}${lpMetal("tB", "#7c858f", "#e3e7eb")}</defs>
+<path class="lp-beam" d="M35 16 L14 0 H82 L61 16 Z" fill="url(#lp-tU)"/>
+<circle class="lp-halo" cx="48" cy="18" r="26" fill="url(#lp-tH)"/>
+<rect x="46.8" y="22" width="2.4" height="62" rx="1.2" fill="url(#lp-tM)"/>
+<rect x="45.4" y="52" width="5.2" height="7" rx="1.6" fill="#3a4047"/>
+<circle cx="48" cy="55.5" r="1.3" fill="#8f98a2"/>
+<ellipse cx="48" cy="88" rx="14" ry="2.6" fill="#000" opacity=".16"/>
+<path d="M36 86 Q36 83 48 83 Q60 83 60 86 Q60 88.4 48 88.4 Q36 88.4 36 86 Z" fill="#2b3036"/>
+<path d="M34 15 H62 L52 23 H44 Z" fill="url(#lp-tB)" stroke="#8f98a2" stroke-width=".6" stroke-linejoin="round"/>
+<ellipse class="lp-lit" cx="48" cy="15" rx="14" ry="1.8"/>`,
+  pendant: () => `<defs>${lpHalo("pH")}${lpBeam("pB")}
+<linearGradient id="lp-pD" x1="0" x2="1"><stop offset="0" stop-color="#2f6b5a"/><stop offset=".45" stop-color="#5fa98f"/><stop offset="1" stop-color="#245446"/></linearGradient></defs>
+<path d="M18 4 H78" stroke="#b9c1c9" stroke-width="3" stroke-linecap="round"/>
+<rect x="42" y="4" width="12" height="3" rx="1" fill="#8f98a2"/>
+<circle class="lp-halo" cx="48" cy="50" r="40" fill="url(#lp-pH)"/>
+<path class="lp-beam" d="M28 50 L10 92 H86 L68 50 Z" fill="url(#lp-pB)"/>
+<path d="M48 7 V26" stroke="#3a4047" stroke-width="1"/>
+<rect x="45" y="26" width="6" height="5" rx="1" fill="#3a4047"/>
+<path d="M45 31 C34 33 27 41 26 50 H70 C69 41 62 33 51 31 Z" fill="url(#lp-pD)"/>
+<path d="M26 50 Q48 53.4 70 50" fill="none" class="lp-litS" stroke-width="1.2" opacity=".9"/>
+<path d="M42.6 50.4 Q48 54 53.4 50.4 Z" class="lp-lit"/>
+<path d="M45 51.2 Q48 52.6 51 51.2" fill="none" stroke="#fff" stroke-width=".8" opacity=".8"/>`,
+  strip: () => `<defs>${lpBeam("sB")}
+<linearGradient id="lp-sW" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#c99a6b"/><stop offset="1" stop-color="#8d6640"/></linearGradient></defs>
+<rect x="0" y="10" width="96" height="80" rx="3" class="lp-wall"/>
+<path class="lp-beam" d="M10 46 L2 90 H94 L86 46 Z" fill="url(#lp-sB)"/>
+<rect x="8" y="38" width="80" height="8" rx="1.5" fill="url(#lp-sW)"/>
+<rect x="20" y="24" width="10" height="14" rx="1" fill="#7c858f"/><rect x="32" y="20" width="8" height="18" rx="1" fill="#a85a3a"/><rect x="62" y="28" width="16" height="10" rx="2" fill="#4f7a96"/>
+<g>${Array.from({ length: 12 }, (_, i) => `<rect class="lp-seg lp-lit" x="${10 + i * 6.4}" y="46" width="5.4" height="2.2" rx="1"/>`).join("")}</g>
+<g class="lp-wash">${Array.from({ length: 12 }, (_, i) => `<ellipse class="lp-seg lp-lit" cx="${(12.7 + i * 6.4).toFixed(1)}" cy="55" rx="5" ry="7" opacity=".35"/>`).join("")}</g>`,
+  // One spot alone throws a wider cone, several share the ceiling.
+  spot: (c) => {
+    const n = LAMP_SPOTS.includes(c.spots) ? c.spots : 1;
+    const gap = { 1: 0, 2: 32, 3: 27, 4: 22 }[n];
+    const w = { 1: 26, 2: 17, 3: 15, 4: 12 }[n];
+    const xs = Array.from({ length: n }, (_, i) => 48 + (i - (n - 1) / 2) * gap);
+    return `<defs>${lpBeam("gB")}</defs>
+<rect x="0" y="6" width="96" height="10" class="lp-ceiling"/>
+<path d="M0 16 H96" stroke="#c5ccd3" stroke-width=".8"/>
+${xs.map((x) => `<path class="lp-beam" d="M${x - 5} 16 L${x - w} 90 H${x + w} L${x + 5} 16 Z" fill="url(#lp-gB)"/>
+<ellipse cx="${x}" cy="16" rx="7" ry="2.4" fill="#aab3bc"/>
+<ellipse class="lp-lit" cx="${x}" cy="16.6" rx="4.4" ry="1.5"/>`).join("")}
+<path d="M4 90 H92" stroke="#c5ccd3" stroke-width="1.4"/>`;
+  },
+  panels: () => `<defs>${lpHalo("nH")}</defs>
+<circle class="lp-halo" cx="48" cy="48" r="46" fill="url(#lp-nH)"/>
+${[["24,58 36,37 48,58", 0], ["36,37 48,58 60,37", 1], ["48,58 60,37 72,58", 2], ["36,37 48,16 60,37", 3], ["48,58 60,79 72,58", 4], ["24,58 36,79 48,58", 5]]
+    .map(([p, i]) => `<polygon class="lp-seg lp-lit" points="${p}" stroke="#fff" stroke-width="1.6" stroke-linejoin="round" style="filter:hue-rotate(${i * 14 - 35}deg)"/>`).join("")}`,
+  desk: () => `<defs>${lpBeam("dB")}${lpMetal("dM", "#3a4047", "#7c858f")}</defs>
+<path class="lp-beam" d="M61 37 L50 86 H92 L81 37 Z" fill="url(#lp-dB)"/>
+<path d="M6 86 H92" stroke="#8a6d52" stroke-width="3" stroke-linecap="round"/>
+<path d="M14 84 Q14 80 22 80 Q30 80 30 84 Z" fill="#2b3036"/>
+<path d="M22 80 L34 46 L66 27" fill="none" stroke="url(#lp-dM)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+<circle cx="34" cy="46" r="2.6" fill="#3a4047"/>
+<path d="M61 37 C61 29 65 24.5 71 24.5 C77 24.5 81 29 81 37 Z" fill="#2b3036"/>
+<circle cx="66" cy="27" r="2.3" fill="#3a4047"/>
+<ellipse class="lp-lit" cx="71" cy="37" rx="10" ry="1.8"/>`,
+  wall: () => `<defs>${lpHalo("oH")}
+<radialGradient id="lp-oG" cx=".5" cy=".55" r=".6"><stop offset="0" stop-color="#fff"/><stop offset="1" class="lp-stop"/></radialGradient></defs>
+<rect x="0" y="4" width="34" height="88" fill="#d7c6ad"/>
+<path d="M0 22 H34 M0 40 H34 M0 58 H34 M0 76 H34 M14 4 V22 M24 22 V40 M10 40 V58 M22 58 V76 M12 76 V92" stroke="#c2ae92" stroke-width=".8"/>
+<circle class="lp-halo" cx="56" cy="50" r="38" fill="url(#lp-oH)"/>
+<path d="M34 40 H46" stroke="#2b3036" stroke-width="3"/>
+<path d="M44 28 L56 20 L68 28 Z" fill="#2b3036"/>
+<rect x="46" y="28" width="20" height="34" fill="url(#lp-oG)" stroke="#2b3036" stroke-width="2"/>
+<path d="M56 28 V62 M46 45 H66" stroke="#2b3036" stroke-width="1.2"/>
+<path d="M44 62 H68 L64 68 H48 Z" fill="#2b3036"/>`,
+};
+function lampHtml(cls, c) {
+  const layout = LAMP_LAYOUTS.includes(c.layout) ? c.layout : "bulb";
+  const flags = ["lp", `lp-l-${layout}`, `lp-m-${c.mode || "unav"}`, c.fx ? "lp-fx" : ""].filter(Boolean).join(" ");
+  const rgb = Array.isArray(c.rgb) ? c.rgb : LAMP_WARM;
+  // Dimmed down to a quarter, never out: a lamp at 1 % is still a lit lamp.
+  const level = c.pct === null || c.pct === undefined ? 1 : 0.25 + 0.75 * Math.min(100, Math.max(0, c.pct)) / 100;
+  return `
+        <div class="machine ${cls} ${flags}" style="--lc:rgb(${rgb.join(",")});--lb:${level.toFixed(2)}"><svg class="lp-svg" viewBox="0 -6 96 108">${LAMP_SVGS[layout](c)}</svg></div>`;
 }
 
 // A bathroom scale: its state entity is the weight. Weighed, and when; the
@@ -7178,6 +7380,30 @@ const ILLUSTRATION_CSS = {
         @keyframes cam-ir { 0%, 100% { opacity: .55; } 50% { opacity: 1; } }
         @media (prefers-reduced-motion: reduce) { .machine.cam * { animation-name: none !important; } }
   `,
+  // A lamp: the light's colour on its glass, its halo and the cone it
+  // throws, dimmed with its brightness; an effect turns the segments' hue.
+  lamp: () => `
+        svg.lp-svg{position:absolute;left:0;top:0;width:96px;height:108px;overflow:hidden}
+        .lp-halo{opacity:calc(var(--lb,1) * .85);transition:opacity .4s}
+        .lp-beam{opacity:calc(var(--lb,1) * .55);transition:opacity .4s}
+        .lp-wash{opacity:calc(var(--lb,1) * .5)}
+        .lp-lit{fill:var(--lc)}
+        .lp-litS{stroke:var(--lc)}
+        .lp-stop{stop-color:var(--lc)}
+        .lp-wall{fill:color-mix(in srgb,var(--primary-text-color,#212121) 6%,transparent)}
+        .lp-ceiling{fill:color-mix(in srgb,var(--primary-text-color,#212121) 9%,transparent)}
+        .lp-m-off .lp-halo,.lp-m-off .lp-beam,.lp-m-off .lp-wash,.lp-m-unav .lp-halo,.lp-m-unav .lp-beam,.lp-m-unav .lp-wash{opacity:0}
+        .lp-m-off .lp-lit,.lp-m-unav .lp-lit{fill:#d9dee3}
+        .lp-m-off .lp-litS,.lp-m-unav .lp-litS{stroke:#c5ccd3}
+        .lp-m-off .lp-stop,.lp-m-unav .lp-stop{stop-color:#e3e7eb}
+        .machine.lp-m-unav{opacity:.45;filter:grayscale(1)}
+        .lp-fx .lp-seg{animation:lp-hue 3s linear infinite;animation-delay:var(--anim-offset,0s)}
+        .lp-fx .lp-seg:nth-child(2n){animation-delay:-.6s}
+        .lp-fx .lp-seg:nth-child(3n){animation-delay:-1.3s}
+        .lp-fx .lp-seg:nth-child(5n){animation-delay:-2.1s}
+        @keyframes lp-hue{to{filter:hue-rotate(360deg)}}
+        @media (prefers-reduced-motion: reduce) { .machine.lp * { animation-name: none !important; } }
+  `,
   // A UPS between the wall socket and the box it protects.
   ups: () => `
         .machine.up { --b: var(--ac-body, #2f343b); --bh: var(--ac-body-hi, #4a515b); --bl: var(--ac-body-lo, #1a1d22); }
@@ -10049,6 +10275,7 @@ function illustrationHtml(type, ctx) {
   if (type === "scale") return scaleHtml(cls, ctx.scale || {});
   if (type === "ups") return upsHtml(cls, ctx.ups || { segs: 0 });
   if (type === "camera") return cameraHtml(cls, ctx.camera || {});
+  if (type === "lamp") return lampHtml(cls, ctx.lampDraw || {});
   if (type === "diffuser") return diffuserHtml(cls, ctx.diffuser || {});
   if (type === "hrv") return hrvHtml(cls, ctx.hrv || {});
   if (type === "screen") return screenHtml(cls, ctx.screen || {});
@@ -13239,6 +13466,27 @@ class ApplianceCard extends HTMLElement {
       camera = { mode, night, layout: cameraLayoutOf(cfg, st), dark: cfg.illustration_color === "black" };
     }
 
+    // A lamp: on or off, and lines for its brightness, its colour
+    // temperature and its effect.
+    let lampDraw = null;
+    if (cap.lamp) {
+      const l = lampReadOf(hass, cfg, st);
+      if (!cfg.state_show_raw || l.mode === "unav") stateLabel = t(hass, LAMP_LABELS[l.mode]);
+      color = LAMP_COLORS[l.mode];
+      if (l.pct !== null) {
+        extraLines.push({ key: "lamp_brightness", icon: "mdi:brightness-6", label: t(hass, "lamp_line_brightness"),
+          value: keepTogether(`${l.pct} %`), entity: cfg.state_entity });
+      }
+      if (l.kelvin) {
+        extraLines.push({ key: "lamp_kelvin", icon: "mdi:thermometer-lines", label: t(hass, "lamp_line_color_temp"),
+          value: keepTogether(`${Math.round(l.kelvin)} K`), entity: cfg.state_entity });
+      }
+      if (l.effect) {
+        extraLines.push({ key: "lamp_effect", icon: "mdi:auto-fix", label: t(hass, "lamp_line_effect"), value: l.effect, entity: cfg.state_entity });
+      }
+      lampDraw = { mode: l.mode, rgb: l.rgb, pct: l.pct, fx: !!l.effect, layout: lampLayoutOf(cfg, st), spots: lampSpotsOf(cfg, st) };
+    }
+
     // A bathroom scale: its state entity is the weight, shown on its screen.
     // The goal, the fat, the muscles and the bones are lines.
     let scale = null;
@@ -13479,6 +13727,7 @@ class ApplianceCard extends HTMLElement {
       battery,
       scale,
       camera,
+      lampDraw,
       diffuser,
       hrv,
       ups,
@@ -13523,6 +13772,7 @@ class ApplianceCard extends HTMLElement {
       ...robotControls(hass, cfg, robot),
       ...(cap.diffuser ? diffuserControls(hass, cfg) : []),
       ...(cap.hrv ? hrvControls(hass, cfg) : []),
+      ...(cap.lamp ? lampControls(hass, cfg) : []),
     ]
       .map((a) => (a.key && a.key !== "toggle" ? { ...a, option: cfg[`${a.key}_option`] ?? a.option, value: cfg[`${a.key}_value`] ?? a.value } : a))
       // A button's icon can be swapped for another, `start_icon` and its
@@ -13586,6 +13836,8 @@ class ApplianceCard extends HTMLElement {
       illustrationCtx.diffuser && [illustrationCtx.diffuser.mode, illustrationCtx.diffuser.lit, illustrationCtx.diffuser.layout].join("/"),
       illustrationCtx.hrv && [illustrationCtx.hrv.mode, illustrationCtx.hrv.level, illustrationCtx.hrv.layout, illustrationCtx.hrv.paused, illustrationCtx.hrv.sPace, illustrationCtx.hrv.ePace].join("/"),
       illustrationCtx.camera && [illustrationCtx.camera.mode, illustrationCtx.camera.night, illustrationCtx.camera.layout].join("/"),
+      illustrationCtx.lampDraw && [illustrationCtx.lampDraw.mode, illustrationCtx.lampDraw.rgb.join(","), illustrationCtx.lampDraw.pct,
+        illustrationCtx.lampDraw.fx, illustrationCtx.lampDraw.layout, illustrationCtx.lampDraw.spots].join("/"),
       illustrationCtx.scale && [illustrationCtx.scale.mode, illustrationCtx.scale.text, illustrationCtx.scale.unit, illustrationCtx.scale.fresh].join("/"),
       illustrationCtx.ups && [illustrationCtx.ups.mode, illustrationCtx.ups.alert, illustrationCtx.ups.charging, illustrationCtx.ups.segs,
         illustrationCtx.ups.lcd, illustrationCtx.ups.level, illustrationCtx.ups.pace].join("/"),
@@ -14166,7 +14418,7 @@ function loadEditor() {
   if (customElements.get("ha-appliance-card-editor")) return Promise.resolve();
   if (!editorLoading) {
     editorLoading = import(assetUrl("ha-appliance-card-editor.js"))
-      .then((m) => m.default({ t, onLanguageLoaded, LANGUAGE_NAMES, localizedHass, activationOf, EV_POWER_THRESHOLD, stateObj, parseValueMap, stringifyValueMap, alertsArray, LIST_OTHER, ENTITY_LISTS, listCandidates, defaultCardName, stripDeviceName, domainOf, INFO_MAX, autoSuggest, APPLIANCE_TYPES, STATE_DOMAINS, illustrationSizeOf, fontScaleOf, compactModeOf, TYPE_GROUPS, caps, detectApplianceType, SCREEN_STANDBY_W, SCREEN_LAYOUTS, SCREEN_IMAGES, HD_HEAT_W, NET_LAYOUTS, SWITCH_PORTS, NET_BAYS, NET_BUSY_MBIT, NET_TEMP_ALERT, netLayoutOf, ROBOT_LAYOUTS, ROBOT_STATIONS, ROBOT_FLOORS, ROBOT_SERVICES, STICK_AWAY_W, robotLayoutOf, POOL_PRESSURE_ALERT, SOLAR_LAYOUTS, BATTERY_LAYOUTS, BATTERY_IDLE_W, DIFFUSER_LAYOUTS, HRV_LAYOUTS, CAMERA_LAYOUTS, UPS_BATTERY_LOW, HISTORY_HOURS, BODY_COLORS, esc, SHELTER_STYLES, SHELTER_COLORS, stateFreeSource }))
+      .then((m) => m.default({ t, onLanguageLoaded, LANGUAGE_NAMES, localizedHass, activationOf, EV_POWER_THRESHOLD, stateObj, parseValueMap, stringifyValueMap, alertsArray, LIST_OTHER, ENTITY_LISTS, listCandidates, defaultCardName, stripDeviceName, domainOf, INFO_MAX, autoSuggest, APPLIANCE_TYPES, STATE_DOMAINS, illustrationSizeOf, fontScaleOf, compactModeOf, TYPE_GROUPS, caps, detectApplianceType, SCREEN_STANDBY_W, SCREEN_LAYOUTS, SCREEN_IMAGES, HD_HEAT_W, NET_LAYOUTS, SWITCH_PORTS, NET_BAYS, NET_BUSY_MBIT, NET_TEMP_ALERT, netLayoutOf, ROBOT_LAYOUTS, ROBOT_STATIONS, ROBOT_FLOORS, ROBOT_SERVICES, STICK_AWAY_W, robotLayoutOf, POOL_PRESSURE_ALERT, SOLAR_LAYOUTS, BATTERY_LAYOUTS, BATTERY_IDLE_W, DIFFUSER_LAYOUTS, HRV_LAYOUTS, CAMERA_LAYOUTS, LAMP_LAYOUTS, LAMP_SPOTS, lampLayoutOf, UPS_BATTERY_LOW, HISTORY_HOURS, BODY_COLORS, esc, SHELTER_STYLES, SHELTER_COLORS, stateFreeSource }))
       .catch((err) => {
         editorLoading = null;
         throw err;

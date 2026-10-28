@@ -1226,6 +1226,21 @@ const hrvOneDuct = hrvCard(L("Bedroom ventilation", "VMC chambre"), "one_duct", 
 const hrvPair = hrvCard(L("Studio ventilation", "VMC studio"), "pair", "on", { percentage: 40 }, [st("binary_sensor.vmc_bypass", "off")], { bypass_entity: "binary_sensor.vmc_bypass" });
 const hrvBypass = hrvCard(L("Summer night", "Nuit d'\u00e9t\u00e9"), "diagram", "on", { percentage: 70 }, [st("binary_sensor.vmc_bypass", "on")], { bypass_entity: "binary_sensor.vmc_bypass" });
 const camOffline = camCard(L("Driveway", "All\u00e9e"), "unavailable", { camera_layout: "outdoor" }, {});
+
+// Lamps: their shape read from the name, their colour, their brightness and
+// their effect from the light entity, as Hue, WLED or Nanoleaf give them.
+const lampCard = (name, id, attrs, cfg = {}) => () => card({ name, state_entity: id, ...cfg }, [st(id, "on", attrs)]);
+const lampBulb = lampCard(L("Kitchen", "Cuisine"), "light.kitchen", { brightness: 204, color_mode: "color_temp", color_temp_kelvin: 2700 });
+const lampBedside = lampCard(L("Bedside", "Chevet"), "light.bedside", { brightness: 150, rgb_color: [80, 140, 255] });
+const lampFloor = lampCard(L("Floor lamp", "Lampadaire"), "light.floor_lamp", { brightness: 255 });
+const lampTorch = lampCard(L("Halogen", "Halog\u00e8ne"), "light.halogen", { brightness: 230 });
+const lampPendant = lampCard(L("Pendant", "Suspension"), "light.pendant", { brightness: 200 });
+const lampStrip = lampCard(L("Shelf", "\u00c9tag\u00e8re"), "light.wled_shelf", { brightness: 255, rgb_color: [255, 60, 140], effect: "Rainbow" });
+const lampSpots = lampCard(L("Spots", "Spots"), "light.spots", { brightness: 255 }, { spots: 3 });
+const lampPanels = lampCard(L("Nanoleaf", "Nanoleaf"), "light.nanoleaf", { brightness: 255, rgb_color: [124, 77, 255], effect: "Northern Lights" });
+const lampDesk = lampCard(L("Desk", "Bureau"), "light.desk_lamp", { brightness: 255 });
+const lampWall = lampCard(L("Garden", "Jardin"), "light.garden_wall", { brightness: 255 });
+const lampOff = () => card({ name: L("Hallway", "Couloir"), state_entity: "light.hallway" }, [st("light.hallway", "off")]);
 const upsReplace = upsCard("OL RB", 100, 300, 18, 236);
 const upsOff = upsCard("OFF", 100, 1500, 0, 241);
 
@@ -1256,6 +1271,8 @@ const EXTRA = { iron, coffee_black: coffeeBlack, boiler_window: boilerWindow, to
                 dif_drop: difDrop, dif_cone: difCone, dif_stone: difStone, dif_flame: difFlame, dif_nebulizer: difNebulizer,
                 hrv_diagram: hrvDiagram, hrv_one_duct: hrvOneDuct, hrv_pair: hrvPair, hrv_bypass: hrvBypass,
                 cam_indoor: camIndoor, cam_tube: camTube, cam_outdoor: camOutdoor, cam_dome: camDome, cam_privacy: camPrivacy, cam_offline: camOffline,
+                lamp_bulb: lampBulb, lamp_bedside: lampBedside, lamp_floor: lampFloor, lamp_torch: lampTorch, lamp_pendant: lampPendant,
+                lamp_strip: lampStrip, lamp_spots: lampSpots, lamp_panels: lampPanels, lamp_desk: lampDesk, lamp_wall: lampWall, lamp_off: lampOff,
                 net_sw8: netSw(8, 6), net_sw16: netSw(16, 11), net_sw24: netSw(24, 20), net_sw32: netSw(32, 27),
                 net_nas1: netBays(1, ["normal"], L("NAS, 1 bay", "NAS 1 baie")),
                 net_nas2: netBays(2, ["normal", null], L("NAS, 2 bays, 1 disk", "NAS 2 baies, 1 disque")),
@@ -1287,8 +1304,8 @@ function liveGallery() {
   const wrap = document.getElementById("wrap");
   wrap.innerHTML = `<header>
     <h1>HA Appliance Card</h1>
-    <p>${L("A Lovelace card for 41 kinds of home appliances, each drawn and animated from its own data. These cards run on made-up states: in Home Assistant every field is an entity you pick.",
-      "Une card Lovelace pour 41 types d'appareils, chacun dessiné et animé à partir de ses propres données. Ces cartes tournent sur des états inventés : dans Home Assistant, chaque champ est une entité que vous choisissez.")}</p>
+    <p>${L("A Lovelace card for 42 kinds of home appliances, each drawn and animated from its own data. These cards run on made-up states: in Home Assistant every field is an entity you pick.",
+      "Une card Lovelace pour 42 types d'appareils, chacun dessiné et animé à partir de ses propres données. Ces cartes tournent sur des états inventés : dans Home Assistant, chaque champ est une entité que vous choisissez.")}</p>
     <nav>${link("lang", "en", "English", !fr)}${link("lang", "fr", "Français", fr)}<span></span>${link("theme", "light", L("Light", "Clair"), !dark)}${link("theme", "dark", L("Dark", "Sombre"), dark)}<span></span>${link("plug", "0", L("Integrations", "Intégrations"), !plugOnly)}${link("plug", "1", L("Smart plug only", "Prise connectée seule"), plugOnly)}<span></span><a href="https://github.com/ADNPolymerase/ha-appliance-card">GitHub</a></nav>
     <p class="hint">${plugOnly
       ? L("Each card below has nothing but a smart plug: its switch and its power meter. Open “Change the values” and move the power, or press the power button.",
@@ -1308,6 +1325,7 @@ function liveGallery() {
     [L("Home and media", "Maison et multimédia"), [printer3d, scaleFresh, scaleGoal]],
     [L("Diffusers and ventilation", "Diffuseurs et ventilation"), [difDrop, difCone, difStone, difFlame, difNebulizer, hrvDiagram, hrvOneDuct, hrvPair, hrvBypass]],
     [L("Cameras", "Cam\u00e9ras"), [camIndoor, camTube, camOutdoor, camDome, camPrivacy, camOffline]],
+    [L("Lamps", "Lampes"), [lampBulb, lampBedside, lampFloor, lampTorch, lampPendant, lampStrip, lampSpots, lampPanels, lampDesk, lampWall, lampOff]],
     [L("Pets", "Animaux"), [petFeeder, roundFeeder, doubleFeeder, dualFeeder, wetFeeder, petFountain]],
   ];
   // Each family folds, the first one open: forty cards in a row are hard to

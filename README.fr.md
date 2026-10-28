@@ -23,7 +23,7 @@ Aucune marque supposée : chaque champ est une entité à choisir, elle fonction
 
 ## Fonctionnalités
 
-- **Quarante et un types d'appareils**, chacun avec une illustration en CSS animée sur les données de l'appareil et statique à l'arrêt. Le type est détecté tout seul ou choisi via `appliance_type`, et `compact: true` ne garde que le texte.
+- **Quarante-deux types d'appareils**, chacun avec une illustration en CSS animée sur les données de l'appareil et statique à l'arrêt. Le type est détecté tout seul ou choisi via `appliance_type`, et `compact: true` ne garde que le texte.
 - **Normalisation d'état** : `Idle`, `RUNNING`, `wash`, `En marche`… sont reconnus (sans tenir compte des accents) et classés en veille, préchauffage, en cours, en pause, terminé, différé ou erreur. Un état inconnu s'affiche tel quel, sans l'espace de noms de l'intégration, et `state_map` classe le reste, `"*"` ramassant tout ce qui dépasse.
 - **L'étape, et non une heure d'*En cours*** : un lave-linge, un sèche-linge ou un lave-vaisselle nomme l'étape où il en est (*Prélavage*, *Lavage*, *Rinçage*, *Essorage*, *Séchage* et sept autres), d'après une entité de phase ou son propre état, et le tambour s'emballe pendant l'essorage. Le temps restant est toujours celui du cycle entier.
 - **Une lavante-séchante est un lave-linge qui sèche** : `washer_dryer: true`, et le tambour montre de l'eau pendant le lavage, puis du linge qui tourne dans l'air chaud pendant le séchage. L'étape vient de l'état lui-même ou d'une entité de phase, et la ligne d'état lit *Lavage* ou *Séchage*.
@@ -33,6 +33,7 @@ Aucune marque supposée : chaque champ est une entité à choisir, elle fonction
 - **Et la piscine** : le filtre à sable, la pompe et le bassin, en *Filtration*, en *Injection de chlore* avec une pompe doseuse en option, en *Contre-lavage* vers l'égout, en *Hors-gel*, et le projecteur, l'eau, le pH et le RedOx dans les lignes.
 - **L'énergie** : des panneaux solaires au sol ou sur un toit, sous le soleil, quelques nuages ou la lune, en *Production*, *Production faible* ou *Nuit* ; une batterie domestique murale ou une station portable, *En charge*, *En décharge*, *Au repos*, *Pleine* ou *Batterie basse*, sa réserve tracée sur sa jauge et le temps jusqu'au plein ou jusqu'à la réserve dans les lignes.
 - **Et le pèse-personne** : le dernier poids sur son écran, allumé une heure après une pesée, ce qu'il reste jusqu'à l'objectif, et la graisse, les muscles et les os dans les lignes, depuis Withings ou n'importe quel capteur de poids.
+- **Et les lampes** : une ampoule, une lampe de chevet, un lampadaire arc, un halogène sur pied, une suspension, un ruban LED, des spots encastrés, des panneaux façon Nanoleaf, une lampe de bureau ou une applique extérieure, allumés dans la couleur de la lumière et tamisés avec sa luminosité ; un effet fait tourner la teinte des segments d'un ruban ou des panneaux.
 - **Et l'onduleur** : la prise murale, l'onduleur et le boîtier qu'il protège, *Sur secteur* avec l'énergie qui le traverse, *Sur batterie* avec la prise barrée, l'onduleur qui bipe et son écran qui compte l'autonomie, *Batterie faible*, *Surcharge* et *Batterie à remplacer* lus dans les codes de NUT, et la batterie, l'autonomie, la charge et la tension d'entrée dans les lignes.
 - **Fonctionne avec une simple prise connectée** : `power_entity` et `power_on_threshold` suffisent à déduire l'état de la consommation ; `power_off_delay` évite qu'une pause soit prise pour la fin, et `show_last_cycle` montre la durée du dernier cycle.
 - **Programme, temps restant, barre de progression, lignes d'info, porte, alertes, connectivité et commandes** (démarrer, pause, reprise, stop), chacun optionnel.
@@ -143,6 +144,13 @@ Clique sur une famille pour voir ses appareils en marche.
 
 </details>
 
+<details>
+<summary><b>Lampes</b></summary>
+
+<img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-lamps.fr.gif" alt="Lampes" width="100%">
+
+</details>
+
 ## Installation
 
 ### Par HACS
@@ -181,7 +189,7 @@ Seule `state_entity` est obligatoire, sauf sur un réfrigérateur où une sonde 
 | `done_alert` | `true` fait pulser un badge vert sur le dessin en fin de cycle, jusqu'à l'ouverture de la porte ou un appui sur le badge. Pour les appareils à cycle (lave-linge, sèche-linge, lave-vaisselle, four…). |
 | `illustration_color` | `auto` (défaut, suit le thème) \| `white` \| `grey` \| `black` \| `red` (rouge foncé). Ne change que la carrosserie, pas les couleurs d'état. |
 | `language` | `auto` (défaut, suit Home Assistant) ou l'un des 14 codes : `en`, `fr`, `de`, `es`, `it`, `nl`, `pt`, `sv`, `no`, `da`, `pl`, `ru`, `zh`, `cs`. `nb` et `nb-NO` donnent le norvégien. |
-| `appliance_type` | `auto` (défaut) \| `washer` \| `dryer` \| `dishwasher` \| `oven` \| `microwave` \| `hood` \| `cooktop` \| `fridge` \| `kettle` \| `cooker` \| `coffee` \| `rice_cooker` \| `air_fryer` \| `water_heater` \| `boiler` \| `heat_pump` \| `printer_3d` \| `pet_feeder` \| `pet_fountain` \| `iron` \| `toaster` \| `pellet_stove` \| `air_conditioner` \| `dehumidifier` \| `space_heater` \| `towel_warmer` \| `air_purifier` \| `fan` \| `ev_charger` \| `hair_dryer` \| `screen` \| `network` \| `robot` \| `pool_pump` \| `scale` \| `ups` \| `solar` \| `home_battery`. |
+| `appliance_type` | `auto` (défaut) \| `washer` \| `dryer` \| `dishwasher` \| `oven` \| `microwave` \| `hood` \| `cooktop` \| `fridge` \| `kettle` \| `cooker` \| `coffee` \| `rice_cooker` \| `air_fryer` \| `water_heater` \| `boiler` \| `heat_pump` \| `printer_3d` \| `pet_feeder` \| `pet_fountain` \| `iron` \| `toaster` \| `pellet_stove` \| `air_conditioner` \| `dehumidifier` \| `space_heater` \| `towel_warmer` \| `air_purifier` \| `fan` \| `ev_charger` \| `hair_dryer` \| `screen` \| `network` \| `robot` \| `pool_pump` \| `scale` \| `ups` \| `solar` \| `home_battery` \| `camera` \| `diffuser` \| `hrv` \| `lamp`. |
 | `tap_action` | Ce que fait un appui sur la carte, dans les mots de Home Assistant : `more-info` (défaut : l'entité d'état, ou sur une carte sans elle ce qu'elle lit à sa place), `none`, `navigate`, `url`, `toggle`, `perform-action` ou `fire-dom-event`, celle qu'écoutent les cartes popup bâties sur browser_mod. En YAML seulement. |
 | `toggle_entity` | Bouton marche/arrêt (`switch`, `button`, `script`, `input_boolean`, `fan`), mis en évidence quand c'est allumé. Sur tous les types, frigo compris, où c'est le seul bouton ; à associer à `controls_activation: confirm` pour un appareil qu'il ne faut pas couper par erreur. |
 | `power_entity` / `power_on_threshold` / `power_icon` | Capteur de puissance. Avec un seuil, l'état en est déduit : *en marche* au-dessus, puis *terminé* en redescendant. Pointer `state_entity` sur ce même capteur l'active avec un seuil de 10 W. `power_icon` remplace `mdi:power-plug`. |
@@ -311,6 +319,8 @@ Seule `state_entity` est obligatoire, sauf sur un réfrigérateur où une sonde 
 | `night_entity` | caméra | Le mode infrarouge : la couronne de LED autour de l'objectif s'allume en rouge, et une ligne *Vision nocturne*. |
 | `privacy_entity` | caméra | Un interrupteur de confidentialité (Reolink, Tapo) : activé, la caméra est *Désactivée*, tête baissée ou volet fermé. L'attribut `monitoring` de Netatmo fait de même. Mettez-le aussi en `toggle_entity` pour avoir un bouton. |
 | `signal_entity` / `battery_entity` | caméra | Le signal Wi-Fi et la batterie, en lignes. Les attributs d'une caméra Arlo sont lus sans eux. |
+| `lamp_layout` | lampe | `bulb` (ampoule) \| `bedside` (chevet) \| `floor` (lampadaire arc) \| `torch` (halogène sur pied, la lumière monte) \| `pendant` (suspension) \| `strip` (ruban LED sous une étagère) \| `spot` (spots encastrés) \| `panels` (panneaux façon Nanoleaf) \| `desk` (lampe de bureau) \| `wall` (applique sur un mur extérieur). Sans réglage, elle est lue dans le nom et le modèle : ruban, strip, WLED ou Govee donne un ruban, Nanoleaf ou panneau des panneaux, chevet une lampe de chevet, bureau une lampe de bureau, halogène une torchère, lampadaire ou arc un lampadaire, spot ou GU10 des spots, suspension ou lustre une suspension, applique, extérieur ou jardin une applique ; une ampoule sinon. |
+| `spots` | lampe | Le nombre de spots dessinés, de 1 à 4. Sans réglage, un groupe de lumières dessine un spot par lumière, jusqu'à quatre. |
 | `robot_layout` | robot | `vacuum` \| `mop` \| `mower` \| `stick` (un aspirateur balai sur son support mural) \| `floor_washer` (un laveur de sol dans sa station). Sans lui, un nom qui dit balai, sans fil ou Dyson en fait un aspirateur balai, Tineco ou laveur de sol un laveur de sol, une entité `lawn_mower` ou un nom qui dit tondeuse, Landroid ou Automower en fait une tondeuse, et Braava ou laveur un robot laveur. |
 | `robot_station` | robot | `station` (défaut : la station de vidage de l'aspirateur, la station de lavage du laveur) \| `base` (une base de charge seule). |
 | `robot_shelter` | robot | `true` dessine un abri au-dessus de la base d'une tondeuse. La pluie s'arrête sur son toit. |
@@ -741,6 +751,19 @@ type: custom:ha-appliance-card
 state_entity: camera.aarlo_camera_avant
 motion_entity: binary_sensor.aarlo_motion_camera_avant
 connectivity_entity: binary_sensor.aarlo_connected_camera_avant
+```
+
+</details>
+
+<details>
+<summary><b>Lampes</b></summary>
+
+Son `state_entity` est la lumière : *Allumée* ou *Éteinte*, et allumée, sa luminosité, sa température de couleur et son effet dans les lignes. Le dessin prend la couleur de la lumière et se tamise jusqu'au quart avec sa luminosité ; un effet fait tourner la teinte des segments d'un ruban ou des panneaux. Un interrupteur ou un helper marche aussi, dessiné en blanc chaud, et le bouton de la carte allume et éteint la lampe. Dix formes, trouvées d'après le nom ou choisies avec `lamp_layout`.
+
+```yaml
+type: custom:ha-appliance-card
+state_entity: light.lampe_chevet
+lamp_layout: bedside
 ```
 
 </details>

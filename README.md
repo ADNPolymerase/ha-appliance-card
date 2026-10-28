@@ -23,7 +23,7 @@ No brand assumed: every field is an entity you pick, so it works with **any** in
 
 ## Features
 
-- **Forty-one appliance types**, each with a CSS illustration that animates on the appliance's own data and stays still when idle. The type is detected on its own or set via `appliance_type`, and `compact: true` keeps only the text.
+- **Forty-two appliance types**, each with a CSS illustration that animates on the appliance's own data and stays still when idle. The type is detected on its own or set via `appliance_type`, and `compact: true` keeps only the text.
 - **State normalization**: `Idle`, `RUNNING`, `wash`, `En marche`… are recognised (accent-insensitive) and sorted into idle, preheating, running, paused, done, delayed or error. An unknown state is shown as it came, minus the integration's namespace, and `state_map` sorts the rest, `"*"` catching everything left over.
 - **The step, not an hour of *Running***: a washer, a dryer or a dishwasher names the step it is at (*Pre-wash*, *Washing*, *Rinsing*, *Spinning*, *Drying* and seven more), from a phase entity or from its own state, and the drum whirls while it spins. The time left is still the whole cycle's.
 - **A washer-dryer is a washer that dries**: `washer_dryer: true`, and the drum shows water while it washes, then clothes turning in hot air while it dries. The step comes from the state itself or from a phase entity, and the state line reads *Washing* or *Drying*.
@@ -34,6 +34,7 @@ No brand assumed: every field is an entity you pick, so it works with **any** in
 - **Energy**: solar panels on the ground or on a roof, under the sun, a few clouds or the moon, *Producing*, *Low production* or *Night*; a home battery on the wall or a portable station, *Charging*, *Discharging*, *Idle*, *Full* or *Low battery*, its reserve drawn on its gauge and the time to full or until the reserve in the lines.
 - **And the bathroom scale**: the last weight on its screen, lit for an hour after a weighing, what is left to the goal, and the fat, the muscles and the bones in the lines, from Withings or any weight sensor.
 - **And the UPS**: the wall socket, the UPS and the box it keeps alive, *On mains* with the energy flowing through it, *On battery* with the wall crossed out, the UPS beeping and its screen counting the time left, *Battery low*, *Overload* and *Replace battery* read from NUT's own codes, and the battery, the runtime, the load and the input voltage in the lines.
+- **And the lamps**: a bulb, a bedside lamp, an arc floor lamp, a halogen torchiere, a pendant, a LED strip, recessed spots, Nanoleaf-style panels, a desk lamp or a wall lantern, lit in the light's own colour and dimmed with its brightness; an effect turns the hue of a strip's segments or of the panels.
 - **Works from a smart plug alone**: `power_entity` and `power_on_threshold` are enough to derive the state from consumption; `power_off_delay` keeps a pause from reading as the end, and `show_last_cycle` shows how long the last cycle ran.
 - **Program, remaining time, progress bar, info lines, door, alerts, connectivity and controls** (start, pause, resume, stop), each optional.
 - **14 languages** (EN, FR, DE, ES, IT, NL, PT, SV, NO, DA, PL, RU, ZH, CS), Home Assistant's or pinned on the card.
@@ -143,6 +144,13 @@ Click a family to see its appliances at work.
 
 </details>
 
+<details>
+<summary><b>Lamps</b></summary>
+
+<img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-lamps.gif" alt="Lamps" width="100%">
+
+</details>
+
 ## Installation
 
 ### HACS
@@ -181,7 +189,7 @@ Only `state_entity` is required, except on a fridge where a probe or a door cont
 | `done_alert` | `true` makes a green badge pulse on the drawing when a cycle has finished, until the door opens or the badge is tapped. For appliances with a cycle (washer, dryer, dishwasher, oven…). |
 | `illustration_color` | `auto` (default, follows the theme) \| `white` \| `grey` \| `black` \| `red` (dark red). Only changes the casing, not the state colours. |
 | `language` | `auto` (default, follows Home Assistant) or one of the 14 codes: `en`, `fr`, `de`, `es`, `it`, `nl`, `pt`, `sv`, `no`, `da`, `pl`, `ru`, `zh`, `cs`. `nb` and `nb-NO` give Norwegian. |
-| `appliance_type` | `auto` (default) \| `washer` \| `dryer` \| `dishwasher` \| `oven` \| `microwave` \| `hood` \| `cooktop` \| `fridge` \| `kettle` \| `cooker` \| `coffee` \| `rice_cooker` \| `air_fryer` \| `water_heater` \| `boiler` \| `heat_pump` \| `printer_3d` \| `pet_feeder` \| `pet_fountain` \| `iron` \| `toaster` \| `pellet_stove` \| `air_conditioner` \| `dehumidifier` \| `space_heater` \| `towel_warmer` \| `air_purifier` \| `fan` \| `ev_charger` \| `hair_dryer` \| `screen` \| `network` \| `robot` \| `pool_pump` \| `scale` \| `ups` \| `solar` \| `home_battery`. |
+| `appliance_type` | `auto` (default) \| `washer` \| `dryer` \| `dishwasher` \| `oven` \| `microwave` \| `hood` \| `cooktop` \| `fridge` \| `kettle` \| `cooker` \| `coffee` \| `rice_cooker` \| `air_fryer` \| `water_heater` \| `boiler` \| `heat_pump` \| `printer_3d` \| `pet_feeder` \| `pet_fountain` \| `iron` \| `toaster` \| `pellet_stove` \| `air_conditioner` \| `dehumidifier` \| `space_heater` \| `towel_warmer` \| `air_purifier` \| `fan` \| `ev_charger` \| `hair_dryer` \| `screen` \| `network` \| `robot` \| `pool_pump` \| `scale` \| `ups` \| `solar` \| `home_battery` \| `camera` \| `diffuser` \| `hrv` \| `lamp`. |
 | `tap_action` | What a tap on the card does, in Home Assistant's own words: `more-info` (default: the state entity, or on a card without one what it reads in its place), `none`, `navigate`, `url`, `toggle`, `perform-action` or `fire-dom-event`, which is what the popup cards built on browser_mod listen for. In YAML only. |
 | `toggle_entity` | Power button (`switch`, `button`, `script`, `input_boolean`, `fan`), highlighted while on. On every type, the fridge included, where it is the only button; pair it with `controls_activation: confirm` for an appliance that must not be switched off by mistake. |
 | `power_entity` / `power_on_threshold` / `power_icon` | Power sensor. With a threshold, the state is derived from it: *running* above, then *finished* when it falls back. Pointing `state_entity` at the same sensor enables it with a 10 W threshold. `power_icon` replaces `mdi:power-plug`. |
@@ -311,6 +319,8 @@ Only `state_entity` is required, except on a fridge where a probe or a door cont
 | `night_entity` | camera | The infrared mode: the ring of LEDs around the lens glows red, and a *Night vision* line. |
 | `privacy_entity` | camera | A privacy switch (Reolink, Tapo): on, the camera is *Off*, its head bowed or its shutter closed. Netatmo's `monitoring` attribute does the same. Set it as `toggle_entity` too for a button. |
 | `signal_entity` / `battery_entity` | camera | The Wi-Fi signal and the battery, as lines. An Arlo camera's own attributes are read without them. |
+| `lamp_layout` | lamp | `bulb` \| `bedside` \| `floor` (an arc floor lamp) \| `torch` (a halogen torchiere, its light going up) \| `pendant` \| `strip` (a LED strip under a shelf) \| `spot` (recessed spots) \| `panels` (Nanoleaf-style panels) \| `desk` \| `wall` (a lantern on an outside wall). Left out, it is read from the name and the model: strip, WLED or Govee makes a strip, Nanoleaf or panel panels, bedside a bedside lamp, desk a desk lamp, halogen or uplight a torchiere, floor or arc a floor lamp, spot or GU10 spots, pendant or chandelier a pendant, wall, outdoor or garden a lantern; a bulb otherwise. |
+| `spots` | lamp | The number of spots drawn, 1 to 4. Left out, a light group draws one spot per light, up to four. |
 | `robot_layout` | robot | `vacuum` \| `mop` \| `mower` \| `stick` (a stick vacuum on its wall dock) \| `floor_washer` (a wet and dry floor washer in its station). Left out, a name that says stick, cordless or Dyson makes a stick vacuum, Tineco or floor washer a floor washer, a `lawn_mower` entity or a name that says mower, Landroid or Automower makes a mower, and Braava or mop a mopping robot. |
 | `robot_station` | robot | `station` (default: the vacuum's emptying station, the mop's washing station) \| `base` (a charging base alone). |
 | `robot_shelter` | robot | `true` draws a shelter over a mower's base. The rain stops on its roof. |
@@ -741,6 +751,19 @@ type: custom:ha-appliance-card
 state_entity: camera.aarlo_camera_avant
 motion_entity: binary_sensor.aarlo_motion_camera_avant
 connectivity_entity: binary_sensor.aarlo_connected_camera_avant
+```
+
+</details>
+
+<details>
+<summary><b>Lamps</b></summary>
+
+Its `state_entity` is the light: *On* or *Off*, and on, its brightness, its colour temperature and its effect in the lines. The drawing takes the light's colour and dims down to a quarter with its brightness; an effect turns the hue of a strip's segments or of the panels. A switch or a helper works too, drawn in a warm white, and the card's button switches the lamp on and off. Ten shapes, found from the name or picked with `lamp_layout`.
+
+```yaml
+type: custom:ha-appliance-card
+state_entity: light.bedside_lamp
+lamp_layout: bedside
 ```
 
 </details>

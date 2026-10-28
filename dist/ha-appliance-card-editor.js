@@ -1,6 +1,6 @@
 // Built by tools/build.mjs from src/ha-appliance-card.js: edit the source, not this file.
 // The card's editor, loaded by the card the first time it is edited.
-export default function defineEditor({ t, onLanguageLoaded, LANGUAGE_NAMES, localizedHass, activationOf, EV_POWER_THRESHOLD, stateObj, parseValueMap, stringifyValueMap, alertsArray, LIST_OTHER, ENTITY_LISTS, listCandidates, defaultCardName, stripDeviceName, domainOf, INFO_MAX, autoSuggest, APPLIANCE_TYPES, STATE_DOMAINS, illustrationSizeOf, fontScaleOf, compactModeOf, TYPE_GROUPS, caps, detectApplianceType, SCREEN_STANDBY_W, SCREEN_LAYOUTS, SCREEN_IMAGES, HD_HEAT_W, NET_LAYOUTS, SWITCH_PORTS, NET_BAYS, NET_BUSY_MBIT, NET_TEMP_ALERT, netLayoutOf, ROBOT_LAYOUTS, ROBOT_STATIONS, ROBOT_FLOORS, ROBOT_SERVICES, STICK_AWAY_W, robotLayoutOf, POOL_PRESSURE_ALERT, SOLAR_LAYOUTS, BATTERY_LAYOUTS, BATTERY_IDLE_W, DIFFUSER_LAYOUTS, HRV_LAYOUTS, CAMERA_LAYOUTS, UPS_BATTERY_LOW, HISTORY_HOURS, BODY_COLORS, esc, SHELTER_STYLES, SHELTER_COLORS, stateFreeSource }) {
+export default function defineEditor({ t, onLanguageLoaded, LANGUAGE_NAMES, localizedHass, activationOf, EV_POWER_THRESHOLD, stateObj, parseValueMap, stringifyValueMap, alertsArray, LIST_OTHER, ENTITY_LISTS, listCandidates, defaultCardName, stripDeviceName, domainOf, INFO_MAX, autoSuggest, APPLIANCE_TYPES, STATE_DOMAINS, illustrationSizeOf, fontScaleOf, compactModeOf, TYPE_GROUPS, caps, detectApplianceType, SCREEN_STANDBY_W, SCREEN_LAYOUTS, SCREEN_IMAGES, HD_HEAT_W, NET_LAYOUTS, SWITCH_PORTS, NET_BAYS, NET_BUSY_MBIT, NET_TEMP_ALERT, netLayoutOf, ROBOT_LAYOUTS, ROBOT_STATIONS, ROBOT_FLOORS, ROBOT_SERVICES, STICK_AWAY_W, robotLayoutOf, POOL_PRESSURE_ALERT, SOLAR_LAYOUTS, BATTERY_LAYOUTS, BATTERY_IDLE_W, DIFFUSER_LAYOUTS, HRV_LAYOUTS, CAMERA_LAYOUTS, LAMP_LAYOUTS, LAMP_SPOTS, lampLayoutOf, UPS_BATTERY_LOW, HISTORY_HOURS, BODY_COLORS, esc, SHELTER_STYLES, SHELTER_COLORS, stateFreeSource }) {
 // ---------------------------------------------------------------------------
 // Editor
 // ---------------------------------------------------------------------------
@@ -1136,6 +1136,13 @@ class ApplianceCardEditor extends HTMLElement {
           type: "select",
           options: [{ value: "auto", label: t(hass, "unit_auto") }].concat(CAMERA_LAYOUTS.map((v) => ({ value: v, label: t(hass, `layout_cam_${v}`) }))),
         }) : ""}
+        ${this._type === "lamp" ? this._row("section_screen_layout", "lamp_layout", {
+          type: "select",
+          options: [{ value: "auto", label: t(hass, "unit_auto") }].concat(LAMP_LAYOUTS.map((v) => ({ value: v, label: t(hass, `layout_lamp_${v}`) }))),
+        }) + (lampLayoutOf(this._config, stateObj(hass, this._config.state_entity)) === "spot" ? this._row("lamp_spots", "spots", {
+          type: "select",
+          options: [{ value: "auto", label: t(hass, "unit_auto") }].concat(LAMP_SPOTS.map((v) => ({ value: String(v), label: String(v) }))),
+        }) : "") : ""}
         ${this._type === "robot" ? (() => {
           const layout = robotLayoutOf(this._config, stateObj(hass, this._config.state_entity));
           return this._row("section_screen_layout", "robot_layout", {

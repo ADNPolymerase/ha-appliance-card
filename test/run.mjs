@@ -10567,6 +10567,74 @@ check('borne : ni un statut reconnu', evMode(evR('SuspendedEVSE', { power_entity
 }
 
 // =============================================================================
+// Lamps: on or off, their brightness, their colour, their effect, their shape.
+// =============================================================================
+{
+  const s = (state, attributes = {}) => ({ state: String(state), attributes });
+  const lamp = (state, attrs = {}, cfg = {}, id = 'light.salon') => render({ state_entity: id, ...cfg }, { [id]: s(state, attrs) });
+  const style = (h) => (/<div class="machine [^"]*" style="([^"]*)"/.exec(h) || [, ''])[1];
+  check('lampe : par son domaine', machineCls(lamp('on')).includes('lp'), true);
+  check('lampe : allumee', stateLine(lamp('on')), 'On');
+  check('lampe : eteinte', stateLine(lamp('off')), 'Off');
+  check('lampe : hors ligne', stateLine(lamp('unavailable')), 'Offline');
+  check('lampe : la couleur allumee', stateColor(lamp('on')), '#ffa000');
+  check('lampe : le dessin eteint', machineCls(lamp('off')).includes('lp-m-off'), true);
+  check('lampe : la luminosite', infoLine(lamp('on', { brightness: 128 }), 'Brightness'), '50 %');
+  check('lampe : pas de luminosite eteinte', infoLine(lamp('off', { brightness: 128 }), 'Brightness'), null);
+  check('lampe : la luminosite tamise le dessin', style(lamp('on', { brightness: 3 })).includes('--lb:0.26'), true);
+  check('lampe : pleine luminosite', style(lamp('on', { brightness: 255 })).includes('--lb:1.00'), true);
+  check('lampe : la couleur RGB', style(lamp('on', { rgb_color: [255, 0, 128] })).includes('--lc:rgb(255,0,128)'), true);
+  check('lampe : la teinte HS', style(lamp('on', { hs_color: [240, 100] })).includes('--lc:rgb(0,0,255)'), true);
+  check('lampe : blanc chaud par defaut', style(lamp('on')).includes('--lc:rgb(255,197,107)'), true);
+  const warm = lamp('on', { color_mode: 'color_temp', color_temp_kelvin: 2700 });
+  check('lampe : temperature de couleur', infoLine(warm, 'Colour temperature').replace(/\s/g, ' '), '2700 K');
+  check('lampe : 2700 K ambre', style(warm).includes('--lc:rgb(255,167,87)'), true);
+  check('lampe : pas de kelvin en couleur', infoLine(lamp('on', { color_mode: 'rgb', color_temp_kelvin: 2700, rgb_color: [255, 0, 0] }), 'Colour temperature'), null);
+  check('lampe : un effet', infoLine(lamp('on', { effect: 'Rainbow' }), 'Effect'), 'Rainbow');
+  check('lampe : l effet anime', machineCls(lamp('on', { effect: 'Rainbow' })).includes('lp-fx'), true);
+  check('lampe : Solid n est pas un effet', machineCls(lamp('on', { effect: 'Solid' })).includes('lp-fx'), false);
+  check('lampe : ampoule par defaut', machineCls(lamp('on')).includes('lp-l-bulb'), true);
+  check('lampe : ruban par son nom', machineCls(lamp('on', {}, {}, 'light.ruban_led_cuisine')).includes('lp-l-strip'), true);
+  check('lampe : WLED en ruban', machineCls(lamp('on', { friendly_name: 'WLED Bureau' })).includes('lp-l-strip'), true);
+  check('lampe : Nanoleaf en panneaux', machineCls(lamp('on', { friendly_name: 'Nanoleaf Shapes' })).includes('lp-l-panels'), true);
+  check('lampe : chevet', machineCls(lamp('on', {}, {}, 'light.lampe_chevet')).includes('lp-l-bedside'), true);
+  check('lampe : suspension', machineCls(lamp('on', {}, {}, 'light.suspension_cuisine')).includes('lp-l-pendant'), true);
+  check('lampe : spots', machineCls(lamp('on', {}, {}, 'light.spots_salon')).includes('lp-l-spot'), true);
+  check('lampe : halogene', machineCls(lamp('on', {}, {}, 'light.halogene')).includes('lp-l-torch'), true);
+  check('lampe : applique du jardin', machineCls(lamp('on', {}, {}, 'light.applique_jardin')).includes('lp-l-wall'), true);
+  check('lampe : forme choisie', machineCls(lamp('on', {}, { lamp_layout: 'desk' }, 'light.ruban')).includes('lp-l-desk'), true);
+  const beams = (h) => (h.match(/class="lp-beam"/g) || []).length;
+  check('lampe : un spot seul', beams(lamp('on', {}, { lamp_layout: 'spot' })), 1);
+  check('lampe : trois spots choisis', beams(lamp('on', {}, { lamp_layout: 'spot', spots: 3 })), 3);
+  check('lampe : un groupe de deux spots', beams(lamp('on', { entity_id: ['light.a', 'light.b'] }, { lamp_layout: 'spot' })), 2);
+  check('lampe : pas plus de quatre spots', beams(lamp('on', { entity_id: ['a', 'b', 'c', 'd', 'e', 'f'] }, { lamp_layout: 'spot' })), 4);
+  check('lampe : un bouton marche', actionBtns(lamp('on')).length, 1);
+  check('lampe : bouton actif allumee', actionBtns(lamp('on'))[0].endsWith(':on'), true);
+  contains('lampe : le bouton vise la lampe', lamp('on'), 'data-entity="light.salon"');
+  check('lampe : sur une prise', stateLine(render({ appliance_type: 'lamp', state_entity: 'switch.lampe' }, { 'switch.lampe': s('on') })), 'On');
+  check('lampe : prise coupee', stateLine(render({ appliance_type: 'lamp', state_entity: 'switch.lampe' }, { 'switch.lampe': s('off') })), 'Off');
+  check('lampe : en francais', stateLine((() => {
+    const c = new Card();
+    c.setConfig({ type: 'custom:ha-appliance-card', state_entity: 'light.s' });
+    c._hass = { ...HASS({ 'light.s': s('on') }), locale: { language: 'fr' }, language: 'fr' };
+    c._render();
+    return markup(c);
+  })()), 'Allum\u00e9e');
+  check('lampe : eteinte en francais', stateLine((() => {
+    const c = new Card();
+    c.setConfig({ type: 'custom:ha-appliance-card', state_entity: 'light.s' });
+    c._hass = { ...HASS({ 'light.s': s('off') }), locale: { language: 'fr' }, language: 'fr' };
+    c._render();
+    return markup(c);
+  })()), '\u00c9teinte');
+  const ed = markup(newEditor({ state_entity: 'light.salon' }));
+  check('editeur lampe : la forme', /data-field="lamp_layout"/.test(ed), true);
+  check('editeur lampe : dans la liste', /value="lamp"/.test(ed), true);
+  check('editeur lampe : pas de nombre hors spots', /data-field="spots"/.test(ed), false);
+  check('editeur lampe : nombre de spots', /data-field="spots"/.test(markup(newEditor({ state_entity: 'light.salon', lamp_layout: 'spot' }))), true);
+}
+
+// =============================================================================
 // Essential oil diffusers: their mist, their light, their tank.
 // =============================================================================
 {
