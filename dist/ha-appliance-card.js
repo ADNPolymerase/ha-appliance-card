@@ -4412,6 +4412,7 @@ const MB_DEFS = `<defs>
 <linearGradient id="mb-g-in" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3a4249"/><stop offset="1" stop-color="#5b646d"/></linearGradient>
 <linearGradient id="mb-g-day" x1="1" y1="0" x2="0" y2="0"><stop offset="0" stop-color="#fff6d6"/><stop offset="1" stop-color="#fff6d6" stop-opacity="0"/></linearGradient>
 <linearGradient id="mb-g-dayl" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#fff6d6"/><stop offset="1" stop-color="#fff6d6" stop-opacity="0"/></linearGradient>
+<linearGradient id="mb-g-dayt" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff6d6"/><stop offset="1" stop-color="#fff6d6" stop-opacity="0"/></linearGradient>
 <clipPath id="mb-clip-slot"><rect x="0" y="-8" width="120" height="40"/></clipPath>
 </defs>`;
 const MB_EDGE = 'stroke="rgba(0,0,0,.28)"';
@@ -4480,7 +4481,7 @@ ${lbl(34, right ? c.house : c.street)}${lbl(86, right ? c.street : c.house)}`;
 <rect x="24" y="18" width="72" height="82" rx="5" fill="${MB_BODY}" ${MB_EDGE} stroke-width=".7"/>
 <rect x="30" y="40" width="60" height="54" rx="3" fill="url(#mb-g-in)"/>
 ${mbLetters(c.drawn, 31, 19, 94, 0, 0, 0)}
-<rect class="mb-light-f" x="30" y="40" width="44" height="54" fill="url(#mb-g-dayl)"/>
+<rect class="mb-light-f" x="30" y="40" width="60" height="36" fill="url(#mb-g-dayt)"/>
 ${door}
 <rect x="20" y="12" width="80" height="9" rx="3" fill="${MB_BODY}" ${MB_EDGE} stroke-width=".7"/><path d="M24 14 H96" stroke="#fff" stroke-width="1.4" opacity=".7"/>
 <rect x="36" y="29.6" width="48" height="3.4" rx="1" fill="#151a20"/>
