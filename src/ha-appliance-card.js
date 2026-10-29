@@ -16502,8 +16502,11 @@ class ApplianceCard extends HTMLElement {
         .cmp-side .cmp-head .top { flex: 1; min-width: 0; align-items: flex-start; text-align: left; }
         .cmp-side .info-lines { margin-top: 10px; }
         /* fill_height: the card takes the height of its slot, so two cards
-           side by side match, and the buttons sit at the bottom. */
-        ha-card.fill { height: 100%; box-sizing: border-box; display: flex; flex-direction: column; }
+           side by side match, and the buttons sit at the bottom. A minimum
+           rather than a height: in a slot shorter than its content (a grid
+           row count forced too low), the card grows with what it draws
+           instead of leaving it hanging outside its own background. */
+        ha-card.fill { min-height: 100%; box-sizing: border-box; display: flex; flex-direction: column; }
         ha-card.fill .fill-gap { flex: 1; }
         /* done_alert: a green badge on the drawing, pulsing until seen. */
         .done-badge {

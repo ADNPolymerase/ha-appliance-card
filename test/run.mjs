@@ -9024,7 +9024,9 @@ check('borne : ni un statut reconnu', evMode(evR('SuspendedEVSE', { power_entity
   const F = { appliance_type: 'dryer', state_entity: 'sensor.sl', toggle_entity: 'switch.sl' };
   const fs = { 'sensor.sl': { state: 'Idle', attributes: {} }, 'switch.sl': { state: 'on', attributes: {} } };
   const fh = render({ ...F, fill_height: true }, fs);
-  contains('hauteur : la carte remplit sa case', fh, 'ha-card.fill { height: 100%; box-sizing: border-box; display: flex; flex-direction: column; }');
+  contains('hauteur : la carte remplit sa case', fh, 'ha-card.fill { min-height: 100%; box-sizing: border-box; display: flex; flex-direction: column; }');
+  // #59 : une case trop basse (rows: 1 en compact side) ne doit pas couper le fond sous le contenu.
+  check('hauteur : jamais une hauteur fixe qui coupe le contenu (#59)', /ha-card\.fill \{ height:/.test(fh), false);
   check('hauteur : un vide avant les boutons', /<div class="fill-gap"><\/div>\s*<div class="actions-row">/.test(fh), true);
   {
     const { card } = build({ ...F, fill_height: true }, fs);
