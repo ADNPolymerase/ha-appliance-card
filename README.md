@@ -10,7 +10,7 @@
 <a href="https://buymeacoffee.com/adnpolymerase" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-orange.png" alt="Buy Me A Coffee" height="60"></a>
 <a href="https://adnpolymerase.github.io/HA/" target="_blank"><img src="https://raw.githubusercontent.com/ADNPolymerase/HA/main/assets/site-button.svg" alt="Link to my github.io for my other projects" height="60"></a>
 
-A Lovelace card for household appliances: washers, dryers, dishwashers, ovens, microwaves, cooker hoods, cooktops, fridges, kettles, cookers, coffee machines, rice cookers, air fryers, water heaters, boilers, heat pumps, 3D printers, pet feeders, irons, toasters, hair dryers, pellet stoves, air conditioners, dehumidifiers, space heaters, towel warmers, air purifiers, fans, EV chargers, TVs, projectors and computers, network switches, servers, NAS and racks, robot vacuums, mops and mowers, stick vacuums and floor washers, pool pumps, bathroom scales, UPSes, solar panels and home batteries. Cycle in progress, program, remaining time, temperature, alerts and controls.
+A Lovelace card for household appliances: washers, dryers, dishwashers, ovens, microwaves, cooker hoods, cooktops, fridges, kettles, cookers, coffee machines, rice cookers, air fryers, water heaters, boilers, heat pumps, 3D printers, pet feeders, irons, toasters, hair dryers, pellet stoves, air conditioners, dehumidifiers, space heaters, towel warmers, air purifiers, fans, EV chargers, TVs, projectors, computers and wall tablets, network switches, servers, NAS and racks, robot vacuums, mops and mowers, stick vacuums and floor washers, pool pumps, bathroom scales, UPSes, solar panels and home batteries. Cycle in progress, program, remaining time, temperature, alerts and controls.
 
 No brand assumed: every field is an entity you pick, so it works with **any** integration (Electrolux, Samsung, LG, Home Connect, Miele, a plain smart plug…).
 
@@ -279,11 +279,19 @@ Only `state_entity` is required, except on a fridge where a probe or a door cont
 | `toaster_layout` | toaster | `two` (default, two slots) \| `four` (four slots, two levers) \| `long` (one long slot for two slices end to end). |
 | `hair_dryer_layout` | hair dryer | `pistol` (default, a classic dryer seen from the side) \| `ring` (a ring dryer seen from the front). |
 | `heat_threshold` | hair dryer | Power from which the dryer blows hot air (300 W by default). Below it, only the fan runs. |
-| `screen_layout` | screen | `tv_feet` (default, a TV on two feet) \| `tv_stand` (a TV on a central stand) \| `tv_wall` (a wall-mounted TV) \| `projector` (a projector under its screen) \| `computer` (a monitor and its tower). Left out, a name that says projector or computer picks the model, and so does a `lock_entity`. |
-| `screen_image` | screen | The picture a lit screen shows: `random` (default, a new one each time it comes on) or one of `sunset`, `aquarium`, `bars`, `football`, `space`, `bounce`, `desktop`, `code`, `pong`. A player that sends a cover shows it instead while it plays. |
+| `screen_layout` | screen | `tv_feet` (default, a TV on two feet) \| `tv_stand` (a TV on a central stand) \| `tv_wall` (a wall-mounted TV) \| `projector` (a projector under its screen) \| `computer` (a monitor and its tower) \| `tablet_wall` (a wall tablet on its flat mount) \| `tablet_frame` (a tablet in a wooden frame, hung like a picture) \| `tablet_portrait` (an upright tablet with a light bar on top). Left out, a name that says projector, computer or tablet picks the model, and so does a `lock_entity`, or one of a tablet's fields below. |
+| `screen_image` | screen | The picture a lit screen shows: `random` (default, a new one each time it comes on) or one of `sunset`, `aquarium`, `bars`, `football`, `space`, `bounce`, `desktop`, `code`, `pong`, `dashboard`. A tablet shows `dashboard` by default. A player that sends a cover shows it instead while it plays. |
 | `media_entity` / `media2_entity` / `media3_entity` | screen | Up to three `media_player` entities that show something on this screen: the TV itself, and the box or console that actually has the picture. The card follows the one that plays, then the one paused, then the one on its home screen, then the one on; on a tie, the first. Its line names it and gives the app or source, the title, and *Muted*. Without a power meter, the players also say whether the screen is off, on standby or on. |
 | `lock_entity` | screen | A computer's session lock: a `lock`, a `binary_sensor` of the lock class (off means locked) or a sensor that reads `locked`, as HASS.Agent, Go Hass Agent or the macOS app report it. Locked, the screen shows a padlock. |
 | `source_entity` | screen | The screen's input: a `select` / `input_select` (such as a monitor's *Input source*) or a `media_player`, whose source list is used. The card shows the current input on a line and adds a button that opens the list to pick another. |
+| `screensaver_entity` | screen (tablet) | The tablet's screensaver, such as Fully Kiosk's *Screensaver* switch. On, the card says *Screensaver* and draws a clock on the glass. As a switch, it also gets a button. |
+| `charging_entity` | screen (tablet) | On its charger: a `binary_sensor` such as Fully Kiosk's *Plugged in*, or a sensor that reads `charging` or `full`. The cable and a bolt show while it charges, and the state says so. |
+| `motion_entity` | screen (tablet) | What its front camera sees: on, the camera lights blue, and so does the light bar of the upright tablet. |
+| `url_entity` | screen (tablet) | The page it shows, such as Fully Kiosk's *Current page*: the card keeps the path, without the address. |
+| `brightness_entity` | screen (tablet) | Its brightness: a `number` of 0 to 255 as Fully Kiosk gives it, a percentage, or a light. |
+| `last_interaction_entity` | screen (tablet) | When it was last touched: a timestamp sensor, or any entity whose last change is that moment. |
+| `reload_entity` | screen (tablet) | A button that reloads its page, such as Fully Kiosk's *Load start URL*. |
+| `battery_entity` | screen (tablet) | Its battery, shown in a corner of the card, orange at 20 % and below. |
 | `network_layout` | network | `switch` \| `server` \| `nas` \| `rack` \| `router`. Left out, a name that says NAS, Synology, QNAP, Unraid, switch, server, rack, router, modem, Bbox, Livebox, Freebox or FRITZ!Box picks the model, disks make it a NAS, and a router's own fields make it a router. |
 | `switch_ports` | network | The ports drawn on a switch: `8`, `16`, `24` or `32`. Left out, the smallest one that holds `ports_total`. |
 | `ports_entity` / `ports_total` | network | The ports in use, and how many the switch has: one LED per port in use, in proportion past 32. Shown as *24/32*. |
@@ -606,9 +614,11 @@ power_entity: sensor.hair_dryer_plug_power
 </details>
 
 <details>
-<summary><b>Screens: TVs, projectors and computers</b></summary>
+<summary><b>Screens: TVs, projectors, computers and wall tablets</b></summary>
 
 Read from its smart plug: *Off* at 0 W (half a watt still counts as nothing), *Standby* up to `power_on_threshold` (20 W by default), *On* above it. On standby the light glows and the power line says what the standby costs; on, the screen shows a picture drawn at random, or the one set in `screen_image`. Without a meter, a `binary_sensor` as `state_entity`, a ping for instance, says *On* or *Off* by itself; a plug's switch only says it has power, so a box on standby then says *Standby*. Add the players that show something on it and the card says *Playing*, *Paused* or *Home screen*, with the app and the title. Five models: a TV on feet, on a stand or on the wall, a projector, a computer. Watch the bouncing logo long enough and it lands in a corner.
+
+A wall tablet that shows a dashboard has three models of its own: flat on its mount, in a wooden frame, or upright with a light bar. Its screen switch says *Dashboard* or *Screen off*, its screensaver *Screensaver* with a clock on the glass. Its cable only hangs from it while it charges, its front camera lights when it sees someone, and its battery sits in a corner. Buttons for the screen, the screensaver and a reload of the page show for the entities given.
 
 ```yaml
 type: custom:ha-appliance-card
@@ -619,6 +629,21 @@ power_entity: sensor.tv_plug_power
 power_on_threshold: 30
 media_entity: media_player.lg_tv
 media2_entity: media_player.apple_tv
+```
+
+```yaml
+type: custom:ha-appliance-card
+appliance_type: screen
+screen_layout: tablet_frame
+name: Hall tablet
+state_entity: switch.hall_tablet_screen
+screensaver_entity: switch.hall_tablet_screensaver
+charging_entity: binary_sensor.hall_tablet_plugged_in
+motion_entity: binary_sensor.hall_tablet_motion
+battery_entity: sensor.hall_tablet_battery
+url_entity: sensor.hall_tablet_current_page
+brightness_entity: number.hall_tablet_screen_brightness
+reload_entity: button.hall_tablet_load_start_url
 ```
 
 </details>

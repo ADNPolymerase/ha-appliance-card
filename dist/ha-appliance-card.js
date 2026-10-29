@@ -141,7 +141,7 @@ const T = {
     type_iron: "Iron", section_iron_layout: "Model", layout_iron: "Iron", layout_generator: "Steam generator",
     type_toaster: "Toaster", section_toaster_layout: "Model", layout_toaster_two: "Two slots", layout_toaster_four: "Four slots",
     layout_toaster_long: "Long slot", toaster_toasting: "Toasting", toaster_done: "Toast ready", type_air_purifier: "Air purifier",
-    type_screen: "Screen (TV, projector, computer)", section_screen_layout: "Model", layout_tv_feet: "TV on feet", layout_tv_stand: "TV on a stand", layout_tv_wall: "Wall-mounted TV", layout_projector: "Projector", layout_computer: "Computer", section_screen_image: "Picture on screen", img_random: "Random", img_sunset: "Sunset", img_aquarium: "Aquarium", img_bars: "Test card", img_football: "Football match", img_space: "Space", img_bounce: "Bouncing logo", img_desktop: "Desktop", img_code: "Scrolling code", img_pong: "Pong", screen_on: "On", screen_playing: "Playing", screen_home: "Home screen", screen_locked: "Locked", screen_muted: "Muted", screen_standby_threshold: "Standby up to this power (W)", section_media: "Media player", section_media2: "Second media player", section_media3: "Third media player", section_lock: "Session lock",
+    type_screen: "Screen (TV, projector, computer)", section_screen_layout: "Model", layout_tv_feet: "TV on feet", layout_tv_stand: "TV on a stand", layout_tv_wall: "Wall-mounted TV", layout_projector: "Projector", layout_computer: "Computer", section_screen_image: "Picture on screen", img_random: "Random", img_sunset: "Sunset", img_aquarium: "Aquarium", img_bars: "Test card", img_football: "Football match", img_space: "Space", img_bounce: "Bouncing logo", img_desktop: "Desktop", img_code: "Scrolling code", img_pong: "Pong", screen_on: "On", screen_playing: "Playing", screen_home: "Home screen", screen_locked: "Locked", screen_muted: "Muted", screen_standby_threshold: "Standby up to this power (W)", section_media: "Media player", section_media2: "Second media player", section_media3: "Third media player", section_lock: "Session lock", layout_tablet_wall: "Wall tablet", layout_tablet_frame: "Framed tablet", layout_tablet_portrait: "Upright tablet with light bar", img_dashboard: "Dashboard", screen_dashboard: "Dashboard", screen_saver: "Screensaver", screen_dark: "Screen off", tab_charging: "charging", tab_line_page: "Page", tab_line_touched: "Last interaction", tab_screen: "Screen", tab_reload: "Reload page", section_screensaver: "Screensaver", section_tab_charging: "Charging sensor", section_tab_page: "Current page", section_tab_brightness: "Screen brightness", section_tab_touched: "Last interaction",
     type_hair_dryer: "Hair dryer", layout_hd_pistol: "Classic", layout_hd_ring: "Ring", hd_cool: "Cool air", hd_hot: "Hot air", hd_heat_threshold: "Hot air above this power (W)", fill_height: "Fill the height of its slot", done_alert: "Flash at the end of the cycle", done_seen: "Seen", no_power_threshold: "No power draw below (W)", group_appearance: "Appearance", show_name: "Show the name", show_state: "Show the state", transparent: "Transparent background", font_scale: "Text size", illustration_size: "Drawing size", compact_mode: "Compact mode", compact_off: "Off", compact_hide: "No drawing", compact_side: "Drawing on the side", group_laundry: "Laundry", group_kitchen: "Kitchen", group_heating: "Heating and hot water", group_air: "Air and climate", group_home: "Home and media", group_pets: "Pets", illustration_frame: "Same drawing height as the cards beside it", section_screen_source: "Input source", screen_source: "Input",
     type_network: "Network device (switch, NAS, server)", group_network: "Network and servers", layout_net_switch: "Switch", layout_net_server: "Server", layout_net_nas: "NAS", layout_net_rack: "Rack", net_ports_count: "Ports drawn", net_bays: "NAS bays", net_online: "Online", net_busy: "Busy", net_alert: "Alert", net_warn: "Disk to watch", section_net_cpu: "CPU usage (%)", section_net_memory: "Memory usage (%)", section_net_volume: "Volume used (%)", section_net_download: "Download rate", section_net_upload: "Upload rate", section_net_ports: "Active ports", net_ports_total: "Port count", section_net_poe: "PoE power", section_net_problem: "Problem alert", section_net_temperature: "Temperature", net_temp_alert: "Alert above this temperature (\u00b0C)", net_busy_threshold: "Busy above this rate (Mbit/s)", net_line_rate: "Throughput", net_line_load: "Load", net_line_volume: "Volume", section_net_disk1: "Disk 1", section_net_disk2: "Disk 2", section_net_disk3: "Disk 3", section_net_disk4: "Disk 4",
     type_robot: "Robot (vacuum, mop, mower)", layout_robot_vacuum: "Robot vacuum", layout_robot_mop: "Mopping robot", layout_robot_mower: "Robot mower", section_robot_station: "Base", robot_station_station: "Emptying or washing station", robot_station_base: "Charging base only", robot_shelter: "Shelter over the base", robot_shelter_style: "Shelter style", shelter_lean_to: "Wooden lean-to", shelter_shell: "Shell", robot_shelter_color: "Shell colour", delay_starts_in: "Starts in", section_delay: "Delayed start countdown", state_entity_optional: "State entity (optional)", color_green: "Green", color_orange: "Orange", robot_charging: "Charging", robot_docked: "Docked", robot_cleaning: "Cleaning", robot_mopping: "Mopping", robot_mowing: "Mowing", robot_edgecut: "Edge cutting", robot_returning: "Returning to base", robot_emptying: "Emptying the bin", robot_bin_full: "Bin full", robot_washing: "Washing the pads", robot_drying: "Drying the pads", robot_water_empty: "Water tank empty", robot_rain: "Rain delay", robot_idle: "Stopped", section_robot_status: "Detailed status", section_battery: "Battery", section_robot_bin: "Bin full alert", section_robot_water: "Water tank", section_robot_rain: "Rain", section_robot_error: "Error",
@@ -2999,7 +2999,8 @@ const STATE_DOMAINS = {
 };
 // A model, a picture, the players it shows and a session lock belong to a
 // screen.
-const SCREEN_ONLY_FIELDS = ["screen_layout", "screen_image", "media_entity", "media2_entity", "media3_entity", "lock_entity", "source_entity"];
+const SCREEN_ONLY_FIELDS = ["screen_layout", "screen_image", "media_entity", "media2_entity", "media3_entity", "lock_entity", "source_entity",
+  "screensaver_entity", "charging_entity", "url_entity", "brightness_entity", "last_interaction_entity", "reload_entity"];
 // Ports, bays, disks and traffic belong to a network device.
 const NETWORK_ONLY_FIELDS = ["network_layout", "switch_ports", "bays", "busy_threshold", "temperature_alert", "cpu_entity",
   "memory_entity", "volume_entity", "download_entity", "upload_entity", "ports_entity", "ports_total", "poe_entity",
@@ -3276,29 +3277,91 @@ const CLOCK_TICK_MS = 30 * 1000;
 // the screen unplugged behind them.
 const SCREEN_OFF_W = 0.5;
 const SCREEN_STANDBY_W = 20;
-const SCREEN_LAYOUTS = ["tv_feet", "tv_stand", "tv_wall", "projector", "computer"];
-const SCREEN_NAME_RE = /(^|[^a-z])tv([^a-z]|$)|(^|[^a-z])t(e|\u00e9)l(e|\u00e9)([^a-z]|$)|t(e|\u00e9)l(e|\u00e9)vis|fernseher|televize|telewizor|\u0442\u0435\u043b\u0435\u0432\u0438\u0437\u043e\u0440|\u7535\u89c6|beamer|project(or|eur)|proyector|proiettore|projektor|\u6295\u5f71|\u043f\u0440\u043e\u0435\u043a\u0442\u043e\u0440|computer|ordinateur|desktop|imac|ordenador|computador|komputer|po(c|\u010d)(i|\u00ed)ta(c|\u010d)|\u7535\u8111|\u043a\u043e\u043c\u043f\u044c\u044e\u0442\u0435\u0440/;
+const SCREEN_LAYOUTS = ["tv_feet", "tv_stand", "tv_wall", "projector", "computer", "tablet_wall", "tablet_frame", "tablet_portrait"];
+// A wall tablet that shows a dashboard (#62): Fully Kiosk's, or any other
+// that reports its screen, its screensaver and its charger.
+const SCREEN_TABLETS = ["tablet_wall", "tablet_frame", "tablet_portrait"];
+const SCREEN_TABLET_RE = /tablet|kiosk|wall ?panel|(^|[^a-z])fully([^a-z]|$)|\u5e73\u677f|\u043f\u043b\u0430\u043d\u0448\u0435\u0442/;
+const SCREEN_NAME_RE = /(^|[^a-z])tv([^a-z]|$)|(^|[^a-z])t(e|\u00e9)l(e|\u00e9)([^a-z]|$)|t(e|\u00e9)l(e|\u00e9)vis|fernseher|televize|telewizor|\u0442\u0435\u043b\u0435\u0432\u0438\u0437\u043e\u0440|\u7535\u89c6|beamer|project(or|eur)|proyector|proiettore|projektor|\u6295\u5f71|\u043f\u0440\u043e\u0435\u043a\u0442\u043e\u0440|computer|ordinateur|desktop|imac|ordenador|computador|komputer|po(c|\u010d)(i|\u00ed)ta(c|\u010d)|\u7535\u8111|\u043a\u043e\u043c\u043f\u044c\u044e\u0442\u0435\u0440|tablet|kiosk|wall ?panel|\u5e73\u677f|\u043f\u043b\u0430\u043d\u0448\u0435\u0442/;
 const SCREEN_PROJECTOR_RE = /beamer|project(or|eur)|proyector|proiettore|projektor|\u6295\u5f71|\u043f\u0440\u043e\u0435\u043a\u0442\u043e\u0440/;
 const SCREEN_COMPUTER_RE = /computer|ordinateur|desktop|imac|ordenador|computador|komputer|po(c|\u010d)(i|\u00ed)ta(c|\u010d)|\u7535\u8111|\u043a\u043e\u043c\u043f\u044c\u044e\u0442\u0435\u0440|(^|[^a-z])pc([^a-z]|$)/;
-const SCREEN_LABELS = { off: "ac_off", standby: "standby", on: "screen_on", playing: "screen_playing", paused: "paused", home: "screen_home", locked: "screen_locked" };
+const SCREEN_LABELS = { off: "ac_off", standby: "standby", on: "screen_on", playing: "screen_playing", paused: "paused", home: "screen_home", locked: "screen_locked", dashboard: "screen_dashboard", saver: "screen_saver" };
 const SCREEN_COLORS = {
   off: "var(--disabled-text-color, #9e9e9e)", standby: "var(--warning-color, #ff9800)",
   on: "var(--info-color, #2196f3)", playing: "var(--info-color, #2196f3)", home: "var(--info-color, #2196f3)",
   paused: "var(--warning-color, #ff9800)", locked: "var(--warning-color, #ff9800)",
+  dashboard: "var(--success-color, #43a047)", saver: "var(--info-color, #2196f3)",
 };
-const SCREEN_LIT = ["on", "playing", "paused", "home", "locked"];
+const SCREEN_LIT = ["on", "playing", "paused", "home", "locked", "dashboard", "saver"];
 // [top of the drawing, its height, how much larger it is drawn].
-const SCREEN_BANDS = { tv_feet: [28, 66, 2], tv_stand: [26, 68, 2], tv_wall: [25, 62, 2], projector: [0, 87, 1.8], computer: [24, 62, 1.6] };
+const SCREEN_BANDS = { tv_feet: [28, 66, 2], tv_stand: [26, 68, 2], tv_wall: [25, 62, 2], projector: [0, 87, 1.8], computer: [24, 62, 1.6],
+  tablet_wall: [26, 59, 2], tablet_frame: [26, 59, 2], tablet_portrait: [24, 64, 2] };
 // The pictures a lit screen shows, one drawn at random each time it comes on:
-// the first six suit a television or a projector, the last three a computer.
-const SCREEN_IMAGES = ["sunset", "aquarium", "bars", "football", "space", "bounce", "desktop", "code", "pong"];
+// the first six suit a television or a projector, the next three a computer,
+// and a tablet shows its dashboard.
+const SCREEN_IMAGES = ["sunset", "aquarium", "bars", "football", "space", "bounce", "desktop", "code", "pong", "dashboard"];
 const SCREEN_TV_IMAGES = SCREEN_IMAGES.slice(0, 6);
-const SCREEN_PC_IMAGES = SCREEN_IMAGES.slice(6);
+const SCREEN_PC_IMAGES = SCREEN_IMAGES.slice(6, 9);
+const SCREEN_TAB_IMAGES = ["dashboard"];
 // The order a screen's players are read in: one playing wins over one paused,
 // which wins over one at rest. Several on one screen is the usual case: the
 // television, and the box or the console that actually has the picture.
 // A box on its home screen tells more than a television that is merely on.
 const MEDIA_RANK = { playing: 4, buffering: 4, paused: 3, idle: 2.5, on: 2 };
+// The model a screen is drawn as: the one chosen, or the one its names and
+// its fields suggest. A tablet's own fields say it is one before its name does.
+function screenLayoutOf(cfg, st) {
+  if (SCREEN_LAYOUTS.includes(cfg.screen_layout)) return cfg.screen_layout;
+  const name = stripAccents(`${cfg.state_entity || ""} ${cfg.media_entity || ""} ${(st && st.attributes.friendly_name) || ""}`.toLowerCase());
+  if (cfg.screensaver_entity || cfg.charging_entity || cfg.url_entity || SCREEN_TABLET_RE.test(name)) return "tablet_wall";
+  return cfg.lock_entity || SCREEN_COMPUTER_RE.test(name) ? "computer" : SCREEN_PROJECTOR_RE.test(name) ? "projector" : "tv_feet";
+}
+function screenIsTablet(cfg, st = null) {
+  return SCREEN_TABLETS.includes(screenLayoutOf(cfg, st));
+}
+// On its charger: a plugged-in sensor that is on, or a battery state that
+// says charging, or full, which a phone or a tablet only says on its cable.
+const SCREEN_CHARGING = ["on", "true", "yes", "charging", "plugged", "plugged_in", "ac", "usb", "wireless", "full"];
+function screenCharging(hass, id) {
+  const st = id ? stateObj(hass, id) : null;
+  return !!st && SCREEN_CHARGING.includes(String(st.state).trim().toLowerCase().replace(/ /g, "_"));
+}
+// The page a tablet shows, without its address: the path is what tells one
+// dashboard from another.
+function screenPage(raw) {
+  let v = String(raw || "").trim();
+  if (!v || ["unavailable", "unknown"].includes(v.toLowerCase())) return "";
+  v = v.replace(/^[a-z][a-z0-9+.-]*:\/\/[^/?#]+/i, "").replace(/^\/+/, "").replace(/[?#].*$/, "");
+  try { v = decodeURIComponent(v); } catch (e) { /* as written */ }
+  return v || "/";
+}
+// A screen's brightness in percent: a number of 0 to 255, as Fully Kiosk
+// gives it, a percentage, or the brightness of a light.
+function screenBrightness(hass, id) {
+  const st = id ? stateObj(hass, id) : null;
+  if (!st) return null;
+  const a = st.attributes || {};
+  if (domainOf(id) === "light") {
+    if (String(st.state).toLowerCase() === "off") return 0;
+    const b = numberOrNull(a.brightness);
+    return b === null ? null : Math.round((b / 255) * 100);
+  }
+  const v = numericState(hass, id);
+  if (v === null) return null;
+  if (a.unit_of_measurement === "%") return Math.round(v);
+  const max = numberOrNull(a.max);
+  return Math.round((v / (max && max > 0 ? max : 255)) * 100);
+}
+// When a tablet was last touched: a timestamp it reports, or the moment the
+// entity last changed.
+function screenTouchedAt(hass, id) {
+  const st = id ? stateObj(hass, id) : null;
+  if (!st || ["unavailable", "unknown"].includes(String(st.state).toLowerCase())) return null;
+  const at = Date.parse(st.state);
+  if (isFinite(at) && /\d{4}-\d{2}-\d{2}/.test(st.state)) return at;
+  const changed = Date.parse(st.last_changed);
+  return isFinite(changed) ? changed : null;
+}
 // A session lock, whatever reports it: a lock entity, a binary sensor of the
 // lock class (on means unlocked), or a sensor that says "locked".
 function screenLocked(lst, id) {
@@ -3969,7 +4032,17 @@ function cardMenuLabel(hass, menu, option) {
 }
 function screenControls(hass, cfg) {
   const menu = screenSourceOptions(hass, cfg);
-  return menu ? [{ key: "screen_source", entity: menu.entity, icon: "mdi:video-input-hdmi", label: t(hass, "screen_source"), menu: true }] : [];
+  const out = menu ? [{ key: "screen_source", entity: menu.entity, icon: "mdi:video-input-hdmi", label: t(hass, "screen_source"), menu: true }] : [];
+  // A wall tablet's own buttons (#62): its screen, its screensaver, and a
+  // reload of its page, each only when there is something to drive it.
+  if (screenIsTablet(cfg, stateObj(hass, cfg.state_entity))) {
+    const sw = (id) => ["switch", "input_boolean", "light"].includes(domainOf(id || ""));
+    const on = (id) => { const st = stateObj(hass, id); return !!st && String(st.state).toLowerCase() === "on"; };
+    if (!cfg.toggle_entity && sw(cfg.state_entity)) out.push({ key: "tab_screen", entity: cfg.state_entity, icon: "mdi:power", label: t(hass, "tab_screen"), on: on(cfg.state_entity) });
+    if (sw(cfg.screensaver_entity)) out.push({ key: "tab_saver", entity: cfg.screensaver_entity, icon: "mdi:weather-night", label: t(hass, "screen_saver"), on: on(cfg.screensaver_entity) });
+    if (cfg.reload_entity) out.push({ key: "tab_reload", entity: cfg.reload_entity, icon: "mdi:refresh", label: t(hass, "tab_reload") });
+  }
+  return out;
 }
 
 // A ventilation unit's controls: its mode, picked from a menu in the card
@@ -8104,6 +8177,39 @@ const ILLUSTRATION_CSS = {
         .scr-feet { border-radius: 0 0 1px 1px; background: #2b2f34; }
         .scr-tower { border-radius: 2px; background: linear-gradient(90deg, var(--ac-body-lo, #22262a), var(--ac-body, #3b4045) 30%, var(--ac-body-hi, #515860) 60%, var(--ac-body-lo, #22262a)); }
         .scr-slot { border-radius: 0.5px; background: rgba(0, 0, 0, 0.35); }
+        /* A wall tablet (#62), on its patch of wall. */
+        .tab-wallbg, .tab-shadow, .tab-body, .tab-wood, .tab-mat, .tab-lightbar, .tab-cam, .tab-cable, .tab-bolt { position: absolute; }
+        .tab-wallbg { border-radius: 4px; background: linear-gradient(180deg, rgba(127, 127, 127, 0.1), rgba(127, 127, 127, 0.2)); }
+        .tab-shadow { border-radius: 3px; background: rgba(0, 0, 0, 0.18); filter: blur(2px); }
+        .tab-body { border-radius: 4.5px; background: linear-gradient(145deg, #3a3f46, #1d2126); }
+        .tab-body.light { border-radius: 4px; background: linear-gradient(145deg, #f4f5f6, #c9ced3); box-shadow: inset 0 0 0 0.5px rgba(0, 0, 0, 0.08); }
+        .tab-wood { border-radius: 2px; background: linear-gradient(135deg, #c98f55, #8d5a30); box-shadow: inset 0 0 0 0.75px rgba(0, 0, 0, 0.18); }
+        .tab-mat { background: #f6f3ee; box-shadow: inset 0 0.5px 1.5px rgba(0, 0, 0, 0.25); }
+        .machine.tablet .tab-glass { background: #121519; }
+        .tab-lightbar { border-radius: 1px; background: #b9bfc5; }
+        .machine.tablet.scr-lit .tab-lightbar { background: #43a047; box-shadow: 0 0 2.5px rgba(67, 160, 71, 0.8); }
+        .machine.tablet.seen .tab-lightbar { background: #29b6f6; box-shadow: 0 0 2.5px rgba(41, 182, 246, 0.9); }
+        .tab-cam { border-radius: 50%; background: #3a4048; }
+        .machine.tablet.seen .tab-cam { background: #29b6f6; box-shadow: 0 0 2px 0.5px rgba(41, 182, 246, 0.8); animation: tab-blink 1.2s steps(1) infinite; animation-delay: var(--anim-offset, 0s); }
+        .tab-cable { border-radius: 1px; background: #cfd3d7; }
+        .tab-bolt { width: 5px; height: 7px; fill: var(--success-color, #43a047); }
+        .si-dash { box-sizing: border-box; background: #f3f4f6; padding: 9% 6% 6%; display: grid; grid-template-columns: repeat(3, 1fr); grid-auto-rows: 1fr; gap: 5%; }
+        .scr-tablet_portrait .si-dash { grid-template-columns: repeat(2, 1fr); }
+        .si-dash::before { content: ""; position: absolute; left: 6%; right: 6%; top: 3%; height: 3%; border-radius: 1px; background: #039be5; }
+        .si-dash i { position: relative; border-radius: 1px; background: #fff; box-shadow: 0 0 0 0.25px #d5d9de; }
+        .si-dash i::after { content: ""; position: absolute; left: 14%; top: 22%; width: 26%; height: 26%; border-radius: 50%; background: var(--c, #ffb300); }
+        .si-dash i:nth-child(2) { --c: #43a047; } .si-dash i:nth-child(3) { --c: #1e88e5; } .si-dash i:nth-child(4) { --c: #8e24aa; }
+        .si-dash i:nth-child(5) { --c: #e53935; } .si-dash i:nth-child(6) { --c: #00897b; }
+        .si-dash i:nth-child(2)::after { animation: tab-blink 2.4s steps(1) infinite; animation-delay: var(--anim-offset, 0s); }
+        .si-saver { background: radial-gradient(circle at 30% 30%, #18263a, #06080c 70%); }
+        .si-saver b {
+          position: absolute; left: 50%; top: 46%; transform: translate(-50%, -50%); white-space: nowrap; line-height: 1.1;
+          color: #cfe3ff; font-weight: 300; font-size: 9px; letter-spacing: 0.02em; animation: tab-drift 9s ease-in-out infinite; animation-delay: var(--anim-offset, 0s);
+        }
+        .scr-tablet_portrait .si-saver b { font-size: 6.5px; }
+        .si-saver b small { display: block; font-size: 0.42em; text-align: center; color: #7f97b5; letter-spacing: 0.04em; }
+        @keyframes tab-blink { 50% { opacity: 0.25; } }
+        @keyframes tab-drift { 0%, 100% { margin-left: -6%; } 50% { margin-left: 6%; } }
 
         /* The pictures. */
         .si-sunset { background: linear-gradient(115deg, #1e3c72, #2a7fba 25%, #f4a261 50%, #e76f51 70%, #264653); background-size: 300% 300%; animation: scr-drift 9s ease-in-out infinite alternate; animation-delay: var(--anim-offset, 0s); }
@@ -8194,7 +8300,7 @@ const ILLUSTRATION_CSS = {
         @keyframes scr-pad { from { top: 10%; } to { top: 66%; } }
         @keyframes scr-pbx { from { left: 8%; } to { left: 88%; } }
         @keyframes scr-pby { from { top: 6%; } to { top: 88%; } }
-        @media (prefers-reduced-motion: reduce) { .machine .scr-pic *, .machine .scr-led { animation: none !important; animation-delay: var(--anim-offset, 0s); } }
+        @media (prefers-reduced-motion: reduce) { .machine .scr-pic *, .machine .scr-led, .machine .tab-cam { animation: none !important; animation-delay: var(--anim-offset, 0s); } }
   `,
   iron: () => `
         .ir { position: absolute; left: 0; right: 0; top: 0; bottom: 0; }
@@ -9911,9 +10017,13 @@ function toasterHtml(cls, tp) {
 // every 118.9 s. Starting 30 s in, the first corner is a minute and a half
 // away rather than right away.
 const SCREEN_CODE_COLORS = ["#c792ea", "#82aaff", "#ffcb6b", "#c3e88d", "#89ddff", "#f78c6c"];
-function screenPictureHtml(img) {
+function screenPictureHtml(img, sc = {}) {
   const at = (x, y, w, h) => `left: ${x}%; top: ${y}%; width: ${w}%; height: ${h}%`;
   switch (img) {
+    case "dashboard":
+      return `<div class="si-dash"><i></i><i></i><i></i><i></i><i></i><i></i></div>`;
+    case "saver":
+      return `<div class="si-saver"><b>${esc(sc.clock || "")}<small>${esc(sc.date || "")}</small></b></div>`;
     case "aquarium":
       return `<div class="si-aquarium"><span class="sand"></span>`
         + `<span class="weed" style="left: 12%"></span><span class="weed" style="left: 17%; height: 28%; animation-delay: calc(-1s + var(--anim-offset, 0s))"></span><span class="weed" style="left: 80%; height: 34%; animation-delay: calc(-2s + var(--anim-offset, 0s))"></span>`
@@ -9961,9 +10071,11 @@ function screenHtml(cls, sc) {
   const layout = SCREEN_LAYOUTS.includes(sc.layout) ? sc.layout : "tv_feet";
   const mode = sc.mode || "off";
   const box = (c, x, y, w, h, extra = "") => `<div class="${c}" style="left: ${x}px; top: ${y}px; width: ${w}px; height: ${h}px${extra}"></div>`;
-  const picture = mode === "home" ? screenPictureHtml("home")
-    : sc.cover ? `<img class="scr-cover" src="${esc(sc.cover)}" alt="">`
-      : screenPictureHtml(sc.image);
+  const tablet = SCREEN_TABLETS.includes(layout);
+  const picture = mode === "saver" ? screenPictureHtml("saver", sc)
+    : mode === "home" ? screenPictureHtml(tablet ? "dashboard" : "home")
+      : sc.cover ? `<img class="scr-cover" src="${esc(sc.cover)}" alt="">`
+        : screenPictureHtml(sc.image);
   const glassInner = `<div class="scr-pic">${SCREEN_LIT.includes(mode) ? picture : ""}</div>${mode === "locked" ? '<div class="scr-lock"></div>' : ""}${SCREEN_BADGES}`;
   const tv = (y) => `${box("scr-bezel", 1, y, 94, 54)}<div class="scr-glass" style="left: 3px; top: ${y + 2}px; width: 90px; height: 49px">${glassInner}</div>`
     + box("scr-led", 46.8, y + 51.8, 2.4, 2.4);
@@ -9979,6 +10091,24 @@ function screenHtml(cls, sc) {
     body = box("scr-bezel", 2, 26, 64, 42) + `<div class="scr-glass" style="left: 5px; top: 29px; width: 58px; height: 35px">${glassInner}</div>`
       + box("scr-neck", 30, 68, 8, 13) + box("scr-base", 20, 80, 28, 4) + box("scr-tower", 72, 34, 20, 50)
       + box("scr-slot", 75, 40, 14, 1.5) + box("scr-slot", 75, 44, 14, 1.5) + box("scr-led", 80.8, 76, 2.4, 2.4);
+  } else if (tablet) {
+    // A wall tablet, drawn on its patch of wall (#62): flat on its mount, in
+    // a wooden frame like a picture, or upright with a light bar on top. Its
+    // front camera lights when it sees someone, and its cable only hangs
+    // from it while it charges.
+    const glass = (x, y, w, h) => `<div class="scr-glass tab-glass" style="left: ${x}px; top: ${y}px; width: ${w}px; height: ${h}px">${glassInner}</div>`;
+    const bolt = (x, y) => (sc.charging ? `<svg class="tab-bolt" viewBox="0 0 10 14" style="left: ${x}px; top: ${y}px"><path d="M6 0 0 8h4l-1 6 6-8H5z"/></svg>` : "");
+    if (layout === "tablet_frame") {
+      body = box("tab-wallbg", 4, 26, 88, 59) + box("tab-shadow", 13, 34, 74, 49) + box("tab-wood", 11, 30, 74, 50) + box("tab-mat", 15, 34, 66, 42)
+        + glass(19, 37.5, 58, 35) + box("tab-cam", 47.25, 35.25, 1.5, 1.5) + (sc.charging ? box("tab-cable", 47.5, 80, 1.25, 5) : "") + bolt(50, 79);
+    } else if (layout === "tablet_portrait") {
+      body = box("tab-wallbg", 18, 24, 60, 64) + box("tab-shadow", 35, 31, 30, 50) + box("tab-body light", 33, 28, 30, 51)
+        + box("tab-lightbar", 40, 29, 16, 1.25) + glass(35, 32, 26, 43) + box("tab-cam", 47.25, 76.5, 1.5, 1.5)
+        + (sc.charging ? box("tab-cable", 47.5, 79, 1.25, 9) : "") + bolt(50, 80);
+    } else {
+      body = box("tab-wallbg", 4, 26, 88, 59) + box("tab-shadow", 17, 37, 66, 42) + box("tab-body", 15, 33, 66, 43)
+        + glass(18.5, 36.5, 59, 36) + box("tab-cam", 47.5, 34.25, 1.5, 1.5) + (sc.charging ? box("tab-cable", 47.5, 76, 1.25, 9) : "") + bolt(50, 77);
+    }
   } else body = tv(30) + box("scr-foot l", 12, 84, 3, 8) + box("scr-foot r", 81, 84, 3, 8);
   const lit = SCREEN_LIT.includes(mode) ? " scr-lit" : "";
   // A television is wider than it is tall, and a computer too with its
@@ -9997,7 +10127,7 @@ function screenHtml(cls, sc) {
     ? ` data-fit-w="${px(96 * band[2])}" style="width: calc(${px(96 * band[2])}px * ${fit}); height: calc(${px(band[1] * band[2])}px * ${fit})"`
     : "";
   return `
-        <div class="machine ${cls} scr-${layout} mode-${mode}${lit}${sc.muted ? " muted" : ""}"${size}>${inner}</div>`;
+        <div class="machine ${cls} scr-${layout} mode-${mode}${lit}${sc.muted ? " muted" : ""}${tablet ? " tablet" : ""}${sc.charging ? " charging" : ""}${sc.seen ? " seen" : ""}"${size}>${inner}</div>`;
 }
 
 function illustrationHtml(type, ctx) {
@@ -13380,19 +13510,23 @@ class ApplianceCard extends HTMLElement {
       else if (players.some((p) => String(p.state).toLowerCase() === "standby")) power = "standby";
       else if (players.some((p) => String(p.state).toLowerCase() === "off")) power = "off";
       else if (sw === "on") power = "on";
+      const layout = screenLayoutOf(cfg, st);
+      const tablet = SCREEN_TABLETS.includes(layout);
       let mode = power || "off";
       if (power === "on") {
         if (cfg.lock_entity && screenLocked(stateObj(hass, cfg.lock_entity), cfg.lock_entity)) mode = "locked";
+        // A tablet's screensaver keeps its screen on: the clock it shows is
+        // what the card draws.
+        else if (tablet && camOn(hass, cfg.screensaver_entity)) mode = "saver";
         else if (ms === "playing" || ms === "buffering") mode = "playing";
         else if (ms === "paused") mode = "paused";
+        // A tablet on, and its browser at rest, shows its dashboard.
+        else if (tablet) mode = "dashboard";
         else if (ms === "idle") mode = "home";
       }
-      const name = stripAccents(`${cfg.state_entity || ""} ${cfg.media_entity || ""} ${(st && st.attributes.friendly_name) || ""}`.toLowerCase());
-      const layout = SCREEN_LAYOUTS.includes(cfg.screen_layout) ? cfg.screen_layout
-        : cfg.lock_entity || SCREEN_COMPUTER_RE.test(name) ? "computer" : SCREEN_PROJECTOR_RE.test(name) ? "projector" : "tv_feet";
       // A new picture each time the screen comes on, unless one was chosen.
       const lit = SCREEN_LIT.includes(mode);
-      const pool = layout === "computer" ? SCREEN_PC_IMAGES : SCREEN_TV_IMAGES;
+      const pool = tablet ? SCREEN_TAB_IMAGES : layout === "computer" ? SCREEN_PC_IMAGES : SCREEN_TV_IMAGES;
       if (SCREEN_IMAGES.includes(cfg.screen_image)) this._screenImage = cfg.screen_image;
       else if (lit && (!this._screenLit || !pool.includes(this._screenImage))) {
         this._screenImage = pool[Math.floor(Math.random() * pool.length)];
@@ -13403,7 +13537,11 @@ class ApplianceCard extends HTMLElement {
       // any picture of the card's.
       const pic = (mode === "playing" || mode === "paused") && a.entity_picture ? String(a.entity_picture) : "";
       const cover = pic && this._hass && typeof this._hass.hassUrl === "function" ? this._hass.hassUrl(pic) : pic;
-      if (power !== null && !cfg.state_show_raw) stateLabel = t(hass, SCREEN_LABELS[mode]);
+      const charging = tablet && screenCharging(hass, cfg.charging_entity);
+      if (power !== null && !cfg.state_show_raw) {
+        stateLabel = t(hass, tablet && mode === "off" ? "screen_dark" : SCREEN_LABELS[mode]);
+        if (charging) stateLabel += ` \u00b7 ${t(hass, "tab_charging")}`;
+      }
       if (power !== null) color = SCREEN_COLORS[mode];
       // Nothing it reads answers: the plug, the meter and the players are all
       // unavailable. That is a screen out of reach, not one whose state is
@@ -13423,7 +13561,28 @@ class ApplianceCard extends HTMLElement {
       if (source && source.current) {
         extraLines.push({ key: "screen_source", icon: "mdi:video-input-hdmi", label: t(hass, "screen_source"), value: keepTogether(screenSourceLabel(hass, stateObj(hass, source.entity), source.current)), entity: source.entity });
       }
-      screen = { mode, layout, image: this._screenImage || pool[0], cover, muted };
+      if (tablet && power !== null) {
+        const page = cfg.url_entity ? screenPage((stateObj(hass, cfg.url_entity) || {}).state) : "";
+        if (page && lit) extraLines.push({ key: "tab_page", icon: "mdi:web", label: t(hass, "tab_line_page"), value: page, entity: cfg.url_entity });
+        const touched = screenTouchedAt(hass, cfg.last_interaction_entity);
+        if (touched !== null) {
+          extraLines.push({ key: "tab_touched", icon: "mdi:gesture-tap", label: t(hass, "tab_line_touched"), value: keepTogether(feedTime(hass, touched)), entity: cfg.last_interaction_entity });
+        }
+        const bright = lit ? screenBrightness(hass, cfg.brightness_entity) : null;
+        if (bright !== null) {
+          extraLines.push({ key: "tab_brightness", icon: "mdi:brightness-6", label: t(hass, "lamp_line_brightness"), value: keepTogether(`${bright} %`), entity: cfg.brightness_entity });
+        }
+      }
+      // The screensaver's clock moves on with the time.
+      this._clearClockTimer();
+      if (mode === "saver" && !this._inert) this._clockTimer = setInterval(() => this._render(), CLOCK_TICK_MS);
+      const battery = tablet && cfg.battery_entity ? numericState(hass, cfg.battery_entity) : null;
+      screen = {
+        mode, layout, image: this._screenImage || pool[0], cover, muted, tablet, charging, battery,
+        seen: tablet && camOn(hass, cfg.motion_entity),
+        clock: mode === "saver" ? feederClock(hass) : "",
+        date: mode === "saver" ? new Date(Date.now()).toLocaleDateString(lang(hass), { weekday: "short", day: "numeric", month: "short" }).toUpperCase() : "",
+      };
     }
 
     // A network device, read from whatever it reports: off or online from its
@@ -14594,10 +14753,14 @@ class ApplianceCard extends HTMLElement {
 
     // A robot's battery, in a corner rather than in the lines when asked
     // (#49): an icon that fills and its percentage, orange when it runs low.
-    const battSide = robot && cfg.battery_corner && robot.battery !== null && robot.mode !== "unav"
+    // A wall tablet always has it there (#62), as its battery is all a
+    // glance at it needs.
+    const batt = robot ? (cfg.battery_corner && robot.mode !== "unav" ? { pct: robot.battery, charging: robot.mode === "charging" } : null)
+      : screen && screen.tablet ? { pct: screen.battery, charging: screen.charging } : null;
+    const battSide = batt && batt.pct !== null
       ? (lightBadgeHtml || doorSide === "left" ? "right" : "left") : "";
     const battBadgeHtml = battSide
-      ? `<div class="batt-badge ${battSide}${robot.battery <= 20 ? " low" : ""}" style="top:${battSide === "right" && connBadgeHtml ? 40 : 10}px" data-more="${esc(cfg.battery_entity || cfg.state_entity)}" title="${esc(t(hass, "section_battery"))}" aria-label="${esc(t(hass, "section_battery"))}"><ha-icon icon="${robotBatteryIcon(robot.battery, robot.mode === "charging")}"></ha-icon><span>${Math.round(robot.battery)} %</span></div>`
+      ? `<div class="batt-badge ${battSide}${batt.pct <= 20 ? " low" : ""}" style="top:${battSide === "right" && connBadgeHtml ? 40 : 10}px" data-more="${esc(cfg.battery_entity || cfg.state_entity)}" title="${esc(t(hass, "section_battery"))}" aria-label="${esc(t(hass, "section_battery"))}"><ha-icon icon="${robotBatteryIcon(batt.pct, batt.charging)}"></ha-icon><span>${Math.round(batt.pct)} %</span></div>`
       : "";
 
     // The switches the user wants at hand: the first on the left, the second
@@ -14772,7 +14935,7 @@ function loadEditor() {
   if (customElements.get("ha-appliance-card-editor")) return Promise.resolve();
   if (!editorLoading) {
     editorLoading = import(assetUrl("ha-appliance-card-editor.js"))
-      .then((m) => m.default({ t, onLanguageLoaded, LANGUAGE_NAMES, localizedHass, activationOf, EV_POWER_THRESHOLD, stateObj, parseValueMap, stringifyValueMap, alertsArray, LIST_OTHER, ENTITY_LISTS, listCandidates, defaultCardName, stripDeviceName, domainOf, INFO_MAX, autoSuggest, APPLIANCE_TYPES, STATE_DOMAINS, illustrationSizeOf, fontScaleOf, compactModeOf, TYPE_GROUPS, caps, detectApplianceType, SCREEN_STANDBY_W, SCREEN_LAYOUTS, SCREEN_IMAGES, HD_HEAT_W, NET_LAYOUTS, SWITCH_PORTS, NET_BAYS, NET_BUSY_MBIT, NET_TEMP_ALERT, netLayoutOf, ROBOT_LAYOUTS, ROBOT_STATIONS, ROBOT_FLOORS, ROBOT_SERVICES, STICK_AWAY_W, robotLayoutOf, POOL_PRESSURE_ALERT, SOLAR_LAYOUTS, BATTERY_LAYOUTS, BATTERY_IDLE_W, DIFFUSER_LAYOUTS, HRV_LAYOUTS, CAMERA_LAYOUTS, MAILBOX_LAYOUTS, MAILBOX_SIDES, mailboxLayoutOf, LAMP_LAYOUTS, LAMP_SPOTS, lampLayoutOf, UPS_BATTERY_LOW, HISTORY_HOURS, BODY_COLORS, esc, SHELTER_STYLES, SHELTER_COLORS, stateFreeSource }))
+      .then((m) => m.default({ t, onLanguageLoaded, LANGUAGE_NAMES, localizedHass, activationOf, EV_POWER_THRESHOLD, stateObj, parseValueMap, stringifyValueMap, alertsArray, LIST_OTHER, ENTITY_LISTS, listCandidates, defaultCardName, stripDeviceName, domainOf, INFO_MAX, autoSuggest, APPLIANCE_TYPES, STATE_DOMAINS, SCREEN_ONLY_FIELDS, illustrationSizeOf, fontScaleOf, compactModeOf, TYPE_GROUPS, caps, detectApplianceType, SCREEN_STANDBY_W, SCREEN_LAYOUTS, SCREEN_IMAGES, screenIsTablet, HD_HEAT_W, NET_LAYOUTS, SWITCH_PORTS, NET_BAYS, NET_BUSY_MBIT, NET_TEMP_ALERT, netLayoutOf, ROBOT_LAYOUTS, ROBOT_STATIONS, ROBOT_FLOORS, ROBOT_SERVICES, STICK_AWAY_W, robotLayoutOf, POOL_PRESSURE_ALERT, SOLAR_LAYOUTS, BATTERY_LAYOUTS, BATTERY_IDLE_W, DIFFUSER_LAYOUTS, HRV_LAYOUTS, CAMERA_LAYOUTS, MAILBOX_LAYOUTS, MAILBOX_SIDES, mailboxLayoutOf, LAMP_LAYOUTS, LAMP_SPOTS, lampLayoutOf, UPS_BATTERY_LOW, HISTORY_HOURS, BODY_COLORS, esc, SHELTER_STYLES, SHELTER_COLORS, stateFreeSource }))
       .catch((err) => {
         editorLoading = null;
         throw err;

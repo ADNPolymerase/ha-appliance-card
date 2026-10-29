@@ -11053,4 +11053,80 @@ check('borne : ni un statut reconnu', evMode(evR('SuspendedEVSE', { power_entity
   check('editeur : case illustration_frame', /data-field="illustration_frame" data-type="checkbox"/.test(markup(newEditor({ ...R }))), true);
 }
 
+// #62: a wall tablet, drawn in three shapes, read from Fully Kiosk's entities.
+{
+  const s = (state, attributes = {}, ago = 120000) => ({ state: String(state), attributes, last_changed: new Date(Date.now() - ago).toISOString() });
+  const TAB = {
+    appliance_type: 'screen', screen_layout: 'tablet_wall', state_entity: 'switch.t_screen', screensaver_entity: 'switch.t_saver',
+    charging_entity: 'binary_sensor.t_plugged', motion_entity: 'binary_sensor.t_motion', battery_entity: 'sensor.t_battery',
+    url_entity: 'sensor.t_page', brightness_entity: 'number.t_bright', reload_entity: 'button.t_reload',
+    last_interaction_entity: 'sensor.t_touched',
+  };
+  const tst = ({ screen = 'on', saver = 'off', plug = 'on', motion = 'off', batt = '64' } = {}) => ({
+    'switch.t_screen': s(screen), 'switch.t_saver': s(saver), 'binary_sensor.t_plugged': s(plug), 'binary_sensor.t_motion': s(motion),
+    'sensor.t_battery': s(batt, { unit_of_measurement: '%' }), 'sensor.t_page': s('http://192.168.0.250:8123/lovelace/Tablette?kiosk'),
+    'number.t_bright': s('153', { max: 255 }), 'button.t_reload': s('unknown'), 'sensor.t_touched': s('2026-10-29T08:15:00+00:00'),
+  });
+  const sp = (v) => String(v ?? '').replace(/\s/g, ' ');
+  const dash = render(TAB, tst({ motion: 'on' }));
+  check('tablette : dessinee au mur', /scr-tablet_wall/.test(machineCls(dash)), true);
+  check('tablette : tableau de bord', / mode-dashboard /.test(` ${machineCls(dash)} `), true);
+  check('tablette : son image de tableau de bord', /class="si-dash"/.test(dash), true);
+  check('tablette : etat tableau de bord en charge', sp(stateLine(dash)), 'Dashboard · charging');
+  check('tablette : la couleur du tableau de bord', stateColor(dash), 'var(--success-color, #43a047)');
+  check('tablette : le cable en charge', /class="tab-cable"/.test(dash) && /class="tab-bolt"/.test(dash), true);
+  check('tablette : la camera voit quelqu un', / seen( |$)/.test(machineCls(dash)), true);
+  check('tablette : la page sans adresse', infoLine(dash, 'Page'), 'lovelace/Tablette');
+  check('tablette : la luminosite sur 255', sp(infoLine(dash, 'Brightness')), '60 %');
+  check('tablette : la derniere interaction', infoLine(dash, 'Last interaction') !== null, true);
+  check('tablette : la batterie dans un coin', /class="batt-badge left"[^>]*><ha-icon icon="mdi:battery-charging-60">/.test(dash), true);
+  check('tablette : ses trois boutons', JSON.stringify(actionBtns(dash).map((b) => b.split(':')[0])), JSON.stringify(['Screen', 'Screensaver', 'Reload page']));
+  const quiet = render(TAB, tst({ plug: 'off' }));
+  check('tablette : debranchee, sans cable', /class="tab-(cable|bolt)"/.test(quiet), false);
+  check('tablette : debranchee, etat sans charge', stateLine(quiet), 'Dashboard');
+  check('tablette : personne devant', / seen( |$)/.test(machineCls(quiet)), false);
+  const saver = build(TAB, tst({ saver: 'on', plug: 'off' }));
+  check('tablette : economiseur', / mode-saver /.test(` ${machineCls(saver.html)} `), true);
+  check('tablette : etat economiseur', stateLine(saver.html), 'Screensaver');
+  check('tablette : l horloge de l economiseur', /class="si-saver"><b>\d{1,2}:\d{2}<small>[^<]+<\/small>/.test(saver.html), true);
+  check('tablette : l horloge suit l heure', !!saver.card._clockTimer, true);
+  saver.card.disconnectedCallback();
+  const dashCard = build(TAB, tst());
+  check('tablette : pas d horloge hors economiseur', !!dashCard.card._clockTimer, false);
+  dashCard.card.disconnectedCallback();
+  const off = render(TAB, tst({ screen: 'off', batt: '18' }));
+  check('tablette : ecran eteint', sp(stateLine(off)), 'Screen off · charging');
+  check('tablette : eteinte, verre noir', /scr-lit/.test(machineCls(off)) || /class="si-dash"/.test(off), false);
+  check('tablette : eteinte, pas de page', infoLine(off, 'Page'), null);
+  check('tablette : batterie faible en orange', /class="batt-badge left low"/.test(off), true);
+  const frame = render({ ...TAB, screen_layout: 'tablet_frame' }, tst());
+  check('tablette : encadree', /scr-tablet_frame/.test(machineCls(frame)) && /class="tab-wood"/.test(frame) && /class="tab-mat"/.test(frame), true);
+  const port = render({ ...TAB, screen_layout: 'tablet_portrait' }, tst({ motion: 'on' }));
+  check('tablette : portrait a barre lumineuse', /scr-tablet_portrait/.test(machineCls(port)) && /class="tab-lightbar"/.test(port), true);
+  check('tablette : barre bleue quand elle voit', /\.machine\.tablet\.seen \.tab-lightbar \{ background: #29b6f6;/.test(port), true);
+  check('tablette : mouvement fige si animations reduites', /prefers-reduced-motion: reduce\) \{ \.machine \.scr-pic \*, \.machine \.scr-led, \.machine \.tab-cam \{/.test(port), true);
+  // The press of each button.
+  const calls = [];
+  const c = new Card();
+  c.setConfig({ type: 'custom:ha-appliance-card', ...TAB });
+  c._hass = { ...HASS(tst()), callService: (domain, service, data) => calls.push(`${domain}.${service}:${data.entity_id}`) };
+  c._render();
+  for (const id of ['switch.t_screen', 'switch.t_saver', 'button.t_reload']) fire(c._root.querySelectorAll('.action-btn, .light-badge').find((n) => n.getAttribute('data-entity') === id), 'click', { stopPropagation() {} });
+  check('tablette : les boutons agissent', JSON.stringify(calls), JSON.stringify(['switch.toggle:switch.t_screen', 'switch.toggle:switch.t_saver', 'button.press:button.t_reload']));
+  c.disconnectedCallback();
+  // Found without a model: by its fields, by its name.
+  check('tablette : reconnue a ses champs', /scr-tablet_wall/.test(machineCls(render({ state_entity: 'switch.t_screen', screensaver_entity: 'switch.t_saver' }, tst()))), true);
+  check('tablette : reconnue a son nom', /scr-tablet_wall/.test(machineCls(render({ appliance_type: 'screen', state_entity: 'switch.fully_kiosk_screen' }, { 'switch.fully_kiosk_screen': s('on') }))), true);
+  check('tablette : une tele reste une tele', /tablet|mode-saver/.test(machineCls(render({ ...TAB, screen_layout: 'tv_feet' }, tst({ saver: 'on' })))), false);
+  check('tablette : une tele sans badge de batterie', /class="batt-badge/.test(render({ ...TAB, screen_layout: 'tv_feet' }, tst())), false);
+  // A light as the brightness.
+  check('tablette : luminosite d une lumiere', sp(infoLine(render({ ...TAB, brightness_entity: 'light.t' }, { ...tst(), 'light.t': s('on', { brightness: 255 }) }), 'Brightness')), '100 %');
+  // The editor shows a tablet's fields to a tablet only.
+  const edTab = markup(newEditor({ appliance_type: 'screen', screen_layout: 'tablet_frame', state_entity: 'switch.t_screen' }));
+  check('editeur tablette : ses champs', ['screensaver_entity', 'charging_entity', 'motion_entity', 'url_entity', 'brightness_entity', 'last_interaction_entity', 'reload_entity', 'battery_entity'].every((f) => edTab.includes(`data-toggle="${f}"`)), true);
+  const edTv = markup(newEditor({ appliance_type: 'screen', screen_layout: 'tv_wall', state_entity: 'media_player.tv' }));
+  check('editeur tele : pas de champs de tablette', /data-toggle="(screensaver_entity|charging_entity|battery_entity|motion_entity)"/.test(edTv), false);
+  check('editeur : les trois formes de tablette', ['tablet_wall', 'tablet_frame', 'tablet_portrait'].every((v) => edTab.includes(`value="${v}"`)), true);
+}
+
 report();

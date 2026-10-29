@@ -10,7 +10,7 @@
 <a href="https://buymeacoffee.com/adnpolymerase" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-orange.png" alt="Buy Me A Coffee" height="60"></a>
 <a href="https://adnpolymerase.github.io/HA/" target="_blank"><img src="https://raw.githubusercontent.com/ADNPolymerase/HA/main/assets/site-button.svg" alt="Lien vers mon github.io pour mes autres projets" height="60"></a>
 
-Une card Lovelace pour les appareils de la maison : lave-linge, sèche-linge, lave-vaisselle, four, micro-ondes, hotte, plaque de cuisson, réfrigérateur, bouilloire, robot cuiseur, machine à café, cuiseur à riz, friteuse à air, chauffe-eau, chaudière, pompe à chaleur, imprimante 3D, distributeur de croquettes, fer à repasser, grille-pain, sèche-cheveux, poêle à granulés, climatiseur, déshumidificateur, petit chauffage, sèche-serviettes, purificateur d'air, ventilateur, borne de recharge, télévision, vidéoprojecteur, ordinateur, switch, serveur, NAS et baie réseau, robot aspirateur, laveur et tondeuse, aspirateur balai et laveur de sol, pompe de piscine, pèse-personne, onduleur, panneaux solaires et batterie domestique. Cycle en cours, programme, temps restant, température, alertes et commandes.
+Une card Lovelace pour les appareils de la maison : lave-linge, sèche-linge, lave-vaisselle, four, micro-ondes, hotte, plaque de cuisson, réfrigérateur, bouilloire, robot cuiseur, machine à café, cuiseur à riz, friteuse à air, chauffe-eau, chaudière, pompe à chaleur, imprimante 3D, distributeur de croquettes, fer à repasser, grille-pain, sèche-cheveux, poêle à granulés, climatiseur, déshumidificateur, petit chauffage, sèche-serviettes, purificateur d'air, ventilateur, borne de recharge, télévision, vidéoprojecteur, ordinateur, tablette murale, switch, serveur, NAS et baie réseau, robot aspirateur, laveur et tondeuse, aspirateur balai et laveur de sol, pompe de piscine, pèse-personne, onduleur, panneaux solaires et batterie domestique. Cycle en cours, programme, temps restant, température, alertes et commandes.
 
 Aucune marque supposée : chaque champ est une entité à choisir, elle fonctionne donc avec **n'importe quelle** intégration (Electrolux, Samsung, LG, Home Connect, Miele, une simple prise connectée…).
 
@@ -279,11 +279,19 @@ Seule `state_entity` est obligatoire, sauf sur un réfrigérateur où une sonde 
 | `toaster_layout` | grille-pain | `two` (défaut, deux fentes) \| `four` (quatre fentes, deux leviers) \| `long` (une fente longue pour deux tranches bout à bout). |
 | `hair_dryer_layout` | sèche-cheveux | `pistol` (défaut, sèche-cheveux classique vu de profil) \| `ring` (sèche-cheveux en anneau vu de face). |
 | `heat_threshold` | sèche-cheveux | Puissance à partir de laquelle il souffle de l'air chaud (300 W par défaut). En dessous, seul le ventilateur tourne. |
-| `screen_layout` | écran | `tv_feet` (défaut, télévision sur deux pieds) \| `tv_stand` (télévision sur pied central) \| `tv_wall` (télévision murale) \| `projector` (vidéoprojecteur sous sa toile) \| `computer` (écran et tour). Sans réglage, un nom qui dit projecteur ou ordinateur choisit le modèle, tout comme un `lock_entity`. |
-| `screen_image` | écran | L'image d'un écran allumé : `random` (défaut, une nouvelle à chaque allumage) ou l'une de `sunset`, `aquarium`, `bars`, `football`, `space`, `bounce`, `desktop`, `code`, `pong`. Un lecteur qui fournit une jaquette l'affiche à la place pendant la lecture. |
+| `screen_layout` | écran | `tv_feet` (défaut, télévision sur deux pieds) \| `tv_stand` (télévision sur pied central) \| `tv_wall` (télévision murale) \| `projector` (vidéoprojecteur sous sa toile) \| `computer` (écran et tour) \| `tablet_wall` (tablette murale sur son support plat) \| `tablet_frame` (tablette dans un cadre en bois, accrochée comme un tableau) \| `tablet_portrait` (tablette en hauteur avec une barre lumineuse). Sans réglage, un nom qui dit projecteur, ordinateur ou tablette choisit le modèle, tout comme un `lock_entity` ou l'un des champs de tablette ci-dessous. |
+| `screen_image` | écran | L'image d'un écran allumé : `random` (défaut, une nouvelle à chaque allumage) ou l'une de `sunset`, `aquarium`, `bars`, `football`, `space`, `bounce`, `desktop`, `code`, `pong`, `dashboard`. Une tablette montre `dashboard` par défaut. Un lecteur qui fournit une jaquette l'affiche à la place pendant la lecture. |
 | `media_entity` / `media2_entity` / `media3_entity` | écran | Jusqu'à trois `media_player` qui affichent quelque chose sur cet écran : la télé elle-même, et le boîtier ou la console qui a vraiment l'image. La card suit celui qui joue, puis celui en pause, puis celui à l'accueil, puis celui allumé ; à égalité, le premier. Sa ligne le nomme et donne l'application ou la source, le titre et *Son coupé*. Sans mesure de puissance, les lecteurs disent aussi si l'écran est éteint, en veille ou allumé. |
 | `lock_entity` | écran | Le verrouillage de session d'un ordinateur : un `lock`, un `binary_sensor` de classe verrou (off veut dire verrouillé) ou un capteur qui vaut `locked`, comme les remontent HASS.Agent, Go Hass Agent ou l'app macOS. Verrouillé, l'écran montre un cadenas. |
 | `source_entity` | écran | L'entrée de l'écran : un `select` / `input_select` (comme la *source d'entrée* d'un moniteur) ou un `media_player`, dont la liste de sources est utilisée. La carte affiche l'entrée en cours sur une ligne et ajoute un bouton qui ouvre la liste pour en choisir une autre. |
+| `screensaver_entity` | écran (tablette) | L'économiseur d'écran de la tablette, comme l'interrupteur *Écran de veille* de Fully Kiosk. Allumé, la card dit *Économiseur d'écran* et dessine une horloge sur la vitre. En interrupteur, il a aussi son bouton. |
+| `charging_entity` | écran (tablette) | Sur son chargeur : un `binary_sensor` comme le *Branché* de Fully Kiosk, ou un capteur qui vaut `charging` ou `full`. Le câble et un éclair s'affichent pendant la charge, et l'état le dit. |
+| `motion_entity` | écran (tablette) | Ce que voit sa caméra frontale : allumé, la caméra s'éclaire en bleu, comme la barre lumineuse de la tablette en hauteur. |
+| `url_entity` | écran (tablette) | La page affichée, comme la *Page actuelle* de Fully Kiosk : la card garde le chemin, sans l'adresse. |
+| `brightness_entity` | écran (tablette) | Sa luminosité : un `number` de 0 à 255 comme le donne Fully Kiosk, un pourcentage, ou une lumière. |
+| `last_interaction_entity` | écran (tablette) | Le dernier contact : un capteur d'horodatage, ou toute entité dont le dernier changement est ce moment. |
+| `reload_entity` | écran (tablette) | Un bouton qui recharge sa page, comme le *Charger l'URL de départ* de Fully Kiosk. |
+| `battery_entity` | écran (tablette) | Sa batterie, affichée dans un coin de la card, en orange à 20 % et moins. |
 | `network_layout` | réseau | `switch` \| `server` \| `nas` \| `rack` \| `router`. Sans lui, un nom qui dit NAS, Synology, QNAP, Unraid, switch, serveur, baie, routeur, modem, Bbox, Livebox, Freebox ou FRITZ!Box choisit le modèle, des disques en font un NAS, et les champs propres au routeur en font un routeur. |
 | `switch_ports` | réseau | Les ports dessinés sur un switch : `8`, `16`, `24` ou `32`. Sans lui, le plus petit qui contient `ports_total`. |
 | `ports_entity` / `ports_total` | réseau | Les ports utilisés, et combien le switch en a : une diode par port utilisé, en proportion au-delà de 32. Affiché *24/32*. |
@@ -606,9 +614,11 @@ power_entity: sensor.prise_seche_cheveux_puissance
 </details>
 
 <details>
-<summary><b>Écrans : télévision, vidéoprojecteur, ordinateur</b></summary>
+<summary><b>Écrans : télévision, vidéoprojecteur, ordinateur, tablette murale</b></summary>
 
 Lu sur sa prise connectée : *Éteint* à 0 W (un demi-watt compte encore pour rien), *En veille* jusqu'à `power_on_threshold` (20 W par défaut), *Allumé* au-dessus. En veille, le témoin s'allume et la ligne de puissance dit ce que coûte la veille ; allumé, l'écran montre une image tirée au hasard, ou celle choisie dans `screen_image`. Sans mesure, un `binary_sensor` en `state_entity`, un ping par exemple, dit seul *Allumé* ou *Éteint* ; l'interrupteur d'une prise dit seulement qu'il y a du courant, et une box en veille dit alors *En veille*. Ajoutez les lecteurs qui affichent quelque chose dessus, et la card dit *Lecture*, *En pause* ou *Accueil*, avec l'application et le titre. Cinq modèles : télévision sur pieds, sur pied central ou murale, vidéoprojecteur, ordinateur. Regardez le logo qui rebondit assez longtemps, il finit par tomber dans un coin.
+
+Une tablette murale qui affiche un tableau de bord a trois modèles à elle : à plat sur son support, dans un cadre en bois, ou en hauteur avec une barre lumineuse. Son interrupteur d'écran dit *Tableau de bord* ou *Écran éteint*, son économiseur *Économiseur d'écran* avec une horloge sur la vitre. Son câble ne pend que pendant la charge, sa caméra frontale s'allume quand elle voit quelqu'un, et sa batterie se place dans un coin. Des boutons pour l'écran, l'économiseur et le rechargement de la page apparaissent selon les entités données.
 
 ```yaml
 type: custom:ha-appliance-card
@@ -619,6 +629,21 @@ power_entity: sensor.prise_tv_power
 power_on_threshold: 30
 media_entity: media_player.lg_tv
 media2_entity: media_player.apple_tv
+```
+
+```yaml
+type: custom:ha-appliance-card
+appliance_type: screen
+screen_layout: tablet_frame
+name: Tablette entrée
+state_entity: switch.tablette_entree_screen
+screensaver_entity: switch.tablette_entree_screensaver
+charging_entity: binary_sensor.tablette_entree_plugged_in
+motion_entity: binary_sensor.tablette_entree_motion
+battery_entity: sensor.tablette_entree_battery
+url_entity: sensor.tablette_entree_current_page
+brightness_entity: number.tablette_entree_screen_brightness
+reload_entity: button.tablette_entree_load_start_url
 ```
 
 </details>
