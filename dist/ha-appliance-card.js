@@ -141,7 +141,7 @@ const T = {
     type_iron: "Iron", section_iron_layout: "Model", layout_iron: "Iron", layout_generator: "Steam generator",
     type_toaster: "Toaster", section_toaster_layout: "Model", layout_toaster_two: "Two slots", layout_toaster_four: "Four slots",
     layout_toaster_long: "Long slot", toaster_toasting: "Toasting", toaster_done: "Toast ready", type_air_purifier: "Air purifier",
-    type_screen: "Screen (TV, projector, computer)", section_screen_layout: "Model", layout_tv_feet: "TV on feet", layout_tv_stand: "TV on a stand", layout_tv_wall: "Wall-mounted TV", layout_projector: "Projector", layout_computer: "Computer", section_screen_image: "Picture on screen", img_random: "Random", img_sunset: "Sunset", img_aquarium: "Aquarium", img_bars: "Test card", img_football: "Football match", img_space: "Space", img_bounce: "Bouncing logo", img_desktop: "Desktop", img_code: "Scrolling code", img_pong: "Pong", screen_on: "On", screen_playing: "Playing", screen_home: "Home screen", screen_locked: "Locked", screen_muted: "Muted", screen_standby_threshold: "Standby up to this power (W)", section_media: "Media player", section_media2: "Second media player", section_media3: "Third media player", section_lock: "Session lock", layout_tablet_wall: "Wall tablet", layout_tablet_frame: "Framed tablet", layout_tablet_portrait: "Upright tablet with light bar", img_dashboard: "Dashboard", screen_dashboard: "Dashboard", screen_saver: "Screensaver", screen_dark: "Screen off", tab_charging: "charging", tab_line_page: "Page", tab_line_touched: "Last interaction", tab_screen: "Screen", tab_reload: "Reload page", section_screensaver: "Screensaver", section_tab_charging: "Charging sensor", section_tab_page: "Current page", section_tab_brightness: "Screen brightness", section_tab_touched: "Last interaction",
+    type_screen: "Screen (TV, projector, computer)", section_screen_layout: "Model", layout_tv_feet: "TV on feet", layout_tv_stand: "TV on a stand", layout_tv_wall: "Wall-mounted TV", layout_projector: "Projector", layout_computer: "Computer", section_screen_image: "Picture on screen", img_random: "Random", img_sunset: "Sunset", img_aquarium: "Aquarium", img_bars: "Test card", img_football: "Football match", img_space: "Space", img_bounce: "Bouncing logo", img_desktop: "Desktop", img_code: "Scrolling code", img_pong: "Pong", screen_on: "On", screen_playing: "Playing", screen_home: "Home screen", screen_locked: "Locked", screen_muted: "Muted", screen_standby_threshold: "Standby up to this power (W)", section_media: "Media player", section_media2: "Second media player", section_media3: "Third media player", section_lock: "Session lock", layout_tablet_wall: "Wall tablet", layout_tablet_frame: "Framed tablet", layout_tablet_portrait: "Upright tablet with light bar", img_dashboard: "Dashboard", screen_dashboard: "Dashboard", screen_saver: "Screensaver", screen_dark: "Screen off", tab_charging: "charging", tab_line_page: "Page", tab_line_touched: "Last interaction", tab_screen: "Screen", tab_reload: "Reload page", section_screensaver: "Screensaver", section_tab_charging: "Charging sensor", section_tab_page: "Current page", section_tab_brightness: "Screen brightness", section_tab_touched: "Last interaction", tab_restart: "Restart app", section_tab_screenshot: "Screenshot",
     type_hair_dryer: "Hair dryer", layout_hd_pistol: "Classic", layout_hd_ring: "Ring", hd_cool: "Cool air", hd_hot: "Hot air", hd_heat_threshold: "Hot air above this power (W)", fill_height: "Fill the height of its slot", done_alert: "Flash at the end of the cycle", done_seen: "Seen", no_power_threshold: "No power draw below (W)", group_appearance: "Appearance", show_name: "Show the name", show_state: "Show the state", transparent: "Transparent background", font_scale: "Text size", illustration_size: "Drawing size", compact_mode: "Compact mode", compact_off: "Off", compact_hide: "No drawing", compact_side: "Drawing on the side", group_laundry: "Laundry", group_kitchen: "Kitchen", group_heating: "Heating and hot water", group_air: "Air and climate", group_home: "Home and media", group_pets: "Pets", illustration_frame: "Same drawing height as the cards beside it", section_screen_source: "Input source", screen_source: "Input",
     type_network: "Network device (switch, NAS, server)", group_network: "Network and servers", layout_net_switch: "Switch", layout_net_server: "Server", layout_net_nas: "NAS", layout_net_rack: "Rack", net_ports_count: "Ports drawn", net_bays: "NAS bays", net_online: "Online", net_busy: "Busy", net_alert: "Alert", net_warn: "Disk to watch", section_net_cpu: "CPU usage (%)", section_net_memory: "Memory usage (%)", section_net_volume: "Volume used (%)", section_net_download: "Download rate", section_net_upload: "Upload rate", section_net_ports: "Active ports", net_ports_total: "Port count", section_net_poe: "PoE power", section_net_problem: "Problem alert", section_net_temperature: "Temperature", net_temp_alert: "Alert above this temperature (\u00b0C)", net_busy_threshold: "Busy above this rate (Mbit/s)", net_line_rate: "Throughput", net_line_load: "Load", net_line_volume: "Volume", section_net_disk1: "Disk 1", section_net_disk2: "Disk 2", section_net_disk3: "Disk 3", section_net_disk4: "Disk 4",
     type_robot: "Robot (vacuum, mop, mower)", layout_robot_vacuum: "Robot vacuum", layout_robot_mop: "Mopping robot", layout_robot_mower: "Robot mower", section_robot_station: "Base", robot_station_station: "Emptying or washing station", robot_station_base: "Charging base only", robot_shelter: "Shelter over the base", robot_shelter_style: "Shelter style", shelter_lean_to: "Wooden lean-to", shelter_shell: "Shell", robot_shelter_color: "Shell colour", delay_starts_in: "Starts in", section_delay: "Delayed start countdown", state_entity_optional: "State entity (optional)", color_green: "Green", color_orange: "Orange", robot_charging: "Charging", robot_docked: "Docked", robot_cleaning: "Cleaning", robot_mopping: "Mopping", robot_mowing: "Mowing", robot_edgecut: "Edge cutting", robot_returning: "Returning to base", robot_emptying: "Emptying the bin", robot_bin_full: "Bin full", robot_washing: "Washing the pads", robot_drying: "Drying the pads", robot_water_empty: "Water tank empty", robot_rain: "Rain delay", robot_idle: "Stopped", section_robot_status: "Detailed status", section_battery: "Battery", section_robot_bin: "Bin full alert", section_robot_water: "Water tank", section_robot_rain: "Rain", section_robot_error: "Error",
@@ -3000,7 +3000,8 @@ const STATE_DOMAINS = {
 // A model, a picture, the players it shows and a session lock belong to a
 // screen.
 const SCREEN_ONLY_FIELDS = ["screen_layout", "screen_image", "media_entity", "media2_entity", "media3_entity", "lock_entity", "source_entity",
-  "screensaver_entity", "charging_entity", "url_entity", "brightness_entity", "last_interaction_entity", "reload_entity"];
+  "screensaver_entity", "charging_entity", "url_entity", "brightness_entity", "last_interaction_entity", "reload_entity",
+  "restart_entity", "screenshot_entity"];
 // Ports, bays, disks and traffic belong to a network device.
 const NETWORK_ONLY_FIELDS = ["network_layout", "switch_ports", "bays", "busy_threshold", "temperature_alert", "cpu_entity",
   "memory_entity", "volume_entity", "download_entity", "upload_entity", "ports_entity", "ports_total", "poe_entity",
@@ -4034,13 +4035,15 @@ function screenControls(hass, cfg) {
   const menu = screenSourceOptions(hass, cfg);
   const out = menu ? [{ key: "screen_source", entity: menu.entity, icon: "mdi:video-input-hdmi", label: t(hass, "screen_source"), menu: true }] : [];
   // A wall tablet's own buttons (#62): its screen, its screensaver, and a
-  // reload of its page, each only when there is something to drive it.
+  // reload of its page and a restart of its app, each only when there is
+  // something to drive it.
   if (screenIsTablet(cfg, stateObj(hass, cfg.state_entity))) {
     const sw = (id) => ["switch", "input_boolean", "light"].includes(domainOf(id || ""));
     const on = (id) => { const st = stateObj(hass, id); return !!st && String(st.state).toLowerCase() === "on"; };
     if (!cfg.toggle_entity && sw(cfg.state_entity)) out.push({ key: "tab_screen", entity: cfg.state_entity, icon: "mdi:power", label: t(hass, "tab_screen"), on: on(cfg.state_entity) });
     if (sw(cfg.screensaver_entity)) out.push({ key: "tab_saver", entity: cfg.screensaver_entity, icon: "mdi:weather-night", label: t(hass, "screen_saver"), on: on(cfg.screensaver_entity) });
     if (cfg.reload_entity) out.push({ key: "tab_reload", entity: cfg.reload_entity, icon: "mdi:refresh", label: t(hass, "tab_reload") });
+    if (cfg.restart_entity) out.push({ key: "tab_restart", entity: cfg.restart_entity, icon: "mdi:restart", label: t(hass, "tab_restart") });
   }
   return out;
 }
@@ -13498,7 +13501,9 @@ class ApplianceCard extends HTMLElement {
       const rank = (p) => MEDIA_RANK[String(p.state).toLowerCase()] || 0;
       const active = players.reduce((best, p) => (rank(p) > (best ? rank(best) : 0) ? p : best), null);
       const ms = active ? String(active.state).toLowerCase() : "";
-      const sw = st && ["switch", "input_boolean", "binary_sensor"].includes(domainOf(cfg.state_entity)) ? String(st.state).toLowerCase() : "";
+      // A light too: Kiosk Satellite gives a tablet's screen as one, its
+      // brightness and all.
+      const sw = st && ["switch", "input_boolean", "binary_sensor", "light"].includes(domainOf(cfg.state_entity)) ? String(st.state).toLowerCase() : "";
       const limit = hasThreshold && isFinite(threshold) ? threshold : SCREEN_STANDBY_W;
       let power = null;
       // A ping or any on/off sensor says the screen itself answers; a plug
@@ -13535,7 +13540,12 @@ class ApplianceCard extends HTMLElement {
       const a = (active && active.attributes) || {};
       // What a player is playing has its cover, which says it better than
       // any picture of the card's.
-      const pic = (mode === "playing" || mode === "paused") && a.entity_picture ? String(a.entity_picture) : "";
+      // And a tablet's own screenshot, as a camera or an image entity,
+      // shows what its dashboard really looks like.
+      const shot = tablet && mode === "dashboard" && cfg.screenshot_entity ? stateObj(hass, cfg.screenshot_entity) : null;
+      const shotPic = shot && !["unavailable", "unknown"].includes(String(shot.state).toLowerCase()) && shot.attributes.entity_picture
+        ? String(shot.attributes.entity_picture) : "";
+      const pic = (mode === "playing" || mode === "paused") && a.entity_picture ? String(a.entity_picture) : shotPic;
       const cover = pic && this._hass && typeof this._hass.hassUrl === "function" ? this._hass.hassUrl(pic) : pic;
       const charging = tablet && screenCharging(hass, cfg.charging_entity);
       if (power !== null && !cfg.state_show_raw) {

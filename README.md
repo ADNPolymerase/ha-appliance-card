@@ -291,6 +291,8 @@ Only `state_entity` is required, except on a fridge where a probe or a door cont
 | `brightness_entity` | screen (tablet) | Its brightness: a `number` of 0 to 255 as Fully Kiosk gives it, a percentage, or a light. |
 | `last_interaction_entity` | screen (tablet) | When it was last touched: a timestamp sensor, or any entity whose last change is that moment. |
 | `reload_entity` | screen (tablet) | A button that reloads its page, such as Fully Kiosk's *Load start URL*. |
+| `restart_entity` | screen (tablet) | A button that restarts its app, such as Kiosk Satellite's *Restart app*. |
+| `screenshot_entity` | screen (tablet) | A `camera` or `image` of its screen, such as Kiosk Satellite's *Screenshot*: shown on the glass instead of the drawn dashboard while the dashboard is on. |
 | `battery_entity` | screen (tablet) | Its battery, shown in a corner of the card, orange at 20 % and below. |
 | `network_layout` | network | `switch` \| `server` \| `nas` \| `rack` \| `router`. Left out, a name that says NAS, Synology, QNAP, Unraid, switch, server, rack, router, modem, Bbox, Livebox, Freebox or FRITZ!Box picks the model, disks make it a NAS, and a router's own fields make it a router. |
 | `switch_ports` | network | The ports drawn on a switch: `8`, `16`, `24` or `32`. Left out, the smallest one that holds `ports_total`. |
@@ -618,7 +620,7 @@ power_entity: sensor.hair_dryer_plug_power
 
 Read from its smart plug: *Off* at 0 W (half a watt still counts as nothing), *Standby* up to `power_on_threshold` (20 W by default), *On* above it. On standby the light glows and the power line says what the standby costs; on, the screen shows a picture drawn at random, or the one set in `screen_image`. Without a meter, a `binary_sensor` as `state_entity`, a ping for instance, says *On* or *Off* by itself; a plug's switch only says it has power, so a box on standby then says *Standby*. Add the players that show something on it and the card says *Playing*, *Paused* or *Home screen*, with the app and the title. Five models: a TV on feet, on a stand or on the wall, a projector, a computer. Watch the bouncing logo long enough and it lands in a corner.
 
-A wall tablet that shows a dashboard has three models of its own: flat on its mount, in a wooden frame, or upright with a light bar. Its screen switch says *Dashboard* or *Screen off*, its screensaver *Screensaver* with a clock on the glass. Its cable only hangs from it while it charges, its front camera lights when it sees someone, and its battery sits in a corner. Buttons for the screen, the screensaver and a reload of the page show for the entities given.
+A wall tablet that shows a dashboard has three models of its own: flat on its mount, in a wooden frame, or upright with a light bar. Its screen switch, or the light Kiosk Satellite gives for it, says *Dashboard* or *Screen off*, its screensaver *Screensaver* with a clock on the glass. Its cable only hangs from it while it charges, its front camera lights when it sees someone, and its battery sits in a corner. Its screenshot, given as a camera, replaces the drawn dashboard. Buttons for the screen, the screensaver, a reload of the page and a restart of the app show for the entities given.
 
 ```yaml
 type: custom:ha-appliance-card

@@ -11129,4 +11129,40 @@ check('borne : ni un statut reconnu', evMode(evR('SuspendedEVSE', { power_entity
   check('editeur : les trois formes de tablette', ['tablet_wall', 'tablet_frame', 'tablet_portrait'].every((v) => edTab.includes(`value="${v}"`)), true);
 }
 
+// #62, as Kiosk Satellite gives it: the screen as a light, a restart button,
+// and a screenshot camera.
+{
+  const s = (state, attributes = {}) => ({ state: String(state), attributes, last_changed: new Date(Date.now() - 60000).toISOString() });
+  const KS = {
+    appliance_type: 'screen', screen_layout: 'tablet_wall', state_entity: 'light.ks_screen', brightness_entity: 'light.ks_screen',
+    reload_entity: 'button.ks_reload', restart_entity: 'button.ks_restart', screenshot_entity: 'camera.ks_shot',
+  };
+  const kst = (screen = 'on', shot = 'idle') => ({
+    'light.ks_screen': s(screen, screen === 'on' ? { brightness: 153 } : {}), 'button.ks_reload': s('unknown'), 'button.ks_restart': s('unknown'),
+    'camera.ks_shot': s(shot, { entity_picture: '/api/camera_proxy/camera.ks_shot?token=abc' }),
+  });
+  const sp = (v) => String(v ?? '').replace(/\s/g, ' ');
+  const on = render(KS, kst());
+  check('kiosk : l ecran en lumiere allume', stateLine(on), 'Dashboard');
+  check('kiosk : sa luminosite', sp(infoLine(on, 'Brightness')), '60 %');
+  check('kiosk : la capture sur la vitre', /<img class="scr-cover" src="\/api\/camera_proxy\/camera\.ks_shot\?token=abc"/.test(on), true);
+  check('kiosk : la capture remplace les tuiles', /class="si-dash"/.test(on), false);
+  check('kiosk : ses boutons, redemarrage compris', JSON.stringify(actionBtns(on).map((b) => b.split(':')[0])), JSON.stringify(['Screen', 'Reload page', 'Restart app']));
+  const off = render(KS, kst('off'));
+  check('kiosk : l ecran en lumiere eteint', stateLine(off), 'Screen off');
+  check('kiosk : eteint, pas de capture', /class="scr-cover"/.test(off), false);
+  check('kiosk : capture indisponible, les tuiles', /class="si-dash"/.test(render(KS, kst('on', 'unavailable'))), true);
+  check('kiosk : pas de capture sur l economiseur', /class="scr-cover"/.test(render({ ...KS, screensaver_entity: 'switch.ks_saver' }, { ...kst(), 'switch.ks_saver': s('on') })), false);
+  const calls = [];
+  const c = new Card();
+  c.setConfig({ type: 'custom:ha-appliance-card', ...KS });
+  c._hass = { ...HASS(kst()), callService: (domain, service, data) => calls.push(`${domain}.${service}:${data.entity_id}`) };
+  c._render();
+  for (const id of ['light.ks_screen', 'button.ks_restart']) fire(c._root.querySelectorAll('.action-btn, .light-badge').find((n) => n.getAttribute('data-entity') === id), 'click', { stopPropagation() {} });
+  check('kiosk : les boutons agissent', JSON.stringify(calls), JSON.stringify(['light.toggle:light.ks_screen', 'button.press:button.ks_restart']));
+  c.disconnectedCallback();
+  const ed = markup(newEditor({ appliance_type: 'screen', screen_layout: 'tablet_wall', state_entity: 'light.ks_screen' }));
+  check('editeur tablette : redemarrage et capture', ['restart_entity', 'screenshot_entity'].every((f) => ed.includes(`data-toggle="${f}"`)), true);
+}
+
 report();

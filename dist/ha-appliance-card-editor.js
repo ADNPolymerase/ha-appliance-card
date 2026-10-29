@@ -100,6 +100,8 @@ const SECTIONS = [
   { field: "brightness_entity", types: ["screen"], labelKey: "section_tab_brightness", includeDomains: ["number", "sensor", "light", "input_number"], when: (c) => screenIsTablet(c) },
   { field: "last_interaction_entity", types: ["screen"], labelKey: "section_tab_touched", includeDomains: ["sensor", "binary_sensor", "event", "input_datetime"], when: (c) => screenIsTablet(c) },
   { field: "reload_entity", types: ["screen"], labelKey: "tab_reload", includeDomains: ["button", "script", "input_button"], when: (c) => screenIsTablet(c) },
+  { field: "restart_entity", types: ["screen"], labelKey: "tab_restart", includeDomains: ["button", "script", "input_button"], when: (c) => screenIsTablet(c) },
+  { field: "screenshot_entity", types: ["screen"], labelKey: "section_tab_screenshot", includeDomains: ["camera", "image"], when: (c) => screenIsTablet(c) },
   // A network device: what it reports, each disk in its bay.
   { field: "download_entity", types: ["network"], labelKey: "section_net_download", includeDomains: ["sensor"], extra: (c) =>
       c._row("net_busy_threshold", "busy_threshold", { placeholder: String(NET_BUSY_MBIT) }) },
