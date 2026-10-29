@@ -11002,4 +11002,55 @@ check('borne : ni un statut reconnu', evMode(evR('SuspendedEVSE', { power_entity
   check('editeur camera : le bouton de sonnette', /data-toggle="ring_entity"/.test(markup(newEditor({ appliance_type: 'camera', state_entity: 'camera.porte' }))), true);
 }
 
+// #60: a screen's input, from a select or a media player's sources.
+{
+  const s = (state, attributes = {}) => ({ state: String(state), attributes });
+  const SRC = { appliance_type: 'screen', state_entity: 'media_player.g9', source_entity: 'select.g9_input' };
+  const sst = (input, on = 'on') => ({ 'media_player.g9': s(on), 'select.g9_input': s(input, { options: ['HDMI 1', 'HDMI 2', 'DisplayPort'] }) });
+  const calls = [];
+  const c = new Card();
+  c.setConfig({ type: 'custom:ha-appliance-card', ...SRC });
+  c._hass = { ...HASS(sst('HDMI 2')), callService: (domain, service, data) => calls.push({ domain, service, data }) };
+  c._render();
+  const html0 = markup(c);
+  check('ecran : l entree sur sa ligne', (infoLine(html0, 'Input') || '').replace(/\s/g, ' '), 'HDMI 2');
+  const btn = c._root.querySelectorAll('.action-btn, .light-badge').find((n) => n.getAttribute('data-menu'));
+  check('ecran : le bouton des entrees', !!btn, true);
+  fire(btn, 'click', { stopPropagation() {} });
+  const opened = markup(c);
+  check('ecran : toutes les entrees', (opened.match(/data-mode-option=/g) || []).length, 3);
+  check('ecran : l entree courante cochee', /class="mode-row sel"[^>]*data-mode-option="HDMI 2"/.test(opened), true);
+  fire(c._root.querySelectorAll('[data-mode-option]').find((n) => n.getAttribute('data-mode-option') === 'DisplayPort'), 'click', { stopPropagation() {} });
+  check('ecran : choisir une entree (select)', JSON.stringify(calls.at(-1)), JSON.stringify({ domain: 'select', service: 'select_option', data: { entity_id: 'select.g9_input', option: 'DisplayPort' } }));
+  c.disconnectedCallback();
+  // A media player's own sources.
+  const mcalls = [];
+  const m = new Card();
+  m.setConfig({ type: 'custom:ha-appliance-card', appliance_type: 'screen', state_entity: 'media_player.tv', source_entity: 'media_player.tv' });
+  m._hass = { ...HASS({ 'media_player.tv': s('on', { source: 'TV', source_list: ['TV', 'HDMI 1', 'HDMI 2'] }) }), callService: (domain, service, data) => mcalls.push({ domain, service, data }) };
+  m._render();
+  fire(m._root.querySelectorAll('.action-btn, .light-badge').find((n) => n.getAttribute('data-menu')), 'click', { stopPropagation() {} });
+  fire(m._root.querySelectorAll('[data-mode-option]').find((n) => n.getAttribute('data-mode-option') === 'HDMI 1'), 'click', { stopPropagation() {} });
+  check('ecran : choisir une source (media_player)', JSON.stringify(mcalls.at(-1)), JSON.stringify({ domain: 'media_player', service: 'select_source', data: { entity_id: 'media_player.tv', source: 'HDMI 1' } }));
+  m.disconnectedCallback();
+  check('ecran : sans source_entity, pas de menu', /data-menu/.test(render({ appliance_type: 'screen', state_entity: 'media_player.tv' }, { 'media_player.tv': s('on', { source: 'TV', source_list: ['TV', 'HDMI 1'] }) })), false);
+  check('ecran : eteint, pas de ligne d entree', infoLine(render(SRC, sst('HDMI 2', 'off')), 'Input'), null);
+  check('ecran : entree indisponible, pas de bouton', /data-menu/.test(render(SRC, { 'media_player.g9': s('on'), 'select.g9_input': s('unavailable', { options: ['HDMI 1', 'HDMI 2'] }) })), false);
+  check('ecran : source_entity suffit a reconnaitre un ecran', /class="machine [^"]*sc/.test(render({ state_entity: 'media_player.g9', source_entity: 'select.g9_input' }, sst('HDMI 1'))), true);
+  check('editeur ecran : la source d entree', /data-toggle="source_entity"/.test(markup(newEditor({ appliance_type: 'screen', state_entity: 'media_player.g9' }))), true);
+}
+
+// #61: a frame of the full drawing height keeps two robots' floors level.
+{
+  const s = (state, attributes = {}) => ({ state: String(state), attributes });
+  const R = { appliance_type: 'robot', state_entity: 'vacuum.r', robot_station: 'base' };
+  const st = { 'vacuum.r': s('docked') };
+  check('cadre : absent par defaut', /class="pic-frame"/.test(render(R, st)), false);
+  check('cadre : le dessin dans son cadre', /class="pic-frame">\s*<div class="machine/.test(render({ ...R, illustration_frame: true }, st)), true);
+  check('cadre : la hauteur pleine', /\.pic-frame \{ min-height: 116px;/.test(render({ ...R, illustration_frame: true }, st)), true);
+  check('cadre : suit la taille du dessin', /\.pic-frame \{ min-height: 58px;/.test(render({ ...R, illustration_frame: true, illustration_size: 0.5 }, st)), true);
+  check('cadre : pas en compact', /class="pic-frame"/.test(render({ ...R, illustration_frame: true, compact: 'side' }, st)), false);
+  check('editeur : case illustration_frame', /data-field="illustration_frame" data-type="checkbox"/.test(markup(newEditor({ ...R }))), true);
+}
+
 report();

@@ -90,6 +90,7 @@ const SECTIONS = [
   { field: "media2_entity", types: ["screen"], labelKey: "section_media2", includeDomains: ["media_player"] },
   { field: "media3_entity", types: ["screen"], labelKey: "section_media3", includeDomains: ["media_player"] },
   { field: "lock_entity", types: ["screen"], labelKey: "section_lock", includeDomains: ["binary_sensor", "sensor", "lock", "input_boolean"] },
+  { field: "source_entity", types: ["screen"], labelKey: "section_screen_source", includeDomains: ["select", "input_select", "media_player"] },
   // A network device: what it reports, each disk in its bay.
   { field: "download_entity", types: ["network"], labelKey: "section_net_download", includeDomains: ["sensor"], extra: (c) =>
       c._row("net_busy_threshold", "busy_threshold", { placeholder: String(NET_BUSY_MBIT) }) },
@@ -1286,6 +1287,7 @@ class ApplianceCardEditor extends HTMLElement {
           ${this._row("show_state", "show_state", { type: "checkbox", defaultOn: true })}
           ${this._row("transparent", "transparent", { type: "checkbox" })}
           ${this._row("fill_height", "fill_height", { type: "checkbox" })}
+          ${this._row("illustration_frame", "illustration_frame", { type: "checkbox" })}
         </div>
       </details>
       ${caps(this._type).zones ? `

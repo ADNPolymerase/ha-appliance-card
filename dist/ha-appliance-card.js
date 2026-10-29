@@ -142,7 +142,7 @@ const T = {
     type_toaster: "Toaster", section_toaster_layout: "Model", layout_toaster_two: "Two slots", layout_toaster_four: "Four slots",
     layout_toaster_long: "Long slot", toaster_toasting: "Toasting", toaster_done: "Toast ready", type_air_purifier: "Air purifier",
     type_screen: "Screen (TV, projector, computer)", section_screen_layout: "Model", layout_tv_feet: "TV on feet", layout_tv_stand: "TV on a stand", layout_tv_wall: "Wall-mounted TV", layout_projector: "Projector", layout_computer: "Computer", section_screen_image: "Picture on screen", img_random: "Random", img_sunset: "Sunset", img_aquarium: "Aquarium", img_bars: "Test card", img_football: "Football match", img_space: "Space", img_bounce: "Bouncing logo", img_desktop: "Desktop", img_code: "Scrolling code", img_pong: "Pong", screen_on: "On", screen_playing: "Playing", screen_home: "Home screen", screen_locked: "Locked", screen_muted: "Muted", screen_standby_threshold: "Standby up to this power (W)", section_media: "Media player", section_media2: "Second media player", section_media3: "Third media player", section_lock: "Session lock",
-    type_hair_dryer: "Hair dryer", layout_hd_pistol: "Classic", layout_hd_ring: "Ring", hd_cool: "Cool air", hd_hot: "Hot air", hd_heat_threshold: "Hot air above this power (W)", fill_height: "Fill the height of its slot", done_alert: "Flash at the end of the cycle", done_seen: "Seen", no_power_threshold: "No power draw below (W)", group_appearance: "Appearance", show_name: "Show the name", show_state: "Show the state", transparent: "Transparent background", font_scale: "Text size", illustration_size: "Drawing size", compact_mode: "Compact mode", compact_off: "Off", compact_hide: "No drawing", compact_side: "Drawing on the side", group_laundry: "Laundry", group_kitchen: "Kitchen", group_heating: "Heating and hot water", group_air: "Air and climate", group_home: "Home and media", group_pets: "Pets",
+    type_hair_dryer: "Hair dryer", layout_hd_pistol: "Classic", layout_hd_ring: "Ring", hd_cool: "Cool air", hd_hot: "Hot air", hd_heat_threshold: "Hot air above this power (W)", fill_height: "Fill the height of its slot", done_alert: "Flash at the end of the cycle", done_seen: "Seen", no_power_threshold: "No power draw below (W)", group_appearance: "Appearance", show_name: "Show the name", show_state: "Show the state", transparent: "Transparent background", font_scale: "Text size", illustration_size: "Drawing size", compact_mode: "Compact mode", compact_off: "Off", compact_hide: "No drawing", compact_side: "Drawing on the side", group_laundry: "Laundry", group_kitchen: "Kitchen", group_heating: "Heating and hot water", group_air: "Air and climate", group_home: "Home and media", group_pets: "Pets", illustration_frame: "Same drawing height as the cards beside it", section_screen_source: "Input source", screen_source: "Input",
     type_network: "Network device (switch, NAS, server)", group_network: "Network and servers", layout_net_switch: "Switch", layout_net_server: "Server", layout_net_nas: "NAS", layout_net_rack: "Rack", net_ports_count: "Ports drawn", net_bays: "NAS bays", net_online: "Online", net_busy: "Busy", net_alert: "Alert", net_warn: "Disk to watch", section_net_cpu: "CPU usage (%)", section_net_memory: "Memory usage (%)", section_net_volume: "Volume used (%)", section_net_download: "Download rate", section_net_upload: "Upload rate", section_net_ports: "Active ports", net_ports_total: "Port count", section_net_poe: "PoE power", section_net_problem: "Problem alert", section_net_temperature: "Temperature", net_temp_alert: "Alert above this temperature (\u00b0C)", net_busy_threshold: "Busy above this rate (Mbit/s)", net_line_rate: "Throughput", net_line_load: "Load", net_line_volume: "Volume", section_net_disk1: "Disk 1", section_net_disk2: "Disk 2", section_net_disk3: "Disk 3", section_net_disk4: "Disk 4",
     type_robot: "Robot (vacuum, mop, mower)", layout_robot_vacuum: "Robot vacuum", layout_robot_mop: "Mopping robot", layout_robot_mower: "Robot mower", section_robot_station: "Base", robot_station_station: "Emptying or washing station", robot_station_base: "Charging base only", robot_shelter: "Shelter over the base", robot_shelter_style: "Shelter style", shelter_lean_to: "Wooden lean-to", shelter_shell: "Shell", robot_shelter_color: "Shell colour", delay_starts_in: "Starts in", section_delay: "Delayed start countdown", state_entity_optional: "State entity (optional)", color_green: "Green", color_orange: "Orange", robot_charging: "Charging", robot_docked: "Docked", robot_cleaning: "Cleaning", robot_mopping: "Mopping", robot_mowing: "Mowing", robot_edgecut: "Edge cutting", robot_returning: "Returning to base", robot_emptying: "Emptying the bin", robot_bin_full: "Bin full", robot_washing: "Washing the pads", robot_drying: "Drying the pads", robot_water_empty: "Water tank empty", robot_rain: "Rain delay", robot_idle: "Stopped", section_robot_status: "Detailed status", section_battery: "Battery", section_robot_bin: "Bin full alert", section_robot_water: "Water tank", section_robot_rain: "Rain", section_robot_error: "Error",
     type_pool_pump: "Pool pump", pool_filtering: "Filtering", pool_chlorinating: "Chlorine injection", pool_backwash: "Backwash", pool_frost: "Frost protection", pool_light_on: "light on", section_water_temperature: "Water temperature", section_air_temperature: "Air temperature", section_ph: "pH", section_redox: "RedOx (ORP)", section_filtration_time: "Filtration time today", section_pressure: "Filter pressure", pool_pressure_alert: "Alert above this pressure (bar)", section_pool_mode: "Pump mode", section_chlorine_pump: "Chlorine pump", section_chlorine_level: "Chlorine tank level", section_backwash: "Backwash", section_frost: "Frost protection", section_pool_alert: "Alert", pool_line_water: "Water", pool_line_air: "Air", pool_line_filtered: "Filtered today", pool_line_pressure: "Pressure", pool_line_chlorine: "Chlorine tank", pool_line_mode: "Mode",
@@ -2999,7 +2999,7 @@ const STATE_DOMAINS = {
 };
 // A model, a picture, the players it shows and a session lock belong to a
 // screen.
-const SCREEN_ONLY_FIELDS = ["screen_layout", "screen_image", "media_entity", "media2_entity", "media3_entity", "lock_entity"];
+const SCREEN_ONLY_FIELDS = ["screen_layout", "screen_image", "media_entity", "media2_entity", "media3_entity", "lock_entity", "source_entity"];
 // Ports, bays, disks and traffic belong to a network device.
 const NETWORK_ONLY_FIELDS = ["network_layout", "switch_ports", "bays", "busy_threshold", "temperature_alert", "cpu_entity",
   "memory_entity", "volume_entity", "download_entity", "upload_entity", "ports_entity", "ports_total", "poe_entity",
@@ -3929,6 +3929,47 @@ function lampControls(hass, cfg) {
   const st = stateObj(hass, cfg.state_entity);
   if (!st || cfg.toggle_entity || !["light", "switch", "input_boolean"].includes(domainOf(cfg.state_entity))) return [];
   return [{ key: "toggle", entity: cfg.state_entity, icon: "mdi:lightbulb", label: t(hass, "toggle"), on: String(st.state).toLowerCase() === "on" }];
+}
+
+// A screen's input, picked from a menu like a ventilation unit's mode (#60):
+// the options of a select, or the sources a media player offers.
+function screenSourceOptions(hass, cfg) {
+  const id = cfg.source_entity;
+  const st = id ? stateObj(hass, id) : null;
+  if (!st || ["unavailable", "unknown"].includes(String(st.state).toLowerCase())) return null;
+  const dom = domainOf(id);
+  const a = st.attributes || {};
+  if ((dom === "select" || dom === "input_select") && Array.isArray(a.options) && a.options.length > 1) {
+    return { entity: id, current: st.state, options: a.options.filter((o) => String(o).trim() !== ""), dom, kind: "source" };
+  }
+  if (dom === "media_player" && Array.isArray(a.source_list) && a.source_list.length > 1) {
+    return { entity: id, current: a.source, options: a.source_list, dom, kind: "source" };
+  }
+  return null;
+}
+// A source in words: a select's own translation, otherwise its name as given.
+function screenSourceLabel(hass, st, option) {
+  if (st && ["select", "input_select"].includes(domainOf(st.entity_id)) && typeof hass.formatEntityState === "function") {
+    try {
+      const own = hass.formatEntityState(st, option);
+      if (own) return own;
+    } catch (e) { /* its name, then */ }
+  }
+  return String(option);
+}
+// The menu a card opens from its buttons, if any.
+function cardMenuOf(hass, cfg, cap) {
+  if (cap && cap.screen) return screenSourceOptions(hass, cfg);
+  if (cap && cap.hrv) return hrvModeOptions(hass, cfg);
+  return null;
+}
+function cardMenuLabel(hass, menu, option) {
+  const st = stateObj(hass, menu.entity);
+  return menu.kind === "source" ? screenSourceLabel(hass, st, option) : hrvModeLabel(hass, st, option);
+}
+function screenControls(hass, cfg) {
+  const menu = screenSourceOptions(hass, cfg);
+  return menu ? [{ key: "screen_source", entity: menu.entity, icon: "mdi:video-input-hdmi", label: t(hass, "screen_source"), menu: true }] : [];
 }
 
 // A ventilation unit's controls: its mode, picked from a menu in the card
@@ -10804,12 +10845,15 @@ class ApplianceCard extends HTMLElement {
     return seen.total > 0 ? Math.max(0, Math.min(100, (1 - left / seen.total) * 100)) : null;
   }
 
-  // A mode picked in the menu: a select's option, or a fan's preset.
+  // A mode picked in the menu: a select's option, a fan's preset, or a
+  // media player's source.
   _pickMode(option) {
     const cfg = this._config || {};
-    const menu = this._hass ? hrvModeOptions(this._hass, cfg) : null;
+    const cap = this._hass ? caps(detectApplianceType(cfg, stateObj(this._hass, cfg.state_entity))) : null;
+    const menu = this._hass ? cardMenuOf(this._hass, cfg, cap) : null;
     if (!menu || !menu.options.includes(option)) return this._render();
     if (menu.dom === "fan") this._hass.callService("fan", "set_preset_mode", { entity_id: menu.entity, preset_mode: option });
+    else if (menu.dom === "media_player") this._hass.callService("media_player", "select_source", { entity_id: menu.entity, source: option });
     else this._hass.callService(menu.dom, "select_option", { entity_id: menu.entity, option });
     this._render();
   }
@@ -13375,6 +13419,10 @@ class ApplianceCard extends HTMLElement {
           extraLines.push({ key: "media", icon: "mdi:television-play", label: a.friendly_name || active.entity_id, value, entity: active.entity_id });
         }
       }
+      const source = lit ? screenSourceOptions(hass, cfg) : null;
+      if (source && source.current) {
+        extraLines.push({ key: "screen_source", icon: "mdi:video-input-hdmi", label: t(hass, "screen_source"), value: keepTogether(screenSourceLabel(hass, stateObj(hass, source.entity), source.current)), entity: source.entity });
+      }
       screen = { mode, layout, image: this._screenImage || pool[0], cover, muted };
     }
 
@@ -14067,6 +14115,7 @@ class ApplianceCard extends HTMLElement {
       ...robotControls(hass, cfg, robot),
       ...(cap.diffuser ? diffuserControls(hass, cfg) : []),
       ...(cap.hrv ? hrvControls(hass, cfg) : []),
+      ...(cap.screen ? screenControls(hass, cfg) : []),
       ...(cap.lamp ? lampControls(hass, cfg) : []),
     ]
       .map((a) => (a.key && a.key !== "toggle" ? { ...a, option: cfg[`${a.key}_option`] ?? a.option, value: cfg[`${a.key}_value`] ?? a.value } : a))
@@ -14204,6 +14253,11 @@ class ApplianceCard extends HTMLElement {
         .corner-btn:hover { background: var(--secondary-background-color, rgba(0, 0, 0, 0.04)); }
         .top { display: flex; flex-direction: column; align-items: center; text-align: center; cursor: pointer; }
         .machine { position: relative; width: 96px; height: 108px; margin: 0 auto 8px; zoom: ${illustrationSizeOf(cfg.illustration_size)}; }
+        /* illustration_frame: every drawing sits at the bottom of a frame of
+           the full height, so a robot without its station keeps its floor
+           level with one that has it, side by side (#61). */
+        .pic-frame { min-height: ${Math.round(116 * illustrationSizeOf(cfg.illustration_size))}px; display: flex; flex-direction: column; justify-content: flex-end; }
+        .pic-frame > .machine { margin-left: auto; margin-right: auto; }
         ${illustrationCss(applianceType, color)}
         .name { font-size: 1.2em; font-weight: 500; color: var(--primary-text-color, #1c1c1c); }
         .state-line { font-size: 1.05em; color: ${color}; margin-top: 2px; }
@@ -14507,9 +14561,9 @@ class ApplianceCard extends HTMLElement {
     // current one ticked.
     const menuAction = actions.find((a) => a.menu);
     if (!menuAction) this._modeMenuOpen = false;
-    const modeMenu = menuAction && this._modeMenuOpen ? hrvModeOptions(hass, cfg) : null;
+    const modeMenu = menuAction && this._modeMenuOpen ? cardMenuOf(hass, cfg, cap) : null;
     const modeMenuHtml = modeMenu
-      ? `<div class="mode-menu" role="listbox">${modeMenu.options.map((o) => `<div class="mode-row${o === modeMenu.current ? " sel" : ""}" role="option" aria-selected="${o === modeMenu.current}" data-mode-option="${esc(o)}"><span>${esc(hrvModeLabel(hass, stateObj(hass, modeMenu.entity), o))}</span>${o === modeMenu.current ? `<ha-icon icon="mdi:check"></ha-icon>` : ""}</div>`).join("")}</div>`
+      ? `<div class="mode-menu" role="listbox">${modeMenu.options.map((o) => `<div class="mode-row${o === modeMenu.current ? " sel" : ""}" role="option" aria-selected="${o === modeMenu.current}" data-mode-option="${esc(o)}"><span>${esc(cardMenuLabel(hass, modeMenu, o))}</span>${o === modeMenu.current ? `<ha-icon icon="mdi:check"></ha-icon>` : ""}</div>`).join("")}</div>`
       : "";
     const actionsHtml = actions.length
       ? `<div class="actions-row">${actions
@@ -14635,7 +14689,7 @@ class ApplianceCard extends HTMLElement {
         ${battBadgeHtml}
         ${cornersHtml}
         <div class="top" id="header">
-          ${iconHtml}
+          ${cfg.illustration_frame ? `<div class="pic-frame">${iconHtml}</div>` : iconHtml}
           ${titleHtml}
         </div>
         ${barHtml}
