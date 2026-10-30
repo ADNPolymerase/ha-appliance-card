@@ -339,7 +339,7 @@ Only `state_entity` is required, except on a fridge where a probe or a door cont
 | `supply_fan_entity` / `exhaust_fan_entity` / `fan_max_rpm` | HRV | Each fan's speed in rpm: each one turns at the speed of its motor, up to `fan_max_rpm` (2000 by default), and the line gives its rpm and its airflow (`airflow_entity` for supply, `exhaust_airflow_entity` for exhaust). |
 | `fan_speed_entity` | HRV | The speed in %, when the unit keeps it in a number of its own. |
 | `current_humidity_entity` / `target_humidity_entity` / `humidity_control_entity` | HRV | The humidity and its setpoint, on a line and on the drawing while humidity control runs. The humidity control switch makes it *Humidity control* and gets a button. |
-| `camera_layout` | camera | `indoor` (a pan and tilt camera) \| `tube` (Netatmo Welcome) \| `outdoor` (on its wall arm) \| `dome` (on the ceiling) \| `doorbell` (a video doorbell). Left out, a camera with a `ring_entity` or a name that says doorbell is a doorbell, a Netatmo indoor camera is a tube, a name that says dome a dome, and a name or a brand that says outdoor, garden, front, back, Arlo or spotlight an outdoor camera. |
+| `camera_layout` | camera | `indoor` (a pan and tilt camera) \| `tube` (Netatmo Welcome) \| `outdoor` (a battery camera like an Arlo, on its wall bracket) \| `dome` (on the ceiling) \| `doorbell` (a video doorbell). Left out, a camera with a `ring_entity` or a name that says doorbell is a doorbell, a Netatmo indoor camera is a tube, a name that says dome a dome, and a name or a brand that says outdoor, garden, front, back, Arlo or spotlight an outdoor camera. |
 | `ring_entity` | camera | The doorbell's button: a binary sensor on while it is pressed (Reolink's *visitor*), or an event entity (Ring, Nest, UniFi Protect), *Ringing* for 30 seconds after its last `ring`. The ring of light beats, then a *Last ring* line. |
 | `motion_entity` | camera | A motion sensor: *Motion detected* while it is on, orange waves in front of the lens, then a *Last motion* line. |
 | `recording_entity` | camera | A recording sensor, for the integrations whose camera entity does not say *recording*. |
@@ -804,7 +804,7 @@ nominal_power: 520
 <details>
 <summary><b>Cameras</b></summary>
 
-A camera's state, not its picture: Home Assistant has cards for that. Its `state_entity` is the camera entity: *Idle*, *Streaming*, *Recording* and *Off* come from it, *Motion detected* from a motion sensor, and *Offline* from a connectivity sensor that is off. Four shapes, found from the name and the brand: a pan and tilt indoor camera, a Netatmo Welcome tube, an outdoor camera on its arm and a dome.
+A camera's state, not its picture: Home Assistant has cards for that. Its `state_entity` is the camera entity: *Idle*, *Streaming*, *Recording* and *Off* come from it, *Motion detected* from a motion sensor, and *Offline* from a connectivity sensor that is off. Four shapes, found from the name and the brand: a pan and tilt indoor camera, a Netatmo Welcome tube, an outdoor battery camera like an Arlo on its wall bracket, and a dome.
 
 ```yaml
 type: custom:ha-appliance-card

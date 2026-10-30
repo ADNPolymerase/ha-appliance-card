@@ -6691,6 +6691,11 @@ const CAM_DEFS = `<defs>
 <linearGradient id="cam-g-dbglass" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#2a323b"/><stop offset=".5" stop-color="#0e1216"/><stop offset="1" stop-color="#05070a"/></linearGradient>
 <radialGradient id="cam-g-pir" cx=".4" cy=".35" r=".7"><stop offset="0" stop-color="#6b737c"/><stop offset="1" stop-color="#1b2026"/></radialGradient>
 <linearGradient id="cam-g-blk" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#05070a"/><stop offset=".35" stop-color="#2a3138"/><stop offset=".6" stop-color="#0d1014"/><stop offset="1" stop-color="#030405"/></linearGradient>
+<filter id="cam-f-soft" x="-40%" y="-80%" width="180%" height="260%"><feGaussianBlur stdDeviation="2.4"/></filter>
+<linearGradient id="cam-g-cyl" x1="0" y1="0" x2="1" y2="0"><stop offset="0" style="stop-color:var(--ac-body-lo,#c9d0d7)"/><stop offset=".3" style="stop-color:var(--ac-body-hi,#fff)"/><stop offset=".7" style="stop-color:var(--ac-body,#eef1f4)"/><stop offset="1" style="stop-color:var(--ac-body-lo,#c9d0d7)"/></linearGradient>
+<linearGradient id="cam-g-visor" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2b333c"/><stop offset=".45" stop-color="#0d1115"/><stop offset="1" stop-color="#05070a"/></linearGradient>
+<linearGradient id="cam-g-ceil" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#d9d4cb" stop-opacity="0"/><stop offset=".18" stop-color="#e3dfd7"/><stop offset=".82" stop-color="#e3dfd7"/><stop offset="1" stop-color="#d9d4cb" stop-opacity="0"/></linearGradient>
+<linearGradient id="cam-g-ceiledge" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#b9b2a6" stop-opacity="0"/><stop offset=".18" stop-color="#c4bdb1"/><stop offset=".82" stop-color="#c4bdb1"/><stop offset="1" stop-color="#b9b2a6" stop-opacity="0"/></linearGradient>
 </defs>`;
 const CAM_EDGE = 'stroke="rgba(0,0,0,.28)"';
 function camLens(x, y, r, irR) {
@@ -6705,18 +6710,29 @@ function camLens(x, y, r, irR) {
 }
 const camWaves = (x, y) => `<g class="cam-waves" transform="translate(${x} ${y})"><path d="M6 -7 Q11 0 6 7"/><path d="M12 -12 Q20 0 12 12"/><path d="M18 -17 Q29 0 18 17"/></g>`;
 const CAM_REC = `<g class="cam-rec"><rect x="4" y="4" width="25" height="11" rx="3" fill="#000" opacity=".55"/><circle cx="9.5" cy="9.5" r="2.4" fill="#ff3b30"/><text x="13.5" y="12.4" font-size="7.5" font-family="Arial, sans-serif" font-weight="700" fill="#fff">REC</text></g>`;
+// A soft shadow on the floor or on the wall, blurred rather than a hard ellipse.
+const camShadow = (cx, cy, rx, ry, op = .24) => `<ellipse cx="${cx}" cy="${cy}" rx="${rx}" ry="${ry}" fill="#000" opacity="${op}" filter="url(#cam-f-soft)"/>`;
 const CAMERA_SVGS = {
-  indoor: () => `<ellipse cx="60" cy="110" rx="30" ry="4" fill="#000" opacity=".15"/>
-<path d="M38 88 Q38 82 44 81 H76 Q82 82 82 88 V104 Q82 109 76 109 H44 Q38 109 38 104 Z" fill="url(#cam-g-sh)" ${CAM_EDGE} stroke-width=".6"/>
-<ellipse cx="60" cy="83" rx="21" ry="3.6" style="fill:var(--ac-body-hi,#fff)" opacity=".7"/>
-<rect x="52" y="76" width="16" height="8" rx="3" fill="url(#cam-g-shv)" ${CAM_EDGE} stroke-width=".5"/>
-<circle cx="60" cy="47" r="31" fill="url(#cam-g-sph)" ${CAM_EDGE} stroke-width=".7"/>
-<g class="cam-on"><ellipse cx="60" cy="47" rx="21" ry="18.5" fill="#111418"/><ellipse cx="60" cy="47" rx="21" ry="18.5" fill="url(#cam-g-glass)" opacity=".9"/>
-${camLens(60, 46, 7.2, 12.5)}<circle cx="49" cy="38" r="1.3" fill="#2b3946"/><circle class="cam-led" cx="60" cy="61" r="1.5"/>
-<path d="M44 36 Q52 31 62 31" stroke="#fff" stroke-width="1.4" opacity=".18" fill="none" stroke-linecap="round"/></g>
-<g class="cam-off"><path d="M41 70 Q60 80 79 70 Q74 77 60 78 Q46 77 41 70 Z" fill="#111418"/><path d="M36 44 Q60 38 84 44" fill="none" ${CAM_EDGE} stroke-width=".7"/></g>
-${camWaves(84, 46)}${CAM_REC}`,
-  tube: () => `<ellipse cx="60" cy="110" rx="22" ry="3.6" fill="#000" opacity=".18"/>
+  // A pan-and-tilt camera, after the Tapo C200 or the Ezviz C6: a round head
+  // with a black face on a neck and a round foot. Tilted down for privacy.
+  indoor: () => `${camShadow(60, 113, 27, 3.6)}
+<path d="M35 99 V106 A25 5.6 0 0 0 85 106 V99 Z" fill="url(#cam-g-cyl)" ${CAM_EDGE} stroke-width=".5"/>
+<ellipse cx="60" cy="99" rx="25" ry="5.6" fill="url(#cam-g-shv)" ${CAM_EDGE} stroke-width=".5"/>
+<ellipse cx="60" cy="98.6" rx="16" ry="3.2" fill="#000" opacity=".06"/>
+<path d="M52.5 76 V97 A7.5 1.8 0 0 0 67.5 97 V76 Z" fill="url(#cam-g-cyl)" ${CAM_EDGE} stroke-width=".5"/>
+<ellipse cx="60" cy="80" rx="9.5" ry="2.6" fill="url(#cam-g-cyl)" ${CAM_EDGE} stroke-width=".5"/>
+<circle cx="60" cy="46" r="31" fill="url(#cam-g-sph)" ${CAM_EDGE} stroke-width=".7"/>
+<path d="M33 60 Q60 72 87 60" stroke="#000" stroke-width=".6" opacity=".12" fill="none"/>
+<g class="cam-on"><rect x="38.5" y="26" width="43" height="41" rx="19" fill="url(#cam-g-visor)"/>
+<path d="M44 33 Q50 28.5 60 28.4" stroke="#fff" stroke-width="1.4" opacity=".22" fill="none" stroke-linecap="round"/>
+${camLens(60, 45, 7.4, 12.6)}<circle cx="47.6" cy="36.4" r="1.2" fill="#2b3946"/><circle cx="72.4" cy="36.4" r="1.2" fill="#2b3946"/>
+<circle class="cam-led" cx="60" cy="61" r="1.5"/></g>
+<g class="cam-off"><path d="M41 69 Q60 80 79 69 Q74 76.5 60 77.5 Q46 76.5 41 69 Z" fill="#0d1115"/><path d="M33 40 Q60 33 87 40" fill="none" ${CAM_EDGE} stroke-width=".7"/><circle cx="60" cy="24" r="1.4" fill="rgba(0,0,0,.18)"/></g>
+<path d="M38 24 Q46 16 58 15.5" stroke="#fff" stroke-width="2.4" opacity=".55" fill="none" stroke-linecap="round"/>
+${camWaves(86, 46)}${CAM_REC}`,
+  // The Netatmo indoor camera: a tube of brushed aluminium, a black window
+  // at the top with the lens, a light under it.
+  tube: () => `${camShadow(60, 108.5, 20, 3.6, .3)}
 <path d="M43 16 V104 A17 5 0 0 0 77 104 V16 Z" fill="url(#cam-g-al)"/>
 <ellipse cx="60" cy="16" rx="17" ry="5" class="cam-al-top"/><ellipse cx="60" cy="16" rx="15.5" ry="4.2" fill="url(#cam-g-al)" opacity=".8"/>
 <path d="M47 22 Q60 26 73 22 V60 Q60 64 47 60 Z" fill="url(#cam-g-blk)"/>
@@ -6724,46 +6740,60 @@ ${camWaves(84, 46)}${CAM_REC}`,
 <g class="cam-on">${camLens(60, 38, 6.2, 9.5)}</g>
 <g class="cam-off"><circle cx="60" cy="38" r="7.8" fill="#2a3037"/><circle cx="60" cy="38" r="5" fill="#1c2127"/></g>
 <circle class="cam-led" cx="60" cy="54" r="1.4"/>
-<path d="M48 68 V100 M52 68 V102 M68 68 V102 M72 68 V100" stroke="#fff" stroke-width=".5" opacity=".25"/>
+<path d="M49 68 V100 M53 68 V102 M67 68 V102 M71 68 V100" stroke="#fff" stroke-width=".5" opacity=".25"/>
 ${camWaves(74, 38)}${CAM_REC}`,
-  outdoor: () => `<g transform="translate(-4 4)">
-<rect x="-4" y="-8" width="13" height="132" class="cam-wall"/>
-<rect x="7" y="56" width="11" height="34" rx="3" fill="url(#cam-g-shv)" ${CAM_EDGE} stroke-width=".6"/>
-<circle cx="12.5" cy="61" r="1.2" fill="rgba(0,0,0,.3)"/><circle cx="12.5" cy="85" r="1.2" fill="rgba(0,0,0,.3)"/>
-<path d="M17 70 Q30 70 34 62" style="stroke:var(--ac-body-lo,#c9d0d7)" stroke-width="7" fill="none" stroke-linecap="round"/>
-<path d="M17 70 Q30 70 34 62" style="stroke:var(--ac-body,#eef1f4)" stroke-width="4" fill="none" stroke-linecap="round"/>
-<circle cx="36" cy="60" r="5.5" fill="url(#cam-g-sph)" ${CAM_EDGE} stroke-width=".6"/>
-<g transform="rotate(10 60 50)">
-<rect x="30" y="38" width="66" height="25" rx="12" fill="url(#cam-g-shv)" ${CAM_EDGE} stroke-width=".7"/>
-<path d="M38 41 H90" stroke="#fff" stroke-width="2" opacity=".35" stroke-linecap="round"/>
-<path d="M44 37 Q44 31 52 31 H106 Q110 31 110 35 V38 H44 Z" fill="url(#cam-g-shv)" ${CAM_EDGE} stroke-width=".7"/>
-<ellipse cx="96" cy="50.5" rx="7" ry="12.5" style="fill:var(--ac-body-lo,#c9d0d7)"/>
-<ellipse cx="97.5" cy="50.5" rx="6" ry="11.3" fill="#111418"/>
-<g class="cam-on">${camLens(98.5, 50.5, 5.2, 0)}<g class="cam-ir"><circle cx="98.5" cy="41.5" r="1"/><circle cx="98.5" cy="59.5" r="1"/><circle cx="95" cy="44" r=".9"/><circle cx="95" cy="57" r=".9"/></g></g>
-<g class="cam-off"><ellipse cx="97.5" cy="50.5" rx="6" ry="11.3" style="fill:var(--ac-body,#eef1f4)" ${CAM_EDGE} stroke-width=".6"/><path d="M93 50.5 H102" ${CAM_EDGE} stroke-width=".8"/></g>
-<circle class="cam-led" cx="88" cy="58" r="1.3"/>
-<rect x="32" y="22" width="3" height="18" rx="1.5" style="fill:var(--ac-body-lo,#c9d0d7)"/>
-</g></g>${camWaves(100, 64)}${CAM_REC}`,
-  dome: () => `<g transform="translate(60 0) scale(1.45) translate(-60 0)">
-<rect x="-40" y="-6" width="200" height="20" class="cam-ceiling"/>
-<rect x="-40" y="13" width="200" height="1.5" fill="#000" opacity=".08"/>
-<path d="M18 14 H102 Q102 24 92 30 H28 Q18 24 18 14 Z" fill="url(#cam-g-shv)" ${CAM_EDGE} stroke-width=".7"/>
-<circle cx="30" cy="20" r="1.3" fill="rgba(0,0,0,.3)"/><circle cx="90" cy="20" r="1.3" fill="rgba(0,0,0,.3)"/>
-<rect x="26" y="29" width="68" height="5" rx="2" style="fill:var(--ac-body-lo,#c9d0d7)"/>
-<path d="M30 34 A30 30 0 0 0 90 34 Z" fill="#0d1115"/>
-<g class="cam-on"><ellipse cx="66" cy="52" rx="15" ry="13" fill="#1a1f25"/>${camLens(67, 53, 6.4, 10.5)}</g>
-<g class="cam-off"><path d="M38 40 Q60 56 82 40" fill="#2a3037"/><path d="M46 46 Q60 52 74 46" stroke="#3b434c" stroke-width="1.2" fill="none"/></g>
-<path d="M30 34 A30 30 0 0 0 90 34 Z" fill="url(#cam-g-smoke)" opacity=".55"/>
-<path d="M37 40 Q42 56 56 61" stroke="#fff" stroke-width="2.4" fill="none" opacity=".3" stroke-linecap="round"/>
-<path d="M30 34 A30 30 0 0 0 90 34" fill="none" ${CAM_EDGE} stroke-width=".7"/>
-<circle class="cam-led" cx="46" cy="45" r="1.3"/>
-</g>${camWaves(86, 82)}<g transform="translate(0 24)">${CAM_REC}</g>`,
+  // A wall camera, after the Arlo Essential and Pro: a white box with
+  // rounded corners, seen three-quarters, its black glass front standing
+  // upright with the lens at the top, on a white wall bracket whose stem
+  // holds it from below by a ball joint.
+  outdoor: () => `${camShadow(17, 92, 7, 16, .18)}
+<rect x="9" y="74" width="15" height="36" rx="5" fill="url(#cam-g-shv)" ${CAM_EDGE} stroke-width=".6"/>
+<rect x="11" y="76" width="2.6" height="32" rx="1.3" fill="#fff" opacity=".55"/>
+<circle cx="16.5" cy="79.5" r="1.1" fill="rgba(0,0,0,.28)"/><circle cx="16.5" cy="104.5" r="1.1" fill="rgba(0,0,0,.28)"/>
+<path d="M23 92 H52 Q58 92 58 86 V80" style="stroke:var(--ac-body-lo,#c9d0d7)" stroke-width="7.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M23 92 H52 Q58 92 58 86 V80" style="stroke:var(--ac-body,#eef1f4)" stroke-width="4.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M25 90.6 H51" stroke="#fff" stroke-width="1.2" opacity=".7" stroke-linecap="round"/>
+${camShadow(64, 78, 26, 3, .18)}
+<path d="M66 18 L40 23 Q31 25 31 34 V62 Q31 71 40 72 L66 76 Z" fill="url(#cam-g-sh)" ${CAM_EDGE} stroke-width=".6"/>
+<path d="M66 18 L40 23 Q31 25 31 34 V62 Q31 71 40 72 L66 76 Z" fill="#000" opacity=".07"/>
+<path d="M40 23 L66 18" stroke="#fff" stroke-width="2" opacity=".75" stroke-linecap="round"/>
+<path d="M35 32 V62" stroke="#fff" stroke-width="2.2" opacity=".5" stroke-linecap="round"/>
+<path d="M40 72 L66 76" stroke="#000" stroke-width="1.2" opacity=".1"/>
+<rect x="62" y="16" width="38" height="61" rx="13" fill="url(#cam-g-shv)" ${CAM_EDGE} stroke-width=".7"/>
+<rect x="66.5" y="20.5" width="29" height="52" rx="10" fill="url(#cam-g-dbglass)"/>
+<path d="M70 26 Q75 22.5 84 22.5" stroke="#fff" stroke-width="1.3" opacity=".22" fill="none" stroke-linecap="round"/>
+<g class="cam-on">${camLens(81, 35, 6.2, 0)}<g class="cam-ir"><circle cx="72" cy="35" r="1"/><circle cx="90" cy="35" r="1"/></g></g>
+<g class="cam-off"><circle cx="81" cy="35" r="7.6" fill="#2a3037"/><circle cx="81" cy="35" r="4.8" fill="#1c2127"/></g>
+<rect x="74" y="50" width="14" height="3.2" rx="1.6" fill="#2c343d"/>
+<circle class="cam-led" cx="81" cy="62" r="1.3"/>
+<path d="M62.5 48 L60 76" stroke="#000" stroke-width=".6" opacity=".12"/>
+<ellipse cx="58" cy="78.5" rx="5" ry="2.4" fill="#000" opacity=".12"/>
+<circle cx="58" cy="79" r="4.6" fill="url(#cam-g-sph)" ${CAM_EDGE} stroke-width=".6"/>
+${camWaves(96, 46)}${CAM_REC}`,
+  // A ceiling dome: the ceiling drawn as a plane fading at its ends, the
+  // white base, and the smoked glass with the camera ball behind it.
+  dome: () => `<rect x="-8" y="-8" width="136" height="26" fill="url(#cam-g-ceil)"/>
+<rect x="-8" y="18" width="136" height="3" fill="url(#cam-g-ceiledge)"/>
+${camShadow(60, 21, 56, 3.5, .22)}
+<g transform="translate(60 0) scale(1.3) translate(-60 0)">
+<path d="M14 15 H106 Q106 27 95 34 H25 Q14 27 14 15 Z" fill="url(#cam-g-shv)" ${CAM_EDGE} stroke-width=".7"/>
+<path d="M20 18 H100" stroke="#fff" stroke-width="1.4" opacity=".6" stroke-linecap="round"/>
+<circle cx="27" cy="22" r="1.3" fill="rgba(0,0,0,.3)"/><circle cx="93" cy="22" r="1.3" fill="rgba(0,0,0,.3)"/>
+<rect x="21" y="33" width="78" height="6" rx="2.5" style="fill:var(--ac-body-lo,#c9d0d7)"/>
+<path d="M24 39 A36 37 0 0 0 96 39 Z" fill="#0d1115"/>
+<g class="cam-on"><circle cx="66" cy="58" r="16" fill="#1a1f25"/><circle cx="66" cy="58" r="16" fill="url(#cam-g-glass)" opacity=".6"/>${camLens(67, 59, 6.8, 11)}</g>
+<g class="cam-off"><path d="M33 48 Q60 70 87 48" fill="#2a3037"/><path d="M42 56 Q60 64 78 56" stroke="#3b434c" stroke-width="1.2" fill="none"/></g>
+<path d="M24 39 A36 37 0 0 0 96 39 Z" fill="url(#cam-g-smoke)" opacity=".55"/>
+<path d="M32 46 Q37 62 52 70" stroke="#fff" stroke-width="2.6" fill="none" opacity=".32" stroke-linecap="round"/>
+<path d="M24 39 A36 37 0 0 0 96 39" fill="none" ${CAM_EDGE} stroke-width=".7"/>
+<circle class="cam-led" cx="40" cy="50" r="1.3"/>
+</g>${camWaves(86, 96)}<g transform="translate(0 92)">${CAM_REC}</g>`,
   // A video doorbell on its wall: the lens at the top, the motion sensor, and
   // the button in its ring of light, which beats when someone rings.
-  doorbell: () => `<ellipse cx="62" cy="121" rx="20" ry="2.6" fill="#000" opacity=".12"/>
-<rect x="38" y="0" width="44" height="118" rx="18" style="fill:var(--ac-body-lo,#c9d0d7)" opacity=".7"/>
+  doorbell: () => `${camShadow(62, 62, 22, 58, .14)}
 <rect x="40" y="2" width="40" height="114" rx="17" fill="url(#cam-g-shv)" ${CAM_EDGE} stroke-width=".7"/>
 <path d="M47 8 H73" stroke="#fff" stroke-width="2" opacity=".6" stroke-linecap="round"/>
+<rect x="42" y="5" width="3" height="104" rx="1.5" fill="#fff" opacity=".45"/>
 <rect x="44" y="12" width="32" height="56" rx="13" fill="url(#cam-g-dbglass)"/>
 <g class="cam-on">${camLens(60, 28, 6.6, 10.4)}</g>
 <g class="cam-off"><circle cx="60" cy="28" r="7.8" fill="#2a3037"/><circle cx="60" cy="28" r="5" fill="#1c2127"/></g>
@@ -10812,8 +10842,6 @@ const ILLUSTRATION_CSS = {
         .cam-m-off .cam-on{display:none}
         .cam-m-off .cam-off{display:inline}
         .machine.cam-m-unav{opacity:.45;filter:grayscale(1)}
-        .cam-wall{fill:#c9c2b6}
-        .cam-ceiling{fill:#d9d4cb}
         .cam-al0{stop-color:#8d959d}.cam-al1{stop-color:#eef1f3}.cam-al2{stop-color:#c3c9cf}.cam-al3{stop-color:#848c94}
         .cam-al-top{fill:#c3c9cf}
         .cam-dark .cam-al0{stop-color:#25292d}.cam-dark .cam-al1{stop-color:#4c535a}.cam-dark .cam-al2{stop-color:#33393f}.cam-dark .cam-al3{stop-color:#1a1d20}

@@ -10551,6 +10551,24 @@ check('borne : ni un statut reconnu', evMode(evR('SuspendedEVSE', { power_entity
   check('camera : par son nom, jardin', machineCls(render({ state_entity: 'camera.jardin' }, { 'camera.jardin': s('idle') })).includes('cam-l-outdoor'), true);
   check('camera : dome', machineCls(cam('idle', { camera_layout: 'dome' })).includes('cam-l-dome'), true);
   check('camera : forme choisie', machineCls(cam('idle', { camera_layout: 'tube' }, {}, { brand: 'Arlo' })).includes('cam-l-tube'), true);
+  // Drawn after the real ones, each on a soft shadow rather than a hard ellipse.
+  const shape = (l) => cam('idle', { camera_layout: l });
+  for (const l of ['indoor', 'tube', 'outdoor', 'dome', 'doorbell'])
+    check(`camera : ${l}, une ombre douce`, /filter="url\(#cam-f-soft\)"/.test(shape(l)), true);
+  // The tube stands on its shadow: the shadow is centred just above its foot,
+  // not hanging under it.
+  check('camera : le tube pose sur son ombre',
+    Number((/<ellipse cx="60" cy="([\d.]+)"[^>]*filter="url\(#cam-f-soft\)"/.exec(shape('tube')) || [])[1]) <= 109, true);
+  // Outdoors, an Arlo-like box: a glass front on a wall bracket, no wall strip.
+  check('camera : exterieure, une facade de verre', /fill="url\(#cam-g-dbglass\)"/.test(shape('outdoor')), true);
+  check('camera : exterieure, plus de bande de mur', /cam-wall/.test(shape('outdoor')), false);
+  // The ceiling of the dome fades at its ends instead of a block cut short.
+  check('camera : dome, le plafond s estompe', /fill="url\(#cam-g-ceil\)"/.test(shape('dome')) && !/cam-ceiling/.test(shape('dome')), true);
+  // The motion waves stay inside the picture: the drawing is clipped at 120.
+  for (const l of ['indoor', 'tube', 'outdoor', 'dome', 'doorbell']) {
+    const x = Number((/<g class="cam-waves" transform="translate\(([\d.]+) /.exec(shape(l)) || [])[1]);
+    check(`camera : ${l}, les ondes dans le cadre`, x + 24 <= 120, true);
+  }
   check('camera : sur une prise', stateLine(render({ appliance_type: 'camera', state_entity: 'switch.cam' }, { 'switch.cam': s('on') })), 'Idle');
   check('camera : prise coupee', stateLine(render({ appliance_type: 'camera', state_entity: 'switch.cam' }, { 'switch.cam': s('off') })), 'Off');
   const ed = markup(newEditor({ state_entity: 'camera.salon' }));

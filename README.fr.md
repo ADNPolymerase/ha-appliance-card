@@ -339,7 +339,7 @@ Seule `state_entity` est obligatoire, sauf sur un réfrigérateur où une sonde 
 | `supply_fan_entity` / `exhaust_fan_entity` / `fan_max_rpm` | VMC | La vitesse de chaque ventilateur en tr/min : chacun tourne à la vitesse de son moteur, jusqu'à `fan_max_rpm` (2000 par défaut), et sa ligne donne ses tr/min et son débit (`airflow_entity` au soufflage, `exhaust_airflow_entity` à l'extraction). |
 | `fan_speed_entity` | VMC | La vitesse en %, quand l'appareil la tient dans un number à part. |
 | `current_humidity_entity` / `target_humidity_entity` / `humidity_control_entity` | VMC | L'humidité et sa consigne, en ligne et sur le dessin pendant le contrôle d'humidité. L'interrupteur du contrôle d'humidité affiche *Contrôle d'humidité* et a son bouton. |
-| `camera_layout` | caméra | `indoor` (caméra orientable) \| `tube` (Netatmo Welcome) \| `outdoor` (sur son bras mural) \| `dome` (au plafond) \| `doorbell` (sonnette vidéo). Sans réglage, une caméra avec un `ring_entity` ou un nom qui dit sonnette ou doorbell est une sonnette, une caméra intérieure Netatmo est un tube, un nom qui dit dôme un dôme, et un nom ou une marque qui dit extérieur, jardin, avant, arrière, Arlo ou spotlight une caméra extérieure. |
+| `camera_layout` | caméra | `indoor` (caméra orientable) \| `tube` (Netatmo Welcome) \| `outdoor` (caméra sur batterie façon Arlo, sur son support mural) \| `dome` (au plafond) \| `doorbell` (sonnette vidéo). Sans réglage, une caméra avec un `ring_entity` ou un nom qui dit sonnette ou doorbell est une sonnette, une caméra intérieure Netatmo est un tube, un nom qui dit dôme un dôme, et un nom ou une marque qui dit extérieur, jardin, avant, arrière, Arlo ou spotlight une caméra extérieure. |
 | `motion_entity` | caméra | Un capteur de mouvement : *Mouvement détecté* tant qu'il est actif, des ondes orange devant l'objectif, puis une ligne *Dernier mouvement*. |
 | `recording_entity` | caméra | Un capteur d'enregistrement, pour les intégrations dont l'entité caméra ne dit pas *recording*. |
 | `night_entity` | caméra | Le mode infrarouge : la couronne de LED autour de l'objectif s'allume en rouge, et une ligne *Vision nocturne*. |
@@ -804,7 +804,7 @@ nominal_power: 520
 <details>
 <summary><b>Caméras</b></summary>
 
-L'état d'une caméra, pas son image : Home Assistant a ses cartes pour ça. Son `state_entity` est l'entité caméra : *En veille*, *En direct*, *Enregistrement* et *Désactivée* en viennent, *Mouvement détecté* d'un capteur de mouvement, et *Hors ligne* d'un capteur de connectivité éteint. Quatre formes, trouvées d'après le nom et la marque : une caméra intérieure orientable, le tube d'une Netatmo Welcome, une caméra extérieure sur son bras et un dôme.
+L'état d'une caméra, pas son image : Home Assistant a ses cartes pour ça. Son `state_entity` est l'entité caméra : *En veille*, *En direct*, *Enregistrement* et *Désactivée* en viennent, *Mouvement détecté* d'un capteur de mouvement, et *Hors ligne* d'un capteur de connectivité éteint. Quatre formes, trouvées d'après le nom et la marque : une caméra intérieure orientable, le tube d'une Netatmo Welcome, une caméra extérieure sur batterie façon Arlo sur son support mural, et un dôme.
 
 ```yaml
 type: custom:ha-appliance-card
