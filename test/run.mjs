@@ -11168,4 +11168,237 @@ check('borne : ni un statut reconnu', evMode(evR('SuspendedEVSE', { power_entity
   check('editeur tablette : redemarrage et capture', ['restart_entity', 'screenshot_entity'].every((f) => ed.includes(`data-toggle="${f}"`)), true);
 }
 
+const SCT = { appliance_type: 'screen', state_entity: 'switch.tv', power_entity: 'sensor.tv_w' };
+function tvT(w) { return { 'switch.tv': { state: 'on', attributes: {} }, 'sensor.tv_w': { state: String(w), attributes: { unit_of_measurement: 'W' } } }; }
+// ── HACF requests: energy and cost, elapsed time, today's running time, the tower ──
+{
+  const W = { 'sensor.w': wst('Running', -40), 'sensor.e': { state: '1.6', attributes: { unit_of_measurement: 'kWh' } } };
+  const EC = { appliance_type: 'washer', state_entity: 'sensor.w', energy_entity: 'sensor.e' };
+  check('energie : la ligne', infoLine(render(EC, W), 'Energy').replace(/\u00a0/g, ' '), '1.6 kWh');
+  check('energie : sans prix, pas de cout', infoLine(render(EC, W), 'Cost'), null);
+  check('energie : prix fixe', infoLine(render({ ...EC, energy_price: 0.25 }, W), 'Cost'), '€0.40');
+  check('energie : prix avec une virgule', infoLine(render({ ...EC, energy_price: '0,25' }, W), 'Cost'), '€0.40');
+  check('energie : prix lu sur une entite', infoLine(render({ ...EC, energy_price: 'sensor.tarif' }, { ...W, 'sensor.tarif': { state: '0.5', attributes: {} } }), 'Cost'), '€0.80');
+  check('energie : entite de prix illisible, pas de cout', infoLine(render({ ...EC, energy_price: 'sensor.tarif' }, { ...W, 'sensor.tarif': { state: 'unknown', attributes: {} } }), 'Cost'), null);
+  check('energie : des Wh ramenes en kWh pour le cout', infoLine(render({ ...EC, energy_price: 0.25 }, { ...W, 'sensor.e': { state: '1600', attributes: { unit_of_measurement: 'Wh' } } }), 'Cost'), '€0.40');
+  check('energie : entite indisponible, pas de ligne', infoLine(render({ ...EC, energy_price: 0.25 }, { ...W, 'sensor.e': { state: 'unavailable', attributes: {} } }), 'Energy'), null);
+  check('energie : pas sur le solaire', infoLine(render({ appliance_type: 'solar', energy_entity: 'sensor.e', state_entity: 'sensor.w' }, W), 'Energy'), null);
+
+  // Elapsed time, read from the state.
+  const EL = { appliance_type: 'washer', state_entity: 'sensor.w', show_elapsed: true };
+  check('ecoule : sans l option, pas de ligne', infoLine(render({ ...EL, show_elapsed: false }, { 'sensor.w': wst('Running', -40) }), 'Elapsed'), null);
+  const el = withHistory(EL, { 'sensor.w': wst('Running', -40) }, { 'sensor.w': [H('Idle', -120), H('Running', -40)] });
+  check('ecoule : depuis le debut du cycle', infoLine(el.html, 'Elapsed').replace(/\u00a0/g, ' '), '40 min');
+  check('ecoule : un reveil chaque minute', !!el.card._elapsedTimer, true);
+  check('ecoule : au repos, pas de ligne', infoLine(rerender(el.card, { 'sensor.w': wst('Idle', 0) }), 'Elapsed'), null);
+  check('ecoule : au repos, plus de reveil', el.card._elapsedTimer, null);
+  el.card.disconnectedCallback();
+  // From a plug opened in the middle of its cycle: the meter's history gives the start.
+  const pe = withHistory({ ...PLUG, show_elapsed: true }, plugSt(1800), { 'sensor.p_w': [P(0, -200), P(1800, -75), P(2, -50), P(1700, -48)] });
+  check('ecoule prise : une demande sur le compteur', pe.calls.map((c) => c.entity_ids.join()).join('|'), 'sensor.p_w');
+  await settle();
+  check('ecoule prise : depuis le debut de la marche', infoLine(markup(pe.card), 'Elapsed').replace(/\u00a0/g, ' '), '48 min');
+  pe.card.disconnectedCallback();
+  check('ecoule prise : sans l option, aucune demande', withHistory(PLUG, plugSt(1800), {}).calls.length, 0);
+
+  // Today's running time and starts.
+  const midnight = new Date(Date.now()); midnight.setHours(0, 0, 0, 0);
+  const sinceMid = (Date.now() - midnight.getTime()) / MIN;
+  const td = withHistory({ ...PLUG, show_today: true }, plugSt(0),
+    { 'sensor.p_w': [P(0, -sinceMid), P(1500, -sinceMid + 10), P(1, -sinceMid + 40), P(1600, -sinceMid + 60), P(2, -sinceMid + 75)] });
+  check('aujourd hui : une demande depuis minuit', td.calls[0]?.start_time, midnight.toISOString());
+  await settle();
+  check('aujourd hui : duree et demarrages', infoLine(markup(td.card), 'Today').replace(/\u00a0/g, ' '), '45 min · 2 starts');
+  rerender(td.card, plugSt(0));
+  check('aujourd hui : garde en memoire', td.calls.length, 1);
+  const one = withHistory({ ...PLUG, show_today: true }, plugSt(0), { 'sensor.p_w': [P(0, -sinceMid), P(1500, -sinceMid + 10), P(1, -sinceMid + 20)] });
+  await settle();
+  check('aujourd hui : un seul demarrage au singulier', infoLine(markup(one.card), 'Today').replace(/\u00a0/g, ' '), '10 min · 1 start');
+  // A run already going at midnight counts its time, not as a start.
+  const carry = withHistory({ ...PLUG, show_today: true }, plugSt(0), { 'sensor.p_w': [P(1500, -sinceMid - 30), P(1, -sinceMid + 20)] });
+  await settle();
+  check('aujourd hui : marche commencee avant minuit', infoLine(markup(carry.card), 'Today').replace(/\u00a0/g, ' '), '20 min · 0 starts');
+  const st = withHistory({ appliance_type: 'washer', state_entity: 'sensor.w', show_today: true }, { 'sensor.w': wst('Idle', 0) },
+    { 'sensor.w': [H('Idle', -sinceMid), H('Running', -sinceMid + 30), H('Finished', -sinceMid + 90), H('Idle', -sinceMid + 100)] });
+  check('aujourd hui : lu sur l etat sans prise', st.calls[0]?.entity_ids?.join(), 'sensor.w');
+  await settle();
+  check('aujourd hui : depuis l etat', infoLine(markup(st.card), 'Today').replace(/\u00a0/g, ' '), '1h00 · 1 start');
+  check('aujourd hui : sans l option, pas de ligne', infoLine(render(PLUG, plugSt(0)), 'Today'), null);
+
+  // The tower on its own plug.
+  const PCT = { ...SCT, screen_layout: 'computer', tower_entity: 'switch.tower' };
+  const tw = (sw, w = 0) => ({ ...tvT(w), 'switch.tower': { state: sw, attributes: {} } });
+  check('tour : allumee, la diode', /\btw-on\b/.test(machineCls(render(PCT, tw('on')))), true);
+  check('tour : eteinte, la diode', /\btw-off\b/.test(machineCls(render(PCT, tw('off')))), true);
+  check('tour : ecran eteint, tour allumee', stateLine(render(PCT, tw('on'))), 'Tower on');
+  check('tour : ecran allume, ecran allume', stateLine(render(PCT, tw('on', 142))), 'On');
+  check('tour : le bouton', actionBtns(render(PCT, tw('on'))).some((b) => b.startsWith('Tower:')), true);
+  check('tour : pas sur une tele', /\btw-on\b/.test(machineCls(render({ ...PCT, screen_layout: 'tv_feet' }, tw('on')))), false);
+  const twm = render({ ...PCT, tower_entity: 'sensor.tower_w' }, { ...tvT(0), 'sensor.tower_w': { state: '86', attributes: { unit_of_measurement: 'W' } } });
+  check('tour : sa puissance', infoLine(twm, 'Tower'), '86 W');
+  check('tour : un compteur allume la tour', stateLine(twm), 'Tower on');
+  check('tour : un compteur n a pas de bouton', actionBtns(twm).some((b) => b.startsWith('Tower:')), false);
+  check('tour : compteur en veille, eteinte', /\btw-off\b/.test(machineCls(render({ ...PCT, tower_entity: 'sensor.tower_w' }, { ...tvT(0), 'sensor.tower_w': { state: '1', attributes: { unit_of_measurement: 'W' } } }))), true);
+  const calls = [];
+  const c = new Card();
+  c.setConfig({ type: 'custom:ha-appliance-card', ...PCT });
+  c._hass = { ...HASS(tw('off')), callService: (domain, service, data) => calls.push(`${domain}.${service}:${data.entity_id}`) };
+  c._render();
+  fire(c._root.querySelectorAll('.action-btn, .light-badge').find((n) => n.getAttribute('data-entity') === 'switch.tower'), 'click', { stopPropagation() {} });
+  check('tour : le bouton bascule la prise', calls.join(), 'switch.toggle:switch.tower');
+
+  // The editor.
+  const edW = markup(newEditor({ appliance_type: 'washer', state_entity: 'sensor.w' }));
+  check('editeur : energie consommee', edW.includes('data-toggle="energy_entity"'), true);
+  check('editeur : temps ecoule et marche du jour', ['show_elapsed', 'show_today'].every((f) => edW.includes(`"${f}"`)), true);
+  const edS = markup(newEditor({ appliance_type: 'solar', state_entity: 'sensor.w' }));
+  check('editeur : pas d energie sur le solaire', edS.includes('data-toggle="energy_entity"'), false);
+  check('editeur : unite centrale sur l ordinateur', markup(newEditor({ appliance_type: 'screen', screen_layout: 'computer', state_entity: 'switch.tv' })).includes('data-toggle="tower_entity"'), true);
+  check('editeur : pas d unite centrale sur la tele', markup(newEditor({ appliance_type: 'screen', screen_layout: 'tv_feet', state_entity: 'switch.tv' })).includes('data-toggle="tower_entity"'), false);
+}
+
+// ── The HACF drawings: two freezers, two pumps, a pool robot, underfloor
+// heating, a spa, a sauna, an aquarium, a Linky meter, a Christmas tree ──
+{
+  const s = (state, attributes = {}) => ({ state: String(state), attributes });
+  const C = (st) => ({ unit_of_measurement: '°C' });
+  const ntCls = (h) => machineCls(h);
+  const kind = (h) => (/\bnt-k-(\w+)/.exec(ntCls(h)) || [, null])[1];
+  const on = (h) => /\bnt-on\b/.test(ntCls(h));
+  // The freezers.
+  const CH = { appliance_type: 'fridge', fridge_layout: 'chest', freezer_temperature_entity: 'sensor.t', power_entity: 'sensor.w', power_on_threshold: 20 };
+  const chS = (t, w) => ({ 'sensor.t': s(t, C()), 'sensor.w': s(w, { unit_of_measurement: 'W' }) });
+  check('coffre : son dessin', kind(render(CH, chS(-18, 80))), 'chest');
+  check('coffre : en froid, il givre', on(render(CH, chS(-18, 80))), true);
+  check('coffre : au repos, rien ne bouge', on(render(CH, chS(-18, 2))), false);
+  check('coffre : la temperature sur son ecran', /-18 °C<\/text>/.test(render(CH, chS(-18, 80))), true);
+  check('coffre : -10 est trop chaud pour un congelateur', /#ff5252/.test(render(CH, chS(-10, 80))), true);
+  check('coffre : -18 ne l est pas', /#ff5252/.test(render(CH, chS(-18, 80))), false);
+  check('coffre : etat', stateLine(render(CH, chS(-18, 80))), 'Cooling');
+  check('coffre : couvercle ouvert', /fill="#e9eef3"/.test(render({ ...CH, door_entity: 'binary_sensor.d' }, { ...chS(-18, 80), 'binary_sensor.d': s('on') })), true);
+  check('coffre : debranche, ecran eteint', /-18 °C<\/text>/.test(render({ ...CH, plug_entity: 'switch.p' }, { ...chS(-18, 0), 'switch.p': s('off') })), false);
+  check('tiroirs : son dessin', kind(render({ ...CH, fridge_layout: 'drawers' }, chS(-20, 80))), 'drawers');
+  check('tiroirs : un tiroir tire', /translate\(-6 5\)/.test(render({ ...CH, fridge_layout: 'drawers', door_entity: 'binary_sensor.d' }, { ...chS(-20, 80), 'binary_sensor.d': s('on') })), true);
+  check('frigo : les autres dessins inchanges', kind(render({ ...CH, fridge_layout: 'single' }, chS(4, 80))), null);
+
+  // The pumps.
+  const BP = { appliance_type: 'water_pump', state_entity: 'switch.p', pressure_entity: 'sensor.bar' };
+  const bpS = (sw, bar = 2.4) => ({ 'switch.p': s(sw), 'sensor.bar': s(bar, { unit_of_measurement: 'bar' }) });
+  check('surpresseur : par defaut', kind(render(BP, bpS('on'))), 'booster');
+  check('surpresseur : pompe', stateLine(render(BP, bpS('on'))), 'Pumping');
+  check('surpresseur : a l arret', stateLine(render(BP, bpS('off'))), 'Standby');
+  check('surpresseur : la pression sur l ecran', />2.4 bar<\/text>/.test(render(BP, bpS('on'))), true);
+  check('surpresseur : la ligne de pression', infoLine(render(BP, bpS('on')), 'Pressure').replace(/\u00a0/g, ' '), '2.4 bar');
+  check('surpresseur : hors ligne', stateLine(render(BP, { 'switch.p': s('unavailable') })), 'Offline');
+  const plug = { appliance_type: 'water_pump', power_entity: 'sensor.w' };
+  check('pompe sur prise : en marche', stateLine(render(plug, { 'sensor.w': s(650, { unit_of_measurement: 'W' }) })), 'Pumping');
+  check('pompe sur prise : au repos', stateLine(render(plug, { 'sensor.w': s(1, { unit_of_measurement: 'W' }) })), 'Standby');
+  const SU = { appliance_type: 'water_pump', pump_layout: 'sump', state_entity: 'switch.p', level_entity: 'sensor.l', level_max: 100, high_level_entity: 'binary_sensor.h' };
+  const suS = (lvl, hi = 'off', sw = 'off') => ({ 'switch.p': s(sw), 'sensor.l': s(lvl, { unit_of_measurement: 'cm' }), 'binary_sensor.h': s(hi) });
+  check('relevage : son dessin', kind(render(SU, suS(40))), 'sump');
+  check('relevage : un niveau dit relevage', kind(render({ appliance_type: 'water_pump', level_entity: 'sensor.l', state_entity: 'switch.p' }, suS(40))), 'sump');
+  check('relevage : en attente', stateLine(render(SU, suS(40))), 'Standby');
+  check('relevage : alarme', stateLine(render(SU, suS(40, 'on'))), 'High level');
+  check('relevage : en alarme, l eau est evacuee', on(render(SU, suS(40, 'on'))), true);
+  check('relevage : le gyrophare', /class="[^"]*nta-beacon/.test(render(SU, suS(40, 'on'))), true);
+  check('relevage : 92 cm sur 100 alerte aussi', stateLine(render(SU, suS(92))), 'High level');
+  check('relevage : le niveau sur l ecran', />40 cm<\/text>/.test(render(SU, suS(40))), true);
+  check('relevage : l eau a son niveau', /y="76\.0" width="58"/.test(render(SU, suS(40))), true);
+  check('relevage : la pompe tourne, pas d alarme', stateLine(render(SU, suS(40, 'off', 'on'))), 'Pumping');
+
+  // The pool robot.
+  const PR = { appliance_type: 'robot', robot_layout: 'pool', state_entity: 'vacuum.dolphin', remaining_time_entity: 'sensor.r' };
+  const prS = (v) => ({ 'vacuum.dolphin': s(v), 'sensor.r': s(105, { unit_of_measurement: 'min' }) });
+  check('robot piscine : son dessin', kind(render(PR, prS('cleaning'))), 'pool');
+  check('robot piscine : il nettoie', on(render(PR, prS('cleaning'))), true);
+  check('robot piscine : le temps sur son boitier', />1h45<\/text>/.test(render(PR, prS('cleaning'))), true);
+  check('robot piscine : le cable suit le robot', /attributeName="d"/.test(render(PR, prS('cleaning'))), true);
+  check('robot piscine : a quai, il ne bouge pas', /attributeName="d"/.test(render(PR, prS('docked'))), false);
+  check('robot piscine : reconnu par son nom', kind(render({ appliance_type: 'robot', state_entity: 'vacuum.dolphin_e30' }, { 'vacuum.dolphin_e30': s('docked') })), 'pool');
+
+  // Underfloor heating.
+  const FH = { appliance_type: 'floor_heating', state_entity: 'climate.pc' };
+  const fhS = (state, act, cur = 21.5) => ({ 'climate.pc': s(state, { hvac_action: act, current_temperature: cur, temperature: 22 }) });
+  check('plancher : chauffe', stateLine(render(FH, fhS('heat', 'heating'))), 'Heating');
+  check('plancher : en veille', stateLine(render(FH, fhS('heat', 'idle'))), 'Standby');
+  check('plancher : eteint', stateLine(render(FH, fhS('off', 'off'))), 'Off');
+  check('plancher : la temperature du thermostat', />22 °C<\/text>/.test(render(FH, fhS('heat', 'heating'))), true);
+  check('plancher : sa ligne', infoLine(render(FH, fhS('heat', 'heating')), 'Temperature').replace(/\u00a0/g, ' '), '22 °C');
+  check('plancher : a eau, le collecteur', /fill="#d32f2f"/.test(render(FH, fhS('heat', 'heating'))), true);
+  check('plancher : electrique, sans collecteur', /fill="#d32f2f"/.test(render({ ...FH, floor_layout: 'electric' }, fhS('heat', 'heating'))), false);
+  check('plancher : un interrupteur', stateLine(render({ appliance_type: 'floor_heating', state_entity: 'switch.pc' }, { 'switch.pc': s('on') })), 'Heating');
+
+  // The spa and the sauna.
+  const SP = { appliance_type: 'spa', state_entity: 'climate.spa', bubbles_entity: 'switch.b' };
+  const spS = (act, b = 'off') => ({ 'climate.spa': s('heat', { hvac_action: act, current_temperature: 38, temperature: 38 }), 'switch.b': s(b) });
+  check('spa : bulles', stateLine(render(SP, spS('idle', 'on'))), 'Bubbles');
+  check('spa : les bulles dessinees', /class="[^"]*nta-pop/.test(render(SP, spS('idle', 'on'))), true);
+  check('spa : chauffe', stateLine(render(SP, spS('heating'))), 'Heating');
+  check('spa : pret', stateLine(render(SP, spS('idle'))), 'Standby');
+  check('spa : le bouton des bulles', actionBtns(render(SP, spS('idle'))).some((b) => b.startsWith('Bubbles:')), true);
+  check('spa : sa temperature', />38 °C<\/text>/.test(render(SP, spS('idle'))), true);
+  const SA = { appliance_type: 'sauna', state_entity: 'climate.sauna' };
+  const saS = (cur) => ({ 'climate.sauna': s('heat', { hvac_action: 'heating', current_temperature: cur, temperature: 85 }) });
+  check('sauna : chauffe', stateLine(render(SA, saS(60))), 'Heating');
+  check('sauna : pret a trois degres', stateLine(render(SA, saS(83))), 'Ready');
+  check('sauna : les pierres rougissent', /#ff7043/.test(render(SA, saS(60))), true);
+  check('sauna : eteint', stateLine(render(SA, { 'climate.sauna': s('off', { current_temperature: 22 }) })), 'Off');
+
+  // The aquarium, the meter and the tree.
+  const AQ = { appliance_type: 'aquarium', state_entity: 'light.aq', temperature_entity: 'sensor.aqt' };
+  check('aquarium : eclaire', stateLine(render(AQ, { 'light.aq': s('on'), 'sensor.aqt': s(25.5, C()) })), 'Light on');
+  check('aquarium : eteint', stateLine(render(AQ, { 'light.aq': s('off'), 'sensor.aqt': s(25.5, C()) })), 'Light off');
+  check('aquarium : les poissons nagent', on(render(AQ, { 'light.aq': s('on') })), true);
+  check('aquarium : le thermometre', />26 °C<\/text>/.test(render(AQ, { 'light.aq': s('on'), 'sensor.aqt': s(25.5, C()) })), true);
+  check('aquarium : sans sonde, pas de thermometre', /#69f0ae/.test(render(AQ, { 'light.aq': s('on') })), false);
+  check('aquarium : son interrupteur', actionBtns(render(AQ, { 'light.aq': s('on') })).some((b) => b.startsWith('Power:')), true);
+  const ME = { appliance_type: 'meter', state_entity: 'sensor.papp', tariff_entity: 'sensor.ptec' };
+  const meS = (v) => ({ 'sensor.papp': s(v, { unit_of_measurement: 'VA' }), 'sensor.ptec': s('HP') });
+  check('linky : conso forte', stateLine(render(ME, meS(3250))), 'High use');
+  check('linky : conso faible', stateLine(render(ME, meS(420))), 'Low use');
+  check('linky : seuil choisi', stateLine(render({ ...ME, high_power: 400 }, meS(420))), 'High use');
+  check('linky : la puissance sur son ecran', />3250 VA<\/text>/.test(render(ME, meS(3250))), true);
+  check('linky : PAPP en VA', />PAPP<\/text>/.test(render(ME, meS(3250))), true);
+  check('linky : la periode tarifaire', infoLine(render(ME, meS(3250)), 'Tariff period'), 'HP');
+  check('linky : le voyant bat vite en conso forte', /class="[^"]*nta-blinkfast/.test(render(ME, meS(3250))), true);
+  check('linky : pas de bouton', actionBtns(render(ME, meS(3250))).length, 0);
+  const TR = { appliance_type: 'christmas_tree', state_entity: 'switch.sapin' };
+  check('sapin : allume', stateLine(render(TR, { 'switch.sapin': s('on') })), 'On');
+  check('sapin : les ampoules', /class="[^"]*nta-twinkle/.test(render(TR, { 'switch.sapin': s('on') })), true);
+  check('sapin : eteint, pas d ampoule allumee', /class="[^"]*nta-twinkle/.test(render(TR, { 'switch.sapin': s('off') })), false);
+  check('sapin : rouge et argent', /fill="#cfd8dc"/.test(render({ ...TR, tree_palette: 'red_silver' }, { 'switch.sapin': s('on') })), true);
+  const gifts = (h) => /x="18" y="100" width="20"/.test(h);
+  check('sapin : en aout, pas de cadeaux', gifts(render(TR, { 'switch.sapin': s('on') })), false);
+  check('sapin : cadeaux toujours', gifts(render({ ...TR, presents: 'show' }, { 'switch.sapin': s('on') })), true);
+  freezeClock('2026-12-24T19:00:00Z');
+  check('sapin : le 24 decembre, les cadeaux', gifts(render(TR, { 'switch.sapin': s('on') })), true);
+  check('sapin : sauf si on n en veut pas', gifts(render({ ...TR, presents: 'hide' }, { 'switch.sapin': s('on') })), false);
+  freezeClock('2026-12-26T10:00:00Z');
+  check('sapin : le 26, plus de cadeaux', gifts(render(TR, { 'switch.sapin': s('on') })), false);
+  freezeClock('2026-08-12T10:00:00Z');
+
+  // Found by their name.
+  const det = (id, st = 'on') => { const c = new Card(); c.setConfig({ type: 'custom:ha-appliance-card', state_entity: id }); c._hass = HASS({ [id]: s(st) }); c._render(); return c._appliance || (/\bnt-k-(\w+)/.exec(machineCls(markup(c))) || [, (/\b(lp)\b/.exec(machineCls(markup(c))) || [, null])[1]])[1]; };
+  check('detection : sapin de noel', det('light.sapin_de_noel'), 'tree');
+  check('detection : aquarium', det('light.aquarium_salon'), 'aquarium');
+  check('detection : sauna', det('climate.sauna', 'heat'), 'sauna');
+  check('detection : spa', det('climate.spa', 'heat'), 'spa');
+  check('detection : linky', det('sensor.linky_papp', '1200'), 'linky');
+  check('detection : plancher chauffant', det('climate.plancher_chauffant', 'heat'), 'floor');
+  check('detection : surpresseur', det('switch.surpresseur'), 'booster');
+  check('detection : une lampe reste une lampe', det('light.salon'), 'lp');
+  check('detection : un radiateur n est pas un spa', det('climate.space_heater', 'heat') === 'spa', false);
+
+  // The editor.
+  const ed = (cfg) => markup(newEditor(cfg));
+  check('editeur pompe : le modele', ed({ appliance_type: 'water_pump', state_entity: 'switch.p' }).includes('"pump_layout"'), true);
+  check('editeur pompe : la pression', ed({ appliance_type: 'water_pump', state_entity: 'switch.p' }).includes('data-toggle="pressure_entity"'), true);
+  check('editeur relevage : le niveau et l alarme', ['level_entity', 'high_level_entity'].every((f) => ed({ appliance_type: 'water_pump', pump_layout: 'sump', state_entity: 'switch.p' }).includes(`data-toggle="${f}"`)), true);
+  check('editeur sapin : couleurs et cadeaux', ['"tree_palette"', '"presents"'].every((f) => ed({ appliance_type: 'christmas_tree', state_entity: 'switch.s' }).includes(f)), true);
+  check('editeur spa : les bulles', ed({ appliance_type: 'spa', state_entity: 'climate.spa' }).includes('data-toggle="bubbles_entity"'), true);
+  check('editeur linky : la periode tarifaire', ed({ appliance_type: 'meter', state_entity: 'sensor.papp' }).includes('data-toggle="tariff_entity"'), true);
+  check('editeur frigo : coffre et tiroirs', ['"chest"', '"drawers"'].every((v) => ed({ appliance_type: 'fridge', fridge_layout: 'single' }).includes(`value=${v}`)), true);
+  check('editeur robot piscine : le temps restant', ed({ appliance_type: 'robot', robot_layout: 'pool', state_entity: 'vacuum.d' }).includes('data-toggle="remaining_time_entity"'), true);
+}
+
 report();

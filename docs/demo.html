@@ -1261,6 +1261,38 @@ const lampOff = () => card({ name: L("Hallway", "Couloir"), state_entity: "light
 const upsReplace = upsCard("OL RB", 100, 300, 18, 236);
 const upsOff = upsCard("OFF", 100, 1500, 0, 241);
 
+// The HACF drawings: two freezers, two pumps, a pool robot, underfloor
+// heating, a spa, a sauna, an aquarium, a Linky meter and a Christmas tree.
+const demoC = { unit_of_measurement: "\u00b0C" };
+const demoChest = () => card({ name: L("Chest freezer", "Cong\u00e9lateur coffre"), appliance_type: "fridge", fridge_layout: "chest", freezer_temperature_entity: "sensor.cf_t",
+  power_entity: "sensor.cf_w", power_on_threshold: 20 }, [st("sensor.cf_t", -18, demoC), st("sensor.cf_w", 85, { unit_of_measurement: "W" })]);
+const demoDrawers = () => card({ name: L("Drawer freezer", "Cong\u00e9lateur \u00e0 tiroirs"), appliance_type: "fridge", fridge_layout: "drawers", freezer_temperature_entity: "sensor.df_t",
+  power_entity: "sensor.df_w", power_on_threshold: 20 }, [st("sensor.df_t", -20, demoC), st("sensor.df_w", 90, { unit_of_measurement: "W" })]);
+const demoBooster = () => card({ name: L("Booster set", "Surpresseur"), appliance_type: "water_pump", state_entity: "switch.booster", pressure_entity: "sensor.booster_bar" },
+  [st("switch.booster", "on"), st("sensor.booster_bar", 2.4, { unit_of_measurement: "bar" })]);
+const demoSump = () => card({ name: L("Sump pump", "Pompe de relevage"), appliance_type: "water_pump", pump_layout: "sump", state_entity: "switch.sump",
+  level_entity: "sensor.sump_level", level_max: 100, high_level_entity: "binary_sensor.sump_high" },
+  [st("switch.sump", "on"), st("sensor.sump_level", 44, { unit_of_measurement: "cm" }), st("binary_sensor.sump_high", "off")]);
+const demoSumpHigh = () => card({ name: L("Sump, high level", "Relevage, niveau haut"), appliance_type: "water_pump", pump_layout: "sump", state_entity: "switch.sump2",
+  level_entity: "sensor.sump2_level", level_max: 100, high_level_entity: "binary_sensor.sump2_high" },
+  [st("switch.sump2", "on"), st("sensor.sump2_level", 72, { unit_of_measurement: "cm" }), st("binary_sensor.sump2_high", "on")]);
+const demoPool = () => card({ name: L("Pool robot", "Robot de piscine"), appliance_type: "robot", robot_layout: "pool", state_entity: "vacuum.dolphin",
+  remaining_time_entity: "sensor.dolphin_left" }, [st("vacuum.dolphin", "cleaning"), st("sensor.dolphin_left", 105, { unit_of_measurement: "min" })]);
+const demoFloorWater = () => card({ name: L("Underfloor heating", "Plancher chauffant"), appliance_type: "floor_heating", state_entity: "climate.floor" },
+  [st("climate.floor", "heat", { hvac_action: "heating", current_temperature: 21.5, temperature: 22 })]);
+const demoFloorElec = () => card({ name: L("Bathroom floor", "Plancher salle de bains"), appliance_type: "floor_heating", floor_layout: "electric", state_entity: "climate.bath_floor" },
+  [st("climate.bath_floor", "heat", { hvac_action: "heating", current_temperature: 24, temperature: 25 })]);
+const demoSpa = () => card({ name: L("Spa", "Spa"), appliance_type: "spa", state_entity: "climate.spa", bubbles_entity: "switch.spa_bubbles", light_entity: "light.spa" },
+  [st("climate.spa", "heat", { hvac_action: "idle", current_temperature: 38, temperature: 38 }), st("switch.spa_bubbles", "on"), st("light.spa", "on")]);
+const demoSauna = () => card({ name: L("Sauna", "Sauna"), appliance_type: "sauna", state_entity: "climate.sauna" },
+  [st("climate.sauna", "heat", { hvac_action: "heating", current_temperature: 80, temperature: 90 })]);
+const demoAquarium = () => card({ name: L("Aquarium", "Aquarium"), appliance_type: "aquarium", state_entity: "light.aquarium", temperature_entity: "sensor.aquarium_t" },
+  [st("light.aquarium", "on"), st("sensor.aquarium_t", 25.5, demoC)]);
+const demoLinky = () => card({ name: L("Linky meter", "Compteur Linky"), appliance_type: "meter", state_entity: "sensor.linky_papp", tariff_entity: "sensor.linky_ptec" },
+  [st("sensor.linky_papp", 3250, { unit_of_measurement: "VA" }), st("sensor.linky_ptec", "HP")]);
+const demoTree = () => card({ name: L("Christmas tree", "Sapin de No\u00ebl"), appliance_type: "christmas_tree", state_entity: "switch.tree", presents: "show" }, [st("switch.tree", "on")]);
+const demoTreeRed = () => card({ name: L("Red and gold", "Rouge et or"), appliance_type: "christmas_tree", state_entity: "switch.tree2", tree_palette: "red_gold" }, [st("switch.tree2", "on")]);
+
 // Grouped by kind: the laundry, the kitchen, heating and climate, then the
 // rest.
 // Screens: a TV, a projector and a computer on their plugs, and the three
@@ -1315,6 +1347,9 @@ const EXTRA = { iron, coffee_black: coffeeBlack, boiler_window: boilerWindow, to
                 lamp_strip: lampStrip, lamp_spots: lampSpots, lamp_panels: lampPanels, lamp_desk: lampDesk, lamp_wall: lampWall, lamp_off: lampOff,
                 cam_doorbell: camDoorbell, cam_doorbell_idle: camDoorbellIdle, mb_through: mbThrough, mb_postman: mbPostman, mb_collect: mbCollect,
                 mb_right: mbRight, mb_classic: mbClassic, mb_classic_open: mbClassicOpen,
+                nt_chest: demoChest, nt_drawers: demoDrawers, nt_booster: demoBooster, nt_sump: demoSump, nt_sump_high: demoSumpHigh, nt_pool: demoPool,
+                nt_floor: demoFloorWater, nt_floor_elec: demoFloorElec, nt_spa: demoSpa, nt_sauna: demoSauna, nt_aquarium: demoAquarium, nt_linky: demoLinky,
+                nt_tree: demoTree, nt_tree_red: demoTreeRed,
                 net_sw8: netSw(8, 6), net_sw16: netSw(16, 11), net_sw24: netSw(24, 20), net_sw32: netSw(32, 27),
                 net_nas1: netBays(1, ["normal"], L("NAS, 1 bay", "NAS 1 baie")),
                 net_nas2: netBays(2, ["normal", null], L("NAS, 2 bays, 1 disk", "NAS 2 baies, 1 disque")),
@@ -1348,8 +1383,8 @@ function liveGallery() {
   const wrap = document.getElementById("wrap");
   wrap.innerHTML = `<header>
     <h1>HA Appliance Card</h1>
-    <p>${L("A Lovelace card for 43 kinds of home appliances, each drawn and animated from its own data. These cards run on made-up states: in Home Assistant every field is an entity you pick.",
-      "Une card Lovelace pour 43 types d'appareils, chacun dessiné et animé à partir de ses propres données. Ces cartes tournent sur des états inventés : dans Home Assistant, chaque champ est une entité que vous choisissez.")}</p>
+    <p>${L("A Lovelace card for 50 kinds of home appliances, each drawn and animated from its own data. These cards run on made-up states: in Home Assistant every field is an entity you pick.",
+      "Une card Lovelace pour 50 types d'appareils, chacun dessiné et animé à partir de ses propres données. Ces cartes tournent sur des états inventés : dans Home Assistant, chaque champ est une entité que vous choisissez.")}</p>
     <nav>${link("lang", "en", "English", !fr)}${link("lang", "fr", "Français", fr)}<span></span>${link("theme", "light", L("Light", "Clair"), !dark)}${link("theme", "dark", L("Dark", "Sombre"), dark)}<span></span>${link("plug", "0", L("Integrations", "Intégrations"), !plugOnly)}${link("plug", "1", L("Smart plug only", "Prise connectée seule"), plugOnly)}<span></span><a href="https://github.com/ADNPolymerase/ha-appliance-card">GitHub</a></nav>
     <p class="hint">${plugOnly
       ? L("Each card below has nothing but a smart plug: its switch and its power meter. Open “Change the values” and move the power, or press the power button.",
@@ -1372,6 +1407,7 @@ function liveGallery() {
     [L("Cameras", "Cam\u00e9ras"), [camIndoor, camTube, camOutdoor, camDome, camPrivacy, camOffline]],
     [L("Lamps", "Lampes"), [lampBulb, lampBedside, lampFloor, lampTorch, lampPendant, lampStrip, lampSpots, lampPanels, lampDesk, lampWall, lampOff]],
     [L("Mailboxes and doorbells", "Boîtes aux lettres et sonnettes"), [mbThrough, mbPostman, mbCollect, mbRight, mbClassic, mbClassicOpen, camDoorbell, camDoorbellIdle]],
+    [L("Around the house", "Autour de la maison"), [demoChest, demoDrawers, demoBooster, demoSump, demoSumpHigh, demoPool, demoFloorWater, demoFloorElec, demoSpa, demoSauna, demoAquarium, demoLinky, demoTree, demoTreeRed]],
     [L("Pets", "Animaux"), [petFeeder, roundFeeder, doubleFeeder, dualFeeder, wetFeeder, petFountain]],
   ];
   // Each family folds, the first one open: forty cards in a row are hard to

@@ -35,6 +35,7 @@ Aucune marque supposée : chaque champ est une entité à choisir, elle fonction
 - **Et le pèse-personne** : le dernier poids sur son écran, allumé une heure après une pesée, ce qu'il reste jusqu'à l'objectif, et la graisse, les muscles et les os dans les lignes, depuis Withings ou n'importe quel capteur de poids.
 - **Et les lampes** : une ampoule, une lampe de chevet, un lampadaire arc, un halogène sur pied, une suspension, un ruban LED, des spots encastrés, des panneaux façon Nanoleaf, une lampe de bureau ou une applique extérieure, allumés dans la couleur de la lumière et tamisés avec sa luminosité ; un effet fait tourner la teinte des segments d'un ruban ou des panneaux.
 - **Et la boîte aux lettres** : traversante avec sa porte côté rue et sa porte côté maison, ou classique sur son poteau. Les lettres s'empilent jusqu'à douze, une nouvelle entre par la fente, et les portes pivotent sur leurs charnières. Les caméras ont aussi leur sonnette, dont l'anneau lumineux bat quand on sonne.
+- **Et le reste de la maison** : un congélateur coffre et un congélateur à tiroirs qui givrent quand ils produisent du froid, un surpresseur avec sa pression sur son contrôleur et une pompe de relevage dont le flotteur suit l'eau, un robot de piscine qui traîne son câble, un plancher chauffant à eau ou électrique, un spa et ses bulles, un sauna dont les pierres rougeoient, un aquarium planté, un compteur Linky et un sapin de Noël en sept couleurs classiques, avec ses cadeaux les 24 et 25 décembre.
 - **Et l'onduleur** : la prise murale, l'onduleur et le boîtier qu'il protège, *Sur secteur* avec l'énergie qui le traverse, *Sur batterie* avec la prise barrée, l'onduleur qui bipe et son écran qui compte l'autonomie, *Batterie faible*, *Surcharge* et *Batterie à remplacer* lus dans les codes de NUT, et la batterie, l'autonomie, la charge et la tension d'entrée dans les lignes.
 - **Fonctionne avec une simple prise connectée** : `power_entity` et `power_on_threshold` suffisent à déduire l'état de la consommation ; `power_off_delay` évite qu'une pause soit prise pour la fin, et `show_last_cycle` montre la durée du dernier cycle.
 - **Programme, temps restant, barre de progression, lignes d'info, porte, alertes, connectivité et commandes** (démarrer, pause, reprise, stop), chacun optionnel.
@@ -198,7 +199,7 @@ Seule `state_entity` est obligatoire, sauf sur un réfrigérateur où une sonde 
 | `done_alert` | `true` fait pulser un badge vert sur le dessin en fin de cycle, jusqu'à l'ouverture de la porte ou un appui sur le badge. Pour les appareils à cycle (lave-linge, sèche-linge, lave-vaisselle, four…). |
 | `illustration_color` | `auto` (défaut, suit le thème) \| `white` \| `grey` \| `black` \| `red` (rouge foncé). Ne change que la carrosserie, pas les couleurs d'état. |
 | `language` | `auto` (défaut, suit Home Assistant) ou l'un des 14 codes : `en`, `fr`, `de`, `es`, `it`, `nl`, `pt`, `sv`, `no`, `da`, `pl`, `ru`, `zh`, `cs`. `nb` et `nb-NO` donnent le norvégien. |
-| `appliance_type` | `auto` (défaut) \| `washer` \| `dryer` \| `dishwasher` \| `oven` \| `microwave` \| `hood` \| `cooktop` \| `fridge` \| `kettle` \| `cooker` \| `coffee` \| `rice_cooker` \| `air_fryer` \| `water_heater` \| `boiler` \| `heat_pump` \| `printer_3d` \| `pet_feeder` \| `pet_fountain` \| `iron` \| `toaster` \| `pellet_stove` \| `air_conditioner` \| `dehumidifier` \| `space_heater` \| `towel_warmer` \| `air_purifier` \| `fan` \| `ev_charger` \| `hair_dryer` \| `screen` \| `network` \| `robot` \| `pool_pump` \| `scale` \| `ups` \| `solar` \| `home_battery` \| `camera` \| `diffuser` \| `hrv` \| `lamp` \| `mailbox`. |
+| `appliance_type` | `auto` (défaut) \| `washer` \| `dryer` \| `dishwasher` \| `oven` \| `microwave` \| `hood` \| `cooktop` \| `fridge` \| `kettle` \| `cooker` \| `coffee` \| `rice_cooker` \| `air_fryer` \| `water_heater` \| `boiler` \| `heat_pump` \| `printer_3d` \| `pet_feeder` \| `pet_fountain` \| `iron` \| `toaster` \| `pellet_stove` \| `air_conditioner` \| `dehumidifier` \| `space_heater` \| `towel_warmer` \| `air_purifier` \| `fan` \| `ev_charger` \| `hair_dryer` \| `screen` \| `network` \| `robot` \| `pool_pump` \| `scale` \| `ups` \| `solar` \| `home_battery` \| `camera` \| `diffuser` \| `hrv` \| `lamp` \| `mailbox` \| `water_pump` \| `floor_heating` \| `spa` \| `sauna` \| `aquarium` \| `meter` \| `christmas_tree`. |
 | `tap_action` | Ce que fait un appui sur la carte, dans les mots de Home Assistant : `more-info` (défaut : l'entité d'état, ou sur une carte sans elle ce qu'elle lit à sa place), `none`, `navigate`, `url`, `toggle`, `perform-action` ou `fire-dom-event`, celle qu'écoutent les cartes popup bâties sur browser_mod. En YAML seulement. |
 | `toggle_entity` | Bouton marche/arrêt (`switch`, `button`, `script`, `input_boolean`, `fan`), mis en évidence quand c'est allumé. Sur tous les types, frigo compris, où c'est le seul bouton ; à associer à `controls_activation: confirm` pour un appareil qu'il ne faut pas couper par erreur. |
 | `power_entity` / `power_on_threshold` / `power_icon` | Capteur de puissance. Avec un seuil, l'état en est déduit : *en marche* au-dessus, puis *terminé* en redescendant. Pointer `state_entity` sur ce même capteur l'active avec un seuil de 10 W. `power_icon` remplace `mdi:power-plug`. |
@@ -206,6 +207,10 @@ Seule `state_entity` est obligatoire, sauf sur un réfrigérateur où une sonde 
 | `speed_power_max` | Une hotte, un purificateur ou un ventilateur sur une prise : sa puissance à la vitesse maximale, en watts. La vitesse se lit alors dans sa consommation : sous le tiers la première, sous les deux tiers la deuxième, au-delà la troisième. Le pourcentage ou le préréglage d'une entité ventilateur passe toujours avant. |
 | `speed_power_custom` | Règle les deux paliers à la main, `speed_power_2` et `speed_power_3` : les watts à partir desquels le ventilateur est en deuxième et en troisième vitesse, quand les tiers ne conviennent pas. |
 | `show_last_cycle` | Ajoute une ligne *Dernier cycle* entre deux cycles : sa durée et son heure de fin, lues dans l'historique de Home Assistant (sept jours de l'état, deux jours de la puissance d'une prise, pauses plus courtes que `power_off_delay` comprises). Appareils à cycle, bouilloire, fer à repasser, grille-pain et sèche-cheveux. |
+| `energy_entity` | Un compteur d'énergie (kWh ou Wh) affiché sur une ligne *Énergie*, comme la consommation d'une prise ou un compteur de services remis à zéro à chaque cycle. Tous les types sauf le solaire et la batterie domestique. |
+| `energy_price` | Prix du kWh, en nombre (`0.2516`) ou en entité dont l'état est le prix : ajoute une ligne *Coût*, dans la devise de Home Assistant. |
+| `show_elapsed` | Ajoute une ligne *Écoulé* pendant un cycle : depuis combien de temps il tourne, pauses retirées. Avec une prise, le début est lu dans l'historique de la puissance quand la carte s'ouvre en plein cycle. |
+| `show_today` | Ajoute une ligne *Aujourd'hui* : combien de temps l'appareil a marché depuis minuit et combien de fois il a démarré, lu dans l'historique de sa prise (ou de son état sans prise). Utile sur une pompe, un chauffage, un chauffe-eau. |
 | `show_history` / `history_entity` / `history_hours` | `true` ajoute sous les lignes un bouton discret *Dernières 24 h* qui déplie la courbe d'une mesure, dans la couleur de l'état, avec son minimum, son maximum et un trou là où le capteur était indisponible. L'historique n'est lu qu'une fois déplié, puis gardé cinq minutes. Sans lui, `history_entity` est ce qui en dit le plus sur le type (la température d'un frigo, le débit descendant d'un appareil réseau, l'eau d'une piscine, la charge d'un onduleur, le poids d'une balance), sinon le compteur, sinon l'état quand c'est un nombre. `history_hours` : 24 par défaut, de 1 à 168. Désactivé par défaut. |
 | `program_entity` / `program_format` | Programme. `clean` (défaut) le rend lisible (`LaundryCare.Washer.Program.Auto40` devient *Auto 40*, `Rapid20Min` devient *Rapid 20 Min*), `raw` l'affiche tel quel. |
 | `delay_entity` | appareils à cycle | Un départ différé qui décompte, en secondes, en minutes ou en heure de départ (le *StartInRelative* de Home Connect). Pendant le décompte l'appareil affiche *Départ différé*, une ligne *Départ dans* donne le temps restant et l'heure de départ, et la barre se remplit jusqu'au départ. Masqué à 0. |
@@ -244,7 +249,7 @@ Seule `state_entity` est obligatoire, sauf sur un réfrigérateur où une sonde 
 | `water_level_entity` / `level_empty_below` | fontaine | L'eau restante : un pourcentage, qui remplit le réservoir sur le dessin ; un mot (`low`, `lack`, `shortage`, `level_1`… ou `normal`, `medium`, `full`) ; ou un contact, allumé quand elle manque, ou allumé tant qu'il y a de l'eau pour un contact d'humidité (Petlibro). Un nombre dans une autre unité (un niveau de 1 à 4, des millilitres) ne se lit contre `level_empty_below` que si celui-ci est réglé. À `level_empty_below` ou en dessous (10 par défaut), l'état lit *Peu d'eau*, en rouge, avant tout le reste : une pompe à sec grille. Le jet s'arrête alors, comme pompe arrêtée, et la vasque baisse avec le réservoir. |
 | `zones` / `zones_layout` / `zones_count` | plaque | Jusqu'à 6 foyers `{ level_entity, residual_heat_entity?, name? }`, niveau en chiffre ou en mot (`boost`), `H` pour la chaleur résiduelle. Disposition `2x1` \| `2x2` \| `3x2`, et nombre de foyers à dessiner sans entité (4 par défaut). |
 | `child_lock_entity` | plaque | Cadenas sur l'illustration. |
-| `fridge_layout` | frigo | `freezer_bottom` (défaut) \| `freezer_top` \| `side_by_side` \| `single` \| `wine` (porte vitrée et bouteilles, pour une cave à vin). |
+| `fridge_layout` | frigo | `freezer_bottom` (défaut) \| `freezer_top` \| `side_by_side` \| `single` \| `wine` (porte vitrée et bouteilles, pour une cave à vin) \| `chest` (congélateur coffre) \| `drawers` (congélateur armoire à tiroirs transparents). Sur ces deux-là, la sonde du congélateur, ou celle du frigo, est sur l'écran, et le seuil d'alerte vaut -12 par défaut. |
 | `fridge_temperature_entity` / `freezer_temperature_entity` / `fridge_max_temperature` / `temperature_hide_in_list` | frigo | Températures affichées sur les portes et dans la liste, `--°` si la sonde se tait (`temperature_hide_in_list` ne les laisse que sur les portes). Au-dessus du maximum (8 °C par défaut, 18 °C pour `wine`), l'état passe en *Température haute*. |
 | `door_entity` / `freezer_door_entity` | frigo | Chaque porte s'ouvre pour son propre capteur. |
 | `ice_maker_entity` | frigo | Les glaçons tombent quand elle produit. |
@@ -293,6 +298,7 @@ Seule `state_entity` est obligatoire, sauf sur un réfrigérateur où une sonde 
 | `reload_entity` | écran (tablette) | Un bouton qui recharge sa page, comme le *Charger l'URL de départ* de Fully Kiosk. |
 | `restart_entity` | écran (tablette) | Un bouton qui redémarre son application, comme le *Restart app* de Kiosk Satellite. |
 | `screenshot_entity` | écran (tablette) | Une `camera` ou une `image` de son écran, comme le *Screenshot* de Kiosk Satellite : affichée sur la vitre à la place du tableau de bord dessiné, quand le tableau de bord est affiché. |
+| `tower_entity` | écran (ordinateur) | L'unité centrale sur une deuxième prise : un `switch` ajoute un bouton *Unité centrale*, un `sensor` de puissance une ligne *Unité centrale*. La diode de la tour la suit, et la carte affiche *Unité centrale allumée* quand l'écran est en veille. |
 | `battery_entity` | écran (tablette) | Sa batterie, affichée dans un coin de la card, en orange à 20 % et moins. |
 | `network_layout` | réseau | `switch` \| `server` \| `nas` \| `rack` \| `router`. Sans lui, un nom qui dit NAS, Synology, QNAP, Unraid, switch, serveur, baie, routeur, modem, Bbox, Livebox, Freebox ou FRITZ!Box choisit le modèle, des disques en font un NAS, et les champs propres au routeur en font un routeur. |
 | `switch_ports` | réseau | Les ports dessinés sur un switch : `8`, `16`, `24` ou `32`. Sans lui, le plus petit qui contient `ports_total`. |
@@ -345,8 +351,20 @@ Seule `state_entity` est obligatoire, sauf sur un réfrigérateur où une sonde 
 | `mailbox_front` | boîte aux lettres | `left` (défaut) \| `right` : le côté de la rue, pour une traversante. |
 | `mail_count_entity` | boîte aux lettres | Un compteur de courrier. La pile dessine jusqu'à douze lettres, et le nombre est une ligne et un badge. |
 | `front_door_entity` / `back_door_entity` | boîte aux lettres | Les contacts de la porte côté rue et de la porte côté maison : *Porte avant ouverte*, *Porte arrière ouverte*, la porte pivote et la lumière du jour entre, et une ligne pour chacune. |
+| `pump_layout` | pompe à eau | `booster` (surpresseur sur son ballon, avec son contrôleur) \| `sump` (regard de relevage en coupe, son flotteur sur son câble). Sans réglage, un `level_entity`, un `high_level_entity` ou un nom qui dit relevage en fait une pompe de relevage. |
+| `pressure_entity` | pompe à eau (surpresseur) | La pression, sur l'écran du contrôleur et en ligne. Sans elle, l'écran affiche la puissance de la prise. |
+| `level_entity` / `level_max` | pompe à eau (relevage) | Le niveau d'eau, sur l'écran, en ligne et comme hauteur d'eau dans le regard : un pourcentage, ou une valeur sur `level_max`. À partir de 90 %, *Niveau haut*. |
+| `high_level_entity` | pompe à eau (relevage) | Un flotteur ou une alarme de niveau haut : *Niveau haut*, le regard plein et un gyrophare qui clignote. |
+| `floor_layout` | plancher chauffant | `water` (défaut, collecteur au mur et serpentin sous le carrelage) \| `electric` (câble chauffant sur sa trame). |
+| `temperature_entity` | plancher chauffant, spa, sauna, aquarium | La température sur l'écran et en ligne. Sans elle, le `current_temperature` du thermostat. |
+| `target_temperature_entity` | sauna | La température à atteindre : à trois degrés près, le sauna est *Prêt*. Sans elle, la consigne du thermostat. |
+| `bubbles_entity` | spa | Les bulles ou les jets : *Bulles*, l'eau qui bouillonne, et un bouton *Bulles* sur un interrupteur. `light_entity` éclaire l'eau. |
+| `tariff_entity` | compteur | La période tarifaire (BASE, HP, HC, une couleur Tempo), sur l'écran et en ligne. |
+| `high_power` | compteur | À partir de cette puissance, le compteur passe en *Conso forte* et son voyant bat vite. 3000 par défaut, dans l'unité de l'entité d'état (VA ou W). |
+| `tree_palette` | sapin de Noël | `multicolor` (défaut) \| `red_gold` \| `red_silver` \| `gold_silver` \| `blue_silver` \| `white_silver` \| `red_green` : les boules, les lumières, la guirlande, l'étoile, le cache-pot et les cadeaux. |
+| `presents` | sapin de Noël | `auto` (défaut, des cadeaux sous le sapin les 24 et 25 décembre seulement) \| `show` \| `hide`. |
 | `spots` | lampe | Le nombre de spots dessinés, de 1 à 4. Sans réglage, un groupe de lumières dessine un spot par lumière, jusqu'à quatre. |
-| `robot_layout` | robot | `vacuum` \| `mop` \| `mower` \| `stick` (un aspirateur balai sur son support mural) \| `floor_washer` (un laveur de sol dans sa station). Sans lui, un nom qui dit balai, sans fil ou Dyson en fait un aspirateur balai, Tineco ou laveur de sol un laveur de sol, une entité `lawn_mower` ou un nom qui dit tondeuse, Landroid ou Automower en fait une tondeuse, et Braava ou laveur un robot laveur. |
+| `robot_layout` | robot | `vacuum` \| `mop` \| `mower` \| `stick` (un aspirateur balai sur son support mural) \| `floor_washer` (un laveur de sol dans sa station). Sans lui, un nom qui dit balai, sans fil ou Dyson en fait un aspirateur balai, Tineco ou laveur de sol un laveur de sol, une entité `lawn_mower` ou un nom qui dit tondeuse, Landroid ou Automower en fait une tondeuse, et Braava ou laveur un robot laveur. `pool` dessine un robot de piscine dont le câble le suit, avec son `remaining_time_entity` sur son boîtier ; un nom qui dit piscine, pool, Dolphin, Maytronics, Aiper, Zodiac ou Polaris le choisit. |
 | `robot_station` | robot | `station` (défaut : la station de vidage de l'aspirateur, la station de lavage du laveur) \| `base` (une base de charge seule). |
 | `robot_shelter` | robot | `true` dessine un abri au-dessus de la base d'une tondeuse. La pluie s'arrête sur son toit. |
 | `robot_shelter_style` | robot | `lean_to` (défaut, un appentis en bois au toit de tôle) \| `shell` (une coque moulée sur un pied). |
@@ -830,6 +848,52 @@ type: custom:ha-appliance-card
 state_entity: camera.sonnette
 ring_entity: binary_sensor.sonnette_visiteur
 motion_entity: binary_sensor.sonnette_mouvement
+```
+
+</details>
+
+<details>
+<summary><b>Pompes, plancher chauffant, spa, sauna, aquarium, compteur et sapin de Noël</b></summary>
+
+Chacun se lit sur sa propre entité, l'action d'un thermostat ou la puissance d'une prise avec `power_on_threshold`, et affiche sa mesure sur un écran dessiné assez grand pour être lu.
+
+```yaml
+type: custom:ha-appliance-card
+appliance_type: water_pump
+state_entity: switch.surpresseur
+pressure_entity: sensor.surpresseur_pression
+```
+
+```yaml
+type: custom:ha-appliance-card
+appliance_type: water_pump
+pump_layout: sump
+state_entity: switch.pompe_relevage
+level_entity: sensor.relevage_niveau
+level_max: 100
+high_level_entity: binary_sensor.relevage_niveau_haut
+```
+
+```yaml
+type: custom:ha-appliance-card
+appliance_type: spa
+state_entity: climate.spa
+bubbles_entity: switch.spa_bulles
+light_entity: light.spa
+```
+
+```yaml
+type: custom:ha-appliance-card
+appliance_type: meter
+state_entity: sensor.linky_papp
+tariff_entity: sensor.linky_ptec
+```
+
+```yaml
+type: custom:ha-appliance-card
+appliance_type: christmas_tree
+state_entity: switch.sapin
+tree_palette: red_gold
 ```
 
 </details>

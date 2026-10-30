@@ -36,6 +36,7 @@ No brand assumed: every field is an entity you pick, so it works with **any** in
 - **And the UPS**: the wall socket, the UPS and the box it keeps alive, *On mains* with the energy flowing through it, *On battery* with the wall crossed out, the UPS beeping and its screen counting the time left, *Battery low*, *Overload* and *Replace battery* read from NUT's own codes, and the battery, the runtime, the load and the input voltage in the lines.
 - **And the lamps**: a bulb, a bedside lamp, an arc floor lamp, a halogen torchiere, a pendant, a LED strip, recessed spots, Nanoleaf-style panels, a desk lamp or a wall lantern, lit in the light's own colour and dimmed with its brightness; an effect turns the hue of a strip's segments or of the panels.
 - **And the mailbox**: through the wall with its street and house doors, or a classic box on its post. The letters pile up to twelve, a new one comes in through the slot, and the doors swing open on their hinges. Cameras get a doorbell too, its ring of light beating when someone rings.
+- **And the rest of the house**: a chest freezer and a drawer freezer that frost over while they cool, a booster set with its pressure on its controller and a sump pit whose float follows the water, a pool robot trailing its cable, underfloor heating on hot water or electric, a spa with its bubbles, a sauna whose stones glow, a planted aquarium, a Linky meter and a Christmas tree in seven classic colour schemes, its presents out on 24 and 25 December.
 - **Works from a smart plug alone**: `power_entity` and `power_on_threshold` are enough to derive the state from consumption; `power_off_delay` keeps a pause from reading as the end, and `show_last_cycle` shows how long the last cycle ran.
 - **Program, remaining time, progress bar, info lines, door, alerts, connectivity and controls** (start, pause, resume, stop), each optional.
 - **14 languages** (EN, FR, DE, ES, IT, NL, PT, SV, NO, DA, PL, RU, ZH, CS), Home Assistant's or pinned on the card.
@@ -198,7 +199,7 @@ Only `state_entity` is required, except on a fridge where a probe or a door cont
 | `done_alert` | `true` makes a green badge pulse on the drawing when a cycle has finished, until the door opens or the badge is tapped. For appliances with a cycle (washer, dryer, dishwasher, oven…). |
 | `illustration_color` | `auto` (default, follows the theme) \| `white` \| `grey` \| `black` \| `red` (dark red). Only changes the casing, not the state colours. |
 | `language` | `auto` (default, follows Home Assistant) or one of the 14 codes: `en`, `fr`, `de`, `es`, `it`, `nl`, `pt`, `sv`, `no`, `da`, `pl`, `ru`, `zh`, `cs`. `nb` and `nb-NO` give Norwegian. |
-| `appliance_type` | `auto` (default) \| `washer` \| `dryer` \| `dishwasher` \| `oven` \| `microwave` \| `hood` \| `cooktop` \| `fridge` \| `kettle` \| `cooker` \| `coffee` \| `rice_cooker` \| `air_fryer` \| `water_heater` \| `boiler` \| `heat_pump` \| `printer_3d` \| `pet_feeder` \| `pet_fountain` \| `iron` \| `toaster` \| `pellet_stove` \| `air_conditioner` \| `dehumidifier` \| `space_heater` \| `towel_warmer` \| `air_purifier` \| `fan` \| `ev_charger` \| `hair_dryer` \| `screen` \| `network` \| `robot` \| `pool_pump` \| `scale` \| `ups` \| `solar` \| `home_battery` \| `camera` \| `diffuser` \| `hrv` \| `lamp` \| `mailbox`. |
+| `appliance_type` | `auto` (default) \| `washer` \| `dryer` \| `dishwasher` \| `oven` \| `microwave` \| `hood` \| `cooktop` \| `fridge` \| `kettle` \| `cooker` \| `coffee` \| `rice_cooker` \| `air_fryer` \| `water_heater` \| `boiler` \| `heat_pump` \| `printer_3d` \| `pet_feeder` \| `pet_fountain` \| `iron` \| `toaster` \| `pellet_stove` \| `air_conditioner` \| `dehumidifier` \| `space_heater` \| `towel_warmer` \| `air_purifier` \| `fan` \| `ev_charger` \| `hair_dryer` \| `screen` \| `network` \| `robot` \| `pool_pump` \| `scale` \| `ups` \| `solar` \| `home_battery` \| `camera` \| `diffuser` \| `hrv` \| `lamp` \| `mailbox` \| `water_pump` \| `floor_heating` \| `spa` \| `sauna` \| `aquarium` \| `meter` \| `christmas_tree`. |
 | `tap_action` | What a tap on the card does, in Home Assistant's own words: `more-info` (default: the state entity, or on a card without one what it reads in its place), `none`, `navigate`, `url`, `toggle`, `perform-action` or `fire-dom-event`, which is what the popup cards built on browser_mod listen for. In YAML only. |
 | `toggle_entity` | Power button (`switch`, `button`, `script`, `input_boolean`, `fan`), highlighted while on. On every type, the fridge included, where it is the only button; pair it with `controls_activation: confirm` for an appliance that must not be switched off by mistake. |
 | `power_entity` / `power_on_threshold` / `power_icon` | Power sensor. With a threshold, the state is derived from it: *running* above, then *finished* when it falls back. Pointing `state_entity` at the same sensor enables it with a 10 W threshold. `power_icon` replaces `mdi:power-plug`. |
@@ -206,6 +207,10 @@ Only `state_entity` is required, except on a fridge where a probe or a door cont
 | `speed_power_max` | A hood, an air purifier or a fan on a plug: its power at top speed, in watts. The speed is then read from what it draws: under a third of it the first speed, under two thirds the second, above that the third. A fan entity's percentage or preset always wins. |
 | `speed_power_custom` | Sets the two steps by hand, `speed_power_2` and `speed_power_3`: the watts from which the fan is on its second and third speed, when the thirds do not fit. |
 | `show_last_cycle` | Adds a *Last cycle* line between cycles: how long it ran and when it ended, read from Home Assistant's history (seven days of the state, two days of a plug's power, pauses shorter than `power_off_delay` included). Appliances that run a cycle, the kettle, the iron, the toaster and the hair dryer. |
+| `energy_entity` | An energy counter (kWh or Wh) shown as an *Energy* line, such as a plug's consumption or a utility meter reset at each cycle. Every type except solar and the home battery. |
+| `energy_price` | Price of one kWh, as a number (`0.2516`) or an entity whose state is the price: adds a *Cost* line, in Home Assistant's currency. |
+| `show_elapsed` | Adds an *Elapsed* line during a cycle: how long it has run, pauses left out. From a plug, the start is read in the power history when the card opens mid-cycle. |
+| `show_today` | Adds a *Today* line: how long the appliance has run since midnight and how many times it started, from the history of its plug (or of its state without a plug). Useful on a pump, a heater, a water heater. |
 | `show_history` / `history_entity` / `history_hours` | `true` adds a discreet *Last 24 h* button under the lines, which unfolds a curve of one reading, in the state's colour, with its minimum and maximum and a gap where the sensor was unavailable. The history is read only once unfolded, then kept five minutes. Left out, `history_entity` is what says the most about the type (a fridge's temperature, a network device's download rate, a pool's water, a UPS's load, a scale's weight), else the power meter, else the state when it is a number. `history_hours`: 24 by default, 1 to 168. Off by default. |
 | `program_entity` / `program_format` | Program. `clean` (default) makes it readable (`LaundryCare.Washer.Program.Auto40` becomes *Auto 40*, `Rapid20Min` becomes *Rapid 20 Min*), `raw` shows it as-is. |
 | `delay_entity` | cycle appliances | A delayed start counting down, in seconds, minutes or as a start time (Home Connect's *StartInRelative*). While it runs the appliance reads *Delayed start*, a *Starts in* line gives the time left and the start time, and the bar fills up to the start. Hidden at 0. |
@@ -244,7 +249,7 @@ Only `state_entity` is required, except on a fridge where a probe or a door cont
 | `water_level_entity` / `level_empty_below` | pet fountain | The water left: a percentage, which fills the tank on the drawing; a word (`low`, `lack`, `shortage`, `level_1`… or `normal`, `medium`, `full`); or a contact, on when it runs low, or on while there is water for a moisture contact (Petlibro). A number in another unit (a level from 1 to 4, millilitres) is only read against `level_empty_below` when it is set. At or below `level_empty_below` (10 by default) the state reads *Low water*, in red, ahead of everything else: a dry pump burns out. The jet then stops, as it does with the pump off, and the dish drops with the tank. |
 | `zones` / `zones_layout` / `zones_count` | cooktop | Up to 6 zones `{ level_entity, residual_heat_entity?, name? }`, level as a number or a word (`boost`), `H` for residual heat. Layout `2x1` \| `2x2` \| `3x2`, and how many zones to draw without entities (default 4). |
 | `child_lock_entity` | cooktop | Padlock on the illustration. |
-| `fridge_layout` | fridge | `freezer_bottom` (default) \| `freezer_top` \| `side_by_side` \| `single` \| `wine` (glass door and bottles, for a wine cooler). |
+| `fridge_layout` | fridge | `freezer_bottom` (default) \| `freezer_top` \| `side_by_side` \| `single` \| `wine` (glass door and bottles, for a wine cooler) \| `chest` (a chest freezer) \| `drawers` (an upright freezer with see-through drawers). On these two the freezer probe, or the fridge one, is on the display, and the warning threshold is -12 by default. |
 | `fridge_temperature_entity` / `freezer_temperature_entity` / `fridge_max_temperature` / `temperature_hide_in_list` | fridge | Temperatures shown on the doors and in the list, `--°` when the probe goes quiet (`temperature_hide_in_list` leaves them on the doors only). Above the maximum (default 8 °C, 18 °C for `wine`), the state reads *Temperature high*. |
 | `door_entity` / `freezer_door_entity` | fridge | Each door swings for its own sensor. |
 | `ice_maker_entity` | fridge | Ice cubes fall while it produces. |
@@ -293,6 +298,7 @@ Only `state_entity` is required, except on a fridge where a probe or a door cont
 | `reload_entity` | screen (tablet) | A button that reloads its page, such as Fully Kiosk's *Load start URL*. |
 | `restart_entity` | screen (tablet) | A button that restarts its app, such as Kiosk Satellite's *Restart app*. |
 | `screenshot_entity` | screen (tablet) | A `camera` or `image` of its screen, such as Kiosk Satellite's *Screenshot*: shown on the glass instead of the drawn dashboard while the dashboard is on. |
+| `tower_entity` | screen (computer) | The tower on a second plug: a `switch` adds a *Tower* button, a power `sensor` a *Tower* line. The tower's LED follows it, and the card reads *Tower on* while the monitor sleeps. |
 | `battery_entity` | screen (tablet) | Its battery, shown in a corner of the card, orange at 20 % and below. |
 | `network_layout` | network | `switch` \| `server` \| `nas` \| `rack` \| `router`. Left out, a name that says NAS, Synology, QNAP, Unraid, switch, server, rack, router, modem, Bbox, Livebox, Freebox or FRITZ!Box picks the model, disks make it a NAS, and a router's own fields make it a router. |
 | `switch_ports` | network | The ports drawn on a switch: `8`, `16`, `24` or `32`. Left out, the smallest one that holds `ports_total`. |
@@ -345,8 +351,20 @@ Only `state_entity` is required, except on a fridge where a probe or a door cont
 | `mailbox_front` | mailbox | `left` (default) \| `right`: the side the street is on, for a through-the-wall box. |
 | `mail_count_entity` | mailbox | A counter of the mail. The pile shows up to twelve letters, and the count is a line and a badge. |
 | `front_door_entity` / `back_door_entity` | mailbox | The contacts on the street door and on the house door: *Front door open*, *Back door open*, the door swings open and daylight comes in, and a line for each. |
+| `pump_layout` | water_pump | `booster` (a pump on its pressure tank, with its controller) \| `sump` (a sump pit in cross-section, its float on its cable). Left out, a `level_entity`, a `high_level_entity` or a name that says sump makes a sump pump. |
+| `pressure_entity` | water_pump (booster) | The pressure, on the controller's display and as a line. Without it, the display shows the plug's power. |
+| `level_entity` / `level_max` | water_pump (sump) | The water level, on the display, as a line and as the height of the water in the pit: a percentage, or a value out of `level_max`. From 90 % it reads *High level*. |
+| `high_level_entity` | water_pump (sump) | A float switch or a high-level alarm: *High level*, the pit full and a beacon flashing. |
+| `floor_layout` | floor_heating | `water` (default, a manifold on the wall and the loop under the tiles) \| `electric` (a heating cable on its mesh). |
+| `temperature_entity` | floor_heating, spa, sauna, aquarium | The temperature on the display and as a line. Left out, a thermostat's `current_temperature` is used. |
+| `target_temperature_entity` | sauna | The temperature to reach: within three degrees, the sauna reads *Ready*. Left out, the thermostat's own target. |
+| `bubbles_entity` | spa | The bubbles or jets: *Bubbles*, the water boiling with them, and a *Bubbles* button on a switch. `light_entity` lights the water. |
+| `tariff_entity` | meter | The tariff period (BASE, HP, HC, a Tempo colour), on the display and as a line. |
+| `high_power` | meter | From this power the meter reads *High use* and its LED beats fast. 3000 by default, in the unit of the state entity (VA or W). |
+| `tree_palette` | christmas_tree | `multicolor` (default) \| `red_gold` \| `red_silver` \| `gold_silver` \| `blue_silver` \| `white_silver` \| `red_green`: the baubles, the lights, the tinsel, the star, the pot and the presents. |
+| `presents` | christmas_tree | `auto` (default, presents under the tree on 24 and 25 December only) \| `show` \| `hide`. |
 | `spots` | lamp | The number of spots drawn, 1 to 4. Left out, a light group draws one spot per light, up to four. |
-| `robot_layout` | robot | `vacuum` \| `mop` \| `mower` \| `stick` (a stick vacuum on its wall dock) \| `floor_washer` (a wet and dry floor washer in its station). Left out, a name that says stick, cordless or Dyson makes a stick vacuum, Tineco or floor washer a floor washer, a `lawn_mower` entity or a name that says mower, Landroid or Automower makes a mower, and Braava or mop a mopping robot. |
+| `robot_layout` | robot | `vacuum` \| `mop` \| `mower` \| `stick` (a stick vacuum on its wall dock) \| `floor_washer` (a wet and dry floor washer in its station). Left out, a name that says stick, cordless or Dyson makes a stick vacuum, Tineco or floor washer a floor washer, a `lawn_mower` entity or a name that says mower, Landroid or Automower makes a mower, and Braava or mop a mopping robot. `pool` draws a pool robot whose cable follows it, with its `remaining_time_entity` on its power supply; a name that says pool, Dolphin, Maytronics, Aiper, Zodiac or Polaris picks it. |
 | `robot_station` | robot | `station` (default: the vacuum's emptying station, the mop's washing station) \| `base` (a charging base alone). |
 | `robot_shelter` | robot | `true` draws a shelter over a mower's base. The rain stops on its roof. |
 | `robot_shelter_style` | robot | `lean_to` (default, a wooden lean-to with a corrugated roof) \| `shell` (a moulded shell on one leg). |
@@ -830,6 +848,52 @@ type: custom:ha-appliance-card
 state_entity: camera.front_door
 ring_entity: binary_sensor.front_door_visitor
 motion_entity: binary_sensor.front_door_motion
+```
+
+</details>
+
+<details>
+<summary><b>Pumps, underfloor heating, spa, sauna, aquarium, meter and Christmas tree</b></summary>
+
+Each is read from its own entity, a thermostat's action or a smart plug's power with `power_on_threshold`, and each shows its reading on a display drawn large enough to read.
+
+```yaml
+type: custom:ha-appliance-card
+appliance_type: water_pump
+state_entity: switch.booster
+pressure_entity: sensor.booster_pressure
+```
+
+```yaml
+type: custom:ha-appliance-card
+appliance_type: water_pump
+pump_layout: sump
+state_entity: switch.sump_pump
+level_entity: sensor.sump_level
+level_max: 100
+high_level_entity: binary_sensor.sump_high_level
+```
+
+```yaml
+type: custom:ha-appliance-card
+appliance_type: spa
+state_entity: climate.spa
+bubbles_entity: switch.spa_bubbles
+light_entity: light.spa
+```
+
+```yaml
+type: custom:ha-appliance-card
+appliance_type: meter
+state_entity: sensor.linky_papp
+tariff_entity: sensor.linky_ptec
+```
+
+```yaml
+type: custom:ha-appliance-card
+appliance_type: christmas_tree
+state_entity: switch.christmas_tree
+tree_palette: red_gold
 ```
 
 </details>

@@ -153,7 +153,7 @@ const T = {
     layout_robot_stick: "Stick vacuum", stick_charged: "Charged",
     layout_robot_floor_washer: "Floor washer", stick_away: "Off the base", stick_away_threshold: "Off the base below this power (W)",
     type_diffuser: "Essential oil diffuser", dif_mist: "Diffusing", dif_inter: "Intermittent", dif_low: "Light mist", dif_empty: "Tank empty", dif_mode: "Mist mode", layout_dif_drop: "Teardrop", layout_dif_cone: "Cone", layout_dif_stone: "Pebble", layout_dif_flame: "Flame", layout_dif_nebulizer: "Nebulizer", section_tank_empty: "Empty tank sensor", type_hrv: "Heat recovery ventilation (HRV/ERV)", hrv_run: "Ventilating", hrv_boost: "Boost", hrv_bypass: "Bypass", hrv_defrost: "Defrosting", hrv_filter: "Replace filter", hrv_away: "Away", hrv_recirc: "Recirculation", hrv_humidity: "Humidity control", hrv_inter: "Intermittent", hrv_inter_paused: "Intermittent, paused", hrv_mode: "Mode", hrv_supply_fan: "Supply fan", hrv_exhaust_fan: "Exhaust fan", section_supply_fan: "Supply fan speed (rpm)", section_exhaust_fan: "Exhaust fan speed (rpm)", fan_max_rpm: "Fan top speed (rpm)", section_exhaust_airflow: "Exhaust airflow", section_target_humidity: "Humidity setpoint", section_humidity_control: "Humidity control switch", layout_hrv_diagram: "Air flows", layout_hrv_one_duct: "Wall unit, one duct", layout_hrv_pair: "Through-wall pair", section_supply_temperature: "Supply air temperature", section_extract_temperature: "Extract air temperature", section_exhaust_temperature: "Exhaust air temperature", section_bypass: "Bypass", section_airflow: "Airflow", hrv_t_outdoor: "fresh air", hrv_t_supply: "supply", hrv_t_extract: "extract", hrv_t_exhaust: "exhaust", hrv_outside: "outside", hrv_room: "room",
-    type_camera: "Camera", cam_idle: "Idle", cam_live: "Streaming", cam_rec: "Recording", cam_motion: "Motion detected", cam_off: "Off", cam_line_last_motion: "Last motion", cam_line_night: "Night vision", cam_line_signal: "Signal", section_motion: "Motion sensor", section_recording: "Recording sensor", section_night_vision: "Night vision", section_privacy: "Privacy mode", section_signal: "Signal strength", layout_cam_indoor: "Indoor, pan and tilt", layout_cam_tube: "Indoor tube", layout_cam_outdoor: "Outdoor", layout_cam_dome: "Dome", layout_cam_doorbell: "Doorbell", cam_ring: "Ringing", cam_line_last_ring: "Last ring", section_ring: "Doorbell button", type_mailbox: "Mailbox", mb_empty: "Empty", mb_mail: "Mail", mb_front_open: "Front door open", mb_back_open: "Back door open", mb_line_count: "Mail received", mb_line_last: "Last mail", mb_front_door: "Front door", mb_back_door: "Back door", mb_open: "Open", mb_closed: "Closed", section_mail_count: "Mail counter", layout_mb_through: "Through the wall", layout_mb_classic: "Classic", mb_street: "street", mb_house: "house", mb_front_side: "Street side", mb_side_left: "Left", mb_side_right: "Right",
+    type_camera: "Camera", cam_idle: "Idle", cam_live: "Streaming", cam_rec: "Recording", cam_motion: "Motion detected", cam_off: "Off", cam_line_last_motion: "Last motion", cam_line_night: "Night vision", cam_line_signal: "Signal", section_motion: "Motion sensor", section_recording: "Recording sensor", section_night_vision: "Night vision", section_privacy: "Privacy mode", section_signal: "Signal strength", layout_cam_indoor: "Indoor, pan and tilt", layout_cam_tube: "Indoor tube", layout_cam_outdoor: "Outdoor", layout_cam_dome: "Dome", layout_cam_doorbell: "Doorbell", cam_ring: "Ringing", cam_line_last_ring: "Last ring", section_ring: "Doorbell button", type_mailbox: "Mailbox", mb_empty: "Empty", mb_mail: "Mail", mb_front_open: "Front door open", mb_back_open: "Back door open", mb_line_count: "Mail received", mb_line_last: "Last mail", mb_front_door: "Front door", mb_back_door: "Back door", mb_open: "Open", mb_closed: "Closed", section_mail_count: "Mail counter", layout_mb_through: "Through the wall", layout_mb_classic: "Classic", mb_street: "street", mb_house: "house", mb_front_side: "Street side", mb_side_left: "Left", mb_side_right: "Right", type_water_pump: "Water pump", type_floor_heating: "Underfloor heating", type_spa: "Spa", type_sauna: "Sauna", type_aquarium: "Aquarium", type_meter: "Electricity meter", type_christmas_tree: "Christmas tree", layout_chest: "Chest freezer", layout_drawers: "Drawer freezer", layout_pump_booster: "Booster set", layout_pump_sump: "Sump pump", layout_floor_water: "Hot water", layout_floor_electric: "Electric", layout_robot_pool: "Pool robot", wp_pumping: "Pumping", wp_high: "High level", spa_bubbles: "Bubbles", sauna_ready: "Ready", aq_lit: "Light on", aq_dark: "Light off", meter_low: "Low use", meter_high: "High use", section_pressure: "Pressure", section_water_level: "Water level", section_high_level: "High level alarm", level_max: "Level when full", section_bubbles: "Bubbles", section_tariff: "Tariff period", high_power: "High use from (W or VA)", tree_palette: "Colours", palette_multicolor: "Multicolour", palette_red_gold: "Red and gold", palette_red_silver: "Red and silver", palette_gold_silver: "Gold and silver", palette_blue_silver: "Blue and silver", palette_white_silver: "White and silver", palette_red_green: "Red and green", presents: "Presents", presents_auto: "On 24 and 25 December", presents_show: "Always", presents_hide: "Never", tree_on: "On", tree_off: "Off",
     type_lamp: "Lamp", lamp_off: "Off", lamp_on: "On", lamp_line_brightness: "Brightness", lamp_line_color_temp: "Colour temperature", lamp_line_effect: "Effect", lamp_spots: "Number of spots", layout_lamp_bulb: "Bulb", layout_lamp_bedside: "Bedside lamp", layout_lamp_floor: "Arc floor lamp", layout_lamp_torch: "Torchiere", layout_lamp_pendant: "Pendant", layout_lamp_strip: "LED strip", layout_lamp_spot: "Recessed spots", layout_lamp_panels: "Light panels", layout_lamp_desk: "Desk lamp", layout_lamp_wall: "Wall lantern",
     speed_power_max: "Power at top speed (W)", speed_power_custom: "Custom speed thresholds", speed_power_2: "Speed 2 from (W)", speed_power_3: "Speed 3 from (W)",
     fw_self_cleaning: "Self-cleaning", fw_dirty_full: "Dirty water tank full", fw_clean_empty: "Clean water tank empty",
@@ -175,7 +175,7 @@ const T = {
     type_air_conditioner: "Air conditioner", ac_off: "Off", ac_cooling: "Cooling", ac_heating: "Heating", ac_drying: "Drying", ac_fan_only: "Fan only", ac_auto: "Auto", ac_idle: "Standby", ac_defrost: "Defrosting", ac_preheating: "Warming up", ac_line_humidity: "Humidity", section_vane_vertical: "Vane up/down", section_vane_horizontal: "Vane left/right", section_purifier: "Air purifier (nanoe, plasma)", section_defrost: "Defrost indicator",
     type_dehumidifier: "Dehumidifier", type_space_heater: "Space heater", type_towel_warmer: "Towel warmer", dh_laundry: "Drying laundry", dh_full: "Tank full", dh_line_tank: "Tank", line_mode: "Mode", tw_comfort: "Comfort", tw_eco: "Eco", tw_frost: "Frost protection", tw_boost: "Boost", tw_drying: "Drying", section_tank: "Water tank", section_current_humidity: "Humidity sensor", section_heater_layout: "Model", layout_fan_heater: "Fan heater", layout_oil_radiator: "Oil-filled radiator",
     type_air_fryer: "Air fryer", af_cooking: "Cooking", af_shake: "Shake the basket", af_basket_out: "Basket out", af_preheated: "Preheated", af_basket2: "Basket 2", section_fryer_layout: "Model", layout_basket: "Basket", layout_window: "Basket with window", layout_dual: "Dual basket", section_basket: "Basket sensor", section_shake: "Shake reminder", section_basket2: "Basket 2 state (dual)",
-    last_cycle: "Last cycle", show_last_cycle: "Show the last cycle", power_off_delay: "Delay before Finished (min, plug only)",
+    last_cycle: "Last cycle", show_last_cycle: "Show the last cycle", power_off_delay: "Delay before Finished (min, plug only)", section_energy: "Energy used", energy_price: "Price per kWh (number or entity)", energy_line: "Energy", cost_line: "Cost", show_elapsed: "Show the time elapsed in the cycle", elapsed_line: "Elapsed", show_today: "Show today's running time and starts", today_line: "Today", starts_one: "{n} start", starts_other: "{n} starts", section_tower: "Tower (second plug)", tower_line: "Tower", tower_on: "Tower on", tower_toggle: "Tower",
     washer_dryer: "Washer-dryer (washes and dries)", step_drying: "Drying", section_cycle_phase: "Cycle phase",
     step_prewash: "Pre-wash", step_soaking: "Soaking", step_weighing: "Weighing", step_filling: "Filling", step_washing: "Washing", step_rinsing: "Rinsing", step_draining: "Draining", step_spinning: "Spinning", step_cooling: "Cooling", step_anti_crease: "Anti-crease", step_steam: "Steam",
     type_ev_charger: "EV charger", ev_no_vehicle: "No vehicle", ev_connected: "Plugged in", ev_awaiting_auth: "Awaiting authorisation", ev_charging: "Charging", ev_paused: "Charging paused", ev_scheduled: "Scheduled", ev_done: "Charging complete", ev_error: "Error", ev_offline: "Offline", section_vehicle: "Vehicle plugged in (plug sensor)", section_session_energy: "Session energy", section_current_limit: "Charging current limit", ev_power_threshold: "Charging above this power (W)", ev_line_session: "Charged", ev_line_limit: "Current limit",
@@ -457,6 +457,40 @@ function lastFinishedRun(runs) {
     if (r.end !== null && !r.cut && r.end - r.start >= LAST_CYCLE_MIN_MS) return r;
   }
   return null;
+}
+
+// The runs of a state history, the one still under way included, its end
+// then null: what an appliance did today, it is still doing.
+function stateRunsOpen(entries, normOf, windowStartMs) {
+  if (!Array.isArray(entries)) return [];
+  const runs = [];
+  let cur = null;
+  entries.forEach((e) => {
+    const t = 1000 * Number(e && (e.lc !== undefined ? e.lc : e.lu));
+    if (!Number.isFinite(t)) return;
+    const role = cycleRole(normOf(e && e.s));
+    if (role === "out") {
+      if (cur) cur.end = t;
+      cur = null;
+    } else if (!cur && role !== "gap") {
+      cur = { start: t, end: null, cut: t <= windowStartMs + 1000 };
+      runs.push(cur);
+    }
+  });
+  return runs;
+}
+
+// How long the runs lasted since fromMs, and how many began after it.
+function runsSince(runs, fromMs, nowMs) {
+  let ms = 0;
+  let starts = 0;
+  runs.forEach((r) => {
+    const end = r.end === null ? nowMs : r.end;
+    const start = Math.max(r.start, fromMs);
+    if (end > start) ms += end - start;
+    if (!r.cut && r.start >= fromMs) starts += 1;
+  });
+  return { ms, starts };
 }
 
 function stripAccents(str) {
@@ -1552,6 +1586,34 @@ function numericState(hass, entityId) {
   return Number.isFinite(v) ? v : null;
 }
 
+// An energy meter's reading in kWh, whatever unit it counts in.
+function energyKwh(hass, entityId) {
+  const v = numericState(hass, entityId);
+  if (v === null) return null;
+  const u = unitOf(hass, entityId).toLowerCase();
+  return u === "wh" ? v / 1000 : u === "mwh" ? v * 1000 : v;
+}
+
+// The price of a kWh, given as a number or as the entity that holds it: a
+// fixed tariff needs no sensor, a Tempo one comes from its own (HACF).
+function energyPriceOf(hass, p) {
+  if (p === undefined || p === null || p === "") return null;
+  const str = String(p).trim();
+  if (/^[a-z_]+\.[a-z0-9_]+$/i.test(str)) return numericState(hass, str);
+  const n = Number(str.replace(",", "."));
+  return Number.isFinite(n) ? n : null;
+}
+
+// An amount in the currency set in Home Assistant, written the profile's way.
+function formatMoney(hass, v) {
+  const cur = (hass && hass.config && hass.config.currency) || "EUR";
+  try {
+    return new Intl.NumberFormat(lang(hass), { style: "currency", currency: cur }).format(v);
+  } catch (e) {
+    return `${v.toFixed(2)} ${cur}`;
+  }
+}
+
 // A number held in an attribute, the way a climate entity keeps its
 // temperatures. An empty attribute is no reading at all, not zero.
 function numberOrNull(v) {
@@ -2385,6 +2447,7 @@ const AUTO_PATTERNS = {
   resume_entity: /resume/i,
   stop_entity: /stop|reset/i,
   power_entity: /_power$|power_w$|watt/i,
+  energy_entity: /^(?!.*(cost|price|tarif|prix)).*(energy|kwh)/i,
 };
 
 // The step of a cycle: Miele names it a program phase, Electrolux a cycle
@@ -2394,6 +2457,19 @@ const PHASE_ENTITY_RE = /program.?phase|cycle.?phase|job.?state|pr.?phase|machin
 // Suggested only for the types that can actually use them, so a washing
 // machine doesn't end up with a "filter life" field pre-filled.
 const TYPE_AUTO_PATTERNS = {
+  water_pump: {
+    pressure_entity: /pressure|pression|druck|presion|pressione|druk|tryck|trykk|cisnien|tlak/i,
+    level_entity: /level|niveau|hauteur|pegel|nivel|livello|niva|poziom|hladina/i,
+    high_level_entity: /high|alarm|haut|alert|hoch|flood|inond/i,
+  },
+  spa: {
+    bubbles_entity: /bubble|bulle|blase|burbuj|bolle|jet|massage|whirl/i,
+    temperature_entity: /temp/i,
+  },
+  sauna: { temperature_entity: /temp/i },
+  floor_heating: { temperature_entity: /temp/i },
+  aquarium: { temperature_entity: /temp/i },
+  meter: { tariff_entity: /tarif|ptec|period|hchp|tempo/i },
   diffuser: {
     light_entity: /light|lumiere|licht|luz|luce|lamp|led|night/i,
     tank_empty_entity: /tank|water|lack|empty|vide|leer|vacio/i,
@@ -2904,6 +2980,15 @@ const TYPE_CAPS = {
   // Heat recovery ventilation: fresh air in through the exchanger, stale air
   // out, a bypass for the summer nights and a filter to change.
   hrv: { hrv: true },
+  // Ten drawings from the HACF thread: two pumps, underfloor heating, a spa,
+  // a sauna, an aquarium, an electricity meter and a Christmas tree.
+  water_pump: { ntPump: true },
+  floor_heating: { ntFloor: true },
+  spa: { ntSpa: true },
+  sauna: { ntSauna: true },
+  aquarium: { ntAqua: true },
+  meter: { ntMeter: true, readOnly: true },
+  christmas_tree: { ntTree: true },
   // A television, a projector or a computer, read from its plug: what it
   // draws at rest is its standby, and a media player says what it shows.
   screen: { screen: true },
@@ -2996,6 +3081,13 @@ const STATE_DOMAINS = {
   mailbox: ["binary_sensor", "input_boolean", "sensor", "counter", "input_number", "switch"],
   diffuser: ["fan", "switch", "select", "input_select", "humidifier", "input_boolean"],
   hrv: ["fan", "climate", "select", "input_select", "switch", "input_boolean"],
+  water_pump: ["switch", "binary_sensor", "input_boolean", "sensor"],
+  floor_heating: ["climate", "switch", "input_boolean", "binary_sensor"],
+  spa: ["climate", "water_heater", "switch", "input_boolean", "binary_sensor"],
+  sauna: ["climate", "switch", "input_boolean", "binary_sensor"],
+  aquarium: ["light", "switch", "input_boolean"],
+  meter: ["sensor"],
+  christmas_tree: ["light", "switch", "input_boolean"],
 };
 // A model, a picture, the players it shows and a session lock belong to a
 // screen.
@@ -3079,10 +3171,10 @@ function compactModeOf(v) {
 const TYPE_GROUPS = [
   ["laundry", ["washer", "dryer"]],
   ["kitchen", ["dishwasher", "oven", "microwave", "hood", "cooktop", "fridge", "kettle", "cooker", "coffee", "rice_cooker", "air_fryer", "toaster"]],
-  ["heating", ["water_heater", "boiler", "heat_pump", "pellet_stove", "space_heater", "towel_warmer"]],
+  ["heating", ["water_heater", "boiler", "heat_pump", "pellet_stove", "space_heater", "towel_warmer", "floor_heating"]],
   ["air", ["air_conditioner", "dehumidifier", "air_purifier", "fan", "diffuser", "hrv"]],
-  ["home", ["screen", "iron", "hair_dryer", "printer_3d", "robot", "pool_pump", "scale", "camera", "lamp", "mailbox"]],
-  ["energy", ["solar", "home_battery", "ev_charger"]],
+  ["home", ["screen", "iron", "hair_dryer", "printer_3d", "robot", "pool_pump", "scale", "camera", "lamp", "mailbox", "water_pump", "spa", "sauna", "aquarium", "christmas_tree"]],
+  ["energy", ["solar", "home_battery", "ev_charger", "meter"]],
   ["pets", ["pet_feeder", "pet_fountain"]],
   ["network", ["network", "ups"]],
 ];
@@ -3125,6 +3217,13 @@ function detectApplianceType(cfg, st) {
   if (MAILBOX_ONLY_FIELDS.some((f) => cfg[f])) return "mailbox";
   if (DIFFUSER_ONLY_FIELDS.some((f) => cfg[f])) return "diffuser";
   if (HRV_ONLY_FIELDS.some((f) => cfg[f])) return "hrv";
+  for (const [ty, fields] of Object.entries(NT_ONLY_FIELDS)) if (fields.some((f) => cfg[f] !== undefined && cfg[f] !== "")) return ty;
+  {
+    // A spa, a sauna, an aquarium, a meter, a Christmas tree and the rest of
+    // the HACF drawings by their name, before a light makes a lamp of them.
+    const named = stripAccents(`${cfg.icon || ""} ${cfg.state_entity || ""} ${(st && st.attributes.friendly_name) || ""} ${cfg.name || ""}`).toLowerCase();
+    for (const [ty, re] of NT_NAME_RES) if (re.test(named)) return ty;
+  }
   // Home Assistant has a domain of its own for each of them.
   if (["vacuum", "lawn_mower"].includes(domainOf(cfg.state_entity))) return "robot";
   if (domainOf(cfg.state_entity) === "camera") return "camera";
@@ -3529,7 +3628,7 @@ function netDiskState(hass, entityId, anchorDevice) {
 // integrations say more in a status of their own, read here for what the
 // drawing can show: the station emptying the bin or washing and drying the
 // pads, rain keeping a mower home, its edge cut.
-const ROBOT_LAYOUTS = ["vacuum", "mop", "mower", "stick", "floor_washer"];
+const ROBOT_LAYOUTS = ["vacuum", "mop", "mower", "stick", "floor_washer", "pool"];
 const ROBOT_STATIONS = ["station", "base"];
 const ROBOT_ONLY_FIELDS = ["robot_layout", "robot_station", "robot_shelter", "robot_shelter_style", "robot_shelter_color", "robot_floor", "robot_controls", "away_threshold", "robot_status_entity", "robot_bin_entity",
   "robot_water_entity", "robot_rain_entity", "robot_error_entity"];
@@ -3567,7 +3666,7 @@ const ROBOT_LABELS = {
   error: "error", emptying: "robot_emptying", full: "robot_bin_full", washing: "robot_washing", drying: "robot_drying",
   empty: "robot_water_empty", rain: "robot_rain", edgecut: "robot_edgecut", unav: "ev_offline", off: "ac_off", away: "stick_away",
 };
-const ROBOT_WORK_LABELS = { vacuum: "robot_cleaning", mop: "robot_mopping", mower: "robot_mowing", stick: "robot_cleaning", floor_washer: "robot_cleaning" };
+const ROBOT_WORK_LABELS = { vacuum: "robot_cleaning", mop: "robot_mopping", mower: "robot_mowing", stick: "robot_cleaning", floor_washer: "robot_cleaning", pool: "robot_cleaning" };
 const ROBOT_COLORS = {
   charging: "#43a047", docked: "#43a047", emptying: "#43a047",
   cleaning: "#1e88e5", edgecut: "#1e88e5", returning: "#1e88e5", washing: "#1e88e5",
@@ -3662,6 +3761,7 @@ function robotLayoutOf(cfg, st) {
   if (ROBOT_LAYOUTS.includes(cfg.robot_layout)) return cfg.robot_layout;
   if (domainOf(cfg.state_entity) === "lawn_mower") return "mower";
   const name = stripAccents(`${(cfg.state_entity || "").split(".")[1] || ""} ${(st && st.attributes.friendly_name) || ""} ${cfg.name || ""}`.toLowerCase());
+  if (ROBOT_POOL_RE.test(name)) return "pool";
   if (ROBOT_MOWER_RE.test(name)) return "mower";
   if (ROBOT_WASHER_RE.test(name)) return "floor_washer";
   if (ROBOT_STICK_RE.test(name)) return "stick";
@@ -4044,6 +4144,12 @@ function screenControls(hass, cfg) {
     if (sw(cfg.screensaver_entity)) out.push({ key: "tab_saver", entity: cfg.screensaver_entity, icon: "mdi:weather-night", label: t(hass, "screen_saver"), on: on(cfg.screensaver_entity) });
     if (cfg.reload_entity) out.push({ key: "tab_reload", entity: cfg.reload_entity, icon: "mdi:refresh", label: t(hass, "tab_reload") });
     if (cfg.restart_entity) out.push({ key: "tab_restart", entity: cfg.restart_entity, icon: "mdi:restart", label: t(hass, "tab_restart") });
+  }
+  // A computer's tower on a plug of its own has a switch of its own (HACF).
+  if (cfg.tower_entity && ["switch", "input_boolean"].includes(domainOf(cfg.tower_entity))
+    && screenLayoutOf(cfg, stateObj(hass, cfg.state_entity)) === "computer") {
+    const ts = stateObj(hass, cfg.tower_entity);
+    out.push({ key: "tower", entity: cfg.tower_entity, icon: "mdi:desktop-tower", label: t(hass, "tower_toggle"), on: !!ts && String(ts.state).toLowerCase() === "on" });
   }
   return out;
 }
@@ -4806,6 +4912,786 @@ function lampHtml(cls, c) {
         <div class="machine ${cls} ${flags}" style="--lc:rgb(${rgb.join(",")});--lb:${level.toFixed(2)}"><svg class="lp-svg" viewBox="0 -6 96 108">${LAMP_SVGS[layout](c)}</svg></div>`;
 }
 
+// Drawings added in 3.10.0 after the HACF thread: a chest freezer and a drawer
+// freezer (fridge layouts), a booster set and a sump pump, a pool robot,
+// underfloor heating on hot water or electric, a spa, a sauna, an aquarium,
+// a Linky meter and a Christmas tree. Drawn in SVG on a 120 x 135 field; what
+// moves moves only on a machine carrying nt-on, staggered through --d0, and
+// the robot's cable and the sump's float follow their SMIL animations.
+const NT_TYPES = ["water_pump", "floor_heating", "spa", "sauna", "aquarium", "meter", "christmas_tree"];
+const PUMP_LAYOUTS = ["booster", "sump"];
+const FLOOR_LAYOUTS = ["water", "electric"];
+const NT_ONLY_FIELDS = {
+  water_pump: ["pump_layout", "pressure_entity", "level_entity", "high_level_entity", "level_max"],
+  floor_heating: ["floor_layout"],
+  spa: ["bubbles_entity"],
+  christmas_tree: ["tree_palette", "presents"],
+  meter: ["tariff_entity", "high_power"],
+};
+// By name, in the languages the card speaks; "whirlpool" is left out, it is a
+// maker of washing machines too.
+const NT_NAME_RES = [
+  ["christmas_tree", /christmas|xmas|(^|[^a-z])sapin|(^|[^a-z])noel([^a-z]|$)|weihnacht|tannenbaum|navidad|natale|kerstboom|julgran|juletre|juletrae|choink|vanocni.?strom/],
+  ["aquarium", /aquari|akwari|akvari/],
+  ["sauna", /sauna/],
+  ["spa", /(^|[^a-z])(spa|jacuzzi|hot.?tub|bain.?nordique|whirlpoolwanne)([^a-z]|$)/],
+  ["meter", /linky|compteur.?(electrique|edf|enedis)|smart.?meter|(^|[^a-z])(teleinfo|papp|sinsts)([^a-z]|$)/],
+  ["floor_heating", /plancher.?chauffant|underfloor|floor.?heat|fussbodenheizung|suelo.?radiante|pavimento.?radiante|vloerverwarming|golvvarme|gulvvarme|ogrzewanie.?podlog|podlahov/],
+  ["water_pump", /surpresseur|booster|relevage|(^|[^a-z])sump|pompe.?(a.?eau|de.?puits|immergee)|water.?pump|well.?pump|(^|[^a-z])forage|tauchpumpe|hauswasser|hebeanlage/],
+];
+const ROBOT_POOL_RE = /pool|piscine|dolphin|maytronics|aiper|zodiac|polaris|beatbot|wybot|bwt.?(d|p)\d|pool.?robot|schwimmbad|piscina|zwembad|basen/;
+
+const TREE_PALETTES = {
+  multicolor: { balls: ["#c62828", "#1565c0", "#f9a825", "#ec407a", "#00897b", "#6a1b9a", "#ef6c00", "#b0bec5", "#e91e63", "#43a047", "#26c6da"], lights: ["#ff5252", "#ffd740", "#40c4ff", "#69f0ae", "#ff80ab", "#b388ff", "#ff9100", "#18ffff"], tinsel: ["#e53935", "#cfd8dc"], star: ["#fff59d", "#f9a825", "#f57f17"], pot: ["#d32f2f", "#8e1b1b"], gifts: ["#c62828", "#1565c0", "#00897b", "#8e24aa"], ribbons: ["#ffd54f", "#ffffff", "#ffeb3b", "#ffd54f"] },
+  red_gold: { balls: ["#c62828", "#f9a825", "#b71c1c", "#ffca28"], lights: ["#ffe0a3"], tinsel: ["#f9a825"], star: ["#fff59d", "#f9a825", "#f57f17"], pot: ["#d32f2f", "#8e1b1b"], gifts: ["#c62828", "#f9a825", "#b71c1c", "#c62828"], ribbons: ["#ffd54f", "#c62828", "#ffd54f", "#ffd54f"] },
+  red_silver: { balls: ["#c62828", "#cfd8dc", "#b71c1c", "#eceff1"], lights: ["#f1f8ff"], tinsel: ["#cfd8dc"], star: ["#ffffff", "#b0bec5", "#78909c"], pot: ["#eceff1", "#b0bec5"], gifts: ["#c62828", "#eceff1", "#b71c1c", "#cfd8dc"], ribbons: ["#eceff1", "#c62828", "#eceff1", "#c62828"] },
+  gold_silver: { balls: ["#f9a825", "#cfd8dc", "#e6c77a", "#eceff1"], lights: ["#ffe0a3"], tinsel: ["#f9a825", "#cfd8dc"], star: ["#fff59d", "#f9a825", "#f57f17"], pot: ["#f5d77e", "#b4842a"], gifts: ["#f9a825", "#eceff1", "#e6c77a", "#cfd8dc"], ribbons: ["#ffffff", "#f9a825", "#ffffff", "#f9a825"] },
+  blue_silver: { balls: ["#1565c0", "#cfd8dc", "#42a5f5", "#eceff1"], lights: ["#e3f2fd"], tinsel: ["#cfd8dc"], star: ["#ffffff", "#b0bec5", "#78909c"], pot: ["#eceff1", "#b0bec5"], gifts: ["#1565c0", "#eceff1", "#42a5f5", "#1565c0"], ribbons: ["#eceff1", "#1565c0", "#eceff1", "#eceff1"] },
+  white_silver: { balls: ["#ffffff", "#cfd8dc", "#e3f2fd", "#eceff1"], lights: ["#f1f8ff"], tinsel: ["#ffffff"], star: ["#ffffff", "#b0bec5", "#78909c"], pot: ["#ffffff", "#cfd8dc"], gifts: ["#ffffff", "#cfd8dc", "#e3f2fd", "#eceff1"], ribbons: ["#b0bec5", "#ffffff", "#90a4ae", "#90a4ae"] },
+  red_green: { balls: ["#c62828", "#2e7d32", "#f9a825", "#b71c1c"], lights: ["#ffe0a3", "#ff5252", "#69f0ae"], tinsel: ["#f9a825", "#e53935"], star: ["#fff59d", "#f9a825", "#f57f17"], pot: ["#d32f2f", "#8e1b1b"], gifts: ["#c62828", "#2e7d32", "#f9a825", "#c62828"], ribbons: ["#ffd54f", "#ffd54f", "#c62828", "#ffffff"] },
+};
+const TREE_PRESENTS = ["auto", "show", "hide"];
+// Presents under the tree on Christmas Eve and Christmas Day, unless asked
+// otherwise.
+function treePresents(cfg) {
+  const p = cfg.presents === true ? "show" : cfg.presents === false ? "hide" : TREE_PRESENTS.includes(cfg.presents) ? cfg.presents : "auto";
+  if (p !== "auto") return p === "show";
+  const d = new Date(Date.now());
+  return d.getMonth() === 11 && (d.getDate() === 24 || d.getDate() === 25);
+}
+function pumpLayoutOf(cfg, st) {
+  if (PUMP_LAYOUTS.includes(cfg.pump_layout)) return cfg.pump_layout;
+  if (cfg.level_entity || cfg.high_level_entity) return "sump";
+  const hay = stripAccents(`${cfg.state_entity || ""} ${cfg.name || ""} ${(st && st.attributes.friendly_name) || ""}`).toLowerCase();
+  return /relevage|sump|tauch|hebe|vide.?cave|drain|eaux.?usees|crue/.test(hay) ? "sump" : "booster";
+}
+function floorLayoutOf(cfg) {
+  return FLOOR_LAYOUTS.includes(cfg.floor_layout) ? cfg.floor_layout : "water";
+}
+
+const NT_ON = ["on", "true", "1", "yes", "heat", "heating", "open", "running", "pumping", "auto", "home"];
+// Running or not: the state entity's own word, a thermostat's action, and a
+// plug's power above its threshold when there is one. Null when nothing
+// answers.
+function ntRunning(hass, cfg, st, watts, threshold) {
+  const raw = st ? String(st.state).trim().toLowerCase() : "";
+  const dead = !st || ["unavailable", "unknown", "none", ""].includes(raw);
+  const metered = cfg.power_entity && watts !== null && isFinite(threshold);
+  if (dead && !metered) return null;
+  if (!dead) {
+    const dom = domainOf(cfg.state_entity);
+    if (["climate", "water_heater"].includes(dom)) {
+      if (raw === "off") return false;
+      const act = String((st.attributes || {}).hvac_action || "").toLowerCase();
+      if (act) return act === "heating" || act === "preheating" || act === "cooling";
+      if (metered) return watts >= threshold;
+      return true;
+    }
+    if (!NT_ON.includes(raw) && !(numberOrNull(st.state) > 0)) return false;
+  }
+  return metered ? watts >= threshold : true;
+}
+function ntOnOff(hass, id) {
+  const s = id ? stateObj(hass, id) : null;
+  return !!s && NT_ON.includes(String(s.state).trim().toLowerCase());
+}
+// The temperature: its own entity, or the thermostat's.
+function ntTemp(hass, cfg, st) {
+  if (cfg.temperature_entity) {
+    const v = numericState(hass, cfg.temperature_entity);
+    return v === null ? null : { v, text: tempText(hass, cfg, cfg.temperature_entity, v, temperatureUnit(hass, cfg.temperature_entity)) };
+  }
+  const v = st ? numberOrNull((st.attributes || {}).current_temperature) : null;
+  if (v === null) return null;
+  const unit = (hass && hass.config && hass.config.unit_system && hass.config.unit_system.temperature) || "\u00b0C";
+  return { v, text: tempText(hass, cfg, null, v, unit) };
+}
+function ntTarget(hass, cfg, st) {
+  if (cfg.target_temperature_entity) return numericState(hass, cfg.target_temperature_entity);
+  return st ? numberOrNull((st.attributes || {}).temperature) : null;
+}
+function ntValueText(hass, cfg, id) {
+  const s = id ? stateObj(hass, id) : null;
+  if (!s || numberOrNull(s.state) === null) return null;
+  return formatInfoValue(s, hass, null, cfg, id);
+}
+
+// Drawing helpers
+let ntN = 0;
+const ntId = () => `nt${++ntN}`;
+const NT_FONT = `font-family="Roboto, 'Segoe UI', Helvetica, Arial, sans-serif"`;
+const ntV = (id, a, b) => `<linearGradient id="${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${a}"/><stop offset="1" stop-color="${b}"/></linearGradient>`;
+const ntBlur = (id, s) => `<filter id="${id}" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="${s}"/></filter>`;
+const ntShadow = (cx, cy, rx) => `<ellipse cx="${cx}" cy="${cy}" rx="${rx}" ry="3.2" fill="#000" opacity=".14"/>`;
+const ntFoot = (pts, op = .22) => { const id = ntId(); return `<filter id="${id}" x="-20%" y="-60%" width="140%" height="220%"><feGaussianBlur stdDeviation="1.5"/></filter><polygon points="${pts}" fill="#000" opacity="${op}" filter="url(#${id})"/>`; };
+// A display in large bold figures, so the value and its unit read at card size.
+const ntLcd = (x, y, w, h, text, lit, color = "#4fc3f7", fs = 8.5) =>
+  `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="1.8" fill="#141a21" stroke="#0a0d11" stroke-width=".5"/>` +
+  `<rect x="${x + .8}" y="${y + .8}" width="${w - 1.6}" height="${(h * .38).toFixed(2)}" rx="1.2" fill="#fff" opacity=".05"/>` +
+  (text ? `<text x="${x + w / 2}" y="${(y + h / 2 + fs * .36).toFixed(2)}" font-size="${fs}" font-weight="700" text-anchor="middle" fill="${lit ? color : "#5d6773"}" ${NT_FONT}>${esc(text)}</text>` : "");
+const ntFlake = (x, y, r, color, w = .8) =>
+  `<path d="M${x} ${y - r}v${2 * r}M${x - r} ${y}h${2 * r}M${x - r * .7} ${y - r * .7}l${r * 1.4} ${r * 1.4}M${x + r * .7} ${y - r * .7}l${-r * 1.4} ${r * 1.4}" stroke="${color}" stroke-width="${w}" stroke-linecap="round"/>`;
+// The text of a display fits its width: a long reading is drawn smaller.
+const ntFit = (text, width, fs) => Math.min(fs, (width - 3) / Math.max(1, String(text || "").length * .6));
+
+// Chest freezer
+function ntChest(c) {
+  const f = ntId(), s = ntId(), t = ntId(), lf = ntId(), inn = ntId();
+  const on = c.on, lit = !c.dark;
+  const slots = [0, 1, 2, 3, 4, 5, 6].map((i) => `<rect x="${18.6 + i * 3.8}" y="93.6" width="1.8" height="4.6" rx=".6" fill="#5d6672"/>`).join("");
+  const frost = [[30, 43.5], [56, 42], [84, 42.5], [104, 41.6], [16, 50]].map(([x, y], i) => `<g class="nta-frost ntd${i + 1}">${ntFlake(x, y, 2.4, "#29b6f6", .7)}</g>`).join("");
+  const mist = [16, 33, 50, 67, 84, 102].map((x, i) => `<path class="nta-fall ntd${i + 1}" d="M${x} 57 q2.6 3.5 0 7 q-2.6 3.5 0 7" stroke="#d4effc" stroke-width="2.6" fill="none" stroke-linecap="round" opacity="0"/>`).join("");
+  const lid = c.open
+    ? `<polygon points="12 47 98 47 112 39 26 39" fill="url(#${inn})"/>
+<path class="nta-fall ntd2" d="M40 44 q2 -4 0 -8 q-2 -4 0 -8" stroke="#e1f5fe" stroke-width="2.4" fill="none" opacity="0" stroke-linecap="round"/>
+<path class="nta-fall ntd4" d="M70 44 q2 -4 0 -8 q-2 -4 0 -8" stroke="#e1f5fe" stroke-width="2.4" fill="none" opacity="0" stroke-linecap="round"/>
+<polygon points="26 39 112 39 104 3 18 3" fill="#e9eef3" stroke="#a3acb7" stroke-width=".6"/>
+<polygon points="30 36 108 36 101 7 23 7" fill="#d7dee5"/>
+<rect x="11" y="47" width="87" height="2.2" rx="1" fill="#c0c8d1" stroke="#a3acb7" stroke-width=".5"/>`
+    : `<path d="M11 47 L25 39 L112 39 L98 47 Z" fill="url(#${t})" stroke="#a3acb7" stroke-width=".6"/>
+<path d="M30 41.2 H95" stroke="#fff" stroke-width="1.2"/>
+<path d="M98 47 L112 39 L112 46.5 L98 54.5 Z" fill="#c0c8d1" stroke="#a3acb7" stroke-width=".6"/>
+<rect x="11" y="47" width="87" height="7.6" rx="2" fill="url(#${lf})" stroke="#a3acb7" stroke-width=".6"/>
+<rect x="39" y="49.3" width="30" height="3.8" rx="1.9" fill="#363d48"/><rect x="40.6" y="49.8" width="26.8" height="1" rx=".5" fill="#8f98a4"/>
+<rect x="84.5" y="49.4" width="5" height="3.2" rx=".8" fill="#9aa3ae"/><circle cx="87" cy="51" r=".8" fill="#4a525e"/>`;
+  const txt = lit ? c.lcd || "" : "";
+  return `<defs>${ntV(f, "#ffffff", "#dde2e8")}${ntV(s, "#d3d9e0", "#a9b2bd")}${ntV(t, "#ffffff", "#e7ebef")}${ntV(lf, "#f8fafc", "#dfe4e9")}${ntV(inn, "#2b3540", "#4b5a68")}</defs>
+${ntFoot("13 106.6 98 106.6 112.5 98 28 98")}
+<path d="M96 55 L110 47 L110 95 L96 103 Z" fill="url(#${s})" stroke="#a3acb7" stroke-width=".6"/>
+<rect x="12" y="55" width="84" height="48" rx="3" fill="url(#${f})" stroke="#a3acb7" stroke-width=".6"/>
+<path d="M17 57 H29 L21 101 H15 Z" fill="#fff" opacity=".6"/>
+<rect x="16" y="92" width="32" height="7.4" rx="1.6" fill="#c7cdd5"/>${slots}
+<rect x="15" y="102.6" width="8" height="3.6" rx="1" fill="#5d6672"/><rect x="85" y="102.6" width="8" height="3.6" rx="1" fill="#5d6672"/><rect x="104" y="95" width="5" height="3.6" rx="1" fill="#5d6672"/>
+${lid}
+<rect x="12" y="54.4" width="84" height="1.5" fill="#434b57"/><path d="M96 55.2 L110 47.2" stroke="#434b57" stroke-width="1.5"/>
+<rect x="53" y="60.5" width="40" height="27" rx="2.6" fill="#f2f4f7" stroke="#c0c7cf" stroke-width=".6"/>
+${ntLcd(56, 63, 34, 14, txt, true, c.warn ? "#ff5252" : "#4fc3f7", ntFit(txt, 34, 9.5))}
+<circle cx="59" cy="82.6" r="1.4" fill="${on ? "#43a047" : "#9aa1ab"}"/>
+${ntFlake(87, 82.6, 2.4, on ? "#29b6f6" : "#9aa1ab", .7)}
+<g class="nt-run">${c.open ? "" : frost}${mist}</g>`;
+}
+
+// Upright freezer with see-through drawers
+function ntDrawers(c) {
+  const f = ntId(), s = ntId(), w = ntId(), t = ntId(), gl = ntId(), mb = ntId();
+  const on = c.on, lit = !c.dark;
+  const goods = [["#66bb6a", "#ef5350", "#fff176"], ["#f48fb1", "#64b5f6", "#ffb74d"], ["#aed581", "#ba68c8", "#e57373"], ["#4db6ac", "#ff8a65", "#90a4ae"]];
+  const rows = [0, 1, 2, 3].map((i) => {
+    const y = 32 + i * 18.5;
+    const pk = goods[i].map((col, j) => { const hh = [7, 5.5, 8][j]; return `<rect x="${41.5 + j * 12.8}" y="${y + 15 - hh}" width="11.4" height="${hh}" rx=".8" fill="${col}"/><rect x="${43 + j * 12.8}" y="${y + 16 - hh}" width="5" height="1.2" fill="#fff" opacity=".7"/>`; }).join("");
+    const drawer = `<rect x="37" y="${y}" width="46" height="17" rx="1.8" fill="url(#${f})" stroke="${on ? "#8fc6e3" : "#a3acb7"}" stroke-width=".55"/>
+<g class="nt-run"><path d="M38 ${y + .6} h44 l-1.6 2 l-2 -1.2 l-2.4 1.6 l-2 -1.4 l-2.6 1.8 l-2.2 -1.2 l-2.4 1.6 l-2 -1.4 l-2.6 1.8 l-2.2 -1.2 l-2.4 1.6 l-2 -1.4 l-2.6 1.8 l-2.2 -1.2 l-2.4 1.6 l-2 -1.4 l-2.6 1.8 l-2.2 -1.2 Z" fill="#ffffff" opacity=".9"/></g>
+<rect x="49" y="${y + 1.3}" width="22" height="2.8" rx="1.4" fill="#363d48"/><rect x="50" y="${y + 1.7}" width="20" height=".8" rx=".4" fill="#8f98a4"/>
+<rect x="40" y="${y + 5.2}" width="40" height="10.2" rx="1" fill="#d6e6ef"/>${pk}
+<rect x="40" y="${y + 5.2}" width="40" height="10.2" rx="1" fill="url(#${w})" opacity=".62" stroke="#b9c7d2" stroke-width=".4"/>
+<g class="nt-run"><rect class="nta-shimmer ntd${i + 1}" x="40" y="${y + 5.2}" width="40" height="10.2" rx="1" fill="#e1f5fe" opacity="0"/><g class="nta-frost ntd${i + 2}">${ntFlake(78, y + 7.5, 1.6, "#29b6f6", .55)}</g></g>`;
+    // A drawer pulled out: its side shows, and it comes forward.
+    return c.open && i === 0
+      ? `<polygon points="37 ${y} 31 ${y + 5} 31 ${y + 22} 37 ${y + 17}" fill="#c3ccd5" stroke="#a3acb7" stroke-width=".5"/><g transform="translate(-6 5)">${drawer}</g>`
+      : drawer;
+  }).join("");
+  const mist = [49.2, 67.7, 86.2, 104.7].map((y, i) => [44, 60, 76].map((x, j) => `<path class="nta-fall ntd${((i + j) % 6) + 1}" d="M${x + (i % 2) * 3} ${y} q2.2 3 0 6 q-2.2 3 0 6" stroke="#d4effc" stroke-width="2.2" fill="none" stroke-linecap="round" opacity="0"/>`).join("")).join("");
+  const txt = lit ? c.lcd || "" : "";
+  return `<defs>${ntV(f, "#ffffff", "#e1e6eb")}${ntV(s, "#d0d6de", "#a6afba")}${ntV(w, "#ffffff", "#c9dde9")}${ntV(t, "#ffffff", "#eef1f4")}${ntBlur(gl, 2.2)}${ntBlur(mb, 2.4)}</defs>
+${ntFoot("35 111.8 87.5 111.8 99.5 104.6 47 104.6")}
+<path d="M86 10 L98 4 L98 103 L86 109 Z" fill="url(#${s})" stroke="#a3acb7" stroke-width=".6"/>
+<path d="M34 10 L46 4 L98 4 L86 10 Z" fill="url(#${t})" stroke="#a3acb7" stroke-width=".6"/>
+<rect x="34" y="10" width="52" height="99" rx="3" fill="${on ? "#e4f3fb" : "#eef1f4"}" stroke="${on ? "#8fc6e3" : "#a3acb7"}" stroke-width=".6"/>
+<rect x="37" y="13" width="46" height="16.4" rx="2" fill="#f7f8fa" stroke="#c0c7cf" stroke-width=".5"/>
+${ntLcd(46, 14.8, 35, 12.8, txt, true, c.warn ? "#ff5252" : "#4fc3f7", ntFit(txt, 35, 9.3))}
+<g class="${on ? "nta-spin-slow" : ""}">${ntFlake(41.3, 19.2, 2.5, on ? "#29b6f6" : "#9aa1ab", .75)}</g>
+<circle cx="41.3" cy="25.8" r="1.2" fill="${on ? "#43a047" : "#9aa1ab"}"/>
+${rows}
+<rect x="37" y="106" width="46" height="2.4" rx="1" fill="#c7cdd5"/>
+<g class="nt-run"><rect class="nta-glow" x="35" y="11" width="50" height="97" rx="3" fill="none" stroke="#4fc3f7" stroke-width="3" filter="url(#${gl})"/>
+<g class="nta-glow" filter="url(#${mb})"><ellipse cx="48" cy="108" rx="14" ry="3.6" fill="#e1f5fe"/><ellipse cx="70" cy="109" rx="16" ry="4" fill="#e1f5fe"/><ellipse cx="88" cy="106" rx="8" ry="3" fill="#e1f5fe"/></g>
+${mist}${[[34, 30], [86, 46], [34, 84], [86, 96]].map(([x, y], i) => `<g class="nta-frost ntd${i + 1}">${ntFlake(x, y, 2.2, "#29b6f6", .65)}</g>`).join("")}</g>
+<rect x="37" y="109" width="6" height="2.6" rx=".8" fill="#5d6672"/><rect x="77" y="109" width="6" height="2.6" rx=".8" fill="#5d6672"/>`;
+}
+
+// Booster set: the pump on its pressure tank and its electronic controller
+function ntBooster(c) {
+  const m = ntId(), t = ntId(), cs = ntId(), b = ntId(), p = ntId(), pv = ntId();
+  const on = c.on;
+  const fins = [0, 1, 2, 3, 4, 5, 6].map((i) => `<rect x="${62 + i * 5}" y="51.5" width="1.6" height="21" rx=".8" fill="#123f78" opacity=".5"/>`).join("");
+  const slots = [0, 1, 2, 3, 4, 5].map((i) => `<path d="M100 ${54 + i * 3}h5.4" stroke="#7a838f" stroke-width="1" stroke-linecap="round"/>`).join("");
+  const txt = c.lcd || "";
+  return `<defs>${ntV(m, "#62a8f0", "#1b56a0")}${ntV(t, "#3f8fe4", "#16457f")}${ntV(cs, "#e3e7ec", "#8b95a1")}${ntV(b, "#f5d77e", "#b4842a")}${ntV(p, "#5a636e", "#262b31")}${ntV(pv, "#eceff2", "#b6bec8")}</defs>
+${ntShadow(63, 107.2, 44)}
+<path d="M24 98 v9 h9 v-9 M92 98 v9 h9 v-9" fill="#3f4752"/>
+<rect x="16" y="80" width="94" height="20" rx="10" fill="url(#${t})"/>
+<rect x="24" y="82.6" width="78" height="3" rx="1.5" fill="#fff" opacity=".28"/>
+<path d="M30 80.4v19.2M96 80.4v19.2" stroke="#0f3563" stroke-width=".7"/>
+<rect x="34" y="74" width="72" height="6" rx="1.2" fill="#555e69"/>
+<g class="nta-vib">
+<rect x="58" y="50" width="42" height="24" rx="4" fill="url(#${m})"/>${fins}
+<rect x="58" y="51.5" width="42" height="3" fill="#fff" opacity=".2"/>
+<rect x="97.5" y="51.5" width="9.5" height="21" rx="3" fill="#353c46"/>${slots}
+<rect x="67" y="42.5" width="20" height="8.2" rx="1.5" fill="#2b3139"/>
+<rect x="70" y="44.2" width="6" height="4.6" rx="1" fill="${on ? "#43a047" : "#59626e"}"/>
+<circle cx="82" cy="46.5" r="1.4" fill="${on ? "#76ff03" : "#59626e"}"/>
+<path d="M38 50 Q34 46 41 46 H53 Q59 46 59 52 V71 Q59 76 53 76 H41 Q35 76 35 70 Z" fill="url(#${cs})"/>
+<path d="M38 52 Q38 48 42 48 H48" stroke="#fff" stroke-width="1" opacity=".6" fill="none"/>
+<rect x="55.5" y="47.5" width="4.4" height="28" rx="1" fill="#7a848f"/>
+<circle cx="57.7" cy="51" r="1" fill="#4a525e"/><circle cx="57.7" cy="72" r="1" fill="#4a525e"/>
+<circle cx="46" cy="62" r="5.2" fill="#9aa3ae" stroke="#6d7682" stroke-width=".6"/><circle cx="46" cy="62" r="1.6" fill="#59626e"/>
+<rect x="37" y="74" width="5" height="3" rx=".6" fill="url(#${b})"/>
+</g>
+<rect x="0" y="57.5" width="36" height="9" fill="url(#${p})"/>
+<rect x="20" y="56" width="8" height="12" rx="1" fill="url(#${b})"/><path d="M22 56v12M24 56v12M26 56v12" stroke="#9a7020" stroke-width=".5"/>
+<rect x="42.5" y="30" width="7" height="17" fill="url(#${pv})" stroke="#9aa3ae" stroke-width=".5"/>
+<rect x="62" y="17" width="58" height="7" fill="url(#${pv})" stroke="#9aa3ae" stroke-width=".5"/>
+<g class="nt-run"><path class="nta-flow" d="M1 62H35" stroke="#81d4fa" stroke-width="2.4" stroke-dasharray="4 4" fill="none"/>
+<path class="nta-flow" d="M46 46V32" stroke="#81d4fa" stroke-width="2.2" stroke-dasharray="4 4" fill="none"/>
+<path class="nta-flow" d="M69 20.5H119" stroke="#81d4fa" stroke-width="2.4" stroke-dasharray="4 4" fill="none"/></g>
+<rect x="28" y="4" width="41" height="28" rx="3" fill="#eef1f4" stroke="#aab2bc" stroke-width=".6"/>
+<rect x="28" y="4" width="41" height="4" rx="2" fill="#1e88e5"/>
+${ntLcd(31, 9.5, 35, 13, txt, true, on ? "#4fc3f7" : "#90a4ae", ntFit(txt, 35, 8.6))}
+<circle cx="34" cy="27" r="1.3" fill="#43a047"/><circle cx="52" cy="27" r="1.3" fill="${on ? "#43a047" : "#b0b7c1"}"/>`;
+}
+
+// Sump pit in cross-section: the float pivots on its cable with the water
+function ntSump(c) {
+  const s = ntId(), w = ntId(), con = ntId(), pu = ntId(), pv = ntId();
+  const angleOf = (y) => Math.max(-8, Math.min(90, Math.asin(Math.max(-1, Math.min(1, (86 - y + 1) / 24))) * 180 / Math.PI));
+  // The water: the level read when there is one, high on an alarm, falling
+  // while it pumps, mid-pit at rest.
+  const known = c.level !== null && c.level !== undefined;
+  const lv = known ? 108 - Math.max(0, Math.min(1, c.level)) * 80 : c.alarm ? 40 : 64;
+  const moving = c.on && !known && !c.alarm;
+  const water = moving
+    ? `<rect x="31" y="62" width="58" height="46" fill="url(#${w})"><animate attributeName="y" values="62;88;62" keyTimes="0;.7;1" dur="7s" repeatCount="indefinite"/><animate attributeName="height" values="46;20;46" keyTimes="0;.7;1" dur="7s" repeatCount="indefinite"/></rect>`
+    : `<rect x="31" y="${lv.toFixed(1)}" width="58" height="${(108 - lv).toFixed(1)}" fill="url(#${w})"/><path d="M31 ${lv.toFixed(1)}h58" stroke="#b3e5fc" stroke-width=".8"/>`;
+  const swing = moving ? `<animateTransform attributeName="transform" type="rotate" values="${angleOf(62)} 52 86;${angleOf(88)} 52 86;${angleOf(62)} 52 86" keyTimes="0;.7;1" dur="7s" repeatCount="indefinite"/>` : "";
+  const soil = [[8, 40], [14, 70], [6, 96], [18, 110], [100, 44], [108, 66], [114, 90], [102, 104], [20, 54], [112, 30], [9, 84]].map(([x, y]) => `<ellipse cx="${x}" cy="${y}" rx="1.6" ry="1" fill="#4e342e" opacity=".5"/>`).join("");
+  const grass = Array.from({ length: 24 }, (_, i) => { const x = i * 5 + 1; return x > 23 && x < 97 ? "" : `<path d="M${x} 24 l1 -3.4 M${x + 2} 24 l-.6 -2.6" stroke="#558b2f" stroke-width=".8"/>`; }).join("");
+  const txt = c.lcd || "";
+  return `<defs>${ntV(s, "#8d6e63", "#5d4037")}${ntV(w, "#4fc3f7", "#0d5c9e")}${ntV(con, "#c4c7cc", "#9a9ea6")}${ntV(pu, "#4a5b55", "#1d2623")}${ntV(pv, "#eceff2", "#b6bec8")}</defs>
+<rect x="0" y="24" width="120" height="96" fill="url(#${s})"/>${soil}
+<rect x="0" y="21.5" width="24" height="3.5" fill="#7cb342"/><rect x="96" y="21.5" width="24" height="3.5" fill="#7cb342"/>${grass}
+<rect x="26" y="24" width="68" height="90" fill="url(#${con})"/>
+<rect x="31" y="26" width="58" height="82" fill="#3a4148"/><rect x="31" y="26" width="58" height="6" fill="#000" opacity=".25"/>
+${water}
+<path d="M31 46h9" stroke="#ef5350" stroke-width=".9" stroke-dasharray="1.6 1"/><text x="33" y="44.6" font-size="5" font-weight="700" fill="#ef5350" ${NT_FONT}>max</text>
+<path d="M31 90h9" stroke="#ffb74d" stroke-width=".9" stroke-dasharray="1.6 1"/><text x="33" y="88.6" font-size="5" font-weight="700" fill="#ffb74d" ${NT_FONT}>min</text>
+<rect x="0" y="29" width="32" height="7" fill="url(#${pv})" stroke="#9aa3ae" stroke-width=".5"/>
+<g class="nta-fall"><circle cx="33" cy="38" r="1.1" fill="#81d4fa"/></g><g class="nta-fall ntd2"><circle cx="33.6" cy="38" r=".9" fill="#81d4fa"/></g>
+<rect x="57" y="7" width="6" height="71" fill="url(#${pv})" stroke="#9aa3ae" stroke-width=".5"/>
+<rect x="57" y="6" width="63" height="6" fill="url(#${pv})" stroke="#9aa3ae" stroke-width=".5"/>
+<g class="nt-run"><path class="nta-flow" d="M60 76V9H119" stroke="#81d4fa" stroke-width="2.4" stroke-dasharray="4 4" fill="none"/></g>
+<rect x="54.5" y="48" width="11" height="10" rx="1.4" fill="#37474f"/><path d="M60 56.5v-6.5M57.6 52.4 60 50l2.4 2.4" stroke="#cfd8dc" stroke-width=".9" fill="none" stroke-linecap="round"/>
+<rect x="24" y="19.5" width="72" height="5" rx="1" fill="#5b6470"/><path d="M30 20.5v3M36 20.5v3M42 20.5v3M48 20.5v3M70 20.5v3M76 20.5v3M82 20.5v3M88 20.5v3" stroke="#3a414b" stroke-width="1.2"/>
+<g class="nta-vib">
+<path d="M55 80 Q55 75 60 75 Q65 75 65 80 Z" fill="#2c3834"/>
+<rect x="52" y="79" width="16" height="22" rx="2.4" fill="url(#${pu})"/>
+<rect x="53.5" y="81" width="2" height="18" rx="1" fill="#fff" opacity=".18"/>
+<rect x="50" y="100" width="20" height="8" rx="1.4" fill="#37474f"/>
+<path d="M53 101.5v5M56 101.5v5M59 101.5v5M62 101.5v5M65 101.5v5M68 101.5v5" stroke="#90a4ae" stroke-width=".8"/>
+</g>
+<g transform="rotate(${moving ? 0 : angleOf(lv).toFixed(1)} 52 86)">${swing}
+<path d="M52 86 H32" stroke="#212121" stroke-width=".9"/>
+<ellipse cx="28" cy="86" rx="5.4" ry="3.6" fill="#ffca28" stroke="#c49000" stroke-width=".5"/><ellipse cx="26.6" cy="84.8" rx="2" ry=".9" fill="#fff" opacity=".6"/>
+</g>
+<rect x="11.5" y="17" width="3" height="6" fill="#5b6470"/>
+<rect x="0" y="2" width="27" height="16" rx="2" fill="#eceff2" stroke="#aab2bc" stroke-width=".5"/>
+${ntLcd(2, 4.2, 23, 11.6, txt, true, c.alarm ? "#ff5252" : "#4fc3f7", ntFit(txt, 23, 7.6))}
+${c.alarm ? `<rect x="29" y="9" width="7" height="3" rx=".6" fill="#5b6470"/><path d="M29.6 9 Q32.5 1.5 35.4 9 Z" fill="#e53935"/><circle class="nta-beacon" cx="32.5" cy="6" r="6" fill="#ff5252" opacity=".5"/>` : ""}`;
+}
+
+// Pool robot: the cable from the deck follows it to and fro
+function ntPoolRobot(c) {
+  const tp = ntId(), w = ntId(), bd = ntId(), dk = ntId();
+  const on = c.on, x0 = 34, x1 = 88;
+  const cable = (x) => `M90 21 C83 21 80 27 76 35.5 C${x + 16} 42 ${x + 7} 62 ${x} 79`;
+  const keys = "0;.45;.5;.95;1";
+  const cablePath = on
+    ? `<path d="${cable(x0)}" stroke="#263238" stroke-width="1.2" fill="none"><animate attributeName="d" values="${[x0, x1, x1, x0, x0].map(cable).join(";")}" keyTimes="${keys}" dur="9s" repeatCount="indefinite"/></path>`
+    : `<path d="${cable(46)}" stroke="#263238" stroke-width="1.2" fill="none"/>`;
+  const brush = (cx) => `<g transform="translate(${cx} 1)"><g class="nta-spin"><circle r="4.2" fill="#1e88e5"/>${[0, 45, 90, 135].map((a) => `<path d="M-4 0H4" transform="rotate(${a})" stroke="#90caf9" stroke-width=".9"/>`).join("")}</g><circle r="1.2" fill="#0d47a1"/></g>`;
+  const robot = `<rect x="-15" y="-2" width="30" height="8.2" rx="4" fill="#263238"/>
+<path class="nta-flow-fast" d="M-12 6H12" stroke="#78909c" stroke-width="1.6" stroke-dasharray="1.6 1.6"/>
+${brush(-13.5)}${brush(13.5)}
+<path d="M-15 -1 Q-15 -14 0 -14 Q15 -14 15 -1 Z" fill="url(#${bd})" stroke="#90a4ae" stroke-width=".5"/>
+<path d="M-15 -3 H15" stroke="#1e88e5" stroke-width="2"/>
+<rect x="-7" y="-11" width="14" height="5" rx="1.5" fill="#37474f"/><path d="M-5.5 -8.5h11" stroke="#78909c" stroke-width=".6" stroke-dasharray="1 .8"/>
+<path d="M-6 -13.4 Q0 -21 6 -13.4" stroke="#455a64" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+<circle cx="10" cy="-6.5" r="1" fill="${on ? "#76ff03" : "#78909c"}"/>`;
+  const anim = on ? `<animateTransform attributeName="transform" type="translate" values="${x0} 98;${x1} 98;${x1} 98;${x0} 98;${x0} 98" keyTimes="${keys}" dur="9s" repeatCount="indefinite"/>` : "";
+  const flip = on ? `<animateTransform attributeName="transform" type="scale" values="1 1;1 1;-1 1;-1 1;1 1" keyTimes="${keys}" calcMode="discrete" dur="9s" repeatCount="indefinite"/>` : "";
+  const bubbles = [0, 1, 2].map((i) => `<circle class="nta-rise ntd${i + 1}" cx="${-2 + i * 2}" cy="-16" r="${1 - i * .15}" fill="#e1f5fe" opacity="0"/>`).join("");
+  const caust = [14, 30, 52, 70, 92].map((x, i) => `<path class="nta-caust ntd${i + 1}" d="M${x} 102 q3 -2 6 0 q3 2 6 0" stroke="#e1f5fe" stroke-width=".8" fill="none"/>`).join("");
+  const txt = on ? c.lcd || "" : "";
+  return `<defs><pattern id="${tp}" width="5" height="5" patternUnits="userSpaceOnUse"><rect width="5" height="5" fill="#8fd0ec"/><path d="M5 0V5M0 5H5" stroke="#6fbbe0" stroke-width=".5"/></pattern>
+${ntV(w, "#4fc3f7", "#0277bd")}${ntV(bd, "#ffffff", "#b0bec5")}${ntV(dk, "#efe5d0", "#d6c7a7")}</defs>
+<rect x="0" y="20" width="120" height="8" fill="url(#${dk})"/><rect x="0" y="27" width="120" height="1.2" fill="#b9a988"/>
+<rect x="6" y="28" width="108" height="80" fill="#cfd8dc"/>
+<rect x="8" y="28" width="104" height="78" fill="url(#${tp})"/>
+<rect x="8" y="35" width="104" height="71" fill="url(#${w})" opacity=".72"/>
+<path class="nta-bob" d="M8 35 q6.5 -1.6 13 0 t13 0 t13 0 t13 0 t13 0 t13 0 t13 0 t13 0" stroke="#e1f5fe" stroke-width="1.2" fill="none"/>
+${caust}
+<rect x="6" y="106" width="108" height="3" fill="#90a4ae"/>
+${cablePath}
+<ellipse cx="76" cy="35.4" rx="3" ry="1.8" fill="#ffca28" stroke="#c49000" stroke-width=".4"/>
+<g transform="translate(${on ? x0 : 46} 98)">${anim}<g>${flip}${robot}<g class="nt-run">${bubbles}</g></g></g>
+<rect x="86" y="5" width="32" height="16" rx="2" fill="#eceff2" stroke="#aab2bc" stroke-width=".5"/>
+${ntLcd(88.5, 7, 27, 11.6, txt, on, "#4fc3f7", ntFit(txt, 27, 7.8))}
+<circle cx="116" cy="19" r=".9" fill="${on ? "#76ff03" : "#9aa1ab"}"/>`;
+}
+
+// Underfloor heating: a corner of the room, the tiles cut open over the loop
+function ntFloor(c) {
+  const wl = ntId(), tl = ntId(), gl = ntId();
+  const on = c.on, electric = c.electric;
+  const P = (u, v) => [22 + 96 * u - 20 * v, 60 + 36 * v];
+  const pt = (u, v) => P(u, v).map((x) => x.toFixed(1)).join(" ");
+  const poly = (pts, fill, extra = "") => `<polygon points="${pts.map(([u, v]) => pt(u, v)).join(" ")}" fill="${fill}" ${extra}/>`;
+  const grout = [1, 2, 3, 4, 5, 6, 7].map((i) => `<path d="M${pt(i / 8, 0)} L${pt(i / 8, 1)}" stroke="#bfb5a4" stroke-width=".5"/>`).join("") +
+    [1, 2, 3, 4].map((j) => `<path d="M${pt(0, j / 5)} L${pt(1, j / 5)}" stroke="#bfb5a4" stroke-width=".5"/>`).join("");
+  const u0 = .4, v0 = .34;
+  const runs = [.44, .54, .64, .74, .84, .94];
+  let d = `M${pt(.47, runs[0])}`;
+  runs.forEach((v, i) => {
+    const end = i % 2 ? .47 : .95;
+    d += ` L${pt(end, v)}`;
+    if (i < runs.length - 1) d += ` Q${pt(end === .95 ? 1.01 : .41, (v + runs[i + 1]) / 2)} ${pt(end, runs[i + 1])}`;
+  });
+  const pipeColor = electric ? (on ? "#ff7043" : "#8d6e63") : (on ? "#e53935" : "#b0857c");
+  const mesh = electric
+    ? Array.from({ length: 7 }, (_, i) => { const u = u0 + (1 - u0) * (i + .5) / 7; return `<path d="M${pt(u, v0)} L${pt(u, 1)}" stroke="#fff" stroke-width=".35" opacity=".8"/>`; }).join("") +
+      Array.from({ length: 6 }, (_, j) => { const v = v0 + (1 - v0) * (j + .5) / 6; return `<path d="M${pt(u0, v)} L${pt(1, v)}" stroke="#fff" stroke-width=".35" opacity=".8"/>`; }).join("")
+    : "";
+  const layers = electric
+    ? [[0, 2, "#d9cfbf"], [2, 4, "#9e9e9e"], [4, 12, "#a8a196"], [12, 17, "#f2e3a0"], [17, 20, "#8a8f96"]]
+    : [[0, 2, "#d9cfbf"], [2, 11, "#a8a196"], [11, 17, "#f2e3a0"], [17, 20, "#8a8f96"]];
+  const front = layers.map(([a, b, col]) => `<rect x="2" y="${96 + a}" width="96" height="${b - a}" fill="${col}"/>`).join("") +
+    layers.map(([a, b, col]) => `<polygon points="98 ${96 + a} 118 ${60 + a} 118 ${60 + b} 98 ${96 + b}" fill="${col}" opacity=".78"/>`).join("");
+  const dots = electric
+    ? Array.from({ length: 12 }, (_, i) => `<circle cx="${7 + i * 8}" cy="99" r=".9" fill="${pipeColor}"/>`).join("")
+    : Array.from({ length: 12 }, (_, i) => `<circle cx="${7 + i * 8}" cy="102.5" r="1.7" fill="${i % 2 ? (on ? "#1e88e5" : "#7f97ad") : pipeColor}" stroke="#fff" stroke-width=".3"/>`).join("");
+  const studs = electric ? "" : Array.from({ length: 16 }, (_, i) => `<rect x="${3 + i * 6}" y="105.5" width="3" height="1.4" rx=".5" fill="#e0cf7c"/>`).join("");
+  const manifold = electric ? "" : `<rect x="18" y="20" width="9" height="11" rx="2" fill="#c62828"/><circle cx="22.5" cy="25.5" r="3" fill="#ef9a9a"/>
+<g class="${on ? "nta-spin-slow" : ""}">${ntFlake(22.5, 25.5, 2.2, "#b71c1c", .7)}</g>
+<rect x="27" y="24" width="33" height="3.6" rx="1.2" fill="#d32f2f"/>
+<rect x="27" y="36" width="33" height="3.6" rx="1.2" fill="#1e88e5"/>
+${[0, 1, 2, 3].map((k) => { const x = 33 + k * 7.5; return `<rect x="${x - 1.4}" y="15.5" width="2.8" height="8.5" rx="1" fill="#e3f2fd" stroke="#90a4ae" stroke-width=".4"/>
+<rect class="nta-bob" x="${x - 1}" y="${on ? 17.6 : 21.4}" width="2" height="2" fill="#e53935"/>
+<circle cx="${x + 2.6}" cy="41.6" r="1.6" fill="#263238"/>
+<path d="M${x - 1.2} 27.6 V60" stroke="${on ? "#ef5350" : "#c08a84"}" stroke-width="1.6"/><path d="M${x + 1.2} 39.6 V60" stroke="${on ? "#42a5f5" : "#8fa6bb"}" stroke-width="1.6"/>`; }).join("")}`;
+  const waves = [[.18, .3], [.5, .2], [.75, .5], [.32, .7], [.62, .8], [.88, .15]].map(([u, v], i) => { const [x, y] = P(u, v); return `<path class="nta-heat ntd${i + 1}" d="M${x.toFixed(1)} ${y.toFixed(1)} q-1.6 -2.6 0 -5.2 q1.6 -2.6 0 -5.2" stroke="#ff8a65" stroke-width="1.1" fill="none" stroke-linecap="round" opacity="0"/>`; }).join("");
+  const txt = c.lcd || "";
+  return `<defs>${ntV(wl, "#f5f7fa", "#e3e8ee")}${ntV(tl, "#f1ece3", "#ddd4c4")}${ntBlur(gl, 1.1)}</defs>
+<polygon points="22 4 118 4 118 60 22 60" fill="url(#${wl})"/>
+<rect x="22" y="56" width="96" height="4" fill="#fff" stroke="#d7dce3" stroke-width=".4"/>
+${manifold}
+${poly([[0, 0], [1, 0], [1, 1], [0, 1]], `url(#${tl})`)}${grout}
+<g class="nt-run">${poly([[0, 0], [1, 0], [1, 1], [0, 1]], "#ff7043", `class="nta-warm" opacity=".1"`)}</g>
+${poly([[u0, v0], [1, v0], [1, 1], [u0, 1]], electric ? "#9e9e9e" : "#a8a196")}
+${mesh}
+<g class="nt-run"><path d="${d}" stroke="${pipeColor}" stroke-width="${electric ? 3.4 : 4.4}" fill="none" opacity=".45" filter="url(#${gl})"/></g>
+<path d="${d}" stroke="${pipeColor}" stroke-width="${electric ? 1.1 : 2.2}" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+${electric ? "" : `<g class="nt-run"><path class="nta-flow" d="${d}" stroke="#ffcdd2" stroke-width=".8" stroke-dasharray="2 5" fill="none"/></g>`}
+<polygon points="${pt(u0, v0)} ${pt(1, v0)} ${P(1, v0)[0].toFixed(1)} ${(P(1, v0)[1] + 1.8).toFixed(1)} ${P(u0, v0)[0].toFixed(1)} ${(P(u0, v0)[1] + 1.8).toFixed(1)}" fill="#a39886"/>
+<polygon points="${pt(u0, v0)} ${pt(u0, 1)} ${(P(u0, 1)[0] + 1.6).toFixed(1)} ${P(u0, 1)[1].toFixed(1)} ${(P(u0, v0)[0] + 1.6).toFixed(1)} ${(P(u0, v0)[1] + 1.8).toFixed(1)}" fill="#b8ad9b"/>
+${front}${dots}${studs}
+<g class="nt-run">${waves}</g>
+<rect x="82" y="14" width="33" height="30" rx="3" fill="#ffffff" stroke="#c3c9d1" stroke-width=".6"/>
+${ntLcd(84.5, 17, 28, 13, txt, true, on ? "#ffb74d" : "#90a4ae", ntFit(txt, 28, 7.4))}
+<path d="M89 39 q-2 -2.6 0 -5 q.6 2 2 2.4 q1 1.4 0 2.6 Z" fill="${on ? "#ff7043" : "#c3c9d1"}"/>
+<circle cx="101" cy="37" r="2.2" fill="#eceff1" stroke="#b0bec5" stroke-width=".4"/><circle cx="108" cy="37" r="2.2" fill="#eceff1" stroke="#b0bec5" stroke-width=".4"/>
+<path d="M99.8 37h2.4M106.8 37h2.4M108 35.8v2.4" stroke="#607d8b" stroke-width=".5"/>
+${electric ? `<path d="M98.5 44 V58" stroke="#78909c" stroke-width=".9"/>` : ""}`;
+}
+
+// Square spa, three-quarter view
+function ntSpa(c) {
+  const wa = ntId(), rim = ntId(), cl = ntId(), gl = ntId(), sd = ntId();
+  const P = (u, v) => [30 + 80 * u - 22 * v, 40 + 22 * v];
+  const pt = (u, v) => P(u, v).map((x) => x.toFixed(1)).join(" ");
+  const roundQuad = (a0, a1, b0, b1, dy = 0) => {
+    const k = [[a0, b0], [a1, b0], [a1, b1], [a0, b1]].map(([u, v]) => { const [x, y] = P(u, v); return [x, y + dy]; });
+    const lerp = (a, b, q) => [a[0] + (b[0] - a[0]) * q, a[1] + (b[1] - a[1]) * q];
+    let d = "";
+    k.forEach((p, i) => { const prev = k[(i + 3) % 4], next = k[(i + 1) % 4]; const a = lerp(p, prev, .16), b = lerp(p, next, .16); d += `${i ? "L" : "M"}${a[0].toFixed(1)} ${a[1].toFixed(1)} Q${p[0].toFixed(1)} ${p[1].toFixed(1)} ${b[0].toFixed(1)} ${b[1].toFixed(1)} `; });
+    return d + "Z";
+  };
+  const glow = c.lit || c.bubbles;
+  const slatsF = Array.from({ length: 13 }, (_, i) => `<path d="M${14 + i * 6} 63.5 V96" stroke="#3e3128" stroke-width=".6" opacity=".55"/>`).join("");
+  const slatsS = Array.from({ length: 5 }, (_, i) => { const q = (i + 1) / 6; return `<path d="M${(88 + 22 * q).toFixed(1)} ${(63.5 - 22 * q).toFixed(1)} V${(96 - 22 * q).toFixed(1)}" stroke="#2f251e" stroke-width=".6" opacity=".55"/>`; }).join("");
+  const bubbles = [[.3, .4], [.5, .3], [.7, .45], [.4, .62], [.62, .66], [.22, .55], [.8, .6], [.52, .5]].map(([u, v], i) => { const [x, y] = P(u, v); return `<circle class="nta-pop ntd${(i % 6) + 1}" cx="${x.toFixed(1)}" cy="${(y + 2).toFixed(1)}" r="${1.4 + (i % 3) * .5}" fill="none" stroke="#e0f7fa" stroke-width=".7" opacity="0"/>`; }).join("");
+  const steam = [[.35, .4], [.55, .35], [.72, .5]].map(([u, v], i) => { const [x, y] = P(u, v); return `<path class="nta-steam ntd${i + 1}" d="M${x.toFixed(1)} ${(y - 2).toFixed(1)} q-2 -3 0 -6 q2 -3 0 -6" stroke="#ffffff" stroke-width="2" fill="none" stroke-linecap="round" opacity="0"/>`; }).join("");
+  const jets = [.25, .4, .6, .75].map((u) => { const [x, y] = P(u, .14); return `<circle cx="${x.toFixed(1)}" cy="${(y + .8).toFixed(1)}" r=".8" fill="#78909c"/>`; }).join("");
+  const [hx1, hy1] = P(.12, .15), [hx2, hy2] = P(.86, .15);
+  const [gx, gy] = P(.5, .52);
+  const txt = c.lcd || "";
+  return `<defs>${ntV(wa, glow ? "#4dd0e1" : "#4f8fa3", glow ? "#0097a7" : "#1f5568")}${ntV(rim, "#f4f6f8", "#cfd6dd")}${ntV(cl, "#6d5848", "#4a3b30")}${ntBlur(gl, 3)}${ntV(sd, "#5a483b", "#3a2e26")}</defs>
+${ntFoot("7 97.2 89 97.2 111.5 74.8 30 74.8")}${ntFoot("9.5 106 40 106 49 96.8 20 96.8")}
+<polygon points="88 62 110 40 110 74 88 96" fill="url(#${sd})"/>${slatsS}
+<rect x="8" y="62" width="80" height="34" fill="url(#${cl})"/>${slatsF}
+<rect x="8" y="62" width="4" height="34" fill="#3a2e26"/><rect x="84" y="62" width="4" height="34" fill="#3a2e26"/>
+<polygon points="8 62 88 62 88 64.4 8 64.4" fill="#9ea7b0"/>
+<polygon points="20 89 48 89 39 98 11 98" fill="#8a7260"/>
+<polygon points="11 98 39 98 39 105 11 105" fill="#5a483b"/><path d="M11 101.5h28" stroke="#2f251e" stroke-width=".45" opacity=".6"/>
+<polygon points="39 98 48 89 48 96 39 105" fill="#3f322a"/>
+<polygon points="20 82 48 82 43.5 86.5 15.5 86.5" fill="#9a8270"/>
+<polygon points="15.5 86.5 43.5 86.5 43.5 93.5 15.5 93.5" fill="#5a483b"/><path d="M15.5 90h28" stroke="#2f251e" stroke-width=".45" opacity=".6"/>
+<polygon points="43.5 86.5 48 82 48 89 43.5 93.5" fill="#3f322a"/>
+<path d="M20 82H48M11 98H39" stroke="#b39d8a" stroke-width=".5"/>
+<polygon points="88 62 110 40 110 42.4 88 64.4" fill="#8a939c"/>
+<polygon points="${pt(0, 0)} ${pt(1, 0)} ${pt(1, 1)} ${pt(0, 1)}" fill="url(#${rim})" stroke="#aab4be" stroke-width=".5"/>
+<path d="${roundQuad(.07, .93, .12, .88)}" fill="#dfe8ed" stroke="#b0bec5" stroke-width=".5"/>
+${jets}
+<path d="${roundQuad(.1, .9, .18, .85, 2)}" fill="url(#${wa})"/>
+${glow ? `<ellipse class="nta-glow" cx="${gx.toFixed(1)}" cy="${(gy + 2).toFixed(1)}" rx="20" ry="5" fill="#b2ebf2" filter="url(#${gl})"/>` : ""}
+<path d="${roundQuad(.17, .83, .3, .74, 2)}" fill="none" stroke="#ffffff" stroke-width=".6" opacity=".35"/>
+<rect x="${(hx1 - 3).toFixed(1)}" y="${(hy1 - 1.4).toFixed(1)}" width="7" height="3" rx="1.5" fill="#37474f"/>
+<rect x="${(hx2 - 3).toFixed(1)}" y="${(hy2 - 1.4).toFixed(1)}" width="7" height="3" rx="1.5" fill="#37474f"/>
+${c.bubbles ? `<g class="nt-run">${bubbles}</g>` : ""}${c.steam ? `<g class="nt-run">${steam}</g>` : ""}
+<rect x="58" y="67" width="27" height="15" rx="1.8" fill="#263238"/>
+${ntLcd(59.5, 68.5, 24, 12, txt, true, c.heating ? "#ffb74d" : "#80deea", ntFit(txt, 24, 8.6))}`;
+}
+
+// Sauna cabin with a glass door: the stones glow and steam rises inside
+function ntSauna(c) {
+  const g = ntId(), cp = ntId(), gl = ntId(), inside = ntId(), st = ntId();
+  const on = c.on;
+  const planks = Array.from({ length: 14 }, (_, i) => { const y = 24 + i * 6; return `<rect x="10" y="${y}" width="90" height="6" fill="${i % 2 ? "#c48d58" : "#cf9963"}"/><path d="M12 ${y + 3} q14 -1.2 28 0 t28 0 t30 .4" stroke="#a8713f" stroke-width=".35" fill="none" opacity=".7"/>`; }).join("");
+  const side = Array.from({ length: 14 }, (_, i) => `<polygon points="100 ${24 + i * 6} 112 ${16 + i * 6} 112 ${22 + i * 6} 100 ${30 + i * 6}" fill="${i % 2 ? "#9c6b3f" : "#a87447"}"/>`).join("");
+  const stones = [[42, 79], [46, 78], [50, 79.4], [44, 76], [48, 75.6], [46.2, 73.8], [40.6, 76.6], [51.4, 76.4]].map(([x, y], i) => `<circle cx="${x}" cy="${y}" r="2.2" fill="${on ? ["#ff7043", "#ff8a65", "#f4511e"][i % 3] : ["#78716c", "#8b8580", "#6b6560"][i % 3]}" stroke="${on ? "#bf360c" : "#57524d"}" stroke-width=".4"/>`).join("");
+  const steam = [[44, 70], [48, 69], [40, 71], [50, 66]].map(([x, y], i) => `<path class="nta-steam ntd${i + 1}" d="M${x} ${y} q-2 -3 0 -6 q2 -3 0 -6" stroke="#fff3e0" stroke-width="2" fill="none" stroke-linecap="round" opacity="0"/>`).join("");
+  // The dial reads from 0 to 120 degrees over 240 of its turn.
+  const deg = c.temp === null || c.temp === undefined ? -120 : -120 + Math.max(0, Math.min(120, c.temp)) * 2;
+  const txt = c.lcd || "";
+  return `<defs>${ntV(g, on ? "#a35a26" : "#4b3223", on ? "#6d3b19" : "#2b1d14")}${ntBlur(gl, 2.4)}<clipPath id="${cp}"><rect x="18" y="32" width="36" height="71"/></clipPath>${ntV(st, "#5d6670", "#363c43")}
+<radialGradient id="${inside}" cx=".5" cy=".1" r=".9"><stop offset="0" stop-color="#ffcc80" stop-opacity="${on ? .75 : 0}"/><stop offset="1" stop-color="#ffcc80" stop-opacity="0"/></radialGradient></defs>
+${ntFoot("8 110.6 101.5 110.6 113.5 101.6 21 101.6")}
+${side}
+<path d="M7 18 L19 10 L115 10 L103 18 Z" fill="#7b4f2d"/><path d="M103 18 L115 10 L115 16 L103 24 Z" fill="#5b3a22"/>
+<rect x="7" y="18" width="96" height="6" fill="#8d5a34"/>
+${planks}
+<rect x="15" y="29" width="42" height="77" rx="1" fill="#8d5a34"/>
+<g clip-path="url(#${cp})">
+<rect x="18" y="32" width="36" height="71" fill="url(#${g})"/>
+${Array.from({ length: 12 }, (_, i) => `<path d="M18 ${36 + i * 6}h36" stroke="#000" stroke-width=".4" opacity=".25"/>`).join("")}
+<rect x="18" y="32" width="36" height="71" fill="url(#${inside})"/>
+<rect x="18" y="58" width="36" height="4" fill="#d9a46d"/><rect x="18" y="62" width="36" height="7" fill="#b07a46"/>
+<path d="M18 64.5h36M18 67h36" stroke="#8d5a34" stroke-width=".4"/>
+<rect x="18" y="84" width="20" height="3.4" fill="#d9a46d"/><rect x="18" y="87.4" width="20" height="15.6" fill="#b07a46"/>
+<path d="M22 78 h8 l-1 6 h-6 Z" fill="#a1663a" stroke="#6d4123" stroke-width=".4"/><path d="M22.4 80h7.2M22.7 82.4h6.6" stroke="#cfd8dc" stroke-width=".6"/>
+<path d="M28 79 L33 70" stroke="#6d4123" stroke-width=".9" stroke-linecap="round"/>
+<rect x="39" y="80" width="14" height="23" rx="1" fill="url(#${st})"/>
+${[41.5, 44.5, 47.5, 50.5].map((x) => `<path d="M${x} 81v21" stroke="#22272c" stroke-width=".8"/>`).join("")}
+${on ? `<ellipse class="nta-glow" cx="46" cy="77" rx="9" ry="5" fill="#ff7043" filter="url(#${gl})"/>` : ""}
+${stones}<g class="nt-run">${steam}</g>
+</g>
+<rect x="18" y="32" width="36" height="71" fill="#3b2412" opacity="${on ? .18 : .35}"/>
+<path d="M20 34 L30 34 L20 60 Z" fill="#fff" opacity=".14"/>
+<rect x="19.6" y="50" width="3.6" height="26" rx="1.6" fill="#e2b07a" stroke="#8d5a34" stroke-width=".5"/>
+<rect x="63" y="32" width="33" height="25" rx="2.2" fill="#263238"/>
+${ntLcd(65.5, 35, 28, 13, txt, true, on ? "#ff9800" : "#90a4ae", ntFit(txt, 28, 9.4))}
+<circle cx="70" cy="52.6" r="1.4" fill="${on ? "#ff7043" : "#546e7a"}"/><circle cx="79.5" cy="52.6" r="1.4" fill="#546e7a"/><circle cx="89" cy="52.6" r="1.4" fill="#546e7a"/>
+<circle cx="79.5" cy="77" r="11" fill="#8d5a34"/><circle cx="79.5" cy="77" r="9.2" fill="#fbf3e6"/>
+${Array.from({ length: 11 }, (_, i) => `<path d="M79.5 69.4 V71.2" stroke="#6d4c41" stroke-width=".6" transform="rotate(${-120 + i * 24} 79.5 77)"/>`).join("")}
+<path d="M73 77.5 A6.6 6.6 0 0 1 75 72" stroke="#42a5f5" stroke-width="1" fill="none"/><path d="M84 72 A6.6 6.6 0 0 1 86 77.5" stroke="#ef5350" stroke-width="1" fill="none"/>
+<text x="79.5" y="83.6" font-size="3.6" text-anchor="middle" fill="#6d4c41" font-weight="700" ${NT_FONT}>\u00b0C</text>
+<path d="M79.5 77 V69.8" stroke="#c62828" stroke-width=".9" stroke-linecap="round" transform="rotate(${deg} 79.5 77)"/><circle cx="79.5" cy="77" r="1.2" fill="#3e2723"/>
+<rect x="9" y="106" width="92" height="4" fill="#6d4123"/>`;
+}
+
+// Planted aquarium on its cabinet
+function ntAquarium(c) {
+  const wa = ntId(), cab = ntId(), sand = ntId(), ray = ntId(), gl = ntId();
+  const on = c.on;
+  const neon = (x, y) => `<g transform="translate(${x} ${y})"><ellipse rx="2.8" ry="1" fill="#cfd8dc"/><path d="M-2.4 -.2 H1.8" stroke="#00b0ff" stroke-width=".7"/><path d="M-2.6 .35 H0" stroke="#ff1744" stroke-width=".6"/><path d="M2.6 0 l1.4 -1 v2 Z" fill="#cfd8dc"/></g>`;
+  const angel = `<g transform="translate(46 50)"><path d="M6 0 L0 -4.5 L-2 -12 L-3.2 -3.5 L-7 -1.2 L-7.6 1.2 L-3.2 3.5 L-2 12 L0 4.5 Z" fill="#eceff1" stroke="#90a4ae" stroke-width=".4"/><path d="M-.2 -4.4 V4.4 M-3 -3 V3 M2.6 -2.4 V2.4" stroke="#37474f" stroke-width=".9"/><circle cx="3.6" cy="-.6" r=".7" fill="#212121"/></g>`;
+  const platy = `<g transform="translate(34 70)"><path d="M4 0 Q0 -3 -3 0 Q0 3 4 0 Z" fill="#ff8f00"/><path d="M-3 0 L-6 -2.4 L-6 2.4 Z" fill="#ffb300"/><circle cx="2.4" cy="-.4" r=".5" fill="#212121"/></g>`;
+  const grassLeaves = [18, 21, 24, 27, 30].map((x, i) => `<path class="nta-sway ntd${i + 1}" d="M${x} 82 C${x - 3} 66 ${x + 3} 52 ${x - 1} 36" stroke="${["#2e7d32", "#43a047", "#388e3c"][i % 3]}" stroke-width="1.3" fill="none"/>`).join("");
+  const redPlant = `<g class="nta-sway ntd3"><path d="M82 82 V48" stroke="#8d3a2b" stroke-width=".8"/>${[50, 56, 62, 68, 74].map((y) => `<ellipse cx="79.6" cy="${y}" rx="2.6" ry="1" fill="#e64a19" transform="rotate(-20 79.6 ${y})"/><ellipse cx="84.4" cy="${y + 1.5}" rx="2.6" ry="1" fill="#ff7043" transform="rotate(20 84.4 ${y + 1.5})"/>`).join("")}</g>`;
+  const carpet = Array.from({ length: 20 }, (_, i) => `<circle cx="${40 + i * 2.2}" cy="${81.6 - (i % 3) * .5}" r="1.1" fill="${i % 2 ? "#66bb6a" : "#7cb342"}"/>`).join("");
+  const bubbles = [0, 1, 2, 3].map((i) => `<circle class="nta-rise ntd${i + 1}" cx="${64 + (i % 2) * .8}" cy="76" r="${(.9 - i * .1).toFixed(1)}" fill="#e1f5fe" opacity="0"/>`).join("");
+  return `<defs>${ntV(wa, on ? "#b3e5fc" : "#2c3f4c", on ? "#1976d2" : "#0f1d27")}${ntV(cab, "#5d4037", "#3e2723")}${ntV(sand, "#e8d6ad", "#c2a76f")}${ntBlur(gl, 1.4)}
+<linearGradient id="${ray}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".9"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient></defs>
+${ntShadow(60, 111.4, 47)}
+<rect x="16" y="88" width="88" height="23" rx="1.5" fill="url(#${cab})"/>
+<path d="M60 90v19" stroke="#2b1b17" stroke-width=".7"/><circle cx="57.4" cy="99" r="1" fill="#bcaaa4"/><circle cx="62.6" cy="99" r="1" fill="#bcaaa4"/>
+<rect x="13" y="20" width="94" height="5" rx="1.5" fill="#263238"/>
+<rect x="16" y="24.4" width="88" height="1.3" rx=".6" fill="${on ? "#e3f2fd" : "#455a64"}"/>
+${on ? `<rect x="16" y="24" width="88" height="2.4" fill="#e3f2fd" filter="url(#${gl})"/>` : ""}
+<rect x="14" y="26" width="92" height="60" fill="url(#${wa})"/>
+${on ? `<g class="nta-rays"><polygon points="28 26 36 26 30 84 20 84" fill="url(#${ray})"/><polygon points="54 26 61 26 58 84 48 84" fill="url(#${ray})"/><polygon points="82 26 88 26 90 84 80 84" fill="url(#${ray})"/></g>` : ""}
+<path d="M14 40 q10 -6 20 0 t20 0 t20 0 t20 0 t12 -2 V86 H14 Z" fill="#000" opacity="${on ? .06 : .2}"/>
+<rect x="17" y="34" width="2.8" height="34" rx="1.4" fill="#cfd8dc" opacity=".7"/><rect x="17.4" y="34" width="2" height="5" rx="1" fill="${c.heater ? "#ff5722" : "#78909c"}"/>
+<rect x="96" y="32" width="8" height="30" rx="1.5" fill="#263238"/><path d="M97.6 36v22M100 36v22M102.4 36v22" stroke="#455a64" stroke-width=".7"/>
+${grassLeaves}${redPlant}
+<path d="M88 84 C86 74 92 70 98 66 M92 74 L99 72 M90 78 L84 70" stroke="#6d4c41" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+<path d="M30 86 Q30 76 38 75 Q46 76 46 86 Z" fill="#78909c"/><path d="M33 80 Q37 77 41 79" stroke="#b0bec5" stroke-width=".6" fill="none"/>
+<path d="M14 82 q6 -2 12 0 t12 0 t12 0 t12 0 t12 0 t12 0 t12 0 t8 0 V86 H14 Z" fill="url(#${sand})"/>${carpet}
+<circle cx="64" cy="83" r="1.6" fill="#90a4ae"/><g class="nt-run">${bubbles}</g>
+<g class="nta-swim">${angel}</g>
+<g class="nta-swimB"><g>${neon(76, 44)}${neon(80, 41)}${neon(83, 45.6)}${neon(78, 48)}${neon(86, 42.4)}</g></g>
+<g class="nta-swim ntd3">${platy}</g>
+${on ? "" : `<rect x="14" y="26" width="92" height="60" fill="#06121b" opacity=".35"/>`}
+<path d="M20 28 L30 28 L18 60 Z" fill="#fff" opacity=".1"/>
+<rect x="13" y="85" width="94" height="4" rx="1" fill="#263238"/>
+<rect x="13.4" y="25.4" width="93.2" height="60.4" fill="none" stroke="#90a4ae" stroke-width=".7" opacity=".7"/>
+${c.lcd ? `<rect x="71" y="64" width="31" height="13" rx="2" fill="#eceff1" stroke="#90a4ae" stroke-width=".5"/>${ntLcd(72.5, 65.4, 28, 10.2, c.lcd, true, "#69f0ae", ntFit(c.lcd, 28, 7.2))}` : ""}`;
+}
+
+// Linky meter on its wall
+function ntLinky(c) {
+  const b = ntId(), cv = ntId(), sc = ntId(), sh = ntId();
+  const val = c.lcd || "";
+  return `<defs>${ntV(b, "#d9e36a", "#bccb3d")}${ntV(cv, "#c3d03f", "#a4b22c")}${ntV(sc, "#c7d1b8", "#a8b598")}<filter id="${sh}" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="1.8"/></filter></defs>
+<rect x="33.6" y="8" width="56" height="106" rx="8" fill="#000" opacity=".22" filter="url(#${sh})"/>
+<rect x="32" y="6" width="56" height="106" rx="8" fill="url(#${b})" stroke="#9aa82a" stroke-width=".6"/>
+<path d="M36 10 H50" stroke="#fff" stroke-width="1.4" opacity=".55" stroke-linecap="round"/>
+<rect x="37" y="14" width="46" height="28" rx="2.4" fill="#5a6347"/>
+<rect x="39" y="16" width="42" height="24" rx="1.4" fill="url(#${sc})"/>
+<text x="41.5" y="23.4" font-size="6" font-weight="700" fill="#1f2a18" ${NT_FONT}>${esc(c.label || "")}</text>
+${c.tariff ? `<text x="78.5" y="23.4" font-size="4.6" text-anchor="end" fill="#1f2a18" ${NT_FONT}>${esc(c.tariff)}</text>` : ""}
+<text x="60" y="35.4" font-size="${ntFit(val, 42, 10).toFixed(1)}" font-weight="700" text-anchor="middle" fill="#1f2a18" ${NT_FONT}>${esc(val)}</text>
+<circle cx="45" cy="50" r="3.6" fill="#eef3c7" stroke="#8c9a24" stroke-width=".6"/><path d="M43.2 50h3.6M45 48.2v3.6" stroke="#4b5320" stroke-width=".7"/>
+<circle cx="56" cy="50" r="3.6" fill="#eef3c7" stroke="#8c9a24" stroke-width=".6"/><path d="M54.2 50h3.6" stroke="#4b5320" stroke-width=".7"/>
+<circle cx="74" cy="50" r="2.4" fill="#5d1010"/>${c.unav ? "" : `<circle class="${c.heavy ? "nta-blinkfast" : "nta-blink"}" cx="74" cy="50" r="2.4" fill="#ff1744"/>`}
+<text x="74" y="57.4" font-size="3.6" text-anchor="middle" fill="#4b5320" ${NT_FONT}>1 Wh</text>
+<path d="M32 62 H88" stroke="#8c9a24" stroke-width=".7"/>
+<rect x="34" y="64" width="52" height="40" rx="4" fill="url(#${cv})"/>
+<text x="60" y="84" font-size="11" font-weight="700" font-style="italic" text-anchor="middle" fill="#ffffff" ${NT_FONT}>linky</text>
+<path d="M45 87.4 Q60 92 76 86" stroke="#ffffff" stroke-width="1.1" fill="none" stroke-linecap="round"/>
+<circle cx="38.6" cy="68.4" r="1.4" fill="#8c9a24"/><circle cx="81.4" cy="68.4" r="1.4" fill="#8c9a24"/>
+<path d="M81.4 69.8 q2 6 -1 10" stroke="#1565c0" stroke-width=".5" fill="none"/><rect x="78.8" y="79.4" width="3.6" height="2.4" rx=".5" fill="#1565c0"/>
+<path d="M48 112 V122" stroke="#5d4037" stroke-width="3"/><path d="M56 112 V122" stroke="#1565c0" stroke-width="3"/><path d="M64 112 V122" stroke="#5d4037" stroke-width="3"/><path d="M72 112 V122" stroke="#1565c0" stroke-width="3"/>`;
+}
+
+// Christmas tree: the lights, the baubles and the star in a palette
+function ntTree(c) {
+  const gr = ntId(), st = ntId(), gl = ntId(), pot = ntId();
+  const on = c.on;
+  const pal = TREE_PALETTES[c.palette] || TREE_PALETTES.multicolor;
+  const tier = (yt, yb, w) => {
+    let d = `M60 ${yt} L${60 + w} ${yb}`;
+    const n = Math.round(w / 3.6);
+    for (let i = 1; i <= 2 * n; i++) { const x = 60 + w - (i * w) / n; d += ` L${x.toFixed(1)} ${i % 2 ? yb - 3.4 : yb}`; }
+    return `<path d="${d} Z" fill="url(#${gr})" stroke="#1b5e20" stroke-width=".5" stroke-linejoin="round"/>` +
+      [-.6, -.3, .3, .6].map((k) => `<path d="M60 ${yt + 4} L${(60 + w * k).toFixed(1)} ${yb - 3}" stroke="#66bb6a" stroke-width=".6" opacity=".45"/>`).join("");
+  };
+  const tiers = [[52, 94, 44], [38, 78, 35], [24, 62, 26], [12, 45, 17]];
+  let k = 0;
+  const lights = tiers.map(([, yb, w]) => {
+    const a = [60 - w * .78, yb - 14], m = [60 + w * .1, yb - 1], b = [60 + w * .82, yb - 7];
+    const q = (s) => [(1 - s) ** 2 * a[0] + 2 * (1 - s) * s * m[0] + s * s * b[0], (1 - s) ** 2 * a[1] + 2 * (1 - s) * s * m[1] + s * s * b[1]];
+    const tinsel = `<path d="M${(60 - w * .7).toFixed(1)} ${yb - 5} Q60 ${yb - 14} ${(60 + w * .72).toFixed(1)} ${yb - 12}" stroke="${pal.tinsel[k % pal.tinsel.length]}" stroke-width="1.4" stroke-dasharray="1.4 .6" fill="none" opacity=".85"/>`;
+    const wire = `<path d="M${a[0].toFixed(1)} ${a[1]} Q${m[0].toFixed(1)} ${m[1]} ${b[0].toFixed(1)} ${b[1]}" stroke="#2e5e2e" stroke-width=".7" fill="none" opacity=".9"/>`;
+    const bulbs = [.12, .3, .48, .66, .84].map((s) => {
+      const [x, y] = q(s); const col = pal.lights[k % pal.lights.length]; const dl = `ntd${(k++ % 6) + 1}`;
+      return on
+        ? `<circle class="nta-twinkle ${dl}" cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="3" fill="${col}" opacity=".7" filter="url(#${gl})"/><circle class="nta-twinkle ${dl}" cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="1.3" fill="${col}"/>`
+        : `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="1.3" fill="#b0b5bb" stroke="#7d8590" stroke-width=".3"/>`;
+    }).join("");
+    return tinsel + wire + bulbs;
+  }).join("");
+  const balls = [[44, 92], [76, 91], [60, 86], [33, 93], [87, 93], [49, 75], [72, 74], [40, 77], [80, 77], [55, 60], [67, 58], [46, 62], [74, 61], [60, 44], [54, 46], [66, 47]]
+    .map(([x, y], i) => `<rect x="${x - .8}" y="${y - 3.6}" width="1.6" height="1.2" fill="#bdbdbd"/><circle cx="${x}" cy="${y}" r="2.6" fill="${pal.balls[i % pal.balls.length]}"/><circle cx="${x - .8}" cy="${y - .9}" r=".8" fill="#fff" opacity=".75"/>`).join("");
+  let star = "";
+  for (let i = 0; i < 10; i++) { const r = i % 2 ? 3.2 : 7.4, ang = -Math.PI / 2 + i * Math.PI / 5; star += `${i ? "L" : "M"}${(60 + r * Math.cos(ang)).toFixed(1)} ${(10 + r * Math.sin(ang)).toFixed(1)}`; }
+  const G = pal.gifts, R = pal.ribbons, edge = `stroke="#263238" stroke-width=".5" stroke-opacity=".7"`;
+  const bow = (x, y, col) => `<path d="M${x} ${y} q-4 -4 -5 0 q4 1 5 0 q4 -4 5 0 q-4 1 -5 0" fill="${col}" stroke="#263238" stroke-width=".35" stroke-opacity=".6"/>`;
+  const presents = c.presents
+    ? `<rect x="9" y="106" width="9" height="7" rx=".8" fill="${G[2]}" ${edge}/><path d="M13.5 106v7M9 109.5h9" stroke="${R[2]}" stroke-width="1"/>
+<rect x="18" y="100" width="20" height="13" rx="1" fill="${G[0]}" ${edge}/><path d="M28 100v13M18 106.5h20" stroke="${R[0]}" stroke-width="1.6"/>${bow(28, 100, R[0])}
+<rect x="82" y="96" width="18" height="17" rx="1" fill="${G[1]}" ${edge}/><path d="M91 96v17M82 104.5h18" stroke="${R[1]}" stroke-width="1.6"/>${bow(91, 96, R[1])}
+<rect x="101" y="105" width="9" height="8" rx=".8" fill="${G[3]}" ${edge}/><path d="M105.5 105v8" stroke="${R[3]}" stroke-width="1.2"/>`
+    : "";
+  return `<defs>${ntV(gr, "#43a047", "#1b5e20")}${ntV(st, pal.star[0], pal.star[1])}${ntBlur(gl, 1.4)}${ntV(pot, pal.pot[0], pal.pot[1])}</defs>
+${ntShadow(60, 113.2, 48)}
+<rect x="56" y="92" width="8" height="8" fill="#6d4c41"/>
+<path d="M46 98 H74 L71 112 H49 Z" fill="url(#${pot})" stroke="#263238" stroke-width=".5" stroke-opacity=".6"/><rect x="45" y="97" width="30" height="3" rx="1" fill="${pal.star[1]}"/>
+${tiers.map(([yt, yb, w]) => tier(yt, yb, w)).join("")}
+${balls}${lights}
+${on ? `<circle class="nta-glow" cx="60" cy="10" r="9" fill="${pal.star[0]}" filter="url(#${gl})"/>` : ""}
+<path d="${star}Z" fill="${on ? `url(#${st})` : "#d6d9dd"}" stroke="${on ? pal.star[2] : "#9aa1ab"}" stroke-width=".5"/>
+${presents}`;
+}
+
+const NT_DRAW = { chest: ntChest, drawers: ntDrawers, booster: ntBooster, sump: ntSump, pool: ntPoolRobot, floor: ntFloor, spa: ntSpa, sauna: ntSauna, aquarium: ntAquarium, linky: ntLinky, tree: ntTree };
+function ntSvg(d) {
+  ntN = 0;
+  const draw = NT_DRAW[d && d.kind] || ntLinky;
+  return `<svg class="nt-svg" viewBox="0 -10 120 135">${draw(d || {})}</svg>`;
+}
+function ntHtml(cls, d) {
+  const flags = ["nt", `nt-k-${(d && d.kind) || "none"}`, d && d.on ? "nt-on" : "", d && d.unav ? "nt-unav" : ""].filter(Boolean).join(" ");
+  return `
+        <div class="machine ${cls} ${flags}">${ntSvg(d)}</div>`;
+}
+
+// The new drawings' motion: nothing moves until the machine runs (nt-on),
+// except a meter's LED and an alarm's beacon. Each part's stagger is its --d0.
+const NT_CSS = `
+        svg.nt-svg{position:absolute;left:0;top:0;width:96px;height:108px;overflow:visible}
+        .machine.nt:not(.nt-on) .nt-run{display:none}
+        .machine.nt-unav{opacity:.45;filter:grayscale(1)}
+        .ntd1{--d0:.3s}.ntd2{--d0:.7s}.ntd3{--d0:1.1s}.ntd4{--d0:1.5s}.ntd5{--d0:1.9s}.ntd6{--d0:2.3s}
+        .nt-on .nta-spin{transform-box:fill-box;transform-origin:center;animation:nt-spin .6s linear infinite}
+        .nt-on .nta-spin-slow{transform-box:fill-box;transform-origin:center;animation:nt-spin 4s linear infinite}
+        .nt-on .nta-flow{animation:nt-flow .8s linear infinite}
+        .nt-on .nta-flow-fast{animation:nt-flow .4s linear infinite}
+        .nt-on .nta-rise{transform-box:fill-box;animation:nt-rise 2.4s ease-in infinite}
+        .nt-on .nta-steam{transform-box:fill-box;transform-origin:center bottom;animation:nt-steam 2.8s ease-out infinite}
+        .nt-on .nta-fall{transform-box:fill-box;animation:nt-fall 2.6s ease-in infinite}
+        .nt-k-sump .nta-fall{transform-box:fill-box;animation:nt-fall 2.6s ease-in infinite}
+        .nt-on .nta-twinkle{animation:nt-twinkle 1.3s ease-in-out infinite}
+        .nt-on .nta-frost{transform-box:fill-box;transform-origin:center;animation:nt-frost 2.4s ease-in-out infinite}
+        .nt-on .nta-shimmer{animation:nt-shimmer 3s ease-in-out infinite}
+        .nta-glow{animation:nt-glow 1.8s ease-in-out infinite}
+        .nt-on .nta-warm{animation:nt-warm 2.6s ease-in-out infinite}
+        .nt-on .nta-pop{transform-box:fill-box;transform-origin:center;animation:nt-pop 1.6s ease-out infinite}
+        .nt-on .nta-sway{transform-box:fill-box;transform-origin:center bottom;animation:nt-sway 3.2s ease-in-out infinite}
+        .nt-on .nta-vib{animation:nt-vib .12s linear infinite}
+        .nt-on .nta-heat{transform-box:fill-box;animation:nt-heat 2.2s ease-out infinite}
+        .nt-on .nta-bob{animation:nt-bob 1.2s ease-in-out infinite}
+        .nt-on .nta-swim{transform-box:fill-box;transform-origin:center;animation:nt-swim 8s ease-in-out infinite}
+        .nt-on .nta-swimB{transform-box:fill-box;transform-origin:center;animation:nt-swimB 6.5s ease-in-out infinite}
+        .nt-on .nta-rays{animation:nt-rays 4s ease-in-out infinite}
+        .nta-caust{opacity:.35}
+        .nt-on .nta-caust{opacity:0;animation:nt-shimmer 3s ease-in-out infinite}
+        .nta-blink{animation:nt-blink 2.4s linear infinite}
+        .nta-blinkfast{animation:nt-blinkfast .45s linear infinite}
+        .nta-beacon{animation:nt-glow .7s ease-in-out infinite}
+        @keyframes nt-spin{to{transform:rotate(360deg)}}
+        @keyframes nt-flow{to{stroke-dashoffset:-24}}
+        @keyframes nt-rise{0%{transform:translateY(0);opacity:0}15%{opacity:.95}100%{transform:translateY(-30px);opacity:0}}
+        @keyframes nt-steam{0%{transform:translateY(0) scaleX(1);opacity:0}30%{opacity:.6}100%{transform:translateY(-20px) scaleX(1.7);opacity:0}}
+        @keyframes nt-fall{0%{transform:translateY(-2px);opacity:0}35%{opacity:.85}100%{transform:translateY(12px);opacity:0}}
+        @keyframes nt-twinkle{0%,100%{opacity:1}50%{opacity:.25}}
+        @keyframes nt-blink{0%,70%,100%{opacity:.15}78%,92%{opacity:1}}
+        @keyframes nt-blinkfast{0%,100%{opacity:.15}45%,55%{opacity:1}}
+        @keyframes nt-frost{0%,100%{opacity:0;transform:scale(.5)}50%{opacity:1;transform:scale(1)}}
+        @keyframes nt-shimmer{0%,100%{opacity:0}50%{opacity:.5}}
+        @keyframes nt-glow{0%,100%{opacity:.45}50%{opacity:1}}
+        @keyframes nt-warm{0%,100%{opacity:.1}50%{opacity:.26}}
+        @keyframes nt-pop{0%{transform:scale(.2);opacity:0}40%{opacity:.95}100%{transform:scale(1.4);opacity:0}}
+        @keyframes nt-sway{0%,100%{transform:skewX(-7deg)}50%{transform:skewX(7deg)}}
+        @keyframes nt-vib{0%,100%{transform:translate(0,0)}25%{transform:translate(.35px,-.2px)}75%{transform:translate(-.35px,.2px)}}
+        @keyframes nt-heat{0%{transform:translateY(0);opacity:0}30%{opacity:.8}100%{transform:translateY(-14px);opacity:0}}
+        @keyframes nt-bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-1.6px)}}
+        @keyframes nt-swim{0%{transform:translateX(0) scaleX(1)}46%{transform:translateX(34px) scaleX(1)}50%{transform:translateX(34px) scaleX(-1)}96%{transform:translateX(0) scaleX(-1)}100%{transform:translateX(0) scaleX(1)}}
+        @keyframes nt-swimB{0%{transform:translateX(0) scaleX(-1)}46%{transform:translateX(-30px) scaleX(-1)}50%{transform:translateX(-30px) scaleX(1)}96%{transform:translateX(0) scaleX(1)}100%{transform:translateX(0) scaleX(-1)}}
+        @keyframes nt-rays{0%,100%{opacity:.18}50%{opacity:.38}}
+        .machine.nt * { animation-delay: calc(var(--d0, 0s) + var(--anim-offset, 0s)) !important; }
+        @media (prefers-reduced-motion: reduce) { .machine.nt * { animation-name: none !important; } }
+`;
+
+const NT_COLORS = { off: "var(--disabled-text-color, #9e9e9e)", idle: "var(--secondary-text-color, #727272)", run: "#1e88e5",
+  heat: "#f4511e", alarm: "#e53935", lit: "#43a047", high: "#e53935", unav: "var(--disabled-text-color, #9e9e9e)" };
+// How a remaining time reads on the robot's power supply: seconds, minutes or
+// hours as its unit says, or a finish time.
+function ntRemaining(hass, id) {
+  const s = id ? stateObj(hass, id) : null;
+  if (!s) return null;
+  const v = numberOrNull(s.state);
+  if (v === null) {
+    const at = Date.parse(s.state);
+    return isFinite(at) ? Math.max(0, (at - Date.now()) / 1000) : null;
+  }
+  const u = String((s.attributes || {}).unit_of_measurement || "min").toLowerCase();
+  return u === "s" ? v : u === "h" ? v * 3600 : v * 60;
+}
+// One reading of the new types: the mode, the state line, its colour, the
+// lines under it and what the drawing needs.
+function ntReadOf(type, hass, cfg, st, watts, threshold) {
+  const lines = [];
+  const raw = st ? String(st.state).trim().toLowerCase() : "";
+  const dead = !st || ["unavailable", "unknown", "none", ""].includes(raw);
+  const running = ntRunning(hass, cfg, st, watts, threshold);
+  const unav = running === null && !(type === "meter" && !dead);
+  const tmp = ntTemp(hass, cfg, st);
+  const out = (mode, labelKey, color, draw) => ({ mode, label: t(hass, labelKey), color, lines, draw: { ...draw, unav } });
+  if (unav) {
+    const kinds = { water_pump: pumpLayoutOf(cfg, st), floor_heating: "floor", spa: "spa", sauna: "sauna", aquarium: "aquarium", meter: "linky", christmas_tree: "tree" };
+    return out("unav", "ev_offline", NT_COLORS.unav, { kind: kinds[type], on: false, electric: floorLayoutOf(cfg) === "electric",
+      palette: cfg.tree_palette, presents: type === "christmas_tree" && treePresents(cfg) });
+  }
+  if (type === "water_pump") {
+    const layout = pumpLayoutOf(cfg, st);
+    const pressure = ntValueText(hass, cfg, cfg.pressure_entity);
+    if (pressure) lines.push({ key: "pump_pressure", icon: "mdi:gauge", label: t(hass, "section_pressure"), value: keepTogether(pressure), entity: cfg.pressure_entity });
+    let level = null;
+    let levelText = null;
+    if (cfg.level_entity) {
+      const v = numericState(hass, cfg.level_entity);
+      if (v !== null) {
+        const max = parseFloat(cfg.level_max);
+        const pct = unitOf(hass, cfg.level_entity) === "%";
+        level = pct ? v / 100 : Number.isFinite(max) && max > 0 ? v / max : null;
+        levelText = ntValueText(hass, cfg, cfg.level_entity);
+        lines.push({ key: "pump_level", icon: "mdi:waves-arrow-up", label: t(hass, "section_water_level"), value: keepTogether(levelText), entity: cfg.level_entity });
+      }
+    }
+    const alarm = layout === "sump" && (ntOnOff(hass, cfg.high_level_entity) || (level !== null && level >= 0.9));
+    const on = !!running || alarm;
+    const lcd = layout === "sump" ? levelText || "" : pressure || (cfg.power_entity && watts !== null ? `${Math.round(watts)} W` : "");
+    if (alarm) return out("alarm", "wp_high", NT_COLORS.alarm, { kind: "sump", on, alarm, level, lcd });
+    return out(on ? "run" : "idle", on ? "wp_pumping" : "ac_idle", on ? NT_COLORS.run : NT_COLORS.idle, { kind: layout, on, alarm: false, level, lcd });
+  }
+  if (type === "floor_heating" || type === "sauna") {
+    const isOff = !dead && raw === "off" && !(cfg.power_entity && watts !== null && watts >= threshold);
+    if (tmp) lines.push({ key: "nt_temp", icon: "mdi:thermometer", label: t(hass, "temperature"), value: keepTogether(tmp.text), entity: cfg.temperature_entity || cfg.state_entity });
+    const target = ntTarget(hass, cfg, st);
+    const draw = type === "sauna"
+      ? { kind: "sauna", on: !!running && !isOff, temp: tmp ? tmp.v : null, lcd: tmp ? tmp.text : "" }
+      : { kind: "floor", on: !!running && !isOff, electric: floorLayoutOf(cfg) === "electric", lcd: tmp ? tmp.text : "" };
+    if (isOff) return out("off", "ac_off", NT_COLORS.off, { ...draw, on: false });
+    if (type === "sauna" && tmp && target !== null && tmp.v >= target - 3) return out("ready", "sauna_ready", NT_COLORS.lit, { ...draw, on: true });
+    return running ? out("heat", "ac_heating", NT_COLORS.heat, draw) : out("idle", "ac_idle", NT_COLORS.idle, draw);
+  }
+  if (type === "spa") {
+    const isOff = !dead && raw === "off";
+    const bubbles = ntOnOff(hass, cfg.bubbles_entity);
+    const lit = ntOnOff(hass, cfg.light_entity);
+    if (tmp) lines.push({ key: "nt_temp", icon: "mdi:thermometer", label: t(hass, "temperature"), value: keepTogether(tmp.text), entity: cfg.temperature_entity || cfg.state_entity });
+    const heating = !!running && !isOff;
+    const draw = { kind: "spa", on: heating || bubbles, heating, bubbles, lit, steam: heating || bubbles, lcd: tmp ? tmp.text : "" };
+    if (bubbles) return out("bubbles", "spa_bubbles", NT_COLORS.run, draw);
+    if (isOff) return out("off", "ac_off", NT_COLORS.off, draw);
+    return heating ? out("heat", "ac_heating", NT_COLORS.heat, draw) : out("idle", "ac_idle", NT_COLORS.idle, draw);
+  }
+  if (type === "aquarium") {
+    if (tmp) lines.push({ key: "nt_temp", icon: "mdi:thermometer", label: t(hass, "temperature"), value: keepTogether(tmp.text), entity: cfg.temperature_entity || cfg.state_entity });
+    const draw = { kind: "aquarium", on: !!running, lcd: tmp ? tmp.text : "", heater: cfg.power_entity && watts !== null ? watts >= threshold : false };
+    return running ? out("lit", "aq_lit", NT_COLORS.lit, draw) : out("off", "aq_dark", NT_COLORS.off, draw);
+  }
+  if (type === "meter") {
+    const v = numberOrNull(st && st.state);
+    if (v === null) return out("unav", "ev_offline", NT_COLORS.unav, { kind: "linky", on: false, unav: true, lcd: "", label: "" });
+    const unit = unitOf(hass, cfg.state_entity) || "VA";
+    const high = parseFloat(cfg.high_power);
+    const heavy = v >= (Number.isFinite(high) ? high : 3000);
+    const tariffSt = cfg.tariff_entity ? stateObj(hass, cfg.tariff_entity) : null;
+    const tariff = tariffSt && !["unknown", "unavailable"].includes(String(tariffSt.state)) ? String(tariffSt.state) : "";
+    if (tariff) lines.push({ key: "meter_tariff", icon: "mdi:clock-time-four-outline", label: t(hass, "section_tariff"), value: tariff, entity: cfg.tariff_entity });
+    const value = `${Math.round(v)} ${unit}`;
+    return out(heavy ? "high" : "low", heavy ? "meter_high" : "meter_low", heavy ? NT_COLORS.high : NT_COLORS.idle,
+      { kind: "linky", on: true, heavy, lcd: value, label: unit.toUpperCase() === "VA" ? "PAPP" : "SINSTS", tariff: tariff.toUpperCase().slice(0, 6) });
+  }
+  // A Christmas tree.
+  const draw = { kind: "tree", on: !!running, palette: TREE_PALETTES[cfg.tree_palette] ? cfg.tree_palette : "multicolor", presents: treePresents(cfg) };
+  return running ? out("lit", "tree_on", NT_COLORS.lit, draw) : out("off", "tree_off", NT_COLORS.off, draw);
+}
+// Each new type's switch, unless the card has a power switch of its own; the
+// spa's bubbles have theirs.
+function ntControls(hass, cfg, type) {
+  const out = [];
+  const st = stateObj(hass, cfg.state_entity);
+  if (st && !cfg.toggle_entity && type !== "meter" && ["light", "switch", "input_boolean"].includes(domainOf(cfg.state_entity))) {
+    out.push({ key: "toggle", entity: cfg.state_entity, icon: type === "christmas_tree" ? "mdi:pine-tree" : type === "aquarium" ? "mdi:lightbulb" : "mdi:power", label: t(hass, "toggle"),
+      on: String(st.state).toLowerCase() === "on" });
+  }
+  if (type === "spa" && cfg.bubbles_entity && ["switch", "input_boolean", "fan"].includes(domainOf(cfg.bubbles_entity))) {
+    out.push({ key: "bubbles", entity: cfg.bubbles_entity, icon: "mdi:chart-bubble", label: t(hass, "section_bubbles"), on: ntOnOff(hass, cfg.bubbles_entity) });
+  }
+  return out;
+}
+
 // A bathroom scale: its state entity is the weight. Weighed, and when; the
 // goal reached within half a unit; offline when there is no weight to show.
 const SCALE_ONLY_FIELDS = ["weight_goal_entity", "weight_goal", "fat_ratio_entity", "fat_mass_entity", "muscle_mass_entity", "bone_mass_entity"];
@@ -5328,6 +6214,13 @@ const ENERGY_CSS = `
 `;
 
 const ILLUSTRATION_CSS = {
+  water_pump: () => NT_CSS,
+  floor_heating: () => NT_CSS,
+  spa: () => NT_CSS,
+  sauna: () => NT_CSS,
+  aquarium: () => NT_CSS,
+  meter: () => NT_CSS,
+  christmas_tree: () => NT_CSS,
   printer_3d: (color) => `
         .p3-case {
           position: absolute; left: 6px; right: 6px; top: 2px; bottom: 5px; border-radius: 6px;
@@ -5974,7 +6867,7 @@ const ILLUSTRATION_CSS = {
           border: 1.5px solid var(--warning-color, #ff9800); border-bottom: none; border-radius: 3px 3px 0 0;
         }
   `,
-  fridge: () => `
+  fridge: () => NT_CSS + `
         .fr-body {
           position: absolute; left: 12px; right: 12px; top: 2px; bottom: 2px;
           border-radius: 8px;
@@ -7794,7 +8687,7 @@ const ILLUSTRATION_CSS = {
         @media (prefers-reduced-motion: reduce) { .machine.up * { animation-name: none !important; } }
   `,
   // A robot and its floor, its base and its station.
-  robot: () => `${MINI_LCD_CSS}
+  robot: () => `${NT_CSS}${MINI_LCD_CSS}
         .machine.rbt { --b: var(--ac-body, #3a3f45); --bh: var(--ac-body-hi, #5a6168); --bl: var(--ac-body-lo, #1d2024); --dk: #2b2f34; --dkh: #41474e; }
         .machine.rbt > *, .rbt-dock > *, .rbt-mdock > *, .rbt-bin > *, .rbt-tk > * { position: absolute; }
         .stk-svg{position:absolute;left:0;top:0;width:96px;height:108px;overflow:visible}
@@ -8149,6 +9042,8 @@ const ILLUSTRATION_CSS = {
         .machine.scr-lit .scr-led { background: transparent; }
         .machine.scr-computer.mode-standby .scr-led { background: #ffb300; box-shadow: 0 0 3px #ffb300; animation: scr-breathe 2.4s ease-in-out infinite; animation-delay: var(--anim-offset, 0s); }
         .machine.scr-computer.scr-lit .scr-led { background: #e3f2fd; box-shadow: 0 0 3px #90caf9; }
+        .machine.scr-computer.tw-on .scr-led { background: #e3f2fd; box-shadow: 0 0 3px #90caf9; animation-name: none; }
+        .machine.scr-computer.tw-off .scr-led { background: #3a3f46; box-shadow: none; animation-name: none; }
         .scr-badge { position: absolute; z-index: 6; right: 4%; bottom: 6%; width: 16%; max-width: 9px; opacity: 0.9; display: none; }
         .scr-badge svg { display: block; width: 100%; height: auto; }
         .machine.mode-playing .scr-badge.play, .machine.mode-paused .scr-badge.pause, .machine.scr-lit.muted .scr-badge.mute { display: block; }
@@ -9933,6 +10828,7 @@ function shelterHtml(style, color) {
 }
 
 function robotHtml(cls, r) {
+  if (r.layout === "pool") return ntHtml(`${cls} rbt rbt-l-pool rbt-m-${r.mode || "docked"}`, { kind: "pool", on: r.mode === "cleaning", lcd: r.poolTime || "" });
   if (r.layout === "stick" || r.layout === "floor_washer") {
     return `
         <div class="machine ${cls} rbt rbt-l-${r.layout} rbt-m-${r.mode || "docked"}">${r.layout === "stick" ? dysonSvg(r.battery) : washerSvg(r.battery)}</div>`;
@@ -10130,7 +11026,7 @@ function screenHtml(cls, sc) {
     ? ` data-fit-w="${px(96 * band[2])}" style="width: calc(${px(96 * band[2])}px * ${fit}); height: calc(${px(band[1] * band[2])}px * ${fit})"`
     : "";
   return `
-        <div class="machine ${cls} scr-${layout} mode-${mode}${lit}${sc.muted ? " muted" : ""}${tablet ? " tablet" : ""}${sc.charging ? " charging" : ""}${sc.seen ? " seen" : ""}"${size}>${inner}</div>`;
+        <div class="machine ${cls} scr-${layout} mode-${mode}${lit}${sc.muted ? " muted" : ""}${tablet ? " tablet" : ""}${sc.charging ? " charging" : ""}${sc.seen ? " seen" : ""}${sc.tower ? ` tw-${sc.tower}` : ""}"${size}>${inner}</div>`;
 }
 
 function illustrationHtml(type, ctx) {
@@ -10360,6 +11256,11 @@ function illustrationHtml(type, ctx) {
         </div>`;
   }
 
+  if (type === "fridge" && ctx.coldBox) {
+    return ntHtml(cls, { kind: ctx.layout, on: ctx.cooling !== false && !ctx.dark, dark: ctx.dark, warn: ctx.fridgeWarn,
+      open: !!(ctx.doorOpen || ctx.freezerDoorOpen), lcd: ctx.coldText });
+  }
+  if (NT_TYPES.includes(type)) return ntHtml(cls, ctx.ntDraw || {});
   if (type === "fridge") {
     return `<div class="machine ${cls} ${ctx.ice ? "ice" : ""}">${fridgeHtml(ctx)}</div>`;
   }
@@ -10817,8 +11718,10 @@ function stateFreeSource(config) {
   // And for a UPS: its input voltage says whether the mains is there.
   const asUps = config && (config.appliance_type === "ups" || UPS_ONLY_FIELDS.some((f) => config[f]));
   const hasUpsSource = asUps && !!(config.input_voltage_entity || config.battery_entity);
+  // And for a pump, a heater, a tree on a smart plug: the meter says it runs.
+  const hasNtSource = !!config && NT_TYPES.includes(config.appliance_type) && config.appliance_type !== "meter" && !!config.power_entity;
   return !!(hasFridgeSource || hasFeederSource || hasChargerSource || hasScreenSource || hasPoolSource
-    || hasSolarSource || hasBatterySource || hasUpsSource);
+    || hasSolarSource || hasBatterySource || hasUpsSource || hasNtSource);
 }
 
 class ApplianceCard extends HTMLElement {
@@ -11040,6 +11943,8 @@ class ApplianceCard extends HTMLElement {
     this._resizer = null;
     this._clearClockTimer();
     this._clearCountdownTimer();
+    if (this._elapsedTimer) clearInterval(this._elapsedTimer);
+    this._elapsedTimer = null;
     if (this._feedTimer) clearTimeout(this._feedTimer);
     this._feedTimer = null;
     if (this._offDelayTimer) clearTimeout(this._offDelayTimer);
@@ -11190,6 +12095,82 @@ class ApplianceCard extends HTMLElement {
       Object.assign(cycle, found);
       this._render();
     }, () => {});
+  }
+
+  // A cycle read from a plug, opened in its middle: its meter's history says
+  // when the plug began to draw.
+  _lookUpPowerCycle(cycle, cfg, threshold) {
+    const hass = this._hass;
+    if (this._inert || !hass || typeof hass.callWS !== "function" || !cfg.power_entity) return;
+    const end = Date.now();
+    const from = end - CYCLE_HISTORY_MS;
+    let req;
+    try {
+      req = hass.callWS({
+        type: "history/history_during_period",
+        start_time: new Date(from).toISOString(),
+        end_time: new Date(end).toISOString(),
+        entity_ids: [cfg.power_entity],
+        include_start_time_state: true,
+        significant_changes_only: false,
+        minimal_response: true,
+        no_attributes: true,
+      });
+    } catch (e) {
+      return;
+    }
+    Promise.resolve(req).then((res) => {
+      if (this._cycle !== cycle) return;
+      const gapMs = Math.max(0, parseFloat(cfg.power_off_delay) || 0) * 60000;
+      const runs = powerRuns(res && res[cfg.power_entity], threshold, gapMs, Date.now(), from);
+      const last = runs[runs.length - 1];
+      if (!last || last.end !== null || last.start > cycle.start) return;
+      cycle.start = last.start;
+      this._render();
+    }, () => {});
+  }
+
+  // Today's running time and starts, read from the history of the meter or of
+  // the state since midnight, and kept five minutes.
+  _lookUpToday(cfg, type, fromPower, threshold) {
+    const hass = this._hass;
+    if (this._inert || !hass || typeof hass.callWS !== "function") return;
+    const entity = fromPower ? cfg.power_entity : cfg.state_entity;
+    if (!entity) return;
+    const midnight = new Date(Date.now());
+    midnight.setHours(0, 0, 0, 0);
+    const from = midnight.getTime();
+    const gapMs = fromPower ? Math.max(0, parseFloat(cfg.power_off_delay) || 0) * 60000 : 0;
+    const key = [entity, type, fromPower ? threshold : "", gapMs, from].join("|");
+    const now = Date.now();
+    if (this._today && this._today.key === key && now - this._today.at < HISTORY_REFRESH_MS) return;
+    if (this._todayPending === key) return;
+    this._todayPending = key;
+    let req;
+    try {
+      req = hass.callWS({
+        type: "history/history_during_period",
+        start_time: new Date(from).toISOString(),
+        end_time: new Date(now).toISOString(),
+        entity_ids: [entity],
+        include_start_time_state: true,
+        significant_changes_only: false,
+        minimal_response: true,
+        no_attributes: true,
+      });
+    } catch (e) {
+      this._todayPending = null;
+      return;
+    }
+    Promise.resolve(req).then((res) => {
+      if (this._todayPending !== key) return;
+      this._todayPending = null;
+      const rows = res && res[entity];
+      const runs = fromPower ? powerRuns(rows, threshold, gapMs, Date.now(), from)
+        : stateRunsOpen(rows, (raw) => normFor(type, raw, cfg.state_map), from);
+      this._today = { key, at: Date.now(), runs, from };
+      this._render();
+    }, () => { this._todayPending = null; });
   }
 
   // Reads one entity's history once the curve is unfolded, then keeps it five
@@ -11543,7 +12524,10 @@ class ApplianceCard extends HTMLElement {
       : nowMs;
     // Only a cycle measured against its remaining time needs a start. A
     // progress entity says it all, and a kettle has no cycle to time.
-    if (role === "out" || cfg.progress_entity || !cfg.remaining_time_entity) {
+    // The elapsed time needs one too (HACF): a plug alone says nothing of the
+    // time left, but it does say since when the machine has been running.
+    const elapsedWanted = !!cfg.show_elapsed;
+    if (role === "out" || ((cfg.progress_entity || !cfg.remaining_time_entity) && !elapsedWanted)) {
       this._cycle = null;
     } else if (!this._cycle) {
       // A gap opens nothing: the card waits for a state it can read.
@@ -11554,6 +12538,7 @@ class ApplianceCard extends HTMLElement {
         const seenStart = this._prevNormState !== null && cycleRole(this._prevNormState) === "out";
         this._cycle = { start: since, pausedMs: 0, pausedSince: role === "paused" ? since : null };
         if (!seenStart && !powerDerived) this._lookUpCycle(this._cycle, cfg, applianceType);
+        else if (!seenStart && powerDerived && elapsedWanted) this._lookUpPowerCycle(this._cycle, cfg, threshold);
       }
     } else if (role === "paused" && this._cycle.pausedSince === null) {
       this._cycle.pausedSince = since;
@@ -11835,10 +12820,13 @@ class ApplianceCard extends HTMLElement {
       const freezerT = readTemp(cfg.freezer_temperature_entity);
       // A wine cooler keeps 10 to 14 degrees on purpose; past 18 the wine suffers.
       const wine = cfg.fridge_layout === "wine";
+      // A chest or a drawer freezer keeps its food frozen: -12 and up is warm.
+      const coldBox = ["chest", "drawers"].includes(cfg.fridge_layout);
       const maxTemp = cfg.fridge_max_temperature === undefined || cfg.fridge_max_temperature === ""
-        ? (wine ? 18 : 8)
+        ? (wine ? 18 : coldBox ? -12 : 8)
         : parseFloat(cfg.fridge_max_temperature);
-      const tempHigh = fridgeT.value !== null && isFinite(maxTemp) && fridgeT.value > maxTemp;
+      const probe = coldBox && freezerT.value !== null ? freezerT : fridgeT;
+      const tempHigh = probe.value !== null && isFinite(maxTemp) && probe.value > maxTemp;
 
       let freezerDoorOpen = false;
       if (cfg.freezer_door_entity) {
@@ -11972,6 +12960,11 @@ class ApplianceCard extends HTMLElement {
         dark: unplugged || noPower,
         freezerDoorOpen,
         ice,
+        coldBox,
+        cooling,
+        coldText: freezerT.value !== null ? tempText(hass, cfg, cfg.freezer_temperature_entity, freezerT.value, unit)
+          : fridgeT.value !== null ? tempText(hass, cfg, cfg.fridge_temperature_entity, fridgeT.value, unit)
+          : cfg.freezer_temperature_entity || cfg.fridge_temperature_entity ? "--" : "",
       };
     } else {
       this._clearClockTimer();
@@ -13586,8 +14579,27 @@ class ApplianceCard extends HTMLElement {
       // The screensaver's clock moves on with the time.
       this._clearClockTimer();
       if (mode === "saver" && !this._inert) this._clockTimer = setInterval(() => this._render(), CLOCK_TICK_MS);
+      // A computer whose tower and screens hang on two plugs (HACF): the tower
+      // has its own entity, a switch, a ping or a meter, and its own light.
+      let tower = null;
+      if (layout === "computer" && cfg.tower_entity) {
+        const ts = stateObj(hass, cfg.tower_entity);
+        if (ts) {
+          const tw = parseFloat(ts.state);
+          const meter = domainOf(cfg.tower_entity) === "sensor" && Number.isFinite(tw);
+          tower = meter ? (tw > SCREEN_STANDBY_W ? "on" : "off") : ["on", "home", "true"].includes(String(ts.state).toLowerCase()) ? "on" : "off";
+          if (meter) {
+            extraLines.push({ key: "tower_power", icon: "mdi:desktop-tower", label: t(hass, "tower_line"), value: `${Math.round(tw)} ${unitOf(hass, cfg.tower_entity) || "W"}`, entity: cfg.tower_entity });
+          }
+          if (tower === "on" && !lit && !cfg.state_show_raw) {
+            stateLabel = t(hass, "tower_on");
+            color = SCREEN_COLORS.on;
+          }
+        }
+      }
       const battery = tablet && cfg.battery_entity ? numericState(hass, cfg.battery_entity) : null;
       screen = {
+        tower,
         mode, layout, image: this._screenImage || pool[0], cover, muted, tablet, charging, battery,
         seen: tablet && camOn(hass, cfg.motion_entity),
         clock: mode === "saver" ? feederClock(hass) : "",
@@ -13998,6 +15010,17 @@ class ApplianceCard extends HTMLElement {
       lampDraw = { mode: l.mode, rgb: l.rgb, pct: l.pct, fx: !!l.effect, layout: lampLayoutOf(cfg, st), spots: lampSpotsOf(cfg, st) };
     }
 
+    // The HACF drawings: a pump, underfloor heating, a spa, a sauna, an
+    // aquarium, a meter, a Christmas tree.
+    let ntDraw = null;
+    if (NT_TYPES.includes(applianceType)) {
+      const r = ntReadOf(applianceType, hass, cfg, st, watts, isFinite(threshold) ? threshold : 10);
+      if (!cfg.state_show_raw || r.mode === "unav") stateLabel = r.label;
+      color = r.color;
+      extraLines.push(...r.lines);
+      ntDraw = r.draw;
+    }
+
     // A bathroom scale: its state entity is the weight, shown on its screen.
     // The goal, the fat, the muscles and the bones are lines.
     let scale = null;
@@ -14151,7 +15174,14 @@ class ApplianceCard extends HTMLElement {
           extraLines.push({ key: "robot_error", icon: "mdi:alert-circle-outline", label: t(hass, "error"), value: text, entity: id, warn: true });
         }
       }
-      robot = { layout, mode, water, battery, floor: cfg.robot_floor, base: cfg.robot_station === "base", shelter: cfg.robot_shelter ? (SHELTER_STYLES.includes(cfg.robot_shelter_style) ? cfg.robot_shelter_style : "lean_to") : "",
+      // A pool robot's time left, on its power supply on the deck; the line
+      // under the state already says it.
+      let poolTime = "";
+      if (layout === "pool" && cfg.remaining_time_entity) {
+        const secs = ntRemaining(hass, cfg.remaining_time_entity);
+        if (secs !== null) poolTime = formatDuration(secs, hass);
+      }
+      robot = { layout, mode, water, battery, poolTime, floor: cfg.robot_floor, base: cfg.robot_station === "base", shelter: cfg.robot_shelter ? (SHELTER_STYLES.includes(cfg.robot_shelter_style) ? cfg.robot_shelter_style : "lean_to") : "",
         shelterColor: cfg.robot_shelter_color };
     }
 
@@ -14178,6 +15208,46 @@ class ApplianceCard extends HTMLElement {
       }
     }
 
+    // The time the cycle has run so far, on request (HACF): with a plug alone
+    // there is no time left to show, but there is a start.
+    if (this._elapsedTimer) {
+      clearInterval(this._elapsedTimer);
+      this._elapsedTimer = null;
+    }
+    if (elapsedWanted && this._cycle && (lcRole === "active" || lcRole === "paused")) {
+      const c = this._cycle;
+      const now = Date.now();
+      const pausedNow = c.pausedSince !== null ? Math.max(0, now - c.pausedSince) : 0;
+      const ran = Math.max(0, now - c.start - c.pausedMs - pausedNow);
+      extraLines.push({
+        key: "elapsed",
+        icon: "mdi:timer-outline",
+        label: t(hass, "elapsed_line"),
+        value: keepTogether(formatDuration(ran / 1000, hass)),
+        entity: powerDerived ? cfg.power_entity : cfg.state_entity,
+      });
+      if (!this._inert) this._elapsedTimer = setInterval(() => this._render(), COUNTDOWN_TICK_MS);
+    }
+
+    // Today's running time and starts, on request: a pump, a heater, a water
+    // heater, any appliance whose day is told by how long it ran.
+    if (cfg.show_today && !cap.solar && !cap.homeBattery) {
+      const fromPower = !!cfg.power_entity && (powerDerived || !cfg.state_entity) && isFinite(threshold);
+      this._lookUpToday(cfg, applianceType, fromPower, isFinite(threshold) ? threshold : 10);
+      const td = this._today;
+      if (td && td.runs) {
+        const { ms, starts } = runsSince(td.runs, td.from, Date.now());
+        const startsText = t(hass, starts === 1 ? "starts_one" : "starts_other").replace("{n}", String(starts));
+        extraLines.push({
+          key: "today",
+          icon: "mdi:chart-timeline-variant",
+          label: t(hass, "today_line"),
+          value: `${keepTogether(formatDuration(ms / 1000, hass))} \u00b7 ${keepTogether(startsText)}`,
+          entity: fromPower ? cfg.power_entity : cfg.state_entity,
+        });
+      }
+    }
+
     // Power draw is worth showing on any type once the entity is there. A
     // charger prints its own, in kilowatts.
     if (!cap.fridgeTemp && !cap.heatPump && !cap.evCharger && !cap.solar && !cap.homeBattery && cfg.power_entity && watts !== null) {
@@ -14188,6 +15258,23 @@ class ApplianceCard extends HTMLElement {
         value: `${Math.round(watts)} ${unitOf(hass, cfg.power_entity) || "W"}`,
         entity: cfg.power_entity,
       });
+    }
+
+    // What it used, and what that cost at the price given: a number for a
+    // fixed tariff, an entity for one that changes (HACF).
+    if (!cap.solar && !cap.homeBattery && cfg.energy_entity && entityUsable(hass, cfg.energy_entity)) {
+      extraLines.push({
+        key: "energy",
+        icon: "mdi:lightning-bolt",
+        label: t(hass, "energy_line"),
+        value: keepTogether(formatInfoValue(stateObj(hass, cfg.energy_entity), hass, null, cfg, cfg.energy_entity)),
+        entity: cfg.energy_entity,
+      });
+      const kwh = energyKwh(hass, cfg.energy_entity);
+      const price = energyPriceOf(hass, cfg.energy_price);
+      if (kwh !== null && price !== null) {
+        extraLines.push({ key: "cost", icon: "mdi:cash", label: t(hass, "cost_line"), value: keepTogether(formatMoney(hass, kwh * price)), entity: cfg.energy_entity });
+      }
     }
 
     const illustrationCtx = {
@@ -14239,6 +15326,7 @@ class ApplianceCard extends HTMLElement {
       scale,
       camera,
       lampDraw,
+      ntDraw,
       mailbox,
       diffuser,
       hrv,
@@ -14286,6 +15374,7 @@ class ApplianceCard extends HTMLElement {
       ...(cap.hrv ? hrvControls(hass, cfg) : []),
       ...(cap.screen ? screenControls(hass, cfg) : []),
       ...(cap.lamp ? lampControls(hass, cfg) : []),
+      ...(NT_TYPES.includes(applianceType) ? ntControls(hass, cfg, applianceType) : []),
     ]
       .map((a) => (a.key && a.key !== "toggle" ? { ...a, option: cfg[`${a.key}_option`] ?? a.option, value: cfg[`${a.key}_value`] ?? a.value } : a))
       // A button's icon can be swapped for another, `start_icon` and its
@@ -14342,7 +15431,9 @@ class ApplianceCard extends HTMLElement {
       illustrationCtx.hairDryer && [illustrationCtx.hairDryer.mode, illustrationCtx.hairDryer.level, illustrationCtx.hairDryer.layout].join("/"),
       illustrationCtx.network && [illustrationCtx.network.mode, illustrationCtx.network.layout, illustrationCtx.network.lit,
         illustrationCtx.network.disks.join(""), illustrationCtx.network.wifiOff].join("/"),
-      illustrationCtx.robot && [illustrationCtx.robot.mode, illustrationCtx.robot.layout].join("/"),
+      illustrationCtx.robot && [illustrationCtx.robot.mode, illustrationCtx.robot.layout, illustrationCtx.robot.poolTime].join("/"),
+      illustrationCtx.ntDraw && JSON.stringify(illustrationCtx.ntDraw),
+      illustrationCtx.coldBox && [illustrationCtx.coldText, illustrationCtx.cooling, illustrationCtx.dark, illustrationCtx.fridgeWarn].join("/"),
       illustrationCtx.pool && [illustrationCtx.pool.mode, illustrationCtx.pool.dosing, illustrationCtx.pool.lit].join("/"),
       illustrationCtx.solar && [illustrationCtx.solar.mode, illustrationCtx.solar.sky, illustrationCtx.solar.layout].join("/"),
       illustrationCtx.battery && [illustrationCtx.battery.mode, illustrationCtx.battery.layout, illustrationCtx.battery.low].join("/"),
@@ -14949,7 +16040,7 @@ function loadEditor() {
   if (customElements.get("ha-appliance-card-editor")) return Promise.resolve();
   if (!editorLoading) {
     editorLoading = import(assetUrl("ha-appliance-card-editor.js"))
-      .then((m) => m.default({ t, onLanguageLoaded, LANGUAGE_NAMES, localizedHass, activationOf, EV_POWER_THRESHOLD, stateObj, parseValueMap, stringifyValueMap, alertsArray, LIST_OTHER, ENTITY_LISTS, listCandidates, defaultCardName, stripDeviceName, domainOf, INFO_MAX, autoSuggest, APPLIANCE_TYPES, STATE_DOMAINS, SCREEN_ONLY_FIELDS, illustrationSizeOf, fontScaleOf, compactModeOf, TYPE_GROUPS, caps, detectApplianceType, SCREEN_STANDBY_W, SCREEN_LAYOUTS, SCREEN_IMAGES, screenIsTablet, HD_HEAT_W, NET_LAYOUTS, SWITCH_PORTS, NET_BAYS, NET_BUSY_MBIT, NET_TEMP_ALERT, netLayoutOf, ROBOT_LAYOUTS, ROBOT_STATIONS, ROBOT_FLOORS, ROBOT_SERVICES, STICK_AWAY_W, robotLayoutOf, POOL_PRESSURE_ALERT, SOLAR_LAYOUTS, BATTERY_LAYOUTS, BATTERY_IDLE_W, DIFFUSER_LAYOUTS, HRV_LAYOUTS, CAMERA_LAYOUTS, MAILBOX_LAYOUTS, MAILBOX_SIDES, mailboxLayoutOf, LAMP_LAYOUTS, LAMP_SPOTS, lampLayoutOf, UPS_BATTERY_LOW, HISTORY_HOURS, BODY_COLORS, esc, SHELTER_STYLES, SHELTER_COLORS, stateFreeSource }))
+      .then((m) => m.default({ t, onLanguageLoaded, LANGUAGE_NAMES, localizedHass, activationOf, EV_POWER_THRESHOLD, stateObj, parseValueMap, stringifyValueMap, alertsArray, LIST_OTHER, ENTITY_LISTS, listCandidates, defaultCardName, stripDeviceName, domainOf, INFO_MAX, autoSuggest, APPLIANCE_TYPES, STATE_DOMAINS, SCREEN_ONLY_FIELDS, illustrationSizeOf, fontScaleOf, compactModeOf, TYPE_GROUPS, caps, detectApplianceType, SCREEN_STANDBY_W, SCREEN_LAYOUTS, SCREEN_IMAGES, screenLayoutOf, screenIsTablet, HD_HEAT_W, NET_LAYOUTS, SWITCH_PORTS, NET_BAYS, NET_BUSY_MBIT, NET_TEMP_ALERT, netLayoutOf, ROBOT_LAYOUTS, ROBOT_STATIONS, ROBOT_FLOORS, ROBOT_SERVICES, STICK_AWAY_W, robotLayoutOf, POOL_PRESSURE_ALERT, SOLAR_LAYOUTS, BATTERY_LAYOUTS, BATTERY_IDLE_W, DIFFUSER_LAYOUTS, HRV_LAYOUTS, CAMERA_LAYOUTS, MAILBOX_LAYOUTS, MAILBOX_SIDES, mailboxLayoutOf, LAMP_LAYOUTS, LAMP_SPOTS, lampLayoutOf, PUMP_LAYOUTS, FLOOR_LAYOUTS, TREE_PALETTES, TREE_PRESENTS, pumpLayoutOf, UPS_BATTERY_LOW, HISTORY_HOURS, BODY_COLORS, esc, SHELTER_STYLES, SHELTER_COLORS, stateFreeSource }))
       .catch((err) => {
         editorLoading = null;
         throw err;

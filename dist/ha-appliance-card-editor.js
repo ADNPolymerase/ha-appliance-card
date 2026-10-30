@@ -1,6 +1,6 @@
 // Built by tools/build.mjs from src/ha-appliance-card.js: edit the source, not this file.
 // The card's editor, loaded by the card the first time it is edited.
-export default function defineEditor({ t, onLanguageLoaded, LANGUAGE_NAMES, localizedHass, activationOf, EV_POWER_THRESHOLD, stateObj, parseValueMap, stringifyValueMap, alertsArray, LIST_OTHER, ENTITY_LISTS, listCandidates, defaultCardName, stripDeviceName, domainOf, INFO_MAX, autoSuggest, APPLIANCE_TYPES, STATE_DOMAINS, SCREEN_ONLY_FIELDS, illustrationSizeOf, fontScaleOf, compactModeOf, TYPE_GROUPS, caps, detectApplianceType, SCREEN_STANDBY_W, SCREEN_LAYOUTS, SCREEN_IMAGES, screenIsTablet, HD_HEAT_W, NET_LAYOUTS, SWITCH_PORTS, NET_BAYS, NET_BUSY_MBIT, NET_TEMP_ALERT, netLayoutOf, ROBOT_LAYOUTS, ROBOT_STATIONS, ROBOT_FLOORS, ROBOT_SERVICES, STICK_AWAY_W, robotLayoutOf, POOL_PRESSURE_ALERT, SOLAR_LAYOUTS, BATTERY_LAYOUTS, BATTERY_IDLE_W, DIFFUSER_LAYOUTS, HRV_LAYOUTS, CAMERA_LAYOUTS, MAILBOX_LAYOUTS, MAILBOX_SIDES, mailboxLayoutOf, LAMP_LAYOUTS, LAMP_SPOTS, lampLayoutOf, UPS_BATTERY_LOW, HISTORY_HOURS, BODY_COLORS, esc, SHELTER_STYLES, SHELTER_COLORS, stateFreeSource }) {
+export default function defineEditor({ t, onLanguageLoaded, LANGUAGE_NAMES, localizedHass, activationOf, EV_POWER_THRESHOLD, stateObj, parseValueMap, stringifyValueMap, alertsArray, LIST_OTHER, ENTITY_LISTS, listCandidates, defaultCardName, stripDeviceName, domainOf, INFO_MAX, autoSuggest, APPLIANCE_TYPES, STATE_DOMAINS, SCREEN_ONLY_FIELDS, illustrationSizeOf, fontScaleOf, compactModeOf, TYPE_GROUPS, caps, detectApplianceType, SCREEN_STANDBY_W, SCREEN_LAYOUTS, SCREEN_IMAGES, screenLayoutOf, screenIsTablet, HD_HEAT_W, NET_LAYOUTS, SWITCH_PORTS, NET_BAYS, NET_BUSY_MBIT, NET_TEMP_ALERT, netLayoutOf, ROBOT_LAYOUTS, ROBOT_STATIONS, ROBOT_FLOORS, ROBOT_SERVICES, STICK_AWAY_W, robotLayoutOf, POOL_PRESSURE_ALERT, SOLAR_LAYOUTS, BATTERY_LAYOUTS, BATTERY_IDLE_W, DIFFUSER_LAYOUTS, HRV_LAYOUTS, CAMERA_LAYOUTS, MAILBOX_LAYOUTS, MAILBOX_SIDES, mailboxLayoutOf, LAMP_LAYOUTS, LAMP_SPOTS, lampLayoutOf, PUMP_LAYOUTS, FLOOR_LAYOUTS, TREE_PALETTES, TREE_PRESENTS, pumpLayoutOf, UPS_BATTERY_LOW, HISTORY_HOURS, BODY_COLORS, esc, SHELTER_STYLES, SHELTER_COLORS, stateFreeSource }) {
 // ---------------------------------------------------------------------------
 // Editor
 // ---------------------------------------------------------------------------
@@ -187,6 +187,19 @@ const SECTIONS = [
   { field: "signal_entity", types: ["camera"], labelKey: "section_signal", includeDomains: ["sensor"] },
   { field: "ring_entity", types: ["camera"], labelKey: "section_ring", includeDomains: ["binary_sensor", "event", "input_boolean", "sensor"] },
   // A mailbox: the mail counter and its two doors.
+  // The HACF drawings.
+  { field: "pressure_entity", types: ["water_pump"], labelKey: "section_pressure", includeDomains: ["sensor", "number", "input_number"],
+    when: (c) => pumpLayoutOf(c, null) === "booster" },
+  { field: "level_entity", types: ["water_pump"], labelKey: "section_water_level", includeDomains: ["sensor", "number", "input_number"],
+    when: (c) => pumpLayoutOf(c, null) === "sump", extra: (c) => c._row("level_max", "level_max", { placeholder: "100" }) },
+  { field: "high_level_entity", types: ["water_pump"], labelKey: "section_high_level", includeDomains: ["binary_sensor", "input_boolean", "sensor"],
+    when: (c) => pumpLayoutOf(c, null) === "sump" },
+  { field: "temperature_entity", types: ["floor_heating", "spa", "sauna", "aquarium"], labelKey: "temperature", includeDomains: ["sensor", "number", "input_number"] },
+  { field: "target_temperature_entity", types: ["sauna"], labelKey: "section_target_temperature", includeDomains: ["number", "sensor", "input_number"] },
+  { field: "bubbles_entity", types: ["spa"], labelKey: "section_bubbles", includeDomains: ["switch", "input_boolean", "fan", "binary_sensor"] },
+  { field: "tariff_entity", types: ["meter"], labelKey: "section_tariff", includeDomains: ["sensor", "select", "input_select"] },
+  { field: "remaining_time_entity", types: ["robot"], labelKey: "section_remaining", includeDomains: ["sensor", "input_number"],
+    when: (c) => robotLayoutOf(c, null) === "pool" },
   { field: "mail_count_entity", types: ["mailbox"], labelKey: "section_mail_count", includeDomains: ["sensor", "counter", "input_number", "number"] },
   { field: "front_door_entity", types: ["mailbox"], labelKey: "mb_front_door", includeDomains: ["binary_sensor", "sensor", "input_boolean", "switch"] },
   { field: "back_door_entity", types: ["mailbox"], labelKey: "mb_back_door", includeDomains: ["binary_sensor", "sensor", "input_boolean", "switch"] },
@@ -209,7 +222,7 @@ const SECTIONS = [
   { field: "heater_entity", types: ["air_purifier", "fan"], labelKey: "section_heater", includeDomains: ["climate", "switch", "select", "binary_sensor"] },
 
   // Oven + hood
-  { field: "light_entity", types: ["oven", "hood", "printer_3d", "fan", "pool_pump", "diffuser"], labelKey: "section_light", includeDomains: ["light", "switch", "input_boolean", "binary_sensor"] },
+  { field: "light_entity", types: ["oven", "hood", "printer_3d", "fan", "pool_pump", "diffuser", "spa"], labelKey: "section_light", includeDomains: ["light", "switch", "input_boolean", "binary_sensor"] },
 
   // Cooktop
   { field: "child_lock_entity", types: ["cooktop"], labelKey: "section_child_lock", includeDomains: ["binary_sensor", "switch", "lock"] },
@@ -217,7 +230,7 @@ const SECTIONS = [
   // Fridge. One option describes both the number of doors and where the
   // freezer sits, because on a real fridge those are the same fact.
   { field: "fridge_temperature_entity", types: ["fridge"], labelKey: "section_fridge_temperature", includeDomains: ["sensor", "number", "input_number"], extra: (c, hass) =>
-      c._row("fridge_max_temperature", "fridge_max_temperature", { placeholder: c._config.fridge_layout === "wine" ? "18" : "8" })
+      c._row("fridge_max_temperature", "fridge_max_temperature", { placeholder: c._config.fridge_layout === "wine" ? "18" : ["chest", "drawers"].includes(c._config.fridge_layout) ? "-12" : "8" })
       + c._row("door_hide_in_list", "temperature_hide_in_list", { type: "checkbox" })
       + c._row("temperature_decimals", "temperature_decimals", {
         type: "select",
@@ -404,6 +417,13 @@ const SECTIONS = [
         + (cap.fridgeTemp ? c._row("no_power_threshold", "no_power_threshold", { placeholder: "1" }) + c._row("no_power_after", "no_power_after", { placeholder: "30" })
           : cap.evCharger || cap.screen || cap.hairDryer || cap.network || cap.poolPump ? "" : c._row("power_off_delay", "power_off_delay", { placeholder: "0" }));
     } },
+
+  // What it used, and the price of a kWh to tell what that cost (HACF).
+  { field: "energy_entity", types: APPLIANCE_TYPES.filter((ty) => ty !== "solar" && ty !== "home_battery"), labelKey: "section_energy", includeDomains: ["sensor"],
+    extra: (c) => c._row("energy_price", "energy_price", { placeholder: "0.2516" }) },
+  // A computer's tower on a second plug (HACF).
+  { field: "tower_entity", types: ["screen"], labelKey: "section_tower", includeDomains: ["switch", "input_boolean", "binary_sensor", "sensor"],
+    when: (c) => screenLayoutOf(c) === "computer" },
 
   // Two sections read as alerts, and only their pickers tell them apart: one
   // entity carrying them in its attributes here, a list of entities of
@@ -1068,6 +1088,8 @@ class ApplianceCardEditor extends HTMLElement {
             { value: "side_by_side", label: t(hass, "layout_side_by_side") },
             { value: "single", label: t(hass, "layout_single") },
             { value: "wine", label: t(hass, "layout_wine") },
+            { value: "chest", label: t(hass, "layout_chest") },
+            { value: "drawers", label: t(hass, "layout_drawers") },
           ],
         }) : ""}
         ${this._type === "pet_feeder" ? this._row("section_feeder_layout", "feeder_layout", {
@@ -1161,6 +1183,22 @@ class ApplianceCardEditor extends HTMLElement {
           type: "select",
           options: MAILBOX_SIDES.map((v) => ({ value: v, label: t(hass, `mb_side_${v}`) })),
         }) : "") : ""}
+        ${this._type === "water_pump" ? this._row("section_screen_layout", "pump_layout", {
+          type: "select",
+          options: [{ value: "auto", label: t(hass, "unit_auto") }].concat(PUMP_LAYOUTS.map((v) => ({ value: v, label: t(hass, `layout_pump_${v}`) }))),
+        }) : ""}
+        ${this._type === "floor_heating" ? this._row("section_screen_layout", "floor_layout", {
+          type: "select",
+          options: FLOOR_LAYOUTS.map((v) => ({ value: v, label: t(hass, `layout_floor_${v}`) })),
+        }) : ""}
+        ${this._type === "meter" ? this._row("high_power", "high_power", { placeholder: "3000" }) : ""}
+        ${this._type === "christmas_tree" ? this._row("tree_palette", "tree_palette", {
+          type: "select",
+          options: Object.keys(TREE_PALETTES).map((v) => ({ value: v, label: t(hass, `palette_${v}`) })),
+        }) + this._row("presents", "presents", {
+          type: "select",
+          options: TREE_PRESENTS.map((v) => ({ value: v, label: t(hass, `presents_${v}`) })),
+        }) : ""}
         ${this._type === "lamp" ? this._row("section_screen_layout", "lamp_layout", {
           type: "select",
           options: [{ value: "auto", label: t(hass, "unit_auto") }].concat(LAMP_LAYOUTS.map((v) => ({ value: v, label: t(hass, `layout_lamp_${v}`) }))),
@@ -1261,6 +1299,8 @@ class ApplianceCardEditor extends HTMLElement {
           ${caps(this._type).cycle ? this._row("controls_always", "controls_always", { type: "checkbox" }) : ""}
           ${caps(this._type).readOnly && !this._config.toggle_entity ? "" : this._row("show_unavailable_controls", "show_unavailable_controls", { type: "checkbox" })}
           ${LAST_CYCLE_TYPES.includes(this._type) ? this._row("show_last_cycle", "show_last_cycle", { type: "checkbox" }) : ""}
+          ${LAST_CYCLE_TYPES.includes(this._type) ? this._row("show_elapsed", "show_elapsed", { type: "checkbox" }) : ""}
+          ${["solar", "home_battery"].includes(this._type) ? "" : this._row("show_today", "show_today", { type: "checkbox" })}
           ${this._row("show_history", "show_history", { type: "checkbox" })}
         </div>
         <div class="section">

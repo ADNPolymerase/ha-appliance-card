@@ -152,7 +152,7 @@ const T = {
     layout_robot_stick: "Stick vacuum", stick_charged: "Charged",
     layout_robot_floor_washer: "Floor washer", stick_away: "Off the base", stick_away_threshold: "Off the base below this power (W)",
     type_diffuser: "Essential oil diffuser", dif_mist: "Diffusing", dif_inter: "Intermittent", dif_low: "Light mist", dif_empty: "Tank empty", dif_mode: "Mist mode", layout_dif_drop: "Teardrop", layout_dif_cone: "Cone", layout_dif_stone: "Pebble", layout_dif_flame: "Flame", layout_dif_nebulizer: "Nebulizer", section_tank_empty: "Empty tank sensor", type_hrv: "Heat recovery ventilation (HRV/ERV)", hrv_run: "Ventilating", hrv_boost: "Boost", hrv_bypass: "Bypass", hrv_defrost: "Defrosting", hrv_filter: "Replace filter", hrv_away: "Away", hrv_recirc: "Recirculation", hrv_humidity: "Humidity control", hrv_inter: "Intermittent", hrv_inter_paused: "Intermittent, paused", hrv_mode: "Mode", hrv_supply_fan: "Supply fan", hrv_exhaust_fan: "Exhaust fan", section_supply_fan: "Supply fan speed (rpm)", section_exhaust_fan: "Exhaust fan speed (rpm)", fan_max_rpm: "Fan top speed (rpm)", section_exhaust_airflow: "Exhaust airflow", section_target_humidity: "Humidity setpoint", section_humidity_control: "Humidity control switch", layout_hrv_diagram: "Air flows", layout_hrv_one_duct: "Wall unit, one duct", layout_hrv_pair: "Through-wall pair", section_supply_temperature: "Supply air temperature", section_extract_temperature: "Extract air temperature", section_exhaust_temperature: "Exhaust air temperature", section_bypass: "Bypass", section_airflow: "Airflow", hrv_t_outdoor: "fresh air", hrv_t_supply: "supply", hrv_t_extract: "extract", hrv_t_exhaust: "exhaust", hrv_outside: "outside", hrv_room: "room",
-    type_camera: "Camera", cam_idle: "Idle", cam_live: "Streaming", cam_rec: "Recording", cam_motion: "Motion detected", cam_off: "Off", cam_line_last_motion: "Last motion", cam_line_night: "Night vision", cam_line_signal: "Signal", section_motion: "Motion sensor", section_recording: "Recording sensor", section_night_vision: "Night vision", section_privacy: "Privacy mode", section_signal: "Signal strength", layout_cam_indoor: "Indoor, pan and tilt", layout_cam_tube: "Indoor tube", layout_cam_outdoor: "Outdoor", layout_cam_dome: "Dome", layout_cam_doorbell: "Doorbell", cam_ring: "Ringing", cam_line_last_ring: "Last ring", section_ring: "Doorbell button", type_mailbox: "Mailbox", mb_empty: "Empty", mb_mail: "Mail", mb_front_open: "Front door open", mb_back_open: "Back door open", mb_line_count: "Mail received", mb_line_last: "Last mail", mb_front_door: "Front door", mb_back_door: "Back door", mb_open: "Open", mb_closed: "Closed", section_mail_count: "Mail counter", layout_mb_through: "Through the wall", layout_mb_classic: "Classic", mb_street: "street", mb_house: "house", mb_front_side: "Street side", mb_side_left: "Left", mb_side_right: "Right",
+    type_camera: "Camera", cam_idle: "Idle", cam_live: "Streaming", cam_rec: "Recording", cam_motion: "Motion detected", cam_off: "Off", cam_line_last_motion: "Last motion", cam_line_night: "Night vision", cam_line_signal: "Signal", section_motion: "Motion sensor", section_recording: "Recording sensor", section_night_vision: "Night vision", section_privacy: "Privacy mode", section_signal: "Signal strength", layout_cam_indoor: "Indoor, pan and tilt", layout_cam_tube: "Indoor tube", layout_cam_outdoor: "Outdoor", layout_cam_dome: "Dome", layout_cam_doorbell: "Doorbell", cam_ring: "Ringing", cam_line_last_ring: "Last ring", section_ring: "Doorbell button", type_mailbox: "Mailbox", mb_empty: "Empty", mb_mail: "Mail", mb_front_open: "Front door open", mb_back_open: "Back door open", mb_line_count: "Mail received", mb_line_last: "Last mail", mb_front_door: "Front door", mb_back_door: "Back door", mb_open: "Open", mb_closed: "Closed", section_mail_count: "Mail counter", layout_mb_through: "Through the wall", layout_mb_classic: "Classic", mb_street: "street", mb_house: "house", mb_front_side: "Street side", mb_side_left: "Left", mb_side_right: "Right", type_water_pump: "Water pump", type_floor_heating: "Underfloor heating", type_spa: "Spa", type_sauna: "Sauna", type_aquarium: "Aquarium", type_meter: "Electricity meter", type_christmas_tree: "Christmas tree", layout_chest: "Chest freezer", layout_drawers: "Drawer freezer", layout_pump_booster: "Booster set", layout_pump_sump: "Sump pump", layout_floor_water: "Hot water", layout_floor_electric: "Electric", layout_robot_pool: "Pool robot", wp_pumping: "Pumping", wp_high: "High level", spa_bubbles: "Bubbles", sauna_ready: "Ready", aq_lit: "Light on", aq_dark: "Light off", meter_low: "Low use", meter_high: "High use", section_pressure: "Pressure", section_water_level: "Water level", section_high_level: "High level alarm", level_max: "Level when full", section_bubbles: "Bubbles", section_tariff: "Tariff period", high_power: "High use from (W or VA)", tree_palette: "Colours", palette_multicolor: "Multicolour", palette_red_gold: "Red and gold", palette_red_silver: "Red and silver", palette_gold_silver: "Gold and silver", palette_blue_silver: "Blue and silver", palette_white_silver: "White and silver", palette_red_green: "Red and green", presents: "Presents", presents_auto: "On 24 and 25 December", presents_show: "Always", presents_hide: "Never", tree_on: "On", tree_off: "Off",
     type_lamp: "Lamp", lamp_off: "Off", lamp_on: "On", lamp_line_brightness: "Brightness", lamp_line_color_temp: "Colour temperature", lamp_line_effect: "Effect", lamp_spots: "Number of spots", layout_lamp_bulb: "Bulb", layout_lamp_bedside: "Bedside lamp", layout_lamp_floor: "Arc floor lamp", layout_lamp_torch: "Torchiere", layout_lamp_pendant: "Pendant", layout_lamp_strip: "LED strip", layout_lamp_spot: "Recessed spots", layout_lamp_panels: "Light panels", layout_lamp_desk: "Desk lamp", layout_lamp_wall: "Wall lantern",
     speed_power_max: "Power at top speed (W)", speed_power_custom: "Custom speed thresholds", speed_power_2: "Speed 2 from (W)", speed_power_3: "Speed 3 from (W)",
     fw_self_cleaning: "Self-cleaning", fw_dirty_full: "Dirty water tank full", fw_clean_empty: "Clean water tank empty",
@@ -174,7 +174,7 @@ const T = {
     type_air_conditioner: "Air conditioner", ac_off: "Off", ac_cooling: "Cooling", ac_heating: "Heating", ac_drying: "Drying", ac_fan_only: "Fan only", ac_auto: "Auto", ac_idle: "Standby", ac_defrost: "Defrosting", ac_preheating: "Warming up", ac_line_humidity: "Humidity", section_vane_vertical: "Vane up/down", section_vane_horizontal: "Vane left/right", section_purifier: "Air purifier (nanoe, plasma)", section_defrost: "Defrost indicator",
     type_dehumidifier: "Dehumidifier", type_space_heater: "Space heater", type_towel_warmer: "Towel warmer", dh_laundry: "Drying laundry", dh_full: "Tank full", dh_line_tank: "Tank", line_mode: "Mode", tw_comfort: "Comfort", tw_eco: "Eco", tw_frost: "Frost protection", tw_boost: "Boost", tw_drying: "Drying", section_tank: "Water tank", section_current_humidity: "Humidity sensor", section_heater_layout: "Model", layout_fan_heater: "Fan heater", layout_oil_radiator: "Oil-filled radiator",
     type_air_fryer: "Air fryer", af_cooking: "Cooking", af_shake: "Shake the basket", af_basket_out: "Basket out", af_preheated: "Preheated", af_basket2: "Basket 2", section_fryer_layout: "Model", layout_basket: "Basket", layout_window: "Basket with window", layout_dual: "Dual basket", section_basket: "Basket sensor", section_shake: "Shake reminder", section_basket2: "Basket 2 state (dual)",
-    last_cycle: "Last cycle", show_last_cycle: "Show the last cycle", power_off_delay: "Delay before Finished (min, plug only)",
+    last_cycle: "Last cycle", show_last_cycle: "Show the last cycle", power_off_delay: "Delay before Finished (min, plug only)", section_energy: "Energy used", energy_price: "Price per kWh (number or entity)", energy_line: "Energy", cost_line: "Cost", show_elapsed: "Show the time elapsed in the cycle", elapsed_line: "Elapsed", show_today: "Show today's running time and starts", today_line: "Today", starts_one: "{n} start", starts_other: "{n} starts", section_tower: "Tower (second plug)", tower_line: "Tower", tower_on: "Tower on", tower_toggle: "Tower",
     washer_dryer: "Washer-dryer (washes and dries)", step_drying: "Drying", section_cycle_phase: "Cycle phase",
     step_prewash: "Pre-wash", step_soaking: "Soaking", step_weighing: "Weighing", step_filling: "Filling", step_washing: "Washing", step_rinsing: "Rinsing", step_draining: "Draining", step_spinning: "Spinning", step_cooling: "Cooling", step_anti_crease: "Anti-crease", step_steam: "Steam",
     type_ev_charger: "EV charger", ev_no_vehicle: "No vehicle", ev_connected: "Plugged in", ev_awaiting_auth: "Awaiting authorisation", ev_charging: "Charging", ev_paused: "Charging paused", ev_scheduled: "Scheduled", ev_done: "Charging complete", ev_error: "Error", ev_offline: "Offline", section_vehicle: "Vehicle plugged in (plug sensor)", section_session_energy: "Session energy", section_current_limit: "Charging current limit", ev_power_threshold: "Charging above this power (W)", ev_line_session: "Charged", ev_line_limit: "Current limit",
@@ -321,7 +321,7 @@ const T = {
     layout_robot_stick: "Aspirateur balai", stick_charged: "Charg\u00e9",
     layout_robot_floor_washer: "Laveur de sol", stick_away: "Hors de la base", stick_away_threshold: "Hors de la base sous cette puissance (W)",
     type_diffuser: "Diffuseur d'huiles essentielles", dif_mist: "Diffusion", dif_inter: "Intermittent", dif_low: "Brume l\u00e9g\u00e8re", dif_empty: "R\u00e9servoir vide", dif_mode: "Mode de brume", layout_dif_drop: "Goutte", layout_dif_cone: "C\u00f4ne", layout_dif_stone: "Galet", layout_dif_flame: "Flamme", layout_dif_nebulizer: "N\u00e9buliseur", section_tank_empty: "Capteur de r\u00e9servoir vide", type_hrv: "VMC double flux", hrv_run: "En marche", hrv_boost: "Boost", hrv_bypass: "Bypass", hrv_defrost: "D\u00e9givrage", hrv_filter: "Filtre \u00e0 changer", hrv_away: "Absence", hrv_recirc: "Recirculation", hrv_humidity: "Contr\u00f4le d'humidit\u00e9", hrv_inter: "Intermittent", hrv_inter_paused: "Intermittent, en pause", hrv_mode: "Mode", hrv_supply_fan: "Soufflage", hrv_exhaust_fan: "Extraction", section_supply_fan: "Vitesse du ventilateur de soufflage (tr/min)", section_exhaust_fan: "Vitesse du ventilateur d'extraction (tr/min)", fan_max_rpm: "Vitesse maximale des ventilateurs (tr/min)", section_exhaust_airflow: "D\u00e9bit d'extraction", section_target_humidity: "Consigne d'humidit\u00e9", section_humidity_control: "Interrupteur du contr\u00f4le d'humidit\u00e9", layout_hrv_diagram: "Sch\u00e9ma des flux", layout_hrv_one_duct: "Murale, un seul conduit", layout_hrv_pair: "Paire d\u00e9centralis\u00e9e", section_supply_temperature: "Temp\u00e9rature de soufflage", section_extract_temperature: "Temp\u00e9rature d'extraction", section_exhaust_temperature: "Temp\u00e9rature de rejet", section_bypass: "Bypass", section_airflow: "D\u00e9bit d'air", hrv_t_outdoor: "air neuf", hrv_t_supply: "soufflage", hrv_t_extract: "extraction", hrv_t_exhaust: "rejet", hrv_outside: "dehors", hrv_room: "pi\u00e8ce",
-    type_camera: "Cam\u00e9ra", cam_idle: "En veille", cam_live: "En direct", cam_rec: "Enregistrement", cam_motion: "Mouvement d\u00e9tect\u00e9", cam_off: "D\u00e9sactiv\u00e9e", cam_line_last_motion: "Dernier mouvement", cam_line_night: "Vision nocturne", cam_line_signal: "Signal", section_motion: "Capteur de mouvement", section_recording: "Capteur d'enregistrement", section_night_vision: "Vision nocturne", section_privacy: "Mode confidentialit\u00e9", section_signal: "Force du signal", layout_cam_indoor: "Int\u00e9rieure orientable", layout_cam_tube: "Int\u00e9rieure tube", layout_cam_outdoor: "Ext\u00e9rieure", layout_cam_dome: "D\u00f4me", layout_cam_doorbell: "Sonnette", cam_ring: "On sonne", cam_line_last_ring: "Dernier appel", section_ring: "Bouton de la sonnette", type_mailbox: "Bo\u00eete aux lettres", mb_empty: "Vide", mb_mail: "Courrier", mb_front_open: "Porte avant ouverte", mb_back_open: "Porte arri\u00e8re ouverte", mb_line_count: "Courrier re\u00e7u", mb_line_last: "Dernier courrier", mb_front_door: "Porte avant", mb_back_door: "Porte arri\u00e8re", mb_open: "Ouverte", mb_closed: "Ferm\u00e9e", section_mail_count: "Compteur de courrier", layout_mb_through: "Traversante", layout_mb_classic: "Classique", mb_street: "rue", mb_house: "maison", mb_front_side: "C\u00f4t\u00e9 rue", mb_side_left: "Gauche", mb_side_right: "Droite",
+    type_camera: "Cam\u00e9ra", cam_idle: "En veille", cam_live: "En direct", cam_rec: "Enregistrement", cam_motion: "Mouvement d\u00e9tect\u00e9", cam_off: "D\u00e9sactiv\u00e9e", cam_line_last_motion: "Dernier mouvement", cam_line_night: "Vision nocturne", cam_line_signal: "Signal", section_motion: "Capteur de mouvement", section_recording: "Capteur d'enregistrement", section_night_vision: "Vision nocturne", section_privacy: "Mode confidentialit\u00e9", section_signal: "Force du signal", layout_cam_indoor: "Int\u00e9rieure orientable", layout_cam_tube: "Int\u00e9rieure tube", layout_cam_outdoor: "Ext\u00e9rieure", layout_cam_dome: "D\u00f4me", layout_cam_doorbell: "Sonnette", cam_ring: "On sonne", cam_line_last_ring: "Dernier appel", section_ring: "Bouton de la sonnette", type_mailbox: "Bo\u00eete aux lettres", mb_empty: "Vide", mb_mail: "Courrier", mb_front_open: "Porte avant ouverte", mb_back_open: "Porte arri\u00e8re ouverte", mb_line_count: "Courrier re\u00e7u", mb_line_last: "Dernier courrier", mb_front_door: "Porte avant", mb_back_door: "Porte arri\u00e8re", mb_open: "Ouverte", mb_closed: "Ferm\u00e9e", section_mail_count: "Compteur de courrier", layout_mb_through: "Traversante", layout_mb_classic: "Classique", mb_street: "rue", mb_house: "maison", mb_front_side: "C\u00f4t\u00e9 rue", mb_side_left: "Gauche", mb_side_right: "Droite", type_water_pump: "Pompe \u00e0 eau", type_floor_heating: "Plancher chauffant", type_spa: "Spa", type_sauna: "Sauna", type_aquarium: "Aquarium", type_meter: "Compteur \u00e9lectrique", type_christmas_tree: "Sapin de No\u00ebl", layout_chest: "Cong\u00e9lateur coffre", layout_drawers: "Cong\u00e9lateur \u00e0 tiroirs", layout_pump_booster: "Surpresseur", layout_pump_sump: "Pompe de relevage", layout_floor_water: "Eau chaude", layout_floor_electric: "\u00c9lectrique", layout_robot_pool: "Robot de piscine", wp_pumping: "Pompage", wp_high: "Niveau haut", spa_bubbles: "Bulles", sauna_ready: "Pr\u00eat", aq_lit: "\u00c9clair\u00e9", aq_dark: "\u00c9clairage \u00e9teint", meter_low: "Conso faible", meter_high: "Conso forte", section_pressure: "Pression", section_water_level: "Niveau d'eau", section_high_level: "Alarme niveau haut", level_max: "Niveau plein", section_bubbles: "Bulles", section_tariff: "P\u00e9riode tarifaire", high_power: "Conso forte \u00e0 partir de (W ou VA)", tree_palette: "Couleurs", palette_multicolor: "Multicolore", palette_red_gold: "Rouge et or", palette_red_silver: "Rouge et argent", palette_gold_silver: "Or et argent", palette_blue_silver: "Bleu et argent", palette_white_silver: "Blanc et argent", palette_red_green: "Rouge et vert", presents: "Cadeaux", presents_auto: "Les 24 et 25 d\u00e9cembre", presents_show: "Toujours", presents_hide: "Jamais", tree_on: "Allum\u00e9", tree_off: "\u00c9teint",
     type_lamp: "Lampe", lamp_off: "\u00c9teinte", lamp_on: "Allum\u00e9e", lamp_line_brightness: "Luminosit\u00e9", lamp_line_color_temp: "Temp\u00e9rature de couleur", lamp_line_effect: "Effet", lamp_spots: "Nombre de spots", layout_lamp_bulb: "Ampoule", layout_lamp_bedside: "Lampe de chevet", layout_lamp_floor: "Lampadaire arc", layout_lamp_torch: "Halog\u00e8ne sur pied", layout_lamp_pendant: "Suspension", layout_lamp_strip: "Ruban LED", layout_lamp_spot: "Spots encastr\u00e9s", layout_lamp_panels: "Panneaux lumineux", layout_lamp_desk: "Lampe de bureau", layout_lamp_wall: "Applique ext\u00e9rieure",
     speed_power_max: "Puissance \u00e0 la vitesse maxi (W)", speed_power_custom: "Personnaliser les seuils de vitesse", speed_power_2: "Vitesse 2 \u00e0 partir de (W)", speed_power_3: "Vitesse 3 \u00e0 partir de (W)",
     fw_self_cleaning: "Autonettoyage", fw_dirty_full: "R\u00e9servoir d'eau sale plein", fw_clean_empty: "R\u00e9servoir d'eau propre vide",
@@ -343,7 +343,7 @@ const T = {
     type_air_conditioner: "Climatiseur", ac_off: "\u00c9teint", ac_cooling: "Refroidissement", ac_heating: "Chauffage", ac_drying: "D\u00e9shumidification", ac_fan_only: "Ventilation", ac_auto: "Auto", ac_idle: "En veille", ac_defrost: "D\u00e9givrage", ac_preheating: "Pr\u00e9chauffage", ac_line_humidity: "Humidit\u00e9", section_vane_vertical: "Volet haut/bas", section_vane_horizontal: "Volet gauche/droite", section_purifier: "Purificateur d'air (nanoe, plasma)", section_defrost: "Indicateur de d\u00e9givrage",
     type_dehumidifier: "D\u00e9shumidificateur", type_space_heater: "Petit chauffage", type_towel_warmer: "S\u00e8che-serviettes", dh_laundry: "S\u00e9chage du linge", dh_full: "R\u00e9servoir plein", dh_line_tank: "R\u00e9servoir", line_mode: "Mode", tw_comfort: "Confort", tw_eco: "\u00c9co", tw_frost: "Hors-gel", tw_boost: "Boost", tw_drying: "S\u00e9chage", section_tank: "R\u00e9servoir d'eau", section_current_humidity: "Capteur d'humidit\u00e9", section_heater_layout: "Mod\u00e8le", layout_fan_heater: "Radiateur soufflant", layout_oil_radiator: "Bain d'huile",
     type_air_fryer: "Friteuse \u00e0 air", af_cooking: "Cuisson", af_shake: "Secouer le panier", af_basket_out: "Panier sorti", af_preheated: "Pr\u00e9chauff\u00e9e", af_basket2: "Panier 2", section_fryer_layout: "Mod\u00e8le", layout_basket: "Panier", layout_window: "Panier \u00e0 hublot", layout_dual: "Double panier", section_basket: "Capteur du panier", section_shake: "Rappel pour secouer", section_basket2: "\u00c9tat du panier 2 (double)",
-    last_cycle: "Dernier cycle", show_last_cycle: "Afficher le dernier cycle", power_off_delay: "D\u00e9lai avant \u00ab Termin\u00e9 \u00bb (min, prise seule)",
+    last_cycle: "Dernier cycle", show_last_cycle: "Afficher le dernier cycle", power_off_delay: "D\u00e9lai avant \u00ab Termin\u00e9 \u00bb (min, prise seule)", section_energy: "\u00c9nergie consomm\u00e9e", energy_price: "Prix du kWh (nombre ou entit\u00e9)", energy_line: "\u00c9nergie", cost_line: "Co\u00fbt", show_elapsed: "Afficher le temps \u00e9coul\u00e9 du cycle", elapsed_line: "\u00c9coul\u00e9", show_today: "Afficher la marche du jour et les d\u00e9marrages", today_line: "Aujourd'hui", starts_one: "{n} d\u00e9marrage", starts_other: "{n} d\u00e9marrages", section_tower: "Unit\u00e9 centrale (deuxi\u00e8me prise)", tower_line: "Unit\u00e9 centrale", tower_on: "Unit\u00e9 centrale allum\u00e9e", tower_toggle: "Unit\u00e9 centrale",
     washer_dryer: "Lavante-s\u00e9chante (lave et s\u00e8che)", step_drying: "S\u00e9chage", section_cycle_phase: "Phase du cycle",
     step_prewash: "Pr\u00e9lavage", step_soaking: "Trempage", step_weighing: "Pes\u00e9e", step_filling: "Remplissage", step_washing: "Lavage", step_rinsing: "Rin\u00e7age", step_draining: "Vidange", step_spinning: "Essorage", step_cooling: "Refroidissement", step_anti_crease: "Anti-froissage", step_steam: "Vapeur",
     type_ev_charger: "Borne de recharge", ev_no_vehicle: "Aucun v\u00e9hicule", ev_connected: "V\u00e9hicule branch\u00e9", ev_awaiting_auth: "En attente d'autorisation", ev_charging: "En charge", ev_paused: "Charge en pause", ev_scheduled: "Charge programm\u00e9e", ev_done: "Charge termin\u00e9e", ev_error: "Erreur", ev_offline: "Hors ligne", section_vehicle: "V\u00e9hicule branch\u00e9 (capteur de prise)", section_session_energy: "\u00c9nergie de la session", section_current_limit: "Limite du courant de charge", ev_power_threshold: "En charge au-dessus de cette puissance (W)", ev_line_session: "Charg\u00e9", ev_line_limit: "Limite de courant",
@@ -490,7 +490,7 @@ const T = {
     layout_robot_stick: "\u0412\u0435\u0440\u0442\u0438\u043a\u0430\u043b\u044c\u043d\u044b\u0439 \u043f\u044b\u043b\u0435\u0441\u043e\u0441", stick_charged: "\u0417\u0430\u0440\u044f\u0436\u0435\u043d",
     layout_robot_floor_washer: "\u041c\u043e\u044e\u0449\u0438\u0439 \u043f\u044b\u043b\u0435\u0441\u043e\u0441", stick_away: "\u041d\u0435 \u043d\u0430 \u0431\u0430\u0437\u0435", stick_away_threshold: "\u041d\u0435 \u043d\u0430 \u0431\u0430\u0437\u0435 \u043d\u0438\u0436\u0435 \u044d\u0442\u043e\u0439 \u043c\u043e\u0449\u043d\u043e\u0441\u0442\u0438 (\u0412\u0442)",
     type_diffuser: "\u0410\u0440\u043e\u043c\u0430\u0434\u0438\u0444\u0444\u0443\u0437\u043e\u0440", dif_mist: "\u0420\u0430\u0441\u043f\u044b\u043b\u0435\u043d\u0438\u0435", dif_inter: "\u041f\u0440\u0435\u0440\u044b\u0432\u0438\u0441\u0442\u043e", dif_low: "\u0421\u043b\u0430\u0431\u044b\u0439 \u0442\u0443\u043c\u0430\u043d", dif_empty: "\u0420\u0435\u0437\u0435\u0440\u0432\u0443\u0430\u0440 \u043f\u0443\u0441\u0442", dif_mode: "\u0420\u0435\u0436\u0438\u043c \u0442\u0443\u043c\u0430\u043d\u0430", layout_dif_drop: "\u041a\u0430\u043f\u043b\u044f", layout_dif_cone: "\u041a\u043e\u043d\u0443\u0441", layout_dif_stone: "\u0413\u0430\u043b\u044c\u043a\u0430", layout_dif_flame: "\u041f\u043b\u0430\u043c\u044f", layout_dif_nebulizer: "\u041d\u0435\u0431\u0443\u043b\u0430\u0439\u0437\u0435\u0440", section_tank_empty: "\u0414\u0430\u0442\u0447\u0438\u043a \u043f\u0443\u0441\u0442\u043e\u0433\u043e \u0440\u0435\u0437\u0435\u0440\u0432\u0443\u0430\u0440\u0430", type_hrv: "\u041f\u0440\u0438\u0442\u043e\u0447\u043d\u043e-\u0432\u044b\u0442\u044f\u0436\u043d\u0430\u044f \u0432\u0435\u043d\u0442\u0438\u043b\u044f\u0446\u0438\u044f", hrv_run: "\u0412\u0435\u043d\u0442\u0438\u043b\u044f\u0446\u0438\u044f", hrv_boost: "\u0411\u0443\u0441\u0442", hrv_bypass: "\u0411\u0430\u0439\u043f\u0430\u0441", hrv_defrost: "\u0420\u0430\u0437\u043c\u043e\u0440\u0430\u0436\u0438\u0432\u0430\u043d\u0438\u0435", hrv_filter: "\u0417\u0430\u043c\u0435\u043d\u0438\u0442\u0435 \u0444\u0438\u043b\u044c\u0442\u0440", hrv_away: "\u041d\u0435\u0442 \u0434\u043e\u043c\u0430", hrv_recirc: "\u0420\u0435\u0446\u0438\u0440\u043a\u0443\u043b\u044f\u0446\u0438\u044f", hrv_humidity: "\u041a\u043e\u043d\u0442\u0440\u043e\u043b\u044c \u0432\u043b\u0430\u0436\u043d\u043e\u0441\u0442\u0438", hrv_inter: "\u041f\u0440\u0435\u0440\u044b\u0432\u0438\u0441\u0442\u043e", hrv_inter_paused: "\u041f\u0440\u0435\u0440\u044b\u0432\u0438\u0441\u0442\u043e, \u043f\u0430\u0443\u0437\u0430", hrv_mode: "\u0420\u0435\u0436\u0438\u043c", hrv_supply_fan: "\u041f\u0440\u0438\u0442\u043e\u043a", hrv_exhaust_fan: "\u0412\u044b\u0442\u044f\u0436\u043a\u0430", section_supply_fan: "\u0421\u043a\u043e\u0440\u043e\u0441\u0442\u044c \u043f\u0440\u0438\u0442\u043e\u0447\u043d\u043e\u0433\u043e \u0432\u0435\u043d\u0442\u0438\u043b\u044f\u0442\u043e\u0440\u0430 (\u043e\u0431/\u043c\u0438\u043d)", section_exhaust_fan: "\u0421\u043a\u043e\u0440\u043e\u0441\u0442\u044c \u0432\u044b\u0442\u044f\u0436\u043d\u043e\u0433\u043e \u0432\u0435\u043d\u0442\u0438\u043b\u044f\u0442\u043e\u0440\u0430 (\u043e\u0431/\u043c\u0438\u043d)", fan_max_rpm: "\u041c\u0430\u043a\u0441\u0438\u043c\u0430\u043b\u044c\u043d\u0430\u044f \u0441\u043a\u043e\u0440\u043e\u0441\u0442\u044c \u0432\u0435\u043d\u0442\u0438\u043b\u044f\u0442\u043e\u0440\u043e\u0432 (\u043e\u0431/\u043c\u0438\u043d)", section_exhaust_airflow: "\u0420\u0430\u0441\u0445\u043e\u0434 \u0432\u044b\u0442\u044f\u0436\u043a\u0438", section_target_humidity: "\u0417\u0430\u0434\u0430\u043d\u043d\u0430\u044f \u0432\u043b\u0430\u0436\u043d\u043e\u0441\u0442\u044c", section_humidity_control: "\u0412\u044b\u043a\u043b\u044e\u0447\u0430\u0442\u0435\u043b\u044c \u043a\u043e\u043d\u0442\u0440\u043e\u043b\u044f \u0432\u043b\u0430\u0436\u043d\u043e\u0441\u0442\u0438", layout_hrv_diagram: "\u0421\u0445\u0435\u043c\u0430 \u043f\u043e\u0442\u043e\u043a\u043e\u0432", layout_hrv_one_duct: "\u041d\u0430\u0441\u0442\u0435\u043d\u043d\u0430\u044f, \u043e\u0434\u0438\u043d \u043a\u0430\u043d\u0430\u043b", layout_hrv_pair: "\u041f\u0430\u0440\u0430 \u0432 \u0441\u0442\u0435\u043d\u0435", section_supply_temperature: "\u0422\u0435\u043c\u043f\u0435\u0440\u0430\u0442\u0443\u0440\u0430 \u043f\u0440\u0438\u0442\u043e\u043a\u0430", section_extract_temperature: "\u0422\u0435\u043c\u043f\u0435\u0440\u0430\u0442\u0443\u0440\u0430 \u0432\u044b\u0442\u044f\u0436\u043a\u0438", section_exhaust_temperature: "\u0422\u0435\u043c\u043f\u0435\u0440\u0430\u0442\u0443\u0440\u0430 \u0432\u044b\u0431\u0440\u043e\u0441\u0430", section_bypass: "\u0411\u0430\u0439\u043f\u0430\u0441", section_airflow: "\u0420\u0430\u0441\u0445\u043e\u0434 \u0432\u043e\u0437\u0434\u0443\u0445\u0430", hrv_t_outdoor: "\u0441\u0432\u0435\u0436\u0438\u0439", hrv_t_supply: "\u043f\u0440\u0438\u0442\u043e\u043a", hrv_t_extract: "\u0432\u044b\u0442\u044f\u0436\u043a\u0430", hrv_t_exhaust: "\u0432\u044b\u0431\u0440\u043e\u0441", hrv_outside: "\u0443\u043b\u0438\u0446\u0430", hrv_room: "\u043a\u043e\u043c\u043d\u0430\u0442\u0430",
-    type_camera: "\u041a\u0430\u043c\u0435\u0440\u0430", cam_idle: "\u041e\u0436\u0438\u0434\u0430\u043d\u0438\u0435", cam_live: "\u0422\u0440\u0430\u043d\u0441\u043b\u044f\u0446\u0438\u044f", cam_rec: "\u0417\u0430\u043f\u0438\u0441\u044c", cam_motion: "\u0414\u0432\u0438\u0436\u0435\u043d\u0438\u0435", cam_off: "\u0412\u044b\u043a\u043b.", cam_line_last_motion: "\u041f\u043e\u0441\u043b\u0435\u0434\u043d\u0435\u0435 \u0434\u0432\u0438\u0436\u0435\u043d\u0438\u0435", cam_line_night: "\u041d\u043e\u0447\u043d\u043e\u0435 \u0432\u0438\u0434\u0435\u043d\u0438\u0435", cam_line_signal: "\u0421\u0438\u0433\u043d\u0430\u043b", section_motion: "\u0414\u0430\u0442\u0447\u0438\u043a \u0434\u0432\u0438\u0436\u0435\u043d\u0438\u044f", section_recording: "\u0414\u0430\u0442\u0447\u0438\u043a \u0437\u0430\u043f\u0438\u0441\u0438", section_night_vision: "\u041d\u043e\u0447\u043d\u043e\u0435 \u0432\u0438\u0434\u0435\u043d\u0438\u0435", section_privacy: "\u0420\u0435\u0436\u0438\u043c \u043f\u0440\u0438\u0432\u0430\u0442\u043d\u043e\u0441\u0442\u0438", section_signal: "\u0423\u0440\u043e\u0432\u0435\u043d\u044c \u0441\u0438\u0433\u043d\u0430\u043b\u0430", layout_cam_indoor: "\u0412\u043d\u0443\u0442\u0440\u0435\u043d\u043d\u044f\u044f \u043f\u043e\u0432\u043e\u0440\u043e\u0442\u043d\u0430\u044f", layout_cam_tube: "\u0412\u043d\u0443\u0442\u0440\u0435\u043d\u043d\u044f\u044f \u0442\u0440\u0443\u0431\u043a\u0430", layout_cam_outdoor: "\u0423\u043b\u0438\u0447\u043d\u0430\u044f", layout_cam_dome: "\u041a\u0443\u043f\u043e\u043b\u044c\u043d\u0430\u044f", layout_cam_doorbell: "\u0414\u0432\u0435\u0440\u043d\u043e\u0439 \u0437\u0432\u043e\u043d\u043e\u043a", cam_ring: "\u0417\u0432\u043e\u043d\u044f\u0442", cam_line_last_ring: "\u041f\u043e\u0441\u043b\u0435\u0434\u043d\u0438\u0439 \u0437\u0432\u043e\u043d\u043e\u043a", section_ring: "\u041a\u043d\u043e\u043f\u043a\u0430 \u0437\u0432\u043e\u043d\u043a\u0430", type_mailbox: "\u041f\u043e\u0447\u0442\u043e\u0432\u044b\u0439 \u044f\u0449\u0438\u043a", mb_empty: "\u041f\u0443\u0441\u0442\u043e", mb_mail: "\u041f\u043e\u0447\u0442\u0430", mb_front_open: "\u041f\u0435\u0440\u0435\u0434\u043d\u044f\u044f \u0434\u0432\u0435\u0440\u0446\u0430 \u043e\u0442\u043a\u0440\u044b\u0442\u0430", mb_back_open: "\u0417\u0430\u0434\u043d\u044f\u044f \u0434\u0432\u0435\u0440\u0446\u0430 \u043e\u0442\u043a\u0440\u044b\u0442\u0430", mb_line_count: "\u041f\u043e\u043b\u0443\u0447\u0435\u043d\u043e \u043f\u0438\u0441\u0435\u043c", mb_line_last: "\u041f\u043e\u0441\u043b\u0435\u0434\u043d\u0435\u0435 \u043f\u0438\u0441\u044c\u043c\u043e", mb_front_door: "\u041f\u0435\u0440\u0435\u0434\u043d\u044f\u044f \u0434\u0432\u0435\u0440\u0446\u0430", mb_back_door: "\u0417\u0430\u0434\u043d\u044f\u044f \u0434\u0432\u0435\u0440\u0446\u0430", mb_open: "\u041e\u0442\u043a\u0440\u044b\u0442\u0430", mb_closed: "\u0417\u0430\u043a\u0440\u044b\u0442\u0430", section_mail_count: "\u0421\u0447\u0451\u0442\u0447\u0438\u043a \u043f\u0438\u0441\u0435\u043c", layout_mb_through: "\u0421\u043a\u0432\u043e\u0437\u043d\u043e\u0439", layout_mb_classic: "\u041a\u043b\u0430\u0441\u0441\u0438\u0447\u0435\u0441\u043a\u0438\u0439", mb_street: "\u0443\u043b\u0438\u0446\u0430", mb_house: "\u0434\u043e\u043c", mb_front_side: "\u0421\u0442\u043e\u0440\u043e\u043d\u0430 \u0443\u043b\u0438\u0446\u044b", mb_side_left: "\u0421\u043b\u0435\u0432\u0430", mb_side_right: "\u0421\u043f\u0440\u0430\u0432\u0430",
+    type_camera: "\u041a\u0430\u043c\u0435\u0440\u0430", cam_idle: "\u041e\u0436\u0438\u0434\u0430\u043d\u0438\u0435", cam_live: "\u0422\u0440\u0430\u043d\u0441\u043b\u044f\u0446\u0438\u044f", cam_rec: "\u0417\u0430\u043f\u0438\u0441\u044c", cam_motion: "\u0414\u0432\u0438\u0436\u0435\u043d\u0438\u0435", cam_off: "\u0412\u044b\u043a\u043b.", cam_line_last_motion: "\u041f\u043e\u0441\u043b\u0435\u0434\u043d\u0435\u0435 \u0434\u0432\u0438\u0436\u0435\u043d\u0438\u0435", cam_line_night: "\u041d\u043e\u0447\u043d\u043e\u0435 \u0432\u0438\u0434\u0435\u043d\u0438\u0435", cam_line_signal: "\u0421\u0438\u0433\u043d\u0430\u043b", section_motion: "\u0414\u0430\u0442\u0447\u0438\u043a \u0434\u0432\u0438\u0436\u0435\u043d\u0438\u044f", section_recording: "\u0414\u0430\u0442\u0447\u0438\u043a \u0437\u0430\u043f\u0438\u0441\u0438", section_night_vision: "\u041d\u043e\u0447\u043d\u043e\u0435 \u0432\u0438\u0434\u0435\u043d\u0438\u0435", section_privacy: "\u0420\u0435\u0436\u0438\u043c \u043f\u0440\u0438\u0432\u0430\u0442\u043d\u043e\u0441\u0442\u0438", section_signal: "\u0423\u0440\u043e\u0432\u0435\u043d\u044c \u0441\u0438\u0433\u043d\u0430\u043b\u0430", layout_cam_indoor: "\u0412\u043d\u0443\u0442\u0440\u0435\u043d\u043d\u044f\u044f \u043f\u043e\u0432\u043e\u0440\u043e\u0442\u043d\u0430\u044f", layout_cam_tube: "\u0412\u043d\u0443\u0442\u0440\u0435\u043d\u043d\u044f\u044f \u0442\u0440\u0443\u0431\u043a\u0430", layout_cam_outdoor: "\u0423\u043b\u0438\u0447\u043d\u0430\u044f", layout_cam_dome: "\u041a\u0443\u043f\u043e\u043b\u044c\u043d\u0430\u044f", layout_cam_doorbell: "\u0414\u0432\u0435\u0440\u043d\u043e\u0439 \u0437\u0432\u043e\u043d\u043e\u043a", cam_ring: "\u0417\u0432\u043e\u043d\u044f\u0442", cam_line_last_ring: "\u041f\u043e\u0441\u043b\u0435\u0434\u043d\u0438\u0439 \u0437\u0432\u043e\u043d\u043e\u043a", section_ring: "\u041a\u043d\u043e\u043f\u043a\u0430 \u0437\u0432\u043e\u043d\u043a\u0430", type_mailbox: "\u041f\u043e\u0447\u0442\u043e\u0432\u044b\u0439 \u044f\u0449\u0438\u043a", mb_empty: "\u041f\u0443\u0441\u0442\u043e", mb_mail: "\u041f\u043e\u0447\u0442\u0430", mb_front_open: "\u041f\u0435\u0440\u0435\u0434\u043d\u044f\u044f \u0434\u0432\u0435\u0440\u0446\u0430 \u043e\u0442\u043a\u0440\u044b\u0442\u0430", mb_back_open: "\u0417\u0430\u0434\u043d\u044f\u044f \u0434\u0432\u0435\u0440\u0446\u0430 \u043e\u0442\u043a\u0440\u044b\u0442\u0430", mb_line_count: "\u041f\u043e\u043b\u0443\u0447\u0435\u043d\u043e \u043f\u0438\u0441\u0435\u043c", mb_line_last: "\u041f\u043e\u0441\u043b\u0435\u0434\u043d\u0435\u0435 \u043f\u0438\u0441\u044c\u043c\u043e", mb_front_door: "\u041f\u0435\u0440\u0435\u0434\u043d\u044f\u044f \u0434\u0432\u0435\u0440\u0446\u0430", mb_back_door: "\u0417\u0430\u0434\u043d\u044f\u044f \u0434\u0432\u0435\u0440\u0446\u0430", mb_open: "\u041e\u0442\u043a\u0440\u044b\u0442\u0430", mb_closed: "\u0417\u0430\u043a\u0440\u044b\u0442\u0430", section_mail_count: "\u0421\u0447\u0451\u0442\u0447\u0438\u043a \u043f\u0438\u0441\u0435\u043c", layout_mb_through: "\u0421\u043a\u0432\u043e\u0437\u043d\u043e\u0439", layout_mb_classic: "\u041a\u043b\u0430\u0441\u0441\u0438\u0447\u0435\u0441\u043a\u0438\u0439", mb_street: "\u0443\u043b\u0438\u0446\u0430", mb_house: "\u0434\u043e\u043c", mb_front_side: "\u0421\u0442\u043e\u0440\u043e\u043d\u0430 \u0443\u043b\u0438\u0446\u044b", mb_side_left: "\u0421\u043b\u0435\u0432\u0430", mb_side_right: "\u0421\u043f\u0440\u0430\u0432\u0430", type_water_pump: "\u0412\u043e\u0434\u044f\u043d\u043e\u0439 \u043d\u0430\u0441\u043e\u0441", type_floor_heating: "\u0422\u0451\u043f\u043b\u044b\u0439 \u043f\u043e\u043b", type_spa: "\u0421\u043f\u0430", type_sauna: "\u0421\u0430\u0443\u043d\u0430", type_aquarium: "\u0410\u043a\u0432\u0430\u0440\u0438\u0443\u043c", type_meter: "\u042d\u043b\u0435\u043a\u0442\u0440\u043e\u0441\u0447\u0451\u0442\u0447\u0438\u043a", type_christmas_tree: "\u041d\u043e\u0432\u043e\u0433\u043e\u0434\u043d\u044f\u044f \u0451\u043b\u043a\u0430", layout_chest: "\u041c\u043e\u0440\u043e\u0437\u0438\u043b\u044c\u043d\u044b\u0439 \u043b\u0430\u0440\u044c", layout_drawers: "\u041c\u043e\u0440\u043e\u0437\u0438\u043b\u044c\u043d\u0438\u043a \u0441 \u044f\u0449\u0438\u043a\u0430\u043c\u0438", layout_pump_booster: "\u041d\u0430\u0441\u043e\u0441\u043d\u0430\u044f \u0441\u0442\u0430\u043d\u0446\u0438\u044f", layout_pump_sump: "\u0414\u0440\u0435\u043d\u0430\u0436\u043d\u044b\u0439 \u043d\u0430\u0441\u043e\u0441", layout_floor_water: "\u0412\u043e\u0434\u044f\u043d\u043e\u0439", layout_floor_electric: "\u042d\u043b\u0435\u043a\u0442\u0440\u0438\u0447\u0435\u0441\u043a\u0438\u0439", layout_robot_pool: "\u0420\u043e\u0431\u043e\u0442 \u0434\u043b\u044f \u0431\u0430\u0441\u0441\u0435\u0439\u043d\u0430", wp_pumping: "\u041f\u0435\u0440\u0435\u043a\u0430\u0447\u043a\u0430", wp_high: "\u0412\u044b\u0441\u043e\u043a\u0438\u0439 \u0443\u0440\u043e\u0432\u0435\u043d\u044c", spa_bubbles: "\u041f\u0443\u0437\u044b\u0440\u044c\u043a\u0438", sauna_ready: "\u0413\u043e\u0442\u043e\u0432\u043e", aq_lit: "\u0421\u0432\u0435\u0442 \u0432\u043a\u043b\u044e\u0447\u0451\u043d", aq_dark: "\u0421\u0432\u0435\u0442 \u0432\u044b\u043a\u043b\u044e\u0447\u0435\u043d", meter_low: "\u041d\u0438\u0437\u043a\u043e\u0435 \u043f\u043e\u0442\u0440\u0435\u0431\u043b\u0435\u043d\u0438\u0435", meter_high: "\u0412\u044b\u0441\u043e\u043a\u043e\u0435 \u043f\u043e\u0442\u0440\u0435\u0431\u043b\u0435\u043d\u0438\u0435", section_pressure: "\u0414\u0430\u0432\u043b\u0435\u043d\u0438\u0435", section_water_level: "\u0423\u0440\u043e\u0432\u0435\u043d\u044c \u0432\u043e\u0434\u044b", section_high_level: "\u0421\u0438\u0433\u043d\u0430\u043b \u0432\u044b\u0441\u043e\u043a\u043e\u0433\u043e \u0443\u0440\u043e\u0432\u043d\u044f", level_max: "\u0423\u0440\u043e\u0432\u0435\u043d\u044c \u043f\u0440\u0438 \u0437\u0430\u043f\u043e\u043b\u043d\u0435\u043d\u0438\u0438", section_bubbles: "\u041f\u0443\u0437\u044b\u0440\u044c\u043a\u0438", section_tariff: "\u0422\u0430\u0440\u0438\u0444\u043d\u044b\u0439 \u043f\u0435\u0440\u0438\u043e\u0434", high_power: "\u0412\u044b\u0441\u043e\u043a\u043e\u0435 \u043f\u043e\u0442\u0440\u0435\u0431\u043b\u0435\u043d\u0438\u0435 \u043e\u0442 (\u0412\u0442 \u0438\u043b\u0438 \u0412\u0410)", tree_palette: "\u0426\u0432\u0435\u0442\u0430", palette_multicolor: "\u0420\u0430\u0437\u043d\u043e\u0446\u0432\u0435\u0442\u043d\u0430\u044f", palette_red_gold: "\u041a\u0440\u0430\u0441\u043d\u044b\u0439 \u0438 \u0437\u043e\u043b\u043e\u0442\u043e", palette_red_silver: "\u041a\u0440\u0430\u0441\u043d\u044b\u0439 \u0438 \u0441\u0435\u0440\u0435\u0431\u0440\u043e", palette_gold_silver: "\u0417\u043e\u043b\u043e\u0442\u043e \u0438 \u0441\u0435\u0440\u0435\u0431\u0440\u043e", palette_blue_silver: "\u0421\u0438\u043d\u0438\u0439 \u0438 \u0441\u0435\u0440\u0435\u0431\u0440\u043e", palette_white_silver: "\u0411\u0435\u043b\u044b\u0439 \u0438 \u0441\u0435\u0440\u0435\u0431\u0440\u043e", palette_red_green: "\u041a\u0440\u0430\u0441\u043d\u044b\u0439 \u0438 \u0437\u0435\u043b\u0451\u043d\u044b\u0439", presents: "\u041f\u043e\u0434\u0430\u0440\u043a\u0438", presents_auto: "24 \u0438 25 \u0434\u0435\u043a\u0430\u0431\u0440\u044f", presents_show: "\u0412\u0441\u0435\u0433\u0434\u0430", presents_hide: "\u041d\u0438\u043a\u043e\u0433\u0434\u0430", tree_on: "\u0412\u043a\u043b\u044e\u0447\u0435\u043d\u0430", tree_off: "\u0412\u044b\u043a\u043b\u044e\u0447\u0435\u043d\u0430",
     type_lamp: "\u041b\u0430\u043c\u043f\u0430", lamp_off: "\u0412\u044b\u043a\u043b.", lamp_on: "\u0412\u043a\u043b.", lamp_line_brightness: "\u042f\u0440\u043a\u043e\u0441\u0442\u044c", lamp_line_color_temp: "\u0426\u0432\u0435\u0442\u043e\u0432\u0430\u044f \u0442\u0435\u043c\u043f\u0435\u0440\u0430\u0442\u0443\u0440\u0430", lamp_line_effect: "\u042d\u0444\u0444\u0435\u043a\u0442", lamp_spots: "\u041a\u043e\u043b\u0438\u0447\u0435\u0441\u0442\u0432\u043e \u0441\u043f\u043e\u0442\u043e\u0432", layout_lamp_bulb: "\u041b\u0430\u043c\u043f\u043e\u0447\u043a\u0430", layout_lamp_bedside: "\u041f\u0440\u0438\u043a\u0440\u043e\u0432\u0430\u0442\u043d\u0430\u044f \u043b\u0430\u043c\u043f\u0430", layout_lamp_floor: "\u0422\u043e\u0440\u0448\u0435\u0440-\u0434\u0443\u0433\u0430", layout_lamp_torch: "\u0422\u043e\u0440\u0448\u0435\u0440 \u0441 \u043e\u0442\u0440\u0430\u0436\u0451\u043d\u043d\u044b\u043c \u0441\u0432\u0435\u0442\u043e\u043c", layout_lamp_pendant: "\u041f\u043e\u0434\u0432\u0435\u0441\u043d\u043e\u0439 \u0441\u0432\u0435\u0442\u0438\u043b\u044c\u043d\u0438\u043a", layout_lamp_strip: "\u0421\u0432\u0435\u0442\u043e\u0434\u0438\u043e\u0434\u043d\u0430\u044f \u043b\u0435\u043d\u0442\u0430", layout_lamp_spot: "\u0412\u0441\u0442\u0440\u0430\u0438\u0432\u0430\u0435\u043c\u044b\u0435 \u0441\u043f\u043e\u0442\u044b", layout_lamp_panels: "\u0421\u0432\u0435\u0442\u043e\u0432\u044b\u0435 \u043f\u0430\u043d\u0435\u043b\u0438", layout_lamp_desk: "\u041d\u0430\u0441\u0442\u043e\u043b\u044c\u043d\u0430\u044f \u043b\u0430\u043c\u043f\u0430", layout_lamp_wall: "\u041d\u0430\u0441\u0442\u0435\u043d\u043d\u044b\u0439 \u0444\u043e\u043d\u0430\u0440\u044c",
     speed_power_max: "\u041c\u043e\u0449\u043d\u043e\u0441\u0442\u044c \u043d\u0430 \u043c\u0430\u043a\u0441\u0438\u043c\u0430\u043b\u044c\u043d\u043e\u0439 \u0441\u043a\u043e\u0440\u043e\u0441\u0442\u0438 (\u0412\u0442)", speed_power_custom: "\u0421\u0432\u043e\u0438 \u043f\u043e\u0440\u043e\u0433\u0438 \u0441\u043a\u043e\u0440\u043e\u0441\u0442\u0438", speed_power_2: "\u0421\u043a\u043e\u0440\u043e\u0441\u0442\u044c 2 \u043e\u0442 (\u0412\u0442)", speed_power_3: "\u0421\u043a\u043e\u0440\u043e\u0441\u0442\u044c 3 \u043e\u0442 (\u0412\u0442)",
     fw_self_cleaning: "\u0421\u0430\u043c\u043e\u043e\u0447\u0438\u0441\u0442\u043a\u0430", fw_dirty_full: "\u0411\u0430\u043a \u0433\u0440\u044f\u0437\u043d\u043e\u0439 \u0432\u043e\u0434\u044b \u043f\u043e\u043b\u043e\u043d", fw_clean_empty: "\u0411\u0430\u043a \u0447\u0438\u0441\u0442\u043e\u0439 \u0432\u043e\u0434\u044b \u043f\u0443\u0441\u0442",
@@ -512,7 +512,7 @@ const T = {
     type_air_conditioner: "\u041a\u043e\u043d\u0434\u0438\u0446\u0438\u043e\u043d\u0435\u0440", ac_off: "\u0412\u044b\u043a\u043b\u044e\u0447\u0435\u043d", ac_cooling: "\u041e\u0445\u043b\u0430\u0436\u0434\u0435\u043d\u0438\u0435", ac_heating: "\u041e\u0431\u043e\u0433\u0440\u0435\u0432", ac_drying: "\u041e\u0441\u0443\u0448\u0435\u043d\u0438\u0435", ac_fan_only: "\u0412\u0435\u043d\u0442\u0438\u043b\u044f\u0446\u0438\u044f", ac_auto: "\u0410\u0432\u0442\u043e", ac_idle: "\u041e\u0436\u0438\u0434\u0430\u043d\u0438\u0435", ac_defrost: "\u041e\u0442\u0442\u0430\u0438\u0432\u0430\u043d\u0438\u0435", ac_preheating: "\u041f\u0440\u043e\u0433\u0440\u0435\u0432", ac_line_humidity: "\u0412\u043b\u0430\u0436\u043d\u043e\u0441\u0442\u044c", section_vane_vertical: "\u0416\u0430\u043b\u044e\u0437\u0438 \u0432\u0432\u0435\u0440\u0445/\u0432\u043d\u0438\u0437", section_vane_horizontal: "\u0416\u0430\u043b\u044e\u0437\u0438 \u0432\u043b\u0435\u0432\u043e/\u0432\u043f\u0440\u0430\u0432\u043e", section_purifier: "\u041e\u0447\u0438\u0441\u0442\u043a\u0430 \u0432\u043e\u0437\u0434\u0443\u0445\u0430 (nanoe, \u043f\u043b\u0430\u0437\u043c\u0430)", section_defrost: "\u0418\u043d\u0434\u0438\u043a\u0430\u0442\u043e\u0440 \u043e\u0442\u0442\u0430\u0438\u0432\u0430\u043d\u0438\u044f",
     type_dehumidifier: "\u041e\u0441\u0443\u0448\u0438\u0442\u0435\u043b\u044c", type_space_heater: "\u041e\u0431\u043e\u0433\u0440\u0435\u0432\u0430\u0442\u0435\u043b\u044c", type_towel_warmer: "\u041f\u043e\u043b\u043e\u0442\u0435\u043d\u0446\u0435\u0441\u0443\u0448\u0438\u0442\u0435\u043b\u044c", dh_laundry: "\u0421\u0443\u0448\u043a\u0430 \u0431\u0435\u043b\u044c\u044f", dh_full: "\u0411\u0430\u043a \u043f\u043e\u043b\u043e\u043d", dh_line_tank: "\u0411\u0430\u043a", line_mode: "\u0420\u0435\u0436\u0438\u043c", tw_comfort: "\u041a\u043e\u043c\u0444\u043e\u0440\u0442", tw_eco: "\u042d\u043a\u043e", tw_frost: "\u0417\u0430\u0449\u0438\u0442\u0430 \u043e\u0442 \u0437\u0430\u043c\u0435\u0440\u0437\u0430\u043d\u0438\u044f", tw_boost: "\u0411\u0443\u0441\u0442", tw_drying: "\u0421\u0443\u0448\u043a\u0430", section_tank: "\u0411\u0430\u043a \u0434\u043b\u044f \u0432\u043e\u0434\u044b", section_current_humidity: "\u0414\u0430\u0442\u0447\u0438\u043a \u0432\u043b\u0430\u0436\u043d\u043e\u0441\u0442\u0438", section_heater_layout: "\u041c\u043e\u0434\u0435\u043b\u044c", layout_fan_heater: "\u0422\u0435\u043f\u043b\u043e\u0432\u0435\u043d\u0442\u0438\u043b\u044f\u0442\u043e\u0440", layout_oil_radiator: "\u041c\u0430\u0441\u043b\u044f\u043d\u044b\u0439 \u0440\u0430\u0434\u0438\u0430\u0442\u043e\u0440",
     type_air_fryer: "\u0410\u044d\u0440\u043e\u0433\u0440\u0438\u043b\u044c", af_cooking: "\u0413\u043e\u0442\u043e\u0432\u043a\u0430", af_shake: "\u0412\u0441\u0442\u0440\u044f\u0445\u043d\u0438\u0442\u0435 \u043a\u043e\u0440\u0437\u0438\u043d\u0443", af_basket_out: "\u041a\u043e\u0440\u0437\u0438\u043d\u0430 \u0438\u0437\u0432\u043b\u0435\u0447\u0435\u043d\u0430", af_preheated: "\u0420\u0430\u0437\u043e\u0433\u0440\u0435\u0442", af_basket2: "\u041a\u043e\u0440\u0437\u0438\u043d\u0430 2", section_fryer_layout: "\u041c\u043e\u0434\u0435\u043b\u044c", layout_basket: "\u041a\u043e\u0440\u0437\u0438\u043d\u0430", layout_window: "\u041a\u043e\u0440\u0437\u0438\u043d\u0430 \u0441 \u043e\u043a\u043d\u043e\u043c", layout_dual: "\u0414\u0432\u0435 \u043a\u043e\u0440\u0437\u0438\u043d\u044b", section_basket: "\u0414\u0430\u0442\u0447\u0438\u043a \u043a\u043e\u0440\u0437\u0438\u043d\u044b", section_shake: "\u041d\u0430\u043f\u043e\u043c\u0438\u043d\u0430\u043d\u0438\u0435 \u0432\u0441\u0442\u0440\u044f\u0445\u043d\u0443\u0442\u044c", section_basket2: "\u0421\u043e\u0441\u0442\u043e\u044f\u043d\u0438\u0435 \u043a\u043e\u0440\u0437\u0438\u043d\u044b 2 (\u0434\u0432\u0435 \u043a\u043e\u0440\u0437\u0438\u043d\u044b)",
-    last_cycle: "\u041f\u043e\u0441\u043b\u0435\u0434\u043d\u0438\u0439 \u0446\u0438\u043a\u043b", show_last_cycle: "\u041f\u043e\u043a\u0430\u0437\u044b\u0432\u0430\u0442\u044c \u043f\u043e\u0441\u043b\u0435\u0434\u043d\u0438\u0439 \u0446\u0438\u043a\u043b", power_off_delay: "\u0417\u0430\u0434\u0435\u0440\u0436\u043a\u0430 \u043f\u0435\u0440\u0435\u0434 \u00ab\u0417\u0430\u0432\u0435\u0440\u0448\u0435\u043d\u043e\u00bb (\u043c\u0438\u043d, \u0442\u043e\u043b\u044c\u043a\u043e \u0440\u043e\u0437\u0435\u0442\u043a\u0430)",
+    last_cycle: "\u041f\u043e\u0441\u043b\u0435\u0434\u043d\u0438\u0439 \u0446\u0438\u043a\u043b", show_last_cycle: "\u041f\u043e\u043a\u0430\u0437\u044b\u0432\u0430\u0442\u044c \u043f\u043e\u0441\u043b\u0435\u0434\u043d\u0438\u0439 \u0446\u0438\u043a\u043b", power_off_delay: "\u0417\u0430\u0434\u0435\u0440\u0436\u043a\u0430 \u043f\u0435\u0440\u0435\u0434 \u00ab\u0417\u0430\u0432\u0435\u0440\u0448\u0435\u043d\u043e\u00bb (\u043c\u0438\u043d, \u0442\u043e\u043b\u044c\u043a\u043e \u0440\u043e\u0437\u0435\u0442\u043a\u0430)", section_energy: "\u0418\u0437\u0440\u0430\u0441\u0445\u043e\u0434\u043e\u0432\u0430\u043d\u043d\u0430\u044f \u044d\u043d\u0435\u0440\u0433\u0438\u044f", energy_price: "\u0426\u0435\u043d\u0430 \u0437\u0430 \u043a\u0412\u0442\u00b7\u0447 (\u0447\u0438\u0441\u043b\u043e \u0438\u043b\u0438 \u0441\u0443\u0449\u043d\u043e\u0441\u0442\u044c)", energy_line: "\u042d\u043d\u0435\u0440\u0433\u0438\u044f", cost_line: "\u0421\u0442\u043e\u0438\u043c\u043e\u0441\u0442\u044c", show_elapsed: "\u041f\u043e\u043a\u0430\u0437\u044b\u0432\u0430\u0442\u044c \u043f\u0440\u043e\u0448\u0435\u0434\u0448\u0435\u0435 \u0432\u0440\u0435\u043c\u044f \u0446\u0438\u043a\u043b\u0430", elapsed_line: "\u041f\u0440\u043e\u0448\u043b\u043e", show_today: "\u041f\u043e\u043a\u0430\u0437\u044b\u0432\u0430\u0442\u044c \u0432\u0440\u0435\u043c\u044f \u0440\u0430\u0431\u043e\u0442\u044b \u0438 \u0437\u0430\u043f\u0443\u0441\u043a\u0438 \u0437\u0430 \u0441\u0435\u0433\u043e\u0434\u043d\u044f", today_line: "\u0421\u0435\u0433\u043e\u0434\u043d\u044f", starts_one: "\u0437\u0430\u043f\u0443\u0441\u043a\u043e\u0432: {n}", starts_other: "\u0437\u0430\u043f\u0443\u0441\u043a\u043e\u0432: {n}", section_tower: "\u0421\u0438\u0441\u0442\u0435\u043c\u043d\u044b\u0439 \u0431\u043b\u043e\u043a (\u0432\u0442\u043e\u0440\u0430\u044f \u0440\u043e\u0437\u0435\u0442\u043a\u0430)", tower_line: "\u0421\u0438\u0441\u0442\u0435\u043c\u043d\u044b\u0439 \u0431\u043b\u043e\u043a", tower_on: "\u0421\u0438\u0441\u0442\u0435\u043c\u043d\u044b\u0439 \u0431\u043b\u043e\u043a \u0432\u043a\u043b\u044e\u0447\u0451\u043d", tower_toggle: "\u0421\u0438\u0441\u0442\u0435\u043c\u043d\u044b\u0439 \u0431\u043b\u043e\u043a",
     washer_dryer: "\u0421\u0442\u0438\u0440\u0430\u043b\u044c\u043d\u043e-\u0441\u0443\u0448\u0438\u043b\u044c\u043d\u0430\u044f \u043c\u0430\u0448\u0438\u043d\u0430 (\u0441\u0442\u0438\u0440\u0430\u0435\u0442 \u0438 \u0441\u0443\u0448\u0438\u0442)", step_drying: "\u0421\u0443\u0448\u043a\u0430", section_cycle_phase: "\u0424\u0430\u0437\u0430 \u0446\u0438\u043a\u043b\u0430",
     step_prewash: "\u041f\u0440\u0435\u0434\u0441\u0442\u0438\u0440\u043a\u0430", step_soaking: "\u0417\u0430\u043c\u0430\u0447\u0438\u0432\u0430\u043d\u0438\u0435", step_weighing: "\u0412\u0437\u0432\u0435\u0448\u0438\u0432\u0430\u043d\u0438\u0435", step_filling: "\u041d\u0430\u0431\u043e\u0440 \u0432\u043e\u0434\u044b", step_washing: "\u0421\u0442\u0438\u0440\u043a\u0430", step_rinsing: "\u041f\u043e\u043b\u043e\u0441\u043a\u0430\u043d\u0438\u0435", step_draining: "\u0421\u043b\u0438\u0432", step_spinning: "\u041e\u0442\u0436\u0438\u043c", step_cooling: "\u041e\u0445\u043b\u0430\u0436\u0434\u0435\u043d\u0438\u0435", step_anti_crease: "\u0417\u0430\u0449\u0438\u0442\u0430 \u043e\u0442 \u0441\u043c\u0438\u043d\u0430\u043d\u0438\u044f", step_steam: "\u041f\u0430\u0440",
     type_ev_charger: "\u0417\u0430\u0440\u044f\u0434\u043d\u0430\u044f \u0441\u0442\u0430\u043d\u0446\u0438\u044f", ev_no_vehicle: "\u041d\u0435\u0442 \u0430\u0432\u0442\u043e\u043c\u043e\u0431\u0438\u043b\u044f", ev_connected: "\u0410\u0432\u0442\u043e\u043c\u043e\u0431\u0438\u043b\u044c \u043f\u043e\u0434\u043a\u043b\u044e\u0447\u0451\u043d", ev_awaiting_auth: "\u041e\u0436\u0438\u0434\u0430\u043d\u0438\u0435 \u0430\u0432\u0442\u043e\u0440\u0438\u0437\u0430\u0446\u0438\u0438", ev_charging: "\u0417\u0430\u0440\u044f\u0434\u043a\u0430", ev_paused: "\u0417\u0430\u0440\u044f\u0434\u043a\u0430 \u043f\u0440\u0438\u043e\u0441\u0442\u0430\u043d\u043e\u0432\u043b\u0435\u043d\u0430", ev_scheduled: "\u0417\u0430\u043f\u043b\u0430\u043d\u0438\u0440\u043e\u0432\u0430\u043d\u043e", ev_done: "\u0417\u0430\u0440\u044f\u0434\u043a\u0430 \u0437\u0430\u0432\u0435\u0440\u0448\u0435\u043d\u0430", ev_error: "\u041e\u0448\u0438\u0431\u043a\u0430", ev_offline: "\u041d\u0435 \u0432 \u0441\u0435\u0442\u0438", section_vehicle: "\u0410\u0432\u0442\u043e\u043c\u043e\u0431\u0438\u043b\u044c \u043f\u043e\u0434\u043a\u043b\u044e\u0447\u0451\u043d (\u0434\u0430\u0442\u0447\u0438\u043a \u0440\u0430\u0437\u044a\u0451\u043c\u0430)", section_session_energy: "\u042d\u043d\u0435\u0440\u0433\u0438\u044f \u0441\u0435\u0430\u043d\u0441\u0430", section_current_limit: "\u041e\u0433\u0440\u0430\u043d\u0438\u0447\u0435\u043d\u0438\u0435 \u0442\u043e\u043a\u0430 \u0437\u0430\u0440\u044f\u0434\u043a\u0438", ev_power_threshold: "\u0417\u0430\u0440\u044f\u0434\u043a\u0430 \u0432\u044b\u0448\u0435 \u044d\u0442\u043e\u0439 \u043c\u043e\u0449\u043d\u043e\u0441\u0442\u0438 (\u0412\u0442)", ev_line_session: "\u0417\u0430\u0440\u044f\u0436\u0435\u043d\u043e", ev_line_limit: "\u041e\u0433\u0440\u0430\u043d\u0438\u0447\u0435\u043d\u0438\u0435 \u0442\u043e\u043a\u0430",
@@ -659,7 +659,7 @@ const T = {
     layout_robot_stick: "Akku-Stielsauger", stick_charged: "Geladen",
     layout_robot_floor_washer: "Nass-Trocken-Sauger", stick_away: "Nicht in der Station", stick_away_threshold: "Nicht in der Station unter dieser Leistung (W)",
     type_diffuser: "Aroma-Diffusor", dif_mist: "Vernebelt", dif_inter: "Intervall", dif_low: "Leichter Nebel", dif_empty: "Tank leer", dif_mode: "Nebelmodus", layout_dif_drop: "Tropfen", layout_dif_cone: "Kegel", layout_dif_stone: "Kiesel", layout_dif_flame: "Flamme", layout_dif_nebulizer: "Vernebler", section_tank_empty: "Sensor leerer Tank", type_hrv: "L\u00fcftung mit W\u00e4rmer\u00fcckgewinnung", hrv_run: "L\u00fcftet", hrv_boost: "Boost", hrv_bypass: "Bypass", hrv_defrost: "Abtauen", hrv_filter: "Filter wechseln", hrv_away: "Abwesend", hrv_recirc: "Umluft", hrv_humidity: "Feuchteregelung", hrv_inter: "Intervall", hrv_inter_paused: "Intervall, Pause", hrv_mode: "Modus", hrv_supply_fan: "Zuluft", hrv_exhaust_fan: "Abluft", section_supply_fan: "Drehzahl Zuluftventilator (U/min)", section_exhaust_fan: "Drehzahl Abluftventilator (U/min)", fan_max_rpm: "H\u00f6chstdrehzahl der Ventilatoren (U/min)", section_exhaust_airflow: "Abluftmenge", section_target_humidity: "Sollfeuchte", section_humidity_control: "Schalter Feuchteregelung", layout_hrv_diagram: "Luftstr\u00f6me", layout_hrv_one_duct: "Wandger\u00e4t, ein Kanal", layout_hrv_pair: "Paar in der Wand", section_supply_temperature: "Zulufttemperatur", section_extract_temperature: "Ablufttemperatur", section_exhaust_temperature: "Fortlufttemperatur", section_bypass: "Bypass", section_airflow: "Luftmenge", hrv_t_outdoor: "Au\u00dfenluft", hrv_t_supply: "Zuluft", hrv_t_extract: "Abluft", hrv_t_exhaust: "Fortluft", hrv_outside: "drau\u00dfen", hrv_room: "Raum",
-    type_camera: "Kamera", cam_idle: "Bereit", cam_live: "Live", cam_rec: "Aufnahme", cam_motion: "Bewegung erkannt", cam_off: "Aus", cam_line_last_motion: "Letzte Bewegung", cam_line_night: "Nachtsicht", cam_line_signal: "Signal", section_motion: "Bewegungssensor", section_recording: "Aufnahmesensor", section_night_vision: "Nachtsicht", section_privacy: "Privatsph\u00e4re-Modus", section_signal: "Signalst\u00e4rke", layout_cam_indoor: "Innen, schwenkbar", layout_cam_tube: "Innen, Zylinder", layout_cam_outdoor: "Au\u00dfen", layout_cam_dome: "Kuppel", layout_cam_doorbell: "T\u00fcrklingel", cam_ring: "Es klingelt", cam_line_last_ring: "Zuletzt geklingelt", section_ring: "Klingeltaste", type_mailbox: "Briefkasten", mb_empty: "Leer", mb_mail: "Post", mb_front_open: "Vordert\u00fcr offen", mb_back_open: "R\u00fcckt\u00fcr offen", mb_line_count: "Post erhalten", mb_line_last: "Letzte Post", mb_front_door: "Vordert\u00fcr", mb_back_door: "R\u00fcckt\u00fcr", mb_open: "Offen", mb_closed: "Geschlossen", section_mail_count: "Postz\u00e4hler", layout_mb_through: "Durchwurf", layout_mb_classic: "Klassisch", mb_street: "Stra\u00dfe", mb_house: "Haus", mb_front_side: "Stra\u00dfenseite", mb_side_left: "Links", mb_side_right: "Rechts",
+    type_camera: "Kamera", cam_idle: "Bereit", cam_live: "Live", cam_rec: "Aufnahme", cam_motion: "Bewegung erkannt", cam_off: "Aus", cam_line_last_motion: "Letzte Bewegung", cam_line_night: "Nachtsicht", cam_line_signal: "Signal", section_motion: "Bewegungssensor", section_recording: "Aufnahmesensor", section_night_vision: "Nachtsicht", section_privacy: "Privatsph\u00e4re-Modus", section_signal: "Signalst\u00e4rke", layout_cam_indoor: "Innen, schwenkbar", layout_cam_tube: "Innen, Zylinder", layout_cam_outdoor: "Au\u00dfen", layout_cam_dome: "Kuppel", layout_cam_doorbell: "T\u00fcrklingel", cam_ring: "Es klingelt", cam_line_last_ring: "Zuletzt geklingelt", section_ring: "Klingeltaste", type_mailbox: "Briefkasten", mb_empty: "Leer", mb_mail: "Post", mb_front_open: "Vordert\u00fcr offen", mb_back_open: "R\u00fcckt\u00fcr offen", mb_line_count: "Post erhalten", mb_line_last: "Letzte Post", mb_front_door: "Vordert\u00fcr", mb_back_door: "R\u00fcckt\u00fcr", mb_open: "Offen", mb_closed: "Geschlossen", section_mail_count: "Postz\u00e4hler", layout_mb_through: "Durchwurf", layout_mb_classic: "Klassisch", mb_street: "Stra\u00dfe", mb_house: "Haus", mb_front_side: "Stra\u00dfenseite", mb_side_left: "Links", mb_side_right: "Rechts", type_water_pump: "Wasserpumpe", type_floor_heating: "Fu\u00dfbodenheizung", type_spa: "Whirlpool", type_sauna: "Sauna", type_aquarium: "Aquarium", type_meter: "Stromz\u00e4hler", type_christmas_tree: "Weihnachtsbaum", layout_chest: "Gefriertruhe", layout_drawers: "Schubladen-Gefrierschrank", layout_pump_booster: "Hauswasserwerk", layout_pump_sump: "Tauchpumpe", layout_floor_water: "Warmwasser", layout_floor_electric: "Elektrisch", layout_robot_pool: "Poolroboter", wp_pumping: "Pumpt", wp_high: "Hoher Pegel", spa_bubbles: "Sprudel", sauna_ready: "Bereit", aq_lit: "Licht an", aq_dark: "Licht aus", meter_low: "Geringer Verbrauch", meter_high: "Hoher Verbrauch", section_pressure: "Druck", section_water_level: "Wasserstand", section_high_level: "Alarm hoher Pegel", level_max: "Pegel bei voll", section_bubbles: "Sprudel", section_tariff: "Tarifzeit", high_power: "Hoher Verbrauch ab (W oder VA)", tree_palette: "Farben", palette_multicolor: "Bunt", palette_red_gold: "Rot und Gold", palette_red_silver: "Rot und Silber", palette_gold_silver: "Gold und Silber", palette_blue_silver: "Blau und Silber", palette_white_silver: "Wei\u00df und Silber", palette_red_green: "Rot und Gr\u00fcn", presents: "Geschenke", presents_auto: "Am 24. und 25. Dezember", presents_show: "Immer", presents_hide: "Nie", tree_on: "An", tree_off: "Aus",
     type_lamp: "Lampe", lamp_off: "Aus", lamp_on: "An", lamp_line_brightness: "Helligkeit", lamp_line_color_temp: "Farbtemperatur", lamp_line_effect: "Effekt", lamp_spots: "Anzahl der Spots", layout_lamp_bulb: "Gl\u00fchbirne", layout_lamp_bedside: "Nachttischlampe", layout_lamp_floor: "Bogenleuchte", layout_lamp_torch: "Deckenfluter", layout_lamp_pendant: "Pendelleuchte", layout_lamp_strip: "LED-Streifen", layout_lamp_spot: "Einbaustrahler", layout_lamp_panels: "Lichtpaneele", layout_lamp_desk: "Schreibtischlampe", layout_lamp_wall: "Wandlaterne",
     speed_power_max: "Leistung bei h\u00f6chster Stufe (W)", speed_power_custom: "Eigene Stufenschwellen", speed_power_2: "Stufe 2 ab (W)", speed_power_3: "Stufe 3 ab (W)",
     fw_self_cleaning: "Selbstreinigung", fw_dirty_full: "Schmutzwassertank voll", fw_clean_empty: "Frischwassertank leer",
@@ -681,7 +681,7 @@ const T = {
     type_air_conditioner: "Klimaanlage", ac_off: "Aus", ac_cooling: "K\u00fchlen", ac_heating: "Heizen", ac_drying: "Entfeuchten", ac_fan_only: "Nur L\u00fcfter", ac_auto: "Automatik", ac_idle: "Bereit", ac_defrost: "Abtauen", ac_preheating: "Vorheizen", ac_line_humidity: "Luftfeuchte", section_vane_vertical: "Lamelle oben/unten", section_vane_horizontal: "Lamelle links/rechts", section_purifier: "Luftreiniger (nanoe, Plasma)", section_defrost: "Abtauanzeige",
     type_dehumidifier: "Luftentfeuchter", type_space_heater: "Heizger\u00e4t", type_towel_warmer: "Handtuchheizk\u00f6rper", dh_laundry: "W\u00e4sche trocknen", dh_full: "Tank voll", dh_line_tank: "Tank", line_mode: "Modus", tw_comfort: "Komfort", tw_eco: "Eco", tw_frost: "Frostschutz", tw_boost: "Boost", tw_drying: "Trocknen", section_tank: "Wassertank", section_current_humidity: "Feuchtesensor", section_heater_layout: "Modell", layout_fan_heater: "Heizl\u00fcfter", layout_oil_radiator: "\u00d6lradiator",
     type_air_fryer: "Hei\u00dfluftfritteuse", af_cooking: "Garen", af_shake: "Korb sch\u00fctteln", af_basket_out: "Korb entnommen", af_preheated: "Vorgeheizt", af_basket2: "Korb 2", section_fryer_layout: "Modell", layout_basket: "Korb", layout_window: "Korb mit Sichtfenster", layout_dual: "Doppelkorb", section_basket: "Korbsensor", section_shake: "Sch\u00fcttel-Erinnerung", section_basket2: "Zustand Korb 2 (Doppelkorb)",
-    last_cycle: "Letzter Zyklus", show_last_cycle: "Letzten Zyklus anzeigen", power_off_delay: "Verz\u00f6gerung vor \u201eFertig\u201c (Min., nur Steckdose)",
+    last_cycle: "Letzter Zyklus", show_last_cycle: "Letzten Zyklus anzeigen", power_off_delay: "Verz\u00f6gerung vor \u201eFertig\u201c (Min., nur Steckdose)", section_energy: "Verbrauchte Energie", energy_price: "Preis pro kWh (Zahl oder Entit\u00e4t)", energy_line: "Energie", cost_line: "Kosten", show_elapsed: "Verstrichene Zeit des Zyklus anzeigen", elapsed_line: "Verstrichen", show_today: "Laufzeit und Starts von heute anzeigen", today_line: "Heute", starts_one: "{n} Start", starts_other: "{n} Starts", section_tower: "Rechner (zweite Steckdose)", tower_line: "Rechner", tower_on: "Rechner an", tower_toggle: "Rechner",
     washer_dryer: "Waschtrockner (w\u00e4scht und trocknet)", step_drying: "Trocknen", section_cycle_phase: "Programmphase",
     step_prewash: "Vorw\u00e4sche", step_soaking: "Einweichen", step_weighing: "Wiegen", step_filling: "Bef\u00fcllen", step_washing: "Waschen", step_rinsing: "Sp\u00fclen", step_draining: "Abpumpen", step_spinning: "Schleudern", step_cooling: "Abk\u00fchlen", step_anti_crease: "Knitterschutz", step_steam: "Dampf",
     type_ev_charger: "Wallbox", ev_no_vehicle: "Kein Fahrzeug", ev_connected: "Fahrzeug angesteckt", ev_awaiting_auth: "Wartet auf Freigabe", ev_charging: "L\u00e4dt", ev_paused: "Laden pausiert", ev_scheduled: "Geplant", ev_done: "Laden abgeschlossen", ev_error: "Fehler", ev_offline: "Offline", section_vehicle: "Fahrzeug angesteckt (Steckersensor)", section_session_energy: "Energie des Ladevorgangs", section_current_limit: "Ladestrombegrenzung", ev_power_threshold: "L\u00e4dt oberhalb dieser Leistung (W)", ev_line_session: "Geladen", ev_line_limit: "Stromgrenze",
@@ -828,7 +828,7 @@ const T = {
     layout_robot_stick: "Aspiradora escoba", stick_charged: "Cargada",
     layout_robot_floor_washer: "Fregona el\u00e9ctrica", stick_away: "Fuera de la base", stick_away_threshold: "Fuera de la base por debajo de esta potencia (W)",
     type_diffuser: "Difusor de aceites esenciales", dif_mist: "Difundiendo", dif_inter: "Intermitente", dif_low: "Bruma ligera", dif_empty: "Dep\u00f3sito vac\u00edo", dif_mode: "Modo de niebla", layout_dif_drop: "Gota", layout_dif_cone: "Cono", layout_dif_stone: "Piedra", layout_dif_flame: "Llama", layout_dif_nebulizer: "Nebulizador", section_tank_empty: "Sensor de dep\u00f3sito vac\u00edo", type_hrv: "Ventilaci\u00f3n con recuperaci\u00f3n de calor", hrv_run: "Ventilando", hrv_boost: "Boost", hrv_bypass: "Bypass", hrv_defrost: "Descongelando", hrv_filter: "Cambiar filtro", hrv_away: "Ausente", hrv_recirc: "Recirculaci\u00f3n", hrv_humidity: "Control de humedad", hrv_inter: "Intermitente", hrv_inter_paused: "Intermitente, en pausa", hrv_mode: "Modo", hrv_supply_fan: "Impulsi\u00f3n", hrv_exhaust_fan: "Extracci\u00f3n", section_supply_fan: "Velocidad del ventilador de impulsi\u00f3n (rpm)", section_exhaust_fan: "Velocidad del ventilador de extracci\u00f3n (rpm)", fan_max_rpm: "Velocidad m\u00e1xima de los ventiladores (rpm)", section_exhaust_airflow: "Caudal de extracci\u00f3n", section_target_humidity: "Consigna de humedad", section_humidity_control: "Interruptor del control de humedad", layout_hrv_diagram: "Flujos de aire", layout_hrv_one_duct: "Mural, un conducto", layout_hrv_pair: "Pareja en el muro", section_supply_temperature: "Temperatura de impulsi\u00f3n", section_extract_temperature: "Temperatura de extracci\u00f3n", section_exhaust_temperature: "Temperatura de expulsi\u00f3n", section_bypass: "Bypass", section_airflow: "Caudal de aire", hrv_t_outdoor: "aire nuevo", hrv_t_supply: "impulsi\u00f3n", hrv_t_extract: "extracci\u00f3n", hrv_t_exhaust: "expulsi\u00f3n", hrv_outside: "fuera", hrv_room: "estancia",
-    type_camera: "C\u00e1mara", cam_idle: "En reposo", cam_live: "En directo", cam_rec: "Grabando", cam_motion: "Movimiento detectado", cam_off: "Apagada", cam_line_last_motion: "\u00daltimo movimiento", cam_line_night: "Visi\u00f3n nocturna", cam_line_signal: "Se\u00f1al", section_motion: "Sensor de movimiento", section_recording: "Sensor de grabaci\u00f3n", section_night_vision: "Visi\u00f3n nocturna", section_privacy: "Modo privacidad", section_signal: "Intensidad de se\u00f1al", layout_cam_indoor: "Interior motorizada", layout_cam_tube: "Interior cil\u00edndrica", layout_cam_outdoor: "Exterior", layout_cam_dome: "Domo", layout_cam_doorbell: "Timbre", cam_ring: "Est\u00e1n llamando", cam_line_last_ring: "\u00daltimo timbrazo", section_ring: "Bot\u00f3n del timbre", type_mailbox: "Buz\u00f3n", mb_empty: "Vac\u00edo", mb_mail: "Correo", mb_front_open: "Puerta delantera abierta", mb_back_open: "Puerta trasera abierta", mb_line_count: "Correo recibido", mb_line_last: "\u00daltimo correo", mb_front_door: "Puerta delantera", mb_back_door: "Puerta trasera", mb_open: "Abierta", mb_closed: "Cerrada", section_mail_count: "Contador de correo", layout_mb_through: "Pasante", layout_mb_classic: "Cl\u00e1sico", mb_street: "calle", mb_house: "casa", mb_front_side: "Lado de la calle", mb_side_left: "Izquierda", mb_side_right: "Derecha",
+    type_camera: "C\u00e1mara", cam_idle: "En reposo", cam_live: "En directo", cam_rec: "Grabando", cam_motion: "Movimiento detectado", cam_off: "Apagada", cam_line_last_motion: "\u00daltimo movimiento", cam_line_night: "Visi\u00f3n nocturna", cam_line_signal: "Se\u00f1al", section_motion: "Sensor de movimiento", section_recording: "Sensor de grabaci\u00f3n", section_night_vision: "Visi\u00f3n nocturna", section_privacy: "Modo privacidad", section_signal: "Intensidad de se\u00f1al", layout_cam_indoor: "Interior motorizada", layout_cam_tube: "Interior cil\u00edndrica", layout_cam_outdoor: "Exterior", layout_cam_dome: "Domo", layout_cam_doorbell: "Timbre", cam_ring: "Est\u00e1n llamando", cam_line_last_ring: "\u00daltimo timbrazo", section_ring: "Bot\u00f3n del timbre", type_mailbox: "Buz\u00f3n", mb_empty: "Vac\u00edo", mb_mail: "Correo", mb_front_open: "Puerta delantera abierta", mb_back_open: "Puerta trasera abierta", mb_line_count: "Correo recibido", mb_line_last: "\u00daltimo correo", mb_front_door: "Puerta delantera", mb_back_door: "Puerta trasera", mb_open: "Abierta", mb_closed: "Cerrada", section_mail_count: "Contador de correo", layout_mb_through: "Pasante", layout_mb_classic: "Cl\u00e1sico", mb_street: "calle", mb_house: "casa", mb_front_side: "Lado de la calle", mb_side_left: "Izquierda", mb_side_right: "Derecha", type_water_pump: "Bomba de agua", type_floor_heating: "Suelo radiante", type_spa: "Spa", type_sauna: "Sauna", type_aquarium: "Acuario", type_meter: "Contador el\u00e9ctrico", type_christmas_tree: "\u00c1rbol de Navidad", layout_chest: "Arc\u00f3n congelador", layout_drawers: "Congelador de cajones", layout_pump_booster: "Grupo de presi\u00f3n", layout_pump_sump: "Bomba de achique", layout_floor_water: "Agua caliente", layout_floor_electric: "El\u00e9ctrico", layout_robot_pool: "Robot de piscina", wp_pumping: "Bombeando", wp_high: "Nivel alto", spa_bubbles: "Burbujas", sauna_ready: "Listo", aq_lit: "Luz encendida", aq_dark: "Luz apagada", meter_low: "Consumo bajo", meter_high: "Consumo alto", section_pressure: "Presi\u00f3n", section_water_level: "Nivel de agua", section_high_level: "Alarma de nivel alto", level_max: "Nivel lleno", section_bubbles: "Burbujas", section_tariff: "Periodo tarifario", high_power: "Consumo alto desde (W o VA)", tree_palette: "Colores", palette_multicolor: "Multicolor", palette_red_gold: "Rojo y oro", palette_red_silver: "Rojo y plata", palette_gold_silver: "Oro y plata", palette_blue_silver: "Azul y plata", palette_white_silver: "Blanco y plata", palette_red_green: "Rojo y verde", presents: "Regalos", presents_auto: "El 24 y 25 de diciembre", presents_show: "Siempre", presents_hide: "Nunca", tree_on: "Encendido", tree_off: "Apagado",
     type_lamp: "L\u00e1mpara", lamp_off: "Apagada", lamp_on: "Encendida", lamp_line_brightness: "Brillo", lamp_line_color_temp: "Temperatura de color", lamp_line_effect: "Efecto", lamp_spots: "N\u00famero de focos", layout_lamp_bulb: "Bombilla", layout_lamp_bedside: "L\u00e1mpara de mesita", layout_lamp_floor: "L\u00e1mpara de arco", layout_lamp_torch: "L\u00e1mpara hal\u00f3gena de pie", layout_lamp_pendant: "L\u00e1mpara colgante", layout_lamp_strip: "Tira LED", layout_lamp_spot: "Focos empotrados", layout_lamp_panels: "Paneles de luz", layout_lamp_desk: "L\u00e1mpara de escritorio", layout_lamp_wall: "Farol de pared",
     speed_power_max: "Potencia a velocidad m\u00e1xima (W)", speed_power_custom: "Umbrales de velocidad propios", speed_power_2: "Velocidad 2 desde (W)", speed_power_3: "Velocidad 3 desde (W)",
     fw_self_cleaning: "Autolimpieza", fw_dirty_full: "Dep\u00f3sito de agua sucia lleno", fw_clean_empty: "Dep\u00f3sito de agua limpia vac\u00edo",
@@ -850,7 +850,7 @@ const T = {
     type_air_conditioner: "Aire acondicionado", ac_off: "Apagado", ac_cooling: "Enfriando", ac_heating: "Calentando", ac_drying: "Deshumidificando", ac_fan_only: "Solo ventilador", ac_auto: "Autom\u00e1tico", ac_idle: "En espera", ac_defrost: "Descongelando", ac_preheating: "Precalentando", ac_line_humidity: "Humedad", section_vane_vertical: "Deflector arriba/abajo", section_vane_horizontal: "Deflector izquierda/derecha", section_purifier: "Purificador de aire (nanoe, plasma)", section_defrost: "Indicador de descongelaci\u00f3n",
     type_dehumidifier: "Deshumidificador", type_space_heater: "Calefactor", type_towel_warmer: "Toallero el\u00e9ctrico", dh_laundry: "Secado de ropa", dh_full: "Dep\u00f3sito lleno", dh_line_tank: "Dep\u00f3sito", line_mode: "Modo", tw_comfort: "Confort", tw_eco: "Eco", tw_frost: "Antihielo", tw_boost: "Boost", tw_drying: "Secado", section_tank: "Dep\u00f3sito de agua", section_current_humidity: "Sensor de humedad", section_heater_layout: "Modelo", layout_fan_heater: "Calefactor de aire", layout_oil_radiator: "Radiador de aceite",
     type_air_fryer: "Freidora de aire", af_cooking: "Cocinando", af_shake: "Agitar la cesta", af_basket_out: "Cesta fuera", af_preheated: "Precalentada", af_basket2: "Cesta 2", section_fryer_layout: "Modelo", layout_basket: "Cesta", layout_window: "Cesta con ventana", layout_dual: "Doble cesta", section_basket: "Sensor de la cesta", section_shake: "Aviso de agitar", section_basket2: "Estado de la cesta 2 (doble)",
-    last_cycle: "\u00daltimo ciclo", show_last_cycle: "Mostrar el \u00faltimo ciclo", power_off_delay: "Retraso antes de \u00abTerminado\u00bb (min, solo enchufe)",
+    last_cycle: "\u00daltimo ciclo", show_last_cycle: "Mostrar el \u00faltimo ciclo", power_off_delay: "Retraso antes de \u00abTerminado\u00bb (min, solo enchufe)", section_energy: "Energ\u00eda consumida", energy_price: "Precio del kWh (n\u00famero o entidad)", energy_line: "Energ\u00eda", cost_line: "Coste", show_elapsed: "Mostrar el tiempo transcurrido del ciclo", elapsed_line: "Transcurrido", show_today: "Mostrar el funcionamiento de hoy y los arranques", today_line: "Hoy", starts_one: "{n} arranque", starts_other: "{n} arranques", section_tower: "Torre (segundo enchufe)", tower_line: "Torre", tower_on: "Torre encendida", tower_toggle: "Torre",
     washer_dryer: "Lavasecadora (lava y seca)", step_drying: "Secado", section_cycle_phase: "Fase del ciclo",
     step_prewash: "Prelavado", step_soaking: "Remojo", step_weighing: "Pesaje", step_filling: "Llenado", step_washing: "Lavado", step_rinsing: "Aclarado", step_draining: "Desag\u00fce", step_spinning: "Centrifugado", step_cooling: "Enfriamiento", step_anti_crease: "Antiarrugas", step_steam: "Vapor",
     type_ev_charger: "Cargador de VE", ev_no_vehicle: "Sin veh\u00edculo", ev_connected: "Veh\u00edculo conectado", ev_awaiting_auth: "Esperando autorizaci\u00f3n", ev_charging: "Cargando", ev_paused: "Carga en pausa", ev_scheduled: "Carga programada", ev_done: "Carga completada", ev_error: "Error", ev_offline: "Sin conexi\u00f3n", section_vehicle: "Veh\u00edculo conectado (sensor del conector)", section_session_energy: "Energ\u00eda de la sesi\u00f3n", section_current_limit: "L\u00edmite de corriente de carga", ev_power_threshold: "Cargando por encima de esta potencia (W)", ev_line_session: "Cargado", ev_line_limit: "L\u00edmite de corriente",
@@ -997,7 +997,7 @@ const T = {
     layout_robot_stick: "Scopa elettrica", stick_charged: "Carica",
     layout_robot_floor_washer: "Lavapavimenti", stick_away: "Fuori dalla base", stick_away_threshold: "Fuori dalla base sotto questa potenza (W)",
     type_diffuser: "Diffusore di oli essenziali", dif_mist: "Diffusione", dif_inter: "Intermittente", dif_low: "Nebbia leggera", dif_empty: "Serbatoio vuoto", dif_mode: "Modalit\u00e0 nebbia", layout_dif_drop: "Goccia", layout_dif_cone: "Cono", layout_dif_stone: "Ciottolo", layout_dif_flame: "Fiamma", layout_dif_nebulizer: "Nebulizzatore", section_tank_empty: "Sensore serbatoio vuoto", type_hrv: "VMC a doppio flusso", hrv_run: "In funzione", hrv_boost: "Boost", hrv_bypass: "Bypass", hrv_defrost: "Sbrinamento", hrv_filter: "Sostituire il filtro", hrv_away: "Assente", hrv_recirc: "Ricircolo", hrv_humidity: "Controllo umidit\u00e0", hrv_inter: "Intermittente", hrv_inter_paused: "Intermittente, in pausa", hrv_mode: "Modalit\u00e0", hrv_supply_fan: "Mandata", hrv_exhaust_fan: "Estrazione", section_supply_fan: "Velocit\u00e0 ventilatore di mandata (giri/min)", section_exhaust_fan: "Velocit\u00e0 ventilatore di estrazione (giri/min)", fan_max_rpm: "Velocit\u00e0 massima dei ventilatori (giri/min)", section_exhaust_airflow: "Portata di estrazione", section_target_humidity: "Umidit\u00e0 impostata", section_humidity_control: "Interruttore controllo umidit\u00e0", layout_hrv_diagram: "Flussi d'aria", layout_hrv_one_duct: "A parete, un condotto", layout_hrv_pair: "Coppia a parete", section_supply_temperature: "Temperatura di mandata", section_extract_temperature: "Temperatura di ripresa", section_exhaust_temperature: "Temperatura di espulsione", section_bypass: "Bypass", section_airflow: "Portata d'aria", hrv_t_outdoor: "aria nuova", hrv_t_supply: "mandata", hrv_t_extract: "ripresa", hrv_t_exhaust: "espulsione", hrv_outside: "fuori", hrv_room: "stanza",
-    type_camera: "Telecamera", cam_idle: "In attesa", cam_live: "In diretta", cam_rec: "Registrazione", cam_motion: "Movimento rilevato", cam_off: "Spenta", cam_line_last_motion: "Ultimo movimento", cam_line_night: "Visione notturna", cam_line_signal: "Segnale", section_motion: "Sensore di movimento", section_recording: "Sensore di registrazione", section_night_vision: "Visione notturna", section_privacy: "Modalit\u00e0 privacy", section_signal: "Potenza del segnale", layout_cam_indoor: "Interna motorizzata", layout_cam_tube: "Interna a cilindro", layout_cam_outdoor: "Esterna", layout_cam_dome: "Dome", layout_cam_doorbell: "Campanello", cam_ring: "Stanno suonando", cam_line_last_ring: "Ultimo squillo", section_ring: "Pulsante del campanello", type_mailbox: "Cassetta postale", mb_empty: "Vuota", mb_mail: "Posta", mb_front_open: "Sportello anteriore aperto", mb_back_open: "Sportello posteriore aperto", mb_line_count: "Posta ricevuta", mb_line_last: "Ultima posta", mb_front_door: "Sportello anteriore", mb_back_door: "Sportello posteriore", mb_open: "Aperto", mb_closed: "Chiuso", section_mail_count: "Contatore della posta", layout_mb_through: "Passante", layout_mb_classic: "Classica", mb_street: "strada", mb_house: "casa", mb_front_side: "Lato strada", mb_side_left: "Sinistra", mb_side_right: "Destra",
+    type_camera: "Telecamera", cam_idle: "In attesa", cam_live: "In diretta", cam_rec: "Registrazione", cam_motion: "Movimento rilevato", cam_off: "Spenta", cam_line_last_motion: "Ultimo movimento", cam_line_night: "Visione notturna", cam_line_signal: "Segnale", section_motion: "Sensore di movimento", section_recording: "Sensore di registrazione", section_night_vision: "Visione notturna", section_privacy: "Modalit\u00e0 privacy", section_signal: "Potenza del segnale", layout_cam_indoor: "Interna motorizzata", layout_cam_tube: "Interna a cilindro", layout_cam_outdoor: "Esterna", layout_cam_dome: "Dome", layout_cam_doorbell: "Campanello", cam_ring: "Stanno suonando", cam_line_last_ring: "Ultimo squillo", section_ring: "Pulsante del campanello", type_mailbox: "Cassetta postale", mb_empty: "Vuota", mb_mail: "Posta", mb_front_open: "Sportello anteriore aperto", mb_back_open: "Sportello posteriore aperto", mb_line_count: "Posta ricevuta", mb_line_last: "Ultima posta", mb_front_door: "Sportello anteriore", mb_back_door: "Sportello posteriore", mb_open: "Aperto", mb_closed: "Chiuso", section_mail_count: "Contatore della posta", layout_mb_through: "Passante", layout_mb_classic: "Classica", mb_street: "strada", mb_house: "casa", mb_front_side: "Lato strada", mb_side_left: "Sinistra", mb_side_right: "Destra", type_water_pump: "Pompa dell'acqua", type_floor_heating: "Riscaldamento a pavimento", type_spa: "Spa", type_sauna: "Sauna", type_aquarium: "Acquario", type_meter: "Contatore elettrico", type_christmas_tree: "Albero di Natale", layout_chest: "Congelatore a pozzetto", layout_drawers: "Congelatore a cassetti", layout_pump_booster: "Autoclave", layout_pump_sump: "Pompa di sollevamento", layout_floor_water: "Acqua calda", layout_floor_electric: "Elettrico", layout_robot_pool: "Robot per piscina", wp_pumping: "Pompaggio", wp_high: "Livello alto", spa_bubbles: "Bolle", sauna_ready: "Pronto", aq_lit: "Luce accesa", aq_dark: "Luce spenta", meter_low: "Consumo basso", meter_high: "Consumo alto", section_pressure: "Pressione", section_water_level: "Livello dell'acqua", section_high_level: "Allarme livello alto", level_max: "Livello pieno", section_bubbles: "Bolle", section_tariff: "Fascia tariffaria", high_power: "Consumo alto da (W o VA)", tree_palette: "Colori", palette_multicolor: "Multicolore", palette_red_gold: "Rosso e oro", palette_red_silver: "Rosso e argento", palette_gold_silver: "Oro e argento", palette_blue_silver: "Blu e argento", palette_white_silver: "Bianco e argento", palette_red_green: "Rosso e verde", presents: "Regali", presents_auto: "Il 24 e 25 dicembre", presents_show: "Sempre", presents_hide: "Mai", tree_on: "Acceso", tree_off: "Spento",
     type_lamp: "Lampada", lamp_off: "Spenta", lamp_on: "Accesa", lamp_line_brightness: "Luminosit\u00e0", lamp_line_color_temp: "Temperatura colore", lamp_line_effect: "Effetto", lamp_spots: "Numero di faretti", layout_lamp_bulb: "Lampadina", layout_lamp_bedside: "Lampada da comodino", layout_lamp_floor: "Lampada ad arco", layout_lamp_torch: "Piantana alogena", layout_lamp_pendant: "Lampada a sospensione", layout_lamp_strip: "Striscia LED", layout_lamp_spot: "Faretti a incasso", layout_lamp_panels: "Pannelli luminosi", layout_lamp_desk: "Lampada da scrivania", layout_lamp_wall: "Lanterna a parete",
     speed_power_max: "Potenza alla velocit\u00e0 massima (W)", speed_power_custom: "Soglie di velocit\u00e0 personalizzate", speed_power_2: "Velocit\u00e0 2 da (W)", speed_power_3: "Velocit\u00e0 3 da (W)",
     fw_self_cleaning: "Autopulizia", fw_dirty_full: "Serbatoio acqua sporca pieno", fw_clean_empty: "Serbatoio acqua pulita vuoto",
@@ -1019,7 +1019,7 @@ const T = {
     type_air_conditioner: "Condizionatore", ac_off: "Spento", ac_cooling: "Raffreddamento", ac_heating: "Riscaldamento", ac_drying: "Deumidificazione", ac_fan_only: "Solo ventilazione", ac_auto: "Automatico", ac_idle: "In attesa", ac_defrost: "Sbrinamento", ac_preheating: "Preriscaldamento", ac_line_humidity: "Umidit\u00e0", section_vane_vertical: "Deflettore alto/basso", section_vane_horizontal: "Deflettore sinistra/destra", section_purifier: "Purificatore d'aria (nanoe, plasma)", section_defrost: "Indicatore di sbrinamento",
     type_dehumidifier: "Deumidificatore", type_space_heater: "Stufetta", type_towel_warmer: "Scaldasalviette", dh_laundry: "Asciugatura bucato", dh_full: "Serbatoio pieno", dh_line_tank: "Serbatoio", line_mode: "Modalit\u00e0", tw_comfort: "Comfort", tw_eco: "Eco", tw_frost: "Antigelo", tw_boost: "Boost", tw_drying: "Asciugatura", section_tank: "Serbatoio dell'acqua", section_current_humidity: "Sensore di umidit\u00e0", section_heater_layout: "Modello", layout_fan_heater: "Termoventilatore", layout_oil_radiator: "Radiatore a olio",
     type_air_fryer: "Friggitrice ad aria", af_cooking: "Cottura", af_shake: "Scuotere il cestello", af_basket_out: "Cestello estratto", af_preheated: "Preriscaldata", af_basket2: "Cestello 2", section_fryer_layout: "Modello", layout_basket: "Cestello", layout_window: "Cestello con obl\u00f2", layout_dual: "Doppio cestello", section_basket: "Sensore del cestello", section_shake: "Promemoria per scuotere", section_basket2: "Stato del cestello 2 (doppio)",
-    last_cycle: "Ultimo ciclo", show_last_cycle: "Mostra l'ultimo ciclo", power_off_delay: "Ritardo prima di \u00abTerminato\u00bb (min, solo presa)",
+    last_cycle: "Ultimo ciclo", show_last_cycle: "Mostra l'ultimo ciclo", power_off_delay: "Ritardo prima di \u00abTerminato\u00bb (min, solo presa)", section_energy: "Energia consumata", energy_price: "Prezzo del kWh (numero o entit\u00e0)", energy_line: "Energia", cost_line: "Costo", show_elapsed: "Mostra il tempo trascorso del ciclo", elapsed_line: "Trascorso", show_today: "Mostra il funzionamento di oggi e gli avvii", today_line: "Oggi", starts_one: "{n} avvio", starts_other: "{n} avvii", section_tower: "Case (seconda presa)", tower_line: "Case", tower_on: "Case acceso", tower_toggle: "Case",
     washer_dryer: "Lavasciuga (lava e asciuga)", step_drying: "Asciugatura", section_cycle_phase: "Fase del ciclo",
     step_prewash: "Prelavaggio", step_soaking: "Ammollo", step_weighing: "Pesatura", step_filling: "Carico acqua", step_washing: "Lavaggio", step_rinsing: "Risciacquo", step_draining: "Scarico", step_spinning: "Centrifuga", step_cooling: "Raffreddamento", step_anti_crease: "Antipiega", step_steam: "Vapore",
     type_ev_charger: "Stazione di ricarica", ev_no_vehicle: "Nessun veicolo", ev_connected: "Veicolo collegato", ev_awaiting_auth: "In attesa di autorizzazione", ev_charging: "In carica", ev_paused: "Ricarica in pausa", ev_scheduled: "Ricarica programmata", ev_done: "Ricarica completata", ev_error: "Errore", ev_offline: "Offline", section_vehicle: "Veicolo collegato (sensore della presa)", section_session_energy: "Energia della sessione", section_current_limit: "Limite di corrente di ricarica", ev_power_threshold: "In carica sopra questa potenza (W)", ev_line_session: "Ricaricato", ev_line_limit: "Limite di corrente",
@@ -1166,7 +1166,7 @@ const T = {
     layout_robot_stick: "Steelstofzuiger", stick_charged: "Opgeladen",
     layout_robot_floor_washer: "Vloerwasser", stick_away: "Niet op de basis", stick_away_threshold: "Niet op de basis onder dit vermogen (W)",
     type_diffuser: "Aromadiffuser", dif_mist: "Verneveling", dif_inter: "Interval", dif_low: "Lichte nevel", dif_empty: "Tank leeg", dif_mode: "Nevelstand", layout_dif_drop: "Druppel", layout_dif_cone: "Kegel", layout_dif_stone: "Kiezel", layout_dif_flame: "Vlam", layout_dif_nebulizer: "Vernevelaar", section_tank_empty: "Sensor lege tank", type_hrv: "Balansventilatie (WTW)", hrv_run: "Ventileert", hrv_boost: "Boost", hrv_bypass: "Bypass", hrv_defrost: "Ontdooien", hrv_filter: "Filter vervangen", hrv_away: "Afwezig", hrv_recirc: "Recirculatie", hrv_humidity: "Vochtregeling", hrv_inter: "Intermitterend", hrv_inter_paused: "Intermitterend, gepauzeerd", hrv_mode: "Modus", hrv_supply_fan: "Toevoer", hrv_exhaust_fan: "Afvoer", section_supply_fan: "Toerental toevoerventilator (tpm)", section_exhaust_fan: "Toerental afvoerventilator (tpm)", fan_max_rpm: "Maximaal toerental ventilatoren (tpm)", section_exhaust_airflow: "Afvoerdebiet", section_target_humidity: "Gewenste vochtigheid", section_humidity_control: "Schakelaar vochtregeling", layout_hrv_diagram: "Luchtstromen", layout_hrv_one_duct: "Wandunit, \u00e9\u00e9n kanaal", layout_hrv_pair: "Paar in de muur", section_supply_temperature: "Toevoertemperatuur", section_extract_temperature: "Afzuigtemperatuur", section_exhaust_temperature: "Afvoertemperatuur", section_bypass: "Bypass", section_airflow: "Luchtdebiet", hrv_t_outdoor: "verse lucht", hrv_t_supply: "toevoer", hrv_t_extract: "afzuiging", hrv_t_exhaust: "afvoer", hrv_outside: "buiten", hrv_room: "kamer",
-    type_camera: "Camera", cam_idle: "Stand-by", cam_live: "Live", cam_rec: "Opname", cam_motion: "Beweging gedetecteerd", cam_off: "Uit", cam_line_last_motion: "Laatste beweging", cam_line_night: "Nachtzicht", cam_line_signal: "Signaal", section_motion: "Bewegingssensor", section_recording: "Opnamesensor", section_night_vision: "Nachtzicht", section_privacy: "Privacymodus", section_signal: "Signaalsterkte", layout_cam_indoor: "Binnen, draaibaar", layout_cam_tube: "Binnen, cilinder", layout_cam_outdoor: "Buiten", layout_cam_dome: "Dome", layout_cam_doorbell: "Deurbel", cam_ring: "Er wordt aangebeld", cam_line_last_ring: "Laatst aangebeld", section_ring: "Deurbelknop", type_mailbox: "Brievenbus", mb_empty: "Leeg", mb_mail: "Post", mb_front_open: "Voordeur open", mb_back_open: "Achterdeur open", mb_line_count: "Post ontvangen", mb_line_last: "Laatste post", mb_front_door: "Voordeur", mb_back_door: "Achterdeur", mb_open: "Open", mb_closed: "Dicht", section_mail_count: "Postteller", layout_mb_through: "Doorsteek", layout_mb_classic: "Klassiek", mb_street: "straat", mb_house: "huis", mb_front_side: "Straatkant", mb_side_left: "Links", mb_side_right: "Rechts",
+    type_camera: "Camera", cam_idle: "Stand-by", cam_live: "Live", cam_rec: "Opname", cam_motion: "Beweging gedetecteerd", cam_off: "Uit", cam_line_last_motion: "Laatste beweging", cam_line_night: "Nachtzicht", cam_line_signal: "Signaal", section_motion: "Bewegingssensor", section_recording: "Opnamesensor", section_night_vision: "Nachtzicht", section_privacy: "Privacymodus", section_signal: "Signaalsterkte", layout_cam_indoor: "Binnen, draaibaar", layout_cam_tube: "Binnen, cilinder", layout_cam_outdoor: "Buiten", layout_cam_dome: "Dome", layout_cam_doorbell: "Deurbel", cam_ring: "Er wordt aangebeld", cam_line_last_ring: "Laatst aangebeld", section_ring: "Deurbelknop", type_mailbox: "Brievenbus", mb_empty: "Leeg", mb_mail: "Post", mb_front_open: "Voordeur open", mb_back_open: "Achterdeur open", mb_line_count: "Post ontvangen", mb_line_last: "Laatste post", mb_front_door: "Voordeur", mb_back_door: "Achterdeur", mb_open: "Open", mb_closed: "Dicht", section_mail_count: "Postteller", layout_mb_through: "Doorsteek", layout_mb_classic: "Klassiek", mb_street: "straat", mb_house: "huis", mb_front_side: "Straatkant", mb_side_left: "Links", mb_side_right: "Rechts", type_water_pump: "Waterpomp", type_floor_heating: "Vloerverwarming", type_spa: "Spa", type_sauna: "Sauna", type_aquarium: "Aquarium", type_meter: "Elektriciteitsmeter", type_christmas_tree: "Kerstboom", layout_chest: "Vrieskist", layout_drawers: "Ladenvriezer", layout_pump_booster: "Hydrofoorpomp", layout_pump_sump: "Dompelpomp", layout_floor_water: "Warm water", layout_floor_electric: "Elektrisch", layout_robot_pool: "Zwembadrobot", wp_pumping: "Pompt", wp_high: "Hoog niveau", spa_bubbles: "Bubbels", sauna_ready: "Klaar", aq_lit: "Licht aan", aq_dark: "Licht uit", meter_low: "Laag verbruik", meter_high: "Hoog verbruik", section_pressure: "Druk", section_water_level: "Waterpeil", section_high_level: "Alarm hoog niveau", level_max: "Peil bij vol", section_bubbles: "Bubbels", section_tariff: "Tariefperiode", high_power: "Hoog verbruik vanaf (W of VA)", tree_palette: "Kleuren", palette_multicolor: "Veelkleurig", palette_red_gold: "Rood en goud", palette_red_silver: "Rood en zilver", palette_gold_silver: "Goud en zilver", palette_blue_silver: "Blauw en zilver", palette_white_silver: "Wit en zilver", palette_red_green: "Rood en groen", presents: "Cadeaus", presents_auto: "Op 24 en 25 december", presents_show: "Altijd", presents_hide: "Nooit", tree_on: "Aan", tree_off: "Uit",
     type_lamp: "Lamp", lamp_off: "Uit", lamp_on: "Aan", lamp_line_brightness: "Helderheid", lamp_line_color_temp: "Kleurtemperatuur", lamp_line_effect: "Effect", lamp_spots: "Aantal spots", layout_lamp_bulb: "Gloeilamp", layout_lamp_bedside: "Bedlampje", layout_lamp_floor: "Booglamp", layout_lamp_torch: "Halogeen staande lamp", layout_lamp_pendant: "Hanglamp", layout_lamp_strip: "Ledstrip", layout_lamp_spot: "Inbouwspots", layout_lamp_panels: "Lichtpanelen", layout_lamp_desk: "Bureaulamp", layout_lamp_wall: "Wandlantaarn",
     speed_power_max: "Vermogen op hoogste stand (W)", speed_power_custom: "Eigen standdrempels", speed_power_2: "Stand 2 vanaf (W)", speed_power_3: "Stand 3 vanaf (W)",
     fw_self_cleaning: "Zelfreiniging", fw_dirty_full: "Vuilwatertank vol", fw_clean_empty: "Schoonwatertank leeg",
@@ -1188,7 +1188,7 @@ const T = {
     type_air_conditioner: "Airconditioner", ac_off: "Uit", ac_cooling: "Koelen", ac_heating: "Verwarmen", ac_drying: "Ontvochtigen", ac_fan_only: "Alleen ventilator", ac_auto: "Automatisch", ac_idle: "Stand-by", ac_defrost: "Ontdooien", ac_preheating: "Voorverwarmen", ac_line_humidity: "Luchtvochtigheid", section_vane_vertical: "Lamel omhoog/omlaag", section_vane_horizontal: "Lamel links/rechts", section_purifier: "Luchtreiniger (nanoe, plasma)", section_defrost: "Ontdooi-indicator",
     type_dehumidifier: "Luchtontvochtiger", type_space_heater: "Kacheltje", type_towel_warmer: "Handdoekradiator", dh_laundry: "Was drogen", dh_full: "Tank vol", dh_line_tank: "Tank", line_mode: "Modus", tw_comfort: "Comfort", tw_eco: "Eco", tw_frost: "Vorstbeveiliging", tw_boost: "Boost", tw_drying: "Drogen", section_tank: "Watertank", section_current_humidity: "Vochtsensor", section_heater_layout: "Model", layout_fan_heater: "Ventilatorkachel", layout_oil_radiator: "Oliegevulde radiator",
     type_air_fryer: "Airfryer", af_cooking: "Bereiden", af_shake: "Mand schudden", af_basket_out: "Mand eruit", af_preheated: "Voorverwarmd", af_basket2: "Mand 2", section_fryer_layout: "Model", layout_basket: "Mand", layout_window: "Mand met venster", layout_dual: "Dubbele mand", section_basket: "Mandsensor", section_shake: "Schudherinnering", section_basket2: "Status mand 2 (dubbel)",
-    last_cycle: "Laatste cyclus", show_last_cycle: "Laatste cyclus tonen", power_off_delay: "Vertraging v\u00f3\u00f3r \u201eKlaar\u201d (min, alleen stekker)",
+    last_cycle: "Laatste cyclus", show_last_cycle: "Laatste cyclus tonen", power_off_delay: "Vertraging v\u00f3\u00f3r \u201eKlaar\u201d (min, alleen stekker)", section_energy: "Verbruikte energie", energy_price: "Prijs per kWh (getal of entiteit)", energy_line: "Energie", cost_line: "Kosten", show_elapsed: "Verstreken tijd van de cyclus tonen", elapsed_line: "Verstreken", show_today: "Looptijd en starts van vandaag tonen", today_line: "Vandaag", starts_one: "{n} start", starts_other: "{n} starts", section_tower: "Computerkast (tweede stekker)", tower_line: "Computerkast", tower_on: "Computerkast aan", tower_toggle: "Computerkast",
     washer_dryer: "Was-droogcombinatie (wast en droogt)", step_drying: "Drogen", section_cycle_phase: "Programmafase",
     step_prewash: "Voorwas", step_soaking: "Weken", step_weighing: "Wegen", step_filling: "Vullen", step_washing: "Wassen", step_rinsing: "Spoelen", step_draining: "Afpompen", step_spinning: "Centrifugeren", step_cooling: "Afkoelen", step_anti_crease: "Anti-kreuk", step_steam: "Stoom",
     type_ev_charger: "Laadpaal", ev_no_vehicle: "Geen voertuig", ev_connected: "Voertuig aangesloten", ev_awaiting_auth: "Wacht op autorisatie", ev_charging: "Laden", ev_paused: "Laden gepauzeerd", ev_scheduled: "Gepland", ev_done: "Laden voltooid", ev_error: "Fout", ev_offline: "Offline", section_vehicle: "Voertuig aangesloten (stekkersensor)", section_session_energy: "Energie van de laadsessie", section_current_limit: "Laadstroomlimiet", ev_power_threshold: "Laadt boven dit vermogen (W)", ev_line_session: "Geladen", ev_line_limit: "Stroomlimiet",
@@ -1335,7 +1335,7 @@ const T = {
     layout_robot_stick: "Aspirador vertical", stick_charged: "Carregado",
     layout_robot_floor_washer: "Lavadora de pavimentos", stick_away: "Fora da base", stick_away_threshold: "Fora da base abaixo desta pot\u00eancia (W)",
     type_diffuser: "Difusor de \u00f3leos essenciais", dif_mist: "Difundindo", dif_inter: "Intermitente", dif_low: "N\u00e9voa leve", dif_empty: "Reservat\u00f3rio vazio", dif_mode: "Modo de n\u00e9voa", layout_dif_drop: "Gota", layout_dif_cone: "Cone", layout_dif_stone: "Seixo", layout_dif_flame: "Chama", layout_dif_nebulizer: "Nebulizador", section_tank_empty: "Sensor de reservat\u00f3rio vazio", type_hrv: "Ventila\u00e7\u00e3o com recupera\u00e7\u00e3o de calor", hrv_run: "Ventilando", hrv_boost: "Boost", hrv_bypass: "Bypass", hrv_defrost: "Descongelando", hrv_filter: "Trocar filtro", hrv_away: "Ausente", hrv_recirc: "Recircula\u00e7\u00e3o", hrv_humidity: "Controlo de humidade", hrv_inter: "Intermitente", hrv_inter_paused: "Intermitente, em pausa", hrv_mode: "Modo", hrv_supply_fan: "Insufla\u00e7\u00e3o", hrv_exhaust_fan: "Extra\u00e7\u00e3o", section_supply_fan: "Velocidade do ventilador de insufla\u00e7\u00e3o (rpm)", section_exhaust_fan: "Velocidade do ventilador de extra\u00e7\u00e3o (rpm)", fan_max_rpm: "Velocidade m\u00e1xima dos ventiladores (rpm)", section_exhaust_airflow: "Caudal de extra\u00e7\u00e3o", section_target_humidity: "Humidade pretendida", section_humidity_control: "Interruptor do controlo de humidade", layout_hrv_diagram: "Fluxos de ar", layout_hrv_one_duct: "Mural, uma conduta", layout_hrv_pair: "Par na parede", section_supply_temperature: "Temperatura de insufla\u00e7\u00e3o", section_extract_temperature: "Temperatura de extra\u00e7\u00e3o", section_exhaust_temperature: "Temperatura de rejei\u00e7\u00e3o", section_bypass: "Bypass", section_airflow: "Caudal de ar", hrv_t_outdoor: "ar novo", hrv_t_supply: "insufla\u00e7\u00e3o", hrv_t_extract: "extra\u00e7\u00e3o", hrv_t_exhaust: "rejei\u00e7\u00e3o", hrv_outside: "fora", hrv_room: "divis\u00e3o",
-    type_camera: "C\u00e2mera", cam_idle: "Em espera", cam_live: "Ao vivo", cam_rec: "Gravando", cam_motion: "Movimento detetado", cam_off: "Desligada", cam_line_last_motion: "\u00daltimo movimento", cam_line_night: "Vis\u00e3o noturna", cam_line_signal: "Sinal", section_motion: "Sensor de movimento", section_recording: "Sensor de grava\u00e7\u00e3o", section_night_vision: "Vis\u00e3o noturna", section_privacy: "Modo privacidade", section_signal: "Intensidade do sinal", layout_cam_indoor: "Interior motorizada", layout_cam_tube: "Interior cil\u00edndrica", layout_cam_outdoor: "Exterior", layout_cam_dome: "Dome", layout_cam_doorbell: "Campainha", cam_ring: "Est\u00e3o a tocar", cam_line_last_ring: "\u00daltimo toque", section_ring: "Bot\u00e3o da campainha", type_mailbox: "Caixa de correio", mb_empty: "Vazia", mb_mail: "Correio", mb_front_open: "Porta da frente aberta", mb_back_open: "Porta de tr\u00e1s aberta", mb_line_count: "Correio recebido", mb_line_last: "\u00daltimo correio", mb_front_door: "Porta da frente", mb_back_door: "Porta de tr\u00e1s", mb_open: "Aberta", mb_closed: "Fechada", section_mail_count: "Contador de correio", layout_mb_through: "De atravessar", layout_mb_classic: "Cl\u00e1ssica", mb_street: "rua", mb_house: "casa", mb_front_side: "Lado da rua", mb_side_left: "Esquerda", mb_side_right: "Direita",
+    type_camera: "C\u00e2mera", cam_idle: "Em espera", cam_live: "Ao vivo", cam_rec: "Gravando", cam_motion: "Movimento detetado", cam_off: "Desligada", cam_line_last_motion: "\u00daltimo movimento", cam_line_night: "Vis\u00e3o noturna", cam_line_signal: "Sinal", section_motion: "Sensor de movimento", section_recording: "Sensor de grava\u00e7\u00e3o", section_night_vision: "Vis\u00e3o noturna", section_privacy: "Modo privacidade", section_signal: "Intensidade do sinal", layout_cam_indoor: "Interior motorizada", layout_cam_tube: "Interior cil\u00edndrica", layout_cam_outdoor: "Exterior", layout_cam_dome: "Dome", layout_cam_doorbell: "Campainha", cam_ring: "Est\u00e3o a tocar", cam_line_last_ring: "\u00daltimo toque", section_ring: "Bot\u00e3o da campainha", type_mailbox: "Caixa de correio", mb_empty: "Vazia", mb_mail: "Correio", mb_front_open: "Porta da frente aberta", mb_back_open: "Porta de tr\u00e1s aberta", mb_line_count: "Correio recebido", mb_line_last: "\u00daltimo correio", mb_front_door: "Porta da frente", mb_back_door: "Porta de tr\u00e1s", mb_open: "Aberta", mb_closed: "Fechada", section_mail_count: "Contador de correio", layout_mb_through: "De atravessar", layout_mb_classic: "Cl\u00e1ssica", mb_street: "rua", mb_house: "casa", mb_front_side: "Lado da rua", mb_side_left: "Esquerda", mb_side_right: "Direita", type_water_pump: "Bomba de \u00e1gua", type_floor_heating: "Piso radiante", type_spa: "Spa", type_sauna: "Sauna", type_aquarium: "Aqu\u00e1rio", type_meter: "Contador de eletricidade", type_christmas_tree: "\u00c1rvore de Natal", layout_chest: "Arca congeladora", layout_drawers: "Congelador de gavetas", layout_pump_booster: "Grupo hidropressor", layout_pump_sump: "Bomba de drenagem", layout_floor_water: "\u00c1gua quente", layout_floor_electric: "El\u00e9trico", layout_robot_pool: "Rob\u00f4 de piscina", wp_pumping: "A bombear", wp_high: "N\u00edvel alto", spa_bubbles: "Bolhas", sauna_ready: "Pronto", aq_lit: "Luz acesa", aq_dark: "Luz apagada", meter_low: "Consumo baixo", meter_high: "Consumo alto", section_pressure: "Press\u00e3o", section_water_level: "N\u00edvel da \u00e1gua", section_high_level: "Alarme de n\u00edvel alto", level_max: "N\u00edvel cheio", section_bubbles: "Bolhas", section_tariff: "Per\u00edodo tarif\u00e1rio", high_power: "Consumo alto a partir de (W ou VA)", tree_palette: "Cores", palette_multicolor: "Multicolor", palette_red_gold: "Vermelho e dourado", palette_red_silver: "Vermelho e prateado", palette_gold_silver: "Dourado e prateado", palette_blue_silver: "Azul e prateado", palette_white_silver: "Branco e prateado", palette_red_green: "Vermelho e verde", presents: "Presentes", presents_auto: "A 24 e 25 de dezembro", presents_show: "Sempre", presents_hide: "Nunca", tree_on: "Acesa", tree_off: "Apagada",
     type_lamp: "Candeeiro", lamp_off: "Apagado", lamp_on: "Aceso", lamp_line_brightness: "Brilho", lamp_line_color_temp: "Temperatura de cor", lamp_line_effect: "Efeito", lamp_spots: "N\u00famero de focos", layout_lamp_bulb: "L\u00e2mpada", layout_lamp_bedside: "Candeeiro de cabeceira", layout_lamp_floor: "Candeeiro de arco", layout_lamp_torch: "Candeeiro de p\u00e9 halog\u00e9neo", layout_lamp_pendant: "Candeeiro suspenso", layout_lamp_strip: "Fita LED", layout_lamp_spot: "Focos embutidos", layout_lamp_panels: "Pain\u00e9is de luz", layout_lamp_desk: "Candeeiro de secret\u00e1ria", layout_lamp_wall: "Lanterna de parede",
     speed_power_max: "Pot\u00eancia na velocidade m\u00e1xima (W)", speed_power_custom: "Limiares de velocidade pr\u00f3prios", speed_power_2: "Velocidade 2 a partir de (W)", speed_power_3: "Velocidade 3 a partir de (W)",
     fw_self_cleaning: "Autolimpeza", fw_dirty_full: "Dep\u00f3sito de \u00e1gua suja cheio", fw_clean_empty: "Dep\u00f3sito de \u00e1gua limpa vazio",
@@ -1357,7 +1357,7 @@ const T = {
     type_air_conditioner: "Ar condicionado", ac_off: "Desligado", ac_cooling: "A arrefecer", ac_heating: "A aquecer", ac_drying: "A desumidificar", ac_fan_only: "S\u00f3 ventila\u00e7\u00e3o", ac_auto: "Autom\u00e1tico", ac_idle: "Em espera", ac_defrost: "A descongelar", ac_preheating: "Pr\u00e9-aquecimento", ac_line_humidity: "Humidade", section_vane_vertical: "Defletor cima/baixo", section_vane_horizontal: "Defletor esquerda/direita", section_purifier: "Purificador de ar (nanoe, plasma)", section_defrost: "Indicador de descongela\u00e7\u00e3o",
     type_dehumidifier: "Desumidificador", type_space_heater: "Aquecedor", type_towel_warmer: "Toalheiro el\u00e9trico", dh_laundry: "Secagem de roupa", dh_full: "Dep\u00f3sito cheio", dh_line_tank: "Dep\u00f3sito", line_mode: "Modo", tw_comfort: "Conforto", tw_eco: "Eco", tw_frost: "Antigelo", tw_boost: "Boost", tw_drying: "Secagem", section_tank: "Dep\u00f3sito de \u00e1gua", section_current_humidity: "Sensor de humidade", section_heater_layout: "Modelo", layout_fan_heater: "Termoventilador", layout_oil_radiator: "Radiador a \u00f3leo",
     type_air_fryer: "Fritadeira de ar", af_cooking: "A cozinhar", af_shake: "Agitar o cesto", af_basket_out: "Cesto retirado", af_preheated: "Pr\u00e9-aquecida", af_basket2: "Cesto 2", section_fryer_layout: "Modelo", layout_basket: "Cesto", layout_window: "Cesto com janela", layout_dual: "Cesto duplo", section_basket: "Sensor do cesto", section_shake: "Lembrete para agitar", section_basket2: "Estado do cesto 2 (duplo)",
-    last_cycle: "\u00daltimo ciclo", show_last_cycle: "Mostrar o \u00faltimo ciclo", power_off_delay: "Atraso antes de \u00abTerminado\u00bb (min, s\u00f3 tomada)",
+    last_cycle: "\u00daltimo ciclo", show_last_cycle: "Mostrar o \u00faltimo ciclo", power_off_delay: "Atraso antes de \u00abTerminado\u00bb (min, s\u00f3 tomada)", section_energy: "Energia consumida", energy_price: "Pre\u00e7o do kWh (n\u00famero ou entidade)", energy_line: "Energia", cost_line: "Custo", show_elapsed: "Mostrar o tempo decorrido do ciclo", elapsed_line: "Decorrido", show_today: "Mostrar o funcionamento de hoje e os arranques", today_line: "Hoje", starts_one: "{n} arranque", starts_other: "{n} arranques", section_tower: "Torre (segunda tomada)", tower_line: "Torre", tower_on: "Torre ligada", tower_toggle: "Torre",
     washer_dryer: "M\u00e1quina de lavar e secar (lava e seca)", step_drying: "Secagem", section_cycle_phase: "Fase do ciclo",
     step_prewash: "Pr\u00e9-lavagem", step_soaking: "Molho", step_weighing: "Pesagem", step_filling: "Enchimento", step_washing: "Lavagem", step_rinsing: "Enxaguamento", step_draining: "Escoamento", step_spinning: "Centrifuga\u00e7\u00e3o", step_cooling: "Arrefecimento", step_anti_crease: "Anti-vincos", step_steam: "Vapor",
     type_ev_charger: "Carregador de VE", ev_no_vehicle: "Sem ve\u00edculo", ev_connected: "Ve\u00edculo ligado", ev_awaiting_auth: "A aguardar autoriza\u00e7\u00e3o", ev_charging: "A carregar", ev_paused: "Carregamento em pausa", ev_scheduled: "Carregamento agendado", ev_done: "Carregamento conclu\u00eddo", ev_error: "Erro", ev_offline: "Offline", section_vehicle: "Ve\u00edculo ligado (sensor da ficha)", section_session_energy: "Energia da sess\u00e3o", section_current_limit: "Limite da corrente de carregamento", ev_power_threshold: "A carregar acima desta pot\u00eancia (W)", ev_line_session: "Carregado", ev_line_limit: "Limite de corrente",
@@ -1504,7 +1504,7 @@ const T = {
     layout_robot_stick: "Skaftdammsugare", stick_charged: "Laddad",
     layout_robot_floor_washer: "Golvtv\u00e4ttare", stick_away: "Inte i basen", stick_away_threshold: "Inte i basen under denna effekt (W)",
     type_diffuser: "Doftspridare", dif_mist: "Sprider", dif_inter: "Intervall", dif_low: "L\u00e4tt dimma", dif_empty: "Tanken tom", dif_mode: "Diml\u00e4ge", layout_dif_drop: "Droppe", layout_dif_cone: "Kon", layout_dif_stone: "Sten", layout_dif_flame: "L\u00e5ga", layout_dif_nebulizer: "Nebulisator", section_tank_empty: "Sensor f\u00f6r tom tank", type_hrv: "FTX-ventilation", hrv_run: "Ventilerar", hrv_boost: "Boost", hrv_bypass: "Bypass", hrv_defrost: "Avfrostning", hrv_filter: "Byt filter", hrv_away: "Borta", hrv_recirc: "Recirkulation", hrv_humidity: "Fuktstyrning", hrv_inter: "Intermittent", hrv_inter_paused: "Intermittent, paus", hrv_mode: "L\u00e4ge", hrv_supply_fan: "Tilluft", hrv_exhaust_fan: "Fr\u00e5nluft", section_supply_fan: "Tilluftsfl\u00e4ktens varvtal (v/min)", section_exhaust_fan: "Fr\u00e5nluftsfl\u00e4ktens varvtal (v/min)", fan_max_rpm: "Fl\u00e4ktarnas maxvarvtal (v/min)", section_exhaust_airflow: "Fr\u00e5nluftsfl\u00f6de", section_target_humidity: "B\u00f6rv\u00e4rde fukt", section_humidity_control: "Brytare f\u00f6r fuktstyrning", layout_hrv_diagram: "Luftfl\u00f6den", layout_hrv_one_duct: "V\u00e4ggaggregat, en kanal", layout_hrv_pair: "Par i v\u00e4ggen", section_supply_temperature: "Tilluftstemperatur", section_extract_temperature: "Fr\u00e5nluftstemperatur", section_exhaust_temperature: "Avluftstemperatur", section_bypass: "Bypass", section_airflow: "Luftfl\u00f6de", hrv_t_outdoor: "uteluft", hrv_t_supply: "tilluft", hrv_t_extract: "fr\u00e5nluft", hrv_t_exhaust: "avluft", hrv_outside: "ute", hrv_room: "rum",
-    type_camera: "Kamera", cam_idle: "Vilar", cam_live: "Direkt", cam_rec: "Spelar in", cam_motion: "R\u00f6relse uppt\u00e4ckt", cam_off: "Av", cam_line_last_motion: "Senaste r\u00f6relse", cam_line_night: "Nattseende", cam_line_signal: "Signal", section_motion: "R\u00f6relsesensor", section_recording: "Inspelningssensor", section_night_vision: "Nattseende", section_privacy: "Integritetsl\u00e4ge", section_signal: "Signalstyrka", layout_cam_indoor: "Inomhus, vridbar", layout_cam_tube: "Inomhus, cylinder", layout_cam_outdoor: "Utomhus", layout_cam_dome: "Dom", layout_cam_doorbell: "D\u00f6rrklocka", cam_ring: "Det ringer", cam_line_last_ring: "Senaste ringning", section_ring: "Ringknapp", type_mailbox: "Brevl\u00e5da", mb_empty: "Tom", mb_mail: "Post", mb_front_open: "Fr\u00e4mre lucka \u00f6ppen", mb_back_open: "Bakre lucka \u00f6ppen", mb_line_count: "Post mottagen", mb_line_last: "Senaste post", mb_front_door: "Fr\u00e4mre lucka", mb_back_door: "Bakre lucka", mb_open: "\u00d6ppen", mb_closed: "St\u00e4ngd", section_mail_count: "Postr\u00e4knare", layout_mb_through: "Genomg\u00e5ende", layout_mb_classic: "Klassisk", mb_street: "gata", mb_house: "hus", mb_front_side: "Gatusida", mb_side_left: "V\u00e4nster", mb_side_right: "H\u00f6ger",
+    type_camera: "Kamera", cam_idle: "Vilar", cam_live: "Direkt", cam_rec: "Spelar in", cam_motion: "R\u00f6relse uppt\u00e4ckt", cam_off: "Av", cam_line_last_motion: "Senaste r\u00f6relse", cam_line_night: "Nattseende", cam_line_signal: "Signal", section_motion: "R\u00f6relsesensor", section_recording: "Inspelningssensor", section_night_vision: "Nattseende", section_privacy: "Integritetsl\u00e4ge", section_signal: "Signalstyrka", layout_cam_indoor: "Inomhus, vridbar", layout_cam_tube: "Inomhus, cylinder", layout_cam_outdoor: "Utomhus", layout_cam_dome: "Dom", layout_cam_doorbell: "D\u00f6rrklocka", cam_ring: "Det ringer", cam_line_last_ring: "Senaste ringning", section_ring: "Ringknapp", type_mailbox: "Brevl\u00e5da", mb_empty: "Tom", mb_mail: "Post", mb_front_open: "Fr\u00e4mre lucka \u00f6ppen", mb_back_open: "Bakre lucka \u00f6ppen", mb_line_count: "Post mottagen", mb_line_last: "Senaste post", mb_front_door: "Fr\u00e4mre lucka", mb_back_door: "Bakre lucka", mb_open: "\u00d6ppen", mb_closed: "St\u00e4ngd", section_mail_count: "Postr\u00e4knare", layout_mb_through: "Genomg\u00e5ende", layout_mb_classic: "Klassisk", mb_street: "gata", mb_house: "hus", mb_front_side: "Gatusida", mb_side_left: "V\u00e4nster", mb_side_right: "H\u00f6ger", type_water_pump: "Vattenpump", type_floor_heating: "Golvv\u00e4rme", type_spa: "Spabad", type_sauna: "Bastu", type_aquarium: "Akvarium", type_meter: "Elm\u00e4tare", type_christmas_tree: "Julgran", layout_chest: "Frysbox", layout_drawers: "L\u00e5dfrys", layout_pump_booster: "Hydroforpump", layout_pump_sump: "Dr\u00e4nkbar pump", layout_floor_water: "Varmvatten", layout_floor_electric: "Elektrisk", layout_robot_pool: "Poolrobot", wp_pumping: "Pumpar", wp_high: "H\u00f6g niv\u00e5", spa_bubbles: "Bubblor", sauna_ready: "Klar", aq_lit: "Ljus p\u00e5", aq_dark: "Ljus av", meter_low: "L\u00e5g f\u00f6rbrukning", meter_high: "H\u00f6g f\u00f6rbrukning", section_pressure: "Tryck", section_water_level: "Vattenniv\u00e5", section_high_level: "Larm h\u00f6g niv\u00e5", level_max: "Niv\u00e5 n\u00e4r full", section_bubbles: "Bubblor", section_tariff: "Tariffperiod", high_power: "H\u00f6g f\u00f6rbrukning fr\u00e5n (W eller VA)", tree_palette: "F\u00e4rger", palette_multicolor: "Flerf\u00e4rgad", palette_red_gold: "R\u00f6tt och guld", palette_red_silver: "R\u00f6tt och silver", palette_gold_silver: "Guld och silver", palette_blue_silver: "Bl\u00e5tt och silver", palette_white_silver: "Vitt och silver", palette_red_green: "R\u00f6tt och gr\u00f6nt", presents: "Julklappar", presents_auto: "Den 24 och 25 december", presents_show: "Alltid", presents_hide: "Aldrig", tree_on: "P\u00e5", tree_off: "Av",
     type_lamp: "Lampa", lamp_off: "Av", lamp_on: "P\u00e5", lamp_line_brightness: "Ljusstyrka", lamp_line_color_temp: "F\u00e4rgtemperatur", lamp_line_effect: "Effekt", lamp_spots: "Antal spotlights", layout_lamp_bulb: "Gl\u00f6dlampa", layout_lamp_bedside: "S\u00e4nglampa", layout_lamp_floor: "B\u00e5glampa", layout_lamp_torch: "Uplight-golvlampa", layout_lamp_pendant: "Pendellampa", layout_lamp_strip: "LED-list", layout_lamp_spot: "Inf\u00e4llda spotlights", layout_lamp_panels: "Ljuspaneler", layout_lamp_desk: "Skrivbordslampa", layout_lamp_wall: "V\u00e4gglykta",
     speed_power_max: "Effekt vid h\u00f6gsta l\u00e4ge (W)", speed_power_custom: "Egna hastighetsgr\u00e4nser", speed_power_2: "L\u00e4ge 2 fr\u00e5n (W)", speed_power_3: "L\u00e4ge 3 fr\u00e5n (W)",
     fw_self_cleaning: "Sj\u00e4lvreng\u00f6ring", fw_dirty_full: "Smutsvattentanken full", fw_clean_empty: "Rentvattentanken tom",
@@ -1526,7 +1526,7 @@ const T = {
     type_air_conditioner: "Luftkonditionering", ac_off: "Av", ac_cooling: "Kyler", ac_heating: "V\u00e4rmer", ac_drying: "Avfuktar", ac_fan_only: "Endast fl\u00e4kt", ac_auto: "Auto", ac_idle: "V\u00e4ntel\u00e4ge", ac_defrost: "Avfrostning", ac_preheating: "F\u00f6rv\u00e4rmer", ac_line_humidity: "Luftfuktighet", section_vane_vertical: "Luftriktning upp/ned", section_vane_horizontal: "Luftriktning v\u00e4nster/h\u00f6ger", section_purifier: "Luftrenare (nanoe, plasma)", section_defrost: "Avfrostningsindikator",
     type_dehumidifier: "Avfuktare", type_space_heater: "Elv\u00e4rmare", type_towel_warmer: "Handdukstork", dh_laundry: "Torkar tv\u00e4tt", dh_full: "Tanken full", dh_line_tank: "Tank", line_mode: "L\u00e4ge", tw_comfort: "Komfort", tw_eco: "Eco", tw_frost: "Frostskydd", tw_boost: "Boost", tw_drying: "Torkning", section_tank: "Vattentank", section_current_humidity: "Fuktsensor", section_heater_layout: "Modell", layout_fan_heater: "V\u00e4rmefl\u00e4kt", layout_oil_radiator: "Oljefylld radiator",
     type_air_fryer: "Airfryer", af_cooking: "Tillagning", af_shake: "Skaka korgen", af_basket_out: "Korgen ute", af_preheated: "F\u00f6rv\u00e4rmd", af_basket2: "Korg 2", section_fryer_layout: "Modell", layout_basket: "Korg", layout_window: "Korg med f\u00f6nster", layout_dual: "Dubbelkorg", section_basket: "Korgsensor", section_shake: "Skakp\u00e5minnelse", section_basket2: "Status korg 2 (dubbel)",
-    last_cycle: "Senaste cykel", show_last_cycle: "Visa senaste cykeln", power_off_delay: "F\u00f6rdr\u00f6jning f\u00f6re \u201dKlar\u201d (min, endast uttag)",
+    last_cycle: "Senaste cykel", show_last_cycle: "Visa senaste cykeln", power_off_delay: "F\u00f6rdr\u00f6jning f\u00f6re \u201dKlar\u201d (min, endast uttag)", section_energy: "F\u00f6rbrukad energi", energy_price: "Pris per kWh (tal eller entitet)", energy_line: "Energi", cost_line: "Kostnad", show_elapsed: "Visa cykelns f\u00f6rflutna tid", elapsed_line: "F\u00f6rflutet", show_today: "Visa dagens drifttid och starter", today_line: "I dag", starts_one: "{n} start", starts_other: "{n} starter", section_tower: "Datorl\u00e5da (andra uttaget)", tower_line: "Datorl\u00e5da", tower_on: "Datorl\u00e5dan p\u00e5", tower_toggle: "Datorl\u00e5da",
     washer_dryer: "Kombinerad tv\u00e4tt/tork (tv\u00e4ttar och torkar)", step_drying: "Torkning", section_cycle_phase: "Programfas",
     step_prewash: "F\u00f6rtv\u00e4tt", step_soaking: "Bl\u00f6tl\u00e4ggning", step_weighing: "V\u00e4gning", step_filling: "P\u00e5fyllning", step_washing: "Tv\u00e4tt", step_rinsing: "Sk\u00f6ljning", step_draining: "T\u00f6mning", step_spinning: "Centrifugering", step_cooling: "Avsvalning", step_anti_crease: "Skrynkelskydd", step_steam: "\u00c5nga",
     type_ev_charger: "Laddbox", ev_no_vehicle: "Inget fordon", ev_connected: "Fordon anslutet", ev_awaiting_auth: "V\u00e4ntar p\u00e5 auktorisering", ev_charging: "Laddar", ev_paused: "Laddning pausad", ev_scheduled: "Schemalagd", ev_done: "Laddning klar", ev_error: "Fel", ev_offline: "Offline", section_vehicle: "Fordon anslutet (kontaktsensor)", section_session_energy: "Laddsessionens energi", section_current_limit: "Gr\u00e4ns f\u00f6r laddstr\u00f6m", ev_power_threshold: "Laddar \u00f6ver denna effekt (W)", ev_line_session: "Laddat", ev_line_limit: "Str\u00f6mgr\u00e4ns",
@@ -1673,7 +1673,7 @@ const T = {
     layout_robot_stick: "Stavst\u00f8vsuger", stick_charged: "Ladet",
     layout_robot_floor_washer: "Gulvvasker", stick_away: "Ikke i basen", stick_away_threshold: "Ikke i basen under denne effekten (W)",
     type_diffuser: "Duftspreder", dif_mist: "Sprer", dif_inter: "Intervall", dif_low: "Lett t\u00e5ke", dif_empty: "Tanken er tom", dif_mode: "T\u00e5kemodus", layout_dif_drop: "Dr\u00e5pe", layout_dif_cone: "Kjegle", layout_dif_stone: "Stein", layout_dif_flame: "Flamme", layout_dif_nebulizer: "Nebulisator", section_tank_empty: "Sensor for tom tank", type_hrv: "Balansert ventilasjon", hrv_run: "Ventilerer", hrv_boost: "Boost", hrv_bypass: "Bypass", hrv_defrost: "Avriming", hrv_filter: "Bytt filter", hrv_away: "Borte", hrv_recirc: "Resirkulering", hrv_humidity: "Fuktstyring", hrv_inter: "Intermitterende", hrv_inter_paused: "Intermitterende, pause", hrv_mode: "Modus", hrv_supply_fan: "Tilluft", hrv_exhaust_fan: "Avtrekk", section_supply_fan: "Tilluftsviftens turtall (o/min)", section_exhaust_fan: "Avtrekksviftens turtall (o/min)", fan_max_rpm: "Viftenes maks turtall (o/min)", section_exhaust_airflow: "Avtrekksluftmengde", section_target_humidity: "\u00d8nsket fuktighet", section_humidity_control: "Bryter for fuktstyring", layout_hrv_diagram: "Luftstr\u00f8mmer", layout_hrv_one_duct: "Veggaggregat, \u00e9n kanal", layout_hrv_pair: "Par i veggen", section_supply_temperature: "Tillufttemperatur", section_extract_temperature: "Avtrekkstemperatur", section_exhaust_temperature: "Avkasttemperatur", section_bypass: "Bypass", section_airflow: "Luftmengde", hrv_t_outdoor: "uteluft", hrv_t_supply: "tilluft", hrv_t_extract: "avtrekk", hrv_t_exhaust: "avkast", hrv_outside: "ute", hrv_room: "rom",
-    type_camera: "Kamera", cam_idle: "Hviler", cam_live: "Direkte", cam_rec: "Tar opp", cam_motion: "Bevegelse oppdaget", cam_off: "Av", cam_line_last_motion: "Siste bevegelse", cam_line_night: "Nattsyn", cam_line_signal: "Signal", section_motion: "Bevegelsessensor", section_recording: "Opptakssensor", section_night_vision: "Nattsyn", section_privacy: "Personvernmodus", section_signal: "Signalstyrke", layout_cam_indoor: "Innend\u00f8rs, dreibar", layout_cam_tube: "Innend\u00f8rs, sylinder", layout_cam_outdoor: "Utend\u00f8rs", layout_cam_dome: "Kuppel", layout_cam_doorbell: "Ringeklokke", cam_ring: "Det ringer p\u00e5", cam_line_last_ring: "Siste ringing", section_ring: "Ringeknapp", type_mailbox: "Postkasse", mb_empty: "Tom", mb_mail: "Post", mb_front_open: "Fremre luke \u00e5pen", mb_back_open: "Bakre luke \u00e5pen", mb_line_count: "Post mottatt", mb_line_last: "Siste post", mb_front_door: "Fremre luke", mb_back_door: "Bakre luke", mb_open: "\u00c5pen", mb_closed: "Lukket", section_mail_count: "Postteller", layout_mb_through: "Gjennomg\u00e5ende", layout_mb_classic: "Klassisk", mb_street: "gate", mb_house: "hus", mb_front_side: "Gateside", mb_side_left: "Venstre", mb_side_right: "H\u00f8yre",
+    type_camera: "Kamera", cam_idle: "Hviler", cam_live: "Direkte", cam_rec: "Tar opp", cam_motion: "Bevegelse oppdaget", cam_off: "Av", cam_line_last_motion: "Siste bevegelse", cam_line_night: "Nattsyn", cam_line_signal: "Signal", section_motion: "Bevegelsessensor", section_recording: "Opptakssensor", section_night_vision: "Nattsyn", section_privacy: "Personvernmodus", section_signal: "Signalstyrke", layout_cam_indoor: "Innend\u00f8rs, dreibar", layout_cam_tube: "Innend\u00f8rs, sylinder", layout_cam_outdoor: "Utend\u00f8rs", layout_cam_dome: "Kuppel", layout_cam_doorbell: "Ringeklokke", cam_ring: "Det ringer p\u00e5", cam_line_last_ring: "Siste ringing", section_ring: "Ringeknapp", type_mailbox: "Postkasse", mb_empty: "Tom", mb_mail: "Post", mb_front_open: "Fremre luke \u00e5pen", mb_back_open: "Bakre luke \u00e5pen", mb_line_count: "Post mottatt", mb_line_last: "Siste post", mb_front_door: "Fremre luke", mb_back_door: "Bakre luke", mb_open: "\u00c5pen", mb_closed: "Lukket", section_mail_count: "Postteller", layout_mb_through: "Gjennomg\u00e5ende", layout_mb_classic: "Klassisk", mb_street: "gate", mb_house: "hus", mb_front_side: "Gateside", mb_side_left: "Venstre", mb_side_right: "H\u00f8yre", type_water_pump: "Vannpumpe", type_floor_heating: "Gulvvarme", type_spa: "Boblebad", type_sauna: "Badstue", type_aquarium: "Akvarium", type_meter: "Str\u00f8mm\u00e5ler", type_christmas_tree: "Juletre", layout_chest: "Fryseboks", layout_drawers: "Skuffefryser", layout_pump_booster: "Hydroforpumpe", layout_pump_sump: "Dykkpumpe", layout_floor_water: "Varmtvann", layout_floor_electric: "Elektrisk", layout_robot_pool: "Bassengrobot", wp_pumping: "Pumper", wp_high: "H\u00f8yt niv\u00e5", spa_bubbles: "Bobler", sauna_ready: "Klar", aq_lit: "Lys p\u00e5", aq_dark: "Lys av", meter_low: "Lavt forbruk", meter_high: "H\u00f8yt forbruk", section_pressure: "Trykk", section_water_level: "Vannstand", section_high_level: "Alarm h\u00f8yt niv\u00e5", level_max: "Niv\u00e5 n\u00e5r full", section_bubbles: "Bobler", section_tariff: "Tariffperiode", high_power: "H\u00f8yt forbruk fra (W eller VA)", tree_palette: "Farger", palette_multicolor: "Flerfarget", palette_red_gold: "R\u00f8dt og gull", palette_red_silver: "R\u00f8dt og s\u00f8lv", palette_gold_silver: "Gull og s\u00f8lv", palette_blue_silver: "Bl\u00e5tt og s\u00f8lv", palette_white_silver: "Hvitt og s\u00f8lv", palette_red_green: "R\u00f8dt og gr\u00f8nt", presents: "Gaver", presents_auto: "Den 24. og 25. desember", presents_show: "Alltid", presents_hide: "Aldri", tree_on: "P\u00e5", tree_off: "Av",
     type_lamp: "Lampe", lamp_off: "Av", lamp_on: "P\u00e5", lamp_line_brightness: "Lysstyrke", lamp_line_color_temp: "Fargetemperatur", lamp_line_effect: "Effekt", lamp_spots: "Antall spotter", layout_lamp_bulb: "Lysp\u00e6re", layout_lamp_bedside: "Nattbordslampe", layout_lamp_floor: "Buelampe", layout_lamp_torch: "Halogen gulvlampe", layout_lamp_pendant: "Pendellampe", layout_lamp_strip: "LED-list", layout_lamp_spot: "Innfelte spotter", layout_lamp_panels: "Lyspaneler", layout_lamp_desk: "Skrivebordslampe", layout_lamp_wall: "Vegglykt",
     speed_power_max: "Effekt p\u00e5 h\u00f8yeste trinn (W)", speed_power_custom: "Egne hastighetsgrenser", speed_power_2: "Trinn 2 fra (W)", speed_power_3: "Trinn 3 fra (W)",
     fw_self_cleaning: "Selvrengj\u00f8ring", fw_dirty_full: "Skittentvannstanken full", fw_clean_empty: "Rentvannstanken tom",
@@ -1695,7 +1695,7 @@ const T = {
     type_air_conditioner: "Klimaanlegg", ac_off: "Av", ac_cooling: "Kj\u00f8ler", ac_heating: "Varmer", ac_drying: "Avfukter", ac_fan_only: "Kun vifte", ac_auto: "Auto", ac_idle: "Hvilemodus", ac_defrost: "Avising", ac_preheating: "Forvarmer", ac_line_humidity: "Luftfuktighet", section_vane_vertical: "Luftretning opp/ned", section_vane_horizontal: "Luftretning venstre/h\u00f8yre", section_purifier: "Luftrenser (nanoe, plasma)", section_defrost: "Avisingsindikator",
     type_dehumidifier: "Avfukter", type_space_heater: "Varmeovn", type_towel_warmer: "H\u00e5ndklet\u00f8rker", dh_laundry: "T\u00f8rker kl\u00e6r", dh_full: "Tanken er full", dh_line_tank: "Tank", line_mode: "Modus", tw_comfort: "Komfort", tw_eco: "Eco", tw_frost: "Frostsikring", tw_boost: "Boost", tw_drying: "T\u00f8rking", section_tank: "Vanntank", section_current_humidity: "Fuktsensor", section_heater_layout: "Modell", layout_fan_heater: "Varmevifte", layout_oil_radiator: "Oljefylt radiator",
     type_air_fryer: "Airfryer", af_cooking: "Tilberedning", af_shake: "Rist kurven", af_basket_out: "Kurven er ute", af_preheated: "Forvarmet", af_basket2: "Kurv 2", section_fryer_layout: "Modell", layout_basket: "Kurv", layout_window: "Kurv med vindu", layout_dual: "Dobbel kurv", section_basket: "Kurvsensor", section_shake: "P\u00e5minnelse om \u00e5 riste", section_basket2: "Status kurv 2 (dobbel)",
-    last_cycle: "Siste syklus", show_last_cycle: "Vis siste syklus", power_off_delay: "Forsinkelse f\u00f8r \u00abFerdig\u00bb (min, kun stikkontakt)",
+    last_cycle: "Siste syklus", show_last_cycle: "Vis siste syklus", power_off_delay: "Forsinkelse f\u00f8r \u00abFerdig\u00bb (min, kun stikkontakt)", section_energy: "Brukt energi", energy_price: "Pris per kWh (tall eller entitet)", energy_line: "Energi", cost_line: "Kostnad", show_elapsed: "Vis syklusens forl\u00f8pte tid", elapsed_line: "Forl\u00f8pt", show_today: "Vis dagens driftstid og starter", today_line: "I dag", starts_one: "{n} start", starts_other: "{n} starter", section_tower: "Kabinett (andre stikkontakt)", tower_line: "Kabinett", tower_on: "Kabinett p\u00e5", tower_toggle: "Kabinett",
     washer_dryer: "Kombinert vaske-/t\u00f8rkemaskin (vasker og t\u00f8rker)", step_drying: "T\u00f8rking", section_cycle_phase: "Programfase",
     step_prewash: "Forvask", step_soaking: "Bl\u00f8tlegging", step_weighing: "Veiing", step_filling: "Vannfylling", step_washing: "Vask", step_rinsing: "Skylling", step_draining: "T\u00f8mming", step_spinning: "Sentrifugering", step_cooling: "Avkj\u00f8ling", step_anti_crease: "Antikr\u00f8ll", step_steam: "Damp",
     type_ev_charger: "Ladeboks", ev_no_vehicle: "Ingen bil", ev_connected: "Bil tilkoblet", ev_awaiting_auth: "Venter p\u00e5 autorisering", ev_charging: "Lader", ev_paused: "Lading satt p\u00e5 pause", ev_scheduled: "Planlagt", ev_done: "Lading fullf\u00f8rt", ev_error: "Feil", ev_offline: "Frakoblet", section_vehicle: "Bil tilkoblet (kontaktsensor)", section_session_energy: "Energi denne lade\u00f8kten", section_current_limit: "Grense for ladestr\u00f8m", ev_power_threshold: "Lader over denne effekten (W)", ev_line_session: "Ladet", ev_line_limit: "Str\u00f8mgrense",
@@ -1842,7 +1842,7 @@ const T = {
     layout_robot_stick: "St\u00f8vsuger p\u00e5 skaft", stick_charged: "Opladet",
     layout_robot_floor_washer: "Gulvvasker", stick_away: "Ikke i basen", stick_away_threshold: "Ikke i basen under denne effekt (W)",
     type_diffuser: "Duftspreder", dif_mist: "Spreder", dif_inter: "Interval", dif_low: "Let t\u00e5ge", dif_empty: "Tanken er tom", dif_mode: "T\u00e5getilstand", layout_dif_drop: "Dr\u00e5be", layout_dif_cone: "Kegle", layout_dif_stone: "Sten", layout_dif_flame: "Flamme", layout_dif_nebulizer: "Nebulisator", section_tank_empty: "Sensor for tom tank", type_hrv: "Ventilation med varmegenvinding", hrv_run: "Ventilerer", hrv_boost: "Boost", hrv_bypass: "Bypass", hrv_defrost: "Afrimning", hrv_filter: "Skift filter", hrv_away: "Ude", hrv_recirc: "Recirkulation", hrv_humidity: "Fugtstyring", hrv_inter: "Intermitterende", hrv_inter_paused: "Intermitterende, pause", hrv_mode: "Tilstand", hrv_supply_fan: "Indbl\u00e6sning", hrv_exhaust_fan: "Udsugning", section_supply_fan: "Indbl\u00e6sningsventilatorens omdrejninger (o/min)", section_exhaust_fan: "Udsugningsventilatorens omdrejninger (o/min)", fan_max_rpm: "Ventilatorernes maks. omdrejninger (o/min)", section_exhaust_airflow: "Udsugningsluftm\u00e6ngde", section_target_humidity: "\u00d8nsket fugtighed", section_humidity_control: "Kontakt til fugtstyring", layout_hrv_diagram: "Luftstr\u00f8mme", layout_hrv_one_duct: "V\u00e6gaggregat, \u00e9n kanal", layout_hrv_pair: "Par i v\u00e6ggen", section_supply_temperature: "Indbl\u00e6sningstemperatur", section_extract_temperature: "Udsugningstemperatur", section_exhaust_temperature: "Afkasttemperatur", section_bypass: "Bypass", section_airflow: "Luftm\u00e6ngde", hrv_t_outdoor: "udeluft", hrv_t_supply: "indbl\u00e6sning", hrv_t_extract: "udsugning", hrv_t_exhaust: "afkast", hrv_outside: "ude", hrv_room: "rum",
-    type_camera: "Kamera", cam_idle: "Hviler", cam_live: "Direkte", cam_rec: "Optager", cam_motion: "Bev\u00e6gelse registreret", cam_off: "Slukket", cam_line_last_motion: "Seneste bev\u00e6gelse", cam_line_night: "Nattesyn", cam_line_signal: "Signal", section_motion: "Bev\u00e6gelsessensor", section_recording: "Optagesensor", section_night_vision: "Nattesyn", section_privacy: "Privatlivstilstand", section_signal: "Signalstyrke", layout_cam_indoor: "Indend\u00f8rs, drejelig", layout_cam_tube: "Indend\u00f8rs, cylinder", layout_cam_outdoor: "Udend\u00f8rs", layout_cam_dome: "Kuppel", layout_cam_doorbell: "D\u00f8rklokke", cam_ring: "Det ringer", cam_line_last_ring: "Seneste ringning", section_ring: "Ringeknap", type_mailbox: "Postkasse", mb_empty: "Tom", mb_mail: "Post", mb_front_open: "Forreste l\u00e5ge \u00e5ben", mb_back_open: "Bagerste l\u00e5ge \u00e5ben", mb_line_count: "Post modtaget", mb_line_last: "Seneste post", mb_front_door: "Forreste l\u00e5ge", mb_back_door: "Bagerste l\u00e5ge", mb_open: "\u00c5ben", mb_closed: "Lukket", section_mail_count: "Postt\u00e6ller", layout_mb_through: "Gennemg\u00e5ende", layout_mb_classic: "Klassisk", mb_street: "gade", mb_house: "hus", mb_front_side: "Gadeside", mb_side_left: "Venstre", mb_side_right: "H\u00f8jre",
+    type_camera: "Kamera", cam_idle: "Hviler", cam_live: "Direkte", cam_rec: "Optager", cam_motion: "Bev\u00e6gelse registreret", cam_off: "Slukket", cam_line_last_motion: "Seneste bev\u00e6gelse", cam_line_night: "Nattesyn", cam_line_signal: "Signal", section_motion: "Bev\u00e6gelsessensor", section_recording: "Optagesensor", section_night_vision: "Nattesyn", section_privacy: "Privatlivstilstand", section_signal: "Signalstyrke", layout_cam_indoor: "Indend\u00f8rs, drejelig", layout_cam_tube: "Indend\u00f8rs, cylinder", layout_cam_outdoor: "Udend\u00f8rs", layout_cam_dome: "Kuppel", layout_cam_doorbell: "D\u00f8rklokke", cam_ring: "Det ringer", cam_line_last_ring: "Seneste ringning", section_ring: "Ringeknap", type_mailbox: "Postkasse", mb_empty: "Tom", mb_mail: "Post", mb_front_open: "Forreste l\u00e5ge \u00e5ben", mb_back_open: "Bagerste l\u00e5ge \u00e5ben", mb_line_count: "Post modtaget", mb_line_last: "Seneste post", mb_front_door: "Forreste l\u00e5ge", mb_back_door: "Bagerste l\u00e5ge", mb_open: "\u00c5ben", mb_closed: "Lukket", section_mail_count: "Postt\u00e6ller", layout_mb_through: "Gennemg\u00e5ende", layout_mb_classic: "Klassisk", mb_street: "gade", mb_house: "hus", mb_front_side: "Gadeside", mb_side_left: "Venstre", mb_side_right: "H\u00f8jre", type_water_pump: "Vandpumpe", type_floor_heating: "Gulvvarme", type_spa: "Spabad", type_sauna: "Sauna", type_aquarium: "Akvarium", type_meter: "Elm\u00e5ler", type_christmas_tree: "Juletr\u00e6", layout_chest: "Frysekiste", layout_drawers: "Skuffefryser", layout_pump_booster: "Hydroforpumpe", layout_pump_sump: "Dykpumpe", layout_floor_water: "Varmt vand", layout_floor_electric: "Elektrisk", layout_robot_pool: "Poolrobot", wp_pumping: "Pumper", wp_high: "H\u00f8jt niveau", spa_bubbles: "Bobler", sauna_ready: "Klar", aq_lit: "Lys t\u00e6ndt", aq_dark: "Lys slukket", meter_low: "Lavt forbrug", meter_high: "H\u00f8jt forbrug", section_pressure: "Tryk", section_water_level: "Vandstand", section_high_level: "Alarm h\u00f8jt niveau", level_max: "Niveau ved fuld", section_bubbles: "Bobler", section_tariff: "Tarifperiode", high_power: "H\u00f8jt forbrug fra (W eller VA)", tree_palette: "Farver", palette_multicolor: "Flerfarvet", palette_red_gold: "R\u00f8dt og guld", palette_red_silver: "R\u00f8dt og s\u00f8lv", palette_gold_silver: "Guld og s\u00f8lv", palette_blue_silver: "Bl\u00e5t og s\u00f8lv", palette_white_silver: "Hvidt og s\u00f8lv", palette_red_green: "R\u00f8dt og gr\u00f8nt", presents: "Gaver", presents_auto: "Den 24. og 25. december", presents_show: "Altid", presents_hide: "Aldrig", tree_on: "T\u00e6ndt", tree_off: "Slukket",
     type_lamp: "Lampe", lamp_off: "Slukket", lamp_on: "T\u00e6ndt", lamp_line_brightness: "Lysstyrke", lamp_line_color_temp: "Farvetemperatur", lamp_line_effect: "Effekt", lamp_spots: "Antal spots", layout_lamp_bulb: "P\u00e6re", layout_lamp_bedside: "Sengelampe", layout_lamp_floor: "Buelampe", layout_lamp_torch: "Halogen standerlampe", layout_lamp_pendant: "Pendel", layout_lamp_strip: "LED-strip", layout_lamp_spot: "Indbyggede spots", layout_lamp_panels: "Lyspaneler", layout_lamp_desk: "Skrivebordslampe", layout_lamp_wall: "V\u00e6glygte",
     speed_power_max: "Effekt p\u00e5 h\u00f8jeste trin (W)", speed_power_custom: "Egne hastighedsgr\u00e6nser", speed_power_2: "Trin 2 fra (W)", speed_power_3: "Trin 3 fra (W)",
     fw_self_cleaning: "Selvrensning", fw_dirty_full: "Snavsevandstank fuld", fw_clean_empty: "Rentvandstank tom",
@@ -1864,7 +1864,7 @@ const T = {
     type_air_conditioner: "Aircondition", ac_off: "Slukket", ac_cooling: "K\u00f8ler", ac_heating: "Varmer", ac_drying: "Affugter", ac_fan_only: "Kun bl\u00e6ser", ac_auto: "Auto", ac_idle: "Standby", ac_defrost: "Afrimning", ac_preheating: "Forvarmer", ac_line_humidity: "Luftfugtighed", section_vane_vertical: "Luftretning op/ned", section_vane_horizontal: "Luftretning venstre/h\u00f8jre", section_purifier: "Luftrenser (nanoe, plasma)", section_defrost: "Afrimningsindikator",
     type_dehumidifier: "Affugter", type_space_heater: "Varmeapparat", type_towel_warmer: "H\u00e5ndkl\u00e6det\u00f8rrer", dh_laundry: "T\u00f8rrer t\u00f8j", dh_full: "Tank fuld", dh_line_tank: "Tank", line_mode: "Tilstand", tw_comfort: "Komfort", tw_eco: "Eco", tw_frost: "Frostsikring", tw_boost: "Boost", tw_drying: "T\u00f8rring", section_tank: "Vandtank", section_current_humidity: "Fugtsensor", section_heater_layout: "Model", layout_fan_heater: "Varmebl\u00e6ser", layout_oil_radiator: "Oliefyldt radiator",
     type_air_fryer: "Airfryer", af_cooking: "Tilberedning", af_shake: "Ryst kurven", af_basket_out: "Kurven er ude", af_preheated: "Forvarmet", af_basket2: "Kurv 2", section_fryer_layout: "Model", layout_basket: "Kurv", layout_window: "Kurv med vindue", layout_dual: "Dobbelt kurv", section_basket: "Kurvsensor", section_shake: "P\u00e5mindelse om at ryste", section_basket2: "Status kurv 2 (dobbelt)",
-    last_cycle: "Seneste cyklus", show_last_cycle: "Vis seneste cyklus", power_off_delay: "Forsinkelse f\u00f8r \u00bbF\u00e6rdig\u00ab (min, kun stikkontakt)",
+    last_cycle: "Seneste cyklus", show_last_cycle: "Vis seneste cyklus", power_off_delay: "Forsinkelse f\u00f8r \u00bbF\u00e6rdig\u00ab (min, kun stikkontakt)", section_energy: "Brugt energi", energy_price: "Pris pr. kWh (tal eller entitet)", energy_line: "Energi", cost_line: "Pris", show_elapsed: "Vis cyklussens forl\u00f8bne tid", elapsed_line: "Forl\u00f8bet", show_today: "Vis dagens driftstid og starter", today_line: "I dag", starts_one: "{n} start", starts_other: "{n} starter", section_tower: "Kabinet (andet stik)", tower_line: "Kabinet", tower_on: "Kabinet t\u00e6ndt", tower_toggle: "Kabinet",
     washer_dryer: "Vaske-t\u00f8rremaskine (vasker og t\u00f8rrer)", step_drying: "T\u00f8rring", section_cycle_phase: "Programfase",
     step_prewash: "Forvask", step_soaking: "Ibl\u00f8ds\u00e6tning", step_weighing: "Vejning", step_filling: "P\u00e5fyldning", step_washing: "Vask", step_rinsing: "Skylning", step_draining: "Udpumpning", step_spinning: "Centrifugering", step_cooling: "Afk\u00f8ling", step_anti_crease: "Antikr\u00f8l", step_steam: "Damp",
     type_ev_charger: "Ladeboks", ev_no_vehicle: "Ingen bil", ev_connected: "Bil tilsluttet", ev_awaiting_auth: "Venter p\u00e5 godkendelse", ev_charging: "Oplader", ev_paused: "Opladning sat p\u00e5 pause", ev_scheduled: "Planlagt", ev_done: "Opladning fuldf\u00f8rt", ev_error: "Fejl", ev_offline: "Offline", section_vehicle: "Bil tilsluttet (stiksensor)", section_session_energy: "Energi i ladesessionen", section_current_limit: "Gr\u00e6nse for ladestr\u00f8m", ev_power_threshold: "Oplader over denne effekt (W)", ev_line_session: "Opladet", ev_line_limit: "Str\u00f8mgr\u00e6nse",
@@ -2011,7 +2011,7 @@ const T = {
     layout_robot_stick: "Odkurzacz pionowy", stick_charged: "Na\u0142adowany",
     layout_robot_floor_washer: "Mop elektryczny", stick_away: "Poza baz\u0105", stick_away_threshold: "Poza baz\u0105 poni\u017cej tej mocy (W)",
     type_diffuser: "Dyfuzor olejk\u00f3w eterycznych", dif_mist: "Rozpylanie", dif_inter: "Przerywany", dif_low: "Lekka mgie\u0142ka", dif_empty: "Pusty zbiornik", dif_mode: "Tryb mgie\u0142ki", layout_dif_drop: "Kropla", layout_dif_cone: "Sto\u017cek", layout_dif_stone: "Kamie\u0144", layout_dif_flame: "P\u0142omie\u0144", layout_dif_nebulizer: "Nebulizator", section_tank_empty: "Czujnik pustego zbiornika", type_hrv: "Wentylacja z rekuperacj\u0105", hrv_run: "Wentyluje", hrv_boost: "Boost", hrv_bypass: "Bypass", hrv_defrost: "Odszranianie", hrv_filter: "Wymie\u0144 filtr", hrv_away: "Nieobecno\u015b\u0107", hrv_recirc: "Recyrkulacja", hrv_humidity: "Kontrola wilgotno\u015bci", hrv_inter: "Przerywany", hrv_inter_paused: "Przerywany, przerwa", hrv_mode: "Tryb", hrv_supply_fan: "Nawiew", hrv_exhaust_fan: "Wywiew", section_supply_fan: "Pr\u0119dko\u015b\u0107 wentylatora nawiewu (obr/min)", section_exhaust_fan: "Pr\u0119dko\u015b\u0107 wentylatora wywiewu (obr/min)", fan_max_rpm: "Maksymalna pr\u0119dko\u015b\u0107 wentylator\u00f3w (obr/min)", section_exhaust_airflow: "Przep\u0142yw wywiewu", section_target_humidity: "Zadana wilgotno\u015b\u0107", section_humidity_control: "Prze\u0142\u0105cznik kontroli wilgotno\u015bci", layout_hrv_diagram: "Przep\u0142ywy powietrza", layout_hrv_one_duct: "\u015acienny, jeden kana\u0142", layout_hrv_pair: "Para w \u015bcianie", section_supply_temperature: "Temperatura nawiewu", section_extract_temperature: "Temperatura wywiewu", section_exhaust_temperature: "Temperatura wyrzutu", section_bypass: "Bypass", section_airflow: "Przep\u0142yw powietrza", hrv_t_outdoor: "czerpnia", hrv_t_supply: "nawiew", hrv_t_extract: "wywiew", hrv_t_exhaust: "wyrzut", hrv_outside: "na zewn\u0105trz", hrv_room: "pok\u00f3j",
-    type_camera: "Kamera", cam_idle: "Czuwanie", cam_live: "Na \u017cywo", cam_rec: "Nagrywanie", cam_motion: "Wykryto ruch", cam_off: "Wy\u0142\u0105czona", cam_line_last_motion: "Ostatni ruch", cam_line_night: "Widzenie nocne", cam_line_signal: "Sygna\u0142", section_motion: "Czujnik ruchu", section_recording: "Czujnik nagrywania", section_night_vision: "Widzenie nocne", section_privacy: "Tryb prywatno\u015bci", section_signal: "Si\u0142a sygna\u0142u", layout_cam_indoor: "Wewn\u0119trzna obrotowa", layout_cam_tube: "Wewn\u0119trzna tuba", layout_cam_outdoor: "Zewn\u0119trzna", layout_cam_dome: "Kopu\u0142a", layout_cam_doorbell: "Dzwonek", cam_ring: "Kto\u015b dzwoni", cam_line_last_ring: "Ostatni dzwonek", section_ring: "Przycisk dzwonka", type_mailbox: "Skrzynka pocztowa", mb_empty: "Pusta", mb_mail: "Poczta", mb_front_open: "Przednie drzwiczki otwarte", mb_back_open: "Tylne drzwiczki otwarte", mb_line_count: "Otrzymana poczta", mb_line_last: "Ostatnia poczta", mb_front_door: "Przednie drzwiczki", mb_back_door: "Tylne drzwiczki", mb_open: "Otwarte", mb_closed: "Zamkni\u0119te", section_mail_count: "Licznik poczty", layout_mb_through: "Przelotowa", layout_mb_classic: "Klasyczna", mb_street: "ulica", mb_house: "dom", mb_front_side: "Strona ulicy", mb_side_left: "Lewa", mb_side_right: "Prawa",
+    type_camera: "Kamera", cam_idle: "Czuwanie", cam_live: "Na \u017cywo", cam_rec: "Nagrywanie", cam_motion: "Wykryto ruch", cam_off: "Wy\u0142\u0105czona", cam_line_last_motion: "Ostatni ruch", cam_line_night: "Widzenie nocne", cam_line_signal: "Sygna\u0142", section_motion: "Czujnik ruchu", section_recording: "Czujnik nagrywania", section_night_vision: "Widzenie nocne", section_privacy: "Tryb prywatno\u015bci", section_signal: "Si\u0142a sygna\u0142u", layout_cam_indoor: "Wewn\u0119trzna obrotowa", layout_cam_tube: "Wewn\u0119trzna tuba", layout_cam_outdoor: "Zewn\u0119trzna", layout_cam_dome: "Kopu\u0142a", layout_cam_doorbell: "Dzwonek", cam_ring: "Kto\u015b dzwoni", cam_line_last_ring: "Ostatni dzwonek", section_ring: "Przycisk dzwonka", type_mailbox: "Skrzynka pocztowa", mb_empty: "Pusta", mb_mail: "Poczta", mb_front_open: "Przednie drzwiczki otwarte", mb_back_open: "Tylne drzwiczki otwarte", mb_line_count: "Otrzymana poczta", mb_line_last: "Ostatnia poczta", mb_front_door: "Przednie drzwiczki", mb_back_door: "Tylne drzwiczki", mb_open: "Otwarte", mb_closed: "Zamkni\u0119te", section_mail_count: "Licznik poczty", layout_mb_through: "Przelotowa", layout_mb_classic: "Klasyczna", mb_street: "ulica", mb_house: "dom", mb_front_side: "Strona ulicy", mb_side_left: "Lewa", mb_side_right: "Prawa", type_water_pump: "Pompa wody", type_floor_heating: "Ogrzewanie pod\u0142ogowe", type_spa: "Spa", type_sauna: "Sauna", type_aquarium: "Akwarium", type_meter: "Licznik energii", type_christmas_tree: "Choinka", layout_chest: "Zamra\u017carka skrzyniowa", layout_drawers: "Zamra\u017carka szufladowa", layout_pump_booster: "Hydrofor", layout_pump_sump: "Pompa zatapialna", layout_floor_water: "Wodne", layout_floor_electric: "Elektryczne", layout_robot_pool: "Robot basenowy", wp_pumping: "Pompowanie", wp_high: "Wysoki poziom", spa_bubbles: "B\u0105belki", sauna_ready: "Gotowe", aq_lit: "\u015awiat\u0142o w\u0142\u0105czone", aq_dark: "\u015awiat\u0142o wy\u0142\u0105czone", meter_low: "Niskie zu\u017cycie", meter_high: "Wysokie zu\u017cycie", section_pressure: "Ci\u015bnienie", section_water_level: "Poziom wody", section_high_level: "Alarm wysokiego poziomu", level_max: "Poziom przy pe\u0142nym", section_bubbles: "B\u0105belki", section_tariff: "Strefa taryfowa", high_power: "Wysokie zu\u017cycie od (W lub VA)", tree_palette: "Kolory", palette_multicolor: "Wielokolorowa", palette_red_gold: "Czerwie\u0144 i z\u0142oto", palette_red_silver: "Czerwie\u0144 i srebro", palette_gold_silver: "Z\u0142oto i srebro", palette_blue_silver: "B\u0142\u0119kit i srebro", palette_white_silver: "Biel i srebro", palette_red_green: "Czerwie\u0144 i ziele\u0144", presents: "Prezenty", presents_auto: "24 i 25 grudnia", presents_show: "Zawsze", presents_hide: "Nigdy", tree_on: "W\u0142\u0105czona", tree_off: "Wy\u0142\u0105czona",
     type_lamp: "Lampa", lamp_off: "Wy\u0142\u0105czona", lamp_on: "W\u0142\u0105czona", lamp_line_brightness: "Jasno\u015b\u0107", lamp_line_color_temp: "Temperatura barwowa", lamp_line_effect: "Efekt", lamp_spots: "Liczba oczek", layout_lamp_bulb: "\u017bar\u00f3wka", layout_lamp_bedside: "Lampka nocna", layout_lamp_floor: "Lampa \u0142ukowa", layout_lamp_torch: "Halogenowa lampa stoj\u0105ca", layout_lamp_pendant: "Lampa wisz\u0105ca", layout_lamp_strip: "Ta\u015bma LED", layout_lamp_spot: "Oczka wpuszczane", layout_lamp_panels: "Panele \u015bwietlne", layout_lamp_desk: "Lampka biurkowa", layout_lamp_wall: "Latarnia \u015bcienna",
     speed_power_max: "Moc na najwy\u017cszym biegu (W)", speed_power_custom: "W\u0142asne progi pr\u0119dko\u015bci", speed_power_2: "Bieg 2 od (W)", speed_power_3: "Bieg 3 od (W)",
     fw_self_cleaning: "Samooczyszczanie", fw_dirty_full: "Zbiornik na brudn\u0105 wod\u0119 pe\u0142ny", fw_clean_empty: "Zbiornik na czyst\u0105 wod\u0119 pusty",
@@ -2033,7 +2033,7 @@ const T = {
     type_air_conditioner: "Klimatyzator", ac_off: "Wy\u0142\u0105czony", ac_cooling: "Ch\u0142odzenie", ac_heating: "Grzanie", ac_drying: "Osuszanie", ac_fan_only: "Tylko wentylator", ac_auto: "Automatyczny", ac_idle: "Czuwanie", ac_defrost: "Odszranianie", ac_preheating: "Podgrzewanie wst\u0119pne", ac_line_humidity: "Wilgotno\u015b\u0107", section_vane_vertical: "\u017baluzja g\u00f3ra/d\u00f3\u0142", section_vane_horizontal: "\u017baluzja lewo/prawo", section_purifier: "Oczyszczacz powietrza (nanoe, plazma)", section_defrost: "Wska\u017anik odszraniania",
     type_dehumidifier: "Osuszacz powietrza", type_space_heater: "Grzejnik elektryczny", type_towel_warmer: "Grzejnik \u0142azienkowy", dh_laundry: "Suszenie prania", dh_full: "Zbiornik pe\u0142ny", dh_line_tank: "Zbiornik", line_mode: "Tryb", tw_comfort: "Komfort", tw_eco: "Eko", tw_frost: "Ochrona przed zamarzaniem", tw_boost: "Boost", tw_drying: "Suszenie", section_tank: "Zbiornik na wod\u0119", section_current_humidity: "Czujnik wilgotno\u015bci", section_heater_layout: "Model", layout_fan_heater: "Termowentylator", layout_oil_radiator: "Grzejnik olejowy",
     type_air_fryer: "Frytkownica bezt\u0142uszczowa", af_cooking: "Pieczenie", af_shake: "Potrz\u0105\u015bnij koszem", af_basket_out: "Kosz wyj\u0119ty", af_preheated: "Nagrzana", af_basket2: "Kosz 2", section_fryer_layout: "Model", layout_basket: "Kosz", layout_window: "Kosz z okienkiem", layout_dual: "Podw\u00f3jny kosz", section_basket: "Czujnik kosza", section_shake: "Przypomnienie o potrz\u0105\u015bni\u0119ciu", section_basket2: "Stan kosza 2 (podw\u00f3jny)",
-    last_cycle: "Ostatni cykl", show_last_cycle: "Poka\u017c ostatni cykl", power_off_delay: "Op\u00f3\u017anienie przed \u201eZako\u0144czono\u201d (min, tylko gniazdko)",
+    last_cycle: "Ostatni cykl", show_last_cycle: "Poka\u017c ostatni cykl", power_off_delay: "Op\u00f3\u017anienie przed \u201eZako\u0144czono\u201d (min, tylko gniazdko)", section_energy: "Zu\u017cyta energia", energy_price: "Cena za kWh (liczba lub encja)", energy_line: "Energia", cost_line: "Koszt", show_elapsed: "Poka\u017c czas, kt\u00f3ry up\u0142yn\u0105\u0142 w cyklu", elapsed_line: "Up\u0142yn\u0119\u0142o", show_today: "Poka\u017c dzisiejszy czas pracy i uruchomienia", today_line: "Dzi\u015b", starts_one: "uruchomienia: {n}", starts_other: "uruchomienia: {n}", section_tower: "Jednostka centralna (drugie gniazdko)", tower_line: "Jednostka centralna", tower_on: "Jednostka centralna w\u0142\u0105czona", tower_toggle: "Jednostka centralna",
     washer_dryer: "Pralko-suszarka (pierze i suszy)", step_drying: "Suszenie", section_cycle_phase: "Faza programu",
     step_prewash: "Pranie wst\u0119pne", step_soaking: "Namaczanie", step_weighing: "Wa\u017cenie", step_filling: "Nape\u0142nianie", step_washing: "Pranie", step_rinsing: "P\u0142ukanie", step_draining: "Odpompowanie", step_spinning: "Wirowanie", step_cooling: "Sch\u0142adzanie", step_anti_crease: "Przeciw zagnieceniom", step_steam: "Para",
     type_ev_charger: "Stacja \u0142adowania", ev_no_vehicle: "Brak pojazdu", ev_connected: "Pojazd pod\u0142\u0105czony", ev_awaiting_auth: "Oczekiwanie na autoryzacj\u0119", ev_charging: "\u0141adowanie", ev_paused: "\u0141adowanie wstrzymane", ev_scheduled: "Zaplanowane", ev_done: "\u0141adowanie zako\u0144czone", ev_error: "B\u0142\u0105d", ev_offline: "Offline", section_vehicle: "Pojazd pod\u0142\u0105czony (czujnik wtyczki)", section_session_energy: "Energia sesji \u0142adowania", section_current_limit: "Limit pr\u0105du \u0142adowania", ev_power_threshold: "\u0141aduje powy\u017cej tej mocy (W)", ev_line_session: "Na\u0142adowano", ev_line_limit: "Limit pr\u0105du",
@@ -2180,7 +2180,7 @@ const T = {
     layout_robot_stick: "\u65e0\u7ebf\u5438\u5c18\u5668", stick_charged: "\u5df2\u5145\u6ee1",
     layout_robot_floor_washer: "\u6d17\u5730\u673a", stick_away: "\u4e0d\u5728\u5e95\u5ea7\u4e0a", stick_away_threshold: "\u4f4e\u4e8e\u6b64\u529f\u7387\u5373\u4e0d\u5728\u5e95\u5ea7\u4e0a (W)",
     type_diffuser: "\u9999\u85b0\u673a", dif_mist: "\u55b7\u96fe\u4e2d", dif_inter: "\u95f4\u6b47", dif_low: "\u8f7b\u96fe", dif_empty: "\u6c34\u7bb1\u7f3a\u6c34", dif_mode: "\u55b7\u96fe\u6a21\u5f0f", layout_dif_drop: "\u6c34\u6ef4", layout_dif_cone: "\u5706\u9525", layout_dif_stone: "\u9e45\u5375\u77f3", layout_dif_flame: "\u706b\u7130", layout_dif_nebulizer: "\u96fe\u5316\u5668", section_tank_empty: "\u7f3a\u6c34\u4f20\u611f\u5668", type_hrv: "\u70ed\u56de\u6536\u65b0\u98ce", hrv_run: "\u8fd0\u884c\u4e2d", hrv_boost: "\u5f3a\u52b2", hrv_bypass: "\u65c1\u901a", hrv_defrost: "\u9664\u971c\u4e2d", hrv_filter: "\u66f4\u6362\u6ee4\u7f51", hrv_away: "\u79bb\u5bb6", hrv_recirc: "\u5185\u5faa\u73af", hrv_humidity: "\u6e7f\u5ea6\u63a7\u5236", hrv_inter: "\u95f4\u6b47", hrv_inter_paused: "\u95f4\u6b47\uff0c\u6682\u505c\u4e2d", hrv_mode: "\u6a21\u5f0f", hrv_supply_fan: "\u9001\u98ce", hrv_exhaust_fan: "\u6392\u98ce", section_supply_fan: "\u9001\u98ce\u98ce\u673a\u8f6c\u901f\uff08\u8f6c/\u5206\uff09", section_exhaust_fan: "\u6392\u98ce\u98ce\u673a\u8f6c\u901f\uff08\u8f6c/\u5206\uff09", fan_max_rpm: "\u98ce\u673a\u6700\u9ad8\u8f6c\u901f\uff08\u8f6c/\u5206\uff09", section_exhaust_airflow: "\u6392\u98ce\u98ce\u91cf", section_target_humidity: "\u76ee\u6807\u6e7f\u5ea6", section_humidity_control: "\u6e7f\u5ea6\u63a7\u5236\u5f00\u5173", layout_hrv_diagram: "\u6c14\u6d41\u793a\u610f", layout_hrv_one_duct: "\u58c1\u6302\u5f0f\uff0c\u5355\u7ba1", layout_hrv_pair: "\u7a7f\u5899\u6210\u5bf9", section_supply_temperature: "\u9001\u98ce\u6e29\u5ea6", section_extract_temperature: "\u56de\u98ce\u6e29\u5ea6", section_exhaust_temperature: "\u6392\u98ce\u6e29\u5ea6", section_bypass: "\u65c1\u901a", section_airflow: "\u98ce\u91cf", hrv_t_outdoor: "\u65b0\u98ce", hrv_t_supply: "\u9001\u98ce", hrv_t_extract: "\u56de\u98ce", hrv_t_exhaust: "\u6392\u98ce", hrv_outside: "\u5ba4\u5916", hrv_room: "\u5ba4\u5185",
-    type_camera: "\u6444\u50cf\u5934", cam_idle: "\u5f85\u673a", cam_live: "\u76f4\u64ad\u4e2d", cam_rec: "\u5f55\u50cf\u4e2d", cam_motion: "\u68c0\u6d4b\u5230\u79fb\u52a8", cam_off: "\u5df2\u5173\u95ed", cam_line_last_motion: "\u4e0a\u6b21\u79fb\u52a8", cam_line_night: "\u591c\u89c6", cam_line_signal: "\u4fe1\u53f7", section_motion: "\u79fb\u52a8\u4f20\u611f\u5668", section_recording: "\u5f55\u50cf\u4f20\u611f\u5668", section_night_vision: "\u591c\u89c6", section_privacy: "\u9690\u79c1\u6a21\u5f0f", section_signal: "\u4fe1\u53f7\u5f3a\u5ea6", layout_cam_indoor: "\u5ba4\u5185\u4e91\u53f0", layout_cam_tube: "\u5ba4\u5185\u5706\u67f1", layout_cam_outdoor: "\u5ba4\u5916", layout_cam_dome: "\u534a\u7403", layout_cam_doorbell: "\u95e8\u94c3", cam_ring: "\u6709\u4eba\u6309\u95e8\u94c3", cam_line_last_ring: "\u4e0a\u6b21\u6309\u94c3", section_ring: "\u95e8\u94c3\u6309\u94ae", type_mailbox: "\u4fe1\u7bb1", mb_empty: "\u7a7a", mb_mail: "\u6709\u4fe1\u4ef6", mb_front_open: "\u524d\u95e8\u5df2\u6253\u5f00", mb_back_open: "\u540e\u95e8\u5df2\u6253\u5f00", mb_line_count: "\u6536\u5230\u7684\u4fe1\u4ef6", mb_line_last: "\u6700\u8fd1\u7684\u4fe1\u4ef6", mb_front_door: "\u524d\u95e8", mb_back_door: "\u540e\u95e8", mb_open: "\u6253\u5f00", mb_closed: "\u5173\u95ed", section_mail_count: "\u4fe1\u4ef6\u8ba1\u6570", layout_mb_through: "\u7a7f\u5899\u5f0f", layout_mb_classic: "\u7ecf\u5178", mb_street: "\u8857\u9053", mb_house: "\u5ba4\u5185", mb_front_side: "\u8857\u9053\u4e00\u4fa7", mb_side_left: "\u5de6\u4fa7", mb_side_right: "\u53f3\u4fa7",
+    type_camera: "\u6444\u50cf\u5934", cam_idle: "\u5f85\u673a", cam_live: "\u76f4\u64ad\u4e2d", cam_rec: "\u5f55\u50cf\u4e2d", cam_motion: "\u68c0\u6d4b\u5230\u79fb\u52a8", cam_off: "\u5df2\u5173\u95ed", cam_line_last_motion: "\u4e0a\u6b21\u79fb\u52a8", cam_line_night: "\u591c\u89c6", cam_line_signal: "\u4fe1\u53f7", section_motion: "\u79fb\u52a8\u4f20\u611f\u5668", section_recording: "\u5f55\u50cf\u4f20\u611f\u5668", section_night_vision: "\u591c\u89c6", section_privacy: "\u9690\u79c1\u6a21\u5f0f", section_signal: "\u4fe1\u53f7\u5f3a\u5ea6", layout_cam_indoor: "\u5ba4\u5185\u4e91\u53f0", layout_cam_tube: "\u5ba4\u5185\u5706\u67f1", layout_cam_outdoor: "\u5ba4\u5916", layout_cam_dome: "\u534a\u7403", layout_cam_doorbell: "\u95e8\u94c3", cam_ring: "\u6709\u4eba\u6309\u95e8\u94c3", cam_line_last_ring: "\u4e0a\u6b21\u6309\u94c3", section_ring: "\u95e8\u94c3\u6309\u94ae", type_mailbox: "\u4fe1\u7bb1", mb_empty: "\u7a7a", mb_mail: "\u6709\u4fe1\u4ef6", mb_front_open: "\u524d\u95e8\u5df2\u6253\u5f00", mb_back_open: "\u540e\u95e8\u5df2\u6253\u5f00", mb_line_count: "\u6536\u5230\u7684\u4fe1\u4ef6", mb_line_last: "\u6700\u8fd1\u7684\u4fe1\u4ef6", mb_front_door: "\u524d\u95e8", mb_back_door: "\u540e\u95e8", mb_open: "\u6253\u5f00", mb_closed: "\u5173\u95ed", section_mail_count: "\u4fe1\u4ef6\u8ba1\u6570", layout_mb_through: "\u7a7f\u5899\u5f0f", layout_mb_classic: "\u7ecf\u5178", mb_street: "\u8857\u9053", mb_house: "\u5ba4\u5185", mb_front_side: "\u8857\u9053\u4e00\u4fa7", mb_side_left: "\u5de6\u4fa7", mb_side_right: "\u53f3\u4fa7", type_water_pump: "\u6c34\u6cf5", type_floor_heating: "\u5730\u6696", type_spa: "\u6c34\u7597\u6d74\u7f38", type_sauna: "\u6851\u62ff", type_aquarium: "\u9c7c\u7f38", type_meter: "\u7535\u8868", type_christmas_tree: "\u5723\u8bde\u6811", layout_chest: "\u5367\u5f0f\u51b0\u67dc", layout_drawers: "\u62bd\u5c49\u5f0f\u51b0\u67dc", layout_pump_booster: "\u589e\u538b\u6cf5", layout_pump_sump: "\u6392\u6c61\u6cf5", layout_floor_water: "\u6c34\u6696", layout_floor_electric: "\u7535\u6696", layout_robot_pool: "\u6cf3\u6c60\u673a\u5668\u4eba", wp_pumping: "\u62bd\u6c34\u4e2d", wp_high: "\u9ad8\u6c34\u4f4d", spa_bubbles: "\u6c14\u6ce1", sauna_ready: "\u5c31\u7eea", aq_lit: "\u706f\u5df2\u5f00", aq_dark: "\u706f\u5df2\u5173", meter_low: "\u4f4e\u529f\u8017", meter_high: "\u9ad8\u529f\u8017", section_pressure: "\u538b\u529b", section_water_level: "\u6c34\u4f4d", section_high_level: "\u9ad8\u6c34\u4f4d\u62a5\u8b66", level_max: "\u6ee1\u6c34\u4f4d", section_bubbles: "\u6c14\u6ce1", section_tariff: "\u7535\u4ef7\u65f6\u6bb5", high_power: "\u9ad8\u529f\u8017\u8d77\u70b9\uff08W \u6216 VA\uff09", tree_palette: "\u989c\u8272", palette_multicolor: "\u591a\u5f69", palette_red_gold: "\u7ea2\u91d1", palette_red_silver: "\u7ea2\u94f6", palette_gold_silver: "\u91d1\u94f6", palette_blue_silver: "\u84dd\u94f6", palette_white_silver: "\u767d\u94f6", palette_red_green: "\u7ea2\u7eff", presents: "\u793c\u7269", presents_auto: "12 \u6708 24 \u548c 25 \u65e5", presents_show: "\u59cb\u7ec8", presents_hide: "\u4ece\u4e0d", tree_on: "\u5df2\u5f00", tree_off: "\u5df2\u5173",
     type_lamp: "\u706f", lamp_off: "\u5173", lamp_on: "\u5f00", lamp_line_brightness: "\u4eae\u5ea6", lamp_line_color_temp: "\u8272\u6e29", lamp_line_effect: "\u6548\u679c", lamp_spots: "\u5c04\u706f\u6570\u91cf", layout_lamp_bulb: "\u706f\u6ce1", layout_lamp_bedside: "\u5e8a\u5934\u706f", layout_lamp_floor: "\u5f27\u5f62\u843d\u5730\u706f", layout_lamp_torch: "\u5364\u7d20\u843d\u5730\u706f", layout_lamp_pendant: "\u540a\u706f", layout_lamp_strip: "LED \u706f\u5e26", layout_lamp_spot: "\u5d4c\u5165\u5f0f\u5c04\u706f", layout_lamp_panels: "\u706f\u677f", layout_lamp_desk: "\u53f0\u706f", layout_lamp_wall: "\u58c1\u706f",
     speed_power_max: "\u6700\u9ad8\u6863\u529f\u7387 (W)", speed_power_custom: "\u81ea\u5b9a\u4e49\u6863\u4f4d\u9608\u503c", speed_power_2: "2 \u6863\u8d77\u59cb (W)", speed_power_3: "3 \u6863\u8d77\u59cb (W)",
     fw_self_cleaning: "\u81ea\u6e05\u6d01\u4e2d", fw_dirty_full: "\u6c61\u6c34\u7bb1\u5df2\u6ee1", fw_clean_empty: "\u6e05\u6c34\u7bb1\u5df2\u7a7a",
@@ -2202,7 +2202,7 @@ const T = {
     type_air_conditioner: "\u7a7a\u8c03", ac_off: "\u5df2\u5173\u95ed", ac_cooling: "\u5236\u51b7\u4e2d", ac_heating: "\u5236\u70ed\u4e2d", ac_drying: "\u9664\u6e7f\u4e2d", ac_fan_only: "\u9001\u98ce", ac_auto: "\u81ea\u52a8", ac_idle: "\u5f85\u673a", ac_defrost: "\u9664\u971c\u4e2d", ac_preheating: "\u9884\u70ed\u4e2d", ac_line_humidity: "\u6e7f\u5ea6", section_vane_vertical: "\u4e0a\u4e0b\u5bfc\u98ce\u677f", section_vane_horizontal: "\u5de6\u53f3\u5bfc\u98ce\u677f", section_purifier: "\u7a7a\u6c14\u51c0\u5316 (nanoe\u3001\u7b49\u79bb\u5b50)", section_defrost: "\u9664\u971c\u6307\u793a",
     type_dehumidifier: "\u9664\u6e7f\u673a", type_space_heater: "\u53d6\u6696\u5668", type_towel_warmer: "\u6bdb\u5dfe\u67b6", dh_laundry: "\u8863\u7269\u5e72\u71e5", dh_full: "\u6c34\u7bb1\u5df2\u6ee1", dh_line_tank: "\u6c34\u7bb1", line_mode: "\u6a21\u5f0f", tw_comfort: "\u8212\u9002", tw_eco: "\u8282\u80fd", tw_frost: "\u9632\u51bb", tw_boost: "\u5f3a\u52b2", tw_drying: "\u70d8\u5e72", section_tank: "\u6c34\u7bb1", section_current_humidity: "\u6e7f\u5ea6\u4f20\u611f\u5668", section_heater_layout: "\u578b\u53f7", layout_fan_heater: "\u6696\u98ce\u673a", layout_oil_radiator: "\u6cb9\u6c40",
     type_air_fryer: "\u7a7a\u6c14\u70b8\u9505", af_cooking: "\u70f9\u996a\u4e2d", af_shake: "\u8bf7\u6447\u6643\u70b8\u7bee", af_basket_out: "\u70b8\u7bee\u5df2\u53d6\u51fa", af_preheated: "\u5df2\u9884\u70ed", af_basket2: "\u70b8\u7bee 2", section_fryer_layout: "\u578b\u53f7", layout_basket: "\u70b8\u7bee", layout_window: "\u5e26\u89c6\u7a97\u70b8\u7bee", layout_dual: "\u53cc\u70b8\u7bee", section_basket: "\u70b8\u7bee\u4f20\u611f\u5668", section_shake: "\u6447\u6643\u63d0\u9192", section_basket2: "\u70b8\u7bee 2 \u72b6\u6001\uff08\u53cc\u7bee\uff09",
-    last_cycle: "\u4e0a\u6b21\u5468\u671f", show_last_cycle: "\u663e\u793a\u4e0a\u6b21\u5468\u671f", power_off_delay: "\u201c\u5b8c\u6210\u201d\u524d\u7684\u5ef6\u8fdf\uff08\u5206\u949f\uff0c\u4ec5\u63d2\u5ea7\uff09",
+    last_cycle: "\u4e0a\u6b21\u5468\u671f", show_last_cycle: "\u663e\u793a\u4e0a\u6b21\u5468\u671f", power_off_delay: "\u201c\u5b8c\u6210\u201d\u524d\u7684\u5ef6\u8fdf\uff08\u5206\u949f\uff0c\u4ec5\u63d2\u5ea7\uff09", section_energy: "\u5df2\u7528\u7535\u91cf", energy_price: "\u6bcf\u5343\u74e6\u65f6\u4ef7\u683c\uff08\u6570\u5b57\u6216\u5b9e\u4f53\uff09", energy_line: "\u7535\u91cf", cost_line: "\u8d39\u7528", show_elapsed: "\u663e\u793a\u672c\u5468\u671f\u5df2\u7528\u65f6\u95f4", elapsed_line: "\u5df2\u7528\u65f6", show_today: "\u663e\u793a\u4eca\u65e5\u8fd0\u884c\u65f6\u95f4\u548c\u542f\u52a8\u6b21\u6570", today_line: "\u4eca\u65e5", starts_one: "{n} \u6b21\u542f\u52a8", starts_other: "{n} \u6b21\u542f\u52a8", section_tower: "\u4e3b\u673a\uff08\u7b2c\u4e8c\u4e2a\u63d2\u5ea7\uff09", tower_line: "\u4e3b\u673a", tower_on: "\u4e3b\u673a\u5df2\u5f00", tower_toggle: "\u4e3b\u673a",
     washer_dryer: "\u6d17\u70d8\u4e00\u4f53\u673a\uff08\u6d17\u6da4\u5e76\u70d8\u5e72\uff09", step_drying: "\u70d8\u5e72\u4e2d", section_cycle_phase: "\u7a0b\u5e8f\u9636\u6bb5",
     step_prewash: "\u9884\u6d17\u4e2d", step_soaking: "\u6d78\u6ce1\u4e2d", step_weighing: "\u79f0\u91cd\u4e2d", step_filling: "\u8fdb\u6c34\u4e2d", step_washing: "\u6d17\u6da4\u4e2d", step_rinsing: "\u6f02\u6d17\u4e2d", step_draining: "\u6392\u6c34\u4e2d", step_spinning: "\u8131\u6c34\u4e2d", step_cooling: "\u51b7\u5374\u4e2d", step_anti_crease: "\u9632\u76b1\u4e2d", step_steam: "\u84b8\u6c7d\u4e2d",
     type_ev_charger: "\u7535\u52a8\u8f66\u5145\u7535\u6869", ev_no_vehicle: "\u65e0\u8f66\u8f86", ev_connected: "\u8f66\u8f86\u5df2\u8fde\u63a5", ev_awaiting_auth: "\u7b49\u5f85\u6388\u6743", ev_charging: "\u5145\u7535\u4e2d", ev_paused: "\u5145\u7535\u5df2\u6682\u505c", ev_scheduled: "\u5df2\u9884\u7ea6", ev_done: "\u5145\u7535\u5b8c\u6210", ev_error: "\u9519\u8bef", ev_offline: "\u79bb\u7ebf", section_vehicle: "\u8f66\u8f86\u5df2\u8fde\u63a5\uff08\u63d2\u5934\u4f20\u611f\u5668\uff09", section_session_energy: "\u672c\u6b21\u5145\u7535\u7535\u91cf", section_current_limit: "\u5145\u7535\u7535\u6d41\u9650\u5236", ev_power_threshold: "\u529f\u7387\u9ad8\u4e8e\u6b64\u503c (W) \u5373\u4e3a\u5145\u7535", ev_line_session: "\u5df2\u5145\u7535\u91cf", ev_line_limit: "\u7535\u6d41\u9650\u5236",
@@ -2349,7 +2349,7 @@ const T = {
     layout_robot_stick: "Ty\u010dov\u00fd vysava\u010d", stick_charged: "Nabito",
     layout_robot_floor_washer: "Myc\u00ed vysava\u010d", stick_away: "Mimo z\u00e1kladnu", stick_away_threshold: "Mimo z\u00e1kladnu pod t\u00edmto v\u00fdkonem (W)",
     type_diffuser: "Aroma difuz\u00e9r", dif_mist: "Rozpra\u0161uje", dif_inter: "P\u0159eru\u0161ovan\u011b", dif_low: "Slab\u00e1 mlha", dif_empty: "Pr\u00e1zdn\u00e1 n\u00e1dr\u017eka", dif_mode: "Re\u017eim mlhy", layout_dif_drop: "Kapka", layout_dif_cone: "Ku\u017eel", layout_dif_stone: "Obl\u00e1zek", layout_dif_flame: "Plamen", layout_dif_nebulizer: "Nebuliz\u00e9r", section_tank_empty: "Senzor pr\u00e1zdn\u00e9 n\u00e1dr\u017eky", type_hrv: "Rekupera\u010dn\u00ed v\u011btr\u00e1n\u00ed", hrv_run: "V\u011btr\u00e1", hrv_boost: "Boost", hrv_bypass: "Bypass", hrv_defrost: "Odmrazov\u00e1n\u00ed", hrv_filter: "Vym\u011bnit filtr", hrv_away: "Pry\u010d", hrv_recirc: "Recirkulace", hrv_humidity: "\u0158\u00edzen\u00ed vlhkosti", hrv_inter: "P\u0159eru\u0161ovan\u011b", hrv_inter_paused: "P\u0159eru\u0161ovan\u011b, pauza", hrv_mode: "Re\u017eim", hrv_supply_fan: "P\u0159\u00edvod", hrv_exhaust_fan: "Odtah", section_supply_fan: "Ot\u00e1\u010dky p\u0159\u00edvodn\u00edho ventil\u00e1toru (ot/min)", section_exhaust_fan: "Ot\u00e1\u010dky odtahov\u00e9ho ventil\u00e1toru (ot/min)", fan_max_rpm: "Maxim\u00e1ln\u00ed ot\u00e1\u010dky ventil\u00e1tor\u016f (ot/min)", section_exhaust_airflow: "Pr\u016ftok odtahu", section_target_humidity: "Po\u017eadovan\u00e1 vlhkost", section_humidity_control: "Sp\u00edna\u010d \u0159\u00edzen\u00ed vlhkosti", layout_hrv_diagram: "Proudy vzduchu", layout_hrv_one_duct: "N\u00e1st\u011bnn\u00e1, jeden kan\u00e1l", layout_hrv_pair: "P\u00e1r ve zdi", section_supply_temperature: "Teplota p\u0159\u00edvodu", section_extract_temperature: "Teplota odvodu", section_exhaust_temperature: "Teplota odpadn\u00edho vzduchu", section_bypass: "Bypass", section_airflow: "Pr\u016ftok vzduchu", hrv_t_outdoor: "\u010derstv\u00fd", hrv_t_supply: "p\u0159\u00edvod", hrv_t_extract: "odvod", hrv_t_exhaust: "odpad", hrv_outside: "venku", hrv_room: "m\u00edstnost",
-    type_camera: "Kamera", cam_idle: "Ne\u010dinn\u00e1", cam_live: "\u017div\u011b", cam_rec: "Nahr\u00e1v\u00e1", cam_motion: "Zji\u0161t\u011bn pohyb", cam_off: "Vypnut\u00e1", cam_line_last_motion: "Posledn\u00ed pohyb", cam_line_night: "No\u010dn\u00ed vid\u011bn\u00ed", cam_line_signal: "Sign\u00e1l", section_motion: "Senzor pohybu", section_recording: "Senzor nahr\u00e1v\u00e1n\u00ed", section_night_vision: "No\u010dn\u00ed vid\u011bn\u00ed", section_privacy: "Re\u017eim soukrom\u00ed", section_signal: "S\u00edla sign\u00e1lu", layout_cam_indoor: "Vnit\u0159n\u00ed oto\u010dn\u00e1", layout_cam_tube: "Vnit\u0159n\u00ed v\u00e1lec", layout_cam_outdoor: "Venkovn\u00ed", layout_cam_dome: "Kopule", layout_cam_doorbell: "Zvonek", cam_ring: "N\u011bkdo zvon\u00ed", cam_line_last_ring: "Posledn\u00ed zazvon\u011bn\u00ed", section_ring: "Tla\u010d\u00edtko zvonku", type_mailbox: "Po\u0161tovn\u00ed schr\u00e1nka", mb_empty: "Pr\u00e1zdn\u00e1", mb_mail: "Po\u0161ta", mb_front_open: "P\u0159edn\u00ed dv\u00ed\u0159ka otev\u0159en\u00e1", mb_back_open: "Zadn\u00ed dv\u00ed\u0159ka otev\u0159en\u00e1", mb_line_count: "P\u0159ijat\u00e1 po\u0161ta", mb_line_last: "Posledn\u00ed po\u0161ta", mb_front_door: "P\u0159edn\u00ed dv\u00ed\u0159ka", mb_back_door: "Zadn\u00ed dv\u00ed\u0159ka", mb_open: "Otev\u0159en\u00e1", mb_closed: "Zav\u0159en\u00e1", section_mail_count: "Po\u010d\u00edtadlo po\u0161ty", layout_mb_through: "Pr\u016fchoz\u00ed", layout_mb_classic: "Klasick\u00e1", mb_street: "ulice", mb_house: "d\u016fm", mb_front_side: "Strana ulice", mb_side_left: "Vlevo", mb_side_right: "Vpravo",
+    type_camera: "Kamera", cam_idle: "Ne\u010dinn\u00e1", cam_live: "\u017div\u011b", cam_rec: "Nahr\u00e1v\u00e1", cam_motion: "Zji\u0161t\u011bn pohyb", cam_off: "Vypnut\u00e1", cam_line_last_motion: "Posledn\u00ed pohyb", cam_line_night: "No\u010dn\u00ed vid\u011bn\u00ed", cam_line_signal: "Sign\u00e1l", section_motion: "Senzor pohybu", section_recording: "Senzor nahr\u00e1v\u00e1n\u00ed", section_night_vision: "No\u010dn\u00ed vid\u011bn\u00ed", section_privacy: "Re\u017eim soukrom\u00ed", section_signal: "S\u00edla sign\u00e1lu", layout_cam_indoor: "Vnit\u0159n\u00ed oto\u010dn\u00e1", layout_cam_tube: "Vnit\u0159n\u00ed v\u00e1lec", layout_cam_outdoor: "Venkovn\u00ed", layout_cam_dome: "Kopule", layout_cam_doorbell: "Zvonek", cam_ring: "N\u011bkdo zvon\u00ed", cam_line_last_ring: "Posledn\u00ed zazvon\u011bn\u00ed", section_ring: "Tla\u010d\u00edtko zvonku", type_mailbox: "Po\u0161tovn\u00ed schr\u00e1nka", mb_empty: "Pr\u00e1zdn\u00e1", mb_mail: "Po\u0161ta", mb_front_open: "P\u0159edn\u00ed dv\u00ed\u0159ka otev\u0159en\u00e1", mb_back_open: "Zadn\u00ed dv\u00ed\u0159ka otev\u0159en\u00e1", mb_line_count: "P\u0159ijat\u00e1 po\u0161ta", mb_line_last: "Posledn\u00ed po\u0161ta", mb_front_door: "P\u0159edn\u00ed dv\u00ed\u0159ka", mb_back_door: "Zadn\u00ed dv\u00ed\u0159ka", mb_open: "Otev\u0159en\u00e1", mb_closed: "Zav\u0159en\u00e1", section_mail_count: "Po\u010d\u00edtadlo po\u0161ty", layout_mb_through: "Pr\u016fchoz\u00ed", layout_mb_classic: "Klasick\u00e1", mb_street: "ulice", mb_house: "d\u016fm", mb_front_side: "Strana ulice", mb_side_left: "Vlevo", mb_side_right: "Vpravo", type_water_pump: "Vodn\u00ed \u010derpadlo", type_floor_heating: "Podlahov\u00e9 topen\u00ed", type_spa: "V\u00ed\u0159ivka", type_sauna: "Sauna", type_aquarium: "Akv\u00e1rium", type_meter: "Elektrom\u011br", type_christmas_tree: "V\u00e1no\u010dn\u00ed stromek", layout_chest: "Truhlicov\u00e1 mrazni\u010dka", layout_drawers: "\u0160upl\u00edkov\u00e1 mrazni\u010dka", layout_pump_booster: "Dom\u00e1c\u00ed vod\u00e1rna", layout_pump_sump: "Kalov\u00e9 \u010derpadlo", layout_floor_water: "Teplovodn\u00ed", layout_floor_electric: "Elektrick\u00e9", layout_robot_pool: "Baz\u00e9nov\u00fd robot", wp_pumping: "\u010cerp\u00e1", wp_high: "Vysok\u00e1 hladina", spa_bubbles: "Bubliny", sauna_ready: "P\u0159ipraveno", aq_lit: "Sv\u011btlo zapnuto", aq_dark: "Sv\u011btlo vypnuto", meter_low: "N\u00edzk\u00e1 spot\u0159eba", meter_high: "Vysok\u00e1 spot\u0159eba", section_pressure: "Tlak", section_water_level: "Hladina vody", section_high_level: "Alarm vysok\u00e9 hladiny", level_max: "Hladina p\u0159i pln\u00e9m", section_bubbles: "Bubliny", section_tariff: "Tarifn\u00ed p\u00e1smo", high_power: "Vysok\u00e1 spot\u0159eba od (W nebo VA)", tree_palette: "Barvy", palette_multicolor: "Pestrobarevn\u00fd", palette_red_gold: "\u010cerven\u00e1 a zlat\u00e1", palette_red_silver: "\u010cerven\u00e1 a st\u0159\u00edbrn\u00e1", palette_gold_silver: "Zlat\u00e1 a st\u0159\u00edbrn\u00e1", palette_blue_silver: "Modr\u00e1 a st\u0159\u00edbrn\u00e1", palette_white_silver: "B\u00edl\u00e1 a st\u0159\u00edbrn\u00e1", palette_red_green: "\u010cerven\u00e1 a zelen\u00e1", presents: "D\u00e1rky", presents_auto: "24. a 25. prosince", presents_show: "V\u017edy", presents_hide: "Nikdy", tree_on: "Zapnut\u00fd", tree_off: "Vypnut\u00fd",
     type_lamp: "Lampa", lamp_off: "Vypnut\u00e1", lamp_on: "Zapnut\u00e1", lamp_line_brightness: "Jas", lamp_line_color_temp: "Teplota barvy", lamp_line_effect: "Efekt", lamp_spots: "Po\u010det bodovek", layout_lamp_bulb: "\u017d\u00e1rovka", layout_lamp_bedside: "No\u010dn\u00ed lampi\u010dka", layout_lamp_floor: "Obloukov\u00e1 lampa", layout_lamp_torch: "Halogenov\u00e1 stojac\u00ed lampa", layout_lamp_pendant: "Z\u00e1v\u011bsn\u00e9 sv\u00edtidlo", layout_lamp_strip: "LED p\u00e1sek", layout_lamp_spot: "Vestavn\u00e9 bodovky", layout_lamp_panels: "Sv\u011bteln\u00e9 panely", layout_lamp_desk: "Stoln\u00ed lampa", layout_lamp_wall: "N\u00e1st\u011bnn\u00e1 lucerna",
     speed_power_max: "P\u0159\u00edkon na nejvy\u0161\u0161\u00ed stupe\u0148 (W)", speed_power_custom: "Vlastn\u00ed prahy rychlosti", speed_power_2: "Stupe\u0148 2 od (W)", speed_power_3: "Stupe\u0148 3 od (W)",
     fw_self_cleaning: "Samo\u010di\u0161t\u011bn\u00ed", fw_dirty_full: "N\u00e1dr\u017e na \u0161pinavou vodu pln\u00e1", fw_clean_empty: "N\u00e1dr\u017e na \u010distou vodu pr\u00e1zdn\u00e1",
@@ -2371,7 +2371,7 @@ const T = {
     type_air_conditioner: "Klimatizace", ac_off: "Vypnuto", ac_cooling: "Chlazen\u00ed", ac_heating: "Topen\u00ed", ac_drying: "Odvlh\u010dov\u00e1n\u00ed", ac_fan_only: "Jen ventil\u00e1tor", ac_auto: "Automaticky", ac_idle: "Pohotovost", ac_defrost: "Odmrazov\u00e1n\u00ed", ac_preheating: "P\u0159edeh\u0159ev", ac_line_humidity: "Vlhkost", section_vane_vertical: "Lamela nahoru/dol\u016f", section_vane_horizontal: "Lamela vlevo/vpravo", section_purifier: "\u010cisti\u010dka vzduchu (nanoe, plazma)", section_defrost: "Indik\u00e1tor odmrazov\u00e1n\u00ed",
     type_dehumidifier: "Odvlh\u010dova\u010d", type_space_heater: "Topidlo", type_towel_warmer: "Su\u0161\u00e1k na ru\u010dn\u00edky", dh_laundry: "Su\u0161en\u00ed pr\u00e1dla", dh_full: "N\u00e1dr\u017e pln\u00e1", dh_line_tank: "N\u00e1dr\u017e", line_mode: "Re\u017eim", tw_comfort: "Komfort", tw_eco: "Eco", tw_frost: "Protiz\u00e1mraz", tw_boost: "Boost", tw_drying: "Su\u0161en\u00ed", section_tank: "N\u00e1dr\u017e na vodu", section_current_humidity: "\u010cidlo vlhkosti", section_heater_layout: "Model", layout_fan_heater: "Teplovzdu\u0161n\u00fd ventil\u00e1tor", layout_oil_radiator: "Olejov\u00fd radi\u00e1tor",
     type_air_fryer: "Horkovzdu\u0161n\u00e1 frit\u00e9za", af_cooking: "Va\u0159en\u00ed", af_shake: "Prot\u0159este ko\u0161", af_basket_out: "Ko\u0161 vyta\u017een", af_preheated: "P\u0159edeh\u0159\u00e1to", af_basket2: "Ko\u0161 2", section_fryer_layout: "Model", layout_basket: "Ko\u0161", layout_window: "Ko\u0161 s ok\u00e9nkem", layout_dual: "Dvojit\u00fd ko\u0161", section_basket: "Senzor ko\u0161e", section_shake: "P\u0159ipom\u00ednka prot\u0159ep\u00e1n\u00ed", section_basket2: "Stav ko\u0161e 2 (dvojit\u00fd)",
-    last_cycle: "Posledn\u00ed cyklus", show_last_cycle: "Zobrazit posledn\u00ed cyklus", power_off_delay: "Zpo\u017ed\u011bn\u00ed p\u0159ed \u201eHotovo\u201c (min, jen z\u00e1suvka)",
+    last_cycle: "Posledn\u00ed cyklus", show_last_cycle: "Zobrazit posledn\u00ed cyklus", power_off_delay: "Zpo\u017ed\u011bn\u00ed p\u0159ed \u201eHotovo\u201c (min, jen z\u00e1suvka)", section_energy: "Spot\u0159ebovan\u00e1 energie", energy_price: "Cena za kWh (\u010d\u00edslo nebo entita)", energy_line: "Energie", cost_line: "N\u00e1klady", show_elapsed: "Zobrazit uplynul\u00fd \u010das cyklu", elapsed_line: "Uplynulo", show_today: "Zobrazit dne\u0161n\u00ed dobu chodu a spu\u0161t\u011bn\u00ed", today_line: "Dnes", starts_one: "spu\u0161t\u011bn\u00ed: {n}", starts_other: "spu\u0161t\u011bn\u00ed: {n}", section_tower: "Sk\u0159\u00ed\u0148 po\u010d\u00edta\u010de (druh\u00e1 z\u00e1suvka)", tower_line: "Sk\u0159\u00ed\u0148", tower_on: "Sk\u0159\u00ed\u0148 zapnut\u00e1", tower_toggle: "Sk\u0159\u00ed\u0148",
     washer_dryer: "Pra\u010dka se su\u0161i\u010dkou (pere a su\u0161\u00ed)", step_drying: "Su\u0161en\u00ed", section_cycle_phase: "F\u00e1ze programu",
     step_prewash: "P\u0159edp\u00edrka", step_soaking: "Nam\u00e1\u010den\u00ed", step_weighing: "V\u00e1\u017een\u00ed", step_filling: "Napou\u0161t\u011bn\u00ed", step_washing: "Pran\u00ed", step_rinsing: "M\u00e1ch\u00e1n\u00ed", step_draining: "Vypou\u0161t\u011bn\u00ed", step_spinning: "Odst\u0159e\u010fov\u00e1n\u00ed", step_cooling: "Chlazen\u00ed", step_anti_crease: "Proti poma\u010dk\u00e1n\u00ed", step_steam: "P\u00e1ra",
     type_ev_charger: "Nab\u00edjec\u00ed stanice", ev_no_vehicle: "\u017d\u00e1dn\u00e9 vozidlo", ev_connected: "Vozidlo p\u0159ipojeno", ev_awaiting_auth: "\u010cek\u00e1 na autorizaci", ev_charging: "Nab\u00edj\u00ed", ev_paused: "Nab\u00edjen\u00ed pozastaveno", ev_scheduled: "Napl\u00e1nov\u00e1no", ev_done: "Nab\u00edjen\u00ed dokon\u010deno", ev_error: "Chyba", ev_offline: "Offline", section_vehicle: "Vozidlo p\u0159ipojeno (senzor konektoru)", section_session_energy: "Energie nab\u00edjec\u00ed relace", section_current_limit: "Limit nab\u00edjec\u00edho proudu", ev_power_threshold: "Nab\u00edj\u00ed nad t\u00edmto v\u00fdkonem (W)", ev_line_session: "Nabito", ev_line_limit: "Limit proudu",
@@ -2653,6 +2653,40 @@ function lastFinishedRun(runs) {
     if (r.end !== null && !r.cut && r.end - r.start >= LAST_CYCLE_MIN_MS) return r;
   }
   return null;
+}
+
+// The runs of a state history, the one still under way included, its end
+// then null: what an appliance did today, it is still doing.
+function stateRunsOpen(entries, normOf, windowStartMs) {
+  if (!Array.isArray(entries)) return [];
+  const runs = [];
+  let cur = null;
+  entries.forEach((e) => {
+    const t = 1000 * Number(e && (e.lc !== undefined ? e.lc : e.lu));
+    if (!Number.isFinite(t)) return;
+    const role = cycleRole(normOf(e && e.s));
+    if (role === "out") {
+      if (cur) cur.end = t;
+      cur = null;
+    } else if (!cur && role !== "gap") {
+      cur = { start: t, end: null, cut: t <= windowStartMs + 1000 };
+      runs.push(cur);
+    }
+  });
+  return runs;
+}
+
+// How long the runs lasted since fromMs, and how many began after it.
+function runsSince(runs, fromMs, nowMs) {
+  let ms = 0;
+  let starts = 0;
+  runs.forEach((r) => {
+    const end = r.end === null ? nowMs : r.end;
+    const start = Math.max(r.start, fromMs);
+    if (end > start) ms += end - start;
+    if (!r.cut && r.start >= fromMs) starts += 1;
+  });
+  return { ms, starts };
 }
 
 function stripAccents(str) {
@@ -3748,6 +3782,34 @@ function numericState(hass, entityId) {
   return Number.isFinite(v) ? v : null;
 }
 
+// An energy meter's reading in kWh, whatever unit it counts in.
+function energyKwh(hass, entityId) {
+  const v = numericState(hass, entityId);
+  if (v === null) return null;
+  const u = unitOf(hass, entityId).toLowerCase();
+  return u === "wh" ? v / 1000 : u === "mwh" ? v * 1000 : v;
+}
+
+// The price of a kWh, given as a number or as the entity that holds it: a
+// fixed tariff needs no sensor, a Tempo one comes from its own (HACF).
+function energyPriceOf(hass, p) {
+  if (p === undefined || p === null || p === "") return null;
+  const str = String(p).trim();
+  if (/^[a-z_]+\.[a-z0-9_]+$/i.test(str)) return numericState(hass, str);
+  const n = Number(str.replace(",", "."));
+  return Number.isFinite(n) ? n : null;
+}
+
+// An amount in the currency set in Home Assistant, written the profile's way.
+function formatMoney(hass, v) {
+  const cur = (hass && hass.config && hass.config.currency) || "EUR";
+  try {
+    return new Intl.NumberFormat(lang(hass), { style: "currency", currency: cur }).format(v);
+  } catch (e) {
+    return `${v.toFixed(2)} ${cur}`;
+  }
+}
+
 // A number held in an attribute, the way a climate entity keeps its
 // temperatures. An empty attribute is no reading at all, not zero.
 function numberOrNull(v) {
@@ -4581,6 +4643,7 @@ const AUTO_PATTERNS = {
   resume_entity: /resume/i,
   stop_entity: /stop|reset/i,
   power_entity: /_power$|power_w$|watt/i,
+  energy_entity: /^(?!.*(cost|price|tarif|prix)).*(energy|kwh)/i,
 };
 
 // The step of a cycle: Miele names it a program phase, Electrolux a cycle
@@ -4590,6 +4653,19 @@ const PHASE_ENTITY_RE = /program.?phase|cycle.?phase|job.?state|pr.?phase|machin
 // Suggested only for the types that can actually use them, so a washing
 // machine doesn't end up with a "filter life" field pre-filled.
 const TYPE_AUTO_PATTERNS = {
+  water_pump: {
+    pressure_entity: /pressure|pression|druck|presion|pressione|druk|tryck|trykk|cisnien|tlak/i,
+    level_entity: /level|niveau|hauteur|pegel|nivel|livello|niva|poziom|hladina/i,
+    high_level_entity: /high|alarm|haut|alert|hoch|flood|inond/i,
+  },
+  spa: {
+    bubbles_entity: /bubble|bulle|blase|burbuj|bolle|jet|massage|whirl/i,
+    temperature_entity: /temp/i,
+  },
+  sauna: { temperature_entity: /temp/i },
+  floor_heating: { temperature_entity: /temp/i },
+  aquarium: { temperature_entity: /temp/i },
+  meter: { tariff_entity: /tarif|ptec|period|hchp|tempo/i },
   diffuser: {
     light_entity: /light|lumiere|licht|luz|luce|lamp|led|night/i,
     tank_empty_entity: /tank|water|lack|empty|vide|leer|vacio/i,
@@ -5100,6 +5176,15 @@ const TYPE_CAPS = {
   // Heat recovery ventilation: fresh air in through the exchanger, stale air
   // out, a bypass for the summer nights and a filter to change.
   hrv: { hrv: true },
+  // Ten drawings from the HACF thread: two pumps, underfloor heating, a spa,
+  // a sauna, an aquarium, an electricity meter and a Christmas tree.
+  water_pump: { ntPump: true },
+  floor_heating: { ntFloor: true },
+  spa: { ntSpa: true },
+  sauna: { ntSauna: true },
+  aquarium: { ntAqua: true },
+  meter: { ntMeter: true, readOnly: true },
+  christmas_tree: { ntTree: true },
   // A television, a projector or a computer, read from its plug: what it
   // draws at rest is its standby, and a media player says what it shows.
   screen: { screen: true },
@@ -5192,6 +5277,13 @@ const STATE_DOMAINS = {
   mailbox: ["binary_sensor", "input_boolean", "sensor", "counter", "input_number", "switch"],
   diffuser: ["fan", "switch", "select", "input_select", "humidifier", "input_boolean"],
   hrv: ["fan", "climate", "select", "input_select", "switch", "input_boolean"],
+  water_pump: ["switch", "binary_sensor", "input_boolean", "sensor"],
+  floor_heating: ["climate", "switch", "input_boolean", "binary_sensor"],
+  spa: ["climate", "water_heater", "switch", "input_boolean", "binary_sensor"],
+  sauna: ["climate", "switch", "input_boolean", "binary_sensor"],
+  aquarium: ["light", "switch", "input_boolean"],
+  meter: ["sensor"],
+  christmas_tree: ["light", "switch", "input_boolean"],
 };
 // A model, a picture, the players it shows and a session lock belong to a
 // screen.
@@ -5275,10 +5367,10 @@ function compactModeOf(v) {
 const TYPE_GROUPS = [
   ["laundry", ["washer", "dryer"]],
   ["kitchen", ["dishwasher", "oven", "microwave", "hood", "cooktop", "fridge", "kettle", "cooker", "coffee", "rice_cooker", "air_fryer", "toaster"]],
-  ["heating", ["water_heater", "boiler", "heat_pump", "pellet_stove", "space_heater", "towel_warmer"]],
+  ["heating", ["water_heater", "boiler", "heat_pump", "pellet_stove", "space_heater", "towel_warmer", "floor_heating"]],
   ["air", ["air_conditioner", "dehumidifier", "air_purifier", "fan", "diffuser", "hrv"]],
-  ["home", ["screen", "iron", "hair_dryer", "printer_3d", "robot", "pool_pump", "scale", "camera", "lamp", "mailbox"]],
-  ["energy", ["solar", "home_battery", "ev_charger"]],
+  ["home", ["screen", "iron", "hair_dryer", "printer_3d", "robot", "pool_pump", "scale", "camera", "lamp", "mailbox", "water_pump", "spa", "sauna", "aquarium", "christmas_tree"]],
+  ["energy", ["solar", "home_battery", "ev_charger", "meter"]],
   ["pets", ["pet_feeder", "pet_fountain"]],
   ["network", ["network", "ups"]],
 ];
@@ -5321,6 +5413,13 @@ function detectApplianceType(cfg, st) {
   if (MAILBOX_ONLY_FIELDS.some((f) => cfg[f])) return "mailbox";
   if (DIFFUSER_ONLY_FIELDS.some((f) => cfg[f])) return "diffuser";
   if (HRV_ONLY_FIELDS.some((f) => cfg[f])) return "hrv";
+  for (const [ty, fields] of Object.entries(NT_ONLY_FIELDS)) if (fields.some((f) => cfg[f] !== undefined && cfg[f] !== "")) return ty;
+  {
+    // A spa, a sauna, an aquarium, a meter, a Christmas tree and the rest of
+    // the HACF drawings by their name, before a light makes a lamp of them.
+    const named = stripAccents(`${cfg.icon || ""} ${cfg.state_entity || ""} ${(st && st.attributes.friendly_name) || ""} ${cfg.name || ""}`).toLowerCase();
+    for (const [ty, re] of NT_NAME_RES) if (re.test(named)) return ty;
+  }
   // Home Assistant has a domain of its own for each of them.
   if (["vacuum", "lawn_mower"].includes(domainOf(cfg.state_entity))) return "robot";
   if (domainOf(cfg.state_entity) === "camera") return "camera";
@@ -5725,7 +5824,7 @@ function netDiskState(hass, entityId, anchorDevice) {
 // integrations say more in a status of their own, read here for what the
 // drawing can show: the station emptying the bin or washing and drying the
 // pads, rain keeping a mower home, its edge cut.
-const ROBOT_LAYOUTS = ["vacuum", "mop", "mower", "stick", "floor_washer"];
+const ROBOT_LAYOUTS = ["vacuum", "mop", "mower", "stick", "floor_washer", "pool"];
 const ROBOT_STATIONS = ["station", "base"];
 const ROBOT_ONLY_FIELDS = ["robot_layout", "robot_station", "robot_shelter", "robot_shelter_style", "robot_shelter_color", "robot_floor", "robot_controls", "away_threshold", "robot_status_entity", "robot_bin_entity",
   "robot_water_entity", "robot_rain_entity", "robot_error_entity"];
@@ -5763,7 +5862,7 @@ const ROBOT_LABELS = {
   error: "error", emptying: "robot_emptying", full: "robot_bin_full", washing: "robot_washing", drying: "robot_drying",
   empty: "robot_water_empty", rain: "robot_rain", edgecut: "robot_edgecut", unav: "ev_offline", off: "ac_off", away: "stick_away",
 };
-const ROBOT_WORK_LABELS = { vacuum: "robot_cleaning", mop: "robot_mopping", mower: "robot_mowing", stick: "robot_cleaning", floor_washer: "robot_cleaning" };
+const ROBOT_WORK_LABELS = { vacuum: "robot_cleaning", mop: "robot_mopping", mower: "robot_mowing", stick: "robot_cleaning", floor_washer: "robot_cleaning", pool: "robot_cleaning" };
 const ROBOT_COLORS = {
   charging: "#43a047", docked: "#43a047", emptying: "#43a047",
   cleaning: "#1e88e5", edgecut: "#1e88e5", returning: "#1e88e5", washing: "#1e88e5",
@@ -5858,6 +5957,7 @@ function robotLayoutOf(cfg, st) {
   if (ROBOT_LAYOUTS.includes(cfg.robot_layout)) return cfg.robot_layout;
   if (domainOf(cfg.state_entity) === "lawn_mower") return "mower";
   const name = stripAccents(`${(cfg.state_entity || "").split(".")[1] || ""} ${(st && st.attributes.friendly_name) || ""} ${cfg.name || ""}`.toLowerCase());
+  if (ROBOT_POOL_RE.test(name)) return "pool";
   if (ROBOT_MOWER_RE.test(name)) return "mower";
   if (ROBOT_WASHER_RE.test(name)) return "floor_washer";
   if (ROBOT_STICK_RE.test(name)) return "stick";
@@ -6240,6 +6340,12 @@ function screenControls(hass, cfg) {
     if (sw(cfg.screensaver_entity)) out.push({ key: "tab_saver", entity: cfg.screensaver_entity, icon: "mdi:weather-night", label: t(hass, "screen_saver"), on: on(cfg.screensaver_entity) });
     if (cfg.reload_entity) out.push({ key: "tab_reload", entity: cfg.reload_entity, icon: "mdi:refresh", label: t(hass, "tab_reload") });
     if (cfg.restart_entity) out.push({ key: "tab_restart", entity: cfg.restart_entity, icon: "mdi:restart", label: t(hass, "tab_restart") });
+  }
+  // A computer's tower on a plug of its own has a switch of its own (HACF).
+  if (cfg.tower_entity && ["switch", "input_boolean"].includes(domainOf(cfg.tower_entity))
+    && screenLayoutOf(cfg, stateObj(hass, cfg.state_entity)) === "computer") {
+    const ts = stateObj(hass, cfg.tower_entity);
+    out.push({ key: "tower", entity: cfg.tower_entity, icon: "mdi:desktop-tower", label: t(hass, "tower_toggle"), on: !!ts && String(ts.state).toLowerCase() === "on" });
   }
   return out;
 }
@@ -7002,6 +7108,786 @@ function lampHtml(cls, c) {
         <div class="machine ${cls} ${flags}" style="--lc:rgb(${rgb.join(",")});--lb:${level.toFixed(2)}"><svg class="lp-svg" viewBox="0 -6 96 108">${LAMP_SVGS[layout](c)}</svg></div>`;
 }
 
+// Drawings added in 3.10.0 after the HACF thread: a chest freezer and a drawer
+// freezer (fridge layouts), a booster set and a sump pump, a pool robot,
+// underfloor heating on hot water or electric, a spa, a sauna, an aquarium,
+// a Linky meter and a Christmas tree. Drawn in SVG on a 120 x 135 field; what
+// moves moves only on a machine carrying nt-on, staggered through --d0, and
+// the robot's cable and the sump's float follow their SMIL animations.
+const NT_TYPES = ["water_pump", "floor_heating", "spa", "sauna", "aquarium", "meter", "christmas_tree"];
+const PUMP_LAYOUTS = ["booster", "sump"];
+const FLOOR_LAYOUTS = ["water", "electric"];
+const NT_ONLY_FIELDS = {
+  water_pump: ["pump_layout", "pressure_entity", "level_entity", "high_level_entity", "level_max"],
+  floor_heating: ["floor_layout"],
+  spa: ["bubbles_entity"],
+  christmas_tree: ["tree_palette", "presents"],
+  meter: ["tariff_entity", "high_power"],
+};
+// By name, in the languages the card speaks; "whirlpool" is left out, it is a
+// maker of washing machines too.
+const NT_NAME_RES = [
+  ["christmas_tree", /christmas|xmas|(^|[^a-z])sapin|(^|[^a-z])noel([^a-z]|$)|weihnacht|tannenbaum|navidad|natale|kerstboom|julgran|juletre|juletrae|choink|vanocni.?strom/],
+  ["aquarium", /aquari|akwari|akvari/],
+  ["sauna", /sauna/],
+  ["spa", /(^|[^a-z])(spa|jacuzzi|hot.?tub|bain.?nordique|whirlpoolwanne)([^a-z]|$)/],
+  ["meter", /linky|compteur.?(electrique|edf|enedis)|smart.?meter|(^|[^a-z])(teleinfo|papp|sinsts)([^a-z]|$)/],
+  ["floor_heating", /plancher.?chauffant|underfloor|floor.?heat|fussbodenheizung|suelo.?radiante|pavimento.?radiante|vloerverwarming|golvvarme|gulvvarme|ogrzewanie.?podlog|podlahov/],
+  ["water_pump", /surpresseur|booster|relevage|(^|[^a-z])sump|pompe.?(a.?eau|de.?puits|immergee)|water.?pump|well.?pump|(^|[^a-z])forage|tauchpumpe|hauswasser|hebeanlage/],
+];
+const ROBOT_POOL_RE = /pool|piscine|dolphin|maytronics|aiper|zodiac|polaris|beatbot|wybot|bwt.?(d|p)\d|pool.?robot|schwimmbad|piscina|zwembad|basen/;
+
+const TREE_PALETTES = {
+  multicolor: { balls: ["#c62828", "#1565c0", "#f9a825", "#ec407a", "#00897b", "#6a1b9a", "#ef6c00", "#b0bec5", "#e91e63", "#43a047", "#26c6da"], lights: ["#ff5252", "#ffd740", "#40c4ff", "#69f0ae", "#ff80ab", "#b388ff", "#ff9100", "#18ffff"], tinsel: ["#e53935", "#cfd8dc"], star: ["#fff59d", "#f9a825", "#f57f17"], pot: ["#d32f2f", "#8e1b1b"], gifts: ["#c62828", "#1565c0", "#00897b", "#8e24aa"], ribbons: ["#ffd54f", "#ffffff", "#ffeb3b", "#ffd54f"] },
+  red_gold: { balls: ["#c62828", "#f9a825", "#b71c1c", "#ffca28"], lights: ["#ffe0a3"], tinsel: ["#f9a825"], star: ["#fff59d", "#f9a825", "#f57f17"], pot: ["#d32f2f", "#8e1b1b"], gifts: ["#c62828", "#f9a825", "#b71c1c", "#c62828"], ribbons: ["#ffd54f", "#c62828", "#ffd54f", "#ffd54f"] },
+  red_silver: { balls: ["#c62828", "#cfd8dc", "#b71c1c", "#eceff1"], lights: ["#f1f8ff"], tinsel: ["#cfd8dc"], star: ["#ffffff", "#b0bec5", "#78909c"], pot: ["#eceff1", "#b0bec5"], gifts: ["#c62828", "#eceff1", "#b71c1c", "#cfd8dc"], ribbons: ["#eceff1", "#c62828", "#eceff1", "#c62828"] },
+  gold_silver: { balls: ["#f9a825", "#cfd8dc", "#e6c77a", "#eceff1"], lights: ["#ffe0a3"], tinsel: ["#f9a825", "#cfd8dc"], star: ["#fff59d", "#f9a825", "#f57f17"], pot: ["#f5d77e", "#b4842a"], gifts: ["#f9a825", "#eceff1", "#e6c77a", "#cfd8dc"], ribbons: ["#ffffff", "#f9a825", "#ffffff", "#f9a825"] },
+  blue_silver: { balls: ["#1565c0", "#cfd8dc", "#42a5f5", "#eceff1"], lights: ["#e3f2fd"], tinsel: ["#cfd8dc"], star: ["#ffffff", "#b0bec5", "#78909c"], pot: ["#eceff1", "#b0bec5"], gifts: ["#1565c0", "#eceff1", "#42a5f5", "#1565c0"], ribbons: ["#eceff1", "#1565c0", "#eceff1", "#eceff1"] },
+  white_silver: { balls: ["#ffffff", "#cfd8dc", "#e3f2fd", "#eceff1"], lights: ["#f1f8ff"], tinsel: ["#ffffff"], star: ["#ffffff", "#b0bec5", "#78909c"], pot: ["#ffffff", "#cfd8dc"], gifts: ["#ffffff", "#cfd8dc", "#e3f2fd", "#eceff1"], ribbons: ["#b0bec5", "#ffffff", "#90a4ae", "#90a4ae"] },
+  red_green: { balls: ["#c62828", "#2e7d32", "#f9a825", "#b71c1c"], lights: ["#ffe0a3", "#ff5252", "#69f0ae"], tinsel: ["#f9a825", "#e53935"], star: ["#fff59d", "#f9a825", "#f57f17"], pot: ["#d32f2f", "#8e1b1b"], gifts: ["#c62828", "#2e7d32", "#f9a825", "#c62828"], ribbons: ["#ffd54f", "#ffd54f", "#c62828", "#ffffff"] },
+};
+const TREE_PRESENTS = ["auto", "show", "hide"];
+// Presents under the tree on Christmas Eve and Christmas Day, unless asked
+// otherwise.
+function treePresents(cfg) {
+  const p = cfg.presents === true ? "show" : cfg.presents === false ? "hide" : TREE_PRESENTS.includes(cfg.presents) ? cfg.presents : "auto";
+  if (p !== "auto") return p === "show";
+  const d = new Date(Date.now());
+  return d.getMonth() === 11 && (d.getDate() === 24 || d.getDate() === 25);
+}
+function pumpLayoutOf(cfg, st) {
+  if (PUMP_LAYOUTS.includes(cfg.pump_layout)) return cfg.pump_layout;
+  if (cfg.level_entity || cfg.high_level_entity) return "sump";
+  const hay = stripAccents(`${cfg.state_entity || ""} ${cfg.name || ""} ${(st && st.attributes.friendly_name) || ""}`).toLowerCase();
+  return /relevage|sump|tauch|hebe|vide.?cave|drain|eaux.?usees|crue/.test(hay) ? "sump" : "booster";
+}
+function floorLayoutOf(cfg) {
+  return FLOOR_LAYOUTS.includes(cfg.floor_layout) ? cfg.floor_layout : "water";
+}
+
+const NT_ON = ["on", "true", "1", "yes", "heat", "heating", "open", "running", "pumping", "auto", "home"];
+// Running or not: the state entity's own word, a thermostat's action, and a
+// plug's power above its threshold when there is one. Null when nothing
+// answers.
+function ntRunning(hass, cfg, st, watts, threshold) {
+  const raw = st ? String(st.state).trim().toLowerCase() : "";
+  const dead = !st || ["unavailable", "unknown", "none", ""].includes(raw);
+  const metered = cfg.power_entity && watts !== null && isFinite(threshold);
+  if (dead && !metered) return null;
+  if (!dead) {
+    const dom = domainOf(cfg.state_entity);
+    if (["climate", "water_heater"].includes(dom)) {
+      if (raw === "off") return false;
+      const act = String((st.attributes || {}).hvac_action || "").toLowerCase();
+      if (act) return act === "heating" || act === "preheating" || act === "cooling";
+      if (metered) return watts >= threshold;
+      return true;
+    }
+    if (!NT_ON.includes(raw) && !(numberOrNull(st.state) > 0)) return false;
+  }
+  return metered ? watts >= threshold : true;
+}
+function ntOnOff(hass, id) {
+  const s = id ? stateObj(hass, id) : null;
+  return !!s && NT_ON.includes(String(s.state).trim().toLowerCase());
+}
+// The temperature: its own entity, or the thermostat's.
+function ntTemp(hass, cfg, st) {
+  if (cfg.temperature_entity) {
+    const v = numericState(hass, cfg.temperature_entity);
+    return v === null ? null : { v, text: tempText(hass, cfg, cfg.temperature_entity, v, temperatureUnit(hass, cfg.temperature_entity)) };
+  }
+  const v = st ? numberOrNull((st.attributes || {}).current_temperature) : null;
+  if (v === null) return null;
+  const unit = (hass && hass.config && hass.config.unit_system && hass.config.unit_system.temperature) || "\u00b0C";
+  return { v, text: tempText(hass, cfg, null, v, unit) };
+}
+function ntTarget(hass, cfg, st) {
+  if (cfg.target_temperature_entity) return numericState(hass, cfg.target_temperature_entity);
+  return st ? numberOrNull((st.attributes || {}).temperature) : null;
+}
+function ntValueText(hass, cfg, id) {
+  const s = id ? stateObj(hass, id) : null;
+  if (!s || numberOrNull(s.state) === null) return null;
+  return formatInfoValue(s, hass, null, cfg, id);
+}
+
+// Drawing helpers
+let ntN = 0;
+const ntId = () => `nt${++ntN}`;
+const NT_FONT = `font-family="Roboto, 'Segoe UI', Helvetica, Arial, sans-serif"`;
+const ntV = (id, a, b) => `<linearGradient id="${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${a}"/><stop offset="1" stop-color="${b}"/></linearGradient>`;
+const ntBlur = (id, s) => `<filter id="${id}" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="${s}"/></filter>`;
+const ntShadow = (cx, cy, rx) => `<ellipse cx="${cx}" cy="${cy}" rx="${rx}" ry="3.2" fill="#000" opacity=".14"/>`;
+const ntFoot = (pts, op = .22) => { const id = ntId(); return `<filter id="${id}" x="-20%" y="-60%" width="140%" height="220%"><feGaussianBlur stdDeviation="1.5"/></filter><polygon points="${pts}" fill="#000" opacity="${op}" filter="url(#${id})"/>`; };
+// A display in large bold figures, so the value and its unit read at card size.
+const ntLcd = (x, y, w, h, text, lit, color = "#4fc3f7", fs = 8.5) =>
+  `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="1.8" fill="#141a21" stroke="#0a0d11" stroke-width=".5"/>` +
+  `<rect x="${x + .8}" y="${y + .8}" width="${w - 1.6}" height="${(h * .38).toFixed(2)}" rx="1.2" fill="#fff" opacity=".05"/>` +
+  (text ? `<text x="${x + w / 2}" y="${(y + h / 2 + fs * .36).toFixed(2)}" font-size="${fs}" font-weight="700" text-anchor="middle" fill="${lit ? color : "#5d6773"}" ${NT_FONT}>${esc(text)}</text>` : "");
+const ntFlake = (x, y, r, color, w = .8) =>
+  `<path d="M${x} ${y - r}v${2 * r}M${x - r} ${y}h${2 * r}M${x - r * .7} ${y - r * .7}l${r * 1.4} ${r * 1.4}M${x + r * .7} ${y - r * .7}l${-r * 1.4} ${r * 1.4}" stroke="${color}" stroke-width="${w}" stroke-linecap="round"/>`;
+// The text of a display fits its width: a long reading is drawn smaller.
+const ntFit = (text, width, fs) => Math.min(fs, (width - 3) / Math.max(1, String(text || "").length * .6));
+
+// Chest freezer
+function ntChest(c) {
+  const f = ntId(), s = ntId(), t = ntId(), lf = ntId(), inn = ntId();
+  const on = c.on, lit = !c.dark;
+  const slots = [0, 1, 2, 3, 4, 5, 6].map((i) => `<rect x="${18.6 + i * 3.8}" y="93.6" width="1.8" height="4.6" rx=".6" fill="#5d6672"/>`).join("");
+  const frost = [[30, 43.5], [56, 42], [84, 42.5], [104, 41.6], [16, 50]].map(([x, y], i) => `<g class="nta-frost ntd${i + 1}">${ntFlake(x, y, 2.4, "#29b6f6", .7)}</g>`).join("");
+  const mist = [16, 33, 50, 67, 84, 102].map((x, i) => `<path class="nta-fall ntd${i + 1}" d="M${x} 57 q2.6 3.5 0 7 q-2.6 3.5 0 7" stroke="#d4effc" stroke-width="2.6" fill="none" stroke-linecap="round" opacity="0"/>`).join("");
+  const lid = c.open
+    ? `<polygon points="12 47 98 47 112 39 26 39" fill="url(#${inn})"/>
+<path class="nta-fall ntd2" d="M40 44 q2 -4 0 -8 q-2 -4 0 -8" stroke="#e1f5fe" stroke-width="2.4" fill="none" opacity="0" stroke-linecap="round"/>
+<path class="nta-fall ntd4" d="M70 44 q2 -4 0 -8 q-2 -4 0 -8" stroke="#e1f5fe" stroke-width="2.4" fill="none" opacity="0" stroke-linecap="round"/>
+<polygon points="26 39 112 39 104 3 18 3" fill="#e9eef3" stroke="#a3acb7" stroke-width=".6"/>
+<polygon points="30 36 108 36 101 7 23 7" fill="#d7dee5"/>
+<rect x="11" y="47" width="87" height="2.2" rx="1" fill="#c0c8d1" stroke="#a3acb7" stroke-width=".5"/>`
+    : `<path d="M11 47 L25 39 L112 39 L98 47 Z" fill="url(#${t})" stroke="#a3acb7" stroke-width=".6"/>
+<path d="M30 41.2 H95" stroke="#fff" stroke-width="1.2"/>
+<path d="M98 47 L112 39 L112 46.5 L98 54.5 Z" fill="#c0c8d1" stroke="#a3acb7" stroke-width=".6"/>
+<rect x="11" y="47" width="87" height="7.6" rx="2" fill="url(#${lf})" stroke="#a3acb7" stroke-width=".6"/>
+<rect x="39" y="49.3" width="30" height="3.8" rx="1.9" fill="#363d48"/><rect x="40.6" y="49.8" width="26.8" height="1" rx=".5" fill="#8f98a4"/>
+<rect x="84.5" y="49.4" width="5" height="3.2" rx=".8" fill="#9aa3ae"/><circle cx="87" cy="51" r=".8" fill="#4a525e"/>`;
+  const txt = lit ? c.lcd || "" : "";
+  return `<defs>${ntV(f, "#ffffff", "#dde2e8")}${ntV(s, "#d3d9e0", "#a9b2bd")}${ntV(t, "#ffffff", "#e7ebef")}${ntV(lf, "#f8fafc", "#dfe4e9")}${ntV(inn, "#2b3540", "#4b5a68")}</defs>
+${ntFoot("13 106.6 98 106.6 112.5 98 28 98")}
+<path d="M96 55 L110 47 L110 95 L96 103 Z" fill="url(#${s})" stroke="#a3acb7" stroke-width=".6"/>
+<rect x="12" y="55" width="84" height="48" rx="3" fill="url(#${f})" stroke="#a3acb7" stroke-width=".6"/>
+<path d="M17 57 H29 L21 101 H15 Z" fill="#fff" opacity=".6"/>
+<rect x="16" y="92" width="32" height="7.4" rx="1.6" fill="#c7cdd5"/>${slots}
+<rect x="15" y="102.6" width="8" height="3.6" rx="1" fill="#5d6672"/><rect x="85" y="102.6" width="8" height="3.6" rx="1" fill="#5d6672"/><rect x="104" y="95" width="5" height="3.6" rx="1" fill="#5d6672"/>
+${lid}
+<rect x="12" y="54.4" width="84" height="1.5" fill="#434b57"/><path d="M96 55.2 L110 47.2" stroke="#434b57" stroke-width="1.5"/>
+<rect x="53" y="60.5" width="40" height="27" rx="2.6" fill="#f2f4f7" stroke="#c0c7cf" stroke-width=".6"/>
+${ntLcd(56, 63, 34, 14, txt, true, c.warn ? "#ff5252" : "#4fc3f7", ntFit(txt, 34, 9.5))}
+<circle cx="59" cy="82.6" r="1.4" fill="${on ? "#43a047" : "#9aa1ab"}"/>
+${ntFlake(87, 82.6, 2.4, on ? "#29b6f6" : "#9aa1ab", .7)}
+<g class="nt-run">${c.open ? "" : frost}${mist}</g>`;
+}
+
+// Upright freezer with see-through drawers
+function ntDrawers(c) {
+  const f = ntId(), s = ntId(), w = ntId(), t = ntId(), gl = ntId(), mb = ntId();
+  const on = c.on, lit = !c.dark;
+  const goods = [["#66bb6a", "#ef5350", "#fff176"], ["#f48fb1", "#64b5f6", "#ffb74d"], ["#aed581", "#ba68c8", "#e57373"], ["#4db6ac", "#ff8a65", "#90a4ae"]];
+  const rows = [0, 1, 2, 3].map((i) => {
+    const y = 32 + i * 18.5;
+    const pk = goods[i].map((col, j) => { const hh = [7, 5.5, 8][j]; return `<rect x="${41.5 + j * 12.8}" y="${y + 15 - hh}" width="11.4" height="${hh}" rx=".8" fill="${col}"/><rect x="${43 + j * 12.8}" y="${y + 16 - hh}" width="5" height="1.2" fill="#fff" opacity=".7"/>`; }).join("");
+    const drawer = `<rect x="37" y="${y}" width="46" height="17" rx="1.8" fill="url(#${f})" stroke="${on ? "#8fc6e3" : "#a3acb7"}" stroke-width=".55"/>
+<g class="nt-run"><path d="M38 ${y + .6} h44 l-1.6 2 l-2 -1.2 l-2.4 1.6 l-2 -1.4 l-2.6 1.8 l-2.2 -1.2 l-2.4 1.6 l-2 -1.4 l-2.6 1.8 l-2.2 -1.2 l-2.4 1.6 l-2 -1.4 l-2.6 1.8 l-2.2 -1.2 l-2.4 1.6 l-2 -1.4 l-2.6 1.8 l-2.2 -1.2 Z" fill="#ffffff" opacity=".9"/></g>
+<rect x="49" y="${y + 1.3}" width="22" height="2.8" rx="1.4" fill="#363d48"/><rect x="50" y="${y + 1.7}" width="20" height=".8" rx=".4" fill="#8f98a4"/>
+<rect x="40" y="${y + 5.2}" width="40" height="10.2" rx="1" fill="#d6e6ef"/>${pk}
+<rect x="40" y="${y + 5.2}" width="40" height="10.2" rx="1" fill="url(#${w})" opacity=".62" stroke="#b9c7d2" stroke-width=".4"/>
+<g class="nt-run"><rect class="nta-shimmer ntd${i + 1}" x="40" y="${y + 5.2}" width="40" height="10.2" rx="1" fill="#e1f5fe" opacity="0"/><g class="nta-frost ntd${i + 2}">${ntFlake(78, y + 7.5, 1.6, "#29b6f6", .55)}</g></g>`;
+    // A drawer pulled out: its side shows, and it comes forward.
+    return c.open && i === 0
+      ? `<polygon points="37 ${y} 31 ${y + 5} 31 ${y + 22} 37 ${y + 17}" fill="#c3ccd5" stroke="#a3acb7" stroke-width=".5"/><g transform="translate(-6 5)">${drawer}</g>`
+      : drawer;
+  }).join("");
+  const mist = [49.2, 67.7, 86.2, 104.7].map((y, i) => [44, 60, 76].map((x, j) => `<path class="nta-fall ntd${((i + j) % 6) + 1}" d="M${x + (i % 2) * 3} ${y} q2.2 3 0 6 q-2.2 3 0 6" stroke="#d4effc" stroke-width="2.2" fill="none" stroke-linecap="round" opacity="0"/>`).join("")).join("");
+  const txt = lit ? c.lcd || "" : "";
+  return `<defs>${ntV(f, "#ffffff", "#e1e6eb")}${ntV(s, "#d0d6de", "#a6afba")}${ntV(w, "#ffffff", "#c9dde9")}${ntV(t, "#ffffff", "#eef1f4")}${ntBlur(gl, 2.2)}${ntBlur(mb, 2.4)}</defs>
+${ntFoot("35 111.8 87.5 111.8 99.5 104.6 47 104.6")}
+<path d="M86 10 L98 4 L98 103 L86 109 Z" fill="url(#${s})" stroke="#a3acb7" stroke-width=".6"/>
+<path d="M34 10 L46 4 L98 4 L86 10 Z" fill="url(#${t})" stroke="#a3acb7" stroke-width=".6"/>
+<rect x="34" y="10" width="52" height="99" rx="3" fill="${on ? "#e4f3fb" : "#eef1f4"}" stroke="${on ? "#8fc6e3" : "#a3acb7"}" stroke-width=".6"/>
+<rect x="37" y="13" width="46" height="16.4" rx="2" fill="#f7f8fa" stroke="#c0c7cf" stroke-width=".5"/>
+${ntLcd(46, 14.8, 35, 12.8, txt, true, c.warn ? "#ff5252" : "#4fc3f7", ntFit(txt, 35, 9.3))}
+<g class="${on ? "nta-spin-slow" : ""}">${ntFlake(41.3, 19.2, 2.5, on ? "#29b6f6" : "#9aa1ab", .75)}</g>
+<circle cx="41.3" cy="25.8" r="1.2" fill="${on ? "#43a047" : "#9aa1ab"}"/>
+${rows}
+<rect x="37" y="106" width="46" height="2.4" rx="1" fill="#c7cdd5"/>
+<g class="nt-run"><rect class="nta-glow" x="35" y="11" width="50" height="97" rx="3" fill="none" stroke="#4fc3f7" stroke-width="3" filter="url(#${gl})"/>
+<g class="nta-glow" filter="url(#${mb})"><ellipse cx="48" cy="108" rx="14" ry="3.6" fill="#e1f5fe"/><ellipse cx="70" cy="109" rx="16" ry="4" fill="#e1f5fe"/><ellipse cx="88" cy="106" rx="8" ry="3" fill="#e1f5fe"/></g>
+${mist}${[[34, 30], [86, 46], [34, 84], [86, 96]].map(([x, y], i) => `<g class="nta-frost ntd${i + 1}">${ntFlake(x, y, 2.2, "#29b6f6", .65)}</g>`).join("")}</g>
+<rect x="37" y="109" width="6" height="2.6" rx=".8" fill="#5d6672"/><rect x="77" y="109" width="6" height="2.6" rx=".8" fill="#5d6672"/>`;
+}
+
+// Booster set: the pump on its pressure tank and its electronic controller
+function ntBooster(c) {
+  const m = ntId(), t = ntId(), cs = ntId(), b = ntId(), p = ntId(), pv = ntId();
+  const on = c.on;
+  const fins = [0, 1, 2, 3, 4, 5, 6].map((i) => `<rect x="${62 + i * 5}" y="51.5" width="1.6" height="21" rx=".8" fill="#123f78" opacity=".5"/>`).join("");
+  const slots = [0, 1, 2, 3, 4, 5].map((i) => `<path d="M100 ${54 + i * 3}h5.4" stroke="#7a838f" stroke-width="1" stroke-linecap="round"/>`).join("");
+  const txt = c.lcd || "";
+  return `<defs>${ntV(m, "#62a8f0", "#1b56a0")}${ntV(t, "#3f8fe4", "#16457f")}${ntV(cs, "#e3e7ec", "#8b95a1")}${ntV(b, "#f5d77e", "#b4842a")}${ntV(p, "#5a636e", "#262b31")}${ntV(pv, "#eceff2", "#b6bec8")}</defs>
+${ntShadow(63, 107.2, 44)}
+<path d="M24 98 v9 h9 v-9 M92 98 v9 h9 v-9" fill="#3f4752"/>
+<rect x="16" y="80" width="94" height="20" rx="10" fill="url(#${t})"/>
+<rect x="24" y="82.6" width="78" height="3" rx="1.5" fill="#fff" opacity=".28"/>
+<path d="M30 80.4v19.2M96 80.4v19.2" stroke="#0f3563" stroke-width=".7"/>
+<rect x="34" y="74" width="72" height="6" rx="1.2" fill="#555e69"/>
+<g class="nta-vib">
+<rect x="58" y="50" width="42" height="24" rx="4" fill="url(#${m})"/>${fins}
+<rect x="58" y="51.5" width="42" height="3" fill="#fff" opacity=".2"/>
+<rect x="97.5" y="51.5" width="9.5" height="21" rx="3" fill="#353c46"/>${slots}
+<rect x="67" y="42.5" width="20" height="8.2" rx="1.5" fill="#2b3139"/>
+<rect x="70" y="44.2" width="6" height="4.6" rx="1" fill="${on ? "#43a047" : "#59626e"}"/>
+<circle cx="82" cy="46.5" r="1.4" fill="${on ? "#76ff03" : "#59626e"}"/>
+<path d="M38 50 Q34 46 41 46 H53 Q59 46 59 52 V71 Q59 76 53 76 H41 Q35 76 35 70 Z" fill="url(#${cs})"/>
+<path d="M38 52 Q38 48 42 48 H48" stroke="#fff" stroke-width="1" opacity=".6" fill="none"/>
+<rect x="55.5" y="47.5" width="4.4" height="28" rx="1" fill="#7a848f"/>
+<circle cx="57.7" cy="51" r="1" fill="#4a525e"/><circle cx="57.7" cy="72" r="1" fill="#4a525e"/>
+<circle cx="46" cy="62" r="5.2" fill="#9aa3ae" stroke="#6d7682" stroke-width=".6"/><circle cx="46" cy="62" r="1.6" fill="#59626e"/>
+<rect x="37" y="74" width="5" height="3" rx=".6" fill="url(#${b})"/>
+</g>
+<rect x="0" y="57.5" width="36" height="9" fill="url(#${p})"/>
+<rect x="20" y="56" width="8" height="12" rx="1" fill="url(#${b})"/><path d="M22 56v12M24 56v12M26 56v12" stroke="#9a7020" stroke-width=".5"/>
+<rect x="42.5" y="30" width="7" height="17" fill="url(#${pv})" stroke="#9aa3ae" stroke-width=".5"/>
+<rect x="62" y="17" width="58" height="7" fill="url(#${pv})" stroke="#9aa3ae" stroke-width=".5"/>
+<g class="nt-run"><path class="nta-flow" d="M1 62H35" stroke="#81d4fa" stroke-width="2.4" stroke-dasharray="4 4" fill="none"/>
+<path class="nta-flow" d="M46 46V32" stroke="#81d4fa" stroke-width="2.2" stroke-dasharray="4 4" fill="none"/>
+<path class="nta-flow" d="M69 20.5H119" stroke="#81d4fa" stroke-width="2.4" stroke-dasharray="4 4" fill="none"/></g>
+<rect x="28" y="4" width="41" height="28" rx="3" fill="#eef1f4" stroke="#aab2bc" stroke-width=".6"/>
+<rect x="28" y="4" width="41" height="4" rx="2" fill="#1e88e5"/>
+${ntLcd(31, 9.5, 35, 13, txt, true, on ? "#4fc3f7" : "#90a4ae", ntFit(txt, 35, 8.6))}
+<circle cx="34" cy="27" r="1.3" fill="#43a047"/><circle cx="52" cy="27" r="1.3" fill="${on ? "#43a047" : "#b0b7c1"}"/>`;
+}
+
+// Sump pit in cross-section: the float pivots on its cable with the water
+function ntSump(c) {
+  const s = ntId(), w = ntId(), con = ntId(), pu = ntId(), pv = ntId();
+  const angleOf = (y) => Math.max(-8, Math.min(90, Math.asin(Math.max(-1, Math.min(1, (86 - y + 1) / 24))) * 180 / Math.PI));
+  // The water: the level read when there is one, high on an alarm, falling
+  // while it pumps, mid-pit at rest.
+  const known = c.level !== null && c.level !== undefined;
+  const lv = known ? 108 - Math.max(0, Math.min(1, c.level)) * 80 : c.alarm ? 40 : 64;
+  const moving = c.on && !known && !c.alarm;
+  const water = moving
+    ? `<rect x="31" y="62" width="58" height="46" fill="url(#${w})"><animate attributeName="y" values="62;88;62" keyTimes="0;.7;1" dur="7s" repeatCount="indefinite"/><animate attributeName="height" values="46;20;46" keyTimes="0;.7;1" dur="7s" repeatCount="indefinite"/></rect>`
+    : `<rect x="31" y="${lv.toFixed(1)}" width="58" height="${(108 - lv).toFixed(1)}" fill="url(#${w})"/><path d="M31 ${lv.toFixed(1)}h58" stroke="#b3e5fc" stroke-width=".8"/>`;
+  const swing = moving ? `<animateTransform attributeName="transform" type="rotate" values="${angleOf(62)} 52 86;${angleOf(88)} 52 86;${angleOf(62)} 52 86" keyTimes="0;.7;1" dur="7s" repeatCount="indefinite"/>` : "";
+  const soil = [[8, 40], [14, 70], [6, 96], [18, 110], [100, 44], [108, 66], [114, 90], [102, 104], [20, 54], [112, 30], [9, 84]].map(([x, y]) => `<ellipse cx="${x}" cy="${y}" rx="1.6" ry="1" fill="#4e342e" opacity=".5"/>`).join("");
+  const grass = Array.from({ length: 24 }, (_, i) => { const x = i * 5 + 1; return x > 23 && x < 97 ? "" : `<path d="M${x} 24 l1 -3.4 M${x + 2} 24 l-.6 -2.6" stroke="#558b2f" stroke-width=".8"/>`; }).join("");
+  const txt = c.lcd || "";
+  return `<defs>${ntV(s, "#8d6e63", "#5d4037")}${ntV(w, "#4fc3f7", "#0d5c9e")}${ntV(con, "#c4c7cc", "#9a9ea6")}${ntV(pu, "#4a5b55", "#1d2623")}${ntV(pv, "#eceff2", "#b6bec8")}</defs>
+<rect x="0" y="24" width="120" height="96" fill="url(#${s})"/>${soil}
+<rect x="0" y="21.5" width="24" height="3.5" fill="#7cb342"/><rect x="96" y="21.5" width="24" height="3.5" fill="#7cb342"/>${grass}
+<rect x="26" y="24" width="68" height="90" fill="url(#${con})"/>
+<rect x="31" y="26" width="58" height="82" fill="#3a4148"/><rect x="31" y="26" width="58" height="6" fill="#000" opacity=".25"/>
+${water}
+<path d="M31 46h9" stroke="#ef5350" stroke-width=".9" stroke-dasharray="1.6 1"/><text x="33" y="44.6" font-size="5" font-weight="700" fill="#ef5350" ${NT_FONT}>max</text>
+<path d="M31 90h9" stroke="#ffb74d" stroke-width=".9" stroke-dasharray="1.6 1"/><text x="33" y="88.6" font-size="5" font-weight="700" fill="#ffb74d" ${NT_FONT}>min</text>
+<rect x="0" y="29" width="32" height="7" fill="url(#${pv})" stroke="#9aa3ae" stroke-width=".5"/>
+<g class="nta-fall"><circle cx="33" cy="38" r="1.1" fill="#81d4fa"/></g><g class="nta-fall ntd2"><circle cx="33.6" cy="38" r=".9" fill="#81d4fa"/></g>
+<rect x="57" y="7" width="6" height="71" fill="url(#${pv})" stroke="#9aa3ae" stroke-width=".5"/>
+<rect x="57" y="6" width="63" height="6" fill="url(#${pv})" stroke="#9aa3ae" stroke-width=".5"/>
+<g class="nt-run"><path class="nta-flow" d="M60 76V9H119" stroke="#81d4fa" stroke-width="2.4" stroke-dasharray="4 4" fill="none"/></g>
+<rect x="54.5" y="48" width="11" height="10" rx="1.4" fill="#37474f"/><path d="M60 56.5v-6.5M57.6 52.4 60 50l2.4 2.4" stroke="#cfd8dc" stroke-width=".9" fill="none" stroke-linecap="round"/>
+<rect x="24" y="19.5" width="72" height="5" rx="1" fill="#5b6470"/><path d="M30 20.5v3M36 20.5v3M42 20.5v3M48 20.5v3M70 20.5v3M76 20.5v3M82 20.5v3M88 20.5v3" stroke="#3a414b" stroke-width="1.2"/>
+<g class="nta-vib">
+<path d="M55 80 Q55 75 60 75 Q65 75 65 80 Z" fill="#2c3834"/>
+<rect x="52" y="79" width="16" height="22" rx="2.4" fill="url(#${pu})"/>
+<rect x="53.5" y="81" width="2" height="18" rx="1" fill="#fff" opacity=".18"/>
+<rect x="50" y="100" width="20" height="8" rx="1.4" fill="#37474f"/>
+<path d="M53 101.5v5M56 101.5v5M59 101.5v5M62 101.5v5M65 101.5v5M68 101.5v5" stroke="#90a4ae" stroke-width=".8"/>
+</g>
+<g transform="rotate(${moving ? 0 : angleOf(lv).toFixed(1)} 52 86)">${swing}
+<path d="M52 86 H32" stroke="#212121" stroke-width=".9"/>
+<ellipse cx="28" cy="86" rx="5.4" ry="3.6" fill="#ffca28" stroke="#c49000" stroke-width=".5"/><ellipse cx="26.6" cy="84.8" rx="2" ry=".9" fill="#fff" opacity=".6"/>
+</g>
+<rect x="11.5" y="17" width="3" height="6" fill="#5b6470"/>
+<rect x="0" y="2" width="27" height="16" rx="2" fill="#eceff2" stroke="#aab2bc" stroke-width=".5"/>
+${ntLcd(2, 4.2, 23, 11.6, txt, true, c.alarm ? "#ff5252" : "#4fc3f7", ntFit(txt, 23, 7.6))}
+${c.alarm ? `<rect x="29" y="9" width="7" height="3" rx=".6" fill="#5b6470"/><path d="M29.6 9 Q32.5 1.5 35.4 9 Z" fill="#e53935"/><circle class="nta-beacon" cx="32.5" cy="6" r="6" fill="#ff5252" opacity=".5"/>` : ""}`;
+}
+
+// Pool robot: the cable from the deck follows it to and fro
+function ntPoolRobot(c) {
+  const tp = ntId(), w = ntId(), bd = ntId(), dk = ntId();
+  const on = c.on, x0 = 34, x1 = 88;
+  const cable = (x) => `M90 21 C83 21 80 27 76 35.5 C${x + 16} 42 ${x + 7} 62 ${x} 79`;
+  const keys = "0;.45;.5;.95;1";
+  const cablePath = on
+    ? `<path d="${cable(x0)}" stroke="#263238" stroke-width="1.2" fill="none"><animate attributeName="d" values="${[x0, x1, x1, x0, x0].map(cable).join(";")}" keyTimes="${keys}" dur="9s" repeatCount="indefinite"/></path>`
+    : `<path d="${cable(46)}" stroke="#263238" stroke-width="1.2" fill="none"/>`;
+  const brush = (cx) => `<g transform="translate(${cx} 1)"><g class="nta-spin"><circle r="4.2" fill="#1e88e5"/>${[0, 45, 90, 135].map((a) => `<path d="M-4 0H4" transform="rotate(${a})" stroke="#90caf9" stroke-width=".9"/>`).join("")}</g><circle r="1.2" fill="#0d47a1"/></g>`;
+  const robot = `<rect x="-15" y="-2" width="30" height="8.2" rx="4" fill="#263238"/>
+<path class="nta-flow-fast" d="M-12 6H12" stroke="#78909c" stroke-width="1.6" stroke-dasharray="1.6 1.6"/>
+${brush(-13.5)}${brush(13.5)}
+<path d="M-15 -1 Q-15 -14 0 -14 Q15 -14 15 -1 Z" fill="url(#${bd})" stroke="#90a4ae" stroke-width=".5"/>
+<path d="M-15 -3 H15" stroke="#1e88e5" stroke-width="2"/>
+<rect x="-7" y="-11" width="14" height="5" rx="1.5" fill="#37474f"/><path d="M-5.5 -8.5h11" stroke="#78909c" stroke-width=".6" stroke-dasharray="1 .8"/>
+<path d="M-6 -13.4 Q0 -21 6 -13.4" stroke="#455a64" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+<circle cx="10" cy="-6.5" r="1" fill="${on ? "#76ff03" : "#78909c"}"/>`;
+  const anim = on ? `<animateTransform attributeName="transform" type="translate" values="${x0} 98;${x1} 98;${x1} 98;${x0} 98;${x0} 98" keyTimes="${keys}" dur="9s" repeatCount="indefinite"/>` : "";
+  const flip = on ? `<animateTransform attributeName="transform" type="scale" values="1 1;1 1;-1 1;-1 1;1 1" keyTimes="${keys}" calcMode="discrete" dur="9s" repeatCount="indefinite"/>` : "";
+  const bubbles = [0, 1, 2].map((i) => `<circle class="nta-rise ntd${i + 1}" cx="${-2 + i * 2}" cy="-16" r="${1 - i * .15}" fill="#e1f5fe" opacity="0"/>`).join("");
+  const caust = [14, 30, 52, 70, 92].map((x, i) => `<path class="nta-caust ntd${i + 1}" d="M${x} 102 q3 -2 6 0 q3 2 6 0" stroke="#e1f5fe" stroke-width=".8" fill="none"/>`).join("");
+  const txt = on ? c.lcd || "" : "";
+  return `<defs><pattern id="${tp}" width="5" height="5" patternUnits="userSpaceOnUse"><rect width="5" height="5" fill="#8fd0ec"/><path d="M5 0V5M0 5H5" stroke="#6fbbe0" stroke-width=".5"/></pattern>
+${ntV(w, "#4fc3f7", "#0277bd")}${ntV(bd, "#ffffff", "#b0bec5")}${ntV(dk, "#efe5d0", "#d6c7a7")}</defs>
+<rect x="0" y="20" width="120" height="8" fill="url(#${dk})"/><rect x="0" y="27" width="120" height="1.2" fill="#b9a988"/>
+<rect x="6" y="28" width="108" height="80" fill="#cfd8dc"/>
+<rect x="8" y="28" width="104" height="78" fill="url(#${tp})"/>
+<rect x="8" y="35" width="104" height="71" fill="url(#${w})" opacity=".72"/>
+<path class="nta-bob" d="M8 35 q6.5 -1.6 13 0 t13 0 t13 0 t13 0 t13 0 t13 0 t13 0 t13 0" stroke="#e1f5fe" stroke-width="1.2" fill="none"/>
+${caust}
+<rect x="6" y="106" width="108" height="3" fill="#90a4ae"/>
+${cablePath}
+<ellipse cx="76" cy="35.4" rx="3" ry="1.8" fill="#ffca28" stroke="#c49000" stroke-width=".4"/>
+<g transform="translate(${on ? x0 : 46} 98)">${anim}<g>${flip}${robot}<g class="nt-run">${bubbles}</g></g></g>
+<rect x="86" y="5" width="32" height="16" rx="2" fill="#eceff2" stroke="#aab2bc" stroke-width=".5"/>
+${ntLcd(88.5, 7, 27, 11.6, txt, on, "#4fc3f7", ntFit(txt, 27, 7.8))}
+<circle cx="116" cy="19" r=".9" fill="${on ? "#76ff03" : "#9aa1ab"}"/>`;
+}
+
+// Underfloor heating: a corner of the room, the tiles cut open over the loop
+function ntFloor(c) {
+  const wl = ntId(), tl = ntId(), gl = ntId();
+  const on = c.on, electric = c.electric;
+  const P = (u, v) => [22 + 96 * u - 20 * v, 60 + 36 * v];
+  const pt = (u, v) => P(u, v).map((x) => x.toFixed(1)).join(" ");
+  const poly = (pts, fill, extra = "") => `<polygon points="${pts.map(([u, v]) => pt(u, v)).join(" ")}" fill="${fill}" ${extra}/>`;
+  const grout = [1, 2, 3, 4, 5, 6, 7].map((i) => `<path d="M${pt(i / 8, 0)} L${pt(i / 8, 1)}" stroke="#bfb5a4" stroke-width=".5"/>`).join("") +
+    [1, 2, 3, 4].map((j) => `<path d="M${pt(0, j / 5)} L${pt(1, j / 5)}" stroke="#bfb5a4" stroke-width=".5"/>`).join("");
+  const u0 = .4, v0 = .34;
+  const runs = [.44, .54, .64, .74, .84, .94];
+  let d = `M${pt(.47, runs[0])}`;
+  runs.forEach((v, i) => {
+    const end = i % 2 ? .47 : .95;
+    d += ` L${pt(end, v)}`;
+    if (i < runs.length - 1) d += ` Q${pt(end === .95 ? 1.01 : .41, (v + runs[i + 1]) / 2)} ${pt(end, runs[i + 1])}`;
+  });
+  const pipeColor = electric ? (on ? "#ff7043" : "#8d6e63") : (on ? "#e53935" : "#b0857c");
+  const mesh = electric
+    ? Array.from({ length: 7 }, (_, i) => { const u = u0 + (1 - u0) * (i + .5) / 7; return `<path d="M${pt(u, v0)} L${pt(u, 1)}" stroke="#fff" stroke-width=".35" opacity=".8"/>`; }).join("") +
+      Array.from({ length: 6 }, (_, j) => { const v = v0 + (1 - v0) * (j + .5) / 6; return `<path d="M${pt(u0, v)} L${pt(1, v)}" stroke="#fff" stroke-width=".35" opacity=".8"/>`; }).join("")
+    : "";
+  const layers = electric
+    ? [[0, 2, "#d9cfbf"], [2, 4, "#9e9e9e"], [4, 12, "#a8a196"], [12, 17, "#f2e3a0"], [17, 20, "#8a8f96"]]
+    : [[0, 2, "#d9cfbf"], [2, 11, "#a8a196"], [11, 17, "#f2e3a0"], [17, 20, "#8a8f96"]];
+  const front = layers.map(([a, b, col]) => `<rect x="2" y="${96 + a}" width="96" height="${b - a}" fill="${col}"/>`).join("") +
+    layers.map(([a, b, col]) => `<polygon points="98 ${96 + a} 118 ${60 + a} 118 ${60 + b} 98 ${96 + b}" fill="${col}" opacity=".78"/>`).join("");
+  const dots = electric
+    ? Array.from({ length: 12 }, (_, i) => `<circle cx="${7 + i * 8}" cy="99" r=".9" fill="${pipeColor}"/>`).join("")
+    : Array.from({ length: 12 }, (_, i) => `<circle cx="${7 + i * 8}" cy="102.5" r="1.7" fill="${i % 2 ? (on ? "#1e88e5" : "#7f97ad") : pipeColor}" stroke="#fff" stroke-width=".3"/>`).join("");
+  const studs = electric ? "" : Array.from({ length: 16 }, (_, i) => `<rect x="${3 + i * 6}" y="105.5" width="3" height="1.4" rx=".5" fill="#e0cf7c"/>`).join("");
+  const manifold = electric ? "" : `<rect x="18" y="20" width="9" height="11" rx="2" fill="#c62828"/><circle cx="22.5" cy="25.5" r="3" fill="#ef9a9a"/>
+<g class="${on ? "nta-spin-slow" : ""}">${ntFlake(22.5, 25.5, 2.2, "#b71c1c", .7)}</g>
+<rect x="27" y="24" width="33" height="3.6" rx="1.2" fill="#d32f2f"/>
+<rect x="27" y="36" width="33" height="3.6" rx="1.2" fill="#1e88e5"/>
+${[0, 1, 2, 3].map((k) => { const x = 33 + k * 7.5; return `<rect x="${x - 1.4}" y="15.5" width="2.8" height="8.5" rx="1" fill="#e3f2fd" stroke="#90a4ae" stroke-width=".4"/>
+<rect class="nta-bob" x="${x - 1}" y="${on ? 17.6 : 21.4}" width="2" height="2" fill="#e53935"/>
+<circle cx="${x + 2.6}" cy="41.6" r="1.6" fill="#263238"/>
+<path d="M${x - 1.2} 27.6 V60" stroke="${on ? "#ef5350" : "#c08a84"}" stroke-width="1.6"/><path d="M${x + 1.2} 39.6 V60" stroke="${on ? "#42a5f5" : "#8fa6bb"}" stroke-width="1.6"/>`; }).join("")}`;
+  const waves = [[.18, .3], [.5, .2], [.75, .5], [.32, .7], [.62, .8], [.88, .15]].map(([u, v], i) => { const [x, y] = P(u, v); return `<path class="nta-heat ntd${i + 1}" d="M${x.toFixed(1)} ${y.toFixed(1)} q-1.6 -2.6 0 -5.2 q1.6 -2.6 0 -5.2" stroke="#ff8a65" stroke-width="1.1" fill="none" stroke-linecap="round" opacity="0"/>`; }).join("");
+  const txt = c.lcd || "";
+  return `<defs>${ntV(wl, "#f5f7fa", "#e3e8ee")}${ntV(tl, "#f1ece3", "#ddd4c4")}${ntBlur(gl, 1.1)}</defs>
+<polygon points="22 4 118 4 118 60 22 60" fill="url(#${wl})"/>
+<rect x="22" y="56" width="96" height="4" fill="#fff" stroke="#d7dce3" stroke-width=".4"/>
+${manifold}
+${poly([[0, 0], [1, 0], [1, 1], [0, 1]], `url(#${tl})`)}${grout}
+<g class="nt-run">${poly([[0, 0], [1, 0], [1, 1], [0, 1]], "#ff7043", `class="nta-warm" opacity=".1"`)}</g>
+${poly([[u0, v0], [1, v0], [1, 1], [u0, 1]], electric ? "#9e9e9e" : "#a8a196")}
+${mesh}
+<g class="nt-run"><path d="${d}" stroke="${pipeColor}" stroke-width="${electric ? 3.4 : 4.4}" fill="none" opacity=".45" filter="url(#${gl})"/></g>
+<path d="${d}" stroke="${pipeColor}" stroke-width="${electric ? 1.1 : 2.2}" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+${electric ? "" : `<g class="nt-run"><path class="nta-flow" d="${d}" stroke="#ffcdd2" stroke-width=".8" stroke-dasharray="2 5" fill="none"/></g>`}
+<polygon points="${pt(u0, v0)} ${pt(1, v0)} ${P(1, v0)[0].toFixed(1)} ${(P(1, v0)[1] + 1.8).toFixed(1)} ${P(u0, v0)[0].toFixed(1)} ${(P(u0, v0)[1] + 1.8).toFixed(1)}" fill="#a39886"/>
+<polygon points="${pt(u0, v0)} ${pt(u0, 1)} ${(P(u0, 1)[0] + 1.6).toFixed(1)} ${P(u0, 1)[1].toFixed(1)} ${(P(u0, v0)[0] + 1.6).toFixed(1)} ${(P(u0, v0)[1] + 1.8).toFixed(1)}" fill="#b8ad9b"/>
+${front}${dots}${studs}
+<g class="nt-run">${waves}</g>
+<rect x="82" y="14" width="33" height="30" rx="3" fill="#ffffff" stroke="#c3c9d1" stroke-width=".6"/>
+${ntLcd(84.5, 17, 28, 13, txt, true, on ? "#ffb74d" : "#90a4ae", ntFit(txt, 28, 7.4))}
+<path d="M89 39 q-2 -2.6 0 -5 q.6 2 2 2.4 q1 1.4 0 2.6 Z" fill="${on ? "#ff7043" : "#c3c9d1"}"/>
+<circle cx="101" cy="37" r="2.2" fill="#eceff1" stroke="#b0bec5" stroke-width=".4"/><circle cx="108" cy="37" r="2.2" fill="#eceff1" stroke="#b0bec5" stroke-width=".4"/>
+<path d="M99.8 37h2.4M106.8 37h2.4M108 35.8v2.4" stroke="#607d8b" stroke-width=".5"/>
+${electric ? `<path d="M98.5 44 V58" stroke="#78909c" stroke-width=".9"/>` : ""}`;
+}
+
+// Square spa, three-quarter view
+function ntSpa(c) {
+  const wa = ntId(), rim = ntId(), cl = ntId(), gl = ntId(), sd = ntId();
+  const P = (u, v) => [30 + 80 * u - 22 * v, 40 + 22 * v];
+  const pt = (u, v) => P(u, v).map((x) => x.toFixed(1)).join(" ");
+  const roundQuad = (a0, a1, b0, b1, dy = 0) => {
+    const k = [[a0, b0], [a1, b0], [a1, b1], [a0, b1]].map(([u, v]) => { const [x, y] = P(u, v); return [x, y + dy]; });
+    const lerp = (a, b, q) => [a[0] + (b[0] - a[0]) * q, a[1] + (b[1] - a[1]) * q];
+    let d = "";
+    k.forEach((p, i) => { const prev = k[(i + 3) % 4], next = k[(i + 1) % 4]; const a = lerp(p, prev, .16), b = lerp(p, next, .16); d += `${i ? "L" : "M"}${a[0].toFixed(1)} ${a[1].toFixed(1)} Q${p[0].toFixed(1)} ${p[1].toFixed(1)} ${b[0].toFixed(1)} ${b[1].toFixed(1)} `; });
+    return d + "Z";
+  };
+  const glow = c.lit || c.bubbles;
+  const slatsF = Array.from({ length: 13 }, (_, i) => `<path d="M${14 + i * 6} 63.5 V96" stroke="#3e3128" stroke-width=".6" opacity=".55"/>`).join("");
+  const slatsS = Array.from({ length: 5 }, (_, i) => { const q = (i + 1) / 6; return `<path d="M${(88 + 22 * q).toFixed(1)} ${(63.5 - 22 * q).toFixed(1)} V${(96 - 22 * q).toFixed(1)}" stroke="#2f251e" stroke-width=".6" opacity=".55"/>`; }).join("");
+  const bubbles = [[.3, .4], [.5, .3], [.7, .45], [.4, .62], [.62, .66], [.22, .55], [.8, .6], [.52, .5]].map(([u, v], i) => { const [x, y] = P(u, v); return `<circle class="nta-pop ntd${(i % 6) + 1}" cx="${x.toFixed(1)}" cy="${(y + 2).toFixed(1)}" r="${1.4 + (i % 3) * .5}" fill="none" stroke="#e0f7fa" stroke-width=".7" opacity="0"/>`; }).join("");
+  const steam = [[.35, .4], [.55, .35], [.72, .5]].map(([u, v], i) => { const [x, y] = P(u, v); return `<path class="nta-steam ntd${i + 1}" d="M${x.toFixed(1)} ${(y - 2).toFixed(1)} q-2 -3 0 -6 q2 -3 0 -6" stroke="#ffffff" stroke-width="2" fill="none" stroke-linecap="round" opacity="0"/>`; }).join("");
+  const jets = [.25, .4, .6, .75].map((u) => { const [x, y] = P(u, .14); return `<circle cx="${x.toFixed(1)}" cy="${(y + .8).toFixed(1)}" r=".8" fill="#78909c"/>`; }).join("");
+  const [hx1, hy1] = P(.12, .15), [hx2, hy2] = P(.86, .15);
+  const [gx, gy] = P(.5, .52);
+  const txt = c.lcd || "";
+  return `<defs>${ntV(wa, glow ? "#4dd0e1" : "#4f8fa3", glow ? "#0097a7" : "#1f5568")}${ntV(rim, "#f4f6f8", "#cfd6dd")}${ntV(cl, "#6d5848", "#4a3b30")}${ntBlur(gl, 3)}${ntV(sd, "#5a483b", "#3a2e26")}</defs>
+${ntFoot("7 97.2 89 97.2 111.5 74.8 30 74.8")}${ntFoot("9.5 106 40 106 49 96.8 20 96.8")}
+<polygon points="88 62 110 40 110 74 88 96" fill="url(#${sd})"/>${slatsS}
+<rect x="8" y="62" width="80" height="34" fill="url(#${cl})"/>${slatsF}
+<rect x="8" y="62" width="4" height="34" fill="#3a2e26"/><rect x="84" y="62" width="4" height="34" fill="#3a2e26"/>
+<polygon points="8 62 88 62 88 64.4 8 64.4" fill="#9ea7b0"/>
+<polygon points="20 89 48 89 39 98 11 98" fill="#8a7260"/>
+<polygon points="11 98 39 98 39 105 11 105" fill="#5a483b"/><path d="M11 101.5h28" stroke="#2f251e" stroke-width=".45" opacity=".6"/>
+<polygon points="39 98 48 89 48 96 39 105" fill="#3f322a"/>
+<polygon points="20 82 48 82 43.5 86.5 15.5 86.5" fill="#9a8270"/>
+<polygon points="15.5 86.5 43.5 86.5 43.5 93.5 15.5 93.5" fill="#5a483b"/><path d="M15.5 90h28" stroke="#2f251e" stroke-width=".45" opacity=".6"/>
+<polygon points="43.5 86.5 48 82 48 89 43.5 93.5" fill="#3f322a"/>
+<path d="M20 82H48M11 98H39" stroke="#b39d8a" stroke-width=".5"/>
+<polygon points="88 62 110 40 110 42.4 88 64.4" fill="#8a939c"/>
+<polygon points="${pt(0, 0)} ${pt(1, 0)} ${pt(1, 1)} ${pt(0, 1)}" fill="url(#${rim})" stroke="#aab4be" stroke-width=".5"/>
+<path d="${roundQuad(.07, .93, .12, .88)}" fill="#dfe8ed" stroke="#b0bec5" stroke-width=".5"/>
+${jets}
+<path d="${roundQuad(.1, .9, .18, .85, 2)}" fill="url(#${wa})"/>
+${glow ? `<ellipse class="nta-glow" cx="${gx.toFixed(1)}" cy="${(gy + 2).toFixed(1)}" rx="20" ry="5" fill="#b2ebf2" filter="url(#${gl})"/>` : ""}
+<path d="${roundQuad(.17, .83, .3, .74, 2)}" fill="none" stroke="#ffffff" stroke-width=".6" opacity=".35"/>
+<rect x="${(hx1 - 3).toFixed(1)}" y="${(hy1 - 1.4).toFixed(1)}" width="7" height="3" rx="1.5" fill="#37474f"/>
+<rect x="${(hx2 - 3).toFixed(1)}" y="${(hy2 - 1.4).toFixed(1)}" width="7" height="3" rx="1.5" fill="#37474f"/>
+${c.bubbles ? `<g class="nt-run">${bubbles}</g>` : ""}${c.steam ? `<g class="nt-run">${steam}</g>` : ""}
+<rect x="58" y="67" width="27" height="15" rx="1.8" fill="#263238"/>
+${ntLcd(59.5, 68.5, 24, 12, txt, true, c.heating ? "#ffb74d" : "#80deea", ntFit(txt, 24, 8.6))}`;
+}
+
+// Sauna cabin with a glass door: the stones glow and steam rises inside
+function ntSauna(c) {
+  const g = ntId(), cp = ntId(), gl = ntId(), inside = ntId(), st = ntId();
+  const on = c.on;
+  const planks = Array.from({ length: 14 }, (_, i) => { const y = 24 + i * 6; return `<rect x="10" y="${y}" width="90" height="6" fill="${i % 2 ? "#c48d58" : "#cf9963"}"/><path d="M12 ${y + 3} q14 -1.2 28 0 t28 0 t30 .4" stroke="#a8713f" stroke-width=".35" fill="none" opacity=".7"/>`; }).join("");
+  const side = Array.from({ length: 14 }, (_, i) => `<polygon points="100 ${24 + i * 6} 112 ${16 + i * 6} 112 ${22 + i * 6} 100 ${30 + i * 6}" fill="${i % 2 ? "#9c6b3f" : "#a87447"}"/>`).join("");
+  const stones = [[42, 79], [46, 78], [50, 79.4], [44, 76], [48, 75.6], [46.2, 73.8], [40.6, 76.6], [51.4, 76.4]].map(([x, y], i) => `<circle cx="${x}" cy="${y}" r="2.2" fill="${on ? ["#ff7043", "#ff8a65", "#f4511e"][i % 3] : ["#78716c", "#8b8580", "#6b6560"][i % 3]}" stroke="${on ? "#bf360c" : "#57524d"}" stroke-width=".4"/>`).join("");
+  const steam = [[44, 70], [48, 69], [40, 71], [50, 66]].map(([x, y], i) => `<path class="nta-steam ntd${i + 1}" d="M${x} ${y} q-2 -3 0 -6 q2 -3 0 -6" stroke="#fff3e0" stroke-width="2" fill="none" stroke-linecap="round" opacity="0"/>`).join("");
+  // The dial reads from 0 to 120 degrees over 240 of its turn.
+  const deg = c.temp === null || c.temp === undefined ? -120 : -120 + Math.max(0, Math.min(120, c.temp)) * 2;
+  const txt = c.lcd || "";
+  return `<defs>${ntV(g, on ? "#a35a26" : "#4b3223", on ? "#6d3b19" : "#2b1d14")}${ntBlur(gl, 2.4)}<clipPath id="${cp}"><rect x="18" y="32" width="36" height="71"/></clipPath>${ntV(st, "#5d6670", "#363c43")}
+<radialGradient id="${inside}" cx=".5" cy=".1" r=".9"><stop offset="0" stop-color="#ffcc80" stop-opacity="${on ? .75 : 0}"/><stop offset="1" stop-color="#ffcc80" stop-opacity="0"/></radialGradient></defs>
+${ntFoot("8 110.6 101.5 110.6 113.5 101.6 21 101.6")}
+${side}
+<path d="M7 18 L19 10 L115 10 L103 18 Z" fill="#7b4f2d"/><path d="M103 18 L115 10 L115 16 L103 24 Z" fill="#5b3a22"/>
+<rect x="7" y="18" width="96" height="6" fill="#8d5a34"/>
+${planks}
+<rect x="15" y="29" width="42" height="77" rx="1" fill="#8d5a34"/>
+<g clip-path="url(#${cp})">
+<rect x="18" y="32" width="36" height="71" fill="url(#${g})"/>
+${Array.from({ length: 12 }, (_, i) => `<path d="M18 ${36 + i * 6}h36" stroke="#000" stroke-width=".4" opacity=".25"/>`).join("")}
+<rect x="18" y="32" width="36" height="71" fill="url(#${inside})"/>
+<rect x="18" y="58" width="36" height="4" fill="#d9a46d"/><rect x="18" y="62" width="36" height="7" fill="#b07a46"/>
+<path d="M18 64.5h36M18 67h36" stroke="#8d5a34" stroke-width=".4"/>
+<rect x="18" y="84" width="20" height="3.4" fill="#d9a46d"/><rect x="18" y="87.4" width="20" height="15.6" fill="#b07a46"/>
+<path d="M22 78 h8 l-1 6 h-6 Z" fill="#a1663a" stroke="#6d4123" stroke-width=".4"/><path d="M22.4 80h7.2M22.7 82.4h6.6" stroke="#cfd8dc" stroke-width=".6"/>
+<path d="M28 79 L33 70" stroke="#6d4123" stroke-width=".9" stroke-linecap="round"/>
+<rect x="39" y="80" width="14" height="23" rx="1" fill="url(#${st})"/>
+${[41.5, 44.5, 47.5, 50.5].map((x) => `<path d="M${x} 81v21" stroke="#22272c" stroke-width=".8"/>`).join("")}
+${on ? `<ellipse class="nta-glow" cx="46" cy="77" rx="9" ry="5" fill="#ff7043" filter="url(#${gl})"/>` : ""}
+${stones}<g class="nt-run">${steam}</g>
+</g>
+<rect x="18" y="32" width="36" height="71" fill="#3b2412" opacity="${on ? .18 : .35}"/>
+<path d="M20 34 L30 34 L20 60 Z" fill="#fff" opacity=".14"/>
+<rect x="19.6" y="50" width="3.6" height="26" rx="1.6" fill="#e2b07a" stroke="#8d5a34" stroke-width=".5"/>
+<rect x="63" y="32" width="33" height="25" rx="2.2" fill="#263238"/>
+${ntLcd(65.5, 35, 28, 13, txt, true, on ? "#ff9800" : "#90a4ae", ntFit(txt, 28, 9.4))}
+<circle cx="70" cy="52.6" r="1.4" fill="${on ? "#ff7043" : "#546e7a"}"/><circle cx="79.5" cy="52.6" r="1.4" fill="#546e7a"/><circle cx="89" cy="52.6" r="1.4" fill="#546e7a"/>
+<circle cx="79.5" cy="77" r="11" fill="#8d5a34"/><circle cx="79.5" cy="77" r="9.2" fill="#fbf3e6"/>
+${Array.from({ length: 11 }, (_, i) => `<path d="M79.5 69.4 V71.2" stroke="#6d4c41" stroke-width=".6" transform="rotate(${-120 + i * 24} 79.5 77)"/>`).join("")}
+<path d="M73 77.5 A6.6 6.6 0 0 1 75 72" stroke="#42a5f5" stroke-width="1" fill="none"/><path d="M84 72 A6.6 6.6 0 0 1 86 77.5" stroke="#ef5350" stroke-width="1" fill="none"/>
+<text x="79.5" y="83.6" font-size="3.6" text-anchor="middle" fill="#6d4c41" font-weight="700" ${NT_FONT}>\u00b0C</text>
+<path d="M79.5 77 V69.8" stroke="#c62828" stroke-width=".9" stroke-linecap="round" transform="rotate(${deg} 79.5 77)"/><circle cx="79.5" cy="77" r="1.2" fill="#3e2723"/>
+<rect x="9" y="106" width="92" height="4" fill="#6d4123"/>`;
+}
+
+// Planted aquarium on its cabinet
+function ntAquarium(c) {
+  const wa = ntId(), cab = ntId(), sand = ntId(), ray = ntId(), gl = ntId();
+  const on = c.on;
+  const neon = (x, y) => `<g transform="translate(${x} ${y})"><ellipse rx="2.8" ry="1" fill="#cfd8dc"/><path d="M-2.4 -.2 H1.8" stroke="#00b0ff" stroke-width=".7"/><path d="M-2.6 .35 H0" stroke="#ff1744" stroke-width=".6"/><path d="M2.6 0 l1.4 -1 v2 Z" fill="#cfd8dc"/></g>`;
+  const angel = `<g transform="translate(46 50)"><path d="M6 0 L0 -4.5 L-2 -12 L-3.2 -3.5 L-7 -1.2 L-7.6 1.2 L-3.2 3.5 L-2 12 L0 4.5 Z" fill="#eceff1" stroke="#90a4ae" stroke-width=".4"/><path d="M-.2 -4.4 V4.4 M-3 -3 V3 M2.6 -2.4 V2.4" stroke="#37474f" stroke-width=".9"/><circle cx="3.6" cy="-.6" r=".7" fill="#212121"/></g>`;
+  const platy = `<g transform="translate(34 70)"><path d="M4 0 Q0 -3 -3 0 Q0 3 4 0 Z" fill="#ff8f00"/><path d="M-3 0 L-6 -2.4 L-6 2.4 Z" fill="#ffb300"/><circle cx="2.4" cy="-.4" r=".5" fill="#212121"/></g>`;
+  const grassLeaves = [18, 21, 24, 27, 30].map((x, i) => `<path class="nta-sway ntd${i + 1}" d="M${x} 82 C${x - 3} 66 ${x + 3} 52 ${x - 1} 36" stroke="${["#2e7d32", "#43a047", "#388e3c"][i % 3]}" stroke-width="1.3" fill="none"/>`).join("");
+  const redPlant = `<g class="nta-sway ntd3"><path d="M82 82 V48" stroke="#8d3a2b" stroke-width=".8"/>${[50, 56, 62, 68, 74].map((y) => `<ellipse cx="79.6" cy="${y}" rx="2.6" ry="1" fill="#e64a19" transform="rotate(-20 79.6 ${y})"/><ellipse cx="84.4" cy="${y + 1.5}" rx="2.6" ry="1" fill="#ff7043" transform="rotate(20 84.4 ${y + 1.5})"/>`).join("")}</g>`;
+  const carpet = Array.from({ length: 20 }, (_, i) => `<circle cx="${40 + i * 2.2}" cy="${81.6 - (i % 3) * .5}" r="1.1" fill="${i % 2 ? "#66bb6a" : "#7cb342"}"/>`).join("");
+  const bubbles = [0, 1, 2, 3].map((i) => `<circle class="nta-rise ntd${i + 1}" cx="${64 + (i % 2) * .8}" cy="76" r="${(.9 - i * .1).toFixed(1)}" fill="#e1f5fe" opacity="0"/>`).join("");
+  return `<defs>${ntV(wa, on ? "#b3e5fc" : "#2c3f4c", on ? "#1976d2" : "#0f1d27")}${ntV(cab, "#5d4037", "#3e2723")}${ntV(sand, "#e8d6ad", "#c2a76f")}${ntBlur(gl, 1.4)}
+<linearGradient id="${ray}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".9"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient></defs>
+${ntShadow(60, 111.4, 47)}
+<rect x="16" y="88" width="88" height="23" rx="1.5" fill="url(#${cab})"/>
+<path d="M60 90v19" stroke="#2b1b17" stroke-width=".7"/><circle cx="57.4" cy="99" r="1" fill="#bcaaa4"/><circle cx="62.6" cy="99" r="1" fill="#bcaaa4"/>
+<rect x="13" y="20" width="94" height="5" rx="1.5" fill="#263238"/>
+<rect x="16" y="24.4" width="88" height="1.3" rx=".6" fill="${on ? "#e3f2fd" : "#455a64"}"/>
+${on ? `<rect x="16" y="24" width="88" height="2.4" fill="#e3f2fd" filter="url(#${gl})"/>` : ""}
+<rect x="14" y="26" width="92" height="60" fill="url(#${wa})"/>
+${on ? `<g class="nta-rays"><polygon points="28 26 36 26 30 84 20 84" fill="url(#${ray})"/><polygon points="54 26 61 26 58 84 48 84" fill="url(#${ray})"/><polygon points="82 26 88 26 90 84 80 84" fill="url(#${ray})"/></g>` : ""}
+<path d="M14 40 q10 -6 20 0 t20 0 t20 0 t20 0 t12 -2 V86 H14 Z" fill="#000" opacity="${on ? .06 : .2}"/>
+<rect x="17" y="34" width="2.8" height="34" rx="1.4" fill="#cfd8dc" opacity=".7"/><rect x="17.4" y="34" width="2" height="5" rx="1" fill="${c.heater ? "#ff5722" : "#78909c"}"/>
+<rect x="96" y="32" width="8" height="30" rx="1.5" fill="#263238"/><path d="M97.6 36v22M100 36v22M102.4 36v22" stroke="#455a64" stroke-width=".7"/>
+${grassLeaves}${redPlant}
+<path d="M88 84 C86 74 92 70 98 66 M92 74 L99 72 M90 78 L84 70" stroke="#6d4c41" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+<path d="M30 86 Q30 76 38 75 Q46 76 46 86 Z" fill="#78909c"/><path d="M33 80 Q37 77 41 79" stroke="#b0bec5" stroke-width=".6" fill="none"/>
+<path d="M14 82 q6 -2 12 0 t12 0 t12 0 t12 0 t12 0 t12 0 t12 0 t8 0 V86 H14 Z" fill="url(#${sand})"/>${carpet}
+<circle cx="64" cy="83" r="1.6" fill="#90a4ae"/><g class="nt-run">${bubbles}</g>
+<g class="nta-swim">${angel}</g>
+<g class="nta-swimB"><g>${neon(76, 44)}${neon(80, 41)}${neon(83, 45.6)}${neon(78, 48)}${neon(86, 42.4)}</g></g>
+<g class="nta-swim ntd3">${platy}</g>
+${on ? "" : `<rect x="14" y="26" width="92" height="60" fill="#06121b" opacity=".35"/>`}
+<path d="M20 28 L30 28 L18 60 Z" fill="#fff" opacity=".1"/>
+<rect x="13" y="85" width="94" height="4" rx="1" fill="#263238"/>
+<rect x="13.4" y="25.4" width="93.2" height="60.4" fill="none" stroke="#90a4ae" stroke-width=".7" opacity=".7"/>
+${c.lcd ? `<rect x="71" y="64" width="31" height="13" rx="2" fill="#eceff1" stroke="#90a4ae" stroke-width=".5"/>${ntLcd(72.5, 65.4, 28, 10.2, c.lcd, true, "#69f0ae", ntFit(c.lcd, 28, 7.2))}` : ""}`;
+}
+
+// Linky meter on its wall
+function ntLinky(c) {
+  const b = ntId(), cv = ntId(), sc = ntId(), sh = ntId();
+  const val = c.lcd || "";
+  return `<defs>${ntV(b, "#d9e36a", "#bccb3d")}${ntV(cv, "#c3d03f", "#a4b22c")}${ntV(sc, "#c7d1b8", "#a8b598")}<filter id="${sh}" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="1.8"/></filter></defs>
+<rect x="33.6" y="8" width="56" height="106" rx="8" fill="#000" opacity=".22" filter="url(#${sh})"/>
+<rect x="32" y="6" width="56" height="106" rx="8" fill="url(#${b})" stroke="#9aa82a" stroke-width=".6"/>
+<path d="M36 10 H50" stroke="#fff" stroke-width="1.4" opacity=".55" stroke-linecap="round"/>
+<rect x="37" y="14" width="46" height="28" rx="2.4" fill="#5a6347"/>
+<rect x="39" y="16" width="42" height="24" rx="1.4" fill="url(#${sc})"/>
+<text x="41.5" y="23.4" font-size="6" font-weight="700" fill="#1f2a18" ${NT_FONT}>${esc(c.label || "")}</text>
+${c.tariff ? `<text x="78.5" y="23.4" font-size="4.6" text-anchor="end" fill="#1f2a18" ${NT_FONT}>${esc(c.tariff)}</text>` : ""}
+<text x="60" y="35.4" font-size="${ntFit(val, 42, 10).toFixed(1)}" font-weight="700" text-anchor="middle" fill="#1f2a18" ${NT_FONT}>${esc(val)}</text>
+<circle cx="45" cy="50" r="3.6" fill="#eef3c7" stroke="#8c9a24" stroke-width=".6"/><path d="M43.2 50h3.6M45 48.2v3.6" stroke="#4b5320" stroke-width=".7"/>
+<circle cx="56" cy="50" r="3.6" fill="#eef3c7" stroke="#8c9a24" stroke-width=".6"/><path d="M54.2 50h3.6" stroke="#4b5320" stroke-width=".7"/>
+<circle cx="74" cy="50" r="2.4" fill="#5d1010"/>${c.unav ? "" : `<circle class="${c.heavy ? "nta-blinkfast" : "nta-blink"}" cx="74" cy="50" r="2.4" fill="#ff1744"/>`}
+<text x="74" y="57.4" font-size="3.6" text-anchor="middle" fill="#4b5320" ${NT_FONT}>1 Wh</text>
+<path d="M32 62 H88" stroke="#8c9a24" stroke-width=".7"/>
+<rect x="34" y="64" width="52" height="40" rx="4" fill="url(#${cv})"/>
+<text x="60" y="84" font-size="11" font-weight="700" font-style="italic" text-anchor="middle" fill="#ffffff" ${NT_FONT}>linky</text>
+<path d="M45 87.4 Q60 92 76 86" stroke="#ffffff" stroke-width="1.1" fill="none" stroke-linecap="round"/>
+<circle cx="38.6" cy="68.4" r="1.4" fill="#8c9a24"/><circle cx="81.4" cy="68.4" r="1.4" fill="#8c9a24"/>
+<path d="M81.4 69.8 q2 6 -1 10" stroke="#1565c0" stroke-width=".5" fill="none"/><rect x="78.8" y="79.4" width="3.6" height="2.4" rx=".5" fill="#1565c0"/>
+<path d="M48 112 V122" stroke="#5d4037" stroke-width="3"/><path d="M56 112 V122" stroke="#1565c0" stroke-width="3"/><path d="M64 112 V122" stroke="#5d4037" stroke-width="3"/><path d="M72 112 V122" stroke="#1565c0" stroke-width="3"/>`;
+}
+
+// Christmas tree: the lights, the baubles and the star in a palette
+function ntTree(c) {
+  const gr = ntId(), st = ntId(), gl = ntId(), pot = ntId();
+  const on = c.on;
+  const pal = TREE_PALETTES[c.palette] || TREE_PALETTES.multicolor;
+  const tier = (yt, yb, w) => {
+    let d = `M60 ${yt} L${60 + w} ${yb}`;
+    const n = Math.round(w / 3.6);
+    for (let i = 1; i <= 2 * n; i++) { const x = 60 + w - (i * w) / n; d += ` L${x.toFixed(1)} ${i % 2 ? yb - 3.4 : yb}`; }
+    return `<path d="${d} Z" fill="url(#${gr})" stroke="#1b5e20" stroke-width=".5" stroke-linejoin="round"/>` +
+      [-.6, -.3, .3, .6].map((k) => `<path d="M60 ${yt + 4} L${(60 + w * k).toFixed(1)} ${yb - 3}" stroke="#66bb6a" stroke-width=".6" opacity=".45"/>`).join("");
+  };
+  const tiers = [[52, 94, 44], [38, 78, 35], [24, 62, 26], [12, 45, 17]];
+  let k = 0;
+  const lights = tiers.map(([, yb, w]) => {
+    const a = [60 - w * .78, yb - 14], m = [60 + w * .1, yb - 1], b = [60 + w * .82, yb - 7];
+    const q = (s) => [(1 - s) ** 2 * a[0] + 2 * (1 - s) * s * m[0] + s * s * b[0], (1 - s) ** 2 * a[1] + 2 * (1 - s) * s * m[1] + s * s * b[1]];
+    const tinsel = `<path d="M${(60 - w * .7).toFixed(1)} ${yb - 5} Q60 ${yb - 14} ${(60 + w * .72).toFixed(1)} ${yb - 12}" stroke="${pal.tinsel[k % pal.tinsel.length]}" stroke-width="1.4" stroke-dasharray="1.4 .6" fill="none" opacity=".85"/>`;
+    const wire = `<path d="M${a[0].toFixed(1)} ${a[1]} Q${m[0].toFixed(1)} ${m[1]} ${b[0].toFixed(1)} ${b[1]}" stroke="#2e5e2e" stroke-width=".7" fill="none" opacity=".9"/>`;
+    const bulbs = [.12, .3, .48, .66, .84].map((s) => {
+      const [x, y] = q(s); const col = pal.lights[k % pal.lights.length]; const dl = `ntd${(k++ % 6) + 1}`;
+      return on
+        ? `<circle class="nta-twinkle ${dl}" cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="3" fill="${col}" opacity=".7" filter="url(#${gl})"/><circle class="nta-twinkle ${dl}" cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="1.3" fill="${col}"/>`
+        : `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="1.3" fill="#b0b5bb" stroke="#7d8590" stroke-width=".3"/>`;
+    }).join("");
+    return tinsel + wire + bulbs;
+  }).join("");
+  const balls = [[44, 92], [76, 91], [60, 86], [33, 93], [87, 93], [49, 75], [72, 74], [40, 77], [80, 77], [55, 60], [67, 58], [46, 62], [74, 61], [60, 44], [54, 46], [66, 47]]
+    .map(([x, y], i) => `<rect x="${x - .8}" y="${y - 3.6}" width="1.6" height="1.2" fill="#bdbdbd"/><circle cx="${x}" cy="${y}" r="2.6" fill="${pal.balls[i % pal.balls.length]}"/><circle cx="${x - .8}" cy="${y - .9}" r=".8" fill="#fff" opacity=".75"/>`).join("");
+  let star = "";
+  for (let i = 0; i < 10; i++) { const r = i % 2 ? 3.2 : 7.4, ang = -Math.PI / 2 + i * Math.PI / 5; star += `${i ? "L" : "M"}${(60 + r * Math.cos(ang)).toFixed(1)} ${(10 + r * Math.sin(ang)).toFixed(1)}`; }
+  const G = pal.gifts, R = pal.ribbons, edge = `stroke="#263238" stroke-width=".5" stroke-opacity=".7"`;
+  const bow = (x, y, col) => `<path d="M${x} ${y} q-4 -4 -5 0 q4 1 5 0 q4 -4 5 0 q-4 1 -5 0" fill="${col}" stroke="#263238" stroke-width=".35" stroke-opacity=".6"/>`;
+  const presents = c.presents
+    ? `<rect x="9" y="106" width="9" height="7" rx=".8" fill="${G[2]}" ${edge}/><path d="M13.5 106v7M9 109.5h9" stroke="${R[2]}" stroke-width="1"/>
+<rect x="18" y="100" width="20" height="13" rx="1" fill="${G[0]}" ${edge}/><path d="M28 100v13M18 106.5h20" stroke="${R[0]}" stroke-width="1.6"/>${bow(28, 100, R[0])}
+<rect x="82" y="96" width="18" height="17" rx="1" fill="${G[1]}" ${edge}/><path d="M91 96v17M82 104.5h18" stroke="${R[1]}" stroke-width="1.6"/>${bow(91, 96, R[1])}
+<rect x="101" y="105" width="9" height="8" rx=".8" fill="${G[3]}" ${edge}/><path d="M105.5 105v8" stroke="${R[3]}" stroke-width="1.2"/>`
+    : "";
+  return `<defs>${ntV(gr, "#43a047", "#1b5e20")}${ntV(st, pal.star[0], pal.star[1])}${ntBlur(gl, 1.4)}${ntV(pot, pal.pot[0], pal.pot[1])}</defs>
+${ntShadow(60, 113.2, 48)}
+<rect x="56" y="92" width="8" height="8" fill="#6d4c41"/>
+<path d="M46 98 H74 L71 112 H49 Z" fill="url(#${pot})" stroke="#263238" stroke-width=".5" stroke-opacity=".6"/><rect x="45" y="97" width="30" height="3" rx="1" fill="${pal.star[1]}"/>
+${tiers.map(([yt, yb, w]) => tier(yt, yb, w)).join("")}
+${balls}${lights}
+${on ? `<circle class="nta-glow" cx="60" cy="10" r="9" fill="${pal.star[0]}" filter="url(#${gl})"/>` : ""}
+<path d="${star}Z" fill="${on ? `url(#${st})` : "#d6d9dd"}" stroke="${on ? pal.star[2] : "#9aa1ab"}" stroke-width=".5"/>
+${presents}`;
+}
+
+const NT_DRAW = { chest: ntChest, drawers: ntDrawers, booster: ntBooster, sump: ntSump, pool: ntPoolRobot, floor: ntFloor, spa: ntSpa, sauna: ntSauna, aquarium: ntAquarium, linky: ntLinky, tree: ntTree };
+function ntSvg(d) {
+  ntN = 0;
+  const draw = NT_DRAW[d && d.kind] || ntLinky;
+  return `<svg class="nt-svg" viewBox="0 -10 120 135">${draw(d || {})}</svg>`;
+}
+function ntHtml(cls, d) {
+  const flags = ["nt", `nt-k-${(d && d.kind) || "none"}`, d && d.on ? "nt-on" : "", d && d.unav ? "nt-unav" : ""].filter(Boolean).join(" ");
+  return `
+        <div class="machine ${cls} ${flags}">${ntSvg(d)}</div>`;
+}
+
+// The new drawings' motion: nothing moves until the machine runs (nt-on),
+// except a meter's LED and an alarm's beacon. Each part's stagger is its --d0.
+const NT_CSS = `
+        svg.nt-svg{position:absolute;left:0;top:0;width:96px;height:108px;overflow:visible}
+        .machine.nt:not(.nt-on) .nt-run{display:none}
+        .machine.nt-unav{opacity:.45;filter:grayscale(1)}
+        .ntd1{--d0:.3s}.ntd2{--d0:.7s}.ntd3{--d0:1.1s}.ntd4{--d0:1.5s}.ntd5{--d0:1.9s}.ntd6{--d0:2.3s}
+        .nt-on .nta-spin{transform-box:fill-box;transform-origin:center;animation:nt-spin .6s linear infinite}
+        .nt-on .nta-spin-slow{transform-box:fill-box;transform-origin:center;animation:nt-spin 4s linear infinite}
+        .nt-on .nta-flow{animation:nt-flow .8s linear infinite}
+        .nt-on .nta-flow-fast{animation:nt-flow .4s linear infinite}
+        .nt-on .nta-rise{transform-box:fill-box;animation:nt-rise 2.4s ease-in infinite}
+        .nt-on .nta-steam{transform-box:fill-box;transform-origin:center bottom;animation:nt-steam 2.8s ease-out infinite}
+        .nt-on .nta-fall{transform-box:fill-box;animation:nt-fall 2.6s ease-in infinite}
+        .nt-k-sump .nta-fall{transform-box:fill-box;animation:nt-fall 2.6s ease-in infinite}
+        .nt-on .nta-twinkle{animation:nt-twinkle 1.3s ease-in-out infinite}
+        .nt-on .nta-frost{transform-box:fill-box;transform-origin:center;animation:nt-frost 2.4s ease-in-out infinite}
+        .nt-on .nta-shimmer{animation:nt-shimmer 3s ease-in-out infinite}
+        .nta-glow{animation:nt-glow 1.8s ease-in-out infinite}
+        .nt-on .nta-warm{animation:nt-warm 2.6s ease-in-out infinite}
+        .nt-on .nta-pop{transform-box:fill-box;transform-origin:center;animation:nt-pop 1.6s ease-out infinite}
+        .nt-on .nta-sway{transform-box:fill-box;transform-origin:center bottom;animation:nt-sway 3.2s ease-in-out infinite}
+        .nt-on .nta-vib{animation:nt-vib .12s linear infinite}
+        .nt-on .nta-heat{transform-box:fill-box;animation:nt-heat 2.2s ease-out infinite}
+        .nt-on .nta-bob{animation:nt-bob 1.2s ease-in-out infinite}
+        .nt-on .nta-swim{transform-box:fill-box;transform-origin:center;animation:nt-swim 8s ease-in-out infinite}
+        .nt-on .nta-swimB{transform-box:fill-box;transform-origin:center;animation:nt-swimB 6.5s ease-in-out infinite}
+        .nt-on .nta-rays{animation:nt-rays 4s ease-in-out infinite}
+        .nta-caust{opacity:.35}
+        .nt-on .nta-caust{opacity:0;animation:nt-shimmer 3s ease-in-out infinite}
+        .nta-blink{animation:nt-blink 2.4s linear infinite}
+        .nta-blinkfast{animation:nt-blinkfast .45s linear infinite}
+        .nta-beacon{animation:nt-glow .7s ease-in-out infinite}
+        @keyframes nt-spin{to{transform:rotate(360deg)}}
+        @keyframes nt-flow{to{stroke-dashoffset:-24}}
+        @keyframes nt-rise{0%{transform:translateY(0);opacity:0}15%{opacity:.95}100%{transform:translateY(-30px);opacity:0}}
+        @keyframes nt-steam{0%{transform:translateY(0) scaleX(1);opacity:0}30%{opacity:.6}100%{transform:translateY(-20px) scaleX(1.7);opacity:0}}
+        @keyframes nt-fall{0%{transform:translateY(-2px);opacity:0}35%{opacity:.85}100%{transform:translateY(12px);opacity:0}}
+        @keyframes nt-twinkle{0%,100%{opacity:1}50%{opacity:.25}}
+        @keyframes nt-blink{0%,70%,100%{opacity:.15}78%,92%{opacity:1}}
+        @keyframes nt-blinkfast{0%,100%{opacity:.15}45%,55%{opacity:1}}
+        @keyframes nt-frost{0%,100%{opacity:0;transform:scale(.5)}50%{opacity:1;transform:scale(1)}}
+        @keyframes nt-shimmer{0%,100%{opacity:0}50%{opacity:.5}}
+        @keyframes nt-glow{0%,100%{opacity:.45}50%{opacity:1}}
+        @keyframes nt-warm{0%,100%{opacity:.1}50%{opacity:.26}}
+        @keyframes nt-pop{0%{transform:scale(.2);opacity:0}40%{opacity:.95}100%{transform:scale(1.4);opacity:0}}
+        @keyframes nt-sway{0%,100%{transform:skewX(-7deg)}50%{transform:skewX(7deg)}}
+        @keyframes nt-vib{0%,100%{transform:translate(0,0)}25%{transform:translate(.35px,-.2px)}75%{transform:translate(-.35px,.2px)}}
+        @keyframes nt-heat{0%{transform:translateY(0);opacity:0}30%{opacity:.8}100%{transform:translateY(-14px);opacity:0}}
+        @keyframes nt-bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-1.6px)}}
+        @keyframes nt-swim{0%{transform:translateX(0) scaleX(1)}46%{transform:translateX(34px) scaleX(1)}50%{transform:translateX(34px) scaleX(-1)}96%{transform:translateX(0) scaleX(-1)}100%{transform:translateX(0) scaleX(1)}}
+        @keyframes nt-swimB{0%{transform:translateX(0) scaleX(-1)}46%{transform:translateX(-30px) scaleX(-1)}50%{transform:translateX(-30px) scaleX(1)}96%{transform:translateX(0) scaleX(1)}100%{transform:translateX(0) scaleX(-1)}}
+        @keyframes nt-rays{0%,100%{opacity:.18}50%{opacity:.38}}
+        .machine.nt * { animation-delay: calc(var(--d0, 0s) + var(--anim-offset, 0s)) !important; }
+        @media (prefers-reduced-motion: reduce) { .machine.nt * { animation-name: none !important; } }
+`;
+
+const NT_COLORS = { off: "var(--disabled-text-color, #9e9e9e)", idle: "var(--secondary-text-color, #727272)", run: "#1e88e5",
+  heat: "#f4511e", alarm: "#e53935", lit: "#43a047", high: "#e53935", unav: "var(--disabled-text-color, #9e9e9e)" };
+// How a remaining time reads on the robot's power supply: seconds, minutes or
+// hours as its unit says, or a finish time.
+function ntRemaining(hass, id) {
+  const s = id ? stateObj(hass, id) : null;
+  if (!s) return null;
+  const v = numberOrNull(s.state);
+  if (v === null) {
+    const at = Date.parse(s.state);
+    return isFinite(at) ? Math.max(0, (at - Date.now()) / 1000) : null;
+  }
+  const u = String((s.attributes || {}).unit_of_measurement || "min").toLowerCase();
+  return u === "s" ? v : u === "h" ? v * 3600 : v * 60;
+}
+// One reading of the new types: the mode, the state line, its colour, the
+// lines under it and what the drawing needs.
+function ntReadOf(type, hass, cfg, st, watts, threshold) {
+  const lines = [];
+  const raw = st ? String(st.state).trim().toLowerCase() : "";
+  const dead = !st || ["unavailable", "unknown", "none", ""].includes(raw);
+  const running = ntRunning(hass, cfg, st, watts, threshold);
+  const unav = running === null && !(type === "meter" && !dead);
+  const tmp = ntTemp(hass, cfg, st);
+  const out = (mode, labelKey, color, draw) => ({ mode, label: t(hass, labelKey), color, lines, draw: { ...draw, unav } });
+  if (unav) {
+    const kinds = { water_pump: pumpLayoutOf(cfg, st), floor_heating: "floor", spa: "spa", sauna: "sauna", aquarium: "aquarium", meter: "linky", christmas_tree: "tree" };
+    return out("unav", "ev_offline", NT_COLORS.unav, { kind: kinds[type], on: false, electric: floorLayoutOf(cfg) === "electric",
+      palette: cfg.tree_palette, presents: type === "christmas_tree" && treePresents(cfg) });
+  }
+  if (type === "water_pump") {
+    const layout = pumpLayoutOf(cfg, st);
+    const pressure = ntValueText(hass, cfg, cfg.pressure_entity);
+    if (pressure) lines.push({ key: "pump_pressure", icon: "mdi:gauge", label: t(hass, "section_pressure"), value: keepTogether(pressure), entity: cfg.pressure_entity });
+    let level = null;
+    let levelText = null;
+    if (cfg.level_entity) {
+      const v = numericState(hass, cfg.level_entity);
+      if (v !== null) {
+        const max = parseFloat(cfg.level_max);
+        const pct = unitOf(hass, cfg.level_entity) === "%";
+        level = pct ? v / 100 : Number.isFinite(max) && max > 0 ? v / max : null;
+        levelText = ntValueText(hass, cfg, cfg.level_entity);
+        lines.push({ key: "pump_level", icon: "mdi:waves-arrow-up", label: t(hass, "section_water_level"), value: keepTogether(levelText), entity: cfg.level_entity });
+      }
+    }
+    const alarm = layout === "sump" && (ntOnOff(hass, cfg.high_level_entity) || (level !== null && level >= 0.9));
+    const on = !!running || alarm;
+    const lcd = layout === "sump" ? levelText || "" : pressure || (cfg.power_entity && watts !== null ? `${Math.round(watts)} W` : "");
+    if (alarm) return out("alarm", "wp_high", NT_COLORS.alarm, { kind: "sump", on, alarm, level, lcd });
+    return out(on ? "run" : "idle", on ? "wp_pumping" : "ac_idle", on ? NT_COLORS.run : NT_COLORS.idle, { kind: layout, on, alarm: false, level, lcd });
+  }
+  if (type === "floor_heating" || type === "sauna") {
+    const isOff = !dead && raw === "off" && !(cfg.power_entity && watts !== null && watts >= threshold);
+    if (tmp) lines.push({ key: "nt_temp", icon: "mdi:thermometer", label: t(hass, "temperature"), value: keepTogether(tmp.text), entity: cfg.temperature_entity || cfg.state_entity });
+    const target = ntTarget(hass, cfg, st);
+    const draw = type === "sauna"
+      ? { kind: "sauna", on: !!running && !isOff, temp: tmp ? tmp.v : null, lcd: tmp ? tmp.text : "" }
+      : { kind: "floor", on: !!running && !isOff, electric: floorLayoutOf(cfg) === "electric", lcd: tmp ? tmp.text : "" };
+    if (isOff) return out("off", "ac_off", NT_COLORS.off, { ...draw, on: false });
+    if (type === "sauna" && tmp && target !== null && tmp.v >= target - 3) return out("ready", "sauna_ready", NT_COLORS.lit, { ...draw, on: true });
+    return running ? out("heat", "ac_heating", NT_COLORS.heat, draw) : out("idle", "ac_idle", NT_COLORS.idle, draw);
+  }
+  if (type === "spa") {
+    const isOff = !dead && raw === "off";
+    const bubbles = ntOnOff(hass, cfg.bubbles_entity);
+    const lit = ntOnOff(hass, cfg.light_entity);
+    if (tmp) lines.push({ key: "nt_temp", icon: "mdi:thermometer", label: t(hass, "temperature"), value: keepTogether(tmp.text), entity: cfg.temperature_entity || cfg.state_entity });
+    const heating = !!running && !isOff;
+    const draw = { kind: "spa", on: heating || bubbles, heating, bubbles, lit, steam: heating || bubbles, lcd: tmp ? tmp.text : "" };
+    if (bubbles) return out("bubbles", "spa_bubbles", NT_COLORS.run, draw);
+    if (isOff) return out("off", "ac_off", NT_COLORS.off, draw);
+    return heating ? out("heat", "ac_heating", NT_COLORS.heat, draw) : out("idle", "ac_idle", NT_COLORS.idle, draw);
+  }
+  if (type === "aquarium") {
+    if (tmp) lines.push({ key: "nt_temp", icon: "mdi:thermometer", label: t(hass, "temperature"), value: keepTogether(tmp.text), entity: cfg.temperature_entity || cfg.state_entity });
+    const draw = { kind: "aquarium", on: !!running, lcd: tmp ? tmp.text : "", heater: cfg.power_entity && watts !== null ? watts >= threshold : false };
+    return running ? out("lit", "aq_lit", NT_COLORS.lit, draw) : out("off", "aq_dark", NT_COLORS.off, draw);
+  }
+  if (type === "meter") {
+    const v = numberOrNull(st && st.state);
+    if (v === null) return out("unav", "ev_offline", NT_COLORS.unav, { kind: "linky", on: false, unav: true, lcd: "", label: "" });
+    const unit = unitOf(hass, cfg.state_entity) || "VA";
+    const high = parseFloat(cfg.high_power);
+    const heavy = v >= (Number.isFinite(high) ? high : 3000);
+    const tariffSt = cfg.tariff_entity ? stateObj(hass, cfg.tariff_entity) : null;
+    const tariff = tariffSt && !["unknown", "unavailable"].includes(String(tariffSt.state)) ? String(tariffSt.state) : "";
+    if (tariff) lines.push({ key: "meter_tariff", icon: "mdi:clock-time-four-outline", label: t(hass, "section_tariff"), value: tariff, entity: cfg.tariff_entity });
+    const value = `${Math.round(v)} ${unit}`;
+    return out(heavy ? "high" : "low", heavy ? "meter_high" : "meter_low", heavy ? NT_COLORS.high : NT_COLORS.idle,
+      { kind: "linky", on: true, heavy, lcd: value, label: unit.toUpperCase() === "VA" ? "PAPP" : "SINSTS", tariff: tariff.toUpperCase().slice(0, 6) });
+  }
+  // A Christmas tree.
+  const draw = { kind: "tree", on: !!running, palette: TREE_PALETTES[cfg.tree_palette] ? cfg.tree_palette : "multicolor", presents: treePresents(cfg) };
+  return running ? out("lit", "tree_on", NT_COLORS.lit, draw) : out("off", "tree_off", NT_COLORS.off, draw);
+}
+// Each new type's switch, unless the card has a power switch of its own; the
+// spa's bubbles have theirs.
+function ntControls(hass, cfg, type) {
+  const out = [];
+  const st = stateObj(hass, cfg.state_entity);
+  if (st && !cfg.toggle_entity && type !== "meter" && ["light", "switch", "input_boolean"].includes(domainOf(cfg.state_entity))) {
+    out.push({ key: "toggle", entity: cfg.state_entity, icon: type === "christmas_tree" ? "mdi:pine-tree" : type === "aquarium" ? "mdi:lightbulb" : "mdi:power", label: t(hass, "toggle"),
+      on: String(st.state).toLowerCase() === "on" });
+  }
+  if (type === "spa" && cfg.bubbles_entity && ["switch", "input_boolean", "fan"].includes(domainOf(cfg.bubbles_entity))) {
+    out.push({ key: "bubbles", entity: cfg.bubbles_entity, icon: "mdi:chart-bubble", label: t(hass, "section_bubbles"), on: ntOnOff(hass, cfg.bubbles_entity) });
+  }
+  return out;
+}
+
 // A bathroom scale: its state entity is the weight. Weighed, and when; the
 // goal reached within half a unit; offline when there is no weight to show.
 const SCALE_ONLY_FIELDS = ["weight_goal_entity", "weight_goal", "fat_ratio_entity", "fat_mass_entity", "muscle_mass_entity", "bone_mass_entity"];
@@ -7524,6 +8410,13 @@ const ENERGY_CSS = `
 `;
 
 const ILLUSTRATION_CSS = {
+  water_pump: () => NT_CSS,
+  floor_heating: () => NT_CSS,
+  spa: () => NT_CSS,
+  sauna: () => NT_CSS,
+  aquarium: () => NT_CSS,
+  meter: () => NT_CSS,
+  christmas_tree: () => NT_CSS,
   printer_3d: (color) => `
         .p3-case {
           position: absolute; left: 6px; right: 6px; top: 2px; bottom: 5px; border-radius: 6px;
@@ -8170,7 +9063,7 @@ const ILLUSTRATION_CSS = {
           border: 1.5px solid var(--warning-color, #ff9800); border-bottom: none; border-radius: 3px 3px 0 0;
         }
   `,
-  fridge: () => `
+  fridge: () => NT_CSS + `
         .fr-body {
           position: absolute; left: 12px; right: 12px; top: 2px; bottom: 2px;
           border-radius: 8px;
@@ -9990,7 +10883,7 @@ const ILLUSTRATION_CSS = {
         @media (prefers-reduced-motion: reduce) { .machine.up * { animation-name: none !important; } }
   `,
   // A robot and its floor, its base and its station.
-  robot: () => `${MINI_LCD_CSS}
+  robot: () => `${NT_CSS}${MINI_LCD_CSS}
         .machine.rbt { --b: var(--ac-body, #3a3f45); --bh: var(--ac-body-hi, #5a6168); --bl: var(--ac-body-lo, #1d2024); --dk: #2b2f34; --dkh: #41474e; }
         .machine.rbt > *, .rbt-dock > *, .rbt-mdock > *, .rbt-bin > *, .rbt-tk > * { position: absolute; }
         .stk-svg{position:absolute;left:0;top:0;width:96px;height:108px;overflow:visible}
@@ -10345,6 +11238,8 @@ const ILLUSTRATION_CSS = {
         .machine.scr-lit .scr-led { background: transparent; }
         .machine.scr-computer.mode-standby .scr-led { background: #ffb300; box-shadow: 0 0 3px #ffb300; animation: scr-breathe 2.4s ease-in-out infinite; animation-delay: var(--anim-offset, 0s); }
         .machine.scr-computer.scr-lit .scr-led { background: #e3f2fd; box-shadow: 0 0 3px #90caf9; }
+        .machine.scr-computer.tw-on .scr-led { background: #e3f2fd; box-shadow: 0 0 3px #90caf9; animation-name: none; }
+        .machine.scr-computer.tw-off .scr-led { background: #3a3f46; box-shadow: none; animation-name: none; }
         .scr-badge { position: absolute; z-index: 6; right: 4%; bottom: 6%; width: 16%; max-width: 9px; opacity: 0.9; display: none; }
         .scr-badge svg { display: block; width: 100%; height: auto; }
         .machine.mode-playing .scr-badge.play, .machine.mode-paused .scr-badge.pause, .machine.scr-lit.muted .scr-badge.mute { display: block; }
@@ -12129,6 +13024,7 @@ function shelterHtml(style, color) {
 }
 
 function robotHtml(cls, r) {
+  if (r.layout === "pool") return ntHtml(`${cls} rbt rbt-l-pool rbt-m-${r.mode || "docked"}`, { kind: "pool", on: r.mode === "cleaning", lcd: r.poolTime || "" });
   if (r.layout === "stick" || r.layout === "floor_washer") {
     return `
         <div class="machine ${cls} rbt rbt-l-${r.layout} rbt-m-${r.mode || "docked"}">${r.layout === "stick" ? dysonSvg(r.battery) : washerSvg(r.battery)}</div>`;
@@ -12326,7 +13222,7 @@ function screenHtml(cls, sc) {
     ? ` data-fit-w="${px(96 * band[2])}" style="width: calc(${px(96 * band[2])}px * ${fit}); height: calc(${px(band[1] * band[2])}px * ${fit})"`
     : "";
   return `
-        <div class="machine ${cls} scr-${layout} mode-${mode}${lit}${sc.muted ? " muted" : ""}${tablet ? " tablet" : ""}${sc.charging ? " charging" : ""}${sc.seen ? " seen" : ""}"${size}>${inner}</div>`;
+        <div class="machine ${cls} scr-${layout} mode-${mode}${lit}${sc.muted ? " muted" : ""}${tablet ? " tablet" : ""}${sc.charging ? " charging" : ""}${sc.seen ? " seen" : ""}${sc.tower ? ` tw-${sc.tower}` : ""}"${size}>${inner}</div>`;
 }
 
 function illustrationHtml(type, ctx) {
@@ -12556,6 +13452,11 @@ function illustrationHtml(type, ctx) {
         </div>`;
   }
 
+  if (type === "fridge" && ctx.coldBox) {
+    return ntHtml(cls, { kind: ctx.layout, on: ctx.cooling !== false && !ctx.dark, dark: ctx.dark, warn: ctx.fridgeWarn,
+      open: !!(ctx.doorOpen || ctx.freezerDoorOpen), lcd: ctx.coldText });
+  }
+  if (NT_TYPES.includes(type)) return ntHtml(cls, ctx.ntDraw || {});
   if (type === "fridge") {
     return `<div class="machine ${cls} ${ctx.ice ? "ice" : ""}">${fridgeHtml(ctx)}</div>`;
   }
@@ -13013,8 +13914,10 @@ function stateFreeSource(config) {
   // And for a UPS: its input voltage says whether the mains is there.
   const asUps = config && (config.appliance_type === "ups" || UPS_ONLY_FIELDS.some((f) => config[f]));
   const hasUpsSource = asUps && !!(config.input_voltage_entity || config.battery_entity);
+  // And for a pump, a heater, a tree on a smart plug: the meter says it runs.
+  const hasNtSource = !!config && NT_TYPES.includes(config.appliance_type) && config.appliance_type !== "meter" && !!config.power_entity;
   return !!(hasFridgeSource || hasFeederSource || hasChargerSource || hasScreenSource || hasPoolSource
-    || hasSolarSource || hasBatterySource || hasUpsSource);
+    || hasSolarSource || hasBatterySource || hasUpsSource || hasNtSource);
 }
 
 class ApplianceCard extends HTMLElement {
@@ -13236,6 +14139,8 @@ class ApplianceCard extends HTMLElement {
     this._resizer = null;
     this._clearClockTimer();
     this._clearCountdownTimer();
+    if (this._elapsedTimer) clearInterval(this._elapsedTimer);
+    this._elapsedTimer = null;
     if (this._feedTimer) clearTimeout(this._feedTimer);
     this._feedTimer = null;
     if (this._offDelayTimer) clearTimeout(this._offDelayTimer);
@@ -13386,6 +14291,82 @@ class ApplianceCard extends HTMLElement {
       Object.assign(cycle, found);
       this._render();
     }, () => {});
+  }
+
+  // A cycle read from a plug, opened in its middle: its meter's history says
+  // when the plug began to draw.
+  _lookUpPowerCycle(cycle, cfg, threshold) {
+    const hass = this._hass;
+    if (this._inert || !hass || typeof hass.callWS !== "function" || !cfg.power_entity) return;
+    const end = Date.now();
+    const from = end - CYCLE_HISTORY_MS;
+    let req;
+    try {
+      req = hass.callWS({
+        type: "history/history_during_period",
+        start_time: new Date(from).toISOString(),
+        end_time: new Date(end).toISOString(),
+        entity_ids: [cfg.power_entity],
+        include_start_time_state: true,
+        significant_changes_only: false,
+        minimal_response: true,
+        no_attributes: true,
+      });
+    } catch (e) {
+      return;
+    }
+    Promise.resolve(req).then((res) => {
+      if (this._cycle !== cycle) return;
+      const gapMs = Math.max(0, parseFloat(cfg.power_off_delay) || 0) * 60000;
+      const runs = powerRuns(res && res[cfg.power_entity], threshold, gapMs, Date.now(), from);
+      const last = runs[runs.length - 1];
+      if (!last || last.end !== null || last.start > cycle.start) return;
+      cycle.start = last.start;
+      this._render();
+    }, () => {});
+  }
+
+  // Today's running time and starts, read from the history of the meter or of
+  // the state since midnight, and kept five minutes.
+  _lookUpToday(cfg, type, fromPower, threshold) {
+    const hass = this._hass;
+    if (this._inert || !hass || typeof hass.callWS !== "function") return;
+    const entity = fromPower ? cfg.power_entity : cfg.state_entity;
+    if (!entity) return;
+    const midnight = new Date(Date.now());
+    midnight.setHours(0, 0, 0, 0);
+    const from = midnight.getTime();
+    const gapMs = fromPower ? Math.max(0, parseFloat(cfg.power_off_delay) || 0) * 60000 : 0;
+    const key = [entity, type, fromPower ? threshold : "", gapMs, from].join("|");
+    const now = Date.now();
+    if (this._today && this._today.key === key && now - this._today.at < HISTORY_REFRESH_MS) return;
+    if (this._todayPending === key) return;
+    this._todayPending = key;
+    let req;
+    try {
+      req = hass.callWS({
+        type: "history/history_during_period",
+        start_time: new Date(from).toISOString(),
+        end_time: new Date(now).toISOString(),
+        entity_ids: [entity],
+        include_start_time_state: true,
+        significant_changes_only: false,
+        minimal_response: true,
+        no_attributes: true,
+      });
+    } catch (e) {
+      this._todayPending = null;
+      return;
+    }
+    Promise.resolve(req).then((res) => {
+      if (this._todayPending !== key) return;
+      this._todayPending = null;
+      const rows = res && res[entity];
+      const runs = fromPower ? powerRuns(rows, threshold, gapMs, Date.now(), from)
+        : stateRunsOpen(rows, (raw) => normFor(type, raw, cfg.state_map), from);
+      this._today = { key, at: Date.now(), runs, from };
+      this._render();
+    }, () => { this._todayPending = null; });
   }
 
   // Reads one entity's history once the curve is unfolded, then keeps it five
@@ -13739,7 +14720,10 @@ class ApplianceCard extends HTMLElement {
       : nowMs;
     // Only a cycle measured against its remaining time needs a start. A
     // progress entity says it all, and a kettle has no cycle to time.
-    if (role === "out" || cfg.progress_entity || !cfg.remaining_time_entity) {
+    // The elapsed time needs one too (HACF): a plug alone says nothing of the
+    // time left, but it does say since when the machine has been running.
+    const elapsedWanted = !!cfg.show_elapsed;
+    if (role === "out" || ((cfg.progress_entity || !cfg.remaining_time_entity) && !elapsedWanted)) {
       this._cycle = null;
     } else if (!this._cycle) {
       // A gap opens nothing: the card waits for a state it can read.
@@ -13750,6 +14734,7 @@ class ApplianceCard extends HTMLElement {
         const seenStart = this._prevNormState !== null && cycleRole(this._prevNormState) === "out";
         this._cycle = { start: since, pausedMs: 0, pausedSince: role === "paused" ? since : null };
         if (!seenStart && !powerDerived) this._lookUpCycle(this._cycle, cfg, applianceType);
+        else if (!seenStart && powerDerived && elapsedWanted) this._lookUpPowerCycle(this._cycle, cfg, threshold);
       }
     } else if (role === "paused" && this._cycle.pausedSince === null) {
       this._cycle.pausedSince = since;
@@ -14031,10 +15016,13 @@ class ApplianceCard extends HTMLElement {
       const freezerT = readTemp(cfg.freezer_temperature_entity);
       // A wine cooler keeps 10 to 14 degrees on purpose; past 18 the wine suffers.
       const wine = cfg.fridge_layout === "wine";
+      // A chest or a drawer freezer keeps its food frozen: -12 and up is warm.
+      const coldBox = ["chest", "drawers"].includes(cfg.fridge_layout);
       const maxTemp = cfg.fridge_max_temperature === undefined || cfg.fridge_max_temperature === ""
-        ? (wine ? 18 : 8)
+        ? (wine ? 18 : coldBox ? -12 : 8)
         : parseFloat(cfg.fridge_max_temperature);
-      const tempHigh = fridgeT.value !== null && isFinite(maxTemp) && fridgeT.value > maxTemp;
+      const probe = coldBox && freezerT.value !== null ? freezerT : fridgeT;
+      const tempHigh = probe.value !== null && isFinite(maxTemp) && probe.value > maxTemp;
 
       let freezerDoorOpen = false;
       if (cfg.freezer_door_entity) {
@@ -14168,6 +15156,11 @@ class ApplianceCard extends HTMLElement {
         dark: unplugged || noPower,
         freezerDoorOpen,
         ice,
+        coldBox,
+        cooling,
+        coldText: freezerT.value !== null ? tempText(hass, cfg, cfg.freezer_temperature_entity, freezerT.value, unit)
+          : fridgeT.value !== null ? tempText(hass, cfg, cfg.fridge_temperature_entity, fridgeT.value, unit)
+          : cfg.freezer_temperature_entity || cfg.fridge_temperature_entity ? "--" : "",
       };
     } else {
       this._clearClockTimer();
@@ -15782,8 +16775,27 @@ class ApplianceCard extends HTMLElement {
       // The screensaver's clock moves on with the time.
       this._clearClockTimer();
       if (mode === "saver" && !this._inert) this._clockTimer = setInterval(() => this._render(), CLOCK_TICK_MS);
+      // A computer whose tower and screens hang on two plugs (HACF): the tower
+      // has its own entity, a switch, a ping or a meter, and its own light.
+      let tower = null;
+      if (layout === "computer" && cfg.tower_entity) {
+        const ts = stateObj(hass, cfg.tower_entity);
+        if (ts) {
+          const tw = parseFloat(ts.state);
+          const meter = domainOf(cfg.tower_entity) === "sensor" && Number.isFinite(tw);
+          tower = meter ? (tw > SCREEN_STANDBY_W ? "on" : "off") : ["on", "home", "true"].includes(String(ts.state).toLowerCase()) ? "on" : "off";
+          if (meter) {
+            extraLines.push({ key: "tower_power", icon: "mdi:desktop-tower", label: t(hass, "tower_line"), value: `${Math.round(tw)} ${unitOf(hass, cfg.tower_entity) || "W"}`, entity: cfg.tower_entity });
+          }
+          if (tower === "on" && !lit && !cfg.state_show_raw) {
+            stateLabel = t(hass, "tower_on");
+            color = SCREEN_COLORS.on;
+          }
+        }
+      }
       const battery = tablet && cfg.battery_entity ? numericState(hass, cfg.battery_entity) : null;
       screen = {
+        tower,
         mode, layout, image: this._screenImage || pool[0], cover, muted, tablet, charging, battery,
         seen: tablet && camOn(hass, cfg.motion_entity),
         clock: mode === "saver" ? feederClock(hass) : "",
@@ -16194,6 +17206,17 @@ class ApplianceCard extends HTMLElement {
       lampDraw = { mode: l.mode, rgb: l.rgb, pct: l.pct, fx: !!l.effect, layout: lampLayoutOf(cfg, st), spots: lampSpotsOf(cfg, st) };
     }
 
+    // The HACF drawings: a pump, underfloor heating, a spa, a sauna, an
+    // aquarium, a meter, a Christmas tree.
+    let ntDraw = null;
+    if (NT_TYPES.includes(applianceType)) {
+      const r = ntReadOf(applianceType, hass, cfg, st, watts, isFinite(threshold) ? threshold : 10);
+      if (!cfg.state_show_raw || r.mode === "unav") stateLabel = r.label;
+      color = r.color;
+      extraLines.push(...r.lines);
+      ntDraw = r.draw;
+    }
+
     // A bathroom scale: its state entity is the weight, shown on its screen.
     // The goal, the fat, the muscles and the bones are lines.
     let scale = null;
@@ -16347,7 +17370,14 @@ class ApplianceCard extends HTMLElement {
           extraLines.push({ key: "robot_error", icon: "mdi:alert-circle-outline", label: t(hass, "error"), value: text, entity: id, warn: true });
         }
       }
-      robot = { layout, mode, water, battery, floor: cfg.robot_floor, base: cfg.robot_station === "base", shelter: cfg.robot_shelter ? (SHELTER_STYLES.includes(cfg.robot_shelter_style) ? cfg.robot_shelter_style : "lean_to") : "",
+      // A pool robot's time left, on its power supply on the deck; the line
+      // under the state already says it.
+      let poolTime = "";
+      if (layout === "pool" && cfg.remaining_time_entity) {
+        const secs = ntRemaining(hass, cfg.remaining_time_entity);
+        if (secs !== null) poolTime = formatDuration(secs, hass);
+      }
+      robot = { layout, mode, water, battery, poolTime, floor: cfg.robot_floor, base: cfg.robot_station === "base", shelter: cfg.robot_shelter ? (SHELTER_STYLES.includes(cfg.robot_shelter_style) ? cfg.robot_shelter_style : "lean_to") : "",
         shelterColor: cfg.robot_shelter_color };
     }
 
@@ -16374,6 +17404,46 @@ class ApplianceCard extends HTMLElement {
       }
     }
 
+    // The time the cycle has run so far, on request (HACF): with a plug alone
+    // there is no time left to show, but there is a start.
+    if (this._elapsedTimer) {
+      clearInterval(this._elapsedTimer);
+      this._elapsedTimer = null;
+    }
+    if (elapsedWanted && this._cycle && (lcRole === "active" || lcRole === "paused")) {
+      const c = this._cycle;
+      const now = Date.now();
+      const pausedNow = c.pausedSince !== null ? Math.max(0, now - c.pausedSince) : 0;
+      const ran = Math.max(0, now - c.start - c.pausedMs - pausedNow);
+      extraLines.push({
+        key: "elapsed",
+        icon: "mdi:timer-outline",
+        label: t(hass, "elapsed_line"),
+        value: keepTogether(formatDuration(ran / 1000, hass)),
+        entity: powerDerived ? cfg.power_entity : cfg.state_entity,
+      });
+      if (!this._inert) this._elapsedTimer = setInterval(() => this._render(), COUNTDOWN_TICK_MS);
+    }
+
+    // Today's running time and starts, on request: a pump, a heater, a water
+    // heater, any appliance whose day is told by how long it ran.
+    if (cfg.show_today && !cap.solar && !cap.homeBattery) {
+      const fromPower = !!cfg.power_entity && (powerDerived || !cfg.state_entity) && isFinite(threshold);
+      this._lookUpToday(cfg, applianceType, fromPower, isFinite(threshold) ? threshold : 10);
+      const td = this._today;
+      if (td && td.runs) {
+        const { ms, starts } = runsSince(td.runs, td.from, Date.now());
+        const startsText = t(hass, starts === 1 ? "starts_one" : "starts_other").replace("{n}", String(starts));
+        extraLines.push({
+          key: "today",
+          icon: "mdi:chart-timeline-variant",
+          label: t(hass, "today_line"),
+          value: `${keepTogether(formatDuration(ms / 1000, hass))} \u00b7 ${keepTogether(startsText)}`,
+          entity: fromPower ? cfg.power_entity : cfg.state_entity,
+        });
+      }
+    }
+
     // Power draw is worth showing on any type once the entity is there. A
     // charger prints its own, in kilowatts.
     if (!cap.fridgeTemp && !cap.heatPump && !cap.evCharger && !cap.solar && !cap.homeBattery && cfg.power_entity && watts !== null) {
@@ -16384,6 +17454,23 @@ class ApplianceCard extends HTMLElement {
         value: `${Math.round(watts)} ${unitOf(hass, cfg.power_entity) || "W"}`,
         entity: cfg.power_entity,
       });
+    }
+
+    // What it used, and what that cost at the price given: a number for a
+    // fixed tariff, an entity for one that changes (HACF).
+    if (!cap.solar && !cap.homeBattery && cfg.energy_entity && entityUsable(hass, cfg.energy_entity)) {
+      extraLines.push({
+        key: "energy",
+        icon: "mdi:lightning-bolt",
+        label: t(hass, "energy_line"),
+        value: keepTogether(formatInfoValue(stateObj(hass, cfg.energy_entity), hass, null, cfg, cfg.energy_entity)),
+        entity: cfg.energy_entity,
+      });
+      const kwh = energyKwh(hass, cfg.energy_entity);
+      const price = energyPriceOf(hass, cfg.energy_price);
+      if (kwh !== null && price !== null) {
+        extraLines.push({ key: "cost", icon: "mdi:cash", label: t(hass, "cost_line"), value: keepTogether(formatMoney(hass, kwh * price)), entity: cfg.energy_entity });
+      }
     }
 
     const illustrationCtx = {
@@ -16435,6 +17522,7 @@ class ApplianceCard extends HTMLElement {
       scale,
       camera,
       lampDraw,
+      ntDraw,
       mailbox,
       diffuser,
       hrv,
@@ -16482,6 +17570,7 @@ class ApplianceCard extends HTMLElement {
       ...(cap.hrv ? hrvControls(hass, cfg) : []),
       ...(cap.screen ? screenControls(hass, cfg) : []),
       ...(cap.lamp ? lampControls(hass, cfg) : []),
+      ...(NT_TYPES.includes(applianceType) ? ntControls(hass, cfg, applianceType) : []),
     ]
       .map((a) => (a.key && a.key !== "toggle" ? { ...a, option: cfg[`${a.key}_option`] ?? a.option, value: cfg[`${a.key}_value`] ?? a.value } : a))
       // A button's icon can be swapped for another, `start_icon` and its
@@ -16538,7 +17627,9 @@ class ApplianceCard extends HTMLElement {
       illustrationCtx.hairDryer && [illustrationCtx.hairDryer.mode, illustrationCtx.hairDryer.level, illustrationCtx.hairDryer.layout].join("/"),
       illustrationCtx.network && [illustrationCtx.network.mode, illustrationCtx.network.layout, illustrationCtx.network.lit,
         illustrationCtx.network.disks.join(""), illustrationCtx.network.wifiOff].join("/"),
-      illustrationCtx.robot && [illustrationCtx.robot.mode, illustrationCtx.robot.layout].join("/"),
+      illustrationCtx.robot && [illustrationCtx.robot.mode, illustrationCtx.robot.layout, illustrationCtx.robot.poolTime].join("/"),
+      illustrationCtx.ntDraw && JSON.stringify(illustrationCtx.ntDraw),
+      illustrationCtx.coldBox && [illustrationCtx.coldText, illustrationCtx.cooling, illustrationCtx.dark, illustrationCtx.fridgeWarn].join("/"),
       illustrationCtx.pool && [illustrationCtx.pool.mode, illustrationCtx.pool.dosing, illustrationCtx.pool.lit].join("/"),
       illustrationCtx.solar && [illustrationCtx.solar.mode, illustrationCtx.solar.sky, illustrationCtx.solar.layout].join("/"),
       illustrationCtx.battery && [illustrationCtx.battery.mode, illustrationCtx.battery.layout, illustrationCtx.battery.low].join("/"),
@@ -17333,6 +18424,19 @@ const SECTIONS = [
   { field: "signal_entity", types: ["camera"], labelKey: "section_signal", includeDomains: ["sensor"] },
   { field: "ring_entity", types: ["camera"], labelKey: "section_ring", includeDomains: ["binary_sensor", "event", "input_boolean", "sensor"] },
   // A mailbox: the mail counter and its two doors.
+  // The HACF drawings.
+  { field: "pressure_entity", types: ["water_pump"], labelKey: "section_pressure", includeDomains: ["sensor", "number", "input_number"],
+    when: (c) => pumpLayoutOf(c, null) === "booster" },
+  { field: "level_entity", types: ["water_pump"], labelKey: "section_water_level", includeDomains: ["sensor", "number", "input_number"],
+    when: (c) => pumpLayoutOf(c, null) === "sump", extra: (c) => c._row("level_max", "level_max", { placeholder: "100" }) },
+  { field: "high_level_entity", types: ["water_pump"], labelKey: "section_high_level", includeDomains: ["binary_sensor", "input_boolean", "sensor"],
+    when: (c) => pumpLayoutOf(c, null) === "sump" },
+  { field: "temperature_entity", types: ["floor_heating", "spa", "sauna", "aquarium"], labelKey: "temperature", includeDomains: ["sensor", "number", "input_number"] },
+  { field: "target_temperature_entity", types: ["sauna"], labelKey: "section_target_temperature", includeDomains: ["number", "sensor", "input_number"] },
+  { field: "bubbles_entity", types: ["spa"], labelKey: "section_bubbles", includeDomains: ["switch", "input_boolean", "fan", "binary_sensor"] },
+  { field: "tariff_entity", types: ["meter"], labelKey: "section_tariff", includeDomains: ["sensor", "select", "input_select"] },
+  { field: "remaining_time_entity", types: ["robot"], labelKey: "section_remaining", includeDomains: ["sensor", "input_number"],
+    when: (c) => robotLayoutOf(c, null) === "pool" },
   { field: "mail_count_entity", types: ["mailbox"], labelKey: "section_mail_count", includeDomains: ["sensor", "counter", "input_number", "number"] },
   { field: "front_door_entity", types: ["mailbox"], labelKey: "mb_front_door", includeDomains: ["binary_sensor", "sensor", "input_boolean", "switch"] },
   { field: "back_door_entity", types: ["mailbox"], labelKey: "mb_back_door", includeDomains: ["binary_sensor", "sensor", "input_boolean", "switch"] },
@@ -17355,7 +18459,7 @@ const SECTIONS = [
   { field: "heater_entity", types: ["air_purifier", "fan"], labelKey: "section_heater", includeDomains: ["climate", "switch", "select", "binary_sensor"] },
 
   // Oven + hood
-  { field: "light_entity", types: ["oven", "hood", "printer_3d", "fan", "pool_pump", "diffuser"], labelKey: "section_light", includeDomains: ["light", "switch", "input_boolean", "binary_sensor"] },
+  { field: "light_entity", types: ["oven", "hood", "printer_3d", "fan", "pool_pump", "diffuser", "spa"], labelKey: "section_light", includeDomains: ["light", "switch", "input_boolean", "binary_sensor"] },
 
   // Cooktop
   { field: "child_lock_entity", types: ["cooktop"], labelKey: "section_child_lock", includeDomains: ["binary_sensor", "switch", "lock"] },
@@ -17363,7 +18467,7 @@ const SECTIONS = [
   // Fridge. One option describes both the number of doors and where the
   // freezer sits, because on a real fridge those are the same fact.
   { field: "fridge_temperature_entity", types: ["fridge"], labelKey: "section_fridge_temperature", includeDomains: ["sensor", "number", "input_number"], extra: (c, hass) =>
-      c._row("fridge_max_temperature", "fridge_max_temperature", { placeholder: c._config.fridge_layout === "wine" ? "18" : "8" })
+      c._row("fridge_max_temperature", "fridge_max_temperature", { placeholder: c._config.fridge_layout === "wine" ? "18" : ["chest", "drawers"].includes(c._config.fridge_layout) ? "-12" : "8" })
       + c._row("door_hide_in_list", "temperature_hide_in_list", { type: "checkbox" })
       + c._row("temperature_decimals", "temperature_decimals", {
         type: "select",
@@ -17550,6 +18654,13 @@ const SECTIONS = [
         + (cap.fridgeTemp ? c._row("no_power_threshold", "no_power_threshold", { placeholder: "1" }) + c._row("no_power_after", "no_power_after", { placeholder: "30" })
           : cap.evCharger || cap.screen || cap.hairDryer || cap.network || cap.poolPump ? "" : c._row("power_off_delay", "power_off_delay", { placeholder: "0" }));
     } },
+
+  // What it used, and the price of a kWh to tell what that cost (HACF).
+  { field: "energy_entity", types: APPLIANCE_TYPES.filter((ty) => ty !== "solar" && ty !== "home_battery"), labelKey: "section_energy", includeDomains: ["sensor"],
+    extra: (c) => c._row("energy_price", "energy_price", { placeholder: "0.2516" }) },
+  // A computer's tower on a second plug (HACF).
+  { field: "tower_entity", types: ["screen"], labelKey: "section_tower", includeDomains: ["switch", "input_boolean", "binary_sensor", "sensor"],
+    when: (c) => screenLayoutOf(c) === "computer" },
 
   // Two sections read as alerts, and only their pickers tell them apart: one
   // entity carrying them in its attributes here, a list of entities of
@@ -18214,6 +19325,8 @@ class ApplianceCardEditor extends HTMLElement {
             { value: "side_by_side", label: t(hass, "layout_side_by_side") },
             { value: "single", label: t(hass, "layout_single") },
             { value: "wine", label: t(hass, "layout_wine") },
+            { value: "chest", label: t(hass, "layout_chest") },
+            { value: "drawers", label: t(hass, "layout_drawers") },
           ],
         }) : ""}
         ${this._type === "pet_feeder" ? this._row("section_feeder_layout", "feeder_layout", {
@@ -18307,6 +19420,22 @@ class ApplianceCardEditor extends HTMLElement {
           type: "select",
           options: MAILBOX_SIDES.map((v) => ({ value: v, label: t(hass, `mb_side_${v}`) })),
         }) : "") : ""}
+        ${this._type === "water_pump" ? this._row("section_screen_layout", "pump_layout", {
+          type: "select",
+          options: [{ value: "auto", label: t(hass, "unit_auto") }].concat(PUMP_LAYOUTS.map((v) => ({ value: v, label: t(hass, `layout_pump_${v}`) }))),
+        }) : ""}
+        ${this._type === "floor_heating" ? this._row("section_screen_layout", "floor_layout", {
+          type: "select",
+          options: FLOOR_LAYOUTS.map((v) => ({ value: v, label: t(hass, `layout_floor_${v}`) })),
+        }) : ""}
+        ${this._type === "meter" ? this._row("high_power", "high_power", { placeholder: "3000" }) : ""}
+        ${this._type === "christmas_tree" ? this._row("tree_palette", "tree_palette", {
+          type: "select",
+          options: Object.keys(TREE_PALETTES).map((v) => ({ value: v, label: t(hass, `palette_${v}`) })),
+        }) + this._row("presents", "presents", {
+          type: "select",
+          options: TREE_PRESENTS.map((v) => ({ value: v, label: t(hass, `presents_${v}`) })),
+        }) : ""}
         ${this._type === "lamp" ? this._row("section_screen_layout", "lamp_layout", {
           type: "select",
           options: [{ value: "auto", label: t(hass, "unit_auto") }].concat(LAMP_LAYOUTS.map((v) => ({ value: v, label: t(hass, `layout_lamp_${v}`) }))),
@@ -18407,6 +19536,8 @@ class ApplianceCardEditor extends HTMLElement {
           ${caps(this._type).cycle ? this._row("controls_always", "controls_always", { type: "checkbox" }) : ""}
           ${caps(this._type).readOnly && !this._config.toggle_entity ? "" : this._row("show_unavailable_controls", "show_unavailable_controls", { type: "checkbox" })}
           ${LAST_CYCLE_TYPES.includes(this._type) ? this._row("show_last_cycle", "show_last_cycle", { type: "checkbox" }) : ""}
+          ${LAST_CYCLE_TYPES.includes(this._type) ? this._row("show_elapsed", "show_elapsed", { type: "checkbox" }) : ""}
+          ${["solar", "home_battery"].includes(this._type) ? "" : this._row("show_today", "show_today", { type: "checkbox" })}
           ${this._row("show_history", "show_history", { type: "checkbox" })}
         </div>
         <div class="section">
