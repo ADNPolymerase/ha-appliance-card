@@ -658,6 +658,30 @@ const boiler = () => card({
   st("sensor.boiler_flow_temp", 58, { unit_of_measurement: "°C" }),
 ]);
 
+// A boiler with its room thermostat on the wall beside it.
+const boilerThermo = () => card({
+  illustration_color: "grey",
+  name: L("Boiler and thermostat", "Chaudi\u00e8re et thermostat"),
+  appliance_type: "boiler",
+  state_entity: "sensor.ct100_display_code",
+  temperature_entity: "sensor.ct100_flow_temp",
+  thermostat_entity: "climate.ct100",
+}, [
+  st("sensor.ct100_display_code", "-H"),
+  st("sensor.ct100_flow_temp", 52, { unit_of_measurement: "\u00b0C" }),
+  st("climate.ct100", "heat", { current_temperature: 19.5, temperature: 21, hvac_action: "heating", hvac_modes: ["heat", "off"], friendly_name: "CT100" }),
+]);
+
+// The thermostats: a white square, a round one, black glass and a valve on
+// its radiator, each read from its climate entity.
+const thermo = (name, id, layout, attrs, state = "heat") => () => card({
+  name, appliance_type: "thermostat", state_entity: id, thermostat_layout: layout,
+}, [st(id, state, { hvac_modes: ["heat", "off"], ...attrs })]);
+const thSquare = thermo(L("Living room", "Salon"), "climate.netatmo_salon", "square", { current_temperature: 19.5, temperature: 21, hvac_action: "heating" });
+const thRound = thermo("Nest", "climate.nest", "round", { current_temperature: 21, temperature: 21, hvac_action: "idle" });
+const thGlass = thermo("ecobee", "climate.ecobee", "glass", { current_temperature: 18.2, temperature: 17, hvac_action: "idle", preset_mode: "eco" });
+const thValve = thermo(L("Bedroom radiator", "Radiateur chambre"), "climate.trv_chambre", "valve", { current_temperature: 19.5, temperature: 21, hvac_action: "heating", valve_position: 45 });
+
 // A boiler whose burner shows through its window, on the heating.
 const boilerWindow = () => card({
   illustration_color: "grey",
@@ -1397,8 +1421,8 @@ function liveGallery() {
   const wrap = document.getElementById("wrap");
   wrap.innerHTML = `<header>
     <h1>HA Appliance Card</h1>
-    <p>${L("A Lovelace card for 51 kinds of home appliances, each drawn and animated from its own data. These cards run on made-up states: in Home Assistant every field is an entity you pick.",
-      "Une card Lovelace pour 51 types d'appareils, chacun dessiné et animé à partir de ses propres données. Ces cartes tournent sur des états inventés : dans Home Assistant, chaque champ est une entité que vous choisissez.")}</p>
+    <p>${L("A Lovelace card for 52 kinds of home appliances, each drawn and animated from its own data. These cards run on made-up states: in Home Assistant every field is an entity you pick.",
+      "Une card Lovelace pour 52 types d'appareils, chacun dessiné et animé à partir de ses propres données. Ces cartes tournent sur des états inventés : dans Home Assistant, chaque champ est une entité que vous choisissez.")}</p>
     <nav>${link("lang", "en", "English", !fr)}${link("lang", "fr", "Français", fr)}<span></span>${link("theme", "light", L("Light", "Clair"), !dark)}${link("theme", "dark", L("Dark", "Sombre"), dark)}<span></span>${link("plug", "0", L("Integrations", "Intégrations"), !plugOnly)}${link("plug", "1", L("Smart plug only", "Prise connectée seule"), plugOnly)}<span></span><a href="https://github.com/ADNPolymerase/ha-appliance-card">GitHub</a></nav>
     <p class="hint">${plugOnly
       ? L("Each card below has nothing but a smart plug: its switch and its power meter. Open “Change the values” and move the power, or press the power button.",
@@ -1409,7 +1433,7 @@ function liveGallery() {
   const FAMILIES = [
     [L("Laundry", "Linge"), [washer, dryer, EXTRA.iron, steamGenerator]],
     [L("Kitchen", "Cuisine"), [dishwasher, oven, microwave, hood, cooktop, fridge, kettle, cooker, coffee, coffeeBlack, riceCooker, airFryer, toaster]],
-    [L("Heating and climate", "Chauffage et climat"), [waterHeater, boiler, boilerWindow, heatPump, pelletStove, spaceHeater, towelWarmer, towelPanel, airConditioner, dehumidifier]],
+    [L("Heating and climate", "Chauffage et climat"), [waterHeater, boiler, boilerWindow, boilerThermo, thSquare, thRound, thGlass, thValve, heatPump, pelletStove, spaceHeater, towelWarmer, towelPanel, airConditioner, dehumidifier]],
     [L("Air purifiers and fans", "Purificateurs et ventilateurs"), [purifier, boxPurifier, ringPurifier, fan, ceilingFan]],
     [L("Robots and vacuums", "Robots et aspirateurs"), [rbtVacuum, rbtEmptying, rbtMop, rbtDrying, rbtMower, rbtRain, rbtStick, rbtWasher]],
     [L("Pool", "Piscine"), [poolRunning, poolChlorine, poolBackwash, poolFrost, poolLight, poolError]],

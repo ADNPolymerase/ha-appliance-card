@@ -10,7 +10,7 @@
 <a href="https://buymeacoffee.com/adnpolymerase" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-orange.png" alt="Buy Me A Coffee" height="60"></a>
 <a href="https://adnpolymerase.github.io/HA/" target="_blank"><img src="https://raw.githubusercontent.com/ADNPolymerase/HA/main/assets/site-button.svg" alt="Link to my github.io for my other projects" height="60"></a>
 
-A Lovelace card for household appliances: washers, dryers, dishwashers, ovens, microwaves, cooker hoods, cooktops, fridges, kettles, cookers, coffee machines, rice cookers, air fryers, water heaters, boilers, heat pumps, 3D printers, pet feeders, irons, toasters, hair dryers, pellet stoves, air conditioners, dehumidifiers, space heaters, towel warmers, air purifiers, fans, EV chargers, TVs, projectors, computers and wall tablets, network switches, servers, NAS and racks, robot vacuums, mops and mowers, stick vacuums and floor washers, pool pumps, bathroom scales, UPSes, solar panels and home batteries, lamps, mailboxes and doorbells, cameras, diffusers, heat recovery ventilation, freezers, booster pumps and sump pits, underfloor heating, spas, saunas, aquariums, electricity meters and Christmas trees. Cycle in progress, program, remaining time, temperature, alerts and controls.
+A Lovelace card for household appliances: washers, dryers, dishwashers, ovens, microwaves, cooker hoods, cooktops, fridges, kettles, cookers, coffee machines, rice cookers, air fryers, water heaters, boilers, thermostats and radiator valves, heat pumps, 3D printers, pet feeders, irons, toasters, hair dryers, pellet stoves, air conditioners, dehumidifiers, space heaters, towel warmers, air purifiers, fans, EV chargers, TVs, projectors, computers and wall tablets, network switches, servers, NAS and racks, robot vacuums, mops and mowers, stick vacuums and floor washers, pool pumps, bathroom scales, UPSes, solar panels and home batteries, lamps, mailboxes and doorbells, cameras, diffusers, heat recovery ventilation, freezers, booster pumps and sump pits, underfloor heating, spas, saunas, aquariums, electricity meters and Christmas trees. Cycle in progress, program, remaining time, temperature, alerts and controls.
 
 No brand assumed: every field is an entity you pick, so it works with **any** integration (Electrolux, Samsung, LG, Home Connect, Miele, a plain smart plug…).
 
@@ -23,7 +23,7 @@ No brand assumed: every field is an entity you pick, so it works with **any** in
 
 ## Features
 
-- **Fifty-one appliance types**, each with a CSS illustration that animates on the appliance's own data and stays still when idle. The type is detected on its own or set via `appliance_type`, and `compact: true` keeps only the text.
+- **Fifty-two appliance types**, each with a CSS illustration that animates on the appliance's own data and stays still when idle. The type is detected on its own or set via `appliance_type`, and `compact: true` keeps only the text.
 - **State normalization**: `Idle`, `RUNNING`, `wash`, `En marche`… are recognised (accent-insensitive) and sorted into idle, preheating, running, paused, done, delayed or error. An unknown state is shown as it came, minus the integration's namespace, and `state_map` sorts the rest, `"*"` catching everything left over.
 - **The step, not an hour of *Running***: a washer, a dryer or a dishwasher names the step it is at (*Pre-wash*, *Washing*, *Rinsing*, *Spinning*, *Drying* and seven more), from a phase entity or from its own state, and the drum whirls while it spins. The time left is still the whole cycle's.
 - **A washer-dryer is a washer that dries**: `washer_dryer: true`, and the drum shows water while it washes, then clothes turning in hot air while it dries. The step comes from the state itself or from a phase entity, and the state line reads *Washing* or *Drying*.
@@ -199,7 +199,7 @@ Only `state_entity` is required, except on a fridge where a probe or a door cont
 | `done_alert` | `true` makes a green badge pulse on the drawing when a cycle has finished, until the door opens or the badge is tapped. For appliances with a cycle (washer, dryer, dishwasher, oven…). |
 | `illustration_color` | `auto` (default, follows the theme) \| `white` \| `grey` \| `black` \| `red` (dark red). Only changes the casing, not the state colours. |
 | `language` | `auto` (default, follows Home Assistant) or one of the 14 codes: `en`, `fr`, `de`, `es`, `it`, `nl`, `pt`, `sv`, `no`, `da`, `pl`, `ru`, `zh`, `cs`. `nb` and `nb-NO` give Norwegian. |
-| `appliance_type` | `auto` (default) \| `washer` \| `dryer` \| `dishwasher` \| `oven` \| `microwave` \| `hood` \| `cooktop` \| `fridge` \| `kettle` \| `cooker` \| `coffee` \| `rice_cooker` \| `air_fryer` \| `water_heater` \| `boiler` \| `heat_pump` \| `printer_3d` \| `pet_feeder` \| `pet_fountain` \| `iron` \| `toaster` \| `pellet_stove` \| `air_conditioner` \| `dehumidifier` \| `space_heater` \| `towel_warmer` \| `air_purifier` \| `fan` \| `ev_charger` \| `hair_dryer` \| `screen` \| `network` \| `robot` \| `pool_pump` \| `scale` \| `ups` \| `solar` \| `home_battery` \| `camera` \| `diffuser` \| `hrv` \| `lamp` \| `mailbox` \| `water_pump` \| `floor_heating` \| `spa` \| `sauna` \| `aquarium` \| `meter` \| `christmas_tree`. |
+| `appliance_type` | `auto` (default) \| `washer` \| `dryer` \| `dishwasher` \| `oven` \| `microwave` \| `hood` \| `cooktop` \| `fridge` \| `kettle` \| `cooker` \| `coffee` \| `rice_cooker` \| `air_fryer` \| `water_heater` \| `boiler` \| `thermostat` \| `heat_pump` \| `printer_3d` \| `pet_feeder` \| `pet_fountain` \| `iron` \| `toaster` \| `pellet_stove` \| `air_conditioner` \| `dehumidifier` \| `space_heater` \| `towel_warmer` \| `air_purifier` \| `fan` \| `ev_charger` \| `hair_dryer` \| `screen` \| `network` \| `robot` \| `pool_pump` \| `scale` \| `ups` \| `solar` \| `home_battery` \| `camera` \| `diffuser` \| `hrv` \| `lamp` \| `mailbox` \| `water_pump` \| `floor_heating` \| `spa` \| `sauna` \| `aquarium` \| `meter` \| `christmas_tree`. |
 | `tap_action` | What a tap on the card does, in Home Assistant's own words: `more-info` (default: the state entity, or on a card without one what it reads in its place), `none`, `navigate`, `url`, `toggle`, `perform-action` or `fire-dom-event`, which is what the popup cards built on browser_mod listen for. In YAML only. |
 | `toggle_entity` | Power button (`switch`, `button`, `script`, `input_boolean`, `fan`), highlighted while on. On every type, the fridge included, where it is the only button; pair it with `controls_activation: confirm` for an appliance that must not be switched off by mistake. |
 | `power_entity` / `power_on_threshold` / `power_icon` | Power sensor. With a threshold, the state is derived from it: *running* above, then *finished* when it falls back. With a smart plug's switch as `state_entity`, or the sensor itself, it is derived without one, against the threshold of the type (see *A smart plug alone*). A state from an integration keeps the say. `power_icon` replaces `mdi:power-plug`. |
@@ -279,6 +279,8 @@ Only `state_entity` is required, except on a fridge where a probe or a door cont
 | `printed_part` | 3D printer | The part on the bed: `cube` (default), `pyramid` or `duck` (a rubber duck). It shows from the bottom up as it prints. |
 | `kettle_layout` | kettle | `classic` (default, a jug in the appliance's colour) \| `steel` (a stainless steel kettle with a black handle). |
 | `coffee_layout` | coffee machine | `silver` (default, a bean-to-cup machine in the appliance's colour, its tank on the side) \| `black` (black with a chrome front and a round screen). |
+| `thermostat_entity` / `thermostat_layout` | boiler | The boiler's room thermostat, a `climate` entity: it is drawn on the wall beside the boiler, its top level with the boiler's, with the room and the setpoint on its screen and a flame while it calls for heat, and the line *Room 19.5 °C → 21 °C* is added. `thermostat_layout` picks its drawing, `square`, `round` or `glass`; by default the thermostat's name decides (a Nest is round, an ecobee black glass). |
+| `thermostat_layout` | thermostat | `square` (a white square with a dark screen: Netatmo, tado, Bosch CT100, Homematic IP) \| `round` (a steel ring around black glass that turns orange while it heats: Nest, Honeywell) \| `glass` (black glass with a light bar: ecobee, Bosch CT200) \| `valve` (a radiator valve seen close up: Sonoff, Aqara, Tuya, Danfoss, Fritz!). By default the name decides, and a climate entity that reports how far it opens is a valve. |
 | `boiler_layout` | boiler | `wall` (default, a white wall boiler with its gauge and screen) \| `window` (a boiler whose burner shows through a window). |
 | `towel_warmer_layout` | towel warmer | `ladder` (default, round bars between two uprights) \| `panel` (flat anthracite panels on one upright). |
 | `iron_layout` | iron | `iron` (default, the iron alone) \| `generator` (the same iron on the base of a steam generator). |
@@ -1036,6 +1038,32 @@ The pump's state is read in the words of the fountain integrations, so a mode wo
 | Petlibro | `Flowing Water (Constant)`, `Intermittent Water (Scheduled)`, `Off` | Weight in %, or the water-state moisture contact | Filter and cleaning days |
 | Catlink | `Flowing mode`, `Eco-mode`, `Smart mode` | Water level in % | Filter life in % |
 | Tuya, tuya-local | Switch or valve (`open`/`closed`); `normal`, `smart`, `night`, `motion` | `level_1`…`level_3`, `low`/`medium`/`full`, or a contact | Filter and pump in minutes or days; reset switches |
+
+</details>
+
+<details>
+<summary><b>Thermostats and radiator valves</b></summary>
+
+Any `climate` entity that heats: a thermostat on the wall, a radiator valve, a boiler's heating circuit (Bosch's `climate.hc1`), whatever the integration (Netatmo, Nest, ecobee, tado, Honeywell, Hive, Zigbee, Matter…). The state reads *Heating*, *Target reached*, *Eco*, *Away*, *Frost protection*, *Window open* (Better Thermostat, Versatile Thermostat) or *Off*, and the line *Room 19.5 °C → 21 °C*. A valve also says how far it has opened.
+
+Four drawings, picked by `thermostat_layout` or by the name: a white square, a round one with its steel ring that turns orange while it heats, black glass, and a radiator valve seen close up, its head standing out from the radiator, the radiator warming while it heats. A thermostat makes no heat, so only the valve's radiator gives some off.
+
+```yaml
+type: custom:ha-appliance-card
+appliance_type: thermostat
+state_entity: climate.bedroom_trv
+thermostat_layout: valve
+```
+
+On a boiler, `thermostat_entity` draws its room thermostat on the wall beside it:
+
+```yaml
+type: custom:ha-appliance-card
+appliance_type: boiler
+state_entity: sensor.boiler_display_code
+temperature_entity: sensor.boiler_flow_temperature
+thermostat_entity: climate.hc1
+```
 
 </details>
 

@@ -1,5 +1,5 @@
 // Built by tools/build.mjs from src/ha-appliance-card.js: edit the source, not this file.
-const CARD_VERSION = "3.15.0";
+const CARD_VERSION = "3.16.0";
 
 console.info(
   "%c HA-APPLIANCE-CARD %c v" + CARD_VERSION + " ",
@@ -144,6 +144,7 @@ const T = {
     type_screen: "Screen (TV, projector, computer)", section_screen_layout: "Model", layout_tv_feet: "TV on feet", layout_tv_stand: "TV on a stand", layout_tv_wall: "Wall-mounted TV", layout_projector: "Projector", layout_computer: "Computer", section_screen_image: "Picture on screen", img_random: "Random", img_sunset: "Sunset", img_aquarium: "Aquarium", img_bars: "Test card", img_football: "Football match", img_space: "Space", img_bounce: "Bouncing logo", img_desktop: "Desktop", img_code: "Scrolling code", img_pong: "Pong", screen_on: "On", screen_playing: "Playing", screen_home: "Home screen", screen_locked: "Locked", screen_muted: "Muted", screen_standby_threshold: "Standby up to this power (W)", section_media: "Media player", section_media2: "Second media player", section_media3: "Third media player", section_lock: "Session lock", layout_tablet_wall: "Wall tablet", layout_tablet_frame: "Framed tablet", layout_tablet_portrait: "Upright tablet with light bar", img_dashboard: "Dashboard", screen_dashboard: "Dashboard", screen_saver: "Screensaver", screen_dark: "Screen off", tab_charging: "charging", tab_line_page: "Page", tab_line_touched: "Last interaction", tab_screen: "Screen", tab_reload: "Reload page", section_screensaver: "Screensaver", section_tab_charging: "Charging sensor", section_tab_page: "Current page", section_tab_brightness: "Screen brightness", section_tab_touched: "Last interaction", tab_restart: "Restart app", section_tab_screenshot: "Screenshot",
     step_heat_threshold: "Heating above this power (W)", step_spin_threshold: "Spinning above this power (W)", zone_power: "One zone at full power (W)",
     source: "Source", source_plug: "A smart plug", source_integration: "Integration entities", plug_switch: "Smart plug switch",
+    type_thermostat: "Thermostat", section_thermostat_layout: "Model", layout_th_square: "Square", layout_th_round: "Round", layout_th_glass: "Black glass", layout_th_valve: "Radiator valve", th_idle: "Target reached", th_eco: "Eco", th_away: "Away", th_frost: "Frost protection", th_window: "Window open", th_line_valve: "Valve", section_thermostat: "Room thermostat",
     type_hair_dryer: "Hair dryer", layout_hd_pistol: "Classic", layout_hd_ring: "Ring", hd_cool: "Cool air", hd_hot: "Hot air", hd_heat_threshold: "Hot air above this power (W)", fill_height: "Fill the height of its slot", done_alert: "Flash at the end of the cycle", done_seen: "Seen", no_power_threshold: "No power draw below (W)", group_appearance: "Appearance", show_name: "Show the name", show_state: "Show the state", transparent: "Transparent background", font_scale: "Text size", illustration_size: "Drawing size", compact_mode: "Compact mode", compact_off: "Off", compact_hide: "No drawing", compact_side: "Drawing on the side", group_laundry: "Laundry", group_kitchen: "Kitchen", group_heating: "Heating and hot water", group_air: "Air and climate", group_home: "Home and media", group_pets: "Pets", illustration_frame: "Same drawing height as the cards beside it", section_screen_source: "Input source", screen_source: "Input",
     type_network: "Network device (switch, NAS, server)", group_network: "Network and servers", layout_net_switch: "Switch", layout_net_server: "Server", layout_net_nas: "NAS", layout_net_rack: "Rack", net_ports_count: "Ports drawn", net_bays: "NAS bays", net_online: "Online", net_busy: "Busy", net_alert: "Alert", net_warn: "Disk to watch", section_net_cpu: "CPU usage (%)", section_net_memory: "Memory usage (%)", section_net_volume: "Volume used (%)", section_net_download: "Download rate", section_net_upload: "Upload rate", section_net_ports: "Active ports", net_ports_total: "Port count", section_net_poe: "PoE power", section_net_problem: "Problem alert", section_net_temperature: "Temperature", net_temp_alert: "Alert above this temperature (\u00b0C)", net_busy_threshold: "Busy above this rate (Mbit/s)", net_line_rate: "Throughput", net_line_load: "Load", net_line_volume: "Volume", section_net_disk1: "Disk 1", section_net_disk2: "Disk 2", section_net_disk3: "Disk 3", section_net_disk4: "Disk 4",
     type_robot: "Robot (vacuum, mop, mower)", layout_robot_vacuum: "Robot vacuum", layout_robot_mop: "Mopping robot", layout_robot_mower: "Robot mower", section_robot_station: "Base", robot_station_station: "Emptying or washing station", robot_station_base: "Charging base only", robot_shelter: "Shelter over the base", robot_shelter_style: "Shelter style", shelter_lean_to: "Wooden lean-to", shelter_shell: "Shell", robot_shelter_color: "Shell colour", delay_starts_in: "Starts in", section_delay: "Delayed start countdown", state_entity_optional: "State entity (optional)", color_green: "Green", color_orange: "Orange", robot_charging: "Charging", robot_docked: "Docked", robot_cleaning: "Cleaning", robot_mopping: "Mopping", robot_mowing: "Mowing", robot_edgecut: "Edge cutting", robot_returning: "Returning to base", robot_emptying: "Emptying the bin", robot_bin_full: "Bin full", robot_washing: "Washing the pads", robot_drying: "Drying the pads", robot_water_empty: "Water tank empty", robot_rain: "Rain delay", robot_idle: "Stopped", section_robot_status: "Detailed status", section_battery: "Battery", section_robot_bin: "Bin full alert", section_robot_water: "Water tank", section_robot_rain: "Rain", section_robot_error: "Error",
@@ -882,6 +883,51 @@ function dehumidifierModeOf(st) {
   const action = String((st.attributes || {}).action || "").toLowerCase();
   if (action === "idle" || action === "off") return "idle";
   return "drying";
+}
+
+// A thermostat or a radiator valve. Named after itself or its maker: Nest,
+// ecobee, tado, Netatmo, Honeywell, Hive, Drayton Wiser, Danfoss, Aqara, a
+// Zigbee TRV, Fritz!DECT, Homematic.
+const THERMOSTAT_NAME_RE = /thermostat|thermostaat|termostat|termostato|\btrv|valve|vanne|ventil|radiat|heizk(o|oe)rper|kopf|tete|nest|ecobee|tado|netatmo|honeywell|lyric|evohome|\bhive\b|wiser|danfoss|aqara|homematic|fritz|\u6e29\u63a7|\u0442\u0435\u0440\u043c\u043e\u0441\u0442\u0430\u0442/;
+const TH_LAYOUTS = ["square", "round", "glass", "valve"];
+const TH_LABELS = { off: "ac_off", heat: "ac_heating", cool: "ac_cooling", idle: "th_idle", eco: "th_eco", away: "th_away", frost: "th_frost", window: "th_window" };
+const TH_COLORS = { off: "var(--disabled-text-color, #9e9e9e)", heat: "#ff7043", cool: "#29b6f6", idle: "var(--secondary-text-color, #727272)",
+  eco: "#26a69a", away: "#26a69a", frost: "#29b6f6", window: "#29b6f6" };
+// Which drawing: the one asked for, else the maker's or the word's (a Nest
+// is round, an ecobee black glass, a valve a valve), else a white square.
+function thermostatLayoutOf(cfg, st) {
+  if (TH_LAYOUTS.includes(cfg.thermostat_layout)) return cfg.thermostat_layout;
+  const a = (st && st.attributes) || {};
+  const name = stripAccents(`${cfg.state_entity || ""} ${a.friendly_name || ""} ${cfg.name || ""}`).toLowerCase();
+  if (/nest|honeywell|lyric|\bt6\b|round/.test(name)) return "round";
+  if (/ecobee|ct200|easycontrol/.test(name)) return "glass";
+  if (/\btrv|valve|vanne|ventil|radiat|heizk(o|oe)rper|kopf|tete|danfoss|aqara|sonoff|fritz|thermostatic|thermostatique/.test(name)
+    || a.valve_position !== undefined || a.pi_heating_demand !== undefined) return "valve";
+  return "square";
+}
+// What a thermostat is doing: off, heating, cooling or at rest, from its
+// action when it gives one, else from the room against the setpoint.
+function thermostatModeOf(st) {
+  if (!st || ["unknown", "unavailable"].includes(st.state)) return "";
+  const state = String(st.state).toLowerCase();
+  if (state === "off") return "off";
+  const a = st.attributes || {};
+  const action = String(a.hvac_action || "").toLowerCase();
+  if (["heating", "preheating"].includes(action)) return "heat";
+  if (action === "cooling") return "cool";
+  if (["idle", "off", "fan", "drying"].includes(action)) return "idle";
+  const room = numberOrNull(a.current_temperature), target = numberOrNull(a.temperature);
+  if (room === null || target === null) return state === "cool" ? "cool" : "heat";
+  if (state === "cool") return room > target + 0.2 ? "cool" : "idle";
+  return room < target - 0.2 ? "heat" : "idle";
+}
+// A preset that changes what the thermostat means: eco, away, frost guard.
+function thermostatPresetOf(raw) {
+  const p = stripAccents(String(raw || "")).toLowerCase();
+  if (/frost|hors.?gel|antigel|antiheladas|frostschutz|vorst/.test(p)) return "frost";
+  if (/away|absent|abwesend|ausente|afwezig|vacation|holiday|vacance/.test(p)) return "away";
+  if (/eco|night|nuit|sleep|reduit|reduced|spar/.test(p)) return "eco";
+  return "";
 }
 
 // A small room heater: a fan heater or an oil-filled radiator, read from a
@@ -2619,6 +2665,7 @@ const TYPE_AUTO_PATTERNS = {
     hot_water_output_entity: /(dhw|hot.?water).?power.?produc/i,
   },
   boiler: {
+    thermostat_entity: /^climate\./i,
     temperature_entity: /flow|supply|depart|temperature/i,
     hot_water_entity: /hot.?water|dhw|eau.?chaude/i,
     heating_entity: /central.?heating|chauffage/i,
@@ -2991,6 +3038,9 @@ const TYPE_CAPS = {
   aquarium: { ntAqua: true },
   meter: { ntMeter: true, readOnly: true },
   christmas_tree: { ntTree: true },
+  // A thermostat on the wall or a valve on a radiator: the room, the
+  // setpoint, and whether it calls for heat. A climate entity says it all.
+  thermostat: { thermostat: true, readOnly: true },
   // A television, a projector or a computer, read from its plug: what it
   // draws at rest is its standby, and a media player says what it shows.
   screen: { screen: true },
@@ -3068,6 +3118,7 @@ const AC_ONLY_FIELDS = ["vane_vertical_entity", "vane_horizontal_entity", "purif
 // its pilot wire; and the ones that live on a smart plug may be read from the
 // plug itself.
 const STATE_DOMAINS = {
+  thermostat: ["climate"],
   water_heater: ["water_heater"], boiler: ["water_heater"], heat_pump: ["climate", "water_heater"],
   pellet_stove: ["climate"], air_conditioner: ["climate", "select", "switch"], dehumidifier: ["humidifier", "switch"],
   space_heater: ["climate", "switch"], towel_warmer: ["climate", "select", "switch"], iron: ["switch"], toaster: ["switch"], hair_dryer: ["switch"], air_fryer: ["switch"],
@@ -3173,7 +3224,7 @@ function compactModeOf(v) {
 const TYPE_GROUPS = [
   ["laundry", ["washer", "dryer"]],
   ["kitchen", ["dishwasher", "oven", "microwave", "hood", "cooktop", "fridge", "kettle", "cooker", "coffee", "rice_cooker", "air_fryer", "toaster"]],
-  ["heating", ["water_heater", "boiler", "heat_pump", "pellet_stove", "space_heater", "towel_warmer", "floor_heating"]],
+  ["heating", ["water_heater", "boiler", "heat_pump", "thermostat", "pellet_stove", "space_heater", "towel_warmer", "floor_heating"]],
   ["air", ["air_conditioner", "dehumidifier", "air_purifier", "fan", "diffuser", "hrv"]],
   ["home", ["screen", "iron", "hair_dryer", "printer_3d", "robot", "pool_pump", "scale", "camera", "lamp", "mailbox", "water_pump", "spa", "sauna", "aquarium", "christmas_tree"]],
   ["energy", ["solar", "home_battery", "ev_charger", "meter"]],
@@ -3321,6 +3372,9 @@ function detectApplianceType(cfg, st) {
   // a climate entity named after its room that can cool, dry or only blow:
   // a boiler's or a stove's only heats. "Clim" and "AC" stand alone, or every
   // climate entity would be one.
+  // A thermostat or a radiator valve, by its name or its maker's. Before the
+  // air conditioner, since a Nest or an ecobee cools as well.
+  if (/^climate\./.test(eid) && THERMOSTAT_NAME_RE.test(stripAccents(`${hay} ${(st && st.attributes.friendly_name) || ""}`.toLowerCase()))) return "thermostat";
   if (/air.?con|aircon|airco|mini.?split|(^|[\s._])(split|clim|ac)([\s._]|$)|climatis|climatiz|condicionad|klimaanl|klimatyz|klimatiz|luftkondit|kondicion|sensibo|melcloud|\u043a\u043e\u043d\u0434\u0438\u0446\u0438\u043e\u043d\u0435\u0440|\u7a7a\u8c03/.test(hay)) return "air_conditioner";
   const hvacModes = st && Array.isArray(st.attributes.hvac_modes) ? st.attributes.hvac_modes : [];
   if (/^climate\./.test(eid) && hvacModes.some((m) => ["cool", "dry", "fan_only"].includes(m))) return "air_conditioner";
@@ -3329,6 +3383,9 @@ function detectApplianceType(cfg, st) {
   // is the Home Assistant domain for one.
   if (/water.?heater|water.?boiler|chauffe.?eau|cumulus|warmwasserspeicher|termo.?electrico|scaldabagno|varmvattenberedare|varmtvannsbereder|podgrzewacz/.test(hay)) return "water_heater";
   if (/\bboiler|chaudiere|chaudi\u00e8re|heizkessel|gaskessel|caldaia|caldera|cv.?ketel|kocio\u0142|nefit/.test(hay)) return "boiler";
+  // Any other climate entity that only heats is a thermostat: a boiler's
+  // heating circuit (Bosch's hc1), a radiator valve, a zone.
+  if (/^climate\./.test(eid)) return "thermostat";
   if (/hood|hotte|abzug|extractor|exaustor|afzuigkap|emh|okap/.test(hay)) return "hood";
   // A fan, by its name in any language, which a fan.* entity id carries; not
   // ventilation, which is a building's.
@@ -6568,7 +6625,23 @@ const AP_CSS = `
         @keyframes ap-steam { 0% { transform: translateY(0) scaleX(1); opacity: 0; } 30% { opacity: 0.6; } 100% { transform: translateY(-14px) scaleX(1.6); opacity: 0; } }
 `;
 
+// A thermostat's light and flame, and a valve's radiator giving off its heat.
+const TH_CSS = `
+        @keyframes th-pulse { 0%, 100% { opacity: 0.35; } 50% { opacity: 1; } }
+        .th-heat .th-pulse { animation: th-pulse 2s ease-in-out infinite; animation-delay: var(--anim-offset, 0s); }
+        .th-flame { transform-box: fill-box; transform-origin: center bottom; }
+        .th-heat .th-flame { animation: th-flick 0.9s ease-in-out infinite; animation-delay: var(--anim-offset, 0s); }
+        @keyframes th-flick { 0%, 100% { transform: scaleY(1); } 50% { transform: scaleY(1.12); } }
+        .th-wave { opacity: 0; }
+        .th-heat .th-wave { animation: th-wave 2.4s ease-in-out infinite; animation-delay: var(--anim-offset, 0s); }
+        .th-heat .th-wave.w2 { animation-delay: calc(-0.8s + var(--anim-offset, 0s)); }
+        .th-heat .th-wave.w3 { animation-delay: calc(-1.6s + var(--anim-offset, 0s)); }
+        @keyframes th-wave { 0% { transform: translateY(4px); opacity: 0; } 30% { opacity: 0.9; } 100% { transform: translateY(-10px); opacity: 0; } }
+        .th-svg text, .bl-svg text { font-family: inherit; }
+`;
+
 const ILLUSTRATION_CSS = {
+  thermostat: () => `${AP_CSS}${TH_CSS}`,
   water_pump: () => NT_CSS,
   floor_heating: () => NT_CSS,
   spa: () => NT_CSS,
@@ -7180,7 +7253,9 @@ const ILLUSTRATION_CSS = {
         .wh-pipe.cold { left: 37px; background: #5aa9d6; }
         .wh-pipe.hot { right: 37px; background: #d9674a; }
   `,
-  boiler: () => `
+  boiler: () => `${TH_CSS}
+        .bl-th.bl-l-wall .bl-lcd { transform-origin: 0 0; transform: translate(-11.15px, 15.66px) scale(0.78); }
+        .bl-th.bl-l-window .bl-lcd { transform-origin: 0 0; transform: translate(-12.36px, 16.32px) scale(0.78); }
         svg.bl-svg { position: absolute; left: 0; top: 0; width: 96px; height: 108px; overflow: visible; }
         .bl-lcd {
           position: absolute; left: 33px; top: 47px; width: 18px; height: 10px; border-radius: 2px;
@@ -11173,6 +11248,114 @@ ${d.leftOn ? IRON_FIRE.map(at).map(([x, y], i) => irFlames(x, y, i % 2 ? 0.24 : 
 </svg>`;
 }
 
+// The room to a tenth and the setpoint, as a thermostat's line reads them:
+// "19.5 \u00b0C -> 21 \u00b0C", or the room alone when off or at the setpoint.
+function thermoLine(hass, cfg, entity, room, target) {
+  const unit = temperatureUnit(hass, entity);
+  const f = thermoFace(hass, cfg, room, target);
+  const now = `${f.room} ${unit}`;
+  return target !== null && Math.abs(room - target) >= 0.05 ? `${keepTogether(now)} \u2192 ${keepTogether(`${f.target} ${unit}`)}` : keepTogether(now);
+}
+// The numbers a thermostat shows: the room to a tenth, the setpoint whole
+// when it is, both with the language's decimal mark.
+function thermoFace(hass, cfg, room, target) {
+  const l = lang(hass);
+  const fmt = (v, d) => (v === null ? "" : Number(v).toLocaleString(l, { minimumFractionDigits: d, maximumFractionDigits: d }));
+  return { room: fmt(room, 1), target: target === null ? "" : fmt(target, Number.isInteger(target) ? 0 : 1) };
+}
+
+// Four thermostats, drawn in a 120 by 135 box and centred on (60, 55): a
+// white square with a dark screen (Netatmo, tado, Bosch CT100, Homematic), a
+// steel ring around black glass that turns orange while it heats (Nest,
+// Honeywell), black glass with a light bar (ecobee, Bosch CT200), and a
+// radiator valve seen close up, its head standing out from the radiator at a
+// right angle with its screen on its side. A thermostat makes no heat: only
+// the valve's radiator shows it.
+const thFlame = (x, y, k) => `<g transform="translate(${x} ${y}) scale(${k})"><path class="th-flame" d="M0 0 C-4 -3 -3 -7 0 -11 C.6 -8 2.4 -7 3.4 -8 C5 -5 4.4 -1.6 0 0 Z" fill="#ff7043"/></g>`;
+const thLeaf = (x, y, k) => `<g transform="translate(${x} ${y}) scale(${k})"><path d="M-4 3 C-4 -3 1 -6 5 -6 C5 -1 2 3 -4 3 Z M-4 3 L2 -3" fill="#26a69a" stroke="#26a69a" stroke-width=".6"/></g>`;
+const thWall = (cx, cy, w, h, r) => `<rect x="${cx - w / 2 + 2}" y="${cy - h / 2 + 3}" width="${w}" height="${h}" rx="${r}" fill="rgba(0,0,0,.08)"/><rect x="${cx - w / 2 + 1}" y="${cy - h / 2 + 1.5}" width="${w}" height="${h}" rx="${r}" fill="rgba(0,0,0,.06)"/>`;
+const thText = (x, y, size, fill, text, weight = 600) => `<text x="${x}" y="${y}" text-anchor="middle" font-size="${size}" font-weight="${weight}" fill="${fill}">${esc(text)}</text>`;
+function thermoDevice(d) {
+  const on = d.mode !== "off", heat = d.mode === "heat", cool = d.mode === "cool";
+  const accent = heat ? "#ff7043" : cool ? "#4fc3f7" : "#90a4ae";
+  const mark = (x, y, k) => (heat ? thFlame(x, y, k) : d.eco ? thLeaf(x, y - 3, k) : "");
+  if (d.layout === "round") {
+    const r = apId(), gl = apId(), hot = apId();
+    const ang = (t) => (-220 + (Math.max(5, Math.min(30, t)) - 5) / 25 * 260) * Math.PI / 180;
+    const num = (v) => parseFloat(String(v).replace(",", "."));
+    const room = num(d.room), target = num(d.target);
+    const ticks = on ? Array.from({ length: 53 }, (_, i) => {
+      const tv = 5 + i * 25 / 52, a = ang(tv);
+      const lit = heat && tv > room && tv < target;
+      return `<path d="M${(60 + 29 * Math.cos(a)).toFixed(2)} ${(55 + 29 * Math.sin(a)).toFixed(2)} L${(60 + 31 * Math.cos(a)).toFixed(2)} ${(55 + 31 * Math.sin(a)).toFixed(2)}" stroke="rgba(255,255,255,${lit ? 0.95 : 0.28})" stroke-width=".6"/>`;
+    }).join("") : "";
+    const tick = (tv, c, w) => { if (!isFinite(tv)) return ""; const a = ang(tv); return `<path d="M${(60 + 27 * Math.cos(a)).toFixed(2)} ${(55 + 27 * Math.sin(a)).toFixed(2)} L${(60 + 31 * Math.cos(a)).toFixed(2)} ${(55 + 31 * Math.sin(a)).toFixed(2)}" stroke="${c}" stroke-width="${w}" stroke-linecap="round"/>`; };
+    return `<defs><linearGradient id="${r}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f5f6f7"/><stop offset=".35" stop-color="#9aa3ad"/><stop offset=".55" stop-color="#e9edf0"/><stop offset="1" stop-color="#6d7680"/></linearGradient>
+<radialGradient id="${gl}" cx=".4" cy=".35" r=".75"><stop offset="0" stop-color="#2a2f35"/><stop offset="1" stop-color="#07080a"/></radialGradient>
+<radialGradient id="${hot}" cx=".4" cy=".35" r=".75"><stop offset="0" stop-color="#ff9e55"/><stop offset="1" stop-color="#e8590c"/></radialGradient></defs>
+<circle cx="62" cy="58" r="41" fill="rgba(0,0,0,.09)"/><circle cx="60" cy="55" r="41" fill="url(#${r})"/><circle cx="60" cy="55" r="36" fill="#3a4047"/>
+<circle class="th-screen" cx="60" cy="55" r="34.5" fill="url(#${heat ? hot : gl})"/>
+<path d="M38 34 A30 30 0 0 1 72 26" fill="none" stroke="rgba(255,255,255,.18)" stroke-width="2.5" stroke-linecap="round"/>
+${ticks}${on ? tick(target, "#fff", 1.8) + tick(room, heat ? "rgba(255,255,255,.6)" : "#90a4ae", 1.2) : ""}
+${on ? `${thText(60, 63, 22, "#fff", d.target || d.room, 500)}${heat ? thText(60, 76, 6.5, "rgba(255,255,255,.8)", "\u25b2", 500) : d.eco ? thLeaf(60, 46, 0.9) : ""}` : thText(60, 60, 10, "#6d7680", "OFF", 500)}`;
+  }
+  if (d.layout === "glass") {
+    const b = apId(), sh = apId();
+    return `<defs><linearGradient id="${b}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#2c3238"/><stop offset=".5" stop-color="#121417"/><stop offset="1" stop-color="#050607"/></linearGradient>
+<linearGradient id="${sh}" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#fff" stop-opacity=".16"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient></defs>
+${thWall(60, 55, 72, 72, 16)}<rect x="24" y="19" width="72" height="72" rx="16" fill="url(#${b})" stroke="#3d434a" stroke-width=".8"/>
+<path d="M28 23 H62 L40 87 H28 Q26 87 26 85 V27 Q26 23 28 23 Z" fill="url(#${sh})"/>
+${on ? `${thText(60, 58, 23, "#fff", d.room, 300)}${heat || d.eco ? mark(53, 74, 0.85) : `<circle cx="53" cy="71" r="2" fill="${accent}"/>`}
+${thText(64, 74, 7.5, heat ? "#ffab91" : "#b0bec5", d.target ? `${d.target}\u00b0` : "", 400)}
+<rect class="${heat ? "th-pulse" : ""}" x="44" y="83" width="32" height="1.6" rx=".8" fill="${heat ? "#ff7043" : accent}"/>` : `<rect x="44" y="83" width="32" height="1.6" rx=".8" fill="#3d434a"/>`}`;
+  }
+  if (d.layout === "valve") {
+    const rad = apId(), hot = apId(), head = apId(), sc = apId(), br = apId(), cap = apId();
+    const waves = heat ? [0, 1, 2].map((i) => `<path class="th-wave w${i + 1}" d="M${6 + i * 11} 34 c-2.5 -3 2.5 -5 0 -8 c-2.5 -3 2.5 -5 0 -8" fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round"/>`).join("") : "";
+    return `<defs><linearGradient id="${rad}" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#c9d0d6"/><stop offset=".45" stop-color="#ffffff"/><stop offset="1" stop-color="#b3bcc4"/></linearGradient>
+<linearGradient id="${hot}" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#ffab91"/><stop offset=".5" stop-color="#ffe0d6"/><stop offset="1" stop-color="#ff8a65"/></linearGradient>
+<linearGradient id="${head}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" style="stop-color: var(--ac-body-hi, #ffffff)"/><stop offset=".45" style="stop-color: var(--ac-body, #f3f5f7)"/><stop offset=".8" style="stop-color: var(--ac-body-lo, #d3d9de)"/><stop offset="1" stop-color="#aab3bc"/></linearGradient>
+<radialGradient id="${cap}" cx=".35" cy=".35" r=".8"><stop offset="0" style="stop-color: var(--ac-body-hi, #ffffff)"/><stop offset="1" style="stop-color: var(--ac-body-lo, #c9d0d6)"/></radialGradient>
+<linearGradient id="${sc}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#2a2f35"/><stop offset="1" stop-color="#0d0f12"/></linearGradient>
+<linearGradient id="${br}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f6dc9c"/><stop offset=".5" stop-color="#d4a94f"/><stop offset="1" stop-color="#9c7630"/></linearGradient></defs>
+${apSoft(62, 121, 54, 3, 0.2)}
+${[-8, 15].map((x) => `<rect x="${x}" y="-9" width="21" height="103" rx="10" fill="url(#${heat ? hot : rad})" stroke="rgba(0,0,0,.18)" stroke-width=".7"/><path d="M${x + 5} -3 V88" stroke="#fff" stroke-width="1.6" stroke-linecap="round" opacity="${heat ? 0.6 : 0.95}"/>`).join("")}
+<rect x="-8" y="80" width="44" height="8" fill="rgba(0,0,0,.06)"/>${waves}
+<path d="M43 76 V125" stroke="#c9d0d6" stroke-width="7"/><path d="M41.6 76 V125" stroke="#fff" stroke-width="1.4"/>
+<rect x="33" y="61" width="8" height="14" rx="1.6" fill="url(#${br})" stroke="#8a6526" stroke-width=".5"/><path d="M34.5 63 V73 M37 63 V73 M39.5 63 V73" stroke="rgba(0,0,0,.18)" stroke-width=".6"/>
+<path d="M40 60 H50 Q53 60 53 63 V76 Q53 79 50 79 H40 Z" fill="url(#${br})" stroke="#8a6526" stroke-width=".6"/><path d="M42 62 H50" stroke="rgba(255,255,255,.7)" stroke-width="1" stroke-linecap="round"/>
+<rect x="51" y="58" width="9" height="22" rx="1.4" fill="#e9edf0" stroke="rgba(0,0,0,.2)" stroke-width=".5"/><path d="M51 61 H60 M51 77 H60" stroke="rgba(0,0,0,.08)" stroke-width=".8"/>
+<path class="th-head" d="M66 46 H104 A9 24 0 0 1 104 94 H66 A9 24 0 0 1 66 46 Z" fill="url(#${head})" stroke="rgba(0,0,0,.2)" stroke-width=".7"/>
+<path d="M66 47 A8 23 0 0 1 66 93" fill="none" stroke="rgba(0,0,0,.1)" stroke-width=".9"/><path d="M93 46.4 A9 23.6 0 0 1 93 93.6" fill="none" stroke="rgba(0,0,0,.16)" stroke-width=".9"/>
+<ellipse cx="104" cy="70" rx="9" ry="24" fill="url(#${cap})" stroke="rgba(0,0,0,.18)" stroke-width=".7"/><ellipse cx="104" cy="70" rx="5" ry="15" fill="none" stroke="rgba(0,0,0,.08)" stroke-width="1"/>
+${[96.5, 100, 103.5].map((x) => `<path d="M${x} 47 A9 23 0 0 1 ${x} 93" fill="none" stroke="rgba(0,0,0,.07)" stroke-width="1.1"/>`).join("")}
+<path d="M64 50 H101" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
+<rect x="66" y="56" width="20" height="16" rx="3" fill="url(#${sc})"/><path d="M67.5 57.3 H84.5 L82 60 H70 Z" fill="rgba(255,255,255,.08)"/>
+${on ? `${thText(76, 67.4, 9, "#fff", d.room)}${thText(heat || d.eco ? 79 : 76, 81, 5.5, heat ? "#ff7043" : "#90a4ae", d.target ? `${d.target}\u00b0` : "", 400)}${mark(72, 81.6, 0.55)}` : thText(76, 66.6, 5.5, "#6d7680", "OFF")}
+<circle class="${heat ? "th-pulse" : ""}" cx="89" cy="80" r="1.4" fill="${on ? accent : "#cfd8dc"}"/>`;
+  }
+  const b = apId(), g = apId();
+  return `<defs><linearGradient id="${b}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" style="stop-color: var(--ac-body-hi, #ffffff)"/><stop offset=".6" style="stop-color: var(--ac-body, #eef1f4)"/><stop offset="1" style="stop-color: var(--ac-body-lo, #c3cad1)"/></linearGradient>
+<linearGradient id="${g}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#262b31"/><stop offset="1" stop-color="#0f1114"/></linearGradient></defs>
+${thWall(60, 55, 74, 74, 12)}<rect x="23" y="18" width="74" height="74" rx="12" fill="url(#${b})" stroke="rgba(0,0,0,.18)" stroke-width=".8"/>
+<path d="M30 19.6 H90" stroke="#fff" stroke-width="1.2" stroke-linecap="round"/>
+<rect x="31" y="26" width="58" height="50" rx="6" fill="url(#${g})"/><path d="M33 27.6 H87 L82 33 H38 Z" fill="rgba(255,255,255,.06)"/>
+${on ? `${thText(60, 56, 21, "#fff", d.room)}${thText(heat || d.eco ? 64 : 60, 70, 8, heat ? "#ffab91" : "#b0bec5", d.target ? `${d.target}\u00b0` : "", 400)}${mark(51, 70, 0.8)}` : thText(60, 56, 11, "#6d7680", "OFF")}
+<circle class="${heat ? "th-pulse" : ""}" cx="60" cy="84" r="1.8" fill="${on ? accent : "#cfd8dc"}"/>`;
+}
+function thermostatSvg(d) {
+  apN = 0;
+  return `<svg class="ap-svg th-svg" viewBox="0 -10 120 135" aria-hidden="true"><g class="th-dev${d.mode === "heat" ? " th-heat" : ""}">${thermoDevice(d)}</g></svg>`;
+}
+// The boiler steps back to the left and down, a little smaller, and its room
+// thermostat goes on the wall beside it, its top level with the boiler's.
+function boilerWithThermo(svg, d) {
+  apN = 0;
+  const open = svg.indexOf(">") + 1, close = svg.lastIndexOf("</svg>");
+  const device = `<svg x="57" y="24.5" width="39" height="39" viewBox="19 14 82 82"><g class="th-dev${d.mode === "heat" ? " th-heat" : ""}">${thermoDevice(d)}</g></svg>`;
+  return `${svg.slice(0, open)}<g transform="translate(-4 26) scale(.78)">${svg.slice(open, close)}</g>${device}</svg>`;
+}
+
 function illustrationHtml(type, ctx) {
   const cls = [
     ctx.spinning ? "spinning" : "",
@@ -11325,14 +11508,21 @@ function illustrationHtml(type, ctx) {
         </div>`;
   }
 
+  if (type === "thermostat") {
+    const d = ctx.thermo || { mode: "off", room: "", target: "", layout: "square" };
+    return `
+        <div class="machine ${cls} th-l-${d.layout} th-m-${d.mode}">${thermostatSvg(d)}</div>`;
+  }
+
   if (type === "boiler") {
     const mode = ctx.boilerMode || "idle";
     const layout = ctx.boilerLayout === "window" ? "window" : "wall";
     // A burner waiting its turn is out, like one on standby.
     const flame = mode !== "idle" && mode !== "waiting";
     const lcd = ctx.display ? `<div class="bl-lcd">${esc(ctx.display)}</div>` : "";
+    const svg = ctx.boilerThermo ? boilerWithThermo(boilerSvg(layout), ctx.boilerThermo) : boilerSvg(layout);
     return `
-        <div class="machine ${cls} bl-l-${layout} mode-${mode} ${flame ? "flame" : ""}">${boilerSvg(layout)}${lcd}</div>`;
+        <div class="machine ${cls} bl-l-${layout} mode-${mode} ${flame ? "flame" : ""} ${ctx.boilerThermo ? "bl-th" : ""}">${svg}${lcd}</div>`;
   }
 
   if (type === "air_conditioner") {
@@ -13199,6 +13389,8 @@ class ApplianceCard extends HTMLElement {
     // entity's words or panel codes do; failing both, a burner that is lit at
     // least says it is heating something.
     let boilerMode = "";
+    let boilerThermo = null;
+    let boilerRoom = null;
     if (cap.boilerMode) {
       if (cfg.hot_water_entity || cfg.heating_entity) {
         // Hot water takes priority on a combi boiler, so it wins a tie.
@@ -13219,6 +13411,19 @@ class ApplianceCard extends HTMLElement {
         color = boilerMode === "hot_water" ? "#ef5350"
           : boilerMode === "idle" || boilerMode === "waiting" ? STATE_COLORS.idle : "#ff7043";
       }
+      // Its room thermostat, on the wall beside it: the room and the setpoint
+      // on a line of their own, and the thermostat drawn.
+      const tst = cfg.thermostat_entity ? stateObj(hass, cfg.thermostat_entity) : null;
+      if (tst && !["unknown", "unavailable"].includes(tst.state)) {
+        const ta = tst.attributes || {};
+        const tmode = thermostatModeOf(tst);
+        const room = numberOrNull(ta.current_temperature), target = numberOrNull(ta.temperature);
+        boilerRoom = room === null ? null : { key: "room_temp", icon: "mdi:home-thermometer-outline", label: t(hass, "ps_line_room"), entity: cfg.thermostat_entity,
+          value: thermoLine(hass, cfg, cfg.thermostat_entity, room, tmode === "off" ? null : target) };
+        boilerThermo = { ...thermoFace(hass, cfg, room, target), mode: tmode || "idle", eco: !!thermostatPresetOf(ta.preset_mode) && tmode === "idle",
+          layout: TH_LAYOUTS.slice(0, 3).includes(cfg.thermostat_layout) ? cfg.thermostat_layout : thermostatLayoutOf({ state_entity: cfg.thermostat_entity }, tst) === "round" ? "round"
+            : thermostatLayoutOf({ state_entity: cfg.thermostat_entity }, tst) === "glass" ? "glass" : "square" };
+      }
       let bv = cfg.temperature_entity ? numericState(hass, cfg.temperature_entity) : null;
       // InComfort's water_heater entity carries the boiler temperature itself.
       if (bv === null && st && /^water_heater\./.test(cfg.state_entity || "")) {
@@ -13236,6 +13441,7 @@ class ApplianceCard extends HTMLElement {
           entity: cfg.temperature_entity,
         });
       }
+      if (boilerRoom) extraLines.push(boilerRoom);
     }
 
     // 3D printer. The state names the job, a stage entity or the heaters say
@@ -14071,6 +14277,33 @@ class ApplianceCard extends HTMLElement {
         icon: mode === "off" ? "" : mode === "fan" ? "fan" : "heat",
         screen: (mode === "heating" || mode === "idle") && target !== null ? acScreenTemp(target) : "",
       };
+    }
+
+    // A thermostat or a radiator valve: what it does, its preset, an open
+    // window; the room and the setpoint on one line, and how far a valve
+    // has opened.
+    let thermo = null;
+    if (cap.thermostat) {
+      const climate = domainOf(cfg.state_entity) === "climate" ? st : null;
+      const attrs = (climate && climate.attributes) || {};
+      let mode = mappedMode(["off", "heat", "cool", "idle"]) || thermostatModeOf(climate) || (st ? "idle" : "off");
+      const preset = thermostatPresetOf(attrs.preset_mode);
+      const win = attrs.window_open === true || /open|ouvert/i.test(String(attrs.window_state || ""));
+      const shown = mode === "off" ? "off" : win ? "window" : mode === "idle" && preset ? preset : mode;
+      if (!cfg.state_show_raw) stateLabel = t(hass, TH_LABELS[shown]);
+      color = TH_COLORS[shown];
+      const room = cfg.current_temperature_entity ? numericState(hass, cfg.current_temperature_entity) : numberOrNull(attrs.current_temperature);
+      const target = cfg.target_temperature_entity ? numericState(hass, cfg.target_temperature_entity) : numberOrNull(attrs.temperature);
+      if (room !== null) {
+        extraLines.push({ key: "room_temp", icon: "mdi:home-thermometer-outline", label: t(hass, "ps_line_room"), entity: cfg.current_temperature_entity || cfg.state_entity,
+          value: thermoLine(hass, cfg, cfg.current_temperature_entity || cfg.state_entity, room, mode === "off" ? null : target) });
+      }
+      const opening = numberOrNull(attrs.valve_position ?? attrs.pi_heating_demand ?? attrs.valve_opening);
+      if (opening !== null && mode !== "off") {
+        extraLines.push({ key: "valve", icon: "mdi:valve", label: t(hass, "th_line_valve"), value: keepTogether(`${Math.round(opening)} %`), entity: cfg.state_entity });
+      }
+      if (mode !== "off" && !preset && !/^(none|home|comfort|confort|manual|manuel)$/i.test(String(attrs.preset_mode || "none"))) modeLine(climate, "preset_mode");
+      thermo = { ...thermoFace(hass, cfg, room, target), mode, eco: !!preset && mode === "idle", layout: thermostatLayoutOf(cfg, st) };
     }
 
     // Towel warmer. Its mode is the pilot wire's: in the climate entity's
@@ -15380,7 +15613,8 @@ class ApplianceCard extends HTMLElement {
       paused: norm === "paused",
       heating: ["oven", "cooker", "rice_cooker"].includes(applianceType) ? heating
         : applianceType === "water_heater" ? tankHeating
-        : applianceType === "iron" ? !!iron && iron.mode === "heating" : false,
+        : applianceType === "iron" ? !!iron && iron.mode === "heating"
+        : applianceType === "thermostat" ? !!thermo && thermo.mode === "heat" : false,
       keepWarm: norm === "keep_warm",
       lit,
       display: displayText,
@@ -15411,6 +15645,8 @@ class ApplianceCard extends HTMLElement {
       kettleLayout: cfg.kettle_layout,
       coffeeLayout: cfg.coffee_layout,
       boilerLayout: cfg.boiler_layout,
+      boilerThermo,
+      thermo,
       toaster,
       hairDryer,
       network,
@@ -15519,6 +15755,8 @@ class ApplianceCard extends HTMLElement {
       illustrationCtx.feederEmptyA,
       illustrationCtx.feederEmptyB,
       illustrationCtx.boilerMode,
+      illustrationCtx.thermo && [illustrationCtx.thermo.mode, illustrationCtx.thermo.layout, illustrationCtx.thermo.eco].join("/"),
+      illustrationCtx.boilerThermo && [illustrationCtx.boilerThermo.mode, illustrationCtx.boilerThermo.layout].join("/"),
       illustrationCtx.hpMode,
       illustrationCtx.compressorOff,
       illustrationCtx.noTank,
@@ -16142,7 +16380,7 @@ function loadEditor() {
   if (customElements.get("ha-appliance-card-editor")) return Promise.resolve();
   if (!editorLoading) {
     editorLoading = import(assetUrl("ha-appliance-card-editor.js"))
-      .then((m) => m.default({ t, onLanguageLoaded, LANGUAGE_NAMES, localizedHass, activationOf, EV_POWER_THRESHOLD, stateObj, parseValueMap, stringifyValueMap, alertsArray, LIST_OTHER, ENTITY_LISTS, listCandidates, defaultCardName, stripDeviceName, domainOf, INFO_MAX, autoSuggest, APPLIANCE_TYPES, STATE_DOMAINS, SCREEN_ONLY_FIELDS, illustrationSizeOf, fontScaleOf, compactModeOf, TYPE_GROUPS, caps, detectApplianceType, SCREEN_STANDBY_W, SCREEN_LAYOUTS, SCREEN_IMAGES, screenLayoutOf, screenIsTablet, HD_HEAT_W, PLUG_THRESHOLDS, ZONE_POWER_W, PLUG_SOURCE_TYPES, plugSourceOf, DW_DRY_MIN, WASH_HEAT_W, WASH_SPIN_W, DRYER_HEAT_W, NET_LAYOUTS, SWITCH_PORTS, NET_BAYS, NET_BUSY_MBIT, NET_TEMP_ALERT, netLayoutOf, ROBOT_LAYOUTS, ROBOT_STATIONS, ROBOT_FLOORS, ROBOT_SERVICES, STICK_AWAY_W, robotLayoutOf, POOL_PRESSURE_ALERT, SOLAR_LAYOUTS, BATTERY_LAYOUTS, BATTERY_IDLE_W, DIFFUSER_LAYOUTS, HRV_LAYOUTS, CAMERA_LAYOUTS, MAILBOX_LAYOUTS, MAILBOX_SIDES, mailboxLayoutOf, LAMP_LAYOUTS, LAMP_SPOTS, lampLayoutOf, PUMP_LAYOUTS, FLOOR_LAYOUTS, TREE_PALETTES, TREE_PRESENTS, pumpLayoutOf, UPS_BATTERY_LOW, HISTORY_HOURS, BODY_COLORS, esc, SHELTER_STYLES, SHELTER_COLORS, stateFreeSource }))
+      .then((m) => m.default({ t, onLanguageLoaded, LANGUAGE_NAMES, localizedHass, activationOf, TH_LAYOUTS, EV_POWER_THRESHOLD, stateObj, parseValueMap, stringifyValueMap, alertsArray, LIST_OTHER, ENTITY_LISTS, listCandidates, defaultCardName, stripDeviceName, domainOf, INFO_MAX, autoSuggest, APPLIANCE_TYPES, STATE_DOMAINS, SCREEN_ONLY_FIELDS, illustrationSizeOf, fontScaleOf, compactModeOf, TYPE_GROUPS, caps, detectApplianceType, SCREEN_STANDBY_W, SCREEN_LAYOUTS, SCREEN_IMAGES, screenLayoutOf, screenIsTablet, HD_HEAT_W, PLUG_THRESHOLDS, ZONE_POWER_W, PLUG_SOURCE_TYPES, plugSourceOf, DW_DRY_MIN, WASH_HEAT_W, WASH_SPIN_W, DRYER_HEAT_W, NET_LAYOUTS, SWITCH_PORTS, NET_BAYS, NET_BUSY_MBIT, NET_TEMP_ALERT, netLayoutOf, ROBOT_LAYOUTS, ROBOT_STATIONS, ROBOT_FLOORS, ROBOT_SERVICES, STICK_AWAY_W, robotLayoutOf, POOL_PRESSURE_ALERT, SOLAR_LAYOUTS, BATTERY_LAYOUTS, BATTERY_IDLE_W, DIFFUSER_LAYOUTS, HRV_LAYOUTS, CAMERA_LAYOUTS, MAILBOX_LAYOUTS, MAILBOX_SIDES, mailboxLayoutOf, LAMP_LAYOUTS, LAMP_SPOTS, lampLayoutOf, PUMP_LAYOUTS, FLOOR_LAYOUTS, TREE_PALETTES, TREE_PRESENTS, pumpLayoutOf, UPS_BATTERY_LOW, HISTORY_HOURS, BODY_COLORS, esc, SHELTER_STYLES, SHELTER_COLORS, stateFreeSource }))
       .catch((err) => {
         editorLoading = null;
         throw err;

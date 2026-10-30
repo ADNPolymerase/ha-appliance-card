@@ -10,7 +10,7 @@
 <a href="https://buymeacoffee.com/adnpolymerase" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-orange.png" alt="Buy Me A Coffee" height="60"></a>
 <a href="https://adnpolymerase.github.io/HA/" target="_blank"><img src="https://raw.githubusercontent.com/ADNPolymerase/HA/main/assets/site-button.svg" alt="Lien vers mon github.io pour mes autres projets" height="60"></a>
 
-Une card Lovelace pour les appareils de la maison : lave-linge, sèche-linge, lave-vaisselle, four, micro-ondes, hotte, plaque de cuisson, réfrigérateur, bouilloire, robot cuiseur, machine à café, cuiseur à riz, friteuse à air, chauffe-eau, chaudière, pompe à chaleur, imprimante 3D, distributeur de croquettes, fer à repasser, grille-pain, sèche-cheveux, poêle à granulés, climatiseur, déshumidificateur, petit chauffage, sèche-serviettes, purificateur d'air, ventilateur, borne de recharge, télévision, vidéoprojecteur, ordinateur, tablette murale, switch, serveur, NAS et baie réseau, robot aspirateur, laveur et tondeuse, aspirateur balai et laveur de sol, pompe de piscine, pèse-personne, onduleur, panneaux solaires et batterie domestique, lampes, boîtes aux lettres et sonnettes, caméras, diffuseurs, VMC double flux, congélateurs, surpresseurs et postes de relevage, plancher chauffant, spa, sauna, aquarium, compteur Linky et sapin de Noël. Cycle en cours, programme, temps restant, température, alertes et commandes.
+Une card Lovelace pour les appareils de la maison : lave-linge, sèche-linge, lave-vaisselle, four, micro-ondes, hotte, plaque de cuisson, réfrigérateur, bouilloire, robot cuiseur, machine à café, cuiseur à riz, friteuse à air, chauffe-eau, chaudière, thermostat et vanne thermostatique, pompe à chaleur, imprimante 3D, distributeur de croquettes, fer à repasser, grille-pain, sèche-cheveux, poêle à granulés, climatiseur, déshumidificateur, petit chauffage, sèche-serviettes, purificateur d'air, ventilateur, borne de recharge, télévision, vidéoprojecteur, ordinateur, tablette murale, switch, serveur, NAS et baie réseau, robot aspirateur, laveur et tondeuse, aspirateur balai et laveur de sol, pompe de piscine, pèse-personne, onduleur, panneaux solaires et batterie domestique, lampes, boîtes aux lettres et sonnettes, caméras, diffuseurs, VMC double flux, congélateurs, surpresseurs et postes de relevage, plancher chauffant, spa, sauna, aquarium, compteur Linky et sapin de Noël. Cycle en cours, programme, temps restant, température, alertes et commandes.
 
 Aucune marque supposée : chaque champ est une entité à choisir, elle fonctionne donc avec **n'importe quelle** intégration (Electrolux, Samsung, LG, Home Connect, Miele, une simple prise connectée…).
 
@@ -23,7 +23,7 @@ Aucune marque supposée : chaque champ est une entité à choisir, elle fonction
 
 ## Fonctionnalités
 
-- **Cinquante et un types d'appareils**, chacun avec une illustration en CSS animée sur les données de l'appareil et statique à l'arrêt. Le type est détecté tout seul ou choisi via `appliance_type`, et `compact: true` ne garde que le texte.
+- **Cinquante-deux types d'appareils**, chacun avec une illustration en CSS animée sur les données de l'appareil et statique à l'arrêt. Le type est détecté tout seul ou choisi via `appliance_type`, et `compact: true` ne garde que le texte.
 - **Normalisation d'état** : `Idle`, `RUNNING`, `wash`, `En marche`… sont reconnus (sans tenir compte des accents) et classés en veille, préchauffage, en cours, en pause, terminé, différé ou erreur. Un état inconnu s'affiche tel quel, sans l'espace de noms de l'intégration, et `state_map` classe le reste, `"*"` ramassant tout ce qui dépasse.
 - **L'étape, et non une heure d'*En cours*** : un lave-linge, un sèche-linge ou un lave-vaisselle nomme l'étape où il en est (*Prélavage*, *Lavage*, *Rinçage*, *Essorage*, *Séchage* et sept autres), d'après une entité de phase ou son propre état, et le tambour s'emballe pendant l'essorage. Le temps restant est toujours celui du cycle entier.
 - **Une lavante-séchante est un lave-linge qui sèche** : `washer_dryer: true`, et le tambour montre de l'eau pendant le lavage, puis du linge qui tourne dans l'air chaud pendant le séchage. L'étape vient de l'état lui-même ou d'une entité de phase, et la ligne d'état lit *Lavage* ou *Séchage*.
@@ -199,7 +199,7 @@ Seule `state_entity` est obligatoire, sauf sur un réfrigérateur où une sonde 
 | `done_alert` | `true` fait pulser un badge vert sur le dessin en fin de cycle, jusqu'à l'ouverture de la porte ou un appui sur le badge. Pour les appareils à cycle (lave-linge, sèche-linge, lave-vaisselle, four…). |
 | `illustration_color` | `auto` (défaut, suit le thème) \| `white` \| `grey` \| `black` \| `red` (rouge foncé). Ne change que la carrosserie, pas les couleurs d'état. |
 | `language` | `auto` (défaut, suit Home Assistant) ou l'un des 14 codes : `en`, `fr`, `de`, `es`, `it`, `nl`, `pt`, `sv`, `no`, `da`, `pl`, `ru`, `zh`, `cs`. `nb` et `nb-NO` donnent le norvégien. |
-| `appliance_type` | `auto` (défaut) \| `washer` \| `dryer` \| `dishwasher` \| `oven` \| `microwave` \| `hood` \| `cooktop` \| `fridge` \| `kettle` \| `cooker` \| `coffee` \| `rice_cooker` \| `air_fryer` \| `water_heater` \| `boiler` \| `heat_pump` \| `printer_3d` \| `pet_feeder` \| `pet_fountain` \| `iron` \| `toaster` \| `pellet_stove` \| `air_conditioner` \| `dehumidifier` \| `space_heater` \| `towel_warmer` \| `air_purifier` \| `fan` \| `ev_charger` \| `hair_dryer` \| `screen` \| `network` \| `robot` \| `pool_pump` \| `scale` \| `ups` \| `solar` \| `home_battery` \| `camera` \| `diffuser` \| `hrv` \| `lamp` \| `mailbox` \| `water_pump` \| `floor_heating` \| `spa` \| `sauna` \| `aquarium` \| `meter` \| `christmas_tree`. |
+| `appliance_type` | `auto` (défaut) \| `washer` \| `dryer` \| `dishwasher` \| `oven` \| `microwave` \| `hood` \| `cooktop` \| `fridge` \| `kettle` \| `cooker` \| `coffee` \| `rice_cooker` \| `air_fryer` \| `water_heater` \| `boiler` \| `thermostat` \| `heat_pump` \| `printer_3d` \| `pet_feeder` \| `pet_fountain` \| `iron` \| `toaster` \| `pellet_stove` \| `air_conditioner` \| `dehumidifier` \| `space_heater` \| `towel_warmer` \| `air_purifier` \| `fan` \| `ev_charger` \| `hair_dryer` \| `screen` \| `network` \| `robot` \| `pool_pump` \| `scale` \| `ups` \| `solar` \| `home_battery` \| `camera` \| `diffuser` \| `hrv` \| `lamp` \| `mailbox` \| `water_pump` \| `floor_heating` \| `spa` \| `sauna` \| `aquarium` \| `meter` \| `christmas_tree`. |
 | `tap_action` | Ce que fait un appui sur la carte, dans les mots de Home Assistant : `more-info` (défaut : l'entité d'état, ou sur une carte sans elle ce qu'elle lit à sa place), `none`, `navigate`, `url`, `toggle`, `perform-action` ou `fire-dom-event`, celle qu'écoutent les cartes popup bâties sur browser_mod. En YAML seulement. |
 | `toggle_entity` | Bouton marche/arrêt (`switch`, `button`, `script`, `input_boolean`, `fan`), mis en évidence quand c'est allumé. Sur tous les types, frigo compris, où c'est le seul bouton ; à associer à `controls_activation: confirm` pour un appareil qu'il ne faut pas couper par erreur. |
 | `power_entity` / `power_on_threshold` / `power_icon` | Capteur de puissance. Avec un seuil, l'état en est déduit : *en marche* au-dessus, puis *terminé* en redescendant. Avec l'interrupteur d'une prise en `state_entity`, ou ce même capteur, il en est déduit sans seuil, avec celui du type (voir *Une prise connectée seule*). L'état d'une intégration garde la main. `power_icon` remplace `mdi:power-plug`. |
@@ -279,6 +279,8 @@ Seule `state_entity` est obligatoire, sauf sur un réfrigérateur où une sonde 
 | `printed_part` | imprimante 3D | La pièce sur le plateau : `cube` (défaut), `pyramid` (pyramide) ou `duck` (un canard en plastique). Elle apparaît de bas en haut au fil de l'impression. |
 | `kettle_layout` | bouilloire | `classic` (défaut, une bouilloire de la couleur de l'appareil) \| `steel` (une bouilloire en inox à poignée noire). |
 | `coffee_layout` | machine à café | `silver` (défaut, une machine à grains de la couleur de l'appareil, réservoir sur le côté) \| `black` (noire à façade chromée et écran rond). |
+| `thermostat_entity` / `thermostat_layout` | chaudière | Le thermostat d'ambiance de la chaudière, une entité `climate` : il est dessiné au mur à côté de la chaudière, le haut aligné sur le sien, avec l'ambiante et la consigne à l'écran et une flamme quand il demande la chauffe, et la ligne *Ambiante 19,5 °C → 21 °C* s'ajoute. `thermostat_layout` choisit son dessin, `square`, `round` ou `glass` ; par défaut, le nom du thermostat décide (un Nest est rond, un ecobee en verre noir). |
+| `thermostat_layout` | thermostat | `square` (un carré blanc à écran sombre : Netatmo, tado, Bosch CT100, Homematic IP) \| `round` (un anneau d'acier autour d'un verre noir qui devient orange en chauffe : Nest, Honeywell) \| `glass` (verre noir avec une barre lumineuse : ecobee, Bosch CT200) \| `valve` (une vanne de radiateur vue de près : Sonoff, Aqara, Tuya, Danfoss, Fritz!). Par défaut, le nom décide, et une entité climate qui donne son ouverture est une vanne. |
 | `boiler_layout` | chaudière | `wall` (défaut, une chaudière murale blanche avec son manomètre et son écran) \| `window` (une chaudière dont on voit le brûleur par un hublot). |
 | `towel_warmer_layout` | sèche-serviettes | `ladder` (défaut, des barreaux ronds entre deux montants) \| `panel` (des lames plates anthracite sur un montant). |
 | `iron_layout` | fer | `iron` (défaut, le fer seul) \| `generator` (le même fer sur le socle d'une centrale vapeur). |
@@ -1038,6 +1040,32 @@ L'état de la pompe se lit dans les mots des intégrations de fontaines, si bien
 | Petlibro | `Flowing Water (Constant)`, `Intermittent Water (Scheduled)`, `Off` | Poids en %, ou le contact d'humidité de l'eau | Jours de filtre et de nettoyage |
 | Catlink | `Flowing mode`, `Eco-mode`, `Smart mode` | Niveau d'eau en % | Vie du filtre en % |
 | Tuya, tuya-local | Interrupteur ou vanne (`open`/`closed`) ; `normal`, `smart`, `night`, `motion` | `level_1`…`level_3`, `low`/`medium`/`full`, ou un contact | Filtre et pompe en minutes ou en jours ; interrupteurs de réinitialisation |
+
+</details>
+
+<details>
+<summary><b>Thermostats et vannes thermostatiques</b></summary>
+
+Toute entité `climate` qui chauffe : un thermostat mural, une vanne de radiateur, le circuit de chauffage d'une chaudière (le `climate.hc1` de Bosch), quelle que soit l'intégration (Netatmo, Nest, ecobee, tado, Honeywell, Hive, Zigbee, Matter…). L'état affiche *Chauffage*, *Consigne atteinte*, *Éco*, *Absent*, *Hors-gel*, *Fenêtre ouverte* (Better Thermostat, Versatile Thermostat) ou *Éteint*, et la ligne *Ambiante 19,5 °C → 21 °C*. Une vanne dit aussi de combien elle est ouverte.
+
+Quatre dessins, choisis par `thermostat_layout` ou par le nom : un carré blanc, un rond dont l'anneau d'acier devient orange en chauffe, un verre noir, et une vanne de radiateur vue de près, sa tête dépassant du radiateur, qui se réchauffe quand elle chauffe. Un thermostat ne produit pas de chaleur : seul le radiateur de la vanne en dégage.
+
+```yaml
+type: custom:ha-appliance-card
+appliance_type: thermostat
+state_entity: climate.vanne_chambre
+thermostat_layout: valve
+```
+
+Sur une chaudière, `thermostat_entity` dessine son thermostat d'ambiance au mur à côté d'elle :
+
+```yaml
+type: custom:ha-appliance-card
+appliance_type: boiler
+state_entity: sensor.code_chaudiere
+temperature_entity: sensor.temperature_depart
+thermostat_entity: climate.hc1
+```
 
 </details>
 

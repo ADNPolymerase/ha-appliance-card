@@ -11612,4 +11612,61 @@ function tvT(w) { return { 'switch.tv': { state: 'on', attributes: {} }, 'sensor
     { 'switch.p': { state: 'on', attributes: {} }, 'sensor.p': PW(0) })), 0);
 }
 
+// == Thermostats and radiator valves ==========================================
+{
+  const TH = (attrs, state = 'heat', extra = {}) => render({ appliance_type: 'thermostat', state_entity: 'climate.th', ...extra },
+    { 'climate.th': { state, attributes: { hvac_modes: ['heat', 'off'], ...attrs } } });
+  const room = h => (/Room<\/span>[\s\S]*?class="[^"]*value[^"]*"[^>]*>([^<]*)</.exec(h) || [, ''])[1];
+  check('thermostat : en chauffe', stateLine(TH({ current_temperature: 19.5, temperature: 21, hvac_action: 'heating' })), 'Heating');
+  check('thermostat : consigne atteinte', stateLine(TH({ current_temperature: 21, temperature: 21, hvac_action: 'idle' })), 'Target reached');
+  check('thermostat : eteint', stateLine(TH({ current_temperature: 18, temperature: 17 }, 'off')), 'Off');
+  check('thermostat : eco', stateLine(TH({ current_temperature: 18, temperature: 17, hvac_action: 'idle', preset_mode: 'eco' })), 'Eco');
+  check('thermostat : absent', stateLine(TH({ current_temperature: 18, temperature: 16, hvac_action: 'idle', preset_mode: 'away' })), 'Away');
+  check('thermostat : hors-gel', stateLine(TH({ current_temperature: 9, temperature: 7, hvac_action: 'idle', preset_mode: 'frost_guard' })), 'Frost protection');
+  check('thermostat : fenetre ouverte', stateLine(TH({ current_temperature: 18, temperature: 21, hvac_action: 'idle', window_open: true })), 'Window open');
+  check('thermostat : sans action, la piece plus froide chauffe', stateLine(TH({ current_temperature: 18, temperature: 21 })), 'Heating');
+  check('thermostat : sans action, a la consigne il attend', stateLine(TH({ current_temperature: 21, temperature: 21 })), 'Target reached');
+  check('thermostat : refroidit', stateLine(TH({ current_temperature: 26, temperature: 24, hvac_action: 'cooling' }, 'cool')), 'Cooling');
+  check('thermostat : en francais', stateLine(TH({ current_temperature: 21, temperature: 21, hvac_action: 'idle' }, 'heat', { language: 'fr' })), 'Consigne atteinte');
+  const heatH = TH({ current_temperature: 19.5, temperature: 21, hvac_action: 'heating' });
+  check('thermostat : la ligne ambiante au dixieme', /19\.5[\s\u00a0]\u00b0C/.test(heatH), true);
+  check('thermostat : et la consigne', /\u2192[\s\u00a0]*21[\s\u00a0]\u00b0C/.test(heatH), true);
+  contains('thermostat : l ecran montre la piece', heatH, '>19.5</text>');
+  check('thermostat : en chauffe, il s anime', /class="th-dev th-heat"/.test(heatH), true);
+  check('thermostat : au repos, rien ne bouge', /class="th-dev th-heat"/.test(TH({ current_temperature: 21, temperature: 21, hvac_action: 'idle' })), false);
+  check('thermostat : eteint, OFF a l ecran', />OFF<\/text>/.test(TH({ current_temperature: 18, temperature: 17 }, 'off')), true);
+  check('thermostat : en francais, la virgule', />19,5<\/text>/.test(TH({ current_temperature: 19.5, temperature: 21, hvac_action: 'heating' }, 'heat', { language: 'fr' })), true);
+  // The drawing by its name or its option.
+  const lay = (id, name, attrs = {}) => (/th-l-(\w+)/.exec(render({ appliance_type: 'thermostat', state_entity: id },
+    { [id]: { state: 'heat', attributes: { friendly_name: name, current_temperature: 20, temperature: 20, ...attrs } } })) || [, ''])[1];
+  check('thermostat : un Nest est rond', lay('climate.living', 'Nest Living Room'), 'round');
+  check('thermostat : un ecobee est en verre', lay('climate.main', 'ecobee'), 'glass');
+  check('thermostat : une tete thermostatique', lay('climate.trv_chambre', 'TRV chambre'), 'valve');
+  check('thermostat : une vanne par son ouverture', lay('climate.x', 'Chambre', { valve_position: 30 }), 'valve');
+  check('thermostat : sinon un carre', lay('climate.salon', 'Netatmo salon'), 'square');
+  check('thermostat : l option gagne', (/th-l-(\w+)/.exec(TH({ current_temperature: 20, temperature: 20 }, 'heat', { thermostat_layout: 'glass' })) || [, ''])[1], 'glass');
+  check('thermostat : la vanne dit son ouverture', /Valve<\/span>/.test(TH({ current_temperature: 19, temperature: 21, hvac_action: 'heating', valve_position: 45 })) && /45[\s\u00a0]%/.test(TH({ current_temperature: 19, temperature: 21, hvac_action: 'heating', valve_position: 45 })), true);
+  // Found by its domain and its name.
+  const det = (id, attrs = {}) => { const c = new Card(); c.setConfig({ type: 'custom:ha-appliance-card', state_entity: id }); c._hass = HASS({ [id]: { state: 'heat', attributes: { hvac_modes: ['heat', 'off'], ...attrs } } }); c._render(); return /th-l-/.test(markup(c)); };
+  check('detection : climate.hc1 de Bosch est un thermostat', det('climate.hc1'), true);
+  check('detection : une tete thermostatique', det('climate.trv_salon'), true);
+  check('detection : un Nest qui refroidit reste un thermostat', det('climate.nest_hallway', { hvac_modes: ['heat', 'cool', 'off'] }), true);
+  check('detection : une clim reste une clim', det('climate.clim_salon', { hvac_modes: ['cool', 'heat', 'dry', 'off'] }), false);
+  check('detection : un seche-serviettes reste lui', det('climate.towel_rail'), false);
+  // The boiler's own room thermostat, on the wall beside it.
+  const BL = (extra = {}, tstate = 'heat', tattrs = { current_temperature: 19.5, temperature: 21, hvac_action: 'heating' }) => render({ appliance_type: 'boiler', state_entity: 'sensor.code', temperature_entity: 'sensor.flow', thermostat_entity: 'climate.hc1', ...extra },
+    { 'sensor.code': { state: '-H', attributes: {} }, 'sensor.flow': { state: '52', attributes: { unit_of_measurement: '°C' } }, 'climate.hc1': { state: tstate, attributes: tattrs } });
+  check('chaudiere thermostat : dessine au mur', /class="th-dev th-heat"/.test(BL()), true);
+  check('chaudiere thermostat : la chaudiere recule', /<g transform="translate\(-4 26\) scale\(\.78\)">/.test(BL()), true);
+  check('chaudiere thermostat : l ecran suit', /machine [^"]*bl-th/.test(BL()), true);
+  check('chaudiere thermostat : la ligne ambiante', /19\.5[\s\u00a0]\u00b0C/.test(BL()), true);
+  check('chaudiere thermostat : apres la temperature', BL().search(/19\.5[\s\u00a0]\u00b0C/) > BL().search(/52[\s\u00a0]\u00b0C/), true);
+  check('chaudiere thermostat : en rond', /<circle cx="60" cy="55" r="41"/.test(BL({ thermostat_layout: 'round' })), true);
+  check('chaudiere sans thermostat : rien ne change', /class="th-dev|bl-th"/.test(render({ appliance_type: 'boiler', state_entity: 'sensor.code' }, { 'sensor.code': { state: '-H', attributes: {} } })), false);
+  // The editor.
+  const ed = (cfg) => markup(newEditor(cfg));
+  check('editeur thermostat : le modele', ed({ appliance_type: 'thermostat', state_entity: 'climate.th' }).includes('data-field="thermostat_layout"'), true);
+  check('editeur chaudiere : le thermostat', ed({ appliance_type: 'boiler', state_entity: 'sensor.code' }).includes('data-toggle="thermostat_entity"'), true);
+}
+
 report();
