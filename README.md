@@ -68,6 +68,13 @@ Click a family to see its appliances at work.
 </details>
 
 <details>
+<summary><b>Thermostats and radiator valves</b></summary>
+
+<img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-thermostats.gif" alt="Thermostats and radiator valves" width="85%">
+
+</details>
+
+<details>
 <summary><b>Air purifiers and fans</b></summary>
 
 <img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-air.gif" alt="Air purifiers and fans" width="100%">

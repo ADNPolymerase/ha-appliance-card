@@ -62,6 +62,7 @@ FAMILIES = (
     ("laundry", "washer,dryer,dishwasher,iron,steam_generator", 5),
     ("kitchen", "oven,microwave,hood,cooktop,fridge,kettle,cooker,coffee,coffee_black,rice_cooker,air_fryer,toaster", 6),
     ("climate", "water_heater,boiler,boiler_window,heat_pump,pellet_stove,space_heater,towel_warmer,towel_panel,air_conditioner,dehumidifier", 5),
+    ("thermostats", "boiler_thermo,th_square,th_round,th_glass,th_valve", 5),
     ("air", "air_purifier,box_purifier,ring_purifier,fan,ceiling_fan", 5),
     ("pets", "pet_feeder,round_feeder,double_feeder,dual_feeder,wet_feeder,pet_fountain", 3),
     ("garage", "ev_charger,ev_discharging,printer_3d", 3),

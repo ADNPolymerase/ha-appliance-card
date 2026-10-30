@@ -68,6 +68,13 @@ Clique sur une famille pour voir ses appareils en marche.
 </details>
 
 <details>
+<summary><b>Thermostats et vannes thermostatiques</b></summary>
+
+<img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-thermostats.fr.gif" alt="Thermostats et vannes thermostatiques" width="85%">
+
+</details>
+
+<details>
 <summary><b>Purificateurs et ventilateurs</b></summary>
 
 <img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-air.fr.gif" alt="Purificateurs et ventilateurs" width="100%">
