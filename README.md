@@ -246,7 +246,7 @@ Only `state_entity` is required, except on a fridge where a probe or a door cont
 | `filter_life_entity` / `filter_reset_entity` / `filter_due_below` | pet fountain | The filter's life left, on a line, and a reset button (a button, a switch or a script). Days, hours, minutes and seconds are counted in days, a percentage stays one, and a date (the next change) gives the days left until it. At or below `filter_due_below` (3 for days, 10 for percent by default) the state reads *Filter due*, and the line and the light turn orange. |
 | `pump_clean_entity` / `pump_reset_entity` | pet fountain | The same for the pump: the time or the date until it wants cleaning, against the same threshold, and a reset button. The state reads *Clean the pump*. |
 | `pump_running_entity` | pet fountain | The pump, when the integration reads it apart from the power (Petkit's *Pump running*, Xiaomi's *watering* status): the water runs only while both say so. A *Pump last ran* line says when it last stopped, or *Running*. |
-| `water_level_entity` / `level_empty_below` | pet fountain | The water left: a percentage, which fills the tank on the drawing; a word (`low`, `lack`, `shortage`, `level_1`… or `normal`, `medium`, `full`); or a contact, on when it runs low, or on while there is water for a moisture contact (Petlibro). A number in another unit (a level from 1 to 4, millilitres) is only read against `level_empty_below` when it is set. At or below `level_empty_below` (10 by default) the state reads *Low water*, in red, ahead of everything else: a dry pump burns out. The jet then stops, as it does with the pump off, and the dish drops with the tank. |
+| `water_level_entity` / `level_empty_below` | pet fountain | The water left: a percentage, which fills the tank on the drawing; a word (`low`, `lack`, `shortage`, `level_1`… or `normal`, `medium`, `full`); or a contact, on when it runs low, or on while there is water for a moisture contact (Petlibro). A number in another unit (a level from 1 to 4, millilitres) is only read against `level_empty_below` when it is set. At or below `level_empty_below` (10 by default) the state reads *Low water*, in red, ahead of everything else: a dry pump burns out. The jet then stops, as it does with the pump off, and the plate runs dry. |
 | `zones` / `zones_layout` / `zones_count` | cooktop | Up to 6 zones `{ level_entity, residual_heat_entity?, name? }`, level as a number or a word (`boost`), `H` for residual heat. Layout `2x1` \| `2x2` \| `3x2`, and how many zones to draw without entities (default 4). |
 | `child_lock_entity` | cooktop | Padlock on the illustration. |
 | `fridge_layout` | fridge | `freezer_bottom` (default) \| `freezer_top` \| `side_by_side` \| `single` \| `wine` (glass door and bottles, for a wine cooler) \| `chest` (a chest freezer) \| `drawers` (an upright freezer with see-through drawers). On these two the freezer probe, or the fridge one, is on the display, and the warning threshold is -12 by default. |
@@ -932,7 +932,7 @@ A feeder that never says it is serving, like Aqara's C1 over Zigbee2MQTT, is dra
 
 Three entities read as well as ten: a line only exists when its entity answers.
 
-Three models are drawn, after the feeders people buy: a square tank on its base, a round tank on a round base, each with its bowl set down in front, and a double with two outlets on its front and a bowl under each. The small screen shows the time like the real ones, turns blue while the feeder serves, showing the portion when `serving_size_entity` is set, and red on an empty tank or an error. The child lock and the automatic lock go in the top corners, each showing whether it holds:
+Three models are drawn, after the feeders people buy: a square tank with a window on its kibble, a round tank, each with a steel bowl set in its base, and a double whose two spouts feed a bowl each. The window fills to the level, the kibble drops into the bowl while a meal is served, and an empty tank leaves both bare. The small screen shows the time in green like the real ones, turns blue while the feeder serves, showing the portion when `serving_size_entity` is set, and red on an empty tank or an error. The child lock and the automatic lock go in the top corners, each showing whether it holds:
 
 ```yaml
 feeder_layout: canister
@@ -950,7 +950,7 @@ level_entity: binary_sensor.feeder_hopper_1_low
 level_b_entity: binary_sensor.feeder_hopper_2_low
 ```
 
-`rotary` is a wet-food feeder: plates on a turntable under a lid with one opening. Serving opens it, so the state entity is whatever says the lid is open, and the flap lifts on the plate in front. Its level is the plates left, counted out of the plates it holds:
+`rotary` is a wet-food feeder: plates on a turntable under a lid with one opening. Serving opens it, so the state entity is whatever says the lid is open, and while it serves the turntable brings the next plate into the opening. Its level is the plates left, counted out of the plates it holds:
 
 ```yaml
 feeder_layout: rotary
@@ -964,7 +964,7 @@ level_max: 3
 <details>
 <summary><b>Pet fountains</b></summary>
 
-A fountain runs all day, so like a feeder it is read rather than run. The water bubbles out of the spout and ripples across the dish while the pump runs, from a switch or the plug the fountain sits on. What it says otherwise is what needs a hand: the water first, then the filter, then the pump, each taking the state line and the light on its front over, orange for the filter and the pump, red and blinking for the water.
+A fountain runs all day, so like a feeder it is read rather than run. While the pump runs the water wells up in a dome over the outlet, rings spread across the steel plate and drops spray off its edges, from a switch or the plug the fountain sits on. What it says otherwise is what needs a hand: the water first, then the filter, then the pump, each taking the state line and the light ring under the plate over, orange with a filter badge for the filter and the pump, red and blinking with a warning badge for the water.
 
 ```yaml
 type: custom:ha-appliance-card

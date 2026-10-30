@@ -4411,6 +4411,28 @@ const CFG_IN = { appliance_type: 'pet_feeder', start_entity: 'select.croquettes_
   schedule_entity: 'sensor.croquettes_schedule_pretty',
   error_entity: 'binary_sensor.croquettes_error' };
 const feeder = (extra = {}, more = {}) => render({ ...CFG_IN, ...extra }, { ...FEEDER_IN, ...more });
+// The feeders are one SVG each; these read the drawing back: the level of each
+// window, where each falling piece starts, the bowls and the outlets.
+const pfLevels = h => [...h.matchAll(/class="pf-win" data-level="(\d+)"/g)].map(m => Number(m[1]));
+const pfDropsAt = h => [...h.matchAll(/<g transform="translate\(([\d.]+) ([\d.]+)\)"><g class="pf-drop/g)].map(m => ({ x: +m[1], y: +m[2] }));
+const pfBowls = h => [...h.matchAll(/<ellipse class="pf-bowl" cx="([\d.]+)" cy="([\d.]+)" rx="([\d.]+)" ry="([\d.]+)"/g)]
+  .map(m => ({ cx: +m[1], cy: +m[2], rx: +m[3], ry: +m[4] }));
+const pfChutes = h => [...h.matchAll(/class="pf-chute" (?:d="([^"]*)"|cx="([\d.]+)" cy="([\d.]+)")/g)].map(m => {
+  if (!m[1]) return { x0: +m[2] - 2.6, x1: +m[2] + 2.6, bottom: +m[3] };
+  const n = m[1].match(/-?[\d.]+/g).map(Number);
+  const xs = n.filter((_, i) => i % 2 === 0), ys = n.filter((_, i) => i % 2);
+  return { x0: Math.min(...xs), x1: Math.max(...xs), bottom: Math.max(...ys) };
+});
+const pfFall = h => Number((/@keyframes pf-fall \{[\s\S]*?100% \{ transform: translateY\(([\d.]+)px\)/.exec(h) || [])[1]);
+// Each piece leaves an outlet, just under its mouth, and lands inside a bowl.
+function dropGeo(h) {
+  const drops = pfDropsAt(h), bowls = pfBowls(h), chutes = pfChutes(h), fall = pfFall(h);
+  return {
+    drops, bowls,
+    fromChute: drops.length > 0 && drops.every(d => chutes.some(c => d.x >= c.x0 && d.x <= c.x1 && d.y >= c.bottom - 1 && d.y <= c.bottom + 4)),
+    inBowl: drops.length > 0 && drops.every(d => bowls.some(b => Math.abs(d.x - b.cx) <= b.rx - 2 && d.y + fall >= b.cy - b.ry && d.y + fall <= b.cy + b.ry)),
+  };
+}
 
 const fIn = feeder();
 check('gamelle : au repos, rien a dire', /class="state-line"/.test(fIn), false);
@@ -4443,7 +4465,7 @@ check('gamelle : et les croquettes tombent', machineCls(fBusy).includes('feeding
 contains('gamelle : elles tombent vraiment', fBusy, 'animation: pf-fall');
 // They fall in front of the bowl, or the bowl would hide the whole fall.
 check('gamelle : la chute passe devant la gamelle',
-  fBusy.indexOf('class="pf-fall"') > fBusy.indexOf('class="pf-bowl"'), true);
+  fBusy.indexOf('class="pf-drop') > fBusy.lastIndexOf('class="pf-bowl"'), true);
 check('gamelle : au repos rien ne tombe', machineCls(fIn).includes('feeding'), false);
 
 // An empty tank: the one thing a feeder cannot fix by itself, so it takes the
@@ -4452,20 +4474,21 @@ const fEmpty = feeder({ level_entity: 'binary_sensor.no_food' },
   { 'binary_sensor.no_food': { state: 'on', attributes: {} } });
 check('gamelle : un contact de manque annonce le reservoir vide', stateLine(fEmpty), 'Tank empty');
 check('gamelle : et la tremie se vide sur le dessin', machineCls(fEmpty).includes('empty'), true);
-check('gamelle : le tas disparait alors', /\.machine\.empty \.pf-kib \{ display: none; \}/.test(fEmpty), true);
+check('gamelle : le tas disparait alors', /class="pf-heap"/.test(fEmpty), false);
+check('gamelle : et la fenetre se vide', pfLevels(fEmpty).join(), '0');
 check('gamelle : contact ferme, rien a signaler',
   /class="state-line"/.test(feeder({ level_entity: 'binary_sensor.no_food' },
     { 'binary_sensor.no_food': { state: 'off', attributes: {} } })), false);
 // A percentage fills the hopper, and empties it at the bottom.
 const fLevel = (pct, extra) => feeder({ level_entity: 'sensor.food_level', ...extra },
   { 'sensor.food_level': { state: String(pct), attributes: { unit_of_measurement: '%' } } });
-check('gamelle : le niveau remplit la tremie', /--pf-fill:14\.0px/.test(fLevel(50)), true);
-check('gamelle : plein, elle est pleine', /--pf-fill:24\.0px/.test(fLevel(100)), true);
+check('gamelle : le niveau remplit la tremie', pfLevels(fLevel(50)).join(), '50');
+check('gamelle : plein, elle est pleine', pfLevels(fLevel(100)).join(), '100');
 check('gamelle : le niveau fait une ligne', infoLine(fLevel(50), 'Food level'), '50\u00a0%');
 check('gamelle : a zero le reservoir est vide', stateLine(fLevel(0)), 'Tank empty');
 check('gamelle : et le seuil se regle', stateLine(fLevel(4, { level_empty_below: '5' })), 'Tank empty');
 check('gamelle : au-dessus du seuil, le niveau seulement', stateLine(fLevel(6, { level_empty_below: '5' })), 'Tank at 6%');
-check('gamelle : sans niveau, pas de hauteur imposee', /style="--pf-fill/.test(fIn), false);
+check('gamelle : sans niveau, une hauteur de repos', pfLevels(fIn).join(), '60');
 
 // A tank counted in grams, as the Tuya feeders report it: the reading is what
 // is left, and 729 g says nothing about how full the hopper is until the
@@ -4473,17 +4496,17 @@ check('gamelle : sans niveau, pas de hauteur imposee', /style="--pf-fill/.test(f
 const fGrams = (g, extra) => feeder({ level_entity: 'sensor.food_left', ...extra },
   { 'sensor.food_left': { state: String(g), attributes: { unit_of_measurement: 'g' } } });
 check('grammes : la ligne montre le poids', infoLine(fGrams(729), 'Food level'), '729\u00a0g');
-check('grammes : sans contenance, aucune hauteur imposee', /style="--pf-fill/.test(fGrams(729)), false);
-check('grammes : avec la contenance, la tremie se remplit', /--pf-fill:19\.1px/.test(fGrams(729, { level_max: '964' })), true);
-check('grammes : presque vide, presque plate', /--pf-fill:4\.6px/.test(fGrams(30, { level_max: '964' })), true);
+check('grammes : sans contenance, la hauteur de repos', pfLevels(fGrams(729)).join(), '60');
+check('grammes : avec la contenance, la tremie se remplit', pfLevels(fGrams(729, { level_max: '964' })).join(), '76');
+check('grammes : presque vide, presque plate', pfLevels(fGrams(30, { level_max: '964' })).join(), '3');
 check('grammes : le seuil de vide reste dans l\'unite du capteur',
   stateLine(fGrams(60, { level_empty_below: '100' })), 'Tank empty');
 check('grammes : au-dessus du seuil, rien a signaler',
   /class="state-line"/.test(fGrams(200, { level_empty_below: '100' })), false);
 // A reading with no unit at all keeps being read as a percentage, as before.
 check('niveau sans unite : toujours un pourcentage',
-  /--pf-fill:14\.0px/.test(feeder({ level_entity: 'sensor.food_level' },
-    { 'sensor.food_level': { state: '50', attributes: {} } })), true);
+  pfLevels(feeder({ level_entity: 'sensor.food_level' },
+    { 'sensor.food_level': { state: '50', attributes: {} } })).join(), '50');
 
 // A fault code names which fault it is, and zero is the only value that says
 // there is none: a feeder reporting 1 is jammed, not ready.
@@ -4499,49 +4522,30 @@ check('code de defaut : une entite muette ne crie pas', /class="state-line"/.tes
 // machines and stays out of it, or a black feeder would show black kibble in a
 // black tank; the bowl itself is steel.
 check('couleur : la coque suit la couleur de l\'appareil',
-  /\.pf-shell \{[^}]*var\(--pf-body\)/.test(fIn) && /\.machine \{ --pf-lo: var\(--ac-body-lo, #1f2327\); --pf-hi: var\(--ac-body-hi, #4a5158\); --pf-body: var\(--ac-body, #34393e\); \}/.test(fIn), true);
-check('couleur : le support de gamelle aussi', /\.pf-holder \{[^}]*var\(--pf-body\)/.test(fIn), true);
-check('couleur : le reservoir reste du plastique fume', /\.pf-tank \{[^}]*--(ac|pf)-/.test(fIn), false);
-check('couleur : la gamelle reste de l\'inox', /\.pf-steel \{[^}]*--(ac|pf)-/.test(fIn), false);
+  /\.machine \{ --pf-lo: var\(--ac-body-lo, #16191d\); --pf-hi: var\(--ac-body-hi, #4b535d\); --pf-body: var\(--ac-body, #2b3037\);/.test(fIn)
+  && /<rect class="pf-body"[^>]*fill="url\(#(pf\d+)\)"/.test(fIn) && /stop-color: var\(--pf-lo\)/.test(fIn), true);
+check('couleur : le socle de la gamelle aussi', /class="pf-tray"[^>]*style="fill: var\(--pf-body\)"/.test(fIn), true);
+check('couleur : le reservoir reste du plastique fume', /<rect class="pf-win"[^>]*(var\(|style=)/.test(fIn), false);
+check('couleur : la gamelle reste de l\'inox', /<ellipse class="pf-bowl"[^>]*var\(/.test(fIn), false);
 check('couleur : la coque et le couvercle sont moules ensemble',
-  ['pf-lid pf-shell', 'pf-base pf-shell'].filter(c => !fIn.includes(`class="${c}"`)).join(' '), '');
+  (fIn.match(/style="stop-color: var\(--pf-hi\)"/g) || []).length >= 3, true);
 
-// The kibble leaves the chute and lands on the heap in the bowl, just under
-// its rim, on every model. Read from the CSS, so moving a chute or a bowl has
-// to keep the fall on both.
+// Reads one length out of a rule of the rendered stylesheet.
 function cssPx(html, selector, prop) {
   const block = new RegExp(`\\${selector} \\{([^}]*)\\}`).exec(html);
   const m = block && new RegExp(`(?:^|[ ;])${prop}: (-?[\\d.]+)px`).exec(block[1]);
   return m ? parseFloat(m[1]) : null;
 }
-function fallGeometry(html, g) {
-  const px = (sel, prop) => cssPx(html, sel, prop);
-  const H = 108;
-  const drop = Number((/@keyframes pf-fall \{[\s\S]*?100% \{ opacity: 0; transform: translateY\(([\d.]+)px\)/.exec(html) || [])[1]);
-  const dot = px('.pf-fall i', 'height');
-  const fallTop = px(g.fall, 'top') ?? px('.pf-fall i', 'top');
-  const fallLeft = px(g.fallX, 'left') ?? px('.pf-fall i', 'left');
-  const chuteTop = g.boxTop + px(g.chute, 'top');
-  const chuteLeft = g.boxLeft + px(g.chute, 'left');
-  const chuteW = px(g.chute, 'width') ?? px('.pf-chute', 'width');
-  const chuteH = px(g.chute, 'height') ?? px('.pf-chute', 'height');
-  const bowlH = px(g.bowl, 'height') ?? px('.pf-bowl', 'height');
-  const bowlW = px(g.bowl, 'width') ?? px(g.bowlW || '.pf-bowl', 'width');
-  const rim = H - (px(g.bowl, 'bottom') ?? px('.pf-bowl', 'bottom')) - bowlH;
-  const heapTop = rim + px('.pf-heap', 'top');
-  const end = fallTop + drop + dot;
-  return {
-    fromChute: fallTop >= chuteTop && fallTop < chuteTop + chuteH && fallLeft >= chuteLeft && fallLeft + 3 <= chuteLeft + chuteW,
-    onHeap: end >= heapTop - 1 && end <= rim,
-    overBowl: fallLeft >= g.bowlLeft && fallLeft + 3 <= g.bowlLeft + bowlW,
-  };
-}
+
+// The kibble leaves the outlet and lands in the bowl, in front of it, on every
+// model. Read from the drawing, so moving an outlet or a bowl has to keep the
+// fall on both.
 {
-  const geo = fallGeometry(fIn, { fall: '.pf-fall i', fallX: '.pf-fall i', chute: '.pf-base .pf-chute', boxTop: cssPx(fIn, '.pf-base', 'top'),
-    boxLeft: cssPx(fIn, '.pf-base', 'left'), bowl: '.pf-bowl', bowlLeft: cssPx(fIn, '.pf-bowl', 'left') });
+  const geo = dropGeo(fBusy);
+  check('dessin : quatre croquettes en l air', geo.drops.length, 4);
   check('dessin : les croquettes partent de la goulotte', geo.fromChute, true);
-  check('dessin : et finissent sur le tas de la gamelle', geo.onHeap, true);
-  check('dessin : droit au-dessus de la gamelle', geo.overBowl, true);
+  check('dessin : et finissent dans la gamelle', geo.inBowl, true);
+  check('dessin : rien ne tombe au repos', pfDropsAt(fIn).length, 0);
 }
 
 // Lines you add come under the ones the card reads on its own, and they carry
@@ -4701,40 +4705,34 @@ const fCan = (level, extra, more) => feeder({ feeder_layout: 'canister', level_e
 const can50 = fCan(50);
 const hasAll = (html, cs) => cs.filter(c => !html.includes(`class="${c}`)).join(' ');
 check('rond : le modele se choisit', machineCls(can50).split(' ').includes('canister'), true);
-check('rond : reservoir, couvercle, socle nervure, ecran, goulotte et gamelle',
-  hasAll(can50, ['pf-tank rd', 'pf-cap', 'pf-drum', 'pf-ribs', 'pf-lcd', 'pf-chute', 'pf-bowl']), '');
-check('rond : rien de la tour', ['pf-tank sq', 'pf-lid', 'pf-base'].filter(c => can50.includes(`class="${c}`)).join(' '), '');
-check('carre : le modele par defaut', /class="pf-tank sq"/.test(fIn) && machineCls(fIn).split(' ').every(c => !['canister', 'double'].includes(c)), true);
-check('carre : la tour se nomme aussi', /class="pf-tank sq"/.test(feeder({ feeder_layout: 'tower' })), true);
-check('carre : un modele inconnu reste un carre', /class="pf-tank sq"/.test(feeder({ feeder_layout: 'zzz' })), true);
-// Its tank is taller, so the same level makes a taller heap.
-check('rond : a moitie plein', /--pf-fill:18\.0px/.test(can50), true);
-check('rond : plein', /--pf-fill:32\.0px/.test(fCan(100)), true);
-check('rond : le carre garde sa hauteur', /--pf-fill:14\.0px/.test(fLevel(50)), true);
+check('rond : fenetre, ecran, goulotte et gamelle',
+  hasAll(can50, ['pf-svg pf-canister', 'pf-body', 'pf-win', 'pf-lcd', 'pf-chute', 'pf-bowl']), '');
+check('rond : rien de la tour', /pf-tower/.test(can50), false);
+check('carre : le modele par defaut', /class="pf-svg pf-tower"/.test(fIn) && machineCls(fIn).split(' ').every(c => !['canister', 'double'].includes(c)), true);
+check('carre : la tour se nomme aussi', /class="pf-svg pf-tower"/.test(feeder({ feeder_layout: 'tower' })), true);
+check('carre : un modele inconnu reste un carre', /class="pf-svg pf-tower"/.test(feeder({ feeder_layout: 'zzz' })), true);
+check('rond : a moitie plein', pfLevels(can50).join(), '50');
+check('rond : plein', pfLevels(fCan(100)).join(), '100');
 check('rond : vide, le reservoir se vide', machineCls(fCan(0)).includes('empty'), true);
 {
-  const geo = fallGeometry(can50, { fall: '.machine.canister .pf-fall i', fallX: '.machine.canister .pf-fall i',
-    chute: '.pf-drum .pf-chute', boxTop: cssPx(can50, '.pf-drum', 'top'), boxLeft: cssPx(can50, '.pf-drum', 'left'),
-    bowl: '.machine.canister .pf-bowl', bowlLeft: cssPx(can50, '.machine.canister .pf-bowl', 'left') });
+  const geo = dropGeo(fCan(50, { state_entity: 'binary_sensor.busy' }, { 'binary_sensor.busy': { state: 'on', attributes: {} } }));
   check('rond : les croquettes partent de la goulotte', geo.fromChute, true);
-  check('rond : et finissent sur le tas', geo.onHeap, true);
-  check('rond : droit, pas en diagonale', geo.overBowl, true);
-  check('rond : la gamelle posee devant, a gauche du socle',
-    cssPx(can50, '.machine.canister .pf-bowl', 'left') < cssPx(can50, '.pf-drum', 'left'), true);
+  check('rond : et finissent dans la gamelle', geo.inBowl, true);
+  check('rond : la gamelle posee devant, au milieu du socle', geo.bowls.map(b => b.cx).join(), '60');
 }
 // White by default, the way these are sold.
 check('rond : blanc par defaut',
-  /\.machine\.canister \{ --pf-lo: var\(--ac-body-lo, #d8dcde\); --pf-hi: var\(--ac-body-hi, #ffffff\); --pf-body: var\(--ac-body, #f1f3f4\); \}/.test(can50), true);
-check('rond : la couleur de l\'appareil peint le socle', /class="pf-drum pf-shell"/.test(can50), true);
+  /\.machine\.canister, \.machine\.dual_split \{ --pf-lo: var\(--ac-body-lo, #b4bcc5\); --pf-hi: var\(--ac-body-hi, #ffffff\); --pf-body: var\(--ac-body, #f1f4f7\);/.test(can50), true);
+check('rond : la couleur de l\'appareil peint le socle', /class="pf-tray"[^>]*var\(--pf-body\)/.test(can50), true);
 const canEmpty = fCan(0);
 check('rond : le chat vient aussi', /class="pf-cat"/.test(canEmpty), true);
-check('rond : a droite, la gamelle etant a gauche',
-  /\.machine\.canister \.pf-cat, \.machine\.double \.pf-cat \{ left: auto; right: 0; \}/.test(canEmpty), true);
+check('rond : a droite, l ecran etant en haut',
+  /\.machine\.canister \.pf-cat, \.machine\.double \.pf-cat, \.machine\.dual_split \.pf-cat, \.machine\.rotary \.pf-cat \{ left: auto; right: 0; \}/.test(canEmpty), true);
 check('rond : son triangle le suit',
-  /\.machine\.canister \.pf-alert, \.machine\.double \.pf-alert \{ left: auto; right: 12px; \}/.test(canEmpty), true);
+  /\.machine\.canister \.pf-alert, \.machine\.double \.pf-alert, \.machine\.dual_split \.pf-alert, \.machine\.rotary \.pf-alert \{ left: auto; right: 12px; \}/.test(canEmpty), true);
 const canBusy = fCan(50, { state_entity: 'binary_sensor.busy' }, { 'binary_sensor.busy': { state: 'on', attributes: {} } });
 check('rond : les croquettes tombent', machineCls(canBusy).includes('feeding'), true);
-check('rond : devant la gamelle', canBusy.indexOf('class="pf-fall"') > canBusy.indexOf('class="pf-bowl"'), true);
+check('rond : devant la gamelle', canBusy.indexOf('class="pf-drop') > canBusy.lastIndexOf('class="pf-bowl"'), true);
 // The model alone says it is a feeder, like a fridge's layout says fridge.
 check('rond : le modele suffit a la config', accepts({ feeder_layout: 'canister' }), true);
 check('rond : et designe seul un distributeur', (() => {
@@ -4749,27 +4747,17 @@ const fDbl = (level, extra, more) => feeder({ feeder_layout: 'double', level_ent
   { 'sensor.food_level': { state: String(level), attributes: { unit_of_measurement: '%' } }, ...more });
 const dbl50 = fDbl(50);
 check('double : le modele se choisit', machineCls(dbl50).split(' ').includes('double'), true);
-check('double : deux sorties', (dbl50.match(/class="pf-chute [ab]"/g) || []).length, 2);
-check('double : deux gamelles', (dbl50.match(/class="pf-bowl [ab]"/g) || []).length, 2);
-check('double : deux chutes', (dbl50.match(/class="pf-fall [ab]"/g) || []).length, 2);
-check('double : une fente de niveau', /class="pf-slot"/.test(dbl50), true);
-check('double : le niveau remplit la fente', /--pf-fill:10\.0px/.test(dbl50), true);
-check('double : pas de reservoir fume', /class="pf-tank/.test(dbl50), false);
+const dblBusy = fDbl(50, { state_entity: 'binary_sensor.busy' }, { 'binary_sensor.busy': { state: 'on', attributes: {} } });
+check('double : deux becs', (dbl50.match(/<ellipse class="pf-chute"/g) || []).length, 2);
+check('double : deux gamelles', pfBowls(dbl50).length, 2);
+check('double : une fenetre de niveau', pfLevels(dbl50).length, 1);
+check('double : le niveau remplit la fenetre', pfLevels(dbl50).join(), '50');
 {
-  const top = cssPx(dbl50, '.pf-dbody', 'top'), left = cssPx(dbl50, '.pf-dbody', 'left');
-  const bodyW = 96 - left - cssPx(dbl50, '.pf-dbody', 'right');
-  const chuteW = cssPx(dbl50, '.pf-dbody .pf-chute', 'width');
-  const aLeft = left + cssPx(dbl50, '.pf-dbody .pf-chute.a', 'left');
-  const bLeft = left + bodyW - cssPx(dbl50, '.pf-dbody .pf-chute.b', 'right') - chuteW;
-  const fallTop = cssPx(dbl50, '.machine.double .pf-fall i', 'top');
-  const chuteTop = top + cssPx(dbl50, '.pf-dbody .pf-chute', 'top');
-  const fa = cssPx(dbl50, '.machine.double .pf-fall.a i', 'left'), fb = cssPx(dbl50, '.machine.double .pf-fall.b i', 'left');
-  const bw = cssPx(dbl50, '.machine.double .pf-bowl', 'width');
-  const ba = cssPx(dbl50, '.machine.double .pf-bowl.a', 'left'), bb = 96 - cssPx(dbl50, '.machine.double .pf-bowl.b', 'right') - bw;
-  check('double : les sorties sont en facade, pas dessous', chuteTop + cssPx(dbl50, '.pf-dbody .pf-chute', 'height') <= 108 - cssPx(dbl50, '.pf-dbody', 'bottom'), true);
-  check('double : chaque chute part de sa sortie',
-    fallTop >= chuteTop && fa >= aLeft && fa + 3 <= aLeft + chuteW && fb >= bLeft && fb + 3 <= bLeft + chuteW, true);
-  check('double : et tombe dans sa gamelle', fa >= ba && fa + 3 <= ba + bw && fb >= bb && fb + 3 <= bb + bw, true);
+  const geo = dropGeo(dblBusy);
+  check('double : deux chutes', geo.drops.length, 8);
+  check('double : chaque chute part de son bec', geo.fromChute, true);
+  check('double : et tombe dans sa gamelle', geo.inBowl, true);
+  check('double : une chute par gamelle', [...new Set(geo.drops.map(d => d.x < 60 ? 'a' : 'b'))].join(), 'a,b');
 }
 check('double : le chat a toujours son corps', /class="body"/.test(fDbl(0)) && !/\.pf-dbody[^{]*\.body|\.double \.body/.test(fDbl(0)), true);
 check('double : le chat vient a droite', /class="pf-cat"/.test(fDbl(0)), true);
@@ -4781,12 +4769,11 @@ const fDs = (a, b, extra, more) => feeder({ feeder_layout: 'dual_split', level_e
     'sensor.food_level_b': { state: String(b), attributes: { unit_of_measurement: '%' } }, ...more });
 const ds = fDs(50, 100);
 check('deux reservoirs : le modele se choisit', machineCls(ds).split(' ').includes('dual_split'), true);
-check('deux reservoirs : deux fenetres', (ds.match(/class="pf-tank [ab]"/g) || []).length, 2);
-check('deux reservoirs : deux sorties', (ds.match(/class="pf-chute [ab]"/g) || []).length, 2);
-check('deux reservoirs : deux chutes', (ds.match(/class="pf-fall [ab]"/g) || []).length, 2);
-check('deux reservoirs : une seule gamelle, partagee', (ds.match(/class="pf-bowl[^"]*"/g) || []).join(' '), 'class="pf-bowl split"');
-check('deux reservoirs : une cloison au milieu', /class="pf-divider"/.test(ds), true);
-check('deux reservoirs : chaque niveau remplit sa fenetre', /--pf-fill:20\.0px;--pf-fill-b:36\.0px/.test(ds), true);
+check('deux reservoirs : deux fenetres', pfLevels(ds).length, 2);
+check('deux reservoirs : une seule gamelle, partagee', pfBowls(ds).length, 1);
+check('deux reservoirs : une recette par moitie', (ds.match(/<path class="pf-heap"[^>]*fill="#3b1d09"/g) || []).length + ',' + (ds.match(/<path class="pf-heap"[^>]*fill="#241105"/g) || []).length, '1,1');
+check('deux reservoirs : chaque niveau remplit sa fenetre', pfLevels(ds).join(), '50,100');
+check('deux reservoirs : le premier vide, sa moitie aussi', /fill="#3b1d09"/.test(fDs(0, 80).replace(/class="pf-kib"[^>]*/g, '')), false);
 check('deux reservoirs : le second niveau a sa ligne', infoLine(ds, 'Food level, second hopper').replace(/\s/g, ' '), '100 %');
 check('deux reservoirs : le premier garde la sienne', infoLine(ds, 'Food level').replace(/\s/g, ' '), '50 %');
 check('deux reservoirs : au repos, le plus bas donne l\'etat', stateLine(ds), 'Tank at 50%');
@@ -4808,23 +4795,15 @@ check('deux reservoirs : un vide sans nom vide les deux',
 check('deux reservoirs : seule la ligne du second avertit',
   /class="info-line[^"]*warn[^"]*"[^>]*>[\s\S]{0,400}Food level, second hopper/.test(fDs(80, 0))
   && !/class="info-line[^"]*warn[^"]*"[^>]*>[\s\S]{0,200}>Food level</.test(fDs(80, 0)), true);
-check('deux reservoirs : sans second niveau, la fenetre garde sa hauteur', /style="[^"]*--pf-fill-b/.test(fDs(50, 50, { level_b_entity: undefined })), false);
-check('deux reservoirs : ailleurs, le second niveau ne dessine rien', /style="[^"]*--pf-fill-b/.test(fDs(50, 100, { feeder_layout: 'double' })), false);
+check('deux reservoirs : sans second niveau, la fenetre garde sa hauteur', pfLevels(fDs(50, 50, { level_b_entity: undefined })).join(), '50,60');
+check('deux reservoirs : ailleurs, le second niveau ne dessine rien', pfLevels(fDs(50, 100, { feeder_layout: 'double' })).join(), '50');
 check('deux reservoirs : le second niveau suffit a la config', accepts({ level_b_entity: 'sensor.food_level_b' }), true);
 {
-  const sbTop = cssPx(ds, '.pf-sbase', 'top'), sbLeft = cssPx(ds, '.pf-sbase', 'left');
-  const sbW = 96 - sbLeft - cssPx(ds, '.pf-sbase', 'right');
-  const chuteW = cssPx(ds, '.pf-sbase .pf-chute', 'width') || 11;
-  const aLeft = sbLeft + cssPx(ds, '.pf-sbase .pf-chute.a', 'left');
-  const bLeft = sbLeft + sbW - cssPx(ds, '.pf-sbase .pf-chute.b', 'right') - chuteW;
-  const fa = cssPx(ds, '.machine.dual_split .pf-fall.a i', 'left'), fb = cssPx(ds, '.machine.dual_split .pf-fall.b i', 'left');
-  const bL = cssPx(ds, '.machine.dual_split .pf-bowl', 'left'), bW = cssPx(ds, '.machine.dual_split .pf-bowl', 'width');
-  const fallTop = cssPx(ds, '.machine.dual_split .pf-fall i', 'top');
-  const chuteBottom = sbTop + cssPx(ds, '.pf-sbase .pf-chute', 'top') + 13;
-  check('deux reservoirs : chaque chute part de sa sortie',
-    fa >= aLeft && fa + 3 <= aLeft + chuteW && fb >= bLeft && fb + 3 <= bLeft + chuteW && fallTop >= chuteBottom - 2, true);
-  check('deux reservoirs : et tombe dans sa moitie de gamelle',
-    fa >= bL && fa + 3 <= bL + bW / 2 && fb >= bL + bW / 2 && fb + 3 <= bL + bW, true);
+  const geo = dropGeo(fDs(50, 100, { state_entity: 'binary_sensor.busy' }, { 'binary_sensor.busy': { state: 'on', attributes: {} } }));
+  check('deux reservoirs : deux chutes', geo.drops.length, 8);
+  check('deux reservoirs : chaque chute part de la sortie', geo.fromChute, true);
+  check('deux reservoirs : et tombe dans sa moitie de gamelle', geo.inBowl
+    && geo.drops.filter(d => d.x < geo.bowls[0].cx).length === 4 && geo.drops.filter(d => d.x > geo.bowls[0].cx).length === 4, true);
 }
 
 // The rotating wet-food feeder: plates on a turntable under a lid with one
@@ -4834,19 +4813,20 @@ const fRo = (left, open) => feeder({ feeder_layout: 'rotary', state_entity: 'swi
   { 'switch.lid': { state: open ? 'on' : 'off', attributes: {} }, 'counter.plates': { state: String(left), attributes: {} } });
 const ro = fRo(2, false);
 check('plateau : le modele se choisit', machineCls(ro).split(' ').includes('rotary'), true);
-check('plateau : socle, couvercle, ouverture, trappe et assiette',
-  hasAll(ro, ['pf-rwall', 'pf-rtop', 'pf-rhub', 'pf-rwin', 'pf-rplate', 'pf-wet', 'pf-rflap', 'pf-lcd']), '');
-check('plateau : ni gamelle ni chute', /class="pf-bowl|class="pf-fall|class="pf-tank/.test(ro), false);
-check('plateau : la trappe se leve en servant', /\.machine\.rotary\.feeding \.pf-rflap \{[^}]*opacity: 0/.test(ro), true);
+check('plateau : socle, plateau tournant, assiettes et ecran',
+  hasAll(ro, ['pf-svg pf-rotary', 'pf-body', 'pf-turn', 'pf-dish', 'pf-lcd']), '');
+check('plateau : ni gamelle ni chute', /class="pf-bowl|class="pf-drop|class="pf-win/.test(ro), false);
+check('plateau : le plateau tourne en servant', /\.machine\.rotary\.feeding \.pf-turn \{ animation: pf-turn /.test(ro), true);
 check('plateau : servir, c\'est ouvrir', machineCls(fRo(2, true)).split(' ').includes('feeding'), true);
 check('plateau : deux assiettes sur trois', stateLine(ro), 'Tank at 67%');
 check('plateau : plus d\'assiette, vide', stateLine(fRo(0, false)), 'Tank empty');
-check('plateau : et l\'assiette se dessine vide', /\.machine\.rotary\.empty \.pf-wet \{ display: none; \}/.test(fRo(0, false)), true);
+check('plateau : et l\'assiette se dessine vide', /class="pf-dish"[^>]*fill="url/.test(fRo(0, false)), false);
+check('plateau : pleine, la patee', /class="pf-dish"[^>]*fill="url/.test(ro), true);
 
 // The screen shows the time, as the real ones do; blue while it serves, red
 // when something is wrong. While it serves it shows the portion instead, when
 // the card knows the serving size.
-const lcd = h => (/<div class="pf-lcd">([^<]*)<\/div>/.exec(h) || [, null])[1];
+const lcd = h => (/<text class="pf-lcd"[^>]*>([^<]*)<\/text>/.exec(h) || [, null])[1];
 check('ecran : au repos, l\'heure', /^\d\d:\d\d$/.test(lcd(fIn)), true);
 check('ecran : la distribution montre la portion', lcd(fBusy), 'P 3');
 check('ecran : sans taille de portion, l\'heure',
@@ -4871,16 +4851,21 @@ check('ecran : en erreur, l\'heure aussi', /^\d\d:\d\d$/.test(lcd(fJam)), true);
   check('ecran : en 12 h, sans AM ni PM', lcd(markup(c)), tokyo('h12'));
   check('ecran : les deux heures different bien', tokyo('h12') !== tokyo('h23'), true);
 }
-check('ecran : bleu pendant la distribution', /\.machine\.feeding \.pf-lcd \{[^}]*background: #1e88e5/.test(fBusy), true);
-check('ecran : rouge quand ca ne va pas', /\.machine\.alert \.pf-lcd \{[^}]*background: #e53935/.test(fJam), true);
+check('ecran : vert au repos', /\.pf-lcd \{ fill: #69f0ae; \}/.test(fIn), true);
+check('ecran : bleu pendant la distribution', /\.machine\.feeding \.pf-lcd \{ fill: #4fc3f7; \}/.test(fBusy), true);
+check('ecran : rouge quand ca ne va pas', /\.machine\.alert \.pf-lcd \{ fill: #ff5252; \}/.test(fJam), true);
 check('ecran : l\'alerte se porte sur la machine', machineCls(fJam).split(' ').includes('alert'), true);
 check('ecran : reservoir vide, rouge aussi', machineCls(fEmpty).split(' ').includes('alert'), true);
 check('ecran : rien a signaler, pas de rouge', machineCls(fIn).split(' ').includes('alert'), false);
 check('ecran : le double a le sien', lcd(dbl50) !== null, true);
 // The bowl holds a heap over its rim, smaller while it is being filled.
 check('gamelle : un tas au-dessus du bord', /class="pf-heap"/.test(fIn), true);
-check('gamelle : plus petit pendant la distribution', /\.machine\.feeding \.pf-heap \{[^}]*height: 4px/.test(fBusy), true);
-check('gamelle : vide avec le reservoir', /\.machine\.empty \.pf-heap \{ display: none; \}/.test(fEmpty), true);
+{
+  const heapH = h => Number((/<path class="pf-heap" d="M[\d.]+ ([\d.]+) C[\d.]+ [\d.]+ [\d.]+ ([\d.]+)/.exec(h) || [])[1] - (/<path class="pf-heap" d="M[\d.]+ ([\d.]+) C[\d.]+ [\d.]+ [\d.]+ ([\d.]+)/.exec(h) || [])[2]);
+  check('gamelle : plus haut pendant la distribution', heapH(fBusy) > heapH(fIn), true);
+}
+check('gamelle : vide avec le reservoir', /class="pf-heap"/.test(fEmpty), false);
+check('gamelle : un bourrage laisse les croquettes', /class="pf-heap"/.test(fJam), true);
 
 // == The control that is not a button =========================================
 // Aqara dispenses from a select set to START, Tuya from a number written with
@@ -5095,13 +5080,13 @@ contains('commande : la valeur aussi',
 }
 // Detection: by name, and by a field no other type has.
 check('detection : une gamelle se reconnait a son nom',
-  /class="pf-tank/.test(render({ state_entity: 'sensor.croquettes_portions_per_day' },
+  /class="pf-svg/.test(render({ state_entity: 'sensor.croquettes_portions_per_day' },
     { 'sensor.croquettes_portions_per_day': { state: '3', attributes: {} } })), true);
 check('detection : un feeder aussi',
-  /class="pf-tank/.test(render({ state_entity: 'binary_sensor.wifi_feeder_alimentation' },
+  /class="pf-svg/.test(render({ state_entity: 'binary_sensor.wifi_feeder_alimentation' },
     { 'binary_sensor.wifi_feeder_alimentation': { state: 'off', attributes: {} } })), true);
 check('detection : un champ de gamelle suffit',
-  /class="pf-tank/.test(render({ state_entity: 'sensor.x', portions_today_entity: 'sensor.p' },
+  /class="pf-svg/.test(render({ state_entity: 'sensor.x', portions_today_entity: 'sensor.p' },
     { 'sensor.x': { state: 'off', attributes: {} }, 'sensor.p': { state: '1', attributes: {} } })), true);
 check('detection : un lave-linge reste un lave-linge',
   /class="pf-body"/.test(render({ state_entity: 'sensor.washer_state' },
@@ -8384,8 +8369,8 @@ check('borne : ni un statut reconnu', evMode(evR('SuspendedEVSE', { power_entity
   check('fontaine : le jet et le remous', machineCls(on).split(' ').includes('flowing'), true);
   check('fontaine : la lumiere bleue', machineCls(on).split(' ').includes('led-on'), true);
   check('fontaine : reservoir, vasque, bec, jet et lumiere',
-    hasAll(on, ['ft-body', 'ft-win', 'ft-water', 'ft-rim', 'ft-pool', 'ft-spout', 'ft-jet', 'ft-led']), '');
-  check('fontaine : sans niveau, le reservoir garde sa hauteur', /--ft-fill: 55%/.test(on), true);
+    hasAll(on, ['ft-svg', 'ft-body', 'ft-win', 'ft-water', 'ft-pool', 'ft-dome', 'ft-ring', 'ft-spray', 'ft-glow', 'ft-led']), '');
+  check('fontaine : sans niveau, le reservoir garde sa hauteur', (/class="ft-water" data-level="(\d+)"/.exec(on) || [])[1], '55');
   check('fontaine : le filtre en jours', infoLine(on, 'Filter').replace(/\s/g, ' '), '19 d');
   check('fontaine : la pompe en jours', infoLine(on, 'Pump').replace(/\s/g, ' '), '12 d');
   check('fontaine : un bouton pour le filtre', /data-entity="button.fountain_reset_filter"/.test(on), true);
@@ -8409,9 +8394,12 @@ check('borne : ni un statut reconnu', evMode(evR('SuspendedEVSE', { power_entity
     { 'binary_sensor.fountain_low': { state: 'on', attributes: {} }, 'sensor.fountain_filter_days': { state: '1', attributes: { unit_of_measurement: 'd' } } });
   check('fontaine : peu d\'eau passe avant tout', stateLine(low), 'Low water');
   check('fontaine : lumiere rouge', machineCls(low).split(' ').includes('led-low'), true);
-  check('fontaine : le reservoir presque vide', /--ft-fill: 8%/.test(low), true);
+  check('fontaine : le reservoir presque vide', (/class="ft-water" data-level="(\d+)"/.exec(low) || [])[1], '12');
+  check('fontaine : peu d\'eau, un badge rouge', /fill="#e53935" stroke="#fff"/.test(low), true);
   const lvl = ft({ water_level_entity: 'sensor.fountain_water' }, { 'sensor.fountain_water': { state: '70', attributes: { unit_of_measurement: '%' } } });
-  check('fontaine : le niveau remplit le reservoir', /--ft-fill: 70%/.test(lvl), true);
+  check('fontaine : le niveau remplit le reservoir', (/class="ft-water" data-level="(\d+)"/.exec(lvl) || [])[1], '70');
+  check('fontaine : filtre a changer, un badge orange', /<circle r="6" fill="#ffb300"/.test(filt), true);
+  check('fontaine : rien a dire, pas de badge', /fill="#e53935" stroke="#fff"|fill="#ffb300"/.test(lvl), false);
   check('fontaine : et a sa ligne', infoLine(lvl, 'Water').replace(/\s/g, ' '), '70 %');
   // The jet only runs on a pump that has water to lift. Off or dry, nothing
   // stands over the dish, and a dry tank leaves the dish low.
@@ -8427,10 +8415,9 @@ check('borne : ni un statut reconnu', evMode(evR('SuspendedEVSE', { power_entity
     cls(ft({ water_level_entity: 'binary_sensor.fountain_low' }, { 'switch.fountain_power': { state: 'off', attributes: {} }, 'binary_sensor.fountain_low': { state: 'on', attributes: {} } })).filter(c => c === 'flowing' || c === 'ft-dry').join(' '), 'ft-dry');
   {
     const FT_CSS = SRC.slice(SRC.indexOf('pet_fountain: () => `'), SRC.indexOf('dehumidifier: () => `'));
-    check('fontaine : la gerbe ne parait qu\'avec le jet', /\.ft-jet \{[^}]*display: none;/.test(FT_CSS) && /\.machine\.flowing \.ft-jet \{ display: block; \}/.test(FT_CSS), true);
-    check('fontaine : a l\'arret, le bec ne fait plus de goutte sur la vasque', /\.machine:not\(\.flowing\) \.ft-spout \{[^}]*top: 32px; height: 3px;/.test(FT_CSS), true);
-    check('fontaine : a sec, la vasque est plus basse et plus petite',
-      /\.machine\.ft-dry \.ft-pool \{[^}]*left: 24px; right: 24px; top: 31px; height: 7px;/.test(FT_CSS), true);
+    check('fontaine : le dome ne bouge qu\'avec le jet', /\.machine\.flowing \.ft-dome \{ animation: ft-dome /.test(FT_CSS), true);
+    check('fontaine : a l\'arret, ni dome ni gouttes', /class="ft-dome|class="ft-spray|class="ft-ring/.test(off), false);
+    check('fontaine : a sec, plus d\'eau sur la vasque', /class="ft-pool"/.test(low) + ',' + /class="ft-pool"/.test(off), 'false,true');
   }
   check('fontaine : dix pourcent, peu d\'eau', stateLine(ft({ water_level_entity: 'sensor.fountain_water' },
     { 'sensor.fountain_water': { state: '10', attributes: { unit_of_measurement: '%' } } })), 'Low water');
@@ -8495,7 +8482,7 @@ check('borne : ni un statut reconnu', evMode(evR('SuspendedEVSE', { power_entity
   check('fontaine : des mL non plus', stateLine(W('8', { unit_of_measurement: 'mL' })), 'Flowing');
   check('fontaine : un seuil choisi les lit', stateLine(W('1', {}, { level_empty_below: 1 })), 'Low water');
   check('fontaine : un pourcentage reste un pourcentage', stateLine(W('8', { unit_of_measurement: '%' })), 'Low water');
-  check('fontaine : seul un pourcentage remplit le reservoir', /--ft-fill: 55%/.test(W('80', { unit_of_measurement: 'mL' })), true);
+  check('fontaine : seul un pourcentage remplit le reservoir', (/class="ft-water" data-level="(\d+)"/.exec(W('80', { unit_of_measurement: 'mL' })) || [])[1], '55');
   // The wear, in days whatever the unit.
   const filt = (state, unit, cfg = {}) => stateLine(F('on', { filter_life_entity: 'sensor.fl', ...cfg },
     { 'sensor.fl': { state: String(state), attributes: unit ? { unit_of_measurement: unit } : {} } }));
@@ -8522,14 +8509,14 @@ check('borne : ni un statut reconnu', evMode(evR('SuspendedEVSE', { power_entity
   check('fontaine : hors ligne, pas de voyant meme a sec', /led-/.test(machineCls(F('offline', { water_level_entity: 'sensor.w' },
     { 'sensor.w': { state: 'low', attributes: {} } }))), false);
   check('fontaine : l eau reste en rouge', /class="info-line warn[^"]*"[^>]*><ha-icon icon="mdi:alert-circle-outline"/.test(W('low')), true);
-  // The jet: a column and two pairs of arcs, light dashes running out, a
-  // splash where they land.
+  // The jet: the water wells up in a dome over the outlet, two rings spread
+  // over the plate and four drops spray off, two on each side.
   const on = F('on');
-  check('fontaine : une gerbe, colonne et quatre arcs', (on.match(/<path class="ft-arc[ "]/g) || []).length, 5);
-  check('fontaine : les tirets courent sur chaque arc', (on.match(/<path class="ft-arc-hi"/g) || []).length, 5);
-  check('fontaine : quatre remous', (on.match(/<ellipse class="ft-splash/g) || []).length, 4);
-  contains('fontaine : les tirets courent', on, '.machine.flowing .ft-jet .ft-arc-hi { animation: ft-run 0.6s linear infinite; animation-delay: var(--anim-offset, 0s); }');
-  check('fontaine : la gerbe sous le bec', on.indexOf('class="ft-jet"') < on.indexOf('class="ft-spout"'), true);
+  check('fontaine : un dome et son reflet', (on.match(/<path class="ft-dome"/g) || []).length, 2);
+  check('fontaine : deux remous', (on.match(/<ellipse class="ft-ring/g) || []).length, 2);
+  check('fontaine : quatre gouttes, deux de chaque cote', (on.match(/class="ft-spray l/g) || []).length + ',' + (on.match(/class="ft-spray r/g) || []).length, '2,2');
+  contains('fontaine : les gouttes jaillissent', on, '.machine.flowing .ft-spray.l { animation: ft-spray-l 1.4s linear infinite; animation-delay: var(--anim-offset, 0s); }');
+  check('fontaine : le jet sur la vasque, sous le reservoir', on.indexOf('class="ft-pool"') < on.indexOf('class="ft-dome"') && on.indexOf('class="ft-dome"') < on.indexOf('class="ft-win"'), true);
   // The editor and the detection.
   check('fontaine : pump_running designe une fontaine', /pet_fountain/.test(machineCls(render({ state_entity: 'switch.x', pump_running_entity: 'binary_sensor.p' },
     { 'switch.x': { state: 'on', attributes: {} }, 'binary_sensor.p': { state: 'on', attributes: {} } }))) || stateLine(render({ state_entity: 'switch.x', pump_running_entity: 'binary_sensor.p' },

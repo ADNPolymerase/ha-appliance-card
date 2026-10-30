@@ -6139,11 +6139,275 @@ const BODY_COLORS = {
   red: { body: "#7f2a2e", hi: "#9a383d", lo: "#5a1a1d" },
 };
 
-// A pet feeder's kibble, drawn once as two small tiles: the heap, and the loose
+// Pet feeders and fountain, drawn after real products. Every piece of kibble
+// is placed by a fixed jitter, so a drawing never changes between two redraws.
+let pfN = 0;
+const pfId = () => `pf${++pfN}`;
+const pfRnd = (i) => { const x = Math.sin(i * 12.9898 + 78.233) * 43758.5453; return x - Math.floor(x); };
+const pfF = (v) => v.toFixed(2);
+// Two recipes, as in a real bag: golden chicken pieces and darker fish ones.
+const PF_TONES = [
+  { light: "#dba468", mid: ["#b06a2c", "#9c5a24", "#c7843f", "#8a4c1d", "#d19352"], dark: "#6b3713", gap: "#3b1d09" },
+  { light: "#b57650", mid: ["#7a4024", "#6a361d", "#8c5032", "#5c2e18", "#93573a"], dark: "#3a1b0b", gap: "#241105" },
+];
+// Five shaded fills per heap, lit from the top left like the rest of the card.
+function pfKibDefs(id, tone = 0) {
+  const t = PF_TONES[tone];
+  return `<defs>${t.mid.map((m, k) => `<radialGradient id="${id}k${k}" cx=".38" cy=".32" r=".8"><stop offset="0" stop-color="${t.light}"/><stop offset=".5" stop-color="${m}"/><stop offset="1" stop-color="${t.dark}"/></radialGradient>`).join("")}</defs>`;
+}
+// One piece seen from above at an angle: a darker edge under a matte top.
+// Rounded triangle, pillow, clover, disc or ring, turned by hand.
+function pfPiece(x, y, s, i, id) {
+  const a = pfRnd(i * 3.1) * Math.PI * 2, shape = Math.floor(pfRnd(i * 7.7) * 5), g = `url(#${id}k${i % 5})`;
+  const shapeAt = (cy, fill, stroke) => {
+    const pt = (ang, r) => `${pfF(x + Math.cos(ang + a) * r)} ${pfF(cy + Math.sin(ang + a) * r * .7)}`;
+    const blob = (n, rc, ra) => {
+      let d = "";
+      for (let k = 0; k < n; k++) { const c = k * 2 * Math.PI / n, m = c + Math.PI / n; d += (k ? "" : `M${pt(c - Math.PI / n, ra)} `) + `Q${pt(c, rc)} ${pt(m, ra)} `; }
+      return d + "Z";
+    };
+    const st = stroke ? ` stroke="${stroke}" stroke-width=".22"` : "";
+    if (shape === 0) return `<path d="${blob(3, s * 1.45, s * .72)}" fill="${fill}"${st}/>`;
+    if (shape === 1) return `<path d="${blob(4, s * 1.22, s * .86)}" fill="${fill}"${st}/>`;
+    if (shape === 2) return `<path d="${blob(4, s * 1.32, s * .7)}" fill="${fill}"${st}/>`;
+    return `<ellipse cx="${pfF(x)}" cy="${pfF(cy)}" rx="${pfF(s)}" ry="${pfF(s * .7)}" fill="${fill}"${st}/>`;
+  };
+  const hole = shape === 4 ? `<ellipse cx="${pfF(x)}" cy="${pfF(y - s * .02)}" rx="${pfF(s * .3)}" ry="${pfF(s * .2)}" fill="#2a1406" opacity=".8"/>` : "";
+  const specks = [0, 1].filter((k) => pfRnd(i * 5.3 + k) > .45).map((k) => `<circle cx="${pfF(x + (pfRnd(i + k * 9) - .5) * s)}" cy="${pfF(y + (pfRnd(i + k * 13) - .5) * s * .6)}" r="${pfF(s * .1)}" fill="#3a1d0a" opacity=".45"/>`).join("");
+  return shapeAt(y + s * .32, "#4a250c") + shapeAt(y, g, "#4a250c") + hole + specks
+    + `<path d="M${pfF(x - s * .62)} ${pfF(y - s * .12)} Q${pfF(x - s * .45)} ${pfF(y - s * .5)} ${pfF(x + s * .05)} ${pfF(y - s * .52)}" stroke="#ffe6c4" stroke-width="${pfF(s * .16)}" stroke-linecap="round" fill="none" opacity=".35"/>`;
+}
+// A dome of kibble in a bowl: a dark mass for the gaps, then pieces laid
+// from the back to the front, the back ones a little smaller.
+function pfHeap(cx, cy, rx, ry, h, seed = 1, tone = 0, s = 1.5) {
+  const id = pfId();
+  const dome = (dx) => h * Math.pow(Math.max(0, 1 - (dx / rx) * (dx / rx)), .7);
+  const hs = Math.max(0, h - s * .9);
+  const sil = `M${pfF(cx - rx)} ${pfF(cy)} C${pfF(cx - rx * .85)} ${pfF(cy - hs * .75)} ${pfF(cx - rx * .45)} ${pfF(cy - hs)} ${pfF(cx)} ${pfF(cy - hs)} C${pfF(cx + rx * .45)} ${pfF(cy - hs)} ${pfF(cx + rx * .85)} ${pfF(cy - hs * .75)} ${pfF(cx + rx)} ${pfF(cy)} A${pfF(rx)} ${pfF(ry)} 0 0 1 ${pfF(cx - rx)} ${pfF(cy)} Z`;
+  let out = "", i = seed * 97, row = 0;
+  for (let y = cy - h + s * .5; y < cy + ry; y += s * 1.05, row++) {
+    const t = (y - (cy - h)) / (h + ry), ss = s * (.82 + .3 * t);
+    for (let x = cx - rx + (row % 2 ? ss * .8 : 0); x <= cx + rx; x += ss * 1.55) {
+      const jx = x + (pfRnd(i) - .5) * ss * .7, jy = y + (pfRnd(i + 5) - .5) * ss * .5, dx = jx - cx;
+      const inside = jy <= cy ? cy - jy <= dome(dx) - ss * .15 : (dx / (rx - ss * .4)) ** 2 + ((jy - cy) / (ry - ss * .2)) ** 2 <= 1;
+      if (inside) out += pfPiece(jx, jy, ss * (.9 + pfRnd(i + 2) * .25), i, id);
+      i++;
+    }
+  }
+  return `${pfKibDefs(id, tone)}<path class="pf-heap" d="${sil}" fill="${PF_TONES[tone].gap}"/>${out}`;
+}
+// Kibble packed behind a window, up to its level.
+function pfFillKib(x, y, w, h, seed = 2, tone = 0) {
+  const id = pfId(), s = 1.15;
+  let out = "", i = seed * 53, row = 0;
+  for (let yy = y + h - s * .3; yy > y - s; yy -= s * 1.05, row++) {
+    for (let xx = x - s * .4 + (row % 2 ? s * .8 : 0); xx < x + w + s; xx += s * 1.55) {
+      out += pfPiece(xx + (pfRnd(i) - .5) * s * .6, yy + (pfRnd(i + 5) - .5) * s * .4, s * (.9 + pfRnd(i + 2) * .25), i, id);
+      i++;
+    }
+  }
+  return `${pfKibDefs(id, tone)}<rect class="pf-kib" x="${pfF(x)}" y="${pfF(y)}" width="${pfF(w)}" height="${pfF(h)}" fill="${PF_TONES[tone].gap}"/>${out}`;
+}
+// A stainless bowl: rim, shaded inside, the kibble, then the front of the
+// rim drawn again over it so the heap sits in the bowl and not on it.
+function pfBowl(cx, cy, rx, ry, heaps) {
+  const id = pfId(), irx = rx - 1.8, iry = ry - 1.2, icy = cy + .3;
+  const pile = (heaps || []).map((p) => {
+    const w = p.dx ? irx / 2 : irx, hx = cx + (p.dx || 0) * irx;
+    return pfHeap(hx, icy, w, p.dx ? iry * .95 : iry, p.h, p.seed, p.tone || 0, p.s || 1.5);
+  }).join("");
+  return `<defs><linearGradient id="${id}r" x1="0" x2="1"><stop offset="0" stop-color="#9aa4ae"/><stop offset=".35" stop-color="#f7f9fb"/><stop offset=".65" stop-color="#cfd6dd"/><stop offset="1" stop-color="#8e98a2"/></linearGradient>`
+    + `<radialGradient id="${id}i" cx=".5" cy=".25" r=".8"><stop offset="0" stop-color="#e9edf1"/><stop offset=".6" stop-color="#aab3bc"/><stop offset="1" stop-color="#7f8994"/></radialGradient>`
+    + `<clipPath id="${id}c"><path d="M${cx - irx} ${icy - 30} H${cx + irx} V${icy} A${irx} ${iry} 0 0 1 ${cx - irx} ${icy} Z"/></clipPath></defs>`
+    + `<ellipse cx="${cx}" cy="${cy + .5}" rx="${rx + 1.2}" ry="${ry + .9}" fill="#000" opacity=".28"/>`
+    + `<ellipse class="pf-bowl" cx="${cx}" cy="${cy}" rx="${rx}" ry="${ry}" fill="url(#${id}r)" stroke="#7d8792" stroke-width=".4"/>`
+    + `<ellipse cx="${cx}" cy="${icy}" rx="${irx}" ry="${iry}" fill="url(#${id}i)"/>`
+    + (pile ? `<g clip-path="url(#${id}c)">${pile}</g>` : "")
+    + `<path d="M${cx - rx} ${cy} A${rx} ${ry} 0 0 0 ${cx + rx} ${cy} L${cx + irx} ${icy} A${irx} ${iry} 0 0 1 ${cx - irx} ${icy} Z" fill="url(#${id}r)"/>`
+    + `<path d="M${pfF(cx - rx * .75)} ${pfF(cy + ry * .62)} Q${cx} ${pfF(cy + ry * 1.08)} ${pfF(cx + rx * .75)} ${pfF(cy + ry * .62)}" stroke="#fff" stroke-width=".7" fill="none" opacity=".8"/>`;
+}
+const pfSoftShadow = (cx, cy, rx, ry) => { const id = pfId(); return `<filter id="${id}" x="-30%" y="-80%" width="160%" height="260%"><feGaussianBlur stdDeviation="2.2"/></filter><ellipse cx="${cx}" cy="${cy}" rx="${rx}" ry="${ry}" fill="#000" opacity=".22" filter="url(#${id})"/>`; };
+// Kibble falling from the chute into the bowl, drawn in front of it.
+const pfDrops = (x, y0) => { const id = pfId(); return pfKibDefs(id) + [0, 1, 2, 3].map((i) => `<g transform="translate(${x} ${y0})"><g class="pf-drop pfd${i + 1}">${pfPiece(i % 2 ? 1.2 : -1, 0, 1.5, i + 11, id)}</g></g>`).join(""); };
+// The shell takes the appliance colour: three stops read from the card.
+const pfMatte = (id) => `<linearGradient id="${id}" x1="0" x2="1"><stop offset="0" style="stop-color: var(--pf-lo)"/><stop offset=".42" style="stop-color: var(--pf-hi)"/><stop offset="1" style="stop-color: var(--pf-lo)"/></linearGradient>`;
+const pfDomeGrad = (id) => `<radialGradient id="${id}" cx=".4" cy=".25" r=".9"><stop offset="0" style="stop-color: var(--pf-hi)"/><stop offset="1" style="stop-color: var(--pf-lo)"/></radialGradient>`;
+// The base seen from the front: a rounded tray as wide as the body, its
+// front edge showing its thickness, the bowl sunk into it.
+function pfTray(cx, w, yb, yf, grad, t = 4, r = 9) {
+  const L = cx - w, R = cx + w;
+  const face = `M${L + r} ${yb} H${R - r} Q${R} ${yb} ${R} ${yb + r} V${yf - r} Q${R} ${yf} ${R - r} ${yf} H${L + r} Q${L} ${yf} ${L} ${yf - r} V${yb + r} Q${L} ${yb} ${L + r} ${yb} Z`;
+  const wall = `M${L} ${yf - r} Q${L} ${yf} ${L + r} ${yf} H${R - r} Q${R} ${yf} ${R} ${yf - r} V${yf - r + t} Q${R} ${yf + t} ${R - r} ${yf + t} H${L + r} Q${L} ${yf + t} ${L} ${yf - r + t} Z`;
+  return `<path d="${wall}" fill="url(#${grad})"/><path d="${wall}" fill="#000" opacity=".18"/><path class="pf-tray" d="${face}" style="fill: var(--pf-body)"/><path d="M${L + r} ${yf - .4} H${R - r}" stroke="#fff" stroke-width=".6" opacity=".35"/>`;
+}
+// The screen: what the feeder says, green at rest, blue while it serves,
+// red when it wants a hand. Long text is drawn smaller to fit.
+function pfLcd(x, y, w, h, text, fs) {
+  const size = ntFit(text, w, fs);
+  return `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="1.8" fill="#141a21" stroke="#0a0d11" stroke-width=".5"/>`
+    + `<rect x="${x + .8}" y="${y + .8}" width="${w - 1.6}" height="${pfF(h * .38)}" rx="1.2" fill="#fff" opacity=".05"/>`
+    + (text ? `<text class="pf-lcd" x="${x + w / 2}" y="${pfF(y + h / 2 + size * .36)}" font-size="${pfF(size)}" font-weight="700" text-anchor="middle" ${NT_FONT}>${esc(text)}</text>` : "");
+}
+// A window on the kibble, filled up to its level from the bottom.
+function pfWindow(x, y0, y1, w, lvl, seed, tone = 0, amber = false) {
+  const id = pfId(), top = y1 - (y1 - y0) * lvl, r = w / 2;
+  const glass = amber ? `<defs><linearGradient id="${id}a" x1="0" x2="1"><stop offset="0" stop-color="#7a4a1a"/><stop offset=".5" stop-color="#c9893f"/><stop offset="1" stop-color="#7a4a1a"/></linearGradient></defs>` : "";
+  const food = lvl > 0 ? (amber ? `<rect x="${x}" y="${pfF(top)}" width="${w}" height="${pfF(y1 - top)}" fill="url(#${id}a)"/>` : "") + pfFillKib(x, top, w, y1 - top, seed, tone) : "";
+  return `${glass}<rect class="pf-win" data-level="${Math.round(lvl * 100)}" x="${x - .5}" y="${y0 - .5}" width="${w + 1}" height="${y1 - y0 + 1}" rx="${r + .5}" fill="#141a20"/>`
+    + `<clipPath id="${id}c"><rect x="${x}" y="${y0}" width="${w}" height="${y1 - y0}" rx="${r}"/></clipPath>`
+    + `<g clip-path="url(#${id}c)">${food}<rect x="${x}" y="${y0}" width="${pfF(w * .35)}" height="${y1 - y0}" fill="#fff" opacity=".1"/></g>`;
+}
+// The resting level of a tank the card cannot read: about half full.
+const pfLvl = (pct, empty) => empty ? 0 : pct === null || pct === undefined ? .6 : Math.max(0, Math.min(1, pct / 100));
+
+// Square tank, after the Petlibro Granary: a rounded column, an amber window
+// on the food, a wide base with its steel bowl.
+function pfTower(d) {
+  const b = pfId(), base = pfId(), lid = pfId();
+  return `<defs>${pfMatte(b)}${pfMatte(base)}${pfDomeGrad(lid)}</defs>
+${pfSoftShadow(60, 111, 26, 3.5)}
+${pfTray(60, 23, 82, 107, base)}
+<rect class="pf-body" x="38" y="16" width="44" height="74" rx="11" fill="url(#${b})"/>
+<rect x="41" y="24" width="3" height="60" rx="1.5" fill="#fff" style="opacity: var(--pf-gloss)"/>
+<path d="M38 22 Q38 12 60 11 Q82 12 82 22 V24 H38 Z" fill="url(#${lid})"/>
+<ellipse cx="60" cy="14.6" rx="6" ry="1.6" fill="#000" opacity=".3"/>
+${pfWindow(57, 30.5, 61.5, 6, d.lvl, 4, 0, true)}
+<rect x="48" y="66" width="24" height="10" rx="3" fill="#0d1014"/>
+${pfLcd(49, 67, 22, 8, d.screen, 6.4)}
+<path class="pf-chute" d="M53 81 L67 81 Q66 85 60 85.4 Q54 85 53 81 Z" fill="#0a0c0f"/>
+${pfBowl(60, 99, 17, 5.6, d.served ? [{ h: d.feeding ? 10 : 8, seed: 3 }] : [])}
+${d.feeding ? pfDrops(60, 86) : ""}`;
+}
+// Round tank, after the Aqara C1: a cylinder with a domed top, a tall window
+// on the kibble and a round tray holding the bowl.
+function pfCanister(d) {
+  const b = pfId(), dome = pfId(), tray = pfId();
+  return `<defs>${pfMatte(b)}${pfMatte(tray)}${pfDomeGrad(dome)}</defs>
+${pfSoftShadow(60, 111, 26, 3.5)}
+${pfTray(60, 23, 84, 107, tray)}
+<path class="pf-body" d="M38 26 V88 Q38 92 60 92 Q82 92 82 88 V26 Z" fill="url(#${b})"/>
+<path d="M38 26 Q38 8 60 8 Q82 8 82 26 Z" fill="url(#${dome})"/>
+<path d="M43 20 Q46 12 56 11" stroke="#fff" stroke-width="1.6" fill="none" style="opacity: var(--pf-gloss)"/>
+<rect x="41" y="30" width="3" height="56" rx="1.5" fill="#fff" style="opacity: var(--pf-gloss)"/>
+${pfWindow(54, 35, 71, 12, d.lvl, 6)}
+<rect x="49" y="22" width="22" height="9" rx="3" fill="#0d1014"/>
+${pfLcd(50, 22.6, 20, 7.8, d.screen, 6.2)}
+<path class="pf-chute" d="M53 82 L67 82 Q66 86 60 86.4 Q54 86 53 82 Z" fill="#1a1e23"/>
+${pfBowl(60, 99.5, 17, 5.6, d.served ? [{ h: d.feeding ? 10 : 8, seed: 5 }] : [])}
+${d.feeding ? pfDrops(60, 87) : ""}`;
+}
+// Two bowls, after the Granary dual: the same column over a wider base, a
+// splitter and two spouts feeding two steel bowls.
+function pfDouble(d) {
+  const b = pfId(), base = pfId(), lid = pfId();
+  const spout = (s) => `<path d="M${60 - s * 7} 82 L${60 - s * 19} 87.5 Q${60 - s * 21.5} 88.6 ${60 - s * 22.5} 87 L${60 - s * 23} 86 Q${60 - s * 23} 84.5 ${60 - s * 21} 83.6 L${60 - s * 9} 79.5 Z" fill="#4b535d" stroke="#0a0c0f" stroke-width=".5"/><ellipse class="pf-chute" cx="${60 - s * 21.4}" cy="88" rx="2.6" ry="1" fill="#050607"/>`;
+  const heaps = (seed) => d.served ? [{ h: d.feeding ? 9 : 7, seed, s: 1.35 }] : [];
+  return `<defs>${pfMatte(b)}${pfMatte(base)}${pfDomeGrad(lid)}</defs>
+${pfSoftShadow(60, 111, 51, 3.5)}
+${pfTray(60, 48, 82, 107, base)}
+<rect class="pf-body" x="38" y="16" width="44" height="74" rx="11" fill="url(#${b})"/>
+<rect x="41" y="24" width="3" height="60" rx="1.5" fill="#fff" style="opacity: var(--pf-gloss)"/>
+<path d="M38 22 Q38 12 60 11 Q82 12 82 22 V24 H38 Z" fill="url(#${lid})"/>
+${pfWindow(57, 30.5, 61.5, 6, d.lvl, 8, 0, true)}
+<rect x="48" y="66" width="24" height="10" rx="3" fill="#0d1014"/>
+${pfLcd(49, 67, 22, 8, d.screen, 6.4)}
+<path d="M50 80 H70 V83 Q70 85 67 85 H53 Q50 85 50 83 Z" fill="#0a0c0f"/>
+${spout(1)}${spout(-1)}
+${pfBowl(37, 99, 15, 5, heaps(9))}
+${pfBowl(83, 99, 15, 5, heaps(11))}
+${d.feeding ? pfDrops(38.4, 89) + pfDrops(81.6, 89) : ""}`;
+}
+// Two hoppers over one split bowl, after the PetKit YumShare: a tall
+// cabinet, 01 and 02 printed over two windows, one recipe each.
+function pfDualSplit(d) {
+  const b = pfId(), tray = pfId();
+  const half = (dx, seed, tone, served) => served ? [{ dx, h: 6.5, seed, s: 1.3, tone }] : [];
+  return `<defs>${pfMatte(b)}${pfMatte(tray)}</defs>
+${pfSoftShadow(60, 111, 33, 3.5)}
+${pfTray(60, 30, 84, 107, tray)}
+<rect class="pf-body" x="30" y="6" width="60" height="86" rx="12" fill="url(#${b})"/>
+<rect x="33" y="14" width="3" height="72" rx="1.5" fill="#fff" style="opacity: var(--pf-gloss)"/>
+<text x="45.5" y="20" font-size="6" font-weight="300" text-anchor="middle" fill="#6b7480" ${NT_FONT}>01</text><text x="74.5" y="20" font-size="6" font-weight="300" text-anchor="middle" fill="#6b7480" ${NT_FONT}>02</text>
+${pfWindow(43, 26.5, 65.5, 5, d.lvl, 43)}
+${pfWindow(72, 26.5, 65.5, 5, d.lvlB, 72, 1)}
+<rect x="49" y="70" width="22" height="9" rx="3" fill="#0d1014"/>
+${pfLcd(50, 70.6, 20, 7.8, d.screen, 6.2)}
+<path class="pf-chute" d="M50 83 L70 83 Q69 87 60 87.4 Q51 87 50 83 Z" fill="#1a1e23"/>
+${pfBowl(60, 99.5, 20, 6, [...half(-.5, 13, 0, d.servedA), ...half(.5, 17, 1, d.servedB)])}
+<path d="M60 94 V105" stroke="#8e98a2" stroke-width="1.2"/>
+${d.feeding ? (d.servedA ? pfDrops(54, 88) : "") + (d.servedB ? pfDrops(66, 88) : "") : ""}`;
+}
+// Wet food, after the Petlibro Polar: a lid over a turning tray; one dish of
+// pate shows in the opening at the front, and while it serves the tray slides
+// the next dish in from the right.
+function pfRotary(d) {
+  const b = pfId(), top = pfId(), food = pfId(), clip = pfId(), well = pfId();
+  const dish = (x) => `<ellipse cx="${x}" cy="66" rx="13.5" ry="6" fill="#dfe4e9" stroke="#9aa3ad" stroke-width=".5"/><ellipse class="pf-dish" cx="${x}" cy="66.4" rx="11.6" ry="4.8" fill="${d.served ? `url(#${food})` : "#b7c0c8"}"/>${d.served ? `<path d="M${x - 7} 66 q2.3 -1.4 4.7 0 q2.3 -1.4 4.7 0 q2.3 -1.4 4.7 0" stroke="#6d3f28" stroke-width=".5" fill="none" opacity=".7"/>` : ""}`;
+  return `<defs>${pfMatte(b)}${pfDomeGrad(top)}
+<radialGradient id="${food}" cx=".42" cy=".35" r=".75"><stop offset="0" stop-color="#d9a283"/><stop offset=".6" stop-color="#a8694a"/><stop offset="1" stop-color="#7a4630"/></radialGradient>
+<radialGradient id="${well}" cx=".5" cy=".2" r=".9"><stop offset="0" stop-color="#0c0e11"/><stop offset="1" stop-color="#2a3037"/></radialGradient>
+<clipPath id="${clip}"><ellipse cx="60" cy="66" rx="19" ry="8.6"/></clipPath></defs>
+${pfSoftShadow(60, 96, 46, 6)}
+<path class="pf-body" d="M16 60 V76 Q16 92 60 93 Q104 92 104 76 V60 Z" fill="url(#${b})"/>
+<path d="M20 66 V78" stroke="#fff" stroke-width="1.6" stroke-linecap="round" style="opacity: var(--pf-gloss)"/>
+<ellipse cx="60" cy="60" rx="44" ry="19" fill="url(#${top})"/>
+<path d="M24 54 Q40 43 66 42" stroke="#fff" stroke-width="1.2" fill="none" opacity=".22"/>
+<ellipse cx="60" cy="54" rx="5" ry="2" fill="#000" opacity=".4"/>
+<ellipse cx="60" cy="66" rx="19" ry="8.6" fill="url(#${well})"/>
+<g clip-path="url(#${clip})"><g class="pf-turn">${dish(60)}${dish(92)}</g></g>
+<ellipse cx="60" cy="66" rx="19" ry="8.6" fill="none" stroke="#596370" stroke-width=".7"/>
+<path d="M42 62.5 Q60 55.5 78 62.5" stroke="#0a0c0f" stroke-width="1.6" fill="none" opacity=".55"/>
+<rect x="49" y="79" width="22" height="9" rx="3" fill="#0d1014"/>
+${pfLcd(50, 79.6, 20, 7.8, d.screen, 6.2)}`;
+}
+const PF_DRAW = { canister: pfCanister, double: pfDouble, dual_split: pfDualSplit, rotary: pfRotary };
+function pfSvg(layout, d) {
+  pfN = 0;
+  return `<svg class="pf-svg pf-${PF_DRAW[layout] ? layout : "tower"}" viewBox="0 -10 120 135" aria-hidden="true">${(PF_DRAW[layout] || pfTower)(d)}</svg>`;
+}
+
+// Fountain, after the PetKit Eversweet: a tank with a steel top where the
+// water wells up from the centre and runs off its edges, a window on the
+// tank and a light ring under the plate.
+function ftSvg(f) {
+  pfN = 0;
+  const b = pfId(), plate = pfId(), w = pfId(), win = pfId(), gl = pfId();
+  const lvl = f.lvl, run = f.running, wy0 = 68, wy1 = 92, top = wy1 - (wy1 - wy0) * lvl;
+  const dish = "M28 45.5 Q28 39 36 38.5 H84 Q92 39 92 45.5 Q92 50 84 50.5 H36 Q28 50 28 45.5 Z";
+  const spray = run ? [0, 1, 2, 3].map((k) => `<circle class="ft-spray ${k % 2 ? "r" : "l"} ftd${k + 1}" cx="${k % 2 ? 61.5 : 58.5}" cy="37" r=".75" fill="#b3e5fc"/>`).join("") : "";
+  const jet = run ? `<ellipse class="ft-ring" cx="60" cy="44.4" rx="6" ry="2" fill="none" stroke="#fff" stroke-width=".8"/><ellipse class="ft-ring ftd2" cx="60" cy="44.4" rx="6" ry="2" fill="none" stroke="#fff" stroke-width=".8"/>`
+    + `<path class="ft-dome" d="M54 44.4 Q54.6 36.4 60 35.2 Q65.4 36.4 66 44.4 Z" fill="url(#${w}d)"/>`
+    + `<path class="ft-dome" d="M56.2 42.6 Q56.8 38 59.4 37" stroke="#fff" stroke-width=".9" stroke-linecap="round" fill="none" opacity=".85"/>${spray}` : "";
+  const badge = f.low ? `<g transform="translate(106 20)"><circle r="5.4" fill="#e53935" stroke="#fff" stroke-width="1.2"/><path d="M0 -2.8 V.6" stroke="#fff" stroke-width="1.6" stroke-linecap="round"/><circle cy="2.6" r=".9" fill="#fff"/></g>`
+    : f.due ? `<g transform="translate(106 20)"><circle r="6" fill="#ffb300" stroke="#fff" stroke-width="1.2"/><path d="M-3 -2.4h6M-3 0h6M-3 2.4h6" stroke="#fff" stroke-width="1"/></g>` : "";
+  return `<svg class="ft-svg" viewBox="0 -10 120 135" aria-hidden="true"><defs>
+<linearGradient id="${b}" x1="0" x2="1"><stop offset="0" style="stop-color: var(--ac-body-lo, #c6ccd3)"/><stop offset=".42" style="stop-color: var(--ac-body-hi, #ffffff)"/><stop offset="1" style="stop-color: var(--ac-body-lo, #c6ccd3)"/></linearGradient>
+<radialGradient id="${plate}" cx=".45" cy=".35" r=".8"><stop offset="0" stop-color="#f4f7fa"/><stop offset=".6" stop-color="#c3cad2"/><stop offset="1" stop-color="#8e98a2"/></radialGradient>
+<radialGradient id="${w}" cx=".5" cy=".4" r=".7"><stop offset="0" stop-color="#e1f5fe" stop-opacity=".9"/><stop offset="1" stop-color="#81d4fa" stop-opacity=".55"/></radialGradient>
+<linearGradient id="${w}d" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e1f5fe" stop-opacity=".95"/><stop offset="1" stop-color="#4fc3f7" stop-opacity=".75"/></linearGradient>
+<linearGradient id="${win}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#81d4fa"/><stop offset="1" stop-color="#1e88e5"/></linearGradient>${ntBlur(gl, 1.2)}</defs>
+<g transform="translate(60 70) scale(1.3) translate(-60 -70)">
+${pfSoftShadow(60, 104, 38, 5)}
+<path class="ft-body" d="M24 48 Q24 40 34 40 H86 Q96 40 96 48 V92 Q96 102 86 102 H34 Q24 102 24 92 Z" fill="url(#${b})"/>
+<rect x="27" y="48" width="3" height="48" rx="1.5" fill="#fff" opacity=".7"/>
+<path d="M22 46 Q22 36 34 35 H86 Q98 36 98 46 Q98 52 86 53 H34 Q22 52 22 46 Z" style="fill: var(--ac-body, #eef1f4)" stroke="#cfd6dd" stroke-width=".5"/>
+<path d="${dish}" fill="url(#${plate})"/>
+${f.dry ? "" : `<path class="ft-pool" d="${dish}" fill="url(#${w})"/>`}
+<ellipse cx="60" cy="44.5" rx="7" ry="2.6" fill="#dfe5ea" stroke="#9aa3ad" stroke-width=".5"/>
+<ellipse cx="60" cy="44.2" rx="3" ry="1.1" fill="${run ? "#e1f5fe" : "#b0bac4"}"/>
+${jet}
+<ellipse class="ft-glow" cx="60" cy="47" rx="16" ry="4" fill="none" stroke-width="1" filter="url(#${gl})"/>
+<rect class="ft-win" x="74" y="${wy0}" width="12" height="${wy1 - wy0}" rx="4" fill="#dbe7ef" stroke="#b9c7d2" stroke-width=".5"/>
+<clipPath id="${win}c"><rect x="74.5" y="${wy0 + .5}" width="11" height="${wy1 - wy0 - 1}" rx="3.6"/></clipPath>
+<g clip-path="url(#${win}c)"><rect class="ft-water" data-level="${Math.round(lvl * 100)}" x="74" y="${pfF(top)}" width="12" height="${pfF(wy1 - top)}" fill="url(#${win})"/><path d="M74 ${pfF(top)} h12" stroke="#e1f5fe" stroke-width=".8"/></g>
+<path d="M76 72 h3 M76 80 h3 M76 88 h3" stroke="#8aa0ae" stroke-width=".5"/>
+<circle class="ft-led" cx="40" cy="92" r="1.8"/>
+</g>
+${badge}
+</svg>`;
+}
 // pieces along its top. Generated, so each disc sits a little askew and no row
 // lines up with the next.
-const KIBBLE_TILE = "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='12'%3E%3Crect width='18' height='12' fill='%233a2211'/%3E%3Cg transform='translate(1.2 1.5) rotate(-2)'%3E%3Cellipse cy='0.6' rx='1.6' ry='0.9' fill='%235a361e'/%3E%3Cellipse rx='1.6' ry='0.9' fill='%23a67a52'/%3E%3C/g%3E%3Cg transform='translate(1.2 13.5) rotate(-2)'%3E%3Cellipse cy='0.6' rx='1.6' ry='0.9' fill='%235a361e'/%3E%3Cellipse rx='1.6' ry='0.9' fill='%23a67a52'/%3E%3C/g%3E%3Cg transform='translate(19.2 1.5) rotate(-2)'%3E%3Cellipse cy='0.6' rx='1.6' ry='0.9' fill='%235a361e'/%3E%3Cellipse rx='1.6' ry='0.9' fill='%23a67a52'/%3E%3C/g%3E%3Cg transform='translate(19.2 13.5) rotate(-2)'%3E%3Cellipse cy='0.6' rx='1.6' ry='0.9' fill='%235a361e'/%3E%3Cellipse rx='1.6' ry='0.9' fill='%23a67a52'/%3E%3C/g%3E%3Cg transform='translate(4.1 1) rotate(4)'%3E%3Cellipse cy='0.6' rx='1.7' ry='1.5' fill='%235a361e'/%3E%3Cellipse rx='1.7' ry='1.5' fill='%23a27449'/%3E%3C/g%3E%3Cg transform='translate(4.1 13) rotate(4)'%3E%3Cellipse cy='0.6' rx='1.7' ry='1.5' fill='%235a361e'/%3E%3Cellipse rx='1.7' ry='1.5' fill='%23a27449'/%3E%3C/g%3E%3Cg transform='translate(8 1.5) rotate(-8)'%3E%3Cellipse cy='0.6' rx='1.7' ry='1.2' fill='%235a361e'/%3E%3Cellipse rx='1.7' ry='1.2' fill='%23a27449'/%3E%3C/g%3E%3Cg transform='translate(8 13.5) rotate(-8)'%3E%3Cellipse cy='0.6' rx='1.7' ry='1.2' fill='%235a361e'/%3E%3Cellipse rx='1.7' ry='1.2' fill='%23a27449'/%3E%3C/g%3E%3Cg transform='translate(10.2 1.2) rotate(19)'%3E%3Cellipse cy='0.6' rx='1.8' ry='1.2' fill='%235a361e'/%3E%3Cellipse rx='1.8' ry='1.2' fill='%23b0835c'/%3E%3C/g%3E%3Cg transform='translate(10.2 13.2) rotate(19)'%3E%3Cellipse cy='0.6' rx='1.8' ry='1.2' fill='%235a361e'/%3E%3Cellipse rx='1.8' ry='1.2' fill='%23b0835c'/%3E%3C/g%3E%3Cg transform='translate(13.2 2) rotate(26)'%3E%3Cellipse cy='0.5' rx='1.5' ry='1.5' fill='%235a361e'/%3E%3Cellipse rx='1.5' ry='1.5' fill='%23976a44'/%3E%3C/g%3E%3Cg transform='translate(13.2 14) rotate(26)'%3E%3Cellipse cy='0.5' rx='1.5' ry='1.5' fill='%235a361e'/%3E%3Cellipse rx='1.5' ry='1.5' fill='%23976a44'/%3E%3C/g%3E%3Cg transform='translate(-1.5 1.7) rotate(-8)'%3E%3Cellipse cy='0.6' rx='1.8' ry='1.2' fill='%235a361e'/%3E%3Cellipse rx='1.8' ry='1.2' fill='%23a67a52'/%3E%3C/g%3E%3Cg transform='translate(-1.5 13.7) rotate(-8)'%3E%3Cellipse cy='0.6' rx='1.8' ry='1.2' fill='%235a361e'/%3E%3Cellipse rx='1.8' ry='1.2' fill='%23a67a52'/%3E%3C/g%3E%3Cg transform='translate(16.5 1.7) rotate(-8)'%3E%3Cellipse cy='0.6' rx='1.8' ry='1.2' fill='%235a361e'/%3E%3Cellipse rx='1.8' ry='1.2' fill='%23a67a52'/%3E%3C/g%3E%3Cg transform='translate(16.5 13.7) rotate(-8)'%3E%3Cellipse cy='0.6' rx='1.8' ry='1.2' fill='%235a361e'/%3E%3Cellipse rx='1.8' ry='1.2' fill='%23a67a52'/%3E%3C/g%3E%3Cg transform='translate(2.9 4.9) rotate(-37)'%3E%3Cellipse cy='0.6' rx='1.8' ry='1.8' fill='%235a361e'/%3E%3Cellipse rx='1.8' ry='1.8' fill='%23b98c65'/%3E%3C/g%3E%3Cg transform='translate(20.9 4.9) rotate(-37)'%3E%3Cellipse cy='0.6' rx='1.8' ry='1.8' fill='%235a361e'/%3E%3Cellipse rx='1.8' ry='1.8' fill='%23b98c65'/%3E%3C/g%3E%3Cg transform='translate(5.7 5) rotate(-6)'%3E%3Cellipse cy='0.6' rx='1.6' ry='1.4' fill='%235a361e'/%3E%3Cellipse rx='1.6' ry='1.4' fill='%23b98c65'/%3E%3C/g%3E%3Cg transform='translate(9.1 4.5) rotate(32)'%3E%3Cellipse cy='0.6' rx='1.6' ry='1.5' fill='%235a361e'/%3E%3Cellipse rx='1.6' ry='1.5' fill='%23b0835c'/%3E%3C/g%3E%3Cg transform='translate(12.4 5) rotate(16)'%3E%3Cellipse cy='0.6' rx='1.7' ry='1.6' fill='%235a361e'/%3E%3Cellipse rx='1.7' ry='1.6' fill='%23976a44'/%3E%3C/g%3E%3Cg transform='translate(-2.5 4.9) rotate(11)'%3E%3Cellipse cy='0.6' rx='1.6' ry='1.6' fill='%235a361e'/%3E%3Cellipse rx='1.6' ry='1.6' fill='%23a67a52'/%3E%3C/g%3E%3Cg transform='translate(15.5 4.9) rotate(11)'%3E%3Cellipse cy='0.6' rx='1.6' ry='1.6' fill='%235a361e'/%3E%3Cellipse rx='1.6' ry='1.6' fill='%23a67a52'/%3E%3C/g%3E%3Cg transform='translate(-0.2 4.1) rotate(-33)'%3E%3Cellipse cy='0.6' rx='1.6' ry='1.1' fill='%235a361e'/%3E%3Cellipse rx='1.6' ry='1.1' fill='%23b0835c'/%3E%3C/g%3E%3Cg transform='translate(17.8 4.1) rotate(-33)'%3E%3Cellipse cy='0.6' rx='1.6' ry='1.1' fill='%235a361e'/%3E%3Cellipse rx='1.6' ry='1.1' fill='%23b0835c'/%3E%3C/g%3E%3Cg transform='translate(1.4 7.2) rotate(30)'%3E%3Cellipse cy='0.5' rx='1.6' ry='1.1' fill='%235a361e'/%3E%3Cellipse rx='1.6' ry='1.1' fill='%23b0835c'/%3E%3C/g%3E%3Cg transform='translate(19.4 7.2) rotate(30)'%3E%3Cellipse cy='0.5' rx='1.6' ry='1.1' fill='%235a361e'/%3E%3Cellipse rx='1.6' ry='1.1' fill='%23b0835c'/%3E%3C/g%3E%3Cg transform='translate(4.6 7.8) rotate(-14)'%3E%3Cellipse cy='0.6' rx='1.6' ry='0.9' fill='%235a361e'/%3E%3Cellipse rx='1.6' ry='0.9' fill='%23976a44'/%3E%3C/g%3E%3Cg transform='translate(7.5 8) rotate(-31)'%3E%3Cellipse cy='0.5' rx='1.6' ry='1.6' fill='%235a361e'/%3E%3Cellipse rx='1.6' ry='1.6' fill='%23a67a52'/%3E%3C/g%3E%3Cg transform='translate(10 7.2) rotate(-19)'%3E%3Cellipse cy='0.6' rx='1.6' ry='0.9' fill='%235a361e'/%3E%3Cellipse rx='1.6' ry='0.9' fill='%23b0835c'/%3E%3C/g%3E%3Cg transform='translate(14 7.3) rotate(32)'%3E%3Cellipse cy='0.6' rx='1.6' ry='1.5' fill='%235a361e'/%3E%3Cellipse rx='1.6' ry='1.5' fill='%23b98c65'/%3E%3C/g%3E%3Cg transform='translate(-1.6 7.9) rotate(14)'%3E%3Cellipse cy='0.6' rx='1.6' ry='0.9' fill='%235a361e'/%3E%3Cellipse rx='1.6' ry='0.9' fill='%23b0835c'/%3E%3C/g%3E%3Cg transform='translate(16.4 7.9) rotate(14)'%3E%3Cellipse cy='0.6' rx='1.6' ry='0.9' fill='%235a361e'/%3E%3Cellipse rx='1.6' ry='0.9' fill='%23b0835c'/%3E%3C/g%3E%3Cg transform='translate(3.1 -1.1) rotate(11)'%3E%3Cellipse cy='0.6' rx='1.6' ry='1.1' fill='%235a361e'/%3E%3Cellipse rx='1.6' ry='1.1' fill='%23a27449'/%3E%3C/g%3E%3Cg transform='translate(3.1 10.9) rotate(11)'%3E%3Cellipse cy='0.6' rx='1.6' ry='1.1' fill='%235a361e'/%3E%3Cellipse rx='1.6' ry='1.1' fill='%23a27449'/%3E%3C/g%3E%3Cg transform='translate(6.4 -1.6) rotate(4)'%3E%3Cellipse cy='0.5' rx='1.5' ry='1.3' fill='%235a361e'/%3E%3Cellipse rx='1.5' ry='1.3' fill='%23b0835c'/%3E%3C/g%3E%3Cg transform='translate(6.4 10.4) rotate(4)'%3E%3Cellipse cy='0.5' rx='1.5' ry='1.3' fill='%235a361e'/%3E%3Cellipse rx='1.5' ry='1.3' fill='%23b0835c'/%3E%3C/g%3E%3Cg transform='translate(9.3 -1) rotate(9)'%3E%3Cellipse cy='0.5' rx='1.6' ry='1.1' fill='%235a361e'/%3E%3Cellipse rx='1.6' ry='1.1' fill='%23a27449'/%3E%3C/g%3E%3Cg transform='translate(9.3 11) rotate(9)'%3E%3Cellipse cy='0.5' rx='1.6' ry='1.1' fill='%235a361e'/%3E%3Cellipse rx='1.6' ry='1.1' fill='%23a27449'/%3E%3C/g%3E%3Cg transform='translate(11.6 -1.4) rotate(9)'%3E%3Cellipse cy='0.6' rx='1.6' ry='1.4' fill='%235a361e'/%3E%3Cellipse rx='1.6' ry='1.4' fill='%23976a44'/%3E%3C/g%3E%3Cg transform='translate(11.6 10.6) rotate(9)'%3E%3Cellipse cy='0.6' rx='1.6' ry='1.4' fill='%235a361e'/%3E%3Cellipse rx='1.6' ry='1.4' fill='%23976a44'/%3E%3C/g%3E%3Cg transform='translate(-2.8 -2) rotate(37)'%3E%3Cellipse cy='0.5' rx='1.5' ry='1.5' fill='%235a361e'/%3E%3Cellipse rx='1.5' ry='1.5' fill='%23976a44'/%3E%3C/g%3E%3Cg transform='translate(-2.8 10) rotate(37)'%3E%3Cellipse cy='0.5' rx='1.5' ry='1.5' fill='%235a361e'/%3E%3Cellipse rx='1.5' ry='1.5' fill='%23976a44'/%3E%3C/g%3E%3Cg transform='translate(15.2 -2) rotate(37)'%3E%3Cellipse cy='0.5' rx='1.5' ry='1.5' fill='%235a361e'/%3E%3Cellipse rx='1.5' ry='1.5' fill='%23976a44'/%3E%3C/g%3E%3Cg transform='translate(15.2 10) rotate(37)'%3E%3Cellipse cy='0.5' rx='1.5' ry='1.5' fill='%235a361e'/%3E%3Cellipse rx='1.5' ry='1.5' fill='%23976a44'/%3E%3C/g%3E%3Cg transform='translate(0.1 -1.7) rotate(-11)'%3E%3Cellipse cy='0.6' rx='1.7' ry='1.6' fill='%235a361e'/%3E%3Cellipse rx='1.7' ry='1.6' fill='%23976a44'/%3E%3C/g%3E%3Cg transform='translate(0.1 10.3) rotate(-11)'%3E%3Cellipse cy='0.6' rx='1.7' ry='1.6' fill='%235a361e'/%3E%3Cellipse rx='1.7' ry='1.6' fill='%23976a44'/%3E%3C/g%3E%3Cg transform='translate(18.1 -1.7) rotate(-11)'%3E%3Cellipse cy='0.6' rx='1.7' ry='1.6' fill='%235a361e'/%3E%3Cellipse rx='1.7' ry='1.6' fill='%23976a44'/%3E%3C/g%3E%3Cg transform='translate(18.1 10.3) rotate(-11)'%3E%3Cellipse cy='0.6' rx='1.7' ry='1.6' fill='%235a361e'/%3E%3Cellipse rx='1.7' ry='1.6' fill='%23976a44'/%3E%3C/g%3E%3C/svg%3E\")";
-const KIBBLE_TOP = "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='4'%3E%3Cg transform='translate(1.6 1.2) rotate(-38)'%3E%3Cellipse cy='0.6' rx='1.7' ry='1' fill='%235a361e'/%3E%3Cellipse rx='1.7' ry='1' fill='%23b98c65'/%3E%3C/g%3E%3Cg transform='translate(19.6 1.2) rotate(-38)'%3E%3Cellipse cy='0.6' rx='1.7' ry='1' fill='%235a361e'/%3E%3Cellipse rx='1.7' ry='1' fill='%23b98c65'/%3E%3C/g%3E%3Cg transform='translate(4.8 1.9) rotate(-31)'%3E%3Cellipse cy='0.5' rx='1.5' ry='1.4' fill='%235a361e'/%3E%3Cellipse rx='1.5' ry='1.4' fill='%23b98c65'/%3E%3C/g%3E%3Cg transform='translate(7.9 1.7) rotate(-39)'%3E%3Cellipse cy='0.5' rx='1.5' ry='1.4' fill='%235a361e'/%3E%3Cellipse rx='1.5' ry='1.4' fill='%23a27449'/%3E%3C/g%3E%3Cg transform='translate(10.4 1.9) rotate(-27)'%3E%3Cellipse cy='0.6' rx='1.8' ry='1.2' fill='%235a361e'/%3E%3Cellipse rx='1.8' ry='1.2' fill='%23b0835c'/%3E%3C/g%3E%3Cg transform='translate(13.1 1.3) rotate(38)'%3E%3Cellipse cy='0.5' rx='1.5' ry='1.5' fill='%235a361e'/%3E%3Cellipse rx='1.5' ry='1.5' fill='%23b0835c'/%3E%3C/g%3E%3Cg transform='translate(-1.8 1.9) rotate(-17)'%3E%3Cellipse cy='0.6' rx='1.8' ry='1.7' fill='%235a361e'/%3E%3Cellipse rx='1.8' ry='1.7' fill='%23a27449'/%3E%3C/g%3E%3Cg transform='translate(16.2 1.9) rotate(-17)'%3E%3Cellipse cy='0.6' rx='1.8' ry='1.7' fill='%235a361e'/%3E%3Cellipse rx='1.8' ry='1.7' fill='%23a27449'/%3E%3C/g%3E%3C/svg%3E\")";
 
 const ENERGY_CSS = `
         svg.en-e{position:absolute;left:0;top:0;width:96px;height:108px;overflow:visible}
@@ -7154,71 +7418,41 @@ const ILLUSTRATION_CSS = {
           50% { transform: skewX(35deg) scaleY(var(--ac-reach, 1)); }
         }
   `,
-  // A pet fountain: a tank of water behind a window, a dish on top and a spout
-  // that bubbles while the pump runs, a ripple spreading across the dish. The
-  // light at the front is blue while it runs, orange when the filter or the
-  // pump wants a hand, red and blinking when the water runs low. White by
-  // default, the way most are sold.
   pet_fountain: () => `
-        .ft-floor { position: absolute; left: 14px; right: 14px; bottom: 3px; height: 7px; border-radius: 50%; background: radial-gradient(closest-side, rgba(0, 0, 0, 0.20), transparent); }
-        .ft-body {
-          position: absolute; left: 18px; right: 18px; top: 34px; bottom: 7px; border-radius: 12px 12px 10px 10px;
-          background: linear-gradient(90deg, var(--ac-body-lo, #d7dbde), var(--ac-body-hi, #ffffff) 30%, var(--ac-body, #eef0f2) 70%, var(--ac-body-lo, #d7dbde));
-          box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.1);
-        }
-        .ft-win {
-          position: absolute; left: 27px; right: 27px; top: 47px; height: 34px; border-radius: 7px; overflow: hidden;
-          background: linear-gradient(180deg, rgba(214, 230, 240, 0.95), rgba(196, 216, 228, 0.95)); box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.14);
-        }
-        .ft-water { position: absolute; left: 0; right: 0; bottom: 0; height: var(--ft-fill, 55%); background: linear-gradient(180deg, #81c7f0, #3a9ad9); transition: height 0.6s ease; }
-        .ft-water::before { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 1.5px; background: rgba(255, 255, 255, 0.65); }
-        .ft-rim {
-          position: absolute; left: 13px; right: 13px; top: 24px; height: 20px; border-radius: 50%;
-          background: radial-gradient(ellipse at 45% 30%, var(--ac-body-hi, #ffffff), var(--ac-body, #eef0f2) 55%, var(--ac-body-lo, #c9ced2));
-          box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.12);
-        }
-        .ft-pool { position: absolute; left: 19px; right: 19px; top: 27px; height: 13px; border-radius: 50%; overflow: hidden; background: radial-gradient(ellipse at 50% 40%, #a9dcf7, #5fb2e6 70%, #3f97d2); }
-        .ft-pool::after {
-          content: ""; position: absolute; left: 50%; top: 50%; width: 10px; height: 4px; margin: -2px 0 0 -5px; border-radius: 50%;
-          box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.7); opacity: 0;
-        }
-        .machine.flowing .ft-pool::after { animation: ft-ripple 1.6s ease-out infinite; animation-delay: var(--anim-offset, 0s); }
-        .ft-spout { position: absolute; left: 43px; width: 10px; top: 30px; height: 5px; border-radius: 50%; background: radial-gradient(ellipse at 50% 35%, #ffffff, #c4ccd2); box-shadow: inset 0 0 0 0.6px rgba(0, 0, 0, 0.2); }
-        /* Still, the spout is a flat outlet under the surface rather than a
-           bubble standing over the dish: only running water lifts it. */
-        .machine:not(.flowing) .ft-spout { top: 32px; height: 3px; background: radial-gradient(ellipse at 50% 50%, #7fa9c4, #5e8eaf); box-shadow: none; }
-        .machine.ft-dry .ft-pool { left: 24px; right: 24px; top: 31px; height: 7px; background: radial-gradient(ellipse at 50% 40%, #c3e6f8, #8cc6ea 70%, #6eb0dc); }
-        .machine.ft-dry .ft-spout { top: 31px; background: radial-gradient(ellipse at 50% 35%, #e2e6ea, #b5bec5); }
-        /* While the pump runs, the water rises from the spout and falls back
-           into the dish in two arcs, like a garden fountain: a light core,
-           pale dashes running outwards, and a splash where each arc lands. */
-        .ft-jet { position: absolute; left: 0; top: 0; width: 96px; height: 108px; overflow: visible; display: none; }
-        .machine.flowing .ft-jet { display: block; }
-        .ft-jet .ft-arc { fill: none; stroke: #6ec1ef; stroke-width: 2.6; stroke-linecap: round; opacity: 0.95; }
-        .ft-jet .ft-arc.col { stroke-width: 4.4; }
-        .ft-jet .ft-arc.mid { stroke-width: 2.2; opacity: 0.85; }
-        .ft-jet .ft-crown { fill: #9ad6f6; }
-        .ft-jet .ft-arc-hi { fill: none; stroke: #e3f5fe; stroke-width: 1.1; stroke-linecap: round; stroke-dasharray: 3 6; }
-        .machine.flowing .ft-jet .ft-arc-hi { animation: ft-run 0.6s linear infinite; animation-delay: var(--anim-offset, 0s); }
-        .ft-jet .ft-splash { fill: none; stroke: rgba(255, 255, 255, 0.85); stroke-width: 0.8; transform-box: fill-box; transform-origin: center; }
-        .machine.flowing .ft-jet .ft-splash { animation: ft-splash 0.9s ease-out infinite; animation-delay: var(--anim-offset, 0s); }
-        .machine.flowing .ft-jet .ft-splash.r { animation-delay: calc(-0.45s + var(--anim-offset, 0s)); }
-        .ft-jet .ft-drop { fill: #8fd0f5; }
-        .machine.flowing .ft-jet .ft-drop { animation: ft-drip 0.9s ease-in infinite; animation-delay: var(--anim-offset, 0s); }
-        .machine.flowing .ft-jet .ft-drop.r { animation-delay: calc(-0.45s + var(--anim-offset, 0s)); }
-        .ft-led { position: absolute; left: 41px; width: 14px; bottom: 13px; height: 3px; border-radius: 2px; background: rgba(0, 0, 0, 0.15); }
-        .machine.led-on .ft-led { background: #29b6f6; box-shadow: 0 0 4px #29b6f6; }
-        .machine.led-due .ft-led { background: #ff9800; box-shadow: 0 0 4px #ff9800; }
-        .machine.led-low .ft-led { background: #e53935; box-shadow: 0 0 4px #e53935; animation: ft-blink 1s steps(2) infinite; animation-delay: var(--anim-offset, 0s); }
-        .machine.led-low .ft-win { box-shadow: inset 0 0 0 1.5px #e53935; }
-        @keyframes ft-run { to { stroke-dashoffset: -9; } }
-        @keyframes ft-splash { 0% { opacity: 0.9; transform: scale(0.4); } 100% { opacity: 0; transform: scale(1.6); } }
-        @keyframes ft-drip { 0% { opacity: 0; transform: translateY(-3px); } 30% { opacity: 1; } 100% { opacity: 0; transform: translateY(3px); } }
+        svg.ft-svg { position: absolute; left: 0; top: 0; width: 96px; height: 108px; overflow: visible; }
+        /* While the pump runs, the water wells up into a dome over the outlet,
+           rings spread across the plate and drops spray off its edges. */
+        .ft-dome { transform-box: fill-box; transform-origin: center bottom; }
+        .machine.flowing .ft-dome { animation: ft-dome 1.1s ease-in-out infinite; animation-delay: var(--anim-offset, 0s); }
+        @keyframes ft-dome { 0%, 100% { transform: scaleY(1); } 50% { transform: scaleY(1.2); } }
+        .ft-ring { transform-box: fill-box; transform-origin: center; opacity: 0; }
+        .machine.flowing .ft-ring { animation: ft-ring 2s ease-out infinite; animation-delay: var(--anim-offset, 0s); }
+        .machine.flowing .ft-ring.ftd2 { animation-delay: calc(-1s + var(--anim-offset, 0s)); }
+        @keyframes ft-ring { 0% { transform: scale(0.4); opacity: 0.9; } 100% { transform: scale(2.6); opacity: 0; } }
+        .ft-spray { opacity: 0; }
+        .machine.flowing .ft-spray.l { animation: ft-spray-l 1.4s linear infinite; animation-delay: var(--anim-offset, 0s); }
+        .machine.flowing .ft-spray.r { animation: ft-spray-r 1.4s linear infinite; animation-delay: var(--anim-offset, 0s); }
+        .machine.flowing .ft-spray.ftd2 { animation-delay: calc(-0.35s + var(--anim-offset, 0s)); }
+        .machine.flowing .ft-spray.ftd3 { animation-delay: calc(-0.7s + var(--anim-offset, 0s)); }
+        .machine.flowing .ft-spray.ftd4 { animation-delay: calc(-1.05s + var(--anim-offset, 0s)); }
+        @keyframes ft-spray-l { 0% { transform: translate(0, 0); opacity: 0; } 15% { opacity: 1; } 45% { transform: translate(-3.5px, -1.5px); } 100% { transform: translate(-7px, 7px); opacity: 0; } }
+        @keyframes ft-spray-r { 0% { transform: translate(0, 0); opacity: 0; } 15% { opacity: 1; } 45% { transform: translate(3.5px, -1.5px); } 100% { transform: translate(7px, 7px); opacity: 0; } }
+        /* The light under the plate and the dot at the front: blue while it
+           runs, orange when the filter or the pump wants a hand, red and
+           blinking when the water runs low, out when it is off. */
+        .ft-glow { stroke: #9aa3ad; opacity: 0.3; }
+        .ft-led { fill: #9aa3ad; }
+        .machine.led-on .ft-glow { stroke: #29b6f6; opacity: 0.8; }
+        .machine.led-on .ft-led { fill: #29b6f6; }
+        .machine.led-due .ft-glow { stroke: #ffb300; opacity: 0.8; }
+        .machine.led-due .ft-led { fill: #ffb300; }
+        .machine.led-low .ft-glow { stroke: #e53935; opacity: 0.8; }
+        .machine.led-low .ft-led { fill: #e53935; animation: ft-blink 1s steps(2) infinite; animation-delay: var(--anim-offset, 0s); }
+        .machine.led-low .ft-win { stroke: #e53935; stroke-width: 1; }
+        @keyframes ft-blink { 50% { opacity: 0.25; } }
         /* Offline, the fountain says nothing: no light, no jet, the water
            drawn grey rather than as a level the card cannot know. */
         .machine.ft-offline .ft-water, .machine.ft-offline .ft-pool { filter: grayscale(1); opacity: 0.55; }
-        @keyframes ft-ripple { 0% { opacity: 0.9; transform: scale(0.6); } 100% { opacity: 0; transform: scale(3.2); } }
-        @keyframes ft-blink { 50% { opacity: 0.25; } }
   `,
   // A portable dehumidifier on its feet: the air leaves by the grille on top,
   // the screen gives the humidity, and the tank at the bottom shows the water
@@ -7687,211 +7921,27 @@ const ILLUSTRATION_CSS = {
         @keyframes hp-frost { 0%, 100% { opacity: 0.35; } 50% { opacity: 0.9; } }
   `,
   pet_feeder: () => `
-        /* Drawn from the feeders people actually buy: a smoked tank of kibble
-           on an opaque base, a small dark panel with a lit screen, a chute on
-           the front and a steel bowl in a holder moulded like the shell. Three
-           families: the square tower, the round tank, and the double with two
-           outlets and two bowls. The shell takes the appliance colour, dark by
-           default, white for the round one, the way they are sold. */
-        .machine { --pf-lo: var(--ac-body-lo, #1f2327); --pf-hi: var(--ac-body-hi, #4a5158); --pf-body: var(--ac-body, #34393e); }
-        .machine.canister { --pf-lo: var(--ac-body-lo, #d8dcde); --pf-hi: var(--ac-body-hi, #ffffff); --pf-body: var(--ac-body, #f1f3f4); }
-        .pf-shell {
-          background: linear-gradient(90deg, var(--pf-lo), var(--pf-hi) 22%, var(--pf-body) 62%, var(--pf-lo));
-          box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.10);
-        }
-        .pf-floor {
-          position: absolute; left: 8px; right: 8px; bottom: 0; height: 7px; border-radius: 50%;
-          background: radial-gradient(closest-side, rgba(0, 0, 0, 0.20), transparent);
-        }
-        /* Kibble as it looks: matte discs, a lighter face and a darker edge,
-           one family of browns, packed in a heap with a bumpy top. */
-        .pf-kib { position: absolute; left: 0; right: 0; bottom: 0; background: ${KIBBLE_TILE}; background-size: 18px 12px; }
-        .pf-kib::before {
-          content: ""; position: absolute; left: 0; right: 0; top: -3px; height: 4px;
-          background: ${KIBBLE_TOP}; background-size: 18px 4px;
-        }
-        /* Nothing left to serve: the tank and the bowls are drawn empty. */
-        .machine.empty .pf-kib { display: none; }
-        /* Smoked plastic, so the kibble is seen through grey, and never the
-           appliance colour or a black feeder would hide it. */
-        .pf-tank { position: absolute; overflow: hidden; background: #6d747a; }
-        .pf-tank .pf-kib { height: var(--pf-fill, 22px); }
-        .pf-tank::after {
-          content: ""; position: absolute; inset: 0; border-radius: inherit;
-          background: linear-gradient(90deg, rgba(28, 32, 36, 0.5), rgba(60, 66, 72, 0.14) 18%, rgba(255, 255, 255, 0.26) 27%, rgba(255, 255, 255, 0.04) 36%, rgba(60, 66, 72, 0.10) 78%, rgba(28, 32, 36, 0.5)),
-            linear-gradient(180deg, rgba(40, 44, 48, 0.35), rgba(40, 44, 48, 0) 30%);
-          box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.25);
-        }
-        /* The screen shows the time, like the real ones; blue while it
-           serves, red when something is wrong. */
-        .pf-panel { position: absolute; width: 20px; height: 14px; border-radius: 2.5px; background: #1a1d21; box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.06); }
-        .pf-lcd {
-          position: absolute; left: 2px; right: 2px; top: 2px; height: 7px; border-radius: 1px; overflow: hidden;
-          background: #0e1a1f; color: #7fdcff; text-align: center; white-space: nowrap;
-          font: 700 5.2px/7px ui-monospace, "SF Mono", Menlo, monospace; text-shadow: 0 0 2px rgba(127, 220, 255, 0.7);
-        }
-        .machine.feeding .pf-lcd { background: #1e88e5; color: #ffffff; text-shadow: none; box-shadow: 0 0 3px rgba(30, 136, 229, 0.8); }
-        .machine.alert .pf-lcd { background: #e53935; color: #ffffff; text-shadow: none; box-shadow: 0 0 3px rgba(229, 57, 53, 0.8); }
-        .pf-keys {
-          position: absolute; left: 2.5px; right: 2.5px; bottom: 2px; height: 2.4px;
-          background: radial-gradient(circle, #59626b 0 0.95px, transparent 1.2px); background-size: 25% 100%;
-        }
-        .pf-chute {
-          position: absolute; width: 11px; height: 13px; border-radius: 2px 2px 3px 3px;
-          background: linear-gradient(180deg, #2a2f34, #15181b); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
-        }
-        /* A steel insert in a holder moulded like the shell, seen a little
-           from above, with its heap standing over the rim. While it serves the
-           heap is still small: the bowl is being filled. */
-        .pf-bowl { position: absolute; left: 13px; width: 43px; bottom: 3px; height: 15px; }
-        .pf-holder {
-          position: absolute; left: 0; right: 0; top: 3.5px; bottom: 0; border-radius: 2px 2px 50% 50% / 2px 2px 60% 60%;
-          background: linear-gradient(90deg, var(--pf-lo), var(--pf-hi) 25%, var(--pf-body) 60%, var(--pf-lo));
-          box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.10);
-        }
-        .pf-lip { position: absolute; left: 0; right: 0; top: 0; height: 9px; border-radius: 50%; background: var(--pf-hi); box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.10); }
-        .pf-steel {
-          position: absolute; left: 3px; right: 3px; top: 1.5px; height: 6.2px; border-radius: 50%; overflow: hidden;
-          background: radial-gradient(ellipse at 50% 75%, #9aa3aa, #dfe4e7 55%, #aab3b9);
-        }
-        .pf-steel .pf-kib { top: 1.2px; left: 0.8px; right: 0.8px; border-radius: 50%; }
-        .pf-heap {
-          position: absolute; left: 6px; right: 6px; top: -3.2px; height: 7px; overflow: hidden;
-          border-radius: 50% 50% 0 0 / 100% 100% 0 0;
-        }
-        .pf-heap .pf-kib { top: 0; }
-        .pf-steel .pf-kib::before, .pf-heap .pf-kib::before { display: none; }
-        .machine.feeding .pf-heap { left: 12px; right: 12px; top: -0.8px; height: 4px; }
-        .machine.empty .pf-heap { display: none; }
-        .pf-fall i {
-          position: absolute; left: 33px; top: 71px; width: 3px; height: 2.4px; border-radius: 50%; opacity: 0;
-          background: #9a6c48; box-shadow: inset 0 -0.7px 0 #5f3b22;
-        }
-        .pf-fall i:nth-child(2) { margin-left: 2px; background: #8c5f3c; }
-        .pf-fall i:nth-child(3) { margin-left: -1.5px; background: #a67856; }
-        .machine.feeding .pf-fall i { animation: pf-fall 0.8s linear infinite; animation-delay: var(--anim-offset, 0s); }
-        .machine.feeding .pf-fall i:nth-child(2) { animation-delay: calc(-0.27s + var(--anim-offset, 0s)); }
-        .machine.feeding .pf-fall i:nth-child(3) { animation-delay: calc(-0.54s + var(--anim-offset, 0s)); }
-        @keyframes pf-fall {
-          0% { opacity: 0; transform: translateY(0) rotate(0); }
-          15% { opacity: 1; }
-          85% { opacity: 1; }
-          100% { opacity: 0; transform: translateY(13px) rotate(160deg); }
-        }
-        /* The square tower, the most common: a square tank under its lid, the
-           chute on the left over the bowl and the screen on the right. */
-        .pf-lid { position: absolute; left: 21px; right: 21px; top: 22px; height: 7px; border-radius: 4px 4px 1.5px 1.5px; }
-        .pf-lid::after { content: ""; position: absolute; left: 19px; right: 19px; top: 2px; height: 1.5px; border-radius: 1px; background: rgba(0, 0, 0, 0.18); }
-        .pf-tank.sq { left: 23px; right: 23px; top: 28px; height: 26px; border-radius: 0 0 2px 2px; }
-        .pf-latch { position: absolute; right: 26px; top: 49px; width: 7px; height: 3px; border-radius: 1px; background: var(--pf-lo); }
-        .pf-base { position: absolute; left: 23px; right: 23px; top: 54px; bottom: 6px; border-radius: 0 0 5px 5px; }
-        .pf-base .pf-panel { right: 4px; top: 5px; }
-        .pf-base .pf-chute { left: 6px; top: 6px; }
-        /* The round tank: a smoked cylinder under a thick lid, a round base
-           with a ribbed foot, the screen over the chute and the chute over the
-           bowl, so the kibble falls straight. */
-        .pf-cap {
-          position: absolute; left: 21px; right: 21px; top: 5px; height: 10px; border-radius: 50%; z-index: 1;
-          background: radial-gradient(ellipse at 42% 35%, var(--pf-hi), var(--pf-body) 55%, var(--pf-lo));
-          box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.14);
-        }
-        .pf-cap::after { content: ""; position: absolute; left: 12px; right: 12px; top: 2.5px; height: 4px; border-radius: 50%; box-shadow: inset 0 0 0 0.8px rgba(0, 0, 0, 0.18); }
-        .pf-rim { position: absolute; left: 21px; right: 21px; top: 10px; height: 4px; border-radius: 0 0 50% 50% / 0 0 100% 100%; }
-        .pf-tank.rd { left: 23px; right: 23px; top: 12px; height: 34px; border-radius: 0 0 3px 3px; }
-        .pf-drum { position: absolute; left: 23px; right: 23px; top: 45px; bottom: 5px; border-radius: 0 0 50% 50% / 0 0 4px 4px; }
-        .pf-ribs {
-          position: absolute; left: 1px; right: 1px; bottom: 0; height: 5px; border-radius: 0 0 50% 50% / 0 0 100% 100%;
-          background: repeating-linear-gradient(90deg, rgba(0, 0, 0, 0.14) 0 0.7px, transparent 0.7px 3px);
-        }
-        .pf-drum .pf-panel { left: 4px; top: 5px; width: 22px; }
-        .pf-drum .pf-chute { left: 10px; top: 21px; width: 10px; height: 11px; }
-        .machine.canister .pf-bowl { left: 17px; width: 42px; bottom: 2px; }
-        .machine.canister .pf-fall i { left: 36px; top: 72px; }
-        /* The double: one wide body with a level slot and a steel band, and
-           two outlets on its front, each over its own bowl. */
-        .pf-dbody { position: absolute; left: 17px; right: 17px; top: 12px; bottom: 10px; border-radius: 9px 9px 4px 4px; }
-        .pf-dbody::before { content: ""; position: absolute; left: 0; right: 0; top: 8px; height: 1px; background: rgba(0, 0, 0, 0.25); }
-        .pf-dbody .pf-panel { left: 50%; top: 1px; width: 18px; height: 6px; margin-left: -9px; background: none; box-shadow: none; }
-        .pf-dbody .pf-lcd { top: 0; height: 5px; font-size: 4.2px; line-height: 5px; }
-        .pf-slot { position: absolute; left: 50%; top: 11px; width: 4px; height: 16px; margin-left: -2px; border-radius: 2px; overflow: hidden; background: #3e454b; }
-        .pf-slot .pf-kib { height: var(--pf-fill, 9px); }
-        .pf-slot .pf-kib::before { display: none; }
-        .pf-band { position: absolute; left: 0; right: 0; top: 30px; height: 4px; background: linear-gradient(180deg, #8d969d, #eef1f3 45%, #a9b1b7); }
-        .pf-band i { position: absolute; left: 50%; top: 0.5px; width: 3px; height: 3px; margin-left: -1.5px; border-radius: 50%; background: #1a1d21; }
-        .pf-dbody .pf-chute { top: 55px; width: 10px; height: 11px; }
-        .pf-dbody .pf-chute.a { left: 4px; }
-        .pf-dbody .pf-chute.b { right: 4px; }
-        .machine.double .pf-bowl { bottom: 2px; width: 36px; height: 14px; }
-        .machine.double .pf-bowl.a { left: 4px; }
-        .machine.double .pf-bowl.b { left: auto; right: 4px; }
-        .machine.double .pf-fall i { top: 73px; }
-        .machine.double .pf-fall.a i { left: 24px; }
-        .machine.double .pf-fall.b i { left: 69px; }
-        .machine.double.feeding .pf-fall.b i { animation-delay: calc(-0.4s + var(--anim-offset, 0s)); }
-        .machine.double.feeding .pf-fall.b i:nth-child(2) { animation-delay: calc(-0.67s + var(--anim-offset, 0s)); }
-        .machine.double.feeding .pf-fall.b i:nth-child(3) { animation-delay: calc(-0.94s + var(--anim-offset, 0s)); }
-        /* Two hoppers, one split bowl: a tall body with two smoked windows,
-           a base with the screen and two outlets, and one wide bowl with a
-           ridge down its middle, each half under its own outlet. */
-        .pf-sbody { position: absolute; left: 18px; right: 18px; top: 6px; height: 54px; border-radius: 7px 7px 2px 2px; }
-        .pf-sbody::before { content: ""; position: absolute; left: 0; right: 0; top: 6px; height: 1px; background: rgba(0, 0, 0, 0.25); }
-        .pf-sbody .pf-tank { top: 10px; width: 23px; height: 38px; border-radius: 2px; }
-        .pf-sbody .pf-tank.a { left: 5px; }
-        .pf-sbody .pf-tank.b { right: 5px; }
-        .pf-sbody .pf-tank.b .pf-kib { height: var(--pf-fill-b, 22px); }
-        .pf-sbase { position: absolute; left: 16px; right: 16px; top: 60px; bottom: 16px; border-radius: 0 0 4px 4px; }
-        .pf-sbase .pf-panel { left: 50%; top: 3px; margin-left: -10px; }
-        .pf-sbase .pf-chute { top: 15px; }
-        .pf-sbase .pf-chute.a { left: 6px; }
-        .pf-sbase .pf-chute.b { right: 6px; }
-        .machine.dual_split .pf-bowl { left: 10px; width: 76px; bottom: 3px; height: 16px; }
-        .machine.dual_split .pf-steel .pf-kib.a { right: 50%; border-radius: 50% 0 0 50%; }
-        .machine.dual_split .pf-steel .pf-kib.b { left: 50%; border-radius: 0 50% 50% 0; }
-        .pf-divider { position: absolute; left: 50%; top: 0; bottom: 0; width: 2px; margin-left: -1px; background: var(--pf-hi); box-shadow: 0 0 0 0.5px rgba(0, 0, 0, 0.15); }
-        .machine.dual_split .pf-heap.a { left: 8px; right: 54%; }
-        .machine.dual_split .pf-heap.b { left: 54%; right: 8px; }
-        .machine.dual_split.feeding .pf-heap { top: -0.8px; height: 4px; }
-        .machine.dual_split.feeding .pf-heap.a { left: 14px; right: 60%; }
-        .machine.dual_split.feeding .pf-heap.b { left: 60%; right: 14px; }
-        .machine.dual_split .pf-fall i { top: 86px; }
-        .machine.dual_split .pf-fall.a i { left: 26px; }
-        .machine.dual_split .pf-fall.b i { left: 67px; }
-        .machine.dual_split.feeding .pf-fall.b i { animation-delay: calc(-0.4s + var(--anim-offset, 0s)); }
-        .machine.dual_split.feeding .pf-fall.b i:nth-child(2) { animation-delay: calc(-0.67s + var(--anim-offset, 0s)); }
-        .machine.dual_split.feeding .pf-fall.b i:nth-child(3) { animation-delay: calc(-0.94s + var(--anim-offset, 0s)); }
-        /* One hopper empties at a time: only its window and its half go bare. */
-        .machine.dual_split.empty .pf-kib, .machine.dual_split.empty .pf-heap { display: block; }
-        .machine.dual_split.empty-a .pf-tank.a .pf-kib, .machine.dual_split.empty-a .pf-steel .pf-kib.a, .machine.dual_split.empty-a .pf-heap.a,
-        .machine.dual_split.empty-b .pf-tank.b .pf-kib, .machine.dual_split.empty-b .pf-steel .pf-kib.b, .machine.dual_split.empty-b .pf-heap.b { display: none; }
-        /* The rotating wet-food feeder: a round base seen a little from above,
-           a lid with a hub in its middle and one opening at the front. The
-           flap lifts while it serves and shows the plate under it. */
-        .pf-rwall { position: absolute; left: 6px; right: 6px; top: 52px; bottom: 12px; border-radius: 0 0 50% 50% / 0 0 16px 16px; }
-        .pf-rwall .pf-panel { left: 50%; top: 18px; margin-left: -10px; }
-        .pf-rtop {
-          position: absolute; left: 6px; right: 6px; top: 36px; height: 32px; border-radius: 50%;
-          background: radial-gradient(ellipse at 45% 35%, var(--pf-hi), var(--pf-body) 60%, var(--pf-lo));
-          box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.14);
-        }
-        .pf-rhub { position: absolute; left: 38px; right: 38px; top: 44px; height: 9px; border-radius: 50%; background: var(--pf-lo); box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.18); }
-        .pf-rwin { position: absolute; left: 30px; right: 30px; top: 54px; height: 12px; border-radius: 50%; overflow: hidden; background: #22272c; }
-        .pf-rplate {
-          position: absolute; left: 4px; right: 4px; top: 2px; bottom: 2px; border-radius: 50%;
-          background: radial-gradient(ellipse at 50% 70%, #9aa3aa, #e4e8eb 60%, #b0b8be);
-        }
-        .pf-wet {
-          position: absolute; left: 6px; right: 6px; top: 1.5px; bottom: 2px; border-radius: 50%;
-          background: radial-gradient(ellipse at 40% 35%, #b5764b, #8a4f2e 60%, #6a3a20);
-        }
-        .machine.rotary.empty .pf-wet { display: none; }
-        .pf-rflap {
-          position: absolute; left: 30px; right: 30px; top: 54px; height: 12px; border-radius: 50%;
-          background: radial-gradient(ellipse at 50% 30%, var(--pf-hi), var(--pf-body));
-          box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.22); transition: transform 0.4s ease, opacity 0.4s ease;
-        }
-        .machine.rotary.feeding .pf-rflap { transform: translateY(-8px) scaleY(0.5); opacity: 0; }
-        .machine.dual_split .pf-cat, .machine.rotary .pf-cat { left: auto; right: 0; }
-        .machine.dual_split .pf-alert, .machine.rotary .pf-alert { left: auto; right: 12px; }
+        /* Drawn from the feeders people actually buy: a tank with a window on
+           the kibble, a small dark panel with a lit screen and a steel bowl in
+           a tray moulded like the shell. The shell takes the appliance colour,
+           dark by default, white for the round tank and the two-hopper one,
+           the way they are sold. */
+        .machine { --pf-lo: var(--ac-body-lo, #16191d); --pf-hi: var(--ac-body-hi, #4b535d); --pf-body: var(--ac-body, #2b3037); --pf-gloss: 0.1; }
+        .machine.canister, .machine.dual_split { --pf-lo: var(--ac-body-lo, #b4bcc5); --pf-hi: var(--ac-body-hi, #ffffff); --pf-body: var(--ac-body, #f1f4f7); --pf-gloss: 0.6; }
+        svg.pf-svg { position: absolute; left: 0; top: 0; width: 96px; height: 108px; overflow: visible; }
+        .pf-lcd { fill: #69f0ae; }
+        .machine.feeding .pf-lcd { fill: #4fc3f7; }
+        .machine.alert .pf-lcd { fill: #ff5252; }
+        /* While a meal is served, kibble drops from the chute into the bowl,
+           and the turning tray of the wet-food feeder brings the next dish. */
+        .pf-drop { opacity: 0; transform-box: fill-box; }
+        .machine.feeding .pf-drop { animation: pf-fall 0.9s linear infinite; animation-delay: var(--anim-offset, 0s); }
+        .machine.feeding .pfd2 { animation-delay: calc(-0.22s + var(--anim-offset, 0s)); }
+        .machine.feeding .pfd3 { animation-delay: calc(-0.45s + var(--anim-offset, 0s)); }
+        .machine.feeding .pfd4 { animation-delay: calc(-0.67s + var(--anim-offset, 0s)); }
+        @keyframes pf-fall { 0% { transform: translateY(0); opacity: 0; } 15% { opacity: 1; } 85% { opacity: 1; } 100% { transform: translateY(9px); opacity: 0; } }
+        .machine.rotary.feeding .pf-turn { animation: pf-turn 2.6s ease-in-out infinite; animation-delay: var(--anim-offset, 0s); }
+        @keyframes pf-turn { 0%, 55% { transform: translateX(0); } 100% { transform: translateX(-32px); } }
         /* The cat, when there is something to be cross about: an empty tank or a
            jam. Its proportions are the ones every grumpy cat is drawn with: a
            head that takes half the height and nearly all the width, a small
@@ -7974,11 +8024,10 @@ const ILLUSTRATION_CSS = {
         .pf-alert i { position: absolute; left: 50%; background: #fff; }
         .pf-alert .bar { top: 5.5px; width: 2.5px; height: 5px; margin-left: -1.25px; border-radius: 1.25px; }
         .pf-alert .dot { top: 12px; width: 2.5px; height: 2.5px; margin-left: -1.25px; border-radius: 50%; }
-        .pf-fall { position: absolute; inset: 0; }
-        /* On the round tank and the double the bowls are on the left or on
-           both sides, and the screen on the left: the cat sits on the right. */
-        .machine.canister .pf-cat, .machine.double .pf-cat { left: auto; right: 0; }
-        .machine.canister .pf-alert, .machine.double .pf-alert { left: auto; right: 12px; }
+        /* On the round tank, the double, the two hoppers and the wet-food
+           feeder, the cat sits on the right. */
+        .machine.canister .pf-cat, .machine.double .pf-cat, .machine.dual_split .pf-cat, .machine.rotary .pf-cat { left: auto; right: 0; }
+        .machine.canister .pf-alert, .machine.double .pf-alert, .machine.dual_split .pf-alert, .machine.rotary .pf-alert { left: auto; right: 12px; }
   `,
   kettle: () => `
         .kt-svg { position: absolute; left: 0; top: 10px; width: 96px; height: 96px; overflow: visible; }
@@ -11114,69 +11163,29 @@ function illustrationHtml(type, ctx) {
   }
 
   if (type === "pet_feeder") {
-    // Three families. The square tower is the default; the round tank and
-    // the double hold a taller heap, and the double shows its level in a slot.
+    // Five families, all drawn in one picture: the square tower (default),
+    // the round tank, the double with two bowls, the two hoppers over one
+    // split bowl, and the wet-food feeder with its turning tray.
     const layout = ctx.feederLayout || "";
-    const heapPx = layout === "canister" ? 28 : layout === "double" ? 12 : layout === "dual_split" ? 32 : 20;
-    const lcd = `<div class="pf-lcd">${esc(ctx.feederScreen || "")}</div>`;
-    const panel = `<div class="pf-panel">${lcd}<div class="pf-keys"></div></div>`;
-    const kib = `<div class="pf-kib"></div>`;
-    const bowl = (side = "") => `
-          <div class="pf-bowl${side}"><div class="pf-holder"></div><div class="pf-lip"></div><div class="pf-steel">${kib}</div><div class="pf-heap">${kib}</div></div>`;
-    const fall = (side = "") => `
-          <div class="pf-fall${side}" aria-hidden="true"><i></i><i></i><i></i></div>`;
-    let body;
-    if (layout === "canister") {
-      body = `
-          <div class="pf-tank rd">${kib}</div>
-          <div class="pf-rim pf-shell"></div>
-          <div class="pf-cap"></div>
-          <div class="pf-drum pf-shell"><div class="pf-ribs"></div>${panel}<div class="pf-chute"></div></div>${bowl()}${fall()}`;
-    } else if (layout === "double") {
-      body = `
-          <div class="pf-dbody pf-shell">
-            <div class="pf-panel">${lcd}</div>
-            <div class="pf-slot">${kib}</div>
-            <div class="pf-band"><i></i></div>
-            <div class="pf-chute a"></div><div class="pf-chute b"></div>
-          </div>${bowl(" a")}${bowl(" b")}${fall(" a")}${fall(" b")}`;
-    } else if (layout === "dual_split") {
-      // Two hoppers side by side in one tall body, each with its own outlet
-      // over its own half of one wide bowl split down the middle.
-      body = `
-          <div class="pf-sbody pf-shell"><div class="pf-tank a">${kib}</div><div class="pf-tank b">${kib}</div></div>
-          <div class="pf-sbase pf-shell">${panel}<div class="pf-chute a"></div><div class="pf-chute b"></div></div>
-          <div class="pf-bowl split"><div class="pf-holder"></div><div class="pf-lip"></div><div class="pf-steel"><div class="pf-kib a"></div><div class="pf-kib b"></div><i class="pf-divider"></i></div><div class="pf-heap a">${kib}</div><div class="pf-heap b">${kib}</div></div>${fall(" a")}${fall(" b")}`;
-    } else if (layout === "rotary") {
-      // A round wet-food feeder: plates on a turntable under a lid with one
-      // opening. The flap lifts while a meal is served, showing the plate.
-      body = `
-          <div class="pf-rwall pf-shell">${panel}</div>
-          <div class="pf-rtop"></div>
-          <div class="pf-rhub"></div>
-          <div class="pf-rwin"><div class="pf-rplate"><div class="pf-wet"></div></div></div>
-          <div class="pf-rflap"></div>`;
-    } else {
-      body = `
-          <div class="pf-tank sq">${kib}</div>
-          <div class="pf-lid pf-shell"></div>
-          <div class="pf-latch"></div>
-          <div class="pf-base pf-shell">${panel}<div class="pf-chute"></div></div>${bowl()}${fall()}`;
-    }
     // Two hoppers empty one at a time. An empty state that names no hopper
     // (a fault that says "no food") empties both.
     const sides = layout !== "dual_split" || !ctx.feederEmpty ? []
       : ctx.feederEmptyA || ctx.feederEmptyB ? [ctx.feederEmptyA ? "empty-a" : "", ctx.feederEmptyB ? "empty-b" : ""]
       : ["empty-a", "empty-b"];
+    const emptyA = sides.includes("empty-a"), emptyB = sides.includes("empty-b");
+    const empty = !!ctx.feederEmpty && layout !== "dual_split";
+    const d = {
+      screen: ctx.feederScreen || "",
+      feeding: !!ctx.feeding,
+      served: !empty,
+      servedA: !emptyA,
+      servedB: !emptyB,
+      lvl: pfLvl(ctx.feederFill, empty || emptyA),
+      lvlB: pfLvl(ctx.feederFillB, emptyB),
+    };
     const cls = [layout, ctx.feeding ? "feeding" : "", ctx.feederEmpty ? "empty" : "", ...sides, ctx.feederAlert ? "alert" : ""].filter(Boolean).join(" ");
-    const fillPx = (pct) => (4 + (pct / 100) * heapPx).toFixed(1);
-    const styles = [
-      ctx.feederFill === null || ctx.feederFill === undefined ? "" : `--pf-fill:${fillPx(ctx.feederFill)}px`,
-      layout !== "dual_split" || ctx.feederFillB === null || ctx.feederFillB === undefined ? "" : `--pf-fill-b:${fillPx(ctx.feederFillB)}px`,
-    ].filter(Boolean).join(";");
     return `
-        <div class="machine ${cls}"${styles ? ` style="${styles}"` : ""}>
-          <div class="pf-floor"></div>${body}${ctx.feederAlert ? `
+        <div class="machine ${cls}">${pfSvg(layout, d)}${ctx.feederAlert ? `
           <div class="pf-cat" aria-hidden="true">
             <u class="ear l"><span></span></u><u class="ear r"><span></span></u>
             <u class="tail"></u>
@@ -11332,31 +11341,15 @@ function illustrationHtml(type, ctx) {
   }
 
   if (type === "pet_fountain") {
-    // A tank seen through its window, a dish on top with water in it and a
-    // spout in the middle that bubbles while the pump runs. Without a level
-    // the tank keeps a resting height rather than reading as empty.
+    // Without a level the tank keeps a resting height rather than reading as
+    // empty. No water comes up a pump that is off or that has run dry.
     const f = ctx.fountain || {};
-    const fill = f.low ? 8 : f.fill === null || f.fill === undefined ? 55 : Math.round(f.fill);
+    const fill = f.low ? 12 : f.fill === null || f.fill === undefined ? 55 : Math.max(0, Math.min(100, Math.round(f.fill)));
     const led = f.offline ? "" : f.low ? "led-low" : f.due ? "led-due" : f.flowing ? "led-on" : "";
-    // No water comes up a pump that is off or that has run dry: the jet stops,
-    // and with the tank low the dish goes low with it.
     const running = f.flowing && !f.low;
+    const svg = ftSvg({ lvl: fill / 100, running, dry: !!f.low, low: !!f.low && !f.offline, due: !!f.due && !f.low && !f.offline });
     return `
-        <div class="machine ${cls} ${running ? "flowing" : ""} ${f.low ? "ft-dry" : ""}${f.offline ? " ft-offline" : ""} ${led}" style="--ft-fill: ${fill}%">
-          <div class="ft-floor"></div>
-          <div class="ft-body"></div>
-          <div class="ft-win"><div class="ft-water"></div></div>
-          <div class="ft-rim"></div>
-          <div class="ft-pool"></div>
-          <svg class="ft-jet" viewBox="0 0 96 108" aria-hidden="true">
-            <path class="ft-arc col" d="M48 31 L48 10"/><path class="ft-arc far" d="M48 10 C44 5 35 7 33 29"/><path class="ft-arc mid" d="M48 10 C46 8 41 11 40 29"/><path class="ft-arc far" d="M48 10 C52 5 61 7 63 29"/><path class="ft-arc mid" d="M48 10 C50 8 55 11 56 29"/>
-            <path class="ft-arc-hi" d="M48 31 L48 10"/><path class="ft-arc-hi" d="M48 10 C44 5 35 7 33 29"/><path class="ft-arc-hi" d="M48 10 C46 8 41 11 40 29"/><path class="ft-arc-hi" d="M48 10 C52 5 61 7 63 29"/><path class="ft-arc-hi" d="M48 10 C50 8 55 11 56 29"/>
-            <ellipse class="ft-crown" cx="48" cy="9.5" rx="3.2" ry="2"/>
-            <circle class="ft-drop" cx="31" cy="23" r="0.9"/><circle class="ft-drop r" cx="65" cy="23" r="0.9"/>
-            <ellipse class="ft-splash" cx="33" cy="31" rx="2.6" ry="1.1"/><ellipse class="ft-splash" cx="40" cy="31" rx="2.6" ry="1.1"/><ellipse class="ft-splash r" cx="56" cy="31" rx="2.6" ry="1.1"/><ellipse class="ft-splash r" cx="63" cy="31" rx="2.6" ry="1.1"/>
-          </svg>
-          <div class="ft-spout"></div>
-          <div class="ft-led"></div>
+        <div class="machine ${cls} ${running ? "flowing" : ""} ${f.low ? "ft-dry" : ""}${f.offline ? " ft-offline" : ""} ${led}">${svg}
         </div>`;
   }
 

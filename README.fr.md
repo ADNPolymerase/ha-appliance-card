@@ -246,7 +246,7 @@ Seule `state_entity` est obligatoire, sauf sur un réfrigérateur où une sonde 
 | `filter_life_entity` / `filter_reset_entity` / `filter_due_below` | fontaine | La durée de vie restante du filtre, sur une ligne, et un bouton de réinitialisation (un bouton, un interrupteur ou un script). Jours, heures, minutes et secondes se comptent en jours, un pourcentage reste un pourcentage, et une date (le prochain changement) donne les jours qui restent. À `filter_due_below` ou en dessous (3 pour des jours, 10 pour un pourcentage par défaut), l'état lit *Filtre à changer*, et la ligne et le voyant passent à l'orange. |
 | `pump_clean_entity` / `pump_reset_entity` | fontaine | Pareil pour la pompe : la durée ou la date avant son nettoyage, avec le même seuil, et un bouton de réinitialisation. L'état lit *Pompe à nettoyer*. |
 | `pump_running_entity` | fontaine | La pompe, quand l'intégration la lit à part de l'alimentation (le *Pump running* de Petkit, le statut *watering* de Xiaomi) : l'eau ne coule que si les deux le disent. Une ligne *Dernière marche de la pompe* donne l'heure de son dernier arrêt, ou *En marche*. |
-| `water_level_entity` / `level_empty_below` | fontaine | L'eau restante : un pourcentage, qui remplit le réservoir sur le dessin ; un mot (`low`, `lack`, `shortage`, `level_1`… ou `normal`, `medium`, `full`) ; ou un contact, allumé quand elle manque, ou allumé tant qu'il y a de l'eau pour un contact d'humidité (Petlibro). Un nombre dans une autre unité (un niveau de 1 à 4, des millilitres) ne se lit contre `level_empty_below` que si celui-ci est réglé. À `level_empty_below` ou en dessous (10 par défaut), l'état lit *Peu d'eau*, en rouge, avant tout le reste : une pompe à sec grille. Le jet s'arrête alors, comme pompe arrêtée, et la vasque baisse avec le réservoir. |
+| `water_level_entity` / `level_empty_below` | fontaine | L'eau restante : un pourcentage, qui remplit le réservoir sur le dessin ; un mot (`low`, `lack`, `shortage`, `level_1`… ou `normal`, `medium`, `full`) ; ou un contact, allumé quand elle manque, ou allumé tant qu'il y a de l'eau pour un contact d'humidité (Petlibro). Un nombre dans une autre unité (un niveau de 1 à 4, des millilitres) ne se lit contre `level_empty_below` que si celui-ci est réglé. À `level_empty_below` ou en dessous (10 par défaut), l'état lit *Peu d'eau*, en rouge, avant tout le reste : une pompe à sec grille. Le jet s'arrête alors, comme pompe arrêtée, et la vasque se retrouve à sec. |
 | `zones` / `zones_layout` / `zones_count` | plaque | Jusqu'à 6 foyers `{ level_entity, residual_heat_entity?, name? }`, niveau en chiffre ou en mot (`boost`), `H` pour la chaleur résiduelle. Disposition `2x1` \| `2x2` \| `3x2`, et nombre de foyers à dessiner sans entité (4 par défaut). |
 | `child_lock_entity` | plaque | Cadenas sur l'illustration. |
 | `fridge_layout` | frigo | `freezer_bottom` (défaut) \| `freezer_top` \| `side_by_side` \| `single` \| `wine` (porte vitrée et bouteilles, pour une cave à vin) \| `chest` (congélateur coffre) \| `drawers` (congélateur armoire à tiroirs transparents). Sur ces deux-là, la sonde du congélateur, ou celle du frigo, est sur l'écran, et le seuil d'alerte vaut -12 par défaut. |
@@ -932,7 +932,7 @@ Un distributeur qui ne dit jamais qu'il sert, comme le C1 d'Aqara en Zigbee2MQTT
 
 Trois entités se lisent aussi bien que dix : une ligne n'existe que si son entité répond.
 
-Trois modèles sont dessinés, d'après les distributeurs du commerce : un réservoir carré sur son socle, un réservoir rond sur un socle rond, chacun avec sa gamelle posée devant, et un double avec deux sorties en façade et une gamelle sous chacune. Le petit écran affiche l'heure comme les vrais, passe en bleu pendant la distribution, avec la portion quand `serving_size_entity` est renseigné, et en rouge sur un réservoir vide ou une erreur. La sécurité enfant et le verrouillage automatique se placent dans les coins du haut, chacun montrant s'il est enclenché :
+Trois modèles sont dessinés, d'après les distributeurs du commerce : un réservoir carré avec une fenêtre sur ses croquettes, un réservoir rond, chacun avec une gamelle en inox posée dans son socle, et un double dont les deux becs remplissent chacun sa gamelle. La fenêtre se remplit selon le niveau, les croquettes tombent dans la gamelle pendant la distribution, et un réservoir vide laisse l'une et l'autre vides. Le petit écran affiche l'heure en vert comme les vrais, passe en bleu pendant la distribution, avec la portion quand `serving_size_entity` est renseigné, et en rouge sur un réservoir vide ou une erreur. La sécurité enfant et le verrouillage automatique se placent dans les coins du haut, chacun montrant s'il est enclenché :
 
 ```yaml
 feeder_layout: canister
@@ -950,7 +950,7 @@ level_entity: binary_sensor.distributeur_reservoir_1_bas
 level_b_entity: binary_sensor.distributeur_reservoir_2_bas
 ```
 
-`rotary` est un distributeur de pâtée : des assiettes sur un plateau tournant sous un couvercle percé d'une ouverture. Servir, c'est ouvrir, donc l'entité d'état est celle qui dit que le couvercle est ouvert, et la trappe se lève sur l'assiette de devant. Son niveau est le nombre d'assiettes restantes, compté sur celles qu'il contient :
+`rotary` est un distributeur de pâtée : des assiettes sur un plateau tournant sous un couvercle percé d'une ouverture. Servir, c'est ouvrir, donc l'entité d'état est celle qui dit que le couvercle est ouvert, et pendant la distribution le plateau amène l'assiette suivante dans l'ouverture. Son niveau est le nombre d'assiettes restantes, compté sur celles qu'il contient :
 
 ```yaml
 feeder_layout: rotary
@@ -964,7 +964,7 @@ level_max: 3
 <details>
 <summary><b>Fontaines à eau</b></summary>
 
-Une fontaine tourne toute la journée, alors comme un distributeur elle se lit plus qu'elle ne se commande. L'eau sort du bec en bouillonnant et se ride dans la vasque tant que la pompe tourne, d'après un interrupteur ou la prise sur laquelle elle est branchée. Le reste de ce qu'elle dit, c'est ce qui demande un coup de main : l'eau d'abord, puis le filtre, puis la pompe, chacun prenant la ligne d'état et le voyant en façade, orange pour le filtre et la pompe, rouge et clignotant pour l'eau.
+Une fontaine tourne toute la journée, alors comme un distributeur elle se lit plus qu'elle ne se commande. Tant que la pompe tourne, l'eau monte en dôme au-dessus de la sortie, des cercles s'étalent sur le plateau en inox et des gouttes jaillissent sur ses bords, d'après un interrupteur ou la prise sur laquelle elle est branchée. Le reste de ce qu'elle dit, c'est ce qui demande un coup de main : l'eau d'abord, puis le filtre, puis la pompe, chacun prenant la ligne d'état et l'anneau lumineux sous le plateau, orange avec un badge de filtre pour le filtre et la pompe, rouge et clignotant avec un badge d'alerte pour l'eau.
 
 ```yaml
 type: custom:ha-appliance-card
