@@ -11579,4 +11579,37 @@ function tvT(w) { return { 'switch.tv': { state: 'on', attributes: {} }, 'sensor
   check('editeur prise : le seuil du type en indice', /data-field="power_on_threshold"[^>]*placeholder="50"|placeholder="50"[^>]*data-field="power_on_threshold"/.test(ed({ appliance_type: 'kettle' })), true);
 }
 
+// Two modes: a smart plug, or an integration's entities.
+{
+  const ed = (cfg) => markup(newEditor(cfg));
+  const PLUGW = { appliance_type: 'washer', state_entity: 'switch.p', power_entity: 'sensor.p' };
+  check('mode : un interrupteur et une mesure, c est une prise', /data-field="source"[\s\S]*?<option value="plug" selected/.test(ed(PLUGW)), true);
+  check('mode prise : pas de programme', ed(PLUGW).includes('data-toggle="program_entity"'), false);
+  check('mode prise : pas de temps restant', ed(PLUGW).includes('data-toggle="remaining_time_entity"'), false);
+  check('mode prise : pas de bouton depart', ed(PLUGW).includes('data-toggle="start_entity"'), false);
+  check('mode prise : pas de correspondance d etats', ed(PLUGW).includes('data-slot="__state_map"'), false);
+  check('mode prise : l energie reste', ed(PLUGW).includes('data-toggle="energy_entity"'), true);
+  check('mode prise : pas d alertes', ed(PLUGW).includes('data-panel="alerts"'), false);
+  check('mode prise : un capteur de piscine reste', ed({ appliance_type: 'pool_pump', state_entity: 'switch.p', power_entity: 'sensor.p' }).includes('data-toggle="ph_entity"'), true);
+  check('mode prise : pas de mode de pompe', ed({ appliance_type: 'pool_pump', state_entity: 'switch.p', power_entity: 'sensor.p' }).includes('data-toggle="pool_mode_entity"'), false);
+  check('mode prise : pas de foyers a choisir', ed({ appliance_type: 'cooktop', state_entity: 'switch.p', power_entity: 'sensor.p' }).includes('data-panel="zones"'), false);
+  const INT = { appliance_type: 'washer', state_entity: 'sensor.w' };
+  check('mode integration : un etat d integration', /<option value="integration" selected/.test(ed(INT)), true);
+  check('mode integration : le programme', ed(INT).includes('data-toggle="program_entity"'), true);
+  check('mode integration force : tout revient', ed({ ...PLUGW, source: 'integration' }).includes('data-toggle="program_entity"'), true);
+  check('mode : pas pour un frigo', ed({ appliance_type: 'fridge', state_entity: 'switch.p', power_entity: 'sensor.p' }).includes('data-field="source"'), false);
+  // On the card: an integration's switch is not a plug, and a plug's switch
+  // is its power button.
+  const PW = v => ({ state: String(v), attributes: { unit_of_measurement: 'W' } });
+  check('mode integration : l interrupteur n est pas une prise', stateLine(render({ ...PLUGW, source: 'integration' },
+    { 'switch.p': { state: 'on', attributes: {} }, 'sensor.p': PW(0) })), 'Running');
+  const plugHtml = render(PLUGW, { 'switch.p': { state: 'on', attributes: {} }, 'sensor.p': PW(0) });
+  const btns = h => (h.match(/class="action-btn[^"]*" data-entity="switch\.p"/g) || []).length;
+  check('mode prise : le bouton marche arret', btns(plugHtml), 1);
+  check('mode prise : un seul, meme pour un type qui a le sien', btns(render({ appliance_type: 'fan', state_entity: 'switch.p', power_entity: 'sensor.p' },
+    { 'switch.p': { state: 'on', attributes: {} }, 'sensor.p': PW(20) })), 1);
+  check('mode integration : pas de bouton tout seul', btns(render({ ...PLUGW, source: 'integration' },
+    { 'switch.p': { state: 'on', attributes: {} }, 'sensor.p': PW(0) })), 0);
+}
+
 report();

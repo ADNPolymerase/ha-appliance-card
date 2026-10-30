@@ -1,6 +1,6 @@
 // Built by tools/build.mjs from src/ha-appliance-card.js: edit the source, not this file.
 // The card's editor, loaded by the card the first time it is edited.
-export default function defineEditor({ t, onLanguageLoaded, LANGUAGE_NAMES, localizedHass, activationOf, EV_POWER_THRESHOLD, stateObj, parseValueMap, stringifyValueMap, alertsArray, LIST_OTHER, ENTITY_LISTS, listCandidates, defaultCardName, stripDeviceName, domainOf, INFO_MAX, autoSuggest, APPLIANCE_TYPES, STATE_DOMAINS, SCREEN_ONLY_FIELDS, illustrationSizeOf, fontScaleOf, compactModeOf, TYPE_GROUPS, caps, detectApplianceType, SCREEN_STANDBY_W, SCREEN_LAYOUTS, SCREEN_IMAGES, screenLayoutOf, screenIsTablet, HD_HEAT_W, NET_LAYOUTS, SWITCH_PORTS, NET_BAYS, NET_BUSY_MBIT, NET_TEMP_ALERT, netLayoutOf, ROBOT_LAYOUTS, ROBOT_STATIONS, ROBOT_FLOORS, ROBOT_SERVICES, STICK_AWAY_W, robotLayoutOf, POOL_PRESSURE_ALERT, SOLAR_LAYOUTS, BATTERY_LAYOUTS, BATTERY_IDLE_W, DIFFUSER_LAYOUTS, HRV_LAYOUTS, CAMERA_LAYOUTS, MAILBOX_LAYOUTS, MAILBOX_SIDES, mailboxLayoutOf, LAMP_LAYOUTS, LAMP_SPOTS, lampLayoutOf, PUMP_LAYOUTS, FLOOR_LAYOUTS, TREE_PALETTES, TREE_PRESENTS, pumpLayoutOf, UPS_BATTERY_LOW, HISTORY_HOURS, BODY_COLORS, esc, SHELTER_STYLES, SHELTER_COLORS, stateFreeSource }) {
+export default function defineEditor({ t, onLanguageLoaded, LANGUAGE_NAMES, localizedHass, activationOf, EV_POWER_THRESHOLD, stateObj, parseValueMap, stringifyValueMap, alertsArray, LIST_OTHER, ENTITY_LISTS, listCandidates, defaultCardName, stripDeviceName, domainOf, INFO_MAX, autoSuggest, APPLIANCE_TYPES, STATE_DOMAINS, SCREEN_ONLY_FIELDS, illustrationSizeOf, fontScaleOf, compactModeOf, TYPE_GROUPS, caps, detectApplianceType, SCREEN_STANDBY_W, SCREEN_LAYOUTS, SCREEN_IMAGES, screenLayoutOf, screenIsTablet, HD_HEAT_W, PLUG_THRESHOLDS, ZONE_POWER_W, PLUG_SOURCE_TYPES, plugSourceOf, DW_DRY_MIN, WASH_HEAT_W, WASH_SPIN_W, DRYER_HEAT_W, NET_LAYOUTS, SWITCH_PORTS, NET_BAYS, NET_BUSY_MBIT, NET_TEMP_ALERT, netLayoutOf, ROBOT_LAYOUTS, ROBOT_STATIONS, ROBOT_FLOORS, ROBOT_SERVICES, STICK_AWAY_W, robotLayoutOf, POOL_PRESSURE_ALERT, SOLAR_LAYOUTS, BATTERY_LAYOUTS, BATTERY_IDLE_W, DIFFUSER_LAYOUTS, HRV_LAYOUTS, CAMERA_LAYOUTS, MAILBOX_LAYOUTS, MAILBOX_SIDES, mailboxLayoutOf, LAMP_LAYOUTS, LAMP_SPOTS, lampLayoutOf, PUMP_LAYOUTS, FLOOR_LAYOUTS, TREE_PALETTES, TREE_PRESENTS, pumpLayoutOf, UPS_BATTERY_LOW, HISTORY_HOURS, BODY_COLORS, esc, SHELTER_STYLES, SHELTER_COLORS, stateFreeSource }) {
 // ---------------------------------------------------------------------------
 // Editor
 // ---------------------------------------------------------------------------
@@ -412,10 +412,15 @@ const SECTIONS = [
               + c._row("speed_power_3", "speed_power_3", { placeholder: c._config.speed_power_max > 0 ? String(Math.round((c._config.speed_power_max * 2) / 3)) : "" })
             : "")
         : "";
+      // What a plug alone tells of a washer's steps and a hob's zones.
+      const plugRows = ["washer", "dishwasher", "dryer"].includes(c._type)
+        ? c._row("step_heat_threshold", "heat_threshold", { placeholder: String(c._type === "dryer" ? DRYER_HEAT_W : WASH_HEAT_W) })
+          + (c._type === "washer" ? c._row("step_spin_threshold", "spin_threshold", { placeholder: String(WASH_SPIN_W) }) : "")
+        : c._type === "cooktop" ? c._row("zone_power", "zone_power", { placeholder: String(ZONE_POWER_W) }) : "";
       return speedRows + c._row(cap.evCharger ? "ev_power_threshold" : cap.screen ? "screen_standby_threshold" : "power_on_threshold", "power_on_threshold",
-        { placeholder: cap.fridgeTemp ? "1" : cap.evCharger ? String(EV_POWER_THRESHOLD) : cap.screen ? String(SCREEN_STANDBY_W) : "10" })
+        { placeholder: cap.fridgeTemp ? "1" : cap.evCharger ? String(EV_POWER_THRESHOLD) : cap.screen ? String(SCREEN_STANDBY_W) : String(PLUG_THRESHOLDS[c._type] ?? 10) }) + plugRows
         + (cap.fridgeTemp ? c._row("no_power_threshold", "no_power_threshold", { placeholder: "1" }) + c._row("no_power_after", "no_power_after", { placeholder: "30" })
-          : cap.evCharger || cap.screen || cap.hairDryer || cap.network || cap.poolPump ? "" : c._row("power_off_delay", "power_off_delay", { placeholder: "0" }));
+          : cap.evCharger || cap.screen || cap.hairDryer || cap.network || cap.poolPump ? "" : c._row("power_off_delay", "power_off_delay", { placeholder: c._type === "dishwasher" ? String(DW_DRY_MIN) : "0" }));
     } },
 
   // What it used, and the price of a kWh to tell what that cost (HACF).
@@ -449,6 +454,18 @@ const SECTIONS = [
   { field: "stop_entity", types: CONTROL_TYPES, labelKey: "section_stop", includeDomains: ACTION_DOMAINS },
 ];
 
+// What a card read from a smart plug leaves out of its editor: what only an
+// integration of the appliance reports or drives (its programme, its time
+// left, its phase, its buttons, its consumables). A sensor beside the plug,
+// a thermometer, a pool's pH, a door contact, stays on offer.
+const PLUG_HIDDEN_SECTIONS = new Set(["program_entity", "delay_entity", "remaining_time_entity", "progress_entity", "phase_entity",
+  "heating_entity", "basket_entity", "shake_entity", "basket2_state_entity", "power_level_entity", "fan_entity", "boost_entity",
+  "filter_life_entity", "filter_reset_entity", "pump_clean_entity", "pump_reset_entity", "pump_running_entity", "air_quality_entity",
+  "display_entity", "night_mode_entity", "heater_entity", "pool_mode_entity", "child_lock_entity", "light_entity", "tank_entity",
+  "fan_speed_entity", "speed_entity", "water_entity", "beans_entity", "tray_entity", "descaling_entity", "cups_entity", "strength_entity",
+  "nozzle_temperature_entity", "nozzle_target_entity", "bed_temperature_entity", "bed_target_entity", "chamber_temperature_entity",
+  "current_layer_entity", "total_layers_entity", "connectivity_entity", "alerts_entity", "toggle_entity", "start_entity", "pause_entity", "resume_entity", "stop_entity"]);
+
 // A section can also hang on the rest of the config: the second hopper only
 // exists on the model that has one.
 function sectionsForType(type, cfg = {}) {
@@ -477,7 +494,14 @@ class ApplianceCardEditor extends HTMLElement {
   }
 
   _sections() {
-    return sectionsForType(this._currentType(), this._config || {});
+    const all = sectionsForType(this._currentType(), this._config || {});
+    return this._plug() ? all.filter((sec) => !PLUG_HIDDEN_SECTIONS.has(sec.field)) : all;
+  }
+
+  // Read from a smart plug: the editor offers the plug, its meter and what
+  // a meter tells, and none of an integration's entities.
+  _plug() {
+    return !!this._config && plugSourceOf(this._config, this._currentType());
   }
 
   _computeOpen(cfg) {
@@ -1077,7 +1101,12 @@ class ApplianceCardEditor extends HTMLElement {
               .sort((a, b) => a.label.localeCompare(b.label, hass.language || undefined)),
           })),
         })}
-        ${this._type === "washer" ? this._row("washer_dryer", "washer_dryer", { type: "checkbox" }) : ""}
+        ${PLUG_SOURCE_TYPES.includes(this._type) ? this._row("source", "source", {
+          type: "select",
+          value: this._plug() ? "plug" : "integration",
+          options: [{ value: "plug", label: t(hass, "source_plug") }, { value: "integration", label: t(hass, "source_integration") }],
+        }) : ""}
+        ${this._type === "washer" && !this._plug() ? this._row("washer_dryer", "washer_dryer", { type: "checkbox" }) : ""}
         ${this._type === "heat_pump" ? this._row("no_hot_water", "no_hot_water", { type: "checkbox" }) : ""}
         ${this._type === "heat_pump" ? this._row("underfloor_heating", "underfloor_heating", { type: "checkbox" }) : ""}
         ${this._type === "fridge" ? this._row("section_fridge_layout", "fridge_layout", {
@@ -1312,7 +1341,7 @@ class ApplianceCardEditor extends HTMLElement {
         </div>
         <div class="section">
           <div class="picker-slot" data-slot="state_entity"></div>
-          <div class="picker-slot" data-slot="__state_map"></div>
+          ${this._plug() ? "" : `<div class="picker-slot" data-slot="__state_map"></div>`}
         </div>
         ${this._sections().map((s) => this._sectionHtml(s)).join("")}
       </details>
@@ -1349,7 +1378,7 @@ class ApplianceCardEditor extends HTMLElement {
           ${this._row("illustration_frame", "illustration_frame", { type: "checkbox" })}
         </div>
       </details>
-      ${caps(this._type).zones ? `
+      ${caps(this._type).zones && !this._plug() ? `
       <details class="group" data-panel="zones" ${this._panelOpen.zones ? "open" : ""}>
         <summary>${t(hass, "section_zones")}</summary>
         <div class="section">
@@ -1390,7 +1419,7 @@ class ApplianceCardEditor extends HTMLElement {
             </div>
           </div>`).join("")}
       </details>
-      ${ENTITY_LISTS.map((list) => this._listPanel(list)).join("")}
+      ${ENTITY_LISTS.filter((list) => !this._plug() || list.panel !== "alerts").map((list) => this._listPanel(list)).join("")}
       ${drawn.length > 1 ? `
       <details class="group" data-panel="order" ${this._panelOpen.order ? "open" : ""}>
         <summary>${t(hass, "section_lines_order")}</summary>
@@ -1403,8 +1432,11 @@ class ApplianceCardEditor extends HTMLElement {
     `;
 
     this._wireTouchTracking();
-    this._mountStateMap(this._root.querySelector('[data-slot="__state_map"]'));
-    this._mountPicker(this._root.querySelector('[data-slot="state_entity"]'), "state_entity", {
+    if (!this._plug()) this._mountStateMap(this._root.querySelector('[data-slot="__state_map"]'));
+    if (this._plug()) this._mountPicker(this._root.querySelector('[data-slot="state_entity"]'), "state_entity", {
+      label: t(hass, "plug_switch"), includeDomains: ["switch", "input_boolean"],
+    });
+    else this._mountPicker(this._root.querySelector('[data-slot="state_entity"]'), "state_entity", {
       label: t(hass, !this._config.state_entity && stateFreeSource(this._config) ? "state_entity_optional" : "state_entity"),
       // Until a type is chosen the card guesses it from the entity, so the
       // list offers every domain a type can live on: limited to sensors, a
@@ -1419,7 +1451,7 @@ class ApplianceCardEditor extends HTMLElement {
           { includeDomains: s.includeDomains, label: s.pickerLabelKey ? t(hass, s.pickerLabelKey) : undefined });
       }
     }
-    if (caps(this._type).zones) {
+    if (caps(this._type).zones && !this._plug()) {
       for (let i = 0; i < this._zoneCount; i++) {
         this._mountZonePicker(this._root.querySelector(`[data-slot="__zone_level_${i}"]`), i, "level_entity", "zone_level_entity", ["sensor", "number", "select", "input_number", "input_select"]);
         this._mountZonePicker(this._root.querySelector(`[data-slot="__zone_residual_${i}"]`), i, "residual_heat_entity", "zone_residual_entity", ["binary_sensor", "sensor"]);

@@ -203,6 +203,7 @@ Only `state_entity` is required, except on a fridge where a probe or a door cont
 | `tap_action` | What a tap on the card does, in Home Assistant's own words: `more-info` (default: the state entity, or on a card without one what it reads in its place), `none`, `navigate`, `url`, `toggle`, `perform-action` or `fire-dom-event`, which is what the popup cards built on browser_mod listen for. In YAML only. |
 | `toggle_entity` | Power button (`switch`, `button`, `script`, `input_boolean`, `fan`), highlighted while on. On every type, the fridge included, where it is the only button; pair it with `controls_activation: confirm` for an appliance that must not be switched off by mistake. |
 | `power_entity` / `power_on_threshold` / `power_icon` | Power sensor. With a threshold, the state is derived from it: *running* above, then *finished* when it falls back. With a smart plug's switch as `state_entity`, or the sensor itself, it is derived without one, against the threshold of the type (see *A smart plug alone*). A state from an integration keeps the say. `power_icon` replaces `mdi:power-plug`. |
+| `source` | `plug` \| `integration`: where the card reads the appliance from. Unset, a smart plug's switch with a meter is a plug, anything else an integration. A plug-read card's editor shows only the plug, its meter and the sensors beside it, and its switch becomes the power button; `integration` keeps a switch from being taken for a plug. Not for a fridge or a screen, which read both together. |
 | `power_off_delay` | Minutes the power must stay under `power_on_threshold` before the cycle reads *Finished*, so a pause (a dishwasher drying, a washer soaking) is not taken for the end. Only when the state comes from the plug: an integration reports its pauses itself. 0 by default, 20 on a dishwasher, which dries on next to nothing. |
 | `speed_power_max` | A hood, an air purifier or a fan on a plug: its power at top speed, in watts. The speed is then read from what it draws: under a third of it the first speed, under two thirds the second, above that the third. A fan entity's percentage or preset always wins. |
 | `speed_power_custom` | Sets the two steps by hand, `speed_power_2` and `speed_power_3`: the watts from which the fan is on its second and third speed, when the thirds do not fit. |
@@ -456,6 +457,8 @@ appliance_type: washer
 state_entity: switch.washer_plug
 power_entity: sensor.washer_plug_power
 ```
+
+In the visual editor, *Source: A smart plug* keeps the menus short: the plug's switch, its meter and the sensors beside it, none of an integration's programme, time left or buttons. The plug's switch is the power button.
 
 Each type knows the power it works at, so there is no threshold to set. Under it, a plug that is on reads *Standby*, and a cycle that ran reads *Finished*. `power_on_threshold` sets another.
 

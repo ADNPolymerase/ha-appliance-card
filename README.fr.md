@@ -203,6 +203,7 @@ Seule `state_entity` est obligatoire, sauf sur un réfrigérateur où une sonde 
 | `tap_action` | Ce que fait un appui sur la carte, dans les mots de Home Assistant : `more-info` (défaut : l'entité d'état, ou sur une carte sans elle ce qu'elle lit à sa place), `none`, `navigate`, `url`, `toggle`, `perform-action` ou `fire-dom-event`, celle qu'écoutent les cartes popup bâties sur browser_mod. En YAML seulement. |
 | `toggle_entity` | Bouton marche/arrêt (`switch`, `button`, `script`, `input_boolean`, `fan`), mis en évidence quand c'est allumé. Sur tous les types, frigo compris, où c'est le seul bouton ; à associer à `controls_activation: confirm` pour un appareil qu'il ne faut pas couper par erreur. |
 | `power_entity` / `power_on_threshold` / `power_icon` | Capteur de puissance. Avec un seuil, l'état en est déduit : *en marche* au-dessus, puis *terminé* en redescendant. Avec l'interrupteur d'une prise en `state_entity`, ou ce même capteur, il en est déduit sans seuil, avec celui du type (voir *Une prise connectée seule*). L'état d'une intégration garde la main. `power_icon` remplace `mdi:power-plug`. |
+| `source` | `plug` \| `integration` : d'où la card lit l'appareil. Sans lui, l'interrupteur d'une prise avec une mesure est une prise, tout le reste une intégration. L'éditeur d'une card lue sur une prise ne montre que la prise, sa mesure et les capteurs à côté, et son interrupteur devient le bouton marche/arrêt ; `integration` évite qu'un interrupteur soit pris pour une prise. Pas pour un frigo ni un écran, qui lisent les deux ensemble. |
 | `power_off_delay` | Nombre de minutes sous `power_on_threshold` avant que le cycle passe à *Terminé*, pour qu'une pause (un lave-vaisselle qui sèche, un lave-linge qui trempe) ne soit pas prise pour la fin. Seulement quand l'état vient de la prise : une intégration signale ses pauses elle-même. 0 par défaut, 20 sur un lave-vaisselle, qui sèche sans presque rien consommer. |
 | `speed_power_max` | Une hotte, un purificateur ou un ventilateur sur une prise : sa puissance à la vitesse maximale, en watts. La vitesse se lit alors dans sa consommation : sous le tiers la première, sous les deux tiers la deuxième, au-delà la troisième. Le pourcentage ou le préréglage d'une entité ventilateur passe toujours avant. |
 | `speed_power_custom` | Règle les deux paliers à la main, `speed_power_2` et `speed_power_3` : les watts à partir desquels le ventilateur est en deuxième et en troisième vitesse, quand les tiers ne conviennent pas. |
@@ -456,6 +457,8 @@ appliance_type: washer
 state_entity: switch.prise_lave_linge
 power_entity: sensor.prise_lave_linge_puissance
 ```
+
+Dans l'éditeur visuel, *Source : Une prise connectée* garde les menus courts : l'interrupteur de la prise, sa mesure et les capteurs à côté, rien du programme, du temps restant ni des boutons d'une intégration. L'interrupteur de la prise sert de bouton marche/arrêt.
 
 Chaque type connaît la puissance à laquelle il travaille, il n'y a donc pas de seuil à régler. En dessous, une prise allumée affiche *En veille*, et un cycle qui a tourné *Terminé*. `power_on_threshold` en fixe un autre.
 

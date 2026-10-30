@@ -139,7 +139,10 @@ function plugConfig(config) {
   plugSeen.add(seen);
   const keep = {};
   for (const [k, v] of Object.entries(config)) if (/_layout$|^illustration_color$|^name$|^washer_dryer$|^tree_palette$|^presents$/.test(k)) keep[k] = v;
-  const out = { ...keep, appliance_type: type, state_entity: "switch.smart_plug", power_entity: "sensor.smart_plug_power", toggle_entity: "switch.smart_plug" };
+  const out = { ...keep, appliance_type: type, state_entity: "switch.smart_plug", power_entity: "sensor.smart_plug_power" };
+  // A plug-read card takes its switch for the power button; a fridge, a
+  // screen or a dock reads its plug with the rest and is given it.
+  if (["fridge", "screen", "robot"].includes(type)) out.toggle_entity = "switch.smart_plug";
   // A fan reads its speed from what it draws: started at mid speed, the
   // slider goes from the first to the third.
   if (["fan", "air_purifier", "hood"].includes(type)) out.speed_power_max = PLUG_WATTS[type] * 2;
