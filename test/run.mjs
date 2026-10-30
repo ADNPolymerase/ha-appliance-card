@@ -8862,6 +8862,9 @@ check('borne : ni un statut reconnu', evMode(evR('SuspendedEVSE', { power_entity
   check('compact side : les boutons sur la ligne du nom', /<div class="cmp-icons">[^]*class="action-btn/.test(side), true);
   check('compact side : plus de rangee de boutons', /class="actions-row"/.test(side), false);
   contains('compact side : le dessin a 72 px', side, '.cmp-side .machine { zoom: 0.75; margin: 0; }');
+  // #65 : sur une carte etroite, les boutons passent sous le nom au lieu de le recouvrir.
+  contains('compact side : les boutons passent a la ligne (#65)', side, '.cmp-side .cmp-wrap .cmp-head { flex: 1; min-width: 0; flex-wrap: wrap; row-gap: 4px; }');
+  contains('compact side : le nom garde son mot le plus long (#65)', side, '.cmp-side .cmp-head .top { flex: 1 1 0; min-width: min-content;');
   check('compact : valeur inconnue, normal', /class="actions-row"/.test(render({ ...W, compact: 'x' }, ws)), true);
   check('compact : false, normal', /class="actions-row"/.test(render({ ...W, compact: false }, ws)), true);
   // A screen beside the text is drawn the size of every other appliance.

@@ -16721,8 +16721,12 @@ class ApplianceCard extends HTMLElement {
         .cmp-side .cmp-wrap { display: flex; gap: 12px; align-items: center; }
         .cmp-side .cmp-pic { flex-shrink: 0; cursor: pointer; }
         .cmp-side .machine { zoom: ${Math.round(0.75 * illustrationSizeOf(cfg.illustration_size) * 1000) / 1000}; margin: 0; }
-        .cmp-side .cmp-wrap .cmp-head { flex: 1; min-width: 0; }
-        .cmp-side .cmp-head .top { flex: 1; min-width: 0; align-items: flex-start; text-align: left; }
+        /* A narrow card has no room for the name and its buttons side by
+           side: the buttons go under the name rather than over it. The name
+           keeps the width of its longest word, which a word cannot shrink
+           below anyway, so that is where the line breaks. */
+        .cmp-side .cmp-wrap .cmp-head { flex: 1; min-width: 0; flex-wrap: wrap; row-gap: 4px; }
+        .cmp-side .cmp-head .top { flex: 1 1 0; min-width: min-content; align-items: flex-start; text-align: left; }
         .cmp-side .info-lines { margin-top: 10px; }
         /* fill_height: the card takes the height of its slot, so two cards
            side by side match, and the buttons sit at the bottom. A minimum
