@@ -138,7 +138,7 @@ const T = {
     type_pet_feeder: "Pet feeder", type_pet_fountain: "Pet fountain", ft_flowing: "Flowing", ft_off: "Off", ft_filter_due: "Filter due", ft_pump_due: "Clean the pump", ft_low_water: "Low water", ft_line_pump: "Pump", ft_line_water: "Water", ft_pump_reset: "Reset pump", ft_last_pump: "Pump last ran", ft_pump_on: "Running", section_pump_clean: "Pump cleaning", section_pump_reset: "Reset pump button", section_pump_running: "Pump running", section_water_level: "Water level", filter_due_below: "Due at or below", feeder_ready: "Ready", feeder_feeding: "Dispensing", section_portions_today: "Portions today", section_weight_today: "Weight today", section_portion_weight: "Portion weight", section_serving_size: "Serving size", section_feeder_schedule: "Schedule", section_last_feed: "Last feed", section_error: "Error indicator", start_option: "Option to select", start_value: "Value to write", portions: "portions",
     feeder_empty: "Tank empty", feeder_level: "Tank at {pct}", section_level: "Food level", section_level_b: "Food level, second hopper", level_empty_below: "Empty at or below", level_max: "Tank capacity",
     section_feeder_layout: "Model", layout_tower: "Square tank", layout_canister: "Round tank", layout_double: "Two bowls", layout_dual_split: "Two hoppers, split bowl", layout_rotary: "Rotating plates (wet food)",
-    type_iron: "Iron", section_iron_layout: "Model", layout_iron: "Iron", layout_generator: "Steam generator",
+    type_iron: "Iron", section_iron_layout: "Model", layout_iron: "Iron", layout_generator: "Steam generator", iron_line_color: "Line colour", color_blue: "Blue", color_body: "Same as the appliance",
     type_toaster: "Toaster", section_toaster_layout: "Model", layout_toaster_two: "Two slots", layout_toaster_four: "Four slots",
     layout_toaster_long: "Long slot", toaster_toasting: "Toasting", toaster_done: "Toast ready", type_air_purifier: "Air purifier",
     type_screen: "Screen (TV, projector, computer)", section_screen_layout: "Model", layout_tv_feet: "TV on feet", layout_tv_stand: "TV on a stand", layout_tv_wall: "Wall-mounted TV", layout_projector: "Projector", layout_computer: "Computer", section_screen_image: "Picture on screen", img_random: "Random", img_sunset: "Sunset", img_aquarium: "Aquarium", img_bars: "Test card", img_football: "Football match", img_space: "Space", img_bounce: "Bouncing logo", img_desktop: "Desktop", img_code: "Scrolling code", img_pong: "Pong", screen_on: "On", screen_playing: "Playing", screen_home: "Home screen", screen_locked: "Locked", screen_muted: "Muted", screen_standby_threshold: "Standby up to this power (W)", section_media: "Media player", section_media2: "Second media player", section_media3: "Third media player", section_lock: "Session lock", layout_tablet_wall: "Wall tablet", layout_tablet_frame: "Framed tablet", layout_tablet_portrait: "Upright tablet with light bar", img_dashboard: "Dashboard", screen_dashboard: "Dashboard", screen_saver: "Screensaver", screen_dark: "Screen off", tab_charging: "charging", tab_line_page: "Page", tab_line_touched: "Last interaction", tab_screen: "Screen", tab_reload: "Reload page", section_screensaver: "Screensaver", section_tab_charging: "Charging sensor", section_tab_page: "Current page", section_tab_brightness: "Screen brightness", section_tab_touched: "Last interaction", tab_restart: "Restart app", section_tab_screenshot: "Screenshot",
@@ -8055,9 +8055,6 @@ const ILLUSTRATION_CSS = {
           100% { transform: translate(-2px, -9px) scale(1.25); opacity: 0; }
         }
   `,
-  // An iron in profile, nose to the left: the soleplate, the shell rising to
-  // the back, the tank inside it and the handle over the top. The same iron is
-  // drawn smaller on the base of a steam generator.
   // An air purifier in one of three shapes: a cylinder blowing out of its
   // top, a square box with its fan on top, or a bladeless ring that blows
   // forward, sideways while it oscillates, or backwards. Clean air is blue,
@@ -9105,116 +9102,30 @@ const ILLUSTRATION_CSS = {
         @keyframes scr-pby { from { top: 6%; } to { top: 88%; } }
         @media (prefers-reduced-motion: reduce) { .machine .scr-pic *, .machine .scr-led, .machine .tab-cam { animation: none !important; animation-delay: var(--anim-offset, 0s); } }
   `,
-  iron: () => `
-        .ir { position: absolute; left: 0; right: 0; top: 0; bottom: 0; }
-        .ir-shell {
-          position: absolute; left: 8px; right: 10px; top: 44px; height: 26px;
-          background: var(--ac-body, var(--secondary-background-color, #d7d7d7));
-          border: 1px solid var(--divider-color, #c7c7c7); border-radius: 10px 16px 4px 4px;
-          clip-path: polygon(0 100%, 12% 40%, 34% 10%, 100% 0, 100% 100%);
+  // The iron and the steam generator: the soleplate turns red and steam
+  // billows from under it, each cloud on its own beat and its own path; the
+  // lamp of the generator glows and steam runs along its hose. Left on, a row
+  // of small flames licks the whole soleplate and the steam turns to smoke.
+  iron: () => `${AP_CSS}
+        .ir-vapo { opacity: 0; transform-box: fill-box; transform-origin: center; }
+        .machine.heating .ir-vapo { animation: ir-vapo 2s ease-out infinite; animation-delay: var(--anim-offset, 0s); }
+        @keyframes ir-vapo {
+          0% { transform: translate(0, -3px) scale(0.35); opacity: 0; }
+          25% { opacity: 1; }
+          100% { transform: translate(var(--dx, -5px), var(--dy, 6px)) scale(var(--sc, 1.5)); opacity: 0; }
         }
-        /* The tank sits inside the shell, so the shell's own outline cuts it:
-           drawn beside it, it stuck out past the nose. */
-        .ir-tank {
-          position: absolute; left: 12px; right: 26px; top: 9px; height: 12px;
-          border-radius: 7px 3px 3px 7px; background: rgba(79, 195, 247, 0.34);
+        .ir-flick { transform-box: fill-box; transform-origin: center bottom; }
+        .machine.left-on .ir-flick { animation: ir-flick 0.6s ease-in-out infinite; animation-delay: var(--anim-offset, 0s); }
+        .machine.left-on .ir-f1 .ir-flick { animation-delay: calc(-0.25s + var(--anim-offset, 0s)); }
+        .machine.left-on .ir-f2 .ir-flick { animation-delay: calc(-0.5s + var(--anim-offset, 0s)); }
+        @keyframes ir-flick {
+          0%, 100% { transform: scaleY(1) skewX(0deg); }
+          33% { transform: scaleY(1.12) skewX(-4deg); }
+          66% { transform: scaleY(0.92) skewX(4deg); }
         }
-        .ir-top {
-          position: absolute; left: 34px; right: 14px; top: 33px; height: 15px; border-radius: 9px 9px 0 0;
-          background: var(--ac-body, var(--secondary-background-color, #d7d7d7));
-          border: 1px solid var(--divider-color, #c7c7c7); border-bottom: none;
-        }
-        .ir-handle {
-          position: absolute; left: 26px; right: 12px; top: 17px; height: 22px;
-          border: 5px solid var(--ac-body, var(--secondary-background-color, #d7d7d7)); border-bottom: none;
-          border-radius: 16px 10px 0 0; box-shadow: 0 -1px 0 var(--divider-color, #c7c7c7);
-        }
-        .ir-plate {
-          position: absolute; left: 4px; right: 8px; top: 69px; height: 9px; background: #3b4048;
-          border-radius: 2px 4px 4px 4px; clip-path: polygon(0 66%, 10% 0, 100% 0, 100% 100%, 3% 100%);
-        }
-        .ir-cord {
-          position: absolute; right: 4px; top: 42px; width: 14px; height: 20px;
-          border: 3px solid var(--disabled-text-color, #9e9e9e); border-left: none; border-top: none;
-          border-radius: 0 0 12px 0;
-        }
-        /* Heating: the soleplate glows and steam leaves the nose. */
-        .machine.heating .ir-plate { background: #ff7043; box-shadow: 0 0 10px 1px #ff7043; }
-        /* Steam: four wisps off the nose, rising clear of the iron and
-           drifting as they go. Kept tall and staggered so that two or three
-           are always in the air rather than one appearing now and then. They
-           are drawn inside the iron: on a generator it is scaled and lifted
-           onto its base, and steam left on the card would rise from nowhere. */
-        .ir-steam {
-          position: absolute; width: 8px; height: 22px; border-radius: 5px; opacity: 0;
-          background: linear-gradient(to top, rgba(176, 196, 214, 0.9), rgba(176, 196, 214, 0));
-        }
-        .ir-steam.s1 { left: 2px; top: 44px; }
-        .ir-steam.s2 { left: 12px; top: 40px; }
-        .ir-steam.s3 { left: 23px; top: 42px; }
-        .ir-steam.s4 { left: 33px; top: 46px; }
-        .machine.heating .ir-steam { animation: ir-puff 2.6s ease-out infinite; animation-delay: var(--anim-offset, 0s); }
-        .machine.heating .ir-steam.s2 { animation-delay: calc(-0.65s + var(--anim-offset, 0s)); }
-        .machine.heating .ir-steam.s3 { animation-delay: calc(-1.3s + var(--anim-offset, 0s)); }
-        .machine.heating .ir-steam.s4 { animation-delay: calc(-1.95s + var(--anim-offset, 0s)); }
-        @keyframes ir-puff {
-          0% { transform: translate(0, 10px) scale(0.45); opacity: 0; }
-          20% { opacity: 0.95; }
-          70% { opacity: 0.7; }
-          100% { transform: translate(-7px, -34px) scale(1.35); opacity: 0; }
-        }
-        /* Left on for too long: the boiler's flame, its shape and its flicker,
-           in front of the iron. Its blue root belongs to a gas burner and is
-           dropped: nothing burns gas here. */
-        .ir-fire {
-          position: absolute; transform-origin: 50% 100%; opacity: 0;
-          background: linear-gradient(0deg, #ffca28 0%, #ffa726 30%, #ff9800 60%, #ff5722 100%);
-          clip-path: polygon(46% 0%, 58% 30%, 70% 10%, 76% 44%, 90% 28%, 94% 64%, 86% 88%, 66% 100%, 34% 100%, 14% 88%, 6% 62%, 12% 32%, 26% 50%, 30% 18%, 42% 36%);
-        }
-        .ir-fire.f1 { left: 8px; bottom: 28px; width: 18px; height: 32px; }
-        .ir-fire.f2 { left: 28px; bottom: 30px; width: 26px; height: 48px; }
-        .ir-fire.f3 { left: 56px; bottom: 30px; width: 20px; height: 38px; }
-        .machine.left-on .ir-fire { opacity: 1; animation: ir-flicker 0.6s ease-in-out infinite; animation-delay: var(--anim-offset, 0s); }
-        .machine.left-on .ir-fire.f2 { animation-delay: calc(-0.2s + var(--anim-offset, 0s)); }
-        .machine.left-on .ir-fire.f3 { animation-delay: calc(-0.4s + var(--anim-offset, 0s)); }
-        @keyframes ir-flicker {
-          0%, 100% { transform: scale(1, 1); }
-          30% { transform: scale(0.92, 1.1); }
-          60% { transform: scale(1.06, 0.9); }
-        }
-        .machine.left-on .ir-plate { background: #ff5722; box-shadow: 0 0 14px 2px #ff5722; }
-        /* The generator: the base carries the water tank, a dial and a lamp,
-           and the iron rests on its mat rather than sinking into it. */
-        .machine.generator .ir { transform: scale(0.74) translate(2px, -35px); transform-origin: 50% 100%; }
-        .machine.generator .ir-fire.f1 { left: 12px; bottom: 52px; width: 16px; height: 28px; }
-        .machine.generator .ir-fire.f2 { left: 29px; bottom: 54px; width: 23px; height: 42px; }
-        .machine.generator .ir-fire.f3 { left: 54px; bottom: 52px; width: 18px; height: 32px; }
-        .gen-base {
-          position: absolute; left: 5px; right: 5px; bottom: 10px; height: 33px; border-radius: 7px 7px 10px 10px;
-          background: var(--ac-body, var(--secondary-background-color, #d7d7d7));
-          border: 1px solid var(--divider-color, #c7c7c7);
-        }
-        .gen-mat {
-          position: absolute; left: 11px; right: 11px; bottom: 42px; height: 6px; border-radius: 4px 4px 0 0;
-          background: var(--ac-body, var(--secondary-background-color, #d7d7d7));
-          border: 1px solid var(--divider-color, #c7c7c7); border-bottom: none;
-        }
-        .gen-tank {
-          position: absolute; left: 11px; width: 30px; bottom: 16px; height: 22px; border-radius: 4px 7px 7px 4px;
-          background: rgba(79, 195, 247, 0.34); border: 1px solid rgba(0, 0, 0, 0.05);
-        }
-        .gen-dial {
-          position: absolute; right: 12px; bottom: 19px; width: 14px; height: 14px; border-radius: 50%;
-          background: var(--disabled-text-color, #9e9e9e);
-        }
-        .gen-led { position: absolute; right: 33px; bottom: 24px; width: 5px; height: 5px; border-radius: 50%; background: #8e9498; }
-        .machine.generator.heating .gen-led { background: #ff7043; box-shadow: 0 0 6px 1px #ff7043; }
-        .machine.generator.left-on .gen-led { background: #ff5722; box-shadow: 0 0 8px 2px #ff5722; }
-        .gen-hose {
-          position: absolute; right: 6px; top: 52px; width: 15px; height: 18px;
-          border: 4px solid var(--disabled-text-color, #9e9e9e); border-left: none; border-top: none;
-          border-radius: 0 0 12px 0;
-        }
+        .machine.heating .ir-glow { animation: ap-glow 1.8s ease-in-out infinite; animation-delay: var(--anim-offset, 0s); }
+        .machine.heating .ir-flow { animation: ir-flow 0.9s linear infinite; animation-delay: var(--anim-offset, 0s); }
+        @keyframes ir-flow { to { stroke-dashoffset: 12; } }
   `,
   // An EV charger on the wall, from the front: the box, its dark face with a
   // bolt and the light above it, the holster on its side with a CCS plug
@@ -10959,7 +10870,8 @@ const AP_CLOTHES = { washer: ["#e57373", "#64b5f6", "#fff176"], dryer: ["#ce93d8
 function laundrySvg(type, d) {
   apN = 0;
   const c = apId(), ch = apId(), gl = apId(), drum = apId(), clip = apId(), warm = apId();
-  const dryer = type === "dryer", dry = dryer || d.drying, water = !dryer && !d.drying && !d.spinCycle;
+  // Water only while it washes: a drum at rest is drained, it can be opened.
+  const dryer = type === "dryer", dry = dryer || d.drying, water = d.turning && !dryer && !d.drying && !d.spinCycle;
   // Turning, the laundry is spread round the drum; stopped, it has fallen
   // to the bottom.
   const at = d.turning ? [0, 120, 240].map((a) => a + (dryer ? 30 : 0)) : [145, 180, 215];
@@ -11096,6 +11008,107 @@ ${apLcd(88, 40, 16, 8.6, d.screen, 5.6)}
 ${[0, 1, 2, 3].map((r) => [0, 1, 2].map((k) => `<rect x="${88.6 + k * 5.2}" y="${53 + r * 6}" width="4" height="4.2" rx="1" fill="#3a434c"/>`).join("")).join("")}
 <rect class="ap-start" x="88.6" y="78" width="14.4" height="9" rx="2"/>
 <rect x="18" y="96" width="8" height="2.6" rx="1" fill="#59616b"/><rect x="94" y="96" width="8" height="2.6" rx="1" fill="#59616b"/>
+</svg>`;
+}
+
+// The colour of the line along the iron: orange, blue, or the iron's own.
+const IRON_LINES = {
+  orange: ["#f57c00", "#ffb74d"],
+  blue: ["#1565c0", "#64b5f6"],
+  body: ["var(--ac-body-lo, #aab3bc)", "var(--ac-body, #dfe5ec)"],
+};
+// A fixed scatter, so the steam looks random but stays put from one render to
+// the next instead of jumping each time the state updates.
+const irRnd = (n) => { const x = Math.sin(n * 12.9898 + 78.233) * 43758.5453; return x - Math.floor(x); };
+// Where the soleplate burns when the iron has been left on.
+const IRON_FIRE = [14, 27, 40, 53, 66, 79, 92, 104].map((x) => [x, 87]);
+const irFlames = (x, y, s, i) => `<g class="ir-f${i % 3}" transform="translate(${x.toFixed(1)} ${y.toFixed(1)}) scale(${s})">
+<path class="ir-flick" d="M-16 0 Q-22 -14 -14 -22 Q-12 -14 -8 -12 Q-10 -24 0 -34 Q2 -22 8 -18 Q10 -26 16 -24 Q22 -12 14 0 Z" fill="#ff7043"/>
+<path class="ir-flick" d="M-8 0 Q-12 -8 -6 -14 Q-4 -8 0 -8 Q0 -16 6 -20 Q8 -12 10 -8 Q14 -4 8 0 Z" fill="#ffca28"/></g>`;
+
+// An iron in profile, nose to the left, after the classic steam irons: the
+// steel soleplate, a shell in the appliance colour with a coloured line along
+// it, the water tank at the front, the handle over the top with its two
+// buttons, the temperature dial and the lamp. Heating, the soleplate turns
+// red and steam billows from under it; left on, it burns and the steam turns
+// to black smoke. The body alone, without its cord or shadow, is the one the
+// steam generator carries.
+function ironBody(d, opt = {}) {
+  const { cord = true, shadow = true } = opt;
+  const b = apId(), o = apId(), pl = apId(), hot = apId(), tk = apId(), hl = apId(), sm = apId();
+  const heat = d.heating || d.leftOn;
+  const [ln, lnHi] = IRON_LINES[d.line] || IRON_LINES.orange;
+  const body = "M12 81 C24 67 37 58 49 52 C53 36 67 26 88 25 H100 Q110 25 110 35 V81 Z";
+  const hole = "M65 50 C68 42 76 37 87 37 H94 Q98 37 98 41 V47 Q98 51 94 51 H67 Q64 51 65 50 Z";
+  const steam = heat ? `<g fill="url(#${sm})">${Array.from({ length: 8 }, (_, i) => {
+    const r = (k) => irRnd(i * 7 + k), x = 12 + i * 12.5 + (r(1) - 0.5) * 8, y = 90 + r(2) * 3, k = 4.5 + r(3) * 4;
+    const st = `animation-duration: ${(1.5 + r(4) * 1.6).toFixed(2)}s; animation-delay: calc(${(-r(5) * 3).toFixed(2)}s + var(--anim-offset, 0s)); --dx: ${((r(6) - 0.7) * 12).toFixed(1)}px; --dy: ${(3 + r(7) * 7).toFixed(1)}px; --sc: ${(1.2 + r(8) * 0.8).toFixed(2)}`;
+    return `<g class="ir-vapo" style="${st}"><circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${k.toFixed(1)}"/><circle cx="${(x + k * 0.7).toFixed(1)}" cy="${(y + 1).toFixed(1)}" r="${(k * 0.7).toFixed(1)}"/><circle cx="${(x - k * 0.6).toFixed(1)}" cy="${(y + 1.5).toFixed(1)}" r="${(k * 0.6).toFixed(1)}"/></g>`;
+  }).join("")}</g>` : "";
+  return `<defs><linearGradient id="${b}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" style="stop-color: var(--ac-body-hi, #ffffff)"/><stop offset=".6" style="stop-color: var(--ac-body, #e6eaee)"/><stop offset="1" style="stop-color: var(--ac-body-lo, #b4bdc6)"/></linearGradient>
+<linearGradient id="${o}" x1="0" y1="0" x2="1" y2="0"><stop offset="0" style="stop-color: ${lnHi}"/><stop offset="1" style="stop-color: ${ln}"/></linearGradient>
+<linearGradient id="${pl}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#eceff1"/><stop offset=".45" stop-color="#b0bec5"/><stop offset="1" stop-color="#546e7a"/></linearGradient>
+<linearGradient id="${hot}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ff7043"/><stop offset="1" stop-color="#d84315"/></linearGradient>
+<linearGradient id="${tk}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e3f2fd" stop-opacity=".7"/><stop offset=".45" stop-color="#bbdefb" stop-opacity=".7"/><stop offset=".46" stop-color="#64b5f6" stop-opacity=".8"/><stop offset="1" stop-color="#1e88e5" stop-opacity=".85"/></linearGradient>
+<linearGradient id="${hl}" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset=".5" stop-color="#fff" stop-opacity=".9"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>
+<radialGradient id="${sm}" cx=".45" cy=".4" r=".6">${d.leftOn ? `<stop offset="0" stop-color="#424242"/><stop offset=".55" stop-color="#212121" stop-opacity=".85"/><stop offset="1" stop-color="#000" stop-opacity="0"/>` : `<stop offset="0" stop-color="#ffffff"/><stop offset=".55" stop-color="#dfe6ea"/><stop offset="1" stop-color="#b0bec5" stop-opacity="0"/>`}</radialGradient></defs>
+${shadow ? apSoft(60, 95, 50, 3, 0.24) : ""}
+${cord ? `<path d="M110 40 Q118 42 120 52" stroke="#78909c" stroke-width="3" fill="none" stroke-linecap="round"/><path d="M107 36 h6 a2 2 0 0 1 2 2 v6 a2 2 0 0 1 -2 2 h-6 Z" fill="#90a4ae"/>` : ""}
+<path class="ir-plate" d="M8 88 Q11 81 22 80 H110 V86 Q110 89 107 89 H10 Q7 89 8 88 Z" fill="url(#${heat ? hot : pl})" stroke="rgba(0,0,0,.25)" stroke-width=".5"/>
+<path d="M14 83.5 H106" stroke="#fff" stroke-width=".8" opacity="${heat ? 0.35 : 0.7}"/>
+<path class="ir-body" fill-rule="evenodd" d="${body} ${hole}" fill="url(#${b})" stroke="rgba(0,0,0,.22)" stroke-width=".6"/>
+<path class="ir-line" d="M13 80.6 C25 69 39 63 58 61 H110 V70 H60 C44 71 30 75 18 80.6 Z" fill="url(#${o})"/>
+<path d="M26 74 C38 67 50 64 66 63.5 H104" stroke="url(#${hl})" stroke-width="1.2" fill="none" stroke-linecap="round"/>
+<path class="ir-tank" d="M22 72 C30 63 40 57 49 53 L53 60 C44 62 35 67 28 73 Z" fill="url(#${tk})" stroke="rgba(30,136,229,.4)" stroke-width=".4"/>
+<path d="M56 34 C62 29 70 27 80 26.5" stroke="#fff" stroke-width="1.6" fill="none" opacity=".9" stroke-linecap="round"/>
+<path d="${hole}" fill="none" stroke="#000" stroke-width=".6" opacity=".15"/>
+<ellipse cx="58" cy="38" rx="3.6" ry="2.4" transform="rotate(-30 58 38)" style="fill: ${lnHi}" stroke="rgba(0,0,0,.2)" stroke-width=".4"/><ellipse cx="64" cy="33" rx="3" ry="2" transform="rotate(-20 64 33)" style="fill: ${ln}" stroke="rgba(0,0,0,.2)" stroke-width=".4"/>
+<ellipse cx="82" cy="56" rx="7" ry="2.6" fill="#eceff1" stroke="rgba(0,0,0,.25)" stroke-width=".5"/><path d="M82 54.2 v2.4" style="stroke: ${ln}" stroke-width="1.2" stroke-linecap="round"/>
+<circle cx="104" cy="56" r="1.7" fill="${heat ? "#ff5252" : "#b0bec5"}"/>${heat ? `<circle class="ir-glow" cx="104" cy="56" r="3.2" fill="#ff5252" opacity=".35"/>` : ""}
+${steam}`;
+}
+
+function ironSvg(d) {
+  apN = 0;
+  return `<svg class="ap-svg ir-svg" viewBox="0 -10 120 135" aria-hidden="true">${ironBody(d)}${d.leftOn ? IRON_FIRE.map(([x, y], i) => irFlames(x, y, i % 2 ? 0.3 : 0.34, i)).join("") : ""}</svg>`;
+}
+
+// A steam generator, after the Calor Pro Express: a low cradle at the back
+// and a tall water tank at the front, a slope between them where the iron
+// lies when it is off, the lamp at the front and the hose looping from the
+// back of the base to the heel of the iron. Heating, the iron lifts off the
+// slope nose up, steam billows under it and runs along the hose.
+function generatorSvg(d) {
+  apN = 0;
+  const b = apId(), tk = apId(), hz = apId(), glow = apId();
+  const heat = d.heating || d.leftOn;
+  // The iron, mirrored so its nose points right, scaled and turned nose up
+  // along the slope; its heel sits on the cradle, lifted off it when it heats.
+  const S = 0.74, deg = -37, A = deg * Math.PI / 180;
+  const rs = ([x, y]) => { const u = (120 - x) * S, v = y * S; return [u * Math.cos(A) - v * Math.sin(A), u * Math.sin(A) + v * Math.cos(A)]; };
+  const h0 = rs([108, 89]), lift = heat ? [-5, -13] : [0, 0], T = [30 + lift[0] - h0[0], 90.5 + lift[1] - h0[1]];
+  const at = (pt) => { const [x, y] = rs(pt); return [T[0] + x, T[1] + y]; };
+  const [hx, hy] = at([111, 41]);
+  const hose = `M${hx.toFixed(1)} ${hy.toFixed(1)} C${(hx - 20).toFixed(1)} ${(hy - 2).toFixed(1)} -1 101 11 100.5`;
+  return `<svg class="ap-svg ir-svg" viewBox="0 -10 120 135" aria-hidden="true"><defs><linearGradient id="${b}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" style="stop-color: var(--ac-body-hi, #f3f6fa)"/><stop offset=".6" style="stop-color: var(--ac-body, #dfe5ec)"/><stop offset="1" style="stop-color: var(--ac-body-lo, #9fb0c2)"/></linearGradient>
+<linearGradient id="${tk}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#b3d4f5" stop-opacity=".55"/><stop offset=".42" stop-color="#90c2f0" stop-opacity=".6"/><stop offset=".43" stop-color="#2f7fd6" stop-opacity=".8"/><stop offset="1" stop-color="#15489a" stop-opacity=".9"/></linearGradient>
+<radialGradient id="${glow}" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#fff"/><stop offset=".55" stop-color="${heat ? "#ff8a65" : "#cfd8dc"}"/><stop offset="1" stop-color="${heat ? "#d84315" : "#78909c"}"/></radialGradient>
+<linearGradient id="${hz}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#78909c"/><stop offset="1" stop-color="#455a64"/></linearGradient></defs>
+${apSoft(60, 111, 54, 3.4, 0.22)}
+<path class="gen-hose" d="${hose}" stroke="url(#${hz})" stroke-width="3.6" fill="none" stroke-linecap="round"/>
+${heat ? `<path class="ir-flow" d="${hose}" stroke="#fff" stroke-width="1.1" stroke-dasharray="2 4" fill="none" stroke-linecap="round" opacity=".8"/>` : ""}
+<path class="gen-base" d="M14 108 Q7 108 7 100 Q7 93 15 92 H30 L86 49.6 Q92 45 100 45.5 Q110 47 112 56 L114 101 Q114 108 107 108 Z" fill="url(#${b})" stroke="rgba(0,0,0,.25)" stroke-width=".6"/>
+<path d="M15.5 94.2 H31 L86.5 52" stroke="#3a4a6b" stroke-width="2" fill="none" stroke-linecap="round" opacity=".75"/>
+<path class="gen-tank" d="M56 96 L87.5 56 Q92 51 98.5 51.5 Q106 52.5 107.5 59 L108.5 96 Z" fill="url(#${tk})" stroke="rgba(21,72,154,.55)" stroke-width=".6"/>
+<path d="M90 58 Q94 54.5 99.5 55" stroke="#fff" stroke-width="1.3" fill="none" opacity=".75" stroke-linecap="round"/>
+<path d="M56 96 H108.5" stroke="#3a4a6b" stroke-width="1.6" opacity=".6"/>
+<rect x="22" y="99" width="22" height="5" rx="2" fill="#000" opacity=".12"/>
+<circle cx="13" cy="100" r="2" fill="#3a4a6b" opacity=".8"/>
+${heat ? `<circle class="ir-glow" cx="80" cy="99" r="8" fill="#ff8a65" opacity=".35"/>` : ""}
+<circle cx="80" cy="99" r="5" fill="url(#${glow})" stroke="rgba(0,0,0,.3)" stroke-width=".5"/>
+<path d="M14 108 H107" stroke="#2b3037" stroke-width="2.4" stroke-linecap="round" opacity=".55"/>
+<g transform="translate(${T[0].toFixed(2)} ${T[1].toFixed(2)}) rotate(${deg}) scale(${S}) translate(120 0) scale(-1 1)">${ironBody(d, { cord: false, shadow: false })}</g>
+${d.leftOn ? IRON_FIRE.map(at).map(([x, y], i) => irFlames(x, y, i % 2 ? 0.24 : 0.27, i)).join("") : ""}
 </svg>`;
 }
 
@@ -11538,30 +11551,11 @@ function illustrationHtml(type, ctx) {
   if (type === "fan") return fanHtml(cls, ctx.fan || {});
 
   if (type === "iron") {
-    // The iron alone, or the same iron on the base of a steam generator. The
-    // base is drawn first, so the iron rests on it rather than through it.
-    const base = ctx.ironLayout === "generator"
-      ? `<div class="gen-base"></div><div class="gen-tank"></div><div class="gen-dial"></div>
-          <div class="gen-led"></div><div class="gen-mat"></div><div class="gen-hose"></div>`
-      : `<div class="ir-cord"></div>`;
+    const d = { heating: !!ctx.heating, leftOn: !!ctx.leftOn, line: ctx.ironLine };
     return `
-        <div class="machine ${cls} ${ctx.ironLayout} ${ctx.leftOn ? "left-on" : ""}">
-          ${base}
-          <div class="ir">
-            <div class="ir-steam s1"></div>
-            <div class="ir-steam s2"></div>
-            <div class="ir-steam s3"></div>
-            <div class="ir-steam s4"></div>
-            <div class="ir-handle"></div>
-            <div class="ir-top"></div>
-            <div class="ir-shell"><div class="ir-tank"></div></div>
-            <div class="ir-plate"></div>
-          </div>
-          <div class="ir-fire f1"></div>
-          <div class="ir-fire f2"></div>
-          <div class="ir-fire f3"></div>
-        </div>`;
+        <div class="machine ${cls} ${ctx.ironLayout} ${ctx.leftOn ? "left-on" : ""}">${ctx.ironLayout === "generator" ? generatorSvg(d) : ironSvg(d)}</div>`;
   }
+
 
   if (type === "kettle") {
     // No timer and no progress: the drawing is the whole readout.
@@ -15273,6 +15267,7 @@ class ApplianceCard extends HTMLElement {
       feederLayout: ["canister", "double", "dual_split", "rotary"].includes(cfg.feeder_layout) ? cfg.feeder_layout : "",
       feederScreen,
       ironLayout: cfg.iron_layout === "generator" ? "generator" : "",
+      ironLine: ["blue", "body"].includes(cfg.iron_line_color) ? cfg.iron_line_color : "orange",
       kettleLayout: cfg.kettle_layout,
       coffeeLayout: cfg.coffee_layout,
       boilerLayout: cfg.boiler_layout,

@@ -137,7 +137,7 @@ const T = {
     type_pet_feeder: "Pet feeder", type_pet_fountain: "Pet fountain", ft_flowing: "Flowing", ft_off: "Off", ft_filter_due: "Filter due", ft_pump_due: "Clean the pump", ft_low_water: "Low water", ft_line_pump: "Pump", ft_line_water: "Water", ft_pump_reset: "Reset pump", ft_last_pump: "Pump last ran", ft_pump_on: "Running", section_pump_clean: "Pump cleaning", section_pump_reset: "Reset pump button", section_pump_running: "Pump running", section_water_level: "Water level", filter_due_below: "Due at or below", feeder_ready: "Ready", feeder_feeding: "Dispensing", section_portions_today: "Portions today", section_weight_today: "Weight today", section_portion_weight: "Portion weight", section_serving_size: "Serving size", section_feeder_schedule: "Schedule", section_last_feed: "Last feed", section_error: "Error indicator", start_option: "Option to select", start_value: "Value to write", portions: "portions",
     feeder_empty: "Tank empty", feeder_level: "Tank at {pct}", section_level: "Food level", section_level_b: "Food level, second hopper", level_empty_below: "Empty at or below", level_max: "Tank capacity",
     section_feeder_layout: "Model", layout_tower: "Square tank", layout_canister: "Round tank", layout_double: "Two bowls", layout_dual_split: "Two hoppers, split bowl", layout_rotary: "Rotating plates (wet food)",
-    type_iron: "Iron", section_iron_layout: "Model", layout_iron: "Iron", layout_generator: "Steam generator",
+    type_iron: "Iron", section_iron_layout: "Model", layout_iron: "Iron", layout_generator: "Steam generator", iron_line_color: "Line colour", color_blue: "Blue", color_body: "Same as the appliance",
     type_toaster: "Toaster", section_toaster_layout: "Model", layout_toaster_two: "Two slots", layout_toaster_four: "Four slots",
     layout_toaster_long: "Long slot", toaster_toasting: "Toasting", toaster_done: "Toast ready", type_air_purifier: "Air purifier",
     type_screen: "Screen (TV, projector, computer)", section_screen_layout: "Model", layout_tv_feet: "TV on feet", layout_tv_stand: "TV on a stand", layout_tv_wall: "Wall-mounted TV", layout_projector: "Projector", layout_computer: "Computer", section_screen_image: "Picture on screen", img_random: "Random", img_sunset: "Sunset", img_aquarium: "Aquarium", img_bars: "Test card", img_football: "Football match", img_space: "Space", img_bounce: "Bouncing logo", img_desktop: "Desktop", img_code: "Scrolling code", img_pong: "Pong", screen_on: "On", screen_playing: "Playing", screen_home: "Home screen", screen_locked: "Locked", screen_muted: "Muted", screen_standby_threshold: "Standby up to this power (W)", section_media: "Media player", section_media2: "Second media player", section_media3: "Third media player", section_lock: "Session lock", layout_tablet_wall: "Wall tablet", layout_tablet_frame: "Framed tablet", layout_tablet_portrait: "Upright tablet with light bar", img_dashboard: "Dashboard", screen_dashboard: "Dashboard", screen_saver: "Screensaver", screen_dark: "Screen off", tab_charging: "charging", tab_line_page: "Page", tab_line_touched: "Last interaction", tab_screen: "Screen", tab_reload: "Reload page", section_screensaver: "Screensaver", section_tab_charging: "Charging sensor", section_tab_page: "Current page", section_tab_brightness: "Screen brightness", section_tab_touched: "Last interaction", tab_restart: "Restart app", section_tab_screenshot: "Screenshot",
@@ -306,7 +306,7 @@ const T = {
     type_pet_feeder: "Distributeur de croquettes", type_pet_fountain: "Fontaine \u00e0 eau", ft_flowing: "L'eau coule", ft_off: "Arr\u00eat\u00e9e", ft_filter_due: "Filtre \u00e0 changer", ft_pump_due: "Pompe \u00e0 nettoyer", ft_low_water: "Peu d'eau", ft_line_pump: "Pompe", ft_line_water: "Eau", ft_pump_reset: "R\u00e9initialiser la pompe", ft_last_pump: "Derni\u00e8re marche de la pompe", ft_pump_on: "En marche", section_pump_clean: "Nettoyage de la pompe", section_pump_reset: "Bouton de r\u00e9initialisation de la pompe", section_pump_running: "Pompe en marche", section_water_level: "Niveau d'eau", filter_due_below: "D\u00fb \u00e0 ce niveau ou moins", feeder_ready: "Pr\u00eat", feeder_feeding: "Distribution", section_portions_today: "Portions du jour", section_weight_today: "Poids du jour", section_portion_weight: "Poids d'une portion", section_serving_size: "Taille de la portion", section_feeder_schedule: "Planning", section_last_feed: "Dernier repas", section_error: "Indicateur d'erreur", start_option: "Option \u00e0 choisir", start_value: "Valeur \u00e0 \u00e9crire", portions: "portions",
     feeder_empty: "R\u00e9servoir vide", feeder_level: "R\u00e9servoir \u00e0 {pct}", section_level: "Niveau de croquettes", section_level_b: "Niveau du second r\u00e9servoir", level_empty_below: "Vide \u00e0 ce niveau ou moins", level_max: "Contenance du r\u00e9servoir",
     section_feeder_layout: "Mod\u00e8le", layout_tower: "R\u00e9servoir carr\u00e9", layout_canister: "R\u00e9servoir rond", layout_double: "Deux gamelles", layout_dual_split: "Deux r\u00e9servoirs, gamelle partag\u00e9e", layout_rotary: "Plateau tournant (p\u00e2t\u00e9e)",
-    type_iron: "Fer \u00e0 repasser", section_iron_layout: "Mod\u00e8le", layout_iron: "Fer seul", layout_generator: "Centrale vapeur",
+    type_iron: "Fer \u00e0 repasser", section_iron_layout: "Mod\u00e8le", layout_iron: "Fer seul", layout_generator: "Centrale vapeur", iron_line_color: "Couleur de la ligne", color_blue: "Bleu", color_body: "Comme l'appareil",
     type_toaster: "Grille-pain", section_toaster_layout: "Mod\u00e8le", layout_toaster_two: "Deux fentes", layout_toaster_four: "Quatre fentes",
     layout_toaster_long: "Fente longue", toaster_toasting: "Grillage", toaster_done: "Pr\u00eat", type_air_purifier: "Purificateur d'air",
     type_screen: "\u00c9cran (TV, projecteur, ordinateur)", section_screen_layout: "Mod\u00e8le", layout_tv_feet: "T\u00e9l\u00e9vision sur pieds", layout_tv_stand: "T\u00e9l\u00e9vision sur pied central", layout_tv_wall: "T\u00e9l\u00e9vision murale", layout_projector: "Vid\u00e9oprojecteur", layout_computer: "Ordinateur", section_screen_image: "Image \u00e0 l'\u00e9cran", img_random: "Au hasard", img_sunset: "Coucher de soleil", img_aquarium: "Aquarium", img_bars: "Mire", img_football: "Match de foot", img_space: "Espace", img_bounce: "Logo qui rebondit", img_desktop: "Bureau", img_code: "Code qui d\u00e9file", img_pong: "Pong", screen_on: "Allum\u00e9", screen_playing: "Lecture", screen_home: "Accueil", screen_locked: "Verrouill\u00e9", screen_muted: "Son coup\u00e9", screen_standby_threshold: "En veille jusqu'\u00e0 cette puissance (W)", section_media: "Lecteur multim\u00e9dia", section_media2: "Deuxi\u00e8me lecteur", section_media3: "Troisi\u00e8me lecteur", section_lock: "Verrouillage de session", layout_tablet_wall: "Tablette murale", layout_tablet_frame: "Tablette encadr\u00e9e", layout_tablet_portrait: "Tablette portrait \u00e0 barre lumineuse", img_dashboard: "Tableau de bord", screen_dashboard: "Tableau de bord", screen_saver: "\u00c9conomiseur d'\u00e9cran", screen_dark: "\u00c9cran \u00e9teint", tab_charging: "en charge", tab_line_page: "Page", tab_line_touched: "Derni\u00e8re interaction", tab_screen: "\u00c9cran", tab_reload: "Recharger la page", section_screensaver: "\u00c9conomiseur d'\u00e9cran", section_tab_charging: "Capteur de charge", section_tab_page: "Page affich\u00e9e", section_tab_brightness: "Luminosit\u00e9 de l'\u00e9cran", section_tab_touched: "Derni\u00e8re interaction", tab_restart: "Red\u00e9marrer l'application", section_tab_screenshot: "Capture d'\u00e9cran",
@@ -475,7 +475,7 @@ const T = {
     type_pet_feeder: "\u041a\u043e\u0440\u043c\u0443\u0448\u043a\u0430", type_pet_fountain: "\u041f\u043e\u0438\u043b\u043a\u0430-\u0444\u043e\u043d\u0442\u0430\u043d", ft_flowing: "\u0422\u0435\u0447\u0451\u0442", ft_off: "\u0412\u044b\u043a\u043b\u044e\u0447\u0435\u043d\u0430", ft_filter_due: "\u0417\u0430\u043c\u0435\u043d\u0438\u0442\u0435 \u0444\u0438\u043b\u044c\u0442\u0440", ft_pump_due: "\u041f\u043e\u0447\u0438\u0441\u0442\u0438\u0442\u0435 \u043d\u0430\u0441\u043e\u0441", ft_low_water: "\u041c\u0430\u043b\u043e \u0432\u043e\u0434\u044b", ft_line_pump: "\u041d\u0430\u0441\u043e\u0441", ft_line_water: "\u0412\u043e\u0434\u0430", ft_pump_reset: "\u0421\u0431\u0440\u043e\u0441\u0438\u0442\u044c \u043d\u0430\u0441\u043e\u0441", ft_last_pump: "\u041f\u043e\u0441\u043b\u0435\u0434\u043d\u0438\u0439 \u0437\u0430\u043f\u0443\u0441\u043a \u043d\u0430\u0441\u043e\u0441\u0430", ft_pump_on: "\u0420\u0430\u0431\u043e\u0442\u0430\u0435\u0442", section_pump_clean: "\u0427\u0438\u0441\u0442\u043a\u0430 \u043d\u0430\u0441\u043e\u0441\u0430", section_pump_reset: "\u041a\u043d\u043e\u043f\u043a\u0430 \u0441\u0431\u0440\u043e\u0441\u0430 \u043d\u0430\u0441\u043e\u0441\u0430", section_pump_running: "\u041d\u0430\u0441\u043e\u0441 \u0440\u0430\u0431\u043e\u0442\u0430\u0435\u0442", section_water_level: "\u0423\u0440\u043e\u0432\u0435\u043d\u044c \u0432\u043e\u0434\u044b", filter_due_below: "\u0421\u0440\u043e\u043a \u043f\u0440\u0438 \u044d\u0442\u043e\u043c \u0437\u043d\u0430\u0447\u0435\u043d\u0438\u0438 \u0438\u043b\u0438 \u043d\u0438\u0436\u0435", feeder_ready: "\u0413\u043e\u0442\u043e\u0432\u0430", feeder_feeding: "\u041a\u043e\u0440\u043c\u043b\u0435\u043d\u0438\u0435", section_portions_today: "\u041f\u043e\u0440\u0446\u0438\u0439 \u0437\u0430 \u0434\u0435\u043d\u044c", section_weight_today: "\u0412\u0435\u0441 \u0437\u0430 \u0434\u0435\u043d\u044c", section_portion_weight: "\u0412\u0435\u0441 \u043f\u043e\u0440\u0446\u0438\u0438", section_serving_size: "\u0420\u0430\u0437\u043c\u0435\u0440 \u043f\u043e\u0440\u0446\u0438\u0438", section_feeder_schedule: "\u0420\u0430\u0441\u043f\u0438\u0441\u0430\u043d\u0438\u0435", section_last_feed: "\u041f\u043e\u0441\u043b\u0435\u0434\u043d\u0435\u0435 \u043a\u043e\u0440\u043c\u043b\u0435\u043d\u0438\u0435", section_error: "\u0418\u043d\u0434\u0438\u043a\u0430\u0442\u043e\u0440 \u043e\u0448\u0438\u0431\u043a\u0438", start_option: "\u0412\u044b\u0431\u0438\u0440\u0430\u0435\u043c\u0430\u044f \u043e\u043f\u0446\u0438\u044f", start_value: "\u0417\u0430\u043f\u0438\u0441\u044b\u0432\u0430\u0435\u043c\u043e\u0435 \u0437\u043d\u0430\u0447\u0435\u043d\u0438\u0435", portions: "\u043f\u043e\u0440\u0446\u0438\u0439",
     feeder_empty: "\u0411\u0443\u043d\u043a\u0435\u0440 \u043f\u0443\u0441\u0442", feeder_level: "\u0411\u0443\u043d\u043a\u0435\u0440 \u0437\u0430\u043f\u043e\u043b\u043d\u0435\u043d \u043d\u0430 {pct}", section_level: "\u0423\u0440\u043e\u0432\u0435\u043d\u044c \u043a\u043e\u0440\u043c\u0430", section_level_b: "\u0423\u0440\u043e\u0432\u0435\u043d\u044c \u0432\u0442\u043e\u0440\u043e\u0433\u043e \u0431\u0443\u043d\u043a\u0435\u0440\u0430", level_empty_below: "\u041f\u0443\u0441\u0442\u043e \u043f\u0440\u0438 \u0437\u043d\u0430\u0447\u0435\u043d\u0438\u0438 \u043d\u0435 \u0432\u044b\u0448\u0435", level_max: "\u0401\u043c\u043a\u043e\u0441\u0442\u044c \u0431\u0443\u043d\u043a\u0435\u0440\u0430",
     section_feeder_layout: "\u041c\u043e\u0434\u0435\u043b\u044c", layout_tower: "\u041a\u0432\u0430\u0434\u0440\u0430\u0442\u043d\u044b\u0439 \u0431\u0443\u043d\u043a\u0435\u0440", layout_canister: "\u041a\u0440\u0443\u0433\u043b\u044b\u0439 \u0431\u0443\u043d\u043a\u0435\u0440", layout_double: "\u0414\u0432\u0435 \u043c\u0438\u0441\u043a\u0438", layout_dual_split: "\u0414\u0432\u0430 \u0431\u0443\u043d\u043a\u0435\u0440\u0430, \u043e\u0431\u0449\u0430\u044f \u043c\u0438\u0441\u043a\u0430", layout_rotary: "\u0412\u0440\u0430\u0449\u0430\u044e\u0449\u0438\u0435\u0441\u044f \u0442\u0430\u0440\u0435\u043b\u043a\u0438 (\u0432\u043b\u0430\u0436\u043d\u044b\u0439 \u043a\u043e\u0440\u043c)",
-    type_iron: "\u0423\u0442\u044e\u0433", section_iron_layout: "\u041c\u043e\u0434\u0435\u043b\u044c", layout_iron: "\u0423\u0442\u044e\u0433", layout_generator: "\u041f\u0430\u0440\u043e\u0433\u0435\u043d\u0435\u0440\u0430\u0442\u043e\u0440",
+    type_iron: "\u0423\u0442\u044e\u0433", section_iron_layout: "\u041c\u043e\u0434\u0435\u043b\u044c", layout_iron: "\u0423\u0442\u044e\u0433", layout_generator: "\u041f\u0430\u0440\u043e\u0433\u0435\u043d\u0435\u0440\u0430\u0442\u043e\u0440", iron_line_color: "\u0426\u0432\u0435\u0442 \u043f\u043e\u043b\u043e\u0441\u044b", color_blue: "\u0421\u0438\u043d\u0438\u0439", color_body: "\u041a\u0430\u043a \u043f\u0440\u0438\u0431\u043e\u0440",
     type_toaster: "\u0422\u043e\u0441\u0442\u0435\u0440", section_toaster_layout: "\u041c\u043e\u0434\u0435\u043b\u044c", layout_toaster_two: "\u0414\u0432\u0430 \u0441\u043b\u043e\u0442\u0430", layout_toaster_four: "\u0427\u0435\u0442\u044b\u0440\u0435 \u0441\u043b\u043e\u0442\u0430",
     layout_toaster_long: "\u0414\u043b\u0438\u043d\u043d\u044b\u0439 \u0441\u043b\u043e\u0442", toaster_toasting: "\u041f\u043e\u0434\u0436\u0430\u0440\u0438\u0432\u0430\u043d\u0438\u0435", toaster_done: "\u0413\u043e\u0442\u043e\u0432\u043e", type_air_purifier: "\u041e\u0447\u0438\u0441\u0442\u0438\u0442\u0435\u043b\u044c \u0432\u043e\u0437\u0434\u0443\u0445\u0430",
     type_screen: "\u042d\u043a\u0440\u0430\u043d (\u0422\u0412, \u043f\u0440\u043e\u0435\u043a\u0442\u043e\u0440, \u043a\u043e\u043c\u043f\u044c\u044e\u0442\u0435\u0440)", section_screen_layout: "\u041c\u043e\u0434\u0435\u043b\u044c", layout_tv_feet: "\u0422\u0435\u043b\u0435\u0432\u0438\u0437\u043e\u0440 \u043d\u0430 \u043d\u043e\u0436\u043a\u0430\u0445", layout_tv_stand: "\u0422\u0435\u043b\u0435\u0432\u0438\u0437\u043e\u0440 \u043d\u0430 \u043f\u043e\u0434\u0441\u0442\u0430\u0432\u043a\u0435", layout_tv_wall: "\u041d\u0430\u0441\u0442\u0435\u043d\u043d\u044b\u0439 \u0442\u0435\u043b\u0435\u0432\u0438\u0437\u043e\u0440", layout_projector: "\u041f\u0440\u043e\u0435\u043a\u0442\u043e\u0440", layout_computer: "\u041a\u043e\u043c\u043f\u044c\u044e\u0442\u0435\u0440", section_screen_image: "\u0418\u0437\u043e\u0431\u0440\u0430\u0436\u0435\u043d\u0438\u0435 \u043d\u0430 \u044d\u043a\u0440\u0430\u043d\u0435", img_random: "\u0421\u043b\u0443\u0447\u0430\u0439\u043d\u043e\u0435", img_sunset: "\u0417\u0430\u043a\u0430\u0442", img_aquarium: "\u0410\u043a\u0432\u0430\u0440\u0438\u0443\u043c", img_bars: "\u0418\u0441\u043f\u044b\u0442\u0430\u0442\u0435\u043b\u044c\u043d\u0430\u044f \u0442\u0430\u0431\u043b\u0438\u0446\u0430", img_football: "\u0424\u0443\u0442\u0431\u043e\u043b\u044c\u043d\u044b\u0439 \u043c\u0430\u0442\u0447", img_space: "\u041a\u043e\u0441\u043c\u043e\u0441", img_bounce: "\u041f\u0440\u044b\u0433\u0430\u044e\u0449\u0438\u0439 \u043b\u043e\u0433\u043e\u0442\u0438\u043f", img_desktop: "\u0420\u0430\u0431\u043e\u0447\u0438\u0439 \u0441\u0442\u043e\u043b", img_code: "\u0411\u0435\u0433\u0443\u0449\u0438\u0439 \u043a\u043e\u0434", img_pong: "\u041f\u043e\u043d\u0433", screen_on: "\u0412\u043a\u043b\u044e\u0447\u0451\u043d", screen_playing: "\u0412\u043e\u0441\u043f\u0440\u043e\u0438\u0437\u0432\u0435\u0434\u0435\u043d\u0438\u0435", screen_home: "\u0413\u043b\u0430\u0432\u043d\u044b\u0439 \u044d\u043a\u0440\u0430\u043d", screen_locked: "\u0417\u0430\u0431\u043b\u043e\u043a\u0438\u0440\u043e\u0432\u0430\u043d", screen_muted: "\u0411\u0435\u0437 \u0437\u0432\u0443\u043a\u0430", screen_standby_threshold: "\u0420\u0435\u0436\u0438\u043c \u043e\u0436\u0438\u0434\u0430\u043d\u0438\u044f \u0434\u043e \u044d\u0442\u043e\u0439 \u043c\u043e\u0449\u043d\u043e\u0441\u0442\u0438 (\u0412\u0442)", section_media: "\u041c\u0435\u0434\u0438\u0430\u043f\u043b\u0435\u0435\u0440", section_media2: "\u0412\u0442\u043e\u0440\u043e\u0439 \u043c\u0435\u0434\u0438\u0430\u043f\u043b\u0435\u0435\u0440", section_media3: "\u0422\u0440\u0435\u0442\u0438\u0439 \u043c\u0435\u0434\u0438\u0430\u043f\u043b\u0435\u0435\u0440", section_lock: "\u0411\u043b\u043e\u043a\u0438\u0440\u043e\u0432\u043a\u0430 \u0441\u0435\u0430\u043d\u0441\u0430", layout_tablet_wall: "\u041d\u0430\u0441\u0442\u0435\u043d\u043d\u044b\u0439 \u043f\u043b\u0430\u043d\u0448\u0435\u0442", layout_tablet_frame: "\u041f\u043b\u0430\u043d\u0448\u0435\u0442 \u0432 \u0440\u0430\u043c\u043a\u0435", layout_tablet_portrait: "\u0412\u0435\u0440\u0442\u0438\u043a\u0430\u043b\u044c\u043d\u044b\u0439 \u043f\u043b\u0430\u043d\u0448\u0435\u0442 \u0441\u043e \u0441\u0432\u0435\u0442\u043e\u0432\u043e\u0439 \u043f\u043e\u043b\u043e\u0441\u043e\u0439", img_dashboard: "\u041f\u0430\u043d\u0435\u043b\u044c \u0443\u043f\u0440\u0430\u0432\u043b\u0435\u043d\u0438\u044f", screen_dashboard: "\u041f\u0430\u043d\u0435\u043b\u044c \u0443\u043f\u0440\u0430\u0432\u043b\u0435\u043d\u0438\u044f", screen_saver: "\u0417\u0430\u0441\u0442\u0430\u0432\u043a\u0430", screen_dark: "\u042d\u043a\u0440\u0430\u043d \u0432\u044b\u043a\u043b\u044e\u0447\u0435\u043d", tab_charging: "\u0437\u0430\u0440\u044f\u0436\u0430\u0435\u0442\u0441\u044f", tab_line_page: "\u0421\u0442\u0440\u0430\u043d\u0438\u0446\u0430", tab_line_touched: "\u041f\u043e\u0441\u043b\u0435\u0434\u043d\u0435\u0435 \u043a\u0430\u0441\u0430\u043d\u0438\u0435", tab_screen: "\u042d\u043a\u0440\u0430\u043d", tab_reload: "\u041f\u0435\u0440\u0435\u0437\u0430\u0433\u0440\u0443\u0437\u0438\u0442\u044c \u0441\u0442\u0440\u0430\u043d\u0438\u0446\u0443", section_screensaver: "\u0417\u0430\u0441\u0442\u0430\u0432\u043a\u0430", section_tab_charging: "\u0414\u0430\u0442\u0447\u0438\u043a \u0437\u0430\u0440\u044f\u0434\u043a\u0438", section_tab_page: "\u0422\u0435\u043a\u0443\u0449\u0430\u044f \u0441\u0442\u0440\u0430\u043d\u0438\u0446\u0430", section_tab_brightness: "\u042f\u0440\u043a\u043e\u0441\u0442\u044c \u044d\u043a\u0440\u0430\u043d\u0430", section_tab_touched: "\u041f\u043e\u0441\u043b\u0435\u0434\u043d\u0435\u0435 \u043a\u0430\u0441\u0430\u043d\u0438\u0435", tab_restart: "\u041f\u0435\u0440\u0435\u0437\u0430\u043f\u0443\u0441\u0442\u0438\u0442\u044c \u043f\u0440\u0438\u043b\u043e\u0436\u0435\u043d\u0438\u0435", section_tab_screenshot: "\u0421\u043d\u0438\u043c\u043e\u043a \u044d\u043a\u0440\u0430\u043d\u0430",
@@ -644,7 +644,7 @@ const T = {
     type_pet_feeder: "Futterautomat", type_pet_fountain: "Trinkbrunnen", ft_flowing: "Flie\u00dft", ft_off: "Aus", ft_filter_due: "Filter f\u00e4llig", ft_pump_due: "Pumpe reinigen", ft_low_water: "Wenig Wasser", ft_line_pump: "Pumpe", ft_line_water: "Wasser", ft_pump_reset: "Pumpe zur\u00fccksetzen", ft_last_pump: "Pumpe zuletzt gelaufen", ft_pump_on: "L\u00e4uft", section_pump_clean: "Pumpenreinigung", section_pump_reset: "Pumpen-Reset-Taste", section_pump_running: "Pumpe l\u00e4uft", section_water_level: "Wasserstand", filter_due_below: "F\u00e4llig ab oder unter", feeder_ready: "Bereit", feeder_feeding: "F\u00fcttert", section_portions_today: "Portionen heute", section_weight_today: "Menge heute", section_portion_weight: "Portionsgewicht", section_serving_size: "Portionsgr\u00f6\u00dfe", section_feeder_schedule: "Zeitplan", section_last_feed: "Letzte F\u00fctterung", section_error: "St\u00f6rungsanzeige", start_option: "Auszuw\u00e4hlende Option", start_value: "Zu schreibender Wert", portions: "Portionen",
     feeder_empty: "Beh\u00e4lter leer", feeder_level: "Beh\u00e4lter zu {pct} voll", section_level: "F\u00fcllstand", section_level_b: "F\u00fcllstand zweite Kammer", level_empty_below: "Leer ab oder unter", level_max: "Fassungsverm\u00f6gen",
     section_feeder_layout: "Modell", layout_tower: "Eckiger Beh\u00e4lter", layout_canister: "Runder Beh\u00e4lter", layout_double: "Zwei N\u00e4pfe", layout_dual_split: "Zwei Kammern, geteilter Napf", layout_rotary: "Drehteller (Nassfutter)",
-    type_iron: "B\u00fcgeleisen", section_iron_layout: "Modell", layout_iron: "B\u00fcgeleisen", layout_generator: "Dampfstation",
+    type_iron: "B\u00fcgeleisen", section_iron_layout: "Modell", layout_iron: "B\u00fcgeleisen", layout_generator: "Dampfstation", iron_line_color: "Farbe der Linie", color_blue: "Blau", color_body: "Wie das Ger\u00e4t",
     type_toaster: "Toaster", section_toaster_layout: "Modell", layout_toaster_two: "Zwei Schlitze", layout_toaster_four: "Vier Schlitze",
     layout_toaster_long: "Langschlitz", toaster_toasting: "Toastet", toaster_done: "Fertig", type_air_purifier: "Luftreiniger",
     type_screen: "Bildschirm (TV, Beamer, Computer)", section_screen_layout: "Modell", layout_tv_feet: "Fernseher auf F\u00fc\u00dfen", layout_tv_stand: "Fernseher mit Standfu\u00df", layout_tv_wall: "Wandfernseher", layout_projector: "Beamer", layout_computer: "Computer", section_screen_image: "Bild auf dem Bildschirm", img_random: "Zuf\u00e4llig", img_sunset: "Sonnenuntergang", img_aquarium: "Aquarium", img_bars: "Testbild", img_football: "Fu\u00dfballspiel", img_space: "Weltall", img_bounce: "H\u00fcpfendes Logo", img_desktop: "Desktop", img_code: "Scrollender Code", img_pong: "Pong", screen_on: "Ein", screen_playing: "Wiedergabe", screen_home: "Startbildschirm", screen_locked: "Gesperrt", screen_muted: "Stumm", screen_standby_threshold: "Standby bis zu dieser Leistung (W)", section_media: "Mediaplayer", section_media2: "Zweiter Mediaplayer", section_media3: "Dritter Mediaplayer", section_lock: "Sitzungssperre", layout_tablet_wall: "Wandtablet", layout_tablet_frame: "Gerahmtes Tablet", layout_tablet_portrait: "Hochkant-Tablet mit Lichtleiste", img_dashboard: "Dashboard", screen_dashboard: "Dashboard", screen_saver: "Bildschirmschoner", screen_dark: "Bildschirm aus", tab_charging: "l\u00e4dt", tab_line_page: "Seite", tab_line_touched: "Letzte Bedienung", tab_screen: "Bildschirm", tab_reload: "Seite neu laden", section_screensaver: "Bildschirmschoner", section_tab_charging: "Ladesensor", section_tab_page: "Aktuelle Seite", section_tab_brightness: "Bildschirmhelligkeit", section_tab_touched: "Letzte Bedienung", tab_restart: "App neu starten", section_tab_screenshot: "Bildschirmfoto",
@@ -813,7 +813,7 @@ const T = {
     type_pet_feeder: "Comedero autom\u00e1tico", type_pet_fountain: "Fuente para mascotas", ft_flowing: "Fluyendo", ft_off: "Apagada", ft_filter_due: "Cambiar filtro", ft_pump_due: "Limpiar la bomba", ft_low_water: "Poca agua", ft_line_pump: "Bomba", ft_line_water: "Agua", ft_pump_reset: "Reiniciar bomba", ft_last_pump: "\u00daltima marcha de la bomba", ft_pump_on: "En marcha", section_pump_clean: "Limpieza de la bomba", section_pump_reset: "Bot\u00f3n de reinicio de la bomba", section_pump_running: "Bomba en marcha", section_water_level: "Nivel de agua", filter_due_below: "Pendiente en o por debajo de", feeder_ready: "Listo", feeder_feeding: "Dispensando", section_portions_today: "Raciones de hoy", section_weight_today: "Peso de hoy", section_portion_weight: "Peso de la raci\u00f3n", section_serving_size: "Tama\u00f1o de la raci\u00f3n", section_feeder_schedule: "Programaci\u00f3n", section_last_feed: "\u00daltima comida", section_error: "Indicador de error", start_option: "Opci\u00f3n a seleccionar", start_value: "Valor a escribir", portions: "raciones",
     feeder_empty: "Dep\u00f3sito vac\u00edo", feeder_level: "Dep\u00f3sito al {pct}", section_level: "Nivel de comida", section_level_b: "Nivel del segundo dep\u00f3sito", level_empty_below: "Vac\u00edo en o por debajo de", level_max: "Capacidad del dep\u00f3sito",
     section_feeder_layout: "Modelo", layout_tower: "Dep\u00f3sito cuadrado", layout_canister: "Dep\u00f3sito redondo", layout_double: "Dos cuencos", layout_dual_split: "Dos dep\u00f3sitos, cuenco dividido", layout_rotary: "Platos giratorios (comida h\u00fameda)",
-    type_iron: "Plancha", section_iron_layout: "Modelo", layout_iron: "Plancha", layout_generator: "Centro de planchado",
+    type_iron: "Plancha", section_iron_layout: "Modelo", layout_iron: "Plancha", layout_generator: "Centro de planchado", iron_line_color: "Color de la l\u00ednea", color_blue: "Azul", color_body: "Como el aparato",
     type_toaster: "Tostadora", section_toaster_layout: "Modelo", layout_toaster_two: "Dos ranuras", layout_toaster_four: "Cuatro ranuras",
     layout_toaster_long: "Ranura larga", toaster_toasting: "Tostando", toaster_done: "Listo", type_air_purifier: "Purificador de aire",
     type_screen: "Pantalla (TV, proyector, ordenador)", section_screen_layout: "Modelo", layout_tv_feet: "Televisor con patas", layout_tv_stand: "Televisor con pie central", layout_tv_wall: "Televisor de pared", layout_projector: "Proyector", layout_computer: "Ordenador", section_screen_image: "Imagen en pantalla", img_random: "Aleatoria", img_sunset: "Puesta de sol", img_aquarium: "Acuario", img_bars: "Carta de ajuste", img_football: "Partido de f\u00fatbol", img_space: "Espacio", img_bounce: "Logo que rebota", img_desktop: "Escritorio", img_code: "C\u00f3digo en movimiento", img_pong: "Pong", screen_on: "Encendido", screen_playing: "Reproduciendo", screen_home: "Pantalla de inicio", screen_locked: "Bloqueado", screen_muted: "Silenciado", screen_standby_threshold: "En espera hasta esta potencia (W)", section_media: "Reproductor multimedia", section_media2: "Segundo reproductor", section_media3: "Tercer reproductor", section_lock: "Bloqueo de sesi\u00f3n", layout_tablet_wall: "Tableta de pared", layout_tablet_frame: "Tableta enmarcada", layout_tablet_portrait: "Tableta vertical con barra de luz", img_dashboard: "Panel", screen_dashboard: "Panel", screen_saver: "Salvapantallas", screen_dark: "Pantalla apagada", tab_charging: "cargando", tab_line_page: "P\u00e1gina", tab_line_touched: "\u00daltima interacci\u00f3n", tab_screen: "Pantalla", tab_reload: "Recargar la p\u00e1gina", section_screensaver: "Salvapantallas", section_tab_charging: "Sensor de carga", section_tab_page: "P\u00e1gina actual", section_tab_brightness: "Brillo de la pantalla", section_tab_touched: "\u00daltima interacci\u00f3n", tab_restart: "Reiniciar la aplicaci\u00f3n", section_tab_screenshot: "Captura de pantalla",
@@ -982,7 +982,7 @@ const T = {
     type_pet_feeder: "Distributore di crocchette", type_pet_fountain: "Fontanella", ft_flowing: "Scorre", ft_off: "Spenta", ft_filter_due: "Filtro da cambiare", ft_pump_due: "Pulire la pompa", ft_low_water: "Poca acqua", ft_line_pump: "Pompa", ft_line_water: "Acqua", ft_pump_reset: "Reimposta pompa", ft_last_pump: "Ultimo avvio della pompa", ft_pump_on: "In funzione", section_pump_clean: "Pulizia della pompa", section_pump_reset: "Pulsante di reset della pompa", section_pump_running: "Pompa in funzione", section_water_level: "Livello dell'acqua", filter_due_below: "In scadenza a questo valore o meno", feeder_ready: "Pronto", feeder_feeding: "Erogazione", section_portions_today: "Porzioni di oggi", section_weight_today: "Peso di oggi", section_portion_weight: "Peso della porzione", section_serving_size: "Dimensione della porzione", section_feeder_schedule: "Programmazione", section_last_feed: "Ultimo pasto", section_error: "Indicatore di errore", start_option: "Opzione da selezionare", start_value: "Valore da scrivere", portions: "porzioni",
     feeder_empty: "Serbatoio vuoto", feeder_level: "Serbatoio al {pct}", section_level: "Livello del cibo", section_level_b: "Livello del secondo serbatoio", level_empty_below: "Vuoto a questo livello o meno", level_max: "Capacit\u00e0 del serbatoio",
     section_feeder_layout: "Modello", layout_tower: "Serbatoio quadrato", layout_canister: "Serbatoio tondo", layout_double: "Due ciotole", layout_dual_split: "Due serbatoi, ciotola divisa", layout_rotary: "Piatti rotanti (cibo umido)",
-    type_iron: "Ferro da stiro", section_iron_layout: "Modello", layout_iron: "Ferro da stiro", layout_generator: "Ferro con caldaia",
+    type_iron: "Ferro da stiro", section_iron_layout: "Modello", layout_iron: "Ferro da stiro", layout_generator: "Ferro con caldaia", iron_line_color: "Colore della linea", color_blue: "Blu", color_body: "Come l'elettrodomestico",
     type_toaster: "Tostapane", section_toaster_layout: "Modello", layout_toaster_two: "Due fessure", layout_toaster_four: "Quattro fessure",
     layout_toaster_long: "Fessura lunga", toaster_toasting: "Tostatura", toaster_done: "Pronto", type_air_purifier: "Purificatore d'aria",
     type_screen: "Schermo (TV, proiettore, computer)", section_screen_layout: "Modello", layout_tv_feet: "TV con piedini", layout_tv_stand: "TV con piedistallo", layout_tv_wall: "TV a parete", layout_projector: "Proiettore", layout_computer: "Computer", section_screen_image: "Immagine sullo schermo", img_random: "Casuale", img_sunset: "Tramonto", img_aquarium: "Acquario", img_bars: "Monoscopio", img_football: "Partita di calcio", img_space: "Spazio", img_bounce: "Logo che rimbalza", img_desktop: "Desktop", img_code: "Codice che scorre", img_pong: "Pong", screen_on: "Acceso", screen_playing: "In riproduzione", screen_home: "Schermata iniziale", screen_locked: "Bloccato", screen_muted: "Audio disattivato", screen_standby_threshold: "In standby fino a questa potenza (W)", section_media: "Lettore multimediale", section_media2: "Secondo lettore", section_media3: "Terzo lettore", section_lock: "Blocco sessione", layout_tablet_wall: "Tablet a parete", layout_tablet_frame: "Tablet incorniciato", layout_tablet_portrait: "Tablet verticale con barra luminosa", img_dashboard: "Dashboard", screen_dashboard: "Dashboard", screen_saver: "Salvaschermo", screen_dark: "Schermo spento", tab_charging: "in carica", tab_line_page: "Pagina", tab_line_touched: "Ultima interazione", tab_screen: "Schermo", tab_reload: "Ricarica la pagina", section_screensaver: "Salvaschermo", section_tab_charging: "Sensore di ricarica", section_tab_page: "Pagina attuale", section_tab_brightness: "Luminosit\u00e0 dello schermo", section_tab_touched: "Ultima interazione", tab_restart: "Riavvia l'app", section_tab_screenshot: "Screenshot",
@@ -1151,7 +1151,7 @@ const T = {
     type_pet_feeder: "Voerautomaat", type_pet_fountain: "Drinkfontein", ft_flowing: "Stroomt", ft_off: "Uit", ft_filter_due: "Filter vervangen", ft_pump_due: "Pomp reinigen", ft_low_water: "Weinig water", ft_line_pump: "Pomp", ft_line_water: "Water", ft_pump_reset: "Pomp resetten", ft_last_pump: "Pomp laatst gedraaid", ft_pump_on: "Draait", section_pump_clean: "Pompreiniging", section_pump_reset: "Pomp-resetknop", section_pump_running: "Pomp draait", section_water_level: "Waterniveau", filter_due_below: "Nodig bij of onder", feeder_ready: "Gereed", feeder_feeding: "Voeren", section_portions_today: "Porties vandaag", section_weight_today: "Gewicht vandaag", section_portion_weight: "Portiegewicht", section_serving_size: "Portiegrootte", section_feeder_schedule: "Schema", section_last_feed: "Laatste voeding", section_error: "Storingsindicator", start_option: "Te kiezen optie", start_value: "Te schrijven waarde", portions: "porties",
     feeder_empty: "Reservoir leeg", feeder_level: "Reservoir voor {pct} vol", section_level: "Voerniveau", section_level_b: "Niveau tweede reservoir", level_empty_below: "Leeg bij of onder", level_max: "Inhoud van het reservoir",
     section_feeder_layout: "Model", layout_tower: "Vierkant reservoir", layout_canister: "Rond reservoir", layout_double: "Twee bakken", layout_dual_split: "Twee reservoirs, gedeelde bak", layout_rotary: "Draaiende bakjes (natvoer)",
-    type_iron: "Strijkijzer", section_iron_layout: "Model", layout_iron: "Strijkijzer", layout_generator: "Stoomgenerator",
+    type_iron: "Strijkijzer", section_iron_layout: "Model", layout_iron: "Strijkijzer", layout_generator: "Stoomgenerator", iron_line_color: "Kleur van de lijn", color_blue: "Blauw", color_body: "Zoals het apparaat",
     type_toaster: "Broodrooster", section_toaster_layout: "Model", layout_toaster_two: "Twee sleuven", layout_toaster_four: "Vier sleuven",
     layout_toaster_long: "Lange sleuf", toaster_toasting: "Roostert", toaster_done: "Klaar", type_air_purifier: "Luchtreiniger",
     type_screen: "Scherm (tv, projector, computer)", section_screen_layout: "Model", layout_tv_feet: "Tv op pootjes", layout_tv_stand: "Tv op voet", layout_tv_wall: "Tv aan de muur", layout_projector: "Projector", layout_computer: "Computer", section_screen_image: "Beeld op het scherm", img_random: "Willekeurig", img_sunset: "Zonsondergang", img_aquarium: "Aquarium", img_bars: "Testbeeld", img_football: "Voetbalwedstrijd", img_space: "Ruimte", img_bounce: "Stuiterend logo", img_desktop: "Bureaublad", img_code: "Scrollende code", img_pong: "Pong", screen_on: "Aan", screen_playing: "Speelt af", screen_home: "Startscherm", screen_locked: "Vergrendeld", screen_muted: "Gedempt", screen_standby_threshold: "Stand-by tot dit vermogen (W)", section_media: "Mediaspeler", section_media2: "Tweede mediaspeler", section_media3: "Derde mediaspeler", section_lock: "Sessievergrendeling", layout_tablet_wall: "Wandtablet", layout_tablet_frame: "Ingelijste tablet", layout_tablet_portrait: "Staande tablet met lichtbalk", img_dashboard: "Dashboard", screen_dashboard: "Dashboard", screen_saver: "Schermbeveiliging", screen_dark: "Scherm uit", tab_charging: "laadt op", tab_line_page: "Pagina", tab_line_touched: "Laatste bediening", tab_screen: "Scherm", tab_reload: "Pagina herladen", section_screensaver: "Schermbeveiliging", section_tab_charging: "Laadsensor", section_tab_page: "Huidige pagina", section_tab_brightness: "Schermhelderheid", section_tab_touched: "Laatste bediening", tab_restart: "App herstarten", section_tab_screenshot: "Schermafbeelding",
@@ -1320,7 +1320,7 @@ const T = {
     type_pet_feeder: "Alimentador autom\u00e1tico", type_pet_fountain: "Fonte para animais", ft_flowing: "A correr", ft_off: "Desligada", ft_filter_due: "Trocar filtro", ft_pump_due: "Limpar a bomba", ft_low_water: "Pouca \u00e1gua", ft_line_pump: "Bomba", ft_line_water: "\u00c1gua", ft_pump_reset: "Repor bomba", ft_last_pump: "\u00daltima marcha da bomba", ft_pump_on: "Em funcionamento", section_pump_clean: "Limpeza da bomba", section_pump_reset: "Bot\u00e3o de reposi\u00e7\u00e3o da bomba", section_pump_running: "Bomba em funcionamento", section_water_level: "N\u00edvel de \u00e1gua", filter_due_below: "Pendente em ou abaixo de", feeder_ready: "Pronto", feeder_feeding: "A distribuir", section_portions_today: "Por\u00e7\u00f5es de hoje", section_weight_today: "Peso de hoje", section_portion_weight: "Peso da por\u00e7\u00e3o", section_serving_size: "Tamanho da por\u00e7\u00e3o", section_feeder_schedule: "Programa\u00e7\u00e3o", section_last_feed: "\u00daltima refei\u00e7\u00e3o", section_error: "Indicador de erro", start_option: "Op\u00e7\u00e3o a selecionar", start_value: "Valor a escrever", portions: "por\u00e7\u00f5es",
     feeder_empty: "Dep\u00f3sito vazio", feeder_level: "Dep\u00f3sito a {pct}", section_level: "N\u00edvel de comida", section_level_b: "N\u00edvel do segundo dep\u00f3sito", level_empty_below: "Vazio em ou abaixo de", level_max: "Capacidade do dep\u00f3sito",
     section_feeder_layout: "Modelo", layout_tower: "Dep\u00f3sito quadrado", layout_canister: "Dep\u00f3sito redondo", layout_double: "Duas ta\u00e7as", layout_dual_split: "Dois dep\u00f3sitos, ta\u00e7a dividida", layout_rotary: "Pratos rotativos (comida h\u00famida)",
-    type_iron: "Ferro de engomar", section_iron_layout: "Modelo", layout_iron: "Ferro de engomar", layout_generator: "Gerador de vapor",
+    type_iron: "Ferro de engomar", section_iron_layout: "Modelo", layout_iron: "Ferro de engomar", layout_generator: "Gerador de vapor", iron_line_color: "Cor da linha", color_blue: "Azul", color_body: "Como o eletrodom\u00e9stico",
     type_toaster: "Torradeira", section_toaster_layout: "Modelo", layout_toaster_two: "Duas ranhuras", layout_toaster_four: "Quatro ranhuras",
     layout_toaster_long: "Ranhura longa", toaster_toasting: "A torrar", toaster_done: "Pronto", type_air_purifier: "Purificador de ar",
     type_screen: "Ecr\u00e3 (TV, projetor, computador)", section_screen_layout: "Modelo", layout_tv_feet: "TV com p\u00e9s", layout_tv_stand: "TV com base central", layout_tv_wall: "TV de parede", layout_projector: "Projetor", layout_computer: "Computador", section_screen_image: "Imagem no ecr\u00e3", img_random: "Aleat\u00f3ria", img_sunset: "P\u00f4r do sol", img_aquarium: "Aqu\u00e1rio", img_bars: "Padr\u00e3o de teste", img_football: "Jogo de futebol", img_space: "Espa\u00e7o", img_bounce: "Log\u00f3tipo a saltar", img_desktop: "Ambiente de trabalho", img_code: "C\u00f3digo a deslizar", img_pong: "Pong", screen_on: "Ligado", screen_playing: "A reproduzir", screen_home: "Ecr\u00e3 inicial", screen_locked: "Bloqueado", screen_muted: "Sem som", screen_standby_threshold: "Em espera at\u00e9 esta pot\u00eancia (W)", section_media: "Leitor multim\u00e9dia", section_media2: "Segundo leitor", section_media3: "Terceiro leitor", section_lock: "Bloqueio de sess\u00e3o", layout_tablet_wall: "Tablet de parede", layout_tablet_frame: "Tablet emoldurado", layout_tablet_portrait: "Tablet vertical com barra de luz", img_dashboard: "Painel", screen_dashboard: "Painel", screen_saver: "Prote\u00e7\u00e3o de ecr\u00e3", screen_dark: "Ecr\u00e3 desligado", tab_charging: "a carregar", tab_line_page: "P\u00e1gina", tab_line_touched: "\u00daltima intera\u00e7\u00e3o", tab_screen: "Ecr\u00e3", tab_reload: "Recarregar a p\u00e1gina", section_screensaver: "Prote\u00e7\u00e3o de ecr\u00e3", section_tab_charging: "Sensor de carregamento", section_tab_page: "P\u00e1gina atual", section_tab_brightness: "Brilho do ecr\u00e3", section_tab_touched: "\u00daltima intera\u00e7\u00e3o", tab_restart: "Reiniciar a aplica\u00e7\u00e3o", section_tab_screenshot: "Captura de ecr\u00e3",
@@ -1489,7 +1489,7 @@ const T = {
     type_pet_feeder: "Foderautomat", type_pet_fountain: "Vattenfont\u00e4n", ft_flowing: "Fl\u00f6dar", ft_off: "Av", ft_filter_due: "Byt filter", ft_pump_due: "Reng\u00f6r pumpen", ft_low_water: "Lite vatten", ft_line_pump: "Pump", ft_line_water: "Vatten", ft_pump_reset: "\u00c5terst\u00e4ll pump", ft_last_pump: "Pumpen gick senast", ft_pump_on: "Ig\u00e5ng", section_pump_clean: "Pumpreng\u00f6ring", section_pump_reset: "Knapp f\u00f6r pump\u00e5terst\u00e4llning", section_pump_running: "Pumpen g\u00e5r", section_water_level: "Vattenniv\u00e5", filter_due_below: "Dags vid eller under", feeder_ready: "Redo", feeder_feeding: "Matar", section_portions_today: "Portioner idag", section_weight_today: "Vikt idag", section_portion_weight: "Portionsvikt", section_serving_size: "Portionsstorlek", section_feeder_schedule: "Schema", section_last_feed: "Senaste matning", section_error: "Felindikator", start_option: "Alternativ att v\u00e4lja", start_value: "V\u00e4rde att skriva", portions: "portioner",
     feeder_empty: "Beh\u00e5llaren tom", feeder_level: "Beh\u00e5llaren {pct} full", section_level: "Foderm\u00e4ngd", section_level_b: "Niv\u00e5 i andra beh\u00e5llaren", level_empty_below: "Tom vid eller under", level_max: "Beh\u00e5llarens volym",
     section_feeder_layout: "Modell", layout_tower: "Fyrkantig beh\u00e5llare", layout_canister: "Rund beh\u00e5llare", layout_double: "Tv\u00e5 sk\u00e5lar", layout_dual_split: "Tv\u00e5 beh\u00e5llare, delad sk\u00e5l", layout_rotary: "Roterande sk\u00e5lar (v\u00e5tfoder)",
-    type_iron: "Strykj\u00e4rn", section_iron_layout: "Modell", layout_iron: "Strykj\u00e4rn", layout_generator: "\u00c5ngstation",
+    type_iron: "Strykj\u00e4rn", section_iron_layout: "Modell", layout_iron: "Strykj\u00e4rn", layout_generator: "\u00c5ngstation", iron_line_color: "Linjens f\u00e4rg", color_blue: "Bl\u00e5", color_body: "Som apparaten",
     type_toaster: "Br\u00f6drost", section_toaster_layout: "Modell", layout_toaster_two: "Tv\u00e5 fack", layout_toaster_four: "Fyra fack",
     layout_toaster_long: "L\u00e5ngt fack", toaster_toasting: "Rostar", toaster_done: "Klart", type_air_purifier: "Luftrenare",
     type_screen: "Sk\u00e4rm (tv, projektor, dator)", section_screen_layout: "Modell", layout_tv_feet: "Tv p\u00e5 f\u00f6tter", layout_tv_stand: "Tv p\u00e5 fot", layout_tv_wall: "V\u00e4ggmonterad tv", layout_projector: "Projektor", layout_computer: "Dator", section_screen_image: "Bild p\u00e5 sk\u00e4rmen", img_random: "Slumpm\u00e4ssig", img_sunset: "Solnedg\u00e5ng", img_aquarium: "Akvarium", img_bars: "Testbild", img_football: "Fotbollsmatch", img_space: "Rymden", img_bounce: "Studsande logga", img_desktop: "Skrivbord", img_code: "Rullande kod", img_pong: "Pong", screen_on: "P\u00e5", screen_playing: "Spelar", screen_home: "Startsk\u00e4rm", screen_locked: "L\u00e5st", screen_muted: "Ljud av", screen_standby_threshold: "Standby upp till denna effekt (W)", section_media: "Mediaspelare", section_media2: "Andra mediaspelaren", section_media3: "Tredje mediaspelaren", section_lock: "Sessionsl\u00e5s", layout_tablet_wall: "V\u00e4ggplatta", layout_tablet_frame: "Inramad surfplatta", layout_tablet_portrait: "St\u00e5ende surfplatta med ljuslist", img_dashboard: "Instrumentpanel", screen_dashboard: "Instrumentpanel", screen_saver: "Sk\u00e4rmsl\u00e4ckare", screen_dark: "Sk\u00e4rmen av", tab_charging: "laddar", tab_line_page: "Sida", tab_line_touched: "Senaste interaktion", tab_screen: "Sk\u00e4rm", tab_reload: "Ladda om sidan", section_screensaver: "Sk\u00e4rmsl\u00e4ckare", section_tab_charging: "Laddningssensor", section_tab_page: "Aktuell sida", section_tab_brightness: "Sk\u00e4rmens ljusstyrka", section_tab_touched: "Senaste interaktion", tab_restart: "Starta om appen", section_tab_screenshot: "Sk\u00e4rmbild",
@@ -1658,7 +1658,7 @@ const T = {
     type_pet_feeder: "F\u00f4rautomat", type_pet_fountain: "Vannfontene", ft_flowing: "Renner", ft_off: "Av", ft_filter_due: "Bytt filter", ft_pump_due: "Rengj\u00f8r pumpen", ft_low_water: "Lite vann", ft_line_pump: "Pumpe", ft_line_water: "Vann", ft_pump_reset: "Tilbakestill pumpe", ft_last_pump: "Pumpen gikk sist", ft_pump_on: "G\u00e5r", section_pump_clean: "Pumperengj\u00f8ring", section_pump_reset: "Knapp for pumpetilbakestilling", section_pump_running: "Pumpen g\u00e5r", section_water_level: "Vannstand", filter_due_below: "Forfaller ved eller under", feeder_ready: "Klar", feeder_feeding: "Mater", section_portions_today: "Porsjoner i dag", section_weight_today: "Vekt i dag", section_portion_weight: "Porsjonsvekt", section_serving_size: "Porsjonsst\u00f8rrelse", section_feeder_schedule: "Tidsplan", section_last_feed: "Siste m\u00e5ltid", section_error: "Feilindikator", start_option: "Alternativ \u00e5 velge", start_value: "Verdi \u00e5 skrive", portions: "porsjoner",
     feeder_empty: "Beholder tom", feeder_level: "Beholder {pct} full", section_level: "F\u00f4rniv\u00e5", section_level_b: "Niv\u00e5 i andre beholder", level_empty_below: "Tom ved eller under", level_max: "Beholderens volum",
     section_feeder_layout: "Modell", layout_tower: "Firkantet beholder", layout_canister: "Rund beholder", layout_double: "To sk\u00e5ler", layout_dual_split: "To beholdere, delt sk\u00e5l", layout_rotary: "Roterende sk\u00e5ler (v\u00e5tf\u00f4r)",
-    type_iron: "Strykejern", section_iron_layout: "Modell", layout_iron: "Strykejern", layout_generator: "Dampstasjon",
+    type_iron: "Strykejern", section_iron_layout: "Modell", layout_iron: "Strykejern", layout_generator: "Dampstasjon", iron_line_color: "Linjens farge", color_blue: "Bl\u00e5", color_body: "Som apparatet",
     type_toaster: "Br\u00f8drister", section_toaster_layout: "Modell", layout_toaster_two: "To spor", layout_toaster_four: "Fire spor",
     layout_toaster_long: "Langt spor", toaster_toasting: "Rister", toaster_done: "Ferdig", type_air_purifier: "Luftrenser",
     type_screen: "Skjerm (TV, projektor, datamaskin)", section_screen_layout: "Modell", layout_tv_feet: "TV p\u00e5 f\u00f8tter", layout_tv_stand: "TV p\u00e5 fot", layout_tv_wall: "Veggmontert TV", layout_projector: "Projektor", layout_computer: "Datamaskin", section_screen_image: "Bilde p\u00e5 skjermen", img_random: "Tilfeldig", img_sunset: "Solnedgang", img_aquarium: "Akvarium", img_bars: "Testbilde", img_football: "Fotballkamp", img_space: "Verdensrommet", img_bounce: "Sprettende logo", img_desktop: "Skrivebord", img_code: "Rullende kode", img_pong: "Pong", screen_on: "P\u00e5", screen_playing: "Spiller", screen_home: "Startskjerm", screen_locked: "L\u00e5st", screen_muted: "Lyd av", screen_standby_threshold: "Standby opp til denne effekten (W)", section_media: "Mediespiller", section_media2: "Andre mediespiller", section_media3: "Tredje mediespiller", section_lock: "\u00d8ktl\u00e5s", layout_tablet_wall: "Veggnettbrett", layout_tablet_frame: "Innrammet nettbrett", layout_tablet_portrait: "St\u00e5ende nettbrett med lyslist", img_dashboard: "Dashbord", screen_dashboard: "Dashbord", screen_saver: "Skjermsparer", screen_dark: "Skjermen av", tab_charging: "lader", tab_line_page: "Side", tab_line_touched: "Siste interaksjon", tab_screen: "Skjerm", tab_reload: "Last inn siden p\u00e5 nytt", section_screensaver: "Skjermsparer", section_tab_charging: "Ladesensor", section_tab_page: "Gjeldende side", section_tab_brightness: "Skjermens lysstyrke", section_tab_touched: "Siste interaksjon", tab_restart: "Start appen p\u00e5 nytt", section_tab_screenshot: "Skjermbilde",
@@ -1827,7 +1827,7 @@ const T = {
     type_pet_feeder: "Foderautomat", type_pet_fountain: "Drikkefont\u00e6ne", ft_flowing: "L\u00f8ber", ft_off: "Slukket", ft_filter_due: "Skift filter", ft_pump_due: "Reng\u00f8r pumpen", ft_low_water: "Lidt vand", ft_line_pump: "Pumpe", ft_line_water: "Vand", ft_pump_reset: "Nulstil pumpe", ft_last_pump: "Pumpen k\u00f8rte sidst", ft_pump_on: "K\u00f8rer", section_pump_clean: "Pumpereng\u00f8ring", section_pump_reset: "Knap til pumpenulstilling", section_pump_running: "Pumpen k\u00f8rer", section_water_level: "Vandstand", filter_due_below: "Forfalden ved eller under", feeder_ready: "Klar", feeder_feeding: "Fodrer", section_portions_today: "Portioner i dag", section_weight_today: "V\u00e6gt i dag", section_portion_weight: "Portionsv\u00e6gt", section_serving_size: "Portionsst\u00f8rrelse", section_feeder_schedule: "Tidsplan", section_last_feed: "Sidste fodring", section_error: "Fejlindikator", start_option: "Valgmulighed", start_value: "V\u00e6rdi at skrive", portions: "portioner",
     feeder_empty: "Beholder tom", feeder_level: "Beholder {pct} fuld", section_level: "Foderm\u00e6ngde", section_level_b: "Niveau i anden beholder", level_empty_below: "Tom ved eller under", level_max: "Beholderens rumfang",
     section_feeder_layout: "Model", layout_tower: "Firkantet beholder", layout_canister: "Rund beholder", layout_double: "To sk\u00e5le", layout_dual_split: "To beholdere, delt sk\u00e5l", layout_rotary: "Roterende sk\u00e5le (v\u00e5dfoder)",
-    type_iron: "Strygejern", section_iron_layout: "Model", layout_iron: "Strygejern", layout_generator: "Dampstation",
+    type_iron: "Strygejern", section_iron_layout: "Model", layout_iron: "Strygejern", layout_generator: "Dampstation", iron_line_color: "Stregens farve", color_blue: "Bl\u00e5", color_body: "Som apparatet",
     type_toaster: "Br\u00f8drister", section_toaster_layout: "Model", layout_toaster_two: "To spalter", layout_toaster_four: "Fire spalter",
     layout_toaster_long: "Lang spalte", toaster_toasting: "Rister", toaster_done: "F\u00e6rdig", type_air_purifier: "Luftrenser",
     type_screen: "Sk\u00e6rm (TV, projektor, computer)", section_screen_layout: "Model", layout_tv_feet: "TV p\u00e5 f\u00f8dder", layout_tv_stand: "TV p\u00e5 fod", layout_tv_wall: "V\u00e6gmonteret TV", layout_projector: "Projektor", layout_computer: "Computer", section_screen_image: "Billede p\u00e5 sk\u00e6rmen", img_random: "Tilf\u00e6ldig", img_sunset: "Solnedgang", img_aquarium: "Akvarium", img_bars: "Testbillede", img_football: "Fodboldkamp", img_space: "Rummet", img_bounce: "Hoppende logo", img_desktop: "Skrivebord", img_code: "Rullende kode", img_pong: "Pong", screen_on: "T\u00e6ndt", screen_playing: "Afspiller", screen_home: "Startsk\u00e6rm", screen_locked: "L\u00e5st", screen_muted: "Lyd sl\u00e5et fra", screen_standby_threshold: "Standby op til denne effekt (W)", section_media: "Medieafspiller", section_media2: "Anden medieafspiller", section_media3: "Tredje medieafspiller", section_lock: "Sessionsl\u00e5s", layout_tablet_wall: "V\u00e6gtablet", layout_tablet_frame: "Indrammet tablet", layout_tablet_portrait: "St\u00e5ende tablet med lysbj\u00e6lke", img_dashboard: "Dashboard", screen_dashboard: "Dashboard", screen_saver: "Pausesk\u00e6rm", screen_dark: "Sk\u00e6rm slukket", tab_charging: "oplader", tab_line_page: "Side", tab_line_touched: "Seneste interaktion", tab_screen: "Sk\u00e6rm", tab_reload: "Genindl\u00e6s siden", section_screensaver: "Pausesk\u00e6rm", section_tab_charging: "Opladningssensor", section_tab_page: "Aktuel side", section_tab_brightness: "Sk\u00e6rmens lysstyrke", section_tab_touched: "Seneste interaktion", tab_restart: "Genstart appen", section_tab_screenshot: "Sk\u00e6rmbillede",
@@ -1996,7 +1996,7 @@ const T = {
     type_pet_feeder: "Karmnik automatyczny", type_pet_fountain: "Poide\u0142ko", ft_flowing: "P\u0142ynie", ft_off: "Wy\u0142\u0105czone", ft_filter_due: "Wymie\u0144 filtr", ft_pump_due: "Wyczy\u015b\u0107 pomp\u0119", ft_low_water: "Ma\u0142o wody", ft_line_pump: "Pompa", ft_line_water: "Woda", ft_pump_reset: "Zresetuj pomp\u0119", ft_last_pump: "Ostatnia praca pompy", ft_pump_on: "Pracuje", section_pump_clean: "Czyszczenie pompy", section_pump_reset: "Przycisk resetu pompy", section_pump_running: "Pompa pracuje", section_water_level: "Poziom wody", filter_due_below: "Termin przy tej warto\u015bci lub ni\u017cej", feeder_ready: "Gotowy", feeder_feeding: "Wydawanie", section_portions_today: "Porcje dzisiaj", section_weight_today: "Waga dzisiaj", section_portion_weight: "Waga porcji", section_serving_size: "Wielko\u015b\u0107 porcji", section_feeder_schedule: "Harmonogram", section_last_feed: "Ostatnie karmienie", section_error: "Wska\u017anik b\u0142\u0119du", start_option: "Opcja do wybrania", start_value: "Warto\u015b\u0107 do zapisania", portions: "porcji",
     feeder_empty: "Pusty zasobnik", feeder_level: "Zasobnik nape\u0142niony w {pct}", section_level: "Poziom karmy", section_level_b: "Poziom drugiego zasobnika", level_empty_below: "Pusty przy tej warto\u015bci lub ni\u017cej", level_max: "Pojemno\u015b\u0107 zasobnika",
     section_feeder_layout: "Model", layout_tower: "Kwadratowy zasobnik", layout_canister: "Okr\u0105g\u0142y zasobnik", layout_double: "Dwie miski", layout_dual_split: "Dwa zasobniki, dzielona miska", layout_rotary: "Obrotowe miseczki (mokra karma)",
-    type_iron: "\u017belazko", section_iron_layout: "Model", layout_iron: "\u017belazko", layout_generator: "Generator pary",
+    type_iron: "\u017belazko", section_iron_layout: "Model", layout_iron: "\u017belazko", layout_generator: "Generator pary", iron_line_color: "Kolor linii", color_blue: "Niebieski", color_body: "Jak urz\u0105dzenie",
     type_toaster: "Toster", section_toaster_layout: "Model", layout_toaster_two: "Dwa otwory", layout_toaster_four: "Cztery otwory",
     layout_toaster_long: "D\u0142ugi otw\u00f3r", toaster_toasting: "Opiekanie", toaster_done: "Gotowe", type_air_purifier: "Oczyszczacz powietrza",
     type_screen: "Ekran (TV, projektor, komputer)", section_screen_layout: "Model", layout_tv_feet: "Telewizor na n\u00f3\u017ckach", layout_tv_stand: "Telewizor na podstawie", layout_tv_wall: "Telewizor na \u015bcianie", layout_projector: "Projektor", layout_computer: "Komputer", section_screen_image: "Obraz na ekranie", img_random: "Losowy", img_sunset: "Zach\u00f3d s\u0142o\u0144ca", img_aquarium: "Akwarium", img_bars: "Plansza testowa", img_football: "Mecz pi\u0142ki no\u017cnej", img_space: "Kosmos", img_bounce: "Odbijaj\u0105ce si\u0119 logo", img_desktop: "Pulpit", img_code: "Przewijany kod", img_pong: "Pong", screen_on: "W\u0142\u0105czony", screen_playing: "Odtwarzanie", screen_home: "Ekran g\u0142\u00f3wny", screen_locked: "Zablokowany", screen_muted: "Wyciszony", screen_standby_threshold: "Czuwanie do tej mocy (W)", section_media: "Odtwarzacz multimedialny", section_media2: "Drugi odtwarzacz", section_media3: "Trzeci odtwarzacz", section_lock: "Blokada sesji", layout_tablet_wall: "Tablet na \u015bcianie", layout_tablet_frame: "Tablet w ramce", layout_tablet_portrait: "Pionowy tablet z paskiem \u015bwietlnym", img_dashboard: "Panel", screen_dashboard: "Panel", screen_saver: "Wygaszacz ekranu", screen_dark: "Ekran wy\u0142\u0105czony", tab_charging: "\u0142adowanie", tab_line_page: "Strona", tab_line_touched: "Ostatnia interakcja", tab_screen: "Ekran", tab_reload: "Od\u015bwie\u017c stron\u0119", section_screensaver: "Wygaszacz ekranu", section_tab_charging: "Czujnik \u0142adowania", section_tab_page: "Bie\u017c\u0105ca strona", section_tab_brightness: "Jasno\u015b\u0107 ekranu", section_tab_touched: "Ostatnia interakcja", tab_restart: "Uruchom ponownie aplikacj\u0119", section_tab_screenshot: "Zrzut ekranu",
@@ -2165,7 +2165,7 @@ const T = {
     type_pet_feeder: "\u81ea\u52a8\u5582\u98df\u5668", type_pet_fountain: "\u5ba0\u7269\u996e\u6c34\u673a", ft_flowing: "\u51fa\u6c34\u4e2d", ft_off: "\u5173\u95ed", ft_filter_due: "\u9700\u66f4\u6362\u6ee4\u82af", ft_pump_due: "\u9700\u6e05\u6d17\u6c34\u6cf5", ft_low_water: "\u6c34\u91cf\u4e0d\u8db3", ft_line_pump: "\u6c34\u6cf5", ft_line_water: "\u6c34\u91cf", ft_pump_reset: "\u91cd\u7f6e\u6c34\u6cf5", ft_last_pump: "\u6c34\u6cf5\u4e0a\u6b21\u8fd0\u884c", ft_pump_on: "\u8fd0\u884c\u4e2d", section_pump_clean: "\u6c34\u6cf5\u6e05\u6d17", section_pump_reset: "\u6c34\u6cf5\u91cd\u7f6e\u6309\u952e", section_pump_running: "\u6c34\u6cf5\u8fd0\u884c", section_water_level: "\u6c34\u4f4d", filter_due_below: "\u4f4e\u4e8e\u6216\u7b49\u4e8e\u6b64\u503c\u65f6\u5230\u671f", feeder_ready: "\u5c31\u7eea", feeder_feeding: "\u6295\u5582\u4e2d", section_portions_today: "\u4eca\u65e5\u4efd\u6570", section_weight_today: "\u4eca\u65e5\u91cd\u91cf", section_portion_weight: "\u6bcf\u4efd\u91cd\u91cf", section_serving_size: "\u6bcf\u6b21\u4efd\u91cf", section_feeder_schedule: "\u8ba1\u5212", section_last_feed: "\u4e0a\u6b21\u6295\u5582", section_error: "\u6545\u969c\u6307\u793a", start_option: "\u8981\u9009\u62e9\u7684\u9009\u9879", start_value: "\u8981\u5199\u5165\u7684\u503c", portions: "\u4efd",
     feeder_empty: "\u6599\u6876\u5df2\u7a7a", feeder_level: "\u6599\u6876\u4f59\u91cf {pct}", section_level: "\u4f59\u91cf", section_level_b: "\u7b2c\u4e8c\u6599\u4ed3\u4f59\u91cf", level_empty_below: "\u4f4e\u4e8e\u6216\u7b49\u4e8e\u6b64\u503c\u89c6\u4e3a\u7a7a", level_max: "\u6599\u6876\u5bb9\u91cf",
     section_feeder_layout: "\u578b\u53f7", layout_tower: "\u65b9\u5f62\u6599\u6876", layout_canister: "\u5706\u5f62\u6599\u6876", layout_double: "\u53cc\u98df\u76c6", layout_dual_split: "\u53cc\u6599\u4ed3\uff0c\u5206\u9694\u98df\u76c6", layout_rotary: "\u65cb\u8f6c\u9910\u76d8\uff08\u6e7f\u7cae\uff09",
-    type_iron: "\u71a8\u6597", section_iron_layout: "\u578b\u53f7", layout_iron: "\u71a8\u6597", layout_generator: "\u84b8\u6c7d\u53d1\u751f\u5668",
+    type_iron: "\u71a8\u6597", section_iron_layout: "\u578b\u53f7", layout_iron: "\u71a8\u6597", layout_generator: "\u84b8\u6c7d\u53d1\u751f\u5668", iron_line_color: "\u7ebf\u6761\u989c\u8272", color_blue: "\u84dd\u8272", color_body: "\u4e0e\u8bbe\u5907\u76f8\u540c",
     type_toaster: "\u70e4\u9762\u5305\u673a", section_toaster_layout: "\u578b\u53f7", layout_toaster_two: "\u53cc\u69fd", layout_toaster_four: "\u56db\u69fd",
     layout_toaster_long: "\u957f\u69fd", toaster_toasting: "\u70d8\u70e4\u4e2d", toaster_done: "\u5df2\u5b8c\u6210", type_air_purifier: "\u7a7a\u6c14\u51c0\u5316\u5668",
     type_screen: "\u5c4f\u5e55\uff08\u7535\u89c6\u3001\u6295\u5f71\u4eea\u3001\u7535\u8111\uff09", section_screen_layout: "\u578b\u53f7", layout_tv_feet: "\u5e26\u811a\u7535\u89c6", layout_tv_stand: "\u5e26\u5e95\u5ea7\u7535\u89c6", layout_tv_wall: "\u58c1\u6302\u7535\u89c6", layout_projector: "\u6295\u5f71\u4eea", layout_computer: "\u7535\u8111", section_screen_image: "\u5c4f\u5e55\u753b\u9762", img_random: "\u968f\u673a", img_sunset: "\u65e5\u843d", img_aquarium: "\u6c34\u65cf\u7bb1", img_bars: "\u6d4b\u8bd5\u56fe", img_football: "\u8db3\u7403\u6bd4\u8d5b", img_space: "\u592a\u7a7a", img_bounce: "\u5f39\u8df3\u6807\u5fd7", img_desktop: "\u684c\u9762", img_code: "\u6eda\u52a8\u4ee3\u7801", img_pong: "\u4e52\u4e53", screen_on: "\u5df2\u5f00\u542f", screen_playing: "\u64ad\u653e\u4e2d", screen_home: "\u4e3b\u5c4f\u5e55", screen_locked: "\u5df2\u9501\u5b9a", screen_muted: "\u5df2\u9759\u97f3", screen_standby_threshold: "\u5f85\u673a\u529f\u7387\u4e0a\u9650 (W)", section_media: "\u5a92\u4f53\u64ad\u653e\u5668", section_media2: "\u7b2c\u4e8c\u4e2a\u5a92\u4f53\u64ad\u653e\u5668", section_media3: "\u7b2c\u4e09\u4e2a\u5a92\u4f53\u64ad\u653e\u5668", section_lock: "\u4f1a\u8bdd\u9501\u5b9a", layout_tablet_wall: "\u58c1\u6302\u5e73\u677f", layout_tablet_frame: "\u5e26\u6846\u5e73\u677f", layout_tablet_portrait: "\u7ad6\u5c4f\u5e73\u677f\uff08\u5e26\u706f\u6761\uff09", img_dashboard: "\u4eea\u8868\u76d8", screen_dashboard: "\u4eea\u8868\u76d8", screen_saver: "\u5c4f\u5e55\u4fdd\u62a4", screen_dark: "\u5c4f\u5e55\u5df2\u5173\u95ed", tab_charging: "\u5145\u7535\u4e2d", tab_line_page: "\u9875\u9762", tab_line_touched: "\u4e0a\u6b21\u4ea4\u4e92", tab_screen: "\u5c4f\u5e55", tab_reload: "\u91cd\u65b0\u52a0\u8f7d\u9875\u9762", section_screensaver: "\u5c4f\u5e55\u4fdd\u62a4", section_tab_charging: "\u5145\u7535\u4f20\u611f\u5668", section_tab_page: "\u5f53\u524d\u9875\u9762", section_tab_brightness: "\u5c4f\u5e55\u4eae\u5ea6", section_tab_touched: "\u4e0a\u6b21\u4ea4\u4e92", tab_restart: "\u91cd\u542f\u5e94\u7528", section_tab_screenshot: "\u5c4f\u5e55\u622a\u56fe",
@@ -2334,7 +2334,7 @@ const T = {
     type_pet_feeder: "Krm\u00edtko", type_pet_fountain: "Font\u00e1na pro zv\u00ed\u0159ata", ft_flowing: "Te\u010de", ft_off: "Vypnuto", ft_filter_due: "Vym\u011b\u0148te filtr", ft_pump_due: "Vy\u010dist\u011bte \u010derpadlo", ft_low_water: "M\u00e1lo vody", ft_line_pump: "\u010cerpadlo", ft_line_water: "Voda", ft_pump_reset: "Resetovat \u010derpadlo", ft_last_pump: "\u010cerpadlo naposledy b\u011b\u017eelo", ft_pump_on: "B\u011b\u017e\u00ed", section_pump_clean: "\u010ci\u0161t\u011bn\u00ed \u010derpadla", section_pump_reset: "Tla\u010d\u00edtko resetu \u010derpadla", section_pump_running: "\u010cerpadlo b\u011b\u017e\u00ed", section_water_level: "Hladina vody", filter_due_below: "Splatn\u00e9 p\u0159i t\u00e9to hodnot\u011b nebo n\u00ed\u017ee", feeder_ready: "P\u0159ipraveno", feeder_feeding: "Krmen\u00ed", section_portions_today: "Porce dnes", section_weight_today: "Hmotnost dnes", section_portion_weight: "Hmotnost porce", section_serving_size: "Velikost porce", section_feeder_schedule: "Rozvrh", section_last_feed: "Posledn\u00ed krmen\u00ed", section_error: "Indik\u00e1tor chyby", start_option: "Mo\u017enost k v\u00fdb\u011bru", start_value: "Hodnota k z\u00e1pisu", portions: "porc\u00ed",
     feeder_empty: "Z\u00e1sobn\u00edk pr\u00e1zdn\u00fd", feeder_level: "Z\u00e1sobn\u00edk napln\u011bn na {pct}", section_level: "Mno\u017estv\u00ed krmiva", section_level_b: "Hladina druh\u00e9ho z\u00e1sobn\u00edku", level_empty_below: "Pr\u00e1zdn\u00fd p\u0159i t\u00e9to hodnot\u011b nebo ni\u017e\u0161\u00ed", level_max: "Objem z\u00e1sobn\u00edku",
     section_feeder_layout: "Model", layout_tower: "Hranat\u00fd z\u00e1sobn\u00edk", layout_canister: "Kulat\u00fd z\u00e1sobn\u00edk", layout_double: "Dv\u011b misky", layout_dual_split: "Dva z\u00e1sobn\u00edky, d\u011blen\u00e1 miska", layout_rotary: "Oto\u010dn\u00e9 misky (kapsi\u010dky)",
-    type_iron: "\u017dehli\u010dka", section_iron_layout: "Model", layout_iron: "\u017dehli\u010dka", layout_generator: "Parn\u00ed gener\u00e1tor",
+    type_iron: "\u017dehli\u010dka", section_iron_layout: "Model", layout_iron: "\u017dehli\u010dka", layout_generator: "Parn\u00ed gener\u00e1tor", iron_line_color: "Barva linky", color_blue: "Modr\u00e1", color_body: "Jako spot\u0159ebi\u010d",
     type_toaster: "Topinkova\u010d", section_toaster_layout: "Model", layout_toaster_two: "Dva otvory", layout_toaster_four: "\u010cty\u0159i otvory",
     layout_toaster_long: "Dlouh\u00fd otvor", toaster_toasting: "Op\u00e9k\u00e1", toaster_done: "Hotovo", type_air_purifier: "\u010cisti\u010dka vzduchu",
     type_screen: "Obrazovka (TV, projektor, po\u010d\u00edta\u010d)", section_screen_layout: "Model", layout_tv_feet: "Televize na no\u017ei\u010dk\u00e1ch", layout_tv_stand: "Televize na stojanu", layout_tv_wall: "Televize na zdi", layout_projector: "Projektor", layout_computer: "Po\u010d\u00edta\u010d", section_screen_image: "Obraz na obrazovce", img_random: "N\u00e1hodn\u00fd", img_sunset: "Z\u00e1pad slunce", img_aquarium: "Akv\u00e1rium", img_bars: "Monoskop", img_football: "Fotbalov\u00fd z\u00e1pas", img_space: "Vesm\u00edr", img_bounce: "Odr\u00e1\u017eej\u00edc\u00ed se logo", img_desktop: "Plocha", img_code: "Roluj\u00edc\u00ed k\u00f3d", img_pong: "Pong", screen_on: "Zapnuto", screen_playing: "P\u0159ehr\u00e1v\u00e1", screen_home: "Domovsk\u00e1 obrazovka", screen_locked: "Zam\u010deno", screen_muted: "Ztlumeno", screen_standby_threshold: "Pohotovost a\u017e do tohoto p\u0159\u00edkonu (W)", section_media: "P\u0159ehr\u00e1va\u010d m\u00e9di\u00ed", section_media2: "Druh\u00fd p\u0159ehr\u00e1va\u010d", section_media3: "T\u0159et\u00ed p\u0159ehr\u00e1va\u010d", section_lock: "Z\u00e1mek relace", layout_tablet_wall: "N\u00e1st\u011bnn\u00fd tablet", layout_tablet_frame: "Tablet v r\u00e1mu", layout_tablet_portrait: "Svisl\u00fd tablet se sv\u011btelnou li\u0161tou", img_dashboard: "Ovl\u00e1dac\u00ed panel", screen_dashboard: "Ovl\u00e1dac\u00ed panel", screen_saver: "Spo\u0159i\u010d obrazovky", screen_dark: "Obrazovka vypnuta", tab_charging: "nab\u00edj\u00ed se", tab_line_page: "Str\u00e1nka", tab_line_touched: "Posledn\u00ed interakce", tab_screen: "Obrazovka", tab_reload: "Znovu na\u010d\u00edst str\u00e1nku", section_screensaver: "Spo\u0159i\u010d obrazovky", section_tab_charging: "Senzor nab\u00edjen\u00ed", section_tab_page: "Aktu\u00e1ln\u00ed str\u00e1nka", section_tab_brightness: "Jas obrazovky", section_tab_touched: "Posledn\u00ed interakce", tab_restart: "Restartovat aplikaci", section_tab_screenshot: "Sn\u00edmek obrazovky",
@@ -10251,9 +10251,6 @@ const ILLUSTRATION_CSS = {
           100% { transform: translate(-2px, -9px) scale(1.25); opacity: 0; }
         }
   `,
-  // An iron in profile, nose to the left: the soleplate, the shell rising to
-  // the back, the tank inside it and the handle over the top. The same iron is
-  // drawn smaller on the base of a steam generator.
   // An air purifier in one of three shapes: a cylinder blowing out of its
   // top, a square box with its fan on top, or a bladeless ring that blows
   // forward, sideways while it oscillates, or backwards. Clean air is blue,
@@ -11301,116 +11298,30 @@ const ILLUSTRATION_CSS = {
         @keyframes scr-pby { from { top: 6%; } to { top: 88%; } }
         @media (prefers-reduced-motion: reduce) { .machine .scr-pic *, .machine .scr-led, .machine .tab-cam { animation: none !important; animation-delay: var(--anim-offset, 0s); } }
   `,
-  iron: () => `
-        .ir { position: absolute; left: 0; right: 0; top: 0; bottom: 0; }
-        .ir-shell {
-          position: absolute; left: 8px; right: 10px; top: 44px; height: 26px;
-          background: var(--ac-body, var(--secondary-background-color, #d7d7d7));
-          border: 1px solid var(--divider-color, #c7c7c7); border-radius: 10px 16px 4px 4px;
-          clip-path: polygon(0 100%, 12% 40%, 34% 10%, 100% 0, 100% 100%);
+  // The iron and the steam generator: the soleplate turns red and steam
+  // billows from under it, each cloud on its own beat and its own path; the
+  // lamp of the generator glows and steam runs along its hose. Left on, a row
+  // of small flames licks the whole soleplate and the steam turns to smoke.
+  iron: () => `${AP_CSS}
+        .ir-vapo { opacity: 0; transform-box: fill-box; transform-origin: center; }
+        .machine.heating .ir-vapo { animation: ir-vapo 2s ease-out infinite; animation-delay: var(--anim-offset, 0s); }
+        @keyframes ir-vapo {
+          0% { transform: translate(0, -3px) scale(0.35); opacity: 0; }
+          25% { opacity: 1; }
+          100% { transform: translate(var(--dx, -5px), var(--dy, 6px)) scale(var(--sc, 1.5)); opacity: 0; }
         }
-        /* The tank sits inside the shell, so the shell's own outline cuts it:
-           drawn beside it, it stuck out past the nose. */
-        .ir-tank {
-          position: absolute; left: 12px; right: 26px; top: 9px; height: 12px;
-          border-radius: 7px 3px 3px 7px; background: rgba(79, 195, 247, 0.34);
+        .ir-flick { transform-box: fill-box; transform-origin: center bottom; }
+        .machine.left-on .ir-flick { animation: ir-flick 0.6s ease-in-out infinite; animation-delay: var(--anim-offset, 0s); }
+        .machine.left-on .ir-f1 .ir-flick { animation-delay: calc(-0.25s + var(--anim-offset, 0s)); }
+        .machine.left-on .ir-f2 .ir-flick { animation-delay: calc(-0.5s + var(--anim-offset, 0s)); }
+        @keyframes ir-flick {
+          0%, 100% { transform: scaleY(1) skewX(0deg); }
+          33% { transform: scaleY(1.12) skewX(-4deg); }
+          66% { transform: scaleY(0.92) skewX(4deg); }
         }
-        .ir-top {
-          position: absolute; left: 34px; right: 14px; top: 33px; height: 15px; border-radius: 9px 9px 0 0;
-          background: var(--ac-body, var(--secondary-background-color, #d7d7d7));
-          border: 1px solid var(--divider-color, #c7c7c7); border-bottom: none;
-        }
-        .ir-handle {
-          position: absolute; left: 26px; right: 12px; top: 17px; height: 22px;
-          border: 5px solid var(--ac-body, var(--secondary-background-color, #d7d7d7)); border-bottom: none;
-          border-radius: 16px 10px 0 0; box-shadow: 0 -1px 0 var(--divider-color, #c7c7c7);
-        }
-        .ir-plate {
-          position: absolute; left: 4px; right: 8px; top: 69px; height: 9px; background: #3b4048;
-          border-radius: 2px 4px 4px 4px; clip-path: polygon(0 66%, 10% 0, 100% 0, 100% 100%, 3% 100%);
-        }
-        .ir-cord {
-          position: absolute; right: 4px; top: 42px; width: 14px; height: 20px;
-          border: 3px solid var(--disabled-text-color, #9e9e9e); border-left: none; border-top: none;
-          border-radius: 0 0 12px 0;
-        }
-        /* Heating: the soleplate glows and steam leaves the nose. */
-        .machine.heating .ir-plate { background: #ff7043; box-shadow: 0 0 10px 1px #ff7043; }
-        /* Steam: four wisps off the nose, rising clear of the iron and
-           drifting as they go. Kept tall and staggered so that two or three
-           are always in the air rather than one appearing now and then. They
-           are drawn inside the iron: on a generator it is scaled and lifted
-           onto its base, and steam left on the card would rise from nowhere. */
-        .ir-steam {
-          position: absolute; width: 8px; height: 22px; border-radius: 5px; opacity: 0;
-          background: linear-gradient(to top, rgba(176, 196, 214, 0.9), rgba(176, 196, 214, 0));
-        }
-        .ir-steam.s1 { left: 2px; top: 44px; }
-        .ir-steam.s2 { left: 12px; top: 40px; }
-        .ir-steam.s3 { left: 23px; top: 42px; }
-        .ir-steam.s4 { left: 33px; top: 46px; }
-        .machine.heating .ir-steam { animation: ir-puff 2.6s ease-out infinite; animation-delay: var(--anim-offset, 0s); }
-        .machine.heating .ir-steam.s2 { animation-delay: calc(-0.65s + var(--anim-offset, 0s)); }
-        .machine.heating .ir-steam.s3 { animation-delay: calc(-1.3s + var(--anim-offset, 0s)); }
-        .machine.heating .ir-steam.s4 { animation-delay: calc(-1.95s + var(--anim-offset, 0s)); }
-        @keyframes ir-puff {
-          0% { transform: translate(0, 10px) scale(0.45); opacity: 0; }
-          20% { opacity: 0.95; }
-          70% { opacity: 0.7; }
-          100% { transform: translate(-7px, -34px) scale(1.35); opacity: 0; }
-        }
-        /* Left on for too long: the boiler's flame, its shape and its flicker,
-           in front of the iron. Its blue root belongs to a gas burner and is
-           dropped: nothing burns gas here. */
-        .ir-fire {
-          position: absolute; transform-origin: 50% 100%; opacity: 0;
-          background: linear-gradient(0deg, #ffca28 0%, #ffa726 30%, #ff9800 60%, #ff5722 100%);
-          clip-path: polygon(46% 0%, 58% 30%, 70% 10%, 76% 44%, 90% 28%, 94% 64%, 86% 88%, 66% 100%, 34% 100%, 14% 88%, 6% 62%, 12% 32%, 26% 50%, 30% 18%, 42% 36%);
-        }
-        .ir-fire.f1 { left: 8px; bottom: 28px; width: 18px; height: 32px; }
-        .ir-fire.f2 { left: 28px; bottom: 30px; width: 26px; height: 48px; }
-        .ir-fire.f3 { left: 56px; bottom: 30px; width: 20px; height: 38px; }
-        .machine.left-on .ir-fire { opacity: 1; animation: ir-flicker 0.6s ease-in-out infinite; animation-delay: var(--anim-offset, 0s); }
-        .machine.left-on .ir-fire.f2 { animation-delay: calc(-0.2s + var(--anim-offset, 0s)); }
-        .machine.left-on .ir-fire.f3 { animation-delay: calc(-0.4s + var(--anim-offset, 0s)); }
-        @keyframes ir-flicker {
-          0%, 100% { transform: scale(1, 1); }
-          30% { transform: scale(0.92, 1.1); }
-          60% { transform: scale(1.06, 0.9); }
-        }
-        .machine.left-on .ir-plate { background: #ff5722; box-shadow: 0 0 14px 2px #ff5722; }
-        /* The generator: the base carries the water tank, a dial and a lamp,
-           and the iron rests on its mat rather than sinking into it. */
-        .machine.generator .ir { transform: scale(0.74) translate(2px, -35px); transform-origin: 50% 100%; }
-        .machine.generator .ir-fire.f1 { left: 12px; bottom: 52px; width: 16px; height: 28px; }
-        .machine.generator .ir-fire.f2 { left: 29px; bottom: 54px; width: 23px; height: 42px; }
-        .machine.generator .ir-fire.f3 { left: 54px; bottom: 52px; width: 18px; height: 32px; }
-        .gen-base {
-          position: absolute; left: 5px; right: 5px; bottom: 10px; height: 33px; border-radius: 7px 7px 10px 10px;
-          background: var(--ac-body, var(--secondary-background-color, #d7d7d7));
-          border: 1px solid var(--divider-color, #c7c7c7);
-        }
-        .gen-mat {
-          position: absolute; left: 11px; right: 11px; bottom: 42px; height: 6px; border-radius: 4px 4px 0 0;
-          background: var(--ac-body, var(--secondary-background-color, #d7d7d7));
-          border: 1px solid var(--divider-color, #c7c7c7); border-bottom: none;
-        }
-        .gen-tank {
-          position: absolute; left: 11px; width: 30px; bottom: 16px; height: 22px; border-radius: 4px 7px 7px 4px;
-          background: rgba(79, 195, 247, 0.34); border: 1px solid rgba(0, 0, 0, 0.05);
-        }
-        .gen-dial {
-          position: absolute; right: 12px; bottom: 19px; width: 14px; height: 14px; border-radius: 50%;
-          background: var(--disabled-text-color, #9e9e9e);
-        }
-        .gen-led { position: absolute; right: 33px; bottom: 24px; width: 5px; height: 5px; border-radius: 50%; background: #8e9498; }
-        .machine.generator.heating .gen-led { background: #ff7043; box-shadow: 0 0 6px 1px #ff7043; }
-        .machine.generator.left-on .gen-led { background: #ff5722; box-shadow: 0 0 8px 2px #ff5722; }
-        .gen-hose {
-          position: absolute; right: 6px; top: 52px; width: 15px; height: 18px;
-          border: 4px solid var(--disabled-text-color, #9e9e9e); border-left: none; border-top: none;
-          border-radius: 0 0 12px 0;
-        }
+        .machine.heating .ir-glow { animation: ap-glow 1.8s ease-in-out infinite; animation-delay: var(--anim-offset, 0s); }
+        .machine.heating .ir-flow { animation: ir-flow 0.9s linear infinite; animation-delay: var(--anim-offset, 0s); }
+        @keyframes ir-flow { to { stroke-dashoffset: 12; } }
   `,
   // An EV charger on the wall, from the front: the box, its dark face with a
   // bolt and the light above it, the holster on its side with a CCS plug
@@ -13155,7 +13066,8 @@ const AP_CLOTHES = { washer: ["#e57373", "#64b5f6", "#fff176"], dryer: ["#ce93d8
 function laundrySvg(type, d) {
   apN = 0;
   const c = apId(), ch = apId(), gl = apId(), drum = apId(), clip = apId(), warm = apId();
-  const dryer = type === "dryer", dry = dryer || d.drying, water = !dryer && !d.drying && !d.spinCycle;
+  // Water only while it washes: a drum at rest is drained, it can be opened.
+  const dryer = type === "dryer", dry = dryer || d.drying, water = d.turning && !dryer && !d.drying && !d.spinCycle;
   // Turning, the laundry is spread round the drum; stopped, it has fallen
   // to the bottom.
   const at = d.turning ? [0, 120, 240].map((a) => a + (dryer ? 30 : 0)) : [145, 180, 215];
@@ -13292,6 +13204,107 @@ ${apLcd(88, 40, 16, 8.6, d.screen, 5.6)}
 ${[0, 1, 2, 3].map((r) => [0, 1, 2].map((k) => `<rect x="${88.6 + k * 5.2}" y="${53 + r * 6}" width="4" height="4.2" rx="1" fill="#3a434c"/>`).join("")).join("")}
 <rect class="ap-start" x="88.6" y="78" width="14.4" height="9" rx="2"/>
 <rect x="18" y="96" width="8" height="2.6" rx="1" fill="#59616b"/><rect x="94" y="96" width="8" height="2.6" rx="1" fill="#59616b"/>
+</svg>`;
+}
+
+// The colour of the line along the iron: orange, blue, or the iron's own.
+const IRON_LINES = {
+  orange: ["#f57c00", "#ffb74d"],
+  blue: ["#1565c0", "#64b5f6"],
+  body: ["var(--ac-body-lo, #aab3bc)", "var(--ac-body, #dfe5ec)"],
+};
+// A fixed scatter, so the steam looks random but stays put from one render to
+// the next instead of jumping each time the state updates.
+const irRnd = (n) => { const x = Math.sin(n * 12.9898 + 78.233) * 43758.5453; return x - Math.floor(x); };
+// Where the soleplate burns when the iron has been left on.
+const IRON_FIRE = [14, 27, 40, 53, 66, 79, 92, 104].map((x) => [x, 87]);
+const irFlames = (x, y, s, i) => `<g class="ir-f${i % 3}" transform="translate(${x.toFixed(1)} ${y.toFixed(1)}) scale(${s})">
+<path class="ir-flick" d="M-16 0 Q-22 -14 -14 -22 Q-12 -14 -8 -12 Q-10 -24 0 -34 Q2 -22 8 -18 Q10 -26 16 -24 Q22 -12 14 0 Z" fill="#ff7043"/>
+<path class="ir-flick" d="M-8 0 Q-12 -8 -6 -14 Q-4 -8 0 -8 Q0 -16 6 -20 Q8 -12 10 -8 Q14 -4 8 0 Z" fill="#ffca28"/></g>`;
+
+// An iron in profile, nose to the left, after the classic steam irons: the
+// steel soleplate, a shell in the appliance colour with a coloured line along
+// it, the water tank at the front, the handle over the top with its two
+// buttons, the temperature dial and the lamp. Heating, the soleplate turns
+// red and steam billows from under it; left on, it burns and the steam turns
+// to black smoke. The body alone, without its cord or shadow, is the one the
+// steam generator carries.
+function ironBody(d, opt = {}) {
+  const { cord = true, shadow = true } = opt;
+  const b = apId(), o = apId(), pl = apId(), hot = apId(), tk = apId(), hl = apId(), sm = apId();
+  const heat = d.heating || d.leftOn;
+  const [ln, lnHi] = IRON_LINES[d.line] || IRON_LINES.orange;
+  const body = "M12 81 C24 67 37 58 49 52 C53 36 67 26 88 25 H100 Q110 25 110 35 V81 Z";
+  const hole = "M65 50 C68 42 76 37 87 37 H94 Q98 37 98 41 V47 Q98 51 94 51 H67 Q64 51 65 50 Z";
+  const steam = heat ? `<g fill="url(#${sm})">${Array.from({ length: 8 }, (_, i) => {
+    const r = (k) => irRnd(i * 7 + k), x = 12 + i * 12.5 + (r(1) - 0.5) * 8, y = 90 + r(2) * 3, k = 4.5 + r(3) * 4;
+    const st = `animation-duration: ${(1.5 + r(4) * 1.6).toFixed(2)}s; animation-delay: calc(${(-r(5) * 3).toFixed(2)}s + var(--anim-offset, 0s)); --dx: ${((r(6) - 0.7) * 12).toFixed(1)}px; --dy: ${(3 + r(7) * 7).toFixed(1)}px; --sc: ${(1.2 + r(8) * 0.8).toFixed(2)}`;
+    return `<g class="ir-vapo" style="${st}"><circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${k.toFixed(1)}"/><circle cx="${(x + k * 0.7).toFixed(1)}" cy="${(y + 1).toFixed(1)}" r="${(k * 0.7).toFixed(1)}"/><circle cx="${(x - k * 0.6).toFixed(1)}" cy="${(y + 1.5).toFixed(1)}" r="${(k * 0.6).toFixed(1)}"/></g>`;
+  }).join("")}</g>` : "";
+  return `<defs><linearGradient id="${b}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" style="stop-color: var(--ac-body-hi, #ffffff)"/><stop offset=".6" style="stop-color: var(--ac-body, #e6eaee)"/><stop offset="1" style="stop-color: var(--ac-body-lo, #b4bdc6)"/></linearGradient>
+<linearGradient id="${o}" x1="0" y1="0" x2="1" y2="0"><stop offset="0" style="stop-color: ${lnHi}"/><stop offset="1" style="stop-color: ${ln}"/></linearGradient>
+<linearGradient id="${pl}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#eceff1"/><stop offset=".45" stop-color="#b0bec5"/><stop offset="1" stop-color="#546e7a"/></linearGradient>
+<linearGradient id="${hot}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ff7043"/><stop offset="1" stop-color="#d84315"/></linearGradient>
+<linearGradient id="${tk}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e3f2fd" stop-opacity=".7"/><stop offset=".45" stop-color="#bbdefb" stop-opacity=".7"/><stop offset=".46" stop-color="#64b5f6" stop-opacity=".8"/><stop offset="1" stop-color="#1e88e5" stop-opacity=".85"/></linearGradient>
+<linearGradient id="${hl}" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset=".5" stop-color="#fff" stop-opacity=".9"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>
+<radialGradient id="${sm}" cx=".45" cy=".4" r=".6">${d.leftOn ? `<stop offset="0" stop-color="#424242"/><stop offset=".55" stop-color="#212121" stop-opacity=".85"/><stop offset="1" stop-color="#000" stop-opacity="0"/>` : `<stop offset="0" stop-color="#ffffff"/><stop offset=".55" stop-color="#dfe6ea"/><stop offset="1" stop-color="#b0bec5" stop-opacity="0"/>`}</radialGradient></defs>
+${shadow ? apSoft(60, 95, 50, 3, 0.24) : ""}
+${cord ? `<path d="M110 40 Q118 42 120 52" stroke="#78909c" stroke-width="3" fill="none" stroke-linecap="round"/><path d="M107 36 h6 a2 2 0 0 1 2 2 v6 a2 2 0 0 1 -2 2 h-6 Z" fill="#90a4ae"/>` : ""}
+<path class="ir-plate" d="M8 88 Q11 81 22 80 H110 V86 Q110 89 107 89 H10 Q7 89 8 88 Z" fill="url(#${heat ? hot : pl})" stroke="rgba(0,0,0,.25)" stroke-width=".5"/>
+<path d="M14 83.5 H106" stroke="#fff" stroke-width=".8" opacity="${heat ? 0.35 : 0.7}"/>
+<path class="ir-body" fill-rule="evenodd" d="${body} ${hole}" fill="url(#${b})" stroke="rgba(0,0,0,.22)" stroke-width=".6"/>
+<path class="ir-line" d="M13 80.6 C25 69 39 63 58 61 H110 V70 H60 C44 71 30 75 18 80.6 Z" fill="url(#${o})"/>
+<path d="M26 74 C38 67 50 64 66 63.5 H104" stroke="url(#${hl})" stroke-width="1.2" fill="none" stroke-linecap="round"/>
+<path class="ir-tank" d="M22 72 C30 63 40 57 49 53 L53 60 C44 62 35 67 28 73 Z" fill="url(#${tk})" stroke="rgba(30,136,229,.4)" stroke-width=".4"/>
+<path d="M56 34 C62 29 70 27 80 26.5" stroke="#fff" stroke-width="1.6" fill="none" opacity=".9" stroke-linecap="round"/>
+<path d="${hole}" fill="none" stroke="#000" stroke-width=".6" opacity=".15"/>
+<ellipse cx="58" cy="38" rx="3.6" ry="2.4" transform="rotate(-30 58 38)" style="fill: ${lnHi}" stroke="rgba(0,0,0,.2)" stroke-width=".4"/><ellipse cx="64" cy="33" rx="3" ry="2" transform="rotate(-20 64 33)" style="fill: ${ln}" stroke="rgba(0,0,0,.2)" stroke-width=".4"/>
+<ellipse cx="82" cy="56" rx="7" ry="2.6" fill="#eceff1" stroke="rgba(0,0,0,.25)" stroke-width=".5"/><path d="M82 54.2 v2.4" style="stroke: ${ln}" stroke-width="1.2" stroke-linecap="round"/>
+<circle cx="104" cy="56" r="1.7" fill="${heat ? "#ff5252" : "#b0bec5"}"/>${heat ? `<circle class="ir-glow" cx="104" cy="56" r="3.2" fill="#ff5252" opacity=".35"/>` : ""}
+${steam}`;
+}
+
+function ironSvg(d) {
+  apN = 0;
+  return `<svg class="ap-svg ir-svg" viewBox="0 -10 120 135" aria-hidden="true">${ironBody(d)}${d.leftOn ? IRON_FIRE.map(([x, y], i) => irFlames(x, y, i % 2 ? 0.3 : 0.34, i)).join("") : ""}</svg>`;
+}
+
+// A steam generator, after the Calor Pro Express: a low cradle at the back
+// and a tall water tank at the front, a slope between them where the iron
+// lies when it is off, the lamp at the front and the hose looping from the
+// back of the base to the heel of the iron. Heating, the iron lifts off the
+// slope nose up, steam billows under it and runs along the hose.
+function generatorSvg(d) {
+  apN = 0;
+  const b = apId(), tk = apId(), hz = apId(), glow = apId();
+  const heat = d.heating || d.leftOn;
+  // The iron, mirrored so its nose points right, scaled and turned nose up
+  // along the slope; its heel sits on the cradle, lifted off it when it heats.
+  const S = 0.74, deg = -37, A = deg * Math.PI / 180;
+  const rs = ([x, y]) => { const u = (120 - x) * S, v = y * S; return [u * Math.cos(A) - v * Math.sin(A), u * Math.sin(A) + v * Math.cos(A)]; };
+  const h0 = rs([108, 89]), lift = heat ? [-5, -13] : [0, 0], T = [30 + lift[0] - h0[0], 90.5 + lift[1] - h0[1]];
+  const at = (pt) => { const [x, y] = rs(pt); return [T[0] + x, T[1] + y]; };
+  const [hx, hy] = at([111, 41]);
+  const hose = `M${hx.toFixed(1)} ${hy.toFixed(1)} C${(hx - 20).toFixed(1)} ${(hy - 2).toFixed(1)} -1 101 11 100.5`;
+  return `<svg class="ap-svg ir-svg" viewBox="0 -10 120 135" aria-hidden="true"><defs><linearGradient id="${b}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" style="stop-color: var(--ac-body-hi, #f3f6fa)"/><stop offset=".6" style="stop-color: var(--ac-body, #dfe5ec)"/><stop offset="1" style="stop-color: var(--ac-body-lo, #9fb0c2)"/></linearGradient>
+<linearGradient id="${tk}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#b3d4f5" stop-opacity=".55"/><stop offset=".42" stop-color="#90c2f0" stop-opacity=".6"/><stop offset=".43" stop-color="#2f7fd6" stop-opacity=".8"/><stop offset="1" stop-color="#15489a" stop-opacity=".9"/></linearGradient>
+<radialGradient id="${glow}" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#fff"/><stop offset=".55" stop-color="${heat ? "#ff8a65" : "#cfd8dc"}"/><stop offset="1" stop-color="${heat ? "#d84315" : "#78909c"}"/></radialGradient>
+<linearGradient id="${hz}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#78909c"/><stop offset="1" stop-color="#455a64"/></linearGradient></defs>
+${apSoft(60, 111, 54, 3.4, 0.22)}
+<path class="gen-hose" d="${hose}" stroke="url(#${hz})" stroke-width="3.6" fill="none" stroke-linecap="round"/>
+${heat ? `<path class="ir-flow" d="${hose}" stroke="#fff" stroke-width="1.1" stroke-dasharray="2 4" fill="none" stroke-linecap="round" opacity=".8"/>` : ""}
+<path class="gen-base" d="M14 108 Q7 108 7 100 Q7 93 15 92 H30 L86 49.6 Q92 45 100 45.5 Q110 47 112 56 L114 101 Q114 108 107 108 Z" fill="url(#${b})" stroke="rgba(0,0,0,.25)" stroke-width=".6"/>
+<path d="M15.5 94.2 H31 L86.5 52" stroke="#3a4a6b" stroke-width="2" fill="none" stroke-linecap="round" opacity=".75"/>
+<path class="gen-tank" d="M56 96 L87.5 56 Q92 51 98.5 51.5 Q106 52.5 107.5 59 L108.5 96 Z" fill="url(#${tk})" stroke="rgba(21,72,154,.55)" stroke-width=".6"/>
+<path d="M90 58 Q94 54.5 99.5 55" stroke="#fff" stroke-width="1.3" fill="none" opacity=".75" stroke-linecap="round"/>
+<path d="M56 96 H108.5" stroke="#3a4a6b" stroke-width="1.6" opacity=".6"/>
+<rect x="22" y="99" width="22" height="5" rx="2" fill="#000" opacity=".12"/>
+<circle cx="13" cy="100" r="2" fill="#3a4a6b" opacity=".8"/>
+${heat ? `<circle class="ir-glow" cx="80" cy="99" r="8" fill="#ff8a65" opacity=".35"/>` : ""}
+<circle cx="80" cy="99" r="5" fill="url(#${glow})" stroke="rgba(0,0,0,.3)" stroke-width=".5"/>
+<path d="M14 108 H107" stroke="#2b3037" stroke-width="2.4" stroke-linecap="round" opacity=".55"/>
+<g transform="translate(${T[0].toFixed(2)} ${T[1].toFixed(2)}) rotate(${deg}) scale(${S}) translate(120 0) scale(-1 1)">${ironBody(d, { cord: false, shadow: false })}</g>
+${d.leftOn ? IRON_FIRE.map(at).map(([x, y], i) => irFlames(x, y, i % 2 ? 0.24 : 0.27, i)).join("") : ""}
 </svg>`;
 }
 
@@ -13734,30 +13747,11 @@ function illustrationHtml(type, ctx) {
   if (type === "fan") return fanHtml(cls, ctx.fan || {});
 
   if (type === "iron") {
-    // The iron alone, or the same iron on the base of a steam generator. The
-    // base is drawn first, so the iron rests on it rather than through it.
-    const base = ctx.ironLayout === "generator"
-      ? `<div class="gen-base"></div><div class="gen-tank"></div><div class="gen-dial"></div>
-          <div class="gen-led"></div><div class="gen-mat"></div><div class="gen-hose"></div>`
-      : `<div class="ir-cord"></div>`;
+    const d = { heating: !!ctx.heating, leftOn: !!ctx.leftOn, line: ctx.ironLine };
     return `
-        <div class="machine ${cls} ${ctx.ironLayout} ${ctx.leftOn ? "left-on" : ""}">
-          ${base}
-          <div class="ir">
-            <div class="ir-steam s1"></div>
-            <div class="ir-steam s2"></div>
-            <div class="ir-steam s3"></div>
-            <div class="ir-steam s4"></div>
-            <div class="ir-handle"></div>
-            <div class="ir-top"></div>
-            <div class="ir-shell"><div class="ir-tank"></div></div>
-            <div class="ir-plate"></div>
-          </div>
-          <div class="ir-fire f1"></div>
-          <div class="ir-fire f2"></div>
-          <div class="ir-fire f3"></div>
-        </div>`;
+        <div class="machine ${cls} ${ctx.ironLayout} ${ctx.leftOn ? "left-on" : ""}">${ctx.ironLayout === "generator" ? generatorSvg(d) : ironSvg(d)}</div>`;
   }
+
 
   if (type === "kettle") {
     // No timer and no progress: the drawing is the whole readout.
@@ -17469,6 +17463,7 @@ class ApplianceCard extends HTMLElement {
       feederLayout: ["canister", "double", "dual_split", "rotary"].includes(cfg.feeder_layout) ? cfg.feeder_layout : "",
       feederScreen,
       ironLayout: cfg.iron_layout === "generator" ? "generator" : "",
+      ironLine: ["blue", "body"].includes(cfg.iron_line_color) ? cfg.iron_line_color : "orange",
       kettleLayout: cfg.kettle_layout,
       coffeeLayout: cfg.coffee_layout,
       boilerLayout: cfg.boiler_layout,
@@ -19319,6 +19314,13 @@ class ApplianceCardEditor extends HTMLElement {
           options: [
             { value: "iron", label: t(hass, "layout_iron") },
             { value: "generator", label: t(hass, "layout_generator") },
+          ],
+        }) + this._row("iron_line_color", "iron_line_color", {
+          type: "select",
+          options: [
+            { value: "orange", label: t(hass, "color_orange") },
+            { value: "blue", label: t(hass, "color_blue") },
+            { value: "body", label: t(hass, "color_body") },
           ],
         }) + this._row("left_on_after", "left_on_after", { placeholder: "30" }) : ""}
         ${this._type === "toaster" ? this._row("section_toaster_layout", "toaster_layout", {

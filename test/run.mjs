@@ -3896,6 +3896,8 @@ const drum = h => /class="ap-water"/.test(h) ? 'water'
   const laundryAt = h => [...h.matchAll(/<g transform="rotate\((\d+) 60 68\)"><path d="M52 52/g)].map(m => +m[1]).join();
   check('dessin : a l arret, le linge au fond', laundryAt(render({ appliance_type: 'washer', state_entity: 'sensor.w' }, { 'sensor.w': { state: 'Off', attributes: {} } })), '145,180,215');
   check('dessin : en marche, il tourne tout autour', laundryAt(wRun), '0,120,240');
+  check('dessin : a l arret, pas d eau dans le tambour', /class="ap-water"/.test(render({ appliance_type: 'washer', state_entity: 'sensor.w' }, { 'sensor.w': { state: 'Off', attributes: {} } })), false);
+  check('dessin : en lavage, de l eau', /class="ap-water"/.test(wRun), true);
   check('dessin : le seche-linge au repos aussi', laundryAt(render({ appliance_type: 'dryer', state_entity: 'sensor.td' }, { 'sensor.td': { state: 'Off', attributes: {} } })), '145,180,215');
   const wOpen = render({ appliance_type: 'washer', state_entity: 'sensor.w', door_entity: 'binary_sensor.d' },
     { 'sensor.w': { state: 'Off', attributes: {} }, 'binary_sensor.d': { state: 'on', attributes: {} } });
@@ -4024,9 +4026,12 @@ check('lavante-sechante : Dry tout court', stateLine(wd('Run', { phase_entity: '
   check('lavante-sechante : en pause, l\'etat prime sur l\'etape',
     stateLine(rerender(c, { 'sensor.wd': { state: 'Paused', attributes: {} },
                             'sensor.ph': { state: 'drying', attributes: {} } })), 'Paused');
-  check('lavante-sechante : le cycle fini rend le tambour a l\'eau',
-    drum(rerender(c, { 'sensor.wd': { state: 'End Of Cycle', attributes: {} },
-                       'sensor.ph': { state: 'drying', attributes: {} } })), 'water');
+  // Finished, it is a washer again, at rest: no heat, and a drained drum
+  // with the laundry at the bottom, ready for the door to open.
+  const fin = rerender(c, { 'sensor.wd': { state: 'End Of Cycle', attributes: {} },
+                            'sensor.ph': { state: 'drying', attributes: {} } });
+  check('lavante-sechante : le cycle fini ne chauffe plus', /class="ap-warm"/.test(fin) || machineCls(fin).includes('drying'), false);
+  check('lavante-sechante : et son tambour est vidange', drum(fin), 'clothes');
 }
 
 // A machine whose name says it dries is one, without the option being set.
@@ -6044,19 +6049,19 @@ check('fer : en chauffe, le mot est chaud', stateColor(iron('on', 2, 1400)), '#f
 check('fer : state_show_raw garde le mot de l\'entite',
   stateLine(render({ appliance_type: 'iron', state_entity: 'switch.fer', state_show_raw: true },
     { 'switch.fer': { state: 'on', attributes: {} } })), 'on');
-contains('fer : la semelle est dessinee', iron('off', 60, 0), '<div class="ir-plate">');
-contains('fer : le reservoir est dans la coque', iron('off', 60, 0), '<div class="ir-shell"><div class="ir-tank"></div></div>');
-check('fer : sans centrale, pas de socle', /<div class="gen-base">/.test(iron('off', 60, 0)), false);
-contains('fer : un cordon a la place', iron('off', 60, 0), '<div class="ir-cord">');
+contains('fer : la semelle est dessinee', iron('off', 60, 0), 'class="ir-plate"');
+contains('fer : le reservoir est dessine', iron('off', 60, 0), 'class="ir-tank"');
+check('fer : sans centrale, pas de socle', /class="gen-base"/.test(iron('off', 60, 0)), false);
+contains('fer : un cordon a la place', iron('off', 60, 0), 'M110 40 Q118 42 120 52');
 
 // The generator: the same iron on a base that holds the water.
 const gen = (state, onMin, watts, extra = {}) => iron(state, onMin, watts, { iron_layout: 'generator', ...extra });
 check('centrale : la classe du modele', hasCls(gen('on', 2, 1900), 'generator'), true);
-contains('centrale : le socle', gen('on', 2, 1900), '<div class="gen-base">');
-contains('centrale : son reservoir', gen('on', 2, 1900), '<div class="gen-tank">');
-contains('centrale : le cordon de vapeur', gen('on', 2, 1900), '<div class="gen-hose">');
-check('centrale : et plus de cordon simple', /<div class="ir-cord">/.test(gen('on', 2, 1900)), false);
-check('centrale : le fer y est encore', /<div class="ir-plate">/.test(gen('on', 2, 1900)), true);
+contains('centrale : le socle', gen('on', 2, 1900), 'class="gen-base"');
+contains('centrale : son reservoir', gen('on', 2, 1900), 'class="gen-tank"');
+contains('centrale : le cordon de vapeur', gen('on', 2, 1900), 'class="gen-hose"');
+check('centrale : et plus de cordon simple', /M110 40 Q118 42 120 52/.test(gen('on', 2, 1900)), false);
+check('centrale : le fer y est encore', /class="ir-plate"/.test(gen('on', 2, 1900)), true);
 check('fer : un modele inconnu reste un fer', hasCls(iron('on', 2, 1400, { iron_layout: 'centrale' }), 'generator'), false);
 
 // Left on: the minutes are counted by the card, since a plug left on stops
@@ -6081,7 +6086,8 @@ check('fer : un delai a zero non plus', hasCls(iron('on', 300, 1400, { left_on_a
 check('fer : a l\'arret depuis des heures, rien ne brule', hasCls(iron('off', 300, 0, { left_on_after: 30 }), 'left-on'), false);
 check('fer : eteint, l\'etat reste l\'etat', stateLine(iron('off', 300, 0, { left_on_after: 30 })), 'Off');
 // The flames are drawn whatever happens: only the class lights them.
-contains('fer : les flammes sont dans le dessin', iron('off', 60, 0), '<div class="ir-fire f1">');
+check('fer : eteint, pas de flamme dans le dessin', /class="ir-flick"/.test(iron('off', 60, 0)), false);
+check('fer : oublie, les flammes courent sur la semelle', (iron('on', 45, 1400, { left_on_after: 30 }).match(/<g class="ir-f\d"/g) || []).length, 8);
 check('fer : le compteur repart quand il s\'eteint', (() => {
   const c = build({ ...IRON, left_on_after: 30 }, ironStates('on', 45, 1400)).card;
   const before = hasCls(markup(c), 'left-on');
@@ -6090,7 +6096,7 @@ check('fer : le compteur repart quand il s\'eteint', (() => {
 })(), 'true false');
 
 // Its own name says what it is, in the languages the card speaks.
-const isIron = id => /<div class="ir-plate">/.test(render({ state_entity: id }, { [id]: { state: 'off', attributes: {} } }));
+const isIron = id => /class="ir-plate"/.test(render({ state_entity: id }, { [id]: { state: 'off', attributes: {} } }));
 for (const id of ['switch.iron', 'switch.steam_generator', 'switch.fer_a_repasser', 'switch.centrale_vapeur',
   'switch.bugeleisen', 'switch.dampfstation', 'switch.plancha_de_ropa', 'switch.ferro_da_stiro',
   'switch.strijkijzer', 'switch.zelazko', 'switch.strykjarn']) {
@@ -6100,7 +6106,7 @@ for (const id of ['switch.iron', 'switch.steam_generator', 'switch.fer_a_repasse
 check('fer : une plancha de cuisine n\'en est pas un', isIron('switch.plancha_de_cocina'), false);
 // And an environment sensor is not one either: "iron" hides inside the word.
 check('fer : environment n\'en est pas un',
-  /<div class="ir-plate">/.test(render({ state_entity: 'sensor.environment_state' },
+  /class="ir-plate"/.test(render({ state_entity: 'sensor.environment_state' },
     { 'sensor.environment_state': { state: 'off', attributes: {} } })), false);
 
 // The editor: the type, its model and its delay, and nowhere else.
@@ -6110,6 +6116,26 @@ check('editeur : le modele est propose sur un fer',
   /data-field="iron_layout"/.test(markup(newEditor({ state_entity: 'sensor.w', appliance_type: 'iron' }))), true);
 check('editeur : le delai aussi',
   /data-field="left_on_after"/.test(markup(newEditor({ state_entity: 'sensor.w', appliance_type: 'iron' }))), true);
+// The new iron: steam under the soleplate while it heats, smoke once it is
+// left on, and the colour of the line along it.
+check('fer : en chauffe, la vapeur sort de la semelle', (iron('on', 2, 1400).match(/class="ir-vapo"/g) || []).length, 8);
+check('fer : a l\'arret, pas de vapeur', /class="ir-vapo"/.test(iron('off', 60, 0)), false);
+check('fer : en chauffe, la semelle est rouge', /class="ir-plate"[^>]*fill="url\(#(ap\d+)\)"/.test(iron('on', 2, 1400)) && /#d84315/.test(iron('on', 2, 1400)), true);
+check('fer : en chauffe, la vapeur est blanche', /#dfe6ea/.test(iron('on', 2, 1400)), true);
+check('fer : oublie, la vapeur devient fumee noire', /#212121/.test(iron('on', 45, 1400, { left_on_after: 30 })), true);
+check('fer : la vapeur ne bouge pas d\'un rendu a l\'autre', iron('on', 2, 1400) === iron('on', 2, 1400), true);
+check('fer : ligne orange par defaut', /stop-color: #f57c00/.test(iron('off', 60, 0)), true);
+check('fer : ligne bleue', /stop-color: #1565c0/.test(iron('off', 60, 0, { iron_line_color: 'blue' })), true);
+check('fer : ligne comme l\'appareil', /stop-color: var\(--ac-body-lo, #aab3bc\)/.test(iron('off', 60, 0, { iron_line_color: 'body' })), true);
+check('fer : couleur inconnue, ligne orange', /stop-color: #f57c00/.test(iron('off', 60, 0, { iron_line_color: 'pink' })), true);
+check('centrale : ligne bleue aussi', /stop-color: #1565c0/.test(gen('off', 60, 0, { iron_line_color: 'blue' })), true);
+check('centrale : en chauffe, la vapeur court dans le tuyau', /class="ir-flow"/.test(gen('on', 2, 1900)), true);
+check('centrale : a l\'arret, le tuyau est vide', /class="ir-flow"/.test(gen('off', 60, 0)), false);
+check('centrale : en chauffe, le fer fume sous la semelle', /class="ir-vapo"/.test(gen('on', 2, 1900)), true);
+check('editeur : la couleur de la ligne pour le fer',
+  /data-field="iron_line_color"/.test(markup(newEditor({ state_entity: 'sensor.w', appliance_type: 'iron' }))), true);
+check('editeur : pas de couleur de ligne pour un lave-linge',
+  /data-field="iron_line_color"/.test(markup(newEditor({ state_entity: 'sensor.w', appliance_type: 'washer' }))), false);
 check('editeur : pas de modele de fer sur un lave-linge',
   /data-field="iron_layout"/.test(markup(newEditor({ state_entity: 'sensor.w', appliance_type: 'washer' }))), false);
 check('editeur : ni le delai',

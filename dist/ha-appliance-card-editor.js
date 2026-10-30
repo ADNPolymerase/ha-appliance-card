@@ -1123,6 +1123,13 @@ class ApplianceCardEditor extends HTMLElement {
             { value: "iron", label: t(hass, "layout_iron") },
             { value: "generator", label: t(hass, "layout_generator") },
           ],
+        }) + this._row("iron_line_color", "iron_line_color", {
+          type: "select",
+          options: [
+            { value: "orange", label: t(hass, "color_orange") },
+            { value: "blue", label: t(hass, "color_blue") },
+            { value: "body", label: t(hass, "color_body") },
+          ],
         }) + this._row("left_on_after", "left_on_after", { placeholder: "30" }) : ""}
         ${this._type === "toaster" ? this._row("section_toaster_layout", "toaster_layout", {
           type: "select",
