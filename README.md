@@ -10,7 +10,7 @@
 <a href="https://buymeacoffee.com/adnpolymerase" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-orange.png" alt="Buy Me A Coffee" height="60"></a>
 <a href="https://adnpolymerase.github.io/HA/" target="_blank"><img src="https://raw.githubusercontent.com/ADNPolymerase/HA/main/assets/site-button.svg" alt="Link to my github.io for my other projects" height="60"></a>
 
-A Lovelace card for household appliances: washers, dryers, dishwashers, ovens, microwaves, cooker hoods, cooktops, fridges, kettles, cookers, coffee machines, rice cookers, air fryers, water heaters, boilers, heat pumps, 3D printers, pet feeders, irons, toasters, hair dryers, pellet stoves, air conditioners, dehumidifiers, space heaters, towel warmers, air purifiers, fans, EV chargers, TVs, projectors, computers and wall tablets, network switches, servers, NAS and racks, robot vacuums, mops and mowers, stick vacuums and floor washers, pool pumps, bathroom scales, UPSes, solar panels and home batteries. Cycle in progress, program, remaining time, temperature, alerts and controls.
+A Lovelace card for household appliances: washers, dryers, dishwashers, ovens, microwaves, cooker hoods, cooktops, fridges, kettles, cookers, coffee machines, rice cookers, air fryers, water heaters, boilers, heat pumps, 3D printers, pet feeders, irons, toasters, hair dryers, pellet stoves, air conditioners, dehumidifiers, space heaters, towel warmers, air purifiers, fans, EV chargers, TVs, projectors, computers and wall tablets, network switches, servers, NAS and racks, robot vacuums, mops and mowers, stick vacuums and floor washers, pool pumps, bathroom scales, UPSes, solar panels and home batteries, lamps, mailboxes and doorbells, cameras, diffusers, heat recovery ventilation, freezers, booster pumps and sump pits, underfloor heating, spas, saunas, aquariums, electricity meters and Christmas trees. Cycle in progress, program, remaining time, temperature, alerts and controls.
 
 No brand assumed: every field is an entity you pick, so it works with **any** integration (Electrolux, Samsung, LG, Home Connect, Miele, a plain smart plug…).
 
@@ -23,7 +23,7 @@ No brand assumed: every field is an entity you pick, so it works with **any** in
 
 ## Features
 
-- **Forty-three appliance types**, each with a CSS illustration that animates on the appliance's own data and stays still when idle. The type is detected on its own or set via `appliance_type`, and `compact: true` keeps only the text.
+- **Fifty-one appliance types**, each with a CSS illustration that animates on the appliance's own data and stays still when idle. The type is detected on its own or set via `appliance_type`, and `compact: true` keeps only the text.
 - **State normalization**: `Idle`, `RUNNING`, `wash`, `En marche`… are recognised (accent-insensitive) and sorted into idle, preheating, running, paused, done, delayed or error. An unknown state is shown as it came, minus the integration's namespace, and `state_map` sorts the rest, `"*"` catching everything left over.
 - **The step, not an hour of *Running***: a washer, a dryer or a dishwasher names the step it is at (*Pre-wash*, *Washing*, *Rinsing*, *Spinning*, *Drying* and seven more), from a phase entity or from its own state, and the drum whirls while it spins. The time left is still the whole cycle's.
 - **A washer-dryer is a washer that dries**: `washer_dryer: true`, and the drum shows water while it washes, then clothes turning in hot air while it dries. The step comes from the state itself or from a phase entity, and the state line reads *Washing* or *Drying*.
@@ -281,6 +281,7 @@ Only `state_entity` is required, except on a fridge where a probe or a door cont
 | `boiler_layout` | boiler | `wall` (default, a white wall boiler with its gauge and screen) \| `window` (a boiler whose burner shows through a window). |
 | `towel_warmer_layout` | towel warmer | `ladder` (default, round bars between two uprights) \| `panel` (flat anthracite panels on one upright). |
 | `iron_layout` | iron | `iron` (default, the iron alone) \| `generator` (the same iron on the base of a steam generator). |
+| `iron_line_color` | iron | The colour of the line along the iron: `orange` (default) \| `blue` \| `body` (the colour of the appliance). |
 | `toaster_layout` | toaster | `two` (default, two slots) \| `four` (four slots, two levers) \| `long` (one long slot for two slices end to end). |
 | `hair_dryer_layout` | hair dryer | `pistol` (default, a classic dryer seen from the side) \| `ring` (a ring dryer seen from the front). |
 | `heat_threshold` | hair dryer | Power from which the dryer blows hot air (300 W by default). Below it, only the fan runs. |
@@ -390,7 +391,7 @@ Only `state_entity` is required, except on a fridge where a probe or a door cont
 | `battery_capacity` | home battery | The capacity, in kWh: with it the lines say how long until full, or until the reserve. |
 | `battery_layout` | home battery | `wall` (a battery on the wall) \| `station` (a portable station). Left out, a name that says EcoFlow, Delta, Bluetti, Jackery, Anker or station makes a station. |
 | `battery_alert_entity` | home battery | Anything that should raise the *Error*: a BMS fault. A state that says fault does the same. |
-| `left_on_after` | iron | Minutes switched on after which the state line reads *Left on*, in red. Empty, it never does. |
+| `left_on_after` | iron | Minutes switched on, heating or ready, after which the state line reads *Left on*, in red, the soleplate burns and the steam turns to black smoke. Empty, it never does. |
 | `feeder_layout` | pet feeder | `tower` (default, a square tank on its base) \| `canister` (a round tank on a round base) \| `double` (two outlets and two bowls) \| `dual_split` (two hoppers over one bowl split down the middle) \| `rotary` (plates on a turntable under a lid, for wet food). |
 | `level_b_entity` | pet feeder | The second hopper's level, on a feeder with two (`dual_split`), read like `level_entity` and against the same `level_empty_below` and `level_max`. It fills the right-hand window, gets its own line, and empty it turns the state to *Tank empty* and leaves only its own half bare. At rest the state line shows the lower of the two levels, the hopper to refill first. The editor offers it only for `dual_split`. |
 | `portions_today_entity` / `weight_today_entity` | pet feeder | What was served today, on one line. Without a weight entity the card works the grams out from `portion_weight_entity`, so nothing is assumed about the size of a meal. |
@@ -584,9 +585,11 @@ An unrecognised value leaves the illustration as it is, and the phase also names
 <details>
 <summary><b>Irons</b></summary>
 
-Nothing connects an iron to Home Assistant, which is why it is on a smart plug: the state comes from what it draws, and the drawing does the rest. Heating, the soleplate glows and steam leaves the nose. Two models are drawn, the iron alone and the same iron on the base of a steam generator.
+Nothing connects an iron to Home Assistant, which is why it is on a smart plug. Its switch says whether the iron is on, its meter whether it is heating and how hard: the soleplate turns red and steam billows from under it, a little on a light draw, a cloud at full power. At temperature the thermostat cuts out and the plug reads nothing: the iron is *Ready*, hot, two wisps of steam rising from it. Without a switch, a meter alone reads *Off* below the threshold.
 
-`left_on_after` is the reason the plug is there. Past that many minutes switched on, the state line reads *Left on*, in red:
+Two models are drawn. The iron alone, after a classic steam iron, and the steam generator, after the Calor stations, whose iron lies on the slope of its tank and lifts nose up while it heats, its lamp glowing and steam running along the hose. `iron_line_color` sets the colour of the line along the iron: orange, blue, or the colour of the appliance.
+
+`left_on_after` is the reason the plug is there. Past that many minutes switched on, heating or ready, the state line reads *Left on*, in red, small flames lick the soleplate and the steam turns to black smoke:
 
 ```yaml
 type: custom:ha-appliance-card

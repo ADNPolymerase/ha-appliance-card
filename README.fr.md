@@ -10,7 +10,7 @@
 <a href="https://buymeacoffee.com/adnpolymerase" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-orange.png" alt="Buy Me A Coffee" height="60"></a>
 <a href="https://adnpolymerase.github.io/HA/" target="_blank"><img src="https://raw.githubusercontent.com/ADNPolymerase/HA/main/assets/site-button.svg" alt="Lien vers mon github.io pour mes autres projets" height="60"></a>
 
-Une card Lovelace pour les appareils de la maison : lave-linge, sèche-linge, lave-vaisselle, four, micro-ondes, hotte, plaque de cuisson, réfrigérateur, bouilloire, robot cuiseur, machine à café, cuiseur à riz, friteuse à air, chauffe-eau, chaudière, pompe à chaleur, imprimante 3D, distributeur de croquettes, fer à repasser, grille-pain, sèche-cheveux, poêle à granulés, climatiseur, déshumidificateur, petit chauffage, sèche-serviettes, purificateur d'air, ventilateur, borne de recharge, télévision, vidéoprojecteur, ordinateur, tablette murale, switch, serveur, NAS et baie réseau, robot aspirateur, laveur et tondeuse, aspirateur balai et laveur de sol, pompe de piscine, pèse-personne, onduleur, panneaux solaires et batterie domestique. Cycle en cours, programme, temps restant, température, alertes et commandes.
+Une card Lovelace pour les appareils de la maison : lave-linge, sèche-linge, lave-vaisselle, four, micro-ondes, hotte, plaque de cuisson, réfrigérateur, bouilloire, robot cuiseur, machine à café, cuiseur à riz, friteuse à air, chauffe-eau, chaudière, pompe à chaleur, imprimante 3D, distributeur de croquettes, fer à repasser, grille-pain, sèche-cheveux, poêle à granulés, climatiseur, déshumidificateur, petit chauffage, sèche-serviettes, purificateur d'air, ventilateur, borne de recharge, télévision, vidéoprojecteur, ordinateur, tablette murale, switch, serveur, NAS et baie réseau, robot aspirateur, laveur et tondeuse, aspirateur balai et laveur de sol, pompe de piscine, pèse-personne, onduleur, panneaux solaires et batterie domestique, lampes, boîtes aux lettres et sonnettes, caméras, diffuseurs, VMC double flux, congélateurs, surpresseurs et postes de relevage, plancher chauffant, spa, sauna, aquarium, compteur Linky et sapin de Noël. Cycle en cours, programme, temps restant, température, alertes et commandes.
 
 Aucune marque supposée : chaque champ est une entité à choisir, elle fonctionne donc avec **n'importe quelle** intégration (Electrolux, Samsung, LG, Home Connect, Miele, une simple prise connectée…).
 
@@ -23,7 +23,7 @@ Aucune marque supposée : chaque champ est une entité à choisir, elle fonction
 
 ## Fonctionnalités
 
-- **Quarante-trois types d'appareils**, chacun avec une illustration en CSS animée sur les données de l'appareil et statique à l'arrêt. Le type est détecté tout seul ou choisi via `appliance_type`, et `compact: true` ne garde que le texte.
+- **Cinquante et un types d'appareils**, chacun avec une illustration en CSS animée sur les données de l'appareil et statique à l'arrêt. Le type est détecté tout seul ou choisi via `appliance_type`, et `compact: true` ne garde que le texte.
 - **Normalisation d'état** : `Idle`, `RUNNING`, `wash`, `En marche`… sont reconnus (sans tenir compte des accents) et classés en veille, préchauffage, en cours, en pause, terminé, différé ou erreur. Un état inconnu s'affiche tel quel, sans l'espace de noms de l'intégration, et `state_map` classe le reste, `"*"` ramassant tout ce qui dépasse.
 - **L'étape, et non une heure d'*En cours*** : un lave-linge, un sèche-linge ou un lave-vaisselle nomme l'étape où il en est (*Prélavage*, *Lavage*, *Rinçage*, *Essorage*, *Séchage* et sept autres), d'après une entité de phase ou son propre état, et le tambour s'emballe pendant l'essorage. Le temps restant est toujours celui du cycle entier.
 - **Une lavante-séchante est un lave-linge qui sèche** : `washer_dryer: true`, et le tambour montre de l'eau pendant le lavage, puis du linge qui tourne dans l'air chaud pendant le séchage. L'étape vient de l'état lui-même ou d'une entité de phase, et la ligne d'état lit *Lavage* ou *Séchage*.
@@ -281,6 +281,7 @@ Seule `state_entity` est obligatoire, sauf sur un réfrigérateur où une sonde 
 | `boiler_layout` | chaudière | `wall` (défaut, une chaudière murale blanche avec son manomètre et son écran) \| `window` (une chaudière dont on voit le brûleur par un hublot). |
 | `towel_warmer_layout` | sèche-serviettes | `ladder` (défaut, des barreaux ronds entre deux montants) \| `panel` (des lames plates anthracite sur un montant). |
 | `iron_layout` | fer | `iron` (défaut, le fer seul) \| `generator` (le même fer sur le socle d'une centrale vapeur). |
+| `iron_line_color` | fer | La couleur de la ligne le long du fer : `orange` (défaut) \| `blue` (bleu) \| `body` (la couleur de l'appareil). |
 | `toaster_layout` | grille-pain | `two` (défaut, deux fentes) \| `four` (quatre fentes, deux leviers) \| `long` (une fente longue pour deux tranches bout à bout). |
 | `hair_dryer_layout` | sèche-cheveux | `pistol` (défaut, sèche-cheveux classique vu de profil) \| `ring` (sèche-cheveux en anneau vu de face). |
 | `heat_threshold` | sèche-cheveux | Puissance à partir de laquelle il souffle de l'air chaud (300 W par défaut). En dessous, seul le ventilateur tourne. |
@@ -390,7 +391,7 @@ Seule `state_entity` est obligatoire, sauf sur un réfrigérateur où une sonde 
 | `battery_capacity` | batterie domestique | La capacité, en kWh : avec elle, les lignes disent dans combien de temps elle sera pleine, ou jusqu'à la réserve. |
 | `battery_layout` | batterie domestique | `wall` (une batterie murale) \| `station` (une station portable). Sans lui, un nom qui dit EcoFlow, Delta, Bluetti, Jackery, Anker ou station en fait une station. |
 | `battery_alert_entity` | batterie domestique | Tout ce qui doit lever l'*Erreur* : un défaut du BMS. Un état qui dit panne fait de même. |
-| `left_on_after` | fer | Minutes allumé au bout desquelles la ligne d'état affiche *Resté allumé*, en rouge. Vide, cela n'arrive jamais. |
+| `left_on_after` | fer | Minutes allumé, en chauffe ou prêt, au bout desquelles la ligne d'état affiche *Resté allumé*, en rouge, la semelle brûle et la vapeur devient une fumée noire. Vide, cela n'arrive jamais. |
 | `feeder_layout` | distributeur | `tower` (défaut, un réservoir carré sur son socle) \| `canister` (un réservoir rond sur un socle rond) \| `double` (deux sorties et deux gamelles) \| `dual_split` (deux réservoirs au-dessus d'une gamelle partagée par le milieu) \| `rotary` (des assiettes sur un plateau tournant sous un couvercle, pour la pâtée). |
 | `level_b_entity` | distributeur | Le niveau du second réservoir, sur un distributeur qui en a deux (`dual_split`), lu comme `level_entity` et avec les mêmes `level_empty_below` et `level_max`. Il remplit la fenêtre de droite, a sa propre ligne, et vide il fait passer l'état à *Réservoir vide* en ne vidant que sa moitié. Au repos, la ligne d'état donne le plus bas des deux niveaux, celui à remplir en premier. L'éditeur ne le propose que pour `dual_split`. |
 | `portions_today_entity` / `weight_today_entity` | distributeur | Ce qui a été servi aujourd'hui, sur une seule ligne. Sans entité de poids, la carte calcule les grammes à partir de `portion_weight_entity` : rien n'est supposé sur la taille d'un repas. |
@@ -584,9 +585,11 @@ Une valeur non reconnue laisse l'illustration en l'état, et la phase nomme auss
 <details>
 <summary><b>Fers à repasser</b></summary>
 
-Rien ne relie un fer à Home Assistant, et c'est bien pourquoi il est sur une prise connectée : l'état vient de ce qu'il consomme, le dessin fait le reste. En chauffe, la semelle rougit et la vapeur sort du nez. Deux modèles sont dessinés, le fer seul et le même fer sur le socle d'une centrale vapeur.
+Rien ne relie un fer à Home Assistant, et c'est bien pourquoi il est sur une prise connectée. Son interrupteur dit si le fer est allumé, sa mesure s'il chauffe et à quelle puissance : la semelle rougit et la vapeur s'échappe par-dessous, un peu pour une faible puissance, un nuage à pleine puissance. Une fois à température, le thermostat coupe et la prise ne mesure plus rien : le fer est *Prêt*, chaud, deux filets de vapeur au-dessus. Sans interrupteur, une mesure seule affiche *À l'arrêt* sous le seuil.
 
-`left_on_after` est la raison d'être de la prise. Passé ce nombre de minutes allumé, la ligne d'état affiche *Resté allumé*, en rouge :
+Deux modèles sont dessinés. Le fer seul, d'après un fer à vapeur classique, et la centrale vapeur, d'après les centrales Calor, dont le fer repose sur la pente du réservoir et se soulève nez en l'air quand il chauffe, voyant allumé et vapeur qui court le long du tuyau. `iron_line_color` choisit la couleur de la ligne le long du fer : orange, bleue ou de la couleur de l'appareil.
+
+`left_on_after` est la raison d'être de la prise. Passé ce nombre de minutes allumé, en chauffe ou prêt, la ligne d'état affiche *Resté allumé*, en rouge, de petites flammes lèchent la semelle et la vapeur devient une fumée noire :
 
 ```yaml
 type: custom:ha-appliance-card

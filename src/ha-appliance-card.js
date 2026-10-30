@@ -166,7 +166,7 @@ const T = {
     layout_fan_table: "Desk", layout_fan_ceiling: "Ceiling", fan_natural: "Natural wind", fan_summer: "Summer",
     fan_winter: "Winter", oscillating: "Oscillates", fan_direction_inverted: "Swap summer and winter", fan_wood_blades: "Wood blades", fan_on: "On",
     section_fan_layout: "Model",
-    iron_heating: "Heating", iron_off: "Off", left_on: "Left on", left_on_after: "Warn after (minutes switched on)",
+    iron_heating: "Heating", iron_off: "Off", iron_ready: "Ready", left_on: "Left on", left_on_after: "Warn after (minutes switched on)",
     type_pellet_stove: "Pellet stove", ps_off: "Off", ps_ignition: "Ignition", ps_burning: "Burning", ps_modulating: "Modulating",
     ps_eco: "Eco standby", ps_cooling: "Cooling down", ps_cleaning: "Cleaning", ps_alarm: "Alarm", ps_no_pellets: "Out of pellets",
     section_stove_status: "Stove status", section_room_temperature: "Room temperature", section_flue_temperature: "Flue gas temperature", section_pellet_level: "Pellet level",
@@ -335,7 +335,7 @@ const T = {
     layout_fan_table: "De table", layout_fan_ceiling: "De plafond", fan_natural: "Vent naturel", fan_summer: "\u00c9t\u00e9",
     fan_winter: "Hiver", oscillating: "Oscillant", fan_direction_inverted: "Inverser \u00e9t\u00e9 et hiver", fan_wood_blades: "Pales en bois", fan_on: "En marche",
     section_fan_layout: "Mod\u00e8le",
-    iron_heating: "En chauffe", iron_off: "\u00c0 l'arr\u00eat", left_on: "Rest\u00e9 allum\u00e9", left_on_after: "Alerter apr\u00e8s (minutes allum\u00e9)",
+    iron_heating: "En chauffe", iron_off: "\u00c0 l'arr\u00eat", iron_ready: "Pr\u00eat", left_on: "Rest\u00e9 allum\u00e9", left_on_after: "Alerter apr\u00e8s (minutes allum\u00e9)",
     type_pellet_stove: "Po\u00eale \u00e0 granul\u00e9s", ps_off: "\u00c9teint", ps_ignition: "Allumage", ps_burning: "En chauffe", ps_modulating: "Modulation",
     ps_eco: "Veille \u00e9co", ps_cooling: "Refroidissement", ps_cleaning: "Nettoyage", ps_alarm: "Alarme", ps_no_pellets: "Granul\u00e9s \u00e9puis\u00e9s",
     section_stove_status: "Statut du po\u00eale", section_room_temperature: "Temp\u00e9rature ambiante", section_flue_temperature: "Temp\u00e9rature des fum\u00e9es", section_pellet_level: "Niveau de granul\u00e9s",
@@ -504,7 +504,7 @@ const T = {
     layout_fan_table: "\u041d\u0430\u0441\u0442\u043e\u043b\u044c\u043d\u044b\u0439", layout_fan_ceiling: "\u041f\u043e\u0442\u043e\u043b\u043e\u0447\u043d\u044b\u0439", fan_natural: "\u0415\u0441\u0442\u0435\u0441\u0442\u0432\u0435\u043d\u043d\u044b\u0439 \u0432\u0435\u0442\u0435\u0440", fan_summer: "\u041b\u0435\u0442\u043e",
     fan_winter: "\u0417\u0438\u043c\u0430", oscillating: "\u041f\u043e\u0432\u043e\u0440\u043e\u0442\u043d\u044b\u0439", fan_direction_inverted: "\u041f\u043e\u043c\u0435\u043d\u044f\u0442\u044c \u043b\u0435\u0442\u043e \u0438 \u0437\u0438\u043c\u0443", fan_wood_blades: "\u0414\u0435\u0440\u0435\u0432\u044f\u043d\u043d\u044b\u0435 \u043b\u043e\u043f\u0430\u0441\u0442\u0438", fan_on: "\u0420\u0430\u0431\u043e\u0442\u0430\u0435\u0442",
     section_fan_layout: "\u041c\u043e\u0434\u0435\u043b\u044c",
-    iron_heating: "\u041d\u0430\u0433\u0440\u0435\u0432", iron_off: "\u0412\u044b\u043a\u043b\u044e\u0447\u0435\u043d", left_on: "\u041e\u0441\u0442\u0430\u043b\u0441\u044f \u0432\u043a\u043b\u044e\u0447\u0451\u043d\u043d\u044b\u043c", left_on_after: "\u041f\u0440\u0435\u0434\u0443\u043f\u0440\u0435\u0434\u0438\u0442\u044c \u0447\u0435\u0440\u0435\u0437 (\u043c\u0438\u043d\u0443\u0442 \u0432\u043a\u043b\u044e\u0447\u0435\u043d\u0438\u044f)",
+    iron_heating: "\u041d\u0430\u0433\u0440\u0435\u0432", iron_off: "\u0412\u044b\u043a\u043b\u044e\u0447\u0435\u043d", iron_ready: "\u0413\u043e\u0442\u043e\u0432", left_on: "\u041e\u0441\u0442\u0430\u043b\u0441\u044f \u0432\u043a\u043b\u044e\u0447\u0451\u043d\u043d\u044b\u043c", left_on_after: "\u041f\u0440\u0435\u0434\u0443\u043f\u0440\u0435\u0434\u0438\u0442\u044c \u0447\u0435\u0440\u0435\u0437 (\u043c\u0438\u043d\u0443\u0442 \u0432\u043a\u043b\u044e\u0447\u0435\u043d\u0438\u044f)",
     type_pellet_stove: "\u041f\u0435\u043b\u043b\u0435\u0442\u043d\u0430\u044f \u043f\u0435\u0447\u044c", ps_off: "\u0412\u044b\u043a\u043b\u044e\u0447\u0435\u043d\u0430", ps_ignition: "\u0420\u043e\u0437\u0436\u0438\u0433", ps_burning: "\u0413\u043e\u0440\u0435\u043d\u0438\u0435", ps_modulating: "\u041c\u043e\u0434\u0443\u043b\u044f\u0446\u0438\u044f",
     ps_eco: "\u042d\u043a\u043e-\u043e\u0436\u0438\u0434\u0430\u043d\u0438\u0435", ps_cooling: "\u041e\u0445\u043b\u0430\u0436\u0434\u0435\u043d\u0438\u0435", ps_cleaning: "\u041e\u0447\u0438\u0441\u0442\u043a\u0430", ps_alarm: "\u0410\u0432\u0430\u0440\u0438\u044f", ps_no_pellets: "\u041d\u0435\u0442 \u043f\u0435\u043b\u043b\u0435\u0442",
     section_stove_status: "\u0421\u043e\u0441\u0442\u043e\u044f\u043d\u0438\u0435 \u043f\u0435\u0447\u0438", section_room_temperature: "\u0422\u0435\u043c\u043f\u0435\u0440\u0430\u0442\u0443\u0440\u0430 \u0432 \u043f\u043e\u043c\u0435\u0449\u0435\u043d\u0438\u0438", section_flue_temperature: "\u0422\u0435\u043c\u043f\u0435\u0440\u0430\u0442\u0443\u0440\u0430 \u0434\u044b\u043c\u043e\u0432\u044b\u0445 \u0433\u0430\u0437\u043e\u0432", section_pellet_level: "\u0423\u0440\u043e\u0432\u0435\u043d\u044c \u043f\u0435\u043b\u043b\u0435\u0442",
@@ -673,7 +673,7 @@ const T = {
     layout_fan_table: "Tischventilator", layout_fan_ceiling: "Deckenventilator", fan_natural: "Naturwind", fan_summer: "Sommer",
     fan_winter: "Winter", oscillating: "Oszilliert", fan_direction_inverted: "Sommer und Winter tauschen", fan_wood_blades: "Holzfl\u00fcgel", fan_on: "L\u00e4uft",
     section_fan_layout: "Modell",
-    iron_heating: "Heizt", iron_off: "Aus", left_on: "Eingeschaltet geblieben", left_on_after: "Warnen nach (Minuten eingeschaltet)",
+    iron_heating: "Heizt", iron_off: "Aus", iron_ready: "Bereit", left_on: "Eingeschaltet geblieben", left_on_after: "Warnen nach (Minuten eingeschaltet)",
     type_pellet_stove: "Pelletofen", ps_off: "Aus", ps_ignition: "Z\u00fcndung", ps_burning: "Brennt", ps_modulating: "Modulation",
     ps_eco: "Eco-Standby", ps_cooling: "Abk\u00fchlung", ps_cleaning: "Reinigung", ps_alarm: "Alarm", ps_no_pellets: "Pellets leer",
     section_stove_status: "Ofenstatus", section_room_temperature: "Raumtemperatur", section_flue_temperature: "Abgastemperatur", section_pellet_level: "Pelletf\u00fcllstand",
@@ -842,7 +842,7 @@ const T = {
     layout_fan_table: "De sobremesa", layout_fan_ceiling: "De techo", fan_natural: "Brisa natural", fan_summer: "Verano",
     fan_winter: "Invierno", oscillating: "Oscilante", fan_direction_inverted: "Invertir verano e invierno", fan_wood_blades: "Aspas de madera", fan_on: "Encendido",
     section_fan_layout: "Modelo",
-    iron_heating: "Calentando", iron_off: "Apagado", left_on: "Sigue encendida", left_on_after: "Avisar tras (minutos encendida)",
+    iron_heating: "Calentando", iron_off: "Apagado", iron_ready: "Lista", left_on: "Sigue encendida", left_on_after: "Avisar tras (minutos encendida)",
     type_pellet_stove: "Estufa de pellets", ps_off: "Apagada", ps_ignition: "Encendido", ps_burning: "En marcha", ps_modulating: "Modulando",
     ps_eco: "Espera eco", ps_cooling: "Enfriando", ps_cleaning: "Limpieza", ps_alarm: "Alarma", ps_no_pellets: "Sin pellets",
     section_stove_status: "Estado de la estufa", section_room_temperature: "Temperatura ambiente", section_flue_temperature: "Temperatura de humos", section_pellet_level: "Nivel de pellets",
@@ -1011,7 +1011,7 @@ const T = {
     layout_fan_table: "Da tavolo", layout_fan_ceiling: "A soffitto", fan_natural: "Vento naturale", fan_summer: "Estate",
     fan_winter: "Inverno", oscillating: "Oscillante", fan_direction_inverted: "Inverti estate e inverno", fan_wood_blades: "Pale in legno", fan_on: "Acceso",
     section_fan_layout: "Modello",
-    iron_heating: "In riscaldamento", iron_off: "Spento", left_on: "Rimasto acceso", left_on_after: "Avvisa dopo (minuti acceso)",
+    iron_heating: "In riscaldamento", iron_off: "Spento", iron_ready: "Pronto", left_on: "Rimasto acceso", left_on_after: "Avvisa dopo (minuti acceso)",
     type_pellet_stove: "Stufa a pellet", ps_off: "Spenta", ps_ignition: "Accensione", ps_burning: "In funzione", ps_modulating: "Modulazione",
     ps_eco: "Stand-by eco", ps_cooling: "Raffreddamento", ps_cleaning: "Pulizia", ps_alarm: "Allarme", ps_no_pellets: "Pellet esaurito",
     section_stove_status: "Stato della stufa", section_room_temperature: "Temperatura ambiente", section_flue_temperature: "Temperatura fumi", section_pellet_level: "Livello pellet",
@@ -1180,7 +1180,7 @@ const T = {
     layout_fan_table: "Tafelmodel", layout_fan_ceiling: "Plafondventilator", fan_natural: "Natuurlijke wind", fan_summer: "Zomer",
     fan_winter: "Winter", oscillating: "Draait heen en weer", fan_direction_inverted: "Zomer en winter omwisselen", fan_wood_blades: "Houten bladen", fan_on: "Aan",
     section_fan_layout: "Model",
-    iron_heating: "Aan het koken", iron_off: "Uit", left_on: "Blijft aan", left_on_after: "Waarschuwen na (minuten aan)",
+    iron_heating: "Aan het koken", iron_off: "Uit", iron_ready: "Klaar", left_on: "Blijft aan", left_on_after: "Waarschuwen na (minuten aan)",
     type_pellet_stove: "Pelletkachel", ps_off: "Uit", ps_ignition: "Ontsteking", ps_burning: "Brandt", ps_modulating: "Moduleert",
     ps_eco: "Eco-stand-by", ps_cooling: "Afkoelen", ps_cleaning: "Reiniging", ps_alarm: "Alarm", ps_no_pellets: "Pellets op",
     section_stove_status: "Kachelstatus", section_room_temperature: "Kamertemperatuur", section_flue_temperature: "Rookgastemperatuur", section_pellet_level: "Pelletniveau",
@@ -1349,7 +1349,7 @@ const T = {
     layout_fan_table: "De mesa", layout_fan_ceiling: "De teto", fan_natural: "Vento natural", fan_summer: "Ver\u00e3o",
     fan_winter: "Inverno", oscillating: "Oscilante", fan_direction_inverted: "Inverter ver\u00e3o e inverno", fan_wood_blades: "P\u00e1s de madeira", fan_on: "Ligado",
     section_fan_layout: "Modelo",
-    iron_heating: "A aquecer", iron_off: "Desligada", left_on: "Ficou ligado", left_on_after: "Avisar ap\u00f3s (minutos ligado)",
+    iron_heating: "A aquecer", iron_off: "Desligada", iron_ready: "Pronto", left_on: "Ficou ligado", left_on_after: "Avisar ap\u00f3s (minutos ligado)",
     type_pellet_stove: "Salamandra a pellets", ps_off: "Desligada", ps_ignition: "Igni\u00e7\u00e3o", ps_burning: "A funcionar", ps_modulating: "Em modula\u00e7\u00e3o",
     ps_eco: "Espera eco", ps_cooling: "A arrefecer", ps_cleaning: "Limpeza", ps_alarm: "Alarme", ps_no_pellets: "Sem pellets",
     section_stove_status: "Estado da salamandra", section_room_temperature: "Temperatura ambiente", section_flue_temperature: "Temperatura dos fumos", section_pellet_level: "N\u00edvel de pellets",
@@ -1518,7 +1518,7 @@ const T = {
     layout_fan_table: "Bordsfl\u00e4kt", layout_fan_ceiling: "Takfl\u00e4kt", fan_natural: "Naturlig vind", fan_summer: "Sommar",
     fan_winter: "Vinter", oscillating: "Sv\u00e4nger", fan_direction_inverted: "Byt sommar och vinter", fan_wood_blades: "Tr\u00e4blad", fan_on: "P\u00e5",
     section_fan_layout: "Modell",
-    iron_heating: "V\u00e4rmer", iron_off: "Av", left_on: "St\u00e5r p\u00e5", left_on_after: "Varna efter (minuter p\u00e5slagen)",
+    iron_heating: "V\u00e4rmer", iron_off: "Av", iron_ready: "Redo", left_on: "St\u00e5r p\u00e5", left_on_after: "Varna efter (minuter p\u00e5slagen)",
     type_pellet_stove: "Pelletskamin", ps_off: "Av", ps_ignition: "T\u00e4ndning", ps_burning: "Eldar", ps_modulating: "Modulerar",
     ps_eco: "Eco-vila", ps_cooling: "Avsvalning", ps_cleaning: "Reng\u00f6ring", ps_alarm: "Larm", ps_no_pellets: "Slut p\u00e5 pellets",
     section_stove_status: "Kaminstatus", section_room_temperature: "Rumstemperatur", section_flue_temperature: "R\u00f6kgastemperatur", section_pellet_level: "Pelletsniv\u00e5",
@@ -1687,7 +1687,7 @@ const T = {
     layout_fan_table: "Bordvifte", layout_fan_ceiling: "Takvifte", fan_natural: "Naturlig vind", fan_summer: "Sommer",
     fan_winter: "Vinter", oscillating: "Svinger", fan_direction_inverted: "Bytt sommer og vinter", fan_wood_blades: "Treblader", fan_on: "P\u00e5",
     section_fan_layout: "Modell",
-    iron_heating: "Varmer", iron_off: "Av", left_on: "St\u00e5r p\u00e5", left_on_after: "Varsle etter (minutter p\u00e5sl\u00e5tt)",
+    iron_heating: "Varmer", iron_off: "Av", iron_ready: "Klar", left_on: "St\u00e5r p\u00e5", left_on_after: "Varsle etter (minutter p\u00e5sl\u00e5tt)",
     type_pellet_stove: "Pelletsovn", ps_off: "Av", ps_ignition: "Tenning", ps_burning: "Fyrer", ps_modulating: "Modulerer",
     ps_eco: "Eco-hvile", ps_cooling: "Nedkj\u00f8ling", ps_cleaning: "Rengj\u00f8ring", ps_alarm: "Alarm", ps_no_pellets: "Tom for pellets",
     section_stove_status: "Ovnstatus", section_room_temperature: "Romtemperatur", section_flue_temperature: "R\u00f8ykgasstemperatur", section_pellet_level: "Pelletsniv\u00e5",
@@ -1856,7 +1856,7 @@ const T = {
     layout_fan_table: "Bordventilator", layout_fan_ceiling: "Loftventilator", fan_natural: "Naturlig vind", fan_summer: "Sommer",
     fan_winter: "Vinter", oscillating: "Svinger", fan_direction_inverted: "Byt sommer og vinter", fan_wood_blades: "Tr\u00e6blade", fan_on: "T\u00e6ndt",
     section_fan_layout: "Model",
-    iron_heating: "Varmer", iron_off: "Slukket", left_on: "St\u00e5r t\u00e6ndt", left_on_after: "Advar efter (minutter t\u00e6ndt)",
+    iron_heating: "Varmer", iron_off: "Slukket", iron_ready: "Klar", left_on: "St\u00e5r t\u00e6ndt", left_on_after: "Advar efter (minutter t\u00e6ndt)",
     type_pellet_stove: "Pilleovn", ps_off: "Slukket", ps_ignition: "T\u00e6nding", ps_burning: "Fyrer", ps_modulating: "Modulerer",
     ps_eco: "Eco-standby", ps_cooling: "Afk\u00f8ling", ps_cleaning: "Reng\u00f8ring", ps_alarm: "Alarm", ps_no_pellets: "Ingen piller",
     section_stove_status: "Ovnstatus", section_room_temperature: "Rumtemperatur", section_flue_temperature: "R\u00f8ggastemperatur", section_pellet_level: "Pilleniveau",
@@ -2025,7 +2025,7 @@ const T = {
     layout_fan_table: "Biurkowy", layout_fan_ceiling: "Sufitowy", fan_natural: "Naturalny wiatr", fan_summer: "Lato",
     fan_winter: "Zima", oscillating: "Obrotowy", fan_direction_inverted: "Zamie\u0144 lato i zim\u0119", fan_wood_blades: "Drewniane \u0142opaty", fan_on: "W\u0142\u0105czony",
     section_fan_layout: "Model",
-    iron_heating: "Grzeje", iron_off: "Wy\u0142\u0105czony", left_on: "Pozosta\u0142o w\u0142\u0105czone", left_on_after: "Ostrze\u017c po (minutach w\u0142\u0105czenia)",
+    iron_heating: "Grzeje", iron_off: "Wy\u0142\u0105czony", iron_ready: "Gotowe", left_on: "Pozosta\u0142o w\u0142\u0105czone", left_on_after: "Ostrze\u017c po (minutach w\u0142\u0105czenia)",
     type_pellet_stove: "Piec na pellet", ps_off: "Wy\u0142\u0105czony", ps_ignition: "Rozpalanie", ps_burning: "Pracuje", ps_modulating: "Modulacja",
     ps_eco: "Czuwanie eko", ps_cooling: "Wygaszanie", ps_cleaning: "Czyszczenie", ps_alarm: "Alarm", ps_no_pellets: "Brak pelletu",
     section_stove_status: "Stan pieca", section_room_temperature: "Temperatura w pomieszczeniu", section_flue_temperature: "Temperatura spalin", section_pellet_level: "Poziom pelletu",
@@ -2194,7 +2194,7 @@ const T = {
     layout_fan_table: "\u53f0\u6247", layout_fan_ceiling: "\u540a\u6247", fan_natural: "\u81ea\u7136\u98ce", fan_summer: "\u590f\u5b63",
     fan_winter: "\u51ac\u5b63", oscillating: "\u6447\u5934", fan_direction_inverted: "\u4e92\u6362\u590f\u5b63\u4e0e\u51ac\u5b63", fan_wood_blades: "\u6728\u8d28\u6247\u53f6", fan_on: "\u8fd0\u884c\u4e2d",
     section_fan_layout: "\u578b\u53f7",
-    iron_heating: "\u52a0\u70ed\u4e2d", iron_off: "\u5df2\u5173\u95ed", left_on: "\u4ecd\u7136\u5f00\u7740", left_on_after: "\u5f00\u542f\u591a\u5c11\u5206\u949f\u540e\u63d0\u9192",
+    iron_heating: "\u52a0\u70ed\u4e2d", iron_off: "\u5df2\u5173\u95ed", iron_ready: "\u5c31\u7eea", left_on: "\u4ecd\u7136\u5f00\u7740", left_on_after: "\u5f00\u542f\u591a\u5c11\u5206\u949f\u540e\u63d0\u9192",
     type_pellet_stove: "\u9897\u7c92\u7089", ps_off: "\u5df2\u5173\u95ed", ps_ignition: "\u70b9\u706b\u4e2d", ps_burning: "\u71c3\u70e7\u4e2d", ps_modulating: "\u8c03\u8282\u4e2d",
     ps_eco: "\u8282\u80fd\u5f85\u673a", ps_cooling: "\u51b7\u5374\u4e2d", ps_cleaning: "\u6e05\u6d01\u4e2d", ps_alarm: "\u62a5\u8b66", ps_no_pellets: "\u9897\u7c92\u8017\u5c3d",
     section_stove_status: "\u7089\u5b50\u72b6\u6001", section_room_temperature: "\u5ba4\u5185\u6e29\u5ea6", section_flue_temperature: "\u70df\u6c14\u6e29\u5ea6", section_pellet_level: "\u9897\u7c92\u4f59\u91cf",
@@ -2363,7 +2363,7 @@ const T = {
     layout_fan_table: "Stoln\u00ed", layout_fan_ceiling: "Stropn\u00ed", fan_natural: "P\u0159irozen\u00fd v\u00edtr", fan_summer: "L\u00e9to",
     fan_winter: "Zima", oscillating: "Oto\u010dn\u00fd", fan_direction_inverted: "Prohodit l\u00e9to a zimu", fan_wood_blades: "D\u0159ev\u011bn\u00e9 lopatky", fan_on: "Zapnuto",
     section_fan_layout: "Model",
-    iron_heating: "Oh\u0159\u00edv\u00e1n\u00ed", iron_off: "Vypnuto", left_on: "Z\u016fstala zapnut\u00e1", left_on_after: "Upozornit po (minut\u00e1ch zapnut\u00ed)",
+    iron_heating: "Oh\u0159\u00edv\u00e1n\u00ed", iron_off: "Vypnuto", iron_ready: "P\u0159ipravena", left_on: "Z\u016fstala zapnut\u00e1", left_on_after: "Upozornit po (minut\u00e1ch zapnut\u00ed)",
     type_pellet_stove: "Kamna na pelety", ps_off: "Vypnuto", ps_ignition: "Zapalov\u00e1n\u00ed", ps_burning: "Top\u00ed", ps_modulating: "Modulace",
     ps_eco: "Eko pohotovost", ps_cooling: "Chladnut\u00ed", ps_cleaning: "\u010ci\u0161t\u011bn\u00ed", ps_alarm: "Alarm", ps_no_pellets: "Do\u0161ly pelety",
     section_stove_status: "Stav kamen", section_room_temperature: "Teplota v m\u00edstnosti", section_flue_temperature: "Teplota spalin", section_pellet_level: "Hladina pelet",
@@ -5676,6 +5676,12 @@ const HAIR_DRYER_RE = /hair.?dryer|blow.?dryer|s(e|\u00e8)che.?cheveux|haartrock
 const HD_HEAT_W = 300;
 // Above this the heater is on its high setting, and the air comes out harder.
 const HD_HIGH_W = 1200;
+// An iron: off, heating, or hot with its thermostat cut out.
+const IRON_LABELS = { off: "iron_off", heating: "iron_heating", ready: "iron_ready" };
+// Below these, the steam is light, then fuller: a travel iron draws under a
+// kilowatt, a full-size one or a steam generator two or more.
+const IRON_LOW_W = 800;
+const IRON_HIGH_W = 1600;
 const HD_LABELS = { off: "ac_off", cool: "hd_cool", hot: "hd_hot", on: "screen_on" };
 // A network device. Its name says which drawing it gets when none is chosen:
 // a NAS by its maker or its system, a switch by its name, a rack by its own.
@@ -8063,6 +8069,7 @@ function historyChart(h) {
   return { svg: `<svg viewBox="0 0 100 32" preserveAspectRatio="none">${areas}${lines}</svg>`, min: lo, max: hi, runs: runs.length };
 }
 
+const IRON_COLORS = { off: "var(--disabled-text-color, #9e9e9e)", heating: "#ff7043", ready: "#ffa726" };
 const HD_COLORS = { off: "var(--disabled-text-color, #9e9e9e)", cool: "#29b6f6", hot: "#ff7043", on: "#ff7043" };
 
 // How long a toaster says its toast is ready once it has popped up.
@@ -11304,7 +11311,9 @@ const ILLUSTRATION_CSS = {
   // of small flames licks the whole soleplate and the steam turns to smoke.
   iron: () => `${AP_CSS}
         .ir-vapo { opacity: 0; transform-box: fill-box; transform-origin: center; }
-        .machine.heating .ir-vapo { animation: ir-vapo 2s ease-out infinite; animation-delay: var(--anim-offset, 0s); }
+        .machine.heating .ir-vapo, .machine.left-on .ir-vapo { animation: ir-vapo 2s ease-out infinite; animation-delay: var(--anim-offset, 0s); }
+        .machine.ready .ir-vapo { animation: ir-vapo 3.6s ease-out infinite; animation-delay: var(--anim-offset, 0s); opacity: 0; }
+        .machine.ready:not(.left-on) .ir-vapo g, .machine.ready:not(.left-on) .ir-vapo circle { fill-opacity: 0.6; }
         @keyframes ir-vapo {
           0% { transform: translate(0, -3px) scale(0.35); opacity: 0; }
           25% { opacity: 1; }
@@ -13216,6 +13225,9 @@ const IRON_LINES = {
 // A fixed scatter, so the steam looks random but stays put from one render to
 // the next instead of jumping each time the state updates.
 const irRnd = (n) => { const x = Math.sin(n * 12.9898 + 78.233) * 43758.5453; return x - Math.floor(x); };
+// Which of the eight clouds rise: three on a light draw, five on a fuller
+// one, all eight at full power, two wisps when the iron is hot and waiting.
+const IRON_STEAM = { 1: [1, 4, 6], 2: [0, 2, 3, 5, 7], 3: [0, 1, 2, 3, 4, 5, 6, 7], ready: [2, 5] };
 // Where the soleplate burns when the iron has been left on.
 const IRON_FIRE = [14, 27, 40, 53, 66, 79, 92, 104].map((x) => [x, 87]);
 const irFlames = (x, y, s, i) => `<g class="ir-f${i % 3}" transform="translate(${x.toFixed(1)} ${y.toFixed(1)}) scale(${s})">
@@ -13236,9 +13248,12 @@ function ironBody(d, opt = {}) {
   const [ln, lnHi] = IRON_LINES[d.line] || IRON_LINES.orange;
   const body = "M12 81 C24 67 37 58 49 52 C53 36 67 26 88 25 H100 Q110 25 110 35 V81 Z";
   const hole = "M65 50 C68 42 76 37 87 37 H94 Q98 37 98 41 V47 Q98 51 94 51 H67 Q64 51 65 50 Z";
-  const steam = heat ? `<g fill="url(#${sm})">${Array.from({ length: 8 }, (_, i) => {
-    const r = (k) => irRnd(i * 7 + k), x = 12 + i * 12.5 + (r(1) - 0.5) * 8, y = 90 + r(2) * 3, k = 4.5 + r(3) * 4;
-    const st = `animation-duration: ${(1.5 + r(4) * 1.6).toFixed(2)}s; animation-delay: calc(${(-r(5) * 3).toFixed(2)}s + var(--anim-offset, 0s)); --dx: ${((r(6) - 0.7) * 12).toFixed(1)}px; --dy: ${(3 + r(7) * 7).toFixed(1)}px; --sc: ${(1.2 + r(8) * 0.8).toFixed(2)}`;
+  // The clouds along the soleplate: all eight left on, as many as the iron
+  // draws hard while it heats, and two thin wisps once it is hot and ready.
+  const keep = d.leftOn || (d.heating && d.level >= 3) ? IRON_STEAM[3] : d.heating ? IRON_STEAM[d.level] || IRON_STEAM[3] : d.ready ? IRON_STEAM.ready : [];
+  const steam = keep.length ? `<g fill="url(#${sm})">${keep.map((i) => {
+    const r = (k) => irRnd(i * 7 + k), x = 12 + i * 12.5 + (r(1) - 0.5) * 8, y = 90 + r(2) * 3, k = (4.5 + r(3) * 4) * (heat ? 1 : 0.7);
+    const st = `animation-duration: ${((1.5 + r(4) * 1.6) * (heat ? 1 : 1.8)).toFixed(2)}s; animation-delay: calc(${(-r(5) * 3).toFixed(2)}s + var(--anim-offset, 0s)); --dx: ${((r(6) - 0.7) * 12).toFixed(1)}px; --dy: ${(3 + r(7) * 7).toFixed(1)}px; --sc: ${(1.2 + r(8) * 0.8).toFixed(2)}`;
     return `<g class="ir-vapo" style="${st}"><circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${k.toFixed(1)}"/><circle cx="${(x + k * 0.7).toFixed(1)}" cy="${(y + 1).toFixed(1)}" r="${(k * 0.7).toFixed(1)}"/><circle cx="${(x - k * 0.6).toFixed(1)}" cy="${(y + 1.5).toFixed(1)}" r="${(k * 0.6).toFixed(1)}"/></g>`;
   }).join("")}</g>` : "";
   return `<defs><linearGradient id="${b}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" style="stop-color: var(--ac-body-hi, #ffffff)"/><stop offset=".6" style="stop-color: var(--ac-body, #e6eaee)"/><stop offset="1" style="stop-color: var(--ac-body-lo, #b4bdc6)"/></linearGradient>
@@ -13747,9 +13762,10 @@ function illustrationHtml(type, ctx) {
   if (type === "fan") return fanHtml(cls, ctx.fan || {});
 
   if (type === "iron") {
-    const d = { heating: !!ctx.heating, leftOn: !!ctx.leftOn, line: ctx.ironLine };
+    const ir = ctx.iron || { mode: ctx.heating ? "heating" : "off", level: 3 };
+    const d = { heating: ir.mode === "heating", ready: ir.mode === "ready", level: ir.level || 3, leftOn: !!ctx.leftOn, line: ctx.ironLine };
     return `
-        <div class="machine ${cls} ${ctx.ironLayout} ${ctx.leftOn ? "left-on" : ""}">${ctx.ironLayout === "generator" ? generatorSvg(d) : ironSvg(d)}</div>`;
+        <div class="machine ${cls} ${ctx.ironLayout} ${ctx.leftOn ? "left-on" : ""} ${d.ready ? "ready" : ""}">${ctx.ironLayout === "generator" ? generatorSvg(d) : ironSvg(d)}</div>`;
   }
 
 
@@ -16443,11 +16459,29 @@ class ApplianceCard extends HTMLElement {
     // An iron, read from the plug it is on: heating or off, and the state line
     // says so in its own words, since "running" says nothing of an iron.
     let leftOn = false;
+    let iron = null;
     if (cap.iron) {
-      if (norm === "running" || norm === "idle") {
-        if (!cfg.state_show_raw) stateLabel = t(hass, norm === "running" ? "iron_heating" : "iron_off");
-        if (norm === "running") color = "#ff7043";
-      }
+      // Its thermostat cuts in and out all the while it is on: at temperature
+      // the plug reads nothing, and the iron is hot and ready rather than off.
+      // So the plug's switch says whether it is on, the meter whether it is
+      // heating, and how hard: the more it draws, the more steam. Ready only
+      // follows a heat seen since the switch went on, since a plug left on
+      // with the iron switched off on its own body reads nothing either.
+      const sw = st && ["switch", "input_boolean"].includes(domainOf(cfg.state_entity)) ? String(st.state).toLowerCase() : "";
+      const onAt = isFinite(threshold) ? threshold : 10;
+      let mode;
+      if (sw === "off") mode = "off";
+      else if (watts !== null) {
+        if (watts > onAt) mode = "heating";
+        else mode = sw === "on" && this._ironHot ? "ready" : "off";
+      } else mode = isActiveState(norm) ? "heating" : "off";
+      if (mode === "heating") this._ironHot = true;
+      else if (mode === "off") this._ironHot = false;
+      const level = mode !== "heating" ? 0 : watts === null ? 3 : watts < IRON_LOW_W ? 1 : watts < IRON_HIGH_W ? 2 : 3;
+      norm = mode === "off" ? "idle" : "running";
+      if (!cfg.state_show_raw) stateLabel = t(hass, IRON_LABELS[mode]);
+      color = IRON_COLORS[mode];
+      iron = { mode, level };
       // Left on: the one thing an owner puts a plug on an iron for. The card
       // counts the minutes itself, because a plug left on stops changing and
       // nothing would push the update that crosses the threshold. The count
@@ -16455,7 +16489,7 @@ class ApplianceCard extends HTMLElement {
       // moment it was switched on; a meter moving with every watt only dates
       // from when the card first saw it heating.
       const afterMin = parseFloat(cfg.left_on_after);
-      if (Number.isFinite(afterMin) && afterMin > 0 && isActiveState(norm)) {
+      if (Number.isFinite(afterMin) && afterMin > 0 && mode !== "off") {
         if (!this._onSince) this._onSince = changedSinceOf(st);
         leftOn = Date.now() - this._onSince >= afterMin * 60000;
       } else {
@@ -17436,7 +17470,7 @@ class ApplianceCard extends HTMLElement {
       paused: norm === "paused",
       heating: ["oven", "cooker", "rice_cooker"].includes(applianceType) ? heating
         : applianceType === "water_heater" ? tankHeating
-        : applianceType === "iron" ? isActiveState(norm) : false,
+        : applianceType === "iron" ? !!iron && iron.mode === "heating" : false,
       keepWarm: norm === "keep_warm",
       lit,
       display: displayText,
@@ -17486,6 +17520,7 @@ class ApplianceCard extends HTMLElement {
       screen,
       fan: fanCtx,
       leftOn,
+      iron,
       tankTemp,
       boilerMode,
       hpMode,
@@ -17574,6 +17609,7 @@ class ApplianceCard extends HTMLElement {
       illustrationCtx.noTank,
       illustrationCtx.underfloor,
       illustrationCtx.leftOn,
+      illustrationCtx.iron && [illustrationCtx.iron.mode, illustrationCtx.iron.level].join("/"),
       illustrationCtx.stove && illustrationCtx.stove.mode,
       illustrationCtx.ac && [illustrationCtx.ac.mode, illustrationCtx.ac.swingV, illustrationCtx.ac.swingH, illustrationCtx.ac.speed].join("/"),
       illustrationCtx.dh && illustrationCtx.dh.mode,

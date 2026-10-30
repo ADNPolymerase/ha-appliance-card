@@ -167,7 +167,7 @@ const T = {
     layout_fan_table: "Desk", layout_fan_ceiling: "Ceiling", fan_natural: "Natural wind", fan_summer: "Summer",
     fan_winter: "Winter", oscillating: "Oscillates", fan_direction_inverted: "Swap summer and winter", fan_wood_blades: "Wood blades", fan_on: "On",
     section_fan_layout: "Model",
-    iron_heating: "Heating", iron_off: "Off", left_on: "Left on", left_on_after: "Warn after (minutes switched on)",
+    iron_heating: "Heating", iron_off: "Off", iron_ready: "Ready", left_on: "Left on", left_on_after: "Warn after (minutes switched on)",
     type_pellet_stove: "Pellet stove", ps_off: "Off", ps_ignition: "Ignition", ps_burning: "Burning", ps_modulating: "Modulating",
     ps_eco: "Eco standby", ps_cooling: "Cooling down", ps_cleaning: "Cleaning", ps_alarm: "Alarm", ps_no_pellets: "Out of pellets",
     section_stove_status: "Stove status", section_room_temperature: "Room temperature", section_flue_temperature: "Flue gas temperature", section_pellet_level: "Pellet level",
@@ -3480,6 +3480,12 @@ const HAIR_DRYER_RE = /hair.?dryer|blow.?dryer|s(e|\u00e8)che.?cheveux|haartrock
 const HD_HEAT_W = 300;
 // Above this the heater is on its high setting, and the air comes out harder.
 const HD_HIGH_W = 1200;
+// An iron: off, heating, or hot with its thermostat cut out.
+const IRON_LABELS = { off: "iron_off", heating: "iron_heating", ready: "iron_ready" };
+// Below these, the steam is light, then fuller: a travel iron draws under a
+// kilowatt, a full-size one or a steam generator two or more.
+const IRON_LOW_W = 800;
+const IRON_HIGH_W = 1600;
 const HD_LABELS = { off: "ac_off", cool: "hd_cool", hot: "hd_hot", on: "screen_on" };
 // A network device. Its name says which drawing it gets when none is chosen:
 // a NAS by its maker or its system, a switch by its name, a rack by its own.
@@ -5867,6 +5873,7 @@ function historyChart(h) {
   return { svg: `<svg viewBox="0 0 100 32" preserveAspectRatio="none">${areas}${lines}</svg>`, min: lo, max: hi, runs: runs.length };
 }
 
+const IRON_COLORS = { off: "var(--disabled-text-color, #9e9e9e)", heating: "#ff7043", ready: "#ffa726" };
 const HD_COLORS = { off: "var(--disabled-text-color, #9e9e9e)", cool: "#29b6f6", hot: "#ff7043", on: "#ff7043" };
 
 // How long a toaster says its toast is ready once it has popped up.
@@ -9108,7 +9115,9 @@ const ILLUSTRATION_CSS = {
   // of small flames licks the whole soleplate and the steam turns to smoke.
   iron: () => `${AP_CSS}
         .ir-vapo { opacity: 0; transform-box: fill-box; transform-origin: center; }
-        .machine.heating .ir-vapo { animation: ir-vapo 2s ease-out infinite; animation-delay: var(--anim-offset, 0s); }
+        .machine.heating .ir-vapo, .machine.left-on .ir-vapo { animation: ir-vapo 2s ease-out infinite; animation-delay: var(--anim-offset, 0s); }
+        .machine.ready .ir-vapo { animation: ir-vapo 3.6s ease-out infinite; animation-delay: var(--anim-offset, 0s); opacity: 0; }
+        .machine.ready:not(.left-on) .ir-vapo g, .machine.ready:not(.left-on) .ir-vapo circle { fill-opacity: 0.6; }
         @keyframes ir-vapo {
           0% { transform: translate(0, -3px) scale(0.35); opacity: 0; }
           25% { opacity: 1; }
@@ -11020,6 +11029,9 @@ const IRON_LINES = {
 // A fixed scatter, so the steam looks random but stays put from one render to
 // the next instead of jumping each time the state updates.
 const irRnd = (n) => { const x = Math.sin(n * 12.9898 + 78.233) * 43758.5453; return x - Math.floor(x); };
+// Which of the eight clouds rise: three on a light draw, five on a fuller
+// one, all eight at full power, two wisps when the iron is hot and waiting.
+const IRON_STEAM = { 1: [1, 4, 6], 2: [0, 2, 3, 5, 7], 3: [0, 1, 2, 3, 4, 5, 6, 7], ready: [2, 5] };
 // Where the soleplate burns when the iron has been left on.
 const IRON_FIRE = [14, 27, 40, 53, 66, 79, 92, 104].map((x) => [x, 87]);
 const irFlames = (x, y, s, i) => `<g class="ir-f${i % 3}" transform="translate(${x.toFixed(1)} ${y.toFixed(1)}) scale(${s})">
@@ -11040,9 +11052,12 @@ function ironBody(d, opt = {}) {
   const [ln, lnHi] = IRON_LINES[d.line] || IRON_LINES.orange;
   const body = "M12 81 C24 67 37 58 49 52 C53 36 67 26 88 25 H100 Q110 25 110 35 V81 Z";
   const hole = "M65 50 C68 42 76 37 87 37 H94 Q98 37 98 41 V47 Q98 51 94 51 H67 Q64 51 65 50 Z";
-  const steam = heat ? `<g fill="url(#${sm})">${Array.from({ length: 8 }, (_, i) => {
-    const r = (k) => irRnd(i * 7 + k), x = 12 + i * 12.5 + (r(1) - 0.5) * 8, y = 90 + r(2) * 3, k = 4.5 + r(3) * 4;
-    const st = `animation-duration: ${(1.5 + r(4) * 1.6).toFixed(2)}s; animation-delay: calc(${(-r(5) * 3).toFixed(2)}s + var(--anim-offset, 0s)); --dx: ${((r(6) - 0.7) * 12).toFixed(1)}px; --dy: ${(3 + r(7) * 7).toFixed(1)}px; --sc: ${(1.2 + r(8) * 0.8).toFixed(2)}`;
+  // The clouds along the soleplate: all eight left on, as many as the iron
+  // draws hard while it heats, and two thin wisps once it is hot and ready.
+  const keep = d.leftOn || (d.heating && d.level >= 3) ? IRON_STEAM[3] : d.heating ? IRON_STEAM[d.level] || IRON_STEAM[3] : d.ready ? IRON_STEAM.ready : [];
+  const steam = keep.length ? `<g fill="url(#${sm})">${keep.map((i) => {
+    const r = (k) => irRnd(i * 7 + k), x = 12 + i * 12.5 + (r(1) - 0.5) * 8, y = 90 + r(2) * 3, k = (4.5 + r(3) * 4) * (heat ? 1 : 0.7);
+    const st = `animation-duration: ${((1.5 + r(4) * 1.6) * (heat ? 1 : 1.8)).toFixed(2)}s; animation-delay: calc(${(-r(5) * 3).toFixed(2)}s + var(--anim-offset, 0s)); --dx: ${((r(6) - 0.7) * 12).toFixed(1)}px; --dy: ${(3 + r(7) * 7).toFixed(1)}px; --sc: ${(1.2 + r(8) * 0.8).toFixed(2)}`;
     return `<g class="ir-vapo" style="${st}"><circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${k.toFixed(1)}"/><circle cx="${(x + k * 0.7).toFixed(1)}" cy="${(y + 1).toFixed(1)}" r="${(k * 0.7).toFixed(1)}"/><circle cx="${(x - k * 0.6).toFixed(1)}" cy="${(y + 1.5).toFixed(1)}" r="${(k * 0.6).toFixed(1)}"/></g>`;
   }).join("")}</g>` : "";
   return `<defs><linearGradient id="${b}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" style="stop-color: var(--ac-body-hi, #ffffff)"/><stop offset=".6" style="stop-color: var(--ac-body, #e6eaee)"/><stop offset="1" style="stop-color: var(--ac-body-lo, #b4bdc6)"/></linearGradient>
@@ -11551,9 +11566,10 @@ function illustrationHtml(type, ctx) {
   if (type === "fan") return fanHtml(cls, ctx.fan || {});
 
   if (type === "iron") {
-    const d = { heating: !!ctx.heating, leftOn: !!ctx.leftOn, line: ctx.ironLine };
+    const ir = ctx.iron || { mode: ctx.heating ? "heating" : "off", level: 3 };
+    const d = { heating: ir.mode === "heating", ready: ir.mode === "ready", level: ir.level || 3, leftOn: !!ctx.leftOn, line: ctx.ironLine };
     return `
-        <div class="machine ${cls} ${ctx.ironLayout} ${ctx.leftOn ? "left-on" : ""}">${ctx.ironLayout === "generator" ? generatorSvg(d) : ironSvg(d)}</div>`;
+        <div class="machine ${cls} ${ctx.ironLayout} ${ctx.leftOn ? "left-on" : ""} ${d.ready ? "ready" : ""}">${ctx.ironLayout === "generator" ? generatorSvg(d) : ironSvg(d)}</div>`;
   }
 
 
@@ -14247,11 +14263,29 @@ class ApplianceCard extends HTMLElement {
     // An iron, read from the plug it is on: heating or off, and the state line
     // says so in its own words, since "running" says nothing of an iron.
     let leftOn = false;
+    let iron = null;
     if (cap.iron) {
-      if (norm === "running" || norm === "idle") {
-        if (!cfg.state_show_raw) stateLabel = t(hass, norm === "running" ? "iron_heating" : "iron_off");
-        if (norm === "running") color = "#ff7043";
-      }
+      // Its thermostat cuts in and out all the while it is on: at temperature
+      // the plug reads nothing, and the iron is hot and ready rather than off.
+      // So the plug's switch says whether it is on, the meter whether it is
+      // heating, and how hard: the more it draws, the more steam. Ready only
+      // follows a heat seen since the switch went on, since a plug left on
+      // with the iron switched off on its own body reads nothing either.
+      const sw = st && ["switch", "input_boolean"].includes(domainOf(cfg.state_entity)) ? String(st.state).toLowerCase() : "";
+      const onAt = isFinite(threshold) ? threshold : 10;
+      let mode;
+      if (sw === "off") mode = "off";
+      else if (watts !== null) {
+        if (watts > onAt) mode = "heating";
+        else mode = sw === "on" && this._ironHot ? "ready" : "off";
+      } else mode = isActiveState(norm) ? "heating" : "off";
+      if (mode === "heating") this._ironHot = true;
+      else if (mode === "off") this._ironHot = false;
+      const level = mode !== "heating" ? 0 : watts === null ? 3 : watts < IRON_LOW_W ? 1 : watts < IRON_HIGH_W ? 2 : 3;
+      norm = mode === "off" ? "idle" : "running";
+      if (!cfg.state_show_raw) stateLabel = t(hass, IRON_LABELS[mode]);
+      color = IRON_COLORS[mode];
+      iron = { mode, level };
       // Left on: the one thing an owner puts a plug on an iron for. The card
       // counts the minutes itself, because a plug left on stops changing and
       // nothing would push the update that crosses the threshold. The count
@@ -14259,7 +14293,7 @@ class ApplianceCard extends HTMLElement {
       // moment it was switched on; a meter moving with every watt only dates
       // from when the card first saw it heating.
       const afterMin = parseFloat(cfg.left_on_after);
-      if (Number.isFinite(afterMin) && afterMin > 0 && isActiveState(norm)) {
+      if (Number.isFinite(afterMin) && afterMin > 0 && mode !== "off") {
         if (!this._onSince) this._onSince = changedSinceOf(st);
         leftOn = Date.now() - this._onSince >= afterMin * 60000;
       } else {
@@ -15240,7 +15274,7 @@ class ApplianceCard extends HTMLElement {
       paused: norm === "paused",
       heating: ["oven", "cooker", "rice_cooker"].includes(applianceType) ? heating
         : applianceType === "water_heater" ? tankHeating
-        : applianceType === "iron" ? isActiveState(norm) : false,
+        : applianceType === "iron" ? !!iron && iron.mode === "heating" : false,
       keepWarm: norm === "keep_warm",
       lit,
       display: displayText,
@@ -15290,6 +15324,7 @@ class ApplianceCard extends HTMLElement {
       screen,
       fan: fanCtx,
       leftOn,
+      iron,
       tankTemp,
       boilerMode,
       hpMode,
@@ -15378,6 +15413,7 @@ class ApplianceCard extends HTMLElement {
       illustrationCtx.noTank,
       illustrationCtx.underfloor,
       illustrationCtx.leftOn,
+      illustrationCtx.iron && [illustrationCtx.iron.mode, illustrationCtx.iron.level].join("/"),
       illustrationCtx.stove && illustrationCtx.stove.mode,
       illustrationCtx.ac && [illustrationCtx.ac.mode, illustrationCtx.ac.swingV, illustrationCtx.ac.swingH, illustrationCtx.ac.speed].join("/"),
       illustrationCtx.dh && illustrationCtx.dh.mode,

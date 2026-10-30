@@ -6118,7 +6118,30 @@ check('editeur : le delai aussi',
   /data-field="left_on_after"/.test(markup(newEditor({ state_entity: 'sensor.w', appliance_type: 'iron' }))), true);
 // The new iron: steam under the soleplate while it heats, smoke once it is
 // left on, and the colour of the line along it.
-check('fer : en chauffe, la vapeur sort de la semelle', (iron('on', 2, 1400).match(/class="ir-vapo"/g) || []).length, 8);
+const clouds = h => (h.match(/class="ir-vapo"/g) || []).length;
+check('fer : pleine puissance, toute la vapeur', clouds(iron('on', 2, 2200)), 8);
+check('fer : puissance moyenne, moins de vapeur', clouds(iron('on', 2, 1400)), 5);
+check('fer : petite puissance, un peu de vapeur', clouds(iron('on', 2, 600)), 3);
+check('fer : sans compteur, toute la vapeur', clouds(render({ appliance_type: 'iron', state_entity: 'switch.fer' },
+  { 'switch.fer': { state: 'on', attributes: {} } })), 8);
+// The thermostat cuts out at temperature: the plug reads nothing, the iron is
+// hot and ready, and the left-on count goes on through it.
+{
+  const { card } = build({ ...IRON, left_on_after: 30 }, ironStates('on', 2, 2200));
+  const ready = rerender(card, ironStates('on', 2, 0));
+  check('fer : thermostat coupe, il est pret', stateLine(ready), 'Ready');
+  check('fer : pret, il ne chauffe pas', hasCls(ready, 'heating'), false);
+  check('fer : pret, deux filets de vapeur', clouds(ready), 2);
+  check('fer : pret, la classe ready', hasCls(ready, 'ready'), true);
+  check('fer : pret, le mot est orange', stateColor(ready), '#ffa726');
+  check('fer : le compte tient pendant qu il est pret', card._onSince !== null, true);
+  card._onSince = Date.now() - 45 * 60e3;
+  check('fer : pret depuis longtemps, il reste oublie', stateLine(rerender(card, ironStates('on', 45, 0))), 'Left on');
+  check('fer : la prise coupee, il est a l arret', stateLine(rerender(card, ironStates('off', 45, 0))), 'Off');
+  check('fer : rallume sans chauffer, toujours a l arret', stateLine(rerender(card, ironStates('on', 1, 0))), 'Off');
+}
+check('fer : jamais termine au-dessous du seuil', stateLine(iron('on', 2, 0)), 'Off');
+check('fer : pret en francais', (() => { const { card } = build({ ...IRON, language: 'fr' }, ironStates('on', 2, 2200)); return stateLine(rerender(card, ironStates('on', 2, 0))); })(), 'Pr\u00eat');
 check('fer : a l\'arret, pas de vapeur', /class="ir-vapo"/.test(iron('off', 60, 0)), false);
 check('fer : en chauffe, la semelle est rouge', /class="ir-plate"[^>]*fill="url\(#(ap\d+)\)"/.test(iron('on', 2, 1400)) && /#d84315/.test(iron('on', 2, 1400)), true);
 check('fer : en chauffe, la vapeur est blanche', /#dfe6ea/.test(iron('on', 2, 1400)), true);
