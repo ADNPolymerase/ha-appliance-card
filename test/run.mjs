@@ -184,8 +184,8 @@ const barStyle   = h => (/<div class="bar-fill" style="([^"]*)"/.exec(h) || [, '
 /** Colour the state line is actually painted with, read from the style block. */
 const stateColor = h => (/\.state-line \{[^}]*color: ([^;]+);/.exec(h) || [, ''])[1].trim();
 const barWidth   = h => (/width:([\d.]+)%/.exec(barStyle(h)) || [, null])[1];
-const ovenDisp   = h => (/<div class="ov-disp">([^<]*)<\/div>/.exec(h) || [, ''])[1];
-const mwDisp     = h => (/<div class="mw-disp">([^<]*)<\/div>/.exec(h) || [, ''])[1];
+const ovenDisp   = h => (/<text class="ap-lcd"[^>]*>([^<]*)<\/text>/.exec(h) || [, ''])[1];
+const mwDisp     = ovenDisp;
 const zones      = h => [...h.matchAll(/<div class="ck-zone ([^"]*)"[^>]*>([^<]*)</g)]
   .map(m => `${m[1].trim()}:${m[2]}`);
 /** Action buttons as "label:classes", so both presence and state are testable. */
@@ -825,7 +825,7 @@ const washer = render({ appliance_type: 'washer', state_entity: 'sensor.w',
     'binary_sensor.d': { state: 'off', attributes: {} } });
 check('non-regression lave-linge : etat', stateLine(washer), 'Washing');
 check('non-regression lave-linge : en marche', machineCls(washer).includes('spinning'), true);
-contains('non-regression lave-linge : illustration du tambour', washer, 'water-level');
+contains('non-regression lave-linge : illustration du tambour', washer, 'class="ap-water"');
 check('non-regression lave-linge : porte fermee', infoLine(washer, 'Door closed'), '');
 
 const dishwasherClosed = render({ appliance_type: 'dishwasher', state_entity: 'sensor.dw',
@@ -3147,14 +3147,33 @@ check('editeur : et n\'a pas perdu les vraies lampes',
 // the light was invisible. Asserting the glass rule specifically is the point:
 // a cavity-only rule would pass a "is there a lit style" test and still show
 // nothing.
-const OVEN_CSS = SRC.slice(SRC.indexOf('oven: () => `'), SRC.indexOf('microwave: () => `'));
-check('four : la lampe eclaire la vitre de la porte',
-  /\.machine\.lit \.ov-glass \{[^}]*background:/.test(OVEN_CSS), true);
+// Read on an oven at rest, so the light can only come from the lamp.
+const ovenCavity = h => (/<radialGradient id="ap\d+" cx="\.5" cy="\.4" r="\.75"><stop offset="0" stop-color="([^"]+)"/.exec(h) || [])[1];
+const ovenAtRest = (lamp, door) => render({ appliance_type: 'oven', state_entity: 'sensor.o', light_entity: 'binary_sensor.lamp', door_entity: 'binary_sensor.door' },
+  { 'sensor.o': { state: 'Off', attributes: {} }, 'binary_sensor.lamp': { state: lamp, attributes: {} }, 'binary_sensor.door': { state: door, attributes: {} } });
+check('four : la lampe eclaire la cavite derriere la vitre', ovenCavity(ovenAtRest('on', 'off')), '#fff3d6');
 check('four : et toujours la cavite, porte ouverte',
-  /\.machine\.lit \.ov-cavity \{[^}]*background:/.test(OVEN_CSS), true);
-// The unlit pane must stay dark, or the oven would read as permanently on.
-check('four : la vitre au repos reste sombre',
-  /\.ov-glass \{[^}]*background: rgba\(16, 18, 22, 0\.94\)/.test(OVEN_CSS), true);
+  ovenCavity(ovenAtRest('on', 'on')) === '#fff3d6' && /class="ap-door-open"/.test(ovenAtRest('on', 'on')), true);
+// The unlit cavity must stay dark, or the oven would read as permanently on.
+check('four : la vitre au repos reste sombre', ovenCavity(ovenAtRest('off', 'off')), '#56606b');
+// A dish in the oven and in the microwave, one of three, picked each time it
+// starts and kept while it runs; the microwave turns it round an ellipse.
+{
+  const cook = (type) => { const c = new Card(); c.setConfig({ type: 'custom:ha-appliance-card', appliance_type: type, state_entity: 'sensor.k' });
+    const draw = (state) => { c._hass = HASS({ 'sensor.k': { state, attributes: {} } }); c._render(); return markup(c); };
+    return { c, draw }; };
+  const seen = new Set();
+  for (let i = 0; i < 40; i++) { const o = cook('oven'); o.draw('Running'); seen.add(o.c._dish); }
+  check('plat : trois plats au four, au hasard', [...seen].sort().join(), '0,1,2');
+  const mw = cook('microwave');
+  mw.draw('Off'); mw.draw('Running');
+  const first = mw.c._dish;
+  const on = mw.draw('Running');
+  check('plat : garde son plat pendant qu il tourne', mw.c._dish, first);
+  contains('plat : le micro-ondes le fait tourner en ellipse', on, '.machine.spinning .ap-ttx { animation: ap-ttx 3s ease-in-out infinite alternate;');
+  check('plat : de gauche a droite', /@keyframes ap-ttx \{ from \{ transform: translateX\(-7px\); \} to \{ transform: translateX\(7px\); \} \}/.test(on), true);
+  check('plat : et d avant en arriere, un quart de tour plus tard', /\.machine\.spinning \.ap-tty \{ animation-delay: calc\(-1\.5s \+ var\(--anim-offset, 0s\)\); \}/.test(on), true);
+}
 
 // ── state_map in the visual editor (issue #8) ────────────────────────────────
 // The option existed in YAML from the start and was never offered here, which
@@ -3857,9 +3876,31 @@ contains('editeur : le fichier imprime a son libelle', edHtml('printer_3d'), 'Pr
 const WD = { appliance_type: 'washer', washer_dryer: true, state_entity: 'sensor.wd' };
 const wd = (state, extra, states) => render({ ...WD, ...(extra || {}) },
   { 'sensor.wd': { state, attributes: {} }, ...(states || {}) });
-const drum = h => /<div class="water-level">/.test(h) ? 'water'
-  : /<div class="garments">/.test(h) ? 'clothes' : '';
+// The drum shows water while it washes, the laundry alone once it is emptied.
+const drum = h => /class="ap-water"/.test(h) ? 'water'
+  : /class="ap-load"/.test(h) ? 'clothes' : '';
 
+// The new drawings: a dryer is drawn as one, a washer shows its time left on
+// its screen, and an open door hangs on its hinges.
+{
+  const dryerHtml = render({ appliance_type: 'dryer', state_entity: 'sensor.td' }, { 'sensor.td': { state: 'Drying', attributes: {} } });
+  check('dessin : un seche-linge se dessine en seche-linge', /class="ap-svg ap-dryer"/.test(dryerHtml), true);
+  check('dessin : et son tambour chauffe', /class="ap-warm"/.test(dryerHtml), true);
+  const wRun = render({ appliance_type: 'washer', state_entity: 'sensor.w', remaining_time_entity: 'sensor.w_rem' },
+    { 'sensor.w': { state: 'Washing', attributes: {} }, 'sensor.w_rem': { state: '83', attributes: { unit_of_measurement: 'min' } } });
+  check('dessin : le lave-linge affiche son temps restant', ovenDisp(wRun), '1:23');
+  const wShort = render({ appliance_type: 'washer', state_entity: 'sensor.w', remaining_time_entity: 'sensor.w_rem' },
+    { 'sensor.w': { state: 'Washing', attributes: {} }, 'sensor.w_rem': { state: '23', attributes: { unit_of_measurement: 'min' } } });
+  check('dessin : en heures et minutes, comme le vrai', ovenDisp(wShort), '0:23');
+  // Stopped, the laundry lies at the bottom of the drum; turning, it is spread round.
+  const laundryAt = h => [...h.matchAll(/<g transform="rotate\((\d+) 60 68\)"><path d="M52 52/g)].map(m => +m[1]).join();
+  check('dessin : a l arret, le linge au fond', laundryAt(render({ appliance_type: 'washer', state_entity: 'sensor.w' }, { 'sensor.w': { state: 'Off', attributes: {} } })), '145,180,215');
+  check('dessin : en marche, il tourne tout autour', laundryAt(wRun), '0,120,240');
+  check('dessin : le seche-linge au repos aussi', laundryAt(render({ appliance_type: 'dryer', state_entity: 'sensor.td' }, { 'sensor.td': { state: 'Off', attributes: {} } })), '145,180,215');
+  const wOpen = render({ appliance_type: 'washer', state_entity: 'sensor.w', door_entity: 'binary_sensor.d' },
+    { 'sensor.w': { state: 'Off', attributes: {} }, 'binary_sensor.d': { state: 'on', attributes: {} } });
+  check('dessin : porte ouverte, sur ses charnieres', /class="ap-door-open"/.test(wOpen) && !/class="ap-load"/.test(wOpen), true);
+}
 const wdWashing = wd('Washing');
 // Every step is named since 2.11.0, the washing as well as the drying.
 check('lavante-sechante : le lavage est nomme', stateLine(wdWashing), 'Washing');
@@ -3871,9 +3912,9 @@ const wdDrying = wd('Drying');
 check('lavante-sechante : sechage nomme', stateLine(wdDrying), 'Drying');
 check('lavante-sechante : sechage, du linge et plus d\'eau', drum(wdDrying), 'clothes');
 check('lavante-sechante : sechage, la classe y est', machineCls(wdDrying).includes('drying'), true);
-contains('lavante-sechante : sechage, la chaleur monte', wdDrying, '<div class="wd-heat"');
-contains('lavante-sechante : et elle est animee', wdDrying, 'animation: wd-rise');
-check('lavante-sechante : lavage, aucune volute', /<div class="wd-heat"/.test(wdWashing), false);
+contains('lavante-sechante : sechage, le tambour chauffe', wdDrying, 'class="ap-warm"');
+contains('lavante-sechante : et il rougeoie', wdDrying, '.machine.spinning .ap-warm { animation: ap-glow');
+check('lavante-sechante : lavage, pas de chaleur', /class="ap-warm"/.test(wdWashing), false);
 check('lavante-sechante : sechage, le tambour tourne toujours',
   machineCls(wdDrying).includes('spinning'), true);
 
@@ -3992,7 +4033,7 @@ check('lavante-sechante : Dry tout court', stateLine(wd('Run', { phase_entity: '
 const wdAuto = render({ state_entity: 'sensor.washer_dryer_state' },
   { 'sensor.washer_dryer_state': { state: 'Drying', attributes: {} } });
 check('lavante-sechante : le nom suffit a la reconnaitre', stateLine(wdAuto), 'Drying');
-contains('lavante-sechante : et c\'est bien un lave-linge, pas un seche-linge', wdAuto, 'class="mbody"');
+contains('lavante-sechante : et c\'est bien un lave-linge, pas un seche-linge', wdAuto, 'class="ap-svg ap-washer"');
 check('lavante-sechante : reconnue par le nom, le tambour seche', drum(wdAuto), 'clothes');
 
 // The option always wins over the name, in both directions.
@@ -4196,7 +4237,7 @@ clockAt(0);
 const spinning = lv('Spin');
 check('essorage : la classe du tambour', machineCls(spinning), 'spinning spin-cycle');
 check('essorage : du linge et plus d\'eau', drum(spinning), 'clothes');
-contains('essorage : il tourne vite', spinning, '.machine.spinning.spin-cycle .garments { animation-duration: 0.7s; }');
+contains('essorage : il tourne vite', spinning, '.machine.spinning.spin-cycle .ap-load { animation-duration: 0.7s; }');
 check('essorage : au rincage, de l\'eau', drum(lv('Rinse')), 'water');
 check('essorage : au rincage, pas de classe', machineCls(lv('Rinse')).includes('spin-cycle'), false);
 check('essorage : un seche-linge ne s\'emballe pas', machineCls(tdStep('thermo_spin')).includes('spin-cycle'), false);

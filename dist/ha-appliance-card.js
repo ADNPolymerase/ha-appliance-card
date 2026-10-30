@@ -6507,6 +6507,14 @@ const ENERGY_CSS = `
         @media (prefers-reduced-motion: reduce) { .machine.en * { animation-name: none !important; } }
 `;
 
+// Shared by the washer, the dryer, the oven and the microwave.
+const AP_CSS = `
+        svg.ap-svg { position: absolute; left: 0; top: 0; width: 96px; height: 108px; overflow: visible; }
+        .ap-steam path { opacity: 0; transform-box: fill-box; transform-origin: center bottom; }
+        @keyframes ap-glow { 0%, 100% { opacity: 0.55; } 50% { opacity: 1; } }
+        @keyframes ap-steam { 0% { transform: translateY(0) scaleX(1); opacity: 0; } 30% { opacity: 0.6; } 100% { transform: translateY(-14px) scaleX(1.6); opacity: 0; } }
+`;
+
 const ILLUSTRATION_CSS = {
   water_pump: () => NT_CSS,
   floor_heating: () => NT_CSS,
@@ -6591,83 +6599,21 @@ const ILLUSTRATION_CSS = {
         .machine.moving .p3-head { animation: p3-move 1.6s ease-in-out infinite alternate; animation-delay: var(--anim-offset, 0s); }
         .machine.moving.has-part .p3-part i { animation: p3-draw 1.6s ease-in-out infinite; animation-delay: var(--anim-offset, 0s); }
       `,
-  laundry: (color) => `
-        .mbody {
-          position: absolute; inset: 0; border-radius: 10px;
-          background: var(--ac-body, var(--secondary-background-color, #d7d7d7));
-          border: 1px solid var(--divider-color, #c7c7c7);
-        }
-        .mpanel {
-          position: absolute; top: 6px; left: 8px; right: 8px; height: 10px;
-          border-radius: 4px; background: var(--divider-color, #bdbdbd);
-        }
-        .mknob {
-          position: absolute; top: 8px; right: 10px; width: 6px; height: 6px;
-          border-radius: 50%; background: var(--disabled-text-color, #9e9e9e);
-        }
-        .mknob.k2 { right: 20px; }
-        .bezel-wrap {
-          position: absolute; left: 50%; top: 62%; transform: translate(-50%, -50%);
-          width: 64px; height: 64px; perspective: 220px;
-        }
-        .drum-hole { position: absolute; inset: 0; border-radius: 50%; background: #14161a; }
-        .door {
-          position: absolute; inset: 0; border-radius: 50%;
-          background: var(--divider-color, #b0b0b0);
-          box-shadow: inset 0 0 0 2px rgba(0, 0, 0, 0.15);
-          transform-origin: left center; transform: rotateY(0deg);
-          transition: transform 0.4s ease;
-        }
-        .door.ajar { transform: rotateY(50deg); }
-        .rim { position: absolute; inset: 5px; border-radius: 50%; background: #2b2f36; }
-        .glass {
-          position: absolute; inset: 6px; border-radius: 50%; overflow: hidden;
-          background: rgba(140, 180, 220, 0.18);
-        }
-        .water-level { position: absolute; left: 0; right: 0; bottom: 0; height: 55%; overflow: hidden; }
-        .wave {
-          position: absolute; left: -58%; top: 39%; width: 170%; height: 266%;
-          background: ${color}; opacity: 0.85;
-          transition: background 1s linear;
-        }
-        .wave.wave2 { opacity: 0.45; }
-        .machine.spinning .wave { border-radius: 58%; animation: waterspin 6s linear infinite; animation-delay: var(--anim-offset, 0s); }
-        .machine.spinning .wave.wave2 { animation: waterspin 8s ease-in-out infinite; animation-delay: var(--anim-offset, 0s); }
-        @keyframes waterspin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-        .garments { position: absolute; inset: 0; }
-        .garment {
-          position: absolute; width: 22px; height: 27px; border-radius: 40px;
-          background: ${color}; opacity: 0.85; transition: background 1s linear;
-        }
-        .garment.g1 { top: 29px; left: -6px; }
-        .machine.spinning .garment.g1 { top: -5px; left: -12px; }
-        .garment.g2 { top: 24px; left: 32px; transform: rotate(15deg); opacity: 0.5; }
-        .garment.g3 { top: 33px; left: 13px; transform: rotate(-25deg); }
-        .machine.spinning .garments { animation: tumble 2.6s linear infinite; animation-delay: var(--anim-offset, 0s); }
-        @keyframes tumble { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-        /* Spinning: the load whirls against the drum, several times faster
-           than the wash turns it. */
-        .machine.spinning.spin-cycle .garments { animation-duration: 0.7s; }
-        /* Drying, on a washer-dryer: the drum is empty of water and warm, so
-           the glass loses its cold cast and three wisps rise behind the load. */
-        .machine.drying .glass { box-shadow: inset 0 0 12px rgba(255, 112, 67, 0.85); }
-        .wd-heat { position: absolute; inset: 0; z-index: 0; }
-        .wd-heat i {
-          position: absolute; bottom: 2px; width: 5px; height: 16px; opacity: 0;
-          background: linear-gradient(180deg, rgba(255, 183, 77, 0), rgba(255, 128, 40, 0.95));
-          border-radius: 50% 50% 40% 40%; filter: blur(0.6px);
-        }
-        .wd-heat i:nth-child(1) { left: 26%; }
-        .wd-heat i:nth-child(2) { left: 48%; height: 21px; }
-        .wd-heat i:nth-child(3) { left: 68%; height: 14px; }
-        .machine.drying .wd-heat i { animation: wd-rise 2.8s ease-in-out infinite; animation-delay: var(--anim-offset, 0s); }
-        .machine.drying .wd-heat i:nth-child(2) { animation-delay: calc(-0.93s + var(--anim-offset, 0s)); }
-        .machine.drying .wd-heat i:nth-child(3) { animation-delay: calc(-1.86s + var(--anim-offset, 0s)); }
-        @keyframes wd-rise {
-          0% { opacity: 0; transform: translateY(4px) scaleY(0.7); }
-          35% { opacity: 0.9; }
-          100% { opacity: 0; transform: translateY(-18px) scaleY(1.15); }
-        }
+  laundry: (color) => `${AP_CSS}
+        /* The water takes the colour of the state; the laundry turns with
+           the drum, much faster on a spin, and a dryer's drum glows warm. */
+        .ap-lcd { fill: #4fc3f7; }
+        .machine.drying .ap-lcd { fill: #ffb74d; }
+        .ap-dial { stroke: #4fc3f7; }
+        .ap-water { fill: ${color}; opacity: 0.8; transform-box: fill-box; transform-origin: center; transition: fill 1s linear; }
+        .ap-load { transform-box: fill-box; transform-origin: center; }
+        .ap-warm { opacity: 0; }
+        .machine.spinning .ap-load { animation: ap-tumble 2.6s linear infinite; animation-delay: var(--anim-offset, 0s); }
+        .machine.spinning.spin-cycle .ap-load { animation-duration: 0.7s; }
+        .machine.spinning .ap-water { animation: ap-slosh 1.4s ease-in-out infinite; animation-delay: var(--anim-offset, 0s); }
+        .machine.spinning .ap-warm { animation: ap-glow 1.8s ease-in-out infinite; animation-delay: var(--anim-offset, 0s); }
+        @keyframes ap-tumble { to { transform: rotate(360deg); } }
+        @keyframes ap-slosh { 0%, 100% { transform: translateX(-2px) rotate(-3deg); } 50% { transform: translateX(2px) rotate(3deg); } }
   `,
   dishwasher: (color) => `
         /* A dishwasher is front-loading, but its door hinges at the bottom.
@@ -6916,151 +6862,33 @@ const ILLUSTRATION_CSS = {
           }
         }
   `,
-  oven: () => `
-        .ov-body {
-          position: absolute; inset: 0; border-radius: 10px;
-          background: var(--ac-body, var(--secondary-background-color, #d7d7d7));
-          border: 1px solid var(--divider-color, #c7c7c7);
-        }
-        .ov-panel { position: absolute; top: 6px; left: 8px; right: 8px; height: 12px; }
-        .ov-disp {
-          position: absolute; left: 0; top: 2px; min-width: 30px; height: 9px; padding: 0 2px;
-          border-radius: 2px; background: #14161a; color: #ff7043; text-align: center;
-          font: 600 6px/9px ui-monospace, "SF Mono", monospace; letter-spacing: 0.5px;
-        }
-        .ov-knob {
-          position: absolute; top: 3px; right: 0; width: 7px; height: 7px;
-          border-radius: 50%; background: var(--disabled-text-color, #9e9e9e);
-        }
-        .ov-knob.k2 { right: 12px; }
-        .ov-doorwrap { position: absolute; left: 7px; right: 7px; top: 24px; bottom: 7px; perspective: 300px; }
-        .ov-cavity { position: absolute; inset: 0; border-radius: 6px; background: #14161a; overflow: hidden; }
-        .ov-elem { position: absolute; left: 7px; right: 7px; height: 3px; border-radius: 2px; background: #3b4048; }
-        .ov-elem.top { top: 16px; }
-        .ov-elem.bottom { bottom: 10px; }
-        .ov-rack { position: absolute; left: 5px; right: 5px; top: 60%; height: 1px; background: #4c525b; }
-        .ov-dish {
-          position: absolute; left: 50%; top: 60%; width: 30px; height: 9px;
-          transform: translate(-50%, -100%); border-radius: 3px 3px 2px 2px; background: #5b6069;
-        }
-        .machine.heating .ov-elem {
-          background: #ff7043; box-shadow: 0 0 9px 1px #ff7043;
-          animation: ov-ember 2.6s ease-in-out infinite; animation-delay: var(--anim-offset, 0s);
-        }
-        .machine.heating .ov-elem.bottom { animation-delay: calc(-1.3s + var(--anim-offset, 0s)); }
-        .machine.heating .ov-cavity { box-shadow: inset 0 0 22px rgba(255, 112, 67, 0.45); }
-        @keyframes ov-ember { 0%, 100% { opacity: 0.55; } 50% { opacity: 1; } }
-        /* The lamp has to light the door glass, not the cavity behind it. With
-           the door shut the glass is 94% opaque, so a cavity lit underneath is
-           invisible: the rule worked and nobody could see it. Lighting the
-           pane is also what a real oven looks like, the lamp reaching you
-           through the window rather than off the back wall. */
-        .machine.lit .ov-cavity {
-          background: radial-gradient(ellipse at 50% 40%, rgba(255, 209, 102, 0.28), #14161a 72%);
-        }
-        .machine.lit .ov-glass {
-          background: radial-gradient(ellipse at 50% 38%, rgba(104, 76, 38, 0.86), rgba(16, 18, 22, 0.94) 78%);
-        }
-        .ov-door {
-          position: absolute; inset: 0; border-radius: 6px;
-          background: var(--ac-body, var(--secondary-background-color, #d7d7d7));
-          border: 1px solid var(--divider-color, #c7c7c7);
-          transform-origin: bottom center; transform: rotateX(0deg); transition: transform 0.45s ease;
-        }
-        .ov-handle {
-          position: absolute; left: 5px; right: 5px; top: 3px; height: 4px;
-          border-radius: 2px; background: var(--disabled-text-color, #9e9e9e);
-        }
-        /* The resistances are drawn on the glass rather than seen through it: making
-           the glass translucent enough to reveal the cavity washes the whole door out
-           to a flat beige and you can no longer read what the oven is doing. */
-        .ov-glass {
-          position: absolute; left: 5px; right: 5px; top: 11px; bottom: 5px; border-radius: 4px;
-          background: rgba(16, 18, 22, 0.94); box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.35);
-          overflow: hidden; transition: box-shadow 0.4s ease;
-        }
-        .ov-glass::before, .ov-glass::after {
-          content: ""; position: absolute; left: 8px; right: 8px; height: 3px; border-radius: 2px;
-          background: #2a2e35; transition: background 0.4s ease;
-        }
-        .ov-glass::before { top: 8px; }
-        .ov-glass::after { bottom: 8px; }
-        .machine.heating .ov-glass {
-          box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.35), inset 0 0 15px rgba(255, 112, 67, 0.32);
-        }
-        .machine.heating .ov-glass::before, .machine.heating .ov-glass::after {
-          background: #ff7043; box-shadow: 0 0 8px 1px #ff7043;
-          animation: ov-ember 2.6s ease-in-out infinite; animation-delay: var(--anim-offset, 0s);
-        }
-        .machine.heating .ov-glass::after { animation-delay: calc(-1.3s + var(--anim-offset, 0s)); }
-        .machine.open .ov-door { transform: rotateX(-74deg); }
+  oven: () => `${AP_CSS}
+        /* Heating: the cavity glows, the top element pulses and a little
+           steam rises from the dish. */
+        .ap-lcd { fill: #9aa4ae; }
+        .machine.heating .ap-lcd { fill: #ff8a65; }
+        .machine.heating .ap-elem { animation: ap-glow 1.8s ease-in-out infinite; animation-delay: var(--anim-offset, 0s); }
+        .machine.heating .ap-glow { animation: ap-glow 1.8s ease-in-out infinite; animation-delay: var(--anim-offset, 0s); }
+        .machine.heating .ap-steam path { animation: ap-steam 2.6s ease-out infinite; animation-delay: var(--anim-offset, 0s); }
+        .machine.heating .ap-steam .apd2 { animation-delay: calc(-0.87s + var(--anim-offset, 0s)); }
+        .machine.heating .ap-steam .apd3 { animation-delay: calc(-1.73s + var(--anim-offset, 0s)); }
   `,
-  microwave: () => `
-        .mw-body {
-          position: absolute; left: 0; right: 0; top: 17px; height: 74px; border-radius: 8px;
-          background: var(--ac-body, var(--secondary-background-color, #d7d7d7));
-          border: 1px solid var(--divider-color, #c7c7c7);
-        }
-        .mw-doorwrap { position: absolute; left: 5px; top: 5px; bottom: 5px; width: 65px; perspective: 280px; }
-        .mw-cavity { position: absolute; inset: 0; border-radius: 4px; background: #14161a; overflow: hidden; }
-        .mw-turn {
-          position: absolute; left: 50%; top: 62%; width: 40px; height: 40px;
-          transform: translate(-50%, -50%) scaleY(0.3);
-        }
-        .mw-plate { position: absolute; inset: 0; border-radius: 50%; background: #2b2f36; }
-        .mw-food {
-          position: absolute; left: 50%; top: 2px; width: 9px; height: 9px;
-          margin-left: -4.5px; border-radius: 50%; background: #6d737c;
-        }
-        .machine.spinning .mw-turn { animation: mw-spin 3.4s linear infinite; animation-delay: var(--anim-offset, 0s); }
-        @keyframes mw-spin {
-          from { transform: translate(-50%, -50%) scaleY(0.3) rotate(0deg); }
-          to { transform: translate(-50%, -50%) scaleY(0.3) rotate(360deg); }
-        }
-        .machine.spinning .mw-cavity {
-          background: radial-gradient(ellipse at 50% 45%, rgba(255, 209, 102, 0.3), #14161a 70%);
-          animation: mw-pulse 1.7s ease-in-out infinite; animation-delay: var(--anim-offset, 0s);
-        }
-        @keyframes mw-pulse { 0%, 100% { filter: brightness(0.88); } 50% { filter: brightness(1.15); } }
-        .machine.spinning .mw-plate { background: #3a3128; }
-        .machine.spinning .mw-food { background: #c98b4b; }
-        .mw-door {
-          position: absolute; inset: 0; border-radius: 4px;
-          background: var(--ac-body, var(--secondary-background-color, #d7d7d7));
-          border: 1px solid var(--divider-color, #c7c7c7);
-          transform-origin: left center; transform: rotateY(0deg); transition: transform 0.45s ease;
-        }
-        .mw-mesh {
-          position: absolute; left: 4px; right: 9px; top: 4px; bottom: 4px; border-radius: 3px;
-          background:
-            radial-gradient(circle, rgba(190, 200, 215, 0.34) 0.8px, transparent 1.1px) 0 0/5px 5px,
-            rgba(18, 20, 24, 0.74);
-          transition: background 0.4s ease;
-        }
-        /* Same reasoning as the oven glass: keep the grille dark and put a pool of
-           warm light behind it, instead of lightening the grille itself. */
-        .machine.spinning .mw-mesh {
-          background:
-            radial-gradient(circle, rgba(190, 200, 215, 0.42) 0.8px, transparent 1.1px) 0 0/5px 5px,
-            radial-gradient(ellipse at 50% 58%, rgba(255, 183, 88, 0.5), transparent 72%),
-            rgba(16, 18, 22, 0.8);
-        }
-        .mw-handle {
-          position: absolute; right: 3px; top: 12px; bottom: 12px; width: 3px;
-          border-radius: 2px; background: var(--disabled-text-color, #9e9e9e);
-        }
-        .machine.open .mw-door { transform: rotateY(-58deg); }
-        .mw-panel { position: absolute; right: 3px; top: 5px; bottom: 5px; width: 19px; }
-        .mw-disp {
-          position: absolute; left: 0; right: 0; top: 0; height: 10px; border-radius: 2px;
-          background: #14161a; color: #ffd166; text-align: center;
-          font: 600 6px/10px ui-monospace, "SF Mono", monospace;
-        }
-        .mw-keys {
-          position: absolute; left: 0; right: 0; top: 14px;
-          display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px;
-        }
-        .mw-keys i { display: block; height: 4px; border-radius: 1px; background: var(--divider-color, #bdbdbd); }
+  microwave: () => `${AP_CSS}
+        /* Running, the plate turns the dish round an ellipse, seen from the
+           front: two eased swings a quarter turn apart, left to right and
+           back to front, a touch smaller at the back. */
+        .ap-lcd { fill: #9aa4ae; }
+        .machine.spinning .ap-lcd { fill: #69f0ae; }
+        .ap-start { fill: #2e7d32; }
+        .machine.spinning .ap-start { fill: #43a047; }
+        .machine.spinning .ap-ttx { animation: ap-ttx 3s ease-in-out infinite alternate; animation-delay: var(--anim-offset, 0s); }
+        .ap-tty { transform-box: fill-box; transform-origin: center bottom; }
+        .machine.spinning .ap-tty { animation: ap-tty 3s ease-in-out infinite alternate; animation-delay: var(--anim-offset, 0s); }
+        .machine.spinning .ap-tty { animation-delay: calc(-1.5s + var(--anim-offset, 0s)); }
+        .machine.spinning .ap-steam path { animation: ap-steam 2.6s ease-out infinite; animation-delay: var(--anim-offset, 0s); }
+        .machine.spinning .ap-steam .apd2 { animation-delay: calc(-0.87s + var(--anim-offset, 0s)); }
+        @keyframes ap-ttx { from { transform: translateX(-7px); } to { transform: translateX(7px); } }
+        @keyframes ap-tty { from { transform: translateY(1.6px) scale(1.04); } to { transform: translateY(-1.6px) scale(0.9); } }
   `,
   hood: (color) => `
         .hd-chimney {
@@ -11106,6 +10934,171 @@ function screenHtml(cls, sc) {
         <div class="machine ${cls} scr-${layout} mode-${mode}${lit}${sc.muted ? " muted" : ""}${tablet ? " tablet" : ""}${sc.charging ? " charging" : ""}${sc.seen ? " seen" : ""}${sc.tower ? ` tw-${sc.tower}` : ""}"${size}>${inner}</div>`;
 }
 
+// Washer, dryer, oven and microwave, drawn after real ones. They take the
+// appliance colour through --ac-body, white by default for the laundry and a
+// light frame for the cooking ones.
+let apN = 0;
+const apId = () => `ap${++apN}`;
+const apSoft = (cx, cy, rx, ry, op = .22) => { const id = apId(); return `<filter id="${id}" x="-30%" y="-80%" width="160%" height="260%"><feGaussianBlur stdDeviation="2.2"/></filter><ellipse cx="${cx}" cy="${cy}" rx="${rx}" ry="${ry}" fill="#000" opacity="${op}" filter="url(#${id})"/>`; };
+// A small screen, its text fitted to its width.
+const apLcd = (x, y, w, h, text, fs, cls = "ap-lcd") => {
+  const size = ntFit(text, w, fs);
+  return `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="1.4" fill="#10161d"/><rect x="${x + .6}" y="${y + .6}" width="${w - 1.2}" height="${(h * .38).toFixed(2)}" rx="1" fill="#fff" opacity=".06"/>`
+    + (text ? `<text class="${cls}" x="${x + w / 2}" y="${(y + h / 2 + size * .36).toFixed(2)}" font-size="${size.toFixed(2)}" font-weight="700" text-anchor="middle" ${NT_FONT}>${esc(text)}</text>` : "");
+};
+const apCabinet = (id) => `<linearGradient id="${id}" x1="0" x2="1"><stop offset="0" style="stop-color: var(--ac-body, #eef1f4)"/><stop offset=".25" style="stop-color: var(--ac-body-hi, #ffffff)"/><stop offset=".85" style="stop-color: var(--ac-body, #eef1f4)"/><stop offset="1" style="stop-color: var(--ac-body-lo, #c9d0d7)"/></linearGradient>`;
+const apChrome = (id) => `<linearGradient id="${id}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f7f9fb"/><stop offset=".35" stop-color="#9aa4ae"/><stop offset=".6" stop-color="#eef1f4"/><stop offset="1" stop-color="#7d8792"/></linearGradient>`;
+const apFeet = (x1, x2, y) => `<rect x="${x1}" y="${y}" width="7" height="3" rx="1" fill="#59616b"/><rect x="${x2}" y="${y}" width="7" height="3" rx="1" fill="#59616b"/>`;
+const AP_CLOTHES = { washer: ["#e57373", "#64b5f6", "#fff176"], dryer: ["#ce93d8", "#90caf9", "#a5d6a7"] };
+
+// A front loader, after the Bosch Serie 6: the drawer, the screen and the
+// dial on the panel, a round door with a chrome ring on the drum. While it
+// washes the laundry turns in water the colour of its state; spinning, it
+// whirls without water; drying, the drum glows warm. Opened, the door hangs
+// on its two hinges.
+function laundrySvg(type, d) {
+  apN = 0;
+  const c = apId(), ch = apId(), gl = apId(), drum = apId(), clip = apId(), warm = apId();
+  const dryer = type === "dryer", dry = dryer || d.drying, water = !dryer && !d.drying && !d.spinCycle;
+  // Turning, the laundry is spread round the drum; stopped, it has fallen
+  // to the bottom.
+  const at = d.turning ? [0, 120, 240].map((a) => a + (dryer ? 30 : 0)) : [145, 180, 215];
+  const clothes = (AP_CLOTHES[dryer ? "dryer" : "washer"]).map((col, i) => `<g transform="rotate(${at[i]} 60 68)"><path d="M52 52 q9 -4 16 1 q3 6 -2 10 q-8 3 -14 -1 q-4 -5 0 -10 Z" fill="${col}"/><path d="M54 55 q6 -2 11 1" stroke="#fff" stroke-width=".8" opacity=".5" fill="none"/></g>`).join("");
+  const panel = dryer
+    ? `<rect x="31" y="13" width="22" height="12" rx="2.5" fill="#e8ecf0" stroke="#bcc4cc" stroke-width=".5"/><rect x="33" y="19" width="18" height="4" rx="1" fill="#bfe3f7" opacity=".9"/><path d="M38 16 H46" stroke="#9aa4ae" stroke-width="1" stroke-linecap="round"/>${apLcd(57, 15, 18, 9, d.screen, 6)}`
+    : `<rect x="31" y="14" width="18" height="10" rx="2" fill="#e8ecf0" stroke="#bcc4cc" stroke-width=".5"/><path d="M34 21 H46" stroke="#9aa4ae" stroke-width="1.1" stroke-linecap="round"/>${apLcd(53, 15, 20, 9, d.screen, 6.4)}`;
+  const door = d.open ? `<circle cx="60" cy="68" r="21" fill="#1a2027"/><circle cx="60" cy="68" r="19" fill="url(#${drum})"/>
+${[0, 1, 2, 3, 4, 5, 6, 7].map((i) => { const a = i * Math.PI / 4; return `<circle cx="${(60 + Math.cos(a) * 12).toFixed(1)}" cy="${(68 + Math.sin(a) * 12).toFixed(1)}" r="1" fill="#2b333c"/>`; }).join("")}
+<circle cx="60" cy="68" r="25.5" fill="none" stroke="#c4cbd2" stroke-width="2.4"/>
+<rect x="29" y="58" width="7" height="4" rx="1.4" fill="#8e98a2"/><rect x="29" y="74" width="7" height="4" rx="1.4" fill="#8e98a2"/>
+<g class="ap-door-open"><ellipse cx="23" cy="68" rx="9" ry="26.5" style="fill: var(--ac-body-lo, #d9dee3)"/>
+<ellipse cx="23" cy="68" rx="8.2" ry="25.5" fill="${dryer ? "#f4f6f8" : `url(#${ch})`}"/>
+<ellipse cx="22" cy="68" rx="5.6" ry="20" fill="#141a20"/><ellipse cx="22" cy="68" rx="5" ry="18.5" fill="url(#${gl})"/>
+<path d="M19 54 Q20 50 22.5 49" stroke="#fff" stroke-width="1.4" opacity=".45" fill="none" stroke-linecap="round"/>
+<rect x="13.5" y="62" width="3" height="12" rx="1.5" fill="url(#${ch})"/></g>`
+    : `<circle cx="60" cy="68" r="27" style="fill: var(--ac-body-lo, #d9dee3)"/>
+${dryer ? `<circle cx="60" cy="68" r="25.5" style="fill: var(--ac-body-hi, #f4f6f8)" stroke="#c4cbd2" stroke-width=".6"/>` : `<circle cx="60" cy="68" r="25.5" fill="url(#${ch})"/>`}
+<circle cx="60" cy="68" r="21" fill="#141a20"/>
+<g clip-path="url(#${clip})"><circle cx="60" cy="68" r="19" fill="url(#${drum})"/>
+${dry ? `<circle class="ap-warm" cx="60" cy="68" r="19" fill="url(#${warm})"/>` : ""}
+<g class="ap-load"><circle cx="60" cy="68" r="19" fill="none"/>${clothes}</g>
+${water ? `<path class="ap-water" d="M36 76 Q49 71 60 76 T84 76 V92 H36 Z"/>` : ""}</g>
+<circle cx="60" cy="68" r="19" fill="url(#${gl})"/>
+<path d="M47 57 Q53 51 62 50" stroke="#fff" stroke-width="2.2" opacity=".35" fill="none" stroke-linecap="round"/>
+<rect x="84" y="62" width="5" height="12" rx="2" fill="url(#${ch})"/>`;
+  return `<svg class="ap-svg ap-${dryer ? "dryer" : "washer"}" viewBox="0 -10 120 135" aria-hidden="true"><defs>${apCabinet(c)}${apChrome(ch)}
+<radialGradient id="${gl}" cx=".4" cy=".35" r=".75"><stop offset="0" stop-color="#9fb4c6" stop-opacity=".18"/><stop offset=".75" stop-color="#1d2a36" stop-opacity=".35"/><stop offset="1" stop-color="#0c1218" stop-opacity=".7"/></radialGradient>
+<radialGradient id="${drum}" cx=".5" cy=".45" r=".6"><stop offset="0" stop-color="${dryer ? "#b8c0c8" : "#9aa4ae"}"/><stop offset="1" stop-color="${dryer ? "#4a525b" : "#3a434c"}"/></radialGradient>
+<radialGradient id="${warm}" cx=".5" cy=".5" r=".55"><stop offset="0" stop-color="#ffb74d" stop-opacity=".5"/><stop offset="1" stop-color="#ff7043" stop-opacity="0"/></radialGradient>
+<clipPath id="${clip}"><circle cx="60" cy="68" r="19"/></clipPath></defs>
+${apSoft(60, 113, 34, 3.4)}${apFeet(30, 83, 109)}
+<rect class="ap-body" x="26" y="8" width="68" height="102" rx="5" fill="url(#${c})" stroke="#c4cbd2" stroke-width=".5"/>
+<path d="M28 10 H92" stroke="#fff" stroke-width="1.4" opacity=".9"/>
+<rect x="26" y="8" width="68" height="25" rx="5" fill="#000" opacity=".03"/><path d="M26 33 H94" stroke="#c4cbd2" stroke-width=".6"/>
+${panel}
+<circle cx="${dryer ? 84 : 83}" cy="20" r="6.4" fill="url(#${ch})"/><circle cx="${dryer ? 84 : 83}" cy="20" r="4.6" fill="#eef1f4" stroke="#aab3bc" stroke-width=".4"/><path class="ap-dial" d="M${dryer ? 84 : 83} 20 l${dryer ? -3 : 3} -3" stroke-width="1.1" stroke-linecap="round"/>
+${door}
+</svg>`;
+}
+
+// Three dishes for the oven, three for the microwave. The card picks one each
+// time the appliance starts, so two ovens rarely cook the same thing.
+const OVEN_DISHES = [
+  (h) => `<path d="M40 70 h40 l-3 5 h-34 Z" fill="#4e342e"/><path d="M40 70 h40" stroke="#6d4c41" stroke-width="1"/>
+<ellipse cx="60" cy="65" rx="12" ry="6.4" fill="${h ? "#d9893e" : "#c8a27a"}"/><ellipse cx="57" cy="62.6" rx="6" ry="2.4" fill="#fff" opacity=".22"/>
+<ellipse cx="47.5" cy="67" rx="4.4" ry="2.6" fill="${h ? "#c97a34" : "#b8956f"}" transform="rotate(-25 47.5 67)"/><ellipse cx="72.5" cy="67" rx="4.4" ry="2.6" fill="${h ? "#c97a34" : "#b8956f"}" transform="rotate(25 72.5 67)"/>
+<circle cx="44.6" cy="68.4" r="1.2" fill="#f5e6d3"/><circle cx="75.4" cy="68.4" r="1.2" fill="#f5e6d3"/>`,
+  (h) => `<rect x="38" y="69.5" width="44" height="2.2" rx="1" fill="#7d8792"/>
+<ellipse cx="60" cy="68.6" rx="19" ry="3.6" fill="${h ? "#e0a050" : "#d9b98a"}"/><ellipse cx="60" cy="68.2" rx="16" ry="2.7" fill="${h ? "#d84315" : "#b8735a"}"/>
+${[[52, 67.8], [60, 69], [67, 67.6], [56, 68.9], [64, 68.6]].map(([x, y], i) => `<ellipse cx="${x}" cy="${y}" rx="${i % 2 ? 1.6 : 2.2}" ry=".9" fill="${i % 2 ? "#fff3c4" : "#8e2a1a"}"/>`).join("")}
+<ellipse cx="58" cy="67.6" rx="1.2" ry=".5" fill="#2e7d32"/>`,
+  (h) => `<path d="M46 63 h28 v8 a14 2 0 0 1 -28 0 Z" fill="#59616b"/><path d="M46 63 h28" stroke="#9aa4ae" stroke-width=".8"/>
+<path d="M47 63.5 Q60 ${h ? 53 : 57} 73 63.5 Z" fill="${h ? "#e8a95a" : "#d9c29a"}"/><path d="M53 60 Q60 ${h ? 57 : 59} 67 60" stroke="#a5652a" stroke-width=".7" fill="none" opacity=".7"/>`,
+];
+const MW_DISHES = [
+  () => `<path d="M34 64 H58 Q57 74 46 74.5 Q35 74 34 64 Z" fill="#f5f5f5"/><ellipse cx="46" cy="64" rx="12" ry="2.6" fill="#ef6c00"/><ellipse cx="46" cy="64" rx="12" ry="2.6" fill="none" stroke="#fff" stroke-width=".8"/>`,
+  () => `<ellipse cx="46" cy="72.5" rx="13" ry="2.8" fill="#f5f5f5"/><ellipse cx="46" cy="72" rx="10" ry="1.8" fill="#e0e0e0"/>
+<path d="M36 71.6 Q45 66.6 55 70.4 L48 72.8 Z" fill="#e0a050"/><path d="M38 71.2 Q45 67.8 53 70.4 L47.6 72.1 Z" fill="#d84315"/>
+<ellipse cx="44" cy="70.4" rx="1.4" ry=".6" fill="#8e2a1a"/><ellipse cx="49" cy="70.9" rx="1.2" ry=".5" fill="#fff3c4"/>`,
+  () => `<path d="M53 63 q6 0 6 4.5 q0 4.5 -6 4.5" stroke="#1e88e5" stroke-width="2.2" fill="none"/>
+<path d="M39 60.5 H53 V71 Q53 74 50 74 H42 Q39 74 39 71 Z" fill="#1e88e5"/><path d="M41 62 V71" stroke="#fff" stroke-width="1.2" opacity=".35" stroke-linecap="round"/>
+<ellipse cx="46" cy="60.5" rx="7" ry="1.7" fill="#fafafa"/><ellipse cx="46" cy="60.5" rx="7" ry="1.7" fill="none" stroke="#1565c0" stroke-width=".6"/>`,
+];
+const COOK_DISHES = { oven: OVEN_DISHES.length, microwave: MW_DISHES.length };
+const apSteam = (xs, y, w) => `<g class="ap-steam">${xs.map((x, i) => `<path class="apd${i + 1}" d="M${x} ${y} q${w} -2.5 0 -5 q-${w} -2.5 0 -5" stroke="#fff3e0" stroke-width="1.6" fill="none" stroke-linecap="round"/>`).join("")}</g>`;
+
+// A built-in oven, after the Bosch Serie 8: a black glass door with a window
+// on the cavity, the racks and a dish inside, the steel band with the screen
+// and two knobs, framed in the appliance colour. Heating, the cavity glows
+// and the top element pulses; its light alone lights it warm white. Opened,
+// the door lies down in front of it.
+function ovenSvg(d) {
+  apN = 0;
+  const g = apId(), cav = apId(), ch = apId(), hot = apId(), clip = apId();
+  const h = d.heating, lit = h || d.lit;
+  const dish = (OVEN_DISHES[d.dish] || OVEN_DISHES[0])(h);
+  const inside = `<g clip-path="url(#${clip})">
+<path d="M34 52 H86 M34 68 H86" stroke="${h ? "#ffcc80" : lit ? "#c9b48f" : "#7d8792"}" stroke-width=".8" opacity=".8"/>
+<path class="ap-elem" d="M34 47 H86" stroke="${h ? "#ff5722" : "#5d6773"}" stroke-width="1.4"/>
+${dish}${h ? `<ellipse class="ap-glow" cx="60" cy="64" rx="26" ry="14" fill="url(#${hot})"/>` : ""}</g>`;
+  return `<svg class="ap-svg" viewBox="0 -10 120 135" aria-hidden="true"><defs>${apChrome(ch)}
+<linearGradient id="${g}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#3a434c"/><stop offset=".5" stop-color="#14191e"/><stop offset="1" stop-color="#05070a"/></linearGradient>
+<radialGradient id="${cav}" cx=".5" cy=".4" r=".75"><stop offset="0" stop-color="${h ? "#ffb74d" : lit ? "#fff3d6" : "#56606b"}"/><stop offset=".6" stop-color="${h ? "#e65100" : lit ? "#d9b77a" : "#2b333c"}"/><stop offset="1" stop-color="${h ? "#5d1f00" : lit ? "#6b5330" : "#14191e"}"/></radialGradient>
+<radialGradient id="${hot}" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#ff9800" stop-opacity=".5"/><stop offset="1" stop-color="#ff9800" stop-opacity="0"/></radialGradient>
+<clipPath id="${clip}"><rect x="34" y="44" width="52" height="40" rx="3"/></clipPath></defs>
+<rect class="ap-body" x="14" y="6" width="92" height="108" rx="4" style="fill: var(--ac-body, #e3e7eb)" stroke="#c4cbd2" stroke-width=".6"/>
+${apSoft(60, 107, 40, 2.4, .25)}
+<rect x="20" y="12" width="80" height="17" rx="3" fill="url(#${ch})"/><rect x="20" y="25" width="80" height="4" fill="url(#${ch})"/>
+<circle cx="32" cy="20.5" r="5.2" fill="#2b333c"/><circle cx="32" cy="20.5" r="4" fill="url(#${ch})"/><path d="M32 20.5 L32 17" stroke="#2b333c" stroke-width="1" stroke-linecap="round"/>
+<circle cx="88" cy="20.5" r="5.2" fill="#2b333c"/><circle cx="88" cy="20.5" r="4" fill="url(#${ch})"/><path d="M88 20.5 L90.5 18" stroke="#2b333c" stroke-width="1" stroke-linecap="round"/>
+${apLcd(45, 15.5, 30, 10, d.screen, 7)}
+${d.open ? `<rect x="20" y="29" width="80" height="77" rx="2" fill="#0d1115"/>
+<rect class="ap-cavity" x="34" y="44" width="52" height="40" rx="3" fill="url(#${cav})"/>
+${inside}
+<path class="ap-door-open" d="M18 106 H102 L110 118 H10 Z" fill="url(#${g})"/><path d="M14 118 H106" stroke="#000" stroke-width="1" opacity=".3"/><rect x="34" y="111" width="52" height="2.6" rx="1.3" fill="url(#${ch})"/>`
+    : `<rect x="20" y="29" width="80" height="77" rx="3" fill="url(#${g})"/>
+<rect x="26" y="33" width="68" height="3.6" rx="1.8" fill="url(#${ch})"/>
+<rect class="ap-cavity" x="34" y="44" width="52" height="40" rx="3" fill="url(#${cav})"/>
+${inside}
+<rect x="34" y="44" width="52" height="40" rx="3" fill="none" stroke="#000" stroke-width="1.2" opacity=".5"/>
+<path d="M36 46 L50 82" stroke="#fff" stroke-width="4" opacity=".06"/>
+${h ? apSteam([48, 60, 72], 66, 2) : ""}`}
+</svg>`;
+}
+
+// A countertop microwave, after the Samsung and Whirlpool ones: a dark door
+// with a window on the turntable, the keypad on the right. While it runs the
+// inside is lit and the dish goes round the plate, an ellipse seen from the
+// front. Opened, the door swings out on its left hinges.
+function microwaveSvg(d) {
+  apN = 0;
+  const b = apId(), cav = apId(), ch = apId(), clip = apId(), mesh = apId();
+  const run = d.running;
+  const dish = (MW_DISHES[d.dish] || MW_DISHES[0])();
+  const food = `<g clip-path="url(#${clip})"><ellipse cx="46" cy="76" rx="20" ry="4.6" fill="#cfd6dd" opacity=".8"/>
+<g class="ap-ttx"><g class="ap-tty">${dish}${run ? apSteam([42, 50], 62, 1.6) : ""}</g></g>
+${d.open ? "" : `<rect x="18" y="42" width="56" height="40" fill="url(#${mesh})"/>`}</g>`;
+  return `<svg class="ap-svg" viewBox="0 -10 120 135" aria-hidden="true"><defs>${apChrome(ch)}
+<linearGradient id="${b}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" style="stop-color: var(--ac-body-hi, #e9edf1)"/><stop offset="1" style="stop-color: var(--ac-body-lo, #b8c0c8)"/></linearGradient>
+<radialGradient id="${cav}" cx=".5" cy=".45" r=".7"><stop offset="0" stop-color="${run ? "#ffe082" : d.open ? "#fff3d6" : "#59636e"}"/><stop offset=".7" stop-color="${run ? "#ffb300" : d.open ? "#d9c7a3" : "#2b333c"}"/><stop offset="1" stop-color="${run ? "#8d5a00" : d.open ? "#7a6a4f" : "#141a20"}"/></radialGradient>
+<pattern id="${mesh}" width="2.2" height="2.2" patternUnits="userSpaceOnUse"><circle cx="1.1" cy="1.1" r=".5" fill="#000" opacity=".45"/></pattern>
+<clipPath id="${clip}"><rect x="18" y="42" width="56" height="40" rx="3"/></clipPath></defs>
+${apSoft(58, 99, 50, 3.6)}
+<rect class="ap-body" x="10" y="32" width="100" height="64" rx="6" fill="url(#${b})" stroke="#9aa4ae" stroke-width=".5"/>
+<path d="M14 34 H106" stroke="#fff" stroke-width="1.2" opacity=".8"/>
+${d.open ? `<rect x="13" y="36" width="70" height="56" rx="4" fill="#2b333c"/>` : `<rect x="13" y="36" width="70" height="56" rx="4" fill="#14191e"/>`}
+<rect class="ap-cavity" x="18" y="42" width="56" height="40" rx="3" fill="url(#${cav})"/>
+${food}
+${d.open ? `<path class="ap-door-open" d="M13 36 L1 30 V98 L13 92 Z" fill="#14191e" stroke="#2b333c" stroke-width=".6"/><path d="M4 36 V92" stroke="#fff" stroke-width="1" opacity=".15"/>`
+    : `<path d="M20 44 L36 80" stroke="#fff" stroke-width="5" opacity=".07"/><rect x="79" y="40" width="2.4" height="48" rx="1.2" fill="url(#${ch})"/>`}
+<rect x="86" y="36" width="20" height="56" rx="3" fill="#1d232a"/>
+${apLcd(88, 40, 16, 8.6, d.screen, 5.6)}
+${[0, 1, 2, 3].map((r) => [0, 1, 2].map((k) => `<rect x="${88.6 + k * 5.2}" y="${53 + r * 6}" width="4" height="4.2" rx="1" fill="#3a434c"/>`).join("")).join("")}
+<rect class="ap-start" x="88.6" y="78" width="14.4" height="9" rx="2"/>
+<rect x="18" y="96" width="8" height="2.6" rx="1" fill="#59616b"/><rect x="94" y="96" width="8" height="2.6" rx="1" fill="#59616b"/>
+</svg>`;
+}
+
 function illustrationHtml(type, ctx) {
   const cls = [
     ctx.spinning ? "spinning" : "",
@@ -11151,43 +11144,12 @@ function illustrationHtml(type, ctx) {
   }
 
   if (LAUNDRY_TYPES.includes(type)) {
-    const water = `
-        <div class="water-level">
-          <div class="wave"></div>
-          <div class="wave wave2"></div>
-        </div>`;
-    const clothes = `
-        <div class="garments">
-          <div class="garment g1"></div>
-          <div class="garment g2"></div>
-          <div class="garment g3"></div>
-        </div>`;
     // A washer-dryer empties its drum before it dries, so while it dries it is
-    // a dryer: clothes turning in hot air, and the warm haze that goes with it.
-    // A spin empties it too, and the clothes show, whirling with no heat.
-    const glassContent = type === "dryer" || ctx.drying || ctx.spinCycle ? clothes : water;
-    const heat = ctx.drying
-      ? `
-        <div class="wd-heat" aria-hidden="true"><i></i><i></i><i></i></div>`
-      : "";
+    // a dryer: clothes turning in a warm drum. A spin empties it too, and the
+    // clothes show, whirling with no water.
+    const flags = [ctx.spinning ? "spinning" : "", ctx.drying ? "drying" : "", ctx.spinCycle ? "spin-cycle" : "", ctx.doorOpen ? "open" : ""].filter(Boolean).join(" ");
     return `
-        <div class="machine ${[ctx.spinning ? "spinning" : "", ctx.drying ? "drying" : "", ctx.spinCycle ? "spin-cycle" : ""].filter(Boolean).join(" ")}">
-          <div class="mbody">
-            <div class="mpanel"></div>
-            <div class="mknob"></div>
-            <div class="mknob k2"></div>
-          </div>
-          <div class="bezel-wrap">
-            <div class="drum-hole"></div>
-            <div class="door ${ctx.doorOpen ? "ajar" : ""}">
-              <div class="rim">
-                <div class="glass">
-                  ${heat}${glassContent}
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>`;
+        <div class="machine ${flags}">${laundrySvg(type, { screen: ctx.display || "", turning: !!ctx.spinning, drying: !!ctx.drying, spinCycle: !!ctx.spinCycle, open: !!ctx.doorOpen })}</div>`;
   }
 
   if (type === "pet_feeder") {
@@ -11231,48 +11193,12 @@ function illustrationHtml(type, ctx) {
 
   if (type === "oven") {
     return `
-        <div class="machine ${cls}">
-          <div class="ov-body">
-            <div class="ov-panel">
-              <div class="ov-disp">${esc(ctx.display || "--")}</div>
-              <div class="ov-knob"></div>
-              <div class="ov-knob k2"></div>
-            </div>
-            <div class="ov-doorwrap">
-              <div class="ov-cavity">
-                <div class="ov-elem top"></div>
-                <div class="ov-rack"></div>
-                <div class="ov-dish"></div>
-                <div class="ov-elem bottom"></div>
-              </div>
-              <div class="ov-door">
-                <div class="ov-handle"></div>
-                <div class="ov-glass"></div>
-              </div>
-            </div>
-          </div>
-        </div>`;
+        <div class="machine ${cls}">${ovenSvg({ screen: ctx.display || "", heating: !!ctx.heating, lit: !!ctx.lit, open: !!ctx.doorOpen, dish: ctx.dish || 0 })}</div>`;
   }
 
   if (type === "microwave") {
     return `
-        <div class="machine ${cls}">
-          <div class="mw-body">
-            <div class="mw-doorwrap">
-              <div class="mw-cavity">
-                <div class="mw-turn"><div class="mw-plate"></div><div class="mw-food"></div></div>
-              </div>
-              <div class="mw-door">
-                <div class="mw-mesh"></div>
-                <div class="mw-handle"></div>
-              </div>
-            </div>
-            <div class="mw-panel">
-              <div class="mw-disp">${esc(ctx.display || "--")}</div>
-              <div class="mw-keys">${"<i></i>".repeat(9)}</div>
-            </div>
-          </div>
-        </div>`;
+        <div class="machine ${cls}">${microwaveSvg({ screen: ctx.display || "", running: !!ctx.spinning, open: !!ctx.doorOpen, dish: ctx.dish || 0 })}</div>`;
   }
 
   if (type === "hood") {
@@ -12721,6 +12647,11 @@ class ApplianceCard extends HTMLElement {
     }
     if (["microwave", "coffee", "rice_cooker"].includes(applianceType) && remSec !== null && remSec > 0) {
       displayText = formatClock(remSec);
+    }
+    // A washer or a dryer counts in hours and minutes, as theirs do: 0:23.
+    if (["washer", "dryer"].includes(applianceType) && remSec !== null && remSec > 0) {
+      const min = Math.ceil(remSec / 60);
+      displayText = `${Math.floor(min / 60)}:${String(min % 60).padStart(2, "0")}`;
     }
 
     // Hood: fan speed, light and filter wear.
@@ -15298,6 +15229,13 @@ class ApplianceCard extends HTMLElement {
       }
     }
 
+    // A new dish each time the oven or the microwave starts, so two of them
+    // on a dashboard rarely cook the same thing.
+    if (COOK_DISHES[applianceType]) {
+      const cooking = isActiveState(norm);
+      if (this._dish === undefined || (cooking && !this._dishOn)) this._dish = Math.floor(Math.random() * COOK_DISHES[applianceType]);
+      this._dishOn = cooking;
+    }
     const illustrationCtx = {
       ...(fridgeCtx || {}),
       ...(coffeeCtx || {}),
@@ -15312,6 +15250,7 @@ class ApplianceCard extends HTMLElement {
       keepWarm: norm === "keep_warm",
       lit,
       display: displayText,
+      dish: this._dish || 0,
       fanLevel: fan.level,
       boost: fan.boost,
       zones,
