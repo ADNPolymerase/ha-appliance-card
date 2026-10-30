@@ -319,7 +319,11 @@ function valueEditor(cell, sim) {
       const opts = [...new Set([...words, String(value), "unavailable"])];
       row.innerHTML = `${name}<input list="${dl}" value="${String(value).replace(/"/g, "&quot;")}"><datalist id="${dl}">${opts.map((o) => `<option value="${String(o).replace(/"/g, "&quot;")}">`).join("")}</datalist>`;
       const inp = row.querySelector("input");
-      inp.addEventListener("change", () => set(id, inp.value, attr));
+      // A word picked from the list is applied at once and the field let go,
+      // so the next click opens the whole list again.
+      const pick = () => { if (!inp.value) return; inp.dataset.was = inp.value; set(id, inp.value, attr); inp.blur(); };
+      inp.addEventListener("change", pick);
+      inp.addEventListener("input", () => { if (opts.map(String).includes(inp.value)) pick(); });
       inp.addEventListener("focus", () => { inp.dataset.was = inp.value; inp.value = ""; });
       inp.addEventListener("blur", () => { if (!inp.value) inp.value = inp.dataset.was || ""; });
     }
