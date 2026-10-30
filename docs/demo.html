@@ -1263,6 +1263,29 @@ const upsOff = upsCard("OFF", 100, 1500, 0, 241);
 
 // Grouped by kind: the laundry, the kitchen, heating and climate, then the
 // rest.
+// Screens: a TV, a projector and a computer on their plugs, and the three
+// wall tablets in their three states.
+const scrCard = (name, layout, image, watts) => () => card({ name, appliance_type: "screen", screen_layout: layout, screen_image: image,
+  state_entity: "switch.scr_plug", power_entity: "sensor.scr_power" },
+  [st("switch.scr_plug", "on"), st("sensor.scr_power", watts, { unit_of_measurement: "W" })]);
+const scrTv = scrCard(L("Living room TV", "Télé du salon"), "tv_stand", "football", 85);
+const scrProjector = scrCard(L("Projector", "Vidéoprojecteur"), "projector", "space", 210);
+const scrComputer = scrCard(L("Office computer", "Ordinateur du bureau"), "computer", "code", 64);
+const tabCard = (name, layout, saver, plugged, motion, battery) => () => card({ name, appliance_type: "screen", screen_layout: layout,
+  state_entity: "switch.tab_screen", screensaver_entity: "switch.tab_saver", charging_entity: "binary_sensor.tab_plugged",
+  motion_entity: "binary_sensor.tab_motion", battery_entity: "sensor.tab_battery", url_entity: "sensor.tab_page" },
+  [st("switch.tab_screen", "on"), st("switch.tab_saver", saver ? "on" : "off"), st("binary_sensor.tab_plugged", plugged ? "on" : "off"),
+    st("binary_sensor.tab_motion", motion ? "on" : "off"), st("sensor.tab_battery", battery, { unit_of_measurement: "%" }),
+    st("sensor.tab_page", "http://homeassistant.local:8123/lovelace/hall")]);
+const tabWall = tabCard(L("Hall tablet", "Tablette entrée"), "tablet_wall", false, true, true, 100);
+const tabFrame = tabCard(L("Kitchen tablet", "Tablette cuisine"), "tablet_frame", true, false, false, 64);
+const tabPortrait = tabCard(L("Door panel", "Panneau de porte"), "tablet_portrait", false, true, false, 88);
+// Hair dryers, read from their plug: hot air on the pistol, cool on the ring.
+const hdCard = (name, layout, watts) => () => card({ name, appliance_type: "hair_dryer", hair_dryer_layout: layout,
+  state_entity: "switch.hd_plug", power_entity: "sensor.hd_power" },
+  [st("switch.hd_plug", "on"), st("sensor.hd_power", watts, { unit_of_measurement: "W" })]);
+const hdHot = hdCard(L("Hair dryer", "Sèche-cheveux"), "pistol", 1650);
+const hdRing = hdCard(L("Bathroom dryer", "Sèche-cheveux salle de bain"), "ring", 180);
 const ALL = { washer, dryer, steam_generator: steamGenerator,
               dishwasher, oven, microwave, hood, cooktop, fridge, kettle, cooker, coffee, rice_cooker: riceCooker, air_fryer: airFryer, toaster,
               water_heater: waterHeater, boiler, heat_pump: heatPump, pellet_stove: pelletStove,
@@ -1295,7 +1318,9 @@ const EXTRA = { iron, coffee_black: coffeeBlack, boiler_window: boilerWindow, to
                 net_sw8: netSw(8, 6), net_sw16: netSw(16, 11), net_sw24: netSw(24, 20), net_sw32: netSw(32, 27),
                 net_nas1: netBays(1, ["normal"], L("NAS, 1 bay", "NAS 1 baie")),
                 net_nas2: netBays(2, ["normal", null], L("NAS, 2 bays, 1 disk", "NAS 2 baies, 1 disque")),
-                net_nas4: netBays(4, ["normal", "normal", "normal", "warning"], L("NAS, 4 bays", "NAS 4 baies")) };
+                net_nas4: netBays(4, ["normal", "normal", "normal", "warning"], L("NAS, 4 bays", "NAS 4 baies")),
+                scr_tv: scrTv, scr_projector: scrProjector, scr_computer: scrComputer,
+                tab_wall: tabWall, tab_frame: tabFrame, tab_portrait: tabPortrait, hd_hot: hdHot, hd_ring: hdRing };
 // ?view=live: the public demo, linked from the README. Every family under
 // its own title, a grid that fits a phone, the language and the theme to
 // pick. The other views stay as they are: the captures depend on them.
@@ -1341,7 +1366,8 @@ function liveGallery() {
     [L("Pool", "Piscine"), [poolRunning, poolChlorine, poolBackwash, poolFrost, poolLight, poolError]],
     [L("Energy", "Énergie"), [solarDay, solarRoof, solarNight, batteryCharging, batteryStation, batteryLow, evCharger, evDischarging]],
     [L("Network and servers", "Réseau et serveurs"), [netSwitch, netRouter("on"), netNas, netServer, netRack, upsOnline, upsBattery, upsLow]],
-    [L("Home and media", "Maison et multimédia"), [printer3d, scaleFresh, scaleGoal]],
+    [L("Screens and tablets", "Écrans et tablettes"), [scrTv, scrProjector, scrComputer, tabWall, tabFrame, tabPortrait]],
+    [L("Home and media", "Maison et multimédia"), [hdHot, hdRing, printer3d, scaleFresh, scaleGoal]],
     [L("Diffusers and ventilation", "Diffuseurs et ventilation"), [difDrop, difCone, difStone, difFlame, difNebulizer, hrvDiagram, hrvOneDuct, hrvPair, hrvBypass]],
     [L("Cameras", "Cam\u00e9ras"), [camIndoor, camTube, camOutdoor, camDome, camPrivacy, camOffline]],
     [L("Lamps", "Lampes"), [lampBulb, lampBedside, lampFloor, lampTorch, lampPendant, lampStrip, lampSpots, lampPanels, lampDesk, lampWall, lampOff]],
