@@ -1,5 +1,5 @@
 // Built by tools/build.mjs from src/ha-appliance-card.js: edit the source, not this file.
-const CARD_VERSION = "3.14.0";
+const CARD_VERSION = "3.15.0";
 
 console.info(
   "%c HA-APPLIANCE-CARD %c v" + CARD_VERSION + " ",
@@ -142,6 +142,7 @@ const T = {
     type_toaster: "Toaster", section_toaster_layout: "Model", layout_toaster_two: "Two slots", layout_toaster_four: "Four slots",
     layout_toaster_long: "Long slot", toaster_toasting: "Toasting", toaster_done: "Toast ready", type_air_purifier: "Air purifier",
     type_screen: "Screen (TV, projector, computer)", section_screen_layout: "Model", layout_tv_feet: "TV on feet", layout_tv_stand: "TV on a stand", layout_tv_wall: "Wall-mounted TV", layout_projector: "Projector", layout_computer: "Computer", section_screen_image: "Picture on screen", img_random: "Random", img_sunset: "Sunset", img_aquarium: "Aquarium", img_bars: "Test card", img_football: "Football match", img_space: "Space", img_bounce: "Bouncing logo", img_desktop: "Desktop", img_code: "Scrolling code", img_pong: "Pong", screen_on: "On", screen_playing: "Playing", screen_home: "Home screen", screen_locked: "Locked", screen_muted: "Muted", screen_standby_threshold: "Standby up to this power (W)", section_media: "Media player", section_media2: "Second media player", section_media3: "Third media player", section_lock: "Session lock", layout_tablet_wall: "Wall tablet", layout_tablet_frame: "Framed tablet", layout_tablet_portrait: "Upright tablet with light bar", img_dashboard: "Dashboard", screen_dashboard: "Dashboard", screen_saver: "Screensaver", screen_dark: "Screen off", tab_charging: "charging", tab_line_page: "Page", tab_line_touched: "Last interaction", tab_screen: "Screen", tab_reload: "Reload page", section_screensaver: "Screensaver", section_tab_charging: "Charging sensor", section_tab_page: "Current page", section_tab_brightness: "Screen brightness", section_tab_touched: "Last interaction", tab_restart: "Restart app", section_tab_screenshot: "Screenshot",
+    step_heat_threshold: "Heating above this power (W)", step_spin_threshold: "Spinning above this power (W)", zone_power: "One zone at full power (W)",
     type_hair_dryer: "Hair dryer", layout_hd_pistol: "Classic", layout_hd_ring: "Ring", hd_cool: "Cool air", hd_hot: "Hot air", hd_heat_threshold: "Hot air above this power (W)", fill_height: "Fill the height of its slot", done_alert: "Flash at the end of the cycle", done_seen: "Seen", no_power_threshold: "No power draw below (W)", group_appearance: "Appearance", show_name: "Show the name", show_state: "Show the state", transparent: "Transparent background", font_scale: "Text size", illustration_size: "Drawing size", compact_mode: "Compact mode", compact_off: "Off", compact_hide: "No drawing", compact_side: "Drawing on the side", group_laundry: "Laundry", group_kitchen: "Kitchen", group_heating: "Heating and hot water", group_air: "Air and climate", group_home: "Home and media", group_pets: "Pets", illustration_frame: "Same drawing height as the cards beside it", section_screen_source: "Input source", screen_source: "Input",
     type_network: "Network device (switch, NAS, server)", group_network: "Network and servers", layout_net_switch: "Switch", layout_net_server: "Server", layout_net_nas: "NAS", layout_net_rack: "Rack", net_ports_count: "Ports drawn", net_bays: "NAS bays", net_online: "Online", net_busy: "Busy", net_alert: "Alert", net_warn: "Disk to watch", section_net_cpu: "CPU usage (%)", section_net_memory: "Memory usage (%)", section_net_volume: "Volume used (%)", section_net_download: "Download rate", section_net_upload: "Upload rate", section_net_ports: "Active ports", net_ports_total: "Port count", section_net_poe: "PoE power", section_net_problem: "Problem alert", section_net_temperature: "Temperature", net_temp_alert: "Alert above this temperature (\u00b0C)", net_busy_threshold: "Busy above this rate (Mbit/s)", net_line_rate: "Throughput", net_line_load: "Load", net_line_volume: "Volume", section_net_disk1: "Disk 1", section_net_disk2: "Disk 2", section_net_disk3: "Disk 3", section_net_disk4: "Disk 4",
     type_robot: "Robot (vacuum, mop, mower)", layout_robot_vacuum: "Robot vacuum", layout_robot_mop: "Mopping robot", layout_robot_mower: "Robot mower", section_robot_station: "Base", robot_station_station: "Emptying or washing station", robot_station_base: "Charging base only", robot_shelter: "Shelter over the base", robot_shelter_style: "Shelter style", shelter_lean_to: "Wooden lean-to", shelter_shell: "Shell", robot_shelter_color: "Shell colour", delay_starts_in: "Starts in", section_delay: "Delayed start countdown", state_entity_optional: "State entity (optional)", color_green: "Green", color_orange: "Orange", robot_charging: "Charging", robot_docked: "Docked", robot_cleaning: "Cleaning", robot_mopping: "Mopping", robot_mowing: "Mowing", robot_edgecut: "Edge cutting", robot_returning: "Returning to base", robot_emptying: "Emptying the bin", robot_bin_full: "Bin full", robot_washing: "Washing the pads", robot_drying: "Drying the pads", robot_water_empty: "Water tank empty", robot_rain: "Rain delay", robot_idle: "Stopped", section_robot_status: "Detailed status", section_battery: "Battery", section_robot_bin: "Bin full alert", section_robot_water: "Water tank", section_robot_rain: "Rain", section_robot_error: "Error",
@@ -177,7 +178,7 @@ const T = {
     type_air_fryer: "Air fryer", af_cooking: "Cooking", af_shake: "Shake the basket", af_basket_out: "Basket out", af_preheated: "Preheated", af_basket2: "Basket 2", section_fryer_layout: "Model", layout_basket: "Basket", layout_window: "Basket with window", layout_dual: "Dual basket", section_basket: "Basket sensor", section_shake: "Shake reminder", section_basket2: "Basket 2 state (dual)",
     last_cycle: "Last cycle", show_last_cycle: "Show the last cycle", power_off_delay: "Delay before Finished (min, plug only)", section_energy: "Energy used", energy_price: "Price per kWh (number or entity)", energy_line: "Energy", cost_line: "Cost", show_elapsed: "Show the time elapsed in the cycle", elapsed_line: "Elapsed", show_today: "Show today's running time and starts", today_line: "Today", starts_one: "{n} start", starts_other: "{n} starts", section_tower: "Tower (second plug)", tower_line: "Tower", tower_on: "Tower on", tower_toggle: "Tower",
     washer_dryer: "Washer-dryer (washes and dries)", step_drying: "Drying", section_cycle_phase: "Cycle phase",
-    step_prewash: "Pre-wash", step_soaking: "Soaking", step_weighing: "Weighing", step_filling: "Filling", step_washing: "Washing", step_rinsing: "Rinsing", step_draining: "Draining", step_spinning: "Spinning", step_cooling: "Cooling", step_anti_crease: "Anti-crease", step_steam: "Steam",
+    step_heating: "Heating", step_prewash: "Pre-wash", step_soaking: "Soaking", step_weighing: "Weighing", step_filling: "Filling", step_washing: "Washing", step_rinsing: "Rinsing", step_draining: "Draining", step_spinning: "Spinning", step_cooling: "Cooling", step_anti_crease: "Anti-crease", step_steam: "Steam",
     type_ev_charger: "EV charger", ev_no_vehicle: "No vehicle", ev_connected: "Plugged in", ev_awaiting_auth: "Awaiting authorisation", ev_charging: "Charging", ev_paused: "Charging paused", ev_scheduled: "Scheduled", ev_done: "Charging complete", ev_error: "Error", ev_offline: "Offline", section_vehicle: "Vehicle plugged in (plug sensor)", section_session_energy: "Session energy", section_current_limit: "Charging current limit", ev_power_threshold: "Charging above this power (W)", ev_line_session: "Charged", ev_line_limit: "Current limit",
     ev_discharging: "Discharging", section_discharge_power: "Power the car gives back (to the home or the grid)", ev_line_discharge: "Discharge",
   },
@@ -3480,6 +3481,32 @@ const HAIR_DRYER_RE = /hair.?dryer|blow.?dryer|s(e|\u00e8)che.?cheveux|haartrock
 const HD_HEAT_W = 300;
 // Above this the heater is on its high setting, and the air comes out harder.
 const HD_HIGH_W = 1200;
+// What each type draws at the least while it works, for a plug that has a
+// meter and no power_on_threshold: a washer turning its drum draws a few
+// watts at times, a fan on its lowest speed hardly more, a kettle a lot. The
+// fridge, the iron, the hair dryer, screens and the rest read their plug in
+// their own way and are not here.
+const PLUG_THRESHOLDS = {
+  washer: 10, dryer: 10, dishwasher: 10, oven: 50, microwave: 50, cooker: 20, coffee: 200, rice_cooker: 100,
+  air_fryer: 50, kettle: 50, toaster: 50, water_heater: 50, space_heater: 30, towel_warmer: 10, dehumidifier: 30,
+  air_purifier: 3, fan: 3, hood: 5, pool_pump: 50, printer_3d: 30, cooktop: 50, pet_fountain: 1,
+  spa: 50, sauna: 100, aquarium: 3, water_pump: 30, floor_heating: 30, christmas_tree: 2, iron: 10,
+};
+// A coffee machine or a rice cooker drawing more than this, under its
+// threshold, is keeping warm.
+const KEEP_WARM_TYPES = ["coffee", "rice_cooker"];
+const KEEP_WARM_W = 5;
+// A hob on a plug: what one zone draws at full power, and how long a zone
+// stays hot once off.
+const ZONE_POWER_W = 1500;
+const ZONE_RESIDUAL_MS = 10 * 60000;
+// A dishwasher on a plug dries for this many minutes after its last heat.
+const DW_DRY_MIN = 20;
+// Above these a washer heats its water and spins its drum; a dishwasher heats
+// its water above the first; a dryer heats its air above its own.
+const WASH_HEAT_W = 1000;
+const WASH_SPIN_W = 200;
+const DRYER_HEAT_W = 600;
 // An iron: off, heating, or hot with its thermostat cut out.
 const IRON_LABELS = { off: "iron_off", heating: "iron_heating", ready: "iron_ready" };
 // Below these, the steam is light, then fuller: a travel iron draws under a
@@ -3890,7 +3917,12 @@ function poolOn(hass, entityId) {
 function poolModeOf(hass, cfg, st, watts) {
   const raw = st ? String(st.state).trim().toLowerCase() : "";
   let mode = "";
-  if (st && !["unavailable", "unknown", ""].includes(raw)) {
+  const plug = ["switch", "input_boolean"].includes(domainOf(cfg.state_entity));
+  if (st && plug && watts !== null && !["unavailable", "unknown", ""].includes(raw)) {
+    // A pump on a plug: the switch says it may run, the meter that it does.
+    const th = parseFloat(cfg.power_on_threshold);
+    mode = raw === "off" ? "off" : watts > (isFinite(th) ? th : POOL_POWER_W) ? "running" : "off";
+  } else if (st && !["unavailable", "unknown", ""].includes(raw)) {
     mode = poolWord(raw);
     // A pump's mode (auto, a schedule) does not say whether it runs: its
     // meter does, when there is one.
@@ -12370,12 +12402,20 @@ class ApplianceCard extends HTMLElement {
     // Pointing state_entity at the power meter itself can only mean "derive the
     // state from it"; without a default threshold the card would print a bare
     // wattage as the appliance's state.
+    // A plug's switch only says the appliance is plugged in: with a meter on
+    // the same plug, what it draws says whether it works, against a threshold
+    // of its own type when none is set (#plug-only). A state from an
+    // integration says more than a meter, and keeps the say.
+    const plugState = !!cfg.power_entity && (!cfg.state_entity || cfg.state_entity === cfg.power_entity
+      || ["switch", "input_boolean"].includes(domainOf(cfg.state_entity)));
     const threshold = hasThreshold
       ? parseFloat(cfg.power_on_threshold)
       : cap.fridgeTemp
         ? 1
         : cap.hairDryer && cfg.power_entity
           ? 10
+        : plugState && PLUG_THRESHOLDS[applianceType] !== undefined
+          ? PLUG_THRESHOLDS[applianceType]
         : cfg.power_entity === cfg.state_entity
           ? 10
           : NaN;
@@ -12387,10 +12427,16 @@ class ApplianceCard extends HTMLElement {
     // with the plug, further down.
     if (!cap.fridgeTemp && !cap.evCharger && !cap.screen && !cap.network && !cap.solar && !cap.homeBattery && !cap.ups && cfg.power_entity && isFinite(threshold)) {
       let derived = powerDerivedState(watts, threshold, this._powerWasRunning);
+      // A hood or a hob has nothing to finish: once it draws nothing it is off.
+      if (derived === "done" && ["hood", "cooktop"].includes(applianceType)) derived = "idle";
       // A pause under the threshold is not the end: a dishwasher drying, a
       // washer soaking. With power_off_delay the card waits that many minutes
       // below the threshold before it calls the cycle finished.
-      const offDelayMs = Math.max(0, parseFloat(cfg.power_off_delay) || 0) * 60000;
+      // A dishwasher on a plug dries on the heat it left in the tub, drawing
+      // next to nothing for a while before it is done: the card waits that
+      // long unless told otherwise.
+      const offDelayCfg = cfg.power_off_delay === undefined || cfg.power_off_delay === "" ? (applianceType === "dishwasher" ? DW_DRY_MIN : 0) : cfg.power_off_delay;
+      const offDelayMs = Math.max(0, parseFloat(offDelayCfg) || 0) * 60000;
       if (derived === "running") this._powerBelowSince = null;
       else if (derived === "done" && offDelayMs > 0) {
         if (!this._powerBelowSince) this._powerBelowSince = Date.now();
@@ -12408,6 +12454,11 @@ class ApplianceCard extends HTMLElement {
         else if (derived === "idle") this._powerWasRunning = false;
         norm = derived;
         powerDerived = true;
+        // A coffee machine or a rice cooker done with its work keeps a hot
+        // plate or a warm pot going on a few watts: that is keeping warm,
+        // not finished, until the plug reads nothing at all.
+        if (KEEP_WARM_TYPES.includes(applianceType) && derived !== "running" && plugState && watts > KEEP_WARM_W
+          && !(st && String(st.state).toLowerCase() === "off")) norm = "keep_warm";
       }
     }
 
@@ -12545,7 +12596,7 @@ class ApplianceCard extends HTMLElement {
     // animation, but integrations that do not expose one must render exactly
     // as before. Unknown vendor phases are intentionally ignored as well.
     const phaseState = cfg.phase_entity ? stateObj(hass, cfg.phase_entity) : null;
-    const phase = phaseState ? normalizeDishwasherPhase(phaseState.state, cfg.phase_map) : "";
+    let phase = phaseState ? normalizeDishwasherPhase(phaseState.state, cfg.phase_map) : "";
 
     // A washer-dryer's drum shows water or hot air, read from the step it is
     // at: from its own state or, when the state stays at "Running" all the way
@@ -12578,6 +12629,20 @@ class ApplianceCard extends HTMLElement {
       if (!step) {
         const own = stateStepOf(rawState, cfg.state_map);
         if (own) step = { step: own };
+      }
+      // Nothing names the step, but the plug's meter tells it: a washer
+      // heating its water draws a kilowatt or two, its motor spinning the drum
+      // a few hundred watts, and much less while it tumbles the wash; a
+      // dishwasher heats, washes, then dries on next to nothing; a dryer
+      // heats its air, then cools the load with the heater off.
+      if (!step && powerDerived && watts !== null && !washerDryer) {
+        const num = (v, d) => { const n = parseFloat(v); return isFinite(n) && n > 0 ? n : d; };
+        const heatAt = num(cfg.heat_threshold, applianceType === "dryer" ? DRYER_HEAT_W : WASH_HEAT_W);
+        const own = applianceType === "washer" ? (watts >= heatAt ? "heating" : watts >= num(cfg.spin_threshold, WASH_SPIN_W) ? "spinning" : "washing")
+          : applianceType === "dishwasher" ? (watts < threshold ? "drying" : watts >= heatAt ? "heating" : "washing")
+          : watts >= heatAt ? "drying" : "cooling";
+        step = { step: own, power: true };
+        if (applianceType === "dishwasher" && !phase) phase = own === "drying" ? "drying" : "mainwash";
       }
       if (step && !cfg.state_show_raw) stateLabel = step.step ? t(hass, `step_${step.step}`) : step.text;
     }
@@ -12729,6 +12794,34 @@ class ApplianceCard extends HTMLElement {
         zones = Array.from({ length: cfg.zones_count || 4 }, () => ({
           on, label: "", intensity, residual: false, max: false, title: "",
         }));
+        // A hob on a plug: what it draws, spread over as many zones as it
+        // takes at a zone's power each, the level on each from 1 to 9. A zone
+        // just turned off stays hot for a while, and says H.
+        if (powerDerived && watts !== null && !cfg.power_level_entity) {
+          const zp = parseFloat(cfg.zone_power) > 0 ? parseFloat(cfg.zone_power) : ZONE_POWER_W;
+          const n = on ? Math.max(1, Math.min(zones.length, Math.ceil(watts / (zp * 1.4)))) : 0;
+          const lv = n ? Math.max(1, Math.min(9, Math.round((watts / n) / zp * 9))) : 0;
+          const now = Date.now();
+          this._zoneHot = (this._zoneHot || []).slice(0, zones.length);
+          zones = zones.map((z, i) => {
+            if (i < n) {
+              this._zoneHot[i] = now;
+              return { ...z, on: true, label: String(lv), intensity: Math.max(0.2, lv / 9), max: lv >= 9 };
+            }
+            const hot = this._zoneHot[i] && now - this._zoneHot[i] < ZONE_RESIDUAL_MS;
+            return { ...z, on: false, intensity: 0, label: hot ? "H" : "", residual: !!hot };
+          });
+          const left = zones.map((z, i) => (z.residual ? ZONE_RESIDUAL_MS - (now - this._zoneHot[i]) : Infinity));
+          if (Math.min(...left) < Infinity) this._armOffDelay(Math.min(...left));
+          if (n) extraLines.push({ key: "zones", icon: "mdi:circle-slice-8", label: t(hass, "section_zones"), value: `${n} / ${zones.length}` });
+          // A hob is never "finished": off, it is at rest, or still hot.
+          if (!n && norm !== "off") {
+            norm = "idle";
+            const warm = zones.some((z) => z.residual);
+            if (!cfg.state_show_raw) stateLabel = t(hass, warm ? "residual_heat" : "idle");
+            color = warm ? "#ff7043" : STATE_COLORS.idle;
+          }
+        }
       }
       if (cfg.power_level_entity) {
         const plst = stateObj(hass, cfg.power_level_entity);
@@ -16031,7 +16124,7 @@ function loadEditor() {
   if (customElements.get("ha-appliance-card-editor")) return Promise.resolve();
   if (!editorLoading) {
     editorLoading = import(assetUrl("ha-appliance-card-editor.js"))
-      .then((m) => m.default({ t, onLanguageLoaded, LANGUAGE_NAMES, localizedHass, activationOf, EV_POWER_THRESHOLD, stateObj, parseValueMap, stringifyValueMap, alertsArray, LIST_OTHER, ENTITY_LISTS, listCandidates, defaultCardName, stripDeviceName, domainOf, INFO_MAX, autoSuggest, APPLIANCE_TYPES, STATE_DOMAINS, SCREEN_ONLY_FIELDS, illustrationSizeOf, fontScaleOf, compactModeOf, TYPE_GROUPS, caps, detectApplianceType, SCREEN_STANDBY_W, SCREEN_LAYOUTS, SCREEN_IMAGES, screenLayoutOf, screenIsTablet, HD_HEAT_W, NET_LAYOUTS, SWITCH_PORTS, NET_BAYS, NET_BUSY_MBIT, NET_TEMP_ALERT, netLayoutOf, ROBOT_LAYOUTS, ROBOT_STATIONS, ROBOT_FLOORS, ROBOT_SERVICES, STICK_AWAY_W, robotLayoutOf, POOL_PRESSURE_ALERT, SOLAR_LAYOUTS, BATTERY_LAYOUTS, BATTERY_IDLE_W, DIFFUSER_LAYOUTS, HRV_LAYOUTS, CAMERA_LAYOUTS, MAILBOX_LAYOUTS, MAILBOX_SIDES, mailboxLayoutOf, LAMP_LAYOUTS, LAMP_SPOTS, lampLayoutOf, PUMP_LAYOUTS, FLOOR_LAYOUTS, TREE_PALETTES, TREE_PRESENTS, pumpLayoutOf, UPS_BATTERY_LOW, HISTORY_HOURS, BODY_COLORS, esc, SHELTER_STYLES, SHELTER_COLORS, stateFreeSource }))
+      .then((m) => m.default({ t, onLanguageLoaded, LANGUAGE_NAMES, localizedHass, activationOf, EV_POWER_THRESHOLD, stateObj, parseValueMap, stringifyValueMap, alertsArray, LIST_OTHER, ENTITY_LISTS, listCandidates, defaultCardName, stripDeviceName, domainOf, INFO_MAX, autoSuggest, APPLIANCE_TYPES, STATE_DOMAINS, SCREEN_ONLY_FIELDS, illustrationSizeOf, fontScaleOf, compactModeOf, TYPE_GROUPS, caps, detectApplianceType, SCREEN_STANDBY_W, SCREEN_LAYOUTS, SCREEN_IMAGES, screenLayoutOf, screenIsTablet, HD_HEAT_W, PLUG_THRESHOLDS, ZONE_POWER_W, DW_DRY_MIN, WASH_HEAT_W, WASH_SPIN_W, DRYER_HEAT_W, NET_LAYOUTS, SWITCH_PORTS, NET_BAYS, NET_BUSY_MBIT, NET_TEMP_ALERT, netLayoutOf, ROBOT_LAYOUTS, ROBOT_STATIONS, ROBOT_FLOORS, ROBOT_SERVICES, STICK_AWAY_W, robotLayoutOf, POOL_PRESSURE_ALERT, SOLAR_LAYOUTS, BATTERY_LAYOUTS, BATTERY_IDLE_W, DIFFUSER_LAYOUTS, HRV_LAYOUTS, CAMERA_LAYOUTS, MAILBOX_LAYOUTS, MAILBOX_SIDES, mailboxLayoutOf, LAMP_LAYOUTS, LAMP_SPOTS, lampLayoutOf, PUMP_LAYOUTS, FLOOR_LAYOUTS, TREE_PALETTES, TREE_PRESENTS, pumpLayoutOf, UPS_BATTERY_LOW, HISTORY_HOURS, BODY_COLORS, esc, SHELTER_STYLES, SHELTER_COLORS, stateFreeSource }))
       .catch((err) => {
         editorLoading = null;
         throw err;

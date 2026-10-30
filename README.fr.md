@@ -37,7 +37,7 @@ Aucune marque supposée : chaque champ est une entité à choisir, elle fonction
 - **Et la boîte aux lettres** : traversante avec sa porte côté rue et sa porte côté maison, ou classique sur son poteau. Les lettres s'empilent jusqu'à douze, une nouvelle entre par la fente, et les portes pivotent sur leurs charnières. Les caméras ont aussi leur sonnette, dont l'anneau lumineux bat quand on sonne.
 - **Et le reste de la maison** : un congélateur coffre et un congélateur à tiroirs qui givrent quand ils produisent du froid, un surpresseur avec sa pression sur son contrôleur et une pompe de relevage dont le flotteur suit l'eau, un robot de piscine qui traîne son câble, un plancher chauffant à eau ou électrique, un spa et ses bulles, un sauna dont les pierres rougeoient, un aquarium planté, un compteur Linky et un sapin de Noël en sept couleurs classiques, avec ses cadeaux les 24 et 25 décembre.
 - **Et l'onduleur** : la prise murale, l'onduleur et le boîtier qu'il protège, *Sur secteur* avec l'énergie qui le traverse, *Sur batterie* avec la prise barrée, l'onduleur qui bipe et son écran qui compte l'autonomie, *Batterie faible*, *Surcharge* et *Batterie à remplacer* lus dans les codes de NUT, et la batterie, l'autonomie, la charge et la tension d'entrée dans les lignes.
-- **Fonctionne avec une simple prise connectée** : `power_entity` et `power_on_threshold` suffisent à déduire l'état de la consommation ; `power_off_delay` évite qu'une pause soit prise pour la fin, et `show_last_cycle` montre la durée du dernier cycle.
+- **Fonctionne avec une simple prise connectée** : son interrupteur et sa mesure suffisent, sans seuil à régler, car chaque type connaît la puissance à laquelle il travaille. Un lave-linge dit s'il chauffe, lave ou essore, un lave-vaisselle chauffe, lave puis sèche, une machine à café maintient au chaud, une plaque allume autant de foyers qu'elle consomme et reste chaude dix minutes, et un chauffage, un ventilateur ou une pompe s'arrête quand la prise ne mesure plus rien. `power_off_delay` évite qu'une pause soit prise pour la fin, et `show_last_cycle` montre la durée du dernier cycle. [L'essayer dans la démo](https://adnpolymerase.github.io/ha-appliance-card/docs/demo.html?view=live&plug=1&lang=fr).
 - **Programme, temps restant, barre de progression, lignes d'info, porte, alertes, connectivité et commandes** (démarrer, pause, reprise, stop), chacun optionnel.
 - **14 langues** (EN, FR, DE, ES, IT, NL, PT, SV, NO, DA, PL, RU, ZH, CS), celle de Home Assistant ou fixée sur la card.
 - **Éditeur visuel** qui pré-remplit les champs depuis les entités du même appareil et ne propose que ceux utiles au type choisi.
@@ -202,8 +202,8 @@ Seule `state_entity` est obligatoire, sauf sur un réfrigérateur où une sonde 
 | `appliance_type` | `auto` (défaut) \| `washer` \| `dryer` \| `dishwasher` \| `oven` \| `microwave` \| `hood` \| `cooktop` \| `fridge` \| `kettle` \| `cooker` \| `coffee` \| `rice_cooker` \| `air_fryer` \| `water_heater` \| `boiler` \| `heat_pump` \| `printer_3d` \| `pet_feeder` \| `pet_fountain` \| `iron` \| `toaster` \| `pellet_stove` \| `air_conditioner` \| `dehumidifier` \| `space_heater` \| `towel_warmer` \| `air_purifier` \| `fan` \| `ev_charger` \| `hair_dryer` \| `screen` \| `network` \| `robot` \| `pool_pump` \| `scale` \| `ups` \| `solar` \| `home_battery` \| `camera` \| `diffuser` \| `hrv` \| `lamp` \| `mailbox` \| `water_pump` \| `floor_heating` \| `spa` \| `sauna` \| `aquarium` \| `meter` \| `christmas_tree`. |
 | `tap_action` | Ce que fait un appui sur la carte, dans les mots de Home Assistant : `more-info` (défaut : l'entité d'état, ou sur une carte sans elle ce qu'elle lit à sa place), `none`, `navigate`, `url`, `toggle`, `perform-action` ou `fire-dom-event`, celle qu'écoutent les cartes popup bâties sur browser_mod. En YAML seulement. |
 | `toggle_entity` | Bouton marche/arrêt (`switch`, `button`, `script`, `input_boolean`, `fan`), mis en évidence quand c'est allumé. Sur tous les types, frigo compris, où c'est le seul bouton ; à associer à `controls_activation: confirm` pour un appareil qu'il ne faut pas couper par erreur. |
-| `power_entity` / `power_on_threshold` / `power_icon` | Capteur de puissance. Avec un seuil, l'état en est déduit : *en marche* au-dessus, puis *terminé* en redescendant. Pointer `state_entity` sur ce même capteur l'active avec un seuil de 10 W. `power_icon` remplace `mdi:power-plug`. |
-| `power_off_delay` | Nombre de minutes sous `power_on_threshold` avant que le cycle passe à *Terminé*, pour qu'une pause (un lave-vaisselle qui sèche, un lave-linge qui trempe) ne soit pas prise pour la fin. Seulement quand l'état vient de la prise : une intégration signale ses pauses elle-même. 0 par défaut. |
+| `power_entity` / `power_on_threshold` / `power_icon` | Capteur de puissance. Avec un seuil, l'état en est déduit : *en marche* au-dessus, puis *terminé* en redescendant. Avec l'interrupteur d'une prise en `state_entity`, ou ce même capteur, il en est déduit sans seuil, avec celui du type (voir *Une prise connectée seule*). L'état d'une intégration garde la main. `power_icon` remplace `mdi:power-plug`. |
+| `power_off_delay` | Nombre de minutes sous `power_on_threshold` avant que le cycle passe à *Terminé*, pour qu'une pause (un lave-vaisselle qui sèche, un lave-linge qui trempe) ne soit pas prise pour la fin. Seulement quand l'état vient de la prise : une intégration signale ses pauses elle-même. 0 par défaut, 20 sur un lave-vaisselle, qui sèche sans presque rien consommer. |
 | `speed_power_max` | Une hotte, un purificateur ou un ventilateur sur une prise : sa puissance à la vitesse maximale, en watts. La vitesse se lit alors dans sa consommation : sous le tiers la première, sous les deux tiers la deuxième, au-delà la troisième. Le pourcentage ou le préréglage d'une entité ventilateur passe toujours avant. |
 | `speed_power_custom` | Règle les deux paliers à la main, `speed_power_2` et `speed_power_3` : les watts à partir desquels le ventilateur est en deuxième et en troisième vitesse, quand les tiers ne conviennent pas. |
 | `show_last_cycle` | Ajoute une ligne *Dernier cycle* entre deux cycles : sa durée et son heure de fin, lues dans l'historique de Home Assistant (sept jours de l'état, deux jours de la puissance d'une prise, pauses plus courtes que `power_off_delay` comprises). Appareils à cycle, bouilloire, fer à repasser, grille-pain et sèche-cheveux. |
@@ -285,6 +285,8 @@ Seule `state_entity` est obligatoire, sauf sur un réfrigérateur où une sonde 
 | `toaster_layout` | grille-pain | `two` (défaut, deux fentes) \| `four` (quatre fentes, deux leviers) \| `long` (une fente longue pour deux tranches bout à bout). |
 | `hair_dryer_layout` | sèche-cheveux | `pistol` (défaut, sèche-cheveux classique vu de profil) \| `ring` (sèche-cheveux en anneau vu de face). |
 | `heat_threshold` | sèche-cheveux | Puissance à partir de laquelle il souffle de l'air chaud (300 W par défaut). En dessous, seul le ventilateur tourne. |
+| `heat_threshold` / `spin_threshold` | lave-linge, lave-vaisselle, sèche-linge | Sur une prise seule : la puissance à partir de laquelle il chauffe (1000 W par défaut, 600 W sur un sèche-linge) et celle à partir de laquelle un lave-linge essore (200 W). En dessous, un lave-linge lave, un sèche-linge refroidit le linge, et un lave-vaisselle sous son seuil sèche. |
+| `zone_power` | plaque de cuisson | Sur une prise seule, ce que consomme un foyer à pleine puissance (1500 W par défaut) : la mesure est répartie sur autant de foyers qu'il en faut, chacun avec un niveau de 1 à 9. |
 | `screen_layout` | écran | `tv_feet` (défaut, télévision sur deux pieds) \| `tv_stand` (télévision sur pied central) \| `tv_wall` (télévision murale) \| `projector` (vidéoprojecteur sous sa toile) \| `computer` (écran et tour) \| `tablet_wall` (tablette murale sur son support plat) \| `tablet_frame` (tablette dans un cadre en bois, accrochée comme un tableau) \| `tablet_portrait` (tablette en hauteur avec une barre lumineuse). Sans réglage, un nom qui dit projecteur, ordinateur ou tablette choisit le modèle, tout comme un `lock_entity` ou l'un des champs de tablette ci-dessous. |
 | `screen_image` | écran | L'image d'un écran allumé : `random` (défaut, une nouvelle à chaque allumage) ou l'une de `sunset`, `aquarium`, `bars`, `football`, `space`, `bounce`, `desktop`, `code`, `pong`, `dashboard`. Une tablette montre `dashboard` par défaut. Un lecteur qui fournit une jaquette l'affiche à la place pendant la lecture. |
 | `media_entity` / `media2_entity` / `media3_entity` | écran | Jusqu'à trois `media_player` qui affichent quelque chose sur cet écran : la télé elle-même, et le boîtier ou la console qui a vraiment l'image. La card suit celui qui joue, puis celui en pause, puis celui à l'accueil, puis celui allumé ; à égalité, le premier. Sa ligne le nomme et donne l'application ou la source, le titre et *Son coupé*. Sans mesure de puissance, les lecteurs disent aussi si l'écran est éteint, en veille ou allumé. |
@@ -442,6 +444,43 @@ Seule `state_entity` est obligatoire, sauf sur un réfrigérateur où une sonde 
 ## Exemples et guides
 
 Une section par sujet : clique pour l'ouvrir.
+
+<details>
+<summary><b>Une prise connectée seule</b></summary>
+
+Rien ne relie la plupart des appareils à Home Assistant, mais une prise connectée avec mesure les lit quand même. Son interrupteur et sa mesure suffisent :
+
+```yaml
+type: custom:ha-appliance-card
+appliance_type: washer
+state_entity: switch.prise_lave_linge
+power_entity: sensor.prise_lave_linge_puissance
+```
+
+Chaque type connaît la puissance à laquelle il travaille, il n'y a donc pas de seuil à régler. En dessous, une prise allumée affiche *En veille*, et un cycle qui a tourné *Terminé*. `power_on_threshold` en fixe un autre.
+
+| Type | Travaille au-dessus de | Ce que dit la mesure en plus |
+|---|---|---|
+| lave-linge | 10 W | *Chauffe* à partir de 1000 W, *Essorage* à partir de 200 W, *Lavage* en dessous (`heat_threshold`, `spin_threshold`) |
+| lave-vaisselle | 10 W | *Chauffe* à partir de 1000 W, *Lavage* en dessous, puis *Séchage* pendant 20 minutes quand il ne consomme plus (`power_off_delay`) |
+| sèche-linge | 10 W | *Séchage* à partir de 600 W, *Refroidissement* en dessous |
+| machine à café, cuiseur à riz | 200 W, 100 W | *Maintien au chaud* sur quelques watts |
+| plaque de cuisson | 50 W | autant de foyers allumés qu'elle consomme, chacun avec son niveau, puis *Chaleur résiduelle* pendant dix minutes (`zone_power`) |
+| fer à repasser | 10 W | *En chauffe*, puis *Prêt* quand le thermostat coupe ; plus il consomme, plus il y a de vapeur |
+| four, micro-ondes, bouilloire, friteuse, grille-pain, chauffe-eau | 50 W | *En cours*, *En chauffe*, *Cuisson* ou *Grillage* |
+| robot cuiseur, imprimante 3D | 20 W, 30 W | *En cours* |
+| petit chauffage, déshumidificateur, pompe, plancher chauffant | 30 W | *Chauffage*, *Déshumidification* ou *Pompage* |
+| sèche-serviettes, pompe de piscine, spa, sauna | 10 W, 50 W, 50 W, 100 W | *Confort*, *Filtration* ou *Chauffage* |
+| hotte, ventilateur, purificateur | 5 W, 3 W, 3 W | à l'arrêt au repos ; avec `speed_power_max`, la vitesse selon la consommation |
+| aquarium, sapin de Noël, fontaine | 3 W, 2 W, 1 W | allumé, ou l'eau qui coule |
+
+Le frigo, le sèche-cheveux, les écrans, les bornes, les robots sur leur station, les panneaux solaires et les batteries lisent leur mesure à leur façon, décrite dans leur section.
+
+L'état d'une intégration (Electrolux, Home Connect, SmartThings…) en dit toujours plus qu'une mesure, et garde la main : la mesure n'ajoute alors que sa ligne de puissance.
+
+**[L'essayer dans la démo](https://adnpolymerase.github.io/ha-appliance-card/docs/demo.html?view=live&plug=1&lang=fr)** : chaque carte n'y a qu'une prise, et chaque curseur de puissance couvre ce que consomme vraiment son appareil.
+
+</details>
 
 <details>
 <summary><b>Exemples</b></summary>

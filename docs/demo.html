@@ -116,11 +116,18 @@ function mkHass(states) {
 // The plug-only view: every appliance that can be read from a smart plug,
 // configured with nothing else than the plug's switch and its meter, drawing
 // what it draws at work. The visitor moves the power to see the card follow.
-const PLUG_WATTS = { washer: 450, dryer: 2000, dishwasher: 1800, oven: 2400, microwave: 900, kettle: 2200, coffee: 1200, cooker: 800,
+// What each draws at work, and the top of its slider: a washer heating its
+// water near two kilowatts, a fan a few dozen watts, so each slider runs over
+// the range its appliance really covers. The card needs nothing else than the
+// plug: it knows each type's threshold, its steps and its phases.
+const PLUG_WATTS = { washer: 1900, dryer: 2000, dishwasher: 1800, oven: 2400, microwave: 900, kettle: 2200, coffee: 1200, cooker: 800,
   rice_cooker: 500, air_fryer: 1500, toaster: 900, iron: 2200, fridge: 70, water_heater: 2000, space_heater: 1500, towel_warmer: 600,
-  dehumidifier: 250, air_purifier: 30, fan: 35, hood: 120, screen: 120, hair_dryer: 1200, printer_3d: 200, pool_pump: 750, robot: 24 };
-// The types whose threshold reads a cycle out of the meter: 10 W is enough.
-const PLUG_CYCLE = ["washer", "dryer", "dishwasher", "oven", "microwave", "kettle", "coffee", "cooker", "rice_cooker", "air_fryer", "printer_3d", "water_heater"];
+  dehumidifier: 250, air_purifier: 30, fan: 35, hood: 120, screen: 120, hair_dryer: 1200, printer_3d: 200, pool_pump: 750, robot: 24,
+  cooktop: 2600, pet_fountain: 2, water_pump: 800, floor_heating: 1200, spa: 2000, sauna: 6000, aquarium: 60, christmas_tree: 20 };
+const PLUG_MAX = { washer: 2400, dryer: 2800, dishwasher: 2200, oven: 3500, microwave: 1300, kettle: 2400, coffee: 1500, cooker: 1200,
+  rice_cooker: 800, air_fryer: 2000, toaster: 1200, iron: 2600, fridge: 200, water_heater: 3000, space_heater: 2000, towel_warmer: 1000,
+  dehumidifier: 400, air_purifier: 80, fan: 80, hood: 300, screen: 250, hair_dryer: 2200, printer_3d: 400, pool_pump: 1500, robot: 60,
+  cooktop: 7200, pet_fountain: 5, water_pump: 1500, floor_heating: 2500, spa: 3000, sauna: 9000, aquarium: 150, christmas_tree: 50 };
 const plugOnly = params.get("plug") === "1";
 const plugSeen = new Set();
 function plugConfig(config) {
@@ -131,13 +138,13 @@ function plugConfig(config) {
   if (plugSeen.has(seen)) return null;
   plugSeen.add(seen);
   const keep = {};
-  for (const [k, v] of Object.entries(config)) if (/_layout$|^illustration_color$|^name$|^washer_dryer$/.test(k)) keep[k] = v;
+  for (const [k, v] of Object.entries(config)) if (/_layout$|^illustration_color$|^name$|^washer_dryer$|^tree_palette$|^presents$/.test(k)) keep[k] = v;
   const out = { ...keep, appliance_type: type, state_entity: "switch.smart_plug", power_entity: "sensor.smart_plug_power", toggle_entity: "switch.smart_plug" };
-  if (PLUG_CYCLE.includes(type)) out.power_on_threshold = 10;
   // A fan reads its speed from what it draws: started at mid speed, the
   // slider goes from the first to the third.
   if (["fan", "air_purifier", "hood"].includes(type)) out.speed_power_max = PLUG_WATTS[type] * 2;
-  return [out, [st("switch.smart_plug", "on"), st("sensor.smart_plug_power", PLUG_WATTS[type], { unit_of_measurement: "W", device_class: "power" })]];
+  const max = PLUG_MAX[type], step = max > 1000 ? 10 : max > 100 ? 1 : 0.5;
+  return [out, [st("switch.smart_plug", "on"), st("sensor.smart_plug_power", PLUG_WATTS[type], { unit_of_measurement: "W", device_class: "power", min: 0, max, step })]];
 }
 
 // What a button of the live demo does: there is no appliance behind it, so

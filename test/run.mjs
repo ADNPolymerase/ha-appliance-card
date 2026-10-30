@@ -6913,27 +6913,31 @@ const PLUG = { appliance_type: 'dishwasher', state_entity: 'switch.p', power_ent
 const plugSt = w => ({ 'switch.p': { state: 'on', attributes: {} }, 'sensor.p_w': { state: String(w), attributes: { unit_of_measurement: 'W' } } });
 {
   const { card } = build({ ...PLUG, power_off_delay: 10 }, plugSt(1800));
-  check('delai prise : en marche', stateLine(markup(card)), 'Running');
-  check('delai prise : sous le seuil, encore en cours', stateLine(rerender(card, plugSt(2))), 'Running');
+  check('delai prise : en marche, il chauffe', stateLine(markup(card)), 'Heating');
+  check('delai prise : sous le seuil, il seche', stateLine(rerender(card, plugSt(2))), 'Drying');
   check('delai prise : un reveil est programme', !!card._offDelayTimer, true);
   setClock(9);
-  check('delai prise : 9 minutes plus tard, encore en cours', stateLine(rerender(card, plugSt(2))), 'Running');
+  check('delai prise : 9 minutes plus tard, il seche encore', stateLine(rerender(card, plugSt(2))), 'Drying');
   setClock(10.5);
   check('delai prise : passe le delai, termine', stateLine(rerender(card, plugSt(2))), 'Finished');
   setClock(12);
   check('delai prise : termine reste termine', stateLine(rerender(card, plugSt(1))), 'Finished');
-  check('delai prise : il repart', stateLine(rerender(card, plugSt(1500))), 'Running');
+  check('delai prise : il repart', stateLine(rerender(card, plugSt(1500))), 'Heating');
   setClock(13);
-  check('delai prise : la pause suivante repart de zero', stateLine(rerender(card, plugSt(2))), 'Running');
+  check('delai prise : la pause suivante repart de zero', stateLine(rerender(card, plugSt(2))), 'Drying');
   setClock(20);
-  check('delai prise : 7 minutes de la seconde pause, encore en cours', stateLine(rerender(card, plugSt(2))), 'Running');
+  check('delai prise : 7 minutes de la seconde pause, encore en cours', stateLine(rerender(card, plugSt(2))), 'Drying');
   card.disconnectedCallback();
   check('delai prise : le reveil est annule au retrait', card._offDelayTimer, null);
   freezeClock(new Date(T0).toISOString());
 }
 {
   const { card } = build(PLUG, plugSt(1800));
-  check('sans delai : termine tout de suite', stateLine(rerender(card, plugSt(2))), 'Finished');
+  // A dishwasher dries for twenty minutes on its own when no delay is set.
+  check('sans delai : un lave-vaisselle seche', stateLine(rerender(card, plugSt(2))), 'Drying');
+  setClock(21);
+  check('sans delai : vingt minutes plus tard, termine', stateLine(rerender(card, plugSt(2))), 'Finished');
+  freezeClock(new Date(T0).toISOString());
   const z = build({ ...PLUG, power_off_delay: '0' }, plugSt(1800)).card;
   check('delai 0 : termine tout de suite', stateLine(rerender(z, plugSt(2))), 'Finished');
   const junk = build({ ...PLUG, power_off_delay: 'abc' }, plugSt(1800)).card;
@@ -7708,7 +7712,7 @@ check('repli : une borne sans rien est refusee', evNoThrow(() => new Card().setC
 check('repli : la session seule ne suffit pas', evNoThrow(() => new Card().setConfig({ type: 'custom:ha-appliance-card', appliance_type: 'ev_charger', session_energy_entity: 'sensor.e' })), false);
 check('repli : un lave-linge sans etat reste refuse', evNoThrow(() => new Card().setConfig({ type: 'custom:ha-appliance-card', appliance_type: 'washer', power_entity: 'sensor.p' })), false);
 check('repli : une prise connectee lit encore un lave-linge', stateLine(render({ appliance_type: 'washer', state_entity: 'switch.p', power_entity: 'sensor.p', power_on_threshold: 5 },
-  { 'switch.p': { state: 'on', attributes: {} }, 'sensor.p': W(1800) })), 'Running');
+  { 'switch.p': { state: 'on', attributes: {} }, 'sensor.p': W(1800) })), 'Heating');
 {
   // The smart plug's latch is not the charger's: a car done charging on a
   // plug reads plugged in, not finished.
@@ -11494,6 +11498,85 @@ function tvT(w) { return { 'switch.tv': { state: 'on', attributes: {} }, 'sensor
   check('editeur linky : la periode tarifaire', ed({ appliance_type: 'meter', state_entity: 'sensor.papp' }).includes('data-toggle="tariff_entity"'), true);
   check('editeur frigo : coffre et tiroirs', ['"chest"', '"drawers"'].every((v) => ed({ appliance_type: 'fridge', fridge_layout: 'single' }).includes(`value=${v}`)), true);
   check('editeur robot piscine : le temps restant', ed({ appliance_type: 'robot', robot_layout: 'pool', state_entity: 'vacuum.d' }).includes('data-toggle="remaining_time_entity"'), true);
+}
+
+// =============================================================================
+// A smart plug alone: its switch and its meter, nothing else to set
+// =============================================================================
+{
+  const PW = v => ({ state: String(v), attributes: { unit_of_measurement: 'W' } });
+  const plugCard = (type, w, extra = {}) => build({ appliance_type: type, state_entity: 'switch.p', power_entity: 'sensor.p', ...extra },
+    { 'switch.p': { state: 'on', attributes: {} }, 'sensor.p': PW(w) });
+  const plugAt = (card, w, sw = 'on') => rerender(card, { 'switch.p': { state: sw, attributes: {} }, 'sensor.p': PW(w) });
+  const line = (type, w, extra) => stateLine(markup(plugCard(type, w, extra).card));
+
+  // Each type knows its own threshold: a plug that is on but draws nothing
+  // is not running.
+  check('prise seule : lave-linge a l arret', line('washer', 0), 'Idle');
+  check('prise seule : lave-linge qui chauffe', line('washer', 2000), 'Heating');
+  check('prise seule : lave-linge qui lave', line('washer', 120), 'Washing');
+  check('prise seule : lave-linge qui essore', line('washer', 450), 'Spinning');
+  check('prise seule : essorage, le tambour tourne vite', hasCls(markup(plugCard('washer', 450).card), 'spin-cycle'), true);
+  check('prise seule : seuils de phase reglables', line('washer', 450, { spin_threshold: 500 }), 'Washing');
+  check('prise seule : seuil de chauffe reglable', line('washer', 900, { heat_threshold: 800 }), 'Heating');
+  check('prise seule : en francais', line('washer', 2000, { language: 'fr' }), 'Chauffe');
+  check('prise seule : seche-linge qui chauffe', line('dryer', 2000), 'Drying');
+  check('prise seule : seche-linge qui refroidit', line('dryer', 200), 'Cooling');
+  check('prise seule : lave-vaisselle qui chauffe', line('dishwasher', 1900), 'Heating');
+  check('prise seule : lave-vaisselle qui lave', line('dishwasher', 150), 'Washing');
+  {
+    const { card } = plugCard('washer', 2000);
+    check('prise seule : lave-linge fini', stateLine(plugAt(card, 0)), 'Finished');
+  }
+  // An integration's own state keeps the say, even with a meter beside it.
+  check('prise seule : l etat d une integration prime', stateLine(render({ appliance_type: 'washer', state_entity: 'sensor.w', power_entity: 'sensor.p' },
+    { 'sensor.w': { state: 'Running', attributes: {} }, 'sensor.p': PW(0) })), 'Running');
+  check('prise seule : le seuil donne prime', line('washer', 30, { power_on_threshold: 50 }), 'Idle');
+  // The rest of the house.
+  check('prise seule : grille-pain au repos', line('toaster', 0), 'Standby');
+  check('prise seule : grille-pain qui grille', line('toaster', 900), 'Toasting');
+  check('prise seule : chauffage au repos', line('space_heater', 0), 'Standby');
+  check('prise seule : chauffage qui chauffe', line('space_heater', 1500), 'Heating');
+  check('prise seule : deshumidificateur au repos', line('dehumidifier', 0), 'Standby');
+  check('prise seule : ventilateur arrete', line('fan', 0), 'Off');
+  check('prise seule : purificateur arrete', line('air_purifier', 0), 'Off');
+  check('prise seule : pompe de piscine arretee', line('pool_pump', 0), 'Off');
+  check('prise seule : pompe de piscine qui filtre', line('pool_pump', 750), 'Filtering');
+  check('prise seule : pompe coupee a la prise', stateLine(plugAt(plugCard('pool_pump', 750).card, 750, 'off')), 'Off');
+  {
+    const { card } = plugCard('hood', 120);
+    check('prise seule : une hotte n est jamais terminee', stateLine(plugAt(card, 0)), 'Idle');
+  }
+  // Keeping warm on a few watts, not finished.
+  {
+    const { card } = plugCard('coffee', 1200);
+    check('prise seule : cafe au chaud', stateLine(plugAt(card, 60)), 'Keeping warm');
+    check('prise seule : cafe debranche, fini', stateLine(plugAt(card, 0)), 'Finished');
+  }
+  check('prise seule : riz au chaud', stateLine(plugAt(plugCard('rice_cooker', 500).card, 40)), 'Keeping warm');
+  // A hob spreads what it draws over its zones, and they stay hot a while.
+  {
+    const { card } = plugCard('cooktop', 2600);
+    const on = markup(card);
+    check('prise seule : plaque, deux foyers', zones(on).filter(z => /\bon\b/.test(z)).length, 2);
+    check('prise seule : plaque, niveau sur les foyers', zones(on).filter(z => /:8$/.test(z)).length, 2);
+    const off = plugAt(card, 0);
+    check('prise seule : plaque eteinte, chaleur residuelle', stateLine(off), 'Residual heat');
+    check('prise seule : plaque eteinte, H sur les foyers', zones(off).filter(z => /:H$/.test(z)).length, 2);
+    setClock(11);
+    check('prise seule : plaque froide dix minutes plus tard', stateLine(plugAt(card, 0)), 'Idle');
+    freezeClock(new Date(T0).toISOString());
+  }
+  check('prise seule : plaque a pleine puissance, les quatre foyers', zones(markup(plugCard('cooktop', 7200).card)).filter(z => /\bon\b/.test(z)).length, 4);
+}
+// The plug's step thresholds in the editor.
+{
+  const ed = (cfg) => markup(newEditor({ state_entity: 'switch.p', power_entity: 'sensor.p', ...cfg }));
+  check('editeur prise : seuil de chauffe du lave-linge', ed({ appliance_type: 'washer' }).includes('data-field="heat_threshold"'), true);
+  check('editeur prise : seuil d essorage du lave-linge', ed({ appliance_type: 'washer' }).includes('data-field="spin_threshold"'), true);
+  check('editeur prise : pas d essorage au lave-vaisselle', ed({ appliance_type: 'dishwasher' }).includes('data-field="spin_threshold"'), false);
+  check('editeur prise : puissance d un foyer', ed({ appliance_type: 'cooktop' }).includes('data-field="zone_power"'), true);
+  check('editeur prise : le seuil du type en indice', /data-field="power_on_threshold"[^>]*placeholder="50"|placeholder="50"[^>]*data-field="power_on_threshold"/.test(ed({ appliance_type: 'kettle' })), true);
 }
 
 report();

@@ -37,7 +37,7 @@ No brand assumed: every field is an entity you pick, so it works with **any** in
 - **And the lamps**: a bulb, a bedside lamp, an arc floor lamp, a halogen torchiere, a pendant, a LED strip, recessed spots, Nanoleaf-style panels, a desk lamp or a wall lantern, lit in the light's own colour and dimmed with its brightness; an effect turns the hue of a strip's segments or of the panels.
 - **And the mailbox**: through the wall with its street and house doors, or a classic box on its post. The letters pile up to twelve, a new one comes in through the slot, and the doors swing open on their hinges. Cameras get a doorbell too, its ring of light beating when someone rings.
 - **And the rest of the house**: a chest freezer and a drawer freezer that frost over while they cool, a booster set with its pressure on its controller and a sump pit whose float follows the water, a pool robot trailing its cable, underfloor heating on hot water or electric, a spa with its bubbles, a sauna whose stones glow, a planted aquarium, a Linky meter and a Christmas tree in seven classic colour schemes, its presents out on 24 and 25 December.
-- **Works from a smart plug alone**: `power_entity` and `power_on_threshold` are enough to derive the state from consumption; `power_off_delay` keeps a pause from reading as the end, and `show_last_cycle` shows how long the last cycle ran.
+- **Works from a smart plug alone**: its switch and its meter are enough, with no threshold to set, since each type knows the power it works at. A washer says whether it heats, washes or spins, a dishwasher heats, washes and then dries, a coffee machine keeps warm, a hob lights as many zones as it draws for and stays hot for ten minutes, and a heater, a fan or a pump stops when the plug reads nothing. `power_off_delay` keeps a pause from reading as the end, and `show_last_cycle` shows how long the last cycle ran. [Try it in the demo](https://adnpolymerase.github.io/ha-appliance-card/docs/demo.html?view=live&plug=1).
 - **Program, remaining time, progress bar, info lines, door, alerts, connectivity and controls** (start, pause, resume, stop), each optional.
 - **14 languages** (EN, FR, DE, ES, IT, NL, PT, SV, NO, DA, PL, RU, ZH, CS), Home Assistant's or pinned on the card.
 - **Visual editor** that pre-fills fields from the entities of the same device and only offers those the chosen type can use.
@@ -202,8 +202,8 @@ Only `state_entity` is required, except on a fridge where a probe or a door cont
 | `appliance_type` | `auto` (default) \| `washer` \| `dryer` \| `dishwasher` \| `oven` \| `microwave` \| `hood` \| `cooktop` \| `fridge` \| `kettle` \| `cooker` \| `coffee` \| `rice_cooker` \| `air_fryer` \| `water_heater` \| `boiler` \| `heat_pump` \| `printer_3d` \| `pet_feeder` \| `pet_fountain` \| `iron` \| `toaster` \| `pellet_stove` \| `air_conditioner` \| `dehumidifier` \| `space_heater` \| `towel_warmer` \| `air_purifier` \| `fan` \| `ev_charger` \| `hair_dryer` \| `screen` \| `network` \| `robot` \| `pool_pump` \| `scale` \| `ups` \| `solar` \| `home_battery` \| `camera` \| `diffuser` \| `hrv` \| `lamp` \| `mailbox` \| `water_pump` \| `floor_heating` \| `spa` \| `sauna` \| `aquarium` \| `meter` \| `christmas_tree`. |
 | `tap_action` | What a tap on the card does, in Home Assistant's own words: `more-info` (default: the state entity, or on a card without one what it reads in its place), `none`, `navigate`, `url`, `toggle`, `perform-action` or `fire-dom-event`, which is what the popup cards built on browser_mod listen for. In YAML only. |
 | `toggle_entity` | Power button (`switch`, `button`, `script`, `input_boolean`, `fan`), highlighted while on. On every type, the fridge included, where it is the only button; pair it with `controls_activation: confirm` for an appliance that must not be switched off by mistake. |
-| `power_entity` / `power_on_threshold` / `power_icon` | Power sensor. With a threshold, the state is derived from it: *running* above, then *finished* when it falls back. Pointing `state_entity` at the same sensor enables it with a 10 W threshold. `power_icon` replaces `mdi:power-plug`. |
-| `power_off_delay` | Minutes the power must stay under `power_on_threshold` before the cycle reads *Finished*, so a pause (a dishwasher drying, a washer soaking) is not taken for the end. Only when the state comes from the plug: an integration reports its pauses itself. 0 by default. |
+| `power_entity` / `power_on_threshold` / `power_icon` | Power sensor. With a threshold, the state is derived from it: *running* above, then *finished* when it falls back. With a smart plug's switch as `state_entity`, or the sensor itself, it is derived without one, against the threshold of the type (see *A smart plug alone*). A state from an integration keeps the say. `power_icon` replaces `mdi:power-plug`. |
+| `power_off_delay` | Minutes the power must stay under `power_on_threshold` before the cycle reads *Finished*, so a pause (a dishwasher drying, a washer soaking) is not taken for the end. Only when the state comes from the plug: an integration reports its pauses itself. 0 by default, 20 on a dishwasher, which dries on next to nothing. |
 | `speed_power_max` | A hood, an air purifier or a fan on a plug: its power at top speed, in watts. The speed is then read from what it draws: under a third of it the first speed, under two thirds the second, above that the third. A fan entity's percentage or preset always wins. |
 | `speed_power_custom` | Sets the two steps by hand, `speed_power_2` and `speed_power_3`: the watts from which the fan is on its second and third speed, when the thirds do not fit. |
 | `show_last_cycle` | Adds a *Last cycle* line between cycles: how long it ran and when it ended, read from Home Assistant's history (seven days of the state, two days of a plug's power, pauses shorter than `power_off_delay` included). Appliances that run a cycle, the kettle, the iron, the toaster and the hair dryer. |
@@ -285,6 +285,8 @@ Only `state_entity` is required, except on a fridge where a probe or a door cont
 | `toaster_layout` | toaster | `two` (default, two slots) \| `four` (four slots, two levers) \| `long` (one long slot for two slices end to end). |
 | `hair_dryer_layout` | hair dryer | `pistol` (default, a classic dryer seen from the side) \| `ring` (a ring dryer seen from the front). |
 | `heat_threshold` | hair dryer | Power from which the dryer blows hot air (300 W by default). Below it, only the fan runs. |
+| `heat_threshold` / `spin_threshold` | washer, dishwasher, dryer | On a smart plug alone: the power from which it heats (1000 W by default, 600 W on a dryer) and from which a washer spins its drum (200 W). Below them a washer washes, a dryer cools the load, and a dishwasher under its threshold dries. |
+| `zone_power` | cooktop | On a smart plug alone, what one zone draws at full power (1500 W by default): the meter is spread over as many zones as it takes, each with a level from 1 to 9. |
 | `screen_layout` | screen | `tv_feet` (default, a TV on two feet) \| `tv_stand` (a TV on a central stand) \| `tv_wall` (a wall-mounted TV) \| `projector` (a projector under its screen) \| `computer` (a monitor and its tower) \| `tablet_wall` (a wall tablet on its flat mount) \| `tablet_frame` (a tablet in a wooden frame, hung like a picture) \| `tablet_portrait` (an upright tablet with a light bar on top). Left out, a name that says projector, computer or tablet picks the model, and so does a `lock_entity`, or one of a tablet's fields below. |
 | `screen_image` | screen | The picture a lit screen shows: `random` (default, a new one each time it comes on) or one of `sunset`, `aquarium`, `bars`, `football`, `space`, `bounce`, `desktop`, `code`, `pong`, `dashboard`. A tablet shows `dashboard` by default. A player that sends a cover shows it instead while it plays. |
 | `media_entity` / `media2_entity` / `media3_entity` | screen | Up to three `media_player` entities that show something on this screen: the TV itself, and the box or console that actually has the picture. The card follows the one that plays, then the one paused, then the one on its home screen, then the one on; on a tie, the first. Its line names it and gives the app or source, the title, and *Muted*. Without a power meter, the players also say whether the screen is off, on standby or on. |
@@ -442,6 +444,43 @@ Only `state_entity` is required, except on a fridge where a probe or a door cont
 ## Examples and guides
 
 One section per topic: click to open it.
+
+<details>
+<summary><b>A smart plug alone</b></summary>
+
+Nothing connects most appliances to Home Assistant, but a smart plug with a meter reads them all the same. Its switch and its meter are enough:
+
+```yaml
+type: custom:ha-appliance-card
+appliance_type: washer
+state_entity: switch.washer_plug
+power_entity: sensor.washer_plug_power
+```
+
+Each type knows the power it works at, so there is no threshold to set. Under it, a plug that is on reads *Standby*, and a cycle that ran reads *Finished*. `power_on_threshold` sets another.
+
+| Type | Works above | What the meter says on top |
+|---|---|---|
+| washer | 10 W | *Heating* from 1000 W, *Spinning* from 200 W, *Washing* below (`heat_threshold`, `spin_threshold`) |
+| dishwasher | 10 W | *Heating* from 1000 W, *Washing* below, then *Drying* for 20 minutes once it draws nothing (`power_off_delay`) |
+| dryer | 10 W | *Drying* from 600 W, *Cooling* below |
+| coffee machine, rice cooker | 200 W, 100 W | *Keeping warm* on a few watts |
+| cooktop | 50 W | as many zones lit as it draws for, each with its level, then *Residual heat* for ten minutes (`zone_power`) |
+| iron | 10 W | *Heating*, then *Ready* when its thermostat cuts out; the more it draws, the more steam |
+| oven, microwave, kettle, air fryer, toaster, water heater | 50 W | *Running*, *Heating*, *Cooking* or *Toasting* |
+| cooker, 3D printer | 20 W, 30 W | *Running* |
+| space heater, dehumidifier, water pump, floor heating | 30 W | *Heating*, *Drying* or *Pumping* |
+| towel warmer, pool pump, spa, sauna | 10 W, 50 W, 50 W, 100 W | *Comfort*, *Filtering* or *Heating* |
+| hood, fan, air purifier | 5 W, 3 W, 3 W | *Off* at rest; with `speed_power_max`, the speed from what it draws |
+| aquarium, Christmas tree, pet fountain | 3 W, 2 W, 1 W | lit, or the water running |
+
+The fridge, the hair dryer, screens, chargers, robots on their dock, solar panels and batteries read their meter in their own way, described in their sections.
+
+A state from an integration (Electrolux, Home Connect, SmartThings…) always says more than a meter, and keeps the say: the meter then only adds its power line.
+
+**[Try it in the demo](https://adnpolymerase.github.io/ha-appliance-card/docs/demo.html?view=live&plug=1)**: every card there has nothing but a plug, and each power slider covers what its appliance really draws.
+
+</details>
 
 <details>
 <summary><b>Examples</b></summary>
