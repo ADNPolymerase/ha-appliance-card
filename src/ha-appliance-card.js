@@ -7318,10 +7318,9 @@ function lampHtml(cls, c) {
         <div class="machine ${cls} ${flags}" style="--lc:rgb(${rgb.join(",")});--lb:${level.toFixed(2)}"><svg class="lp-svg" viewBox="0 -6 96 108">${LAMP_SVGS[layout](c)}</svg></div>`;
 }
 
-// Drawings added in 3.10.0 after the HACF thread: a chest freezer and a drawer
-// freezer (fridge layouts), a booster set and a sump pump, a pool robot,
-// underfloor heating on hot water or electric, a spa, a sauna, an aquarium,
-// a Linky meter and a Christmas tree. Drawn in SVG on a 120 x 135 field; what
+// Drawings added in 3.10.0 after the HACF thread: a booster set and a sump
+// pump, a pool robot, underfloor heating on hot water or electric, a spa, a
+// sauna, an aquarium, a Linky meter and a Christmas tree. Drawn in SVG on a 120 x 135 field; what
 // moves moves only on a machine carrying nt-on, staggered through --d0, and
 // the robot's cable and the sump's float follow their SMIL animations.
 const NT_TYPES = ["water_pump", "floor_heating", "spa", "sauna", "aquarium", "meter", "christmas_tree"];
@@ -7439,81 +7438,6 @@ const ntFlake = (x, y, r, color, w = .8) =>
   `<path d="M${x} ${y - r}v${2 * r}M${x - r} ${y}h${2 * r}M${x - r * .7} ${y - r * .7}l${r * 1.4} ${r * 1.4}M${x + r * .7} ${y - r * .7}l${-r * 1.4} ${r * 1.4}" stroke="${color}" stroke-width="${w}" stroke-linecap="round"/>`;
 // The text of a display fits its width: a long reading is drawn smaller.
 const ntFit = (text, width, fs) => Math.min(fs, (width - 3) / Math.max(1, String(text || "").length * .6));
-
-// Chest freezer
-function ntChest(c) {
-  const f = ntId(), s = ntId(), t = ntId(), lf = ntId(), inn = ntId();
-  const on = c.on, lit = !c.dark;
-  const slots = [0, 1, 2, 3, 4, 5, 6].map((i) => `<rect x="${18.6 + i * 3.8}" y="93.6" width="1.8" height="4.6" rx=".6" fill="#5d6672"/>`).join("");
-  const frost = [[30, 43.5], [56, 42], [84, 42.5], [104, 41.6], [16, 50]].map(([x, y], i) => `<g class="nta-frost ntd${i + 1}">${ntFlake(x, y, 2.4, "#29b6f6", .7)}</g>`).join("");
-  const mist = [16, 33, 50, 67, 84, 102].map((x, i) => `<path class="nta-fall ntd${i + 1}" d="M${x} 57 q2.6 3.5 0 7 q-2.6 3.5 0 7" stroke="#d4effc" stroke-width="2.6" fill="none" stroke-linecap="round" opacity="0"/>`).join("");
-  const lid = c.open
-    ? `<polygon points="12 47 98 47 112 39 26 39" fill="url(#${inn})"/>
-<path class="nta-fall ntd2" d="M40 44 q2 -4 0 -8 q-2 -4 0 -8" stroke="#e1f5fe" stroke-width="2.4" fill="none" opacity="0" stroke-linecap="round"/>
-<path class="nta-fall ntd4" d="M70 44 q2 -4 0 -8 q-2 -4 0 -8" stroke="#e1f5fe" stroke-width="2.4" fill="none" opacity="0" stroke-linecap="round"/>
-<polygon points="26 39 112 39 104 3 18 3" fill="#e9eef3" stroke="#a3acb7" stroke-width=".6"/>
-<polygon points="30 36 108 36 101 7 23 7" fill="#d7dee5"/>
-<rect x="11" y="47" width="87" height="2.2" rx="1" fill="#c0c8d1" stroke="#a3acb7" stroke-width=".5"/>`
-    : `<path d="M11 47 L25 39 L112 39 L98 47 Z" fill="url(#${t})" stroke="#a3acb7" stroke-width=".6"/>
-<path d="M30 41.2 H95" stroke="#fff" stroke-width="1.2"/>
-<path d="M98 47 L112 39 L112 46.5 L98 54.5 Z" fill="#c0c8d1" stroke="#a3acb7" stroke-width=".6"/>
-<rect x="11" y="47" width="87" height="7.6" rx="2" fill="url(#${lf})" stroke="#a3acb7" stroke-width=".6"/>
-<rect x="39" y="49.3" width="30" height="3.8" rx="1.9" fill="#363d48"/><rect x="40.6" y="49.8" width="26.8" height="1" rx=".5" fill="#8f98a4"/>
-<rect x="84.5" y="49.4" width="5" height="3.2" rx=".8" fill="#9aa3ae"/><circle cx="87" cy="51" r=".8" fill="#4a525e"/>`;
-  const txt = lit ? c.lcd || "" : "";
-  return `<defs>${ntV(f, "#ffffff", "#dde2e8")}${ntV(s, "#d3d9e0", "#a9b2bd")}${ntV(t, "#ffffff", "#e7ebef")}${ntV(lf, "#f8fafc", "#dfe4e9")}${ntV(inn, "#2b3540", "#4b5a68")}</defs>
-${ntFoot("13 106.6 98 106.6 112.5 98 28 98")}
-<path d="M96 55 L110 47 L110 95 L96 103 Z" fill="url(#${s})" stroke="#a3acb7" stroke-width=".6"/>
-<rect x="12" y="55" width="84" height="48" rx="3" fill="url(#${f})" stroke="#a3acb7" stroke-width=".6"/>
-<path d="M17 57 H29 L21 101 H15 Z" fill="#fff" opacity=".6"/>
-<rect x="16" y="92" width="32" height="7.4" rx="1.6" fill="#c7cdd5"/>${slots}
-<rect x="15" y="102.6" width="8" height="3.6" rx="1" fill="#5d6672"/><rect x="85" y="102.6" width="8" height="3.6" rx="1" fill="#5d6672"/><rect x="104" y="95" width="5" height="3.6" rx="1" fill="#5d6672"/>
-${lid}
-<rect x="12" y="54.4" width="84" height="1.5" fill="#434b57"/><path d="M96 55.2 L110 47.2" stroke="#434b57" stroke-width="1.5"/>
-<rect x="53" y="60.5" width="40" height="27" rx="2.6" fill="#f2f4f7" stroke="#c0c7cf" stroke-width=".6"/>
-${ntLcd(56, 63, 34, 14, txt, true, c.warn ? "#ff5252" : "#4fc3f7", ntFit(txt, 34, 9.5))}
-<circle cx="59" cy="82.6" r="1.4" fill="${on ? "#43a047" : "#9aa1ab"}"/>
-${ntFlake(87, 82.6, 2.4, on ? "#29b6f6" : "#9aa1ab", .7)}
-<g class="nt-run">${c.open ? "" : frost}${mist}</g>`;
-}
-
-// Upright freezer with see-through drawers
-function ntDrawers(c) {
-  const f = ntId(), s = ntId(), w = ntId(), t = ntId(), gl = ntId(), mb = ntId();
-  const on = c.on, lit = !c.dark;
-  const goods = [["#66bb6a", "#ef5350", "#fff176"], ["#f48fb1", "#64b5f6", "#ffb74d"], ["#aed581", "#ba68c8", "#e57373"], ["#4db6ac", "#ff8a65", "#90a4ae"]];
-  const rows = [0, 1, 2, 3].map((i) => {
-    const y = 32 + i * 18.5;
-    const pk = goods[i].map((col, j) => { const hh = [7, 5.5, 8][j]; return `<rect x="${41.5 + j * 12.8}" y="${y + 15 - hh}" width="11.4" height="${hh}" rx=".8" fill="${col}"/><rect x="${43 + j * 12.8}" y="${y + 16 - hh}" width="5" height="1.2" fill="#fff" opacity=".7"/>`; }).join("");
-    const drawer = `<rect x="37" y="${y}" width="46" height="17" rx="1.8" fill="url(#${f})" stroke="${on ? "#8fc6e3" : "#a3acb7"}" stroke-width=".55"/>
-<g class="nt-run"><path d="M38 ${y + .6} h44 l-1.6 2 l-2 -1.2 l-2.4 1.6 l-2 -1.4 l-2.6 1.8 l-2.2 -1.2 l-2.4 1.6 l-2 -1.4 l-2.6 1.8 l-2.2 -1.2 l-2.4 1.6 l-2 -1.4 l-2.6 1.8 l-2.2 -1.2 l-2.4 1.6 l-2 -1.4 l-2.6 1.8 l-2.2 -1.2 Z" fill="#ffffff" opacity=".9"/></g>
-<rect x="49" y="${y + 1.3}" width="22" height="2.8" rx="1.4" fill="#363d48"/><rect x="50" y="${y + 1.7}" width="20" height=".8" rx=".4" fill="#8f98a4"/>
-<rect x="40" y="${y + 5.2}" width="40" height="10.2" rx="1" fill="#d6e6ef"/>${pk}
-<rect x="40" y="${y + 5.2}" width="40" height="10.2" rx="1" fill="url(#${w})" opacity=".62" stroke="#b9c7d2" stroke-width=".4"/>
-<g class="nt-run"><rect class="nta-shimmer ntd${i + 1}" x="40" y="${y + 5.2}" width="40" height="10.2" rx="1" fill="#e1f5fe" opacity="0"/><g class="nta-frost ntd${i + 2}">${ntFlake(78, y + 7.5, 1.6, "#29b6f6", .55)}</g></g>`;
-    // A drawer pulled out: its side shows, and it comes forward.
-    return c.open && i === 0
-      ? `<polygon points="37 ${y} 31 ${y + 5} 31 ${y + 22} 37 ${y + 17}" fill="#c3ccd5" stroke="#a3acb7" stroke-width=".5"/><g transform="translate(-6 5)">${drawer}</g>`
-      : drawer;
-  }).join("");
-  const mist = [49.2, 67.7, 86.2, 104.7].map((y, i) => [44, 60, 76].map((x, j) => `<path class="nta-fall ntd${((i + j) % 6) + 1}" d="M${x + (i % 2) * 3} ${y} q2.2 3 0 6 q-2.2 3 0 6" stroke="#d4effc" stroke-width="2.2" fill="none" stroke-linecap="round" opacity="0"/>`).join("")).join("");
-  const txt = lit ? c.lcd || "" : "";
-  return `<defs>${ntV(f, "#ffffff", "#e1e6eb")}${ntV(s, "#d0d6de", "#a6afba")}${ntV(w, "#ffffff", "#c9dde9")}${ntV(t, "#ffffff", "#eef1f4")}${ntBlur(gl, 2.2)}${ntBlur(mb, 2.4)}</defs>
-${ntFoot("35 111.8 87.5 111.8 99.5 104.6 47 104.6")}
-<path d="M86 10 L98 4 L98 103 L86 109 Z" fill="url(#${s})" stroke="#a3acb7" stroke-width=".6"/>
-<path d="M34 10 L46 4 L98 4 L86 10 Z" fill="url(#${t})" stroke="#a3acb7" stroke-width=".6"/>
-<rect x="34" y="10" width="52" height="99" rx="3" fill="${on ? "#e4f3fb" : "#eef1f4"}" stroke="${on ? "#8fc6e3" : "#a3acb7"}" stroke-width=".6"/>
-<rect x="37" y="13" width="46" height="16.4" rx="2" fill="#f7f8fa" stroke="#c0c7cf" stroke-width=".5"/>
-${ntLcd(46, 14.8, 35, 12.8, txt, true, c.warn ? "#ff5252" : "#4fc3f7", ntFit(txt, 35, 9.3))}
-<g class="${on ? "nta-spin-slow" : ""}">${ntFlake(41.3, 19.2, 2.5, on ? "#29b6f6" : "#9aa1ab", .75)}</g>
-<circle cx="41.3" cy="25.8" r="1.2" fill="${on ? "#43a047" : "#9aa1ab"}"/>
-${rows}
-<rect x="37" y="106" width="46" height="2.4" rx="1" fill="#c7cdd5"/>
-<g class="nt-run"><rect class="nta-glow" x="35" y="11" width="50" height="97" rx="3" fill="none" stroke="#4fc3f7" stroke-width="3" filter="url(#${gl})"/>
-<g class="nta-glow" filter="url(#${mb})"><ellipse cx="48" cy="108" rx="14" ry="3.6" fill="#e1f5fe"/><ellipse cx="70" cy="109" rx="16" ry="4" fill="#e1f5fe"/><ellipse cx="88" cy="106" rx="8" ry="3" fill="#e1f5fe"/></g>
-${mist}${[[34, 30], [86, 46], [34, 84], [86, 96]].map(([x, y], i) => `<g class="nta-frost ntd${i + 1}">${ntFlake(x, y, 2.2, "#29b6f6", .65)}</g>`).join("")}</g>
-<rect x="37" y="109" width="6" height="2.6" rx=".8" fill="#5d6672"/><rect x="77" y="109" width="6" height="2.6" rx=".8" fill="#5d6672"/>`;
-}
 
 // Booster set: the pump on its pressure tank and its electronic controller
 function ntBooster(c) {
@@ -7918,7 +7842,7 @@ ${on ? `<circle class="nta-glow" cx="60" cy="10" r="9" fill="${pal.star[0]}" fil
 ${presents}`;
 }
 
-const NT_DRAW = { chest: ntChest, drawers: ntDrawers, booster: ntBooster, sump: ntSump, pool: ntPoolRobot, floor: ntFloor, spa: ntSpa, sauna: ntSauna, aquarium: ntAquarium, linky: ntLinky, tree: ntTree };
+const NT_DRAW = { booster: ntBooster, sump: ntSump, pool: ntPoolRobot, floor: ntFloor, spa: ntSpa, sauna: ntSauna, aquarium: ntAquarium, linky: ntLinky, tree: ntTree };
 function ntSvg(d) {
   ntN = 0;
   const draw = NT_DRAW[d && d.kind] || ntLinky;
@@ -9383,79 +9307,28 @@ const ILLUSTRATION_CSS = {
         }
   `,
   fridge: () => NT_CSS + `
-        .fr-body {
-          position: absolute; left: 12px; right: 12px; top: 2px; bottom: 2px;
-          border-radius: 8px;
-          background: linear-gradient(100deg, var(--ac-body, var(--secondary-background-color, #d7d7d7)) 0%, var(--ac-body-hi, #e6e6e6) 45%, var(--ac-body, var(--secondary-background-color, #d7d7d7)) 100%);
-          border: 1px solid var(--divider-color, #c7c7c7);
+        .fr3 { position: absolute; inset: 0; }
+        svg.fr-svg { position: absolute; left: 0; top: 0; width: 96px; height: 108px; overflow: visible; }
+        .fr-cube { transform-box: fill-box; }
+        .machine.ice .fr-cube.drop { animation: fr-drop 1.6s ease-in infinite; animation-delay: var(--anim-offset, 0s); }
+        .machine.ice .fr-cube.d2 { animation-delay: calc(-0.55s + var(--anim-offset, 0s)); }
+        .machine.ice .fr-cube.d3 { animation-delay: calc(-1.1s + var(--anim-offset, 0s)); }
+        @keyframes fr-drop {
+          0% { transform: translateY(-2px); opacity: 0; } 12% { opacity: 1; }
+          70% { transform: translateY(var(--fall, 14px)); opacity: 1; } 100% { transform: translateY(var(--fall, 14px)); opacity: 0; }
         }
-        /* The open-door view needs its own stacking context and a perspective,
-           so the panels can swing without dragging the whole card into 3D. */
-        .fr-wrap { position: absolute; left: 12px; right: 12px; top: 2px; bottom: 2px; perspective: 320px; }
-        .fr-split { position: absolute; background: var(--divider-color, #c7c7c7); }
-        .fr-split.h { left: 3px; right: 3px; height: 2px; }
-        .fr-split.v { top: 3px; bottom: 3px; width: 2px; }
-        .fr-handle { position: absolute; width: 3px; border-radius: 2px; background: var(--disabled-text-color, #9e9e9e); }
-        .fr-lcd {
-          position: absolute; height: 11px; min-width: 22px; padding: 0 3px;
-          border-radius: 2px; background: #14161a; color: #4fc3f7; text-align: center;
-          font: 600 7px/11px ui-monospace, "SF Mono", monospace;
-        }
-        .fr-lcd.freeze { color: #90caf9; }
-        .fr-lcd.warn { color: var(--error-color, #f44336); }
-        .fr-disp {
-          position: absolute; border-radius: 3px; background: #20242b;
-          box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.6);
-        }
-        .fr-cav {
-          position: absolute; z-index: 0; border-radius: 6px; overflow: hidden;
-          background: radial-gradient(ellipse at 60% 40%, rgba(255, 209, 102, 0.3), #1a1d22 72%);
-        }
-        .fr-shelf { position: absolute; left: 4px; right: 4px; height: 1.5px; border-radius: 1px; background: #4c525b; }
-        .fr-glass {
-          position: absolute; border-radius: 4px; overflow: hidden; border: 2px solid #3b4048;
-          background: radial-gradient(ellipse at 50% 0%, rgba(255, 224, 178, 0.35), rgba(26, 29, 34, 0.92) 70%);
-        }
-        .fr-glass::after {
-          content: ""; position: absolute; inset: 0; pointer-events: none;
-          background: linear-gradient(115deg, transparent 32%, rgba(255, 255, 255, 0.16) 40%, transparent 48%);
-        }
-        .fr-glass.empty { background: rgba(26, 29, 34, 0.5); }
-        .fr-cav.off, .fr-glass.off { background: #15171b; }
-        .fr-cav.off .fr-rack, .fr-glass.off .fr-rack { filter: brightness(0.35); }
-        .fr-racks { position: absolute; left: 8px; right: 17px; top: 21px; bottom: 9px; }
-        .fr-rack {
-          position: absolute; left: 50%; width: 45px; margin-left: -22.5px; height: 9px; border-bottom: 1.5px solid #8d6e63;
-          background:
-            radial-gradient(circle at 4.5px 4.5px, #8e2439 0 2.6px, #3a0d17 2.8px 3.8px, transparent 4px) 0 0 / 18px 9px repeat-x,
-            radial-gradient(circle at 13.5px 4.5px, #4a7a3f 0 2.6px, #13240f 2.8px 3.8px, transparent 4px) 0 0 / 18px 9px repeat-x;
-        }
-        .fr-door {
-          position: absolute; z-index: 1; border-radius: 6px;
-          background: linear-gradient(100deg, var(--ac-body, var(--secondary-background-color, #d7d7d7)), var(--ac-body-hi, #e6e6e6));
-          border: 1px solid var(--divider-color, #c7c7c7);
-          transform-origin: left center; transition: transform 0.45s ease;
-        }
-        /* An open door has to paint over the one below it: left to DOM order it
-           would slide behind its neighbour instead. */
-        .fr-door.swung { z-index: 3; transform: rotateY(-74deg); }
-        /* Hinge on the outer edge, so on a side-by-side the right-hand door
-           opens to the right rather than folding across the left one. */
-        .fr-door.hinge-right { transform-origin: right center; }
-        .fr-door.hinge-right.swung { transform: rotateY(74deg); }
-        .fr-icebox { position: absolute; overflow: hidden; }
-        .fr-cube { position: absolute; width: 5px; height: 5px; border-radius: 1px; background: #4fc3f7; opacity: 0; }
-        .machine.ice .fr-cube { animation: fr-fall 1.8s linear infinite; animation-delay: var(--anim-offset, 0s); }
-        .machine.ice .fr-cube.c2 { animation-delay: calc(-0.6s + var(--anim-offset, 0s)); }
-        .machine.ice .fr-cube.c3 { animation-delay: calc(-1.2s + var(--anim-offset, 0s)); }
-        /* Configured but not producing: the cubes stay, greyed, so the card
-           still shows there is an ice maker. */
-        .fr-icebox.off .fr-cube { opacity: 0.22; background: var(--disabled-text-color, #9e9e9e); animation: none; animation-delay: var(--anim-offset, 0s); }
-        @keyframes fr-fall {
-          0% { transform: translateY(0); opacity: 0; }
-          15%, 80% { opacity: 0.95; }
-          100% { transform: translateY(19px); opacity: 0; }
-        }
+        .machine.ice .fr-glint { animation: fr-glint 2.4s ease-in-out infinite; animation-delay: var(--anim-offset, 0s); }
+        @keyframes fr-glint { 0%, 100% { opacity: 0.2; } 50% { opacity: 0.9; } }
+        /* Cold air rolling out of an open fridge, mist rising out of a chest. */
+        .fr-mist { animation: fr-cold 2.6s ease-out infinite; animation-delay: var(--anim-offset, 0s); }
+        .fr-mist.m2 { animation-delay: calc(-0.9s + var(--anim-offset, 0s)); }
+        .fr-mist.m3 { animation-delay: calc(-1.7s + var(--anim-offset, 0s)); }
+        @keyframes fr-cold { 0% { transform: translateY(0); opacity: 0; } 30% { opacity: 0.7; } 100% { transform: translateY(8px); opacity: 0; } }
+        .fr-steam { animation: fr-rise 2.8s ease-out infinite; animation-delay: var(--anim-offset, 0s); }
+        .fr-steam.m2 { animation-delay: calc(-0.9s + var(--anim-offset, 0s)); }
+        .fr-steam.m3 { animation-delay: calc(-1.8s + var(--anim-offset, 0s)); }
+        .fr-steam.m4 { animation-delay: calc(-2.3s + var(--anim-offset, 0s)); }
+        @keyframes fr-rise { 0% { transform: translateY(0); opacity: 0; } 30% { opacity: 0.75; } 100% { transform: translateY(-10px); opacity: 0; } }
   `,
   water_heater: () => `
         .wh-bracket { position: absolute; left: 40px; right: 40px; top: 1px; height: 5px; border-radius: 2px; background: #3b4048; }
@@ -11765,119 +11638,442 @@ function esc(value) {
 // whole cabinet (doors shut), `door[]` against each panel (a door open). The
 // display, the handle and the ice dispenser belong to their door and swing
 // with it, which is also why an open door shows nothing but its edge.
-function fridgeHtml(ctx) {
-  const layout = ctx.layout || "freezer_bottom";
-  // No temperature entity, no display: an empty dial would be worse than none.
-  // A configured probe that stopped reporting shows dashes instead, since that
-  // is a real state on a fridge whose plug is out but whose Zigbee sensor lives on.
-  const lcd = (cls, style, v) =>
-    v === undefined ? "" : `<div class="fr-lcd ${cls}" style="${style}">${esc(v)}</div>`;
-  const icebox = (left, top, w) =>
-    ctx.ice === undefined
-      ? ""
-      : `<div class="fr-icebox ${ctx.ice ? "" : "off"}" style="left:${left}px;top:${top}px;width:${w}px;height:19px">
-           <div class="fr-cube c1" style="left:${(w / 2 - 8).toFixed(1)}px"></div>
-           <div class="fr-cube c2" style="left:${(w / 2 - 2.5).toFixed(1)}px"></div>
-           <div class="fr-cube c3" style="left:${(w / 2 + 3).toFixed(1)}px"></div>
-         </div>`;
-  const fT = ctx.fridgeTemp;
-  const zT = layout === "single" ? undefined : ctx.freezerTemp;
-  // Bottles lying on wooden racks, seen through the glass or with the door open.
-  const racks = [3, 17, 31, 45, 59].map((y) => `<div class="fr-rack" style="top:${y}px"></div>`).join("");
-  // Unplugged or drawing nothing: the light inside is out too.
-  const off = ctx.dark ? " off" : "";
-  const fCls = ctx.fridgeWarn ? "warn" : "";
-
-  let body = "";
-  let door = ["", ""];
-  if (layout === "wine") {
-    // A glass door: the display sits above the pane, and no ice maker.
-    body = `<div class="fr-handle" style="right:8px;top:24px;bottom:24px"></div>
-            ${lcd(fCls, "left:9px;top:5px", fT)}
-            <div class="fr-glass${off}" style="left:6px;right:15px;top:19px;bottom:7px">${racks}</div>`;
-    door = [`<div class="fr-handle" style="right:8px;top:24px;bottom:24px"></div>
-            ${lcd(fCls, "left:9px;top:5px", fT)}
-            <div class="fr-glass empty" style="left:6px;right:15px;top:19px;bottom:7px"></div>`, ""];
-  } else if (layout === "single") {
-    body = `<div class="fr-handle" style="right:8px;top:24px;bottom:24px"></div>
-            ${lcd(fCls, "left:9px;top:9px", fT)}${icebox(14, 74, 22)}`;
-    door = [body, ""];
-  } else if (layout === "freezer_top") {
-    body = `<div class="fr-split h" style="top:34%"></div>
-            <div class="fr-handle" style="right:8px;top:10px;height:18px"></div>
-            <div class="fr-handle" style="right:8px;top:42%;bottom:20px"></div>
-            ${lcd("freeze", "left:9px;top:8px", zT)}
-            ${lcd(fCls, "left:9px;top:40%", fT)}${icebox(14, 74, 22)}`;
-    door = [
-      `<div class="fr-handle" style="right:7px;top:10px;height:18px"></div>
-       ${lcd("freeze", "left:9px;top:8px", zT)}`,
-      `<div class="fr-handle" style="right:7px;top:9px;bottom:20px"></div>
-       ${lcd(fCls, "left:9px;top:7px", fT)}${icebox(14, 39, 22)}`,
-    ];
-  } else if (layout === "side_by_side") {
-    body = `<div class="fr-split v" style="left:42%"></div>
-            <div class="fr-handle" style="left:34%;top:22px;bottom:22px"></div>
-            <div class="fr-handle" style="left:47%;top:22px;bottom:22px"></div>
-            <div class="fr-disp" style="left:3px;top:29px;width:20px;height:31px"></div>
-            ${lcd("freeze", "left:4px;top:9px;min-width:19px;font-size:6px", zT)}
-            ${lcd(fCls, "right:7px;top:9px;min-width:19px;font-size:6px", fT)}
-            ${icebox(3, 33, 20)}`;
-    // Handle on the side away from the hinge: right of the left door, and the
-    // other way round for the right one.
-    door = [
-      `<div class="fr-handle" style="right:5px;top:22px;bottom:22px"></div>
-       <div class="fr-disp" style="left:3px;top:29px;width:20px;height:31px"></div>
-       ${lcd("freeze", "left:4px;top:9px;min-width:19px;font-size:6px", zT)}${icebox(3, 33, 20)}`,
-      `<div class="fr-handle" style="left:5px;top:22px;bottom:22px"></div>
-       ${lcd(fCls, "right:7px;top:9px;min-width:19px;font-size:6px", fT)}`,
-    ];
-  } else {
-    body = `<div class="fr-split h" style="top:63%"></div>
-            <div class="fr-handle" style="right:8px;top:26px;height:28px"></div>
-            <div class="fr-handle" style="right:8px;top:70%;height:20px"></div>
-            ${lcd(fCls, "left:9px;top:9px", fT)}
-            ${lcd("freeze", "left:9px;top:70%", zT)}${icebox(14, 42, 22)}`;
-    door = [
-      `<div class="fr-handle" style="right:7px;top:26px;height:28px"></div>
-       ${lcd(fCls, "left:9px;top:9px", fT)}${icebox(14, 42, 22)}`,
-      `<div class="fr-handle" style="right:7px;top:8px;height:20px"></div>
-       ${lcd("freeze", "left:9px;top:8px", zT)}`,
-    ];
+// Fridges and freezers in three-quarter view: the cabinet with its side and
+// top, doors that turn on their hinge (the outside until seen edge on, then
+// the inside with its balconies), a lit inside with things standing on glass
+// shelves, a cellar's bottles lying on wooden racks, an ice dispenser, a chest
+// freezer whose lid lifts and an upright one with see-through drawers. Drawn
+// in SVG on a 120 x 135 field. anim (from the card's door animation) sets
+// open, freezerOpen and kF / kZ, how far each door has turned.
+const FR3 = (() => {
+  let n = 0;
+  const id = () => `fr${n++}`;
+  // The cabinet: front x0..x1, y0..y1; side and top drawn with a depth (dx, dy).
+  const DX = 11, DY = -6;
+  function cabinet(x0, y0, x1, y1, g) {
+    return `<ellipse cx="${(x0 + x1) / 2 + 6}" cy="${y1 + 4}" rx="${(x1 - x0) / 2 + 12}" ry="3.2" fill="rgba(0,0,0,.14)"/>
+    <path d="M${x1} ${y0} L${x1 + DX} ${y0 + DY} V${y1 + DY} L${x1} ${y1} Z" fill="url(#${g.side})"/>
+    <path d="M${x0} ${y0} L${x0 + DX} ${y0 + DY} H${x1 + DX} L${x1} ${y0} Z" fill="url(#${g.top})"/>
+    <path d="M${x1} ${y0} L${x1 + DX} ${y0 + DY}" stroke="rgba(255,255,255,.8)" stroke-width=".7"/>
+    <rect x="${x0}" y="${y0}" width="${x1 - x0}" height="${y1 - y0}" rx="2.5" fill="url(#${g.front})" stroke="rgba(0,0,0,.18)" stroke-width=".6"/>
+    <rect x="${x0 + 3}" y="${y1}" width="5" height="3" rx="1" fill="#59616b"/><rect x="${x1 - 8}" y="${y1}" width="5" height="3" rx="1" fill="#59616b"/>`;
+  }
+  function defs(g, warmLight) {
+    return `<defs>
+    <linearGradient id="${g.front}" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="var(--ac-body-hi, #ffffff)"/><stop offset=".55" stop-color="var(--ac-body, #e9edf1)"/><stop offset="1" stop-color="var(--ac-body-lo, #b9c2ca)"/></linearGradient>
+    <linearGradient id="${g.side}" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#aeb7bf"/><stop offset="1" stop-color="#8b959e"/></linearGradient>
+    <linearGradient id="${g.top}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f6f8fa"/><stop offset="1" stop-color="#d5dbe0"/></linearGradient>
+    <linearGradient id="${g.door}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="var(--ac-body-hi, #ffffff)"/><stop offset=".6" stop-color="var(--ac-body, #e9edf1)"/><stop offset="1" stop-color="var(--ac-body-lo, #b9c2ca)"/></linearGradient>
+    <linearGradient id="${g.cav}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${warmLight ? "#fffdf5" : "#5f6a73"}"/><stop offset="1" stop-color="${warmLight ? "#e3eef5" : "#3d464e"}"/></linearGradient>
+    <linearGradient id="${g.handle}" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#8f99a3"/><stop offset=".4" stop-color="#f3f5f7"/><stop offset="1" stop-color="#7d868f"/></linearGradient>
+    <linearGradient id="${g.rec}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1b1f24"/><stop offset="1" stop-color="#3a424a"/></linearGradient>
+    <linearGradient id="${g.glass}" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#cfe9ff" stop-opacity=".55"/><stop offset=".5" stop-color="#ffffff" stop-opacity=".25"/><stop offset="1" stop-color="#cfe9ff" stop-opacity=".5"/></linearGradient>
+    <radialGradient id="${g.glow}" cx=".5" cy=".3" r=".7"><stop offset="0" stop-color="#fffbe6" stop-opacity=".9"/><stop offset="1" stop-color="#fffbe6" stop-opacity="0"/></radialGradient>
+    </defs>`;
+  }
+  // A handle standing out from the door: its bar and the shadow it casts.
+  const handle = (x, y, h, g) => `<rect x="${x + 1.4}" y="${y + 1}" width="2.4" height="${h}" rx="1.2" fill="rgba(0,0,0,.15)"/><rect x="${x}" y="${y}" width="2.6" height="${h}" rx="1.3" fill="url(#${g.handle})"/><rect x="${x + 2.6}" y="${y + 1.5}" width="1" height="${h - 3}" fill="#6d7680"/>`;
+  // The display shows the reading as the card writes it; with no current it is
+  // a dark pane.
+  const lcd = (x, y, w, v, warn, dark) => v === undefined || v === "" ? "" : `<g class="fr-lcd${warn ? " warn" : ""}"><rect x="${x}" y="${y}" width="${w}" height="8" rx="1.6" fill="#15191d"/>${dark ? "" : `<text x="${x + w / 2}" y="${y + 6}" text-anchor="middle" font-size="${Math.min(5.6, (w * 1.75) / Math.max(3, String(v).length)).toFixed(2)}" font-weight="600" fill="${warn ? "#ff5252" : "#4fc3f7"}">${esc(v)}</text>`}</g>`;
+  const seam = (x0, y, x1) => `<path d="M${x0} ${y} H${x1}" stroke="rgba(0,0,0,.28)" stroke-width=".9"/><path d="M${x0} ${y + 1} H${x1}" stroke="rgba(255,255,255,.7)" stroke-width=".5"/>`;
+  const vseam = (x, y0, y1) => `<path d="M${x} ${y0} V${y1}" stroke="rgba(0,0,0,.28)" stroke-width=".9"/><path d="M${x + 1} ${y0} V${y1}" stroke="rgba(255,255,255,.6)" stroke-width=".5"/>`;
+  // A cube of ice: rounded, pale blue, with a gleam on its corner.
+  const cube = (x, y, s, r, cls = "", fall = 14) => `<g class="fr-cube ${cls}" style="--fall:${fall}px"><g transform="translate(${x} ${y}) rotate(${r})"><rect x="${-s / 2}" y="${-s / 2}" width="${s}" height="${s}" rx="${s * .25}" fill="#e6f6ff" stroke="#81c7f5" stroke-width=".45"/><path d="M${-s * .3} ${-s * .25} L${-s * .05} ${-s * .32}" stroke="#fff" stroke-width=".7" stroke-linecap="round"/></g></g>`;
+  // The ice and water dispenser: a dark recess, the ice bin behind its window,
+  // the chute, the lever, a glass on the drip tray, cubes dropping into it.
+  function dispenser(x, y, w, h, s, g) {
+    const cx = x + w / 2;
+    const bin = s.ice !== undefined ? `<rect x="${x + 2.5}" y="${y + 2.5}" width="${w - 5}" height="9" rx="1.5" fill="#0f1317"/>${s.ice ? [0, 1, 2, 3, 4].map((i) => cube(x + 5 + i * (w - 10) / 4, y + 8 - (i % 2) * 2.2, 3.4, i * 23)).join("") + `<path class="fr-glint" d="M${x + 4} ${y + 4} H${x + w - 4}" stroke="#bfe6ff" stroke-width=".6"/>` : `<text x="${cx}" y="${y + 9}" text-anchor="middle" font-size="3.6" fill="#59616b">\u2014</text>`}` : "";
+    const falling = s.ice ? cube(cx, y + 17, 2.8, 15, "drop", 11) + cube(cx - 1, y + 17, 2.6, 40, "drop d2", 11) + cube(cx + 1, y + 17, 2.6, 70, "drop d3", 11) : "";
+    return `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="3" fill="url(#${g.rec})" stroke="rgba(0,0,0,.35)" stroke-width=".5"/>
+    <path d="M${x + 1} ${y + 1} H${x + w - 1} L${x + w - 3} ${y + 3} H${x + 3} Z" fill="rgba(0,0,0,.4)"/>
+    ${bin}
+    <rect x="${cx - 2.5}" y="${y + 13}" width="5" height="3" rx="1" fill="#59616b"/>
+    <rect x="${cx - 4}" y="${y + 16.5}" width="1.2" height="7" rx=".6" fill="#8f99a3"/>
+    ${falling}
+    <path d="M${cx - 4} ${y + h - 9} L${cx - 3.2} ${y + h - 3.6} H${cx + 3.2} L${cx + 4} ${y + h - 9}" fill="url(#${g.glass})" stroke="#9fc6e6" stroke-width=".5"/>
+    ${s.ice ? cube(cx - 1.2, y + h - 5.4, 2.4, 20) + cube(cx + 1.4, y + h - 5.8, 2.2, 55) : ""}
+    <rect x="${x + 2}" y="${y + h - 3.4}" width="${w - 4}" height="2.2" rx="1" fill="#59616b"/>`;
+  }
+  // The inside, seen through the open front as a real box: the back wall set
+  // back along the cabinet's own depth, the left wall and the floor showing,
+  // glass shelves seen a little from above, and things standing on them with
+  // a top of their own. What lies right of or above the opening stays hidden
+  // behind the frame.
+  function box3(x, y, w, h, d, front, top, side) {
+    // A box standing at (x, y) bottom-left of its front face, depth d along the
+    // cabinet's depth vector.
+    const kx = d * 0.73, ky = -d * 0.4;
+    return `<path d="M${x} ${y - h} L${x + kx} ${y - h + ky} H${x + w + kx} L${x + w} ${y - h} Z" fill="${top}"/>
+    <path d="M${x + w} ${y} L${x + w + kx} ${y + ky} V${y - h + ky} L${x + w} ${y - h} Z" fill="${side}"/>
+    <rect x="${x}" y="${y - h}" width="${w}" height="${h}" fill="${front}"/>`;
+  }
+  function inside(x0, y0, x1, y1, g, s, freezer) {
+    const cid = id(), gl = id(), gb = id(), cy = id(), DXI = 12, DYI = -7;
+    const bx0 = x0 + DXI, by0 = y0 + DYI, by1 = y1 + DYI;
+    const lit = !s.dark;
+    const wallBack = `url(#${gb})`, wallLeft = `url(#${gl})`, floor = lit ? "#c9d6e0" : "#3a434a";
+    const grads = `<linearGradient id="${gl}" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="${lit ? "#aebfcc" : "#2c3338"}"/><stop offset="1" stop-color="${lit ? "#dbe6ee" : "#3d464e"}"/></linearGradient>
+    <linearGradient id="${cy}" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#000" stop-opacity=".35"/><stop offset=".35" stop-color="#fff" stop-opacity=".35"/><stop offset=".55" stop-color="#fff" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".3"/></linearGradient>
+    <linearGradient id="${gb}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${lit ? "#ffffff" : "#4a545c"}"/><stop offset=".5" stop-color="${lit ? "#eef5fa" : "#434c54"}"/><stop offset="1" stop-color="${lit ? "#d6e2ea" : "#3a434a"}"/></linearGradient>`;
+    const shelfYs = freezer === "drawers" ? [] : freezer ? [0.5] : [0.3, 0.58];
+    const shelf = (f) => {
+      const y = y0 + (y1 - y0) * f;
+      return `<path d="M${x0} ${y} L${x0 + DXI} ${y + DYI} H${x1 + 2} V${y} Z" fill="rgba(190,225,250,.55)" stroke="rgba(110,160,195,.7)" stroke-width=".5"/>
+      <rect x="${x0}" y="${y}" width="${x1 - x0}" height="1.6" fill="rgba(140,185,215,.9)"/><path d="M${x0} ${y + .3} H${x1}" stroke="#fff" stroke-width=".6"/>
+      <path d="M${x0 + 2} ${y + 2.2} L${x0 + DXI + 2} ${y + DYI + 2.2} H${x1 + 2}" stroke="rgba(0,0,0,.08)" stroke-width="1.6" fill="none"/>`;
+    };
+    const sy = (f) => y0 + (y1 - y0) * f;
+    const items = freezer === "drawers" ? drawerStack(x0, y0, x1, y1, s.dark, s.kF === undefined ? 1 : s.kF)
+      : freezer
+      ? box3(x0 + 6, sy(0.5) - 1, 12, 8, 6, "#90caf9", "#bbdefb", "#64b5f6") + box3(x0 + 21, sy(0.5) - 2, 10, 7, 6, "#ef9a9a", "#ffcdd2", "#e57373")
+        + box3(x0 + 7, y1 - 2, 14, 9, 7, "#e0e0e0", "#f5f5f5", "#bdbdbd") + box3(x0 + 25, y1 - 3, 12, 8, 6, "#a5d6a7", "#c8e6c9", "#81c784")
+      : box3(x0 + 7, sy(0.3) - 1, 5, 11, 4, "#fafafa", "#eceff1", "#cfd8dc") + `<path d="M${x0 + 7} ${sy(0.3) - 12} l2.5 -2.2 l2.5 2.2 z" fill="#42a5f5"/>`
+        + box3(x0 + 16, sy(0.3) - 2, 9, 6, 5, "#ffb74d", "#ffe0b2", "#fb8c00")
+        + `<ellipse cx="${x0 + 13}" cy="${sy(0.58) - 4}" rx="4.6" ry="3.6" fill="#e53935"/><path d="M${x0 + 11} ${sy(0.58) - 6} q1.5 -1 3 0" stroke="#fff" stroke-width=".7" fill="none" opacity=".7"/>`
+        + standingBottle(x0 + 24, sy(0.58) - 3, 2.3, 16, "#43a047", "#1b5e20", cy)
+        + `<ellipse cx="${x0 + 33}" cy="${sy(0.58) - 3}" rx="4" ry="2.4" fill="#fff176"/><ellipse cx="${x0 + 33}" cy="${sy(0.58) - 4}" rx="4" ry="1.6" fill="#fff9c4"/>`
+        + box3(x0 + 3, y1 - 1.5, x1 - x0 - 10, 8, 6, "rgba(200,230,200,.75)", "rgba(220,240,220,.7)", "rgba(160,200,160,.75)")
+        + `<ellipse cx="${x0 + 12}" cy="${y1 - 7}" rx="3" ry="2.2" fill="#7cb342"/><ellipse cx="${x0 + 20}" cy="${y1 - 6.5}" rx="3" ry="2.2" fill="#fb8c00"/>`;
+    const lamp = lit ? `<rect x="${bx0 + 6}" y="${by0 + 1}" width="${x1 - bx0 - 10}" height="2.2" rx="1" fill="#fffde7"/><path d="M${bx0} ${by0 + 2} H${x1}" stroke="none"/>
+      <polygon points="${bx0 + 6},${by0 + 3} ${x1 - 4},${by0 + 3} ${x1},${y1} ${x0},${y1}" fill="url(#${g.glow})" opacity=".55"/>` : "";
+    return `<defs>${grads}</defs><clipPath id="${cid}"><rect x="${x0}" y="${y0}" width="${x1 - x0}" height="${y1 - y0}"/></clipPath>
+    <g clip-path="url(#${cid})">
+      <rect x="${x0}" y="${y0}" width="${x1 - x0}" height="${y1 - y0}" fill="${wallLeft}"/>
+      <rect x="${bx0}" y="${by0}" width="${x1 - bx0 + 4}" height="${by1 - by0}" fill="${wallBack}"/>
+      <path d="M${x0} ${y0} L${bx0} ${by0} V${by1} L${x0} ${y1} Z" fill="${wallLeft}"/>
+      <path d="M${x0} ${y1} L${bx0} ${by1} H${x1 + 4} V${y1} Z" fill="${floor}"/>
+      <path d="M${bx0} ${by0} V${by1} M${bx0} ${by1} H${x1 + 4}" stroke="rgba(0,0,0,.22)" stroke-width=".8"/>
+      <path d="M${bx0 + 1} ${by0} V${by1 - 1} H${x1 + 4}" stroke="rgba(0,0,0,.08)" stroke-width="2.4" fill="none"/>
+      ${[0.25, 0.5, 0.75].map((f) => `<path d="M${x0} ${y0 + (y1 - y0) * f} L${bx0} ${by0 + (by1 - by0) * f}" stroke="rgba(0,0,0,.06)" stroke-width=".6"/>`).join("")}
+      ${lamp}
+      ${shelfYs.map(shelf).join("")}
+      ${items}
+      ${freezer || !lit ? "" : [0, 1, 2].map((i) => `<path class="fr-mist m${i + 1}" d="M${x0 + 10 + i * 12} ${y1 - 2} q2 3 0 6" stroke="rgba(200,230,255,.8)" stroke-width="1" fill="none"/>`).join("")}
+    </g>
+    <rect x="${x0}" y="${y0}" width="${x1 - x0}" height="${y1 - y0}" fill="none" stroke="rgba(0,0,0,.25)" stroke-width="1.2"/>
+    <path d="M${x0 + .6} ${y0 + .6} V${y1 - .6}" stroke="#e9eef2" stroke-width="1.6"/>`;
+  }
+  // A bottle standing upright, seen slightly from above: round foot, straight
+  // sides, a curved shoulder, the neck and its cap.
+  function standingBottle(cx, by, r, h, color, cap, shade) {
+    const ry = r * 0.32, hb = h * 0.58, sh = h * 0.2, hn = h * 0.22, rn = r * 0.38;
+    const t = by - hb, ts = t - sh, tn = ts - hn;
+    const d = `M${cx - r} ${t} L${cx - r} ${by} A${r} ${ry} 0 0 0 ${cx + r} ${by} L${cx + r} ${t} C${cx + r} ${t - sh * .55} ${cx + rn} ${ts + sh * .35} ${cx + rn} ${ts} L${cx + rn} ${tn} L${cx - rn} ${tn} L${cx - rn} ${ts} C${cx - rn} ${ts + sh * .35} ${cx - r} ${t - sh * .55} ${cx - r} ${t} Z`;
+    return `<path d="${d}" fill="${color}"/><path d="${d}" fill="url(#${shade})"/>
+      <rect x="${cx - r}" y="${t + hb * .25}" width="${r * 2}" height="${hb * .4}" fill="#f5f0e1" opacity=".85"/><rect x="${cx - r}" y="${t + hb * .25}" width="${r * 2}" height="${hb * .4}" fill="url(#${shade})"/>
+      <rect x="${cx - rn - .2}" y="${tn - 1.6}" width="${rn * 2 + .4}" height="1.8" rx=".4" fill="${cap}"/><ellipse cx="${cx}" cy="${tn - 1.6}" rx="${rn + .2}" ry="${(rn + .2) * .35}" fill="${cap}" opacity=".7"/>
+      <path d="M${cx - r * .45} ${t - sh * .2} V${by - 1}" stroke="rgba(255,255,255,.45)" stroke-width=".6"/>`;
+  }
+  // A jar seen slightly from above: its lid is an ellipse.
+  function jar(cx, by, r, h, color, lid, shade) {
+    const ry = r * 0.32;
+    const d = `M${cx - r} ${by - h} L${cx - r} ${by} A${r} ${ry} 0 0 0 ${cx + r} ${by} L${cx + r} ${by - h} Z`;
+    return `<path d="${d}" fill="${color}"/><path d="${d}" fill="url(#${shade})"/>
+      <rect x="${cx - r - .2}" y="${by - h - 1.8}" width="${r * 2 + .4}" height="1.8" fill="${lid}"/><ellipse cx="${cx}" cy="${by - h - 1.8}" rx="${r + .2}" ry="${ry}" fill="${lid}"/><ellipse cx="${cx}" cy="${by - h - 1.8}" rx="${r * .8}" ry="${ry * .7}" fill="rgba(255,255,255,.25)"/>`;
+  }
+  // A wine bottle lying on a rack, neck towards us: tip (tx, ty), its axis going
+  // back along (ux, uy).
+  function lyingBottle(tx, ty, ux, uy, len, glass, capsule) {
+    const nx = -uy, ny = ux; // perpendicular, towards the bottom right
+    const prof = [[0, 1.2], [2.6, 1.25], [4.6, 1.25], [6, 2.2], [7.4, 3], [8.8, 3.3], [len, 3.3]];
+    const pt = (s0, r, side) => `${(tx + ux * s0 + nx * r * side).toFixed(2)} ${(ty + uy * s0 + ny * r * side).toFixed(2)}`;
+    const outline = (from, to) => { const seg = prof.filter(([s0]) => s0 >= from && s0 <= to); return `M${seg.map(([s0, r]) => pt(s0, r, 1)).join(" L")} L${seg.reverse().map(([s0, r]) => pt(s0, r, -1)).join(" L")} Z`; };
+    const end = prof[prof.length - 1];
+    return `<ellipse cx="${tx + ux * end[0]}" cy="${ty + uy * end[0]}" rx="3.3" ry="3.3" fill="${glass}"/>
+      <path d="${outline(0, len)}" fill="${glass}"/>
+      <path d="M${pt(5.6, 1.4, -1)} L${pt(len - .5, 2.2, -1)}" stroke="rgba(255,255,255,.28)" stroke-width=".9" stroke-linecap="round"/>
+      <path d="${outline(0, 2.6)}" fill="${capsule}"/>
+      <ellipse cx="${tx}" cy="${ty}" rx="1.25" ry="1.25" fill="${capsule}" stroke="rgba(0,0,0,.35)" stroke-width=".4"/>`;
+  }
+  // A door turning on its hinge. Closed it spans W from the hinge (sgn +1: hinge
+  // on the left, -1: on the right); wide open its free edge sits wOpen beyond the
+  // hinge, inside face towards us (the drawing of door()). k (0..1) is how far
+  // it has turned. Until it is seen edge on, its outside turns with it: the panel
+  // and what is on it (front). A point gone out by z towards us moves by
+  // (-DX, -DY) * z / DEPTH, the cabinet's own depth vector.
+  const DEPTH = 40, KD = DX / DEPTH;
+  function swing(xh, y0, y1, g, sgn, W, wOpen, kind, front, k = 1) {
+    const proj = (th) => sgn * W * Math.cos(th) - KD * W * Math.sin(th);
+    const thEdge = Math.atan2(sgn, KD);
+    let lo = thEdge, hi = Math.PI * .99;
+    for (let i = 0; i < 40; i++) { const m = (lo + hi) / 2; if (Math.abs(proj(m)) < wOpen) lo = m; else hi = m; }
+    const th = k * lo, e = proj(th);
+    if (Math.sign(e) === sgn) {
+      const a = e / (sgn * W), b = Math.sin(th) * 1.4 / (sgn * W);
+      const fx = xh + e, fy = (x) => x;
+      return `<g transform="matrix(${a} ${b} 0 1 ${xh - a * xh} ${-b * xh})">${front}</g>`
+        + `<path d="M${fx} ${y0 + b * sgn * W} V${y1 + b * sgn * W}" stroke="rgba(0,0,0,.35)" stroke-width="${.6 + 2.4 * Math.sin(th)}"/>`;
+    }
+    PF = Math.min(1, Math.abs(e) / wOpen);
+    const d = door(xh, y0, y1, g, -sgn, Math.abs(e), kind);
+    PF = 1;
+    return d;
+  }
+  const panel = (x0, y0, x1, y1, g) => `<rect x="${x0}" y="${y0}" width="${x1 - x0}" height="${y1 - y0}" rx="2.2" fill="url(#${g.front})" stroke="rgba(0,0,0,.2)" stroke-width=".6"/>`;
+  // A door swung wide open on its hinge (dir -1: hinge on the left, +1: on the
+  // right), seen from inside: a liner with a gasket, the thickness of the door
+  // on its free edge, and balconies that stand out of the liner with what they
+  // hold. kind: "bins" (fridge), "glass" (wine cellar: a framed pane, nothing in
+  // it), "plain".
+  let PF = 1;
+  function door(xh, y0, y1, g, dir, w, kind) {
+    const P = (u, f) => [xh + dir * w * u, y0 + (y1 - y0) * f + u * PF * (2.5 - 6.5 * (1 - f) + 4 * f)];
+    const quad = (u0, f0, u1, f1) => { const a = P(u0, f0), b = P(u1, f0), c = P(u1, f1), d = P(u0, f1); return `M${a} L${b} L${c} L${d} Z`; };
+    const lin = id(), cyl = id();
+    const defs = `<defs><linearGradient id="${lin}" x1="${dir < 0 ? 1 : 0}" y1="0" x2="${dir < 0 ? 0 : 1}" y2="0"><stop offset="0" stop-color="#cfd8de"/><stop offset=".35" stop-color="#eef2f5"/><stop offset="1" stop-color="#fbfcfd"/></linearGradient>
+      <linearGradient id="${cyl}" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#000" stop-opacity=".35"/><stop offset=".35" stop-color="#fff" stop-opacity=".35"/><stop offset=".55" stop-color="#fff" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".3"/></linearGradient></defs>`;
+    // The thickness of the door, seen on its free edge.
+    const e0 = P(1, 0), e1 = P(1, 1), t = dir * 3;
+    const edge = `<path d="M${e0} L${e0[0] + t} ${e0[1] + 1} L${e1[0] + t} ${e1[1] + 1} L${e1} Z" fill="url(#${g.side})"/>`;
+    let body = `<path d="${quad(0, 0, 1, 1)}" fill="url(#${lin})" stroke="rgba(0,0,0,.25)" stroke-width=".6"/>
+      <path d="${quad(.07, .02, .93, .98)}" fill="none" stroke="rgba(0,0,0,.18)" stroke-width="1.4"/>
+      <path d="${quad(0, 0, .14, 1)}" fill="rgba(0,0,0,.08)"/>`;
+    if (kind === "glass") {
+      body += `<path d="${quad(.16, .05, .84, .95)}" fill="rgba(180,215,235,.35)" stroke="#7b6a5a" stroke-width="1.6"/>
+        <path d="${quad(.25, .1, .45, .1)} " fill="none"/>
+        <path d="M${P(.28, .1)} L${P(.48, .1)} L${P(.24, .55)} L${P(.2, .55)} Z" fill="rgba(255,255,255,.35)"/>`;
+    }
+    if (kind === "bins") {
+      body += [0.24, 0.52, 0.8].map((f, i) => {
+        const lip = 4.2, back = [dir * 2.4, -2.6];
+        const [ax, ay] = P(.1, f), [bx, by] = P(.9, f);
+        // Floor of the balcony, seen from above.
+        let out = `<path d="M${ax} ${ay} L${bx} ${by} L${bx + back[0]} ${by + back[1]} L${ax + back[0]} ${ay + back[1]} Z" fill="#dfe7ec"/>`;
+        // What stands in it: bottles in the lower one, jars and a carton above.
+        const items = i === 2 ? [[.25, "#43a047", 11, 3.2], [.5, "#8d6e63", 10, 3.2], [.75, "#fafafa", 9, 3.6]]
+          : i === 1 ? [[.3, "#fff59d", 6, 4.4], [.7, "#ef9a9a", 7, 4]] : [[.3, "#ffcc80", 5, 3.6], [.62, "#b3e5fc", 5.5, 3.6]];
+        out += items.map(([u, c, h, wd]) => {
+          const [x, y] = P(u, f), cx = x + back[0] * .5, by2 = y + back[1] * .5 - .5;
+          return i === 2 ? standingBottle(cx, by2, wd / 2, h + 3, c, "#37474f", cyl) : jar(cx, by2, wd / 2, h * .8, c, i === 1 ? "#e53935" : "#ffffff", cyl);
+        }).join("");
+        // The front lip, translucent, hiding the feet of what stands behind it.
+        out += `<path d="M${ax} ${ay} L${bx} ${by} L${bx} ${by + lip} L${ax} ${ay + lip} Z" fill="rgba(205,228,242,.88)" stroke="#90a4ae" stroke-width=".5"/>
+          <path d="M${ax} ${ay + .4} L${bx} ${by + .4}" stroke="#fff" stroke-width=".6"/>`;
+        return out;
+      }).join("");
+    }
+    return defs + body + edge;
+  }
+  // Inside of a wine cellar: dark wood walls in depth, a warm light, wooden racks
+  // seen from above with bottles lying on them, their bases towards us.
+  function wineInside(x0, y0, x1, y1, g, s) {
+    const cid = id(), gl = id(), gb = id(), DXI = 12, DYI = -7;
+    const bx0 = x0 + DXI, by0 = y0 + DYI, by1 = y1 + DYI, lit = !s.dark;
+    const grads = `<linearGradient id="${gl}" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="${lit ? "#2a1d16" : "#141010"}"/><stop offset="1" stop-color="${lit ? "#4a352a" : "#1e1816"}"/></linearGradient>
+    <linearGradient id="${gb}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${lit ? "#6b4c3b" : "#241c19"}"/><stop offset="1" stop-color="${lit ? "#3e2c22" : "#1a1513"}"/></linearGradient>`;
+    const rows = 5, step = (y1 - y0 - 8) / rows;
+    let racks = "";
+    for (let r = 0; r < rows; r++) {
+      const y = y0 + 10 + step * (r + 1) - 2;
+      racks += `<path class="fr-rack" d="M${x0} ${y} L${x0 + DXI} ${y + DYI} H${x1 + 2} V${y} Z" fill="${lit ? "#8d6e63" : "#3e2f29"}"/>
+        <rect x="${x0}" y="${y}" width="${x1 - x0}" height="2" fill="${lit ? "#6d4c41" : "#2e2320"}"/><path d="M${x0} ${y + .3} H${x1}" stroke="rgba(255,220,180,.35)" stroke-width=".5"/>`;
+      racks += [2, 1, 0].map((c) => lyingBottle(x0 + 7 + c * 14, y - 3.4, 0.864, -0.504, 19, lit ? (c === 1 ? "#4a1a22" : "#26402a") : "#151b16", c === 1 ? "#c9a24b" : "#8e1b2c")).join("");
+    }
+    const lamp = lit ? `<rect x="${bx0 + 6}" y="${by0 + 1}" width="${x1 - bx0 - 10}" height="2" rx="1" fill="#ffe0b2"/>
+      <polygon points="${bx0 + 6},${by0 + 3} ${x1 - 4},${by0 + 3} ${x1},${y1} ${x0},${y1}" fill="#ffb74d" opacity=".12"/>` : "";
+    return `<defs>${grads}</defs><clipPath id="${cid}"><rect x="${x0}" y="${y0}" width="${x1 - x0}" height="${y1 - y0}"/></clipPath>
+    <g clip-path="url(#${cid})">
+      <rect x="${x0}" y="${y0}" width="${x1 - x0}" height="${y1 - y0}" fill="url(#${gl})"/>
+      <rect x="${bx0}" y="${by0}" width="${x1 - bx0 + 4}" height="${by1 - by0}" fill="url(#${gb})"/>
+      <path d="M${x0} ${y0} L${bx0} ${by0} V${by1} L${x0} ${y1} Z" fill="url(#${gl})"/>
+      <path d="M${bx0} ${by0} V${by1}" stroke="rgba(0,0,0,.35)" stroke-width=".8"/>
+      ${lamp}${racks}
+    </g>
+    <rect x="${x0}" y="${y0}" width="${x1 - x0}" height="${y1 - y0}" fill="none" stroke="rgba(0,0,0,.3)" stroke-width="1.2"/>`;
   }
 
-  const open = !!ctx.doorOpen;
-  const openFreezer = !!ctx.freezerDoorOpen;
-  if (!open && !openFreezer) return `<div class="fr-body">${body}</div>`;
+  // Four see-through drawers stacked in an upright freezer, the top one pulled
+  // out towards us.
+  function drawerStack(x0, y0, x1, y1, dark, k) {
+    const goods = [["#66bb6a", "#ef5350", "#fff176"], ["#f48fb1", "#64b5f6", "#ffb74d"], ["#aed581", "#ba68c8", "#e57373"], ["#4db6ac", "#ff8a65", "#90a4ae"]];
+    const n = 4, gap = 2.4, h = (y1 - y0 - 6 - gap * n) / n, w = x1 - x0 - 5, d = 12;
+    let out = "";
+    for (let i = n - 1; i >= 0; i--) {
+      const pull = i === 0 ? k : 0;
+      const bx = x0 + 2 - pull * 7, by = y0 + 4 + (i + 1) * (h + gap) + pull * 7;
+      const kx = d * 0.73, ky = -d * 0.4;
+      // Goods first, then the clear plastic tub over them.
+      const pk = goods[i].map((col, j) => box3(bx + 3 + j * (w - 6) / 3, by - 1.2, (w - 10) / 3, [6, 4.5, 7][j] * h / 14, 6, col, "rgba(255,255,255,.55)", "rgba(0,0,0,.18)")).join("");
+      out += `<path d="M${bx} ${by - h} L${bx + kx} ${by - h + ky} H${bx + w + kx} L${bx + w} ${by - h} Z" fill="rgba(225,240,250,${pull ? .55 : .35})" stroke="rgba(120,170,200,.6)" stroke-width=".4"/>
+        ${pk}
+        <path d="M${bx + w} ${by} L${bx + w + kx} ${by + ky} V${by - h + ky} L${bx + w} ${by - h} Z" fill="rgba(190,220,240,.45)" stroke="rgba(120,170,200,.6)" stroke-width=".4"/>
+        <rect x="${bx}" y="${by - h}" width="${w}" height="${h}" rx="1.2" fill="rgba(215,235,248,${dark ? .25 : .5})" stroke="rgba(110,160,195,.85)" stroke-width=".6"/>
+        <rect x="${bx + w / 2 - 7}" y="${by - h + 1.2}" width="14" height="2.4" rx="1.2" fill="#5d6672"/>
+        <path d="M${bx + 2} ${by - h + 1} L${bx + 6} ${by - 1}" stroke="rgba(255,255,255,.7)" stroke-width=".8"/>`;
+    }
+    return out;
+  }
+  // Chest freezer, seen from the front right and above: the lid lifts on its
+  // back hinge and shows the tub, a wire basket and frozen food, cold mist
+  // rising out of it.
+  function chest(s) {
+    const g = { front: id(), side: id(), top: id(), door: id(), cav: id(), handle: id(), rec: id(), glass: id(), glow: id() };
+    const tub = id(), lin = id(), cid = id();
+    const x0 = 4, x1 = 88, y0 = 66, y1 = 114, KX = 22, KY = -26, lip = 7;
+    const lit = !s.dark;
+    let out = defs(g, lit) + `<defs><linearGradient id="${tub}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${lit ? "#dfeaf2" : "#3a434a"}"/><stop offset="1" stop-color="${lit ? "#b6c8d6" : "#2a3137"}"/></linearGradient>
+      <linearGradient id="${lin}" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#cfd8de"/><stop offset="1" stop-color="#f4f7f9"/></linearGradient></defs>`;
+    out += `<ellipse cx="${(x0 + x1) / 2 + 9}" cy="${y1 + 3}" rx="${(x1 - x0) / 2 + 16}" ry="3.6" fill="rgba(0,0,0,.14)"/>
+      <path d="M${x1} ${y0} L${x1 + KX} ${y0 + KY} V${y1 + KY} L${x1} ${y1} Z" fill="url(#${g.side})"/>
+      <rect x="${x0}" y="${y0}" width="${x1 - x0}" height="${y1 - y0}" rx="2.5" fill="url(#${g.front})" stroke="rgba(0,0,0,.18)" stroke-width=".6"/>
+      <rect x="${x0 + 5}" y="${y1 - 11}" width="26" height="6" rx="1.2" fill="#c5ccd3"/>${[0, 1, 2, 3, 4, 5].map((i) => `<rect x="${x0 + 7.5 + i * 3.8}" y="${y1 - 10}" width="1.8" height="4" rx=".6" fill="#6b747e"/>`).join("")}
+      <rect x="${x0 + 3}" y="${y1}" width="6" height="2.6" rx="1" fill="#59616b"/><rect x="${x1 - 9}" y="${y1}" width="6" height="2.6" rx="1" fill="#59616b"/>
+      ${lcd(x1 - 30, y0 + lip + 8, 24, s.fridgeTemp, s.warn, s.dark)}
+      <circle cx="${x1 - 27}" cy="${y0 + lip + 21}" r="1.1" fill="${s.warn ? "#ff5252" : "#43a047"}"/>`;
+    const rim = [[x0, y0], [x0 + KX, y0 + KY], [x1 + KX, y0 + KY], [x1, y0]];
+    if (!s.open) {
+      out += `<path d="M${rim.map((p) => p.join(" ")).join(" L")} Z" fill="url(#${g.top})" stroke="rgba(0,0,0,.18)" stroke-width=".6"/>
+        <path d="M${x0 + 6} ${y0 - 3} L${x0 + KX - 2} ${y0 + KY + 2} H${x1 + KX - 8}" stroke="#fff" stroke-width="1" fill="none" opacity=".8"/>
+        <path d="M${x1} ${y0} L${x1 + KX} ${y0 + KY} V${y0 + KY + lip} L${x1} ${y0 + lip} Z" fill="#a9b2bb"/>
+        <rect x="${x0}" y="${y0}" width="${x1 - x0}" height="${lip}" rx="2" fill="url(#${g.door})" stroke="rgba(0,0,0,.2)" stroke-width=".6"/>
+        <rect x="${(x0 + x1) / 2 - 15}" y="${y0 + 2.2}" width="30" height="3" rx="1.5" fill="#363d48"/><rect x="${(x0 + x1) / 2 - 13.5}" y="${y0 + 2.6}" width="27" height="1" rx=".5" fill="#8f98a4"/>
+        <path d="M${x0} ${y0 + lip + .6} H${x1}" stroke="rgba(0,0,0,.35)" stroke-width=".9"/>
+        <g class="nt-run">${[[x0 + 20, y0 - 6], [x0 + 48, y0 - 14], [x0 + 74, y0 - 9], [x1 + 8, y0 - 20]].map(([x, y], i) => `<g class="nta-frost ntd${i + 1}">${ntFlake(x, y, 2.4, "#29b6f6", .7)}</g>`).join("")}</g>`;
+      return out;
+    }
+    // Open: the lid turns on its back hinge. A point of the chest is (x, z, h):
+    // z depth from the front (0..D), h height above the rim.
+    const D = 40, P3 = (x, z, h) => [x + KX * z / D, y0 + KY * z / D - h];
+    const th = (s.kF === undefined ? 1 : s.kF) * 98 * Math.PI / 180, cs = Math.cos(th), sn = Math.sin(th);
+    // Inner face from the hinge (z = D, h = -lip) to the front edge; outer face
+    // the thickness of the lid further along its normal.
+    const inner = (x, f) => P3(x, D - f * D * cs + 0, -lip + f * D * sn);
+    const outer = (x, f) => P3(x + 0, D - f * D * cs + lip * sn, -lip + f * D * sn + lip * cs);
+    const quad = (A, B, C, E) => `M${A} L${B} L${C} L${E} Z`;
+    const lidSvg = th < 1.05
+      ? `<path d="${quad(outer(x0, 0), outer(x1, 0), outer(x1, 1), outer(x0, 1))}" fill="url(#${g.top})" stroke="rgba(0,0,0,.18)" stroke-width=".6"/>
+        <path d="${quad(outer(x1, 0), inner(x1, 0), inner(x1, 1), outer(x1, 1))}" fill="#a9b2bb"/>
+        <path d="${quad(outer(x0, 1), outer(x1, 1), inner(x1, 1), inner(x0, 1))}" fill="url(#${g.door})" stroke="rgba(0,0,0,.2)" stroke-width=".6"/>`
+      : `<path d="${quad(inner(x0, 0), inner(x1, 0), inner(x1, 1), inner(x0, 1))}" fill="url(#${lin})" stroke="rgba(0,0,0,.25)" stroke-width=".6"/>
+        <path d="${quad(inner(x0 + 4, .08), inner(x1 - 4, .08), inner(x1 - 4, .92), inner(x0 + 4, .92))}" fill="none" stroke="rgba(0,0,0,.16)" stroke-width="1.6"/>
+        <path d="${quad(inner(x1, 0), outer(x1, 0), outer(x1, 1), inner(x1, 1))}" fill="url(#${g.side})"/>
+        <path d="${quad(inner(x0, 1), inner(x1, 1), outer(x1, 1), outer(x0, 1))}" fill="#c3cad1"/>
+        ${lit && th > 1.4 ? (() => { const L0 = inner((x0 + x1) / 2 - 10, .12), L1 = inner((x0 + x1) / 2 + 10, .12); return `<path d="M${L0} L${L1}" stroke="#fffde7" stroke-width="2" stroke-linecap="round"/>`; })() : ""}`;
+    // The tub: opening, back and left inner walls, floor, then what it holds.
+    const DEP = 15, inset = 3;
+    const o = [[x0 + inset, y0 + 1], [x0 + KX + inset * .4, y0 + KY + 2], [x1 + KX - inset, y0 + KY + 2], [x1 - inset, y0 + 1]];
+    // Frozen food lying on the floor of the tub, sinking behind the front rim.
+    const fl = y0 + 7;
+    const foods = box3(x0 + 9, fl, 18, 9, 10, "#90caf9", "#bbdefb", "#64b5f6") + box3(x0 + 29, fl + 1, 14, 8, 9, "#ef9a9a", "#ffcdd2", "#e57373")
+      + box3(x0 + 45, fl, 16, 10, 10, "#e0e0e0", "#f5f5f5", "#bdbdbd") + box3(x0 + 17, fl - 9, 13, 7, 8, "#a5d6a7", "#c8e6c9", "#81c784")
+      + box3(x0 + 36, fl - 10, 11, 6, 7, "#fff59d", "#fffde7", "#fbc02d")
+      + `<ellipse cx="${x0 + 58}" cy="${fl - 12}" rx="7" ry="3.4" fill="#ffcc80"/><ellipse cx="${x0 + 58}" cy="${fl - 13}" rx="7" ry="2.4" fill="#fff3e0"/>`;
+    // Wire basket hooked on the rim, on the right.
+    const bx = x1 - 24, by = y0 - 6, bw = 26, bh = 10, bd = 20;
+    const kx = bd * 0.73, ky = -bd * 0.4;
+    const basket = box3(bx + 2, by - 1, 9, 5, 7, "#ffcc80", "#ffe0b2", "#ffb74d") + box3(bx + 12, by - 1, 8, 6, 7, "#b39ddb", "#d1c4e9", "#9575cd")
+      + `<path d="M${bx} ${by - bh} L${bx + kx} ${by - bh + ky} H${bx + bw + kx} L${bx + bw} ${by - bh} Z M${bx + bw} ${by} L${bx + bw + kx} ${by + ky} V${by - bh + ky} M${bx} ${by - bh} V${by} H${bx + bw} V${by - bh}" fill="none" stroke="#9aa5ae" stroke-width=".7"/>
+      ${[1, 2, 3, 4, 5].map((i) => `<path d="M${bx + i * bw / 6} ${by - bh} V${by}" stroke="#9aa5ae" stroke-width=".45"/>`).join("")}
+      <path d="M${bx} ${by - bh / 2} H${bx + bw}" stroke="#9aa5ae" stroke-width=".45"/>`;
+    out += `<clipPath id="${cid}"><path d="M${o.map((p) => p.join(" ")).join(" L")} Z"/></clipPath>
+      <g clip-path="url(#${cid})">
+        <rect x="${x0}" y="${y0 + KY - 2}" width="${x1 - x0 + KX + 4}" height="${-KY + 6}" fill="url(#${tub})"/>
+        <path d="M${o[1]} L${o[2]} L${o[2][0]} ${o[2][1] + DEP} L${o[1][0]} ${o[1][1] + DEP} Z" fill="${lit ? "#eef4f8" : "#434c54"}"/>
+        <path d="M${o[0]} L${o[1]} L${o[1][0]} ${o[1][1] + DEP} L${o[0][0]} ${o[0][1] + DEP} Z" fill="${lit ? "#c3d3df" : "#2c3338"}"/>
+        ${[0.3, 0.6].map((f) => `<path d="M${o[1][0]} ${o[1][1] + DEP * f} H${o[2][0]}" stroke="rgba(255,255,255,.6)" stroke-width=".8"/>`).join("")}
+        ${foods}${basket}
+      </g>
+      <path d="M${o.map((p) => p.join(" ")).join(" L")} Z" fill="none" stroke="#9aa5ae" stroke-width="1.6"/>
+      <path d="M${rim.map((p) => p.join(" ")).join(" L")} Z" fill="none" stroke="url(#${g.top})" stroke-width="2.4"/>
+      <rect x="${x0}" y="${y0}" width="${x1 - x0}" height="2.6" rx="1" fill="#d5dbe0" stroke="rgba(0,0,0,.2)" stroke-width=".5"/>
+      ${lidSvg}
+      ${lit && th > 1.2 ? [0, 1, 2, 3].map((i) => `<path class="fr-steam m${i + 1}" d="M${x0 + 18 + i * 18} ${y0 - 4} q-2.5 -3 0 -6 q2.5 -3 0 -6" stroke="rgba(215,238,255,.9)" stroke-width="1.4" fill="none" stroke-linecap="round"/>`).join("") : ""}`;
+    return out;
+  }
+  // Upright freezer: one door, see-through drawers behind it.
+  function uprightFreezer(s) {
+    const g = { front: id(), side: id(), top: id(), door: id(), cav: id(), handle: id(), rec: id(), glass: id(), glow: id() };
+    const x0 = 28, x1 = 84, y0 = 2, y1 = 116;
+    let out = defs(g, !s.dark) + cabinet(x0, y0, x1, y1, g);
+    const front = `<rect x="${x0 + 3}" y="${y0 + 3}" width="${x1 - x0 - 6}" height="14" rx="2" fill="rgba(0,0,0,.04)"/>`
+      + handle(x1 - 7, y0 + 24, 44, g) + lcd(x0 + 5, y0 + 6, 26, s.fridgeTemp, s.warn, s.dark);
+    if (s.open) return out + inside(x0 + 1, y0 + 1, x1 - 1, y1 - 1, g, s, "drawers") + swing(x0, y0, y1, g, 1, x1 - x0, 17, "plain", panel(x0, y0, x1, y1, g) + front, s.kF);
+    return out + front + `<g class="nt-run">${[[x0 + 9, y0 + 32], [x1 - 15, y0 + 62], [x0 + 12, y0 + 96]].map(([x, y], i) => `<g class="nta-frost ntd${i + 1}">${ntFlake(x, y, 2.2, "#29b6f6", .65)}</g>`).join("")}</g>`;
+  }
+  function fridge(layout, s) {
+    if (layout === "chest") return chest(s);
+    if (layout === "drawers") return uprightFreezer(s);
+    const g = { front: id(), side: id(), top: id(), door: id(), cav: id(), handle: id(), rec: id(), glass: id(), glow: id() };
+    let out = defs(g, !s.dark);
+    if (layout === "side_by_side") {
+      const x0 = 18, x1 = 90, y0 = 6, y1 = 116, mid = 48;
+      out += cabinet(x0, y0, x1, y1, g);
+      const rFront = handle(mid + 3.5, y0 + 26, 50, g) + lcd(mid + 10, y0 + 8, 18, s.fridgeTemp, s.warn, s.dark);
+      const lFront = lcd(x0 + 5, y0 + 8, 20, s.freezerTemp, false, s.dark) + dispenser(x0 + 3, y0 + 22, 19, 34, s, g) + handle(mid - 5.5, y0 + 26, 50, g);
+      if (s.open) out += inside(mid + 1, y0 + 1, x1 - 1, y1 - 1, g, s, false) + swing(x1, y0, y1, g, -1, x1 - mid, 15, "bins", panel(mid, y0, x1, y1, g) + rFront, s.kF);
+      else out += vseam(mid, y0, y1) + rFront;
+      // Dispenser on the left of the freezer door, handle beside the seam in
+      // front of it, never hidden behind it.
+      if (s.freezerOpen) out += inside(x0 + 1, y0 + 1, mid - 1, y1 - 1, g, s, true) + swing(x0, y0, y1, g, 1, mid - x0, 15, "plain", panel(x0, y0, mid, y1, g) + lFront, s.kZ);
+      else out += lFront;
+      out += vseam(mid, y0, y1);
+      return out;
+    }
+    const x0 = 28, x1 = 84, y0 = 2, y1 = 116;
+    out += cabinet(x0, y0, x1, y1, g);
+    if (layout === "wine") {
+      // Closed: the same racks and lying bottles as the open cellar, seen
+      // through the tinted glass of the door.
+      const wx0 = x0 + 4, wy0 = y0 + 13, wx1 = x1 - 8, wy1 = y1 - 5;
+      const glassFront = `<path d="M${x0} ${y0} H${x1} V${y1} H${x0} Z M${wx0} ${wy0} V${wy1} H${wx1} V${wy0} Z" fill="url(#${g.front})" fill-rule="evenodd" stroke="rgba(0,0,0,.2)" stroke-width=".6"/>
+        <rect x="${wx0}" y="${wy0}" width="${wx1 - wx0}" height="${wy1 - wy0}" rx="2" fill="url(#${g.glass})" opacity=".45"/>
+        <path d="M${wx0 + 3} ${wy0 + 2} L${wx0 + 15} ${wy0 + 2} L${wx0 + 3} ${wy0 + 48} Z" fill="rgba(255,255,255,.14)"/>
+        <rect x="${wx0}" y="${wy0}" width="${wx1 - wx0}" height="${wy1 - wy0}" rx="2" fill="none" stroke="#3a3f45" stroke-width="1.6"/>
+        ${handle(x1 - 6, y0 + 30, 50, g)}${lcd(x0 + 17, y0 + 3, 20, s.fridgeTemp, s.warn, s.dark)}`;
+      if (s.open) return out + wineInside(x0 + 1, y0 + 1, x1 - 1, y1 - 1, g, s) + swing(x0, y0, y1, g, 1, x1 - x0, 17, "glass", glassFront, s.kF);
+      return out + wineInside(wx0, wy0, wx1, wy1, g, s) + `
+        <rect class="fr-glass" x="${wx0}" y="${wy0}" width="${wx1 - wx0}" height="${wy1 - wy0}" rx="2" fill="url(#${g.glass})" opacity=".45"/>
+        <rect x="${wx0}" y="${wy0}" width="${wx1 - wx0}" height="${wy1 - wy0}" rx="2" fill="rgba(20,24,28,${s.dark ? .55 : .18})"/>
+        <path d="M${wx0 + 3} ${wy0 + 2} L${wx0 + 15} ${wy0 + 2} L${wx0 + 3} ${wy0 + 48} Z" fill="rgba(255,255,255,.14)"/>
+        <path d="M${wx0 + 19} ${wy0 + 2} L${wx0 + 23} ${wy0 + 2} L${wx0 + 9} ${wy0 + 56} L${wx0 + 7} ${wy0 + 56} Z" fill="rgba(255,255,255,.08)"/>
+        <rect x="${wx0}" y="${wy0}" width="${wx1 - wx0}" height="${wy1 - wy0}" rx="2" fill="none" stroke="#3a3f45" stroke-width="1.6"/>
+        ${handle(x1 - 6, y0 + 30, 50, g)}${lcd(x0 + 17, y0 + 3, 20, s.fridgeTemp, s.warn, s.dark)}`;
+    }
+    const cut = layout === "freezer_top" ? 0.34 : layout === "single" ? 1 : 0.63;
+    const yc = y0 + (y1 - y0) * cut;
+    const fridgeTop = layout !== "freezer_top";
+    const fy0 = fridgeTop ? y0 : yc, fy1 = fridgeTop ? (layout === "single" ? y1 : yc) : y1;
+    const zy0 = fridgeTop ? yc : y0, zy1 = fridgeTop ? y1 : yc;
+    const fFront = handle(x1 - 7, fy0 + (fy1 - fy0) * 0.22, Math.min(40, (fy1 - fy0) * 0.45), g) + lcd(x0 + 5, fy0 + 6, 16, s.fridgeTemp, s.warn, s.dark)
+      + (s.ice !== undefined && layout === "freezer_bottom" ? dispenser(x0 + 5, fy0 + 18, 17, 30, s, g) : "");
+    if (s.open) out += inside(x0 + 1, fy0 + 1, x1 - 1, fy1 - 1, g, s, false) + swing(x0, fy0, fy1, g, 1, x1 - x0, 17, "bins", panel(x0, fy0, x1, fy1, g) + fFront, s.kF);
+    else out += fFront;
+    if (layout !== "single") {
+      out += seam(x0, yc, x1);
+      const zFront = handle(x1 - 7, zy0 + 6, Math.min(18, (zy1 - zy0) * 0.4), g) + lcd(x0 + 5, zy0 + 6, 16, s.freezerTemp, false, s.dark);
+      if (s.freezerOpen) out += inside(x0 + 1, zy0 + 1, x1 - 1, zy1 - 1, g, s, true) + swing(x0, zy0, zy1, g, 1, x1 - x0, 17, "plain", panel(x0, zy0, x1, zy1, g) + zFront, s.kZ);
+      else out += zFront;
+    }
+    return out;
+  }
 
-  const cav = (style) =>
-    `<div class="fr-cav${off}" style="${style}">
-       <div class="fr-shelf" style="top:28%"></div><div class="fr-shelf" style="top:62%"></div>
-     </div>`;
-  const panel = (style, content, on, hinge) =>
-    `<div class="fr-door${on ? " swung" : ""}${hinge === "right" ? " hinge-right" : ""}" style="${style}">${content}</div>`;
+  return (ctx, anim) => {
+    n = 0;
+    const L = ctx.layout || "freezer_bottom";
+    const cold = L === "chest" || L === "drawers";
+    const s = {
+      fridgeTemp: cold ? ctx.coldText || undefined : ctx.fridgeTemp,
+      freezerTemp: L === "single" || cold ? undefined : ctx.freezerTemp,
+      warn: !!ctx.fridgeWarn,
+      dark: !!ctx.dark,
+      open: cold ? !!(ctx.doorOpen || ctx.freezerDoorOpen) : !!ctx.doorOpen,
+      freezerOpen: !cold && !!ctx.freezerDoorOpen,
+      ice: L === "wine" ? undefined : ctx.ice,
+      kF: 1,
+      kZ: 1,
+      ...(anim || {}),
+    };
+    return `<svg class="fr-svg" viewBox="0 -10 120 135">${fridge(L, s)}</svg>`;
+  };
+})();
 
-  if (layout === "single") {
-    return `<div class="fr-wrap">${cav("inset:0")}${panel("inset:0", door[0], open)}</div>`;
-  }
-  if (layout === "wine") {
-    return `<div class="fr-wrap"><div class="fr-cav wine${off}" style="inset:0"><div class="fr-racks">${racks}</div></div>${panel("inset:0", door[0], open)}</div>`;
-  }
-  if (layout === "side_by_side") {
-    return `<div class="fr-wrap">
-        ${cav("left:0;width:42%;top:0;bottom:0")}${cav("left:42%;right:0;top:0;bottom:0")}
-        ${panel("left:0;width:42%;top:0;bottom:0", door[0], openFreezer)}
-        ${panel("left:42%;right:0;top:0;bottom:0", door[1], open, "right")}
-      </div>`;
-  }
-  // Stacked layouts: the top door belongs to whichever compartment is on top.
-  const cut = layout === "freezer_top" ? 34 : 63;
-  const topOpen = layout === "freezer_top" ? openFreezer : open;
-  const bottomOpen = layout === "freezer_top" ? open : openFreezer;
-  return `<div class="fr-wrap">
-      ${cav(`left:0;right:0;top:0;height:${cut}%`)}${cav(`left:0;right:0;top:${cut}%;bottom:0`)}
-      ${panel(`left:0;right:0;top:0;height:${cut}%`, door[0], topOpen)}
-      ${panel(`left:0;right:0;top:${cut}%;bottom:0`, door[1], bottomOpen)}
-    </div>`;
+function fridgeHtml(ctx, anim) {
+  const cold = ctx.coldBox;
+  const f = cold ? !!(ctx.doorOpen || ctx.freezerDoorOpen) : !!ctx.doorOpen;
+  const z = !cold && !!ctx.freezerDoorOpen;
+  return `<div class="fr3 fr-k-${ctx.layout || "freezer_bottom"}${ctx.dark ? " fr-off" : ""}${f ? " fr-open-f" : ""}${z ? " fr-open-z" : ""}">${FR3(ctx, anim)}</div>`;
 }
 
 // The air lines, shared by the purifier and the fan. How many show depends on
@@ -13743,13 +13939,12 @@ function illustrationHtml(type, ctx) {
         </div>`;
   }
 
-  if (type === "fridge" && ctx.coldBox) {
-    return ntHtml(cls, { kind: ctx.layout, on: ctx.cooling !== false && !ctx.dark, dark: ctx.dark, warn: ctx.fridgeWarn,
-      open: !!(ctx.doorOpen || ctx.freezerDoorOpen), lcd: ctx.coldText });
-  }
   if (NT_TYPES.includes(type)) return ntHtml(cls, ctx.ntDraw || {});
   if (type === "fridge") {
-    return `<div class="machine ${cls} ${ctx.ice ? "ice" : ""}">${fridgeHtml(ctx)}</div>`;
+    // A chest or a drawer freezer frosts over while it cools, like the other
+    // new drawings (nt-on).
+    const nt = ctx.coldBox ? ` nt nt-k-${ctx.layout}${ctx.cooling !== false && !ctx.dark ? " nt-on" : ""}` : "";
+    return `<div class="machine ${cls} ${ctx.ice ? "ice" : ""}${nt}">${fridgeHtml(ctx)}</div>`;
   }
 
   if (type === "water_heater") {
@@ -18670,6 +18865,34 @@ class ApplianceCard extends HTMLElement {
         this._render();
       });
     });
+    this._fridgeSwing(applianceType === "fridge" && compact !== "hide" ? illustrationCtx : null);
+  }
+
+  // A fridge door opening or closing turns on its hinge rather than jumping:
+  // for a moment after the change the drawing is redrawn frame by frame, each
+  // door that moved going from shut to open or back. Nothing moves on the
+  // first drawing, nor for someone who asked for less motion.
+  _fridgeSwing(ctx) {
+    const now = ctx ? (ctx.coldBox ? { f: !!(ctx.doorOpen || ctx.freezerDoorOpen), z: false } : { f: !!ctx.doorOpen, z: !!ctx.freezerDoorOpen }) : null;
+    const prev = this._frDoors;
+    this._frDoors = now;
+    if (!now || !prev || (prev.f === now.f && prev.z === now.z)) return;
+    if (typeof requestAnimationFrame !== "function" || typeof performance === "undefined") return;
+    if (typeof matchMedia === "function" && matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    if (this._frRaf) cancelAnimationFrame(this._frRaf);
+    const t0 = performance.now(), dur = 800;
+    const ease = (x) => (x < 0.5 ? 2 * x * x : 1 - Math.pow(-2 * x + 2, 2) / 2);
+    const step = (t) => {
+      const host = this._root && this._root.querySelector(".fr3");
+      if (!host) { this._frRaf = null; return; }
+      const p = Math.min(1, (t - t0) / dur), e = ease(p);
+      const k = (a, b) => (a === b ? 1 : b ? e : 1 - e);
+      host.innerHTML = p < 1
+        ? FR3(ctx, { open: prev.f || now.f, freezerOpen: prev.z || now.z, kF: k(prev.f, now.f), kZ: k(prev.z, now.z) })
+        : FR3(ctx);
+      this._frRaf = p < 1 ? requestAnimationFrame(step) : null;
+    };
+    this._frRaf = requestAnimationFrame(step);
   }
 }
 

@@ -1583,7 +1583,7 @@ check('config vide : toujours refusee', accepts({}), false);
 // A fridge-only field identifies the type on its own, which is what makes a
 // state-entity-free config possible in the first place.
 check('frigo : detecte sur un champ qui n\'existe que chez lui',
-  /fr-body/.test(render({ fridge_temperature_entity: 'sensor.fr_t' }, FRIDGE)), true);
+  /fr-svg/.test(render({ fridge_temperature_entity: 'sensor.fr_t' }, FRIDGE)), true);
 
 const frOk = render(fridgeCfg({ fridge_temperature_entity: 'sensor.fr_t',
   freezer_temperature_entity: 'sensor.cg_t', door_entity: 'binary_sensor.fr_d' }), FRIDGE);
@@ -1696,29 +1696,27 @@ const frCgOpen = render(fridgeCfg({ door_entity: 'binary_sensor.fr_d', freezer_d
 contains('frigo : la porte ouverte est nommee', frCgOpen, 'Freezer door open');
 check('frigo : la porte fermee ne prend pas de ligne', /Fridge door open/.test(frCgOpen), false);
 
-// Each door swings for its own sensor, hinged on the outer edge.
-/** The two door panels, in DOM order, as "swung|shut". */
-const panels = h => [...h.matchAll(/<div class="(fr-door[^"]*)" style="([^"]*)"/g)]
-  .map(m => (m[1].includes('swung') ? 'swung' : 'shut'));
+// Each door opens for its own sensor.
+/** The drawing's holder classes: fr-open-f fridge door open, fr-open-z freezer. */
+const opened = h => (/class="fr3[^"]*"/.exec(h) || [''])[0];
 const sbs = (states) => render(fridgeCfg({ fridge_layout: 'side_by_side',
   door_entity: 'binary_sensor.fr_d', freezer_door_entity: 'binary_sensor.cg_d' }), withStates(states));
 const sbsRight = sbs({ 'binary_sensor.fr_d': { state: 'on', attributes: {} } });
-check('americain : la porte du refrigerateur est charniere a droite',
-  /fr-door swung hinge-right/.test(sbsRight), true);
-check('americain : le congelateur reste ferme', panels(sbsRight).join(','), 'shut,swung');
+check('americain : la porte du refrigerateur s\'ouvre', /fr-open-f/.test(opened(sbsRight)), true);
+check('americain : le congelateur reste ferme', /fr-open-z/.test(opened(sbsRight)), false);
 const sbsLeft = sbs({ 'binary_sensor.cg_d': { state: 'on', attributes: {} } });
-check('americain : le congelateur s\'ouvre vers la gauche',
-  /fr-door swung"/.test(sbsLeft), true);
+check('americain : le congelateur s\'ouvre seul', /fr-open-z/.test(opened(sbsLeft)) && !/fr-open-f/.test(opened(sbsLeft)), true);
+check('americain : porte du congelateur ouverte, plus de distributeur', /url\(#fr\d+\)" stroke="rgba\(0,0,0,.35\)" stroke-width=".5"/.test(sbsLeft), false);
+check('americain : porte fermee, le distributeur', /url\(#fr\d+\)" stroke="rgba\(0,0,0,.35\)" stroke-width=".5"/.test(sbsRight), true);
 
-// Stacked layouts: the top panel belongs to whichever compartment is on top,
-// so the same open fridge door swings a different panel in each layout.
+// Stacked layouts: each door its own compartment.
 const openFridgeDoor = layout => render(
   fridgeCfg({ fridge_layout: layout, door_entity: 'binary_sensor.fr_d' }),
   withStates({ 'binary_sensor.fr_d': { state: 'on', attributes: {} } }));
-check('congelateur en bas : la porte du frigo est celle du haut',
-  panels(openFridgeDoor('freezer_bottom')).join(','), 'swung,shut');
-check('congelateur en haut : la porte du frigo est celle du bas',
-  panels(openFridgeDoor('freezer_top')).join(','), 'shut,swung');
+for (const layout of ['freezer_bottom', 'freezer_top']) {
+  check(`${layout} : la porte du frigo seule`, opened(openFridgeDoor(layout)).replace(/fr-k-\w+ ?/, ''), 'class="fr3 fr-open-f"');
+  check(`${layout} : l interieur et ses balconnets`, /<path d="M[^"]*" fill="rgba\(190,225,250,.55\)"/.test(openFridgeDoor(layout)), true);
+}
 
 // Whole degrees by default, on the screens and in the lines: an update must
 // not change what a dashboard shows. temperature_decimals: auto hands each
@@ -1737,13 +1735,13 @@ check('congelateur en haut : la porte du frigo est celle du bas',
   const def = fridgeWith({});
   check('temperature par defaut : le frigo au degre', infoLine(def, 'Fridge'), '4 °C');
   check('temperature par defaut : le congelateur au degre', infoLine(def, 'Freezer'), '-21 °C');
-  contains('temperature par defaut : l\'ecran au degre', def, '>4°</div>');
-  contains('temperature par defaut : l\'ecran du congelateur au degre', def, '>-21°</div>');
+  contains('temperature par defaut : l\'ecran au degre', def, '>4°</text>');
+  contains('temperature par defaut : l\'ecran du congelateur au degre', def, '>-21°</text>');
   const h = fridgeWith({ temperature_decimals: 'auto' });
   check('temperature auto : le frigo garde ses decimales', infoLine(h, 'Fridge'), '4,2 °C');
   check('temperature auto : le congelateur aussi', infoLine(h, 'Freezer'), '-20,6 °C');
-  contains('temperature auto : l\'ecran suit la precision de l\'entite', h, '>4,2°</div>');
-  contains('temperature auto : l\'ecran du congelateur aussi', h, '>-20,6°</div>');
+  contains('temperature auto : l\'ecran suit la precision de l\'entite', h, '>4,2°</text>');
+  contains('temperature auto : l\'ecran du congelateur aussi', h, '>-20,6°</text>');
   check('temperature auto : sans formateur, la valeur telle quelle', infoLine(render(fridgeCfg({ fridge_temperature_entity: 'sensor.fr_t',
     temperature_decimals: 'auto' }), withStates({ 'sensor.fr_t': { state: '4.2', attributes: { unit_of_measurement: '°C' } } })), 'Fridge'), '4.2 °C');
   check('temperature auto : sans unite, le degre entier et l\'unite de HA', infoLine(render(fridgeCfg({ fridge_temperature_entity: 'input_number.fr',
@@ -1782,11 +1780,11 @@ check('congelateur en haut : la porte du frigo est celle du bas',
     freezer_temperature_entity: 'sensor.cg_t', ...extra });
   const frSt = (a = '4.2', b = '-20.6') => withStates({ 'sensor.fr_t': T(a), 'sensor.cg_t': T(b) });
   const deg = withFmt(frCfg({ temperature_decimals: '0' }), frSt());
-  contains('precision au degre : l\'ecran', deg, '>4\u00b0</div>');
-  contains('precision au degre : le congelateur arrondit', deg, '>-21\u00b0</div>');
+  contains('precision au degre : l\'ecran', deg, '>4\u00b0</text>');
+  contains('precision au degre : le congelateur arrondit', deg, '>-21\u00b0</text>');
   check('precision au degre : la ligne', infoLine(deg, 'Fridge'), '4 \u00b0C');
   const dix = withFmt(frCfg({ temperature_decimals: '1' }), frSt('4', '-18'));
-  contains('precision au dixieme : l\'ecran', dix, '>4.0\u00b0</div>');
+  contains('precision au dixieme : l\'ecran', dix, '>4.0\u00b0</text>');
   check('precision au dixieme : la ligne', infoLine(dix, 'Fridge'), '4.0 \u00b0C');
   check('precision au dixieme : le congelateur', infoLine(dix, 'Freezer'), '-18.0 \u00b0C');
   check('precision en nombre YAML : 0 compris', infoLine(withFmt(frCfg({ temperature_decimals: 0 }), frSt()), 'Fridge'), '4 \u00b0C');
@@ -1794,12 +1792,12 @@ check('congelateur en haut : la porte du frigo est celle du bas',
   check('precision auto : comme l\'entite', infoLine(withFmt(frCfg({ temperature_decimals: 'auto' }), frSt()), 'Fridge'), '4,2 \u00b0C');
   check('precision inconnue : au degre', infoLine(withFmt(frCfg({ temperature_decimals: '2' }), frSt()), 'Fridge'), '4 \u00b0C');
   const zero = withFmt(frCfg({ temperature_decimals: '0' }), frSt('-0.3'));
-  contains('precision au degre : -0,3 se lit 0', zero, '>0\u00b0</div>');
+  contains('precision au degre : -0,3 se lit 0', zero, '>0\u00b0</text>');
   check('precision au degre : jamais -0', /-0\u00b0/.test(zero), false);
   // A pinned language: the formatter would answer in the wrong one.
-  check('langue forcee : la precision de l\'entite', /(>4,2\u00b0<\/div>)/.test(withFmt(frCfg({ language: 'fr', temperature_decimals: 'auto' }), frSt(),
+  check('langue forcee : la precision de l\'entite', /(>4,2\u00b0<\/text>)/.test(withFmt(frCfg({ language: 'fr', temperature_decimals: 'auto' }), frSt(),
     { 'sensor.fr_t': { display_precision: 1 } })), true);
-  check('langue forcee : sans precision, le degre entier', /(>4\u00b0<\/div>)/.test(withFmt(frCfg({ language: 'fr', temperature_decimals: 'auto' }), frSt())), true);
+  check('langue forcee : sans precision, le degre entier', /(>4\u00b0<\/text>)/.test(withFmt(frCfg({ language: 'fr', temperature_decimals: 'auto' }), frSt())), true);
   // Every appliance with a temperature, screens included.
   const blf = withFmt({ appliance_type: 'boiler', state_entity: 'sensor.bl', temperature_entity: 'sensor.flow', temperature_decimals: 'auto' },
     { 'sensor.bl': { state: 'CH', attributes: {} }, 'sensor.flow': T('56.5') });
@@ -1832,25 +1830,25 @@ check('congelateur en haut : la porte du frigo est celle du bas',
     power_entity: 'sensor.p', ...extra }, { 'sensor.fr_t': FRIDGE['sensor.fr_t'], ...states });
   const lit = cave({ plug_entity: 'switch.plug' }, { 'sensor.p': { state: '14', attributes: { unit_of_measurement: 'W' } },
     'switch.plug': { state: 'on', attributes: {} } });
-  check('cave allumee : la vitre est eclairee', /class="fr-glass"/.test(lit), true);
-  check('cave allumee : pas d\'extinction', /fr-glass off/.test(lit), false);
+  check('cave allumee : la vitre est eclairee', /fr-off/.test(lit), false);
+  check('cave allumee : pas d\'extinction', /fr-off/.test(lit), false);
   const unpl = cave({ plug_entity: 'switch.plug' }, { 'sensor.p': { state: '0', attributes: { unit_of_measurement: 'W' } },
     'switch.plug': { state: 'off', attributes: {} } });
-  check('cave debranchee : la lumiere s\'eteint', /class="fr-glass off"/.test(unpl), true);
+  check('cave debranchee : la lumiere s\'eteint', /fr-off/.test(unpl), true);
   const zeroFrom = m => ({ 'sensor.p': { state: '0', attributes: { unit_of_measurement: 'W' },
     last_changed: new Date(now() - m * 60000).toISOString() } });
   const zeroW = cave({}, zeroFrom(45));
-  check('cave a 0 W : la lumiere s\'eteint aussi', /class="fr-glass off"/.test(zeroW), true);
-  check('cave a 0 W depuis 10 min : encore allumee', /fr-glass off/.test(cave({}, zeroFrom(10))), false);
+  check('cave a 0 W : la lumiere s\'eteint aussi', /fr-off/.test(zeroW), true);
+  check('cave a 0 W depuis 10 min : encore allumee', /fr-off/.test(cave({}, zeroFrom(10))), false);
   const openOff = render({ appliance_type: 'fridge', fridge_layout: 'wine', door_entity: 'binary_sensor.fr_d', plug_entity: 'switch.plug' },
     { 'binary_sensor.fr_d': { state: 'on', attributes: {} }, 'switch.plug': { state: 'off', attributes: {} } });
-  check('cave debranchee ouverte : l\'interieur est noir', /class="fr-cav wine off"/.test(openOff), true);
+  check('cave debranchee ouverte : l\'interieur est noir', /fr-off/.test(openOff) && /#141010/.test(openOff), true);
   const single = (sw) => render({ appliance_type: 'fridge', fridge_layout: 'single', door_entity: 'binary_sensor.fr_d', plug_entity: 'switch.plug' },
     { 'binary_sensor.fr_d': { state: 'on', attributes: {} }, 'switch.plug': { state: sw, attributes: {} } });
-  check('frigo debranche ouvert : l\'interieur est noir', /class="fr-cav off"/.test(single('off')), true);
-  check('frigo branche ouvert : l\'interieur est eclaire', /class="fr-cav"/.test(single('on')), true);
-  contains('lumiere eteinte : sa couleur', lit, '.fr-cav.off, .fr-glass.off { background: #15171b; }');
-  contains('lumiere eteinte : les bouteilles dans le noir', lit, '.fr-cav.off .fr-rack, .fr-glass.off .fr-rack { filter: brightness(0.35); }');
+  check('frigo debranche ouvert : l\'interieur est noir', /fr-off/.test(single('off')) && /#2c3338/.test(single('off')), true);
+  check('frigo branche ouvert : l\'interieur est eclaire', /fr-off/.test(single('on')) || /#2c3338/.test(single('on')), false);
+  contains('lumiere eteinte : les bouteilles dans le noir', unpl, '#151b16');
+  check('lumiere allumee : les bouteilles en couleur', /#151b16/.test(lit), false);
 }
 
 // Hidden from the list, still on the doors: an American fridge already shows
@@ -1861,8 +1859,8 @@ check('congelateur en haut : la porte du frigo est celle du bas',
     withStates({ 'sensor.fr_t': { state: '11', attributes: { unit_of_measurement: '°C' } } }));
   check('masquer les temperatures : plus de ligne frigo', infoLine(hot, 'Fridge'), null);
   check('masquer les temperatures : plus de ligne congelateur', infoLine(hot, 'Freezer'), null);
-  contains('masquer les temperatures : toujours sur les portes', hot, '>11°</div>');
-  contains('masquer les temperatures : et le congelateur', hot, '>-18°</div>');
+  contains('masquer les temperatures : toujours sur les portes', hot, '>11°</text>');
+  contains('masquer les temperatures : et le congelateur', hot, '>-18°</text>');
   check('masquer les temperatures : l\'alerte reste', stateLine(hot), 'Temperature high');
   check('masquer les temperatures : la porte reste dans la liste', /Door closed/.test(hot), true);
 }
@@ -1875,9 +1873,9 @@ const wine = (extra = {}, states = {}) => render(fridgeCfg({ fridge_layout: 'win
 const wineShut = wine({}, wineT('12'));
 check('cave a vin : une vitre', (wineShut.match(/class="fr-glass"/g) || []).length, 1);
 check('cave a vin : cinq casiers derriere la vitre', (wineShut.match(/class="fr-rack"/g) || []).length, 5);
-check('cave a vin : les casiers sont dans la vitre',
-  /<div class="fr-glass"[^>]*>(\s*<div class="fr-rack"[^>]*><\/div>){5}\s*<\/div>/.test(wineShut), true);
-contains('cave a vin : la temperature a l\'ecran', wineShut, '>12°</div>');
+check('cave a vin : les casiers derriere la vitre',
+  wineShut.lastIndexOf('class="fr-rack"') < wineShut.indexOf('class="fr-glass"'), true);
+contains('cave a vin : la temperature a l\'ecran', wineShut, '>12°</text>');
 check('cave a vin : 12 degres, c\'est normal', stateLine(wineShut), 'Normal');
 check('cave a vin : la ligne dit Temperature', infoLine(wineShut, 'Temperature'), '12 °C');
 check('cave a vin : pas de ligne Fridge', infoLine(wineShut, 'Fridge'), null);
@@ -1887,19 +1885,29 @@ check('cave a vin : le seuil choisi passe devant', stateLine(wine({ fridge_max_t
 check('frigo une porte : 12 degres restent trop chauds', stateLine(render(fridgeCfg({ fridge_layout: 'single',
   fridge_temperature_entity: 'sensor.fr_t' }), withStates(wineT('12')))), 'Temperature high');
 const wineMore = wine({ ice_maker_entity: 'switch.ice', freezer_temperature_entity: 'sensor.cg_t' }, wineT('12'));
-check('cave a vin : pas de glacons', /class="fr-icebox/.test(wineMore), false);
-check('frigo une porte : ses glacons, eux, sont la', /class="fr-icebox/.test(render(fridgeCfg({ fridge_layout: 'single', ice_maker_entity: 'switch.ice' }), FRIDGE)), true);
+check('cave a vin : pas de glacons', /class="fr-cube/.test(wineMore), false);
+check('frigo une porte : pas de distributeur, meme avec des glacons', /class="fr-(cube|glint)/.test(render(fridgeCfg({ fridge_layout: 'single', ice_maker_entity: 'switch.ice' }),
+  withStates({ 'switch.ice': { state: 'on', attributes: {} } }))), false);
+{
+  const ice = (layout, extra = {}, st = 'on') => render(fridgeCfg({ fridge_layout: layout, ...extra }), withStates({ 'switch.ice': { state: st, attributes: {} } }));
+  check('congelateur en bas : le distributeur avec une entite glacons', /class="fr-glint"/.test(ice('freezer_bottom', { ice_maker_entity: 'switch.ice' })), true);
+  check('congelateur en bas : des cubes qui tombent', (ice('freezer_bottom', { ice_maker_entity: 'switch.ice' }).match(/fr-cube drop/g) || []).length, 3);
+  check('congelateur en bas : sans entite glacons, pas de distributeur', /class="fr-cube|\u2014<\/text>|stroke-width=".5"\/>\s*<path d="M[^"]*" fill="rgba\(0,0,0,.4\)"/.test(ice('freezer_bottom')), false);
+  check('congelateur en bas : machine a l arret, le bac vide', /\u2014<\/text>/.test(ice('freezer_bottom', { ice_maker_entity: 'switch.ice' }, 'off')), true);
+  check('congelateur en haut : pas de distributeur', /class="fr-(cube|glint)/.test(ice('freezer_top', { ice_maker_entity: 'switch.ice' })), false);
+  check('americain : le distributeur sans entite glacons', /fill="rgba\(0,0,0,.4\)"/.test(ice('side_by_side')), true);
+  check('americain : les glacons qui tombent', /fr-cube drop/.test(ice('side_by_side', { ice_maker_entity: 'switch.ice' })), true);
+}
 check('cave a vin : pas d\'ecran de congelateur', /-18°/.test(wineMore), false);
 const wineOpen = wine({}, { ...wineT('12'), 'binary_sensor.fr_d': { state: 'on', attributes: {} } });
-check('cave a vin ouverte : la porte pivote', panels(wineOpen).join(','), 'swung');
-check('cave a vin ouverte : les bouteilles restent dans la cave',
-  /<div class="fr-cav wine"[^>]*><div class="fr-racks">(<div class="fr-rack"[^>]*><\/div>){5}<\/div><\/div>/.test(wineOpen), true);
-check('cave a vin ouverte : la vitre de la porte est vide', /<div class="fr-glass empty"[^>]*><\/div>/.test(wineOpen), true);
-contains('cave a vin : cinq bouteilles entieres par casier', wineShut, 'left: 50%; width: 45px; margin-left: -22.5px;');
+check('cave a vin ouverte : la porte s\'ouvre', /fr-open-f/.test(opened(wineOpen)), true);
+check('cave a vin ouverte : les bouteilles restent dans la cave', (wineOpen.match(/class="fr-rack"/g) || []).length, 5);
+check('cave a vin ouverte : la vitre de la porte', /fill="rgba\(180,215,235,.35\)"/.test(wineOpen), true);
+check('cave a vin : trois bouteilles couchees par casier, une de rouge', (wineShut.match(/fill="#c9a24b"/g) || []).length, 10);
 contains('cave a vin : en francais', render(fridgeCfg({ fridge_layout: 'wine', language: 'fr', fridge_temperature_entity: 'sensor.fr_t' }),
   withStates(wineT('12'))), 'Température');
 for (const id of ['sensor.cave_a_vin_etat', 'sensor.wine_cooler_status', 'binary_sensor.weinkuehlschrank_tur', 'sensor.vinoteca_estado']) {
-  check(`detection : ${id} est un frigo`, /fr-body|fr-wrap/.test(render({ state_entity: id }, { [id]: { state: 'off', attributes: {} } })), true);
+  check(`detection : ${id} est un frigo`, /fr-svg/.test(render({ state_entity: id }, { [id]: { state: 'off', attributes: {} } })), true);
 }
 
 // Read-only by design: a fridge exposes nothing to press, so a stray action
@@ -11374,10 +11382,10 @@ function tvT(w) { return { 'switch.tv': { state: 'on', attributes: {} }, 'sensor
   check('coffre : -10 est trop chaud pour un congelateur', /#ff5252/.test(render(CH, chS(-10, 80))), true);
   check('coffre : -18 ne l est pas', /#ff5252/.test(render(CH, chS(-18, 80))), false);
   check('coffre : etat', stateLine(render(CH, chS(-18, 80))), 'Cooling');
-  check('coffre : couvercle ouvert', /fill="#e9eef3"/.test(render({ ...CH, door_entity: 'binary_sensor.d' }, { ...chS(-18, 80), 'binary_sensor.d': s('on') })), true);
+  check('coffre : couvercle ouvert', /stop-color="#f4f7f9"/.test(render({ ...CH, door_entity: 'binary_sensor.d' }, { ...chS(-18, 80), 'binary_sensor.d': s('on') })), true);
   check('coffre : debranche, ecran eteint', /-18 °C<\/text>/.test(render({ ...CH, plug_entity: 'switch.p' }, { ...chS(-18, 0), 'switch.p': s('off') })), false);
   check('tiroirs : son dessin', kind(render({ ...CH, fridge_layout: 'drawers' }, chS(-20, 80))), 'drawers');
-  check('tiroirs : un tiroir tire', /translate\(-6 5\)/.test(render({ ...CH, fridge_layout: 'drawers', door_entity: 'binary_sensor.d' }, { ...chS(-20, 80), 'binary_sensor.d': s('on') })), true);
+  check('tiroirs : la porte ouverte sur les tiroirs', /fill="#5d6672"/.test(render({ ...CH, fridge_layout: 'drawers', door_entity: 'binary_sensor.d' }, { ...chS(-20, 80), 'binary_sensor.d': s('on') })), true);
   check('frigo : les autres dessins inchanges', kind(render({ ...CH, fridge_layout: 'single' }, chS(4, 80))), null);
 
   // The pumps.
