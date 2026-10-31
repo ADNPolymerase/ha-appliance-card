@@ -11669,4 +11669,33 @@ function tvT(w) { return { 'switch.tv': { state: 'on', attributes: {} }, 'sensor
   check('editeur chaudiere : le thermostat', ed({ appliance_type: 'boiler', state_entity: 'sensor.code' }).includes('data-toggle="thermostat_entity"'), true);
 }
 
+// == Compact: the lines under the card, beside the drawing, or behind a chevron
+{
+  const AC = { appliance_type: 'air_conditioner', state_entity: 'climate.ac', compact: 'side' };
+  const ACS = { 'climate.ac': { state: 'cool', attributes: { hvac_action: 'cooling', current_temperature: 27, temperature: 24, current_humidity: 58, hvac_modes: ['off', 'cool'] } } };
+  const lines = h => (h.match(/class="info-line /g) || []).length;
+  const below = render(AC, ACS);
+  check('compact : par defaut les infos dessous', /<div class="info-lines(?! beside)/.test(below) && !/info-lines beside/.test(below), true);
+  check('compact : par defaut pas de chevron', /data-lines-toggle/.test(below), false);
+  const beside = render({ ...AC, compact_lines: 'beside' }, ACS);
+  check('compact beside : les infos a cote', /class="cmp-col">[\s\S]*info-lines beside/.test(beside), true);
+  check('compact beside : pas de chevron', /data-lines-toggle/.test(beside), false);
+  const { card } = build({ ...AC, compact_lines: 'toggle' }, ACS);
+  const closed = markup(card);
+  check('compact toggle : ferme, pas d infos', lines(closed), 0);
+  check('compact toggle : le chevron', /data-lines-toggle/.test(closed), true);
+  check('compact toggle : il dit ce qu il fait', /aria-expanded="false"/.test(closed), true);
+  card._linesOpen = true; card._render();
+  const open = markup(card);
+  check('compact toggle : ouvert, les infos a cote', /info-lines beside/.test(open) && lines(open) > 0, true);
+  check('compact toggle : le chevron tourne', /class="cmp-more open"/.test(open), true);
+  check('compact toggle : ouvert au depart si demande', /info-lines beside/.test(render({ ...AC, compact_lines: 'toggle', compact_lines_open: true }, ACS)), true);
+  check('compact toggle : rien a montrer, pas de chevron', /data-lines-toggle/.test(render({ appliance_type: 'washer', state_entity: 'sensor.w', compact: 'side', compact_lines: 'toggle' }, { 'sensor.w': { state: 'Idle', attributes: {} } })), false);
+  check('compact toggle : sans compact, rien ne change', /data-lines-toggle|info-lines beside/.test(render({ ...AC, compact: false, compact_lines: 'toggle' }, ACS)), false);
+  check('compact : le libelle au survol', /class="info-line [^"]*"[^>]*title="Room"/.test(beside), true);
+  const ed = (cfg) => markup(newEditor(cfg));
+  check('editeur compact : le choix des infos', ed({ ...AC }).includes('data-field="compact_lines"'), true);
+  check('editeur compact : seulement a cote', ed({ ...AC, compact: false }).includes('data-field="compact_lines"'), false);
+}
+
 report();

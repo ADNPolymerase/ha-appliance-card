@@ -145,6 +145,7 @@ const T = {
     step_heat_threshold: "Heating above this power (W)", step_spin_threshold: "Spinning above this power (W)", zone_power: "One zone at full power (W)",
     source: "Source", source_plug: "A smart plug", source_integration: "Integration entities", plug_switch: "Smart plug switch",
     type_thermostat: "Thermostat", section_thermostat_layout: "Model", layout_th_square: "Square", layout_th_round: "Round", layout_th_glass: "Black glass", layout_th_valve: "Radiator valve", th_idle: "Target reached", th_eco: "Eco", th_away: "Away", th_frost: "Frost protection", th_window: "Window open", th_line_valve: "Valve", section_thermostat: "Room thermostat",
+    compact_lines: "Information", lines_below: "Under the card", lines_beside: "Beside the drawing", lines_toggle: "Hidden, a chevron shows them", lines_show: "Show the information", lines_hide: "Hide the information",
     type_hair_dryer: "Hair dryer", layout_hd_pistol: "Classic", layout_hd_ring: "Ring", hd_cool: "Cool air", hd_hot: "Hot air", hd_heat_threshold: "Hot air above this power (W)", fill_height: "Fill the height of its slot", done_alert: "Flash at the end of the cycle", done_seen: "Seen", no_power_threshold: "No power draw below (W)", group_appearance: "Appearance", show_name: "Show the name", show_state: "Show the state", transparent: "Transparent background", font_scale: "Text size", illustration_size: "Drawing size", compact_mode: "Compact mode", compact_off: "Off", compact_hide: "No drawing", compact_side: "Drawing on the side", group_laundry: "Laundry", group_kitchen: "Kitchen", group_heating: "Heating and hot water", group_air: "Air and climate", group_home: "Home and media", group_pets: "Pets", illustration_frame: "Same drawing height as the cards beside it", section_screen_source: "Input source", screen_source: "Input",
     type_network: "Network device (switch, NAS, server)", group_network: "Network and servers", layout_net_switch: "Switch", layout_net_server: "Server", layout_net_nas: "NAS", layout_net_rack: "Rack", net_ports_count: "Ports drawn", net_bays: "NAS bays", net_online: "Online", net_busy: "Busy", net_alert: "Alert", net_warn: "Disk to watch", section_net_cpu: "CPU usage (%)", section_net_memory: "Memory usage (%)", section_net_volume: "Volume used (%)", section_net_download: "Download rate", section_net_upload: "Upload rate", section_net_ports: "Active ports", net_ports_total: "Port count", section_net_poe: "PoE power", section_net_problem: "Problem alert", section_net_temperature: "Temperature", net_temp_alert: "Alert above this temperature (\u00b0C)", net_busy_threshold: "Busy above this rate (Mbit/s)", net_line_rate: "Throughput", net_line_load: "Load", net_line_volume: "Volume", section_net_disk1: "Disk 1", section_net_disk2: "Disk 2", section_net_disk3: "Disk 3", section_net_disk4: "Disk 4",
     type_robot: "Robot (vacuum, mop, mower)", layout_robot_vacuum: "Robot vacuum", layout_robot_mop: "Mopping robot", layout_robot_mower: "Robot mower", section_robot_station: "Base", robot_station_station: "Emptying or washing station", robot_station_base: "Charging base only", robot_shelter: "Shelter over the base", robot_shelter_style: "Shelter style", shelter_lean_to: "Wooden lean-to", shelter_shell: "Shell", robot_shelter_color: "Shell colour", delay_starts_in: "Starts in", section_delay: "Delayed start countdown", state_entity_optional: "State entity (optional)", color_green: "Green", color_orange: "Orange", robot_charging: "Charging", robot_docked: "Docked", robot_cleaning: "Cleaning", robot_mopping: "Mopping", robot_mowing: "Mowing", robot_edgecut: "Edge cutting", robot_returning: "Returning to base", robot_emptying: "Emptying the bin", robot_bin_full: "Bin full", robot_washing: "Washing the pads", robot_drying: "Drying the pads", robot_water_empty: "Water tank empty", robot_rain: "Rain delay", robot_idle: "Stopped", section_robot_status: "Detailed status", section_battery: "Battery", section_robot_bin: "Bin full alert", section_robot_water: "Water tank", section_robot_rain: "Rain", section_robot_error: "Error",
@@ -3213,6 +3214,24 @@ function fontScaleOf(v) {
   return Math.round(Math.min(1.4, Math.max(0.7, n)) * 100) / 100;
 }
 
+// Whether a compact card's lines are shown, as this browser left them. The
+// key is the card's own entity, so two cards of the same appliance agree.
+function linesKey(cfg) {
+  return `ha-appliance-card:lines:${cfg.state_entity || cfg.power_entity || cfg.name || cfg.appliance_type || ""}`;
+}
+function linesOpenStored(cfg) {
+  try {
+    const v = globalThis.localStorage && globalThis.localStorage.getItem(linesKey(cfg));
+    return v === null || v === undefined ? cfg.compact_lines_open === true : v === "1";
+  } catch (e) {
+    return cfg.compact_lines_open === true;
+  }
+}
+function linesOpenStore(cfg, open) {
+  try {
+    if (globalThis.localStorage) globalThis.localStorage.setItem(linesKey(cfg), open ? "1" : "0");
+  } catch (e) { /* a private window keeps it for the page only */ }
+}
 function compactModeOf(v) {
   const s = String(v === undefined || v === null ? "" : v).trim().toLowerCase();
   if (s === "side") return "side";
@@ -15961,6 +15980,18 @@ class ApplianceCard extends HTMLElement {
            keeps the width of its longest word, which a word cannot shrink
            below anyway, so that is where the line breaks. */
         .cmp-side .cmp-wrap .cmp-head { flex: 1; min-width: 0; flex-wrap: wrap; row-gap: 4px; }
+        .cmp-side .cmp-col { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 6px; }
+        .cmp-side .info-lines.beside { margin-top: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 3px 10px; }
+        .cmp-side .info-lines.beside .info-line { font-size: 0.8em; gap: 4px; min-width: 0; }
+        .cmp-side .info-lines.beside .info-line > span { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .cmp-side .info-lines.beside .info-line ha-icon { --mdc-icon-size: 16px; }
+        .cmp-side .info-lines.beside .info-line .label { display: none; }
+        .cmp-more {
+          width: 28px; height: 28px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0;
+          cursor: pointer; color: var(--secondary-text-color, #727272); --mdc-icon-size: 22px; transition: transform 0.25s, background 0.2s;
+        }
+        .cmp-more:hover { background: var(--secondary-background-color, rgba(0, 0, 0, 0.06)); }
+        .cmp-more.open { transform: rotate(180deg); }
         .cmp-side .cmp-head .top { flex: 1 1 0; min-width: min-content; align-items: flex-start; text-align: left; }
         .cmp-side .info-lines { margin-top: 10px; }
         /* fill_height: the card takes the height of its slot, so two cards
@@ -16112,7 +16143,7 @@ class ApplianceCard extends HTMLElement {
           .map((l) => ({ ...l, open: !!l.entity && entityUsable(hass, l.entity) }))
           .map(
             (l) =>
-              `<div class="info-line ${l.warn ? "warn" : l.caution ? "caution" : ""}${l.open ? " clickable" : ""}${l.wrap ? " wrap" : ""}"${l.open ? ` data-more="${esc(l.entity)}"` : ""}><ha-icon icon="${esc(l.icon)}"></ha-icon><span class="label">${esc(l.label)}</span>${l.value ? `<span>${esc(l.value)}</span>` : ""}</div>`
+              `<div class="info-line ${l.warn ? "warn" : l.caution ? "caution" : ""}${l.open ? " clickable" : ""}${l.wrap ? " wrap" : ""}"${l.open ? ` data-more="${esc(l.entity)}"` : ""} title="${esc(l.label)}"><ha-icon icon="${esc(l.icon)}"></ha-icon><span class="label">${esc(l.label)}</span>${l.value ? `<span>${esc(l.value)}</span>` : ""}</div>`
           )
           .join("")}</div>`
       : "";
@@ -16270,16 +16301,28 @@ class ApplianceCard extends HTMLElement {
     }
     // Side: the drawing, the name and the buttons on one row, and the lines
     // under them the whole width of the card, a narrow card wrapping nothing.
+    // Its lines, on a compact card set to: under the row as ever, beside the
+    // drawing under the name, or hidden behind a chevron that shows them
+    // beside it, a choice each browser keeps for itself.
+    const linesMode = ["beside", "toggle"].includes(cfg.compact_lines) ? cfg.compact_lines : "below";
+    if (this._linesOpen === undefined) this._linesOpen = linesOpenStored(cfg);
+    const linesBeside = !!linesHtml && (linesMode === "beside" || (linesMode === "toggle" && this._linesOpen));
+    const linesBelow = linesMode === "below" ? linesHtml : "";
+    const chevron = compact === "side" && linesMode === "toggle" && linesHtml
+      ? `<div class="cmp-more${this._linesOpen ? " open" : ""}" data-lines-toggle role="button" tabindex="0" aria-expanded="${!!this._linesOpen}" title="${esc(t(hass, this._linesOpen ? "lines_hide" : "lines_show"))}"><ha-icon icon="mdi:chevron-down"></ha-icon></div>` : "";
     this._card.innerHTML = compact === "side" ? `
         <div class="cmp-wrap">
           <div class="cmp-pic" data-tap="1">${iconHtml}</div>
-          <div class="cmp-head">
-            <div class="top" id="header">${titleHtml}</div>
-            <div class="cmp-icons">${leftIcons}${rightIcons}</div>
+          <div class="cmp-col">
+            <div class="cmp-head">
+              <div class="top" id="header">${titleHtml}</div>
+              <div class="cmp-icons">${leftIcons}${rightIcons}${chevron}</div>
+            </div>
+            ${linesBeside ? linesHtml.replace('class="info-lines', 'class="info-lines beside') : ""}
           </div>
         </div>
         ${barHtml}
-        ${linesHtml}${historyHtml}
+        ${linesBelow}${historyHtml}
         ${alertsHtml}
     ` : compact === "hide" ? `
         <div class="cmp-head">
@@ -16315,6 +16358,16 @@ class ApplianceCard extends HTMLElement {
     const header = this._root.getElementById("header");
     if (header) header.addEventListener("click", () => this._tap(cfg, tapFallback));
     this._root.querySelectorAll("[data-tap]").forEach((el) => el.addEventListener("click", () => this._tap(cfg, tapFallback)));
+    this._root.querySelectorAll("[data-lines-toggle]").forEach((el) => {
+      const flip = (ev) => {
+        ev.stopPropagation();
+        this._linesOpen = !this._linesOpen;
+        linesOpenStore(cfg, this._linesOpen);
+        this._render();
+      };
+      el.addEventListener("click", flip);
+      el.addEventListener("keydown", (ev) => { if (ev.key === "Enter" || ev.key === " ") { ev.preventDefault(); flip(ev); } });
+    });
     this._root.querySelectorAll("[data-done-seen]").forEach((el) => el.addEventListener("click", (ev) => {
       ev.stopPropagation();
       this._doneSeen = true;

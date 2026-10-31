@@ -1373,6 +1373,11 @@ class ApplianceCardEditor extends HTMLElement {
               { value: "side", label: t(hass, "compact_side") },
             ],
           })}
+          ${compactModeOf(this._config.compact) === "side" ? this._row("compact_lines", "compact_lines", {
+            type: "select",
+            value: ["beside", "toggle"].includes(this._config.compact_lines) ? this._config.compact_lines : "below",
+            options: ["below", "beside", "toggle"].map((v) => ({ value: v, label: t(hass, `lines_${v}`) })),
+          }) : ""}
           ${this._row("illustration_size", "illustration_size", {
             type: "range", min: 0.3, max: 1.2, step: 0.05, default: 1,
             value: this._config.illustration_size === undefined ? "" : illustrationSizeOf(this._config.illustration_size),
