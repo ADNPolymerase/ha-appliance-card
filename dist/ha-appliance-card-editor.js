@@ -533,6 +533,16 @@ class ApplianceCardEditor extends HTMLElement {
       this._shown = shown;
       this._needsBuild = true;
     }
+    // Nor a row that a choice shows or hides in place: the lines of a compact
+    // card beside its drawing, a plug's thresholds, custom fan speeds, a
+    // model's own options. Without this the row only appears once the editor
+    // is closed and opened again.
+    const form = [compactModeOf(this._config.compact), this._plug(), !!this._config.speed_power_custom,
+      ...Object.keys(this._config).filter((k) => /_layout$/.test(k)).sort().map((k) => `${k}=${this._config[k]}`)].join("|");
+    if (this._form !== form) {
+      this._form = form;
+      this._needsBuild = true;
+    }
     this._open = newOpen;
     if (!this._panelOpen) {
       this._panelOpen = {
@@ -1573,6 +1583,9 @@ class ApplianceCardEditor extends HTMLElement {
           else delete this._config.compact;
         }
         this.dispatchEvent(new CustomEvent("config-changed", { detail: { config: this._config } }));
+        // A choice that shows or hides rows redraws the form at once, without
+        // waiting for Home Assistant to hand the config back.
+        if (/^(compact|source|speed_power_custom)$|_layout$/.test(field)) this.setConfig(this._config);
       });
     });
 

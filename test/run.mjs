@@ -11698,4 +11698,20 @@ function tvT(w) { return { 'switch.tv': { state: 'on', attributes: {} }, 'sensor
   check('editeur compact : seulement a cote', ed({ ...AC, compact: false }).includes('data-field="compact_lines"'), false);
 }
 
+// A choice that shows rows redraws the editor at once (compact side, then
+// the information row appears without closing the editor).
+{
+  const ed = newEditor({ appliance_type: 'air_conditioner', state_entity: 'climate.ac' });
+  check('editeur compact : pas de choix des infos au depart', markup(ed._root).includes('data-field="compact_lines"'), false);
+  const sel = ed._root.querySelectorAll('[data-field]').find(n => n.getAttribute('data-field') === 'compact');
+  sel.value = 'side';
+  fire(sel, 'change', { target: sel });
+  check('editeur compact : le choix des infos apparait tout de suite', markup(ed._root).includes('data-field="compact_lines"'), true);
+  const src = newEditor({ appliance_type: 'washer', state_entity: 'switch.p', power_entity: 'sensor.p' });
+  const s2 = src._root.querySelectorAll('[data-field]').find(n => n.getAttribute('data-field') === 'source');
+  s2.value = 'integration';
+  fire(s2, 'change', { target: s2 });
+  check('editeur source : les entites d integration apparaissent tout de suite', markup(src._root).includes('data-toggle="program_entity"'), true);
+}
+
 report();
