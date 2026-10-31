@@ -10051,7 +10051,7 @@ check('borne : ni un statut reconnu', evMode(evR('SuspendedEVSE', { power_entity
   check('editeur robot : le sol', /data-field="robot_floor"/.test(ed), true);
   check('editeur robot : les boutons', /data-field="robot_controls"/.test(ed), true);
   check('editeur robot : la batterie en coin', /data-field="battery_corner"/.test(ed), true);
-  check('editeur robot : pas de sans sol', /value="none"/.test(ed), false);
+  check('editeur robot : pas de sans sol', /value="none"/.test((/data-field="robot_floor"[\s\S]*?<\/select>/.exec(ed) || [''])[0]), false);
   const edMow = markup(newEditor({ state_entity: 'lawn_mower.x' }));
   check('editeur tondeuse : pas de sol', /data-field="robot_floor"/.test(edMow), false);
   check('editeur tondeuse : les boutons', /data-field="robot_controls"/.test(edMow), true);
@@ -10846,6 +10846,24 @@ check('borne : ni un statut reconnu', evMode(evR('SuspendedEVSE', { power_entity
     check('suggestion broan : le debit extrait', sug.exhaust_airflow_entity, 'sensor.venmar_erv_exhaust_fan_cfm');
     check('suggestion broan : pas de temperature de soufflage prise sur un ventilateur', sug.supply_temperature_entity, undefined);
     check('suggestion broan : la temperature exterieure', sug.outdoor_temperature_entity, 'sensor.venmar_erv_temperature_ext');
+  }
+  {
+    // HACF #125: a lamp's timer as a pill, and a tap on the drawing alone.
+    const L = (extra = {}, more = {}) => render({ appliance_type: 'lamp', state_entity: 'light.bureau', ...extra },
+      { 'light.bureau': s('on', { brightness: 255 }), 'select.bureau_timer': s('01:00:00', { options: ['00:15:00', '00:30:00', '01:00:00', '02:00:00'] }), ...more });
+    const pill = L({ timer_entity: 'select.bureau_timer' });
+    check('lampe minuteur : une pastille', /class="action-btn pill/.test(pill), true);
+    check('lampe minuteur : la duree choisie', /<span>01:00:00<\/span>/.test(pill), true);
+    check('lampe minuteur : elle ouvre la liste', /class="action-btn pill[^"]*" data-entity="select.bureau_timer" data-menu="1"/.test(pill), true);
+    check('lampe minuteur : le bouton d allumage reste', /data-entity="light.bureau"/.test(pill), true);
+    check('lampe minuteur : sans entite, pas de pastille', /action-btn pill/.test(L()), false);
+    check('lampe : le minuteur suffit a dire lampe', machineCls(render({ state_entity: 'switch.x', timer_entity: 'select.bureau_timer' },
+      { 'switch.x': s('on'), 'select.bureau_timer': s('01:00:00', { options: ['00:15:00', '01:00:00'] }) })).split(' ').includes('lp'), true);
+    check('dessin : un appui qui allume', /class="pic-tap" data-pic-tap="1"/.test(L({ illustration_tap_action: 'toggle' })), true);
+    check('dessin : en forme d action', /data-pic-tap="1"/.test(L({ illustration_tap_action: { action: 'toggle' } })), true);
+    check('dessin : par defaut, comme la carte', /data-pic-tap/.test(L()), false);
+    check('dessin : default ne change rien', /data-pic-tap/.test(L({ illustration_tap_action: 'default' })), false);
+    check('dessin : en compact aussi', /class="cmp-pic" data-pic-tap="1"/.test(L({ illustration_tap_action: 'toggle', compact: 'side' })), true);
   }
   // #54, second round: the air each fan moves on the drawing, the filter as a
   // bar, sliders for the speed in Manual and the setpoint under humidity

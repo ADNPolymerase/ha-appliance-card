@@ -1,6 +1,6 @@
 // Built by tools/build.mjs from src/ha-appliance-card.js: edit the source, not this file.
 // The card's editor, loaded by the card the first time it is edited.
-export default function defineEditor({ t, onLanguageLoaded, LANGUAGE_NAMES, localizedHass, activationOf, TH_LAYOUTS, EV_POWER_THRESHOLD, stateObj, parseValueMap, stringifyValueMap, alertsArray, LIST_OTHER, ENTITY_LISTS, listCandidates, defaultCardName, stripDeviceName, domainOf, INFO_MAX, autoSuggest, APPLIANCE_TYPES, STATE_DOMAINS, SCREEN_ONLY_FIELDS, illustrationSizeOf, fontScaleOf, compactModeOf, TYPE_GROUPS, caps, detectApplianceType, SCREEN_STANDBY_W, SCREEN_LAYOUTS, SCREEN_IMAGES, screenLayoutOf, screenIsTablet, HD_HEAT_W, PLUG_THRESHOLDS, ZONE_POWER_W, PLUG_SOURCE_TYPES, plugSourceOf, DW_DRY_MIN, WASH_HEAT_W, WASH_SPIN_W, DRYER_HEAT_W, NET_LAYOUTS, SWITCH_PORTS, NET_BAYS, NET_BUSY_MBIT, NET_TEMP_ALERT, netLayoutOf, ROBOT_LAYOUTS, ROBOT_STATIONS, ROBOT_FLOORS, ROBOT_SERVICES, STICK_AWAY_W, robotLayoutOf, POOL_PRESSURE_ALERT, SOLAR_LAYOUTS, BATTERY_LAYOUTS, BATTERY_IDLE_W, DIFFUSER_LAYOUTS, HRV_LAYOUTS, CAMERA_LAYOUTS, MAILBOX_LAYOUTS, MAILBOX_SIDES, mailboxLayoutOf, LAMP_LAYOUTS, LAMP_SPOTS, lampLayoutOf, PUMP_LAYOUTS, FLOOR_LAYOUTS, TREE_PALETTES, TREE_PRESENTS, pumpLayoutOf, UPS_BATTERY_LOW, HISTORY_HOURS, BODY_COLORS, esc, SHELTER_STYLES, SHELTER_COLORS, stateFreeSource }) {
+export default function defineEditor({ t, onLanguageLoaded, LANGUAGE_NAMES, localizedHass, activationOf, TH_LAYOUTS, EV_POWER_THRESHOLD, stateObj, parseValueMap, stringifyValueMap, alertsArray, LIST_OTHER, ENTITY_LISTS, listCandidates, defaultCardName, stripDeviceName, domainOf, INFO_MAX, autoSuggest, APPLIANCE_TYPES, STATE_DOMAINS, SCREEN_ONLY_FIELDS, illustrationSizeOf, fontScaleOf, compactModeOf, TYPE_GROUPS, caps, detectApplianceType, SCREEN_STANDBY_W, SCREEN_LAYOUTS, SCREEN_IMAGES, screenLayoutOf, screenIsTablet, HD_HEAT_W, PLUG_THRESHOLDS, ZONE_POWER_W, PLUG_SOURCE_TYPES, plugSourceOf, DW_DRY_MIN, WASH_HEAT_W, WASH_SPIN_W, DRYER_HEAT_W, NET_LAYOUTS, SWITCH_PORTS, NET_BAYS, NET_BUSY_MBIT, NET_TEMP_ALERT, netLayoutOf, ROBOT_LAYOUTS, ROBOT_STATIONS, ROBOT_FLOORS, ROBOT_SERVICES, STICK_AWAY_W, robotLayoutOf, POOL_PRESSURE_ALERT, SOLAR_LAYOUTS, BATTERY_LAYOUTS, BATTERY_IDLE_W, DIFFUSER_LAYOUTS, illustrationTapOf, HRV_LAYOUTS, CAMERA_LAYOUTS, MAILBOX_LAYOUTS, MAILBOX_SIDES, mailboxLayoutOf, LAMP_LAYOUTS, LAMP_SPOTS, lampLayoutOf, PUMP_LAYOUTS, FLOOR_LAYOUTS, TREE_PALETTES, TREE_PRESENTS, pumpLayoutOf, UPS_BATTERY_LOW, HISTORY_HOURS, BODY_COLORS, esc, SHELTER_STYLES, SHELTER_COLORS, stateFreeSource }) {
 // ---------------------------------------------------------------------------
 // Editor
 // ---------------------------------------------------------------------------
@@ -180,6 +180,8 @@ const SECTIONS = [
   { field: "current_humidity_entity", types: ["hrv"], labelKey: "section_current_humidity", includeDomains: ["sensor"] },
   { field: "target_humidity_entity", types: ["hrv"], labelKey: "section_target_humidity", includeDomains: ["number", "sensor", "input_number"] },
   { field: "humidity_control_entity", types: ["hrv"], labelKey: "section_humidity_control", includeDomains: ["switch", "input_boolean"] },
+  // A lamp's timer: a list of durations.
+  { field: "timer_entity", types: ["lamp"], labelKey: "lamp_timer", includeDomains: ["select", "input_select"] },
   // A camera: what it sees, whether it records, its night vision, its
   // privacy switch and its signal.
   { field: "motion_entity", types: ["camera"], labelKey: "section_motion", includeDomains: ["binary_sensor", "sensor"] },
@@ -1355,6 +1357,11 @@ class ApplianceCardEditor extends HTMLElement {
             options: ["tap", "confirm", "hold", "off"].map((v) => ({ value: v, label: t(hass, `activation_${v}`) })),
           })}
           ${caps(this._type).cycle ? this._row("controls_always", "controls_always", { type: "checkbox" }) : ""}
+          ${this._row("illustration_tap_action", "illustration_tap_action", {
+            type: "select",
+            value: (illustrationTapOf(this._config) || {}).action || "default",
+            options: [["default", "pic_tap_default"], ["toggle", "pic_tap_toggle"], ["more-info", "pic_tap_more"], ["none", "pic_tap_none"]].map(([v, k]) => ({ value: v, label: t(hass, k) })),
+          })}
           ${caps(this._type).readOnly && !this._config.toggle_entity ? "" : this._row("show_unavailable_controls", "show_unavailable_controls", { type: "checkbox" })}
           ${LAST_CYCLE_TYPES.includes(this._type) ? this._row("show_last_cycle", "show_last_cycle", { type: "checkbox" }) : ""}
           ${LAST_CYCLE_TYPES.includes(this._type) ? this._row("show_elapsed", "show_elapsed", { type: "checkbox" }) : ""}

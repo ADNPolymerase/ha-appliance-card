@@ -158,7 +158,7 @@ const T = {
     layout_robot_floor_washer: "Floor washer", stick_away: "Off the base", stick_away_threshold: "Off the base below this power (W)",
     type_diffuser: "Essential oil diffuser", dif_mist: "Diffusing", dif_inter: "Intermittent", dif_low: "Light mist", dif_empty: "Tank empty", dif_mode: "Mist mode", layout_dif_drop: "Teardrop", layout_dif_cone: "Cone", layout_dif_stone: "Pebble", layout_dif_flame: "Flame", layout_dif_nebulizer: "Nebulizer", section_tank_empty: "Empty tank sensor", type_hrv: "Heat recovery ventilation (HRV/ERV)", hrv_run: "Ventilating", hrv_boost: "Boost", hrv_bypass: "Bypass", hrv_defrost: "Defrosting", hrv_filter: "Replace filter", hrv_away: "Away", hrv_recirc: "Recirculation", hrv_humidity: "Humidity control", hrv_inter: "Intermittent", hrv_inter_paused: "Intermittent, paused", hrv_mode: "Mode", hrv_supply_fan: "Supply fan", hrv_exhaust_fan: "Exhaust fan", section_supply_fan: "Supply fan speed (rpm)", section_exhaust_fan: "Exhaust fan speed (rpm)", fan_max_rpm: "Fan top speed (rpm)", section_exhaust_airflow: "Exhaust airflow", section_target_humidity: "Humidity setpoint", section_humidity_control: "Humidity control switch", layout_hrv_diagram: "Air flows", layout_hrv_one_duct: "Wall unit, one duct", layout_hrv_pair: "Through-wall pair", section_supply_temperature: "Supply air temperature", section_extract_temperature: "Extract air temperature", section_exhaust_temperature: "Exhaust air temperature", section_bypass: "Bypass", section_airflow: "Airflow", hrv_t_outdoor: "fresh air", hrv_t_supply: "supply", hrv_t_extract: "extract", hrv_t_exhaust: "exhaust", hrv_outside: "outside", hrv_room: "room",
     type_camera: "Camera", cam_idle: "Idle", cam_live: "Streaming", cam_rec: "Recording", cam_motion: "Motion detected", cam_off: "Off", cam_line_last_motion: "Last motion", cam_line_night: "Night vision", cam_line_signal: "Signal", section_motion: "Motion sensor", section_recording: "Recording sensor", section_night_vision: "Night vision", section_privacy: "Privacy mode", section_signal: "Signal strength", layout_cam_indoor: "Indoor, pan and tilt", layout_cam_tube: "Indoor tube", layout_cam_outdoor: "Outdoor", layout_cam_dome: "Dome", layout_cam_doorbell: "Doorbell", cam_ring: "Ringing", cam_line_last_ring: "Last ring", section_ring: "Doorbell button", type_mailbox: "Mailbox", mb_empty: "Empty", mb_mail: "Mail", mb_front_open: "Front door open", mb_back_open: "Back door open", mb_line_count: "Mail received", mb_line_last: "Last mail", mb_front_door: "Front door", mb_back_door: "Back door", mb_open: "Open", mb_closed: "Closed", section_mail_count: "Mail counter", layout_mb_through: "Through the wall", layout_mb_classic: "Classic", mb_street: "street", mb_house: "house", mb_front_side: "Street side", mb_side_left: "Left", mb_side_right: "Right", type_water_pump: "Water pump", type_floor_heating: "Underfloor heating", type_spa: "Spa", type_sauna: "Sauna", type_aquarium: "Aquarium", type_meter: "Electricity meter", type_christmas_tree: "Christmas tree", layout_chest: "Chest freezer", layout_drawers: "Drawer freezer", layout_pump_booster: "Booster set", layout_pump_sump: "Sump pump", layout_floor_water: "Hot water", layout_floor_electric: "Electric", layout_robot_pool: "Pool robot", wp_pumping: "Pumping", wp_high: "High level", spa_bubbles: "Bubbles", sauna_ready: "Ready", aq_lit: "Light on", aq_dark: "Light off", meter_low: "Low use", meter_high: "High use", section_pressure: "Pressure", section_water_level: "Water level", section_high_level: "High level alarm", level_max: "Level when full", section_bubbles: "Bubbles", section_tariff: "Tariff period", high_power: "High use from (W or VA)", tree_palette: "Colours", palette_multicolor: "Multicolour", palette_red_gold: "Red and gold", palette_red_silver: "Red and silver", palette_gold_silver: "Gold and silver", palette_blue_silver: "Blue and silver", palette_white_silver: "White and silver", palette_red_green: "Red and green", presents: "Presents", presents_auto: "On 24 and 25 December", presents_show: "Always", presents_hide: "Never", tree_on: "On", tree_off: "Off",
-    type_lamp: "Lamp", lamp_off: "Off", lamp_on: "On", lamp_line_brightness: "Brightness", lamp_line_color_temp: "Colour temperature", lamp_line_effect: "Effect", lamp_spots: "Number of spots", layout_lamp_bulb: "Bulb", layout_lamp_bedside: "Bedside lamp", layout_lamp_floor: "Arc floor lamp", layout_lamp_torch: "Torchiere", layout_lamp_pendant: "Pendant", layout_lamp_strip: "LED strip", layout_lamp_spot: "Recessed spots", layout_lamp_panels: "Light panels", layout_lamp_desk: "Desk lamp", layout_lamp_wall: "Wall lantern",
+    type_lamp: "Lamp", lamp_off: "Off", lamp_on: "On", lamp_line_brightness: "Brightness", lamp_line_color_temp: "Colour temperature", lamp_line_effect: "Effect", lamp_timer: "Timer", illustration_tap_action: "Tap on the drawing", pic_tap_default: "Card's own", pic_tap_toggle: "Toggle", pic_tap_more: "Details", pic_tap_none: "Nothing", lamp_spots: "Number of spots", layout_lamp_bulb: "Bulb", layout_lamp_bedside: "Bedside lamp", layout_lamp_floor: "Arc floor lamp", layout_lamp_torch: "Torchiere", layout_lamp_pendant: "Pendant", layout_lamp_strip: "LED strip", layout_lamp_spot: "Recessed spots", layout_lamp_panels: "Light panels", layout_lamp_desk: "Desk lamp", layout_lamp_wall: "Wall lantern",
     speed_power_max: "Power at top speed (W)", speed_power_custom: "Custom speed thresholds", speed_power_2: "Speed 2 from (W)", speed_power_3: "Speed 3 from (W)",
     fw_self_cleaning: "Self-cleaning", fw_dirty_full: "Dirty water tank full", fw_clean_empty: "Clean water tank empty",
     group_energy: "Energy", type_solar: "Solar panels", type_home_battery: "Home battery", solar_producing: "Producing", solar_low: "Low production", solar_night: "Night", section_solar_layout: "Mounting", layout_solar_ground: "On the ground", layout_solar_roof: "On a roof", section_solar_power: "Power produced", section_energy_today: "Energy produced today", solar_line_today: "Today", solar_peak_power: "Peak power of the panels (W)", section_battery_power: "Battery power (+ charging, \u2212 discharging)", power_inverted: "Positive power means discharging", section_charge_power: "Charge power", section_battery_discharge: "Discharge power", section_reserve: "Backup reserve", section_charge_limit: "Charge limit", battery_capacity: "Capacity (kWh)", layout_battery_wall: "Wall battery", layout_battery_station: "Portable power station", bat_idle: "Idle", bat_full: "Full", bat_low: "Low battery", bat_line_full_in: "Full in", bat_line_left: "Remaining", bat_line_reserve: "Reserve",
@@ -4223,8 +4223,15 @@ function diffuserControls(hass, cfg) {
 // A lamp's switch, unless the card has a power switch of its own.
 function lampControls(hass, cfg) {
   const st = stateObj(hass, cfg.state_entity);
-  if (!st || cfg.toggle_entity || !["light", "switch", "input_boolean"].includes(domainOf(cfg.state_entity))) return [];
-  return [{ key: "toggle", entity: cfg.state_entity, icon: "mdi:lightbulb", label: t(hass, "toggle"), on: String(st.state).toLowerCase() === "on" }];
+  const out = [];
+  // Its timer as a pill that shows the duration chosen and opens the list.
+  const timer = lampTimerOptions(hass, cfg);
+  if (timer) {
+    out.push({ key: "lamp_timer", entity: timer.entity, icon: "mdi:timer-cog-outline", label: t(hass, "lamp_timer"), menu: true,
+      text: screenSourceLabel(hass, stateObj(hass, timer.entity), timer.current) });
+  }
+  if (!st || cfg.toggle_entity || !["light", "switch", "input_boolean"].includes(domainOf(cfg.state_entity))) return out;
+  return out.concat([{ key: "toggle", entity: cfg.state_entity, icon: "mdi:lightbulb", label: t(hass, "toggle"), on: String(st.state).toLowerCase() === "on" }]);
 }
 
 // A screen's input, picked from a menu like a ventilation unit's mode (#60):
@@ -4253,15 +4260,32 @@ function screenSourceLabel(hass, st, option) {
   }
   return String(option);
 }
+// A lamp's timer (HACF #125): a list of durations, picked from the card.
+function lampTimerOptions(hass, cfg) {
+  const id = cfg.timer_entity;
+  const st = id ? stateObj(hass, id) : null;
+  const a = (st && st.attributes) || {};
+  if (!st || !["select", "input_select"].includes(domainOf(id)) || !Array.isArray(a.options) || a.options.length < 2) return null;
+  return { entity: id, current: st.state, options: a.options.filter((o) => String(o).trim() !== ""), dom: domainOf(id), kind: "timer" };
+}
+// illustration_tap_action: a tap on the drawing alone, given as
+// Home Assistant's action or as its name alone (toggle, more-info, none).
+// Unset or "default", the drawing does what the card does.
+function illustrationTapOf(cfg) {
+  const a = cfg.illustration_tap_action;
+  if (!a || a === "default") return null;
+  return typeof a === "string" ? { action: a } : typeof a === "object" && a.action && a.action !== "default" ? a : null;
+}
 // The menu a card opens from its buttons, if any.
 function cardMenuOf(hass, cfg, cap) {
   if (cap && cap.screen) return screenSourceOptions(hass, cfg);
+  if (cap && cap.lamp) return lampTimerOptions(hass, cfg);
   if (cap && cap.hrv) return hrvModeOptions(hass, cfg);
   return null;
 }
 function cardMenuLabel(hass, menu, option) {
   const st = stateObj(hass, menu.entity);
-  return menu.kind === "source" ? screenSourceLabel(hass, st, option) : hrvModeLabel(hass, st, option);
+  return menu.kind === "source" || menu.kind === "timer" ? screenSourceLabel(hass, st, option) : hrvModeLabel(hass, st, option);
 }
 function screenControls(hass, cfg) {
   const menu = screenSourceOptions(hass, cfg);
@@ -4894,7 +4918,7 @@ function mailboxHtml(cls, c) {
 // A lamp, read from its light entity: on or off, how bright, in what colour,
 // and whether an effect runs. A switch or a helper only says on or off, and
 // the lamp is drawn in the warm white of a bulb.
-const LAMP_ONLY_FIELDS = ["lamp_layout", "spots"];
+const LAMP_ONLY_FIELDS = ["lamp_layout", "spots", "timer_entity"];
 const LAMP_LAYOUTS = ["bulb", "bedside", "floor", "torch", "pendant", "strip", "spot", "panels", "desk", "wall"];
 const LAMP_SPOTS = [1, 2, 3, 4];
 const LAMP_LABELS = { on: "lamp_on", off: "lamp_off", unav: "ev_offline" };
@@ -16198,6 +16222,10 @@ class ApplianceCard extends HTMLElement {
           color: var(--primary-text-color, #1c1c1c);
         }
         .action-btn:hover { background: var(--secondary-background-color, rgba(0,0,0,0.04)); }
+        /* A button that shows its value, a lamp's timer: a pill with a chevron. */
+        .pic-tap { cursor: pointer; }
+        .action-btn.pill { width: auto; padding: 0 10px 0 12px; gap: 6px; border-radius: 20px; font-size: 0.95em; white-space: nowrap; }
+        .action-btn.pill .chev { --mdc-icon-size: 18px; }
         .action-btn.on { color: var(--primary-color, #03a9f4); border-color: var(--primary-color, #03a9f4); }
         /* confirm: an armed control turns red and waits for its second tap. */
         .armed, .action-btn.armed, .cmp-icons .armed {
@@ -16216,6 +16244,8 @@ class ApplianceCard extends HTMLElement {
         .cmp-icons .conn-badge, .cmp-icons .light-badge { display: flex; padding: 4px; }
         .cmp-icons .action-btn { width: 32px; height: 32px; }
         .cmp-icons .action-btn ha-icon { --mdc-icon-size: 18px; }
+        .cmp-icons .action-btn.pill { width: auto; padding: 0 8px; font-size: 0.85em; gap: 4px; }
+        .cmp-icons .action-btn.pill .chev { display: none; }
         .cmp-hide .cmp-head { display: grid; grid-template-columns: 1fr minmax(0, auto) 1fr; }
         .cmp-hide .cmp-icons.right { justify-self: end; }
         .cmp-side .cmp-wrap { display: flex; gap: 12px; align-items: center; }
@@ -16466,7 +16496,7 @@ class ApplianceCard extends HTMLElement {
       ? `<div class="actions-row">${actions
           .map(
             (a) =>
-              `<div class="action-btn ${a.on || (a.menu && this._modeMenuOpen) ? "on" : ""}" data-entity="${esc(a.entity)}"${a.menu ? ` data-menu="1" aria-expanded="${!!this._modeMenuOpen}"` : ""}${a.service ? ` data-service="${esc(a.service)}"` : ""}${a.option ? ` data-option="${esc(a.option)}"` : ""}${a.value !== undefined && a.value !== null && a.value !== "" ? ` data-value="${esc(a.value)}"` : ""} title="${esc(a.label)}" aria-label="${esc(a.label)}"><ha-icon icon="${esc(a.icon)}"></ha-icon></div>`
+              `<div class="action-btn${a.text ? " pill" : ""} ${a.on || (a.menu && this._modeMenuOpen) ? "on" : ""}" data-entity="${esc(a.entity)}"${a.menu ? ` data-menu="1" aria-expanded="${!!this._modeMenuOpen}"` : ""}${a.service ? ` data-service="${esc(a.service)}"` : ""}${a.option ? ` data-option="${esc(a.option)}"` : ""}${a.value !== undefined && a.value !== null && a.value !== "" ? ` data-value="${esc(a.value)}"` : ""} title="${esc(a.label)}" aria-label="${esc(a.label)}"><ha-icon icon="${esc(a.icon)}"></ha-icon>${a.text ? `<span>${esc(a.text)}</span><ha-icon class="chev" icon="mdi:chevron-down"></ha-icon>` : ""}</div>`
           )
           .join("")}</div>${modeMenuHtml}`
       : "";
@@ -16550,6 +16580,9 @@ class ApplianceCard extends HTMLElement {
     // A compact card has no row of its own for its buttons: they join the
     // corner switches, the light and the connection on the name's line.
     const buttonsInline = actionsHtml.replace('<div class="actions-row">', "").replace(/<\/div>$/, "");
+    // A tap on the drawing alone (HACF #125): a lamp lit by touching it, while
+    // the rest of the card keeps its own tap.
+    const picTap = illustrationTapOf(cfg);
     const leftIcons = lightBadgeHtml + (doorSide === "left" ? doorBadgeHtml : "") + (battSide === "left" ? battBadgeHtml : "") + (cornerList[0] || "");
     const rightIcons = (compact === "hide" ? doneBadge : "") + (cornerList[1] || "") + (doorSide === "right" ? doorBadgeHtml : "") + (battSide === "right" ? battBadgeHtml : "") + connBadgeHtml
       + (compact ? buttonsInline : "");
@@ -16574,7 +16607,7 @@ class ApplianceCard extends HTMLElement {
       ? `<div class="cmp-more${this._linesOpen ? " open" : ""}" data-lines-toggle role="button" tabindex="0" aria-expanded="${!!this._linesOpen}" title="${esc(t(hass, this._linesOpen ? "lines_hide" : "lines_show"))}"><ha-icon icon="mdi:chevron-down"></ha-icon></div>` : "";
     this._card.innerHTML = compact === "side" ? `
         <div class="cmp-wrap">
-          <div class="cmp-pic" data-tap="1">${iconHtml}</div>
+          <div class="cmp-pic" ${picTap ? 'data-pic-tap="1"' : 'data-tap="1"'}>${iconHtml}</div>
           <div class="cmp-col">
             <div class="cmp-head">
               <div class="top" id="header">${titleHtml}</div>
@@ -16602,7 +16635,7 @@ class ApplianceCard extends HTMLElement {
         ${battBadgeHtml}
         ${cornersHtml}
         <div class="top" id="header">
-          ${cfg.illustration_frame ? `<div class="pic-frame">${iconHtml}</div>` : iconHtml}
+          ${picTap ? '<div class="pic-tap" data-pic-tap="1">' : ""}${cfg.illustration_frame ? `<div class="pic-frame">${iconHtml}</div>` : iconHtml}${picTap ? "</div>" : ""}
           ${titleHtml}
         </div>
         ${barHtml}
@@ -16620,6 +16653,10 @@ class ApplianceCard extends HTMLElement {
     const header = this._root.getElementById("header");
     if (header) header.addEventListener("click", () => this._tap(cfg, tapFallback));
     this._root.querySelectorAll("[data-tap]").forEach((el) => el.addEventListener("click", () => this._tap(cfg, tapFallback)));
+    this._root.querySelectorAll("[data-pic-tap]").forEach((el) => el.addEventListener("click", (ev) => {
+      ev.stopPropagation();
+      this._tap({ ...cfg, tap_action: illustrationTapOf(cfg) }, tapFallback);
+    }));
     this._root.querySelectorAll("[data-lines-toggle]").forEach((el) => {
       const flip = (ev) => {
         ev.stopPropagation();
@@ -16776,7 +16813,7 @@ function loadEditor() {
   if (customElements.get("ha-appliance-card-editor")) return Promise.resolve();
   if (!editorLoading) {
     editorLoading = import(assetUrl("ha-appliance-card-editor.js"))
-      .then((m) => m.default({ t, onLanguageLoaded, LANGUAGE_NAMES, localizedHass, activationOf, TH_LAYOUTS, EV_POWER_THRESHOLD, stateObj, parseValueMap, stringifyValueMap, alertsArray, LIST_OTHER, ENTITY_LISTS, listCandidates, defaultCardName, stripDeviceName, domainOf, INFO_MAX, autoSuggest, APPLIANCE_TYPES, STATE_DOMAINS, SCREEN_ONLY_FIELDS, illustrationSizeOf, fontScaleOf, compactModeOf, TYPE_GROUPS, caps, detectApplianceType, SCREEN_STANDBY_W, SCREEN_LAYOUTS, SCREEN_IMAGES, screenLayoutOf, screenIsTablet, HD_HEAT_W, PLUG_THRESHOLDS, ZONE_POWER_W, PLUG_SOURCE_TYPES, plugSourceOf, DW_DRY_MIN, WASH_HEAT_W, WASH_SPIN_W, DRYER_HEAT_W, NET_LAYOUTS, SWITCH_PORTS, NET_BAYS, NET_BUSY_MBIT, NET_TEMP_ALERT, netLayoutOf, ROBOT_LAYOUTS, ROBOT_STATIONS, ROBOT_FLOORS, ROBOT_SERVICES, STICK_AWAY_W, robotLayoutOf, POOL_PRESSURE_ALERT, SOLAR_LAYOUTS, BATTERY_LAYOUTS, BATTERY_IDLE_W, DIFFUSER_LAYOUTS, HRV_LAYOUTS, CAMERA_LAYOUTS, MAILBOX_LAYOUTS, MAILBOX_SIDES, mailboxLayoutOf, LAMP_LAYOUTS, LAMP_SPOTS, lampLayoutOf, PUMP_LAYOUTS, FLOOR_LAYOUTS, TREE_PALETTES, TREE_PRESENTS, pumpLayoutOf, UPS_BATTERY_LOW, HISTORY_HOURS, BODY_COLORS, esc, SHELTER_STYLES, SHELTER_COLORS, stateFreeSource }))
+      .then((m) => m.default({ t, onLanguageLoaded, LANGUAGE_NAMES, localizedHass, activationOf, TH_LAYOUTS, EV_POWER_THRESHOLD, stateObj, parseValueMap, stringifyValueMap, alertsArray, LIST_OTHER, ENTITY_LISTS, listCandidates, defaultCardName, stripDeviceName, domainOf, INFO_MAX, autoSuggest, APPLIANCE_TYPES, STATE_DOMAINS, SCREEN_ONLY_FIELDS, illustrationSizeOf, fontScaleOf, compactModeOf, TYPE_GROUPS, caps, detectApplianceType, SCREEN_STANDBY_W, SCREEN_LAYOUTS, SCREEN_IMAGES, screenLayoutOf, screenIsTablet, HD_HEAT_W, PLUG_THRESHOLDS, ZONE_POWER_W, PLUG_SOURCE_TYPES, plugSourceOf, DW_DRY_MIN, WASH_HEAT_W, WASH_SPIN_W, DRYER_HEAT_W, NET_LAYOUTS, SWITCH_PORTS, NET_BAYS, NET_BUSY_MBIT, NET_TEMP_ALERT, netLayoutOf, ROBOT_LAYOUTS, ROBOT_STATIONS, ROBOT_FLOORS, ROBOT_SERVICES, STICK_AWAY_W, robotLayoutOf, POOL_PRESSURE_ALERT, SOLAR_LAYOUTS, BATTERY_LAYOUTS, BATTERY_IDLE_W, DIFFUSER_LAYOUTS, illustrationTapOf, HRV_LAYOUTS, CAMERA_LAYOUTS, MAILBOX_LAYOUTS, MAILBOX_SIDES, mailboxLayoutOf, LAMP_LAYOUTS, LAMP_SPOTS, lampLayoutOf, PUMP_LAYOUTS, FLOOR_LAYOUTS, TREE_PALETTES, TREE_PRESENTS, pumpLayoutOf, UPS_BATTERY_LOW, HISTORY_HOURS, BODY_COLORS, esc, SHELTER_STYLES, SHELTER_COLORS, stateFreeSource }))
       .catch((err) => {
         editorLoading = null;
         throw err;
