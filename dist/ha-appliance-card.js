@@ -135,7 +135,7 @@ const T = {
     p3_attention: "Needs attention", p3_leveling: "Bed levelling", p3_filament: "Changing filament",
     p3_cooling: "Cooling", p3_calibrating: "Calibrating", p3_homing: "Homing",
     section_printed_part: "Printed part", part_cube: "Cube", part_pyramid: "Pyramid", part_duck: "Rubber duck",
-    type_pet_feeder: "Pet feeder", type_pet_fountain: "Pet fountain", ft_flowing: "Flowing", ft_off: "Off", ft_filter_due: "Filter due", ft_pump_due: "Clean the pump", ft_low_water: "Low water", ft_line_pump: "Pump", ft_line_water: "Water", ft_pump_reset: "Reset pump", ft_last_pump: "Pump last ran", ft_pump_on: "Running", section_pump_clean: "Pump cleaning", section_pump_reset: "Reset pump button", section_pump_running: "Pump running", section_water_level: "Water level", filter_due_below: "Due at or below", feeder_ready: "Ready", feeder_feeding: "Dispensing", section_portions_today: "Portions today", section_weight_today: "Weight today", section_portion_weight: "Portion weight", section_serving_size: "Serving size", section_feeder_schedule: "Schedule", section_last_feed: "Last feed", section_error: "Error indicator", start_option: "Option to select", start_value: "Value to write", portions: "portions",
+    type_pet_feeder: "Pet feeder", type_pet_fountain: "Pet fountain", ft_flowing: "Flowing", ft_off: "Off", ft_filter_due: "Filter due", ft_pump_due: "Clean the pump", ft_low_water: "Low water", ft_line_pump: "Pump", ft_line_water: "Water", ft_pump_reset: "Reset pump", ft_last_pump: "Pump last ran", ft_pump_on: "Running", section_pump_clean: "Pump cleaning", section_pump_reset: "Reset pump button", section_pump_running: "Pump running", section_water_level: "Water level", filter_due_below: "Due at or below", filter_life_full: "Days of a new filter", feeder_ready: "Ready", feeder_feeding: "Dispensing", section_portions_today: "Portions today", section_weight_today: "Weight today", section_portion_weight: "Portion weight", section_serving_size: "Serving size", section_feeder_schedule: "Schedule", section_last_feed: "Last feed", section_error: "Error indicator", start_option: "Option to select", start_value: "Value to write", portions: "portions",
     feeder_empty: "Tank empty", feeder_level: "Tank at {pct}", section_level: "Food level", section_level_b: "Food level, second hopper", level_empty_below: "Empty at or below", level_max: "Tank capacity",
     section_feeder_layout: "Model", layout_tower: "Square tank", layout_canister: "Round tank", layout_double: "Two bowls", layout_dual_split: "Two hoppers, split bowl", layout_rotary: "Rotating plates (wet food)",
     type_iron: "Iron", section_iron_layout: "Model", layout_iron: "Iron", layout_generator: "Steam generator", iron_line_color: "Line colour", color_blue: "Blue", color_body: "Same as the appliance",
@@ -2526,13 +2526,17 @@ const TYPE_AUTO_PATTERNS = {
   // Vallox, Zehnder, Danfoss: four temperatures, a bypass or a cell state, a
   // filter, an airflow.
   hrv: {
-    outdoor_temperature_entity: /outdoor|outside|exterieur|aussen|frisch|fresh/i,
-    supply_temperature_entity: /supply|soufflage|zuluft|insufl|impuls|mandata|toevoer|tillu/i,
+    outdoor_temperature_entity: /^(?!.*(fan|rpm|cfm|flow))(.*(outdoor|outside|exterieur|aussen|frisch|fresh)|.*temp\w*_ext)/i,
+    supply_temperature_entity: /^(?!.*(fan|rpm|cfm|flow)).*(supply|soufflage|zuluft|insufl|impuls|mandata|toevoer|tillu)/i,
     extract_temperature_entity: /^(?!.*fan).*(extract|reprise|abluft|extrac|ripresa|afzuig|franlu|indoor)/i,
     exhaust_temperature_entity: /^(?!.*fan).*(exhaust|rejet|fortluft|expuls|espuls|afvoer|avlu)/i,
     bypass_entity: /bypass|cell.?state|by.?pass/i,
     filter_life_entity: /filter|filtre/i,
-    airflow_entity: /air.?flow|debit|luftmenge|caudal|portata|m3/i,
+    airflow_entity: /air.?flow|debit|luftmenge|caudal|portata|m3|(supply|fresh|soufflage|zuluft).*(cfm|flow)/i,
+    // Broan / Venmar over ESPHome: each fan's rpm and the air it moves.
+    supply_fan_entity: /(supply|fresh|soufflage|zuluft|insufl).*rpm/i,
+    exhaust_fan_entity: /(exhaust|extract|stale|rejet|abluft|fortluft|vicie).*rpm/i,
+    exhaust_airflow_entity: /(exhaust|extract|stale|rejet|abluft|fortluft|vicie).*(cfm|flow|debit|m3)/i,
   },
   // Arlo calls its sensors motion_camera_x and connected_camera_x, Reolink
   // and Tapo name a privacy switch, and most of them an infrared mode.
@@ -4375,7 +4379,7 @@ ${DIFFUSER_SVGS[layout](wood, b)}${DIF_DROP_BADGE}</svg></div>`;
 // cell state (heat recovery, cool recovery, bypass, defrosting); a filter in
 // days or in percent; four temperatures drawn at the ends of the ducts.
 const HRV_ONLY_FIELDS = ["hrv_layout", "supply_temperature_entity", "extract_temperature_entity", "exhaust_temperature_entity", "bypass_entity", "airflow_entity",
-  "supply_fan_entity", "exhaust_fan_entity", "exhaust_airflow_entity", "fan_max_rpm", "humidity_control_entity"];
+  "supply_fan_entity", "exhaust_fan_entity", "exhaust_airflow_entity", "fan_max_rpm", "humidity_control_entity", "filter_life_full"];
 const HRV_LAYOUTS = ["diagram", "one_duct", "pair"];
 const HRV_NAME_RE = /(^|[^a-z])(hrv|erv|vmc|wtw|ftx|mvhr)([^a-z]|$)|double.?flux|heat.?recovery|recuperat|comfoair|comfoconnect|vallox|zehnder|lunos|twinfresh|danfoss.?air|renson|endura|brink.?(flair|renovent)|wohnraumluft/;
 const HRV_LABELS = { run: "hrv_run", boost: "hrv_boost", bypass: "hrv_bypass", defrost: "hrv_defrost", filter: "hrv_filter", away: "hrv_away",
@@ -4461,7 +4465,7 @@ function hrvReadOf(hass, cfg, st, norm, powerDerived) {
   const defrost = /defrost|degivr|abtau|frost/.test(braw) || /defrost|degivr|abtau/.test(raw);
   const bypass = !defrost && (["on", "true", "open", "opened", "bypass", "active"].includes(braw) || /bypass|cool.?recovery/.test(braw) || (isFinite(bnum) && bnum > 0));
   // The filter: days or percent left, or a sensor that says it is due.
-  let filterDue = false, filterText = "";
+  let filterDue = false, filterText = "", filterValue = null, filterDays = false;
   const fst = cfg.filter_life_entity ? stateObj(hass, cfg.filter_life_entity) : null;
   if (fst) {
     const fv = parseFloat(fst.state);
@@ -4471,13 +4475,15 @@ function hrvReadOf(hass, cfg, st, norm, powerDerived) {
       const due = parseFloat(cfg.filter_due_below);
       filterDue = fv <= (isFinite(due) ? due : days ? 7 : 10);
       filterText = `${Math.round(fv)}${days ? ` ${unit}` : " %"}`;
+      filterValue = fv;
+      filterDays = days;
     } else filterDue = ["on", "true", "due", "replace", "dirty"].includes(String(fst.state).toLowerCase());
   }
   const named = presetSpeedOf(preset);
   const level = boost ? 3 : pct !== null && pct > 0 ? (pct <= 40 ? 1 : pct <= 75 ? 2 : 3) : named || 2;
   const mode = defrost ? "defrost" : recirc ? "rec" : bypass ? "bypass" : boost ? "boost" : humidity ? "hum" : inter ? "inter"
     : filterDue ? "filter" : away ? "away" : "run";
-  return { mode, level, pct, bypass, defrost, filterDue, filterText, paused,
+  return { mode, level, pct, bypass, defrost, filterDue, filterText, filterValue, filterDays, paused,
     sRpm, eRpm, sPace: hrvPace(sRpm, max), ePace: hrvPace(eRpm, max) };
 }
 function hrvLayoutOf(cfg, st) {
@@ -4490,7 +4496,9 @@ function hrvLayoutOf(cfg, st) {
 }
 const hvLab = (x, y, temp, name, anchor) => `<text class="hv-t" x="${x}" y="${y}" text-anchor="${anchor}">${anchor === "start"
   ? `${temp} <tspan class="hv-n">${name}</tspan>` : `<tspan class="hv-n">${name}</tspan> ${temp}`}</text>`;
-const hvFan = (x, y, r, cls) => `<circle cx="${x}" cy="${y}" r="${r}" class="hv-fanbody"/><g class="hv-fan${cls ? ` ${cls}` : ""}">${[0, 120, 240].map((d) => `<path d="M${x} ${y} q${(r * 0.45).toFixed(1)} -${(r * 0.85).toFixed(1)} 0 -${(r * 0.85).toFixed(1)} q-${(r * 0.45).toFixed(1)} ${(r * 0.3).toFixed(1)} 0 ${(r * 0.85).toFixed(1)}z" transform="rotate(${d} ${x} ${y})"/>`).join("")}</g>`;
+// Each fan turns on its own centre: the box of its blades is not centred on
+// it, so the turn is set on the drawing's own coordinates.
+const hvFan = (x, y, r, cls) => `<circle cx="${x}" cy="${y}" r="${r}" class="hv-fanbody"/><g class="hv-fan${cls ? ` ${cls}` : ""}" style="transform-origin:${x}px ${y}px">${[0, 120, 240].map((d) => `<path d="M${x} ${y} q${(r * 0.45).toFixed(1)} -${(r * 0.85).toFixed(1)} 0 -${(r * 0.85).toFixed(1)} q-${(r * 0.45).toFixed(1)} ${(r * 0.3).toFixed(1)} 0 ${(r * 0.85).toFixed(1)}z" transform="rotate(${d} ${x} ${y})"/>`).join("")}</g>`;
 const hvBadges = (h, cx, y) => `<g class="hv-hum"><rect x="${cx - 34}" y="${y}" width="68" height="13" rx="6.5" fill="#1e88e5"/><path d="M${cx - 26} ${y + 2.5} C${cx - 24} ${y + 5.5} ${cx - 22.5} ${y + 7} ${cx - 22.5} ${y + 8.6} a3.5 3.5 0 0 1 -7 0 C${cx - 29.5} ${y + 7} ${cx - 28} ${y + 5.5} ${cx - 26} ${y + 2.5}Z" fill="#fff"/><text class="hv-badge" x="${cx + 4}" y="${y + 9.6}" text-anchor="middle">${h.humText || ""}</text></g>
 <g class="hv-int"><rect x="${cx - 20}" y="${y}" width="40" height="13" rx="6.5" fill="#607d8b"/><circle cx="${cx - 12}" cy="${y + 6.5}" r="4" fill="none" stroke="#fff" stroke-width="1.2"/><path d="M${cx - 12} ${y + 4} V${y + 6.5} L${cx - 10} ${y + 7.6}" stroke="#fff" stroke-width="1.1" fill="none" stroke-linecap="round"/><text class="hv-badge" x="${cx + 4}" y="${y + 9.6}" text-anchor="middle">INT</text></g>`;
 const HRV_SVGS = {
@@ -4504,6 +4512,7 @@ const HRV_SVGS = {
 <path class="hv-flow" d="M226 34 H174 C146 34 140 52 118 66 C96 80 90 98 62 98 H10" stroke="url(#hv-g-ex)"/><path class="hv-dash hv-de" d="M226 34 H174 C146 34 140 52 118 66 C96 80 90 98 62 98 H10"/></g>
 <g class="hv-rc"><path class="hv-flow" d="M226 34 H170 C128 34 128 98 170 98 H226" stroke="#ff9800"/><path class="hv-dash hv-ds" d="M226 34 H170 C128 34 128 98 170 98 H226"/></g>
 <path class="hv-damper" d="M58 27 L66 41 M58 91 L66 105"/>${hvFan(160, 98, 8, "hv-fs")}${hvFan(76, 98, 8, "hv-fe")}
+${h.flowS ? `<text class="hv-n hv-cfm" x="160" y="85" text-anchor="middle">${h.flowS}</text>` : ""}${h.flowE ? `<text class="hv-n hv-cfm" x="76" y="85" text-anchor="middle">${h.flowE}</text>` : ""}
 ${hvLab(8, 26, h.t.o, "", "start")}${hvLab(228, 118, h.t.s, "", "end")}${hvLab(228, 26, h.t.e, "", "end")}${hvLab(8, 118, h.t.x, "", "start")}
 <text class="hv-frost" x="118" y="16" text-anchor="middle">\u2744</text><g class="hv-filt"><circle cx="168" cy="27" r="6"/><text x="168" y="30.5" text-anchor="middle">!</text></g>${hvBadges(h, 118, 4)}`,
   one_duct: (h) => `<defs><linearGradient id="hv-g-fa" gradientUnits="userSpaceOnUse" x1="130" x2="182"><stop offset="0" stop-color="#42a5f5"/><stop offset="1" stop-color="#ff9800"/></linearGradient>
@@ -4513,6 +4522,7 @@ ${hvLab(8, 26, h.t.o, "", "start")}${hvLab(228, 118, h.t.s, "", "end")}${hvLab(2
 <rect x="118" y="28" width="78" height="72" rx="7" class="hv-box"/>
 <rect x="132" y="50" width="46" height="28" rx="2" fill="#3a4148" stroke="#7b858f"/>${Array.from({ length: 11 }, (_, i) => `<path d="M${136 + i * 4} 51 V77" stroke="#7b858f" stroke-width=".7"/>`).join("")}
 ${hvFan(188, 56, 6.5, "hv-fs")}${hvFan(126, 72, 6.5, "hv-fe")}
+${h.flowS ? `<text class="hv-n hv-cfm" x="188" y="47" text-anchor="middle">${h.flowS}</text>` : ""}${h.flowE ? `<text class="hv-n hv-cfm" x="126" y="86" text-anchor="middle">${h.flowE}</text>` : ""}
 <g class="hv-through"><path class="hv-flow" d="M22 56 H214" stroke="url(#hv-g-fa)"/><path class="hv-dash hv-ds" d="M22 56 H214"/></g>
 <g class="hv-bypass"><path class="hv-flow" d="M22 56 H124 C130 56 130 40 140 40 H170 C180 40 180 56 186 56 H214" stroke="#42a5f5"/><path class="hv-dash hv-ds" d="M22 56 H124 C130 56 130 40 140 40 H170 C180 40 180 56 186 56 H214"/></g>
 <path class="hv-flow" d="M214 72 H22" stroke="url(#hv-g-ex)"/><path class="hv-dash hv-rev hv-de" d="M22 72 H214"/>
@@ -8422,7 +8432,7 @@ const ILLUSTRATION_CSS = {
         .hv-wall{fill:#d9cbb7}
         .hv-tube{fill:#eef1f3;stroke:#aab3bb}
         .hv-fanbody{fill:var(--ac-body-lo,#d5dade);stroke:#9aa3ad;stroke-width:.8}
-        .hv-fan{transform-box:fill-box;transform-origin:50% 50%}
+        .hv-fan{transform-box:view-box}
         .hv-fan path{fill:#5d6873}
         .hv-on .hv-fan{animation:hv-spin var(--hv-pace,1.4s) linear infinite}
         .hv-flow{fill:none;stroke-width:5;stroke-linecap:round}
@@ -8452,6 +8462,7 @@ const ILLUSTRATION_CSS = {
         .hv-fd .hv-filt{display:inline;animation:hv-blink 1s steps(1) infinite}
         .hv-t{font:600 9px Arial,sans-serif;fill:var(--primary-text-color,#212121)}
         .hv-n{font:400 8px Arial,sans-serif;fill:var(--secondary-text-color,#727272)}
+        .hv-cfm{font-size:7.5px;font-weight:600}
         .hv-lcd{font:700 6px Arial,sans-serif;fill:#7fe3ff}
         .hv-pa,.hv-pb{opacity:0}
         .hv-on .hv-pa{animation:hv-pa 140s linear infinite;animation-delay:var(--anim-offset,0s)}
@@ -13084,6 +13095,9 @@ class ApplianceCard extends HTMLElement {
 
     // ---- Type-specific readings -------------------------------------------
     const extraLines = [];
+    // Sliders under the lines, for a value the card sets itself (an ERV's
+    // speed in Manual, its humidity setpoint).
+    const sliders = [];
     let heatBarPct = null;
     let filterPct = null;
 
@@ -15370,15 +15384,20 @@ class ApplianceCard extends HTMLElement {
     // Heat recovery ventilation: the mode, its speed, its airflow and its
     // filter as lines, the four temperatures on the drawing.
     let hrv = null;
+    let hrvFilterPct = null;
     if (cap.hrv) {
       const h = hrvReadOf(hass, cfg, st, norm, powerDerived);
       if (!cfg.state_show_raw || h.mode === "unav") stateLabel = t(hass, h.paused ? "hrv_inter_paused" : HRV_LABELS[h.mode]);
       color = HRV_COLORS[h.mode];
       const live = !["off", "unav"].includes(h.mode);
-      // The mode of a select, in words, since the state line only says what
-      // the unit is doing.
+      // The mode of a select is what the state line says (Smart, Manual, Turbo
+      // on a Broan) while the unit simply runs in it; a defrost, a bypass, a
+      // filter due or an intermittent pause still says itself.
       const menu = hrvModeOptions(hass, cfg);
-      if (menu && live && menu.dom !== "fan") {
+      if (menu && live && menu.dom !== "fan" && !cfg.state_show_raw && ["run", "boost", "away", "rec", "hum", "inter"].includes(h.mode) && !h.paused
+        && (h.mode !== "hum" || /humid|feucht/i.test(stripAccents(String(menu.current || ""))))) {
+        stateLabel = hrvModeLabel(hass, st, menu.current);
+      } else if (menu && live && menu.dom !== "fan") {
         extraLines.push({ key: "hrv_mode", icon: "mdi:tune-variant", label: t(hass, "hrv_mode"), value: keepTogether(hrvModeLabel(hass, st, menu.current)), entity: cfg.state_entity });
       }
       const flowText = (id) => {
@@ -15386,8 +15405,24 @@ class ApplianceCard extends HTMLElement {
         return v === null ? "" : `${netNumber(hass, v, 0)} ${unitOf(hass, id) || "m\u00b3/h"}`;
       };
       const rpmText = (v, id) => `${netNumber(hass, v, 0)} ${unitOf(hass, id) || "rpm"}`;
+      // The air each fan moves, written by it on the drawing too.
       if (live) {
-        if (h.pct !== null && h.pct > 0) {
+        h.flowS = esc(flowText(cfg.airflow_entity));
+        h.flowE = esc(flowText(cfg.exhaust_airflow_entity));
+      }
+      // A slider for what the mode leaves to set by hand: the speed in Manual,
+      // the humidity setpoint under humidity control, when it is a number.
+      const settable = (id) => !!id && ["number", "input_number"].includes(domainOf(id)) && !!stateObj(hass, id);
+      if (live && settable(cfg.fan_speed_entity) && (/manu/.test(stripAccents(String((st && st.state) || "")).toLowerCase()) || (menu && /manu/i.test(String(menu.current || ""))))) {
+        sliders.push({ entity: cfg.fan_speed_entity, icon: "mdi:fan", label: t(hass, "section_fan_speed") });
+      }
+      if (live && h.mode === "hum" && settable(cfg.target_humidity_entity)) {
+        sliders.push({ entity: cfg.target_humidity_entity, icon: "mdi:water-percent", label: t(hass, "section_target_humidity") });
+      }
+      if (live) {
+        const speedSlider = !!cfg.fan_speed_entity && ["number", "input_number"].includes(domainOf(cfg.fan_speed_entity))
+          && (/manu/.test(stripAccents(String((st && st.state) || "")).toLowerCase()) || (menu && /manu/i.test(String(menu.current || ""))));
+        if (h.pct !== null && h.pct > 0 && !speedSlider) {
           extraLines.push({ key: "hrv_speed", icon: "mdi:fan", label: t(hass, "section_fan_speed"), value: keepTogether(`${Math.round(h.pct)} %`), entity: cfg.fan_speed_entity || cfg.state_entity });
         }
         // Each fan on a line of its own when it reports its speed, with the
@@ -15415,6 +15450,12 @@ class ApplianceCard extends HTMLElement {
       }
       h.humText = [hum, target].filter((x) => x !== null).map((x) => netNumber(hass, x, 0)).join(" \u2192 ") + (hum !== null || target !== null ? " %" : "");
       h.humBadge = h.mode === "hum";
+      // The filter's life as a bar: its percentage, or its days out of
+      // filter_life_full (90 by default, a filter changed each season).
+      if (h.filterValue !== null && h.filterValue !== undefined) {
+        const full = parseFloat(cfg.filter_life_full);
+        hrvFilterPct = Math.max(0, Math.min(100, h.filterDays ? (h.filterValue / (isFinite(full) && full > 0 ? full : 90)) * 100 : h.filterValue));
+      }
       if (h.filterText) {
         extraLines.push({ key: "hrv_filter", icon: "mdi:air-filter", label: t(hass, "filter"), value: keepTogether(h.filterText), entity: cfg.filter_life_entity, caution: h.filterDue });
       }
@@ -16130,11 +16171,21 @@ class ApplianceCard extends HTMLElement {
         .alert-row .alert-label { flex: 1; min-width: 0; }
         .alert-row .go { color: var(--secondary-text-color, #727272); }
         .actions-row { display: flex; gap: 8px; margin-top: 12px; justify-content: center; }
+        /* The menu floats over the page next to its button, like Home
+           Assistant's own lists, and opens upwards when there is no room
+           below; placed by _placeModeMenu. */
         .mode-menu {
-          margin-top: 8px; padding: 6px 0; border-radius: 10px;
-          background: var(--card-background-color, #fff);
+          position: fixed; z-index: 20; min-width: 180px; max-height: 60vh; overflow-y: auto;
+          padding: 6px 0; border-radius: 10px;
+          background: var(--card-background-color, var(--ha-card-background, #fff));
           box-shadow: 0 4px 14px rgba(0, 0, 0, 0.16), 0 1px 3px rgba(0, 0, 0, 0.1);
         }
+        .sliders { display: flex; flex-direction: column; gap: 4px; margin-top: 6px; }
+        .slider-row { display: flex; align-items: center; gap: 8px; color: var(--secondary-text-color, #727272); }
+        .slider-row ha-icon { --mdc-icon-size: 18px; flex-shrink: 0; }
+        .slider-row .s-label { flex-shrink: 0; }
+        .slider-row input { flex: 1; min-width: 60px; accent-color: var(--primary-color, #03a9f4); }
+        .slider-row .s-val { min-width: 3.2em; text-align: right; color: var(--primary-text-color, #1c1c1c); font-weight: 500; }
         .mode-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 8px 14px; cursor: pointer; }
         .mode-row.sel { color: var(--primary-color, #03a9f4); font-weight: 500; }
         .mode-row ha-icon { --mdc-icon-size: 18px; }
@@ -16343,6 +16394,19 @@ class ApplianceCard extends HTMLElement {
           .join("")}</div>`
       : "";
 
+    const slidersHtml = sliders.length
+      ? `<div class="sliders">${sliders.map((sl) => {
+        const sst = stateObj(hass, sl.entity);
+        const a = (sst && sst.attributes) || {};
+        const min = numberOrNull(a.min) ?? 0, max = numberOrNull(a.max) ?? 100, step = numberOrNull(a.step) ?? 1;
+        const v = numberOrNull(sst && sst.state) ?? min;
+        const unit = a.unit_of_measurement || "";
+        return `<div class="slider-row" title="${esc(sl.label)}"><ha-icon icon="${esc(sl.icon)}"></ha-icon><span class="s-label">${esc(sl.label)}</span>`
+          + `<input type="range" data-slider="${esc(sl.entity)}" data-unit="${esc(unit)}" min="${min}" max="${max}" step="${step}" value="${v}" aria-label="${esc(sl.label)}">`
+          + `<span class="s-val">${esc(`${netNumber(hass, v, 0)}${unit ? ` ${unit}` : ""}`)}</span></div>`;
+      }).join("")}</div>`
+      : "";
+
     // Bar priority: preheating beats cycle progress (it's the live information
     // while an oven climbs), and a hood has no cycle so its bar is the filter.
     let barPct = progressPct;
@@ -16356,6 +16420,9 @@ class ApplianceCard extends HTMLElement {
     } else if (cap.filter && filterPct !== null && progressPct === null) {
       barPct = filterPct;
       barColor = filterPct <= 15 ? "var(--error-color, #f44336)" : "var(--warning-color, #ff9800)";
+    } else if (hrvFilterPct !== null && progressPct === null) {
+      barPct = hrvFilterPct;
+      barColor = hrv && hrv.filterDue ? "var(--error-color, #f44336)" : "var(--warning-color, #ff9800)";
     }
 
     const barHtml = barPct !== null
@@ -16517,7 +16584,7 @@ class ApplianceCard extends HTMLElement {
           </div>
         </div>
         ${barHtml}
-        ${linesBelow}${historyHtml}
+        ${linesBelow}${slidersHtml}${historyHtml}
         ${alertsHtml}
     ` : compact === "hide" ? `
         <div class="cmp-head">
@@ -16526,7 +16593,7 @@ class ApplianceCard extends HTMLElement {
           <div class="cmp-icons right">${rightIcons}</div>
         </div>
         ${barHtml}
-        ${linesHtml}${historyHtml}
+        ${linesHtml}${slidersHtml}${historyHtml}
         ${alertsHtml}
     ` : `
         ${lightBadgeHtml}
@@ -16539,7 +16606,7 @@ class ApplianceCard extends HTMLElement {
           ${titleHtml}
         </div>
         ${barHtml}
-        ${linesHtml}${historyHtml}
+        ${linesHtml}${slidersHtml}${historyHtml}
         ${alertsHtml}
         <div class="fill-gap"></div>
         ${actionsHtml}
@@ -16568,6 +16635,7 @@ class ApplianceCard extends HTMLElement {
       this._doneSeen = true;
       this._render();
     }));
+    this._placeModeMenu();
     this._root.querySelectorAll("[data-mode-option]").forEach((el) => el.addEventListener("click", (ev) => {
       ev.stopPropagation();
       this._modeMenuOpen = false;
@@ -16610,6 +16678,15 @@ class ApplianceCard extends HTMLElement {
         this._render();
       });
     });
+    // A slider shows its value as it moves and sets it when let go; a tap on
+    // it never reaches the card's own tap.
+    this._root.querySelectorAll("input[data-slider]").forEach((el) => {
+      const out = el.parentNode && el.parentNode.querySelector ? el.parentNode.querySelector(".s-val") : null;
+      const unit = el.getAttribute("data-unit") || "";
+      ["click", "pointerdown", "touchstart"].forEach((n) => el.addEventListener(n, (ev) => ev.stopPropagation()));
+      el.addEventListener("input", () => { if (out) out.textContent = `${el.value}${unit ? ` ${unit}` : ""}`; });
+      el.addEventListener("change", () => this._call(el.getAttribute("data-slider"), { value: el.value }));
+    });
     this._root.querySelectorAll("[data-history-toggle]").forEach((el) => {
       el.addEventListener("click", (ev) => {
         ev.stopPropagation();
@@ -16618,6 +16695,49 @@ class ApplianceCard extends HTMLElement {
       });
     });
     this._fridgeSwing(applianceType === "fridge" && compact !== "hide" ? illustrationCtx : null);
+  }
+
+  // The open mode menu sits under its button, or above it when the page has
+  // no room below, kept inside the window. Whatever ancestor turns fixed into
+  // relative (a transform, a container), the offset it adds is measured and
+  // taken back.
+  _placeModeMenu() {
+    const menu = this._root && this._root.querySelector ? this._root.querySelector(".mode-menu") : null;
+    const btn = menu ? this._root.querySelector("[data-menu]") : null;
+    // A click anywhere else, or the page scrolling under it, closes it.
+    if (typeof window !== "undefined" && window.addEventListener) {
+      if (this._menuAway) {
+        window.removeEventListener("click", this._menuAway);
+        window.removeEventListener("scroll", this._menuAway, true);
+        this._menuAway = null;
+      }
+      if (menu) {
+        this._menuAway = () => {
+          window.removeEventListener("click", this._menuAway);
+          window.removeEventListener("scroll", this._menuAway, true);
+          this._menuAway = null;
+          if (this._modeMenuOpen) { this._modeMenuOpen = false; this._render(); }
+        };
+        setTimeout(() => {
+          if (!this._menuAway) return;
+          window.addEventListener("click", this._menuAway);
+          window.addEventListener("scroll", this._menuAway, true);
+        }, 0);
+      }
+    }
+    if (!menu || !btn || typeof menu.getBoundingClientRect !== "function" || typeof window === "undefined" || !window.innerHeight) return;
+    const b = btn.getBoundingClientRect();
+    const vw = window.innerWidth, vh = window.innerHeight;
+    menu.style.left = "0px";
+    menu.style.top = "0px";
+    const m0 = menu.getBoundingClientRect();
+    const w = m0.width, h = m0.height;
+    const below = vh - b.bottom - 8, above = b.top - 8;
+    const top = h <= below || below >= above ? b.bottom + 6 : Math.max(8, b.top - 6 - h);
+    const left = Math.min(Math.max(8, b.left + b.width / 2 - w / 2), vw - w - 8);
+    menu.style.left = `${left - m0.left}px`;
+    menu.style.top = `${top - m0.top}px`;
+    menu.style.maxHeight = `${Math.max(120, Math.max(below, above))}px`;
   }
 
   // A fridge door opening or closing turns on its hinge rather than jumping:

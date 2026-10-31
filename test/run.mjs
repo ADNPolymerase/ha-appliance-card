@@ -10830,7 +10830,45 @@ check('borne : ni un statut reconnu', evMode(evR('SuspendedEVSE', { power_entity
     'switch.erv_humidity_control': s(o.hc ?? 'off'),
   });
   const broan = (mode, o, extra = {}) => render({ ...bcfg, ...extra }, bst(mode, o));
-  check('broan : min ventile', stateLine(broan('min')), 'Ventilating');
+  {
+    // The editor fills each fan and its airflow from Broan's own names, and
+    // takes none of them for a temperature.
+    const ids = ['select.venmar_erv_erv_mode', 'sensor.venmar_erv_supply_fan_rpm', 'sensor.venmar_erv_exhaust_fan_rpm',
+      'sensor.venmar_erv_supply_fan_cfm', 'sensor.venmar_erv_exhaust_fan_cfm', 'sensor.venmar_erv_temperature_ext'];
+    const ed = new Editor();
+    ed.setConfig({ type: 'custom:ha-appliance-card', appliance_type: 'hrv', state_entity: 'select.venmar_erv_erv_mode' });
+    ed.hass = { ...HASS(Object.fromEntries(ids.map(id => [id, { state: '1', attributes: {} }]))),
+      entities: Object.fromEntries(ids.map(id => [id, { device_id: 'erv' }])) };
+    const sug = ed.events.at(-1)?.detail?.config || {};
+    check('suggestion broan : le ventilateur de soufflage', sug.supply_fan_entity, 'sensor.venmar_erv_supply_fan_rpm');
+    check('suggestion broan : le ventilateur d extraction', sug.exhaust_fan_entity, 'sensor.venmar_erv_exhaust_fan_rpm');
+    check('suggestion broan : le debit souffle', sug.airflow_entity, 'sensor.venmar_erv_supply_fan_cfm');
+    check('suggestion broan : le debit extrait', sug.exhaust_airflow_entity, 'sensor.venmar_erv_exhaust_fan_cfm');
+    check('suggestion broan : pas de temperature de soufflage prise sur un ventilateur', sug.supply_temperature_entity, undefined);
+    check('suggestion broan : la temperature exterieure', sug.outdoor_temperature_entity, 'sensor.venmar_erv_temperature_ext');
+  }
+  // #54, second round: the air each fan moves on the drawing, the filter as a
+  // bar, sliders for the speed in Manual and the setpoint under humidity
+  // control, fans turning on their centre.
+  check('broan : le debit du soufflage sur le dessin', /class="hv-n hv-cfm" x="160"[^>]*>50 CFM<\/text>/.test(broan('min')), true);
+  check('broan : le debit de l extraction sur le dessin', /class="hv-n hv-cfm" x="76"[^>]*>50 CFM<\/text>/.test(broan('min')), true);
+  check('broan : arretee, pas de debit dessine', /hv-cfm" x/.test(broan('off')), false);
+  check('broan : les pales tournent sur leur centre', /class="hv-fan hv-fs" style="transform-origin:160px 98px"/.test(broan('min')), true);
+  const fl = (v, unit, extra = {}) => render({ ...bcfg, filter_life_entity: 'sensor.erv_filter', ...extra }, { ...bst('min'), 'sensor.erv_filter': s(v, { unit_of_measurement: unit }) });
+  const barW = (h) => ((/class="bar-fill" style="width:(\d+)%/.exec(h)) || [])[1];
+  check('broan : le filtre en barre, en jours sur 90', barW(fl(45, 'd')), '50');
+  check('broan : le filtre en barre, sa duree choisie', barW(fl(45, 'd', { filter_life_full: 180 })), '25');
+  check('broan : le filtre en barre, en %', barW(fl(30, '%')), '30');
+  check('broan : sans filtre, pas de barre', barW(broan('min')), undefined);
+  check('broan : en manuel, le curseur de vitesse', /<input type="range" data-slider="number.erv_fan_speed"/.test(broan('manual')), true);
+  check('broan : le curseur sur sa valeur', /data-slider="number.erv_fan_speed"[^>]*value="50"/.test(broan('manual')), true);
+  check('broan : hors manuel, pas de curseur de vitesse', /data-slider="number.erv_fan_speed"/.test(broan('smart')), false);
+  check('broan : en mode humidite, le curseur de consigne', /data-slider="number.erv_humidity_setpoint"/.test(broan('humidity')), true);
+  check('broan : hors humidite, pas de curseur de consigne', /data-slider="number.erv_humidity_setpoint"/.test(broan('min')), false);
+  check('broan : arretee, aucun curseur', /data-slider=/.test(broan('off')), false);
+  check('broan : interrupteur d humidite sur min, l etat le dit', stateLine(broan('min', { hc: 'on' })), 'Humidity control');
+  contains('broan : le menu flotte', broan('min'), 'position: fixed; z-index: 20;');
+  check('broan : l etat dit le mode', stateLine(broan('min')), 'Min');
   check('broan : sans type, reste une vmc malgre le capteur d humidite', machineCls(render({ ...bcfg, appliance_type: undefined }, bst('min'))).includes('hv'), true);
   check('broan : arret', stateLine(broan('off')), 'Off');
   check('broan : recirculation', stateLine(broan('recirculate')), 'Recirculation');
@@ -10843,11 +10881,14 @@ check('borne : ni un statut reconnu', evMode(evR('SuspendedEVSE', { power_entity
   check('broan : intermittent en marche', stateLine(broan('int')), 'Intermittent');
   check('broan : intermittent en pause, ventilateurs a l arret', stateLine(broan('int', { sr: 0, er: 0 })), 'Intermittent, paused');
   check('broan : en pause, rien ne tourne', machineCls(broan('int', { sr: 0, er: 0 })).split(' ').includes('hv-on'), false);
-  check('broan : turbo', stateLine(broan('turbo')), 'Boost');
-  check('broan : la ligne du mode', infoLine(broan('smart'), 'Mode'), 'Smart');
+  check('broan : turbo', stateLine(broan('turbo')), 'Turbo');
+  check('broan : turbo reste un boost sur le dessin', machineCls(broan('turbo')).includes('hv-m-boost'), true);
+  check('broan : le mode dans l etat', stateLine(broan('smart')), 'Smart');
+  check('broan : plus de ligne du mode en double', infoLine(broan('smart'), 'Mode'), null);
   check('broan : soufflage en tr/min et debit', infoLine(broan('min'), 'Supply fan').replace(/\s/g, ' '), '1,084 RPM · 50 CFM');
   check('broan : extraction en tr/min et debit', infoLine(broan('min'), 'Exhaust fan').replace(/\s/g, ' '), '1,362 RPM · 50 CFM');
-  check('broan : la vitesse en % depuis un number', infoLine(broan('manual'), 'Fan speed').replace(/\s/g, ' '), '50 %');
+  check('broan : la vitesse en % depuis un number', infoLine(broan('min'), 'Fan speed').replace(/\s/g, ' '), '50 %');
+  check('broan : en manuel, le curseur remplace la ligne de vitesse', infoLine(broan('manual'), 'Fan speed'), null);
   const paces = broan('min');
   check('broan : chaque ventilateur a sa vitesse (soufflage)', /--hv-sp:1\.52s/.test(paces), true);
   check('broan : chaque ventilateur a sa vitesse (extraction)', /--hv-ep:1\.24s/.test(paces), true);

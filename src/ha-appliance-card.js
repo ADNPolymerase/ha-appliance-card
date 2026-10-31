@@ -134,7 +134,7 @@ const T = {
     p3_attention: "Needs attention", p3_leveling: "Bed levelling", p3_filament: "Changing filament",
     p3_cooling: "Cooling", p3_calibrating: "Calibrating", p3_homing: "Homing",
     section_printed_part: "Printed part", part_cube: "Cube", part_pyramid: "Pyramid", part_duck: "Rubber duck",
-    type_pet_feeder: "Pet feeder", type_pet_fountain: "Pet fountain", ft_flowing: "Flowing", ft_off: "Off", ft_filter_due: "Filter due", ft_pump_due: "Clean the pump", ft_low_water: "Low water", ft_line_pump: "Pump", ft_line_water: "Water", ft_pump_reset: "Reset pump", ft_last_pump: "Pump last ran", ft_pump_on: "Running", section_pump_clean: "Pump cleaning", section_pump_reset: "Reset pump button", section_pump_running: "Pump running", section_water_level: "Water level", filter_due_below: "Due at or below", feeder_ready: "Ready", feeder_feeding: "Dispensing", section_portions_today: "Portions today", section_weight_today: "Weight today", section_portion_weight: "Portion weight", section_serving_size: "Serving size", section_feeder_schedule: "Schedule", section_last_feed: "Last feed", section_error: "Error indicator", start_option: "Option to select", start_value: "Value to write", portions: "portions",
+    type_pet_feeder: "Pet feeder", type_pet_fountain: "Pet fountain", ft_flowing: "Flowing", ft_off: "Off", ft_filter_due: "Filter due", ft_pump_due: "Clean the pump", ft_low_water: "Low water", ft_line_pump: "Pump", ft_line_water: "Water", ft_pump_reset: "Reset pump", ft_last_pump: "Pump last ran", ft_pump_on: "Running", section_pump_clean: "Pump cleaning", section_pump_reset: "Reset pump button", section_pump_running: "Pump running", section_water_level: "Water level", filter_due_below: "Due at or below", filter_life_full: "Days of a new filter", feeder_ready: "Ready", feeder_feeding: "Dispensing", section_portions_today: "Portions today", section_weight_today: "Weight today", section_portion_weight: "Portion weight", section_serving_size: "Serving size", section_feeder_schedule: "Schedule", section_last_feed: "Last feed", section_error: "Error indicator", start_option: "Option to select", start_value: "Value to write", portions: "portions",
     feeder_empty: "Tank empty", feeder_level: "Tank at {pct}", section_level: "Food level", section_level_b: "Food level, second hopper", level_empty_below: "Empty at or below", level_max: "Tank capacity",
     section_feeder_layout: "Model", layout_tower: "Square tank", layout_canister: "Round tank", layout_double: "Two bowls", layout_dual_split: "Two hoppers, split bowl", layout_rotary: "Rotating plates (wet food)",
     type_iron: "Iron", section_iron_layout: "Model", layout_iron: "Iron", layout_generator: "Steam generator", iron_line_color: "Line colour", color_blue: "Blue", color_body: "Same as the appliance",
@@ -307,7 +307,7 @@ const T = {
     p3_attention: "Intervention requise", p3_leveling: "Nivellement du plateau", p3_filament: "Changement de filament",
     p3_cooling: "Refroidissement", p3_calibrating: "Calibrage", p3_homing: "Mise \u00e0 l'origine",
     section_printed_part: "Pi\u00e8ce imprim\u00e9e", part_cube: "Cube", part_pyramid: "Pyramide", part_duck: "Canard en plastique",
-    type_pet_feeder: "Distributeur de croquettes", type_pet_fountain: "Fontaine \u00e0 eau", ft_flowing: "L'eau coule", ft_off: "Arr\u00eat\u00e9e", ft_filter_due: "Filtre \u00e0 changer", ft_pump_due: "Pompe \u00e0 nettoyer", ft_low_water: "Peu d'eau", ft_line_pump: "Pompe", ft_line_water: "Eau", ft_pump_reset: "R\u00e9initialiser la pompe", ft_last_pump: "Derni\u00e8re marche de la pompe", ft_pump_on: "En marche", section_pump_clean: "Nettoyage de la pompe", section_pump_reset: "Bouton de r\u00e9initialisation de la pompe", section_pump_running: "Pompe en marche", section_water_level: "Niveau d'eau", filter_due_below: "D\u00fb \u00e0 ce niveau ou moins", feeder_ready: "Pr\u00eat", feeder_feeding: "Distribution", section_portions_today: "Portions du jour", section_weight_today: "Poids du jour", section_portion_weight: "Poids d'une portion", section_serving_size: "Taille de la portion", section_feeder_schedule: "Planning", section_last_feed: "Dernier repas", section_error: "Indicateur d'erreur", start_option: "Option \u00e0 choisir", start_value: "Valeur \u00e0 \u00e9crire", portions: "portions",
+    type_pet_feeder: "Distributeur de croquettes", type_pet_fountain: "Fontaine \u00e0 eau", ft_flowing: "L'eau coule", ft_off: "Arr\u00eat\u00e9e", ft_filter_due: "Filtre \u00e0 changer", ft_pump_due: "Pompe \u00e0 nettoyer", ft_low_water: "Peu d'eau", ft_line_pump: "Pompe", ft_line_water: "Eau", ft_pump_reset: "R\u00e9initialiser la pompe", ft_last_pump: "Derni\u00e8re marche de la pompe", ft_pump_on: "En marche", section_pump_clean: "Nettoyage de la pompe", section_pump_reset: "Bouton de r\u00e9initialisation de la pompe", section_pump_running: "Pompe en marche", section_water_level: "Niveau d'eau", filter_due_below: "D\u00fb \u00e0 ce niveau ou moins", filter_life_full: "Jours d'un filtre neuf", feeder_ready: "Pr\u00eat", feeder_feeding: "Distribution", section_portions_today: "Portions du jour", section_weight_today: "Poids du jour", section_portion_weight: "Poids d'une portion", section_serving_size: "Taille de la portion", section_feeder_schedule: "Planning", section_last_feed: "Dernier repas", section_error: "Indicateur d'erreur", start_option: "Option \u00e0 choisir", start_value: "Valeur \u00e0 \u00e9crire", portions: "portions",
     feeder_empty: "R\u00e9servoir vide", feeder_level: "R\u00e9servoir \u00e0 {pct}", section_level: "Niveau de croquettes", section_level_b: "Niveau du second r\u00e9servoir", level_empty_below: "Vide \u00e0 ce niveau ou moins", level_max: "Contenance du r\u00e9servoir",
     section_feeder_layout: "Mod\u00e8le", layout_tower: "R\u00e9servoir carr\u00e9", layout_canister: "R\u00e9servoir rond", layout_double: "Deux gamelles", layout_dual_split: "Deux r\u00e9servoirs, gamelle partag\u00e9e", layout_rotary: "Plateau tournant (p\u00e2t\u00e9e)",
     type_iron: "Fer \u00e0 repasser", section_iron_layout: "Mod\u00e8le", layout_iron: "Fer seul", layout_generator: "Centrale vapeur", iron_line_color: "Couleur de la ligne", color_blue: "Bleu", color_body: "Comme l'appareil",
@@ -480,7 +480,7 @@ const T = {
     p3_attention: "\u0422\u0440\u0435\u0431\u0443\u0435\u0442\u0441\u044f \u0432\u043d\u0438\u043c\u0430\u043d\u0438\u0435", p3_leveling: "\u0412\u044b\u0440\u0430\u0432\u043d\u0438\u0432\u0430\u043d\u0438\u0435 \u0441\u0442\u043e\u043b\u0430", p3_filament: "\u0421\u043c\u0435\u043d\u0430 \u0444\u0438\u043b\u0430\u043c\u0435\u043d\u0442\u0430",
     p3_cooling: "\u041e\u0445\u043b\u0430\u0436\u0434\u0435\u043d\u0438\u0435", p3_calibrating: "\u041a\u0430\u043b\u0438\u0431\u0440\u043e\u0432\u043a\u0430", p3_homing: "\u041f\u0430\u0440\u043a\u043e\u0432\u043a\u0430 \u043e\u0441\u0435\u0439",
     section_printed_part: "\u041f\u0435\u0447\u0430\u0442\u0430\u0435\u043c\u0430\u044f \u043c\u043e\u0434\u0435\u043b\u044c", part_cube: "\u041a\u0443\u0431", part_pyramid: "\u041f\u0438\u0440\u0430\u043c\u0438\u0434\u0430", part_duck: "\u0420\u0435\u0437\u0438\u043d\u043e\u0432\u0430\u044f \u0443\u0442\u043e\u0447\u043a\u0430",
-    type_pet_feeder: "\u041a\u043e\u0440\u043c\u0443\u0448\u043a\u0430", type_pet_fountain: "\u041f\u043e\u0438\u043b\u043a\u0430-\u0444\u043e\u043d\u0442\u0430\u043d", ft_flowing: "\u0422\u0435\u0447\u0451\u0442", ft_off: "\u0412\u044b\u043a\u043b\u044e\u0447\u0435\u043d\u0430", ft_filter_due: "\u0417\u0430\u043c\u0435\u043d\u0438\u0442\u0435 \u0444\u0438\u043b\u044c\u0442\u0440", ft_pump_due: "\u041f\u043e\u0447\u0438\u0441\u0442\u0438\u0442\u0435 \u043d\u0430\u0441\u043e\u0441", ft_low_water: "\u041c\u0430\u043b\u043e \u0432\u043e\u0434\u044b", ft_line_pump: "\u041d\u0430\u0441\u043e\u0441", ft_line_water: "\u0412\u043e\u0434\u0430", ft_pump_reset: "\u0421\u0431\u0440\u043e\u0441\u0438\u0442\u044c \u043d\u0430\u0441\u043e\u0441", ft_last_pump: "\u041f\u043e\u0441\u043b\u0435\u0434\u043d\u0438\u0439 \u0437\u0430\u043f\u0443\u0441\u043a \u043d\u0430\u0441\u043e\u0441\u0430", ft_pump_on: "\u0420\u0430\u0431\u043e\u0442\u0430\u0435\u0442", section_pump_clean: "\u0427\u0438\u0441\u0442\u043a\u0430 \u043d\u0430\u0441\u043e\u0441\u0430", section_pump_reset: "\u041a\u043d\u043e\u043f\u043a\u0430 \u0441\u0431\u0440\u043e\u0441\u0430 \u043d\u0430\u0441\u043e\u0441\u0430", section_pump_running: "\u041d\u0430\u0441\u043e\u0441 \u0440\u0430\u0431\u043e\u0442\u0430\u0435\u0442", section_water_level: "\u0423\u0440\u043e\u0432\u0435\u043d\u044c \u0432\u043e\u0434\u044b", filter_due_below: "\u0421\u0440\u043e\u043a \u043f\u0440\u0438 \u044d\u0442\u043e\u043c \u0437\u043d\u0430\u0447\u0435\u043d\u0438\u0438 \u0438\u043b\u0438 \u043d\u0438\u0436\u0435", feeder_ready: "\u0413\u043e\u0442\u043e\u0432\u0430", feeder_feeding: "\u041a\u043e\u0440\u043c\u043b\u0435\u043d\u0438\u0435", section_portions_today: "\u041f\u043e\u0440\u0446\u0438\u0439 \u0437\u0430 \u0434\u0435\u043d\u044c", section_weight_today: "\u0412\u0435\u0441 \u0437\u0430 \u0434\u0435\u043d\u044c", section_portion_weight: "\u0412\u0435\u0441 \u043f\u043e\u0440\u0446\u0438\u0438", section_serving_size: "\u0420\u0430\u0437\u043c\u0435\u0440 \u043f\u043e\u0440\u0446\u0438\u0438", section_feeder_schedule: "\u0420\u0430\u0441\u043f\u0438\u0441\u0430\u043d\u0438\u0435", section_last_feed: "\u041f\u043e\u0441\u043b\u0435\u0434\u043d\u0435\u0435 \u043a\u043e\u0440\u043c\u043b\u0435\u043d\u0438\u0435", section_error: "\u0418\u043d\u0434\u0438\u043a\u0430\u0442\u043e\u0440 \u043e\u0448\u0438\u0431\u043a\u0438", start_option: "\u0412\u044b\u0431\u0438\u0440\u0430\u0435\u043c\u0430\u044f \u043e\u043f\u0446\u0438\u044f", start_value: "\u0417\u0430\u043f\u0438\u0441\u044b\u0432\u0430\u0435\u043c\u043e\u0435 \u0437\u043d\u0430\u0447\u0435\u043d\u0438\u0435", portions: "\u043f\u043e\u0440\u0446\u0438\u0439",
+    type_pet_feeder: "\u041a\u043e\u0440\u043c\u0443\u0448\u043a\u0430", type_pet_fountain: "\u041f\u043e\u0438\u043b\u043a\u0430-\u0444\u043e\u043d\u0442\u0430\u043d", ft_flowing: "\u0422\u0435\u0447\u0451\u0442", ft_off: "\u0412\u044b\u043a\u043b\u044e\u0447\u0435\u043d\u0430", ft_filter_due: "\u0417\u0430\u043c\u0435\u043d\u0438\u0442\u0435 \u0444\u0438\u043b\u044c\u0442\u0440", ft_pump_due: "\u041f\u043e\u0447\u0438\u0441\u0442\u0438\u0442\u0435 \u043d\u0430\u0441\u043e\u0441", ft_low_water: "\u041c\u0430\u043b\u043e \u0432\u043e\u0434\u044b", ft_line_pump: "\u041d\u0430\u0441\u043e\u0441", ft_line_water: "\u0412\u043e\u0434\u0430", ft_pump_reset: "\u0421\u0431\u0440\u043e\u0441\u0438\u0442\u044c \u043d\u0430\u0441\u043e\u0441", ft_last_pump: "\u041f\u043e\u0441\u043b\u0435\u0434\u043d\u0438\u0439 \u0437\u0430\u043f\u0443\u0441\u043a \u043d\u0430\u0441\u043e\u0441\u0430", ft_pump_on: "\u0420\u0430\u0431\u043e\u0442\u0430\u0435\u0442", section_pump_clean: "\u0427\u0438\u0441\u0442\u043a\u0430 \u043d\u0430\u0441\u043e\u0441\u0430", section_pump_reset: "\u041a\u043d\u043e\u043f\u043a\u0430 \u0441\u0431\u0440\u043e\u0441\u0430 \u043d\u0430\u0441\u043e\u0441\u0430", section_pump_running: "\u041d\u0430\u0441\u043e\u0441 \u0440\u0430\u0431\u043e\u0442\u0430\u0435\u0442", section_water_level: "\u0423\u0440\u043e\u0432\u0435\u043d\u044c \u0432\u043e\u0434\u044b", filter_due_below: "\u0421\u0440\u043e\u043a \u043f\u0440\u0438 \u044d\u0442\u043e\u043c \u0437\u043d\u0430\u0447\u0435\u043d\u0438\u0438 \u0438\u043b\u0438 \u043d\u0438\u0436\u0435", filter_life_full: "\u0414\u043d\u0435\u0439 \u0443 \u043d\u043e\u0432\u043e\u0433\u043e \u0444\u0438\u043b\u044c\u0442\u0440\u0430", feeder_ready: "\u0413\u043e\u0442\u043e\u0432\u0430", feeder_feeding: "\u041a\u043e\u0440\u043c\u043b\u0435\u043d\u0438\u0435", section_portions_today: "\u041f\u043e\u0440\u0446\u0438\u0439 \u0437\u0430 \u0434\u0435\u043d\u044c", section_weight_today: "\u0412\u0435\u0441 \u0437\u0430 \u0434\u0435\u043d\u044c", section_portion_weight: "\u0412\u0435\u0441 \u043f\u043e\u0440\u0446\u0438\u0438", section_serving_size: "\u0420\u0430\u0437\u043c\u0435\u0440 \u043f\u043e\u0440\u0446\u0438\u0438", section_feeder_schedule: "\u0420\u0430\u0441\u043f\u0438\u0441\u0430\u043d\u0438\u0435", section_last_feed: "\u041f\u043e\u0441\u043b\u0435\u0434\u043d\u0435\u0435 \u043a\u043e\u0440\u043c\u043b\u0435\u043d\u0438\u0435", section_error: "\u0418\u043d\u0434\u0438\u043a\u0430\u0442\u043e\u0440 \u043e\u0448\u0438\u0431\u043a\u0438", start_option: "\u0412\u044b\u0431\u0438\u0440\u0430\u0435\u043c\u0430\u044f \u043e\u043f\u0446\u0438\u044f", start_value: "\u0417\u0430\u043f\u0438\u0441\u044b\u0432\u0430\u0435\u043c\u043e\u0435 \u0437\u043d\u0430\u0447\u0435\u043d\u0438\u0435", portions: "\u043f\u043e\u0440\u0446\u0438\u0439",
     feeder_empty: "\u0411\u0443\u043d\u043a\u0435\u0440 \u043f\u0443\u0441\u0442", feeder_level: "\u0411\u0443\u043d\u043a\u0435\u0440 \u0437\u0430\u043f\u043e\u043b\u043d\u0435\u043d \u043d\u0430 {pct}", section_level: "\u0423\u0440\u043e\u0432\u0435\u043d\u044c \u043a\u043e\u0440\u043c\u0430", section_level_b: "\u0423\u0440\u043e\u0432\u0435\u043d\u044c \u0432\u0442\u043e\u0440\u043e\u0433\u043e \u0431\u0443\u043d\u043a\u0435\u0440\u0430", level_empty_below: "\u041f\u0443\u0441\u0442\u043e \u043f\u0440\u0438 \u0437\u043d\u0430\u0447\u0435\u043d\u0438\u0438 \u043d\u0435 \u0432\u044b\u0448\u0435", level_max: "\u0401\u043c\u043a\u043e\u0441\u0442\u044c \u0431\u0443\u043d\u043a\u0435\u0440\u0430",
     section_feeder_layout: "\u041c\u043e\u0434\u0435\u043b\u044c", layout_tower: "\u041a\u0432\u0430\u0434\u0440\u0430\u0442\u043d\u044b\u0439 \u0431\u0443\u043d\u043a\u0435\u0440", layout_canister: "\u041a\u0440\u0443\u0433\u043b\u044b\u0439 \u0431\u0443\u043d\u043a\u0435\u0440", layout_double: "\u0414\u0432\u0435 \u043c\u0438\u0441\u043a\u0438", layout_dual_split: "\u0414\u0432\u0430 \u0431\u0443\u043d\u043a\u0435\u0440\u0430, \u043e\u0431\u0449\u0430\u044f \u043c\u0438\u0441\u043a\u0430", layout_rotary: "\u0412\u0440\u0430\u0449\u0430\u044e\u0449\u0438\u0435\u0441\u044f \u0442\u0430\u0440\u0435\u043b\u043a\u0438 (\u0432\u043b\u0430\u0436\u043d\u044b\u0439 \u043a\u043e\u0440\u043c)",
     type_iron: "\u0423\u0442\u044e\u0433", section_iron_layout: "\u041c\u043e\u0434\u0435\u043b\u044c", layout_iron: "\u0423\u0442\u044e\u0433", layout_generator: "\u041f\u0430\u0440\u043e\u0433\u0435\u043d\u0435\u0440\u0430\u0442\u043e\u0440", iron_line_color: "\u0426\u0432\u0435\u0442 \u043f\u043e\u043b\u043e\u0441\u044b", color_blue: "\u0421\u0438\u043d\u0438\u0439", color_body: "\u041a\u0430\u043a \u043f\u0440\u0438\u0431\u043e\u0440",
@@ -653,7 +653,7 @@ const T = {
     p3_attention: "Eingriff n\u00f6tig", p3_leveling: "Bettnivellierung", p3_filament: "Filamentwechsel",
     p3_cooling: "Abk\u00fchlen", p3_calibrating: "Kalibrierung", p3_homing: "Referenzfahrt",
     section_printed_part: "Druckobjekt", part_cube: "W\u00fcrfel", part_pyramid: "Pyramide", part_duck: "Quietscheentchen",
-    type_pet_feeder: "Futterautomat", type_pet_fountain: "Trinkbrunnen", ft_flowing: "Flie\u00dft", ft_off: "Aus", ft_filter_due: "Filter f\u00e4llig", ft_pump_due: "Pumpe reinigen", ft_low_water: "Wenig Wasser", ft_line_pump: "Pumpe", ft_line_water: "Wasser", ft_pump_reset: "Pumpe zur\u00fccksetzen", ft_last_pump: "Pumpe zuletzt gelaufen", ft_pump_on: "L\u00e4uft", section_pump_clean: "Pumpenreinigung", section_pump_reset: "Pumpen-Reset-Taste", section_pump_running: "Pumpe l\u00e4uft", section_water_level: "Wasserstand", filter_due_below: "F\u00e4llig ab oder unter", feeder_ready: "Bereit", feeder_feeding: "F\u00fcttert", section_portions_today: "Portionen heute", section_weight_today: "Menge heute", section_portion_weight: "Portionsgewicht", section_serving_size: "Portionsgr\u00f6\u00dfe", section_feeder_schedule: "Zeitplan", section_last_feed: "Letzte F\u00fctterung", section_error: "St\u00f6rungsanzeige", start_option: "Auszuw\u00e4hlende Option", start_value: "Zu schreibender Wert", portions: "Portionen",
+    type_pet_feeder: "Futterautomat", type_pet_fountain: "Trinkbrunnen", ft_flowing: "Flie\u00dft", ft_off: "Aus", ft_filter_due: "Filter f\u00e4llig", ft_pump_due: "Pumpe reinigen", ft_low_water: "Wenig Wasser", ft_line_pump: "Pumpe", ft_line_water: "Wasser", ft_pump_reset: "Pumpe zur\u00fccksetzen", ft_last_pump: "Pumpe zuletzt gelaufen", ft_pump_on: "L\u00e4uft", section_pump_clean: "Pumpenreinigung", section_pump_reset: "Pumpen-Reset-Taste", section_pump_running: "Pumpe l\u00e4uft", section_water_level: "Wasserstand", filter_due_below: "F\u00e4llig ab oder unter", filter_life_full: "Tage eines neuen Filters", feeder_ready: "Bereit", feeder_feeding: "F\u00fcttert", section_portions_today: "Portionen heute", section_weight_today: "Menge heute", section_portion_weight: "Portionsgewicht", section_serving_size: "Portionsgr\u00f6\u00dfe", section_feeder_schedule: "Zeitplan", section_last_feed: "Letzte F\u00fctterung", section_error: "St\u00f6rungsanzeige", start_option: "Auszuw\u00e4hlende Option", start_value: "Zu schreibender Wert", portions: "Portionen",
     feeder_empty: "Beh\u00e4lter leer", feeder_level: "Beh\u00e4lter zu {pct} voll", section_level: "F\u00fcllstand", section_level_b: "F\u00fcllstand zweite Kammer", level_empty_below: "Leer ab oder unter", level_max: "Fassungsverm\u00f6gen",
     section_feeder_layout: "Modell", layout_tower: "Eckiger Beh\u00e4lter", layout_canister: "Runder Beh\u00e4lter", layout_double: "Zwei N\u00e4pfe", layout_dual_split: "Zwei Kammern, geteilter Napf", layout_rotary: "Drehteller (Nassfutter)",
     type_iron: "B\u00fcgeleisen", section_iron_layout: "Modell", layout_iron: "B\u00fcgeleisen", layout_generator: "Dampfstation", iron_line_color: "Farbe der Linie", color_blue: "Blau", color_body: "Wie das Ger\u00e4t",
@@ -826,7 +826,7 @@ const T = {
     p3_attention: "Requiere atenci\u00f3n", p3_leveling: "Nivelando la cama", p3_filament: "Cambiando el filamento",
     p3_cooling: "Enfriando", p3_calibrating: "Calibrando", p3_homing: "Buscando el origen",
     section_printed_part: "Pieza impresa", part_cube: "Cubo", part_pyramid: "Pir\u00e1mide", part_duck: "Patito de goma",
-    type_pet_feeder: "Comedero autom\u00e1tico", type_pet_fountain: "Fuente para mascotas", ft_flowing: "Fluyendo", ft_off: "Apagada", ft_filter_due: "Cambiar filtro", ft_pump_due: "Limpiar la bomba", ft_low_water: "Poca agua", ft_line_pump: "Bomba", ft_line_water: "Agua", ft_pump_reset: "Reiniciar bomba", ft_last_pump: "\u00daltima marcha de la bomba", ft_pump_on: "En marcha", section_pump_clean: "Limpieza de la bomba", section_pump_reset: "Bot\u00f3n de reinicio de la bomba", section_pump_running: "Bomba en marcha", section_water_level: "Nivel de agua", filter_due_below: "Pendiente en o por debajo de", feeder_ready: "Listo", feeder_feeding: "Dispensando", section_portions_today: "Raciones de hoy", section_weight_today: "Peso de hoy", section_portion_weight: "Peso de la raci\u00f3n", section_serving_size: "Tama\u00f1o de la raci\u00f3n", section_feeder_schedule: "Programaci\u00f3n", section_last_feed: "\u00daltima comida", section_error: "Indicador de error", start_option: "Opci\u00f3n a seleccionar", start_value: "Valor a escribir", portions: "raciones",
+    type_pet_feeder: "Comedero autom\u00e1tico", type_pet_fountain: "Fuente para mascotas", ft_flowing: "Fluyendo", ft_off: "Apagada", ft_filter_due: "Cambiar filtro", ft_pump_due: "Limpiar la bomba", ft_low_water: "Poca agua", ft_line_pump: "Bomba", ft_line_water: "Agua", ft_pump_reset: "Reiniciar bomba", ft_last_pump: "\u00daltima marcha de la bomba", ft_pump_on: "En marcha", section_pump_clean: "Limpieza de la bomba", section_pump_reset: "Bot\u00f3n de reinicio de la bomba", section_pump_running: "Bomba en marcha", section_water_level: "Nivel de agua", filter_due_below: "Pendiente en o por debajo de", filter_life_full: "D\u00edas de un filtro nuevo", feeder_ready: "Listo", feeder_feeding: "Dispensando", section_portions_today: "Raciones de hoy", section_weight_today: "Peso de hoy", section_portion_weight: "Peso de la raci\u00f3n", section_serving_size: "Tama\u00f1o de la raci\u00f3n", section_feeder_schedule: "Programaci\u00f3n", section_last_feed: "\u00daltima comida", section_error: "Indicador de error", start_option: "Opci\u00f3n a seleccionar", start_value: "Valor a escribir", portions: "raciones",
     feeder_empty: "Dep\u00f3sito vac\u00edo", feeder_level: "Dep\u00f3sito al {pct}", section_level: "Nivel de comida", section_level_b: "Nivel del segundo dep\u00f3sito", level_empty_below: "Vac\u00edo en o por debajo de", level_max: "Capacidad del dep\u00f3sito",
     section_feeder_layout: "Modelo", layout_tower: "Dep\u00f3sito cuadrado", layout_canister: "Dep\u00f3sito redondo", layout_double: "Dos cuencos", layout_dual_split: "Dos dep\u00f3sitos, cuenco dividido", layout_rotary: "Platos giratorios (comida h\u00fameda)",
     type_iron: "Plancha", section_iron_layout: "Modelo", layout_iron: "Plancha", layout_generator: "Centro de planchado", iron_line_color: "Color de la l\u00ednea", color_blue: "Azul", color_body: "Como el aparato",
@@ -999,7 +999,7 @@ const T = {
     p3_attention: "Richiede attenzione", p3_leveling: "Livellamento del piatto", p3_filament: "Cambio filamento",
     p3_cooling: "Raffreddamento", p3_calibrating: "Calibrazione", p3_homing: "Azzeramento assi",
     section_printed_part: "Oggetto stampato", part_cube: "Cubo", part_pyramid: "Piramide", part_duck: "Paperella di gomma",
-    type_pet_feeder: "Distributore di crocchette", type_pet_fountain: "Fontanella", ft_flowing: "Scorre", ft_off: "Spenta", ft_filter_due: "Filtro da cambiare", ft_pump_due: "Pulire la pompa", ft_low_water: "Poca acqua", ft_line_pump: "Pompa", ft_line_water: "Acqua", ft_pump_reset: "Reimposta pompa", ft_last_pump: "Ultimo avvio della pompa", ft_pump_on: "In funzione", section_pump_clean: "Pulizia della pompa", section_pump_reset: "Pulsante di reset della pompa", section_pump_running: "Pompa in funzione", section_water_level: "Livello dell'acqua", filter_due_below: "In scadenza a questo valore o meno", feeder_ready: "Pronto", feeder_feeding: "Erogazione", section_portions_today: "Porzioni di oggi", section_weight_today: "Peso di oggi", section_portion_weight: "Peso della porzione", section_serving_size: "Dimensione della porzione", section_feeder_schedule: "Programmazione", section_last_feed: "Ultimo pasto", section_error: "Indicatore di errore", start_option: "Opzione da selezionare", start_value: "Valore da scrivere", portions: "porzioni",
+    type_pet_feeder: "Distributore di crocchette", type_pet_fountain: "Fontanella", ft_flowing: "Scorre", ft_off: "Spenta", ft_filter_due: "Filtro da cambiare", ft_pump_due: "Pulire la pompa", ft_low_water: "Poca acqua", ft_line_pump: "Pompa", ft_line_water: "Acqua", ft_pump_reset: "Reimposta pompa", ft_last_pump: "Ultimo avvio della pompa", ft_pump_on: "In funzione", section_pump_clean: "Pulizia della pompa", section_pump_reset: "Pulsante di reset della pompa", section_pump_running: "Pompa in funzione", section_water_level: "Livello dell'acqua", filter_due_below: "In scadenza a questo valore o meno", filter_life_full: "Giorni di un filtro nuovo", feeder_ready: "Pronto", feeder_feeding: "Erogazione", section_portions_today: "Porzioni di oggi", section_weight_today: "Peso di oggi", section_portion_weight: "Peso della porzione", section_serving_size: "Dimensione della porzione", section_feeder_schedule: "Programmazione", section_last_feed: "Ultimo pasto", section_error: "Indicatore di errore", start_option: "Opzione da selezionare", start_value: "Valore da scrivere", portions: "porzioni",
     feeder_empty: "Serbatoio vuoto", feeder_level: "Serbatoio al {pct}", section_level: "Livello del cibo", section_level_b: "Livello del secondo serbatoio", level_empty_below: "Vuoto a questo livello o meno", level_max: "Capacit\u00e0 del serbatoio",
     section_feeder_layout: "Modello", layout_tower: "Serbatoio quadrato", layout_canister: "Serbatoio tondo", layout_double: "Due ciotole", layout_dual_split: "Due serbatoi, ciotola divisa", layout_rotary: "Piatti rotanti (cibo umido)",
     type_iron: "Ferro da stiro", section_iron_layout: "Modello", layout_iron: "Ferro da stiro", layout_generator: "Ferro con caldaia", iron_line_color: "Colore della linea", color_blue: "Blu", color_body: "Come l'elettrodomestico",
@@ -1172,7 +1172,7 @@ const T = {
     p3_attention: "Aandacht vereist", p3_leveling: "Bed nivelleren", p3_filament: "Filament wisselen",
     p3_cooling: "Afkoelen", p3_calibrating: "Kalibreren", p3_homing: "Homen",
     section_printed_part: "Geprint object", part_cube: "Kubus", part_pyramid: "Piramide", part_duck: "Badeendje",
-    type_pet_feeder: "Voerautomaat", type_pet_fountain: "Drinkfontein", ft_flowing: "Stroomt", ft_off: "Uit", ft_filter_due: "Filter vervangen", ft_pump_due: "Pomp reinigen", ft_low_water: "Weinig water", ft_line_pump: "Pomp", ft_line_water: "Water", ft_pump_reset: "Pomp resetten", ft_last_pump: "Pomp laatst gedraaid", ft_pump_on: "Draait", section_pump_clean: "Pompreiniging", section_pump_reset: "Pomp-resetknop", section_pump_running: "Pomp draait", section_water_level: "Waterniveau", filter_due_below: "Nodig bij of onder", feeder_ready: "Gereed", feeder_feeding: "Voeren", section_portions_today: "Porties vandaag", section_weight_today: "Gewicht vandaag", section_portion_weight: "Portiegewicht", section_serving_size: "Portiegrootte", section_feeder_schedule: "Schema", section_last_feed: "Laatste voeding", section_error: "Storingsindicator", start_option: "Te kiezen optie", start_value: "Te schrijven waarde", portions: "porties",
+    type_pet_feeder: "Voerautomaat", type_pet_fountain: "Drinkfontein", ft_flowing: "Stroomt", ft_off: "Uit", ft_filter_due: "Filter vervangen", ft_pump_due: "Pomp reinigen", ft_low_water: "Weinig water", ft_line_pump: "Pomp", ft_line_water: "Water", ft_pump_reset: "Pomp resetten", ft_last_pump: "Pomp laatst gedraaid", ft_pump_on: "Draait", section_pump_clean: "Pompreiniging", section_pump_reset: "Pomp-resetknop", section_pump_running: "Pomp draait", section_water_level: "Waterniveau", filter_due_below: "Nodig bij of onder", filter_life_full: "Dagen van een nieuw filter", feeder_ready: "Gereed", feeder_feeding: "Voeren", section_portions_today: "Porties vandaag", section_weight_today: "Gewicht vandaag", section_portion_weight: "Portiegewicht", section_serving_size: "Portiegrootte", section_feeder_schedule: "Schema", section_last_feed: "Laatste voeding", section_error: "Storingsindicator", start_option: "Te kiezen optie", start_value: "Te schrijven waarde", portions: "porties",
     feeder_empty: "Reservoir leeg", feeder_level: "Reservoir voor {pct} vol", section_level: "Voerniveau", section_level_b: "Niveau tweede reservoir", level_empty_below: "Leeg bij of onder", level_max: "Inhoud van het reservoir",
     section_feeder_layout: "Model", layout_tower: "Vierkant reservoir", layout_canister: "Rond reservoir", layout_double: "Twee bakken", layout_dual_split: "Twee reservoirs, gedeelde bak", layout_rotary: "Draaiende bakjes (natvoer)",
     type_iron: "Strijkijzer", section_iron_layout: "Model", layout_iron: "Strijkijzer", layout_generator: "Stoomgenerator", iron_line_color: "Kleur van de lijn", color_blue: "Blauw", color_body: "Zoals het apparaat",
@@ -1345,7 +1345,7 @@ const T = {
     p3_attention: "Requer aten\u00e7\u00e3o", p3_leveling: "Nivelando a mesa", p3_filament: "Trocando o filamento",
     p3_cooling: "Resfriando", p3_calibrating: "Calibrando", p3_homing: "Retornando \u00e0 origem",
     section_printed_part: "Pe\u00e7a impressa", part_cube: "Cubo", part_pyramid: "Pir\u00e2mide", part_duck: "Patinho de borracha",
-    type_pet_feeder: "Alimentador autom\u00e1tico", type_pet_fountain: "Fonte para animais", ft_flowing: "A correr", ft_off: "Desligada", ft_filter_due: "Trocar filtro", ft_pump_due: "Limpar a bomba", ft_low_water: "Pouca \u00e1gua", ft_line_pump: "Bomba", ft_line_water: "\u00c1gua", ft_pump_reset: "Repor bomba", ft_last_pump: "\u00daltima marcha da bomba", ft_pump_on: "Em funcionamento", section_pump_clean: "Limpeza da bomba", section_pump_reset: "Bot\u00e3o de reposi\u00e7\u00e3o da bomba", section_pump_running: "Bomba em funcionamento", section_water_level: "N\u00edvel de \u00e1gua", filter_due_below: "Pendente em ou abaixo de", feeder_ready: "Pronto", feeder_feeding: "A distribuir", section_portions_today: "Por\u00e7\u00f5es de hoje", section_weight_today: "Peso de hoje", section_portion_weight: "Peso da por\u00e7\u00e3o", section_serving_size: "Tamanho da por\u00e7\u00e3o", section_feeder_schedule: "Programa\u00e7\u00e3o", section_last_feed: "\u00daltima refei\u00e7\u00e3o", section_error: "Indicador de erro", start_option: "Op\u00e7\u00e3o a selecionar", start_value: "Valor a escrever", portions: "por\u00e7\u00f5es",
+    type_pet_feeder: "Alimentador autom\u00e1tico", type_pet_fountain: "Fonte para animais", ft_flowing: "A correr", ft_off: "Desligada", ft_filter_due: "Trocar filtro", ft_pump_due: "Limpar a bomba", ft_low_water: "Pouca \u00e1gua", ft_line_pump: "Bomba", ft_line_water: "\u00c1gua", ft_pump_reset: "Repor bomba", ft_last_pump: "\u00daltima marcha da bomba", ft_pump_on: "Em funcionamento", section_pump_clean: "Limpeza da bomba", section_pump_reset: "Bot\u00e3o de reposi\u00e7\u00e3o da bomba", section_pump_running: "Bomba em funcionamento", section_water_level: "N\u00edvel de \u00e1gua", filter_due_below: "Pendente em ou abaixo de", filter_life_full: "Dias de um filtro novo", feeder_ready: "Pronto", feeder_feeding: "A distribuir", section_portions_today: "Por\u00e7\u00f5es de hoje", section_weight_today: "Peso de hoje", section_portion_weight: "Peso da por\u00e7\u00e3o", section_serving_size: "Tamanho da por\u00e7\u00e3o", section_feeder_schedule: "Programa\u00e7\u00e3o", section_last_feed: "\u00daltima refei\u00e7\u00e3o", section_error: "Indicador de erro", start_option: "Op\u00e7\u00e3o a selecionar", start_value: "Valor a escrever", portions: "por\u00e7\u00f5es",
     feeder_empty: "Dep\u00f3sito vazio", feeder_level: "Dep\u00f3sito a {pct}", section_level: "N\u00edvel de comida", section_level_b: "N\u00edvel do segundo dep\u00f3sito", level_empty_below: "Vazio em ou abaixo de", level_max: "Capacidade do dep\u00f3sito",
     section_feeder_layout: "Modelo", layout_tower: "Dep\u00f3sito quadrado", layout_canister: "Dep\u00f3sito redondo", layout_double: "Duas ta\u00e7as", layout_dual_split: "Dois dep\u00f3sitos, ta\u00e7a dividida", layout_rotary: "Pratos rotativos (comida h\u00famida)",
     type_iron: "Ferro de engomar", section_iron_layout: "Modelo", layout_iron: "Ferro de engomar", layout_generator: "Gerador de vapor", iron_line_color: "Cor da linha", color_blue: "Azul", color_body: "Como o eletrodom\u00e9stico",
@@ -1518,7 +1518,7 @@ const T = {
     p3_attention: "Kr\u00e4ver \u00e5tg\u00e4rd", p3_leveling: "Nivellerar b\u00e4dden", p3_filament: "Byter filament",
     p3_cooling: "Kyler", p3_calibrating: "Kalibrerar", p3_homing: "Nollst\u00e4ller axlar",
     section_printed_part: "Utskrivet objekt", part_cube: "Kub", part_pyramid: "Pyramid", part_duck: "Badanka",
-    type_pet_feeder: "Foderautomat", type_pet_fountain: "Vattenfont\u00e4n", ft_flowing: "Fl\u00f6dar", ft_off: "Av", ft_filter_due: "Byt filter", ft_pump_due: "Reng\u00f6r pumpen", ft_low_water: "Lite vatten", ft_line_pump: "Pump", ft_line_water: "Vatten", ft_pump_reset: "\u00c5terst\u00e4ll pump", ft_last_pump: "Pumpen gick senast", ft_pump_on: "Ig\u00e5ng", section_pump_clean: "Pumpreng\u00f6ring", section_pump_reset: "Knapp f\u00f6r pump\u00e5terst\u00e4llning", section_pump_running: "Pumpen g\u00e5r", section_water_level: "Vattenniv\u00e5", filter_due_below: "Dags vid eller under", feeder_ready: "Redo", feeder_feeding: "Matar", section_portions_today: "Portioner idag", section_weight_today: "Vikt idag", section_portion_weight: "Portionsvikt", section_serving_size: "Portionsstorlek", section_feeder_schedule: "Schema", section_last_feed: "Senaste matning", section_error: "Felindikator", start_option: "Alternativ att v\u00e4lja", start_value: "V\u00e4rde att skriva", portions: "portioner",
+    type_pet_feeder: "Foderautomat", type_pet_fountain: "Vattenfont\u00e4n", ft_flowing: "Fl\u00f6dar", ft_off: "Av", ft_filter_due: "Byt filter", ft_pump_due: "Reng\u00f6r pumpen", ft_low_water: "Lite vatten", ft_line_pump: "Pump", ft_line_water: "Vatten", ft_pump_reset: "\u00c5terst\u00e4ll pump", ft_last_pump: "Pumpen gick senast", ft_pump_on: "Ig\u00e5ng", section_pump_clean: "Pumpreng\u00f6ring", section_pump_reset: "Knapp f\u00f6r pump\u00e5terst\u00e4llning", section_pump_running: "Pumpen g\u00e5r", section_water_level: "Vattenniv\u00e5", filter_due_below: "Dags vid eller under", filter_life_full: "Dagar f\u00f6r ett nytt filter", feeder_ready: "Redo", feeder_feeding: "Matar", section_portions_today: "Portioner idag", section_weight_today: "Vikt idag", section_portion_weight: "Portionsvikt", section_serving_size: "Portionsstorlek", section_feeder_schedule: "Schema", section_last_feed: "Senaste matning", section_error: "Felindikator", start_option: "Alternativ att v\u00e4lja", start_value: "V\u00e4rde att skriva", portions: "portioner",
     feeder_empty: "Beh\u00e5llaren tom", feeder_level: "Beh\u00e5llaren {pct} full", section_level: "Foderm\u00e4ngd", section_level_b: "Niv\u00e5 i andra beh\u00e5llaren", level_empty_below: "Tom vid eller under", level_max: "Beh\u00e5llarens volym",
     section_feeder_layout: "Modell", layout_tower: "Fyrkantig beh\u00e5llare", layout_canister: "Rund beh\u00e5llare", layout_double: "Tv\u00e5 sk\u00e5lar", layout_dual_split: "Tv\u00e5 beh\u00e5llare, delad sk\u00e5l", layout_rotary: "Roterande sk\u00e5lar (v\u00e5tfoder)",
     type_iron: "Strykj\u00e4rn", section_iron_layout: "Modell", layout_iron: "Strykj\u00e4rn", layout_generator: "\u00c5ngstation", iron_line_color: "Linjens f\u00e4rg", color_blue: "Bl\u00e5", color_body: "Som apparaten",
@@ -1691,7 +1691,7 @@ const T = {
     p3_attention: "Krever tilsyn", p3_leveling: "Nivellerer sengen", p3_filament: "Bytter filament",
     p3_cooling: "Kj\u00f8ler", p3_calibrating: "Kalibrerer", p3_homing: "Nullstiller akser",
     section_printed_part: "Utskrevet objekt", part_cube: "Kube", part_pyramid: "Pyramide", part_duck: "Badeand",
-    type_pet_feeder: "F\u00f4rautomat", type_pet_fountain: "Vannfontene", ft_flowing: "Renner", ft_off: "Av", ft_filter_due: "Bytt filter", ft_pump_due: "Rengj\u00f8r pumpen", ft_low_water: "Lite vann", ft_line_pump: "Pumpe", ft_line_water: "Vann", ft_pump_reset: "Tilbakestill pumpe", ft_last_pump: "Pumpen gikk sist", ft_pump_on: "G\u00e5r", section_pump_clean: "Pumperengj\u00f8ring", section_pump_reset: "Knapp for pumpetilbakestilling", section_pump_running: "Pumpen g\u00e5r", section_water_level: "Vannstand", filter_due_below: "Forfaller ved eller under", feeder_ready: "Klar", feeder_feeding: "Mater", section_portions_today: "Porsjoner i dag", section_weight_today: "Vekt i dag", section_portion_weight: "Porsjonsvekt", section_serving_size: "Porsjonsst\u00f8rrelse", section_feeder_schedule: "Tidsplan", section_last_feed: "Siste m\u00e5ltid", section_error: "Feilindikator", start_option: "Alternativ \u00e5 velge", start_value: "Verdi \u00e5 skrive", portions: "porsjoner",
+    type_pet_feeder: "F\u00f4rautomat", type_pet_fountain: "Vannfontene", ft_flowing: "Renner", ft_off: "Av", ft_filter_due: "Bytt filter", ft_pump_due: "Rengj\u00f8r pumpen", ft_low_water: "Lite vann", ft_line_pump: "Pumpe", ft_line_water: "Vann", ft_pump_reset: "Tilbakestill pumpe", ft_last_pump: "Pumpen gikk sist", ft_pump_on: "G\u00e5r", section_pump_clean: "Pumperengj\u00f8ring", section_pump_reset: "Knapp for pumpetilbakestilling", section_pump_running: "Pumpen g\u00e5r", section_water_level: "Vannstand", filter_due_below: "Forfaller ved eller under", filter_life_full: "Dager for et nytt filter", feeder_ready: "Klar", feeder_feeding: "Mater", section_portions_today: "Porsjoner i dag", section_weight_today: "Vekt i dag", section_portion_weight: "Porsjonsvekt", section_serving_size: "Porsjonsst\u00f8rrelse", section_feeder_schedule: "Tidsplan", section_last_feed: "Siste m\u00e5ltid", section_error: "Feilindikator", start_option: "Alternativ \u00e5 velge", start_value: "Verdi \u00e5 skrive", portions: "porsjoner",
     feeder_empty: "Beholder tom", feeder_level: "Beholder {pct} full", section_level: "F\u00f4rniv\u00e5", section_level_b: "Niv\u00e5 i andre beholder", level_empty_below: "Tom ved eller under", level_max: "Beholderens volum",
     section_feeder_layout: "Modell", layout_tower: "Firkantet beholder", layout_canister: "Rund beholder", layout_double: "To sk\u00e5ler", layout_dual_split: "To beholdere, delt sk\u00e5l", layout_rotary: "Roterende sk\u00e5ler (v\u00e5tf\u00f4r)",
     type_iron: "Strykejern", section_iron_layout: "Modell", layout_iron: "Strykejern", layout_generator: "Dampstasjon", iron_line_color: "Linjens farge", color_blue: "Bl\u00e5", color_body: "Som apparatet",
@@ -1864,7 +1864,7 @@ const T = {
     p3_attention: "Kr\u00e6ver handling", p3_leveling: "Nivellerer sengen", p3_filament: "Skifter filament",
     p3_cooling: "K\u00f8ler", p3_calibrating: "Kalibrerer", p3_homing: "Nulstiller akser",
     section_printed_part: "Printet emne", part_cube: "Terning", part_pyramid: "Pyramide", part_duck: "Badeand",
-    type_pet_feeder: "Foderautomat", type_pet_fountain: "Drikkefont\u00e6ne", ft_flowing: "L\u00f8ber", ft_off: "Slukket", ft_filter_due: "Skift filter", ft_pump_due: "Reng\u00f8r pumpen", ft_low_water: "Lidt vand", ft_line_pump: "Pumpe", ft_line_water: "Vand", ft_pump_reset: "Nulstil pumpe", ft_last_pump: "Pumpen k\u00f8rte sidst", ft_pump_on: "K\u00f8rer", section_pump_clean: "Pumpereng\u00f8ring", section_pump_reset: "Knap til pumpenulstilling", section_pump_running: "Pumpen k\u00f8rer", section_water_level: "Vandstand", filter_due_below: "Forfalden ved eller under", feeder_ready: "Klar", feeder_feeding: "Fodrer", section_portions_today: "Portioner i dag", section_weight_today: "V\u00e6gt i dag", section_portion_weight: "Portionsv\u00e6gt", section_serving_size: "Portionsst\u00f8rrelse", section_feeder_schedule: "Tidsplan", section_last_feed: "Sidste fodring", section_error: "Fejlindikator", start_option: "Valgmulighed", start_value: "V\u00e6rdi at skrive", portions: "portioner",
+    type_pet_feeder: "Foderautomat", type_pet_fountain: "Drikkefont\u00e6ne", ft_flowing: "L\u00f8ber", ft_off: "Slukket", ft_filter_due: "Skift filter", ft_pump_due: "Reng\u00f8r pumpen", ft_low_water: "Lidt vand", ft_line_pump: "Pumpe", ft_line_water: "Vand", ft_pump_reset: "Nulstil pumpe", ft_last_pump: "Pumpen k\u00f8rte sidst", ft_pump_on: "K\u00f8rer", section_pump_clean: "Pumpereng\u00f8ring", section_pump_reset: "Knap til pumpenulstilling", section_pump_running: "Pumpen k\u00f8rer", section_water_level: "Vandstand", filter_due_below: "Forfalden ved eller under", filter_life_full: "Dage for et nyt filter", feeder_ready: "Klar", feeder_feeding: "Fodrer", section_portions_today: "Portioner i dag", section_weight_today: "V\u00e6gt i dag", section_portion_weight: "Portionsv\u00e6gt", section_serving_size: "Portionsst\u00f8rrelse", section_feeder_schedule: "Tidsplan", section_last_feed: "Sidste fodring", section_error: "Fejlindikator", start_option: "Valgmulighed", start_value: "V\u00e6rdi at skrive", portions: "portioner",
     feeder_empty: "Beholder tom", feeder_level: "Beholder {pct} fuld", section_level: "Foderm\u00e6ngde", section_level_b: "Niveau i anden beholder", level_empty_below: "Tom ved eller under", level_max: "Beholderens rumfang",
     section_feeder_layout: "Model", layout_tower: "Firkantet beholder", layout_canister: "Rund beholder", layout_double: "To sk\u00e5le", layout_dual_split: "To beholdere, delt sk\u00e5l", layout_rotary: "Roterende sk\u00e5le (v\u00e5dfoder)",
     type_iron: "Strygejern", section_iron_layout: "Model", layout_iron: "Strygejern", layout_generator: "Dampstation", iron_line_color: "Stregens farve", color_blue: "Bl\u00e5", color_body: "Som apparatet",
@@ -2037,7 +2037,7 @@ const T = {
     p3_attention: "Wymaga uwagi", p3_leveling: "Poziomowanie sto\u0142u", p3_filament: "Zmiana filamentu",
     p3_cooling: "Ch\u0142odzenie", p3_calibrating: "Kalibracja", p3_homing: "Bazowanie",
     section_printed_part: "Drukowany obiekt", part_cube: "Sze\u015bcian", part_pyramid: "Piramida", part_duck: "Gumowa kaczuszka",
-    type_pet_feeder: "Karmnik automatyczny", type_pet_fountain: "Poide\u0142ko", ft_flowing: "P\u0142ynie", ft_off: "Wy\u0142\u0105czone", ft_filter_due: "Wymie\u0144 filtr", ft_pump_due: "Wyczy\u015b\u0107 pomp\u0119", ft_low_water: "Ma\u0142o wody", ft_line_pump: "Pompa", ft_line_water: "Woda", ft_pump_reset: "Zresetuj pomp\u0119", ft_last_pump: "Ostatnia praca pompy", ft_pump_on: "Pracuje", section_pump_clean: "Czyszczenie pompy", section_pump_reset: "Przycisk resetu pompy", section_pump_running: "Pompa pracuje", section_water_level: "Poziom wody", filter_due_below: "Termin przy tej warto\u015bci lub ni\u017cej", feeder_ready: "Gotowy", feeder_feeding: "Wydawanie", section_portions_today: "Porcje dzisiaj", section_weight_today: "Waga dzisiaj", section_portion_weight: "Waga porcji", section_serving_size: "Wielko\u015b\u0107 porcji", section_feeder_schedule: "Harmonogram", section_last_feed: "Ostatnie karmienie", section_error: "Wska\u017anik b\u0142\u0119du", start_option: "Opcja do wybrania", start_value: "Warto\u015b\u0107 do zapisania", portions: "porcji",
+    type_pet_feeder: "Karmnik automatyczny", type_pet_fountain: "Poide\u0142ko", ft_flowing: "P\u0142ynie", ft_off: "Wy\u0142\u0105czone", ft_filter_due: "Wymie\u0144 filtr", ft_pump_due: "Wyczy\u015b\u0107 pomp\u0119", ft_low_water: "Ma\u0142o wody", ft_line_pump: "Pompa", ft_line_water: "Woda", ft_pump_reset: "Zresetuj pomp\u0119", ft_last_pump: "Ostatnia praca pompy", ft_pump_on: "Pracuje", section_pump_clean: "Czyszczenie pompy", section_pump_reset: "Przycisk resetu pompy", section_pump_running: "Pompa pracuje", section_water_level: "Poziom wody", filter_due_below: "Termin przy tej warto\u015bci lub ni\u017cej", filter_life_full: "Dni nowego filtra", feeder_ready: "Gotowy", feeder_feeding: "Wydawanie", section_portions_today: "Porcje dzisiaj", section_weight_today: "Waga dzisiaj", section_portion_weight: "Waga porcji", section_serving_size: "Wielko\u015b\u0107 porcji", section_feeder_schedule: "Harmonogram", section_last_feed: "Ostatnie karmienie", section_error: "Wska\u017anik b\u0142\u0119du", start_option: "Opcja do wybrania", start_value: "Warto\u015b\u0107 do zapisania", portions: "porcji",
     feeder_empty: "Pusty zasobnik", feeder_level: "Zasobnik nape\u0142niony w {pct}", section_level: "Poziom karmy", section_level_b: "Poziom drugiego zasobnika", level_empty_below: "Pusty przy tej warto\u015bci lub ni\u017cej", level_max: "Pojemno\u015b\u0107 zasobnika",
     section_feeder_layout: "Model", layout_tower: "Kwadratowy zasobnik", layout_canister: "Okr\u0105g\u0142y zasobnik", layout_double: "Dwie miski", layout_dual_split: "Dwa zasobniki, dzielona miska", layout_rotary: "Obrotowe miseczki (mokra karma)",
     type_iron: "\u017belazko", section_iron_layout: "Model", layout_iron: "\u017belazko", layout_generator: "Generator pary", iron_line_color: "Kolor linii", color_blue: "Niebieski", color_body: "Jak urz\u0105dzenie",
@@ -2210,7 +2210,7 @@ const T = {
     p3_attention: "\u9700\u8981\u5904\u7406", p3_leveling: "\u8c03\u5e73\u4e2d", p3_filament: "\u66f4\u6362\u8017\u6750",
     p3_cooling: "\u51b7\u5374\u4e2d", p3_calibrating: "\u6821\u51c6\u4e2d", p3_homing: "\u5f52\u4f4d\u4e2d",
     section_printed_part: "\u6253\u5370\u6a21\u578b", part_cube: "\u7acb\u65b9\u4f53", part_pyramid: "\u91d1\u5b57\u5854", part_duck: "\u6a61\u76ae\u9e2d",
-    type_pet_feeder: "\u81ea\u52a8\u5582\u98df\u5668", type_pet_fountain: "\u5ba0\u7269\u996e\u6c34\u673a", ft_flowing: "\u51fa\u6c34\u4e2d", ft_off: "\u5173\u95ed", ft_filter_due: "\u9700\u66f4\u6362\u6ee4\u82af", ft_pump_due: "\u9700\u6e05\u6d17\u6c34\u6cf5", ft_low_water: "\u6c34\u91cf\u4e0d\u8db3", ft_line_pump: "\u6c34\u6cf5", ft_line_water: "\u6c34\u91cf", ft_pump_reset: "\u91cd\u7f6e\u6c34\u6cf5", ft_last_pump: "\u6c34\u6cf5\u4e0a\u6b21\u8fd0\u884c", ft_pump_on: "\u8fd0\u884c\u4e2d", section_pump_clean: "\u6c34\u6cf5\u6e05\u6d17", section_pump_reset: "\u6c34\u6cf5\u91cd\u7f6e\u6309\u952e", section_pump_running: "\u6c34\u6cf5\u8fd0\u884c", section_water_level: "\u6c34\u4f4d", filter_due_below: "\u4f4e\u4e8e\u6216\u7b49\u4e8e\u6b64\u503c\u65f6\u5230\u671f", feeder_ready: "\u5c31\u7eea", feeder_feeding: "\u6295\u5582\u4e2d", section_portions_today: "\u4eca\u65e5\u4efd\u6570", section_weight_today: "\u4eca\u65e5\u91cd\u91cf", section_portion_weight: "\u6bcf\u4efd\u91cd\u91cf", section_serving_size: "\u6bcf\u6b21\u4efd\u91cf", section_feeder_schedule: "\u8ba1\u5212", section_last_feed: "\u4e0a\u6b21\u6295\u5582", section_error: "\u6545\u969c\u6307\u793a", start_option: "\u8981\u9009\u62e9\u7684\u9009\u9879", start_value: "\u8981\u5199\u5165\u7684\u503c", portions: "\u4efd",
+    type_pet_feeder: "\u81ea\u52a8\u5582\u98df\u5668", type_pet_fountain: "\u5ba0\u7269\u996e\u6c34\u673a", ft_flowing: "\u51fa\u6c34\u4e2d", ft_off: "\u5173\u95ed", ft_filter_due: "\u9700\u66f4\u6362\u6ee4\u82af", ft_pump_due: "\u9700\u6e05\u6d17\u6c34\u6cf5", ft_low_water: "\u6c34\u91cf\u4e0d\u8db3", ft_line_pump: "\u6c34\u6cf5", ft_line_water: "\u6c34\u91cf", ft_pump_reset: "\u91cd\u7f6e\u6c34\u6cf5", ft_last_pump: "\u6c34\u6cf5\u4e0a\u6b21\u8fd0\u884c", ft_pump_on: "\u8fd0\u884c\u4e2d", section_pump_clean: "\u6c34\u6cf5\u6e05\u6d17", section_pump_reset: "\u6c34\u6cf5\u91cd\u7f6e\u6309\u952e", section_pump_running: "\u6c34\u6cf5\u8fd0\u884c", section_water_level: "\u6c34\u4f4d", filter_due_below: "\u4f4e\u4e8e\u6216\u7b49\u4e8e\u6b64\u503c\u65f6\u5230\u671f", filter_life_full: "\u65b0\u6ee4\u7f51\u5929\u6570", feeder_ready: "\u5c31\u7eea", feeder_feeding: "\u6295\u5582\u4e2d", section_portions_today: "\u4eca\u65e5\u4efd\u6570", section_weight_today: "\u4eca\u65e5\u91cd\u91cf", section_portion_weight: "\u6bcf\u4efd\u91cd\u91cf", section_serving_size: "\u6bcf\u6b21\u4efd\u91cf", section_feeder_schedule: "\u8ba1\u5212", section_last_feed: "\u4e0a\u6b21\u6295\u5582", section_error: "\u6545\u969c\u6307\u793a", start_option: "\u8981\u9009\u62e9\u7684\u9009\u9879", start_value: "\u8981\u5199\u5165\u7684\u503c", portions: "\u4efd",
     feeder_empty: "\u6599\u6876\u5df2\u7a7a", feeder_level: "\u6599\u6876\u4f59\u91cf {pct}", section_level: "\u4f59\u91cf", section_level_b: "\u7b2c\u4e8c\u6599\u4ed3\u4f59\u91cf", level_empty_below: "\u4f4e\u4e8e\u6216\u7b49\u4e8e\u6b64\u503c\u89c6\u4e3a\u7a7a", level_max: "\u6599\u6876\u5bb9\u91cf",
     section_feeder_layout: "\u578b\u53f7", layout_tower: "\u65b9\u5f62\u6599\u6876", layout_canister: "\u5706\u5f62\u6599\u6876", layout_double: "\u53cc\u98df\u76c6", layout_dual_split: "\u53cc\u6599\u4ed3\uff0c\u5206\u9694\u98df\u76c6", layout_rotary: "\u65cb\u8f6c\u9910\u76d8\uff08\u6e7f\u7cae\uff09",
     type_iron: "\u71a8\u6597", section_iron_layout: "\u578b\u53f7", layout_iron: "\u71a8\u6597", layout_generator: "\u84b8\u6c7d\u53d1\u751f\u5668", iron_line_color: "\u7ebf\u6761\u989c\u8272", color_blue: "\u84dd\u8272", color_body: "\u4e0e\u8bbe\u5907\u76f8\u540c",
@@ -2383,7 +2383,7 @@ const T = {
     p3_attention: "Vy\u017eaduje pozornost", p3_leveling: "Vyrovn\u00e1v\u00e1n\u00ed podlo\u017eky", p3_filament: "V\u00fdm\u011bna filamentu",
     p3_cooling: "Chlazen\u00ed", p3_calibrating: "Kalibrace", p3_homing: "Naj\u00ed\u017ed\u011bn\u00ed do v\u00fdchoz\u00ed polohy",
     section_printed_part: "Ti\u0161t\u011bn\u00fd objekt", part_cube: "Krychle", part_pyramid: "Pyramida", part_duck: "Gumov\u00e1 kachni\u010dka",
-    type_pet_feeder: "Krm\u00edtko", type_pet_fountain: "Font\u00e1na pro zv\u00ed\u0159ata", ft_flowing: "Te\u010de", ft_off: "Vypnuto", ft_filter_due: "Vym\u011b\u0148te filtr", ft_pump_due: "Vy\u010dist\u011bte \u010derpadlo", ft_low_water: "M\u00e1lo vody", ft_line_pump: "\u010cerpadlo", ft_line_water: "Voda", ft_pump_reset: "Resetovat \u010derpadlo", ft_last_pump: "\u010cerpadlo naposledy b\u011b\u017eelo", ft_pump_on: "B\u011b\u017e\u00ed", section_pump_clean: "\u010ci\u0161t\u011bn\u00ed \u010derpadla", section_pump_reset: "Tla\u010d\u00edtko resetu \u010derpadla", section_pump_running: "\u010cerpadlo b\u011b\u017e\u00ed", section_water_level: "Hladina vody", filter_due_below: "Splatn\u00e9 p\u0159i t\u00e9to hodnot\u011b nebo n\u00ed\u017ee", feeder_ready: "P\u0159ipraveno", feeder_feeding: "Krmen\u00ed", section_portions_today: "Porce dnes", section_weight_today: "Hmotnost dnes", section_portion_weight: "Hmotnost porce", section_serving_size: "Velikost porce", section_feeder_schedule: "Rozvrh", section_last_feed: "Posledn\u00ed krmen\u00ed", section_error: "Indik\u00e1tor chyby", start_option: "Mo\u017enost k v\u00fdb\u011bru", start_value: "Hodnota k z\u00e1pisu", portions: "porc\u00ed",
+    type_pet_feeder: "Krm\u00edtko", type_pet_fountain: "Font\u00e1na pro zv\u00ed\u0159ata", ft_flowing: "Te\u010de", ft_off: "Vypnuto", ft_filter_due: "Vym\u011b\u0148te filtr", ft_pump_due: "Vy\u010dist\u011bte \u010derpadlo", ft_low_water: "M\u00e1lo vody", ft_line_pump: "\u010cerpadlo", ft_line_water: "Voda", ft_pump_reset: "Resetovat \u010derpadlo", ft_last_pump: "\u010cerpadlo naposledy b\u011b\u017eelo", ft_pump_on: "B\u011b\u017e\u00ed", section_pump_clean: "\u010ci\u0161t\u011bn\u00ed \u010derpadla", section_pump_reset: "Tla\u010d\u00edtko resetu \u010derpadla", section_pump_running: "\u010cerpadlo b\u011b\u017e\u00ed", section_water_level: "Hladina vody", filter_due_below: "Splatn\u00e9 p\u0159i t\u00e9to hodnot\u011b nebo n\u00ed\u017ee", filter_life_full: "Dny nov\u00e9ho filtru", feeder_ready: "P\u0159ipraveno", feeder_feeding: "Krmen\u00ed", section_portions_today: "Porce dnes", section_weight_today: "Hmotnost dnes", section_portion_weight: "Hmotnost porce", section_serving_size: "Velikost porce", section_feeder_schedule: "Rozvrh", section_last_feed: "Posledn\u00ed krmen\u00ed", section_error: "Indik\u00e1tor chyby", start_option: "Mo\u017enost k v\u00fdb\u011bru", start_value: "Hodnota k z\u00e1pisu", portions: "porc\u00ed",
     feeder_empty: "Z\u00e1sobn\u00edk pr\u00e1zdn\u00fd", feeder_level: "Z\u00e1sobn\u00edk napln\u011bn na {pct}", section_level: "Mno\u017estv\u00ed krmiva", section_level_b: "Hladina druh\u00e9ho z\u00e1sobn\u00edku", level_empty_below: "Pr\u00e1zdn\u00fd p\u0159i t\u00e9to hodnot\u011b nebo ni\u017e\u0161\u00ed", level_max: "Objem z\u00e1sobn\u00edku",
     section_feeder_layout: "Model", layout_tower: "Hranat\u00fd z\u00e1sobn\u00edk", layout_canister: "Kulat\u00fd z\u00e1sobn\u00edk", layout_double: "Dv\u011b misky", layout_dual_split: "Dva z\u00e1sobn\u00edky, d\u011blen\u00e1 miska", layout_rotary: "Oto\u010dn\u00e9 misky (kapsi\u010dky)",
     type_iron: "\u017dehli\u010dka", section_iron_layout: "Model", layout_iron: "\u017dehli\u010dka", layout_generator: "Parn\u00ed gener\u00e1tor", iron_line_color: "Barva linky", color_blue: "Modr\u00e1", color_body: "Jako spot\u0159ebi\u010d",
@@ -4774,13 +4774,17 @@ const TYPE_AUTO_PATTERNS = {
   // Vallox, Zehnder, Danfoss: four temperatures, a bypass or a cell state, a
   // filter, an airflow.
   hrv: {
-    outdoor_temperature_entity: /outdoor|outside|exterieur|aussen|frisch|fresh/i,
-    supply_temperature_entity: /supply|soufflage|zuluft|insufl|impuls|mandata|toevoer|tillu/i,
+    outdoor_temperature_entity: /^(?!.*(fan|rpm|cfm|flow))(.*(outdoor|outside|exterieur|aussen|frisch|fresh)|.*temp\w*_ext)/i,
+    supply_temperature_entity: /^(?!.*(fan|rpm|cfm|flow)).*(supply|soufflage|zuluft|insufl|impuls|mandata|toevoer|tillu)/i,
     extract_temperature_entity: /^(?!.*fan).*(extract|reprise|abluft|extrac|ripresa|afzuig|franlu|indoor)/i,
     exhaust_temperature_entity: /^(?!.*fan).*(exhaust|rejet|fortluft|expuls|espuls|afvoer|avlu)/i,
     bypass_entity: /bypass|cell.?state|by.?pass/i,
     filter_life_entity: /filter|filtre/i,
-    airflow_entity: /air.?flow|debit|luftmenge|caudal|portata|m3/i,
+    airflow_entity: /air.?flow|debit|luftmenge|caudal|portata|m3|(supply|fresh|soufflage|zuluft).*(cfm|flow)/i,
+    // Broan / Venmar over ESPHome: each fan's rpm and the air it moves.
+    supply_fan_entity: /(supply|fresh|soufflage|zuluft|insufl).*rpm/i,
+    exhaust_fan_entity: /(exhaust|extract|stale|rejet|abluft|fortluft|vicie).*rpm/i,
+    exhaust_airflow_entity: /(exhaust|extract|stale|rejet|abluft|fortluft|vicie).*(cfm|flow|debit|m3)/i,
   },
   // Arlo calls its sensors motion_camera_x and connected_camera_x, Reolink
   // and Tapo name a privacy switch, and most of them an infrared mode.
@@ -6623,7 +6627,7 @@ ${DIFFUSER_SVGS[layout](wood, b)}${DIF_DROP_BADGE}</svg></div>`;
 // cell state (heat recovery, cool recovery, bypass, defrosting); a filter in
 // days or in percent; four temperatures drawn at the ends of the ducts.
 const HRV_ONLY_FIELDS = ["hrv_layout", "supply_temperature_entity", "extract_temperature_entity", "exhaust_temperature_entity", "bypass_entity", "airflow_entity",
-  "supply_fan_entity", "exhaust_fan_entity", "exhaust_airflow_entity", "fan_max_rpm", "humidity_control_entity"];
+  "supply_fan_entity", "exhaust_fan_entity", "exhaust_airflow_entity", "fan_max_rpm", "humidity_control_entity", "filter_life_full"];
 const HRV_LAYOUTS = ["diagram", "one_duct", "pair"];
 const HRV_NAME_RE = /(^|[^a-z])(hrv|erv|vmc|wtw|ftx|mvhr)([^a-z]|$)|double.?flux|heat.?recovery|recuperat|comfoair|comfoconnect|vallox|zehnder|lunos|twinfresh|danfoss.?air|renson|endura|brink.?(flair|renovent)|wohnraumluft/;
 const HRV_LABELS = { run: "hrv_run", boost: "hrv_boost", bypass: "hrv_bypass", defrost: "hrv_defrost", filter: "hrv_filter", away: "hrv_away",
@@ -6709,7 +6713,7 @@ function hrvReadOf(hass, cfg, st, norm, powerDerived) {
   const defrost = /defrost|degivr|abtau|frost/.test(braw) || /defrost|degivr|abtau/.test(raw);
   const bypass = !defrost && (["on", "true", "open", "opened", "bypass", "active"].includes(braw) || /bypass|cool.?recovery/.test(braw) || (isFinite(bnum) && bnum > 0));
   // The filter: days or percent left, or a sensor that says it is due.
-  let filterDue = false, filterText = "";
+  let filterDue = false, filterText = "", filterValue = null, filterDays = false;
   const fst = cfg.filter_life_entity ? stateObj(hass, cfg.filter_life_entity) : null;
   if (fst) {
     const fv = parseFloat(fst.state);
@@ -6719,13 +6723,15 @@ function hrvReadOf(hass, cfg, st, norm, powerDerived) {
       const due = parseFloat(cfg.filter_due_below);
       filterDue = fv <= (isFinite(due) ? due : days ? 7 : 10);
       filterText = `${Math.round(fv)}${days ? ` ${unit}` : " %"}`;
+      filterValue = fv;
+      filterDays = days;
     } else filterDue = ["on", "true", "due", "replace", "dirty"].includes(String(fst.state).toLowerCase());
   }
   const named = presetSpeedOf(preset);
   const level = boost ? 3 : pct !== null && pct > 0 ? (pct <= 40 ? 1 : pct <= 75 ? 2 : 3) : named || 2;
   const mode = defrost ? "defrost" : recirc ? "rec" : bypass ? "bypass" : boost ? "boost" : humidity ? "hum" : inter ? "inter"
     : filterDue ? "filter" : away ? "away" : "run";
-  return { mode, level, pct, bypass, defrost, filterDue, filterText, paused,
+  return { mode, level, pct, bypass, defrost, filterDue, filterText, filterValue, filterDays, paused,
     sRpm, eRpm, sPace: hrvPace(sRpm, max), ePace: hrvPace(eRpm, max) };
 }
 function hrvLayoutOf(cfg, st) {
@@ -6738,7 +6744,9 @@ function hrvLayoutOf(cfg, st) {
 }
 const hvLab = (x, y, temp, name, anchor) => `<text class="hv-t" x="${x}" y="${y}" text-anchor="${anchor}">${anchor === "start"
   ? `${temp} <tspan class="hv-n">${name}</tspan>` : `<tspan class="hv-n">${name}</tspan> ${temp}`}</text>`;
-const hvFan = (x, y, r, cls) => `<circle cx="${x}" cy="${y}" r="${r}" class="hv-fanbody"/><g class="hv-fan${cls ? ` ${cls}` : ""}">${[0, 120, 240].map((d) => `<path d="M${x} ${y} q${(r * 0.45).toFixed(1)} -${(r * 0.85).toFixed(1)} 0 -${(r * 0.85).toFixed(1)} q-${(r * 0.45).toFixed(1)} ${(r * 0.3).toFixed(1)} 0 ${(r * 0.85).toFixed(1)}z" transform="rotate(${d} ${x} ${y})"/>`).join("")}</g>`;
+// Each fan turns on its own centre: the box of its blades is not centred on
+// it, so the turn is set on the drawing's own coordinates.
+const hvFan = (x, y, r, cls) => `<circle cx="${x}" cy="${y}" r="${r}" class="hv-fanbody"/><g class="hv-fan${cls ? ` ${cls}` : ""}" style="transform-origin:${x}px ${y}px">${[0, 120, 240].map((d) => `<path d="M${x} ${y} q${(r * 0.45).toFixed(1)} -${(r * 0.85).toFixed(1)} 0 -${(r * 0.85).toFixed(1)} q-${(r * 0.45).toFixed(1)} ${(r * 0.3).toFixed(1)} 0 ${(r * 0.85).toFixed(1)}z" transform="rotate(${d} ${x} ${y})"/>`).join("")}</g>`;
 const hvBadges = (h, cx, y) => `<g class="hv-hum"><rect x="${cx - 34}" y="${y}" width="68" height="13" rx="6.5" fill="#1e88e5"/><path d="M${cx - 26} ${y + 2.5} C${cx - 24} ${y + 5.5} ${cx - 22.5} ${y + 7} ${cx - 22.5} ${y + 8.6} a3.5 3.5 0 0 1 -7 0 C${cx - 29.5} ${y + 7} ${cx - 28} ${y + 5.5} ${cx - 26} ${y + 2.5}Z" fill="#fff"/><text class="hv-badge" x="${cx + 4}" y="${y + 9.6}" text-anchor="middle">${h.humText || ""}</text></g>
 <g class="hv-int"><rect x="${cx - 20}" y="${y}" width="40" height="13" rx="6.5" fill="#607d8b"/><circle cx="${cx - 12}" cy="${y + 6.5}" r="4" fill="none" stroke="#fff" stroke-width="1.2"/><path d="M${cx - 12} ${y + 4} V${y + 6.5} L${cx - 10} ${y + 7.6}" stroke="#fff" stroke-width="1.1" fill="none" stroke-linecap="round"/><text class="hv-badge" x="${cx + 4}" y="${y + 9.6}" text-anchor="middle">INT</text></g>`;
 const HRV_SVGS = {
@@ -6752,6 +6760,7 @@ const HRV_SVGS = {
 <path class="hv-flow" d="M226 34 H174 C146 34 140 52 118 66 C96 80 90 98 62 98 H10" stroke="url(#hv-g-ex)"/><path class="hv-dash hv-de" d="M226 34 H174 C146 34 140 52 118 66 C96 80 90 98 62 98 H10"/></g>
 <g class="hv-rc"><path class="hv-flow" d="M226 34 H170 C128 34 128 98 170 98 H226" stroke="#ff9800"/><path class="hv-dash hv-ds" d="M226 34 H170 C128 34 128 98 170 98 H226"/></g>
 <path class="hv-damper" d="M58 27 L66 41 M58 91 L66 105"/>${hvFan(160, 98, 8, "hv-fs")}${hvFan(76, 98, 8, "hv-fe")}
+${h.flowS ? `<text class="hv-n hv-cfm" x="160" y="85" text-anchor="middle">${h.flowS}</text>` : ""}${h.flowE ? `<text class="hv-n hv-cfm" x="76" y="85" text-anchor="middle">${h.flowE}</text>` : ""}
 ${hvLab(8, 26, h.t.o, "", "start")}${hvLab(228, 118, h.t.s, "", "end")}${hvLab(228, 26, h.t.e, "", "end")}${hvLab(8, 118, h.t.x, "", "start")}
 <text class="hv-frost" x="118" y="16" text-anchor="middle">\u2744</text><g class="hv-filt"><circle cx="168" cy="27" r="6"/><text x="168" y="30.5" text-anchor="middle">!</text></g>${hvBadges(h, 118, 4)}`,
   one_duct: (h) => `<defs><linearGradient id="hv-g-fa" gradientUnits="userSpaceOnUse" x1="130" x2="182"><stop offset="0" stop-color="#42a5f5"/><stop offset="1" stop-color="#ff9800"/></linearGradient>
@@ -6761,6 +6770,7 @@ ${hvLab(8, 26, h.t.o, "", "start")}${hvLab(228, 118, h.t.s, "", "end")}${hvLab(2
 <rect x="118" y="28" width="78" height="72" rx="7" class="hv-box"/>
 <rect x="132" y="50" width="46" height="28" rx="2" fill="#3a4148" stroke="#7b858f"/>${Array.from({ length: 11 }, (_, i) => `<path d="M${136 + i * 4} 51 V77" stroke="#7b858f" stroke-width=".7"/>`).join("")}
 ${hvFan(188, 56, 6.5, "hv-fs")}${hvFan(126, 72, 6.5, "hv-fe")}
+${h.flowS ? `<text class="hv-n hv-cfm" x="188" y="47" text-anchor="middle">${h.flowS}</text>` : ""}${h.flowE ? `<text class="hv-n hv-cfm" x="126" y="86" text-anchor="middle">${h.flowE}</text>` : ""}
 <g class="hv-through"><path class="hv-flow" d="M22 56 H214" stroke="url(#hv-g-fa)"/><path class="hv-dash hv-ds" d="M22 56 H214"/></g>
 <g class="hv-bypass"><path class="hv-flow" d="M22 56 H124 C130 56 130 40 140 40 H170 C180 40 180 56 186 56 H214" stroke="#42a5f5"/><path class="hv-dash hv-ds" d="M22 56 H124 C130 56 130 40 140 40 H170 C180 40 180 56 186 56 H214"/></g>
 <path class="hv-flow" d="M214 72 H22" stroke="url(#hv-g-ex)"/><path class="hv-dash hv-rev hv-de" d="M22 72 H214"/>
@@ -10670,7 +10680,7 @@ const ILLUSTRATION_CSS = {
         .hv-wall{fill:#d9cbb7}
         .hv-tube{fill:#eef1f3;stroke:#aab3bb}
         .hv-fanbody{fill:var(--ac-body-lo,#d5dade);stroke:#9aa3ad;stroke-width:.8}
-        .hv-fan{transform-box:fill-box;transform-origin:50% 50%}
+        .hv-fan{transform-box:view-box}
         .hv-fan path{fill:#5d6873}
         .hv-on .hv-fan{animation:hv-spin var(--hv-pace,1.4s) linear infinite}
         .hv-flow{fill:none;stroke-width:5;stroke-linecap:round}
@@ -10700,6 +10710,7 @@ const ILLUSTRATION_CSS = {
         .hv-fd .hv-filt{display:inline;animation:hv-blink 1s steps(1) infinite}
         .hv-t{font:600 9px Arial,sans-serif;fill:var(--primary-text-color,#212121)}
         .hv-n{font:400 8px Arial,sans-serif;fill:var(--secondary-text-color,#727272)}
+        .hv-cfm{font-size:7.5px;font-weight:600}
         .hv-lcd{font:700 6px Arial,sans-serif;fill:#7fe3ff}
         .hv-pa,.hv-pb{opacity:0}
         .hv-on .hv-pa{animation:hv-pa 140s linear infinite;animation-delay:var(--anim-offset,0s)}
@@ -15332,6 +15343,9 @@ class ApplianceCard extends HTMLElement {
 
     // ---- Type-specific readings -------------------------------------------
     const extraLines = [];
+    // Sliders under the lines, for a value the card sets itself (an ERV's
+    // speed in Manual, its humidity setpoint).
+    const sliders = [];
     let heatBarPct = null;
     let filterPct = null;
 
@@ -17618,15 +17632,20 @@ class ApplianceCard extends HTMLElement {
     // Heat recovery ventilation: the mode, its speed, its airflow and its
     // filter as lines, the four temperatures on the drawing.
     let hrv = null;
+    let hrvFilterPct = null;
     if (cap.hrv) {
       const h = hrvReadOf(hass, cfg, st, norm, powerDerived);
       if (!cfg.state_show_raw || h.mode === "unav") stateLabel = t(hass, h.paused ? "hrv_inter_paused" : HRV_LABELS[h.mode]);
       color = HRV_COLORS[h.mode];
       const live = !["off", "unav"].includes(h.mode);
-      // The mode of a select, in words, since the state line only says what
-      // the unit is doing.
+      // The mode of a select is what the state line says (Smart, Manual, Turbo
+      // on a Broan) while the unit simply runs in it; a defrost, a bypass, a
+      // filter due or an intermittent pause still says itself.
       const menu = hrvModeOptions(hass, cfg);
-      if (menu && live && menu.dom !== "fan") {
+      if (menu && live && menu.dom !== "fan" && !cfg.state_show_raw && ["run", "boost", "away", "rec", "hum", "inter"].includes(h.mode) && !h.paused
+        && (h.mode !== "hum" || /humid|feucht/i.test(stripAccents(String(menu.current || ""))))) {
+        stateLabel = hrvModeLabel(hass, st, menu.current);
+      } else if (menu && live && menu.dom !== "fan") {
         extraLines.push({ key: "hrv_mode", icon: "mdi:tune-variant", label: t(hass, "hrv_mode"), value: keepTogether(hrvModeLabel(hass, st, menu.current)), entity: cfg.state_entity });
       }
       const flowText = (id) => {
@@ -17634,8 +17653,24 @@ class ApplianceCard extends HTMLElement {
         return v === null ? "" : `${netNumber(hass, v, 0)} ${unitOf(hass, id) || "m\u00b3/h"}`;
       };
       const rpmText = (v, id) => `${netNumber(hass, v, 0)} ${unitOf(hass, id) || "rpm"}`;
+      // The air each fan moves, written by it on the drawing too.
       if (live) {
-        if (h.pct !== null && h.pct > 0) {
+        h.flowS = esc(flowText(cfg.airflow_entity));
+        h.flowE = esc(flowText(cfg.exhaust_airflow_entity));
+      }
+      // A slider for what the mode leaves to set by hand: the speed in Manual,
+      // the humidity setpoint under humidity control, when it is a number.
+      const settable = (id) => !!id && ["number", "input_number"].includes(domainOf(id)) && !!stateObj(hass, id);
+      if (live && settable(cfg.fan_speed_entity) && (/manu/.test(stripAccents(String((st && st.state) || "")).toLowerCase()) || (menu && /manu/i.test(String(menu.current || ""))))) {
+        sliders.push({ entity: cfg.fan_speed_entity, icon: "mdi:fan", label: t(hass, "section_fan_speed") });
+      }
+      if (live && h.mode === "hum" && settable(cfg.target_humidity_entity)) {
+        sliders.push({ entity: cfg.target_humidity_entity, icon: "mdi:water-percent", label: t(hass, "section_target_humidity") });
+      }
+      if (live) {
+        const speedSlider = !!cfg.fan_speed_entity && ["number", "input_number"].includes(domainOf(cfg.fan_speed_entity))
+          && (/manu/.test(stripAccents(String((st && st.state) || "")).toLowerCase()) || (menu && /manu/i.test(String(menu.current || ""))));
+        if (h.pct !== null && h.pct > 0 && !speedSlider) {
           extraLines.push({ key: "hrv_speed", icon: "mdi:fan", label: t(hass, "section_fan_speed"), value: keepTogether(`${Math.round(h.pct)} %`), entity: cfg.fan_speed_entity || cfg.state_entity });
         }
         // Each fan on a line of its own when it reports its speed, with the
@@ -17663,6 +17698,12 @@ class ApplianceCard extends HTMLElement {
       }
       h.humText = [hum, target].filter((x) => x !== null).map((x) => netNumber(hass, x, 0)).join(" \u2192 ") + (hum !== null || target !== null ? " %" : "");
       h.humBadge = h.mode === "hum";
+      // The filter's life as a bar: its percentage, or its days out of
+      // filter_life_full (90 by default, a filter changed each season).
+      if (h.filterValue !== null && h.filterValue !== undefined) {
+        const full = parseFloat(cfg.filter_life_full);
+        hrvFilterPct = Math.max(0, Math.min(100, h.filterDays ? (h.filterValue / (isFinite(full) && full > 0 ? full : 90)) * 100 : h.filterValue));
+      }
       if (h.filterText) {
         extraLines.push({ key: "hrv_filter", icon: "mdi:air-filter", label: t(hass, "filter"), value: keepTogether(h.filterText), entity: cfg.filter_life_entity, caution: h.filterDue });
       }
@@ -18378,11 +18419,21 @@ class ApplianceCard extends HTMLElement {
         .alert-row .alert-label { flex: 1; min-width: 0; }
         .alert-row .go { color: var(--secondary-text-color, #727272); }
         .actions-row { display: flex; gap: 8px; margin-top: 12px; justify-content: center; }
+        /* The menu floats over the page next to its button, like Home
+           Assistant's own lists, and opens upwards when there is no room
+           below; placed by _placeModeMenu. */
         .mode-menu {
-          margin-top: 8px; padding: 6px 0; border-radius: 10px;
-          background: var(--card-background-color, #fff);
+          position: fixed; z-index: 20; min-width: 180px; max-height: 60vh; overflow-y: auto;
+          padding: 6px 0; border-radius: 10px;
+          background: var(--card-background-color, var(--ha-card-background, #fff));
           box-shadow: 0 4px 14px rgba(0, 0, 0, 0.16), 0 1px 3px rgba(0, 0, 0, 0.1);
         }
+        .sliders { display: flex; flex-direction: column; gap: 4px; margin-top: 6px; }
+        .slider-row { display: flex; align-items: center; gap: 8px; color: var(--secondary-text-color, #727272); }
+        .slider-row ha-icon { --mdc-icon-size: 18px; flex-shrink: 0; }
+        .slider-row .s-label { flex-shrink: 0; }
+        .slider-row input { flex: 1; min-width: 60px; accent-color: var(--primary-color, #03a9f4); }
+        .slider-row .s-val { min-width: 3.2em; text-align: right; color: var(--primary-text-color, #1c1c1c); font-weight: 500; }
         .mode-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 8px 14px; cursor: pointer; }
         .mode-row.sel { color: var(--primary-color, #03a9f4); font-weight: 500; }
         .mode-row ha-icon { --mdc-icon-size: 18px; }
@@ -18591,6 +18642,19 @@ class ApplianceCard extends HTMLElement {
           .join("")}</div>`
       : "";
 
+    const slidersHtml = sliders.length
+      ? `<div class="sliders">${sliders.map((sl) => {
+        const sst = stateObj(hass, sl.entity);
+        const a = (sst && sst.attributes) || {};
+        const min = numberOrNull(a.min) ?? 0, max = numberOrNull(a.max) ?? 100, step = numberOrNull(a.step) ?? 1;
+        const v = numberOrNull(sst && sst.state) ?? min;
+        const unit = a.unit_of_measurement || "";
+        return `<div class="slider-row" title="${esc(sl.label)}"><ha-icon icon="${esc(sl.icon)}"></ha-icon><span class="s-label">${esc(sl.label)}</span>`
+          + `<input type="range" data-slider="${esc(sl.entity)}" data-unit="${esc(unit)}" min="${min}" max="${max}" step="${step}" value="${v}" aria-label="${esc(sl.label)}">`
+          + `<span class="s-val">${esc(`${netNumber(hass, v, 0)}${unit ? ` ${unit}` : ""}`)}</span></div>`;
+      }).join("")}</div>`
+      : "";
+
     // Bar priority: preheating beats cycle progress (it's the live information
     // while an oven climbs), and a hood has no cycle so its bar is the filter.
     let barPct = progressPct;
@@ -18604,6 +18668,9 @@ class ApplianceCard extends HTMLElement {
     } else if (cap.filter && filterPct !== null && progressPct === null) {
       barPct = filterPct;
       barColor = filterPct <= 15 ? "var(--error-color, #f44336)" : "var(--warning-color, #ff9800)";
+    } else if (hrvFilterPct !== null && progressPct === null) {
+      barPct = hrvFilterPct;
+      barColor = hrv && hrv.filterDue ? "var(--error-color, #f44336)" : "var(--warning-color, #ff9800)";
     }
 
     const barHtml = barPct !== null
@@ -18765,7 +18832,7 @@ class ApplianceCard extends HTMLElement {
           </div>
         </div>
         ${barHtml}
-        ${linesBelow}${historyHtml}
+        ${linesBelow}${slidersHtml}${historyHtml}
         ${alertsHtml}
     ` : compact === "hide" ? `
         <div class="cmp-head">
@@ -18774,7 +18841,7 @@ class ApplianceCard extends HTMLElement {
           <div class="cmp-icons right">${rightIcons}</div>
         </div>
         ${barHtml}
-        ${linesHtml}${historyHtml}
+        ${linesHtml}${slidersHtml}${historyHtml}
         ${alertsHtml}
     ` : `
         ${lightBadgeHtml}
@@ -18787,7 +18854,7 @@ class ApplianceCard extends HTMLElement {
           ${titleHtml}
         </div>
         ${barHtml}
-        ${linesHtml}${historyHtml}
+        ${linesHtml}${slidersHtml}${historyHtml}
         ${alertsHtml}
         <div class="fill-gap"></div>
         ${actionsHtml}
@@ -18816,6 +18883,7 @@ class ApplianceCard extends HTMLElement {
       this._doneSeen = true;
       this._render();
     }));
+    this._placeModeMenu();
     this._root.querySelectorAll("[data-mode-option]").forEach((el) => el.addEventListener("click", (ev) => {
       ev.stopPropagation();
       this._modeMenuOpen = false;
@@ -18858,6 +18926,15 @@ class ApplianceCard extends HTMLElement {
         this._render();
       });
     });
+    // A slider shows its value as it moves and sets it when let go; a tap on
+    // it never reaches the card's own tap.
+    this._root.querySelectorAll("input[data-slider]").forEach((el) => {
+      const out = el.parentNode && el.parentNode.querySelector ? el.parentNode.querySelector(".s-val") : null;
+      const unit = el.getAttribute("data-unit") || "";
+      ["click", "pointerdown", "touchstart"].forEach((n) => el.addEventListener(n, (ev) => ev.stopPropagation()));
+      el.addEventListener("input", () => { if (out) out.textContent = `${el.value}${unit ? ` ${unit}` : ""}`; });
+      el.addEventListener("change", () => this._call(el.getAttribute("data-slider"), { value: el.value }));
+    });
     this._root.querySelectorAll("[data-history-toggle]").forEach((el) => {
       el.addEventListener("click", (ev) => {
         ev.stopPropagation();
@@ -18866,6 +18943,49 @@ class ApplianceCard extends HTMLElement {
       });
     });
     this._fridgeSwing(applianceType === "fridge" && compact !== "hide" ? illustrationCtx : null);
+  }
+
+  // The open mode menu sits under its button, or above it when the page has
+  // no room below, kept inside the window. Whatever ancestor turns fixed into
+  // relative (a transform, a container), the offset it adds is measured and
+  // taken back.
+  _placeModeMenu() {
+    const menu = this._root && this._root.querySelector ? this._root.querySelector(".mode-menu") : null;
+    const btn = menu ? this._root.querySelector("[data-menu]") : null;
+    // A click anywhere else, or the page scrolling under it, closes it.
+    if (typeof window !== "undefined" && window.addEventListener) {
+      if (this._menuAway) {
+        window.removeEventListener("click", this._menuAway);
+        window.removeEventListener("scroll", this._menuAway, true);
+        this._menuAway = null;
+      }
+      if (menu) {
+        this._menuAway = () => {
+          window.removeEventListener("click", this._menuAway);
+          window.removeEventListener("scroll", this._menuAway, true);
+          this._menuAway = null;
+          if (this._modeMenuOpen) { this._modeMenuOpen = false; this._render(); }
+        };
+        setTimeout(() => {
+          if (!this._menuAway) return;
+          window.addEventListener("click", this._menuAway);
+          window.addEventListener("scroll", this._menuAway, true);
+        }, 0);
+      }
+    }
+    if (!menu || !btn || typeof menu.getBoundingClientRect !== "function" || typeof window === "undefined" || !window.innerHeight) return;
+    const b = btn.getBoundingClientRect();
+    const vw = window.innerWidth, vh = window.innerHeight;
+    menu.style.left = "0px";
+    menu.style.top = "0px";
+    const m0 = menu.getBoundingClientRect();
+    const w = m0.width, h = m0.height;
+    const below = vh - b.bottom - 8, above = b.top - 8;
+    const top = h <= below || below >= above ? b.bottom + 6 : Math.max(8, b.top - 6 - h);
+    const left = Math.min(Math.max(8, b.left + b.width / 2 - w / 2), vw - w - 8);
+    menu.style.left = `${left - m0.left}px`;
+    menu.style.top = `${top - m0.top}px`;
+    menu.style.maxHeight = `${Math.max(120, Math.max(below, above))}px`;
   }
 
   // A fridge door opening or closing turns on its hinge rather than jumping:
@@ -18976,7 +19096,8 @@ const SECTIONS = [
   { field: "fan_entity", types: ["hood"], labelKey: "section_fan", includeDomains: ["fan", "select", "input_select", "sensor", "number", "input_number"] },
   { field: "boost_entity", types: ["hood"], labelKey: "section_boost", includeDomains: ["switch", "binary_sensor", "input_boolean"] },
   { field: "filter_life_entity", types: ["hood", "pet_fountain", "hrv"], labelKey: "section_filter_life", includeDomains: ["sensor", "number"], extra: (c) =>
-      c._type === "pet_fountain" ? c._row("filter_due_below", "filter_due_below", { placeholder: "3" }) : "" },
+      c._type === "pet_fountain" ? c._row("filter_due_below", "filter_due_below", { placeholder: "3" })
+        : c._type === "hrv" ? c._row("filter_life_full", "filter_life_full", { placeholder: "90" }) : "" },
   { field: "filter_reset_entity", types: ["hood", "pet_fountain"], labelKey: "section_filter_reset", includeDomains: ACTION_DOMAINS },
 
   // Pet fountain
@@ -19074,12 +19195,13 @@ const SECTIONS = [
   { field: "extract_temperature_entity", types: ["hrv"], labelKey: "section_extract_temperature", includeDomains: ["sensor"] },
   { field: "exhaust_temperature_entity", types: ["hrv"], labelKey: "section_exhaust_temperature", includeDomains: ["sensor"] },
   { field: "bypass_entity", types: ["hrv"], labelKey: "section_bypass", includeDomains: ["binary_sensor", "switch", "sensor", "select"] },
-  { field: "airflow_entity", types: ["hrv"], labelKey: "section_airflow", includeDomains: ["sensor"] },
-  { field: "exhaust_airflow_entity", types: ["hrv"], labelKey: "section_exhaust_airflow", includeDomains: ["sensor"] },
+  // Each fan with the air it moves, side by side.
   { field: "fan_speed_entity", types: ["hrv"], labelKey: "section_fan_speed", includeDomains: ["number", "sensor", "input_number"] },
   { field: "supply_fan_entity", types: ["hrv"], labelKey: "section_supply_fan", includeDomains: ["sensor"],
     extra: (c) => c._row("fan_max_rpm", "fan_max_rpm", { placeholder: "2000" }) },
+  { field: "airflow_entity", types: ["hrv"], labelKey: "section_airflow", includeDomains: ["sensor"] },
   { field: "exhaust_fan_entity", types: ["hrv"], labelKey: "section_exhaust_fan", includeDomains: ["sensor"] },
+  { field: "exhaust_airflow_entity", types: ["hrv"], labelKey: "section_exhaust_airflow", includeDomains: ["sensor"] },
   { field: "current_humidity_entity", types: ["hrv"], labelKey: "section_current_humidity", includeDomains: ["sensor"] },
   { field: "target_humidity_entity", types: ["hrv"], labelKey: "section_target_humidity", includeDomains: ["number", "sensor", "input_number"] },
   { field: "humidity_control_entity", types: ["hrv"], labelKey: "section_humidity_control", includeDomains: ["switch", "input_boolean"] },

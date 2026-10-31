@@ -71,7 +71,8 @@ const SECTIONS = [
   { field: "fan_entity", types: ["hood"], labelKey: "section_fan", includeDomains: ["fan", "select", "input_select", "sensor", "number", "input_number"] },
   { field: "boost_entity", types: ["hood"], labelKey: "section_boost", includeDomains: ["switch", "binary_sensor", "input_boolean"] },
   { field: "filter_life_entity", types: ["hood", "pet_fountain", "hrv"], labelKey: "section_filter_life", includeDomains: ["sensor", "number"], extra: (c) =>
-      c._type === "pet_fountain" ? c._row("filter_due_below", "filter_due_below", { placeholder: "3" }) : "" },
+      c._type === "pet_fountain" ? c._row("filter_due_below", "filter_due_below", { placeholder: "3" })
+        : c._type === "hrv" ? c._row("filter_life_full", "filter_life_full", { placeholder: "90" }) : "" },
   { field: "filter_reset_entity", types: ["hood", "pet_fountain"], labelKey: "section_filter_reset", includeDomains: ACTION_DOMAINS },
 
   // Pet fountain
@@ -169,12 +170,13 @@ const SECTIONS = [
   { field: "extract_temperature_entity", types: ["hrv"], labelKey: "section_extract_temperature", includeDomains: ["sensor"] },
   { field: "exhaust_temperature_entity", types: ["hrv"], labelKey: "section_exhaust_temperature", includeDomains: ["sensor"] },
   { field: "bypass_entity", types: ["hrv"], labelKey: "section_bypass", includeDomains: ["binary_sensor", "switch", "sensor", "select"] },
-  { field: "airflow_entity", types: ["hrv"], labelKey: "section_airflow", includeDomains: ["sensor"] },
-  { field: "exhaust_airflow_entity", types: ["hrv"], labelKey: "section_exhaust_airflow", includeDomains: ["sensor"] },
+  // Each fan with the air it moves, side by side.
   { field: "fan_speed_entity", types: ["hrv"], labelKey: "section_fan_speed", includeDomains: ["number", "sensor", "input_number"] },
   { field: "supply_fan_entity", types: ["hrv"], labelKey: "section_supply_fan", includeDomains: ["sensor"],
     extra: (c) => c._row("fan_max_rpm", "fan_max_rpm", { placeholder: "2000" }) },
+  { field: "airflow_entity", types: ["hrv"], labelKey: "section_airflow", includeDomains: ["sensor"] },
   { field: "exhaust_fan_entity", types: ["hrv"], labelKey: "section_exhaust_fan", includeDomains: ["sensor"] },
+  { field: "exhaust_airflow_entity", types: ["hrv"], labelKey: "section_exhaust_airflow", includeDomains: ["sensor"] },
   { field: "current_humidity_entity", types: ["hrv"], labelKey: "section_current_humidity", includeDomains: ["sensor"] },
   { field: "target_humidity_entity", types: ["hrv"], labelKey: "section_target_humidity", includeDomains: ["number", "sensor", "input_number"] },
   { field: "humidity_control_entity", types: ["hrv"], labelKey: "section_humidity_control", includeDomains: ["switch", "input_boolean"] },
