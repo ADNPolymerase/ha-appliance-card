@@ -148,7 +148,7 @@ const T = {
     compact_lines: "Information", lines_below: "Under the card", lines_beside: "Beside the drawing", lines_toggle: "Hidden, a chevron shows them", lines_show: "Show the information", lines_hide: "Hide the information",
     type_hair_dryer: "Hair dryer", layout_hd_pistol: "Classic", layout_hd_ring: "Ring", hd_cool: "Cool air", hd_hot: "Hot air", hd_heat_threshold: "Hot air above this power (W)", fill_height: "Fill the height of its slot", done_alert: "Flash at the end of the cycle", done_seen: "Seen", no_power_threshold: "No power draw below (W)", group_appearance: "Appearance", show_name: "Show the name", show_state: "Show the state", transparent: "Transparent background", font_scale: "Text size", illustration_size: "Drawing size", compact_mode: "Compact mode", compact_off: "Off", compact_hide: "No drawing", compact_side: "Drawing on the side", group_laundry: "Laundry", group_kitchen: "Kitchen", group_heating: "Heating and hot water", group_air: "Air and climate", group_home: "Home and media", group_pets: "Pets", illustration_frame: "Same drawing height as the cards beside it", section_screen_source: "Input source", screen_source: "Input",
     type_network: "Network device (switch, NAS, server)", group_network: "Network and servers", layout_net_switch: "Switch", layout_net_server: "Server", layout_net_nas: "NAS", layout_net_rack: "Rack", net_ports_count: "Ports drawn", net_bays: "NAS bays", net_online: "Online", net_busy: "Busy", net_alert: "Alert", net_warn: "Disk to watch", section_net_cpu: "CPU usage (%)", section_net_memory: "Memory usage (%)", section_net_volume: "Volume used (%)", section_net_download: "Download rate", section_net_upload: "Upload rate", section_net_ports: "Active ports", net_ports_total: "Port count", section_net_poe: "PoE power", section_net_problem: "Problem alert", section_net_temperature: "Temperature", net_temp_alert: "Alert above this temperature (\u00b0C)", net_busy_threshold: "Busy above this rate (Mbit/s)", net_line_rate: "Throughput", net_line_load: "Load", net_line_volume: "Volume", section_net_disk1: "Disk 1", section_net_disk2: "Disk 2", section_net_disk3: "Disk 3", section_net_disk4: "Disk 4",
-    type_robot: "Robot (vacuum, mop, mower)", layout_robot_vacuum: "Robot vacuum", layout_robot_mop: "Mopping robot", layout_robot_mower: "Robot mower", section_robot_station: "Base", robot_station_station: "Emptying or washing station", robot_station_base: "Charging base only", robot_shelter: "Shelter over the base", robot_shelter_style: "Shelter style", shelter_lean_to: "Wooden lean-to", shelter_shell: "Shell", robot_shelter_color: "Shell colour", delay_starts_in: "Starts in", section_delay: "Delayed start countdown", state_entity_optional: "State entity (optional)", color_green: "Green", color_orange: "Orange", robot_charging: "Charging", robot_docked: "Docked", robot_cleaning: "Cleaning", robot_mopping: "Mopping", robot_mowing: "Mowing", robot_edgecut: "Edge cutting", robot_returning: "Returning to base", robot_emptying: "Emptying the bin", robot_bin_full: "Bin full", robot_washing: "Washing the pads", robot_drying: "Drying the pads", robot_water_empty: "Water tank empty", robot_rain: "Rain delay", robot_idle: "Stopped", section_robot_status: "Detailed status", section_battery: "Battery", section_robot_bin: "Bin full alert", section_robot_water: "Water tank", section_robot_rain: "Rain", section_robot_error: "Error",
+    type_robot: "Robot (vacuum, mop, mower)", layout_robot_vacuum: "Robot vacuum", layout_robot_mop: "Mopping robot", layout_robot_mower: "Robot mower", section_robot_station: "Base", robot_station_station: "Emptying or washing station", robot_station_base: "Charging base only", robot_shelter: "Shelter over the base", robot_shelter_style: "Shelter style", mower_style: "Mower style", mower_classic: "Classic", mower_navimow: "Navimow, orange wheels", shelter_lean_to: "Wooden lean-to", shelter_shell: "Shell", robot_shelter_color: "Shell colour", delay_starts_in: "Starts in", section_delay: "Delayed start countdown", state_entity_optional: "State entity (optional)", color_green: "Green", color_orange: "Orange", robot_charging: "Charging", robot_docked: "Docked", robot_cleaning: "Cleaning", robot_mopping: "Mopping", robot_mowing: "Mowing", robot_edgecut: "Edge cutting", robot_returning: "Returning to base", robot_emptying: "Emptying the bin", robot_bin_full: "Bin full", robot_washing: "Washing the pads", robot_drying: "Drying the pads", robot_water_empty: "Water tank empty", robot_rain: "Rain delay", robot_idle: "Stopped", section_robot_status: "Detailed status", section_battery: "Battery", section_robot_bin: "Bin full alert", section_robot_water: "Water tank", section_robot_rain: "Rain", section_robot_error: "Error",
     type_pool_pump: "Pool pump", pool_filtering: "Filtering", pool_chlorinating: "Chlorine injection", pool_backwash: "Backwash", pool_frost: "Frost protection", pool_light_on: "light on", section_water_temperature: "Water temperature", section_air_temperature: "Air temperature", section_ph: "pH", section_redox: "RedOx (ORP)", section_filtration_time: "Filtration time today", section_pressure: "Filter pressure", pool_pressure_alert: "Alert above this pressure (bar)", section_pool_mode: "Pump mode", section_chlorine_pump: "Chlorine pump", section_chlorine_level: "Chlorine tank level", section_backwash: "Backwash", section_frost: "Frost protection", section_pool_alert: "Alert", pool_line_water: "Water", pool_line_air: "Air", pool_line_filtered: "Filtered today", pool_line_pressure: "Pressure", pool_line_chlorine: "Chlorine tank", pool_line_mode: "Mode",
     history_last: "Last {h} h", show_history: "Show the history", section_history: "History sensor", history_hours: "Hours of history", history_empty: "No history yet",
     type_scale: "Bathroom scale", scale_weighed: "Weighed", scale_goal_reached: "Goal reached", section_weight_goal: "Weight goal", scale_goal_value: "Weight goal, without a sensor", section_fat_ratio: "Body fat (%)", section_fat_mass: "Fat mass", section_muscle_mass: "Muscle mass", section_bone_mass: "Bone mass", scale_line_goal: "Goal", scale_line_fat: "Fat", scale_line_muscle: "Muscle", scale_line_bone: "Bone", scale_to_lose: "to lose", scale_to_gain: "to gain",
@@ -3757,7 +3757,7 @@ function netDiskState(hass, entityId, anchorDevice) {
 // pads, rain keeping a mower home, its edge cut.
 const ROBOT_LAYOUTS = ["vacuum", "mop", "mower", "stick", "floor_washer", "pool"];
 const ROBOT_STATIONS = ["station", "base"];
-const ROBOT_ONLY_FIELDS = ["robot_layout", "robot_station", "robot_shelter", "robot_shelter_style", "robot_shelter_color", "robot_floor", "robot_controls", "away_threshold", "robot_status_entity", "robot_bin_entity",
+const ROBOT_ONLY_FIELDS = ["robot_layout", "robot_station", "robot_shelter", "robot_shelter_style", "mower_style", "robot_shelter_color", "robot_floor", "robot_controls", "away_threshold", "robot_status_entity", "robot_bin_entity",
   "robot_water_entity", "robot_rain_entity", "robot_error_entity"];
 // A robot by its name, its maker's or its integration's. A robot cook is a
 // cooker, so the word robot needs what it does.
@@ -10493,6 +10493,33 @@ const ROBOT_MOWER_SVG = `<svg viewBox="0 0 62 35">
   <circle cx="16" cy="25.5" r="4" fill="#4a5057"/><path d="M16 21.5 V29.5 M12 25.5 H20" stroke="#2b2f34" stroke-width="1.2"/><circle cx="16" cy="25.5" r="1.3" fill="#ff8f1f"/></g>
  <g class="rbt-whl"><circle cx="51" cy="31.3" r="3.4" fill="#1b1e21"/><circle cx="51" cy="31.3" r="1.3" fill="#555c63"/></g>
 </svg>`;
+// A Segway Navimow i series (#67): a low grey shell, a black glossy top with
+// its round chrome lid on a ring of light, the red stop button, and big rear
+// wheels with orange treads.
+const ROBOT_NAVIMOW_SVG = `<svg viewBox="0 0 62 35">
+ <ellipse cx="31" cy="34" rx="29" ry="2" fill="rgba(0,0,0,.25)"/>
+ <path d="M6 27 V22.5 C6 20.5 7.2 19.2 9.2 19.2 H55 C58 19.2 59.6 21.2 59.6 23.6 V27 Z" fill="#2b2f34"/>
+ <path d="M7 22.2 C6 16.2 9 12.6 15 11.6 L45 10.6 C51 10.6 55.6 13.6 57.6 18 C58.4 19.8 58 21.6 56.6 22.2 Z" fill="#b9c1c9"/>
+ <path d="M10 14.6 C14 12.6 30 11.8 44 11.7 C50 11.7 53.6 13.4 55.6 16 C46 14.7 26 14.5 10 15.7 Z" fill="#e1e6ea"/>
+ <path d="M8 21 C20 20.2 44 20.2 57 20.8" stroke="#8d969f" stroke-width=".6" fill="none"/>
+ <path d="M16 12.1 C20 9.7 40 9.1 47 10.1 C50 10.5 52 11.5 53 12.7 C44 11.9 26 11.9 16 12.7 Z" fill="#14171a"/>
+ <ellipse class="rbt-led" cx="31" cy="9.7" rx="9.6" ry="1.4"/>
+ <path d="M22 9.3 C22 6.6 40 6.6 40 9.3 C40 10.3 22 10.3 22 9.3 Z" fill="#c4cad0"/>
+ <ellipse cx="31" cy="7.4" rx="8" ry="1.2" fill="#f1f3f5"/>
+ <path d="M27 7.2 H35" stroke="#3a3f45" stroke-width=".8" stroke-linecap="round"/>
+ <rect x="42.6" y="8.5" width="4.2" height="1.8" rx=".6" fill="#e53935"/>
+ <rect x="54.4" y="20.2" width="4" height="2.2" rx=".6" fill="#14171a"/><circle cx="56.4" cy="21.3" r=".6" fill="#4fc3f7"/>
+ <g class="rbt-whl"><circle cx="15" cy="24.5" r="10" fill="#ff5a1f"/><circle cx="15" cy="24.5" r="9.6" fill="none" stroke="#c23d0d" stroke-width="1.8" stroke-dasharray="1.6 1.4"/>
+  <circle cx="15" cy="24.5" r="7" fill="#1b1e21"/><path d="M15 18.9 L16.5 23 L20.6 24.5 L16.5 26 L15 30.1 L13.5 26 L9.4 24.5 L13.5 23 Z" fill="#30353a"/><circle cx="15" cy="24.5" r="1.4" fill="#5a6168"/></g>
+ <g class="rbt-whl"><circle cx="50" cy="31.3" r="3.4" fill="#1b1e21"/><circle cx="50" cy="31.3" r="1.3" fill="#555c63"/></g>
+</svg>`;
+const MOWER_STYLES = ["classic", "navimow"];
+// The mower's style: the one chosen, else its name (Navimow, Segway).
+function mowerStyleOf(cfg, st) {
+  if (MOWER_STYLES.includes(cfg.mower_style)) return cfg.mower_style;
+  const hay = stripAccents(`${cfg.state_entity || ""} ${cfg.name || ""} ${(st && st.attributes && st.attributes.friendly_name) || ""}`).toLowerCase();
+  return /navimow|segway/.test(hay) ? "navimow" : "classic";
+}
 // Five appliances drawn in volume: a cooker with a clear jug, a Japanese rice
 // cooker, a wall boiler (or one with a burner window), a bean-to-cup coffee
 // machine (silver, or black and chrome) and a towel warmer (a white ladder, or
@@ -11041,7 +11068,7 @@ function robotHtml(cls, r) {
     const sh = r.shelter ? shelterHtml(r.shelter, r.shelterColor) : { back: "", front: "" };
     inner = `<div class="rbt-lawn"></div><div class="rbt-stub"></div>${robotRain()}
           <div class="rbt-st-base"></div><div class="rbt-st-tower"></div><i class="rbt-st-led"></i>${sh.back}
-          <div class="rbt-mw">${ROBOT_MOWER_SVG}${err}<div class="rbt-clip">${"<b></b>".repeat(6)}</div></div>
+          <div class="rbt-mw">${r.mowerStyle === "navimow" ? ROBOT_NAVIMOW_SVG : ROBOT_MOWER_SVG}${err}<div class="rbt-clip">${"<b></b>".repeat(6)}</div></div>
           <div class="rbt-tall"></div>${sh.front}`;
   } else if (layout === "mop") {
     const lvl = r.water !== null && r.water !== undefined ? ` style="--lvl: ${Math.round(r.water)}%"` : "";
@@ -15780,7 +15807,7 @@ class ApplianceCard extends HTMLElement {
         if (secs !== null) poolTime = formatDuration(secs, hass);
       }
       robot = { layout, mode, water, battery, poolTime, floor: cfg.robot_floor, base: cfg.robot_station === "base", shelter: cfg.robot_shelter ? (SHELTER_STYLES.includes(cfg.robot_shelter_style) ? cfg.robot_shelter_style : "lean_to") : "",
-        shelterColor: cfg.robot_shelter_color };
+        shelterColor: cfg.robot_shelter_color, mowerStyle: mowerStyleOf(cfg, st) };
     }
 
     // The last cycle, on request: how long it ran and when it ended. Shown
@@ -16813,7 +16840,7 @@ function loadEditor() {
   if (customElements.get("ha-appliance-card-editor")) return Promise.resolve();
   if (!editorLoading) {
     editorLoading = import(assetUrl("ha-appliance-card-editor.js"))
-      .then((m) => m.default({ t, onLanguageLoaded, LANGUAGE_NAMES, localizedHass, activationOf, TH_LAYOUTS, EV_POWER_THRESHOLD, stateObj, parseValueMap, stringifyValueMap, alertsArray, LIST_OTHER, ENTITY_LISTS, listCandidates, defaultCardName, stripDeviceName, domainOf, INFO_MAX, autoSuggest, APPLIANCE_TYPES, STATE_DOMAINS, SCREEN_ONLY_FIELDS, illustrationSizeOf, fontScaleOf, compactModeOf, TYPE_GROUPS, caps, detectApplianceType, SCREEN_STANDBY_W, SCREEN_LAYOUTS, SCREEN_IMAGES, screenLayoutOf, screenIsTablet, HD_HEAT_W, PLUG_THRESHOLDS, ZONE_POWER_W, PLUG_SOURCE_TYPES, plugSourceOf, DW_DRY_MIN, WASH_HEAT_W, WASH_SPIN_W, DRYER_HEAT_W, NET_LAYOUTS, SWITCH_PORTS, NET_BAYS, NET_BUSY_MBIT, NET_TEMP_ALERT, netLayoutOf, ROBOT_LAYOUTS, ROBOT_STATIONS, ROBOT_FLOORS, ROBOT_SERVICES, STICK_AWAY_W, robotLayoutOf, POOL_PRESSURE_ALERT, SOLAR_LAYOUTS, BATTERY_LAYOUTS, BATTERY_IDLE_W, DIFFUSER_LAYOUTS, illustrationTapOf, HRV_LAYOUTS, CAMERA_LAYOUTS, MAILBOX_LAYOUTS, MAILBOX_SIDES, mailboxLayoutOf, LAMP_LAYOUTS, LAMP_SPOTS, lampLayoutOf, PUMP_LAYOUTS, FLOOR_LAYOUTS, TREE_PALETTES, TREE_PRESENTS, pumpLayoutOf, UPS_BATTERY_LOW, HISTORY_HOURS, BODY_COLORS, esc, SHELTER_STYLES, SHELTER_COLORS, stateFreeSource }))
+      .then((m) => m.default({ t, onLanguageLoaded, LANGUAGE_NAMES, localizedHass, activationOf, TH_LAYOUTS, EV_POWER_THRESHOLD, stateObj, parseValueMap, stringifyValueMap, alertsArray, LIST_OTHER, ENTITY_LISTS, listCandidates, defaultCardName, stripDeviceName, domainOf, INFO_MAX, autoSuggest, APPLIANCE_TYPES, STATE_DOMAINS, SCREEN_ONLY_FIELDS, illustrationSizeOf, fontScaleOf, compactModeOf, TYPE_GROUPS, caps, detectApplianceType, SCREEN_STANDBY_W, SCREEN_LAYOUTS, SCREEN_IMAGES, screenLayoutOf, screenIsTablet, HD_HEAT_W, PLUG_THRESHOLDS, ZONE_POWER_W, PLUG_SOURCE_TYPES, plugSourceOf, DW_DRY_MIN, WASH_HEAT_W, WASH_SPIN_W, DRYER_HEAT_W, NET_LAYOUTS, SWITCH_PORTS, NET_BAYS, NET_BUSY_MBIT, NET_TEMP_ALERT, netLayoutOf, ROBOT_LAYOUTS, ROBOT_STATIONS, ROBOT_FLOORS, ROBOT_SERVICES, STICK_AWAY_W, robotLayoutOf, POOL_PRESSURE_ALERT, SOLAR_LAYOUTS, BATTERY_LAYOUTS, BATTERY_IDLE_W, DIFFUSER_LAYOUTS, illustrationTapOf, HRV_LAYOUTS, CAMERA_LAYOUTS, MAILBOX_LAYOUTS, MAILBOX_SIDES, mailboxLayoutOf, LAMP_LAYOUTS, LAMP_SPOTS, lampLayoutOf, PUMP_LAYOUTS, FLOOR_LAYOUTS, TREE_PALETTES, TREE_PRESENTS, pumpLayoutOf, UPS_BATTERY_LOW, HISTORY_HOURS, BODY_COLORS, esc, MOWER_STYLES, SHELTER_STYLES, SHELTER_COLORS, stateFreeSource }))
       .catch((err) => {
         editorLoading = null;
         throw err;

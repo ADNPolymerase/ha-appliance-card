@@ -10865,6 +10865,15 @@ check('borne : ni un statut reconnu', evMode(evR('SuspendedEVSE', { power_entity
     check('dessin : default ne change rien', /data-pic-tap/.test(L({ illustration_tap_action: 'default' })), false);
     check('dessin : en compact aussi', /class="cmp-pic" data-pic-tap="1"/.test(L({ illustration_tap_action: 'toggle', compact: 'side' })), true);
   }
+  {
+    // #67: a Segway Navimow, big orange wheels.
+    const M = (extra = {}, id = 'lawn_mower.x') => render({ appliance_type: 'robot', robot_layout: 'mower', state_entity: id, ...extra }, { [id]: s('mowing') });
+    check('navimow : choisie, ses roues orange', /fill="#ff5a1f"/.test(M({ mower_style: 'navimow' })), true);
+    check('navimow : par son nom', /fill="#ff5a1f"/.test(M({}, 'lawn_mower.navimow_i105')), true);
+    check('navimow : sinon la tondeuse classique', /fill="#ff5a1f"/.test(M()), false);
+    check('navimow : classique force malgre le nom', /fill="#ff5a1f"/.test(M({ mower_style: 'classic' }, 'lawn_mower.navimow_i105')), false);
+    check('navimow : son anneau dit l etat', /class="rbt-led" cx="31"/.test(M({ mower_style: 'navimow' })), true);
+  }
   // #54, second round: the air each fan moves on the drawing, the filter as a
   // bar, sliders for the speed in Manual and the setpoint under humidity
   // control, fans turning on their centre.
