@@ -21,7 +21,7 @@ A Lovelace card that draws the appliances of your home and animates them from th
 
 ## Features
 
-- **51 appliance types, more than 120 models drawn**, animated while they work and still when they stop. The type is detected on its own or set with `appliance_type`.
+- **52 appliance types, more than 130 models drawn**, animated while they work and still when they stop. The type is detected on its own or set with `appliance_type`.
 - **Any integration**: every field is an entity you pick. A plain smart plug is enough, its power tells whether the appliance heats, washes or spins.
 - **State understood**: `Idle`, `RUNNING`, `wash`… become idle, running, paused, finished, delayed or error, with the step of the cycle (wash, rinse, spin…).
 - **What matters for each appliance**: program, time left, door, alerts, levels, temperatures, energy and cost, today's running time.
@@ -79,6 +79,13 @@ Click a family to see its appliances at work.
 <summary><b>Garage and workshop</b></summary>
 
 <img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-garage.gif" alt="Garage and workshop">
+
+</details>
+
+<details>
+<summary><b>Electric rides</b></summary>
+
+<img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-mobility.gif" alt="Electric rides: scooters, e-bike, gyropode and motorcycle">
 
 </details>
 
@@ -194,7 +201,7 @@ Only `state_entity` is required, except on a fridge where a probe or a door cont
 | `done_alert` | `true` makes a green badge pulse on the drawing when a cycle has finished, until the door opens or the badge is tapped. For appliances with a cycle (washer, dryer, dishwasher, oven…). |
 | `illustration_color` | `auto` (default, follows the theme) \| `white` \| `grey` \| `black` \| `red` (dark red). Only changes the casing, not the state colours. |
 | `language` | `auto` (default, follows Home Assistant) or one of the 14 codes: `en`, `fr`, `de`, `es`, `it`, `nl`, `pt`, `sv`, `no`, `da`, `pl`, `ru`, `zh`, `cs`. `nb` and `nb-NO` give Norwegian. |
-| `appliance_type` | `auto` (default) \| `washer` \| `dryer` \| `dishwasher` \| `oven` \| `microwave` \| `hood` \| `cooktop` \| `fridge` \| `kettle` \| `cooker` \| `coffee` \| `rice_cooker` \| `air_fryer` \| `water_heater` \| `boiler` \| `thermostat` \| `heat_pump` \| `printer_3d` \| `pet_feeder` \| `pet_fountain` \| `iron` \| `toaster` \| `pellet_stove` \| `air_conditioner` \| `dehumidifier` \| `space_heater` \| `towel_warmer` \| `air_purifier` \| `fan` \| `ev_charger` \| `hair_dryer` \| `screen` \| `network` \| `robot` \| `pool_pump` \| `scale` \| `ups` \| `solar` \| `home_battery` \| `camera` \| `diffuser` \| `hrv` \| `lamp` \| `mailbox` \| `water_pump` \| `floor_heating` \| `spa` \| `sauna` \| `aquarium` \| `meter` \| `christmas_tree`. |
+| `appliance_type` | `auto` (default) \| `washer` \| `dryer` \| `dishwasher` \| `oven` \| `microwave` \| `hood` \| `cooktop` \| `fridge` \| `kettle` \| `cooker` \| `coffee` \| `rice_cooker` \| `air_fryer` \| `water_heater` \| `boiler` \| `thermostat` \| `heat_pump` \| `printer_3d` \| `pet_feeder` \| `pet_fountain` \| `iron` \| `toaster` \| `pellet_stove` \| `air_conditioner` \| `dehumidifier` \| `space_heater` \| `towel_warmer` \| `air_purifier` \| `fan` \| `ev_charger` \| `hair_dryer` \| `screen` \| `network` \| `robot` \| `pool_pump` \| `scale` \| `ups` \| `solar` \| `home_battery` \| `camera` \| `diffuser` \| `hrv` \| `lamp` \| `mailbox` \| `water_pump` \| `floor_heating` \| `spa` \| `sauna` \| `aquarium` \| `meter` \| `christmas_tree` \| `mobility`. |
 | `tap_action` | What a tap on the card does, in Home Assistant's own words: `more-info` (default: the state entity, or on a card without one what it reads in its place), `none`, `navigate`, `url`, `toggle`, `perform-action` or `fire-dom-event`, which is what the popup cards built on browser_mod listen for. In YAML only. |
 | `illustration_tap_action` | A tap on the drawing alone, the rest of the card keeping `tap_action`: `toggle` (a lamp lit by touching it), `more-info`, `none`, or any of Home Assistant's actions. Left out, the drawing does what the card does. With `toggle`, the drawing answers like the buttons, as `controls_activation` says: a tap, two taps or a long press. |
 | `show_toggle` | `false` takes away a lamp's on/off button, for a card switched by touching its drawing (`illustration_tap_action: toggle`). |
@@ -356,6 +363,8 @@ Only `state_entity` is required, except on a fridge where a probe or a door cont
 | `mail_count_entity` | mailbox | A counter of the mail. The pile shows up to twelve letters, and the count is a line and a badge. |
 | `front_door_entity` / `back_door_entity` | mailbox | The contacts on the street door and on the house door: *Front door open*, *Back door open*, the door swings open and daylight comes in, and a line for each. |
 | `pump_layout` | water_pump | `booster` (a pump on its pressure tank, with its controller) \| `sump` (a sump pit in cross-section, its float on its cable). Left out, a `level_entity`, a `high_level_entity` or a name that says sump makes a sump pump. |
+| `mobility_layout` | electric ride | `scooter` \| `offroad` (an off-road scooter on double suspension, like the Ausom DT2 Pro) \| `ebike` \| `gyropode` \| `motorcycle`. Left out, it is read in the name: Ausom, Dualtron or off-road, bike or e-bike, gyropode, moto or Super Soco; a scooter otherwise. |
+| `battery_entity` | electric ride | The ride's battery, in %: one bar of the gauge per quarter, the next one blinking while it charges, and *Charged* at 100 %. Without it, the bars fill from 0 to 4 in a loop while it charges. |
 | `pressure_entity` | water_pump (booster) | The pressure, on the controller's display and as a line. Without it, the display shows the plug's power. |
 | `level_entity` / `level_max` | water_pump (sump) | The water level, on the display, as a line and as the height of the water in the pit: a percentage, or a value out of `level_max`. From 90 % it reads *High level*. |
 | `high_level_entity` | water_pump (sump) | A float switch or a high-level alarm: *High level*, the pit full and a beacon flashing. |
@@ -944,6 +953,17 @@ type: custom:ha-appliance-card
 appliance_type: christmas_tree
 state_entity: switch.christmas_tree
 tree_palette: red_gold
+```
+
+An electric ride on its charger (#72): the plug is enough. Above 40 W it is *Charging* (the current runs from the charger to the ride, the charger's light pulses red), below it *Charged* (green light), and *Unplugged* when the plug is off, the ride greyed out and the cable on the floor. The threshold is set with `power_on_threshold`.
+
+```yaml
+type: custom:ha-appliance-card
+appliance_type: mobility
+mobility_layout: offroad
+state_entity: switch.workshop_plug
+power_entity: sensor.workshop_plug_power
+battery_entity: sensor.scooter_battery   # optional
 ```
 
 </details>

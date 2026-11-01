@@ -21,7 +21,7 @@ Une card Lovelace qui dessine les appareils de la maison et les anime selon leur
 
 ## Fonctionnalités
 
-- **51 types d'appareils, plus de 120 modèles dessinés**, animés pendant qu'ils travaillent et figés à l'arrêt. Le type est reconnu tout seul ou choisi avec `appliance_type`.
+- **52 types d'appareils, plus de 130 modèles dessinés**, animés pendant qu'ils travaillent et figés à l'arrêt. Le type est reconnu tout seul ou choisi avec `appliance_type`.
 - **Toutes les intégrations** : chaque champ est une entité à choisir. Une simple prise connectée suffit, sa puissance dit si l'appareil chauffe, lave ou essore.
 - **L'état compris** : `Idle`, `RUNNING`, `En marche`… deviennent veille, en cours, pause, terminé, différé ou erreur, avec l'étape du cycle (lavage, rinçage, essorage…).
 - **Ce qui compte pour chaque appareil** : programme, temps restant, porte, alertes, niveaux, températures, énergie et coût, marche du jour.
@@ -79,6 +79,13 @@ Clique sur une famille pour voir ses appareils en marche.
 <summary><b>Garage et atelier</b></summary>
 
 <img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-garage.fr.gif" alt="Garage et atelier">
+
+</details>
+
+<details>
+<summary><b>Mobilité électrique</b></summary>
+
+<img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-mobility.fr.gif" alt="Mobilité électrique : trottinettes, vélo, gyropode et moto">
 
 </details>
 
@@ -194,7 +201,7 @@ Seule `state_entity` est obligatoire, sauf sur un réfrigérateur où une sonde 
 | `done_alert` | `true` fait pulser un badge vert sur le dessin en fin de cycle, jusqu'à l'ouverture de la porte ou un appui sur le badge. Pour les appareils à cycle (lave-linge, sèche-linge, lave-vaisselle, four…). |
 | `illustration_color` | `auto` (défaut, suit le thème) \| `white` \| `grey` \| `black` \| `red` (rouge foncé). Ne change que la carrosserie, pas les couleurs d'état. |
 | `language` | `auto` (défaut, suit Home Assistant) ou l'un des 14 codes : `en`, `fr`, `de`, `es`, `it`, `nl`, `pt`, `sv`, `no`, `da`, `pl`, `ru`, `zh`, `cs`. `nb` et `nb-NO` donnent le norvégien. |
-| `appliance_type` | `auto` (défaut) \| `washer` \| `dryer` \| `dishwasher` \| `oven` \| `microwave` \| `hood` \| `cooktop` \| `fridge` \| `kettle` \| `cooker` \| `coffee` \| `rice_cooker` \| `air_fryer` \| `water_heater` \| `boiler` \| `thermostat` \| `heat_pump` \| `printer_3d` \| `pet_feeder` \| `pet_fountain` \| `iron` \| `toaster` \| `pellet_stove` \| `air_conditioner` \| `dehumidifier` \| `space_heater` \| `towel_warmer` \| `air_purifier` \| `fan` \| `ev_charger` \| `hair_dryer` \| `screen` \| `network` \| `robot` \| `pool_pump` \| `scale` \| `ups` \| `solar` \| `home_battery` \| `camera` \| `diffuser` \| `hrv` \| `lamp` \| `mailbox` \| `water_pump` \| `floor_heating` \| `spa` \| `sauna` \| `aquarium` \| `meter` \| `christmas_tree`. |
+| `appliance_type` | `auto` (défaut) \| `washer` \| `dryer` \| `dishwasher` \| `oven` \| `microwave` \| `hood` \| `cooktop` \| `fridge` \| `kettle` \| `cooker` \| `coffee` \| `rice_cooker` \| `air_fryer` \| `water_heater` \| `boiler` \| `thermostat` \| `heat_pump` \| `printer_3d` \| `pet_feeder` \| `pet_fountain` \| `iron` \| `toaster` \| `pellet_stove` \| `air_conditioner` \| `dehumidifier` \| `space_heater` \| `towel_warmer` \| `air_purifier` \| `fan` \| `ev_charger` \| `hair_dryer` \| `screen` \| `network` \| `robot` \| `pool_pump` \| `scale` \| `ups` \| `solar` \| `home_battery` \| `camera` \| `diffuser` \| `hrv` \| `lamp` \| `mailbox` \| `water_pump` \| `floor_heating` \| `spa` \| `sauna` \| `aquarium` \| `meter` \| `christmas_tree` \| `mobility`. |
 | `tap_action` | Ce que fait un appui sur la carte, dans les mots de Home Assistant : `more-info` (défaut : l'entité d'état, ou sur une carte sans elle ce qu'elle lit à sa place), `none`, `navigate`, `url`, `toggle`, `perform-action` ou `fire-dom-event`, celle qu'écoutent les cartes popup bâties sur browser_mod. En YAML seulement. |
 | `illustration_tap_action` | Un appui sur le dessin seul, le reste de la carte gardant `tap_action` : `toggle` (une lampe allumée en la touchant), `more-info`, `none`, ou n'importe quelle action de Home Assistant. Sans lui, le dessin fait comme la carte. Avec `toggle`, le dessin répond comme les boutons, selon `controls_activation` : un appui, deux appuis ou un appui long. |
 | `show_toggle` | `false` retire le bouton allumer / éteindre d'une lampe, pour une carte qu'on allume en touchant son dessin (`illustration_tap_action: toggle`). |
@@ -356,6 +363,8 @@ Seule `state_entity` est obligatoire, sauf sur un réfrigérateur où une sonde 
 | `mail_count_entity` | boîte aux lettres | Un compteur de courrier. La pile dessine jusqu'à douze lettres, et le nombre est une ligne et un badge. |
 | `front_door_entity` / `back_door_entity` | boîte aux lettres | Les contacts de la porte côté rue et de la porte côté maison : *Porte avant ouverte*, *Porte arrière ouverte*, la porte pivote et la lumière du jour entre, et une ligne pour chacune. |
 | `pump_layout` | pompe à eau | `booster` (surpresseur sur son ballon, avec son contrôleur) \| `sump` (regard de relevage en coupe, son flotteur sur son câble). Sans réglage, un `level_entity`, un `high_level_entity` ou un nom qui dit relevage en fait une pompe de relevage. |
+| `mobility_layout` | mobilité | `scooter` (trottinette) \| `offroad` (trottinette tout-terrain à double suspension, comme l'Ausom DT2 Pro) \| `ebike` (vélo électrique) \| `gyropode` \| `motorcycle` (moto électrique). Sans réglage, il est lu dans le nom : Ausom, Dualtron ou tout-terrain, vélo ou bike, gyropode, moto ou Super Soco ; une trottinette sinon. |
+| `battery_entity` | mobilité | La batterie du véhicule, en % : une barre de la jauge par quart, la suivante qui clignote en charge, et *Chargée* à 100 %. Sans elle, les barres se remplissent de 0 à 4 en boucle pendant la charge. |
 | `pressure_entity` | pompe à eau (surpresseur) | La pression, sur l'écran du contrôleur et en ligne. Sans elle, l'écran affiche la puissance de la prise. |
 | `level_entity` / `level_max` | pompe à eau (relevage) | Le niveau d'eau, sur l'écran, en ligne et comme hauteur d'eau dans le regard : un pourcentage, ou une valeur sur `level_max`. À partir de 90 %, *Niveau haut*. |
 | `high_level_entity` | pompe à eau (relevage) | Un flotteur ou une alarme de niveau haut : *Niveau haut*, le regard plein et un gyrophare qui clignote. |
@@ -941,6 +950,17 @@ type: custom:ha-appliance-card
 appliance_type: christmas_tree
 state_entity: switch.sapin
 tree_palette: red_gold
+```
+
+Un véhicule électrique sur son chargeur (#72) : la prise suffit. Au-dessus de 40 W il est *En charge* (le courant va du chargeur au véhicule, le voyant du chargeur pulse en rouge), en dessous *Chargée* (voyant vert), et *Débranchée* quand la prise est coupée, le véhicule grisé et le câble au sol. Le seuil se règle avec `power_on_threshold`.
+
+```yaml
+type: custom:ha-appliance-card
+appliance_type: mobility
+mobility_layout: offroad
+state_entity: switch.prise_atelier
+power_entity: sensor.prise_atelier_power
+battery_entity: sensor.trottinette_batterie   # facultatif
 ```
 
 </details>
