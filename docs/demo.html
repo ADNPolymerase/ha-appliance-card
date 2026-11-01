@@ -1201,6 +1201,13 @@ const rbtVacuum = robot("Roomba", "vacuum.roomba", "cleaning", { battery_level: 
 const rbtEmptying = robot("Roomba", "vacuum.roomba", "docked", { battery_level: 96, status: "Emptying the bin" });
 const rbtMop = robot("Braava", "vacuum.braava", "cleaning", { battery_level: 74 }, { robot_water_entity: "sensor.braava_water" },
   [st("sensor.braava_water", 60, { unit_of_measurement: "%" })]);
+// A rectangular station (#69): the robot half in its bay, a camera on its
+// bumper, the two water tanks on the front, white and with a gold front.
+const rbtBox = robot("Deebot", "vacuum.deebot", "docked", { battery_level: 100 }, { robot_station: "box", robot_camera: true,
+  robot_clean_tank_entity: "sensor.deebot_clean_water", robot_dirty_tank_entity: "sensor.deebot_dirty_water" },
+  [st("sensor.deebot_clean_water", 70, { unit_of_measurement: "%" }), st("sensor.deebot_dirty_water", 30, { unit_of_measurement: "%" })]);
+const rbtBoxGold = robot("Dreame", "vacuum.dreame", "docked", { battery_level: 96, status: "Emptying the bin" },
+  { robot_station: "box", robot_station_color: "gold", robot_camera: true });
 const rbtDrying = robot("Braava", "vacuum.braava", "docked", { battery_level: 100 }, { robot_status_entity: "sensor.braava_status" },
   [st("sensor.braava_status", "drying_mop")]);
 const rbtMower = robot("Landroid", "lawn_mower.landroid", "mowing", {}, { battery_entity: "sensor.landroid_battery" },
@@ -1430,7 +1437,7 @@ const EXTRA = { iron, coffee_black: coffeeBlack, boiler_window: boilerWindow, bo
                 box_purifier: boxPurifier, ring_purifier: ringPurifier,
                 net_switch: netSwitch, net_nas: netNas, net_server: netServer, net_rack: netRack,
                 net_router: netRouter("on"), net_router_down: netRouter("off"),
-                robot_vacuum: rbtVacuum, robot_emptying: rbtEmptying, robot_mop: rbtMop, robot_drying: rbtDrying,
+                robot_vacuum: rbtVacuum, robot_emptying: rbtEmptying, robot_box: rbtBox, robot_box_gold: rbtBoxGold, robot_mop: rbtMop, robot_drying: rbtDrying,
                 robot_mower: rbtMower, robot_navimow: rbtNavimow, robot_rain: rbtRain, robot_stick: rbtStick, robot_washer: rbtWasher,
                 pool_running: poolRunning, pool_chlorine: poolChlorine, pool_backwash: poolBackwash, pool_frost: poolFrost,
                 pool_light: poolLight, pool_error: poolError,
@@ -1497,7 +1504,7 @@ function liveGallery() {
     [L("Kitchen", "Cuisine"), [dishwasher, oven, microwave, hood, cooktop, fridge, kettle, cooker, coffee, coffeeBlack, riceCooker, airFryer, toaster]],
     [L("Heating and climate", "Chauffage et climat"), [waterHeater, boiler, boilerWindow, boilerThermo, thSquare, thRound, thGlass, thValve, heatPump, pelletStove, spaceHeater, towelWarmer, towelPanel, airConditioner, dehumidifier]],
     [L("Air purifiers and fans", "Purificateurs et ventilateurs"), [purifier, boxPurifier, ringPurifier, fan, ceilingFan]],
-    [L("Robots and vacuums", "Robots et aspirateurs"), [rbtVacuum, rbtEmptying, rbtMop, rbtDrying, rbtMower, rbtNavimow, rbtRain, rbtStick, rbtWasher]],
+    [L("Robots and vacuums", "Robots et aspirateurs"), [rbtVacuum, rbtEmptying, rbtBox, rbtBoxGold, rbtMop, rbtDrying, rbtMower, rbtNavimow, rbtRain, rbtStick, rbtWasher]],
     [L("Electric rides", "Mobilit\u00e9 \u00e9lectrique"), [demo_mobScooter, demo_mobOffroad, demo_mobEbike, demo_mobGyropode, demo_mobMotorcycle, demo_mobUnplugged]],
     [L("Pool", "Piscine"), [poolRunning, poolChlorine, poolBackwash, poolFrost, poolLight, poolError]],
     [L("Energy", "Énergie"), [solarDay, solarRoof, solarNight, batteryCharging, batteryStation, batteryLow, evCharger, evDischarging]],

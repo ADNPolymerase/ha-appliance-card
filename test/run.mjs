@@ -9844,6 +9844,62 @@ check('borne : ni un statut reconnu', evMode(evR('SuspendedEVSE', { power_entity
   check('editeur robot : la pluie', edMow.includes('data-toggle="robot_rain_entity"'), true);
   check('editeur robot : pas de bac sur une tondeuse', edMow.includes('data-toggle="robot_bin_entity"'), false);
   check('editeur : pas de modele robot ailleurs', /robot_layout/.test(markup(newEditor({ state_entity: 'sensor.w', appliance_type: 'washer' }))), false);
+
+  // The rectangular station (#69): the robot half in its bay, the tanks on
+  // the front, the dust bin behind its panel, white, black or gold.
+  const box = (cfg = {}, st = 'docked', more = {}) => render({ state_entity: 'vacuum.x', robot_station: 'box', ...cfg }, { 'vacuum.x': s(st, { battery_level: 100 }), ...more });
+  check('station : rectangulaire au choix', machineCls(box()).includes('rbt-box'), true);
+  check('station : la caisse est dessinee', /<svg class="rbx"/.test(box()), true);
+  check('station : plus de tour', /class="rbt-(dock|dcap|pcap)"/.test(box()), false);
+  check('station : plus de tour de lavage', /class="rbt-(mdock|mcap)"/.test(box({ robot_layout: 'mop' })), false);
+  check('station : blanche par defaut', machineCls(box()).includes('rbx-white'), true);
+  check('station : noire', machineCls(box({ robot_station_color: 'black' })).includes('rbx-black'), true);
+  check('station : doree', machineCls(box({ robot_station_color: 'gold' })).includes('rbx-gold'), true);
+  check('station : facade doree', /fill="url\(#rbx\d+g\)"/.test(box({ robot_station_color: 'gold' })), true);
+  check('station : pas de facade doree sur la blanche', /fill="url\(#rbx\d+g\)"/.test(box()), false);
+  check('station : couleur inconnue, blanche', machineCls(box({ robot_station_color: 'pink' })).includes('rbx-white'), true);
+  check('station : la tour reste la station par defaut', /class="rbx"/.test(render({ state_entity: 'vacuum.x' }, { 'vacuum.x': s('docked') })), false);
+  check('station : pas sur une tondeuse', /class="rbx"/.test(render({ state_entity: 'lawn_mower.x', robot_station: 'box' }, { 'lawn_mower.x': s('docked') })), false);
+  check('station : pas de classe de caisse sur une tondeuse', machineCls(render({ state_entity: 'lawn_mower.x', robot_station: 'box' }, { 'lawn_mower.x': s('docked') })).includes('rbt-box'), false);
+  check('station : le robot apres la caisse', /class="rbx"[\s\S]*class="rbt-rb"/.test(box()), true);
+  check('station : le bac au vidage', machineCls(box({ robot_status_entity: 'sensor.st' }, 'docked', { 'sensor.st': s('emptying') })).includes('rbt-m-emptying'), true);
+  // The tanks: on a mop's station always, on a vacuum's when an entity says.
+  const lv = (h, c) => { const m = h.match(new RegExp(`rbx-lv ${c}" x="[\\d.]+" y="[\\d.]+" width="3" height="([\\d.]+)"`)); return m ? Number(m[1]) : null; };
+  check('station : pas de cuves sans entite sur un aspirateur', /class="rbx-lv/.test(box()), false);
+  check('station : cuves du laveur', lv(box({ robot_layout: 'mop' }), 'rbx-c'), 10.95);
+  check('station : eau sale du laveur', lv(box({ robot_layout: 'mop' }), 'rbx-d'), 2.92);
+  const tk = box({ robot_clean_tank_entity: 'sensor.c', robot_dirty_tank_entity: 'binary_sensor.d' }, 'docked',
+    { 'sensor.c': s(70, { unit_of_measurement: '%' }), 'binary_sensor.d': s('on') });
+  check('station : eau propre a 70 %', lv(tk, 'rbx-c'), 10.22);
+  check('station : eau sale pleine', lv(tk, 'rbx-d'), 13.87);
+  check('station : ligne eau propre', infoLine(tk, 'Clean water'), `70${NB}%`);
+  check('station : ligne eau sale', infoLine(tk, 'Dirty water'), 'Full');
+  check('station : eau sale pleine signalee', /rbt-dirty_tank|warn/.test(tk.split('Dirty water')[0].slice(-400)), true);
+  const tk2 = box({ robot_clean_tank_entity: 'binary_sensor.c' }, 'docked', { 'binary_sensor.c': s('off') });
+  check('station : eau propre normale', infoLine(tk2, 'Clean water'), 'Normal');
+  check('station : eau propre normale, sans alerte', /warn/.test(tk2.split('Clean water')[0].slice(-400)), false);
+  check('station : eau propre basse', infoLine(box({ robot_clean_tank_entity: 'sensor.c' }, 'docked', { 'sensor.c': s(10) }), 'Clean water'), `10${NB}%`);
+  check('station : cuve indisponible, pas de ligne', infoLine(box({ robot_clean_tank_entity: 'sensor.c' }, 'docked', { 'sensor.c': s('unavailable') }), 'Clean water'), null);
+  check('station : cuves de la tour du laveur', /rbt-mdock" style="--clean: 40%; --dirty: 95%"/.test(render({ state_entity: 'vacuum.x', robot_layout: 'mop',
+    robot_clean_tank_entity: 'sensor.c', robot_dirty_tank_entity: 'binary_sensor.d' }, { 'vacuum.x': s('docked'), 'sensor.c': s(40), 'binary_sensor.d': s('on') })), true);
+  check('station : pas de ligne de cuve sur une tondeuse', infoLine(render({ state_entity: 'lawn_mower.x', robot_clean_tank_entity: 'sensor.c' },
+    { 'lawn_mower.x': s('docked'), 'sensor.c': s(50) }), 'Clean water'), null);
+  // The camera on the bumper, on any station.
+  check('camera : sur le robot', /class="rbt-cam"/.test(box({ robot_camera: true })), true);
+  check('camera : pas sans l option', /class="rbt-cam"/.test(box()), false);
+  check('camera : sur le laveur', /class="rbt-rm"[^]*class="rbt-cam"/.test(box({ robot_layout: 'mop', robot_camera: true })), true);
+  check('camera : avec la tour', /class="rbt-cam"/.test(render({ state_entity: 'vacuum.x', robot_camera: true }, { 'vacuum.x': s('docked') })), true);
+  check('camera : le faisceau', /class="rbt-camb"/.test(box({ robot_camera: true })), true);
+  // The editor: the colour only for this station, the camera, the tanks.
+  const edBox = markup(newEditor({ state_entity: 'vacuum.x', appliance_type: 'robot', robot_station: 'box' }));
+  check('editeur station : la couleur', /data-field="robot_station_color"/.test(edBox), true);
+  check('editeur station : pas de couleur sur la tour', /data-field="robot_station_color"/.test(edVac), false);
+  check('editeur station : la camera', /data-field="robot_camera"/.test(edVac), true);
+  check('editeur station : l eau propre', edVac.includes('data-toggle="robot_clean_tank_entity"'), true);
+  check('editeur station : l eau sale', edVac.includes('data-toggle="robot_dirty_tank_entity"'), true);
+  check('editeur station : pas de cuves sur une tondeuse', edMow.includes('data-toggle="robot_clean_tank_entity"'), false);
+  check('editeur station : pas de camera sur une tondeuse', /data-field="robot_camera"/.test(edMow), false);
+  check('editeur station : trois choix', (edVac.match(/robot_station_(station|box|base)|Rectangular station|Emptying or washing station|Charging base only/g) || []).length >= 3, true);
 }
 
 

@@ -148,7 +148,7 @@ const T = {
     compact_lines: "Information", lines_below: "Under the card", lines_beside: "Beside the drawing", lines_toggle: "Hidden, a chevron shows them", lines_show: "Show the information", lines_hide: "Hide the information",
     type_mobility: "Electric ride", layout_mob_scooter: "Scooter", layout_mob_offroad: "Off-road scooter", layout_mob_ebike: "E-bike", layout_mob_gyropode: "Gyropode", layout_mob_motorcycle: "Electric motorcycle", mob_charging: "Charging", mob_charged: "Charged", mob_unplugged: "Unplugged", mob_plugged: "Plugged in", type_hair_dryer: "Hair dryer", layout_hd_pistol: "Classic", layout_hd_ring: "Ring", hd_cool: "Cool air", hd_hot: "Hot air", hd_heat_threshold: "Hot air above this power (W)", fill_height: "Fill the height of its slot", done_alert: "Flash at the end of the cycle", done_seen: "Seen", no_power_threshold: "No power draw below (W)", group_appearance: "Appearance", show_name: "Show the name", show_state: "Show the state", transparent: "Transparent background", font_scale: "Text size", illustration_size: "Drawing size", compact_mode: "Compact mode", compact_off: "Off", compact_hide: "No drawing", compact_side: "Drawing on the side", group_laundry: "Laundry", group_kitchen: "Kitchen", group_heating: "Heating and hot water", group_air: "Air and climate", group_home: "Home and media", group_pets: "Pets", illustration_frame: "Same drawing height as the cards beside it", section_screen_source: "Input source", screen_source: "Input",
     type_network: "Network device (switch, NAS, server)", group_network: "Network and servers", layout_net_switch: "Switch", layout_net_server: "Server", layout_net_nas: "NAS", layout_net_rack: "Rack", net_ports_count: "Ports drawn", net_bays: "NAS bays", net_online: "Online", net_busy: "Busy", net_alert: "Alert", net_warn: "Disk to watch", section_net_cpu: "CPU usage (%)", section_net_memory: "Memory usage (%)", section_net_volume: "Volume used (%)", section_net_download: "Download rate", section_net_upload: "Upload rate", section_net_ports: "Active ports", net_ports_total: "Port count", section_net_poe: "PoE power", section_net_problem: "Problem alert", section_net_temperature: "Temperature", net_temp_alert: "Alert above this temperature (\u00b0C)", net_busy_threshold: "Busy above this rate (Mbit/s)", net_line_rate: "Throughput", net_line_load: "Load", net_line_volume: "Volume", section_net_disk1: "Disk 1", section_net_disk2: "Disk 2", section_net_disk3: "Disk 3", section_net_disk4: "Disk 4",
-    type_robot: "Robot (vacuum, mop, mower)", layout_robot_vacuum: "Robot vacuum", layout_robot_mop: "Mopping robot", layout_robot_mower: "Robot mower", section_robot_station: "Base", robot_station_station: "Emptying or washing station", robot_station_base: "Charging base only", robot_shelter: "Shelter over the base", robot_shelter_style: "Shelter style", mower_style: "Mower style", mower_classic: "Classic", mower_navimow: "Navimow, orange wheels", shelter_lean_to: "Wooden lean-to", shelter_shell: "Shell", shelter_garage: "Garage", robot_shelter_color: "Shell colour", delay_starts_in: "Starts in", section_delay: "Delayed start countdown", state_entity_optional: "State entity (optional)", color_green: "Green", color_orange: "Orange", robot_charging: "Charging", robot_docked: "Docked", robot_cleaning: "Cleaning", robot_mopping: "Mopping", robot_mowing: "Mowing", robot_edgecut: "Edge cutting", robot_returning: "Returning to base", robot_emptying: "Emptying the bin", robot_bin_full: "Bin full", robot_washing: "Washing the pads", robot_drying: "Drying the pads", robot_water_empty: "Water tank empty", robot_rain: "Rain delay", robot_idle: "Stopped", section_robot_status: "Detailed status", section_battery: "Battery", section_robot_bin: "Bin full alert", section_robot_water: "Water tank", section_robot_rain: "Rain", section_robot_error: "Error",
+    type_robot: "Robot (vacuum, mop, mower)", layout_robot_vacuum: "Robot vacuum", layout_robot_mop: "Mopping robot", layout_robot_mower: "Robot mower", section_robot_station: "Base", robot_station_station: "Emptying or washing station", robot_station_base: "Charging base only", robot_shelter: "Shelter over the base", robot_shelter_style: "Shelter style", mower_style: "Mower style", mower_classic: "Classic", mower_navimow: "Navimow, orange wheels", shelter_lean_to: "Wooden lean-to", shelter_shell: "Shell", shelter_garage: "Garage", robot_shelter_color: "Shell colour", delay_starts_in: "Starts in", section_delay: "Delayed start countdown", state_entity_optional: "State entity (optional)", color_green: "Green", color_orange: "Orange", robot_charging: "Charging", robot_docked: "Docked", robot_cleaning: "Cleaning", robot_mopping: "Mopping", robot_mowing: "Mowing", robot_edgecut: "Edge cutting", robot_returning: "Returning to base", robot_emptying: "Emptying the bin", robot_bin_full: "Bin full", robot_washing: "Washing the pads", robot_drying: "Drying the pads", robot_water_empty: "Water tank empty", robot_rain: "Rain delay", robot_idle: "Stopped", section_robot_status: "Detailed status", section_battery: "Battery", section_robot_bin: "Bin full alert", section_robot_water: "Water tank", section_robot_rain: "Rain", section_robot_error: "Error", robot_station_box: "Rectangular station", robot_station_color: "Station colour", color_gold: "Gold", robot_camera: "Camera module on the robot", section_robot_clean_tank: "Clean water", section_robot_dirty_tank: "Dirty water",
     type_pool_pump: "Pool pump", pool_filtering: "Filtering", pool_chlorinating: "Chlorine injection", pool_backwash: "Backwash", pool_frost: "Frost protection", pool_light_on: "light on", section_water_temperature: "Water temperature", section_air_temperature: "Air temperature", section_ph: "pH", section_redox: "RedOx (ORP)", section_filtration_time: "Filtration time today", section_pressure: "Filter pressure", pool_pressure_alert: "Alert above this pressure (bar)", section_pool_mode: "Pump mode", section_chlorine_pump: "Chlorine pump", section_chlorine_level: "Chlorine tank level", section_backwash: "Backwash", section_frost: "Frost protection", section_pool_alert: "Alert", pool_line_water: "Water", pool_line_air: "Air", pool_line_filtered: "Filtered today", pool_line_pressure: "Pressure", pool_line_chlorine: "Chlorine tank", pool_line_mode: "Mode",
     history_last: "Last {h} h", show_history: "Show the history", section_history: "History sensor", history_hours: "Hours of history", history_empty: "No history yet",
     type_scale: "Bathroom scale", scale_weighed: "Weighed", scale_goal_reached: "Goal reached", section_weight_goal: "Weight goal", scale_goal_value: "Weight goal, without a sensor", section_fat_ratio: "Body fat (%)", section_fat_mass: "Fat mass", section_muscle_mass: "Muscle mass", section_bone_mass: "Bone mass", scale_line_goal: "Goal", scale_line_fat: "Fat", scale_line_muscle: "Muscle", scale_line_bone: "Bone", scale_to_lose: "to lose", scale_to_gain: "to gain",
@@ -3828,9 +3828,11 @@ function netDiskState(hass, entityId, anchorDevice) {
 // drawing can show: the station emptying the bin or washing and drying the
 // pads, rain keeping a mower home, its edge cut.
 const ROBOT_LAYOUTS = ["vacuum", "mop", "mower", "stick", "floor_washer", "pool"];
-const ROBOT_STATIONS = ["station", "base"];
-const ROBOT_ONLY_FIELDS = ["robot_layout", "robot_station", "robot_shelter", "robot_shelter_style", "mower_style", "robot_shelter_color", "robot_floor", "robot_controls", "away_threshold", "robot_status_entity", "robot_bin_entity",
-  "robot_water_entity", "robot_rain_entity", "robot_error_entity"];
+const ROBOT_STATIONS = ["station", "box", "base"];
+// A rectangular station's front, as the brands make them (#69).
+const ROBOT_BOX_COLORS = ["white", "black", "gold"];
+const ROBOT_ONLY_FIELDS = ["robot_layout", "robot_station", "robot_station_color", "robot_camera", "robot_shelter", "robot_shelter_style", "mower_style", "robot_shelter_color", "robot_floor", "robot_controls", "away_threshold", "robot_status_entity", "robot_bin_entity",
+  "robot_water_entity", "robot_clean_tank_entity", "robot_dirty_tank_entity", "robot_rain_entity", "robot_error_entity"];
 // A robot by its name, its maker's or its integration's. A robot cook is a
 // cooker, so the word robot needs what it does.
 const ROBOT_NAME_RE = /tineco|aspirateur.?balai|floor.?one|ifloor|laveur.?de.?sol|floor.?washer|nass.?trocken|lavapavimenti|stick.?vac|cordless.?vac|akkusauger|stielsauger|roomba|braava|roborock|ecovacs|deebot|dreame|neato|eufy.?clean|robovac|xiaomi.?vacuum|conga|robot.?(vacuum|aspir|mop|laveur|mower|tondeuse)|robot.?(clean|sweep)|vacuum|aspirateur|saugroboter|staubsauger|wischroboter|aspiradora|aspirapolvere|robotstofzuiger|stofzuiger|dammsugare|st(o|\u00f8)vsuger|odkurzacz|vysavac|landroid|automower|mammotion|navimow|(^|[^a-z])luba([^a-z]|$)|lawn.?mower|(^|[^a-z])mower|tondeuse|m(a|ae|\u00e4)hroboter|robotmaaier|grasmaaier|cortac(e|\u00e9)sped|tosaerba|corta.?relva|robotgr(a|\u00e4)sklipp|robotgressklipp|robotpl(a|\u00e6)neklipp|kosiarka|sekacka|\u626b\u5730|\u5438\u5c18|\u62d6\u5730|\u5272\u8349|\u043f\u044b\u043b\u0435\u0441\u043e\u0441|\u0433\u0430\u0437\u043e\u043d\u043e\u043a\u043e\u0441/;
@@ -4017,6 +4019,18 @@ function robotModeOf(hass, cfg, st, layout) {
 function robotWaterPct(hass, cfg) {
   const w = cfg.robot_water_entity ? numericEntity(hass, cfg.robot_water_entity) : null;
   return w ? Math.max(0, Math.min(100, Number(w.state))) : null;
+}
+
+// A station tank, clean or dirty water (#69): its level when a number says
+// it, or whether its sensor is raised (the clean one empty, the dirty one
+// full). Null when nothing says it.
+function robotTank(hass, id) {
+  if (!id) return null;
+  const n = numericEntity(hass, id);
+  if (n) return { pct: Math.max(0, Math.min(100, Number(n.state))), raised: null };
+  const s = stateObj(hass, id);
+  if (!s || ["unknown", "unavailable"].includes(String(s.state))) return null;
+  return { pct: null, raised: robotRaised(hass, id, /empty|low|short|lack|vide|leer|full|plein|voll/) };
 }
 
 function robotBattery(hass, cfg, st) {
@@ -9388,6 +9402,35 @@ const ILLUSTRATION_CSS = {
         @keyframes rbt-splash{0%,80%{transform:scale(.2);opacity:0}85%{opacity:1}100%{transform:scale(1.3);opacity:0}}
         .rbt-vapor path:nth-child(2) { --d0: -0.45s; }
         .rbt-vapor path:nth-child(3) { --d0: -0.9s; }
+        .rbx{position:absolute;left:0;top:0;width:96px;height:106px;overflow:visible}
+        .rbt-box .rbt-floor{left:0;width:78px;clip-path:none;transform:skewX(-28deg);transform-origin:50% 100%}
+        .machine.rbt.rbx-white,.machine.rbt.rbx-gold{--b:var(--ac-body,#eef1f3);--bh:var(--ac-body-hi,#ffffff);--bl:var(--ac-body-lo,#aab3ba);--dk:#3a4046;--dkh:#555c63}
+        .rbx-lv.rbx-c{fill:#29b6f6}
+        .rbx-lv.rbx-d{fill:#8d6e4f}
+        .rbx-win{display:none}
+        .rbt-m-emptying .rbx-win,.rbt-m-full .rbx-win{display:inline}
+        .rbx-dustlv{transform-box:fill-box;transform-origin:50% 100%}
+        .rbt-m-emptying .rbx-dustlv{animation:rbx-fill 6s ease-in-out infinite}
+        .rbt-m-full .rbx-dustlv{transform:scaleY(1.85)}
+        .rbt-m-full .rbx-dust{display:none}
+        .rbx-dust circle{opacity:0;animation:rbx-dust .9s linear infinite}
+        .rbx-dust circle:nth-child(2){--d0:.3s}
+        .rbx-dust circle:nth-child(3){--d0:.6s}
+        @keyframes rbx-dust{0%{transform:translateY(0);opacity:0}20%{opacity:1}100%{transform:translateY(-10px);opacity:0}}
+        @keyframes rbx-fill{0%{transform:scaleY(1)}100%{transform:scaleY(1.7)}}
+        .rbx-led{fill:#9aa3ab}
+        .rbx-black .rbx-led{fill:#5a636b}
+        .rbt-m-charging .rbx-led,.rbt-m-emptying .rbx-led,.rbt-m-washing .rbx-led,.rbt-m-drying .rbx-led{fill:#2ecc71;animation:rbt-breathe 2.4s ease-in-out infinite}
+        .rbt-m-full .rbx-led,.rbt-m-empty .rbx-led{fill:#ff9800}
+        .rbt-m-error .rbx-led{fill:#f44336;animation:rbt-blink 1s steps(1) infinite}
+        .rbt-cam{display:block;left:19px;top:18.5px;width:14px;height:5px;border-radius:2px;background:#111417;box-shadow:inset 0 0 0 .5px rgba(255,255,255,.22)}
+        .rbt-cam::before{content:"";position:absolute;left:3.4px;top:1.2px;width:2.6px;height:2.6px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#9fd3f0,#2d6b8f 45%,#0d1b24)}
+        .rbt-cam::after{content:"";position:absolute;left:8.6px;top:1.8px;width:1.4px;height:1.4px;border-radius:50%;background:#e53935}
+        .rbt-rm .rbt-cam{left:17px;top:18.2px;height:4.6px}
+        .rbt-camb{display:none;left:9px;top:23.5px;width:34px;height:11px;clip-path:polygon(32% 0,68% 0,100% 100%,0 100%);background:linear-gradient(180deg,rgba(79,195,247,.4),rgba(79,195,247,0))}
+        .rbt-rm .rbt-camb{left:7px;top:22.8px}
+        .rbt-m-cleaning .rbt-camb{display:block;animation:rbt-breathe 1.6s ease-in-out infinite}
+        .rbt-m-cleaning .rbt-cam::after{animation:rbt-blink 1s steps(1) infinite}
         .machine.rbt.rbt-base:not(.rbt-l-mower) { height: 80px; }
         .machine.rbt.rbt-base:not(.rbt-l-mower) > * { margin-top: -28px; }
         .rbt-base .rbt-dock, .rbt-base .rbt-dcap, .rbt-base .rbt-mdock, .rbt-base .rbt-mcap, .rbt-base .rbt-bubbles, .rbt-base .rbt-vapor { display: none; }
@@ -11592,6 +11635,57 @@ function shelterHtml(style, color) {
   return { back, front };
 }
 
+// A rectangular station seen three-quarters (#69): the robot sits half in
+// its low bay, the two water tanks show their level on the front, the dust
+// bin behind its panel, the lids on top. White, black or with a gold front.
+const ROBOT_BOX_SKINS = {
+  white: { f0: "#ffffff", f1: "#e4e9ed", side: "#c9d1d7", top: "#f6f8f9", edge: "rgba(0,0,0,.2)", panel: "#eef1f3", bay: "#8e99a2", bay2: "#d3dae0" },
+  black: { f0: "#4a5158", f1: "#2b3035", side: "#1d2125", top: "#565d64", edge: "rgba(0,0,0,.5)", panel: "#383e44", bay: "#0f1114", bay2: "#24282c" },
+  gold: { f0: "#ffffff", f1: "#e4e9ed", side: "#c9d1d7", top: "#f6f8f9", edge: "rgba(0,0,0,.2)", panel: "gold", bay: "#8e99a2", bay2: "#d3dae0" },
+};
+// A tank's level to draw: its number, or full or low when its sensor says
+// so, or the usual level when nothing says it.
+function tankLevel(tk, usual, raisedPct) {
+  if (!tk) return usual;
+  return tk.pct !== null ? tk.pct : tk.raised ? raisedPct : usual;
+}
+function tankVars(r) {
+  const v = [];
+  if (r.cleanTank) v.push(`--clean: ${Math.round(tankLevel(r.cleanTank, 75, 5))}%`);
+  if (r.dirtyTank) v.push(`--dirty: ${Math.round(tankLevel(r.dirtyTank, 20, 95))}%`);
+  return v.length ? ` style="${v.join("; ")}"` : "";
+}
+let robotBoxN = 0;
+function robotBoxHtml(color, tanks) {
+  const k = ROBOT_BOX_SKINS[color] ? color : "white";
+  const c = ROBOT_BOX_SKINS[k];
+  const g = `rbx${robotBoxN++}`;
+  const X0 = 17, X1 = 79, Y0 = 10, Y1 = 74, DX = 9, DY = -5.5, BT = 52;
+  const panel = c.panel === "gold" ? `url(#${g}g)` : c.panel;
+  // A level window: its frame, then the water at its height.
+  const tank = (cls, x, pct) => `<rect x="${x}" y="15" width="4.4" height="16" rx="1.8" fill="rgba(0,0,0,.2)" stroke="${c.edge}" stroke-width=".35"/>`
+    + `<rect class="rbx-lv ${cls}" x="${x + .7}" y="${15.7 + 14.6 * (1 - pct / 100)}" width="3" height="${14.6 * pct / 100}" rx="1.2"/>`;
+  const gauges = tanks ? tank("rbx-c", X0 + 5, tanks[0]) + tank("rbx-d", X1 - 9.4, tanks[1]) : "";
+  return `<svg class="rbx" viewBox="0 0 96 106" aria-hidden="true"><defs>
+<linearGradient id="${g}g" x1="0" x2="1"><stop offset="0" stop-color="#c9b68a"/><stop offset=".45" stop-color="#f1e6c8"/><stop offset="1" stop-color="#b6a274"/></linearGradient>
+<linearGradient id="${g}f" x1="0" x2="1"><stop offset="0" stop-color="${c.f1}"/><stop offset=".35" stop-color="${c.f0}"/><stop offset="1" stop-color="${c.f1}"/></linearGradient>
+<linearGradient id="${g}b" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${c.bay}"/><stop offset="1" stop-color="${c.bay2}"/></linearGradient></defs>
+<path d="M${X1} ${Y0} L${X1 + DX} ${Y0 + DY} V${Y1 + DY} L${X1} ${Y1} Z" fill="${c.side}" stroke="${c.edge}" stroke-width=".45"/>
+<path d="M${X0} ${Y0} L${X0 + DX} ${Y0 + DY} H${X1 + DX} L${X1} ${Y0} Z" fill="${c.top}" stroke="${c.edge}" stroke-width=".45"/>
+<path d="M20.5 9.2 L24.5 5.3 H52 L48 9.2 Z M50 9.2 L54 5.3 H85 L81 9.2 Z" fill="none" stroke="${c.edge}" stroke-width=".5"/>
+<rect x="33" y="6.6" width="5" height="1.2" rx=".6" fill="${c.side}"/><rect x="64" y="6.6" width="5" height="1.2" rx=".6" fill="${c.side}"/>
+<rect x="${X0}" y="${Y0}" width="${X1 - X0}" height="${Y1 - Y0}" fill="url(#${g}f)" stroke="${c.edge}" stroke-width=".45"/>${gauges}
+<circle cx="48" cy="20" r="2.6" fill="none" stroke="${c.edge}" stroke-width=".6"/>
+<rect x="22" y="34" width="52" height="13" rx="2.4" fill="${panel}" stroke="${c.edge}" stroke-width=".45"/>
+<g class="rbx-win"><rect x="25" y="36.4" width="46" height="8.2" rx="1.6" fill="rgba(40,46,52,.55)"/><rect class="rbx-dustlv" x="25" y="40.6" width="46" height="4" rx="1" fill="rgba(150,125,90,.8)"/>
+<g class="rbx-dust" fill="#a1886a"><circle cx="38" cy="50" r=".9"/><circle cx="47" cy="51" r=".8"/><circle cx="56" cy="50" r=".9"/></g></g>
+<rect class="rbx-led" x="45" y="48.4" width="6" height="1.4" rx=".7"/>
+<rect x="20" y="${BT}" width="56" height="${Y1 - BT}" rx="3" fill="url(#${g}b)"/>
+<path d="M22.5 ${BT + 2.4} H73.5" stroke="rgba(255,255,255,.14)" stroke-width=".7"/>
+<path d="M20 ${Y1} H83 L75 89 H12 Z" fill="${c.side}" stroke="${c.edge}" stroke-width=".45" opacity=".9"/>
+<path d="M24 77.5 H79 M19 82.5 H77" stroke="rgba(0,0,0,.1)" stroke-width=".5"/></svg>`;
+}
+
 function robotHtml(cls, r) {
   if (r.layout === "pool") return ntHtml(`${cls} rbt rbt-l-pool rbt-m-${r.mode || "docked"}`, { kind: "pool", on: r.mode === "cleaning", lcd: r.poolTime || "" });
   if (r.layout === "stick" || r.layout === "floor_washer") {
@@ -11605,6 +11699,8 @@ function robotHtml(cls, r) {
   const mode = r.mode || "idle";
   const draw = mode === "edgecut" ? "cleaning" : mode === "docked" ? "charging" : mode === "rain" ? "charging rbt-m-raining" : mode;
   const err = ROBOT_MANGA + ROBOT_ANGER;
+  // The camera module some robots carry on their bumper (#69).
+  const cam = r.camera ? `<i class="rbt-cam"></i><i class="rbt-camb"></i>` : "";
   let inner;
   if (layout === "mower") {
     const sh = r.shelter ? shelterHtml(r.shelter, r.shelterColor) : { back: "", front: "" };
@@ -11614,20 +11710,26 @@ function robotHtml(cls, r) {
           <div class="rbt-tall"></div>${sh.front}`;
   } else if (layout === "mop") {
     const lvl = r.water !== null && r.water !== undefined ? ` style="--lvl: ${Math.round(r.water)}%"` : "";
+    const tk = tankVars(r);
+    const dock = r.box ? robotBoxHtml(r.boxColor, [tankLevel(r.cleanTank, 75, 5), tankLevel(r.dirtyTank, 20, 95)])
+      : `<div class="rbt-mcap"></div><div class="rbt-mdock"${tk}><div class="rbt-tk rbt-c"><i></i></div><div class="rbt-tk rbt-d"><i></i></div><i class="rbt-dled"></i></div>
+          <div class="rbt-plate"></div><div class="rbt-pcap"></div>`;
     inner = `<div class="${floorCls}"><i class="rbt-trace rbt-t1 rbt-wet"></i><i class="rbt-trace rbt-t2 rbt-wet"></i></div>
-          <div class="rbt-mcap"></div><div class="rbt-mdock"><div class="rbt-tk rbt-c"><i></i></div><div class="rbt-tk rbt-d"><i></i></div><i class="rbt-dled"></i></div>
-          <div class="rbt-plate"></div><div class="rbt-pcap"></div>
-          <div class="rbt-rm"${lvl}><div class="rbt-pad"></div><div class="rbt-sd"></div><div class="rbt-tp"></div><div class="rbt-tank"><i></i></div><div class="rbt-ring"></div>${err}</div>
+          ${dock}
+          <div class="rbt-rm"${lvl}><div class="rbt-pad"></div><div class="rbt-sd"></div><div class="rbt-tp"></div><div class="rbt-tank"><i></i></div><div class="rbt-ring"></div>${cam}${err}</div>
           ${airFlow("rbt-vapor", 44, 17)}
           <div class="rbt-bubbles">${"<b></b>".repeat(4)}</div>`;
   } else {
+    const tanks = r.cleanTank || r.dirtyTank ? [tankLevel(r.cleanTank, 75, 5), tankLevel(r.dirtyTank, 20, 95)] : null;
+    const dock = r.box ? robotBoxHtml(r.boxColor, tanks)
+      : `<div class="rbt-dock"><i class="rbt-dled"></i><div class="rbt-bin"><div class="rbt-fill"></div>${"<b></b>".repeat(3)}</div></div><div class="rbt-dcap"></div>
+          <div class="rbt-plate"></div><div class="rbt-pcap"></div>`;
     inner = `<div class="${floorCls}"></div>
-          <div class="rbt-dock"><i class="rbt-dled"></i><div class="rbt-bin"><div class="rbt-fill"></div>${"<b></b>".repeat(3)}</div></div><div class="rbt-dcap"></div>
-          <div class="rbt-plate"></div><div class="rbt-pcap"></div>
-          <div class="rbt-rb"><div class="rbt-brush"><i></i></div><div class="rbt-sd"></div><div class="rbt-bmp"></div><div class="rbt-tp"></div><div class="rbt-lidw"></div><div class="rbt-lid"></div><div class="rbt-ring"></div>${err}</div>`;
+          ${dock}
+          <div class="rbt-rb"><div class="rbt-brush"><i></i></div><div class="rbt-sd"></div><div class="rbt-bmp"></div><div class="rbt-tp"></div><div class="rbt-lidw"></div><div class="rbt-lid"></div><div class="rbt-ring"></div>${cam}${err}</div>`;
   }
   return `
-        <div class="machine ${cls} rbt rbt-l-${layout} rbt-m-${draw}${r.base ? " rbt-base" : ""}${r.shelter ? ` rbt-roof rbt-sh-${r.shelter}` : ""}">
+        <div class="machine ${cls} rbt rbt-l-${layout} rbt-m-${draw}${r.base ? " rbt-base" : ""}${r.box && layout !== "mower" ? ` rbt-box rbx-${ROBOT_BOX_SKINS[r.boxColor] ? r.boxColor : "white"}` : ""}${r.shelter ? ` rbt-roof rbt-sh-${r.shelter}` : ""}">
           ${inner}
         </div>`;
 }
@@ -16357,6 +16459,10 @@ class ApplianceCard extends HTMLElement {
       }
       color = ROBOT_COLORS[mode];
       const water = robotWaterPct(hass, cfg);
+      // The station's two water tanks, on the lines and on its front (#69).
+      const tankOn = layout === "vacuum" || layout === "mop";
+      const cleanTank = tankOn ? robotTank(hass, cfg.robot_clean_tank_entity) : null;
+      const dirtyTank = tankOn ? robotTank(hass, cfg.robot_dirty_tank_entity) : null;
       if (mode !== "unav") {
         if (battery !== null && !cfg.battery_corner) {
           extraLines.push({ key: "robot_battery", icon: robotBatteryIcon(battery, mode === "charging"), label: t(hass, "section_battery"),
@@ -16365,6 +16471,15 @@ class ApplianceCard extends HTMLElement {
         if (water !== null) {
           extraLines.push({ key: "robot_water", icon: "mdi:water", label: t(hass, "section_robot_water"),
             value: keepTogether(`${Math.round(water)} %`), entity: cfg.robot_water_entity });
+        }
+        for (const [key, tk, id] of [["robot_clean_tank", cleanTank, cfg.robot_clean_tank_entity], ["robot_dirty_tank", dirtyTank, cfg.robot_dirty_tank_entity]]) {
+          if (!tk) continue;
+          const clean = key === "robot_clean_tank";
+          // Low on clean water, or the dirty one nearly full: worth a look.
+          const warn = tk.pct !== null ? (clean ? tk.pct <= 15 : tk.pct >= 85) : tk.raised;
+          extraLines.push({ key, icon: clean ? "mdi:water" : "mdi:water-opacity", label: t(hass, `section_${key}`),
+            value: tk.pct !== null ? keepTogether(`${Math.round(tk.pct)} %`) : t(hass, tk.raised ? (clean ? "mb_empty" : "bat_full") : "fridge_ok"),
+            entity: id, ...(warn ? { warn: true } : {}) });
         }
       }
       // An error says which one when an entity words it: the error entity's
@@ -16393,7 +16508,8 @@ class ApplianceCard extends HTMLElement {
         if (secs !== null) poolTime = formatDuration(secs, hass);
       }
       robot = { layout, mode, water, battery, poolTime, floor: cfg.robot_floor, base: cfg.robot_station === "base", shelter: cfg.robot_shelter ? (SHELTER_STYLES.includes(cfg.robot_shelter_style) ? cfg.robot_shelter_style : "lean_to") : "",
-        shelterColor: cfg.robot_shelter_color, mowerStyle: mowerStyleOf(cfg, st) };
+        shelterColor: cfg.robot_shelter_color, mowerStyle: mowerStyleOf(cfg, st),
+        box: cfg.robot_station === "box", boxColor: cfg.robot_station_color, camera: !!cfg.robot_camera, cleanTank, dirtyTank };
     }
 
     // The last cycle, on request: how long it ran and when it ended. Shown
@@ -17439,7 +17555,7 @@ function loadEditor() {
   if (customElements.get("ha-appliance-card-editor")) return Promise.resolve();
   if (!editorLoading) {
     editorLoading = import(assetUrl("ha-appliance-card-editor.js"))
-      .then((m) => m.default({ t, onLanguageLoaded, LANGUAGE_NAMES, localizedHass, activationOf, TH_LAYOUTS, EV_POWER_THRESHOLD, stateObj, parseValueMap, stringifyValueMap, alertsArray, LIST_OTHER, ENTITY_LISTS, listCandidates, defaultCardName, stripDeviceName, domainOf, INFO_MAX, autoSuggest, APPLIANCE_TYPES, STATE_DOMAINS, SCREEN_ONLY_FIELDS, illustrationSizeOf, fontScaleOf, compactModeOf, TYPE_GROUPS, caps, detectApplianceType, SCREEN_STANDBY_W, SCREEN_LAYOUTS, SCREEN_IMAGES, screenLayoutOf, screenIsTablet, HD_HEAT_W, PLUG_THRESHOLDS, ZONE_POWER_W, PLUG_SOURCE_TYPES, plugSourceOf, DW_DRY_MIN, WASH_HEAT_W, WASH_SPIN_W, DRYER_HEAT_W, NET_LAYOUTS, SWITCH_PORTS, NET_BAYS, NET_BUSY_MBIT, NET_TEMP_ALERT, netLayoutOf, ROBOT_LAYOUTS, ROBOT_STATIONS, ROBOT_FLOORS, ROBOT_SERVICES, STICK_AWAY_W, robotLayoutOf, POOL_PRESSURE_ALERT, SOLAR_LAYOUTS, BATTERY_LAYOUTS, BATTERY_IDLE_W, DIFFUSER_LAYOUTS, illustrationTapOf, HRV_LAYOUTS, CAMERA_LAYOUTS, MAILBOX_LAYOUTS, MAILBOX_SIDES, mailboxLayoutOf, LAMP_LAYOUTS, LAMP_SPOTS, lampLayoutOf, MOBILITY_LAYOUTS, PUMP_LAYOUTS, FLOOR_LAYOUTS, METER_LAYOUTS, meterLayoutOf, TREE_PALETTES, TREE_PRESENTS, pumpLayoutOf, UPS_BATTERY_LOW, HISTORY_HOURS, BODY_COLORS, esc, MOWER_STYLES, SHELTER_STYLES, SHELTER_COLORS, stateFreeSource }))
+      .then((m) => m.default({ t, onLanguageLoaded, LANGUAGE_NAMES, localizedHass, activationOf, TH_LAYOUTS, EV_POWER_THRESHOLD, stateObj, parseValueMap, stringifyValueMap, alertsArray, LIST_OTHER, ENTITY_LISTS, listCandidates, defaultCardName, stripDeviceName, domainOf, INFO_MAX, autoSuggest, APPLIANCE_TYPES, STATE_DOMAINS, SCREEN_ONLY_FIELDS, illustrationSizeOf, fontScaleOf, compactModeOf, TYPE_GROUPS, caps, detectApplianceType, SCREEN_STANDBY_W, SCREEN_LAYOUTS, SCREEN_IMAGES, screenLayoutOf, screenIsTablet, HD_HEAT_W, PLUG_THRESHOLDS, ZONE_POWER_W, PLUG_SOURCE_TYPES, plugSourceOf, DW_DRY_MIN, WASH_HEAT_W, WASH_SPIN_W, DRYER_HEAT_W, NET_LAYOUTS, SWITCH_PORTS, NET_BAYS, NET_BUSY_MBIT, NET_TEMP_ALERT, netLayoutOf, ROBOT_LAYOUTS, ROBOT_STATIONS, ROBOT_BOX_COLORS, ROBOT_FLOORS, ROBOT_SERVICES, STICK_AWAY_W, robotLayoutOf, POOL_PRESSURE_ALERT, SOLAR_LAYOUTS, BATTERY_LAYOUTS, BATTERY_IDLE_W, DIFFUSER_LAYOUTS, illustrationTapOf, HRV_LAYOUTS, CAMERA_LAYOUTS, MAILBOX_LAYOUTS, MAILBOX_SIDES, mailboxLayoutOf, LAMP_LAYOUTS, LAMP_SPOTS, lampLayoutOf, MOBILITY_LAYOUTS, PUMP_LAYOUTS, FLOOR_LAYOUTS, METER_LAYOUTS, meterLayoutOf, TREE_PALETTES, TREE_PRESENTS, pumpLayoutOf, UPS_BATTERY_LOW, HISTORY_HOURS, BODY_COLORS, esc, MOWER_STYLES, SHELTER_STYLES, SHELTER_COLORS, stateFreeSource }))
       .catch((err) => {
         editorLoading = null;
         throw err;
