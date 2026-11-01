@@ -1,4 +1,4 @@
-const CARD_VERSION = "3.21.1";
+const CARD_VERSION = "3.22.0";
 
 console.info(
   "%c HA-APPLIANCE-CARD %c v" + CARD_VERSION + " ",
