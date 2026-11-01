@@ -1832,8 +1832,9 @@ for (const layout of ['freezer_bottom', 'freezer_top']) {
     'switch.plug': { state: 'on', attributes: {} } });
   check('cave allumee : la vitre est eclairee', /fr-off/.test(lit), false);
   check('cave allumee : pas d\'extinction', /fr-off/.test(lit), false);
-  check('cave fermee qui refroidit : lumiere bleue qui respire', /class="fr-cool fr-chill"/.test(lit), true);
-  check('cave fermee au repos : bleue sans respirer', /class="fr-cool"/.test(cave({}, { 'sensor.p': { state: '0', attributes: { unit_of_measurement: 'W' }, last_changed: new Date(now() - 5 * 60000).toISOString() } })), true);
+  check('cave fermee qui refroidit : lumiere bleue', /class="fr-cool"/.test(lit), true);
+  check('cave fermee qui refroidit : des flocons sur la vitre', (lit.match(/class="fr-flake /g) || []).length, 4);
+  check('cave fermee au repos : bleue sans flocons', !/class="fr-flake /.test(cave({}, { 'sensor.p': { state: '0', attributes: { unit_of_measurement: 'W' }, last_changed: new Date(now() - 5 * 60000).toISOString() } })) && /class="fr-cool"/.test(cave({}, { 'sensor.p': { state: '0', attributes: { unit_of_measurement: 'W' }, last_changed: new Date(now() - 5 * 60000).toISOString() } })), true);
   check('cave ouverte : la lampe chaude, pas de bleu', /class="fr-cool/.test(render({ appliance_type: 'fridge', fridge_layout: 'wine', door_entity: 'binary_sensor.fr_d' },
     { 'binary_sensor.fr_d': { state: 'on', attributes: {} } })), false);
   const unpl = cave({ plug_entity: 'switch.plug' }, { 'sensor.p': { state: '0', attributes: { unit_of_measurement: 'W' } },

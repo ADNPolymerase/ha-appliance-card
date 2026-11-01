@@ -7272,9 +7272,12 @@ const ILLUSTRATION_CSS = {
         .fr-steam.m2 { animation-delay: calc(-0.9s + var(--anim-offset, 0s)); }
         .fr-steam.m3 { animation-delay: calc(-1.8s + var(--anim-offset, 0s)); }
         .fr-steam.m4 { animation-delay: calc(-2.3s + var(--anim-offset, 0s)); }
-        /* A wine cooler's blue light breathes while it cools. */
-        .fr-cool.fr-chill { animation: fr-chill 3.2s ease-in-out infinite; animation-delay: var(--anim-offset, 0s); }
-        @keyframes fr-chill { 0%, 100% { opacity: 0.22; } 50% { opacity: 0.48; } }
+        /* While a wine cooler cools, snowflakes come and go on its glass. */
+        .fr-flake { transform-box: fill-box; transform-origin: center; opacity: 0; animation: fr-flake 3.6s ease-in-out infinite; animation-delay: var(--anim-offset, 0s); }
+        .fr-flake.fr-f2 { animation-delay: calc(-0.9s + var(--anim-offset, 0s)); }
+        .fr-flake.fr-f3 { animation-delay: calc(-1.8s + var(--anim-offset, 0s)); }
+        .fr-flake.fr-f4 { animation-delay: calc(-2.7s + var(--anim-offset, 0s)); }
+        @keyframes fr-flake { 0% { opacity: 0; transform: scale(0.5) rotate(0deg); } 35% { opacity: 1; transform: scale(1) rotate(30deg); } 70% { opacity: 0.9; } 100% { opacity: 0; transform: scale(0.8) rotate(60deg); } }
         @keyframes fr-rise { 0% { transform: translateY(0); opacity: 0; } 30% { opacity: 0.75; } 100% { transform: translateY(-10px); opacity: 0; } }
   `,
   water_heater: () => `
@@ -9806,7 +9809,7 @@ const FR3 = (() => {
   }
   // Inside of a wine cellar: dark wood walls in depth, a warm light, wooden racks
   // seen from above with bottles lying on them, their bases towards us.
-  // Door shut, the cellar's LEDs light it blue, breathing while it cools;
+  // Door shut, the cellar's LEDs light it blue;
   // door open, its lamp lights it warm.
   function wineInside(x0, y0, x1, y1, g, s, blue) {
     const cid = id(), gl = id(), gb = id(), DXI = 12, DYI = -7;
@@ -9821,13 +9824,12 @@ const FR3 = (() => {
         <rect x="${x0}" y="${y}" width="${x1 - x0}" height="2" fill="${lit ? "#6d4c41" : "#2e2320"}"/><path d="M${x0} ${y + .3} H${x1}" stroke="rgba(255,220,180,.35)" stroke-width=".5"/>`;
       racks += [2, 1, 0].map((c) => lyingBottle(x0 + 7 + c * 14, y - 3.4, 0.864, -0.504, 19, lit ? (c === 1 ? "#4a1a22" : "#26402a") : "#151b16", c === 1 ? "#c9a24b" : "#8e1b2c")).join("");
     }
-    const chill = s.cooling === true ? " fr-chill" : "";
     const lamp = !lit ? "" : blue
       ? `<rect x="${bx0 + 4}" y="${by0}" width="${x1 - bx0 - 6}" height="3" rx="1.5" fill="#4fc3f7" opacity=".55"/><rect x="${bx0 + 6}" y="${by0 + .6}" width="${x1 - bx0 - 10}" height="1.8" rx=".9" fill="#e1f5fe"/>
       <polygon points="${bx0 + 6},${by0 + 3} ${x1 - 4},${by0 + 3} ${x1},${y1} ${x0},${y1}" fill="#29b6f6" opacity=".3"/>`
       : `<rect x="${bx0 + 6}" y="${by0 + 1}" width="${x1 - bx0 - 10}" height="2" rx="1" fill="#ffe0b2"/>
       <polygon points="${bx0 + 6},${by0 + 3} ${x1 - 4},${by0 + 3} ${x1},${y1} ${x0},${y1}" fill="#ffb74d" opacity=".12"/>`;
-    const tint = lit && blue ? `<rect class="fr-cool${chill}" x="${x0}" y="${y0}" width="${x1 - x0}" height="${y1 - y0}" fill="#29b6f6" opacity=".34"/>` : "";
+    const tint = lit && blue ? `<rect class="fr-cool" x="${x0}" y="${y0}" width="${x1 - x0}" height="${y1 - y0}" fill="#29b6f6" opacity=".34"/>` : "";
     return `<defs>${grads}</defs><clipPath id="${cid}"><rect x="${x0}" y="${y0}" width="${x1 - x0}" height="${y1 - y0}"/></clipPath>
     <g clip-path="url(#${cid})">
       <rect x="${x0}" y="${y0}" width="${x1 - x0}" height="${y1 - y0}" fill="url(#${gl})"/>
@@ -9984,6 +9986,7 @@ const FR3 = (() => {
         <path d="M${wx0 + 3} ${wy0 + 2} L${wx0 + 15} ${wy0 + 2} L${wx0 + 3} ${wy0 + 48} Z" fill="rgba(255,255,255,.14)"/>
         <path d="M${wx0 + 19} ${wy0 + 2} L${wx0 + 23} ${wy0 + 2} L${wx0 + 9} ${wy0 + 56} L${wx0 + 7} ${wy0 + 56} Z" fill="rgba(255,255,255,.08)"/>
         <rect x="${wx0}" y="${wy0}" width="${wx1 - wx0}" height="${wy1 - wy0}" rx="2" fill="none" stroke="#3a3f45" stroke-width="1.6"/>
+        ${s.cooling === true && !s.dark ? [[wx0 + 9, wy0 + 13], [wx1 - 9, wy0 + 33], [wx0 + 15, wy0 + 57], [wx1 - 11, wy0 + 80]].map(([x, y], i) => `<g class="fr-flake fr-f${i + 1}">${ntFlake(x, y, 3.2, "#e1f5fe", .9)}</g>`).join("") : ""}
         ${handle(x1 - 6, y0 + 30, 50, g)}${lcd(x0 + 17, y0 + 3, 20, s.fridgeTemp, s.warn, s.dark)}`;
     }
     const cut = layout === "freezer_top" ? 0.34 : layout === "single" ? 1 : 0.63;
