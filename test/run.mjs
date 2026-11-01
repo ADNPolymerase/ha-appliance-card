@@ -11414,6 +11414,18 @@ function tvT(w) { return { 'switch.tv': { state: 'on', attributes: {} }, 'sensor
   check('aujourd hui : lu sur l etat sans prise', st.calls[0]?.entity_ids?.join(), 'sensor.w');
   await settle();
   check('aujourd hui : depuis l etat', infoLine(markup(st.card), 'Today').replace(/\u00a0/g, ' '), '1h00 · 1 start');
+  // A heat pump names its mode, mapped onto space_heating and hot_water: both are runs.
+  const HPT = { appliance_type: 'heat_pump', state_entity: 'sensor.hp', show_today: true,
+    state_map: { aus: 'idle', Heizen: 'space_heating', Warmwasser: 'hot_water' } };
+  const hpt = withHistory(HPT, { 'sensor.hp': wst('aus', 0) },
+    { 'sensor.hp': [H('aus', -sinceMid), H('Heizen', -sinceMid + 60), H('aus', -sinceMid + 120), H('Warmwasser', -sinceMid + 150), H('aus', -sinceMid + 180)] });
+  await settle();
+  check('aujourd hui : pompe a chaleur, chauffage et eau chaude', infoLine(markup(hpt.card), 'Today').replace(/\u00a0/g, ' '), '1h30 · 2 starts');
+  // A boiler's own words, without state_map: a burner waiting (Nefit 0A) is not running.
+  const blt = withHistory({ appliance_type: 'boiler', state_entity: 'sensor.bl', show_today: true }, { 'sensor.bl': wst('idle', 0) },
+    { 'sensor.bl': [H('idle', -sinceMid), H('central_heating', -sinceMid + 30), H('0A', -sinceMid + 50), H('idle', -sinceMid + 60)] });
+  await settle();
+  check('aujourd hui : chaudiere, l attente ne compte pas', infoLine(markup(blt.card), 'Today').replace(/\u00a0/g, ' '), '20 min · 1 start');
   check('aujourd hui : sans l option, pas de ligne', infoLine(render(PLUG, plugSt(0)), 'Today'), null);
 
   // The tower on its own plug.

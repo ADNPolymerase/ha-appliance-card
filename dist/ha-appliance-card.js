@@ -1524,6 +1524,24 @@ function normFor(type, raw, stateMap) {
   return norm;
 }
 
+// What a state says about running, for the day's running time. A heat pump
+// and a boiler name a mode rather than a cycle: space_heating, hot_water,
+// cooling, defrost and starting are the appliance at work, idle and waiting
+// are not. Their state_map targets those modes, which normFor does not sort,
+// so the day would never start a run. History rows carry no attributes, so
+// only the state's own words are read.
+function todayNormFor(type, raw, stateMap) {
+  if (type === "heat_pump") {
+    const mode = heatPumpModeOf(raw, {}, stateMap, false);
+    if (mode) return mode === "idle" ? "idle" : "running";
+  }
+  if (type === "boiler") {
+    const mode = boilerModeOf(raw, stateMap);
+    if (mode) return mode === "idle" || mode === "waiting" ? "idle" : "running";
+  }
+  return normFor(type, raw, stateMap);
+}
+
 // A print file as a person names it: no folder, no slicer extension.
 function printerFileName(raw) {
   const base = String(raw).split(/[\\/]/).pop();
@@ -12812,7 +12830,7 @@ class ApplianceCard extends HTMLElement {
       this._todayPending = null;
       const rows = res && res[entity];
       const runs = fromPower ? powerRuns(rows, threshold, gapMs, Date.now(), from)
-        : stateRunsOpen(rows, (raw) => normFor(type, raw, cfg.state_map), from);
+        : stateRunsOpen(rows, (raw) => todayNormFor(type, raw, cfg.state_map), from);
       this._today = { key, at: Date.now(), runs, from };
       this._render();
     }, () => { this._todayPending = null; });
