@@ -16392,9 +16392,9 @@ class ApplianceCard extends HTMLElement {
         .sliders { display: flex; flex-direction: column; gap: 4px; margin-top: 6px; }
         .slider-row { display: flex; align-items: center; gap: 8px; color: var(--secondary-text-color, #727272); }
         .slider-row ha-icon { --mdc-icon-size: 18px; flex-shrink: 0; }
-        .slider-row .s-label { flex-shrink: 0; }
-        .slider-row input { flex: 1; min-width: 60px; accent-color: var(--primary-color, #03a9f4); }
-        .slider-row .s-val { min-width: 3.2em; text-align: right; color: var(--primary-text-color, #1c1c1c); font-weight: 500; }
+        .slider-row .s-label { flex: 0 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .slider-row input { flex: 1 1 70px; min-width: 50px; margin: 0; accent-color: var(--primary-color, #03a9f4); }
+        .slider-row .s-val { flex-shrink: 0; min-width: 2.8em; text-align: right; color: var(--primary-text-color, #1c1c1c); font-weight: 500; }
         .mode-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 8px 14px; cursor: pointer; }
         .mode-row.sel { color: var(--primary-color, #03a9f4); font-weight: 500; }
         .mode-row ha-icon { --mdc-icon-size: 18px; }
