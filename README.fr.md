@@ -10,9 +10,7 @@
 <a href="https://buymeacoffee.com/adnpolymerase" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-orange.png" alt="Buy Me A Coffee" height="60"></a>
 <a href="https://adnpolymerase.github.io/HA/" target="_blank"><img src="https://raw.githubusercontent.com/ADNPolymerase/HA/main/assets/site-button.svg" alt="Lien vers mon github.io pour mes autres projets" height="60"></a>
 
-Une card Lovelace pour les appareils de la maison : lave-linge, sèche-linge, lave-vaisselle, four, micro-ondes, hotte, plaque de cuisson, réfrigérateur, bouilloire, robot cuiseur, machine à café, cuiseur à riz, friteuse à air, chauffe-eau, chaudière, thermostat et vanne thermostatique, pompe à chaleur, imprimante 3D, distributeur de croquettes, fer à repasser, grille-pain, sèche-cheveux, poêle à granulés, climatiseur, déshumidificateur, petit chauffage, sèche-serviettes, purificateur d'air, ventilateur, borne de recharge, télévision, vidéoprojecteur, ordinateur, tablette murale, switch, serveur, NAS et baie réseau, robot aspirateur, laveur et tondeuse, aspirateur balai et laveur de sol, pompe de piscine, pèse-personne, onduleur, panneaux solaires et batterie domestique, lampes, boîtes aux lettres et sonnettes, caméras, diffuseurs, VMC double flux, congélateurs, surpresseurs et postes de relevage, plancher chauffant, spa, sauna, aquarium, compteur Linky et sapin de Noël. Cycle en cours, programme, temps restant, température, alertes et commandes.
-
-Aucune marque supposée : chaque champ est une entité à choisir, elle fonctionne donc avec **n'importe quelle** intégration (Electrolux, Samsung, LG, Home Connect, Miele, une simple prise connectée…).
+Une card Lovelace qui dessine les appareils de la maison et les anime selon leur état réel : électroménager, chauffage, robots, piscine, énergie, réseau, lampes, caméras et bien d'autres.
 
 **[Essayer la démo en ligne](https://adnpolymerase.github.io/ha-appliance-card/docs/demo.html?view=live&lang=fr)** : tous les appareils animés dans votre navigateur, en clair ou en sombre, sans Home Assistant.
 
@@ -23,24 +21,13 @@ Aucune marque supposée : chaque champ est une entité à choisir, elle fonction
 
 ## Fonctionnalités
 
-- **Cinquante-deux types d'appareils**, chacun avec une illustration en CSS animée sur les données de l'appareil et statique à l'arrêt. Le type est détecté tout seul ou choisi via `appliance_type`, et `compact: true` ne garde que le texte.
-- **Normalisation d'état** : `Idle`, `RUNNING`, `wash`, `En marche`… sont reconnus (sans tenir compte des accents) et classés en veille, préchauffage, en cours, en pause, terminé, différé ou erreur. Un état inconnu s'affiche tel quel, sans l'espace de noms de l'intégration, et `state_map` classe le reste, `"*"` ramassant tout ce qui dépasse.
-- **L'étape, et non une heure d'*En cours*** : un lave-linge, un sèche-linge ou un lave-vaisselle nomme l'étape où il en est (*Prélavage*, *Lavage*, *Rinçage*, *Essorage*, *Séchage* et sept autres), d'après une entité de phase ou son propre état, et le tambour s'emballe pendant l'essorage. Le temps restant est toujours celui du cycle entier.
-- **Une lavante-séchante est un lave-linge qui sèche** : `washer_dryer: true`, et le tambour montre de l'eau pendant le lavage, puis du linge qui tourne dans l'air chaud pendant le séchage. L'étape vient de l'état lui-même ou d'une entité de phase, et la ligne d'état lit *Lavage* ou *Séchage*.
-- **Chaque appareil dit ce qui compte pour lui** : une machine à café ce qui lui manque (eau, grains, bac, détartrage), un réfrigérateur sa santé (débranché, porte ouverte, température haute), une chaudière mixte ce qu'elle chauffe (chauffage, eau chaude ou veille), une imprimante 3D ce que fait l'impression (préchauffage, nivellement, changement de filament), un poêle à granulés la phase de son feu (allumage, modulation, éco, nettoyage), un climatiseur son mode et où il souffle, une borne de recharge si une voiture est branchée et ce que fait la charge (attente d'autorisation, en charge, en pause, programmée, terminée).
-- **Le réseau aussi** : un switch, un serveur, un NAS, une baie ou un routeur (la box du fournisseur aussi), *En ligne*, en *Activité* ou en *Alerte*, et *Pas d'internet* quand un routeur perd son lien. Une diode par port utilisé, une par disque dans sa baie (sain, en lecture, en veille, à surveiller, en panne), et les mesures trouvées toutes seules sur Synology, UGREEN, Unraid ou Glances.
-- **Les robots aussi** : un aspirateur, un laveur ou une tondeuse quitte sa base et parcourt son sol, revient, et dit quand sa station vide le bac ou lave les patins, quand la pluie le garde à la base ou quand il est coincé. Un aspirateur balai sur son support mural et un laveur de sol dans sa station se chargent par un câble où l'on voit passer le courant.
-- **Et la piscine** : le filtre à sable, la pompe et le bassin, en *Filtration*, en *Injection de chlore* avec une pompe doseuse en option, en *Contre-lavage* vers l'égout, en *Hors-gel*, et le projecteur, l'eau, le pH et le RedOx dans les lignes.
-- **L'énergie** : des panneaux solaires au sol ou sur un toit, sous le soleil, quelques nuages ou la lune, en *Production*, *Production faible* ou *Nuit* ; une batterie domestique murale ou une station portable, *En charge*, *En décharge*, *Au repos*, *Pleine* ou *Batterie basse*, sa réserve tracée sur sa jauge et le temps jusqu'au plein ou jusqu'à la réserve dans les lignes.
-- **Et le pèse-personne** : le dernier poids sur son écran, allumé une heure après une pesée, ce qu'il reste jusqu'à l'objectif, et la graisse, les muscles et les os dans les lignes, depuis Withings ou n'importe quel capteur de poids.
-- **Et les lampes** : une ampoule, une lampe de chevet, un lampadaire arc, un halogène sur pied, une suspension, un ruban LED, des spots encastrés, des panneaux façon Nanoleaf, une lampe de bureau ou une applique extérieure, allumés dans la couleur de la lumière et tamisés avec sa luminosité ; un effet fait tourner la teinte des segments d'un ruban ou des panneaux.
-- **Et la boîte aux lettres** : traversante avec sa porte côté rue et sa porte côté maison, ou classique sur son poteau. Les lettres s'empilent jusqu'à douze, une nouvelle entre par la fente, et les portes pivotent sur leurs charnières. Les caméras ont aussi leur sonnette, dont l'anneau lumineux bat quand on sonne.
-- **Et le reste de la maison** : un congélateur coffre et un congélateur à tiroirs qui givrent quand ils produisent du froid, un surpresseur avec sa pression sur son contrôleur et une pompe de relevage dont le flotteur suit l'eau, un robot de piscine qui traîne son câble, un plancher chauffant à eau ou électrique, un spa et ses bulles, un sauna dont les pierres rougeoient, un aquarium planté, un compteur Linky et un sapin de Noël en sept couleurs classiques, avec ses cadeaux les 24 et 25 décembre.
-- **Et l'onduleur** : la prise murale, l'onduleur et le boîtier qu'il protège, *Sur secteur* avec l'énergie qui le traverse, *Sur batterie* avec la prise barrée, l'onduleur qui bipe et son écran qui compte l'autonomie, *Batterie faible*, *Surcharge* et *Batterie à remplacer* lus dans les codes de NUT, et la batterie, l'autonomie, la charge et la tension d'entrée dans les lignes.
-- **Fonctionne avec une simple prise connectée** : son interrupteur et sa mesure suffisent, sans seuil à régler, car chaque type connaît la puissance à laquelle il travaille. Un lave-linge dit s'il chauffe, lave ou essore, un lave-vaisselle chauffe, lave puis sèche, une machine à café maintient au chaud, une plaque allume autant de foyers qu'elle consomme et reste chaude dix minutes, et un chauffage, un ventilateur ou une pompe s'arrête quand la prise ne mesure plus rien. `power_off_delay` évite qu'une pause soit prise pour la fin, et `show_last_cycle` montre la durée du dernier cycle. [L'essayer dans la démo](https://adnpolymerase.github.io/ha-appliance-card/docs/demo.html?view=live&plug=1&lang=fr).
-- **Programme, temps restant, barre de progression, lignes d'info, porte, alertes, connectivité et commandes** (démarrer, pause, reprise, stop), chacun optionnel.
-- **14 langues** (EN, FR, DE, ES, IT, NL, PT, SV, NO, DA, PL, RU, ZH, CS), celle de Home Assistant ou fixée sur la card.
-- **Éditeur visuel** qui pré-remplit les champs depuis les entités du même appareil et ne propose que ceux utiles au type choisi.
+- **51 types d'appareils, plus de 120 modèles dessinés**, animés pendant qu'ils travaillent et figés à l'arrêt. Le type est reconnu tout seul ou choisi avec `appliance_type`.
+- **Toutes les intégrations** : chaque champ est une entité à choisir. Une simple prise connectée suffit, sa puissance dit si l'appareil chauffe, lave ou essore.
+- **L'état compris** : `Idle`, `RUNNING`, `En marche`… deviennent veille, en cours, pause, terminé, différé ou erreur, avec l'étape du cycle (lavage, rinçage, essorage…).
+- **Ce qui compte pour chaque appareil** : programme, temps restant, porte, alertes, niveaux, températures, énergie et coût, marche du jour.
+- **Des commandes** (démarrer, pause, stop, allumer) avec protection contre les appuis accidentels.
+- **Complète ou compacte**, au thème clair ou sombre de Home Assistant.
+- **14 langues** et un éditeur visuel qui pré-remplit les champs depuis l'appareil.
 
 ## Galerie
 
@@ -49,121 +36,121 @@ Clique sur une famille pour voir ses appareils en marche.
 <details>
 <summary><b>Linge et vaisselle</b></summary>
 
-<img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-laundry.fr.gif" alt="Linge et vaisselle" width="100%">
+<img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-laundry.fr.gif" alt="Linge et vaisselle">
 
 </details>
 
 <details>
 <summary><b>Cuisine</b></summary>
 
-<img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-kitchen.fr.gif" alt="Cuisine" width="100%">
+<img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-kitchen.fr.gif" alt="Cuisine">
 
 </details>
 
 <details>
 <summary><b>Chauffage et climat</b></summary>
 
-<img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-climate.fr.gif" alt="Chauffage et climat" width="85%">
+<img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-climate.fr.gif" alt="Chauffage et climat">
 
 </details>
 
 <details>
 <summary><b>Thermostats et vannes thermostatiques</b></summary>
 
-<img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-thermostats.fr.gif" alt="Thermostats et vannes thermostatiques" width="85%">
+<img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-thermostats.fr.gif" alt="Thermostats et vannes thermostatiques">
 
 </details>
 
 <details>
 <summary><b>Purificateurs et ventilateurs</b></summary>
 
-<img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-air.fr.gif" alt="Purificateurs et ventilateurs" width="100%">
+<img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-air.fr.gif" alt="Purificateurs et ventilateurs">
 
 </details>
 
 <details>
 <summary><b>Animaux</b></summary>
 
-<img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-pets.fr.gif" alt="Animaux" width="60%">
+<img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-pets.fr.gif" alt="Animaux">
 
 </details>
 
 <details>
 <summary><b>Garage et atelier</b></summary>
 
-<img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-garage.fr.gif" alt="Garage et atelier" width="60%">
+<img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-garage.fr.gif" alt="Garage et atelier">
 
 </details>
 
 <details>
 <summary><b>Réseau et serveurs</b></summary>
 
-<img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-network.fr.gif" alt="Réseau et serveurs" width="100%">
+<img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-network.fr.gif" alt="Réseau et serveurs">
 
 </details>
 
 <details>
 <summary><b>Robots et aspirateurs : robots, tondeuses, aspirateurs balais et laveurs de sol</b></summary>
 
-<img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-robots.fr.gif" alt="Robots et aspirateurs : robots, tondeuses, aspirateurs balais et laveurs de sol" width="100%">
+<img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-robots.fr.gif" alt="Robots et aspirateurs : robots, tondeuses, aspirateurs balais et laveurs de sol">
 
 </details>
 
 <details>
 <summary><b>Pompes de piscine</b></summary>
 
-<img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-pool.fr.gif" alt="Pompes de piscine" width="100%">
+<img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-pool.fr.gif" alt="Pompes de piscine">
 
 </details>
 
 <details>
 <summary><b>Énergie : panneaux solaires et batteries domestiques</b></summary>
 
-<img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-energy.fr.gif" alt="Énergie : panneaux solaires et batteries domestiques" width="100%">
+<img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-energy.fr.gif" alt="Énergie : panneaux solaires et batteries domestiques">
 
 </details>
 
 <details>
 <summary><b>Pèse-personnes</b></summary>
 
-<img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-scales.fr.gif" alt="Pèse-personnes" width="50%">
+<img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-scales.fr.gif" alt="Pèse-personnes">
 
 </details>
 
 <details>
 <summary><b>Onduleurs</b></summary>
 
-<img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-ups.fr.gif" alt="Onduleurs" width="100%">
+<img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-ups.fr.gif" alt="Onduleurs">
 
 </details>
 
 <details>
 <summary><b>Diffuseurs et ventilation</b></summary>
 
-<img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-diffusers.fr.gif" alt="Diffuseurs et ventilation" width="100%">
+<img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-diffusers.fr.gif" alt="Diffuseurs et ventilation">
 
-<img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-ventilation.fr.gif" alt="VMC" width="100%">
+<img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-ventilation.fr.gif" alt="VMC">
 
 </details>
 
 <details>
 <summary><b>Caméras</b></summary>
 
-<img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-cameras.fr.gif" alt="Caméras" width="100%">
+<img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-cameras.fr.gif" alt="Caméras">
 
 </details>
 
 <details>
 <summary><b>Lampes</b></summary>
 
-<img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-lamps.fr.gif" alt="Lampes" width="100%">
+<img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-lamps.fr.gif" alt="Lampes">
 
 </details>
 
 <details>
 <summary><b>Boîtes aux lettres et sonnettes</b></summary>
 
-<img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-mailboxes.fr.gif" alt="Boîtes aux lettres et sonnettes" width="100%">
+<img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-mailboxes.fr.gif" alt="Boîtes aux lettres et sonnettes">
 
 </details>
 
@@ -209,6 +196,8 @@ Seule `state_entity` est obligatoire, sauf sur un réfrigérateur où une sonde 
 | `language` | `auto` (défaut, suit Home Assistant) ou l'un des 14 codes : `en`, `fr`, `de`, `es`, `it`, `nl`, `pt`, `sv`, `no`, `da`, `pl`, `ru`, `zh`, `cs`. `nb` et `nb-NO` donnent le norvégien. |
 | `appliance_type` | `auto` (défaut) \| `washer` \| `dryer` \| `dishwasher` \| `oven` \| `microwave` \| `hood` \| `cooktop` \| `fridge` \| `kettle` \| `cooker` \| `coffee` \| `rice_cooker` \| `air_fryer` \| `water_heater` \| `boiler` \| `thermostat` \| `heat_pump` \| `printer_3d` \| `pet_feeder` \| `pet_fountain` \| `iron` \| `toaster` \| `pellet_stove` \| `air_conditioner` \| `dehumidifier` \| `space_heater` \| `towel_warmer` \| `air_purifier` \| `fan` \| `ev_charger` \| `hair_dryer` \| `screen` \| `network` \| `robot` \| `pool_pump` \| `scale` \| `ups` \| `solar` \| `home_battery` \| `camera` \| `diffuser` \| `hrv` \| `lamp` \| `mailbox` \| `water_pump` \| `floor_heating` \| `spa` \| `sauna` \| `aquarium` \| `meter` \| `christmas_tree`. |
 | `tap_action` | Ce que fait un appui sur la carte, dans les mots de Home Assistant : `more-info` (défaut : l'entité d'état, ou sur une carte sans elle ce qu'elle lit à sa place), `none`, `navigate`, `url`, `toggle`, `perform-action` ou `fire-dom-event`, celle qu'écoutent les cartes popup bâties sur browser_mod. En YAML seulement. |
+| `illustration_tap_action` | Un appui sur le dessin seul, le reste de la carte gardant `tap_action` : `toggle` (une lampe allumée en la touchant), `more-info`, `none`, ou n'importe quelle action de Home Assistant. Sans lui, le dessin fait comme la carte. Avec `toggle`, le dessin répond comme les boutons, selon `controls_activation` : un appui, deux appuis ou un appui long. |
+| `show_toggle` | `false` retire le bouton allumer / éteindre d'une lampe, pour une carte qu'on allume en touchant son dessin (`illustration_tap_action: toggle`). |
 | `toggle_entity` | Bouton marche/arrêt (`switch`, `button`, `script`, `input_boolean`, `fan`), mis en évidence quand c'est allumé. Sur tous les types, frigo compris, où c'est le seul bouton ; à associer à `controls_activation: confirm` pour un appareil qu'il ne faut pas couper par erreur. |
 | `power_entity` / `power_on_threshold` / `power_icon` | Capteur de puissance. Avec un seuil, l'état en est déduit : *en marche* au-dessus, puis *terminé* en redescendant. Avec l'interrupteur d'une prise en `state_entity`, ou ce même capteur, il en est déduit sans seuil, avec celui du type (voir *Une prise connectée seule*). L'état d'une intégration garde la main. `power_icon` remplace `mdi:power-plug`. |
 | `source` | `plug` \| `integration` : d'où la card lit l'appareil. Sans lui, l'interrupteur d'une prise avec une mesure est une prise, tout le reste une intégration. L'éditeur d'une card lue sur une prise ne montre que la prise, sa mesure et les capteurs à côté, et son interrupteur devient le bouton marche/arrêt ; `integration` évite qu'un interrupteur soit pris pour une prise. Pas pour un frigo ni un écran, qui lisent les deux ensemble. |
@@ -234,6 +223,7 @@ Seule `state_entity` est obligatoire, sauf sur un réfrigérateur où une sonde 
 | `corner_entities` | Jusqu'à 2 interrupteurs en icônes dans les coins du haut, le premier à gauche et le second à droite, en `{ entity, label?, icon? }` ou en simple identifiant. L'icône dit ce que fait chacun et s'il est enclenché (sécurité enfant, verrouillage automatique, verrou, interrupteur), et un appui le bascule. Un `lock` ouvre seulement sa fiche : un appui par erreur ne déverrouille jamais rien. |
 | `info_entities` | Jusqu'à 8 lignes `{ entity, icon?, label?, value_map?, hide_unit? }`, les suivantes sont ignorées, affichées sous les lignes que la carte lit d'elle-même. Un appui ouvre la fiche de l'entité, ce qui permet de réinitialiser un réservoir ou un filtre depuis la carte. Au-delà de 5 lignes, l'espacement se resserre. Les valeurs s'affichent comme dans Home Assistant, avec la précision d'affichage de l'entité. `value_map` renomme les valeurs brutes (voir plus bas), `hide_unit` masque l'unité. |
 | `lines_order` | L'ordre des lignes d'info, donné par leurs clés : `program`, `remaining`, `door`, celles que chaque type apporte (`level`, `last_feed`, `flow_return`, `nozzle`…) et, pour les lignes ajoutées, leur identifiant d'entité. L'éditeur visuel l'écrit tout seul au glisser. Les lignes non citées gardent leur place après celles qui le sont, et une ligne qui ne s'affiche pas est ignorée. |
+| `hidden_lines` | Les lignes à ne jamais afficher, par les mêmes clés que `lines_order` (`lamp_brightness`, `today`, `power`...). Dans l'éditeur visuel, l'œil à côté de chaque ligne d'*Ordre des lignes*. |
 | `start_entity` / `pause_entity` / `resume_entity` / `stop_entity` | Commandes, affichées seulement si configurées. Une commande est d'ordinaire un `button`, un `script` ou une `automation`, qui est déclenchée et non désactivée, et peut aussi être un `select` ou un `number` : `start_option` dit quelle option choisir (la carte la prend toute seule quand la liste n'en propose qu'une), `start_value` ce qu'il faut écrire. Idem pour les trois autres, en `pause_option`, `stop_value` et ainsi de suite. `start_icon` remplace l'icône du bouton, comme `pause_icon`, `resume_icon`, `stop_icon`, `toggle_icon` et `filter_reset_icon` : `mdi:play` se lit comme un programme qui démarre, ce que tout appui n'est pas. En YAML seulement. |
 
 </details>
@@ -378,11 +368,12 @@ Seule `state_entity` est obligatoire, sauf sur un réfrigérateur où une sonde 
 | `tree_palette` | sapin de Noël | `multicolor` (défaut) \| `red_gold` \| `red_silver` \| `gold_silver` \| `blue_silver` \| `white_silver` \| `red_green` : les boules, les lumières, la guirlande, l'étoile, le cache-pot et les cadeaux. |
 | `presents` | sapin de Noël | `auto` (défaut, des cadeaux sous le sapin les 24 et 25 décembre seulement) \| `show` \| `hide`. |
 | `spots` | lampe | Le nombre de spots dessinés, de 1 à 4. Sans réglage, un groupe de lumières dessine un spot par lumière, jusqu'à quatre. |
+| `timer_entity` | lampe | Un `select` de durées (un minuteur d'extinction) : une pastille qui montre celle choisie et ouvre la liste. |
 | `robot_layout` | robot | `vacuum` \| `mop` \| `mower` \| `stick` (un aspirateur balai sur son support mural) \| `floor_washer` (un laveur de sol dans sa station). Sans lui, un nom qui dit balai, sans fil ou Dyson en fait un aspirateur balai, Tineco ou laveur de sol un laveur de sol, une entité `lawn_mower` ou un nom qui dit tondeuse, Landroid ou Automower en fait une tondeuse, et Braava ou laveur un robot laveur. `pool` dessine un robot de piscine dont le câble le suit, avec son `remaining_time_entity` sur son boîtier ; un nom qui dit piscine, pool, Dolphin, Maytronics, Aiper, Zodiac ou Polaris le choisit. |
 | `robot_station` | robot | `station` (défaut : la station de vidage de l'aspirateur, la station de lavage du laveur) \| `base` (une base de charge seule). |
 | `robot_shelter` | robot | `true` dessine un abri au-dessus de la base d'une tondeuse. La pluie s'arrête sur son toit. |
-| `robot_shelter_style` | robot | `lean_to` (défaut, un appentis en bois au toit de tôle) \| `shell` (une coque moulée sur un pied). |
-| `robot_shelter_color` | robot | La couleur de la coque : `white` (défaut) \| `grey` \| `black` \| `green` \| `orange`. |
+| `robot_shelter_style` | robot | `lean_to` (défaut, un appentis en bois au toit de tôle) \| `shell` (une coque moulée sur un pied) \| `garage` (un mur arrière qui se prolonge en long toit au-dessus de la tondeuse, sur un tapis sombre, comme les garages Navimow ou Husqvarna). |
+| `robot_shelter_color` | robot | La couleur de la coque ou du garage (noir par défaut pour le garage) : `white` (défaut) \| `grey` \| `black` \| `green` \| `orange`. |
 | `away_threshold` | robot | Un aspirateur balai ou un laveur de sol lu sur la prise de son support : au-dessus de `power_on_threshold` (5 W par défaut) il est *En charge*, en dessous *Chargé*, et à `away_threshold` (1 W par défaut) ou moins *Hors de la base*, en utilisation ou mal accroché, son support dessiné vide. La prise coupée affiche *Éteint*. |
 | `robot_floor` | robot | Le sol sur lequel travaille un aspirateur ou un laveur : `rug` (tapis, défaut de l'aspirateur) \| `tiles` (carrelage, défaut du laveur) \| `parquet` \| `smooth` (sol lisse). |
 | `robot_controls` | robot | `true` ajoute les boutons du robot, sur une entité `vacuum` ou `lawn_mower` : *Démarrer* hors du travail, *Pause* au travail, *Retour à la base* loin d'elle. `controls_always: true` montre les trois en permanence. |
@@ -406,6 +397,7 @@ Seule `state_entity` est obligatoire, sauf sur un réfrigérateur où une sonde 
 | `battery_alert_entity` | batterie domestique | Tout ce qui doit lever l'*Erreur* : un défaut du BMS. Un état qui dit panne fait de même. |
 | `left_on_after` | fer | Minutes allumé, en chauffe ou prêt, au bout desquelles la ligne d'état affiche *Resté allumé*, en rouge, la semelle brûle et la vapeur devient une fumée noire. Vide, cela n'arrive jamais. |
 | `feeder_layout` | distributeur | `tower` (défaut, un réservoir carré sur son socle) \| `canister` (un réservoir rond sur un socle rond) \| `double` (deux sorties et deux gamelles) \| `dual_split` (deux réservoirs au-dessus d'une gamelle partagée par le milieu) \| `rotary` (des assiettes sur un plateau tournant sous un couvercle, pour la pâtée). |
+| `fountain_layout` | fontaine | `square` (défaut, un réservoir carré avec une fenêtre sur l'eau) \| `round` (un tambour rond au rebord inox, le voyant au pied de la face avant). |
 | `level_b_entity` | distributeur | Le niveau du second réservoir, sur un distributeur qui en a deux (`dual_split`), lu comme `level_entity` et avec les mêmes `level_empty_below` et `level_max`. Il remplit la fenêtre de droite, a sa propre ligne, et vide il fait passer l'état à *Réservoir vide* en ne vidant que sa moitié. Au repos, la ligne d'état donne le plus bas des deux niveaux, celui à remplir en premier. L'éditeur ne le propose que pour `dual_split`. |
 | `portions_today_entity` / `weight_today_entity` | distributeur | Ce qui a été servi aujourd'hui, sur une seule ligne. Sans entité de poids, la carte calcule les grammes à partir de `portion_weight_entity` : rien n'est supposé sur la taille d'un repas. |
 | `serving_size_entity` / `portion_weight_entity` | distributeur | Combien de portions par distribution, et ce que pèse une portion. |
@@ -728,7 +720,7 @@ reload_entity: button.tablette_entree_load_start_url
 
 Lu à partir de ce qu'il remonte. Son `state_entity`, un ping, le suivi du routeur ou un état, dit *En ligne* ou *Éteint*. Un trafic au-delà de 10 Mbit/s, un processeur chargé ou un disque au travail le mettent en *Activité* ; un problème, un disque en panne ou une température de 70 °C le mettent en *Alerte* : toutes les diodes passent au rouge et le ventilateur démarre et s'arrête. Un disque à surveiller le dit en orange. Ses lignes donnent le trafic, la charge, le volume et les ports. Dans l'éditeur, la carte trouve les mesures sur l'appareil et sur les appareils qui en dépendent, disques compris (Synology, UGREEN, Unraid, Glances). Cinq modèles : un switch de 8 à 32 ports, un serveur tour, un NAS de 1 à 4 baies, une baie, un routeur.
 
-<img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-network-models.fr.gif" alt="Switchs de 8 à 32 ports et NAS de 1 à 4 baies" width="100%">
+<img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-network-models.fr.gif" alt="Switchs de 8 à 32 ports et NAS de 1 à 4 baies">
 
 ```yaml
 type: custom:ha-appliance-card
