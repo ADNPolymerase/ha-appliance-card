@@ -1,5 +1,5 @@
 // Built by tools/build.mjs from src/ha-appliance-card.js: edit the source, not this file.
-const CARD_VERSION = "3.20.0";
+const CARD_VERSION = "3.21.0";
 
 console.info(
   "%c HA-APPLIANCE-CARD %c v" + CARD_VERSION + " ",
