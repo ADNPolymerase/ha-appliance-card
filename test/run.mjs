@@ -2528,6 +2528,15 @@ contains('eau : et elle y coule', hmCool, '.machine.flowing.mode-hot_water .hp-p
   check('suggestion ems-esp : le debit', sug.water_flow_entity, 'sensor.boiler_pc0flow');
   check('suggestion ems-esp : le ventilateur', sug.fan_speed_entity, 'sensor.boiler_fanspd');
   check('suggestion ems-esp : la temperature exterieure', sug.outdoor_temperature_entity, 'sensor.boiler_outdoortemp');
+  // Without hptc1, no flow at all rather than curflowtemp.
+  const ids2 = ['sensor.boiler_hpactivity', 'sensor.boiler_curflowtemp', 'sensor.boiler_hptc0'];
+  const ed2 = new Editor();
+  ed2.setConfig({ type: 'custom:ha-appliance-card', state_entity: 'sensor.boiler_hpactivity' });
+  ed2.hass = { ...HASS(Object.fromEntries(ids2.map(id => [id, { state: '1', attributes: {} }]))),
+    entities: Object.fromEntries(ids2.map(id => [id, { device_id: 'ems' }])) };
+  const sug2 = ed2.events.at(-1)?.detail?.config || {};
+  check('suggestion ems-esp : sans hptc1, pas de curflowtemp pour le depart', sug2.temperature_entity, undefined);
+  check('suggestion ems-esp : sans hptc1, le retour reste', sug2.return_temperature_entity, 'sensor.boiler_hptc0');
 }
 
 // The cooling line in fourteen languages: a label of its own in each, never

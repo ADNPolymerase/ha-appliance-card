@@ -2943,6 +2943,9 @@ function autoSuggest(hass, cfg, sectionsFor) {
   const domains = Object.fromEntries(sections.map((s) => [s.field, s.includeDomains]));
   const patterns = { ...AUTO_PATTERNS, ...(TYPE_AUTO_PATTERNS[type] || {}) };
   const patch = type === "heat_pump" ? emsSuggest(hass, cfg, siblings, domains) : {};
+  // On an EMS-ESP heat pump curflowtemp is never the pump's flow, even when
+  // hptc1 is missing: better no flow than the buffer tank's.
+  const emsHeatPump = type === "heat_pump" && /^sensor\..*hpactivity$/.test(String(cfg.state_entity || ""));
   for (const f of Object.keys(patch)) if (!allowed.has(f)) delete patch[f];
   // A machine whose name says it washes and dries gets the option written
   // down, so that the editor shows it ticked and the YAML says what the card
@@ -2952,7 +2955,8 @@ function autoSuggest(hass, cfg, sectionsFor) {
   }
   for (const [field, re] of Object.entries(patterns)) {
     if (cfg[field] || patch[field] || !allowed.has(field)) continue;
-    const match = siblings.find((id) => re.test(id) && domains[field].includes(domainOf(id)));
+    const match = siblings.find((id) => re.test(id) && domains[field].includes(domainOf(id))
+      && !(emsHeatPump && field === "temperature_entity" && /(^|[._])curflowtemp$/.test(id)));
     if (match) patch[field] = match;
   }
   if (type === "network") Object.assign(patch, netSuggest(hass, cfg));
