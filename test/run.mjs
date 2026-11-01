@@ -193,6 +193,11 @@ const actionBtns = h => [...h.matchAll(/<div class="action-btn ([^"]*)"[^>]*titl
   .map(m => `${m[2]}:${m[1].trim()}`);
 
 /** Value of the info line carrying `label`, or null when the line is absent. */
+// A line drawn without its label: its text, found by its title.
+function bareLine(html, title) {
+  const m = new RegExp(`title="${title}"><ha-icon[^>]*></ha-icon><span>([^<]*)</span>`).exec(html);
+  return m ? m[1] : null;
+}
 function infoLine(html, label) {
   const re = new RegExp(`<span class="label">${label}</span>(?:<span>([^<]*)</span>)?`);
   const m = re.exec(html);
@@ -9819,6 +9824,8 @@ check('borne : ni un statut reconnu', evMode(evR('SuspendedEVSE', { power_entity
   check('robot : pas de pluie par capteur sur un aspirateur', vac('docked', { battery_level: 100 }, { robot_rain_entity: 'binary_sensor.r' }, { 'binary_sensor.r': s('on') }), 'Docked');
   check('robot : pas de ligne d\'erreur pour un simple on', infoLine(render({ state_entity: 'lawn_mower.x', robot_error_entity: 'binary_sensor.e' },
     { 'lawn_mower.x': s('error'), 'binary_sensor.e': s('on') }), 'Error'), null);
+  check('robot : pas de ligne nue pour un simple on', bareLine(render({ state_entity: 'lawn_mower.x', robot_error_entity: 'binary_sensor.e' },
+    { 'lawn_mower.x': s('error'), 'binary_sensor.e': s('on') }), 'Error'), null);
   check('robot : "no error" de Worx', mow('mowing', { robot_error_entity: 'sensor.e' }, { 'sensor.e': s('no error') }), 'Mowing');
 
   // The lines.
@@ -9827,6 +9834,19 @@ check('borne : ni un statut reconnu', evMode(evR('SuspendedEVSE', { power_entity
   check('robot : ligne du reservoir', infoLine(lines, 'Water tank'), `60${NB}%`);
   check('robot : batterie d\'une entite', infoLine(render({ state_entity: 'lawn_mower.x', battery_entity: 'sensor.b' }, { 'lawn_mower.x': s('docked'), 'sensor.b': s(54) }), 'Battery'), `54${NB}%`);
   check('robot : texte de l\'erreur', infoLine(render({ state_entity: 'lawn_mower.x', robot_error_entity: 'sensor.e' },
+    { 'lawn_mower.x': s('error'), 'sensor.e': s('trapped timeout') }), 'Error'), null);
+  // A short value goes under its label on a narrow card rather than out of it.
+  const fitCls = (h, label) => { const m = new RegExp(`<div class="info-line([^"]*)"[^>]*title="${label}"`).exec(h); return m ? m[1].trim().split(' ') : null; };
+  const fitH = render({ state_entity: 'vacuum.x', robot_station: 'box', robot_clean_tank_entity: 'binary_sensor.c', robot_error_entity: 'sensor.e' },
+    { 'vacuum.x': s('error', { battery_level: 80 }), 'binary_sensor.c': s('off'), 'sensor.e': s('Brush jammed') });
+  check('lignes : une valeur courte peut passer dessous', fitCls(fitH, 'Battery').includes('fit'), true);
+  check('lignes : un mot court aussi', fitCls(fitH, 'Clean water').includes('fit'), true);
+  check('lignes : pas la ligne nue', fitCls(fitH, 'Error').includes('fit'), false);
+  const progH = (v) => render({ appliance_type: 'washer', state_entity: 'sensor.w', program_entity: 'sensor.p' },
+    { 'sensor.w': s('Running'), 'sensor.p': s(v) });
+  check('lignes : un programme court peut passer dessous', fitCls(progH('Eco 40'), 'Program').includes('fit'), true);
+  check('lignes : un programme long reste a cote', fitCls(progH('Cotton Eco 40-60 extra rinse'), 'Program').includes('fit'), false);
+  check('robot : le texte de l\'erreur seul, sans libelle (#69)', bareLine(render({ state_entity: 'lawn_mower.x', robot_error_entity: 'sensor.e' },
     { 'lawn_mower.x': s('error'), 'sensor.e': s('trapped timeout') }), 'Error'), 'trapped timeout');
   check('robot : pas de ligne hors ligne', infoLine(render({ state_entity: 'vacuum.x' }, { 'vacuum.x': s('unavailable', { battery_level: 50 }) }), 'Battery'), null);
 
@@ -11128,9 +11148,9 @@ check('borne : ni un statut reconnu', evMode(evR('SuspendedEVSE', { power_entity
     check(`robot : "${ok}" n est pas une erreur`, stateLine(vac(ok)) === 'Error', false);
   }
   check('robot : une vraie erreur reste une erreur', stateLine(vac('Brosse principale emmêlée')), 'Error');
-  check('robot : le texte de l erreur en ligne', infoLine(vac('Brosse principale emmêlée'), 'Error'), 'Brosse principale emmêlée');
+  check('robot : le texte de l erreur en ligne', bareLine(vac('Brosse principale emmêlée'), 'Error'), 'Brosse principale emmêlée');
   check('robot : un code Ecovacs est une erreur', stateLine(vac('104')), 'Error');
-  check('robot : pas de ligne d erreur sans erreur', infoLine(vac('Aucune erreur'), 'Error'), null);
+  check('robot : pas de ligne d erreur sans erreur', bareLine(vac('Aucune erreur'), 'Error'), null);
 
   // #55: a feeder with a control needs no state entity, and the editor says so.
   const label = (cfg) => newEditor(cfg)._root.querySelector('[data-slot="state_entity"]')?.children.at(-1)?.label;

@@ -16497,7 +16497,9 @@ class ApplianceCard extends HTMLElement {
           try {
             if (typeof hass.formatEntityState === "function") text = hass.formatEntityState(s) || text;
           } catch (e) { /* the raw word, then */ }
-          extraLines.push({ key: "robot_error", icon: "mdi:alert-circle-outline", label: t(hass, "error"), value: text, entity: id, warn: true });
+          // The state above already says Error: the line keeps its icon and
+          // the text alone, which gets the whole width (#69).
+          extraLines.push({ key: "robot_error", icon: "mdi:alert-circle-outline", label: t(hass, "error"), value: text, entity: id, warn: true, bare: true });
         }
       }
       // A pool robot's time left, on its power supply on the deck; the line
@@ -16845,6 +16847,10 @@ class ApplianceCard extends HTMLElement {
         .batt-badge {
           position: absolute; cursor: pointer; display: flex; align-items: center; gap: 2px;
           --mdc-icon-size: 22px; color: var(--secondary-text-color, #767676); font-size: 0.85em; font-weight: 500;
+          /* Over the drawing, on the card's own background: a wide drawing
+           (the rectangular station) must not hide the percentage (#69). */
+          z-index: 2; padding: 1px 5px 1px 1px; border-radius: 10px;
+          background: var(--ha-card-background, var(--card-background-color, #fff));
         }
         .batt-badge.left { left: 10px; }
         .batt-badge.right { right: 10px; }
@@ -16877,6 +16883,12 @@ class ApplianceCard extends HTMLElement {
         }
         .info-line ha-icon { --mdc-icon-size: 20px; color: var(--secondary-text-color, #767676); flex-shrink: 0; }
         .info-line .label { color: var(--secondary-text-color, #767676); }
+        /* A short value (80 %) that no longer fits beside its label on a
+           narrow card goes under it rather than out of the card. */
+        .info-line.fit { flex-wrap: wrap; row-gap: 0; padding-left: 28px; position: relative; }
+        .info-line.fit ha-icon { position: absolute; left: 0; top: calc(0.6em - 10px); }
+        .info-lines.compact .info-line.fit { padding-left: 26px; }
+        .info-lines.compact .info-line.fit ha-icon { top: calc(0.6em - 9px); }
         /* Lines backed by an entity open its more-info dialog: that is where a
            venting level or a power level is actually changed, and it costs no
            extra height on the card. */
@@ -16994,6 +17006,8 @@ class ApplianceCard extends HTMLElement {
         .cmp-side .info-lines.beside .info-line { font-size: 0.8em; gap: 4px; min-width: 0; }
         .cmp-side .info-lines.beside .info-line > span { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
         .cmp-side .info-lines.beside .info-line ha-icon { --mdc-icon-size: 16px; }
+        .cmp-side .info-lines.beside .info-line.fit { flex-wrap: nowrap; padding-left: 0; }
+        .cmp-side .info-lines.beside .info-line.fit ha-icon { position: static; }
         .cmp-side .info-lines.beside .info-line .label { display: none; }
         .cmp-more {
           width: 28px; height: 28px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0;
@@ -17156,7 +17170,7 @@ class ApplianceCard extends HTMLElement {
           .map((l) => ({ ...l, open: !!l.entity && entityUsable(hass, l.entity) }))
           .map(
             (l) =>
-              `<div class="info-line ${l.warn ? "warn" : l.caution ? "caution" : ""}${l.open ? " clickable" : ""}${l.wrap ? " wrap" : ""}"${l.open ? ` data-more="${esc(l.entity)}"` : ""} title="${esc(l.label)}"><ha-icon icon="${esc(l.icon)}"></ha-icon><span class="label">${esc(l.label)}</span>${l.value ? `<span>${esc(l.value)}</span>` : ""}</div>`
+              `<div class="info-line ${l.warn ? "warn" : l.caution ? "caution" : ""}${l.open ? " clickable" : ""}${l.wrap ? " wrap" : ""}${!l.wrap && !l.bare && l.value && String(l.value).length <= 14 ? " fit" : ""}"${l.open ? ` data-more="${esc(l.entity)}"` : ""} title="${esc(l.label)}"><ha-icon icon="${esc(l.icon)}"></ha-icon>${l.bare && l.value ? "" : `<span class="label">${esc(l.label)}</span>`}${l.value ? `<span>${esc(l.value)}</span>` : ""}</div>`
           )
           .join("")}</div>`
       : "";
