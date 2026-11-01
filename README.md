@@ -301,6 +301,7 @@ Only `state_entity` is required, except on a fridge where a probe or a door cont
 | `lock_entity` | screen | A computer's session lock: a `lock`, a `binary_sensor` of the lock class (off means locked) or a sensor that reads `locked`, as HASS.Agent, Go Hass Agent or the macOS app report it. Locked, the screen shows a padlock. |
 | `source_entity` | screen | The screen's input: a `select` / `input_select` (such as a monitor's *Input source*) or a `media_player`, whose source list is used. The card shows the current input on a line and adds a button that opens the list to pick another. |
 | `screensaver_entity` | screen (tablet) | The tablet's screensaver, such as Fully Kiosk's *Screensaver* switch. On, the card says *Screensaver* and draws a clock on the glass. As a switch, it also gets a button. |
+| `laptop_color` | screen (laptop) | The laptop's colour: `silver` (default) \| `space_grey` \| `midnight` \| `gold` \| `rose`. Left out, it follows `illustration_color`. |
 | `charging_entity` | screen (tablet, laptop) | On its charger: a `binary_sensor` such as Fully Kiosk's *Plugged in*, or a sensor that reads `charging` or `full`. The cable and a bolt show while it charges, and the state says so. |
 | `motion_entity` | screen (tablet) | What its front camera sees: on, the camera lights blue, and so does the light bar of the upright tablet. |
 | `url_entity` | screen (tablet) | The page it shows, such as Fully Kiosk's *Current page*: the card keeps the path, without the address. |

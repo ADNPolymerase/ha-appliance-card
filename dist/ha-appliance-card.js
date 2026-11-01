@@ -141,7 +141,7 @@ const T = {
     type_iron: "Iron", section_iron_layout: "Model", layout_iron: "Iron", layout_generator: "Steam generator", iron_line_color: "Line colour", color_blue: "Blue", color_body: "Same as the appliance",
     type_toaster: "Toaster", section_toaster_layout: "Model", layout_toaster_two: "Two slots", layout_toaster_four: "Four slots",
     layout_toaster_long: "Long slot", toaster_toasting: "Toasting", toaster_done: "Toast ready", type_air_purifier: "Air purifier",
-    type_screen: "Screen (TV, projector, computer)", section_screen_layout: "Model", layout_tv_feet: "TV on feet", layout_tv_stand: "TV on a stand", layout_tv_wall: "Wall-mounted TV", layout_projector: "Projector", layout_computer: "Computer", layout_laptop: "Laptop", section_screen_image: "Picture on screen", img_random: "Random", img_sunset: "Sunset", img_aquarium: "Aquarium", img_bars: "Test card", img_football: "Football match", img_space: "Space", img_bounce: "Bouncing logo", img_desktop: "Desktop", img_code: "Scrolling code", img_pong: "Pong", screen_on: "On", screen_playing: "Playing", screen_home: "Home screen", screen_locked: "Locked", screen_muted: "Muted", screen_standby_threshold: "Standby up to this power (W)", section_media: "Media player", section_media2: "Second media player", section_media3: "Third media player", section_lock: "Session lock", layout_tablet_wall: "Wall tablet", layout_tablet_frame: "Framed tablet", layout_tablet_portrait: "Upright tablet with light bar", img_dashboard: "Dashboard", screen_dashboard: "Dashboard", screen_saver: "Screensaver", screen_dark: "Screen off", tab_charging: "charging", tab_line_page: "Page", tab_line_touched: "Last interaction", tab_screen: "Screen", tab_reload: "Reload page", section_screensaver: "Screensaver", section_tab_charging: "Charging sensor", section_tab_page: "Current page", section_tab_brightness: "Screen brightness", section_tab_touched: "Last interaction", tab_restart: "Restart app", section_tab_screenshot: "Screenshot",
+    type_screen: "Screen (TV, projector, computer)", section_screen_layout: "Model", layout_tv_feet: "TV on feet", layout_tv_stand: "TV on a stand", layout_tv_wall: "Wall-mounted TV", layout_projector: "Projector", layout_computer: "Computer", layout_laptop: "Laptop", laptop_color: "Laptop colour", color_silver: "Silver", color_space_grey: "Space grey", color_midnight: "Midnight", color_rose: "Rose gold", section_screen_image: "Picture on screen", img_random: "Random", img_sunset: "Sunset", img_aquarium: "Aquarium", img_bars: "Test card", img_football: "Football match", img_space: "Space", img_bounce: "Bouncing logo", img_desktop: "Desktop", img_code: "Scrolling code", img_pong: "Pong", screen_on: "On", screen_playing: "Playing", screen_home: "Home screen", screen_locked: "Locked", screen_muted: "Muted", screen_standby_threshold: "Standby up to this power (W)", section_media: "Media player", section_media2: "Second media player", section_media3: "Third media player", section_lock: "Session lock", layout_tablet_wall: "Wall tablet", layout_tablet_frame: "Framed tablet", layout_tablet_portrait: "Upright tablet with light bar", img_dashboard: "Dashboard", screen_dashboard: "Dashboard", screen_saver: "Screensaver", screen_dark: "Screen off", tab_charging: "charging", tab_line_page: "Page", tab_line_touched: "Last interaction", tab_screen: "Screen", tab_reload: "Reload page", section_screensaver: "Screensaver", section_tab_charging: "Charging sensor", section_tab_page: "Current page", section_tab_brightness: "Screen brightness", section_tab_touched: "Last interaction", tab_restart: "Restart app", section_tab_screenshot: "Screenshot",
     step_heat_threshold: "Heating above this power (W)", step_spin_threshold: "Spinning above this power (W)", zone_power: "One zone at full power (W)",
     source: "Source", source_plug: "A smart plug", source_integration: "Integration entities", plug_switch: "Smart plug switch",
     type_thermostat: "Thermostat", section_thermostat_layout: "Model", layout_th_square: "Square", layout_th_round: "Round", layout_th_glass: "Black glass", layout_th_valve: "Radiator valve", th_idle: "Target reached", th_eco: "Eco", th_away: "Away", th_frost: "Frost protection", th_window: "Window open", th_line_valve: "Valve", section_thermostat: "Room thermostat",
@@ -3218,7 +3218,7 @@ const STATE_DOMAINS = {
 };
 // A model, a picture, the players it shows and a session lock belong to a
 // screen.
-const SCREEN_ONLY_FIELDS = ["screen_layout", "screen_image", "media_entity", "media2_entity", "media3_entity", "lock_entity", "source_entity",
+const SCREEN_ONLY_FIELDS = ["screen_layout", "laptop_color", "screen_image", "media_entity", "media2_entity", "media3_entity", "lock_entity", "source_entity",
   "screensaver_entity", "charging_entity", "url_entity", "brightness_entity", "last_interaction_entity", "reload_entity",
   "restart_entity", "screenshot_entity"];
 // Ports, bays, disks and traffic belong to a network device.
@@ -9536,12 +9536,18 @@ const ILLUSTRATION_CSS = {
         .lap-lid { border-radius: 3px 3px 0 0; }
         .lap-cam { border-radius: 50%; background: #0c0e11; box-shadow: 0 0 0 0.4px rgba(255, 255, 255, 0.2); }
         .lap-hinge { background: linear-gradient(180deg, #2a2e33, #7d848b); }
-        .lap-deck { clip-path: polygon(11.9% 0, 88.1% 0, 100% 100%, 0 100%); background: linear-gradient(180deg, var(--lap-hi, #eef0f2), var(--lap-body, #c9ced4)); }
-        .lap-keys { clip-path: polygon(2.2% 0, 97.8% 0, 100% 100%, 0 100%); background-color: #2b3036;
-          background-image: repeating-linear-gradient(90deg, transparent 0 3.3px, var(--lap-hi, #e3e6e9) 3.3px 4.1px), repeating-linear-gradient(180deg, transparent 0 1.55px, var(--lap-hi, #e3e6e9) 1.55px 1.85px); }
+        .lap-deck { clip-path: polygon(11.9% 0, 88.1% 0, 100% 100%, 0 100%); background: linear-gradient(180deg, var(--ac-body-hi, #eef0f2), var(--ac-body, #c9ced4)); }
+        .lap-keys { position: absolute; left: 0; top: 0; width: 96px; height: 106px; overflow: visible; fill: #23272c; }
+        .scr-laptop .lap-lid { background: linear-gradient(180deg, #3a3f45, #1d2125 60%, #121518); }
         .lap-pad { clip-path: polygon(4% 0, 96% 0, 100% 100%, 0 100%); background: rgba(0, 0, 0, 0.1); box-shadow: inset 0 0 0 0.4px rgba(0, 0, 0, 0.18); }
-        .lap-edge { border-radius: 0 0 3px 3px; background: linear-gradient(180deg, var(--lap-body, #c9ced4), var(--lap-lo, #8e959c)); }
+        .lap-edge { border-radius: 0 0 3px 3px; background: linear-gradient(180deg, var(--ac-body, #c9ced4), var(--ac-body-lo, #8e959c)); }
         .lap-notch { border-radius: 0 0 3px 3px; background: rgba(0, 0, 0, 0.22); }
+        .machine.lap-silver { --ac-body: #c9ced4; --ac-body-hi: #eef0f2; --ac-body-lo: #8e959c; }
+        .machine.lap-space_grey { --ac-body: #7d8187; --ac-body-hi: #a3a7ac; --ac-body-lo: #55595e; }
+        .machine.lap-midnight { --ac-body: #2e3440; --ac-body-hi: #4a5263; --ac-body-lo: #1b1f27; }
+        .machine.lap-gold { --ac-body: #e3cfae; --ac-body-hi: #f6ead6; --ac-body-lo: #b89f78; }
+        .machine.lap-rose { --ac-body: #e6c3bb; --ac-body-hi: #f6e1dc; --ac-body-lo: #b9918a; }
+        .machine.lap-midnight .lap-keys, .machine.lap-space_grey .lap-keys { fill: #15181c; }
         .lap-shadow { border-radius: 50%; background: radial-gradient(ellipse at 50% 40%, rgba(0, 0, 0, 0.22), transparent 70%); }
         .lap-cable { border-radius: 1px; background: #2b2f34; }
         .scr-laptop .scr-led { border-radius: 0.6px; }
@@ -11851,6 +11857,29 @@ function screenPictureHtml(img, sc = {}) {
 const SCREEN_BADGE = (cls, d) => `<span class="scr-badge ${cls}"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="11" fill="rgba(0,0,0,.55)"/><path fill="#fff" d="${d}"/></svg></span>`;
 const SCREEN_BADGES = SCREEN_BADGE("play", "M9 7v10l8-5z") + SCREEN_BADGE("pause", "M8 7h3v10H8zM13 7h3v10h-3z")
   + SCREEN_BADGE("mute", "M5 10v4h3l4 3V7L8 10zM14.6 9.7l1-1 2.4 2.4 2.4-2.4 1 1-2.4 2.4 2.4 2.4-1 1-2.4-2.4-2.4 2.4-1-1 2.4-2.4z");
+// A laptop's keyboard in the deck's perspective: the deck widens towards the
+// front, so each row's keys widen with it and their sides lean like the deck's.
+const LAPTOP_COLORS = {
+  silver: ["#c9ced4", "#eef0f2", "#8e959c"], space_grey: ["#7d8187", "#a3a7ac", "#55595e"],
+  midnight: ["#2e3440", "#4a5263", "#1b1f27"], gold: ["#e3cfae", "#f6ead6", "#b89f78"], rose: ["#e6c3bb", "#f6e1dc", "#b9918a"],
+};
+function laptopKeys() {
+  const xl = (y) => 16 - 10 * (y - 68.4) / 14 + 1.6;
+  const xr = (y) => 80 + 10 * (y - 68.4) / 14 - 1.6;
+  const at = (y, u) => xl(y) + (xr(y) - xl(y)) * u / 14;
+  const rows = [[69.7, 71.0], [71.2, 72.6], [72.8, 74.2], [74.4, 75.8], [76.0, 77.4]];
+  const cells = [];
+  rows.forEach(([y0, y1], r) => {
+    const keys = r === 4 ? [1, 1, 1, 1.2, 5.6, 1.2, 1, 1, 1] : Array(14).fill(1);
+    let u = 0;
+    for (const w of keys) {
+      const a = u + 0.12, b = u + w - 0.12;
+      cells.push(`${at(y0, a).toFixed(2)},${y0} ${at(y0, b).toFixed(2)},${y0} ${at(y1, b).toFixed(2)},${y1} ${at(y1, a).toFixed(2)},${y1}`);
+      u += w;
+    }
+  });
+  return `<svg class="lap-keys" viewBox="0 0 96 106" aria-hidden="true">${cells.map((c) => `<polygon points="${c}"/>`).join("")}</svg>`;
+}
 function screenHtml(cls, sc) {
   const layout = SCREEN_LAYOUTS.includes(sc.layout) ? sc.layout : "tv_feet";
   const mode = sc.mode || "off";
@@ -11882,7 +11911,7 @@ function screenHtml(cls, sc) {
     body = box("lap-shadow", 4, 82, 88, 6) + box("scr-bezel lap-lid", 16, 26, 64, 41)
       + `<div class="scr-glass" style="left: 19px; top: 29px; width: 58px; height: 35.5px">${glassInner}</div>`
       + box("lap-cam", 47.4, 27.1, 1.2, 1.2) + box("lap-hinge", 16, 67, 64, 1.6)
-      + box("lap-deck", 6, 68.4, 84, 14) + box("lap-keys", 14.5, 69.6, 67, 7.4) + box("lap-pad", 38, 77.6, 20, 3.6)
+      + box("lap-deck", 6, 68.4, 84, 14) + laptopKeys() + box("lap-pad", 38, 77.9, 20, 3.6)
       + box("lap-edge", 6, 82.4, 84, 2.4) + box("lap-notch", 42, 82.4, 12, 0.9) + box("scr-led", 12, 82.9, 2, 1.2)
       + (sc.charging ? box("lap-cable", 90, 79, 6, 1.4) + `<svg class="tab-bolt" viewBox="0 0 10 14" style="left: 88px; top: 71px"><path d="M6 0 0 8h4l-1 6 6-8H5z"/></svg>` : "");
   } else if (tablet) {
@@ -11921,7 +11950,7 @@ function screenHtml(cls, sc) {
     ? ` data-fit-w="${px(96 * band[2])}" style="width: calc(${px(96 * band[2])}px * ${fit}); height: calc(${px(band[1] * band[2])}px * ${fit})"`
     : "";
   return `
-        <div class="machine ${cls} scr-${layout} mode-${mode}${lit}${sc.muted ? " muted" : ""}${tablet ? " tablet" : ""}${sc.charging ? " charging" : ""}${sc.seen ? " seen" : ""}${sc.tower ? ` tw-${sc.tower}` : ""}"${size}>${inner}</div>`;
+        <div class="machine ${cls} scr-${layout} mode-${mode}${lit}${layout === "laptop" && LAPTOP_COLORS[sc.color] ? ` lap-${sc.color}` : ""}${sc.muted ? " muted" : ""}${tablet ? " tablet" : ""}${sc.charging ? " charging" : ""}${sc.seen ? " seen" : ""}${sc.tower ? ` tw-${sc.tower}` : ""}"${size}>${inner}</div>`;
 }
 
 // Washer, dryer, oven and microwave, drawn after real ones. They take the
@@ -15900,7 +15929,7 @@ class ApplianceCard extends HTMLElement {
       const battery = (tablet || laptop) && cfg.battery_entity ? numericState(hass, cfg.battery_entity) : null;
       screen = {
         tower,
-        mode, layout, image: this._screenImage || pool[0], cover, muted, tablet, laptop, charging, battery,
+        mode, layout, image: this._screenImage || pool[0], cover, muted, tablet, laptop, charging, battery, color: cfg.laptop_color,
         seen: tablet && camOn(hass, cfg.motion_entity),
         clock: mode === "saver" ? feederClock(hass) : "",
         date: mode === "saver" ? new Date(Date.now()).toLocaleDateString(lang(hass), { weekday: "short", day: "numeric", month: "short" }).toUpperCase() : "",
@@ -17599,7 +17628,7 @@ function loadEditor() {
   if (customElements.get("ha-appliance-card-editor")) return Promise.resolve();
   if (!editorLoading) {
     editorLoading = import(assetUrl("ha-appliance-card-editor.js"))
-      .then((m) => m.default({ t, onLanguageLoaded, LANGUAGE_NAMES, localizedHass, activationOf, TH_LAYOUTS, EV_POWER_THRESHOLD, stateObj, parseValueMap, stringifyValueMap, alertsArray, LIST_OTHER, ENTITY_LISTS, listCandidates, defaultCardName, stripDeviceName, domainOf, INFO_MAX, autoSuggest, APPLIANCE_TYPES, STATE_DOMAINS, SCREEN_ONLY_FIELDS, illustrationSizeOf, fontScaleOf, compactModeOf, TYPE_GROUPS, caps, detectApplianceType, SCREEN_STANDBY_W, SCREEN_LAYOUTS, SCREEN_IMAGES, screenLayoutOf, screenIsTablet, HD_HEAT_W, PLUG_THRESHOLDS, ZONE_POWER_W, PLUG_SOURCE_TYPES, plugSourceOf, DW_DRY_MIN, WASH_HEAT_W, WASH_SPIN_W, DRYER_HEAT_W, NET_LAYOUTS, SWITCH_PORTS, NET_BAYS, NET_BUSY_MBIT, NET_TEMP_ALERT, netLayoutOf, ROBOT_LAYOUTS, ROBOT_STATIONS, ROBOT_BOX_COLORS, ROBOT_FLOORS, ROBOT_SERVICES, STICK_AWAY_W, robotLayoutOf, POOL_PRESSURE_ALERT, SOLAR_LAYOUTS, BATTERY_LAYOUTS, BATTERY_IDLE_W, DIFFUSER_LAYOUTS, illustrationTapOf, HRV_LAYOUTS, CAMERA_LAYOUTS, MAILBOX_LAYOUTS, MAILBOX_SIDES, mailboxLayoutOf, LAMP_LAYOUTS, LAMP_SPOTS, lampLayoutOf, MOBILITY_LAYOUTS, PUMP_LAYOUTS, FLOOR_LAYOUTS, METER_LAYOUTS, meterLayoutOf, TREE_PALETTES, TREE_PRESENTS, pumpLayoutOf, UPS_BATTERY_LOW, HISTORY_HOURS, BODY_COLORS, esc, MOWER_STYLES, SHELTER_STYLES, SHELTER_COLORS, stateFreeSource }))
+      .then((m) => m.default({ t, onLanguageLoaded, LANGUAGE_NAMES, localizedHass, activationOf, TH_LAYOUTS, EV_POWER_THRESHOLD, stateObj, parseValueMap, stringifyValueMap, alertsArray, LIST_OTHER, ENTITY_LISTS, listCandidates, defaultCardName, stripDeviceName, domainOf, INFO_MAX, autoSuggest, APPLIANCE_TYPES, STATE_DOMAINS, SCREEN_ONLY_FIELDS, illustrationSizeOf, fontScaleOf, compactModeOf, TYPE_GROUPS, caps, detectApplianceType, SCREEN_STANDBY_W, SCREEN_LAYOUTS, SCREEN_IMAGES, screenLayoutOf, screenIsTablet, HD_HEAT_W, PLUG_THRESHOLDS, ZONE_POWER_W, PLUG_SOURCE_TYPES, plugSourceOf, DW_DRY_MIN, WASH_HEAT_W, WASH_SPIN_W, DRYER_HEAT_W, NET_LAYOUTS, SWITCH_PORTS, NET_BAYS, NET_BUSY_MBIT, NET_TEMP_ALERT, netLayoutOf, ROBOT_LAYOUTS, ROBOT_STATIONS, ROBOT_BOX_COLORS, ROBOT_FLOORS, ROBOT_SERVICES, STICK_AWAY_W, robotLayoutOf, POOL_PRESSURE_ALERT, SOLAR_LAYOUTS, BATTERY_LAYOUTS, BATTERY_IDLE_W, DIFFUSER_LAYOUTS, illustrationTapOf, HRV_LAYOUTS, CAMERA_LAYOUTS, MAILBOX_LAYOUTS, MAILBOX_SIDES, mailboxLayoutOf, LAMP_LAYOUTS, LAMP_SPOTS, lampLayoutOf, MOBILITY_LAYOUTS, PUMP_LAYOUTS, FLOOR_LAYOUTS, METER_LAYOUTS, meterLayoutOf, TREE_PALETTES, TREE_PRESENTS, pumpLayoutOf, UPS_BATTERY_LOW, HISTORY_HOURS, BODY_COLORS, esc, MOWER_STYLES, SHELTER_STYLES, SHELTER_COLORS, LAPTOP_COLORS, stateFreeSource }))
       .catch((err) => {
         editorLoading = null;
         throw err;
