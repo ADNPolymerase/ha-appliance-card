@@ -384,7 +384,7 @@ Only `state_entity` is required, except on a fridge where a probe or a door cont
 | `timer_entity` | lamp | A select of durations (an auto-off timer): a pill showing the one chosen, which opens the list. |
 | `robot_layout` | robot | `vacuum` \| `mop` \| `mower` \| `stick` (a stick vacuum on its wall dock) \| `floor_washer` (a wet and dry floor washer in its station). Left out, a name that says stick, cordless or Dyson makes a stick vacuum, Tineco or floor washer a floor washer, a `lawn_mower` entity or a name that says mower, Landroid or Automower makes a mower, and Braava or mop a mopping robot. `pool` draws a pool robot whose cable follows it, with its `remaining_time_entity` on its power supply; a name that says pool, Dolphin, Maytronics, Aiper, Zodiac or Polaris picks it. |
 | `robot_station` | robot | `station` (default: the vacuum's emptying station, the mop's washing station) \| `base` (a charging base alone). |
-| `mower_style` | robot (mower) | `classic` \| `navimow` (a Segway Navimow: grey shell, round chrome lid on a ring of light, big orange wheels). Left out, a name that says Navimow or Segway draws one. |
+| `mower_style` | robot (mower) | `classic` \| `navimow` (a Segway Navimow: grey shell, round chrome lid on a ring of light, big orange front wheels). Left out, a name that says Navimow or Segway draws one. |
 | `robot_shelter` | robot | `true` draws a shelter over a mower's base. The rain stops on its roof. |
 | `robot_shelter_style` | robot | `lean_to` (default, a wooden lean-to with a corrugated roof) \| `shell` (a moulded shell on one leg). |
 | `robot_shelter_color` | robot | The shell's colour: `white` (default) \| `grey` \| `black` \| `green` \| `orange`. |

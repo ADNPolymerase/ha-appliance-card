@@ -12918,8 +12918,8 @@ const ROBOT_MOWER_SVG = `<svg viewBox="0 0 62 35">
  <g class="rbt-whl"><circle cx="51" cy="31.3" r="3.4" fill="#1b1e21"/><circle cx="51" cy="31.3" r="1.3" fill="#555c63"/></g>
 </svg>`;
 // A Segway Navimow i series (#67): a low grey shell, a black glossy top with
-// its round chrome lid on a ring of light, the red stop button, and big rear
-// wheels with orange treads.
+// its round chrome lid on a ring of light, the red stop button, and big front
+// wheels with orange treads, a small caster behind.
 const ROBOT_NAVIMOW_SVG = `<svg viewBox="0 0 62 35">
  <ellipse cx="31" cy="34" rx="29" ry="2" fill="rgba(0,0,0,.25)"/>
  <path d="M6 27 V22.5 C6 20.5 7.2 19.2 9.2 19.2 H55 C58 19.2 59.6 21.2 59.6 23.6 V27 Z" fill="#2b2f34"/>
@@ -12933,9 +12933,9 @@ const ROBOT_NAVIMOW_SVG = `<svg viewBox="0 0 62 35">
  <path d="M27 7.2 H35" stroke="#3a3f45" stroke-width=".8" stroke-linecap="round"/>
  <rect x="42.6" y="8.5" width="4.2" height="1.8" rx=".6" fill="#e53935"/>
  <rect x="54.4" y="20.2" width="4" height="2.2" rx=".6" fill="#14171a"/><circle cx="56.4" cy="21.3" r=".6" fill="#4fc3f7"/>
- <g class="rbt-whl"><circle cx="15" cy="24.5" r="10" fill="#ff5a1f"/><circle cx="15" cy="24.5" r="9.6" fill="none" stroke="#c23d0d" stroke-width="1.8" stroke-dasharray="1.6 1.4"/>
-  <circle cx="15" cy="24.5" r="7" fill="#1b1e21"/><path d="M15 18.9 L16.5 23 L20.6 24.5 L16.5 26 L15 30.1 L13.5 26 L9.4 24.5 L13.5 23 Z" fill="#30353a"/><circle cx="15" cy="24.5" r="1.4" fill="#5a6168"/></g>
- <g class="rbt-whl"><circle cx="50" cy="31.3" r="3.4" fill="#1b1e21"/><circle cx="50" cy="31.3" r="1.3" fill="#555c63"/></g>
+ <g class="rbt-whl"><circle cx="12" cy="31.3" r="3.4" fill="#1b1e21"/><circle cx="12" cy="31.3" r="1.3" fill="#555c63"/></g>
+ <g class="rbt-whl"><circle cx="46" cy="24.5" r="10" fill="#ff5a1f"/><circle cx="46" cy="24.5" r="9.6" fill="none" stroke="#c23d0d" stroke-width="1.8" stroke-dasharray="1.6 1.4"/>
+  <circle cx="46" cy="24.5" r="7" fill="#1b1e21"/><path d="M46 18.9 L47.5 23 L51.6 24.5 L47.5 26 L46 30.1 L44.5 26 L40.4 24.5 L44.5 23 Z" fill="#30353a"/><circle cx="46" cy="24.5" r="1.4" fill="#5a6168"/></g>
 </svg>`;
 const MOWER_STYLES = ["classic", "navimow"];
 // The mower's style: the one chosen, else its name (Navimow, Segway).
