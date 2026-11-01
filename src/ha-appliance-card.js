@@ -8511,9 +8511,20 @@ function ntReadOf(type, hass, cfg, st, watts, threshold) {
     }
     const electric = layout === "box" || layout === "dome";
     const high = parseFloat(cfg.high_power);
-    const watts = rate && electric ? (/^kw/i.test(unit) || /^kva/i.test(unit) ? v * 1000 : v) : null;
+    // An electric meter read from its index takes its live power from the
+    // power entity when there is one: the display shows it, and high use
+    // is worked out from it (#68).
+    let live = rate ? { v, unit } : null;
+    if (!live && electric && cfg.power_entity) {
+      const p = numericState(hass, cfg.power_entity);
+      if (p !== null) live = { v: p, unit: unitOf(hass, cfg.power_entity) || "W" };
+    }
+    const watts = live && electric ? (/^k(w|va)$/i.test(live.unit.replace(/\s/g, "")) ? live.v * 1000 : live.v) : null;
     const heavy = watts !== null && watts >= (Number.isFinite(high) ? high : 3000);
-    const draw = { kind, on, heavy, lcd: rate || electric ? text : "", counter, today };
+    const liveText = live && !rate ? `${netNumber(hass, live.v, Math.abs(live.v) < 10 && live.v % 1 ? 2 : 0)} ${live.unit}` : text;
+    const lcd = rate || electric ? liveText : "";
+    // Today's use under the display, unless the display already says it.
+    const draw = { kind, on: on || (!!live && live.v > 0), heavy, lcd, counter, today: today && today !== lcd ? today : "" };
     if (electric) {
       return out(heavy ? "high" : "low", heavy ? "meter_high" : "meter_low", heavy ? NT_COLORS.high : NT_COLORS.idle, draw);
     }
@@ -19254,6 +19265,11 @@ class ApplianceCard extends HTMLElement {
         .info-line.warn ha-icon { color: var(--error-color, #f44336); }
         .info-line.caution, .info-line.caution ha-icon { color: var(--warning-color, #ff9800); }
         .bar-row { margin-top: 4px; }
+        .bar-row.labelled { display: flex; align-items: center; gap: 6px; font-size: 0.85em; color: var(--secondary-text-color, #767676); }
+        .bar-row.labelled ha-icon { --mdc-icon-size: 18px; flex-shrink: 0; }
+        .bar-row.labelled .bar { flex: 1; min-width: 24px; }
+        .bar-row.labelled .bar-pct { flex-shrink: 0; }
+        .cmp-side .bar-row.labelled .bar-lbl, .cmp-hide .bar-row.labelled .bar-lbl { display: none; }
         .bar { height: 6px; border-radius: 3px; background: var(--divider-color, #e0e0e0); overflow: hidden; }
         .bar-fill { height: 100%; background: ${color}; transition: width 1s linear; }
         .alerts-wrap { margin-top: 12px; display: flex; flex-direction: column; align-items: center; }
@@ -19530,6 +19546,9 @@ class ApplianceCard extends HTMLElement {
     // while an oven climbs), and a hood has no cycle so its bar is the filter.
     let barPct = progressPct;
     let barColor = color;
+    // A filter's life on the bar says so, with its icon and its percentage
+    // (#54): a bar alone reads as a cycle's progress.
+    let barLabel = "";
     // The countdown of a delayed start, as a bar that fills up to the start.
     const delayPct = delaySec !== null && norm === "delayed" ? this._delayProgress(cfg.delay_entity, delaySec) : null;
     if (delayPct !== null && progressPct === null) barPct = delayPct;
@@ -19539,15 +19558,17 @@ class ApplianceCard extends HTMLElement {
     } else if (cap.filter && filterPct !== null && progressPct === null) {
       barPct = filterPct;
       barColor = filterPct <= 15 ? "var(--error-color, #f44336)" : "var(--warning-color, #ff9800)";
+      barLabel = t(hass, "section_filter_life");
     } else if (hrvFilterPct !== null && progressPct === null) {
       barPct = hrvFilterPct;
       barColor = hrv && hrv.filterDue ? "var(--error-color, #f44336)" : "var(--warning-color, #ff9800)";
+      barLabel = t(hass, "section_filter_life");
     }
 
     const barHtml = barPct !== null
       ? `
-        <div class="bar-row">
-          <div class="bar"><div class="bar-fill" style="width:${barPct.toFixed(0)}%;background:${barColor}"></div></div>
+        <div class="bar-row${barLabel ? " labelled" : ""}"${barLabel ? ` title="${esc(barLabel)}"` : ""}>${barLabel ? `<ha-icon icon="mdi:air-filter"></ha-icon><span class="bar-lbl">${esc(barLabel)}</span>` : ""}
+          <div class="bar"><div class="bar-fill" style="width:${barPct.toFixed(0)}%;background:${barColor}"></div></div>${barLabel ? `<span class="bar-pct">${barPct.toFixed(0)}\u00a0%</span>` : ""}
         </div>`
       : "";
 

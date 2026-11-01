@@ -11005,6 +11005,14 @@ check('borne : ni un statut reconnu', evMode(evR('SuspendedEVSE', { power_entity
 {
   const s = (state, attributes = {}) => ({ state: String(state), attributes });
   const hrv = (state, attrs = {}, cfg = {}, more = {}) => render({ appliance_type: 'hrv', state_entity: 'fan.vmc', ...cfg }, { 'fan.vmc': s(state, attrs), ...more });
+  // The filter bar says what it is, with its icon and percentage (#54).
+  const hrvF = hrv('on', { percentage: 50 }, { filter_life_entity: 'sensor.f' }, { 'sensor.f': s(62, { unit_of_measurement: '%' }) });
+  check('vmc : la barre du filtre a son libelle', /class="bar-row labelled" title="Filter life"><ha-icon icon="mdi:air-filter"><\/ha-icon><span class="bar-lbl">Filter life<\/span>/.test(hrvF), true);
+  check('vmc : la barre du filtre a son pourcentage', /class="bar-pct">62\u00a0%</.test(hrvF), true);
+  check('vmc : en compact, le libelle se cache', /\.cmp-side \.bar-row\.labelled \.bar-lbl/.test(hrvF), true);
+  check('hotte : la barre du filtre a son libelle', /class="bar-row labelled"/.test(render({ appliance_type: 'hood', state_entity: 'fan.hood', filter_life_entity: 'sensor.hf' },
+    { 'fan.hood': s('on', { percentage: 33 }), 'sensor.hf': s(40, { unit_of_measurement: '%' }) })), true);
+  check('lave-linge : la barre de cycle sans libelle', /bar-row labelled/.test(render({ state_entity: 'sensor.w', time_to_end_entity: 'sensor.t' }, { 'sensor.w': s('Running'), 'sensor.t': s(1800, { unit_of_measurement: 's' }) })), false);
   check('vmc : en marche', stateLine(hrv('on', { percentage: 50 })), 'Ventilating');
   check('vmc : arret', stateLine(hrv('off')), 'Off');
   check('vmc : hors ligne', stateLine(hrv('unavailable')), 'Offline');
@@ -11815,6 +11823,17 @@ function tvT(w) { return { 'switch.tv': { state: 'on', attributes: {} }, 'sensor
   check('compteur : 1,25 kW, conso faible', stateLine(render(EB, ebS(1.25))), 'Low use');
   check('compteur : en W aussi', stateLine(render(EB, ebS(3600, 'W'))), 'High use');
   check('compteur rond : son dessin', kindOf(render({ ...EB, meter_layout: 'dome' }, ebS(1.25))), 'meter_dome');
+  // Read from today's index with the power on its own entity (#68): the power
+  // goes on the display and decides high use, and today's use is not shown
+  // twice.
+  const HQ = { appliance_type: 'meter', meter_layout: 'dome', state_entity: 'sensor.hq', today_entity: 'sensor.hq', power_entity: 'sensor.hqp' };
+  const hqS = (w, u = 'W') => ({ 'sensor.hq': s(8.86, { unit_of_measurement: 'kWh' }), 'sensor.hqp': s(w, { unit_of_measurement: u }) });
+  check('compteur par index : forte conso par la puissance', stateLine(render(HQ, hqS(3609))), 'High use');
+  check('compteur par index : faible conso', stateLine(render(HQ, hqS(1240))), 'Low use');
+  check('compteur par index : en kW', stateLine(render(HQ, hqS(3.6, 'kW'))), 'High use');
+  check('compteur par index : la puissance sur l ecran', />3,609 W<\/text>|>3609 W<\/text>/.test(render(HQ, hqS(3609))), true);
+  check('compteur par index : la conso du jour une seule fois sur le dessin', (render(HQ, hqS(3609)).match(/>8\.86 kWh<\/text>/g) || []).length, 1);
+  check('compteur par index : sans puissance, l index sur l ecran et pas en double', (render({ ...HQ, power_entity: undefined }, hqS(0)).match(/>8\.86 kWh<\/text>/g) || []).length, 1);
   const GA = { appliance_type: 'meter', state_entity: 'sensor.gas_index', today_entity: 'sensor.gas_today' };
   const gaS = (lc) => ({ 'sensor.gas_index': { state: '4521.384', attributes: { unit_of_measurement: 'm\u00b3', device_class: 'gas' }, last_changed: lc },
     'sensor.gas_today': s(3.2, { unit_of_measurement: 'm\u00b3' }) });
