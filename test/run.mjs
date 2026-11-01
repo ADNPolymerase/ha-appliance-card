@@ -1834,6 +1834,16 @@ for (const layout of ['freezer_bottom', 'freezer_top']) {
   check('cave allumee : pas d\'extinction', /fr-off/.test(lit), false);
   check('cave fermee qui refroidit : lumiere bleue', /class="fr-cool"/.test(lit), true);
   check('cave fermee qui refroidit : des flocons sur la vitre', (lit.match(/class="fr-flake /g) || []).length, 4);
+  {
+    const fr = (layout, w, more = {}) => render({ appliance_type: 'fridge', fridge_layout: layout, fridge_temperature_entity: 'sensor.fr_t', power_entity: 'sensor.p', power_on_threshold: 10,
+      door_entity: 'binary_sensor.fr_d' }, { 'sensor.fr_t': FRIDGE['sensor.fr_t'], 'sensor.p': { state: String(w), attributes: { unit_of_measurement: 'W' } }, ...more });
+    const flakes = (h) => (h.match(/class="fr-flake /g) || []).length;
+    check('frigo qui refroidit : des flocons sur ses portes', flakes(fr('freezer_bottom', 60)), 3);
+    check('americain qui refroidit : sur ses deux portes', flakes(fr('side_by_side', 60)), 4);
+    check('frigo une porte qui refroidit : ses flocons', flakes(fr('single', 60)), 2);
+    check('frigo en veille : pas de flocon', flakes(fr('freezer_bottom', 3)), 0);
+    check('frigo ouvert : plus de flocon sur la porte ouverte', flakes(fr('freezer_bottom', 60, { 'binary_sensor.fr_d': { state: 'on', attributes: {} } })), 1);
+  }
   check('cave fermee au repos : bleue sans flocons', !/class="fr-flake /.test(cave({}, { 'sensor.p': { state: '0', attributes: { unit_of_measurement: 'W' }, last_changed: new Date(now() - 5 * 60000).toISOString() } })) && /class="fr-cool"/.test(cave({}, { 'sensor.p': { state: '0', attributes: { unit_of_measurement: 'W' }, last_changed: new Date(now() - 5 * 60000).toISOString() } })), true);
   check('cave ouverte : la lampe chaude, pas de bleu', /class="fr-cool/.test(render({ appliance_type: 'fridge', fridge_layout: 'wine', door_entity: 'binary_sensor.fr_d' },
     { 'binary_sensor.fr_d': { state: 'on', attributes: {} } })), false);

@@ -7272,7 +7272,7 @@ const ILLUSTRATION_CSS = {
         .fr-steam.m2 { animation-delay: calc(-0.9s + var(--anim-offset, 0s)); }
         .fr-steam.m3 { animation-delay: calc(-1.8s + var(--anim-offset, 0s)); }
         .fr-steam.m4 { animation-delay: calc(-2.3s + var(--anim-offset, 0s)); }
-        /* While a wine cooler cools, snowflakes come and go on its glass. */
+        /* While a fridge cools, snowflakes come and go on its shut doors. */
         .fr-flake { transform-box: fill-box; transform-origin: center; opacity: 0; animation: fr-flake 3.6s ease-in-out infinite; animation-delay: var(--anim-offset, 0s); }
         .fr-flake.fr-f2 { animation-delay: calc(-0.9s + var(--anim-offset, 0s)); }
         .fr-flake.fr-f3 { animation-delay: calc(-1.8s + var(--anim-offset, 0s)); }
@@ -9809,6 +9809,10 @@ const FR3 = (() => {
   }
   // Inside of a wine cellar: dark wood walls in depth, a warm light, wooden racks
   // seen from above with bottles lying on them, their bases towards us.
+  // While it cools, snowflakes come and go on its shut doors, one after the
+  // other (first picks the first of the four staggers).
+  const frost = (s, pts, first, color = "#4fc3f7") => s.cooling === true && !s.dark
+    ? pts.map(([x, y], i) => `<g class="fr-flake fr-f${((first + i) % 4) + 1}">${ntFlake(x, y, 3.2, color, .9)}</g>`).join("") : "";
   // Door shut, the cellar's LEDs light it blue;
   // door open, its lamp lights it warm.
   function wineInside(x0, y0, x1, y1, g, s, blue) {
@@ -9960,11 +9964,11 @@ const FR3 = (() => {
       const rFront = handle(mid + 3.5, y0 + 26, 50, g) + lcd(mid + 10, y0 + 8, 18, s.fridgeTemp, s.warn, s.dark);
       const lFront = lcd(x0 + 5, y0 + 8, 20, s.freezerTemp, false, s.dark) + dispenser(x0 + 3, y0 + 22, 19, 34, s, g) + handle(mid - 5.5, y0 + 26, 50, g);
       if (s.open) out += inside(mid + 1, y0 + 1, x1 - 1, y1 - 1, g, s, false) + swing(x1, y0, y1, g, -1, x1 - mid, 15, "bins", panel(mid, y0, x1, y1, g) + rFront, s.kF);
-      else out += vseam(mid, y0, y1) + rFront;
+      else out += vseam(mid, y0, y1) + rFront + frost(s, [[mid + 22, y0 + 62], [mid + 12, y0 + 92]], 0);
       // Dispenser on the left of the freezer door, handle beside the seam in
       // front of it, never hidden behind it.
       if (s.freezerOpen) out += inside(x0 + 1, y0 + 1, mid - 1, y1 - 1, g, s, true) + swing(x0, y0, y1, g, 1, mid - x0, 15, "plain", panel(x0, y0, mid, y1, g) + lFront, s.kZ);
-      else out += lFront;
+      else out += lFront + frost(s, [[x0 + 9, y0 + 68], [x0 + 21, y0 + 94]], 2);
       out += vseam(mid, y0, y1);
       return out;
     }
@@ -9986,7 +9990,7 @@ const FR3 = (() => {
         <path d="M${wx0 + 3} ${wy0 + 2} L${wx0 + 15} ${wy0 + 2} L${wx0 + 3} ${wy0 + 48} Z" fill="rgba(255,255,255,.14)"/>
         <path d="M${wx0 + 19} ${wy0 + 2} L${wx0 + 23} ${wy0 + 2} L${wx0 + 9} ${wy0 + 56} L${wx0 + 7} ${wy0 + 56} Z" fill="rgba(255,255,255,.08)"/>
         <rect x="${wx0}" y="${wy0}" width="${wx1 - wx0}" height="${wy1 - wy0}" rx="2" fill="none" stroke="#3a3f45" stroke-width="1.6"/>
-        ${s.cooling === true && !s.dark ? [[wx0 + 9, wy0 + 13], [wx1 - 9, wy0 + 33], [wx0 + 15, wy0 + 57], [wx1 - 11, wy0 + 80]].map(([x, y], i) => `<g class="fr-flake fr-f${i + 1}">${ntFlake(x, y, 3.2, "#e1f5fe", .9)}</g>`).join("") : ""}
+        ${frost(s, [[wx0 + 9, wy0 + 13], [wx1 - 9, wy0 + 33], [wx0 + 15, wy0 + 57], [wx1 - 11, wy0 + 80]], 0, "#e1f5fe")}
         ${handle(x1 - 6, y0 + 30, 50, g)}${lcd(x0 + 17, y0 + 3, 20, s.fridgeTemp, s.warn, s.dark)}`;
     }
     const cut = layout === "freezer_top" ? 0.34 : layout === "single" ? 1 : 0.63;
@@ -9997,12 +10001,12 @@ const FR3 = (() => {
     const fFront = handle(x1 - 7, fy0 + (fy1 - fy0) * 0.22, Math.min(40, (fy1 - fy0) * 0.45), g) + lcd(x0 + 5, fy0 + 6, 16, s.fridgeTemp, s.warn, s.dark)
       + (s.ice !== undefined && layout === "freezer_bottom" ? dispenser(x0 + 5, fy0 + 18, 17, 30, s, g) : "");
     if (s.open) out += inside(x0 + 1, fy0 + 1, x1 - 1, fy1 - 1, g, s, false) + swing(x0, fy0, fy1, g, 1, x1 - x0, 17, "bins", panel(x0, fy0, x1, fy1, g) + fFront, s.kF);
-    else out += fFront;
+    else out += fFront + frost(s, [[x0 + 31, fy0 + (fy1 - fy0) * 0.42], [x0 + 15, fy0 + (fy1 - fy0) * 0.84]], 0);
     if (layout !== "single") {
       out += seam(x0, yc, x1);
       const zFront = handle(x1 - 7, zy0 + 6, Math.min(18, (zy1 - zy0) * 0.4), g) + lcd(x0 + 5, zy0 + 6, 16, s.freezerTemp, false, s.dark);
       if (s.freezerOpen) out += inside(x0 + 1, zy0 + 1, x1 - 1, zy1 - 1, g, s, true) + swing(x0, zy0, zy1, g, 1, x1 - x0, 17, "plain", panel(x0, zy0, x1, zy1, g) + zFront, s.kZ);
-      else out += zFront;
+      else out += zFront + frost(s, [[x0 + 30, zy0 + (zy1 - zy0) * 0.62]], 2);
     }
     return out;
   }
