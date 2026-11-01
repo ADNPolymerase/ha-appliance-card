@@ -2807,10 +2807,14 @@ function boilerModeOf(raw, stateMap) {
   if (code && Object.prototype.hasOwnProperty.call(NEFIT_CAUSE_CODES, code[1])) return NEFIT_CAUSE_CODES[code[1]];
   const f = stripAccents(s).toLowerCase();
   // Hot water first: "chauffage eau chaude" is about the taps, not the radiators.
-  if (f === "=h" || /\b(hw|dhw|ecs|acs)\b|\bhwc|tap.?water|heat.?water|hot.?water|eau.?chaude|sanitaire|warmwasser|agua.?caliente|acqua.?calda|warm.?water/.test(f)) return "hot_water";
+  // EMS-ESP (Bosch, Buderus, Junkers, Nefit) words its states in the language
+  // it is set to: varmvatten, varmtvann, c.w.u., sicak su, horuca/horka voda.
+  if (f === "=h" || /\b(hw|dhw|ecs|acs)\b|\bhwc|tap.?water|heat.?water|hot.?water|eau.?chaude|sanitaire|warmwasser|agua.?caliente|acqua.?calda|warm.?water|varmvatten|varmtvann|\bc\.?w\.?u\b|s(i|\u0131)cak.?su|hor(uca|ka).?voda/.test(f)) return "hot_water";
   // Plain "heating" only after hot water has had its turn: on a boiler, a
   // heating that is not about the taps is about the radiators.
-  if (f === "-h" || /\bch\b|starting.?ch|central.?heating|space.?heating|heat.?zones|\bheating\b|chauffage|heizung|heizbetrieb|calefaccion|riscaldamento|verwarming|\bcv\b/.test(f)) return "space_heating";
+  // EMS-ESP again: Heizen, verwarmen, uppvarmning, ogrzewanie, oppvarming,
+  // isitma, kurenie, topeni.
+  if (f === "-h" || /\bch\b|starting.?ch|central.?heating|space.?heating|heat.?zones|\bheating\b|chauffage|heizung|heizbetrieb|calefaccion|riscaldamento|verwarming|\bcv\b|heizen|verwarmen|uppvarmning|ogrzewanie|oppvarming|(i|\u0131)s(i|\u0131)tma|kurenie|topeni/.test(f)) return "space_heating";
   if (Object.prototype.hasOwnProperty.call(NEFIT_PANEL_CODES, f)) return NEFIT_PANEL_CODES[f];
   if (f === "no") return "idle";
   return "";
@@ -2847,8 +2851,14 @@ function heatPumpModeOf(raw, attrs, stateMap, modeEntity) {
   if (Object.prototype.hasOwnProperty.call(MELCLOUD_MODES, status)) return MELCLOUD_MODES[status];
   if (modeEntity) return "";
   const f = stripAccents(s).toLowerCase();
-  if (/defrost|degivr|abtau|descongel|desescarch|sbrin|ontdooi|avfrost|avrim|afrim|odszran|odmraz/.test(f)) return "defrost";
-  if (/\bcool(ing)?\b|refroidissement|rafraichissement|kuhlen|kuehlen|refrigeracion|raffrescamento|koelen|kylning|kjoling|koling|chlodzenie|chlazeni/.test(f)) return "cooling";
+  // With EMS-ESP's own words: odladzanie, tine, buz cozucu, scongelamento;
+  // Kyler, kjoling, soguma, raffreddamento, chladenie. The letters NFD does
+  // not take apart (\u00f8, \u0142, \u0131) are written out.
+  if (/defrost|degivr|abtau|descongel|desescarch|sbrin|ontdooi|avfrost|avrim|afrim|odszran|odmraz|odladzanie|^tine$|buz.?cozucu|scongel/.test(f)) return "defrost";
+  if (/\bcool(ing)?\b|refroidissement|rafraichissement|kuhlen|kuehlen|refrigeracion|raffrescamento|koelen|kylning|kjoling|koling|chlodzenie|chlazeni|kyler|kj\u00f8ling|ch\u0142odzenie|soguma|raffreddamento|chladenie/.test(f)) return "cooling";
+  // EMS-ESP's compressor at rest, off or none in its eleven languages: the
+  // whole word only, since some are short enough to sit inside another.
+  if (/^(off|aus|uit|av|wy(l|\u0142)aczono|kapal(i|\u0131)|vyp|none|keine|geen|ingen|brak|aucun|hi(c|\u00e7)biri|nessuno|ziadny|zadne)$/.test(f)) return "idle";
   const m = boilerModeOf(s, null);
   return HEAT_PUMP_MODES.includes(m) ? m : "";
 }
@@ -5162,6 +5172,34 @@ function netSuggest(hass, cfg) {
   return patch;
 }
 
+// EMS-ESP names a heat pump's entities after their telegram fields, the same
+// in every language it speaks: hptc1 is the heat carrier going out, hptc0 the
+// one coming back, hpcurrpower what the compressor draws, hppower the heat it
+// gives. The generic patterns would take curflowtemp for the flow, which on a
+// heat pump is the boiler module's sensor, often down in a buffer tank.
+const EMS_HP_FIELDS = {
+  compressor_entity: "hpcompon",
+  temperature_entity: "hptc1",
+  return_temperature_entity: "hptc0",
+  power_entity: "hpcurrpower",
+  heat_output_entity: "hppower",
+  water_flow_entity: "pc0flow",
+  fan_speed_entity: "fanspd",
+  outdoor_temperature_entity: "outdoortemp",
+};
+function emsSuggest(hass, cfg, siblings, domains) {
+  const m = /^sensor\.(.*?)hpactivity$/.exec(String(cfg.state_entity || ""));
+  if (!m) return {};
+  const patch = {};
+  for (const [field, key] of Object.entries(EMS_HP_FIELDS)) {
+    if (cfg[field]) continue;
+    const id = siblings.find((e) => (e.split(".")[1] || "") === m[1] + key
+      && (domains[field] || []).includes(domainOf(e)));
+    if (id) patch[field] = id;
+  }
+  return patch;
+}
+
 // The sections live in the editor, which is a file of its own in a release:
 // it hands them over, since only the editor ever asks for suggestions.
 function autoSuggest(hass, cfg, sectionsFor) {
@@ -5175,7 +5213,11 @@ function autoSuggest(hass, cfg, sectionsFor) {
   const allowed = new Set(sections.map((s) => s.field));
   const domains = Object.fromEntries(sections.map((s) => [s.field, s.includeDomains]));
   const patterns = { ...AUTO_PATTERNS, ...(TYPE_AUTO_PATTERNS[type] || {}) };
-  const patch = {};
+  const patch = type === "heat_pump" ? emsSuggest(hass, cfg, siblings, domains) : {};
+  // On an EMS-ESP heat pump curflowtemp is never the pump's flow, even when
+  // hptc1 is missing: better no flow than the buffer tank's.
+  const emsHeatPump = type === "heat_pump" && /^sensor\..*hpactivity$/.test(String(cfg.state_entity || ""));
+  for (const f of Object.keys(patch)) if (!allowed.has(f)) delete patch[f];
   // A machine whose name says it washes and dries gets the option written
   // down, so that the editor shows it ticked and the YAML says what the card
   // is doing, rather than both relying on the name for ever.
@@ -5183,8 +5225,9 @@ function autoSuggest(hass, cfg, sectionsFor) {
     patch.washer_dryer = true;
   }
   for (const [field, re] of Object.entries(patterns)) {
-    if (cfg[field] || !allowed.has(field)) continue;
-    const match = siblings.find((id) => re.test(id) && domains[field].includes(domainOf(id)));
+    if (cfg[field] || patch[field] || !allowed.has(field)) continue;
+    const match = siblings.find((id) => re.test(id) && domains[field].includes(domainOf(id))
+      && !(emsHeatPump && field === "temperature_entity" && /(^|[._])curflowtemp$/.test(id)));
     if (match) patch[field] = match;
   }
   if (type === "network") Object.assign(patch, netSuggest(hass, cfg));
@@ -5664,7 +5707,10 @@ function detectApplianceType(cfg, st) {
   // domain says tank, the name says boiler, and the name is the one that knows.
   const eid = String(cfg.state_entity || "").toLowerCase();
   // First: a heat pump's own water heater is still the heat pump.
-  if (/heat.?pump|pompe.?(a|\u00e0).?chaleur|w(a|ae|\u00e4)rmepumpe|bomba.?de.?calor|pompa.?di.?calore|warmtepomp|v(a|\u00e4)rmepump|pompa.?ciep|tepelne.?cerpadlo|ecodan|altherma|aquarea/.test(hay)) return "heat_pump";
+  if (/heat.?pump|pompe.?(a|\u00e0).?chaleur|w(a|ae|\u00e4)rmepumpe|bomba.?de.?calor|pompa.?di.?calore|warmtepomp|v(a|\u00e4)rmepump|pompa.?ciep|tepelne.?cerpadlo|ecodan|altherma|aquarea/.test(hay)
+    // EMS-ESP's compressor activity sits on its boiler device, under a
+    // boiler's name: its short name says heat pump.
+    || /(^|[._])hpactivity$/.test(eid)) return "heat_pump";
   // A split air conditioner, by its name in any language or its maker's, or
   // a climate entity named after its room that can cool, dry or only blow:
   // a boiler's or a stove's only heats. "Clim" and "AC" stand alone, or every
