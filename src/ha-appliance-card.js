@@ -10915,7 +10915,10 @@ const ILLUSTRATION_CSS = {
           position: absolute; inset: 0; color: #e3f2fd; text-align: center; text-shadow: 0 0 1.5px currentColor;
           font: 700 10px/20px system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif; letter-spacing: -0.2px;
         }
-        .machine:not(.on) .pf-lcd span, .machine:not(.on) .dy-round span { display: none; }
+        /* Off, the screen still reads the room, dimmed, as a Dyson's does on
+           its standby: only a purifier out of reach shows nothing. */
+        .machine:not(.on) .pf-lcd span, .machine:not(.on) .dy-round span { opacity: 0.45; text-shadow: none; }
+        .machine.mode-offline .pf-lcd span, .machine.mode-offline .dy-round span { display: none; }
         .machine.mode-night .pf-bar, .machine.mode-night .dy-disp i { opacity: 0.35; }
         .machine.mode-night .pf-lcd, .machine.mode-night .dy-round span { opacity: 0.7; }
         .cy-body, .cy-ring, .cy-ctrl, .cy-perf, .co-top, .co-fan, .co-hub, .co-lid, .co-body, .co-perf { position: absolute; }

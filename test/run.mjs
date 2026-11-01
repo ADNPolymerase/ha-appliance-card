@@ -9479,7 +9479,12 @@ check('borne : ni un statut reconnu', evMode(evR('SuspendedEVSE', { power_entity
   check('ecran : le boitier', /class="pf-lcd"/.test(scr('box', { state: '5', attributes: {} })), true);
   check('ecran : indisponible, vide', /class="pf-lcd"[^>]*><span><\/span>/.test(scr('cylinder', { state: 'unavailable', attributes: {} })), true);
   check('ecran : echappe', scr('cylinder', { state: '<b>', attributes: {} }).includes('<span>&lt;b&gt;</span>'), true);
-  contains('ecran : eteint, l\'ecran se tait', pf('on'), '.machine:not(.on) .pf-lcd span, .machine:not(.on) .dy-round span { display: none; }');
+  // Off, the screen still reads, dimmed: a Dyson off still tells the room's
+  // temperature. Only out of reach does it say nothing.
+  contains('ecran : eteint, l\'ecran se lit encore, attenue', pf('on'), '.machine:not(.on) .pf-lcd span, .machine:not(.on) .dy-round span { opacity: 0.45; text-shadow: none; }');
+  contains('ecran : hors ligne, l\'ecran se tait', pf('on'), '.machine.mode-offline .pf-lcd span, .machine.mode-offline .dy-round span { display: none; }');
+  check('ecran : eteint, la temperature reste dans le dessin', /class="dy-round"[^>]*><span>21°<\/span>/.test(render({ ...PF, purifier_layout: 'ring', display_entity: 'sensor.salon_x' },
+    { 'fan.salon': { state: 'off', attributes: {} }, 'sensor.salon_x': { state: '21.3', attributes: { unit_of_measurement: '°C' } } })), true);
   contains('chaleur : orange', pf('on'), '.machine.mode-heat, .machine.warm { --air: #ff7043; }');
   contains('nuit : attenue', pf('on'), '.machine.mode-night .wind { opacity: 0.45; }');
   check('air : il monte d\'un cylindre', /<svg class="wind "[^>]*><path d="M3.2 19/.test(pf('on')), true);
