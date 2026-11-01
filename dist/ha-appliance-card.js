@@ -16939,6 +16939,9 @@ class ApplianceCard extends HTMLElement {
           background: var(--ha-card-background, var(--card-background-color, #fff));
         }
         .batt-badge.left { left: 10px; }
+        /* A drawing as wide as the rectangular station or a laptop would run
+           under the battery in its corner: it is drawn lower instead (#69). */
+        .batt-badge ~ .top .machine.rbt-box, .batt-badge ~ .top .machine.scr-laptop { margin-top: 18px; }
         .batt-badge.right { right: 10px; }
         .batt-badge.low { color: var(--warning-color, #ff9800); }
         /* Switches at hand, lined up under the light on the left and under

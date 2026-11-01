@@ -9955,6 +9955,10 @@ check('borne : ni un statut reconnu', evMode(evR('SuspendedEVSE', { power_entity
   check('station : pas de ligne de cuve sur une tondeuse', infoLine(render({ state_entity: 'lawn_mower.x', robot_clean_tank_entity: 'sensor.c' },
     { 'lawn_mower.x': s('docked'), 'sensor.c': s(50) }), 'Clean water'), null);
   // The camera on the bumper, on any station.
+  // The battery in its corner: a station as wide as this one is drawn lower,
+  // under it, rather than behind it.
+  check('station : descendue sous la batterie en coin', /\.batt-badge ~ \.top \.machine\.rbt-box[^{]*\{ margin-top: 18px; \}/.test(box({ battery_corner: true })), true);
+  check('station : la batterie avant le dessin', /class="batt-badge [\s\S]*class="top"[\s\S]*class="machine [^"]*rbt-box/.test(box({ battery_corner: true })), true);
   check('camera : sur le robot', /class="rbt-cam"/.test(box({ robot_camera: true })), true);
   check('camera : pas sans l option', /class="rbt-cam"/.test(box()), false);
   check('camera : sur le laveur', /class="rbt-rm"[^]*class="rbt-cam"/.test(box({ robot_layout: 'mop', robot_camera: true })), true);
