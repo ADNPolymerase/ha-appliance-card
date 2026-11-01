@@ -158,7 +158,7 @@ const T = {
     layout_robot_floor_washer: "Floor washer", stick_away: "Off the base", stick_away_threshold: "Off the base below this power (W)",
     type_diffuser: "Essential oil diffuser", dif_mist: "Diffusing", dif_inter: "Intermittent", dif_low: "Light mist", dif_empty: "Tank empty", dif_mode: "Mist mode", layout_dif_drop: "Teardrop", layout_dif_cone: "Cone", layout_dif_stone: "Pebble", layout_dif_flame: "Flame", layout_dif_nebulizer: "Nebulizer", section_tank_empty: "Empty tank sensor", type_hrv: "Heat recovery ventilation (HRV/ERV)", hrv_run: "Ventilating", hrv_boost: "Boost", hrv_bypass: "Bypass", hrv_defrost: "Defrosting", hrv_filter: "Replace filter", hrv_away: "Away", hrv_recirc: "Recirculation", hrv_humidity: "Humidity control", hrv_inter: "Intermittent", hrv_inter_paused: "Intermittent, paused", hrv_mode: "Mode", hrv_supply_fan: "Supply fan", hrv_exhaust_fan: "Exhaust fan", section_supply_fan: "Supply fan speed (rpm)", section_exhaust_fan: "Exhaust fan speed (rpm)", fan_max_rpm: "Fan top speed (rpm)", section_exhaust_airflow: "Exhaust airflow", section_target_humidity: "Humidity setpoint", section_humidity_control: "Humidity control switch", layout_hrv_diagram: "Air flows", layout_hrv_one_duct: "Wall unit, one duct", layout_hrv_pair: "Through-wall pair", section_supply_temperature: "Supply air temperature", section_extract_temperature: "Extract air temperature", section_exhaust_temperature: "Exhaust air temperature", section_bypass: "Bypass", section_airflow: "Airflow", hrv_t_outdoor: "fresh air", hrv_t_supply: "supply", hrv_t_extract: "extract", hrv_t_exhaust: "exhaust", hrv_outside: "outside", hrv_room: "room",
     type_camera: "Camera", cam_idle: "Idle", cam_live: "Streaming", cam_rec: "Recording", cam_motion: "Motion detected", cam_off: "Off", cam_line_last_motion: "Last motion", cam_line_night: "Night vision", cam_line_signal: "Signal", section_motion: "Motion sensor", section_recording: "Recording sensor", section_night_vision: "Night vision", section_privacy: "Privacy mode", section_signal: "Signal strength", layout_cam_indoor: "Indoor, pan and tilt", layout_cam_tube: "Indoor tube", layout_cam_outdoor: "Outdoor", layout_cam_dome: "Dome", layout_cam_doorbell: "Doorbell", cam_ring: "Ringing", cam_line_last_ring: "Last ring", section_ring: "Doorbell button", type_mailbox: "Mailbox", mb_empty: "Empty", mb_mail: "Mail", mb_front_open: "Front door open", mb_back_open: "Back door open", mb_line_count: "Mail received", mb_line_last: "Last mail", mb_front_door: "Front door", mb_back_door: "Back door", mb_open: "Open", mb_closed: "Closed", section_mail_count: "Mail counter", layout_mb_through: "Through the wall", layout_mb_classic: "Classic", mb_street: "street", mb_house: "house", mb_front_side: "Street side", mb_side_left: "Left", mb_side_right: "Right", type_water_pump: "Water pump", type_floor_heating: "Underfloor heating", type_spa: "Spa", type_sauna: "Sauna", type_aquarium: "Aquarium", type_meter: "Electricity meter", type_christmas_tree: "Christmas tree", layout_chest: "Chest freezer", layout_drawers: "Drawer freezer", layout_pump_booster: "Booster set", layout_pump_sump: "Sump pump", layout_floor_water: "Hot water", layout_floor_electric: "Electric", layout_robot_pool: "Pool robot", wp_pumping: "Pumping", wp_high: "High level", spa_bubbles: "Bubbles", sauna_ready: "Ready", aq_lit: "Light on", aq_dark: "Light off", meter_low: "Low use", meter_high: "High use", layout_meter_linky: "Linky", layout_meter_box: "Electricity meter", layout_meter_dome: "Round meter", layout_meter_gas: "Gas meter", layout_meter_water: "Water meter", section_today_use: "Today's use (kWh, m\u00b3)", section_meter_index: "Meter index", meter_index: "Index", meter_flowing: "In use", meter_idle: "No use", meter_flow: "Flow", section_pressure: "Pressure", section_water_level: "Water level", section_high_level: "High level alarm", level_max: "Level when full", section_bubbles: "Bubbles", section_tariff: "Tariff period", high_power: "High use from (W or VA)", tree_palette: "Colours", palette_multicolor: "Multicolour", palette_red_gold: "Red and gold", palette_red_silver: "Red and silver", palette_gold_silver: "Gold and silver", palette_blue_silver: "Blue and silver", palette_white_silver: "White and silver", palette_red_green: "Red and green", presents: "Presents", presents_auto: "On 24 and 25 December", presents_show: "Always", presents_hide: "Never", tree_on: "On", tree_off: "Off",
-    type_lamp: "Lamp", lamp_off: "Off", lamp_on: "On", lamp_line_brightness: "Brightness", lamp_line_color_temp: "Colour temperature", lamp_line_effect: "Effect", lamp_timer: "Timer", illustration_tap_action: "Tap on the drawing", pic_tap_default: "Card's own", pic_tap_toggle: "Toggle", pic_tap_more: "Details", pic_tap_none: "Nothing", lamp_spots: "Number of spots", layout_lamp_bulb: "Bulb", layout_lamp_bedside: "Bedside lamp", layout_lamp_floor: "Arc floor lamp", layout_lamp_torch: "Torchiere", layout_lamp_pendant: "Pendant", layout_lamp_strip: "LED strip", layout_lamp_spot: "Recessed spots", layout_lamp_panels: "Light panels", layout_lamp_desk: "Desk lamp", layout_lamp_wall: "Wall lantern",
+    type_lamp: "Lamp", lamp_off: "Off", lamp_on: "On", lamp_line_brightness: "Brightness", lamp_line_color_temp: "Colour temperature", lamp_line_effect: "Effect", lamp_timer: "Timer", show_toggle: "On/off button", line_hide: "Hide this line", line_show: "Show this line", illustration_tap_action: "Tap on the drawing", pic_tap_default: "Card's own", pic_tap_toggle: "Toggle", pic_tap_more: "Details", pic_tap_none: "Nothing", lamp_spots: "Number of spots", layout_lamp_bulb: "Bulb", layout_lamp_bedside: "Bedside lamp", layout_lamp_floor: "Arc floor lamp", layout_lamp_torch: "Torchiere", layout_lamp_pendant: "Pendant", layout_lamp_strip: "LED strip", layout_lamp_spot: "Recessed spots", layout_lamp_panels: "Light panels", layout_lamp_desk: "Desk lamp", layout_lamp_wall: "Wall lantern",
     speed_power_max: "Power at top speed (W)", speed_power_custom: "Custom speed thresholds", speed_power_2: "Speed 2 from (W)", speed_power_3: "Speed 3 from (W)",
     fw_self_cleaning: "Self-cleaning", fw_dirty_full: "Dirty water tank full", fw_clean_empty: "Clean water tank empty",
     group_energy: "Energy", type_solar: "Solar panels", type_home_battery: "Home battery", solar_producing: "Producing", solar_low: "Low production", solar_night: "Night", section_solar_layout: "Mounting", layout_solar_ground: "On the ground", layout_solar_roof: "On a roof", section_solar_power: "Power produced", section_energy_today: "Energy produced today", solar_line_today: "Today", solar_peak_power: "Peak power of the panels (W)", section_battery_power: "Battery power (+ charging, \u2212 discharging)", power_inverted: "Positive power means discharging", section_charge_power: "Charge power", section_battery_discharge: "Discharge power", section_reserve: "Backup reserve", section_charge_limit: "Charge limit", battery_capacity: "Capacity (kWh)", layout_battery_wall: "Wall battery", layout_battery_station: "Portable power station", bat_idle: "Idle", bat_full: "Full", bat_low: "Low battery", bat_line_full_in: "Full in", bat_line_left: "Remaining", bat_line_reserve: "Reserve",
@@ -3106,7 +3106,7 @@ const FEEDER_ONLY_FIELDS = [
 ];
 
 // Same for a pet fountain: nothing else has a pump to clean.
-const FOUNTAIN_ONLY_FIELDS = ["pump_clean_entity", "pump_reset_entity", "water_level_entity", "pump_running_entity"];
+const FOUNTAIN_ONLY_FIELDS = ["fountain_layout", "pump_clean_entity", "pump_reset_entity", "water_level_entity", "pump_running_entity"];
 
 // Same for a 3D printer: nothing else has a nozzle or a print bed.
 // A flue gas reading belongs to a fire, and the only fire the card draws is a
@@ -3839,7 +3839,7 @@ function robotWord(v) {
 // washer's integration says more: in use, washing itself, a full dirty
 // tank, an empty clean one, a tangled brush.
 const ROBOT_STICK_RE = /dyson|balai|stick|cordless|sans.?fil|akkusauger|stielsauger|escoba|scopa|steelstofzuiger|skaftdammsugare|stavstovsuger|pionowy|tycovy/;
-const ROBOT_WASHER_RE = /tineco|floor.?one|ifloor|laveur|floor.?washer|wet.?dry|nass|lavapavimenti|fregona|vloerwasser|myci|\u6d17\u5730/;
+const ROBOT_WASHER_RE = /tineco|floor.?one|ifloor|laveur.?de.?sol|floor.?washer|wet.?dry|nass|lavapavimenti|fregona|vloerwasser|myci|\u6d17\u5730/;
 const STICK_CHARGE_W = 5;
 const STICK_AWAY_W = 1;
 const STICK_AT_WORK = /^(in_operation|operating|working|cleaning|running|in_use)$/;
@@ -4230,7 +4230,8 @@ function lampControls(hass, cfg) {
     out.push({ key: "lamp_timer", entity: timer.entity, icon: "mdi:timer-cog-outline", label: t(hass, "lamp_timer"), menu: true,
       text: screenSourceLabel(hass, stateObj(hass, timer.entity), timer.current) });
   }
-  if (!st || cfg.toggle_entity || !["light", "switch", "input_boolean"].includes(domainOf(cfg.state_entity))) return out;
+  // show_toggle: false leaves the switching to the drawing (HACF #127).
+  if (!st || cfg.toggle_entity || cfg.show_toggle === false || !["light", "switch", "input_boolean"].includes(domainOf(cfg.state_entity))) return out;
   return out.concat([{ key: "toggle", entity: cfg.state_entity, icon: "mdi:lightbulb", label: t(hass, "toggle"), on: String(st.state).toLowerCase() === "on" }]);
 }
 
@@ -6503,7 +6504,7 @@ function pfBowl(cx, cy, rx, ry, heaps) {
 }
 const pfSoftShadow = (cx, cy, rx, ry) => { const id = pfId(); return `<filter id="${id}" x="-30%" y="-80%" width="160%" height="260%"><feGaussianBlur stdDeviation="2.2"/></filter><ellipse cx="${cx}" cy="${cy}" rx="${rx}" ry="${ry}" fill="#000" opacity=".22" filter="url(#${id})"/>`; };
 // Kibble falling from the chute into the bowl, drawn in front of it.
-const pfDrops = (x, y0) => { const id = pfId(); return pfKibDefs(id) + [0, 1, 2, 3].map((i) => `<g transform="translate(${x} ${y0})"><g class="pf-drop pfd${i + 1}">${pfPiece(i % 2 ? 1.2 : -1, 0, 1.5, i + 11, id)}</g></g>`).join(""); };
+const pfDrops = (x, y0, fall) => { const id = pfId(); return pfKibDefs(id) + [0, 1, 2, 3].map((i) => `<g transform="translate(${x} ${y0})"${fall ? ` style="--pf-fall: ${fall}px"` : ""}><g class="pf-drop pfd${i + 1}">${pfPiece(i % 2 ? 1.2 : -1, 0, 1.5, i + 11, id)}</g></g>`).join(""); };
 // The shell takes the appliance colour: three stops read from the card.
 const pfMatte = (id) => `<linearGradient id="${id}" x1="0" x2="1"><stop offset="0" style="stop-color: var(--pf-lo)"/><stop offset=".42" style="stop-color: var(--pf-hi)"/><stop offset="1" style="stop-color: var(--pf-lo)"/></linearGradient>`;
 const pfDomeGrad = (id) => `<radialGradient id="${id}" cx=".4" cy=".25" r=".9"><stop offset="0" style="stop-color: var(--pf-hi)"/><stop offset="1" style="stop-color: var(--pf-lo)"/></radialGradient>`;
@@ -6542,16 +6543,16 @@ function pfTower(d) {
   return `<defs>${pfMatte(b)}${pfMatte(base)}${pfDomeGrad(lid)}</defs>
 ${pfSoftShadow(60, 111, 26, 3.5)}
 ${pfTray(60, 23, 82, 107, base)}
-<rect class="pf-body" x="38" y="16" width="44" height="74" rx="11" fill="url(#${b})"/>
-<rect x="41" y="24" width="3" height="60" rx="1.5" fill="#fff" style="opacity: var(--pf-gloss)"/>
+<rect class="pf-body" x="38" y="16" width="44" height="66" rx="11" fill="url(#${b})"/>
+<rect x="41" y="24" width="3" height="52" rx="1.5" fill="#fff" style="opacity: var(--pf-gloss)"/>
 <path d="M38 22 Q38 12 60 11 Q82 12 82 22 V24 H38 Z" fill="url(#${lid})"/>
 <ellipse cx="60" cy="14.6" rx="6" ry="1.6" fill="#000" opacity=".3"/>
-${pfWindow(57, 30.5, 61.5, 6, d.lvl, 4, 0, true)}
-<rect x="48" y="66" width="24" height="10" rx="3" fill="#0d1014"/>
-${pfLcd(49, 67, 22, 8, d.screen, 6.4)}
-<path class="pf-chute" d="M53 81 L67 81 Q66 85 60 85.4 Q54 85 53 81 Z" fill="#0a0c0f"/>
+${pfWindow(57, 29.5, 54.5, 6, d.lvl, 4, 0, true)}
+<rect x="48" y="59" width="24" height="10" rx="3" fill="#0d1014"/>
+${pfLcd(49, 60, 22, 8, d.screen, 6.4)}
+<path class="pf-chute" d="M53 73 L67 73 Q66 77 60 77.4 Q54 77 53 73 Z" fill="#0a0c0f"/>
 ${pfBowl(60, 99, 17, 5.6, d.served ? [{ h: d.feeding ? 10 : 8, seed: 3 }] : [])}
-${d.feeding ? pfDrops(60, 86) : ""}`;
+${d.feeding ? pfDrops(60, 78, 17) : ""}`;
 }
 // Round tank, after the Aqara C1: a cylinder with a domed top, a tall window
 // on the kibble and a round tray holding the bowl.
@@ -6560,16 +6561,16 @@ function pfCanister(d) {
   return `<defs>${pfMatte(b)}${pfMatte(tray)}${pfDomeGrad(dome)}</defs>
 ${pfSoftShadow(60, 111, 26, 3.5)}
 ${pfTray(60, 23, 84, 107, tray)}
-<path class="pf-body" d="M38 26 V88 Q38 92 60 92 Q82 92 82 88 V26 Z" fill="url(#${b})"/>
+<path class="pf-body" d="M38 26 V80 Q38 84 60 84 Q82 84 82 80 V26 Z" fill="url(#${b})"/>
 <path d="M38 26 Q38 8 60 8 Q82 8 82 26 Z" fill="url(#${dome})"/>
 <path d="M43 20 Q46 12 56 11" stroke="#fff" stroke-width="1.6" fill="none" style="opacity: var(--pf-gloss)"/>
-<rect x="41" y="30" width="3" height="56" rx="1.5" fill="#fff" style="opacity: var(--pf-gloss)"/>
-${pfWindow(54, 35, 71, 12, d.lvl, 6)}
+<rect x="41" y="30" width="3" height="48" rx="1.5" fill="#fff" style="opacity: var(--pf-gloss)"/>
+${pfWindow(54, 35, 64, 12, d.lvl, 6)}
 <rect x="49" y="22" width="22" height="9" rx="3" fill="#0d1014"/>
 ${pfLcd(50, 22.6, 20, 7.8, d.screen, 6.2)}
-<path class="pf-chute" d="M53 82 L67 82 Q66 86 60 86.4 Q54 86 53 82 Z" fill="#1a1e23"/>
+<path class="pf-chute" d="M53 74 L67 74 Q66 78 60 78.4 Q54 78 53 74 Z" fill="#1a1e23"/>
 ${pfBowl(60, 99.5, 17, 5.6, d.served ? [{ h: d.feeding ? 10 : 8, seed: 5 }] : [])}
-${d.feeding ? pfDrops(60, 87) : ""}`;
+${d.feeding ? pfDrops(60, 79, 17) : ""}`;
 }
 // Two bowls, after the Granary dual: the same column over a wider base, a
 // splitter and two spouts feeding two steel bowls.
@@ -6636,31 +6637,65 @@ ${pfSoftShadow(60, 96, 46, 6)}
 ${pfLcd(50, 79.6, 20, 7.8, d.screen, 6.2)}`;
 }
 const PF_DRAW = { canister: pfCanister, double: pfDouble, dual_split: pfDualSplit, rotary: pfRotary };
+// The two single columns fill a third of the drawing's width, so they are
+// drawn a third larger around their foot: the kibble falling reads at card
+// size, in the compact side layout above all (#71).
+const PF_GROW = { tower: 1.35, canister: 1.35 };
 function pfSvg(layout, d) {
   pfN = 0;
-  return `<svg class="pf-svg pf-${PF_DRAW[layout] ? layout : "tower"}" viewBox="0 -10 120 135" aria-hidden="true">${(PF_DRAW[layout] || pfTower)(d)}</svg>`;
+  const key = PF_DRAW[layout] ? layout : "tower";
+  const body = (PF_DRAW[layout] || pfTower)(d);
+  const k = PF_GROW[key];
+  return `<svg class="pf-svg pf-${key}" viewBox="0 -10 120 135" aria-hidden="true">${k ? `<g transform="translate(60 111) scale(${k}) translate(-60 -111)">${body}</g>` : body}</svg>`;
 }
 
 // Fountain, after the PetKit Eversweet: a tank with a steel top where the
 // water wells up from the centre and runs off its edges, a window on the
-// tank and a light ring under the plate.
+// tank and a light ring under the plate. Round, after the PetKit Eversweet
+// Solo: a white drum with a steel rim, the water welling up in the middle of
+// a round plate and a light at the foot of the front (#70). The jet stands
+// taller than the real one, so it reads at the size of a card (#70).
 function ftSvg(f) {
   pfN = 0;
   const b = pfId(), plate = pfId(), w = pfId(), win = pfId(), gl = pfId();
   const lvl = f.lvl, run = f.running, wy0 = 68, wy1 = 92, top = wy1 - (wy1 - wy0) * lvl;
-  const dish = "M28 45.5 Q28 39 36 38.5 H84 Q92 39 92 45.5 Q92 50 84 50.5 H36 Q28 50 28 45.5 Z";
-  const spray = run ? [0, 1, 2, 3].map((k) => `<circle class="ft-spray ${k % 2 ? "r" : "l"} ftd${k + 1}" cx="${k % 2 ? 61.5 : 58.5}" cy="37" r=".75" fill="#b3e5fc"/>`).join("") : "";
-  const jet = run ? `<ellipse class="ft-ring" cx="60" cy="44.4" rx="6" ry="2" fill="none" stroke="#fff" stroke-width=".8"/><ellipse class="ft-ring ftd2" cx="60" cy="44.4" rx="6" ry="2" fill="none" stroke="#fff" stroke-width=".8"/>`
-    + `<path class="ft-dome" d="M54 44.4 Q54.6 36.4 60 35.2 Q65.4 36.4 66 44.4 Z" fill="url(#${w}d)"/>`
-    + `<path class="ft-dome" d="M56.2 42.6 Q56.8 38 59.4 37" stroke="#fff" stroke-width=".9" stroke-linecap="round" fill="none" opacity=".85"/>${spray}` : "";
+  const cy = f.round ? 43.4 : 44.4;
+  const spray = run ? [0, 1, 2, 3].map((k) => `<circle class="ft-spray ${k % 2 ? "r" : "l"} ftd${k + 1}" cx="${k % 2 ? 61.6 : 58.4}" cy="${pfF(cy - 13)}" r=".85" fill="#b3e5fc"/>`).join("") : "";
+  const jet = run ? `<ellipse class="ft-ring" cx="60" cy="${cy}" rx="6" ry="2" fill="none" stroke="#fff" stroke-width=".8"/><ellipse class="ft-ring ftd2" cx="60" cy="${cy}" rx="6" ry="2" fill="none" stroke="#fff" stroke-width=".8"/>`
+    + `<path class="ft-dome" d="M54.6 ${cy} Q55.6 ${pfF(cy - 7)} 58 ${pfF(cy - 11.4)} Q60 ${pfF(cy - 14.6)} 62 ${pfF(cy - 11.4)} Q64.4 ${pfF(cy - 7)} 65.4 ${cy} Z" fill="url(#${w}d)"/>`
+    + `<path class="ft-dome" d="M57 ${pfF(cy - 1.6)} Q57.4 ${pfF(cy - 7.6)} 59.2 ${pfF(cy - 11.6)}" stroke="#fff" stroke-width=".9" stroke-linecap="round" fill="none" opacity=".85"/>${spray}` : "";
   const badge = f.low ? `<g transform="translate(106 20)"><circle r="5.4" fill="#e53935" stroke="#fff" stroke-width="1.2"/><path d="M0 -2.8 V.6" stroke="#fff" stroke-width="1.6" stroke-linecap="round"/><circle cy="2.6" r=".9" fill="#fff"/></g>`
     : f.due ? `<g transform="translate(106 20)"><circle r="6" fill="#ffb300" stroke="#fff" stroke-width="1.2"/><path d="M-3 -2.4h6M-3 0h6M-3 2.4h6" stroke="#fff" stroke-width="1"/></g>` : "";
-  return `<svg class="ft-svg" viewBox="0 -10 120 135" aria-hidden="true"><defs>
+  const defs = `<defs>
 <linearGradient id="${b}" x1="0" x2="1"><stop offset="0" style="stop-color: var(--ac-body-lo, #c6ccd3)"/><stop offset=".42" style="stop-color: var(--ac-body-hi, #ffffff)"/><stop offset="1" style="stop-color: var(--ac-body-lo, #c6ccd3)"/></linearGradient>
 <radialGradient id="${plate}" cx=".45" cy=".35" r=".8"><stop offset="0" stop-color="#f4f7fa"/><stop offset=".6" stop-color="#c3cad2"/><stop offset="1" stop-color="#8e98a2"/></radialGradient>
 <radialGradient id="${w}" cx=".5" cy=".4" r=".7"><stop offset="0" stop-color="#e1f5fe" stop-opacity=".9"/><stop offset="1" stop-color="#81d4fa" stop-opacity=".55"/></radialGradient>
 <linearGradient id="${w}d" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e1f5fe" stop-opacity=".95"/><stop offset="1" stop-color="#4fc3f7" stop-opacity=".75"/></linearGradient>
-<linearGradient id="${win}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#81d4fa"/><stop offset="1" stop-color="#1e88e5"/></linearGradient>${ntBlur(gl, 1.2)}</defs>
+<linearGradient id="${win}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#81d4fa"/><stop offset="1" stop-color="#1e88e5"/></linearGradient>${ntBlur(gl, 1.2)}</defs>`;
+  if (f.round) {
+    const bowl = "M36 44 A24 6.6 0 0 1 84 44 A24 6.6 0 0 1 36 44 Z";
+    return `<svg class="ft-svg ft-round" viewBox="0 -10 120 135" aria-hidden="true">${defs}
+<g transform="translate(60 70) scale(1.3) translate(-60 -70)">
+${pfSoftShadow(60, 102, 36, 5)}
+<path class="ft-body" d="M28 44 V94 A32 7.6 0 0 0 92 94 V44 Z" fill="url(#${b})"/>
+<path d="M28.6 92 A31.4 7.4 0 0 0 91.4 92 V95 A31.4 7.4 0 0 1 28.6 95 Z" fill="#000" opacity=".07"/>
+<rect x="31" y="48" width="3" height="40" rx="1.5" fill="#fff" opacity=".7"/>
+<ellipse cx="60" cy="44" rx="32" ry="8.6" style="fill: var(--ac-body, #eef1f4)" stroke="#cfd6dd" stroke-width=".5"/>
+<ellipse cx="60" cy="44" rx="28.4" ry="7.6" fill="url(#${plate})"/>
+<ellipse cx="60" cy="44.6" rx="25" ry="6.4" fill="#7d8892" opacity=".35"/>
+<path d="${bowl}" fill="#e9eef2"/>
+${f.dry ? "" : `<path class="ft-pool" d="${bowl}" fill="url(#${w})"/>`}
+<ellipse cx="60" cy="${cy}" rx="4.4" ry="1.6" fill="#dfe5ea" stroke="#9aa3ad" stroke-width=".5"/>
+<ellipse cx="60" cy="${pfF(cy - .2)}" rx="2" ry=".8" fill="${run ? "#e1f5fe" : "#b0bac4"}"/>
+${jet}
+<ellipse class="ft-glow" cx="60" cy="46" rx="18" ry="4.4" fill="none" stroke-width="1" filter="url(#${gl})"/>
+<circle class="ft-led" cx="60" cy="98.2" r="1.6"/>
+</g>
+${badge}
+</svg>`;
+  }
+  const dish = "M28 45.5 Q28 39 36 38.5 H84 Q92 39 92 45.5 Q92 50 84 50.5 H36 Q28 50 28 45.5 Z";
+  return `<svg class="ft-svg" viewBox="0 -10 120 135" aria-hidden="true">${defs}
 <g transform="translate(60 70) scale(1.3) translate(-60 -70)">
 ${pfSoftShadow(60, 104, 38, 5)}
 <path class="ft-body" d="M24 48 Q24 40 34 40 H86 Q96 40 96 48 V92 Q96 102 86 102 H34 Q24 102 24 92 Z" fill="url(#${b})"/>
@@ -7511,8 +7546,8 @@ const ILLUSTRATION_CSS = {
         .machine.flowing .ft-spray.ftd2 { animation-delay: calc(-0.35s + var(--anim-offset, 0s)); }
         .machine.flowing .ft-spray.ftd3 { animation-delay: calc(-0.7s + var(--anim-offset, 0s)); }
         .machine.flowing .ft-spray.ftd4 { animation-delay: calc(-1.05s + var(--anim-offset, 0s)); }
-        @keyframes ft-spray-l { 0% { transform: translate(0, 0); opacity: 0; } 15% { opacity: 1; } 45% { transform: translate(-3.5px, -1.5px); } 100% { transform: translate(-7px, 7px); opacity: 0; } }
-        @keyframes ft-spray-r { 0% { transform: translate(0, 0); opacity: 0; } 15% { opacity: 1; } 45% { transform: translate(3.5px, -1.5px); } 100% { transform: translate(7px, 7px); opacity: 0; } }
+        @keyframes ft-spray-l { 0% { transform: translate(0, 0); opacity: 0; } 15% { opacity: 1; } 45% { transform: translate(-4.5px, -2px); } 100% { transform: translate(-9px, 11px); opacity: 0; } }
+        @keyframes ft-spray-r { 0% { transform: translate(0, 0); opacity: 0; } 15% { opacity: 1; } 45% { transform: translate(4.5px, -2px); } 100% { transform: translate(9px, 11px); opacity: 0; } }
         /* The light under the plate and the dot at the front: blue while it
            runs, orange when the filter or the pump wants a hand, red and
            blinking when the water runs low, out when it is off. */
@@ -8015,7 +8050,7 @@ const ILLUSTRATION_CSS = {
         .machine.feeding .pfd2 { animation-delay: calc(-0.22s + var(--anim-offset, 0s)); }
         .machine.feeding .pfd3 { animation-delay: calc(-0.45s + var(--anim-offset, 0s)); }
         .machine.feeding .pfd4 { animation-delay: calc(-0.67s + var(--anim-offset, 0s)); }
-        @keyframes pf-fall { 0% { transform: translateY(0); opacity: 0; } 15% { opacity: 1; } 85% { opacity: 1; } 100% { transform: translateY(9px); opacity: 0; } }
+        @keyframes pf-fall { 0% { transform: translateY(0); opacity: 0; } 15% { opacity: 1; } 85% { opacity: 1; } 100% { transform: translateY(var(--pf-fall, 9px)); opacity: 0; } }
         .machine.rotary.feeding .pf-turn { animation: pf-turn 2.6s ease-in-out infinite; animation-delay: var(--anim-offset, 0s); }
         @keyframes pf-turn { 0%, 55% { transform: translateX(0); } 100% { transform: translateX(-32px); } }
         /* The cat, when there is something to be cross about: an empty tank or a
@@ -12041,7 +12076,7 @@ function illustrationHtml(type, ctx) {
     const fill = f.low ? 12 : f.fill === null || f.fill === undefined ? 55 : Math.max(0, Math.min(100, Math.round(f.fill)));
     const led = f.offline ? "" : f.low ? "led-low" : f.due ? "led-due" : f.flowing ? "led-on" : "";
     const running = f.flowing && !f.low;
-    const svg = ftSvg({ lvl: fill / 100, running, dry: !!f.low, low: !!f.low && !f.offline, due: !!f.due && !f.low && !f.offline });
+    const svg = ftSvg({ round: !!f.round, lvl: fill / 100, running, dry: !!f.low, low: !!f.low && !f.offline, due: !!f.due && !f.low && !f.offline });
     return `
         <div class="machine ${cls} ${running ? "flowing" : ""} ${f.low ? "ft-dry" : ""}${f.offline ? " ft-offline" : ""} ${led}">${svg}
         </div>`;
@@ -12496,6 +12531,9 @@ class ApplianceCard extends HTMLElement {
                   Array.isArray(a.options) ? a.options.join(",") : ""].join("~"));
       if (id === this._config.alerts_entity) parts.push(JSON.stringify(a));
       if (domainOf(id) === "media_player") parts.push([a.app_name, a.source, a.media_title, a.is_volume_muted, a.entity_picture].join("~"));
+      // A light changes colour or brightness without changing state or
+      // last_changed: the bulb is drawn in its colour, so that is a change.
+      if (domainOf(id) === "light") parts.push(JSON.stringify([a.brightness, a.color_mode, a.rgb_color, a.hs_color, a.xy_color, a.color_temp_kelvin, a.effect]));
     }
     // While a fridge counts the minutes since its plug went quiet, the minute
     // is part of what is displayed even though no state carries it. The card
@@ -12834,12 +12872,32 @@ class ApplianceCard extends HTMLElement {
     Promise.resolve(req).then((res) => {
       if (this._todayPending !== key) return;
       this._todayPending = null;
-      const rows = res && res[entity];
-      const runs = fromPower ? powerRuns(rows, threshold, gapMs, Date.now(), from)
-        : stateRunsOpen(rows, (raw) => normFor(type, raw, cfg.state_map), from);
-      this._today = { key, at: Date.now(), runs, from };
+      const rows = Array.isArray(res && res[entity]) ? res[entity] : [];
+      this._today = { key, at: Date.now(), rows, from, fromPower, threshold, gapMs, type, entity };
       this._render();
     }, () => { this._todayPending = null; });
+  }
+
+  // Today's runs: the history read, then what the card saw happen since
+  // (HACF #127). The history is kept five minutes and the recorder writes
+  // late, so a lamp switched on a moment ago would otherwise wait for the
+  // next read to be counted, and two quick switches between reads not at all.
+  _todayRuns(cfg) {
+    const td = this._today;
+    if (!td || !td.rows) return null;
+    const rowTime = (e) => Number(e && (e.lc !== undefined ? e.lc : e.lu));
+    const last = td.rows.reduce((m, e) => Math.max(m, rowTime(e) || 0), 0);
+    const st = stateObj(this._hass, td.entity);
+    if (st) {
+      const lc = Date.parse(st.last_changed) / 1000;
+      const seen = this._todaySeen && this._todaySeen.key === td.key ? this._todaySeen : (this._todaySeen = { key: td.key, rows: [] });
+      const prev = seen.rows[seen.rows.length - 1];
+      if (Number.isFinite(lc) && (!prev || lc > prev.lc || (lc === prev.lc && String(st.state) !== prev.s))) seen.rows.push({ s: String(st.state), lc });
+      seen.rows = seen.rows.filter((e) => e.lc > last);
+    }
+    const rows = td.rows.concat(this._todaySeen && this._todaySeen.key === td.key ? this._todaySeen.rows : []);
+    return td.fromPower ? powerRuns(rows, td.threshold, td.gapMs, Date.now(), td.from)
+      : stateRunsOpen(rows, (raw) => normFor(td.type, raw, cfg.state_map), td.from);
   }
 
   // Reads one entity's history once the curve is unfolded, then keeps it five
@@ -12986,6 +13044,10 @@ class ApplianceCard extends HTMLElement {
 
   _showArmed(el) {
     if (el.classList) el.classList.add("armed");
+    if (el.hasAttribute && el.hasAttribute("data-pic-tap")) {
+      el.setAttribute("title", t(this._hass, "confirm_again"));
+      return;
+    }
     const icon = el.querySelector && el.querySelector("ha-icon");
     if (icon) icon.setAttribute("icon", "mdi:check-bold");
     el.setAttribute("title", t(this._hass, "confirm_again"));
@@ -14898,6 +14960,7 @@ class ApplianceCard extends HTMLElement {
         low,
         due: !!((filter && filter.due) || (pump && pump.due)),
         fill: wPct !== null ? Math.max(0, Math.min(100, wPct)) : null,
+        round: cfg.fountain_layout === "round",
       };
     }
 
@@ -16060,8 +16123,9 @@ class ApplianceCard extends HTMLElement {
       const fromPower = !!cfg.power_entity && (powerDerived || !cfg.state_entity) && isFinite(threshold);
       this._lookUpToday(cfg, applianceType, fromPower, isFinite(threshold) ? threshold : 10);
       const td = this._today;
-      if (td && td.runs) {
-        const { ms, starts } = runsSince(td.runs, td.from, Date.now());
+      const todayRuns = this._todayRuns(cfg);
+      if (todayRuns) {
+        const { ms, starts } = runsSince(todayRuns, td.from, Date.now());
         const startsText = t(hass, starts === 1 ? "starts_one" : "starts_other").replace("{n}", String(starts));
         extraLines.push({
           key: "today",
@@ -16459,6 +16523,7 @@ class ApplianceCard extends HTMLElement {
           color: #fff; background: var(--error-color, #f44336); border-color: var(--error-color, #f44336); border-radius: 50%;
           animation: ac-armed 0.8s ease-in-out infinite alternate; animation-delay: var(--anim-offset, 0s);
         }
+        .pic-tap.armed, .cmp-pic.armed { color: inherit; background: none; border-radius: 14px; box-shadow: 0 0 0 2px var(--error-color, #f44336); }
         @keyframes ac-armed { to { opacity: 0.65; } }
         @media (prefers-reduced-motion: reduce) { .armed { animation-name: none; } }
         .action-btn ha-icon { --mdc-icon-size: 20px; }
@@ -16483,6 +16548,8 @@ class ApplianceCard extends HTMLElement {
            keeps the width of its longest word, which a word cannot shrink
            below anyway, so that is where the line breaks. */
         .cmp-side .cmp-wrap .cmp-head { flex: 1; min-width: 0; flex-wrap: wrap; row-gap: 4px; }
+        /* Wrapped under the name, the buttons keep to the right (HACF #127). */
+        .cmp-side .cmp-head .cmp-icons { margin-left: auto; }
         .cmp-side .cmp-col { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 6px; }
         .cmp-side .info-lines.beside { margin-top: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 3px 10px; }
         .cmp-side .info-lines.beside .info-line { font-size: 0.8em; gap: 4px; min-width: 0; }
@@ -16620,7 +16687,11 @@ class ApplianceCard extends HTMLElement {
     // What the editor reads to offer an order: the lines actually drawn, in
     // the card's own language, rather than a second list to keep in step with
     // this one.
-    this._drawnLines = lines.filter((l) => l.key).map((l) => ({ key: l.key, label: l.label }));
+    const hidden = Array.isArray(cfg.hidden_lines) ? cfg.hidden_lines : [];
+    this._drawnLines = lines.filter((l) => l.key).map((l) => ({ key: l.key, label: l.label, hidden: hidden.includes(l.key) }));
+    // hidden_lines: a line you never want to see (HACF #127), still offered
+    // in the editor so it can be shown again.
+    if (hidden.length) lines = lines.filter((l) => !l.key || !hidden.includes(l.key));
     // The history: a discreet button under the lines unfolds the curve.
     let historyHtml = "";
     const historyEntity = cfg.show_history ? historyEntityOf(hass, cfg, applianceType) : null;
@@ -16880,10 +16951,15 @@ class ApplianceCard extends HTMLElement {
     const header = this._root.getElementById("header");
     if (header) header.addEventListener("click", () => this._tap(cfg, tapFallback));
     this._root.querySelectorAll("[data-tap]").forEach((el) => el.addEventListener("click", () => this._tap(cfg, tapFallback)));
-    this._root.querySelectorAll("[data-pic-tap]").forEach((el) => el.addEventListener("click", (ev) => {
-      ev.stopPropagation();
-      this._tap({ ...cfg, tap_action: illustrationTapOf(cfg) }, tapFallback);
-    }));
+    // A drawing that switches the appliance asks for the same touch as its
+    // buttons (HACF #127): a tap, two taps or a long press, as the card's
+    // controls are set to.
+    this._root.querySelectorAll("[data-pic-tap]").forEach((el) => {
+      const pic = illustrationTapOf(cfg);
+      const run = () => this._tap({ ...cfg, tap_action: pic }, tapFallback);
+      if (pic && pic.action === "toggle" && cfg.state_entity) this._wireControl(el, cfg.controls_activation, cfg.state_entity, run);
+      else el.addEventListener("click", (ev) => { ev.stopPropagation(); run(); });
+    });
     this._root.querySelectorAll("[data-lines-toggle]").forEach((el) => {
       const flip = (ev) => {
         ev.stopPropagation();

@@ -14,7 +14,7 @@
     --info-color: #2196f3; --warning-color: #ff9800; --success-color: #4caf50; --error-color: #f44336;
   }
   #wrap { display: inline-block; }
-  .row { display: grid; grid-template-columns: repeat(var(--cols, 5), 300px); gap: 24px; align-items: start; }
+  .row { display: grid; grid-template-columns: repeat(var(--cols, 5), var(--cw, 300px)); gap: var(--gap, 24px); align-items: start; }
   ha-card { display: block; width: 300px; background: #ffffff; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.08); }
   body.live { padding: 16px; }
   body.live #wrap { display: block; max-width: 1280px; margin: 0 auto; }
@@ -103,6 +103,18 @@ const view = ["types", "live"].includes(params.get("view")) ? params.get("view")
 // Twenty-nine types, the two other feeders and a ceiling fan, thirty-two
 // cards with the iron on its steam generator: eight across and four down.
 document.documentElement.style.setProperty("--cols", params.get("cols") || 8);
+// ?cw= narrows the cards for the README grids, where a drawing alone would
+// otherwise sit in a mostly empty 300 px card.
+if (Number(params.get("cw"))) {
+  document.documentElement.style.setProperty("--cw", `${Number(params.get("cw"))}px`);
+  document.documentElement.style.setProperty("--gap", params.get("gap") !== null ? `${Number(params.get("gap"))}px` : "12px");
+}
+// ?poster=1: the README's opening picture, every drawing with its name alone,
+// packed tight like a poster.
+const poster = params.get("poster") === "1";
+let posterName = null;
+let posterModels = 0;
+let posterSize = 0;
 const fr = uiLang === "fr";
 const L = (en, f) => (fr ? f : en);
 
@@ -233,14 +245,22 @@ function card(config, entities) {
   // lines per card (0: the drawing, its name and its state alone), for the
   // README's animated grids.
   const isize = Number(params.get("isize"));
-  el.setConfig({ type: "custom:ha-appliance-card", ...config, ...(isize ? { illustration_size: isize } : {}) });
+  el.setConfig({ type: "custom:ha-appliance-card", ...config, ...(isize ? { illustration_size: posterSize || isize } : {}), ...(posterName ? { name: posterName } : {}) });
   el.hass = mkHass(states);
   const maxLines = params.get("lines");
   if (maxLines !== null && el.shadowRoot) {
     const css = document.createElement("style");
     css.textContent = maxLines === "0"
-      ? ".info-lines, .actions-row, .bar-row, .history-toggle, .sliders, .alerts { display: none !important; }"
+      ? ".info-lines, .actions-row, .bar-row, .history-toggle, .sliders, .alerts, .light-badge, .conn-badge { display: none !important; }"
       : `.info-lines .info-line:nth-child(n+${Number(maxLines) + 1}) { display: none !important; } .actions-row, .history-toggle { display: none !important; }`;
+    el.shadowRoot.appendChild(css);
+  }
+  if (poster && el.shadowRoot) {
+    const css = document.createElement("style");
+    css.textContent = "ha-card { padding: 4px 2px 6px !important; } .state-line { display: none !important; }"
+      + " .name { font-size: 0.9em !important; line-height: 1.2; } .machine { margin-bottom: 4px !important; }"
+      // How many models the card draws, under the name.
+      + (posterModels ? ` .name::after { content: "${posterModels} ${fr ? "mod\u00e8les" : "models"}"; display: block; font-size: 0.82em; font-weight: 400; color: var(--primary-color, #03a9f4); margin-top: 1px; }` : "");
     el.shadowRoot.appendChild(css);
   }
   return el;
@@ -902,6 +922,18 @@ const petFountain = () => card({
   st("button.fountain_reset_filter", "unknown"),
 ]);
 
+// The round fountain, its tank running low: the light at its foot blinks red.
+const roundFountain = () => card({
+  name: L("Round fountain", "Fontaine ronde"),
+  appliance_type: "pet_fountain",
+  fountain_layout: "round",
+  state_entity: "switch.round_fountain_power",
+  water_level_entity: "sensor.round_fountain_water_level",
+}, [
+  st("switch.round_fountain_power", "on"),
+  st("sensor.round_fountain_water_level", 60, { unit_of_measurement: "%" }),
+]);
+
 // An iron reaches Home Assistant through the plug it sits on, and nothing
 // else: the state is what it draws. The one that rests on a steam generator
 // shows the iron as well.
@@ -1173,6 +1205,8 @@ const rbtDrying = robot("Braava", "vacuum.braava", "docked", { battery_level: 10
   [st("sensor.braava_status", "drying_mop")]);
 const rbtMower = robot("Landroid", "lawn_mower.landroid", "mowing", {}, { battery_entity: "sensor.landroid_battery" },
   [st("sensor.landroid_battery", 68, { unit_of_measurement: "%" })]);
+const rbtNavimow = robot("Navimow", "lawn_mower.navimow", "docked", {}, { battery_entity: "sensor.navimow_battery", mower_style: "navimow", robot_shelter: true, robot_shelter_style: "garage" },
+  [st("sensor.navimow_battery", 82, { unit_of_measurement: "%" })]);
 const rbtRain = robot("Landroid", "lawn_mower.landroid", "docked", {}, { battery_entity: "sensor.landroid_battery", robot_status_entity: "sensor.landroid_status", robot_shelter: true },
   [st("sensor.landroid_battery", 100, { unit_of_measurement: "%" }), st("sensor.landroid_status", "rain_delayed")]);
 // A stick vacuum on its wall dock, read from its plug, and a floor washer in
@@ -1373,7 +1407,7 @@ const ALL = { washer, dryer, steam_generator: steamGenerator,
               water_heater: waterHeater, boiler, heat_pump: heatPump, pellet_stove: pelletStove,
               space_heater: spaceHeater, towel_warmer: towelWarmer, air_conditioner: airConditioner, dehumidifier,
               air_purifier: purifier, fan, ceiling_fan: ceilingFan,
-              pet_feeder: petFeeder, dual_feeder: dualFeeder, wet_feeder: wetFeeder, pet_fountain: petFountain,
+              pet_feeder: petFeeder, dual_feeder: dualFeeder, wet_feeder: wetFeeder, pet_fountain: petFountain, round_fountain: roundFountain,
               printer_3d: printer3d, ev_charger: evCharger };
 // The variants the family captures fill their grids with; the gallery of all
 // types leaves them out.
@@ -1383,7 +1417,7 @@ const EXTRA = { iron, coffee_black: coffeeBlack, boiler_window: boilerWindow, bo
                 net_switch: netSwitch, net_nas: netNas, net_server: netServer, net_rack: netRack,
                 net_router: netRouter("on"), net_router_down: netRouter("off"),
                 robot_vacuum: rbtVacuum, robot_emptying: rbtEmptying, robot_mop: rbtMop, robot_drying: rbtDrying,
-                robot_mower: rbtMower, robot_rain: rbtRain, robot_stick: rbtStick, robot_washer: rbtWasher,
+                robot_mower: rbtMower, robot_navimow: rbtNavimow, robot_rain: rbtRain, robot_stick: rbtStick, robot_washer: rbtWasher,
                 pool_running: poolRunning, pool_chlorine: poolChlorine, pool_backwash: poolBackwash, pool_frost: poolFrost,
                 pool_light: poolLight, pool_error: poolError,
                 solar_day: solarDay, solar_roof: solarRoof, solar_night: solarNight,
@@ -1478,10 +1512,55 @@ function liveGallery() {
     else sec.querySelector("small").textContent = grid.children.length;
   });
 }
+// On the poster a card is named for what it is, not for the room the demo
+// puts it in.
+// A drawing wider than a poster cell, drawn smaller there.
+const POSTER_SIZES = { hrv_one_duct: 0.62, scr_tv: 0.58 };
+const POSTER_NAMES = {
+  towel_panel: ["Panel towel rail", "Radiateur \u00e0 lames"], boiler_thermo: ["Boiler and thermostat", "Chaudi\u00e8re et thermostat"],
+  th_square: ["Thermostat", "Thermostat"], th_valve: ["Radiator valve", "T\u00eate thermostatique"],
+  box_purifier: ["Heating purifier", "Purificateur chauffant"], ring_purifier: ["Bladeless fan", "Ventilateur sans pales"],
+  pet_feeder: ["Pet feeder", "Distributeur"], ev_charger: ["EV charger", "Borne de recharge"],
+  solar_day: ["Ground solar", "Solaire au sol"], solar_roof: ["Roof solar", "Solaire sur toit"],
+  battery_charging: ["Wall battery", "Batterie murale"], battery_station: ["Power station", "Station portable"],
+  scale_fresh: ["Bathroom scale", "P\u00e8se-personne"], ups_online: ["UPS", "Onduleur"], pool_running: ["Pool pump", "Pompe de piscine"],
+  dif_drop: ["Drop diffuser", "Diffuseur goutte"], dif_cone: ["Cone diffuser", "Diffuseur c\u00f4ne"], dif_stone: ["Pebble diffuser", "Diffuseur galet"],
+  dif_flame: ["Flame diffuser", "Diffuseur flamme"], dif_nebulizer: ["Nebulizer", "N\u00e9buliseur"],
+  hrv_diagram: ["HRV", "VMC double flux"], hrv_one_duct: ["Room HRV", "VMC murale"], hrv_pair: ["Paired HRV", "VMC par paire"],
+  cam_indoor: ["Indoor camera", "Cam\u00e9ra int\u00e9rieure"], cam_tube: ["Tube camera", "Cam\u00e9ra tube"],
+  cam_outdoor: ["Outdoor camera", "Cam\u00e9ra ext\u00e9rieure"], cam_dome: ["Dome camera", "Cam\u00e9ra d\u00f4me"],
+  lamp_bulb: ["Bulb", "Ampoule"], lamp_bedside: ["Bedside lamp", "Lampe de chevet"], lamp_strip: ["LED strip", "Ruban LED"],
+  lamp_panels: ["Light panels", "Panneaux lumineux"], lamp_desk: ["Desk lamp", "Lampe de bureau"], lamp_wall: ["Wall lantern", "Applique"],
+  mb_through: ["Through-wall mailbox", "Bo\u00eete traversante"], mb_right: ["Wall mailbox", "Bo\u00eete murale"],
+  mb_classic: ["Mailbox", "Bo\u00eete aux lettres"], cam_doorbell: ["Video doorbell", "Sonnette vid\u00e9o"],
+  iron: ["Iron", "Fer \u00e0 repasser"], fridge: ["Fridge and freezer", "Frigo et cong\u00e9lateur"], kettle: ["Kettle", "Bouilloire"],
+  coffee: ["Coffee machine", "Machine \u00e0 caf\u00e9"], air_fryer: ["Air fryer", "Friteuse \u00e0 air"], toaster: ["Toaster", "Grille-pain"],
+  boiler: ["Boiler", "Chaudi\u00e8re"], space_heater: ["Heater", "Radiateur"], towel_warmer: ["Towel rail", "S\u00e8che-serviettes"],
+  air_purifier: ["Air purifier", "Purificateur"], fan: ["Fan", "Ventilateur"], pet_fountain: ["Pet fountain", "Fontaine \u00e0 eau"],
+  printer_3d: ["3D printer", "Imprimante 3D"], net_switch: ["Network", "R\u00e9seau"], scr_tv: ["Screen", "\u00c9cran"],
+  robot_stick: ["Stick vacuum", "Aspirateur balai"], robot_washer: ["Floor washer", "Laveur de sol"], nt_pool: ["Pool robot", "Robot de piscine"],
+  nt_spa: ["Hot tub", "Spa"], nt_sauna: ["Sauna", "Sauna"], nt_aquarium: ["Aquarium", "Aquarium"], nt_linky: ["Meter", "Compteur"],
+  nt_booster: ["Water pump", "Pompe \u00e0 eau"], nt_floor: ["Underfloor heating", "Plancher chauffant"], nt_tree: ["Christmas tree", "Sapin de No\u00ebl"],
+  hd_hot: ["Hair dryer", "S\u00e8che-cheveux"], dif_drop: ["Diffuser", "Diffuseur"], hrv_one_duct: ["Ventilation", "VMC"],
+  cam_outdoor: ["Camera", "Cam\u00e9ra"], lamp_floor: ["Lamp", "Lampe"], solar_day: ["Solar panels", "Panneaux solaires"],
+  battery_charging: ["Home battery", "Batterie domestique"], th_square: ["Thermostat", "Thermostat"],
+  robot_vacuum: ["Robot vacuum", "Robot aspirateur"], robot_drying: ["Mopping robot", "Robot laveur"], robot_mower: ["Robot mower", "Robot tondeuse"],
+};
 const only = (params.get("only") || "").split(",").map((k) => k.trim()).filter(Boolean);
 if (only.length) {
   document.documentElement.style.setProperty("--cols", params.get("cols") || only.length);
-  only.forEach((k) => (ALL[k] || EXTRA[k]) && (ALL[k] || EXTRA[k])());
+  const models = (params.get("models") || "").split(",").map(Number);
+  only.forEach((k, i) => {
+    const f = ALL[k] || EXTRA[k];
+    if (!f) return;
+    posterName = poster && POSTER_NAMES[k] ? (fr ? POSTER_NAMES[k][1] : POSTER_NAMES[k][0]) : null;
+    posterModels = poster && models[i] > 1 ? models[i] : 0;
+    posterSize = poster && POSTER_SIZES[k] ? POSTER_SIZES[k] : 0;
+    f();
+  });
+  posterName = null;
+  posterModels = 0;
+  posterSize = 0;
 } else if (view === "types") {
   Object.values(ALL).forEach((f) => f());
 } else if (view === "live") {
