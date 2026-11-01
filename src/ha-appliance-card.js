@@ -3777,14 +3777,18 @@ function normFor(type, raw, stateMap) {
 // cooling, defrost and starting are the appliance at work, idle and waiting
 // are not. Their state_map targets those modes, which normFor does not sort,
 // so the day would never start a run. History rows carry no attributes, so
-// only the state's own words are read.
-function todayNormFor(type, raw, stateMap) {
+// only the state's own words are read. The state of a climate or water_heater
+// entity is a mode the user picked, not what the appliance does: there only an
+// explicit state_map entry is taken as a mode, as on the card itself.
+function todayNormFor(type, raw, stateMap, modeEntity) {
   if (type === "heat_pump") {
-    const mode = heatPumpModeOf(raw, {}, stateMap, false);
+    const mode = heatPumpModeOf(raw, {}, stateMap, modeEntity);
     if (mode) return mode === "idle" ? "idle" : "running";
   }
   if (type === "boiler") {
-    const mode = boilerModeOf(raw, stateMap);
+    const mapped = !!stateMap && raw !== undefined && raw !== null
+      && Object.prototype.hasOwnProperty.call(stateMap, String(raw).trim());
+    const mode = !modeEntity || mapped ? boilerModeOf(raw, stateMap) : "";
     if (mode) return mode === "idle" || mode === "waiting" ? "idle" : "running";
   }
   return normFor(type, raw, stateMap);
@@ -15078,7 +15082,7 @@ class ApplianceCard extends HTMLElement {
       this._todayPending = null;
       const rows = res && res[entity];
       const runs = fromPower ? powerRuns(rows, threshold, gapMs, Date.now(), from)
-        : stateRunsOpen(rows, (raw) => todayNormFor(type, raw, cfg.state_map), from);
+        : stateRunsOpen(rows, (raw) => todayNormFor(type, raw, cfg.state_map, /^(climate|water_heater)\./.test(entity)), from);
       this._today = { key, at: Date.now(), runs, from };
       this._render();
     }, () => { this._todayPending = null; });

@@ -11421,6 +11421,16 @@ function tvT(w) { return { 'switch.tv': { state: 'on', attributes: {} }, 'sensor
     { 'sensor.hp': [H('aus', -sinceMid), H('Heizen', -sinceMid + 60), H('aus', -sinceMid + 120), H('Warmwasser', -sinceMid + 150), H('aus', -sinceMid + 180)] });
   await settle();
   check('aujourd hui : pompe a chaleur, chauffage et eau chaude', infoLine(markup(hpt.card), 'Today').replace(/\u00a0/g, ' '), '1h30 · 2 starts');
+  // A climate entity's state is the mode picked, not the pump at work: unmapped, it is no run...
+  const hpc = withHistory({ appliance_type: 'heat_pump', state_entity: 'climate.hp', show_today: true }, { 'climate.hp': wst('cool', 0) },
+    { 'climate.hp': [H('off', -sinceMid), H('cool', -sinceMid + 60), H('off', -sinceMid + 120)] });
+  await settle();
+  check('aujourd hui : climate, un mode choisi ne compte pas', infoLine(markup(hpc.card), 'Today').replace(/\u00a0/g, ' '), '0 min · 0 starts');
+  // ...unless state_map says it is one.
+  const hpm = withHistory({ appliance_type: 'heat_pump', state_entity: 'climate.hp', show_today: true, state_map: { heat: 'space_heating', off: 'idle' } },
+    { 'climate.hp': wst('off', 0) }, { 'climate.hp': [H('off', -sinceMid), H('heat', -sinceMid + 60), H('off', -sinceMid + 105)] });
+  await settle();
+  check('aujourd hui : climate, state_map explicite', infoLine(markup(hpm.card), 'Today').replace(/\u00a0/g, ' '), '45 min · 1 start');
   // A boiler's own words, without state_map: a burner waiting (Nefit 0A) is not running.
   const blt = withHistory({ appliance_type: 'boiler', state_entity: 'sensor.bl', show_today: true }, { 'sensor.bl': wst('idle', 0) },
     { 'sensor.bl': [H('idle', -sinceMid), H('central_heating', -sinceMid + 30), H('0A', -sinceMid + 50), H('idle', -sinceMid + 60)] });
