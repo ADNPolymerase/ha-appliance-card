@@ -7272,6 +7272,9 @@ const ILLUSTRATION_CSS = {
         .fr-steam.m2 { animation-delay: calc(-0.9s + var(--anim-offset, 0s)); }
         .fr-steam.m3 { animation-delay: calc(-1.8s + var(--anim-offset, 0s)); }
         .fr-steam.m4 { animation-delay: calc(-2.3s + var(--anim-offset, 0s)); }
+        /* A wine cooler's blue light breathes while it cools. */
+        .fr-cool.fr-chill { animation: fr-chill 3.2s ease-in-out infinite; animation-delay: var(--anim-offset, 0s); }
+        @keyframes fr-chill { 0%, 100% { opacity: 0.22; } 50% { opacity: 0.48; } }
         @keyframes fr-rise { 0% { transform: translateY(0); opacity: 0; } 30% { opacity: 0.75; } 100% { transform: translateY(-10px); opacity: 0; } }
   `,
   water_heater: () => `
@@ -9803,7 +9806,9 @@ const FR3 = (() => {
   }
   // Inside of a wine cellar: dark wood walls in depth, a warm light, wooden racks
   // seen from above with bottles lying on them, their bases towards us.
-  function wineInside(x0, y0, x1, y1, g, s) {
+  // Door shut, the cellar's LEDs light it blue, breathing while it cools;
+  // door open, its lamp lights it warm.
+  function wineInside(x0, y0, x1, y1, g, s, blue) {
     const cid = id(), gl = id(), gb = id(), DXI = 12, DYI = -7;
     const bx0 = x0 + DXI, by0 = y0 + DYI, by1 = y1 + DYI, lit = !s.dark;
     const grads = `<linearGradient id="${gl}" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="${lit ? "#2a1d16" : "#141010"}"/><stop offset="1" stop-color="${lit ? "#4a352a" : "#1e1816"}"/></linearGradient>
@@ -9816,15 +9821,20 @@ const FR3 = (() => {
         <rect x="${x0}" y="${y}" width="${x1 - x0}" height="2" fill="${lit ? "#6d4c41" : "#2e2320"}"/><path d="M${x0} ${y + .3} H${x1}" stroke="rgba(255,220,180,.35)" stroke-width=".5"/>`;
       racks += [2, 1, 0].map((c) => lyingBottle(x0 + 7 + c * 14, y - 3.4, 0.864, -0.504, 19, lit ? (c === 1 ? "#4a1a22" : "#26402a") : "#151b16", c === 1 ? "#c9a24b" : "#8e1b2c")).join("");
     }
-    const lamp = lit ? `<rect x="${bx0 + 6}" y="${by0 + 1}" width="${x1 - bx0 - 10}" height="2" rx="1" fill="#ffe0b2"/>
-      <polygon points="${bx0 + 6},${by0 + 3} ${x1 - 4},${by0 + 3} ${x1},${y1} ${x0},${y1}" fill="#ffb74d" opacity=".12"/>` : "";
+    const chill = s.cooling === true ? " fr-chill" : "";
+    const lamp = !lit ? "" : blue
+      ? `<rect x="${bx0 + 4}" y="${by0}" width="${x1 - bx0 - 6}" height="3" rx="1.5" fill="#4fc3f7" opacity=".55"/><rect x="${bx0 + 6}" y="${by0 + .6}" width="${x1 - bx0 - 10}" height="1.8" rx=".9" fill="#e1f5fe"/>
+      <polygon points="${bx0 + 6},${by0 + 3} ${x1 - 4},${by0 + 3} ${x1},${y1} ${x0},${y1}" fill="#29b6f6" opacity=".3"/>`
+      : `<rect x="${bx0 + 6}" y="${by0 + 1}" width="${x1 - bx0 - 10}" height="2" rx="1" fill="#ffe0b2"/>
+      <polygon points="${bx0 + 6},${by0 + 3} ${x1 - 4},${by0 + 3} ${x1},${y1} ${x0},${y1}" fill="#ffb74d" opacity=".12"/>`;
+    const tint = lit && blue ? `<rect class="fr-cool${chill}" x="${x0}" y="${y0}" width="${x1 - x0}" height="${y1 - y0}" fill="#29b6f6" opacity=".34"/>` : "";
     return `<defs>${grads}</defs><clipPath id="${cid}"><rect x="${x0}" y="${y0}" width="${x1 - x0}" height="${y1 - y0}"/></clipPath>
     <g clip-path="url(#${cid})">
       <rect x="${x0}" y="${y0}" width="${x1 - x0}" height="${y1 - y0}" fill="url(#${gl})"/>
       <rect x="${bx0}" y="${by0}" width="${x1 - bx0 + 4}" height="${by1 - by0}" fill="url(#${gb})"/>
       <path d="M${x0} ${y0} L${bx0} ${by0} V${by1} L${x0} ${y1} Z" fill="url(#${gl})"/>
       <path d="M${bx0} ${by0} V${by1}" stroke="rgba(0,0,0,.35)" stroke-width=".8"/>
-      ${lamp}${racks}
+      ${lamp}${racks}${tint}
     </g>
     <rect x="${x0}" y="${y0}" width="${x1 - x0}" height="${y1 - y0}" fill="none" stroke="rgba(0,0,0,.3)" stroke-width="1.2"/>`;
   }
@@ -9968,7 +9978,7 @@ const FR3 = (() => {
         <rect x="${wx0}" y="${wy0}" width="${wx1 - wx0}" height="${wy1 - wy0}" rx="2" fill="none" stroke="#3a3f45" stroke-width="1.6"/>
         ${handle(x1 - 6, y0 + 30, 50, g)}${lcd(x0 + 17, y0 + 3, 20, s.fridgeTemp, s.warn, s.dark)}`;
       if (s.open) return out + wineInside(x0 + 1, y0 + 1, x1 - 1, y1 - 1, g, s) + swing(x0, y0, y1, g, 1, x1 - x0, 17, "glass", glassFront, s.kF);
-      return out + wineInside(wx0, wy0, wx1, wy1, g, s) + `
+      return out + wineInside(wx0, wy0, wx1, wy1, g, s, true) + `
         <rect class="fr-glass" x="${wx0}" y="${wy0}" width="${wx1 - wx0}" height="${wy1 - wy0}" rx="2" fill="url(#${g.glass})" opacity=".45"/>
         <rect x="${wx0}" y="${wy0}" width="${wx1 - wx0}" height="${wy1 - wy0}" rx="2" fill="rgba(20,24,28,${s.dark ? .55 : .18})"/>
         <path d="M${wx0 + 3} ${wy0 + 2} L${wx0 + 15} ${wy0 + 2} L${wx0 + 3} ${wy0 + 48} Z" fill="rgba(255,255,255,.14)"/>
@@ -10006,6 +10016,7 @@ const FR3 = (() => {
       open: cold ? !!(ctx.doorOpen || ctx.freezerDoorOpen) : !!ctx.doorOpen,
       freezerOpen: !cold && !!ctx.freezerDoorOpen,
       ice: L === "wine" ? undefined : ctx.ice,
+      cooling: ctx.cooling,
       kF: 1,
       kZ: 1,
       ...(anim || {}),
