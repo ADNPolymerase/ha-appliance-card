@@ -9957,7 +9957,11 @@ check('borne : ni un statut reconnu', evMode(evR('SuspendedEVSE', { power_entity
   // The camera on the bumper, on any station.
   // The battery in its corner: a station as wide as this one is drawn lower,
   // under it, rather than behind it.
-  check('station : descendue sous la batterie en coin', /\.batt-badge ~ \.top \.machine\.rbt-box[^{]*\{ margin-top: 18px; \}/.test(box({ battery_corner: true })), true);
+  check('station : descendue sous la batterie en coin', /\.batt-badge ~ \.top \.machine\.rbt-l-vacuum[^{]*\{ margin-top: 18px; \}/.test(box({ battery_corner: true })), true);
+  // Side by side, every vacuum's floor is level and leans the same way,
+  // whatever its station (#69).
+  check('sols : le meme sol incline pour tous', /\.rbt-l-vacuum \.rbt-floor,\.rbt-l-mop \.rbt-floor\{[^}]*skewX\(-28deg\)/.test(box()), true);
+  check('sols : la base seule n est plus tassee', /\.rbt-base:not\(\.rbt-l-mower\) \{ height: 80px/.test(box({ robot_station: 'base' })), false);
   check('station : la batterie avant le dessin', /class="batt-badge [\s\S]*class="top"[\s\S]*class="machine [^"]*rbt-box/.test(box({ battery_corner: true })), true);
   check('camera : sur le robot', /class="rbt-cam"/.test(box({ robot_camera: true })), true);
   check('camera : pas sans l option', /class="rbt-cam"/.test(box()), false);

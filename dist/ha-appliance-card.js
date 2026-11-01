@@ -9238,10 +9238,12 @@ const ILLUSTRATION_CSS = {
         .rbt-cut{background:repeating-linear-gradient(90deg,#8fcf6f 0 1.5px,#9fd97e 1.5px 3.5px)}
         .rbt-m-cleaning .rbt-t1{animation:rbt-t1 9s linear infinite}
         .rbt-m-cleaning .rbt-t2{animation:rbt-t2 9s linear infinite}
-        @keyframes rbt-t1{0%{width:0;opacity:1}45%{width:84px;opacity:1}95%{width:84px;opacity:.5}100%{width:84px;opacity:0}}
-        @keyframes rbt-t2{0%,50%{width:0;opacity:1}95%{width:84px;opacity:1}100%{width:84px;opacity:0}}
-        @keyframes rbt-path{0%{transform:translate(-20px,8px)}45%{transform:translate(20px,8px)}50%{transform:translate(20px,16px)}95%{transform:translate(-20px,16px)}100%{transform:translate(-20px,8px)}}
-        @keyframes rbt-ret{0%{transform:translate(20px,16px)}65%,100%{transform:translate(0,0)}}
+        @keyframes rbt-t1{0%{width:0;opacity:1}45%{width:72px;opacity:1}95%{width:72px;opacity:.5}100%{width:72px;opacity:0}}
+        @keyframes rbt-t2{0%,50%{width:0;opacity:1}95%{width:74px;opacity:1}100%{width:74px;opacity:0}}
+        /* Back and forth on the floor, which leans: the far row sits further
+           right than the near one (#69). */
+        @keyframes rbt-path{0%{transform:translate(-9px,8px)}45%{transform:translate(17px,8px)}50%{transform:translate(12px,16px)}95%{transform:translate(-14px,16px)}100%{transform:translate(-9px,8px)}}
+        @keyframes rbt-ret{0%{transform:translate(12px,16px)}65%,100%{transform:translate(0,0)}}
         .rbt-dock{left:28px;top:14px;width:40px;height:56px;border-radius:0 0 20px 20px/0 0 6px 6px;background:linear-gradient(90deg,var(--bl),var(--b) 18%,var(--bh) 38%,var(--b) 68%,var(--bl))}
         .rbt-dcap{left:28px;top:8px;width:40px;height:12px;border-radius:50%;background:radial-gradient(ellipse at 45% 40%,var(--bh),var(--b) 80%);box-shadow:inset 0 0 0 1px rgba(0,0,0,.15)}
         .rbt-plate{left:30px;top:72px;width:36px;height:5px;border-radius:0 0 18px 18px/0 0 4px 4px;background:linear-gradient(90deg,var(--bl),var(--dk) 40%,var(--bl))}
@@ -9406,7 +9408,7 @@ const ILLUSTRATION_CSS = {
         .rbt-vapor path:nth-child(2) { --d0: -0.45s; }
         .rbt-vapor path:nth-child(3) { --d0: -0.9s; }
         .rbx{position:absolute;left:0;top:0;width:96px;height:106px;overflow:visible}
-        .rbt-box .rbt-floor{left:0;width:78px;clip-path:none;transform:skewX(-28deg);transform-origin:50% 100%}
+        .rbt-l-vacuum .rbt-floor,.rbt-l-mop .rbt-floor{left:0;width:78px;clip-path:none;overflow:hidden;transform:skewX(-28deg);transform-origin:50% 100%}
         .machine.rbt.rbx-white,.machine.rbt.rbx-gold{--b:var(--ac-body,#eef1f3);--bh:var(--ac-body-hi,#ffffff);--bl:var(--ac-body-lo,#aab3ba);--dk:#3a4046;--dkh:#555c63}
         .rbx-lv.rbx-c{fill:#29b6f6}
         .rbx-lv.rbx-d{fill:#8d6e4f}
@@ -9434,8 +9436,6 @@ const ILLUSTRATION_CSS = {
         .rbt-rm .rbt-camb{left:7px;top:22.8px}
         .rbt-m-cleaning .rbt-camb{display:block;animation:rbt-breathe 1.6s ease-in-out infinite}
         .rbt-m-cleaning .rbt-cam::after{animation:rbt-blink 1s steps(1) infinite}
-        .machine.rbt.rbt-base:not(.rbt-l-mower) { height: 80px; }
-        .machine.rbt.rbt-base:not(.rbt-l-mower) > * { margin-top: -28px; }
         .rbt-base .rbt-dock, .rbt-base .rbt-dcap, .rbt-base .rbt-mdock, .rbt-base .rbt-mcap, .rbt-base .rbt-bubbles, .rbt-base .rbt-vapor { display: none; }
         .rbt-m-idle .rbt-rb, .rbt-m-idle .rbt-rm { transform: translate(-16px, 14px); }
         .rbt-m-idle .rbt-mw { transform: translate(-30px, 8px); }
@@ -16940,8 +16940,9 @@ class ApplianceCard extends HTMLElement {
         }
         .batt-badge.left { left: 10px; }
         /* A drawing as wide as the rectangular station or a laptop would run
-           under the battery in its corner: it is drawn lower instead (#69). */
-        .batt-badge ~ .top .machine.rbt-box, .batt-badge ~ .top .machine.scr-laptop { margin-top: 18px; }
+           under the battery in its corner: it is drawn lower instead (#69),
+           and so is every robot's, so floors side by side stay level. */
+        .batt-badge ~ .top .machine.rbt-l-vacuum, .batt-badge ~ .top .machine.rbt-l-mop, .batt-badge ~ .top .machine.scr-laptop { margin-top: 18px; }
         .batt-badge.right { right: 10px; }
         .batt-badge.low { color: var(--warning-color, #ff9800); }
         /* Switches at hand, lined up under the light on the left and under
