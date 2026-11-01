@@ -1375,6 +1375,20 @@ const demoAquarium = () => card({ name: L("Aquarium", "Aquarium"), appliance_typ
 const demoLinky = () => card({ name: L("Linky meter", "Compteur Linky"), appliance_type: "meter", state_entity: "sensor.linky_papp", tariff_entity: "sensor.linky_ptec" },
   [st("sensor.linky_papp", 3250, { unit_of_measurement: "VA" }), st("sensor.linky_ptec", "HP")]);
 const demoTree = () => card({ name: L("Christmas tree", "Sapin de No\u00ebl"), appliance_type: "christmas_tree", state_entity: "switch.tree", presents: "show" }, [st("switch.tree", "on")]);
+// Electric rides on their charger (#72): the plug, its power, and the
+// battery when the ride reports it.
+const mobCard = (name, layout, plug, watts, battery) => () => card({ name, appliance_type: "mobility", mobility_layout: layout,
+  state_entity: "switch.mob_plug", power_entity: "sensor.mob_power", ...(battery !== null ? { battery_entity: "sensor.mob_battery" } : {}) },
+  [st("switch.mob_plug", plug), st("sensor.mob_power", watts, { unit_of_measurement: "W", device_class: "power" }),
+   ...(battery !== null ? [st("sensor.mob_battery", battery, { unit_of_measurement: "%", device_class: "battery" })] : [])]);
+const demo_mobScooter = mobCard(L("Scooter", "Trottinette"), "scooter", "on", 118, 64);
+const demo_mobOffroad = mobCard("Ausom DT2 Pro", "offroad", "on", 121, null);
+const demo_mobEbike = mobCard(L("E-bike", "V\u00e9lo \u00e9lectrique"), "ebike", "on", 2, null);
+const demo_mobGyropode = mobCard(L("Gyropode", "Gyropode"), "gyropode", "on", 96, 30);
+const demo_mobMotorcycle = mobCard(L("Motorcycle", "Moto"), "motorcycle", "on", 640, 82);
+// For the README's poster: still frames, so the gauge reads from a battery.
+const demo_mobPoster = mobCard("Ausom DT2 Pro", "offroad", "on", 121, 70);
+const demo_mobUnplugged = mobCard(L("Scooter", "Trottinette"), "scooter", "off", 0, 41);
 const demoTreeRed = () => card({ name: L("Red and gold", "Rouge et or"), appliance_type: "christmas_tree", state_entity: "switch.tree2", tree_palette: "red_gold" }, [st("switch.tree2", "on")]);
 
 // Grouped by kind: the laundry, the kitchen, heating and climate, then the
@@ -1435,6 +1449,7 @@ const EXTRA = { iron, coffee_black: coffeeBlack, boiler_window: boilerWindow, bo
                 nt_chest: demoChest, nt_drawers: demoDrawers, nt_booster: demoBooster, nt_sump: demoSump, nt_sump_high: demoSumpHigh, nt_pool: demoPool,
                 nt_floor: demoFloorWater, nt_floor_elec: demoFloorElec, nt_spa: demoSpa, nt_sauna: demoSauna, nt_aquarium: demoAquarium, nt_linky: demoLinky,
                 nt_tree: demoTree, nt_tree_red: demoTreeRed,
+                mob_scooter: demo_mobScooter, mob_offroad: demo_mobOffroad, mob_ebike: demo_mobEbike, mob_gyropode: demo_mobGyropode, mob_motorcycle: demo_mobMotorcycle, mob_unplugged: demo_mobUnplugged, mob_poster: demo_mobPoster,
                 net_sw8: netSw(8, 6), net_sw16: netSw(16, 11), net_sw24: netSw(24, 20), net_sw32: netSw(32, 27),
                 net_nas1: netBays(1, ["normal"], L("NAS, 1 bay", "NAS 1 baie")),
                 net_nas2: netBays(2, ["normal", null], L("NAS, 2 bays, 1 disk", "NAS 2 baies, 1 disque")),
@@ -1482,7 +1497,8 @@ function liveGallery() {
     [L("Kitchen", "Cuisine"), [dishwasher, oven, microwave, hood, cooktop, fridge, kettle, cooker, coffee, coffeeBlack, riceCooker, airFryer, toaster]],
     [L("Heating and climate", "Chauffage et climat"), [waterHeater, boiler, boilerWindow, boilerThermo, thSquare, thRound, thGlass, thValve, heatPump, pelletStove, spaceHeater, towelWarmer, towelPanel, airConditioner, dehumidifier]],
     [L("Air purifiers and fans", "Purificateurs et ventilateurs"), [purifier, boxPurifier, ringPurifier, fan, ceilingFan]],
-    [L("Robots and vacuums", "Robots et aspirateurs"), [rbtVacuum, rbtEmptying, rbtMop, rbtDrying, rbtMower, rbtRain, rbtStick, rbtWasher]],
+    [L("Robots and vacuums", "Robots et aspirateurs"), [rbtVacuum, rbtEmptying, rbtMop, rbtDrying, rbtMower, rbtNavimow, rbtRain, rbtStick, rbtWasher]],
+    [L("Electric rides", "Mobilit\u00e9 \u00e9lectrique"), [demo_mobScooter, demo_mobOffroad, demo_mobEbike, demo_mobGyropode, demo_mobMotorcycle, demo_mobUnplugged]],
     [L("Pool", "Piscine"), [poolRunning, poolChlorine, poolBackwash, poolFrost, poolLight, poolError]],
     [L("Energy", "Énergie"), [solarDay, solarRoof, solarNight, batteryCharging, batteryStation, batteryLow, evCharger, evDischarging]],
     [L("Network and servers", "Réseau et serveurs"), [netSwitch, netRouter("on"), netNas, netServer, netRack, upsOnline, upsBattery, upsLow]],
@@ -1493,7 +1509,7 @@ function liveGallery() {
     [L("Lamps", "Lampes"), [lampBulb, lampBedside, lampFloor, lampTorch, lampPendant, lampStrip, lampSpots, lampPanels, lampDesk, lampWall, lampOff]],
     [L("Mailboxes and doorbells", "Boîtes aux lettres et sonnettes"), [mbThrough, mbPostman, mbCollect, mbRight, mbClassic, mbClassicOpen, camDoorbell, camDoorbellIdle]],
     [L("Around the house", "Autour de la maison"), [demoChest, demoDrawers, demoBooster, demoSump, demoSumpHigh, demoPool, demoFloorWater, demoFloorElec, demoSpa, demoSauna, demoAquarium, demoLinky, demoTree, demoTreeRed]],
-    [L("Pets", "Animaux"), [petFeeder, roundFeeder, doubleFeeder, dualFeeder, wetFeeder, petFountain]],
+    [L("Pets", "Animaux"), [petFeeder, roundFeeder, doubleFeeder, dualFeeder, wetFeeder, petFountain, roundFountain]],
   ];
   // Each family folds, the first one open: forty cards in a row are hard to
   // read, a list of families is not.
@@ -1540,6 +1556,7 @@ const POSTER_NAMES = {
   printer_3d: ["3D printer", "Imprimante 3D"], net_switch: ["Network", "R\u00e9seau"], scr_tv: ["Screen", "\u00c9cran"],
   robot_stick: ["Stick vacuum", "Aspirateur balai"], robot_washer: ["Floor washer", "Laveur de sol"], nt_pool: ["Pool robot", "Robot de piscine"],
   nt_spa: ["Hot tub", "Spa"], nt_sauna: ["Sauna", "Sauna"], nt_aquarium: ["Aquarium", "Aquarium"], nt_linky: ["Meter", "Compteur"],
+  mob_poster: ["Electric ride", "Mobilit\u00e9 \u00e9lectrique"],
   nt_booster: ["Water pump", "Pompe \u00e0 eau"], nt_floor: ["Underfloor heating", "Plancher chauffant"], nt_tree: ["Christmas tree", "Sapin de No\u00ebl"],
   hd_hot: ["Hair dryer", "S\u00e8che-cheveux"], dif_drop: ["Diffuser", "Diffuseur"], hrv_one_duct: ["Ventilation", "VMC"],
   cam_outdoor: ["Camera", "Cam\u00e9ra"], lamp_floor: ["Lamp", "Lampe"], solar_day: ["Solar panels", "Panneaux solaires"],
@@ -1579,7 +1596,10 @@ if (only.length) {
 }
 const phase = params.get("phase");
 if (phase !== null) {
-  requestAnimationFrame(() => {
+  // A card redraws once its language has loaded, which starts every
+  // animation over: the phase is set again after that, or a French frame
+  // would show the start of the loop whatever its phase.
+  const freeze = () => {
     for (const el of row.children) {
       if (!el.shadowRoot) continue;
       for (const a of el.shadowRoot.getAnimations()) {
@@ -1587,8 +1607,12 @@ if (phase !== null) {
         a.currentTime = Number(phase);
       }
     }
-    document.title = "ready";
-  });
+  };
+  // A page of fifty cards may take a while longer: frozen again just before
+  // the capture.
+  requestAnimationFrame(freeze);
+  setTimeout(freeze, 1500);
+  setTimeout(() => { freeze(); document.title = "ready"; }, 3500);
 }
 </script>
 </body>

@@ -66,6 +66,7 @@ FAMILIES = (
     ("air", "air_purifier,box_purifier,ring_purifier,fan,ceiling_fan", 5),
     ("pets", "pet_feeder,round_feeder,double_feeder,dual_feeder,wet_feeder,pet_fountain,round_fountain", 3),
     ("garage", "ev_charger,ev_discharging,printer_3d", 3),
+    ("mobility", "mob_scooter,mob_offroad,mob_ebike,mob_gyropode,mob_motorcycle,mob_unplugged", 3),
     ("network", "net_switch,net_nas,net_server,net_rack,net_router", 5),
     ("network-routers", "net_router,net_router_down", 2),
     ("network-models", "net_sw8,net_sw16,net_sw24,net_sw32,net_nas1,net_nas2,net_nas4", 4),
@@ -102,6 +103,9 @@ GIF_ISIZE = 1.2
 # Families whose drawings are wider than a card: fewer a row, wider cards.
 # The ventilation units draw a whole duct diagram.
 GIF_WIDE = {"ventilation": (2, 400)}
+# Families whose loop is longer than 1.6 s: frames and their spacing. An
+# electric ride's gauge fills in 5 s, and its fourth bar has to be seen.
+GIF_TIMING = {"mobility": (25, 200)}
 
 
 def gif_cols(count):
@@ -173,7 +177,7 @@ POSTER = (
     ("fridge", 7), ("kettle", 2), ("cooker", 1), ("coffee", 2), ("rice_cooker", 1), ("air_fryer", 3), ("toaster", 3), ("water_heater", 1),
     ("boiler", 2), ("heat_pump", 1), ("pellet_stove", 1), ("space_heater", 2), ("towel_warmer", 2), ("air_conditioner", 1), ("dehumidifier", 1), ("th_square", 4),
     ("air_purifier", 3), ("fan", 3), ("pet_feeder", 5), ("pet_fountain", 2), ("ev_charger", 1), ("printer_3d", 2), ("net_switch", 5), ("scr_tv", 8),
-    ("robot_vacuum", 1), ("robot_drying", 1), ("robot_mower", 2), ("robot_stick", 1), ("robot_washer", 1), ("nt_pool", 1), ("pool_running", 1), ("nt_spa", 1),
+    ("robot_vacuum", 2), ("mob_poster", 5), ("robot_mower", 2), ("robot_stick", 1), ("robot_washer", 1), ("nt_pool", 1), ("pool_running", 1), ("nt_spa", 1),
     ("solar_day", 2), ("battery_charging", 2), ("ups_online", 1), ("nt_linky", 5), ("nt_booster", 2), ("nt_floor", 2), ("nt_sauna", 1), ("nt_aquarium", 1),
     ("scale_fresh", 1), ("hd_hot", 2), ("dif_drop", 5), ("hrv_one_duct", 3), ("cam_outdoor", 5), ("lamp_floor", 10), ("mb_classic", 2), ("nt_tree", 1),
 )
@@ -185,7 +189,7 @@ def screenshots():
     for lang, name in (("", "screenshot.png"), ("&lang=fr", "screenshot.fr.png")):
         out = DOCS / name
         im = shoot(f"http://127.0.0.1:{PORT}/docs/demo.html?view=types&only={types}&models={models}&cols=8{lang}"
-                   f"&lines=0&poster=1&cw=136&gap=4&isize=1.05", str(out), window=(1400, 3000), scale=HEADER_SCALE)
+                   f"&lines=0&poster=1&cw=136&gap=4&isize=1.05&phase=4500", str(out), window=(1400, 3000), scale=HEADER_SCALE)
         print(f"  {name}  {im.size[0]}x{im.size[1]}  {len(POSTER)} drawings")
 
 
@@ -196,8 +200,9 @@ def gifs(only=None):
         cols, card_w = GIF_WIDE.get(slug, (gif_cols(len(types.split(","))), GIF_CARD_W))
         for lang, name in (("", f"family-{slug}.gif"), ("&lang=fr", f"family-{slug}.fr.gif")):
             frames, box = [], None
-            for i in range(GIF_FRAMES):
-                phase = i * GIF_STEP_MS
+            frames_n, step = GIF_TIMING.get(slug, (GIF_FRAMES, GIF_STEP_MS))
+            for i in range(frames_n):
+                phase = i * step
                 tmp = DOCS / f".frame-{i}.png"
                 url = (f"http://127.0.0.1:{PORT}/docs/demo.html"
                        f"?view=types&only={types}&cols={cols}&phase={phase}{lang}"
@@ -216,7 +221,7 @@ def gifs(only=None):
                 tmp.unlink()
             out = DOCS / name
             frames[0].save(out, save_all=True, append_images=frames[1:],
-                           duration=GIF_STEP_MS, loop=0, optimize=True)
+                           duration=step, loop=0, optimize=True)
             print(f"  {name}  {frames[0].size[0]}x{frames[0].size[1]}  {os.path.getsize(out) // 1024} KB")
 
 
