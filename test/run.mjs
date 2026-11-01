@@ -11668,6 +11668,53 @@ function tvT(w) { return { 'switch.tv': { state: 'on', attributes: {} }, 'sensor
   check('editeur linky : la periode tarifaire', ed({ appliance_type: 'meter', state_entity: 'sensor.papp' }).includes('data-toggle="tariff_entity"'), true);
   check('editeur frigo : coffre et tiroirs', ['"chest"', '"drawers"'].every((v) => ed({ appliance_type: 'fridge', fridge_layout: 'single' }).includes(`value=${v}`)), true);
   check('editeur robot piscine : le temps restant', ed({ appliance_type: 'robot', robot_layout: 'pool', state_entity: 'vacuum.d' }).includes('data-toggle="remaining_time_entity"'), true);
+
+  // An electric ride on its charger (#72).
+  const MB = { appliance_type: 'mobility', state_entity: 'switch.trott', power_entity: 'sensor.trott_w' };
+  const mbS = (plug, w, more = {}) => ({ 'switch.trott': s(plug), 'sensor.trott_w': s(w, { unit_of_measurement: 'W' }), ...more });
+  check('mobilite : en charge au-dessus de 40 W', stateLine(render(MB, mbS('on', 118))), 'Charging');
+  check('mobilite : chargee en dessous', stateLine(render(MB, mbS('on', 12))), 'Charged');
+  check('mobilite : debranchee', stateLine(render(MB, mbS('off', 0))), 'Unplugged');
+  check('mobilite : le seuil se regle', stateLine(render({ ...MB, power_on_threshold: 10 }, mbS('on', 12))), 'Charging');
+  check('mobilite : en charge, ca bouge', /\bnt-on\b/.test(machineCls(render(MB, mbS('on', 118)))), true);
+  check('mobilite : le courant va vers le vehicule', /class="nta-feed"/.test(render(MB, mbS('on', 118))), true);
+  check('mobilite : chargee, rien ne coule', /class="nta-feed"/.test(render(MB, mbS('on', 12))), false);
+  check('mobilite : debranchee, grisee', /opacity="\.5" style="filter:grayscale\(1\)"/.test(render(MB, mbS('off', 0))), true);
+  check('mobilite : branchee, en couleur', /style="filter:grayscale\(1\)"/.test(render(MB, mbS('on', 118))), false);
+  check('mobilite : debranchee, la prise au sol', /<rect x="\d+" y="104.6" width="5.4"/.test(render(MB, mbS('off', 0))), true);
+  {
+    // Unplugged without a battery entity, the gauge keeps the charge seen.
+    const { card } = build(MB, mbS('on', 12));
+    rerender(card, mbS('off', 0));
+    check('mobilite : debranchee apres la charge, la jauge reste pleine', (markup(card).match(/height="5.2" rx=".6" fill="#43a047"/g) || []).length, 4);
+    const fresh = render(MB, mbS('off', 0));
+    check('mobilite : debranchee sans rien savoir, jauge vide', (fresh.match(/height="5.2" rx=".6" fill="#43a047"/g) || []).length, 0);
+  }
+  check('mobilite : niveau inconnu, les barres se remplissent', ['nta-bar1', 'nta-bar4'].every((c) => render(MB, mbS('on', 118)).includes(`class="${c}"`)), true);
+  const BT = { ...MB, battery_entity: 'sensor.trott_bat' };
+  const bat = (v) => ({ 'sensor.trott_bat': s(v, { unit_of_measurement: '%' }) });
+  const lit = (h) => (h.match(/height="5.2" rx=".6" fill="#43a047"/g) || []).length;
+  check('mobilite : 64 %, trois barres', lit(render(BT, mbS('on', 118, bat(64)))), 3);
+  check('mobilite : la suivante clignote', /class="nta-next"/.test(render(BT, mbS('on', 118, bat(64)))), true);
+  check('mobilite : niveau connu, pas de remplissage en boucle', /class="nta-bar1"/.test(render(BT, mbS('on', 118, bat(64)))), false);
+  check('mobilite : la batterie en ligne', infoLine(render(BT, mbS('on', 118, bat(64))), 'Battery').replace(/\s/g, ' '), '64 %');
+  check('mobilite : 100 %, chargee', stateLine(render(BT, mbS('on', 118, bat(100)))), 'Charged');
+  check('mobilite : batterie basse en rouge', /height="5.2" rx=".6" fill="#e53935"/.test(render(BT, mbS('off', 0, bat(12)))), true);
+  check('mobilite : sans prise, la batterie dit la charge', stateLine(render({ appliance_type: 'mobility', state_entity: 'switch.trott', battery_entity: 'sensor.trott_bat' }, { 'switch.trott': s('on'), ...bat(50) })), 'Charging');
+  for (const [layout, kind] of [['scooter', 'mob_scooter'], ['offroad', 'mob_offroad'], ['ebike', 'mob_ebike'], ['gyropode', 'mob_gyropode'], ['motorcycle', 'mob_motorcycle']]) {
+    check(`mobilite : modele ${layout}`, kindOf(render({ ...MB, mobility_layout: layout }, mbS('on', 118))), kind);
+  }
+  const byNm = (id) => kindOf(render({ appliance_type: 'mobility', state_entity: id }, { [id]: s('on') }));
+  check('mobilite : ausom par son nom', byNm('switch.ausom_dt2_pro'), 'mob_offroad');
+  check('mobilite : velo par son nom', byNm('switch.velo_electrique'), 'mob_ebike');
+  check('mobilite : moto par son nom', byNm('switch.moto_garage'), 'mob_motorcycle');
+  check('mobilite : gyropode par son nom', byNm('switch.gyropode'), 'mob_gyropode');
+  check('mobilite : trottinette par defaut', byNm('switch.prise_atelier'), 'mob_scooter');
+  check('detection : trottinette', det('switch.trottinette'), 'mob_scooter');
+  check('detection : velo electrique', det('switch.velo_electrique'), 'mob_ebike');
+  check('editeur mobilite : le modele', ed({ appliance_type: 'mobility', state_entity: 'switch.t' }).includes('"mobility_layout"'), true);
+  check('editeur mobilite : la batterie', ed({ appliance_type: 'mobility', state_entity: 'switch.t' }).includes('data-toggle="battery_entity"'), true);
+  check('mobilite : en francais', stateLine(render({ ...MB, language: 'fr' }, mbS('on', 118))), 'En charge');
 }
 
 // =============================================================================
