@@ -141,7 +141,7 @@ const T = {
     type_iron: "Iron", section_iron_layout: "Model", layout_iron: "Iron", layout_generator: "Steam generator", iron_line_color: "Line colour", color_blue: "Blue", color_body: "Same as the appliance",
     type_toaster: "Toaster", section_toaster_layout: "Model", layout_toaster_two: "Two slots", layout_toaster_four: "Four slots",
     layout_toaster_long: "Long slot", toaster_toasting: "Toasting", toaster_done: "Toast ready", type_air_purifier: "Air purifier",
-    type_screen: "Screen (TV, projector, computer)", section_screen_layout: "Model", layout_tv_feet: "TV on feet", layout_tv_stand: "TV on a stand", layout_tv_wall: "Wall-mounted TV", layout_projector: "Projector", layout_computer: "Computer", layout_laptop: "Laptop", laptop_color: "Laptop colour", color_silver: "Silver", color_space_grey: "Space grey", color_midnight: "Midnight", color_rose: "Rose gold", section_screen_image: "Picture on screen", img_random: "Random", img_sunset: "Sunset", img_aquarium: "Aquarium", img_bars: "Test card", img_football: "Football match", img_space: "Space", img_bounce: "Bouncing logo", img_desktop: "Desktop", img_code: "Scrolling code", img_pong: "Pong", screen_on: "On", screen_playing: "Playing", screen_home: "Home screen", screen_locked: "Locked", screen_muted: "Muted", screen_standby_threshold: "Standby up to this power (W)", section_media: "Media player", section_media2: "Second media player", section_media3: "Third media player", section_lock: "Session lock", layout_tablet_wall: "Wall tablet", layout_tablet_frame: "Framed tablet", layout_tablet_portrait: "Upright tablet with light bar", img_dashboard: "Dashboard", screen_dashboard: "Dashboard", screen_saver: "Screensaver", screen_dark: "Screen off", tab_charging: "charging", tab_line_page: "Page", tab_line_touched: "Last interaction", tab_screen: "Screen", tab_reload: "Reload page", section_screensaver: "Screensaver", section_tab_charging: "Charging sensor", section_tab_page: "Current page", section_tab_brightness: "Screen brightness", section_tab_touched: "Last interaction", tab_restart: "Restart app", section_tab_screenshot: "Screenshot",
+    type_screen: "Screen (TV, projector, computer)", section_screen_layout: "Model", layout_tv_feet: "TV on feet", layout_tv_stand: "TV on a stand", layout_tv_wall: "Wall-mounted TV", layout_projector: "Projector", layout_computer: "Computer", layout_laptop: "Laptop", laptop_style: "Laptop style", laptop_thin: "Thin, MacBook style", laptop_classic: "Classic PC", laptop_color: "Laptop colour", color_silver: "Silver", color_space_grey: "Space grey", color_midnight: "Midnight", color_rose: "Rose gold", section_screen_image: "Picture on screen", img_random: "Random", img_sunset: "Sunset", img_aquarium: "Aquarium", img_bars: "Test card", img_football: "Football match", img_space: "Space", img_bounce: "Bouncing logo", img_desktop: "Desktop", img_code: "Scrolling code", img_pong: "Pong", screen_on: "On", screen_playing: "Playing", screen_home: "Home screen", screen_locked: "Locked", screen_muted: "Muted", screen_standby_threshold: "Standby up to this power (W)", section_media: "Media player", section_media2: "Second media player", section_media3: "Third media player", section_lock: "Session lock", layout_tablet_wall: "Wall tablet", layout_tablet_frame: "Framed tablet", layout_tablet_portrait: "Upright tablet with light bar", img_dashboard: "Dashboard", screen_dashboard: "Dashboard", screen_saver: "Screensaver", screen_dark: "Screen off", tab_charging: "charging", tab_line_page: "Page", tab_line_touched: "Last interaction", tab_screen: "Screen", tab_reload: "Reload page", section_screensaver: "Screensaver", section_tab_charging: "Charging sensor", section_tab_page: "Current page", section_tab_brightness: "Screen brightness", section_tab_touched: "Last interaction", tab_restart: "Restart app", section_tab_screenshot: "Screenshot",
     step_heat_threshold: "Heating above this power (W)", step_spin_threshold: "Spinning above this power (W)", zone_power: "One zone at full power (W)",
     source: "Source", source_plug: "A smart plug", source_integration: "Integration entities", plug_switch: "Smart plug switch",
     type_thermostat: "Thermostat", section_thermostat_layout: "Model", layout_th_square: "Square", layout_th_round: "Round", layout_th_glass: "Black glass", layout_th_valve: "Radiator valve", th_idle: "Target reached", th_eco: "Eco", th_away: "Away", th_frost: "Frost protection", th_window: "Window open", th_line_valve: "Valve", section_thermostat: "Room thermostat",
@@ -3218,7 +3218,7 @@ const STATE_DOMAINS = {
 };
 // A model, a picture, the players it shows and a session lock belong to a
 // screen.
-const SCREEN_ONLY_FIELDS = ["screen_layout", "laptop_color", "screen_image", "media_entity", "media2_entity", "media3_entity", "lock_entity", "source_entity",
+const SCREEN_ONLY_FIELDS = ["screen_layout", "laptop_style", "laptop_color", "screen_image", "media_entity", "media2_entity", "media3_entity", "lock_entity", "source_entity",
   "screensaver_entity", "charging_entity", "url_entity", "brightness_entity", "last_interaction_entity", "reload_entity",
   "restart_entity", "screenshot_entity"];
 // Ports, bays, disks and traffic belong to a network device.
@@ -9532,7 +9532,12 @@ const ILLUSTRATION_CSS = {
         .scr-zoom { position: absolute; width: 96px; height: 108px; transform-origin: 0 0; }
         .scr-bezel, .scr-glass, .scr-led, .scr-foot, .scr-neck, .scr-base, .scr-shade, .scr-wall, .scr-rod, .scr-beam,
         .scr-body, .scr-lens, .scr-vent, .scr-feet, .scr-tower, .scr-slot { position: absolute; }
-        .lap-shadow, .lap-cam, .lap-hinge, .lap-deck, .lap-keys, .lap-pad, .lap-edge, .lap-notch, .lap-cable { position: absolute; }
+        .lap-shadow, .lap-cam, .lap-hinge, .lap-deck, .lap-keys, .lap-pad, .lap-edge, .lap-notch, .lap-cable, .lap-brand, .lap-btns, .lap-sticker, .lap-vent { position: absolute; }
+        .lap-brand { border-radius: 0.5px; background: rgba(255, 255, 255, 0.28); }
+        .lap-btns { clip-path: polygon(0 0, 100% 0, 101% 100%, -1% 100%); background: linear-gradient(90deg, rgba(0, 0, 0, 0.16) 0 49%, transparent 49% 51%, rgba(0, 0, 0, 0.16) 51%); }
+        .lap-sticker { border-radius: 0.4px; background: linear-gradient(135deg, #1e88e5, #0d47a1); box-shadow: inset 0 0 0 0.3px rgba(255, 255, 255, 0.5); }
+        .lap-vent { background: repeating-linear-gradient(90deg, rgba(0, 0, 0, 0.35) 0 0.8px, transparent 0.8px 1.6px); }
+        .scr-laptop.lap-st-classic .lap-lid { border-radius: 2px 2px 0 0; background: linear-gradient(180deg, #2c3035, #191c20); }
         .lap-lid { border-radius: 3px 3px 0 0; }
         .lap-cam { border-radius: 50%; background: #0c0e11; box-shadow: 0 0 0 0.4px rgba(255, 255, 255, 0.2); }
         .lap-hinge { background: linear-gradient(180deg, #2a2e33, #7d848b); }
@@ -9547,7 +9552,8 @@ const ILLUSTRATION_CSS = {
         .machine.lap-midnight { --ac-body: #2e3440; --ac-body-hi: #4a5263; --ac-body-lo: #1b1f27; }
         .machine.lap-gold { --ac-body: #e3cfae; --ac-body-hi: #f6ead6; --ac-body-lo: #b89f78; }
         .machine.lap-rose { --ac-body: #e6c3bb; --ac-body-hi: #f6e1dc; --ac-body-lo: #b9918a; }
-        .machine.lap-midnight .lap-keys, .machine.lap-space_grey .lap-keys { fill: #15181c; }
+        .machine.lap-black { --ac-body: #3a3f45; --ac-body-hi: #575d64; --ac-body-lo: #202428; }
+        .machine.lap-midnight .lap-keys, .machine.lap-space_grey .lap-keys, .machine.lap-black .lap-keys { fill: #15181c; }
         .lap-shadow { border-radius: 50%; background: radial-gradient(ellipse at 50% 40%, rgba(0, 0, 0, 0.22), transparent 70%); }
         .lap-cable { border-radius: 1px; background: #2b2f34; }
         .scr-laptop .scr-led { border-radius: 0.6px; }
@@ -11861,18 +11867,30 @@ const SCREEN_BADGES = SCREEN_BADGE("play", "M9 7v10l8-5z") + SCREEN_BADGE("pause
 // front, so each row's keys widen with it and their sides lean like the deck's.
 const LAPTOP_COLORS = {
   silver: ["#c9ced4", "#eef0f2", "#8e959c"], space_grey: ["#7d8187", "#a3a7ac", "#55595e"],
-  midnight: ["#2e3440", "#4a5263", "#1b1f27"], gold: ["#e3cfae", "#f6ead6", "#b89f78"], rose: ["#e6c3bb", "#f6e1dc", "#b9918a"],
+  black: ["#3a3f45", "#575d64", "#202428"], midnight: ["#2e3440", "#4a5263", "#1b1f27"], gold: ["#e3cfae", "#f6ead6", "#b89f78"], rose: ["#e6c3bb", "#f6e1dc", "#b9918a"],
 };
-function laptopKeys() {
+// The classic one, a PC's, adds its numeric keypad on the right.
+const LAPTOP_STYLES = ["thin", "classic"];
+const LAPTOP_THIN_RE = /macbook|apple|mac ?book/;
+function laptopStyleOf(cfg, st) {
+  if (LAPTOP_STYLES.includes(cfg.laptop_style)) return cfg.laptop_style;
+  const name = stripAccents(`${cfg.state_entity || ""} ${(st && st.attributes && st.attributes.friendly_name) || ""}`.toLowerCase());
+  return LAPTOP_THIN_RE.test(name) ? "thin" : "classic";
+}
+function laptopKeys(classic) {
   const xl = (y) => 16 - 10 * (y - 68.4) / 14 + 1.6;
   const xr = (y) => 80 + 10 * (y - 68.4) / 14 - 1.6;
-  const at = (y, u) => xl(y) + (xr(y) - xl(y)) * u / 14;
+  const T = classic ? 17.8 : 14;
+  const at = (y, u) => xl(y) + (xr(y) - xl(y)) * u / T;
   const rows = [[69.7, 71.0], [71.2, 72.6], [72.8, 74.2], [74.4, 75.8], [76.0, 77.4]];
+  const pad = classic ? [0.6, 1.07, 1.07, 1.06] : [];
   const cells = [];
   rows.forEach(([y0, y1], r) => {
-    const keys = r === 4 ? [1, 1, 1, 1.2, 5.6, 1.2, 1, 1, 1] : Array(14).fill(1);
+    const keys = (r === 4 ? [1, 1, 1, 1.2, 5.6, 1.2, 1, 1, 1] : Array(14).fill(1)).concat(pad);
     let u = 0;
-    for (const w of keys) {
+    for (const [i, w] of keys.entries()) {
+      // The gap before the keypad is a gap, not a key.
+      if (classic && i === keys.length - 4) { u += w; continue; }
       const a = u + 0.12, b = u + w - 0.12;
       cells.push(`${at(y0, a).toFixed(2)},${y0} ${at(y0, b).toFixed(2)},${y0} ${at(y1, b).toFixed(2)},${y1} ${at(y1, a).toFixed(2)},${y1}`);
       u += w;
@@ -11908,11 +11926,17 @@ function screenHtml(cls, sc) {
     // A laptop open on the desk: its lid upright with the screen, the
     // keyboard and the trackpad on the deck seen from above, a light on the
     // front edge, and its cable while it charges.
+    // The classic one: a thicker bezel and base, the keypad, the trackpad
+    // off centre with its two buttons, a sticker on the palm rest.
+    const classic = sc.laptopStyle === "classic";
     body = box("lap-shadow", 4, 82, 88, 6) + box("scr-bezel lap-lid", 16, 26, 64, 41)
-      + `<div class="scr-glass" style="left: 19px; top: 29px; width: 58px; height: 35.5px">${glassInner}</div>`
+      + (classic ? `<div class="scr-glass" style="left: 20px; top: 29.5px; width: 56px; height: 33.5px">${glassInner}</div>` + box("lap-brand", 45, 64.6, 6, 0.9)
+        : `<div class="scr-glass" style="left: 19px; top: 29px; width: 58px; height: 35.5px">${glassInner}</div>`)
       + box("lap-cam", 47.4, 27.1, 1.2, 1.2) + box("lap-hinge", 16, 67, 64, 1.6)
-      + box("lap-deck", 6, 68.4, 84, 14) + laptopKeys() + box("lap-pad", 38, 77.9, 20, 3.6)
-      + box("lap-edge", 6, 82.4, 84, 2.4) + box("lap-notch", 42, 82.4, 12, 0.9) + box("scr-led", 12, 82.9, 2, 1.2)
+      + box("lap-deck", 6, 68.4, 84, 14) + laptopKeys(classic)
+      + (classic ? box("lap-pad", 33, 77.9, 17, 2.7) + box("lap-btns", 32.6, 80.7, 17.8, 1.1) + box("lap-sticker", 70, 78.6, 4.4, 2.6)
+          + box("lap-edge", 6, 82.4, 84, 3.4) + box("scr-led", 10, 83.3, 1.6, 1) + box("scr-led", 13, 83.3, 1.6, 1) + box("lap-vent", 66, 83.4, 14, 1.2)
+        : box("lap-pad", 38, 77.9, 20, 3.6) + box("lap-edge", 6, 82.4, 84, 2.4) + box("lap-notch", 42, 82.4, 12, 0.9) + box("scr-led", 12, 82.9, 2, 1.2))
       + (sc.charging ? box("lap-cable", 90, 79, 6, 1.4) + `<svg class="tab-bolt" viewBox="0 0 10 14" style="left: 88px; top: 71px"><path d="M6 0 0 8h4l-1 6 6-8H5z"/></svg>` : "");
   } else if (tablet) {
     // A wall tablet, drawn on its patch of wall (#62): flat on its mount, in
@@ -11950,7 +11974,7 @@ function screenHtml(cls, sc) {
     ? ` data-fit-w="${px(96 * band[2])}" style="width: calc(${px(96 * band[2])}px * ${fit}); height: calc(${px(band[1] * band[2])}px * ${fit})"`
     : "";
   return `
-        <div class="machine ${cls} scr-${layout} mode-${mode}${lit}${layout === "laptop" && LAPTOP_COLORS[sc.color] ? ` lap-${sc.color}` : ""}${sc.muted ? " muted" : ""}${tablet ? " tablet" : ""}${sc.charging ? " charging" : ""}${sc.seen ? " seen" : ""}${sc.tower ? ` tw-${sc.tower}` : ""}"${size}>${inner}</div>`;
+        <div class="machine ${cls} scr-${layout} mode-${mode}${lit}${layout === "laptop" ? ` lap-st-${sc.laptopStyle === "classic" ? "classic" : "thin"}` : ""}${layout === "laptop" && LAPTOP_COLORS[sc.color] ? ` lap-${sc.color}` : ""}${sc.muted ? " muted" : ""}${tablet ? " tablet" : ""}${sc.charging ? " charging" : ""}${sc.seen ? " seen" : ""}${sc.tower ? ` tw-${sc.tower}` : ""}"${size}>${inner}</div>`;
 }
 
 // Washer, dryer, oven and microwave, drawn after real ones. They take the
@@ -15929,7 +15953,10 @@ class ApplianceCard extends HTMLElement {
       const battery = (tablet || laptop) && cfg.battery_entity ? numericState(hass, cfg.battery_entity) : null;
       screen = {
         tower,
-        mode, layout, image: this._screenImage || pool[0], cover, muted, tablet, laptop, charging, battery, color: cfg.laptop_color,
+        mode, layout, image: this._screenImage || pool[0], cover, muted, tablet, laptop, charging, battery,
+        laptopStyle: laptop ? laptopStyleOf(cfg, stateObj(hass, cfg.state_entity)) : "",
+        // A classic laptop is black unless a colour is chosen, its own or the card's.
+        color: cfg.laptop_color || (laptop && !cfg.illustration_color && laptopStyleOf(cfg, stateObj(hass, cfg.state_entity)) === "classic" ? "black" : ""),
         seen: tablet && camOn(hass, cfg.motion_entity),
         clock: mode === "saver" ? feederClock(hass) : "",
         date: mode === "saver" ? new Date(Date.now()).toLocaleDateString(lang(hass), { weekday: "short", day: "numeric", month: "short" }).toUpperCase() : "",
@@ -17628,7 +17655,7 @@ function loadEditor() {
   if (customElements.get("ha-appliance-card-editor")) return Promise.resolve();
   if (!editorLoading) {
     editorLoading = import(assetUrl("ha-appliance-card-editor.js"))
-      .then((m) => m.default({ t, onLanguageLoaded, LANGUAGE_NAMES, localizedHass, activationOf, TH_LAYOUTS, EV_POWER_THRESHOLD, stateObj, parseValueMap, stringifyValueMap, alertsArray, LIST_OTHER, ENTITY_LISTS, listCandidates, defaultCardName, stripDeviceName, domainOf, INFO_MAX, autoSuggest, APPLIANCE_TYPES, STATE_DOMAINS, SCREEN_ONLY_FIELDS, illustrationSizeOf, fontScaleOf, compactModeOf, TYPE_GROUPS, caps, detectApplianceType, SCREEN_STANDBY_W, SCREEN_LAYOUTS, SCREEN_IMAGES, screenLayoutOf, screenIsTablet, HD_HEAT_W, PLUG_THRESHOLDS, ZONE_POWER_W, PLUG_SOURCE_TYPES, plugSourceOf, DW_DRY_MIN, WASH_HEAT_W, WASH_SPIN_W, DRYER_HEAT_W, NET_LAYOUTS, SWITCH_PORTS, NET_BAYS, NET_BUSY_MBIT, NET_TEMP_ALERT, netLayoutOf, ROBOT_LAYOUTS, ROBOT_STATIONS, ROBOT_BOX_COLORS, ROBOT_FLOORS, ROBOT_SERVICES, STICK_AWAY_W, robotLayoutOf, POOL_PRESSURE_ALERT, SOLAR_LAYOUTS, BATTERY_LAYOUTS, BATTERY_IDLE_W, DIFFUSER_LAYOUTS, illustrationTapOf, HRV_LAYOUTS, CAMERA_LAYOUTS, MAILBOX_LAYOUTS, MAILBOX_SIDES, mailboxLayoutOf, LAMP_LAYOUTS, LAMP_SPOTS, lampLayoutOf, MOBILITY_LAYOUTS, PUMP_LAYOUTS, FLOOR_LAYOUTS, METER_LAYOUTS, meterLayoutOf, TREE_PALETTES, TREE_PRESENTS, pumpLayoutOf, UPS_BATTERY_LOW, HISTORY_HOURS, BODY_COLORS, esc, MOWER_STYLES, SHELTER_STYLES, SHELTER_COLORS, LAPTOP_COLORS, stateFreeSource }))
+      .then((m) => m.default({ t, onLanguageLoaded, LANGUAGE_NAMES, localizedHass, activationOf, TH_LAYOUTS, EV_POWER_THRESHOLD, stateObj, parseValueMap, stringifyValueMap, alertsArray, LIST_OTHER, ENTITY_LISTS, listCandidates, defaultCardName, stripDeviceName, domainOf, INFO_MAX, autoSuggest, APPLIANCE_TYPES, STATE_DOMAINS, SCREEN_ONLY_FIELDS, illustrationSizeOf, fontScaleOf, compactModeOf, TYPE_GROUPS, caps, detectApplianceType, SCREEN_STANDBY_W, SCREEN_LAYOUTS, SCREEN_IMAGES, screenLayoutOf, screenIsTablet, HD_HEAT_W, PLUG_THRESHOLDS, ZONE_POWER_W, PLUG_SOURCE_TYPES, plugSourceOf, DW_DRY_MIN, WASH_HEAT_W, WASH_SPIN_W, DRYER_HEAT_W, NET_LAYOUTS, SWITCH_PORTS, NET_BAYS, NET_BUSY_MBIT, NET_TEMP_ALERT, netLayoutOf, ROBOT_LAYOUTS, ROBOT_STATIONS, ROBOT_BOX_COLORS, ROBOT_FLOORS, ROBOT_SERVICES, STICK_AWAY_W, robotLayoutOf, POOL_PRESSURE_ALERT, SOLAR_LAYOUTS, BATTERY_LAYOUTS, BATTERY_IDLE_W, DIFFUSER_LAYOUTS, illustrationTapOf, HRV_LAYOUTS, CAMERA_LAYOUTS, MAILBOX_LAYOUTS, MAILBOX_SIDES, mailboxLayoutOf, LAMP_LAYOUTS, LAMP_SPOTS, lampLayoutOf, MOBILITY_LAYOUTS, PUMP_LAYOUTS, FLOOR_LAYOUTS, METER_LAYOUTS, meterLayoutOf, TREE_PALETTES, TREE_PRESENTS, pumpLayoutOf, UPS_BATTERY_LOW, HISTORY_HOURS, BODY_COLORS, esc, MOWER_STYLES, SHELTER_STYLES, SHELTER_COLORS, LAPTOP_COLORS, LAPTOP_STYLES, stateFreeSource }))
       .catch((err) => {
         editorLoading = null;
         throw err;

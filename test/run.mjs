@@ -9001,17 +9001,27 @@ check('borne : ni un statut reconnu', evMode(evR('SuspendedEVSE', { power_entity
   // The keys lean with the deck: a key on the left is wider at its front edge
   // and leans left, one on the right leans right.
   const keyPts = (lapH.match(/<svg class="lap-keys"[\s\S]*?<\/svg>/) || [''])[0].match(/points="([^"]+)"/g) || [];
-  check('portable : 65 touches (4 rangs de 14, une barre d espace)', keyPts.length, 65);
+  check('portable classique : 80 touches, avec le pave numerique', keyPts.length, 80);
+  const thinH = render({ ...LAP, laptop_style: 'thin' }, lapSt());
+  check('portable fin : 65 touches (4 rangs de 14, une barre d espace)', ((thinH.match(/<svg class="lap-keys"[\s\S]*?<\/svg>/) || [''])[0].match(/points="/g) || []).length, 65);
+  check('portable : classique par defaut', machineCls(lapH).includes('lap-st-classic'), true);
+  check('portable classique : noir par defaut', machineCls(lapH).includes('lap-black'), true);
+  check('portable classique : les boutons du pave tactile', /class="lap-btns"/.test(lapH), true);
+  check('portable fin : pas de boutons', /class="lap-btns"/.test(thinH), false);
+  check('portable fin : argent par defaut', /lap-black/.test(machineCls(thinH)), false);
+  check('portable : un MacBook est fin', machineCls(render({ ...LAP, state_entity: 'switch.macbook_pro' }, { ...lapSt(), 'switch.macbook_pro': { state: 'on', attributes: {} } })).includes('lap-st-thin'), true);
+  check('portable classique : la couleur de la carte l emporte sur le noir', /lap-black/.test(machineCls(render({ ...LAP, illustration_color: 'red' }, lapSt()))), false);
   const pts = (k) => k.slice(8, -1).split(' ').map((p) => p.split(',').map(Number));
   const first = pts(keyPts[0]), last = pts(keyPts[13]);
   check('portable : la premiere touche penche a gauche', first[3][0] < first[0][0], true);
   check('portable : la derniere touche penche a droite', last[2][0] > last[1][0], true);
-  check('portable : couleur par defaut, argent', /lap-(silver|space_grey|midnight|gold|rose)/.test(machineCls(lapH)), false);
+  check('portable : couleur par defaut, aucune des couleurs au choix', /lap-(silver|space_grey|midnight|gold|rose)/.test(machineCls(lapH)), false);
   check('portable : gris sideral', machineCls(render({ ...LAP, laptop_color: 'space_grey' }, lapSt())).includes('lap-space_grey'), true);
   check('portable : couleur inconnue ignoree', /lap-pink/.test(machineCls(render({ ...LAP, laptop_color: 'pink' }, lapSt()))), false);
   check('ordinateur : pas de couleur de portable', /lap-gold/.test(machineCls(render({ ...LAP, screen_layout: 'computer', laptop_color: 'gold' }, lapSt()))), false);
   const edLap = markup(newEditor(LAP));
   check('editeur portable : la couleur', /data-field="laptop_color"/.test(edLap), true);
+  check('editeur portable : le style', /data-field="laptop_style"/.test(edLap), true);
   check('editeur ordinateur : pas de couleur de portable', /data-field="laptop_color"/.test(markup(newEditor({ ...LAP, screen_layout: 'computer' }))), false);
   check('editeur portable : la charge', edLap.includes('data-toggle="charging_entity"'), true);
   check('editeur portable : la batterie', edLap.includes('data-toggle="battery_entity"'), true);
