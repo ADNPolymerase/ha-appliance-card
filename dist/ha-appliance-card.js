@@ -14702,9 +14702,12 @@ class ApplianceCard extends HTMLElement {
       const tankCircuit = hpCircuit === "hot_water";
       const powerId = (cooling && cfg.cooling_power_entity) || (tankCircuit && cfg.hot_water_power_entity) || cfg.power_entity;
       const outputId = (cooling && cfg.cooling_output_entity) || (tankCircuit && cfg.hot_water_output_entity) || cfg.heat_output_entity;
-      hpLine(powerId, "power", cfg.power_icon || "mdi:flash", t(hass, "power"));
-      hpLine(outputId, "heat_output", cooling ? "mdi:snowflake" : "mdi:heat-wave",
-        t(hass, cooling ? "section_cooling_output" : "section_heat_output"));
+      // A meter in kWh is energy, not power (#76).
+      const coldOut = cooling;
+      const energyUnit = (id) => /^[kmg]?wh$/i.test(String(unitOf(hass, id) || "").replace(/\s/g, ""));
+      hpLine(powerId, "power", cfg.power_icon || "mdi:flash", t(hass, powerId && energyUnit(powerId) ? "energy_line" : "power"));
+      hpLine(outputId, "heat_output", coldOut ? "mdi:snowflake" : "mdi:heat-wave",
+        t(hass, coldOut ? "section_cooling_output" : "section_heat_output"));
       const pw = powerId ? numericState(hass, powerId) : null;
       if (cfg.cop_entity) {
         hpLine(cfg.cop_entity, "cop", "mdi:gauge", "COP");
@@ -14722,7 +14725,7 @@ class ApplianceCard extends HTMLElement {
           extraLines.push({
             key: "cop",
             icon: "mdi:gauge",
-            label: cooling ? "EER" : "COP",
+            label: coldOut ? "EER" : "COP",
             value: new Intl.NumberFormat(lang(hass), { minimumFractionDigits: 1, maximumFractionDigits: 1 }).format(cop),
           });
         }

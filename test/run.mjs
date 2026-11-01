@@ -2445,6 +2445,10 @@ const rBare = HM('Cooling', 'Room', 17, { power_entity: 'sensor.hm_heat_in', hea
   HMR([610, 2400], [0, 0], [0, 0]));
 check('circuits : sans champ de froid, la puissance du chauffage', infoLine(rBare, 'Power'), '610 W');
 check('circuits : nommee froid produit', infoLine(rBare, 'Cooling output'), '2400 W');
+// A daily consumption in kWh put in the power field reads as energy (#76).
+const rKwh = HM('Heating', 'Room', 35, { power_entity: 'sensor.hp_kwh' }, { 'sensor.hp_kwh': { state: '2.35', attributes: { unit_of_measurement: 'kWh' } } });
+check('pac : des kWh se disent energie', (infoLine(rKwh, 'Energy') || '').replace(/\s/g, ' '), '2.35 kWh');
+check('pac : et pas puissance', infoLine(rKwh, 'Power'), null);
 // A COP entity is the owner's own, and keeps its name.
 check('circuits : une entite COP reste COP en froid', infoLine(HM('Cooling', 'Room', 17,
   { ...HMF, cop_entity: 'sensor.hp_cop' }, { ...HMR([0, 0], [520, 2900], [0, 0]), ...HP_READINGS }), 'COP'), '3.2');
