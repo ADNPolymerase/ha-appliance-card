@@ -2493,6 +2493,43 @@ contains('eau : et elle y coule', hmCool, '.machine.flowing.mode-hot_water .hp-p
   check('suggestion heishamon : la puissance du ballon', sug.hot_water_power_entity, 'sensor.aquarea_dhw_power_consumed');
 }
 
+{
+  // EMS-ESP words its compressor activity in the language it is set to, eleven
+  // of them: no state_map needed in any. Its short entity id makes it a heat pump.
+  const EMS_WORDS = {
+    idle: ['off', 'aus', 'uit', 'av', 'wyłączono', 'kapalı', 'vyp', 'none', 'keine', 'geen', 'ingen', 'brak', 'aucun', 'hiçbiri', 'nessuno', 'žiadny', 'žádné'],
+    space_heating: ['heating', 'Heizen', 'verwarmen', 'Uppvärmning', 'ogrzewanie', 'oppvarming', 'chauffage', 'ısıtma', 'riscaldamento', 'kúrenie', 'topení'],
+    cooling: ['cooling', 'Kühlen', 'koelen', 'Kyler', 'chłodzenie', 'kjøling', 'refroidissement', 'soğuma', 'raffreddamento', 'chladenie', 'chlazení'],
+    hot_water: ['hot water', 'Warmwasser', 'warm water', 'varmvatten', 'c.w.u.', 'varmtvann', 'eau chaude', 'sıcak su', 'acqua calda', 'horúca voda', 'horká voda'],
+    defrost: ['defrost', 'Abtauen', 'ontdooien', 'avfrostning', 'odladzanie', 'tine', 'dégivrage', 'buz çözücü', 'scongelamento', 'odmrazenie', 'odmrazování'],
+  };
+  for (const [mode, words] of Object.entries(EMS_WORDS)) {
+    const missed = words.filter((w) => !hasCls(render({ state_entity: 'sensor.boiler_hpactivity' },
+      { 'sensor.boiler_hpactivity': { state: w, attributes: { friendly_name: 'Boiler Compressor activity' } } }), `mode-${mode}`));
+    check(`ems-esp : ${mode} dans les onze langues, sans state_map`, missed.join(', '), '');
+  }
+  // Its fields by their short names, which do not change with the language.
+  // curflowtemp comes first on purpose: on a heat pump it is the boiler
+  // module's sensor, not the water leaving the pump.
+  const ids = ['sensor.boiler_hpactivity', 'sensor.boiler_curflowtemp', 'sensor.boiler_hptc1', 'sensor.boiler_hptc0',
+    'binary_sensor.boiler_hpcompon', 'sensor.boiler_hpcurrpower', 'sensor.boiler_hppower', 'sensor.boiler_pc0flow',
+    'sensor.boiler_fanspd', 'sensor.boiler_outdoortemp'];
+  const ed = new Editor();
+  ed.setConfig({ type: 'custom:ha-appliance-card', state_entity: 'sensor.boiler_hpactivity' });
+  ed.hass = { ...HASS(Object.fromEntries(ids.map(id => [id, { state: '1', attributes: {} }]))),
+    entities: Object.fromEntries(ids.map(id => [id, { device_id: 'ems' }])) };
+  const sug = ed.events.at(-1)?.detail?.config || {};
+  check('suggestion ems-esp : reconnue comme pompe a chaleur', sug.appliance_type === undefined || sug.appliance_type === 'heat_pump', true);
+  check('suggestion ems-esp : le depart est hptc1, pas curflowtemp', sug.temperature_entity, 'sensor.boiler_hptc1');
+  check('suggestion ems-esp : le retour hptc0', sug.return_temperature_entity, 'sensor.boiler_hptc0');
+  check('suggestion ems-esp : le compresseur', sug.compressor_entity, 'binary_sensor.boiler_hpcompon');
+  check('suggestion ems-esp : ce qu il consomme', sug.power_entity, 'sensor.boiler_hpcurrpower');
+  check('suggestion ems-esp : la chaleur qu il donne', sug.heat_output_entity, 'sensor.boiler_hppower');
+  check('suggestion ems-esp : le debit', sug.water_flow_entity, 'sensor.boiler_pc0flow');
+  check('suggestion ems-esp : le ventilateur', sug.fan_speed_entity, 'sensor.boiler_fanspd');
+  check('suggestion ems-esp : la temperature exterieure', sug.outdoor_temperature_entity, 'sensor.boiler_outdoortemp');
+}
+
 // The cooling line in fourteen languages: a label of its own in each, never
 // the English one a missing entry would fall back to.
 for (const language of ['fr', 'ru', 'de', 'es', 'it', 'nl', 'pt', 'sv', 'no', 'da', 'pl', 'zh', 'cs']) {
