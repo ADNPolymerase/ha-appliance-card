@@ -229,8 +229,20 @@ function card(config, entities) {
     return el;
   }
   row.appendChild(el);
-  el.setConfig({ type: "custom:ha-appliance-card", ...config });
+  // ?isize= draws the gallery's appliances larger, ?lines= keeps that many
+  // lines per card (0: the drawing, its name and its state alone), for the
+  // README's animated grids.
+  const isize = Number(params.get("isize"));
+  el.setConfig({ type: "custom:ha-appliance-card", ...config, ...(isize ? { illustration_size: isize } : {}) });
   el.hass = mkHass(states);
+  const maxLines = params.get("lines");
+  if (maxLines !== null && el.shadowRoot) {
+    const css = document.createElement("style");
+    css.textContent = maxLines === "0"
+      ? ".info-lines, .actions-row, .bar-row, .history-toggle, .sliders, .alerts { display: none !important; }"
+      : `.info-lines .info-line:nth-child(n+${Number(maxLines) + 1}) { display: none !important; } .actions-row, .history-toggle { display: none !important; }`;
+    el.shadowRoot.appendChild(css);
+  }
   return el;
 }
 

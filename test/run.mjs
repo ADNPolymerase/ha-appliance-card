@@ -9716,6 +9716,11 @@ check('borne : ni un statut reconnu', evMode(evR('SuspendedEVSE', { power_entity
   check('editeur abri : pas de forme sans abri', /data-field="robot_shelter_style"/.test(edMower({})), false);
   check('editeur abri : la forme avec l abri', /data-field="robot_shelter_style"/.test(edMower({ robot_shelter: true })), true);
   check('editeur abri : pas de couleur sur l appentis', /data-field="robot_shelter_color"/.test(edMower({ robot_shelter: true })), false);
+  check('abri : garage au choix', machineCls(mowerH({ robot_shelter_style: 'garage' })).includes('rbt-sh-garage'), true);
+  check('abri : garage noir par defaut', /stop-color="#5c636b"/.test(mowerH({ robot_shelter_style: 'garage' })), true);
+  check('abri : garage blanc', /stop-color="#ffffff"/.test(mowerH({ robot_shelter_style: 'garage', robot_shelter_color: 'white' })), true);
+  check('abri : garage, le tapis', /fill="#2a2e33"/.test(mowerH({ robot_shelter_style: 'garage' })), true);
+  check('editeur abri : la couleur sur le garage', /data-field="robot_shelter_color"/.test(edMower({ robot_shelter: true, robot_shelter_style: 'garage' })), true);
   check('editeur abri : la couleur sur la coque', /data-field="robot_shelter_color"/.test(edMower({ robot_shelter: true, robot_shelter_style: 'shell' })), true);
   check('robot : niveau du reservoir dessine', /rbt-rm" style="--lvl: 42%"/.test(render({ state_entity: 'vacuum.braava', robot_water_entity: 'sensor.w' },
     { 'vacuum.braava': s('cleaning'), 'sensor.w': s(42, { unit_of_measurement: '%' }) })), true);
@@ -10888,7 +10893,7 @@ check('borne : ni un statut reconnu', evMode(evR('SuspendedEVSE', { power_entity
     check('navimow : par son nom', /fill="#ff5a1f"/.test(M({}, 'lawn_mower.navimow_i105')), true);
     check('navimow : sinon la tondeuse classique', /fill="#ff5a1f"/.test(M()), false);
     check('navimow : classique force malgre le nom', /fill="#ff5a1f"/.test(M({ mower_style: 'classic' }, 'lawn_mower.navimow_i105')), false);
-    check('navimow : son anneau dit l etat', /class="rbt-led" cx="31"/.test(M({ mower_style: 'navimow' })), true);
+    check('navimow : son anneau dit l etat', /class="rbt-led" x="19.6"/.test(M({ mower_style: 'navimow' })), true);
   }
   // #54, second round: the air each fan moves on the drawing, the filter as a
   // bar, sliders for the speed in Manual and the setpoint under humidity

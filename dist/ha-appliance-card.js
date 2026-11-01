@@ -148,7 +148,7 @@ const T = {
     compact_lines: "Information", lines_below: "Under the card", lines_beside: "Beside the drawing", lines_toggle: "Hidden, a chevron shows them", lines_show: "Show the information", lines_hide: "Hide the information",
     type_hair_dryer: "Hair dryer", layout_hd_pistol: "Classic", layout_hd_ring: "Ring", hd_cool: "Cool air", hd_hot: "Hot air", hd_heat_threshold: "Hot air above this power (W)", fill_height: "Fill the height of its slot", done_alert: "Flash at the end of the cycle", done_seen: "Seen", no_power_threshold: "No power draw below (W)", group_appearance: "Appearance", show_name: "Show the name", show_state: "Show the state", transparent: "Transparent background", font_scale: "Text size", illustration_size: "Drawing size", compact_mode: "Compact mode", compact_off: "Off", compact_hide: "No drawing", compact_side: "Drawing on the side", group_laundry: "Laundry", group_kitchen: "Kitchen", group_heating: "Heating and hot water", group_air: "Air and climate", group_home: "Home and media", group_pets: "Pets", illustration_frame: "Same drawing height as the cards beside it", section_screen_source: "Input source", screen_source: "Input",
     type_network: "Network device (switch, NAS, server)", group_network: "Network and servers", layout_net_switch: "Switch", layout_net_server: "Server", layout_net_nas: "NAS", layout_net_rack: "Rack", net_ports_count: "Ports drawn", net_bays: "NAS bays", net_online: "Online", net_busy: "Busy", net_alert: "Alert", net_warn: "Disk to watch", section_net_cpu: "CPU usage (%)", section_net_memory: "Memory usage (%)", section_net_volume: "Volume used (%)", section_net_download: "Download rate", section_net_upload: "Upload rate", section_net_ports: "Active ports", net_ports_total: "Port count", section_net_poe: "PoE power", section_net_problem: "Problem alert", section_net_temperature: "Temperature", net_temp_alert: "Alert above this temperature (\u00b0C)", net_busy_threshold: "Busy above this rate (Mbit/s)", net_line_rate: "Throughput", net_line_load: "Load", net_line_volume: "Volume", section_net_disk1: "Disk 1", section_net_disk2: "Disk 2", section_net_disk3: "Disk 3", section_net_disk4: "Disk 4",
-    type_robot: "Robot (vacuum, mop, mower)", layout_robot_vacuum: "Robot vacuum", layout_robot_mop: "Mopping robot", layout_robot_mower: "Robot mower", section_robot_station: "Base", robot_station_station: "Emptying or washing station", robot_station_base: "Charging base only", robot_shelter: "Shelter over the base", robot_shelter_style: "Shelter style", mower_style: "Mower style", mower_classic: "Classic", mower_navimow: "Navimow, orange wheels", shelter_lean_to: "Wooden lean-to", shelter_shell: "Shell", robot_shelter_color: "Shell colour", delay_starts_in: "Starts in", section_delay: "Delayed start countdown", state_entity_optional: "State entity (optional)", color_green: "Green", color_orange: "Orange", robot_charging: "Charging", robot_docked: "Docked", robot_cleaning: "Cleaning", robot_mopping: "Mopping", robot_mowing: "Mowing", robot_edgecut: "Edge cutting", robot_returning: "Returning to base", robot_emptying: "Emptying the bin", robot_bin_full: "Bin full", robot_washing: "Washing the pads", robot_drying: "Drying the pads", robot_water_empty: "Water tank empty", robot_rain: "Rain delay", robot_idle: "Stopped", section_robot_status: "Detailed status", section_battery: "Battery", section_robot_bin: "Bin full alert", section_robot_water: "Water tank", section_robot_rain: "Rain", section_robot_error: "Error",
+    type_robot: "Robot (vacuum, mop, mower)", layout_robot_vacuum: "Robot vacuum", layout_robot_mop: "Mopping robot", layout_robot_mower: "Robot mower", section_robot_station: "Base", robot_station_station: "Emptying or washing station", robot_station_base: "Charging base only", robot_shelter: "Shelter over the base", robot_shelter_style: "Shelter style", mower_style: "Mower style", mower_classic: "Classic", mower_navimow: "Navimow, orange wheels", shelter_lean_to: "Wooden lean-to", shelter_shell: "Shell", shelter_garage: "Garage", robot_shelter_color: "Shell colour", delay_starts_in: "Starts in", section_delay: "Delayed start countdown", state_entity_optional: "State entity (optional)", color_green: "Green", color_orange: "Orange", robot_charging: "Charging", robot_docked: "Docked", robot_cleaning: "Cleaning", robot_mopping: "Mopping", robot_mowing: "Mowing", robot_edgecut: "Edge cutting", robot_returning: "Returning to base", robot_emptying: "Emptying the bin", robot_bin_full: "Bin full", robot_washing: "Washing the pads", robot_drying: "Drying the pads", robot_water_empty: "Water tank empty", robot_rain: "Rain delay", robot_idle: "Stopped", section_robot_status: "Detailed status", section_battery: "Battery", section_robot_bin: "Bin full alert", section_robot_water: "Water tank", section_robot_rain: "Rain", section_robot_error: "Error",
     type_pool_pump: "Pool pump", pool_filtering: "Filtering", pool_chlorinating: "Chlorine injection", pool_backwash: "Backwash", pool_frost: "Frost protection", pool_light_on: "light on", section_water_temperature: "Water temperature", section_air_temperature: "Air temperature", section_ph: "pH", section_redox: "RedOx (ORP)", section_filtration_time: "Filtration time today", section_pressure: "Filter pressure", pool_pressure_alert: "Alert above this pressure (bar)", section_pool_mode: "Pump mode", section_chlorine_pump: "Chlorine pump", section_chlorine_level: "Chlorine tank level", section_backwash: "Backwash", section_frost: "Frost protection", section_pool_alert: "Alert", pool_line_water: "Water", pool_line_air: "Air", pool_line_filtered: "Filtered today", pool_line_pressure: "Pressure", pool_line_chlorine: "Chlorine tank", pool_line_mode: "Mode",
     history_last: "Last {h} h", show_history: "Show the history", section_history: "History sensor", history_hours: "Hours of history", history_empty: "No history yet",
     type_scale: "Bathroom scale", scale_weighed: "Weighed", scale_goal_reached: "Goal reached", section_weight_goal: "Weight goal", scale_goal_value: "Weight goal, without a sensor", section_fat_ratio: "Body fat (%)", section_fat_mass: "Fat mass", section_muscle_mass: "Muscle mass", section_bone_mass: "Bone mass", scale_line_goal: "Goal", scale_line_fat: "Fat", scale_line_muscle: "Muscle", scale_line_bone: "Bone", scale_to_lose: "to lose", scale_to_gain: "to gain",
@@ -8996,6 +8996,7 @@ const ILLUSTRATION_CSS = {
         .rbt-m-raining .rbt-sh-drip{display:block;animation:rbt-sh-drip 1.6s ease-in infinite}
         @keyframes rbt-sh-drip{0%{transform:translateY(0);opacity:0}15%{opacity:1}100%{transform:translateY(26px);opacity:0}}
         .rbt-sh-lean_to .rbt-rain{clip-path:path(evenodd,'M-20 -20 H140 V140 H-20 Z M22 49.2 L26 44.2 L97 36.2 V140 H22 Z')}
+        .rbt-sh-garage .rbt-rain{clip-path:path(evenodd,'M-20 -20 H140 V140 H-20 Z M20 52 L26 46 L86 39.6 C94 38.8 98.6 42 98.6 49 V140 H20 Z')}
         .rbt-sh-shell .rbt-rain{clip-path:path(evenodd,'M-20 -20 H140 V140 H-20 Z M25 59 L29 54 C32 41 48 33.5 65 33 C81 32.5 94 37 96 47 V140 H25 Z')}
         .rbt-st-led{left:86px;top:70px;width:2px;height:4px;border-radius:1px;background:#3d434a}
         .rbt-m-charging .rbt-st-led{background:#2ecc71;box-shadow:0 0 3px #2ecc71;animation:rbt-breathe 2.4s ease-in-out infinite}
@@ -10674,20 +10675,22 @@ const ROBOT_MOWER_SVG = `<svg viewBox="0 0 62 35">
 // wheels with orange treads, a small caster behind.
 const ROBOT_NAVIMOW_SVG = `<svg viewBox="0 0 62 35">
  <ellipse cx="31" cy="34" rx="29" ry="2" fill="rgba(0,0,0,.25)"/>
- <path d="M6 27 V22.5 C6 20.5 7.2 19.2 9.2 19.2 H55 C58 19.2 59.6 21.2 59.6 23.6 V27 Z" fill="#2b2f34"/>
- <path d="M7 22.2 C6 16.2 9 12.6 15 11.6 L45 10.6 C51 10.6 55.6 13.6 57.6 18 C58.4 19.8 58 21.6 56.6 22.2 Z" fill="#b9c1c9"/>
- <path d="M10 14.6 C14 12.6 30 11.8 44 11.7 C50 11.7 53.6 13.4 55.6 16 C46 14.7 26 14.5 10 15.7 Z" fill="#e1e6ea"/>
- <path d="M8 21 C20 20.2 44 20.2 57 20.8" stroke="#8d969f" stroke-width=".6" fill="none"/>
- <path d="M16 12.1 C20 9.7 40 9.1 47 10.1 C50 10.5 52 11.5 53 12.7 C44 11.9 26 11.9 16 12.7 Z" fill="#14171a"/>
- <ellipse class="rbt-led" cx="31" cy="9.7" rx="9.6" ry="1.4"/>
- <path d="M22 9.3 C22 6.6 40 6.6 40 9.3 C40 10.3 22 10.3 22 9.3 Z" fill="#c4cad0"/>
- <ellipse cx="31" cy="7.4" rx="8" ry="1.2" fill="#f1f3f5"/>
- <path d="M27 7.2 H35" stroke="#3a3f45" stroke-width=".8" stroke-linecap="round"/>
- <rect x="42.6" y="8.5" width="4.2" height="1.8" rx=".6" fill="#e53935"/>
- <rect x="54.4" y="20.2" width="4" height="2.2" rx=".6" fill="#14171a"/><circle cx="56.4" cy="21.3" r=".6" fill="#4fc3f7"/>
- <g class="rbt-whl"><circle cx="12" cy="31.3" r="3.4" fill="#1b1e21"/><circle cx="12" cy="31.3" r="1.3" fill="#555c63"/></g>
- <g class="rbt-whl"><circle cx="46" cy="24.5" r="10" fill="#ff5a1f"/><circle cx="46" cy="24.5" r="9.6" fill="none" stroke="#c23d0d" stroke-width="1.8" stroke-dasharray="1.6 1.4"/>
-  <circle cx="46" cy="24.5" r="7" fill="#1b1e21"/><path d="M46 18.9 L47.5 23 L51.6 24.5 L47.5 26 L46 30.1 L44.5 26 L40.4 24.5 L44.5 23 Z" fill="#30353a"/><circle cx="46" cy="24.5" r="1.4" fill="#5a6168"/></g>
+ <g class="rbt-whl"><circle cx="9" cy="31.2" r="3.3" fill="#1b1e21"/><circle cx="9" cy="31.2" r="1.2" fill="#555c63"/></g>
+ <path d="M3 20.5 H59.6 V26.6 C59.6 28.9 58.2 30.2 55.8 30.4 L8 31.4 C4.8 31.4 3 30 3 27.6 Z" fill="#2b2f34"/>
+ <path d="M3.2 22.4 C2.4 14.6 6.6 10 13.6 9.4 L38 8.4 C46.4 8.1 53.4 9.2 57.2 12.6 C59.6 14.9 60.2 18.4 59.8 22.4 Z" fill="#b9c1c9"/>
+ <path d="M6.6 13.2 C10.4 10.8 26 10 40 9.7 C48 9.6 53.6 10.8 56.2 13.4 C46 12.4 24 12.4 6.6 14.4 Z" fill="#e1e6ea"/>
+ <path d="M4.8 20.6 C20 19.8 44 19.8 58.6 20.4" stroke="#8d969f" stroke-width=".6" fill="none"/>
+ <path d="M13.6 9.6 C19.6 7.6 40 7.2 49.6 8.1 C52.6 8.4 54.6 9.3 55.6 10.4 C45 9.6 25 9.6 13.6 10.6 Z" fill="#14171a"/>
+ <rect class="rbt-led" x="19.6" y="5.6" width="21" height="3" rx="1.5"/>
+ <path d="M20.6 5.9 C20.6 3.4 39.4 3.4 39.4 5.9 C39.4 6.9 20.6 6.9 20.6 5.9 Z" fill="#c4cad0"/>
+ <ellipse cx="30" cy="4.3" rx="7.6" ry="1.1" fill="#f1f3f5"/>
+ <path d="M26.6 4.1 H33.4" stroke="#3a3f45" stroke-width=".7" stroke-linecap="round"/>
+ <rect x="42.6" y="6.4" width="4.2" height="2" rx=".6" fill="#e53935"/>
+ <rect x="57.4" y="14.4" width="2.4" height="4.4" rx=".6" fill="#14171a"/><circle cx="58.6" cy="16.6" r=".55" fill="#4fc3f7"/>
+ <g class="rbt-whl"><circle cx="44" cy="23" r="11.5" fill="#ff5a1f"/><circle cx="44" cy="23" r="11.1" fill="none" stroke="#c23d0d" stroke-width="1.9" stroke-dasharray="1.8 1.5"/>
+  <circle cx="44" cy="23" r="8.2" fill="#1b1e21"/><path d="M44 16.4 L45.8 21.2 L50.6 23 L45.8 24.8 L44 29.6 L42.2 24.8 L37.4 23 L42.2 21.2 Z" fill="#30353a"/><circle cx="44" cy="23" r="1.6" fill="#5a6168"/></g>
+ <path d="M30.6 19.2 A14 14 0 0 1 57.4 19.2" stroke="#b9c1c9" stroke-width="2.6" fill="none"/>
+ <path d="M31.6 20.4 A12.9 12.9 0 0 1 56.4 20.4" stroke="#2b2f34" stroke-width=".7" fill="none"/>
 </svg>`;
 const MOWER_STYLES = ["classic", "navimow"];
 // The mower's style: the one chosen, else its name (Navimow, Segway).
@@ -11169,7 +11172,7 @@ ${ENERGY_SMOKE(30, 14, 0.55)}${ENERGY_ANGER(56, 22)}
 // The shelter over a mower's base, seen three-quarters like the mower: a part
 // behind it (the far posts, the shadow, the inside of a shell) and a part in
 // front (the near posts, the roof). The rain stops on the roof.
-const SHELTER_STYLES = ["lean_to", "shell"];
+const SHELTER_STYLES = ["lean_to", "shell", "garage"];
 const SHELTER_COLORS = {
   white: ["#ffffff", "#e2e6ea", "#c3cad0", "#c9d0d6", "#a3abb2", "#b3bbc2", "#8d959c", "#8a929a", "#aab2b9", "rgba(255,255,255,.9)", "#5f676f"],
   grey: ["#c9ced3", "#9ea5ac", "#7f878f", "#8a9299", "#677078", "#7a838b", "#5c646c", "#545c63", "#747c84", "rgba(255,255,255,.55)", "#3f454b"],
@@ -11182,6 +11185,27 @@ let shelterN = 0;
 function shelterHtml(style, color) {
   const g = `rbt-sh${shelterN++}`;
   const drip = (x, y) => `<circle class="rbt-sh-drip" cx="${x}" cy="${y}" r="1"/>`;
+  if (style === "garage") {
+    // A garage like the Navimow or Husqvarna ones: a back wall behind the
+    // station that curves into a long roof reaching over the mower, on a
+    // dark mat (#67).
+    const [t0, t1, t2, r0, r1, s0, s1, ln, , hl] = SHELTER_COLORS[color] || SHELTER_COLORS.black;
+    const dots = Array.from({ length: 10 }, (_, i) => `<circle cx="${30 + i * 6.4}" cy="${90.6 - i * .07}" r=".45"/>`).join("");
+    const back = `${SHELTER_SVG}<path d="M22 94.4 L92 93.4 L96.4 88.2 L27.6 88.8 Z" fill="#2a2e33"/>
+<path d="M22 94.4 L92 93.4 L92 94.6 L22 95.6 Z" fill="#1b1e21"/><g fill="rgba(255,255,255,.14)">${dots}</g>
+<path d="M27.6 88.8 L96.4 88.2 L96 87 L30 87.4 Z" fill="rgba(0,0,0,.22)"/></svg>`;
+    const front = `${SHELTER_SVG}<defs>
+<linearGradient id="${g}t" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="${t2}"/><stop offset=".5" stop-color="${t1}"/><stop offset="1" stop-color="${t0}"/></linearGradient>
+<linearGradient id="${g}r" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${r0}"/><stop offset="1" stop-color="${r1}"/></linearGradient>
+<linearGradient id="${g}s" x1="0" x2="1"><stop offset="0" stop-color="${s0}"/><stop offset="1" stop-color="${s1}"/></linearGradient></defs>
+<path d="M92.6 55 C92.6 48 88 44.8 80 45.6 L20 52 L26 46 L86 39.6 C94 38.8 98.6 42 98.6 49 L98.6 86.4 L92.6 92.4 Z" fill="url(#${g}t)"/>
+<path d="M92.6 55 L98.6 49 L98.6 86.4 L92.6 92.4 Z" fill="url(#${g}s)"/>
+<path d="M26 46 L86 39.6 C94 38.8 98.6 42 98.6 49" fill="none" stroke="${hl}" stroke-width=".8" stroke-linecap="round"/>
+<path d="M20 52 L80 45.6 C88 44.8 92.6 48 92.6 55 L92.6 92.4 L87.8 93 L87.8 56 C87.8 51.6 85.6 49.6 81 50 L20 56.4 Z" fill="url(#${g}r)" stroke="${ln}" stroke-width=".4"/>
+<path d="M20.6 53.1 L80 46.8 C87 46.1 91.4 48.9 91.4 55 V92" fill="none" stroke="rgba(255,255,255,.3)" stroke-width=".5"/>
+<rect class="rbt-sh-led" x="89.5" y="64" width="1.4" height="3" rx=".6"/>${drip(20.6, 57.4)}</svg>`;
+    return { back, front };
+  }
   if (style === "shell") {
     const [t0, t1, t2, r0, r1, s0, s1, ln, lip, hl, inn] = SHELTER_COLORS[color] || SHELTER_COLORS.white;
     const back = `${SHELTER_SVG}<defs><linearGradient id="${g}i" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${inn}" stop-opacity=".75"/><stop offset=".55" stop-color="${inn}" stop-opacity=".35"/><stop offset="1" stop-color="${inn}" stop-opacity="0"/></linearGradient></defs>

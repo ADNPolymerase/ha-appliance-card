@@ -1283,7 +1283,7 @@ class ApplianceCardEditor extends HTMLElement {
               + (this._config.robot_shelter ? this._row("robot_shelter_style", "robot_shelter_style", {
                 type: "select",
                 options: SHELTER_STYLES.map((v) => ({ value: v, label: t(hass, `shelter_${v}`) })),
-              }) + (this._config.robot_shelter_style === "shell" ? this._row("robot_shelter_color", "robot_shelter_color", {
+              }) + (["shell", "garage"].includes(this._config.robot_shelter_style) ? this._row("robot_shelter_color", "robot_shelter_color", {
                 type: "select",
                 options: Object.keys(SHELTER_COLORS).map((v) => ({ value: v, label: t(hass, `color_${v}`) })),
               }) : "") : "")
