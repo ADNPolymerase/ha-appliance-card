@@ -10,9 +10,7 @@
 <a href="https://buymeacoffee.com/adnpolymerase" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-orange.png" alt="Buy Me A Coffee" height="60"></a>
 <a href="https://adnpolymerase.github.io/HA/" target="_blank"><img src="https://raw.githubusercontent.com/ADNPolymerase/HA/main/assets/site-button.svg" alt="Link to my github.io for my other projects" height="60"></a>
 
-A Lovelace card for household appliances: washers, dryers, dishwashers, ovens, microwaves, cooker hoods, cooktops, fridges, kettles, cookers, coffee machines, rice cookers, air fryers, water heaters, boilers, thermostats and radiator valves, heat pumps, 3D printers, pet feeders, irons, toasters, hair dryers, pellet stoves, air conditioners, dehumidifiers, space heaters, towel warmers, air purifiers, fans, EV chargers, TVs, projectors, computers and wall tablets, network switches, servers, NAS and racks, robot vacuums, mops and mowers, stick vacuums and floor washers, pool pumps, bathroom scales, UPSes, solar panels and home batteries, lamps, mailboxes and doorbells, cameras, diffusers, heat recovery ventilation, freezers, booster pumps and sump pits, underfloor heating, spas, saunas, aquariums, electricity meters and Christmas trees. Cycle in progress, program, remaining time, temperature, alerts and controls.
-
-No brand assumed: every field is an entity you pick, so it works with **any** integration (Electrolux, Samsung, LG, Home Connect, Miele, a plain smart plug…).
+A Lovelace card that draws the appliances of your home and animates them from their real state: household appliances, heating, robots, pool, energy, network, lamps, cameras and many more.
 
 **[Try the live demo](https://adnpolymerase.github.io/ha-appliance-card/docs/demo.html?view=live)**: every appliance animated in your browser, light or dark, no Home Assistant needed.
 
@@ -23,24 +21,13 @@ No brand assumed: every field is an entity you pick, so it works with **any** in
 
 ## Features
 
-- **Fifty-two appliance types**, each with a CSS illustration that animates on the appliance's own data and stays still when idle. The type is detected on its own or set via `appliance_type`, and `compact: true` keeps only the text.
-- **State normalization**: `Idle`, `RUNNING`, `wash`, `En marche`… are recognised (accent-insensitive) and sorted into idle, preheating, running, paused, done, delayed or error. An unknown state is shown as it came, minus the integration's namespace, and `state_map` sorts the rest, `"*"` catching everything left over.
-- **The step, not an hour of *Running***: a washer, a dryer or a dishwasher names the step it is at (*Pre-wash*, *Washing*, *Rinsing*, *Spinning*, *Drying* and seven more), from a phase entity or from its own state, and the drum whirls while it spins. The time left is still the whole cycle's.
-- **A washer-dryer is a washer that dries**: `washer_dryer: true`, and the drum shows water while it washes, then clothes turning in hot air while it dries. The step comes from the state itself or from a phase entity, and the state line reads *Washing* or *Drying*.
-- **Each appliance says what matters for it**: a coffee machine what it is missing (water, beans, tray, descaling), a fridge its health (unplugged, door open, temperature high), a combi boiler what it is heating (central heating, hot water or standby), a 3D printer what the job is doing (preheating, bed levelling, changing filament), a pellet stove the phase of its fire (ignition, modulating, eco, cleaning), an air conditioner its mode and where it blows, an EV charger whether a car is plugged in and what the charge is doing (waiting for authorisation, charging, paused, scheduled, complete).
-- **The network as well**: a switch, a server, a NAS, a rack or a router (the box an ISP lends too), *Online*, *Busy* or in *Alert*, and *No internet* when a router loses its link. One LED per port in use, one per disk in its bay (fine, reading, asleep, to watch, failed), and the readings found on their own from Synology, UGREEN, Unraid or Glances.
-- **Robots too**: a vacuum, a mop or a mower leaves its base and goes over its floor, comes back, and says when its station empties the bin or washes the pads, when rain keeps it home or when it is stuck. A stick vacuum on its wall dock and a floor washer in its station charge from a cable you see the current run along.
-- **And the pool**: the sand filter, the pump and the pool, *Filtering*, *Chlorine injection* with an optional dosing pump, *Backwash* to the drain, *Frost protection*, and the light, the water, the pH and the RedOx in the lines.
-- **Energy**: solar panels on the ground or on a roof, under the sun, a few clouds or the moon, *Producing*, *Low production* or *Night*; a home battery on the wall or a portable station, *Charging*, *Discharging*, *Idle*, *Full* or *Low battery*, its reserve drawn on its gauge and the time to full or until the reserve in the lines.
-- **And the bathroom scale**: the last weight on its screen, lit for an hour after a weighing, what is left to the goal, and the fat, the muscles and the bones in the lines, from Withings or any weight sensor.
-- **And the UPS**: the wall socket, the UPS and the box it keeps alive, *On mains* with the energy flowing through it, *On battery* with the wall crossed out, the UPS beeping and its screen counting the time left, *Battery low*, *Overload* and *Replace battery* read from NUT's own codes, and the battery, the runtime, the load and the input voltage in the lines.
-- **And the lamps**: a bulb, a bedside lamp, an arc floor lamp, a halogen torchiere, a pendant, a LED strip, recessed spots, Nanoleaf-style panels, a desk lamp or a wall lantern, lit in the light's own colour and dimmed with its brightness; an effect turns the hue of a strip's segments or of the panels.
-- **And the mailbox**: through the wall with its street and house doors, or a classic box on its post. The letters pile up to twelve, a new one comes in through the slot, and the doors swing open on their hinges. Cameras get a doorbell too, its ring of light beating when someone rings.
-- **And the rest of the house**: a chest freezer whose lid lifts and an upright freezer with see-through drawers, both frosting over while they cool, a booster set with its pressure on its controller and a sump pit whose float follows the water, a pool robot trailing its cable, underfloor heating on hot water or electric, a spa with its bubbles, a sauna whose stones glow, a planted aquarium, electricity, gas and water meters and a Christmas tree in seven classic colour schemes, its presents out on 24 and 25 December.
-- **Works from a smart plug alone**: its switch and its meter are enough, with no threshold to set, since each type knows the power it works at. A washer says whether it heats, washes or spins, a dishwasher heats, washes and then dries, a coffee machine keeps warm, a hob lights as many zones as it draws for and stays hot for ten minutes, and a heater, a fan or a pump stops when the plug reads nothing. `power_off_delay` keeps a pause from reading as the end, and `show_last_cycle` shows how long the last cycle ran. [Try it in the demo](https://adnpolymerase.github.io/ha-appliance-card/docs/demo.html?view=live&plug=1).
-- **Program, remaining time, progress bar, info lines, door, alerts, connectivity and controls** (start, pause, resume, stop), each optional.
-- **14 languages** (EN, FR, DE, ES, IT, NL, PT, SV, NO, DA, PL, RU, ZH, CS), Home Assistant's or pinned on the card.
-- **Visual editor** that pre-fills fields from the entities of the same device and only offers those the chosen type can use.
+- **52 appliance types, more than 130 models drawn**, animated while they work and still when they stop. The type is detected on its own or set with `appliance_type`.
+- **Any integration**: every field is an entity you pick. A plain smart plug is enough, its power tells whether the appliance heats, washes or spins.
+- **State understood**: `Idle`, `RUNNING`, `wash`… become idle, running, paused, finished, delayed or error, with the step of the cycle (wash, rinse, spin…).
+- **What matters for each appliance**: program, time left, door, alerts, levels, temperatures, energy and cost, today's running time.
+- **Controls** (start, pause, stop, switch on) with protection against stray taps.
+- **Full or compact**, in Home Assistant's light or dark theme.
+- **14 languages** and a visual editor that pre-fills the fields from the device.
 
 ## Gallery
 
@@ -49,121 +36,128 @@ Click a family to see its appliances at work.
 <details>
 <summary><b>Laundry and dishes</b></summary>
 
-<img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-laundry.gif" alt="Laundry and dishes" width="100%">
+<img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-laundry.gif" alt="Laundry and dishes">
 
 </details>
 
 <details>
 <summary><b>Kitchen</b></summary>
 
-<img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-kitchen.gif" alt="Kitchen" width="100%">
+<img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-kitchen.gif" alt="Kitchen">
 
 </details>
 
 <details>
 <summary><b>Heating and climate</b></summary>
 
-<img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-climate.gif" alt="Heating and climate" width="85%">
+<img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-climate.gif" alt="Heating and climate">
 
 </details>
 
 <details>
 <summary><b>Thermostats and radiator valves</b></summary>
 
-<img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-thermostats.gif" alt="Thermostats and radiator valves" width="85%">
+<img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-thermostats.gif" alt="Thermostats and radiator valves">
 
 </details>
 
 <details>
 <summary><b>Air purifiers and fans</b></summary>
 
-<img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-air.gif" alt="Air purifiers and fans" width="100%">
+<img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-air.gif" alt="Air purifiers and fans">
 
 </details>
 
 <details>
 <summary><b>Pets</b></summary>
 
-<img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-pets.gif" alt="Pets" width="60%">
+<img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-pets.gif" alt="Pets">
 
 </details>
 
 <details>
 <summary><b>Garage and workshop</b></summary>
 
-<img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-garage.gif" alt="Garage and workshop" width="60%">
+<img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-garage.gif" alt="Garage and workshop">
+
+</details>
+
+<details>
+<summary><b>Electric rides</b></summary>
+
+<img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-mobility.gif" alt="Electric rides: scooters, e-bike, gyropode and motorcycle">
 
 </details>
 
 <details>
 <summary><b>Network and servers</b></summary>
 
-<img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-network.gif" alt="Network and servers" width="100%">
+<img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-network.gif" alt="Network and servers">
 
 </details>
 
 <details>
 <summary><b>Robots and vacuums: robots, mowers, stick vacuums and floor washers</b></summary>
 
-<img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-robots.gif" alt="Robots and vacuums: robots, mowers, stick vacuums and floor washers" width="100%">
+<img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-robots.gif" alt="Robots and vacuums: robots, mowers, stick vacuums and floor washers">
 
 </details>
 
 <details>
 <summary><b>Pool pumps</b></summary>
 
-<img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-pool.gif" alt="Pool pumps" width="100%">
+<img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-pool.gif" alt="Pool pumps">
 
 </details>
 
 <details>
 <summary><b>Energy: solar panels and home batteries</b></summary>
 
-<img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-energy.gif" alt="Energy: solar panels and home batteries" width="100%">
+<img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-energy.gif" alt="Energy: solar panels and home batteries">
 
 </details>
 
 <details>
 <summary><b>Bathroom scales</b></summary>
 
-<img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-scales.gif" alt="Bathroom scales" width="50%">
+<img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-scales.gif" alt="Bathroom scales">
 
 </details>
 
 <details>
 <summary><b>UPSes</b></summary>
 
-<img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-ups.gif" alt="UPSes" width="100%">
+<img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-ups.gif" alt="UPSes">
 
 </details>
 
 <details>
 <summary><b>Diffusers and ventilation</b></summary>
 
-<img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-diffusers.gif" alt="Diffusers and ventilation" width="100%">
+<img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-diffusers.gif" alt="Diffusers and ventilation">
 
-<img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-ventilation.gif" alt="VMC" width="100%">
+<img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-ventilation.gif" alt="VMC">
 
 </details>
 
 <details>
 <summary><b>Cameras</b></summary>
 
-<img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-cameras.gif" alt="Cameras" width="100%">
+<img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-cameras.gif" alt="Cameras">
 
 </details>
 
 <details>
 <summary><b>Lamps</b></summary>
 
-<img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-lamps.gif" alt="Lamps" width="100%">
+<img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-lamps.gif" alt="Lamps">
 
 </details>
 
 <details>
 <summary><b>Mailboxes and doorbells</b></summary>
 
-<img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-mailboxes.gif" alt="Mailboxes and doorbells" width="100%">
+<img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-mailboxes.gif" alt="Mailboxes and doorbells">
 
 </details>
 
@@ -207,9 +201,10 @@ Only `state_entity` is required, except on a fridge where a probe or a door cont
 | `done_alert` | `true` makes a green badge pulse on the drawing when a cycle has finished, until the door opens or the badge is tapped. For appliances with a cycle (washer, dryer, dishwasher, oven…). |
 | `illustration_color` | `auto` (default, follows the theme) \| `white` \| `grey` \| `black` \| `red` (dark red). Only changes the casing, not the state colours. |
 | `language` | `auto` (default, follows Home Assistant) or one of the 14 codes: `en`, `fr`, `de`, `es`, `it`, `nl`, `pt`, `sv`, `no`, `da`, `pl`, `ru`, `zh`, `cs`. `nb` and `nb-NO` give Norwegian. |
-| `appliance_type` | `auto` (default) \| `washer` \| `dryer` \| `dishwasher` \| `oven` \| `microwave` \| `hood` \| `cooktop` \| `fridge` \| `kettle` \| `cooker` \| `coffee` \| `rice_cooker` \| `air_fryer` \| `water_heater` \| `boiler` \| `thermostat` \| `heat_pump` \| `printer_3d` \| `pet_feeder` \| `pet_fountain` \| `iron` \| `toaster` \| `pellet_stove` \| `air_conditioner` \| `dehumidifier` \| `space_heater` \| `towel_warmer` \| `air_purifier` \| `fan` \| `ev_charger` \| `hair_dryer` \| `screen` \| `network` \| `robot` \| `pool_pump` \| `scale` \| `ups` \| `solar` \| `home_battery` \| `camera` \| `diffuser` \| `hrv` \| `lamp` \| `mailbox` \| `water_pump` \| `floor_heating` \| `spa` \| `sauna` \| `aquarium` \| `meter` \| `christmas_tree`. |
+| `appliance_type` | `auto` (default) \| `washer` \| `dryer` \| `dishwasher` \| `oven` \| `microwave` \| `hood` \| `cooktop` \| `fridge` \| `kettle` \| `cooker` \| `coffee` \| `rice_cooker` \| `air_fryer` \| `water_heater` \| `boiler` \| `thermostat` \| `heat_pump` \| `printer_3d` \| `pet_feeder` \| `pet_fountain` \| `iron` \| `toaster` \| `pellet_stove` \| `air_conditioner` \| `dehumidifier` \| `space_heater` \| `towel_warmer` \| `air_purifier` \| `fan` \| `ev_charger` \| `hair_dryer` \| `screen` \| `network` \| `robot` \| `pool_pump` \| `scale` \| `ups` \| `solar` \| `home_battery` \| `camera` \| `diffuser` \| `hrv` \| `lamp` \| `mailbox` \| `water_pump` \| `floor_heating` \| `spa` \| `sauna` \| `aquarium` \| `meter` \| `christmas_tree` \| `mobility`. |
 | `tap_action` | What a tap on the card does, in Home Assistant's own words: `more-info` (default: the state entity, or on a card without one what it reads in its place), `none`, `navigate`, `url`, `toggle`, `perform-action` or `fire-dom-event`, which is what the popup cards built on browser_mod listen for. In YAML only. |
-| `illustration_tap_action` | A tap on the drawing alone, the rest of the card keeping `tap_action`: `toggle` (a lamp lit by touching it), `more-info`, `none`, or any of Home Assistant's actions. Left out, the drawing does what the card does. |
+| `illustration_tap_action` | A tap on the drawing alone, the rest of the card keeping `tap_action`: `toggle` (a lamp lit by touching it), `more-info`, `none`, or any of Home Assistant's actions. Left out, the drawing does what the card does. With `toggle`, the drawing answers like the buttons, as `controls_activation` says: a tap, two taps or a long press. |
+| `show_toggle` | `false` takes away a lamp's on/off button, for a card switched by touching its drawing (`illustration_tap_action: toggle`). |
 | `toggle_entity` | Power button (`switch`, `button`, `script`, `input_boolean`, `fan`), highlighted while on. On every type, the fridge included, where it is the only button; pair it with `controls_activation: confirm` for an appliance that must not be switched off by mistake. |
 | `power_entity` / `power_on_threshold` / `power_icon` | Power sensor. With a threshold, the state is derived from it: *running* above, then *finished* when it falls back. With a smart plug's switch as `state_entity`, or the sensor itself, it is derived without one, against the threshold of the type (see *A smart plug alone*). A state from an integration keeps the say. `power_icon` replaces `mdi:power-plug`. |
 | `source` | `plug` \| `integration`: where the card reads the appliance from. Unset, a smart plug's switch with a meter is a plug, anything else an integration. A plug-read card's editor shows only the plug, its meter and the sensors beside it, and its switch becomes the power button; `integration` keeps a switch from being taken for a plug. Not for a fridge or a screen, which read both together. |
@@ -235,6 +230,7 @@ Only `state_entity` is required, except on a fridge where a probe or a door cont
 | `corner_entities` | Up to 2 switches as icons in the top corners, the first on the left and the second on the right, as `{ entity, label?, icon? }` or a plain id. The icon says what each one does and whether it holds (a child lock, an automatic lock, a lock, a switch), and a tap toggles it. A `lock` only opens its dialog: a stray tap never unlocks anything. |
 | `info_entities` | Up to 8 lines `{ entity, icon?, label?, value_map?, hide_unit? }`, any beyond are ignored, shown under the lines the card reads on its own. A tap opens the entity's dialog, which is how a tank or a filter gets reset from the card. Past 5 lines the spacing tightens. Values read as in Home Assistant, with the entity's display precision. `value_map` relabels raw values (see below), `hide_unit` drops the unit. |
 | `lines_order` | The order of the info lines, as a list of their keys: `program`, `remaining`, `door`, the ones each type brings (`level`, `last_feed`, `flow_return`, `nozzle`…) and, for the lines you add, their entity id. The visual editor writes it for you by dragging. Lines left out keep their place after the ones named, and a line that is not showing is skipped. |
+| `hidden_lines` | Lines never to show, by the same keys as `lines_order` (`lamp_brightness`, `today`, `power`...). In the visual editor, the eye beside each line of *Line order*. |
 | `start_entity` / `pause_entity` / `resume_entity` / `stop_entity` | Controls, only shown when configured. A control is usually a `button`, a `script` or an `automation`, which is triggered rather than switched off, and can also be a `select` or a `number`: `start_option` says which option to pick (the card takes it on its own when the list holds only one), `start_value` what to write. The same goes for the other three, as `pause_option`, `stop_value` and so on. `start_icon` swaps the button's icon, as do `pause_icon`, `resume_icon`, `stop_icon`, `toggle_icon` and `filter_reset_icon`: `mdi:play` reads as a programme starting, which is not what every press does. In YAML only. |
 
 </details>
@@ -367,6 +363,8 @@ Only `state_entity` is required, except on a fridge where a probe or a door cont
 | `mail_count_entity` | mailbox | A counter of the mail. The pile shows up to twelve letters, and the count is a line and a badge. |
 | `front_door_entity` / `back_door_entity` | mailbox | The contacts on the street door and on the house door: *Front door open*, *Back door open*, the door swings open and daylight comes in, and a line for each. |
 | `pump_layout` | water_pump | `booster` (a pump on its pressure tank, with its controller) \| `sump` (a sump pit in cross-section, its float on its cable). Left out, a `level_entity`, a `high_level_entity` or a name that says sump makes a sump pump. |
+| `mobility_layout` | electric ride | `scooter` \| `offroad` (an off-road scooter on double suspension, like the Ausom DT2 Pro) \| `ebike` \| `gyropode` \| `motorcycle`. Left out, it is read in the name: Ausom, Dualtron or off-road, bike or e-bike, gyropode, moto or Super Soco; a scooter otherwise. |
+| `battery_entity` | electric ride | The ride's battery, in %: one bar of the gauge per quarter, the next one blinking while it charges, and *Charged* at 100 %. Without it, the bars fill from 0 to 4 in a loop while it charges. |
 | `pressure_entity` | water_pump (booster) | The pressure, on the controller's display and as a line. Without it, the display shows the plug's power. |
 | `level_entity` / `level_max` | water_pump (sump) | The water level, on the display, as a line and as the height of the water in the pit: a percentage, or a value out of `level_max`. From 90 % it reads *High level*. |
 | `high_level_entity` | water_pump (sump) | A float switch or a high-level alarm: *High level*, the pit full and a beacon flashing. |
@@ -386,8 +384,8 @@ Only `state_entity` is required, except on a fridge where a probe or a door cont
 | `robot_station` | robot | `station` (default: the vacuum's emptying station, the mop's washing station) \| `base` (a charging base alone). |
 | `mower_style` | robot (mower) | `classic` \| `navimow` (a Segway Navimow: grey shell, round chrome lid on a ring of light, big orange front wheels). Left out, a name that says Navimow or Segway draws one. |
 | `robot_shelter` | robot | `true` draws a shelter over a mower's base. The rain stops on its roof. |
-| `robot_shelter_style` | robot | `lean_to` (default, a wooden lean-to with a corrugated roof) \| `shell` (a moulded shell on one leg). |
-| `robot_shelter_color` | robot | The shell's colour: `white` (default) \| `grey` \| `black` \| `green` \| `orange`. |
+| `robot_shelter_style` | robot | `lean_to` (default, a wooden lean-to with a corrugated roof) \| `shell` (a moulded shell on one leg) \| `garage` (a back wall curving into a long roof over the mower, on a dark mat, like the Navimow or Husqvarna garages). |
+| `robot_shelter_color` | robot | The colour of the shell or garage (black by default for the garage): `white` (default) \| `grey` \| `black` \| `green` \| `orange`. |
 | `away_threshold` | robot | A stick vacuum or a floor washer read from the plug its dock is on: above `power_on_threshold` (5 W by default) it is *Charging*, below it *Charged*, and at `away_threshold` (1 W by default) or less *Off the base*, in use or badly seated, its dock drawn empty. The plug switched off reads *Off*. |
 | `robot_floor` | robot | The floor a vacuum or a mop works on: `rug` (default for a vacuum) \| `tiles` (default for a mop) \| `parquet` \| `smooth`. |
 | `robot_controls` | robot | `true` adds the robot's own buttons, on a `vacuum` or `lawn_mower` entity: *Start* away from work, *Pause* at work, *Return to base* away from it. `controls_always: true` shows all three all the time. |
@@ -411,6 +409,7 @@ Only `state_entity` is required, except on a fridge where a probe or a door cont
 | `battery_alert_entity` | home battery | Anything that should raise the *Error*: a BMS fault. A state that says fault does the same. |
 | `left_on_after` | iron | Minutes switched on, heating or ready, after which the state line reads *Left on*, in red, the soleplate burns and the steam turns to black smoke. Empty, it never does. |
 | `feeder_layout` | pet feeder | `tower` (default, a square tank on its base) \| `canister` (a round tank on a round base) \| `double` (two outlets and two bowls) \| `dual_split` (two hoppers over one bowl split down the middle) \| `rotary` (plates on a turntable under a lid, for wet food). |
+| `fountain_layout` | pet fountain | `square` (default, a square tank with a window on the water) \| `round` (a round drum with a steel rim, the light at the foot of the front). |
 | `level_b_entity` | pet feeder | The second hopper's level, on a feeder with two (`dual_split`), read like `level_entity` and against the same `level_empty_below` and `level_max`. It fills the right-hand window, gets its own line, and empty it turns the state to *Tank empty* and leaves only its own half bare. At rest the state line shows the lower of the two levels, the hopper to refill first. The editor offers it only for `dual_split`. |
 | `portions_today_entity` / `weight_today_entity` | pet feeder | What was served today, on one line. Without a weight entity the card works the grams out from `portion_weight_entity`, so nothing is assumed about the size of a meal. |
 | `serving_size_entity` / `portion_weight_entity` | pet feeder | How many portions a serving holds, and what one weighs. |
@@ -733,7 +732,7 @@ reload_entity: button.hall_tablet_load_start_url
 
 Read from whatever it reports. Its `state_entity`, a ping, a router's tracker or a status, says *Online* or *Off*. Traffic above 10 Mbit/s, a busy processor or a disk at work make it *Busy*; a problem, a failed disk or a temperature of 70 °C make it *Alert*, and every LED turns red while the fan starts and stops. A disk to watch says so in orange. Its lines give the traffic, the load, the volume and the ports. In the editor, the card finds the readings on the device and on the devices that hang from it, disks included (Synology, UGREEN, Unraid, Glances). Five models: a switch of 8 to 32 ports, a server tower, a NAS of 1 to 4 bays, a rack, a router.
 
-<img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-network-models.gif" alt="Switches of 8 to 32 ports and NAS of 1 to 4 bays" width="100%">
+<img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-network-models.gif" alt="Switches of 8 to 32 ports and NAS of 1 to 4 bays">
 
 ```yaml
 type: custom:ha-appliance-card
@@ -954,6 +953,17 @@ type: custom:ha-appliance-card
 appliance_type: christmas_tree
 state_entity: switch.christmas_tree
 tree_palette: red_gold
+```
+
+An electric ride on its charger (#72): the plug is enough. Above 40 W it is *Charging* (the current runs from the charger to the ride, the charger's light pulses red), below it *Charged* (green light), and *Unplugged* when the plug is off, the ride greyed out and the cable on the floor. The threshold is set with `power_on_threshold`.
+
+```yaml
+type: custom:ha-appliance-card
+appliance_type: mobility
+mobility_layout: offroad
+state_entity: switch.workshop_plug
+power_entity: sensor.workshop_plug_power
+battery_entity: sensor.scooter_battery   # optional
 ```
 
 </details>

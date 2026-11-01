@@ -1,6 +1,6 @@
 // Built by tools/build.mjs from src/ha-appliance-card.js: edit the source, not this file.
 // The card's editor, loaded by the card the first time it is edited.
-export default function defineEditor({ t, onLanguageLoaded, LANGUAGE_NAMES, localizedHass, activationOf, TH_LAYOUTS, EV_POWER_THRESHOLD, stateObj, parseValueMap, stringifyValueMap, alertsArray, LIST_OTHER, ENTITY_LISTS, listCandidates, defaultCardName, stripDeviceName, domainOf, INFO_MAX, autoSuggest, APPLIANCE_TYPES, STATE_DOMAINS, SCREEN_ONLY_FIELDS, illustrationSizeOf, fontScaleOf, compactModeOf, TYPE_GROUPS, caps, detectApplianceType, SCREEN_STANDBY_W, SCREEN_LAYOUTS, SCREEN_IMAGES, screenLayoutOf, screenIsTablet, HD_HEAT_W, PLUG_THRESHOLDS, ZONE_POWER_W, PLUG_SOURCE_TYPES, plugSourceOf, DW_DRY_MIN, WASH_HEAT_W, WASH_SPIN_W, DRYER_HEAT_W, NET_LAYOUTS, SWITCH_PORTS, NET_BAYS, NET_BUSY_MBIT, NET_TEMP_ALERT, netLayoutOf, ROBOT_LAYOUTS, ROBOT_STATIONS, ROBOT_FLOORS, ROBOT_SERVICES, STICK_AWAY_W, robotLayoutOf, POOL_PRESSURE_ALERT, SOLAR_LAYOUTS, BATTERY_LAYOUTS, BATTERY_IDLE_W, DIFFUSER_LAYOUTS, illustrationTapOf, HRV_LAYOUTS, CAMERA_LAYOUTS, MAILBOX_LAYOUTS, MAILBOX_SIDES, mailboxLayoutOf, LAMP_LAYOUTS, LAMP_SPOTS, lampLayoutOf, PUMP_LAYOUTS, FLOOR_LAYOUTS, METER_LAYOUTS, meterLayoutOf, TREE_PALETTES, TREE_PRESENTS, pumpLayoutOf, UPS_BATTERY_LOW, HISTORY_HOURS, BODY_COLORS, esc, MOWER_STYLES, SHELTER_STYLES, SHELTER_COLORS, stateFreeSource }) {
+export default function defineEditor({ t, onLanguageLoaded, LANGUAGE_NAMES, localizedHass, activationOf, TH_LAYOUTS, EV_POWER_THRESHOLD, stateObj, parseValueMap, stringifyValueMap, alertsArray, LIST_OTHER, ENTITY_LISTS, listCandidates, defaultCardName, stripDeviceName, domainOf, INFO_MAX, autoSuggest, APPLIANCE_TYPES, STATE_DOMAINS, SCREEN_ONLY_FIELDS, illustrationSizeOf, fontScaleOf, compactModeOf, TYPE_GROUPS, caps, detectApplianceType, SCREEN_STANDBY_W, SCREEN_LAYOUTS, SCREEN_IMAGES, screenLayoutOf, screenIsTablet, HD_HEAT_W, PLUG_THRESHOLDS, ZONE_POWER_W, PLUG_SOURCE_TYPES, plugSourceOf, DW_DRY_MIN, WASH_HEAT_W, WASH_SPIN_W, DRYER_HEAT_W, NET_LAYOUTS, SWITCH_PORTS, NET_BAYS, NET_BUSY_MBIT, NET_TEMP_ALERT, netLayoutOf, ROBOT_LAYOUTS, ROBOT_STATIONS, ROBOT_FLOORS, ROBOT_SERVICES, STICK_AWAY_W, robotLayoutOf, POOL_PRESSURE_ALERT, SOLAR_LAYOUTS, BATTERY_LAYOUTS, BATTERY_IDLE_W, DIFFUSER_LAYOUTS, illustrationTapOf, HRV_LAYOUTS, CAMERA_LAYOUTS, MAILBOX_LAYOUTS, MAILBOX_SIDES, mailboxLayoutOf, LAMP_LAYOUTS, LAMP_SPOTS, lampLayoutOf, MOBILITY_LAYOUTS, PUMP_LAYOUTS, FLOOR_LAYOUTS, METER_LAYOUTS, meterLayoutOf, TREE_PALETTES, TREE_PRESENTS, pumpLayoutOf, UPS_BATTERY_LOW, HISTORY_HOURS, BODY_COLORS, esc, MOWER_STYLES, SHELTER_STYLES, SHELTER_COLORS, stateFreeSource }) {
 // ---------------------------------------------------------------------------
 // Editor
 // ---------------------------------------------------------------------------
@@ -209,7 +209,7 @@ const SECTIONS = [
   { field: "mail_count_entity", types: ["mailbox"], labelKey: "section_mail_count", includeDomains: ["sensor", "counter", "input_number", "number"] },
   { field: "front_door_entity", types: ["mailbox"], labelKey: "mb_front_door", includeDomains: ["binary_sensor", "sensor", "input_boolean", "switch"] },
   { field: "back_door_entity", types: ["mailbox"], labelKey: "mb_back_door", includeDomains: ["binary_sensor", "sensor", "input_boolean", "switch"] },
-  { field: "battery_entity", types: ["robot", "home_battery", "ups", "camera", "screen"], labelKey: "section_battery", includeDomains: ["sensor"],
+  { field: "battery_entity", types: ["robot", "home_battery", "ups", "camera", "screen", "mobility"], labelKey: "section_battery", includeDomains: ["sensor"],
     when: (c) => !(c.appliance_type === "screen" || SCREEN_ONLY_FIELDS.some((f) => c[f])) || screenIsTablet(c), extra: (c) =>
       (caps(c._currentType()).ups ? c._row("ups_battery_low", "battery_low", { placeholder: String(UPS_BATTERY_LOW) }) : "") },
   // A UPS: the time left on its battery, its load and the mains voltage.
@@ -983,7 +983,26 @@ class ApplianceCardEditor extends HTMLElement {
     this._build();
   }
 
+  // The eye on a line of the order panel hides it from the card or shows it
+  // again (hidden_lines).
+  _toggleHiddenLine(key) {
+    const hidden = (Array.isArray(this._config.hidden_lines) ? this._config.hidden_lines : []).slice();
+    const at = hidden.indexOf(key);
+    if (at === -1) hidden.push(key);
+    else hidden.splice(at, 1);
+    const config = { ...this._config, hidden_lines: hidden };
+    if (!hidden.length) delete config.hidden_lines;
+    this._config = config;
+    this.dispatchEvent(new CustomEvent("config-changed", { detail: { config: this._config } }));
+    this._build();
+  }
+
   _wireInfoDragAndDrop() {
+    this._root.querySelectorAll("[data-line-hide]").forEach((el) => {
+      const flip = (ev) => { ev.stopPropagation(); this._toggleHiddenLine(el.getAttribute("data-line-hide")); };
+      el.addEventListener("click", flip);
+      el.addEventListener("keydown", (ev) => { if (ev.key === "Enter" || ev.key === " ") { ev.preventDefault(); flip(ev); } });
+    });
     this._wireDragAndDrop(".info-row[data-drag-index]", "data-drag-index", (from, to) => this._reorderInfoEntities(from, to));
     this._wireDragAndDrop(".info-row[data-line-index]", "data-line-index", (from, to) => this._reorderLines(from, to));
   }
@@ -1088,6 +1107,9 @@ class ApplianceCardEditor extends HTMLElement {
         .info-row-handle:active { cursor: grabbing; }
         .info-row-fields { flex: 1; min-width: 0; }
         .order-line { padding: 7px 0; }
+        .order-line.off { opacity: 0.45; text-decoration: line-through; }
+        .line-eye { display: inline-flex; align-items: center; justify-content: center; width: 32px; height: 32px; border-radius: 50%; cursor: pointer; color: var(--secondary-text-color, #727272); --mdc-icon-size: 20px; flex-shrink: 0; }
+        .line-eye:hover { background: var(--secondary-background-color, rgba(0, 0, 0, 0.06)); }
         .list-choice { display: flex; align-items: center; gap: 10px; padding: 6px 2px; color: var(--primary-text-color, #1c1c1c); }
         .list-choice > ha-icon { --mdc-icon-size: 20px; color: var(--secondary-text-color, #767676); flex-shrink: 0; }
         .list-choice.alerts > ha-icon { color: var(--error-color, #f44336); }
@@ -1151,6 +1173,13 @@ class ApplianceCardEditor extends HTMLElement {
             { value: "double", label: t(hass, "layout_double") },
             { value: "dual_split", label: t(hass, "layout_dual_split") },
             { value: "rotary", label: t(hass, "layout_rotary") },
+          ],
+        }) : ""}
+        ${this._type === "pet_fountain" ? this._row("section_feeder_layout", "fountain_layout", {
+          type: "select",
+          options: [
+            { value: "square", label: t(hass, "layout_tower") },
+            { value: "round", label: t(hass, "layout_canister") },
           ],
         }) : ""}
         ${this._type === "air_fryer" ? this._row("section_fryer_layout", "fryer_layout", {
@@ -1249,6 +1278,10 @@ class ApplianceCardEditor extends HTMLElement {
           type: "select",
           options: [{ value: "auto", label: t(hass, "unit_auto") }].concat(PUMP_LAYOUTS.map((v) => ({ value: v, label: t(hass, `layout_pump_${v}`) }))),
         }) : ""}
+        ${this._type === "mobility" ? this._row("section_screen_layout", "mobility_layout", {
+          type: "select",
+          options: [{ value: "auto", label: t(hass, "unit_auto") }].concat(MOBILITY_LAYOUTS.map((v) => ({ value: v, label: t(hass, `layout_mob_${v}`) }))),
+        }) : ""}
         ${this._type === "floor_heating" ? this._row("section_screen_layout", "floor_layout", {
           type: "select",
           options: FLOOR_LAYOUTS.map((v) => ({ value: v, label: t(hass, `layout_floor_${v}`) })),
@@ -1270,7 +1303,7 @@ class ApplianceCardEditor extends HTMLElement {
         }) + (lampLayoutOf(this._config, stateObj(hass, this._config.state_entity)) === "spot" ? this._row("lamp_spots", "spots", {
           type: "select",
           options: [{ value: "auto", label: t(hass, "unit_auto") }].concat(LAMP_SPOTS.map((v) => ({ value: String(v), label: String(v) }))),
-        }) : "") : ""}
+        }) : "") + this._row("show_toggle", "show_toggle", { type: "checkbox", defaultOn: true }) : ""}
         ${this._type === "robot" ? (() => {
           const layout = robotLayoutOf(this._config, stateObj(hass, this._config.state_entity));
           return this._row("section_screen_layout", "robot_layout", {
@@ -1283,7 +1316,7 @@ class ApplianceCardEditor extends HTMLElement {
               + (this._config.robot_shelter ? this._row("robot_shelter_style", "robot_shelter_style", {
                 type: "select",
                 options: SHELTER_STYLES.map((v) => ({ value: v, label: t(hass, `shelter_${v}`) })),
-              }) + (this._config.robot_shelter_style === "shell" ? this._row("robot_shelter_color", "robot_shelter_color", {
+              }) + (["shell", "garage"].includes(this._config.robot_shelter_style) ? this._row("robot_shelter_color", "robot_shelter_color", {
                 type: "select",
                 options: Object.keys(SHELTER_COLORS).map((v) => ({ value: v, label: t(hass, `color_${v}`) })),
               }) : "") : "")
@@ -1468,7 +1501,8 @@ class ApplianceCardEditor extends HTMLElement {
         ${drawn.map((l, i) => `
           <div class="section info-row" draggable="true" data-line-index="${i}">
             <div class="info-row-handle" title="${t(hass, "info_drag")}">\u283f</div>
-            <div class="info-row-fields"><div class="order-line">${esc(l.label)}</div></div>
+            <div class="info-row-fields"><div class="order-line${l.hidden ? " off" : ""}">${esc(l.label)}</div></div>
+            <div class="line-eye" role="button" tabindex="0" data-line-hide="${esc(l.key)}" title="${esc(t(hass, l.hidden ? "line_show" : "line_hide"))}" aria-pressed="${!l.hidden}"><ha-icon icon="${l.hidden ? "mdi:eye-off-outline" : "mdi:eye-outline"}"></ha-icon></div>
           </div>`).join("")}
       </details>` : ""}
     `;
@@ -1591,7 +1625,7 @@ class ApplianceCardEditor extends HTMLElement {
           delete this._config.speed_power_3;
         }
         // Shown is the default and is not written: only false is.
-        if ((field === "show_name" || field === "show_state") && value) delete this._config[field];
+        if (["show_name", "show_state", "show_toggle"].includes(field) && value) delete this._config[field];
         // Compact is written the way it always was: true for the card without
         // its drawing, nothing at all when it is off.
         if (field === "compact") {

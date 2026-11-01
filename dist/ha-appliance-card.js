@@ -1,5 +1,5 @@
 // Built by tools/build.mjs from src/ha-appliance-card.js: edit the source, not this file.
-const CARD_VERSION = "3.19.0";
+const CARD_VERSION = "3.21.0";
 
 console.info(
   "%c HA-APPLIANCE-CARD %c v" + CARD_VERSION + " ",
@@ -146,9 +146,9 @@ const T = {
     source: "Source", source_plug: "A smart plug", source_integration: "Integration entities", plug_switch: "Smart plug switch",
     type_thermostat: "Thermostat", section_thermostat_layout: "Model", layout_th_square: "Square", layout_th_round: "Round", layout_th_glass: "Black glass", layout_th_valve: "Radiator valve", th_idle: "Target reached", th_eco: "Eco", th_away: "Away", th_frost: "Frost protection", th_window: "Window open", th_line_valve: "Valve", section_thermostat: "Room thermostat",
     compact_lines: "Information", lines_below: "Under the card", lines_beside: "Beside the drawing", lines_toggle: "Hidden, a chevron shows them", lines_show: "Show the information", lines_hide: "Hide the information",
-    type_hair_dryer: "Hair dryer", layout_hd_pistol: "Classic", layout_hd_ring: "Ring", hd_cool: "Cool air", hd_hot: "Hot air", hd_heat_threshold: "Hot air above this power (W)", fill_height: "Fill the height of its slot", done_alert: "Flash at the end of the cycle", done_seen: "Seen", no_power_threshold: "No power draw below (W)", group_appearance: "Appearance", show_name: "Show the name", show_state: "Show the state", transparent: "Transparent background", font_scale: "Text size", illustration_size: "Drawing size", compact_mode: "Compact mode", compact_off: "Off", compact_hide: "No drawing", compact_side: "Drawing on the side", group_laundry: "Laundry", group_kitchen: "Kitchen", group_heating: "Heating and hot water", group_air: "Air and climate", group_home: "Home and media", group_pets: "Pets", illustration_frame: "Same drawing height as the cards beside it", section_screen_source: "Input source", screen_source: "Input",
+    type_mobility: "Electric ride", layout_mob_scooter: "Scooter", layout_mob_offroad: "Off-road scooter", layout_mob_ebike: "E-bike", layout_mob_gyropode: "Gyropode", layout_mob_motorcycle: "Electric motorcycle", mob_charging: "Charging", mob_charged: "Charged", mob_unplugged: "Unplugged", mob_plugged: "Plugged in", type_hair_dryer: "Hair dryer", layout_hd_pistol: "Classic", layout_hd_ring: "Ring", hd_cool: "Cool air", hd_hot: "Hot air", hd_heat_threshold: "Hot air above this power (W)", fill_height: "Fill the height of its slot", done_alert: "Flash at the end of the cycle", done_seen: "Seen", no_power_threshold: "No power draw below (W)", group_appearance: "Appearance", show_name: "Show the name", show_state: "Show the state", transparent: "Transparent background", font_scale: "Text size", illustration_size: "Drawing size", compact_mode: "Compact mode", compact_off: "Off", compact_hide: "No drawing", compact_side: "Drawing on the side", group_laundry: "Laundry", group_kitchen: "Kitchen", group_heating: "Heating and hot water", group_air: "Air and climate", group_home: "Home and media", group_pets: "Pets", illustration_frame: "Same drawing height as the cards beside it", section_screen_source: "Input source", screen_source: "Input",
     type_network: "Network device (switch, NAS, server)", group_network: "Network and servers", layout_net_switch: "Switch", layout_net_server: "Server", layout_net_nas: "NAS", layout_net_rack: "Rack", net_ports_count: "Ports drawn", net_bays: "NAS bays", net_online: "Online", net_busy: "Busy", net_alert: "Alert", net_warn: "Disk to watch", section_net_cpu: "CPU usage (%)", section_net_memory: "Memory usage (%)", section_net_volume: "Volume used (%)", section_net_download: "Download rate", section_net_upload: "Upload rate", section_net_ports: "Active ports", net_ports_total: "Port count", section_net_poe: "PoE power", section_net_problem: "Problem alert", section_net_temperature: "Temperature", net_temp_alert: "Alert above this temperature (\u00b0C)", net_busy_threshold: "Busy above this rate (Mbit/s)", net_line_rate: "Throughput", net_line_load: "Load", net_line_volume: "Volume", section_net_disk1: "Disk 1", section_net_disk2: "Disk 2", section_net_disk3: "Disk 3", section_net_disk4: "Disk 4",
-    type_robot: "Robot (vacuum, mop, mower)", layout_robot_vacuum: "Robot vacuum", layout_robot_mop: "Mopping robot", layout_robot_mower: "Robot mower", section_robot_station: "Base", robot_station_station: "Emptying or washing station", robot_station_base: "Charging base only", robot_shelter: "Shelter over the base", robot_shelter_style: "Shelter style", mower_style: "Mower style", mower_classic: "Classic", mower_navimow: "Navimow, orange wheels", shelter_lean_to: "Wooden lean-to", shelter_shell: "Shell", robot_shelter_color: "Shell colour", delay_starts_in: "Starts in", section_delay: "Delayed start countdown", state_entity_optional: "State entity (optional)", color_green: "Green", color_orange: "Orange", robot_charging: "Charging", robot_docked: "Docked", robot_cleaning: "Cleaning", robot_mopping: "Mopping", robot_mowing: "Mowing", robot_edgecut: "Edge cutting", robot_returning: "Returning to base", robot_emptying: "Emptying the bin", robot_bin_full: "Bin full", robot_washing: "Washing the pads", robot_drying: "Drying the pads", robot_water_empty: "Water tank empty", robot_rain: "Rain delay", robot_idle: "Stopped", section_robot_status: "Detailed status", section_battery: "Battery", section_robot_bin: "Bin full alert", section_robot_water: "Water tank", section_robot_rain: "Rain", section_robot_error: "Error",
+    type_robot: "Robot (vacuum, mop, mower)", layout_robot_vacuum: "Robot vacuum", layout_robot_mop: "Mopping robot", layout_robot_mower: "Robot mower", section_robot_station: "Base", robot_station_station: "Emptying or washing station", robot_station_base: "Charging base only", robot_shelter: "Shelter over the base", robot_shelter_style: "Shelter style", mower_style: "Mower style", mower_classic: "Classic", mower_navimow: "Navimow, orange wheels", shelter_lean_to: "Wooden lean-to", shelter_shell: "Shell", shelter_garage: "Garage", robot_shelter_color: "Shell colour", delay_starts_in: "Starts in", section_delay: "Delayed start countdown", state_entity_optional: "State entity (optional)", color_green: "Green", color_orange: "Orange", robot_charging: "Charging", robot_docked: "Docked", robot_cleaning: "Cleaning", robot_mopping: "Mopping", robot_mowing: "Mowing", robot_edgecut: "Edge cutting", robot_returning: "Returning to base", robot_emptying: "Emptying the bin", robot_bin_full: "Bin full", robot_washing: "Washing the pads", robot_drying: "Drying the pads", robot_water_empty: "Water tank empty", robot_rain: "Rain delay", robot_idle: "Stopped", section_robot_status: "Detailed status", section_battery: "Battery", section_robot_bin: "Bin full alert", section_robot_water: "Water tank", section_robot_rain: "Rain", section_robot_error: "Error",
     type_pool_pump: "Pool pump", pool_filtering: "Filtering", pool_chlorinating: "Chlorine injection", pool_backwash: "Backwash", pool_frost: "Frost protection", pool_light_on: "light on", section_water_temperature: "Water temperature", section_air_temperature: "Air temperature", section_ph: "pH", section_redox: "RedOx (ORP)", section_filtration_time: "Filtration time today", section_pressure: "Filter pressure", pool_pressure_alert: "Alert above this pressure (bar)", section_pool_mode: "Pump mode", section_chlorine_pump: "Chlorine pump", section_chlorine_level: "Chlorine tank level", section_backwash: "Backwash", section_frost: "Frost protection", section_pool_alert: "Alert", pool_line_water: "Water", pool_line_air: "Air", pool_line_filtered: "Filtered today", pool_line_pressure: "Pressure", pool_line_chlorine: "Chlorine tank", pool_line_mode: "Mode",
     history_last: "Last {h} h", show_history: "Show the history", section_history: "History sensor", history_hours: "Hours of history", history_empty: "No history yet",
     type_scale: "Bathroom scale", scale_weighed: "Weighed", scale_goal_reached: "Goal reached", section_weight_goal: "Weight goal", scale_goal_value: "Weight goal, without a sensor", section_fat_ratio: "Body fat (%)", section_fat_mass: "Fat mass", section_muscle_mass: "Muscle mass", section_bone_mass: "Bone mass", scale_line_goal: "Goal", scale_line_fat: "Fat", scale_line_muscle: "Muscle", scale_line_bone: "Bone", scale_to_lose: "to lose", scale_to_gain: "to gain",
@@ -158,7 +158,7 @@ const T = {
     layout_robot_floor_washer: "Floor washer", stick_away: "Off the base", stick_away_threshold: "Off the base below this power (W)",
     type_diffuser: "Essential oil diffuser", dif_mist: "Diffusing", dif_inter: "Intermittent", dif_low: "Light mist", dif_empty: "Tank empty", dif_mode: "Mist mode", layout_dif_drop: "Teardrop", layout_dif_cone: "Cone", layout_dif_stone: "Pebble", layout_dif_flame: "Flame", layout_dif_nebulizer: "Nebulizer", section_tank_empty: "Empty tank sensor", type_hrv: "Heat recovery ventilation (HRV/ERV)", hrv_run: "Ventilating", hrv_boost: "Boost", hrv_bypass: "Bypass", hrv_defrost: "Defrosting", hrv_filter: "Replace filter", hrv_away: "Away", hrv_recirc: "Recirculation", hrv_humidity: "Humidity control", hrv_inter: "Intermittent", hrv_inter_paused: "Intermittent, paused", hrv_mode: "Mode", hrv_supply_fan: "Supply fan", hrv_exhaust_fan: "Exhaust fan", section_supply_fan: "Supply fan speed (rpm)", section_exhaust_fan: "Exhaust fan speed (rpm)", fan_max_rpm: "Fan top speed (rpm)", section_exhaust_airflow: "Exhaust airflow", section_target_humidity: "Humidity setpoint", section_humidity_control: "Humidity control switch", layout_hrv_diagram: "Air flows", layout_hrv_one_duct: "Wall unit, one duct", layout_hrv_pair: "Through-wall pair", section_supply_temperature: "Supply air temperature", section_extract_temperature: "Extract air temperature", section_exhaust_temperature: "Exhaust air temperature", section_bypass: "Bypass", section_airflow: "Airflow", hrv_t_outdoor: "fresh air", hrv_t_supply: "supply", hrv_t_extract: "extract", hrv_t_exhaust: "exhaust", hrv_outside: "outside", hrv_room: "room",
     type_camera: "Camera", cam_idle: "Idle", cam_live: "Streaming", cam_rec: "Recording", cam_motion: "Motion detected", cam_off: "Off", cam_line_last_motion: "Last motion", cam_line_night: "Night vision", cam_line_signal: "Signal", section_motion: "Motion sensor", section_recording: "Recording sensor", section_night_vision: "Night vision", section_privacy: "Privacy mode", section_signal: "Signal strength", layout_cam_indoor: "Indoor, pan and tilt", layout_cam_tube: "Indoor tube", layout_cam_outdoor: "Outdoor", layout_cam_dome: "Dome", layout_cam_doorbell: "Doorbell", cam_ring: "Ringing", cam_line_last_ring: "Last ring", section_ring: "Doorbell button", type_mailbox: "Mailbox", mb_empty: "Empty", mb_mail: "Mail", mb_front_open: "Front door open", mb_back_open: "Back door open", mb_line_count: "Mail received", mb_line_last: "Last mail", mb_front_door: "Front door", mb_back_door: "Back door", mb_open: "Open", mb_closed: "Closed", section_mail_count: "Mail counter", layout_mb_through: "Through the wall", layout_mb_classic: "Classic", mb_street: "street", mb_house: "house", mb_front_side: "Street side", mb_side_left: "Left", mb_side_right: "Right", type_water_pump: "Water pump", type_floor_heating: "Underfloor heating", type_spa: "Spa", type_sauna: "Sauna", type_aquarium: "Aquarium", type_meter: "Electricity meter", type_christmas_tree: "Christmas tree", layout_chest: "Chest freezer", layout_drawers: "Drawer freezer", layout_pump_booster: "Booster set", layout_pump_sump: "Sump pump", layout_floor_water: "Hot water", layout_floor_electric: "Electric", layout_robot_pool: "Pool robot", wp_pumping: "Pumping", wp_high: "High level", spa_bubbles: "Bubbles", sauna_ready: "Ready", aq_lit: "Light on", aq_dark: "Light off", meter_low: "Low use", meter_high: "High use", layout_meter_linky: "Linky", layout_meter_box: "Electricity meter", layout_meter_dome: "Round meter", layout_meter_gas: "Gas meter", layout_meter_water: "Water meter", section_today_use: "Today's use (kWh, m\u00b3)", section_meter_index: "Meter index", meter_index: "Index", meter_flowing: "In use", meter_idle: "No use", meter_flow: "Flow", section_pressure: "Pressure", section_water_level: "Water level", section_high_level: "High level alarm", level_max: "Level when full", section_bubbles: "Bubbles", section_tariff: "Tariff period", high_power: "High use from (W or VA)", tree_palette: "Colours", palette_multicolor: "Multicolour", palette_red_gold: "Red and gold", palette_red_silver: "Red and silver", palette_gold_silver: "Gold and silver", palette_blue_silver: "Blue and silver", palette_white_silver: "White and silver", palette_red_green: "Red and green", presents: "Presents", presents_auto: "On 24 and 25 December", presents_show: "Always", presents_hide: "Never", tree_on: "On", tree_off: "Off",
-    type_lamp: "Lamp", lamp_off: "Off", lamp_on: "On", lamp_line_brightness: "Brightness", lamp_line_color_temp: "Colour temperature", lamp_line_effect: "Effect", lamp_timer: "Timer", illustration_tap_action: "Tap on the drawing", pic_tap_default: "Card's own", pic_tap_toggle: "Toggle", pic_tap_more: "Details", pic_tap_none: "Nothing", lamp_spots: "Number of spots", layout_lamp_bulb: "Bulb", layout_lamp_bedside: "Bedside lamp", layout_lamp_floor: "Arc floor lamp", layout_lamp_torch: "Torchiere", layout_lamp_pendant: "Pendant", layout_lamp_strip: "LED strip", layout_lamp_spot: "Recessed spots", layout_lamp_panels: "Light panels", layout_lamp_desk: "Desk lamp", layout_lamp_wall: "Wall lantern",
+    type_lamp: "Lamp", lamp_off: "Off", lamp_on: "On", lamp_line_brightness: "Brightness", lamp_line_color_temp: "Colour temperature", lamp_line_effect: "Effect", lamp_timer: "Timer", show_toggle: "On/off button", line_hide: "Hide this line", line_show: "Show this line", illustration_tap_action: "Tap on the drawing", pic_tap_default: "Card's own", pic_tap_toggle: "Toggle", pic_tap_more: "Details", pic_tap_none: "Nothing", lamp_spots: "Number of spots", layout_lamp_bulb: "Bulb", layout_lamp_bedside: "Bedside lamp", layout_lamp_floor: "Arc floor lamp", layout_lamp_torch: "Torchiere", layout_lamp_pendant: "Pendant", layout_lamp_strip: "LED strip", layout_lamp_spot: "Recessed spots", layout_lamp_panels: "Light panels", layout_lamp_desk: "Desk lamp", layout_lamp_wall: "Wall lantern",
     speed_power_max: "Power at top speed (W)", speed_power_custom: "Custom speed thresholds", speed_power_2: "Speed 2 from (W)", speed_power_3: "Speed 3 from (W)",
     fw_self_cleaning: "Self-cleaning", fw_dirty_full: "Dirty water tank full", fw_clean_empty: "Clean water tank empty",
     group_energy: "Energy", type_solar: "Solar panels", type_home_battery: "Home battery", solar_producing: "Producing", solar_low: "Low production", solar_night: "Night", section_solar_layout: "Mounting", layout_solar_ground: "On the ground", layout_solar_roof: "On a roof", section_solar_power: "Power produced", section_energy_today: "Energy produced today", solar_line_today: "Today", solar_peak_power: "Peak power of the panels (W)", section_battery_power: "Battery power (+ charging, \u2212 discharging)", power_inverted: "Positive power means discharging", section_charge_power: "Charge power", section_battery_discharge: "Discharge power", section_reserve: "Backup reserve", section_charge_limit: "Charge limit", battery_capacity: "Capacity (kWh)", layout_battery_wall: "Wall battery", layout_battery_station: "Portable power station", bat_idle: "Idle", bat_full: "Full", bat_low: "Low battery", bat_line_full_in: "Full in", bat_line_left: "Remaining", bat_line_reserve: "Reserve",
@@ -2540,6 +2540,7 @@ const TYPE_AUTO_PATTERNS = {
   sauna: { temperature_entity: /temp/i },
   floor_heating: { temperature_entity: /temp/i },
   aquarium: { temperature_entity: /temp/i },
+  mobility: { battery_entity: /batter|akku|(^|[._])soc([._]|$)/i },
   meter: { tariff_entity: /tarif|ptec|period|hchp|tempo/i },
   diffuser: {
     light_entity: /light|lumiere|licht|luz|luce|lamp|led|night/i,
@@ -3065,6 +3066,8 @@ const TYPE_CAPS = {
   aquarium: { ntAqua: true },
   meter: { ntMeter: true, readOnly: true },
   christmas_tree: { ntTree: true },
+  // A scooter, a bike, a gyropode or a motorcycle on its charger (#72).
+  mobility: { ntMobility: true },
   // A thermostat on the wall or a valve on a radiator: the room, the
   // setpoint, and whether it calls for heat. A climate entity says it all.
   thermostat: { thermostat: true, readOnly: true },
@@ -3128,7 +3131,7 @@ const FEEDER_ONLY_FIELDS = [
 ];
 
 // Same for a pet fountain: nothing else has a pump to clean.
-const FOUNTAIN_ONLY_FIELDS = ["pump_clean_entity", "pump_reset_entity", "water_level_entity", "pump_running_entity"];
+const FOUNTAIN_ONLY_FIELDS = ["fountain_layout", "pump_clean_entity", "pump_reset_entity", "water_level_entity", "pump_running_entity"];
 
 // Same for a 3D printer: nothing else has a nozzle or a print bed.
 // A flue gas reading belongs to a fire, and the only fire the card draws is a
@@ -3168,6 +3171,7 @@ const STATE_DOMAINS = {
   aquarium: ["light", "switch", "input_boolean"],
   meter: ["sensor"],
   christmas_tree: ["light", "switch", "input_boolean"],
+  mobility: ["switch", "input_boolean", "binary_sensor", "sensor"],
 };
 // A model, a picture, the players it shows and a session lock belong to a
 // screen.
@@ -3271,7 +3275,7 @@ const TYPE_GROUPS = [
   ["kitchen", ["dishwasher", "oven", "microwave", "hood", "cooktop", "fridge", "kettle", "cooker", "coffee", "rice_cooker", "air_fryer", "toaster"]],
   ["heating", ["water_heater", "boiler", "heat_pump", "thermostat", "pellet_stove", "space_heater", "towel_warmer", "floor_heating"]],
   ["air", ["air_conditioner", "dehumidifier", "air_purifier", "fan", "diffuser", "hrv"]],
-  ["home", ["screen", "iron", "hair_dryer", "printer_3d", "robot", "pool_pump", "scale", "camera", "lamp", "mailbox", "water_pump", "spa", "sauna", "aquarium", "christmas_tree"]],
+  ["home", ["screen", "iron", "hair_dryer", "printer_3d", "robot", "pool_pump", "scale", "camera", "lamp", "mailbox", "water_pump", "spa", "sauna", "aquarium", "christmas_tree", "mobility"]],
   ["energy", ["solar", "home_battery", "ev_charger", "meter"]],
   ["pets", ["pet_feeder", "pet_fountain"]],
   ["network", ["network", "ups"]],
@@ -3593,7 +3597,7 @@ const PLUG_THRESHOLDS = {
   washer: 10, dryer: 10, dishwasher: 10, oven: 50, microwave: 50, cooker: 20, coffee: 200, rice_cooker: 100,
   air_fryer: 50, kettle: 50, toaster: 50, water_heater: 50, space_heater: 30, towel_warmer: 10, dehumidifier: 30,
   air_purifier: 3, fan: 3, hood: 5, pool_pump: 50, printer_3d: 30, cooktop: 50, pet_fountain: 1,
-  spa: 50, sauna: 100, aquarium: 3, water_pump: 30, floor_heating: 30, christmas_tree: 2, iron: 10,
+  spa: 50, sauna: 100, aquarium: 3, water_pump: 30, floor_heating: 30, christmas_tree: 2, iron: 10, mobility: 40,
 };
 // A coffee machine or a rice cooker drawing more than this, under its
 // threshold, is keeping warm.
@@ -3861,7 +3865,7 @@ function robotWord(v) {
 // washer's integration says more: in use, washing itself, a full dirty
 // tank, an empty clean one, a tangled brush.
 const ROBOT_STICK_RE = /dyson|balai|stick|cordless|sans.?fil|akkusauger|stielsauger|escoba|scopa|steelstofzuiger|skaftdammsugare|stavstovsuger|pionowy|tycovy/;
-const ROBOT_WASHER_RE = /tineco|floor.?one|ifloor|laveur|floor.?washer|wet.?dry|nass|lavapavimenti|fregona|vloerwasser|myci|\u6d17\u5730/;
+const ROBOT_WASHER_RE = /tineco|floor.?one|ifloor|laveur.?de.?sol|floor.?washer|wet.?dry|nass|lavapavimenti|fregona|vloerwasser|myci|\u6d17\u5730/;
 const STICK_CHARGE_W = 5;
 const STICK_AWAY_W = 1;
 const STICK_AT_WORK = /^(in_operation|operating|working|cleaning|running|in_use)$/;
@@ -4252,7 +4256,8 @@ function lampControls(hass, cfg) {
     out.push({ key: "lamp_timer", entity: timer.entity, icon: "mdi:timer-cog-outline", label: t(hass, "lamp_timer"), menu: true,
       text: screenSourceLabel(hass, stateObj(hass, timer.entity), timer.current) });
   }
-  if (!st || cfg.toggle_entity || !["light", "switch", "input_boolean"].includes(domainOf(cfg.state_entity))) return out;
+  // show_toggle: false leaves the switching to the drawing (HACF #127).
+  if (!st || cfg.toggle_entity || cfg.show_toggle === false || !["light", "switch", "input_boolean"].includes(domainOf(cfg.state_entity))) return out;
   return out.concat([{ key: "toggle", entity: cfg.state_entity, icon: "mdi:lightbulb", label: t(hass, "toggle"), on: String(st.state).toLowerCase() === "on" }]);
 }
 
@@ -5131,7 +5136,8 @@ function lampHtml(cls, c) {
 // sauna, an aquarium, a Linky meter and a Christmas tree. Drawn in SVG on a 120 x 135 field; what
 // moves moves only on a machine carrying nt-on, staggered through --d0, and
 // the robot's cable and the sump's float follow their SMIL animations.
-const NT_TYPES = ["water_pump", "floor_heating", "spa", "sauna", "aquarium", "meter", "christmas_tree"];
+const NT_TYPES = ["water_pump", "floor_heating", "spa", "sauna", "aquarium", "meter", "christmas_tree", "mobility"];
+const MOBILITY_LAYOUTS = ["scooter", "offroad", "ebike", "gyropode", "motorcycle"];
 const PUMP_LAYOUTS = ["booster", "sump"];
 const FLOOR_LAYOUTS = ["water", "electric"];
 const NT_ONLY_FIELDS = {
@@ -5139,6 +5145,7 @@ const NT_ONLY_FIELDS = {
   floor_heating: ["floor_layout"],
   spa: ["bubbles_entity"],
   christmas_tree: ["tree_palette", "presents"],
+  mobility: ["mobility_layout"],
   meter: ["tariff_entity", "high_power", "meter_layout", "today_entity", "total_entity"],
 };
 // By name, in the languages the card speaks; "whirlpool" is left out, it is a
@@ -5146,6 +5153,7 @@ const NT_ONLY_FIELDS = {
 const NT_NAME_RES = [
   ["christmas_tree", /christmas|xmas|(^|[^a-z])sapin|(^|[^a-z])noel([^a-z]|$)|weihnacht|tannenbaum|navidad|natale|kerstboom|julgran|juletre|juletrae|choink|vanocni.?strom/],
   ["aquarium", /aquari|akwari|akvari/],
+  ["mobility", /trottinette|e-?scooter|(^|[^a-z])scooter([^a-z]|$)|ninebot|(^|[^a-z])(velo|e-?bike|ebike|vae|pedelec)([^a-z]|$)|gyropode|gyroroue|monowheel|hoverboard|(^|[^a-z])moto([^a-z]|$)|motorcycle|super.?soco|sur.?ron|ausom|dualtron|kaabo|patinete|monopattino|hulajnoga|elsparkcykel|elsparkesykkel|kolobezka/],
   ["sauna", /sauna/],
   ["spa", /(^|[^a-z])(spa|jacuzzi|hot.?tub|bain.?nordique|whirlpoolwanne)([^a-z]|$)/],
   ["meter", /linky|compteur.?(electrique|edf|enedis)|smart.?meter|(^|[^a-z])(teleinfo|papp|sinsts)([^a-z]|$)/],
@@ -5164,6 +5172,16 @@ function meterLayoutOf(cfg, st) {
   if (a.device_class === "gas" || /(^|[^a-z])(gas|gaz)([^a-z]|$)|gazpar/.test(hay)) return "gas";
   if (a.device_class === "water" || /water|(^|[^a-z])eau([^a-z]|$)|wasser|agua|acqua|water_meter/.test(hay)) return "water";
   return "linky";
+}
+// An electric ride's drawing: the one chosen, else its name.
+function mobilityLayoutOf(cfg, st) {
+  if (MOBILITY_LAYOUTS.includes(cfg.mobility_layout)) return cfg.mobility_layout;
+  const hay = stripAccents(`${cfg.state_entity || ""} ${cfg.name || ""} ${(st && st.attributes.friendly_name) || ""}`).toLowerCase();
+  if (/ausom|dualtron|kaabo|off.?road|tout.?terrain|gelande|todoterreno|fuoristrada|teren/.test(hay)) return "offroad";
+  if (/gyropode|gyroroue|monowheel|hoverboard|segway.?pt|one.?wheel/.test(hay)) return "gyropode";
+  if (/(^|[^a-z])moto([^a-z]|$)|motorcycle|motorrad|motocicl|motocykl|super.?soco|sur.?ron|talaria|horwin|zero.?s/.test(hay)) return "motorcycle";
+  if (/(^|[^a-z])(velo|e-?bike|ebike|vae|pedelec|bike|fahrrad|bici|fiets|cykel|sykkel|rower|kolo)([^a-z]|$)/.test(hay)) return "ebike";
+  return "scooter";
 }
 const ROBOT_POOL_RE = /pool|piscine|dolphin|maytronics|aiper|zodiac|polaris|beatbot|wybot|bwt.?(d|p)\d|pool.?robot|schwimmbad|piscina|zwembad|basen/;
 
@@ -5769,7 +5787,196 @@ ${on ? `<circle class="nta-glow" cx="60" cy="10" r="9" fill="${pal.star[0]}" fil
 ${presents}`;
 }
 
-const NT_DRAW = { meter_box: ntMeterBox, meter_dome: ntMeterDome, meter_gas: ntGas, meter_water: ntWater, booster: ntBooster, sump: ntSump, pool: ntPoolRobot, floor: ntFloor, spa: ntSpa, sauna: ntSauna, aquarium: ntAquarium, linky: ntLinky, tree: ntTree };
+// Electric rides on their charger (#72): a scooter, an off-road scooter like
+// the Ausom DT2 Pro, an e-bike, a gyropode and an electric motorcycle, front
+// to the left. The charger's light is red while it charges, green once
+// full; the current runs from the charger to the vehicle.
+// A wheel: tyre, rim, hub; knobs for an off-road tyre, spokes for a bike.
+function mobWheel(cx, cy, r, o = {}) {
+  const t = o.tyre || "#1e2226";
+  let s = `<circle cx="${cx}" cy="${cy}" r="${r}" fill="${t}"/>`;
+  if (o.knobby) {
+    const n = 18;
+    for (let i = 0; i < n; i++) {
+      const a = (i / n) * Math.PI * 2;
+      const x = cx + Math.cos(a) * (r - .2), y = cy + Math.sin(a) * (r - .2);
+      s += `<rect x="${(x - 1.6).toFixed(2)}" y="${(y - 1.1).toFixed(2)}" width="3.2" height="2.2" rx=".6" fill="${t}" transform="rotate(${(a * 180 / Math.PI + 90).toFixed(1)} ${x.toFixed(2)} ${y.toFixed(2)})"/>`;
+    }
+  }
+  const rim = o.rim || r * .58;
+  if (o.spokes) {
+    s += `<circle cx="${cx}" cy="${cy}" r="${r - 1.8}" fill="none" stroke="#8a939d" stroke-width=".9"/>`;
+    for (let i = 0; i < 16; i++) { const a = i / 16 * Math.PI * 2; s += `<path d="M${cx} ${cy} L${(cx + Math.cos(a) * (r - 2)).toFixed(2)} ${(cy + Math.sin(a) * (r - 2)).toFixed(2)}" stroke="#a7aeb6" stroke-width=".35"/>`; }
+    s += `<circle cx="${cx}" cy="${cy}" r="2.2" fill="#3b4148"/>`;
+    return s;
+  }
+  s += `<circle cx="${cx}" cy="${cy}" r="${rim}" fill="${o.rimColor || "#4a525b"}"/>`;
+  if (o.disc) s += `<circle cx="${cx}" cy="${cy}" r="${rim * .82}" fill="none" stroke="#b9c0c8" stroke-width="1.2" stroke-dasharray="1.4 .8"/>`;
+  s += `<circle cx="${cx}" cy="${cy}" r="${rim * .38}" fill="#22272c"/><circle cx="${cx}" cy="${cy}" r="${rim * .14}" fill="#9aa3ad"/>`;
+  return s;
+}
+
+// The charger on the floor, its cable to the vehicle's port; its light red
+// while charging, green once full, dark when the plug is off.
+function mobCharger(x, port, c) {
+  const led = c.st === "charging" ? "#ff5252" : c.st === "full" ? "#43a047" : "#3a4048";
+  const [px, py] = port;
+  // Unplugged, its cable lies on the floor and its plug is free.
+  const lying = c.st === "off";
+  const cable = lying ? `M${x} 104 C${x - 6} 107.4 ${x - 14} 107.4 ${x - 20} 106.6` : `M${px} ${py} C${px + 2} ${py + 14} ${x - 10} 104 ${x} 103`;
+  return `<path d="${cable}" stroke="#2a2f35" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+${c.st === "charging" ? `<path class="nta-feed" d="${cable}" stroke="#ffca28" stroke-width=".9" fill="none" stroke-dasharray="2 4"/>` : ""}
+${lying ? `<rect x="${x - 25}" y="104.6" width="5.4" height="3.4" rx="1" fill="#2a2f35"/>` : ""}
+<circle cx="${px}" cy="${py}" r="1.5" fill="#15181c"/>
+<rect x="${x}" y="98" width="20" height="10" rx="2.2" fill="#24292e"/><rect x="${x + 1}" y="98.8" width="18" height="2.4" rx="1.2" fill="#fff" opacity=".08"/>
+<circle class="${c.st === "charging" ? "nta-led" : ""}" cx="${x + 16}" cy="101.6" r="1.3" fill="${led}"/>
+<path d="M${x + 20} 104 C${x + 26} 104 ${x + 28} 106 116 106" stroke="#2a2f35" stroke-width="1.3" fill="none"/>`;
+}
+
+// Unplugged, the ride is greyed out.
+const mobGrey = (c) => (c.st === "off" ? ' opacity=".5" style="filter:grayscale(1)"' : "");
+
+// One bar of four: the real level when it is known (a bar per quarter, the
+// next one blinking while it charges), else the bars filling from 0 to 4 in
+// turn while it charges, all four once full, none lit when nothing says.
+function mobBar(c, i, lit, dim) {
+  if (c.level !== null && c.level !== undefined) {
+    const n = c.st === "full" ? 4 : Math.max(0, Math.min(4, Math.ceil(c.level / 25)));
+    const low = n <= 1 && c.st !== "charging";
+    if (i < n) return `fill="${low ? "#e53935" : lit}"`;
+    if (c.st === "charging" && i === n) return `class="nta-next" fill="${lit}"`;
+    return `fill="${dim}"`;
+  }
+  if (c.st === "charging") return `class="nta-bar${i + 1}" fill="${lit}"`;
+  return `fill="${c.st === "full" ? lit : dim}"`;
+}
+
+// The battery gauge over the vehicle, four bars read by mobBar.
+function mobGauge(cx, cy, c) {
+  const bars = [0, 1, 2, 3].map((i) => `<rect x="${cx - 9.2 + i * 4.4}" y="${cy - 2.6}" width="3.6" height="5.2" rx=".6" ${mobBar(c, i, "#43a047", "#dfe3e7")}/>`).join("");
+  return `<rect x="${cx - 11}" y="${cy - 4.4}" width="20" height="8.8" rx="2" fill="#fff" stroke="#9aa3ad" stroke-width=".8"/><rect x="${cx + 9}" y="${cy - 1.6}" width="1.6" height="3.2" rx=".6" fill="#9aa3ad"/>${bars}
+${c.st === "charging" ? `<path class="nta-led" d="M${cx + 15} ${cy - 5} l-3 5.4 h2.4 l-1.4 4.6 l4 -6 h-2.4 l1.6 -4 Z" fill="#ffb300" stroke="#e65100" stroke-width=".3"/>` : ""}`;
+}
+
+// A commuter scooter, Segway / Ninebot style, front to the left.
+function mobScooter(c) {
+  const g = ntId();
+  return `<defs>${ntV(g, "#7d858e", "#4c535b")}</defs>${ntShadow(58, 110, 46)}<g${mobGrey(c)}>
+${mobWheel(22, 98, 10)}${mobWheel(94, 98, 10)}
+<path d="M84 88 Q94 82 104 90 L104 92 Q94 86 86 91 Z" fill="#1f2328"/>
+<path d="M28 90 L34 84 H86 L88 90 Q87 93 84 93 H32 Q29 93 28 90 Z" fill="#23272c"/>
+<path d="M40 86.4 H80" stroke="#5a626b" stroke-width="1.6" stroke-linecap="round"/>
+<path d="M22 98 L27 74 L33 84" stroke="url(#${g})" stroke-width="5" fill="none" stroke-linejoin="round"/>
+<path d="M27 76 L37 20" stroke="#1e2226" stroke-width="3.6" stroke-linecap="round"/>
+<path d="M36 22 L37 16" stroke="#1e2226" stroke-width="3" stroke-linecap="round"/>
+<path d="M33 16.6 L44 15" stroke="#1e2226" stroke-width="3" stroke-linecap="round"/><path d="M40 15.4 L46 14.6" stroke="#3b4148" stroke-width="3.4" stroke-linecap="round"/>
+<path d="M34 24 Q30 34 31 46" stroke="#e53935" stroke-width=".7" fill="none"/>
+<rect x="23.6" y="80" width="3.4" height="4" rx="1" fill="#f5f5f5" opacity=".85"/>
+<rect x="100" y="89" width="3" height="1.6" rx=".6" fill="#e53935"/>
+</g>${mobCharger(60, [38, 88], c)}${mobGauge(78, 52, c)}`;
+}
+
+// Ausom DT2 Pro: dual motors, off-road tyres, swing arms, yellow touches.
+function mobOffroad(c) {
+  const g = ntId(), d = ntId();
+  return `<defs>${ntV(g, "#5c636b", "#2f3439")}${ntV(d, "#4a5057", "#24282c")}</defs>${ntShadow(60, 110, 50)}<g${mobGrey(c)}>
+${mobWheel(20, 96, 12, { knobby: true, disc: true })}${mobWheel(98, 96, 12, { knobby: true, disc: true })}
+<path d="M88 84 L98 96" stroke="#3a4046" stroke-width="5" stroke-linecap="round"/>
+<path d="M90 84 Q100 74 110 84 L110 87 Q100 79 92 88 Z" fill="#2a2f34"/>
+<path d="M30 92 L36 82 H86 L90 90 Q89 94 85 94 H33 Q30 94 30 92 Z" fill="url(#${d})"/>
+<text x="62" y="91.6" font-size="3.2" font-weight="700" text-anchor="middle" fill="#c9ced3" font-family="Arial, sans-serif" letter-spacing=".3">AUSOM</text>
+<path d="M80 82 L82 74 H90" stroke="#2a2f34" stroke-width="2.4" fill="none" stroke-linejoin="round"/>
+<path d="M20 96 L28 80" stroke="#3a4046" stroke-width="4.4" stroke-linecap="round"/>
+<path d="M27 82 L33 77 L37 83" stroke="url(#${g})" stroke-width="5.6" fill="none" stroke-linejoin="round"/>
+<path d="M25.4 86.4 L29 80.6" stroke="#ffb300" stroke-width="2.2" stroke-dasharray="1 .7"/>
+<path d="M31 78 L40 18" stroke="url(#${g})" stroke-width="4.6" stroke-linecap="round"/>
+<circle cx="33.4" cy="62" r="2.4" fill="#ffb300"/><circle cx="33.4" cy="62" r=".9" fill="#c77800"/>
+<path d="M36 40 L37.4 32" stroke="#ffb300" stroke-width="1.6" stroke-linecap="round" opacity=".9"/>
+<path d="M33 16.4 L47 14" stroke="#1e2226" stroke-width="3" stroke-linecap="round"/><path d="M42 14.8 L49 13.6" stroke="#3b4148" stroke-width="3.6" stroke-linecap="round"/>
+<rect x="37" y="11.6" width="5" height="3.4" rx=".8" fill="#14181c"/><rect x="37.8" y="12.4" width="3.4" height="1.8" rx=".4" fill="${c.st === "off" ? "#2b3138" : "#4fc3f7"}"/>
+<circle cx="33" cy="26" r="1.8" fill="#fffde7" stroke="#2a2f34" stroke-width=".6"/>
+<rect x="107" y="85" width="3" height="1.8" rx=".6" fill="#e53935"/>
+</g>${mobCharger(62, [42, 89], c)}${mobGauge(80, 50, c)}`;
+}
+
+// An e-bike: its battery along the down tube, the motor at the cranks.
+function mobEbike(c) {
+  const f = "#2e7d6b";
+  // The down tube runs from the head tube (46,62) to the cranks (60,92); the
+  // battery lies on its upper side, along it.
+  const ang = (Math.atan2(30, 14) * 180 / Math.PI).toFixed(1);
+  const bars = [0, 1, 2, 3].map((i) => `<rect x="${4 + i * 2}" y="-1.6" width="1.3" height="3.2" rx=".4" ${mobBar(c, i, "#69f0ae", "#4a525b")}/>`).join("");
+  return `${ntShadow(60, 110, 52)}<g${mobGrey(c)}>
+${mobWheel(24, 92, 17, { spokes: true })}${mobWheel(96, 92, 17, { spokes: true })}
+<path d="M24 92 L46 62 L82 62 L96 92 M46 62 L60 92 L82 62 M60 92 L96 92" stroke="${f}" stroke-width="3" fill="none" stroke-linejoin="round" stroke-linecap="round"/>
+<g transform="translate(55.6 76.4) rotate(${ang})"><rect x="-13" y="-3.4" width="24" height="6.8" rx="2.6" fill="#30363c"/><rect x="-11" y="-2.6" width="16" height="1.2" rx=".6" fill="#fff" opacity=".12"/>${bars}</g>
+<path d="M46 62 L44 50 Q44 47 47 47 H52" stroke="#1e2226" stroke-width="2.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/><path d="M50 47 H54" stroke="#3b4148" stroke-width="3.2" stroke-linecap="round"/>
+<path d="M82 62 L85 48" stroke="#9aa3ad" stroke-width="2.2" stroke-linecap="round"/>
+<path d="M79 47 Q86 44.6 93 46.4 Q93 48.6 88 48.6 H81 Q78.6 48.4 79 47 Z" fill="#1e2226"/>
+<circle cx="60" cy="92" r="4.6" fill="#3b4148"/><circle cx="60" cy="92" r="2" fill="#6c757e"/>
+<path d="M60 92 L64 98" stroke="#22272c" stroke-width="1.6"/><rect x="62" y="97" width="5" height="1.6" rx=".6" fill="#22272c"/>
+<circle cx="43" cy="57" r="1.8" fill="#fffde7" stroke="#2a2f34" stroke-width=".5"/>
+<path d="M88 66 L92 66" stroke="#e53935" stroke-width="1.6" stroke-linecap="round"/>
+</g>${mobCharger(70, [52, 78], c)}${mobGauge(98, 30, c)}`;
+}
+
+// A self-balancing gyropode (Segway PT): two wheels side by side, a platform
+// between them, a tall stem and its handlebar.
+function mobGyropode(c) {
+  const g = ntId();
+  return `<defs>${ntV(g, "#e9edf1", "#a9b2bc")}</defs>${ntShadow(52, 110, 30)}<g${mobGrey(c)}>
+${mobWheel(52, 92, 17, { rim: 9.6 })}
+<path d="M34 96 H70 Q72 96 72 98 V101 Q72 103 70 103 H34 Q32 103 32 101 V98 Q32 96 34 96 Z" fill="#22272c"/>
+<rect x="34" y="92.6" width="36" height="4" rx="1.4" fill="#3b4148"/>
+<path d="M44 80 Q52 76 60 80 L58 94 H46 Z" fill="url(#${g})" stroke="#8a939d" stroke-width=".6"/>
+<path d="M52 82 L56 22" stroke="#2a2f34" stroke-width="3.6" stroke-linecap="round"/>
+<path d="M48 22 H64" stroke="#2a2f34" stroke-width="3.2" stroke-linecap="round"/><path d="M47 22 H51 M61 22 H65" stroke="#4a525b" stroke-width="4" stroke-linecap="round"/>
+<rect x="53.4" y="25" width="5" height="3.4" rx=".8" fill="#14181c"/><rect x="54.2" y="25.8" width="3.4" height="1.8" rx=".4" fill="${c.st === "off" ? "#2b3138" : "#4fc3f7"}"/>
+</g>${mobCharger(82, [58, 88], c)}${mobGauge(84, 50, c)}`;
+}
+
+// An electric motorcycle, neo-retro like the Super Soco TC Max: round
+// headlight, a tank that holds the battery, flat ribbed seat, silver swing
+// arm and the motor in the rear hub. Front to the left like the others.
+function mobAlloy(cx, cy, r) {
+  let s = `<circle cx="${cx}" cy="${cy}" r="${r}" fill="#1b1f23"/><circle cx="${cx}" cy="${cy}" r="${r - 2.6}" fill="#2c3238"/><circle cx="${cx}" cy="${cy}" r="${r - 3.4}" fill="#14171a"/>`;
+  for (let i = 0; i < 5; i++) {
+    const a = i / 5 * Math.PI * 2 - Math.PI / 2;
+    const x1 = cx + Math.cos(a - .12) * (r - 3.4), y1 = cy + Math.sin(a - .12) * (r - 3.4);
+    const x2 = cx + Math.cos(a + .12) * (r - 3.4), y2 = cy + Math.sin(a + .12) * (r - 3.4);
+    s += `<path d="M${cx} ${cy} L${x1.toFixed(2)} ${y1.toFixed(2)} L${x2.toFixed(2)} ${y2.toFixed(2)} Z" fill="#3d444c"/>`;
+  }
+  return s;
+}
+function mobMotorcycle(c) {
+  const b = ntId(), sv = ntId(), sh = ntId();
+  // Low and long: the seat about 1.3 wheels high, as on the real bike.
+  return `<defs>${ntV(b, "#4a525b", "#16191c")}${ntV(sv, "#e9edf1", "#9aa3ad")}${ntV(sh, "#30363c", "#111316")}</defs>${ntShadow(60, 110, 56)}<g${mobGrey(c)}>
+${mobAlloy(22, 92, 16)}<circle cx="22" cy="92" r="7.6" fill="none" stroke="#c4cbd2" stroke-width="1.4" stroke-dasharray="1.6 .9"/><circle cx="22" cy="92" r="2.2" fill="#9aa3ad"/>
+${mobAlloy(98, 92, 16)}<circle cx="98" cy="92" r="6.8" fill="url(#${sv})"/><circle cx="98" cy="92" r="3" fill="#5a636c"/>
+<path d="M85 76 Q98 66 112 77 L111 80 Q98 70 87 79 Z" fill="#1f2328"/>
+<rect x="107" y="75" width="6" height="4.4" rx=".8" fill="#e9edf1" stroke="#9aa3ad" stroke-width=".4"/>
+<path d="M64 86 L98 92" stroke="url(#${sv})" stroke-width="4.4" stroke-linecap="round"/>
+<path d="M78 66 L82 84" stroke="#e9edf1" stroke-width="2.6" stroke-linecap="round"/><path d="M78.6 68.6 L81.6 81" stroke="#e53935" stroke-width="1.6" stroke-dasharray="1 .8"/>
+<path d="M36 56 L22 92" stroke="#1f2328" stroke-width="4" stroke-linecap="round"/><path d="M27.6 77 L23 90" stroke="#c4cbd2" stroke-width="2.6" stroke-linecap="round"/>
+<path d="M76 62 L106 61 L103 67 H78 Z" fill="#1f2328"/><path d="M103 66 L108 75" stroke="#1f2328" stroke-width="1.8" stroke-linecap="round"/>
+<path d="M105 60.6 L109.6 61.4 L108.8 64.4 L104.4 63.8 Z" fill="#e53935"/>
+<path d="M38 58 L54 54 Q70 52 78 58 L80 70 L76 84 H50 Q42 82 40 72 Z" fill="url(#${b})"/>
+<path d="M44 72 H79 L76 84 H50 Q45 81 44 72 Z" fill="url(#${sv})"/>
+<text x="64" y="81" font-size="4.4" font-weight="700" font-style="italic" text-anchor="middle" fill="#5a636c" font-family="Arial, sans-serif">TC</text>
+<path d="M48 60 Q60 56 72 60" stroke="#fff" stroke-width=".8" fill="none" opacity=".18"/>
+<circle cx="58" cy="65" r="2.4" fill="#2a3036" stroke="#7d868f" stroke-width=".5"/>
+<path d="M70 57 Q72 54 78 54 H101 Q107 54.4 107 58 L106 61.4 H72 Q69 60.6 70 57 Z" fill="url(#${sh})"/>
+${[0, 1, 2, 3, 4, 5, 6].map((i) => `<path d="M${79 + i * 3.6} 55 V61" stroke="#4a525b" stroke-width=".5"/>`).join("")}
+<path d="M72 54.8 H105" stroke="#c4cbd2" stroke-width=".6"/>
+<path d="M37 55 L42 46 M42 46 L49 47" stroke="#1f2328" stroke-width="2.2" stroke-linecap="round"/><path d="M46 46.8 L51 47.6" stroke="#3b4148" stroke-width="3" stroke-linecap="round"/>
+<path d="M41 47 L38 38" stroke="#1f2328" stroke-width="1"/><circle cx="37.6" cy="36.4" r="2.6" fill="#2a2f34" stroke="#9aa3ad" stroke-width=".6"/>
+<ellipse cx="30.6" cy="62" rx="4.4" ry="5.4" fill="#2a2f34" stroke="#c4cbd2" stroke-width=".9"/><ellipse cx="28.4" cy="62" rx="2" ry="4.2" fill="#fffde7"/>
+<path d="M62 86 L66 86" stroke="#9aa3ad" stroke-width="1.8" stroke-linecap="round"/>
+</g>${mobCharger(70, [76, 74], c)}${mobGauge(88, 30, c)}`;
+}
+
+const NT_DRAW = { mob_scooter: mobScooter, mob_offroad: mobOffroad, mob_ebike: mobEbike, mob_gyropode: mobGyropode, mob_motorcycle: mobMotorcycle, meter_box: ntMeterBox, meter_dome: ntMeterDome, meter_gas: ntGas, meter_water: ntWater, booster: ntBooster, sump: ntSump, pool: ntPoolRobot, floor: ntFloor, spa: ntSpa, sauna: ntSauna, aquarium: ntAquarium, linky: ntLinky, tree: ntTree };
 function ntSvg(d) {
   ntN = 0;
   const draw = NT_DRAW[d && d.kind] || ntLinky;
@@ -5812,6 +6019,15 @@ const NT_CSS = `
         .nta-caust{opacity:.35}
         .nt-on .nta-caust{opacity:0;animation:nt-shimmer 3s ease-in-out infinite}
         .nta-blink{animation:nt-blink 2.4s linear infinite}
+        .nt-on .nta-feed{animation:nt-feed .625s linear infinite}
+        .nt-on .nta-led,.nt-on .nta-next{animation:nt-glow 1.25s ease-in-out infinite}
+        .nt-on .nta-bar1{animation:nt-bar1 5s steps(1) infinite}.nt-on .nta-bar2{animation:nt-bar2 5s steps(1) infinite}
+        .nt-on .nta-bar3{animation:nt-bar3 5s steps(1) infinite}.nt-on .nta-bar4{animation:nt-bar4 5s steps(1) infinite}
+        @keyframes nt-feed{to{stroke-dashoffset:12}}
+        @keyframes nt-bar1{0%{opacity:.15}12%,100%{opacity:1}}
+        @keyframes nt-bar2{0%{opacity:.15}30%,100%{opacity:1}}
+        @keyframes nt-bar3{0%{opacity:.15}48%,100%{opacity:1}}
+        @keyframes nt-bar4{0%{opacity:.15}66%,100%{opacity:1}}
         .nta-blinkfast{animation:nt-blinkfast .45s linear infinite}
         .nta-beacon{animation:nt-glow .7s ease-in-out infinite}
         @keyframes nt-spin{to{transform:rotate(360deg)}}
@@ -5867,9 +6083,32 @@ function ntReadOf(type, hass, cfg, st, watts, threshold) {
   const out = (mode, labelKey, color, draw) => ({ mode, label: t(hass, labelKey), color, lines, draw: { ...draw, unav } });
   if (unav) {
     const ml = meterLayoutOf(cfg, st);
-    const kinds = { water_pump: pumpLayoutOf(cfg, st), floor_heating: "floor", spa: "spa", sauna: "sauna", aquarium: "aquarium", meter: ml === "linky" ? "linky" : `meter_${ml}`, christmas_tree: "tree" };
+    const kinds = { water_pump: pumpLayoutOf(cfg, st), floor_heating: "floor", spa: "spa", sauna: "sauna", aquarium: "aquarium", meter: ml === "linky" ? "linky" : `meter_${ml}`, christmas_tree: "tree", mobility: `mob_${mobilityLayoutOf(cfg, st)}` };
     return out("unav", "ev_offline", NT_COLORS.unav, { kind: kinds[type], on: false, electric: floorLayoutOf(cfg) === "electric",
       palette: cfg.tree_palette, presents: type === "christmas_tree" && treePresents(cfg) });
+  }
+  if (type === "mobility") {
+    // On its charger (#72): unplugged when the plug is off, charging while
+    // it draws its threshold or more (40 W by default, a charger tapering
+    // off draws less), charged below it. A battery entity gives the level,
+    // and says charged at 100 % whatever the plug says.
+    const kind = `mob_${mobilityLayoutOf(cfg, st)}`;
+    const lv = cfg.battery_entity ? numericState(hass, cfg.battery_entity) : null;
+    const level = lv === null ? null : Math.max(0, Math.min(100, lv));
+    if (level !== null) {
+      lines.push({ key: "mob_battery", icon: level >= 95 ? "mdi:battery" : `mdi:battery-${Math.max(10, Math.round(level / 10) * 10)}`, label: t(hass, "section_battery"),
+        value: keepTogether(`${Math.round(level)} %`), entity: cfg.battery_entity, caution: level <= 15 });
+    }
+    const isOff = !dead && ["off", "false", "0", "no", "unplugged"].includes(raw);
+    const metered = cfg.power_entity && watts !== null && isFinite(threshold);
+    if (isOff) return out("off", "mob_unplugged", NT_COLORS.off, { kind, on: false, st: "off", level });
+    if (level !== null && level >= 100) return out("full", "mob_charged", NT_COLORS.lit, { kind, on: false, st: "full", level });
+    if (metered) {
+      return watts >= threshold ? out("charging", "mob_charging", "#fb8c00", { kind, on: true, st: "charging", level })
+        : out("full", "mob_charged", NT_COLORS.lit, { kind, on: false, st: "full", level });
+    }
+    if (level !== null) return out("charging", "mob_charging", "#fb8c00", { kind, on: true, st: "charging", level });
+    return out("idle", "mob_plugged", NT_COLORS.idle, { kind, on: false, st: "plugged", level });
   }
   if (type === "water_pump") {
     const layout = pumpLayoutOf(cfg, st);
@@ -5979,7 +6218,7 @@ function ntControls(hass, cfg, type) {
   const out = [];
   const st = stateObj(hass, cfg.state_entity);
   if (st && !cfg.toggle_entity && type !== "meter" && ["light", "switch", "input_boolean"].includes(domainOf(cfg.state_entity))) {
-    out.push({ key: "toggle", entity: cfg.state_entity, icon: type === "christmas_tree" ? "mdi:pine-tree" : type === "aquarium" ? "mdi:lightbulb" : "mdi:power", label: t(hass, "toggle"),
+    out.push({ key: "toggle", entity: cfg.state_entity, icon: type === "christmas_tree" ? "mdi:pine-tree" : type === "aquarium" ? "mdi:lightbulb" : type === "mobility" ? "mdi:power-plug" : "mdi:power", label: t(hass, "toggle"),
       on: String(st.state).toLowerCase() === "on" });
   }
   if (type === "spa" && cfg.bubbles_entity && ["switch", "input_boolean", "fan"].includes(domainOf(cfg.bubbles_entity))) {
@@ -6525,7 +6764,7 @@ function pfBowl(cx, cy, rx, ry, heaps) {
 }
 const pfSoftShadow = (cx, cy, rx, ry) => { const id = pfId(); return `<filter id="${id}" x="-30%" y="-80%" width="160%" height="260%"><feGaussianBlur stdDeviation="2.2"/></filter><ellipse cx="${cx}" cy="${cy}" rx="${rx}" ry="${ry}" fill="#000" opacity=".22" filter="url(#${id})"/>`; };
 // Kibble falling from the chute into the bowl, drawn in front of it.
-const pfDrops = (x, y0) => { const id = pfId(); return pfKibDefs(id) + [0, 1, 2, 3].map((i) => `<g transform="translate(${x} ${y0})"><g class="pf-drop pfd${i + 1}">${pfPiece(i % 2 ? 1.2 : -1, 0, 1.5, i + 11, id)}</g></g>`).join(""); };
+const pfDrops = (x, y0, fall) => { const id = pfId(); return pfKibDefs(id) + [0, 1, 2, 3].map((i) => `<g transform="translate(${x} ${y0})"${fall ? ` style="--pf-fall: ${fall}px"` : ""}><g class="pf-drop pfd${i + 1}">${pfPiece(i % 2 ? 1.2 : -1, 0, 1.5, i + 11, id)}</g></g>`).join(""); };
 // The shell takes the appliance colour: three stops read from the card.
 const pfMatte = (id) => `<linearGradient id="${id}" x1="0" x2="1"><stop offset="0" style="stop-color: var(--pf-lo)"/><stop offset=".42" style="stop-color: var(--pf-hi)"/><stop offset="1" style="stop-color: var(--pf-lo)"/></linearGradient>`;
 const pfDomeGrad = (id) => `<radialGradient id="${id}" cx=".4" cy=".25" r=".9"><stop offset="0" style="stop-color: var(--pf-hi)"/><stop offset="1" style="stop-color: var(--pf-lo)"/></radialGradient>`;
@@ -6564,16 +6803,16 @@ function pfTower(d) {
   return `<defs>${pfMatte(b)}${pfMatte(base)}${pfDomeGrad(lid)}</defs>
 ${pfSoftShadow(60, 111, 26, 3.5)}
 ${pfTray(60, 23, 82, 107, base)}
-<rect class="pf-body" x="38" y="16" width="44" height="74" rx="11" fill="url(#${b})"/>
-<rect x="41" y="24" width="3" height="60" rx="1.5" fill="#fff" style="opacity: var(--pf-gloss)"/>
+<rect class="pf-body" x="38" y="16" width="44" height="66" rx="11" fill="url(#${b})"/>
+<rect x="41" y="24" width="3" height="52" rx="1.5" fill="#fff" style="opacity: var(--pf-gloss)"/>
 <path d="M38 22 Q38 12 60 11 Q82 12 82 22 V24 H38 Z" fill="url(#${lid})"/>
 <ellipse cx="60" cy="14.6" rx="6" ry="1.6" fill="#000" opacity=".3"/>
-${pfWindow(57, 30.5, 61.5, 6, d.lvl, 4, 0, true)}
-<rect x="48" y="66" width="24" height="10" rx="3" fill="#0d1014"/>
-${pfLcd(49, 67, 22, 8, d.screen, 6.4)}
-<path class="pf-chute" d="M53 81 L67 81 Q66 85 60 85.4 Q54 85 53 81 Z" fill="#0a0c0f"/>
+${pfWindow(57, 29.5, 54.5, 6, d.lvl, 4, 0, true)}
+<rect x="48" y="59" width="24" height="10" rx="3" fill="#0d1014"/>
+${pfLcd(49, 60, 22, 8, d.screen, 6.4)}
+<path class="pf-chute" d="M53 73 L67 73 Q66 77 60 77.4 Q54 77 53 73 Z" fill="#0a0c0f"/>
 ${pfBowl(60, 99, 17, 5.6, d.served ? [{ h: d.feeding ? 10 : 8, seed: 3 }] : [])}
-${d.feeding ? pfDrops(60, 86) : ""}`;
+${d.feeding ? pfDrops(60, 78, 17) : ""}`;
 }
 // Round tank, after the Aqara C1: a cylinder with a domed top, a tall window
 // on the kibble and a round tray holding the bowl.
@@ -6582,16 +6821,16 @@ function pfCanister(d) {
   return `<defs>${pfMatte(b)}${pfMatte(tray)}${pfDomeGrad(dome)}</defs>
 ${pfSoftShadow(60, 111, 26, 3.5)}
 ${pfTray(60, 23, 84, 107, tray)}
-<path class="pf-body" d="M38 26 V88 Q38 92 60 92 Q82 92 82 88 V26 Z" fill="url(#${b})"/>
+<path class="pf-body" d="M38 26 V80 Q38 84 60 84 Q82 84 82 80 V26 Z" fill="url(#${b})"/>
 <path d="M38 26 Q38 8 60 8 Q82 8 82 26 Z" fill="url(#${dome})"/>
 <path d="M43 20 Q46 12 56 11" stroke="#fff" stroke-width="1.6" fill="none" style="opacity: var(--pf-gloss)"/>
-<rect x="41" y="30" width="3" height="56" rx="1.5" fill="#fff" style="opacity: var(--pf-gloss)"/>
-${pfWindow(54, 35, 71, 12, d.lvl, 6)}
+<rect x="41" y="30" width="3" height="48" rx="1.5" fill="#fff" style="opacity: var(--pf-gloss)"/>
+${pfWindow(54, 35, 64, 12, d.lvl, 6)}
 <rect x="49" y="22" width="22" height="9" rx="3" fill="#0d1014"/>
 ${pfLcd(50, 22.6, 20, 7.8, d.screen, 6.2)}
-<path class="pf-chute" d="M53 82 L67 82 Q66 86 60 86.4 Q54 86 53 82 Z" fill="#1a1e23"/>
+<path class="pf-chute" d="M53 74 L67 74 Q66 78 60 78.4 Q54 78 53 74 Z" fill="#1a1e23"/>
 ${pfBowl(60, 99.5, 17, 5.6, d.served ? [{ h: d.feeding ? 10 : 8, seed: 5 }] : [])}
-${d.feeding ? pfDrops(60, 87) : ""}`;
+${d.feeding ? pfDrops(60, 79, 17) : ""}`;
 }
 // Two bowls, after the Granary dual: the same column over a wider base, a
 // splitter and two spouts feeding two steel bowls.
@@ -6658,31 +6897,65 @@ ${pfSoftShadow(60, 96, 46, 6)}
 ${pfLcd(50, 79.6, 20, 7.8, d.screen, 6.2)}`;
 }
 const PF_DRAW = { canister: pfCanister, double: pfDouble, dual_split: pfDualSplit, rotary: pfRotary };
+// The two single columns fill a third of the drawing's width, so they are
+// drawn a third larger around their foot: the kibble falling reads at card
+// size, in the compact side layout above all (#71).
+const PF_GROW = { tower: 1.35, canister: 1.35 };
 function pfSvg(layout, d) {
   pfN = 0;
-  return `<svg class="pf-svg pf-${PF_DRAW[layout] ? layout : "tower"}" viewBox="0 -10 120 135" aria-hidden="true">${(PF_DRAW[layout] || pfTower)(d)}</svg>`;
+  const key = PF_DRAW[layout] ? layout : "tower";
+  const body = (PF_DRAW[layout] || pfTower)(d);
+  const k = PF_GROW[key];
+  return `<svg class="pf-svg pf-${key}" viewBox="0 -10 120 135" aria-hidden="true">${k ? `<g transform="translate(60 111) scale(${k}) translate(-60 -111)">${body}</g>` : body}</svg>`;
 }
 
 // Fountain, after the PetKit Eversweet: a tank with a steel top where the
 // water wells up from the centre and runs off its edges, a window on the
-// tank and a light ring under the plate.
+// tank and a light ring under the plate. Round, after the PetKit Eversweet
+// Solo: a white drum with a steel rim, the water welling up in the middle of
+// a round plate and a light at the foot of the front (#70). The jet stands
+// taller than the real one, so it reads at the size of a card (#70).
 function ftSvg(f) {
   pfN = 0;
   const b = pfId(), plate = pfId(), w = pfId(), win = pfId(), gl = pfId();
   const lvl = f.lvl, run = f.running, wy0 = 68, wy1 = 92, top = wy1 - (wy1 - wy0) * lvl;
-  const dish = "M28 45.5 Q28 39 36 38.5 H84 Q92 39 92 45.5 Q92 50 84 50.5 H36 Q28 50 28 45.5 Z";
-  const spray = run ? [0, 1, 2, 3].map((k) => `<circle class="ft-spray ${k % 2 ? "r" : "l"} ftd${k + 1}" cx="${k % 2 ? 61.5 : 58.5}" cy="37" r=".75" fill="#b3e5fc"/>`).join("") : "";
-  const jet = run ? `<ellipse class="ft-ring" cx="60" cy="44.4" rx="6" ry="2" fill="none" stroke="#fff" stroke-width=".8"/><ellipse class="ft-ring ftd2" cx="60" cy="44.4" rx="6" ry="2" fill="none" stroke="#fff" stroke-width=".8"/>`
-    + `<path class="ft-dome" d="M54 44.4 Q54.6 36.4 60 35.2 Q65.4 36.4 66 44.4 Z" fill="url(#${w}d)"/>`
-    + `<path class="ft-dome" d="M56.2 42.6 Q56.8 38 59.4 37" stroke="#fff" stroke-width=".9" stroke-linecap="round" fill="none" opacity=".85"/>${spray}` : "";
+  const cy = f.round ? 43.4 : 44.4;
+  const spray = run ? [0, 1, 2, 3].map((k) => `<circle class="ft-spray ${k % 2 ? "r" : "l"} ftd${k + 1}" cx="${k % 2 ? 61.6 : 58.4}" cy="${pfF(cy - 13)}" r=".85" fill="#b3e5fc"/>`).join("") : "";
+  const jet = run ? `<ellipse class="ft-ring" cx="60" cy="${cy}" rx="6" ry="2" fill="none" stroke="#fff" stroke-width=".8"/><ellipse class="ft-ring ftd2" cx="60" cy="${cy}" rx="6" ry="2" fill="none" stroke="#fff" stroke-width=".8"/>`
+    + `<path class="ft-dome" d="M54.6 ${cy} Q55.6 ${pfF(cy - 7)} 58 ${pfF(cy - 11.4)} Q60 ${pfF(cy - 14.6)} 62 ${pfF(cy - 11.4)} Q64.4 ${pfF(cy - 7)} 65.4 ${cy} Z" fill="url(#${w}d)"/>`
+    + `<path class="ft-dome" d="M57 ${pfF(cy - 1.6)} Q57.4 ${pfF(cy - 7.6)} 59.2 ${pfF(cy - 11.6)}" stroke="#fff" stroke-width=".9" stroke-linecap="round" fill="none" opacity=".85"/>${spray}` : "";
   const badge = f.low ? `<g transform="translate(106 20)"><circle r="5.4" fill="#e53935" stroke="#fff" stroke-width="1.2"/><path d="M0 -2.8 V.6" stroke="#fff" stroke-width="1.6" stroke-linecap="round"/><circle cy="2.6" r=".9" fill="#fff"/></g>`
     : f.due ? `<g transform="translate(106 20)"><circle r="6" fill="#ffb300" stroke="#fff" stroke-width="1.2"/><path d="M-3 -2.4h6M-3 0h6M-3 2.4h6" stroke="#fff" stroke-width="1"/></g>` : "";
-  return `<svg class="ft-svg" viewBox="0 -10 120 135" aria-hidden="true"><defs>
+  const defs = `<defs>
 <linearGradient id="${b}" x1="0" x2="1"><stop offset="0" style="stop-color: var(--ac-body-lo, #c6ccd3)"/><stop offset=".42" style="stop-color: var(--ac-body-hi, #ffffff)"/><stop offset="1" style="stop-color: var(--ac-body-lo, #c6ccd3)"/></linearGradient>
 <radialGradient id="${plate}" cx=".45" cy=".35" r=".8"><stop offset="0" stop-color="#f4f7fa"/><stop offset=".6" stop-color="#c3cad2"/><stop offset="1" stop-color="#8e98a2"/></radialGradient>
 <radialGradient id="${w}" cx=".5" cy=".4" r=".7"><stop offset="0" stop-color="#e1f5fe" stop-opacity=".9"/><stop offset="1" stop-color="#81d4fa" stop-opacity=".55"/></radialGradient>
 <linearGradient id="${w}d" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e1f5fe" stop-opacity=".95"/><stop offset="1" stop-color="#4fc3f7" stop-opacity=".75"/></linearGradient>
-<linearGradient id="${win}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#81d4fa"/><stop offset="1" stop-color="#1e88e5"/></linearGradient>${ntBlur(gl, 1.2)}</defs>
+<linearGradient id="${win}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#81d4fa"/><stop offset="1" stop-color="#1e88e5"/></linearGradient>${ntBlur(gl, 1.2)}</defs>`;
+  if (f.round) {
+    const bowl = "M36 44 A24 6.6 0 0 1 84 44 A24 6.6 0 0 1 36 44 Z";
+    return `<svg class="ft-svg ft-round" viewBox="0 -10 120 135" aria-hidden="true">${defs}
+<g transform="translate(60 70) scale(1.3) translate(-60 -70)">
+${pfSoftShadow(60, 102, 36, 5)}
+<path class="ft-body" d="M28 44 V94 A32 7.6 0 0 0 92 94 V44 Z" fill="url(#${b})"/>
+<path d="M28.6 92 A31.4 7.4 0 0 0 91.4 92 V95 A31.4 7.4 0 0 1 28.6 95 Z" fill="#000" opacity=".07"/>
+<rect x="31" y="48" width="3" height="40" rx="1.5" fill="#fff" opacity=".7"/>
+<ellipse cx="60" cy="44" rx="32" ry="8.6" style="fill: var(--ac-body, #eef1f4)" stroke="#cfd6dd" stroke-width=".5"/>
+<ellipse cx="60" cy="44" rx="28.4" ry="7.6" fill="url(#${plate})"/>
+<ellipse cx="60" cy="44.6" rx="25" ry="6.4" fill="#7d8892" opacity=".35"/>
+<path d="${bowl}" fill="#e9eef2"/>
+${f.dry ? "" : `<path class="ft-pool" d="${bowl}" fill="url(#${w})"/>`}
+<ellipse cx="60" cy="${cy}" rx="4.4" ry="1.6" fill="#dfe5ea" stroke="#9aa3ad" stroke-width=".5"/>
+<ellipse cx="60" cy="${pfF(cy - .2)}" rx="2" ry=".8" fill="${run ? "#e1f5fe" : "#b0bac4"}"/>
+${jet}
+<ellipse class="ft-glow" cx="60" cy="46" rx="18" ry="4.4" fill="none" stroke-width="1" filter="url(#${gl})"/>
+<circle class="ft-led" cx="60" cy="98.2" r="1.6"/>
+</g>
+${badge}
+</svg>`;
+  }
+  const dish = "M28 45.5 Q28 39 36 38.5 H84 Q92 39 92 45.5 Q92 50 84 50.5 H36 Q28 50 28 45.5 Z";
+  return `<svg class="ft-svg" viewBox="0 -10 120 135" aria-hidden="true">${defs}
 <g transform="translate(60 70) scale(1.3) translate(-60 -70)">
 ${pfSoftShadow(60, 104, 38, 5)}
 <path class="ft-body" d="M24 48 Q24 40 34 40 H86 Q96 40 96 48 V92 Q96 102 86 102 H34 Q24 102 24 92 Z" fill="url(#${b})"/>
@@ -6804,6 +7077,7 @@ const ILLUSTRATION_CSS = {
   spa: () => NT_CSS,
   sauna: () => NT_CSS,
   aquarium: () => NT_CSS,
+  mobility: () => NT_CSS,
   meter: () => NT_CSS,
   christmas_tree: () => NT_CSS,
   printer_3d: (color) => `
@@ -7533,8 +7807,8 @@ const ILLUSTRATION_CSS = {
         .machine.flowing .ft-spray.ftd2 { animation-delay: calc(-0.35s + var(--anim-offset, 0s)); }
         .machine.flowing .ft-spray.ftd3 { animation-delay: calc(-0.7s + var(--anim-offset, 0s)); }
         .machine.flowing .ft-spray.ftd4 { animation-delay: calc(-1.05s + var(--anim-offset, 0s)); }
-        @keyframes ft-spray-l { 0% { transform: translate(0, 0); opacity: 0; } 15% { opacity: 1; } 45% { transform: translate(-3.5px, -1.5px); } 100% { transform: translate(-7px, 7px); opacity: 0; } }
-        @keyframes ft-spray-r { 0% { transform: translate(0, 0); opacity: 0; } 15% { opacity: 1; } 45% { transform: translate(3.5px, -1.5px); } 100% { transform: translate(7px, 7px); opacity: 0; } }
+        @keyframes ft-spray-l { 0% { transform: translate(0, 0); opacity: 0; } 15% { opacity: 1; } 45% { transform: translate(-4.5px, -2px); } 100% { transform: translate(-9px, 11px); opacity: 0; } }
+        @keyframes ft-spray-r { 0% { transform: translate(0, 0); opacity: 0; } 15% { opacity: 1; } 45% { transform: translate(4.5px, -2px); } 100% { transform: translate(9px, 11px); opacity: 0; } }
         /* The light under the plate and the dot at the front: blue while it
            runs, orange when the filter or the pump wants a hand, red and
            blinking when the water runs low, out when it is off. */
@@ -8037,7 +8311,7 @@ const ILLUSTRATION_CSS = {
         .machine.feeding .pfd2 { animation-delay: calc(-0.22s + var(--anim-offset, 0s)); }
         .machine.feeding .pfd3 { animation-delay: calc(-0.45s + var(--anim-offset, 0s)); }
         .machine.feeding .pfd4 { animation-delay: calc(-0.67s + var(--anim-offset, 0s)); }
-        @keyframes pf-fall { 0% { transform: translateY(0); opacity: 0; } 15% { opacity: 1; } 85% { opacity: 1; } 100% { transform: translateY(9px); opacity: 0; } }
+        @keyframes pf-fall { 0% { transform: translateY(0); opacity: 0; } 15% { opacity: 1; } 85% { opacity: 1; } 100% { transform: translateY(var(--pf-fall, 9px)); opacity: 0; } }
         .machine.rotary.feeding .pf-turn { animation: pf-turn 2.6s ease-in-out infinite; animation-delay: var(--anim-offset, 0s); }
         @keyframes pf-turn { 0%, 55% { transform: translateX(0); } 100% { transform: translateX(-32px); } }
         /* The cat, when there is something to be cross about: an empty tank or a
@@ -9018,6 +9292,7 @@ const ILLUSTRATION_CSS = {
         .rbt-m-raining .rbt-sh-drip{display:block;animation:rbt-sh-drip 1.6s ease-in infinite}
         @keyframes rbt-sh-drip{0%{transform:translateY(0);opacity:0}15%{opacity:1}100%{transform:translateY(26px);opacity:0}}
         .rbt-sh-lean_to .rbt-rain{clip-path:path(evenodd,'M-20 -20 H140 V140 H-20 Z M22 49.2 L26 44.2 L97 36.2 V140 H22 Z')}
+        .rbt-sh-garage .rbt-rain{clip-path:path(evenodd,'M-20 -20 H140 V140 H-20 Z M20 52 L26 46 L86 39.6 C94 38.8 98.6 42 98.6 49 V140 H20 Z')}
         .rbt-sh-shell .rbt-rain{clip-path:path(evenodd,'M-20 -20 H140 V140 H-20 Z M25 59 L29 54 C32 41 48 33.5 65 33 C81 32.5 94 37 96 47 V140 H25 Z')}
         .rbt-st-led{left:86px;top:70px;width:2px;height:4px;border-radius:1px;background:#3d434a}
         .rbt-m-charging .rbt-st-led{background:#2ecc71;box-shadow:0 0 3px #2ecc71;animation:rbt-breathe 2.4s ease-in-out infinite}
@@ -10696,20 +10971,22 @@ const ROBOT_MOWER_SVG = `<svg viewBox="0 0 62 35">
 // wheels with orange treads, a small caster behind.
 const ROBOT_NAVIMOW_SVG = `<svg viewBox="0 0 62 35">
  <ellipse cx="31" cy="34" rx="29" ry="2" fill="rgba(0,0,0,.25)"/>
- <path d="M6 27 V22.5 C6 20.5 7.2 19.2 9.2 19.2 H55 C58 19.2 59.6 21.2 59.6 23.6 V27 Z" fill="#2b2f34"/>
- <path d="M7 22.2 C6 16.2 9 12.6 15 11.6 L45 10.6 C51 10.6 55.6 13.6 57.6 18 C58.4 19.8 58 21.6 56.6 22.2 Z" fill="#b9c1c9"/>
- <path d="M10 14.6 C14 12.6 30 11.8 44 11.7 C50 11.7 53.6 13.4 55.6 16 C46 14.7 26 14.5 10 15.7 Z" fill="#e1e6ea"/>
- <path d="M8 21 C20 20.2 44 20.2 57 20.8" stroke="#8d969f" stroke-width=".6" fill="none"/>
- <path d="M16 12.1 C20 9.7 40 9.1 47 10.1 C50 10.5 52 11.5 53 12.7 C44 11.9 26 11.9 16 12.7 Z" fill="#14171a"/>
- <ellipse class="rbt-led" cx="31" cy="9.7" rx="9.6" ry="1.4"/>
- <path d="M22 9.3 C22 6.6 40 6.6 40 9.3 C40 10.3 22 10.3 22 9.3 Z" fill="#c4cad0"/>
- <ellipse cx="31" cy="7.4" rx="8" ry="1.2" fill="#f1f3f5"/>
- <path d="M27 7.2 H35" stroke="#3a3f45" stroke-width=".8" stroke-linecap="round"/>
- <rect x="42.6" y="8.5" width="4.2" height="1.8" rx=".6" fill="#e53935"/>
- <rect x="54.4" y="20.2" width="4" height="2.2" rx=".6" fill="#14171a"/><circle cx="56.4" cy="21.3" r=".6" fill="#4fc3f7"/>
- <g class="rbt-whl"><circle cx="12" cy="31.3" r="3.4" fill="#1b1e21"/><circle cx="12" cy="31.3" r="1.3" fill="#555c63"/></g>
- <g class="rbt-whl"><circle cx="46" cy="24.5" r="10" fill="#ff5a1f"/><circle cx="46" cy="24.5" r="9.6" fill="none" stroke="#c23d0d" stroke-width="1.8" stroke-dasharray="1.6 1.4"/>
-  <circle cx="46" cy="24.5" r="7" fill="#1b1e21"/><path d="M46 18.9 L47.5 23 L51.6 24.5 L47.5 26 L46 30.1 L44.5 26 L40.4 24.5 L44.5 23 Z" fill="#30353a"/><circle cx="46" cy="24.5" r="1.4" fill="#5a6168"/></g>
+ <g class="rbt-whl"><circle cx="9" cy="31.2" r="3.3" fill="#1b1e21"/><circle cx="9" cy="31.2" r="1.2" fill="#555c63"/></g>
+ <path d="M3 20.5 H59.6 V26.6 C59.6 28.9 58.2 30.2 55.8 30.4 L8 31.4 C4.8 31.4 3 30 3 27.6 Z" fill="#2b2f34"/>
+ <path d="M3.2 22.4 C2.4 14.6 6.6 10 13.6 9.4 L38 8.4 C46.4 8.1 53.4 9.2 57.2 12.6 C59.6 14.9 60.2 18.4 59.8 22.4 Z" fill="#b9c1c9"/>
+ <path d="M6.6 13.2 C10.4 10.8 26 10 40 9.7 C48 9.6 53.6 10.8 56.2 13.4 C46 12.4 24 12.4 6.6 14.4 Z" fill="#e1e6ea"/>
+ <path d="M4.8 20.6 C20 19.8 44 19.8 58.6 20.4" stroke="#8d969f" stroke-width=".6" fill="none"/>
+ <path d="M13.6 9.6 C19.6 7.6 40 7.2 49.6 8.1 C52.6 8.4 54.6 9.3 55.6 10.4 C45 9.6 25 9.6 13.6 10.6 Z" fill="#14171a"/>
+ <rect class="rbt-led" x="19.6" y="5.6" width="21" height="3" rx="1.5"/>
+ <path d="M20.6 5.9 C20.6 3.4 39.4 3.4 39.4 5.9 C39.4 6.9 20.6 6.9 20.6 5.9 Z" fill="#c4cad0"/>
+ <ellipse cx="30" cy="4.3" rx="7.6" ry="1.1" fill="#f1f3f5"/>
+ <path d="M26.6 4.1 H33.4" stroke="#3a3f45" stroke-width=".7" stroke-linecap="round"/>
+ <rect x="42.6" y="6.4" width="4.2" height="2" rx=".6" fill="#e53935"/>
+ <rect x="57.4" y="14.4" width="2.4" height="4.4" rx=".6" fill="#14171a"/><circle cx="58.6" cy="16.6" r=".55" fill="#4fc3f7"/>
+ <g class="rbt-whl"><circle cx="44" cy="23" r="11.5" fill="#ff5a1f"/><circle cx="44" cy="23" r="11.1" fill="none" stroke="#c23d0d" stroke-width="1.9" stroke-dasharray="1.8 1.5"/>
+  <circle cx="44" cy="23" r="8.2" fill="#1b1e21"/><path d="M44 16.4 L45.8 21.2 L50.6 23 L45.8 24.8 L44 29.6 L42.2 24.8 L37.4 23 L42.2 21.2 Z" fill="#30353a"/><circle cx="44" cy="23" r="1.6" fill="#5a6168"/></g>
+ <path d="M30.6 19.2 A14 14 0 0 1 57.4 19.2" stroke="#b9c1c9" stroke-width="2.6" fill="none"/>
+ <path d="M31.6 20.4 A12.9 12.9 0 0 1 56.4 20.4" stroke="#2b2f34" stroke-width=".7" fill="none"/>
 </svg>`;
 const MOWER_STYLES = ["classic", "navimow"];
 // The mower's style: the one chosen, else its name (Navimow, Segway).
@@ -11191,7 +11468,7 @@ ${ENERGY_SMOKE(30, 14, 0.55)}${ENERGY_ANGER(56, 22)}
 // The shelter over a mower's base, seen three-quarters like the mower: a part
 // behind it (the far posts, the shadow, the inside of a shell) and a part in
 // front (the near posts, the roof). The rain stops on the roof.
-const SHELTER_STYLES = ["lean_to", "shell"];
+const SHELTER_STYLES = ["lean_to", "shell", "garage"];
 const SHELTER_COLORS = {
   white: ["#ffffff", "#e2e6ea", "#c3cad0", "#c9d0d6", "#a3abb2", "#b3bbc2", "#8d959c", "#8a929a", "#aab2b9", "rgba(255,255,255,.9)", "#5f676f"],
   grey: ["#c9ced3", "#9ea5ac", "#7f878f", "#8a9299", "#677078", "#7a838b", "#5c646c", "#545c63", "#747c84", "rgba(255,255,255,.55)", "#3f454b"],
@@ -11204,6 +11481,27 @@ let shelterN = 0;
 function shelterHtml(style, color) {
   const g = `rbt-sh${shelterN++}`;
   const drip = (x, y) => `<circle class="rbt-sh-drip" cx="${x}" cy="${y}" r="1"/>`;
+  if (style === "garage") {
+    // A garage like the Navimow or Husqvarna ones: a back wall behind the
+    // station that curves into a long roof reaching over the mower, on a
+    // dark mat (#67).
+    const [t0, t1, t2, r0, r1, s0, s1, ln, , hl] = SHELTER_COLORS[color] || SHELTER_COLORS.black;
+    const dots = Array.from({ length: 10 }, (_, i) => `<circle cx="${30 + i * 6.4}" cy="${90.6 - i * .07}" r=".45"/>`).join("");
+    const back = `${SHELTER_SVG}<path d="M22 94.4 L92 93.4 L96.4 88.2 L27.6 88.8 Z" fill="#2a2e33"/>
+<path d="M22 94.4 L92 93.4 L92 94.6 L22 95.6 Z" fill="#1b1e21"/><g fill="rgba(255,255,255,.14)">${dots}</g>
+<path d="M27.6 88.8 L96.4 88.2 L96 87 L30 87.4 Z" fill="rgba(0,0,0,.22)"/></svg>`;
+    const front = `${SHELTER_SVG}<defs>
+<linearGradient id="${g}t" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="${t2}"/><stop offset=".5" stop-color="${t1}"/><stop offset="1" stop-color="${t0}"/></linearGradient>
+<linearGradient id="${g}r" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${r0}"/><stop offset="1" stop-color="${r1}"/></linearGradient>
+<linearGradient id="${g}s" x1="0" x2="1"><stop offset="0" stop-color="${s0}"/><stop offset="1" stop-color="${s1}"/></linearGradient></defs>
+<path d="M92.6 55 C92.6 48 88 44.8 80 45.6 L20 52 L26 46 L86 39.6 C94 38.8 98.6 42 98.6 49 L98.6 86.4 L92.6 92.4 Z" fill="url(#${g}t)"/>
+<path d="M92.6 55 L98.6 49 L98.6 86.4 L92.6 92.4 Z" fill="url(#${g}s)"/>
+<path d="M26 46 L86 39.6 C94 38.8 98.6 42 98.6 49" fill="none" stroke="${hl}" stroke-width=".8" stroke-linecap="round"/>
+<path d="M20 52 L80 45.6 C88 44.8 92.6 48 92.6 55 L92.6 92.4 L87.8 93 L87.8 56 C87.8 51.6 85.6 49.6 81 50 L20 56.4 Z" fill="url(#${g}r)" stroke="${ln}" stroke-width=".4"/>
+<path d="M20.6 53.1 L80 46.8 C87 46.1 91.4 48.9 91.4 55 V92" fill="none" stroke="rgba(255,255,255,.3)" stroke-width=".5"/>
+<rect class="rbt-sh-led" x="89.5" y="64" width="1.4" height="3" rx=".6"/>${drip(20.6, 57.4)}</svg>`;
+    return { back, front };
+  }
   if (style === "shell") {
     const [t0, t1, t2, r0, r1, s0, s1, ln, lip, hl, inn] = SHELTER_COLORS[color] || SHELTER_COLORS.white;
     const back = `${SHELTER_SVG}<defs><linearGradient id="${g}i" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${inn}" stop-opacity=".75"/><stop offset=".55" stop-color="${inn}" stop-opacity=".35"/><stop offset="1" stop-color="${inn}" stop-opacity="0"/></linearGradient></defs>
@@ -12039,7 +12337,7 @@ function illustrationHtml(type, ctx) {
     const fill = f.low ? 12 : f.fill === null || f.fill === undefined ? 55 : Math.max(0, Math.min(100, Math.round(f.fill)));
     const led = f.offline ? "" : f.low ? "led-low" : f.due ? "led-due" : f.flowing ? "led-on" : "";
     const running = f.flowing && !f.low;
-    const svg = ftSvg({ lvl: fill / 100, running, dry: !!f.low, low: !!f.low && !f.offline, due: !!f.due && !f.low && !f.offline });
+    const svg = ftSvg({ round: !!f.round, lvl: fill / 100, running, dry: !!f.low, low: !!f.low && !f.offline, due: !!f.due && !f.low && !f.offline });
     return `
         <div class="machine ${cls} ${running ? "flowing" : ""} ${f.low ? "ft-dry" : ""}${f.offline ? " ft-offline" : ""} ${led}">${svg}
         </div>`;
@@ -12494,6 +12792,9 @@ class ApplianceCard extends HTMLElement {
                   Array.isArray(a.options) ? a.options.join(",") : ""].join("~"));
       if (id === this._config.alerts_entity) parts.push(JSON.stringify(a));
       if (domainOf(id) === "media_player") parts.push([a.app_name, a.source, a.media_title, a.is_volume_muted, a.entity_picture].join("~"));
+      // A light changes colour or brightness without changing state or
+      // last_changed: the bulb is drawn in its colour, so that is a change.
+      if (domainOf(id) === "light") parts.push(JSON.stringify([a.brightness, a.color_mode, a.rgb_color, a.hs_color, a.xy_color, a.color_temp_kelvin, a.effect]));
     }
     // While a fridge counts the minutes since its plug went quiet, the minute
     // is part of what is displayed even though no state carries it. The card
@@ -12832,12 +13133,32 @@ class ApplianceCard extends HTMLElement {
     Promise.resolve(req).then((res) => {
       if (this._todayPending !== key) return;
       this._todayPending = null;
-      const rows = res && res[entity];
-      const runs = fromPower ? powerRuns(rows, threshold, gapMs, Date.now(), from)
-        : stateRunsOpen(rows, (raw) => todayNormFor(type, raw, cfg.state_map, /^(climate|water_heater)\./.test(entity)), from);
-      this._today = { key, at: Date.now(), runs, from };
+      const rows = Array.isArray(res && res[entity]) ? res[entity] : [];
+      this._today = { key, at: Date.now(), rows, from, fromPower, threshold, gapMs, type, entity };
       this._render();
     }, () => { this._todayPending = null; });
+  }
+
+  // Today's runs: the history read, then what the card saw happen since
+  // (HACF #127). The history is kept five minutes and the recorder writes
+  // late, so a lamp switched on a moment ago would otherwise wait for the
+  // next read to be counted, and two quick switches between reads not at all.
+  _todayRuns(cfg) {
+    const td = this._today;
+    if (!td || !td.rows) return null;
+    const rowTime = (e) => Number(e && (e.lc !== undefined ? e.lc : e.lu));
+    const last = td.rows.reduce((m, e) => Math.max(m, rowTime(e) || 0), 0);
+    const st = stateObj(this._hass, td.entity);
+    if (st) {
+      const lc = Date.parse(st.last_changed) / 1000;
+      const seen = this._todaySeen && this._todaySeen.key === td.key ? this._todaySeen : (this._todaySeen = { key: td.key, rows: [] });
+      const prev = seen.rows[seen.rows.length - 1];
+      if (Number.isFinite(lc) && (!prev || lc > prev.lc || (lc === prev.lc && String(st.state) !== prev.s))) seen.rows.push({ s: String(st.state), lc });
+      seen.rows = seen.rows.filter((e) => e.lc > last);
+    }
+    const rows = td.rows.concat(this._todaySeen && this._todaySeen.key === td.key ? this._todaySeen.rows : []);
+    return td.fromPower ? powerRuns(rows, td.threshold, td.gapMs, Date.now(), td.from)
+      : stateRunsOpen(rows, (raw) => todayNormFor(td.type, raw, cfg.state_map, /^(climate|water_heater)\./.test(td.entity)), td.from);
   }
 
   // Reads one entity's history once the curve is unfolded, then keeps it five
@@ -12984,6 +13305,10 @@ class ApplianceCard extends HTMLElement {
 
   _showArmed(el) {
     if (el.classList) el.classList.add("armed");
+    if (el.hasAttribute && el.hasAttribute("data-pic-tap")) {
+      el.setAttribute("title", t(this._hass, "confirm_again"));
+      return;
+    }
     const icon = el.querySelector && el.querySelector("ha-icon");
     if (icon) icon.setAttribute("icon", "mdi:check-bold");
     el.setAttribute("title", t(this._hass, "confirm_again"));
@@ -14896,6 +15221,7 @@ class ApplianceCard extends HTMLElement {
         low,
         due: !!((filter && filter.due) || (pump && pump.due)),
         fill: wPct !== null ? Math.max(0, Math.min(100, wPct)) : null,
+        round: cfg.fountain_layout === "round",
       };
     }
 
@@ -15842,6 +16168,22 @@ class ApplianceCard extends HTMLElement {
       color = r.color;
       extraLines.push(...r.lines);
       ntDraw = r.draw;
+      // A ride without a battery entity, unplugged, keeps the charge the
+      // card last saw: full once it was charged, kept in the browser so a
+      // reload does not empty the gauge.
+      if (applianceType === "mobility" && (r.draw.level === null || r.draw.level === undefined)) {
+        const key = `ha-appliance-card-mob:${cfg.state_entity || ""}`;
+        if (r.draw.st === "full" || r.draw.st === "charging") {
+          this._mobLast = r.draw.st === "full" ? 100 : null;
+          try { localStorage.setItem(key, r.draw.st === "full" ? "100" : ""); } catch (e) { /* private browsing */ }
+        } else if (r.draw.st === "off") {
+          let last = this._mobLast;
+          if (last === undefined || last === null) {
+            try { last = parseFloat(localStorage.getItem(key)); } catch (e) { last = null; }
+          }
+          if (Number.isFinite(last)) ntDraw = { ...r.draw, level: last };
+        }
+      }
     }
 
     // A bathroom scale: its state entity is the weight, shown on its screen.
@@ -16058,8 +16400,9 @@ class ApplianceCard extends HTMLElement {
       const fromPower = !!cfg.power_entity && (powerDerived || !cfg.state_entity) && isFinite(threshold);
       this._lookUpToday(cfg, applianceType, fromPower, isFinite(threshold) ? threshold : 10);
       const td = this._today;
-      if (td && td.runs) {
-        const { ms, starts } = runsSince(td.runs, td.from, Date.now());
+      const todayRuns = this._todayRuns(cfg);
+      if (todayRuns) {
+        const { ms, starts } = runsSince(todayRuns, td.from, Date.now());
         const startsText = t(hass, starts === 1 ? "starts_one" : "starts_other").replace("{n}", String(starts));
         extraLines.push({
           key: "today",
@@ -16457,6 +16800,7 @@ class ApplianceCard extends HTMLElement {
           color: #fff; background: var(--error-color, #f44336); border-color: var(--error-color, #f44336); border-radius: 50%;
           animation: ac-armed 0.8s ease-in-out infinite alternate; animation-delay: var(--anim-offset, 0s);
         }
+        .pic-tap.armed, .cmp-pic.armed { color: inherit; background: none; border-radius: 14px; box-shadow: 0 0 0 2px var(--error-color, #f44336); }
         @keyframes ac-armed { to { opacity: 0.65; } }
         @media (prefers-reduced-motion: reduce) { .armed { animation-name: none; } }
         .action-btn ha-icon { --mdc-icon-size: 20px; }
@@ -16481,6 +16825,8 @@ class ApplianceCard extends HTMLElement {
            keeps the width of its longest word, which a word cannot shrink
            below anyway, so that is where the line breaks. */
         .cmp-side .cmp-wrap .cmp-head { flex: 1; min-width: 0; flex-wrap: wrap; row-gap: 4px; }
+        /* Wrapped under the name, the buttons keep to the right (HACF #127). */
+        .cmp-side .cmp-head .cmp-icons { margin-left: auto; }
         .cmp-side .cmp-col { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 6px; }
         .cmp-side .info-lines.beside { margin-top: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 3px 10px; }
         .cmp-side .info-lines.beside .info-line { font-size: 0.8em; gap: 4px; min-width: 0; }
@@ -16618,7 +16964,11 @@ class ApplianceCard extends HTMLElement {
     // What the editor reads to offer an order: the lines actually drawn, in
     // the card's own language, rather than a second list to keep in step with
     // this one.
-    this._drawnLines = lines.filter((l) => l.key).map((l) => ({ key: l.key, label: l.label }));
+    const hidden = Array.isArray(cfg.hidden_lines) ? cfg.hidden_lines : [];
+    this._drawnLines = lines.filter((l) => l.key).map((l) => ({ key: l.key, label: l.label, hidden: hidden.includes(l.key) }));
+    // hidden_lines: a line you never want to see (HACF #127), still offered
+    // in the editor so it can be shown again.
+    if (hidden.length) lines = lines.filter((l) => !l.key || !hidden.includes(l.key));
     // The history: a discreet button under the lines unfolds the curve.
     let historyHtml = "";
     const historyEntity = cfg.show_history ? historyEntityOf(hass, cfg, applianceType) : null;
@@ -16878,10 +17228,15 @@ class ApplianceCard extends HTMLElement {
     const header = this._root.getElementById("header");
     if (header) header.addEventListener("click", () => this._tap(cfg, tapFallback));
     this._root.querySelectorAll("[data-tap]").forEach((el) => el.addEventListener("click", () => this._tap(cfg, tapFallback)));
-    this._root.querySelectorAll("[data-pic-tap]").forEach((el) => el.addEventListener("click", (ev) => {
-      ev.stopPropagation();
-      this._tap({ ...cfg, tap_action: illustrationTapOf(cfg) }, tapFallback);
-    }));
+    // A drawing that switches the appliance asks for the same touch as its
+    // buttons (HACF #127): a tap, two taps or a long press, as the card's
+    // controls are set to.
+    this._root.querySelectorAll("[data-pic-tap]").forEach((el) => {
+      const pic = illustrationTapOf(cfg);
+      const run = () => this._tap({ ...cfg, tap_action: pic }, tapFallback);
+      if (pic && pic.action === "toggle" && cfg.state_entity) this._wireControl(el, cfg.controls_activation, cfg.state_entity, run);
+      else el.addEventListener("click", (ev) => { ev.stopPropagation(); run(); });
+    });
     this._root.querySelectorAll("[data-lines-toggle]").forEach((el) => {
       const flip = (ev) => {
         ev.stopPropagation();
@@ -17038,7 +17393,7 @@ function loadEditor() {
   if (customElements.get("ha-appliance-card-editor")) return Promise.resolve();
   if (!editorLoading) {
     editorLoading = import(assetUrl("ha-appliance-card-editor.js"))
-      .then((m) => m.default({ t, onLanguageLoaded, LANGUAGE_NAMES, localizedHass, activationOf, TH_LAYOUTS, EV_POWER_THRESHOLD, stateObj, parseValueMap, stringifyValueMap, alertsArray, LIST_OTHER, ENTITY_LISTS, listCandidates, defaultCardName, stripDeviceName, domainOf, INFO_MAX, autoSuggest, APPLIANCE_TYPES, STATE_DOMAINS, SCREEN_ONLY_FIELDS, illustrationSizeOf, fontScaleOf, compactModeOf, TYPE_GROUPS, caps, detectApplianceType, SCREEN_STANDBY_W, SCREEN_LAYOUTS, SCREEN_IMAGES, screenLayoutOf, screenIsTablet, HD_HEAT_W, PLUG_THRESHOLDS, ZONE_POWER_W, PLUG_SOURCE_TYPES, plugSourceOf, DW_DRY_MIN, WASH_HEAT_W, WASH_SPIN_W, DRYER_HEAT_W, NET_LAYOUTS, SWITCH_PORTS, NET_BAYS, NET_BUSY_MBIT, NET_TEMP_ALERT, netLayoutOf, ROBOT_LAYOUTS, ROBOT_STATIONS, ROBOT_FLOORS, ROBOT_SERVICES, STICK_AWAY_W, robotLayoutOf, POOL_PRESSURE_ALERT, SOLAR_LAYOUTS, BATTERY_LAYOUTS, BATTERY_IDLE_W, DIFFUSER_LAYOUTS, illustrationTapOf, HRV_LAYOUTS, CAMERA_LAYOUTS, MAILBOX_LAYOUTS, MAILBOX_SIDES, mailboxLayoutOf, LAMP_LAYOUTS, LAMP_SPOTS, lampLayoutOf, PUMP_LAYOUTS, FLOOR_LAYOUTS, METER_LAYOUTS, meterLayoutOf, TREE_PALETTES, TREE_PRESENTS, pumpLayoutOf, UPS_BATTERY_LOW, HISTORY_HOURS, BODY_COLORS, esc, MOWER_STYLES, SHELTER_STYLES, SHELTER_COLORS, stateFreeSource }))
+      .then((m) => m.default({ t, onLanguageLoaded, LANGUAGE_NAMES, localizedHass, activationOf, TH_LAYOUTS, EV_POWER_THRESHOLD, stateObj, parseValueMap, stringifyValueMap, alertsArray, LIST_OTHER, ENTITY_LISTS, listCandidates, defaultCardName, stripDeviceName, domainOf, INFO_MAX, autoSuggest, APPLIANCE_TYPES, STATE_DOMAINS, SCREEN_ONLY_FIELDS, illustrationSizeOf, fontScaleOf, compactModeOf, TYPE_GROUPS, caps, detectApplianceType, SCREEN_STANDBY_W, SCREEN_LAYOUTS, SCREEN_IMAGES, screenLayoutOf, screenIsTablet, HD_HEAT_W, PLUG_THRESHOLDS, ZONE_POWER_W, PLUG_SOURCE_TYPES, plugSourceOf, DW_DRY_MIN, WASH_HEAT_W, WASH_SPIN_W, DRYER_HEAT_W, NET_LAYOUTS, SWITCH_PORTS, NET_BAYS, NET_BUSY_MBIT, NET_TEMP_ALERT, netLayoutOf, ROBOT_LAYOUTS, ROBOT_STATIONS, ROBOT_FLOORS, ROBOT_SERVICES, STICK_AWAY_W, robotLayoutOf, POOL_PRESSURE_ALERT, SOLAR_LAYOUTS, BATTERY_LAYOUTS, BATTERY_IDLE_W, DIFFUSER_LAYOUTS, illustrationTapOf, HRV_LAYOUTS, CAMERA_LAYOUTS, MAILBOX_LAYOUTS, MAILBOX_SIDES, mailboxLayoutOf, LAMP_LAYOUTS, LAMP_SPOTS, lampLayoutOf, MOBILITY_LAYOUTS, PUMP_LAYOUTS, FLOOR_LAYOUTS, METER_LAYOUTS, meterLayoutOf, TREE_PALETTES, TREE_PRESENTS, pumpLayoutOf, UPS_BATTERY_LOW, HISTORY_HOURS, BODY_COLORS, esc, MOWER_STYLES, SHELTER_STYLES, SHELTER_COLORS, stateFreeSource }))
       .catch((err) => {
         editorLoading = null;
         throw err;

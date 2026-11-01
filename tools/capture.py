@@ -64,12 +64,13 @@ FAMILIES = (
     ("climate", "water_heater,boiler,boiler_window,heat_pump,pellet_stove,space_heater,towel_warmer,towel_panel,air_conditioner,dehumidifier", 5),
     ("thermostats", "boiler_thermo,th_square,th_round,th_glass,th_valve", 5),
     ("air", "air_purifier,box_purifier,ring_purifier,fan,ceiling_fan", 5),
-    ("pets", "pet_feeder,round_feeder,double_feeder,dual_feeder,wet_feeder,pet_fountain", 3),
+    ("pets", "pet_feeder,round_feeder,double_feeder,dual_feeder,wet_feeder,pet_fountain,round_fountain", 3),
     ("garage", "ev_charger,ev_discharging,printer_3d", 3),
+    ("mobility", "mob_scooter,mob_offroad,mob_ebike,mob_gyropode,mob_motorcycle,mob_unplugged", 3),
     ("network", "net_switch,net_nas,net_server,net_rack,net_router", 5),
     ("network-routers", "net_router,net_router_down", 2),
     ("network-models", "net_sw8,net_sw16,net_sw24,net_sw32,net_nas1,net_nas2,net_nas4", 4),
-    ("robots", "robot_vacuum,robot_emptying,robot_mop,robot_drying,robot_mower,robot_rain,robot_stick,robot_washer", 4),
+    ("robots", "robot_vacuum,robot_emptying,robot_mop,robot_drying,robot_mower,robot_navimow,robot_rain,robot_stick,robot_washer", 4),
     ("pool", "pool_running,pool_chlorine,pool_backwash,pool_frost,pool_light,pool_error", 6),
     ("energy", "solar_day,solar_roof,solar_night,battery_charging,battery_station,battery_low", 6),
     ("scales", "scale_fresh,scale_goal,scale_old", 3),
@@ -91,6 +92,25 @@ GIF_SCALE = 1
 # The animated grids are cropped tighter than the screenshots. Keeping the page's full 32px
 # on a band 1400 wide and 320 tall leaves it looking padded rather than framed.
 GIF_PAD = 6
+# The README shows each family as drawings alone, the name and the state
+# under each, on narrow cards: the info lines were unreadable once the grid
+# was shrunk to the width of a GitHub column. At most four cards a row, and
+# the rows balanced, so a family of five or six reads as two even rows.
+GIF_CARD_W = 200
+GIF_ISIZE = 1.2
+
+
+# Families whose drawings are wider than a card: fewer a row, wider cards.
+# The ventilation units draw a whole duct diagram.
+GIF_WIDE = {"ventilation": (2, 400)}
+# Families whose loop is longer than 1.6 s: frames and their spacing. An
+# electric ride's gauge fills in 5 s, and its fourth bar has to be seen.
+GIF_TIMING = {"mobility": (25, 200)}
+
+
+def gif_cols(count):
+    rows = -(-count // 4)
+    return -(-count // rows)
 
 
 class QuietHandler(http.server.SimpleHTTPRequestHandler):
@@ -148,31 +168,49 @@ def squeeze(im, out):
         os.remove(tmp)
 
 
+# The README opens on a poster: one drawing per appliance, eight a row,
+# packed tight with its name, and under it how many models the card draws
+# when there are several. The families further down show each one moving.
+HEADER_SCALE = 2
+POSTER = (
+    ("washer", 1), ("dryer", 1), ("dishwasher", 1), ("iron", 2), ("oven", 1), ("microwave", 1), ("hood", 1), ("cooktop", 1),
+    ("fridge", 7), ("kettle", 2), ("cooker", 1), ("coffee", 2), ("rice_cooker", 1), ("air_fryer", 3), ("toaster", 3), ("water_heater", 1),
+    ("boiler", 2), ("heat_pump", 1), ("pellet_stove", 1), ("space_heater", 2), ("towel_warmer", 2), ("air_conditioner", 1), ("dehumidifier", 1), ("th_square", 4),
+    ("air_purifier", 3), ("fan", 3), ("pet_feeder", 5), ("pet_fountain", 2), ("ev_charger", 1), ("printer_3d", 2), ("net_switch", 5), ("scr_tv", 8),
+    ("robot_vacuum", 2), ("mob_poster", 5), ("robot_mower", 2), ("robot_stick", 1), ("robot_washer", 1), ("nt_pool", 1), ("pool_running", 1), ("nt_spa", 1),
+    ("solar_day", 2), ("battery_charging", 2), ("ups_online", 1), ("nt_linky", 5), ("nt_booster", 2), ("nt_floor", 2), ("nt_sauna", 1), ("nt_aquarium", 1),
+    ("scale_fresh", 1), ("hd_hot", 2), ("dif_drop", 5), ("hrv_one_duct", 3), ("cam_outdoor", 5), ("lamp_floor", 10), ("mb_classic", 2), ("nt_tree", 1),
+)
+
+
 def screenshots():
+    types = ",".join(k for k, _ in POSTER)
+    models = ",".join(str(n) for _, n in POSTER)
     for lang, name in (("", "screenshot.png"), ("&lang=fr", "screenshot.fr.png")):
         out = DOCS / name
-        # Eight columns of four: thirty-two cards fill the band exactly,
-        # and a wide band reads better than a ragged square. 8 x 300 px and
-        # seven gaps of 24 make 2568 px, plus the page's padding.
-        im = shoot(f"http://127.0.0.1:{PORT}/docs/demo.html?view=types{lang}", str(out), window=(2700, 2300))
-        print(f"  {name}  {im.size[0]}x{im.size[1]}")
+        im = shoot(f"http://127.0.0.1:{PORT}/docs/demo.html?view=types&only={types}&models={models}&cols=8{lang}"
+                   f"&lines=0&poster=1&cw=136&gap=4&isize=1.05&phase=4500", str(out), window=(1400, 3000), scale=HEADER_SCALE)
+        print(f"  {name}  {im.size[0]}x{im.size[1]}  {len(POSTER)} drawings")
 
 
 def gifs(only=None):
-    for slug, types, cols in FAMILIES:
+    for slug, types, _ in FAMILIES:
         if only and slug != only:
             continue
+        cols, card_w = GIF_WIDE.get(slug, (gif_cols(len(types.split(","))), GIF_CARD_W))
         for lang, name in (("", f"family-{slug}.gif"), ("&lang=fr", f"family-{slug}.fr.gif")):
             frames, box = [], None
-            for i in range(GIF_FRAMES):
-                phase = i * GIF_STEP_MS
+            frames_n, step = GIF_TIMING.get(slug, (GIF_FRAMES, GIF_STEP_MS))
+            for i in range(frames_n):
+                phase = i * step
                 tmp = DOCS / f".frame-{i}.png"
                 url = (f"http://127.0.0.1:{PORT}/docs/demo.html"
-                       f"?view=types&only={types}&cols={cols}&phase={phase}{lang}")
+                       f"?view=types&only={types}&cols={cols}&phase={phase}{lang}"
+                       f"&lines=0&cw={card_w}&isize={GIF_ISIZE}")
                 # Uncropped on purpose: every frame has to be cut to the same
                 # box. Cropping each one to its own content makes the grid
                 # jitter as a wisp of steam grows past the edge and shrinks.
-                im = shoot(url, str(tmp), window=(cols * 324 + 200, 1400), crop=False, scale=GIF_SCALE)
+                im = shoot(url, str(tmp), window=(cols * (card_w + 12) + 200, 1400), crop=False, scale=GIF_SCALE)
                 if box is None:
                     b = ImageChops.difference(im, Image.new("RGB", im.size, im.getpixel((2, 2)))).getbbox()
                     if b is None:
@@ -183,7 +221,7 @@ def gifs(only=None):
                 tmp.unlink()
             out = DOCS / name
             frames[0].save(out, save_all=True, append_images=frames[1:],
-                           duration=GIF_STEP_MS, loop=0, optimize=True)
+                           duration=step, loop=0, optimize=True)
             print(f"  {name}  {frames[0].size[0]}x{frames[0].size[1]}  {os.path.getsize(out) // 1024} KB")
 
 

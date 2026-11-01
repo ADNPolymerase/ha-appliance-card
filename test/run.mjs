@@ -4484,7 +4484,7 @@ const feeder = (extra = {}, more = {}) => render({ ...CFG_IN, ...extra }, { ...F
 // The feeders are one SVG each; these read the drawing back: the level of each
 // window, where each falling piece starts, the bowls and the outlets.
 const pfLevels = h => [...h.matchAll(/class="pf-win" data-level="(\d+)"/g)].map(m => Number(m[1]));
-const pfDropsAt = h => [...h.matchAll(/<g transform="translate\(([\d.]+) ([\d.]+)\)"><g class="pf-drop/g)].map(m => ({ x: +m[1], y: +m[2] }));
+const pfDropsAt = h => [...h.matchAll(/<g transform="translate\(([\d.]+) ([\d.]+)\)"(?: style="--pf-fall: ([\d.]+)px")?><g class="pf-drop/g)].map(m => ({ x: +m[1], y: +m[2], fall: m[3] ? +m[3] : null }));
 const pfBowls = h => [...h.matchAll(/<ellipse class="pf-bowl" cx="([\d.]+)" cy="([\d.]+)" rx="([\d.]+)" ry="([\d.]+)"/g)]
   .map(m => ({ cx: +m[1], cy: +m[2], rx: +m[3], ry: +m[4] }));
 const pfChutes = h => [...h.matchAll(/class="pf-chute" (?:d="([^"]*)"|cx="([\d.]+)" cy="([\d.]+)")/g)].map(m => {
@@ -4493,14 +4493,14 @@ const pfChutes = h => [...h.matchAll(/class="pf-chute" (?:d="([^"]*)"|cx="([\d.]
   const xs = n.filter((_, i) => i % 2 === 0), ys = n.filter((_, i) => i % 2);
   return { x0: Math.min(...xs), x1: Math.max(...xs), bottom: Math.max(...ys) };
 });
-const pfFall = h => Number((/@keyframes pf-fall \{[\s\S]*?100% \{ transform: translateY\(([\d.]+)px\)/.exec(h) || [])[1]);
+const pfFall = h => Number((/@keyframes pf-fall \{[\s\S]*?100% \{ transform: translateY\(var\(--pf-fall, ([\d.]+)px\)\)/.exec(h) || [])[1]);
 // Each piece leaves an outlet, just under its mouth, and lands inside a bowl.
 function dropGeo(h) {
   const drops = pfDropsAt(h), bowls = pfBowls(h), chutes = pfChutes(h), fall = pfFall(h);
   return {
     drops, bowls,
     fromChute: drops.length > 0 && drops.every(d => chutes.some(c => d.x >= c.x0 && d.x <= c.x1 && d.y >= c.bottom - 1 && d.y <= c.bottom + 4)),
-    inBowl: drops.length > 0 && drops.every(d => bowls.some(b => Math.abs(d.x - b.cx) <= b.rx - 2 && d.y + fall >= b.cy - b.ry && d.y + fall <= b.cy + b.ry)),
+    inBowl: drops.length > 0 && drops.every(d => bowls.some(b => Math.abs(d.x - b.cx) <= b.rx - 2 && d.y + (d.fall || fall) >= b.cy - b.ry && d.y + (d.fall || fall) <= b.cy + b.ry)),
   };
 }
 
@@ -4616,6 +4616,7 @@ function cssPx(html, selector, prop) {
   check('dessin : les croquettes partent de la goulotte', geo.fromChute, true);
   check('dessin : et finissent dans la gamelle', geo.inBowl, true);
   check('dessin : rien ne tombe au repos', pfDropsAt(fIn).length, 0);
+  check('dessin : la sortie haute, une longue chute (#71)', geo.drops.every(d => d.fall >= 15), true);
 }
 
 // Lines you add come under the ones the card reads on its own, and they carry
@@ -8488,6 +8489,12 @@ check('borne : ni un statut reconnu', evMode(evR('SuspendedEVSE', { power_entity
   check('fontaine : la lumiere bleue', machineCls(on).split(' ').includes('led-on'), true);
   check('fontaine : reservoir, vasque, bec, jet et lumiere',
     hasAll(on, ['ft-svg', 'ft-body', 'ft-win', 'ft-water', 'ft-pool', 'ft-dome', 'ft-ring', 'ft-spray', 'ft-glow', 'ft-led']), '');
+  check('fontaine : carree par defaut', /class="ft-svg ft-round"/.test(on), false);
+  const ftRound = ft({ fountain_layout: 'round' });
+  check('fontaine ronde : le cylindre', /class="ft-svg ft-round"/.test(ftRound), true);
+  check('fontaine ronde : jet, lumiere, sans fenetre', hasAll(ftRound, ['ft-dome', 'ft-ring', 'ft-led', 'ft-pool']) + String(/class="ft-win"/.test(ftRound)), 'false');
+  check('fontaine ronde : le jet monte plus haut', /class="ft-dome" d="M54\.6 43\.4 Q55\.6 36\.40 58 32\.00 Q60 28\.80/.test(ftRound), true);
+  check('editeur fontaine : la forme', /data-field="fountain_layout"/.test(markup(newEditor({ ...CFG_FT, fountain_layout: 'round' }))), true);
   check('fontaine : sans niveau, le reservoir garde sa hauteur', (/class="ft-water" data-level="(\d+)"/.exec(on) || [])[1], '55');
   check('fontaine : le filtre en jours', infoLine(on, 'Filter').replace(/\s/g, ' '), '19 d');
   check('fontaine : la pompe en jours', infoLine(on, 'Pump').replace(/\s/g, ' '), '12 d');
@@ -9716,6 +9723,11 @@ check('borne : ni un statut reconnu', evMode(evR('SuspendedEVSE', { power_entity
   check('editeur abri : pas de forme sans abri', /data-field="robot_shelter_style"/.test(edMower({})), false);
   check('editeur abri : la forme avec l abri', /data-field="robot_shelter_style"/.test(edMower({ robot_shelter: true })), true);
   check('editeur abri : pas de couleur sur l appentis', /data-field="robot_shelter_color"/.test(edMower({ robot_shelter: true })), false);
+  check('abri : garage au choix', machineCls(mowerH({ robot_shelter_style: 'garage' })).includes('rbt-sh-garage'), true);
+  check('abri : garage noir par defaut', /stop-color="#5c636b"/.test(mowerH({ robot_shelter_style: 'garage' })), true);
+  check('abri : garage blanc', /stop-color="#ffffff"/.test(mowerH({ robot_shelter_style: 'garage', robot_shelter_color: 'white' })), true);
+  check('abri : garage, le tapis', /fill="#2a2e33"/.test(mowerH({ robot_shelter_style: 'garage' })), true);
+  check('editeur abri : la couleur sur le garage', /data-field="robot_shelter_color"/.test(edMower({ robot_shelter: true, robot_shelter_style: 'garage' })), true);
   check('editeur abri : la couleur sur la coque', /data-field="robot_shelter_color"/.test(edMower({ robot_shelter: true, robot_shelter_style: 'shell' })), true);
   check('robot : niveau du reservoir dessine', /rbt-rm" style="--lvl: 42%"/.test(render({ state_entity: 'vacuum.braava', robot_water_entity: 'sensor.w' },
     { 'vacuum.braava': s('cleaning'), 'sensor.w': s(42, { unit_of_measurement: '%' }) })), true);
@@ -10589,6 +10601,10 @@ check('borne : ni un statut reconnu', evMode(evR('SuspendedEVSE', { power_entity
     { 'switch.station': s('on'), 'sensor.w': W(30) })), 'Charging');
   check('laveur : l\'anneau suit la batterie', /class="fw-ringf"[^>]*style="--fw-off: 7.6"/.test(fw('idle', { battery_entity: 'sensor.b' }, { 'sensor.b': s(60) })), true);
   check('laveur : par son nom', machineCls(render({ state_entity: 'sensor.tineco_floor_one_status' }, { 'sensor.tineco_floor_one_status': s('idle') })).includes('rbt-l-floor_washer'), true);
+  // A robot called a washer is a mopping robot; only a floor washer by name is one.
+  const byName = (name) => machineCls(render({ appliance_type: 'robot', state_entity: 'vacuum.x', name }, { 'vacuum.x': s('docked') }));
+  check('laveur : robot laveur reste un robot', byName('Robot laveur').includes('rbt-l-mop'), true);
+  check('laveur : laveur de sol par son nom', byName('Laveur de sol').includes('rbt-l-floor_washer'), true);
   check('laveur : erreur en fumee', /class="en-smoke"/.test(fw('idle', { robot_error_entity: 'sensor.brush' }, { 'sensor.brush': s('stuck') })), true);
   const ed = markup(newEditor({ ...FW }));
   check('editeur laveur : dans la liste', /value="floor_washer"/.test(ed), true);
@@ -10879,6 +10895,20 @@ check('borne : ni un statut reconnu', evMode(evR('SuspendedEVSE', { power_entity
     check('dessin : en forme d action', /data-pic-tap="1"/.test(L({ illustration_tap_action: { action: 'toggle' } })), true);
     check('dessin : par defaut, comme la carte', /data-pic-tap/.test(L()), false);
     check('dessin : default ne change rien', /data-pic-tap/.test(L({ illustration_tap_action: 'default' })), false);
+    // HACF #127: the drawing alone switches the lamp, its lines can go.
+    check('lampe : sans bouton d allumage', /class="action-btn[^"]*" data-entity="light.bureau"/.test(L({ show_toggle: false })), false);
+    check('lampe : le minuteur reste sans le bouton', /data-entity="select.bureau_timer"/.test(L({ show_toggle: false, timer_entity: 'select.bureau_timer' })), true);
+    check('lampe : le bouton par defaut', /class="action-btn[^"]*" data-entity="light.bureau"/.test(L()), true);
+    check('lignes masquees : la luminosite part', infoLine(L({ hidden_lines: ['lamp_brightness'] }), 'Brightness'), null);
+    check('lignes masquees : sinon elle est la', infoLine(L(), 'Brightness') !== null, true);
+    {
+      const { card } = build({ appliance_type: 'lamp', state_entity: 'light.bureau', hidden_lines: ['lamp_brightness'] }, { 'light.bureau': s('on', { brightness: 255 }) });
+      check('lignes masquees : toujours proposee a l editeur', JSON.stringify(card._drawnLines.find((l) => l.key === 'lamp_brightness')), JSON.stringify({ key: 'lamp_brightness', label: 'Brightness', hidden: true }));
+      const sig = (attrs) => card._stateSignature(HASS({ 'light.bureau': { state: 'on', attributes: attrs, last_changed: at(0) } }));
+      check('lampe : une autre couleur redessine', sig({ rgb_color: [255, 0, 0] }) !== sig({ rgb_color: [0, 0, 255] }), true);
+      check('lampe : une autre luminosite redessine', sig({ brightness: 20 }) !== sig({ brightness: 200 }), true);
+    }
+    check('compact side : les boutons a droite meme sous le nom', /\.cmp-side \.cmp-head \.cmp-icons \{ margin-left: auto; \}/.test(L({ compact: 'side' })), true);
     check('dessin : en compact aussi', /class="cmp-pic" data-pic-tap="1"/.test(L({ illustration_tap_action: 'toggle', compact: 'side' })), true);
   }
   {
@@ -10888,7 +10918,7 @@ check('borne : ni un statut reconnu', evMode(evR('SuspendedEVSE', { power_entity
     check('navimow : par son nom', /fill="#ff5a1f"/.test(M({}, 'lawn_mower.navimow_i105')), true);
     check('navimow : sinon la tondeuse classique', /fill="#ff5a1f"/.test(M()), false);
     check('navimow : classique force malgre le nom', /fill="#ff5a1f"/.test(M({ mower_style: 'classic' }, 'lawn_mower.navimow_i105')), false);
-    check('navimow : son anneau dit l etat', /class="rbt-led" cx="31"/.test(M({ mower_style: 'navimow' })), true);
+    check('navimow : son anneau dit l etat', /class="rbt-led" x="19.6"/.test(M({ mower_style: 'navimow' })), true);
   }
   // #54, second round: the air each fan moves on the drawing, the filter as a
   // bar, sliders for the speed in Manual and the setpoint under humidity
@@ -11437,6 +11467,21 @@ function tvT(w) { return { 'switch.tv': { state: 'on', attributes: {} }, 'sensor
   await settle();
   check('aujourd hui : chaudiere, l attente ne compte pas', infoLine(markup(blt.card), 'Today').replace(/\u00a0/g, ' '), '20 min · 1 start');
   check('aujourd hui : sans l option, pas de ligne', infoLine(render(PLUG, plugSt(0)), 'Today'), null);
+  // HACF #127: a lamp switched on since the history was read counts at once,
+  // without asking the recorder again.
+  {
+    const LT = { appliance_type: 'lamp', state_entity: 'light.b', show_today: true };
+    const lt = withHistory(LT, { 'light.b': wst('off', -5) },
+      { 'light.b': [H('off', -sinceMid), H('on', -sinceMid + 10), H('off', -sinceMid + 20)] });
+    await settle();
+    check('aujourd hui direct : depuis l historique', infoLine(markup(lt.card), 'Today').replace(/\u00a0/g, ' '), '10 min · 1 start');
+    rerender(lt.card, { 'light.b': wst('on', -2) });
+    check('aujourd hui direct : allumee a l instant, comptee', infoLine(markup(lt.card), 'Today').replace(/\u00a0/g, ' '), '12 min · 2 starts');
+    rerender(lt.card, { 'light.b': wst('off', -1) });
+    rerender(lt.card, { 'light.b': wst('on', 0) });
+    check('aujourd hui direct : deux appuis rapides, deux demarrages', infoLine(markup(lt.card), 'Today').replace(/\u00a0/g, ' '), '11 min · 3 starts');
+    check('aujourd hui direct : sans nouvelle demande', lt.calls.length, 1);
+  }
 
   // The tower on its own plug.
   const PCT = { ...SCT, screen_layout: 'computer', tower_entity: 'switch.tower' };
@@ -11645,6 +11690,53 @@ function tvT(w) { return { 'switch.tv': { state: 'on', attributes: {} }, 'sensor
   check('editeur linky : la periode tarifaire', ed({ appliance_type: 'meter', state_entity: 'sensor.papp' }).includes('data-toggle="tariff_entity"'), true);
   check('editeur frigo : coffre et tiroirs', ['"chest"', '"drawers"'].every((v) => ed({ appliance_type: 'fridge', fridge_layout: 'single' }).includes(`value=${v}`)), true);
   check('editeur robot piscine : le temps restant', ed({ appliance_type: 'robot', robot_layout: 'pool', state_entity: 'vacuum.d' }).includes('data-toggle="remaining_time_entity"'), true);
+
+  // An electric ride on its charger (#72).
+  const MB = { appliance_type: 'mobility', state_entity: 'switch.trott', power_entity: 'sensor.trott_w' };
+  const mbS = (plug, w, more = {}) => ({ 'switch.trott': s(plug), 'sensor.trott_w': s(w, { unit_of_measurement: 'W' }), ...more });
+  check('mobilite : en charge au-dessus de 40 W', stateLine(render(MB, mbS('on', 118))), 'Charging');
+  check('mobilite : chargee en dessous', stateLine(render(MB, mbS('on', 12))), 'Charged');
+  check('mobilite : debranchee', stateLine(render(MB, mbS('off', 0))), 'Unplugged');
+  check('mobilite : le seuil se regle', stateLine(render({ ...MB, power_on_threshold: 10 }, mbS('on', 12))), 'Charging');
+  check('mobilite : en charge, ca bouge', /\bnt-on\b/.test(machineCls(render(MB, mbS('on', 118)))), true);
+  check('mobilite : le courant va vers le vehicule', /class="nta-feed"/.test(render(MB, mbS('on', 118))), true);
+  check('mobilite : chargee, rien ne coule', /class="nta-feed"/.test(render(MB, mbS('on', 12))), false);
+  check('mobilite : debranchee, grisee', /opacity="\.5" style="filter:grayscale\(1\)"/.test(render(MB, mbS('off', 0))), true);
+  check('mobilite : branchee, en couleur', /style="filter:grayscale\(1\)"/.test(render(MB, mbS('on', 118))), false);
+  check('mobilite : debranchee, la prise au sol', /<rect x="\d+" y="104.6" width="5.4"/.test(render(MB, mbS('off', 0))), true);
+  {
+    // Unplugged without a battery entity, the gauge keeps the charge seen.
+    const { card } = build(MB, mbS('on', 12));
+    rerender(card, mbS('off', 0));
+    check('mobilite : debranchee apres la charge, la jauge reste pleine', (markup(card).match(/height="5.2" rx=".6" fill="#43a047"/g) || []).length, 4);
+    const fresh = render(MB, mbS('off', 0));
+    check('mobilite : debranchee sans rien savoir, jauge vide', (fresh.match(/height="5.2" rx=".6" fill="#43a047"/g) || []).length, 0);
+  }
+  check('mobilite : niveau inconnu, les barres se remplissent', ['nta-bar1', 'nta-bar4'].every((c) => render(MB, mbS('on', 118)).includes(`class="${c}"`)), true);
+  const BT = { ...MB, battery_entity: 'sensor.trott_bat' };
+  const bat = (v) => ({ 'sensor.trott_bat': s(v, { unit_of_measurement: '%' }) });
+  const lit = (h) => (h.match(/height="5.2" rx=".6" fill="#43a047"/g) || []).length;
+  check('mobilite : 64 %, trois barres', lit(render(BT, mbS('on', 118, bat(64)))), 3);
+  check('mobilite : la suivante clignote', /class="nta-next"/.test(render(BT, mbS('on', 118, bat(64)))), true);
+  check('mobilite : niveau connu, pas de remplissage en boucle', /class="nta-bar1"/.test(render(BT, mbS('on', 118, bat(64)))), false);
+  check('mobilite : la batterie en ligne', infoLine(render(BT, mbS('on', 118, bat(64))), 'Battery').replace(/\s/g, ' '), '64 %');
+  check('mobilite : 100 %, chargee', stateLine(render(BT, mbS('on', 118, bat(100)))), 'Charged');
+  check('mobilite : batterie basse en rouge', /height="5.2" rx=".6" fill="#e53935"/.test(render(BT, mbS('off', 0, bat(12)))), true);
+  check('mobilite : sans prise, la batterie dit la charge', stateLine(render({ appliance_type: 'mobility', state_entity: 'switch.trott', battery_entity: 'sensor.trott_bat' }, { 'switch.trott': s('on'), ...bat(50) })), 'Charging');
+  for (const [layout, kind] of [['scooter', 'mob_scooter'], ['offroad', 'mob_offroad'], ['ebike', 'mob_ebike'], ['gyropode', 'mob_gyropode'], ['motorcycle', 'mob_motorcycle']]) {
+    check(`mobilite : modele ${layout}`, kindOf(render({ ...MB, mobility_layout: layout }, mbS('on', 118))), kind);
+  }
+  const byNm = (id) => kindOf(render({ appliance_type: 'mobility', state_entity: id }, { [id]: s('on') }));
+  check('mobilite : ausom par son nom', byNm('switch.ausom_dt2_pro'), 'mob_offroad');
+  check('mobilite : velo par son nom', byNm('switch.velo_electrique'), 'mob_ebike');
+  check('mobilite : moto par son nom', byNm('switch.moto_garage'), 'mob_motorcycle');
+  check('mobilite : gyropode par son nom', byNm('switch.gyropode'), 'mob_gyropode');
+  check('mobilite : trottinette par defaut', byNm('switch.prise_atelier'), 'mob_scooter');
+  check('detection : trottinette', det('switch.trottinette'), 'mob_scooter');
+  check('detection : velo electrique', det('switch.velo_electrique'), 'mob_ebike');
+  check('editeur mobilite : le modele', ed({ appliance_type: 'mobility', state_entity: 'switch.t' }).includes('"mobility_layout"'), true);
+  check('editeur mobilite : la batterie', ed({ appliance_type: 'mobility', state_entity: 'switch.t' }).includes('data-toggle="battery_entity"'), true);
+  check('mobilite : en francais', stateLine(render({ ...MB, language: 'fr' }, mbS('on', 118))), 'En charge');
 }
 
 // =============================================================================
