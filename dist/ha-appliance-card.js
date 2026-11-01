@@ -141,7 +141,7 @@ const T = {
     type_iron: "Iron", section_iron_layout: "Model", layout_iron: "Iron", layout_generator: "Steam generator", iron_line_color: "Line colour", color_blue: "Blue", color_body: "Same as the appliance",
     type_toaster: "Toaster", section_toaster_layout: "Model", layout_toaster_two: "Two slots", layout_toaster_four: "Four slots",
     layout_toaster_long: "Long slot", toaster_toasting: "Toasting", toaster_done: "Toast ready", type_air_purifier: "Air purifier",
-    type_screen: "Screen (TV, projector, computer)", section_screen_layout: "Model", layout_tv_feet: "TV on feet", layout_tv_stand: "TV on a stand", layout_tv_wall: "Wall-mounted TV", layout_projector: "Projector", layout_computer: "Computer", section_screen_image: "Picture on screen", img_random: "Random", img_sunset: "Sunset", img_aquarium: "Aquarium", img_bars: "Test card", img_football: "Football match", img_space: "Space", img_bounce: "Bouncing logo", img_desktop: "Desktop", img_code: "Scrolling code", img_pong: "Pong", screen_on: "On", screen_playing: "Playing", screen_home: "Home screen", screen_locked: "Locked", screen_muted: "Muted", screen_standby_threshold: "Standby up to this power (W)", section_media: "Media player", section_media2: "Second media player", section_media3: "Third media player", section_lock: "Session lock", layout_tablet_wall: "Wall tablet", layout_tablet_frame: "Framed tablet", layout_tablet_portrait: "Upright tablet with light bar", img_dashboard: "Dashboard", screen_dashboard: "Dashboard", screen_saver: "Screensaver", screen_dark: "Screen off", tab_charging: "charging", tab_line_page: "Page", tab_line_touched: "Last interaction", tab_screen: "Screen", tab_reload: "Reload page", section_screensaver: "Screensaver", section_tab_charging: "Charging sensor", section_tab_page: "Current page", section_tab_brightness: "Screen brightness", section_tab_touched: "Last interaction", tab_restart: "Restart app", section_tab_screenshot: "Screenshot",
+    type_screen: "Screen (TV, projector, computer)", section_screen_layout: "Model", layout_tv_feet: "TV on feet", layout_tv_stand: "TV on a stand", layout_tv_wall: "Wall-mounted TV", layout_projector: "Projector", layout_computer: "Computer", layout_laptop: "Laptop", section_screen_image: "Picture on screen", img_random: "Random", img_sunset: "Sunset", img_aquarium: "Aquarium", img_bars: "Test card", img_football: "Football match", img_space: "Space", img_bounce: "Bouncing logo", img_desktop: "Desktop", img_code: "Scrolling code", img_pong: "Pong", screen_on: "On", screen_playing: "Playing", screen_home: "Home screen", screen_locked: "Locked", screen_muted: "Muted", screen_standby_threshold: "Standby up to this power (W)", section_media: "Media player", section_media2: "Second media player", section_media3: "Third media player", section_lock: "Session lock", layout_tablet_wall: "Wall tablet", layout_tablet_frame: "Framed tablet", layout_tablet_portrait: "Upright tablet with light bar", img_dashboard: "Dashboard", screen_dashboard: "Dashboard", screen_saver: "Screensaver", screen_dark: "Screen off", tab_charging: "charging", tab_line_page: "Page", tab_line_touched: "Last interaction", tab_screen: "Screen", tab_reload: "Reload page", section_screensaver: "Screensaver", section_tab_charging: "Charging sensor", section_tab_page: "Current page", section_tab_brightness: "Screen brightness", section_tab_touched: "Last interaction", tab_restart: "Restart app", section_tab_screenshot: "Screenshot",
     step_heat_threshold: "Heating above this power (W)", step_spin_threshold: "Spinning above this power (W)", zone_power: "One zone at full power (W)",
     source: "Source", source_plug: "A smart plug", source_integration: "Integration entities", plug_switch: "Smart plug switch",
     type_thermostat: "Thermostat", section_thermostat_layout: "Model", layout_th_square: "Square", layout_th_round: "Round", layout_th_glass: "Black glass", layout_th_valve: "Radiator valve", th_idle: "Target reached", th_eco: "Eco", th_away: "Away", th_frost: "Frost protection", th_window: "Window open", th_line_valve: "Valve", section_thermostat: "Room thermostat",
@@ -3531,12 +3531,14 @@ const CLOCK_TICK_MS = 30 * 1000;
 // the screen unplugged behind them.
 const SCREEN_OFF_W = 0.5;
 const SCREEN_STANDBY_W = 20;
-const SCREEN_LAYOUTS = ["tv_feet", "tv_stand", "tv_wall", "projector", "computer", "tablet_wall", "tablet_frame", "tablet_portrait"];
+const SCREEN_LAYOUTS = ["tv_feet", "tv_stand", "tv_wall", "projector", "computer", "laptop", "tablet_wall", "tablet_frame", "tablet_portrait"];
 // A wall tablet that shows a dashboard (#62): Fully Kiosk's, or any other
 // that reports its screen, its screensaver and its charger.
 const SCREEN_TABLETS = ["tablet_wall", "tablet_frame", "tablet_portrait"];
 const SCREEN_TABLET_RE = /tablet|kiosk|wall ?panel|(^|[^a-z])fully([^a-z]|$)|\u5e73\u677f|\u043f\u043b\u0430\u043d\u0448\u0435\u0442/;
-const SCREEN_NAME_RE = /(^|[^a-z])tv([^a-z]|$)|(^|[^a-z])t(e|\u00e9)l(e|\u00e9)([^a-z]|$)|t(e|\u00e9)l(e|\u00e9)vis|fernseher|televize|telewizor|\u0442\u0435\u043b\u0435\u0432\u0438\u0437\u043e\u0440|\u7535\u89c6|beamer|project(or|eur)|proyector|proiettore|projektor|\u6295\u5f71|\u043f\u0440\u043e\u0435\u043a\u0442\u043e\u0440|computer|ordinateur|desktop|imac|ordenador|computador|komputer|po(c|\u010d)(i|\u00ed)ta(c|\u010d)|\u7535\u8111|\u043a\u043e\u043c\u043f\u044c\u044e\u0442\u0435\u0440|tablet|kiosk|wall ?panel|\u5e73\u677f|\u043f\u043b\u0430\u043d\u0448\u0435\u0442/;
+const SCREEN_NAME_RE = /(^|[^a-z])tv([^a-z]|$)|(^|[^a-z])t(e|\u00e9)l(e|\u00e9)([^a-z]|$)|t(e|\u00e9)l(e|\u00e9)vis|fernseher|televize|telewizor|\u0442\u0435\u043b\u0435\u0432\u0438\u0437\u043e\u0440|\u7535\u89c6|beamer|project(or|eur)|proyector|proiettore|projektor|\u6295\u5f71|\u043f\u0440\u043e\u0435\u043a\u0442\u043e\u0440|computer|ordinateur|desktop|imac|ordenador|computador|komputer|po(c|\u010d)(i|\u00ed)ta(c|\u010d)|\u7535\u8111|\u043a\u043e\u043c\u043f\u044c\u044e\u0442\u0435\u0440|tablet|kiosk|wall ?panel|\u5e73\u677f|\u043f\u043b\u0430\u043d\u0448\u0435\u0442|laptop|notebook|macbook|chromebook|thinkpad|\u7b14\u8bb0\u672c|\u043d\u043e\u0443\u0442\u0431\u0443\u043a/;
+// A laptop, by its name: the word for one, or a model everybody knows.
+const SCREEN_LAPTOP_RE = /laptop|notebook|macbook|chromebook|thinkpad|ultrabook|(ordinateur|pc|computer|ordenador|computador)[ _]portable|portatil|baerbar|b\u00e6rbar|barbar dator|\u7b14\u8bb0\u672c|\u043d\u043e\u0443\u0442\u0431\u0443\u043a/;
 const SCREEN_PROJECTOR_RE = /beamer|project(or|eur)|proyector|proiettore|projektor|\u6295\u5f71|\u043f\u0440\u043e\u0435\u043a\u0442\u043e\u0440/;
 const SCREEN_COMPUTER_RE = /computer|ordinateur|desktop|imac|ordenador|computador|komputer|po(c|\u010d)(i|\u00ed)ta(c|\u010d)|\u7535\u8111|\u043a\u043e\u043c\u043f\u044c\u044e\u0442\u0435\u0440|(^|[^a-z])pc([^a-z]|$)/;
 const SCREEN_LABELS = { off: "ac_off", standby: "standby", on: "screen_on", playing: "screen_playing", paused: "paused", home: "screen_home", locked: "screen_locked", dashboard: "screen_dashboard", saver: "screen_saver" };
@@ -3548,7 +3550,7 @@ const SCREEN_COLORS = {
 };
 const SCREEN_LIT = ["on", "playing", "paused", "home", "locked", "dashboard", "saver"];
 // [top of the drawing, its height, how much larger it is drawn].
-const SCREEN_BANDS = { tv_feet: [28, 66, 2], tv_stand: [26, 68, 2], tv_wall: [25, 62, 2], projector: [0, 87, 1.8], computer: [24, 62, 1.6],
+const SCREEN_BANDS = { tv_feet: [28, 66, 2], tv_stand: [26, 68, 2], tv_wall: [25, 62, 2], projector: [0, 87, 1.8], computer: [24, 62, 1.6], laptop: [24, 64, 1.6],
   tablet_wall: [26, 59, 2], tablet_frame: [26, 59, 2], tablet_portrait: [24, 64, 2] };
 // The pictures a lit screen shows, one drawn at random each time it comes on:
 // the first six suit a television or a projector, the next three a computer,
@@ -3568,6 +3570,7 @@ function screenLayoutOf(cfg, st) {
   if (SCREEN_LAYOUTS.includes(cfg.screen_layout)) return cfg.screen_layout;
   const name = stripAccents(`${cfg.state_entity || ""} ${cfg.media_entity || ""} ${(st && st.attributes.friendly_name) || ""}`.toLowerCase());
   if (cfg.screensaver_entity || cfg.charging_entity || cfg.url_entity || SCREEN_TABLET_RE.test(name)) return "tablet_wall";
+  if (SCREEN_LAPTOP_RE.test(name)) return "laptop";
   return cfg.lock_entity || SCREEN_COMPUTER_RE.test(name) ? "computer" : SCREEN_PROJECTOR_RE.test(name) ? "projector" : "tv_feet";
 }
 function screenIsTablet(cfg, st = null) {
@@ -9174,7 +9177,7 @@ const ILLUSTRATION_CSS = {
         .stk-ef{fill:none;stroke:#ffca28;stroke-width:1.8;stroke-dasharray:2.4 3.6;stroke-linecap:round;opacity:0}
         .rbt-m-charging .stk-ef{opacity:1;animation:stk-flow .6s linear infinite}
         @keyframes stk-flow{to{stroke-dashoffset:-12}}
-        .rbt-m-away .stk-mach{display:none}
+        .rbt-m-away .stk-mach{opacity:.5;filter:grayscale(1)}
         .stk-bar{fill:#1f2a1f}
         .stk-bar.on,.rbt-m-docked .stk-bar.full{fill:#43d65a}
         .rbt-m-charging .stk-bar{animation:stk-bar1 2.4s steps(1) infinite}
@@ -9529,6 +9532,20 @@ const ILLUSTRATION_CSS = {
         .scr-zoom { position: absolute; width: 96px; height: 108px; transform-origin: 0 0; }
         .scr-bezel, .scr-glass, .scr-led, .scr-foot, .scr-neck, .scr-base, .scr-shade, .scr-wall, .scr-rod, .scr-beam,
         .scr-body, .scr-lens, .scr-vent, .scr-feet, .scr-tower, .scr-slot { position: absolute; }
+        .lap-shadow, .lap-cam, .lap-hinge, .lap-deck, .lap-keys, .lap-pad, .lap-edge, .lap-notch, .lap-cable { position: absolute; }
+        .lap-lid { border-radius: 3px 3px 0 0; }
+        .lap-cam { border-radius: 50%; background: #0c0e11; box-shadow: 0 0 0 0.4px rgba(255, 255, 255, 0.2); }
+        .lap-hinge { background: linear-gradient(180deg, #2a2e33, #7d848b); }
+        .lap-deck { clip-path: polygon(11.9% 0, 88.1% 0, 100% 100%, 0 100%); background: linear-gradient(180deg, var(--lap-hi, #eef0f2), var(--lap-body, #c9ced4)); }
+        .lap-keys { clip-path: polygon(2.2% 0, 97.8% 0, 100% 100%, 0 100%); background-color: #2b3036;
+          background-image: repeating-linear-gradient(90deg, transparent 0 3.3px, var(--lap-hi, #e3e6e9) 3.3px 4.1px), repeating-linear-gradient(180deg, transparent 0 1.55px, var(--lap-hi, #e3e6e9) 1.55px 1.85px); }
+        .lap-pad { clip-path: polygon(4% 0, 96% 0, 100% 100%, 0 100%); background: rgba(0, 0, 0, 0.1); box-shadow: inset 0 0 0 0.4px rgba(0, 0, 0, 0.18); }
+        .lap-edge { border-radius: 0 0 3px 3px; background: linear-gradient(180deg, var(--lap-body, #c9ced4), var(--lap-lo, #8e959c)); }
+        .lap-notch { border-radius: 0 0 3px 3px; background: rgba(0, 0, 0, 0.22); }
+        .lap-shadow { border-radius: 50%; background: radial-gradient(ellipse at 50% 40%, rgba(0, 0, 0, 0.22), transparent 70%); }
+        .lap-cable { border-radius: 1px; background: #2b2f34; }
+        .scr-laptop .scr-led { border-radius: 0.6px; }
+        .scr-laptop .tab-bolt { position: absolute; width: 6px; height: 8.4px; }
         .scr-bezel {
           border-radius: 2px; background: linear-gradient(180deg, var(--ac-body-hi, #515860), var(--ac-body, #3b4045) 50%, var(--ac-body-lo, #22262a));
           box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.25), 0 2px 4px rgba(0, 0, 0, 0.18);
@@ -9547,8 +9564,9 @@ const ILLUSTRATION_CSS = {
         .scr-led { width: 2.4px; height: 2.4px; border-radius: 50%; background: #3a3f46; }
         .machine.mode-standby .scr-led { background: #ff3b30; box-shadow: 0 0 3px #ff3b30; }
         .machine.scr-lit .scr-led { background: transparent; }
-        .machine.scr-computer.mode-standby .scr-led { background: #ffb300; box-shadow: 0 0 3px #ffb300; animation: scr-breathe 2.4s ease-in-out infinite; animation-delay: var(--anim-offset, 0s); }
-        .machine.scr-computer.scr-lit .scr-led { background: #e3f2fd; box-shadow: 0 0 3px #90caf9; }
+        .machine.scr-laptop.mode-standby .scr-led, .machine.scr-computer.mode-standby .scr-led { background: #ffb300; box-shadow: 0 0 3px #ffb300; animation: scr-breathe 2.4s ease-in-out infinite; animation-delay: var(--anim-offset, 0s); }
+        .machine.scr-computer.scr-lit .scr-led, .machine.scr-laptop.scr-lit .scr-led { background: #e3f2fd; box-shadow: 0 0 3px #90caf9; }
+        .machine.scr-laptop.charging:not(.scr-lit) .scr-led { background: #ffb300; box-shadow: 0 0 3px #ffb300; }
         .machine.scr-computer.tw-on .scr-led { background: #e3f2fd; box-shadow: 0 0 3px #90caf9; animation-name: none; }
         .machine.scr-computer.tw-off .scr-led { background: #3a3f46; box-shadow: none; animation-name: none; }
         .scr-badge { position: absolute; z-index: 6; right: 4%; bottom: 6%; width: 16%; max-width: 9px; opacity: 0.9; display: none; }
@@ -11857,6 +11875,16 @@ function screenHtml(cls, sc) {
     body = box("scr-bezel", 2, 26, 64, 42) + `<div class="scr-glass" style="left: 5px; top: 29px; width: 58px; height: 35px">${glassInner}</div>`
       + box("scr-neck", 30, 68, 8, 13) + box("scr-base", 20, 80, 28, 4) + box("scr-tower", 72, 34, 20, 50)
       + box("scr-slot", 75, 40, 14, 1.5) + box("scr-slot", 75, 44, 14, 1.5) + box("scr-led", 80.8, 76, 2.4, 2.4);
+  } else if (layout === "laptop") {
+    // A laptop open on the desk: its lid upright with the screen, the
+    // keyboard and the trackpad on the deck seen from above, a light on the
+    // front edge, and its cable while it charges.
+    body = box("lap-shadow", 4, 82, 88, 6) + box("scr-bezel lap-lid", 16, 26, 64, 41)
+      + `<div class="scr-glass" style="left: 19px; top: 29px; width: 58px; height: 35.5px">${glassInner}</div>`
+      + box("lap-cam", 47.4, 27.1, 1.2, 1.2) + box("lap-hinge", 16, 67, 64, 1.6)
+      + box("lap-deck", 6, 68.4, 84, 14) + box("lap-keys", 14.5, 69.6, 67, 7.4) + box("lap-pad", 38, 77.6, 20, 3.6)
+      + box("lap-edge", 6, 82.4, 84, 2.4) + box("lap-notch", 42, 82.4, 12, 0.9) + box("scr-led", 12, 82.9, 2, 1.2)
+      + (sc.charging ? box("lap-cable", 90, 79, 6, 1.4) + `<svg class="tab-bolt" viewBox="0 0 10 14" style="left: 88px; top: 71px"><path d="M6 0 0 8h4l-1 6 6-8H5z"/></svg>` : "");
   } else if (tablet) {
     // A wall tablet, drawn on its patch of wall (#62): flat on its mount, in
     // a wooden frame like a picture, or upright with a light bar on top. Its
@@ -15794,7 +15822,7 @@ class ApplianceCard extends HTMLElement {
       }
       // A new picture each time the screen comes on, unless one was chosen.
       const lit = SCREEN_LIT.includes(mode);
-      const pool = tablet ? SCREEN_TAB_IMAGES : layout === "computer" ? SCREEN_PC_IMAGES : SCREEN_TV_IMAGES;
+      const pool = tablet ? SCREEN_TAB_IMAGES : layout === "computer" || layout === "laptop" ? SCREEN_PC_IMAGES : SCREEN_TV_IMAGES;
       if (SCREEN_IMAGES.includes(cfg.screen_image)) this._screenImage = cfg.screen_image;
       else if (lit && (!this._screenLit || !pool.includes(this._screenImage))) {
         this._screenImage = pool[Math.floor(Math.random() * pool.length)];
@@ -15810,7 +15838,9 @@ class ApplianceCard extends HTMLElement {
         ? String(shot.attributes.entity_picture) : "";
       const pic = (mode === "playing" || mode === "paused") && a.entity_picture ? String(a.entity_picture) : shotPic;
       const cover = pic && this._hass && typeof this._hass.hassUrl === "function" ? this._hass.hassUrl(pic) : pic;
-      const charging = tablet && screenCharging(hass, cfg.charging_entity);
+      // A laptop runs on its battery and charges on its cable, as a tablet.
+      const laptop = layout === "laptop";
+      const charging = (tablet || laptop) && screenCharging(hass, cfg.charging_entity);
       if (power !== null && !cfg.state_show_raw) {
         stateLabel = t(hass, tablet && mode === "off" ? "screen_dark" : SCREEN_LABELS[mode]);
         if (charging) stateLabel += ` \u00b7 ${t(hass, "tab_charging")}`;
@@ -15867,10 +15897,10 @@ class ApplianceCard extends HTMLElement {
           }
         }
       }
-      const battery = tablet && cfg.battery_entity ? numericState(hass, cfg.battery_entity) : null;
+      const battery = (tablet || laptop) && cfg.battery_entity ? numericState(hass, cfg.battery_entity) : null;
       screen = {
         tower,
-        mode, layout, image: this._screenImage || pool[0], cover, muted, tablet, charging, battery,
+        mode, layout, image: this._screenImage || pool[0], cover, muted, tablet, laptop, charging, battery,
         seen: tablet && camOn(hass, cfg.motion_entity),
         clock: mode === "saver" ? feederClock(hass) : "",
         date: mode === "saver" ? new Date(Date.now()).toLocaleDateString(lang(hass), { weekday: "short", day: "numeric", month: "short" }).toUpperCase() : "",
@@ -17275,7 +17305,7 @@ class ApplianceCard extends HTMLElement {
     // A wall tablet always has it there (#62), as its battery is all a
     // glance at it needs.
     const batt = robot ? (cfg.battery_corner && robot.mode !== "unav" ? { pct: robot.battery, charging: robot.mode === "charging" } : null)
-      : screen && screen.tablet ? { pct: screen.battery, charging: screen.charging } : null;
+      : screen && (screen.tablet || screen.laptop) ? { pct: screen.battery, charging: screen.charging } : null;
     const battSide = batt && batt.pct !== null
       ? (lightBadgeHtml || doorSide === "left" ? "right" : "left") : "";
     const battBadgeHtml = battSide

@@ -8846,7 +8846,7 @@ check('borne : ni un statut reconnu', evMode(evR('SuspendedEVSE', { power_entity
   const tv = (w, sw = 'on', extra = {}) => ({ 'switch.tv': { state: sw, attributes: {} },
     'sensor.tv_w': { state: String(w), attributes: { unit_of_measurement: 'W' } }, ...extra });
   const scMode = h => (/\bmode-(\w+)/.exec(machineCls(h)) || [, null])[1];
-  const scLayout = h => (/\bscr-(tv_feet|tv_stand|tv_wall|projector|computer)\b/.exec(machineCls(h)) || [, null])[1];
+  const scLayout = h => (/\bscr-(tv_feet|tv_stand|tv_wall|projector|computer|laptop)\b/.exec(machineCls(h)) || [, null])[1];
   const scImage = h => (/<div class="si-(\w+)"/.exec(h) || [, null])[1];
   // The plug alone.
   check('ecran : 0 W, eteint', scMode(render(SC, tv(0))), 'off');
@@ -8871,7 +8871,7 @@ check('borne : ni un statut reconnu', evMode(evR('SuspendedEVSE', { power_entity
   check('ecran : en veille, pas d image', /\bscr-lit\b/.test(machineCls(render(SC, tv(17)))), false);
   check('ecran : en veille, aucune image dessinee', scImage(render(SC, tv(17))), null);
   check('ecran : sur pieds par defaut', scLayout(render(SC, tv(142))), 'tv_feet');
-  for (const l of ['tv_feet', 'tv_stand', 'tv_wall', 'projector', 'computer'])
+  for (const l of ['tv_feet', 'tv_stand', 'tv_wall', 'projector', 'computer', 'laptop'])
     check(`ecran : modele ${l}`, scLayout(render({ ...SC, screen_layout: l }, tv(142))), l);
   check('ecran : modele inconnu, sur pieds', scLayout(render({ ...SC, screen_layout: 'x' }, tv(142))), 'tv_feet');
   check('ecran : sur pieds, deux pieds', (render(SC, tv(142)).match(/class="scr-foot /g) || []).length, 2);
@@ -8978,6 +8978,32 @@ check('borne : ni un statut reconnu', evMode(evR('SuspendedEVSE', { power_entity
   check('detection ecran : un lecteur designe un ecran', /scr-/.test(machineCls(render({ state_entity: 'switch.x', media_entity: 'media_player.lg' }, { 'switch.x': { state: 'on', attributes: {} }, ...lg('on') }))), true);
   check('detection ecran : le nom dit projecteur', scLayout(render({ appliance_type: 'screen', state_entity: 'switch.videoprojecteur' }, { 'switch.videoprojecteur': { state: 'on', attributes: {} } })), 'projector');
   check('detection ecran : le nom dit ordinateur', scLayout(render({ appliance_type: 'screen', state_entity: 'switch.pc_bureau' }, { 'switch.pc_bureau': { state: 'on', attributes: {} } })), 'computer');
+  // A laptop: by its name, its battery and its cable as a tablet's.
+  const lapOn = (id, attrs = {}) => scLayout(render({ appliance_type: 'screen', state_entity: id }, { [id]: { state: 'on', attributes: attrs } }));
+  for (const id of ['switch.macbook_pro', 'binary_sensor.laptop_bureau', 'switch.pc_portable', 'device_tracker.thinkpad', 'switch.ordinateur_portable', 'switch.notebook'])
+    check(`detection portable : ${id}`, lapOn(id), 'laptop');
+  check('detection portable : par le nom affiche', lapOn('binary_sensor.x', { friendly_name: 'MacBook Air de Lea' }), 'laptop');
+  check('detection portable : un telephone portable n en est pas un', lapOn('switch.telephone_portable'), 'tv_feet');
+  check('detection portable : l ordinateur de bureau reste un ordinateur', lapOn('switch.ordinateur'), 'computer');
+  check('detection portable : le nom l emporte sur un verrou', scLayout(render({ ...PC, screen_layout: undefined, state_entity: 'switch.macbook' }, { 'switch.macbook': { state: 'on', attributes: {} }, 'sensor.lock': { state: 'Unlocked', attributes: {} } })), 'laptop');
+  const LAP = { appliance_type: 'screen', screen_layout: 'laptop', state_entity: 'binary_sensor.l', battery_entity: 'sensor.b', charging_entity: 'binary_sensor.c' };
+  const lapSt = (c = 'on') => ({ 'binary_sensor.l': { state: 'on', attributes: {} }, 'sensor.b': { state: '64', attributes: { unit_of_measurement: '%' } }, 'binary_sensor.c': { state: c, attributes: {} } });
+  const lapH = render(LAP, lapSt());
+  check('portable : le clavier et le pave', /class="lap-keys"[\s\S]*class="lap-pad"/.test(lapH), true);
+  check('portable : pas de tour', /class="scr-tower"/.test(lapH), false);
+  check('portable : la batterie en coin', /class="batt-badge [^"]*"[^>]*>[\s\S]*?<span>64 %<\/span>/.test(lapH), true);
+  check('portable : en charge se dit', stateLine(lapH), 'On \u00b7 charging');
+  check('portable : le cable en charge', /class="lap-cable"/.test(lapH), true);
+  check('portable : pas de cable sans charge', /class="lap-cable"/.test(render(LAP, lapSt('off'))), false);
+  check('portable : une image d ordinateur', ['desktop', 'code', 'pong'].includes(scImage(lapH)), true);
+  check('portable : dessine plus grand', /width: calc\(153\.6px \* var\(--scr-fit, 1\)\); height: calc\(102\.4px/.test(mSize(lapH)), true);
+  check('ordinateur : pas de batterie en coin', /class="batt-badge/.test(render({ ...LAP, screen_layout: 'computer' }, lapSt())), false);
+  const edLap = markup(newEditor(LAP));
+  check('editeur portable : la charge', edLap.includes('data-toggle="charging_entity"'), true);
+  check('editeur portable : la batterie', edLap.includes('data-toggle="battery_entity"'), true);
+  check('editeur portable : pas de tour', edLap.includes('data-toggle="tower_entity"'), false);
+  check('editeur portable : pas d economiseur', edLap.includes('data-toggle="screensaver_entity"'), false);
+  check('editeur ordinateur : pas de charge', markup(newEditor({ ...LAP, screen_layout: 'computer' })).includes('data-toggle="charging_entity"'), false);
   check('detection ecran : un verrou dit ordinateur', scLayout(render(PC, { ...tv(64), 'sensor.lock': { state: 'Unlocked', attributes: {} } })), 'computer');
   // Editor.
   const ed = newEditor({ state_entity: 'switch.tv', appliance_type: 'screen', power_entity: 'sensor.tv_w' });
@@ -10710,7 +10736,9 @@ check('borne : ni un statut reconnu', evMode(evR('SuspendedEVSE', { power_entity
   check('laveur : en utilisation, hors de la base', stateLine(fw('in_operation')), 'Off the base');
   check('laveur : autonettoyage', stateLine(fw('self_cleaning')), 'Self-cleaning');
   check('laveur : autonettoyage meme quand la station consomme', stateLine(fw('self_cleaning', { power_entity: 'sensor.w' }, { 'sensor.w': W(45) })), 'Self-cleaning');
-  check('hors base : la feuille de style cache l\'aspirateur', /\.rbt-m-away \.stk-mach\{display:none\}/.test(stk(0)), true);
+  // Off its base it stays drawn, greyed like a parked ride, not gone.
+  check('hors base : l\'aspirateur reste dessine, grise', /\.rbt-m-away \.stk-mach\{opacity:\.5;filter:grayscale\(1\)\}/.test(stk(0)), true);
+  check('hors base : il n\'est plus cache', /\.rbt-m-away \.stk-mach\{display:none\}/.test(stk(0)), false);
   check('laveur : les bulles de l\'autonettoyage', machineCls(fw('self_cleaning')).includes('rbt-m-washing'), true);
   check('laveur : eau sale pleine', stateLine(fw('idle', { robot_bin_entity: 'sensor.waste' }, { 'sensor.waste': s('full') })), 'Dirty water tank full');
   check('laveur : eau sale propre', stateLine(fw('idle', { robot_bin_entity: 'sensor.waste' }, { 'sensor.waste': s('clean') })), 'Charged');

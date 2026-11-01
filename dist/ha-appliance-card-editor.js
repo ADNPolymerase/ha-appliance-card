@@ -95,7 +95,7 @@ const SECTIONS = [
   // A wall tablet (#62): its screensaver, its charger, what it sees, the page
   // it shows, its brightness, when it was last touched, and a reload.
   { field: "screensaver_entity", types: ["screen"], labelKey: "section_screensaver", includeDomains: ["switch", "binary_sensor", "input_boolean"], when: (c) => screenIsTablet(c) },
-  { field: "charging_entity", types: ["screen"], labelKey: "section_tab_charging", includeDomains: ["binary_sensor", "sensor", "switch", "input_boolean"], when: (c) => screenIsTablet(c) },
+  { field: "charging_entity", types: ["screen"], labelKey: "section_tab_charging", includeDomains: ["binary_sensor", "sensor", "switch", "input_boolean"], when: (c) => screenIsTablet(c) || screenLayoutOf(c) === "laptop" },
   { field: "motion_entity", types: ["screen"], labelKey: "section_motion", includeDomains: ["binary_sensor", "sensor"], when: (c) => screenIsTablet(c) },
   { field: "url_entity", types: ["screen"], labelKey: "section_tab_page", includeDomains: ["sensor"], when: (c) => screenIsTablet(c) },
   { field: "brightness_entity", types: ["screen"], labelKey: "section_tab_brightness", includeDomains: ["number", "sensor", "light", "input_number"], when: (c) => screenIsTablet(c) },
@@ -210,7 +210,7 @@ const SECTIONS = [
   { field: "front_door_entity", types: ["mailbox"], labelKey: "mb_front_door", includeDomains: ["binary_sensor", "sensor", "input_boolean", "switch"] },
   { field: "back_door_entity", types: ["mailbox"], labelKey: "mb_back_door", includeDomains: ["binary_sensor", "sensor", "input_boolean", "switch"] },
   { field: "battery_entity", types: ["robot", "home_battery", "ups", "camera", "screen", "mobility"], labelKey: "section_battery", includeDomains: ["sensor"],
-    when: (c) => !(c.appliance_type === "screen" || SCREEN_ONLY_FIELDS.some((f) => c[f])) || screenIsTablet(c), extra: (c) =>
+    when: (c) => !(c.appliance_type === "screen" || SCREEN_ONLY_FIELDS.some((f) => c[f])) || screenIsTablet(c) || screenLayoutOf(c) === "laptop", extra: (c) =>
       (caps(c._currentType()).ups ? c._row("ups_battery_low", "battery_low", { placeholder: String(UPS_BATTERY_LOW) }) : "") },
   // A UPS: the time left on its battery, its load and the mains voltage.
   { field: "runtime_entity", types: ["ups"], labelKey: "section_ups_runtime", includeDomains: ["sensor"] },

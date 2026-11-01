@@ -1408,6 +1408,10 @@ const scrCard = (name, layout, image, watts) => () => card({ name, appliance_typ
 const scrTv = scrCard(L("Living room TV", "Télé du salon"), "tv_stand", "football", 85);
 const scrProjector = scrCard(L("Projector", "Vidéoprojecteur"), "projector", "space", 210);
 const scrComputer = scrCard(L("Office computer", "Ordinateur du bureau"), "computer", "code", 64);
+// A laptop on its charger, its battery in the corner.
+const scrLaptop = () => card({ name: "MacBook", appliance_type: "screen", screen_layout: "laptop", screen_image: "desktop",
+  state_entity: "binary_sensor.macbook_active", battery_entity: "sensor.macbook_battery", charging_entity: "binary_sensor.macbook_charging" },
+  [st("binary_sensor.macbook_active", "on"), st("sensor.macbook_battery", 72, { unit_of_measurement: "%" }), st("binary_sensor.macbook_charging", "on")]);
 const tabCard = (name, layout, saver, plugged, motion, battery) => () => card({ name, appliance_type: "screen", screen_layout: layout,
   state_entity: "switch.tab_screen", screensaver_entity: "switch.tab_saver", charging_entity: "binary_sensor.tab_plugged",
   motion_entity: "binary_sensor.tab_motion", battery_entity: "sensor.tab_battery", url_entity: "sensor.tab_page" },
@@ -1461,7 +1465,7 @@ const EXTRA = { iron, coffee_black: coffeeBlack, boiler_window: boilerWindow, bo
                 net_nas1: netBays(1, ["normal"], L("NAS, 1 bay", "NAS 1 baie")),
                 net_nas2: netBays(2, ["normal", null], L("NAS, 2 bays, 1 disk", "NAS 2 baies, 1 disque")),
                 net_nas4: netBays(4, ["normal", "normal", "normal", "warning"], L("NAS, 4 bays", "NAS 4 baies")),
-                scr_tv: scrTv, scr_projector: scrProjector, scr_computer: scrComputer,
+                scr_tv: scrTv, scr_projector: scrProjector, scr_computer: scrComputer, scr_laptop: scrLaptop,
                 tab_wall: tabWall, tab_frame: tabFrame, tab_portrait: tabPortrait, hd_hot: hdHot, hd_ring: hdRing };
 // ?view=live: the public demo, linked from the README. Every family under
 // its own title, a grid that fits a phone, the language and the theme to
@@ -1509,7 +1513,7 @@ function liveGallery() {
     [L("Pool", "Piscine"), [poolRunning, poolChlorine, poolBackwash, poolFrost, poolLight, poolError]],
     [L("Energy", "Énergie"), [solarDay, solarRoof, solarNight, batteryCharging, batteryStation, batteryLow, evCharger, evDischarging]],
     [L("Network and servers", "Réseau et serveurs"), [netSwitch, netRouter("on"), netNas, netServer, netRack, upsOnline, upsBattery, upsLow]],
-    [L("Screens and tablets", "Écrans et tablettes"), [scrTv, scrProjector, scrComputer, tabWall, tabFrame, tabPortrait]],
+    [L("Screens and tablets", "Écrans et tablettes"), [scrTv, scrProjector, scrComputer, scrLaptop, tabWall, tabFrame, tabPortrait]],
     [L("Home and media", "Maison et multimédia"), [hdHot, hdRing, printer3d, scaleFresh, scaleGoal]],
     [L("Diffusers and ventilation", "Diffuseurs et ventilation"), [difDrop, difCone, difStone, difFlame, difNebulizer, hrvDiagram, hrvOneDuct, hrvPair, hrvBypass]],
     [L("Cameras", "Cam\u00e9ras"), [camIndoor, camTube, camOutdoor, camDome, camPrivacy, camOffline]],
