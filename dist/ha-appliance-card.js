@@ -157,7 +157,7 @@ const T = {
     layout_robot_stick: "Stick vacuum", stick_charged: "Charged",
     layout_robot_floor_washer: "Floor washer", stick_away: "Off the base", stick_away_threshold: "Off the base below this power (W)",
     type_diffuser: "Essential oil diffuser", dif_mist: "Diffusing", dif_inter: "Intermittent", dif_low: "Light mist", dif_empty: "Tank empty", dif_mode: "Mist mode", layout_dif_drop: "Teardrop", layout_dif_cone: "Cone", layout_dif_stone: "Pebble", layout_dif_flame: "Flame", layout_dif_nebulizer: "Nebulizer", section_tank_empty: "Empty tank sensor", type_hrv: "Heat recovery ventilation (HRV/ERV)", hrv_run: "Ventilating", hrv_boost: "Boost", hrv_bypass: "Bypass", hrv_defrost: "Defrosting", hrv_filter: "Replace filter", hrv_away: "Away", hrv_recirc: "Recirculation", hrv_humidity: "Humidity control", hrv_inter: "Intermittent", hrv_inter_paused: "Intermittent, paused", hrv_mode: "Mode", section_active_mode: "Active mode (when it differs from the one set)", hrv_supply_fan: "Supply fan", hrv_exhaust_fan: "Exhaust fan", section_supply_fan: "Supply fan speed (rpm)", section_exhaust_fan: "Exhaust fan speed (rpm)", fan_max_rpm: "Fan top speed (rpm)", section_exhaust_airflow: "Exhaust airflow", section_target_humidity: "Humidity setpoint", section_humidity_control: "Humidity control switch", layout_hrv_diagram: "Air flows", layout_hrv_one_duct: "Wall unit, one duct", layout_hrv_pair: "Through-wall pair", section_supply_temperature: "Supply air temperature", section_extract_temperature: "Extract air temperature", section_exhaust_temperature: "Exhaust air temperature", section_bypass: "Bypass", section_airflow: "Airflow", hrv_t_outdoor: "fresh air", hrv_t_supply: "supply", hrv_t_extract: "extract", hrv_t_exhaust: "exhaust", hrv_outside: "outside", hrv_room: "room",
-    type_camera: "Camera", cam_idle: "Idle", cam_live: "Streaming", cam_rec: "Recording", cam_motion: "Motion detected", cam_off: "Off", cam_line_last_motion: "Last motion", cam_line_night: "Night vision", cam_line_signal: "Signal", section_motion: "Motion sensor", section_recording: "Recording sensor", section_night_vision: "Night vision", section_privacy: "Privacy mode", section_signal: "Signal strength", layout_cam_indoor: "Indoor, pan and tilt", layout_cam_tube: "Indoor tube", layout_cam_outdoor: "Outdoor", layout_cam_dome: "Dome", layout_cam_doorbell: "Doorbell", cam_ring: "Ringing", cam_line_last_ring: "Last ring", section_ring: "Doorbell button", type_mailbox: "Mailbox", mb_empty: "Empty", mb_mail: "Mail", mb_front_open: "Front door open", mb_back_open: "Back door open", mb_line_count: "Mail received", mb_line_last: "Last mail", mb_front_door: "Front door", mb_back_door: "Back door", mb_open: "Open", mb_closed: "Closed", section_mail_count: "Mail counter", layout_mb_through: "Through the wall", layout_mb_classic: "Classic", mb_street: "street", mb_house: "house", mb_front_side: "Street side", mb_side_left: "Left", mb_side_right: "Right", type_water_pump: "Water pump", type_floor_heating: "Underfloor heating", type_spa: "Spa", type_sauna: "Sauna", type_aquarium: "Aquarium", type_meter: "Electricity meter", type_christmas_tree: "Christmas tree", layout_chest: "Chest freezer", layout_drawers: "Drawer freezer", layout_pump_booster: "Booster set", layout_pump_sump: "Sump pump", layout_floor_water: "Hot water", layout_floor_electric: "Electric", layout_robot_pool: "Pool robot", wp_pumping: "Pumping", wp_high: "High level", spa_bubbles: "Bubbles", sauna_ready: "Ready", aq_lit: "Light on", aq_dark: "Light off", meter_low: "Low use", meter_high: "High use", layout_meter_linky: "Linky", layout_meter_box: "Electricity meter", layout_meter_dome: "Round meter", layout_meter_gas: "Gas meter", layout_meter_water: "Water meter", section_today_use: "Today's use (kWh, m\u00b3)", section_meter_index: "Meter index", meter_index: "Index", meter_flowing: "In use", meter_idle: "No use", meter_flow: "Flow", section_pressure: "Pressure", section_water_level: "Water level", section_high_level: "High level alarm", level_max: "Level when full", section_bubbles: "Bubbles", section_tariff: "Tariff period", high_power: "High use from (W or VA)", tree_palette: "Colours", palette_multicolor: "Multicolour", palette_red_gold: "Red and gold", palette_red_silver: "Red and silver", palette_gold_silver: "Gold and silver", palette_blue_silver: "Blue and silver", palette_white_silver: "White and silver", palette_red_green: "Red and green", presents: "Presents", presents_auto: "On 24 and 25 December", presents_show: "Always", presents_hide: "Never", tree_on: "On", tree_off: "Off",
+    type_camera: "Camera", cam_idle: "Idle", cam_live: "Streaming", cam_rec: "Recording", cam_motion: "Motion detected", cam_off: "Off", cam_line_last_motion: "Last motion", cam_line_night: "Night vision", cam_line_signal: "Signal", section_motion: "Motion sensor", section_recording: "Recording sensor", section_night_vision: "Night vision", section_privacy: "Privacy mode", section_signal: "Signal strength", layout_cam_indoor: "Indoor, pan and tilt", layout_cam_tube: "Indoor tube", layout_cam_outdoor: "Outdoor", layout_cam_dome: "Dome", layout_cam_doorbell: "Doorbell", cam_ring: "Ringing", cam_line_last_ring: "Last ring", section_ring: "Doorbell button", type_mailbox: "Mailbox", mb_empty: "Empty", mb_mail: "Mail", mb_front_open: "Front door open", mb_back_open: "Back door open", mb_line_count: "Mail received", mb_line_last: "Last mail", mb_front_door: "Front door", mb_back_door: "Back door", mb_open: "Open", mb_closed: "Closed", section_mail_count: "Mail counter", layout_mb_through: "Through the wall", layout_mb_classic: "Classic", mb_street: "street", mb_house: "house", mb_front_side: "Street side", mb_side_left: "Left", mb_side_right: "Right", type_water_pump: "Water pump", type_floor_heating: "Underfloor heating", type_spa: "Spa", type_sauna: "Sauna", type_aquarium: "Aquarium", type_meter: "Electricity meter", type_christmas_tree: "Christmas tree", layout_chest: "Chest freezer", layout_drawers: "Drawer freezer", layout_pump_booster: "Booster set", layout_pump_sump: "Sump pump", layout_floor_water: "Hot water", layout_floor_electric: "Electric", layout_robot_pool: "Pool robot", wp_pumping: "Pumping", wp_high: "High level", spa_bubbles: "Bubbles", sauna_ready: "Ready", aq_lit: "Light on", aq_dark: "Light off", meter_low: "Low use", meter_high: "High use", layout_meter_linky: "Linky", layout_meter_box: "Electricity meter", layout_meter_dome: "Round meter", layout_meter_gas: "Gas meter", layout_meter_water: "Water meter", section_today_use: "Today's use (kWh, m\u00b3)", section_meter_index: "Meter index", meter_index: "Index", meter_flowing: "In use", meter_idle: "No use", meter_export: "Feeding in", meter_export_index: "Export index", meter_direction: "Power direction", meter_dir_auto: "Auto (negative = feed-in)", meter_dir_import: "Consumption only", meter_dir_export: "Feed-in only", meter_flow: "Flow", section_pressure: "Pressure", section_water_level: "Water level", section_high_level: "High level alarm", level_max: "Level when full", section_bubbles: "Bubbles", section_tariff: "Tariff period", high_power: "High use from (W or VA)", tree_palette: "Colours", palette_multicolor: "Multicolour", palette_red_gold: "Red and gold", palette_red_silver: "Red and silver", palette_gold_silver: "Gold and silver", palette_blue_silver: "Blue and silver", palette_white_silver: "White and silver", palette_red_green: "Red and green", presents: "Presents", presents_auto: "On 24 and 25 December", presents_show: "Always", presents_hide: "Never", tree_on: "On", tree_off: "Off",
     type_lamp: "Lamp", lamp_off: "Off", lamp_on: "On", lamp_line_brightness: "Brightness", lamp_line_color_temp: "Colour temperature", lamp_line_effect: "Effect", lamp_timer: "Timer", show_toggle: "On/off button", line_hide: "Hide this line", line_show: "Show this line", illustration_tap_action: "Tap on the drawing", pic_tap_default: "Card's own", pic_tap_toggle: "Toggle", pic_tap_more: "Details", pic_tap_none: "Nothing", lamp_spots: "Number of spots", layout_lamp_bulb: "Bulb", layout_lamp_bedside: "Bedside lamp", layout_lamp_floor: "Arc floor lamp", layout_lamp_torch: "Torchiere", layout_lamp_pendant: "Pendant", layout_lamp_strip: "LED strip", layout_lamp_spot: "Recessed spots", layout_lamp_panels: "Light panels", layout_lamp_desk: "Desk lamp", layout_lamp_wall: "Wall lantern",
     speed_power_max: "Power at top speed (W)", speed_power_custom: "Custom speed thresholds", speed_power_2: "Speed 2 from (W)", speed_power_3: "Speed 3 from (W)",
     fw_self_cleaning: "Self-cleaning", fw_dirty_full: "Dirty water tank full", fw_clean_empty: "Clean water tank empty",
@@ -5211,7 +5211,7 @@ const NT_ONLY_FIELDS = {
   spa: ["bubbles_entity"],
   christmas_tree: ["tree_palette", "presents"],
   mobility: ["mobility_layout"],
-  meter: ["tariff_entity", "high_power", "meter_layout", "today_entity", "total_entity"],
+  meter: ["tariff_entity", "high_power", "meter_layout", "today_entity", "total_entity", "export_total_entity", "meter_direction"],
 };
 // By name, in the languages the card speaks; "whirlpool" is left out, it is a
 // maker of washing machines too.
@@ -5671,6 +5671,12 @@ ${c.lcd ? `<rect x="71" y="64" width="31" height="13" rx="2" fill="#eceff1" stro
 }
 
 // Linky meter on its wall
+// The meter's pulse LED: red on what is drawn, green on what is fed in (#77),
+// and the arrow that points back to the grid.
+function ntPulse(c) { return c.exp ? "#00e676" : "#ff1744"; }
+function ntExportArrow(x, y) {
+  return `<path d="M${x} ${y} l3.6 -2.6 v1.6 h4 v2 h-4 v1.6 Z" fill="#2e7d32"/>`;
+}
 function ntLinky(c) {
   const b = ntId(), cv = ntId(), sc = ntId(), sh = ntId();
   const val = c.lcd || "";
@@ -5685,7 +5691,7 @@ ${c.tariff ? `<text x="78.5" y="23.4" font-size="4.6" text-anchor="end" fill="#1
 <text x="60" y="35.4" font-size="${ntFit(val, 42, 10).toFixed(1)}" font-weight="700" text-anchor="middle" fill="#1f2a18" ${NT_FONT}>${esc(val)}</text>
 <circle cx="45" cy="50" r="3.6" fill="#eef3c7" stroke="#8c9a24" stroke-width=".6"/><path d="M43.2 50h3.6M45 48.2v3.6" stroke="#4b5320" stroke-width=".7"/>
 <circle cx="56" cy="50" r="3.6" fill="#eef3c7" stroke="#8c9a24" stroke-width=".6"/><path d="M54.2 50h3.6" stroke="#4b5320" stroke-width=".7"/>
-<circle cx="74" cy="50" r="2.4" fill="#5d1010"/>${c.unav ? "" : `<circle class="${c.heavy ? "nta-blinkfast" : "nta-blink"}" cx="74" cy="50" r="2.4" fill="#ff1744"/>`}
+<circle cx="74" cy="50" r="2.4" fill="${c.exp ? "#0d3d1a" : "#5d1010"}"/>${c.unav || c.still ? "" : `<circle class="${c.heavy ? "nta-blinkfast" : "nta-blink"}" cx="74" cy="50" r="2.4" fill="${ntPulse(c)}"/>`}${c.exp ? ntExportArrow(62.4, 50) : ""}
 <text x="74" y="57.4" font-size="3.6" text-anchor="middle" fill="#4b5320" ${NT_FONT}>1 Wh</text>
 <path d="M32 62 H88" stroke="#8c9a24" stroke-width=".7"/>
 <rect x="34" y="64" width="52" height="40" rx="4" fill="url(#${cv})"/>
@@ -5732,7 +5738,7 @@ function ntMeterBox(c) {
 <rect x="35" y="15" width="50" height="30" rx="2.6" fill="#3c4550"/>
 ${ntLcd(37, 17, 46, 17, c.lcd, !c.unav, "#9be7ff", ntFit(c.lcd, 46, 10))}
 ${c.today ? `<text x="60" y="41.4" font-size="${ntFit(c.today, 44, 5).toFixed(1)}" text-anchor="middle" fill="#c8d2dc" ${NT_FONT}>${esc(c.today)}</text>` : ""}
-<circle cx="42" cy="54" r="2.4" fill="#4a1010"/>${c.unav ? "" : `<circle class="${c.heavy ? "nta-blinkfast" : "nta-blink"}" cx="42" cy="54" r="2.4" fill="#ff1744"/>`}
+<circle cx="42" cy="54" r="2.4" fill="${c.exp ? "#0d3d1a" : "#4a1010"}"/>${c.unav || c.still ? "" : `<circle class="${c.heavy ? "nta-blinkfast" : "nta-blink"}" cx="42" cy="54" r="2.4" fill="${ntPulse(c)}"/>`}${c.exp ? ntExportArrow(47.4, 54) : ""}
 <text x="42" y="61" font-size="3.4" text-anchor="middle" fill="#5d6773" ${NT_FONT}>imp/kWh</text>
 <rect x="64" y="51" width="8" height="5" rx="2.5" fill="#9aa4ae"/><rect x="75" y="51" width="8" height="5" rx="2.5" fill="#9aa4ae"/>
 <rect x="38" y="66" width="44" height="24" rx="2" fill="#e9edf0" stroke="#b9c1c9" stroke-width=".5"/>
@@ -5756,7 +5762,7 @@ function ntMeterDome(c) {
 <text x="60" y="43" font-size="3" text-anchor="middle" fill="#6b7580" ${NT_FONT}>CL200  240V  3W</text>
 ${ntLcd(44, 46, 32, 14, c.lcd, !c.unav, "#9be7ff", ntFit(c.lcd, 32, 8))}
 ${c.today ? `<text x="60" y="68" font-size="${ntFit(c.today, 40, 4.4).toFixed(1)}" text-anchor="middle" fill="#37414b" ${NT_FONT}>${esc(c.today)}</text>` : ""}
-<rect x="57.4" y="72" width="5.2" height="2.6" rx=".6" fill="#3b1010"/>${c.unav ? "" : `<rect class="${c.heavy ? "nta-blinkfast" : "nta-blink"}" x="57.4" y="72" width="5.2" height="2.6" rx=".6" fill="#ff1744"/>`}
+<rect x="57.4" y="72" width="5.2" height="2.6" rx=".6" fill="${c.exp ? "#0d3d1a" : "#3b1010"}"/>${c.unav || c.still ? "" : `<rect class="${c.heavy ? "nta-blinkfast" : "nta-blink"}" x="57.4" y="72" width="5.2" height="2.6" rx=".6" fill="${ntPulse(c)}"/>`}${c.exp ? ntExportArrow(64.4, 73.3) : ""}
 <circle cx="60" cy="56" r="27" fill="url(#${gl})"/>
 <path d="M41 40 A24 24 0 0 1 58 31" stroke="#fff" stroke-width="2.2" fill="none" opacity=".7" stroke-linecap="round"/>
 <rect x="54" y="106" width="12" height="16" fill="#8a949d"/><rect x="52" y="104" width="16" height="4" rx="1" fill="#7a848d"/>`;
@@ -6234,14 +6240,33 @@ function ntReadOf(type, hass, cfg, st, watts, threshold) {
     const tariffSt = cfg.tariff_entity ? stateObj(hass, cfg.tariff_entity) : null;
     const tariff = tariffSt && !["unknown", "unavailable"].includes(String(tariffSt.state)) ? String(tariffSt.state) : "";
     if (tariff) lines.push({ key: "meter_tariff", icon: "mdi:clock-time-four-outline", label: t(hass, "section_tariff"), value: tariff, entity: cfg.tariff_entity });
+    // Which way the power flows (#77): below zero it feeds in, as most smart
+    // meter readers report it, unless the meter is set to one direction; at
+    // zero nothing is used.
+    const direction = ["import", "export"].includes(cfg.meter_direction) ? cfg.meter_direction : "auto";
+    const flowOf = (w) => direction === "export" ? (Math.abs(w) < 1 ? "none" : "export")
+      : direction === "import" ? (w < 1 ? "none" : "import")
+      : Math.abs(w) < 1 ? "none" : w < 0 ? "export" : "import";
+    const high = parseFloat(cfg.high_power);
+    const highW = Number.isFinite(high) ? high : 3000;
+    const exportIdx = cfg.export_total_entity ? numericState(hass, cfg.export_total_entity) : null;
+    const exportLine = () => {
+      if (exportIdx === null) return;
+      const u = unitOf(hass, cfg.export_total_entity);
+      lines.push({ key: "meter_export_index", icon: "mdi:transmission-tower-export", label: t(hass, "meter_export_index"),
+        value: keepTogether(`${netNumber(hass, exportIdx, 3)}${u ? ` ${u}` : ""}`), entity: cfg.export_total_entity });
+    };
     if (layout === "linky") {
+      exportLine();
       if (v === null) return out("unav", "ev_offline", NT_COLORS.unav, { kind: "linky", on: false, unav: true, lcd: "", label: "" });
       const unit = unitOf(hass, cfg.state_entity) || "VA";
-      const high = parseFloat(cfg.high_power);
-      const heavy = v >= (Number.isFinite(high) ? high : 3000);
-      const value = `${Math.round(v)} ${unit}`;
-      return out(heavy ? "high" : "low", heavy ? "meter_high" : "meter_low", heavy ? NT_COLORS.high : NT_COLORS.idle,
-        { kind: "linky", on: true, heavy, lcd: value, label: unit.toUpperCase() === "VA" ? "PAPP" : "SINSTS", tariff: tariff.toUpperCase().slice(0, 6) });
+      const flow = flowOf(v);
+      const heavy = Math.abs(v) >= highW;
+      const value = `${Math.round(Math.abs(v))} ${unit}`;
+      const draw = { kind: "linky", on: true, heavy, still: flow === "none", exp: flow === "export", lcd: value, label: unit.toUpperCase() === "VA" ? "PAPP" : "SINSTS", tariff: tariff.toUpperCase().slice(0, 6) };
+      if (flow === "none") return out("idle", "meter_idle", NT_COLORS.idle, draw);
+      if (flow === "export") return out("export", "meter_export", NT_COLORS.lit, draw);
+      return out(heavy ? "high" : "low", heavy ? "meter_high" : "meter_low", heavy ? NT_COLORS.high : NT_COLORS.idle, draw);
     }
     const kind = `meter_${layout}`;
     if (v === null) return out("unav", "ev_offline", NT_COLORS.unav, { kind, on: false, unav: true, lcd: "", counter: indexV !== null ? String(indexV) : "", today });
@@ -6251,20 +6276,24 @@ function ntReadOf(type, hass, cfg, st, watts, threshold) {
     const unit = unitOf(hass, cfg.state_entity) || "";
     const rate = /^(m?w|kw|va|kva|.*\/(h|min|s))$/i.test(unit.replace(/\s/g, "")) || ["power", "volume_flow_rate", "apparent_power"].includes(String((st.attributes || {}).device_class || ""));
     const moved = st.last_changed ? Date.now() - Date.parse(st.last_changed) < 120000 : false;
+    const electric = layout === "box" || layout === "dome";
     const on = rate ? v > 0 : moved;
-    const text = `${netNumber(hass, v, Math.abs(v) < 10 && v % 1 ? 2 : Math.abs(v) < 100 && v % 1 ? 1 : 0)}${unit ? ` ${unit}` : ""}`;
+    // A rate below zero on an electric meter is power fed in: the display
+    // shows its size, the state says which way it goes.
+    const shown = rate && electric ? Math.abs(v) : v;
+    const text = `${netNumber(hass, shown, Math.abs(shown) < 10 && shown % 1 ? 2 : Math.abs(shown) < 100 && shown % 1 ? 1 : 0)}${unit ? ` ${unit}` : ""}`;
     const counter = indexV !== null ? String(indexV) : !rate ? String(v) : "";
     // The live reading on a line of its own, first: the power, or the flow.
+    const feeding = rate && electric && flowOf(v) === "export";
     if (rate) {
-      lines.unshift({ key: "meter_live", icon: layout === "box" || layout === "dome" ? "mdi:flash" : layout === "gas" ? "mdi:fire" : "mdi:water",
-        label: t(hass, layout === "box" || layout === "dome" ? "power" : "meter_flow"), value: keepTogether(text), entity: cfg.state_entity });
+      lines.unshift({ key: "meter_live", icon: feeding ? "mdi:transmission-tower-export" : electric ? "mdi:flash" : layout === "gas" ? "mdi:fire" : "mdi:water",
+        label: t(hass, feeding ? "meter_export" : electric ? "power" : "meter_flow"), value: keepTogether(text), entity: cfg.state_entity });
     }
     if (indexV !== null) {
       lines.push({ key: "meter_index", icon: "mdi:counter", label: t(hass, "meter_index"),
         value: keepTogether(`${netNumber(hass, indexV, 3)}${unitOf(hass, cfg.total_entity) ? ` ${unitOf(hass, cfg.total_entity)}` : ""}`), entity: cfg.total_entity });
     }
-    const electric = layout === "box" || layout === "dome";
-    const high = parseFloat(cfg.high_power);
+    if (electric) exportLine();
     // An electric meter read from its index takes its live power from the
     // power entity when there is one: the display shows it, and high use
     // is worked out from it (#68).
@@ -6274,12 +6303,15 @@ function ntReadOf(type, hass, cfg, st, watts, threshold) {
       if (p !== null) live = { v: p, unit: unitOf(hass, cfg.power_entity) || "W" };
     }
     const watts = live && electric ? (/^k(w|va)$/i.test(live.unit.replace(/\s/g, "")) ? live.v * 1000 : live.v) : null;
-    const heavy = watts !== null && watts >= (Number.isFinite(high) ? high : 3000);
-    const liveText = live && !rate ? `${netNumber(hass, live.v, Math.abs(live.v) < 10 && live.v % 1 ? 2 : 0)} ${live.unit}` : text;
+    const flow = watts !== null ? flowOf(watts) : null;
+    const heavy = watts !== null && Math.abs(watts) >= highW;
+    const liveText = live && !rate ? `${netNumber(hass, Math.abs(live.v), Math.abs(live.v) < 10 && live.v % 1 ? 2 : 0)} ${live.unit}` : text;
     const lcd = rate || electric ? liveText : "";
     // Today's use under the display, unless the display already says it.
-    const draw = { kind, on: on || (!!live && live.v > 0), heavy, lcd, counter, today: today && today !== lcd ? today : "" };
+    const draw = { kind, on: on || (!!live && live.v !== 0), heavy, still: flow === "none", exp: flow === "export", lcd, counter, today: today && today !== lcd ? today : "" };
     if (electric) {
+      if (flow === "none") return out("idle", "meter_idle", NT_COLORS.idle, draw);
+      if (flow === "export") return out("export", "meter_export", NT_COLORS.lit, draw);
       return out(heavy ? "high" : "low", heavy ? "meter_high" : "meter_low", heavy ? NT_COLORS.high : NT_COLORS.idle, draw);
     }
     return on ? out("low", "meter_flowing", NT_COLORS.run, draw) : out("idle", "meter_idle", NT_COLORS.idle, draw);

@@ -11875,6 +11875,21 @@ function tvT(w) { return { 'switch.tv': { state: 'on', attributes: {} }, 'sensor
   check('compteur : 1,25 kW, conso faible', stateLine(render(EB, ebS(1.25))), 'Low use');
   check('compteur : en W aussi', stateLine(render(EB, ebS(3600, 'W'))), 'High use');
   check('compteur rond : son dessin', kindOf(render({ ...EB, meter_layout: 'dome' }, ebS(1.25))), 'meter_dome');
+  // #77: no use at 0 W, and power fed in below zero.
+  check('compteur : 0 W, pas de consommation', stateLine(render(EB, ebS(0, 'W'))), 'No use');
+  check('compteur : 0 W, le voyant ne clignote pas', /class="nta-blink[a-z]*" cx="42"/.test(render(EB, ebS(0, 'W'))), false);
+  check('compteur : -333 W, injection', stateLine(render(EB, ebS(-333, 'W'))), 'Feeding in');
+  check('compteur : injection, la valeur sans signe sur l ecran', />333 W<\/text>/.test(render(EB, ebS(-333, 'W'))), true);
+  check('compteur : injection, la ligne', infoLine(render(EB, ebS(-333, 'W')), 'Feeding in').replace(/\s/g, ' '), '333 W');
+  check('compteur : injection, voyant vert', /fill="#00e676"/.test(render(EB, ebS(-333, 'W'))), true);
+  check('compteur : injection forte en kW', stateLine(render(EB, ebS(-6.8))), 'Feeding in');
+  check('compteur : sens injection seule, positif = injection', stateLine(render({ ...EB, meter_direction: 'export' }, ebS(333, 'W'))), 'Feeding in');
+  check('compteur : sens consommation seule, negatif = rien', stateLine(render({ ...EB, meter_direction: 'import' }, ebS(-3, 'W'))), 'No use');
+  check('compteur rond : injection', stateLine(render({ ...EB, meter_layout: 'dome' }, ebS(-0.4))), 'Feeding in');
+  const EXS = { ...ebS(-333, 'W'), 'sensor.ex': s(1234.5678, { unit_of_measurement: 'kWh' }) };
+  check('compteur : index d injection en ligne', infoLine(render({ ...EB, export_total_entity: 'sensor.ex' }, EXS), 'Export index').replace(/\s/g, ' '), '1,234.568 kWh');
+  check('linky : 0 VA, pas de consommation', stateLine(render(ME, meS(0))), 'No use');
+  check('linky : negatif, injection', stateLine(render(ME, meS(-500))), 'Feeding in');
   // Read from today's index with the power on its own entity (#68): the power
   // goes on the display and decides high use, and today's use is not shown
   // twice.

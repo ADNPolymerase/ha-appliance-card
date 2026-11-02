@@ -205,6 +205,8 @@ const SECTIONS = [
   { field: "tariff_entity", types: ["meter"], labelKey: "section_tariff", includeDomains: ["sensor", "select", "input_select"] },
   { field: "today_entity", types: ["meter"], labelKey: "section_today_use", includeDomains: ["sensor", "input_number"] },
   { field: "total_entity", types: ["meter"], labelKey: "section_meter_index", includeDomains: ["sensor", "input_number"] },
+  { field: "export_total_entity", types: ["meter"], labelKey: "meter_export_index", includeDomains: ["sensor", "input_number"],
+    when: (c) => ["linky", "box", "dome"].includes(meterLayoutOf(c, null)) },
   { field: "remaining_time_entity", types: ["robot"], labelKey: "section_remaining", includeDomains: ["sensor", "input_number"],
     when: (c) => robotLayoutOf(c, null) === "pool" },
   { field: "mail_count_entity", types: ["mailbox"], labelKey: "section_mail_count", includeDomains: ["sensor", "counter", "input_number", "number"] },
@@ -1303,7 +1305,9 @@ class ApplianceCardEditor extends HTMLElement {
         ${this._type === "meter" ? this._row("section_screen_layout", "meter_layout", {
           type: "select",
           options: [{ value: "auto", label: t(hass, "unit_auto") }].concat(METER_LAYOUTS.map((v) => ({ value: v, label: t(hass, `layout_meter_${v}`) }))),
-        }) + (["linky", "box", "dome"].includes(meterLayoutOf(this._config, stateObj(hass, this._config.state_entity))) ? this._row("high_power", "high_power", { placeholder: "3000" }) : "") : ""}
+        }) + (["linky", "box", "dome"].includes(meterLayoutOf(this._config, stateObj(hass, this._config.state_entity))) ? this._row("high_power", "high_power", { placeholder: "3000" })
+          + this._row("meter_direction", "meter_direction", { type: "select",
+            options: ["auto", "import", "export"].map((v) => ({ value: v, label: t(hass, `meter_dir_${v}`) })) }) : "") : ""}
         ${this._type === "christmas_tree" ? this._row("tree_palette", "tree_palette", {
           type: "select",
           options: Object.keys(TREE_PALETTES).map((v) => ({ value: v, label: t(hass, `palette_${v}`) })),
