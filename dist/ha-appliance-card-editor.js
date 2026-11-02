@@ -1,6 +1,6 @@
 // Built by tools/build.mjs from src/ha-appliance-card.js: edit the source, not this file.
 // The card's editor, loaded by the card the first time it is edited.
-export default function defineEditor({ t, onLanguageLoaded, LANGUAGE_NAMES, localizedHass, activationOf, TH_LAYOUTS, EV_POWER_THRESHOLD, stateObj, parseValueMap, stringifyValueMap, alertsArray, LIST_OTHER, ENTITY_LISTS, listCandidates, defaultCardName, stripDeviceName, domainOf, INFO_MAX, autoSuggest, APPLIANCE_TYPES, STATE_DOMAINS, SCREEN_ONLY_FIELDS, illustrationSizeOf, fontScaleOf, compactModeOf, TYPE_GROUPS, caps, detectApplianceType, SCREEN_STANDBY_W, SCREEN_LAYOUTS, SCREEN_IMAGES, screenLayoutOf, screenIsTablet, HD_HEAT_W, PLUG_THRESHOLDS, ZONE_POWER_W, PLUG_SOURCE_TYPES, plugSourceOf, DW_DRY_MIN, WASH_HEAT_W, WASH_SPIN_W, DRYER_HEAT_W, NET_LAYOUTS, SWITCH_PORTS, NET_BAYS, NET_BUSY_MBIT, NET_TEMP_ALERT, netLayoutOf, ROBOT_LAYOUTS, ROBOT_STATIONS, ROBOT_BOX_COLORS, ROBOT_FLOORS, ROBOT_SERVICES, STICK_AWAY_W, robotLayoutOf, POOL_PRESSURE_ALERT, SOLAR_LAYOUTS, BATTERY_LAYOUTS, BATTERY_IDLE_W, DIFFUSER_LAYOUTS, illustrationTapOf, HRV_LAYOUTS, CAMERA_LAYOUTS, MAILBOX_LAYOUTS, MAILBOX_SIDES, mailboxLayoutOf, LAMP_LAYOUTS, LAMP_SPOTS, lampLayoutOf, MOBILITY_LAYOUTS, PUMP_LAYOUTS, FLOOR_LAYOUTS, METER_LAYOUTS, meterLayoutOf, TREE_PALETTES, TREE_PRESENTS, pumpLayoutOf, UPS_BATTERY_LOW, HISTORY_HOURS, BODY_COLORS, esc, MOWER_STYLES, SHELTER_STYLES, SHELTER_COLORS, LAPTOP_COLORS, LAPTOP_STYLES, stateFreeSource }) {
+export default function defineEditor({ t, onLanguageLoaded, LANGUAGE_NAMES, localizedHass, activationOf, TH_LAYOUTS, EV_POWER_THRESHOLD, stateObj, parseValueMap, stringifyValueMap, alertsArray, LIST_OTHER, ENTITY_LISTS, listCandidates, defaultCardName, stripDeviceName, domainOf, INFO_MAX, autoSuggest, APPLIANCE_TYPES, STATE_DOMAINS, SCREEN_ONLY_FIELDS, illustrationSizeOf, fontScaleOf, compactModeOf, TYPE_GROUPS, caps, detectApplianceType, SCREEN_STANDBY_W, SCREEN_LAYOUTS, SCREEN_IMAGES, screenLayoutOf, screenIsTablet, HD_HEAT_W, PLUG_THRESHOLDS, ZONE_POWER_W, PLUG_SOURCE_TYPES, plugSourceOf, DW_DRY_MIN, WASH_HEAT_W, WASH_SPIN_W, DRYER_HEAT_W, NET_LAYOUTS, SWITCH_PORTS, NET_BAYS, NET_BUSY_MBIT, NET_TEMP_ALERT, netLayoutOf, ROBOT_LAYOUTS, ROBOT_STATIONS, ROBOT_BOX_COLORS, ROBOT_FLOORS, ROBOT_SERVICES, STICK_AWAY_W, robotLayoutOf, POOL_PRESSURE_ALERT, SOLAR_LAYOUTS, BATTERY_LAYOUTS, BATTERY_IDLE_W, DIFFUSER_LAYOUTS, illustrationTapOf, UNIT_FILTERS, HRV_LAYOUTS, CAMERA_LAYOUTS, MAILBOX_LAYOUTS, MAILBOX_SIDES, mailboxLayoutOf, LAMP_LAYOUTS, LAMP_SPOTS, lampLayoutOf, MOBILITY_LAYOUTS, PUMP_LAYOUTS, FLOOR_LAYOUTS, METER_LAYOUTS, meterLayoutOf, TREE_PALETTES, TREE_PRESENTS, pumpLayoutOf, UPS_BATTERY_LOW, HISTORY_HOURS, BODY_COLORS, esc, MOWER_STYLES, SHELTER_STYLES, SHELTER_COLORS, LAPTOP_COLORS, LAPTOP_STYLES, stateFreeSource }) {
 // ---------------------------------------------------------------------------
 // Editor
 // ---------------------------------------------------------------------------
@@ -180,6 +180,7 @@ const SECTIONS = [
   { field: "current_humidity_entity", types: ["hrv"], labelKey: "section_current_humidity", includeDomains: ["sensor"] },
   { field: "target_humidity_entity", types: ["hrv"], labelKey: "section_target_humidity", includeDomains: ["number", "sensor", "input_number"] },
   { field: "humidity_control_entity", types: ["hrv"], labelKey: "section_humidity_control", includeDomains: ["switch", "input_boolean"] },
+  { field: "active_mode_entity", types: ["hrv"], labelKey: "section_active_mode", includeDomains: ["sensor", "select", "input_select"] },
   // A lamp's timer: a list of durations.
   { field: "timer_entity", types: ["lamp"], labelKey: "lamp_timer", includeDomains: ["select", "input_select"] },
   // A camera: what it sees, whether it records, its night vision, its
@@ -296,14 +297,17 @@ const SECTIONS = [
   { field: "water_flow_entity", types: ["heat_pump"], labelKey: "section_water_flow", includeDomains: ["sensor"] },
   { field: "compressor_entity", types: ["heat_pump"], labelKey: "section_compressor", includeDomains: ["sensor", "binary_sensor", "switch", "input_boolean"] },
   { field: "fan_speed_entity", types: ["heat_pump"], labelKey: "section_fan_speed", includeDomains: ["sensor", "number"] },
-  { field: "heat_output_entity", types: ["heat_pump"], labelKey: "section_heat_output", includeDomains: ["sensor"] },
+  { field: "heat_output_entity", types: ["heat_pump"], labelKey: "section_heat_output", includeDomains: ["sensor"], units: "power" },
   { field: "cop_entity", types: ["heat_pump"], labelKey: "section_cop", includeDomains: ["sensor", "input_number"] },
   // What the pump draws and makes while it cools and for the tank, for the
   // integrations that measure each circuit apart.
-  { field: "cooling_power_entity", types: ["heat_pump"], labelKey: "section_cooling_power", includeDomains: ["sensor"] },
-  { field: "cooling_output_entity", types: ["heat_pump"], labelKey: "section_cooling_output", includeDomains: ["sensor"] },
-  { field: "hot_water_power_entity", types: ["heat_pump"], labelKey: "section_hot_water_power", includeDomains: ["sensor"] },
-  { field: "hot_water_output_entity", types: ["heat_pump"], labelKey: "section_hot_water_output", includeDomains: ["sensor"] },
+  { field: "cooling_power_entity", types: ["heat_pump"], labelKey: "section_cooling_power", includeDomains: ["sensor"], units: "power" },
+  { field: "cooling_output_entity", types: ["heat_pump"], labelKey: "section_cooling_output", includeDomains: ["sensor"], units: "power" },
+  { field: "hot_water_power_entity", types: ["heat_pump"], labelKey: "section_hot_water_power", includeDomains: ["sensor"], units: "power" },
+  { field: "heating_energy_entity", types: ["heat_pump"], labelKey: "section_heating_energy", includeDomains: ["sensor"], units: "energy" },
+  { field: "cooling_energy_entity", types: ["heat_pump"], labelKey: "section_cooling_energy", includeDomains: ["sensor"], units: "energy" },
+  { field: "hot_water_energy_entity", types: ["heat_pump"], labelKey: "section_hot_water_energy", includeDomains: ["sensor"], units: "energy" },
+  { field: "hot_water_output_entity", types: ["heat_pump"], labelKey: "section_hot_water_output", includeDomains: ["sensor"], units: "power" },
 
   // Pellet stove. The status names the phase; a climate entity in the state
   // already carries the room and the setpoint, so both fields are for the
@@ -409,8 +413,8 @@ const SECTIONS = [
   // The history's sensor and its hours, once the history is on.
   { field: "history_entity", types: APPLIANCE_TYPES, labelKey: "section_history", includeDomains: ["sensor", "number", "input_number"],
     when: (c) => !!c.show_history, extra: (c) => c._row("history_hours", "history_hours", { placeholder: String(HISTORY_HOURS) }) },
-  { field: "power_entity", types: APPLIANCE_TYPES, includeDomains: ["sensor"],
-    labelKey: (type) => (type === "solar" ? "section_solar_power" : type === "home_battery" ? "section_battery_power" : "section_power"), extra: (c) => {
+  { field: "power_entity", types: APPLIANCE_TYPES, includeDomains: ["sensor"], units: (type) => (type === "heat_pump" ? "power" : ""),
+    labelKey: (type) => (type === "solar" ? "section_solar_power" : type === "home_battery" ? "section_battery_power" : type === "heat_pump" ? "section_heating_power" : "section_power"), extra: (c) => {
       const cap = caps(c._currentType());
       // Panels need no threshold; a battery's tells a rest from a charge.
       if (cap.solar) return "";
@@ -816,6 +820,12 @@ class ApplianceCardEditor extends HTMLElement {
     picker.value = this._config[field] || "";
     picker.label = opts.label || t(this._l10n, "entity");
     if (opts.includeDomains) picker.includeDomains = opts.includeDomains;
+    // A power field lists sensors in W, an energy field sensors in kWh (#76),
+    // so one cannot end up in the other; the entity already chosen stays.
+    if (opts.units && UNIT_FILTERS[opts.units]) {
+      const re = UNIT_FILTERS[opts.units], keep = this._config[field];
+      picker.entityFilter = (st) => !!st && (st.entity_id === keep || re.test(String((st.attributes || {}).unit_of_measurement || "").replace(/\s/g, "")));
+    }
     picker.addEventListener("value-changed", (ev) => {
       const value = ev.detail.value;
       if (!this._acceptsPick(this._config[field], value)) return;
@@ -1537,7 +1547,8 @@ class ApplianceCardEditor extends HTMLElement {
     for (const s of this._sections()) {
       if (this._open.has(s.field)) {
         this._mountPicker(this._root.querySelector(`[data-slot="${s.field}"]`), s.field,
-          { includeDomains: s.includeDomains, label: s.pickerLabelKey ? t(hass, s.pickerLabelKey) : undefined });
+          { includeDomains: s.includeDomains, label: s.pickerLabelKey ? t(hass, s.pickerLabelKey) : undefined,
+            units: typeof s.units === "function" ? s.units(this._type) : s.units });
       }
     }
     if (caps(this._type).zones && !this._plug()) {

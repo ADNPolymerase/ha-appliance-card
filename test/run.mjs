@@ -2449,6 +2449,35 @@ check('circuits : nommee froid produit', infoLine(rBare, 'Cooling output'), '240
 const rKwh = HM('Heating', 'Room', 35, { power_entity: 'sensor.hp_kwh' }, { 'sensor.hp_kwh': { state: '2.35', attributes: { unit_of_measurement: 'kWh' } } });
 check('pac : des kWh se disent energie', (infoLine(rKwh, 'Energy') || '').replace(/\s/g, ' '), '2.35 kWh');
 check('pac : et pas puissance', infoLine(rKwh, 'Power'), null);
+// Each circuit's own consumption in kWh, on the circuit in use (#76).
+const HE = { heating_energy_entity: 'sensor.e_heat', cooling_energy_entity: 'sensor.e_cool', hot_water_energy_entity: 'sensor.e_dhw' };
+const heS = { 'sensor.e_heat': { state: '12.4', attributes: { unit_of_measurement: 'kWh' } }, 'sensor.e_cool': { state: '3.1', attributes: { unit_of_measurement: 'kWh' } },
+  'sensor.e_dhw': { state: '1.7', attributes: { unit_of_measurement: 'kWh' } } };
+const nb = (v) => (v || '').replace(/\s/g, ' ');
+check('pac : energie du chauffage', nb(infoLine(HM('Heating', 'Room', 35, HE, heS), 'Energy used for heating')), '12.4 kWh');
+check('pac : pas celle du froid en chauffage', infoLine(HM('Heating', 'Room', 35, HE, heS), 'Energy used for cooling'), null);
+check('pac : energie du froid', nb(infoLine(HM('Cooling', 'Room', 35, HE, heS), 'Energy used for cooling')), '3.1 kWh');
+check('pac : energie de l eau chaude', nb(infoLine(HM('Heating', 'Tank', 35, HE, heS), 'Energy used for hot water')), '1.7 kWh');
+{
+  // The editor: the power field says heating for a heat pump, and each list
+  // keeps to its unit, the entity already chosen excepted.
+  const ed = newEditor({ appliance_type: 'heat_pump', state_entity: 'sensor.hp', power_entity: 'sensor.w_in', heating_energy_entity: 'sensor.e_heat', heat_output_entity: 'sensor.kwh_out' });
+  const html = markup(ed);
+  check('editeur pac : puissance en chauffage', html.includes('Power while heating'), true);
+  for (const f of ['heating_energy_entity', 'cooling_energy_entity', 'hot_water_energy_entity'])
+    check(`editeur pac : ${f}`, html.includes(`data-toggle="${f}"`), true);
+  const filt = (f) => ed._root.querySelector(`[data-slot="${f}"]`)?.children.at(-1)?.entityFilter;
+  const ent = (id, u) => ({ entity_id: id, attributes: { unit_of_measurement: u } });
+  const pw = filt('power_entity'), en = filt('heating_energy_entity'), out = filt('heat_output_entity');
+  check('editeur pac : la puissance accepte des W', !!pw && pw(ent('sensor.a', 'W')), true);
+  check('editeur pac : et des kW', !!pw && pw(ent('sensor.a', 'kW')), true);
+  check('editeur pac : pas des kWh', !!pw && pw(ent('sensor.a', 'kWh')), false);
+  check('editeur pac : l energie accepte des kWh', !!en && en(ent('sensor.a', 'kWh')), true);
+  check('editeur pac : pas des W', !!en && en(ent('sensor.a', 'W')), false);
+  check('editeur pac : l entite deja choisie reste, meme en kWh', !!out && out(ent('sensor.kwh_out', 'kWh')), true);
+  const plug = newEditor({ appliance_type: 'washer', state_entity: 'sensor.w', power_entity: 'sensor.p' });
+  check('editeur lave-linge : la puissance sans filtre d unite', plug._root.querySelector('[data-slot="power_entity"]')?.children.at(-1)?.entityFilter, undefined);
+}
 // A COP entity is the owner's own, and keeps its name.
 check('circuits : une entite COP reste COP en froid', infoLine(HM('Cooling', 'Room', 17,
   { ...HMF, cop_entity: 'sensor.hp_cop' }, { ...HMR([0, 0], [520, 2900], [0, 0]), ...HP_READINGS }), 'COP'), '3.2');
@@ -11061,6 +11090,20 @@ check('borne : ni un statut reconnu', evMode(evR('SuspendedEVSE', { power_entity
     'switch.erv_humidity_control': s(o.hc ?? 'off'),
   });
   const broan = (mode, o, extra = {}) => render({ ...bcfg, ...extra }, bst(mode, o));
+  // Smart mode: the unit picks its mode itself and says it apart (#54). The
+  // state and drawing follow the active mode, the menu ticks the one set.
+  {
+    const act = (v) => render({ ...bcfg, active_mode_entity: 'sensor.erv_active' }, { ...bst('smart'), 'sensor.erv_active': s(v) });
+    check('mode actif : la recirculation choisie par le mode smart', stateLine(act('recirculate')), 'Recirculation');
+    check('mode actif : le mode regle en ligne', infoLine(act('recirculate'), 'Mode'), 'Smart');
+    check('mode actif : le dessin suit le mode actif', machineCls(act('recirculate')).includes('hv-m-rec'), true);
+    check('mode actif : pareil, pas de ligne', infoLine(render({ ...bcfg, active_mode_entity: 'sensor.erv_active' }, { ...bst('min'), 'sensor.erv_active': s('min') }), 'Mode'), null);
+    check('mode actif : indisponible, le mode regle', stateLine(act('unavailable')), stateLine(broan('smart')));
+    check('mode actif : sans le champ, le mode regle', stateLine(broan('recirculate')), 'Recirculation');
+    const ed = markup(newEditor({ ...bcfg }));
+    check('editeur vmc : le mode actif', ed.includes('data-toggle="active_mode_entity"'), true);
+    contains('menu : au premier plan, dans la couche du dessus', act('recirculate'), '.mode-menu[popover] { position: fixed; inset: auto; margin: 0; border: 0;');
+  }
   {
     // The editor fills each fan and its airflow from Broan's own names, and
     // takes none of them for a temperature.
