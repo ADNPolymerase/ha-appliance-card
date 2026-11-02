@@ -1,13 +1,19 @@
 <svg viewBox="0 0 545 153" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Read in English">
   <rect x="4" y="8" width="537" height="141" rx="24" fill="#0b1440"/>
   <rect x="4" y="4" width="537" height="141" rx="24" fill="#012169"/>
-  <defs><clipPath id="f"><rect width="100" height="60" rx="10"/></clipPath></defs>
+  <defs><clipPath id="f"><rect width="100" height="60" rx="10"/></clipPath><clipPath id="l"><rect width="50" height="60"/></clipPath></defs>
   <g transform="translate(26,44)" clip-path="url(#f)">
-    <rect width="100" height="60" fill="#012169"/>
-    <path d="M0 0 L100 60 M100 0 L0 60" stroke="#ffffff" stroke-width="12"/>
-    <path d="M0 0 L100 60 M100 0 L0 60" stroke="#c8102e" stroke-width="4"/>
-    <path d="M50 0 V60 M0 30 H100" stroke="#ffffff" stroke-width="20"/>
-    <path d="M50 0 V60 M0 30 H100" stroke="#c8102e" stroke-width="12"/>
+    <g clip-path="url(#l)">
+      <rect width="100" height="60" fill="#012169"/>
+      <path d="M0 0 L100 60 M100 0 L0 60" stroke="#ffffff" stroke-width="12"/>
+      <path d="M0 0 L100 60 M100 0 L0 60" stroke="#c8102e" stroke-width="4"/>
+      <path d="M50 0 V60 M0 30 H100" stroke="#ffffff" stroke-width="20"/>
+      <path d="M50 0 V60 M0 30 H100" stroke="#c8102e" stroke-width="12"/>
+    </g>
+    <rect x="50" y="0.00" width="50" height="4.62" fill="#b22234"/><rect x="50" y="4.62" width="50" height="4.62" fill="#ffffff"/><rect x="50" y="9.23" width="50" height="4.62" fill="#b22234"/><rect x="50" y="13.85" width="50" height="4.62" fill="#ffffff"/><rect x="50" y="18.46" width="50" height="4.62" fill="#b22234"/><rect x="50" y="23.08" width="50" height="4.62" fill="#ffffff"/><rect x="50" y="27.69" width="50" height="4.62" fill="#b22234"/><rect x="50" y="32.31" width="50" height="4.62" fill="#ffffff"/><rect x="50" y="36.92" width="50" height="4.62" fill="#b22234"/><rect x="50" y="41.54" width="50" height="4.62" fill="#ffffff"/><rect x="50" y="46.15" width="50" height="4.62" fill="#b22234"/><rect x="50" y="50.77" width="50" height="4.62" fill="#ffffff"/><rect x="50" y="55.38" width="50" height="4.62" fill="#b22234"/>
+    <rect x="50" width="22" height="32.3" fill="#3c3b6e"/>
+    <circle cx="53.0" cy="3.0" r="1.1" fill="#ffffff"/><circle cx="61.4" cy="3.0" r="1.1" fill="#ffffff"/><circle cx="69.8" cy="3.0" r="1.1" fill="#ffffff"/><circle cx="57.2" cy="7.2" r="1.1" fill="#ffffff"/><circle cx="65.6" cy="7.2" r="1.1" fill="#ffffff"/><circle cx="53.0" cy="11.4" r="1.1" fill="#ffffff"/><circle cx="61.4" cy="11.4" r="1.1" fill="#ffffff"/><circle cx="69.8" cy="11.4" r="1.1" fill="#ffffff"/><circle cx="57.2" cy="15.6" r="1.1" fill="#ffffff"/><circle cx="65.6" cy="15.6" r="1.1" fill="#ffffff"/><circle cx="53.0" cy="19.8" r="1.1" fill="#ffffff"/><circle cx="61.4" cy="19.8" r="1.1" fill="#ffffff"/><circle cx="69.8" cy="19.8" r="1.1" fill="#ffffff"/><circle cx="57.2" cy="24.0" r="1.1" fill="#ffffff"/><circle cx="65.6" cy="24.0" r="1.1" fill="#ffffff"/><circle cx="53.0" cy="28.2" r="1.1" fill="#ffffff"/><circle cx="61.4" cy="28.2" r="1.1" fill="#ffffff"/><circle cx="69.8" cy="28.2" r="1.1" fill="#ffffff"/>
+    <path d="M50 0 V60" stroke="#ffffff" stroke-width="1.6"/>
   </g>
   <rect x="26" y="44" width="100" height="60" rx="10" fill="none" stroke="#ffffff" stroke-width="2"/>
   <text x="148" y="70" font-family="Verdana, Geneva, DejaVu Sans, sans-serif" font-size="34" font-weight="bold" fill="#ffffff" textLength="366">Read in English</text>
