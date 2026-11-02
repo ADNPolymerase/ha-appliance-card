@@ -10967,6 +10967,23 @@ check('borne : ni un statut reconnu', evMode(evR('SuspendedEVSE', { power_entity
   check('lampe : halogene', machineCls(lamp('on', {}, {}, 'light.halogene')).includes('lp-l-torch'), true);
   check('lampe : applique du jardin', machineCls(lamp('on', {}, {}, 'light.applique_jardin')).includes('lp-l-wall'), true);
   check('lampe : forme choisie', machineCls(lamp('on', {}, { lamp_layout: 'desk' }, 'light.ruban')).includes('lp-l-desk'), true);
+  // Garden lights and Twinkly-style string lights.
+  const shape = (id, attrs = {}) => (/lp-l-(\w+)/.exec(machineCls(lamp('on', attrs, {}, id))) || [])[1];
+  check('lampe : spot de jardin', shape('light.spot_jardin'), 'garden_spot');
+  check('lampe : projecteur exterieur', shape('light.projecteur_exterieur'), 'garden_spot');
+  check('lampe : borne de jardin', shape('light.borne_allee'), 'bollard');
+  check('lampe : petit lampadaire de jardin', shape('light.lampadaire_jardin'), 'bollard');
+  check('lampe : lampadaire du salon reste un lampadaire', shape('light.lampadaire_salon'), 'floor');
+  check('lampe : Twinkly en guirlande', shape('light.deco', { friendly_name: 'Twinkly Strings' }), 'string');
+  check('lampe : rideau Twinkly', shape('light.twinkly_curtain'), 'curtain');
+  check('lampe : stalactites', shape('light.guirlande_stalactites'), 'icicle');
+  check('lampe : guinguette', shape('light.guirlande_guinguette'), 'festoon');
+  check('lampe : Twinkly Squares', shape('light.twinkly_squares'), 'squares');
+  check('lampe : guirlande qui scintille', /class="lp-seg lp-tw"/.test(lamp('on', {}, { lamp_layout: 'string' })), true);
+  check('lampe : carres de pixels', (lamp('on', {}, { lamp_layout: 'squares' }).match(/class="lp-seg lp-px/g) || []).length, 144);
+  for (const l of ['garden_spot', 'bollard', 'string', 'curtain', 'icicle', 'festoon', 'squares']) {
+    check(`lampe : dessin ${l}`, /<svg class="lp-svg"[^>]*>[\s\S]*<\/svg>/.test(lamp('on', {}, { lamp_layout: l })) && !/undefined|NaN/.test(lamp('on', {}, { lamp_layout: l })), true);
+  }
   const beams = (h) => (h.match(/class="lp-beam"/g) || []).length;
   check('lampe : un spot seul', beams(lamp('on', {}, { lamp_layout: 'spot' })), 1);
   check('lampe : trois spots choisis', beams(lamp('on', {}, { lamp_layout: 'spot', spots: 3 })), 3);

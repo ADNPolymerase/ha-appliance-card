@@ -1,5 +1,5 @@
 // Built by tools/build.mjs from src/ha-appliance-card.js: edit the source, not this file.
-const CARD_VERSION = "3.26.0";
+const CARD_VERSION = "3.27.0";
 
 console.info(
   "%c HA-APPLIANCE-CARD %c v" + CARD_VERSION + " ",
@@ -158,7 +158,7 @@ const T = {
     layout_robot_floor_washer: "Floor washer", stick_away: "Off the base", stick_away_threshold: "Off the base below this power (W)",
     type_diffuser: "Essential oil diffuser", dif_mist: "Diffusing", dif_inter: "Intermittent", dif_low: "Light mist", dif_empty: "Tank empty", dif_mode: "Mist mode", layout_dif_drop: "Teardrop", layout_dif_cone: "Cone", layout_dif_stone: "Pebble", layout_dif_flame: "Flame", layout_dif_nebulizer: "Nebulizer", section_tank_empty: "Empty tank sensor", type_hrv: "Heat recovery ventilation (HRV/ERV)", hrv_run: "Ventilating", hrv_boost: "Boost", hrv_bypass: "Bypass", hrv_defrost: "Defrosting", hrv_filter: "Replace filter", hrv_away: "Away", hrv_recirc: "Recirculation", hrv_humidity: "Humidity control", hrv_inter: "Intermittent", hrv_inter_paused: "Intermittent, paused", hrv_mode: "Mode", section_active_mode: "Active mode (when it differs from the one set)", hrv_supply_fan: "Supply fan", hrv_exhaust_fan: "Exhaust fan", section_supply_fan: "Supply fan speed (rpm)", section_exhaust_fan: "Exhaust fan speed (rpm)", fan_max_rpm: "Fan top speed (rpm)", section_exhaust_airflow: "Exhaust airflow", section_target_humidity: "Humidity setpoint", section_humidity_control: "Humidity control switch", layout_hrv_diagram: "Air flows", layout_hrv_one_duct: "Wall unit, one duct", layout_hrv_pair: "Through-wall pair", section_supply_temperature: "Supply air temperature", section_extract_temperature: "Extract air temperature", section_exhaust_temperature: "Exhaust air temperature", section_bypass: "Bypass", section_airflow: "Airflow", hrv_t_outdoor: "fresh air", hrv_t_supply: "supply", hrv_t_extract: "extract", hrv_t_exhaust: "exhaust", hrv_outside: "outside", hrv_room: "room",
     type_camera: "Camera", cam_idle: "Idle", cam_live: "Streaming", cam_rec: "Recording", cam_motion: "Motion detected", cam_off: "Off", cam_line_last_motion: "Last motion", cam_line_night: "Night vision", cam_line_signal: "Signal", section_motion: "Motion sensor", section_recording: "Recording sensor", section_night_vision: "Night vision", section_privacy: "Privacy mode", section_signal: "Signal strength", layout_cam_indoor: "Indoor, pan and tilt", layout_cam_tube: "Indoor tube", layout_cam_outdoor: "Outdoor", layout_cam_dome: "Dome", layout_cam_doorbell: "Doorbell", cam_ring: "Ringing", cam_line_last_ring: "Last ring", section_ring: "Doorbell button", type_mailbox: "Mailbox", mb_empty: "Empty", mb_mail: "Mail", mb_front_open: "Front door open", mb_back_open: "Back door open", mb_line_count: "Mail received", mb_line_last: "Last mail", mb_front_door: "Front door", mb_back_door: "Back door", mb_open: "Open", mb_closed: "Closed", section_mail_count: "Mail counter", layout_mb_through: "Through the wall", layout_mb_classic: "Classic", mb_street: "street", mb_house: "house", mb_front_side: "Street side", mb_side_left: "Left", mb_side_right: "Right", type_water_pump: "Water pump", type_floor_heating: "Underfloor heating", type_spa: "Spa", type_sauna: "Sauna", type_aquarium: "Aquarium", type_meter: "Electricity meter", type_christmas_tree: "Christmas tree", layout_chest: "Chest freezer", layout_drawers: "Drawer freezer", layout_pump_booster: "Booster set", layout_pump_sump: "Sump pump", layout_floor_water: "Hot water", layout_floor_electric: "Electric", layout_robot_pool: "Pool robot", wp_pumping: "Pumping", wp_high: "High level", spa_bubbles: "Bubbles", sauna_ready: "Ready", aq_lit: "Light on", aq_dark: "Light off", meter_low: "Low use", meter_high: "High use", layout_meter_linky: "Linky", layout_meter_box: "Electricity meter", layout_meter_dome: "Round meter", layout_meter_gas: "Gas meter", layout_meter_water: "Water meter", section_today_use: "Today's use (kWh, m\u00b3)", section_meter_index: "Meter index", meter_index: "Index", meter_flowing: "In use", meter_idle: "No use", meter_export: "Feeding in", meter_export_index: "Export index", meter_direction: "Power direction", meter_dir_auto: "Auto (negative = feed-in)", meter_dir_import: "Consumption only", meter_dir_export: "Feed-in only", meter_flow: "Flow", section_pressure: "Pressure", section_water_level: "Water level", section_high_level: "High level alarm", level_max: "Level when full", section_bubbles: "Bubbles", section_tariff: "Tariff period", high_power: "High use from (W or VA)", tree_palette: "Colours", palette_multicolor: "Multicolour", palette_red_gold: "Red and gold", palette_red_silver: "Red and silver", palette_gold_silver: "Gold and silver", palette_blue_silver: "Blue and silver", palette_white_silver: "White and silver", palette_red_green: "Red and green", presents: "Presents", presents_auto: "On 24 and 25 December", presents_show: "Always", presents_hide: "Never", tree_on: "On", tree_off: "Off",
-    type_lamp: "Lamp", lamp_off: "Off", lamp_on: "On", lamp_line_brightness: "Brightness", lamp_line_color_temp: "Colour temperature", lamp_line_effect: "Effect", lamp_timer: "Timer", show_toggle: "On/off button", line_hide: "Hide this line", line_show: "Show this line", illustration_tap_action: "Tap on the drawing", pic_tap_default: "Card's own", pic_tap_toggle: "Toggle", pic_tap_more: "Details", pic_tap_none: "Nothing", lamp_spots: "Number of spots", layout_lamp_bulb: "Bulb", layout_lamp_bedside: "Bedside lamp", layout_lamp_floor: "Arc floor lamp", layout_lamp_torch: "Torchiere", layout_lamp_pendant: "Pendant", layout_lamp_strip: "LED strip", layout_lamp_spot: "Recessed spots", layout_lamp_panels: "Light panels", layout_lamp_desk: "Desk lamp", layout_lamp_wall: "Wall lantern",
+    type_lamp: "Lamp", lamp_off: "Off", lamp_on: "On", lamp_line_brightness: "Brightness", lamp_line_color_temp: "Colour temperature", lamp_line_effect: "Effect", lamp_timer: "Timer", show_toggle: "On/off button", line_hide: "Hide this line", line_show: "Show this line", illustration_tap_action: "Tap on the drawing", pic_tap_default: "Card's own", pic_tap_toggle: "Toggle", pic_tap_more: "Details", pic_tap_none: "Nothing", lamp_spots: "Number of spots", layout_lamp_bulb: "Bulb", layout_lamp_bedside: "Bedside lamp", layout_lamp_floor: "Arc floor lamp", layout_lamp_torch: "Torchiere", layout_lamp_pendant: "Pendant", layout_lamp_strip: "LED strip", layout_lamp_spot: "Recessed spots", layout_lamp_panels: "Light panels", layout_lamp_desk: "Desk lamp", layout_lamp_wall: "Wall lantern", layout_lamp_garden_spot: "Garden spotlight", layout_lamp_bollard: "Garden bollard", layout_lamp_string: "String lights", layout_lamp_curtain: "Curtain lights", layout_lamp_icicle: "Icicle lights", layout_lamp_festoon: "Festoon lights", layout_lamp_squares: "Pixel squares",
     speed_power_max: "Power at top speed (W)", speed_power_custom: "Custom speed thresholds", speed_power_2: "Speed 2 from (W)", speed_power_3: "Speed 3 from (W)",
     fw_self_cleaning: "Self-cleaning", fw_dirty_full: "Dirty water tank full", fw_clean_empty: "Clean water tank empty",
     group_energy: "Energy", type_solar: "Solar panels", type_home_battery: "Home battery", solar_producing: "Producing", solar_low: "Low production", solar_night: "Night", section_solar_layout: "Mounting", layout_solar_ground: "On the ground", layout_solar_roof: "On a roof", section_solar_power: "Power produced", section_energy_today: "Energy produced today", solar_line_today: "Today", solar_peak_power: "Peak power of the panels (W)", section_battery_power: "Battery power (+ charging, \u2212 discharging)", power_inverted: "Positive power means discharging", section_charge_power: "Charge power", section_battery_discharge: "Discharge power", section_reserve: "Backup reserve", section_charge_limit: "Charge limit", battery_capacity: "Capacity (kWh)", layout_battery_wall: "Wall battery", layout_battery_station: "Portable power station", bat_idle: "Idle", bat_full: "Full", bat_low: "Low battery", bat_line_full_in: "Full in", bat_line_left: "Remaining", bat_line_reserve: "Reserve",
@@ -5011,7 +5011,7 @@ function mailboxHtml(cls, c) {
 // and whether an effect runs. A switch or a helper only says on or off, and
 // the lamp is drawn in the warm white of a bulb.
 const LAMP_ONLY_FIELDS = ["lamp_layout", "spots", "timer_entity"];
-const LAMP_LAYOUTS = ["bulb", "bedside", "floor", "torch", "pendant", "strip", "spot", "panels", "desk", "wall"];
+const LAMP_LAYOUTS = ["bulb", "bedside", "floor", "torch", "pendant", "strip", "spot", "panels", "desk", "wall", "garden_spot", "bollard", "string", "curtain", "icicle", "festoon", "squares"];
 const LAMP_SPOTS = [1, 2, 3, 4];
 const LAMP_LABELS = { on: "lamp_on", off: "lamp_off", unav: "ev_offline" };
 const LAMP_COLORS = { on: "#ffa000", off: "var(--disabled-text-color, #9e9e9e)", unav: "var(--disabled-text-color, #9e9e9e)" };
@@ -5053,8 +5053,9 @@ function lampReadOf(hass, cfg, st) {
   return { mode, pct, kelvin, effect, rgb: rgb || LAMP_WARM };
 }
 // The shape: picked, or read from the name and the model. A light strip, a
-// set of panels, a bedside or a desk lamp, a pendant, recessed spots, a lamp
-// on a wall outside; a plain bulb otherwise.
+// set of panels, a bedside or a desk lamp, a garden spotlight or a small
+// garden post, a pendant, recessed spots, a lamp on a wall outside; a plain
+// bulb otherwise.
 function lampLayoutOf(cfg, st) {
   if (LAMP_LAYOUTS.includes(cfg.lamp_layout)) return cfg.lamp_layout;
   const a = (st && st.attributes) || {};
@@ -5063,6 +5064,15 @@ function lampLayoutOf(cfg, st) {
   if (/nanoleaf|panel|panneau|shapes|canvas|hexagon|triangle/.test(hay)) return "panels";
   if (/chevet|bedside|night.?stand|nachttisch|mesita|comodino|nachtkastje/.test(hay)) return "bedside";
   if (/desk|bureau|schreibtisch|escritorio|scrivania/.test(hay)) return "desk";
+  // String lights (Twinkly and the like), then the garden.
+  if (/curtain|rideau|vorhang|cortina|tenda.?lumin|gordijn|gardin|kurtyna|zaves/.test(hay)) return "curtain";
+  if (/icicle|stalactit|eisregen|caramban|stalattit|ijspegel|istapp|istap|sopl|rampouch/.test(hay)) return "icicle";
+  if (/festoon|guinguette|bulb.?string|partylicht|prikkabel|partyslinga/.test(hay)) return "festoon";
+  if (/twinkly.{0,12}(square|matri)|pixel.?(square|panel|matri)|(^|[^a-z])matri(x|ce)/.test(hay)) return "squares";
+  if (/twinkly|guirlande|fairy|string.?light|lichterkette|guirnalda|ghirlanda|lichtsnoer|ljusslinga|lysslynge|lyskaede|girlanda|lampki/.test(hay)) return "string";
+  // In the garden: a spotlight on its spike, or a small post along a path.
+  if (/garden.?spot|spike|piquet|spiess|erdspie|(spot|projecteur|projector|strahler|foco|faretto).{0,14}(jardin|garden|exterieur|outdoor|garten|giardino|tuin)/.test(hay)) return "garden_spot";
+  if (/bollard|borne|potelet|path.?light|pollerleuchte|wegeleuchte|baliza|paletto|tuinpaal|lampadaire.{0,6}(de.?)?jardin|(petit|mini).?lampadaire|garden.?(post|lamp)/.test(hay)) return "bollard";
   if (/halogen|torch|uplight|deckenfluter/.test(hay)) return "torch";
   if (/lampadaire|floor|stehlampe|piantana|vloerlamp|(^|[^a-z])arc([^a-z]|$)/.test(hay)) return "floor";
   if (/(^|[^a-z])spots?([^a-z]|$)|gu10|downlight|einbau|faretti|encastr/.test(hay)) return "spot";
@@ -5186,6 +5196,117 @@ ${[["24,58 36,37 48,58", 0], ["36,37 48,58 60,37", 1], ["48,58 60,37 72,58", 2],
 <path d="M56 28 V62 M46 45 H66" stroke="#2b3036" stroke-width="1.2"/>
 <path d="M44 62 H68 L64 68 H48 Z" fill="#2b3036"/>`,
 };
+// A strip of lawn for the garden lights.
+const lpGrass = () => `<path d="M0 84 Q48 80 96 84 V94 H0 Z" fill="#6f9e4a"/>
+<path d="M0 86 Q48 82.4 96 86" fill="none" stroke="#8bbd5c" stroke-width="1"/>
+${Array.from({ length: 16 }, (_, i) => `<path d="M${3 + i * 6} 85 l1.2 -3.6 l1.2 3.6" fill="none" stroke="#4f7d33" stroke-width=".9" stroke-linejoin="round"/>`).join("")}`;
+// A spotlight on its spike in the grass, washing a shrub from below.
+LAMP_SVGS.garden_spot = () => `<defs>${lpHalo("zH")}
+<linearGradient id="lp-zB" x1="0" y1="1" x2=".8" y2="0"><stop offset="0" class="lp-stop" stop-opacity=".95"/><stop offset="1" class="lp-stop" stop-opacity="0"/></linearGradient>
+<radialGradient id="lp-zW" cx=".35" cy=".85" r=".8"><stop offset="0" class="lp-stop" stop-opacity=".85"/><stop offset="1" class="lp-stop" stop-opacity="0"/></radialGradient>
+<radialGradient id="lp-zG" cx=".4" cy=".35" r=".7"><stop offset="0" stop-color="#4f8a3a"/><stop offset="1" stop-color="#2c5a22"/></radialGradient>
+${lpMetal("zM", "#2b3036", "#6f7882")}</defs>
+<path d="M62 84 V58" stroke="#6b4a2e" stroke-width="3.4" stroke-linecap="round"/>
+<path d="M62 70 L54 62 M62 66 L70 58" stroke="#6b4a2e" stroke-width="1.8" stroke-linecap="round"/>
+<path d="M36 46 C30 32 40 14 56 14 C66 8 82 14 84 28 C94 34 92 54 80 60 C72 66 50 66 42 60 C34 58 32 52 36 46 Z" fill="url(#lp-zG)"/>
+<path d="M44 30 q4 -6 10 -6 M66 22 q6 -2 10 4 M76 44 q6 2 6 8" fill="none" stroke="#6fae54" stroke-width="1.4" stroke-linecap="round" opacity=".7"/>
+<path class="lp-wash" d="M36 46 C30 32 40 14 56 14 C66 8 82 14 84 28 C94 34 92 54 80 60 C72 66 50 66 42 60 C34 58 32 52 36 46 Z" fill="url(#lp-zW)"/>
+<path class="lp-beam" d="M30 56 L38 64 L94 26 L60 2 Z" fill="url(#lp-zB)"/>
+${lpGrass()}
+<path d="M24.6 74 L24.6 90 L23.4 94 L22.2 90 L22.2 74 Z" fill="#2b3036"/>
+<circle cx="23.4" cy="74" r="2.6" fill="#3a4047"/>
+<g transform="rotate(42 23.4 72)"><rect x="17.4" y="56" width="12" height="16" rx="2.4" fill="url(#lp-zM)"/>
+<path d="M17.4 59 H29.4 M17.4 62 H29.4 M17.4 65 H29.4" stroke="#1e2226" stroke-width=".6"/>
+<ellipse cx="23.4" cy="56" rx="6.6" ry="2.2" fill="#1e2226"/>
+<ellipse class="lp-lit" cx="23.4" cy="56" rx="5" ry="1.6"/></g>
+<circle class="lp-halo" cx="34.4" cy="59.4" r="11" fill="url(#lp-zH)"/>`;
+// String lights in two swags between three hooks, Twinkly style: the bulbs
+// twinkle while on, and with an effect each takes its own hue.
+LAMP_SVGS.string = () => {
+  const swag = (x0, x1, sag) => (u) => {
+    const x = x0 + (x1 - x0) * u;
+    return [x, 18 + sag * 4 * u * (1 - u)];
+  };
+  const pts = [];
+  for (const [x0, x1, sag] of [[6, 48, 50], [48, 90, 44]]) {
+    const f = swag(x0, x1, sag);
+    for (let i = 1; i < 8; i++) pts.push(f(i / 8));
+  }
+  const wire = (x0, x1, sag) => `M${x0} 18 Q${(x0 + x1) / 2} ${18 + sag * 2} ${x1} 18`;
+  return `<defs>${lpHalo("wH")}</defs>
+<rect x="0" y="4" width="96" height="88" rx="3" class="lp-wall"/>
+<path d="${wire(6, 48, 50)} ${wire(48, 90, 44)}" fill="none" stroke="#2f3a2f" stroke-width="1"/>
+${[6, 48, 90].map((x) => `<circle cx="${x}" cy="18" r="1.8" fill="#8f98a2"/>`).join("")}
+<g>${pts.map(([x, y], i) => `<rect x="${(x - .9).toFixed(1)}" y="${(y - .4).toFixed(1)}" width="1.8" height="1.8" fill="#2f3a2f"/>${lpTwBulb(x, y, i, 2.3)}`).join("")}</g>`;
+};
+// One small twinkling bulb on a wire, with its own hue for effects.
+const lpTwBulb = (x, y, i, r = 1.8) => `<g class="lp-seg lp-tw" style="filter:hue-rotate(${(i * 47) % 360}deg)"><circle class="lp-halo" cx="${x.toFixed(1)}" cy="${(y + 3).toFixed(1)}" r="${(r * 3.2).toFixed(1)}" fill="url(#lp-wH)"/>
+<ellipse class="lp-lit" cx="${x.toFixed(1)}" cy="${(y + 2.6).toFixed(1)}" rx="${r}" ry="${(r * 1.4).toFixed(1)}"/></g>`;
+// A light curtain in a window: wires hanging from a rod.
+LAMP_SVGS.curtain = () => {
+  const xs = [14, 26, 38, 50, 62, 74, 86];
+  let i = 0;
+  return `<defs>${lpHalo("wH")}</defs>
+<rect x="4" y="8" width="88" height="82" rx="2" fill="#2a3a4c" stroke="#d7dce1" stroke-width="2.4"/>
+<path d="M48 8 V90 M4 49 H92" stroke="#d7dce1" stroke-width="1.6"/>
+<path d="M4 12 H92" stroke="#8f98a2" stroke-width="2" stroke-linecap="round"/>
+${xs.map((x) => `<path d="M${x} 12 V84" stroke="#3b4a3b" stroke-width=".6"/>`).join("")}
+<g>${xs.map((x, k) => Array.from({ length: 8 }, (_, j) => lpTwBulb(x, 15 + j * 9 + (k % 2) * 4, i++, 1.5)).join("")).join("")}</g>`;
+};
+// Icicle lights under a gutter: drops of uneven lengths.
+LAMP_SVGS.icicle = () => {
+  const lens = [3, 5, 2, 4, 6, 3, 5, 2, 4, 3, 5];
+  let i = 0;
+  return `<defs>${lpHalo("wH")}</defs>
+<rect x="0" y="14" width="96" height="80" class="lp-wall"/>
+<path d="M-2 4 L48 -4 L98 4 V12 H-2 Z" fill="#8a4b38"/>
+<rect x="0" y="11" width="96" height="4" rx="1.4" fill="#b9c1c9"/>
+<path d="M2 16 H94" stroke="#2f3a2f" stroke-width=".9"/>
+${lens.map((n, k) => { const x = 6 + k * 8.4; return `<path d="M${x.toFixed(1)} 16 V${16 + n * 8}" stroke="#2f3a2f" stroke-width=".6"/>`; }).join("")}
+<g>${lens.map((n, k) => Array.from({ length: n }, (_, j) => lpTwBulb(6 + k * 8.4, 16 + j * 8, i++, 1.5)).join("")).join("")}</g>`;
+};
+// Festoon lights: big round bulbs on two swags, as over a terrace.
+LAMP_SVGS.festoon = () => {
+  const pts = [];
+  for (const [x0, x1, sag] of [[4, 48, 34], [48, 92, 30]]) {
+    for (let k = 1; k < 4; k++) { const u = k / 4; pts.push([x0 + (x1 - x0) * u, 12 + sag * 4 * u * (1 - u)]); }
+  }
+  return `<defs>${lpHalo("wH")}
+<radialGradient id="lp-fG" cx=".4" cy=".35" r=".7"><stop offset="0" stop-color="#fff"/><stop offset=".5" class="lp-stop"/><stop offset="1" class="lp-stop" stop-opacity=".8"/></radialGradient></defs>
+<path d="M4 12 Q26 80 48 12 Q70 72 92 12" fill="none" stroke="#2b3036" stroke-width="1.4"/>
+${[4, 48, 92].map((x) => `<circle cx="${x}" cy="12" r="2.2" fill="#8f98a2"/>`).join("")}
+<g>${pts.map(([x, y], i) => `<g class="lp-seg lp-tw" style="filter:hue-rotate(${(i * 47) % 360}deg)"><circle class="lp-halo" cx="${x.toFixed(1)}" cy="${(y + 12).toFixed(1)}" r="16" fill="url(#lp-wH)"/>
+<rect x="${(x - 2.4).toFixed(1)}" y="${y.toFixed(1)}" width="4.8" height="5" rx=".9" fill="#2b3036"/>
+<circle cx="${x.toFixed(1)}" cy="${(y + 11.4).toFixed(1)}" r="6.8" fill="url(#lp-fG)" stroke="#c5ccd3" stroke-width=".5"/>
+<path d="M${(x - 3.2).toFixed(1)} ${(y + 8.4).toFixed(1)} q1.2 -2.2 3.6 -2.4" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round" opacity=".8"/></g>`).join("")}</g>`;
+};
+// Pixel squares on a wall, Twinkly Squares style: each pixel its own hue.
+LAMP_SVGS.squares = () => {
+  const tile = (tx, ty, k) => `<rect x="${tx}" y="${ty}" width="34" height="34" rx="2" fill="#1e2226"/>
+${Array.from({ length: 36 }, (_, i) => { const c = i % 6, r = Math.floor(i / 6); return `<rect class="lp-seg lp-px lp-lit" x="${tx + 2.4 + c * 5}" y="${ty + 2.4 + r * 5}" width="4" height="4" rx=".6" style="filter:hue-rotate(${((c + r + k * 3) * 22) % 360}deg)"/>`; }).join("")}`;
+  return `<defs>${lpHalo("qH")}</defs>
+<rect x="0" y="4" width="96" height="88" rx="3" class="lp-wall"/>
+<circle class="lp-halo" cx="48" cy="48" r="46" fill="url(#lp-qH)"/>
+<g>${tile(12, 12, 0)}${tile(50, 12, 1)}</g><g>${tile(12, 50, 2)}${tile(50, 50, 3)}</g>`;
+};
+// A small garden post along a path: its glass head lights the stones.
+LAMP_SVGS.bollard = () => `<defs>${lpHalo("yH")}
+<radialGradient id="lp-yG" cx=".5" cy=".5" r=".6"><stop offset="0" stop-color="#fff"/><stop offset="1" class="lp-stop"/></radialGradient>
+<radialGradient id="lp-yP" cx=".5" cy=".5" r=".5"><stop offset="0" class="lp-stop" stop-opacity=".8"/><stop offset="1" class="lp-stop" stop-opacity="0"/></radialGradient>
+${lpMetal("yM", "#2b3036", "#5d6670")}</defs>
+${lpGrass()}
+<path d="M30 94 C38 88 58 88 66 94 Z" fill="#b8b2a6"/>
+<ellipse cx="40" cy="91" rx="5" ry="1.6" fill="#cfc9bd"/><ellipse cx="54" cy="90.4" rx="4.4" ry="1.4" fill="#cfc9bd"/>
+<ellipse class="lp-wash" cx="48" cy="88" rx="36" ry="7" fill="url(#lp-yP)"/>
+<circle class="lp-halo" cx="48" cy="38" r="30" fill="url(#lp-yH)"/>
+<ellipse cx="48" cy="87" rx="9" ry="2" fill="#000" opacity=".22"/>
+<rect x="44" y="46" width="8" height="40" rx="1" fill="url(#lp-yM)"/>
+<path d="M41 86 H55 L53 82 H43 Z" fill="#2b3036"/>
+<rect x="41" y="44" width="14" height="3" rx="1" fill="#2b3036"/>
+<rect x="40" y="29" width="16" height="15" rx="1.5" fill="url(#lp-yG)" stroke="#2b3036" stroke-width="1.4"/>
+<path d="M44.6 29 V44 M51.4 29 V44" stroke="#2b3036" stroke-width=".9"/>
+<path d="M36 29 Q48 20 60 29 Z" fill="#2b3036"/>
+<rect x="46.6" y="20.4" width="2.8" height="3" rx="1" fill="#2b3036"/>`;
 function lampHtml(cls, c) {
   const layout = LAMP_LAYOUTS.includes(c.layout) ? c.layout : "bulb";
   const flags = ["lp", `lp-l-${layout}`, `lp-m-${c.mode || "unav"}`, c.fx ? "lp-fx" : ""].filter(Boolean).join(" ");
@@ -9172,6 +9293,13 @@ const ILLUSTRATION_CSS = {
         .lp-fx .lp-seg:nth-child(3n){animation-delay:-1.3s}
         .lp-fx .lp-seg:nth-child(5n){animation-delay:-2.1s}
         @keyframes lp-hue{to{filter:hue-rotate(360deg)}}
+        .lp-m-on .lp-tw{animation:lp-tw 3s ease-in-out infinite}
+        .lp-m-on .lp-tw:nth-child(2n){animation-delay:-.9s}
+        .lp-m-on .lp-tw:nth-child(3n){animation-delay:-1.7s}
+        .lp-m-on .lp-tw:nth-child(5n){animation-delay:-2.3s}
+        .lp:not(.lp-fx) .lp-tw,.lp:not(.lp-fx) .lp-px{filter:none !important}
+        .lp-fx.lp-m-on .lp-tw{animation:lp-tw 1.5s ease-in-out infinite,lp-hue 3s linear infinite}
+        @keyframes lp-tw{0%,100%{opacity:1}50%{opacity:.45}}
         @media (prefers-reduced-motion: reduce) { .machine.lp * { animation-name: none !important; } }
   `,
   // A UPS between the wall socket and the box it protects.
