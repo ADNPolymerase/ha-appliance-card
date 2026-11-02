@@ -1,0 +1,12 @@
+<svg viewBox="0 0 545 153" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Lire en français">
+  <rect x="4" y="8" width="537" height="141" rx="24" fill="#003a75"/>
+  <rect x="4" y="4" width="537" height="141" rx="24" fill="#0055a4"/>
+  <g transform="translate(32,38)">
+    <rect width="66" height="70" rx="10" fill="#ffffff"/>
+    <path d="M10 0 H22 V70 H10 A10 10 0 0 1 0 60 V10 A10 10 0 0 1 10 0 Z" fill="#1f5fbf"/>
+    <path d="M44 0 H56 A10 10 0 0 1 66 10 V60 A10 10 0 0 1 56 70 H44 Z" fill="#ef4135"/>
+    <rect x="22" width="22" height="70" fill="#ffffff"/>
+  </g>
+  <text x="124" y="70" font-family="Verdana, Geneva, DejaVu Sans, sans-serif" font-size="34" font-weight="bold" fill="#ffffff" textLength="390">Lire en français</text>
+  <text x="124" y="108" font-family="Verdana, Geneva, DejaVu Sans, sans-serif" font-size="24" fill="#d6e6f7" textLength="390">Documentation complète</text>
+</svg>

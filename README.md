@@ -1,5 +1,7 @@
 # HA Appliance Card
 
+<a href="https://github.com/ADNPolymerase/ha-appliance-card/blob/main/README.fr.md"><img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/lang-fr.svg" alt="Lire en français" height="60"></a>
+
 [![hacs_badge](https://img.shields.io/badge/HACS-Default-41BDF5.svg)](https://github.com/hacs/integration)
 [![GitHub Release](https://img.shields.io/github/v/release/ADNPolymerase/ha-appliance-card?sort=semver)](https://github.com/ADNPolymerase/ha-appliance-card/releases)
 [![HACS Action](https://github.com/ADNPolymerase/ha-appliance-card/actions/workflows/hacs.yml/badge.svg)](https://github.com/ADNPolymerase/ha-appliance-card/actions/workflows/hacs.yml)
@@ -15,7 +17,6 @@ A Lovelace card that draws the appliances of your home and animates them from th
 **[Try the live demo](https://adnpolymerase.github.io/ha-appliance-card/docs/demo.html?view=live)**: every appliance animated in your browser, light or dark, no Home Assistant needed.
 
 > Feedback and issues welcome.
-> 🇫🇷 [Lire en français](README.fr.md)
 
 <img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/screenshot.png" alt="HA Appliance Card screenshot" width="100%">
 
@@ -395,7 +396,7 @@ Only `state_entity` is required, except on a fridge where a probe or a door cont
 | `robot_shelter` | robot | `true` draws a shelter over a mower's base. The rain stops on its roof. |
 | `robot_shelter_style` | robot | `lean_to` (default, a wooden lean-to with a corrugated roof) \| `shell` (a moulded shell on one leg) \| `garage` (a back wall curving into a long roof over the mower, on a dark mat, like the Navimow or Husqvarna garages). |
 | `robot_shelter_color` | robot | The colour of the shell or garage (black by default for the garage): `white` (default) \| `grey` \| `black` \| `green` \| `orange`. |
-| `away_threshold` | robot | A stick vacuum or a floor washer read from the plug its dock is on: above `power_on_threshold` (5 W by default) it is *Charging*, below it *Charged*, and at `away_threshold` (1 W by default) or less *Off the base*, in use or badly seated, its dock drawn empty. The plug switched off reads *Off*. |
+| `away_threshold` | robot | A stick vacuum or a floor washer read from the plug its dock is on: above `power_on_threshold` (5 W by default) it is *Charging*, below it *Charged*, and at `away_threshold` (1 W by default) or less *Off the base*, in use or badly seated, its dock drawn empty. The plug switched off reads *Off*, whether it is the state entity or the card's switch (`toggle_entity`). |
 | `robot_floor` | robot | The floor a vacuum or a mop works on: `rug` (default for a vacuum) \| `tiles` (default for a mop) \| `parquet` \| `smooth`. |
 | `robot_controls` | robot | `true` adds the robot's own buttons, on a `vacuum` or `lawn_mower` entity: *Start* away from work, *Pause* at work, *Return to base* away from it. `controls_always: true` shows all three all the time. |
 | `battery_corner` | robot | `true` moves the battery from the lines to a corner of the card, as an icon and its percentage, orange at 20 % or less. A tap opens its entity. |

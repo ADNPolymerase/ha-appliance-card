@@ -1,5 +1,7 @@
 # HA Appliance Card
 
+<a href="https://github.com/ADNPolymerase/ha-appliance-card/blob/main/README.md"><img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/lang-en.svg" alt="Read in English" height="60"></a>
+
 [![hacs_badge](https://img.shields.io/badge/HACS-Default-41BDF5.svg)](https://github.com/hacs/integration)
 [![GitHub Release](https://img.shields.io/github/v/release/ADNPolymerase/ha-appliance-card?sort=semver)](https://github.com/ADNPolymerase/ha-appliance-card/releases)
 [![HACS Action](https://github.com/ADNPolymerase/ha-appliance-card/actions/workflows/hacs.yml/badge.svg)](https://github.com/ADNPolymerase/ha-appliance-card/actions/workflows/hacs.yml)
@@ -15,7 +17,6 @@ Une card Lovelace qui dessine les appareils de la maison et les anime selon leur
 **[Essayer la démo en ligne](https://adnpolymerase.github.io/ha-appliance-card/docs/demo.html?view=live&lang=fr)** : tous les appareils animés dans votre navigateur, en clair ou en sombre, sans Home Assistant.
 
 > Retours et issues bienvenus.
-> 🇬🇧 [Read in English](README.md)
 
 <img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/screenshot.fr.png" alt="HA Appliance Card screenshot" width="100%">
 
@@ -383,7 +384,7 @@ Seule `state_entity` est obligatoire, sauf sur un réfrigérateur où une sonde 
 | `robot_shelter` | robot | `true` dessine un abri au-dessus de la base d'une tondeuse. La pluie s'arrête sur son toit. |
 | `robot_shelter_style` | robot | `lean_to` (défaut, un appentis en bois au toit de tôle) \| `shell` (une coque moulée sur un pied) \| `garage` (un mur arrière qui se prolonge en long toit au-dessus de la tondeuse, sur un tapis sombre, comme les garages Navimow ou Husqvarna). |
 | `robot_shelter_color` | robot | La couleur de la coque ou du garage (noir par défaut pour le garage) : `white` (défaut) \| `grey` \| `black` \| `green` \| `orange`. |
-| `away_threshold` | robot | Un aspirateur balai ou un laveur de sol lu sur la prise de son support : au-dessus de `power_on_threshold` (5 W par défaut) il est *En charge*, en dessous *Chargé*, et à `away_threshold` (1 W par défaut) ou moins *Hors de la base*, en utilisation ou mal accroché, son support dessiné vide. La prise coupée affiche *Éteint*. |
+| `away_threshold` | robot | Un aspirateur balai ou un laveur de sol lu sur la prise de son support : au-dessus de `power_on_threshold` (5 W par défaut) il est *En charge*, en dessous *Chargé*, et à `away_threshold` (1 W par défaut) ou moins *Hors de la base*, en utilisation ou mal accroché, son support dessiné vide. La prise coupée affiche *Éteint*, qu'elle soit l'entité d'état ou l'interrupteur de la carte (`toggle_entity`). |
 | `robot_floor` | robot | Le sol sur lequel travaille un aspirateur ou un laveur : `rug` (tapis, défaut de l'aspirateur) \| `tiles` (carrelage, défaut du laveur) \| `parquet` \| `smooth` (sol lisse). |
 | `robot_controls` | robot | `true` ajoute les boutons du robot, sur une entité `vacuum` ou `lawn_mower` : *Démarrer* hors du travail, *Pause* au travail, *Retour à la base* loin d'elle. `controls_always: true` montre les trois en permanence. |
 | `battery_corner` | robot | `true` déplace la batterie des lignes vers un coin de la carte, en icône et en pourcentage, orange à 20 % ou moins. Un appui ouvre son entité. |

@@ -6173,6 +6173,12 @@ function stickModeOf(hass, cfg, st, layout) {
   const raw = st ? stripAccents(String(st.state)).trim().toLowerCase() : "";
   const plug = ["switch", "input_boolean"].includes(domainOf(cfg.state_entity));
   if (plug && ["off", "false"].includes(raw)) return "off";
+  // The plug as the card's switch, the state being its power or the
+  // integration: switched off, the dock is off, not the vacuum away from it.
+  for (const id of [cfg.toggle_entity, cfg.plug_entity]) {
+    const ps = id && ["switch", "input_boolean"].includes(domainOf(id)) ? stateObj(hass, id) : null;
+    if (ps && ["off", "false"].includes(String(ps.state).toLowerCase())) return "off";
+  }
   let mode = "";
   if (st && !plug && STICK_SELF_CLEAN.test(raw)) mode = "washing";
   else if (st && !plug && STICK_AT_WORK.test(raw.replace(/\s+/g, "_"))) mode = "away";

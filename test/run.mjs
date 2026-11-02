@@ -10740,6 +10740,11 @@ check('borne : ni un statut reconnu', evMode(evR('SuspendedEVSE', { power_entity
   check('balai : seuil choisi', stateLine(stk('on', 8, { power_on_threshold: 10 })), 'Charged');
   check('balai : en kilowatts', stateLine(stk('on', 0.02, {}, { 'sensor.balai_w': s(0.02, { unit_of_measurement: 'kW' }) })), 'Charging');
   check('balai : prise coupee', stateLine(stk('off', 0)), 'Off');
+  // HACF #134: the state is the power, the plug is the card's switch.
+  const STP = { ...ST, state_entity: 'sensor.balai_w', toggle_entity: 'switch.balai' };
+  check('balai : prise en interrupteur, coupee', stateLine(render(STP, { 'switch.balai': s('off'), 'sensor.balai_w': W(0) })), 'Off');
+  check('balai : prise en interrupteur, allumee, 0 W', stateLine(render(STP, { 'switch.balai': s('on'), 'sensor.balai_w': W(0) })), 'Off the base');
+  check('balai : prise en interrupteur, en charge', stateLine(render(STP, { 'switch.balai': s('on'), 'sensor.balai_w': W(20) })), 'Charging');
   check('balai : hors ligne', stateLine(render({ ...ST }, { 'switch.balai': s('unavailable'), 'sensor.balai_w': s('unavailable') })), 'Offline');
   check('balai : sans compteur, prise allumee', stateLine(render({ ...ST, power_entity: undefined }, { 'switch.balai': s('on') })), 'Charged');
   check('balai : sa batterie pleine', stateLine(stk('on', 24, { battery_entity: 'sensor.b' }, { 'sensor.b': s(100) })), 'Charged');
