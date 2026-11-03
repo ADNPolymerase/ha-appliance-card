@@ -22,7 +22,7 @@ A Lovelace card that draws the appliances of your home and animates them from th
 
 ## Features
 
-- **52 appliance types, more than 130 models drawn**, animated while they work and still when they stop. The type is detected on its own or set with `appliance_type`.
+- **56 appliance types, more than 140 models drawn**, animated while they work and still when they stop. The type is detected on its own or set with `appliance_type`.
 - **Any integration**: every field is an entity you pick. A plain smart plug is enough, its power tells whether the appliance heats, washes or spins.
 - **State understood**: `Idle`, `RUNNING`, `wash`… become idle, running, paused, finished, delayed or error, with the step of the cycle (wash, rinse, spin…).
 - **What matters for each appliance**: program, time left, door, alerts, levels, temperatures, energy and cost, today's running time.
@@ -77,6 +77,13 @@ Click a family to see its appliances at work.
 </details>
 
 <details>
+<summary><b>Litter boxes</b></summary>
+
+<img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-litter.gif" alt="Litter boxes">
+
+</details>
+
+<details>
 <summary><b>Garage and workshop</b></summary>
 
 <img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-garage.gif" alt="Garage and workshop">
@@ -108,6 +115,13 @@ Click a family to see its appliances at work.
 <summary><b>Pool pumps</b></summary>
 
 <img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-pool.gif" alt="Pool pumps">
+
+</details>
+
+<details>
+<summary><b>Garden watering</b></summary>
+
+<img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-watering.gif" alt="Garden watering">
 
 </details>
 
@@ -162,6 +176,20 @@ Click a family to see its appliances at work.
 
 </details>
 
+<details>
+<summary><b>Smoke, CO and leak detectors</b></summary>
+
+<img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-detectors.gif" alt="Smoke, CO and leak detectors">
+
+</details>
+
+<details>
+<summary><b>Speakers</b></summary>
+
+<img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-speakers.gif" alt="Speakers">
+
+</details>
+
 ## Installation
 
 ### HACS
@@ -202,7 +230,7 @@ Only `state_entity` is required, except on a fridge where a probe or a door cont
 | `done_alert` | `true` makes a green badge pulse on the drawing when a cycle has finished, until the door opens or the badge is tapped. For appliances with a cycle (washer, dryer, dishwasher, oven…). |
 | `illustration_color` | `auto` (default, follows the theme) \| `white` \| `grey` \| `black` \| `red` (dark red). Only changes the casing, not the state colours. |
 | `language` | `auto` (default, follows Home Assistant) or one of the 14 codes: `en`, `fr`, `de`, `es`, `it`, `nl`, `pt`, `sv`, `no`, `da`, `pl`, `ru`, `zh`, `cs`. `nb` and `nb-NO` give Norwegian. |
-| `appliance_type` | `auto` (default) \| `washer` \| `dryer` \| `dishwasher` \| `oven` \| `microwave` \| `hood` \| `cooktop` \| `fridge` \| `kettle` \| `cooker` \| `coffee` \| `rice_cooker` \| `air_fryer` \| `water_heater` \| `boiler` \| `thermostat` \| `heat_pump` \| `printer_3d` \| `pet_feeder` \| `pet_fountain` \| `iron` \| `toaster` \| `pellet_stove` \| `air_conditioner` \| `dehumidifier` \| `space_heater` \| `towel_warmer` \| `air_purifier` \| `fan` \| `ev_charger` \| `hair_dryer` \| `screen` \| `network` \| `robot` \| `pool_pump` \| `scale` \| `ups` \| `solar` \| `home_battery` \| `camera` \| `diffuser` \| `hrv` \| `lamp` \| `mailbox` \| `water_pump` \| `floor_heating` \| `spa` \| `sauna` \| `aquarium` \| `meter` \| `christmas_tree` \| `mobility`. |
+| `appliance_type` | `auto` (default) \| `washer` \| `dryer` \| `dishwasher` \| `oven` \| `microwave` \| `hood` \| `cooktop` \| `fridge` \| `kettle` \| `cooker` \| `coffee` \| `rice_cooker` \| `air_fryer` \| `water_heater` \| `boiler` \| `thermostat` \| `heat_pump` \| `printer_3d` \| `pet_feeder` \| `pet_fountain` \| `iron` \| `toaster` \| `pellet_stove` \| `air_conditioner` \| `dehumidifier` \| `space_heater` \| `towel_warmer` \| `air_purifier` \| `fan` \| `ev_charger` \| `hair_dryer` \| `screen` \| `network` \| `robot` \| `pool_pump` \| `scale` \| `ups` \| `solar` \| `home_battery` \| `camera` \| `diffuser` \| `hrv` \| `lamp` \| `mailbox` \| `water_pump` \| `floor_heating` \| `spa` \| `sauna` \| `aquarium` \| `meter` \| `christmas_tree` \| `mobility` \| `irrigation` \| `litter_box` \| `detector` \| `speaker`. |
 | `tap_action` | What a tap on the card does, in Home Assistant's own words: `more-info` (default: the state entity, or on a card without one what it reads in its place), `none`, `navigate`, `url`, `toggle`, `perform-action` or `fire-dom-event`, which is what the popup cards built on browser_mod listen for. In YAML only. |
 | `illustration_tap_action` | A tap on the drawing alone, the rest of the card keeping `tap_action`: `toggle` (a lamp lit by touching it), `more-info`, `none`, or any of Home Assistant's actions. Left out, the drawing does what the card does. With `toggle`, the drawing answers like the buttons, as `controls_activation` says: a tap, two taps or a long press. |
 | `show_toggle` | `false` takes away a lamp's on/off button, for a card switched by touching its drawing (`illustration_tap_action: toggle`). |
@@ -385,6 +413,26 @@ Only `state_entity` is required, except on a fridge where a probe or a door cont
 | `meter_direction` | meter | `auto` (default): power below zero is fed in, the meter reads *Feeding in* with a green LED \| `import`: a meter that only draws, a negative reading counts as no use \| `export`: a meter that only feeds in, whatever the sign. At 0 W an electricity meter reads *No use*. |
 | `tree_palette` | christmas_tree | `multicolor` (default) \| `red_gold` \| `red_silver` \| `gold_silver` \| `blue_silver` \| `white_silver` \| `red_green`: the baubles, the lights, the tinsel, the star, the pot and the presents. |
 | `presents` | christmas_tree | `auto` (default, presents under the tree on 24 and 25 December only) \| `show` \| `hide`. |
+| `irrigation_layout` | irrigation | `sprinkler` (a pop-up spray head on its lawn) \| `tap` (a tap timer on the garden tap, its hose and nozzle). Left out, a name that says Gardena, LinkTap, tap or timer makes a tap timer. |
+| `zone_entity` / `next_run_entity` | irrigation | The zone being watered and the next run, as lines. `remaining_time_entity` shows the time left on the drawing while it waters. |
+| `rain_delay_entity` | irrigation | A rain delay, on or a number of hours: *Rain delay*, the rain falling on the lawn. |
+| `soil_moisture_entity` | irrigation | The soil moisture, in %: a gauge on a stake in the lawn, and a line, amber below 25 %. |
+| `litter_layout` | litter_box | `globe` (a globe that turns on its base, Litter-Robot style) \| `box` (a closed box with a round entrance, Petkit Pura style). Left out, a name that says Petkit, Pura or box makes a box. The state is read in words or in Litter-Robot's codes (`rdy`, `ccp`, `cst`, `dfs`...): *Ready*, *Cleaning* (the full cycle: the globe or the drum turns, the litter stays flat at the bottom and the clumps are sifted out, then it levels and comes back), *Cat inside*, *Drawer full*, *Fault*. |
+| `waste_drawer_entity` / `litter_level_entity` | litter_box | The waste drawer's fill and the litter level, in %: a gauge on the drawer and lines, amber from 80 % full or 20 % of litter left. |
+| `pet_weight_entity` / `visits_entity` / `last_use_entity` | litter_box | The cat's weight, today's visits and the last use, as lines. |
+| `cat_present_entity` | litter_box | A sensor that sees the cat: *Cat inside*, the cat in the doorway. |
+| `detector_layout` | detector | `smoke` (a smoke detector on the ceiling) \| `co` (a CO alarm on the wall, its display in ppm) \| `leak` (a leak sensor on the floor). Left out, the device class picks it (`smoke`, `carbon_monoxide` or `gas`, `moisture`), or the name. On is an alarm: the smoke rises to the ceiling, the CO display turns red, the water drips into a puddle. |
+| `battery_entity` | detector | The battery, in % or as a low-battery sensor: a line, and the light turns amber at 20 % or less. |
+| `co_level_entity` | detector | The CO level, on the alarm's display and as a line. |
+| `speaker_layout` | speaker | `smart` (HomePod) \| `homepod_mini` \| `sonos_one` \| `bookshelf` \| `sonos_move` \| `soundbar` (under its TV) \| `echo_dot` \| `nest_mini`. Left out, it is read in the name. The state is a `media_player`: what it plays, the artist, the source and the volume are lines. |
+| `meat_probe_entity` / `meat_probe_target_entity` | oven | The meat probe and its target, as one line. |
+| `detergent_level_entity` / `softener_level_entity` | washer | The detergent and softener tanks, a level in % or a low-level sensor: a line, amber when low. |
+| `wash_temperature_entity` / `spin_speed_entity` | washer | The wash temperature and the spin speed, as lines. |
+| `heater_mode_entity` / `showers_entity` | water_heater | The heating mode (eco, boost...) and the showers available, as lines. |
+| `pilot_mode_entity` / `window_entity` | space_heater, towel_warmer | The pilot wire mode, and a window contact: *Open* in amber. |
+| `range_entity` / `vehicle_lock_entity` | electric ride | The range left, and the lock: *Unlocked* in amber. |
+| `water_ph_entity` / `water_chlorine_entity` | spa, aquarium | The water's pH, and on a spa its chlorine, as lines. |
+| `aquarium_filter_entity` | aquarium | The filter pump: *Stopped* in amber. |
 | `spots` | lamp | The number of spots drawn, 1 to 4. Left out, a light group draws one spot per light, up to four. |
 | `timer_entity` | lamp | A select of durations (an auto-off timer): a pill showing the one chosen, which opens the list. |
 | `robot_layout` | robot | `vacuum` \| `mop` \| `mower` \| `stick` (a stick vacuum on its wall dock) \| `floor_washer` (a wet and dry floor washer in its station). Left out, a name that says stick, cordless or Dyson makes a stick vacuum, Tineco or floor washer a floor washer, a `lawn_mower` entity or a name that says mower, Landroid or Automower makes a mower, and Braava or mop a mopping robot. `pool` draws a pool robot whose cable follows it, with its `remaining_time_entity` on its power supply; a name that says pool, Dolphin, Maytronics, Aiper, Zodiac or Polaris picks it. |
@@ -974,6 +1022,50 @@ mobility_layout: offroad
 state_entity: switch.workshop_plug
 power_entity: sensor.workshop_plug_power
 battery_entity: sensor.scooter_battery   # optional
+```
+
+</details>
+
+<details>
+<summary><b>Watering, litter boxes, detectors and speakers</b></summary>
+
+A sprinkler waters while its switch or valve is on, and waits for the weather when its rain delay is set:
+
+```yaml
+type: custom:ha-appliance-card
+appliance_type: irrigation
+state_entity: switch.front_lawn
+remaining_time_entity: sensor.front_lawn_time_left
+rain_delay_entity: binary_sensor.rain_delay
+soil_moisture_entity: sensor.lawn_moisture
+```
+
+A Litter-Robot reads its own status codes:
+
+```yaml
+type: custom:ha-appliance-card
+appliance_type: litter_box
+state_entity: sensor.litter_robot_status
+waste_drawer_entity: sensor.litter_robot_waste_drawer
+pet_weight_entity: sensor.litter_robot_pet_weight
+```
+
+A detector is a binary sensor, its device class picks the drawing:
+
+```yaml
+type: custom:ha-appliance-card
+appliance_type: detector
+state_entity: binary_sensor.kitchen_leak
+battery_entity: sensor.kitchen_leak_battery
+```
+
+A speaker is a media player:
+
+```yaml
+type: custom:ha-appliance-card
+appliance_type: speaker
+speaker_layout: sonos_one
+state_entity: media_player.living_room
 ```
 
 </details>

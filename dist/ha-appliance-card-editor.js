@@ -1,6 +1,6 @@
 // Built by tools/build.mjs from src/ha-appliance-card.js: edit the source, not this file.
 // The card's editor, loaded by the card the first time it is edited.
-export default function defineEditor({ t, onLanguageLoaded, LANGUAGE_NAMES, localizedHass, activationOf, TH_LAYOUTS, EV_POWER_THRESHOLD, stateObj, parseValueMap, stringifyValueMap, alertsArray, LIST_OTHER, ENTITY_LISTS, listCandidates, defaultCardName, stripDeviceName, domainOf, INFO_MAX, autoSuggest, APPLIANCE_TYPES, STATE_DOMAINS, SCREEN_ONLY_FIELDS, illustrationSizeOf, fontScaleOf, compactModeOf, TYPE_GROUPS, caps, detectApplianceType, SCREEN_STANDBY_W, SCREEN_LAYOUTS, SCREEN_IMAGES, screenLayoutOf, screenIsTablet, HD_HEAT_W, PLUG_THRESHOLDS, ZONE_POWER_W, PLUG_SOURCE_TYPES, plugSourceOf, DW_DRY_MIN, WASH_HEAT_W, WASH_SPIN_W, DRYER_HEAT_W, NET_LAYOUTS, SWITCH_PORTS, NET_BAYS, NET_BUSY_MBIT, NET_TEMP_ALERT, netLayoutOf, ROBOT_LAYOUTS, ROBOT_STATIONS, ROBOT_BOX_COLORS, ROBOT_FLOORS, ROBOT_SERVICES, STICK_AWAY_W, robotLayoutOf, POOL_PRESSURE_ALERT, SOLAR_LAYOUTS, BATTERY_LAYOUTS, BATTERY_IDLE_W, DIFFUSER_LAYOUTS, illustrationTapOf, UNIT_FILTERS, HRV_LAYOUTS, CAMERA_LAYOUTS, MAILBOX_LAYOUTS, MAILBOX_SIDES, mailboxLayoutOf, LAMP_LAYOUTS, LAMP_SPOTS, lampLayoutOf, MOBILITY_LAYOUTS, PUMP_LAYOUTS, FLOOR_LAYOUTS, METER_LAYOUTS, meterLayoutOf, TREE_PALETTES, TREE_PRESENTS, pumpLayoutOf, UPS_BATTERY_LOW, HISTORY_HOURS, BODY_COLORS, esc, MOWER_STYLES, SHELTER_STYLES, SHELTER_COLORS, LAPTOP_COLORS, LAPTOP_STYLES, stateFreeSource }) {
+export default function defineEditor({ t, onLanguageLoaded, LANGUAGE_NAMES, localizedHass, activationOf, TH_LAYOUTS, EV_POWER_THRESHOLD, stateObj, parseValueMap, stringifyValueMap, alertsArray, LIST_OTHER, ENTITY_LISTS, listCandidates, defaultCardName, stripDeviceName, domainOf, INFO_MAX, autoSuggest, APPLIANCE_TYPES, STATE_DOMAINS, SCREEN_ONLY_FIELDS, illustrationSizeOf, fontScaleOf, compactModeOf, TYPE_GROUPS, caps, detectApplianceType, SCREEN_STANDBY_W, SCREEN_LAYOUTS, SCREEN_IMAGES, screenLayoutOf, screenIsTablet, HD_HEAT_W, PLUG_THRESHOLDS, ZONE_POWER_W, PLUG_SOURCE_TYPES, plugSourceOf, DW_DRY_MIN, WASH_HEAT_W, WASH_SPIN_W, DRYER_HEAT_W, NET_LAYOUTS, SWITCH_PORTS, NET_BAYS, NET_BUSY_MBIT, NET_TEMP_ALERT, netLayoutOf, ROBOT_LAYOUTS, ROBOT_STATIONS, ROBOT_BOX_COLORS, ROBOT_FLOORS, ROBOT_SERVICES, STICK_AWAY_W, robotLayoutOf, POOL_PRESSURE_ALERT, SOLAR_LAYOUTS, BATTERY_LAYOUTS, BATTERY_IDLE_W, DIFFUSER_LAYOUTS, illustrationTapOf, UNIT_FILTERS, HRV_LAYOUTS, CAMERA_LAYOUTS, MAILBOX_LAYOUTS, MAILBOX_SIDES, mailboxLayoutOf, LAMP_LAYOUTS, LAMP_SPOTS, lampLayoutOf, IRRIGATION_LAYOUTS, LITTER_LAYOUTS, DETECTOR_LAYOUTS, SPEAKER_LAYOUTS, MOBILITY_LAYOUTS, PUMP_LAYOUTS, FLOOR_LAYOUTS, OPT_LINES, METER_LAYOUTS, meterLayoutOf, detectorLayoutOf, TREE_PALETTES, TREE_PRESENTS, pumpLayoutOf, UPS_BATTERY_LOW, HISTORY_HOURS, BODY_COLORS, esc, MOWER_STYLES, SHELTER_STYLES, SHELTER_COLORS, LAPTOP_COLORS, LAPTOP_STYLES, stateFreeSource }) {
 // ---------------------------------------------------------------------------
 // Editor
 // ---------------------------------------------------------------------------
@@ -209,10 +209,27 @@ const SECTIONS = [
     when: (c) => ["linky", "box", "dome"].includes(meterLayoutOf(c, null)) },
   { field: "remaining_time_entity", types: ["robot"], labelKey: "section_remaining", includeDomains: ["sensor", "input_number"],
     when: (c) => robotLayoutOf(c, null) === "pool" },
+  // Watering, the litter box, the detector.
+  { field: "zone_entity", types: ["irrigation"], labelKey: "irr_zone", includeDomains: ["sensor", "select", "input_select", "input_text"] },
+  { field: "remaining_time_entity", types: ["irrigation"], labelKey: "section_remaining", includeDomains: ["sensor", "input_number"] },
+  { field: "rain_delay_entity", types: ["irrigation"], labelKey: "section_rain_delay", includeDomains: ["binary_sensor", "switch", "input_boolean", "sensor", "number"] },
+  { field: "soil_moisture_entity", types: ["irrigation"], labelKey: "section_soil_moisture", includeDomains: ["sensor"] },
+  { field: "next_run_entity", types: ["irrigation"], labelKey: "section_next_run", includeDomains: ["sensor", "input_datetime"] },
+  { field: "waste_drawer_entity", types: ["litter_box"], labelKey: "sec_waste_drawer", includeDomains: ["sensor", "number"] },
+  { field: "litter_level_entity", types: ["litter_box"], labelKey: "sec_litter_level", includeDomains: ["sensor", "number"] },
+  { field: "pet_weight_entity", types: ["litter_box"], labelKey: "sec_pet_weight", includeDomains: ["sensor"] },
+  { field: "visits_entity", types: ["litter_box"], labelKey: "sec_visits", includeDomains: ["sensor", "counter"] },
+  { field: "last_use_entity", types: ["litter_box"], labelKey: "sec_last_use", includeDomains: ["sensor", "input_datetime"] },
+  { field: "cat_present_entity", types: ["litter_box"], labelKey: "sec_cat_present", includeDomains: ["binary_sensor"] },
+  { field: "co_level_entity", types: ["detector"], labelKey: "sec_co_level", includeDomains: ["sensor"], when: (c) => detectorLayoutOf(c, null) === "co" },
+  { field: "test_entity", types: ["detector"], labelKey: "sec_test", includeDomains: ["button", "input_button", "script", "switch"] },
+  // Optional readings on the older types.
+  ...Object.entries(OPT_LINES).flatMap(([ty, list]) => list.flatMap((o) => [{ field: o.field, types: [ty], labelKey: o.label, includeDomains: o.domains }]
+    .concat(o.target ? [{ field: o.target, types: [ty], labelKey: o.targetLabel, includeDomains: ["sensor", "number", "input_number"] }] : []))),
   { field: "mail_count_entity", types: ["mailbox"], labelKey: "section_mail_count", includeDomains: ["sensor", "counter", "input_number", "number"] },
   { field: "front_door_entity", types: ["mailbox"], labelKey: "mb_front_door", includeDomains: ["binary_sensor", "sensor", "input_boolean", "switch"] },
   { field: "back_door_entity", types: ["mailbox"], labelKey: "mb_back_door", includeDomains: ["binary_sensor", "sensor", "input_boolean", "switch"] },
-  { field: "battery_entity", types: ["robot", "home_battery", "ups", "camera", "screen", "mobility"], labelKey: "section_battery", includeDomains: ["sensor"],
+  { field: "battery_entity", types: ["robot", "home_battery", "ups", "camera", "screen", "mobility", "detector"], labelKey: "section_battery", includeDomains: ["sensor", "binary_sensor"],
     when: (c) => !(c.appliance_type === "screen" || SCREEN_ONLY_FIELDS.some((f) => c[f])) || screenIsTablet(c) || screenLayoutOf(c) === "laptop", extra: (c) =>
       (caps(c._currentType()).ups ? c._row("ups_battery_low", "battery_low", { placeholder: String(UPS_BATTERY_LOW) }) : "") },
   // A UPS: the time left on its battery, its load and the mains voltage.
@@ -1294,6 +1311,9 @@ class ApplianceCardEditor extends HTMLElement {
           type: "select",
           options: [{ value: "auto", label: t(hass, "unit_auto") }].concat(PUMP_LAYOUTS.map((v) => ({ value: v, label: t(hass, `layout_pump_${v}`) }))),
         }) : ""}
+        ${[["irrigation", "irrigation_layout", IRRIGATION_LAYOUTS, "irr"], ["litter_box", "litter_layout", LITTER_LAYOUTS, "lit"], ["detector", "detector_layout", DETECTOR_LAYOUTS, "det"], ["speaker", "speaker_layout", SPEAKER_LAYOUTS, "spk"]]
+          .filter(([ty]) => this._type === ty).map(([, f, list, p]) => this._row("section_screen_layout", f, { type: "select",
+            options: [{ value: "auto", label: t(hass, "unit_auto") }].concat(list.map((v) => ({ value: v, label: t(hass, `layout_${p}_${v}`) }))) })).join("")}
         ${this._type === "mobility" ? this._row("section_screen_layout", "mobility_layout", {
           type: "select",
           options: [{ value: "auto", label: t(hass, "unit_auto") }].concat(MOBILITY_LAYOUTS.map((v) => ({ value: v, label: t(hass, `layout_mob_${v}`) }))),

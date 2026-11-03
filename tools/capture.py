@@ -80,6 +80,10 @@ FAMILIES = (
     ("cameras", "cam_indoor,cam_tube,cam_outdoor,cam_dome,cam_privacy,cam_offline", 6),
     ("lamps", "lamp_bulb,lamp_bedside,lamp_floor,lamp_torch,lamp_pendant,lamp_strip,lamp_spots,lamp_panels,lamp_desk,lamp_wall", 5),
     ("mailboxes", "mb_through,mb_postman,mb_collect,mb_right,mb_classic,mb_classic_open,cam_doorbell,cam_doorbell_idle", 4),
+    ("litter", "lit_globe,lit_globe_clean,lit_globe_cat,lit_box,lit_box_clean,lit_box_full", 3),
+    ("watering", "irr_sprinkler,irr_rain,irr_tap,irr_tap_off", 4),
+    ("detectors", "det_smoke,det_smoke_alarm,det_co,det_co_alarm,det_leak,det_leak_alarm", 3),
+    ("speakers", "spk_smart,spk_mini,spk_one,spk_shelf,spk_move,spk_bar,spk_dot,spk_nest", 4),
 )
 # Sixteen frames a tenth of a second apart over a 1.6 s loop, on a 128-colour
 # palette: the five families weigh about 1.4 MB per language, where 32 frames
@@ -105,7 +109,9 @@ GIF_ISIZE = 1.2
 GIF_WIDE = {"ventilation": (2, 400)}
 # Families whose loop is longer than 1.6 s: frames and their spacing. An
 # electric ride's gauge fills in 5 s, and its fourth bar has to be seen.
-GIF_TIMING = {"mobility": (25, 200)}
+# The litter boxes, the watering, the detectors and the speakers share one 7 s
+# cycle, the litter box's full cleaning, every motion fitting it whole.
+GIF_TIMING = {"mobility": (25, 200), "litter": (35, 200), "watering": (35, 200), "detectors": (35, 200), "speakers": (35, 200)}
 
 
 def gif_cols(count):
@@ -180,6 +186,7 @@ POSTER = (
     ("robot_vacuum", 2), ("mob_poster", 5), ("robot_mower", 2), ("robot_stick", 1), ("robot_washer", 1), ("nt_pool", 1), ("pool_running", 1), ("nt_spa", 1),
     ("solar_day", 2), ("battery_charging", 2), ("ups_online", 1), ("nt_linky", 5), ("nt_booster", 2), ("nt_floor", 2), ("nt_sauna", 1), ("nt_aquarium", 1),
     ("scale_fresh", 1), ("hd_hot", 2), ("dif_drop", 5), ("hrv_one_duct", 3), ("cam_outdoor", 5), ("lamp_floor", 10), ("mb_classic", 2), ("nt_tree", 1),
+    ("irr_sprinkler", 2), ("lit_globe", 2), ("det_smoke", 3), ("spk_smart", 8),
 )
 
 

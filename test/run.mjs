@@ -12243,4 +12243,75 @@ function tvT(w) { return { 'switch.tv': { state: 'on', attributes: {} }, 'sensor
   check('editeur source : les entites d integration apparaissent tout de suite', markup(src._root).includes('data-toggle="program_entity"'), true);
 }
 
+// Watering, litter boxes, detectors and speakers, and the optional readings
+// added to the older types.
+{
+  const s = (state, attributes = {}) => ({ state: String(state), attributes });
+  const kindOf = (h) => (/\bnt-k-(\w+)/.exec(machineCls(h)) || [, null])[1];
+  const IR = { appliance_type: 'irrigation', state_entity: 'switch.irr' };
+  check('arrosage : arrose', stateLine(render(IR, { 'switch.irr': s('on') })), 'Watering');
+  check('arrosage : en attente', stateLine(render(IR, { 'switch.irr': s('off') })), 'Waiting');
+  check('arrosage : pause pluie', stateLine(render({ ...IR, rain_delay_entity: 'binary_sensor.r' }, { 'switch.irr': s('off'), 'binary_sensor.r': s('on') })), 'Rain delay');
+  check('arrosage : pause pluie en heures', stateLine(render({ ...IR, rain_delay_entity: 'sensor.r' }, { 'switch.irr': s('off'), 'sensor.r': s(24) })), 'Rain delay');
+  check('arrosage : la pluie dessinee', /class="nta-rdrop/.test(render({ ...IR, rain_delay_entity: 'binary_sensor.r' }, { 'switch.irr': s('off'), 'binary_sensor.r': s('on') })), true);
+  check('arrosage : une vanne ouverte arrose', stateLine(render({ appliance_type: 'irrigation', state_entity: 'valve.v' }, { 'valve.v': s('open') })), 'Watering');
+  check('arrosage : arroseur par defaut', kindOf(render(IR, { 'switch.irr': s('on') })), 'irr_sprinkler');
+  check('arrosage : programmateur par son nom', kindOf(render({ appliance_type: 'irrigation', state_entity: 'valve.gardena' }, { 'valve.gardena': s('open') })), 'irr_tap');
+  const soil = render({ ...IR, soil_moisture_entity: 'sensor.h' }, { 'switch.irr': s('off'), 'sensor.h': s(14, { unit_of_measurement: '%' }) });
+  check('arrosage : humidite du sol en ligne', infoLine(soil, 'Soil moisture').replace(/\s/g, ' '), '14 %');
+  check('arrosage : sol sec en orange', /info-line[^"]*caution[^"]*"[^>]*title="Soil moisture"|title="Soil moisture"[^>]*caution/.test(soil) || /caution/.test(soil), true);
+
+  const LT = (st, more = {}, ents = {}) => render({ appliance_type: 'litter_box', state_entity: 'sensor.lr', ...more }, { 'sensor.lr': s(st), ...ents });
+  check('litiere : prete', stateLine(LT('rdy')), 'Ready');
+  check('litiere : nettoyage', stateLine(LT('ccp')), 'Cleaning');
+  check('litiere : chat dedans', stateLine(LT('cst')), 'Cat inside');
+  check('litiere : tiroir plein', stateLine(LT('dfs')), 'Drawer full');
+  check('litiere : defaut', stateLine(LT('csf')), 'Fault');
+  check('litiere : en mots', stateLine(LT('Cleaning')), 'Cleaning');
+  check('litiere : un chat vu par un capteur', stateLine(LT('rdy', { cat_present_entity: 'binary_sensor.c' }, { 'binary_sensor.c': s('on') })), 'Cat inside');
+  check('litiere : le tiroir a 100 % est plein', stateLine(LT('rdy', { waste_drawer_entity: 'sensor.d' }, { 'sensor.d': s(100, { unit_of_measurement: '%' }) })), 'Drawer full');
+  check('litiere : le globe tourne en nettoyage', /class="nta-lrcycle/.test(LT('ccp')) && /nt-on/.test(machineCls(LT('ccp'))), true);
+  check('litiere : au repos, rien ne tourne', /nt-on/.test(machineCls(LT('rdy'))), false);
+  check('litiere : globe par defaut', kindOf(LT('rdy')), 'lit_globe');
+  check('litiere : boite par son nom', kindOf(render({ appliance_type: 'litter_box', state_entity: 'sensor.petkit_pura' }, { 'sensor.petkit_pura': s('rdy') })), 'lit_box');
+  check('litiere : les agglomerats seulement en nettoyage', [/class="nta-clump/.test(LT('ccp')), /class="nta-clump/.test(LT('rdy'))].join(), 'true,false');
+  check('litiere : poids du chat', /4\.6(\s|&nbsp;|\u00a0)*kg/.test(LT('rdy', { pet_weight_entity: 'sensor.w' }, { 'sensor.w': s(4.6, { unit_of_measurement: 'kg' }) })), true);
+
+  const DT = (cls, st, more = {}, ents = {}) => render({ appliance_type: 'detector', state_entity: 'binary_sensor.d', ...more }, { 'binary_sensor.d': s(st, { device_class: cls }), ...ents });
+  check('detecteur : fumee RAS', stateLine(DT('smoke', 'off')), 'All clear');
+  check('detecteur : fumee', stateLine(DT('smoke', 'on')), 'Smoke detected');
+  check('detecteur : CO', stateLine(DT('carbon_monoxide', 'on')), 'CO detected');
+  check('detecteur : fuite', stateLine(DT('moisture', 'on')), 'Leak detected');
+  check('detecteur : le dessin suit la classe', [kindOf(DT('smoke', 'off')), kindOf(DT('carbon_monoxide', 'off')), kindOf(DT('moisture', 'off'))].join(), 'det_smoke,det_co,det_leak');
+  check('detecteur : la fumee monte en alarme', [/class="nta-smoke/.test(DT('smoke', 'on')), /class="nta-smoke/.test(DT('smoke', 'off'))].join(), 'true,false');
+  check('detecteur : taux de CO sur l ecran', /180 ppm/.test(DT('carbon_monoxide', 'on', { co_level_entity: 'sensor.co' }, { 'sensor.co': s(180, { unit_of_measurement: 'ppm' }) })), true);
+  const lowB = DT('smoke', 'off', { battery_entity: 'sensor.b' }, { 'sensor.b': s(12, { unit_of_measurement: '%' }) });
+  check('detecteur : pile faible, voyant orange', /fill="#ffb300"/.test(lowB), true);
+  check('detecteur : pile en ligne', infoLine(lowB, 'Battery').replace(/\s/g, ' '), '12 %');
+
+  const SPK = (st, attrs = {}, more = {}) => render({ appliance_type: 'speaker', state_entity: 'media_player.m', ...more }, { 'media_player.m': s(st, attrs) });
+  check('enceinte : lecture', stateLine(SPK('playing')), 'Playing');
+  check('enceinte : pause', stateLine(SPK('paused')), 'Paused');
+  check('enceinte : eteinte', stateLine(SPK('off')), 'Off');
+  check('enceinte : le titre en ligne', infoLine(SPK('playing', { media_title: 'Song', volume_level: 0.42 }), 'Title'), 'Song');
+  check('enceinte : le volume', infoLine(SPK('playing', { volume_level: 0.42 }), 'Volume').replace(/\s/g, ' '), '42 %');
+  check('enceinte : muette', infoLine(SPK('idle', { volume_level: 0.5, is_volume_muted: true }), 'Volume'), 'Muted');
+  check('enceinte : les modeles', ['homepod_mini', 'sonos_one', 'sonos_move', 'echo_dot', 'nest_mini', 'bookshelf', 'soundbar', 'smart'].map((l) => kindOf(SPK('playing', {}, { speaker_layout: l }))).join(),
+    'spk_homepod_mini,spk_sonos_one,spk_sonos_move,spk_echo_dot,spk_nest_mini,spk_bookshelf,spk_soundbar,spk_smart');
+  check('enceinte : par son nom', kindOf(render({ appliance_type: 'speaker', state_entity: 'media_player.sonos_one_salon' }, { 'media_player.sonos_one_salon': s('playing') })), 'spk_sonos_one');
+
+  // The optional readings on the older types.
+  check('four : sonde a viande', infoLine(render({ appliance_type: 'oven', state_entity: 'sensor.o', meat_probe_entity: 'sensor.p', meat_probe_target_entity: 'sensor.t' },
+    { 'sensor.o': s('running'), 'sensor.p': s(52, { unit_of_measurement: '°C' }), 'sensor.t': s(65, { unit_of_measurement: '°C' }) }), 'Meat probe') !== '', true);
+  check('radiateur : fenetre ouverte', infoLine(render({ appliance_type: 'space_heater', state_entity: 'climate.r', window_entity: 'binary_sensor.f' },
+    { 'climate.r': s('heat', { hvac_action: 'heating', current_temperature: 19, temperature: 20 }), 'binary_sensor.f': s('on') }), 'Window'), 'Open');
+  check('trottinette : autonomie', infoLine(render({ appliance_type: 'mobility', state_entity: 'switch.t', range_entity: 'sensor.r' }, { 'switch.t': s('on'), 'sensor.r': s(23, { unit_of_measurement: 'km' }) }), 'Range').replace(/\s/g, ' '), '23 km');
+
+  // The editor.
+  const ed = (cfg) => markup(newEditor(cfg));
+  check('editeur arrosage : le modele et la pluie', ['"irrigation_layout"', 'data-toggle="rain_delay_entity"'].every((f) => ed({ appliance_type: 'irrigation', state_entity: 'switch.i' }).includes(f)), true);
+  check('editeur litiere : le tiroir', ed({ appliance_type: 'litter_box', state_entity: 'sensor.l' }).includes('data-toggle="waste_drawer_entity"'), true);
+  check('editeur enceinte : le modele', ed({ appliance_type: 'speaker', state_entity: 'media_player.m' }).includes('"speaker_layout"'), true);
+}
+
 report();

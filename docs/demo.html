@@ -1397,6 +1397,42 @@ const demo_mobMotorcycle = mobCard(L("Motorcycle", "Moto"), "motorcycle", "on", 
 const demo_mobPoster = mobCard("Ausom DT2 Pro", "offroad", "on", 121, 70);
 const demo_mobUnplugged = mobCard(L("Scooter", "Trottinette"), "scooter", "off", 0, 41);
 const demoTreeRed = () => card({ name: L("Red and gold", "Rouge et or"), appliance_type: "christmas_tree", state_entity: "switch.tree2", tree_palette: "red_gold" }, [st("switch.tree2", "on")]);
+// Watering, litter boxes, detectors and speakers.
+const irrCard = (name, cfg, ents) => () => card({ name, appliance_type: "irrigation", ...cfg }, ents);
+const irrSprinkler = irrCard(L("Front lawn", "Pelouse avant"), { irrigation_layout: "sprinkler", state_entity: "switch.irr", remaining_time_entity: "sensor.irr_left", soil_moisture_entity: "sensor.irr_soil" },
+  [st("switch.irr", "on"), st("sensor.irr_left", 12, { unit_of_measurement: "min" }), st("sensor.irr_soil", 38, { unit_of_measurement: "%" })]);
+const irrRain = irrCard(L("Rain delay", "Pause pluie"), { irrigation_layout: "sprinkler", state_entity: "switch.irr2", rain_delay_entity: "binary_sensor.irr_rain", soil_moisture_entity: "sensor.irr_soil2" },
+  [st("switch.irr2", "off"), st("binary_sensor.irr_rain", "on"), st("sensor.irr_soil2", 38, { unit_of_measurement: "%" })]);
+const irrTap = irrCard(L("Tap timer", "Programmateur"), { irrigation_layout: "tap", state_entity: "valve.irr_tap", remaining_time_entity: "sensor.irr_tap_left" },
+  [st("valve.irr_tap", "open"), st("sensor.irr_tap_left", 12, { unit_of_measurement: "min" })]);
+const irrTapOff = irrCard(L("Dry soil", "Sol sec"), { irrigation_layout: "tap", state_entity: "valve.irr_tap2", soil_moisture_entity: "sensor.irr_soil3" },
+  [st("valve.irr_tap2", "closed"), st("sensor.irr_soil3", 14, { unit_of_measurement: "%" })]);
+const litCard = (name, layout, status, drawer, more = {}) => () => card({ name, appliance_type: "litter_box", litter_layout: layout, state_entity: "sensor.lit_" + layout + status, waste_drawer_entity: "sensor.lit_drawer_" + layout + status, ...more },
+  [st("sensor.lit_" + layout + status, status), st("sensor.lit_drawer_" + layout + status, drawer, { unit_of_measurement: "%" }), st("sensor.lit_weight", 4.6, { unit_of_measurement: "kg" })]);
+const litGlobe = litCard(L("Litter-Robot", "Litter-Robot"), "globe", "rdy", 45, { pet_weight_entity: "sensor.lit_weight" });
+const litGlobeClean = litCard(L("Cleaning", "Nettoyage"), "globe", "ccp", 45);
+const litGlobeCat = litCard(L("Cat inside", "Chat dedans"), "globe", "cst", 45);
+const litBox = litCard(L("Petkit Pura", "Petkit Pura"), "box", "rdy", 30);
+const litBoxClean = litCard(L("Cleaning", "Nettoyage"), "box", "ccp", 30);
+const litBoxFull = litCard(L("Drawer full", "Tiroir plein"), "box", "dfs", 100);
+const detCard = (name, cls, on, more = {}, ents = []) => () => card({ name, appliance_type: "detector", state_entity: "binary_sensor.det_" + cls + (on ? "_on" : ""), battery_entity: "sensor.det_batt", ...more },
+  [st("binary_sensor.det_" + cls + (on ? "_on" : ""), on ? "on" : "off", { device_class: cls }), st("sensor.det_batt", 85, { unit_of_measurement: "%" }), ...ents]);
+const detSmoke = detCard(L("Hallway", "Couloir"), "smoke", false);
+const detSmokeAlarm = detCard(L("Smoke", "Fumée"), "smoke", true);
+const detCo = detCard(L("Boiler room", "Chaufferie"), "carbon_monoxide", false, { co_level_entity: "sensor.det_co" }, [st("sensor.det_co", 12, { unit_of_measurement: "ppm" })]);
+const detCoAlarm = detCard(L("Carbon monoxide", "Monoxyde de carbone"), "carbon_monoxide", true, { co_level_entity: "sensor.det_co2" }, [st("sensor.det_co2", 180, { unit_of_measurement: "ppm" })]);
+const detLeak = detCard(L("Under the sink", "Sous l'évier"), "moisture", false);
+const detLeakAlarm = detCard(L("Water leak", "Fuite d'eau"), "moisture", true);
+const spkCard = (name, layout, state, attrs) => () => card({ name, appliance_type: "speaker", speaker_layout: layout, state_entity: "media_player.spk_" + layout },
+  [st("media_player.spk_" + layout, state, { volume_level: 0.4, ...attrs })]);
+const spkSmart = spkCard(L("HomePod", "HomePod"), "smart", "playing", { media_title: "Clair de lune", media_artist: "Debussy" });
+const spkMini = spkCard(L("HomePod mini", "HomePod mini"), "homepod_mini", "playing", { media_title: "Gymnopédie No. 1", media_artist: "Satie" });
+const spkOne = spkCard(L("Sonos One", "Sonos One"), "sonos_one", "paused", { media_title: "Boléro", media_artist: "Ravel" });
+const spkShelf = spkCard(L("Bookshelf", "Enceinte de salon"), "bookshelf", "playing", { media_title: "The Four Seasons", media_artist: "Vivaldi" });
+const spkMove = spkCard(L("Sonos Move", "Sonos Move"), "sonos_move", "idle", { is_volume_muted: true });
+const spkBar = spkCard(L("Soundbar", "Barre de son"), "soundbar", "playing", { source: "TV" });
+const spkDot = spkCard(L("Echo Dot", "Echo Dot"), "echo_dot", "playing", { media_title: "Radio" });
+const spkNest = spkCard(L("Nest Mini", "Nest Mini"), "nest_mini", "paused", { media_title: "Podcast" });
 
 // Grouped by kind: the laundry, the kitchen, heating and climate, then the
 // rest.
@@ -1460,6 +1496,10 @@ const EXTRA = { iron, coffee_black: coffeeBlack, boiler_window: boilerWindow, bo
                 nt_chest: demoChest, nt_drawers: demoDrawers, nt_booster: demoBooster, nt_sump: demoSump, nt_sump_high: demoSumpHigh, nt_pool: demoPool,
                 nt_floor: demoFloorWater, nt_floor_elec: demoFloorElec, nt_spa: demoSpa, nt_sauna: demoSauna, nt_aquarium: demoAquarium, nt_linky: demoLinky,
                 nt_tree: demoTree, nt_tree_red: demoTreeRed,
+                irr_sprinkler: irrSprinkler, irr_rain: irrRain, irr_tap: irrTap, irr_tap_off: irrTapOff,
+                lit_globe: litGlobe, lit_globe_clean: litGlobeClean, lit_globe_cat: litGlobeCat, lit_box: litBox, lit_box_clean: litBoxClean, lit_box_full: litBoxFull,
+                det_smoke: detSmoke, det_smoke_alarm: detSmokeAlarm, det_co: detCo, det_co_alarm: detCoAlarm, det_leak: detLeak, det_leak_alarm: detLeakAlarm,
+                spk_smart: spkSmart, spk_mini: spkMini, spk_one: spkOne, spk_shelf: spkShelf, spk_move: spkMove, spk_bar: spkBar, spk_dot: spkDot, spk_nest: spkNest,
                 mob_scooter: demo_mobScooter, mob_offroad: demo_mobOffroad, mob_ebike: demo_mobEbike, mob_gyropode: demo_mobGyropode, mob_motorcycle: demo_mobMotorcycle, mob_unplugged: demo_mobUnplugged, mob_poster: demo_mobPoster,
                 net_sw8: netSw(8, 6), net_sw16: netSw(16, 11), net_sw24: netSw(24, 20), net_sw32: netSw(32, 27),
                 net_nas1: netBays(1, ["normal"], L("NAS, 1 bay", "NAS 1 baie")),
@@ -1521,6 +1561,10 @@ function liveGallery() {
     [L("Mailboxes and doorbells", "Boîtes aux lettres et sonnettes"), [mbThrough, mbPostman, mbCollect, mbRight, mbClassic, mbClassicOpen, camDoorbell, camDoorbellIdle]],
     [L("Around the house", "Autour de la maison"), [demoChest, demoDrawers, demoBooster, demoSump, demoSumpHigh, demoPool, demoFloorWater, demoFloorElec, demoSpa, demoSauna, demoAquarium, demoLinky, demoTree, demoTreeRed]],
     [L("Pets", "Animaux"), [petFeeder, roundFeeder, doubleFeeder, dualFeeder, wetFeeder, petFountain, roundFountain]],
+    [L("Litter boxes", "Liti\u00e8res"), [litGlobe, litGlobeClean, litGlobeCat, litBox, litBoxClean, litBoxFull]],
+    [L("Garden watering", "Arrosage"), [irrSprinkler, irrRain, irrTap, irrTapOff]],
+    [L("Smoke, CO and leak detectors", "D\u00e9tecteurs de fum\u00e9e, CO et fuite"), [detSmoke, detSmokeAlarm, detCo, detCoAlarm, detLeak, detLeakAlarm]],
+    [L("Speakers", "Enceintes"), [spkSmart, spkMini, spkOne, spkShelf, spkMove, spkBar, spkDot, spkNest]],
   ];
   // Each family folds, the first one open: forty cards in a row are hard to
   // read, a list of families is not.
@@ -1572,6 +1616,7 @@ const POSTER_NAMES = {
   hd_hot: ["Hair dryer", "S\u00e8che-cheveux"], dif_drop: ["Diffuser", "Diffuseur"], hrv_one_duct: ["Ventilation", "VMC"],
   cam_outdoor: ["Camera", "Cam\u00e9ra"], lamp_floor: ["Lamp", "Lampe"], solar_day: ["Solar panels", "Panneaux solaires"],
   battery_charging: ["Home battery", "Batterie domestique"], th_square: ["Thermostat", "Thermostat"],
+  irr_sprinkler: ["Watering", "Arrosage"], lit_globe: ["Litter box", "Liti\u00e8re"], det_smoke: ["Detector", "D\u00e9tecteur"], spk_smart: ["Speaker", "Enceinte"],
   robot_vacuum: ["Robot vacuum", "Robot aspirateur"], robot_drying: ["Mopping robot", "Robot laveur"], robot_mower: ["Robot mower", "Robot tondeuse"],
 };
 const only = (params.get("only") || "").split(",").map((k) => k.trim()).filter(Boolean);
