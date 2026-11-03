@@ -76,7 +76,7 @@ FAMILIES = (
     ("scales", "scale_fresh,scale_goal,scale_old", 3),
     ("ups", "ups_online,ups_charging,ups_battery,ups_low,ups_replace,ups_off", 6),
     ("diffusers", "dif_drop,dif_cone,dif_stone,dif_flame,dif_nebulizer", 5),
-    ("ventilation", "hrv_diagram,hrv_one_duct,hrv_pair,hrv_bypass", 4),
+    ("ventilation", "hrv_diagram,hrv_one_duct,hrv_pair,hrv_bypass,hrv_single,hrv_single_box", 4),
     ("cameras", "cam_indoor,cam_tube,cam_outdoor,cam_dome,cam_privacy,cam_offline", 6),
     ("lamps", "lamp_bulb,lamp_bedside,lamp_floor,lamp_torch,lamp_pendant,lamp_strip,lamp_spots,lamp_panels,lamp_desk,lamp_wall", 5),
     ("mailboxes", "mb_through,mb_postman,mb_collect,mb_right,mb_classic,mb_classic_open,cam_doorbell,cam_doorbell_idle", 4),
@@ -185,7 +185,7 @@ POSTER = (
     ("air_purifier", 3), ("fan", 3), ("pet_feeder", 5), ("pet_fountain", 2), ("ev_charger", 1), ("printer_3d", 2), ("net_switch", 5), ("scr_tv", 8),
     ("robot_vacuum", 2), ("mob_poster", 5), ("robot_mower", 2), ("robot_stick", 1), ("robot_washer", 1), ("nt_pool", 1), ("pool_running", 1), ("nt_spa", 1),
     ("solar_day", 2), ("battery_charging", 2), ("ups_online", 1), ("nt_linky", 5), ("nt_booster", 2), ("nt_floor", 2), ("nt_sauna", 1), ("nt_aquarium", 1),
-    ("scale_fresh", 1), ("hd_hot", 2), ("dif_drop", 5), ("hrv_one_duct", 3), ("cam_outdoor", 5), ("lamp_floor", 10), ("mb_classic", 2), ("nt_tree", 1),
+    ("scale_fresh", 1), ("hd_hot", 2), ("dif_drop", 5), ("hrv_one_duct", 5), ("cam_outdoor", 5), ("lamp_floor", 10), ("mb_classic", 2), ("nt_tree", 1),
     ("irr_sprinkler", 2), ("lit_globe", 2), ("det_smoke", 3), ("spk_smart", 8),
 )
 

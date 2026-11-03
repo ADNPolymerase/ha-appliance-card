@@ -12314,4 +12314,33 @@ function tvT(w) { return { 'switch.tv': { state: 'on', attributes: {} }, 'sensor
   check('editeur enceinte : le modele', ed({ appliance_type: 'speaker', state_entity: 'media_player.m' }).includes('"speaker_layout"'), true);
 }
 
+// The extract-only ventilation and the sump pump on a plug left on (#136).
+{
+  const s = (state, attributes = {}) => ({ state: String(state), attributes });
+  const VS = (power, speed, layout = 'single') => render({ appliance_type: 'hrv', hrv_layout: layout, state_entity: 'switch.vmc', high_speed_entity: 'switch.vmc_v' }, { 'switch.vmc': s(power), 'switch.vmc_v': s(speed) });
+  check('vmc simple flux : petite vitesse', stateLine(VS('on', 'off')), 'Low speed');
+  check('vmc simple flux : grande vitesse', stateLine(VS('on', 'on')), 'High speed');
+  check('vmc simple flux : arretee', stateLine(VS('off', 'on')), 'Off');
+  check('vmc simple flux : son dessin', /hv-l-single\b/.test(VS('on', 'off')), true);
+  check('vmc simple flux : la grande vitesse tourne plus vite', [/--hv-pace:2\.2s/.test(VS('on', 'off')), /--hv-pace:\.7s/.test(VS('on', 'on'))].join(), 'true,true');
+  check('vmc simple flux : arretee, rien ne tourne', /class="machine[^"]*hv-on/.test(VS('off', 'off')), false);
+  check('vmc caisson : son dessin', /hv-l-single_box\b/.test(VS('on', 'off', 'single_box')), true);
+  check('vmc caisson : la vitesse aussi', stateLine(VS('on', 'on', 'single_box')), 'High speed');
+  check('vmc simple flux : par son nom', /hv-l-single\b/.test(render({ appliance_type: 'hrv', state_entity: 'fan.vmc_simple_flux' }, { 'fan.vmc_simple_flux': s('on') })), true);
+  check('vmc double flux : sans switch de vitesse, inchangee', stateLine(render({ appliance_type: 'hrv', state_entity: 'fan.vmc' }, { 'fan.vmc': s('on', { percentage: 50 }) })), 'Ventilating');
+  check('vmc simple flux : pas d etiquette sans temperature', /class="hv-n"/.test(VS('on', 'off')), false);
+  const ed = (cfg) => markup(newEditor(cfg));
+  check('editeur vmc simple flux : le switch de vitesse', ed({ appliance_type: 'hrv', hrv_layout: 'single', state_entity: 'switch.v' }).includes('data-toggle="high_speed_entity"'), true);
+  check('editeur vmc double flux : pas de switch de vitesse', ed({ appliance_type: 'hrv', hrv_layout: 'diagram', state_entity: 'fan.v' }).includes('data-toggle="high_speed_entity"'), false);
+
+  const SP = { appliance_type: 'water_pump', pump_layout: 'sump', state_entity: 'switch.prise', power_entity: 'sensor.prise_w', power_on_threshold: 20 };
+  const spS = (sw, w) => ({ 'switch.prise': s(sw), 'sensor.prise_w': s(w, { unit_of_measurement: 'W' }) });
+  check('relevage sur prise : pompe', stateLine(render(SP, spS('on', 300))), 'Pumping');
+  check('relevage sur prise : attend', stateLine(render(SP, spS('on', 0))), 'Standby');
+  check('relevage sur prise : coupee', stateLine(render(SP, spS('off', 0))), 'Switched off');
+  check('relevage sur prise : coupee en rouge', [stateColor(render(SP, spS('off', 0))), stateColor(render(SP, spS('on', 0)))].join(' | '), '#e53935 | var(--secondary-text-color, #727272)');
+  check('relevage sur prise : OFF a l ecran', />OFF<\/text>/.test(render(SP, spS('off', 0))), true);
+  check('relevage sans prise mesuree : off reste en attente', stateLine(render({ appliance_type: 'water_pump', pump_layout: 'sump', state_entity: 'switch.p' }, { 'switch.p': s('off') })), 'Standby');
+}
+
 report();

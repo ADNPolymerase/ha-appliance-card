@@ -1316,6 +1316,17 @@ const hrvDiagram = hrvCard(L("Ventilation", "VMC double flux"), "diagram", "on",
 const hrvOneDuct = hrvCard(L("Bedroom ventilation", "VMC chambre"), "one_duct", "on", { percentage: 90, preset_mode: "boost" });
 const hrvPair = hrvCard(L("Studio ventilation", "VMC studio"), "pair", "on", { percentage: 40 }, [st("binary_sensor.vmc_bypass", "off")], { bypass_entity: "binary_sensor.vmc_bypass" });
 const hrvBypass = hrvCard(L("Summer night", "Nuit d'\u00e9t\u00e9"), "diagram", "on", { percentage: 70 }, [st("binary_sensor.vmc_bypass", "on")], { bypass_entity: "binary_sensor.vmc_bypass" });
+// An extract unit with two speeds: the stop switch is the state, its speed
+// switch off the low speed, on the high one.
+const hrvSingleCard = (name, on, high) => () => card({ name, appliance_type: "hrv", hrv_layout: "single", state_entity: "switch.vmc_power", high_speed_entity: "switch.vmc_speed" },
+  [st("switch.vmc_power", on ? "on" : "off"), st("switch.vmc_speed", high ? "on" : "off")]);
+const hrvSingle = hrvSingleCard(L("Ventilation", "VMC"), true, false);
+const hrvSingleHigh = hrvSingleCard(L("Bathroom in use", "Salle de bain occup\u00e9e"), true, true);
+const hrvSingleOff = hrvSingleCard(L("Winter night", "Nuit d'hiver"), false, false);
+const hrvSingleBox = () => card({ name: L("Extract unit", "Caisson VMC"), appliance_type: "hrv", hrv_layout: "single_box", state_entity: "switch.vmc2_power", high_speed_entity: "switch.vmc2_speed" },
+  [st("switch.vmc2_power", "on"), st("switch.vmc2_speed", "off")]);
+const hrvSingleBoxHigh = () => card({ name: L("High speed", "Grande vitesse"), appliance_type: "hrv", hrv_layout: "single_box", state_entity: "switch.vmc3_power", high_speed_entity: "switch.vmc3_speed" },
+  [st("switch.vmc3_power", "on"), st("switch.vmc3_speed", "on")]);
 const camOffline = camCard(L("Driveway", "All\u00e9e"), "unavailable", { camera_layout: "outdoor" }, {});
 
 // Doorbells: a camera with its button, ringing or waiting, and the mailbox:
@@ -1364,6 +1375,11 @@ const demoBooster = () => card({ name: L("Booster set", "Surpresseur"), applianc
 const demoSump = () => card({ name: L("Sump pump", "Pompe de relevage"), appliance_type: "water_pump", pump_layout: "sump", state_entity: "switch.sump",
   level_entity: "sensor.sump_level", level_max: 100, high_level_entity: "binary_sensor.sump_high" },
   [st("switch.sump", "on"), st("sensor.sump_level", 44, { unit_of_measurement: "cm" }), st("binary_sensor.sump_high", "off")]);
+// A sump pump on a smart plug left on: pumping above the threshold,
+// waiting below, and in red once the plug is cut.
+const demoSumpPlug = (name, plug, watts) => () => card({ name, appliance_type: "water_pump", pump_layout: "sump", state_entity: "switch.sump_plug" + plug + watts, power_entity: "sensor.sump_w" + plug + watts, power_on_threshold: 20 },
+  [st("switch.sump_plug" + plug + watts, plug), st("sensor.sump_w" + plug + watts, watts, { unit_of_measurement: "W" })]);
+const demoSumpOff = demoSumpPlug(L("Plug cut", "Prise coup\u00e9e"), "off", 0);
 const demoSumpHigh = () => card({ name: L("Sump, high level", "Relevage, niveau haut"), appliance_type: "water_pump", pump_layout: "sump", state_entity: "switch.sump2",
   level_entity: "sensor.sump2_level", level_max: 100, high_level_entity: "binary_sensor.sump2_high" },
   [st("switch.sump2", "on"), st("sensor.sump2_level", 72, { unit_of_measurement: "cm" }), st("binary_sensor.sump2_high", "on")]);
@@ -1487,13 +1503,13 @@ const EXTRA = { iron, coffee_black: coffeeBlack, boiler_window: boilerWindow, bo
                 ups_online: upsOnline, ups_charging: upsCharging, ups_battery: upsBattery, ups_low: upsLow,
                 ups_replace: upsReplace, ups_off: upsOff,
                 dif_drop: difDrop, dif_cone: difCone, dif_stone: difStone, dif_flame: difFlame, dif_nebulizer: difNebulizer,
-                hrv_diagram: hrvDiagram, hrv_one_duct: hrvOneDuct, hrv_pair: hrvPair, hrv_bypass: hrvBypass,
+                hrv_diagram: hrvDiagram, hrv_one_duct: hrvOneDuct, hrv_pair: hrvPair, hrv_bypass: hrvBypass, hrv_single: hrvSingle, hrv_single_high: hrvSingleHigh, hrv_single_off: hrvSingleOff, hrv_single_box: hrvSingleBox, hrv_single_box_high: hrvSingleBoxHigh,
                 cam_indoor: camIndoor, cam_tube: camTube, cam_outdoor: camOutdoor, cam_dome: camDome, cam_privacy: camPrivacy, cam_offline: camOffline,
                 lamp_bulb: lampBulb, lamp_bedside: lampBedside, lamp_floor: lampFloor, lamp_torch: lampTorch, lamp_pendant: lampPendant,
                 lamp_strip: lampStrip, lamp_spots: lampSpots, lamp_panels: lampPanels, lamp_desk: lampDesk, lamp_wall: lampWall, lamp_off: lampOff,
                 cam_doorbell: camDoorbell, cam_doorbell_idle: camDoorbellIdle, mb_through: mbThrough, mb_postman: mbPostman, mb_collect: mbCollect,
                 mb_right: mbRight, mb_classic: mbClassic, mb_classic_open: mbClassicOpen,
-                nt_chest: demoChest, nt_drawers: demoDrawers, nt_booster: demoBooster, nt_sump: demoSump, nt_sump_high: demoSumpHigh, nt_pool: demoPool,
+                nt_chest: demoChest, nt_drawers: demoDrawers, nt_booster: demoBooster, nt_sump: demoSump, nt_sump_high: demoSumpHigh, nt_sump_off: demoSumpOff, nt_pool: demoPool,
                 nt_floor: demoFloorWater, nt_floor_elec: demoFloorElec, nt_spa: demoSpa, nt_sauna: demoSauna, nt_aquarium: demoAquarium, nt_linky: demoLinky,
                 nt_tree: demoTree, nt_tree_red: demoTreeRed,
                 irr_sprinkler: irrSprinkler, irr_rain: irrRain, irr_tap: irrTap, irr_tap_off: irrTapOff,
@@ -1555,11 +1571,11 @@ function liveGallery() {
     [L("Network and servers", "Réseau et serveurs"), [netSwitch, netRouter("on"), netNas, netServer, netRack, upsOnline, upsBattery, upsLow]],
     [L("Screens and tablets", "Écrans et tablettes"), [scrTv, scrProjector, scrComputer, scrLaptop, tabWall, tabFrame, tabPortrait]],
     [L("Home and media", "Maison et multimédia"), [hdHot, hdRing, printer3d, scaleFresh, scaleGoal]],
-    [L("Diffusers and ventilation", "Diffuseurs et ventilation"), [difDrop, difCone, difStone, difFlame, difNebulizer, hrvDiagram, hrvOneDuct, hrvPair, hrvBypass]],
+    [L("Diffusers and ventilation", "Diffuseurs et ventilation"), [difDrop, difCone, difStone, difFlame, difNebulizer, hrvDiagram, hrvOneDuct, hrvPair, hrvBypass, hrvSingle, hrvSingleHigh, hrvSingleOff, hrvSingleBox, hrvSingleBoxHigh]],
     [L("Cameras", "Cam\u00e9ras"), [camIndoor, camTube, camOutdoor, camDome, camPrivacy, camOffline]],
     [L("Lamps", "Lampes"), [lampBulb, lampBedside, lampFloor, lampTorch, lampPendant, lampStrip, lampSpots, lampPanels, lampDesk, lampWall, lampOff]],
     [L("Mailboxes and doorbells", "Boîtes aux lettres et sonnettes"), [mbThrough, mbPostman, mbCollect, mbRight, mbClassic, mbClassicOpen, camDoorbell, camDoorbellIdle]],
-    [L("Around the house", "Autour de la maison"), [demoChest, demoDrawers, demoBooster, demoSump, demoSumpHigh, demoPool, demoFloorWater, demoFloorElec, demoSpa, demoSauna, demoAquarium, demoLinky, demoTree, demoTreeRed]],
+    [L("Around the house", "Autour de la maison"), [demoChest, demoDrawers, demoBooster, demoSump, demoSumpHigh, demoSumpOff, demoPool, demoFloorWater, demoFloorElec, demoSpa, demoSauna, demoAquarium, demoLinky, demoTree, demoTreeRed]],
     [L("Pets", "Animaux"), [petFeeder, roundFeeder, doubleFeeder, dualFeeder, wetFeeder, petFountain, roundFountain]],
     [L("Litter boxes", "Liti\u00e8res"), [litGlobe, litGlobeClean, litGlobeCat, litBox, litBoxClean, litBoxFull]],
     [L("Garden watering", "Arrosage"), [irrSprinkler, irrRain, irrTap, irrTapOff]],

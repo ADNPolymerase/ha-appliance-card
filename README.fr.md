@@ -371,7 +371,8 @@ Seule `state_entity` est obligatoire, sauf sur un réfrigérateur où une sonde 
 | `input_voltage_entity` | onduleur | La tension à la prise, en ligne. Sans `state_entity`, sous 100 V l'onduleur est sur batterie. |
 | `diffuser_layout` | diffuseur | `drop` (une goutte en bois, Meross, Asakuki) \| `cone` \| `stone` (galet, Vitruvi, Govee) \| `flame` (un diffuseur effet flamme) \| `nebulizer` (verre sur socle en bois). Sans réglage, le nom décide, sinon une goutte. Bois par défaut pour la goutte, la flamme et le nébuliseur, blanc pour les autres, ou `illustration_color`. |
 | `light_entity` / `tank_empty_entity` | diffuseur | La lumière du diffuseur : sa couleur éclaire l'anneau et le sol. Un capteur de réservoir vide l'affiche *Réservoir vide*. Son `state_entity` est la brume : un interrupteur, un ventilateur (50 % ou moins = *Intermittent*), le select de Meross (`eco` = *Brume légère*, une brume plus faible ; `intermittent` ou `interval` = *Intermittent*) ou une entité humidificateur. Un select a un bouton qui passe d'un mode au suivant, un interrupteur ou un ventilateur un bouton marche/arrêt. |
-| `hrv_layout` | VMC | `diagram` (les deux flux qui se croisent dans l'échangeur) \| `one_duct` (VMC murale à un seul conduit, Lunos eGO, Zehnder ComfoAir 70) \| `pair` (paire décentralisée traversant le mur, Lunos e2, Vents TwinFresh, qui s'inverse toutes les 70 s). |
+| `hrv_layout` | VMC | `diagram` (les deux flux qui se croisent dans l'échangeur) \| `one_duct` (VMC murale à un seul conduit, Lunos eGO, Zehnder ComfoAir 70) \| `pair` (paire décentralisée traversant le mur, Lunos e2, Vents TwinFresh, qui s'inverse toutes les 70 s) \| `single` (une VMC simple flux dans les combles, ses bouches au plafond et sa sortie au-dessus du toit, l'air neuf entrant par les fenêtres) \| `single_box` (le même caisson d'extraction dessiné seul, ses gaines d'entrée et sa sortie). Sans réglage, un nom qui dit simple flux, extract ou hygro donne une VMC simple flux. |
+| `high_speed_entity` | VMC (single, single_box) | Le switch de vitesse d'une VMC simple flux à deux vitesses : coupé c'est la *Petite vitesse*, allumé la *Grande vitesse*, le ventilateur tournant trois fois plus vite. Le `state_entity` reste sa marche et son arrêt. |
 | `outdoor_temperature_entity` / `supply_temperature_entity` / `extract_temperature_entity` / `exhaust_temperature_entity` | VMC | Les quatre températures, dessinées au bout des gaines. |
 | `bypass_entity` | VMC | Le bypass : un interrupteur ou un capteur binaire actif, une ouverture en %, ou l'état de l'échangeur de Vallox, dont *Defrosting* affiche *Dégivrage*. |
 | `airflow_entity` / `filter_life_entity` | VMC | Le débit et le filtre, en jours ou en %, en lignes. À 7 jours ou 10 % (ou `filter_due_below`), *Filtre à changer*. Le `state_entity` est l'entité ventilateur, climat ou select de la VMC : sa vitesse, ses préréglages *Boost* et *Absence*. |
@@ -391,7 +392,7 @@ Seule `state_entity` est obligatoire, sauf sur un réfrigérateur où une sonde 
 | `mailbox_front` | boîte aux lettres | `left` (défaut) \| `right` : le côté de la rue, pour une traversante. |
 | `mail_count_entity` | boîte aux lettres | Un compteur de courrier. La pile dessine jusqu'à douze lettres, et le nombre est une ligne et un badge. |
 | `front_door_entity` / `back_door_entity` | boîte aux lettres | Les contacts de la porte côté rue et de la porte côté maison : *Porte avant ouverte*, *Porte arrière ouverte*, la porte pivote et la lumière du jour entre, et une ligne pour chacune. |
-| `pump_layout` | pompe à eau | `booster` (surpresseur sur son ballon, avec son contrôleur) \| `sump` (regard de relevage en coupe, son flotteur sur son câble). Sans réglage, un `level_entity`, un `high_level_entity` ou un nom qui dit relevage en fait une pompe de relevage. |
+| `pump_layout` | pompe à eau | `booster` (surpresseur sur son ballon, avec son contrôleur) \| `sump` (regard de relevage en coupe, son flotteur sur son câble). Sans réglage, un `level_entity`, un `high_level_entity` ou un nom qui dit relevage en fait une pompe de relevage. Sur une prise connectée laissée allumée avec son `power_entity`, elle pompe au-dessus de `power_on_threshold`, attend en dessous, et affiche *Éteinte* dès que la prise est coupée, en rouge sur une pompe de relevage. Sans mesure de puissance, le switch est celui de la pompe et coupé veut seulement dire qu'elle attend. |
 | `mobility_layout` | mobilité | `scooter` (trottinette) \| `offroad` (trottinette tout-terrain à double suspension, comme l'Ausom DT2 Pro) \| `ebike` (vélo électrique) \| `gyropode` \| `motorcycle` (moto électrique). Sans réglage, il est lu dans le nom : Ausom, Dualtron ou tout-terrain, vélo ou bike, gyropode, moto ou Super Soco ; une trottinette sinon. |
 | `battery_entity` | mobilité | La batterie du véhicule, en % : une barre de la jauge par quart, la suivante qui clignote en charge, et *Chargée* à 100 %. Sans elle, les barres se remplissent de 0 à 4 en boucle pendant la charge. |
 | `pressure_entity` | pompe à eau (surpresseur) | La pression, sur l'écran du contrôleur et en ligne. Sans elle, l'écran affiche la puissance de la prise. |
@@ -999,6 +1000,27 @@ type: custom:ha-appliance-card
 appliance_type: christmas_tree
 state_entity: switch.sapin
 tree_palette: red_gold
+```
+
+Une VMC simple flux à deux vitesses : le switch d'arrêt est l'état, le switch de vitesse choisit petite ou grande vitesse.
+
+```yaml
+type: custom:ha-appliance-card
+appliance_type: hrv
+hrv_layout: single
+state_entity: switch.vmc_marche
+high_speed_entity: switch.vmc_vitesse
+```
+
+Une pompe de relevage sur une prise connectée laissée allumée :
+
+```yaml
+type: custom:ha-appliance-card
+appliance_type: water_pump
+pump_layout: sump
+state_entity: switch.prise_relevage
+power_entity: sensor.prise_relevage_puissance
+power_on_threshold: 20
 ```
 
 Un véhicule électrique sur son chargeur (#72) : la prise suffit. Au-dessus de 40 W il est *En charge* (le courant va du chargeur au véhicule, le voyant du chargeur pulse en rouge), en dessous *Chargée* (voyant vert), et *Débranchée* quand la prise est coupée, le véhicule grisé et le câble au sol. Le seuil se règle avec `power_on_threshold`.

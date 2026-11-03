@@ -374,7 +374,8 @@ Only `state_entity` is required, except on a fridge where a probe or a door cont
 | `input_voltage_entity` | UPS | The voltage at the wall, as a line. Without a `state_entity`, below 100 V the UPS is on battery. |
 | `diffuser_layout` | diffuser | `drop` (a wooden teardrop, Meross, Asakuki) \| `cone` \| `stone` (Vitruvi, Govee) \| `flame` (a flame-effect diffuser) \| `nebulizer` (glass on a wooden base). Left out, the name decides, a teardrop otherwise. Wood by default for the teardrop, the flame and the nebulizer, white for the others, or `illustration_color`. |
 | `light_entity` / `tank_empty_entity` | diffuser | The diffuser's light: its colour lights the band and the floor. An empty tank sensor makes it *Tank empty*. Its `state_entity` is the mist: a switch, a fan (50 % or less is *Intermittent*), Meross's spray select (`eco` is *Light mist*, a lower mist; `intermittent` or `interval` is *Intermittent*) or a humidifier entity. A select gets a button that steps through its modes, a switch or a fan an on/off button. |
-| `hrv_layout` | HRV | `diagram` (the two streams crossing in the exchanger) \| `one_duct` (a single-room unit, Lunos eGO, Zehnder ComfoAir 70) \| `pair` (two through-wall units, Lunos e2, Vents TwinFresh, that swap direction every 70 s). |
+| `hrv_layout` | HRV | `diagram` (the two streams crossing in the exchanger) \| `one_duct` (a single-room unit, Lunos eGO, Zehnder ComfoAir 70) \| `pair` (two through-wall units, Lunos e2, Vents TwinFresh, that swap direction every 70 s) \| `single` (an extract-only unit in the attic, its ceiling vents and the outlet over the roof, fresh air coming in through the windows) \| `single_box` (the same extract unit drawn alone, its ducts in and its outlet). Left out, a name that says single flow, extract or hygro makes an extract-only unit. |
+| `high_speed_entity` | HRV (single, single_box) | A two-speed extract unit's speed switch: off is *Low speed*, on *High speed*, the fan turning three times faster. The `state_entity` stays its on and off. |
 | `outdoor_temperature_entity` / `supply_temperature_entity` / `extract_temperature_entity` / `exhaust_temperature_entity` | HRV | The four temperatures, drawn at the ends of the ducts. |
 | `bypass_entity` | HRV | The bypass: a switch or a binary sensor that is on, a position in %, or Vallox's cell state, whose *Defrosting* reads *Defrosting*. |
 | `airflow_entity` / `filter_life_entity` / `filter_life_full` | HRV | The airflow and the filter, in days or in %, as lines, and the filter's life as the bar: its percentage, or its days out of `filter_life_full` (90 by default). 7 days or 10 % left (or `filter_due_below`) reads *Replace filter*. The `state_entity` is the unit's fan, climate or select: its speed, its *Boost* and *Away* presets. |
@@ -395,7 +396,7 @@ Only `state_entity` is required, except on a fridge where a probe or a door cont
 | `mailbox_front` | mailbox | `left` (default) \| `right`: the side the street is on, for a through-the-wall box. |
 | `mail_count_entity` | mailbox | A counter of the mail. The pile shows up to twelve letters, and the count is a line and a badge. |
 | `front_door_entity` / `back_door_entity` | mailbox | The contacts on the street door and on the house door: *Front door open*, *Back door open*, the door swings open and daylight comes in, and a line for each. |
-| `pump_layout` | water_pump | `booster` (a pump on its pressure tank, with its controller) \| `sump` (a sump pit in cross-section, its float on its cable). Left out, a `level_entity`, a `high_level_entity` or a name that says sump makes a sump pump. |
+| `pump_layout` | water_pump | `booster` (a pump on its pressure tank, with its controller) \| `sump` (a sump pit in cross-section, its float on its cable). Left out, a `level_entity`, a `high_level_entity` or a name that says sump makes a sump pump. On a smart plug left on with its `power_entity`, the pump pumps above `power_on_threshold`, waits below it, and reads *Switched off* once the plug is cut, in red on a sump pump. Without a power meter, the switch is the pump's own and off is only waiting. |
 | `mobility_layout` | electric ride | `scooter` \| `offroad` (an off-road scooter on double suspension, like the Ausom DT2 Pro) \| `ebike` \| `gyropode` \| `motorcycle`. Left out, it is read in the name: Ausom, Dualtron or off-road, bike or e-bike, gyropode, moto or Super Soco; a scooter otherwise. |
 | `battery_entity` | electric ride | The ride's battery, in %: one bar of the gauge per quarter, the next one blinking while it charges, and *Charged* at 100 %. Without it, the bars fill from 0 to 4 in a loop while it charges. |
 | `pressure_entity` | water_pump (booster) | The pressure, on the controller's display and as a line. Without it, the display shows the plug's power. |
@@ -1011,6 +1012,27 @@ type: custom:ha-appliance-card
 appliance_type: christmas_tree
 state_entity: switch.christmas_tree
 tree_palette: red_gold
+```
+
+An extract-only ventilation with two speeds: the stop switch is the state, the speed switch picks low or high.
+
+```yaml
+type: custom:ha-appliance-card
+appliance_type: hrv
+hrv_layout: single
+state_entity: switch.vmc_power
+high_speed_entity: switch.vmc_speed
+```
+
+A sump pump on a smart plug left on:
+
+```yaml
+type: custom:ha-appliance-card
+appliance_type: water_pump
+pump_layout: sump
+state_entity: switch.sump_plug
+power_entity: sensor.sump_plug_power
+power_on_threshold: 20
 ```
 
 An electric ride on its charger (#72): the plug is enough. Above 40 W it is *Charging* (the current runs from the charger to the ride, the charger's light pulses red), below it *Charged* (green light), and *Unplugged* when the plug is off, the ride greyed out and the cable on the floor. The threshold is set with `power_on_threshold`.
