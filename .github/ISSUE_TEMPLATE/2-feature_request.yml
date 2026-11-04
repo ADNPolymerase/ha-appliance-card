@@ -1,0 +1,29 @@
+name: "✨ Feature request"
+description: "Suggest an improvement / Proposer une amélioration"
+title: "[Feature]: "
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        You can write in English or French. / Vous pouvez écrire en anglais ou en français.
+  - type: textarea
+    id: request
+    attributes:
+      label: "What would you like? / Que souhaitez-vous ?"
+    validations:
+      required: true
+  - type: textarea
+    id: use_case
+    attributes:
+      label: "Why would it be useful? / À quoi cela servirait-il ?"
+      description: "Your setup, your use case / Votre installation, votre usage"
+    validations:
+      required: false
+  - type: textarea
+    id: mockup
+    attributes:
+      label: "Example or mockup / Exemple ou maquette"
+      description: "A sketch, a screenshot of another card, a YAML idea... / Un croquis, une capture d'une autre carte, une idée de YAML..."
+    validations:
+      required: false

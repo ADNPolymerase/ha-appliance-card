@@ -1,0 +1,46 @@
+name: "🧩 New appliance"
+description: "Ask for support of a new device / Demander la prise en charge d'un nouvel appareil"
+title: "[Device]: "
+labels: ["new device"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        You can write in English or French. / Vous pouvez écrire en anglais ou en français.
+  - type: input
+    id: model
+    attributes:
+      label: "Brand and model / Marque et modèle"
+      placeholder: "Robot mower, heat pump, kettle..."
+    validations:
+      required: true
+  - type: input
+    id: integration
+    attributes:
+      label: "Home Assistant integration / Intégration Home Assistant"
+      description: "The integration that provides the entities / L'intégration qui fournit les entités"
+      placeholder: "Zigbee2MQTT, Tuya, ESPHome..."
+    validations:
+      required: false
+  - type: textarea
+    id: entities
+    attributes:
+      label: "Entities and states / Entités et états"
+      description: "Developer tools > States: entity_id, state and attributes. One per entity. / Outils de développement > États : entity_id, état et attributs. Une par entité."
+      render: yaml
+    validations:
+      required: true
+  - type: textarea
+    id: behaviour
+    attributes:
+      label: "What should it show or do? / Que doit-il afficher ou faire ?"
+      description: "States to show, animations, values... / États à afficher, animations, valeurs..."
+    validations:
+      required: true
+  - type: textarea
+    id: photo
+    attributes:
+      label: "Photo or screenshot / Photo ou capture"
+      description: "A photo of the device helps to draw it. / Une photo de l'appareil aide à le dessiner."
+    validations:
+      required: false

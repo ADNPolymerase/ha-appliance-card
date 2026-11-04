@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: "💬 Question or help / Question ou aide"
+    url: https://github.com/ADNPolymerase/ha-appliance-card/discussions
+    about: "Ask how to configure or use it / Demandez comment le configurer ou l'utiliser"

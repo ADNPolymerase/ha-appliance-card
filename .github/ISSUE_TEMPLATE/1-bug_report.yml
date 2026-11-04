@@ -1,0 +1,77 @@
+name: "🐛 Bug report"
+description: "Something does not work as expected / Quelque chose ne fonctionne pas"
+title: "[Bug]: "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        You can write in English or French. / Vous pouvez écrire en anglais ou en français.
+        
+        Please check the [existing issues](https://github.com/ADNPolymerase/ha-appliance-card/issues?q=is%3Aissue) first. / Vérifiez d'abord les [issues existantes](https://github.com/ADNPolymerase/ha-appliance-card/issues?q=is%3Aissue).
+  - type: input
+    id: card_version
+    attributes:
+      label: "Card version / Version de la carte"
+      description: "HACS > the card > version"
+      placeholder: "3.29.0"
+    validations:
+      required: true
+  - type: input
+    id: ha_version
+    attributes:
+      label: "Home Assistant version / Version de Home Assistant"
+      description: "Settings > About / Paramètres > À propos"
+      placeholder: "2026.11.0"
+    validations:
+      required: true
+  - type: input
+    id: browser
+    attributes:
+      label: "Browser or app / Navigateur ou application"
+      placeholder: "Chrome 142 on macOS, Companion app iOS 26..."
+    validations:
+      required: true
+  - type: textarea
+    id: problem
+    attributes:
+      label: "What happened? / Que se passe-t-il ?"
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: "What did you expect? / Qu'attendiez-vous ?"
+    validations:
+      required: false
+  - type: textarea
+    id: config
+    attributes:
+      label: "Card YAML / YAML de la carte"
+      description: "Edit the card > Show code editor / Modifier la carte > Afficher l'éditeur de code"
+      render: yaml
+    validations:
+      required: true
+  - type: textarea
+    id: states
+    attributes:
+      label: "Entity states / États des entités"
+      description: "Developer tools > States: state and attributes of the entities used / Outils de développement > États : état et attributs des entités utilisées"
+      render: yaml
+    validations:
+      required: false
+  - type: textarea
+    id: console
+    attributes:
+      label: "Browser console errors / Erreurs de la console du navigateur"
+      description: "F12 > Console"
+      render: text
+    validations:
+      required: false
+  - type: textarea
+    id: screenshot
+    attributes:
+      label: "Screenshot / Capture d'écran"
+      description: "Drag an image here / Glissez une image ici"
+    validations:
+      required: false

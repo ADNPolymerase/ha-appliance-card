@@ -1,0 +1,44 @@
+name: "🌐 Translation"
+description: "Wrong or missing text in your language / Texte faux ou manquant dans votre langue"
+title: "[Translation]: "
+labels: ["translation"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        You can write in English or French. / Vous pouvez écrire en anglais ou en français.
+  - type: dropdown
+    id: language
+    attributes:
+      options:
+        - English
+        - Français
+        - Deutsch
+        - Español
+        - Italiano
+        - Nederlands
+        - Polski
+        - Português
+        - Other / Autre
+      label: "Language / Langue"
+    validations:
+      required: true
+  - type: textarea
+    id: where
+    attributes:
+      label: "Where is the text? / Où se trouve le texte ?"
+      description: "Card, editor, entity name, state... / Carte, éditeur, nom d'entité, état..."
+    validations:
+      required: true
+  - type: textarea
+    id: current
+    attributes:
+      label: "Current text / Texte actuel"
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: "Proposed text / Texte proposé"
+    validations:
+      required: true
