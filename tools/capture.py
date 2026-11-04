@@ -84,7 +84,7 @@ FAMILIES = (
     ("watering", "irr_sprinkler,irr_rain,irr_tap,irr_tap_off", 4),
     ("detectors", "det_smoke,det_smoke_alarm,det_co,det_co_alarm,det_leak,det_leak_alarm", 3),
     ("speakers", "spk_smart,spk_mini,spk_one,spk_era100,spk_era300,spk_move,spk_bar,spk_wave,spk_bose500,spk_flex,spk_bosebar,spk_shelf,spk_dot,spk_nest", 7),
-    ("consoles", "con_ps1,con_ps2,con_ps3,con_ps4,con_ps4pro,con_ps5,con_xbox,con_x360,con_xone,con_xsx,con_xss,con_switch,con_switch2,con_lite,con_nes,con_snes,con_n64,con_cube,con_wii,con_md", 5),
+    ("consoles", "con_ps1,con_ps2,con_ps3,con_ps4,con_ps4pro,con_ps5,con_xbox,con_x360,con_xone,con_xsx,con_xss,con_switch,con_switch2,con_lite,con_vita,con_nes,con_snes,con_n64,con_cube,con_wii,con_md", 5),
 )
 # Sixteen frames a tenth of a second apart over a 1.6 s loop, on a 128-colour
 # palette: the five families weigh about 1.4 MB per language, where 32 frames

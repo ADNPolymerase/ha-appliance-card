@@ -12357,10 +12357,10 @@ function tvT(w) { return { 'switch.tv': { state: 'on', attributes: {} }, 'sensor
   check('console : temps de jeu du jour', infoLine(times, 'Play time today').replace(/\s/g, ' '), '74 min');
   check('console : temps restant', infoLine(times, 'Play time left').replace(/\s/g, ' '), '46 min');
   const byName = (id) => kindOf(render({ appliance_type: 'console', state_entity: id }, { [id]: s('on') }));
-  check('console : les modeles lus dans le nom', ['media_player.xbox', 'sensor.nintendo_switch_lite', 'switch.ps4_pro', 'switch.super_nintendo', 'switch.nintendo_64', 'switch.xbox_series_s', 'switch.ma_gamecube', 'switch.sega_mega_drive', 'media_player.ps3', 'switch.ps1', 'switch.switch_2_salon'].map(byName).join(),
-    'con_xbox_series_x,con_switch_lite,con_ps4_pro,con_snes,con_n64,con_xbox_series_s,con_gamecube,con_megadrive,con_ps3,con_ps1,con_switch_2');
-  const ALL = ['ps1', 'ps2', 'ps3', 'ps4', 'ps4_pro', 'ps5', 'xbox', 'xbox_360', 'xbox_one', 'xbox_series_x', 'xbox_series_s', 'switch', 'switch_2', 'switch_lite', 'nes', 'snes', 'n64', 'gamecube', 'wii', 'megadrive'];
-  check('console : les 20 modeles', ALL.map((l) => kindOf(CON('switch.x', s('on'), { console_layout: l }))).join(), ALL.map((l) => `con_${l}`).join());
+  check('console : les modeles lus dans le nom', ['media_player.xbox', 'sensor.nintendo_switch_lite', 'switch.ps4_pro', 'switch.super_nintendo', 'switch.nintendo_64', 'switch.xbox_series_s', 'switch.ma_gamecube', 'switch.sega_mega_drive', 'media_player.ps3', 'switch.ps1', 'switch.switch_2_salon', 'media_player.ps_vita'].map(byName).join(),
+    'con_xbox_series_x,con_switch_lite,con_ps4_pro,con_snes,con_n64,con_xbox_series_s,con_gamecube,con_megadrive,con_ps3,con_ps1,con_switch_2,con_ps_vita');
+  const ALL = ['ps1', 'ps2', 'ps3', 'ps4', 'ps4_pro', 'ps5', 'xbox', 'xbox_360', 'xbox_one', 'xbox_series_x', 'xbox_series_s', 'switch', 'switch_2', 'switch_lite', 'ps_vita', 'nes', 'snes', 'n64', 'gamecube', 'wii', 'megadrive'];
+  check('console : les 21 modeles', ALL.map((l) => kindOf(CON('switch.x', s('on'), { console_layout: l }))).join(), ALL.map((l) => `con_${l}`).join());
   check('console : chaque modele a son dessin', ALL.every((l) => /<svg class="nt-svg"[^>]*>\s*<defs>/.test(CON('switch.x', s('on'), { console_layout: l }))), true);
   check('console : un lecteur PlayStation n est pas une enceinte', kindOf(render({ state_entity: 'media_player.playstation_5' }, { 'media_player.playstation_5': s('on', { device_class: 'speaker' }) })), 'con_ps5');
   const ed = (cfg) => markup(newEditor(cfg));

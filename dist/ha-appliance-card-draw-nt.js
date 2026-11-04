@@ -1309,274 +1309,434 @@ ${c.st === "paused" ? spkPause(60, 44, "#8d8a83") : ""}${c.muted ? spkMute(96, 5
 }
 // Game consoles. Sparks rise while a game runs; a console's light is lit
 // when it is on, amber in rest mode, dark when it is off.
-const conSparks = (c, x, y) => (c.st === "playing" ? `<g class="nt-run">${[["\u2726", 0, 0, 9], ["\u2727", 15, 8, 8], ["\u2726", -14, 10, 7]].map(([n, dx, dy, fs], i) => `<text class="nta-rise ntd${i * 2 + 1}" x="${x + dx}" y="${y + dy}" font-size="${fs}" fill="var(--primary-color, #03a9f4)" ${NT_FONT}>${n}</text>`).join("")}</g>` : "");
+// What rises while a game runs: the PlayStation symbols, the Xbox buttons,
+// or a pixel heart and coin on the Nintendo and the retro ones.
+const CON_PLAY = {
+  ps: [`<path d="M0 -2.8 L2.6 1.6 H-2.6 Z" fill="none" stroke="#2ec27e" stroke-width="1.1" stroke-linejoin="round"/>`, `<circle r="2.5" fill="none" stroke="#ff4d4d" stroke-width="1.1"/>`,
+    `<path d="M-2.1 -2.1 L2.1 2.1 M2.1 -2.1 L-2.1 2.1" stroke="#4d8dff" stroke-width="1.1" stroke-linecap="round"/>`, `<rect x="-2.2" y="-2.2" width="4.4" height="4.4" fill="none" stroke="#ff7ac8" stroke-width="1.1"/>`],
+  xbox: [["A", "#3fb950"], ["B", "#e5484d"], ["X", "#3b82f6"], ["Y", "#f5b301"]].map(([l, col]) => `<circle r="3" fill="${col}"/><text y="1.3" font-size="3.6" font-weight="700" fill="#fff" text-anchor="middle" ${NT_FONT}>${l}</text>`),
+  nin: [`<path d="M-2 -2 h1.3 v.7 h1.4 v-.7 h1.3 v.7 h.7 v2 h-.7 v.7 h-.7 v.7 h-.7 v.7 h-.6 v-.7 h-.7 v-.7 h-.7 v-.7 h-.7 v-2 h.7 Z" fill="#e53935"/>`, `<ellipse rx="2" ry="2.8" fill="#fbc02d" stroke="#c88a00" stroke-width=".6"/><rect x="-.4" y="-1.6" width=".8" height="3.2" fill="#c88a00"/>`,
+    `<path d="M-2 -2 h1.3 v.7 h1.4 v-.7 h1.3 v.7 h.7 v2 h-.7 v.7 h-.7 v.7 h-.7 v.7 h-.6 v-.7 h-.7 v-.7 h-.7 v-.7 h-.7 v-2 h.7 Z" fill="#e53935"/>`],
+};
+const conSparks = (c, x, y, kind = "nin") => (c.st === "playing" ? `<g class="nt-run">${CON_PLAY[kind].map((g, i) => { const [dx, dy] = [[-12, 10], [0, 0], [11, 8], [20, -2]][i]; return `<g class="nta-rise ntd${i * 2 + 1}"><g transform="translate(${x + dx} ${y + dy})">${g}</g></g>`; }).join("")}</g>` : "");
 const conLit = (c, on, rest = "#ffa000", off = "#3a3f45") => (c.on ? on : c.st === "rest" ? rest : off);
 const conLed = (c, x, y, r, on, rest = "#ffa000") => `<circle class="${c.on ? "nta-glow" : ""}" cx="${x}" cy="${y}" r="${r}" fill="${conLit(c, on, rest)}"/>`;
-const conPorts = (xs, y, w = 7, h = 3.4, fill = "#2a2c30") => xs.map((x) => `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="1" fill="${fill}"/>`).join("");
+const conNum = (v) => +v.toFixed(1);
+// A console seen from the front and a little above: its front face, rounded
+// at the bottom, and its top narrowing away to the back. at(u, v) gives a
+// point on that top, u across from the left, v from the front edge back.
+function conBox(x, y, w, h, d, k, r, front, top, edge = "") {
+  const st = edge ? ` stroke="${edge}" stroke-width=".5" stroke-linejoin="round"` : "";
+  return `<path d="M${x} ${y} L${x + k} ${y - d} H${x + w - k} L${x + w} ${y} Z" fill="${top}"${st}/>
+<path d="M${x} ${y} H${x + w} V${y + h - r} Q${x + w} ${y + h} ${x + w - r} ${y + h} H${x + r} Q${x} ${y + h} ${x} ${y + h - r} Z" fill="${front}"${st}/>
+<path d="M${x + 1} ${y + .5} H${x + w - 1}" stroke="#fff" stroke-width=".6" opacity=".22"/>`;
+}
+const conAt = (x, y, w, d, k) => (u, v) => [conNum(x + k * v + u * (w - 2 * k * v)), conNum(y - d * v)];
+const conPt = (p) => p.join(" ");
+// A strip across a box's top, from u0 to u1 and v0 to v1.
+const conQuad = (at, u0, u1, v0, v1, fill, extra = "") => `<path d="M${conPt(at(u0, v0))} L${conPt(at(u1, v0))} L${conPt(at(u1, v1))} L${conPt(at(u0, v1))} Z" fill="${fill}"${extra}/>`;
+// The shadow a console casts where it stands: dark right under its edge,
+// fading wider around it.
+function conFloor(x0, x1, y) {
+  const b = ntId();
+  return `<filter id="${b}" x="-20%" y="-300%" width="140%" height="700%"><feGaussianBlur stdDeviation="1.3"/></filter>
+<ellipse cx="${conNum((x0 + x1) / 2)}" cy="${conNum(y + 1.4)}" rx="${conNum((x1 - x0) / 2 + 5)}" ry="2.8" fill="#000" opacity=".16" filter="url(#${b})"/>
+<rect x="${conNum(x0 + 1.5)}" y="${conNum(y - 1.4)}" width="${conNum(x1 - x0 - 3)}" height="2.8" rx="1.4" fill="#000" opacity=".34" filter="url(#${b})"/>`;
+}
+// A handheld lifted a little above the table: a soft shadow under it.
+function conFloat(x0, x1, y) {
+  const b = ntId();
+  return `<filter id="${b}" x="-20%" y="-300%" width="140%" height="700%"><feGaussianBlur stdDeviation="1.8"/></filter><ellipse cx="${conNum((x0 + x1) / 2)}" cy="${conNum(y + 6)}" rx="${conNum((x1 - x0) * .42)}" ry="2.2" fill="#000" opacity=".22" filter="url(#${b})"/>`;
+}
+// A controller port: a rounded socket and its pins.
+const conPort = (x, y, w, h, body, hole = "#141518") => `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="${h * .3}" fill="${body}"/><rect x="${conNum(x + w * .18)}" y="${conNum(y + h * .3)}" width="${conNum(w * .64)}" height="${conNum(h * .4)}" rx=".5" fill="${hole}"/>`;
 // What a handheld's screen shows: a game while one runs, the home menu when
 // it is only on, nothing when it is off or asleep.
 function conScreen(c, x, y, w, h, id) {
   if (c.st === "playing") {
     return `<defs><linearGradient id="${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#6ec6ff"/><stop offset=".62" stop-color="#bfe8ff"/><stop offset=".62" stop-color="#5cb85c"/><stop offset="1" stop-color="#3d8b3d"/></linearGradient></defs>
-<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="1" fill="url(#${id})"/>
-<path d="M${x} ${y + h * .66} Q${x + w * .3} ${y + h * .44} ${x + w * .55} ${y + h * .62} T${x + w} ${y + h * .58} V${y + h} H${x} Z" fill="#4caf50"/>
-<circle cx="${x + w * .78}" cy="${y + h * .26}" r="${h * .12}" fill="#ffd54f"/>
-<g class="nta-pop"><rect x="${x + w * .3}" y="${y + h * .5}" width="${w * .09}" height="${h * .16}" rx=".6" fill="#e53935"/><circle cx="${x + w * .345}" cy="${y + h * .46}" r="${h * .06}" fill="#ffcc80"/></g>`;
+<rect x="${x}" y="${y}" width="${w}" height="${h}" rx=".8" fill="url(#${id})"/>
+<path d="M${x} ${conNum(y + h * .66)} Q${conNum(x + w * .3)} ${conNum(y + h * .44)} ${conNum(x + w * .55)} ${conNum(y + h * .62)} T${x + w} ${conNum(y + h * .58)} V${y + h} H${x} Z" fill="#4caf50"/>
+<circle cx="${conNum(x + w * .78)}" cy="${conNum(y + h * .26)}" r="${conNum(h * .12)}" fill="#ffd54f"/>
+<g class="nta-pop"><rect x="${conNum(x + w * .3)}" y="${conNum(y + h * .5)}" width="${conNum(w * .09)}" height="${conNum(h * .16)}" rx=".6" fill="#e53935"/><circle cx="${conNum(x + w * .345)}" cy="${conNum(y + h * .46)}" r="${conNum(h * .06)}" fill="#ffcc80"/></g>`;
   }
   if (c.on) {
     const tw = (w - 8) / 4;
-    return `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="1" fill="#eceff1"/>${[0, 1, 2, 3].map((i) => `<rect x="${(x + 2 + i * (tw + 1.33)).toFixed(1)}" y="${(y + h * .32).toFixed(1)}" width="${tw.toFixed(1)}" height="${(h * .36).toFixed(1)}" rx=".6" fill="${["#ef5350", "#42a5f5", "#ffca28", "#66bb6a"][i]}"/>`).join("")}`;
+    return `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx=".8" fill="#eceff1"/>${[0, 1, 2, 3].map((i) => `<rect x="${conNum(x + 2 + i * (tw + 1.33))}" y="${conNum(y + h * .32)}" width="${conNum(tw)}" height="${conNum(h * .36)}" rx=".6" fill="${["#ef5350", "#42a5f5", "#ffca28", "#66bb6a"][i]}"/>`).join("")}`;
   }
-  return `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="1" fill="#0d0f12"/><path d="M${x + 2} ${y + 2} L${x + w * .4} ${y + 2} L${x + 2} ${y + h * .7} Z" fill="#fff" opacity=".06"/>`;
+  return `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx=".8" fill="#0d0f12"/><path d="M${x + 2} ${y + 2} L${conNum(x + w * .4)} ${y + 2} L${x + 2} ${conNum(y + h * .7)} Z" fill="#fff" opacity=".06"/>`;
 }
+// The PlayStation mark, small: the P standing, the S lying flat in front.
+const conPsLogo = (x, y, s, mono = "") => `<g transform="translate(${x} ${y}) scale(${s})" fill="none" stroke-linecap="round" stroke-width="1.1"><path d="M-.4 1.4 V-4 Q3 -4 3 -2 Q3 0 -.4 -.2" stroke="${mono || "#e53935"}"/>
+<path d="M3.8 .6 H-1.6 Q-3.6 .6 -3.6 1.5 Q-3.6 2.4 -1.6 2.4" stroke="${mono || "#fbc02d"}"/><path d="M-1.6 2.4 H1.8 Q3.8 2.4 3.8 3.3 Q3.8 4.2 1.8 4.2 H-3.6" stroke="${mono || "#1e88e5"}"/></g>`;
 
-// PlayStation: the grey box with its round lid.
+// PlayStation: the grey box, its round lid, Open on the back corner, Reset
+// and Power at the front, two controller ports under their card slots.
 function conPs1(c) {
-  const f = ntId(), s = ntId(), t = ntId();
-  return `<defs>${ntV(f, "#d4d3cf", "#b9b8b3")}${ntV(s, "#aeada8", "#93928d")}${ntV(t, "#e6e5e1", "#d2d1cc")}</defs>
-${conSparks(c, 60, 22)}${ntFoot("12 106 100 106 118 90 30 90", .25)}
-${ntRoundBox(14, 70, 84, 30, 20, 3, `url(#${f})`, `url(#${s})`, `url(#${t})`, "#a3a29d")}
-<ellipse cx="72" cy="60" rx="21" ry="7" fill="#c3c2bd" stroke="#a3a29d" stroke-width=".8"/><ellipse cx="72" cy="59.4" rx="17" ry="5.4" fill="#d9d8d3"/>
-<ellipse cx="72" cy="59.4" rx="3" ry="1" fill="#b0afaa"/>
-<circle cx="36" cy="64" r="2.4" fill="#bdbcb7" stroke="#9a9994" stroke-width=".5"/><circle cx="44" cy="64" r="2.4" fill="#bdbcb7" stroke="#9a9994" stroke-width=".5"/><circle cx="102" cy="58" r="2.4" fill="#bdbcb7" stroke="#9a9994" stroke-width=".5"/>
-${conLed(c, 31, 62, 1, "#7cff6b")}
-${conPorts([24, 40], 84, 12, 6, "#8f8e89")}${conPorts([26, 42], 77, 8, 2.4, "#3a3a3a")}
-<path d="M14 96 H98" stroke="#a3a29d" stroke-width=".6"/>`;
+  const f = ntId(), t = ntId(), l = ntId();
+  const at = conAt(10, 80, 100, 26, 8);
+  const [lx, ly] = at(.53, .52), [ox, oy] = at(.9, .74), [rx, ry] = at(.09, .3), [px, py] = at(.19, .3);
+  return `<defs>${ntV(f, "#c7c6c1", "#a6a5a0")}${ntV(t, "#c9c8c3", "#e3e2dd")}<radialGradient id="${l}" cx=".45" cy=".35" r=".75"><stop offset="0" stop-color="#e8e7e2"/><stop offset="1" stop-color="#c3c2bd"/></radialGradient></defs>
+${conSparks(c, 60, 36, "ps")}${conFloor(10, 110, 102)}
+${conBox(10, 80, 100, 22, 26, 8, 3, `url(#${f})`, `url(#${t})`, "#97968f")}
+<ellipse cx="${lx}" cy="${ly + .8}" rx="23" ry="8.8" fill="#a9a8a3"/><ellipse cx="${lx}" cy="${ly}" rx="22.4" ry="8.4" fill="url(#${l})" stroke="#9c9b96" stroke-width=".5"/>
+<ellipse cx="${lx}" cy="${ly}" rx="17" ry="6.2" fill="none" stroke="#c9c8c3" stroke-width=".6"/><ellipse cx="${lx}" cy="${ly}" rx="3.4" ry="1.3" fill="#b4b3ae"/>
+${conPsLogo(lx - 10, ly + 2.2, .7)}
+<ellipse cx="${ox}" cy="${oy + .5}" rx="4" ry="1.9" fill="#8f8e89"/><ellipse cx="${ox}" cy="${oy}" rx="3.6" ry="1.6" fill="#d2d1cc" stroke="#9c9b96" stroke-width=".4"/>
+<ellipse cx="${rx}" cy="${ry + .5}" rx="2.8" ry="1.3" fill="#8f8e89"/><ellipse cx="${rx}" cy="${ry}" rx="2.5" ry="1.1" fill="#d2d1cc"/>
+<ellipse cx="${px}" cy="${py + .5}" rx="3.2" ry="1.5" fill="#8f8e89"/><ellipse cx="${px}" cy="${py}" rx="2.9" ry="1.3" fill="#d2d1cc"/>
+${conLed(c, px + 4.6, py + .6, .8, "#7cff6b")}
+<rect x="24" y="84" width="14" height="2.2" rx=".6" fill="#3b3a38"/><rect x="66" y="84" width="14" height="2.2" rx=".6" fill="#3b3a38"/>
+${conPort(23, 89, 16, 6.4, "#8d8c87", "#2d2c2a")}${conPort(65, 89, 16, 6.4, "#8d8c87", "#2d2c2a")}
+<path d="M12 99 H108" stroke="#97968f" stroke-width=".5"/>`;
 }
-// PlayStation 2: the black slab, its ridged left side, the tray and the
-// blue light.
+// PlayStation 2: the black slab, its ridges down the left of the top and the
+// front, the tray, the reset and eject buttons with their lights.
 function conPs2(c) {
-  const f = ntId(), s = ntId(), t = ntId();
-  return `<defs>${ntV(f, "#2b2d31", "#17181b")}${ntV(s, "#1a1b1e", "#0d0e10")}${ntV(t, "#3b3e43", "#25272b")}</defs>
-${conSparks(c, 60, 26)}${ntFoot("10 104 96 104 112 90 26 90", .28)}
-${ntRoundBox(12, 72, 86, 26, 16, 2, `url(#${f})`, `url(#${s})`, `url(#${t})`)}
-${[0, 1, 2, 3, 4].map((i) => `<path d="M14 ${76 + i * 4.4} H44" stroke="#0b0c0e" stroke-width="1.3"/><path d="M14 ${77.2 + i * 4.4} H44" stroke="#4a4d52" stroke-width=".4"/>`).join("")}
-${[0, 1, 2, 3, 4, 5].map((i) => `<path d="M${20 + i * 12} 72 L${36 + i * 12} 56" stroke="#1a1b1e" stroke-width="1.6"/>`).join("")}
-<path d="M48 80 H94" stroke="#0b0c0e" stroke-width="1.2"/><path d="M48 81 H94" stroke="#55585e" stroke-width=".4"/>
-<circle cx="52" cy="88" r="1.8" fill="${conLit(c, "#2979ff", "#2979ff", "#1a2a44")}"${c.on ? ` class="nta-glow"` : ""}/>
-${conLed(c, 88, 88, 1.2, "#7cff6b", "#ff3d00")}<rect x="84" y="91.4" width="8" height="2" rx="1" fill="#3a3d42"/>
-${conPorts([60, 70], 90, 7, 3)}`;
+  const f = ntId(), t = ntId();
+  const X = 8, Y = 80, W = 104, D = 22, K = 7, at = conAt(X, Y, W, D, K);
+  const ridges = Array.from({ length: 9 }, (_, i) => .02 + i * .034);
+  const [lgx, lgy] = at(.74, .45);
+  return `<defs>${ntV(f, "#26282c", "#121315")}${ntV(t, "#18191c", "#2f3236")}</defs>
+${conSparks(c, 60, 40, "ps")}${conFloor(8, 112, 100)}
+${conBox(X, Y, W, 20, D, K, 2, `url(#${f})`, `url(#${t})`)}
+${ridges.map((u) => `<path d="M${conPt(at(u, 0))} L${conPt(at(u, 1))}" stroke="#08090a" stroke-width="1.5"/><path d="M${conPt(at(u + .012, 0))} L${conPt(at(u + .012, 1))}" stroke="#44474c" stroke-width=".4"/>`).join("")}
+${ridges.map((u) => `<path d="M${conNum(X + u * W)} 80 V89" stroke="#08090a" stroke-width="1.5"/>`).join("")}
+<text x="${lgx}" y="${lgy}" font-size="3.4" font-style="italic" font-weight="700" fill="#4a68c9" text-anchor="middle" ${NT_FONT}>PS2</text>
+<path d="M8 89 H112" stroke="#060607" stroke-width="1.2"/><path d="M8 90 H112" stroke="#3a3d42" stroke-width=".4"/>
+<path d="M46 84.6 H100" stroke="#060607" stroke-width="1.4"/><path d="M46 85.6 H100" stroke="#4a4d52" stroke-width=".4"/>
+${[12, 26].map((x) => `<rect x="${x}" y="91.6" width="11" height="1.8" rx=".5" fill="#060607"/>${conPort(x, 95, 11, 3.6, "#33363b", "#060607")}`).join("")}
+<circle cx="106" cy="84.6" r="1.6" fill="#2b2d31" stroke="#060607" stroke-width=".4"/>${conLed(c, 102.6, 84.6, .7, "#7cff6b", "#ff3d00")}
+<circle cx="106" cy="94.6" r="1.6" fill="#2b2d31" stroke="#060607" stroke-width=".4"/><circle cx="102.6" cy="94.6" r=".7" fill="${conLit(c, "#2979ff", "#1a2a44", "#1a2a44")}"${c.on ? ` class="nta-glow"` : ""}/>`;
 }
-// PlayStation 3: the glossy black bulge, its silver band and the slot.
+// PlayStation 3: the wide glossy black body, its top rounded from front to
+// back, the glossy flap on the left, the chrome band with the slot on the
+// right, the PlayStation mark, the USB ports and vents along the bottom.
 function conPs3(c) {
-  const g = ntId(), t = ntId(), band = ntId();
-  return `<defs><linearGradient id="${g}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#4b4f55"/><stop offset=".25" stop-color="#16181b"/><stop offset="1" stop-color="#050506"/></linearGradient>
-<linearGradient id="${t}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#6b7077"/><stop offset="1" stop-color="#1c1e21"/></linearGradient>${ntV(band, "#e3e6e9", "#9aa1a8")}</defs>
-${conSparks(c, 60, 28)}${ntShadow(60, 104, 50)}
-<path d="M10 102 V80 Q10 66 60 62 Q110 66 110 80 V102 Z" fill="url(#${g})"/>
-<path d="M16 76 Q20 67 60 64.6 Q100 67 104 76" fill="none" stroke="url(#${t})" stroke-width="3" opacity=".7"/>
-<path d="M10 92 H110 V98 H10 Z" fill="url(#${band})"/>
-<path d="M30 83 H90" stroke="#000" stroke-width="1.4"/><path d="M30 84 H90" stroke="#3a3d42" stroke-width=".4"/>
-<path d="M18 80 Q24 72 40 70" fill="none" stroke="#fff" stroke-width="1.6" opacity=".35" stroke-linecap="round"/>
-${conLed(c, 20, 88, 1.1, "#7cff6b", "#ff3d00")}${conLed(c, 100, 88, 1.1, "#7cff6b", "#5d6773")}`;
+  const t = ntId(), fl = ntId(), cr = ntId(), lo = ntId();
+  return `<defs><linearGradient id="${t}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#050506"/><stop offset=".55" stop-color="#2e3237"/><stop offset=".8" stop-color="#6b7178"/><stop offset="1" stop-color="#111214"/></linearGradient>
+<linearGradient id="${fl}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3a3e44"/><stop offset=".35" stop-color="#131417"/><stop offset="1" stop-color="#050506"/></linearGradient>
+<linearGradient id="${cr}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f4f6f8"/><stop offset=".45" stop-color="#b9c0c6"/><stop offset=".55" stop-color="#8d949b"/><stop offset="1" stop-color="#e3e6e9"/></linearGradient>${ntV(lo, "#141517", "#050506")}</defs>
+${conSparks(c, 60, 44, "ps")}${conFloor(8, 112, 104)}
+<path d="M8 104 V80 Q8 68 22 68 H98 Q112 68 112 80 V104 Z" fill="url(#${lo})"/>
+<path d="M8.4 81 Q8.4 68.6 22 68.6 H98 Q111.6 68.6 111.6 81 Z" fill="url(#${t})"/>
+<path d="M9 81 H50 V92 Q50 94 48 94 H11 Q9 94 9 92 Z" fill="url(#${fl})"/>
+<path d="M12 82.6 H46" stroke="#fff" stroke-width=".6" opacity=".25"/>
+<path d="M50 81 H111 V89.4 H50 Z" fill="url(#${cr})"/><path d="M60 85.2 H107" stroke="#050506" stroke-width="1.3"/>
+${conPsLogo(76, 91.2, .5)}
+<path d="M95.6 91.6 a1.4 1.4 0 1 0 2 0 M96.6 90.9 V92.7" fill="none" stroke="#8a9097" stroke-width=".4"/>
+<path d="M101 93 h2.6 M101.2 92.4 l1.1 -1.4 l1.1 1.4 Z" fill="#8a9097" stroke="#8a9097" stroke-width=".35"/>
+${conLed(c, 92.6, 92, .5, "#7cff6b", "#ff3d00")}
+<path d="M8 95.6 H112" stroke="#2c2f34" stroke-width=".5"/>
+${[13, 20, 27, 34].map((x) => `<rect x="${x}" y="98.2" width="4.6" height="1.8" rx=".3" fill="#2e3136"/><rect x="${x + .6}" y="98.7" width="3.4" height=".8" fill="#050506"/>`).join("")}
+${Array.from({ length: 26 }, (_, i) => `<path d="M${44 + i * 2.2} 97 V102.4" stroke="#000" stroke-width="1"/>`).join("")}`;
 }
-// PlayStation 4: slabs stacked a little off true, matte over glossy, the
-// light bar in the groove between them; the Pro has three.
+// PlayStation 4: a thin slab leaning forward, its top split between the
+// glossy left and the matte right by the light bar; the Pro is three layers.
 function conPs4(c, pro) {
-  const m = ntId(), ms = ntId(), mt = ntId(), g = ntId(), gs = ntId(), gt = ntId(), lb = ntId();
-  const bar = conLit(c, "#2979ff", "#ffa000", "#202226");
-  const slabs = pro ? [[16, 88, 12], [12, 76, 12], [16, 64, 12]] : [[18, 86, 14], [13, 72, 14]];
-  const top = slabs[slabs.length - 1];
-  return `<defs>${ntV(m, "#2f3236", "#1b1c1f")}${ntV(ms, "#1d1e21", "#111214")}${ntV(mt, "#3a3d42", "#2a2c30")}
-${ntV(g, "#3b3e44", "#0d0e10")}${ntV(gs, "#1a1b1e", "#08090a")}${ntV(gt, "#4a4d53", "#2b2d31")}${ntBlur(lb, 1.4)}</defs>
-${conSparks(c, 64, top[1] - 34)}${ntFoot("12 106 98 106 116 90 30 90", .28)}
-${slabs.map(([x, y, h], i) => ntRoundBox(x, y, 80, h, 16, 1.5, `url(#${i % 2 ? g : m})`, `url(#${i % 2 ? gs : ms})`, `url(#${i % 2 ? gt : mt})`)).join("")}
-<path d="M${top[0] + 46} ${top[1] - 1} L${top[0] + 60} ${top[1] - 15}" stroke="#08090a" stroke-width="2.2"/>
-<path d="M${top[0] + 46} ${top[1] - 1} L${top[0] + 60} ${top[1] - 15}" stroke="${bar}" stroke-width="1.2"${c.on ? ` filter="url(#${lb})" class="nta-glow"` : ""}/>
-${c.on || c.st === "rest" ? `<path d="M${top[0] + 46} ${top[1] - 1} L${top[0] + 60} ${top[1] - 15}" stroke="${bar}" stroke-width=".6"/>` : ""}
-<path d="M${slabs[0][0] + 4} ${slabs[0][1] + 5} H${slabs[0][0] + 40}" stroke="#000" stroke-width=".9"/>`;
+  const gl = ntId(), mt = ntId(), fr = ntId(), lb = ntId(), rf = ntId();
+  const bar = conLit(c, "#f4f8ff", "#ffa000", "#1b1d20");
+  const X = 8, W = 104, D = 22, K = 8, Y = pro ? 76 : 82, at = conAt(X, Y, W, D, K);
+  const split = pro ? 0 : .38;
+  const glow = c.on ? ` filter="url(#${lb})" class="nta-glow"` : "";
+  const top = pro ? `${conQuad(at, 0, 1, 0, 1, `url(#${mt})`)}${conPsLogo(...at(.5, .5), 1.1, "#5a5f66")}`
+    : `${conQuad(at, 0, split, 0, 1, `url(#${gl})`)}${conQuad(at, 0, split, 0, 1, `url(#${rf})`)}${conQuad(at, split, 1, 0, 1, `url(#${mt})`)}${conPsLogo(...at(.1, .7), .8, "#6b7077")}
+<path d="M${conPt(at(split, 0))} L${conPt(at(split, 1))}" stroke="#050506" stroke-width="2.4"/><path d="M${conPt(at(split, 0))} L${conPt(at(split, 1))}" stroke="${bar}" stroke-width="1.1"${glow}/>
+${c.on || c.st === "rest" ? `<path d="M${conPt(at(split, 0))} L${conPt(at(split, 1))}" stroke="${bar}" stroke-width=".5"/>` : ""}`;
+  const layers = pro
+    ? `<path d="M8 76 H112 L111 80 H9 Z" fill="url(#${fr})"/><rect x="9" y="80" width="102" height="3.4" fill="#050506"/>
+<path d="M10 83.4 H110 L109 89 H11 Z" fill="url(#${fr})"/><rect x="11" y="89" width="98" height="3" fill="#050506"/>
+<path d="M30 90.5 H90" stroke="${bar}" stroke-width="1"${glow}/><path d="M12 92 H108 L107 99 Q107 100 105 100 H15 Q13 100 13 99 Z" fill="#1a1b1e"/>
+<path d="M26 81.8 H70" stroke="#2a2c30" stroke-width=".7"/>`
+    : `<path d="M8 82 H112 L111 86 H9 Z" fill="url(#${fr})"/><rect x="10" y="86" width="100" height="5.6" fill="#050506"/>
+<path d="M18 88.6 H62" stroke="#2a2c30" stroke-width=".9"/><path d="M${conPt(at(split, 0))} V86" stroke="${bar}" stroke-width="1"${glow}/>
+<path d="M68 88.8 h4 M76 88.8 h4" stroke="#3a3d42" stroke-width=".8"/>
+<path d="M12 91.6 H108 L107 99 Q107 100 105 100 H15 Q13 100 13 99 Z" fill="#1a1b1e"/>`;
+  return `<defs>${ntV(gl, "#2e3136", "#0b0c0e")}${ntV(mt, "#1d1f22", "#2e3034")}${ntV(fr, "#2b2d31", "#141517")}${ntBlur(lb, 1.4)}
+<linearGradient id="${rf}" x1="0" x2="1"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset=".5" stop-color="#fff" stop-opacity=".18"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient></defs>
+${conSparks(c, 60, Y - 42, "ps")}${conFloor(12, 108, 100)}
+${top}${layers}`;
 }
-// PlayStation 5: the white wings flaring around the black core, the light
-// along their inner edges, on its round stand.
+// PlayStation 5, standing, seen from its front left: the tall white side
+// panel widening towards the bottom, its front corner pointing up, the
+// PlayStation mark high on it, the black core lit white at the top, amber at rest, the
+// thin far panel flaring out, the black stand.
 function conPs5(c) {
-  const w = ntId(), k = ntId(), lb = ntId();
-  const light = conLit(c, "#4aa8ff", "#ffa000", "#2a2f36");
-  return `<defs><linearGradient id="${w}" x1="0" x2="1"><stop offset="0" stop-color="#cfd3d7"/><stop offset=".4" stop-color="#ffffff"/><stop offset="1" stop-color="#dfe2e5"/></linearGradient>
-<linearGradient id="${k}" x1="0" x2="1"><stop offset="0" stop-color="#0b0c0e"/><stop offset=".5" stop-color="#2a2d31"/><stop offset="1" stop-color="#0b0c0e"/></linearGradient>${ntBlur(lb, 1.6)}</defs>
-${conSparks(c, 64, -4)}${ntShadow(60, 113, 22)}
-<ellipse cx="60" cy="110" rx="17" ry="3.6" fill="#1c1e21"/>
-<path d="M48 14 V106 H72 V14 Z" fill="url(#${k})"/>
-${[0, 1, 2, 3, 4, 5].map((i) => `<path d="M52 ${20 + i * 3} H68" stroke="#000" stroke-width=".8"/>`).join("")}
-<path d="M48 16 C40 14 30 12 26 10 C30 40 36 80 40 106 H48 Z" fill="url(#${w})"/>
-<path d="M72 16 C80 14 90 12 94 10 C90 40 84 80 80 106 H72 Z" fill="url(#${w})"/>
-<path d="M48 16 V106 M72 16 V106" stroke="${light}" stroke-width="1.4"${c.on ? ` filter="url(#${lb})" class="nta-glow"` : ""}/>
-<path d="M48 16 V106 M72 16 V106" stroke="${light}" stroke-width=".6"/>
-<path d="M50 92 H70" stroke="#000" stroke-width="1.4"/>`;
+  const wl = ntId(), sh = ntId(), k = ntId(), lb = ntId(), fb = ntId(), sd = ntId();
+  const light = conLit(c, "#f4f8ff", "#ffa000", "#2a2f36");
+  const panel = "M27.6 96 Q27 98.6 30 99 L81.6 104.6 Q77 50 72 7.4 Q55 8.2 40.6 12.8 Q38 13.6 37.8 16.4 Z";
+  return `<defs><linearGradient id="${wl}" x1="0" x2="1"><stop offset="0" stop-color="#e3e7eb"/><stop offset=".5" stop-color="#fcfcfd"/><stop offset="1" stop-color="#ffffff"/></linearGradient>
+<linearGradient id="${sh}" x1="0" y1="0" x2="0" y2="1"><stop offset=".5" stop-color="#8a96a3" stop-opacity="0"/><stop offset="1" stop-color="#8a96a3" stop-opacity=".22"/></linearGradient>
+<linearGradient id="${k}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${c.on ? "#5d6470" : c.st === "rest" ? "#7a4a08" : "#20232a"}"/><stop offset=".35" stop-color="#101219"/><stop offset="1" stop-color="#050608"/></linearGradient>${ntBlur(lb, 2.2)}${ntBlur(fb, 2)}<linearGradient id="${sd}" x1="0" x2="1"><stop offset="0" stop-color="#0b0c0e"/><stop offset=".55" stop-color="#2c2f34"/><stop offset="1" stop-color="#0b0c0e"/></linearGradient></defs>
+${conSparks(c, 56, -6, "ps")}<ellipse cx="60" cy="107.6" rx="33" ry="3.6" transform="rotate(5 60 107.6)" fill="#000" opacity=".22" filter="url(#${fb})"/><g transform="rotate(6 58 104)"><ellipse cx="58" cy="107.6" rx="31" ry="3.4" fill="#000" opacity=".32" filter="url(#${fb})"/>
+<path d="M27 104 V105.8 A31 4.6 0 0 0 89 105.8 V104 Z" fill="url(#${sd})"/><ellipse cx="58" cy="104" rx="31" ry="4.6" fill="#1b1d20"/><ellipse cx="58" cy="103.8" rx="29.4" ry="3.8" fill="none" stroke="#3a3d42" stroke-width=".4"/></g>
+<path d="M72 7.4 L86.4 7 Q86 50 85.6 105.2 L81.6 104.6 Q77 50 72 7.4 Z" fill="url(#${k})"/>
+${c.on || c.st === "rest" ? `<path d="M80 9 Q84 24 84.4 44" fill="none" stroke="${light}" stroke-width="3.6" opacity=".8" filter="url(#${lb})"${c.on ? ` class="nta-glow"` : ""}/>` : ""}
+<rect x="83" y="50" width="1" height="2.6" rx=".4" fill="#3a3f48"/><rect x="83" y="56" width="1" height="2.6" rx=".4" fill="#3a3f48"/>
+<path d="M86.4 7 L89.6 5.8 Q88.4 50 87.6 105.4 L85.6 105.2 Q86 50 86.4 7 Z" fill="#f5f6f7" stroke="#c3c8cd" stroke-width=".4"/>
+<path d="${panel}" fill="url(#${wl})" stroke="#c9ced3" stroke-width=".5"/><path d="${panel}" fill="url(#${sh})"/>
+<path d="M73.6 10 Q78 50 81.6 102" fill="none" stroke="#fff" stroke-width="1"/>
+${conPsLogo(42.6, 32, .8, "#9aa0a6")}`;
 }
-// Xbox: the big black box and the green jewel on top.
+// Xbox: the big black box, the X raised on its top meeting at the green
+// jewel, the tray, the power ring and four ports in front.
 function conXbox(c) {
-  const f = ntId(), s = ntId(), t = ntId(), j = ntId(), gl = ntId();
-  return `<defs>${ntV(f, "#25272a", "#121314")}${ntV(s, "#151618", "#0a0a0b")}${ntV(t, "#33363a", "#1f2124")}
-<radialGradient id="${j}" cx=".4" cy=".35" r=".7"><stop offset="0" stop-color="${c.on ? "#b9ff7a" : "#7fb35a"}"/><stop offset=".6" stop-color="${c.on ? "#4caf1f" : "#36602a"}"/><stop offset="1" stop-color="#1d3a12"/></radialGradient>${ntBlur(gl, 2)}</defs>
-${conSparks(c, 60, 22)}${ntFoot("12 108 100 108 118 92 30 92", .28)}
-${ntRoundBox(14, 70, 84, 32, 20, 5, `url(#${f})`, `url(#${s})`, `url(#${t})`)}
-${c.on ? `<ellipse class="nta-glow" cx="66" cy="60" rx="12" ry="4.6" fill="#76ff03" opacity=".5" filter="url(#${gl})"/>` : ""}
-<ellipse cx="66" cy="60" rx="10" ry="3.8" fill="url(#${j})" stroke="#0a0a0b" stroke-width=".6"/>
-<path d="M60 58 L72 62 M72 58 L60 62" stroke="#1d3a12" stroke-width="1" opacity=".55"/>
-<path d="M22 80 H66" stroke="#000" stroke-width="1.3"/>
-<circle cx="78" cy="80" r="2.4" fill="#3a3d42" stroke="#000" stroke-width=".5"/>${conLed(c, 78, 80, 1, "#76ff03", "#5d6773")}<circle cx="87" cy="80" r="2.4" fill="#3a3d42" stroke="#000" stroke-width=".5"/>
-${conPorts([22, 37, 52, 67], 91, 10, 4, "#0a0a0b")}`;
+  const f = ntId(), t = ntId(), j = ntId(), gl = ntId(), pn = ntId();
+  const at = conAt(10, 76, 100, 24, 8), [jx, jy] = at(.5, .52);
+  const corners = [[.06, .1], [.94, .1], [.94, .94], [.06, .94]];
+  return `<defs>${ntV(f, "#25272a", "#101112")}${ntV(t, "#18191b", "#35383c")}${ntV(pn, "#34373b", "#17181a")}
+<radialGradient id="${j}" cx=".4" cy=".35" r=".7"><stop offset="0" stop-color="${c.on ? "#c6ff8a" : "#86b764"}"/><stop offset=".55" stop-color="${c.on ? "#54c21f" : "#3d6b2c"}"/><stop offset="1" stop-color="#173210"/></radialGradient>${ntBlur(gl, 2)}</defs>
+${conSparks(c, 60, 34, "xbox")}${conFloor(10, 110, 102)}
+${conBox(10, 76, 100, 26, 24, 8, 4, `url(#${f})`, `url(#${t})`)}
+${corners.map(([u, v]) => `<path d="M${jx} ${jy} L${conPt(at(u, v))}" stroke="#45484d" stroke-width="3.4" stroke-linecap="round"/><path d="M${jx} ${jy + .6} L${conPt(at(u, v))}" stroke="#0a0a0b" stroke-width="1.2" stroke-linecap="round" opacity=".7"/>`).join("")}
+${c.on ? `<ellipse class="nta-glow" cx="${jx}" cy="${jy}" rx="13" ry="5.6" fill="#76ff03" opacity=".45" filter="url(#${gl})"/>` : ""}
+<ellipse cx="${jx}" cy="${jy}" rx="11" ry="4.8" fill="#0a0a0b"/><ellipse cx="${jx}" cy="${jy - .3}" rx="9" ry="3.8" fill="url(#${j})"/>
+<path d="M${jx - 4.4} ${jy - 2.2} Q${jx} ${jy - .4} ${jx + 4.4} ${jy + 1.8} M${jx + 4.4} ${jy - 2.2} Q${jx} ${jy - .4} ${jx - 4.4} ${jy + 1.8}" stroke="#173210" stroke-width="1.1" fill="none" opacity=".7"/>
+<path d="M30 76 Q60 79 90 76 V102 H30 Z" fill="url(#${pn})"/>
+<path d="M36 83.6 H80" stroke="#000" stroke-width="1.4"/><path d="M36 84.6 H80" stroke="#55585e" stroke-width=".4"/>
+<circle cx="96" cy="84" r="2.6" fill="#2b2d31" stroke="${conLit(c, "#76ff03", "#ffa000", "#000")}" stroke-width=".7"/><circle cx="103.4" cy="84" r="2" fill="#2b2d31" stroke="#000" stroke-width=".5"/>
+${[13.5, 21.5, 91.5, 99.5].map((x) => conPort(x, 92.4, 7, 4.4, "#0a0a0b", "#2a2c30")).join("")}`;
 }
-// Xbox 360: white, standing, its sides drawn in, the ring of light.
+// Xbox 360: white and lying flat, its front drawn in, the hard drive on top,
+// the tray and the ring of light around the power button.
 function conX360(c) {
-  const f = ntId(), sd = ntId(), gl = ntId();
+  const f = ntId(), t = ntId(), hd = ntId(), gl = ntId();
   const ring = c.on ? "#76ff03" : c.st === "rest" ? "#ffa000" : "#c3c7cb";
-  return `<defs><linearGradient id="${f}" x1="0" x2="1"><stop offset="0" stop-color="#d7dbdf"/><stop offset=".4" stop-color="#fbfcfc"/><stop offset="1" stop-color="#e3e6e9"/></linearGradient>${ntV(sd, "#9aa1a8", "#6f767d")}${ntBlur(gl, 1.6)}</defs>
-${conSparks(c, 64, -2)}${ntShadow(60, 112, 28)}
-<path d="M80 18 L92 12 V102 L80 110 Z" fill="url(#${sd})"/>
-${[0, 1, 2, 3, 4, 5, 6, 7].map((i) => `<path d="M83 ${28 + i * 8} L89 ${25 + i * 8}" stroke="#555c63" stroke-width="1.6"/>`).join("")}
-<path d="M38 18 Q59 23 80 18 V110 Q59 105 38 110 Z" fill="url(#${f})" stroke="#bfc4c9" stroke-width=".5"/>
-<path d="M42 40 H76" stroke="#9aa1a8" stroke-width="1.2"/>
-${c.on ? `<circle class="nta-glow" cx="59" cy="31" r="5.6" fill="none" stroke="${ring}" stroke-width="2.4" filter="url(#${gl})"/>` : ""}
-<circle cx="59" cy="31" r="4.6" fill="#eef0f2" stroke="#b9bec3" stroke-width=".6"/>
-${[0, 1, 2, 3].map((i) => `<path d="M${59 + 5.6 * Math.cos(i * Math.PI / 2 + .2)} ${31 + 5.6 * Math.sin(i * Math.PI / 2 + .2)} A5.6 5.6 0 0 1 ${59 + 5.6 * Math.cos((i + 1) * Math.PI / 2 - .2)} ${31 + 5.6 * Math.sin((i + 1) * Math.PI / 2 - .2)}" fill="none" stroke="${ring}" stroke-width="1.4"/>`).join("")}
-${conPorts([46, 62], 98, 10, 3, "#9aa1a8")}`;
+  const at = conAt(8, 80, 104, 22, 8);
+  return `<defs>${ntV(f, "#f6f7f8", "#d5d9dd")}${ntV(t, "#e1e4e7", "#fbfcfc")}${ntV(hd, "#a9b0b6", "#8a9198")}${ntBlur(gl, 1.6)}</defs>
+${conSparks(c, 60, 36, "xbox")}${conFloor(8, 112, 101.4)}
+<path d="M8 80 L16 58 H104 L112 80 Q60 76 8 80 Z" fill="url(#${t})" stroke="#c5cacf" stroke-width=".5"/>
+${conQuad(at, .05, .46, .14, .92, `url(#${hd})`, ` stroke="#7a8188" stroke-width=".4"`)}
+${Array.from({ length: 9 }, (_, i) => `<path d="M${conPt(at(.08 + i * .04, .26))} L${conPt(at(.08 + i * .04, .8))}" stroke="#6b7279" stroke-width=".8"/>`).join("")}
+<path d="M8 80 Q60 76 112 80 V102 Q60 98 8 102 Z" fill="url(#${f})" stroke="#c5cacf" stroke-width=".5"/>
+<path d="M14 85 H26 V95 H14 Z" fill="none" stroke="#c0c5ca" stroke-width=".6"/>
+<path d="M32 88 Q58 86 82 88" fill="none" stroke="#8d949b" stroke-width="1.2"/><circle cx="87" cy="88.4" r="1.2" fill="#e6e9ec" stroke="#a9b0b6" stroke-width=".4"/>
+${c.on ? `<circle class="nta-glow" cx="100" cy="90" r="6" fill="none" stroke="${ring}" stroke-width="2.4" filter="url(#${gl})"/>` : ""}
+<circle cx="100" cy="90" r="5.8" fill="#e6e9ec" stroke="#b9bec3" stroke-width=".5"/>
+${[0, 1, 2, 3].map((i) => { const a0 = i * Math.PI / 2 + .22, a1 = (i + 1) * Math.PI / 2 - .22; return `<path d="M${conNum(100 + 4.8 * Math.cos(a0))} ${conNum(90 + 4.8 * Math.sin(a0))} A4.8 4.8 0 0 1 ${conNum(100 + 4.8 * Math.cos(a1))} ${conNum(90 + 4.8 * Math.sin(a1))}" fill="none" stroke="${ring}" stroke-width="1.3"/>`; }).join("")}
+<circle cx="100" cy="90" r="3" fill="#f4f5f6" stroke="#b9bec3" stroke-width=".4"/>`;
 }
-// Xbox One: the wide black box, its top half vents, half gloss, the white
-// light on its front.
+// Xbox One: the long black slab, the vents over the left of its top, the
+// glossy right, the slot and the glowing logo in front.
 function conXone(c) {
-  const f = ntId(), s = ntId(), t = ntId(), gl = ntId();
-  return `<defs>${ntV(f, "#2a2c2f", "#111214")}${ntV(s, "#17181a", "#0a0a0b")}${ntV(t, "#2e3034", "#1b1c1f")}${ntBlur(gl, 1.6)}</defs>
-${conSparks(c, 60, 32)}${ntFoot("6 104 100 104 116 90 22 90", .28)}
-${ntRoundBox(8, 76, 92, 24, 16, 2, `url(#${f})`, `url(#${s})`, `url(#${t})`)}
-${Array.from({ length: 14 }, (_, i) => `<path d="M${12 + i * 3.6} 75 L${27 + i * 3.6} 61" stroke="#0b0c0e" stroke-width="1.6"/>`).join("")}
-<path d="M62 76 L78 60" stroke="#000" stroke-width=".8"/>
-<path d="M14 84 H58" stroke="#000" stroke-width="1.2"/>
-${c.on ? `<circle class="nta-glow" cx="90" cy="86" r="3.4" fill="#fff" filter="url(#${gl})"/>` : ""}<circle cx="90" cy="86" r="2.4" fill="${conLit(c, "#ffffff", "#9aa1a8", "#3a3d42")}"/>`;
+  const f = ntId(), t = ntId(), gs = ntId(), gl = ntId();
+  const at = conAt(6, 84, 108, 24, 8);
+  return `<defs>${ntV(f, "#2a2c2f", "#0e0f10")}${ntV(t, "#141517", "#25272a")}${ntV(gs, "#3a3d42", "#0e0f10")}${ntBlur(gl, 1.6)}</defs>
+${conSparks(c, 60, 40, "xbox")}${conFloor(6, 114, 100)}
+${conBox(6, 84, 108, 16, 24, 8, 2, `url(#${f})`, `url(#${t})`)}
+${Array.from({ length: 28 }, (_, i) => `<path d="M${conPt(at(.02 + i * .02, .04))} L${conPt(at(.02 + i * .02, .96))}" stroke="#050506" stroke-width="1.1"/>`).join("")}
+${conQuad(at, .6, 1, 0, 1, `url(#${gs})`)}
+<path d="M${conPt(at(.6, 0))} L${conPt(at(.6, 1))}" stroke="#000" stroke-width=".8"/>
+<path d="M14 90 H60" stroke="#000" stroke-width="1.3"/><path d="M14 91 H60" stroke="#3a3d42" stroke-width=".4"/>
+${c.on ? `<circle class="nta-glow" cx="101" cy="91" r="3.6" fill="#fff" filter="url(#${gl})"/>` : ""}
+<circle cx="101" cy="91" r="2.6" fill="${conLit(c, "#ffffff", "#c6cbd0", "#4a4d52")}"/>
+<path d="M99.4 89.2 Q101 91 102.6 89.2 M99.4 92.8 Q101 91 102.6 92.8" fill="none" stroke="#111214" stroke-width=".7"/>`;
 }
-// Xbox Series X: the black monolith, its round vents on top tinted green.
+// Xbox Series X: the black tower, the dish on top showing green through its
+// holes, the logo button, the vertical disc slot.
 function conXsx(c) {
-  const f = ntId(), s = ntId(), t = ntId(), gl = ntId();
-  return `<defs>${ntV(f, "#202224", "#111214")}${ntV(s, "#161719", "#0a0a0b")}${ntV(t, "#2a2c2f", "#1b1c1f")}${ntBlur(gl, 1.4)}</defs>
-${conSparks(c, 66, -2)}${ntFoot("34 114 82 114 100 98 52 98", .28)}
-${ntRoundBox(38, 28, 40, 84, 16, 3, `url(#${f})`, `url(#${s})`, `url(#${t})`)}
-<ellipse cx="66" cy="20" rx="15" ry="5.6" fill="#0a0a0b"/>
-${Array.from({ length: 18 }, (_, i) => { const a = i / 18 * Math.PI * 2; return `<circle cx="${(66 + Math.cos(a) * 11).toFixed(1)}" cy="${(20 + Math.sin(a) * 4).toFixed(1)}" r=".9" fill="${c.on ? "#3ad13a" : "#1f5a1f"}"/>`; }).join("")}
-${Array.from({ length: 10 }, (_, i) => { const a = i / 10 * Math.PI * 2; return `<circle cx="${(66 + Math.cos(a) * 6).toFixed(1)}" cy="${(20 + Math.sin(a) * 2.2).toFixed(1)}" r=".8" fill="${c.on ? "#3ad13a" : "#1f5a1f"}"/>`; }).join("")}
-<path d="M70 40 V96" stroke="#000" stroke-width="1"/>
-${c.on ? `<circle class="nta-glow" cx="46" cy="36" r="3" fill="#fff" filter="url(#${gl})"/>` : ""}<circle cx="46" cy="36" r="2" fill="${conLit(c, "#ffffff", "#9aa1a8", "#3a3d42")}"/>
-<rect x="44" y="100" width="6" height="2" rx="1" fill="#000"/>`;
+  const f = ntId(), t = ntId(), g = ntId(), gl = ntId();
+  const at = conAt(40, 30, 40, 12, 4), [cx, cy] = at(.5, .5);
+  const holes = [];
+  for (let j = -3; j <= 3; j++) for (let i = -8; i <= 8; i++) {
+    const x = i * 1.9 + (j % 2 ? .95 : 0), y = j * 1.25;
+    if ((x / 15.2) ** 2 + (y / 4.3) ** 2 < 1) holes.push(`<circle cx="${conNum(cx + x)}" cy="${conNum(cy + y)}" r=".55" fill="#050506"/>`);
+  }
+  return `<defs><linearGradient id="${f}" x1="0" x2="1"><stop offset="0" stop-color="#1c1e20"/><stop offset=".5" stop-color="#26282b"/><stop offset="1" stop-color="#121314"/></linearGradient>${ntV(t, "#141517", "#2a2c2f")}
+<radialGradient id="${g}" cx=".5" cy=".7" r=".6"><stop offset="0" stop-color="#4fe24a"/><stop offset=".7" stop-color="#1c8a24"/><stop offset="1" stop-color="#071a09"/></radialGradient>${ntBlur(gl, 1.4)}</defs>
+${conSparks(c, 64, -4, "xbox")}${conFloor(40, 80, 108)}
+${conBox(40, 30, 40, 78, 12, 4, 3, `url(#${f})`, `url(#${t})`)}
+<ellipse cx="${cx}" cy="${cy + .4}" rx="17.6" ry="5.4" fill="#050506"/><ellipse cx="${cx}" cy="${cy}" rx="16.6" ry="4.9" fill="url(#${g})"/>
+${holes.join("")}
+${c.on ? `<circle class="nta-glow" cx="46.4" cy="36" r="3.2" fill="#fff" filter="url(#${gl})"/>` : ""}<circle cx="46.4" cy="36" r="2.1" fill="${conLit(c, "#ffffff", "#c6cbd0", "#3a3d42")}"/>
+<path d="M45.2 34.8 L47.6 37.2 M47.6 34.8 L45.2 37.2" stroke="#111214" stroke-width=".5"/>
+<path d="M73 46 V92" stroke="#000" stroke-width="1.6"/><path d="M74 46 V92" stroke="#3a3d42" stroke-width=".4"/><circle cx="73.4" cy="96" r="1" fill="#2e3034"/>
+<rect x="44.4" y="100" width="4" height="1.6" rx=".4" fill="#000"/><circle cx="46.4" cy="96" r=".8" fill="#2e3034"/>`;
 }
-// Xbox Series S: the small white box, the big black round vent on top.
+// Xbox Series S: the small white box lying flat, the big black round vent
+// on its top, the logo button in front.
 function conXss(c) {
-  const f = ntId(), s = ntId(), t = ntId(), gl = ntId();
-  return `<defs>${ntV(f, "#f4f5f5", "#d9dcde")}${ntV(s, "#c6cacd", "#a6abaf")}${ntV(t, "#ffffff", "#eceeef")}${ntBlur(gl, 1.4)}</defs>
-${conSparks(c, 60, 32)}${ntFoot("18 106 94 106 110 92 34 92", .22)}
-${ntRoundBox(20, 74, 74, 28, 18, 4, `url(#${f})`, `url(#${s})`, `url(#${t})`, "#c2c6c9")}
-<ellipse cx="66" cy="65" rx="22" ry="7.4" fill="#141516"/>
-${Array.from({ length: 5 }, (_, i) => `<ellipse cx="66" cy="65" rx="${20 - i * 4}" ry="${6.6 - i * 1.32}" fill="none" stroke="#2b2d30" stroke-width=".7"/>`).join("")}
-${c.on ? `<circle class="nta-glow" cx="28" cy="82" r="2.8" fill="#fff" filter="url(#${gl})"/>` : ""}<circle cx="28" cy="82" r="1.9" fill="${conLit(c, "#ffffff", "#9aa1a8", "#a6abaf")}" stroke="#a6abaf" stroke-width=".4"/>`;
+  const f = ntId(), t = ntId(), gl = ntId();
+  const at = conAt(14, 84, 92, 28, 8), [cx, cy] = at(.58, .5);
+  const holes = [];
+  for (let j = -4; j <= 4; j++) for (let i = -10; i <= 10; i++) {
+    const x = i * 1.9 + (j % 2 ? .95 : 0), y = j * 1.9;
+    if ((x / 17.4) ** 2 + (y / 9) ** 2 < 1) holes.push(`<circle cx="${conNum(cx + x)}" cy="${conNum(cy + y)}" r=".5" fill="#2a2c2f"/>`);
+  }
+  return `<defs>${ntV(f, "#f4f5f5", "#d3d6d9")}${ntV(t, "#e2e4e6", "#fbfbfb")}${ntBlur(gl, 1.4)}</defs>
+${conSparks(c, 60, 38, "xbox")}${conFloor(14, 106, 102)}
+${conBox(14, 84, 92, 18, 28, 8, 3, `url(#${f})`, `url(#${t})`, "#c2c6c9")}
+<ellipse cx="${cx}" cy="${cy + .6}" rx="20" ry="10.6" fill="#a6abaf"/><ellipse cx="${cx}" cy="${cy}" rx="19.4" ry="10.2" fill="#121314"/>
+${holes.join("")}
+${c.on ? `<circle class="nta-glow" cx="23" cy="92" r="3" fill="#fff" filter="url(#${gl})"/>` : ""}<circle cx="23" cy="92" r="2" fill="${conLit(c, "#ffffff", "#9aa1a8", "#c6cacd")}" stroke="#a6abaf" stroke-width=".4"/>
+<path d="M21.9 90.9 L24.1 93.1 M24.1 90.9 L21.9 93.1" stroke="#7a8086" stroke-width=".45"/>
+<rect x="29" y="91.2" width="4.4" height="1.6" rx=".4" fill="#3a3d42"/><circle cx="37" cy="92" r=".9" fill="#c6cacd" stroke="#a6abaf" stroke-width=".3"/>`;
 }
-// Nintendo Switch: the console in its dock, the red and blue Joy-Con either
-// side and its screen above the dock.
+// A handheld's buttons: four in a diamond, a stick, a cross.
+const conDiamond = (x, y, g, r, fills) => [[0, -g], [g, 0], [0, g], [-g, 0]].map(([dx, dy], i) => `<circle cx="${conNum(x + dx)}" cy="${conNum(y + dy)}" r="${r}" fill="${fills[i] || fills[0]}"/>`).join("");
+const conStick = (x, y, r, ring = "") => `<circle cx="${x}" cy="${y}" r="${r + .6}" fill="#0b0c0e"/>${ring ? `<circle cx="${x}" cy="${y}" r="${r + 1.2}" fill="none" stroke="${ring}" stroke-width=".9"/>` : ""}<circle cx="${x}" cy="${y}" r="${r}" fill="#26282c"/><circle cx="${x}" cy="${y}" r="${conNum(r * .62)}" fill="#33363b"/><circle cx="${conNum(x - r * .25)}" cy="${conNum(y - r * .25)}" r="${conNum(r * .25)}" fill="#fff" opacity=".12"/>`;
+const conCross = (x, y, a, fill) => `<path d="M${x - a / 3} ${y - a} h${conNum(a * 2 / 3)} v${conNum(a * 2 / 3)} h${conNum(a * 2 / 3)} v${conNum(a * 2 / 3)} h${conNum(-a * 2 / 3)} v${conNum(a * 2 / 3)} h${conNum(-a * 2 / 3)} v${conNum(-a * 2 / 3)} h${conNum(-a * 2 / 3)} v${conNum(-a * 2 / 3)} h${conNum(a * 2 / 3)} Z" fill="${fill}"/>`;
+// Nintendo Switch: the console held in hand, the neon blue and red Joy-Con
+// either side of the screen; the Switch 2 is wider, its Joy-Con black with a
+// colour ring under each stick.
 function conSwitch(c, two) {
-  const dk = ntId(), ds = ntId(), dt = ntId(), sc = ntId(), l = ntId(), r = ntId();
-  const lcol = two ? ["#2b2d31", "#17181b"] : ["#00c3e3", "#0095b0"], rcol = two ? ["#2b2d31", "#17181b"] : ["#ff4554", "#d62f3d"];
-  const W = two ? 50 : 44, H = two ? 30 : 27, sx = 60 - W / 2, sy = 46 - (two ? 2 : 0), dy = sy + H * .62, dh = 30;
-  return `<defs>${ntV(dk, "#2c2e33", "#18191c")}${ntV(ds, "#1a1b1e", "#0e0f11")}${ntV(dt, "#3a3d42", "#25272b")}${ntV(l, ...lcol)}${ntV(r, ...rcol)}</defs>
-${conSparks(c, 64, 14)}${ntFoot(`${sx - 4} ${dy + dh + 5} ${sx + W - 4} ${dy + dh + 5} ${sx + W + 6} ${dy + dh - 4} ${sx + 4} ${dy + dh - 4}`, .28)}
-<rect x="${sx - 1}" y="${sy - 1}" width="${W + 2}" height="${H + 2}" rx="2" fill="#111215"/>
-${conScreen(c, sx + 2, sy + 2, W - 4, H - 4, sc)}
-<path d="M${sx - 1} ${sy + 2} Q${sx - 1} ${sy - 1} ${sx - 4} ${sy - 1} H${sx - 9} Q${sx - 13} ${sy - 1} ${sx - 13} ${sy + 4} V${sy + H - 3} Q${sx - 13} ${sy + H + 1} ${sx - 9} ${sy + H + 1} H${sx - 1} Z" fill="url(#${l})"/>
-<path d="M${sx + W + 1} ${sy + 2} Q${sx + W + 1} ${sy - 1} ${sx + W + 4} ${sy - 1} H${sx + W + 9} Q${sx + W + 13} ${sy - 1} ${sx + W + 13} ${sy + 4} V${sy + H - 3} Q${sx + W + 13} ${sy + H + 1} ${sx + W + 9} ${sy + H + 1} H${sx + W + 1} Z" fill="url(#${r})"/>
-<circle cx="${sx - 7}" cy="${sy + 7}" r="2.6" fill="#1b1c1f"/><circle cx="${sx - 7}" cy="${sy + 7}" r="1.6" fill="#3a3d42"/>
-<circle cx="${sx + W + 7}" cy="${sy + 15}" r="2.6" fill="#1b1c1f"/><circle cx="${sx + W + 7}" cy="${sy + 15}" r="1.6" fill="#3a3d42"/>
-${[[0, -2.6], [2.6, 0], [0, 2.6], [-2.6, 0]].map(([dx, dy]) => `<circle cx="${sx + W + 7 + dx}" cy="${sy + 6 + dy}" r=".9" fill="#1b1c1f"/>`).join("")}
-${two ? `<circle cx="${sx - 7}" cy="${sy + 7}" r="3.2" fill="none" stroke="#2979ff" stroke-width=".7"/><circle cx="${sx + W + 7}" cy="${sy + 15}" r="3.2" fill="none" stroke="#ff4554" stroke-width=".7"/>` : ""}
-${ntRoundBox(sx - 1, dy, W - 6, dh, 8, 4, `url(#${dk})`, `url(#${ds})`, `url(#${dt})`)}
-<path d="M${sx + 5} ${dy + 2} H${sx + W - 13}" stroke="#000" stroke-width="1.2" opacity=".6"/>
-${conLed(c, sx + W - 12, dy + dh - 4, .9, "#7cff6b", "#5d6773")}`;
+  const l = ntId(), r = ntId(), sc = ntId(), bz = ntId();
+  const W = two ? 68 : 60, H = two ? 38 : 34, J = two ? 13 : 12, sx = 60 - W / 2, sy = 72 - H / 2;
+  const lc = two ? ["#34363b", "#17181b"] : ["#25d0ea", "#009fbd"], rc = two ? ["#34363b", "#17181b"] : ["#ff6b62", "#e83a3a"];
+  const btn = two ? "#0b0c0e" : "#1d1e21";
+  const lx = sx - J / 2, rx = sx + W + J / 2;
+  const joy = (x0, dir, fill) => `<path d="M${x0} ${sy} H${x0 + dir * (J - 6)} Q${x0 + dir * J} ${sy} ${x0 + dir * J} ${sy + 6} V${sy + H - 6} Q${x0 + dir * J} ${sy + H} ${x0 + dir * (J - 6)} ${sy + H} H${x0} Z" fill="url(#${fill})"/>`;
+  return `<defs>${ntV(l, ...lc)}${ntV(r, ...rc)}${ntV(bz, "#2a2c30", "#121315")}</defs>
+${conSparks(c, 64, sy - 18)}${conFloat(sx - J, sx + W + J, sy + H)}
+<rect x="${sx - J + 1}" y="${sy + 2}" width="${W + 2 * J - 2}" height="${H}" rx="6" fill="#000" opacity=".25"/>
+${joy(sx, -1, l)}${joy(sx + W, 1, r)}
+<rect x="${sx}" y="${sy}" width="${W}" height="${H}" fill="url(#${bz})"/>
+${conScreen(c, sx + 4, sy + 3, W - 8, H - 6, sc)}
+<path d="M${sx + .5} ${sy} V${sy + H} M${sx + W - .5} ${sy} V${sy + H}" stroke="#000" stroke-width=".6" opacity=".5"/>
+${conStick(lx, conNum(sy + H * .27), 3.2, two ? "#1fa3ff" : "")}${conDiamond(lx, conNum(sy + H * .62), 2.9, 1.25, [btn])}
+<path d="M${sx - 3.6} ${sy + 3.4} h2.2" stroke="${btn}" stroke-width=".8"/><rect x="${lx - 1.4}" y="${conNum(sy + H * .84)}" width="1.9" height="1.9" rx=".3" fill="${btn}"/>
+${conDiamond(rx, conNum(sy + H * .27), 2.9, 1.25, [btn])}${conStick(rx, conNum(sy + H * .62), 3.2, two ? "#ff3b3b" : "")}
+<path d="M${sx + W + 1.4} ${sy + 3.4} h2.2 M${sx + W + 2.5} ${sy + 2.3} v2.2" stroke="${btn}" stroke-width=".8"/><circle cx="${rx + .6}" cy="${conNum(sy + H * .87)}" r="1.1" fill="${btn}" stroke="#777" stroke-width=".3"/>
+${two ? `<path d="M${sx + 1} ${sy + 1.2} V${sy + H - 1.2}" stroke="#1fa3ff" stroke-width=".7"/><path d="M${sx + W - 1} ${sy + 1.2} V${sy + H - 1.2}" stroke="#ff3b3b" stroke-width=".7"/>` : ""}`;
 }
-// Nintendo Switch Lite: the handheld in one piece, its screen in the middle.
+// Nintendo Switch Lite: the turquoise handheld in one piece, a real cross on
+// its left.
 function conSwitchLite(c) {
   const b = ntId(), sc = ntId();
-  return `<defs>${ntV(b, "#5fd3e0", "#2aa3b3")}</defs>
-${conSparks(c, 62, 32)}${ntShadow(60, 104, 46)}
-<path d="M24 58 H96 Q110 58 110 72 V86 Q110 100 96 100 H24 Q10 100 10 86 V72 Q10 58 24 58 Z" fill="url(#${b})"/>
-<path d="M22 60 H98" stroke="#fff" stroke-width="1" opacity=".5" stroke-linecap="round"/>
-<rect x="33" y="61" width="54" height="36" rx="2" fill="#141518"/>
-${conScreen(c, 35.4, 63.4, 49.2, 31.2, sc)}
-<circle cx="21" cy="70" r="4.4" fill="#1b1c1f"/><circle cx="21" cy="70" r="3" fill="#33363b"/>
-<path d="M19.4 82 h3.2 v2.4 h2.4 v3.2 h-2.4 v2.4 h-3.2 v-2.4 h-2.4 v-3.2 h2.4 Z" fill="#1b1c1f"/>
-<circle cx="99" cy="86" r="4.4" fill="#1b1c1f"/><circle cx="99" cy="86" r="3" fill="#33363b"/>
-${[[0, -3.4], [3.4, 0], [0, 3.4], [-3.4, 0]].map(([dx, dy]) => `<circle cx="${99 + dx}" cy="${72 + dy}" r="1.3" fill="#1b1c1f"/>`).join("")}`;
+  return `<defs>${ntV(b, "#6fdbe6", "#2ba7b6")}</defs>
+${conSparks(c, 62, 38)}${conFloat(10, 110, 97)}
+<rect x="11" y="57" width="98" height="42" rx="13" fill="#000" opacity=".22"/>
+<rect x="10" y="55" width="100" height="42" rx="13" fill="url(#${b})"/>
+<path d="M22 56.6 H98" stroke="#fff" stroke-width=".9" opacity=".55" stroke-linecap="round"/>
+<rect x="33" y="57.6" width="54" height="36.8" rx="2" fill="#141518"/>
+${conScreen(c, 36, 60.4, 48, 31.2, sc)}
+${conStick(21.6, 66, 3.3)}${conCross(21.6, 82, 3.9, "#1b1c1f")}
+<path d="M27 60 h2.2" stroke="#1b1c1f" stroke-width=".8"/><rect x="27" y="88.6" width="1.9" height="1.9" rx=".3" fill="#1b1c1f"/>
+${conDiamond(98.4, 66, 3.1, 1.35, ["#1b1c1f"])}${conStick(98.4, 82, 3.3)}
+<path d="M90.8 60 h2.2 M91.9 58.9 v2.2" stroke="#1b1c1f" stroke-width=".8"/><circle cx="92" cy="89.6" r="1.1" fill="#1b1c1f"/>`;
 }
-// NES: the grey box, its dark band, the cartridge door, the red light.
+// PlayStation Vita: the black oval, its screen between the cross and stick
+// on the left and the four symbols and stick on the right.
+function conVita(c) {
+  const b = ntId(), sc = ntId(), rim = ntId();
+  const sym = [`<path d="M100 66.6 l1.2 2 h-2.4 Z" fill="none" stroke="#3fd19a" stroke-width=".5"/>`, `<circle cx="103.6" cy="70.2" r="1" fill="none" stroke="#ff5b5b" stroke-width=".5"/>`,
+    `<path d="M99.2 73 l1.6 1.6 M100.8 73 l-1.6 1.6" stroke="#7fb2ff" stroke-width=".5"/>`, `<rect x="95.6" y="69.4" width="1.6" height="1.6" fill="none" stroke="#ff8fd1" stroke-width=".5"/>`];
+  return `<defs>${ntV(b, "#34373c", "#0b0c0e")}${ntV(rim, "#c9ced3", "#6b7177")}</defs>
+${conSparks(c, 62, 38, "ps")}${conFloat(8, 112, 99)}
+<rect x="9" y="57" width="102" height="44" rx="22" fill="#000" opacity=".22"/>
+<rect x="8" y="55" width="104" height="44" rx="22" fill="url(#${b})" stroke="url(#${rim})" stroke-width="1"/>
+<path d="M26 57 Q60 54.6 94 57" fill="none" stroke="#fff" stroke-width=".7" opacity=".25"/>
+<rect x="31" y="60" width="58" height="34" rx="2" fill="#050506"/>
+${conScreen(c, 33, 62, 54, 30, sc)}
+${conCross(20, 70.2, 3.6, "#43464c")}<path d="M20 67.6 v-.8 M20 72.8 v.8" stroke="#55585e" stroke-width=".4"/>
+${conStick(23.6, 84.4, 2.4)}<circle cx="15.6" cy="90.6" r="1.4" fill="${conLit(c, "#3d8bff", "#ffa000", "#1d1f22")}" stroke="#55585e" stroke-width=".3"${c.on ? ` class="nta-glow"` : ""}/>
+${conDiamond(100, 70.2, 3.6, 1.7, ["#2c2f34"])}${sym.join("")}
+${conStick(96.4, 84.4, 2.4)}<rect x="98.4" y="90" width="2.8" height="1.1" rx=".55" fill="#3a3d42"/><rect x="103" y="90" width="2.8" height="1.1" rx=".55" fill="#3a3d42"/>
+<text x="60" y="97.6" font-size="2.2" fill="#6b7177" text-anchor="middle" letter-spacing=".5" ${NT_FONT}>SONY</text>`;
+}
+// NES: the grey box, the grooves on the back of its top, the cartridge door
+// in front, the black band with power, reset and two ports.
 function conNes(c) {
-  const f = ntId(), s = ntId(), t = ntId();
-  return `<defs>${ntV(f, "#d5d3cc", "#bfbdb5")}${ntV(s, "#acaaa2", "#94928a")}${ntV(t, "#e2e0d9", "#cfcdc6")}</defs>
-${conSparks(c, 60, 24)}${ntFoot("12 106 100 106 118 90 30 90", .25)}
-${ntRoundBox(14, 70, 84, 30, 20, 2, `url(#${f})`, `url(#${s})`, `url(#${t})`, "#9e9c94")}
-${[0, 1, 2, 3, 4, 5, 6, 7].map((i) => `<path d="M${20 + i * 3} 68 L${40 + i * 3} 52" stroke="#bdbbb3" stroke-width=".8"/>`).join("")}
-<rect x="14" y="86" width="84" height="14" fill="#3b3b3d"/>
-<rect x="30" y="73" width="46" height="11" rx="1" fill="#c9c7c0" stroke="#9e9c94" stroke-width=".6"/>
-${[0, 1, 2].map((i) => `<path d="M33 ${76 + i * 3} H73" stroke="#a9a7a0" stroke-width=".6"/>`).join("")}
-${conPorts([60, 72], 90.4, 9, 5, "#c9c7c0")}
-<rect x="20" y="90.4" width="6" height="4" rx=".6" fill="#c9c7c0"/><rect x="29" y="90.4" width="6" height="4" rx=".6" fill="#c9c7c0"/>
-<circle cx="40" cy="92.4" r="1.1" fill="${conLit(c, "#ff1744", "#ff1744", "#4a1a1a")}"${c.on ? ` class="nta-glow"` : ""}/>`;
+  const f = ntId(), t = ntId(), dr = ntId();
+  const at = conAt(12, 70, 96, 22, 7);
+  return `<defs>${ntV(f, "#d4d2cb", "#bebcb5")}${ntV(t, "#c6c4bd", "#dddbd4")}${ntV(dr, "#c9c7c0", "#b3b1aa")}</defs>
+${conSparks(c, 60, 28)}${conFloor(12, 108, 102)}
+${conBox(12, 70, 96, 32, 22, 7, 2, `url(#${f})`, `url(#${t})`, "#9e9c94")}
+${[.5, .6, .7, .8, .9].map((v) => `<path d="M${conPt(at(.03, v))} L${conPt(at(.97, v))}" stroke="#a8a69f" stroke-width=".9"/><path d="M${conPt(at(.03, v - .03))} L${conPt(at(.97, v - .03))}" stroke="#ecebe5" stroke-width=".4"/>`).join("")}
+<rect x="32" y="72" width="64" height="14" rx="1" fill="url(#${dr})" stroke="#9e9c94" stroke-width=".5"/>
+${[0, 1, 2, 3].map((i) => `<path d="M35 ${75 + i * 2.6} H93" stroke="#a5a39c" stroke-width=".5"/>`).join("")}
+<text x="15" y="76" font-size="3" font-weight="700" fill="#c62828" ${NT_FONT}>Nintendo</text><path d="M15 78.4 H29 M15 80.2 H26" stroke="#3b3b3d" stroke-width=".6"/>
+<path d="M12 88 H108 V100 Q108 102 106 102 H14 Q12 102 12 100 Z" fill="#2d2d2f"/>
+<circle cx="17.6" cy="95" r="1.1" fill="${conLit(c, "#ff1744", "#ff1744", "#4a1a1a")}"${c.on ? ` class="nta-glow"` : ""}/>
+<rect x="21" y="92.6" width="8" height="4.6" rx=".6" fill="#c9c7c0"/><rect x="32" y="92.6" width="8" height="4.6" rx=".6" fill="#c9c7c0"/>
+${conPort(70, 91.6, 14, 7, "#c9c7c0", "#2d2d2f")}${conPort(88, 91.6, 14, 7, "#c9c7c0", "#2d2d2f")}`;
 }
-// Super Nintendo: the rounded grey shell, its cartridge slot, the power and
-// reset switches.
+// Super Nintendo: the rounded grey shell, the raised slot in the middle of
+// its top, the eject button before it, the power and reset sliders, the
+// four colours of its logo.
 function conSnes(c) {
-  const f = ntId(), s = ntId(), t = ntId();
-  return `<defs>${ntV(f, "#cfcfcd", "#b4b4b1")}${ntV(s, "#a9a9a6", "#8f8f8c")}${ntV(t, "#e4e4e2", "#d0d0ce")}</defs>
-${conSparks(c, 60, 26)}${ntFoot("14 106 100 106 116 92 30 92", .25)}
-${ntRoundBox(16, 74, 82, 26, 18, 9, `url(#${f})`, `url(#${s})`, `url(#${t})`, "#9b9b98")}
-<path d="M48 64 H78 L82 60 H52 Z" fill="#3f3f45"/><path d="M50 63 H78" stroke="#7a7a80" stroke-width=".6"/>
-<rect x="30" y="64" width="9" height="3.4" rx="1.4" fill="#7e5fb0"/><rect x="88" y="62" width="9" height="3.4" rx="1.4" fill="#7e5fb0"/>
-<circle cx="45" cy="70" r="2" fill="#9b9b98"/>
-${conLed(c, 26, 78, 1, "#ff1744", "#ff1744")}
-<rect x="16" y="90" width="82" height="2" fill="#9b9b98"/>
-${conPorts([38, 66], 82, 12, 6, "#6f6f6c")}`;
+  const f = ntId(), t = ntId(), sl = ntId();
+  const at = conAt(12, 84, 96, 28, 8), [ex, ey] = at(.5, .2), [px, py] = at(.18, .46), [rx, ry] = at(.82, .46), [ox, oy] = at(.2, .12);
+  return `<defs>${ntV(f, "#cbcbc8", "#adadaa")}${ntV(t, "#d2d2d0", "#e9e9e7")}${ntV(sl, "#8d8d8b", "#a9a9a7")}</defs>
+${conSparks(c, 60, 40)}${conFloor(12, 108, 100)}
+${conBox(12, 84, 96, 16, 28, 8, 6, `url(#${f})`, `url(#${t})`, "#9b9b98")}
+${conQuad(at, .3, .7, .36, .86, `url(#${sl})`, ` stroke="#7f7f7d" stroke-width=".5"`)}
+<path d="M${conPt(at(.36, .62))} L${conPt(at(.64, .62))}" stroke="#2e2e30" stroke-width="2"/>
+<ellipse cx="${ex}" cy="${ey}" rx="4.4" ry="1.8" fill="#8d8d8b" stroke="#6f6f6d" stroke-width=".4"/>
+<rect x="${px - 4}" y="${py - 1.4}" width="8" height="2.8" rx="1" fill="#8d8d8b" stroke="#6f6f6d" stroke-width=".4"/><rect x="${rx - 4}" y="${ry - 1.4}" width="8" height="2.8" rx="1" fill="#8d8d8b" stroke="#6f6f6d" stroke-width=".4"/>
+${["#e53935", "#fbc02d", "#43a047", "#1e88e5"].map((col, i) => `<circle cx="${conNum(ox + i * 2.4)}" cy="${oy}" r=".9" fill="${col}"/>`).join("")}
+${conLed(c, 18, 89, .8, "#ff1744", "#ff1744")}
+${conPort(40, 88.4, 13, 6.4, "#8d8d8b", "#3a3a3c")}${conPort(66, 88.4, 13, 6.4, "#8d8d8b", "#3a3a3c")}`;
 }
-// Nintendo 64: the dark shell flaring to its round shoulders, the cartridge
-// slot on the hump, four ports in front.
+// Nintendo 64: the charcoal shell, the slot on the hump at the back, the
+// power and reset sliders, the four-colour cube, four ports in front.
 function conN64(c) {
-  const g = ntId(), t = ntId();
-  return `<defs>${ntV(g, "#3a3c41", "#18191c")}<radialGradient id="${t}" cx=".5" cy=".3" r=".8"><stop offset="0" stop-color="#55585e"/><stop offset="1" stop-color="#1d1e21"/></radialGradient></defs>
-${conSparks(c, 60, 26)}${ntShadow(60, 106, 52)}
-<path d="M8 104 L16 80 Q20 70 34 68 H86 Q100 70 104 80 L112 104 Z" fill="url(#${g})"/>
-<path d="M36 70 Q36 56 60 54 Q84 56 84 70 Z" fill="url(#${t})"/>
-<rect x="48" y="58" width="24" height="5" rx="1.2" fill="#0b0c0e"/><path d="M50 60.6 H70" stroke="#3a3d42" stroke-width=".6"/>
-<rect x="22" y="72" width="10" height="3" rx="1.4" fill="#55585e"/><rect x="88" y="72" width="10" height="3" rx="1.4" fill="#55585e"/>
-${conLed(c, 36, 76, 1, "#ff1744", "#ff1744")}
-${conPorts([28, 46, 64, 82], 94, 10, 5, "#0b0c0e")}`;
+  const f = ntId(), t = ntId(), h = ntId();
+  const at = conAt(10, 86, 100, 24, 6), [hx, hy] = at(.5, .7), [px, py] = at(.2, .32), [rx, ry] = at(.8, .32), [lx, ly] = at(.5, .2);
+  return `<defs>${ntV(f, "#34363b", "#17181b")}${ntV(t, "#202226", "#3b3d42")}<radialGradient id="${h}" cx=".5" cy=".3" r=".8"><stop offset="0" stop-color="#55585e"/><stop offset="1" stop-color="#202226"/></radialGradient></defs>
+${conSparks(c, 60, 40)}${conFloor(10, 110, 102)}
+${conBox(10, 86, 100, 16, 24, 6, 4, `url(#${f})`, `url(#${t})`)}
+<path d="M${hx - 22} ${hy + 6} Q${hx - 20} ${hy - 7} ${hx} ${hy - 7} Q${hx + 20} ${hy - 7} ${hx + 22} ${hy + 6} Z" fill="url(#${h})"/>
+<rect x="${hx - 11}" y="${hy - 4}" width="22" height="3.6" rx="1" fill="#0b0c0e"/><path d="M${hx - 9} ${hy - 2.2} H${hx + 9}" stroke="#3a3d42" stroke-width=".5"/>
+<rect x="${px - 4.4}" y="${py - 1.4}" width="8.8" height="2.8" rx="1.2" fill="#55585e"/><rect x="${rx - 4.4}" y="${ry - 1.4}" width="8.8" height="2.8" rx="1.2" fill="#55585e"/>
+<g transform="translate(${lx} ${ly})"><path d="M0 -2.6 L2.6 0 L0 0 Z" fill="#e53935"/><path d="M2.6 0 L0 2.6 L0 0 Z" fill="#1e88e5"/><path d="M0 2.6 L-2.6 0 L0 0 Z" fill="#fbc02d"/><path d="M-2.6 0 L0 -2.6 L0 0 Z" fill="#43a047"/></g>
+${conLed(c, 20, 90.6, .8, "#ff1744", "#ff1744")}
+${[24, 42, 60, 78].map((x) => `<path d="M${x} 98 V93.6 Q${x} 91.6 ${x + 2} 91.6 H${x + 8} Q${x + 10} 91.6 ${x + 10} 93.6 V98 Z" fill="#0b0c0e"/><rect x="${x + 2.6}" y="93.6" width="4.8" height="2" rx=".5" fill="#55585e"/>`).join("")}`;
 }
-// GameCube: the indigo cube, its handle at the back and the round lid.
+// GameCube: the indigo cube, the handle at its back, the round lid, the
+// buttons at its front corners, the card slots and four ports in front.
 function conGamecube(c) {
-  const f = ntId(), s = ntId(), t = ntId();
-  return `<defs>${ntV(f, "#5a49a0", "#41337c")}${ntV(s, "#3d3075", "#2b2156")}${ntV(t, "#7564bd", "#5b4aa1")}</defs>
-${conSparks(c, 62, 4)}${ntFoot("22 112 90 112 108 94 40 94", .26)}
-<path d="M52 37 Q54 25 76 25 Q98 25 100 37" fill="none" stroke="#2b2156" stroke-width="5" stroke-linecap="round"/>
-${ntRoundBox(26, 54, 60, 54, 20, 7, `url(#${f})`, `url(#${s})`, `url(#${t})`)}
-<ellipse cx="66" cy="44" rx="19" ry="6.6" fill="#4a3b8c" stroke="#2b2156" stroke-width=".7"/><ellipse cx="66" cy="43.4" rx="15" ry="5" fill="#6857b0"/>
-${conLed(c, 32, 64, 1, "#7cff6b", "#ffa000")}<circle cx="78" cy="64" r="2.4" fill="#2b2156"/>
-${conPorts([32, 45, 58, 71], 96, 9, 5, "#2b2156")}`;
+  const f = ntId(), t = ntId(), l = ntId();
+  const at = conAt(30, 56, 56, 22, 6), [lx, ly] = at(.5, .55), [px, py] = at(.15, .16), [ox, oy] = at(.85, .16);
+  return `<defs>${ntV(f, "#5c4ea6", "#3d3380")}${ntV(t, "#4a3e8c", "#6b5cb4")}<radialGradient id="${l}" cx=".45" cy=".35" r=".75"><stop offset="0" stop-color="#8273c9"/><stop offset="1" stop-color="#5a4ba3"/></radialGradient></defs>
+${conSparks(c, 60, 10)}${conFloor(30, 86, 106)}
+<path d="M40 36 Q42 20 58 20 Q74 20 76 36" fill="none" stroke="#2c2358" stroke-width="5" stroke-linecap="round"/><path d="M40.6 35 Q42.4 21.8 58 21.8 Q73.6 21.8 75.4 35" fill="none" stroke="#5446a0" stroke-width="1.4"/>
+${conBox(30, 56, 56, 50, 22, 6, 6, `url(#${f})`, `url(#${t})`)}
+<ellipse cx="${lx}" cy="${ly + .7}" rx="19.6" ry="7.6" fill="#2c2358"/><ellipse cx="${lx}" cy="${ly}" rx="19" ry="7.2" fill="url(#${l})"/>
+<g transform="translate(${lx} ${ly}) scale(1 .45)" fill="none" stroke="#2c2358" stroke-width="1"><path d="M0 -5 L4.4 -2.5 V2.5 L0 5 L-4.4 2.5 V-2.5 Z M0 0 L4.4 -2.5 M0 0 V5 M0 0 L-4.4 -2.5"/></g>
+<ellipse cx="${px}" cy="${py}" rx="2.6" ry="1.2" fill="#3d3380" stroke="#2c2358" stroke-width=".4"/><ellipse cx="${ox}" cy="${oy}" rx="2.6" ry="1.2" fill="#3d3380" stroke="#2c2358" stroke-width=".4"/>
+${conLed(c, px + 4.4, py + .4, .7, "#7cff6b", "#ffa000")}
+<rect x="36" y="68" width="18" height="3" rx=".6" fill="#2c2358"/><rect x="62" y="68" width="18" height="3" rx=".6" fill="#2c2358"/>
+<rect x="53" y="78" width="10" height="7" rx="1.4" fill="none" stroke="#2c2358" stroke-width=".7"/>
+${[35, 47, 59, 71].map((x) => conPort(x, 93, 10, 6, "#2c2358", "#18132f")).join("")}`;
 }
-// Wii: the thin white console standing on its foot, the blue glow in its slot.
+// Wii: the thin white console standing on its foot, the blue glow along its
+// slot, power and reset under it, its name on the side.
 function conWii(c) {
   const f = ntId(), s = ntId(), t = ntId(), gl = ntId();
-  return `<defs>${ntV(f, "#ffffff", "#e3e6e9")}${ntV(s, "#e0e3e6", "#c3c8cc")}${ntV(t, "#ffffff", "#f1f3f4")}${ntBlur(gl, 1.6)}</defs>
-${conSparks(c, 70, -2)}${ntShadow(70, 112, 30)}
-<path d="M44 112 H88 L96 104 H52 Z" fill="#cfd3d7"/>
-${ntRoundBox(48, 24, 14, 84, 30, 2, `url(#${f})`, `url(#${s})`, `url(#${t})`, "#c8cdd2")}
-${c.on ? `<path class="nta-glow" d="M55 32 V96" stroke="#40c4ff" stroke-width="3" filter="url(#${gl})"/>` : ""}
-<path d="M55 32 V96" stroke="${c.on ? "#82e1ff" : "#9aa1a8"}" stroke-width="1.2"/>
-<circle cx="55" cy="101" r="1.2" fill="${conLit(c, "#7cff6b", "#ff1744", "#9aa1a8")}"/>`;
+  return `<defs>${ntV(f, "#ffffff", "#e3e6e9")}${ntV(s, "#eceff1", "#cdd2d6")}${ntV(t, "#ffffff", "#f1f3f4")}${ntBlur(gl, 1.6)}</defs>
+${conSparks(c, 106, 34)}<filter id="${gl}f" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="1.6"/></filter>
+<path d="M42 112.6 H70 L102 80.6 H74 Z" fill="#000" opacity=".2" filter="url(#${gl}f)"/>
+<path d="M44.6 109.6 Q43 111.4 45.4 111.4 H67.6 L99.4 79.6 Q101 77.8 98.6 77.8 H76.4 Z" fill="#b9bec3"/>
+<path d="M44.6 108 Q43 109.8 45.4 109.8 H67.6 L99.4 78 Q101 76.2 98.6 76.2 H76.4 Z" fill="#eef0f2" stroke="#c3c8cd" stroke-width=".4"/>
+${ntRoundBox(48, 22, 15, 86, 30, 2, `url(#${f})`, `url(#${s})`, `url(#${t})`, "#c8cdd2")}
+<text transform="translate(80 70) rotate(-90) skewX(-25)" font-size="9" font-weight="700" fill="#c3c8cd" text-anchor="middle" ${NT_FONT}>Wii</text>
+${c.on ? `<path class="nta-glow" d="M55.5 30 V92" stroke="#40c4ff" stroke-width="3.4" filter="url(#${gl})"/>` : ""}
+<path d="M55.5 30 V92" stroke="#7a8188" stroke-width="1.4"/><path d="M55.5 30 V92" stroke="${c.on ? "#82e1ff" : "#9aa1a8"}" stroke-width=".7"/>
+<rect x="50.4" y="95" width="10.2" height="7" rx="1" fill="none" stroke="#c8cdd2" stroke-width=".5"/>
+<circle cx="53" cy="104.4" r="1.1" fill="#e9ecee" stroke="#b9bec3" stroke-width=".4"/><circle cx="58" cy="104.4" r="1.1" fill="#e9ecee" stroke="#b9bec3" stroke-width=".4"/>
+<circle cx="53" cy="104.4" r=".45" fill="${conLit(c, "#7cff6b", "#ff1744", "#9aa1a8")}"/>`;
 }
-// Mega Drive: the black box, the round raised centre and its slot.
+// Mega Drive: the black box, the vents on the left of its top, the round
+// ring with 16-BIT around the slot, the reset button, its name in white.
 function conMegadrive(c) {
-  const f = ntId(), s = ntId(), t = ntId();
-  return `<defs>${ntV(f, "#24262a", "#111214")}${ntV(s, "#151618", "#0a0a0b")}${ntV(t, "#303236", "#1b1c1f")}</defs>
-${conSparks(c, 60, 30)}${ntFoot("10 106 98 106 116 90 28 90", .28)}
-${ntRoundBox(12, 76, 86, 24, 20, 8, `url(#${f})`, `url(#${s})`, `url(#${t})`)}
-<ellipse cx="66" cy="66" rx="26" ry="8.4" fill="#0b0c0e"/><ellipse cx="66" cy="65" rx="23" ry="7.2" fill="#2b2d31"/>
-<ellipse cx="66" cy="65" rx="23" ry="7.2" fill="none" stroke="#c62828" stroke-width=".7"/>
-<rect x="52" y="63" width="28" height="4" rx="1" fill="#0b0c0e"/>
-${conLed(c, 22, 84, 1, "#ff1744", "#ff1744")}<rect x="26" y="83" width="12" height="2" rx="1" fill="#3a3d42"/>
-${conPorts([60, 74], 88, 10, 5, "#0b0c0e")}`;
+  const f = ntId(), t = ntId(), r = ntId();
+  const at = conAt(10, 84, 100, 26, 8), [cx, cy] = at(.58, .5), [bx, by] = at(.92, .42), [nx, ny] = at(.08, .16);
+  return `<defs>${ntV(f, "#25272b", "#101113")}${ntV(t, "#18191c", "#2f3135")}<radialGradient id="${r}" cx=".5" cy=".3" r=".8"><stop offset="0" stop-color="#3c3f44"/><stop offset="1" stop-color="#1b1c1f"/></radialGradient></defs>
+${conSparks(c, 60, 38)}${conFloor(10, 110, 100)}
+${conBox(10, 84, 100, 16, 26, 8, 4, `url(#${f})`, `url(#${t})`)}
+${Array.from({ length: 8 }, (_, i) => `<path d="M${conPt(at(.06 + i * .03, .55))} L${conPt(at(.06 + i * .03, .92))}" stroke="#050506" stroke-width="1"/>`).join("")}
+<ellipse cx="${cx}" cy="${cy + 1.6}" rx="25" ry="9.6" fill="#08090a"/><ellipse cx="${cx}" cy="${cy}" rx="24" ry="9" fill="url(#${r})"/>
+<ellipse cx="${cx}" cy="${cy}" rx="24" ry="9" fill="none" stroke="#9e1b1b" stroke-width=".5"/><ellipse cx="${cx}" cy="${cy}" rx="16" ry="5.6" fill="#16171a"/>
+<text x="${cx}" y="${conNum(cy - 5.6)}" font-size="2.6" font-weight="700" fill="#e7c66a" text-anchor="middle" letter-spacing=".8" ${NT_FONT}>16-BIT</text>
+<rect x="${cx - 12}" y="${cy - 1.4}" width="24" height="2.8" rx=".8" fill="#050506"/>
+<ellipse cx="${bx}" cy="${by + .5}" rx="3" ry="1.5" fill="#050506"/><ellipse cx="${bx}" cy="${by}" rx="2.7" ry="1.2" fill="#3a3d42"/>
+<text x="${nx}" y="${ny}" font-size="3.2" font-weight="700" font-style="italic" fill="#f2f2f2" ${NT_FONT}>MEGA DRIVE</text>
+<rect x="15" y="89" width="9" height="2.6" rx=".6" fill="#3a3d42"/><rect x="18.6" y="89.4" width="2.6" height="1.8" rx=".3" fill="#7a8086"/>${conLed(c, 27, 90.3, .7, "#ff1744", "#ff1744")}
+<rect x="31" y="89" width="7" height="1.6" rx=".6" fill="#3a3d42"/><circle cx="42" cy="90" r="1" fill="#050506" stroke="#3a3d42" stroke-width=".4"/>
+${[78, 94].map((x) => `<path d="M${x} 89 H${x + 11} L${x + 10} 95 H${x + 1} Z" fill="#050506"/><path d="M${x + 2} 91 H${x + 9}" stroke="#3a3d42" stroke-width=".6"/>`).join("")}`;
 }
-const NT_DRAW = { irr_sprinkler: ntIrrSprinkler, irr_tap: ntIrrTap, lit_globe: ntLitterGlobe, lit_box: ntLitterBox, det_smoke: ntDetSmoke, det_co: ntDetCo, det_leak: ntDetLeak, spk_smart: ntSpkSmart, spk_homepod_mini: ntSpkMini, spk_sonos_one: ntSpkOne, spk_bookshelf: ntSpkShelf, spk_sonos_move: ntSpkMove, spk_soundbar: ntSpkBar, spk_echo_dot: ntSpkDot, spk_nest_mini: ntSpkNest, spk_sonos_era100: ntSpkEra100, spk_sonos_era300: ntSpkEra300, spk_bose_wave: ntSpkWave, spk_bose_500: ntSpkBose500, spk_bose_soundlink: ntSpkFlex, spk_bose_soundbar: ntSpkBoseBar, con_ps1: conPs1, con_ps2: conPs2, con_ps3: conPs3, con_ps4: (c) => conPs4(c, false), con_ps4_pro: (c) => conPs4(c, true), con_ps5: conPs5, con_xbox: conXbox, con_xbox_360: conX360, con_xbox_one: conXone, con_xbox_series_x: conXsx, con_xbox_series_s: conXss, con_switch: (c) => conSwitch(c, false), con_switch_2: (c) => conSwitch(c, true), con_switch_lite: conSwitchLite, con_nes: conNes, con_snes: conSnes, con_n64: conN64, con_gamecube: conGamecube, con_wii: conWii, con_megadrive: conMegadrive, mob_scooter: mobScooter, mob_offroad: mobOffroad, mob_ebike: mobEbike, mob_gyropode: mobGyropode, mob_motorcycle: mobMotorcycle, meter_box: ntMeterBox, meter_dome: ntMeterDome, meter_gas: ntGas, meter_water: ntWater, booster: ntBooster, sump: ntSump, pool: ntPoolRobot, floor: ntFloor, spa: ntSpa, sauna: ntSauna, aquarium: ntAquarium, linky: ntLinky, tree: ntTree };
+const NT_DRAW = { irr_sprinkler: ntIrrSprinkler, irr_tap: ntIrrTap, lit_globe: ntLitterGlobe, lit_box: ntLitterBox, det_smoke: ntDetSmoke, det_co: ntDetCo, det_leak: ntDetLeak, spk_smart: ntSpkSmart, spk_homepod_mini: ntSpkMini, spk_sonos_one: ntSpkOne, spk_bookshelf: ntSpkShelf, spk_sonos_move: ntSpkMove, spk_soundbar: ntSpkBar, spk_echo_dot: ntSpkDot, spk_nest_mini: ntSpkNest, spk_sonos_era100: ntSpkEra100, spk_sonos_era300: ntSpkEra300, spk_bose_wave: ntSpkWave, spk_bose_500: ntSpkBose500, spk_bose_soundlink: ntSpkFlex, spk_bose_soundbar: ntSpkBoseBar, con_ps1: conPs1, con_ps2: conPs2, con_ps3: conPs3, con_ps4: (c) => conPs4(c, false), con_ps4_pro: (c) => conPs4(c, true), con_ps5: conPs5, con_xbox: conXbox, con_xbox_360: conX360, con_xbox_one: conXone, con_xbox_series_x: conXsx, con_xbox_series_s: conXss, con_switch: (c) => conSwitch(c, false), con_switch_2: (c) => conSwitch(c, true), con_switch_lite: conSwitchLite, con_ps_vita: conVita, con_nes: conNes, con_snes: conSnes, con_n64: conN64, con_gamecube: conGamecube, con_wii: conWii, con_megadrive: conMegadrive, mob_scooter: mobScooter, mob_offroad: mobOffroad, mob_ebike: mobEbike, mob_gyropode: mobGyropode, mob_motorcycle: mobMotorcycle, meter_box: ntMeterBox, meter_dome: ntMeterDome, meter_gas: ntGas, meter_water: ntWater, booster: ntBooster, sump: ntSump, pool: ntPoolRobot, floor: ntFloor, spa: ntSpa, sauna: ntSauna, aquarium: ntAquarium, linky: ntLinky, tree: ntTree };
 function ntSvg(d) {
   ntN = 0;
   const draw = NT_DRAW[d && d.kind] || ntLinky;

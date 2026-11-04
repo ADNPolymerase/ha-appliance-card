@@ -1468,8 +1468,9 @@ const conXone = conCard(L("Xbox One", "Xbox One"), "xbox_one", "off");
 const conXsx = conCard(L("Xbox Series X", "Xbox Series X"), "xbox_series_x", "playing", { media_title: "Forza Horizon 5" });
 const conXss = conCard(L("Xbox Series S", "Xbox Series S"), "xbox_series_s", "on");
 const conSwitch = conCard(L("Nintendo Switch", "Nintendo Switch"), "switch", "playing", { media_title: "Mario Kart 8 Deluxe" }, { playtime_entity: "sensor.con_played", playtime_left_entity: "sensor.con_left" });
-const conSwitch2 = conCard(L("Nintendo Switch 2", "Nintendo Switch 2"), "switch_2", "on");
+const conSwitch2 = conCard(L("Nintendo Switch 2", "Nintendo Switch 2"), "switch_2", "playing", { media_title: "Mario Kart World" });
 const conLite = conCard(L("Switch Lite", "Switch Lite"), "switch_lite", "playing", { media_title: "Animal Crossing" }, { playtime_entity: "sensor.con_played" });
+const conVita = conCard(L("PS Vita", "PS Vita"), "ps_vita", "playing", { media_title: "Uncharted" });
 const conNes = conCard(L("NES", "NES"), "nes", "playing", { media_title: "Super Mario Bros." });
 const conSnes = conCard(L("Super Nintendo", "Super Nintendo"), "snes", "on");
 const conN64 = conCard(L("Nintendo 64", "Nintendo 64"), "n64", "playing", { media_title: "GoldenEye 007" });
@@ -1543,7 +1544,7 @@ const EXTRA = { iron, coffee_black: coffeeBlack, boiler_window: boilerWindow, bo
                 irr_sprinkler: irrSprinkler, irr_rain: irrRain, irr_tap: irrTap, irr_tap_off: irrTapOff,
                 lit_globe: litGlobe, lit_globe_clean: litGlobeClean, lit_globe_cat: litGlobeCat, lit_box: litBox, lit_box_clean: litBoxClean, lit_box_full: litBoxFull,
                 det_smoke: detSmoke, det_smoke_alarm: detSmokeAlarm, det_co: detCo, det_co_alarm: detCoAlarm, det_leak: detLeak, det_leak_alarm: detLeakAlarm,
-                spk_smart: spkSmart, spk_mini: spkMini, spk_one: spkOne, spk_shelf: spkShelf, spk_move: spkMove, spk_bar: spkBar, spk_dot: spkDot, spk_nest: spkNest, spk_era100: spkEra100, spk_era300: spkEra300, spk_wave: spkWave, spk_bose500: spkBose500, spk_flex: spkFlex, spk_bosebar: spkBoseBar, con_ps1: conPs1, con_ps2: conPs2, con_ps3: conPs3, con_ps4: conPs4, con_ps4pro: conPs4Pro, con_ps5: conPs5, con_xbox: conXbox, con_x360: conX360, con_xone: conXone, con_xsx: conXsx, con_xss: conXss, con_switch: conSwitch, con_switch2: conSwitch2, con_lite: conLite, con_nes: conNes, con_snes: conSnes, con_n64: conN64, con_cube: conCube, con_wii: conWii, con_md: conMd,
+                spk_smart: spkSmart, spk_mini: spkMini, spk_one: spkOne, spk_shelf: spkShelf, spk_move: spkMove, spk_bar: spkBar, spk_dot: spkDot, spk_nest: spkNest, spk_era100: spkEra100, spk_era300: spkEra300, spk_wave: spkWave, spk_bose500: spkBose500, spk_flex: spkFlex, spk_bosebar: spkBoseBar, con_ps1: conPs1, con_ps2: conPs2, con_ps3: conPs3, con_ps4: conPs4, con_ps4pro: conPs4Pro, con_ps5: conPs5, con_xbox: conXbox, con_x360: conX360, con_xone: conXone, con_xsx: conXsx, con_xss: conXss, con_switch: conSwitch, con_switch2: conSwitch2, con_lite: conLite, con_vita: conVita, con_nes: conNes, con_snes: conSnes, con_n64: conN64, con_cube: conCube, con_wii: conWii, con_md: conMd,
                 mob_scooter: demo_mobScooter, mob_offroad: demo_mobOffroad, mob_ebike: demo_mobEbike, mob_gyropode: demo_mobGyropode, mob_motorcycle: demo_mobMotorcycle, mob_unplugged: demo_mobUnplugged, mob_poster: demo_mobPoster,
                 net_sw8: netSw(8, 6), net_sw16: netSw(16, 11), net_sw24: netSw(24, 20), net_sw32: netSw(32, 27),
                 net_nas1: netBays(1, ["normal"], L("NAS, 1 bay", "NAS 1 baie")),
@@ -1609,7 +1610,7 @@ function liveGallery() {
     [L("Garden watering", "Arrosage"), [irrSprinkler, irrRain, irrTap, irrTapOff]],
     [L("Smoke, CO and leak detectors", "D\u00e9tecteurs de fum\u00e9e, CO et fuite"), [detSmoke, detSmokeAlarm, detCo, detCoAlarm, detLeak, detLeakAlarm]],
     [L("Speakers", "Enceintes"), [spkSmart, spkMini, spkOne, spkEra100, spkEra300, spkMove, spkBar, spkWave, spkBose500, spkFlex, spkBoseBar, spkShelf, spkDot, spkNest]],
-    [L("Game consoles", "Consoles de jeu"), [conPs1, conPs2, conPs3, conPs4, conPs4Pro, conPs5, conXbox, conX360, conXone, conXsx, conXss, conSwitch, conSwitch2, conLite, conNes, conSnes, conN64, conCube, conWii, conMd]],
+    [L("Game consoles", "Consoles de jeu"), [conPs1, conPs2, conPs3, conPs4, conPs4Pro, conPs5, conXbox, conX360, conXone, conXsx, conXss, conSwitch, conSwitch2, conLite, conVita, conNes, conSnes, conN64, conCube, conWii, conMd]],
   ];
   // Each family folds, the first one open: forty cards in a row are hard to
   // read, a list of families is not.
