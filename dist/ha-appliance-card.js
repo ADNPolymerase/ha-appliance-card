@@ -1,5 +1,5 @@
 // Built by tools/build.mjs from the files of src/: edit those, not this file.
-const CARD_VERSION = "4.2.0";
+const CARD_VERSION = "4.3.0";
 
 console.info(
   "%c HA-APPLIANCE-CARD %c v" + CARD_VERSION + " ",
@@ -150,7 +150,7 @@ const T = {
     type_network: "Network device (switch, NAS, server)", group_network: "Network and servers", layout_net_switch: "Switch", layout_net_server: "Server", layout_net_nas: "NAS", layout_net_rack: "Rack", net_ports_count: "Ports drawn", net_bays: "NAS bays", net_online: "Online", net_busy: "Busy", net_alert: "Alert", net_warn: "Disk to watch", section_net_cpu: "CPU usage (%)", section_net_memory: "Memory usage (%)", section_net_volume: "Volume used (%)", section_net_download: "Download rate", section_net_upload: "Upload rate", section_net_ports: "Active ports", net_ports_total: "Port count", section_net_poe: "PoE power", section_net_problem: "Problem alert", section_net_temperature: "Temperature", net_temp_alert: "Alert above this temperature (\u00b0C)", net_busy_threshold: "Busy above this rate (Mbit/s)", net_line_rate: "Throughput", net_line_load: "Load", net_line_volume: "Volume", section_net_disk1: "Disk 1", section_net_disk2: "Disk 2", section_net_disk3: "Disk 3", section_net_disk4: "Disk 4",
     type_robot: "Robot (vacuum, mop, mower)", layout_robot_vacuum: "Robot vacuum", layout_robot_mop: "Mopping robot", layout_robot_mower: "Robot mower", section_robot_station: "Base", robot_station_station: "Emptying or washing station", robot_station_base: "Charging base only", robot_shelter: "Shelter over the base", robot_shelter_style: "Shelter style", mower_style: "Mower style", mower_classic: "Classic", mower_navimow: "Navimow, orange wheels", shelter_lean_to: "Wooden lean-to", shelter_shell: "Shell", shelter_garage: "Garage", robot_shelter_color: "Shell colour", delay_starts_in: "Starts in", section_delay: "Delayed start countdown", state_entity_optional: "State entity (optional)", color_green: "Green", color_orange: "Orange", robot_charging: "Charging", robot_docked: "Docked", robot_cleaning: "Cleaning", robot_mopping: "Mopping", robot_mowing: "Mowing", robot_edgecut: "Edge cutting", robot_returning: "Returning to base", robot_emptying: "Emptying the bin", robot_bin_full: "Bin full", robot_washing: "Washing the pads", robot_drying: "Drying the pads", robot_water_empty: "Water tank empty", robot_rain: "Rain delay", robot_idle: "Stopped", section_robot_status: "Detailed status", section_battery: "Battery", section_robot_bin: "Bin full alert", section_robot_water: "Water tank", section_robot_rain: "Rain", section_robot_error: "Error", robot_station_box: "Rectangular station", robot_station_color: "Station colour", color_gold: "Gold", robot_camera: "Camera module on the robot", section_robot_clean_tank: "Clean water", section_robot_dirty_tank: "Dirty water",
     type_pool_pump: "Pool pump", pool_filtering: "Filtering", pool_chlorinating: "Chlorine injection", pool_backwash: "Backwash", pool_frost: "Frost protection", pool_light_on: "light on", section_water_temperature: "Water temperature", section_air_temperature: "Air temperature", section_ph: "pH", section_redox: "RedOx (ORP)", section_filtration_time: "Filtration time today", section_pressure: "Filter pressure", pool_pressure_alert: "Alert above this pressure (bar)", section_pool_mode: "Pump mode", section_chlorine_pump: "Chlorine pump", section_chlorine_level: "Chlorine tank level", section_backwash: "Backwash", section_frost: "Frost protection", section_pool_alert: "Alert", pool_line_water: "Water", pool_line_air: "Air", pool_line_filtered: "Filtered today", pool_line_pressure: "Pressure", pool_line_chlorine: "Chlorine tank", pool_line_mode: "Mode",
-    history_last: "Last {h} h", show_history: "Show the history", section_history: "History sensor", history_hours: "Hours of history", history_empty: "No history yet",
+    history_last: "Last {h} h", show_history: "Show the history", section_history: "History sensor", history_hours: "Hours of history", history_empty: "No history yet", history_last_days: "Last {d} days", history_chip_h: "{h} h", history_chip_d: "{d} d", history_periods: "History periods", history_total: "Total", delay_set: "Delayed start", delay_none: "None", section_delay_set: "Delayed start setting", hide_when_off: "Show only the state when off", robot_winter: "Winter storage", section_robot_winter: "Winter storage switch",
     type_scale: "Bathroom scale", scale_weighed: "Weighed", scale_goal_reached: "Goal reached", section_weight_goal: "Weight goal", scale_goal_value: "Weight goal, without a sensor", section_fat_ratio: "Body fat (%)", section_fat_mass: "Fat mass", section_muscle_mass: "Muscle mass", section_bone_mass: "Bone mass", scale_line_goal: "Goal", scale_line_fat: "Fat", scale_line_muscle: "Muscle", scale_line_bone: "Bone", scale_to_lose: "to lose", scale_to_gain: "to gain",
     type_ups: "UPS (uninterruptible power supply)", ups_online: "On mains", ups_battery: "On battery", ups_bypass: "Bypass", ups_charging: "charging", ups_low: "Battery low", ups_replace: "Replace battery", ups_overload: "Overload", section_ups_runtime: "Runtime", section_ups_load: "Load (%)", section_ups_input_voltage: "Input voltage", ups_nominal_power: "Nominal power, for the load in watts (W)", ups_battery_low: "Battery low below (%)", ups_line_battery: "Battery", ups_line_runtime: "Runtime", ups_line_load: "Load", ups_line_input: "Input",
     door_corner: "Show it in a corner of the card", controls_always: "Always show every button", show_unavailable_controls: "Show buttons whose entity is unavailable",
@@ -3755,7 +3755,7 @@ const ROBOT_STATIONS = ["station", "box", "base"];
 // A rectangular station's front, as the brands make them (#69).
 const ROBOT_BOX_COLORS = ["white", "black", "gold"];
 const ROBOT_ONLY_FIELDS = ["robot_layout", "robot_station", "robot_station_color", "robot_camera", "robot_shelter", "robot_shelter_style", "mower_style", "robot_shelter_color", "robot_floor", "robot_controls", "away_threshold", "robot_status_entity", "robot_bin_entity",
-  "robot_water_entity", "robot_clean_tank_entity", "robot_dirty_tank_entity", "robot_rain_entity", "robot_error_entity"];
+  "robot_water_entity", "robot_clean_tank_entity", "robot_dirty_tank_entity", "robot_rain_entity", "robot_error_entity", "robot_winter", "robot_winter_entity"];
 // A robot by its name, its maker's or its integration's. A robot cook is a
 // cooker, so the word robot needs what it does.
 const ROBOT_NAME_RE = /tineco|aspirateur.?balai|floor.?one|ifloor|laveur.?de.?sol|floor.?washer|nass.?trocken|lavapavimenti|stick.?vac|cordless.?vac|akkusauger|stielsauger|roomba|braava|roborock|ecovacs|deebot|dreame|neato|eufy.?clean|robovac|xiaomi.?vacuum|conga|robot.?(vacuum|aspir|mop|laveur|mower|tondeuse)|robot.?(clean|sweep)|vacuum|aspirateur|saugroboter|staubsauger|wischroboter|aspiradora|aspirapolvere|robotstofzuiger|stofzuiger|dammsugare|st(o|\u00f8)vsuger|odkurzacz|vysavac|landroid|automower|mammotion|navimow|(^|[^a-z])luba([^a-z]|$)|lawn.?mower|(^|[^a-z])mower|tondeuse|m(a|ae|\u00e4)hroboter|robotmaaier|grasmaaier|cortac(e|\u00e9)sped|tosaerba|corta.?relva|robotgr(a|\u00e4)sklipp|robotgressklipp|robotpl(a|\u00e6)neklipp|kosiarka|sekacka|\u626b\u5730|\u5438\u5c18|\u62d6\u5730|\u5272\u8349|\u043f\u044b\u043b\u0435\u0441\u043e\u0441|\u0433\u0430\u0437\u043e\u043d\u043e\u043a\u043e\u0441/;
@@ -3788,14 +3788,14 @@ const ROBOT_WORDS = [
 const ROBOT_LABELS = {
   charging: "robot_charging", docked: "robot_docked", returning: "robot_returning", paused: "paused", idle: "robot_idle",
   error: "error", emptying: "robot_emptying", full: "robot_bin_full", washing: "robot_washing", drying: "robot_drying",
-  empty: "robot_water_empty", rain: "robot_rain", edgecut: "robot_edgecut", unav: "ev_offline", off: "ac_off", away: "stick_away",
+  empty: "robot_water_empty", rain: "robot_rain", edgecut: "robot_edgecut", winter: "robot_winter", unav: "ev_offline", off: "ac_off", away: "stick_away",
 };
 const ROBOT_WORK_LABELS = { vacuum: "robot_cleaning", mop: "robot_mopping", mower: "robot_mowing", stick: "robot_cleaning", floor_washer: "robot_cleaning", pool: "robot_cleaning" };
 const ROBOT_COLORS = {
   charging: "#43a047", docked: "#43a047", emptying: "#43a047",
   cleaning: "#1e88e5", edgecut: "#1e88e5", returning: "#1e88e5", washing: "#1e88e5",
   paused: "#fb8c00", full: "#fb8c00", empty: "#fb8c00", drying: "#fb8c00",
-  rain: "#5c6bc0", error: "#f44336",
+  rain: "#5c6bc0", error: "#f44336", winter: "#4fa3d8",
   idle: "var(--disabled-text-color, #9e9e9e)", unav: "var(--disabled-text-color, #9e9e9e)", off: "var(--disabled-text-color, #9e9e9e)", away: "#1e88e5",
 };
 
@@ -3942,6 +3942,12 @@ function robotModeOf(hass, cfg, st, layout) {
     if (low) mode = "empty";
   }
   return mode;
+}
+
+// A mower put away for the winter (#80): ticked in the card, or switched on
+// from any on and off entity, an input_boolean or a date-driven automation.
+function robotWinter(hass, cfg) {
+  return cfg.robot_winter === true || (!!cfg.robot_winter_entity && robotRaised(hass, cfg.robot_winter_entity, /winter|hiver/));
 }
 
 // The tank's level, when a number says it.
@@ -4291,6 +4297,49 @@ function illustrationTapOf(cfg) {
   const a = cfg.illustration_tap_action;
   if (!a || a === "default") return null;
   return typeof a === "string" ? { action: a } : typeof a === "object" && a.action && a.action !== "default" ? a : null;
+}
+// Between cycles, the machine waits for its settings (#79): nothing to pick
+// while it runs, is paused or counts down to a delayed start.
+const betweenCycles = (norm) => !isActiveState(norm) && !["paused", "delayed"].includes(norm);
+// The programs a select offers, to pick one between cycles (#79).
+function programMenuOf(hass, cfg, cap, norm) {
+  const id = cfg.program_entity;
+  if (!id || !cap || !cap.cycle || cap.printer3d || !["select", "input_select"].includes(domainOf(id)) || !betweenCycles(norm)) return null;
+  const st = stateObj(hass, id);
+  const opts = st && Array.isArray(st.attributes.options) ? st.attributes.options.map(String) : [];
+  return opts.length > 1 ? { kind: "program", entity: id, dom: domainOf(id), options: opts, current: String(st.state) } : null;
+}
+// A delayed start set between cycles (#79): a number in seconds, minutes or
+// hours by its unit, offered hour by hour up to a day, or a select's options.
+function delayMenuOf(hass, cfg, cap, norm) {
+  const id = cfg.delay_set_entity;
+  if (!id || !cap || !cap.cycle || !betweenCycles(norm)) return null;
+  const st = stateObj(hass, id);
+  if (!st || HA_OFFLINE_STATES.includes(String(st.state).toLowerCase())) return null;
+  const dom = domainOf(id);
+  if (["select", "input_select"].includes(dom)) {
+    const opts = Array.isArray(st.attributes.options) ? st.attributes.options.map(String) : [];
+    return opts.length > 1 ? { kind: "delay", entity: id, dom, options: opts, current: String(st.state) } : null;
+  }
+  if (!["number", "input_number"].includes(dom)) return null;
+  const a = st.attributes;
+  const unit = String(a.unit_of_measurement || "s").toLowerCase();
+  const sec = /^h/.test(unit) ? 3600 : /^min/.test(unit) ? 60 : 1;
+  const per = 3600 / sec;
+  const min = Number.isFinite(parseFloat(a.min)) ? parseFloat(a.min) : 0;
+  const max = Number.isFinite(parseFloat(a.max)) ? parseFloat(a.max) : 24 * per;
+  const opts = min <= 0 ? ["0"] : [];
+  for (let h = 1; h <= Math.min(24, Math.floor(max / per)); h++) if (h * per >= min) opts.push(String(h * per));
+  const cur = parseFloat(st.state);
+  return opts.length > 1 ? { kind: "delay", entity: id, dom, options: opts, current: Number.isFinite(cur) ? String(Math.round(cur)) : "", sec } : null;
+}
+// How a line's menu says an option: a program cleaned up, a delay as its
+// length and the time it would start.
+function lineMenuLabel(hass, cfg, menu, option) {
+  if (menu.kind === "program") return programLabel(hass, stateObj(hass, menu.entity), option, cfg);
+  if (!menu.sec) return option;
+  const s = parseFloat(option) * menu.sec;
+  return s > 0 ? `${formatDuration(s, hass)} \u00b7 ${formatEta(s, hass)}` : t(hass, "delay_none");
 }
 // The menu a card opens from its buttons, if any.
 function cardMenuOf(hass, cfg, cap) {
@@ -5370,7 +5419,9 @@ const HISTORY_SOURCES = {
 
 function historyEntityOf(hass, cfg, type) {
   if (cfg.history_entity) return cfg.history_entity;
-  const field = (HISTORY_SOURCES[type] || []).concat(["power_entity", "temperature_entity", "state_entity"])
+  // A washer, a dryer or a dishwasher with an energy meter alone still has
+  // its days to show as bars (#79).
+  const field = (HISTORY_SOURCES[type] || []).concat(["power_entity", "temperature_entity", "state_entity"], HISTORY_BAR_TYPES.includes(type) ? ["energy_entity"] : [])
     .find((f) => cfg[f] && numericState(hass, cfg[f]) !== null);
   return field ? cfg[field] : null;
 }
@@ -5378,6 +5429,141 @@ function historyEntityOf(hass, cfg, type) {
 function historyHoursOf(cfg) {
   const n = parseFloat(cfg.history_hours);
   return isFinite(n) && n > 0 ? Math.min(168, Math.max(1, Math.round(n))) : HISTORY_HOURS;
+}
+
+// The longest period offered: a year.
+const HISTORY_MAX_HOURS = 8760;
+// Past two days, the card reads Home Assistant's statistics rather than the
+// raw history: they are kept for good and weigh far less.
+const HISTORY_RAW_HOURS = 48;
+
+// The periods offered above the curve, in hours: history_periods when set
+// ("24h, 7d, 30d" or a list of hours), else the hours chosen, a week and a
+// month (HACF #138).
+function historyPeriodsOf(cfg) {
+  const parse = (v) => {
+    if (typeof v === "number") return v;
+    const m = /^\s*(\d+(?:[.,]\d+)?)\s*([a-z]*)\.?\s*$/i.exec(String(v));
+    if (!m) return NaN;
+    const n = parseFloat(m[1].replace(",", "."));
+    if (/^(d|j|t|g|days?|jours?|tage?|dias?|giorni)$/i.test(m[2])) return n * 24;
+    if (/^(w|wk|weeks?|sem|semaines?|wochen?)$/i.test(m[2])) return n * 168;
+    if (/^(m|mo|months?|mois)$/i.test(m[2])) return n * 720;
+    return n;
+  };
+  const raw = Array.isArray(cfg.history_periods) ? cfg.history_periods
+    : typeof cfg.history_periods === "string" && cfg.history_periods.trim() ? cfg.history_periods.split(/[,;]+|\s+(?=\d)/)
+      : [historyHoursOf(cfg), 168, 720];
+  const out = [...new Set(raw.map(parse).filter((n) => isFinite(n) && n > 0).map((n) => Math.min(HISTORY_MAX_HOURS, Math.max(1, Math.round(n)))))];
+  return out.length ? out : [historyHoursOf(cfg)];
+}
+
+// A period as the button and the chips say it: in days from two days up.
+const historyInDays = (hours) => hours >= HISTORY_RAW_HOURS && hours % 24 === 0;
+function historyLabel(hass, hours) {
+  return historyInDays(hours) ? t(hass, "history_last_days").replace("{d}", String(hours / 24)) : t(hass, "history_last").replace("{h}", String(hours));
+}
+function historyChip(hass, hours) {
+  return historyInDays(hours) ? t(hass, "history_chip_d").replace("{d}", String(hours / 24)) : t(hass, "history_chip_h").replace("{h}", String(hours));
+}
+
+// A statistic row's start, in milliseconds: a number in recent versions of
+// Home Assistant, a date before.
+const statStart = (r) => (typeof r.start === "number" ? r.start : Date.parse(r.start));
+
+// The curve read from statistics: one step per hour or per day, its mean (the
+// state for a sensor that keeps no mean), the minimum and maximum their own.
+function historyStatValues(rows, from, to, stepMs) {
+  const n = Math.max(1, Math.ceil((to - from) / stepMs));
+  const values = new Array(n).fill(null);
+  let lo = Infinity;
+  let hi = -Infinity;
+  let any = false;
+  (Array.isArray(rows) ? rows : []).forEach((r) => {
+    const i = Math.floor((statStart(r) - from) / stepMs);
+    const v = Number.isFinite(r.mean) ? r.mean : Number.isFinite(r.state) ? r.state : null;
+    if (i < 0 || i >= n || v === null) return;
+    values[i] = v;
+    any = true;
+    lo = Math.min(lo, Number.isFinite(r.min) ? r.min : v);
+    hi = Math.max(hi, Number.isFinite(r.max) ? r.max : v);
+  });
+  return any ? { values, min: lo, max: hi } : null;
+}
+
+// The starts of the days of a period, at local midnight, oldest first.
+function historyDays(days, now) {
+  const d = new Date(now);
+  return Array.from({ length: days }, (_, k) => new Date(d.getFullYear(), d.getMonth(), d.getDate() - (days - 1 - k)).getTime());
+}
+const dayIndex = (starts, t) => { let i = -1; for (let k = 0; k < starts.length && starts[k] <= t; k++) i = k; return i; };
+// The types whose long periods are drawn as a bar per day.
+const HISTORY_BAR_TYPES = ["washer", "dryer", "dishwasher"];
+// A reading in kilowatt-hours, from what its unit says.
+const toKwh = (v, unit) => (/^mwh$/i.test(unit) ? v * 1000 : /^wh$/i.test(unit) ? v / 1000 : v);
+
+// What a washer, a dryer or a dishwasher did each day: the energy it used,
+// from its energy meter's daily change or its power's hourly means, and the
+// cycles it started, from its state's history or from the hours its plug
+// went past the threshold.
+function historyDayBars(starts, now, src) {
+  const days = starts.map((s) => ({ start: s, kwh: null, cycles: null }));
+  if (src.energyRows) {
+    src.energyRows.forEach((r) => {
+      const i = dayIndex(starts, statStart(r));
+      if (i >= 0 && Number.isFinite(r.change)) days[i].kwh = (days[i].kwh || 0) + toKwh(r.change, src.energyUnit);
+    });
+  } else if (src.powerRows) {
+    src.powerRows.forEach((r) => {
+      const i = dayIndex(starts, statStart(r));
+      if (i >= 0 && Number.isFinite(r.mean)) days[i].kwh = (days[i].kwh || 0) + (/^kw$/i.test(src.powerUnit) ? r.mean : r.mean / 1000);
+    });
+  }
+  if (src.runs) {
+    const from = src.covered;
+    days.forEach((d) => { if (d.start + 86400000 > from) d.cycles = 0; });
+    src.runs.forEach((r) => {
+      if (r.cut) return;
+      const i = dayIndex(starts, r.start);
+      if (i >= 0 && days[i].cycles !== null) days[i].cycles += 1;
+    });
+  } else if (src.powerRows && Number.isFinite(src.threshold)) {
+    let was = false;
+    src.powerRows.slice().sort((a, b) => statStart(a) - statStart(b)).forEach((r) => {
+      const i = dayIndex(starts, statStart(r));
+      const on = Number.isFinite(r.max) && r.max >= src.threshold;
+      if (i >= 0) {
+        if (days[i].cycles === null) days[i].cycles = 0;
+        if (on && !was) days[i].cycles += 1;
+      }
+      was = on;
+    });
+  }
+  const kwh = days.some((d) => d.kwh !== null);
+  const cycles = days.some((d) => d.cycles !== null);
+  return kwh || cycles ? { days, kwh, cycles } : null;
+}
+
+// The bars, one per day, the cycles over them; their height is the energy,
+// or the cycles when there is no energy to read.
+function historyBarsHtml(hass, bars) {
+  const val = (d) => (bars.kwh ? d.kwh : d.cycles);
+  const top = Math.max(0, ...bars.days.map((d) => val(d) || 0));
+  const kwhText = (v) => keepTogether(`${netNumber(hass, v, v < 10 ? 1 : 0)} kWh`);
+  const cols = bars.days.map((d) => {
+    const v = val(d);
+    const pct = top > 0 && v ? Math.max(2, Math.round((v / top) * 100)) : 0;
+    const when = new Date(d.start).toLocaleDateString(lang(hass), { weekday: "short", day: "numeric", month: "short" });
+    const parts = [bars.kwh && d.kwh !== null ? kwhText(d.kwh) : "", d.cycles !== null ? t(hass, d.cycles === 1 ? "starts_one" : "starts_other").replace("{n}", String(d.cycles)) : ""].filter(Boolean);
+    return `<div class="h-col" title="${esc([when, ...parts].join(" \u00b7 "))}"><span class="h-n">${bars.kwh && d.cycles ? d.cycles : ""}</span><div class="h-bar" style="height:${pct}%"></div></div>`;
+  }).join("");
+  const total = bars.days.reduce((s, d) => s + (d.kwh || 0), 0);
+  const count = bars.days.reduce((s, d) => s + (d.cycles || 0), 0);
+  const sum = [bars.kwh ? kwhText(total) : "", bars.cycles ? t(hass, count === 1 ? "starts_one" : "starts_other").replace("{n}", String(count)) : ""].filter(Boolean).join(" \u00b7 ");
+  const maxText = bars.kwh ? kwhText(top) : String(top);
+  // The days under a week or two, by the first letters of their names.
+  const days = bars.days.length <= 14 ? `<div class="h-days">${bars.days.map((d) => `<span>${esc(new Date(d.start).toLocaleDateString(lang(hass), { weekday: "narrow" }))}</span>`).join("")}</div>` : "";
+  return `<span class="h-max">${esc(maxText)}</span><div class="h-bars">${cols}</div><span class="h-min">0</span></div>${days}<div class="h-sum">${esc(`${t(hass, "history_total")} ${sum}`)}</div>`;
 }
 
 // Each step's mean, weighted by how long each reading lasted, from Home
@@ -5420,6 +5606,7 @@ function historyValues(rows, from, to) {
 // the card's width.
 function historyChart(h) {
   const values = h.values;
+  if (!Array.isArray(values)) return null;
   const nums = values.filter((v) => v !== null);
   if (!nums.length || !Number.isFinite(h.min)) return null;
   const lo = h.min;
@@ -6598,6 +6785,18 @@ class ApplianceCard extends HTMLElement {
     this._render();
   }
 
+  // A program or a delayed start picked in a line's menu (#79): a select's
+  // option, or a number set to the hours chosen.
+  _pickLine(kind, option) {
+    const menu = this._lineMenus && this._lineMenus[kind];
+    this._lineMenu = null;
+    if (menu && menu.options.includes(option)) {
+      if (["number", "input_number"].includes(menu.dom)) this._hass.callService(menu.dom, "set_value", { entity_id: menu.entity, value: Number(option) });
+      else this._hass.callService(menu.dom, "select_option", { entity_id: menu.entity, option });
+    }
+    this._render();
+  }
+
   _clearClockTimer() {
     if (this._clockTimer) {
       clearInterval(this._clockTimer);
@@ -6897,37 +7096,56 @@ class ApplianceCard extends HTMLElement {
       : stateRunsOpen(rows, (raw) => todayNormFor(td.type, raw, cfg.state_map, /^(climate|water_heater)\./.test(td.entity)), td.from);
   }
 
-  // Reads one entity's history once the curve is unfolded, then keeps it five
+  // Reads the history once the curve is unfolded, then keeps it five
   // minutes: a dashboard left open does not ask the recorder at every render.
-  _lookUpHistory(entity, hours) {
+  // Up to two days the raw history; past that Home Assistant's statistics, or
+  // the raw history again for a sensor that keeps none; a washer's, a dryer's
+  // or a dishwasher's days as bars.
+  _lookUpHistory(entity, hours, bars) {
     const hass = this._hass;
     if (this._inert || !hass || typeof hass.callWS !== "function" || !entity) return;
-    const key = `${entity}|${hours}`;
+    const key = `${entity}|${hours}|${bars ? JSON.stringify(bars) : ""}`;
     const now = Date.now();
     if (this._history && this._history.key === key && now - this._history.at < HISTORY_REFRESH_MS) return;
     if (this._historyPending === key) return;
     this._historyPending = key;
     const from = now - hours * 3600000;
-    let req;
-    try {
-      req = hass.callWS({
-        type: "history/history_during_period",
-        start_time: new Date(from).toISOString(),
-        end_time: new Date(now).toISOString(),
-        entity_ids: [entity],
-        include_start_time_state: true,
-        significant_changes_only: false,
-        minimal_response: true,
-        no_attributes: true,
+    const ws = (msg) => { try { return Promise.resolve(hass.callWS(msg)); } catch (e) { return Promise.reject(e); } };
+    const iso = (ms) => new Date(ms).toISOString();
+    const raw = (id, start) => ws({ type: "history/history_during_period", start_time: iso(start), end_time: iso(now), entity_ids: [id],
+      include_start_time_state: true, significant_changes_only: false, minimal_response: true, no_attributes: true }).then((res) => (res && Array.isArray(res[id]) ? res[id] : []));
+    const stats = (id, start, period, types) => ws({ type: "recorder/statistics_during_period", start_time: iso(start), end_time: iso(now), statistic_ids: [id], period, types })
+      .then((res) => (res && Array.isArray(res[id]) ? res[id] : []), () => []);
+    let job;
+    if (bars) {
+      const starts = historyDays(Math.round(hours / 24), now);
+      const s0 = starts[0];
+      const needPower = bars.power && (!bars.energy || !bars.state);
+      job = Promise.all([
+        bars.energy ? stats(bars.energy, s0, "day", ["change"]) : null,
+        needPower ? stats(bars.power, s0, "hour", ["mean", "max"]) : null,
+        bars.state ? raw(bars.state, s0) : null,
+      ]).then(([energyRows, powerRows, stateRows]) => {
+        const rowTime = (e) => 1000 * Number(e && (e.lc !== undefined ? e.lc : e.lu));
+        const runs = stateRows && stateRows.length ? stateRunsOpen(stateRows, (v) => todayNormFor(bars.type, v, bars.stateMap, false), s0) : null;
+        return historyDayBars(starts, now, {
+          energyRows: energyRows && energyRows.length ? energyRows : null, energyUnit: bars.energyUnit,
+          powerRows: powerRows && powerRows.length ? powerRows : null, powerUnit: bars.powerUnit,
+          runs, covered: runs ? rowTime(stateRows[0]) - 1000 : Infinity, threshold: bars.threshold,
+        });
       });
-    } catch (e) {
-      this._historyPending = null;
-      return;
+    } else if (hours <= HISTORY_RAW_HOURS) {
+      job = raw(entity, from).then((rows) => historyValues(rows, from, now));
+    } else {
+      const byDay = hours > 24 * 14;
+      const start = byDay ? historyDays(Math.ceil(hours / 24), now)[0] : Math.floor(from / 3600000) * 3600000;
+      job = stats(entity, start, byDay ? "day" : "hour", ["mean", "min", "max", "state"])
+        .then((rows) => historyStatValues(rows, start, now, (byDay ? 24 : 1) * 3600000) || raw(entity, from).then((r) => historyValues(r, from, now)));
     }
-    Promise.resolve(req).then((res) => {
+    job.then((v) => {
       if (this._historyPending !== key) return;
       this._historyPending = null;
-      this._history = { key, at: Date.now(), ...historyValues(res && res[entity], from, now) };
+      this._history = bars ? { key, at: Date.now(), bars: v } : { key, at: Date.now(), ...v };
       if (this._historyOpen) this._render();
     }, () => { this._historyPending = null; });
   }
@@ -7211,6 +7429,11 @@ class ApplianceCard extends HTMLElement {
         if (!CONTROL_RUNNING.includes(norm) && !["paused", "error"].includes(norm)) norm = "delayed";
       }
     }
+    // hide_when_off (#79): with its power switch off, an appliance reads Off
+    // whatever its state sensor last said, and shows its state alone.
+    const toggleSt = cfg.toggle_entity ? stateObj(hass, cfg.toggle_entity) : null;
+    const offHidden = !!cfg.hide_when_off && ((!!toggleSt && String(toggleSt.state).toLowerCase() === "off") || norm === "off");
+    if (offHidden) { norm = "idle"; delaySec = null; }
     let color = STATE_COLORS[norm] || STATE_COLORS.unknown;
     const rawIsMeaningless = ["unknown", "unavailable", "none", ""].includes(String(rawState).trim().toLowerCase());
     // When the raw state doesn't match any known vocabulary, show it as-is
@@ -7226,6 +7449,7 @@ class ApplianceCard extends HTMLElement {
     let stateLabel = !powerDerived && (cfg.state_show_raw || norm === "unknown") && !rawIsMeaningless
       ? (cfg.state_show_raw ? rawStateText(hass, st, rawState, cfg) : cleanStateLabel(rawState))
       : t(hass, norm);
+    if (offHidden) stateLabel = t(hass, "ac_off");
 
     // A card with no state entity is named after its type, and a tap opens
     // what it reads in its place.
@@ -7234,7 +7458,7 @@ class ApplianceCard extends HTMLElement {
 
     // Program
     let programText = null;
-    if (cfg.program_entity) {
+    if (cfg.program_entity && !offHidden) {
       const pst = stateObj(hass, cfg.program_entity);
       if (pst && !["unknown", "unavailable"].includes(pst.state)) {
         programText = cap.printer3d ? printerFileName(pst.state) : programLabel(hass, pst, pst.state, cfg);
@@ -7243,7 +7467,7 @@ class ApplianceCard extends HTMLElement {
 
     // Remaining time / progress
     let remSec = null;
-    if (cfg.remaining_time_entity) {
+    if (cfg.remaining_time_entity && !offHidden) {
       // remaining_time_hide_when_idle cross-references the already-normalized
       // machine state so stale completion timestamps (integrations like
       // Samsung SmartThings keep reporting a past cycle's finish time after
@@ -10069,6 +10293,9 @@ class ApplianceCard extends HTMLElement {
       // A stick vacuum's plug says it charges: only its own battery can say
       // it is full.
       if (mode === "charging" && (stick ? battery !== null && battery >= 100 : battery === null || battery >= 100)) mode = "docked";
+      // Put away for the winter, it reads so whatever its integration says,
+      // often nothing at all once it is unplugged (#80).
+      if (layout === "mower" && robotWinter(hass, cfg)) mode = "winter";
       if (!cfg.state_show_raw || mode === "unav") {
         const washer = layout === "floor_washer" ? { washing: "fw_self_cleaning", full: "fw_dirty_full", empty: "fw_clean_empty" } : {};
         stateLabel = t(hass, mode === "cleaning" ? ROBOT_WORK_LABELS[layout] : stick && mode === "docked" ? "stick_charged" : washer[mode] || ROBOT_LABELS[mode]);
@@ -10079,7 +10306,7 @@ class ApplianceCard extends HTMLElement {
       const tankOn = layout === "vacuum" || layout === "mop";
       const cleanTank = tankOn ? robotTank(hass, cfg.robot_clean_tank_entity) : null;
       const dirtyTank = tankOn ? robotTank(hass, cfg.robot_dirty_tank_entity) : null;
-      if (mode !== "unav") {
+      if (mode !== "unav" && mode !== "winter") {
         if (battery !== null && !cfg.battery_corner) {
           extraLines.push({ key: "robot_battery", icon: robotBatteryIcon(battery, mode === "charging"), label: t(hass, "section_battery"),
             value: keepTogether(`${Math.round(battery)} %`), entity: cfg.battery_entity || cfg.state_entity });
@@ -10527,6 +10754,21 @@ class ApplianceCard extends HTMLElement {
         .history .h-max, .history .h-min { position: absolute; right: 0; font-size: 0.75em; color: var(--secondary-text-color); pointer-events: none; }
         .history .h-max { top: -2px; }
         .history .h-min { bottom: -2px; }
+        .info-line.has-menu .chev { --mdc-icon-size: 16px; margin-left: 2px; opacity: .6; flex: none; }
+        .line-menu { grid-column: 1 / -1; margin: 2px 0 4px; border: 1px solid var(--divider-color, rgba(127,127,127,.25)); border-radius: 10px; overflow: hidden; max-height: 240px; overflow-y: auto; }
+        .line-menu .mode-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 7px 12px; cursor: pointer; font-size: .9em; }
+        .line-menu .mode-row.sel { color: var(--primary-color, #03a9f4); }
+        .line-menu .mode-row ha-icon { --mdc-icon-size: 18px; }
+        .h-periods { display: flex; gap: 6px; margin-top: 6px; flex-wrap: wrap; }
+        .h-chip { font-size: 0.75em; padding: 2px 9px; border-radius: 10px; border: 1px solid var(--divider-color, rgba(127,127,127,.3)); color: var(--secondary-text-color); cursor: pointer; user-select: none; }
+        .h-chip.on { background: var(--primary-color, #03a9f4); border-color: var(--primary-color, #03a9f4); color: var(--text-primary-color, #fff); }
+        .history .h-bars { display: flex; align-items: flex-end; gap: 1px; height: 100%; }
+        .history .h-col { flex: 1; min-width: 0; height: 100%; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; }
+        .history .h-bar { width: 72%; background: var(--h-color, var(--primary-color)); opacity: 0.75; border-radius: 2px 2px 0 0; }
+        .history .h-n { font-size: 0.6em; line-height: 1.3; color: var(--secondary-text-color); }
+        .h-days { display: flex; gap: 1px; padding-right: 52px; margin-top: 2px; }
+        .h-days span { flex: 1; text-align: center; font-size: 0.6em; color: var(--secondary-text-color); }
+        .h-sum { margin-top: 4px; font-size: 0.75em; color: var(--secondary-text-color); }
         .history .h-empty { text-align: center; font-size: 0.85em; line-height: 56px; color: var(--secondary-text-color); }
         .info-line.clickable { cursor: pointer; }
         /* A print file is one long word: it breaks anywhere rather than
@@ -10536,6 +10778,7 @@ class ApplianceCard extends HTMLElement {
         .info-line.warn ha-icon { color: var(--error-color, #f44336); }
         .info-line.caution, .info-line.caution ha-icon { color: var(--warning-color, #ff9800); }
         .bar-row { margin-top: 4px; }
+        .cmp-wrap + .bar-row { margin-top: 10px; }
         .bar-row.labelled { display: flex; align-items: center; gap: 6px; font-size: 0.85em; color: var(--secondary-text-color, #767676); }
         .bar-row.labelled ha-icon { --mdc-icon-size: 18px; flex-shrink: 0; }
         .bar-row.labelled .bar { flex: 1; min-width: 24px; }
@@ -10675,11 +10918,19 @@ class ApplianceCard extends HTMLElement {
 
     const stripNamePrefix = (friendlyName, entityId) => stripDeviceName(hass, friendlyName, entityId, name);
 
+    // The program and the delayed start, picked in the card between cycles (#79).
+    const programMenu = offHidden ? null : programMenuOf(hass, cfg, cap, norm);
+    const delayMenu = offHidden ? null : delayMenuOf(hass, cfg, cap, norm);
+    this._lineMenus = { program: programMenu, delay: delayMenu };
+    if (!this._lineMenus[this._lineMenu]) this._lineMenu = null;
     let lines = [];
     if (programText) {
       lines.push(cap.printer3d
         ? { key: "file", icon: "mdi:file-outline", label: t(hass, "p3_file"), value: programText, wrap: true }
-        : { key: "program", icon: "mdi:tag-outline", label: t(hass, "program"), value: programText });
+        : { key: "program", icon: "mdi:tag-outline", label: t(hass, "program"), value: programText, menu: programMenu ? "program" : "" });
+    }
+    if (delayMenu) {
+      lines.push({ key: "delay_set", icon: "mdi:clock-start", label: t(hass, "delay_set"), value: lineMenuLabel(hass, cfg, delayMenu, delayMenu.current), menu: "delay" });
     }
     if (remSec !== null) {
       const remRounded = Math.round(remSec / 60);
@@ -10771,34 +11022,53 @@ class ApplianceCard extends HTMLElement {
     // hidden_lines: a line you never want to see (HACF #127), still offered
     // in the editor so it can be shown again.
     if (hidden.length) lines = lines.filter((l) => !l.key || !hidden.includes(l.key));
+    if (offHidden) lines = [];
     // The history: a discreet button under the lines unfolds the curve.
     let historyHtml = "";
     const historyEntity = cfg.show_history ? historyEntityOf(hass, cfg, applianceType) : null;
     if (historyEntity) {
-      const hours = historyHoursOf(cfg);
+      const periods = historyPeriodsOf(cfg);
+      const hours = periods.includes(this._historyHours) ? this._historyHours : periods.includes(historyHoursOf(cfg)) ? historyHoursOf(cfg) : periods[0];
       const open = !!this._historyOpen;
       let body = "";
       if (open) {
-        this._lookUpHistory(historyEntity, hours);
-        const h = this._history && this._history.key === `${historyEntity}|${hours}` ? this._history : null;
+        // A washer's, a dryer's or a dishwasher's week or month, as a bar per
+        // day: a power curve says nothing at that scale (HACF #138).
+        const unitOf = (id) => { const o = id && stateObj(hass, id); return (o && o.attributes.unit_of_measurement) || ""; };
+        const bars = HISTORY_BAR_TYPES.includes(applianceType) && !cfg.history_entity && historyInDays(hours) && hours > HISTORY_RAW_HOURS ? {
+          energy: cfg.energy_entity || null, energyUnit: unitOf(cfg.energy_entity),
+          power: cfg.power_entity || null, powerUnit: unitOf(cfg.power_entity),
+          state: cfg.state_entity && !powerDerived ? cfg.state_entity : null, stateMap: cfg.state_map || null,
+          type: applianceType, threshold: isFinite(threshold) ? threshold : 10,
+        } : null;
+        this._lookUpHistory(historyEntity, hours, bars);
+        const hkey = `${historyEntity}|${hours}|${bars ? JSON.stringify(bars) : ""}`;
+        const h = this._history && this._history.key === hkey ? this._history : null;
+        const chips = periods.length > 1 ? `<div class="h-periods">${periods.map((p) => `<span class="h-chip${p === hours ? " on" : ""}" data-history-hours="${p}" role="button">${esc(historyChip(hass, p))}</span>`).join("")}</div>` : "";
         const chart = h ? historyChart(h) : null;
         const hst = stateObj(hass, historyEntity);
         const unit = (hst && hst.attributes.unit_of_measurement) || "";
         const fmt = (v) => keepTogether(`${netNumber(hass, v, Math.abs(v) < 100 ? 1 : 0)}${unit ? ` ${unit}` : ""}`);
-        body = !h ? `<div class="history"><div class="h-empty">\u2026</div></div>`
+        body = chips + (!h ? `<div class="history"><div class="h-empty">\u2026</div></div>`
+          : bars ? (h.bars ? `<div class="history bars" style="--h-color:var(--primary-color, #03a9f4)">${historyBarsHtml(hass, h.bars)}` : `<div class="history"><div class="h-empty">${esc(t(hass, "history_empty"))}</div></div>`)
           : chart ? `<div class="history" style="--h-color:${color}"><span class="h-max">${esc(fmt(chart.max))}</span>${chart.svg}<span class="h-min">${esc(fmt(chart.min))}</span></div>`
-            : `<div class="history"><div class="h-empty">${esc(t(hass, "history_empty"))}</div></div>`;
+            : `<div class="history"><div class="h-empty">${esc(t(hass, "history_empty"))}</div></div>`);
       }
-      historyHtml = `<div class="history-toggle" data-history-toggle="1" aria-expanded="${open}"><ha-icon icon="mdi:chart-line"></ha-icon><span>${esc(t(hass, "history_last").replace("{h}", String(hours)))}</span><ha-icon class="caret" icon="mdi:chevron-${open ? "up" : "down"}"></ha-icon></div>${body}`;
+      historyHtml = `<div class="history-toggle" data-history-toggle="1" aria-expanded="${open}"><ha-icon icon="mdi:chart-line"></ha-icon><span>${esc(historyLabel(hass, hours))}</span><ha-icon class="caret" icon="mdi:chevron-${open ? "up" : "down"}"></ha-icon></div>${body}`;
     }
+    // A line's menu, open under the lines: every option, the current one ticked.
+    const lineMenu = this._lineMenu ? this._lineMenus[this._lineMenu] : null;
+    const lineMenuHtml = lineMenu && lines.some((l) => l.menu === this._lineMenu)
+      ? `<div class="line-menu" role="listbox">${lineMenu.options.map((o) => `<div class="mode-row${o === lineMenu.current ? " sel" : ""}" role="option" aria-selected="${o === lineMenu.current}" data-line-option="${esc(o)}"><span>${esc(lineMenuLabel(hass, cfg, lineMenu, o))}</span>${o === lineMenu.current ? `<ha-icon icon="mdi:check"></ha-icon>` : ""}</div>`).join("")}</div>`
+      : "";
     const linesHtml = lines.length
       ? `<div class="info-lines${infoEntities.length > INFO_COMPACT_ABOVE ? " compact" : ""}">${lines
           .map((l) => ({ ...l, open: !!l.entity && entityUsable(hass, l.entity) }))
           .map(
             (l) =>
-              `<div class="info-line ${l.warn ? "warn" : l.caution ? "caution" : ""}${l.open ? " clickable" : ""}${l.wrap ? " wrap" : ""}${!l.wrap && !l.bare && l.value && String(l.value).length <= 14 ? " fit" : ""}"${l.open ? ` data-more="${esc(l.entity)}"` : ""} title="${esc(l.label)}"><ha-icon icon="${esc(l.icon)}"></ha-icon>${l.bare && l.value ? "" : `<span class="label">${esc(l.label)}</span>`}${l.value ? `<span>${esc(l.value)}</span>` : ""}</div>`
+              `<div class="info-line ${l.warn ? "warn" : l.caution ? "caution" : ""}${l.open || l.menu ? " clickable" : ""}${l.menu ? " has-menu" : ""}${l.wrap ? " wrap" : ""}${!l.wrap && !l.bare && l.value && String(l.value).length <= 14 ? " fit" : ""}"${l.open ? ` data-more="${esc(l.entity)}"` : ""}${l.menu ? ` data-line-menu="${l.menu}" aria-expanded="${this._lineMenu === l.menu}"` : ""} title="${esc(l.label)}"><ha-icon icon="${esc(l.icon)}"></ha-icon>${l.bare && l.value ? "" : `<span class="label">${esc(l.label)}</span>`}${l.value ? `<span>${esc(l.value)}</span>` : ""}${l.menu ? `<ha-icon class="chev" icon="mdi:chevron-${this._lineMenu === l.menu ? "up" : "down"}"></ha-icon>` : ""}</div>`
           )
-          .join("")}</div>`
+          .join("")}${lineMenuHtml}</div>`
       : "";
 
     const slidersHtml = sliders.length
@@ -10816,7 +11086,7 @@ class ApplianceCard extends HTMLElement {
 
     // Bar priority: preheating beats cycle progress (it's the live information
     // while an oven climbs), and a hood has no cycle so its bar is the filter.
-    let barPct = progressPct;
+    let barPct = offHidden ? null : progressPct;
     let barColor = color;
     // A filter's life on the bar says so, with its icon and its percentage
     // (#54): a bar alone reads as a cycle's progress.
@@ -10837,6 +11107,8 @@ class ApplianceCard extends HTMLElement {
       barLabel = t(hass, "section_filter_life");
     }
 
+    // hide_when_off also drops an empty bar between cycles (#79).
+    if (cfg.hide_when_off && barPct === 0 && !isActiveState(norm) && norm !== "paused") barPct = null;
     const barHtml = barPct !== null
       ? `
         <div class="bar-row${barLabel ? " labelled" : ""}"${barLabel ? ` title="${esc(barLabel)}"` : ""}>${barLabel ? `<ha-icon icon="mdi:air-filter"></ha-icon><span class="bar-lbl">${esc(barLabel)}</span>` : ""}
@@ -10857,6 +11129,7 @@ class ApplianceCard extends HTMLElement {
     if (alertItems.length < 2) this._alertsOpen = false;
     const alertItem = (a, cls) => `<div class="${cls} clickable" data-more="${esc(a.entity)}"><ha-icon icon="${esc(a.icon)}"></ha-icon><span class="alert-label">${esc(a.label)}</span>`;
     let alertsHtml = "";
+    if (offHidden) alertItems.length = 0;
     if (alertItems.length === 1) {
       alertsHtml = `<div class="alerts-wrap">${alertItem(alertItems[0], "alerts-pill")}</div></div>`;
     } else if (alertItems.length > 1) {
@@ -11110,6 +11383,23 @@ class ApplianceCard extends HTMLElement {
       ["click", "pointerdown", "touchstart"].forEach((n) => el.addEventListener(n, (ev) => ev.stopPropagation()));
       el.addEventListener("input", () => { if (out) out.textContent = `${el.value}${unit ? ` ${unit}` : ""}`; });
       el.addEventListener("change", () => this._call(el.getAttribute("data-slider"), { value: el.value }));
+    });
+    this._root.querySelectorAll("[data-line-menu]").forEach((el) => el.addEventListener("click", (ev) => {
+      ev.stopPropagation();
+      const kind = el.getAttribute("data-line-menu");
+      this._lineMenu = this._lineMenu === kind ? null : kind;
+      this._render();
+    }));
+    this._root.querySelectorAll("[data-line-option]").forEach((el) => el.addEventListener("click", (ev) => {
+      ev.stopPropagation();
+      this._pickLine(this._lineMenu, el.getAttribute("data-line-option"));
+    }));
+    this._root.querySelectorAll("[data-history-hours]").forEach((el) => {
+      el.addEventListener("click", (ev) => {
+        ev.stopPropagation();
+        this._historyHours = Number(el.getAttribute("data-history-hours"));
+        this._render();
+      });
     });
     this._root.querySelectorAll("[data-history-toggle]").forEach((el) => {
       el.addEventListener("click", (ev) => {

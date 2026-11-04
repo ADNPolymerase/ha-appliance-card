@@ -307,7 +307,7 @@ const ROBOT_STATIONS = ["station", "box", "base"];
 // A rectangular station's front, as the brands make them (#69).
 const ROBOT_BOX_COLORS = ["white", "black", "gold"];
 const ROBOT_ONLY_FIELDS = ["robot_layout", "robot_station", "robot_station_color", "robot_camera", "robot_shelter", "robot_shelter_style", "mower_style", "robot_shelter_color", "robot_floor", "robot_controls", "away_threshold", "robot_status_entity", "robot_bin_entity",
-  "robot_water_entity", "robot_clean_tank_entity", "robot_dirty_tank_entity", "robot_rain_entity", "robot_error_entity"];
+  "robot_water_entity", "robot_clean_tank_entity", "robot_dirty_tank_entity", "robot_rain_entity", "robot_error_entity", "robot_winter", "robot_winter_entity"];
 // A robot by its name, its maker's or its integration's. A robot cook is a
 // cooker, so the word robot needs what it does.
 const ROBOT_NAME_RE = /tineco|aspirateur.?balai|floor.?one|ifloor|laveur.?de.?sol|floor.?washer|nass.?trocken|lavapavimenti|stick.?vac|cordless.?vac|akkusauger|stielsauger|roomba|braava|roborock|ecovacs|deebot|dreame|neato|eufy.?clean|robovac|xiaomi.?vacuum|conga|robot.?(vacuum|aspir|mop|laveur|mower|tondeuse)|robot.?(clean|sweep)|vacuum|aspirateur|saugroboter|staubsauger|wischroboter|aspiradora|aspirapolvere|robotstofzuiger|stofzuiger|dammsugare|st(o|\u00f8)vsuger|odkurzacz|vysavac|landroid|automower|mammotion|navimow|(^|[^a-z])luba([^a-z]|$)|lawn.?mower|(^|[^a-z])mower|tondeuse|m(a|ae|\u00e4)hroboter|robotmaaier|grasmaaier|cortac(e|\u00e9)sped|tosaerba|corta.?relva|robotgr(a|\u00e4)sklipp|robotgressklipp|robotpl(a|\u00e6)neklipp|kosiarka|sekacka|\u626b\u5730|\u5438\u5c18|\u62d6\u5730|\u5272\u8349|\u043f\u044b\u043b\u0435\u0441\u043e\u0441|\u0433\u0430\u0437\u043e\u043d\u043e\u043a\u043e\u0441/;
@@ -340,14 +340,14 @@ const ROBOT_WORDS = [
 const ROBOT_LABELS = {
   charging: "robot_charging", docked: "robot_docked", returning: "robot_returning", paused: "paused", idle: "robot_idle",
   error: "error", emptying: "robot_emptying", full: "robot_bin_full", washing: "robot_washing", drying: "robot_drying",
-  empty: "robot_water_empty", rain: "robot_rain", edgecut: "robot_edgecut", unav: "ev_offline", off: "ac_off", away: "stick_away",
+  empty: "robot_water_empty", rain: "robot_rain", edgecut: "robot_edgecut", winter: "robot_winter", unav: "ev_offline", off: "ac_off", away: "stick_away",
 };
 const ROBOT_WORK_LABELS = { vacuum: "robot_cleaning", mop: "robot_mopping", mower: "robot_mowing", stick: "robot_cleaning", floor_washer: "robot_cleaning", pool: "robot_cleaning" };
 const ROBOT_COLORS = {
   charging: "#43a047", docked: "#43a047", emptying: "#43a047",
   cleaning: "#1e88e5", edgecut: "#1e88e5", returning: "#1e88e5", washing: "#1e88e5",
   paused: "#fb8c00", full: "#fb8c00", empty: "#fb8c00", drying: "#fb8c00",
-  rain: "#5c6bc0", error: "#f44336",
+  rain: "#5c6bc0", error: "#f44336", winter: "#4fa3d8",
   idle: "var(--disabled-text-color, #9e9e9e)", unav: "var(--disabled-text-color, #9e9e9e)", off: "var(--disabled-text-color, #9e9e9e)", away: "#1e88e5",
 };
 
@@ -494,6 +494,12 @@ function robotModeOf(hass, cfg, st, layout) {
     if (low) mode = "empty";
   }
   return mode;
+}
+
+// A mower put away for the winter (#80): ticked in the card, or switched on
+// from any on and off entity, an input_boolean or a date-driven automation.
+function robotWinter(hass, cfg) {
+  return cfg.robot_winter === true || (!!cfg.robot_winter_entity && robotRaised(hass, cfg.robot_winter_entity, /winter|hiver/));
 }
 
 // The tank's level, when a number says it.
@@ -843,6 +849,49 @@ function illustrationTapOf(cfg) {
   const a = cfg.illustration_tap_action;
   if (!a || a === "default") return null;
   return typeof a === "string" ? { action: a } : typeof a === "object" && a.action && a.action !== "default" ? a : null;
+}
+// Between cycles, the machine waits for its settings (#79): nothing to pick
+// while it runs, is paused or counts down to a delayed start.
+const betweenCycles = (norm) => !isActiveState(norm) && !["paused", "delayed"].includes(norm);
+// The programs a select offers, to pick one between cycles (#79).
+function programMenuOf(hass, cfg, cap, norm) {
+  const id = cfg.program_entity;
+  if (!id || !cap || !cap.cycle || cap.printer3d || !["select", "input_select"].includes(domainOf(id)) || !betweenCycles(norm)) return null;
+  const st = stateObj(hass, id);
+  const opts = st && Array.isArray(st.attributes.options) ? st.attributes.options.map(String) : [];
+  return opts.length > 1 ? { kind: "program", entity: id, dom: domainOf(id), options: opts, current: String(st.state) } : null;
+}
+// A delayed start set between cycles (#79): a number in seconds, minutes or
+// hours by its unit, offered hour by hour up to a day, or a select's options.
+function delayMenuOf(hass, cfg, cap, norm) {
+  const id = cfg.delay_set_entity;
+  if (!id || !cap || !cap.cycle || !betweenCycles(norm)) return null;
+  const st = stateObj(hass, id);
+  if (!st || HA_OFFLINE_STATES.includes(String(st.state).toLowerCase())) return null;
+  const dom = domainOf(id);
+  if (["select", "input_select"].includes(dom)) {
+    const opts = Array.isArray(st.attributes.options) ? st.attributes.options.map(String) : [];
+    return opts.length > 1 ? { kind: "delay", entity: id, dom, options: opts, current: String(st.state) } : null;
+  }
+  if (!["number", "input_number"].includes(dom)) return null;
+  const a = st.attributes;
+  const unit = String(a.unit_of_measurement || "s").toLowerCase();
+  const sec = /^h/.test(unit) ? 3600 : /^min/.test(unit) ? 60 : 1;
+  const per = 3600 / sec;
+  const min = Number.isFinite(parseFloat(a.min)) ? parseFloat(a.min) : 0;
+  const max = Number.isFinite(parseFloat(a.max)) ? parseFloat(a.max) : 24 * per;
+  const opts = min <= 0 ? ["0"] : [];
+  for (let h = 1; h <= Math.min(24, Math.floor(max / per)); h++) if (h * per >= min) opts.push(String(h * per));
+  const cur = parseFloat(st.state);
+  return opts.length > 1 ? { kind: "delay", entity: id, dom, options: opts, current: Number.isFinite(cur) ? String(Math.round(cur)) : "", sec } : null;
+}
+// How a line's menu says an option: a program cleaned up, a delay as its
+// length and the time it would start.
+function lineMenuLabel(hass, cfg, menu, option) {
+  if (menu.kind === "program") return programLabel(hass, stateObj(hass, menu.entity), option, cfg);
+  if (!menu.sec) return option;
+  const s = parseFloat(option) * menu.sec;
+  return s > 0 ? `${formatDuration(s, hass)} \u00b7 ${formatEta(s, hass)}` : t(hass, "delay_none");
 }
 // The menu a card opens from its buttons, if any.
 function cardMenuOf(hass, cfg, cap) {

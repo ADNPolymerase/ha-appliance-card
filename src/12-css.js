@@ -2323,6 +2323,16 @@ const ILLUSTRATION_CSS = {
         .rbt-st-led{left:86px;top:70px;width:2px;height:4px;border-radius:1px;background:#3d434a}
         .rbt-m-charging .rbt-st-led{background:#2ecc71;box-shadow:0 0 3px #2ecc71;animation:rbt-breathe 2.4s ease-in-out infinite}
         .rbt-mw{left:30px;top:53px;width:62px;height:35px;transform-origin:50% 100%}
+        .rbt-cap{display:none;position:absolute;background:linear-gradient(180deg,#fff,#e6eef5);border-radius:50% 50% 30% 30%/80% 80% 20% 20%;box-shadow:0 1px 1px rgba(60,90,120,.35),inset 0 -1px 0 #c7d8e6}
+        .rbt-m-winter .rbt-cap{display:block}
+        .rbt-cap-mw{left:40px;top:52px;width:36px;height:7px}
+        .rbt-cap-st{left:79px;top:62.5px;width:16px;height:6px}
+        .rbt-m-winter .rbt-lawn{background:radial-gradient(ellipse at 50% 0,#f2f7fb,#d9e6f0 60%,#bdd0df)}
+        .rbt-m-winter .rbt-tall,.rbt-m-winter .rbt-stub{display:none}
+        .rbt-m-winter .rbt-mw{filter:saturate(.55) brightness(1.04)}
+        .rbt-snow{position:absolute;left:0;top:0;width:96px;height:100px;overflow:hidden;pointer-events:none}
+        .rbt-snow b{position:absolute;top:-6px;width:var(--s);height:var(--s);border-radius:50%;background:#eaf3fa;box-shadow:0 0 0 .5px #8fb0c9;animation:rbt-flake var(--d) linear var(--d0) infinite}
+        @keyframes rbt-flake{0%{transform:translate(0,0)}25%{transform:translate(3px,25px)}50%{transform:translate(-2px,50px)}75%{transform:translate(3px,75px)}100%{transform:translate(0,100px)}}
         .rbt-mw svg{position:absolute;left:0;top:0;width:62px;height:35px;overflow:visible}
         .rbt-mw .rbt-whl{transform-box:fill-box;transform-origin:center}
         .rbt-mw .rbt-led{fill:#59606a}

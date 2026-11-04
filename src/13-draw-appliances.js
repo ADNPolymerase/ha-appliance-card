@@ -1752,6 +1752,11 @@ function robotHtml(cls, r) {
   const floorCls = `rbt-floor rbt-${floor}`;
   const mode = r.mode || "idle";
   const draw = mode === "edgecut" ? "cleaning" : mode === "docked" ? "charging" : mode === "rain" ? "charging rbt-m-raining" : mode;
+  // Winter (#80): snow on the lawn, on the base and on the mower, and
+  // flakes falling slowly.
+  const snow = layout === "mower" && mode === "winter"
+    ? `<div class="rbt-snow">${Array.from({ length: 20 }, (_, i) => `<b style="left: ${4 + ((i * 29) % 90)}px; --s: ${(1.8 + (i % 3) * .6).toFixed(1)}px; --d: ${(3.2 + (i % 5) * .5).toFixed(1)}s; --d0: ${(-((i * .61) % 4)).toFixed(2)}s"></b>`).join("")}</div>`
+    : "";
   const err = ROBOT_MANGA + ROBOT_ANGER;
   // The camera module some robots carry on their bumper (#69).
   const cam = r.camera ? `<i class="rbt-cam"></i><i class="rbt-camb"></i>` : "";
@@ -1761,7 +1766,7 @@ function robotHtml(cls, r) {
     inner = `<div class="rbt-lawn"></div><div class="rbt-stub"></div>${robotRain()}
           <div class="rbt-st-base"></div><div class="rbt-st-tower"></div><i class="rbt-st-led"></i>${sh.back}
           <div class="rbt-mw">${r.mowerStyle === "navimow" ? ROBOT_NAVIMOW_SVG : ROBOT_MOWER_SVG}${err}<div class="rbt-clip">${"<b></b>".repeat(6)}</div></div>
-          <div class="rbt-tall"></div>${sh.front}`;
+          <div class="rbt-tall"></div>${sh.front}<i class="rbt-cap rbt-cap-mw"></i><i class="rbt-cap rbt-cap-st"></i>${snow}`;
   } else if (layout === "mop") {
     const lvl = r.water !== null && r.water !== undefined ? ` style="--lvl: ${Math.round(r.water)}%"` : "";
     const tk = tankVars(r);

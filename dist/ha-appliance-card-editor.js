@@ -34,6 +34,8 @@ const SECTIONS = [
       ],
     }) },
   { field: "delay_entity", types: CYCLE_TYPES, labelKey: "section_delay", includeDomains: ["sensor", "number", "input_number"] },
+  // The delayed start set from the card between cycles (#79).
+  { field: "delay_set_entity", types: CYCLE_TYPES, labelKey: "section_delay_set", includeDomains: ["number", "input_number", "select", "input_select"] },
   { field: "remaining_time_entity", types: CYCLE_TYPES, labelKey: "section_remaining", includeDomains: ["sensor", "input_number"], extra: (c, hass) => c._row("remaining_time_unit", "remaining_time_unit", {
       type: "select",
       options: [
@@ -253,6 +255,8 @@ const SECTIONS = [
     when: (c) => ["vacuum", "mop"].includes(robotLayoutOf(c, null)) },
   { field: "robot_rain_entity", types: ["robot"], labelKey: "section_robot_rain", includeDomains: ["binary_sensor", "sensor", "switch"],
     when: (c) => robotLayoutOf(c, null) === "mower" },
+  { field: "robot_winter_entity", types: ["robot"], labelKey: "section_robot_winter", includeDomains: ["input_boolean", "switch", "binary_sensor"],
+    when: (c) => robotLayoutOf(c, null) === "mower" },
   { field: "robot_error_entity", types: ["robot"], labelKey: "section_robot_error", includeDomains: ["sensor", "binary_sensor"] },
   { field: "night_mode_entity", types: ["air_purifier", "fan"], labelKey: "pf_night", includeDomains: ["switch", "binary_sensor", "input_boolean"] },
   { field: "heater_entity", types: ["air_purifier", "fan"], labelKey: "section_heater", includeDomains: ["climate", "switch", "select", "binary_sensor"] },
@@ -429,7 +433,7 @@ const SECTIONS = [
   // Any type: the on/off control. Named toggle_entity rather than
   // power_switch_entity so it cannot be confused with power_entity below,
   // which is the wattage meter.
-  { field: "toggle_entity", types: APPLIANCE_TYPES, labelKey: "section_toggle", includeDomains: ACTION_DOMAINS.concat(["fan"]) },
+  { field: "toggle_entity", types: APPLIANCE_TYPES, labelKey: "section_toggle", includeDomains: ACTION_DOMAINS.concat(["fan"]), extra: (c) => c._row("hide_when_off", "hide_when_off", { type: "checkbox" }) },
 
   // Any type: a plug's power meter, optionally driving the state itself.
   // A charger's threshold says when power flows: it stands in for a missing
@@ -437,7 +441,7 @@ const SECTIONS = [
   // end it would have to wait for.
   // The history's sensor and its hours, once the history is on.
   { field: "history_entity", types: APPLIANCE_TYPES, labelKey: "section_history", includeDomains: ["sensor", "number", "input_number"],
-    when: (c) => !!c.show_history, extra: (c) => c._row("history_hours", "history_hours", { placeholder: String(HISTORY_HOURS) }) },
+    when: (c) => !!c.show_history, extra: (c) => c._row("history_hours", "history_hours", { placeholder: String(HISTORY_HOURS) }) + c._row("history_periods", "history_periods", { placeholder: "24h, 7d, 30d" }) },
   { field: "power_entity", types: APPLIANCE_TYPES, includeDomains: ["sensor"], units: (type) => (type === "heat_pump" ? "power" : ""),
     labelKey: (type) => (type === "solar" ? "section_solar_power" : type === "home_battery" ? "section_battery_power" : type === "heat_pump" ? "section_heating_power" : "section_power"), extra: (c) => {
       const cap = caps(c._currentType());
@@ -1360,7 +1364,7 @@ class ApplianceCardEditor extends HTMLElement {
           }) + (layout === "mower" ? this._row("mower_style", "mower_style", {
                 type: "select",
                 options: [{ value: "auto", label: t(hass, "unit_auto") }].concat(MOWER_STYLES.map((v) => ({ value: v, label: t(hass, `mower_${v}`) }))),
-              }) + this._row("robot_shelter", "robot_shelter", { type: "checkbox" })
+              }) + this._row("robot_winter", "robot_winter", { type: "checkbox" }) + this._row("robot_shelter", "robot_shelter", { type: "checkbox" })
               + (this._config.robot_shelter ? this._row("robot_shelter_style", "robot_shelter_style", {
                 type: "select",
                 options: SHELTER_STYLES.map((v) => ({ value: v, label: t(hass, `shelter_${v}`) })),

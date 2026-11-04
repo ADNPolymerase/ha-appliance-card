@@ -10721,6 +10721,188 @@ check('borne : ni un statut reconnu', evMode(evR('SuspendedEVSE', { power_entity
   check('editeur historique : le capteur avec la case', markup(newEditor({ state_entity: 'sensor.w', appliance_type: 'washer', show_history: true })).includes('data-toggle="history_entity"'), true);
 }
 
+// History over a week and a month (HACF #138): the period chips, the
+// statistics past two days, and a washer's days as bars.
+{
+  const NB = '\u00a0';
+  const HR = 3600000;
+  const dayStart = (k) => { const d = new Date(T0); return new Date(d.getFullYear(), d.getMonth(), d.getDate() - k).getTime(); };
+  const open = (h) => { h.card._historyOpen = true; h.card._render(); return h; };
+  const pick = async (h, hours) => { h.card._historyHours = hours; h.card._render(); await settle(); return markup(h.card); };
+
+  // A UPS's load: the chips, then the hourly statistics over a week.
+  const UPS = { appliance_type: 'ups', state_entity: 'sensor.u', load_entity: 'sensor.l', show_history: true };
+  const UST = { 'sensor.u': { state: 'OL', attributes: {} }, 'sensor.l': { state: '8', attributes: { unit_of_measurement: '%' } } };
+  const statRows = Array.from({ length: 168 }, (_, i) => ({ start: Math.floor((T0 - 168 * HR) / HR) * HR + i * HR, mean: 8, min: 6, max: i === 40 ? 31 : 9 }));
+  const u = open(withHistory(UPS, UST, (msg) => Promise.resolve(msg.type === 'recorder/statistics_during_period' ? { 'sensor.l': statRows } : {})));
+  const m0 = markup(u.card);
+  check('periodes : trois boutons', (m0.match(/class="h-chip/g) || []).length, 3);
+  check('periodes : 24 h choisi', /<span class="h-chip on" data-history-hours="24"[^>]*>24 h<\/span>/.test(m0), true);
+  check('periodes : 7 j et 30 j', /data-history-hours="168"[^>]*>7 d<\/span>.*data-history-hours="720"[^>]*>30 d<\/span>/.test(m0), true);
+  check('periodes : 24 h reste l historique brut', u.calls[0]?.type, 'history/history_during_period');
+  const m7 = await pick(u, 168);
+  const st = u.calls[u.calls.length - 1];
+  check('periodes : au-dela de 48 h, les statistiques', st?.type, 'recorder/statistics_during_period');
+  check('periodes : par heure sur une semaine', st?.period, 'hour');
+  check('periodes : la moyenne, le min et le max', ['mean', 'min', 'max'].every((k) => st?.types?.includes(k)), true);
+  check('periodes : le bouton dit les jours', /<span>Last 7 days<\/span>/.test(m7), true);
+  check('periodes : le maximum des statistiques', (/<span class="h-max">([^<]*)</.exec(m7) || [])[1], `31${NB}%`);
+  check('periodes : le minimum des statistiques', (/<span class="h-min">([^<]*)</.exec(m7) || [])[1], `6${NB}%`);
+  await pick(u, 720);
+  check('periodes : par jour sur un mois', u.calls[u.calls.length - 1]?.period, 'day');
+  check('periodes : en francais', /<span>30 derniers jours<\/span>.*>30 j<\/span>/.test(markup(open(withHistory({ ...UPS, language: 'fr' }, UST, {})).card).replace(/<span>30 derniers jours[\s\S]*$/, '') + render({ ...UPS, language: 'fr' }, UST)) || /30 j</.test(markup(open(withHistory({ ...UPS, language: 'fr' }, UST, {})).card)), true);
+
+  // A sensor without statistics: the raw history over the week instead.
+  const noStats = open(withHistory(UPS, UST, (msg) => Promise.resolve(msg.type === 'recorder/statistics_during_period' ? {} : { 'sensor.l': [H('8', -168 * 60), H('12', -60)] })));
+  const mn = await pick(noStats, 168);
+  check('periodes : sans statistiques, l historique brut', noStats.calls[noStats.calls.length - 1]?.type, 'history/history_during_period');
+  check('periodes : sans statistiques, sur la semaine', noStats.calls[noStats.calls.length - 1]?.start_time, new Date(T0 - 168 * HR).toISOString());
+  check('periodes : sans statistiques, la courbe', (/<span class="h-max">([^<]*)</.exec(mn) || [])[1], `12${NB}%`);
+
+  // The periods chosen, and one alone gives no chip.
+  const own = open(withHistory({ ...UPS, history_periods: '6h, 2d' }, UST, {}));
+  const mo = markup(own.card);
+  check('periodes : les periodes choisies', (mo.match(/data-history-hours="(\d+)"/g) || []).join(), 'data-history-hours="6",data-history-hours="48"');
+  check('periodes : en jours au-dela de deux jours', />2 d<\/span>/.test(mo), true);
+  check('periodes : une liste aussi', (markup(open(withHistory({ ...UPS, history_periods: [12, '7 d'] }, UST, {})).card).match(/data-history-hours="(\d+)"/g) || []).join(), 'data-history-hours="12",data-history-hours="168"');
+  check('periodes : une seule periode, pas de bouton', /class="h-chip/.test(markup(open(withHistory({ ...UPS, history_periods: '24h' }, UST, {})).card)), false);
+  check('periodes : history_hours ouvre la sienne', /<span class="h-chip on" data-history-hours="6"/.test(markup(open(withHistory({ ...UPS, history_hours: 6 }, UST, {})).card)), true);
+
+  // A washer's week: a bar per day of energy, its cycles above.
+  const WSH = { appliance_type: 'washer', state_entity: 'sensor.w', power_entity: 'sensor.p', energy_entity: 'sensor.e', show_history: true };
+  const WST = { 'sensor.w': { state: 'Idle', attributes: {} }, 'sensor.p': { state: '2', attributes: { unit_of_measurement: 'W' } }, 'sensor.e': { state: '310.5', attributes: { unit_of_measurement: 'kWh' } } };
+  const energy = [{ start: dayStart(6), change: 1.2 }, { start: dayStart(2), change: 0.9 }, { start: dayStart(0), change: 1.4 }];
+  const at = (k, h) => ({ s: 'Running', lu: (dayStart(k) + h * HR) / 1000 });
+  const stateRows = [{ s: 'Idle', lu: dayStart(6) / 1000 }, at(6, 9), { s: 'Idle', lu: (dayStart(6) + 11 * HR) / 1000 },
+    at(2, 8), { s: 'Idle', lu: (dayStart(2) + 10 * HR) / 1000 }, at(2, 18), { s: 'Idle', lu: (dayStart(2) + 20 * HR) / 1000 }];
+  const w = open(withHistory(WSH, WST, (msg) => Promise.resolve(msg.type === 'recorder/statistics_during_period' ? { 'sensor.e': energy } : { 'sensor.w': stateRows })));
+  const mw = await pick(w, 168);
+  const asked = w.calls.slice(-2);
+  check('lave-linge 7 j : l energie par jour', asked.some((c) => c.type === 'recorder/statistics_during_period' && c.statistic_ids?.[0] === 'sensor.e' && c.period === 'day' && c.types?.includes('change')), true);
+  check('lave-linge 7 j : les cycles dans l historique de l etat', asked.some((c) => c.type === 'history/history_during_period' && c.entity_ids?.[0] === 'sensor.w'), true);
+  check('lave-linge 7 j : depuis minuit il y a six jours', asked.find((c) => c.type === 'history/history_during_period')?.start_time, new Date(dayStart(6)).toISOString());
+  check('lave-linge 7 j : une barre par jour', (mw.match(/class="h-col"/g) || []).length, 7);
+  check('lave-linge 7 j : la plus haute barre', (/<span class="h-max">([^<]*)</.exec(mw) || [])[1], `1.4${NB}kWh`);
+  check('lave-linge 7 j : le total', (/<div class="h-sum">([^<]*)</.exec(mw) || [])[1], `Total 3.5${NB}kWh · 3 starts`);
+  check('lave-linge 7 j : deux cycles un jour', /<span class="h-n">2<\/span>/.test(mw), true);
+  check('lave-linge 7 j : un jour sans rien', /<span class="h-n"><\/span><div class="h-bar" style="height:0%"><\/div>/.test(mw), true);
+  check('lave-linge 7 j : pas de courbe', /class="h-line"/.test(mw), false);
+
+  // A washer on a plug alone: its kilowatt-hours from the hourly means of its
+  // power, its cycles from the hours past the threshold.
+  const PL = { appliance_type: 'washer', state_entity: 'switch.lave', power_entity: 'sensor.p', show_history: true };
+  const PST = { 'switch.lave': { state: 'on', attributes: {} }, 'sensor.p': { state: '2', attributes: { unit_of_measurement: 'W' } } };
+  const hours = [[1, 10, 900, 1900], [1, 11, 600, 1200], [1, 12, 2, 3], [1, 14, 500, 1800]];
+  const powerRows = hours.map(([k, h, mean, max]) => ({ start: dayStart(k) + h * HR, mean, max }));
+  const pl = open(withHistory(PL, PST, (msg) => Promise.resolve(msg.type === 'recorder/statistics_during_period' ? { 'sensor.p': powerRows } : {})));
+  const mp = await pick(pl, 168);
+  check('prise seule 7 j : les moyennes horaires de la puissance', pl.calls.slice(-1)[0]?.period, 'hour');
+  check('prise seule 7 j : les kWh et les cycles', (/<div class="h-sum">([^<]*)</.exec(mp) || [])[1], `Total 2${NB}kWh · 2 starts`);
+
+  // A washer's day stays a curve, and a chosen sensor too.
+  const w24 = open(withHistory(WSH, WST, {}));
+  check('lave-linge 24 h : la courbe', /class="history bars"/.test(markup(w24.card)), false);
+  const wOwn = open(withHistory({ ...WSH, history_entity: 'sensor.p' }, WST, {}));
+  await pick(wOwn, 168);
+  check('lave-linge : un capteur choisi reste une courbe', wOwn.calls.find((c) => c.type === 'recorder/statistics_during_period')?.statistic_ids?.[0], 'sensor.p');
+
+  // The editor.
+  check('editeur historique : les periodes', markup(newEditor({ state_entity: 'sensor.w', appliance_type: 'washer', show_history: true, history_entity: 'sensor.p' })).includes('data-field="history_periods"'), true);
+}
+
+// A dishwasher's program and delayed start picked in the card, and
+// hide_when_off (#79).
+{
+  const s = (state, attributes = {}) => ({ state: String(state), attributes });
+  const D = { appliance_type: 'dishwasher', state_entity: 'sensor.dw', program_entity: 'select.prog', toggle_entity: 'switch.dw', delay_set_entity: 'number.delay' };
+  const ST = (op, power = 'on', extra = {}) => ({ 'sensor.dw': s(op), 'switch.dw': s(power), 'select.prog': s('Auto 45-60', { options: ['Eco 50', 'Auto 45-60', 'Intensive 70'] }),
+    'number.delay': s(0, { unit_of_measurement: 's', min: 0, max: 86340, step: 60 }), ...extra });
+  const make = (cfg, states) => {
+    const calls = [];
+    const c = new Card();
+    c.setConfig({ type: 'custom:ha-appliance-card', ...cfg });
+    c._hass = { ...HASS(states), callService: (d, sv, data) => calls.push([d, sv, data]) };
+    c._render();
+    return { c, calls, m: () => markup(c) };
+  };
+  const idle = make(D, ST('Ready'));
+  check('programme : un menu entre deux cycles', /data-line-menu="program"/.test(idle.m()), true);
+  check('programme : ferme au depart', /class="line-menu"/.test(idle.m()), false);
+  idle.c._lineMenu = 'program';
+  idle.c._render();
+  const mo = idle.m();
+  check('programme : les programmes du select', (mo.match(/data-line-option="([^"]*)"/g) || []).join(), 'data-line-option="Eco 50",data-line-option="Auto 45-60",data-line-option="Intensive 70"');
+  check('programme : le courant coche', /<div class="mode-row sel"[^>]*data-line-option="Auto 45-60"/.test(mo), true);
+  idle.c._pickLine('program', 'Intensive 70');
+  check('programme : choisi dans le select', JSON.stringify(idle.calls.pop()), JSON.stringify(['select', 'select_option', { entity_id: 'select.prog', option: 'Intensive 70' }]));
+  check('programme : le menu se referme', idle.c._lineMenu, null);
+  check('programme : pas de menu pendant le cycle', /data-line-menu/.test(make(D, ST('Run')).m()), false);
+  check('programme : pas de menu avec un capteur', /data-line-menu="program"/.test(make({ ...D, program_entity: 'sensor.prog' }, { ...ST('Ready'), 'sensor.prog': s('Eco 50') }).m()), false);
+
+  // The delayed start: a number in seconds offered hour by hour.
+  check('differe : la ligne entre deux cycles', /<span class="label">Delayed start<\/span><span>None<\/span>/.test(idle.m()), true);
+  idle.c._lineMenu = 'delay';
+  idle.c._render();
+  const md = idle.m();
+  check('differe : de rien a 23 h', (md.match(/data-line-option="/g) || []).length, 24);
+  check('differe : la premiere heure en secondes', /data-line-option="3600"><span>1h[^<]*<\/span>/.test(md), true);
+  idle.c._pickLine('delay', '7200');
+  check('differe : le number regle en secondes', JSON.stringify(idle.calls.pop()), JSON.stringify(['number', 'set_value', { entity_id: 'number.delay', value: 7200 }]));
+  const set = make(D, ST('Ready', 'on', { 'number.delay': s(10800, { unit_of_measurement: 's', min: 0, max: 86340 }) }));
+  check('differe : la duree reglee', /<span class="label">Delayed start<\/span><span>3h[^<]*<\/span>/.test(set.m()), true);
+  const mins = make(D, ST('Ready', 'on', { 'number.delay': s(0, { unit_of_measurement: 'min', min: 0, max: 600 }) }));
+  mins.c._lineMenu = 'delay';
+  mins.c._render();
+  check('differe : un number en minutes', (mins.m().match(/data-line-option="(\d+)"/g) || []).slice(0, 3).join(), 'data-line-option="0",data-line-option="60",data-line-option="120"');
+  const sel = make({ ...D, delay_set_entity: 'input_select.delay' }, { ...ST('Ready'), 'input_select.delay': s('Off', { options: ['Off', '2 h', '4 h'] }) });
+  sel.c._lineMenu = 'delay';
+  sel.c._render();
+  sel.c._pickLine('delay', '4 h');
+  check('differe : une liste', JSON.stringify(sel.calls.pop()), JSON.stringify(['input_select', 'select_option', { entity_id: 'input_select.delay', option: '4 h' }]));
+  check('differe : pas de ligne pendant le cycle', /Delayed start<\/span>/.test(make(D, ST('Run')).m()), false);
+
+  // hide_when_off: the power switch off, the state alone.
+  const A = { ...D, alerts_entities: ['binary_sensor.cancelled'], progress_entity: 'sensor.pg' };
+  const AS = (power) => ({ ...ST('Inactive', power), 'binary_sensor.cancelled': s('on', { friendly_name: 'Programme cancelled' }), 'sensor.pg': s(0, { unit_of_measurement: '%' }) });
+  const off = make({ ...A, hide_when_off: true }, AS('off')).m();
+  check('eteint : se lit Off', stateLine(off), 'Off');
+  check('eteint : pas de ligne', /class="info-line/.test(off), false);
+  check('eteint : pas d alerte', /class="alerts-pill/.test(off), false);
+  check('eteint : pas de barre', /class="bar-row/.test(off), false);
+  const on = make({ ...A, hide_when_off: true }, AS('on')).m();
+  check('allume : le programme', /<span class="label">Program<\/span>/.test(on), true);
+  check('allume : l alerte', /class="alerts-pill/.test(on), true);
+  check('allume : pas de barre vide hors cycle', /class="bar-row/.test(on), false);
+  const plain = make(A, AS('off')).m();
+  check('sans option : rien ne change', /<span class="label">Program<\/span>/.test(plain) && /class="alerts-pill/.test(plain) && /class="bar-row/.test(plain), true);
+
+  // The editor.
+  const ed = markup(newEditor({ state_entity: 'sensor.dw', appliance_type: 'dishwasher', toggle_entity: 'switch.dw' }));
+  check('editeur : le reglage du differe', ed.includes('data-toggle="delay_set_entity"'), true);
+  check('editeur : hide_when_off', ed.includes('data-field="hide_when_off"'), true);
+}
+
+// A mower put away for the winter (#80).
+{
+  const s = (state, attributes = {}) => ({ state: String(state), attributes });
+  const M = { appliance_type: 'robot', robot_layout: 'mower', state_entity: 'lawn_mower.m', battery_entity: 'sensor.b' };
+  const MS = (v, extra = {}) => ({ 'lawn_mower.m': s(v), 'sensor.b': s(80, { unit_of_measurement: '%' }), ...extra });
+  const w = render({ ...M, robot_winter: true }, MS('docked'));
+  check('hivernage : se lit Winter storage', stateLine(w), 'Winter storage');
+  check('hivernage : le dessin sous la neige', /rbt-m-winter/.test(w) && /class="rbt-snow"/.test(w), true);
+  check('hivernage : plus de batterie', infoLine(w, 'Battery'), null);
+  check('hivernage : meme debranchee', stateLine(render({ ...M, robot_winter: true }, MS('unavailable'))), 'Winter storage');
+  check('hivernage : par un interrupteur', stateLine(render({ ...M, robot_winter_entity: 'input_boolean.hiver' }, MS('docked', { 'input_boolean.hiver': s('on') }))), 'Winter storage');
+  check('hivernage : interrupteur coupe', stateLine(render({ ...M, robot_winter_entity: 'input_boolean.hiver' }, MS('docked', { 'input_boolean.hiver': s('off') }))) === 'Winter storage', false);
+  check('hivernage : pas de neige sans hivernage', /class="rbt-snow"/.test(render(M, MS('docked'))), false);
+  check('hivernage : seulement une tondeuse', stateLine(render({ appliance_type: 'robot', robot_layout: 'vacuum', state_entity: 'vacuum.v', robot_winter: true }, { 'vacuum.v': s('docked') })) === 'Winter storage', false);
+  check('hivernage : en francais', stateLine(render({ ...M, robot_winter: true, language: 'fr' }, MS('docked'))), 'Hivernage');
+  const ed = markup(newEditor({ state_entity: 'lawn_mower.m', appliance_type: 'robot', robot_layout: 'mower' }));
+  check('editeur hivernage : la case', ed.includes('data-field="robot_winter"'), true);
+  check('editeur hivernage : l interrupteur', ed.includes('data-toggle="robot_winter_entity"'), true);
+  check('editeur hivernage : pas pour un aspirateur', markup(newEditor({ state_entity: 'vacuum.v', appliance_type: 'robot', robot_layout: 'vacuum' })).includes('data-field="robot_winter"'), false);
+}
+
 
 // =============================================================================
 // Stick vacuums on their stand, and the phone's vibration on a control.

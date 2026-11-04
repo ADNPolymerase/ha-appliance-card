@@ -73,7 +73,9 @@ const HISTORY_SOURCES = {
 
 function historyEntityOf(hass, cfg, type) {
   if (cfg.history_entity) return cfg.history_entity;
-  const field = (HISTORY_SOURCES[type] || []).concat(["power_entity", "temperature_entity", "state_entity"])
+  // A washer, a dryer or a dishwasher with an energy meter alone still has
+  // its days to show as bars (#79).
+  const field = (HISTORY_SOURCES[type] || []).concat(["power_entity", "temperature_entity", "state_entity"], HISTORY_BAR_TYPES.includes(type) ? ["energy_entity"] : [])
     .find((f) => cfg[f] && numericState(hass, cfg[f]) !== null);
   return field ? cfg[field] : null;
 }
@@ -81,6 +83,141 @@ function historyEntityOf(hass, cfg, type) {
 function historyHoursOf(cfg) {
   const n = parseFloat(cfg.history_hours);
   return isFinite(n) && n > 0 ? Math.min(168, Math.max(1, Math.round(n))) : HISTORY_HOURS;
+}
+
+// The longest period offered: a year.
+const HISTORY_MAX_HOURS = 8760;
+// Past two days, the card reads Home Assistant's statistics rather than the
+// raw history: they are kept for good and weigh far less.
+const HISTORY_RAW_HOURS = 48;
+
+// The periods offered above the curve, in hours: history_periods when set
+// ("24h, 7d, 30d" or a list of hours), else the hours chosen, a week and a
+// month (HACF #138).
+function historyPeriodsOf(cfg) {
+  const parse = (v) => {
+    if (typeof v === "number") return v;
+    const m = /^\s*(\d+(?:[.,]\d+)?)\s*([a-z]*)\.?\s*$/i.exec(String(v));
+    if (!m) return NaN;
+    const n = parseFloat(m[1].replace(",", "."));
+    if (/^(d|j|t|g|days?|jours?|tage?|dias?|giorni)$/i.test(m[2])) return n * 24;
+    if (/^(w|wk|weeks?|sem|semaines?|wochen?)$/i.test(m[2])) return n * 168;
+    if (/^(m|mo|months?|mois)$/i.test(m[2])) return n * 720;
+    return n;
+  };
+  const raw = Array.isArray(cfg.history_periods) ? cfg.history_periods
+    : typeof cfg.history_periods === "string" && cfg.history_periods.trim() ? cfg.history_periods.split(/[,;]+|\s+(?=\d)/)
+      : [historyHoursOf(cfg), 168, 720];
+  const out = [...new Set(raw.map(parse).filter((n) => isFinite(n) && n > 0).map((n) => Math.min(HISTORY_MAX_HOURS, Math.max(1, Math.round(n)))))];
+  return out.length ? out : [historyHoursOf(cfg)];
+}
+
+// A period as the button and the chips say it: in days from two days up.
+const historyInDays = (hours) => hours >= HISTORY_RAW_HOURS && hours % 24 === 0;
+function historyLabel(hass, hours) {
+  return historyInDays(hours) ? t(hass, "history_last_days").replace("{d}", String(hours / 24)) : t(hass, "history_last").replace("{h}", String(hours));
+}
+function historyChip(hass, hours) {
+  return historyInDays(hours) ? t(hass, "history_chip_d").replace("{d}", String(hours / 24)) : t(hass, "history_chip_h").replace("{h}", String(hours));
+}
+
+// A statistic row's start, in milliseconds: a number in recent versions of
+// Home Assistant, a date before.
+const statStart = (r) => (typeof r.start === "number" ? r.start : Date.parse(r.start));
+
+// The curve read from statistics: one step per hour or per day, its mean (the
+// state for a sensor that keeps no mean), the minimum and maximum their own.
+function historyStatValues(rows, from, to, stepMs) {
+  const n = Math.max(1, Math.ceil((to - from) / stepMs));
+  const values = new Array(n).fill(null);
+  let lo = Infinity;
+  let hi = -Infinity;
+  let any = false;
+  (Array.isArray(rows) ? rows : []).forEach((r) => {
+    const i = Math.floor((statStart(r) - from) / stepMs);
+    const v = Number.isFinite(r.mean) ? r.mean : Number.isFinite(r.state) ? r.state : null;
+    if (i < 0 || i >= n || v === null) return;
+    values[i] = v;
+    any = true;
+    lo = Math.min(lo, Number.isFinite(r.min) ? r.min : v);
+    hi = Math.max(hi, Number.isFinite(r.max) ? r.max : v);
+  });
+  return any ? { values, min: lo, max: hi } : null;
+}
+
+// The starts of the days of a period, at local midnight, oldest first.
+function historyDays(days, now) {
+  const d = new Date(now);
+  return Array.from({ length: days }, (_, k) => new Date(d.getFullYear(), d.getMonth(), d.getDate() - (days - 1 - k)).getTime());
+}
+const dayIndex = (starts, t) => { let i = -1; for (let k = 0; k < starts.length && starts[k] <= t; k++) i = k; return i; };
+// The types whose long periods are drawn as a bar per day.
+const HISTORY_BAR_TYPES = ["washer", "dryer", "dishwasher"];
+// A reading in kilowatt-hours, from what its unit says.
+const toKwh = (v, unit) => (/^mwh$/i.test(unit) ? v * 1000 : /^wh$/i.test(unit) ? v / 1000 : v);
+
+// What a washer, a dryer or a dishwasher did each day: the energy it used,
+// from its energy meter's daily change or its power's hourly means, and the
+// cycles it started, from its state's history or from the hours its plug
+// went past the threshold.
+function historyDayBars(starts, now, src) {
+  const days = starts.map((s) => ({ start: s, kwh: null, cycles: null }));
+  if (src.energyRows) {
+    src.energyRows.forEach((r) => {
+      const i = dayIndex(starts, statStart(r));
+      if (i >= 0 && Number.isFinite(r.change)) days[i].kwh = (days[i].kwh || 0) + toKwh(r.change, src.energyUnit);
+    });
+  } else if (src.powerRows) {
+    src.powerRows.forEach((r) => {
+      const i = dayIndex(starts, statStart(r));
+      if (i >= 0 && Number.isFinite(r.mean)) days[i].kwh = (days[i].kwh || 0) + (/^kw$/i.test(src.powerUnit) ? r.mean : r.mean / 1000);
+    });
+  }
+  if (src.runs) {
+    const from = src.covered;
+    days.forEach((d) => { if (d.start + 86400000 > from) d.cycles = 0; });
+    src.runs.forEach((r) => {
+      if (r.cut) return;
+      const i = dayIndex(starts, r.start);
+      if (i >= 0 && days[i].cycles !== null) days[i].cycles += 1;
+    });
+  } else if (src.powerRows && Number.isFinite(src.threshold)) {
+    let was = false;
+    src.powerRows.slice().sort((a, b) => statStart(a) - statStart(b)).forEach((r) => {
+      const i = dayIndex(starts, statStart(r));
+      const on = Number.isFinite(r.max) && r.max >= src.threshold;
+      if (i >= 0) {
+        if (days[i].cycles === null) days[i].cycles = 0;
+        if (on && !was) days[i].cycles += 1;
+      }
+      was = on;
+    });
+  }
+  const kwh = days.some((d) => d.kwh !== null);
+  const cycles = days.some((d) => d.cycles !== null);
+  return kwh || cycles ? { days, kwh, cycles } : null;
+}
+
+// The bars, one per day, the cycles over them; their height is the energy,
+// or the cycles when there is no energy to read.
+function historyBarsHtml(hass, bars) {
+  const val = (d) => (bars.kwh ? d.kwh : d.cycles);
+  const top = Math.max(0, ...bars.days.map((d) => val(d) || 0));
+  const kwhText = (v) => keepTogether(`${netNumber(hass, v, v < 10 ? 1 : 0)} kWh`);
+  const cols = bars.days.map((d) => {
+    const v = val(d);
+    const pct = top > 0 && v ? Math.max(2, Math.round((v / top) * 100)) : 0;
+    const when = new Date(d.start).toLocaleDateString(lang(hass), { weekday: "short", day: "numeric", month: "short" });
+    const parts = [bars.kwh && d.kwh !== null ? kwhText(d.kwh) : "", d.cycles !== null ? t(hass, d.cycles === 1 ? "starts_one" : "starts_other").replace("{n}", String(d.cycles)) : ""].filter(Boolean);
+    return `<div class="h-col" title="${esc([when, ...parts].join(" \u00b7 "))}"><span class="h-n">${bars.kwh && d.cycles ? d.cycles : ""}</span><div class="h-bar" style="height:${pct}%"></div></div>`;
+  }).join("");
+  const total = bars.days.reduce((s, d) => s + (d.kwh || 0), 0);
+  const count = bars.days.reduce((s, d) => s + (d.cycles || 0), 0);
+  const sum = [bars.kwh ? kwhText(total) : "", bars.cycles ? t(hass, count === 1 ? "starts_one" : "starts_other").replace("{n}", String(count)) : ""].filter(Boolean).join(" \u00b7 ");
+  const maxText = bars.kwh ? kwhText(top) : String(top);
+  // The days under a week or two, by the first letters of their names.
+  const days = bars.days.length <= 14 ? `<div class="h-days">${bars.days.map((d) => `<span>${esc(new Date(d.start).toLocaleDateString(lang(hass), { weekday: "narrow" }))}</span>`).join("")}</div>` : "";
+  return `<span class="h-max">${esc(maxText)}</span><div class="h-bars">${cols}</div><span class="h-min">0</span></div>${days}<div class="h-sum">${esc(`${t(hass, "history_total")} ${sum}`)}</div>`;
 }
 
 // Each step's mean, weighted by how long each reading lasted, from Home
@@ -123,6 +260,7 @@ function historyValues(rows, from, to) {
 // the card's width.
 function historyChart(h) {
   const values = h.values;
+  if (!Array.isArray(values)) return null;
   const nums = values.filter((v) => v !== null);
   if (!nums.length || !Number.isFinite(h.min)) return null;
   const lo = h.min;

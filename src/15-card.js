@@ -181,6 +181,18 @@ class ApplianceCard extends HTMLElement {
     this._render();
   }
 
+  // A program or a delayed start picked in a line's menu (#79): a select's
+  // option, or a number set to the hours chosen.
+  _pickLine(kind, option) {
+    const menu = this._lineMenus && this._lineMenus[kind];
+    this._lineMenu = null;
+    if (menu && menu.options.includes(option)) {
+      if (["number", "input_number"].includes(menu.dom)) this._hass.callService(menu.dom, "set_value", { entity_id: menu.entity, value: Number(option) });
+      else this._hass.callService(menu.dom, "select_option", { entity_id: menu.entity, option });
+    }
+    this._render();
+  }
+
   _clearClockTimer() {
     if (this._clockTimer) {
       clearInterval(this._clockTimer);
@@ -480,37 +492,56 @@ class ApplianceCard extends HTMLElement {
       : stateRunsOpen(rows, (raw) => todayNormFor(td.type, raw, cfg.state_map, /^(climate|water_heater)\./.test(td.entity)), td.from);
   }
 
-  // Reads one entity's history once the curve is unfolded, then keeps it five
+  // Reads the history once the curve is unfolded, then keeps it five
   // minutes: a dashboard left open does not ask the recorder at every render.
-  _lookUpHistory(entity, hours) {
+  // Up to two days the raw history; past that Home Assistant's statistics, or
+  // the raw history again for a sensor that keeps none; a washer's, a dryer's
+  // or a dishwasher's days as bars.
+  _lookUpHistory(entity, hours, bars) {
     const hass = this._hass;
     if (this._inert || !hass || typeof hass.callWS !== "function" || !entity) return;
-    const key = `${entity}|${hours}`;
+    const key = `${entity}|${hours}|${bars ? JSON.stringify(bars) : ""}`;
     const now = Date.now();
     if (this._history && this._history.key === key && now - this._history.at < HISTORY_REFRESH_MS) return;
     if (this._historyPending === key) return;
     this._historyPending = key;
     const from = now - hours * 3600000;
-    let req;
-    try {
-      req = hass.callWS({
-        type: "history/history_during_period",
-        start_time: new Date(from).toISOString(),
-        end_time: new Date(now).toISOString(),
-        entity_ids: [entity],
-        include_start_time_state: true,
-        significant_changes_only: false,
-        minimal_response: true,
-        no_attributes: true,
+    const ws = (msg) => { try { return Promise.resolve(hass.callWS(msg)); } catch (e) { return Promise.reject(e); } };
+    const iso = (ms) => new Date(ms).toISOString();
+    const raw = (id, start) => ws({ type: "history/history_during_period", start_time: iso(start), end_time: iso(now), entity_ids: [id],
+      include_start_time_state: true, significant_changes_only: false, minimal_response: true, no_attributes: true }).then((res) => (res && Array.isArray(res[id]) ? res[id] : []));
+    const stats = (id, start, period, types) => ws({ type: "recorder/statistics_during_period", start_time: iso(start), end_time: iso(now), statistic_ids: [id], period, types })
+      .then((res) => (res && Array.isArray(res[id]) ? res[id] : []), () => []);
+    let job;
+    if (bars) {
+      const starts = historyDays(Math.round(hours / 24), now);
+      const s0 = starts[0];
+      const needPower = bars.power && (!bars.energy || !bars.state);
+      job = Promise.all([
+        bars.energy ? stats(bars.energy, s0, "day", ["change"]) : null,
+        needPower ? stats(bars.power, s0, "hour", ["mean", "max"]) : null,
+        bars.state ? raw(bars.state, s0) : null,
+      ]).then(([energyRows, powerRows, stateRows]) => {
+        const rowTime = (e) => 1000 * Number(e && (e.lc !== undefined ? e.lc : e.lu));
+        const runs = stateRows && stateRows.length ? stateRunsOpen(stateRows, (v) => todayNormFor(bars.type, v, bars.stateMap, false), s0) : null;
+        return historyDayBars(starts, now, {
+          energyRows: energyRows && energyRows.length ? energyRows : null, energyUnit: bars.energyUnit,
+          powerRows: powerRows && powerRows.length ? powerRows : null, powerUnit: bars.powerUnit,
+          runs, covered: runs ? rowTime(stateRows[0]) - 1000 : Infinity, threshold: bars.threshold,
+        });
       });
-    } catch (e) {
-      this._historyPending = null;
-      return;
+    } else if (hours <= HISTORY_RAW_HOURS) {
+      job = raw(entity, from).then((rows) => historyValues(rows, from, now));
+    } else {
+      const byDay = hours > 24 * 14;
+      const start = byDay ? historyDays(Math.ceil(hours / 24), now)[0] : Math.floor(from / 3600000) * 3600000;
+      job = stats(entity, start, byDay ? "day" : "hour", ["mean", "min", "max", "state"])
+        .then((rows) => historyStatValues(rows, start, now, (byDay ? 24 : 1) * 3600000) || raw(entity, from).then((r) => historyValues(r, from, now)));
     }
-    Promise.resolve(req).then((res) => {
+    job.then((v) => {
       if (this._historyPending !== key) return;
       this._historyPending = null;
-      this._history = { key, at: Date.now(), ...historyValues(res && res[entity], from, now) };
+      this._history = bars ? { key, at: Date.now(), bars: v } : { key, at: Date.now(), ...v };
       if (this._historyOpen) this._render();
     }, () => { this._historyPending = null; });
   }
@@ -794,6 +825,11 @@ class ApplianceCard extends HTMLElement {
         if (!CONTROL_RUNNING.includes(norm) && !["paused", "error"].includes(norm)) norm = "delayed";
       }
     }
+    // hide_when_off (#79): with its power switch off, an appliance reads Off
+    // whatever its state sensor last said, and shows its state alone.
+    const toggleSt = cfg.toggle_entity ? stateObj(hass, cfg.toggle_entity) : null;
+    const offHidden = !!cfg.hide_when_off && ((!!toggleSt && String(toggleSt.state).toLowerCase() === "off") || norm === "off");
+    if (offHidden) { norm = "idle"; delaySec = null; }
     let color = STATE_COLORS[norm] || STATE_COLORS.unknown;
     const rawIsMeaningless = ["unknown", "unavailable", "none", ""].includes(String(rawState).trim().toLowerCase());
     // When the raw state doesn't match any known vocabulary, show it as-is
@@ -809,6 +845,7 @@ class ApplianceCard extends HTMLElement {
     let stateLabel = !powerDerived && (cfg.state_show_raw || norm === "unknown") && !rawIsMeaningless
       ? (cfg.state_show_raw ? rawStateText(hass, st, rawState, cfg) : cleanStateLabel(rawState))
       : t(hass, norm);
+    if (offHidden) stateLabel = t(hass, "ac_off");
 
     // A card with no state entity is named after its type, and a tap opens
     // what it reads in its place.
@@ -817,7 +854,7 @@ class ApplianceCard extends HTMLElement {
 
     // Program
     let programText = null;
-    if (cfg.program_entity) {
+    if (cfg.program_entity && !offHidden) {
       const pst = stateObj(hass, cfg.program_entity);
       if (pst && !["unknown", "unavailable"].includes(pst.state)) {
         programText = cap.printer3d ? printerFileName(pst.state) : programLabel(hass, pst, pst.state, cfg);
@@ -826,7 +863,7 @@ class ApplianceCard extends HTMLElement {
 
     // Remaining time / progress
     let remSec = null;
-    if (cfg.remaining_time_entity) {
+    if (cfg.remaining_time_entity && !offHidden) {
       // remaining_time_hide_when_idle cross-references the already-normalized
       // machine state so stale completion timestamps (integrations like
       // Samsung SmartThings keep reporting a past cycle's finish time after
@@ -3652,6 +3689,9 @@ class ApplianceCard extends HTMLElement {
       // A stick vacuum's plug says it charges: only its own battery can say
       // it is full.
       if (mode === "charging" && (stick ? battery !== null && battery >= 100 : battery === null || battery >= 100)) mode = "docked";
+      // Put away for the winter, it reads so whatever its integration says,
+      // often nothing at all once it is unplugged (#80).
+      if (layout === "mower" && robotWinter(hass, cfg)) mode = "winter";
       if (!cfg.state_show_raw || mode === "unav") {
         const washer = layout === "floor_washer" ? { washing: "fw_self_cleaning", full: "fw_dirty_full", empty: "fw_clean_empty" } : {};
         stateLabel = t(hass, mode === "cleaning" ? ROBOT_WORK_LABELS[layout] : stick && mode === "docked" ? "stick_charged" : washer[mode] || ROBOT_LABELS[mode]);
@@ -3662,7 +3702,7 @@ class ApplianceCard extends HTMLElement {
       const tankOn = layout === "vacuum" || layout === "mop";
       const cleanTank = tankOn ? robotTank(hass, cfg.robot_clean_tank_entity) : null;
       const dirtyTank = tankOn ? robotTank(hass, cfg.robot_dirty_tank_entity) : null;
-      if (mode !== "unav") {
+      if (mode !== "unav" && mode !== "winter") {
         if (battery !== null && !cfg.battery_corner) {
           extraLines.push({ key: "robot_battery", icon: robotBatteryIcon(battery, mode === "charging"), label: t(hass, "section_battery"),
             value: keepTogether(`${Math.round(battery)} %`), entity: cfg.battery_entity || cfg.state_entity });
@@ -4110,6 +4150,21 @@ class ApplianceCard extends HTMLElement {
         .history .h-max, .history .h-min { position: absolute; right: 0; font-size: 0.75em; color: var(--secondary-text-color); pointer-events: none; }
         .history .h-max { top: -2px; }
         .history .h-min { bottom: -2px; }
+        .info-line.has-menu .chev { --mdc-icon-size: 16px; margin-left: 2px; opacity: .6; flex: none; }
+        .line-menu { grid-column: 1 / -1; margin: 2px 0 4px; border: 1px solid var(--divider-color, rgba(127,127,127,.25)); border-radius: 10px; overflow: hidden; max-height: 240px; overflow-y: auto; }
+        .line-menu .mode-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 7px 12px; cursor: pointer; font-size: .9em; }
+        .line-menu .mode-row.sel { color: var(--primary-color, #03a9f4); }
+        .line-menu .mode-row ha-icon { --mdc-icon-size: 18px; }
+        .h-periods { display: flex; gap: 6px; margin-top: 6px; flex-wrap: wrap; }
+        .h-chip { font-size: 0.75em; padding: 2px 9px; border-radius: 10px; border: 1px solid var(--divider-color, rgba(127,127,127,.3)); color: var(--secondary-text-color); cursor: pointer; user-select: none; }
+        .h-chip.on { background: var(--primary-color, #03a9f4); border-color: var(--primary-color, #03a9f4); color: var(--text-primary-color, #fff); }
+        .history .h-bars { display: flex; align-items: flex-end; gap: 1px; height: 100%; }
+        .history .h-col { flex: 1; min-width: 0; height: 100%; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; }
+        .history .h-bar { width: 72%; background: var(--h-color, var(--primary-color)); opacity: 0.75; border-radius: 2px 2px 0 0; }
+        .history .h-n { font-size: 0.6em; line-height: 1.3; color: var(--secondary-text-color); }
+        .h-days { display: flex; gap: 1px; padding-right: 52px; margin-top: 2px; }
+        .h-days span { flex: 1; text-align: center; font-size: 0.6em; color: var(--secondary-text-color); }
+        .h-sum { margin-top: 4px; font-size: 0.75em; color: var(--secondary-text-color); }
         .history .h-empty { text-align: center; font-size: 0.85em; line-height: 56px; color: var(--secondary-text-color); }
         .info-line.clickable { cursor: pointer; }
         /* A print file is one long word: it breaks anywhere rather than
@@ -4119,6 +4174,7 @@ class ApplianceCard extends HTMLElement {
         .info-line.warn ha-icon { color: var(--error-color, #f44336); }
         .info-line.caution, .info-line.caution ha-icon { color: var(--warning-color, #ff9800); }
         .bar-row { margin-top: 4px; }
+        .cmp-wrap + .bar-row { margin-top: 10px; }
         .bar-row.labelled { display: flex; align-items: center; gap: 6px; font-size: 0.85em; color: var(--secondary-text-color, #767676); }
         .bar-row.labelled ha-icon { --mdc-icon-size: 18px; flex-shrink: 0; }
         .bar-row.labelled .bar { flex: 1; min-width: 24px; }
@@ -4258,11 +4314,19 @@ class ApplianceCard extends HTMLElement {
 
     const stripNamePrefix = (friendlyName, entityId) => stripDeviceName(hass, friendlyName, entityId, name);
 
+    // The program and the delayed start, picked in the card between cycles (#79).
+    const programMenu = offHidden ? null : programMenuOf(hass, cfg, cap, norm);
+    const delayMenu = offHidden ? null : delayMenuOf(hass, cfg, cap, norm);
+    this._lineMenus = { program: programMenu, delay: delayMenu };
+    if (!this._lineMenus[this._lineMenu]) this._lineMenu = null;
     let lines = [];
     if (programText) {
       lines.push(cap.printer3d
         ? { key: "file", icon: "mdi:file-outline", label: t(hass, "p3_file"), value: programText, wrap: true }
-        : { key: "program", icon: "mdi:tag-outline", label: t(hass, "program"), value: programText });
+        : { key: "program", icon: "mdi:tag-outline", label: t(hass, "program"), value: programText, menu: programMenu ? "program" : "" });
+    }
+    if (delayMenu) {
+      lines.push({ key: "delay_set", icon: "mdi:clock-start", label: t(hass, "delay_set"), value: lineMenuLabel(hass, cfg, delayMenu, delayMenu.current), menu: "delay" });
     }
     if (remSec !== null) {
       const remRounded = Math.round(remSec / 60);
@@ -4354,34 +4418,53 @@ class ApplianceCard extends HTMLElement {
     // hidden_lines: a line you never want to see (HACF #127), still offered
     // in the editor so it can be shown again.
     if (hidden.length) lines = lines.filter((l) => !l.key || !hidden.includes(l.key));
+    if (offHidden) lines = [];
     // The history: a discreet button under the lines unfolds the curve.
     let historyHtml = "";
     const historyEntity = cfg.show_history ? historyEntityOf(hass, cfg, applianceType) : null;
     if (historyEntity) {
-      const hours = historyHoursOf(cfg);
+      const periods = historyPeriodsOf(cfg);
+      const hours = periods.includes(this._historyHours) ? this._historyHours : periods.includes(historyHoursOf(cfg)) ? historyHoursOf(cfg) : periods[0];
       const open = !!this._historyOpen;
       let body = "";
       if (open) {
-        this._lookUpHistory(historyEntity, hours);
-        const h = this._history && this._history.key === `${historyEntity}|${hours}` ? this._history : null;
+        // A washer's, a dryer's or a dishwasher's week or month, as a bar per
+        // day: a power curve says nothing at that scale (HACF #138).
+        const unitOf = (id) => { const o = id && stateObj(hass, id); return (o && o.attributes.unit_of_measurement) || ""; };
+        const bars = HISTORY_BAR_TYPES.includes(applianceType) && !cfg.history_entity && historyInDays(hours) && hours > HISTORY_RAW_HOURS ? {
+          energy: cfg.energy_entity || null, energyUnit: unitOf(cfg.energy_entity),
+          power: cfg.power_entity || null, powerUnit: unitOf(cfg.power_entity),
+          state: cfg.state_entity && !powerDerived ? cfg.state_entity : null, stateMap: cfg.state_map || null,
+          type: applianceType, threshold: isFinite(threshold) ? threshold : 10,
+        } : null;
+        this._lookUpHistory(historyEntity, hours, bars);
+        const hkey = `${historyEntity}|${hours}|${bars ? JSON.stringify(bars) : ""}`;
+        const h = this._history && this._history.key === hkey ? this._history : null;
+        const chips = periods.length > 1 ? `<div class="h-periods">${periods.map((p) => `<span class="h-chip${p === hours ? " on" : ""}" data-history-hours="${p}" role="button">${esc(historyChip(hass, p))}</span>`).join("")}</div>` : "";
         const chart = h ? historyChart(h) : null;
         const hst = stateObj(hass, historyEntity);
         const unit = (hst && hst.attributes.unit_of_measurement) || "";
         const fmt = (v) => keepTogether(`${netNumber(hass, v, Math.abs(v) < 100 ? 1 : 0)}${unit ? ` ${unit}` : ""}`);
-        body = !h ? `<div class="history"><div class="h-empty">\u2026</div></div>`
+        body = chips + (!h ? `<div class="history"><div class="h-empty">\u2026</div></div>`
+          : bars ? (h.bars ? `<div class="history bars" style="--h-color:var(--primary-color, #03a9f4)">${historyBarsHtml(hass, h.bars)}` : `<div class="history"><div class="h-empty">${esc(t(hass, "history_empty"))}</div></div>`)
           : chart ? `<div class="history" style="--h-color:${color}"><span class="h-max">${esc(fmt(chart.max))}</span>${chart.svg}<span class="h-min">${esc(fmt(chart.min))}</span></div>`
-            : `<div class="history"><div class="h-empty">${esc(t(hass, "history_empty"))}</div></div>`;
+            : `<div class="history"><div class="h-empty">${esc(t(hass, "history_empty"))}</div></div>`);
       }
-      historyHtml = `<div class="history-toggle" data-history-toggle="1" aria-expanded="${open}"><ha-icon icon="mdi:chart-line"></ha-icon><span>${esc(t(hass, "history_last").replace("{h}", String(hours)))}</span><ha-icon class="caret" icon="mdi:chevron-${open ? "up" : "down"}"></ha-icon></div>${body}`;
+      historyHtml = `<div class="history-toggle" data-history-toggle="1" aria-expanded="${open}"><ha-icon icon="mdi:chart-line"></ha-icon><span>${esc(historyLabel(hass, hours))}</span><ha-icon class="caret" icon="mdi:chevron-${open ? "up" : "down"}"></ha-icon></div>${body}`;
     }
+    // A line's menu, open under the lines: every option, the current one ticked.
+    const lineMenu = this._lineMenu ? this._lineMenus[this._lineMenu] : null;
+    const lineMenuHtml = lineMenu && lines.some((l) => l.menu === this._lineMenu)
+      ? `<div class="line-menu" role="listbox">${lineMenu.options.map((o) => `<div class="mode-row${o === lineMenu.current ? " sel" : ""}" role="option" aria-selected="${o === lineMenu.current}" data-line-option="${esc(o)}"><span>${esc(lineMenuLabel(hass, cfg, lineMenu, o))}</span>${o === lineMenu.current ? `<ha-icon icon="mdi:check"></ha-icon>` : ""}</div>`).join("")}</div>`
+      : "";
     const linesHtml = lines.length
       ? `<div class="info-lines${infoEntities.length > INFO_COMPACT_ABOVE ? " compact" : ""}">${lines
           .map((l) => ({ ...l, open: !!l.entity && entityUsable(hass, l.entity) }))
           .map(
             (l) =>
-              `<div class="info-line ${l.warn ? "warn" : l.caution ? "caution" : ""}${l.open ? " clickable" : ""}${l.wrap ? " wrap" : ""}${!l.wrap && !l.bare && l.value && String(l.value).length <= 14 ? " fit" : ""}"${l.open ? ` data-more="${esc(l.entity)}"` : ""} title="${esc(l.label)}"><ha-icon icon="${esc(l.icon)}"></ha-icon>${l.bare && l.value ? "" : `<span class="label">${esc(l.label)}</span>`}${l.value ? `<span>${esc(l.value)}</span>` : ""}</div>`
+              `<div class="info-line ${l.warn ? "warn" : l.caution ? "caution" : ""}${l.open || l.menu ? " clickable" : ""}${l.menu ? " has-menu" : ""}${l.wrap ? " wrap" : ""}${!l.wrap && !l.bare && l.value && String(l.value).length <= 14 ? " fit" : ""}"${l.open ? ` data-more="${esc(l.entity)}"` : ""}${l.menu ? ` data-line-menu="${l.menu}" aria-expanded="${this._lineMenu === l.menu}"` : ""} title="${esc(l.label)}"><ha-icon icon="${esc(l.icon)}"></ha-icon>${l.bare && l.value ? "" : `<span class="label">${esc(l.label)}</span>`}${l.value ? `<span>${esc(l.value)}</span>` : ""}${l.menu ? `<ha-icon class="chev" icon="mdi:chevron-${this._lineMenu === l.menu ? "up" : "down"}"></ha-icon>` : ""}</div>`
           )
-          .join("")}</div>`
+          .join("")}${lineMenuHtml}</div>`
       : "";
 
     const slidersHtml = sliders.length
@@ -4399,7 +4482,7 @@ class ApplianceCard extends HTMLElement {
 
     // Bar priority: preheating beats cycle progress (it's the live information
     // while an oven climbs), and a hood has no cycle so its bar is the filter.
-    let barPct = progressPct;
+    let barPct = offHidden ? null : progressPct;
     let barColor = color;
     // A filter's life on the bar says so, with its icon and its percentage
     // (#54): a bar alone reads as a cycle's progress.
@@ -4420,6 +4503,8 @@ class ApplianceCard extends HTMLElement {
       barLabel = t(hass, "section_filter_life");
     }
 
+    // hide_when_off also drops an empty bar between cycles (#79).
+    if (cfg.hide_when_off && barPct === 0 && !isActiveState(norm) && norm !== "paused") barPct = null;
     const barHtml = barPct !== null
       ? `
         <div class="bar-row${barLabel ? " labelled" : ""}"${barLabel ? ` title="${esc(barLabel)}"` : ""}>${barLabel ? `<ha-icon icon="mdi:air-filter"></ha-icon><span class="bar-lbl">${esc(barLabel)}</span>` : ""}
@@ -4440,6 +4525,7 @@ class ApplianceCard extends HTMLElement {
     if (alertItems.length < 2) this._alertsOpen = false;
     const alertItem = (a, cls) => `<div class="${cls} clickable" data-more="${esc(a.entity)}"><ha-icon icon="${esc(a.icon)}"></ha-icon><span class="alert-label">${esc(a.label)}</span>`;
     let alertsHtml = "";
+    if (offHidden) alertItems.length = 0;
     if (alertItems.length === 1) {
       alertsHtml = `<div class="alerts-wrap">${alertItem(alertItems[0], "alerts-pill")}</div></div>`;
     } else if (alertItems.length > 1) {
@@ -4693,6 +4779,23 @@ class ApplianceCard extends HTMLElement {
       ["click", "pointerdown", "touchstart"].forEach((n) => el.addEventListener(n, (ev) => ev.stopPropagation()));
       el.addEventListener("input", () => { if (out) out.textContent = `${el.value}${unit ? ` ${unit}` : ""}`; });
       el.addEventListener("change", () => this._call(el.getAttribute("data-slider"), { value: el.value }));
+    });
+    this._root.querySelectorAll("[data-line-menu]").forEach((el) => el.addEventListener("click", (ev) => {
+      ev.stopPropagation();
+      const kind = el.getAttribute("data-line-menu");
+      this._lineMenu = this._lineMenu === kind ? null : kind;
+      this._render();
+    }));
+    this._root.querySelectorAll("[data-line-option]").forEach((el) => el.addEventListener("click", (ev) => {
+      ev.stopPropagation();
+      this._pickLine(this._lineMenu, el.getAttribute("data-line-option"));
+    }));
+    this._root.querySelectorAll("[data-history-hours]").forEach((el) => {
+      el.addEventListener("click", (ev) => {
+        ev.stopPropagation();
+        this._historyHours = Number(el.getAttribute("data-history-hours"));
+        this._render();
+      });
     });
     this._root.querySelectorAll("[data-history-toggle]").forEach((el) => {
       el.addEventListener("click", (ev) => {
