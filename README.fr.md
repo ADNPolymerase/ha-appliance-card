@@ -210,7 +210,7 @@ Clique sur une famille pour voir ses appareils en marche.
 
 ### À la main
 
-1. Télécharge tous les fichiers de la [dernière release](https://github.com/ADNPolymerase/ha-appliance-card/releases/latest) (`ha-appliance-card.js`, son éditeur et ses fichiers de langue) et dépose-les ensemble dans `config/www/`. Sans les fichiers de langue, la carte s'affiche en anglais.
+1. Télécharge tous les fichiers de la [dernière release](https://github.com/ADNPolymerase/ha-appliance-card/releases/latest) (`ha-appliance-card.js`, son éditeur, ses dessins et ses fichiers de langue) et dépose-les ensemble dans `config/www/`. Sans les fichiers de langue, la carte s'affiche en anglais, et sans le fichier d'un dessin, elle s'affiche sans dessin.
 2. Ajoute la ressource `/local/ha-appliance-card.js`, type **Module JavaScript**, dans **Paramètres > Tableaux de bord > Ressources**.
 3. Ajoute une card `custom:ha-appliance-card`. Une installation manuelle est à refaire à chaque release.
 
@@ -275,24 +275,143 @@ Seule `state_entity` est obligatoire, sauf sur un réfrigérateur où une sonde 
 
 </details>
 
+## Appareils
+
+Une section par famille d'appareils : ses options, puis ses guides. Chaque partie s'ouvre d'un clic.
+
+### Linge et vaisselle
+
 <details>
-<summary><b>Options par type</b></summary>
+<summary><b>Options</b></summary>
 
 | Option | Types | Description |
 |---|---|---|
 | `washer_dryer` | lave-linge | `true` pour une machine qui lave puis sèche, sous forme de case sous le type d'appareil. Un nom qui le dit suffit ; `false` ramène le lave-linge ordinaire. |
 | `phase_entity` / `phase_map` | lave-linge, sèche-linge, lave-vaisselle | L'étape du cycle, nommée sur la ligne d'état. Voir *Étapes du cycle* plus bas. |
+| `iron_layout` | fer | `iron` (défaut, le fer seul) \| `generator` (le même fer sur le socle d'une centrale vapeur). |
+| `iron_line_color` | fer | La couleur de la ligne le long du fer : `orange` (défaut) \| `blue` (bleu) \| `body` (la couleur de l'appareil). |
+| `hair_dryer_layout` | sèche-cheveux | `pistol` (défaut, sèche-cheveux classique vu de profil) \| `ring` (sèche-cheveux en anneau vu de face). |
+| `heat_threshold` | sèche-cheveux | Puissance à partir de laquelle il souffle de l'air chaud (300 W par défaut). En dessous, seul le ventilateur tourne. |
+| `heat_threshold` / `spin_threshold` | lave-linge, lave-vaisselle, sèche-linge | Sur une prise seule : la puissance à partir de laquelle il chauffe (1000 W par défaut, 600 W sur un sèche-linge) et celle à partir de laquelle un lave-linge essore (200 W). En dessous, un lave-linge lave, un sèche-linge refroidit le linge, et un lave-vaisselle sous son seuil sèche. |
+| `detergent_level_entity` / `softener_level_entity` | lave-linge | Les réservoirs de lessive et d'adoucissant, un niveau en % ou un capteur de niveau bas : une ligne, orange quand c'est bas. |
+| `wash_temperature_entity` / `spin_speed_entity` | lave-linge | La température de lavage et la vitesse d'essorage, en lignes. |
+| `left_on_after` | fer | Minutes allumé, en chauffe ou prêt, au bout desquelles la ligne d'état affiche *Resté allumé*, en rouge, la semelle brûle et la vapeur devient une fumée noire. Vide, cela n'arrive jamais. |
+
+</details>
+
+<details>
+<summary><b>Phases du lave-vaisselle</b></summary>
+
+Avec une `phase_entity`, `Drying` et `Ado Drying` remplacent le lavage par de la vapeur orange qui monte le long de la porte, plus haut pour `Ado Drying`. `Prewash`, `Mainwash` et `Rinsing` gardent l'animation de lavage. Ces valeurs sont reconnues d'office, comme `Pre Wash`, `Wash`, `Rinse` et `Dry`, et `phase_map` traduit les autres :
+
+```yaml
+appliance_type: dishwasher
+state_entity: sensor.lave_vaisselle_etat
+phase_entity: sensor.lave_vaisselle_phase
+phase_map:
+  Sechage: drying
+```
+
+Une valeur non reconnue laisse l'illustration en l'état, et la phase nomme aussi l'étape sur la ligne d'état (voir *Étapes du cycle*).
+
+</details>
+
+<details>
+<summary><b>Fers à repasser</b></summary>
+
+Rien ne relie un fer à Home Assistant, et c'est bien pourquoi il est sur une prise connectée. Son interrupteur dit si le fer est allumé, sa mesure s'il chauffe et à quelle puissance : la semelle rougit et la vapeur s'échappe par-dessous, un peu pour une faible puissance, un nuage à pleine puissance. Une fois à température, le thermostat coupe et la prise ne mesure plus rien : le fer est *Prêt*, chaud, deux filets de vapeur au-dessus. Sans interrupteur, une mesure seule affiche *À l'arrêt* sous le seuil.
+
+Deux modèles sont dessinés. Le fer seul, d'après un fer à vapeur classique, et la centrale vapeur, d'après les centrales Calor, dont le fer repose sur la pente du réservoir et se soulève nez en l'air quand il chauffe, voyant allumé et vapeur qui court le long du tuyau. `iron_line_color` choisit la couleur de la ligne le long du fer : orange, bleue ou de la couleur de l'appareil.
+
+`left_on_after` est la raison d'être de la prise. Passé ce nombre de minutes allumé, en chauffe ou prêt, la ligne d'état affiche *Resté allumé*, en rouge, de petites flammes lèchent la semelle et la vapeur devient une fumée noire :
+
+```yaml
+type: custom:ha-appliance-card
+appliance_type: iron
+iron_layout: generator
+state_entity: switch.prise_fer
+power_entity: sensor.prise_fer_puissance
+power_on_threshold: 20
+left_on_after: 30
+```
+
+La carte montre l'alerte ; éteindre le fer reste le travail d'une automatisation, sur la même entité.
+
+</details>
+
+<details>
+<summary><b>Sèche-cheveux</b></summary>
+
+Lu sur sa prise connectée : *Éteint* à `power_on_threshold` ou moins (10 W par défaut), *Air froid* quand seul le ventilateur tourne, *Air chaud* à partir de `heat_threshold` (300 W par défaut). L'air sort de l'embout, bleu à froid, orange à chaud, et plus fort en position haute (à partir de 1200 W). Sans mesure, son interrupteur dit seulement *Allumé* ou *Éteint*. Deux modèles : classique et en anneau.
+
+```yaml
+type: custom:ha-appliance-card
+appliance_type: hair_dryer
+hair_dryer_layout: ring
+state_entity: switch.prise_seche_cheveux
+power_entity: sensor.prise_seche_cheveux_puissance
+```
+
+</details>
+
+<details>
+<summary><b>Étapes du cycle</b></summary>
+
+Pendant qu'un lave-linge, un sèche-linge ou un lave-vaisselle tourne, la ligne d'état nomme l'étape où il en est au lieu d'*En cours* du début à la fin : *Prélavage*, *Trempage*, *Pesée*, *Remplissage*, *Lavage*, *Rinçage*, *Vidange*, *Essorage*, *Séchage*, *Refroidissement*, *Anti-froissage* ou *Vapeur*. Pendant l'essorage d'un lave-linge, le tambour se vide et le linge s'emballe. Une machine en pause, terminée ou en départ différé garde son mot, et le temps restant comme la barre de progression restent ceux du cycle entier.
+
+Où se trouve l'étape dépend de l'intégration :
+
+| Intégration | Où elle le dit | À configurer |
+|---|---|---|
+| LG ThinQ, Whirlpool, Midea | l'état lui-même (`rinsing`, `cycle_spinning`, `Dry`) | rien |
+| Electrolux, AEG | `cyclePhase` (`Wash`, `Rinse`, `Spin`) | `phase_entity` |
+| Miele, SmartThings | une entité de phase (`program_phase`, `job_state`) | `phase_entity` |
+| hOn (Candy, Hoover, Haier) | une phase numérotée (`prPhase`) | `phase_entity` et `phase_map` |
+| HomeWhiz (Beko, Grundig, Arçelik, Bauknecht) | son *Sub state* (`washer_substate_spin`, `dryer_message_cooling`) | `phase_entity` |
+| Home Connect (Bosch, Siemens) | nulle part : l'état reste *Run* du début à la fin | rien à lire |
+
+Un mot de l'entité de phase que la carte ne connaît pas s'affiche tel qu'il est écrit, sauf un message de HomeWhiz qui ne nomme pas d'étape (*Hello*, *Child lock*), qui laisse *En cours*. Une machine HomeWhiz dit aussi la fin du cycle dans ce message, en réclamant le linge ou en annonçant le programme terminé alors que son état revient à *On* : encore allumée, la carte affiche *Terminé*. `phase_map` traduit les codes, vers une des étapes ci-dessus ou vers vos propres mots, et `state_map` accepte aussi les étapes comme cibles :
+
+```yaml
+appliance_type: washer
+state_entity: sensor.lave_linge_etat
+phase_entity: sensor.lave_linge_phase
+phase_map:
+  4: rinsing
+  5: spinning
+  9: Anti-allergie
+```
+
+</details>
+
+<details>
+<summary><b>Lavantes-séchantes</b></summary>
+
+Une lavante-séchante est un lave-linge avec `washer_dryer: true`, et non un type à part : l'option est une case sous le type d'appareil. Cochée, le tambour montre de l'eau pendant le lavage et du linge qui tourne dans l'air chaud pendant le séchage, d'après la même étape que la ligne d'état. Une machine dont le nom dit qu'elle lave et sèche est reconnue toute seule.
+
+Le rinçage compte pour du lavage, puisqu'il y a encore de l'eau dans le tambour. Une étape que la carte ne sait pas lire laisse le dessin en l'état : un cycle qui finit sur un anti-froissage ou un refroidissement garde son linge au lieu de se remplir d'eau.
+
+```yaml
+appliance_type: washer
+washer_dryer: true
+state_entity: sensor.lavante_sechante_etat
+phase_entity: sensor.lavante_sechante_phase
+```
+
+</details>
+
+### Cuisine
+
+<details>
+<summary><b>Options</b></summary>
+
+| Option | Types | Description |
+|---|---|---|
 | `target_temperature_entity` / `current_temperature_entity` | four, robot cuiseur, cuiseur à riz | Consigne et température réelle. Pendant la montée, la barre devient une jauge de préchauffage. |
-| `heating_entity` | four, robot cuiseur, cuiseur à riz, chauffe-eau | Dit s'il chauffe quand l'entité d'état ne le dit pas. À défaut, déduit de l'état en cours. |
-| `light_entity` | four, hotte, imprimante 3D | Éclairage, en petite bascule dans l'en-tête. Allumé, il éclaire aussi l'enceinte de l'imprimante. |
 | `power_level_entity` | micro-ondes, plaque | Niveau de puissance. Sur une plaque, il règle l'intensité du halo des foyers. |
 | `fan_entity` | hotte | Vitesse : pourcentage ou preset d'un `fan`, ou `select`, `sensor` ou `number` ramené sur 1 à 3. Un clic sur la ligne ouvre l'entité pour la changer. |
 | `boost_entity` | hotte | Mode intensif, quand le preset ne le dit pas. |
 | `filter_life_entity` / `filter_reset_entity` | hotte | Usure du filtre en barre, et bouton de remise à zéro. |
-| `filter_life_entity` / `filter_reset_entity` / `filter_due_below` | fontaine | La durée de vie restante du filtre, sur une ligne, et un bouton de réinitialisation (un bouton, un interrupteur ou un script). Jours, heures, minutes et secondes se comptent en jours, un pourcentage reste un pourcentage, et une date (le prochain changement) donne les jours qui restent. À `filter_due_below` ou en dessous (3 pour des jours, 10 pour un pourcentage par défaut), l'état lit *Filtre à changer*, et la ligne et le voyant passent à l'orange. |
-| `pump_clean_entity` / `pump_reset_entity` | fontaine | Pareil pour la pompe : la durée ou la date avant son nettoyage, avec le même seuil, et un bouton de réinitialisation. L'état lit *Pompe à nettoyer*. |
-| `pump_running_entity` | fontaine | La pompe, quand l'intégration la lit à part de l'alimentation (le *Pump running* de Petkit, le statut *watering* de Xiaomi) : l'eau ne coule que si les deux le disent. Une ligne *Dernière marche de la pompe* donne l'heure de son dernier arrêt, ou *En marche*. |
-| `water_level_entity` / `level_empty_below` | fontaine | L'eau restante : un pourcentage, qui remplit le réservoir sur le dessin ; un mot (`low`, `lack`, `shortage`, `level_1`… ou `normal`, `medium`, `full`) ; ou un contact, allumé quand elle manque, ou allumé tant qu'il y a de l'eau pour un contact d'humidité (Petlibro). Un nombre dans une autre unité (un niveau de 1 à 4, des millilitres) ne se lit contre `level_empty_below` que si celui-ci est réglé. À `level_empty_below` ou en dessous (10 par défaut), l'état lit *Peu d'eau*, en rouge, avant tout le reste : une pompe à sec grille. Le jet s'arrête alors, comme pompe arrêtée, et la vasque se retrouve à sec. |
 | `zones` / `zones_layout` / `zones_count` | plaque | Jusqu'à 6 foyers `{ level_entity, residual_heat_entity?, name? }`, niveau en chiffre ou en mot (`boost`), `H` pour la chaleur résiduelle. Disposition `2x1` \| `2x2` \| `3x2`, et nombre de foyers à dessiner sans entité (4 par défaut). |
 | `child_lock_entity` | plaque | Cadenas sur l'illustration. |
 | `fridge_layout` | frigo | `freezer_bottom` (défaut) \| `freezer_top` \| `side_by_side` \| `single` \| `wine` (porte vitrée et bouteilles, pour une cave à vin) \| `chest` (congélateur coffre) \| `drawers` (congélateur armoire à tiroirs transparents). Sur ces deux-là, la sonde du congélateur, ou celle du frigo, est sur l'écran, et le seuil d'alerte vaut -12 par défaut. |
@@ -301,20 +420,746 @@ Seule `state_entity` est obligatoire, sauf sur un réfrigérateur où une sonde 
 | `ice_maker_entity` | frigo | Les glaçons tombent quand elle produit. |
 | `power_entity` / `power_on_threshold` / `no_power_threshold` / `no_power_after` | frigo | Sans problème, l'état lit *Refroidissement* au seuil ou au-dessus et *En veille* en dessous : réglez le seuil entre la consommation de votre frigo au repos et en froid (10 W pour un frigo qui descend à 6 W en pause). Rester sous `no_power_threshold` (1 W par défaut, quel que soit le seuil de froid) plus de `no_power_after` minutes (30 par défaut) signale *Aucune consommation*, en orange : une longue pause du compresseur ressemble à ça. Compté depuis le dernier changement de la mesure : recharger la page ne le remet pas à zéro. |
 | `plug_entity` | frigo | L'interrupteur de la prise connectée. Coupé, l'état passe tout de suite en *Débranché*. Débranché ou sans consommation, la lumière intérieure s'éteint. |
-| `temperature_decimals` | frigo, bouilloire, chauffe-eau, chaudière, pompe à chaleur | `0` (défaut, au degré), `1` (au dixième) ou `auto` (la précision d'affichage de l'entité), sur l'écran de l'appareil et dans la liste. |
-| `temperature_entity` | bouilloire, chauffe-eau, chaudière, pompe à chaleur | Température de l'eau (de départ sur une chaudière ou une pompe à chaleur), affichée sur l'appareil et dans la liste. Une entité `water_heater` donne la sienne toute seule. Sur un chauffe-eau, l'eau chaude remplit la cuve de 15 à 65 °C. |
+| `kettle_layout` | bouilloire | `classic` (défaut, une bouilloire de la couleur de l'appareil) \| `steel` (une bouilloire en inox à poignée noire). |
+| `coffee_layout` | machine à café | `silver` (défaut, une machine à grains de la couleur de l'appareil, réservoir sur le côté) \| `black` (noire à façade chromée et écran rond). |
+| `toaster_layout` | grille-pain | `two` (défaut, deux fentes) \| `four` (quatre fentes, deux leviers) \| `long` (une fente longue pour deux tranches bout à bout). |
+| `zone_power` | plaque de cuisson | Sur une prise seule, ce que consomme un foyer à pleine puissance (1500 W par défaut) : la mesure est répartie sur autant de foyers qu'il en faut, chacun avec un niveau de 1 à 9. |
+| `meat_probe_entity` / `meat_probe_target_entity` | four | La sonde à viande et sa cible, sur une ligne. |
+| `speed_entity` | robot cuiseur | Vitesse du couteau, ramenée sur trois vitesses. |
+| `state_entity` / `fryer_layout` | friteuse à air | Les mots de la friteuse, tels que Philips (HomeID et l'ancienne intégration HACS), Xiaomi et Cosori (VeSync) les donnent : *Préchauffage*, *Préchauffée*, *Cuisson*, *Secouer le panier*, *Panier sorti*, *En pause*, *Maintien au chaud*, *Terminé*, *Départ différé*. `fryer_layout` : `basket` (par défaut), `window` (panier à hublot) ou `dual` (double panier). |
+| `basket_entity` / `shake_entity` / `basket2_state_entity` | friteuse à air | Le capteur du panier, allumé quand il est sorti (le tiroir Philips, la cuve Xiaomi), qui fait passer un cycle en *Panier sorti* ; le rappel pour secouer, qui fait passer la cuisson en *Secouer le panier* ; l'état du second panier d'une friteuse double, dessiné à part et nommé sur une ligne. |
+| `water_entity` | machine à café | Réservoir : booléen Home Connect, ou niveau en % avec *vide* sous 10 %. |
+| `beans_entity` / `tray_entity` / `descaling_entity` | machine à café | Grains vides, bac plein, détartrage à faire. Un réservoir ou des grains vides, ou un bac plein, encadrent cette partie du dessin et allument en orange un point de la façade. |
+| `cups_entity` | machine à café | Nombre de tasses : un compte, un booléen ou un nom de boisson (*2 Espressi*). |
+| `strength_entity` | machine à café | Force du café, en chiffre ou en mot. |
+
+</details>
+
+<details>
+<summary><b>Grille-pain</b></summary>
+
+Lu sur sa prise connectée, comme le fer : *En veille*, *Grillage* tant qu'il consomme, puis *Prêt* pendant cinq minutes une fois les tranches sorties. Pendant le grillage, les fentes rougeoient, la chaleur monte au-dessus et le levier est baissé. Trois modèles : deux fentes, quatre fentes et fente longue.
+
+```yaml
+type: custom:ha-appliance-card
+appliance_type: toaster
+toaster_layout: four
+state_entity: switch.prise_grille_pain
+power_entity: sensor.prise_grille_pain_puissance
+power_on_threshold: 30
+```
+
+</details>
+
+<details>
+<summary><b>Friteuses à air</b></summary>
+
+L'écran montre la température pendant la chauffe et le maintien au chaud, et le temps restant pendant la cuisson. La chaleur monte au-dessus et la jointure du panier rougeoie ; un panier sorti avance, un panier à secouer tremble. Derrière le hublot les frites sautent dans la chaleur, et sur une friteuse double chaque panier montre son propre état. Philips HomeID :
+
+```yaml
+type: custom:ha-appliance-card
+state_entity: sensor.airfryer_status
+fryer_layout: window
+remaining_time_entity: sensor.airfryer_time_remaining
+target_temperature_entity: sensor.airfryer_temperature
+basket_entity: binary_sensor.airfryer_drawer
+shake_entity: binary_sensor.airfryer_shake_reminder
+```
+
+Une entité qui porte le nom d'une friteuse (ou le `cook_status` de Cosori) est reconnue d'elle-même, et l'éditeur remplit le reste. Avec une simple prise connectée, elle affiche *Cuisson*, puis *Terminé*.
+
+</details>
+
+### Chauffage, climatisation et air
+
+<details>
+<summary><b>Options</b></summary>
+
+| Option | Types | Description |
+|---|---|---|
 | `state_entity` en `water_heater` | chauffe-eau | Son état est le mode (*Éco*, *Performance*…), affiché tel que Home Assistant le traduit. La chauffe vient alors de `heating_entity`, d'une prise ou de l'attribut `status` de MELCloud. |
 | `heating_entity` / `hot_water_entity` | chaudière, pompe à chaleur | Indicateurs chauffage et eau chaude ; allumés tous les deux, l'eau chaude l'emporte. Une pompe à chaleur a aussi celui du rafraîchissement, plus bas. Sans eux, le mode vient de `state_entity` : codes `-H`, `=H`, `0H` (Nefit, Bosch) ou leur forme numérique `200`, `201`, `203`, le démarrage (`0U`, `0C`, `0L` ou `270`, `283`, `284`) se lisant *Allumage* et les attentes du brûleur (`0A`, `0Y`, `0E` ou `202`, `204`, `265`, `305`, `353`) *En attente* ; `CH`, `HW`, `No` ; ceux d'InComfort, ebusd, myVAILLANT et MELCloud ; ou *chauffage* et *eau chaude*. Indicateurs éteints mais flamme allumée, elle affiche *Brûleur allumé*. `state_map` accepte `space_heating`, `hot_water`, `starting`, `waiting` et `idle`. Avec seulement le brûleur en `power_entity`, la flamme s'allume sans dire pour quoi. |
 | `state_entity` sur une pompe à chaleur | pompe à chaleur | Ce que fait la pompe : le `hvac_action` d'une entité `climate` (chauffage, refroidissement, dégivrage, repos), l'attribut `status` de MELCloud (`heat_water`, `heat_zones`, `cool`, `defrost`, `standby`, `legionella`) ou un capteur en toutes lettres (*chauffage*, *eau chaude*, *refroidissement*, *dégivrage*, en 14 langues). L'activité du compresseur d'EMS-ESP (`sensor.boiler_hpactivity`, Bosch, Buderus, Junkers, Nefit) se lit dans les onze langues d'EMS-ESP, sans `state_map`, et fait à elle seule de la carte une pompe à chaleur ; choisie dans l'éditeur, elle remplit les autres champs de la pompe d'après les noms courts d'EMS-ESP, qui ne changent pas avec la langue : `hptc1` pour le départ, `hptc0` le retour, `hpcompon` le compresseur, `hpcurrpower` ce qu'il consomme, `hppower` la chaleur qu'il donne, `pc0flow`, `fanspd` et `outdoortemp`. `curflowtemp` est écarté exprès : sur une pompe à chaleur, c'est la sonde du module chaudière, souvent dans un ballon tampon. L'état d'une entité `climate` ou `water_heater` est le mode que vous avez choisi, affiché tel quel quand l'entité ne dit rien de ce que fait la pompe. `state_map` accepte `space_heating`, `hot_water`, `cooling`, `defrost` et `idle`. Le ventilateur de l'unité extérieure tourne quand elle travaille et s'arrête pour dégivrer ; le ballon ou le radiateur chauffe selon le mode, et l'eau descend par le tuyau de départ et remonte par le retour, partie chaude et revenue plus froide quand la pompe chauffe, l'inverse quand elle rafraîchit. |
 | `cooling_entity` et les vannes | pompe à chaleur | Un indicateur de rafraîchissement, à côté de ceux du chauffage et de l'eau chaude. Un indicateur peut aussi être une vanne : la vanne 2 voies de HeishaMon lit *Heating* ou *Cooling* et sa vanne 3 voies *Room* ou *Tank*, quel que soit le champ où on les met. Le ballon passe d'abord, puis le rafraîchissement, puis le chauffage. |
 | `outdoor_temperature_entity` / `heat_output_entity` / `cop_entity` | pompe à chaleur | Température extérieure, chaleur produite et COP, dans la liste. Sans entité COP, la card divise la chaleur produite par `power_entity` dès que les deux sont en W ou en kW. |
 | `cooling_power_entity` / `cooling_output_entity` / `hot_water_power_entity` / `hot_water_output_entity` | pompe à chaleur | Ce que la pompe consomme et produit en rafraîchissement et pour le ballon, pour les intégrations qui mesurent chaque circuit à part (HeishaMon). La carte lit la paire du circuit qu'indiquent les indicateurs, même à l'arrêt, et celle du chauffage sinon. En rafraîchissement, la ligne devient *Froid produit* et le rapport calculé *EER*. |
+| `heating_energy_entity` / `cooling_energy_entity` / `hot_water_energy_entity` | pompe à chaleur | Ce que chaque circuit a consommé, en kWh (un compteur du jour ou total). La ligne du circuit en cours est affichée. Dans l'éditeur, les champs de puissance de la pompe à chaleur ne proposent que des capteurs en W ou kW, et ceux-ci que des capteurs en kWh, l'entité déjà choisie mise à part ; `power_entity` se lit *Puissance en chauffage*. Un capteur en kWh mis dans `power_entity` se lit *Énergie*. |
 | `return_temperature_entity` | pompe à chaleur | L'eau qui revient. Départ et retour partagent alors une seule ligne, *42 °C → 36 °C*, et la carte calcule l'écart (Delta T) toute seule comme elle calcule le COP, en kelvin comme l'écrit le métier (les °F restent en °F), toujours avec un dixième puisqu'une pompe à chaleur travaille sur quelques degrés. Pris comme une distance, donc positif même quand la pompe rafraîchit. |
 | `water_flow_entity` | pompe à chaleur | Débit d'eau, dans l'unité de l'entité. |
 | `compressor_entity` | pompe à chaleur | Fréquence en hertz, ou un contact tout ou rien lu *En marche* et *Éteint*. Un compresseur à l'arrêt arrête le ventilateur du dessin et met les indicateurs *En veille* : la pompe ne fait plus que brasser de l'eau, quel que soit le sens des vannes. En marche, il fait passer un état en veille à *En marche*. |
 | `fan_speed_entity` | pompe à chaleur | Vitesse du ventilateur, dans l'unité de l'entité. |
 | `no_hot_water` | pompe à chaleur | `true` retire le ballon du dessin, pour une installation qui ne fait pas d'eau chaude sanitaire. Ce qui reste se recentre. |
 | `underfloor_heating` | pompe à chaleur | `true` dessine un plancher chauffant à la place du radiateur, ce qui est le cas de la plupart des installations air-eau : la dalle vue de biais avec son tuyau en serpentin, et la chaleur qui s'en échappe quand elle chauffe. Elle passe au bleu quand la pompe rafraîchit. |
+| `thermostat_entity` / `thermostat_layout` | chaudière | Le thermostat d'ambiance de la chaudière, une entité `climate` : il est dessiné au mur à côté de la chaudière, le haut aligné sur le sien, avec l'ambiante et la consigne à l'écran et une flamme quand il demande la chauffe, et la ligne *Ambiante 19,5 °C → 21 °C* s'ajoute. `thermostat_layout` choisit son dessin, `square`, `round` ou `glass` ; par défaut, le nom du thermostat décide (un Nest est rond, un ecobee en verre noir). |
+| `thermostat_layout` | thermostat | `square` (un carré blanc à écran sombre : Netatmo, tado, Bosch CT100, Homematic IP) \| `round` (un anneau d'acier autour d'un verre noir qui devient orange en chauffe : Nest, Honeywell) \| `glass` (verre noir avec une barre lumineuse : ecobee, Bosch CT200) \| `valve` (une vanne de radiateur vue de près : Sonoff, Aqara, Tuya, Danfoss, Fritz!). Par défaut, le nom décide, et une entité climate qui donne son ouverture est une vanne. |
+| `boiler_layout` | chaudière | `wall` (défaut, une chaudière murale blanche avec son manomètre et son écran) \| `window` (une chaudière dont on voit le brûleur par un hublot). |
+| `towel_warmer_layout` | sèche-serviettes | `ladder` (défaut, des barreaux ronds entre deux montants) \| `panel` (des lames plates anthracite sur un montant). |
+| `diffuser_layout` | diffuseur | `drop` (une goutte en bois, Meross, Asakuki) \| `cone` \| `stone` (galet, Vitruvi, Govee) \| `flame` (un diffuseur effet flamme) \| `nebulizer` (verre sur socle en bois). Sans réglage, le nom décide, sinon une goutte. Bois par défaut pour la goutte, la flamme et le nébuliseur, blanc pour les autres, ou `illustration_color`. |
+| `light_entity` / `tank_empty_entity` | diffuseur | La lumière du diffuseur : sa couleur éclaire l'anneau et le sol. Un capteur de réservoir vide l'affiche *Réservoir vide*. Son `state_entity` est la brume : un interrupteur, un ventilateur (50 % ou moins = *Intermittent*), le select de Meross (`eco` = *Brume légère*, une brume plus faible ; `intermittent` ou `interval` = *Intermittent*) ou une entité humidificateur. Un select a un bouton qui passe d'un mode au suivant, un interrupteur ou un ventilateur un bouton marche/arrêt. |
+| `hrv_layout` | VMC | `diagram` (les deux flux qui se croisent dans l'échangeur) \| `one_duct` (VMC murale à un seul conduit, Lunos eGO, Zehnder ComfoAir 70) \| `pair` (paire décentralisée traversant le mur, Lunos e2, Vents TwinFresh, qui s'inverse toutes les 70 s) \| `single` (une VMC simple flux dans les combles, ses bouches au plafond et sa sortie au-dessus du toit, l'air neuf entrant par les fenêtres) \| `single_box` (le même caisson d'extraction dessiné seul, ses gaines d'entrée et sa sortie). Sans réglage, un nom qui dit simple flux, extract ou hygro donne une VMC simple flux. |
+| `high_speed_entity` | VMC (single, single_box) | Le switch de vitesse d'une VMC simple flux à deux vitesses : coupé c'est la *Petite vitesse*, allumé la *Grande vitesse*, le ventilateur tournant trois fois plus vite. Le `state_entity` reste sa marche et son arrêt. |
+| `outdoor_temperature_entity` / `supply_temperature_entity` / `extract_temperature_entity` / `exhaust_temperature_entity` | VMC | Les quatre températures, dessinées au bout des gaines. |
+| `bypass_entity` | VMC | Le bypass : un interrupteur ou un capteur binaire actif, une ouverture en %, ou l'état de l'échangeur de Vallox, dont *Defrosting* affiche *Dégivrage*. |
+| `airflow_entity` / `filter_life_entity` / `filter_life_full` | VMC | Le débit et le filtre, en jours ou en %, en lignes, et l'usure du filtre en barre : son pourcentage, ou ses jours sur `filter_life_full` (90 par défaut). À 7 jours ou 10 % (ou `filter_due_below`), *Filtre à changer*. Le `state_entity` est l'entité ventilateur, climat ou select de la VMC : sa vitesse, ses préréglages *Boost* et *Absence*. |
+| `state_entity` (modes) | VMC | Un select de modes, ou un ventilateur à préréglages, a un bouton *Mode* qui ouvre la liste des modes dans la carte. VMC Broan et Venmar en ESPHome ([broan_erv_uart](https://github.com/nspitko/broan_erv_uart)) : `recirculate` affiche *Recirculation* (les volets extérieurs se ferment, l'air de la maison tourne dans l'appareil), `humidity` *Contrôle d'humidité*, `int` *Intermittent* (et *Intermittent, en pause* quand les deux ventilateurs sont à l'arrêt), `turbo` et `max` *Boost*. |
+| `supply_fan_entity` / `exhaust_fan_entity` / `fan_max_rpm` | VMC | La vitesse de chaque ventilateur en tr/min : chacun tourne à la vitesse de son moteur, jusqu'à `fan_max_rpm` (2000 par défaut), et sa ligne donne ses tr/min et son débit (`airflow_entity` au soufflage, `exhaust_airflow_entity` à l'extraction). |
+| `fan_speed_entity` | VMC | La vitesse en %, quand l'appareil la tient dans un number à part. |
+| `current_humidity_entity` / `target_humidity_entity` / `humidity_control_entity` | VMC | L'humidité et sa consigne, en ligne et sur le dessin pendant le contrôle d'humidité. L'interrupteur du contrôle d'humidité affiche *Contrôle d'humidité* et a son bouton. |
+| `active_mode_entity` | VMC | Le mode dans lequel l'appareil tourne, quand il diffère de celui demandé (une VMC double flux en mode intelligent choisit le sien). L'état et le dessin le suivent, une ligne *Mode* donne celui demandé, et le menu des modes garde celui demandé coché. |
+| `floor_layout` | plancher chauffant | `water` (défaut, collecteur au mur et serpentin sous le carrelage) \| `electric` (câble chauffant sur sa trame). |
+| `heater_mode_entity` / `showers_entity` | chauffe-eau | Le mode de chauffe (éco, boost...) et les douches disponibles, en lignes. |
+| `pilot_mode_entity` / `window_entity` | radiateur, sèche-serviettes | Le mode du fil pilote, et un contact de fenêtre : *Ouverte* en orange. |
+| `state_entity` / `phase_entity` | poêle | La phase du feu : *Éteint*, *Allumage*, *En chauffe*, *Modulation*, *Veille éco*, *Refroidissement*, *Nettoyage* ou *Alarme*. Lue sur un capteur de statut dans `phase_entity` (les clés de Palazzetti, l'Agua IOT de Micronova dans la langue du poêle, Edilkamin, Rika, Duepi), et sinon sur le `hvac_action` d'une entité `climate`, où *idle* est la veille éco. `state_map` accepte les huit phases : `off`, `ignition`, `burning`, `modulating`, `eco`, `cooling`, `cleaning` et `alarm`. |
+| `current_temperature_entity` / `target_temperature_entity` | poêle | La pièce et la consigne, en *20 °C → 21 °C* tant que le poêle y travaille. Une entité `climate` dans `state_entity` donne les deux d'elle-même. |
+| `power_level_entity` / `flue_temperature_entity` / `fan_speed_entity` | poêle | Le palier de puissance, en *4 / 5* quand l'entité connaît sa plage, et sur l'écran du poêle quand il chauffe ; la température des fumées ; la ventilation, en pourcentage pour une entité `fan`. |
+| `level_entity` / `level_empty_below` / `level_max` | poêle | Les granulés de la trémie : un pourcentage, ou un contact allumé quand la réserve est atteinte (Agua IOT, Edilkamin). Un niveau en centimètres ou en kilos remplit la trémie une fois que `level_max` donne sa contenance. Vide, la trémie passe au rouge, et en alarme l'état se lit *Granulés épuisés*. |
+| `error_entity` | poêle | L'alarme : un mot (*Échec d'allumage*), un compte ou un contact. Tout ce qui n'est pas *pas d'alarme*, quelle que soit la façon dont le poêle le dit, met le poêle en alarme, avec ses mots sur une ligne et son code (*AL05*) sur l'écran. |
+| `state_entity` | climatiseur | Une entité `climate` : *Refroidissement*, *Chauffage*, *Déshumidification*, *Ventilation* ou *Auto* selon le mode, et d'après `hvac_action` *En veille* une fois la consigne atteinte, *Dégivrage* et *Préchauffage*. L'écran montre le symbole du mode et la consigne, les lignes la pièce, l'humidité et la ventilation. Sur une prise, *En cours* ou *Éteint*. `state_map` accepte `off`, `cool`, `heat`, `dry`, `fan`, `auto`, `idle` et `defrost`. |
+| `vane_vertical_entity` / `vane_horizontal_entity` | climatiseur | Les volets, quand ils vivent dans des selects à eux (Panasonic, Midea) ; sinon le `swing_mode` et le `swing_horizontal_mode` de l'entité `climate`. Cinq positions de haut en bas et de gauche à droite, ou le balayage, dans les mots de chaque intégration. |
+| `state_entity` | déshumidificateur | Une entité `humidifier` : *Déshumidification*, *Séchage du linge* quand son mode le dit (clothes_dry chez Midea), *En veille* une fois l'humidité atteinte, *Réservoir plein*. L'écran et une ligne donnent l'humidité et sa cible. |
+| `tank_entity` / `tank_full_above` / `current_humidity_entity` | déshumidificateur | Le réservoir, un contact allumé quand il est plein ou un niveau en pourcentage (plein à partir de `tank_full_above`, 100 par défaut), montré dans la fenêtre du bas ; un hygromètre pour un déshumidificateur sur prise. |
+| `state_entity` / `heater_layout` | petit chauffage | Une entité `climate` : *Chauffage*, *En veille* une fois la consigne atteinte, *Ventilation*. `heater_layout` : `fan` (radiateur soufflant, par défaut) ou `oil` (bain d'huile). |
+| `state_entity` | sèche-serviettes | Le mode du fil pilote : *Confort*, *Éco*, *Hors-gel*, *Boost*, *Séchage*, lu sur le preset d'une entité `climate` (Heatzy, Atlantic) ou sur un select (NodOn). |
+| `current_temperature_entity` / `target_temperature_entity` | petit chauffage, sèche-serviettes | La pièce et la consigne, quand une entité `climate` ne les porte pas. |
+| `fan_speed_entity` / `purifier_entity` / `outdoor_temperature_entity` / `defrost_entity` | climatiseur | La ventilation quand l'entité `climate` ne la porte pas ; le purificateur (nanoe, plasma), allumé sur l'unité ; la température extérieure ; un contact de dégivrage. |
+| `state_entity` | purificateur | Une entité `fan` : *Purification*, *Auto*, *Mode nuit*, *Chauffage* ou *Éteint*, d'après son état et son `preset_mode`, dans les mots de chaque intégration (*sleep*, *night*, *Silent*, *Quiet*...). Une entité `climate` (un Dyson Hot+Cool), un `select` qui nomme le mode (LG, Haier, Midea) ou une prise conviennent aussi. `state_map` accepte `off`, `run`, `night` et `heat`. |
+| `purifier_layout` | purificateur | `cylinder` (défaut, l'air sort par le dessus) \| `box` (un boîtier carré, ventilateur sur le dessus) \| `ring` (un anneau sans pales, par défaut pour un Dyson). L'anneau souffle devant lui, pivote en oscillation et aspire l'air vers son centre en souffle arrière (`direction: reverse`). |
+| `air_quality_entity` | purificateur | La qualité de l'air sur une jauge à quatre niveaux (*Bonne*, *Moyenne*, *Mauvaise*, *Très mauvaise*) et une ligne : PM2.5 en µg/m³ (12, 35 et 55), un AQI américain (50, 100, 150), l'indice d'allergènes Philips de 1 à 12, ou les mots de VeSync, Winix, Coway, Dyson, IKEA, SmartThings, Matter et tuya-local. Une échelle que la carte ne sait pas placer n'allume aucun niveau. |
+| `display_entity` | purificateur | Un écran facultatif qui affiche la valeur de cette entité, un PM2.5 ou une température : en façade du cylindre et du boîtier, rond au-dessus de la jauge sur l'anneau. |
+| `night_mode_entity` / `heater_entity` | purificateur, ventilateur | Le mode nuit quand c'est un interrupteur à part (Dyson, Duux) ; le chauffage, d'après le `hvac_action` d'une entité `climate`, un interrupteur ou un select. La nuit atténue et ralentit l'air, la chaleur le rend orange, les deux ensemble donnent un orange atténué. |
+| `fan_layout` | ventilateur | `stand` (défaut, sur pied) \| `table` \| `ceiling` (plafond, par défaut pour un ventilateur nommé d'après le plafond). |
+| `oscillating` | ventilateur | `true` pour un ventilateur sur prise qui oscille : la tête tourne et l'air la suit. Une entité `fan` qui donne `oscillating` fait foi à la place. |
+| `light_entity` / `wood_blades` / `fan_direction_inverted` | ventilateur de plafond | La lumière du ventilateur, dessinée en globe sous le moteur qui s'allume (sans lumière, pas de globe) ; des pales en bois ; été et hiver inversés, pour un ventilateur dont `direction: forward` veut dire hiver. L'été aspire l'air vers le haut, l'hiver renvoie vers le sol l'air chaud du plafond, en orange. |
+
+</details>
+
+<details>
+<summary><b>Thermostats et vannes thermostatiques</b></summary>
+
+Toute entité `climate` qui chauffe : un thermostat mural, une vanne de radiateur, le circuit de chauffage d'une chaudière (le `climate.hc1` de Bosch), quelle que soit l'intégration (Netatmo, Nest, ecobee, tado, Honeywell, Hive, Zigbee, Matter…). L'état affiche *Chauffage*, *Consigne atteinte*, *Éco*, *Absent*, *Hors-gel*, *Fenêtre ouverte* (Better Thermostat, Versatile Thermostat) ou *Éteint*, et la ligne *Ambiante 19,5 °C → 21 °C*. Une vanne dit aussi de combien elle est ouverte.
+
+Quatre dessins, choisis par `thermostat_layout` ou par le nom : un carré blanc, un rond dont l'anneau d'acier devient orange en chauffe, un verre noir, et une vanne de radiateur vue de près, sa tête dépassant du radiateur, qui se réchauffe quand elle chauffe. Un thermostat ne produit pas de chaleur : seul le radiateur de la vanne en dégage.
+
+```yaml
+type: custom:ha-appliance-card
+appliance_type: thermostat
+state_entity: climate.vanne_chambre
+thermostat_layout: valve
+```
+
+Sur une chaudière, `thermostat_entity` dessine son thermostat d'ambiance au mur à côté d'elle :
+
+```yaml
+type: custom:ha-appliance-card
+appliance_type: boiler
+state_entity: sensor.code_chaudiere
+temperature_entity: sensor.temperature_depart
+thermostat_entity: climate.hc1
+```
+
+</details>
+
+<details>
+<summary><b>Poêles à granulés</b></summary>
+
+Un poêle en dit plus qu'allumé ou éteint : il s'allume, chauffe, module, se met en veille éco une fois la pièce chaude, refroidit et nettoie son brasier. La card lit cette phase sur le statut du poêle et la dessine : la flamme derrière la vitre, l'air chaud au-dessus de la grille, la fumée au conduit à l'allumage, les cendres au nettoyage, les braises en veille. La trémie à côté de la porte montre les granulés qui restent.
+
+Avec l'intégration de Home Assistant lui-même, Palazzetti :
+
+```yaml
+type: custom:ha-appliance-card
+appliance_type: pellet_stove
+state_entity: climate.poele
+phase_entity: sensor.poele_status
+power_level_entity: number.poele_combustion_power
+level_entity: sensor.poele_pellet_level
+level_max: 40
+```
+
+L'éditeur en remplit l'essentiel depuis les entités du poêle, aussi sur Agua IOT (Extraflame, Ravelli, MCZ, Piazzetta et une trentaine d'autres), Edilkamin, Rika et Duepi.
+
+</details>
+
+<details>
+<summary><b>Climatiseurs</b></summary>
+
+L'unité intérieure d'un split, avec le symbole du mode et la consigne sur son écran. L'air part aussi bas et aussi loin sur le côté que les volets le dirigent, plus vite avec la ventilation, et balaie avec eux ; en déshumidification l'eau remonte dans l'unité, au dégivrage le givre la recouvre. Panasonic Comfort Cloud :
+
+```yaml
+type: custom:ha-appliance-card
+state_entity: climate.salon
+vane_vertical_entity: select.salon_vertical_swing
+vane_horizontal_entity: select.salon_horizontal_swing
+purifier_entity: switch.salon_nanoe
+outdoor_temperature_entity: sensor.salon_outside_temperature
+```
+
+Une entité `climate` qui sait refroidir est reconnue d'elle-même, et l'éditeur remplit le reste depuis les entités de l'unité.
+
+</details>
+
+<details>
+<summary><b>Déshumidificateurs, petits chauffages et sèche-serviettes</b></summary>
+
+Un déshumidificateur montre l'humidité sur son écran et l'eau récupérée dans son réservoir ; un radiateur soufflant rougeoie derrière sa grille, un bain d'huile chauffe ses ailettes ; un sèche-serviettes montre le mode du fil pilote avec les symboles des radiateurs (soleil, lune, flocon). L'air chaud monte, l'air soufflé par un déshumidificateur ou un ventilateur va dans l'autre sens.
+
+Les trois fonctionnent avec une simple prise connectée : au-dessus de `power_on_threshold` ils déshumidifient ou chauffent, en dessous ils sont en veille tant que la prise est allumée, et *Éteint* une fois coupée.
+
+```yaml
+type: custom:ha-appliance-card
+appliance_type: space_heater
+heater_layout: oil
+state_entity: switch.radiateur_prise
+power_entity: sensor.radiateur_prise_power
+power_on_threshold: 30
+```
+
+</details>
+
+<details>
+<summary><b>Purificateurs d'air et ventilateurs</b></summary>
+
+L'air que soufflent un purificateur ou un ventilateur est dessiné en lignes pointillées : bleues, orange quand il chauffe, atténuées et lentes la nuit. Plus il souffle, plus il y a de lignes : deux jusqu'à 40 %, trois jusqu'à 75 %, cinq au-delà, ou d'après le préréglage quand il n'y a pas de pourcentage (nuit, turbo, low, medium, high). Un purificateur porte aussi une jauge à quatre niveaux de la qualité de l'air, allumée dans sa couleur, et un écran facultatif.
+
+Un ventilateur existe sur pied, de table ou de plafond. Son vent naturel souffle par vagues, les pales accélèrent puis ralentissent. Un ventilateur de plafond aspire l'air vers le haut en été et renvoie l'air chaud vers le sol en hiver, et sa lumière apparaît en globe sous le moteur.
+
+```yaml
+type: custom:ha-appliance-card
+appliance_type: air_purifier
+purifier_layout: ring
+state_entity: fan.purificateur_salon
+air_quality_entity: sensor.salon_pm2_5
+display_entity: sensor.salon_temperature
+heater_entity: climate.purificateur_salon
+```
+
+```yaml
+type: custom:ha-appliance-card
+appliance_type: fan
+fan_layout: ceiling
+state_entity: fan.plafond_chambre
+light_entity: light.plafond_chambre
+wood_blades: true
+```
+
+</details>
+
+### Piscine, pompes, spa, sauna et aquarium
+
+<details>
+<summary><b>Options</b></summary>
+
+| Option | Types | Description |
+|---|---|---|
+| `water_temperature_entity` / `air_temperature_entity` | piscine | L'eau et l'air, affichés en lignes. |
+| `ph_entity` / `redox_entity` | piscine | Le pH et le RedOx (ORP), affichés en lignes. |
+| `filtration_time_entity` | piscine | La durée de filtration du jour, en heures, minutes ou secondes : *4h30*. |
+| `pressure_entity` / `pressure_alert` | piscine | La pression du filtre : l'aiguille du manomètre la suit, et à `pressure_alert` (1,8 bar par défaut) ou plus, pompe en marche, c'est une *Erreur*. |
+| `pool_mode_entity` | piscine | Le mode de la pompe (auto, manuel…), affiché en ligne. En `state_entity`, un mode ne dit que la pompe tourne que si un `power_entity` dépasse `power_on_threshold` (50 W par défaut). |
+| `chlorine_pump_entity` / `chlorine_level_entity` | piscine | Une pompe doseuse de chlore, en option : son bidon et sa longue tubulure vers le tuyau de retour n'apparaissent que si elle est donnée, et des gouttes y descendent pendant l'injection. Son niveau, en %, remplit le bidon et passe en orange à 15 % ou moins. |
+| `backwash_entity` / `frost_entity` | piscine | Un contre-lavage envoie l'eau sale à l'égout, le bassin ne bouge pas ; le hors-gel givre les tuyaux. Un état qui dit contre-lavage ou hors-gel fait de même. |
+| `pool_alert_entity` | piscine | Tout ce qui doit déclencher l'*Erreur* : la pompe fume et l'aiguille du manomètre s'affole. |
+| `light_entity` | piscine | Le projecteur du bassin : il éclaire la paroi du fond, et son interrupteur se met dans le coin de la carte. |
+| `pump_layout` | pompe à eau | `booster` (surpresseur sur son ballon, avec son contrôleur) \| `sump` (regard de relevage en coupe, son flotteur sur son câble). Sans réglage, un `level_entity`, un `high_level_entity` ou un nom qui dit relevage en fait une pompe de relevage. Sur une prise connectée laissée allumée avec son `power_entity`, elle pompe au-dessus de `power_on_threshold`, attend en dessous, et affiche *Éteinte* dès que la prise est coupée, en rouge sur une pompe de relevage. Sans mesure de puissance, le switch est celui de la pompe et coupé veut seulement dire qu'elle attend. |
+| `pressure_entity` | pompe à eau (surpresseur) | La pression, sur l'écran du contrôleur et en ligne. Sans elle, l'écran affiche la puissance de la prise. |
+| `level_entity` / `level_max` | pompe à eau (relevage) | Le niveau d'eau, sur l'écran, en ligne et comme hauteur d'eau dans le regard : un pourcentage, ou une valeur sur `level_max`. À partir de 90 %, *Niveau haut*. |
+| `high_level_entity` | pompe à eau (relevage) | Un flotteur ou une alarme de niveau haut : *Niveau haut*, le regard plein et un gyrophare qui clignote. |
+| `target_temperature_entity` | sauna | La température à atteindre : à trois degrés près, le sauna est *Prêt*. Sans elle, la consigne du thermostat. |
+| `bubbles_entity` | spa | Les bulles ou les jets : *Bulles*, l'eau qui bouillonne, et un bouton *Bulles* sur un interrupteur. `light_entity` éclaire l'eau. |
+| `water_ph_entity` / `water_chlorine_entity` | spa, aquarium | Le pH de l'eau, et sur un spa son chlore, en lignes. |
+| `aquarium_filter_entity` | aquarium | La pompe du filtre : *À l'arrêt* en orange. |
+
+</details>
+
+<details>
+<summary><b>Pompes de piscine</b></summary>
+
+Un filtre à sable avec sa vanne multivoies et son manomètre, la pompe et son préfiltre à couvercle transparent, les tuyaux et le bassin. Son `state_entity` est la pompe, un interrupteur ou un capteur binaire : *Filtration* quand elle tourne, avec l'eau qui circule dans les tuyaux, un jet dans le préfiltre et l'aiguille qui monte ; *Éteint* au repos. Avec une pompe à chlore, *Injection de chlore* pendant le dosage. Le *Contre-lavage* envoie l'eau sale à l'égout, le *Hors-gel* givre les tuyaux, et une alerte ou une pression trop haute est une *Erreur*. Le projecteur, l'eau, l'air, le pH, le RedOx, la durée de filtration du jour, la pression et le mode de la pompe sont chacun en option. Le compteur d'une prise connectée suffit à lui seul.
+
+```yaml
+type: custom:ha-appliance-card
+appliance_type: pool_pump
+state_entity: binary_sensor.pompe_piscine
+light_entity: switch.projecteur_piscine
+water_temperature_entity: sensor.piscine_temperature_eau
+ph_entity: sensor.piscine_ph
+redox_entity: sensor.piscine_redox
+filtration_time_entity: sensor.piscine_filtration_aujourd_hui
+chlorine_pump_entity: binary_sensor.piscine_pompe_chlore
+```
+
+</details>
+
+<details>
+<summary><b>Pompes, plancher chauffant, spa, sauna, aquarium, compteur et sapin de Noël</b></summary>
+
+Chacun se lit sur sa propre entité, l'action d'un thermostat ou la puissance d'une prise avec `power_on_threshold`, et affiche sa mesure sur un écran dessiné assez grand pour être lu.
+
+```yaml
+type: custom:ha-appliance-card
+appliance_type: water_pump
+state_entity: switch.surpresseur
+pressure_entity: sensor.surpresseur_pression
+```
+
+```yaml
+type: custom:ha-appliance-card
+appliance_type: water_pump
+pump_layout: sump
+state_entity: switch.pompe_relevage
+level_entity: sensor.relevage_niveau
+level_max: 100
+high_level_entity: binary_sensor.relevage_niveau_haut
+```
+
+```yaml
+type: custom:ha-appliance-card
+appliance_type: spa
+state_entity: climate.spa
+bubbles_entity: switch.spa_bulles
+light_entity: light.spa
+```
+
+```yaml
+type: custom:ha-appliance-card
+appliance_type: meter
+state_entity: sensor.linky_papp
+tariff_entity: sensor.linky_ptec
+```
+
+```yaml
+type: custom:ha-appliance-card
+appliance_type: christmas_tree
+state_entity: switch.sapin
+tree_palette: red_gold
+```
+
+Une VMC simple flux à deux vitesses : le switch d'arrêt est l'état, le switch de vitesse choisit petite ou grande vitesse.
+
+```yaml
+type: custom:ha-appliance-card
+appliance_type: hrv
+hrv_layout: single
+state_entity: switch.vmc_marche
+high_speed_entity: switch.vmc_vitesse
+```
+
+Une pompe de relevage sur une prise connectée laissée allumée :
+
+```yaml
+type: custom:ha-appliance-card
+appliance_type: water_pump
+pump_layout: sump
+state_entity: switch.prise_relevage
+power_entity: sensor.prise_relevage_puissance
+power_on_threshold: 20
+```
+
+Un véhicule électrique sur son chargeur (#72) : la prise suffit. Au-dessus de 40 W il est *En charge* (le courant va du chargeur au véhicule, le voyant du chargeur pulse en rouge), en dessous *Chargée* (voyant vert), et *Débranchée* quand la prise est coupée, le véhicule grisé et le câble au sol. Le seuil se règle avec `power_on_threshold`.
+
+```yaml
+type: custom:ha-appliance-card
+appliance_type: mobility
+mobility_layout: offroad
+state_entity: switch.prise_atelier
+power_entity: sensor.prise_atelier_power
+battery_entity: sensor.trottinette_batterie   # facultatif
+```
+
+</details>
+
+### Robots et jardin
+
+<details>
+<summary><b>Options</b></summary>
+
+| Option | Types | Description |
+|---|---|---|
+| `irrigation_layout` | arrosage | `sprinkler` (une tête escamotable sur sa pelouse) \| `tap` (un programmateur sur le robinet du jardin, son tuyau et sa lance). Non renseigné, un nom qui dit Gardena, LinkTap, robinet ou timer donne un programmateur. |
+| `zone_entity` / `next_run_entity` | arrosage | La zone arrosée et le prochain arrosage, en lignes. `remaining_time_entity` affiche le temps restant sur le dessin pendant l'arrosage. |
+| `rain_delay_entity` | arrosage | Une pause pluie, allumée ou un nombre d'heures : *Pause pluie*, la pluie qui tombe sur la pelouse. |
+| `soil_moisture_entity` | arrosage | L'humidité du sol, en % : une jauge sur un piquet dans la pelouse, et une ligne, orange sous 25 %. |
+| `robot_layout` | robot | `vacuum` \| `mop` \| `mower` \| `stick` (un aspirateur balai sur son support mural) \| `floor_washer` (un laveur de sol dans sa station). Sans lui, un nom qui dit balai, sans fil ou Dyson en fait un aspirateur balai, Tineco ou laveur de sol un laveur de sol, une entité `lawn_mower` ou un nom qui dit tondeuse, Landroid ou Automower en fait une tondeuse, et Braava ou laveur un robot laveur. `pool` dessine un robot de piscine dont le câble le suit, avec son `remaining_time_entity` sur son boîtier ; un nom qui dit piscine, pool, Dolphin, Maytronics, Aiper, Zodiac ou Polaris le choisit. |
+| `robot_station` | robot | `station` (défaut : la station de vidage de l'aspirateur, la station de lavage du laveur) \| `base` (une base de charge seule). |
+| `robot_station_color` | robot | La couleur de la station rectangulaire : `white` (par défaut) \| `black` \| `gold` (blanche avec une façade dorée). |
+| `robot_camera` | robot | `true` dessine un module caméra sur le pare-chocs du robot, qui balaie devant lui pendant qu'il travaille. |
+| `robot_clean_tank_entity` / `robot_dirty_tank_entity` | robot | Les réservoirs d'eau propre et d'eau sale de la station : un niveau en %, ou un capteur binaire allumé quand le propre est vide ou le sale plein. En lignes, le propre signalé à 15 % ou moins et le sale à 85 % ou plus, et dessinés sur la façade de la station. |
+| `mower_style` | robot (tondeuse) | `classic` \| `navimow` (une Segway Navimow : coque grise, couvercle chromé rond sur un anneau de lumière, grosses roues avant orange). Sans lui, un nom qui dit Navimow ou Segway en dessine une. |
+| `robot_shelter` | robot | `true` dessine un abri au-dessus de la base d'une tondeuse. La pluie s'arrête sur son toit. |
+| `robot_shelter_style` | robot | `lean_to` (défaut, un appentis en bois au toit de tôle) \| `shell` (une coque moulée sur un pied) \| `garage` (un mur arrière qui se prolonge en long toit au-dessus de la tondeuse, sur un tapis sombre, comme les garages Navimow ou Husqvarna). |
+| `robot_shelter_color` | robot | La couleur de la coque ou du garage (noir par défaut pour le garage) : `white` (défaut) \| `grey` \| `black` \| `green` \| `orange`. |
+| `away_threshold` | robot | Un aspirateur balai ou un laveur de sol lu sur la prise de son support : au-dessus de `power_on_threshold` (5 W par défaut) il est *En charge*, en dessous *Chargé*, et à `away_threshold` (1 W par défaut) ou moins *Hors de la base*, en utilisation ou mal accroché, son support dessiné vide. La prise coupée affiche *Éteint*, qu'elle soit l'entité d'état ou l'interrupteur de la carte (`toggle_entity`). |
+| `robot_floor` | robot | Le sol sur lequel travaille un aspirateur ou un laveur : `rug` (tapis, défaut de l'aspirateur) \| `tiles` (carrelage, défaut du laveur) \| `parquet` \| `smooth` (sol lisse). |
+| `robot_controls` | robot | `true` ajoute les boutons du robot, sur une entité `vacuum` ou `lawn_mower` : *Démarrer* hors du travail, *Pause* au travail, *Retour à la base* loin d'elle. `controls_always: true` montre les trois en permanence. |
+| `battery_corner` | robot | `true` déplace la batterie des lignes vers un coin de la carte, en icône et en pourcentage, orange à 20 % ou moins. Un appui ouvre son entité. |
+| `robot_status_entity` | robot | L'état détaillé de l'intégration, lu pour ce que le dessin sait montrer : la station qui vide le bac, lave ou sèche les patins, la pluie qui garde une tondeuse à la base, la coupe des bordures. L'attribut `status` d'une entité aspirateur est lu sans lui. |
+| `battery_entity` | robot | La batterie, en %, quand l'entité du robot ne la porte pas. Sur la base, *En charge* sous 100 %, *À la base* au-dessus. |
+| `robot_bin_entity` / `robot_water_entity` | robot | Un bac plein, un réservoir d'eau vide : un capteur binaire allumé, un capteur qui le dit, ou un niveau en % (vide à 5 % ou moins, son niveau dessiné dans le robot). |
+| `robot_rain_entity` | robot | La pluie qui garde une tondeuse sur sa base : un nuage et sa pluie sur la pelouse. |
+| `robot_error_entity` | robot | L'erreur, en mots : le robot fume et son texte s'affiche. *no error*, *none*, `0` et leurs semblables n'en sont pas, dans toutes les langues de la carte (*Aucune erreur*, *Pas d'erreur*, *Keine Fehler*...) : un capteur template qui met un code d'erreur en mots marche tel quel. |
+
+</details>
+
+<details>
+<summary><b>Robots et aspirateurs : robots, tondeuses, aspirateurs balais et laveurs de sol</b></summary>
+
+Lu depuis l'entité `vacuum` ou `lawn_mower` de Home Assistant : *Nettoyage*, *Lavage* ou *Tonte*, *Retour à la base*, *En pause*, *À l'arrêt*, *En charge* puis *À la base* une fois plein, *Erreur*. Le robot quitte sa base et fait des allers-retours sur son sol, un tapis, du carrelage ou une pelouse dont l'herbe est coupée sous la tondeuse, et son anneau prend la couleur de son état. Un état détaillé en dit plus : la station qui vide le bac, lave ou sèche les patins, la *Coupe des bordures*, la *Pluie*. Un bac plein ou un réservoir vide le passent en orange ; une erreur le fait fumer, avec une marque de colère. Ses lignes donnent la batterie, le réservoir d'eau et le texte de l'erreur.
+
+```yaml
+type: custom:ha-appliance-card
+state_entity: lawn_mower.landroid
+robot_status_entity: sensor.landroid_status
+battery_entity: sensor.landroid_battery
+robot_error_entity: sensor.landroid_error
+robot_shelter: true
+```
+
+Un aspirateur balai ou un laveur de sol se lit sur la prise de son support ou de sa station, et le courant parcourt le câble pendant la charge. L'intégration d'un laveur de sol (Tineco) en dit plus : hors de la base pendant l'utilisation, *Autonettoyage* avec des bulles dans la station, réservoir d'eau sale plein, réservoir d'eau propre vide, brosse emmêlée en *Erreur*.
+
+```yaml
+type: custom:ha-appliance-card
+appliance_type: robot
+robot_layout: floor_washer
+state_entity: sensor.tineco_vacuum_status
+battery_entity: sensor.tineco_battery
+robot_bin_entity: sensor.tineco_waste_water_tank
+robot_water_entity: sensor.tineco_fresh_water_tank
+robot_error_entity: sensor.tineco_brush_roller
+```
+
+</details>
+
+### Animaux
+
+<details>
+<summary><b>Options</b></summary>
+
+| Option | Types | Description |
+|---|---|---|
+| `filter_life_entity` / `filter_reset_entity` / `filter_due_below` | fontaine | La durée de vie restante du filtre, sur une ligne, et un bouton de réinitialisation (un bouton, un interrupteur ou un script). Jours, heures, minutes et secondes se comptent en jours, un pourcentage reste un pourcentage, et une date (le prochain changement) donne les jours qui restent. À `filter_due_below` ou en dessous (3 pour des jours, 10 pour un pourcentage par défaut), l'état lit *Filtre à changer*, et la ligne et le voyant passent à l'orange. |
+| `pump_clean_entity` / `pump_reset_entity` | fontaine | Pareil pour la pompe : la durée ou la date avant son nettoyage, avec le même seuil, et un bouton de réinitialisation. L'état lit *Pompe à nettoyer*. |
+| `pump_running_entity` | fontaine | La pompe, quand l'intégration la lit à part de l'alimentation (le *Pump running* de Petkit, le statut *watering* de Xiaomi) : l'eau ne coule que si les deux le disent. Une ligne *Dernière marche de la pompe* donne l'heure de son dernier arrêt, ou *En marche*. |
+| `water_level_entity` / `level_empty_below` | fontaine | L'eau restante : un pourcentage, qui remplit le réservoir sur le dessin ; un mot (`low`, `lack`, `shortage`, `level_1`… ou `normal`, `medium`, `full`) ; ou un contact, allumé quand elle manque, ou allumé tant qu'il y a de l'eau pour un contact d'humidité (Petlibro). Un nombre dans une autre unité (un niveau de 1 à 4, des millilitres) ne se lit contre `level_empty_below` que si celui-ci est réglé. À `level_empty_below` ou en dessous (10 par défaut), l'état lit *Peu d'eau*, en rouge, avant tout le reste : une pompe à sec grille. Le jet s'arrête alors, comme pompe arrêtée, et la vasque se retrouve à sec. |
+| `litter_layout` | litière | `globe` (un globe qui tourne sur sa base, façon Litter-Robot) \| `box` (une boîte fermée à l'entrée ronde, façon Petkit Pura). Non renseigné, un nom qui dit Petkit, Pura ou box donne une boîte. L'état se lit en mots ou dans les codes du Litter-Robot (`rdy`, `ccp`, `cst`, `dfs`...) : *Prête*, *Nettoyage* (le cycle complet : le globe ou le tambour tourne, la litière reste à plat au fond et les agglomérats sont tamisés, puis il nivelle et revient), *Chat dedans*, *Tiroir plein*, *Défaut*. |
+| `waste_drawer_entity` / `litter_level_entity` | litière | Le remplissage du tiroir à déchets et le niveau de litière, en % : une jauge sur le tiroir et des lignes, orange à partir de 80 % de remplissage ou de 20 % de litière restante. |
+| `pet_weight_entity` / `visits_entity` / `last_use_entity` | litière | Le poids du chat, les passages du jour et le dernier passage, en lignes. |
+| `cat_present_entity` | litière | Un capteur qui voit le chat : *Chat dedans*, le chat à l'entrée. |
+| `feeder_layout` | distributeur | `tower` (défaut, un réservoir carré sur son socle) \| `canister` (un réservoir rond sur un socle rond) \| `double` (deux sorties et deux gamelles) \| `dual_split` (deux réservoirs au-dessus d'une gamelle partagée par le milieu) \| `rotary` (des assiettes sur un plateau tournant sous un couvercle, pour la pâtée). |
+| `fountain_layout` | fontaine | `square` (défaut, un réservoir carré avec une fenêtre sur l'eau) \| `round` (un tambour rond au rebord inox, le voyant au pied de la face avant). |
+| `level_b_entity` | distributeur | Le niveau du second réservoir, sur un distributeur qui en a deux (`dual_split`), lu comme `level_entity` et avec les mêmes `level_empty_below` et `level_max`. Il remplit la fenêtre de droite, a sa propre ligne, et vide il fait passer l'état à *Réservoir vide* en ne vidant que sa moitié. Au repos, la ligne d'état donne le plus bas des deux niveaux, celui à remplir en premier. L'éditeur ne le propose que pour `dual_split`. |
+| `portions_today_entity` / `weight_today_entity` | distributeur | Ce qui a été servi aujourd'hui, sur une seule ligne. Sans entité de poids, la carte calcule les grammes à partir de `portion_weight_entity` : rien n'est supposé sur la taille d'un repas. |
+| `serving_size_entity` / `portion_weight_entity` | distributeur | Combien de portions par distribution, et ce que pèse une portion. |
+| `schedule_entity` | distributeur | Le planning, dans les mots de l'intégration, sur une ligne qui s'enroule. |
+| `last_feed_entity` | distributeur | L'horodatage du dernier repas, quand l'intégration en donne un. Sinon la carte le trouve : un `script` dit quand il a tourné pour la dernière fois, quoi qu'il l'ait demandé, un `button` porte l'heure de son dernier appui, et le compteur du jour bouge à chaque repas que le distributeur rapporte, y compris ceux qu'il sert sur son propre planning. |
+| `level_entity` / `level_empty_below` / `level_max` | distributeur | Ce qui reste dans le réservoir : un pourcentage, qui remplit la trémie sur le dessin et se lit sur la ligne d'état au repos (*Réservoir à 74 %*), ou un contact qui dit seulement *vide*. À `level_empty_below` ou en dessous (0 par défaut), dans l'unité du relevé, l'état lit *Réservoir vide*, en orange, et la trémie se vide. Un réservoir compté en grammes ou en litres remplit la trémie, et donne son pourcentage, dès que `level_max` en donne la contenance. |
+| `error_entity` | distributeur | Fait passer l'état en *Erreur*, et en *Réservoir vide* quand l'erreur se nomme elle-même (`no_food`, `empty`, et le même mot dans les autres langues). Un code de défaut vaut une erreur sur toute valeur autre que zéro. |
+| `state_entity` | distributeur | Facultatif : un distributeur est au repos presque tout le temps, donc une commande ou un compteur suffisent. Quand il rapporte quelque chose, *on* se lit *Distribution* et les croquettes tombent. |
+
+</details>
+
+<details>
+<summary><b>Distributeurs de croquettes</b></summary>
+
+Un distributeur se lit, il ne se pilote pas : pas de cycle, pas de programme, pas de porte. Son état est calculé à partir de ce qu'il rapporte, *Réservoir vide*, *Erreur* ou *Distribution*, et au repos la ligne dit à quel point le réservoir est plein, ou rien quand la carte ne peut pas le savoir. La carte porte ce qui a été servi aujourd'hui et l'heure du dernier repas. Un réservoir vide est la seule chose qu'un distributeur ne peut pas régler tout seul : il prend la ligne d'état, et vide le réservoir et la gamelle sur le dessin. Un triangle rouge se lève avec lui, et il se lève aussi pour un blocage, avec les croquettes toujours dans le réservoir cette fois.
+
+La commande est le point intéressant, parce qu'un distributeur a rarement un bouton. Celui-ci distribue depuis une liste réglée sur `START`, via Zigbee2MQTT :
+
+```yaml
+type: custom:ha-appliance-card
+appliance_type: pet_feeder
+start_entity: select.croquettes_feed
+portions_today_entity: sensor.croquettes_portions_per_day
+weight_today_entity: sensor.croquettes_weight_per_day
+portion_weight_entity: number.croquettes_portion_weight
+serving_size_entity: number.croquettes_serving_size
+schedule_entity: sensor.croquettes_planning
+```
+
+L'option n'est pas écrite : une liste dont la seule vraie option est `START` n'a rien à demander. Celui-là distribue par un script, et compte ses repas avec un helper `history_stats` :
+
+```yaml
+type: custom:ha-appliance-card
+appliance_type: pet_feeder
+start_entity: script.distribuer_croquettes
+portions_today_entity: sensor.croquettes_distributions_du_jour
+state_entity: binary_sensor.distributeur_distribution
+```
+
+Une automation ou un `input_button` fait aussi bien l'affaire comme commande, et un `utility_meter` fait un bon compteur : `portions_today_entity` prend ce qui compte les repas, là où l'intégration le tient.
+
+Un distributeur qui ne dit jamais qu'il sert, comme le C1 d'Aqara en Zigbee2MQTT, est dessiné *Distribution* pendant 30 secondes après un appui sur le bouton de la carte, et quand ses portions ou son poids du jour augmentent, quel que soit celui qui a servi le repas.
+
+Trois entités se lisent aussi bien que dix : une ligne n'existe que si son entité répond.
+
+Trois modèles sont dessinés, d'après les distributeurs du commerce : un réservoir carré avec une fenêtre sur ses croquettes, un réservoir rond, chacun avec une gamelle en inox posée dans son socle, et un double dont les deux becs remplissent chacun sa gamelle. La fenêtre se remplit selon le niveau, les croquettes tombent dans la gamelle pendant la distribution, et un réservoir vide laisse l'une et l'autre vides. Le petit écran affiche l'heure en vert comme les vrais, passe en bleu pendant la distribution, avec la portion quand `serving_size_entity` est renseigné, et en rouge sur un réservoir vide ou une erreur. La sécurité enfant et le verrouillage automatique se placent dans les coins du haut, chacun montrant s'il est enclenché :
+
+```yaml
+feeder_layout: canister
+corner_entities:
+  - switch.distributeur_auto_lock
+  - switch.distributeur_child_lock
+```
+
+Deux autres couvrent les distributeurs qui n'entrent dans aucun des trois. `dual_split` a deux réservoirs côte à côte, par exemple les friandises à gauche et les croquettes à droite, chacun avec sa sortie au-dessus de sa moitié d'une seule gamelle large. Chaque réservoir lit son propre niveau, et celui qui se vide ne laisse nues que sa fenêtre et sa moitié de gamelle :
+
+```yaml
+feeder_layout: dual_split
+state_entity: binary_sensor.distributeur_en_cours
+level_entity: binary_sensor.distributeur_reservoir_1_bas
+level_b_entity: binary_sensor.distributeur_reservoir_2_bas
+```
+
+`rotary` est un distributeur de pâtée : des assiettes sur un plateau tournant sous un couvercle percé d'une ouverture. Servir, c'est ouvrir, donc l'entité d'état est celle qui dit que le couvercle est ouvert, et pendant la distribution le plateau amène l'assiette suivante dans l'ouverture. Son niveau est le nombre d'assiettes restantes, compté sur celles qu'il contient :
+
+```yaml
+feeder_layout: rotary
+state_entity: switch.distributeur_patee_couvercle
+level_entity: counter.distributeur_patee_assiettes
+level_max: 3
+```
+
+</details>
+
+<details>
+<summary><b>Fontaines à eau</b></summary>
+
+Une fontaine tourne toute la journée, alors comme un distributeur elle se lit plus qu'elle ne se commande. Tant que la pompe tourne, l'eau monte en dôme au-dessus de la sortie, des cercles s'étalent sur le plateau en inox et des gouttes jaillissent sur ses bords, d'après un interrupteur ou la prise sur laquelle elle est branchée. Le reste de ce qu'elle dit, c'est ce qui demande un coup de main : l'eau d'abord, puis le filtre, puis la pompe, chacun prenant la ligne d'état et l'anneau lumineux sous le plateau, orange avec un badge de filtre pour le filtre et la pompe, rouge et clignotant avec un badge d'alerte pour l'eau.
+
+```yaml
+type: custom:ha-appliance-card
+appliance_type: pet_fountain
+state_entity: switch.fontaine_alimentation
+filter_life_entity: sensor.fontaine_jours_filtre
+filter_reset_entity: button.fontaine_reinitialiser_filtre
+pump_clean_entity: sensor.fontaine_jours_nettoyage_pompe
+pump_reset_entity: button.fontaine_reinitialiser_pompe
+corner_entities:
+  - switch.fontaine_voyant
+info_entities:
+  - select.fontaine_mode
+```
+
+Une fontaine qui ne connaît pas son niveau d'eau garde un réservoir à mi-hauteur sur le dessin plutôt que de le montrer vide.
+
+Une fontaine hors ligne lit *Hors ligne*, sans voyant et son eau dessinée en gris.
+
+L'état de la pompe se lit dans les mots des intégrations de fontaines, si bien qu'un mode marche aussi bien qu'un interrupteur : ce qui l'arrête d'abord (`off`, `Do not flow`, `closed`, `waterless`), puis ce qui la fait tourner (`on`, `flowing`, `constant`, `intermittent`, `smart`, `auto`, `motion`, `open`…).
+
+| Intégration | Pompe ou mode | Eau | Filtre et pompe |
+|---|---|---|---|
+| Petkit ([Jezza34000](https://github.com/Jezza34000/homeassistant_petkit), [RobertD502](https://github.com/RobertD502/home-assistant-petkit)) | Interrupteur ; *Pump running* dans `pump_running_entity` ; `Continuous`, `Intermittent`, `Motion activated` | *Water lack warning*, ou `normal`/`low`/`empty` | Filtre en % ou en jours, prochain rinçage en date |
+| Xiaomi ([xiaomi_miot](https://github.com/al-one/hass-xiaomi-miot), Xiaomi Home) | Interrupteur ; `Common`/`Smart`, `Auto`/`Interval`/`Constant` ; statut `watering`/`waterless` | Contact de manque d'eau | Filtre et nettoyage en jours ou en heures |
+| Petlibro | `Flowing Water (Constant)`, `Intermittent Water (Scheduled)`, `Off` | Poids en %, ou le contact d'humidité de l'eau | Jours de filtre et de nettoyage |
+| Catlink | `Flowing mode`, `Eco-mode`, `Smart mode` | Niveau d'eau en % | Vie du filtre en % |
+| Tuya, tuya-local | Interrupteur ou vanne (`open`/`closed`) ; `normal`, `smart`, `night`, `motion` | `level_1`…`level_3`, `low`/`medium`/`full`, ou un contact | Filtre et pompe en minutes ou en jours ; interrupteurs de réinitialisation |
+
+</details>
+
+### Énergie et mobilité électrique
+
+<details>
+<summary><b>Options</b></summary>
+
+| Option | Types | Description |
+|---|---|---|
+| `battery_entity` / `battery_low` | onduleur | La charge de la batterie, en % : la jauge de l'onduleur se remplit par cinquièmes, orange à 40 % ou moins, rouge à `battery_low` (20 % par défaut) ou moins. Sur batterie, à ce niveau ou avec le `LB` de NUT, il affiche *Batterie faible*. |
+| `runtime_entity` | onduleur | L'autonomie restante, en secondes comme NUT la donne, ou en minutes ou en heures : une ligne, et l'écran de l'onduleur quand il est sur batterie. |
+| `load_entity` / `nominal_power` | onduleur | La charge, en % : l'énergie circule plus vite quand elle monte, et à 100 % ou plus c'est une *Surcharge*. Avec `nominal_power` (en W) et sans `power_entity`, la ligne la donne aussi en watts. |
+| `input_voltage_entity` | onduleur | La tension à la prise, en ligne. Sans `state_entity`, sous 100 V l'onduleur est sur batterie. |
+| `mobility_layout` | mobilité | `scooter` (trottinette) \| `offroad` (trottinette tout-terrain à double suspension, comme l'Ausom DT2 Pro) \| `ebike` (vélo électrique) \| `gyropode` \| `motorcycle` (moto électrique). Sans réglage, il est lu dans le nom : Ausom, Dualtron ou tout-terrain, vélo ou bike, gyropode, moto ou Super Soco ; une trottinette sinon. |
+| `battery_entity` | mobilité | La batterie du véhicule, en % : une barre de la jauge par quart, la suivante qui clignote en charge, et *Chargée* à 100 %. Sans elle, les barres se remplissent de 0 à 4 en boucle pendant la charge. |
+| `meter_layout` | compteur | `linky` \| `box` (un compteur électrique numérique) \| `dome` (un compteur rond nord-américain sous sa cloche) \| `gas` (un compteur de gaz à membrane et ses rouleaux) \| `water` (un compteur d'eau en laiton, ses rouleaux, ses cadrans des litres et son étoile). Sans lui, une classe ou un nom gaz ou eau choisit le compteur de gaz ou d'eau, un Linky sinon. Son `state_entity` est soit un débit (W, kW, m³/h, L/min), à l'écran et en ligne, soit un index (kWh, m³, L), sur les rouleaux, en marche s'il a bougé dans les deux dernières minutes. |
+| `tariff_entity` | compteur | La période tarifaire (BASE, HP, HC, une couleur Tempo), sur l'écran et en ligne. |
+| `today_entity` / `total_entity` | compteur | La consommation du jour (un `utility_meter` ou celui de l'intégration), et l'index quand l'état est un débit, en lignes et sur le compteur. |
+| `high_power` | compteur | À partir de cette puissance, le compteur passe en *Conso forte* et son voyant bat vite. 3000 par défaut, dans l'unité de l'entité d'état (VA ou W). |
+| `export_total_entity` | compteur | L'index d'injection (kWh) d'un compteur électrique, en ligne *Index d'injection*. |
+| `meter_direction` | compteur | `auto` (par défaut) : une puissance négative est injectée, le compteur lit *Injection* avec une diode verte \| `import` : un compteur qui ne fait que consommer, une valeur négative compte comme aucune consommation \| `export` : un compteur qui ne fait qu'injecter, quel que soit le signe. À 0 W, un compteur électrique lit *Pas de consommation*. |
+| `range_entity` / `vehicle_lock_entity` | mobilité électrique | L'autonomie restante, et l'antivol : *Déverrouillé* en orange. |
+| `power_entity` | solaire | La puissance produite par les panneaux, en W ou en kW : *Production* au-dessus de 15 % de `peak_power` (100 W sans lui), *Production faible* en dessous en plein jour, *Nuit* une fois le soleil couché (`sun.sun`, ou aucune puissance du tout sans lui). Le `state_entity` est facultatif : l'état d'un onduleur, dont les mots pour une panne font une *Erreur*. |
+| `peak_power` | solaire | La puissance crête des panneaux, en W, dont le seuil de la *Production faible* est tiré. |
+| `energy_today_entity` | solaire | L'énergie produite aujourd'hui, en ligne. |
+| `solar_layout` | solaire | `ground` (défaut, deux panneaux sur leur support) \| `roof` (une maison avec ses panneaux sur le toit). |
+| `solar_alert_entity` | solaire | Tout ce qui doit lever l'*Erreur* : l'onduleur fume. |
+| `battery_entity` | batterie domestique | Le niveau, en %. Il remplit la jauge et l'écran, et à 10 % ou moins la batterie est en *Batterie basse*, en rouge. |
+| `power_entity` / `power_inverted` / `power_on_threshold` | batterie domestique | Une seule puissance, positive en charge et négative en décharge, ou l'inverse avec `power_inverted: true`. Sous `power_on_threshold` (10 W par défaut) dans un sens comme dans l'autre, elle est *Au repos*, et *Pleine* à sa limite de charge. |
+| `charge_power_entity` / `discharge_power_entity` | batterie domestique | Ce qui entre et ce qui sort, pour les batteries qui les mesurent à part (EcoFlow, Bluetti), à la place de `power_entity`. |
+| `reserve_entity` / `charge_limit_entity` | batterie domestique | La réserve de secours, tracée en pointillés sur la jauge et donnée en ligne, et la limite de charge, *Pleine* une fois atteinte. |
+| `battery_capacity` | batterie domestique | La capacité, en kWh : avec elle, les lignes disent dans combien de temps elle sera pleine, ou jusqu'à la réserve. |
+| `battery_layout` | batterie domestique | `wall` (une batterie murale) \| `station` (une station portable). Sans lui, un nom qui dit EcoFlow, Delta, Bluetti, Jackery, Anker ou station en fait une station. |
+| `battery_alert_entity` | batterie domestique | Tout ce qui doit lever l'*Erreur* : un défaut du BMS. Un état qui dit panne fait de même. |
+| `state_entity` | borne de recharge | Le statut de la borne : *Aucun véhicule*, *Véhicule branché*, *En attente d'autorisation*, *En charge*, *En décharge*, *Charge en pause*, *Charge programmée*, *Charge terminée*, *Erreur* ou *Hors ligne*, lu dans les mots d'OCPP et des intégrations de Home Assistant (voir *Bornes de recharge*). `state_map` accepte les dix : `no_vehicle`, `connected`, `awaiting_auth`, `charging`, `discharging`, `paused`, `scheduled`, `done`, `error` et `offline`. Facultatif : sans lui, la prise et le compteur le disent. |
+| `vehicle_entity` | borne de recharge | Si une voiture est branchée : le contact d'une prise, ou l'état d'un câble en mots (`disconnected`, `cable_only`, `vehicle_connected`, `vehicle_locked`). Sans voiture, un statut reconnu devient *Aucun véhicule*, sauf une erreur. |
+| `power_entity` / `power_on_threshold` | borne de recharge | La puissance, dans l'unité et la précision du compteur (*7,4 kW*). Le seuil est en W quelle que soit cette unité, 100 W par défaut : au-dessus, la puissance passe. Il ne sert qu'à défaut de statut, et à distinguer une voiture qui a sa charge d'une voiture en pause. |
+| `session_energy_entity` | borne de recharge | L'énergie de la session, en *Chargé 12,4 kWh*. |
+| `discharge_power_entity` | borne de recharge | La puissance que rend la voiture (V2H, V2G), comme le `Power.Active.Export` d'OCPP, en *Décharge 7,4 kW*. Au-dessus de `power_on_threshold`, la voiture est *En décharge* (voir *Charge bidirectionnelle*). |
+| `current_limit_entity` | borne de recharge | La limite de courant, en *Limite de courant 16 A*. Un appui ouvre l'entité, qui est là où elle se règle. |
+| `error_entity` | borne de recharge | Un contact allumé, un code autre que 0 ou un mot autre que *pas d'erreur* (le `NoError` d'OCPP, `ok`, `none`) fait passer l'état en *Erreur*, avec les mots de la borne sur une ligne. |
+
+</details>
+
+<details>
+<summary><b>Panneaux solaires et batteries domestiques</b></summary>
+
+Des panneaux solaires sur leur support au sol, ou sur le toit d'une maison. En production, un reflet passe sur les cellules et l'énergie descend le câble jusqu'à l'onduleur, plus vite quand le soleil est fort ; avec peu de puissance quelques nuages passent, et la nuit la lune et les étoiles se lèvent. La puissance et l'énergie du jour sont données en lignes.
+
+```yaml
+type: custom:ha-appliance-card
+appliance_type: solar
+power_entity: sensor.puissance_solaire
+energy_today_entity: sensor.energie_solaire_aujourd_hui
+peak_power: 800
+solar_layout: roof
+```
+
+Une batterie domestique murale, ou une station portable. Sa jauge se remplit avec son niveau, l'énergie entre en vert pendant la charge et sort en orange pendant la décharge, et l'écran donne le pourcentage. La réserve est une ligne en pointillés sur la jauge, et avec `battery_capacity` les lignes disent dans combien de temps elle sera pleine, ou jusqu'à la réserve. `illustration_color` peint son boîtier.
+
+```yaml
+type: custom:ha-appliance-card
+appliance_type: home_battery
+battery_entity: sensor.delta_pro_battery_level
+charge_power_entity: sensor.delta_pro_total_in_power
+discharge_power_entity: sensor.delta_pro_total_out_power
+reserve_entity: number.delta_pro_backup_reserve_level
+battery_capacity: 3.6
+battery_layout: station
+```
+
+</details>
+
+<details>
+<summary><b>Onduleurs</b></summary>
+
+Un onduleur entre la prise murale et le boîtier qu'il protège, avec son écran, ses trois voyants et sa jauge de batterie. Son `state_entity` est le capteur d'état de NUT, celui qui affiche `OL`, `OB DISCHRG` ou `OL CHRG`, ou le capteur en texte de l'intégration (*Online*, *On Battery*) : *Sur secteur* avec l'énergie qui va de la prise à l'onduleur, *en charge* pendant qu'il remplit sa batterie ; *Sur batterie* quand le secteur a disparu, la prise barrée, l'onduleur qui bipe et son écran qui compte l'autonomie ; *Bypass* et *Arrêt*. `LB` ou une charge basse sur batterie, `OVER` ou une charge de 100 %, et `RB` déclenchent *Batterie faible*, *Surcharge* et *Batterie à remplacer*. La batterie, l'autonomie, la charge et la tension d'entrée sont des lignes. L'intégration NUT de Home Assistant laisse `battery.runtime` désactivé : activez-le pour avoir l'autonomie.
+
+```yaml
+type: custom:ha-appliance-card
+appliance_type: ups
+state_entity: sensor.ups_code_d_etat
+battery_entity: sensor.ups_charge_de_la_batterie
+runtime_entity: sensor.ups_autonomie_de_la_batterie
+load_entity: sensor.ups_charge
+input_voltage_entity: sensor.ups_tension_d_entree
+nominal_power: 520
+```
+
+</details>
+
+<details>
+<summary><b>Bornes de recharge</b></summary>
+
+Une wallbox au mur, son voyant dans la couleur de ce que fait la borne : *Aucun véhicule*, *Véhicule branché* (une voiture qui attend), *En attente d'autorisation* (un badge ou l'appli), *En charge*, *En décharge* (la voiture qui rend de l'énergie), *Charge en pause* (par la borne ou par la voiture), *Charge programmée*, *Charge terminée* (la voiture encore branchée), *Erreur* ou *Hors ligne*. Avec une voiture branchée, la prise quitte son étui et le câble part vers la voiture ; pendant la charge, l'énergie court le long du câble, lumineuse dans la couleur de l'état et d'autant plus vite que la puissance est forte (quatre allures, d'un surplus solaire à 22 kW), et s'arrête pendant une pause. Le voyant respire pendant la charge et lentement quand elle est programmée, et clignote pour une autorisation et, plus vite, sur un défaut. Sous vos yeux, une voiture qu'on branche montre la prise qui suit le câble jusqu'à elle, une voiture qu'on débranche le câble qui revient, et la fin d'une charge un éclat du voyant. Avec *réduire les animations* activé sur l'appareil, rien ne bouge. N'importe quelle wallbox fait l'affaire : la card lit le statut dans les mots d'OCPP et des intégrations de Home Assistant lui-même, `state_map` lui apprend tous les autres, et une borne sans statut se lit sur sa prise et son compteur.
+
+| Intégration | Statut | Mots lus |
+|---|---|---|
+| OCPP ([ocpp](https://github.com/lbbrhzn/ocpp), 1.6 et 2.0.1) | Status Connector | `Available`, `Reserved` → aucun véhicule ; `Preparing` → véhicule branché ; `Charging` ; `SuspendedEVSE`, `SuspendedEV` → en pause ; `Finishing` → terminée ; `Faulted` → erreur |
+| Peblar | State | `no_ev_connected` → aucun véhicule ; `charging` ; `suspended` → en pause ; `error`, `fault`, `invalid` → erreur |
+| Ohme | Status | `unplugged` → aucun véhicule ; `plugged_in` → véhicule branché ; `pending_approval` → en attente d'autorisation ; `charging` ; `paused` ; `finished` → terminée |
+| Tesla Wall Connector | Status | `not_connected` → aucun véhicule ; `connected`, `negotiating` → véhicule branché ; `charging`, `charging_reduced` ; `waiting_car` → en pause ; `charging_finished` → terminée ; `error` |
+| NRGkick | Status | `standby` → aucun véhicule ; `connected` → véhicule branché ; `charging` ; `error` |
+| OpenEVSE | Charging status | `not_connected` → aucun véhicule ; `connected` → véhicule branché ; `charging` ; `sleeping`, `disabled` → en pause ; `vent_required` et les défauts (`gfci_fault`, `no_ground`, `stuck_relay`…) → erreur |
+| Lektrico | State | `available` → aucun véhicule ; `connected` → véhicule branché ; `need_auth` → en attente d'autorisation ; `charging` ; `paused` ; `paused_by_scheduler` → programmée ; `error` |
+| Blue Current | Activity | `available` → aucun véhicule ; `charging` ; `error` ; `offline` |
+| Webasto Next et Unite ([Modbus](https://github.com/tomwellnitz/Webasto-Next-Modbus)) | Charge Point State | `available`, `reserved` → aucun véhicule ; `preparing` → véhicule branché ; `charging` ; `suspended`, `suspended_evse`, `suspended_ev` → en pause ; `finishing` → terminée ; `error`, `faulted` → erreur |
+| Wallbox | Status description | `Charging` ; `Discharging` ; `Paused`, `Waiting for car demand`, `Waiting in queue by …` → en pause ; `Scheduled` ; `Locked, car connected` → en attente d'autorisation ; `Error`, `Waiting MID failed` → erreur |
+| Easee ([easee_hass](https://github.com/nordicopen/easee_hass)) | Status | `disconnected` → aucun véhicule ; `awaiting_start` → véhicule branché ; `awaiting_authorization` → en attente d'autorisation ; `charging` ; `awaiting_load_balancing` → en pause ; `awaiting_scheduled_start`, `awaiting_smart_start` → programmée ; `completed` → terminée ; `error_*` → erreur |
+| Zaptec ([zaptec](https://github.com/custom-components/zaptec)) | Charger mode | `disconnected` → aucun véhicule ; `connected_requesting` → véhicule branché ; `connected_charging` → en charge ; `connected_finished` → terminée |
+| go-e Charger | Car state | `Idle`, `Charger ready, no vehicle` → aucun véhicule ; `Wait for car`, `Waiting for vehicle` → véhicule branché ; `Charging` ; `Complete` → terminée ; `Error` |
+| Alfen ([alfen_wallbox](https://github.com/leeyuentuen/alfen_wallbox)) | Status code socket | `Available`, `Cable connected` → aucun véhicule ; `EV connected` → véhicule branché ; `Authorizing` → en attente d'autorisation ; `Charging normal`, `Solar charging` → en charge ; `Wait vehicle charging`, `Waiting for power` → en pause ; `Finish wait vehicle` → terminée ; `Error …` |
+| myenergi Zappi | Plug status | `EV Disconnected` → aucun véhicule ; `EV Connected` → véhicule branché ; `Waiting for EV`, `EV ready to charge` → en pause ; `Charging` ; `Fault` → erreur |
+| Fronius Wattpilot, Hypervolt, SMA EV Charger, Charge Amps, Pod Point | Status | leurs mots aussi : `wait car`, `no car`, `sleep_mode`, `active_mode`, `station_locked`, `suspended-ev`, `out-of-service`, `connected-waiting-for-schedule`… |
+| Tessie, Greencell, Nexblue, TechnoVE, Shelly EVE01, Besen, Victron GX | Status | `idle`, `disconnected`, `charger_free` → aucun véhicule ; `charger_insert`, `plugged_waiting` → véhicule branché ; `waiting_for_rfid` → en attente d'autorisation ; `charger_wait`, `ev_waiting`, `lb_waiting` → en pause ; `delay_waiting`, `high_tariff_period` → programmée ; `charger_end`, `charged` → terminée ; `pilot_fault`, `error_evse` → erreur |
+
+Le statut se lit quelle que soit son écriture : majuscules, espaces, tirets et virgules s'effacent, si bien que `Waiting for car demand`, `suspended-ev` et `charging_normal` retrouvent les mêmes mots. Le `Disconnected` d'une Wallbox peut être la borne coupée de son cloud plutôt qu'aucune voiture : `state_map: {Disconnected: offline}` le corrige. L'état du véhicule de go-e arrive traduit dans la langue de Home Assistant, et seuls les mots anglais sont lus ; evcc et openWB n'ont pas d'entité de statut, il faut alors leur donner leur prise et leur compteur.
+
+Un mot au sens incertain reste tel qu'il vient, comme pour tout autre appareil : le `booting` de la Tesla, le `wakeup` de la NRGkick, les `updating_firmware` et `locked` de la Lektrico. De même pour un mot qui dit une chose sur une borne et une autre ailleurs : le `ready` de la Tesla est une voiture branchée, le `Ready` d'une Wallbox une borne sans voiture, et tous deux se lisent *Inactif* (`state_map: {ready: connected}` pour la Tesla). Une voiture qui cesse de prendre l'énergie (`SuspendedEV`, `suspended_ev`, le `waiting_car` de la Tesla) se lit *Charge terminée* une fois que la session contient de l'énergie et que la puissance ne passe plus, ce qui demande `session_energy_entity` et `power_entity` ; sinon c'est une pause. Une borne qui retient l'énergie (`SuspendedEVSE`, un `suspended` seul) reste en pause : elle reprend d'elle-même.
+
+Les `unavailable` et `unknown` de Home Assistant se lisent *Hors ligne*. Une borne qui donne l'`Unavailable` d'OCPP comme un mot se règle avec `state_map`, puisque seule la majuscule l'en distingue (les `unavailable` en minuscules de Blue Current et de l'Unite ne peuvent pas l'être, et se lisent *Hors ligne*). Ce qui l'emporte, dans l'ordre : une `error_entity` qui signale une erreur, puis *Hors ligne*, puis une `vehicle_entity` qui dit qu'il n'y a pas de voiture, ce qui fait de tout statut reconnu sauf une erreur *Aucun véhicule*, puis le statut lui-même.
+
+La Webasto Next, avec l'[intégration Modbus](https://github.com/tomwellnitz/Webasto-Next-Modbus) :
+
+```yaml
+type: custom:ha-appliance-card
+appliance_type: ev_charger
+state_entity: sensor.webasto_next_charge_point_state
+vehicle_entity: sensor.webasto_next_cable_state
+power_entity: sensor.webasto_next_active_power_total
+session_energy_entity: sensor.webasto_next_charged_energy
+current_limit_entity: number.webasto_next_charging_current_limit
+start_entity: button.webasto_next_start_charging
+stop_entity: button.webasto_next_stop_charging
+```
+
+Une borne sans statut, par sa prise et son compteur : sans voiture elle se lit *Aucun véhicule*, avec une voiture et la puissance au-dessus de `power_on_threshold` *En charge*, avec une voiture sans puissance *Véhicule branché*.
+
+```yaml
+type: custom:ha-appliance-card
+appliance_type: ev_charger
+vehicle_entity: binary_sensor.wallbox_prise
+power_entity: sensor.wallbox_puissance
+power_on_threshold: 500
+```
+
+Une borne qui donne les lettres du pilote de contrôle de la norme IEC 61851 se lit par `state_map`, puisqu'une lettre seule pourrait vouloir dire n'importe quoi sur une autre entité :
+
+```yaml
+type: custom:ha-appliance-card
+appliance_type: ev_charger
+state_entity: sensor.wallbox_cp_state
+state_map:
+  A: no_vehicle
+  B: connected
+  C: charging
+  D: charging
+  E: error
+  F: error
+```
+
+Et l'`Unavailable` d'OCPP, un connecteur mis hors service, de la même façon :
+
+```yaml
+state_map:
+  Unavailable: offline
+```
+
+#### Charge bidirectionnelle (V2H, V2G)
+
+Une voiture qui rend de l'énergie, à la maison ou au réseau, se lit *En décharge*, dans le violet de l'énergie restituée du tableau de bord Énergie de Home Assistant, et l'énergie remonte le câble de la voiture vers la borne, dans une lueur qui scintille tout le long du câble. Aucune norme ne donne de statut à une borne pour cela : OCPP continue d'annoncer une charge jusqu'à la 2.1, l'ISO 15118-20 n'a pas d'état pour cela, et le fil pilote de l'IEC 61851 n'a pas de sens. La card le lit donc là où il se dit :
+
+- dans un mot, entier : `Discharging` (la Wallbox Quasar, la borne DC de Sigenergy, les intégrations Volvo et Volkswagen) et `v2g_discharging` (Renault) ;
+- sur un compteur à part, `discharge_power_entity`, au-dessus de `power_on_threshold` : le `Power.Active.Export` d'OCPP, la puissance Powershare de Tesla ;
+- sous zéro sur `power_entity`, pour un compteur qui compte en négatif l'énergie rendue (une Quasar en Modbus). Un compteur qui compte les deux sens de la même façon, comme celui du cloud Wallbox, ne dit rien du sens : le statut le dit.
+
+Une voiture qui rend de l'énergie est en décharge quel que soit le nom que lui donne le statut, puisque OCPP annonce une charge ; une erreur, *Hors ligne* et une prise sans voiture passent toujours avant. Un mot qui ne fait que contenir le mot est autre chose : un mode à choisir (`immediateDischarging`), la batterie de la maison qui alimente la borne (`ChargingBecauseDischargingPvBattery`). Le V2L n'est pas lu non plus : une voiture qui alimente un appareil par sa propre prise n'a pas de wallbox sur son chemin.
+
+Une wallbox OCPP qui sait se décharger, et une Wallbox Quasar :
+
+```yaml
+type: custom:ha-appliance-card
+appliance_type: ev_charger
+state_entity: sensor.wallbox_status_connector
+power_entity: sensor.wallbox_power_active_import
+discharge_power_entity: sensor.wallbox_power_active_export
+```
+
+```yaml
+type: custom:ha-appliance-card
+appliance_type: ev_charger
+state_entity: sensor.wallbox_quasar_status_description
+power_entity: sensor.wallbox_quasar_charging_power
+current_limit_entity: number.wallbox_quasar_maximum_charging_current
+```
+
+Une entité qui porte le nom d'une wallbox dans les langues de la card, de son fabricant ou d'OCPP est reconnue d'elle-même, comme un statut énuméré qui liste les mots d'une borne. L'éditeur remplit la prise, le compteur, la puissance rendue, la session, la limite de courant, l'erreur et les boutons de démarrage et d'arrêt depuis les entités de la borne, jamais son bouton de redémarrage ou de réinitialisation.
+
+</details>
+
+### Réseau, écrans et imprimantes 3D
+
+<details>
+<summary><b>Options</b></summary>
+
+| Option | Types | Description |
+|---|---|---|
 | `state_entity` sur une imprimante 3D | imprimante 3D | L'état de l'imprimante, tel que chaque intégration l'envoie : `current_state` (OctoPrint), le capteur de l'imprimante (PrusaLink), `print_status` (Bambu Lab, Creality), `current_print_state` (Moonraker, Klipper), `current_status` (Elegoo), `machine_status` (Flashforge), `job_state` (Anycubic). Il se lit *Impression*, *Préparation*, *Préchauffage*, *En pause*, *Intervention requise*, *Terminé*, *Annulée*, *Échec*, *Erreur*, *En veille* ou *Hors ligne*. La plupart des intégrations disent *impression* dès que le code de départ chauffe : tant qu'une résistance reste à plus de 5 °C sous sa consigne et que la pièce n'a pas commencé, la card affiche *Préchauffage* et la barre devient une jauge de chauffe. Hors d'une impression, le temps restant est masqué, car l'imprimante garde celui du dernier travail. |
 | `phase_entity` | imprimante 3D | Ce que fait l'impression : `current_stage` de Bambu Lab, `print_status` d'Elegoo. Il se lit *Préchauffage*, *Nivellement du plateau*, *Changement de filament*, *Refroidissement*, *Calibrage* ou *Mise à l'origine* pendant une impression. |
 | `program_entity` | imprimante 3D | Le fichier imprimé, sans son dossier ni l'extension du trancheur. |
@@ -322,25 +1167,14 @@ Seule `state_entity` est obligatoire, sauf sur un réfrigérateur où une sonde 
 | `current_layer_entity` / `total_layers_entity` | imprimante 3D | La couche, en *84 / 190*. |
 | `printer_layout` | imprimante 3D | `enclosed` (défaut : une enceinte dont le plateau descend quand la pièce monte) \| `open` (un cadre ouvert dont le portique monte). La pièce grandit avec la progression, dans la couleur de l'état, et la tête va et vient pendant l'impression. |
 | `printed_part` | imprimante 3D | La pièce sur le plateau : `cube` (défaut), `pyramid` (pyramide) ou `duck` (un canard en plastique). Elle apparaît de bas en haut au fil de l'impression. |
-| `kettle_layout` | bouilloire | `classic` (défaut, une bouilloire de la couleur de l'appareil) \| `steel` (une bouilloire en inox à poignée noire). |
-| `coffee_layout` | machine à café | `silver` (défaut, une machine à grains de la couleur de l'appareil, réservoir sur le côté) \| `black` (noire à façade chromée et écran rond). |
-| `thermostat_entity` / `thermostat_layout` | chaudière | Le thermostat d'ambiance de la chaudière, une entité `climate` : il est dessiné au mur à côté de la chaudière, le haut aligné sur le sien, avec l'ambiante et la consigne à l'écran et une flamme quand il demande la chauffe, et la ligne *Ambiante 19,5 °C → 21 °C* s'ajoute. `thermostat_layout` choisit son dessin, `square`, `round` ou `glass` ; par défaut, le nom du thermostat décide (un Nest est rond, un ecobee en verre noir). |
-| `thermostat_layout` | thermostat | `square` (un carré blanc à écran sombre : Netatmo, tado, Bosch CT100, Homematic IP) \| `round` (un anneau d'acier autour d'un verre noir qui devient orange en chauffe : Nest, Honeywell) \| `glass` (verre noir avec une barre lumineuse : ecobee, Bosch CT200) \| `valve` (une vanne de radiateur vue de près : Sonoff, Aqara, Tuya, Danfoss, Fritz!). Par défaut, le nom décide, et une entité climate qui donne son ouverture est une vanne. |
-| `boiler_layout` | chaudière | `wall` (défaut, une chaudière murale blanche avec son manomètre et son écran) \| `window` (une chaudière dont on voit le brûleur par un hublot). |
-| `towel_warmer_layout` | sèche-serviettes | `ladder` (défaut, des barreaux ronds entre deux montants) \| `panel` (des lames plates anthracite sur un montant). |
-| `iron_layout` | fer | `iron` (défaut, le fer seul) \| `generator` (le même fer sur le socle d'une centrale vapeur). |
-| `iron_line_color` | fer | La couleur de la ligne le long du fer : `orange` (défaut) \| `blue` (bleu) \| `body` (la couleur de l'appareil). |
-| `toaster_layout` | grille-pain | `two` (défaut, deux fentes) \| `four` (quatre fentes, deux leviers) \| `long` (une fente longue pour deux tranches bout à bout). |
-| `hair_dryer_layout` | sèche-cheveux | `pistol` (défaut, sèche-cheveux classique vu de profil) \| `ring` (sèche-cheveux en anneau vu de face). |
-| `heat_threshold` | sèche-cheveux | Puissance à partir de laquelle il souffle de l'air chaud (300 W par défaut). En dessous, seul le ventilateur tourne. |
-| `heat_threshold` / `spin_threshold` | lave-linge, lave-vaisselle, sèche-linge | Sur une prise seule : la puissance à partir de laquelle il chauffe (1000 W par défaut, 600 W sur un sèche-linge) et celle à partir de laquelle un lave-linge essore (200 W). En dessous, un lave-linge lave, un sèche-linge refroidit le linge, et un lave-vaisselle sous son seuil sèche. |
-| `zone_power` | plaque de cuisson | Sur une prise seule, ce que consomme un foyer à pleine puissance (1500 W par défaut) : la mesure est répartie sur autant de foyers qu'il en faut, chacun avec un niveau de 1 à 9. |
 | `screen_layout` | écran | `tv_feet` (défaut, télévision sur deux pieds) \| `tv_stand` (télévision sur pied central) \| `tv_wall` (télévision murale) \| `projector` (vidéoprojecteur sous sa toile) \| `computer` (écran et tour) \| `tablet_wall` (tablette murale sur son support plat) \| `tablet_frame` (tablette dans un cadre en bois, accrochée comme un tableau) \| `tablet_portrait` (tablette en hauteur avec une barre lumineuse). Sans réglage, un nom qui dit projecteur, ordinateur ou tablette choisit le modèle, tout comme un `lock_entity` ou l'un des champs de tablette ci-dessous. |
 | `screen_image` | écran | L'image d'un écran allumé : `random` (défaut, une nouvelle à chaque allumage) ou l'une de `sunset`, `aquarium`, `bars`, `football`, `space`, `bounce`, `desktop`, `code`, `pong`, `dashboard`. Une tablette montre `dashboard` par défaut. Un lecteur qui fournit une jaquette l'affiche à la place pendant la lecture. |
 | `media_entity` / `media2_entity` / `media3_entity` | écran | Jusqu'à trois `media_player` qui affichent quelque chose sur cet écran : la télé elle-même, et le boîtier ou la console qui a vraiment l'image. La card suit celui qui joue, puis celui en pause, puis celui à l'accueil, puis celui allumé ; à égalité, le premier. Sa ligne le nomme et donne l'application ou la source, le titre et *Son coupé*. Sans mesure de puissance, les lecteurs disent aussi si l'écran est éteint, en veille ou allumé. |
 | `lock_entity` | écran | Le verrouillage de session d'un ordinateur : un `lock`, un `binary_sensor` de classe verrou (off veut dire verrouillé) ou un capteur qui vaut `locked`, comme les remontent HASS.Agent, Go Hass Agent ou l'app macOS. Verrouillé, l'écran montre un cadenas. |
 | `source_entity` | écran | L'entrée de l'écran : un `select` / `input_select` (comme la *source d'entrée* d'un moniteur) ou un `media_player`, dont la liste de sources est utilisée. La carte affiche l'entrée en cours sur une ligne et ajoute un bouton qui ouvre la liste pour en choisir une autre. |
 | `screensaver_entity` | écran (tablette) | L'économiseur d'écran de la tablette, comme l'interrupteur *Écran de veille* de Fully Kiosk. Allumé, la card dit *Économiseur d'écran* et dessine une horloge sur la vitre. En interrupteur, il a aussi son bouton. |
+| `laptop_style` | écran (portable) | `classic` (un PC : plus épais, le pavé numérique, le pavé tactile et ses deux boutons) \| `thin` (façon MacBook). Sans lui, un nom qui dit MacBook dessine le fin, tout autre nom le classique. |
+| `laptop_color` | écran (portable) | La couleur du portable : `silver` \| `space_grey` \| `black` \| `midnight` \| `gold` \| `rose`. Sans elle, le classique est noir et le fin argent, sauf si `illustration_color` est réglée. |
 | `charging_entity` | écran (tablette) | Sur son chargeur : un `binary_sensor` comme le *Branché* de Fully Kiosk, ou un capteur qui vaut `charging` ou `full`. Le câble et un éclair s'affichent pendant la charge, et l'état le dit. |
 | `motion_entity` | écran (tablette) | Ce que voit sa caméra frontale : allumé, la caméra s'éclaire en bleu, comme la barre lumineuse de la tablette en hauteur. |
 | `url_entity` | écran (tablette) | La page affichée, comme la *Page actuelle* de Fully Kiosk : la card garde le chemin, sans l'adresse. |
@@ -364,159 +1198,228 @@ Seule `state_entity` est obligatoire, sauf sur un réfrigérateur où une sonde 
 | `wan_entity` | réseau (routeur) | Le lien internet, un capteur de connectivité ou un état qui dit `online` / `offline` : quand il tombe, le routeur affiche *Pas d'internet*, en alerte. |
 | `wifi_entity` | réseau (routeur) | Le Wi-Fi, un interrupteur : coupé, les ondes ne montent plus des antennes et le voyant Wi-Fi s'éteint. |
 | `disk1_entity` … `disk4_entity` / `bays` | réseau | Une entité par disque, n'importe laquelle des siennes : la carte les lit toutes. Sa diode est verte quand tout va bien, bleue quand il lit ou écrit, faible quand il dort, orange quand il est à surveiller, rouge quand il est en panne. `bays` : `1`, `2` ou `4` baies dessinées sur un NAS, une baie vide n'a pas de tiroir. |
-| `water_temperature_entity` / `air_temperature_entity` | piscine | L'eau et l'air, affichés en lignes. |
-| `ph_entity` / `redox_entity` | piscine | Le pH et le RedOx (ORP), affichés en lignes. |
-| `filtration_time_entity` | piscine | La durée de filtration du jour, en heures, minutes ou secondes : *4h30*. |
-| `pressure_entity` / `pressure_alert` | piscine | La pression du filtre : l'aiguille du manomètre la suit, et à `pressure_alert` (1,8 bar par défaut) ou plus, pompe en marche, c'est une *Erreur*. |
-| `pool_mode_entity` | piscine | Le mode de la pompe (auto, manuel…), affiché en ligne. En `state_entity`, un mode ne dit que la pompe tourne que si un `power_entity` dépasse `power_on_threshold` (50 W par défaut). |
-| `chlorine_pump_entity` / `chlorine_level_entity` | piscine | Une pompe doseuse de chlore, en option : son bidon et sa longue tubulure vers le tuyau de retour n'apparaissent que si elle est donnée, et des gouttes y descendent pendant l'injection. Son niveau, en %, remplit le bidon et passe en orange à 15 % ou moins. |
-| `backwash_entity` / `frost_entity` | piscine | Un contre-lavage envoie l'eau sale à l'égout, le bassin ne bouge pas ; le hors-gel givre les tuyaux. Un état qui dit contre-lavage ou hors-gel fait de même. |
-| `pool_alert_entity` | piscine | Tout ce qui doit déclencher l'*Erreur* : la pompe fume et l'aiguille du manomètre s'affole. |
-| `light_entity` | piscine | Le projecteur du bassin : il éclaire la paroi du fond, et son interrupteur se met dans le coin de la carte. |
+
+</details>
+
+<details>
+<summary><b>Écrans : télévision, vidéoprojecteur, ordinateur, tablette murale</b></summary>
+
+Lu sur sa prise connectée : *Éteint* à 0 W (un demi-watt compte encore pour rien), *En veille* jusqu'à `power_on_threshold` (20 W par défaut), *Allumé* au-dessus. En veille, le témoin s'allume et la ligne de puissance dit ce que coûte la veille ; allumé, l'écran montre une image tirée au hasard, ou celle choisie dans `screen_image`. Sans mesure, un `binary_sensor` en `state_entity`, un ping par exemple, dit seul *Allumé* ou *Éteint* ; l'interrupteur d'une prise dit seulement qu'il y a du courant, et une box en veille dit alors *En veille*. Ajoutez les lecteurs qui affichent quelque chose dessus, et la card dit *Lecture*, *En pause* ou *Accueil*, avec l'application et le titre. Cinq modèles : télévision sur pieds, sur pied central ou murale, vidéoprojecteur, ordinateur. Regardez le logo qui rebondit assez longtemps, il finit par tomber dans un coin.
+
+Une tablette murale qui affiche un tableau de bord a trois modèles à elle : à plat sur son support, dans un cadre en bois, ou en hauteur avec une barre lumineuse. Son interrupteur d'écran, ou la lumière que Kiosk Satellite donne pour lui, dit *Tableau de bord* ou *Écran éteint*, son économiseur *Économiseur d'écran* avec une horloge sur la vitre. Son câble ne pend que pendant la charge, sa caméra frontale s'allume quand elle voit quelqu'un, et sa batterie se place dans un coin. Sa capture d'écran, donnée en caméra, remplace le tableau de bord dessiné. Des boutons pour l'écran, l'économiseur, le rechargement de la page et le redémarrage de l'application apparaissent selon les entités données.
+
+```yaml
+type: custom:ha-appliance-card
+appliance_type: screen
+screen_layout: tv_wall
+state_entity: switch.prise_tv
+power_entity: sensor.prise_tv_power
+power_on_threshold: 30
+media_entity: media_player.lg_tv
+media2_entity: media_player.apple_tv
+```
+
+```yaml
+type: custom:ha-appliance-card
+appliance_type: screen
+screen_layout: tablet_frame
+name: Tablette entrée
+state_entity: switch.tablette_entree_screen
+screensaver_entity: switch.tablette_entree_screensaver
+charging_entity: binary_sensor.tablette_entree_plugged_in
+motion_entity: binary_sensor.tablette_entree_motion
+battery_entity: sensor.tablette_entree_battery
+url_entity: sensor.tablette_entree_current_page
+brightness_entity: number.tablette_entree_screen_brightness
+reload_entity: button.tablette_entree_load_start_url
+```
+
+</details>
+
+<details>
+<summary><b>Réseau : switchs, serveurs, NAS et baies</b></summary>
+
+Lu à partir de ce qu'il remonte. Son `state_entity`, un ping, le suivi du routeur ou un état, dit *En ligne* ou *Éteint*. Un trafic au-delà de 10 Mbit/s, un processeur chargé ou un disque au travail le mettent en *Activité* ; un problème, un disque en panne ou une température de 70 °C le mettent en *Alerte* : toutes les diodes passent au rouge et le ventilateur démarre et s'arrête. Un disque à surveiller le dit en orange. Ses lignes donnent le trafic, la charge, le volume et les ports. Dans l'éditeur, la carte trouve les mesures sur l'appareil et sur les appareils qui en dépendent, disques compris (Synology, UGREEN, Unraid, Glances). Cinq modèles : un switch de 8 à 32 ports, un serveur tour, un NAS de 1 à 4 baies, une baie, un routeur.
+
+<img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-network-models.fr.gif" alt="Switchs de 8 à 32 ports et NAS de 1 à 4 baies">
+
+```yaml
+type: custom:ha-appliance-card
+appliance_type: network
+network_layout: nas
+state_entity: device_tracker.nas
+cpu_entity: sensor.nas_cpu_utilization_total
+volume_entity: sensor.nas_volume_1_volume_used
+download_entity: sensor.nas_download_throughput
+disk1_entity: sensor.nas_drive_1_status
+disk2_entity: sensor.nas_drive_2_status
+```
+
+</details>
+
+### Autour de la maison
+
+<details>
+<summary><b>Options</b></summary>
+
+| Option | Types | Description |
+|---|---|---|
 | `weight_goal_entity` / `weight_goal` | pèse-personne | L'objectif de poids, par un capteur ou un nombre (le capteur l'emporte) : une ligne *Objectif* avec ce qu'il reste à perdre ou à prendre, et *Objectif atteint* à moins d'une demi-unité. |
 | `fat_ratio_entity` / `fat_mass_entity` | pèse-personne | La graisse, en % et en masse, sur une ligne *Graisse*. |
 | `muscle_mass_entity` / `bone_mass_entity` | pèse-personne | Les masses musculaire et osseuse, en lignes. |
-| `battery_entity` / `battery_low` | onduleur | La charge de la batterie, en % : la jauge de l'onduleur se remplit par cinquièmes, orange à 40 % ou moins, rouge à `battery_low` (20 % par défaut) ou moins. Sur batterie, à ce niveau ou avec le `LB` de NUT, il affiche *Batterie faible*. |
-| `runtime_entity` | onduleur | L'autonomie restante, en secondes comme NUT la donne, ou en minutes ou en heures : une ligne, et l'écran de l'onduleur quand il est sur batterie. |
-| `load_entity` / `nominal_power` | onduleur | La charge, en % : l'énergie circule plus vite quand elle monte, et à 100 % ou plus c'est une *Surcharge*. Avec `nominal_power` (en W) et sans `power_entity`, la ligne la donne aussi en watts. |
-| `input_voltage_entity` | onduleur | La tension à la prise, en ligne. Sans `state_entity`, sous 100 V l'onduleur est sur batterie. |
-| `diffuser_layout` | diffuseur | `drop` (une goutte en bois, Meross, Asakuki) \| `cone` \| `stone` (galet, Vitruvi, Govee) \| `flame` (un diffuseur effet flamme) \| `nebulizer` (verre sur socle en bois). Sans réglage, le nom décide, sinon une goutte. Bois par défaut pour la goutte, la flamme et le nébuliseur, blanc pour les autres, ou `illustration_color`. |
-| `light_entity` / `tank_empty_entity` | diffuseur | La lumière du diffuseur : sa couleur éclaire l'anneau et le sol. Un capteur de réservoir vide l'affiche *Réservoir vide*. Son `state_entity` est la brume : un interrupteur, un ventilateur (50 % ou moins = *Intermittent*), le select de Meross (`eco` = *Brume légère*, une brume plus faible ; `intermittent` ou `interval` = *Intermittent*) ou une entité humidificateur. Un select a un bouton qui passe d'un mode au suivant, un interrupteur ou un ventilateur un bouton marche/arrêt. |
-| `hrv_layout` | VMC | `diagram` (les deux flux qui se croisent dans l'échangeur) \| `one_duct` (VMC murale à un seul conduit, Lunos eGO, Zehnder ComfoAir 70) \| `pair` (paire décentralisée traversant le mur, Lunos e2, Vents TwinFresh, qui s'inverse toutes les 70 s) \| `single` (une VMC simple flux dans les combles, ses bouches au plafond et sa sortie au-dessus du toit, l'air neuf entrant par les fenêtres) \| `single_box` (le même caisson d'extraction dessiné seul, ses gaines d'entrée et sa sortie). Sans réglage, un nom qui dit simple flux, extract ou hygro donne une VMC simple flux. |
-| `high_speed_entity` | VMC (single, single_box) | Le switch de vitesse d'une VMC simple flux à deux vitesses : coupé c'est la *Petite vitesse*, allumé la *Grande vitesse*, le ventilateur tournant trois fois plus vite. Le `state_entity` reste sa marche et son arrêt. |
-| `outdoor_temperature_entity` / `supply_temperature_entity` / `extract_temperature_entity` / `exhaust_temperature_entity` | VMC | Les quatre températures, dessinées au bout des gaines. |
-| `bypass_entity` | VMC | Le bypass : un interrupteur ou un capteur binaire actif, une ouverture en %, ou l'état de l'échangeur de Vallox, dont *Defrosting* affiche *Dégivrage*. |
-| `airflow_entity` / `filter_life_entity` | VMC | Le débit et le filtre, en jours ou en %, en lignes. À 7 jours ou 10 % (ou `filter_due_below`), *Filtre à changer*. Le `state_entity` est l'entité ventilateur, climat ou select de la VMC : sa vitesse, ses préréglages *Boost* et *Absence*. |
-| `state_entity` (modes) | VMC | Un select de modes, ou un ventilateur à préréglages, a un bouton *Mode* qui ouvre la liste des modes dans la carte. VMC Broan et Venmar en ESPHome ([broan_erv_uart](https://github.com/nspitko/broan_erv_uart)) : `recirculate` affiche *Recirculation* (les volets extérieurs se ferment, l'air de la maison tourne dans l'appareil), `humidity` *Contrôle d'humidité*, `int` *Intermittent* (et *Intermittent, en pause* quand les deux ventilateurs sont à l'arrêt), `turbo` et `max` *Boost*. |
-| `supply_fan_entity` / `exhaust_fan_entity` / `fan_max_rpm` | VMC | La vitesse de chaque ventilateur en tr/min : chacun tourne à la vitesse de son moteur, jusqu'à `fan_max_rpm` (2000 par défaut), et sa ligne donne ses tr/min et son débit (`airflow_entity` au soufflage, `exhaust_airflow_entity` à l'extraction). |
-| `fan_speed_entity` | VMC | La vitesse en %, quand l'appareil la tient dans un number à part. |
-| `current_humidity_entity` / `target_humidity_entity` / `humidity_control_entity` | VMC | L'humidité et sa consigne, en ligne et sur le dessin pendant le contrôle d'humidité. L'interrupteur du contrôle d'humidité affiche *Contrôle d'humidité* et a son bouton. |
 | `camera_layout` | caméra | `indoor` (caméra orientable) \| `tube` (Netatmo Welcome) \| `outdoor` (caméra sur batterie façon Arlo, sur son support mural) \| `dome` (au plafond) \| `doorbell` (sonnette vidéo). Sans réglage, une caméra avec un `ring_entity` ou un nom qui dit sonnette ou doorbell est une sonnette, une caméra intérieure Netatmo est un tube, un nom qui dit dôme un dôme, et un nom ou une marque qui dit extérieur, jardin, avant, arrière, Arlo ou spotlight une caméra extérieure. |
+| `ring_entity` | caméra | Le bouton de la sonnette : un binary_sensor allumé pendant l'appui (le *visitor* de Reolink), ou une entité event (Ring, Nest, UniFi Protect), *On sonne* pendant 30 secondes après son dernier `ring`. L'anneau lumineux bat, puis une ligne *Dernier appel*. |
 | `motion_entity` | caméra | Un capteur de mouvement : *Mouvement détecté* tant qu'il est actif, des ondes orange devant l'objectif, puis une ligne *Dernier mouvement*. |
 | `recording_entity` | caméra | Un capteur d'enregistrement, pour les intégrations dont l'entité caméra ne dit pas *recording*. |
 | `night_entity` | caméra | Le mode infrarouge : la couronne de LED autour de l'objectif s'allume en rouge, et une ligne *Vision nocturne*. |
 | `privacy_entity` | caméra | Un interrupteur de confidentialité (Reolink, Tapo) : activé, la caméra est *Désactivée*, tête baissée ou volet fermé. L'attribut `monitoring` de Netatmo fait de même. Mettez-le aussi en `toggle_entity` pour avoir un bouton. |
-| `ring_entity` | caméra | Le bouton de la sonnette : un binary_sensor allumé pendant l'appui (le *visitor* de Reolink), ou une entité event (Ring, Nest, UniFi Protect), *On sonne* pendant 30 secondes après son dernier `ring`. L'anneau lumineux bat, puis une ligne *Dernier appel*. |
 | `signal_entity` / `battery_entity` | caméra | Le signal Wi-Fi et la batterie, en lignes. Les attributs d'une caméra Arlo sont lus sans eux. |
 | `lamp_layout` | lampe | `bulb` (ampoule) \| `bedside` (chevet) \| `floor` (lampadaire arc) \| `torch` (halogène sur pied, la lumière monte) \| `pendant` (suspension) \| `strip` (ruban LED sous une étagère) \| `spot` (spots encastrés) \| `panels` (panneaux façon Nanoleaf) \| `desk` (lampe de bureau) \| `wall` (applique sur un mur extérieur). Sans réglage, elle est lue dans le nom et le modèle : ruban, strip, WLED ou Govee donne un ruban, Nanoleaf ou panneau des panneaux, chevet une lampe de chevet, bureau une lampe de bureau, halogène une torchère, lampadaire ou arc un lampadaire, spot ou GU10 des spots, suspension ou lustre une suspension, applique, extérieur ou jardin une applique ; une ampoule sinon. |
 | `mailbox_layout` | boîte aux lettres | `through` (traversante, vue de côté, une porte sur chaque face) \| `classic` (boîte sur poteau, vue de face). Sans réglage, un `back_door_entity` en fait une traversante. |
 | `mailbox_front` | boîte aux lettres | `left` (défaut) \| `right` : le côté de la rue, pour une traversante. |
 | `mail_count_entity` | boîte aux lettres | Un compteur de courrier. La pile dessine jusqu'à douze lettres, et le nombre est une ligne et un badge. |
 | `front_door_entity` / `back_door_entity` | boîte aux lettres | Les contacts de la porte côté rue et de la porte côté maison : *Porte avant ouverte*, *Porte arrière ouverte*, la porte pivote et la lumière du jour entre, et une ligne pour chacune. |
-| `pump_layout` | pompe à eau | `booster` (surpresseur sur son ballon, avec son contrôleur) \| `sump` (regard de relevage en coupe, son flotteur sur son câble). Sans réglage, un `level_entity`, un `high_level_entity` ou un nom qui dit relevage en fait une pompe de relevage. Sur une prise connectée laissée allumée avec son `power_entity`, elle pompe au-dessus de `power_on_threshold`, attend en dessous, et affiche *Éteinte* dès que la prise est coupée, en rouge sur une pompe de relevage. Sans mesure de puissance, le switch est celui de la pompe et coupé veut seulement dire qu'elle attend. |
-| `mobility_layout` | mobilité | `scooter` (trottinette) \| `offroad` (trottinette tout-terrain à double suspension, comme l'Ausom DT2 Pro) \| `ebike` (vélo électrique) \| `gyropode` \| `motorcycle` (moto électrique). Sans réglage, il est lu dans le nom : Ausom, Dualtron ou tout-terrain, vélo ou bike, gyropode, moto ou Super Soco ; une trottinette sinon. |
-| `battery_entity` | mobilité | La batterie du véhicule, en % : une barre de la jauge par quart, la suivante qui clignote en charge, et *Chargée* à 100 %. Sans elle, les barres se remplissent de 0 à 4 en boucle pendant la charge. |
-| `pressure_entity` | pompe à eau (surpresseur) | La pression, sur l'écran du contrôleur et en ligne. Sans elle, l'écran affiche la puissance de la prise. |
-| `level_entity` / `level_max` | pompe à eau (relevage) | Le niveau d'eau, sur l'écran, en ligne et comme hauteur d'eau dans le regard : un pourcentage, ou une valeur sur `level_max`. À partir de 90 %, *Niveau haut*. |
-| `high_level_entity` | pompe à eau (relevage) | Un flotteur ou une alarme de niveau haut : *Niveau haut*, le regard plein et un gyrophare qui clignote. |
-| `floor_layout` | plancher chauffant | `water` (défaut, collecteur au mur et serpentin sous le carrelage) \| `electric` (câble chauffant sur sa trame). |
-| `temperature_entity` | plancher chauffant, spa, sauna, aquarium | La température sur l'écran et en ligne. Sans elle, le `current_temperature` du thermostat. |
-| `target_temperature_entity` | sauna | La température à atteindre : à trois degrés près, le sauna est *Prêt*. Sans elle, la consigne du thermostat. |
-| `bubbles_entity` | spa | Les bulles ou les jets : *Bulles*, l'eau qui bouillonne, et un bouton *Bulles* sur un interrupteur. `light_entity` éclaire l'eau. |
-| `tariff_entity` | compteur | La période tarifaire (BASE, HP, HC, une couleur Tempo), sur l'écran et en ligne. |
-| `high_power` | compteur | À partir de cette puissance, le compteur passe en *Conso forte* et son voyant bat vite. 3000 par défaut, dans l'unité de l'entité d'état (VA ou W). |
 | `tree_palette` | sapin de Noël | `multicolor` (défaut) \| `red_gold` \| `red_silver` \| `gold_silver` \| `blue_silver` \| `white_silver` \| `red_green` : les boules, les lumières, la guirlande, l'étoile, le cache-pot et les cadeaux. |
 | `presents` | sapin de Noël | `auto` (défaut, des cadeaux sous le sapin les 24 et 25 décembre seulement) \| `show` \| `hide`. |
-| `irrigation_layout` | arrosage | `sprinkler` (une tête escamotable sur sa pelouse) \| `tap` (un programmateur sur le robinet du jardin, son tuyau et sa lance). Non renseigné, un nom qui dit Gardena, LinkTap, robinet ou timer donne un programmateur. |
-| `zone_entity` / `next_run_entity` | arrosage | La zone arrosée et le prochain arrosage, en lignes. `remaining_time_entity` affiche le temps restant sur le dessin pendant l'arrosage. |
-| `rain_delay_entity` | arrosage | Une pause pluie, allumée ou un nombre d'heures : *Pause pluie*, la pluie qui tombe sur la pelouse. |
-| `soil_moisture_entity` | arrosage | L'humidité du sol, en % : une jauge sur un piquet dans la pelouse, et une ligne, orange sous 25 %. |
-| `litter_layout` | litière | `globe` (un globe qui tourne sur sa base, façon Litter-Robot) \| `box` (une boîte fermée à l'entrée ronde, façon Petkit Pura). Non renseigné, un nom qui dit Petkit, Pura ou box donne une boîte. L'état se lit en mots ou dans les codes du Litter-Robot (`rdy`, `ccp`, `cst`, `dfs`...) : *Prête*, *Nettoyage* (le cycle complet : le globe ou le tambour tourne, la litière reste à plat au fond et les agglomérats sont tamisés, puis il nivelle et revient), *Chat dedans*, *Tiroir plein*, *Défaut*. |
-| `waste_drawer_entity` / `litter_level_entity` | litière | Le remplissage du tiroir à déchets et le niveau de litière, en % : une jauge sur le tiroir et des lignes, orange à partir de 80 % de remplissage ou de 20 % de litière restante. |
-| `pet_weight_entity` / `visits_entity` / `last_use_entity` | litière | Le poids du chat, les passages du jour et le dernier passage, en lignes. |
-| `cat_present_entity` | litière | Un capteur qui voit le chat : *Chat dedans*, le chat à l'entrée. |
 | `detector_layout` | détecteur | `smoke` (un détecteur de fumée au plafond) \| `co` (un détecteur de CO au mur, son écran en ppm) \| `leak` (un capteur de fuite au sol). Non renseigné, la classe d'appareil le choisit (`smoke`, `carbon_monoxide` ou `gas`, `moisture`), ou le nom. Allumé, c'est une alarme : la fumée monte au plafond, l'écran du CO passe au rouge, l'eau goutte dans une flaque. |
 | `battery_entity` | détecteur | La pile, en % ou en capteur de pile faible : une ligne, et le voyant passe à l'orange à 20 % ou moins. |
 | `co_level_entity` | détecteur | Le taux de CO, sur l'écran du détecteur et en ligne. |
 | `speaker_layout` | enceinte | `smart` (HomePod) \| `homepod_mini` \| `sonos_one` \| `bookshelf` \| `sonos_move` \| `soundbar` (sous sa télé) \| `echo_dot` \| `nest_mini`. Non renseigné, il se lit dans le nom. L'état est un `media_player` : le titre, l'artiste, la source et le volume sont des lignes. |
-| `meat_probe_entity` / `meat_probe_target_entity` | four | La sonde à viande et sa cible, sur une ligne. |
-| `detergent_level_entity` / `softener_level_entity` | lave-linge | Les réservoirs de lessive et d'adoucissant, un niveau en % ou un capteur de niveau bas : une ligne, orange quand c'est bas. |
-| `wash_temperature_entity` / `spin_speed_entity` | lave-linge | La température de lavage et la vitesse d'essorage, en lignes. |
-| `heater_mode_entity` / `showers_entity` | chauffe-eau | Le mode de chauffe (éco, boost...) et les douches disponibles, en lignes. |
-| `pilot_mode_entity` / `window_entity` | radiateur, sèche-serviettes | Le mode du fil pilote, et un contact de fenêtre : *Ouverte* en orange. |
-| `range_entity` / `vehicle_lock_entity` | mobilité électrique | L'autonomie restante, et l'antivol : *Déverrouillé* en orange. |
-| `water_ph_entity` / `water_chlorine_entity` | spa, aquarium | Le pH de l'eau, et sur un spa son chlore, en lignes. |
-| `aquarium_filter_entity` | aquarium | La pompe du filtre : *À l'arrêt* en orange. |
 | `spots` | lampe | Le nombre de spots dessinés, de 1 à 4. Sans réglage, un groupe de lumières dessine un spot par lumière, jusqu'à quatre. |
 | `timer_entity` | lampe | Un `select` de durées (un minuteur d'extinction) : une pastille qui montre celle choisie et ouvre la liste. |
-| `robot_layout` | robot | `vacuum` \| `mop` \| `mower` \| `stick` (un aspirateur balai sur son support mural) \| `floor_washer` (un laveur de sol dans sa station). Sans lui, un nom qui dit balai, sans fil ou Dyson en fait un aspirateur balai, Tineco ou laveur de sol un laveur de sol, une entité `lawn_mower` ou un nom qui dit tondeuse, Landroid ou Automower en fait une tondeuse, et Braava ou laveur un robot laveur. `pool` dessine un robot de piscine dont le câble le suit, avec son `remaining_time_entity` sur son boîtier ; un nom qui dit piscine, pool, Dolphin, Maytronics, Aiper, Zodiac ou Polaris le choisit. |
-| `robot_station` | robot | `station` (défaut : la station de vidage de l'aspirateur, la station de lavage du laveur) \| `base` (une base de charge seule). |
-| `robot_shelter` | robot | `true` dessine un abri au-dessus de la base d'une tondeuse. La pluie s'arrête sur son toit. |
-| `robot_shelter_style` | robot | `lean_to` (défaut, un appentis en bois au toit de tôle) \| `shell` (une coque moulée sur un pied) \| `garage` (un mur arrière qui se prolonge en long toit au-dessus de la tondeuse, sur un tapis sombre, comme les garages Navimow ou Husqvarna). |
-| `robot_shelter_color` | robot | La couleur de la coque ou du garage (noir par défaut pour le garage) : `white` (défaut) \| `grey` \| `black` \| `green` \| `orange`. |
-| `away_threshold` | robot | Un aspirateur balai ou un laveur de sol lu sur la prise de son support : au-dessus de `power_on_threshold` (5 W par défaut) il est *En charge*, en dessous *Chargé*, et à `away_threshold` (1 W par défaut) ou moins *Hors de la base*, en utilisation ou mal accroché, son support dessiné vide. La prise coupée affiche *Éteint*, qu'elle soit l'entité d'état ou l'interrupteur de la carte (`toggle_entity`). |
-| `robot_floor` | robot | Le sol sur lequel travaille un aspirateur ou un laveur : `rug` (tapis, défaut de l'aspirateur) \| `tiles` (carrelage, défaut du laveur) \| `parquet` \| `smooth` (sol lisse). |
-| `robot_controls` | robot | `true` ajoute les boutons du robot, sur une entité `vacuum` ou `lawn_mower` : *Démarrer* hors du travail, *Pause* au travail, *Retour à la base* loin d'elle. `controls_always: true` montre les trois en permanence. |
-| `battery_corner` | robot | `true` déplace la batterie des lignes vers un coin de la carte, en icône et en pourcentage, orange à 20 % ou moins. Un appui ouvre son entité. |
-| `robot_status_entity` | robot | L'état détaillé de l'intégration, lu pour ce que le dessin sait montrer : la station qui vide le bac, lave ou sèche les patins, la pluie qui garde une tondeuse à la base, la coupe des bordures. L'attribut `status` d'une entité aspirateur est lu sans lui. |
-| `battery_entity` | robot | La batterie, en %, quand l'entité du robot ne la porte pas. Sur la base, *En charge* sous 100 %, *À la base* au-dessus. |
-| `robot_bin_entity` / `robot_water_entity` | robot | Un bac plein, un réservoir d'eau vide : un capteur binaire allumé, un capteur qui le dit, ou un niveau en % (vide à 5 % ou moins, son niveau dessiné dans le robot). |
-| `robot_rain_entity` | robot | La pluie qui garde une tondeuse sur sa base : un nuage et sa pluie sur la pelouse. |
-| `robot_error_entity` | robot | L'erreur, en mots : le robot fume et son texte s'affiche. *no error*, *none*, `0` et leurs semblables n'en sont pas, dans toutes les langues de la carte (*Aucune erreur*, *Pas d'erreur*, *Keine Fehler*...) : un capteur template qui met un code d'erreur en mots marche tel quel. |
-| `power_entity` | solaire | La puissance produite par les panneaux, en W ou en kW : *Production* au-dessus de 15 % de `peak_power` (100 W sans lui), *Production faible* en dessous en plein jour, *Nuit* une fois le soleil couché (`sun.sun`, ou aucune puissance du tout sans lui). Le `state_entity` est facultatif : l'état d'un onduleur, dont les mots pour une panne font une *Erreur*. |
-| `peak_power` | solaire | La puissance crête des panneaux, en W, dont le seuil de la *Production faible* est tiré. |
-| `energy_today_entity` | solaire | L'énergie produite aujourd'hui, en ligne. |
-| `solar_layout` | solaire | `ground` (défaut, deux panneaux sur leur support) \| `roof` (une maison avec ses panneaux sur le toit). |
-| `solar_alert_entity` | solaire | Tout ce qui doit lever l'*Erreur* : l'onduleur fume. |
-| `battery_entity` | batterie domestique | Le niveau, en %. Il remplit la jauge et l'écran, et à 10 % ou moins la batterie est en *Batterie basse*, en rouge. |
-| `power_entity` / `power_inverted` / `power_on_threshold` | batterie domestique | Une seule puissance, positive en charge et négative en décharge, ou l'inverse avec `power_inverted: true`. Sous `power_on_threshold` (10 W par défaut) dans un sens comme dans l'autre, elle est *Au repos*, et *Pleine* à sa limite de charge. |
-| `charge_power_entity` / `discharge_power_entity` | batterie domestique | Ce qui entre et ce qui sort, pour les batteries qui les mesurent à part (EcoFlow, Bluetti), à la place de `power_entity`. |
-| `reserve_entity` / `charge_limit_entity` | batterie domestique | La réserve de secours, tracée en pointillés sur la jauge et donnée en ligne, et la limite de charge, *Pleine* une fois atteinte. |
-| `battery_capacity` | batterie domestique | La capacité, en kWh : avec elle, les lignes disent dans combien de temps elle sera pleine, ou jusqu'à la réserve. |
-| `battery_layout` | batterie domestique | `wall` (une batterie murale) \| `station` (une station portable). Sans lui, un nom qui dit EcoFlow, Delta, Bluetti, Jackery, Anker ou station en fait une station. |
-| `battery_alert_entity` | batterie domestique | Tout ce qui doit lever l'*Erreur* : un défaut du BMS. Un état qui dit panne fait de même. |
-| `left_on_after` | fer | Minutes allumé, en chauffe ou prêt, au bout desquelles la ligne d'état affiche *Resté allumé*, en rouge, la semelle brûle et la vapeur devient une fumée noire. Vide, cela n'arrive jamais. |
-| `feeder_layout` | distributeur | `tower` (défaut, un réservoir carré sur son socle) \| `canister` (un réservoir rond sur un socle rond) \| `double` (deux sorties et deux gamelles) \| `dual_split` (deux réservoirs au-dessus d'une gamelle partagée par le milieu) \| `rotary` (des assiettes sur un plateau tournant sous un couvercle, pour la pâtée). |
-| `fountain_layout` | fontaine | `square` (défaut, un réservoir carré avec une fenêtre sur l'eau) \| `round` (un tambour rond au rebord inox, le voyant au pied de la face avant). |
-| `level_b_entity` | distributeur | Le niveau du second réservoir, sur un distributeur qui en a deux (`dual_split`), lu comme `level_entity` et avec les mêmes `level_empty_below` et `level_max`. Il remplit la fenêtre de droite, a sa propre ligne, et vide il fait passer l'état à *Réservoir vide* en ne vidant que sa moitié. Au repos, la ligne d'état donne le plus bas des deux niveaux, celui à remplir en premier. L'éditeur ne le propose que pour `dual_split`. |
-| `portions_today_entity` / `weight_today_entity` | distributeur | Ce qui a été servi aujourd'hui, sur une seule ligne. Sans entité de poids, la carte calcule les grammes à partir de `portion_weight_entity` : rien n'est supposé sur la taille d'un repas. |
-| `serving_size_entity` / `portion_weight_entity` | distributeur | Combien de portions par distribution, et ce que pèse une portion. |
-| `schedule_entity` | distributeur | Le planning, dans les mots de l'intégration, sur une ligne qui s'enroule. |
-| `last_feed_entity` | distributeur | L'horodatage du dernier repas, quand l'intégration en donne un. Sinon la carte le trouve : un `script` dit quand il a tourné pour la dernière fois, quoi qu'il l'ait demandé, un `button` porte l'heure de son dernier appui, et le compteur du jour bouge à chaque repas que le distributeur rapporte, y compris ceux qu'il sert sur son propre planning. |
-| `level_entity` / `level_empty_below` / `level_max` | distributeur | Ce qui reste dans le réservoir : un pourcentage, qui remplit la trémie sur le dessin et se lit sur la ligne d'état au repos (*Réservoir à 74 %*), ou un contact qui dit seulement *vide*. À `level_empty_below` ou en dessous (0 par défaut), dans l'unité du relevé, l'état lit *Réservoir vide*, en orange, et la trémie se vide. Un réservoir compté en grammes ou en litres remplit la trémie, et donne son pourcentage, dès que `level_max` en donne la contenance. |
-| `error_entity` | distributeur | Fait passer l'état en *Erreur*, et en *Réservoir vide* quand l'erreur se nomme elle-même (`no_food`, `empty`, et le même mot dans les autres langues). Un code de défaut vaut une erreur sur toute valeur autre que zéro. |
-| `state_entity` | distributeur | Facultatif : un distributeur est au repos presque tout le temps, donc une commande ou un compteur suffisent. Quand il rapporte quelque chose, *on* se lit *Distribution* et les croquettes tombent. |
-| `state_entity` / `phase_entity` | poêle | La phase du feu : *Éteint*, *Allumage*, *En chauffe*, *Modulation*, *Veille éco*, *Refroidissement*, *Nettoyage* ou *Alarme*. Lue sur un capteur de statut dans `phase_entity` (les clés de Palazzetti, l'Agua IOT de Micronova dans la langue du poêle, Edilkamin, Rika, Duepi), et sinon sur le `hvac_action` d'une entité `climate`, où *idle* est la veille éco. `state_map` accepte les huit phases : `off`, `ignition`, `burning`, `modulating`, `eco`, `cooling`, `cleaning` et `alarm`. |
-| `current_temperature_entity` / `target_temperature_entity` | poêle | La pièce et la consigne, en *20 °C → 21 °C* tant que le poêle y travaille. Une entité `climate` dans `state_entity` donne les deux d'elle-même. |
-| `power_level_entity` / `flue_temperature_entity` / `fan_speed_entity` | poêle | Le palier de puissance, en *4 / 5* quand l'entité connaît sa plage, et sur l'écran du poêle quand il chauffe ; la température des fumées ; la ventilation, en pourcentage pour une entité `fan`. |
-| `level_entity` / `level_empty_below` / `level_max` | poêle | Les granulés de la trémie : un pourcentage, ou un contact allumé quand la réserve est atteinte (Agua IOT, Edilkamin). Un niveau en centimètres ou en kilos remplit la trémie une fois que `level_max` donne sa contenance. Vide, la trémie passe au rouge, et en alarme l'état se lit *Granulés épuisés*. |
-| `error_entity` | poêle | L'alarme : un mot (*Échec d'allumage*), un compte ou un contact. Tout ce qui n'est pas *pas d'alarme*, quelle que soit la façon dont le poêle le dit, met le poêle en alarme, avec ses mots sur une ligne et son code (*AL05*) sur l'écran. |
-| `state_entity` | climatiseur | Une entité `climate` : *Refroidissement*, *Chauffage*, *Déshumidification*, *Ventilation* ou *Auto* selon le mode, et d'après `hvac_action` *En veille* une fois la consigne atteinte, *Dégivrage* et *Préchauffage*. L'écran montre le symbole du mode et la consigne, les lignes la pièce, l'humidité et la ventilation. Sur une prise, *En cours* ou *Éteint*. `state_map` accepte `off`, `cool`, `heat`, `dry`, `fan`, `auto`, `idle` et `defrost`. |
-| `vane_vertical_entity` / `vane_horizontal_entity` | climatiseur | Les volets, quand ils vivent dans des selects à eux (Panasonic, Midea) ; sinon le `swing_mode` et le `swing_horizontal_mode` de l'entité `climate`. Cinq positions de haut en bas et de gauche à droite, ou le balayage, dans les mots de chaque intégration. |
-| `state_entity` | déshumidificateur | Une entité `humidifier` : *Déshumidification*, *Séchage du linge* quand son mode le dit (clothes_dry chez Midea), *En veille* une fois l'humidité atteinte, *Réservoir plein*. L'écran et une ligne donnent l'humidité et sa cible. |
-| `tank_entity` / `tank_full_above` / `current_humidity_entity` | déshumidificateur | Le réservoir, un contact allumé quand il est plein ou un niveau en pourcentage (plein à partir de `tank_full_above`, 100 par défaut), montré dans la fenêtre du bas ; un hygromètre pour un déshumidificateur sur prise. |
-| `state_entity` / `heater_layout` | petit chauffage | Une entité `climate` : *Chauffage*, *En veille* une fois la consigne atteinte, *Ventilation*. `heater_layout` : `fan` (radiateur soufflant, par défaut) ou `oil` (bain d'huile). |
-| `state_entity` | sèche-serviettes | Le mode du fil pilote : *Confort*, *Éco*, *Hors-gel*, *Boost*, *Séchage*, lu sur le preset d'une entité `climate` (Heatzy, Atlantic) ou sur un select (NodOn). |
-| `current_temperature_entity` / `target_temperature_entity` | petit chauffage, sèche-serviettes | La pièce et la consigne, quand une entité `climate` ne les porte pas. |
-| `fan_speed_entity` / `purifier_entity` / `outdoor_temperature_entity` / `defrost_entity` | climatiseur | La ventilation quand l'entité `climate` ne la porte pas ; le purificateur (nanoe, plasma), allumé sur l'unité ; la température extérieure ; un contact de dégivrage. |
-| `state_entity` | purificateur | Une entité `fan` : *Purification*, *Auto*, *Mode nuit*, *Chauffage* ou *Éteint*, d'après son état et son `preset_mode`, dans les mots de chaque intégration (*sleep*, *night*, *Silent*, *Quiet*...). Une entité `climate` (un Dyson Hot+Cool), un `select` qui nomme le mode (LG, Haier, Midea) ou une prise conviennent aussi. `state_map` accepte `off`, `run`, `night` et `heat`. |
-| `purifier_layout` | purificateur | `cylinder` (défaut, l'air sort par le dessus) \| `box` (un boîtier carré, ventilateur sur le dessus) \| `ring` (un anneau sans pales, par défaut pour un Dyson). L'anneau souffle devant lui, pivote en oscillation et aspire l'air vers son centre en souffle arrière (`direction: reverse`). |
-| `air_quality_entity` | purificateur | La qualité de l'air sur une jauge à quatre niveaux (*Bonne*, *Moyenne*, *Mauvaise*, *Très mauvaise*) et une ligne : PM2.5 en µg/m³ (12, 35 et 55), un AQI américain (50, 100, 150), l'indice d'allergènes Philips de 1 à 12, ou les mots de VeSync, Winix, Coway, Dyson, IKEA, SmartThings, Matter et tuya-local. Une échelle que la carte ne sait pas placer n'allume aucun niveau. |
-| `display_entity` | purificateur | Un écran facultatif qui affiche la valeur de cette entité, un PM2.5 ou une température : en façade du cylindre et du boîtier, rond au-dessus de la jauge sur l'anneau. |
-| `night_mode_entity` / `heater_entity` | purificateur, ventilateur | Le mode nuit quand c'est un interrupteur à part (Dyson, Duux) ; le chauffage, d'après le `hvac_action` d'une entité `climate`, un interrupteur ou un select. La nuit atténue et ralentit l'air, la chaleur le rend orange, les deux ensemble donnent un orange atténué. |
-| `fan_layout` | ventilateur | `stand` (défaut, sur pied) \| `table` \| `ceiling` (plafond, par défaut pour un ventilateur nommé d'après le plafond). |
-| `oscillating` | ventilateur | `true` pour un ventilateur sur prise qui oscille : la tête tourne et l'air la suit. Une entité `fan` qui donne `oscillating` fait foi à la place. |
-| `light_entity` / `wood_blades` / `fan_direction_inverted` | ventilateur de plafond | La lumière du ventilateur, dessinée en globe sous le moteur qui s'allume (sans lumière, pas de globe) ; des pales en bois ; été et hiver inversés, pour un ventilateur dont `direction: forward` veut dire hiver. L'été aspire l'air vers le haut, l'hiver renvoie vers le sol l'air chaud du plafond, en orange. |
-| `speed_entity` | robot cuiseur | Vitesse du couteau, ramenée sur trois vitesses. |
-| `state_entity` / `fryer_layout` | friteuse à air | Les mots de la friteuse, tels que Philips (HomeID et l'ancienne intégration HACS), Xiaomi et Cosori (VeSync) les donnent : *Préchauffage*, *Préchauffée*, *Cuisson*, *Secouer le panier*, *Panier sorti*, *En pause*, *Maintien au chaud*, *Terminé*, *Départ différé*. `fryer_layout` : `basket` (par défaut), `window` (panier à hublot) ou `dual` (double panier). |
-| `basket_entity` / `shake_entity` / `basket2_state_entity` | friteuse à air | Le capteur du panier, allumé quand il est sorti (le tiroir Philips, la cuve Xiaomi), qui fait passer un cycle en *Panier sorti* ; le rappel pour secouer, qui fait passer la cuisson en *Secouer le panier* ; l'état du second panier d'une friteuse double, dessiné à part et nommé sur une ligne. |
-| `water_entity` | machine à café | Réservoir : booléen Home Connect, ou niveau en % avec *vide* sous 10 %. |
-| `beans_entity` / `tray_entity` / `descaling_entity` | machine à café | Grains vides, bac plein, détartrage à faire. Un réservoir ou des grains vides, ou un bac plein, encadrent cette partie du dessin et allument en orange un point de la façade. |
-| `cups_entity` | machine à café | Nombre de tasses : un compte, un booléen ou un nom de boisson (*2 Espressi*). |
-| `strength_entity` | machine à café | Force du café, en chiffre ou en mot. |
-| `state_entity` | borne de recharge | Le statut de la borne : *Aucun véhicule*, *Véhicule branché*, *En attente d'autorisation*, *En charge*, *En décharge*, *Charge en pause*, *Charge programmée*, *Charge terminée*, *Erreur* ou *Hors ligne*, lu dans les mots d'OCPP et des intégrations de Home Assistant (voir *Bornes de recharge*). `state_map` accepte les dix : `no_vehicle`, `connected`, `awaiting_auth`, `charging`, `discharging`, `paused`, `scheduled`, `done`, `error` et `offline`. Facultatif : sans lui, la prise et le compteur le disent. |
-| `vehicle_entity` | borne de recharge | Si une voiture est branchée : le contact d'une prise, ou l'état d'un câble en mots (`disconnected`, `cable_only`, `vehicle_connected`, `vehicle_locked`). Sans voiture, un statut reconnu devient *Aucun véhicule*, sauf une erreur. |
-| `power_entity` / `power_on_threshold` | borne de recharge | La puissance, dans l'unité et la précision du compteur (*7,4 kW*). Le seuil est en W quelle que soit cette unité, 100 W par défaut : au-dessus, la puissance passe. Il ne sert qu'à défaut de statut, et à distinguer une voiture qui a sa charge d'une voiture en pause. |
-| `session_energy_entity` | borne de recharge | L'énergie de la session, en *Chargé 12,4 kWh*. |
-| `discharge_power_entity` | borne de recharge | La puissance que rend la voiture (V2H, V2G), comme le `Power.Active.Export` d'OCPP, en *Décharge 7,4 kW*. Au-dessus de `power_on_threshold`, la voiture est *En décharge* (voir *Charge bidirectionnelle*). |
-| `current_limit_entity` | borne de recharge | La limite de courant, en *Limite de courant 16 A*. Un appui ouvre l'entité, qui est là où elle se règle. |
-| `error_entity` | borne de recharge | Un contact allumé, un code autre que 0 ou un mot autre que *pas d'erreur* (le `NoError` d'OCPP, `ok`, `none`) fait passer l'état en *Erreur*, avec les mots de la borne sur une ligne. |
 
 </details>
 
-## Exemples et guides
+<details>
+<summary><b>Pèse-personnes</b></summary>
 
-Une section par sujet : clique pour l'ouvrir.
+Un pèse-personne en verre avec son écran. Son `state_entity` est le capteur de poids (Withings, Xiaomi, Eufy, un template...) : l'écran affiche le dernier poids et reste allumé une heure après une pesée, et la ligne d'état dit quand elle a eu lieu (*Pesée 07:42*, ou la date). Avec un objectif, par un capteur (`weight_goal_entity`) ou un nombre (`weight_goal`), la ligne donne ce qu'il reste à perdre ou à prendre, et à moins d'une demi-unité l'écran passe au vert avec une coche : *Objectif atteint*. La graisse, les muscles et les os sont des lignes. Un capteur de poids en kg, lb ou st, ou un nom qui dit balance (scale) ou Withings, choisit le type tout seul.
+
+```yaml
+type: custom:ha-appliance-card
+appliance_type: scale
+state_entity: sensor.withings_poids
+weight_goal_entity: sensor.withings_weight_goal
+fat_ratio_entity: sensor.withings_taux_de_graisse
+muscle_mass_entity: sensor.withings_masse_musculaire
+bone_mass_entity: sensor.withings_bone_mass
+```
+
+</details>
+
+<details>
+<summary><b>Caméras</b></summary>
+
+L'état d'une caméra, pas son image : Home Assistant a ses cartes pour ça. Son `state_entity` est l'entité caméra : *En veille*, *En direct*, *Enregistrement* et *Désactivée* en viennent, *Mouvement détecté* d'un capteur de mouvement, et *Hors ligne* d'un capteur de connectivité éteint. Quatre formes, trouvées d'après le nom et la marque : une caméra intérieure orientable, le tube d'une Netatmo Welcome, une caméra extérieure sur batterie façon Arlo sur son support mural, et un dôme.
+
+```yaml
+type: custom:ha-appliance-card
+state_entity: camera.aarlo_camera_avant
+motion_entity: binary_sensor.aarlo_motion_camera_avant
+connectivity_entity: binary_sensor.aarlo_connected_camera_avant
+```
+
+</details>
+
+<details>
+<summary><b>Lampes</b></summary>
+
+Son `state_entity` est la lumière : *Allumée* ou *Éteinte*, et allumée, sa luminosité, sa température de couleur et son effet dans les lignes. Le dessin prend la couleur de la lumière et se tamise jusqu'au quart avec sa luminosité ; un effet fait tourner la teinte des segments d'un ruban ou des panneaux. Un interrupteur ou un helper marche aussi, dessiné en blanc chaud, et le bouton de la carte allume et éteint la lampe. Dix formes, trouvées d'après le nom ou choisies avec `lamp_layout`.
+
+```yaml
+type: custom:ha-appliance-card
+state_entity: light.lampe_chevet
+lamp_layout: bedside
+```
+
+</details>
+
+<details>
+<summary><b>Boîtes aux lettres et sonnettes</b></summary>
+
+Le `state_entity` d'une boîte aux lettres est son indicateur de courrier (un binary_sensor, un helper) ou son compteur : *Vide*, *Courrier* avec le nombre, *Porte avant ouverte* et *Porte arrière ouverte* d'après les contacts de ses portes. Jusqu'à douze lettres sont dessinées en pile ; une nouvelle entre par la fente quand le compteur monte. Deux dessins : traversante, la rue à gauche ou à droite, et classique sur son poteau. [ha-smart-mailbox](https://github.com/danyial/ha-smart-mailbox) fournit les quatre entités.
+
+```yaml
+type: custom:ha-appliance-card
+state_entity: input_boolean.bal_courrier
+mail_count_entity: counter.bal_compteur
+front_door_entity: binary_sensor.bal_porte_avant
+back_door_entity: binary_sensor.bal_porte_arriere
+```
+
+Une sonnette est une caméra avec son bouton en `ring_entity` :
+
+```yaml
+type: custom:ha-appliance-card
+state_entity: camera.sonnette
+ring_entity: binary_sensor.sonnette_visiteur
+motion_entity: binary_sensor.sonnette_mouvement
+```
+
+</details>
+
+<details>
+<summary><b>Arrosage, litières, détecteurs et enceintes</b></summary>
+
+Un arroseur arrose tant que son interrupteur ou sa vanne est ouvert, et attend la météo quand sa pause pluie est active :
+
+```yaml
+type: custom:ha-appliance-card
+appliance_type: irrigation
+state_entity: switch.pelouse_avant
+remaining_time_entity: sensor.pelouse_avant_temps_restant
+rain_delay_entity: binary_sensor.pause_pluie
+soil_moisture_entity: sensor.humidite_pelouse
+```
+
+Un Litter-Robot lit ses propres codes d'état :
+
+```yaml
+type: custom:ha-appliance-card
+appliance_type: litter_box
+state_entity: sensor.litter_robot_status
+waste_drawer_entity: sensor.litter_robot_waste_drawer
+pet_weight_entity: sensor.litter_robot_pet_weight
+```
+
+Un détecteur est un capteur binaire, sa classe d'appareil choisit le dessin :
+
+```yaml
+type: custom:ha-appliance-card
+appliance_type: detector
+state_entity: binary_sensor.fuite_cuisine
+battery_entity: sensor.fuite_cuisine_batterie
+```
+
+Une enceinte est un lecteur multimédia :
+
+```yaml
+type: custom:ha-appliance-card
+appliance_type: speaker
+speaker_layout: sonos_one
+state_entity: media_player.salon
+```
+
+</details>
+
+### Options communes à plusieurs familles
+
+<details>
+<summary><b>Options</b></summary>
+
+| Option | Types | Description |
+|---|---|---|
+| `heating_entity` | four, robot cuiseur, cuiseur à riz, chauffe-eau | Dit s'il chauffe quand l'entité d'état ne le dit pas. À défaut, déduit de l'état en cours. |
+| `light_entity` | four, hotte, imprimante 3D | Éclairage, en petite bascule dans l'en-tête. Allumé, il éclaire aussi l'enceinte de l'imprimante. |
+| `temperature_decimals` | frigo, bouilloire, chauffe-eau, chaudière, pompe à chaleur | `0` (défaut, au degré), `1` (au dixième) ou `auto` (la précision d'affichage de l'entité), sur l'écran de l'appareil et dans la liste. |
+| `temperature_entity` | bouilloire, chauffe-eau, chaudière, pompe à chaleur | Température de l'eau (de départ sur une chaudière ou une pompe à chaleur), affichée sur l'appareil et dans la liste. Une entité `water_heater` donne la sienne toute seule. Sur un chauffe-eau, l'eau chaude remplit la cuve de 15 à 65 °C. |
+| `temperature_entity` | plancher chauffant, spa, sauna, aquarium | La température sur l'écran et en ligne. Sans elle, le `current_temperature` du thermostat. |
+
+</details>
+
+## Guides
+
+Ce qui marche pareil sur tous les appareils. Chaque guide s'ouvre d'un clic.
 
 <details>
 <summary><b>Une prise connectée seule</b></summary>
@@ -676,801 +1579,6 @@ info_entities:
 ```
 
 La casse est ignorée et une valeur absente de la table s'affiche telle quelle. Dans l'éditeur visuel, c'est une ligne `code: libellé` par correspondance.
-
-</details>
-
-<details>
-<summary><b>Phases du lave-vaisselle</b></summary>
-
-Avec une `phase_entity`, `Drying` et `Ado Drying` remplacent le lavage par de la vapeur orange qui monte le long de la porte, plus haut pour `Ado Drying`. `Prewash`, `Mainwash` et `Rinsing` gardent l'animation de lavage. Ces valeurs sont reconnues d'office, comme `Pre Wash`, `Wash`, `Rinse` et `Dry`, et `phase_map` traduit les autres :
-
-```yaml
-appliance_type: dishwasher
-state_entity: sensor.lave_vaisselle_etat
-phase_entity: sensor.lave_vaisselle_phase
-phase_map:
-  Sechage: drying
-```
-
-Une valeur non reconnue laisse l'illustration en l'état, et la phase nomme aussi l'étape sur la ligne d'état (voir *Étapes du cycle*).
-
-</details>
-
-<details>
-<summary><b>Fers à repasser</b></summary>
-
-Rien ne relie un fer à Home Assistant, et c'est bien pourquoi il est sur une prise connectée. Son interrupteur dit si le fer est allumé, sa mesure s'il chauffe et à quelle puissance : la semelle rougit et la vapeur s'échappe par-dessous, un peu pour une faible puissance, un nuage à pleine puissance. Une fois à température, le thermostat coupe et la prise ne mesure plus rien : le fer est *Prêt*, chaud, deux filets de vapeur au-dessus. Sans interrupteur, une mesure seule affiche *À l'arrêt* sous le seuil.
-
-Deux modèles sont dessinés. Le fer seul, d'après un fer à vapeur classique, et la centrale vapeur, d'après les centrales Calor, dont le fer repose sur la pente du réservoir et se soulève nez en l'air quand il chauffe, voyant allumé et vapeur qui court le long du tuyau. `iron_line_color` choisit la couleur de la ligne le long du fer : orange, bleue ou de la couleur de l'appareil.
-
-`left_on_after` est la raison d'être de la prise. Passé ce nombre de minutes allumé, en chauffe ou prêt, la ligne d'état affiche *Resté allumé*, en rouge, de petites flammes lèchent la semelle et la vapeur devient une fumée noire :
-
-```yaml
-type: custom:ha-appliance-card
-appliance_type: iron
-iron_layout: generator
-state_entity: switch.prise_fer
-power_entity: sensor.prise_fer_puissance
-power_on_threshold: 20
-left_on_after: 30
-```
-
-La carte montre l'alerte ; éteindre le fer reste le travail d'une automatisation, sur la même entité.
-
-</details>
-
-<details>
-<summary><b>Grille-pain</b></summary>
-
-Lu sur sa prise connectée, comme le fer : *En veille*, *Grillage* tant qu'il consomme, puis *Prêt* pendant cinq minutes une fois les tranches sorties. Pendant le grillage, les fentes rougeoient, la chaleur monte au-dessus et le levier est baissé. Trois modèles : deux fentes, quatre fentes et fente longue.
-
-```yaml
-type: custom:ha-appliance-card
-appliance_type: toaster
-toaster_layout: four
-state_entity: switch.prise_grille_pain
-power_entity: sensor.prise_grille_pain_puissance
-power_on_threshold: 30
-```
-
-</details>
-
-<details>
-<summary><b>Sèche-cheveux</b></summary>
-
-Lu sur sa prise connectée : *Éteint* à `power_on_threshold` ou moins (10 W par défaut), *Air froid* quand seul le ventilateur tourne, *Air chaud* à partir de `heat_threshold` (300 W par défaut). L'air sort de l'embout, bleu à froid, orange à chaud, et plus fort en position haute (à partir de 1200 W). Sans mesure, son interrupteur dit seulement *Allumé* ou *Éteint*. Deux modèles : classique et en anneau.
-
-```yaml
-type: custom:ha-appliance-card
-appliance_type: hair_dryer
-hair_dryer_layout: ring
-state_entity: switch.prise_seche_cheveux
-power_entity: sensor.prise_seche_cheveux_puissance
-```
-
-</details>
-
-<details>
-<summary><b>Écrans : télévision, vidéoprojecteur, ordinateur, tablette murale</b></summary>
-
-Lu sur sa prise connectée : *Éteint* à 0 W (un demi-watt compte encore pour rien), *En veille* jusqu'à `power_on_threshold` (20 W par défaut), *Allumé* au-dessus. En veille, le témoin s'allume et la ligne de puissance dit ce que coûte la veille ; allumé, l'écran montre une image tirée au hasard, ou celle choisie dans `screen_image`. Sans mesure, un `binary_sensor` en `state_entity`, un ping par exemple, dit seul *Allumé* ou *Éteint* ; l'interrupteur d'une prise dit seulement qu'il y a du courant, et une box en veille dit alors *En veille*. Ajoutez les lecteurs qui affichent quelque chose dessus, et la card dit *Lecture*, *En pause* ou *Accueil*, avec l'application et le titre. Cinq modèles : télévision sur pieds, sur pied central ou murale, vidéoprojecteur, ordinateur. Regardez le logo qui rebondit assez longtemps, il finit par tomber dans un coin.
-
-Une tablette murale qui affiche un tableau de bord a trois modèles à elle : à plat sur son support, dans un cadre en bois, ou en hauteur avec une barre lumineuse. Son interrupteur d'écran, ou la lumière que Kiosk Satellite donne pour lui, dit *Tableau de bord* ou *Écran éteint*, son économiseur *Économiseur d'écran* avec une horloge sur la vitre. Son câble ne pend que pendant la charge, sa caméra frontale s'allume quand elle voit quelqu'un, et sa batterie se place dans un coin. Sa capture d'écran, donnée en caméra, remplace le tableau de bord dessiné. Des boutons pour l'écran, l'économiseur, le rechargement de la page et le redémarrage de l'application apparaissent selon les entités données.
-
-```yaml
-type: custom:ha-appliance-card
-appliance_type: screen
-screen_layout: tv_wall
-state_entity: switch.prise_tv
-power_entity: sensor.prise_tv_power
-power_on_threshold: 30
-media_entity: media_player.lg_tv
-media2_entity: media_player.apple_tv
-```
-
-```yaml
-type: custom:ha-appliance-card
-appliance_type: screen
-screen_layout: tablet_frame
-name: Tablette entrée
-state_entity: switch.tablette_entree_screen
-screensaver_entity: switch.tablette_entree_screensaver
-charging_entity: binary_sensor.tablette_entree_plugged_in
-motion_entity: binary_sensor.tablette_entree_motion
-battery_entity: sensor.tablette_entree_battery
-url_entity: sensor.tablette_entree_current_page
-brightness_entity: number.tablette_entree_screen_brightness
-reload_entity: button.tablette_entree_load_start_url
-```
-
-</details>
-
-<details>
-<summary><b>Réseau : switchs, serveurs, NAS et baies</b></summary>
-
-Lu à partir de ce qu'il remonte. Son `state_entity`, un ping, le suivi du routeur ou un état, dit *En ligne* ou *Éteint*. Un trafic au-delà de 10 Mbit/s, un processeur chargé ou un disque au travail le mettent en *Activité* ; un problème, un disque en panne ou une température de 70 °C le mettent en *Alerte* : toutes les diodes passent au rouge et le ventilateur démarre et s'arrête. Un disque à surveiller le dit en orange. Ses lignes donnent le trafic, la charge, le volume et les ports. Dans l'éditeur, la carte trouve les mesures sur l'appareil et sur les appareils qui en dépendent, disques compris (Synology, UGREEN, Unraid, Glances). Cinq modèles : un switch de 8 à 32 ports, un serveur tour, un NAS de 1 à 4 baies, une baie, un routeur.
-
-<img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-network-models.fr.gif" alt="Switchs de 8 à 32 ports et NAS de 1 à 4 baies">
-
-```yaml
-type: custom:ha-appliance-card
-appliance_type: network
-network_layout: nas
-state_entity: device_tracker.nas
-cpu_entity: sensor.nas_cpu_utilization_total
-volume_entity: sensor.nas_volume_1_volume_used
-download_entity: sensor.nas_download_throughput
-disk1_entity: sensor.nas_drive_1_status
-disk2_entity: sensor.nas_drive_2_status
-```
-
-</details>
-
-<details>
-<summary><b>Robots et aspirateurs : robots, tondeuses, aspirateurs balais et laveurs de sol</b></summary>
-
-Lu depuis l'entité `vacuum` ou `lawn_mower` de Home Assistant : *Nettoyage*, *Lavage* ou *Tonte*, *Retour à la base*, *En pause*, *À l'arrêt*, *En charge* puis *À la base* une fois plein, *Erreur*. Le robot quitte sa base et fait des allers-retours sur son sol, un tapis, du carrelage ou une pelouse dont l'herbe est coupée sous la tondeuse, et son anneau prend la couleur de son état. Un état détaillé en dit plus : la station qui vide le bac, lave ou sèche les patins, la *Coupe des bordures*, la *Pluie*. Un bac plein ou un réservoir vide le passent en orange ; une erreur le fait fumer, avec une marque de colère. Ses lignes donnent la batterie, le réservoir d'eau et le texte de l'erreur.
-
-```yaml
-type: custom:ha-appliance-card
-state_entity: lawn_mower.landroid
-robot_status_entity: sensor.landroid_status
-battery_entity: sensor.landroid_battery
-robot_error_entity: sensor.landroid_error
-robot_shelter: true
-```
-
-Un aspirateur balai ou un laveur de sol se lit sur la prise de son support ou de sa station, et le courant parcourt le câble pendant la charge. L'intégration d'un laveur de sol (Tineco) en dit plus : hors de la base pendant l'utilisation, *Autonettoyage* avec des bulles dans la station, réservoir d'eau sale plein, réservoir d'eau propre vide, brosse emmêlée en *Erreur*.
-
-```yaml
-type: custom:ha-appliance-card
-appliance_type: robot
-robot_layout: floor_washer
-state_entity: sensor.tineco_vacuum_status
-battery_entity: sensor.tineco_battery
-robot_bin_entity: sensor.tineco_waste_water_tank
-robot_water_entity: sensor.tineco_fresh_water_tank
-robot_error_entity: sensor.tineco_brush_roller
-```
-
-</details>
-
-<details>
-<summary><b>Pompes de piscine</b></summary>
-
-Un filtre à sable avec sa vanne multivoies et son manomètre, la pompe et son préfiltre à couvercle transparent, les tuyaux et le bassin. Son `state_entity` est la pompe, un interrupteur ou un capteur binaire : *Filtration* quand elle tourne, avec l'eau qui circule dans les tuyaux, un jet dans le préfiltre et l'aiguille qui monte ; *Éteint* au repos. Avec une pompe à chlore, *Injection de chlore* pendant le dosage. Le *Contre-lavage* envoie l'eau sale à l'égout, le *Hors-gel* givre les tuyaux, et une alerte ou une pression trop haute est une *Erreur*. Le projecteur, l'eau, l'air, le pH, le RedOx, la durée de filtration du jour, la pression et le mode de la pompe sont chacun en option. Le compteur d'une prise connectée suffit à lui seul.
-
-```yaml
-type: custom:ha-appliance-card
-appliance_type: pool_pump
-state_entity: binary_sensor.pompe_piscine
-light_entity: switch.projecteur_piscine
-water_temperature_entity: sensor.piscine_temperature_eau
-ph_entity: sensor.piscine_ph
-redox_entity: sensor.piscine_redox
-filtration_time_entity: sensor.piscine_filtration_aujourd_hui
-chlorine_pump_entity: binary_sensor.piscine_pompe_chlore
-```
-
-</details>
-
-<details>
-<summary><b>Panneaux solaires et batteries domestiques</b></summary>
-
-Des panneaux solaires sur leur support au sol, ou sur le toit d'une maison. En production, un reflet passe sur les cellules et l'énergie descend le câble jusqu'à l'onduleur, plus vite quand le soleil est fort ; avec peu de puissance quelques nuages passent, et la nuit la lune et les étoiles se lèvent. La puissance et l'énergie du jour sont données en lignes.
-
-```yaml
-type: custom:ha-appliance-card
-appliance_type: solar
-power_entity: sensor.puissance_solaire
-energy_today_entity: sensor.energie_solaire_aujourd_hui
-peak_power: 800
-solar_layout: roof
-```
-
-Une batterie domestique murale, ou une station portable. Sa jauge se remplit avec son niveau, l'énergie entre en vert pendant la charge et sort en orange pendant la décharge, et l'écran donne le pourcentage. La réserve est une ligne en pointillés sur la jauge, et avec `battery_capacity` les lignes disent dans combien de temps elle sera pleine, ou jusqu'à la réserve. `illustration_color` peint son boîtier.
-
-```yaml
-type: custom:ha-appliance-card
-appliance_type: home_battery
-battery_entity: sensor.delta_pro_battery_level
-charge_power_entity: sensor.delta_pro_total_in_power
-discharge_power_entity: sensor.delta_pro_total_out_power
-reserve_entity: number.delta_pro_backup_reserve_level
-battery_capacity: 3.6
-battery_layout: station
-```
-
-</details>
-
-<details>
-<summary><b>Pèse-personnes</b></summary>
-
-Un pèse-personne en verre avec son écran. Son `state_entity` est le capteur de poids (Withings, Xiaomi, Eufy, un template...) : l'écran affiche le dernier poids et reste allumé une heure après une pesée, et la ligne d'état dit quand elle a eu lieu (*Pesée 07:42*, ou la date). Avec un objectif, par un capteur (`weight_goal_entity`) ou un nombre (`weight_goal`), la ligne donne ce qu'il reste à perdre ou à prendre, et à moins d'une demi-unité l'écran passe au vert avec une coche : *Objectif atteint*. La graisse, les muscles et les os sont des lignes. Un capteur de poids en kg, lb ou st, ou un nom qui dit balance (scale) ou Withings, choisit le type tout seul.
-
-```yaml
-type: custom:ha-appliance-card
-appliance_type: scale
-state_entity: sensor.withings_poids
-weight_goal_entity: sensor.withings_weight_goal
-fat_ratio_entity: sensor.withings_taux_de_graisse
-muscle_mass_entity: sensor.withings_masse_musculaire
-bone_mass_entity: sensor.withings_bone_mass
-```
-
-</details>
-
-<details>
-<summary><b>Onduleurs</b></summary>
-
-Un onduleur entre la prise murale et le boîtier qu'il protège, avec son écran, ses trois voyants et sa jauge de batterie. Son `state_entity` est le capteur d'état de NUT, celui qui affiche `OL`, `OB DISCHRG` ou `OL CHRG`, ou le capteur en texte de l'intégration (*Online*, *On Battery*) : *Sur secteur* avec l'énergie qui va de la prise à l'onduleur, *en charge* pendant qu'il remplit sa batterie ; *Sur batterie* quand le secteur a disparu, la prise barrée, l'onduleur qui bipe et son écran qui compte l'autonomie ; *Bypass* et *Arrêt*. `LB` ou une charge basse sur batterie, `OVER` ou une charge de 100 %, et `RB` déclenchent *Batterie faible*, *Surcharge* et *Batterie à remplacer*. La batterie, l'autonomie, la charge et la tension d'entrée sont des lignes. L'intégration NUT de Home Assistant laisse `battery.runtime` désactivé : activez-le pour avoir l'autonomie.
-
-```yaml
-type: custom:ha-appliance-card
-appliance_type: ups
-state_entity: sensor.ups_code_d_etat
-battery_entity: sensor.ups_charge_de_la_batterie
-runtime_entity: sensor.ups_autonomie_de_la_batterie
-load_entity: sensor.ups_charge
-input_voltage_entity: sensor.ups_tension_d_entree
-nominal_power: 520
-```
-
-</details>
-
-<details>
-<summary><b>Caméras</b></summary>
-
-L'état d'une caméra, pas son image : Home Assistant a ses cartes pour ça. Son `state_entity` est l'entité caméra : *En veille*, *En direct*, *Enregistrement* et *Désactivée* en viennent, *Mouvement détecté* d'un capteur de mouvement, et *Hors ligne* d'un capteur de connectivité éteint. Quatre formes, trouvées d'après le nom et la marque : une caméra intérieure orientable, le tube d'une Netatmo Welcome, une caméra extérieure sur batterie façon Arlo sur son support mural, et un dôme.
-
-```yaml
-type: custom:ha-appliance-card
-state_entity: camera.aarlo_camera_avant
-motion_entity: binary_sensor.aarlo_motion_camera_avant
-connectivity_entity: binary_sensor.aarlo_connected_camera_avant
-```
-
-</details>
-
-<details>
-<summary><b>Lampes</b></summary>
-
-Son `state_entity` est la lumière : *Allumée* ou *Éteinte*, et allumée, sa luminosité, sa température de couleur et son effet dans les lignes. Le dessin prend la couleur de la lumière et se tamise jusqu'au quart avec sa luminosité ; un effet fait tourner la teinte des segments d'un ruban ou des panneaux. Un interrupteur ou un helper marche aussi, dessiné en blanc chaud, et le bouton de la carte allume et éteint la lampe. Dix formes, trouvées d'après le nom ou choisies avec `lamp_layout`.
-
-```yaml
-type: custom:ha-appliance-card
-state_entity: light.lampe_chevet
-lamp_layout: bedside
-```
-
-</details>
-
-<details>
-<summary><b>Boîtes aux lettres et sonnettes</b></summary>
-
-Le `state_entity` d'une boîte aux lettres est son indicateur de courrier (un binary_sensor, un helper) ou son compteur : *Vide*, *Courrier* avec le nombre, *Porte avant ouverte* et *Porte arrière ouverte* d'après les contacts de ses portes. Jusqu'à douze lettres sont dessinées en pile ; une nouvelle entre par la fente quand le compteur monte. Deux dessins : traversante, la rue à gauche ou à droite, et classique sur son poteau. [ha-smart-mailbox](https://github.com/danyial/ha-smart-mailbox) fournit les quatre entités.
-
-```yaml
-type: custom:ha-appliance-card
-state_entity: input_boolean.bal_courrier
-mail_count_entity: counter.bal_compteur
-front_door_entity: binary_sensor.bal_porte_avant
-back_door_entity: binary_sensor.bal_porte_arriere
-```
-
-Une sonnette est une caméra avec son bouton en `ring_entity` :
-
-```yaml
-type: custom:ha-appliance-card
-state_entity: camera.sonnette
-ring_entity: binary_sensor.sonnette_visiteur
-motion_entity: binary_sensor.sonnette_mouvement
-```
-
-</details>
-
-<details>
-<summary><b>Pompes, plancher chauffant, spa, sauna, aquarium, compteur et sapin de Noël</b></summary>
-
-Chacun se lit sur sa propre entité, l'action d'un thermostat ou la puissance d'une prise avec `power_on_threshold`, et affiche sa mesure sur un écran dessiné assez grand pour être lu.
-
-```yaml
-type: custom:ha-appliance-card
-appliance_type: water_pump
-state_entity: switch.surpresseur
-pressure_entity: sensor.surpresseur_pression
-```
-
-```yaml
-type: custom:ha-appliance-card
-appliance_type: water_pump
-pump_layout: sump
-state_entity: switch.pompe_relevage
-level_entity: sensor.relevage_niveau
-level_max: 100
-high_level_entity: binary_sensor.relevage_niveau_haut
-```
-
-```yaml
-type: custom:ha-appliance-card
-appliance_type: spa
-state_entity: climate.spa
-bubbles_entity: switch.spa_bulles
-light_entity: light.spa
-```
-
-```yaml
-type: custom:ha-appliance-card
-appliance_type: meter
-state_entity: sensor.linky_papp
-tariff_entity: sensor.linky_ptec
-```
-
-```yaml
-type: custom:ha-appliance-card
-appliance_type: christmas_tree
-state_entity: switch.sapin
-tree_palette: red_gold
-```
-
-Une VMC simple flux à deux vitesses : le switch d'arrêt est l'état, le switch de vitesse choisit petite ou grande vitesse.
-
-```yaml
-type: custom:ha-appliance-card
-appliance_type: hrv
-hrv_layout: single
-state_entity: switch.vmc_marche
-high_speed_entity: switch.vmc_vitesse
-```
-
-Une pompe de relevage sur une prise connectée laissée allumée :
-
-```yaml
-type: custom:ha-appliance-card
-appliance_type: water_pump
-pump_layout: sump
-state_entity: switch.prise_relevage
-power_entity: sensor.prise_relevage_puissance
-power_on_threshold: 20
-```
-
-Un véhicule électrique sur son chargeur (#72) : la prise suffit. Au-dessus de 40 W il est *En charge* (le courant va du chargeur au véhicule, le voyant du chargeur pulse en rouge), en dessous *Chargée* (voyant vert), et *Débranchée* quand la prise est coupée, le véhicule grisé et le câble au sol. Le seuil se règle avec `power_on_threshold`.
-
-```yaml
-type: custom:ha-appliance-card
-appliance_type: mobility
-mobility_layout: offroad
-state_entity: switch.prise_atelier
-power_entity: sensor.prise_atelier_power
-battery_entity: sensor.trottinette_batterie   # facultatif
-```
-
-</details>
-
-<details>
-<summary><b>Arrosage, litières, détecteurs et enceintes</b></summary>
-
-Un arroseur arrose tant que son interrupteur ou sa vanne est ouvert, et attend la météo quand sa pause pluie est active :
-
-```yaml
-type: custom:ha-appliance-card
-appliance_type: irrigation
-state_entity: switch.pelouse_avant
-remaining_time_entity: sensor.pelouse_avant_temps_restant
-rain_delay_entity: binary_sensor.pause_pluie
-soil_moisture_entity: sensor.humidite_pelouse
-```
-
-Un Litter-Robot lit ses propres codes d'état :
-
-```yaml
-type: custom:ha-appliance-card
-appliance_type: litter_box
-state_entity: sensor.litter_robot_status
-waste_drawer_entity: sensor.litter_robot_waste_drawer
-pet_weight_entity: sensor.litter_robot_pet_weight
-```
-
-Un détecteur est un capteur binaire, sa classe d'appareil choisit le dessin :
-
-```yaml
-type: custom:ha-appliance-card
-appliance_type: detector
-state_entity: binary_sensor.fuite_cuisine
-battery_entity: sensor.fuite_cuisine_batterie
-```
-
-Une enceinte est un lecteur multimédia :
-
-```yaml
-type: custom:ha-appliance-card
-appliance_type: speaker
-speaker_layout: sonos_one
-state_entity: media_player.salon
-```
-
-</details>
-
-<details>
-<summary><b>Distributeurs de croquettes</b></summary>
-
-Un distributeur se lit, il ne se pilote pas : pas de cycle, pas de programme, pas de porte. Son état est calculé à partir de ce qu'il rapporte, *Réservoir vide*, *Erreur* ou *Distribution*, et au repos la ligne dit à quel point le réservoir est plein, ou rien quand la carte ne peut pas le savoir. La carte porte ce qui a été servi aujourd'hui et l'heure du dernier repas. Un réservoir vide est la seule chose qu'un distributeur ne peut pas régler tout seul : il prend la ligne d'état, et vide le réservoir et la gamelle sur le dessin. Un triangle rouge se lève avec lui, et il se lève aussi pour un blocage, avec les croquettes toujours dans le réservoir cette fois.
-
-La commande est le point intéressant, parce qu'un distributeur a rarement un bouton. Celui-ci distribue depuis une liste réglée sur `START`, via Zigbee2MQTT :
-
-```yaml
-type: custom:ha-appliance-card
-appliance_type: pet_feeder
-start_entity: select.croquettes_feed
-portions_today_entity: sensor.croquettes_portions_per_day
-weight_today_entity: sensor.croquettes_weight_per_day
-portion_weight_entity: number.croquettes_portion_weight
-serving_size_entity: number.croquettes_serving_size
-schedule_entity: sensor.croquettes_planning
-```
-
-L'option n'est pas écrite : une liste dont la seule vraie option est `START` n'a rien à demander. Celui-là distribue par un script, et compte ses repas avec un helper `history_stats` :
-
-```yaml
-type: custom:ha-appliance-card
-appliance_type: pet_feeder
-start_entity: script.distribuer_croquettes
-portions_today_entity: sensor.croquettes_distributions_du_jour
-state_entity: binary_sensor.distributeur_distribution
-```
-
-Une automation ou un `input_button` fait aussi bien l'affaire comme commande, et un `utility_meter` fait un bon compteur : `portions_today_entity` prend ce qui compte les repas, là où l'intégration le tient.
-
-Un distributeur qui ne dit jamais qu'il sert, comme le C1 d'Aqara en Zigbee2MQTT, est dessiné *Distribution* pendant 30 secondes après un appui sur le bouton de la carte, et quand ses portions ou son poids du jour augmentent, quel que soit celui qui a servi le repas.
-
-Trois entités se lisent aussi bien que dix : une ligne n'existe que si son entité répond.
-
-Trois modèles sont dessinés, d'après les distributeurs du commerce : un réservoir carré avec une fenêtre sur ses croquettes, un réservoir rond, chacun avec une gamelle en inox posée dans son socle, et un double dont les deux becs remplissent chacun sa gamelle. La fenêtre se remplit selon le niveau, les croquettes tombent dans la gamelle pendant la distribution, et un réservoir vide laisse l'une et l'autre vides. Le petit écran affiche l'heure en vert comme les vrais, passe en bleu pendant la distribution, avec la portion quand `serving_size_entity` est renseigné, et en rouge sur un réservoir vide ou une erreur. La sécurité enfant et le verrouillage automatique se placent dans les coins du haut, chacun montrant s'il est enclenché :
-
-```yaml
-feeder_layout: canister
-corner_entities:
-  - switch.distributeur_auto_lock
-  - switch.distributeur_child_lock
-```
-
-Deux autres couvrent les distributeurs qui n'entrent dans aucun des trois. `dual_split` a deux réservoirs côte à côte, par exemple les friandises à gauche et les croquettes à droite, chacun avec sa sortie au-dessus de sa moitié d'une seule gamelle large. Chaque réservoir lit son propre niveau, et celui qui se vide ne laisse nues que sa fenêtre et sa moitié de gamelle :
-
-```yaml
-feeder_layout: dual_split
-state_entity: binary_sensor.distributeur_en_cours
-level_entity: binary_sensor.distributeur_reservoir_1_bas
-level_b_entity: binary_sensor.distributeur_reservoir_2_bas
-```
-
-`rotary` est un distributeur de pâtée : des assiettes sur un plateau tournant sous un couvercle percé d'une ouverture. Servir, c'est ouvrir, donc l'entité d'état est celle qui dit que le couvercle est ouvert, et pendant la distribution le plateau amène l'assiette suivante dans l'ouverture. Son niveau est le nombre d'assiettes restantes, compté sur celles qu'il contient :
-
-```yaml
-feeder_layout: rotary
-state_entity: switch.distributeur_patee_couvercle
-level_entity: counter.distributeur_patee_assiettes
-level_max: 3
-```
-
-</details>
-
-<details>
-<summary><b>Fontaines à eau</b></summary>
-
-Une fontaine tourne toute la journée, alors comme un distributeur elle se lit plus qu'elle ne se commande. Tant que la pompe tourne, l'eau monte en dôme au-dessus de la sortie, des cercles s'étalent sur le plateau en inox et des gouttes jaillissent sur ses bords, d'après un interrupteur ou la prise sur laquelle elle est branchée. Le reste de ce qu'elle dit, c'est ce qui demande un coup de main : l'eau d'abord, puis le filtre, puis la pompe, chacun prenant la ligne d'état et l'anneau lumineux sous le plateau, orange avec un badge de filtre pour le filtre et la pompe, rouge et clignotant avec un badge d'alerte pour l'eau.
-
-```yaml
-type: custom:ha-appliance-card
-appliance_type: pet_fountain
-state_entity: switch.fontaine_alimentation
-filter_life_entity: sensor.fontaine_jours_filtre
-filter_reset_entity: button.fontaine_reinitialiser_filtre
-pump_clean_entity: sensor.fontaine_jours_nettoyage_pompe
-pump_reset_entity: button.fontaine_reinitialiser_pompe
-corner_entities:
-  - switch.fontaine_voyant
-info_entities:
-  - select.fontaine_mode
-```
-
-Une fontaine qui ne connaît pas son niveau d'eau garde un réservoir à mi-hauteur sur le dessin plutôt que de le montrer vide.
-
-Une fontaine hors ligne lit *Hors ligne*, sans voyant et son eau dessinée en gris.
-
-L'état de la pompe se lit dans les mots des intégrations de fontaines, si bien qu'un mode marche aussi bien qu'un interrupteur : ce qui l'arrête d'abord (`off`, `Do not flow`, `closed`, `waterless`), puis ce qui la fait tourner (`on`, `flowing`, `constant`, `intermittent`, `smart`, `auto`, `motion`, `open`…).
-
-| Intégration | Pompe ou mode | Eau | Filtre et pompe |
-|---|---|---|---|
-| Petkit ([Jezza34000](https://github.com/Jezza34000/homeassistant_petkit), [RobertD502](https://github.com/RobertD502/home-assistant-petkit)) | Interrupteur ; *Pump running* dans `pump_running_entity` ; `Continuous`, `Intermittent`, `Motion activated` | *Water lack warning*, ou `normal`/`low`/`empty` | Filtre en % ou en jours, prochain rinçage en date |
-| Xiaomi ([xiaomi_miot](https://github.com/al-one/hass-xiaomi-miot), Xiaomi Home) | Interrupteur ; `Common`/`Smart`, `Auto`/`Interval`/`Constant` ; statut `watering`/`waterless` | Contact de manque d'eau | Filtre et nettoyage en jours ou en heures |
-| Petlibro | `Flowing Water (Constant)`, `Intermittent Water (Scheduled)`, `Off` | Poids en %, ou le contact d'humidité de l'eau | Jours de filtre et de nettoyage |
-| Catlink | `Flowing mode`, `Eco-mode`, `Smart mode` | Niveau d'eau en % | Vie du filtre en % |
-| Tuya, tuya-local | Interrupteur ou vanne (`open`/`closed`) ; `normal`, `smart`, `night`, `motion` | `level_1`…`level_3`, `low`/`medium`/`full`, ou un contact | Filtre et pompe en minutes ou en jours ; interrupteurs de réinitialisation |
-
-</details>
-
-<details>
-<summary><b>Thermostats et vannes thermostatiques</b></summary>
-
-Toute entité `climate` qui chauffe : un thermostat mural, une vanne de radiateur, le circuit de chauffage d'une chaudière (le `climate.hc1` de Bosch), quelle que soit l'intégration (Netatmo, Nest, ecobee, tado, Honeywell, Hive, Zigbee, Matter…). L'état affiche *Chauffage*, *Consigne atteinte*, *Éco*, *Absent*, *Hors-gel*, *Fenêtre ouverte* (Better Thermostat, Versatile Thermostat) ou *Éteint*, et la ligne *Ambiante 19,5 °C → 21 °C*. Une vanne dit aussi de combien elle est ouverte.
-
-Quatre dessins, choisis par `thermostat_layout` ou par le nom : un carré blanc, un rond dont l'anneau d'acier devient orange en chauffe, un verre noir, et une vanne de radiateur vue de près, sa tête dépassant du radiateur, qui se réchauffe quand elle chauffe. Un thermostat ne produit pas de chaleur : seul le radiateur de la vanne en dégage.
-
-```yaml
-type: custom:ha-appliance-card
-appliance_type: thermostat
-state_entity: climate.vanne_chambre
-thermostat_layout: valve
-```
-
-Sur une chaudière, `thermostat_entity` dessine son thermostat d'ambiance au mur à côté d'elle :
-
-```yaml
-type: custom:ha-appliance-card
-appliance_type: boiler
-state_entity: sensor.code_chaudiere
-temperature_entity: sensor.temperature_depart
-thermostat_entity: climate.hc1
-```
-
-</details>
-
-<details>
-<summary><b>Poêles à granulés</b></summary>
-
-Un poêle en dit plus qu'allumé ou éteint : il s'allume, chauffe, module, se met en veille éco une fois la pièce chaude, refroidit et nettoie son brasier. La card lit cette phase sur le statut du poêle et la dessine : la flamme derrière la vitre, l'air chaud au-dessus de la grille, la fumée au conduit à l'allumage, les cendres au nettoyage, les braises en veille. La trémie à côté de la porte montre les granulés qui restent.
-
-Avec l'intégration de Home Assistant lui-même, Palazzetti :
-
-```yaml
-type: custom:ha-appliance-card
-appliance_type: pellet_stove
-state_entity: climate.poele
-phase_entity: sensor.poele_status
-power_level_entity: number.poele_combustion_power
-level_entity: sensor.poele_pellet_level
-level_max: 40
-```
-
-L'éditeur en remplit l'essentiel depuis les entités du poêle, aussi sur Agua IOT (Extraflame, Ravelli, MCZ, Piazzetta et une trentaine d'autres), Edilkamin, Rika et Duepi.
-
-</details>
-
-<details>
-<summary><b>Climatiseurs</b></summary>
-
-L'unité intérieure d'un split, avec le symbole du mode et la consigne sur son écran. L'air part aussi bas et aussi loin sur le côté que les volets le dirigent, plus vite avec la ventilation, et balaie avec eux ; en déshumidification l'eau remonte dans l'unité, au dégivrage le givre la recouvre. Panasonic Comfort Cloud :
-
-```yaml
-type: custom:ha-appliance-card
-state_entity: climate.salon
-vane_vertical_entity: select.salon_vertical_swing
-vane_horizontal_entity: select.salon_horizontal_swing
-purifier_entity: switch.salon_nanoe
-outdoor_temperature_entity: sensor.salon_outside_temperature
-```
-
-Une entité `climate` qui sait refroidir est reconnue d'elle-même, et l'éditeur remplit le reste depuis les entités de l'unité.
-
-</details>
-
-<details>
-<summary><b>Friteuses à air</b></summary>
-
-L'écran montre la température pendant la chauffe et le maintien au chaud, et le temps restant pendant la cuisson. La chaleur monte au-dessus et la jointure du panier rougeoie ; un panier sorti avance, un panier à secouer tremble. Derrière le hublot les frites sautent dans la chaleur, et sur une friteuse double chaque panier montre son propre état. Philips HomeID :
-
-```yaml
-type: custom:ha-appliance-card
-state_entity: sensor.airfryer_status
-fryer_layout: window
-remaining_time_entity: sensor.airfryer_time_remaining
-target_temperature_entity: sensor.airfryer_temperature
-basket_entity: binary_sensor.airfryer_drawer
-shake_entity: binary_sensor.airfryer_shake_reminder
-```
-
-Une entité qui porte le nom d'une friteuse (ou le `cook_status` de Cosori) est reconnue d'elle-même, et l'éditeur remplit le reste. Avec une simple prise connectée, elle affiche *Cuisson*, puis *Terminé*.
-
-</details>
-
-<details>
-<summary><b>Déshumidificateurs, petits chauffages et sèche-serviettes</b></summary>
-
-Un déshumidificateur montre l'humidité sur son écran et l'eau récupérée dans son réservoir ; un radiateur soufflant rougeoie derrière sa grille, un bain d'huile chauffe ses ailettes ; un sèche-serviettes montre le mode du fil pilote avec les symboles des radiateurs (soleil, lune, flocon). L'air chaud monte, l'air soufflé par un déshumidificateur ou un ventilateur va dans l'autre sens.
-
-Les trois fonctionnent avec une simple prise connectée : au-dessus de `power_on_threshold` ils déshumidifient ou chauffent, en dessous ils sont en veille tant que la prise est allumée, et *Éteint* une fois coupée.
-
-```yaml
-type: custom:ha-appliance-card
-appliance_type: space_heater
-heater_layout: oil
-state_entity: switch.radiateur_prise
-power_entity: sensor.radiateur_prise_power
-power_on_threshold: 30
-```
-
-</details>
-
-<details>
-<summary><b>Purificateurs d'air et ventilateurs</b></summary>
-
-L'air que soufflent un purificateur ou un ventilateur est dessiné en lignes pointillées : bleues, orange quand il chauffe, atténuées et lentes la nuit. Plus il souffle, plus il y a de lignes : deux jusqu'à 40 %, trois jusqu'à 75 %, cinq au-delà, ou d'après le préréglage quand il n'y a pas de pourcentage (nuit, turbo, low, medium, high). Un purificateur porte aussi une jauge à quatre niveaux de la qualité de l'air, allumée dans sa couleur, et un écran facultatif.
-
-Un ventilateur existe sur pied, de table ou de plafond. Son vent naturel souffle par vagues, les pales accélèrent puis ralentissent. Un ventilateur de plafond aspire l'air vers le haut en été et renvoie l'air chaud vers le sol en hiver, et sa lumière apparaît en globe sous le moteur.
-
-```yaml
-type: custom:ha-appliance-card
-appliance_type: air_purifier
-purifier_layout: ring
-state_entity: fan.purificateur_salon
-air_quality_entity: sensor.salon_pm2_5
-display_entity: sensor.salon_temperature
-heater_entity: climate.purificateur_salon
-```
-
-```yaml
-type: custom:ha-appliance-card
-appliance_type: fan
-fan_layout: ceiling
-state_entity: fan.plafond_chambre
-light_entity: light.plafond_chambre
-wood_blades: true
-```
-
-</details>
-
-<details>
-<summary><b>Bornes de recharge</b></summary>
-
-Une wallbox au mur, son voyant dans la couleur de ce que fait la borne : *Aucun véhicule*, *Véhicule branché* (une voiture qui attend), *En attente d'autorisation* (un badge ou l'appli), *En charge*, *En décharge* (la voiture qui rend de l'énergie), *Charge en pause* (par la borne ou par la voiture), *Charge programmée*, *Charge terminée* (la voiture encore branchée), *Erreur* ou *Hors ligne*. Avec une voiture branchée, la prise quitte son étui et le câble part vers la voiture ; pendant la charge, l'énergie court le long du câble, lumineuse dans la couleur de l'état et d'autant plus vite que la puissance est forte (quatre allures, d'un surplus solaire à 22 kW), et s'arrête pendant une pause. Le voyant respire pendant la charge et lentement quand elle est programmée, et clignote pour une autorisation et, plus vite, sur un défaut. Sous vos yeux, une voiture qu'on branche montre la prise qui suit le câble jusqu'à elle, une voiture qu'on débranche le câble qui revient, et la fin d'une charge un éclat du voyant. Avec *réduire les animations* activé sur l'appareil, rien ne bouge. N'importe quelle wallbox fait l'affaire : la card lit le statut dans les mots d'OCPP et des intégrations de Home Assistant lui-même, `state_map` lui apprend tous les autres, et une borne sans statut se lit sur sa prise et son compteur.
-
-| Intégration | Statut | Mots lus |
-|---|---|---|
-| OCPP ([ocpp](https://github.com/lbbrhzn/ocpp), 1.6 et 2.0.1) | Status Connector | `Available`, `Reserved` → aucun véhicule ; `Preparing` → véhicule branché ; `Charging` ; `SuspendedEVSE`, `SuspendedEV` → en pause ; `Finishing` → terminée ; `Faulted` → erreur |
-| Peblar | State | `no_ev_connected` → aucun véhicule ; `charging` ; `suspended` → en pause ; `error`, `fault`, `invalid` → erreur |
-| Ohme | Status | `unplugged` → aucun véhicule ; `plugged_in` → véhicule branché ; `pending_approval` → en attente d'autorisation ; `charging` ; `paused` ; `finished` → terminée |
-| Tesla Wall Connector | Status | `not_connected` → aucun véhicule ; `connected`, `negotiating` → véhicule branché ; `charging`, `charging_reduced` ; `waiting_car` → en pause ; `charging_finished` → terminée ; `error` |
-| NRGkick | Status | `standby` → aucun véhicule ; `connected` → véhicule branché ; `charging` ; `error` |
-| OpenEVSE | Charging status | `not_connected` → aucun véhicule ; `connected` → véhicule branché ; `charging` ; `sleeping`, `disabled` → en pause ; `vent_required` et les défauts (`gfci_fault`, `no_ground`, `stuck_relay`…) → erreur |
-| Lektrico | State | `available` → aucun véhicule ; `connected` → véhicule branché ; `need_auth` → en attente d'autorisation ; `charging` ; `paused` ; `paused_by_scheduler` → programmée ; `error` |
-| Blue Current | Activity | `available` → aucun véhicule ; `charging` ; `error` ; `offline` |
-| Webasto Next et Unite ([Modbus](https://github.com/tomwellnitz/Webasto-Next-Modbus)) | Charge Point State | `available`, `reserved` → aucun véhicule ; `preparing` → véhicule branché ; `charging` ; `suspended`, `suspended_evse`, `suspended_ev` → en pause ; `finishing` → terminée ; `error`, `faulted` → erreur |
-| Wallbox | Status description | `Charging` ; `Discharging` ; `Paused`, `Waiting for car demand`, `Waiting in queue by …` → en pause ; `Scheduled` ; `Locked, car connected` → en attente d'autorisation ; `Error`, `Waiting MID failed` → erreur |
-| Easee ([easee_hass](https://github.com/nordicopen/easee_hass)) | Status | `disconnected` → aucun véhicule ; `awaiting_start` → véhicule branché ; `awaiting_authorization` → en attente d'autorisation ; `charging` ; `awaiting_load_balancing` → en pause ; `awaiting_scheduled_start`, `awaiting_smart_start` → programmée ; `completed` → terminée ; `error_*` → erreur |
-| Zaptec ([zaptec](https://github.com/custom-components/zaptec)) | Charger mode | `disconnected` → aucun véhicule ; `connected_requesting` → véhicule branché ; `connected_charging` → en charge ; `connected_finished` → terminée |
-| go-e Charger | Car state | `Idle`, `Charger ready, no vehicle` → aucun véhicule ; `Wait for car`, `Waiting for vehicle` → véhicule branché ; `Charging` ; `Complete` → terminée ; `Error` |
-| Alfen ([alfen_wallbox](https://github.com/leeyuentuen/alfen_wallbox)) | Status code socket | `Available`, `Cable connected` → aucun véhicule ; `EV connected` → véhicule branché ; `Authorizing` → en attente d'autorisation ; `Charging normal`, `Solar charging` → en charge ; `Wait vehicle charging`, `Waiting for power` → en pause ; `Finish wait vehicle` → terminée ; `Error …` |
-| myenergi Zappi | Plug status | `EV Disconnected` → aucun véhicule ; `EV Connected` → véhicule branché ; `Waiting for EV`, `EV ready to charge` → en pause ; `Charging` ; `Fault` → erreur |
-| Fronius Wattpilot, Hypervolt, SMA EV Charger, Charge Amps, Pod Point | Status | leurs mots aussi : `wait car`, `no car`, `sleep_mode`, `active_mode`, `station_locked`, `suspended-ev`, `out-of-service`, `connected-waiting-for-schedule`… |
-| Tessie, Greencell, Nexblue, TechnoVE, Shelly EVE01, Besen, Victron GX | Status | `idle`, `disconnected`, `charger_free` → aucun véhicule ; `charger_insert`, `plugged_waiting` → véhicule branché ; `waiting_for_rfid` → en attente d'autorisation ; `charger_wait`, `ev_waiting`, `lb_waiting` → en pause ; `delay_waiting`, `high_tariff_period` → programmée ; `charger_end`, `charged` → terminée ; `pilot_fault`, `error_evse` → erreur |
-
-Le statut se lit quelle que soit son écriture : majuscules, espaces, tirets et virgules s'effacent, si bien que `Waiting for car demand`, `suspended-ev` et `charging_normal` retrouvent les mêmes mots. Le `Disconnected` d'une Wallbox peut être la borne coupée de son cloud plutôt qu'aucune voiture : `state_map: {Disconnected: offline}` le corrige. L'état du véhicule de go-e arrive traduit dans la langue de Home Assistant, et seuls les mots anglais sont lus ; evcc et openWB n'ont pas d'entité de statut, il faut alors leur donner leur prise et leur compteur.
-
-Un mot au sens incertain reste tel qu'il vient, comme pour tout autre appareil : le `booting` de la Tesla, le `wakeup` de la NRGkick, les `updating_firmware` et `locked` de la Lektrico. De même pour un mot qui dit une chose sur une borne et une autre ailleurs : le `ready` de la Tesla est une voiture branchée, le `Ready` d'une Wallbox une borne sans voiture, et tous deux se lisent *Inactif* (`state_map: {ready: connected}` pour la Tesla). Une voiture qui cesse de prendre l'énergie (`SuspendedEV`, `suspended_ev`, le `waiting_car` de la Tesla) se lit *Charge terminée* une fois que la session contient de l'énergie et que la puissance ne passe plus, ce qui demande `session_energy_entity` et `power_entity` ; sinon c'est une pause. Une borne qui retient l'énergie (`SuspendedEVSE`, un `suspended` seul) reste en pause : elle reprend d'elle-même.
-
-Les `unavailable` et `unknown` de Home Assistant se lisent *Hors ligne*. Une borne qui donne l'`Unavailable` d'OCPP comme un mot se règle avec `state_map`, puisque seule la majuscule l'en distingue (les `unavailable` en minuscules de Blue Current et de l'Unite ne peuvent pas l'être, et se lisent *Hors ligne*). Ce qui l'emporte, dans l'ordre : une `error_entity` qui signale une erreur, puis *Hors ligne*, puis une `vehicle_entity` qui dit qu'il n'y a pas de voiture, ce qui fait de tout statut reconnu sauf une erreur *Aucun véhicule*, puis le statut lui-même.
-
-La Webasto Next, avec l'[intégration Modbus](https://github.com/tomwellnitz/Webasto-Next-Modbus) :
-
-```yaml
-type: custom:ha-appliance-card
-appliance_type: ev_charger
-state_entity: sensor.webasto_next_charge_point_state
-vehicle_entity: sensor.webasto_next_cable_state
-power_entity: sensor.webasto_next_active_power_total
-session_energy_entity: sensor.webasto_next_charged_energy
-current_limit_entity: number.webasto_next_charging_current_limit
-start_entity: button.webasto_next_start_charging
-stop_entity: button.webasto_next_stop_charging
-```
-
-Une borne sans statut, par sa prise et son compteur : sans voiture elle se lit *Aucun véhicule*, avec une voiture et la puissance au-dessus de `power_on_threshold` *En charge*, avec une voiture sans puissance *Véhicule branché*.
-
-```yaml
-type: custom:ha-appliance-card
-appliance_type: ev_charger
-vehicle_entity: binary_sensor.wallbox_prise
-power_entity: sensor.wallbox_puissance
-power_on_threshold: 500
-```
-
-Une borne qui donne les lettres du pilote de contrôle de la norme IEC 61851 se lit par `state_map`, puisqu'une lettre seule pourrait vouloir dire n'importe quoi sur une autre entité :
-
-```yaml
-type: custom:ha-appliance-card
-appliance_type: ev_charger
-state_entity: sensor.wallbox_cp_state
-state_map:
-  A: no_vehicle
-  B: connected
-  C: charging
-  D: charging
-  E: error
-  F: error
-```
-
-Et l'`Unavailable` d'OCPP, un connecteur mis hors service, de la même façon :
-
-```yaml
-state_map:
-  Unavailable: offline
-```
-
-#### Charge bidirectionnelle (V2H, V2G)
-
-Une voiture qui rend de l'énergie, à la maison ou au réseau, se lit *En décharge*, dans le violet de l'énergie restituée du tableau de bord Énergie de Home Assistant, et l'énergie remonte le câble de la voiture vers la borne, dans une lueur qui scintille tout le long du câble. Aucune norme ne donne de statut à une borne pour cela : OCPP continue d'annoncer une charge jusqu'à la 2.1, l'ISO 15118-20 n'a pas d'état pour cela, et le fil pilote de l'IEC 61851 n'a pas de sens. La card le lit donc là où il se dit :
-
-- dans un mot, entier : `Discharging` (la Wallbox Quasar, la borne DC de Sigenergy, les intégrations Volvo et Volkswagen) et `v2g_discharging` (Renault) ;
-- sur un compteur à part, `discharge_power_entity`, au-dessus de `power_on_threshold` : le `Power.Active.Export` d'OCPP, la puissance Powershare de Tesla ;
-- sous zéro sur `power_entity`, pour un compteur qui compte en négatif l'énergie rendue (une Quasar en Modbus). Un compteur qui compte les deux sens de la même façon, comme celui du cloud Wallbox, ne dit rien du sens : le statut le dit.
-
-Une voiture qui rend de l'énergie est en décharge quel que soit le nom que lui donne le statut, puisque OCPP annonce une charge ; une erreur, *Hors ligne* et une prise sans voiture passent toujours avant. Un mot qui ne fait que contenir le mot est autre chose : un mode à choisir (`immediateDischarging`), la batterie de la maison qui alimente la borne (`ChargingBecauseDischargingPvBattery`). Le V2L n'est pas lu non plus : une voiture qui alimente un appareil par sa propre prise n'a pas de wallbox sur son chemin.
-
-Une wallbox OCPP qui sait se décharger, et une Wallbox Quasar :
-
-```yaml
-type: custom:ha-appliance-card
-appliance_type: ev_charger
-state_entity: sensor.wallbox_status_connector
-power_entity: sensor.wallbox_power_active_import
-discharge_power_entity: sensor.wallbox_power_active_export
-```
-
-```yaml
-type: custom:ha-appliance-card
-appliance_type: ev_charger
-state_entity: sensor.wallbox_quasar_status_description
-power_entity: sensor.wallbox_quasar_charging_power
-current_limit_entity: number.wallbox_quasar_maximum_charging_current
-```
-
-Une entité qui porte le nom d'une wallbox dans les langues de la card, de son fabricant ou d'OCPP est reconnue d'elle-même, comme un statut énuméré qui liste les mots d'une borne. L'éditeur remplit la prise, le compteur, la puissance rendue, la session, la limite de courant, l'erreur et les boutons de démarrage et d'arrêt depuis les entités de la borne, jamais son bouton de redémarrage ou de réinitialisation.
-
-</details>
-
-<details>
-<summary><b>Étapes du cycle</b></summary>
-
-Pendant qu'un lave-linge, un sèche-linge ou un lave-vaisselle tourne, la ligne d'état nomme l'étape où il en est au lieu d'*En cours* du début à la fin : *Prélavage*, *Trempage*, *Pesée*, *Remplissage*, *Lavage*, *Rinçage*, *Vidange*, *Essorage*, *Séchage*, *Refroidissement*, *Anti-froissage* ou *Vapeur*. Pendant l'essorage d'un lave-linge, le tambour se vide et le linge s'emballe. Une machine en pause, terminée ou en départ différé garde son mot, et le temps restant comme la barre de progression restent ceux du cycle entier.
-
-Où se trouve l'étape dépend de l'intégration :
-
-| Intégration | Où elle le dit | À configurer |
-|---|---|---|
-| LG ThinQ, Whirlpool, Midea | l'état lui-même (`rinsing`, `cycle_spinning`, `Dry`) | rien |
-| Electrolux, AEG | `cyclePhase` (`Wash`, `Rinse`, `Spin`) | `phase_entity` |
-| Miele, SmartThings | une entité de phase (`program_phase`, `job_state`) | `phase_entity` |
-| hOn (Candy, Hoover, Haier) | une phase numérotée (`prPhase`) | `phase_entity` et `phase_map` |
-| HomeWhiz (Beko, Grundig, Arçelik, Bauknecht) | son *Sub state* (`washer_substate_spin`, `dryer_message_cooling`) | `phase_entity` |
-| Home Connect (Bosch, Siemens) | nulle part : l'état reste *Run* du début à la fin | rien à lire |
-
-Un mot de l'entité de phase que la carte ne connaît pas s'affiche tel qu'il est écrit, sauf un message de HomeWhiz qui ne nomme pas d'étape (*Hello*, *Child lock*), qui laisse *En cours*. Une machine HomeWhiz dit aussi la fin du cycle dans ce message, en réclamant le linge ou en annonçant le programme terminé alors que son état revient à *On* : encore allumée, la carte affiche *Terminé*. `phase_map` traduit les codes, vers une des étapes ci-dessus ou vers vos propres mots, et `state_map` accepte aussi les étapes comme cibles :
-
-```yaml
-appliance_type: washer
-state_entity: sensor.lave_linge_etat
-phase_entity: sensor.lave_linge_phase
-phase_map:
-  4: rinsing
-  5: spinning
-  9: Anti-allergie
-```
-
-</details>
-
-<details>
-<summary><b>Lavantes-séchantes</b></summary>
-
-Une lavante-séchante est un lave-linge avec `washer_dryer: true`, et non un type à part : l'option est une case sous le type d'appareil. Cochée, le tambour montre de l'eau pendant le lavage et du linge qui tourne dans l'air chaud pendant le séchage, d'après la même étape que la ligne d'état. Une machine dont le nom dit qu'elle lave et sèche est reconnue toute seule.
-
-Le rinçage compte pour du lavage, puisqu'il y a encore de l'eau dans le tambour. Une étape que la carte ne sait pas lire laisse le dessin en l'état : un cycle qui finit sur un anti-froissage ou un refroidissement garde son linge au lieu de se remplir d'eau.
-
-```yaml
-appliance_type: washer
-washer_dryer: true
-state_entity: sensor.lavante_sechante_etat
-phase_entity: sensor.lavante_sechante_phase
-```
 
 </details>
 
