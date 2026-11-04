@@ -6,12 +6,13 @@
  * wrong once it is split is tested here: a language that never arrives, an
  * editor missing one of the card's helpers, a cache that outlives a release.
  */
-import { mkdtempSync, readFileSync, readdirSync } from 'node:fs';
+import { mkdtempSync, readFileSync, readdirSync, unlinkSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join, dirname } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { execFileSync } from 'node:child_process';
 import { loadCard, markup, check, report } from './harness.mjs';
+import { sourceText } from '../tools/source.mjs';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const OUT = mkdtempSync(join(tmpdir(), 'hac-split-'));
@@ -56,7 +57,7 @@ check('l editeur n est pas dans le fichier de la carte', registry.has('ha-applia
 
 // ── Languages ────────────────────────────────────────────────────────────────
 // English is read from the source, which is what every language falls back on.
-const SRC = readFileSync(join(HERE, '..', 'src', 'ha-appliance-card.js'), 'utf8');
+const SRC = sourceText();
 const enBlock = SRC.slice(SRC.indexOf('\n  en: {'), SRC.indexOf('\n  fr: {'));
 const enKeys = new Set([...enBlock.matchAll(/(?:^|[\s,{])([a-z][a-z0-9_]*):\s*"/g)].map((m) => m[1]));
 const langs = readdirSync(OUT).filter((n) => n.endsWith('.json'));
@@ -126,6 +127,52 @@ globalThis.fetch = plainFetch;
 check('fichier absent : demande une seule fois', fetched.filter((u) => u.includes('-cs.json')).length, 1);
 check('fichier absent : la carte reste en anglais', /Idle/.test(markup(csCard)), true);
 check('fichier absent : un avertissement', warned.length, 1);
+
+// ── Drawings ─────────────────────────────────────────────────────────────────
+// Each drawing ships in a file of its own, fetched the first time a card shows it.
+const drawKeys = [...SRC.slice(SRC.indexOf('\nconst DRAWINGS = {'), SRC.indexOf('\n};\n', SRC.indexOf('\nconst DRAWINGS = {')))
+  .matchAll(/\n  ([a-z_0-9]+): /g)].map((m) => m[1]);
+const drawFiles = readdirSync(OUT).filter((n) => /^ha-appliance-card-draw-[a-z_0-9]+\.js$/.test(n));
+check('un fichier par dessin', drawFiles.length, drawKeys.length);
+check('chaque dessin a son fichier', drawKeys.every((k) => drawFiles.includes(`ha-appliance-card-draw-${k}.js`)), true);
+const mainText = readFileSync(MAIN, 'utf8');
+check('le fichier de la carte ne contient aucun dessin', /const DRAWINGS = \{|const ILLUSTRATION_CSS = \{|class="rb-|robotHtml\(/.test(mainText), false);
+const until = async (ok) => { for (let i = 0; i < 200 && !ok(); i++) await new Promise((r) => setTimeout(r, 5)); return ok(); };
+const card = (type) => {
+  const c = new Card();
+  c.setConfig({ type: 'custom:ha-appliance-card', appliance_type: type, state_entity: 'sensor.w_state' });
+  c._hass = hassIn('en');
+  c.connectedCallback();
+  c._render();
+  return c;
+};
+const robotCfg = new Card();
+robotCfg.setConfig({ type: 'custom:ha-appliance-card', appliance_type: 'fan', state_entity: 'sensor.w_state' });
+await new Promise((r) => setTimeout(r, 300));
+check('le dessin est demande des la configuration : la au premier rendu', /<svg|class="machine/.test(markup(card('fan'))), true);
+const robot = card('robot');
+const before = markup(robot);
+check('dessin pas encore la : la carte s affiche quand meme', /state-line">Stopped</.test(before), true);
+check('dessin pas encore la : pas de dessin', /<svg/.test(before), false);
+check('le dessin arrive et la carte se redessine', await until(() => /<svg/.test(markup(robot))), true);
+const robot2 = card('robot');
+check('dessin deja la : des le premier rendu', /<svg/.test(markup(robot2)), true);
+
+// A drawing missing from the release: the card without it, one warning.
+unlinkSync(join(OUT, 'ha-appliance-card-draw-toaster.js'));
+const dWarned = [];
+const dWarn = console.warn;
+console.warn = (msg) => dWarned.push(String(msg));
+let toasterError = null;
+let toaster = null;
+try { toaster = card('toaster'); } catch (e) { toasterError = e; }
+await until(() => dWarned.length > 0);
+try { card('toaster'); } catch (e) { toasterError = e; }
+await new Promise((r) => setTimeout(r, 50));
+console.warn = dWarn;
+check('dessin absent : rien ne casse', toasterError && String(toasterError), null);
+check('dessin absent : un seul avertissement', dWarned.filter((w) => w.includes('toaster')).length, 1);
+check('dessin absent : la carte garde son texte', /Idle|Ready|Standby/.test(markup(toaster)), true);
 
 // ── Editor ───────────────────────────────────────────────────────────────────
 await Card.getConfigElement();

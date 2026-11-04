@@ -12,14 +12,15 @@
  * so a dispatch built the wrong way drops the payload and every edit is lost.
  * This card has ten CustomEvent sites and they are all exercised below.
  */
-import { readFileSync } from 'node:fs';
+import { readFileSync, writeFileSync } from 'node:fs';
+import { sourcePath, sourceText } from '../tools/source.mjs';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 import { loadCard, markup, freezeClock, now, check, contains, report }
   from './harness.mjs';
 
 const HERE     = dirname(fileURLToPath(import.meta.url));
-const registry = await loadCard(join(HERE, '..', 'src', 'ha-appliance-card.js'));
+const registry = await loadCard(sourcePath());
 const Card     = registry.get('ha-appliance-card');
 const Editor   = registry.get('ha-appliance-card-editor');
 
@@ -158,8 +159,12 @@ const HASS = states => ({
   callService() {},
 });
 
+// test/equiv.mjs replays every card built here on the release as it ships.
+const RECORD = process.env.HAC_RECORD ? [] : null;
+
 /** Builds a card, renders it once, and returns { card, html }. */
 function build(config, states) {
+  if (RECORD) RECORD.push({ config, states, at: Date.now() });
   const c = new Card();
   c.setConfig({ type: 'custom:ha-appliance-card', ...config });
   c._hass = HASS(states);
@@ -1241,7 +1246,7 @@ check('carte : state_entity manquante est refusee',
 // is a static check on the table itself, which is what a contributed language
 // needs before it can be trusted.
 
-const SRC    = readFileSync(join(HERE, '..', 'src', 'ha-appliance-card.js'), 'utf8');
+const SRC    = sourceText();
 const tStart = SRC.indexOf('const T = {');
 const TABLE  = eval('(' + SRC.slice(tStart + 'const T ='.length, SRC.indexOf('\n};', tStart) + 2) + ')');
 const EN_KEYS = Object.keys(TABLE.en);
@@ -12343,4 +12348,5 @@ function tvT(w) { return { 'switch.tv': { state: 'on', attributes: {} }, 'sensor
   check('relevage sans prise mesuree : off reste en attente', stateLine(render({ appliance_type: 'water_pump', pump_layout: 'sump', state_entity: 'switch.p' }, { 'switch.p': s('off') })), 'Standby');
 }
 
+if (RECORD) writeFileSync(process.env.HAC_RECORD, JSON.stringify(RECORD));
 report();

@@ -1,5 +1,5 @@
 * text=auto
 *.js text eol=lf
-src/ha-appliance-card.js linguist-vendored=false
-src/ha-appliance-card.js linguist-detectable=true
+src/*.js linguist-vendored=false
+src/*.js linguist-detectable=true
 dist/* linguist-generated=true

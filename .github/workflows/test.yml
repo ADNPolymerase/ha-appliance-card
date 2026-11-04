@@ -14,10 +14,12 @@ jobs:
         with:
           node-version: '22'
       - name: Syntax check
-        run: node --check src/ha-appliance-card.js
+        run: for f in src/*.js tools/*.mjs test/*.mjs; do node --check "$f"; done
       - name: dist/ is what the source builds
         run: node tools/build.mjs --check
       - name: Behaviour tests
         run: node test/run.mjs
       - name: Release as split
         run: node test/split.mjs
+      - name: Release draws what the source draws
+        run: node test/equiv.mjs
