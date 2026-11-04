@@ -30,7 +30,7 @@ Une card Lovelace qui dessine les appareils de la maison et les anime selon leur
 - **Complète ou compacte**, au thème clair ou sombre de Home Assistant.
 - **14 langues** et un éditeur visuel qui pré-remplit les champs depuis l'appareil.
 
-## Vous cherchez autre chose ?
+## Projets liés
 
 Certaines demandes ont leur propre carte :
 

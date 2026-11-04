@@ -30,9 +30,9 @@ A Lovelace card that draws the appliances of your home and animates them from th
 - **Full or compact**, in Home Assistant's light or dark theme.
 - **14 languages** and a visual editor that pre-fills the fields from the device.
 
-## Looking for something else?
+## Related projects
 
-Some requests are better served by a dedicated card of mine:
+Some requests are better served by one of my other cards:
 
 | You want | Card |
 |---|---|
