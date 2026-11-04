@@ -1319,6 +1319,10 @@ class ApplianceCardEditor extends HTMLElement {
         ${[["irrigation", "irrigation_layout", IRRIGATION_LAYOUTS, "irr"], ["litter_box", "litter_layout", LITTER_LAYOUTS, "lit"], ["detector", "detector_layout", DETECTOR_LAYOUTS, "det"], ["speaker", "speaker_layout", SPEAKER_LAYOUTS, "spk"]]
           .filter(([ty]) => this._type === ty).map(([, f, list, p]) => this._row("section_screen_layout", f, { type: "select",
             options: [{ value: "auto", label: t(hass, "unit_auto") }].concat(list.map((v) => ({ value: v, label: t(hass, `layout_${p}_${v}`) }))) })).join("")}
+        ${this._type === "speaker" ? this._row("speaker_color", "speaker_color", {
+          type: "select",
+          options: [{ value: "auto", label: t(hass, "unit_auto") }].concat(SPK_COLORS.map((v) => ({ value: v, label: t(hass, `color_${v}`) }))),
+        }) : ""}
         ${this._type === "mobility" ? this._row("section_screen_layout", "mobility_layout", {
           type: "select",
           options: [{ value: "auto", label: t(hass, "unit_auto") }].concat(MOBILITY_LAYOUTS.map((v) => ({ value: v, label: t(hass, `layout_mob_${v}`) }))),

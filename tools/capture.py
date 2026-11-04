@@ -83,7 +83,7 @@ FAMILIES = (
     ("litter", "lit_globe,lit_globe_clean,lit_globe_cat,lit_box,lit_box_clean,lit_box_full", 3),
     ("watering", "irr_sprinkler,irr_rain,irr_tap,irr_tap_off", 4),
     ("detectors", "det_smoke,det_smoke_alarm,det_co,det_co_alarm,det_leak,det_leak_alarm", 3),
-    ("speakers", "spk_smart,spk_mini,spk_one,spk_shelf,spk_move,spk_bar,spk_dot,spk_nest", 4),
+    ("speakers", "spk_smart,spk_mini,spk_one,spk_era100,spk_era300,spk_move,spk_bar,spk_wave,spk_bose500,spk_flex,spk_bosebar,spk_shelf,spk_dot,spk_nest", 7),
 )
 # Sixteen frames a tenth of a second apart over a 1.6 s loop, on a 128-colour
 # palette: the five families weigh about 1.4 MB per language, where 32 frames
@@ -186,7 +186,7 @@ POSTER = (
     ("robot_vacuum", 2), ("mob_poster", 5), ("robot_mower", 2), ("robot_stick", 1), ("robot_washer", 1), ("nt_pool", 1), ("pool_running", 1), ("nt_spa", 1),
     ("solar_day", 2), ("battery_charging", 2), ("ups_online", 1), ("nt_linky", 5), ("nt_booster", 2), ("nt_floor", 2), ("nt_sauna", 1), ("nt_aquarium", 1),
     ("scale_fresh", 1), ("hd_hot", 2), ("dif_drop", 5), ("hrv_one_duct", 5), ("cam_outdoor", 5), ("lamp_floor", 10), ("mb_classic", 2), ("nt_tree", 1),
-    ("irr_sprinkler", 2), ("lit_globe", 2), ("det_smoke", 3), ("spk_smart", 8),
+    ("irr_sprinkler", 2), ("lit_globe", 2), ("det_smoke", 3), ("spk_smart", 14),
 )
 
 

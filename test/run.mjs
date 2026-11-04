@@ -12304,6 +12304,19 @@ function tvT(w) { return { 'switch.tv': { state: 'on', attributes: {} }, 'sensor
   check('enceinte : les modeles', ['homepod_mini', 'sonos_one', 'sonos_move', 'echo_dot', 'nest_mini', 'bookshelf', 'soundbar', 'smart'].map((l) => kindOf(SPK('playing', {}, { speaker_layout: l }))).join(),
     'spk_homepod_mini,spk_sonos_one,spk_sonos_move,spk_echo_dot,spk_nest_mini,spk_bookshelf,spk_soundbar,spk_smart');
   check('enceinte : par son nom', kindOf(render({ appliance_type: 'speaker', state_entity: 'media_player.sonos_one_salon' }, { 'media_player.sonos_one_salon': s('playing') })), 'spk_sonos_one');
+  check('enceinte : les nouveaux modeles', ['sonos_era100', 'sonos_era300', 'bose_wave', 'bose_500', 'bose_soundlink', 'bose_soundbar'].map((l) => kindOf(SPK('playing', {}, { speaker_layout: l }))).join(),
+    'spk_sonos_era100,spk_sonos_era300,spk_bose_wave,spk_bose_500,spk_bose_soundlink,spk_bose_soundbar');
+  const byName = (id) => kindOf(render({ appliance_type: 'speaker', state_entity: `media_player.${id}` }, { [`media_player.${id}`]: s('playing') }));
+  check('enceinte : modeles lus dans le nom', ['bose_wave_soundtouch', 'salon_era_300', 'cuisine_era_100', 'bose_soundlink_flex', 'bose_smart_soundbar', 'bose_home_speaker', 'sonos_arc', 'homepod_mini_bureau'].map(byName).join(),
+    'spk_bose_wave,spk_sonos_era300,spk_sonos_era100,spk_bose_soundlink,spk_bose_soundbar,spk_bose_500,spk_soundbar,spk_homepod_mini');
+  const svgOf = (h) => (h.match(/<svg class="nt-svg"[\s\S]*?<\/svg>/) || [''])[0];
+  check('enceinte : HomePod blanc', svgOf(SPK('playing', {}, { speaker_layout: 'smart', speaker_color: 'white' })).includes('#e7e5e0'), true);
+  check('enceinte : HomePod minuit par defaut', svgOf(SPK('playing', {}, { speaker_layout: 'smart' })).includes('#3c434a'), true);
+  check('enceinte : la couleur lue dans le nom', svgOf(render({ appliance_type: 'speaker', speaker_layout: 'smart', state_entity: 'media_player.homepod_blanc' }, { 'media_player.homepod_blanc': s('playing') })).includes('#e7e5e0'), true);
+  check('enceinte : la couleur de l illustration', svgOf(SPK('playing', {}, { speaker_layout: 'sonos_one', illustration_color: 'white' })).includes('#ecebe8'), true);
+  check('enceinte : HomePod mini orange', svgOf(SPK('playing', {}, { speaker_layout: 'homepod_mini', speaker_color: 'orange' })).includes('#ef8f45'), true);
+  check('enceinte : une couleur absente du modele', svgOf(SPK('playing', {}, { speaker_layout: 'sonos_one', speaker_color: 'yellow' })).includes('#2a2e33'), true);
+  check('enceinte : hors ligne, garde sa couleur', svgOf(SPK('unavailable', {}, { speaker_layout: 'smart', speaker_color: 'white' })).includes('#e7e5e0'), true);
 
   // The optional readings on the older types.
   check('four : sonde a viande', infoLine(render({ appliance_type: 'oven', state_entity: 'sensor.o', meat_probe_entity: 'sensor.p', meat_probe_target_entity: 'sensor.t' },
@@ -12317,6 +12330,7 @@ function tvT(w) { return { 'switch.tv': { state: 'on', attributes: {} }, 'sensor
   check('editeur arrosage : le modele et la pluie', ['"irrigation_layout"', 'data-toggle="rain_delay_entity"'].every((f) => ed({ appliance_type: 'irrigation', state_entity: 'switch.i' }).includes(f)), true);
   check('editeur litiere : le tiroir', ed({ appliance_type: 'litter_box', state_entity: 'sensor.l' }).includes('data-toggle="waste_drawer_entity"'), true);
   check('editeur enceinte : le modele', ed({ appliance_type: 'speaker', state_entity: 'media_player.m' }).includes('"speaker_layout"'), true);
+  check('editeur enceinte : la couleur', ['"speaker_color"', 'value="yellow"', 'value="sonos_era300"', 'value="bose_wave"'].every((f) => ed({ appliance_type: 'speaker', state_entity: 'media_player.m' }).includes(f)), true);
 }
 
 // The extract-only ventilation and the sump pump on a plug left on (#136).
