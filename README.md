@@ -498,6 +498,7 @@ An entity named after an air fryer (or Cosori's `cook_status`) is recognised on 
 | `light_entity` / `tank_empty_entity` | diffuser | The diffuser's light: its colour lights the band and the floor. An empty tank sensor makes it *Tank empty*. Its `state_entity` is the mist: a switch, a fan (50 % or less is *Intermittent*), Meross's spray select (`eco` is *Light mist*, a lower mist; `intermittent` or `interval` is *Intermittent*) or a humidifier entity. A select gets a button that steps through its modes, a switch or a fan an on/off button. |
 | `hrv_layout` | HRV | `diagram` (the two streams crossing in the exchanger) \| `one_duct` (a single-room unit, Lunos eGO, Zehnder ComfoAir 70) \| `pair` (two through-wall units, Lunos e2, Vents TwinFresh, that swap direction every 70 s) \| `single` (an extract-only unit in the attic, its ceiling vents and the outlet over the roof, fresh air coming in through the windows) \| `single_box` (the same extract unit drawn alone, its ducts in and its outlet). Left out, a name that says single flow, extract or hygro makes an extract-only unit. |
 | `high_speed_entity` | HRV (single, single_box) | A two-speed extract unit's speed switch: off is *Low speed*, on *High speed*, the fan turning three times faster. The `state_entity` stays its on and off. |
+| `speed_entities` | HRV | One entity per speed, in order (`input_boolean`, `switch` or `light`), for a unit run by its relays (#78). The speed is the one whose entity is on: the state reads *Speed 2*, a line *2 / 3*, and the fans turn faster with each speed. A *Speed* button opens a menu of the speeds that turns on the one picked and nothing else, leaving the others to the unit's own automations. A unit whose `state_entity` is a select of modes or a fan with presets keeps its *Mode* menu, the speed shown as a line. |
 | `outdoor_temperature_entity` / `supply_temperature_entity` / `extract_temperature_entity` / `exhaust_temperature_entity` | HRV | The four temperatures, drawn at the ends of the ducts. |
 | `bypass_entity` | HRV | The bypass: a switch or a binary sensor that is on, a position in %, or Vallox's cell state, whose *Defrosting* reads *Defrosting*. |
 | `airflow_entity` / `filter_life_entity` / `filter_life_full` | HRV | The airflow and the filter, in days or in %, as lines, and the filter's life as the bar: its percentage, or its days out of `filter_life_full` (90 by default). 7 days or 10 % left (or `filter_due_below`) reads *Replace filter*. The `state_entity` is the unit's fan, climate or select: its speed, its *Boost* and *Away* presets. |
@@ -742,6 +743,18 @@ appliance_type: hrv
 hrv_layout: single
 state_entity: switch.vmc_power
 high_speed_entity: switch.vmc_speed
+```
+
+A dual-flow unit run by three relays, one boolean per speed, read on its power meter (#78):
+
+```yaml
+type: custom:ha-appliance-card
+appliance_type: hrv
+state_entity: sensor.vmc_power
+speed_entities:
+  - input_boolean.vmc_1
+  - input_boolean.vmc_2
+  - input_boolean.vmc_3
 ```
 
 A sump pump on a smart plug left on:

@@ -498,6 +498,7 @@ Une entité qui porte le nom d'une friteuse (ou le `cook_status` de Cosori) est 
 | `light_entity` / `tank_empty_entity` | diffuseur | La lumière du diffuseur : sa couleur éclaire l'anneau et le sol. Un capteur de réservoir vide l'affiche *Réservoir vide*. Son `state_entity` est la brume : un interrupteur, un ventilateur (50 % ou moins = *Intermittent*), le select de Meross (`eco` = *Brume légère*, une brume plus faible ; `intermittent` ou `interval` = *Intermittent*) ou une entité humidificateur. Un select a un bouton qui passe d'un mode au suivant, un interrupteur ou un ventilateur un bouton marche/arrêt. |
 | `hrv_layout` | VMC | `diagram` (les deux flux qui se croisent dans l'échangeur) \| `one_duct` (VMC murale à un seul conduit, Lunos eGO, Zehnder ComfoAir 70) \| `pair` (paire décentralisée traversant le mur, Lunos e2, Vents TwinFresh, qui s'inverse toutes les 70 s) \| `single` (une VMC simple flux dans les combles, ses bouches au plafond et sa sortie au-dessus du toit, l'air neuf entrant par les fenêtres) \| `single_box` (le même caisson d'extraction dessiné seul, ses gaines d'entrée et sa sortie). Sans réglage, un nom qui dit simple flux, extract ou hygro donne une VMC simple flux. |
 | `high_speed_entity` | VMC (single, single_box) | Le switch de vitesse d'une VMC simple flux à deux vitesses : coupé c'est la *Petite vitesse*, allumé la *Grande vitesse*, le ventilateur tournant trois fois plus vite. Le `state_entity` reste sa marche et son arrêt. |
+| `speed_entities` | VMC | Une entité par vitesse, dans l'ordre (`input_boolean`, `switch` ou `light`), pour une VMC pilotée par ses relais (#78). La vitesse est celle dont l'entité est allumée : l'état dit *Vitesse 2*, une ligne *2 / 3*, et les ventilateurs tournent plus vite à chaque vitesse. Un bouton *Vitesse* ouvre un menu des vitesses qui allume celle choisie et rien d'autre, laissant les autres aux automatisations de la VMC. Une VMC dont le `state_entity` est un select de modes ou un ventilateur à préréglages garde son menu *Mode*, la vitesse affichée en ligne. |
 | `outdoor_temperature_entity` / `supply_temperature_entity` / `extract_temperature_entity` / `exhaust_temperature_entity` | VMC | Les quatre températures, dessinées au bout des gaines. |
 | `bypass_entity` | VMC | Le bypass : un interrupteur ou un capteur binaire actif, une ouverture en %, ou l'état de l'échangeur de Vallox, dont *Defrosting* affiche *Dégivrage*. |
 | `airflow_entity` / `filter_life_entity` / `filter_life_full` | VMC | Le débit et le filtre, en jours ou en %, en lignes, et l'usure du filtre en barre : son pourcentage, ou ses jours sur `filter_life_full` (90 par défaut). À 7 jours ou 10 % (ou `filter_due_below`), *Filtre à changer*. Le `state_entity` est l'entité ventilateur, climat ou select de la VMC : sa vitesse, ses préréglages *Boost* et *Absence*. |
@@ -742,6 +743,18 @@ appliance_type: hrv
 hrv_layout: single
 state_entity: switch.vmc_marche
 high_speed_entity: switch.vmc_vitesse
+```
+
+Une VMC double flux pilotée par trois relais, un booléen par vitesse, lue sur sa prise mesurée (#78) :
+
+```yaml
+type: custom:ha-appliance-card
+appliance_type: hrv
+state_entity: sensor.vmc_puissance
+speed_entities:
+  - input_boolean.vmc_1
+  - input_boolean.vmc_2
+  - input_boolean.vmc_3
 ```
 
 Une pompe de relevage sur une prise connectée laissée allumée :

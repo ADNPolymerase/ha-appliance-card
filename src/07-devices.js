@@ -853,6 +853,7 @@ function cardMenuOf(hass, cfg, cap) {
 }
 function cardMenuLabel(hass, menu, option) {
   const st = stateObj(hass, menu.entity);
+  if (menu.kind === "speed") return `${t(hass, "hrv_speed")} ${option}`;
   return menu.kind === "source" || menu.kind === "timer" ? screenSourceLabel(hass, st, option) : hrvModeLabel(hass, st, option);
 }
 function screenControls(hass, cfg) {
@@ -883,7 +884,8 @@ function screenControls(hass, cfg) {
 function hrvControls(hass, cfg) {
   const out = [];
   const menu = hrvModeOptions(hass, cfg);
-  if (menu) out.push({ key: "hrv_mode", entity: menu.entity, icon: "mdi:tune-variant", label: t(hass, "hrv_mode"), menu: true });
+  if (menu) out.push(menu.kind === "speed" ? { key: "hrv_speed", entity: menu.entity, icon: "mdi:fan", label: t(hass, "hrv_speed"), menu: true }
+    : { key: "hrv_mode", entity: menu.entity, icon: "mdi:tune-variant", label: t(hass, "hrv_mode"), menu: true });
   const hst = cfg.humidity_control_entity ? stateObj(hass, cfg.humidity_control_entity) : null;
   if (hst) out.push({ key: "hrv_humidity", entity: cfg.humidity_control_entity, icon: "mdi:water-percent", label: t(hass, "hrv_humidity"), on: ["on", "true"].includes(String(hst.state).toLowerCase()) });
   return out;

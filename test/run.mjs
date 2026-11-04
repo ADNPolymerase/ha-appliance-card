@@ -12352,6 +12352,32 @@ function tvT(w) { return { 'switch.tv': { state: 'on', attributes: {} }, 'sensor
   check('editeur vmc simple flux : le switch de vitesse', ed({ appliance_type: 'hrv', hrv_layout: 'single', state_entity: 'switch.v' }).includes('data-toggle="high_speed_entity"'), true);
   check('editeur vmc double flux : pas de switch de vitesse', ed({ appliance_type: 'hrv', hrv_layout: 'diagram', state_entity: 'fan.v' }).includes('data-toggle="high_speed_entity"'), false);
 
+  // One entity per speed (#78): TioBundy's Siber, its power meter as the
+  // state and three booleans driving its relays.
+  const SPEEDS = { appliance_type: 'hrv', state_entity: 'sensor.siber_w', speed_entities: ['input_boolean.vmc_1', 'input_boolean.vmc_2', 'input_boolean.vmc_3'] };
+  const spd = (on) => ({ 'sensor.siber_w': s(7, { unit_of_measurement: 'W' }), ...Object.fromEntries([1, 2, 3].map((i) => [`input_boolean.vmc_${i}`, s(i === on ? 'on' : 'off')])) });
+  check('vmc par vitesse : l etat dit la vitesse', stateLine(render(SPEEDS, spd(2))), 'Speed 2');
+  check('vmc par vitesse : la ligne', infoLine(render(SPEEDS, spd(2)), 'Speed').replace(/\s/g, ' '), '2 / 3');
+  check('vmc par vitesse : la plus haute tourne vite', [/--hv-pace:2\.2s/.test(render(SPEEDS, spd(1))), /--hv-pace:1\.4s/.test(render(SPEEDS, spd(2))), /--hv-pace:\.7s/.test(render(SPEEDS, spd(3)))].join(), 'true,true,true');
+  check('vmc par vitesse : aucune allumee, l etat de la VMC', [stateLine(render(SPEEDS, spd(0))), infoLine(render(SPEEDS, spd(0)), 'Speed')].join(' | '), 'Ventilating | -');
+  check('vmc par vitesse : le bouton Vitesse', /data-menu="1"[^>]*title="Speed"/.test(render(SPEEDS, spd(2))), true);
+  {
+    const calls = [];
+    const c = new Card();
+    c.setConfig({ type: 'custom:ha-appliance-card', ...SPEEDS });
+    c._hass = { ...HASS(spd(1)), callService: (domain, service, data) => calls.push({ domain, service, data }) };
+    c._render();
+    c._modeMenuOpen = true;
+    c._render();
+    check('vmc par vitesse : le menu 1 2 3', [...markup(c).matchAll(/data-mode-option="([^"]+)"/g)].map((m) => m[1]).join(), '1,2,3');
+    check('vmc par vitesse : la vitesse en cours cochee', /mode-row sel[^>]*data-mode-option="1"/.test(markup(c)), true);
+    c._pickMode('3');
+    check('vmc par vitesse : n allume que la vitesse choisie', JSON.stringify(calls), JSON.stringify([{ domain: 'input_boolean', service: 'turn_on', data: { entity_id: 'input_boolean.vmc_3' } }]));
+  }
+  check('vmc par vitesse : un select de modes garde son menu', /title="Mode"/.test(render({ ...SPEEDS, state_entity: 'select.m' }, { ...spd(1), 'select.m': s('auto', { options: ['auto', 'boost'] }) })), true);
+  check('editeur vmc : la liste des vitesses', ed({ appliance_type: 'hrv', state_entity: 'fan.v' }).includes('data-panel="speeds"'), true);
+  check('editeur lave-linge : pas de liste des vitesses', ed({ appliance_type: 'washer', state_entity: 'sensor.w' }).includes('data-panel="speeds"'), false);
+
   const SP = { appliance_type: 'water_pump', pump_layout: 'sump', state_entity: 'switch.prise', power_entity: 'sensor.prise_w', power_on_threshold: 20 };
   const spS = (sw, w) => ({ 'switch.prise': s(sw), 'sensor.prise_w': s(w, { unit_of_measurement: 'W' }) });
   check('relevage sur prise : pompe', stateLine(render(SP, spS('on', 300))), 'Pumping');

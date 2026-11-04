@@ -168,6 +168,13 @@ class ApplianceCard extends HTMLElement {
     const cap = this._hass ? caps(detectApplianceType(cfg, stateObj(this._hass, cfg.state_entity))) : null;
     const menu = this._hass ? cardMenuOf(this._hass, cfg, cap) : null;
     if (!menu || !menu.options.includes(option)) return this._render();
+    // A speed turns its own entity on and nothing else: the unit's own
+    // automations switch the other speeds off (#78).
+    if (menu.dom === "speed") {
+      const id = menu.ids[Number(option) - 1];
+      if (id) this._hass.callService(domainOf(id), "turn_on", { entity_id: id });
+      return this._render();
+    }
     if (menu.dom === "fan") this._hass.callService("fan", "set_preset_mode", { entity_id: menu.entity, preset_mode: option });
     else if (menu.dom === "media_player") this._hass.callService("media_player", "select_source", { entity_id: menu.entity, source: option });
     else this._hass.callService(menu.dom, "select_option", { entity_id: menu.entity, option });
@@ -3290,13 +3297,18 @@ class ApplianceCard extends HTMLElement {
       const act = cfg.active_mode_entity ? stateObj(hass, cfg.active_mode_entity) : null;
       const actOk = act && st && !["unknown", "unavailable", ""].includes(String(act.state).trim().toLowerCase());
       const h = hrvReadOf(hass, cfg, actOk ? { ...st, state: act.state } : st, norm, powerDerived);
-      if (!cfg.state_show_raw || h.mode === "unav") stateLabel = t(hass, h.paused ? "hrv_inter_paused" : h.mode === "run" && h.speed ? `hrv_${h.speed}_speed` : HRV_LABELS[h.mode]);
+      if (!cfg.state_show_raw || h.mode === "unav") stateLabel = h.mode === "run" && h.step && !h.paused ? `${t(hass, "hrv_speed")} ${h.step}`
+        : t(hass, h.paused ? "hrv_inter_paused" : h.mode === "run" && h.speed ? `hrv_${h.speed}_speed` : HRV_LABELS[h.mode]);
+      if (h.steps && !["off", "unav"].includes(h.mode)) {
+        extraLines.push({ key: "hrv_speed", icon: "mdi:fan", label: t(hass, "hrv_speed"), value: keepTogether(h.step ? `${h.step} / ${h.steps}` : "-"), entity: h.stepEntity || entityEntries(cfg.speed_entities, 6)[0].entity });
+      }
       color = HRV_COLORS[h.mode];
       const live = !["off", "unav"].includes(h.mode);
       // The mode of a select is what the state line says (Smart, Manual, Turbo
       // on a Broan) while the unit simply runs in it; a defrost, a bypass, a
       // filter due or an intermittent pause still says itself.
-      const menu = hrvModeOptions(hass, cfg);
+      const anyMenu = hrvModeOptions(hass, cfg);
+      const menu = anyMenu && anyMenu.dom !== "speed" ? anyMenu : null;
       if (menu && live && menu.dom !== "fan" && !cfg.state_show_raw && ["run", "boost", "away", "rec", "hum", "inter"].includes(h.mode) && !h.paused
         && (h.mode !== "hum" || /humid|feucht/i.test(stripAccents(String((actOk ? act.state : menu.current) || ""))))) {
         // With an active mode, the state says the mode it runs in and a line

@@ -82,7 +82,7 @@ ${DIFFUSER_SVGS[layout](wood, b)}${DIF_DROP_BADGE}</svg></div>`;
 // The units a power and an energy field accept in the editor's lists.
 const UNIT_FILTERS = { power: /^[mkMG]?W$/, energy: /^[mkMG]?Wh$/ };
 const HRV_ONLY_FIELDS = ["hrv_layout", "active_mode_entity", "supply_temperature_entity", "extract_temperature_entity", "exhaust_temperature_entity", "bypass_entity", "airflow_entity",
-  "supply_fan_entity", "exhaust_fan_entity", "exhaust_airflow_entity", "fan_max_rpm", "humidity_control_entity", "filter_life_full", "high_speed_entity"];
+  "supply_fan_entity", "exhaust_fan_entity", "exhaust_airflow_entity", "fan_max_rpm", "humidity_control_entity", "filter_life_full", "high_speed_entity", "speed_entities"];
 const HRV_LAYOUTS = ["diagram", "one_duct", "pair", "single", "single_box"];
 const HRV_NAME_RE = /(^|[^a-z])(hrv|erv|vmc|wtw|ftx|mvhr)([^a-z]|$)|double.?flux|heat.?recovery|recuperat|comfoair|comfoconnect|vallox|zehnder|lunos|twinfresh|danfoss.?air|renson|endura|brink.?(flair|renovent)|wohnraumluft/;
 const HRV_LABELS = { run: "hrv_run", boost: "hrv_boost", bypass: "hrv_bypass", defrost: "hrv_defrost", filter: "hrv_filter", away: "hrv_away",
@@ -116,10 +116,26 @@ function hrvModeLabel(hass, st, option) {
   if (/^humid|humidity|feucht/.test(raw)) return t(hass, "hrv_humidity");
   return String(option).charAt(0).toUpperCase() + String(option).slice(1);
 }
-// The mode menu: the options of a select, or the presets of a fan.
+// One entity per speed, in order (#78): a boolean, a switch or a light each,
+// as a home-made unit runs its relays. The speed is the one whose entity is
+// on, the highest when several are; none on reads no speed.
+function hrvSpeedOf(hass, cfg) {
+  const ids = entityEntries(cfg.speed_entities, 6).map((e) => e.entity);
+  if (ids.length < 2) return null;
+  let step = 0;
+  ids.forEach((id, i) => {
+    const s = stateObj(hass, id);
+    if (s && ["on", "true"].includes(String(s.state).toLowerCase())) step = i + 1;
+  });
+  return { ids, step, count: ids.length };
+}
+// The mode menu: the options of a select, or the presets of a fan; for a unit
+// run by one entity per speed, its speeds.
 function hrvModeOptions(hass, cfg) {
   const st = stateObj(hass, cfg.state_entity);
-  if (!st) return null;
+  const sp = hrvSpeedOf(hass, cfg);
+  const speeds = sp ? { entity: sp.ids[0], current: sp.step ? String(sp.step) : "", options: sp.ids.map((_, i) => String(i + 1)), dom: "speed", kind: "speed", ids: sp.ids } : null;
+  if (!st) return speeds;
   const dom = domainOf(cfg.state_entity);
   const a = st.attributes || {};
   if ((dom === "select" || dom === "input_select") && Array.isArray(a.options) && a.options.length > 1) {
@@ -128,7 +144,7 @@ function hrvModeOptions(hass, cfg) {
   if (dom === "fan" && Array.isArray(a.preset_modes) && a.preset_modes.length > 1) {
     return { entity: cfg.state_entity, current: a.preset_mode, options: a.preset_modes, dom };
   }
-  return null;
+  return speeds;
 }
 const HRV_PACE = { 1: "2.2s", 2: "1.4s", 3: ".7s" };
 function hrvReadOf(hass, cfg, st, norm, powerDerived) {
@@ -187,10 +203,13 @@ function hrvReadOf(hass, cfg, st, norm, powerDerived) {
   // low one.
   const hs = cfg.high_speed_entity ? stateObj(hass, cfg.high_speed_entity) : null;
   const speed = hs && !["unavailable", "unknown"].includes(String(hs.state).toLowerCase()) ? (["on", "true"].includes(String(hs.state).toLowerCase()) ? "high" : "low") : null;
-  const level = boost ? 3 : speed ? (speed === "high" ? 3 : 1) : pct !== null && pct > 0 ? (pct <= 40 ? 1 : pct <= 75 ? 2 : 3) : named || 2;
+  const sp = hrvSpeedOf(hass, cfg);
+  const step = sp && sp.step ? sp.step : 0;
+  const level = boost ? 3 : step ? Math.max(1, Math.min(3, Math.round(step / sp.count * 3))) : speed ? (speed === "high" ? 3 : 1)
+    : pct !== null && pct > 0 ? (pct <= 40 ? 1 : pct <= 75 ? 2 : 3) : named || 2;
   const mode = defrost ? "defrost" : recirc ? "rec" : bypass ? "bypass" : boost ? "boost" : humidity ? "hum" : inter ? "inter"
     : filterDue ? "filter" : away ? "away" : "run";
-  return { mode, level, speed, pct, bypass, defrost, filterDue, filterText, filterValue, filterDays, paused,
+  return { mode, level, speed, step, steps: sp ? sp.count : 0, stepEntity: step ? sp.ids[step - 1] : "", pct, bypass, defrost, filterDue, filterText, filterValue, filterDays, paused,
     sRpm, eRpm, sPace: hrvPace(sRpm, max), ePace: hrvPace(eRpm, max) };
 }
 function hrvLayoutOf(cfg, st) {

@@ -156,7 +156,7 @@ const T = {
     door_corner: "Show it in a corner of the card", controls_always: "Always show every button", show_unavailable_controls: "Show buttons whose entity is unavailable",
     layout_robot_stick: "Stick vacuum", stick_charged: "Charged",
     layout_robot_floor_washer: "Floor washer", stick_away: "Off the base", stick_away_threshold: "Off the base below this power (W)",
-    type_diffuser: "Essential oil diffuser", dif_mist: "Diffusing", dif_inter: "Intermittent", dif_low: "Light mist", dif_empty: "Tank empty", dif_mode: "Mist mode", layout_dif_drop: "Teardrop", layout_dif_cone: "Cone", layout_dif_stone: "Pebble", layout_dif_flame: "Flame", layout_dif_nebulizer: "Nebulizer", section_tank_empty: "Empty tank sensor", type_hrv: "Heat recovery ventilation (HRV/ERV)", hrv_run: "Ventilating", hrv_boost: "Boost", hrv_bypass: "Bypass", hrv_defrost: "Defrosting", hrv_filter: "Replace filter", hrv_away: "Away", hrv_recirc: "Recirculation", hrv_humidity: "Humidity control", hrv_inter: "Intermittent", hrv_inter_paused: "Intermittent, paused", hrv_mode: "Mode", section_active_mode: "Active mode (when it differs from the one set)", hrv_supply_fan: "Supply fan", hrv_exhaust_fan: "Exhaust fan", section_supply_fan: "Supply fan speed (rpm)", section_exhaust_fan: "Exhaust fan speed (rpm)", fan_max_rpm: "Fan top speed (rpm)", section_exhaust_airflow: "Exhaust airflow", section_target_humidity: "Humidity setpoint", section_humidity_control: "Humidity control switch", layout_hrv_diagram: "Air flows", layout_hrv_one_duct: "Wall unit, one duct", layout_hrv_pair: "Through-wall pair", section_supply_temperature: "Supply air temperature", section_extract_temperature: "Extract air temperature", section_exhaust_temperature: "Exhaust air temperature", section_bypass: "Bypass", section_airflow: "Airflow", hrv_t_outdoor: "fresh air", hrv_t_supply: "supply", hrv_t_extract: "extract", hrv_t_exhaust: "exhaust", hrv_outside: "outside", hrv_room: "room", layout_hrv_single: "Extract only (single flow)", hrv_low_speed: "Low speed", hrv_high_speed: "High speed", section_high_speed: "High speed switch", wp_off: "Switched off", layout_hrv_single_box: "Extract unit alone",
+    type_diffuser: "Essential oil diffuser", dif_mist: "Diffusing", dif_inter: "Intermittent", dif_low: "Light mist", dif_empty: "Tank empty", dif_mode: "Mist mode", layout_dif_drop: "Teardrop", layout_dif_cone: "Cone", layout_dif_stone: "Pebble", layout_dif_flame: "Flame", layout_dif_nebulizer: "Nebulizer", section_tank_empty: "Empty tank sensor", type_hrv: "Heat recovery ventilation (HRV/ERV)", hrv_run: "Ventilating", hrv_boost: "Boost", hrv_bypass: "Bypass", hrv_defrost: "Defrosting", hrv_filter: "Replace filter", hrv_away: "Away", hrv_recirc: "Recirculation", hrv_humidity: "Humidity control", hrv_inter: "Intermittent", hrv_inter_paused: "Intermittent, paused", hrv_mode: "Mode", hrv_speed: "Speed", section_speed_list: "Speeds (one entity per speed)", speeds_add: "Add a speed", section_active_mode: "Active mode (when it differs from the one set)", hrv_supply_fan: "Supply fan", hrv_exhaust_fan: "Exhaust fan", section_supply_fan: "Supply fan speed (rpm)", section_exhaust_fan: "Exhaust fan speed (rpm)", fan_max_rpm: "Fan top speed (rpm)", section_exhaust_airflow: "Exhaust airflow", section_target_humidity: "Humidity setpoint", section_humidity_control: "Humidity control switch", layout_hrv_diagram: "Air flows", layout_hrv_one_duct: "Wall unit, one duct", layout_hrv_pair: "Through-wall pair", section_supply_temperature: "Supply air temperature", section_extract_temperature: "Extract air temperature", section_exhaust_temperature: "Exhaust air temperature", section_bypass: "Bypass", section_airflow: "Airflow", hrv_t_outdoor: "fresh air", hrv_t_supply: "supply", hrv_t_extract: "extract", hrv_t_exhaust: "exhaust", hrv_outside: "outside", hrv_room: "room", layout_hrv_single: "Extract only (single flow)", hrv_low_speed: "Low speed", hrv_high_speed: "High speed", section_high_speed: "High speed switch", wp_off: "Switched off", layout_hrv_single_box: "Extract unit alone",
     type_camera: "Camera", cam_idle: "Idle", cam_live: "Streaming", cam_rec: "Recording", cam_motion: "Motion detected", cam_off: "Off", cam_line_last_motion: "Last motion", cam_line_night: "Night vision", cam_line_signal: "Signal", section_motion: "Motion sensor", section_recording: "Recording sensor", section_night_vision: "Night vision", section_privacy: "Privacy mode", section_signal: "Signal strength", layout_cam_indoor: "Indoor, pan and tilt", layout_cam_tube: "Indoor tube", layout_cam_outdoor: "Outdoor", layout_cam_dome: "Dome", layout_cam_doorbell: "Doorbell", cam_ring: "Ringing", cam_line_last_ring: "Last ring", section_ring: "Doorbell button", type_mailbox: "Mailbox", mb_empty: "Empty", mb_mail: "Mail", mb_front_open: "Front door open", mb_back_open: "Back door open", mb_line_count: "Mail received", mb_line_last: "Last mail", mb_front_door: "Front door", mb_back_door: "Back door", mb_open: "Open", mb_closed: "Closed", section_mail_count: "Mail counter", layout_mb_through: "Through the wall", layout_mb_classic: "Classic", mb_street: "street", mb_house: "house", mb_front_side: "Street side", mb_side_left: "Left", mb_side_right: "Right", type_water_pump: "Water pump", type_floor_heating: "Underfloor heating", type_spa: "Spa", type_sauna: "Sauna", type_aquarium: "Aquarium", type_meter: "Electricity meter", type_christmas_tree: "Christmas tree", layout_chest: "Chest freezer", layout_drawers: "Drawer freezer", layout_pump_booster: "Booster set", layout_pump_sump: "Sump pump", layout_floor_water: "Hot water", layout_floor_electric: "Electric", layout_robot_pool: "Pool robot", wp_pumping: "Pumping", wp_high: "High level", spa_bubbles: "Bubbles", sauna_ready: "Ready", aq_lit: "Light on", aq_dark: "Light off", meter_low: "Low use", meter_high: "High use", layout_meter_linky: "Linky", layout_meter_box: "Electricity meter", layout_meter_dome: "Round meter", layout_meter_gas: "Gas meter", layout_meter_water: "Water meter", section_today_use: "Today's use (kWh, m\u00b3)", section_meter_index: "Meter index", meter_index: "Index", meter_flowing: "In use", meter_idle: "No use", meter_export: "Feeding in", meter_export_index: "Export index", meter_direction: "Power direction", meter_dir_auto: "Auto (negative = feed-in)", meter_dir_import: "Consumption only", meter_dir_export: "Feed-in only", meter_flow: "Flow", section_pressure: "Pressure", section_water_level: "Water level", section_high_level: "High level alarm", level_max: "Level when full", section_bubbles: "Bubbles", section_tariff: "Tariff period", high_power: "High use from (W or VA)", tree_palette: "Colours", palette_multicolor: "Multicolour", palette_red_gold: "Red and gold", palette_red_silver: "Red and silver", palette_gold_silver: "Gold and silver", palette_blue_silver: "Blue and silver", palette_white_silver: "White and silver", palette_red_green: "Red and green", presents: "Presents", presents_auto: "On 24 and 25 December", presents_show: "Always", presents_hide: "Never", tree_on: "On", tree_off: "Off",
     type_lamp: "Lamp", lamp_off: "Off", lamp_on: "On", lamp_line_brightness: "Brightness", lamp_line_color_temp: "Colour temperature", lamp_line_effect: "Effect", lamp_timer: "Timer", show_toggle: "On/off button", line_hide: "Hide this line", line_show: "Show this line", illustration_tap_action: "Tap on the drawing", pic_tap_default: "Card's own", pic_tap_toggle: "Toggle", pic_tap_more: "Details", pic_tap_none: "Nothing", lamp_spots: "Number of spots", layout_lamp_bulb: "Bulb", layout_lamp_bedside: "Bedside lamp", layout_lamp_floor: "Arc floor lamp", layout_lamp_torch: "Torchiere", layout_lamp_pendant: "Pendant", layout_lamp_strip: "LED strip", layout_lamp_spot: "Recessed spots", layout_lamp_panels: "Light panels", layout_lamp_desk: "Desk lamp", layout_lamp_wall: "Wall lantern", layout_lamp_garden_spot: "Garden spotlight", layout_lamp_bollard: "Garden bollard", layout_lamp_string: "String lights", layout_lamp_curtain: "Curtain lights", layout_lamp_icicle: "Icicle lights", layout_lamp_festoon: "Festoon lights", layout_lamp_squares: "Pixel squares", type_irrigation: "Watering", type_litter_box: "Self-cleaning litter box", type_detector: "Smoke, CO or leak detector", type_speaker: "Speaker", layout_irr_sprinkler: "Pop-up sprinkler", layout_irr_tap: "Tap timer", layout_lit_globe: "Rotating globe", layout_lit_box: "Closed box", layout_det_smoke: "Smoke detector", layout_det_co: "CO alarm", layout_det_leak: "Water leak sensor", layout_spk_smart: "Smart speaker (HomePod)", layout_spk_bookshelf: "Bookshelf speaker", layout_spk_soundbar: "Soundbar", layout_spk_homepod_mini: "HomePod mini", layout_spk_sonos_one: "Compact (Sonos One)", layout_spk_sonos_move: "Portable (Sonos Move)", layout_spk_echo_dot: "Sphere (Echo Dot)", layout_spk_nest_mini: "Puck (Nest Mini)", layout_spk_sonos_era100: "Sonos Era 100", layout_spk_sonos_era300: "Sonos Era 300", layout_spk_bose_wave: "Bose Wave SoundTouch", layout_spk_bose_500: "Bose Home Speaker 500", layout_spk_bose_soundlink: "Portable (Bose SoundLink)", layout_spk_bose_soundbar: "Soundbar (Bose)", speaker_color: "Speaker colour", irr_watering: "Watering", irr_waiting: "Waiting", irr_rain: "Rain delay", irr_zone: "Zone", section_rain_delay: "Rain delay", section_soil_moisture: "Soil moisture", section_next_run: "Next watering", lit_ready: "Ready", lit_cleaning: "Cleaning", lit_cat: "Cat inside", lit_full: "Drawer full", lit_fault: "Fault", lit_sleep: "Sleeping", sec_waste_drawer: "Waste drawer", sec_litter_level: "Litter level", sec_pet_weight: "Cat's weight", sec_visits: "Visits", sec_last_use: "Last visit", sec_cat_present: "Cat sensor", det_ok: "All clear", det_smoke: "Smoke detected", det_co: "CO detected", det_leak: "Leak detected", sec_test: "Test button", sec_co_level: "CO level", spk_playing: "Playing", spk_paused: "Paused", spk_idle: "Idle", spk_off: "Off", spk_title: "Title", spk_artist: "Artist", spk_source: "Source", spk_volume: "Volume", spk_muted: "Muted", play_pause: "Play/pause", opt_low: "Low", opt_ok: "OK", opt_running: "Running", opt_stopped: "Stopped", lock_locked: "Locked", lock_unlocked: "Unlocked", sec_meat_probe: "Meat probe", sec_meat_probe_target: "Probe target", sec_detergent: "Detergent level", sec_softener: "Softener level", sec_wash_temp: "Wash temperature", sec_spin: "Spin speed", sec_heater_mode: "Mode", sec_showers: "Showers available", sec_pilot_mode: "Pilot wire mode", sec_window: "Window", sec_range: "Range", sec_vehicle_lock: "Lock", sec_water_chlorine: "Chlorine", sec_aq_filter: "Filter pump",
     speed_power_max: "Power at top speed (W)", speed_power_custom: "Custom speed thresholds", speed_power_2: "Speed 2 from (W)", speed_power_3: "Speed 3 from (W)",
@@ -2324,6 +2324,9 @@ const ENTITY_LISTS = [
     domains: ["binary_sensor", "sensor"], offers: isAlertCandidate, icon: alertIcon },
   { panel: "corners", field: "corner_entities", max: CORNERS_MAX, title: "section_corner_list", add: "corners_add",
     domains: ["switch", "input_boolean", "lock", "light", "fan"], offers: isCornerCandidate, icon: cornerIcon },
+  // A ventilation unit run by one entity per speed (#78), in order.
+  { panel: "speeds", field: "speed_entities", max: 6, title: "section_speed_list", add: "speeds_add", types: ["hrv"],
+    domains: ["input_boolean", "switch", "light"], offers: (hass, id) => ["input_boolean", "switch", "light"].includes(domainOf(id)), icon: () => "mdi:fan" },
 ];
 
 // What a menu offers: the appliance's own, less what the card already shows
@@ -4295,6 +4298,7 @@ function cardMenuOf(hass, cfg, cap) {
 }
 function cardMenuLabel(hass, menu, option) {
   const st = stateObj(hass, menu.entity);
+  if (menu.kind === "speed") return `${t(hass, "hrv_speed")} ${option}`;
   return menu.kind === "source" || menu.kind === "timer" ? screenSourceLabel(hass, st, option) : hrvModeLabel(hass, st, option);
 }
 function screenControls(hass, cfg) {
@@ -4325,7 +4329,8 @@ function screenControls(hass, cfg) {
 function hrvControls(hass, cfg) {
   const out = [];
   const menu = hrvModeOptions(hass, cfg);
-  if (menu) out.push({ key: "hrv_mode", entity: menu.entity, icon: "mdi:tune-variant", label: t(hass, "hrv_mode"), menu: true });
+  if (menu) out.push(menu.kind === "speed" ? { key: "hrv_speed", entity: menu.entity, icon: "mdi:fan", label: t(hass, "hrv_speed"), menu: true }
+    : { key: "hrv_mode", entity: menu.entity, icon: "mdi:tune-variant", label: t(hass, "hrv_mode"), menu: true });
   const hst = cfg.humidity_control_entity ? stateObj(hass, cfg.humidity_control_entity) : null;
   if (hst) out.push({ key: "hrv_humidity", entity: cfg.humidity_control_entity, icon: "mdi:water-percent", label: t(hass, "hrv_humidity"), on: ["on", "true"].includes(String(hst.state).toLowerCase()) });
   return out;
@@ -4338,7 +4343,7 @@ function hrvControls(hass, cfg) {
 // The units a power and an energy field accept in the editor's lists.
 const UNIT_FILTERS = { power: /^[mkMG]?W$/, energy: /^[mkMG]?Wh$/ };
 const HRV_ONLY_FIELDS = ["hrv_layout", "active_mode_entity", "supply_temperature_entity", "extract_temperature_entity", "exhaust_temperature_entity", "bypass_entity", "airflow_entity",
-  "supply_fan_entity", "exhaust_fan_entity", "exhaust_airflow_entity", "fan_max_rpm", "humidity_control_entity", "filter_life_full", "high_speed_entity"];
+  "supply_fan_entity", "exhaust_fan_entity", "exhaust_airflow_entity", "fan_max_rpm", "humidity_control_entity", "filter_life_full", "high_speed_entity", "speed_entities"];
 const HRV_LAYOUTS = ["diagram", "one_duct", "pair", "single", "single_box"];
 const HRV_NAME_RE = /(^|[^a-z])(hrv|erv|vmc|wtw|ftx|mvhr)([^a-z]|$)|double.?flux|heat.?recovery|recuperat|comfoair|comfoconnect|vallox|zehnder|lunos|twinfresh|danfoss.?air|renson|endura|brink.?(flair|renovent)|wohnraumluft/;
 const HRV_LABELS = { run: "hrv_run", boost: "hrv_boost", bypass: "hrv_bypass", defrost: "hrv_defrost", filter: "hrv_filter", away: "hrv_away",
@@ -4372,10 +4377,26 @@ function hrvModeLabel(hass, st, option) {
   if (/^humid|humidity|feucht/.test(raw)) return t(hass, "hrv_humidity");
   return String(option).charAt(0).toUpperCase() + String(option).slice(1);
 }
-// The mode menu: the options of a select, or the presets of a fan.
+// One entity per speed, in order (#78): a boolean, a switch or a light each,
+// as a home-made unit runs its relays. The speed is the one whose entity is
+// on, the highest when several are; none on reads no speed.
+function hrvSpeedOf(hass, cfg) {
+  const ids = entityEntries(cfg.speed_entities, 6).map((e) => e.entity);
+  if (ids.length < 2) return null;
+  let step = 0;
+  ids.forEach((id, i) => {
+    const s = stateObj(hass, id);
+    if (s && ["on", "true"].includes(String(s.state).toLowerCase())) step = i + 1;
+  });
+  return { ids, step, count: ids.length };
+}
+// The mode menu: the options of a select, or the presets of a fan; for a unit
+// run by one entity per speed, its speeds.
 function hrvModeOptions(hass, cfg) {
   const st = stateObj(hass, cfg.state_entity);
-  if (!st) return null;
+  const sp = hrvSpeedOf(hass, cfg);
+  const speeds = sp ? { entity: sp.ids[0], current: sp.step ? String(sp.step) : "", options: sp.ids.map((_, i) => String(i + 1)), dom: "speed", kind: "speed", ids: sp.ids } : null;
+  if (!st) return speeds;
   const dom = domainOf(cfg.state_entity);
   const a = st.attributes || {};
   if ((dom === "select" || dom === "input_select") && Array.isArray(a.options) && a.options.length > 1) {
@@ -4384,7 +4405,7 @@ function hrvModeOptions(hass, cfg) {
   if (dom === "fan" && Array.isArray(a.preset_modes) && a.preset_modes.length > 1) {
     return { entity: cfg.state_entity, current: a.preset_mode, options: a.preset_modes, dom };
   }
-  return null;
+  return speeds;
 }
 function hrvReadOf(hass, cfg, st, norm, powerDerived) {
   const raw = st ? stripAccents(String(st.state)).trim().toLowerCase() : "";
@@ -4442,10 +4463,13 @@ function hrvReadOf(hass, cfg, st, norm, powerDerived) {
   // low one.
   const hs = cfg.high_speed_entity ? stateObj(hass, cfg.high_speed_entity) : null;
   const speed = hs && !["unavailable", "unknown"].includes(String(hs.state).toLowerCase()) ? (["on", "true"].includes(String(hs.state).toLowerCase()) ? "high" : "low") : null;
-  const level = boost ? 3 : speed ? (speed === "high" ? 3 : 1) : pct !== null && pct > 0 ? (pct <= 40 ? 1 : pct <= 75 ? 2 : 3) : named || 2;
+  const sp = hrvSpeedOf(hass, cfg);
+  const step = sp && sp.step ? sp.step : 0;
+  const level = boost ? 3 : step ? Math.max(1, Math.min(3, Math.round(step / sp.count * 3))) : speed ? (speed === "high" ? 3 : 1)
+    : pct !== null && pct > 0 ? (pct <= 40 ? 1 : pct <= 75 ? 2 : 3) : named || 2;
   const mode = defrost ? "defrost" : recirc ? "rec" : bypass ? "bypass" : boost ? "boost" : humidity ? "hum" : inter ? "inter"
     : filterDue ? "filter" : away ? "away" : "run";
-  return { mode, level, speed, pct, bypass, defrost, filterDue, filterText, filterValue, filterDays, paused,
+  return { mode, level, speed, step, steps: sp ? sp.count : 0, stepEntity: step ? sp.ids[step - 1] : "", pct, bypass, defrost, filterDue, filterText, filterValue, filterDays, paused,
     sRpm, eRpm, sPace: hrvPace(sRpm, max), ePace: hrvPace(eRpm, max) };
 }
 function hrvLayoutOf(cfg, st) {
@@ -7833,6 +7857,13 @@ class ApplianceCard extends HTMLElement {
     const cap = this._hass ? caps(detectApplianceType(cfg, stateObj(this._hass, cfg.state_entity))) : null;
     const menu = this._hass ? cardMenuOf(this._hass, cfg, cap) : null;
     if (!menu || !menu.options.includes(option)) return this._render();
+    // A speed turns its own entity on and nothing else: the unit's own
+    // automations switch the other speeds off (#78).
+    if (menu.dom === "speed") {
+      const id = menu.ids[Number(option) - 1];
+      if (id) this._hass.callService(domainOf(id), "turn_on", { entity_id: id });
+      return this._render();
+    }
     if (menu.dom === "fan") this._hass.callService("fan", "set_preset_mode", { entity_id: menu.entity, preset_mode: option });
     else if (menu.dom === "media_player") this._hass.callService("media_player", "select_source", { entity_id: menu.entity, source: option });
     else this._hass.callService(menu.dom, "select_option", { entity_id: menu.entity, option });
@@ -10955,13 +10986,18 @@ class ApplianceCard extends HTMLElement {
       const act = cfg.active_mode_entity ? stateObj(hass, cfg.active_mode_entity) : null;
       const actOk = act && st && !["unknown", "unavailable", ""].includes(String(act.state).trim().toLowerCase());
       const h = hrvReadOf(hass, cfg, actOk ? { ...st, state: act.state } : st, norm, powerDerived);
-      if (!cfg.state_show_raw || h.mode === "unav") stateLabel = t(hass, h.paused ? "hrv_inter_paused" : h.mode === "run" && h.speed ? `hrv_${h.speed}_speed` : HRV_LABELS[h.mode]);
+      if (!cfg.state_show_raw || h.mode === "unav") stateLabel = h.mode === "run" && h.step && !h.paused ? `${t(hass, "hrv_speed")} ${h.step}`
+        : t(hass, h.paused ? "hrv_inter_paused" : h.mode === "run" && h.speed ? `hrv_${h.speed}_speed` : HRV_LABELS[h.mode]);
+      if (h.steps && !["off", "unav"].includes(h.mode)) {
+        extraLines.push({ key: "hrv_speed", icon: "mdi:fan", label: t(hass, "hrv_speed"), value: keepTogether(h.step ? `${h.step} / ${h.steps}` : "-"), entity: h.stepEntity || entityEntries(cfg.speed_entities, 6)[0].entity });
+      }
       color = HRV_COLORS[h.mode];
       const live = !["off", "unav"].includes(h.mode);
       // The mode of a select is what the state line says (Smart, Manual, Turbo
       // on a Broan) while the unit simply runs in it; a defrost, a bypass, a
       // filter due or an intermittent pause still says itself.
-      const menu = hrvModeOptions(hass, cfg);
+      const anyMenu = hrvModeOptions(hass, cfg);
+      const menu = anyMenu && anyMenu.dom !== "speed" ? anyMenu : null;
       if (menu && live && menu.dom !== "fan" && !cfg.state_show_raw && ["run", "boost", "away", "rec", "hum", "inter"].includes(h.mode) && !h.paused
         && (h.mode !== "hum" || /humid|feucht/i.test(stripAccents(String((actOk ? act.state : menu.current) || ""))))) {
         // With an active mode, the state says the mode it runs in and a line

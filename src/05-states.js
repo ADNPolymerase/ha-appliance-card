@@ -987,6 +987,9 @@ const ENTITY_LISTS = [
     domains: ["binary_sensor", "sensor"], offers: isAlertCandidate, icon: alertIcon },
   { panel: "corners", field: "corner_entities", max: CORNERS_MAX, title: "section_corner_list", add: "corners_add",
     domains: ["switch", "input_boolean", "lock", "light", "fan"], offers: isCornerCandidate, icon: cornerIcon },
+  // A ventilation unit run by one entity per speed (#78), in order.
+  { panel: "speeds", field: "speed_entities", max: 6, title: "section_speed_list", add: "speeds_add", types: ["hrv"],
+    domains: ["input_boolean", "switch", "light"], offers: (hass, id) => ["input_boolean", "switch", "light"].includes(domainOf(id)), icon: () => "mdi:fan" },
 ];
 
 // What a menu offers: the appliance's own, less what the card already shows

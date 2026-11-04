@@ -1546,7 +1546,7 @@ class ApplianceCardEditor extends HTMLElement {
             </div>
           </div>`).join("")}
       </details>
-      ${ENTITY_LISTS.filter((list) => !this._plug() || list.panel !== "alerts").map((list) => this._listPanel(list)).join("")}
+      ${ENTITY_LISTS.filter((list) => (!this._plug() || list.panel !== "alerts") && (!list.types || list.types.includes(this._type))).map((list) => this._listPanel(list)).join("")}
       ${drawn.length > 1 ? `
       <details class="group" data-panel="order" ${this._panelOpen.order ? "open" : ""}>
         <summary>${t(hass, "section_lines_order")}</summary>
