@@ -30,6 +30,17 @@ A Lovelace card that draws the appliances of your home and animates them from th
 - **Full or compact**, in Home Assistant's light or dark theme.
 - **14 languages** and a visual editor that pre-fills the fields from the device.
 
+## Looking for something else?
+
+Some requests are better served by a dedicated card of mine:
+
+| You want | Card |
+|---|---|
+| A gate, a garage door or a front door with a smart lock | [HA Gate Card](https://github.com/ADNPolymerase/ha-gate-card) |
+| A presence sensor (mmWave radar, PIR) | [Presence Sensor Card](https://github.com/ADNPolymerase/ha-presence-sensor-card) |
+| A paper printer: ink or toner, trays, status message | [HA Printer Card](https://github.com/ADNPolymerase/ha-printer-card) |
+| The level of a dosing tank (chlorine, pH-, pH+, flocculant) | [Dosing Tank Card](https://github.com/ADNPolymerase/ha-dosing-tank-card) |
+
 ## Gallery
 
 Click a family to see its appliances at work.

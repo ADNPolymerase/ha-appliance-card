@@ -30,6 +30,17 @@ Une card Lovelace qui dessine les appareils de la maison et les anime selon leur
 - **Complète ou compacte**, au thème clair ou sombre de Home Assistant.
 - **14 langues** et un éditeur visuel qui pré-remplit les champs depuis l'appareil.
 
+## Vous cherchez autre chose ?
+
+Certaines demandes ont leur propre carte :
+
+| Vous voulez | Carte |
+|---|---|
+| Un portail, une porte de garage ou une porte d'entrée avec serrure connectée | [HA Gate Card](https://github.com/ADNPolymerase/ha-gate-card) |
+| Un capteur de présence (radar mmWave, PIR) | [Presence Sensor Card](https://github.com/ADNPolymerase/ha-presence-sensor-card) |
+| Une imprimante papier : encre ou toner, bacs, message d'état | [HA Printer Card](https://github.com/ADNPolymerase/ha-printer-card) |
+| Le niveau d'une cuve de dosage (chlore, pH-, pH+, floculant) | [Dosing Tank Card](https://github.com/ADNPolymerase/ha-dosing-tank-card) |
+
 ## Galerie
 
 Clique sur une famille pour voir ses appareils en marche.
