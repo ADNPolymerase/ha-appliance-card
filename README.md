@@ -22,7 +22,7 @@ A Lovelace card that draws the appliances of your home and animates them from th
 
 ## Features
 
-- **56 appliance types, more than 150 models drawn**, animated while they work and still when they stop. The type is detected on its own or set with `appliance_type`.
+- **57 appliance types, more than 170 models drawn**, animated while they work and still when they stop. The type is detected on its own or set with `appliance_type`.
 - **Any integration**: every field is an entity you pick. A plain smart plug is enough, its power tells whether the appliance heats, washes or spins.
 - **State understood**: `Idle`, `RUNNING`, `wash`… become idle, running, paused, finished, delayed or error, with the step of the cycle (wash, rinse, spin…).
 - **What matters for each appliance**: program, time left, door, alerts, levels, temperatures, energy and cost, today's running time.
@@ -201,6 +201,13 @@ Click a family to see its appliances at work.
 
 </details>
 
+<details>
+<summary><b>Game consoles</b></summary>
+
+<img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-consoles.gif" alt="Game consoles">
+
+</details>
+
 ## Installation
 
 ### HACS
@@ -241,7 +248,7 @@ Only `state_entity` is required, except on a fridge where a probe or a door cont
 | `done_alert` | `true` makes a green badge pulse on the drawing when a cycle has finished, until the door opens or the badge is tapped. For appliances with a cycle (washer, dryer, dishwasher, oven…). |
 | `illustration_color` | `auto` (default, follows the theme) \| `white` \| `grey` \| `black` \| `red` (dark red). Only changes the casing, not the state colours. |
 | `language` | `auto` (default, follows Home Assistant) or one of the 14 codes: `en`, `fr`, `de`, `es`, `it`, `nl`, `pt`, `sv`, `no`, `da`, `pl`, `ru`, `zh`, `cs`. `nb` and `nb-NO` give Norwegian. |
-| `appliance_type` | `auto` (default) \| `washer` \| `dryer` \| `dishwasher` \| `oven` \| `microwave` \| `hood` \| `cooktop` \| `fridge` \| `kettle` \| `cooker` \| `coffee` \| `rice_cooker` \| `air_fryer` \| `water_heater` \| `boiler` \| `thermostat` \| `heat_pump` \| `printer_3d` \| `pet_feeder` \| `pet_fountain` \| `iron` \| `toaster` \| `pellet_stove` \| `air_conditioner` \| `dehumidifier` \| `space_heater` \| `towel_warmer` \| `air_purifier` \| `fan` \| `ev_charger` \| `hair_dryer` \| `screen` \| `network` \| `robot` \| `pool_pump` \| `scale` \| `ups` \| `solar` \| `home_battery` \| `camera` \| `diffuser` \| `hrv` \| `lamp` \| `mailbox` \| `water_pump` \| `floor_heating` \| `spa` \| `sauna` \| `aquarium` \| `meter` \| `christmas_tree` \| `mobility` \| `irrigation` \| `litter_box` \| `detector` \| `speaker`. |
+| `appliance_type` | `auto` (default) \| `washer` \| `dryer` \| `dishwasher` \| `oven` \| `microwave` \| `hood` \| `cooktop` \| `fridge` \| `kettle` \| `cooker` \| `coffee` \| `rice_cooker` \| `air_fryer` \| `water_heater` \| `boiler` \| `thermostat` \| `heat_pump` \| `printer_3d` \| `pet_feeder` \| `pet_fountain` \| `iron` \| `toaster` \| `pellet_stove` \| `air_conditioner` \| `dehumidifier` \| `space_heater` \| `towel_warmer` \| `air_purifier` \| `fan` \| `ev_charger` \| `hair_dryer` \| `screen` \| `network` \| `robot` \| `pool_pump` \| `scale` \| `ups` \| `solar` \| `home_battery` \| `camera` \| `diffuser` \| `hrv` \| `lamp` \| `mailbox` \| `water_pump` \| `floor_heating` \| `spa` \| `sauna` \| `aquarium` \| `meter` \| `christmas_tree` \| `mobility` \| `irrigation` \| `litter_box` \| `detector` \| `speaker` \| `console`. |
 | `tap_action` | What a tap on the card does, in Home Assistant's own words: `more-info` (default: the state entity, or on a card without one what it reads in its place), `none`, `navigate`, `url`, `toggle`, `perform-action` or `fire-dom-event`, which is what the popup cards built on browser_mod listen for. In YAML only. |
 | `illustration_tap_action` | A tap on the drawing alone, the rest of the card keeping `tap_action`: `toggle` (a lamp lit by touching it), `more-info`, `none`, or any of Home Assistant's actions. Left out, the drawing does what the card does. With `toggle`, the drawing answers like the buttons, as `controls_activation` says: a tap, two taps or a long press. |
 | `show_toggle` | `false` takes away a lamp's on/off button, for a card switched by touching its drawing (`illustration_tap_action: toggle`). |
@@ -1297,6 +1304,9 @@ disk2_entity: sensor.nas_drive_2_status
 | `co_level_entity` | detector | The CO level, on the alarm's display and as a line. |
 | `speaker_layout` | speaker | `smart` (HomePod) \| `homepod_mini` \| `sonos_one` \| `sonos_era100` \| `sonos_era300` \| `sonos_move` \| `soundbar` (Sonos Arc or Beam, under its TV) \| `bose_wave` (Wave SoundTouch) \| `bose_500` (Home Speaker 500) \| `bose_soundlink` (SoundLink Flex) \| `bose_soundbar` (Smart Soundbar, under its TV) \| `bookshelf` \| `echo_dot` \| `nest_mini`. Left out, it is read in the name: HomePod mini, Era 100, Era 300, Move, Arc, Beam, Wave, SoundLink, Flex, another Bose. The state is a `media_player`: what it plays, the artist, the source and the volume are lines. |
 | `speaker_color` | speaker | `white` \| `black` \| `silver` \| `yellow` \| `orange` \| `blue`, each model in the colours it is sold in: a HomePod white or midnight, a HomePod mini in all five, a Sonos white or black, a Bose 500 or Wave silver or black, a SoundLink black, white or blue. Left out, a colour in the name picks it (a HomePod named *white*), then `illustration_color`; otherwise each model has its own. |
+| `console_layout` | game console | `ps1` \| `ps2` \| `ps3` \| `ps4` \| `ps4_pro` \| `ps5` \| `xbox` \| `xbox_360` \| `xbox_one` \| `xbox_series_x` \| `xbox_series_s` \| `switch` \| `switch_2` \| `switch_lite` \| `nes` \| `snes` \| `n64` \| `gamecube` \| `wii` \| `megadrive`. Left out, it is read in the name (PS4 Pro, Series S, Switch Lite, N64...), a brand alone drawing its latest. The state is a `media_player` (PlayStation Network, Xbox, the PS4 integration), PlayStation Network's online status, a smart plug, or anything on and off: *Playing* while a game runs, *On* in its menus, *Rest mode* on standby, *Off*. Sparks rise while it plays, its light is lit when on and amber at rest. |
+| `game_entity` | game console | The game being played, when the state does not say it (PlayStation Network's *Now playing* sensor). Without it, the media player's title. |
+| `playtime_entity` / `playtime_left_entity` | game console | Today's play time and the time left, as a parental control counts them (Nintendo Switch Parental Controls), as lines. |
 | `spots` | lamp | The number of spots drawn, 1 to 4. Left out, a light group draws one spot per light, up to four. |
 | `timer_entity` | lamp | A select of durations (an auto-off timer): a pill showing the one chosen, which opens the list. |
 
@@ -1401,6 +1411,25 @@ type: custom:ha-appliance-card
 appliance_type: detector
 state_entity: binary_sensor.kitchen_leak
 battery_entity: sensor.kitchen_leak_battery
+```
+
+A game console on PlayStation Network, or a Switch with its parental control's play time:
+
+```yaml
+type: custom:ha-appliance-card
+appliance_type: console
+state_entity: media_player.playstation_5
+game_entity: sensor.my_psn_now_playing
+```
+
+```yaml
+type: custom:ha-appliance-card
+appliance_type: console
+console_layout: switch
+state_entity: switch.switch_plug
+power_entity: sensor.switch_plug_power
+playtime_entity: sensor.switch_used_screen_time
+playtime_left_entity: sensor.switch_screen_time_remaining
 ```
 
 A speaker is a media player:

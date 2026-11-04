@@ -3,7 +3,8 @@
 // sauna, an aquarium, a Linky meter and a Christmas tree. Drawn in SVG on a 120 x 135 field; what
 // moves moves only on a machine carrying nt-on, staggered through --d0, and
 // the robot's cable and the sump's float follow their SMIL animations.
-const NT_TYPES = ["water_pump", "floor_heating", "spa", "sauna", "aquarium", "meter", "christmas_tree", "mobility", "irrigation", "litter_box", "detector", "speaker"];
+const NT_TYPES = ["water_pump", "floor_heating", "spa", "sauna", "aquarium", "meter", "christmas_tree", "mobility", "irrigation", "litter_box", "detector", "speaker", "console"];
+const CONSOLE_LAYOUTS = ["ps1", "ps2", "ps3", "ps4", "ps4_pro", "ps5", "xbox", "xbox_360", "xbox_one", "xbox_series_x", "xbox_series_s", "switch", "switch_2", "switch_lite", "nes", "snes", "n64", "gamecube", "wii", "megadrive"];
 const IRRIGATION_LAYOUTS = ["sprinkler", "tap"];
 const LITTER_LAYOUTS = ["globe", "box"];
 const DETECTOR_LAYOUTS = ["smoke", "co", "leak"];
@@ -21,6 +22,7 @@ const NT_ONLY_FIELDS = {
   litter_box: ["litter_layout", "waste_drawer_entity", "litter_level_entity", "pet_weight_entity", "visits_entity", "cat_present_entity", "last_use_entity"],
   detector: ["detector_layout", "co_level_entity"],
   speaker: ["speaker_layout", "speaker_color"],
+  console: ["console_layout", "game_entity", "playtime_entity", "playtime_left_entity"],
   meter: ["tariff_entity", "high_power", "meter_layout", "today_entity", "total_entity", "export_total_entity", "meter_direction"],
 };
 // Optional readings on the older types: each is a line when its entity is
@@ -87,6 +89,7 @@ function optLines(hass, cfg, type) {
 // By name, in the languages the card speaks; "whirlpool" is left out, it is a
 // maker of washing machines too.
 const NT_NAME_RES = [
+  ["console", /playstation|(^|[^a-z])ps[1-5]([^a-z0-9]|$)|xbox|nintendo|gamecube|(^|[^a-z])(n64|snes|nes|wii|switch.?lite|switch.?2)([^a-z0-9]|$)|mega.?drive|genesis|console|konsole|consola|konsol/],
   ["litter_box", /litter|litiere|katzenklo|arenero|lettiera|kattlada|kuweta|kattebak|kattesand|(^|[^a-z])pura.?(x|max)/],
   ["irrigation", /arrosage|irrigat|sprinkler|bewasserung|(^|[^a-z])riego|beregening|bevattning|vanning|vanding|nawadnian|zavlaz|opensprinkler|linktap|hydrawise|rachio|rain.?bird/],
   ["detector", /smoke|fumee|detecteur.?(de.?)?(fumee|co|fuite)|monoxyde|carbon.?monoxide|(^|[^a-z])co.?(alarm|detector)|rauchmelder|detector.?de.?humo|rilevatore|rookmelder|brandvarnare|roykvarsler|roegalarm|czujnik.?dymu|water.?leak|fuite.?d.?eau|wassermelder|leak.?sensor/],
@@ -151,6 +154,20 @@ function speakerLayoutOf(cfg, st) {
   if (/nest.?mini|google.?home.?mini|home.?mini/.test(hay)) return "nest_mini";
   if (/bookshelf|sonos.?(five|play.?5)|(^|[^a-z])(kef|denon|yamaha|marantz|monitor)([^a-z]|$)|bibliotheque|regallautsprecher/.test(hay)) return "bookshelf";
   return "smart";
+}
+// A console's model, by its name: the generation of a PlayStation, which
+// Xbox, which Switch, the retro ones; a brand alone draws its latest.
+function consoleLayoutOf(cfg, st) {
+  if (CONSOLE_LAYOUTS.includes(cfg.console_layout)) return cfg.console_layout;
+  const hay = stripAccents(`${cfg.state_entity || ""} ${cfg.name || ""} ${(st && st.attributes.friendly_name) || ""}`).toLowerCase();
+  const re = [["ps4_pro", /ps.?4.?pro|playstation.?4.?pro/], ["ps1", /(^|[^a-z])(ps.?1|psx|psone)([^0-9]|$)|playstation.?1([^0-9]|$)/], ["ps2", /ps.?2([^0-9]|$)|playstation.?2/],
+    ["ps3", /ps.?3([^0-9]|$)|playstation.?3/], ["ps4", /ps.?4([^0-9]|$)|playstation.?4/], ["ps5", /ps.?5([^0-9]|$)|playstation/],
+    ["xbox_series_s", /series.?s([^a-z]|$)|xbox.?s([^a-z]|$)/], ["xbox_series_x", /series.?x|xbox.?x([^a-z]|$)/], ["xbox_360", /360/], ["xbox_one", /xbox.?one/],
+    ["switch_lite", /switch.?lite|(^|[^a-z])lite([^a-z]|$)/], ["switch_2", /switch.?2/], ["gamecube", /gamecube|game.?cube|(^|[^a-z])ngc([^a-z]|$)/], ["n64", /n64|nintendo.?64/],
+    ["snes", /snes|super.?(nes|nintendo|famicom)/], ["nes", /(^|[^a-z])(nes|famicom)([^a-z]|$)/], ["wii", /(^|[^a-z])wii([^a-z]|$)/], ["megadrive", /mega.?drive|genesis|sega/],
+    ["xbox_series_x", /xbox/], ["switch", /switch|nintendo/]];
+  const hit = re.find(([, r]) => r.test(hay));
+  return hit ? hit[0] : "ps5";
 }
 // A line read from any entity, as Home Assistant prints its state.
 function ntLine(hass, cfg, key, icon, labelKey, id) {
@@ -1577,7 +1594,276 @@ ${[-1.5, -.5, .5, 1.5].map((k, i) => `<circle class="${c.on ? `nta-glow ntd${i +
 ${c.on ? `<circle cx="${60 + k * 8}" cy="76" r="1.2" fill="#fff"/>` : ""}`).join("")}
 ${c.st === "paused" ? spkPause(60, 44, "#8d8a83") : ""}${c.muted ? spkMute(96, 52) : ""}`;
 }
-const NT_DRAW = { irr_sprinkler: ntIrrSprinkler, irr_tap: ntIrrTap, lit_globe: ntLitterGlobe, lit_box: ntLitterBox, det_smoke: ntDetSmoke, det_co: ntDetCo, det_leak: ntDetLeak, spk_smart: ntSpkSmart, spk_homepod_mini: ntSpkMini, spk_sonos_one: ntSpkOne, spk_bookshelf: ntSpkShelf, spk_sonos_move: ntSpkMove, spk_soundbar: ntSpkBar, spk_echo_dot: ntSpkDot, spk_nest_mini: ntSpkNest, spk_sonos_era100: ntSpkEra100, spk_sonos_era300: ntSpkEra300, spk_bose_wave: ntSpkWave, spk_bose_500: ntSpkBose500, spk_bose_soundlink: ntSpkFlex, spk_bose_soundbar: ntSpkBoseBar, mob_scooter: mobScooter, mob_offroad: mobOffroad, mob_ebike: mobEbike, mob_gyropode: mobGyropode, mob_motorcycle: mobMotorcycle, meter_box: ntMeterBox, meter_dome: ntMeterDome, meter_gas: ntGas, meter_water: ntWater, booster: ntBooster, sump: ntSump, pool: ntPoolRobot, floor: ntFloor, spa: ntSpa, sauna: ntSauna, aquarium: ntAquarium, linky: ntLinky, tree: ntTree };
+// Game consoles. Sparks rise while a game runs; a console's light is lit
+// when it is on, amber in rest mode, dark when it is off.
+const conSparks = (c, x, y) => (c.st === "playing" ? `<g class="nt-run">${[["\u2726", 0, 0, 9], ["\u2727", 15, 8, 8], ["\u2726", -14, 10, 7]].map(([n, dx, dy, fs], i) => `<text class="nta-rise ntd${i * 2 + 1}" x="${x + dx}" y="${y + dy}" font-size="${fs}" fill="var(--primary-color, #03a9f4)" ${NT_FONT}>${n}</text>`).join("")}</g>` : "");
+const conLit = (c, on, rest = "#ffa000", off = "#3a3f45") => (c.on ? on : c.st === "rest" ? rest : off);
+const conLed = (c, x, y, r, on, rest = "#ffa000") => `<circle class="${c.on ? "nta-glow" : ""}" cx="${x}" cy="${y}" r="${r}" fill="${conLit(c, on, rest)}"/>`;
+const conPorts = (xs, y, w = 7, h = 3.4, fill = "#2a2c30") => xs.map((x) => `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="1" fill="${fill}"/>`).join("");
+// What a handheld's screen shows: a game while one runs, the home menu when
+// it is only on, nothing when it is off or asleep.
+function conScreen(c, x, y, w, h, id) {
+  if (c.st === "playing") {
+    return `<defs><linearGradient id="${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#6ec6ff"/><stop offset=".62" stop-color="#bfe8ff"/><stop offset=".62" stop-color="#5cb85c"/><stop offset="1" stop-color="#3d8b3d"/></linearGradient></defs>
+<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="1" fill="url(#${id})"/>
+<path d="M${x} ${y + h * .66} Q${x + w * .3} ${y + h * .44} ${x + w * .55} ${y + h * .62} T${x + w} ${y + h * .58} V${y + h} H${x} Z" fill="#4caf50"/>
+<circle cx="${x + w * .78}" cy="${y + h * .26}" r="${h * .12}" fill="#ffd54f"/>
+<g class="nta-pop"><rect x="${x + w * .3}" y="${y + h * .5}" width="${w * .09}" height="${h * .16}" rx=".6" fill="#e53935"/><circle cx="${x + w * .345}" cy="${y + h * .46}" r="${h * .06}" fill="#ffcc80"/></g>`;
+  }
+  if (c.on) {
+    const tw = (w - 8) / 4;
+    return `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="1" fill="#eceff1"/>${[0, 1, 2, 3].map((i) => `<rect x="${(x + 2 + i * (tw + 1.33)).toFixed(1)}" y="${(y + h * .32).toFixed(1)}" width="${tw.toFixed(1)}" height="${(h * .36).toFixed(1)}" rx=".6" fill="${["#ef5350", "#42a5f5", "#ffca28", "#66bb6a"][i]}"/>`).join("")}`;
+  }
+  return `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="1" fill="#0d0f12"/><path d="M${x + 2} ${y + 2} L${x + w * .4} ${y + 2} L${x + 2} ${y + h * .7} Z" fill="#fff" opacity=".06"/>`;
+}
+
+// PlayStation: the grey box with its round lid.
+function conPs1(c) {
+  const f = ntId(), s = ntId(), t = ntId();
+  return `<defs>${ntV(f, "#d4d3cf", "#b9b8b3")}${ntV(s, "#aeada8", "#93928d")}${ntV(t, "#e6e5e1", "#d2d1cc")}</defs>
+${conSparks(c, 60, 22)}${ntFoot("12 106 100 106 118 90 30 90", .25)}
+${ntRoundBox(14, 70, 84, 30, 20, 3, `url(#${f})`, `url(#${s})`, `url(#${t})`, "#a3a29d")}
+<ellipse cx="72" cy="60" rx="21" ry="7" fill="#c3c2bd" stroke="#a3a29d" stroke-width=".8"/><ellipse cx="72" cy="59.4" rx="17" ry="5.4" fill="#d9d8d3"/>
+<ellipse cx="72" cy="59.4" rx="3" ry="1" fill="#b0afaa"/>
+<circle cx="36" cy="64" r="2.4" fill="#bdbcb7" stroke="#9a9994" stroke-width=".5"/><circle cx="44" cy="64" r="2.4" fill="#bdbcb7" stroke="#9a9994" stroke-width=".5"/><circle cx="102" cy="58" r="2.4" fill="#bdbcb7" stroke="#9a9994" stroke-width=".5"/>
+${conLed(c, 31, 62, 1, "#7cff6b")}
+${conPorts([24, 40], 84, 12, 6, "#8f8e89")}${conPorts([26, 42], 77, 8, 2.4, "#3a3a3a")}
+<path d="M14 96 H98" stroke="#a3a29d" stroke-width=".6"/>`;
+}
+// PlayStation 2: the black slab, its ridged left side, the tray and the
+// blue light.
+function conPs2(c) {
+  const f = ntId(), s = ntId(), t = ntId();
+  return `<defs>${ntV(f, "#2b2d31", "#17181b")}${ntV(s, "#1a1b1e", "#0d0e10")}${ntV(t, "#3b3e43", "#25272b")}</defs>
+${conSparks(c, 60, 26)}${ntFoot("10 104 96 104 112 90 26 90", .28)}
+${ntRoundBox(12, 72, 86, 26, 16, 2, `url(#${f})`, `url(#${s})`, `url(#${t})`)}
+${[0, 1, 2, 3, 4].map((i) => `<path d="M14 ${76 + i * 4.4} H44" stroke="#0b0c0e" stroke-width="1.3"/><path d="M14 ${77.2 + i * 4.4} H44" stroke="#4a4d52" stroke-width=".4"/>`).join("")}
+${[0, 1, 2, 3, 4, 5].map((i) => `<path d="M${20 + i * 12} 72 L${36 + i * 12} 56" stroke="#1a1b1e" stroke-width="1.6"/>`).join("")}
+<path d="M48 80 H94" stroke="#0b0c0e" stroke-width="1.2"/><path d="M48 81 H94" stroke="#55585e" stroke-width=".4"/>
+<circle cx="52" cy="88" r="1.8" fill="${conLit(c, "#2979ff", "#2979ff", "#1a2a44")}"${c.on ? ` class="nta-glow"` : ""}/>
+${conLed(c, 88, 88, 1.2, "#7cff6b", "#ff3d00")}<rect x="84" y="91.4" width="8" height="2" rx="1" fill="#3a3d42"/>
+${conPorts([60, 70], 90, 7, 3)}`;
+}
+// PlayStation 3: the glossy black bulge, its silver band and the slot.
+function conPs3(c) {
+  const g = ntId(), t = ntId(), band = ntId();
+  return `<defs><linearGradient id="${g}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#4b4f55"/><stop offset=".25" stop-color="#16181b"/><stop offset="1" stop-color="#050506"/></linearGradient>
+<linearGradient id="${t}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#6b7077"/><stop offset="1" stop-color="#1c1e21"/></linearGradient>${ntV(band, "#e3e6e9", "#9aa1a8")}</defs>
+${conSparks(c, 60, 28)}${ntShadow(60, 104, 50)}
+<path d="M10 102 V80 Q10 66 60 62 Q110 66 110 80 V102 Z" fill="url(#${g})"/>
+<path d="M16 76 Q20 67 60 64.6 Q100 67 104 76" fill="none" stroke="url(#${t})" stroke-width="3" opacity=".7"/>
+<path d="M10 92 H110 V98 H10 Z" fill="url(#${band})"/>
+<path d="M30 83 H90" stroke="#000" stroke-width="1.4"/><path d="M30 84 H90" stroke="#3a3d42" stroke-width=".4"/>
+<path d="M18 80 Q24 72 40 70" fill="none" stroke="#fff" stroke-width="1.6" opacity=".35" stroke-linecap="round"/>
+${conLed(c, 20, 88, 1.1, "#7cff6b", "#ff3d00")}${conLed(c, 100, 88, 1.1, "#7cff6b", "#5d6773")}`;
+}
+// PlayStation 4: slabs stacked a little off true, matte over glossy, the
+// light bar in the groove between them; the Pro has three.
+function conPs4(c, pro) {
+  const m = ntId(), ms = ntId(), mt = ntId(), g = ntId(), gs = ntId(), gt = ntId(), lb = ntId();
+  const bar = conLit(c, "#2979ff", "#ffa000", "#202226");
+  const slabs = pro ? [[16, 88, 12], [12, 76, 12], [16, 64, 12]] : [[18, 86, 14], [13, 72, 14]];
+  const top = slabs[slabs.length - 1];
+  return `<defs>${ntV(m, "#2f3236", "#1b1c1f")}${ntV(ms, "#1d1e21", "#111214")}${ntV(mt, "#3a3d42", "#2a2c30")}
+${ntV(g, "#3b3e44", "#0d0e10")}${ntV(gs, "#1a1b1e", "#08090a")}${ntV(gt, "#4a4d53", "#2b2d31")}${ntBlur(lb, 1.4)}</defs>
+${conSparks(c, 64, top[1] - 34)}${ntFoot("12 106 98 106 116 90 30 90", .28)}
+${slabs.map(([x, y, h], i) => ntRoundBox(x, y, 80, h, 16, 1.5, `url(#${i % 2 ? g : m})`, `url(#${i % 2 ? gs : ms})`, `url(#${i % 2 ? gt : mt})`)).join("")}
+<path d="M${top[0] + 46} ${top[1] - 1} L${top[0] + 60} ${top[1] - 15}" stroke="#08090a" stroke-width="2.2"/>
+<path d="M${top[0] + 46} ${top[1] - 1} L${top[0] + 60} ${top[1] - 15}" stroke="${bar}" stroke-width="1.2"${c.on ? ` filter="url(#${lb})" class="nta-glow"` : ""}/>
+${c.on || c.st === "rest" ? `<path d="M${top[0] + 46} ${top[1] - 1} L${top[0] + 60} ${top[1] - 15}" stroke="${bar}" stroke-width=".6"/>` : ""}
+<path d="M${slabs[0][0] + 4} ${slabs[0][1] + 5} H${slabs[0][0] + 40}" stroke="#000" stroke-width=".9"/>`;
+}
+// PlayStation 5: the white wings flaring around the black core, the light
+// along their inner edges, on its round stand.
+function conPs5(c) {
+  const w = ntId(), k = ntId(), lb = ntId();
+  const light = conLit(c, "#4aa8ff", "#ffa000", "#2a2f36");
+  return `<defs><linearGradient id="${w}" x1="0" x2="1"><stop offset="0" stop-color="#cfd3d7"/><stop offset=".4" stop-color="#ffffff"/><stop offset="1" stop-color="#dfe2e5"/></linearGradient>
+<linearGradient id="${k}" x1="0" x2="1"><stop offset="0" stop-color="#0b0c0e"/><stop offset=".5" stop-color="#2a2d31"/><stop offset="1" stop-color="#0b0c0e"/></linearGradient>${ntBlur(lb, 1.6)}</defs>
+${conSparks(c, 64, -4)}${ntShadow(60, 113, 22)}
+<ellipse cx="60" cy="110" rx="17" ry="3.6" fill="#1c1e21"/>
+<path d="M48 14 V106 H72 V14 Z" fill="url(#${k})"/>
+${[0, 1, 2, 3, 4, 5].map((i) => `<path d="M52 ${20 + i * 3} H68" stroke="#000" stroke-width=".8"/>`).join("")}
+<path d="M48 16 C40 14 30 12 26 10 C30 40 36 80 40 106 H48 Z" fill="url(#${w})"/>
+<path d="M72 16 C80 14 90 12 94 10 C90 40 84 80 80 106 H72 Z" fill="url(#${w})"/>
+<path d="M48 16 V106 M72 16 V106" stroke="${light}" stroke-width="1.4"${c.on ? ` filter="url(#${lb})" class="nta-glow"` : ""}/>
+<path d="M48 16 V106 M72 16 V106" stroke="${light}" stroke-width=".6"/>
+<path d="M50 92 H70" stroke="#000" stroke-width="1.4"/>`;
+}
+// Xbox: the big black box and the green jewel on top.
+function conXbox(c) {
+  const f = ntId(), s = ntId(), t = ntId(), j = ntId(), gl = ntId();
+  return `<defs>${ntV(f, "#25272a", "#121314")}${ntV(s, "#151618", "#0a0a0b")}${ntV(t, "#33363a", "#1f2124")}
+<radialGradient id="${j}" cx=".4" cy=".35" r=".7"><stop offset="0" stop-color="${c.on ? "#b9ff7a" : "#7fb35a"}"/><stop offset=".6" stop-color="${c.on ? "#4caf1f" : "#36602a"}"/><stop offset="1" stop-color="#1d3a12"/></radialGradient>${ntBlur(gl, 2)}</defs>
+${conSparks(c, 60, 22)}${ntFoot("12 108 100 108 118 92 30 92", .28)}
+${ntRoundBox(14, 70, 84, 32, 20, 5, `url(#${f})`, `url(#${s})`, `url(#${t})`)}
+${c.on ? `<ellipse class="nta-glow" cx="66" cy="60" rx="12" ry="4.6" fill="#76ff03" opacity=".5" filter="url(#${gl})"/>` : ""}
+<ellipse cx="66" cy="60" rx="10" ry="3.8" fill="url(#${j})" stroke="#0a0a0b" stroke-width=".6"/>
+<path d="M60 58 L72 62 M72 58 L60 62" stroke="#1d3a12" stroke-width="1" opacity=".55"/>
+<path d="M22 80 H66" stroke="#000" stroke-width="1.3"/>
+<circle cx="78" cy="80" r="2.4" fill="#3a3d42" stroke="#000" stroke-width=".5"/>${conLed(c, 78, 80, 1, "#76ff03", "#5d6773")}<circle cx="87" cy="80" r="2.4" fill="#3a3d42" stroke="#000" stroke-width=".5"/>
+${conPorts([22, 37, 52, 67], 91, 10, 4, "#0a0a0b")}`;
+}
+// Xbox 360: white, standing, its sides drawn in, the ring of light.
+function conX360(c) {
+  const f = ntId(), sd = ntId(), gl = ntId();
+  const ring = c.on ? "#76ff03" : c.st === "rest" ? "#ffa000" : "#c3c7cb";
+  return `<defs><linearGradient id="${f}" x1="0" x2="1"><stop offset="0" stop-color="#d7dbdf"/><stop offset=".4" stop-color="#fbfcfc"/><stop offset="1" stop-color="#e3e6e9"/></linearGradient>${ntV(sd, "#9aa1a8", "#6f767d")}${ntBlur(gl, 1.6)}</defs>
+${conSparks(c, 64, -2)}${ntShadow(60, 112, 28)}
+<path d="M80 18 L92 12 V102 L80 110 Z" fill="url(#${sd})"/>
+${[0, 1, 2, 3, 4, 5, 6, 7].map((i) => `<path d="M83 ${28 + i * 8} L89 ${25 + i * 8}" stroke="#555c63" stroke-width="1.6"/>`).join("")}
+<path d="M38 18 Q59 23 80 18 V110 Q59 105 38 110 Z" fill="url(#${f})" stroke="#bfc4c9" stroke-width=".5"/>
+<path d="M42 40 H76" stroke="#9aa1a8" stroke-width="1.2"/>
+${c.on ? `<circle class="nta-glow" cx="59" cy="31" r="5.6" fill="none" stroke="${ring}" stroke-width="2.4" filter="url(#${gl})"/>` : ""}
+<circle cx="59" cy="31" r="4.6" fill="#eef0f2" stroke="#b9bec3" stroke-width=".6"/>
+${[0, 1, 2, 3].map((i) => `<path d="M${59 + 5.6 * Math.cos(i * Math.PI / 2 + .2)} ${31 + 5.6 * Math.sin(i * Math.PI / 2 + .2)} A5.6 5.6 0 0 1 ${59 + 5.6 * Math.cos((i + 1) * Math.PI / 2 - .2)} ${31 + 5.6 * Math.sin((i + 1) * Math.PI / 2 - .2)}" fill="none" stroke="${ring}" stroke-width="1.4"/>`).join("")}
+${conPorts([46, 62], 98, 10, 3, "#9aa1a8")}`;
+}
+// Xbox One: the wide black box, its top half vents, half gloss, the white
+// light on its front.
+function conXone(c) {
+  const f = ntId(), s = ntId(), t = ntId(), gl = ntId();
+  return `<defs>${ntV(f, "#2a2c2f", "#111214")}${ntV(s, "#17181a", "#0a0a0b")}${ntV(t, "#2e3034", "#1b1c1f")}${ntBlur(gl, 1.6)}</defs>
+${conSparks(c, 60, 32)}${ntFoot("6 104 100 104 116 90 22 90", .28)}
+${ntRoundBox(8, 76, 92, 24, 16, 2, `url(#${f})`, `url(#${s})`, `url(#${t})`)}
+${Array.from({ length: 14 }, (_, i) => `<path d="M${12 + i * 3.6} 75 L${27 + i * 3.6} 61" stroke="#0b0c0e" stroke-width="1.6"/>`).join("")}
+<path d="M62 76 L78 60" stroke="#000" stroke-width=".8"/>
+<path d="M14 84 H58" stroke="#000" stroke-width="1.2"/>
+${c.on ? `<circle class="nta-glow" cx="90" cy="86" r="3.4" fill="#fff" filter="url(#${gl})"/>` : ""}<circle cx="90" cy="86" r="2.4" fill="${conLit(c, "#ffffff", "#9aa1a8", "#3a3d42")}"/>`;
+}
+// Xbox Series X: the black monolith, its round vents on top tinted green.
+function conXsx(c) {
+  const f = ntId(), s = ntId(), t = ntId(), gl = ntId();
+  return `<defs>${ntV(f, "#202224", "#111214")}${ntV(s, "#161719", "#0a0a0b")}${ntV(t, "#2a2c2f", "#1b1c1f")}${ntBlur(gl, 1.4)}</defs>
+${conSparks(c, 66, -2)}${ntFoot("34 114 82 114 100 98 52 98", .28)}
+${ntRoundBox(38, 28, 40, 84, 16, 3, `url(#${f})`, `url(#${s})`, `url(#${t})`)}
+<ellipse cx="66" cy="20" rx="15" ry="5.6" fill="#0a0a0b"/>
+${Array.from({ length: 18 }, (_, i) => { const a = i / 18 * Math.PI * 2; return `<circle cx="${(66 + Math.cos(a) * 11).toFixed(1)}" cy="${(20 + Math.sin(a) * 4).toFixed(1)}" r=".9" fill="${c.on ? "#3ad13a" : "#1f5a1f"}"/>`; }).join("")}
+${Array.from({ length: 10 }, (_, i) => { const a = i / 10 * Math.PI * 2; return `<circle cx="${(66 + Math.cos(a) * 6).toFixed(1)}" cy="${(20 + Math.sin(a) * 2.2).toFixed(1)}" r=".8" fill="${c.on ? "#3ad13a" : "#1f5a1f"}"/>`; }).join("")}
+<path d="M70 40 V96" stroke="#000" stroke-width="1"/>
+${c.on ? `<circle class="nta-glow" cx="46" cy="36" r="3" fill="#fff" filter="url(#${gl})"/>` : ""}<circle cx="46" cy="36" r="2" fill="${conLit(c, "#ffffff", "#9aa1a8", "#3a3d42")}"/>
+<rect x="44" y="100" width="6" height="2" rx="1" fill="#000"/>`;
+}
+// Xbox Series S: the small white box, the big black round vent on top.
+function conXss(c) {
+  const f = ntId(), s = ntId(), t = ntId(), gl = ntId();
+  return `<defs>${ntV(f, "#f4f5f5", "#d9dcde")}${ntV(s, "#c6cacd", "#a6abaf")}${ntV(t, "#ffffff", "#eceeef")}${ntBlur(gl, 1.4)}</defs>
+${conSparks(c, 60, 32)}${ntFoot("18 106 94 106 110 92 34 92", .22)}
+${ntRoundBox(20, 74, 74, 28, 18, 4, `url(#${f})`, `url(#${s})`, `url(#${t})`, "#c2c6c9")}
+<ellipse cx="66" cy="65" rx="22" ry="7.4" fill="#141516"/>
+${Array.from({ length: 5 }, (_, i) => `<ellipse cx="66" cy="65" rx="${20 - i * 4}" ry="${6.6 - i * 1.32}" fill="none" stroke="#2b2d30" stroke-width=".7"/>`).join("")}
+${c.on ? `<circle class="nta-glow" cx="28" cy="82" r="2.8" fill="#fff" filter="url(#${gl})"/>` : ""}<circle cx="28" cy="82" r="1.9" fill="${conLit(c, "#ffffff", "#9aa1a8", "#a6abaf")}" stroke="#a6abaf" stroke-width=".4"/>`;
+}
+// Nintendo Switch: the console in its dock, the red and blue Joy-Con either
+// side and its screen above the dock.
+function conSwitch(c, two) {
+  const dk = ntId(), ds = ntId(), dt = ntId(), sc = ntId(), l = ntId(), r = ntId();
+  const lcol = two ? ["#2b2d31", "#17181b"] : ["#00c3e3", "#0095b0"], rcol = two ? ["#2b2d31", "#17181b"] : ["#ff4554", "#d62f3d"];
+  const W = two ? 50 : 44, H = two ? 30 : 27, sx = 60 - W / 2, sy = 46 - (two ? 2 : 0), dy = sy + H * .62, dh = 30;
+  return `<defs>${ntV(dk, "#2c2e33", "#18191c")}${ntV(ds, "#1a1b1e", "#0e0f11")}${ntV(dt, "#3a3d42", "#25272b")}${ntV(l, ...lcol)}${ntV(r, ...rcol)}</defs>
+${conSparks(c, 64, 14)}${ntFoot(`${sx - 4} ${dy + dh + 5} ${sx + W - 4} ${dy + dh + 5} ${sx + W + 6} ${dy + dh - 4} ${sx + 4} ${dy + dh - 4}`, .28)}
+<rect x="${sx - 1}" y="${sy - 1}" width="${W + 2}" height="${H + 2}" rx="2" fill="#111215"/>
+${conScreen(c, sx + 2, sy + 2, W - 4, H - 4, sc)}
+<path d="M${sx - 1} ${sy + 2} Q${sx - 1} ${sy - 1} ${sx - 4} ${sy - 1} H${sx - 9} Q${sx - 13} ${sy - 1} ${sx - 13} ${sy + 4} V${sy + H - 3} Q${sx - 13} ${sy + H + 1} ${sx - 9} ${sy + H + 1} H${sx - 1} Z" fill="url(#${l})"/>
+<path d="M${sx + W + 1} ${sy + 2} Q${sx + W + 1} ${sy - 1} ${sx + W + 4} ${sy - 1} H${sx + W + 9} Q${sx + W + 13} ${sy - 1} ${sx + W + 13} ${sy + 4} V${sy + H - 3} Q${sx + W + 13} ${sy + H + 1} ${sx + W + 9} ${sy + H + 1} H${sx + W + 1} Z" fill="url(#${r})"/>
+<circle cx="${sx - 7}" cy="${sy + 7}" r="2.6" fill="#1b1c1f"/><circle cx="${sx - 7}" cy="${sy + 7}" r="1.6" fill="#3a3d42"/>
+<circle cx="${sx + W + 7}" cy="${sy + 15}" r="2.6" fill="#1b1c1f"/><circle cx="${sx + W + 7}" cy="${sy + 15}" r="1.6" fill="#3a3d42"/>
+${[[0, -2.6], [2.6, 0], [0, 2.6], [-2.6, 0]].map(([dx, dy]) => `<circle cx="${sx + W + 7 + dx}" cy="${sy + 6 + dy}" r=".9" fill="#1b1c1f"/>`).join("")}
+${two ? `<circle cx="${sx - 7}" cy="${sy + 7}" r="3.2" fill="none" stroke="#2979ff" stroke-width=".7"/><circle cx="${sx + W + 7}" cy="${sy + 15}" r="3.2" fill="none" stroke="#ff4554" stroke-width=".7"/>` : ""}
+${ntRoundBox(sx - 1, dy, W - 6, dh, 8, 4, `url(#${dk})`, `url(#${ds})`, `url(#${dt})`)}
+<path d="M${sx + 5} ${dy + 2} H${sx + W - 13}" stroke="#000" stroke-width="1.2" opacity=".6"/>
+${conLed(c, sx + W - 12, dy + dh - 4, .9, "#7cff6b", "#5d6773")}`;
+}
+// Nintendo Switch Lite: the handheld in one piece, its screen in the middle.
+function conSwitchLite(c) {
+  const b = ntId(), sc = ntId();
+  return `<defs>${ntV(b, "#5fd3e0", "#2aa3b3")}</defs>
+${conSparks(c, 62, 32)}${ntShadow(60, 104, 46)}
+<path d="M24 58 H96 Q110 58 110 72 V86 Q110 100 96 100 H24 Q10 100 10 86 V72 Q10 58 24 58 Z" fill="url(#${b})"/>
+<path d="M22 60 H98" stroke="#fff" stroke-width="1" opacity=".5" stroke-linecap="round"/>
+<rect x="33" y="61" width="54" height="36" rx="2" fill="#141518"/>
+${conScreen(c, 35.4, 63.4, 49.2, 31.2, sc)}
+<circle cx="21" cy="70" r="4.4" fill="#1b1c1f"/><circle cx="21" cy="70" r="3" fill="#33363b"/>
+<path d="M19.4 82 h3.2 v2.4 h2.4 v3.2 h-2.4 v2.4 h-3.2 v-2.4 h-2.4 v-3.2 h2.4 Z" fill="#1b1c1f"/>
+<circle cx="99" cy="86" r="4.4" fill="#1b1c1f"/><circle cx="99" cy="86" r="3" fill="#33363b"/>
+${[[0, -3.4], [3.4, 0], [0, 3.4], [-3.4, 0]].map(([dx, dy]) => `<circle cx="${99 + dx}" cy="${72 + dy}" r="1.3" fill="#1b1c1f"/>`).join("")}`;
+}
+// NES: the grey box, its dark band, the cartridge door, the red light.
+function conNes(c) {
+  const f = ntId(), s = ntId(), t = ntId();
+  return `<defs>${ntV(f, "#d5d3cc", "#bfbdb5")}${ntV(s, "#acaaa2", "#94928a")}${ntV(t, "#e2e0d9", "#cfcdc6")}</defs>
+${conSparks(c, 60, 24)}${ntFoot("12 106 100 106 118 90 30 90", .25)}
+${ntRoundBox(14, 70, 84, 30, 20, 2, `url(#${f})`, `url(#${s})`, `url(#${t})`, "#9e9c94")}
+${[0, 1, 2, 3, 4, 5, 6, 7].map((i) => `<path d="M${20 + i * 3} 68 L${40 + i * 3} 52" stroke="#bdbbb3" stroke-width=".8"/>`).join("")}
+<rect x="14" y="86" width="84" height="14" fill="#3b3b3d"/>
+<rect x="30" y="73" width="46" height="11" rx="1" fill="#c9c7c0" stroke="#9e9c94" stroke-width=".6"/>
+${[0, 1, 2].map((i) => `<path d="M33 ${76 + i * 3} H73" stroke="#a9a7a0" stroke-width=".6"/>`).join("")}
+${conPorts([60, 72], 90.4, 9, 5, "#c9c7c0")}
+<rect x="20" y="90.4" width="6" height="4" rx=".6" fill="#c9c7c0"/><rect x="29" y="90.4" width="6" height="4" rx=".6" fill="#c9c7c0"/>
+<circle cx="40" cy="92.4" r="1.1" fill="${conLit(c, "#ff1744", "#ff1744", "#4a1a1a")}"${c.on ? ` class="nta-glow"` : ""}/>`;
+}
+// Super Nintendo: the rounded grey shell, its cartridge slot, the power and
+// reset switches.
+function conSnes(c) {
+  const f = ntId(), s = ntId(), t = ntId();
+  return `<defs>${ntV(f, "#cfcfcd", "#b4b4b1")}${ntV(s, "#a9a9a6", "#8f8f8c")}${ntV(t, "#e4e4e2", "#d0d0ce")}</defs>
+${conSparks(c, 60, 26)}${ntFoot("14 106 100 106 116 92 30 92", .25)}
+${ntRoundBox(16, 74, 82, 26, 18, 9, `url(#${f})`, `url(#${s})`, `url(#${t})`, "#9b9b98")}
+<path d="M48 64 H78 L82 60 H52 Z" fill="#3f3f45"/><path d="M50 63 H78" stroke="#7a7a80" stroke-width=".6"/>
+<rect x="30" y="64" width="9" height="3.4" rx="1.4" fill="#7e5fb0"/><rect x="88" y="62" width="9" height="3.4" rx="1.4" fill="#7e5fb0"/>
+<circle cx="45" cy="70" r="2" fill="#9b9b98"/>
+${conLed(c, 26, 78, 1, "#ff1744", "#ff1744")}
+<rect x="16" y="90" width="82" height="2" fill="#9b9b98"/>
+${conPorts([38, 66], 82, 12, 6, "#6f6f6c")}`;
+}
+// Nintendo 64: the dark shell flaring to its round shoulders, the cartridge
+// slot on the hump, four ports in front.
+function conN64(c) {
+  const g = ntId(), t = ntId();
+  return `<defs>${ntV(g, "#3a3c41", "#18191c")}<radialGradient id="${t}" cx=".5" cy=".3" r=".8"><stop offset="0" stop-color="#55585e"/><stop offset="1" stop-color="#1d1e21"/></radialGradient></defs>
+${conSparks(c, 60, 26)}${ntShadow(60, 106, 52)}
+<path d="M8 104 L16 80 Q20 70 34 68 H86 Q100 70 104 80 L112 104 Z" fill="url(#${g})"/>
+<path d="M36 70 Q36 56 60 54 Q84 56 84 70 Z" fill="url(#${t})"/>
+<rect x="48" y="58" width="24" height="5" rx="1.2" fill="#0b0c0e"/><path d="M50 60.6 H70" stroke="#3a3d42" stroke-width=".6"/>
+<rect x="22" y="72" width="10" height="3" rx="1.4" fill="#55585e"/><rect x="88" y="72" width="10" height="3" rx="1.4" fill="#55585e"/>
+${conLed(c, 36, 76, 1, "#ff1744", "#ff1744")}
+${conPorts([28, 46, 64, 82], 94, 10, 5, "#0b0c0e")}`;
+}
+// GameCube: the indigo cube, its handle at the back and the round lid.
+function conGamecube(c) {
+  const f = ntId(), s = ntId(), t = ntId();
+  return `<defs>${ntV(f, "#5a49a0", "#41337c")}${ntV(s, "#3d3075", "#2b2156")}${ntV(t, "#7564bd", "#5b4aa1")}</defs>
+${conSparks(c, 62, 4)}${ntFoot("22 112 90 112 108 94 40 94", .26)}
+<path d="M52 37 Q54 25 76 25 Q98 25 100 37" fill="none" stroke="#2b2156" stroke-width="5" stroke-linecap="round"/>
+${ntRoundBox(26, 54, 60, 54, 20, 7, `url(#${f})`, `url(#${s})`, `url(#${t})`)}
+<ellipse cx="66" cy="44" rx="19" ry="6.6" fill="#4a3b8c" stroke="#2b2156" stroke-width=".7"/><ellipse cx="66" cy="43.4" rx="15" ry="5" fill="#6857b0"/>
+${conLed(c, 32, 64, 1, "#7cff6b", "#ffa000")}<circle cx="78" cy="64" r="2.4" fill="#2b2156"/>
+${conPorts([32, 45, 58, 71], 96, 9, 5, "#2b2156")}`;
+}
+// Wii: the thin white console standing on its foot, the blue glow in its slot.
+function conWii(c) {
+  const f = ntId(), s = ntId(), t = ntId(), gl = ntId();
+  return `<defs>${ntV(f, "#ffffff", "#e3e6e9")}${ntV(s, "#e0e3e6", "#c3c8cc")}${ntV(t, "#ffffff", "#f1f3f4")}${ntBlur(gl, 1.6)}</defs>
+${conSparks(c, 70, -2)}${ntShadow(70, 112, 30)}
+<path d="M44 112 H88 L96 104 H52 Z" fill="#cfd3d7"/>
+${ntRoundBox(48, 24, 14, 84, 30, 2, `url(#${f})`, `url(#${s})`, `url(#${t})`, "#c8cdd2")}
+${c.on ? `<path class="nta-glow" d="M55 32 V96" stroke="#40c4ff" stroke-width="3" filter="url(#${gl})"/>` : ""}
+<path d="M55 32 V96" stroke="${c.on ? "#82e1ff" : "#9aa1a8"}" stroke-width="1.2"/>
+<circle cx="55" cy="101" r="1.2" fill="${conLit(c, "#7cff6b", "#ff1744", "#9aa1a8")}"/>`;
+}
+// Mega Drive: the black box, the round raised centre and its slot.
+function conMegadrive(c) {
+  const f = ntId(), s = ntId(), t = ntId();
+  return `<defs>${ntV(f, "#24262a", "#111214")}${ntV(s, "#151618", "#0a0a0b")}${ntV(t, "#303236", "#1b1c1f")}</defs>
+${conSparks(c, 60, 30)}${ntFoot("10 106 98 106 116 90 28 90", .28)}
+${ntRoundBox(12, 76, 86, 24, 20, 8, `url(#${f})`, `url(#${s})`, `url(#${t})`)}
+<ellipse cx="66" cy="66" rx="26" ry="8.4" fill="#0b0c0e"/><ellipse cx="66" cy="65" rx="23" ry="7.2" fill="#2b2d31"/>
+<ellipse cx="66" cy="65" rx="23" ry="7.2" fill="none" stroke="#c62828" stroke-width=".7"/>
+<rect x="52" y="63" width="28" height="4" rx="1" fill="#0b0c0e"/>
+${conLed(c, 22, 84, 1, "#ff1744", "#ff1744")}<rect x="26" y="83" width="12" height="2" rx="1" fill="#3a3d42"/>
+${conPorts([60, 74], 88, 10, 5, "#0b0c0e")}`;
+}
+const NT_DRAW = { irr_sprinkler: ntIrrSprinkler, irr_tap: ntIrrTap, lit_globe: ntLitterGlobe, lit_box: ntLitterBox, det_smoke: ntDetSmoke, det_co: ntDetCo, det_leak: ntDetLeak, spk_smart: ntSpkSmart, spk_homepod_mini: ntSpkMini, spk_sonos_one: ntSpkOne, spk_bookshelf: ntSpkShelf, spk_sonos_move: ntSpkMove, spk_soundbar: ntSpkBar, spk_echo_dot: ntSpkDot, spk_nest_mini: ntSpkNest, spk_sonos_era100: ntSpkEra100, spk_sonos_era300: ntSpkEra300, spk_bose_wave: ntSpkWave, spk_bose_500: ntSpkBose500, spk_bose_soundlink: ntSpkFlex, spk_bose_soundbar: ntSpkBoseBar, con_ps1: conPs1, con_ps2: conPs2, con_ps3: conPs3, con_ps4: (c) => conPs4(c, false), con_ps4_pro: (c) => conPs4(c, true), con_ps5: conPs5, con_xbox: conXbox, con_xbox_360: conX360, con_xbox_one: conXone, con_xbox_series_x: conXsx, con_xbox_series_s: conXss, con_switch: (c) => conSwitch(c, false), con_switch_2: (c) => conSwitch(c, true), con_switch_lite: conSwitchLite, con_nes: conNes, con_snes: conSnes, con_n64: conN64, con_gamecube: conGamecube, con_wii: conWii, con_megadrive: conMegadrive, mob_scooter: mobScooter, mob_offroad: mobOffroad, mob_ebike: mobEbike, mob_gyropode: mobGyropode, mob_motorcycle: mobMotorcycle, meter_box: ntMeterBox, meter_dome: ntMeterDome, meter_gas: ntGas, meter_water: ntWater, booster: ntBooster, sump: ntSump, pool: ntPoolRobot, floor: ntFloor, spa: ntSpa, sauna: ntSauna, aquarium: ntAquarium, linky: ntLinky, tree: ntTree };
 function ntSvg(d) {
   ntN = 0;
   const draw = NT_DRAW[d && d.kind] || ntLinky;
@@ -1711,7 +1997,7 @@ function ntReadOf(type, hass, cfg, st, watts, threshold) {
   if (unav) {
     const ml = meterLayoutOf(cfg, st);
     const kinds = { water_pump: pumpLayoutOf(cfg, st), floor_heating: "floor", spa: "spa", sauna: "sauna", aquarium: "aquarium", meter: ml === "linky" ? "linky" : `meter_${ml}`, christmas_tree: "tree", mobility: `mob_${mobilityLayoutOf(cfg, st)}`,
-      irrigation: `irr_${irrigationLayoutOf(cfg, st)}`, litter_box: `lit_${litterLayoutOf(cfg, st)}`, detector: `det_${detectorLayoutOf(cfg, st)}`, speaker: `spk_${speakerLayoutOf(cfg, st)}` };
+      irrigation: `irr_${irrigationLayoutOf(cfg, st)}`, litter_box: `lit_${litterLayoutOf(cfg, st)}`, detector: `det_${detectorLayoutOf(cfg, st)}`, speaker: `spk_${speakerLayoutOf(cfg, st)}`, console: `con_${consoleLayoutOf(cfg, st)}` };
     return out("unav", "ev_offline", NT_COLORS.unav, { kind: kinds[type], on: false, electric: floorLayoutOf(cfg) === "electric",
       palette: cfg.tree_palette, presents: type === "christmas_tree" && treePresents(cfg), color: type === "speaker" ? speakerColorOf(cfg, st) : "" });
   }
@@ -1783,6 +2069,32 @@ function ntReadOf(type, hass, cfg, st, watts, threshold) {
     const draw = { kind, on: alarm, low, lcd: cv !== null ? `${Math.round(cv)} ppm` : alarm ? "ALARM" : "OK" };
     if (alarm) return out("alarm", { smoke: "det_smoke", co: "det_co", leak: "det_leak" }[layout], NT_COLORS.alarm, draw);
     return out("ok", "det_ok", NT_COLORS.lit, draw);
+  }
+  if (type === "console") {
+    // A console: a media player from PlayStation Network, Xbox or the PS4
+    // integration, PSN's online status, a smart plug, or anything on and off.
+    // Playing while a game runs, on in its menus, resting, or off.
+    const kind = `con_${consoleLayoutOf(cfg, st)}`;
+    const a = (st && st.attributes) || {};
+    const gst = cfg.game_entity ? stateObj(hass, cfg.game_entity) : null;
+    const gameOk = gst && !["unknown", "unavailable", "", "none", "off", "null"].includes(String(gst.state).trim().toLowerCase());
+    const game = gameOk ? String(gst.state) : a.media_title ? String(a.media_title) : "";
+    const metered = cfg.power_entity && watts !== null && isFinite(threshold);
+    const rest = !metered && ["standby", "rest", "rest_mode"].includes(raw);
+    const on = metered ? watts >= threshold
+      : !dead && ["on", "true", "playing", "idle", "paused", "home", "online", "availabletoplay", "availabletocommunicate", "busy", "buffering"].includes(raw);
+    // A plug drawing power is a console being played; so is a game running.
+    const playing = on && (raw === "playing" || !!game || (metered && domainOf(cfg.state_entity) !== "media_player"));
+    if (on && game) lines.push({ key: "con_game", icon: "mdi:gamepad-variant", label: t(hass, "con_game"), value: game, entity: gameOk ? cfg.game_entity : cfg.state_entity, wrap: true });
+    const played = ntLine(hass, cfg, "con_playtime", "mdi:timer-outline", "con_playtime", cfg.playtime_entity);
+    if (played) lines.push(played);
+    const left = ntLine(hass, cfg, "con_playtime_left", "mdi:timer-sand", "con_playtime_left", cfg.playtime_left_entity);
+    if (left) lines.push(left);
+    const draw = { kind, on, st: playing ? "playing" : on ? "on" : rest ? "rest" : "off" };
+    if (playing) return out("playing", "con_playing", NT_COLORS.run, draw);
+    if (on) return out("on", "con_on", NT_COLORS.lit, draw);
+    if (rest) return out("rest", "con_rest", "#fb8c00", draw);
+    return out("off", "con_off", NT_COLORS.off, draw);
   }
   if (type === "speaker") {
     // A media player: what it plays and how loud, in the lines.

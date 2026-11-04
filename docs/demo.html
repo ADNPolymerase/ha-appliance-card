@@ -1454,6 +1454,28 @@ const spkEra300 = spkCard(L("Sonos Era 300", "Sonos Era 300"), "sonos_era300", "
 const spkWave = spkCard(L("Bose Wave SoundTouch", "Bose Wave SoundTouch"), "bose_wave", "playing", { media_title: "Radio Classique", source: "Radio" });
 const spkBose500 = spkCard(L("Bose Home Speaker 500", "Bose Home Speaker 500"), "bose_500", "playing", { media_title: "Take Five", media_artist: "Dave Brubeck" });
 const spkFlex = spkCard(L("Bose SoundLink Flex", "Bose SoundLink Flex"), "bose_soundlink", "playing", { media_title: "Happy", media_artist: "Pharrell Williams" }, "blue");
+const conCard = (name, layout, state, attrs, more) => () => card({ name, appliance_type: "console", console_layout: layout, state_entity: "media_player.con_" + layout, ...(more || {}) },
+  [st("media_player.con_" + layout, state, attrs || {}), st("sensor.con_played", 74, { unit_of_measurement: "min" }), st("sensor.con_left", 46, { unit_of_measurement: "min" })]);
+const conPs1 = conCard(L("PlayStation", "PlayStation"), "ps1", "on");
+const conPs2 = conCard(L("PlayStation 2", "PlayStation 2"), "ps2", "playing", { media_title: "Gran Turismo 4" });
+const conPs3 = conCard(L("PlayStation 3", "PlayStation 3"), "ps3", "standby");
+const conPs4 = conCard(L("PlayStation 4", "PlayStation 4"), "ps4", "playing", { media_title: "Bloodborne" });
+const conPs4Pro = conCard(L("PlayStation 4 Pro", "PlayStation 4 Pro"), "ps4_pro", "on");
+const conPs5 = conCard(L("PlayStation 5", "PlayStation 5"), "ps5", "playing", { media_title: "Astro Bot" });
+const conXbox = conCard(L("Xbox", "Xbox"), "xbox", "on");
+const conX360 = conCard(L("Xbox 360", "Xbox 360"), "xbox_360", "playing", { media_title: "Halo 3" });
+const conXone = conCard(L("Xbox One", "Xbox One"), "xbox_one", "off");
+const conXsx = conCard(L("Xbox Series X", "Xbox Series X"), "xbox_series_x", "playing", { media_title: "Forza Horizon 5" });
+const conXss = conCard(L("Xbox Series S", "Xbox Series S"), "xbox_series_s", "on");
+const conSwitch = conCard(L("Nintendo Switch", "Nintendo Switch"), "switch", "playing", { media_title: "Mario Kart 8 Deluxe" }, { playtime_entity: "sensor.con_played", playtime_left_entity: "sensor.con_left" });
+const conSwitch2 = conCard(L("Nintendo Switch 2", "Nintendo Switch 2"), "switch_2", "on");
+const conLite = conCard(L("Switch Lite", "Switch Lite"), "switch_lite", "playing", { media_title: "Animal Crossing" }, { playtime_entity: "sensor.con_played" });
+const conNes = conCard(L("NES", "NES"), "nes", "playing", { media_title: "Super Mario Bros." });
+const conSnes = conCard(L("Super Nintendo", "Super Nintendo"), "snes", "on");
+const conN64 = conCard(L("Nintendo 64", "Nintendo 64"), "n64", "playing", { media_title: "GoldenEye 007" });
+const conCube = conCard(L("GameCube", "GameCube"), "gamecube", "on");
+const conWii = conCard(L("Wii", "Wii"), "wii", "playing", { media_title: "Wii Sports" });
+const conMd = conCard(L("Mega Drive", "Mega Drive"), "megadrive", "off");
 const spkBoseBar = spkCard(L("Bose Smart Soundbar", "Bose Smart Soundbar"), "bose_soundbar", "paused", { source: "TV" });
 
 // Grouped by kind: the laundry, the kitchen, heating and climate, then the
@@ -1521,7 +1543,7 @@ const EXTRA = { iron, coffee_black: coffeeBlack, boiler_window: boilerWindow, bo
                 irr_sprinkler: irrSprinkler, irr_rain: irrRain, irr_tap: irrTap, irr_tap_off: irrTapOff,
                 lit_globe: litGlobe, lit_globe_clean: litGlobeClean, lit_globe_cat: litGlobeCat, lit_box: litBox, lit_box_clean: litBoxClean, lit_box_full: litBoxFull,
                 det_smoke: detSmoke, det_smoke_alarm: detSmokeAlarm, det_co: detCo, det_co_alarm: detCoAlarm, det_leak: detLeak, det_leak_alarm: detLeakAlarm,
-                spk_smart: spkSmart, spk_mini: spkMini, spk_one: spkOne, spk_shelf: spkShelf, spk_move: spkMove, spk_bar: spkBar, spk_dot: spkDot, spk_nest: spkNest, spk_era100: spkEra100, spk_era300: spkEra300, spk_wave: spkWave, spk_bose500: spkBose500, spk_flex: spkFlex, spk_bosebar: spkBoseBar,
+                spk_smart: spkSmart, spk_mini: spkMini, spk_one: spkOne, spk_shelf: spkShelf, spk_move: spkMove, spk_bar: spkBar, spk_dot: spkDot, spk_nest: spkNest, spk_era100: spkEra100, spk_era300: spkEra300, spk_wave: spkWave, spk_bose500: spkBose500, spk_flex: spkFlex, spk_bosebar: spkBoseBar, con_ps1: conPs1, con_ps2: conPs2, con_ps3: conPs3, con_ps4: conPs4, con_ps4pro: conPs4Pro, con_ps5: conPs5, con_xbox: conXbox, con_x360: conX360, con_xone: conXone, con_xsx: conXsx, con_xss: conXss, con_switch: conSwitch, con_switch2: conSwitch2, con_lite: conLite, con_nes: conNes, con_snes: conSnes, con_n64: conN64, con_cube: conCube, con_wii: conWii, con_md: conMd,
                 mob_scooter: demo_mobScooter, mob_offroad: demo_mobOffroad, mob_ebike: demo_mobEbike, mob_gyropode: demo_mobGyropode, mob_motorcycle: demo_mobMotorcycle, mob_unplugged: demo_mobUnplugged, mob_poster: demo_mobPoster,
                 net_sw8: netSw(8, 6), net_sw16: netSw(16, 11), net_sw24: netSw(24, 20), net_sw32: netSw(32, 27),
                 net_nas1: netBays(1, ["normal"], L("NAS, 1 bay", "NAS 1 baie")),
@@ -1586,7 +1608,8 @@ function liveGallery() {
     [L("Litter boxes", "Liti\u00e8res"), [litGlobe, litGlobeClean, litGlobeCat, litBox, litBoxClean, litBoxFull]],
     [L("Garden watering", "Arrosage"), [irrSprinkler, irrRain, irrTap, irrTapOff]],
     [L("Smoke, CO and leak detectors", "D\u00e9tecteurs de fum\u00e9e, CO et fuite"), [detSmoke, detSmokeAlarm, detCo, detCoAlarm, detLeak, detLeakAlarm]],
-    [L("Speakers", "Enceintes"), [spkSmart, spkMini, spkOne, spkShelf, spkMove, spkBar, spkDot, spkNest]],
+    [L("Speakers", "Enceintes"), [spkSmart, spkMini, spkOne, spkEra100, spkEra300, spkMove, spkBar, spkWave, spkBose500, spkFlex, spkBoseBar, spkShelf, spkDot, spkNest]],
+    [L("Game consoles", "Consoles de jeu"), [conPs1, conPs2, conPs3, conPs4, conPs4Pro, conPs5, conXbox, conX360, conXone, conXsx, conXss, conSwitch, conSwitch2, conLite, conNes, conSnes, conN64, conCube, conWii, conMd]],
   ];
   // Each family folds, the first one open: forty cards in a row are hard to
   // read, a list of families is not.
@@ -1638,7 +1661,7 @@ const POSTER_NAMES = {
   hd_hot: ["Hair dryer", "S\u00e8che-cheveux"], dif_drop: ["Diffuser", "Diffuseur"], hrv_one_duct: ["Ventilation", "VMC"],
   cam_outdoor: ["Camera", "Cam\u00e9ra"], lamp_floor: ["Lamp", "Lampe"], solar_day: ["Solar panels", "Panneaux solaires"],
   battery_charging: ["Home battery", "Batterie domestique"], th_square: ["Thermostat", "Thermostat"],
-  irr_sprinkler: ["Watering", "Arrosage"], lit_globe: ["Litter box", "Liti\u00e8re"], det_smoke: ["Detector", "D\u00e9tecteur"], spk_smart: ["Speaker", "Enceinte"],
+  irr_sprinkler: ["Watering", "Arrosage"], lit_globe: ["Litter box", "Liti\u00e8re"], det_smoke: ["Detector", "D\u00e9tecteur"], spk_smart: ["Speaker", "Enceinte"], con_ps5: ["Game console", "Console de jeu"],
   robot_vacuum: ["Robot vacuum", "Robot aspirateur"], robot_drying: ["Mopping robot", "Robot laveur"], robot_mower: ["Robot mower", "Robot tondeuse"],
 };
 const only = (params.get("only") || "").split(",").map((k) => k.trim()).filter(Boolean);

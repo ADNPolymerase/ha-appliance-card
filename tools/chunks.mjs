@@ -141,9 +141,17 @@ export function chunksOf(src) {
   return chunks;
 }
 
-/** Every identifier a piece of code mentions, strings and templates included. */
+/**
+ * Every identifier a piece of code mentions, strings and templates included.
+ * Comment lines and object keys are left out: neither uses the function they
+ * name.
+ */
 export function namesIn(text) {
-  return new Set(text.match(/[A-Za-z_$][\w$]*/g) || []);
+  const code = text.split('\n').filter((l) => !/^\s*(\/\/|\/\*|\*)/.test(l)).join('\n')
+    // An object's key ({ ntTree: true }) names a property, not the function
+    // of the same name.
+    .replace(/([{,]\s*)[A-Za-z_$][\w$]*(\s*:)/g, '$1$2');
+  return new Set(code.match(/[A-Za-z_$][\w$]*/g) || []);
 }
 
 /** The entries of an object literal written one key per line at two spaces. */

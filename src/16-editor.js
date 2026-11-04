@@ -225,6 +225,11 @@ const SECTIONS = [
   { field: "pet_weight_entity", types: ["litter_box"], labelKey: "sec_pet_weight", includeDomains: ["sensor"] },
   { field: "visits_entity", types: ["litter_box"], labelKey: "sec_visits", includeDomains: ["sensor", "counter"] },
   { field: "last_use_entity", types: ["litter_box"], labelKey: "sec_last_use", includeDomains: ["sensor", "input_datetime"] },
+  // A console: the game it plays when its state does not say it, and the
+  // play time a parental control counts.
+  { field: "game_entity", types: ["console"], labelKey: "con_game", includeDomains: ["sensor", "media_player", "input_text"] },
+  { field: "playtime_entity", types: ["console"], labelKey: "con_playtime", includeDomains: ["sensor", "number"] },
+  { field: "playtime_left_entity", types: ["console"], labelKey: "con_playtime_left", includeDomains: ["sensor", "number"] },
   { field: "cat_present_entity", types: ["litter_box"], labelKey: "sec_cat_present", includeDomains: ["binary_sensor"] },
   { field: "co_level_entity", types: ["detector"], labelKey: "sec_co_level", includeDomains: ["sensor"], when: (c) => detectorLayoutOf(c, null) === "co" },
   { field: "test_entity", types: ["detector"], labelKey: "sec_test", includeDomains: ["button", "input_button", "script", "switch"] },
@@ -1316,7 +1321,7 @@ class ApplianceCardEditor extends HTMLElement {
           type: "select",
           options: [{ value: "auto", label: t(hass, "unit_auto") }].concat(PUMP_LAYOUTS.map((v) => ({ value: v, label: t(hass, `layout_pump_${v}`) }))),
         }) : ""}
-        ${[["irrigation", "irrigation_layout", IRRIGATION_LAYOUTS, "irr"], ["litter_box", "litter_layout", LITTER_LAYOUTS, "lit"], ["detector", "detector_layout", DETECTOR_LAYOUTS, "det"], ["speaker", "speaker_layout", SPEAKER_LAYOUTS, "spk"]]
+        ${[["irrigation", "irrigation_layout", IRRIGATION_LAYOUTS, "irr"], ["litter_box", "litter_layout", LITTER_LAYOUTS, "lit"], ["detector", "detector_layout", DETECTOR_LAYOUTS, "det"], ["speaker", "speaker_layout", SPEAKER_LAYOUTS, "spk"], ["console", "console_layout", CONSOLE_LAYOUTS, "con"]]
           .filter(([ty]) => this._type === ty).map(([, f, list, p]) => this._row("section_screen_layout", f, { type: "select",
             options: [{ value: "auto", label: t(hass, "unit_auto") }].concat(list.map((v) => ({ value: v, label: t(hass, `layout_${p}_${v}`) }))) })).join("")}
         ${this._type === "speaker" ? this._row("speaker_color", "speaker_color", {

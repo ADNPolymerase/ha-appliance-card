@@ -1,6 +1,6 @@
 // Built by tools/build.mjs from the files of src/: edit those, not this file.
 // The robot drawing and its CSS, loaded by the card the first time it shows one.
-export default function defineDrawing({ BATTERY_LAYOUTS, CAMERA_LAYOUTS, DIFFUSER_LAYOUTS, EV_FLOW_DEFAULT, FR3, HRV_LAYOUTS, LAMP_LAYOUTS, LAMP_SPOTS, LAMP_WARM, LAPTOP_COLORS, MAILBOX_LAYOUTS, MAILBOX_MAX_LETTERS, MW_DISHES, NET_LAYOUTS, NT_FONT, OVEN_DISHES, ROBOT_FLOORS, ROBOT_LAYOUTS, SCREEN_LAYOUTS, SCREEN_LIT, SCREEN_TABLETS, SHELTER_COLORS, SOLAR_LAYOUTS, T, TOASTER_LAYOUTS, esc, ntBlur, ntFit, ntHtml, t, zoneColumns }) {
+export default function defineDrawing({ BATTERY_LAYOUTS, CAMERA_LAYOUTS, DIFFUSER_LAYOUTS, EV_FLOW_DEFAULT, FR3, HRV_LAYOUTS, LAMP_LAYOUTS, LAMP_SPOTS, LAMP_WARM, LAPTOP_COLORS, MAILBOX_LAYOUTS, MAILBOX_MAX_LETTERS, MW_DISHES, NET_LAYOUTS, OVEN_DISHES, ROBOT_FLOORS, ROBOT_LAYOUTS, SCREEN_LAYOUTS, SCREEN_LIT, SCREEN_TABLETS, SHELTER_COLORS, SOLAR_LAYOUTS, T, TOASTER_LAYOUTS, TREE_PALETTES, esc, ntFlake, t, zoneColumns }) {
 // The small screen and the air lines the dehumidifier and the two heaters
 // share. Warm air rises; the air a dehumidifier or a fan blows goes the other
 // way along the same lines.
@@ -29,6 +29,1593 @@ const MINI_LCD_CSS = `
 function airFlow(cls, w, h, down) {
   const line = (x) => `<path d="M${x} ${h} C${x - w * 0.1} ${h * 0.66} ${x + w * 0.1} ${h * 0.33} ${x} 0"/>`;
   return `<svg class="air-flow ${cls} ${down ? "down" : ""}" viewBox="0 0 ${w} ${h}">${line(w * 0.25)}${line(w * 0.5)}${line(w * 0.75)}</svg>`;
+}
+
+// Drawing helpers
+let ntN = 0;
+const ntId = () => `nt${++ntN}`;
+const NT_FONT = `font-family="Roboto, 'Segoe UI', Helvetica, Arial, sans-serif"`;
+const ntV = (id, a, b) => `<linearGradient id="${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${a}"/><stop offset="1" stop-color="${b}"/></linearGradient>`;
+const ntBlur = (id, s) => `<filter id="${id}" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="${s}"/></filter>`;
+const ntShadow = (cx, cy, rx) => `<ellipse cx="${cx}" cy="${cy}" rx="${rx}" ry="3.2" fill="#000" opacity=".14"/>`;
+const ntFoot = (pts, op = .22) => { const id = ntId(); return `<filter id="${id}" x="-20%" y="-60%" width="140%" height="220%"><feGaussianBlur stdDeviation="1.5"/></filter><polygon points="${pts}" fill="#000" opacity="${op}" filter="url(#${id})"/>`; };
+// A display in large bold figures, so the value and its unit read at card size.
+const ntLcd = (x, y, w, h, text, lit, color = "#4fc3f7", fs = 8.5) =>
+  `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="1.8" fill="#141a21" stroke="#0a0d11" stroke-width=".5"/>` +
+  `<rect x="${x + .8}" y="${y + .8}" width="${w - 1.6}" height="${(h * .38).toFixed(2)}" rx="1.2" fill="#fff" opacity=".05"/>` +
+  (text ? `<text x="${x + w / 2}" y="${(y + h / 2 + fs * .36).toFixed(2)}" font-size="${fs}" font-weight="700" text-anchor="middle" fill="${lit ? color : "#5d6773"}" ${NT_FONT}>${esc(text)}</text>` : "");
+// The text of a display fits its width: a long reading is drawn smaller.
+const ntFit = (text, width, fs) => Math.min(fs, (width - 3) / Math.max(1, String(text || "").length * .6));
+
+// Booster set: the pump on its pressure tank and its electronic controller
+function ntBooster(c) {
+  const m = ntId(), t = ntId(), cs = ntId(), b = ntId(), p = ntId(), pv = ntId();
+  const on = c.on;
+  const fins = [0, 1, 2, 3, 4, 5, 6].map((i) => `<rect x="${62 + i * 5}" y="51.5" width="1.6" height="21" rx=".8" fill="#123f78" opacity=".5"/>`).join("");
+  const slots = [0, 1, 2, 3, 4, 5].map((i) => `<path d="M100 ${54 + i * 3}h5.4" stroke="#7a838f" stroke-width="1" stroke-linecap="round"/>`).join("");
+  const txt = c.lcd || "";
+  return `<defs>${ntV(m, "#62a8f0", "#1b56a0")}${ntV(t, "#3f8fe4", "#16457f")}${ntV(cs, "#e3e7ec", "#8b95a1")}${ntV(b, "#f5d77e", "#b4842a")}${ntV(p, "#5a636e", "#262b31")}${ntV(pv, "#eceff2", "#b6bec8")}</defs>
+${ntShadow(63, 107.2, 44)}
+<path d="M24 98 v9 h9 v-9 M92 98 v9 h9 v-9" fill="#3f4752"/>
+<rect x="16" y="80" width="94" height="20" rx="10" fill="url(#${t})"/>
+<rect x="24" y="82.6" width="78" height="3" rx="1.5" fill="#fff" opacity=".28"/>
+<path d="M30 80.4v19.2M96 80.4v19.2" stroke="#0f3563" stroke-width=".7"/>
+<rect x="34" y="74" width="72" height="6" rx="1.2" fill="#555e69"/>
+<g class="nta-vib">
+<rect x="58" y="50" width="42" height="24" rx="4" fill="url(#${m})"/>${fins}
+<rect x="58" y="51.5" width="42" height="3" fill="#fff" opacity=".2"/>
+<rect x="97.5" y="51.5" width="9.5" height="21" rx="3" fill="#353c46"/>${slots}
+<rect x="67" y="42.5" width="20" height="8.2" rx="1.5" fill="#2b3139"/>
+<rect x="70" y="44.2" width="6" height="4.6" rx="1" fill="${on ? "#43a047" : "#59626e"}"/>
+<circle cx="82" cy="46.5" r="1.4" fill="${on ? "#76ff03" : "#59626e"}"/>
+<path d="M38 50 Q34 46 41 46 H53 Q59 46 59 52 V71 Q59 76 53 76 H41 Q35 76 35 70 Z" fill="url(#${cs})"/>
+<path d="M38 52 Q38 48 42 48 H48" stroke="#fff" stroke-width="1" opacity=".6" fill="none"/>
+<rect x="55.5" y="47.5" width="4.4" height="28" rx="1" fill="#7a848f"/>
+<circle cx="57.7" cy="51" r="1" fill="#4a525e"/><circle cx="57.7" cy="72" r="1" fill="#4a525e"/>
+<circle cx="46" cy="62" r="5.2" fill="#9aa3ae" stroke="#6d7682" stroke-width=".6"/><circle cx="46" cy="62" r="1.6" fill="#59626e"/>
+<rect x="37" y="74" width="5" height="3" rx=".6" fill="url(#${b})"/>
+</g>
+<rect x="0" y="57.5" width="36" height="9" fill="url(#${p})"/>
+<rect x="20" y="56" width="8" height="12" rx="1" fill="url(#${b})"/><path d="M22 56v12M24 56v12M26 56v12" stroke="#9a7020" stroke-width=".5"/>
+<rect x="42.5" y="30" width="7" height="17" fill="url(#${pv})" stroke="#9aa3ae" stroke-width=".5"/>
+<rect x="62" y="17" width="58" height="7" fill="url(#${pv})" stroke="#9aa3ae" stroke-width=".5"/>
+<g class="nt-run"><path class="nta-flow" d="M1 62H35" stroke="#81d4fa" stroke-width="2.4" stroke-dasharray="4 4" fill="none"/>
+<path class="nta-flow" d="M46 46V32" stroke="#81d4fa" stroke-width="2.2" stroke-dasharray="4 4" fill="none"/>
+<path class="nta-flow" d="M69 20.5H119" stroke="#81d4fa" stroke-width="2.4" stroke-dasharray="4 4" fill="none"/></g>
+<rect x="28" y="4" width="41" height="28" rx="3" fill="#eef1f4" stroke="#aab2bc" stroke-width=".6"/>
+<rect x="28" y="4" width="41" height="4" rx="2" fill="#1e88e5"/>
+${ntLcd(31, 9.5, 35, 13, txt, true, on ? "#4fc3f7" : "#90a4ae", ntFit(txt, 35, 8.6))}
+<circle cx="34" cy="27" r="1.3" fill="#43a047"/><circle cx="52" cy="27" r="1.3" fill="${on ? "#43a047" : "#b0b7c1"}"/>`;
+}
+
+// Sump pit in cross-section: the float pivots on its cable with the water
+function ntSump(c) {
+  const s = ntId(), w = ntId(), con = ntId(), pu = ntId(), pv = ntId();
+  const angleOf = (y) => Math.max(-8, Math.min(90, Math.asin(Math.max(-1, Math.min(1, (86 - y + 1) / 24))) * 180 / Math.PI));
+  // The water: the level read when there is one, high on an alarm, falling
+  // while it pumps, mid-pit at rest.
+  const known = c.level !== null && c.level !== undefined;
+  const lv = known ? 108 - Math.max(0, Math.min(1, c.level)) * 80 : c.alarm ? 40 : 64;
+  const moving = c.on && !known && !c.alarm;
+  const water = moving
+    ? `<rect x="31" y="62" width="58" height="46" fill="url(#${w})"><animate attributeName="y" values="62;88;62" keyTimes="0;.7;1" dur="7s" repeatCount="indefinite"/><animate attributeName="height" values="46;20;46" keyTimes="0;.7;1" dur="7s" repeatCount="indefinite"/></rect>`
+    : `<rect x="31" y="${lv.toFixed(1)}" width="58" height="${(108 - lv).toFixed(1)}" fill="url(#${w})"/><path d="M31 ${lv.toFixed(1)}h58" stroke="#b3e5fc" stroke-width=".8"/>`;
+  const swing = moving ? `<animateTransform attributeName="transform" type="rotate" values="${angleOf(62)} 52 86;${angleOf(88)} 52 86;${angleOf(62)} 52 86" keyTimes="0;.7;1" dur="7s" repeatCount="indefinite"/>` : "";
+  const soil = [[8, 40], [14, 70], [6, 96], [18, 110], [100, 44], [108, 66], [114, 90], [102, 104], [20, 54], [112, 30], [9, 84]].map(([x, y]) => `<ellipse cx="${x}" cy="${y}" rx="1.6" ry="1" fill="#4e342e" opacity=".5"/>`).join("");
+  const grass = Array.from({ length: 24 }, (_, i) => { const x = i * 5 + 1; return x > 23 && x < 97 ? "" : `<path d="M${x} 24 l1 -3.4 M${x + 2} 24 l-.6 -2.6" stroke="#558b2f" stroke-width=".8"/>`; }).join("");
+  const txt = c.lcd || "";
+  return `<defs>${ntV(s, "#8d6e63", "#5d4037")}${ntV(w, "#4fc3f7", "#0d5c9e")}${ntV(con, "#c4c7cc", "#9a9ea6")}${ntV(pu, "#4a5b55", "#1d2623")}${ntV(pv, "#eceff2", "#b6bec8")}</defs>
+<rect x="0" y="24" width="120" height="96" fill="url(#${s})"/>${soil}
+<rect x="0" y="21.5" width="24" height="3.5" fill="#7cb342"/><rect x="96" y="21.5" width="24" height="3.5" fill="#7cb342"/>${grass}
+<rect x="26" y="24" width="68" height="90" fill="url(#${con})"/>
+<rect x="31" y="26" width="58" height="82" fill="#3a4148"/><rect x="31" y="26" width="58" height="6" fill="#000" opacity=".25"/>
+${water}
+<path d="M31 46h9" stroke="#ef5350" stroke-width=".9" stroke-dasharray="1.6 1"/><text x="33" y="44.6" font-size="5" font-weight="700" fill="#ef5350" ${NT_FONT}>max</text>
+<path d="M31 90h9" stroke="#ffb74d" stroke-width=".9" stroke-dasharray="1.6 1"/><text x="33" y="88.6" font-size="5" font-weight="700" fill="#ffb74d" ${NT_FONT}>min</text>
+<rect x="0" y="29" width="32" height="7" fill="url(#${pv})" stroke="#9aa3ae" stroke-width=".5"/>
+<g class="nta-fall"><circle cx="33" cy="38" r="1.1" fill="#81d4fa"/></g><g class="nta-fall ntd2"><circle cx="33.6" cy="38" r=".9" fill="#81d4fa"/></g>
+<rect x="57" y="7" width="6" height="71" fill="url(#${pv})" stroke="#9aa3ae" stroke-width=".5"/>
+<rect x="57" y="6" width="63" height="6" fill="url(#${pv})" stroke="#9aa3ae" stroke-width=".5"/>
+<g class="nt-run"><path class="nta-flow" d="M60 76V9H119" stroke="#81d4fa" stroke-width="2.4" stroke-dasharray="4 4" fill="none"/></g>
+<rect x="54.5" y="48" width="11" height="10" rx="1.4" fill="#37474f"/><path d="M60 56.5v-6.5M57.6 52.4 60 50l2.4 2.4" stroke="#cfd8dc" stroke-width=".9" fill="none" stroke-linecap="round"/>
+<rect x="24" y="19.5" width="72" height="5" rx="1" fill="#5b6470"/><path d="M30 20.5v3M36 20.5v3M42 20.5v3M48 20.5v3M70 20.5v3M76 20.5v3M82 20.5v3M88 20.5v3" stroke="#3a414b" stroke-width="1.2"/>
+<g class="nta-vib">
+<path d="M55 80 Q55 75 60 75 Q65 75 65 80 Z" fill="#2c3834"/>
+<rect x="52" y="79" width="16" height="22" rx="2.4" fill="url(#${pu})"/>
+<rect x="53.5" y="81" width="2" height="18" rx="1" fill="#fff" opacity=".18"/>
+<rect x="50" y="100" width="20" height="8" rx="1.4" fill="#37474f"/>
+<path d="M53 101.5v5M56 101.5v5M59 101.5v5M62 101.5v5M65 101.5v5M68 101.5v5" stroke="#90a4ae" stroke-width=".8"/>
+</g>
+<g transform="rotate(${moving ? 0 : angleOf(lv).toFixed(1)} 52 86)">${swing}
+<path d="M52 86 H32" stroke="#212121" stroke-width=".9"/>
+<ellipse cx="28" cy="86" rx="5.4" ry="3.6" fill="#ffca28" stroke="#c49000" stroke-width=".5"/><ellipse cx="26.6" cy="84.8" rx="2" ry=".9" fill="#fff" opacity=".6"/>
+</g>
+<rect x="11.5" y="17" width="3" height="6" fill="#5b6470"/>
+<rect x="0" y="2" width="27" height="16" rx="2" fill="#eceff2" stroke="#aab2bc" stroke-width=".5"/>
+${ntLcd(2, 4.2, 23, 11.6, txt, true, c.alarm ? "#ff5252" : "#4fc3f7", ntFit(txt, 23, 7.6))}
+${c.alarm ? `<rect x="29" y="9" width="7" height="3" rx=".6" fill="#5b6470"/><path d="M29.6 9 Q32.5 1.5 35.4 9 Z" fill="#e53935"/><circle class="nta-beacon" cx="32.5" cy="6" r="6" fill="#ff5252" opacity=".5"/>` : ""}`;
+}
+
+// Pool robot: the cable from the deck follows it to and fro
+function ntPoolRobot(c) {
+  const tp = ntId(), w = ntId(), bd = ntId(), dk = ntId();
+  const on = c.on, x0 = 34, x1 = 88;
+  const cable = (x) => `M90 21 C83 21 80 27 76 35.5 C${x + 16} 42 ${x + 7} 62 ${x} 79`;
+  const keys = "0;.45;.5;.95;1";
+  const cablePath = on
+    ? `<path d="${cable(x0)}" stroke="#263238" stroke-width="1.2" fill="none"><animate attributeName="d" values="${[x0, x1, x1, x0, x0].map(cable).join(";")}" keyTimes="${keys}" dur="9s" repeatCount="indefinite"/></path>`
+    : `<path d="${cable(46)}" stroke="#263238" stroke-width="1.2" fill="none"/>`;
+  const brush = (cx) => `<g transform="translate(${cx} 1)"><g class="nta-spin"><circle r="4.2" fill="#1e88e5"/>${[0, 45, 90, 135].map((a) => `<path d="M-4 0H4" transform="rotate(${a})" stroke="#90caf9" stroke-width=".9"/>`).join("")}</g><circle r="1.2" fill="#0d47a1"/></g>`;
+  const robot = `<rect x="-15" y="-2" width="30" height="8.2" rx="4" fill="#263238"/>
+<path class="nta-flow-fast" d="M-12 6H12" stroke="#78909c" stroke-width="1.6" stroke-dasharray="1.6 1.6"/>
+${brush(-13.5)}${brush(13.5)}
+<path d="M-15 -1 Q-15 -14 0 -14 Q15 -14 15 -1 Z" fill="url(#${bd})" stroke="#90a4ae" stroke-width=".5"/>
+<path d="M-15 -3 H15" stroke="#1e88e5" stroke-width="2"/>
+<rect x="-7" y="-11" width="14" height="5" rx="1.5" fill="#37474f"/><path d="M-5.5 -8.5h11" stroke="#78909c" stroke-width=".6" stroke-dasharray="1 .8"/>
+<path d="M-6 -13.4 Q0 -21 6 -13.4" stroke="#455a64" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+<circle cx="10" cy="-6.5" r="1" fill="${on ? "#76ff03" : "#78909c"}"/>`;
+  const anim = on ? `<animateTransform attributeName="transform" type="translate" values="${x0} 98;${x1} 98;${x1} 98;${x0} 98;${x0} 98" keyTimes="${keys}" dur="9s" repeatCount="indefinite"/>` : "";
+  const flip = on ? `<animateTransform attributeName="transform" type="scale" values="1 1;1 1;-1 1;-1 1;1 1" keyTimes="${keys}" calcMode="discrete" dur="9s" repeatCount="indefinite"/>` : "";
+  const bubbles = [0, 1, 2].map((i) => `<circle class="nta-rise ntd${i + 1}" cx="${-2 + i * 2}" cy="-16" r="${1 - i * .15}" fill="#e1f5fe" opacity="0"/>`).join("");
+  const caust = [14, 30, 52, 70, 92].map((x, i) => `<path class="nta-caust ntd${i + 1}" d="M${x} 102 q3 -2 6 0 q3 2 6 0" stroke="#e1f5fe" stroke-width=".8" fill="none"/>`).join("");
+  const txt = on ? c.lcd || "" : "";
+  return `<defs><pattern id="${tp}" width="5" height="5" patternUnits="userSpaceOnUse"><rect width="5" height="5" fill="#8fd0ec"/><path d="M5 0V5M0 5H5" stroke="#6fbbe0" stroke-width=".5"/></pattern>
+${ntV(w, "#4fc3f7", "#0277bd")}${ntV(bd, "#ffffff", "#b0bec5")}${ntV(dk, "#efe5d0", "#d6c7a7")}</defs>
+<rect x="0" y="20" width="120" height="8" fill="url(#${dk})"/><rect x="0" y="27" width="120" height="1.2" fill="#b9a988"/>
+<rect x="6" y="28" width="108" height="80" fill="#cfd8dc"/>
+<rect x="8" y="28" width="104" height="78" fill="url(#${tp})"/>
+<rect x="8" y="35" width="104" height="71" fill="url(#${w})" opacity=".72"/>
+<path class="nta-bob" d="M8 35 q6.5 -1.6 13 0 t13 0 t13 0 t13 0 t13 0 t13 0 t13 0 t13 0" stroke="#e1f5fe" stroke-width="1.2" fill="none"/>
+${caust}
+<rect x="6" y="106" width="108" height="3" fill="#90a4ae"/>
+${cablePath}
+<ellipse cx="76" cy="35.4" rx="3" ry="1.8" fill="#ffca28" stroke="#c49000" stroke-width=".4"/>
+<g transform="translate(${on ? x0 : 46} 98)">${anim}<g>${flip}${robot}<g class="nt-run">${bubbles}</g></g></g>
+<rect x="86" y="5" width="32" height="16" rx="2" fill="#eceff2" stroke="#aab2bc" stroke-width=".5"/>
+${ntLcd(88.5, 7, 27, 11.6, txt, on, "#4fc3f7", ntFit(txt, 27, 7.8))}
+<circle cx="116" cy="19" r=".9" fill="${on ? "#76ff03" : "#9aa1ab"}"/>`;
+}
+
+// Underfloor heating: a corner of the room, the tiles cut open over the loop
+function ntFloor(c) {
+  const wl = ntId(), tl = ntId(), gl = ntId();
+  const on = c.on, electric = c.electric;
+  const P = (u, v) => [22 + 96 * u - 20 * v, 60 + 36 * v];
+  const pt = (u, v) => P(u, v).map((x) => x.toFixed(1)).join(" ");
+  const poly = (pts, fill, extra = "") => `<polygon points="${pts.map(([u, v]) => pt(u, v)).join(" ")}" fill="${fill}" ${extra}/>`;
+  const grout = [1, 2, 3, 4, 5, 6, 7].map((i) => `<path d="M${pt(i / 8, 0)} L${pt(i / 8, 1)}" stroke="#bfb5a4" stroke-width=".5"/>`).join("") +
+    [1, 2, 3, 4].map((j) => `<path d="M${pt(0, j / 5)} L${pt(1, j / 5)}" stroke="#bfb5a4" stroke-width=".5"/>`).join("");
+  const u0 = .4, v0 = .34;
+  const runs = [.44, .54, .64, .74, .84, .94];
+  let d = `M${pt(.47, runs[0])}`;
+  runs.forEach((v, i) => {
+    const end = i % 2 ? .47 : .95;
+    d += ` L${pt(end, v)}`;
+    if (i < runs.length - 1) d += ` Q${pt(end === .95 ? 1.01 : .41, (v + runs[i + 1]) / 2)} ${pt(end, runs[i + 1])}`;
+  });
+  const pipeColor = electric ? (on ? "#ff7043" : "#8d6e63") : (on ? "#e53935" : "#b0857c");
+  const mesh = electric
+    ? Array.from({ length: 7 }, (_, i) => { const u = u0 + (1 - u0) * (i + .5) / 7; return `<path d="M${pt(u, v0)} L${pt(u, 1)}" stroke="#fff" stroke-width=".35" opacity=".8"/>`; }).join("") +
+      Array.from({ length: 6 }, (_, j) => { const v = v0 + (1 - v0) * (j + .5) / 6; return `<path d="M${pt(u0, v)} L${pt(1, v)}" stroke="#fff" stroke-width=".35" opacity=".8"/>`; }).join("")
+    : "";
+  const layers = electric
+    ? [[0, 2, "#d9cfbf"], [2, 4, "#9e9e9e"], [4, 12, "#a8a196"], [12, 17, "#f2e3a0"], [17, 20, "#8a8f96"]]
+    : [[0, 2, "#d9cfbf"], [2, 11, "#a8a196"], [11, 17, "#f2e3a0"], [17, 20, "#8a8f96"]];
+  const front = layers.map(([a, b, col]) => `<rect x="2" y="${96 + a}" width="96" height="${b - a}" fill="${col}"/>`).join("") +
+    layers.map(([a, b, col]) => `<polygon points="98 ${96 + a} 118 ${60 + a} 118 ${60 + b} 98 ${96 + b}" fill="${col}" opacity=".78"/>`).join("");
+  const dots = electric
+    ? Array.from({ length: 12 }, (_, i) => `<circle cx="${7 + i * 8}" cy="99" r=".9" fill="${pipeColor}"/>`).join("")
+    : Array.from({ length: 12 }, (_, i) => `<circle cx="${7 + i * 8}" cy="102.5" r="1.7" fill="${i % 2 ? (on ? "#1e88e5" : "#7f97ad") : pipeColor}" stroke="#fff" stroke-width=".3"/>`).join("");
+  const studs = electric ? "" : Array.from({ length: 16 }, (_, i) => `<rect x="${3 + i * 6}" y="105.5" width="3" height="1.4" rx=".5" fill="#e0cf7c"/>`).join("");
+  const manifold = electric ? "" : `<rect x="18" y="20" width="9" height="11" rx="2" fill="#c62828"/><circle cx="22.5" cy="25.5" r="3" fill="#ef9a9a"/>
+<g class="${on ? "nta-spin-slow" : ""}">${ntFlake(22.5, 25.5, 2.2, "#b71c1c", .7)}</g>
+<rect x="27" y="24" width="33" height="3.6" rx="1.2" fill="#d32f2f"/>
+<rect x="27" y="36" width="33" height="3.6" rx="1.2" fill="#1e88e5"/>
+${[0, 1, 2, 3].map((k) => { const x = 33 + k * 7.5; return `<rect x="${x - 1.4}" y="15.5" width="2.8" height="8.5" rx="1" fill="#e3f2fd" stroke="#90a4ae" stroke-width=".4"/>
+<rect class="nta-bob" x="${x - 1}" y="${on ? 17.6 : 21.4}" width="2" height="2" fill="#e53935"/>
+<circle cx="${x + 2.6}" cy="41.6" r="1.6" fill="#263238"/>
+<path d="M${x - 1.2} 27.6 V60" stroke="${on ? "#ef5350" : "#c08a84"}" stroke-width="1.6"/><path d="M${x + 1.2} 39.6 V60" stroke="${on ? "#42a5f5" : "#8fa6bb"}" stroke-width="1.6"/>`; }).join("")}`;
+  const waves = [[.18, .3], [.5, .2], [.75, .5], [.32, .7], [.62, .8], [.88, .15]].map(([u, v], i) => { const [x, y] = P(u, v); return `<path class="nta-heat ntd${i + 1}" d="M${x.toFixed(1)} ${y.toFixed(1)} q-1.6 -2.6 0 -5.2 q1.6 -2.6 0 -5.2" stroke="#ff8a65" stroke-width="1.1" fill="none" stroke-linecap="round" opacity="0"/>`; }).join("");
+  const txt = c.lcd || "";
+  return `<defs>${ntV(wl, "#f5f7fa", "#e3e8ee")}${ntV(tl, "#f1ece3", "#ddd4c4")}${ntBlur(gl, 1.1)}</defs>
+<polygon points="22 4 118 4 118 60 22 60" fill="url(#${wl})"/>
+<rect x="22" y="56" width="96" height="4" fill="#fff" stroke="#d7dce3" stroke-width=".4"/>
+${manifold}
+${poly([[0, 0], [1, 0], [1, 1], [0, 1]], `url(#${tl})`)}${grout}
+<g class="nt-run">${poly([[0, 0], [1, 0], [1, 1], [0, 1]], "#ff7043", `class="nta-warm" opacity=".1"`)}</g>
+${poly([[u0, v0], [1, v0], [1, 1], [u0, 1]], electric ? "#9e9e9e" : "#a8a196")}
+${mesh}
+<g class="nt-run"><path d="${d}" stroke="${pipeColor}" stroke-width="${electric ? 3.4 : 4.4}" fill="none" opacity=".45" filter="url(#${gl})"/></g>
+<path d="${d}" stroke="${pipeColor}" stroke-width="${electric ? 1.1 : 2.2}" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+${electric ? "" : `<g class="nt-run"><path class="nta-flow" d="${d}" stroke="#ffcdd2" stroke-width=".8" stroke-dasharray="2 5" fill="none"/></g>`}
+<polygon points="${pt(u0, v0)} ${pt(1, v0)} ${P(1, v0)[0].toFixed(1)} ${(P(1, v0)[1] + 1.8).toFixed(1)} ${P(u0, v0)[0].toFixed(1)} ${(P(u0, v0)[1] + 1.8).toFixed(1)}" fill="#a39886"/>
+<polygon points="${pt(u0, v0)} ${pt(u0, 1)} ${(P(u0, 1)[0] + 1.6).toFixed(1)} ${P(u0, 1)[1].toFixed(1)} ${(P(u0, v0)[0] + 1.6).toFixed(1)} ${(P(u0, v0)[1] + 1.8).toFixed(1)}" fill="#b8ad9b"/>
+${front}${dots}${studs}
+<g class="nt-run">${waves}</g>
+<rect x="82" y="14" width="33" height="30" rx="3" fill="#ffffff" stroke="#c3c9d1" stroke-width=".6"/>
+${ntLcd(84.5, 17, 28, 13, txt, true, on ? "#ffb74d" : "#90a4ae", ntFit(txt, 28, 7.4))}
+<path d="M89 39 q-2 -2.6 0 -5 q.6 2 2 2.4 q1 1.4 0 2.6 Z" fill="${on ? "#ff7043" : "#c3c9d1"}"/>
+<circle cx="101" cy="37" r="2.2" fill="#eceff1" stroke="#b0bec5" stroke-width=".4"/><circle cx="108" cy="37" r="2.2" fill="#eceff1" stroke="#b0bec5" stroke-width=".4"/>
+<path d="M99.8 37h2.4M106.8 37h2.4M108 35.8v2.4" stroke="#607d8b" stroke-width=".5"/>
+${electric ? `<path d="M98.5 44 V58" stroke="#78909c" stroke-width=".9"/>` : ""}`;
+}
+
+// Square spa, three-quarter view
+function ntSpa(c) {
+  const wa = ntId(), rim = ntId(), cl = ntId(), gl = ntId(), sd = ntId();
+  const P = (u, v) => [30 + 80 * u - 22 * v, 40 + 22 * v];
+  const pt = (u, v) => P(u, v).map((x) => x.toFixed(1)).join(" ");
+  const roundQuad = (a0, a1, b0, b1, dy = 0) => {
+    const k = [[a0, b0], [a1, b0], [a1, b1], [a0, b1]].map(([u, v]) => { const [x, y] = P(u, v); return [x, y + dy]; });
+    const lerp = (a, b, q) => [a[0] + (b[0] - a[0]) * q, a[1] + (b[1] - a[1]) * q];
+    let d = "";
+    k.forEach((p, i) => { const prev = k[(i + 3) % 4], next = k[(i + 1) % 4]; const a = lerp(p, prev, .16), b = lerp(p, next, .16); d += `${i ? "L" : "M"}${a[0].toFixed(1)} ${a[1].toFixed(1)} Q${p[0].toFixed(1)} ${p[1].toFixed(1)} ${b[0].toFixed(1)} ${b[1].toFixed(1)} `; });
+    return d + "Z";
+  };
+  const glow = c.lit || c.bubbles;
+  const slatsF = Array.from({ length: 13 }, (_, i) => `<path d="M${14 + i * 6} 63.5 V96" stroke="#3e3128" stroke-width=".6" opacity=".55"/>`).join("");
+  const slatsS = Array.from({ length: 5 }, (_, i) => { const q = (i + 1) / 6; return `<path d="M${(88 + 22 * q).toFixed(1)} ${(63.5 - 22 * q).toFixed(1)} V${(96 - 22 * q).toFixed(1)}" stroke="#2f251e" stroke-width=".6" opacity=".55"/>`; }).join("");
+  const bubbles = [[.3, .4], [.5, .3], [.7, .45], [.4, .62], [.62, .66], [.22, .55], [.8, .6], [.52, .5]].map(([u, v], i) => { const [x, y] = P(u, v); return `<circle class="nta-pop ntd${(i % 6) + 1}" cx="${x.toFixed(1)}" cy="${(y + 2).toFixed(1)}" r="${1.4 + (i % 3) * .5}" fill="none" stroke="#e0f7fa" stroke-width=".7" opacity="0"/>`; }).join("");
+  const steam = [[.35, .4], [.55, .35], [.72, .5]].map(([u, v], i) => { const [x, y] = P(u, v); return `<path class="nta-steam ntd${i + 1}" d="M${x.toFixed(1)} ${(y - 2).toFixed(1)} q-2 -3 0 -6 q2 -3 0 -6" stroke="#ffffff" stroke-width="2" fill="none" stroke-linecap="round" opacity="0"/>`; }).join("");
+  const jets = [.25, .4, .6, .75].map((u) => { const [x, y] = P(u, .14); return `<circle cx="${x.toFixed(1)}" cy="${(y + .8).toFixed(1)}" r=".8" fill="#78909c"/>`; }).join("");
+  const [hx1, hy1] = P(.12, .15), [hx2, hy2] = P(.86, .15);
+  const [gx, gy] = P(.5, .52);
+  const txt = c.lcd || "";
+  return `<defs>${ntV(wa, glow ? "#4dd0e1" : "#4f8fa3", glow ? "#0097a7" : "#1f5568")}${ntV(rim, "#f4f6f8", "#cfd6dd")}${ntV(cl, "#6d5848", "#4a3b30")}${ntBlur(gl, 3)}${ntV(sd, "#5a483b", "#3a2e26")}</defs>
+${ntFoot("7 97.2 89 97.2 111.5 74.8 30 74.8")}${ntFoot("9.5 106 40 106 49 96.8 20 96.8")}
+<polygon points="88 62 110 40 110 74 88 96" fill="url(#${sd})"/>${slatsS}
+<rect x="8" y="62" width="80" height="34" fill="url(#${cl})"/>${slatsF}
+<rect x="8" y="62" width="4" height="34" fill="#3a2e26"/><rect x="84" y="62" width="4" height="34" fill="#3a2e26"/>
+<polygon points="8 62 88 62 88 64.4 8 64.4" fill="#9ea7b0"/>
+<polygon points="20 89 48 89 39 98 11 98" fill="#8a7260"/>
+<polygon points="11 98 39 98 39 105 11 105" fill="#5a483b"/><path d="M11 101.5h28" stroke="#2f251e" stroke-width=".45" opacity=".6"/>
+<polygon points="39 98 48 89 48 96 39 105" fill="#3f322a"/>
+<polygon points="20 82 48 82 43.5 86.5 15.5 86.5" fill="#9a8270"/>
+<polygon points="15.5 86.5 43.5 86.5 43.5 93.5 15.5 93.5" fill="#5a483b"/><path d="M15.5 90h28" stroke="#2f251e" stroke-width=".45" opacity=".6"/>
+<polygon points="43.5 86.5 48 82 48 89 43.5 93.5" fill="#3f322a"/>
+<path d="M20 82H48M11 98H39" stroke="#b39d8a" stroke-width=".5"/>
+<polygon points="88 62 110 40 110 42.4 88 64.4" fill="#8a939c"/>
+<polygon points="${pt(0, 0)} ${pt(1, 0)} ${pt(1, 1)} ${pt(0, 1)}" fill="url(#${rim})" stroke="#aab4be" stroke-width=".5"/>
+<path d="${roundQuad(.07, .93, .12, .88)}" fill="#dfe8ed" stroke="#b0bec5" stroke-width=".5"/>
+${jets}
+<path d="${roundQuad(.1, .9, .18, .85, 2)}" fill="url(#${wa})"/>
+${glow ? `<ellipse class="nta-glow" cx="${gx.toFixed(1)}" cy="${(gy + 2).toFixed(1)}" rx="20" ry="5" fill="#b2ebf2" filter="url(#${gl})"/>` : ""}
+<path d="${roundQuad(.17, .83, .3, .74, 2)}" fill="none" stroke="#ffffff" stroke-width=".6" opacity=".35"/>
+<rect x="${(hx1 - 3).toFixed(1)}" y="${(hy1 - 1.4).toFixed(1)}" width="7" height="3" rx="1.5" fill="#37474f"/>
+<rect x="${(hx2 - 3).toFixed(1)}" y="${(hy2 - 1.4).toFixed(1)}" width="7" height="3" rx="1.5" fill="#37474f"/>
+${c.bubbles ? `<g class="nt-run">${bubbles}</g>` : ""}${c.steam ? `<g class="nt-run">${steam}</g>` : ""}
+<rect x="58" y="67" width="27" height="15" rx="1.8" fill="#263238"/>
+${ntLcd(59.5, 68.5, 24, 12, txt, true, c.heating ? "#ffb74d" : "#80deea", ntFit(txt, 24, 8.6))}`;
+}
+
+// Sauna cabin with a glass door: the stones glow and steam rises inside
+function ntSauna(c) {
+  const g = ntId(), cp = ntId(), gl = ntId(), inside = ntId(), st = ntId();
+  const on = c.on;
+  const planks = Array.from({ length: 14 }, (_, i) => { const y = 24 + i * 6; return `<rect x="10" y="${y}" width="90" height="6" fill="${i % 2 ? "#c48d58" : "#cf9963"}"/><path d="M12 ${y + 3} q14 -1.2 28 0 t28 0 t30 .4" stroke="#a8713f" stroke-width=".35" fill="none" opacity=".7"/>`; }).join("");
+  const side = Array.from({ length: 14 }, (_, i) => `<polygon points="100 ${24 + i * 6} 112 ${16 + i * 6} 112 ${22 + i * 6} 100 ${30 + i * 6}" fill="${i % 2 ? "#9c6b3f" : "#a87447"}"/>`).join("");
+  const stones = [[42, 79], [46, 78], [50, 79.4], [44, 76], [48, 75.6], [46.2, 73.8], [40.6, 76.6], [51.4, 76.4]].map(([x, y], i) => `<circle cx="${x}" cy="${y}" r="2.2" fill="${on ? ["#ff7043", "#ff8a65", "#f4511e"][i % 3] : ["#78716c", "#8b8580", "#6b6560"][i % 3]}" stroke="${on ? "#bf360c" : "#57524d"}" stroke-width=".4"/>`).join("");
+  const steam = [[44, 70], [48, 69], [40, 71], [50, 66]].map(([x, y], i) => `<path class="nta-steam ntd${i + 1}" d="M${x} ${y} q-2 -3 0 -6 q2 -3 0 -6" stroke="#fff3e0" stroke-width="2" fill="none" stroke-linecap="round" opacity="0"/>`).join("");
+  // The dial reads from 0 to 120 degrees over 240 of its turn.
+  const deg = c.temp === null || c.temp === undefined ? -120 : -120 + Math.max(0, Math.min(120, c.temp)) * 2;
+  const txt = c.lcd || "";
+  return `<defs>${ntV(g, on ? "#a35a26" : "#4b3223", on ? "#6d3b19" : "#2b1d14")}${ntBlur(gl, 2.4)}<clipPath id="${cp}"><rect x="18" y="32" width="36" height="71"/></clipPath>${ntV(st, "#5d6670", "#363c43")}
+<radialGradient id="${inside}" cx=".5" cy=".1" r=".9"><stop offset="0" stop-color="#ffcc80" stop-opacity="${on ? .75 : 0}"/><stop offset="1" stop-color="#ffcc80" stop-opacity="0"/></radialGradient></defs>
+${ntFoot("8 110.6 101.5 110.6 113.5 101.6 21 101.6")}
+${side}
+<path d="M7 18 L19 10 L115 10 L103 18 Z" fill="#7b4f2d"/><path d="M103 18 L115 10 L115 16 L103 24 Z" fill="#5b3a22"/>
+<rect x="7" y="18" width="96" height="6" fill="#8d5a34"/>
+${planks}
+<rect x="15" y="29" width="42" height="77" rx="1" fill="#8d5a34"/>
+<g clip-path="url(#${cp})">
+<rect x="18" y="32" width="36" height="71" fill="url(#${g})"/>
+${Array.from({ length: 12 }, (_, i) => `<path d="M18 ${36 + i * 6}h36" stroke="#000" stroke-width=".4" opacity=".25"/>`).join("")}
+<rect x="18" y="32" width="36" height="71" fill="url(#${inside})"/>
+<rect x="18" y="58" width="36" height="4" fill="#d9a46d"/><rect x="18" y="62" width="36" height="7" fill="#b07a46"/>
+<path d="M18 64.5h36M18 67h36" stroke="#8d5a34" stroke-width=".4"/>
+<rect x="18" y="84" width="20" height="3.4" fill="#d9a46d"/><rect x="18" y="87.4" width="20" height="15.6" fill="#b07a46"/>
+<path d="M22 78 h8 l-1 6 h-6 Z" fill="#a1663a" stroke="#6d4123" stroke-width=".4"/><path d="M22.4 80h7.2M22.7 82.4h6.6" stroke="#cfd8dc" stroke-width=".6"/>
+<path d="M28 79 L33 70" stroke="#6d4123" stroke-width=".9" stroke-linecap="round"/>
+<rect x="39" y="80" width="14" height="23" rx="1" fill="url(#${st})"/>
+${[41.5, 44.5, 47.5, 50.5].map((x) => `<path d="M${x} 81v21" stroke="#22272c" stroke-width=".8"/>`).join("")}
+${on ? `<ellipse class="nta-glow" cx="46" cy="77" rx="9" ry="5" fill="#ff7043" filter="url(#${gl})"/>` : ""}
+${stones}<g class="nt-run">${steam}</g>
+</g>
+<rect x="18" y="32" width="36" height="71" fill="#3b2412" opacity="${on ? .18 : .35}"/>
+<path d="M20 34 L30 34 L20 60 Z" fill="#fff" opacity=".14"/>
+<rect x="19.6" y="50" width="3.6" height="26" rx="1.6" fill="#e2b07a" stroke="#8d5a34" stroke-width=".5"/>
+<rect x="63" y="32" width="33" height="25" rx="2.2" fill="#263238"/>
+${ntLcd(65.5, 35, 28, 13, txt, true, on ? "#ff9800" : "#90a4ae", ntFit(txt, 28, 9.4))}
+<circle cx="70" cy="52.6" r="1.4" fill="${on ? "#ff7043" : "#546e7a"}"/><circle cx="79.5" cy="52.6" r="1.4" fill="#546e7a"/><circle cx="89" cy="52.6" r="1.4" fill="#546e7a"/>
+<circle cx="79.5" cy="77" r="11" fill="#8d5a34"/><circle cx="79.5" cy="77" r="9.2" fill="#fbf3e6"/>
+${Array.from({ length: 11 }, (_, i) => `<path d="M79.5 69.4 V71.2" stroke="#6d4c41" stroke-width=".6" transform="rotate(${-120 + i * 24} 79.5 77)"/>`).join("")}
+<path d="M73 77.5 A6.6 6.6 0 0 1 75 72" stroke="#42a5f5" stroke-width="1" fill="none"/><path d="M84 72 A6.6 6.6 0 0 1 86 77.5" stroke="#ef5350" stroke-width="1" fill="none"/>
+<text x="79.5" y="83.6" font-size="3.6" text-anchor="middle" fill="#6d4c41" font-weight="700" ${NT_FONT}>\u00b0C</text>
+<path d="M79.5 77 V69.8" stroke="#c62828" stroke-width=".9" stroke-linecap="round" transform="rotate(${deg} 79.5 77)"/><circle cx="79.5" cy="77" r="1.2" fill="#3e2723"/>
+<rect x="9" y="106" width="92" height="4" fill="#6d4123"/>`;
+}
+
+// Planted aquarium on its cabinet
+function ntAquarium(c) {
+  const wa = ntId(), cab = ntId(), sand = ntId(), ray = ntId(), gl = ntId();
+  const on = c.on;
+  const neon = (x, y) => `<g transform="translate(${x} ${y})"><ellipse rx="2.8" ry="1" fill="#cfd8dc"/><path d="M-2.4 -.2 H1.8" stroke="#00b0ff" stroke-width=".7"/><path d="M-2.6 .35 H0" stroke="#ff1744" stroke-width=".6"/><path d="M2.6 0 l1.4 -1 v2 Z" fill="#cfd8dc"/></g>`;
+  const angel = `<g transform="translate(46 50)"><path d="M6 0 L0 -4.5 L-2 -12 L-3.2 -3.5 L-7 -1.2 L-7.6 1.2 L-3.2 3.5 L-2 12 L0 4.5 Z" fill="#eceff1" stroke="#90a4ae" stroke-width=".4"/><path d="M-.2 -4.4 V4.4 M-3 -3 V3 M2.6 -2.4 V2.4" stroke="#37474f" stroke-width=".9"/><circle cx="3.6" cy="-.6" r=".7" fill="#212121"/></g>`;
+  const platy = `<g transform="translate(34 70)"><path d="M4 0 Q0 -3 -3 0 Q0 3 4 0 Z" fill="#ff8f00"/><path d="M-3 0 L-6 -2.4 L-6 2.4 Z" fill="#ffb300"/><circle cx="2.4" cy="-.4" r=".5" fill="#212121"/></g>`;
+  const grassLeaves = [18, 21, 24, 27, 30].map((x, i) => `<path class="nta-sway ntd${i + 1}" d="M${x} 82 C${x - 3} 66 ${x + 3} 52 ${x - 1} 36" stroke="${["#2e7d32", "#43a047", "#388e3c"][i % 3]}" stroke-width="1.3" fill="none"/>`).join("");
+  const redPlant = `<g class="nta-sway ntd3"><path d="M82 82 V48" stroke="#8d3a2b" stroke-width=".8"/>${[50, 56, 62, 68, 74].map((y) => `<ellipse cx="79.6" cy="${y}" rx="2.6" ry="1" fill="#e64a19" transform="rotate(-20 79.6 ${y})"/><ellipse cx="84.4" cy="${y + 1.5}" rx="2.6" ry="1" fill="#ff7043" transform="rotate(20 84.4 ${y + 1.5})"/>`).join("")}</g>`;
+  const carpet = Array.from({ length: 20 }, (_, i) => `<circle cx="${40 + i * 2.2}" cy="${81.6 - (i % 3) * .5}" r="1.1" fill="${i % 2 ? "#66bb6a" : "#7cb342"}"/>`).join("");
+  const bubbles = [0, 1, 2, 3].map((i) => `<circle class="nta-rise ntd${i + 1}" cx="${64 + (i % 2) * .8}" cy="76" r="${(.9 - i * .1).toFixed(1)}" fill="#e1f5fe" opacity="0"/>`).join("");
+  return `<defs>${ntV(wa, on ? "#b3e5fc" : "#2c3f4c", on ? "#1976d2" : "#0f1d27")}${ntV(cab, "#5d4037", "#3e2723")}${ntV(sand, "#e8d6ad", "#c2a76f")}${ntBlur(gl, 1.4)}
+<linearGradient id="${ray}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".9"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient></defs>
+${ntShadow(60, 111.4, 47)}
+<rect x="16" y="88" width="88" height="23" rx="1.5" fill="url(#${cab})"/>
+<path d="M60 90v19" stroke="#2b1b17" stroke-width=".7"/><circle cx="57.4" cy="99" r="1" fill="#bcaaa4"/><circle cx="62.6" cy="99" r="1" fill="#bcaaa4"/>
+<rect x="13" y="20" width="94" height="5" rx="1.5" fill="#263238"/>
+<rect x="16" y="24.4" width="88" height="1.3" rx=".6" fill="${on ? "#e3f2fd" : "#455a64"}"/>
+${on ? `<rect x="16" y="24" width="88" height="2.4" fill="#e3f2fd" filter="url(#${gl})"/>` : ""}
+<rect x="14" y="26" width="92" height="60" fill="url(#${wa})"/>
+${on ? `<g class="nta-rays"><polygon points="28 26 36 26 30 84 20 84" fill="url(#${ray})"/><polygon points="54 26 61 26 58 84 48 84" fill="url(#${ray})"/><polygon points="82 26 88 26 90 84 80 84" fill="url(#${ray})"/></g>` : ""}
+<path d="M14 40 q10 -6 20 0 t20 0 t20 0 t20 0 t12 -2 V86 H14 Z" fill="#000" opacity="${on ? .06 : .2}"/>
+<rect x="17" y="34" width="2.8" height="34" rx="1.4" fill="#cfd8dc" opacity=".7"/><rect x="17.4" y="34" width="2" height="5" rx="1" fill="${c.heater ? "#ff5722" : "#78909c"}"/>
+<rect x="96" y="32" width="8" height="30" rx="1.5" fill="#263238"/><path d="M97.6 36v22M100 36v22M102.4 36v22" stroke="#455a64" stroke-width=".7"/>
+${grassLeaves}${redPlant}
+<path d="M88 84 C86 74 92 70 98 66 M92 74 L99 72 M90 78 L84 70" stroke="#6d4c41" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+<path d="M30 86 Q30 76 38 75 Q46 76 46 86 Z" fill="#78909c"/><path d="M33 80 Q37 77 41 79" stroke="#b0bec5" stroke-width=".6" fill="none"/>
+<path d="M14 82 q6 -2 12 0 t12 0 t12 0 t12 0 t12 0 t12 0 t12 0 t8 0 V86 H14 Z" fill="url(#${sand})"/>${carpet}
+<circle cx="64" cy="83" r="1.6" fill="#90a4ae"/><g class="nt-run">${bubbles}</g>
+<g class="nta-swim">${angel}</g>
+<g class="nta-swimB"><g>${neon(76, 44)}${neon(80, 41)}${neon(83, 45.6)}${neon(78, 48)}${neon(86, 42.4)}</g></g>
+<g class="nta-swim ntd3">${platy}</g>
+${on ? "" : `<rect x="14" y="26" width="92" height="60" fill="#06121b" opacity=".35"/>`}
+<path d="M20 28 L30 28 L18 60 Z" fill="#fff" opacity=".1"/>
+<rect x="13" y="85" width="94" height="4" rx="1" fill="#263238"/>
+<rect x="13.4" y="25.4" width="93.2" height="60.4" fill="none" stroke="#90a4ae" stroke-width=".7" opacity=".7"/>
+${c.lcd ? `<rect x="71" y="64" width="31" height="13" rx="2" fill="#eceff1" stroke="#90a4ae" stroke-width=".5"/>${ntLcd(72.5, 65.4, 28, 10.2, c.lcd, true, "#69f0ae", ntFit(c.lcd, 28, 7.2))}` : ""}`;
+}
+
+// Linky meter on its wall
+// The meter's pulse LED: red on what is drawn, green on what is fed in (#77),
+// and the arrow that points back to the grid.
+function ntPulse(c) { return c.exp ? "#00e676" : "#ff1744"; }
+function ntExportArrow(x, y) {
+  return `<path d="M${x} ${y} l3.6 -2.6 v1.6 h4 v2 h-4 v1.6 Z" fill="#2e7d32"/>`;
+}
+function ntLinky(c) {
+  const b = ntId(), cv = ntId(), sc = ntId(), sh = ntId();
+  const val = c.lcd || "";
+  return `<defs>${ntV(b, "#d9e36a", "#bccb3d")}${ntV(cv, "#c3d03f", "#a4b22c")}${ntV(sc, "#c7d1b8", "#a8b598")}<filter id="${sh}" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="1.8"/></filter></defs>
+<rect x="33.6" y="8" width="56" height="106" rx="8" fill="#000" opacity=".22" filter="url(#${sh})"/>
+<rect x="32" y="6" width="56" height="106" rx="8" fill="url(#${b})" stroke="#9aa82a" stroke-width=".6"/>
+<path d="M36 10 H50" stroke="#fff" stroke-width="1.4" opacity=".55" stroke-linecap="round"/>
+<rect x="37" y="14" width="46" height="28" rx="2.4" fill="#5a6347"/>
+<rect x="39" y="16" width="42" height="24" rx="1.4" fill="url(#${sc})"/>
+<text x="41.5" y="23.4" font-size="6" font-weight="700" fill="#1f2a18" ${NT_FONT}>${esc(c.label || "")}</text>
+${c.tariff ? `<text x="78.5" y="23.4" font-size="4.6" text-anchor="end" fill="#1f2a18" ${NT_FONT}>${esc(c.tariff)}</text>` : ""}
+<text x="60" y="35.4" font-size="${ntFit(val, 42, 10).toFixed(1)}" font-weight="700" text-anchor="middle" fill="#1f2a18" ${NT_FONT}>${esc(val)}</text>
+<circle cx="45" cy="50" r="3.6" fill="#eef3c7" stroke="#8c9a24" stroke-width=".6"/><path d="M43.2 50h3.6M45 48.2v3.6" stroke="#4b5320" stroke-width=".7"/>
+<circle cx="56" cy="50" r="3.6" fill="#eef3c7" stroke="#8c9a24" stroke-width=".6"/><path d="M54.2 50h3.6" stroke="#4b5320" stroke-width=".7"/>
+<circle cx="74" cy="50" r="2.4" fill="${c.exp ? "#0d3d1a" : "#5d1010"}"/>${c.unav || c.still ? "" : `<circle class="${c.heavy ? "nta-blinkfast" : "nta-blink"}" cx="74" cy="50" r="2.4" fill="${ntPulse(c)}"/>`}${c.exp ? ntExportArrow(62.4, 50) : ""}
+<text x="74" y="57.4" font-size="3.6" text-anchor="middle" fill="#4b5320" ${NT_FONT}>1 Wh</text>
+<path d="M32 62 H88" stroke="#8c9a24" stroke-width=".7"/>
+<rect x="34" y="64" width="52" height="40" rx="4" fill="url(#${cv})"/>
+<text x="60" y="84" font-size="11" font-weight="700" font-style="italic" text-anchor="middle" fill="#ffffff" ${NT_FONT}>linky</text>
+<path d="M45 87.4 Q60 92 76 86" stroke="#ffffff" stroke-width="1.1" fill="none" stroke-linecap="round"/>
+<circle cx="38.6" cy="68.4" r="1.4" fill="#8c9a24"/><circle cx="81.4" cy="68.4" r="1.4" fill="#8c9a24"/>
+<path d="M81.4 69.8 q2 6 -1 10" stroke="#1565c0" stroke-width=".5" fill="none"/><rect x="78.8" y="79.4" width="3.6" height="2.4" rx=".5" fill="#1565c0"/>
+<path d="M48 112 V122" stroke="#5d4037" stroke-width="3"/><path d="M56 112 V122" stroke="#1565c0" stroke-width="3"/><path d="M64 112 V122" stroke="#5d4037" stroke-width="3"/><path d="M72 112 V122" stroke="#1565c0" stroke-width="3"/>`;
+}
+
+// A meter's index on rolling drums: whole units in white on black, the
+// fraction in red, the last drum turning while something flows (#68).
+function ntDrums(x, y, cw, h, text, dec, on) {
+  const [ip, fp = ""] = String(text || "").split(".");
+  const whole = ip.replace(/\D/g, "").slice(-5).padStart(5, "0");
+  const frac = fp.replace(/\D/g, "").slice(0, dec).padEnd(dec, "0");
+  const cells = (whole + frac).split("");
+  const cid = ntId();
+  let out = `<defs><clipPath id="${cid}"><rect x="${x + (cells.length - 1) * cw + .4}" y="${y + .4}" width="${cw - .8}" height="${h - .8}"/></clipPath></defs>`;
+  cells.forEach((d, i) => {
+    const red = i >= 5;
+    const cx = x + i * cw;
+    out += `<rect x="${cx + .4}" y="${y + .4}" width="${cw - .8}" height="${h - .8}" rx=".6" fill="${red ? "#b71c1c" : "#15191d"}"/>`;
+    if (i === cells.length - 1) {
+      // The last drum: ten figures stacked, rolling up while on.
+      const col = Array.from({ length: 11 }, (_, k) => `<text x="${cx + cw / 2}" y="${(y + h * .76 + k * h).toFixed(2)}" font-size="${(h * .72).toFixed(2)}" font-weight="700" text-anchor="middle" fill="#fff" ${NT_FONT}>${(Number(d) + k) % 10}</text>`).join("");
+      out += `<g clip-path="url(#${cid})"><g class="${on ? "nta-roll" : ""}" style="--roll:${-10 * h}px">${col}</g></g>`;
+    } else {
+      out += `<text x="${cx + cw / 2}" y="${(y + h * .76).toFixed(2)}" font-size="${(h * .72).toFixed(2)}" font-weight="700" text-anchor="middle" fill="#fff" ${NT_FONT}>${d}</text>`;
+    }
+  });
+  return out + `<rect x="${x}" y="${y}" width="${cells.length * cw}" height="${h}" rx="1" fill="none" stroke="#0b0d10" stroke-width=".8"/>
+<rect x="${x}" y="${y}" width="${cells.length * cw}" height="${(h * .35).toFixed(2)}" fill="#fff" opacity=".08"/>`;
+}
+const ntCable = (x0, n) => Array.from({ length: n }, (_, i) => `<path d="M${x0 + i * 8} 108 V122" stroke="${i % 2 ? "#1565c0" : "#5d4037"}" stroke-width="3"/>`).join("");
+// A digital electricity meter on its wall: its display, a pulse LED, its
+// plate and its cables.
+function ntMeterBox(c) {
+  const b = ntId(), sh = ntId();
+  return `<defs>${ntV(b, "#f5f7f9", "#d3d9df")}${ntBlur(sh, 2.2)}</defs>
+<rect x="31.6" y="9.4" width="60" height="98" rx="6" fill="#000" opacity=".2" filter="url(#${sh})"/>
+<rect x="30" y="8" width="60" height="98" rx="6" fill="url(#${b})" stroke="#a7b0b9" stroke-width=".7"/>
+<path d="M34 12 H52" stroke="#fff" stroke-width="1.4" opacity=".7" stroke-linecap="round"/>
+<rect x="35" y="15" width="50" height="30" rx="2.6" fill="#3c4550"/>
+${ntLcd(37, 17, 46, 17, c.lcd, !c.unav, "#9be7ff", ntFit(c.lcd, 46, 10))}
+${c.today ? `<text x="60" y="41.4" font-size="${ntFit(c.today, 44, 5).toFixed(1)}" text-anchor="middle" fill="#c8d2dc" ${NT_FONT}>${esc(c.today)}</text>` : ""}
+<circle cx="42" cy="54" r="2.4" fill="${c.exp ? "#0d3d1a" : "#4a1010"}"/>${c.unav || c.still ? "" : `<circle class="${c.heavy ? "nta-blinkfast" : "nta-blink"}" cx="42" cy="54" r="2.4" fill="${ntPulse(c)}"/>`}${c.exp ? ntExportArrow(47.4, 54) : ""}
+<text x="42" y="61" font-size="3.4" text-anchor="middle" fill="#5d6773" ${NT_FONT}>imp/kWh</text>
+<rect x="64" y="51" width="8" height="5" rx="2.5" fill="#9aa4ae"/><rect x="75" y="51" width="8" height="5" rx="2.5" fill="#9aa4ae"/>
+<rect x="38" y="66" width="44" height="24" rx="2" fill="#e9edf0" stroke="#b9c1c9" stroke-width=".5"/>
+<text x="42" y="74" font-size="4.6" font-weight="700" fill="#37414b" ${NT_FONT}>kWh</text>
+<text x="42" y="80" font-size="3" fill="#6b7580" ${NT_FONT}>230 V  50 Hz  5(60) A</text>
+${[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11].map((i) => `<rect x="${55 + i * 2.1}" y="83" width="${i % 3 ? .9 : 1.5}" height="5" fill="#37414b"/>`).join("")}
+<rect x="34" y="94" width="52" height="12" rx="3" fill="#c7ced5" stroke="#a7b0b9" stroke-width=".5"/>
+${ntCable(48, 4)}`;
+}
+// A North American meter: a glass dome on its socket box, a dial plate and a
+// display under the glass.
+function ntMeterDome(c) {
+  const box = ntId(), gl = ntId(), sh = ntId(), rim = ntId();
+  return `<defs>${ntV(box, "#c9d0d6", "#9aa4ad")}${ntV(rim, "#eef1f3", "#a9b2ba")}${ntBlur(sh, 2.2)}
+<radialGradient id="${gl}" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#ffffff" stop-opacity=".75"/><stop offset=".5" stop-color="#dbeaf3" stop-opacity=".25"/><stop offset="1" stop-color="#9fb8c8" stop-opacity=".4"/></radialGradient></defs>
+<rect x="27.6" y="13.4" width="68" height="94" rx="8" fill="#000" opacity=".2" filter="url(#${sh})"/>
+<rect x="26" y="12" width="68" height="94" rx="8" fill="url(#${box})" stroke="#8a949d" stroke-width=".7"/>
+<circle cx="60" cy="56" r="31" fill="url(#${rim})" stroke="#7d8790" stroke-width=".8"/>
+<circle cx="60" cy="56" r="27" fill="#f6f8f9"/>
+<text x="60" y="38" font-size="5" font-weight="700" text-anchor="middle" fill="#37414b" ${NT_FONT}>kWh</text>
+<text x="60" y="43" font-size="3" text-anchor="middle" fill="#6b7580" ${NT_FONT}>CL200  240V  3W</text>
+${ntLcd(44, 46, 32, 14, c.lcd, !c.unav, "#9be7ff", ntFit(c.lcd, 32, 8))}
+${c.today ? `<text x="60" y="68" font-size="${ntFit(c.today, 40, 4.4).toFixed(1)}" text-anchor="middle" fill="#37414b" ${NT_FONT}>${esc(c.today)}</text>` : ""}
+<rect x="57.4" y="72" width="5.2" height="2.6" rx=".6" fill="${c.exp ? "#0d3d1a" : "#3b1010"}"/>${c.unav || c.still ? "" : `<rect class="${c.heavy ? "nta-blinkfast" : "nta-blink"}" x="57.4" y="72" width="5.2" height="2.6" rx=".6" fill="${ntPulse(c)}"/>`}${c.exp ? ntExportArrow(64.4, 73.3) : ""}
+<circle cx="60" cy="56" r="27" fill="url(#${gl})"/>
+<path d="M41 40 A24 24 0 0 1 58 31" stroke="#fff" stroke-width="2.2" fill="none" opacity=".7" stroke-linecap="round"/>
+<rect x="54" y="106" width="12" height="16" fill="#8a949d"/><rect x="52" y="104" width="16" height="4" rx="1" fill="#7a848d"/>`;
+}
+// A diaphragm gas meter: its two pipes on top, its window of drums.
+function ntGas(c) {
+  const b = ntId(), sh = ntId(), p = ntId();
+  const pipe = (x) => `<rect x="${x}" y="-6" width="9" height="30" fill="url(#${p})"/><rect x="${x - 2}" y="18" width="13" height="8" rx="1.4" fill="#b8892f" stroke="#8a6420" stroke-width=".5"/>`;
+  return `<defs>${ntV(b, "#ecebe3", "#cdc9bb")}${ntBlur(sh, 2.4)}<linearGradient id="${p}" x1="0" x2="1"><stop offset="0" stop-color="#a6adb4"/><stop offset=".45" stop-color="#e3e7ea"/><stop offset="1" stop-color="#8d959c"/></linearGradient></defs>
+${pipe(32)}${pipe(79)}
+<rect x="23.6" y="27.4" width="76" height="80" rx="7" fill="#000" opacity=".2" filter="url(#${sh})"/>
+<rect x="22" y="26" width="76" height="80" rx="7" fill="url(#${b})" stroke="#a8a291" stroke-width=".8"/>
+<path d="M26 31 H58" stroke="#fff" stroke-width="1.6" opacity=".6" stroke-linecap="round"/>
+<rect x="29" y="38" width="62" height="20" rx="3" fill="#3a3f45"/>
+${ntDrums(31, 41.5, 7.25, 13, c.counter, 3, c.on && !c.unav)}
+<text x="88" y="64" font-size="4.6" font-weight="700" text-anchor="end" fill="#4a4538" ${NT_FONT}>m\u00b3</text>
+<text x="31" y="64" font-size="3.4" fill="#6f6857" ${NT_FONT}>G4  Qmax 6 m\u00b3/h</text>
+${c.lcd ? `<text x="60" y="76" font-size="${ntFit(c.lcd, 56, 7).toFixed(1)}" font-weight="700" text-anchor="middle" fill="#4a4538" ${NT_FONT}>${esc(c.lcd)}</text>` : ""}
+${c.today ? `<text x="60" y="86" font-size="${ntFit(c.today, 56, 5).toFixed(1)}" text-anchor="middle" fill="#6f6857" ${NT_FONT}>${esc(c.today)}</text>` : ""}
+<rect x="30" y="92" width="60" height="8" rx="2" fill="#dcd7c8" stroke="#b5ae9b" stroke-width=".5"/>`;
+}
+// A water meter on its pipe: brass body, a dial with its drums, the litre
+// dials and the star that turns as soon as water runs.
+function ntWater(c) {
+  const br = ntId(), sh = ntId(), p = ntId();
+  const on = c.on && !c.unav;
+  const dial = (x, y) => `<circle cx="${x}" cy="${y}" r="3.6" fill="#fff" stroke="#b71c1c" stroke-width=".6"/><g class="${on ? "nta-spin" : ""}"><path d="M${x} ${y + .6} L${x} ${y - 3}" stroke="#b71c1c" stroke-width=".9" stroke-linecap="round"/></g>`;
+  const star = `<g class="${on ? "nta-spin" : ""}"><path d="M60 82 l1.3 -3.4 1.3 3.4 3.4 -1.3 -2.1 3 2.1 3 -3.4 -1.3 -1.3 3.4 -1.3 -3.4 -3.4 1.3 2.1 -3 -2.1 -3 3.4 1.3 Z" fill="#c62828"/><circle cx="60" cy="84.4" r=".9" fill="#fff"/></g>`;
+  return `<defs><radialGradient id="${br}" cx=".4" cy=".35" r=".75"><stop offset="0" stop-color="#f3d27c"/><stop offset=".6" stop-color="#c9952f"/><stop offset="1" stop-color="#8f6519"/></radialGradient>${ntBlur(sh, 2.4)}
+<linearGradient id="${p}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e3e7ea"/><stop offset=".5" stop-color="#b4bcc3"/><stop offset="1" stop-color="#7f878e"/></linearGradient></defs>
+<rect x="-2" y="68" width="36" height="12" fill="url(#${p})"/><rect x="86" y="68" width="36" height="12" fill="url(#${p})"/>
+<path d="M22 65 h8 l2 4 v10 l-2 4 h-8 l-2 -4 v-10 Z" fill="#c9952f" stroke="#8f6519" stroke-width=".5"/><path d="M90 65 h8 l2 4 v10 l-2 4 h-8 l-2 -4 v-10 Z" fill="#c9952f" stroke="#8f6519" stroke-width=".5"/>
+<ellipse cx="61.6" cy="77.4" rx="31" ry="30" fill="#000" opacity=".2" filter="url(#${sh})"/>
+<circle cx="60" cy="74" r="31" fill="url(#${br})" stroke="#7a5512" stroke-width=".8"/>
+<circle cx="60" cy="74" r="25.5" fill="#1e5aa8"/>
+<circle cx="60" cy="74" r="23.6" fill="#f8f8f3"/>
+<text x="60" y="59" font-size="4.4" font-weight="700" text-anchor="middle" fill="#1e3a68" ${NT_FONT}>m\u00b3</text>
+${ntDrums(43.6, 61, 4.1, 7.6, c.counter, 3, on)}
+${dial(49, 77)}${dial(71, 77)}
+${star}
+<path d="M44 57 A22 22 0 0 1 60 51" stroke="#fff" stroke-width="2" fill="none" opacity=".8" stroke-linecap="round"/>
+${c.lcd ? `<text x="60" y="114" font-size="${ntFit(c.lcd, 80, 7).toFixed(1)}" font-weight="700" text-anchor="middle" fill="#37414b" ${NT_FONT}>${esc(c.lcd)}</text>` : ""}
+${c.today ? `<text x="60" y="122" font-size="${ntFit(c.today, 80, 5).toFixed(1)}" text-anchor="middle" fill="#6b7580" ${NT_FONT}>${esc(c.today)}</text>` : ""}`;
+}
+
+// Christmas tree: the lights, the baubles and the star in a palette
+function ntTree(c) {
+  const gr = ntId(), st = ntId(), gl = ntId(), pot = ntId();
+  const on = c.on;
+  const pal = TREE_PALETTES[c.palette] || TREE_PALETTES.multicolor;
+  const tier = (yt, yb, w) => {
+    let d = `M60 ${yt} L${60 + w} ${yb}`;
+    const n = Math.round(w / 3.6);
+    for (let i = 1; i <= 2 * n; i++) { const x = 60 + w - (i * w) / n; d += ` L${x.toFixed(1)} ${i % 2 ? yb - 3.4 : yb}`; }
+    return `<path d="${d} Z" fill="url(#${gr})" stroke="#1b5e20" stroke-width=".5" stroke-linejoin="round"/>` +
+      [-.6, -.3, .3, .6].map((k) => `<path d="M60 ${yt + 4} L${(60 + w * k).toFixed(1)} ${yb - 3}" stroke="#66bb6a" stroke-width=".6" opacity=".45"/>`).join("");
+  };
+  const tiers = [[52, 94, 44], [38, 78, 35], [24, 62, 26], [12, 45, 17]];
+  let k = 0;
+  const lights = tiers.map(([, yb, w]) => {
+    const a = [60 - w * .78, yb - 14], m = [60 + w * .1, yb - 1], b = [60 + w * .82, yb - 7];
+    const q = (s) => [(1 - s) ** 2 * a[0] + 2 * (1 - s) * s * m[0] + s * s * b[0], (1 - s) ** 2 * a[1] + 2 * (1 - s) * s * m[1] + s * s * b[1]];
+    const tinsel = `<path d="M${(60 - w * .7).toFixed(1)} ${yb - 5} Q60 ${yb - 14} ${(60 + w * .72).toFixed(1)} ${yb - 12}" stroke="${pal.tinsel[k % pal.tinsel.length]}" stroke-width="1.4" stroke-dasharray="1.4 .6" fill="none" opacity=".85"/>`;
+    const wire = `<path d="M${a[0].toFixed(1)} ${a[1]} Q${m[0].toFixed(1)} ${m[1]} ${b[0].toFixed(1)} ${b[1]}" stroke="#2e5e2e" stroke-width=".7" fill="none" opacity=".9"/>`;
+    const bulbs = [.12, .3, .48, .66, .84].map((s) => {
+      const [x, y] = q(s); const col = pal.lights[k % pal.lights.length]; const dl = `ntd${(k++ % 6) + 1}`;
+      return on
+        ? `<circle class="nta-twinkle ${dl}" cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="3" fill="${col}" opacity=".7" filter="url(#${gl})"/><circle class="nta-twinkle ${dl}" cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="1.3" fill="${col}"/>`
+        : `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="1.3" fill="#b0b5bb" stroke="#7d8590" stroke-width=".3"/>`;
+    }).join("");
+    return tinsel + wire + bulbs;
+  }).join("");
+  const balls = [[44, 92], [76, 91], [60, 86], [33, 93], [87, 93], [49, 75], [72, 74], [40, 77], [80, 77], [55, 60], [67, 58], [46, 62], [74, 61], [60, 44], [54, 46], [66, 47]]
+    .map(([x, y], i) => `<rect x="${x - .8}" y="${y - 3.6}" width="1.6" height="1.2" fill="#bdbdbd"/><circle cx="${x}" cy="${y}" r="2.6" fill="${pal.balls[i % pal.balls.length]}"/><circle cx="${x - .8}" cy="${y - .9}" r=".8" fill="#fff" opacity=".75"/>`).join("");
+  let star = "";
+  for (let i = 0; i < 10; i++) { const r = i % 2 ? 3.2 : 7.4, ang = -Math.PI / 2 + i * Math.PI / 5; star += `${i ? "L" : "M"}${(60 + r * Math.cos(ang)).toFixed(1)} ${(10 + r * Math.sin(ang)).toFixed(1)}`; }
+  const G = pal.gifts, R = pal.ribbons, edge = `stroke="#263238" stroke-width=".5" stroke-opacity=".7"`;
+  const bow = (x, y, col) => `<path d="M${x} ${y} q-4 -4 -5 0 q4 1 5 0 q4 -4 5 0 q-4 1 -5 0" fill="${col}" stroke="#263238" stroke-width=".35" stroke-opacity=".6"/>`;
+  const presents = c.presents
+    ? `<rect x="9" y="106" width="9" height="7" rx=".8" fill="${G[2]}" ${edge}/><path d="M13.5 106v7M9 109.5h9" stroke="${R[2]}" stroke-width="1"/>
+<rect x="18" y="100" width="20" height="13" rx="1" fill="${G[0]}" ${edge}/><path d="M28 100v13M18 106.5h20" stroke="${R[0]}" stroke-width="1.6"/>${bow(28, 100, R[0])}
+<rect x="82" y="96" width="18" height="17" rx="1" fill="${G[1]}" ${edge}/><path d="M91 96v17M82 104.5h18" stroke="${R[1]}" stroke-width="1.6"/>${bow(91, 96, R[1])}
+<rect x="101" y="105" width="9" height="8" rx=".8" fill="${G[3]}" ${edge}/><path d="M105.5 105v8" stroke="${R[3]}" stroke-width="1.2"/>`
+    : "";
+  return `<defs>${ntV(gr, "#43a047", "#1b5e20")}${ntV(st, pal.star[0], pal.star[1])}${ntBlur(gl, 1.4)}${ntV(pot, pal.pot[0], pal.pot[1])}</defs>
+${ntShadow(60, 113.2, 48)}
+<rect x="56" y="92" width="8" height="8" fill="#6d4c41"/>
+<path d="M46 98 H74 L71 112 H49 Z" fill="url(#${pot})" stroke="#263238" stroke-width=".5" stroke-opacity=".6"/><rect x="45" y="97" width="30" height="3" rx="1" fill="${pal.star[1]}"/>
+${tiers.map(([yt, yb, w]) => tier(yt, yb, w)).join("")}
+${balls}${lights}
+${on ? `<circle class="nta-glow" cx="60" cy="10" r="9" fill="${pal.star[0]}" filter="url(#${gl})"/>` : ""}
+<path d="${star}Z" fill="${on ? `url(#${st})` : "#d6d9dd"}" stroke="${on ? pal.star[2] : "#9aa1ab"}" stroke-width=".5"/>
+${presents}`;
+}
+
+// Electric rides on their charger (#72): a scooter, an off-road scooter like
+// the Ausom DT2 Pro, an e-bike, a gyropode and an electric motorcycle, front
+// to the left. The charger's light is red while it charges, green once
+// full; the current runs from the charger to the vehicle.
+// A wheel: tyre, rim, hub; knobs for an off-road tyre, spokes for a bike.
+function mobWheel(cx, cy, r, o = {}) {
+  const t = o.tyre || "#1e2226";
+  let s = `<circle cx="${cx}" cy="${cy}" r="${r}" fill="${t}"/>`;
+  if (o.knobby) {
+    const n = 18;
+    for (let i = 0; i < n; i++) {
+      const a = (i / n) * Math.PI * 2;
+      const x = cx + Math.cos(a) * (r - .2), y = cy + Math.sin(a) * (r - .2);
+      s += `<rect x="${(x - 1.6).toFixed(2)}" y="${(y - 1.1).toFixed(2)}" width="3.2" height="2.2" rx=".6" fill="${t}" transform="rotate(${(a * 180 / Math.PI + 90).toFixed(1)} ${x.toFixed(2)} ${y.toFixed(2)})"/>`;
+    }
+  }
+  const rim = o.rim || r * .58;
+  if (o.spokes) {
+    s += `<circle cx="${cx}" cy="${cy}" r="${r - 1.8}" fill="none" stroke="#8a939d" stroke-width=".9"/>`;
+    for (let i = 0; i < 16; i++) { const a = i / 16 * Math.PI * 2; s += `<path d="M${cx} ${cy} L${(cx + Math.cos(a) * (r - 2)).toFixed(2)} ${(cy + Math.sin(a) * (r - 2)).toFixed(2)}" stroke="#a7aeb6" stroke-width=".35"/>`; }
+    s += `<circle cx="${cx}" cy="${cy}" r="2.2" fill="#3b4148"/>`;
+    return s;
+  }
+  s += `<circle cx="${cx}" cy="${cy}" r="${rim}" fill="${o.rimColor || "#4a525b"}"/>`;
+  if (o.disc) s += `<circle cx="${cx}" cy="${cy}" r="${rim * .82}" fill="none" stroke="#b9c0c8" stroke-width="1.2" stroke-dasharray="1.4 .8"/>`;
+  s += `<circle cx="${cx}" cy="${cy}" r="${rim * .38}" fill="#22272c"/><circle cx="${cx}" cy="${cy}" r="${rim * .14}" fill="#9aa3ad"/>`;
+  return s;
+}
+
+// The charger on the floor, its cable to the vehicle's port; its light red
+// while charging, green once full, dark when the plug is off.
+function mobCharger(x, port, c) {
+  const led = c.st === "charging" ? "#ff5252" : c.st === "full" ? "#43a047" : "#3a4048";
+  const [px, py] = port;
+  // Unplugged, its cable lies on the floor and its plug is free.
+  const lying = c.st === "off";
+  const cable = lying ? `M${x} 104 C${x - 6} 107.4 ${x - 14} 107.4 ${x - 20} 106.6` : `M${px} ${py} C${px + 2} ${py + 14} ${x - 10} 104 ${x} 103`;
+  return `<path d="${cable}" stroke="#2a2f35" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+${c.st === "charging" ? `<path class="nta-feed" d="${cable}" stroke="#ffca28" stroke-width=".9" fill="none" stroke-dasharray="2 4"/>` : ""}
+${lying ? `<rect x="${x - 25}" y="104.6" width="5.4" height="3.4" rx="1" fill="#2a2f35"/>` : ""}
+<circle cx="${px}" cy="${py}" r="1.5" fill="#15181c"/>
+<rect x="${x}" y="98" width="20" height="10" rx="2.2" fill="#24292e"/><rect x="${x + 1}" y="98.8" width="18" height="2.4" rx="1.2" fill="#fff" opacity=".08"/>
+<circle class="${c.st === "charging" ? "nta-led" : ""}" cx="${x + 16}" cy="101.6" r="1.3" fill="${led}"/>
+<path d="M${x + 20} 104 C${x + 26} 104 ${x + 28} 106 116 106" stroke="#2a2f35" stroke-width="1.3" fill="none"/>`;
+}
+
+// Unplugged, the ride is greyed out.
+const mobGrey = (c) => (c.st === "off" ? ' opacity=".5" style="filter:grayscale(1)"' : "");
+
+// One bar of four: the real level when it is known (a bar per quarter, the
+// next one blinking while it charges), else the bars filling from 0 to 4 in
+// turn while it charges, all four once full, none lit when nothing says.
+function mobBar(c, i, lit, dim) {
+  if (c.level !== null && c.level !== undefined) {
+    const n = c.st === "full" ? 4 : Math.max(0, Math.min(4, Math.ceil(c.level / 25)));
+    const low = n <= 1 && c.st !== "charging";
+    if (i < n) return `fill="${low ? "#e53935" : lit}"`;
+    if (c.st === "charging" && i === n) return `class="nta-next" fill="${lit}"`;
+    return `fill="${dim}"`;
+  }
+  if (c.st === "charging") return `class="nta-bar${i + 1}" fill="${lit}"`;
+  return `fill="${c.st === "full" ? lit : dim}"`;
+}
+
+// The battery gauge over the vehicle, four bars read by mobBar.
+function mobGauge(cx, cy, c) {
+  const bars = [0, 1, 2, 3].map((i) => `<rect x="${cx - 9.2 + i * 4.4}" y="${cy - 2.6}" width="3.6" height="5.2" rx=".6" ${mobBar(c, i, "#43a047", "#dfe3e7")}/>`).join("");
+  return `<rect x="${cx - 11}" y="${cy - 4.4}" width="20" height="8.8" rx="2" fill="#fff" stroke="#9aa3ad" stroke-width=".8"/><rect x="${cx + 9}" y="${cy - 1.6}" width="1.6" height="3.2" rx=".6" fill="#9aa3ad"/>${bars}
+${c.st === "charging" ? `<path class="nta-led" d="M${cx + 15} ${cy - 5} l-3 5.4 h2.4 l-1.4 4.6 l4 -6 h-2.4 l1.6 -4 Z" fill="#ffb300" stroke="#e65100" stroke-width=".3"/>` : ""}`;
+}
+
+// A commuter scooter, Segway / Ninebot style, front to the left.
+function mobScooter(c) {
+  const g = ntId();
+  return `<defs>${ntV(g, "#7d858e", "#4c535b")}</defs>${ntShadow(58, 110, 46)}<g${mobGrey(c)}>
+${mobWheel(22, 98, 10)}${mobWheel(94, 98, 10)}
+<path d="M84 88 Q94 82 104 90 L104 92 Q94 86 86 91 Z" fill="#1f2328"/>
+<path d="M28 90 L34 84 H86 L88 90 Q87 93 84 93 H32 Q29 93 28 90 Z" fill="#23272c"/>
+<path d="M40 86.4 H80" stroke="#5a626b" stroke-width="1.6" stroke-linecap="round"/>
+<path d="M22 98 L27 74 L33 84" stroke="url(#${g})" stroke-width="5" fill="none" stroke-linejoin="round"/>
+<path d="M27 76 L37 20" stroke="#1e2226" stroke-width="3.6" stroke-linecap="round"/>
+<path d="M36 22 L37 16" stroke="#1e2226" stroke-width="3" stroke-linecap="round"/>
+<path d="M33 16.6 L44 15" stroke="#1e2226" stroke-width="3" stroke-linecap="round"/><path d="M40 15.4 L46 14.6" stroke="#3b4148" stroke-width="3.4" stroke-linecap="round"/>
+<path d="M34 24 Q30 34 31 46" stroke="#e53935" stroke-width=".7" fill="none"/>
+<rect x="23.6" y="80" width="3.4" height="4" rx="1" fill="#f5f5f5" opacity=".85"/>
+<rect x="100" y="89" width="3" height="1.6" rx=".6" fill="#e53935"/>
+</g>${mobCharger(60, [38, 88], c)}${mobGauge(78, 52, c)}`;
+}
+
+// Ausom DT2 Pro: dual motors, off-road tyres, swing arms, yellow touches.
+function mobOffroad(c) {
+  const g = ntId(), d = ntId();
+  return `<defs>${ntV(g, "#5c636b", "#2f3439")}${ntV(d, "#4a5057", "#24282c")}</defs>${ntShadow(60, 110, 50)}<g${mobGrey(c)}>
+${mobWheel(20, 96, 12, { knobby: true, disc: true })}${mobWheel(98, 96, 12, { knobby: true, disc: true })}
+<path d="M88 84 L98 96" stroke="#3a4046" stroke-width="5" stroke-linecap="round"/>
+<path d="M90 84 Q100 74 110 84 L110 87 Q100 79 92 88 Z" fill="#2a2f34"/>
+<path d="M30 92 L36 82 H86 L90 90 Q89 94 85 94 H33 Q30 94 30 92 Z" fill="url(#${d})"/>
+<text x="62" y="91.6" font-size="3.2" font-weight="700" text-anchor="middle" fill="#c9ced3" font-family="Arial, sans-serif" letter-spacing=".3">AUSOM</text>
+<path d="M80 82 L82 74 H90" stroke="#2a2f34" stroke-width="2.4" fill="none" stroke-linejoin="round"/>
+<path d="M20 96 L28 80" stroke="#3a4046" stroke-width="4.4" stroke-linecap="round"/>
+<path d="M27 82 L33 77 L37 83" stroke="url(#${g})" stroke-width="5.6" fill="none" stroke-linejoin="round"/>
+<path d="M25.4 86.4 L29 80.6" stroke="#ffb300" stroke-width="2.2" stroke-dasharray="1 .7"/>
+<path d="M31 78 L40 18" stroke="url(#${g})" stroke-width="4.6" stroke-linecap="round"/>
+<circle cx="33.4" cy="62" r="2.4" fill="#ffb300"/><circle cx="33.4" cy="62" r=".9" fill="#c77800"/>
+<path d="M36 40 L37.4 32" stroke="#ffb300" stroke-width="1.6" stroke-linecap="round" opacity=".9"/>
+<path d="M33 16.4 L47 14" stroke="#1e2226" stroke-width="3" stroke-linecap="round"/><path d="M42 14.8 L49 13.6" stroke="#3b4148" stroke-width="3.6" stroke-linecap="round"/>
+<rect x="37" y="11.6" width="5" height="3.4" rx=".8" fill="#14181c"/><rect x="37.8" y="12.4" width="3.4" height="1.8" rx=".4" fill="${c.st === "off" ? "#2b3138" : "#4fc3f7"}"/>
+<circle cx="33" cy="26" r="1.8" fill="#fffde7" stroke="#2a2f34" stroke-width=".6"/>
+<rect x="107" y="85" width="3" height="1.8" rx=".6" fill="#e53935"/>
+</g>${mobCharger(62, [42, 89], c)}${mobGauge(80, 50, c)}`;
+}
+
+// An e-bike: its battery along the down tube, the motor at the cranks.
+function mobEbike(c) {
+  const f = "#2e7d6b";
+  // The down tube runs from the head tube (46,62) to the cranks (60,92); the
+  // battery lies on its upper side, along it.
+  const ang = (Math.atan2(30, 14) * 180 / Math.PI).toFixed(1);
+  const bars = [0, 1, 2, 3].map((i) => `<rect x="${4 + i * 2}" y="-1.6" width="1.3" height="3.2" rx=".4" ${mobBar(c, i, "#69f0ae", "#4a525b")}/>`).join("");
+  return `${ntShadow(60, 110, 52)}<g${mobGrey(c)}>
+${mobWheel(24, 92, 17, { spokes: true })}${mobWheel(96, 92, 17, { spokes: true })}
+<path d="M24 92 L46 62 L82 62 L96 92 M46 62 L60 92 L82 62 M60 92 L96 92" stroke="${f}" stroke-width="3" fill="none" stroke-linejoin="round" stroke-linecap="round"/>
+<g transform="translate(55.6 76.4) rotate(${ang})"><rect x="-13" y="-3.4" width="24" height="6.8" rx="2.6" fill="#30363c"/><rect x="-11" y="-2.6" width="16" height="1.2" rx=".6" fill="#fff" opacity=".12"/>${bars}</g>
+<path d="M46 62 L44 50 Q44 47 47 47 H52" stroke="#1e2226" stroke-width="2.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/><path d="M50 47 H54" stroke="#3b4148" stroke-width="3.2" stroke-linecap="round"/>
+<path d="M82 62 L85 48" stroke="#9aa3ad" stroke-width="2.2" stroke-linecap="round"/>
+<path d="M79 47 Q86 44.6 93 46.4 Q93 48.6 88 48.6 H81 Q78.6 48.4 79 47 Z" fill="#1e2226"/>
+<circle cx="60" cy="92" r="4.6" fill="#3b4148"/><circle cx="60" cy="92" r="2" fill="#6c757e"/>
+<path d="M60 92 L64 98" stroke="#22272c" stroke-width="1.6"/><rect x="62" y="97" width="5" height="1.6" rx=".6" fill="#22272c"/>
+<circle cx="43" cy="57" r="1.8" fill="#fffde7" stroke="#2a2f34" stroke-width=".5"/>
+<path d="M88 66 L92 66" stroke="#e53935" stroke-width="1.6" stroke-linecap="round"/>
+</g>${mobCharger(70, [52, 78], c)}${mobGauge(98, 30, c)}`;
+}
+
+// A self-balancing gyropode (Segway PT): two wheels side by side, a platform
+// between them, a tall stem and its handlebar.
+function mobGyropode(c) {
+  const g = ntId();
+  return `<defs>${ntV(g, "#e9edf1", "#a9b2bc")}</defs>${ntShadow(52, 110, 30)}<g${mobGrey(c)}>
+${mobWheel(52, 92, 17, { rim: 9.6 })}
+<path d="M34 96 H70 Q72 96 72 98 V101 Q72 103 70 103 H34 Q32 103 32 101 V98 Q32 96 34 96 Z" fill="#22272c"/>
+<rect x="34" y="92.6" width="36" height="4" rx="1.4" fill="#3b4148"/>
+<path d="M44 80 Q52 76 60 80 L58 94 H46 Z" fill="url(#${g})" stroke="#8a939d" stroke-width=".6"/>
+<path d="M52 82 L56 22" stroke="#2a2f34" stroke-width="3.6" stroke-linecap="round"/>
+<path d="M48 22 H64" stroke="#2a2f34" stroke-width="3.2" stroke-linecap="round"/><path d="M47 22 H51 M61 22 H65" stroke="#4a525b" stroke-width="4" stroke-linecap="round"/>
+<rect x="53.4" y="25" width="5" height="3.4" rx=".8" fill="#14181c"/><rect x="54.2" y="25.8" width="3.4" height="1.8" rx=".4" fill="${c.st === "off" ? "#2b3138" : "#4fc3f7"}"/>
+</g>${mobCharger(82, [58, 88], c)}${mobGauge(84, 50, c)}`;
+}
+
+// An electric motorcycle, neo-retro like the Super Soco TC Max: round
+// headlight, a tank that holds the battery, flat ribbed seat, silver swing
+// arm and the motor in the rear hub. Front to the left like the others.
+function mobAlloy(cx, cy, r) {
+  let s = `<circle cx="${cx}" cy="${cy}" r="${r}" fill="#1b1f23"/><circle cx="${cx}" cy="${cy}" r="${r - 2.6}" fill="#2c3238"/><circle cx="${cx}" cy="${cy}" r="${r - 3.4}" fill="#14171a"/>`;
+  for (let i = 0; i < 5; i++) {
+    const a = i / 5 * Math.PI * 2 - Math.PI / 2;
+    const x1 = cx + Math.cos(a - .12) * (r - 3.4), y1 = cy + Math.sin(a - .12) * (r - 3.4);
+    const x2 = cx + Math.cos(a + .12) * (r - 3.4), y2 = cy + Math.sin(a + .12) * (r - 3.4);
+    s += `<path d="M${cx} ${cy} L${x1.toFixed(2)} ${y1.toFixed(2)} L${x2.toFixed(2)} ${y2.toFixed(2)} Z" fill="#3d444c"/>`;
+  }
+  return s;
+}
+function mobMotorcycle(c) {
+  const b = ntId(), sv = ntId(), sh = ntId();
+  // Low and long: the seat about 1.3 wheels high, as on the real bike.
+  return `<defs>${ntV(b, "#4a525b", "#16191c")}${ntV(sv, "#e9edf1", "#9aa3ad")}${ntV(sh, "#30363c", "#111316")}</defs>${ntShadow(60, 110, 56)}<g${mobGrey(c)}>
+${mobAlloy(22, 92, 16)}<circle cx="22" cy="92" r="7.6" fill="none" stroke="#c4cbd2" stroke-width="1.4" stroke-dasharray="1.6 .9"/><circle cx="22" cy="92" r="2.2" fill="#9aa3ad"/>
+${mobAlloy(98, 92, 16)}<circle cx="98" cy="92" r="6.8" fill="url(#${sv})"/><circle cx="98" cy="92" r="3" fill="#5a636c"/>
+<path d="M85 76 Q98 66 112 77 L111 80 Q98 70 87 79 Z" fill="#1f2328"/>
+<rect x="107" y="75" width="6" height="4.4" rx=".8" fill="#e9edf1" stroke="#9aa3ad" stroke-width=".4"/>
+<path d="M64 86 L98 92" stroke="url(#${sv})" stroke-width="4.4" stroke-linecap="round"/>
+<path d="M78 66 L82 84" stroke="#e9edf1" stroke-width="2.6" stroke-linecap="round"/><path d="M78.6 68.6 L81.6 81" stroke="#e53935" stroke-width="1.6" stroke-dasharray="1 .8"/>
+<path d="M36 56 L22 92" stroke="#1f2328" stroke-width="4" stroke-linecap="round"/><path d="M27.6 77 L23 90" stroke="#c4cbd2" stroke-width="2.6" stroke-linecap="round"/>
+<path d="M76 62 L106 61 L103 67 H78 Z" fill="#1f2328"/><path d="M103 66 L108 75" stroke="#1f2328" stroke-width="1.8" stroke-linecap="round"/>
+<path d="M105 60.6 L109.6 61.4 L108.8 64.4 L104.4 63.8 Z" fill="#e53935"/>
+<path d="M38 58 L54 54 Q70 52 78 58 L80 70 L76 84 H50 Q42 82 40 72 Z" fill="url(#${b})"/>
+<path d="M44 72 H79 L76 84 H50 Q45 81 44 72 Z" fill="url(#${sv})"/>
+<text x="64" y="81" font-size="4.4" font-weight="700" font-style="italic" text-anchor="middle" fill="#5a636c" font-family="Arial, sans-serif">TC</text>
+<path d="M48 60 Q60 56 72 60" stroke="#fff" stroke-width=".8" fill="none" opacity=".18"/>
+<circle cx="58" cy="65" r="2.4" fill="#2a3036" stroke="#7d868f" stroke-width=".5"/>
+<path d="M70 57 Q72 54 78 54 H101 Q107 54.4 107 58 L106 61.4 H72 Q69 60.6 70 57 Z" fill="url(#${sh})"/>
+${[0, 1, 2, 3, 4, 5, 6].map((i) => `<path d="M${79 + i * 3.6} 55 V61" stroke="#4a525b" stroke-width=".5"/>`).join("")}
+<path d="M72 54.8 H105" stroke="#c4cbd2" stroke-width=".6"/>
+<path d="M37 55 L42 46 M42 46 L49 47" stroke="#1f2328" stroke-width="2.2" stroke-linecap="round"/><path d="M46 46.8 L51 47.6" stroke="#3b4148" stroke-width="3" stroke-linecap="round"/>
+<path d="M41 47 L38 38" stroke="#1f2328" stroke-width="1"/><circle cx="37.6" cy="36.4" r="2.6" fill="#2a2f34" stroke="#9aa3ad" stroke-width=".6"/>
+<ellipse cx="30.6" cy="62" rx="4.4" ry="5.4" fill="#2a2f34" stroke="#c4cbd2" stroke-width=".9"/><ellipse cx="28.4" cy="62" rx="2" ry="4.2" fill="#fffde7"/>
+<path d="M62 86 L66 86" stroke="#9aa3ad" stroke-width="1.8" stroke-linecap="round"/>
+</g>${mobCharger(70, [76, 74], c)}${mobGauge(88, 30, c)}`;
+}
+
+// Watering, a self-cleaning litter box, a smoke, CO or leak detector and a
+// speaker.
+// A round island of lawn, seen in three-quarter view: its edge of soil, its
+// tufts and a few flowers, all kept inside it.
+function ntLawnDisc(cx, cy, rx, ry) {
+  const g = ntId(), so = ntId();
+  const tufts = [];
+  for (let i = 0; i < 34; i++) {
+    const a = (i * 137.5) * Math.PI / 180, q = Math.sqrt(((i * 61) % 97) / 97) * .86;
+    const x = cx + Math.cos(a) * rx * q, y = cy + Math.sin(a) * ry * q;
+    tufts.push(`<path d="M${(x - 1.4).toFixed(1)} ${y.toFixed(1)} l.7 -2.6 l.7 2 l.7 -2.8 l.7 3.4" fill="none" stroke="${i % 3 ? "#3f7d2c" : "#86c262"}" stroke-width=".7" stroke-linejoin="round"/>`);
+  }
+  const flowers = [[-.62, .1, "#fff59d"], [.58, -.34, "#f8bbd0"], [.7, .42, "#fff"], [-.3, .56, "#fff59d"]].map(([u, v, col]) => {
+    const x = cx + u * rx, y = cy + v * ry;
+    return `<g>${[0, 1, 2, 3, 4].map((k) => `<circle cx="${(x + Math.cos(k * 1.256) * 1.3).toFixed(1)}" cy="${(y + Math.sin(k * 1.256) * .8).toFixed(1)}" r=".9" fill="${col}"/>`).join("")}<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r=".7" fill="#ffb300"/></g>`;
+  }).join("");
+  return `<defs><radialGradient id="${g}" cx=".45" cy=".35" r=".7"><stop offset="0" stop-color="#9ccc65"/><stop offset=".7" stop-color="#6fa646"/><stop offset="1" stop-color="#4f8a34"/></radialGradient>${ntV(so, "#7a5638", "#4e3524")}</defs>
+${ntFoot(`${cx - rx + 4} ${cy + ry + 6} ${cx + rx - 4} ${cy + ry + 6} ${cx + rx} ${cy + 4} ${cx - rx} ${cy + 4}`, .25)}
+<path d="M${cx - rx} ${cy} V${cy + 6} A${rx} ${ry} 0 0 0 ${cx + rx} ${cy + 6} V${cy} Z" fill="url(#${so})"/>
+<ellipse cx="${cx}" cy="${cy}" rx="${rx}" ry="${ry}" fill="url(#${g})"/>
+<path d="M${cx - rx + 6} ${cy - 3} A${rx - 6} ${ry - 3} 0 0 1 ${cx + rx * .3} ${cy - ry + 1.6}" fill="none" stroke="#c5e1a5" stroke-width="1" opacity=".6"/>
+${tufts.join("")}${flowers}`;
+}
+// The rain while the watering waits for the weather: the robot mower's cloud
+// and its slanted drops, each splashing on the ground.
+const ntRainCloud = (ground, dx = 0, sc = 1.25) => { const g = ntId(), dr = ntId(); let drops = ""; const x0 = 15 + dx, w = 72 * sc, n = Math.round(14.4 * sc);
+  for (let i = 0; i < n; i++) { const x = +(x0 + w * .12 + ((i * 37) % 76) / 76 * w * .76).toFixed(1), d = 7 / (10 + ((i * 7) % 5)), dl = -((i * 0.23) % d), st = `animation-duration:${d.toFixed(2)}s;animation-delay:${dl.toFixed(2)}s`;
+    drops += `<path class="nta-rdrop" style="${st}" d="M${x} ${(-9 + 25 * sc).toFixed(1)} l-1.9 8.8" stroke="url(#${dr})" stroke-width="1.1" stroke-linecap="round"/><ellipse class="nta-rsplash" style="${st}" cx="${x - 16}" cy="${ground + (i % 4) * 3}" rx="4" ry="1.3" fill="none" stroke="#b4d7f5" stroke-width=".9"/>`; }
+  return `<defs><linearGradient id="${g}" x1="0" y1="0" x2="0" y2="26" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#d7dde2"/><stop offset=".55" stop-color="#a9b2ba"/><stop offset="1" stop-color="#7f8a94"/></linearGradient>
+<linearGradient id="${dr}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#a0c8f0" stop-opacity="0"/><stop offset="1" stop-color="#96c3f0" stop-opacity=".95"/></linearGradient></defs>${drops}
+<g transform="translate(${x0} -9) scale(${sc})"><path d="M12 25.5 C5 25.5 3 18 9 15.5 C8 9 15 6 20 9 C23 2 35 0 40 7 C45 3 54 6 54 12 C61 11 67 16 64 21 C66 24 63 25.5 60 25.5 Z" fill="url(#${g})"/><path d="M14 13 C15 10 18 9 21 10.5 M27 7 C30 4 35 4 38 7.5" fill="none" stroke="rgba(255,255,255,.55)" stroke-width="1.4" stroke-linecap="round"/></g>`; };
+// The soil probe: a stake in the lawn, its gauge how wet the ground is.
+const ntSoil = (x, y, m) => m === null || m === undefined ? "" : `<ellipse cx="${x + 3.5}" cy="${y + 23}" rx="4" ry="1.3" fill="#2e5a20" opacity=".6"/>
+<rect x="${x}" y="${y}" width="7" height="22" rx="3.5" fill="#eceff1" stroke="#90a4ae" stroke-width=".6"/>
+<rect x="${x + 1.6}" y="${y + 2}" width="3.8" height="18" rx="1.9" fill="#37474f"/>
+<rect x="${x + 1.6}" y="${(y + 2 + 18 * (1 - m)).toFixed(1)}" width="3.8" height="${(18 * m).toFixed(1)}" rx="1.9" fill="${m < 0.25 ? "#ffb300" : "#29b6f6"}"/>
+<path d="M${x + 3.5} ${y - 8} q-3 4 0 5.6 q3 -1.6 0 -5.6 Z" fill="${m < 0.25 ? "#ffb300" : "#29b6f6"}"/>`;
+// Water thrown in an arc: a fine mist along it and the drops flying in it.
+const ntJet = (d, i) => `<path d="${d}" fill="none" stroke="#e1f5fe" stroke-width="4" stroke-linecap="round" opacity=".55"/>
+<path class="nta-flow ntd${i + 1}" d="${d}" fill="none" stroke="#4fc3f7" stroke-width="1.8" stroke-dasharray="0 4" stroke-linecap="round"/>
+<path class="nta-flow ntd${i + 1}" d="${d}" fill="none" stroke="#0288d1" stroke-width=".9" stroke-dasharray="0 6" stroke-linecap="round" opacity=".7"/>`;
+// A pop-up spray head in the middle of the lawn: the riser comes up and
+// throws its fan of jets, the head sinks back flush with the grass when it
+// stops.
+function ntIrrSprinkler(c) {
+  const bd = ntId(), cap = ntId(), mi = ntId();
+  const ends = [[6, 100], [24, 112], [44, 116], [76, 116], [96, 112], [114, 100]];
+  const top = [60, 82];
+  const arcs = ends.map(([x, y], i) => [`M${top[0]} ${top[1]} Q${(top[0] + (x - top[0]) * .55).toFixed(1)} ${-22 + Math.abs(x - 60) * .5} ${x} ${y}`, i]);
+  return `<defs>${ntV(bd, "#4a5560", "#1e2328")}<radialGradient id="${cap}" cx=".4" cy=".35" r=".7"><stop offset="0" stop-color="#8d9aa6"/><stop offset="1" stop-color="#37424c"/></radialGradient>${ntBlur(mi, 2.4)}</defs>
+${c.rain ? ntRainCloud(100) : ""}
+${ntLawnDisc(60, 104, 58, 18)}
+${ntSoil(100, 84, c.moist)}
+<g class="nt-run">${arcs.map(([d, i]) => ntJet(d, i)).join("")}
+${ends.map(([x, y], i) => `<circle cx="${x}" cy="${y - 3}" r="5" fill="#e1f5fe" opacity=".55" filter="url(#${mi})"/>
+<circle class="nta-fall ntd${(i % 6) + 1}" cx="${x + 1.5}" cy="${y - 10}" r="1.2" fill="#4fc3f7"/>`).join("")}</g>
+<ellipse cx="60" cy="105" rx="13" ry="4" fill="#2f5e22" opacity=".55"/>
+<ellipse cx="60" cy="104" rx="10" ry="3.2" fill="url(#${cap})"/>
+${c.on ? `<rect x="55.4" y="88" width="9.2" height="16" fill="url(#${bd})"/><path d="M57.2 90 V102" stroke="#8d9aa6" stroke-width=".9" opacity=".8"/>
+<path d="M53 88 Q60 80 67 88 V91 H53 Z" fill="url(#${cap})"/><ellipse cx="60" cy="83.4" rx="3.6" ry="1.6" fill="#263238"/><circle cx="60" cy="83" r="1" fill="#81d4fa"/>` : `<ellipse cx="60" cy="103.4" rx="5" ry="1.5" fill="#1e2328"/><circle cx="60" cy="103.2" r=".9" fill="#8d9aa6"/>`}
+${c.lcd ? `<rect x="44" y="113" width="32" height="10" rx="5" fill="#1e2328" opacity=".82"/><text x="60" y="120.2" font-size="${ntFit(c.lcd, 30, 6.4).toFixed(1)}" font-weight="700" text-anchor="middle" fill="#b3e5fc" ${NT_FONT}>${esc(c.lcd)}</text>` : ""}`;
+}
+// A tap timer on the garden tap of a brick wall, the hose running down to the
+// terrace and spraying from its nozzle while it waters.
+function ntIrrTap(c) {
+  const br = ntId(), bx = ntId(), bs = ntId(), wl = ntId(), gd = ntId();
+  const bricks = [];
+  for (let r = 0; r < 9; r++) {
+    const y = -10 + r * 11;
+    bricks.push(`<path d="M-10 ${y} H130" stroke="#b9a07c" stroke-width=".8"/>`);
+    for (let x = (r % 2 ? -4 : 8); x < 130; x += 24) bricks.push(`<path d="M${x} ${y} V${y + 11}" stroke="#b9a07c" stroke-width=".8"/>`);
+  }
+  const [wm, wdef] = ntFade(60, 40, 74, 62), [gm, gdef] = ntFade(60, 110, 72, 22);
+  return `<defs>${ntV(br, "#f6dc8c", "#a8781e")}${ntV(bx, "#5cbf5f", "#2a7a2e")}${ntV(bs, "#2a7a2e", "#17511b")}${ntV(wl, "#eadcc6", "#d2bf9f")}${ntV(gd, "#c9c2b6", "#a59d8f")}</defs>${wdef}${gdef}
+<g mask="url(#${wm})"><rect x="-10" y="-10" width="140" height="106" fill="url(#${wl})"/>${bricks.join("")}</g>
+<g mask="url(#${gm})"><rect x="-10" y="96" width="140" height="30" fill="url(#${gd})"/><path d="M-10 96.5 H130" stroke="#8d8577" stroke-width="1"/>
+${[0, 1, 2, 3, 4, 5].map((i) => `<path d="M${-6 + i * 26} 125 L${6 + i * 26} 97" stroke="#9a9283" stroke-width=".7"/>`).join("")}<path d="M-10 110 H130" stroke="#9a9283" stroke-width=".7"/></g>
+${c.rain ? ntRainCloud(104, 52, .75) : ""}
+<rect x="50" y="9" width="20" height="9" rx="2" fill="#8a6418" opacity=".25"/>
+<circle cx="56" cy="13" r="7" fill="url(#${br})" stroke="#8a6418" stroke-width=".5"/><ellipse cx="56" cy="14" rx="3.6" ry="3" fill="#7a5714"/>
+<path d="M52 12 H64 Q69 12 69 17 V24 H62 V19 H52 Z" fill="url(#${br})" stroke="#8a6418" stroke-width=".4"/>
+<rect x="54.8" y="1" width="2.6" height="10" fill="#8a6418"/><path d="M49 1 Q56 -3.4 63 1 L61 3.2 Q56 .6 51 3.2 Z" fill="#d32f2f"/>
+<rect x="61.6" y="23" width="7.8" height="5" fill="url(#${br})"/><rect x="60.4" y="27" width="10.2" height="4.4" rx="1.2" fill="#26a69a"/>
+${ntRoundBox(47, 31, 34, 42, 6, 8, `url(#${bx})`, `url(#${bs})`, "#7ed37f", "#17511b")}
+<path d="M51 35.6 Q64 32.6 77 35.6" fill="none" stroke="#fff" stroke-width="1.3" opacity=".45" stroke-linecap="round"/>
+<rect x="50.6" y="38" width="26.8" height="15.4" rx="2.4" fill="#1b2a1c"/>
+${ntLcd(51.6, 39, 24.8, 13.4, c.lcd || "--", c.on, "#b9f6ca", ntFit(c.lcd || "--", 24, 7))}
+<circle cx="57" cy="62" r="3.6" fill="#e8f5e9" stroke="#17511b" stroke-width=".5"/><circle cx="71" cy="62" r="3.6" fill="#e8f5e9" stroke="#17511b" stroke-width=".5"/>
+<path d="M55.4 62 h3.2 M69.4 62 h3.2 M71 60.4 v3.2" stroke="#2a7a2e" stroke-width=".9"/>
+<rect x="59.6" y="73" width="9" height="5.4" rx="1.4" fill="#ffb300"/><rect x="60.8" y="77.6" width="6.6" height="4" fill="#ffca28"/>
+<ellipse cx="88" cy="114" rx="30" ry="4" fill="#000" opacity=".12"/>
+<path d="M64 81 C62 100 50 106 40 110 C28 115 34 121 56 119 C72 117 84 112 92 109" fill="none" stroke="#1b5e20" stroke-width="5.6" stroke-linecap="round"/>
+<path d="M64 81 C62 100 50 106 40 110 C28 115 34 121 56 119 C72 117 84 112 92 109" fill="none" stroke="#43a047" stroke-width="3.8" stroke-linecap="round"/>
+<path d="M63 84 C61 99 50 105 41 109" fill="none" stroke="#a5d6a7" stroke-width="1" opacity=".7"/>
+<path class="nt-run nta-flow" d="M64 81 C62 100 50 106 40 110 C28 115 34 121 56 119 C72 117 84 112 92 109" fill="none" stroke="#b3e5fc" stroke-width="1.2" stroke-dasharray="3 5"/>
+<g transform="rotate(-14 96 108)"><rect x="90" y="105" width="11" height="6" rx="2" fill="#ffb300"/><path d="M100 105.4 L106 104 V112 L100 110.6 Z" fill="#f57c00"/></g>
+<g class="nt-run">${[["M106 105 Q114 99 125 101", 0], ["M106 107 Q115 103 125 107", 2], ["M106 109 Q114 108 124 114", 4]].map(([d, i]) => ntJet(d, i)).join("")}
+<path d="M106 107 L126 98 L126 116 Z" fill="#e1f5fe" opacity=".35"/></g>
+${ntSoil(14, 78, c.moist)}`;
+}
+// The status light of a litter box: ready, cleaning, a cat in, full.
+const litLed = (c) => ({ ready: "#43a047", cleaning: "#29b6f6", cat: "#ff9800", full: "#e53935", fault: "#e53935", off: "#5d6773" }[c.st] || "#5d6773");
+const litLedCls = (c) => c.st === "full" || c.st === "fault" ? "nta-blinkfast" : c.on ? "nta-glow" : "";
+// A cat in the doorway: its head, its ears, its eyes and whiskers.
+const litCat = (cx, cy, s = 1) => `<g transform="translate(${cx} ${cy}) scale(${s})">
+<path d="M-12 10 Q-14 -2 -10 -6 L-11 -15 L-4 -9 Q0 -10 4 -9 L11 -15 L10 -6 Q14 -2 12 10 Z" fill="#6d4c41"/>
+<path d="M-9.4 -12 L-5.6 -8.6 L-9 -7.4 Z M9.4 -12 L5.6 -8.6 L9 -7.4 Z" fill="#f48fb1"/>
+<path d="M-8 -2 Q-4 -5 0 -2 Q4 -5 8 -2" fill="none" stroke="#4e342e" stroke-width=".8"/>
+<ellipse cx="-4.6" cy="0" rx="2.4" ry="2.8" fill="#d4e157"/><ellipse cx="4.6" cy="0" rx="2.4" ry="2.8" fill="#d4e157"/>
+<ellipse cx="-4.6" cy="0" rx=".8" ry="2.4" fill="#212121"/><ellipse cx="4.6" cy="0" rx=".8" ry="2.4" fill="#212121"/>
+<path d="M-1.4 4 H1.4 L0 5.6 Z" fill="#f48fb1"/><path d="M-3 6 Q0 8 3 6" fill="none" stroke="#3e2723" stroke-width=".7"/>
+<path d="M-3 5 L-12 3.6 M-3 6 L-12 7 M3 5 L12 3.6 M3 6 L12 7" stroke="#efebe9" stroke-width=".5"/></g>`;
+// The waste drawer's level, on a little window of its front.
+const litDrawer = (x, y, w, f) => f === null || f === undefined ? "" : `<rect x="${x}" y="${y}" width="${w}" height="4.4" rx="2.2" fill="#10151a"/>
+<rect x="${x + .7}" y="${y + .7}" width="${((w - 1.4) * Math.max(0.04, f)).toFixed(1)}" height="3" rx="1.5" fill="${f >= 0.9 ? "#e53935" : f >= 0.75 ? "#ffb300" : "#a1887f"}"/>`;
+// The litter's grains, and the clumps the cleaning sifts out of it.
+const litGrains = (x, y, w, hgt) => Array.from({ length: 24 }, (_, i) => { const u = ((i * 37) % 23) / 23, v = ((i * 53) % 19) / 19; return `<circle cx="${(x + u * w).toFixed(1)}" cy="${(y + v * hgt).toFixed(1)}" r=".7" fill="${i % 2 ? "#a88a56" : "#f1e2c0"}"/>`; }).join("");
+const litClumps = (pts) => pts.map(([x, y], i) => `<g class="nta-clump ntd${i + 1}"><ellipse cx="${x}" cy="${y}" rx="2.6" ry="1.4" fill="#8d6e4a"/><ellipse cx="${x - .6}" cy="${y - .4}" rx="1.2" ry=".6" fill="#b08d62"/></g>`).join("");
+// A globe that turns on its base, Litter-Robot style. While it cleans the
+// door turns away and back; the litter stays at the bottom of the globe, seen
+// through the door wherever it is.
+function ntLitterGlobe(c) {
+  const g = ntId(), bs = ntId(), bt = ntId(), sd = ntId(), ins = ntId(), lit = ntId(), dr = ntId();
+  const door = "M36 44 Q36 22 60 20 Q84 22 84 44 Q84 60 60 62 Q36 60 36 44 Z";
+  return `<defs><radialGradient id="${g}" cx=".36" cy=".3" r=".78"><stop offset="0" stop-color="#ffffff"/><stop offset=".55" stop-color="#e3e8ec"/><stop offset="1" stop-color="#9eabb6"/></radialGradient>
+${ntV(bs, "#3c434b", "#16191d")}${ntV(bt, "#5a636c", "#2b3036")}${ntV(sd, "#25292e", "#0e1013")}
+<radialGradient id="${ins}" cx=".5" cy=".35" r=".7"><stop offset="0" stop-color="#3a4047"/><stop offset="1" stop-color="#0d1013"/></radialGradient>
+${ntV(lit, "#e8d5ab", "#bfa06a")}<clipPath id="${dr}"><path class="nta-lrcycle" d="${door}"/></clipPath></defs>
+${ntFoot("14 116 98 116 110 106 26 106", .3)}
+${ntRoundBox(18, 70, 76, 45, 11, 4, `url(#${bs})`, `url(#${sd})`, `url(#${bt})`)}
+<path d="M22 74 H90" stroke="#5a636c" stroke-width=".6"/>
+<path d="M28 92 H84 Q86 92 86 94 V108 Q86 110 84 110 H28 Q26 110 26 108 V94 Q26 92 28 92 Z" fill="#20252a" stroke="#4a525b" stroke-width=".6"/>
+${litDrawer(32, 97, 48, c.drawer)}
+<path d="M48 105 H64" stroke="#5a636c" stroke-width="1.8" stroke-linecap="round"/>
+<ellipse cx="60" cy="66" rx="30" ry="6" fill="#000" opacity=".35"/>
+<circle cx="60" cy="38" r="34" fill="url(#${g})" stroke="#8e9ba6" stroke-width=".7"/>
+<g clip-path="url(#${dr})"><circle cx="60" cy="38" r="34" fill="url(#${ins})"/>
+<g class="nta-littilt" style="transform-origin:60px 56px"><path d="M14 56 H106 V96 H14 Z" fill="url(#${lit})"/><path d="M20 56 H100" stroke="#f3e5c4" stroke-width="1.2" opacity=".9"/>
+${litGrains(30, 58, 60, 10)}${c.on ? litClumps([[48, 57], [66, 58], [58, 57.4]]) : ""}</g>
+${c.cat && !c.on ? litCat(60, 42, 1.05) : ""}</g>
+<path class="nta-lrcycle" d="${door}" fill="none" stroke="#c5ced6" stroke-width="2.4"/>
+<path d="M30 30 Q34 12 52 6" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" opacity=".85"/>
+<rect x="54" y="80" width="12" height="4" rx="2" fill="#10151a"/><rect class="${litLedCls(c)}" x="55" y="81" width="10" height="2" rx="1" fill="${litLed(c)}"/>`;
+}
+// A box with rounded corners in three-quarter view, its depth going up and
+// to the right at 45 degrees: the top and the side are the rounded outline
+// swept back, so a rounded corner stays rounded on every face. They meet at
+// the corner's 45 degree point, where the curve turns from one to the other.
+function ntRoundBox(x0, y0, w, h, d, r, front, side, top, stroke = "") {
+  const x1 = x0 + w, y1 = y0 + h, k = r * Math.SQRT1_2;
+  const n = (v) => +v.toFixed(2);
+  const B = (x, y) => `${n(x + d)} ${n(y - d)}`, F = (x, y) => `${n(x)} ${n(y)}`;
+  const A = (sw, pt) => r ? `A${r} ${r} 0 0 ${sw} ${pt}` : `L${pt}`;
+  const tl = [x0 + r - k, y0 + r - k], tr = [x1 - r + k, y0 + r - k], br = [x1 - r + k, y1 - r + k];
+  const topFace = `M${F(...tl)} ${A(1, F(x0 + r, y0))} L${F(x1 - r, y0)} ${A(1, F(...tr))} L${B(...tr)} ${A(0, B(x1 - r, y0))} L${B(x0 + r, y0)} ${A(0, B(...tl))} Z`;
+  const sideFace = `M${F(...tr)} ${A(1, F(x1, y0 + r))} L${F(x1, y1 - r)} ${A(1, F(...br))} L${B(...br)} ${A(0, B(x1, y1 - r))} L${B(x1, y0 + r)} ${A(0, B(...tr))} Z`;
+  const frontFace = `M${F(x0 + r, y0)} H${n(x1 - r)} ${A(1, F(x1, y0 + r))} V${n(y1 - r)} ${A(1, F(x1 - r, y1))} H${n(x0 + r)} ${A(1, F(x0, y1 - r))} V${n(y0 + r)} ${A(1, F(x0 + r, y0))} Z`;
+  return `<path d="${topFace}" fill="${top}"/><path d="${sideFace}" fill="${side}"/>
+<path d="${frontFace}" fill="${front}"${stroke ? ` stroke="${stroke}" stroke-width=".7"` : ""}/>`;
+}
+// A closed box in three-quarter view, Petkit Pura style: a wide round
+// entrance low on its front so the cat steps straight in, the litter lying
+// flat inside, the drum turning around it while it cleans, and the waste
+// drawer's gauge under the entrance.
+function ntLitterBox(c) {
+  const fr = ntId(), sd = ntId(), tp = ntId(), dr = ntId(), lit = ntId(), mt = ntId(), cp = ntId(), sh = ntId(), wl = ntId();
+  const x0 = 8, y0 = 26, w = 88, h = 86, d = 16, r = 22;
+  const x1 = x0 + w, y1 = y0 + h, ox = 52, oy = 70, orad = 30;
+  return `<defs>${ntV(fr, "#ffffff", "#e3e8ec")}${ntV(sd, "#d3d9df", "#aab4bd")}${ntV(tp, "#f9fafb", "#e7ebee")}
+<radialGradient id="${dr}" cx=".5" cy=".7" r=".8"><stop offset="0" stop-color="#e9edf0"/><stop offset=".55" stop-color="#bfc7ce"/><stop offset="1" stop-color="#7f8a94"/></radialGradient>${ntV(lit, "#ecdcb6", "#c4a670")}
+<linearGradient id="${mt}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#b8c0c7"/><stop offset="1" stop-color="#8e98a1"/></linearGradient>
+<linearGradient id="${sh}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#000" stop-opacity=".5"/><stop offset="1" stop-color="#000" stop-opacity="0"/></linearGradient>
+<linearGradient id="${wl}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e4e9ed"/><stop offset="1" stop-color="#b9c2ca"/></linearGradient><clipPath id="${cp}"><circle cx="${ox}" cy="${oy}" r="${orad - 2}"/></clipPath></defs>
+${ntFoot(`${x0 - 4} ${y1 + 8} ${x1 + 2} ${y1 + 8} ${x1 + d + 4} ${y1 - d + 2} ${x0 + d} ${y1 - d + 2}`, .22)}
+<path d="M6 122 Q4 118 10 116 H96 Q104 116 106 120 L98 124 Q96 125 92 125 H12 Q6 125 6 122 Z" fill="url(#${mt})"/>
+${ntRoundBox(x0, y0, w, h, d, r, `url(#${fr})`, `url(#${sd})`, `url(#${tp})`, "#b3bdc5")}
+<path d="M${x0 + 12} ${y0 + 5} Q${x0 + 36} ${y0 + 1.4} ${x0 + 62} ${y0 + 2.8}" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round"/>
+<rect x="38" y="31" width="28" height="4" rx="2" fill="#22272c"/><rect class="${litLedCls(c)}" x="40" y="32.1" width="24" height="1.8" rx=".9" fill="${litLed(c)}"/>
+<circle cx="${ox}" cy="${oy + 1}" r="${orad + 2.4}" fill="#c9d1d8"/><circle cx="${ox}" cy="${oy}" r="${orad + 1.2}" fill="#eef1f4"/><circle cx="${ox}" cy="${oy}" r="${orad}" fill="url(#${dr})"/>
+<g clip-path="url(#${cp})">
+<rect x="${ox - orad}" y="${oy - orad}" width="${orad * 2}" height="10" fill="url(#${sh})"/>
+<g class="nta-littilt" style="transform-origin:${ox}px ${oy + 14}px"><path d="M${ox - 40} ${oy + 12} H${ox + 40} V${oy + 40} H${ox - 40} Z" fill="url(#${lit})"/><path d="M${ox - 30} ${oy + 12} H${ox + 30}" stroke="#f7ecd0" stroke-width="1.2"/>
+${litGrains(ox - 24, oy + 14, 48, 10)}${c.on ? litClumps([[ox - 9, oy + 13], [ox + 8, oy + 13.6], [ox, oy + 13]]) : ""}</g>
+<g class="nta-lrcycle" style="transform-origin:${ox}px ${oy}px"><path d="M${ox - orad + 2} ${oy} a${orad - 2} ${orad - 2} 0 1 0 ${(orad - 2) * 2} 0 a${orad - 2} ${orad - 2} 0 1 0 ${-(orad - 2) * 2} 0 Z M${ox - 19} ${oy + 7} a19 19 0 1 1 38 0 a19 19 0 1 1 -38 0 Z" fill="url(#${wl})" fill-rule="evenodd" stroke="#8f9aa4" stroke-width=".6"/>
+${[-50, 0, 50].map((a) => `<path d="M${ox} ${oy - orad + 4} v4" stroke="#9aa4ad" stroke-width="1.4" stroke-linecap="round" transform="rotate(${a} ${ox} ${oy})"/>`).join("")}</g>
+${c.cat && !c.on ? litCat(ox, oy + 4, 1.2) : ""}</g>
+<path d="M${ox - orad + 3} ${oy - 4} A${orad - 3} ${orad - 3} 0 0 1 ${ox + 4} ${oy - orad + 3}" fill="none" stroke="#fff" stroke-width="1" opacity=".35" stroke-linecap="round"/>
+<path d="M${ox - orad - 1} ${oy + 6} A${orad + 1.6} ${orad + 1.6} 0 0 0 ${ox + orad + 1} ${oy + 6}" fill="none" stroke="#b7c0c8" stroke-width="1.2"/>
+${litDrawer(30, 104.4, 44, c.drawer)}`;
+}
+// Sound waves on both sides of a detector or a speaker.
+const ntWaves = (x, y, color, gap = 22) => `<g class="nt-run">${[0, 1, 2].map((i) => `<path class="nta-beacon ntd${i + 1}" d="M${x - gap - i * 6} ${y - 8 - i * 3} q-${4 + i * 2} ${8 + i * 3} 0 ${16 + i * 6}" fill="none" stroke="${color}" stroke-width="1.8" stroke-linecap="round"/>
+<path class="nta-beacon ntd${i + 1}" d="M${x + gap + i * 6} ${y - 8 - i * 3} q${4 + i * 2} ${8 + i * 3} 0 ${16 + i * 6}" fill="none" stroke="${color}" stroke-width="1.8" stroke-linecap="round"/>`).join("")}</g>`;
+// The detector's light: a slow green blink, amber on a low battery, red and
+// fast on alarm, with its halo.
+const detLed = (c, x, y, r = 2.2) => { const h = ntId(); const col = c.on ? "#ff1744" : c.low ? "#ffb300" : "#43a047"; return `<defs>${ntBlur(h, 1.6)}</defs>
+<circle class="${c.on ? "nta-blinkfast" : "nta-blink"}" cx="${x}" cy="${y}" r="${r * 2.4}" fill="${col}" opacity=".55" filter="url(#${h})"/>
+<circle class="${c.on ? "nta-blinkfast" : "nta-blink"}" cx="${x}" cy="${y}" r="${r}" fill="${col}"/>`; };
+// A patch of floor, wall or ceiling that fades out at its edges, so the
+// drawing does not sit in a box.
+const ntPatch = (cx, cy, rx, ry, color) => { const g = ntId(); return `<defs><radialGradient id="${g}" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="${color}"/><stop offset=".65" stop-color="${color}" stop-opacity=".8"/><stop offset="1" stop-color="${color}" stop-opacity="0"/></radialGradient></defs>
+<ellipse cx="${cx}" cy="${cy}" rx="${rx}" ry="${ry}" fill="url(#${g})"/>`; };
+const ntFade = (cx, cy, rx, ry) => { const m = ntId(), g = ntId(); return [m, `<defs><radialGradient id="${g}" cx=".5" cy=".5" r=".5"><stop offset=".45" stop-color="#fff"/><stop offset="1" stop-color="#000"/></radialGradient>
+<mask id="${m}"><ellipse cx="${cx}" cy="${cy}" rx="${rx}" ry="${ry}" fill="url(#${g})"/></mask></defs>`]; };
+// A corner of the room: a ceiling or a wall, softly lit.
+const ntRoom = (id) => `<defs><linearGradient id="${id}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f1f3f5"/><stop offset="1" stop-color="#dde2e7"/></linearGradient></defs>`;
+// A smoke detector on the ceiling, seen from below: its face towards us, its
+// vented rim going up to the ceiling. On alarm the smoke rises from the room
+// and spreads under the ceiling around it.
+function ntDetSmoke(c) {
+  const b = ntId(), sd = ntId(), bt = ntId(), pf = ntId(), rg = ntId(), cl = ntId();
+  const cx = 60, cy = 50, rx = 46, ry = 14, h = 12;
+  const puff = (x, y, r, cls) => `<g class="${cls}"><circle cx="${x}" cy="${y}" r="${r}" fill="url(#${pf})"/><circle cx="${(x + r * .7).toFixed(1)}" cy="${(y - r * .45).toFixed(1)}" r="${(r * .72).toFixed(1)}" fill="url(#${pf})"/><circle cx="${(x - r * .65).toFixed(1)}" cy="${(y - r * .3).toFixed(1)}" r="${(r * .6).toFixed(1)}" fill="url(#${pf})"/></g>`;
+  const slots = [];
+  for (let i = 0; i < 15; i++) { const a = Math.PI * (1.08 + i * .06); const x = cx + Math.cos(a) * rx * .97; const y = cy - h + Math.sin(a) * ry * .97 + h * .5; slots.push(`<rect x="${(x - .9).toFixed(1)}" y="${(y - 2.6).toFixed(1)}" width="1.8" height="5.2" rx=".9" fill="#9aa6b0" opacity="${(.35 + .65 * Math.sin((i + .5) / 15 * Math.PI)).toFixed(2)}"/>`); }
+  return `<defs><radialGradient id="${b}" cx=".42" cy=".4" r=".7"><stop offset="0" stop-color="#ffffff"/><stop offset=".75" stop-color="#eef1f4"/><stop offset="1" stop-color="#cdd4da"/></radialGradient>
+<linearGradient id="${sd}" x1="0" x2="1"><stop offset="0" stop-color="#b9c2ca"/><stop offset=".45" stop-color="#eef1f4"/><stop offset="1" stop-color="#aeb8c1"/></linearGradient>
+<radialGradient id="${bt}" cx=".4" cy=".35" r=".7"><stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#d6dce2"/></radialGradient>
+<radialGradient id="${pf}" cx=".45" cy=".4" r=".55"><stop offset="0" stop-color="#7f8c97" stop-opacity=".85"/><stop offset=".6" stop-color="#a3afb9" stop-opacity=".6"/><stop offset="1" stop-color="#cfd8dc" stop-opacity="0"/></radialGradient>
+<radialGradient id="${rg}" cx=".5" cy=".5" r=".5"><stop offset=".55" stop-color="#ff1744" stop-opacity=".55"/><stop offset="1" stop-color="#ff1744" stop-opacity="0"/></radialGradient>
+<linearGradient id="${cl}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#d9dee3"/><stop offset="1" stop-color="#d9dee3" stop-opacity="0"/></linearGradient></defs>
+${ntPatch(60, 20, 80, 30, "#e3e7eb")}
+${c.on ? `<ellipse class="nta-blinkfast" cx="${cx}" cy="${cy}" rx="${rx + 14}" ry="${ry + 9}" fill="url(#${rg})"/>
+<g class="nt-run">${[[40, 118, 9, 1], [60, 122, 10, 3], [80, 118, 9, 5], [50, 124, 8, 2], [70, 122, 9, 4], [30, 124, 7, 6], [90, 124, 7, 3]].map(([x, y, r, d]) => puff(x, y, r, `nta-smoke ntd${d}`)).join("")}
+${[[46, 62, 8, "nta-spreadL ntd2"], [74, 62, 8, "nta-spreadR ntd4"], [52, 66, 7, "nta-spreadL ntd5"], [68, 66, 7, "nta-spreadR ntd1"], [60, 64, 7, "nta-spreadL ntd6"]].map(([x, y, r, cls]) => puff(x, y, r, cls)).join("")}</g>` : ""}
+<ellipse cx="${cx}" cy="${cy - h}" rx="${rx + 4}" ry="${ry + 2}" fill="#000" opacity=".07"/>
+<path d="M${cx - rx} ${cy} V${cy - h} A${rx} ${ry} 0 0 1 ${cx + rx} ${cy - h} V${cy} Z" fill="url(#${sd})"/>
+${slots.join("")}
+<ellipse cx="${cx}" cy="${cy}" rx="${rx}" ry="${ry}" fill="url(#${b})" stroke="#b5bfc8" stroke-width=".6"/>
+<ellipse cx="${cx}" cy="${cy}" rx="${rx * .82}" ry="${ry * .82}" fill="none" stroke="#d3d9df" stroke-width="1"/>
+${Array.from({ length: 16 }, (_, i) => { const a = i * Math.PI / 8; return `<path d="M${(cx + Math.cos(a) * rx * .36).toFixed(1)} ${(cy + Math.sin(a) * ry * .36).toFixed(1)} L${(cx + Math.cos(a) * rx * .72).toFixed(1)} ${(cy + Math.sin(a) * ry * .72).toFixed(1)}" stroke="#c2cad2" stroke-width="1.8" stroke-linecap="round"/>`; }).join("")}
+<ellipse cx="${cx}" cy="${cy + 1.2}" rx="${rx * .3}" ry="${ry * .3}" fill="#c9d0d7"/><ellipse cx="${cx}" cy="${cy}" rx="${rx * .28}" ry="${ry * .28}" fill="url(#${bt})" stroke="#b5bfc8" stroke-width=".5"/>
+<path d="M${cx - rx * .7} ${cy - ry * .45} Q${cx - rx * .3} ${cy - ry * .85} ${cx + rx * .1} ${cy - ry * .86}" fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round" opacity=".9"/>
+${c.on ? `<ellipse class="nta-blinkfast" cx="${cx}" cy="${cy}" rx="${rx + 1}" ry="${ry + 1}" fill="none" stroke="#ff1744" stroke-width="1.8"/>` : ""}
+${detLed(c, cx + rx * .5, cy + ry * .42, 1.5)}
+${c.on ? ntWaves(cx, cy + 30, "#e53935", 26) : ""}`;
+}
+// A CO alarm on the wall, its display reading the parts per million.
+function ntDetCo(c) {
+  const rm = ntId(), b = ntId(), sd = ntId(), al = ntId();
+  return `${ntRoom(rm)}<defs>${ntV(b, "#ffffff", "#d7dde3")}${ntV(sd, "#c9d1d8", "#a2adb7")}<radialGradient id="${al}" cx=".5" cy=".5" r=".5"><stop offset=".55" stop-color="#ff1744" stop-opacity=".45"/><stop offset="1" stop-color="#ff1744" stop-opacity="0"/></radialGradient></defs>
+${ntPatch(62, 58, 58, 60, "#e7ebef")}
+${c.on ? `<ellipse class="nta-blinkfast" cx="60" cy="56" rx="50" ry="58" fill="url(#${al})"/>` : ""}
+${ntWaves(62, 46, "#e53935", 36)}
+${ntFoot("36 108 92 108 96 104 40 104", .2)}
+${ntRoundBox(32, 12, 54, 92, 6, 12, `url(#${b})`, `url(#${sd})`, "#eef1f4", "#aab4bd")}
+<path d="M38 18 Q58 14 80 18" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round"/>
+${Array.from({ length: 21 }, (_, i) => `<circle cx="${43 + (i % 7) * 5.4}" cy="${26 + Math.floor(i / 7) * 5.6}" r="1.5" fill="#9fabb5"/>`).join("")}
+<rect x="38" y="46" width="42" height="22" rx="3" fill="#1f262d"/>
+${ntLcd(39.4, 47.4, 39.2, 19.2, c.lcd || "", true, c.on ? "#ff5252" : "#69f0ae", ntFit(c.lcd || "", 39, 9))}
+<text x="59" y="80" font-size="10" font-weight="800" text-anchor="middle" fill="${c.on ? "#e53935" : "#37414b"}" ${NT_FONT}>CO</text>
+<text x="59" y="86" font-size="3.6" text-anchor="middle" fill="#7a8590" ${NT_FONT}>ALARM</text>
+<circle cx="50" cy="95" r="5" fill="#eef1f4" stroke="#aab4bd" stroke-width=".6"/><text x="50" y="96.4" font-size="3.4" text-anchor="middle" fill="#5d6773" ${NT_FONT}>TEST</text>
+${detLed(c, 70, 95)}`;
+}
+// A leak sensor on the floor, and the water that sets it off.
+function ntDetLeak(c) {
+  const fl = ntId(), wl = ntId(), b = ntId(), sd = ntId(), pd = ntId();
+  return `<defs><linearGradient id="${fl}" x1="0" y1="1" x2=".3" y2="0"><stop offset="0" stop-color="#c7cfd5"/><stop offset="1" stop-color="#e3e8ec"/></linearGradient>${ntV(wl, "#f3f5f7", "#e2e6ea")}
+<radialGradient id="${b}" cx=".4" cy=".3" r=".75"><stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#dfe5ea"/></radialGradient>${ntV(sd, "#d3dae0", "#a9b4bd")}
+<radialGradient id="${pd}" cx=".45" cy=".45" r=".55"><stop offset="0" stop-color="#4fc3f7" stop-opacity=".75"/><stop offset=".8" stop-color="#29b6f6" stop-opacity=".45"/><stop offset="1" stop-color="#29b6f6" stop-opacity="0"/></radialGradient></defs>
+${(() => { const [m, d] = ntFade(60, 84, 70, 42); return `${d}<g mask="url(#${m})"><polygon points="-8 125 128 125 128 53 -8 53" fill="url(#${fl})"/>
+${[0, 1, 2, 3, 4, 5, 6].map((i) => `<path d="M${-14 + i * 24} 125 L${10 + i * 24} 53" stroke="#aeb8c0" stroke-width=".8"/>`).join("")}
+${[66, 80, 98].map((y) => `<path d="M-8 ${y} H128" stroke="#aeb8c0" stroke-width=".8"/>`).join("")}</g>`; })()}
+<g transform="translate(60 78) scale(1.45) translate(-60 -86)"><g class="nt-run"><ellipse class="nta-shimmer" cx="58" cy="94" rx="58" ry="20" fill="url(#${pd})"/>
+${[0, 1, 2].map((i) => `<ellipse class="nta-pop ntd${i * 2 + 1}" cx="58" cy="94" rx="${30 + i * 10}" ry="${10 + i * 3.4}" fill="none" stroke="#e1f5fe" stroke-width=".8" opacity="0"/>`).join("")}</g>
+${ntFoot("34 100 86 100 82 92 38 92", .25)}
+<path d="M32 86 V92 Q32 101 60 101 Q88 101 88 92 V86 Z" fill="url(#${sd})"/>
+${[0, 1, 2, 3].map((i) => `<rect x="${41 + i * 11}" y="${97.6 - Math.abs(1.5 - i) * .8}" width="3" height="2.6" rx=".6" fill="#b0bec5" stroke="#78909c" stroke-width=".4"/>`).join("")}
+<ellipse cx="60" cy="86" rx="28" ry="9.4" fill="url(#${b})" stroke="#b5bfc8" stroke-width=".6"/>
+<ellipse cx="60" cy="86" rx="18" ry="5.6" fill="none" stroke="#d8dee3" stroke-width="1"/>
+<path d="M40 82 Q50 78 62 78" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
+${detLed(c, 60, 86, 2)}
+<g class="nt-run">${[[54, 1], [66, 3], [60, 5]].map(([x, d]) => `<ellipse class="nta-splash ntd${d}" cx="${x}" cy="84.6" rx="6" ry="1.8" fill="none" stroke="#4fc3f7" stroke-width=".9"/>
+<path class="nta-drip ntd${d}" d="M${x} 78 q-2.6 3.8 0 5.4 q2.6 -1.6 0 -5.4 Z" fill="#4fc3f7" stroke="#0288d1" stroke-width=".3"/>`).join("")}</g>
+${ntWaves(60, 66, "#e53935", 36)}</g>`;
+}
+// Musical notes rising while a speaker plays.
+const spkNotes = (x, y) => `<g class="nt-run">${[["\u266a", 0, 0, 10], ["\u266b", 15, 7, 11], ["\u266a", -14, 10, 9]].map(([n, dx, dy, fs], i) => `<text class="nta-rise ntd${i * 2 + 1}" x="${x + dx}" y="${y + dy}" font-size="${fs}" fill="var(--primary-color, #03a9f4)" ${NT_FONT}>${n}</text>`).join("")}</g>`;
+const spkMute = (x, y) => `<g><circle cx="${x + 6}" cy="${y}" r="7" fill="#fff" stroke="#cfd6dc" stroke-width=".6"/><path d="M${x + 1.4} ${y - 2} h2.4 l3.4 -2.6 v9.2 l-3.4 -2.6 h-2.4 Z" fill="#5d6773"/><path d="M${x + 8.6} ${y - 1.8} l3.6 3.6 M${x + 12.2} ${y - 1.8} l-3.6 3.6" stroke="#e53935" stroke-width="1.3" stroke-linecap="round"/></g>`;
+const spkPause = (x, y, col = "#fff") => `<rect x="${x - 4.4}" y="${y - 5}" width="3.2" height="10" rx="1" fill="${col}" opacity=".9"/><rect x="${x + 1.2}" y="${y - 5}" width="3.2" height="10" rx="1" fill="${col}" opacity=".9"/>`;
+const SPK_PALETTES = {
+  homepod: { black: ["#5b636c", "#3c434a", "#1f2328", "#2c3238", "#15181b"], white: ["#fbfaf7", "#e7e5e0", "#c3c1bb", "#dcdad5", "#f4f3f0"] },
+  mini: { black: ["#6a737c", "#3c434a", "#1c2024", "#2c3238", "#15181b"], white: ["#fbfaf7", "#e4e2dd", "#bdbbb5", "#d8d6d1", "#f1f0ec"],
+    yellow: ["#fff2a8", "#f2d14b", "#c9a52a", "#e3c13d", "#fae58a"], orange: ["#ffc79a", "#ef8f45", "#c4692a", "#e07f38", "#f9b077"],
+    blue: ["#9fc0de", "#4f7ca6", "#2f557a", "#45719a", "#7ea3c6"] },
+  sonos: { black: ["#4a5058", "#2a2e33", "#16191c", "#1f2226", "#0b0d0f"], white: ["#ffffff", "#ecebe8", "#c8c7c3", "#f6f5f2", "#b9b8b3"] },
+  bose500: { silver: ["#f1f3f5", "#cfd3d7", "#9aa1a8", "#e3e6e9", "#8e959c"], black: ["#565b61", "#2e3236", "#17191c", "#3a3e43", "#0d0f11"] },
+  wave: { black: ["#5e636a", "#3a3e44", "#1f2226", "#4a4f55", "#15171a"], silver: ["#eef0f2", "#c9cdd1", "#959ca3", "#dfe2e5", "#6f767d"] },
+  flex: { black: ["#4b4f55", "#2b2e32", "#151719", "#36393e", "#0f1012"], white: ["#f6f4ee", "#dedbd2", "#b5b1a6", "#ebe8e0", "#8f8b80"],
+    blue: ["#8fb1d1", "#4a72a0", "#2b4b71", "#5a82ae", "#1e3550"] },
+};
+function spkPal(model, color) {
+  const set = SPK_PALETTES[model];
+  return set[color] || set[Object.keys(set)[0]];
+}
+// A body lit from the left, as the round speakers are.
+const spkSide = (id, p) => `<linearGradient id="${id}" x1="0" x2="1"><stop offset="0" stop-color="${p[2]}"/><stop offset=".22" stop-color="${p[1]}"/><stop offset=".36" stop-color="${p[0]}"/><stop offset=".72" stop-color="${p[1]}"/><stop offset="1" stop-color="${p[2]}"/></linearGradient>`;
+// The bottom of a body falling into shade.
+const spkFoot = (id) => `<linearGradient id="${id}" x1="0" y1="0" x2="0" y2="1"><stop offset=".55" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".28"/></linearGradient>`;
+// Apple's knit, in fine rows.
+const spkKnit = (id, col) => `<pattern id="${id}" width="2.2" height="1.7" patternUnits="userSpaceOnUse"><path d="M0 .85 Q.55 .35 1.1 .85 T2.2 .85" fill="none" stroke="${col}" stroke-width=".5" opacity=".55"/></pattern>`;
+// A perforated grille.
+const spkHoles = (id, col, step = 1.9, r = .48) => `<pattern id="${id}" width="${step}" height="${step}" patternUnits="userSpaceOnUse"><circle cx="${step / 2}" cy="${step / 2}" r="${r}" fill="${col}"/></pattern>`;
+// The Siri swirl on top of a HomePod while it plays, its glass dark at rest.
+const spkSwirl = (c, cx, cy, rx, ry, r, gl, rest) => (c.on
+  ? `<ellipse class="nta-glow" cx="${cx}" cy="${cy}" rx="${rx}" ry="${ry}" fill="url(#${r})" filter="url(#${gl})"/><ellipse class="nta-shimmer" cx="${cx}" cy="${cy}" rx="${rx * .62}" ry="${ry * .62}" fill="url(#${r})"/>`
+  : `<ellipse cx="${cx}" cy="${cy}" rx="${rx * .62}" ry="${ry * .62}" fill="${c.st === "paused" ? "#8f98a2" : rest}" opacity=".9"/>`);
+const spkLed = (c, x, y, r = 1.1, col = "#ffffff") => `<circle class="${c.on ? "nta-glow" : ""}" cx="${x}" cy="${y}" r="${r}" fill="${c.on ? col : c.st === "paused" ? "#ffb300" : "#5d6773"}"/>`;
+const spkLogo = (x, y, col, size = 4.2, word = "BOSE") => `<text x="${x}" y="${y}" text-anchor="middle" font-size="${size}" font-weight="700" letter-spacing=".5" fill="${col}" ${NT_FONT}>${word}</text>`;
+
+// A HomePod: a column of knit with rounded shoulders, the glass on top lit
+// with the Siri swirl while it plays.
+function ntSpkSmart(c) {
+  const p = spkPal("homepod", c.color);
+  const b = ntId(), k = ntId(), sh = ntId(), r = ntId(), gl = ntId(), tp = ntId();
+  const light = c.color === "white";
+  const body = "M35 47 C35 39.6 45 36 60 36 C75 36 85 39.6 85 47 V96 Q85 111 70 111 H50 Q35 111 35 96 Z";
+  return `<defs>${spkSide(b, p)}${spkKnit(k, light ? "#bdbab4" : "#0c0e10")}${spkFoot(sh)}${spkGlowDefs(r, gl)}
+<radialGradient id="${tp}" cx=".5" cy=".45" r=".6"><stop offset="0" stop-color="${p[4]}"/><stop offset="1" stop-color="${p[3]}"/></radialGradient></defs>
+${spkNotes(66, 4)}${ntWaves(60, 70, "var(--primary-color, #03a9f4)", 33)}
+${ntShadow(60, 112, 24)}
+<path d="${body}" fill="url(#${b})"/><path d="${body}" fill="url(#${k})"/><path d="${body}" fill="url(#${sh})"/>
+<path d="M39 46 Q40 40.6 47 39" fill="none" stroke="#fff" stroke-width="1.6" opacity="${light ? .9 : .25}" stroke-linecap="round"/>
+<path d="M41 50 V96" stroke="#fff" stroke-width="2.6" opacity="${light ? .45 : .12}" stroke-linecap="round"/>
+<ellipse cx="60" cy="40" rx="17" ry="3.2" fill="${p[2]}" opacity=".55"/>
+<ellipse cx="60" cy="39.8" rx="15.4" ry="2.7" fill="url(#${tp})"/>
+${spkSwirl(c, 60, 39.8, 10.4, 1.9, r, gl, light ? "#cfccc6" : "#0f1113")}
+${c.st === "paused" ? spkPause(60, 72, light ? "#7d7a74" : "#fff") : ""}${c.muted ? spkMute(66, 100) : ""}`;
+}
+// A HomePod mini: a ball of knit cut flat on top, the touch glass lit while
+// it plays, in its five colours.
+function ntSpkMini(c) {
+  const p = spkPal("mini", c.color);
+  const b = ntId(), k = ntId(), r = ntId(), gl = ntId(), tp = ntId();
+  const light = c.color && c.color !== "black";
+  const ball = "M42.6 54 A30 30 0 0 0 42.8 103 H77.2 A30 30 0 0 0 77.4 54 Z";
+  return `<defs><radialGradient id="${b}" cx=".34" cy=".3" r=".85"><stop offset="0" stop-color="${p[0]}"/><stop offset=".55" stop-color="${p[1]}"/><stop offset="1" stop-color="${p[2]}"/></radialGradient>
+${spkKnit(k, light ? "#000" : "#0c0e10")}${spkGlowDefs(r, gl)}
+<radialGradient id="${tp}" cx=".5" cy=".45" r=".6"><stop offset="0" stop-color="${p[4]}"/><stop offset="1" stop-color="${p[3]}"/></radialGradient></defs>
+${spkNotes(64, 18)}${ntWaves(60, 78, "var(--primary-color, #03a9f4)", 36)}
+${ntShadow(60, 107, 22)}
+<ellipse cx="60" cy="103.4" rx="15.6" ry="2.2" fill="${p[2]}"/><ellipse cx="60" cy="103.8" rx="11" ry="1.4" fill="#000" opacity=".35"/>
+<path d="${ball}" fill="url(#${b})"/><path d="${ball}" fill="url(#${k})" opacity="${light ? .35 : 1}"/>
+<path d="M36 72 Q37 60 46 56" fill="none" stroke="#fff" stroke-width="2.2" opacity="${light ? .55 : .2}" stroke-linecap="round"/>
+<ellipse cx="60" cy="54.2" rx="17.6" ry="4.2" fill="${p[2]}"/>
+<ellipse cx="60" cy="53.8" rx="15.6" ry="3.5" fill="url(#${tp})"/>
+${spkSwirl(c, 60, 53.8, 10, 2.2, r, gl, light ? p[2] : "#0f1113")}
+${c.st === "paused" ? spkPause(60, 80, light ? "#00000080" : "#fff") : ""}${c.muted ? spkMute(70, 102) : ""}`;
+}
+// The touch controls on top of a Sonos: play, the volume either side, its light.
+const sonosTop = (c, cx, cy, s, col) => `<g transform="translate(${cx} ${cy}) scale(${s} ${s * .36})" opacity=".85">
+${c.on ? `<rect x="-2.2" y="-2.6" width="1.5" height="5.2" fill="${col}"/><rect x=".7" y="-2.6" width="1.5" height="5.2" fill="${col}"/>` : `<path d="M-1.6 -2.8 L2.6 0 L-1.6 2.8 Z" fill="${col}"/>`}
+<path d="M-13 0 h5 M8 0 h5 M10.5 -2.5 v5" stroke="${col}" stroke-width="1.4"/></g>`;
+// A Sonos One: a squarish column, its grille wrapping round, the controls on top.
+function ntSpkOne(c) {
+  const p = spkPal("sonos", c.color);
+  const f = ntId(), h = ntId(), sh = ntId();
+  const light = c.color === "white";
+  return `<defs>${spkSide(f, p)}${spkHoles(h, light ? "#a9a8a3" : "#08090a")}${spkFoot(sh)}</defs>
+${spkNotes(62, 2)}${ntWaves(60, 68, "var(--primary-color, #03a9f4)", 32)}
+${ntShadow(60, 111, 26)}
+<path d="M35 44 Q35 33 46 33 H74 Q85 33 85 44 V100 Q85 110 75 110 H45 Q35 110 35 100 Z" fill="url(#${f})"/>
+<path d="M37 47 Q37 40 44 40 H76 Q83 40 83 47 V99 Q83 107 76 107 H44 Q37 107 37 99 Z" fill="url(#${h})"/>
+<path d="M35 44 Q35 33 46 33 H74 Q85 33 85 44 V100 Q85 110 75 110 H45 Q35 110 35 100 Z" fill="url(#${sh})"/>
+<path d="M37 42 Q38 35 46 35 H74 Q82 35 83 42 Q60 44.6 37 42 Z" fill="${p[3]}"/>
+${sonosTop(c, 60, 38.4, .9, light ? "#8f8e89" : "#c7ccd1")}${spkLed(c, 77, 37.6, .8)}
+<path d="M39 50 V98" stroke="#fff" stroke-width="2" opacity="${light ? .6 : .1}" stroke-linecap="round"/>
+${c.st === "paused" ? spkPause(60, 74, light ? "#6f6e69" : "#fff") : ""}${c.muted ? spkMute(66, 100) : ""}`;
+}
+// A Sonos Era 100: taller and softer than the One, its top sloping to a
+// groove for the volume.
+function ntSpkEra100(c) {
+  const p = spkPal("sonos", c.color);
+  const f = ntId(), h = ntId(), sh = ntId();
+  const light = c.color === "white";
+  const body = "M37 44 Q37 26 60 26 Q83 26 83 44 V96 Q83 111 68 111 H52 Q37 111 37 96 Z";
+  return `<defs>${spkSide(f, p)}${spkHoles(h, light ? "#a9a8a3" : "#08090a", 1.7, .44)}${spkFoot(sh)}</defs>
+${spkNotes(64, -2)}${ntWaves(60, 68, "var(--primary-color, #03a9f4)", 31)}
+${ntShadow(60, 112, 24)}
+<path d="${body}" fill="url(#${f})"/>
+<path d="M39 46 Q39 34 60 34 Q81 34 81 46 V95 Q81 108 67 108 H53 Q39 108 39 95 Z" fill="url(#${h})"/>
+<path d="${body}" fill="url(#${sh})"/>
+<path d="M39.6 36 Q42 27.6 60 27.6 Q78 27.6 80.4 36 Q60 39 39.6 36 Z" fill="${p[3]}"/>
+<path d="M50 32.6 Q60 34 70 32.6" fill="none" stroke="${light ? "#bdbcb7" : "#0b0d0f"}" stroke-width="1.6" stroke-linecap="round"/>
+${sonosTop(c, 60, 30.4, .62, light ? "#8f8e89" : "#c7ccd1")}${spkLed(c, 75, 31.6, .8)}
+<path d="M41 48 V96" stroke="#fff" stroke-width="2" opacity="${light ? .6 : .1}" stroke-linecap="round"/>
+${c.st === "paused" ? spkPause(60, 74, light ? "#6f6e69" : "#fff") : ""}${c.muted ? spkMute(66, 101) : ""}`;
+}
+// A Sonos Era 300: the hourglass, wide at the top and the foot and drawn in at
+// the waist, its grille all over.
+function ntSpkEra300(c) {
+  const p = spkPal("sonos", c.color);
+  const f = ntId(), h = ntId(), sh = ntId();
+  const light = c.color === "white";
+  const body = "M22 50 C22 41 29 38 37 38 H83 C91 38 98 41 98 50 C98 62 87 68 87 78 C87 88 97 94 97 102 C97 109 91 111 84 111 H36 C29 111 23 109 23 102 C23 94 33 88 33 78 C33 68 22 62 22 50 Z";
+  const grille = "M25 51 C25 44 31 42.6 37 42.6 H83 C89 42.6 95 44 95 51 C95 62 84.4 68 84.4 78 C84.4 88 94 94 94 101 C94 106 89 108 84 108 H36 C31 108 26 106 26 101 C26 94 35.6 88 35.6 78 C35.6 68 25 62 25 51 Z";
+  return `<defs>${spkSide(f, p)}${spkHoles(h, light ? "#a9a8a3" : "#08090a", 1.7, .44)}${spkFoot(sh)}</defs>
+${spkNotes(64, 10)}${ntWaves(60, 76, "var(--primary-color, #03a9f4)", 44)}
+${ntShadow(60, 112, 36)}
+<path d="${body}" fill="url(#${f})"/><path d="${grille}" fill="url(#${h})"/><path d="${body}" fill="url(#${sh})"/>
+<path d="M25 44 Q30 38.6 40 38.6 H80 Q90 38.6 95 44 Q60 47 25 44 Z" fill="${p[3]}"/>
+${sonosTop(c, 60, 42.2, .8, light ? "#8f8e89" : "#c7ccd1")}${spkLed(c, 82, 41.6, .8)}
+<path d="M29 52 Q30 62 37 70" fill="none" stroke="#fff" stroke-width="2" opacity="${light ? .6 : .12}" stroke-linecap="round"/>
+${c.st === "paused" ? spkPause(60, 76, light ? "#6f6e69" : "#fff") : ""}${c.muted ? spkMute(84, 100) : ""}`;
+}
+// A Sonos Move: a tall oval on its charging base, the handle cut into its back.
+function ntSpkMove(c) {
+  const p = spkPal("sonos", c.color);
+  const f = ntId(), h = ntId(), bs = ntId(), sh = ntId();
+  const light = c.color === "white";
+  const body = "M37 36 Q37 17 60 17 Q83 17 83 36 V95 Q83 108 60 108 Q37 108 37 95 Z";
+  return `<defs>${spkSide(f, p)}${spkHoles(h, light ? "#a9a8a3" : "#08090a", 1.8, .46)}${ntV(bs, light ? "#e2e1dd" : "#3a4047", light ? "#b3b2ad" : "#16191d")}${spkFoot(sh)}</defs>
+${spkNotes(62, -6)}${ntWaves(60, 64, "var(--primary-color, #03a9f4)", 32)}
+${ntShadow(60, 113, 26)}
+<path d="M39 105 H81 L85 111 Q85 113.6 81 113.6 H39 Q35 113.6 35 111 Z" fill="url(#${bs})"/>
+<path d="${body}" fill="url(#${f})"/>
+<path d="M39 40 Q39 32 47 32 H73 Q81 32 81 40 V94 Q81 105 60 105 Q39 105 39 94 Z" fill="url(#${h})"/>
+<path d="${body}" fill="url(#${sh})"/>
+<path d="M47 21.6 Q60 16 73 21.6 Q71 26.6 60 26 Q49 26.6 47 21.6 Z" fill="${light ? "#c9c8c3" : "#0b0d0f"}"/>
+${sonosTop(c, 60, 29, .7, light ? "#8f8e89" : "#c7ccd1")}${spkLed(c, 60, 101, 1)}
+<path d="M41 42 V94" stroke="#fff" stroke-width="2" opacity="${light ? .6 : .1}" stroke-linecap="round"/>
+${c.st === "paused" ? spkPause(60, 66, light ? "#6f6e69" : "#fff") : ""}${c.muted ? spkMute(70, 22) : ""}`;
+}
+// The television and the low cabinet a soundbar sits on.
+function spkTvCabinet(tv, sc, cb, ct) {
+  return `${ntPatch(60, 30, 66, 46, "#e9edf0")}
+<rect x="10" y="-2" width="100" height="58" rx="2.6" fill="url(#${tv})"/>
+<rect x="13" y="1" width="94" height="52" rx="1.2" fill="url(#${sc})"/>
+<path d="M13 1 L54 1 L30 53 L13 53 Z" fill="#fff" opacity=".05"/>
+${spkNotes(60, 40)}
+${ntWaves(60, 78, "var(--primary-color, #03a9f4)", 54)}
+${ntFoot("6 118 104 118 116 108 18 108", .3)}
+${ntRoundBox(6, 94, 96, 24, 11, 2, `url(#${cb})`, "#5d4430", `url(#${ct})`)}
+<path d="M54 96 V116" stroke="#5d4430" stroke-width=".8"/><circle cx="50" cy="106" r="1.1" fill="#e0d2bf"/><circle cx="58" cy="106" r="1.1" fill="#e0d2bf"/>`;
+}
+const spkTvDefs = (tv, sc, cb, ct) => `${ntV(tv, "#2b3036", "#121518")}${ntV(cb, "#a98a66", "#7a5f42")}${ntV(ct, "#c9ab84", "#a98a66")}
+<linearGradient id="${sc}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#3a5878"/><stop offset=".6" stop-color="#1d3047"/><stop offset="1" stop-color="#0f1c2b"/></linearGradient>`;
+// A soundbar (Sonos Arc, Beam) on a low cabinet under the television: a long
+// rounded bar, perforated all along, its light on top.
+function ntSpkBar(c) {
+  const p = spkPal("sonos", c.color);
+  const b = ntId(), tv = ntId(), cb = ntId(), ct = ntId(), sc = ntId(), h = ntId();
+  const light = c.color === "white";
+  return `<defs>${spkTvDefs(tv, sc, cb, ct)}${ntV(b, p[0], p[2])}${spkHoles(h, light ? "#a9a8a3" : "#08090a", 1.6, .42)}</defs>
+${spkTvCabinet(tv, sc, cb, ct)}
+<ellipse cx="60" cy="85" rx="48" ry="2.4" fill="#000" opacity=".22"/>
+<path d="M18 70 H102 Q109 70 109 77 Q109 84 102 84 H18 Q11 84 11 77 Q11 70 18 70 Z" fill="url(#${b})"/>
+<path d="M18 74 H102 Q106 74 106 78 Q106 82 102 82 H18 Q14 82 14 78 Q14 74 18 74 Z" fill="url(#${h})"/>
+<path d="M20 71.6 H100" stroke="#fff" stroke-width=".8" opacity="${light ? .9 : .3}" stroke-linecap="round"/>
+${spkLed(c, 60, 72.6, .9)}
+${c.st === "paused" ? spkPause(60, 28) : ""}${c.muted ? spkMute(92, 62) : ""}`;
+}
+// A Bose Smart Soundbar on the same cabinet: a slimmer bar wrapped in its
+// metal grille, the glass on top and its light bar.
+function ntSpkBoseBar(c) {
+  const p = spkPal("bose500", c.color === "white" ? "silver" : c.color);
+  const b = ntId(), tv = ntId(), cb = ntId(), ct = ntId(), sc = ntId(), h = ntId(), g = ntId();
+  const light = c.color === "white" || c.color === "silver";
+  return `<defs>${spkTvDefs(tv, sc, cb, ct)}${ntV(b, p[0], p[2])}${spkHoles(h, light ? "#7d848b" : "#050607", 1.5, .4)}${ntBlur(g, 1.2)}</defs>
+${spkTvCabinet(tv, sc, cb, ct)}
+<ellipse cx="60" cy="84" rx="50" ry="2.2" fill="#000" opacity=".22"/>
+<path d="M14 73 Q14 71 17 71 H103 Q106 71 106 73 V80 Q106 83 103 83 H17 Q14 83 14 80 Z" fill="url(#${b})"/>
+<path d="M14 74 H106 V80 Q106 83 103 83 H17 Q14 83 14 80 Z" fill="url(#${h})"/>
+<path d="M15 71.8 H105" stroke="#0b0d0f" stroke-width="1.6" stroke-linecap="round"/>
+${c.on ? `<path class="nta-glow" d="M54 71.8 H66" stroke="#fff" stroke-width="1.4" stroke-linecap="round" filter="url(#${g})"/><path d="M55 71.8 H65" stroke="#fff" stroke-width=".7" stroke-linecap="round"/>` : ""}
+${spkLogo(60, 81.4, light ? "#5d646b" : "#9aa1a8", 3.2)}
+${c.st === "paused" ? spkPause(60, 28) : ""}${c.muted ? spkMute(92, 62) : ""}`;
+}
+// A Bose Wave SoundTouch: the wide table unit with its arched top and the CD
+// slot, the display between its grilles, on its SoundTouch pedestal.
+function ntSpkWave(c) {
+  const p = spkPal("wave", c.color);
+  const b = ntId(), sh = ntId(), h = ntId(), ped = ntId();
+  const light = c.color === "silver" || c.color === "white";
+  const lit = c.on || c.st === "paused" || c.st === "idle";
+  const body = "M20 72 Q20 64.6 27 63.8 Q60 60.6 93 63.8 Q100 64.6 100 72 V96 Q100 102 94 102 H26 Q20 102 20 96 Z";
+  return `<defs>${ntV(b, p[1], p[2])}${spkHoles(h, light ? "#6f767d" : "#0b0c0e", 1.5, .45)}${ntV(ped, p[2], "#111316")}
+<linearGradient id="${sh}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${p[0]}"/><stop offset=".22" stop-color="${p[0]}" stop-opacity="0"/></linearGradient></defs>
+${spkNotes(60, 36)}${ntWaves(60, 86, "var(--primary-color, #03a9f4)", 41)}
+${ntFoot("24 110 96 110 102 102 18 102", .28)}
+<path d="M32 101 H88 L86 107 H34 Z" fill="url(#${ped})"/>
+<path d="${body}" fill="url(#${b})"/><path d="${body}" fill="url(#${sh})"/>
+<path d="M27 64.6 Q60 61.6 93 64.6" fill="none" stroke="#fff" stroke-width=".9" opacity="${light ? .9 : .35}" stroke-linecap="round"/>
+<rect x="23" y="72" width="74" height="27" rx="4" fill="url(#${h})"/>
+<rect x="45" y="68.6" width="30" height="1.4" rx=".7" fill="#0b0c0e"/>
+<rect x="47" y="73.6" width="26" height="11" rx="1.6" fill="#0d1116" stroke="${light ? "#8e959c" : "#000"}" stroke-width=".5"/>
+${lit ? `<text x="60" y="81.6" text-anchor="middle" font-size="5.2" fill="#7fd3ff" ${NT_FONT}${c.on ? ` class="nta-glow"` : ""}>${c.on ? "\u25b6 \u266a" : c.st === "paused" ? "II" : "12:00"}</text>` : ""}
+${spkLogo(60, 93, light ? "#5d646b" : "#9aa1a8", 4.4)}
+${c.muted ? spkMute(96, 56) : ""}`;
+}
+// A Bose Home Speaker 500: a flattened oval of perforated aluminium, its small
+// screen on the front, the light bar on top.
+function ntSpkBose500(c) {
+  const p = spkPal("bose500", c.color === "white" ? "silver" : c.color);
+  const f = ntId(), h = ntId(), sh = ntId(), art = ntId(), g = ntId();
+  const light = c.color !== "black";
+  const body = "M60 29 C78 29 84 33 85.4 49 C86.4 62 86.4 78 85.4 91 C84 107 78 111 60 111 C42 111 36 107 34.6 91 C33.6 78 33.6 62 34.6 49 C36 33 42 29 60 29 Z";
+  return `<defs>${spkSide(f, p)}${spkHoles(h, light ? "#6f767d" : "#050607", 1.4, .38)}${spkFoot(sh)}${ntBlur(g, 1.2)}
+<linearGradient id="${art}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ff7043"/><stop offset=".5" stop-color="#7e57c2"/><stop offset="1" stop-color="#26c6da"/></linearGradient></defs>
+${spkNotes(64, 2)}${ntWaves(60, 72, "var(--primary-color, #03a9f4)", 33)}
+${ntShadow(60, 112, 22)}
+<path d="${body}" fill="url(#${f})"/><path d="${body}" fill="url(#${h})"/><path d="${body}" fill="url(#${sh})"/>
+<rect x="50" y="44" width="20" height="14" rx="1.6" fill="#0b0d10" stroke="${light ? "#8e959c" : "#000"}" stroke-width=".5"/>
+${c.on ? `<rect x="51.6" y="45.6" width="10.8" height="10.8" rx=".8" fill="url(#${art})"/><path d="M64 48 h4.6 M64 51 h3.4 M64 54 h4" stroke="#cfd8dc" stroke-width=".8"/>`
+    : c.st === "paused" ? `<rect x="51.6" y="45.6" width="10.8" height="10.8" rx=".8" fill="url(#${art})" opacity=".45"/>${spkPause(57, 51)}`
+    : c.st === "idle" ? `<text x="60" y="53.2" text-anchor="middle" font-size="5" fill="#cfd8dc" ${NT_FONT}>12:00</text>` : ""}
+${c.on ? `<path class="nta-glow" d="M52 29.4 Q60 28.2 68 29.4" fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round" filter="url(#${g})"/>` : ""}
+<path d="M52 29.4 Q60 28.2 68 29.4" fill="none" stroke="${c.on ? "#fff" : "#0b0d10"}" stroke-width=".8" stroke-linecap="round"/>
+<path d="M39 50 Q37.6 70 39 90" fill="none" stroke="#fff" stroke-width="2.2" opacity="${light ? .55 : .12}" stroke-linecap="round"/>
+${spkLogo(60, 102, light ? "#5d646b" : "#9aa1a8", 3.6)}
+${c.muted ? spkMute(72, 100) : ""}`;
+}
+// A Bose SoundLink Flex: a rounded slab of soft-touch silicone, its metal
+// grille and logo on the front, the buttons along the top and its loop.
+function ntSpkFlex(c) {
+  const p = spkPal("flex", c.color);
+  const b = ntId(), h = ntId(), gr = ntId(), sh = ntId();
+  const light = c.color === "white";
+  const body = "M16 72 Q16 62 26 62 H94 Q104 62 104 72 V98 Q104 108 94 108 H26 Q16 108 16 98 Z";
+  return `<defs>${ntV(b, p[0], p[2])}${ntV(gr, light ? "#cfccc3" : "#3b3f45", light ? "#a29e93" : "#16181b")}${spkHoles(h, light ? "#6f6b62" : "#050607", 1.5, .42)}${spkFoot(sh)}</defs>
+${spkNotes(64, 26)}${ntWaves(60, 86, "var(--primary-color, #03a9f4)", 50)}
+${ntShadow(60, 110, 42)}
+<path d="M12 78 Q8 78 8 83 V89 Q8 94 12 94" fill="none" stroke="${p[3]}" stroke-width="3" stroke-linecap="round"/>
+<path d="${body}" fill="url(#${b})"/><path d="${body}" fill="url(#${sh})"/>
+<rect x="22" y="68" width="76" height="35" rx="6" fill="url(#${gr})"/><rect x="22" y="68" width="76" height="35" rx="6" fill="url(#${h})"/>
+${spkLogo(60, 88, light ? "#4a4740" : "#c9cdd1", 5.4)}
+${[-12, -4, 4, 12].map((dx, i) => `<rect x="${60 + dx - 2.6}" y="60.6" width="5.2" height="2.4" rx="1.2" fill="${p[3]}" stroke="${p[2]}" stroke-width=".4"/>${i === 1 && c.on ? `<circle class="nta-glow" cx="${60 + dx}" cy="61.8" r=".7" fill="#fff"/>` : ""}`).join("")}
+<path d="M24 65 H96" stroke="#fff" stroke-width="1.2" opacity="${light ? .7 : .2}" stroke-linecap="round"/>
+${spkLed(c, 96, 65.6, .8)}
+${c.st === "paused" ? spkPause(60, 46, "#8f98a2") : ""}${c.muted ? spkMute(84, 50) : ""}`;
+}
+// A bookshelf speaker in three-quarter view: its tweeter, and a woofer whose
+// cone beats with the music.
+function ntSpkShelf(c) {
+  const f = ntId(), sd = ntId(), tp = ntId(), w = ntId(), sr = ntId(), tw = ntId();
+  return `<defs>${ntV(f, "#3a4047", "#1c2024")}${ntV(sd, "#8d6e4a", "#5d4430")}${ntV(tp, "#a07e57", "#7a5c3e")}
+<radialGradient id="${w}" cx=".42" cy=".38" r=".7"><stop offset="0" stop-color="#6b7580"/><stop offset=".6" stop-color="#2b3036"/><stop offset="1" stop-color="#111417"/></radialGradient>
+<radialGradient id="${sr}" cx=".5" cy=".5" r=".5"><stop offset=".78" stop-color="#1b1f23"/><stop offset=".9" stop-color="#4a525b"/><stop offset="1" stop-color="#1b1f23"/></radialGradient>
+<radialGradient id="${tw}" cx=".4" cy=".35" r=".6"><stop offset="0" stop-color="#e3e7eb"/><stop offset="1" stop-color="#6b7580"/></radialGradient></defs>
+${spkNotes(60, 2)}${ntWaves(54, 64, "var(--primary-color, #03a9f4)", 36)}
+${ntFoot("24 116 84 116 98 104 38 104", .3)}
+${ntRoundBox(26, 20, 56, 94, 13, 3, `url(#${f})`, `url(#${sd})`, `url(#${tp})`, "#111417")}
+${[0, 1, 2, 3].map((i) => `<path d="M${85 + i * 2.6} ${19 - i * 2.6} V${110 - i * 2.6}" stroke="#4a3624" stroke-width=".5" opacity=".5"/>`).join("")}
+<path d="M29 23 H79" stroke="#5d6670" stroke-width=".8" opacity=".6"/>
+<circle cx="54" cy="40" r="10" fill="#111417" stroke="#4a525b" stroke-width="1"/><circle cx="54" cy="40" r="7" fill="#22272c"/>
+<circle cx="54" cy="40" r="4.2" fill="url(#${tw})"/><circle cx="52.6" cy="38.6" r="1.2" fill="#fff" opacity=".7"/>
+<circle cx="54" cy="78" r="24" fill="#111417" stroke="#4a525b" stroke-width="1.2"/>
+${[0, 1, 2, 3].map((i) => { const a = Math.PI / 4 + i * Math.PI / 2; return `<circle cx="${(54 + Math.cos(a) * 21.4).toFixed(1)}" cy="${(78 + Math.sin(a) * 21.4).toFixed(1)}" r="1.1" fill="#8f98a2"/>`; }).join("")}
+<g class="nta-pop"><circle cx="54" cy="78" r="19.4" fill="url(#${sr})"/><circle cx="54" cy="78" r="16.4" fill="url(#${w})"/>
+<circle cx="54" cy="78" r="6.4" fill="#3a4047"/><circle cx="52.4" cy="76.4" r="2.4" fill="#8f98a2" opacity=".5"/></g>
+<circle class="${c.on ? "nta-glow" : ""}" cx="54" cy="108" r="1.6" fill="${c.on ? "#69f0ae" : c.st === "paused" ? "#ffb300" : "#5d6773"}"/>
+${c.st === "paused" ? spkPause(54, 78) : ""}${c.muted ? spkMute(66, 26) : ""}`;
+}
+// A mesh of fabric, for the speakers dressed in it.
+const spkMesh = (id, op = .35) => `<pattern id="${id}" width="3" height="3" patternUnits="userSpaceOnUse"><path d="M0 3 L3 0 M-1 1 L1 -1 M2 4 L4 2" stroke="#000" stroke-width=".5" opacity="${op}"/></pattern>`;
+const spkGlowDefs = (r, gl) => `<linearGradient id="${r}" x1="0" x2="1"><stop offset="0" stop-color="#ff4081"/><stop offset=".33" stop-color="#7c4dff"/><stop offset=".66" stop-color="#18ffff"/><stop offset="1" stop-color="#ffab40"/></linearGradient>${ntBlur(gl, 2.2)}`;
+// An Echo Dot: a ball of fabric, the light ring around its foot.
+function ntSpkDot(c) {
+  const b = ntId(), m = ntId(), rg = ntId(), gl = ntId();
+  return `<defs><radialGradient id="${b}" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#6f7983"/><stop offset=".6" stop-color="#3a4249"/><stop offset="1" stop-color="#1a1e22"/></radialGradient>${spkMesh(m)}
+<linearGradient id="${rg}" x1="0" x2="1"><stop offset="0" stop-color="#00e5ff"/><stop offset=".5" stop-color="#2979ff"/><stop offset="1" stop-color="#00e5ff"/></linearGradient>${ntBlur(gl, 2)}</defs>
+${spkNotes(62, 14)}${ntWaves(60, 70, "#00b8d4", 38)}
+${ntShadow(60, 110, 26)}
+<circle cx="60" cy="72" r="34" fill="url(#${b})"/><circle cx="60" cy="72" r="34" fill="url(#${m})"/>
+<path d="M34 60 Q40 44 56 40" fill="none" stroke="#fff" stroke-width="2.4" opacity=".16" stroke-linecap="round"/>
+<path d="M30 92 Q60 108 90 92" fill="none" stroke="#1a1e22" stroke-width="4" stroke-linecap="round"/>
+${c.on ? `<path class="nta-glow" d="M30 92 Q60 108 90 92" fill="none" stroke="url(#${rg})" stroke-width="5" stroke-linecap="round" filter="url(#${gl})"/><path d="M30 92 Q60 108 90 92" fill="none" stroke="url(#${rg})" stroke-width="2.4" stroke-linecap="round"/>` : ""}
+${[[46, 52], [74, 52], [52, 46], [68, 46]].map(([x, y]) => `<circle cx="${x}" cy="${y}" r="2" fill="#262b30" stroke="#5d6670" stroke-width=".5"/>`).join("")}
+${c.st === "paused" ? spkPause(60, 74) : ""}${c.muted ? spkMute(72, 46) : ""}`;
+}
+// A Nest Mini: a pebble of fabric on the table, four lights under the fabric.
+function ntSpkNest(c) {
+  const t = ntId(), sd = ntId(), m = ntId(), gl = ntId();
+  return `<defs><radialGradient id="${t}" cx=".42" cy=".3" r=".75"><stop offset="0" stop-color="#fbfbfa"/><stop offset=".7" stop-color="#e2e0db"/><stop offset="1" stop-color="#c8c5be"/></radialGradient>${ntV(sd, "#d9d6d0", "#99958d")}${spkMesh(m, .16)}${ntBlur(gl, 1.4)}</defs>
+${spkNotes(60, 26)}${c.on ? ntWaves(60, 76, "var(--primary-color, #03a9f4)", 52) : ""}
+${ntShadow(60, 104, 48)}
+<path d="M12 80 Q12 100 60 102 Q108 100 108 80 Z" fill="url(#${sd})"/>
+<path d="M12 80 Q12 100 60 102 Q108 100 108 80 Z" fill="url(#${m})"/>
+<path d="M12 80 Q12 60 60 58 Q108 60 108 80 Q108 92 60 93 Q12 92 12 80 Z" fill="url(#${t})"/>
+<path d="M12 80 Q12 60 60 58 Q108 60 108 80 Q108 92 60 93 Q12 92 12 80 Z" fill="url(#${m})"/>
+<path d="M22 72 Q36 62 58 61" fill="none" stroke="#fff" stroke-width="2.4" opacity=".7" stroke-linecap="round"/>
+${[-1.5, -.5, .5, 1.5].map((k, i) => `<circle class="${c.on ? `nta-glow ntd${i + 1}` : ""}" cx="${60 + k * 8}" cy="76" r="2" fill="${c.on ? "#ffffff" : c.st === "paused" ? "#ffb74d" : "#cbc8c1"}"${c.on ? ` filter="url(#${gl})"` : ""}/>
+${c.on ? `<circle cx="${60 + k * 8}" cy="76" r="1.2" fill="#fff"/>` : ""}`).join("")}
+${c.st === "paused" ? spkPause(60, 44, "#8d8a83") : ""}${c.muted ? spkMute(96, 52) : ""}`;
+}
+// Game consoles. Sparks rise while a game runs; a console's light is lit
+// when it is on, amber in rest mode, dark when it is off.
+const conSparks = (c, x, y) => (c.st === "playing" ? `<g class="nt-run">${[["\u2726", 0, 0, 9], ["\u2727", 15, 8, 8], ["\u2726", -14, 10, 7]].map(([n, dx, dy, fs], i) => `<text class="nta-rise ntd${i * 2 + 1}" x="${x + dx}" y="${y + dy}" font-size="${fs}" fill="var(--primary-color, #03a9f4)" ${NT_FONT}>${n}</text>`).join("")}</g>` : "");
+const conLit = (c, on, rest = "#ffa000", off = "#3a3f45") => (c.on ? on : c.st === "rest" ? rest : off);
+const conLed = (c, x, y, r, on, rest = "#ffa000") => `<circle class="${c.on ? "nta-glow" : ""}" cx="${x}" cy="${y}" r="${r}" fill="${conLit(c, on, rest)}"/>`;
+const conPorts = (xs, y, w = 7, h = 3.4, fill = "#2a2c30") => xs.map((x) => `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="1" fill="${fill}"/>`).join("");
+// What a handheld's screen shows: a game while one runs, the home menu when
+// it is only on, nothing when it is off or asleep.
+function conScreen(c, x, y, w, h, id) {
+  if (c.st === "playing") {
+    return `<defs><linearGradient id="${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#6ec6ff"/><stop offset=".62" stop-color="#bfe8ff"/><stop offset=".62" stop-color="#5cb85c"/><stop offset="1" stop-color="#3d8b3d"/></linearGradient></defs>
+<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="1" fill="url(#${id})"/>
+<path d="M${x} ${y + h * .66} Q${x + w * .3} ${y + h * .44} ${x + w * .55} ${y + h * .62} T${x + w} ${y + h * .58} V${y + h} H${x} Z" fill="#4caf50"/>
+<circle cx="${x + w * .78}" cy="${y + h * .26}" r="${h * .12}" fill="#ffd54f"/>
+<g class="nta-pop"><rect x="${x + w * .3}" y="${y + h * .5}" width="${w * .09}" height="${h * .16}" rx=".6" fill="#e53935"/><circle cx="${x + w * .345}" cy="${y + h * .46}" r="${h * .06}" fill="#ffcc80"/></g>`;
+  }
+  if (c.on) {
+    const tw = (w - 8) / 4;
+    return `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="1" fill="#eceff1"/>${[0, 1, 2, 3].map((i) => `<rect x="${(x + 2 + i * (tw + 1.33)).toFixed(1)}" y="${(y + h * .32).toFixed(1)}" width="${tw.toFixed(1)}" height="${(h * .36).toFixed(1)}" rx=".6" fill="${["#ef5350", "#42a5f5", "#ffca28", "#66bb6a"][i]}"/>`).join("")}`;
+  }
+  return `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="1" fill="#0d0f12"/><path d="M${x + 2} ${y + 2} L${x + w * .4} ${y + 2} L${x + 2} ${y + h * .7} Z" fill="#fff" opacity=".06"/>`;
+}
+
+// PlayStation: the grey box with its round lid.
+function conPs1(c) {
+  const f = ntId(), s = ntId(), t = ntId();
+  return `<defs>${ntV(f, "#d4d3cf", "#b9b8b3")}${ntV(s, "#aeada8", "#93928d")}${ntV(t, "#e6e5e1", "#d2d1cc")}</defs>
+${conSparks(c, 60, 22)}${ntFoot("12 106 100 106 118 90 30 90", .25)}
+${ntRoundBox(14, 70, 84, 30, 20, 3, `url(#${f})`, `url(#${s})`, `url(#${t})`, "#a3a29d")}
+<ellipse cx="72" cy="60" rx="21" ry="7" fill="#c3c2bd" stroke="#a3a29d" stroke-width=".8"/><ellipse cx="72" cy="59.4" rx="17" ry="5.4" fill="#d9d8d3"/>
+<ellipse cx="72" cy="59.4" rx="3" ry="1" fill="#b0afaa"/>
+<circle cx="36" cy="64" r="2.4" fill="#bdbcb7" stroke="#9a9994" stroke-width=".5"/><circle cx="44" cy="64" r="2.4" fill="#bdbcb7" stroke="#9a9994" stroke-width=".5"/><circle cx="102" cy="58" r="2.4" fill="#bdbcb7" stroke="#9a9994" stroke-width=".5"/>
+${conLed(c, 31, 62, 1, "#7cff6b")}
+${conPorts([24, 40], 84, 12, 6, "#8f8e89")}${conPorts([26, 42], 77, 8, 2.4, "#3a3a3a")}
+<path d="M14 96 H98" stroke="#a3a29d" stroke-width=".6"/>`;
+}
+// PlayStation 2: the black slab, its ridged left side, the tray and the
+// blue light.
+function conPs2(c) {
+  const f = ntId(), s = ntId(), t = ntId();
+  return `<defs>${ntV(f, "#2b2d31", "#17181b")}${ntV(s, "#1a1b1e", "#0d0e10")}${ntV(t, "#3b3e43", "#25272b")}</defs>
+${conSparks(c, 60, 26)}${ntFoot("10 104 96 104 112 90 26 90", .28)}
+${ntRoundBox(12, 72, 86, 26, 16, 2, `url(#${f})`, `url(#${s})`, `url(#${t})`)}
+${[0, 1, 2, 3, 4].map((i) => `<path d="M14 ${76 + i * 4.4} H44" stroke="#0b0c0e" stroke-width="1.3"/><path d="M14 ${77.2 + i * 4.4} H44" stroke="#4a4d52" stroke-width=".4"/>`).join("")}
+${[0, 1, 2, 3, 4, 5].map((i) => `<path d="M${20 + i * 12} 72 L${36 + i * 12} 56" stroke="#1a1b1e" stroke-width="1.6"/>`).join("")}
+<path d="M48 80 H94" stroke="#0b0c0e" stroke-width="1.2"/><path d="M48 81 H94" stroke="#55585e" stroke-width=".4"/>
+<circle cx="52" cy="88" r="1.8" fill="${conLit(c, "#2979ff", "#2979ff", "#1a2a44")}"${c.on ? ` class="nta-glow"` : ""}/>
+${conLed(c, 88, 88, 1.2, "#7cff6b", "#ff3d00")}<rect x="84" y="91.4" width="8" height="2" rx="1" fill="#3a3d42"/>
+${conPorts([60, 70], 90, 7, 3)}`;
+}
+// PlayStation 3: the glossy black bulge, its silver band and the slot.
+function conPs3(c) {
+  const g = ntId(), t = ntId(), band = ntId();
+  return `<defs><linearGradient id="${g}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#4b4f55"/><stop offset=".25" stop-color="#16181b"/><stop offset="1" stop-color="#050506"/></linearGradient>
+<linearGradient id="${t}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#6b7077"/><stop offset="1" stop-color="#1c1e21"/></linearGradient>${ntV(band, "#e3e6e9", "#9aa1a8")}</defs>
+${conSparks(c, 60, 28)}${ntShadow(60, 104, 50)}
+<path d="M10 102 V80 Q10 66 60 62 Q110 66 110 80 V102 Z" fill="url(#${g})"/>
+<path d="M16 76 Q20 67 60 64.6 Q100 67 104 76" fill="none" stroke="url(#${t})" stroke-width="3" opacity=".7"/>
+<path d="M10 92 H110 V98 H10 Z" fill="url(#${band})"/>
+<path d="M30 83 H90" stroke="#000" stroke-width="1.4"/><path d="M30 84 H90" stroke="#3a3d42" stroke-width=".4"/>
+<path d="M18 80 Q24 72 40 70" fill="none" stroke="#fff" stroke-width="1.6" opacity=".35" stroke-linecap="round"/>
+${conLed(c, 20, 88, 1.1, "#7cff6b", "#ff3d00")}${conLed(c, 100, 88, 1.1, "#7cff6b", "#5d6773")}`;
+}
+// PlayStation 4: slabs stacked a little off true, matte over glossy, the
+// light bar in the groove between them; the Pro has three.
+function conPs4(c, pro) {
+  const m = ntId(), ms = ntId(), mt = ntId(), g = ntId(), gs = ntId(), gt = ntId(), lb = ntId();
+  const bar = conLit(c, "#2979ff", "#ffa000", "#202226");
+  const slabs = pro ? [[16, 88, 12], [12, 76, 12], [16, 64, 12]] : [[18, 86, 14], [13, 72, 14]];
+  const top = slabs[slabs.length - 1];
+  return `<defs>${ntV(m, "#2f3236", "#1b1c1f")}${ntV(ms, "#1d1e21", "#111214")}${ntV(mt, "#3a3d42", "#2a2c30")}
+${ntV(g, "#3b3e44", "#0d0e10")}${ntV(gs, "#1a1b1e", "#08090a")}${ntV(gt, "#4a4d53", "#2b2d31")}${ntBlur(lb, 1.4)}</defs>
+${conSparks(c, 64, top[1] - 34)}${ntFoot("12 106 98 106 116 90 30 90", .28)}
+${slabs.map(([x, y, h], i) => ntRoundBox(x, y, 80, h, 16, 1.5, `url(#${i % 2 ? g : m})`, `url(#${i % 2 ? gs : ms})`, `url(#${i % 2 ? gt : mt})`)).join("")}
+<path d="M${top[0] + 46} ${top[1] - 1} L${top[0] + 60} ${top[1] - 15}" stroke="#08090a" stroke-width="2.2"/>
+<path d="M${top[0] + 46} ${top[1] - 1} L${top[0] + 60} ${top[1] - 15}" stroke="${bar}" stroke-width="1.2"${c.on ? ` filter="url(#${lb})" class="nta-glow"` : ""}/>
+${c.on || c.st === "rest" ? `<path d="M${top[0] + 46} ${top[1] - 1} L${top[0] + 60} ${top[1] - 15}" stroke="${bar}" stroke-width=".6"/>` : ""}
+<path d="M${slabs[0][0] + 4} ${slabs[0][1] + 5} H${slabs[0][0] + 40}" stroke="#000" stroke-width=".9"/>`;
+}
+// PlayStation 5: the white wings flaring around the black core, the light
+// along their inner edges, on its round stand.
+function conPs5(c) {
+  const w = ntId(), k = ntId(), lb = ntId();
+  const light = conLit(c, "#4aa8ff", "#ffa000", "#2a2f36");
+  return `<defs><linearGradient id="${w}" x1="0" x2="1"><stop offset="0" stop-color="#cfd3d7"/><stop offset=".4" stop-color="#ffffff"/><stop offset="1" stop-color="#dfe2e5"/></linearGradient>
+<linearGradient id="${k}" x1="0" x2="1"><stop offset="0" stop-color="#0b0c0e"/><stop offset=".5" stop-color="#2a2d31"/><stop offset="1" stop-color="#0b0c0e"/></linearGradient>${ntBlur(lb, 1.6)}</defs>
+${conSparks(c, 64, -4)}${ntShadow(60, 113, 22)}
+<ellipse cx="60" cy="110" rx="17" ry="3.6" fill="#1c1e21"/>
+<path d="M48 14 V106 H72 V14 Z" fill="url(#${k})"/>
+${[0, 1, 2, 3, 4, 5].map((i) => `<path d="M52 ${20 + i * 3} H68" stroke="#000" stroke-width=".8"/>`).join("")}
+<path d="M48 16 C40 14 30 12 26 10 C30 40 36 80 40 106 H48 Z" fill="url(#${w})"/>
+<path d="M72 16 C80 14 90 12 94 10 C90 40 84 80 80 106 H72 Z" fill="url(#${w})"/>
+<path d="M48 16 V106 M72 16 V106" stroke="${light}" stroke-width="1.4"${c.on ? ` filter="url(#${lb})" class="nta-glow"` : ""}/>
+<path d="M48 16 V106 M72 16 V106" stroke="${light}" stroke-width=".6"/>
+<path d="M50 92 H70" stroke="#000" stroke-width="1.4"/>`;
+}
+// Xbox: the big black box and the green jewel on top.
+function conXbox(c) {
+  const f = ntId(), s = ntId(), t = ntId(), j = ntId(), gl = ntId();
+  return `<defs>${ntV(f, "#25272a", "#121314")}${ntV(s, "#151618", "#0a0a0b")}${ntV(t, "#33363a", "#1f2124")}
+<radialGradient id="${j}" cx=".4" cy=".35" r=".7"><stop offset="0" stop-color="${c.on ? "#b9ff7a" : "#7fb35a"}"/><stop offset=".6" stop-color="${c.on ? "#4caf1f" : "#36602a"}"/><stop offset="1" stop-color="#1d3a12"/></radialGradient>${ntBlur(gl, 2)}</defs>
+${conSparks(c, 60, 22)}${ntFoot("12 108 100 108 118 92 30 92", .28)}
+${ntRoundBox(14, 70, 84, 32, 20, 5, `url(#${f})`, `url(#${s})`, `url(#${t})`)}
+${c.on ? `<ellipse class="nta-glow" cx="66" cy="60" rx="12" ry="4.6" fill="#76ff03" opacity=".5" filter="url(#${gl})"/>` : ""}
+<ellipse cx="66" cy="60" rx="10" ry="3.8" fill="url(#${j})" stroke="#0a0a0b" stroke-width=".6"/>
+<path d="M60 58 L72 62 M72 58 L60 62" stroke="#1d3a12" stroke-width="1" opacity=".55"/>
+<path d="M22 80 H66" stroke="#000" stroke-width="1.3"/>
+<circle cx="78" cy="80" r="2.4" fill="#3a3d42" stroke="#000" stroke-width=".5"/>${conLed(c, 78, 80, 1, "#76ff03", "#5d6773")}<circle cx="87" cy="80" r="2.4" fill="#3a3d42" stroke="#000" stroke-width=".5"/>
+${conPorts([22, 37, 52, 67], 91, 10, 4, "#0a0a0b")}`;
+}
+// Xbox 360: white, standing, its sides drawn in, the ring of light.
+function conX360(c) {
+  const f = ntId(), sd = ntId(), gl = ntId();
+  const ring = c.on ? "#76ff03" : c.st === "rest" ? "#ffa000" : "#c3c7cb";
+  return `<defs><linearGradient id="${f}" x1="0" x2="1"><stop offset="0" stop-color="#d7dbdf"/><stop offset=".4" stop-color="#fbfcfc"/><stop offset="1" stop-color="#e3e6e9"/></linearGradient>${ntV(sd, "#9aa1a8", "#6f767d")}${ntBlur(gl, 1.6)}</defs>
+${conSparks(c, 64, -2)}${ntShadow(60, 112, 28)}
+<path d="M80 18 L92 12 V102 L80 110 Z" fill="url(#${sd})"/>
+${[0, 1, 2, 3, 4, 5, 6, 7].map((i) => `<path d="M83 ${28 + i * 8} L89 ${25 + i * 8}" stroke="#555c63" stroke-width="1.6"/>`).join("")}
+<path d="M38 18 Q59 23 80 18 V110 Q59 105 38 110 Z" fill="url(#${f})" stroke="#bfc4c9" stroke-width=".5"/>
+<path d="M42 40 H76" stroke="#9aa1a8" stroke-width="1.2"/>
+${c.on ? `<circle class="nta-glow" cx="59" cy="31" r="5.6" fill="none" stroke="${ring}" stroke-width="2.4" filter="url(#${gl})"/>` : ""}
+<circle cx="59" cy="31" r="4.6" fill="#eef0f2" stroke="#b9bec3" stroke-width=".6"/>
+${[0, 1, 2, 3].map((i) => `<path d="M${59 + 5.6 * Math.cos(i * Math.PI / 2 + .2)} ${31 + 5.6 * Math.sin(i * Math.PI / 2 + .2)} A5.6 5.6 0 0 1 ${59 + 5.6 * Math.cos((i + 1) * Math.PI / 2 - .2)} ${31 + 5.6 * Math.sin((i + 1) * Math.PI / 2 - .2)}" fill="none" stroke="${ring}" stroke-width="1.4"/>`).join("")}
+${conPorts([46, 62], 98, 10, 3, "#9aa1a8")}`;
+}
+// Xbox One: the wide black box, its top half vents, half gloss, the white
+// light on its front.
+function conXone(c) {
+  const f = ntId(), s = ntId(), t = ntId(), gl = ntId();
+  return `<defs>${ntV(f, "#2a2c2f", "#111214")}${ntV(s, "#17181a", "#0a0a0b")}${ntV(t, "#2e3034", "#1b1c1f")}${ntBlur(gl, 1.6)}</defs>
+${conSparks(c, 60, 32)}${ntFoot("6 104 100 104 116 90 22 90", .28)}
+${ntRoundBox(8, 76, 92, 24, 16, 2, `url(#${f})`, `url(#${s})`, `url(#${t})`)}
+${Array.from({ length: 14 }, (_, i) => `<path d="M${12 + i * 3.6} 75 L${27 + i * 3.6} 61" stroke="#0b0c0e" stroke-width="1.6"/>`).join("")}
+<path d="M62 76 L78 60" stroke="#000" stroke-width=".8"/>
+<path d="M14 84 H58" stroke="#000" stroke-width="1.2"/>
+${c.on ? `<circle class="nta-glow" cx="90" cy="86" r="3.4" fill="#fff" filter="url(#${gl})"/>` : ""}<circle cx="90" cy="86" r="2.4" fill="${conLit(c, "#ffffff", "#9aa1a8", "#3a3d42")}"/>`;
+}
+// Xbox Series X: the black monolith, its round vents on top tinted green.
+function conXsx(c) {
+  const f = ntId(), s = ntId(), t = ntId(), gl = ntId();
+  return `<defs>${ntV(f, "#202224", "#111214")}${ntV(s, "#161719", "#0a0a0b")}${ntV(t, "#2a2c2f", "#1b1c1f")}${ntBlur(gl, 1.4)}</defs>
+${conSparks(c, 66, -2)}${ntFoot("34 114 82 114 100 98 52 98", .28)}
+${ntRoundBox(38, 28, 40, 84, 16, 3, `url(#${f})`, `url(#${s})`, `url(#${t})`)}
+<ellipse cx="66" cy="20" rx="15" ry="5.6" fill="#0a0a0b"/>
+${Array.from({ length: 18 }, (_, i) => { const a = i / 18 * Math.PI * 2; return `<circle cx="${(66 + Math.cos(a) * 11).toFixed(1)}" cy="${(20 + Math.sin(a) * 4).toFixed(1)}" r=".9" fill="${c.on ? "#3ad13a" : "#1f5a1f"}"/>`; }).join("")}
+${Array.from({ length: 10 }, (_, i) => { const a = i / 10 * Math.PI * 2; return `<circle cx="${(66 + Math.cos(a) * 6).toFixed(1)}" cy="${(20 + Math.sin(a) * 2.2).toFixed(1)}" r=".8" fill="${c.on ? "#3ad13a" : "#1f5a1f"}"/>`; }).join("")}
+<path d="M70 40 V96" stroke="#000" stroke-width="1"/>
+${c.on ? `<circle class="nta-glow" cx="46" cy="36" r="3" fill="#fff" filter="url(#${gl})"/>` : ""}<circle cx="46" cy="36" r="2" fill="${conLit(c, "#ffffff", "#9aa1a8", "#3a3d42")}"/>
+<rect x="44" y="100" width="6" height="2" rx="1" fill="#000"/>`;
+}
+// Xbox Series S: the small white box, the big black round vent on top.
+function conXss(c) {
+  const f = ntId(), s = ntId(), t = ntId(), gl = ntId();
+  return `<defs>${ntV(f, "#f4f5f5", "#d9dcde")}${ntV(s, "#c6cacd", "#a6abaf")}${ntV(t, "#ffffff", "#eceeef")}${ntBlur(gl, 1.4)}</defs>
+${conSparks(c, 60, 32)}${ntFoot("18 106 94 106 110 92 34 92", .22)}
+${ntRoundBox(20, 74, 74, 28, 18, 4, `url(#${f})`, `url(#${s})`, `url(#${t})`, "#c2c6c9")}
+<ellipse cx="66" cy="65" rx="22" ry="7.4" fill="#141516"/>
+${Array.from({ length: 5 }, (_, i) => `<ellipse cx="66" cy="65" rx="${20 - i * 4}" ry="${6.6 - i * 1.32}" fill="none" stroke="#2b2d30" stroke-width=".7"/>`).join("")}
+${c.on ? `<circle class="nta-glow" cx="28" cy="82" r="2.8" fill="#fff" filter="url(#${gl})"/>` : ""}<circle cx="28" cy="82" r="1.9" fill="${conLit(c, "#ffffff", "#9aa1a8", "#a6abaf")}" stroke="#a6abaf" stroke-width=".4"/>`;
+}
+// Nintendo Switch: the console in its dock, the red and blue Joy-Con either
+// side and its screen above the dock.
+function conSwitch(c, two) {
+  const dk = ntId(), ds = ntId(), dt = ntId(), sc = ntId(), l = ntId(), r = ntId();
+  const lcol = two ? ["#2b2d31", "#17181b"] : ["#00c3e3", "#0095b0"], rcol = two ? ["#2b2d31", "#17181b"] : ["#ff4554", "#d62f3d"];
+  const W = two ? 50 : 44, H = two ? 30 : 27, sx = 60 - W / 2, sy = 46 - (two ? 2 : 0), dy = sy + H * .62, dh = 30;
+  return `<defs>${ntV(dk, "#2c2e33", "#18191c")}${ntV(ds, "#1a1b1e", "#0e0f11")}${ntV(dt, "#3a3d42", "#25272b")}${ntV(l, ...lcol)}${ntV(r, ...rcol)}</defs>
+${conSparks(c, 64, 14)}${ntFoot(`${sx - 4} ${dy + dh + 5} ${sx + W - 4} ${dy + dh + 5} ${sx + W + 6} ${dy + dh - 4} ${sx + 4} ${dy + dh - 4}`, .28)}
+<rect x="${sx - 1}" y="${sy - 1}" width="${W + 2}" height="${H + 2}" rx="2" fill="#111215"/>
+${conScreen(c, sx + 2, sy + 2, W - 4, H - 4, sc)}
+<path d="M${sx - 1} ${sy + 2} Q${sx - 1} ${sy - 1} ${sx - 4} ${sy - 1} H${sx - 9} Q${sx - 13} ${sy - 1} ${sx - 13} ${sy + 4} V${sy + H - 3} Q${sx - 13} ${sy + H + 1} ${sx - 9} ${sy + H + 1} H${sx - 1} Z" fill="url(#${l})"/>
+<path d="M${sx + W + 1} ${sy + 2} Q${sx + W + 1} ${sy - 1} ${sx + W + 4} ${sy - 1} H${sx + W + 9} Q${sx + W + 13} ${sy - 1} ${sx + W + 13} ${sy + 4} V${sy + H - 3} Q${sx + W + 13} ${sy + H + 1} ${sx + W + 9} ${sy + H + 1} H${sx + W + 1} Z" fill="url(#${r})"/>
+<circle cx="${sx - 7}" cy="${sy + 7}" r="2.6" fill="#1b1c1f"/><circle cx="${sx - 7}" cy="${sy + 7}" r="1.6" fill="#3a3d42"/>
+<circle cx="${sx + W + 7}" cy="${sy + 15}" r="2.6" fill="#1b1c1f"/><circle cx="${sx + W + 7}" cy="${sy + 15}" r="1.6" fill="#3a3d42"/>
+${[[0, -2.6], [2.6, 0], [0, 2.6], [-2.6, 0]].map(([dx, dy]) => `<circle cx="${sx + W + 7 + dx}" cy="${sy + 6 + dy}" r=".9" fill="#1b1c1f"/>`).join("")}
+${two ? `<circle cx="${sx - 7}" cy="${sy + 7}" r="3.2" fill="none" stroke="#2979ff" stroke-width=".7"/><circle cx="${sx + W + 7}" cy="${sy + 15}" r="3.2" fill="none" stroke="#ff4554" stroke-width=".7"/>` : ""}
+${ntRoundBox(sx - 1, dy, W - 6, dh, 8, 4, `url(#${dk})`, `url(#${ds})`, `url(#${dt})`)}
+<path d="M${sx + 5} ${dy + 2} H${sx + W - 13}" stroke="#000" stroke-width="1.2" opacity=".6"/>
+${conLed(c, sx + W - 12, dy + dh - 4, .9, "#7cff6b", "#5d6773")}`;
+}
+// Nintendo Switch Lite: the handheld in one piece, its screen in the middle.
+function conSwitchLite(c) {
+  const b = ntId(), sc = ntId();
+  return `<defs>${ntV(b, "#5fd3e0", "#2aa3b3")}</defs>
+${conSparks(c, 62, 32)}${ntShadow(60, 104, 46)}
+<path d="M24 58 H96 Q110 58 110 72 V86 Q110 100 96 100 H24 Q10 100 10 86 V72 Q10 58 24 58 Z" fill="url(#${b})"/>
+<path d="M22 60 H98" stroke="#fff" stroke-width="1" opacity=".5" stroke-linecap="round"/>
+<rect x="33" y="61" width="54" height="36" rx="2" fill="#141518"/>
+${conScreen(c, 35.4, 63.4, 49.2, 31.2, sc)}
+<circle cx="21" cy="70" r="4.4" fill="#1b1c1f"/><circle cx="21" cy="70" r="3" fill="#33363b"/>
+<path d="M19.4 82 h3.2 v2.4 h2.4 v3.2 h-2.4 v2.4 h-3.2 v-2.4 h-2.4 v-3.2 h2.4 Z" fill="#1b1c1f"/>
+<circle cx="99" cy="86" r="4.4" fill="#1b1c1f"/><circle cx="99" cy="86" r="3" fill="#33363b"/>
+${[[0, -3.4], [3.4, 0], [0, 3.4], [-3.4, 0]].map(([dx, dy]) => `<circle cx="${99 + dx}" cy="${72 + dy}" r="1.3" fill="#1b1c1f"/>`).join("")}`;
+}
+// NES: the grey box, its dark band, the cartridge door, the red light.
+function conNes(c) {
+  const f = ntId(), s = ntId(), t = ntId();
+  return `<defs>${ntV(f, "#d5d3cc", "#bfbdb5")}${ntV(s, "#acaaa2", "#94928a")}${ntV(t, "#e2e0d9", "#cfcdc6")}</defs>
+${conSparks(c, 60, 24)}${ntFoot("12 106 100 106 118 90 30 90", .25)}
+${ntRoundBox(14, 70, 84, 30, 20, 2, `url(#${f})`, `url(#${s})`, `url(#${t})`, "#9e9c94")}
+${[0, 1, 2, 3, 4, 5, 6, 7].map((i) => `<path d="M${20 + i * 3} 68 L${40 + i * 3} 52" stroke="#bdbbb3" stroke-width=".8"/>`).join("")}
+<rect x="14" y="86" width="84" height="14" fill="#3b3b3d"/>
+<rect x="30" y="73" width="46" height="11" rx="1" fill="#c9c7c0" stroke="#9e9c94" stroke-width=".6"/>
+${[0, 1, 2].map((i) => `<path d="M33 ${76 + i * 3} H73" stroke="#a9a7a0" stroke-width=".6"/>`).join("")}
+${conPorts([60, 72], 90.4, 9, 5, "#c9c7c0")}
+<rect x="20" y="90.4" width="6" height="4" rx=".6" fill="#c9c7c0"/><rect x="29" y="90.4" width="6" height="4" rx=".6" fill="#c9c7c0"/>
+<circle cx="40" cy="92.4" r="1.1" fill="${conLit(c, "#ff1744", "#ff1744", "#4a1a1a")}"${c.on ? ` class="nta-glow"` : ""}/>`;
+}
+// Super Nintendo: the rounded grey shell, its cartridge slot, the power and
+// reset switches.
+function conSnes(c) {
+  const f = ntId(), s = ntId(), t = ntId();
+  return `<defs>${ntV(f, "#cfcfcd", "#b4b4b1")}${ntV(s, "#a9a9a6", "#8f8f8c")}${ntV(t, "#e4e4e2", "#d0d0ce")}</defs>
+${conSparks(c, 60, 26)}${ntFoot("14 106 100 106 116 92 30 92", .25)}
+${ntRoundBox(16, 74, 82, 26, 18, 9, `url(#${f})`, `url(#${s})`, `url(#${t})`, "#9b9b98")}
+<path d="M48 64 H78 L82 60 H52 Z" fill="#3f3f45"/><path d="M50 63 H78" stroke="#7a7a80" stroke-width=".6"/>
+<rect x="30" y="64" width="9" height="3.4" rx="1.4" fill="#7e5fb0"/><rect x="88" y="62" width="9" height="3.4" rx="1.4" fill="#7e5fb0"/>
+<circle cx="45" cy="70" r="2" fill="#9b9b98"/>
+${conLed(c, 26, 78, 1, "#ff1744", "#ff1744")}
+<rect x="16" y="90" width="82" height="2" fill="#9b9b98"/>
+${conPorts([38, 66], 82, 12, 6, "#6f6f6c")}`;
+}
+// Nintendo 64: the dark shell flaring to its round shoulders, the cartridge
+// slot on the hump, four ports in front.
+function conN64(c) {
+  const g = ntId(), t = ntId();
+  return `<defs>${ntV(g, "#3a3c41", "#18191c")}<radialGradient id="${t}" cx=".5" cy=".3" r=".8"><stop offset="0" stop-color="#55585e"/><stop offset="1" stop-color="#1d1e21"/></radialGradient></defs>
+${conSparks(c, 60, 26)}${ntShadow(60, 106, 52)}
+<path d="M8 104 L16 80 Q20 70 34 68 H86 Q100 70 104 80 L112 104 Z" fill="url(#${g})"/>
+<path d="M36 70 Q36 56 60 54 Q84 56 84 70 Z" fill="url(#${t})"/>
+<rect x="48" y="58" width="24" height="5" rx="1.2" fill="#0b0c0e"/><path d="M50 60.6 H70" stroke="#3a3d42" stroke-width=".6"/>
+<rect x="22" y="72" width="10" height="3" rx="1.4" fill="#55585e"/><rect x="88" y="72" width="10" height="3" rx="1.4" fill="#55585e"/>
+${conLed(c, 36, 76, 1, "#ff1744", "#ff1744")}
+${conPorts([28, 46, 64, 82], 94, 10, 5, "#0b0c0e")}`;
+}
+// GameCube: the indigo cube, its handle at the back and the round lid.
+function conGamecube(c) {
+  const f = ntId(), s = ntId(), t = ntId();
+  return `<defs>${ntV(f, "#5a49a0", "#41337c")}${ntV(s, "#3d3075", "#2b2156")}${ntV(t, "#7564bd", "#5b4aa1")}</defs>
+${conSparks(c, 62, 4)}${ntFoot("22 112 90 112 108 94 40 94", .26)}
+<path d="M52 37 Q54 25 76 25 Q98 25 100 37" fill="none" stroke="#2b2156" stroke-width="5" stroke-linecap="round"/>
+${ntRoundBox(26, 54, 60, 54, 20, 7, `url(#${f})`, `url(#${s})`, `url(#${t})`)}
+<ellipse cx="66" cy="44" rx="19" ry="6.6" fill="#4a3b8c" stroke="#2b2156" stroke-width=".7"/><ellipse cx="66" cy="43.4" rx="15" ry="5" fill="#6857b0"/>
+${conLed(c, 32, 64, 1, "#7cff6b", "#ffa000")}<circle cx="78" cy="64" r="2.4" fill="#2b2156"/>
+${conPorts([32, 45, 58, 71], 96, 9, 5, "#2b2156")}`;
+}
+// Wii: the thin white console standing on its foot, the blue glow in its slot.
+function conWii(c) {
+  const f = ntId(), s = ntId(), t = ntId(), gl = ntId();
+  return `<defs>${ntV(f, "#ffffff", "#e3e6e9")}${ntV(s, "#e0e3e6", "#c3c8cc")}${ntV(t, "#ffffff", "#f1f3f4")}${ntBlur(gl, 1.6)}</defs>
+${conSparks(c, 70, -2)}${ntShadow(70, 112, 30)}
+<path d="M44 112 H88 L96 104 H52 Z" fill="#cfd3d7"/>
+${ntRoundBox(48, 24, 14, 84, 30, 2, `url(#${f})`, `url(#${s})`, `url(#${t})`, "#c8cdd2")}
+${c.on ? `<path class="nta-glow" d="M55 32 V96" stroke="#40c4ff" stroke-width="3" filter="url(#${gl})"/>` : ""}
+<path d="M55 32 V96" stroke="${c.on ? "#82e1ff" : "#9aa1a8"}" stroke-width="1.2"/>
+<circle cx="55" cy="101" r="1.2" fill="${conLit(c, "#7cff6b", "#ff1744", "#9aa1a8")}"/>`;
+}
+// Mega Drive: the black box, the round raised centre and its slot.
+function conMegadrive(c) {
+  const f = ntId(), s = ntId(), t = ntId();
+  return `<defs>${ntV(f, "#24262a", "#111214")}${ntV(s, "#151618", "#0a0a0b")}${ntV(t, "#303236", "#1b1c1f")}</defs>
+${conSparks(c, 60, 30)}${ntFoot("10 106 98 106 116 90 28 90", .28)}
+${ntRoundBox(12, 76, 86, 24, 20, 8, `url(#${f})`, `url(#${s})`, `url(#${t})`)}
+<ellipse cx="66" cy="66" rx="26" ry="8.4" fill="#0b0c0e"/><ellipse cx="66" cy="65" rx="23" ry="7.2" fill="#2b2d31"/>
+<ellipse cx="66" cy="65" rx="23" ry="7.2" fill="none" stroke="#c62828" stroke-width=".7"/>
+<rect x="52" y="63" width="28" height="4" rx="1" fill="#0b0c0e"/>
+${conLed(c, 22, 84, 1, "#ff1744", "#ff1744")}<rect x="26" y="83" width="12" height="2" rx="1" fill="#3a3d42"/>
+${conPorts([60, 74], 88, 10, 5, "#0b0c0e")}`;
+}
+const NT_DRAW = { irr_sprinkler: ntIrrSprinkler, irr_tap: ntIrrTap, lit_globe: ntLitterGlobe, lit_box: ntLitterBox, det_smoke: ntDetSmoke, det_co: ntDetCo, det_leak: ntDetLeak, spk_smart: ntSpkSmart, spk_homepod_mini: ntSpkMini, spk_sonos_one: ntSpkOne, spk_bookshelf: ntSpkShelf, spk_sonos_move: ntSpkMove, spk_soundbar: ntSpkBar, spk_echo_dot: ntSpkDot, spk_nest_mini: ntSpkNest, spk_sonos_era100: ntSpkEra100, spk_sonos_era300: ntSpkEra300, spk_bose_wave: ntSpkWave, spk_bose_500: ntSpkBose500, spk_bose_soundlink: ntSpkFlex, spk_bose_soundbar: ntSpkBoseBar, con_ps1: conPs1, con_ps2: conPs2, con_ps3: conPs3, con_ps4: (c) => conPs4(c, false), con_ps4_pro: (c) => conPs4(c, true), con_ps5: conPs5, con_xbox: conXbox, con_xbox_360: conX360, con_xbox_one: conXone, con_xbox_series_x: conXsx, con_xbox_series_s: conXss, con_switch: (c) => conSwitch(c, false), con_switch_2: (c) => conSwitch(c, true), con_switch_lite: conSwitchLite, con_nes: conNes, con_snes: conSnes, con_n64: conN64, con_gamecube: conGamecube, con_wii: conWii, con_megadrive: conMegadrive, mob_scooter: mobScooter, mob_offroad: mobOffroad, mob_ebike: mobEbike, mob_gyropode: mobGyropode, mob_motorcycle: mobMotorcycle, meter_box: ntMeterBox, meter_dome: ntMeterDome, meter_gas: ntGas, meter_water: ntWater, booster: ntBooster, sump: ntSump, pool: ntPoolRobot, floor: ntFloor, spa: ntSpa, sauna: ntSauna, aquarium: ntAquarium, linky: ntLinky, tree: ntTree };
+function ntSvg(d) {
+  ntN = 0;
+  const draw = NT_DRAW[d && d.kind] || ntLinky;
+  return `<svg class="nt-svg" viewBox="0 -10 120 135">${draw(d || {})}</svg>`;
+}
+function ntHtml(cls, d) {
+  const flags = ["nt", `nt-k-${(d && d.kind) || "none"}`, d && /^(irr|lit|det|spk)_/.test(d.kind) ? "nt-c7" : "", d && d.on ? "nt-on" : "", d && d.unav ? "nt-unav" : ""].filter(Boolean).join(" ");
+  return `
+        <div class="machine ${cls} ${flags}">${ntSvg(d)}</div>`;
 }
 
 // The new drawings' motion: nothing moves until the machine runs (nt-on),

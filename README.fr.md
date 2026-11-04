@@ -22,7 +22,7 @@ Une card Lovelace qui dessine les appareils de la maison et les anime selon leur
 
 ## Fonctionnalités
 
-- **56 types d'appareils, plus de 150 modèles dessinés**, animés pendant qu'ils travaillent et figés à l'arrêt. Le type est reconnu tout seul ou choisi avec `appliance_type`.
+- **57 types d'appareils, plus de 170 modèles dessinés**, animés pendant qu'ils travaillent et figés à l'arrêt. Le type est reconnu tout seul ou choisi avec `appliance_type`.
 - **Toutes les intégrations** : chaque champ est une entité à choisir. Une simple prise connectée suffit, sa puissance dit si l'appareil chauffe, lave ou essore.
 - **L'état compris** : `Idle`, `RUNNING`, `En marche`… deviennent veille, en cours, pause, terminé, différé ou erreur, avec l'étape du cycle (lavage, rinçage, essorage…).
 - **Ce qui compte pour chaque appareil** : programme, temps restant, porte, alertes, niveaux, températures, énergie et coût, marche du jour.
@@ -201,6 +201,13 @@ Clique sur une famille pour voir ses appareils en marche.
 
 </details>
 
+<details>
+<summary><b>Consoles de jeu</b></summary>
+
+<img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-consoles.fr.gif" alt="Consoles de jeu">
+
+</details>
+
 ## Installation
 
 ### Par HACS
@@ -241,7 +248,7 @@ Seule `state_entity` est obligatoire, sauf sur un réfrigérateur où une sonde 
 | `done_alert` | `true` fait pulser un badge vert sur le dessin en fin de cycle, jusqu'à l'ouverture de la porte ou un appui sur le badge. Pour les appareils à cycle (lave-linge, sèche-linge, lave-vaisselle, four…). |
 | `illustration_color` | `auto` (défaut, suit le thème) \| `white` \| `grey` \| `black` \| `red` (rouge foncé). Ne change que la carrosserie, pas les couleurs d'état. |
 | `language` | `auto` (défaut, suit Home Assistant) ou l'un des 14 codes : `en`, `fr`, `de`, `es`, `it`, `nl`, `pt`, `sv`, `no`, `da`, `pl`, `ru`, `zh`, `cs`. `nb` et `nb-NO` donnent le norvégien. |
-| `appliance_type` | `auto` (défaut) \| `washer` \| `dryer` \| `dishwasher` \| `oven` \| `microwave` \| `hood` \| `cooktop` \| `fridge` \| `kettle` \| `cooker` \| `coffee` \| `rice_cooker` \| `air_fryer` \| `water_heater` \| `boiler` \| `thermostat` \| `heat_pump` \| `printer_3d` \| `pet_feeder` \| `pet_fountain` \| `iron` \| `toaster` \| `pellet_stove` \| `air_conditioner` \| `dehumidifier` \| `space_heater` \| `towel_warmer` \| `air_purifier` \| `fan` \| `ev_charger` \| `hair_dryer` \| `screen` \| `network` \| `robot` \| `pool_pump` \| `scale` \| `ups` \| `solar` \| `home_battery` \| `camera` \| `diffuser` \| `hrv` \| `lamp` \| `mailbox` \| `water_pump` \| `floor_heating` \| `spa` \| `sauna` \| `aquarium` \| `meter` \| `christmas_tree` \| `mobility` \| `irrigation` \| `litter_box` \| `detector` \| `speaker`. |
+| `appliance_type` | `auto` (défaut) \| `washer` \| `dryer` \| `dishwasher` \| `oven` \| `microwave` \| `hood` \| `cooktop` \| `fridge` \| `kettle` \| `cooker` \| `coffee` \| `rice_cooker` \| `air_fryer` \| `water_heater` \| `boiler` \| `thermostat` \| `heat_pump` \| `printer_3d` \| `pet_feeder` \| `pet_fountain` \| `iron` \| `toaster` \| `pellet_stove` \| `air_conditioner` \| `dehumidifier` \| `space_heater` \| `towel_warmer` \| `air_purifier` \| `fan` \| `ev_charger` \| `hair_dryer` \| `screen` \| `network` \| `robot` \| `pool_pump` \| `scale` \| `ups` \| `solar` \| `home_battery` \| `camera` \| `diffuser` \| `hrv` \| `lamp` \| `mailbox` \| `water_pump` \| `floor_heating` \| `spa` \| `sauna` \| `aquarium` \| `meter` \| `christmas_tree` \| `mobility` \| `irrigation` \| `litter_box` \| `detector` \| `speaker` \| `console`. |
 | `tap_action` | Ce que fait un appui sur la carte, dans les mots de Home Assistant : `more-info` (défaut : l'entité d'état, ou sur une carte sans elle ce qu'elle lit à sa place), `none`, `navigate`, `url`, `toggle`, `perform-action` ou `fire-dom-event`, celle qu'écoutent les cartes popup bâties sur browser_mod. En YAML seulement. |
 | `illustration_tap_action` | Un appui sur le dessin seul, le reste de la carte gardant `tap_action` : `toggle` (une lampe allumée en la touchant), `more-info`, `none`, ou n'importe quelle action de Home Assistant. Sans lui, le dessin fait comme la carte. Avec `toggle`, le dessin répond comme les boutons, selon `controls_activation` : un appui, deux appuis ou un appui long. |
 | `show_toggle` | `false` retire le bouton allumer / éteindre d'une lampe, pour une carte qu'on allume en touchant son dessin (`illustration_tap_action: toggle`). |
@@ -1299,6 +1306,9 @@ disk2_entity: sensor.nas_drive_2_status
 | `co_level_entity` | détecteur | Le taux de CO, sur l'écran du détecteur et en ligne. |
 | `speaker_layout` | enceinte | `smart` (HomePod) \| `homepod_mini` \| `sonos_one` \| `sonos_era100` \| `sonos_era300` \| `sonos_move` \| `soundbar` (Sonos Arc ou Beam, sous sa télé) \| `bose_wave` (Wave SoundTouch) \| `bose_500` (Home Speaker 500) \| `bose_soundlink` (SoundLink Flex) \| `bose_soundbar` (Smart Soundbar, sous sa télé) \| `bookshelf` \| `echo_dot` \| `nest_mini`. Non renseigné, il se lit dans le nom : HomePod mini, Era 100, Era 300, Move, Arc, Beam, Wave, SoundLink, Flex, une autre Bose. L'état est un `media_player` : le titre, l'artiste, la source et le volume sont des lignes. |
 | `speaker_color` | enceinte | `white` \| `black` \| `silver` \| `yellow` \| `orange` \| `blue`, chaque modèle dans les couleurs où il est vendu : un HomePod blanc ou minuit, un HomePod mini dans les cinq, une Sonos blanche ou noire, une Bose 500 ou Wave argent ou noire, une SoundLink noire, blanche ou bleue. Sans elle, une couleur dans le nom la choisit (un HomePod nommé *blanc*), puis `illustration_color` ; sinon chaque modèle a la sienne. |
+| `console_layout` | console de jeu | `ps1` \| `ps2` \| `ps3` \| `ps4` \| `ps4_pro` \| `ps5` \| `xbox` \| `xbox_360` \| `xbox_one` \| `xbox_series_x` \| `xbox_series_s` \| `switch` \| `switch_2` \| `switch_lite` \| `nes` \| `snes` \| `n64` \| `gamecube` \| `wii` \| `megadrive`. Non renseigné, il se lit dans le nom (PS4 Pro, Series S, Switch Lite, N64...), une marque seule dessinant sa dernière console. L'état est un `media_player` (PlayStation Network, Xbox, l'intégration PS4), le statut en ligne de PlayStation Network, une prise connectée, ou tout ce qui s'allume et s'éteint : *En jeu* pendant une partie, *Allumée* dans ses menus, *Mode repos* en veille, *Éteinte*. Des étincelles montent pendant le jeu, sa lumière est allumée en marche et orange au repos. |
+| `game_entity` | console de jeu | Le jeu en cours, quand l'état ne le dit pas (le capteur *Lecture en cours* de PlayStation Network). Sans lui, le titre du lecteur. |
+| `playtime_entity` / `playtime_left_entity` | console de jeu | Le temps de jeu du jour et le temps restant, tels qu'un contrôle parental les compte (Contrôle parental Nintendo Switch), en lignes. |
 | `spots` | lampe | Le nombre de spots dessinés, de 1 à 4. Sans réglage, un groupe de lumières dessine un spot par lumière, jusqu'à quatre. |
 | `timer_entity` | lampe | Un `select` de durées (un minuteur d'extinction) : une pastille qui montre celle choisie et ouvre la liste. |
 
@@ -1403,6 +1413,25 @@ type: custom:ha-appliance-card
 appliance_type: detector
 state_entity: binary_sensor.fuite_cuisine
 battery_entity: sensor.fuite_cuisine_batterie
+```
+
+Une console de jeu sur PlayStation Network, ou une Switch avec le temps de jeu de son contrôle parental :
+
+```yaml
+type: custom:ha-appliance-card
+appliance_type: console
+state_entity: media_player.playstation_5
+game_entity: sensor.mon_psn_lecture_en_cours
+```
+
+```yaml
+type: custom:ha-appliance-card
+appliance_type: console
+console_layout: switch
+state_entity: switch.prise_switch
+power_entity: sensor.prise_switch_puissance
+playtime_entity: sensor.switch_temps_de_jeu
+playtime_left_entity: sensor.switch_temps_restant
 ```
 
 Une enceinte est un lecteur multimédia :

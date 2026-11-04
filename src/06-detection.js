@@ -580,6 +580,8 @@ const TYPE_CAPS = {
   litter_box: { ntLitter: true },
   detector: { ntDetector: true },
   speaker: { ntSpeaker: true },
+  // A game console, on PlayStation Network, Xbox, the PS4 integration or a plug.
+  console: { ntConsole: true },
   // A thermostat on the wall or a valve on a radiator: the room, the
   // setpoint, and whether it calls for heat. A climate entity says it all.
   thermostat: { thermostat: true, readOnly: true },
@@ -688,6 +690,7 @@ const STATE_DOMAINS = {
   litter_box: ["sensor", "vacuum", "binary_sensor", "select", "switch"],
   detector: ["binary_sensor", "sensor", "input_boolean"],
   speaker: ["media_player"],
+  console: ["media_player", "sensor", "switch", "binary_sensor", "device_tracker", "input_boolean"],
 };
 // A model, a picture, the players it shows and a session lock belong to a
 // screen.
@@ -791,7 +794,7 @@ const TYPE_GROUPS = [
   ["kitchen", ["dishwasher", "oven", "microwave", "hood", "cooktop", "fridge", "kettle", "cooker", "coffee", "rice_cooker", "air_fryer", "toaster"]],
   ["heating", ["water_heater", "boiler", "heat_pump", "thermostat", "pellet_stove", "space_heater", "towel_warmer", "floor_heating"]],
   ["air", ["air_conditioner", "dehumidifier", "air_purifier", "fan", "diffuser", "hrv"]],
-  ["home", ["screen", "iron", "hair_dryer", "printer_3d", "robot", "pool_pump", "scale", "camera", "lamp", "mailbox", "water_pump", "spa", "sauna", "aquarium", "christmas_tree", "mobility", "irrigation", "detector", "speaker"]],
+  ["home", ["screen", "iron", "hair_dryer", "printer_3d", "robot", "pool_pump", "scale", "camera", "lamp", "mailbox", "water_pump", "spa", "sauna", "aquarium", "christmas_tree", "mobility", "irrigation", "detector", "speaker", "console"]],
   ["energy", ["solar", "home_battery", "ev_charger", "meter"]],
   ["pets", ["pet_feeder", "pet_fountain", "litter_box"]],
   ["network", ["network", "ups"]],

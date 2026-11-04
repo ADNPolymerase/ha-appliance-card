@@ -9677,7 +9677,7 @@ check('borne : ni un statut reconnu', evMode(evR('SuspendedEVSE', { power_entity
   check('reseau : un NAS Synology par son nom', typeOf({ state_entity: 'sensor.synology_temperature' }), true);
   check('reseau : un switch par son nom', typeOf({ state_entity: 'device_tracker.switch_salon' }), true);
   check('reseau : une prise n\'est pas un switch', typeOf({ state_entity: 'switch.prise_lave_linge' }), false);
-  check('reseau : une Nintendo Switch n\'en est pas un', typeOf({ state_entity: 'sensor.nintendo_switch_status' }), false);
+  check('reseau : une Nintendo Switch n\'en est pas un, c\'est une console', /nt-k-con_switch\b/.test(render({ state_entity: 'sensor.nintendo_switch_status' }, {})), true);
 
   // The drawings.
   const draw = (extra, states = {}) => render({ appliance_type: 'network', state_entity: 'binary_sensor.up', ...extra },
@@ -12331,6 +12331,40 @@ function tvT(w) { return { 'switch.tv': { state: 'on', attributes: {} }, 'sensor
   check('editeur litiere : le tiroir', ed({ appliance_type: 'litter_box', state_entity: 'sensor.l' }).includes('data-toggle="waste_drawer_entity"'), true);
   check('editeur enceinte : le modele', ed({ appliance_type: 'speaker', state_entity: 'media_player.m' }).includes('"speaker_layout"'), true);
   check('editeur enceinte : la couleur', ['"speaker_color"', 'value="yellow"', 'value="sonos_era300"', 'value="bose_wave"'].every((f) => ed({ appliance_type: 'speaker', state_entity: 'media_player.m' }).includes(f)), true);
+}
+
+// Game consoles: a media player, PlayStation Network's status, or a plug.
+{
+  const s = (state, attributes = {}) => ({ state: String(state), attributes });
+  const kindOf = (h) => (h.match(/class="machine [^"]*\bnt-k-([a-z0-9_]+)/) || [])[1];
+  const CON = (id, st, more = {}, extra = {}) => render({ appliance_type: 'console', state_entity: id, ...more }, { [id]: st, ...extra });
+  const ps5 = CON('media_player.playstation_5', s('playing', { media_title: 'Astro Bot' }));
+  check('console : en jeu', stateLine(ps5), 'Playing');
+  check('console : le jeu en ligne', infoLine(ps5, 'Game'), 'Astro Bot');
+  check('console : la PS5 par son nom', kindOf(ps5), 'con_ps5');
+  check('console : des etincelles en jeu', /nta-rise/.test(ps5), true);
+  check('console : dans ses menus', stateLine(CON('media_player.playstation_5', s('on'))), 'On');
+  check('console : au repos', stateLine(CON('media_player.ps4_salon', s('standby'))), 'Rest mode');
+  check('console : eteinte', stateLine(CON('media_player.xbox', s('off'))), 'Off');
+  check('console : le statut PSN', [stateLine(CON('sensor.psn_online_status', s('availabletoplay'))), stateLine(CON('sensor.psn_online_status', s('offline')))].join(), 'On,Off');
+  check('console : le jeu d un capteur', infoLine(CON('media_player.playstation_5', s('on'), { game_entity: 'sensor.now_playing' }, { 'sensor.now_playing': s('Gran Turismo 7') }), 'Game'), 'Gran Turismo 7');
+  check('console : un jeu en cours, c est en jeu', stateLine(CON('media_player.playstation_5', s('on'), { game_entity: 'sensor.now_playing' }, { 'sensor.now_playing': s('Gran Turismo 7') })), 'Playing');
+  const plug = (w) => CON('switch.prise_nes', s('on'), { power_entity: 'sensor.prise_nes_w' }, { 'sensor.prise_nes_w': s(w, { unit_of_measurement: 'W' }) });
+  check('console sur prise : en jeu quand elle consomme', [stateLine(plug(12)), stateLine(plug(0))].join(), 'Playing,Off');
+  check('console sur prise : la NES par son nom', kindOf(plug(12)), 'con_nes');
+  const times = CON('switch.prise_switch', s('on'), { console_layout: 'switch', playtime_entity: 'sensor.played', playtime_left_entity: 'sensor.left' },
+    { 'sensor.played': s(74, { unit_of_measurement: 'min' }), 'sensor.left': s(46, { unit_of_measurement: 'min' }) });
+  check('console : temps de jeu du jour', infoLine(times, 'Play time today').replace(/\s/g, ' '), '74 min');
+  check('console : temps restant', infoLine(times, 'Play time left').replace(/\s/g, ' '), '46 min');
+  const byName = (id) => kindOf(render({ appliance_type: 'console', state_entity: id }, { [id]: s('on') }));
+  check('console : les modeles lus dans le nom', ['media_player.xbox', 'sensor.nintendo_switch_lite', 'switch.ps4_pro', 'switch.super_nintendo', 'switch.nintendo_64', 'switch.xbox_series_s', 'switch.ma_gamecube', 'switch.sega_mega_drive', 'media_player.ps3', 'switch.ps1', 'switch.switch_2_salon'].map(byName).join(),
+    'con_xbox_series_x,con_switch_lite,con_ps4_pro,con_snes,con_n64,con_xbox_series_s,con_gamecube,con_megadrive,con_ps3,con_ps1,con_switch_2');
+  const ALL = ['ps1', 'ps2', 'ps3', 'ps4', 'ps4_pro', 'ps5', 'xbox', 'xbox_360', 'xbox_one', 'xbox_series_x', 'xbox_series_s', 'switch', 'switch_2', 'switch_lite', 'nes', 'snes', 'n64', 'gamecube', 'wii', 'megadrive'];
+  check('console : les 20 modeles', ALL.map((l) => kindOf(CON('switch.x', s('on'), { console_layout: l }))).join(), ALL.map((l) => `con_${l}`).join());
+  check('console : chaque modele a son dessin', ALL.every((l) => /<svg class="nt-svg"[^>]*>\s*<defs>/.test(CON('switch.x', s('on'), { console_layout: l }))), true);
+  check('console : un lecteur PlayStation n est pas une enceinte', kindOf(render({ state_entity: 'media_player.playstation_5' }, { 'media_player.playstation_5': s('on', { device_class: 'speaker' }) })), 'con_ps5');
+  const ed = (cfg) => markup(newEditor(cfg));
+  check('editeur console : le modele et le jeu', ['"console_layout"', 'value="megadrive"', 'data-toggle="game_entity"', 'data-toggle="playtime_entity"'].every((f) => ed({ appliance_type: 'console', state_entity: 'media_player.p' }).includes(f)), true);
 }
 
 // The extract-only ventilation and the sump pump on a plug left on (#136).
