@@ -22,7 +22,7 @@ Une card Lovelace qui dessine les appareils de la maison et les anime selon leur
 
 ## Fonctionnalités
 
-- **56 types d'appareils, plus de 140 modèles dessinés**, animés pendant qu'ils travaillent et figés à l'arrêt. Le type est reconnu tout seul ou choisi avec `appliance_type`.
+- **56 types d'appareils, plus de 150 modèles dessinés**, animés pendant qu'ils travaillent et figés à l'arrêt. Le type est reconnu tout seul ou choisi avec `appliance_type`.
 - **Toutes les intégrations** : chaque champ est une entité à choisir. Une simple prise connectée suffit, sa puissance dit si l'appareil chauffe, lave ou essore.
 - **L'état compris** : `Idle`, `RUNNING`, `En marche`… deviennent veille, en cours, pause, terminé, différé ou erreur, avec l'étape du cycle (lavage, rinçage, essorage…).
 - **Ce qui compte pour chaque appareil** : programme, temps restant, porte, alertes, niveaux, températures, énergie et coût, marche du jour.
@@ -1412,6 +1412,16 @@ type: custom:ha-appliance-card
 appliance_type: speaker
 speaker_layout: sonos_one
 state_entity: media_player.salon
+```
+
+Un HomePod blanc, ou une Bose lue dans son nom : `media_player.wave_soundtouch` dessine la Wave SoundTouch sans `speaker_layout`.
+
+```yaml
+type: custom:ha-appliance-card
+appliance_type: speaker
+speaker_layout: smart
+speaker_color: white
+state_entity: media_player.cuisine
 ```
 
 </details>

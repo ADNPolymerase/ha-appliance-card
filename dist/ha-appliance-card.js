@@ -1,5 +1,5 @@
 // Built by tools/build.mjs from the files of src/: edit those, not this file.
-const CARD_VERSION = "4.0.0";
+const CARD_VERSION = "4.1.0";
 
 console.info(
   "%c HA-APPLIANCE-CARD %c v" + CARD_VERSION + " ",
@@ -5974,17 +5974,17 @@ function ntSpkSmart(c) {
   const p = spkPal("homepod", c.color);
   const b = ntId(), k = ntId(), sh = ntId(), r = ntId(), gl = ntId(), tp = ntId();
   const light = c.color === "white";
-  const body = "M35 46 Q35 34 47 34 H73 Q85 34 85 46 V96 Q85 111 70 111 H50 Q35 111 35 96 Z";
+  const body = "M35 47 C35 39.6 45 36 60 36 C75 36 85 39.6 85 47 V96 Q85 111 70 111 H50 Q35 111 35 96 Z";
   return `<defs>${spkSide(b, p)}${spkKnit(k, light ? "#bdbab4" : "#0c0e10")}${spkFoot(sh)}${spkGlowDefs(r, gl)}
 <radialGradient id="${tp}" cx=".5" cy=".45" r=".6"><stop offset="0" stop-color="${p[4]}"/><stop offset="1" stop-color="${p[3]}"/></radialGradient></defs>
 ${spkNotes(66, 4)}${ntWaves(60, 70, "var(--primary-color, #03a9f4)", 33)}
 ${ntShadow(60, 112, 24)}
 <path d="${body}" fill="url(#${b})"/><path d="${body}" fill="url(#${k})"/><path d="${body}" fill="url(#${sh})"/>
-<path d="M40 44 Q40 39 45 38" fill="none" stroke="#fff" stroke-width="1.6" opacity="${light ? .9 : .25}" stroke-linecap="round"/>
-<path d="M41 48 V96" stroke="#fff" stroke-width="2.6" opacity="${light ? .45 : .12}" stroke-linecap="round"/>
-<ellipse cx="60" cy="35.4" rx="23.6" ry="4.6" fill="${p[1]}"/>
-<ellipse cx="60" cy="35.2" rx="21" ry="3.7" fill="url(#${tp})"/>
-${spkSwirl(c, 60, 35, 13.6, 2.6, r, gl, light ? "#cfccc6" : "#0f1113")}
+<path d="M39 46 Q40 40.6 47 39" fill="none" stroke="#fff" stroke-width="1.6" opacity="${light ? .9 : .25}" stroke-linecap="round"/>
+<path d="M41 50 V96" stroke="#fff" stroke-width="2.6" opacity="${light ? .45 : .12}" stroke-linecap="round"/>
+<ellipse cx="60" cy="40" rx="17" ry="3.2" fill="${p[2]}" opacity=".55"/>
+<ellipse cx="60" cy="39.8" rx="15.4" ry="2.7" fill="url(#${tp})"/>
+${spkSwirl(c, 60, 39.8, 10.4, 1.9, r, gl, light ? "#cfccc6" : "#0f1113")}
 ${c.st === "paused" ? spkPause(60, 72, light ? "#7d7a74" : "#fff") : ""}${c.muted ? spkMute(66, 100) : ""}`;
 }
 // A HomePod mini: a ball of knit cut flat on top, the touch glass lit while
@@ -5993,12 +5993,13 @@ function ntSpkMini(c) {
   const p = spkPal("mini", c.color);
   const b = ntId(), k = ntId(), r = ntId(), gl = ntId(), tp = ntId();
   const light = c.color && c.color !== "black";
-  const ball = "M42.6 54 A30 30 0 1 0 77.4 54 Z";
+  const ball = "M42.6 54 A30 30 0 0 0 42.8 103 H77.2 A30 30 0 0 0 77.4 54 Z";
   return `<defs><radialGradient id="${b}" cx=".34" cy=".3" r=".85"><stop offset="0" stop-color="${p[0]}"/><stop offset=".55" stop-color="${p[1]}"/><stop offset="1" stop-color="${p[2]}"/></radialGradient>
 ${spkKnit(k, light ? "#000" : "#0c0e10")}${spkGlowDefs(r, gl)}
 <radialGradient id="${tp}" cx=".5" cy=".45" r=".6"><stop offset="0" stop-color="${p[4]}"/><stop offset="1" stop-color="${p[3]}"/></radialGradient></defs>
 ${spkNotes(64, 18)}${ntWaves(60, 78, "var(--primary-color, #03a9f4)", 36)}
-${ntShadow(60, 111, 22)}
+${ntShadow(60, 107, 22)}
+<ellipse cx="60" cy="103.4" rx="15.6" ry="2.2" fill="${p[2]}"/><ellipse cx="60" cy="103.8" rx="11" ry="1.4" fill="#000" opacity=".35"/>
 <path d="${ball}" fill="url(#${b})"/><path d="${ball}" fill="url(#${k})" opacity="${light ? .35 : 1}"/>
 <path d="M36 72 Q37 60 46 56" fill="none" stroke="#fff" stroke-width="2.2" opacity="${light ? .55 : .2}" stroke-linecap="round"/>
 <ellipse cx="60" cy="54.2" rx="17.6" ry="4.2" fill="${p[2]}"/>
@@ -6129,24 +6130,23 @@ ${c.st === "paused" ? spkPause(60, 28) : ""}${c.muted ? spkMute(92, 62) : ""}`;
 // slot, the display between its grilles, on its SoundTouch pedestal.
 function ntSpkWave(c) {
   const p = spkPal("wave", c.color);
-  const b = ntId(), t = ntId(), h = ntId(), ped = ntId(), g = ntId();
+  const b = ntId(), sh = ntId(), h = ntId(), ped = ntId();
   const light = c.color === "silver" || c.color === "white";
   const lit = c.on || c.st === "paused" || c.st === "idle";
-  const front = "M10 72 Q60 60 110 72 V96 Q110 101 105 101 H15 Q10 101 10 96 Z";
-  return `<defs>${ntV(b, p[1], p[2])}${ntV(t, p[0], p[3])}${spkHoles(h, light ? "#6f767d" : "#0b0c0e", 1.5, .45)}${ntV(ped, p[2], "#111316")}${ntBlur(g, 1)}</defs>
-${spkNotes(60, 22)}${ntWaves(60, 40, "var(--primary-color, #03a9f4)", 30)}
-${ntFoot("14 112 106 112 112 104 8 104", .28)}
-<path d="M28 100 H92 L90 106 H30 Z" fill="url(#${ped})"/>
-<path d="M12 66 Q60 53 108 66 L110 72 Q60 60 10 72 Z" fill="url(#${t})"/>
-<path d="M44 61 Q60 57.6 76 61" fill="none" stroke="#0b0c0e" stroke-width="1.2" stroke-linecap="round"/>
-<path d="${front}" fill="url(#${b})"/>
-<path d="M15 76 Q37 70.6 47 70 V97 H15 Z" fill="url(#${h})"/><path d="M105 76 Q83 70.6 73 70 V97 H105 Z" fill="url(#${h})"/>
-<rect x="49" y="72" width="22" height="12" rx="1.6" fill="#0d1116" stroke="${light ? "#8e959c" : "#000"}" stroke-width=".5"/>
-${lit ? `<text x="60" y="80.6" text-anchor="middle" font-size="5.2" fill="#7fd3ff" ${NT_FONT}${c.on ? ` class="nta-glow"` : ""}>${c.on ? "\u25b6 \u266a" : c.st === "paused" ? "II" : "12:00"}</text>` : ""}
-${[0, 1, 2].map((i) => `<circle cx="${54 + i * 6}" cy="89" r="1.3" fill="${light ? "#a7adb3" : "#2a2d31"}" stroke="${light ? "#7d848b" : "#0b0c0e"}" stroke-width=".4"/>`).join("")}
-${spkLogo(60, 97.6, light ? "#5d646b" : "#9aa1a8", 4)}
-<path d="M13 74 Q60 63 107 74" fill="none" stroke="#fff" stroke-width=".8" opacity="${light ? .8 : .25}"/>
-${c.muted ? spkMute(96, 58) : ""}`;
+  const body = "M20 72 Q20 64.6 27 63.8 Q60 60.6 93 63.8 Q100 64.6 100 72 V96 Q100 102 94 102 H26 Q20 102 20 96 Z";
+  return `<defs>${ntV(b, p[1], p[2])}${spkHoles(h, light ? "#6f767d" : "#0b0c0e", 1.5, .45)}${ntV(ped, p[2], "#111316")}
+<linearGradient id="${sh}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${p[0]}"/><stop offset=".22" stop-color="${p[0]}" stop-opacity="0"/></linearGradient></defs>
+${spkNotes(60, 36)}${ntWaves(60, 86, "var(--primary-color, #03a9f4)", 41)}
+${ntFoot("24 110 96 110 102 102 18 102", .28)}
+<path d="M32 101 H88 L86 107 H34 Z" fill="url(#${ped})"/>
+<path d="${body}" fill="url(#${b})"/><path d="${body}" fill="url(#${sh})"/>
+<path d="M27 64.6 Q60 61.6 93 64.6" fill="none" stroke="#fff" stroke-width=".9" opacity="${light ? .9 : .35}" stroke-linecap="round"/>
+<rect x="23" y="72" width="74" height="27" rx="4" fill="url(#${h})"/>
+<rect x="45" y="68.6" width="30" height="1.4" rx=".7" fill="#0b0c0e"/>
+<rect x="47" y="73.6" width="26" height="11" rx="1.6" fill="#0d1116" stroke="${light ? "#8e959c" : "#000"}" stroke-width=".5"/>
+${lit ? `<text x="60" y="81.6" text-anchor="middle" font-size="5.2" fill="#7fd3ff" ${NT_FONT}${c.on ? ` class="nta-glow"` : ""}>${c.on ? "\u25b6 \u266a" : c.st === "paused" ? "II" : "12:00"}</text>` : ""}
+${spkLogo(60, 93, light ? "#5d646b" : "#9aa1a8", 4.4)}
+${c.muted ? spkMute(96, 56) : ""}`;
 }
 // A Bose Home Speaker 500: a flattened oval of perforated aluminium, its small
 // screen on the front, the light bar on top.
