@@ -76,7 +76,7 @@ FAMILIES = (
     ("scales", "scale_fresh,scale_goal,scale_old", 3),
     ("ups", "ups_online,ups_charging,ups_battery,ups_low,ups_replace,ups_off", 6),
     ("diffusers", "dif_drop,dif_cone,dif_stone,dif_flame,dif_nebulizer", 5),
-    ("ventilation", "hrv_diagram,hrv_one_duct,hrv_pair,hrv_bypass,hrv_single,hrv_single_box", 4),
+    ("ventilation", "hrv_diagram,hrv_one_duct,hrv_pair,hrv_bypass,hrv_single,hrv_single_box,hrv_basement,hrv_basement_shut", 4),
     ("cameras", "cam_indoor,cam_tube,cam_outdoor,cam_dome,cam_privacy,cam_offline", 6),
     ("lamps", "lamp_bulb,lamp_bedside,lamp_floor,lamp_torch,lamp_pendant,lamp_strip,lamp_spots,lamp_panels,lamp_desk,lamp_wall", 5),
     ("mailboxes", "mb_through,mb_postman,mb_collect,mb_right,mb_3d,mb_3d_open,mb_3d_back,mb_3d_green,mb_classic,mb_classic_open,cam_doorbell,cam_doorbell_idle", 4),

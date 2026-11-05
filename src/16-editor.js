@@ -178,7 +178,7 @@ const SECTIONS = [
   { field: "bypass_entity", types: ["hrv"], labelKey: "section_bypass", includeDomains: ["binary_sensor", "switch", "sensor", "select"] },
   // Each fan with the air it moves, side by side.
   { field: "fan_speed_entity", types: ["hrv"], labelKey: "section_fan_speed", includeDomains: ["number", "sensor", "input_number"] },
-  { field: "high_speed_entity", types: ["hrv"], labelKey: "section_high_speed", includeDomains: ["switch", "input_boolean", "binary_sensor"], when: (c) => ["single", "single_box"].includes(hrvLayoutOf(c, null)) },
+  { field: "high_speed_entity", types: ["hrv"], labelKey: "section_high_speed", includeDomains: ["switch", "input_boolean", "binary_sensor"], when: (c) => ["single", "single_box", "single_basement"].includes(hrvLayoutOf(c, null)) },
   { field: "supply_fan_entity", types: ["hrv"], labelKey: "section_supply_fan", includeDomains: ["sensor"],
     extra: (c) => c._row("fan_max_rpm", "fan_max_rpm", { placeholder: "2000" }) },
   { field: "airflow_entity", types: ["hrv"], labelKey: "section_airflow", includeDomains: ["sensor"] },
@@ -1343,7 +1343,10 @@ class ApplianceCardEditor extends HTMLElement {
         ${this._type === "hrv" ? this._row("section_screen_layout", "hrv_layout", {
           type: "select",
           options: [{ value: "auto", label: t(hass, "unit_auto") }].concat(HRV_LAYOUTS.map((v) => ({ value: v, label: t(hass, `layout_hrv_${v}`) }))),
-        }) : ""}
+        }) + (hrvLayoutOf(this._config, null) === "single_basement" ? this._row("section_hrv_floors", "hrv_floors", {
+          type: "select", value: String(this._config.hrv_floors || 2),
+          options: ["1", "2", "3"].map((v) => ({ value: v, label: v })),
+        }) : "") : ""}
         ${this._type === "camera" ? this._row("section_screen_layout", "camera_layout", {
           type: "select",
           options: [{ value: "auto", label: t(hass, "unit_auto") }].concat(CAMERA_LAYOUTS.map((v) => ({ value: v, label: t(hass, `layout_cam_${v}`) }))),
@@ -1613,7 +1616,7 @@ class ApplianceCardEditor extends HTMLElement {
             </div>
           </div>`).join("")}
       </details>
-      ${ENTITY_LISTS.filter((list) => (!this._plug() || list.panel !== "alerts") && (!list.types || list.types.includes(this._type))).map((list) => this._listPanel(list)).join("")}
+      ${ENTITY_LISTS.filter((list) => (!this._plug() || list.panel !== "alerts") && (!list.types || list.types.includes(this._type)) && (!list.when || list.when(this._config))).map((list) => this._listPanel(list)).join("")}
       ${drawn.length > 1 ? `
       <details class="group" data-panel="order" ${this._panelOpen.order ? "open" : ""}>
         <summary>${t(hass, "section_lines_order")}</summary>

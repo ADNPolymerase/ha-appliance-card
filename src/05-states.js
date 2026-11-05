@@ -996,6 +996,12 @@ const ENTITY_LISTS = [
     domains: ["sensor", "number", "input_number"], offers: (hass, id) => ["sensor", "number"].includes(domainOf(id)) && /temp/.test(String((stateObj(hass, id) || { attributes: {} }).attributes.device_class || id)), icon: () => "mdi:thermometer" },
   { panel: "tank_sources", field: "sources", max: 6, title: "tank_sources", add: "tank_sources_add", types: ["storage_tank"],
     domains: ["binary_sensor", "switch", "sensor", "input_boolean"], offers: () => false, icon: () => "mdi:fire" },
+  // An extract unit in the basement (#87): the dampers of its zones, the
+  // first on the riser and the second on the basement branch unless their
+  // "at" places them elsewhere.
+  { panel: "zone_valves", field: "zone_valves", max: 4, title: "zone_valves_list", add: "zone_valves_add", types: ["hrv"],
+    when: (c) => hrvLayoutOf(c, null) === "single_basement",
+    domains: ["valve", "cover", "switch", "input_boolean", "binary_sensor"], offers: (hass, id) => ["valve", "cover"].includes(domainOf(id)), icon: () => "mdi:valve" },
   { panel: "tank_consumers", field: "consumers", max: 6, title: "tank_consumers", add: "tank_consumers_add", types: ["storage_tank"],
     domains: ["binary_sensor", "switch", "sensor", "input_boolean"], offers: () => false, icon: () => "mdi:radiator" },
 ];

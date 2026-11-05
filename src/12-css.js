@@ -1950,6 +1950,8 @@ const ILLUSTRATION_CSS = {
         .hv-badge{font:700 8px Arial,sans-serif;fill:#fff}
         .machine.hv:not(.hv-on) .hv-flow{opacity:.2}
         .machine.hv:not(.hv-on) .hv-dash{display:none}
+        .hv-zoff .hv-flow{opacity:.15}
+        .hv-zoff .hv-dash{display:none}
         .hv-bypass{display:none}
         .hv-by .hv-bypass{display:inline}
         .hv-by .hv-through{opacity:.15}

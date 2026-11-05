@@ -1327,6 +1327,13 @@ const hrvSingleBox = () => card({ name: L("Extract unit", "Caisson VMC"), applia
   [st("switch.vmc2_power", "on"), st("switch.vmc2_speed", "off")]);
 const hrvSingleBoxHigh = () => card({ name: L("High speed", "Grande vitesse"), appliance_type: "hrv", hrv_layout: "single_box", state_entity: "switch.vmc3_power", high_speed_entity: "switch.vmc3_speed" },
   [st("switch.vmc3_power", "on"), st("switch.vmc3_speed", "on")]);
+// An extract unit in the basement (#87): two floors, a damper on the riser
+// open and the basement's shut.
+const hrvBasementCard = (name, house, cellar, floors) => () => card({ name, appliance_type: "hrv", hrv_layout: "single_basement", hrv_floors: floors, state_entity: "switch.vmc4_power",
+  zone_valves: [{ entity: "cover.vmc4_house", name: L("House", "Maison") }, { entity: "cover.vmc4_cellar", name: L("Basement", "Cave") }] },
+  [st("switch.vmc4_power", "on"), st("cover.vmc4_house", house), st("cover.vmc4_cellar", cellar)]);
+const hrvBasement = hrvBasementCard(L("Ventilation", "VMC"), "open", "open", 2);
+const hrvBasementShut = hrvBasementCard(L("Basement shut", "Cave ferm\u00e9e"), "open", "closed", 3);
 const camOffline = camCard(L("Driveway", "All\u00e9e"), "unavailable", { camera_layout: "outdoor" }, {});
 
 // Doorbells: a camera with its button, ringing or waiting, and the mailbox:
@@ -1573,7 +1580,7 @@ const EXTRA = { iron, coffee_black: coffeeBlack, boiler_window: boilerWindow, bo
                 ups_online: upsOnline, ups_charging: upsCharging, ups_battery: upsBattery, ups_low: upsLow,
                 ups_replace: upsReplace, ups_off: upsOff,
                 dif_drop: difDrop, dif_cone: difCone, dif_stone: difStone, dif_flame: difFlame, dif_nebulizer: difNebulizer,
-                hrv_diagram: hrvDiagram, hrv_one_duct: hrvOneDuct, hrv_pair: hrvPair, hrv_bypass: hrvBypass, hrv_single: hrvSingle, hrv_single_high: hrvSingleHigh, hrv_single_off: hrvSingleOff, hrv_single_box: hrvSingleBox, hrv_single_box_high: hrvSingleBoxHigh,
+                hrv_diagram: hrvDiagram, hrv_one_duct: hrvOneDuct, hrv_pair: hrvPair, hrv_bypass: hrvBypass, hrv_single: hrvSingle, hrv_single_high: hrvSingleHigh, hrv_single_off: hrvSingleOff, hrv_single_box: hrvSingleBox, hrv_single_box_high: hrvSingleBoxHigh, hrv_basement: hrvBasement, hrv_basement_shut: hrvBasementShut,
                 cam_indoor: camIndoor, cam_tube: camTube, cam_outdoor: camOutdoor, cam_dome: camDome, cam_privacy: camPrivacy, cam_offline: camOffline,
                 lamp_bulb: lampBulb, lamp_bedside: lampBedside, lamp_floor: lampFloor, lamp_torch: lampTorch, lamp_pendant: lampPendant,
                 lamp_strip: lampStrip, lamp_spots: lampSpots, lamp_panels: lampPanels, lamp_desk: lampDesk, lamp_wall: lampWall, lamp_off: lampOff,
@@ -1642,7 +1649,7 @@ function liveGallery() {
     [L("Network and servers", "Réseau et serveurs"), [netSwitch, netRouter("on"), netNas, netServer, netRack, upsOnline, upsBattery, upsLow]],
     [L("Screens and tablets", "Écrans et tablettes"), [scrTv, scrProjector, scrComputer, scrLaptop, tabWall, tabFrame, tabPortrait]],
     [L("Home and media", "Maison et multimédia"), [hdHot, hdRing, printer3d, scaleFresh, scaleGoal]],
-    [L("Diffusers and ventilation", "Diffuseurs et ventilation"), [difDrop, difCone, difStone, difFlame, difNebulizer, hrvDiagram, hrvOneDuct, hrvPair, hrvBypass, hrvSingle, hrvSingleHigh, hrvSingleOff, hrvSingleBox, hrvSingleBoxHigh]],
+    [L("Diffusers and ventilation", "Diffuseurs et ventilation"), [difDrop, difCone, difStone, difFlame, difNebulizer, hrvDiagram, hrvOneDuct, hrvPair, hrvBypass, hrvSingle, hrvSingleHigh, hrvSingleOff, hrvSingleBox, hrvSingleBoxHigh, hrvBasement, hrvBasementShut]],
     [L("Cameras", "Cam\u00e9ras"), [camIndoor, camTube, camOutdoor, camDome, camPrivacy, camOffline]],
     [L("Lamps", "Lampes"), [lampBulb, lampBedside, lampFloor, lampTorch, lampPendant, lampStrip, lampSpots, lampPanels, lampDesk, lampWall, lampOff]],
     [L("Mailboxes and doorbells", "Boîtes aux lettres et sonnettes"), [mbThrough, mbPostman, mbCollect, mbRight, mb3d, mb3dOpen, mb3dBack, mb3dGreen, mbClassic, mbClassicOpen, camDoorbell, camDoorbellIdle]],

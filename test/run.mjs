@@ -12739,5 +12739,45 @@ function tvT(w) { return { 'switch.tv': { state: 'on', attributes: {} }, 'sensor
   check('relevage sans prise mesuree : off reste en attente', stateLine(render({ appliance_type: 'water_pump', pump_layout: 'sump', state_entity: 'switch.p' }, { 'switch.p': s('off') })), 'Standby');
 }
 
+// An extract unit in the basement and its zone dampers (#87).
+{
+  const s = (state, attributes = {}) => ({ state: String(state), attributes });
+  const BASE = { appliance_type: 'hrv', hrv_layout: 'single_basement', state_entity: 'switch.vmc' };
+  const B = (extra = {}, states = {}) => render({ ...BASE, ...extra }, { 'switch.vmc': s('on'), ...states });
+  const zv = [{ entity: 'cover.house', name: 'House' }, { entity: 'valve.cellar', name: 'Basement' }];
+  const shutCount = (h) => (h.match(/class="hv-zone hv-zshut"/g) || []).length;
+  const vents = (h) => (h.match(/<ellipse cx="64"/g) || []).length;
+  check('vmc en cave : son dessin', /hv-l-single_basement\b/.test(B()), true);
+  check('vmc en cave : marche', stateLine(B()), 'Ventilating');
+  check('vmc en cave : sans clapet, aucun dessine', /class="hv-zone/.test(B()), false);
+  check('vmc en cave : 2 etages par defaut, une bouche par niveau et la cave', vents(B()), 3);
+  check('vmc en cave : 1 et 3 etages', [vents(B({ hrv_floors: 1 })), vents(B({ hrv_floors: '3' }))].join(), '2,4');
+  check('vmc en cave : etages bornes a 3', vents(B({ hrv_floors: 7 })), 4);
+  const both = B({ zone_valves: zv }, { 'cover.house': s('open'), 'valve.cellar': s('open') });
+  check('vmc en cave : deux clapets ouverts', [(both.match(/class="hv-zone"/g) || []).length, shutCount(both)].join(), '2,0');
+  check('vmc en cave : rien estompe quand tout est ouvert', /class="hv-zoff"/.test(both), false);
+  const cellarShut = B({ zone_valves: zv }, { 'cover.house': s('open'), 'valve.cellar': s('closed') });
+  check('vmc en cave : un clapet ferme', shutCount(cellarShut), 1);
+  check('vmc en cave : la ligne des clapets', infoLine(cellarShut, 'Dampers').replace(/\s/g, ' '), 'House : open · Basement : closed');
+  check('vmc en cave : cave fermee, la sortie tourne', (cellarShut.match(/class="hv-zoff"/g) || []).length, 1);
+  const allShut = B({ zone_valves: zv }, { 'cover.house': s('closed'), 'valve.cellar': s('closed') });
+  check('vmc en cave : tout ferme, la sortie s estompe aussi', (allShut.match(/class="hv-zoff"/g) || []).length > 4, true);
+  check('vmc en cave : position a 0 = ferme', shutCount(B({ zone_valves: ['cover.house'] }, { 'cover.house': s('open', { current_position: 0 }) })), 1);
+  check('vmc en cave : un switch coupe = ferme', shutCount(B({ zone_valves: ['switch.z'] }, { 'switch.z': s('off') })), 1);
+  check('vmc en cave : indisponible = ouvert', shutCount(B({ zone_valves: ['switch.z'] }, { 'switch.z': s('unavailable') })), 0);
+  const riser = B({ zone_valves: ['switch.z'] }, { 'switch.z': s('on') });
+  const onFloor = B({ zone_valves: [{ entity: 'switch.z', at: 'floor_1' }] }, { 'switch.z': s('on') });
+  check('vmc en cave : le 1er sur la colonne', /<circle cx="130"/.test(riser), true);
+  check('vmc en cave : at deplace le clapet', [/<circle cx="130"/.test(onFloor), /<circle cx="106"/.test(onFloor)].join(), 'false,true');
+  check('vmc en cave : un etage qui n existe pas, pas de clapet', /class="hv-zone/.test(B({ hrv_floors: 1, zone_valves: [{ entity: 'switch.z', at: 'floor_2' }] }, { 'switch.z': s('on') })), false);
+  check('vmc en cave : les clapets ignores sur un autre dessin', /class="hv-zone/.test(B({ hrv_layout: 'single', zone_valves: ['switch.z'] }, { 'switch.z': s('on') })), false);
+  check('vmc en cave : grande vitesse aussi', stateLine(B({ high_speed_entity: 'switch.v' }, { 'switch.v': s('on') })), 'High speed');
+  check('vmc en cave : aucune valeur cassee', ['riser', 'basement', 'floor_0', 'floor_1', 'floor_2'].every((at) => [1, 2, 3].every((f) => !/NaN|undefined/.test(B({ hrv_floors: f, zone_valves: [{ entity: 'switch.z', at }] }, { 'switch.z': s('off') })))), true);
+
+  const ed = (cfg) => markup(newEditor(cfg));
+  check('editeur vmc en cave : etages et clapets', ['data-field="hrv_floors"', 'data-panel="zone_valves"'].every((f) => ed(BASE).includes(f)), true);
+  check('editeur vmc simple flux : ni etages ni clapets', ['data-field="hrv_floors"', 'data-panel="zone_valves"'].some((f) => ed({ ...BASE, hrv_layout: 'single' }).includes(f)), false);
+}
+
 if (RECORD) writeFileSync(process.env.HAC_RECORD, JSON.stringify(RECORD));
 report();

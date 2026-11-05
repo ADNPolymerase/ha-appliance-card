@@ -9,6 +9,12 @@ const hvLab = (x, y, temp, name, anchor) => `<text class="hv-t" x="${x}" y="${y}
 const hvFan = (x, y, r, cls) => `<circle cx="${x}" cy="${y}" r="${r}" class="hv-fanbody"/><g class="hv-fan${cls ? ` ${cls}` : ""}" style="transform-origin:${x}px ${y}px">${[0, 120, 240].map((d) => `<path d="M${x} ${y} q${(r * 0.45).toFixed(1)} -${(r * 0.85).toFixed(1)} 0 -${(r * 0.85).toFixed(1)} q-${(r * 0.45).toFixed(1)} ${(r * 0.3).toFixed(1)} 0 ${(r * 0.85).toFixed(1)}z" transform="rotate(${d} ${x} ${y})"/>`).join("")}</g>`;
 const hvBadges = (h, cx, y) => `<g class="hv-hum"><rect x="${cx - 34}" y="${y}" width="68" height="13" rx="6.5" fill="#1e88e5"/><path d="M${cx - 26} ${y + 2.5} C${cx - 24} ${y + 5.5} ${cx - 22.5} ${y + 7} ${cx - 22.5} ${y + 8.6} a3.5 3.5 0 0 1 -7 0 C${cx - 29.5} ${y + 7} ${cx - 28} ${y + 5.5} ${cx - 26} ${y + 2.5}Z" fill="#fff"/><text class="hv-badge" x="${cx + 4}" y="${y + 9.6}" text-anchor="middle">${h.humText || ""}</text></g>
 <g class="hv-int"><rect x="${cx - 20}" y="${y}" width="40" height="13" rx="6.5" fill="#607d8b"/><circle cx="${cx - 12}" cy="${y + 6.5}" r="4" fill="none" stroke="#fff" stroke-width="1.2"/><path d="M${cx - 12} ${y + 4} V${y + 6.5} L${cx - 10} ${y + 7.6}" stroke="#fff" stroke-width="1.1" fill="none" stroke-linecap="round"/><text class="hv-badge" x="${cx + 4}" y="${y + 9.6}" text-anchor="middle">INT</text></g>`;
+const hvDamper = (x, y, vert, z) => {
+  if (!z) return "";
+  const open = z.open;
+  const blade = (vert ? open : !open) ? `M${x} ${y - 5} V${y + 5}` : `M${x - 5} ${y} H${x + 5}`;
+  return `<g class="hv-zone${open ? "" : " hv-zshut"}"><circle cx="${x}" cy="${y}" r="6.5" fill="#fff" stroke="${open ? "#43a047" : "#e53935"}" stroke-width="1.6"/><path d="${blade}" stroke="#37474f" stroke-width="2.2" stroke-linecap="round"/><circle cx="${x}" cy="${y}" r="1.2" fill="#37474f"/></g>`;
+};
 const HRV_SVGS = {
   diagram: (h) => `<defs><linearGradient id="hv-g-fa" x1="0" x2="1"><stop offset="0" stop-color="#42a5f5"/><stop offset="1" stop-color="#ff9800"/></linearGradient>
 <linearGradient id="hv-g-ex" x1="1" x2="0"><stop offset="0" stop-color="#ef5350"/><stop offset="1" stop-color="#78909c"/></linearGradient></defs>
@@ -70,6 +76,70 @@ ${[50, 68, 86].map((y) => `<rect x="34" y="${y - 5}" width="38" height="10" rx="
 <circle class="hv-led" cx="156" cy="88" r="2.4"/>
 <g class="hv-filt"><circle cx="160" cy="46" r="6"/><text x="160" y="49.5" text-anchor="middle">!</text></g>
 ${h.t.e ? hvLab(4, 16, h.t.e, h.n.e, "start") : ""}${h.t.o ? hvLab(232, 16, h.t.o, h.n.o, "end") : ""}${hvBadges(h, 118, 112)}`,
+  // An extract unit in the basement (#87): its riser climbs to one ceiling
+  // vent per floor, the ducts running in the attic and in the floor slabs, a
+  // branch takes the basement's own vent, and the outlet leaves through the
+  // basement wall. Each zone damper sits where its "at" says (riser,
+  // basement or floor_N, the first two by default on the riser and the
+  // basement) and dims what lies behind it when shut.
+  single_basement: (h) => {
+  const n = Math.min(3, Math.max(1, Math.round(Number(h.floors) || 2)));
+  // Each damper sits where its config says: on the riser near the unit (it
+  // closes every floor), on the basement branch, or on one floor's branch
+  // (floor_0 is the ground floor). The first two default to riser/basement.
+  const zones = (h.zones || []).map((z, i) => ({ ...z, at: z.at || (i === 0 ? "riser" : i === 1 ? "basement" : "") }));
+  const shut = (at) => zones.some((z) => z.at === at && !z.open);
+  const S = 8, B = 94, eave = n === 3 ? 26 : 34;
+  const room = (B - eave - S * (n - 1)) / n;
+  const ceil = Array.from({ length: n }, (_, i) => eave + i * (room + S));
+  const r1 = (v) => Math.round(v * 10) / 10;
+  const J = B + S / 2;
+  const duct = (d) => `<path d="${d}" fill="none" stroke="#c9d0d6" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/><path d="${d}" fill="none" stroke="#e3e7ea" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>`;
+  const fl = (d, stroke, off) => `<g${off ? ' class="hv-zoff"' : ""}><path class="hv-flow" style="stroke-width:3.6" d="${d}" stroke="${stroke}"/><path class="hv-dash hv-de" style="stroke-width:1.6" d="${d}"/></g>`;
+  const runY = ceil.map((c, i) => r1(i === 0 ? c - 5 : c - S / 2));
+  // floor index from the ground up: top drawn row i is floor n-1-i
+  const riserShut = shut("riser");
+  const floorOff = ceil.map((c, i) => riserShut || shut(`floor_${n - 1 - i}`));
+  const lowOff = shut("basement");
+  const branches = ceil.map((c, i) => `M64 ${c} V${runY[i]} H130`);
+  const riserSeg = runY.map((y, i) => `M130 ${y} V${i < n - 1 ? runY[i + 1] : J}`);
+  const segOff = runY.map((y, i) => riserShut || floorOff.slice(0, i + 1).every(Boolean));
+  const lowP = `M64 ${B + S} V${J} H130`, joint = `M130 ${J} V116 H148`;
+  const allOff = segOff[n - 1] && lowOff;
+  const slabs = ceil.slice(1).map((c) => `<rect x="14" y="${c - S}" width="184" height="${S}" class="hv-wall"/>`).join("");
+  const vents = ceil.map((c) => `<ellipse cx="64" cy="${c + 1.5}" rx="8" ry="2.2" fill="#eceff1" stroke="#90a4ae"/>`).join("");
+  const wins = ceil.map((c) => r1(c + room / 2));
+  const top = eave - 28;
+  const spot = (at) => {
+    if (at === "riser") return [130, r1(Math.max(runY[n - 1] + 8, B - 8)), true];
+    if (at === "basement") return [106, J, false];
+    const m = /^floor_(\d)$/.exec(at || "");
+    if (m && Number(m[1]) < n) return [106, runY[n - 1 - Number(m[1])], false];
+    return null;
+  };
+  const dampers = zones.map((z) => { const p = spot(z.at); return p ? hvDamper(p[0], p[1], p[2], z) : ""; }).join("");
+  return `<defs><linearGradient id="hv-g-sb" gradientUnits="userSpaceOnUse" x1="64" y1="0" x2="150" y2="0"><stop offset="0" stop-color="#ff9800"/><stop offset="1" stop-color="#ef5350"/></linearGradient></defs>
+<path d="M0 118 H16 V132 H0 Z M196 118 H236 V132 H196 Z" fill="#a1887f"/><path d="M0 118 H16 M196 118 H236" stroke="#6d4c41" stroke-width="1.5"/>
+<path d="M14 ${eave} L106 ${top + 2} L198 ${eave} Z" fill="#f5efe6"/><path d="M8 ${eave + 2} L106 ${top} L204 ${eave + 2}" fill="none" stroke="#8d6e63" stroke-width="4" stroke-linejoin="round"/>
+<rect x="16" y="${eave}" width="180" height="${B - eave}" fill="#fbf8f3"/><rect x="16" y="${B + S}" width="180" height="${126 - B - S}" fill="#eceae6"/>
+${slabs}<rect x="14" y="${B}" width="184" height="${S}" class="hv-wall"/><rect x="14" y="126" width="184" height="4" fill="#9e9e9e"/>
+<path d="M16 ${eave} V${B} M196 ${eave} V${B}" stroke="#b7a68e" stroke-width="3"/><path d="M16 ${B} V128 M196 ${B} V128" stroke="#9e9e9e" stroke-width="3"/>
+${branches.map(duct).join("")}${duct(`M130 ${runY[0]} V${J}`)}${duct(lowP)}${duct(joint)}
+<rect x="182" y="106" width="44" height="12" rx="2" class="hv-tube"/><path d="M226 104 V120 L232 117 V107 Z" fill="#9aa3ad"/>
+<rect x="148" y="104" width="36" height="22" rx="4" class="hv-box"/>${hvFan(166, 115, 7.5, "hv-fe")}
+<g class="hv-ins">
+${branches.map((d, i) => fl(d, "url(#hv-g-sb)", floorOff[i])).join("")}${riserSeg.map((d, i) => fl(d, "#ef5350", segOff[i])).join("")}
+${wins.map((y, i) => fl(`M-6 ${y} H28`, "#42a5f5", floorOff[i])).join("")}
+${fl(lowP, "url(#hv-g-sb)", lowOff)}${fl(joint, "#ef5350", allOff)}${fl("M184 112 H234", "#78909c", allOff)}
+</g>
+${vents}<ellipse cx="64" cy="${B + S + 1.5}" rx="8" ry="2.2" fill="#eceff1" stroke="#90a4ae"/>
+${wins.map((y) => `<rect x="12" y="${y - 4.5}" width="8" height="9" rx="1" fill="#eceff1" stroke="#90a4ae"/>`).join("")}
+${dampers}
+<circle class="hv-led" cx="178" cy="121" r="2"/>
+<g class="hv-filt"><circle cx="184" cy="104" r="6"/><text x="184" y="107.5" text-anchor="middle">!</text></g>
+${h.flowE ? `<text class="hv-n hv-cfm" x="234" y="101" text-anchor="end">${h.flowE}</text>` : ""}
+${h.t.o ? hvLab(4, 12, h.t.o, h.n.o, "start") : ""}${h.t.e ? hvLab(232, 12, h.t.e, h.n.e, "end") : ""}${hvBadges(h, 106, top + 14)}`;
+  },
   pair: (h) => {
     const unit = (cy) => `<rect x="72" y="${cy - 12}" width="92" height="24" rx="3" class="hv-tube"/>${Array.from({ length: 18 }, (_, i) => `<rect x="${104 + (i % 6) * 5}" y="${cy - 7 + Math.floor(i / 6) * 5}" width="4" height="4" fill="#e9dccb" stroke="#bfae96" stroke-width=".5"/>`).join("")}
 ${hvFan(146, cy, 8.5)}<path d="M72 ${cy - 15} V${cy + 15} L64 ${cy + 12} V${cy - 12} Z" fill="#9aa3ad"/><rect x="164" y="${cy - 16}" width="6" height="32" rx="3" class="hv-box"/>`;
@@ -123,6 +193,8 @@ css: () => `
         .hv-badge{font:700 8px Arial,sans-serif;fill:#fff}
         .machine.hv:not(.hv-on) .hv-flow{opacity:.2}
         .machine.hv:not(.hv-on) .hv-dash{display:none}
+        .hv-zoff .hv-flow{opacity:.15}
+        .hv-zoff .hv-dash{display:none}
         .hv-bypass{display:none}
         .hv-by .hv-bypass{display:inline}
         .hv-by .hv-through{opacity:.15}

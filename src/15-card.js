@@ -3420,7 +3420,17 @@ class ApplianceCard extends HTMLElement {
         const v = id ? numericState(hass, id) : null;
         return v === null ? "" : `${netNumber(hass, v, 0)}\u00b0`;
       };
-      hrv = { ...h, layout: hrvLayoutOf(cfg, st), dark: cfg.illustration_color === "black",
+      // The zone dampers of an extract unit in the basement (#87), each on a
+      // line with its state.
+      const hrvLayout = hrvLayoutOf(cfg, st);
+      const zoneEntries = hrvLayout === "single_basement" ? entityEntries(cfg.zone_valves, 4) : [];
+      const zones = zoneEntries.map((e) => ({ open: hrvZoneOpen(hass, e.entity), at: e.at }));
+      if (zoneEntries.length) {
+        const zname = (e) => e.name || (stateObj(hass, e.entity) && stateObj(hass, e.entity).attributes.friendly_name) || humanizeEntityId(e.entity);
+        extraLines.push({ key: "hrv_zones", icon: "mdi:valve", label: t(hass, "hrv_zones"), entity: zoneEntries[0].entity, wrap: true,
+          value: zoneEntries.map((e, i) => `${zname(e)} : ${t(hass, zones[i].open ? "hrv_zone_open" : "hrv_zone_shut")}`).join(" \u00b7 ") });
+      }
+      hrv = { ...h, layout: hrvLayout, zones, floors: cfg.hrv_floors, dark: cfg.illustration_color === "black",
         lcd: h.mode === "run" ? `V${h.level}` : HRV_LCD[h.mode] || "",
         t: { o: temp(cfg.outdoor_temperature_entity), s: temp(cfg.supply_temperature_entity), e: temp(cfg.extract_temperature_entity), x: temp(cfg.exhaust_temperature_entity) },
         n: { o: t(hass, "hrv_t_outdoor"), s: t(hass, "hrv_t_supply"), e: t(hass, "hrv_t_extract"), x: t(hass, "hrv_t_exhaust"), out: t(hass, "hrv_outside"), room: t(hass, "hrv_room") } };
