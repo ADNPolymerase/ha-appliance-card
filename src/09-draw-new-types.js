@@ -28,7 +28,7 @@ const NT_ONLY_FIELDS = {
   speaker: ["speaker_layout", "speaker_color"],
   console: ["console_layout", "game_entity", "playtime_entity", "playtime_left_entity"],
   storage_tank: ["temperature_entities", "charge_entity", "charge_min_temp", "charge_max_temp", "tank_volume", "sources", "consumers"],
-  fresh_water_station: ["primary_temperature_entity", "cold_water_temperature_entity", "circulation_entity", "circulation_mode_entity"],
+  fresh_water_station: ["primary_temperature_entity", "cold_water_temperature_entity", "circulation_entity", "circulation_mode_entity", "supply_margin"],
   solar_thermal: ["collector_style", "collector_temperature_entity", "tank_temperature_entity", "collector_shutdown_entity", "tank_full_entity", "stagnation_temp", "heat_power_entity"],
   wood_stove: ["water_jacket", "burning_temp", "embers_temp", "temperature_scale", "flow_temperature_entity", "valve_entity", "last_fire_entity", "overheat_temp"],
   meter: ["tariff_entity", "high_power", "meter_layout", "today_entity", "total_entity", "export_total_entity", "meter_direction"],
@@ -3011,7 +3011,9 @@ function heatReadOf(type, hass, cfg, st) {
     const cm = ntLine(hass, cfg, "fws_circ_mode", "mdi:sync", "fws_circ_mode", cfg.circulation_mode_entity);
     if (cm) lines.push(cm);
     faultLine();
-    const cold = setV !== null && supV !== null && supV < setV + 5;
+    // The supply is too cold under the setpoint plus a margin, 5 by default:
+    // some stations hold their setpoint with less (#86).
+    const cold = setV !== null && supV !== null && supV < setV + Math.max(0, heatNum(cfg.supply_margin, 5));
     const lcd = drawing && flowNum !== null && st ? formatInfoValue(st, hass, null, cfg, cfg.state_entity) : outV !== null ? screenTemp(hass, cfg, cfg.temperature_entity, outV).replace("\u00b0", `\u00b0${/f/i.test(temperatureUnit(hass, cfg.temperature_entity)) ? "F" : "C"}`) : "";
     const draw = { kind: "fws", on: drawing || circ, drawing, circulating: circ, lcd: String(lcd) };
     if (fault) return out("fault", "heat_fault_state", NT_COLORS.alarm, draw);

@@ -12638,6 +12638,11 @@ function tvT(w) { return { 'switch.tv': { state: 'on', attributes: {} }, 'sensor
   check('station : la pompe primaire suffit', stateLine(FWS(0, { pump_entity: 'binary_sensor.pump' }, { 'binary_sensor.pump': s('on') })), 'Drawing hot water');
   check('station : bouclage', stateLine(FWS(0, { circulation_entity: 'binary_sensor.circ' }, { 'binary_sensor.circ': s('on') })), 'Circulating');
   check('station : depart trop froid', stateLine(FWS(0, { target_temperature_entity: 'sensor.set', primary_temperature_entity: 'sensor.sup' }, { 'sensor.set': T(50), 'sensor.sup': T(48) })), 'Supply too cold');
+  const MG = (m, sup) => stateLine(FWS(0, { target_temperature_entity: 'sensor.set', primary_temperature_entity: 'sensor.sup', ...(m === undefined ? {} : { supply_margin: m }) }, { 'sensor.set': T(42), 'sensor.sup': T(sup) }));
+  check('station : marge de 5 par defaut', [MG(undefined, 46), MG(undefined, 47)].join(), 'Supply too cold,Standby');
+  check('station : sa propre marge (#86)', [MG(2, 45), MG(2, 43.5), MG('2', 44)].join(), 'Standby,Supply too cold,Standby');
+  check('station : marge nulle, sous la consigne seulement', [MG(0, 42), MG(0, 41.9)].join(), 'Standby,Supply too cold');
+  check('editeur station : la marge avec le depart', [markup(newEditor({ appliance_type: 'fresh_water_station', state_entity: 'sensor.f', primary_temperature_entity: 'sensor.sup' })).includes('data-field="supply_margin"'), markup(newEditor({ appliance_type: 'fresh_water_station', state_entity: 'sensor.f' })).includes('data-field="supply_margin"')].join(), 'true,false');
   check('station : defaut', stateLine(FWS(8, { fault_entity: 'binary_sensor.f' }, { 'binary_sensor.f': s('on') })), 'Fault');
   check('station : le mode de bouclage', infoLine(FWS(0, { circulation_mode_entity: 'select.c' }, { 'select.c': s('3x3min') }), 'Circulation mode'), '3x3min');
   check('station : reconnue par son nom', kindOf(render({ state_entity: 'sensor.frischwasser_flow' }, { 'sensor.frischwasser_flow': s(0, { unit_of_measurement: 'L/min' }) })), 'fws');

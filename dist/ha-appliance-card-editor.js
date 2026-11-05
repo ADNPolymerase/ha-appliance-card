@@ -236,7 +236,8 @@ const SECTIONS = [
   // and the cold water, the primary pump, the circulation and a fault.
   { field: "temperature_entity", types: ["fresh_water_station"], labelKey: "fws_outlet", includeDomains: ["sensor", "number", "input_number"] },
   { field: "target_temperature_entity", types: ["fresh_water_station"], labelKey: "section_target_temperature", includeDomains: ["number", "sensor", "input_number"] },
-  { field: "primary_temperature_entity", types: ["fresh_water_station"], labelKey: "fws_supply", includeDomains: ["sensor", "number", "input_number"] },
+  { field: "primary_temperature_entity", types: ["fresh_water_station"], labelKey: "fws_supply", includeDomains: ["sensor", "number", "input_number"],
+    extra: (c) => c._row("fws_supply_margin", "supply_margin", { placeholder: "5" }) },
   { field: "cold_water_temperature_entity", types: ["fresh_water_station"], labelKey: "fws_cold", includeDomains: ["sensor", "number", "input_number"] },
   { field: "pump_entity", types: ["fresh_water_station"], labelKey: "fws_pump", includeDomains: ["binary_sensor", "switch", "sensor", "input_boolean"] },
   { field: "circulation_entity", types: ["fresh_water_station"], labelKey: "fws_circulation", includeDomains: ["binary_sensor", "switch", "sensor", "input_boolean"] },

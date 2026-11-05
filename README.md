@@ -676,7 +676,7 @@ A buffer tank (`storage_tank`) fills with the colour of its layers, blue when co
 | `sources` / `consumers` | buffer tank | Up to six entities each, with an optional `name`: a binary sensor, a switch, a pump or a status. A source running is *Loading*; otherwise *Charged* from 80 %, *Partly charged*, *Discharged* under 20 %. Anything but off, idle, 0 or the like counts as running (*Warmwasser*, *heating*...). |
 | `state_entity` | fresh water station | Its flow, in L/min: above zero it is *Drawing hot water*. A pump or any on/off entity works too. |
 | `temperature_entity` / `target_temperature_entity` | fresh water station | The outlet temperature, shown on its screen between draws, and its setpoint. |
-| `primary_temperature_entity` / `cold_water_temperature_entity` | fresh water station | The tank's supply and the cold water. A supply under the setpoint plus 5 degrees is *Supply too cold*. |
+| `primary_temperature_entity` / `cold_water_temperature_entity` | fresh water station | The tank's supply and the cold water. A supply under the setpoint plus `supply_margin` (5 by default, in K or °F) is *Supply too cold*. |
 | `pump_entity` / `pump_modulation_entity` | fresh water station, solar thermal | The primary pump (it running is a draw) and its modulation in %. On solar thermal, a modulation under 60 % turns the pump slowly. |
 | `circulation_entity` / `circulation_mode_entity` | fresh water station | The circulation pump, *Circulating* while it runs, and its mode or schedule as a line. |
 | `fault_entity` | fresh water station, solar thermal | A problem sensor: *Fault* while on. |

@@ -676,7 +676,7 @@ Un ballon tampon (`storage_tank`) prend la couleur de ses couches, bleu à froid
 | `sources` / `consumers` | ballon tampon | Jusqu'à six entités chacun, avec un `name` facultatif : un capteur binaire, un interrupteur, une pompe ou un statut. Une source en marche, c'est *En charge* ; sinon *Chargé* dès 80 %, *Partiellement chargé*, *Déchargé* sous 20 %. Tout sauf off, inactif, 0 ou équivalent compte comme en marche (*Warmwasser*, *heating*...). |
 | `state_entity` | station d'eau fraîche | Son débit, en L/min : au-dessus de zéro, c'est *Puisage d'eau chaude*. Une pompe ou toute entité marche / arrêt convient aussi. |
 | `temperature_entity` / `target_temperature_entity` | station d'eau fraîche | La température de sortie, sur son écran entre deux puisages, et sa consigne. |
-| `primary_temperature_entity` / `cold_water_temperature_entity` | station d'eau fraîche | Le départ du ballon et l'eau froide. Un départ sous la consigne plus 5 degrés, c'est *Départ trop froid*. |
+| `primary_temperature_entity` / `cold_water_temperature_entity` | station d'eau fraîche | Le départ du ballon et l'eau froide. Un départ sous la consigne plus `supply_margin` (5 par défaut, en K ou °F), c'est *Départ trop froid*. |
 | `pump_entity` / `pump_modulation_entity` | station d'eau fraîche, solaire thermique | La pompe primaire (en marche, c'est un puisage) et sa modulation en %. Sur le solaire thermique, une modulation sous 60 % fait tourner la pompe lentement. |
 | `circulation_entity` / `circulation_mode_entity` | station d'eau fraîche | La pompe de bouclage, *Bouclage* quand elle tourne, et son mode ou programme en ligne. |
 | `fault_entity` | station d'eau fraîche, solaire thermique | Un capteur de problème : *En défaut* quand il est actif. |
