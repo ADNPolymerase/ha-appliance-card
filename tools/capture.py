@@ -79,7 +79,7 @@ FAMILIES = (
     ("ventilation", "hrv_diagram,hrv_one_duct,hrv_pair,hrv_bypass,hrv_single,hrv_single_box", 4),
     ("cameras", "cam_indoor,cam_tube,cam_outdoor,cam_dome,cam_privacy,cam_offline", 6),
     ("lamps", "lamp_bulb,lamp_bedside,lamp_floor,lamp_torch,lamp_pendant,lamp_strip,lamp_spots,lamp_panels,lamp_desk,lamp_wall", 5),
-    ("mailboxes", "mb_through,mb_postman,mb_collect,mb_right,mb_classic,mb_classic_open,cam_doorbell,cam_doorbell_idle", 4),
+    ("mailboxes", "mb_through,mb_postman,mb_collect,mb_right,mb_3d,mb_3d_open,mb_3d_back,mb_3d_green,mb_classic,mb_classic_open,cam_doorbell,cam_doorbell_idle", 4),
     ("litter", "lit_globe,lit_globe_clean,lit_globe_cat,lit_box,lit_box_clean,lit_box_full", 3),
     ("watering", "irr_sprinkler,irr_rain,irr_tap,irr_tap_off", 4),
     ("detectors", "det_smoke,det_smoke_alarm,det_co,det_co_alarm,det_leak,det_leak_alarm", 3),

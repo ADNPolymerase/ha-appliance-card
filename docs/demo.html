@@ -1345,6 +1345,11 @@ const mbCollect = mbCard(L("Collecting", "Relevé du courrier"), 0, false, true)
 const mbRight = mbCard(L("Street on the right", "Rue à droite"), 12, false, false, { mailbox_front: "right" });
 const mbClassic = mbCard(L("Front gate", "Portillon"), 2, false, false, { back_door_entity: undefined, mailbox_layout: "classic" });
 const mbClassicOpen = mbCard(L("Box open", "Boîte ouverte"), 4, true, false, { back_door_entity: undefined, mailbox_layout: "classic" });
+// The through-wall box in three-quarter view, in its colours (HACF).
+const mb3d = mbCard(L("Through-wall box", "Bo\u00eete traversante"), 2, false, false, { mailbox_layout: "through_3d" });
+const mb3dOpen = mbCard(L("Postman, 3/4", "Facteur, en 3/4"), 5, true, false, { mailbox_layout: "through_3d" });
+const mb3dBack = mbCard(L("Collecting, 3/4", "Relev\u00e9, en 3/4"), 0, false, true, { mailbox_layout: "through_3d", mailbox_color: "white" });
+const mb3dGreen = mbCard(L("Green box", "Bo\u00eete verte"), 1, false, false, { mailbox_layout: "through_3d", mailbox_color: "green" });
 
 // Lamps: their shape read from the name, their colour, their brightness and
 // their effect from the light entity, as Hue, WLED or Nanoleaf give them.
@@ -1563,7 +1568,7 @@ const EXTRA = { iron, coffee_black: coffeeBlack, boiler_window: boilerWindow, bo
                 lamp_bulb: lampBulb, lamp_bedside: lampBedside, lamp_floor: lampFloor, lamp_torch: lampTorch, lamp_pendant: lampPendant,
                 lamp_strip: lampStrip, lamp_spots: lampSpots, lamp_panels: lampPanels, lamp_desk: lampDesk, lamp_wall: lampWall, lamp_off: lampOff,
                 cam_doorbell: camDoorbell, cam_doorbell_idle: camDoorbellIdle, mb_through: mbThrough, mb_postman: mbPostman, mb_collect: mbCollect,
-                mb_right: mbRight, mb_classic: mbClassic, mb_classic_open: mbClassicOpen,
+                mb_right: mbRight, mb_classic: mbClassic, mb_classic_open: mbClassicOpen, mb_3d: mb3d, mb_3d_open: mb3dOpen, mb_3d_back: mb3dBack, mb_3d_green: mb3dGreen,
                 nt_chest: demoChest, nt_drawers: demoDrawers, nt_booster: demoBooster, nt_sump: demoSump, nt_sump_high: demoSumpHigh, nt_sump_off: demoSumpOff, nt_pool: demoPool,
                 nt_floor: demoFloorWater, nt_floor_elec: demoFloorElec, nt_spa: demoSpa, nt_sauna: demoSauna, nt_aquarium: demoAquarium, nt_linky: demoLinky,
                 nt_tree: demoTree, nt_tree_red: demoTreeRed,
@@ -1630,7 +1635,7 @@ function liveGallery() {
     [L("Diffusers and ventilation", "Diffuseurs et ventilation"), [difDrop, difCone, difStone, difFlame, difNebulizer, hrvDiagram, hrvOneDuct, hrvPair, hrvBypass, hrvSingle, hrvSingleHigh, hrvSingleOff, hrvSingleBox, hrvSingleBoxHigh]],
     [L("Cameras", "Cam\u00e9ras"), [camIndoor, camTube, camOutdoor, camDome, camPrivacy, camOffline]],
     [L("Lamps", "Lampes"), [lampBulb, lampBedside, lampFloor, lampTorch, lampPendant, lampStrip, lampSpots, lampPanels, lampDesk, lampWall, lampOff]],
-    [L("Mailboxes and doorbells", "Boîtes aux lettres et sonnettes"), [mbThrough, mbPostman, mbCollect, mbRight, mbClassic, mbClassicOpen, camDoorbell, camDoorbellIdle]],
+    [L("Mailboxes and doorbells", "Boîtes aux lettres et sonnettes"), [mbThrough, mbPostman, mbCollect, mbRight, mb3d, mb3dOpen, mb3dBack, mb3dGreen, mbClassic, mbClassicOpen, camDoorbell, camDoorbellIdle]],
     [L("Around the house", "Autour de la maison"), [demoChest, demoDrawers, demoBooster, demoSump, demoSumpHigh, demoSumpOff, demoPool, demoFloorWater, demoFloorElec, demoSpa, demoSauna, demoAquarium, demoLinky, demoTree, demoTreeRed]],
     [L("Pets", "Animaux"), [petFeeder, roundFeeder, doubleFeeder, dualFeeder, wetFeeder, petFountain, roundFountain]],
     [L("Litter boxes", "Liti\u00e8res"), [litGlobe, litGlobeClean, litGlobeCat, litBox, litBoxClean, litBoxFull]],

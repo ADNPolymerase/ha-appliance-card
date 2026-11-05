@@ -11674,6 +11674,27 @@ check('borne : ni un statut reconnu', evMode(evR('SuspendedEVSE', { power_entity
   check('editeur bal : le dessin et le cote de la rue', ['mailbox_layout', 'mailbox_front'].every((f) => new RegExp(`data-field="${f}"`).test(markup(newEditor({ ...BAL })))), true);
   check('editeur bal : les portes et le compteur', ['mail_count_entity', 'front_door_entity', 'back_door_entity'].every((f) => new RegExp(`data-toggle="${f}"`).test(markup(newEditor({ appliance_type: 'mailbox', state_entity: 'input_boolean.bal' })))), true);
   check('editeur bal : le cote de la rue seulement en traversante', /data-field="mailbox_front"/.test(markup(newEditor({ ...BAL, mailbox_layout: 'classic' }))), false);
+  // HACF: an entity saying whether mail is inside, whatever the counter says.
+  const PR = { ...BAL, mail_present_entity: 'input_boolean.bal_courrier' };
+  const SP = (on, n) => ({ ...S({ n }), 'input_boolean.bal_courrier': st(on ? 'on' : 'off') });
+  check('bal : releve, vide malgre le compteur', sline(card(PR, SP(false, 1))), 'Vide');
+  check('bal : releve, ni lettre ni badge', [letters(html(card(PR, SP(false, 1)))), /class="mb-badge"/.test(html(card(PR, SP(false, 1))))].join(), '0,false');
+  check('bal : releve, le compteur du jour reste en ligne', infoLine(html(card(PR, SP(false, 1))), 'Courrier reçu'), '1');
+  check('bal : courrier present', sline(card(PR, SP(true, 1))), 'Courrier · 1');
+  check('bal : present sans compteur', sline(card({ ...PR, mail_count_entity: undefined }, SP(true, 0))), 'Courrier');
+  check('bal : indicateur hors ligne, le compteur reprend la main', sline(card(PR, { ...SP(false, 2), 'input_boolean.bal_courrier': st('unavailable') })), 'Courrier · 2');
+  // HACF: the through-wall box in three-quarter view.
+  const B3 = { ...BAL, mailbox_layout: 'through_3d' };
+  check('bal 3/4 : son dessin', /mb-l-through_3d/.test(mcls(card(B3, S()))), true);
+  check('bal 3/4 : porte fermee, pas de lettre visible', letters(html(card(B3, S({ on: true, n: 3 })))), 0);
+  check('bal 3/4 : porte avant ouverte, les lettres au fond', letters(html(card(B3, S({ on: true, n: 3, f: true })))), 3);
+  check('bal 3/4 : la porte avant pivote', /class="mb-swing hl"/.test(html(card(B3, S({ f: true })))), true);
+  check('bal 3/4 : la porte arriere pivote', /class="mb-swing hr"/.test(html(card(B3, S({ b: true })))), true);
+  check('bal 3/4 : la lettre qui arrive', /class="mb-post"/.test(html(card(B3, S()))), true);
+  check('bal 3/4 : anthracite par defaut, blanc au choix', [/stop-color="#5b6168"/.test(html(card(B3, S()))), /stop-color="#ffffff"/.test(html(card({ ...B3, mailbox_color: 'white' }, S())))].join(), 'true,true');
+  check('bal 3/4 : bourrage au-dela de douze', /translate\([\d.]+ [\d.]+\) rotate\(-7\)/.test(html(card(B3, S({ on: true, n: 15 })))), true);
+  check('editeur bal : la couleur en 3/4 seulement', [/data-field="mailbox_color"/.test(markup(newEditor(B3))), /data-field="mailbox_color"/.test(markup(newEditor(BAL)))].join(), 'true,false');
+  check('editeur bal : le champ courrier present', /data-toggle="mail_present_entity"/.test(markup(newEditor(BAL))), true);
   check('editeur camera : le bouton de sonnette', /data-toggle="ring_entity"/.test(markup(newEditor({ appliance_type: 'camera', state_entity: 'camera.porte' }))), true);
 }
 

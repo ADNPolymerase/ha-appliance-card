@@ -3513,7 +3513,7 @@ class ApplianceCard extends HTMLElement {
       mailbox = { ...m, drawn, over: m.present && (m.count || 0) > MAILBOX_MAX_LETTERS,
         newIdx: arrive !== null && (m.count || 1) <= MAILBOX_MAX_LETTERS ? drawn : 0, arrive, arriveAt: arrive !== null ? this._mbArriveAt : 0,
         swingF: m.front && since(this._mbSwingF, MAILBOX_SWING_MS) !== null, swingB: m.back && since(this._mbSwingB, MAILBOX_SWING_MS) !== null,
-        layout: mailboxLayoutOf(cfg), side: MAILBOX_SIDES.includes(cfg.mailbox_front) ? cfg.mailbox_front : "left",
+        layout: mailboxLayoutOf(cfg), side: MAILBOX_SIDES.includes(cfg.mailbox_front) ? cfg.mailbox_front : "left", color: cfg.mailbox_color,
         street: t(hass, "mb_street"), house: t(hass, "mb_house") };
       // The arrival is drawn once: the card goes back to the still pile after it.
       if (this._mbTimer) { clearTimeout(this._mbTimer); this._mbTimer = null; }
@@ -4031,7 +4031,7 @@ class ApplianceCard extends HTMLElement {
       illustrationCtx.hrv && [illustrationCtx.hrv.mode, illustrationCtx.hrv.level, illustrationCtx.hrv.layout, illustrationCtx.hrv.paused, illustrationCtx.hrv.sPace, illustrationCtx.hrv.ePace].join("/"),
       illustrationCtx.camera && [illustrationCtx.camera.mode, illustrationCtx.camera.night, illustrationCtx.camera.layout].join("/"),
       illustrationCtx.mailbox && [illustrationCtx.mailbox.mode, illustrationCtx.mailbox.drawn, illustrationCtx.mailbox.count, illustrationCtx.mailbox.front,
-        illustrationCtx.mailbox.back, illustrationCtx.mailbox.layout, illustrationCtx.mailbox.side, illustrationCtx.mailbox.arriveAt].join("/"),
+        illustrationCtx.mailbox.back, illustrationCtx.mailbox.layout, illustrationCtx.mailbox.side, illustrationCtx.mailbox.color, illustrationCtx.mailbox.arriveAt].join("/"),
       illustrationCtx.lampDraw && [illustrationCtx.lampDraw.mode, illustrationCtx.lampDraw.rgb.join(","), illustrationCtx.lampDraw.pct,
         illustrationCtx.lampDraw.fx, illustrationCtx.lampDraw.layout, illustrationCtx.lampDraw.spots].join("/"),
       illustrationCtx.scale && [illustrationCtx.scale.mode, illustrationCtx.scale.text, illustrationCtx.scale.unit, illustrationCtx.scale.fresh].join("/"),

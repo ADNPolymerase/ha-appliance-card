@@ -269,6 +269,7 @@ const SECTIONS = [
   ...Object.entries(OPT_LINES).flatMap(([ty, list]) => list.flatMap((o) => [{ field: o.field, types: [ty], labelKey: o.label, includeDomains: o.domains }]
     .concat(o.target ? [{ field: o.target, types: [ty], labelKey: o.targetLabel, includeDomains: ["sensor", "number", "input_number"] }] : []))),
   { field: "mail_count_entity", types: ["mailbox"], labelKey: "section_mail_count", includeDomains: ["sensor", "counter", "input_number", "number"] },
+  { field: "mail_present_entity", types: ["mailbox"], labelKey: "section_mail_present", includeDomains: ["input_boolean", "binary_sensor", "switch", "sensor"] },
   { field: "front_door_entity", types: ["mailbox"], labelKey: "mb_front_door", includeDomains: ["binary_sensor", "sensor", "input_boolean", "switch"] },
   { field: "back_door_entity", types: ["mailbox"], labelKey: "mb_back_door", includeDomains: ["binary_sensor", "sensor", "input_boolean", "switch"] },
   { field: "battery_entity", types: ["robot", "home_battery", "ups", "camera", "screen", "mobility", "detector"], labelKey: "section_battery", includeDomains: ["sensor", "binary_sensor"],
@@ -1350,6 +1351,9 @@ class ApplianceCardEditor extends HTMLElement {
         }) + (mailboxLayoutOf(this._config) === "through" ? this._row("mb_front_side", "mailbox_front", {
           type: "select",
           options: MAILBOX_SIDES.map((v) => ({ value: v, label: t(hass, `mb_side_${v}`) })),
+        }) : "") + (mailboxLayoutOf(this._config) === "through_3d" ? this._row("mb_color", "mailbox_color", {
+          type: "select",
+          options: MAILBOX_COLORS_3D.map((v) => ({ value: v, label: t(hass, `mb_color_${v}`) })),
         }) : "") : ""}
         ${this._type === "water_pump" ? this._row("section_screen_layout", "pump_layout", {
           type: "select",
