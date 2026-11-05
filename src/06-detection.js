@@ -246,6 +246,16 @@ const TYPE_AUTO_PATTERNS = {
     basket_entity: /drawer|basket|pot.?out|pull.?out/i,
     shake_entity: /shake|flip/i,
   },
+  // VeSync keeps each part of a humidifier in its own entity (#89).
+  humidifier: {
+    current_humidity_entity: /^(?!.*(target|set)).*(humidity$|current.?humid|humidite$)/i,
+    mist_level_entity: /mist|fog.?level|spray(ing)?.?(level|volume)|brume/i,
+    night_light_entity: /night.?light|mood.?light|veilleuse|ambient.?light/i,
+    display_entity: /^(?!.*auto.?off).*(display|screen|backlight|[._]led($|_)|ecran)/i,
+    low_water_entity: /low.?water|water.?(lack|shortage|empty)|no.?water|tank.?empty|manque.?d.?eau/i,
+    tank_lifted_entity: /lifted|detached|tank.?(removed|missing|off)|water.?tank$/i,
+    water_level_entity: /water.?level|niveau.?d.?eau/i,
+  },
   // Midea LAN and Tuya keep the tank apart, as a contact or a level.
   dehumidifier: {
     tank_entity: /tank.?(full|level)|water.?(tank|level|full)|bucket|full.?tank/i,
@@ -588,6 +598,7 @@ const TYPE_CAPS = {
   fresh_water_station: { readOnly: true },
   solar_thermal: { readOnly: true },
   wood_stove: { readOnly: true },
+  humidifier: { ntHumidifier: true },
   // A thermostat on the wall or a valve on a radiator: the room, the
   // setpoint, and whether it calls for heat. A climate entity says it all.
   thermostat: { thermostat: true, readOnly: true },
@@ -670,7 +681,7 @@ const AC_ONLY_FIELDS = ["vane_vertical_entity", "vane_horizontal_entity", "purif
 const STATE_DOMAINS = {
   thermostat: ["climate"],
   water_heater: ["water_heater"], boiler: ["water_heater"], heat_pump: ["climate", "water_heater"],
-  pellet_stove: ["climate"], air_conditioner: ["climate", "select", "switch"], dehumidifier: ["humidifier", "switch"],
+  pellet_stove: ["climate"], air_conditioner: ["climate", "select", "switch"], dehumidifier: ["humidifier", "switch"], humidifier: ["humidifier", "switch", "fan", "input_boolean"],
   space_heater: ["climate", "switch"], towel_warmer: ["climate", "select", "switch"], iron: ["switch"], toaster: ["switch"], hair_dryer: ["switch"], air_fryer: ["switch"],
   screen: ["switch", "media_player", "input_boolean", "binary_sensor"],
   air_purifier: ["fan", "switch", "select", "climate"], fan: ["fan", "switch"],
@@ -803,7 +814,7 @@ const TYPE_GROUPS = [
   ["laundry", ["washer", "dryer"]],
   ["kitchen", ["dishwasher", "oven", "microwave", "hood", "cooktop", "fridge", "kettle", "cooker", "coffee", "rice_cooker", "air_fryer", "toaster"]],
   ["heating", ["water_heater", "boiler", "heat_pump", "thermostat", "pellet_stove", "space_heater", "towel_warmer", "floor_heating", "storage_tank", "fresh_water_station", "wood_stove"]],
-  ["air", ["air_conditioner", "dehumidifier", "air_purifier", "fan", "diffuser", "hrv"]],
+  ["air", ["air_conditioner", "dehumidifier", "humidifier", "air_purifier", "fan", "diffuser", "hrv"]],
   ["home", ["screen", "iron", "hair_dryer", "printer_3d", "robot", "pool_pump", "scale", "camera", "lamp", "mailbox", "water_pump", "spa", "sauna", "aquarium", "christmas_tree", "mobility", "irrigation", "detector", "speaker", "console"]],
   ["energy", ["solar", "solar_thermal", "home_battery", "ev_charger", "meter"]],
   ["pets", ["pet_feeder", "pet_fountain", "litter_box"]],
@@ -816,6 +827,18 @@ function caps(type) {
 
 function detectApplianceType(cfg, st) {
   if (cfg.appliance_type && cfg.appliance_type !== "auto") return cfg.appliance_type;
+  // A humidifier by its own fields or its entity's class, before a humidity
+  // sensor makes a dehumidifier of it. Essential oil diffusers often report
+  // as humidifiers too, and keep their drawing.
+  if (HUMIDIFIER_ONLY_FIELDS.some((f) => cfg[f])) return "humidifier";
+  // VeSync gives its humidifiers no class at all: the domain says it, unless
+  // the name or the action say it dries.
+  if (st && domainOf(cfg.state_entity) === "humidifier" && !DIFFUSER_ONLY_FIELDS.some((f) => cfg[f])) {
+    const named = stripAccents(`${cfg.state_entity || ""} ${st.attributes.friendly_name || ""} ${cfg.name || ""}`).toLowerCase();
+    const dc = st.attributes.device_class;
+    if (!DIFFUSER_NAME_RE.test(named) && (dc === "humidifier" || (!dc && !/dehumid|deshumid|entfeucht|deumidif|ontvocht|avfukt|affugt|osuszacz|odvlh|\u9664\u6e7f/.test(named) && st.attributes.action !== "drying"))) return "humidifier";
+  }
+  if (st && domainOf(cfg.state_entity) === "humidifier" && st.attributes.device_class === "dehumidifier") return "dehumidifier";
   // A fridge-only field settles it before any name matching: those keys mean
   // nothing on the other seven types, and a fridge may have no state entity
   // whose name could be matched in the first place.

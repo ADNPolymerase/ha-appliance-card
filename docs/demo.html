@@ -792,6 +792,17 @@ const airConditioner = () => card({
 
 // A Midea dehumidifier in the cellar, as Midea AC LAN reports it: a
 // humidifier entity for the humidity and its target, the tank apart.
+// A tank humidifier (#89): the humidity on its screen, its mist level and its
+// target on sliders, its night light in the tank.
+const humCard = (name, sw, o = {}) => () => card({ name, appliance_type: "humidifier", state_entity: "humidifier.room", mist_level_entity: "number.room_mist", night_light_entity: "select.room_night",
+  display_entity: "switch.room_display", low_water_entity: "binary_sensor.room_low", tank_lifted_entity: "binary_sensor.room_lift" },
+  [st("humidifier.room", sw, { device_class: "humidifier", min_humidity: 30, max_humidity: 80, available_modes: ["auto", "normal", "sleep"], current_humidity: o.hum ?? 48, humidity: 60, mode: o.mode || "normal" }),
+   st("number.room_mist", o.mist ?? 5, { min: 1, max: 9, step: 1 }), st("select.room_night", o.night || "off", { options: ["bright", "dim", "off"] }), st("switch.room_display", o.display || "on"),
+   st("binary_sensor.room_low", o.low || "off"), st("binary_sensor.room_lift", o.lift || "off")]);
+const humidifier = humCard(L("Humidifier", "Humidificateur"), "on");
+const humidifierNight = humCard(L("Humidifier, night light", "Humidificateur, veilleuse"), "on", { mist: 2, night: "bright", mode: "sleep", hum: 54 });
+const humidifierEmpty = humCard(L("Humidifier, out of water", "Humidificateur sans eau"), "on", { low: "on", hum: 41 });
+const humidifierLifted = humCard(L("Humidifier, tank removed", "Humidificateur, r\u00e9servoir retir\u00e9"), "on", { lift: "on", hum: 41 });
 const dehumidifier = () => card({
   name: L("Dehumidifier", "D\u00e9shumidificateur"),
   appliance_type: "dehumidifier",
@@ -1571,7 +1582,7 @@ const hdRing = hdCard(L("Bathroom dryer", "Sèche-cheveux salle de bain"), "ring
 const ALL = { washer, dryer, steam_generator: steamGenerator,
               dishwasher, oven, microwave, hood, cooktop, fridge, kettle, cooker, coffee, rice_cooker: riceCooker, air_fryer: airFryer, toaster,
               water_heater: waterHeater, boiler, heat_pump: heatPump, pellet_stove: pelletStove,
-              space_heater: spaceHeater, towel_warmer: towelWarmer, air_conditioner: airConditioner, dehumidifier,
+              space_heater: spaceHeater, towel_warmer: towelWarmer, air_conditioner: airConditioner, dehumidifier, humidifier, humidifier_night: humidifierNight, humidifier_empty: humidifierEmpty, humidifier_lifted: humidifierLifted,
               air_purifier: purifier, fan, ceiling_fan: ceilingFan,
               pet_feeder: petFeeder, dual_feeder: dualFeeder, wet_feeder: wetFeeder, pet_fountain: petFountain, round_fountain: roundFountain,
               printer_3d: printer3d, ev_charger: evCharger };
@@ -1651,7 +1662,7 @@ function liveGallery() {
   const FAMILIES = [
     [L("Laundry", "Linge"), [washer, dryer, EXTRA.iron, steamGenerator]],
     [L("Kitchen", "Cuisine"), [dishwasher, oven, microwave, hood, cooktop, fridge, kettle, cooker, coffee, coffeeBlack, riceCooker, airFryer, toaster]],
-    [L("Heating and climate", "Chauffage et climat"), [waterHeater, boiler, boilerWindow, boilerThermo, thSquare, thRound, thGlass, thValve, heatPump, pelletStove, spaceHeater, towelWarmer, towelPanel, airConditioner, dehumidifier]],
+    [L("Heating and climate", "Chauffage et climat"), [waterHeater, boiler, boilerWindow, boilerThermo, thSquare, thRound, thGlass, thValve, heatPump, pelletStove, spaceHeater, towelWarmer, towelPanel, airConditioner, dehumidifier, humidifier, humidifierNight, humidifierEmpty, humidifierLifted]],
     [L("Air purifiers and fans", "Purificateurs et ventilateurs"), [purifier, boxPurifier, ringPurifier, fan, ceilingFan]],
     [L("Robots and vacuums", "Robots et aspirateurs"), [rbtVacuum, rbtEmptying, rbtBox, rbtBoxGold, rbtMop, rbtDrying, rbtMower, rbtNavimow, rbtRain, rbtStick, rbtWasher]],
     [L("Electric rides", "Mobilit\u00e9 \u00e9lectrique"), [demo_mobScooter, demo_mobOffroad, demo_mobEbike, demo_mobGyropode, demo_mobMotorcycle, demo_mobUnplugged]],

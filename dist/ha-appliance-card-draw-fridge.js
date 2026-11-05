@@ -97,6 +97,12 @@ const NT_CSS = `
         @keyframes nt-swim{0%{transform:translateX(0) scaleX(1)}46%{transform:translateX(34px) scaleX(1)}50%{transform:translateX(34px) scaleX(-1)}96%{transform:translateX(0) scaleX(-1)}100%{transform:translateX(0) scaleX(1)}}
         @keyframes nt-swimB{0%{transform:translateX(0) scaleX(-1)}46%{transform:translateX(-30px) scaleX(-1)}50%{transform:translateX(-30px) scaleX(1)}96%{transform:translateX(0) scaleX(1)}100%{transform:translateX(0) scaleX(-1)}}
         @keyframes nt-rays{0%,100%{opacity:.18}50%{opacity:.38}}
+        .hu-puff{opacity:0;transform-box:fill-box;transform-origin:center;animation:hu-rise 3s ease-out infinite}
+        @keyframes hu-rise{0%{opacity:0;transform:translate(0,0) scale(.5)}15%{opacity:1}100%{opacity:0;transform:translate(var(--dx,0),var(--h,-26px)) scale(2)}}
+        .hu-bub{opacity:0;animation:hu-up 2.7s ease-in infinite}
+        @keyframes hu-up{0%{opacity:0;transform:translateY(0)}15%{opacity:.9}85%{opacity:.8}100%{opacity:0;transform:translateY(var(--h,-20px))}}
+        .hu-blink{animation:hu-bl 1s steps(2,jump-none) infinite}
+        @keyframes hu-bl{0%{opacity:1}100%{opacity:.25}}
         .machine.nt * { animation-delay: calc(var(--d0, 0s) + var(--anim-offset, 0s)) !important; }
         @media (prefers-reduced-motion: reduce) { .machine.nt * { animation-name: none !important; } }
 `;

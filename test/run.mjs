@@ -12834,5 +12834,140 @@ function tvT(w) { return { 'switch.tv': { state: 'on', attributes: {} }, 'sensor
   check('editeur surpresseur : aucun champ de circulateur', ['data-toggle="head_entity"', 'data-toggle="control_mode_entity"', '"circulator_model"'].some((f) => ed({ appliance_type: 'water_pump', state_entity: 'switch.c' }).includes(f)), false);
 }
 
+// A tank humidifier (#89).
+{
+  const s = (state, attributes = {}) => ({ state: String(state), attributes });
+  const ntCls = (h) => machineCls(h);
+  const kind = (h) => (/\bnt-k-(\w+)/.exec(ntCls(h)) || [, null])[1];
+  const HU = { appliance_type: 'humidifier', state_entity: 'humidifier.h', mist_level_entity: 'number.mist', night_light_entity: 'select.night', display_entity: 'switch.display', low_water_entity: 'binary_sensor.low', tank_lifted_entity: 'binary_sensor.lift' };
+  const huS = (o = {}) => ({ 'humidifier.h': s(o.state ?? 'on', { device_class: 'humidifier', min_humidity: 30, max_humidity: 80, available_modes: ['auto', 'normal', 'sleep'], current_humidity: 48, humidity: 60, mode: 'normal', ...(o.attrs || {}) }),
+    'number.mist': s(o.mist ?? 5, { min: 1, max: 9, step: 1 }), 'select.night': s(o.night ?? 'off', { options: ['bright', 'dim', 'off'] }), 'switch.display': s(o.display ?? 'on'), 'binary_sensor.low': s(o.low ?? 'off'), 'binary_sensor.lift': s(o.lift ?? 'off') });
+  const run = render(HU, huS());
+  check('humidificateur : son dessin', kind(run), 'humidifier');
+  check('humidificateur : en marche', stateLine(run), 'Humidifying');
+  check('humidificateur : l humidite et sa cible', infoLine(run, 'Humidity').replace(/\s/g, ' '), '48 % → 60 %');
+  check('humidificateur : le mode', infoLine(run, 'Mode'), 'Normal');
+  check('humidificateur : l humidite sur l ecran', />48<\/text>/.test(run), true);
+  check('humidificateur : le niveau sur l ecran', />L5<\/text>/.test(run), true);
+  const puffs = (h) => (h.match(/class="hu-puff"/g) || []).length;
+  check('humidificateur : de la brume', puffs(run) > 0, true);
+  check('humidificateur : plus de brume au niveau 9', puffs(render(HU, huS({ mist: 9 }))) > puffs(render(HU, huS({ mist: 1 }))), true);
+  check('humidificateur : ecran coupe', />48<\/text>/.test(render(HU, huS({ display: 'off' }))), false);
+  check('humidificateur : eteint', stateLine(render(HU, huS({ state: 'off' }))), 'Off');
+  check('humidificateur : eteint, ni brume ni chiffres', [puffs(render(HU, huS({ state: 'off' }))), />48<\/text>/.test(render(HU, huS({ state: 'off' })))].join(), '0,false');
+  check('humidificateur : humidite atteinte, en veille', [stateLine(render(HU, huS({ attrs: { action: 'idle' } }))), puffs(render(HU, huS({ attrs: { action: 'idle' } })))].join(), 'Standby,0');
+  const glow = (h) => /fill="url\(#hu-nl\)" opacity="([\d.]+)"/.exec(h);
+  check('humidificateur : veilleuse eteinte', glow(run), null);
+  check('humidificateur : veilleuse douce et forte', [glow(render(HU, huS({ night: 'dim' })))[1], glow(render(HU, huS({ night: 'bright' })))[1]].join(), '0.5,0.95');
+  check('humidificateur : la veilleuse reste, appareil eteint', !!glow(render(HU, huS({ state: 'off', night: 'dim' }))), true);
+  check('humidificateur : veilleuse sur une lampe', glow(render({ ...HU, night_light_entity: 'light.n' }, { ...huS(), 'light.n': s('on', { brightness: 40 }) }))[1], '0.5');
+  const dry = render(HU, huS({ low: 'on' }));
+  check('humidificateur : plus d eau', stateLine(dry), 'Add water');
+  check('humidificateur : plus d eau, plus de brume, une goutte', [puffs(dry), /class="hu-blink"/.test(dry)].join(), '0,true');
+  const lift = render(HU, huS({ lift: 'on', low: 'on' }));
+  check('humidificateur : reservoir retire, gagne sur l eau', stateLine(lift), 'Tank removed');
+  check('humidificateur : reservoir souleve', /translate\(0 -13\)/.test(lift), true);
+  check('humidificateur : pose, il ne bouge pas', /translate\(0 0\)/.test(run), true);
+  check('humidificateur : hors ligne', stateLine(render(HU, { 'humidifier.h': s('unavailable') })), 'Offline');
+  check('humidificateur : la hauteur d eau suit le capteur', render({ ...HU, water_level_entity: 'sensor.w' }, { ...huS(), 'sensor.w': s(90) }) !== render({ ...HU, water_level_entity: 'sensor.w' }, { ...huS(), 'sensor.w': s(30) }), true);
+  check('humidificateur : un capteur a sec = plus d eau', stateLine(render({ ...HU, water_level_entity: 'sensor.w' }, { ...huS(), 'sensor.w': s(3) })), 'Add water');
+  check('humidificateur : aucune valeur cassee', /NaN|undefined/.test(render({ appliance_type: 'humidifier', state_entity: 'switch.h' }, { 'switch.h': s('on') })), false);
+  check('humidificateur sur prise : en marche des 5 W', stateLine(render({ appliance_type: 'humidifier', state_entity: 'switch.h', power_entity: 'sensor.w' }, { 'switch.h': s('on'), 'sensor.w': s(20, { unit_of_measurement: 'W' }) })), 'Humidifying');
+
+  // The sliders, the mode and the switch call their services.
+  const act = (cfg, states) => {
+    const c = new Card(), calls = [];
+    c.setConfig({ type: 'custom:ha-appliance-card', ...cfg });
+    c._hass = { ...HASS(states), callService: (d, sv, data) => calls.push({ d, sv, data }) };
+    c._render();
+    return { c, calls, html: markup(c) };
+  };
+  const a = act(HU, huS());
+  check('humidificateur : le curseur de cible', /data-slider="humidifier\.h"[^>]*min="30" max="80" step="1" value="60"/.test(a.html), true);
+  check('humidificateur : le curseur de brume', /data-slider="number\.mist"[^>]*min="1" max="9" step="1" value="5"/.test(a.html), true);
+  a.c._call('humidifier.h', { value: '55' });
+  check('humidificateur : la cible va a set_humidity', JSON.stringify(a.calls.pop()), JSON.stringify({ d: 'humidifier', sv: 'set_humidity', data: { entity_id: 'humidifier.h', humidity: 55 } }));
+  a.c._call('number.mist', { value: '7' });
+  check('humidificateur : la brume va au number', a.calls.pop().sv, 'set_value');
+  check('humidificateur : le mode ouvre un menu', /data-line-menu="hum_mode"/.test(a.html), true);
+  a.c._lineMenu = 'hum_mode';
+  a.c._render();
+  check('humidificateur : les modes dans le menu', ['auto', 'normal', 'sleep'].every((m) => markup(a.c).includes(`data-line-option="${m}"`)), true);
+  a.c._pickLine('hum_mode', 'sleep');
+  check('humidificateur : le mode va a set_mode', JSON.stringify(a.calls.pop()), JSON.stringify({ d: 'humidifier', sv: 'set_mode', data: { entity_id: 'humidifier.h', mode: 'sleep' } }));
+  check('humidificateur : eteint, ni curseurs ni menu', /data-slider|data-line-menu/.test(render(HU, huS({ state: 'off' }))), false);
+  check('humidificateur : reservoir retire, pas de curseur', /data-slider/.test(render(HU, huS({ lift: 'on' }))), false);
+  check('humidificateur : la cible d un number', /data-slider="number\.t"/.test(render({ ...HU, target_humidity_entity: 'number.t' }, { ...huS(), 'number.t': s(50, { min: 30, max: 80 }) })), true);
+  check('humidificateur : l interrupteur', /data-toggle-entity="humidifier\.h"|data-entity="humidifier\.h"/.test(run), true);
+
+  // Told apart from its neighbours when no type is set.
+  const auto = (cfg, states) => kind(render(cfg, states));
+  check('humidificateur : reconnu par sa classe', auto({ state_entity: 'humidifier.a' }, { 'humidifier.a': s('on', { device_class: 'humidifier' }) }), 'humidifier');
+  check('humidificateur : reconnu par son nom', auto({ state_entity: 'switch.a', name: 'Humidificateur' }, { 'switch.a': s('on') }), 'humidifier');
+  check('humidificateur : reconnu a ses champs', auto({ state_entity: 'switch.a', mist_level_entity: 'number.m' }, { 'switch.a': s('on'), 'number.m': s(3) }), 'humidifier');
+  check('humidificateur : un capteur d humidite ne le change pas', auto({ state_entity: 'humidifier.a', current_humidity_entity: 'sensor.h' }, { 'humidifier.a': s('on', { device_class: 'humidifier' }), 'sensor.h': s(40) }), 'humidifier');
+  const typeOf = (cfg, states) => { const h = render(cfg, states); return kind(h); };
+  check('deshumidificateur : pas un humidificateur', typeOf({ state_entity: 'humidifier.a' }, { 'humidifier.a': s('on', { device_class: 'dehumidifier' }) }) === 'humidifier', false);
+  check('deshumidificateur : son nom gagne', typeOf({ state_entity: 'humidifier.a', name: 'Dehumidifier' }, { 'humidifier.a': s('on') }) === 'humidifier', false);
+  check('VeSync : aucune classe, le domaine suffit', typeOf({ state_entity: 'humidifier.chambre' }, { 'humidifier.chambre': s('on') }), 'humidifier');
+  check('deshumidificateur sans classe : son action le dit', typeOf({ state_entity: 'humidifier.cave' }, { 'humidifier.cave': s('on', { action: 'drying' }) }) === 'humidifier', false);
+
+  // The integrations, as their code exposes them.
+  const line = (h, l) => infoLine(h, l).replace(/\s/g, ' ');
+  // Xiaomi: a connectivity sensor on while the tank is in place, no_water, a percentage.
+  const MI = { appliance_type: 'humidifier', state_entity: 'humidifier.mi', tank_lifted_entity: 'binary_sensor.tank', low_water_entity: 'binary_sensor.nowater', water_level_entity: 'sensor.level', display_entity: 'select.led' };
+  const miS = (o = {}) => ({ 'humidifier.mi': s('on', { device_class: 'humidifier', mode: o.mode || 'High', available_modes: ['Silent', 'Medium', 'High'], current_humidity: 40, humidity: 50 }), 'binary_sensor.tank': s(o.tank ?? 'on', { device_class: 'connectivity' }), 'binary_sensor.nowater': s(o.no ?? 'off'), 'sensor.level': s(o.lvl ?? 60, { unit_of_measurement: '%' }), 'select.led': s(o.led ?? 'dim', { options: ['bright', 'dim', 'off'] }) });
+  check('Xiaomi : reservoir en place = on', stateLine(render(MI, miS())), 'Humidifying');
+  check('Xiaomi : reservoir retire = off', stateLine(render(MI, miS({ tank: 'off' }))), 'Tank removed');
+  check('Xiaomi : ecran dim reste allume', />40<\/text>/.test(render(MI, miS())), true);
+  check('Xiaomi : ecran off', />40<\/text>/.test(render(MI, miS({ led: 'off' }))), false);
+  check('Xiaomi : la brume suit le mode', puffs(render(MI, miS({ mode: 'High' }))) > puffs(render(MI, miS({ mode: 'Silent' }))), true);
+  check('Xiaomi : niveau d eau en ligne', line(render(MI, miS()), 'Water level'), '60 %');
+  // Tuya: spraying level and water level as selects and enums of level_n.
+  const TU = { appliance_type: 'humidifier', state_entity: 'humidifier.tu', mist_level_entity: 'select.spray', water_level_entity: 'sensor.wl', night_light_entity: 'select.mood' };
+  const tuS = (o = {}) => ({ 'humidifier.tu': s('on', { device_class: 'humidifier', mode: 'auto', available_modes: ['auto', 'large'], humidity: 50, current_humidity: 45 }), 'select.spray': s(o.spray ?? 'level_2', { options: ['level_1', 'level_2', 'level_3'] }), 'sensor.wl': s(o.wl ?? 'level_2', { device_class: 'enum', options: ['level_1', 'level_2', 'level_3'] }), 'select.mood': s(o.mood ?? '1', { options: ['1', '2', '3', '4', '5'] }) });
+  const tu = render(TU, tuS());
+  check('Tuya : le rang du niveau sur l ecran', />L2<\/text>/.test(tu), true);
+  check('Tuya : le niveau en menu', /data-line-menu="hum_mist"/.test(tu), true);
+  check('Tuya : plus de brume au niveau 3', puffs(render(TU, tuS({ spray: 'level_3' }))) > puffs(render(TU, tuS({ spray: 'level_1' }))), true);
+  check('Tuya : veilleuse 1 sur 5 = douce', glow(tu)[1], '0.5');
+  check('Tuya : veilleuse 5 sur 5 = forte', glow(render(TU, tuS({ mood: '5' })))[1], '0.95');
+  check('Tuya : aucune valeur cassee', /NaN|undefined/.test(tu), false);
+  // SwitchBot: a water level in words, its mist in the mode, drying its filter.
+  const SB = { appliance_type: 'humidifier', state_entity: 'humidifier.sb', water_level_entity: 'sensor.sbw' };
+  const sbS = (o = {}) => ({ 'humidifier.sb': s('on', { device_class: 'humidifier', mode: o.mode || 'medium', action: o.action || 'humidifying', humidity: 50, current_humidity: 45 }), 'sensor.sbw': s(o.w ?? 'medium', { device_class: 'enum', options: ['empty', 'low', 'medium', 'high'] }) });
+  check('SwitchBot : en marche', stateLine(render(SB, sbS())), 'Humidifying');
+  check('SwitchBot : empty = plus d eau', stateLine(render(SB, sbS({ w: 'empty' }))), 'Add water');
+  check('SwitchBot : low n est pas vide', stateLine(render(SB, sbS({ w: 'low' }))), 'Humidifying');
+  check('SwitchBot : la hauteur suit le mot', render(SB, sbS({ w: 'high' })) !== render(SB, sbS({ w: 'low' })), true);
+  check('SwitchBot : sechage du filtre, pas de brume', puffs(render(SB, sbS({ action: 'drying', mode: 'drying_filter' }))), 0);
+  // LG: action off while it rests. Generic hygrostat: idle.
+  check('LG : action off, au repos', stateLine(render(SB, sbS({ action: 'off' }))), 'Standby');
+  // A motor's speed is no level; a text sensor saying all is well is no alert.
+  check('Xiaomi CA4 : la vitesse moteur ne s ecrit pas L1200', /L1200/.test(render({ appliance_type: 'humidifier', state_entity: 'humidifier.h', mist_level_entity: 'number.motor' }, { ...huS(), 'number.motor': s(1200, { min: 200, max: 2000 }) })), false);
+  check('un capteur dit ok : pas d alerte', stateLine(render({ appliance_type: 'humidifier', state_entity: 'humidifier.h', low_water_entity: 'sensor.w' }, { ...huS(), 'sensor.w': s('ok') })), 'Humidifying');
+  check('diffuseur : garde son dessin', typeOf({ state_entity: 'humidifier.aroma_diffuser' }, { 'humidifier.aroma_diffuser': s('on', { device_class: 'humidifier' }) }) === 'humidifier', false);
+
+  // The entities each integration names, found on its device.
+  const suggest = (state, ids) => {
+    const e = new Editor();
+    e.setConfig({ type: 'custom:ha-appliance-card', appliance_type: 'humidifier', state_entity: state });
+    e.hass = { ...HASS(Object.fromEntries([state, ...ids].map((id) => [id, s('1')]))), entities: Object.fromEntries([state, ...ids].map((id) => [id, { device_id: 'd' }])) };
+    return e.events.at(-1)?.detail?.config || {};
+  };
+  const ve = suggest('humidifier.humidifier', ['number.humidifier_mist_level', 'sensor.humidifier_humidity', 'select.humidifier_night_light_level', 'switch.humidifier_auto_off', 'switch.humidifier_display', 'binary_sensor.humidifier_low_water', 'binary_sensor.humidifier_water_tank_lifted']);
+  check('suggestion VeSync : tout est trouve', [ve.mist_level_entity, ve.current_humidity_entity, ve.night_light_entity, ve.display_entity, ve.low_water_entity, ve.tank_lifted_entity].join(), 'number.humidifier_mist_level,sensor.humidifier_humidity,select.humidifier_night_light_level,switch.humidifier_display,binary_sensor.humidifier_low_water,binary_sensor.humidifier_water_tank_lifted');
+  const mi = suggest('humidifier.mi', ['binary_sensor.mi_water_tank_empty', 'binary_sensor.mi_water_tank', 'sensor.mi_water_level', 'switch.mi_led', 'sensor.mi_humidity']);
+  check('suggestion Xiaomi : le reservoir vide et le reservoir ne se confondent pas', [mi.low_water_entity, mi.tank_lifted_entity, mi.water_level_entity, mi.display_entity].join(), 'binary_sensor.mi_water_tank_empty,binary_sensor.mi_water_tank,sensor.mi_water_level,switch.mi_led');
+  const tu2 = suggest('humidifier.tu', ['select.tu_spraying_level', 'select.tu_spray_mode', 'select.tu_moodlighting', 'sensor.tu_water_level', 'sensor.tu_humidity']);
+  check('suggestion Tuya : le niveau, pas le mode', [tu2.mist_level_entity, tu2.night_light_entity, tu2.water_level_entity].join(), 'select.tu_spraying_level,select.tu_moodlighting,sensor.tu_water_level');
+  const dr = suggest('humidifier.dreo', ['number.dreo_fog_level', 'number.dreo_target_humidity', 'sensor.dreo_humidity', 'sensor.dreo_target_humidity', 'switch.dreo_display_auto_off', 'sensor.dreo_water_level_percent']);
+  check('suggestion Dreo : l humidite, pas sa cible ; l extinction auto n est pas l ecran', [dr.mist_level_entity, dr.current_humidity_entity, dr.display_entity, dr.water_level_entity].join(), 'number.dreo_fog_level,sensor.dreo_humidity,,sensor.dreo_water_level_percent');
+
+  const ed = (cfg) => markup(newEditor(cfg));
+  check('editeur humidificateur : ses champs', ['current_humidity_entity', 'target_humidity_entity', 'mist_level_entity', 'night_light_entity', 'display_entity', 'low_water_entity', 'tank_lifted_entity', 'water_level_entity'].every((f) => ed(HU).includes(`data-toggle="${f}"`)), true);
+  check('editeur deshumidificateur : pas ces champs', ['mist_level_entity', 'tank_lifted_entity'].some((f) => ed({ appliance_type: 'dehumidifier', state_entity: 'humidifier.a' }).includes(`data-toggle="${f}"`)), false);
+}
+
 if (RECORD) writeFileSync(process.env.HAC_RECORD, JSON.stringify(RECORD));
 report();

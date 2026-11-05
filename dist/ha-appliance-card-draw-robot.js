@@ -2205,7 +2205,77 @@ ${c.mode ? `<text x="60" y="70" font-size="5.5" text-anchor="middle" fill="#9fb3
 ${c.nodata ? `<g transform="translate(78 26)"><circle r="6" fill="#607d8b"/><path d="M-2.6 -3 l5.2 6 M2.6 -3 l-5.2 6" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/></g>` : ""}
 ${c.fault ? `<g transform="translate(80 26)" class="nta-blinkfast"><path d="M0 -6.5 L6.5 5 H-6.5 Z" fill="#ff3b30" stroke="#fff" stroke-width=".8"/><text y="3.6" font-size="7" font-weight="700" text-anchor="middle" fill="#fff" ${NT_FONT}>!</text></g>` : ""}</g>`;
 }
-const NT_DRAW = { circulator: ntCirculator, irr_sprinkler: ntIrrSprinkler, irr_tap: ntIrrTap, irr_drip: ntIrrDrip, irr_flowers: ntIrrFlowers, lit_globe: ntLitterGlobe, lit_box: ntLitterBox, det_smoke: ntDetSmoke, det_co: ntDetCo, det_leak: ntDetLeak, spk_smart: ntSpkSmart, spk_homepod_mini: ntSpkMini, spk_sonos_one: ntSpkOne, spk_bookshelf: ntSpkShelf, spk_sonos_move: ntSpkMove, spk_soundbar: ntSpkBar, spk_echo_dot: ntSpkDot, spk_nest_mini: ntSpkNest, spk_sonos_era100: ntSpkEra100, spk_sonos_era300: ntSpkEra300, spk_bose_wave: ntSpkWave, spk_bose_500: ntSpkBose500, spk_bose_soundlink: ntSpkFlex, spk_bose_soundbar: ntSpkBoseBar, con_ps1: conPs1, con_ps2: conPs2, con_ps3: conPs3, con_ps4: (c) => conPs4(c, false), con_ps4_pro: (c) => conPs4(c, true), con_ps5: conPs5, con_xbox: conXbox, con_xbox_360: conX360, con_xbox_one: conXone, con_xbox_series_x: conXsx, con_xbox_series_s: conXss, con_switch: (c) => conSwitch(c, false), con_switch_2: (c) => conSwitch(c, true), con_switch_lite: conSwitchLite, con_ps_vita: conVita, con_nes: conNes, con_snes: conSnes, con_n64: conN64, con_gamecube: conGamecube, con_wii: conWii, con_megadrive: conMegadrive, tank: ntTank, fws: ntFresh, solth: ntSolarThermal, wood: ntWoodStove, mob_scooter: mobScooter, mob_offroad: mobOffroad, mob_ebike: mobEbike, mob_gyropode: mobGyropode, mob_motorcycle: mobMotorcycle, meter_box: ntMeterBox, meter_dome: ntMeterDome, meter_gas: ntGas, meter_water: ntWater, booster: ntBooster, sump: ntSump, pool: ntPoolRobot, floor: ntFloor, spa: ntSpa, sauna: ntSauna, aquarium: ntAquarium, linky: ntLinky, tree: ntTree };
+// A tank humidifier (#89), its body a soft squircle seen from just above: a
+// white base with its display and buttons, a smoked tank tapering upwards with
+// its water, its tube and its night light, the mist rising from the nozzle.
+function ntHumidifier(c) {
+  const id = (n) => `hu-${n}`;
+  const on = c.on && !c.lifted && !c.empty;
+  const lvl = Math.max(0, Math.min(1, c.mist === null || c.mist === undefined ? .5 : c.mist));
+  const lift = c.lifted ? -13 : 0;
+  const L = c.empty ? .06 : Math.max(.06, Math.min(1, c.water === null || c.water === undefined ? .6 : c.water));
+  const f = (v) => v.toFixed(1);
+  // A squircle seen from above, a flattened rounded square.
+  const sq = (cx, cy, rx, ry) => `M${f(cx - rx)} ${f(cy)} C${f(cx - rx)} ${f(cy - ry * .95)} ${f(cx - rx * .62)} ${f(cy - ry)} ${f(cx)} ${f(cy - ry)} C${f(cx + rx * .62)} ${f(cy - ry)} ${f(cx + rx)} ${f(cy - ry * .95)} ${f(cx + rx)} ${f(cy)} C${f(cx + rx)} ${f(cy + ry * .95)} ${f(cx + rx * .62)} ${f(cy + ry)} ${f(cx)} ${f(cy + ry)} C${f(cx - rx * .62)} ${f(cy + ry)} ${f(cx - rx)} ${f(cy + ry * .95)} ${f(cx - rx)} ${f(cy)} Z`;
+  const cx = 60, tY = 30, tR = 35, tr = 5.2, bY = 78, bR = 40, br = 6.6;
+  const rAt = (y) => tR + (bR - tR) * (y - tY) / (bY - tY);
+  const ryAt = (y) => tr + (br - tr) * (y - tY) / (bY - tY);
+  const wy = bY - (bY - tY - 5) * L, wr = rAt(wy), wry = ryAt(wy);
+  const body = (yTop, rTop) => `M${f(cx - rTop)} ${f(yTop)} L${f(cx - bR)} ${bY} C${f(cx - bR)} ${f(bY + br * .95)} ${f(cx - bR * .62)} ${f(bY + br)} ${cx} ${f(bY + br)} C${f(cx + bR * .62)} ${f(bY + br)} ${f(cx + bR)} ${f(bY + br * .95)} ${f(cx + bR)} ${bY} L${f(cx + rTop)} ${f(yTop)} Z`;
+  const glow = c.night === "bright" ? .95 : c.night === "dim" ? .5 : 0;
+  const n = Math.round(3 + lvl * 5);
+  const dur = (3.8 - lvl * 1.8).toFixed(2);
+  const puffs = on ? Array.from({ length: n }, (_, i) => {
+    const off = [0, -5, 5, -2, 3, -6, 6, 1][i];
+    return `<ellipse class="hu-puff" fill="url(#${id("pf")})" cx="${f(cx + off * .3)}" cy="18" rx="${f(5 + lvl * 4)}" ry="${f(3.6 + lvl * 2.6)}" style="--dx:${off * 1.6}px;--h:${(-22 - lvl * 14).toFixed(0)}px;animation-duration:${dur}s;--d0:${(i * dur / n).toFixed(2)}s"/>`;
+  }).join("") : "";
+  const btn = (x, y, a) => `<circle cx="${x}" cy="${y}" r="3.1" fill="url(#${id("bt")})" stroke="#cfd4d8" stroke-width=".4"/><circle cx="${x}" cy="${y}" r="1.2" fill="none" stroke="${a ? "#26a69a" : "#a9b0b7"}" stroke-width=".65"/>`;
+  const dispOn = c.powered && c.display !== false && !c.lifted;
+  const big = c.hum === null || c.hum === undefined ? "--" : String(Math.round(c.hum));
+  const screen = dispOn ? `<text x="${cx}" y="107.4" font-size="12.5" font-weight="700" text-anchor="middle" fill="#e8f6ff" ${NT_FONT}>${big}</text><text x="${big.length > 2 ? 75 : 70.4}" y="102" font-size="4" fill="#9fb3c8" ${NT_FONT}>%</text>${c.level ? `<text x="46.4" y="107" font-size="4.6" text-anchor="middle" font-weight="700" fill="#7fe3ff" ${NT_FONT}>L${c.level}</text>` : ""}${c.empty ? `<path class="hu-blink" d="M74 103.6 q-2 2.4 -2 3.6 a2 2 0 0 0 4 0 q0 -1.2 -2 -3.6z" fill="#ff5252"/>` : ""}` : "";
+  const baseBody = `M15 84 L15.6 110 C15.6 116.5 33 120.5 ${cx} 120.5 C87 120.5 104.4 116.5 104.4 110 L105 84 Z`;
+  return `<defs>
+<linearGradient id="${id("base")}" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#dfe3e6"/><stop offset=".18" stop-color="#fbfcfc"/><stop offset=".55" stop-color="#ffffff"/><stop offset=".85" stop-color="#e9ecee"/><stop offset="1" stop-color="#c4cacf"/></linearGradient>
+<linearGradient id="${id("tank")}" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#596067" stop-opacity=".62"/><stop offset=".16" stop-color="#a9afb5" stop-opacity=".3"/><stop offset=".55" stop-color="#b9bec3" stop-opacity=".24"/><stop offset=".86" stop-color="#8d9399" stop-opacity=".34"/><stop offset="1" stop-color="#4c5258" stop-opacity=".68"/></linearGradient>
+<linearGradient id="${id("water")}" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#2f86bd" stop-opacity=".82"/><stop offset=".22" stop-color="#6cc0ee" stop-opacity=".62"/><stop offset=".62" stop-color="#58b2e6" stop-opacity=".62"/><stop offset="1" stop-color="#23709f" stop-opacity=".85"/></linearGradient>
+<linearGradient id="${id("tube")}" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#5d656c" stop-opacity=".85"/><stop offset=".35" stop-color="#c9d0d6" stop-opacity=".7"/><stop offset=".7" stop-color="#9aa2a9" stop-opacity=".7"/><stop offset="1" stop-color="#50585f" stop-opacity=".85"/></linearGradient>
+<linearGradient id="${id("lid")}" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#a9afb5"/><stop offset=".3" stop-color="#eef0f2"/><stop offset=".7" stop-color="#dfe2e5"/><stop offset="1" stop-color="#9aa1a7"/></linearGradient>
+<linearGradient id="${id("noz")}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#d5d9dd"/></linearGradient>
+<radialGradient id="${id("bt")}" cx=".4" cy=".35"><stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#e6e9eb"/></radialGradient>
+<radialGradient id="${id("nl")}" gradientUnits="userSpaceOnUse" cx="60" cy="83" r="44"><stop offset="0" stop-color="#ffe2a0" stop-opacity=".95"/><stop offset=".35" stop-color="#ffc56b" stop-opacity=".55"/><stop offset=".75" stop-color="#ffb74d" stop-opacity=".12"/><stop offset="1" stop-color="#ffb74d" stop-opacity="0"/></radialGradient>
+<filter id="${id("led")}" x="-80%" y="-200%" width="260%" height="500%"><feGaussianBlur stdDeviation="1.1"/></filter>
+<radialGradient id="${id("pf")}"><stop offset="0" stop-color="#4fb0ee" stop-opacity=".95"/><stop offset=".6" stop-color="#84caf3" stop-opacity=".62"/><stop offset="1" stop-color="#b7e3fa" stop-opacity="0"/></radialGradient>
+<filter id="${id("sh")}" x="-20%" y="-120%" width="140%" height="340%"><feGaussianBlur stdDeviation="1.5"/></filter>
+</defs>
+<ellipse cx="${cx}" cy="119" rx="45" ry="4.4" fill="#000" opacity=".4" filter="url(#${id("sh")})"/>
+<path d="${baseBody}" fill="url(#${id("base")})" stroke="#c5cacf" stroke-width=".4"/>
+<path d="${sq(cx, 84, 45, 7)}" fill="#f6f7f8" stroke="#d3d7db" stroke-width=".4"/>
+${c.lifted ? `<path d="${sq(cx, 84, 37, 5.4)}" fill="#c9ced2"/><path d="${sq(cx, 84.4, 33, 4.4)}" fill="#aab0b6"/><ellipse cx="${cx}" cy="84" rx="6" ry="2" fill="#6d747b"/>` : ""}
+${btn(27, 98, c.on)}${btn(27.6, 107.5, false)}${btn(93, 98, on)}${btn(92.4, 107.5, c.night && c.night !== "off")}
+<rect x="38" y="94.5" width="44" height="17" rx="4" fill="#0c1014" stroke="#2b3138" stroke-width=".4"/><rect x="39" y="95.3" width="42" height="5.6" rx="2.8" fill="#fff" opacity=".06"/>${screen}
+<g transform="translate(0 ${lift})">
+<path d="${sq(cx, bY, bR, br)}" fill="#59626b" opacity=".55"/>
+<path d="${body(tY, tR)}" fill="url(#${id("tank")})" stroke="#2b3035" stroke-opacity=".55" stroke-width=".4"/>
+<rect x="55.5" y="${tY}" width="9" height="${bY - tY - 3}" fill="url(#${id("tube")})"/>
+<path d="${sq(cx, bY - 2.4, 9.5, 2.4)}" fill="#8f979e" stroke="#646c73" stroke-width=".3"/>
+<rect x="56" y="${bY - 8}" width="8" height="6" rx="1" fill="#8f979e"/>
+<path d="${body(wy, wr)}" fill="url(#${id("water")})"/>
+<path d="${sq(cx, wy, wr, wry)}" fill="#d3eefc" fill-opacity=".62" stroke="#fff" stroke-opacity=".55" stroke-width=".5"/>
+${on && !c.empty ? [[-5, 0], [4.5, .9], [-1.5, 1.8]].map(([x, d]) => `<circle class="hu-bub" cx="${cx + x}" cy="${bY - 3}" r="1" fill="#fff" fill-opacity=".8" style="--h:${f(wy - bY + 6)}px;--d0:${d}s"/>`).join("") : ""}
+${glow ? `<path d="${body(tY, tR)}" fill="url(#${id("nl")})" opacity="${glow}"/><ellipse cx="${cx}" cy="${bY - 1}" rx="13" ry="2.6" fill="#fff3cf" opacity="${(glow * .95).toFixed(2)}" filter="url(#${id("led")})"/>` : ""}
+<path d="M${cx - tR + 4.6} ${tY + 6} Q${cx - bR + 5} 58 ${cx - bR + 5.4} ${bY - 3}" fill="none" stroke="#fff" stroke-opacity=".5" stroke-width="2.2" stroke-linecap="round"/>
+<path d="M${cx + tR - 3} ${tY + 8} L${cx + bR - 3.4} ${bY - 9}" fill="none" stroke="#fff" stroke-opacity=".18" stroke-width="1.3" stroke-linecap="round"/>
+<path d="M${cx - tR} ${tY} v2.4 C${cx - tR} ${tY + 7.6} ${cx - tR * .62} ${tY + 7.6} ${cx} ${tY + 7.6} C${cx + tR * .62} ${tY + 7.6} ${cx + tR} ${tY + 7.6} ${cx + tR} ${tY + 2.4} V${tY} Z" fill="url(#${id("lid")})"/>
+<path d="${sq(cx, tY, tR, tr)}" fill="url(#${id("lid")})" stroke="#8f969c" stroke-width=".35"/>
+<ellipse cx="${cx}" cy="${tY - .6}" rx="12" ry="2.8" fill="#000" opacity=".16"/>
+<path d="M48.6 ${tY - 1.6} Q49.4 21.6 ${cx} 21.4 Q70.6 21.6 71.4 ${tY - 1.6} Q${cx} ${tY + 2} 48.6 ${tY - 1.6} Z" fill="url(#${id("noz")})" stroke="#c5cacf" stroke-width=".35"/>
+<ellipse cx="${cx}" cy="23.2" rx="3.4" ry="1.05" fill="#5a636c"/>
+<g>${puffs}</g>
+</g>
+${c.lifted ? `<g class="hu-blink" transform="translate(104 66)"><path d="M0 -8 L8 6 H-8 Z" fill="#ff3b30" stroke="#fff" stroke-width=".9"/><text y="4.4" font-size="9" font-weight="700" text-anchor="middle" fill="#fff" ${NT_FONT}>!</text></g>` : ""}
+${c.empty ? `<g class="hu-blink" transform="translate(106 44)"><circle r="8" fill="#ff3b30" stroke="#fff" stroke-width=".9"/><path d="M0 -5 q-3.6 4.2 -3.6 6.2 a3.6 3.6 0 0 0 7.2 0 q0 -2 -3.6 -6.2z" fill="#fff"/></g>` : ""}`;
+}
+const NT_DRAW = { humidifier: ntHumidifier, circulator: ntCirculator, irr_sprinkler: ntIrrSprinkler, irr_tap: ntIrrTap, irr_drip: ntIrrDrip, irr_flowers: ntIrrFlowers, lit_globe: ntLitterGlobe, lit_box: ntLitterBox, det_smoke: ntDetSmoke, det_co: ntDetCo, det_leak: ntDetLeak, spk_smart: ntSpkSmart, spk_homepod_mini: ntSpkMini, spk_sonos_one: ntSpkOne, spk_bookshelf: ntSpkShelf, spk_sonos_move: ntSpkMove, spk_soundbar: ntSpkBar, spk_echo_dot: ntSpkDot, spk_nest_mini: ntSpkNest, spk_sonos_era100: ntSpkEra100, spk_sonos_era300: ntSpkEra300, spk_bose_wave: ntSpkWave, spk_bose_500: ntSpkBose500, spk_bose_soundlink: ntSpkFlex, spk_bose_soundbar: ntSpkBoseBar, con_ps1: conPs1, con_ps2: conPs2, con_ps3: conPs3, con_ps4: (c) => conPs4(c, false), con_ps4_pro: (c) => conPs4(c, true), con_ps5: conPs5, con_xbox: conXbox, con_xbox_360: conX360, con_xbox_one: conXone, con_xbox_series_x: conXsx, con_xbox_series_s: conXss, con_switch: (c) => conSwitch(c, false), con_switch_2: (c) => conSwitch(c, true), con_switch_lite: conSwitchLite, con_ps_vita: conVita, con_nes: conNes, con_snes: conSnes, con_n64: conN64, con_gamecube: conGamecube, con_wii: conWii, con_megadrive: conMegadrive, tank: ntTank, fws: ntFresh, solth: ntSolarThermal, wood: ntWoodStove, mob_scooter: mobScooter, mob_offroad: mobOffroad, mob_ebike: mobEbike, mob_gyropode: mobGyropode, mob_motorcycle: mobMotorcycle, meter_box: ntMeterBox, meter_dome: ntMeterDome, meter_gas: ntGas, meter_water: ntWater, booster: ntBooster, sump: ntSump, pool: ntPoolRobot, floor: ntFloor, spa: ntSpa, sauna: ntSauna, aquarium: ntAquarium, linky: ntLinky, tree: ntTree };
 function ntSvg(d) {
   ntN = 0;
   const draw = NT_DRAW[d && d.kind] || ntLinky;
@@ -2313,6 +2383,12 @@ const NT_CSS = `
         @keyframes nt-swim{0%{transform:translateX(0) scaleX(1)}46%{transform:translateX(34px) scaleX(1)}50%{transform:translateX(34px) scaleX(-1)}96%{transform:translateX(0) scaleX(-1)}100%{transform:translateX(0) scaleX(1)}}
         @keyframes nt-swimB{0%{transform:translateX(0) scaleX(-1)}46%{transform:translateX(-30px) scaleX(-1)}50%{transform:translateX(-30px) scaleX(1)}96%{transform:translateX(0) scaleX(1)}100%{transform:translateX(0) scaleX(-1)}}
         @keyframes nt-rays{0%,100%{opacity:.18}50%{opacity:.38}}
+        .hu-puff{opacity:0;transform-box:fill-box;transform-origin:center;animation:hu-rise 3s ease-out infinite}
+        @keyframes hu-rise{0%{opacity:0;transform:translate(0,0) scale(.5)}15%{opacity:1}100%{opacity:0;transform:translate(var(--dx,0),var(--h,-26px)) scale(2)}}
+        .hu-bub{opacity:0;animation:hu-up 2.7s ease-in infinite}
+        @keyframes hu-up{0%{opacity:0;transform:translateY(0)}15%{opacity:.9}85%{opacity:.8}100%{opacity:0;transform:translateY(var(--h,-20px))}}
+        .hu-blink{animation:hu-bl 1s steps(2,jump-none) infinite}
+        @keyframes hu-bl{0%{opacity:1}100%{opacity:.25}}
         .machine.nt * { animation-delay: calc(var(--d0, 0s) + var(--anim-offset, 0s)) !important; }
         @media (prefers-reduced-motion: reduce) { .machine.nt * { animation-name: none !important; } }
 `;

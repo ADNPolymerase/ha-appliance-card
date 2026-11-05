@@ -116,7 +116,7 @@ const HD_HIGH_W = 1200;
 // their own way and are not here.
 const PLUG_THRESHOLDS = {
   washer: 10, dryer: 10, dishwasher: 10, oven: 50, microwave: 50, cooker: 20, coffee: 200, rice_cooker: 100,
-  air_fryer: 50, kettle: 50, toaster: 50, water_heater: 50, space_heater: 30, towel_warmer: 10, dehumidifier: 30,
+  air_fryer: 50, kettle: 50, toaster: 50, water_heater: 50, space_heater: 30, towel_warmer: 10, dehumidifier: 30, humidifier: 5,
   air_purifier: 3, fan: 3, hood: 5, pool_pump: 50, printer_3d: 30, cooktop: 50, pet_fountain: 1,
   spa: 50, sauna: 100, aquarium: 3, water_pump: 30, floor_heating: 30, christmas_tree: 2, iron: 10, mobility: 40, irrigation: 3, litter_box: 5, speaker: 3, console: 8,
 };
@@ -861,6 +861,22 @@ function programMenuOf(hass, cfg, cap, norm) {
   const opts = st && Array.isArray(st.attributes.options) ? st.attributes.options.map(String) : [];
   return opts.length > 1 ? { kind: "program", entity: id, dom: domainOf(id), options: opts, current: String(st.state) } : null;
 }
+// A humidifier's modes, picked in the card (#89).
+function humidifierModeMenuOf(hass, cfg) {
+  const st = stateObj(hass, cfg.state_entity);
+  if (!st || domainOf(cfg.state_entity) !== "humidifier" || ["off", ...HA_OFFLINE_STATES].includes(String(st.state).toLowerCase())) return null;
+  const opts = Array.isArray(st.attributes.available_modes) ? st.attributes.available_modes.map(String) : [];
+  return opts.length > 1 ? { kind: "hum_mode", entity: cfg.state_entity, dom: "humidifier", options: opts, current: String(st.attributes.mode) } : null;
+}
+// Its mist when that is a select (Tuya's spraying level).
+function humidifierMistMenuOf(hass, cfg) {
+  const id = cfg.mist_level_entity;
+  if (!id || !["select", "input_select"].includes(domainOf(id))) return null;
+  const main = stateObj(hass, cfg.state_entity), st = stateObj(hass, id);
+  if (!st || (main && String(main.state).toLowerCase() === "off") || HA_OFFLINE_STATES.includes(String(st.state).toLowerCase())) return null;
+  const opts = Array.isArray(st.attributes.options) ? st.attributes.options.map(String) : [];
+  return opts.length > 1 ? { kind: "program", entity: id, dom: domainOf(id), options: opts, current: String(st.state) } : null;
+}
 // A delayed start set between cycles (#79): a number in seconds, minutes or
 // hours by its unit, offered hour by hour up to a day, or a select's options.
 function delayMenuOf(hass, cfg, cap, norm) {
@@ -889,6 +905,7 @@ function delayMenuOf(hass, cfg, cap, norm) {
 // length and the time it would start.
 function lineMenuLabel(hass, cfg, menu, option) {
   if (menu.kind === "program") return programLabel(hass, stateObj(hass, menu.entity), option, cfg);
+  if (menu.kind === "hum_mode") return attrLabel(hass, stateObj(hass, menu.entity), "mode", option, cfg);
   if (!menu.sec) return option;
   const s = parseFloat(option) * menu.sec;
   return s > 0 ? `${formatDuration(s, hass)} \u00b7 ${formatEta(s, hass)}` : t(hass, "delay_none");

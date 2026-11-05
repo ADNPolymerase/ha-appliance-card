@@ -255,7 +255,7 @@ Only `state_entity` is required, except on a fridge where a probe or a door cont
 | `done_alert` | `true` makes a green badge pulse on the drawing when a cycle has finished, until the door opens or the badge is tapped. For appliances with a cycle (washer, dryer, dishwasher, oven…). |
 | `illustration_color` | `auto` (default, follows the theme) \| `white` \| `grey` \| `black` \| `red` (dark red). Only changes the casing, not the state colours. |
 | `language` | `auto` (default, follows Home Assistant) or one of the 14 codes: `en`, `fr`, `de`, `es`, `it`, `nl`, `pt`, `sv`, `no`, `da`, `pl`, `ru`, `zh`, `cs`. `nb` and `nb-NO` give Norwegian. |
-| `appliance_type` | `auto` (default) \| `washer` \| `dryer` \| `dishwasher` \| `oven` \| `microwave` \| `hood` \| `cooktop` \| `fridge` \| `kettle` \| `cooker` \| `coffee` \| `rice_cooker` \| `air_fryer` \| `water_heater` \| `boiler` \| `thermostat` \| `heat_pump` \| `printer_3d` \| `pet_feeder` \| `pet_fountain` \| `iron` \| `toaster` \| `pellet_stove` \| `air_conditioner` \| `dehumidifier` \| `space_heater` \| `towel_warmer` \| `air_purifier` \| `fan` \| `ev_charger` \| `hair_dryer` \| `screen` \| `network` \| `robot` \| `pool_pump` \| `scale` \| `ups` \| `solar` \| `home_battery` \| `camera` \| `diffuser` \| `hrv` \| `lamp` \| `mailbox` \| `water_pump` \| `floor_heating` \| `spa` \| `sauna` \| `aquarium` \| `meter` \| `christmas_tree` \| `mobility` \| `irrigation` \| `litter_box` \| `detector` \| `speaker` \| `console` \| `storage_tank` \| `fresh_water_station` \| `solar_thermal` \| `wood_stove`. |
+| `appliance_type` | `auto` (default) \| `washer` \| `dryer` \| `dishwasher` \| `oven` \| `microwave` \| `hood` \| `cooktop` \| `fridge` \| `kettle` \| `cooker` \| `coffee` \| `rice_cooker` \| `air_fryer` \| `water_heater` \| `boiler` \| `thermostat` \| `heat_pump` \| `printer_3d` \| `pet_feeder` \| `pet_fountain` \| `iron` \| `toaster` \| `pellet_stove` \| `air_conditioner` \| `dehumidifier` \| `humidifier` \| `space_heater` \| `towel_warmer` \| `air_purifier` \| `fan` \| `ev_charger` \| `hair_dryer` \| `screen` \| `network` \| `robot` \| `pool_pump` \| `scale` \| `ups` \| `solar` \| `home_battery` \| `camera` \| `diffuser` \| `hrv` \| `lamp` \| `mailbox` \| `water_pump` \| `floor_heating` \| `spa` \| `sauna` \| `aquarium` \| `meter` \| `christmas_tree` \| `mobility` \| `irrigation` \| `litter_box` \| `detector` \| `speaker` \| `console` \| `storage_tank` \| `fresh_water_station` \| `solar_thermal` \| `wood_stove`. |
 | `tap_action` | What a tap on the card does, in Home Assistant's own words: `more-info` (default: the state entity, or on a card without one what it reads in its place), `none`, `navigate`, `url`, `toggle`, `perform-action` or `fire-dom-event`, which is what the popup cards built on browser_mod listen for. In YAML only. |
 | `illustration_tap_action` | A tap on the drawing alone, the rest of the card keeping `tap_action`: `toggle` (a lamp lit by touching it), `more-info`, `none`, or any of Home Assistant's actions. Left out, the drawing does what the card does. With `toggle`, the drawing answers like the buttons, as `controls_activation` says: a tap, two taps or a long press. |
 | `show_toggle` | `false` takes away a lamp's on/off button, for a card switched by touching its drawing (`illustration_tap_action: toggle`). |
@@ -536,6 +536,13 @@ An entity named after an air fryer (or Cosori's `cook_status`) is recognised on 
 | `vane_vertical_entity` / `vane_horizontal_entity` | air conditioner | The vanes, when they live in selects of their own (Panasonic, Midea); otherwise the `climate` entity's `swing_mode` and `swing_horizontal_mode`. Five positions from top to bottom and from left to right, or a swing, in each integration's words. |
 | `state_entity` | dehumidifier | A `humidifier` entity: *Drying*, *Drying laundry* when its mode says so (Midea's clothes_dry), *Standby* once the humidity is reached, *Tank full*. The screen and a line give the humidity and its target. |
 | `tank_entity` / `tank_full_above` / `current_humidity_entity` | dehumidifier | The tank, a contact on when full or a level in percent (full from `tank_full_above`, 100 by default), shown in the window at the bottom; a hygrometer for a dehumidifier on a plug. |
+| `state_entity` | humidifier | A `humidifier` entity: *Humidifying*, *Standby* once its action says the humidity is reached, *Off*. A switch or a smart plug works too, running from 5 W. The mist rises from its nozzle while it runs. |
+| `current_humidity_entity` / `target_humidity_entity` | humidifier | Only if they are apart from the `humidifier` entity, which gives both. The humidity is on its screen and as a line with its target. |
+| `mist_level_entity` | humidifier | The mist level, on its screen: more levels, more mist, higher and faster. A `number` gets a slider on the card (VeSync, Dreo), a select a menu on its line (Tuya's level_1 to level_n). Without one, the mist follows a mode that says low, medium or high (SwitchBot, Xiaomi). |
+| `night_light_entity` | humidifier | A soft light from the bottom of the tank, dim or bright, even with the humidifier off: a select (bright, dim, off), a light, a number or a switch. |
+| `display_entity` | humidifier | Its screen goes dark while this is off: a switch, or a select or a light for its brightness (Xiaomi's LED). |
+| `low_water_entity` / `water_level_entity` | humidifier | *Add water*: the water at the bottom of the tank, no more mist, a red drop flashing. A level in percent or in words (empty, low, medium, high, or Tuya's level_n) sets the height of the water; at 5 % or empty it reads the same. |
+| `tank_lifted_entity` | humidifier | *Tank removed*: the tank lifts off its base with a warning, and wins over the rest. A problem sensor is on once lifted (VeSync), a connectivity sensor on while it is in place (Xiaomi): the card reads both. |
 | `state_entity` / `heater_layout` | space heater | A `climate` entity: *Heating*, *Standby* once the setpoint is reached, *Fan only*. `heater_layout`: `fan` (fan heater, the default) or `oil` (oil-filled radiator). |
 | `state_entity` | towel warmer | The pilot wire's mode: *Comfort*, *Eco*, *Frost protection*, *Boost*, *Drying*, read from a `climate` entity's preset (Heatzy, Atlantic) or from a select (NodOn). |
 | `current_temperature_entity` / `target_temperature_entity` | space heater, towel warmer | Room and setpoint, when a `climate` entity does not carry them. |
@@ -617,9 +624,9 @@ A `climate` entity that can cool is recognised on its own, and the editor fills 
 </details>
 
 <details>
-<summary><b>Dehumidifiers, space heaters and towel warmers</b></summary>
+<summary><b>Dehumidifiers, humidifiers, space heaters and towel warmers</b></summary>
 
-A dehumidifier shows the humidity on its screen and the water it has taken in its tank; a fan heater glows behind its grille, an oil-filled radiator warms up its fins; a towel warmer shows the pilot wire's mode with the symbols of French radiators (sun, moon, snowflake). Warm air rises, the air a dehumidifier or a fan blows goes the other way.
+A dehumidifier shows the humidity on its screen and the water it has taken in its tank; a humidifier does the opposite, its mist rising in blue from the nozzle at the level set, with its water, its night light and its screen in the tank and on its base, and sliders for its target and its mist; a fan heater glows behind its grille, an oil-filled radiator warms up its fins; a towel warmer shows the pilot wire's mode with the symbols of French radiators (sun, moon, snowflake). Warm air rises, the air a dehumidifier or a fan blows goes the other way.
 
 All three work on a smart plug alone: above `power_on_threshold` they dry or heat, below it they rest while the plug is on and read *Off* once it is switched off.
 
@@ -1603,6 +1610,7 @@ Each type knows the power it works at, so there is no threshold to set. Under it
 | cooker, 3D printer | 20 W, 30 W | *Running* |
 | space heater, dehumidifier, water pump, floor heating | 30 W | *Heating*, *Drying* or *Pumping* |
 | towel warmer, pool pump, spa, sauna | 10 W, 50 W, 50 W, 100 W | *Comfort*, *Filtering* or *Heating* |
+| humidifier | 5 W | *Humidifying* |
 | hood, fan, air purifier | 5 W, 3 W, 3 W | *Off* at rest; with `speed_power_max`, the speed from what it draws |
 | aquarium, Christmas tree, pet fountain | 3 W, 2 W, 1 W | lit, or the water running |
 

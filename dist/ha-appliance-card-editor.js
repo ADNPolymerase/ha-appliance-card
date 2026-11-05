@@ -401,6 +401,16 @@ const SECTIONS = [
 
   // Dehumidifier. A humidifier entity carries the humidity and its target;
   // the tank lives apart on most of them.
+  // A tank humidifier: its humidifier entity carries the humidity and its
+  // target, the other parts are entities of their own (#89).
+  { field: "current_humidity_entity", types: ["humidifier"], labelKey: "section_current_humidity", includeDomains: ["sensor"] },
+  { field: "target_humidity_entity", types: ["humidifier"], labelKey: "section_target_humidity", includeDomains: ["number", "sensor", "input_number"] },
+  { field: "mist_level_entity", types: ["humidifier"], labelKey: "hum_mist", includeDomains: ["number", "sensor", "select", "input_number", "input_select"] },
+  { field: "night_light_entity", types: ["humidifier"], labelKey: "hum_night", includeDomains: ["select", "light", "switch", "number", "sensor", "input_select"] },
+  { field: "display_entity", types: ["humidifier"], labelKey: "hum_display", includeDomains: ["switch", "binary_sensor", "input_boolean", "select", "light", "number"] },
+  { field: "low_water_entity", types: ["humidifier"], labelKey: "hum_low_water", includeDomains: ["binary_sensor", "sensor"] },
+  { field: "tank_lifted_entity", types: ["humidifier"], labelKey: "hum_lifted", includeDomains: ["binary_sensor", "sensor"] },
+  { field: "water_level_entity", types: ["humidifier"], labelKey: "section_water_level", includeDomains: ["sensor", "number"] },
   { field: "tank_entity", types: ["dehumidifier"], labelKey: "section_tank", includeDomains: ["binary_sensor", "sensor", "number"] },
   { field: "current_humidity_entity", types: ["dehumidifier"], labelKey: "section_current_humidity", includeDomains: ["sensor"] },
   { field: "fan_speed_entity", types: ["dehumidifier"], labelKey: "section_fan_speed", includeDomains: ["select", "fan", "sensor", "input_select"] },

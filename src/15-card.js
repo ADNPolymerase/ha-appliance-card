@@ -188,6 +188,7 @@ class ApplianceCard extends HTMLElement {
     this._lineMenu = null;
     if (menu && menu.options.includes(option)) {
       if (["number", "input_number"].includes(menu.dom)) this._hass.callService(menu.dom, "set_value", { entity_id: menu.entity, value: Number(option) });
+      else if (menu.dom === "humidifier") this._hass.callService("humidifier", "set_mode", { entity_id: menu.entity, mode: option });
       else this._hass.callService(menu.dom, "select_option", { entity_id: menu.entity, option });
     }
     this._render();
@@ -564,6 +565,10 @@ class ApplianceCard extends HTMLElement {
       // would run the wrong programme: open the entity and let the user choose.
       if (!option) return this._moreInfo(entityId);
       return this._hass.callService(domain, "select_option", { entity_id: entityId, option });
+    }
+    // A humidifier's setpoint, from its slider (#89).
+    if (domain === "humidifier" && opts && opts.value !== undefined) {
+      return this._hass.callService("humidifier", "set_humidity", { entity_id: entityId, humidity: Number(opts.value) });
     }
     if (domain === "number" || domain === "input_number") {
       const value = opts && opts.value;
@@ -3560,6 +3565,7 @@ class ApplianceCard extends HTMLElement {
       color = r.color;
       extraLines.push(...r.lines);
       ntDraw = r.draw;
+      if (r.sliders) sliders.push(...r.sliders);
       // A ride without a battery entity, unplugged, keeps the charge the
       // card last saw: full once it was charged, kept in the browser so a
       // reload does not empty the gauge.
@@ -4327,7 +4333,7 @@ class ApplianceCard extends HTMLElement {
     // The program and the delayed start, picked in the card between cycles (#79).
     const programMenu = offHidden ? null : programMenuOf(hass, cfg, cap, norm);
     const delayMenu = offHidden ? null : delayMenuOf(hass, cfg, cap, norm);
-    this._lineMenus = { program: programMenu, delay: delayMenu };
+    this._lineMenus = { program: programMenu, delay: delayMenu, hum_mode: applianceType === "humidifier" ? humidifierModeMenuOf(hass, cfg) : null, hum_mist: applianceType === "humidifier" ? humidifierMistMenuOf(hass, cfg) : null };
     if (!this._lineMenus[this._lineMenu]) this._lineMenu = null;
     let lines = [];
     if (programText) {
@@ -4481,9 +4487,9 @@ class ApplianceCard extends HTMLElement {
       ? `<div class="sliders">${sliders.map((sl) => {
         const sst = stateObj(hass, sl.entity);
         const a = (sst && sst.attributes) || {};
-        const min = numberOrNull(a.min) ?? 0, max = numberOrNull(a.max) ?? 100, step = numberOrNull(a.step) ?? 1;
-        const v = numberOrNull(sst && sst.state) ?? min;
-        const unit = a.unit_of_measurement || "";
+        const min = sl.min ?? numberOrNull(a.min) ?? 0, max = sl.max ?? numberOrNull(a.max) ?? 100, step = sl.step ?? numberOrNull(a.step) ?? 1;
+        const v = sl.value ?? numberOrNull(sst && sst.state) ?? min;
+        const unit = sl.unit ?? a.unit_of_measurement ?? "";
         return `<div class="slider-row" title="${esc(sl.label)}"><ha-icon icon="${esc(sl.icon)}"></ha-icon><span class="s-label">${esc(sl.label)}</span>`
           + `<input type="range" data-slider="${esc(sl.entity)}" data-unit="${esc(unit)}" min="${min}" max="${max}" step="${step}" value="${v}" aria-label="${esc(sl.label)}">`
           + `<span class="s-val">${esc(`${netNumber(hass, v, 0)}${unit ? ` ${unit}` : ""}`)}</span></div>`;

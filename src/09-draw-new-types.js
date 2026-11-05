@@ -3,7 +3,7 @@
 // sauna, an aquarium, a Linky meter and a Christmas tree. Drawn in SVG on a 120 x 135 field; what
 // moves moves only on a machine carrying nt-on, staggered through --d0, and
 // the robot's cable and the sump's float follow their SMIL animations.
-const NT_TYPES = ["water_pump", "floor_heating", "spa", "sauna", "aquarium", "meter", "christmas_tree", "mobility", "irrigation", "litter_box", "detector", "speaker", "console", "storage_tank", "fresh_water_station", "solar_thermal", "wood_stove"];
+const NT_TYPES = ["water_pump", "floor_heating", "spa", "sauna", "aquarium", "meter", "christmas_tree", "mobility", "irrigation", "litter_box", "detector", "speaker", "console", "storage_tank", "fresh_water_station", "solar_thermal", "wood_stove", "humidifier"];
 const CONSOLE_LAYOUTS = ["ps1", "ps2", "ps3", "ps4", "ps4_pro", "ps5", "xbox", "xbox_360", "xbox_one", "xbox_series_x", "xbox_series_s", "switch", "switch_2", "switch_lite", "ps_vita", "nes", "snes", "n64", "gamecube", "wii", "megadrive"];
 const IRRIGATION_LAYOUTS = ["sprinkler", "tap", "drip", "flowers"];
 // A tap timer: the generic one or Sonoff's, on a brick wall, white render or
@@ -17,7 +17,9 @@ const MOBILITY_LAYOUTS = ["scooter", "offroad", "ebike", "gyropode", "motorcycle
 const PUMP_LAYOUTS = ["booster", "sump", "circulator"];
 const CIRC_MODELS = ["grundfos", "wilo", "dab", "generic"];
 const FLOOR_LAYOUTS = ["water", "electric"];
+const HUMIDIFIER_ONLY_FIELDS = ["mist_level_entity", "low_water_entity", "tank_lifted_entity", "night_light_entity"];
 const NT_ONLY_FIELDS = {
+  humidifier: HUMIDIFIER_ONLY_FIELDS,
   water_pump: ["pump_layout", "pressure_entity", "level_entity", "high_level_entity", "level_max", "head_entity", "control_mode_entity", "circulator_model", "max_speed"],
   floor_heating: ["floor_layout"],
   spa: ["bubbles_entity"],
@@ -98,6 +100,8 @@ function optLines(hass, cfg, type) {
 // By name, in the languages the card speaks; "whirlpool" is left out, it is a
 // maker of washing machines too.
 const NT_NAME_RES = [
+  // Not its domain alone, humidifier.basement may well dry the basement.
+  ["humidifier", /^(?!.*(dehumid|deshumid|entfeucht|deumidif|ontvocht|avfukt|affugt|osuszacz|odvlh)).*(humidifier(?!\.)|humidificateur|luftbefeuchter|humidificador|umidificatore|luchtbevochtiger|luftfuktare|luftfukter|luftfugter|nawilzacz|zvlhcovac|\u52a0\u6e7f)/],
   ["fresh_water_station", /frischwasser|fresh.?water.?(station|module)|freshwater|station.?(d.?)?eau.?(fraiche|chaude)|module.?(d.?)?eau.?chaude|(^|[^a-z])fws([^a-z]|$)/],
   ["storage_tank", /pufferspeicher|(^|[^a-z])puffer|buffer.?tank|ballon.?tampon|thermal.?store|schichtspeicher|serbatoio.?(inerziale|di.?accumulo)|deposito.?de.?inercia|buffertank|zbiornik.?buforowy/],
   ["solar_thermal", /solar.?therm|solarthermie|solaire.?thermique|thermique.?solaire|kollektor|collector.?temp|capteur.?solaire|solar.?pump|solarpumpe|solar.?collector/],
@@ -283,6 +287,82 @@ function ntTemp(hass, cfg, st) {
   if (v === null) return null;
   const unit = (hass && hass.config && hass.config.unit_system && hass.config.unit_system.temperature) || "\u00b0C";
   return { v, text: tempText(hass, cfg, null, v, unit) };
+}
+// What the humidifier integrations differ on (#89). VeSync keeps a number for
+// its mist and a select for its night light; Tuya a select with level_1 to
+// level_n, and a water level in words; SwitchBot empty, low, medium or high,
+// and its mist in the mode; Xiaomi a water tank that is on when it is in place.
+const HUM_OFF_WORDS = ["off", "false", "0", "none", ""];
+function humWordLevel(raw) {
+  if (/empty|lack|shortage|no.?water|vide/.test(raw)) return 0;
+  if (/low|quiet|silent|faible|sleep|night|min/.test(raw)) return .25;
+  if (/medium|mid|moyen/.test(raw)) return .55;
+  if (/high|strong|turbo|boost|max|full|fort|plein/.test(raw)) return .9;
+  return null;
+}
+// A level among a select's or an enum sensor's own options, its rank too.
+function humOptionLevel(s) {
+  const raw = String(s.state).trim().toLowerCase();
+  const opts = (Array.isArray(s.attributes.options) ? s.attributes.options : []).map((o) => String(o).trim().toLowerCase()).filter((o) => !HUM_OFF_WORDS.includes(o));
+  const i = opts.indexOf(raw);
+  if (HUM_OFF_WORDS.includes(raw)) return { frac: 0, rank: 0 };
+  const word = humWordLevel(raw);
+  if (word !== null) return { frac: word, rank: i >= 0 ? i + 1 : 0 };
+  return i >= 0 ? { frac: (i + 1) / opts.length, rank: i + 1 } : null;
+}
+function humMistOf(hass, cfg, attrs) {
+  const s = cfg.mist_level_entity ? stateObj(hass, cfg.mist_level_entity) : null;
+  if (s && !HA_OFFLINE_STATES.includes(String(s.state).toLowerCase())) {
+    const v = numberOrNull(s.state);
+    if (v !== null) {
+      const max = numberOrNull(s.attributes.max) || 9;
+      // A level reads L5; a motor's 1200 rpm is no level.
+      return { frac: v / max, level: max <= 20 ? Math.round(v) : "" };
+    }
+    const o = humOptionLevel(s);
+    if (o) return { frac: o.frac, level: o.rank || "" };
+  }
+  // SwitchBot and Xiaomi set their mist with the mode.
+  const m = humWordLevel(String(attrs.mode || "").toLowerCase());
+  return { frac: m, level: "" };
+}
+function humWaterOf(hass, id) {
+  const s = id ? stateObj(hass, id) : null;
+  if (!s || HA_OFFLINE_STATES.includes(String(s.state).toLowerCase())) return null;
+  const v = numberOrNull(s.state);
+  if (v === null) { const o = humOptionLevel(s); return o ? o.frac : null; }
+  const max = numberOrNull(s.attributes.max);
+  return Math.max(0, Math.min(1, v / (max || 100)));
+}
+// Xiaomi's water tank is a connectivity sensor, on while it is in place;
+// VeSync's is a problem sensor, on once lifted.
+function humTankOut(hass, id) {
+  const s = id ? stateObj(hass, id) : null;
+  if (!s || HA_OFFLINE_STATES.includes(String(s.state).toLowerCase())) return false;
+  if (["connectivity", "plug", "presence"].includes(s.attributes.device_class)) return String(s.state).toLowerCase() === "off";
+  return heatActive(hass, id);
+}
+function humDisplayOn(hass, id) {
+  const s = id ? stateObj(hass, id) : null;
+  if (!s || HA_OFFLINE_STATES.includes(String(s.state).toLowerCase())) return true;
+  return !HUM_OFF_WORDS.includes(String(s.state).trim().toLowerCase());
+}
+// A humidifier's night light: off, dim or bright, from a select, a light's
+// brightness, a number or a plain switch.
+function humidifierNightOf(hass, cfg) {
+  const s = cfg.night_light_entity ? stateObj(hass, cfg.night_light_entity) : null;
+  if (!s || HA_OFFLINE_STATES.includes(String(s.state).toLowerCase())) return "off";
+  const raw = String(s.state).trim().toLowerCase();
+  if (["off", "false", "0", "none", ""].includes(raw)) return "off";
+  const dom = domainOf(cfg.night_light_entity);
+  if (dom === "light") { const b = numberOrNull(s.attributes.brightness); return b !== null && b < 128 ? "dim" : "bright"; }
+  const n = numberOrNull(s.state);
+  if (n !== null) {
+    const opts = (Array.isArray(s.attributes.options) ? s.attributes.options : []).map(Number).filter(Number.isFinite);
+    const max = numberOrNull(s.attributes.max) || (opts.length ? Math.max(...opts) : 100);
+    return n / max < .5 ? "dim" : "bright";
+  }
+  return /dim|low|soft|faible|doux|med/.test(raw) ? "dim" : "bright";
 }
 function ntTarget(hass, cfg, st) {
   if (cfg.target_temperature_entity) return numericState(hass, cfg.target_temperature_entity);
@@ -2494,7 +2574,77 @@ ${c.mode ? `<text x="60" y="70" font-size="5.5" text-anchor="middle" fill="#9fb3
 ${c.nodata ? `<g transform="translate(78 26)"><circle r="6" fill="#607d8b"/><path d="M-2.6 -3 l5.2 6 M2.6 -3 l-5.2 6" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/></g>` : ""}
 ${c.fault ? `<g transform="translate(80 26)" class="nta-blinkfast"><path d="M0 -6.5 L6.5 5 H-6.5 Z" fill="#ff3b30" stroke="#fff" stroke-width=".8"/><text y="3.6" font-size="7" font-weight="700" text-anchor="middle" fill="#fff" ${NT_FONT}>!</text></g>` : ""}</g>`;
 }
-const NT_DRAW = { circulator: ntCirculator, irr_sprinkler: ntIrrSprinkler, irr_tap: ntIrrTap, irr_drip: ntIrrDrip, irr_flowers: ntIrrFlowers, lit_globe: ntLitterGlobe, lit_box: ntLitterBox, det_smoke: ntDetSmoke, det_co: ntDetCo, det_leak: ntDetLeak, spk_smart: ntSpkSmart, spk_homepod_mini: ntSpkMini, spk_sonos_one: ntSpkOne, spk_bookshelf: ntSpkShelf, spk_sonos_move: ntSpkMove, spk_soundbar: ntSpkBar, spk_echo_dot: ntSpkDot, spk_nest_mini: ntSpkNest, spk_sonos_era100: ntSpkEra100, spk_sonos_era300: ntSpkEra300, spk_bose_wave: ntSpkWave, spk_bose_500: ntSpkBose500, spk_bose_soundlink: ntSpkFlex, spk_bose_soundbar: ntSpkBoseBar, con_ps1: conPs1, con_ps2: conPs2, con_ps3: conPs3, con_ps4: (c) => conPs4(c, false), con_ps4_pro: (c) => conPs4(c, true), con_ps5: conPs5, con_xbox: conXbox, con_xbox_360: conX360, con_xbox_one: conXone, con_xbox_series_x: conXsx, con_xbox_series_s: conXss, con_switch: (c) => conSwitch(c, false), con_switch_2: (c) => conSwitch(c, true), con_switch_lite: conSwitchLite, con_ps_vita: conVita, con_nes: conNes, con_snes: conSnes, con_n64: conN64, con_gamecube: conGamecube, con_wii: conWii, con_megadrive: conMegadrive, tank: ntTank, fws: ntFresh, solth: ntSolarThermal, wood: ntWoodStove, mob_scooter: mobScooter, mob_offroad: mobOffroad, mob_ebike: mobEbike, mob_gyropode: mobGyropode, mob_motorcycle: mobMotorcycle, meter_box: ntMeterBox, meter_dome: ntMeterDome, meter_gas: ntGas, meter_water: ntWater, booster: ntBooster, sump: ntSump, pool: ntPoolRobot, floor: ntFloor, spa: ntSpa, sauna: ntSauna, aquarium: ntAquarium, linky: ntLinky, tree: ntTree };
+// A tank humidifier (#89), its body a soft squircle seen from just above: a
+// white base with its display and buttons, a smoked tank tapering upwards with
+// its water, its tube and its night light, the mist rising from the nozzle.
+function ntHumidifier(c) {
+  const id = (n) => `hu-${n}`;
+  const on = c.on && !c.lifted && !c.empty;
+  const lvl = Math.max(0, Math.min(1, c.mist === null || c.mist === undefined ? .5 : c.mist));
+  const lift = c.lifted ? -13 : 0;
+  const L = c.empty ? .06 : Math.max(.06, Math.min(1, c.water === null || c.water === undefined ? .6 : c.water));
+  const f = (v) => v.toFixed(1);
+  // A squircle seen from above, a flattened rounded square.
+  const sq = (cx, cy, rx, ry) => `M${f(cx - rx)} ${f(cy)} C${f(cx - rx)} ${f(cy - ry * .95)} ${f(cx - rx * .62)} ${f(cy - ry)} ${f(cx)} ${f(cy - ry)} C${f(cx + rx * .62)} ${f(cy - ry)} ${f(cx + rx)} ${f(cy - ry * .95)} ${f(cx + rx)} ${f(cy)} C${f(cx + rx)} ${f(cy + ry * .95)} ${f(cx + rx * .62)} ${f(cy + ry)} ${f(cx)} ${f(cy + ry)} C${f(cx - rx * .62)} ${f(cy + ry)} ${f(cx - rx)} ${f(cy + ry * .95)} ${f(cx - rx)} ${f(cy)} Z`;
+  const cx = 60, tY = 30, tR = 35, tr = 5.2, bY = 78, bR = 40, br = 6.6;
+  const rAt = (y) => tR + (bR - tR) * (y - tY) / (bY - tY);
+  const ryAt = (y) => tr + (br - tr) * (y - tY) / (bY - tY);
+  const wy = bY - (bY - tY - 5) * L, wr = rAt(wy), wry = ryAt(wy);
+  const body = (yTop, rTop) => `M${f(cx - rTop)} ${f(yTop)} L${f(cx - bR)} ${bY} C${f(cx - bR)} ${f(bY + br * .95)} ${f(cx - bR * .62)} ${f(bY + br)} ${cx} ${f(bY + br)} C${f(cx + bR * .62)} ${f(bY + br)} ${f(cx + bR)} ${f(bY + br * .95)} ${f(cx + bR)} ${bY} L${f(cx + rTop)} ${f(yTop)} Z`;
+  const glow = c.night === "bright" ? .95 : c.night === "dim" ? .5 : 0;
+  const n = Math.round(3 + lvl * 5);
+  const dur = (3.8 - lvl * 1.8).toFixed(2);
+  const puffs = on ? Array.from({ length: n }, (_, i) => {
+    const off = [0, -5, 5, -2, 3, -6, 6, 1][i];
+    return `<ellipse class="hu-puff" fill="url(#${id("pf")})" cx="${f(cx + off * .3)}" cy="18" rx="${f(5 + lvl * 4)}" ry="${f(3.6 + lvl * 2.6)}" style="--dx:${off * 1.6}px;--h:${(-22 - lvl * 14).toFixed(0)}px;animation-duration:${dur}s;--d0:${(i * dur / n).toFixed(2)}s"/>`;
+  }).join("") : "";
+  const btn = (x, y, a) => `<circle cx="${x}" cy="${y}" r="3.1" fill="url(#${id("bt")})" stroke="#cfd4d8" stroke-width=".4"/><circle cx="${x}" cy="${y}" r="1.2" fill="none" stroke="${a ? "#26a69a" : "#a9b0b7"}" stroke-width=".65"/>`;
+  const dispOn = c.powered && c.display !== false && !c.lifted;
+  const big = c.hum === null || c.hum === undefined ? "--" : String(Math.round(c.hum));
+  const screen = dispOn ? `<text x="${cx}" y="107.4" font-size="12.5" font-weight="700" text-anchor="middle" fill="#e8f6ff" ${NT_FONT}>${big}</text><text x="${big.length > 2 ? 75 : 70.4}" y="102" font-size="4" fill="#9fb3c8" ${NT_FONT}>%</text>${c.level ? `<text x="46.4" y="107" font-size="4.6" text-anchor="middle" font-weight="700" fill="#7fe3ff" ${NT_FONT}>L${c.level}</text>` : ""}${c.empty ? `<path class="hu-blink" d="M74 103.6 q-2 2.4 -2 3.6 a2 2 0 0 0 4 0 q0 -1.2 -2 -3.6z" fill="#ff5252"/>` : ""}` : "";
+  const baseBody = `M15 84 L15.6 110 C15.6 116.5 33 120.5 ${cx} 120.5 C87 120.5 104.4 116.5 104.4 110 L105 84 Z`;
+  return `<defs>
+<linearGradient id="${id("base")}" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#dfe3e6"/><stop offset=".18" stop-color="#fbfcfc"/><stop offset=".55" stop-color="#ffffff"/><stop offset=".85" stop-color="#e9ecee"/><stop offset="1" stop-color="#c4cacf"/></linearGradient>
+<linearGradient id="${id("tank")}" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#596067" stop-opacity=".62"/><stop offset=".16" stop-color="#a9afb5" stop-opacity=".3"/><stop offset=".55" stop-color="#b9bec3" stop-opacity=".24"/><stop offset=".86" stop-color="#8d9399" stop-opacity=".34"/><stop offset="1" stop-color="#4c5258" stop-opacity=".68"/></linearGradient>
+<linearGradient id="${id("water")}" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#2f86bd" stop-opacity=".82"/><stop offset=".22" stop-color="#6cc0ee" stop-opacity=".62"/><stop offset=".62" stop-color="#58b2e6" stop-opacity=".62"/><stop offset="1" stop-color="#23709f" stop-opacity=".85"/></linearGradient>
+<linearGradient id="${id("tube")}" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#5d656c" stop-opacity=".85"/><stop offset=".35" stop-color="#c9d0d6" stop-opacity=".7"/><stop offset=".7" stop-color="#9aa2a9" stop-opacity=".7"/><stop offset="1" stop-color="#50585f" stop-opacity=".85"/></linearGradient>
+<linearGradient id="${id("lid")}" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#a9afb5"/><stop offset=".3" stop-color="#eef0f2"/><stop offset=".7" stop-color="#dfe2e5"/><stop offset="1" stop-color="#9aa1a7"/></linearGradient>
+<linearGradient id="${id("noz")}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#d5d9dd"/></linearGradient>
+<radialGradient id="${id("bt")}" cx=".4" cy=".35"><stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#e6e9eb"/></radialGradient>
+<radialGradient id="${id("nl")}" gradientUnits="userSpaceOnUse" cx="60" cy="83" r="44"><stop offset="0" stop-color="#ffe2a0" stop-opacity=".95"/><stop offset=".35" stop-color="#ffc56b" stop-opacity=".55"/><stop offset=".75" stop-color="#ffb74d" stop-opacity=".12"/><stop offset="1" stop-color="#ffb74d" stop-opacity="0"/></radialGradient>
+<filter id="${id("led")}" x="-80%" y="-200%" width="260%" height="500%"><feGaussianBlur stdDeviation="1.1"/></filter>
+<radialGradient id="${id("pf")}"><stop offset="0" stop-color="#4fb0ee" stop-opacity=".95"/><stop offset=".6" stop-color="#84caf3" stop-opacity=".62"/><stop offset="1" stop-color="#b7e3fa" stop-opacity="0"/></radialGradient>
+<filter id="${id("sh")}" x="-20%" y="-120%" width="140%" height="340%"><feGaussianBlur stdDeviation="1.5"/></filter>
+</defs>
+<ellipse cx="${cx}" cy="119" rx="45" ry="4.4" fill="#000" opacity=".4" filter="url(#${id("sh")})"/>
+<path d="${baseBody}" fill="url(#${id("base")})" stroke="#c5cacf" stroke-width=".4"/>
+<path d="${sq(cx, 84, 45, 7)}" fill="#f6f7f8" stroke="#d3d7db" stroke-width=".4"/>
+${c.lifted ? `<path d="${sq(cx, 84, 37, 5.4)}" fill="#c9ced2"/><path d="${sq(cx, 84.4, 33, 4.4)}" fill="#aab0b6"/><ellipse cx="${cx}" cy="84" rx="6" ry="2" fill="#6d747b"/>` : ""}
+${btn(27, 98, c.on)}${btn(27.6, 107.5, false)}${btn(93, 98, on)}${btn(92.4, 107.5, c.night && c.night !== "off")}
+<rect x="38" y="94.5" width="44" height="17" rx="4" fill="#0c1014" stroke="#2b3138" stroke-width=".4"/><rect x="39" y="95.3" width="42" height="5.6" rx="2.8" fill="#fff" opacity=".06"/>${screen}
+<g transform="translate(0 ${lift})">
+<path d="${sq(cx, bY, bR, br)}" fill="#59626b" opacity=".55"/>
+<path d="${body(tY, tR)}" fill="url(#${id("tank")})" stroke="#2b3035" stroke-opacity=".55" stroke-width=".4"/>
+<rect x="55.5" y="${tY}" width="9" height="${bY - tY - 3}" fill="url(#${id("tube")})"/>
+<path d="${sq(cx, bY - 2.4, 9.5, 2.4)}" fill="#8f979e" stroke="#646c73" stroke-width=".3"/>
+<rect x="56" y="${bY - 8}" width="8" height="6" rx="1" fill="#8f979e"/>
+<path d="${body(wy, wr)}" fill="url(#${id("water")})"/>
+<path d="${sq(cx, wy, wr, wry)}" fill="#d3eefc" fill-opacity=".62" stroke="#fff" stroke-opacity=".55" stroke-width=".5"/>
+${on && !c.empty ? [[-5, 0], [4.5, .9], [-1.5, 1.8]].map(([x, d]) => `<circle class="hu-bub" cx="${cx + x}" cy="${bY - 3}" r="1" fill="#fff" fill-opacity=".8" style="--h:${f(wy - bY + 6)}px;--d0:${d}s"/>`).join("") : ""}
+${glow ? `<path d="${body(tY, tR)}" fill="url(#${id("nl")})" opacity="${glow}"/><ellipse cx="${cx}" cy="${bY - 1}" rx="13" ry="2.6" fill="#fff3cf" opacity="${(glow * .95).toFixed(2)}" filter="url(#${id("led")})"/>` : ""}
+<path d="M${cx - tR + 4.6} ${tY + 6} Q${cx - bR + 5} 58 ${cx - bR + 5.4} ${bY - 3}" fill="none" stroke="#fff" stroke-opacity=".5" stroke-width="2.2" stroke-linecap="round"/>
+<path d="M${cx + tR - 3} ${tY + 8} L${cx + bR - 3.4} ${bY - 9}" fill="none" stroke="#fff" stroke-opacity=".18" stroke-width="1.3" stroke-linecap="round"/>
+<path d="M${cx - tR} ${tY} v2.4 C${cx - tR} ${tY + 7.6} ${cx - tR * .62} ${tY + 7.6} ${cx} ${tY + 7.6} C${cx + tR * .62} ${tY + 7.6} ${cx + tR} ${tY + 7.6} ${cx + tR} ${tY + 2.4} V${tY} Z" fill="url(#${id("lid")})"/>
+<path d="${sq(cx, tY, tR, tr)}" fill="url(#${id("lid")})" stroke="#8f969c" stroke-width=".35"/>
+<ellipse cx="${cx}" cy="${tY - .6}" rx="12" ry="2.8" fill="#000" opacity=".16"/>
+<path d="M48.6 ${tY - 1.6} Q49.4 21.6 ${cx} 21.4 Q70.6 21.6 71.4 ${tY - 1.6} Q${cx} ${tY + 2} 48.6 ${tY - 1.6} Z" fill="url(#${id("noz")})" stroke="#c5cacf" stroke-width=".35"/>
+<ellipse cx="${cx}" cy="23.2" rx="3.4" ry="1.05" fill="#5a636c"/>
+<g>${puffs}</g>
+</g>
+${c.lifted ? `<g class="hu-blink" transform="translate(104 66)"><path d="M0 -8 L8 6 H-8 Z" fill="#ff3b30" stroke="#fff" stroke-width=".9"/><text y="4.4" font-size="9" font-weight="700" text-anchor="middle" fill="#fff" ${NT_FONT}>!</text></g>` : ""}
+${c.empty ? `<g class="hu-blink" transform="translate(106 44)"><circle r="8" fill="#ff3b30" stroke="#fff" stroke-width=".9"/><path d="M0 -5 q-3.6 4.2 -3.6 6.2 a3.6 3.6 0 0 0 7.2 0 q0 -2 -3.6 -6.2z" fill="#fff"/></g>` : ""}`;
+}
+const NT_DRAW = { humidifier: ntHumidifier, circulator: ntCirculator, irr_sprinkler: ntIrrSprinkler, irr_tap: ntIrrTap, irr_drip: ntIrrDrip, irr_flowers: ntIrrFlowers, lit_globe: ntLitterGlobe, lit_box: ntLitterBox, det_smoke: ntDetSmoke, det_co: ntDetCo, det_leak: ntDetLeak, spk_smart: ntSpkSmart, spk_homepod_mini: ntSpkMini, spk_sonos_one: ntSpkOne, spk_bookshelf: ntSpkShelf, spk_sonos_move: ntSpkMove, spk_soundbar: ntSpkBar, spk_echo_dot: ntSpkDot, spk_nest_mini: ntSpkNest, spk_sonos_era100: ntSpkEra100, spk_sonos_era300: ntSpkEra300, spk_bose_wave: ntSpkWave, spk_bose_500: ntSpkBose500, spk_bose_soundlink: ntSpkFlex, spk_bose_soundbar: ntSpkBoseBar, con_ps1: conPs1, con_ps2: conPs2, con_ps3: conPs3, con_ps4: (c) => conPs4(c, false), con_ps4_pro: (c) => conPs4(c, true), con_ps5: conPs5, con_xbox: conXbox, con_xbox_360: conX360, con_xbox_one: conXone, con_xbox_series_x: conXsx, con_xbox_series_s: conXss, con_switch: (c) => conSwitch(c, false), con_switch_2: (c) => conSwitch(c, true), con_switch_lite: conSwitchLite, con_ps_vita: conVita, con_nes: conNes, con_snes: conSnes, con_n64: conN64, con_gamecube: conGamecube, con_wii: conWii, con_megadrive: conMegadrive, tank: ntTank, fws: ntFresh, solth: ntSolarThermal, wood: ntWoodStove, mob_scooter: mobScooter, mob_offroad: mobOffroad, mob_ebike: mobEbike, mob_gyropode: mobGyropode, mob_motorcycle: mobMotorcycle, meter_box: ntMeterBox, meter_dome: ntMeterDome, meter_gas: ntGas, meter_water: ntWater, booster: ntBooster, sump: ntSump, pool: ntPoolRobot, floor: ntFloor, spa: ntSpa, sauna: ntSauna, aquarium: ntAquarium, linky: ntLinky, tree: ntTree };
 function ntSvg(d) {
   ntN = 0;
   const draw = NT_DRAW[d && d.kind] || ntLinky;
@@ -2602,6 +2752,12 @@ const NT_CSS = `
         @keyframes nt-swim{0%{transform:translateX(0) scaleX(1)}46%{transform:translateX(34px) scaleX(1)}50%{transform:translateX(34px) scaleX(-1)}96%{transform:translateX(0) scaleX(-1)}100%{transform:translateX(0) scaleX(1)}}
         @keyframes nt-swimB{0%{transform:translateX(0) scaleX(-1)}46%{transform:translateX(-30px) scaleX(-1)}50%{transform:translateX(-30px) scaleX(1)}96%{transform:translateX(0) scaleX(1)}100%{transform:translateX(0) scaleX(-1)}}
         @keyframes nt-rays{0%,100%{opacity:.18}50%{opacity:.38}}
+        .hu-puff{opacity:0;transform-box:fill-box;transform-origin:center;animation:hu-rise 3s ease-out infinite}
+        @keyframes hu-rise{0%{opacity:0;transform:translate(0,0) scale(.5)}15%{opacity:1}100%{opacity:0;transform:translate(var(--dx,0),var(--h,-26px)) scale(2)}}
+        .hu-bub{opacity:0;animation:hu-up 2.7s ease-in infinite}
+        @keyframes hu-up{0%{opacity:0;transform:translateY(0)}15%{opacity:.9}85%{opacity:.8}100%{opacity:0;transform:translateY(var(--h,-20px))}}
+        .hu-blink{animation:hu-bl 1s steps(2,jump-none) infinite}
+        @keyframes hu-bl{0%{opacity:1}100%{opacity:.25}}
         .machine.nt * { animation-delay: calc(var(--d0, 0s) + var(--anim-offset, 0s)) !important; }
         @media (prefers-reduced-motion: reduce) { .machine.nt * { animation-name: none !important; } }
 `;
@@ -2634,7 +2790,7 @@ function ntReadOf(type, hass, cfg, st, watts, threshold) {
   const out = (mode, labelKey, color, draw) => ({ mode, label: t(hass, labelKey), color, lines, draw: { ...draw, unav } });
   if (unav) {
     const ml = meterLayoutOf(cfg, st);
-    const kinds = { water_pump: pumpLayoutOf(cfg, st), floor_heating: "floor", spa: "spa", sauna: "sauna", aquarium: "aquarium", meter: ml === "linky" ? "linky" : `meter_${ml}`, christmas_tree: "tree", mobility: `mob_${mobilityLayoutOf(cfg, st)}`,
+    const kinds = { humidifier: "humidifier", water_pump: pumpLayoutOf(cfg, st), floor_heating: "floor", spa: "spa", sauna: "sauna", aquarium: "aquarium", meter: ml === "linky" ? "linky" : `meter_${ml}`, christmas_tree: "tree", mobility: `mob_${mobilityLayoutOf(cfg, st)}`,
       irrigation: `irr_${irrigationLayoutOf(cfg, st)}`, litter_box: `lit_${litterLayoutOf(cfg, st)}`, detector: `det_${detectorLayoutOf(cfg, st)}`, speaker: `spk_${speakerLayoutOf(cfg, st)}`, console: `con_${consoleLayoutOf(cfg, st)}` };
     return out("unav", "ev_offline", NT_COLORS.unav, { kind: kinds[type], on: false, electric: floorLayoutOf(cfg) === "electric", model: type === "water_pump" ? circModelOf(cfg, st) : "",
       palette: cfg.tree_palette, presents: type === "christmas_tree" && treePresents(cfg), color: type === "speaker" ? speakerColorOf(cfg, st) : "" });
@@ -2792,6 +2948,57 @@ function ntReadOf(type, hass, cfg, st, watts, threshold) {
     }
     if (level !== null) return out("charging", "mob_charging", "#fb8c00", { kind, on: true, st: "charging", level });
     return out("idle", "mob_plugged", NT_COLORS.idle, { kind, on: false, st: "plugged", level });
+  }
+  if (type === "humidifier") {
+    // A tank humidifier (#89): the humidity it reads and the one it aims at,
+    // its mist level, its night light and its screen. A tank lifted off the
+    // base wins, then a tank run dry.
+    const a = (st && st.attributes) || {};
+    const own = domainOf(cfg.state_entity) === "humidifier";
+    const cur = cfg.current_humidity_entity ? numericState(hass, cfg.current_humidity_entity) : numberOrNull(a.current_humidity);
+    const tgt = cfg.target_humidity_entity ? numericState(hass, cfg.target_humidity_entity) : own ? numberOrNull(a.humidity) : null;
+    const off = !dead && ["off", "false"].includes(raw);
+    const lifted = humTankOut(hass, cfg.tank_lifted_entity);
+    const water = humWaterOf(hass, cfg.water_level_entity);
+    const lowRaw = cfg.low_water_entity ? String((stateObj(hass, cfg.low_water_entity) || {}).state || "").trim().toLowerCase() : "";
+    const empty = (!!cfg.low_water_entity && !/^(ok|normal|sufficient|full|good)$/.test(lowRaw) && heatActive(hass, cfg.low_water_entity)) || (water !== null && water <= .05);
+    if (cur !== null) {
+      const aim = tgt !== null && !off && Math.round(tgt) !== Math.round(cur);
+      lines.push({ key: "humidity", icon: "mdi:water-percent", label: t(hass, "ac_line_humidity"), value: keepTogether(aim ? `${Math.round(cur)} % \u2192 ${Math.round(tgt)} %` : `${Math.round(cur)} %`), entity: cfg.current_humidity_entity || cfg.state_entity });
+    }
+    if (own && a.mode !== undefined && a.mode !== null && !["", "none"].includes(String(a.mode).toLowerCase())) {
+      lines.push({ key: "mode", icon: "mdi:tune-variant", label: t(hass, "line_mode"), value: attrLabel(hass, st, "mode", a.mode, cfg), entity: cfg.state_entity, menu: humidifierModeMenuOf(hass, cfg) ? "hum_mode" : "" });
+    }
+    const settable = (id) => !!id && ["number", "input_number"].includes(domainOf(id)) && !!stateObj(hass, id);
+    const mist = humMistOf(hass, cfg, a);
+    if (!settable(cfg.mist_level_entity)) {
+      const l = ntLine(hass, cfg, "hum_mist", "mdi:weather-fog", "hum_mist", cfg.mist_level_entity);
+      if (l) lines.push({ ...l, menu: humidifierMistMenuOf(hass, cfg) ? "hum_mist" : "" });
+    }
+    const wl = ntLine(hass, cfg, "hum_water", "mdi:waves-arrow-up", "section_water_level", cfg.water_level_entity);
+    if (wl) lines.push(wl);
+    const nl = ntLine(hass, cfg, "hum_night", "mdi:weather-night", "hum_night", cfg.night_light_entity);
+    if (nl) lines.push(nl);
+    // What the card can set, while it is on and has its tank.
+    const sliders = [];
+    if (!off && !lifted) {
+      if (settable(cfg.target_humidity_entity)) sliders.push({ entity: cfg.target_humidity_entity, icon: "mdi:water-percent", label: t(hass, "section_target_humidity") });
+      else if (own && !cfg.target_humidity_entity && tgt !== null) {
+        sliders.push({ entity: cfg.state_entity, icon: "mdi:water-percent", label: t(hass, "section_target_humidity"), unit: "%", value: tgt,
+          min: numberOrNull(a.min_humidity) ?? 30, max: numberOrNull(a.max_humidity) ?? 80, step: numberOrNull(a.target_humidity_step) ?? 1 });
+      }
+      if (settable(cfg.mist_level_entity)) sliders.push({ entity: cfg.mist_level_entity, icon: "mdi:weather-fog", label: t(hass, "hum_mist") });
+    }
+    const action = String(a.action || "").toLowerCase();
+    // SwitchBot dries its filter (drying), LG and ecobee rest (off, idle).
+    const going = !!running && !off && (!action || action === "humidifying") && mist.frac !== 0;
+    const draw = { kind: "humidifier", powered: !off, on: going, mist: mist.frac, level: mist.level, hum: cur,
+      night: humidifierNightOf(hass, cfg), display: humDisplayOn(hass, cfg.display_entity), water, empty, lifted };
+    const done = (r) => ({ ...r, sliders });
+    if (lifted) return done(out("lifted", "hum_lifted", NT_COLORS.alarm, draw));
+    if (empty) return done(out("empty", "hum_empty", NT_COLORS.alarm, draw));
+    if (off) return done(out("off", "ac_off", NT_COLORS.off, draw));
+    return done(going ? out("run", "hum_running", "#29a3e0", draw) : out("idle", "ac_idle", NT_COLORS.idle, draw));
   }
   if (type === "water_pump") {
     const layout = pumpLayoutOf(cfg, st);
@@ -2977,7 +3184,7 @@ function ntReadOf(type, hass, cfg, st, watts, threshold) {
 function ntControls(hass, cfg, type) {
   const out = [];
   const st = stateObj(hass, cfg.state_entity);
-  if (st && !cfg.toggle_entity && type !== "meter" && ["light", "switch", "input_boolean"].includes(domainOf(cfg.state_entity))) {
+  if (st && !cfg.toggle_entity && type !== "meter" && (["light", "switch", "input_boolean"].includes(domainOf(cfg.state_entity)) || (type === "humidifier" && domainOf(cfg.state_entity) === "humidifier"))) {
     out.push({ key: "toggle", entity: cfg.state_entity, icon: type === "christmas_tree" ? "mdi:pine-tree" : type === "aquarium" ? "mdi:lightbulb" : type === "mobility" ? "mdi:power-plug" : "mdi:power", label: t(hass, "toggle"),
       on: String(st.state).toLowerCase() === "on" });
   }
