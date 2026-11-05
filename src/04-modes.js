@@ -610,7 +610,8 @@ function airFlow(cls, w, h, down) {
 const FRYER_STATES = {
   standby: "off", idle: "off", setting: "off", mainmenu: "off", powersave: "off", pairing: "off", shutdown: "off",
   precook: "preheating", preheat: "preheating", heating: "preheating",
-  preheatfinish: "preheated", preheatend: "preheated",
+  preheatfinish: "preheated", preheatend: "preheated", preheat_finish: "preheated", preheat_end: "preheated", preheat_stop: "off", preheat_pause: "paused",
+  cooking_end: "done", cooking_stop: "off", pull_out: "basket_out",
   cooking: "cooking", crispyroast: "cooking", degrease: "cooking",
   user_action: "shake",
   pause: "paused", pause2: "paused", parasetting: "paused", preheatpause: "paused", keepwarmpause: "paused",

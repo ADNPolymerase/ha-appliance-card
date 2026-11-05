@@ -278,7 +278,7 @@ Only `state_entity` is required, except on a fridge where a probe or a door cont
 | `remaining_time_hide_when_idle` | `true` only shows the remaining time while running, against stale finish times (SmartThings). |
 | `remaining_time_split` | `true` puts the end time on its own line, for a narrow card. |
 | `progress_entity` | 0-100 sensor replacing the estimate drawn from the remaining time. |
-| `door_entity` / `door_open_state` / `door_invert` / `door_hide_in_list` / `door_corner` | Door sensor, "open" state (default `on`), inversion, and hiding the line (the door is still drawn). `door_corner: true` shows the door as an icon in a top corner instead of a line, green when shut and orange when open. |
+| `door_entity` / `door_open_state` / `door_invert` / `door_hide_in_list` / `door_corner` | Door sensor, "open" state (by default `on` or `open`, for an enum sensor such as Home Connect), inversion, and hiding the line (the door is still drawn). `door_corner: true` shows the door as an icon in a top corner instead of a line, green when shut and orange when open. |
 | `alerts_entity` | Entity whose every *attribute* at on, true or active shows as an alert. |
 | `alerts_entities` | Up to 8 alerts with an entity each (Home Connect's salt, rinse aid, i-Dos, filters…), as `{ entity, label?, icon? }` or a plain id, shown while on, true, active, *present* or *confirmed*: one under its own name, several behind their count (see *Alert entities*). |
 | `connectivity_entity` / `connectivity_connected_state` | Connectivity, as a wifi icon, and the "connected" state (default `on`). |
@@ -1107,7 +1107,7 @@ The pump's state is read in the words of the fountain integrations, so a mode wo
 | `solar_layout` | solar | `ground` (default, two panels on their frame) \| `roof` (a house with its panels on the roof). |
 | `solar_alert_entity` | solar | Anything that should raise the *Error*: the inverter smokes. |
 | `battery_entity` | home battery | The level, in %. It fills the gauge and the screen, and at 10 % or less the battery is *Low battery*, in red. |
-| `power_entity` / `power_inverted` / `power_on_threshold` | home battery | One power, positive while it charges and negative while it discharges, or the other way with `power_inverted: true`. Under `power_on_threshold` (10 W by default) either way, it is *Idle*, and *Full* at its charge limit. |
+| `power_entity` / `power_inverted` / `power_on_threshold` | home battery | One power, positive while it charges and negative while it discharges, or the other way with `power_inverted: true`. Powerwall, Fronius and Sonnen report it the other way: the card reads them so on its own, and `power_inverted: false` overrides it. Under `power_on_threshold` (10 W by default) either way, it is *Idle*, and *Full* at its charge limit. |
 | `charge_power_entity` / `discharge_power_entity` | home battery | What goes in and what comes out, for the batteries that measure them apart (EcoFlow, Bluetti), in place of `power_entity`. |
 | `reserve_entity` / `charge_limit_entity` | home battery | The backup reserve, drawn as a dashed line on the gauge and shown as a line, and the charge limit, *Full* once reached. |
 | `battery_capacity` | home battery | The capacity, in kWh: with it the lines say how long until full, or until the reserve. |

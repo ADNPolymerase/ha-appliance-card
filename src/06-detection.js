@@ -14,7 +14,8 @@ const TYPE_AUTO_PATTERNS = {
   floor_heating: { temperature_entity: /temp/i },
   aquarium: { temperature_entity: /temp/i },
   mobility: { battery_entity: /batter|akku|(^|[._])soc([._]|$)/i },
-  meter: { tariff_entity: /tarif|ptec|period|hchp|tempo/i },
+  // linkytic's tarif_option is the contract, ptec the period running now.
+  meter: { tariff_entity: /^(?!.*(option|index)).*(tarif|ptec|period|hchp|tempo)/i },
   diffuser: {
     light_entity: /light|lumiere|licht|luz|luce|lamp|led|night/i,
     tank_empty_entity: /tank|water|lack|empty|vide|leer|vacio/i,
@@ -26,8 +27,10 @@ const TYPE_AUTO_PATTERNS = {
     supply_temperature_entity: /^(?!.*(fan|rpm|cfm|flow)).*(supply|soufflage|zuluft|insufl|impuls|mandata|toevoer|tillu)/i,
     extract_temperature_entity: /^(?!.*fan).*(extract|reprise|abluft|extrac|ripresa|afzuig|franlu|indoor)/i,
     exhaust_temperature_entity: /^(?!.*fan).*(exhaust|rejet|fortluft|expuls|espuls|afvoer|avlu)/i,
-    bypass_entity: /bypass|cell.?state|by.?pass/i,
-    filter_life_entity: /filter|filtre/i,
+    // Renson's activation temperature and Vallox's lock are no bypass.
+    bypass_entity: /^(?!.*(temp|activation|lock|timeout|threshold)).*(bypass|by.?pass|cell.?state)/i,
+    // Flexit's operating hours count up: they are no life left.
+    filter_life_entity: /^(?!.*(operating|hours|usage)).*(filter|filtre)/i,
     airflow_entity: /air.?flow|debit|luftmenge|caudal|portata|m3|(supply|fresh|soufflage|zuluft).*(cfm|flow)/i,
     // Broan / Venmar over ESPHome: each fan's rpm and the air it moves.
     supply_fan_entity: /(supply|fresh|soufflage|zuluft|insufl).*rpm/i,
@@ -38,7 +41,8 @@ const TYPE_AUTO_PATTERNS = {
   // and Tapo name a privacy switch, and most of them an infrared mode.
   camera: {
     motion_entity: /motion|mouvement|bewegung|movimiento|movimento|person|human/i,
-    recording_entity: /record|enregistr|aufnahme|grabac/i,
+    // Reolink's record switches are settings, on all the time.
+    recording_entity: /^(?!switch\.)(?!.*(audio|capacity|oldest|mode|last)).*(record|enregistr|aufnahme|grabac)/i,
     night_entity: /night|nuit|infra.?red|(^|[._])ir([._]|$)|nacht|notte|noche/i,
     privacy_entity: /privacy|confidential|privat|lens.?mask/i,
     battery_entity: /batter|akku/i,
@@ -59,8 +63,9 @@ const TYPE_AUTO_PATTERNS = {
   },
   home_battery: {
     battery_entity: /battery_?level|state_?of_?charge|(^|[._])soc([._]|$)|batter/i,
+    // Huawei's charge/discharge power is one signed sensor: it is power_entity.
     charge_power_entity: /^(?!.*dis)(?!.*out).*(charg|input|_in_|total_in).*(power|watt)/i,
-    discharge_power_entity: /(discharg|output|_out_|total_out).*(power|watt)/i,
+    discharge_power_entity: /^(?!.*charge.?(or.?)?discharge)(?!.*in.?out).*(discharg|output|_out_|total_out).*(power|watt)/i,
     reserve_entity: /reserve|backup/i,
     charge_limit_entity: /charge_?limit|max_?charge|charge_?level_?max/i,
     battery_alert_entity: /error|fault|alarm|defaut/i,
@@ -99,7 +104,9 @@ const TYPE_AUTO_PATTERNS = {
     robot_status_entity: /status|activity|phase|etat/i,
     battery_entity: /batter|akku/i,
     robot_bin_entity: /bin_?full|dust_?bin_?full|box_?full/i,
-    robot_water_entity: /water_?(shortage|box|tank|level)|mop_?water|clean_?water/i,
+    // Roborock's water_box_attached is on while the box is in place, its
+    // dirty_box_full the wrong tank.
+    robot_water_entity: /^(?!.*(attached|carriage|dirty)).*(water_?(shortage|box|tank|level)|low_?water|mop_?water|clean_?water)/i,
     robot_error_entity: /error|erreur|fault/i,
     robot_rain_entity: /rain|pluie|regen/i,
   },
@@ -192,7 +199,7 @@ const TYPE_AUTO_PATTERNS = {
     current_layer_entity: /current_layer|working_layer/i,
     total_layers_entity: /total_layer/i,
     light_entity: /^(light|switch)\..*(light|led)/i,
-    start_entity: /^(button|script)\..*start/i,
+    start_entity: /^(button|script)\.(?!.*restart).*start/i,
     pause_entity: /^(button|script)\..*pause/i,
     resume_entity: /^(button|script)\..*(resume|continue)/i,
     stop_entity: /^(button|script)\..*(?<!emergency_)(stop|cancel)/i,
@@ -202,7 +209,7 @@ const TYPE_AUTO_PATTERNS = {
   // The schedule is only suggested when a readable one exists: the raw one is
   // a Python repr, which belongs in a template rather than on a card.
   pet_feeder: {
-    start_entity: /^(button|script|automation|select|number)\..*(feed|start|distribu|croquette|portion)/i,
+    start_entity: /^(button|script|automation|select|number)\.(?!.*(cancel|disable|enable|delete|skip|schedule|plan|reset|desiccant|restart)).*(feed|start|distribu|croquette|portion)/i,
     portions_today_entity: /portions?.?(per.?day|today|du.?jour)|distributions?.?(per.?day|today|du.?jour)/i,
     weight_today_entity: /weight.?(per.?day|today)|poids.?du.?jour/i,
     portion_weight_entity: /portion.?weight|poids.?(d.)?une?.?portion/i,

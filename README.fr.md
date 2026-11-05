@@ -278,7 +278,7 @@ Seule `state_entity` est obligatoire, sauf sur un réfrigérateur où une sonde 
 | `remaining_time_hide_when_idle` | `true` n'affiche le temps restant qu'en marche, contre les heures de fin périmées (SmartThings). |
 | `remaining_time_split` | `true` met l'heure de fin sur sa propre ligne, pour une card étroite. |
 | `progress_entity` | Capteur 0-100 qui remplace l'estimation tirée du temps restant. |
-| `door_entity` / `door_open_state` / `door_invert` / `door_hide_in_list` / `door_corner` | Capteur de porte, état « ouverte » (défaut `on`), inversion, et masquage de la ligne (la porte reste dessinée). `door_corner: true` affiche la porte en icône dans un coin du haut au lieu d'une ligne, verte fermée et orange ouverte. |
+| `door_entity` / `door_open_state` / `door_invert` / `door_hide_in_list` / `door_corner` | Capteur de porte, état « ouverte » (par défaut `on` ou `open`, pour un capteur à liste comme Home Connect), inversion, et masquage de la ligne (la porte reste dessinée). `door_corner: true` affiche la porte en icône dans un coin du haut au lieu d'une ligne, verte fermée et orange ouverte. |
 | `alerts_entity` | Entité dont chaque *attribut* à on, true ou active s'affiche en alerte. |
 | `alerts_entities` | Jusqu'à 8 alertes, une entité chacune (sel, liquide de rinçage, i-Dos, filtres… de Home Connect), en `{ entity, label?, icon? }` ou en simple identifiant, affichées tant qu'elles sont à on, true, active, *present* ou *confirmed* : une seule sous son propre nom, plusieurs derrière leur nombre (voir *Entités d'alerte*). |
 | `connectivity_entity` / `connectivity_connected_state` | Connectivité, en icône wifi, et état « connecté » (défaut `on`). |
@@ -1109,7 +1109,7 @@ L'état de la pompe se lit dans les mots des intégrations de fontaines, si bien
 | `solar_layout` | solaire | `ground` (défaut, deux panneaux sur leur support) \| `roof` (une maison avec ses panneaux sur le toit). |
 | `solar_alert_entity` | solaire | Tout ce qui doit lever l'*Erreur* : l'onduleur fume. |
 | `battery_entity` | batterie domestique | Le niveau, en %. Il remplit la jauge et l'écran, et à 10 % ou moins la batterie est en *Batterie basse*, en rouge. |
-| `power_entity` / `power_inverted` / `power_on_threshold` | batterie domestique | Une seule puissance, positive en charge et négative en décharge, ou l'inverse avec `power_inverted: true`. Sous `power_on_threshold` (10 W par défaut) dans un sens comme dans l'autre, elle est *Au repos*, et *Pleine* à sa limite de charge. |
+| `power_entity` / `power_inverted` / `power_on_threshold` | batterie domestique | Une seule puissance, positive en charge et négative en décharge, ou l'inverse avec `power_inverted: true`. Powerwall, Fronius et Sonnen la donnent dans l'autre sens : la carte les lit ainsi d'elle-même, et `power_inverted: false` a le dernier mot. Sous `power_on_threshold` (10 W par défaut) dans un sens comme dans l'autre, elle est *Au repos*, et *Pleine* à sa limite de charge. |
 | `charge_power_entity` / `discharge_power_entity` | batterie domestique | Ce qui entre et ce qui sort, pour les batteries qui les mesurent à part (EcoFlow, Bluetti), à la place de `power_entity`. |
 | `reserve_entity` / `charge_limit_entity` | batterie domestique | La réserve de secours, tracée en pointillés sur la jauge et donnée en ligne, et la limite de charge, *Pleine* une fois atteinte. |
 | `battery_capacity` | batterie domestique | La capacité, en kWh : avec elle, les lignes disent dans combien de temps elle sera pleine, ou jusqu'à la réserve. |

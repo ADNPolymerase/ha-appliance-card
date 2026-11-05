@@ -130,6 +130,8 @@ function meterLayoutOf(cfg, st) {
   if (/linky|teleinfo|papp|sinsts/.test(hay)) return "linky";
   if (a.device_class === "gas" || /(^|[^a-z])(gas|gaz)([^a-z]|$)|gazpar/.test(hay)) return "gas";
   if (a.device_class === "water" || /water|(^|[^a-z])eau([^a-z]|$)|wasser|agua|acqua|water_meter/.test(hay)) return "water";
+  // An index in kWh is drawn on the drums (#68).
+  if (/wh$/i.test(String(a.unit_of_measurement || ""))) return "box";
   return "linky";
 }
 // The new drawings, picked or read from the name, the device class.
@@ -264,9 +266,14 @@ function ntRunning(hass, cfg, st, watts, threshold) {
     const dom = domainOf(cfg.state_entity);
     if (["climate", "water_heater"].includes(dom)) {
       if (raw === "off") return false;
-      const act = String((st.attributes || {}).hvac_action || "").toLowerCase();
+      // A water heater says it in its state (Gecko: Heating, Cooling, Idle).
+      const act = String((st.attributes || {}).hvac_action || "").toLowerCase() || (dom === "water_heater" && ["heating", "cooling", "idle"].includes(raw) ? raw : "");
       if (act) return act === "heating" || act === "preheating" || act === "cooling";
       if (metered) return watts >= threshold;
+      // No action at all (Tuya, Intex): it runs until the setpoint is reached.
+      const cur = numberOrNull((st.attributes || {}).current_temperature), aim = numberOrNull((st.attributes || {}).temperature);
+      if (cur !== null && aim !== null && raw === "heat") return cur < aim;
+      if (cur !== null && aim !== null && raw === "cool") return cur > aim;
       return true;
     }
     if (!NT_ON.includes(raw) && !(numberOrNull(st.state) > 0)) return false;
@@ -2785,7 +2792,8 @@ function ntReadOf(type, hass, cfg, st, watts, threshold) {
   const raw = st ? String(st.state).trim().toLowerCase() : "";
   const dead = !st || ["unavailable", "unknown", "none", ""].includes(raw);
   const running = ntRunning(hass, cfg, st, watts, threshold);
-  const unav = running === null && !(type === "meter" && !dead);
+  // A detector's none is all clear (Shelly Gas), not a missing value.
+  const unav = running === null && !(type === "meter" && !dead) && !(type === "detector" && st && raw === "none");
   const tmp = ntTemp(hass, cfg, st);
   const out = (mode, labelKey, color, draw) => ({ mode, label: t(hass, labelKey), color, lines, draw: { ...draw, unav } });
   if (unav) {
@@ -2864,7 +2872,7 @@ function ntReadOf(type, hass, cfg, st, watts, threshold) {
     // says. A low battery is a line, the light turns amber.
     const layout = detectorLayoutOf(cfg, st);
     const kind = `det_${layout}`;
-    const alarm = !dead && (NT_ON.includes(raw) || /alarm|smoke|detect|leak|wet|fuite|fumee|emergency|warning/.test(raw)) && !/^(off|ok|clear|dry|normal|idle)$/.test(raw);
+    const alarm = !dead && (NT_ON.includes(raw) || /alarm|smoke|detect|leak|wet|fuite|fumee|emergency|warning|mild|heavy|critical|danger/.test(raw)) && !/^(off|ok|clear|dry|normal|idle|test)$|^(no|not|un)[ _-]?/.test(raw);
     const bv = cfg.battery_entity ? numericState(hass, cfg.battery_entity) : null;
     const bs = cfg.battery_entity ? stateObj(hass, cfg.battery_entity) : null;
     const low = bv !== null ? bv <= 20 : !!bs && domainOf(cfg.battery_entity) === "binary_sensor" && NT_ON.includes(String(bs.state).toLowerCase());
@@ -3071,6 +3079,9 @@ function ntReadOf(type, hass, cfg, st, watts, threshold) {
       : { kind: "floor", on: !!running && !isOff, electric: floorLayoutOf(cfg) === "electric", lcd: tmp ? tmp.text : "" };
     if (isOff) return out("off", "ac_off", NT_COLORS.off, { ...draw, on: false });
     if (type === "sauna" && tmp && target !== null && tmp.v >= target - 3) return out("ready", "sauna_ready", NT_COLORS.lit, { ...draw, on: true });
+    // A floor that cools (myVAILLANT, MELCloud) does not heat.
+    const cooling = !!running && (String((st && st.attributes && st.attributes.hvac_action) || "").toLowerCase() === "cooling" || raw === "cool");
+    if (cooling) return out("cool", "ac_cooling", "#29b6f6", { ...draw, on: false });
     return running ? out("heat", "ac_heating", NT_COLORS.heat, draw) : out("idle", "ac_idle", NT_COLORS.idle, draw);
   }
   if (type === "spa") {
@@ -3078,7 +3089,7 @@ function ntReadOf(type, hass, cfg, st, watts, threshold) {
     const bubbles = ntOnOff(hass, cfg.bubbles_entity);
     const lit = ntOnOff(hass, cfg.light_entity);
     if (tmp) lines.push({ key: "nt_temp", icon: "mdi:thermometer", label: t(hass, "temperature"), value: keepTogether(tmp.text), entity: cfg.temperature_entity || cfg.state_entity });
-    const heating = !!running && !isOff;
+    const heating = !!running && !isOff && String((st && st.attributes && st.attributes.hvac_action) || "").toLowerCase() !== "cooling" && raw !== "cooling";
     const draw = { kind: "spa", on: heating || bubbles, heating, bubbles, lit, steam: heating || bubbles, lcd: tmp ? tmp.text : "" };
     if (bubbles) return out("bubbles", "spa_bubbles", NT_COLORS.run, draw);
     if (isOff) return out("off", "ac_off", NT_COLORS.off, draw);
@@ -3119,9 +3130,13 @@ function ntReadOf(type, hass, cfg, st, watts, threshold) {
       exportLine();
       if (v === null) return out("unav", "ev_offline", NT_COLORS.unav, { kind: "linky", on: false, unav: true, lcd: "", label: "" });
       const unit = unitOf(hass, cfg.state_entity) || "VA";
-      const flow = flowOf(v);
-      const heavy = Math.abs(v) >= highW;
-      const value = `${Math.round(Math.abs(v))} ${unit}`;
+      // An index (linkytic's BASE) is no power; DSMR reports kW.
+      const isIndex = /wh$/i.test(unit);
+      const kilo = /^k(w|va)$/i.test(unit);
+      const w = isIndex ? 0 : kilo ? v * 1000 : v;
+      const flow = flowOf(w);
+      const heavy = Math.abs(w) >= highW;
+      const value = `${isIndex || kilo ? netNumber(hass, Math.abs(v), isIndex ? 0 : 2) : Math.round(Math.abs(v))} ${unit}`;
       const draw = { kind: "linky", on: true, heavy, still: flow === "none", exp: flow === "export", lcd: value, label: unit.toUpperCase() === "VA" ? "PAPP" : "SINSTS", tariff: tariff.toUpperCase().slice(0, 6) };
       if (flow === "none") return out("idle", "meter_idle", NT_COLORS.idle, draw);
       if (flow === "export") return out("export", "meter_export", NT_COLORS.lit, draw);

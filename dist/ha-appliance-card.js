@@ -1053,7 +1053,8 @@ function towelModeOf(raw) {
 const FRYER_STATES = {
   standby: "off", idle: "off", setting: "off", mainmenu: "off", powersave: "off", pairing: "off", shutdown: "off",
   precook: "preheating", preheat: "preheating", heating: "preheating",
-  preheatfinish: "preheated", preheatend: "preheated",
+  preheatfinish: "preheated", preheatend: "preheated", preheat_finish: "preheated", preheat_end: "preheated", preheat_stop: "off", preheat_pause: "paused",
+  cooking_end: "done", cooking_stop: "off", pull_out: "basket_out",
   cooking: "cooking", crispyroast: "cooking", degrease: "cooking",
   user_action: "shake",
   pause: "paused", pause2: "paused", parasetting: "paused", preheatpause: "paused", keepwarmpause: "paused",
@@ -1487,12 +1488,37 @@ const HOMEWHIZ_STATES = {
   device_state_time_delay_active: "delayed",
 };
 
+// The states a keyword cannot tell, as the integrations spell them: Miele, LG
+// ThinQ, SmartThings, Whirlpool and Home Connect. "_" is a letter to a keyword,
+// so power_off and program_ended would read nothing, and running_end "run".
+function doorStateOpen(state, cfg) {
+  if (cfg.door_open_state) return state === cfg.door_open_state;
+  // Home Connect's door is an enum sensor: open, closed, locked.
+  return ["on", "open", "opened", "true"].includes(String(state).trim().toLowerCase());
+}
+const INTEGRATION_STATES = {
+  // Miele
+  in_use: "running", autocleaning: "running", program_ended: "done", failure: "error", program_interrupted: "error",
+  waiting_to_start: "delayed", programmed: "idle", rinse_hold: "paused", not_connected: "unknown",
+  // LG ThinQ
+  power_off: "idle", initial: "idle", initializing: "idle", sleep: "idle", reserved: "delayed", running_end: "done", end_cooling: "running",
+  cook: "running", cooking_in_progress: "running", cook_complete: "done", preheat_complete: "running", preheating_is_done: "running",
+  // SmartThings
+  stop: "idle", fast_preheat: "preheating", time_hold_preheat: "preheating", stone_heating: "preheating", searing: "running", defrosting: "running",
+  // Whirlpool
+  hard_stop_or_error: "error", exception: "error", power_failure: "error", cancelled: "idle", setting: "idle", system_initialize: "idle",
+  // Home Connect
+  actionrequired: "paused",
+};
+
 function normalizeState(raw, stateMap) {
   if (raw === undefined || raw === null) return "unknown";
   const s = String(raw).trim();
   if (["unknown", "unavailable", "none", ""].includes(s.toLowerCase())) return "unknown";
   if (stateMap && Object.prototype.hasOwnProperty.call(stateMap, s)) return mappedState(stateMap[s]);
   if (Object.prototype.hasOwnProperty.call(HOMEWHIZ_STATES, s)) return HOMEWHIZ_STATES[s];
+  const exact = s.toLowerCase();
+  if (Object.prototype.hasOwnProperty.call(INTEGRATION_STATES, exact)) return INTEGRATION_STATES[exact];
   const flat = stripAccents(s);
   for (const norm of Object.keys(STATE_KEYWORD_PATTERNS)) {
     if (STATE_KEYWORD_PATTERNS[norm].some((re) => re.test(flat))) return norm;
@@ -2440,14 +2466,17 @@ function siblingEntityIds(hass, entityId) {
 const AUTO_PATTERNS = {
   program_entity: /program/i,
   remaining_time_entity: /time.?to.?end|remaining|finish.?in/i,
-  door_entity: /door/i,
+  // A door lock (hOn, Electrolux) is not the door.
+  door_entity: /^(?!.*(lock|alarm|assistant)).*door/i,
   alerts_entity: /alert/i,
   connectivity_entity: /connectiv/i,
   // A start delay is set, not pressed: HomeWhiz writes its own on a number.
-  start_entity: /^(?!.*delay).*start/i,
+  // Nor is a restart a start, or a relative start time (Home Connect).
+  start_entity: /^(?!.*(delay|restart|start.?in|start.?time)).*start/i,
   pause_entity: /pause/i,
   resume_entity: /resume/i,
-  stop_entity: /stop|reset/i,
+  // Resetting a filter or a counter stops nothing.
+  stop_entity: /^(?!.*(filter|descal|counter|statistic|maintenance|hours|usage)).*(stop|reset)/i,
   power_entity: /_power$|power_w$|watt/i,
   energy_entity: /^(?!.*(cost|price|tarif|prix)).*(energy|kwh)/i,
 };
@@ -2472,7 +2501,8 @@ const TYPE_AUTO_PATTERNS = {
   floor_heating: { temperature_entity: /temp/i },
   aquarium: { temperature_entity: /temp/i },
   mobility: { battery_entity: /batter|akku|(^|[._])soc([._]|$)/i },
-  meter: { tariff_entity: /tarif|ptec|period|hchp|tempo/i },
+  // linkytic's tarif_option is the contract, ptec the period running now.
+  meter: { tariff_entity: /^(?!.*(option|index)).*(tarif|ptec|period|hchp|tempo)/i },
   diffuser: {
     light_entity: /light|lumiere|licht|luz|luce|lamp|led|night/i,
     tank_empty_entity: /tank|water|lack|empty|vide|leer|vacio/i,
@@ -2484,8 +2514,10 @@ const TYPE_AUTO_PATTERNS = {
     supply_temperature_entity: /^(?!.*(fan|rpm|cfm|flow)).*(supply|soufflage|zuluft|insufl|impuls|mandata|toevoer|tillu)/i,
     extract_temperature_entity: /^(?!.*fan).*(extract|reprise|abluft|extrac|ripresa|afzuig|franlu|indoor)/i,
     exhaust_temperature_entity: /^(?!.*fan).*(exhaust|rejet|fortluft|expuls|espuls|afvoer|avlu)/i,
-    bypass_entity: /bypass|cell.?state|by.?pass/i,
-    filter_life_entity: /filter|filtre/i,
+    // Renson's activation temperature and Vallox's lock are no bypass.
+    bypass_entity: /^(?!.*(temp|activation|lock|timeout|threshold)).*(bypass|by.?pass|cell.?state)/i,
+    // Flexit's operating hours count up: they are no life left.
+    filter_life_entity: /^(?!.*(operating|hours|usage)).*(filter|filtre)/i,
     airflow_entity: /air.?flow|debit|luftmenge|caudal|portata|m3|(supply|fresh|soufflage|zuluft).*(cfm|flow)/i,
     // Broan / Venmar over ESPHome: each fan's rpm and the air it moves.
     supply_fan_entity: /(supply|fresh|soufflage|zuluft|insufl).*rpm/i,
@@ -2496,7 +2528,8 @@ const TYPE_AUTO_PATTERNS = {
   // and Tapo name a privacy switch, and most of them an infrared mode.
   camera: {
     motion_entity: /motion|mouvement|bewegung|movimiento|movimento|person|human/i,
-    recording_entity: /record|enregistr|aufnahme|grabac/i,
+    // Reolink's record switches are settings, on all the time.
+    recording_entity: /^(?!switch\.)(?!.*(audio|capacity|oldest|mode|last)).*(record|enregistr|aufnahme|grabac)/i,
     night_entity: /night|nuit|infra.?red|(^|[._])ir([._]|$)|nacht|notte|noche/i,
     privacy_entity: /privacy|confidential|privat|lens.?mask/i,
     battery_entity: /batter|akku/i,
@@ -2517,8 +2550,9 @@ const TYPE_AUTO_PATTERNS = {
   },
   home_battery: {
     battery_entity: /battery_?level|state_?of_?charge|(^|[._])soc([._]|$)|batter/i,
+    // Huawei's charge/discharge power is one signed sensor: it is power_entity.
     charge_power_entity: /^(?!.*dis)(?!.*out).*(charg|input|_in_|total_in).*(power|watt)/i,
-    discharge_power_entity: /(discharg|output|_out_|total_out).*(power|watt)/i,
+    discharge_power_entity: /^(?!.*charge.?(or.?)?discharge)(?!.*in.?out).*(discharg|output|_out_|total_out).*(power|watt)/i,
     reserve_entity: /reserve|backup/i,
     charge_limit_entity: /charge_?limit|max_?charge|charge_?level_?max/i,
     battery_alert_entity: /error|fault|alarm|defaut/i,
@@ -2557,7 +2591,9 @@ const TYPE_AUTO_PATTERNS = {
     robot_status_entity: /status|activity|phase|etat/i,
     battery_entity: /batter|akku/i,
     robot_bin_entity: /bin_?full|dust_?bin_?full|box_?full/i,
-    robot_water_entity: /water_?(shortage|box|tank|level)|mop_?water|clean_?water/i,
+    // Roborock's water_box_attached is on while the box is in place, its
+    // dirty_box_full the wrong tank.
+    robot_water_entity: /^(?!.*(attached|carriage|dirty)).*(water_?(shortage|box|tank|level)|low_?water|mop_?water|clean_?water)/i,
     robot_error_entity: /error|erreur|fault/i,
     robot_rain_entity: /rain|pluie|regen/i,
   },
@@ -2650,7 +2686,7 @@ const TYPE_AUTO_PATTERNS = {
     current_layer_entity: /current_layer|working_layer/i,
     total_layers_entity: /total_layer/i,
     light_entity: /^(light|switch)\..*(light|led)/i,
-    start_entity: /^(button|script)\..*start/i,
+    start_entity: /^(button|script)\.(?!.*restart).*start/i,
     pause_entity: /^(button|script)\..*pause/i,
     resume_entity: /^(button|script)\..*(resume|continue)/i,
     stop_entity: /^(button|script)\..*(?<!emergency_)(stop|cancel)/i,
@@ -2660,7 +2696,7 @@ const TYPE_AUTO_PATTERNS = {
   // The schedule is only suggested when a readable one exists: the raw one is
   // a Python repr, which belongs in a template rather than on a card.
   pet_feeder: {
-    start_entity: /^(button|script|automation|select|number)\..*(feed|start|distribu|croquette|portion)/i,
+    start_entity: /^(button|script|automation|select|number)\.(?!.*(cancel|disable|enable|delete|skip|schedule|plan|reset|desiccant|restart)).*(feed|start|distribu|croquette|portion)/i,
     portions_today_entity: /portions?.?(per.?day|today|du.?jour)|distributions?.?(per.?day|today|du.?jour)/i,
     weight_today_entity: /weight.?(per.?day|today)|poids.?du.?jour/i,
     portion_weight_entity: /portion.?weight|poids.?(d.)?une?.?portion/i,
@@ -3985,7 +4021,11 @@ function robotModeOf(hass, cfg, st, layout) {
   if (atRest && cfg.robot_bin_entity && robotRaised(hass, cfg.robot_bin_entity, /full|plein|voll/)) mode = "full";
   if (atRest && cfg.robot_water_entity) {
     const w = numericEntity(hass, cfg.robot_water_entity);
-    const low = w ? Number(w.state) <= 5 : robotRaised(hass, cfg.robot_water_entity, /empty|low|short|lack|vide/);
+    // Roborock and Xiaomi say the box is attached: on is all is well.
+    const wst = stateObj(hass, cfg.robot_water_entity);
+    const attached = !!wst && ["connectivity", "plug", "presence"].includes((wst.attributes || {}).device_class);
+    const low = attached ? String(wst.state).toLowerCase() === "off"
+      : w ? Number(w.state) <= 5 : robotRaised(hass, cfg.robot_water_entity, /empty|low|short|lack|vide/);
     if (low) mode = "empty";
   }
   return mode;
@@ -4181,6 +4221,7 @@ function batteryLayoutOf(cfg, st) {
 
 // What the battery does: its level, the power going in or out, its word for
 // an error, and whether it has reached the top it is allowed.
+const BATTERY_NEGATIVE_CHARGE = ["powerwall", "fronius", "sonnenbatterie"];
 function batteryReadOf(hass, cfg, st) {
   const levelId = cfg.battery_entity || (numericEntity(hass, cfg.state_entity) ? cfg.state_entity : "");
   const level = levelId ? numericState(hass, levelId) : null;
@@ -4194,7 +4235,12 @@ function batteryReadOf(hass, cfg, st) {
   } else if (cfg.power_entity) {
     const p = wattsOf(hass, cfg.power_entity);
     if (p !== null) {
-      net = cfg.power_inverted ? -p : p;
+      // Home Assistant's own convention, negative while charging, is what
+      // Powerwall, Fronius and Sonnen report; power_inverted false overrides it.
+      const reg = hass.entities && hass.entities[cfg.power_entity];
+      // Fronius's own power_battery_charge says which way it means.
+      const inverted = cfg.power_inverted !== undefined ? cfg.power_inverted : !!reg && BATTERY_NEGATIVE_CHARGE.includes(reg.platform) && !/charge|_in$|_out$/i.test(cfg.power_entity);
+      net = inverted ? -p : p;
       powerId = cfg.power_entity;
     }
   }
@@ -4558,14 +4604,29 @@ function hrvReadOf(hass, cfg, st, norm, powerDerived) {
   const braw = bst ? stripAccents(String(bst.state)).toLowerCase() : "";
   const bnum = bst ? parseFloat(bst.state) : NaN;
   const defrost = /defrost|degivr|abtau|frost/.test(braw) || /defrost|degivr|abtau/.test(raw);
-  const bypass = !defrost && (["on", "true", "open", "opened", "bypass", "active"].includes(braw) || /bypass|cool.?recovery/.test(braw) || (isFinite(bnum) && bnum > 0));
+  // A temperature (Renson's activation point) or a lock (Vallox) is no bypass.
+  const bUnit = String((bst && bst.attributes && bst.attributes.unit_of_measurement) || "");
+  const bNotOne = !!bst && ((bst.attributes || {}).device_class === "temperature" || /\u00b0/.test(bUnit) || /lock/i.test(cfg.bypass_entity));
+  const bypass = !defrost && !bNotOne && (["on", "true", "open", "opened", "bypass", "active"].includes(braw) || /bypass|cool.?recovery/.test(braw) || (isFinite(bnum) && bnum > 0));
   // The filter: days or percent left, or a sensor that says it is due.
   let filterDue = false, filterText = "", filterValue = null, filterDays = false;
   const fst = cfg.filter_life_entity ? stateObj(hass, cfg.filter_life_entity) : null;
   if (fst) {
     const fv = parseFloat(fst.state);
     const unit = String((fst.attributes || {}).unit_of_measurement || "").toLowerCase();
-    if (isFinite(fv)) {
+    const fAt = (fst.attributes || {}).device_class === "timestamp" || /^\d{4}-\d{2}-\d{2}/.test(String(fst.state)) ? Date.parse(fst.state) : NaN;
+    if (isFinite(fAt)) {
+      // Vallox gives the date its filter is due.
+      const left = Math.ceil((fAt - Date.now()) / 86400000);
+      const due = parseFloat(cfg.filter_due_below);
+      filterDue = left <= (isFinite(due) ? due : 7);
+      filterText = `${left} d`;
+      filterValue = left;
+      filterDays = true;
+    } else if (isFinite(fv) && unit && unit !== "%" && !/^(d|day|days|jours?|tage?|dias?|giorni)$/.test(unit)) {
+      // Hours run (Flexit) say nothing of what is left.
+      filterText = `${Math.round(fv)} ${unit}`;
+    } else if (isFinite(fv)) {
       const days = /^(d|day|days|jours?|tage?|dias?|giorni)$/.test(unit);
       const due = parseFloat(cfg.filter_due_below);
       filterDue = fv <= (isFinite(due) ? due : days ? 7 : 10);
@@ -4648,12 +4709,13 @@ function cameraReadOf(hass, cfg, st) {
   const conn = cfg.connectivity_entity ? stateObj(hass, cfg.connectivity_entity) : null;
   const gone = !!conn && ["off", "false", "disconnected", "offline", "unavailable"].includes(String(conn.state).toLowerCase());
   let mode;
-  if (!st || ["unavailable", "unknown", "none", ""].includes(raw) || gone) mode = "unav";
+  if (!st || ["unavailable", "unknown", "none", ""].includes(raw) || /^offline/.test(raw) || gone) mode = "unav";
   else if (raw === "off" || a.monitoring === false || camOn(hass, cfg.privacy_entity)) mode = "off";
   else if (camRinging(hass, cfg.ring_entity)) mode = "ring";
-  else if (raw === "recording" || camOn(hass, cfg.recording_entity)) mode = "rec";
+  else if (raw === "recording" || (camOn(hass, cfg.recording_entity) && !/record.?audio/i.test(cfg.recording_entity))) mode = "rec";
   else if (raw === "motion" || camOn(hass, cfg.motion_entity)) mode = "motion";
-  else if (raw === "streaming") mode = "live";
+  // Nest and Netatmo always say streaming: nobody is watching for all that.
+  else if (raw === "streaming" && !/netatmo|google nest/i.test(String(a.brand || ""))) mode = "live";
   else mode = "idle";
   return { mode, night: mode !== "off" && mode !== "unav" && camOn(hass, cfg.night_entity) };
 }
@@ -4941,6 +5003,8 @@ function meterLayoutOf(cfg, st) {
   if (/linky|teleinfo|papp|sinsts/.test(hay)) return "linky";
   if (a.device_class === "gas" || /(^|[^a-z])(gas|gaz)([^a-z]|$)|gazpar/.test(hay)) return "gas";
   if (a.device_class === "water" || /water|(^|[^a-z])eau([^a-z]|$)|wasser|agua|acqua|water_meter/.test(hay)) return "water";
+  // An index in kWh is drawn on the drums (#68).
+  if (/wh$/i.test(String(a.unit_of_measurement || ""))) return "box";
   return "linky";
 }
 // The new drawings, picked or read from the name, the device class.
@@ -5075,9 +5139,14 @@ function ntRunning(hass, cfg, st, watts, threshold) {
     const dom = domainOf(cfg.state_entity);
     if (["climate", "water_heater"].includes(dom)) {
       if (raw === "off") return false;
-      const act = String((st.attributes || {}).hvac_action || "").toLowerCase();
+      // A water heater says it in its state (Gecko: Heating, Cooling, Idle).
+      const act = String((st.attributes || {}).hvac_action || "").toLowerCase() || (dom === "water_heater" && ["heating", "cooling", "idle"].includes(raw) ? raw : "");
       if (act) return act === "heating" || act === "preheating" || act === "cooling";
       if (metered) return watts >= threshold;
+      // No action at all (Tuya, Intex): it runs until the setpoint is reached.
+      const cur = numberOrNull((st.attributes || {}).current_temperature), aim = numberOrNull((st.attributes || {}).temperature);
+      if (cur !== null && aim !== null && raw === "heat") return cur < aim;
+      if (cur !== null && aim !== null && raw === "cool") return cur > aim;
       return true;
     }
     if (!NT_ON.includes(raw) && !(numberOrNull(st.state) > 0)) return false;
@@ -5234,7 +5303,8 @@ function ntReadOf(type, hass, cfg, st, watts, threshold) {
   const raw = st ? String(st.state).trim().toLowerCase() : "";
   const dead = !st || ["unavailable", "unknown", "none", ""].includes(raw);
   const running = ntRunning(hass, cfg, st, watts, threshold);
-  const unav = running === null && !(type === "meter" && !dead);
+  // A detector's none is all clear (Shelly Gas), not a missing value.
+  const unav = running === null && !(type === "meter" && !dead) && !(type === "detector" && st && raw === "none");
   const tmp = ntTemp(hass, cfg, st);
   const out = (mode, labelKey, color, draw) => ({ mode, label: t(hass, labelKey), color, lines, draw: { ...draw, unav } });
   if (unav) {
@@ -5313,7 +5383,7 @@ function ntReadOf(type, hass, cfg, st, watts, threshold) {
     // says. A low battery is a line, the light turns amber.
     const layout = detectorLayoutOf(cfg, st);
     const kind = `det_${layout}`;
-    const alarm = !dead && (NT_ON.includes(raw) || /alarm|smoke|detect|leak|wet|fuite|fumee|emergency|warning/.test(raw)) && !/^(off|ok|clear|dry|normal|idle)$/.test(raw);
+    const alarm = !dead && (NT_ON.includes(raw) || /alarm|smoke|detect|leak|wet|fuite|fumee|emergency|warning|mild|heavy|critical|danger/.test(raw)) && !/^(off|ok|clear|dry|normal|idle|test)$|^(no|not|un)[ _-]?/.test(raw);
     const bv = cfg.battery_entity ? numericState(hass, cfg.battery_entity) : null;
     const bs = cfg.battery_entity ? stateObj(hass, cfg.battery_entity) : null;
     const low = bv !== null ? bv <= 20 : !!bs && domainOf(cfg.battery_entity) === "binary_sensor" && NT_ON.includes(String(bs.state).toLowerCase());
@@ -5520,6 +5590,9 @@ function ntReadOf(type, hass, cfg, st, watts, threshold) {
       : { kind: "floor", on: !!running && !isOff, electric: floorLayoutOf(cfg) === "electric", lcd: tmp ? tmp.text : "" };
     if (isOff) return out("off", "ac_off", NT_COLORS.off, { ...draw, on: false });
     if (type === "sauna" && tmp && target !== null && tmp.v >= target - 3) return out("ready", "sauna_ready", NT_COLORS.lit, { ...draw, on: true });
+    // A floor that cools (myVAILLANT, MELCloud) does not heat.
+    const cooling = !!running && (String((st && st.attributes && st.attributes.hvac_action) || "").toLowerCase() === "cooling" || raw === "cool");
+    if (cooling) return out("cool", "ac_cooling", "#29b6f6", { ...draw, on: false });
     return running ? out("heat", "ac_heating", NT_COLORS.heat, draw) : out("idle", "ac_idle", NT_COLORS.idle, draw);
   }
   if (type === "spa") {
@@ -5527,7 +5600,7 @@ function ntReadOf(type, hass, cfg, st, watts, threshold) {
     const bubbles = ntOnOff(hass, cfg.bubbles_entity);
     const lit = ntOnOff(hass, cfg.light_entity);
     if (tmp) lines.push({ key: "nt_temp", icon: "mdi:thermometer", label: t(hass, "temperature"), value: keepTogether(tmp.text), entity: cfg.temperature_entity || cfg.state_entity });
-    const heating = !!running && !isOff;
+    const heating = !!running && !isOff && String((st && st.attributes && st.attributes.hvac_action) || "").toLowerCase() !== "cooling" && raw !== "cooling";
     const draw = { kind: "spa", on: heating || bubbles, heating, bubbles, lit, steam: heating || bubbles, lcd: tmp ? tmp.text : "" };
     if (bubbles) return out("bubbles", "spa_bubbles", NT_COLORS.run, draw);
     if (isOff) return out("off", "ac_off", NT_COLORS.off, draw);
@@ -5568,9 +5641,13 @@ function ntReadOf(type, hass, cfg, st, watts, threshold) {
       exportLine();
       if (v === null) return out("unav", "ev_offline", NT_COLORS.unav, { kind: "linky", on: false, unav: true, lcd: "", label: "" });
       const unit = unitOf(hass, cfg.state_entity) || "VA";
-      const flow = flowOf(v);
-      const heavy = Math.abs(v) >= highW;
-      const value = `${Math.round(Math.abs(v))} ${unit}`;
+      // An index (linkytic's BASE) is no power; DSMR reports kW.
+      const isIndex = /wh$/i.test(unit);
+      const kilo = /^k(w|va)$/i.test(unit);
+      const w = isIndex ? 0 : kilo ? v * 1000 : v;
+      const flow = flowOf(w);
+      const heavy = Math.abs(w) >= highW;
+      const value = `${isIndex || kilo ? netNumber(hass, Math.abs(v), isIndex ? 0 : 2) : Math.round(Math.abs(v))} ${unit}`;
       const draw = { kind: "linky", on: true, heavy, still: flow === "none", exp: flow === "export", lcd: value, label: unit.toUpperCase() === "VA" ? "PAPP" : "SINSTS", tariff: tariff.toUpperCase().slice(0, 6) };
       if (flow === "none") return out("idle", "meter_idle", NT_COLORS.idle, draw);
       if (flow === "export") return out("export", "meter_export", NT_COLORS.lit, draw);
@@ -5875,15 +5952,19 @@ function upsStatusOf(hass, cfg, st) {
   const raw = st ? String(st.state).trim() : "";
   const text = stripAccents(raw.toLowerCase());
   const codes = new Set(raw.toUpperCase().split(/[\s,]+/).filter((c) => UPS_CODES.includes(c)));
+  // NUT's Status sensor spells its flags out, apcupsd writes them in one word.
+  if (/low.?batt/.test(text)) codes.add("LB");
+  if (/replac/.test(text)) codes.add("RB");
+  if (/overload/.test(text)) codes.add("OVER");
   let mode;
-  if (st && ["unavailable", "unknown", ""].includes(text)) mode = "unav";
+  if (st && (["unavailable", "unknown", ""].includes(text) || /comm.?lost|no.?comm/.test(text))) mode = "unav";
   else if (codes.has("OFF")) mode = "off";
   else if (codes.has("OB") || codes.has("DISCHRG")) mode = "battery";
   else if (codes.has("BYPASS")) mode = "bypass";
   else if (codes.has("OL")) mode = "online";
   else if (st) {
     if (/on.?batt|sur.?batt|batteriebetrieb|discharg|decharg/.test(text)) mode = "battery";
-    else if (/^(off|arret|shutdown)$/.test(text)) mode = "off";
+    else if (/^(off|arret|shutdown)$|^offline|forced.?shutdown|shutting/.test(text)) mode = "off";
     else mode = "online";
   } else {
     // No status at all: the voltage at the wall says whether the mains is there.
@@ -6284,14 +6365,21 @@ function zoneState(hass, zone) {
     const raw = String(st.state).trim();
     const low = raw.toLowerCase();
     if (!["unknown", "unavailable", "none", "", "off", "false"].includes(low)) {
-      const num = parseFloat(raw);
+      // Miele's power steps: plate_step_0 is off, the others go up to 18.
+      const step = /^plate_step_(\d+)$/.exec(low);
+      const num = step ? Number(step[1]) : parseFloat(raw);
+      const top = step ? 18 : 9;
       if (!isNaN(num)) {
         if (num > 0) {
           out.on = true;
           out.label = String(Math.round(num));
-          out.intensity = Math.max(0, Math.min(1, num / 9));
-          out.max = num >= 9;
+          out.intensity = Math.max(0, Math.min(1, num / top));
+          out.max = num >= top;
         }
+      } else if (low === "plate_step_warming") {
+        out.on = true;
+        out.intensity = 0.25;
+        out.label = "W";
       } else {
         const isMax = /boost|power|turbo|max/.test(low) || low === "p";
         out.on = true;
@@ -7845,6 +7933,8 @@ class ApplianceCard extends HTMLElement {
     const applianceType = detectApplianceType(cfg, st);
     const cap = caps(applianceType);
     let norm = normFor(applianceType, rawState, cfg.state_map);
+    // Miele's on is a machine switched on with no programme; its enum says so.
+    if (String(rawState).trim().toLowerCase() === "on" && st && Array.isArray(st.attributes.options) && st.attributes.options.includes("in_use") && !(cfg.state_map && "on" in cfg.state_map)) norm = "idle";
 
     // HomeWhiz says a finished cycle in its message rather than in its state:
     // the washer goes back to "on" and asks for the laundry back, the dryer and
@@ -8053,7 +8143,7 @@ class ApplianceCard extends HTMLElement {
     if (cfg.door_entity) {
       const dst = stateObj(hass, cfg.door_entity);
       if (dst) {
-        doorOpen = dst.state === (cfg.door_open_state || "on");
+        doorOpen = doorStateOpen(dst.state, cfg);
         if (cfg.door_invert) doorOpen = !doorOpen;
       }
     }
@@ -8233,8 +8323,13 @@ class ApplianceCard extends HTMLElement {
     }
     if (cap.filter && cfg.filter_life_entity) {
       const f = numericState(hass, cfg.filter_life_entity);
-      if (f !== null) {
-        filterPct = Math.max(0, Math.min(100, f));
+      // Worn out rather than left (SmartThings' usage), or hours and counts
+      // that are no percentage at all (Electrolux, hOn): shown as they come.
+      const fUnit = unitOf(hass, cfg.filter_life_entity) || "";
+      const fWorn = /usage|used/i.test(cfg.filter_life_entity);
+      const fPct = fUnit === "%" || (!fUnit && /life|remain/i.test(cfg.filter_life_entity));
+      if (f !== null && (fPct || fWorn)) {
+        filterPct = Math.max(0, Math.min(100, fWorn ? 100 - f : f));
         extraLines.push({
           key: "filter",
           icon: "mdi:air-filter",
@@ -8242,6 +8337,8 @@ class ApplianceCard extends HTMLElement {
           value: `${Math.round(filterPct)} %`,
           warn: filterPct <= 15,
         });
+      } else if (f !== null) {
+        extraLines.push({ key: "filter", icon: "mdi:air-filter", label: t(hass, "filter"), value: keepTogether(`${Math.round(f)}${fUnit ? ` ${fUnit}` : ""}`) });
       }
     }
 
@@ -8318,7 +8415,9 @@ class ApplianceCard extends HTMLElement {
       }
       if (cfg.child_lock_entity) {
         const clst = stateObj(hass, cfg.child_lock_entity);
-        childLock = !!clst && ["on", "true", "locked"].includes(String(clst.state).toLowerCase());
+        // A lock sensor is on while unlocked (hOn).
+        const clRaw = clst ? String(clst.state).toLowerCase() : "";
+        childLock = !!clst && (domainOf(cfg.child_lock_entity) === "binary_sensor" && (clst.attributes || {}).device_class === "lock" ? clRaw === "off" : ["on", "true", "locked"].includes(clRaw));
         if (childLock) {
           extraLines.push({ key: "child_lock", icon: "mdi:lock", label: t(hass, "child_lock"), value: "" });
         }
@@ -8359,7 +8458,7 @@ class ApplianceCard extends HTMLElement {
       if (cfg.freezer_door_entity) {
         const fdst = stateObj(hass, cfg.freezer_door_entity);
         if (fdst) {
-          freezerDoorOpen = fdst.state === (cfg.door_open_state || "on");
+          freezerDoorOpen = doorStateOpen(fdst.state, cfg);
           if (cfg.door_invert) freezerDoorOpen = !freezerDoorOpen;
         }
       }

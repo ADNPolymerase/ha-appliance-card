@@ -490,7 +490,11 @@ function robotModeOf(hass, cfg, st, layout) {
   if (atRest && cfg.robot_bin_entity && robotRaised(hass, cfg.robot_bin_entity, /full|plein|voll/)) mode = "full";
   if (atRest && cfg.robot_water_entity) {
     const w = numericEntity(hass, cfg.robot_water_entity);
-    const low = w ? Number(w.state) <= 5 : robotRaised(hass, cfg.robot_water_entity, /empty|low|short|lack|vide/);
+    // Roborock and Xiaomi say the box is attached: on is all is well.
+    const wst = stateObj(hass, cfg.robot_water_entity);
+    const attached = !!wst && ["connectivity", "plug", "presence"].includes((wst.attributes || {}).device_class);
+    const low = attached ? String(wst.state).toLowerCase() === "off"
+      : w ? Number(w.state) <= 5 : robotRaised(hass, cfg.robot_water_entity, /empty|low|short|lack|vide/);
     if (low) mode = "empty";
   }
   return mode;
@@ -686,6 +690,7 @@ function batteryLayoutOf(cfg, st) {
 
 // What the battery does: its level, the power going in or out, its word for
 // an error, and whether it has reached the top it is allowed.
+const BATTERY_NEGATIVE_CHARGE = ["powerwall", "fronius", "sonnenbatterie"];
 function batteryReadOf(hass, cfg, st) {
   const levelId = cfg.battery_entity || (numericEntity(hass, cfg.state_entity) ? cfg.state_entity : "");
   const level = levelId ? numericState(hass, levelId) : null;
@@ -699,7 +704,12 @@ function batteryReadOf(hass, cfg, st) {
   } else if (cfg.power_entity) {
     const p = wattsOf(hass, cfg.power_entity);
     if (p !== null) {
-      net = cfg.power_inverted ? -p : p;
+      // Home Assistant's own convention, negative while charging, is what
+      // Powerwall, Fronius and Sonnen report; power_inverted false overrides it.
+      const reg = hass.entities && hass.entities[cfg.power_entity];
+      // Fronius's own power_battery_charge says which way it means.
+      const inverted = cfg.power_inverted !== undefined ? cfg.power_inverted : !!reg && BATTERY_NEGATIVE_CHARGE.includes(reg.platform) && !/charge|_in$|_out$/i.test(cfg.power_entity);
+      net = inverted ? -p : p;
       powerId = cfg.power_entity;
     }
   }

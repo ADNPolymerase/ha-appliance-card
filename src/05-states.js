@@ -150,12 +150,37 @@ const HOMEWHIZ_STATES = {
   device_state_time_delay_active: "delayed",
 };
 
+// The states a keyword cannot tell, as the integrations spell them: Miele, LG
+// ThinQ, SmartThings, Whirlpool and Home Connect. "_" is a letter to a keyword,
+// so power_off and program_ended would read nothing, and running_end "run".
+function doorStateOpen(state, cfg) {
+  if (cfg.door_open_state) return state === cfg.door_open_state;
+  // Home Connect's door is an enum sensor: open, closed, locked.
+  return ["on", "open", "opened", "true"].includes(String(state).trim().toLowerCase());
+}
+const INTEGRATION_STATES = {
+  // Miele
+  in_use: "running", autocleaning: "running", program_ended: "done", failure: "error", program_interrupted: "error",
+  waiting_to_start: "delayed", programmed: "idle", rinse_hold: "paused", not_connected: "unknown",
+  // LG ThinQ
+  power_off: "idle", initial: "idle", initializing: "idle", sleep: "idle", reserved: "delayed", running_end: "done", end_cooling: "running",
+  cook: "running", cooking_in_progress: "running", cook_complete: "done", preheat_complete: "running", preheating_is_done: "running",
+  // SmartThings
+  stop: "idle", fast_preheat: "preheating", time_hold_preheat: "preheating", stone_heating: "preheating", searing: "running", defrosting: "running",
+  // Whirlpool
+  hard_stop_or_error: "error", exception: "error", power_failure: "error", cancelled: "idle", setting: "idle", system_initialize: "idle",
+  // Home Connect
+  actionrequired: "paused",
+};
+
 function normalizeState(raw, stateMap) {
   if (raw === undefined || raw === null) return "unknown";
   const s = String(raw).trim();
   if (["unknown", "unavailable", "none", ""].includes(s.toLowerCase())) return "unknown";
   if (stateMap && Object.prototype.hasOwnProperty.call(stateMap, s)) return mappedState(stateMap[s]);
   if (Object.prototype.hasOwnProperty.call(HOMEWHIZ_STATES, s)) return HOMEWHIZ_STATES[s];
+  const exact = s.toLowerCase();
+  if (Object.prototype.hasOwnProperty.call(INTEGRATION_STATES, exact)) return INTEGRATION_STATES[exact];
   const flat = stripAccents(s);
   for (const norm of Object.keys(STATE_KEYWORD_PATTERNS)) {
     if (STATE_KEYWORD_PATTERNS[norm].some((re) => re.test(flat))) return norm;
@@ -1103,14 +1128,17 @@ function siblingEntityIds(hass, entityId) {
 const AUTO_PATTERNS = {
   program_entity: /program/i,
   remaining_time_entity: /time.?to.?end|remaining|finish.?in/i,
-  door_entity: /door/i,
+  // A door lock (hOn, Electrolux) is not the door.
+  door_entity: /^(?!.*(lock|alarm|assistant)).*door/i,
   alerts_entity: /alert/i,
   connectivity_entity: /connectiv/i,
   // A start delay is set, not pressed: HomeWhiz writes its own on a number.
-  start_entity: /^(?!.*delay).*start/i,
+  // Nor is a restart a start, or a relative start time (Home Connect).
+  start_entity: /^(?!.*(delay|restart|start.?in|start.?time)).*start/i,
   pause_entity: /pause/i,
   resume_entity: /resume/i,
-  stop_entity: /stop|reset/i,
+  // Resetting a filter or a counter stops nothing.
+  stop_entity: /^(?!.*(filter|descal|counter|statistic|maintenance|hours|usage)).*(stop|reset)/i,
   power_entity: /_power$|power_w$|watt/i,
   energy_entity: /^(?!.*(cost|price|tarif|prix)).*(energy|kwh)/i,
 };

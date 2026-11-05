@@ -12969,5 +12969,120 @@ function tvT(w) { return { 'switch.tv': { state: 'on', attributes: {} }, 'sensor
   check('editeur deshumidificateur : pas ces champs', ['mist_level_entity', 'tank_lifted_entity'].some((f) => ed({ appliance_type: 'dehumidifier', state_entity: 'humidifier.a' }).includes(`data-toggle="${f}"`)), false);
 }
 
+// Compatibility pass, states that read wrong or dangerously (lot 1).
+{
+  const s = (state, attributes = {}) => ({ state: String(state), attributes });
+  const cls = (h) => machineCls(h);
+  const W = (v, attrs = {}) => stateLine(render({ appliance_type: 'washer', state_entity: 'sensor.w' }, { 'sensor.w': s(v, attrs) }));
+  // Miele, LG, SmartThings, Whirlpool, Home Connect.
+  check('miele : in_use tourne', W('in_use'), 'Running');
+  check('miele : program_ended est fini', W('program_ended'), 'Finished');
+  check('miele : failure en erreur', W('failure'), W('error'));
+  check('miele : on sans programme, au repos', W('on', { options: ['off', 'on', 'in_use', 'program_ended'] }), W('idle'));
+  check('un on generique reste en marche', W('on'), 'Running');
+  check('lg : power_off au repos', W('power_off'), W('idle'));
+  check('lg : running_end est fini', W('running_end'), 'Finished');
+  check('smartthings : stop au repos', W('stop'), W('idle'));
+  check('whirlpool : hard_stop_or_error en erreur', W('hard_stop_or_error'), W('error'));
+  check('state_map reste le plus fort', stateLine(render({ appliance_type: 'washer', state_entity: 'sensor.w', state_map: { stop: 'running' } }, { 'sensor.w': s('stop') })), 'Running');
+  // A door enum, a lock sensor.
+  const D = (d, extra = {}) => render({ appliance_type: 'washer', state_entity: 'sensor.w', door_entity: 'sensor.d', ...extra }, { 'sensor.w': s('idle'), 'sensor.d': s(d) });
+  const doorText = (h) => /door-open|Door open/.test(h);
+  check('home connect : porte open', doorText(D('open')), true);
+  check('home connect : porte locked', doorText(D('locked')), false);
+  check('door_open_state reste le plus fort', doorText(D('open', { door_open_state: 'ajar' })), false);
+  // Water box attached, on is all is well.
+  const R = (wb, dc) => render({ appliance_type: 'robot', state_entity: 'vacuum.r', robot_water_entity: 'binary_sensor.wb' }, { 'vacuum.r': s('docked'), 'binary_sensor.wb': s(wb, dc ? { device_class: dc } : {}) });
+  check('roborock : boite en place, pas vide', /rbt-m-empty/.test(cls(R('on', 'connectivity'))), false);
+  check('roborock : boite retiree', /rbt-m-empty/.test(cls(R('off', 'connectivity'))), true);
+  check('sans classe, on reste un manque', /rbt-m-empty/.test(cls(R('empty'))), true);
+  // A gas detector.
+  const G = (v) => stateLine(render({ appliance_type: 'detector', state_entity: 'sensor.gas', detector_layout: 'co' }, { 'sensor.gas': s(v) }));
+  check('shelly gas : none tout va bien', G('none'), 'All clear');
+  check('shelly gas : heavy en alarme', G('heavy') === 'All clear', false);
+  check('shelly gas : mild en alarme', G('mild') === 'All clear', false);
+  check('shelly gas : test', G('test'), 'All clear');
+  check('no_alarm n est pas une alarme', G('no_alarm'), 'All clear');
+  check('not_detected non plus', G('not_detected'), 'All clear');
+  // UPS words.
+  const U = (v) => render({ appliance_type: 'ups', state_entity: 'sensor.u' }, { 'sensor.u': s(v) });
+  check('nut : Offline', stateLine(U('Offline')), stateLine(U('OFF')));
+  check('nut : Online, Low Battery', stateLine(U('Online, Low Battery')), stateLine(U('OL LB')));
+  check('nut : Online, Overloaded', stateLine(U('Online, Overloaded')), stateLine(U('OL OVER')));
+  check('nut : Online, Battery Needs Replacement', stateLine(U('Online, Battery Needs Replacement')), stateLine(U('OL RB')));
+  check('apcupsd : COMMLOST hors ligne', stateLine(U('COMMLOST')), stateLine(U('unavailable')));
+  check('apcupsd : SHUTTING DOWN', stateLine(U('SHUTTING DOWN')), stateLine(U('OFF')));
+  check('nut : Online simple reste sur secteur', stateLine(U('Online')), stateLine(U('OL')));
+  // Cameras.
+  const C = (cfg, states) => cls(render({ appliance_type: 'camera', state_entity: 'camera.c', ...cfg }, states));
+  check('nest : streaming n est pas en direct', /cam-m-live|mode-live/.test(C({}, { 'camera.c': s('streaming', { brand: 'Google Nest' }) })), false);
+  check('arlo : streaming reste en direct', /live/.test(C({}, { 'camera.c': s('streaming', { brand: 'Arlo' }) })), true);
+  check('aarlo : Offline, Too Cold hors ligne', /unav/.test(C({}, { 'camera.c': s('Offline, Too Cold') })), true);
+  check('reolink : record audio n enregistre pas', /rec\b/.test(C({ recording_entity: 'switch.c_record_audio' }, { 'camera.c': s('idle'), 'switch.c_record_audio': s('on') })), false);
+  // Ventilation.
+  const H = (cfg, states) => render({ appliance_type: 'hrv', state_entity: 'fan.v', ...cfg }, { 'fan.v': s('on'), ...states });
+  check('renson : un seuil en degres n est pas un bypass', /hv-m-bypass/.test(H({ bypass_entity: 'sensor.b' }, { 'sensor.b': s(22, { device_class: 'temperature', unit_of_measurement: '°C' }) })), false);
+  check('un bypass en % reste un bypass', /hv-m-bypass/.test(H({ bypass_entity: 'sensor.b' }, { 'sensor.b': s(60, { unit_of_measurement: '%' }) })), true);
+  check('vallox : bypass verrouille', /hv-m-bypass/.test(H({ bypass_entity: 'switch.bypass_locked' }, { 'switch.bypass_locked': s('on') })), false);
+  const far = new Date(now() + 40 * 86400000).toISOString();
+  const vallox = H({ filter_life_entity: 'sensor.f' }, { 'sensor.f': s(far, { device_class: 'timestamp' }) });
+  check('vallox : une date de filtre', /2027 %|20\d\d %/.test(vallox), false);
+  check('vallox : en jours', /40\s*d/.test(infoLine(vallox, 'Filter')), true);
+  const flexit = H({ filter_life_entity: 'sensor.f' }, { 'sensor.f': s(3120, { unit_of_measurement: 'h' }) });
+  check('flexit : des heures ne sont pas des %', infoLine(flexit, 'Filter').replace(/\s/g, ' '), '3120 h');
+  check('flexit : binaire accepte', /hv-/.test(H({ filter_life_entity: 'binary_sensor.f' }, { 'binary_sensor.f': s('on') })), true);
+  // Hood filter.
+  const HO = (id, v, attrs = {}) => render({ appliance_type: 'hood', state_entity: 'switch.h', filter_life_entity: id }, { 'switch.h': s('on'), [id]: s(v, attrs) });
+  check('smartthings : usure de 5 %, 95 % restants', infoLine(HO('sensor.hood_filter_usage', 5, { unit_of_measurement: '%' }), 'Filter').replace(/\s/g, ' '), '95 %');
+  check('electrolux : des heures restent des heures', infoLine(HO('sensor.h_timer', 3000, { unit_of_measurement: 'h' }), 'Filter').replace(/\s/g, ' '), '3000 h');
+  check('un % reste un %', infoLine(HO('sensor.h_filter_life', 40, { unit_of_measurement: '%' }), 'Filter').replace(/\s/g, ' '), '40 %');
+  // Spa, floor.
+  const SP = (st) => stateLine(render({ appliance_type: 'spa', state_entity: st.id }, { [st.id]: s(st.v, st.a || {}) }));
+  check('gecko : Idle', SP({ id: 'water_heater.s', v: 'Idle' }) === 'Heating', false);
+  check('gecko : Cooling', SP({ id: 'water_heater.s', v: 'Cooling' }) === 'Heating', false);
+  check('gecko : Heating', SP({ id: 'water_heater.s', v: 'Heating' }), 'Heating');
+  check('intex : consigne atteinte', SP({ id: 'climate.s', v: 'heat', a: { current_temperature: 38, temperature: 38 } }) === 'Heating', false);
+  check('intex : sous la consigne', SP({ id: 'climate.s', v: 'heat', a: { current_temperature: 30, temperature: 38 } }), 'Heating');
+  const FL = (a, v = 'heat') => stateLine(render({ appliance_type: 'floor_heating', state_entity: 'climate.f' }, { 'climate.f': s(v, a) }));
+  check('myvaillant : plancher qui rafraichit', FL({ hvac_action: 'cooling' }, 'cool'), 'Cooling');
+  check('plancher : chauffe', FL({ hvac_action: 'heating' }), 'Heating');
+  check('tuya : sans action, consigne atteinte', FL({ current_temperature: 25, temperature: 20 }) === 'Heating', false);
+  // Meter.
+  const M = (v, u, extra = {}) => render({ appliance_type: 'meter', state_entity: 'sensor.m', ...extra }, { 'sensor.m': s(v, { unit_of_measurement: u }) });
+  check('dsmr : 0,45 kW consomme', stateLine(M(0.45, 'kW')) === stateLine(M(0, 'W')), false);
+  check('dsmr : 3,5 kW fort', stateLine(M(3.5, 'kW')), stateLine(M(3500, 'W')));
+  check('dsmr : les decimales', />0.45 kW<\/text>/.test(M(0.45, 'kW')), true);
+  check('un index n est pas une puissance', stateLine(M(12345, 'kWh', { meter_layout: 'linky' })) === stateLine(M(5000, 'W')), false);
+  check('un index va aux tambours', /meter_box/.test(cls(M(12345, 'kWh'))), true);
+  // A battery's sign, by its integration.
+  const B = (p, plat, extra = {}) => { const c = new Card(); c.setConfig({ type: 'custom:ha-appliance-card', appliance_type: 'home_battery', state_entity: 'sensor.b', power_entity: 'sensor.p', ...extra }); c._hass = { ...HASS({ 'sensor.b': s(50, { unit_of_measurement: '%' }), 'sensor.p': s(p, { unit_of_measurement: 'W' }) }), entities: { 'sensor.p': { platform: plat } } }; c._render(); return stateLine(markup(c)); };
+  check('powerwall : +2000 W se decharge', B(2000, 'powerwall'), B(-2000, 'other'));
+  check('autre : +2000 W charge', B(2000, 'other'), B(-2000, 'powerwall'));
+  { const c = new Card(); c.setConfig({ type: 'custom:ha-appliance-card', appliance_type: 'home_battery', state_entity: 'sensor.b', power_entity: 'sensor.power_battery_charge' }); c._hass = { ...HASS({ 'sensor.b': s(50, { unit_of_measurement: '%' }), 'sensor.power_battery_charge': s(2000, { unit_of_measurement: 'W' }) }), entities: { 'sensor.power_battery_charge': { platform: 'fronius' } } }; c._render(); check('fronius : power_battery_charge charge bien', stateLine(markup(c)), B(2000, 'other')); }
+  check('power_inverted false garde le dernier mot', B(2000, 'powerwall', { power_inverted: false }), B(2000, 'other'));
+  // Miele's plates.
+  const Z = (v) => render({ appliance_type: 'cooktop', state_entity: 'sensor.st', zones: [{ level_entity: 'sensor.z' }] }, { 'sensor.st': s('on'), 'sensor.z': s(v) });
+  check('miele : plate_step_0 eteinte', Z('plate_step_0') === Z('off'), true);
+  check('miele : plate_step_9 allumee', Z('plate_step_9') === Z('off'), false);
+  // VeSync's fryer.
+  const F = (v) => stateLine(render({ appliance_type: 'air_fryer', state_entity: 'sensor.f' }, { 'sensor.f': s(v) }));
+  check('vesync : preheat_stop', F('preheat_stop'), F('standby'));
+  check('vesync : cooking_end', F('cooking_end'), F('finish'));
+  check('vesync : pull_out', F('pull_out'), F('pullout'));
+
+  // Suggested on the device: no restart, no cancel, no lock for a door.
+  const sug = (cfg, ids) => { const e = new Editor(); e.setConfig({ type: 'custom:ha-appliance-card', ...cfg }); const all = [cfg.state_entity, ...ids]; e.hass = { ...HASS(Object.fromEntries(all.map((id) => [id, s('1')]))), entities: Object.fromEntries(all.map((id) => [id, { device_id: 'd' }])) }; return e.events.at(-1)?.detail?.config || {}; };
+  check('octoprint : restart n est pas start', sug({ appliance_type: 'printer_3d', state_entity: 'sensor.o' }, ['button.o_restart_octoprint']).start_entity, undefined);
+  check('moonraker : le vrai demarrage', sug({ appliance_type: 'printer_3d', state_entity: 'sensor.v' }, ['button.v_server_restart', 'button.v_start_print']).start_entity, 'button.v_start_print');
+  check('petkit : annuler n est pas distribuer', sug({ appliance_type: 'pet_feeder', state_entity: 'sensor.y' }, ['button.y_cancel_manual_feed', 'button.y_manual_feed']).start_entity, 'button.y_manual_feed');
+  check('hon : le verrou n est pas la porte', sug({ appliance_type: 'washer', state_entity: 'sensor.w' }, ['binary_sensor.w_door_lock', 'binary_sensor.w_door']).door_entity, 'binary_sensor.w_door');
+  check('reinitialiser un filtre n arrete rien', sug({ appliance_type: 'washer', state_entity: 'sensor.w' }, ['button.w_reset_filter']).stop_entity, undefined);
+  check('reolink : pas de switch d enregistrement', sug({ appliance_type: 'camera', state_entity: 'camera.a' }, ['switch.a_record_audio']).recording_entity, undefined);
+  check('roborock : boite attachee ignoree', sug({ appliance_type: 'robot', state_entity: 'vacuum.r' }, ['binary_sensor.r_water_box_attached', 'binary_sensor.r_water_shortage']).robot_water_entity, 'binary_sensor.r_water_shortage');
+  check('renson : le seuil ignore', sug({ appliance_type: 'hrv', state_entity: 'fan.v' }, ['sensor.v_bypass_activation_temperature', 'sensor.v_bypass_level']).bypass_entity, 'sensor.v_bypass_level');
+  check('huawei : un capteur signe n est pas une decharge', sug({ appliance_type: 'home_battery', state_entity: 'sensor.b' }, ['sensor.b_charge_discharge_power']).discharge_power_entity, undefined);
+  check('linky : le tarif en cours', sug({ appliance_type: 'meter', state_entity: 'sensor.linky_sinsts' }, ['sensor.linky_tarif_option', 'sensor.linky_ptec']).tariff_entity, 'sensor.linky_ptec');
+}
+
 if (RECORD) writeFileSync(process.env.HAC_RECORD, JSON.stringify(RECORD));
 report();

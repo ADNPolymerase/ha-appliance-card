@@ -182,14 +182,29 @@ function hrvReadOf(hass, cfg, st, norm, powerDerived) {
   const braw = bst ? stripAccents(String(bst.state)).toLowerCase() : "";
   const bnum = bst ? parseFloat(bst.state) : NaN;
   const defrost = /defrost|degivr|abtau|frost/.test(braw) || /defrost|degivr|abtau/.test(raw);
-  const bypass = !defrost && (["on", "true", "open", "opened", "bypass", "active"].includes(braw) || /bypass|cool.?recovery/.test(braw) || (isFinite(bnum) && bnum > 0));
+  // A temperature (Renson's activation point) or a lock (Vallox) is no bypass.
+  const bUnit = String((bst && bst.attributes && bst.attributes.unit_of_measurement) || "");
+  const bNotOne = !!bst && ((bst.attributes || {}).device_class === "temperature" || /\u00b0/.test(bUnit) || /lock/i.test(cfg.bypass_entity));
+  const bypass = !defrost && !bNotOne && (["on", "true", "open", "opened", "bypass", "active"].includes(braw) || /bypass|cool.?recovery/.test(braw) || (isFinite(bnum) && bnum > 0));
   // The filter: days or percent left, or a sensor that says it is due.
   let filterDue = false, filterText = "", filterValue = null, filterDays = false;
   const fst = cfg.filter_life_entity ? stateObj(hass, cfg.filter_life_entity) : null;
   if (fst) {
     const fv = parseFloat(fst.state);
     const unit = String((fst.attributes || {}).unit_of_measurement || "").toLowerCase();
-    if (isFinite(fv)) {
+    const fAt = (fst.attributes || {}).device_class === "timestamp" || /^\d{4}-\d{2}-\d{2}/.test(String(fst.state)) ? Date.parse(fst.state) : NaN;
+    if (isFinite(fAt)) {
+      // Vallox gives the date its filter is due.
+      const left = Math.ceil((fAt - Date.now()) / 86400000);
+      const due = parseFloat(cfg.filter_due_below);
+      filterDue = left <= (isFinite(due) ? due : 7);
+      filterText = `${left} d`;
+      filterValue = left;
+      filterDays = true;
+    } else if (isFinite(fv) && unit && unit !== "%" && !/^(d|day|days|jours?|tage?|dias?|giorni)$/.test(unit)) {
+      // Hours run (Flexit) say nothing of what is left.
+      filterText = `${Math.round(fv)} ${unit}`;
+    } else if (isFinite(fv)) {
       const days = /^(d|day|days|jours?|tage?|dias?|giorni)$/.test(unit);
       const due = parseFloat(cfg.filter_due_below);
       filterDue = fv <= (isFinite(due) ? due : days ? 7 : 10);
@@ -434,12 +449,13 @@ function cameraReadOf(hass, cfg, st) {
   const conn = cfg.connectivity_entity ? stateObj(hass, cfg.connectivity_entity) : null;
   const gone = !!conn && ["off", "false", "disconnected", "offline", "unavailable"].includes(String(conn.state).toLowerCase());
   let mode;
-  if (!st || ["unavailable", "unknown", "none", ""].includes(raw) || gone) mode = "unav";
+  if (!st || ["unavailable", "unknown", "none", ""].includes(raw) || /^offline/.test(raw) || gone) mode = "unav";
   else if (raw === "off" || a.monitoring === false || camOn(hass, cfg.privacy_entity)) mode = "off";
   else if (camRinging(hass, cfg.ring_entity)) mode = "ring";
-  else if (raw === "recording" || camOn(hass, cfg.recording_entity)) mode = "rec";
+  else if (raw === "recording" || (camOn(hass, cfg.recording_entity) && !/record.?audio/i.test(cfg.recording_entity))) mode = "rec";
   else if (raw === "motion" || camOn(hass, cfg.motion_entity)) mode = "motion";
-  else if (raw === "streaming") mode = "live";
+  // Nest and Netatmo always say streaming: nobody is watching for all that.
+  else if (raw === "streaming" && !/netatmo|google nest/i.test(String(a.brand || ""))) mode = "live";
   else mode = "idle";
   return { mode, night: mode !== "off" && mode !== "unav" && camOn(hass, cfg.night_entity) };
 }

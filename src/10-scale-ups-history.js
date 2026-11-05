@@ -27,15 +27,19 @@ function upsStatusOf(hass, cfg, st) {
   const raw = st ? String(st.state).trim() : "";
   const text = stripAccents(raw.toLowerCase());
   const codes = new Set(raw.toUpperCase().split(/[\s,]+/).filter((c) => UPS_CODES.includes(c)));
+  // NUT's Status sensor spells its flags out, apcupsd writes them in one word.
+  if (/low.?batt/.test(text)) codes.add("LB");
+  if (/replac/.test(text)) codes.add("RB");
+  if (/overload/.test(text)) codes.add("OVER");
   let mode;
-  if (st && ["unavailable", "unknown", ""].includes(text)) mode = "unav";
+  if (st && (["unavailable", "unknown", ""].includes(text) || /comm.?lost|no.?comm/.test(text))) mode = "unav";
   else if (codes.has("OFF")) mode = "off";
   else if (codes.has("OB") || codes.has("DISCHRG")) mode = "battery";
   else if (codes.has("BYPASS")) mode = "bypass";
   else if (codes.has("OL")) mode = "online";
   else if (st) {
     if (/on.?batt|sur.?batt|batteriebetrieb|discharg|decharg/.test(text)) mode = "battery";
-    else if (/^(off|arret|shutdown)$/.test(text)) mode = "off";
+    else if (/^(off|arret|shutdown)$|^offline|forced.?shutdown|shutting/.test(text)) mode = "off";
     else mode = "online";
   } else {
     // No status at all: the voltage at the wall says whether the mains is there.
@@ -436,14 +440,21 @@ function zoneState(hass, zone) {
     const raw = String(st.state).trim();
     const low = raw.toLowerCase();
     if (!["unknown", "unavailable", "none", "", "off", "false"].includes(low)) {
-      const num = parseFloat(raw);
+      // Miele's power steps: plate_step_0 is off, the others go up to 18.
+      const step = /^plate_step_(\d+)$/.exec(low);
+      const num = step ? Number(step[1]) : parseFloat(raw);
+      const top = step ? 18 : 9;
       if (!isNaN(num)) {
         if (num > 0) {
           out.on = true;
           out.label = String(Math.round(num));
-          out.intensity = Math.max(0, Math.min(1, num / 9));
-          out.max = num >= 9;
+          out.intensity = Math.max(0, Math.min(1, num / top));
+          out.max = num >= top;
         }
+      } else if (low === "plate_step_warming") {
+        out.on = true;
+        out.intensity = 0.25;
+        out.label = "W";
       } else {
         const isMax = /boost|power|turbo|max/.test(low) || low === "p";
         out.on = true;

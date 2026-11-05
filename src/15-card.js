@@ -739,6 +739,8 @@ class ApplianceCard extends HTMLElement {
     const applianceType = detectApplianceType(cfg, st);
     const cap = caps(applianceType);
     let norm = normFor(applianceType, rawState, cfg.state_map);
+    // Miele's on is a machine switched on with no programme; its enum says so.
+    if (String(rawState).trim().toLowerCase() === "on" && st && Array.isArray(st.attributes.options) && st.attributes.options.includes("in_use") && !(cfg.state_map && "on" in cfg.state_map)) norm = "idle";
 
     // HomeWhiz says a finished cycle in its message rather than in its state:
     // the washer goes back to "on" and asks for the laundry back, the dryer and
@@ -947,7 +949,7 @@ class ApplianceCard extends HTMLElement {
     if (cfg.door_entity) {
       const dst = stateObj(hass, cfg.door_entity);
       if (dst) {
-        doorOpen = dst.state === (cfg.door_open_state || "on");
+        doorOpen = doorStateOpen(dst.state, cfg);
         if (cfg.door_invert) doorOpen = !doorOpen;
       }
     }
@@ -1127,8 +1129,13 @@ class ApplianceCard extends HTMLElement {
     }
     if (cap.filter && cfg.filter_life_entity) {
       const f = numericState(hass, cfg.filter_life_entity);
-      if (f !== null) {
-        filterPct = Math.max(0, Math.min(100, f));
+      // Worn out rather than left (SmartThings' usage), or hours and counts
+      // that are no percentage at all (Electrolux, hOn): shown as they come.
+      const fUnit = unitOf(hass, cfg.filter_life_entity) || "";
+      const fWorn = /usage|used/i.test(cfg.filter_life_entity);
+      const fPct = fUnit === "%" || (!fUnit && /life|remain/i.test(cfg.filter_life_entity));
+      if (f !== null && (fPct || fWorn)) {
+        filterPct = Math.max(0, Math.min(100, fWorn ? 100 - f : f));
         extraLines.push({
           key: "filter",
           icon: "mdi:air-filter",
@@ -1136,6 +1143,8 @@ class ApplianceCard extends HTMLElement {
           value: `${Math.round(filterPct)} %`,
           warn: filterPct <= 15,
         });
+      } else if (f !== null) {
+        extraLines.push({ key: "filter", icon: "mdi:air-filter", label: t(hass, "filter"), value: keepTogether(`${Math.round(f)}${fUnit ? ` ${fUnit}` : ""}`) });
       }
     }
 
@@ -1212,7 +1221,9 @@ class ApplianceCard extends HTMLElement {
       }
       if (cfg.child_lock_entity) {
         const clst = stateObj(hass, cfg.child_lock_entity);
-        childLock = !!clst && ["on", "true", "locked"].includes(String(clst.state).toLowerCase());
+        // A lock sensor is on while unlocked (hOn).
+        const clRaw = clst ? String(clst.state).toLowerCase() : "";
+        childLock = !!clst && (domainOf(cfg.child_lock_entity) === "binary_sensor" && (clst.attributes || {}).device_class === "lock" ? clRaw === "off" : ["on", "true", "locked"].includes(clRaw));
         if (childLock) {
           extraLines.push({ key: "child_lock", icon: "mdi:lock", label: t(hass, "child_lock"), value: "" });
         }
@@ -1253,7 +1264,7 @@ class ApplianceCard extends HTMLElement {
       if (cfg.freezer_door_entity) {
         const fdst = stateObj(hass, cfg.freezer_door_entity);
         if (fdst) {
-          freezerDoorOpen = fdst.state === (cfg.door_open_state || "on");
+          freezerDoorOpen = doorStateOpen(fdst.state, cfg);
           if (cfg.door_invert) freezerDoorOpen = !freezerDoorOpen;
         }
       }
