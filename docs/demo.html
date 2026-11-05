@@ -1513,6 +1513,18 @@ const fwsCard = (name, flow, more, extra) => () => card({ name, appliance_type: 
 const heatFws = fwsCard(L("Fresh water station", "Station d'eau fra\u00eeche"), 0);
 const heatFwsDraw = fwsCard(L("Fresh water, tap open", "Eau chaude, robinet ouvert"), 8.5);
 const heatFwsCirc = fwsCard(L("Fresh water, circulation", "Eau chaude, bouclage"), 0, { circulation_entity: "binary_sensor.fws_circ" }, [st("binary_sensor.fws_circ", "on")]);
+// A heating circulator (#88): its power on the display, its speed turning
+// the impeller, its brand in the colour of its head.
+const circCard = (name, model, w, rpm, more, extra) => () => card({ name, appliance_type: "water_pump", pump_layout: "circulator", circulator_model: model,
+  state_entity: "switch.circ", power_entity: "sensor.circ_w", speed_entity: "sensor.circ_rpm", max_speed: 4500, head_entity: "sensor.circ_head",
+  flow_entity: "sensor.circ_flow", control_mode_entity: "select.circ_mode", fault_entity: "binary_sensor.circ_fault", ...(more || {}) },
+  [st("switch.circ", "on"), st("sensor.circ_w", w, { unit_of_measurement: "W" }), st("sensor.circ_rpm", rpm, { unit_of_measurement: "rpm" }),
+   st("sensor.circ_head", rpm === "unavailable" ? "unavailable" : 1.8, { unit_of_measurement: "m" }), st("sensor.circ_flow", rpm === "unavailable" ? "unavailable" : 0.62, { unit_of_measurement: "m\u00b3/h" }),
+   st("select.circ_mode", "AUTOADAPT"), st("binary_sensor.circ_fault", "off")].concat(extra || []));
+const heatCirc = circCard(L("Heating circulator", "Circulateur"), "grundfos", 12, 2300);
+const heatCircWilo = circCard(L("Circulator, full speed", "Circulateur, pleine vitesse"), "wilo", 38, 4300);
+const heatCircFault = circCard(L("Circulator, fault", "Circulateur en d\u00e9faut"), "dab", 0, 0, null, [st("binary_sensor.circ_fault", "on")]);
+const heatCircNoData = circCard(L("Circulator, no data", "Circulateur, pas de donn\u00e9es"), "generic", "unavailable", "unavailable");
 const sthCard = (name, pump, col, more, extra) => () => card({ name, appliance_type: "solar_thermal", state_entity: "binary_sensor.sth_pump", collector_temperature_entity: "sensor.sth_col", tank_temperature_entity: "sensor.sth_tank", ...(more || {}) },
   [st("binary_sensor.sth_pump", pump), tmpSt("sensor.sth_col", col), tmpSt("sensor.sth_tank", 46)].concat(extra || []));
 const heatSth = sthCard(L("Solar thermal", "Solaire thermique"), "on", 68);
@@ -1592,7 +1604,7 @@ const EXTRA = { iron, coffee_black: coffeeBlack, boiler_window: boilerWindow, bo
                 irr_sprinkler: irrSprinkler, irr_rain: irrRain, irr_tap: irrTap, irr_tap_off: irrTapOff, irr_sonoff: irrSonoff, irr_sonoff_pipe: irrSonoffPipe, irr_drip: irrDrip, irr_flowers: irrFlowers,
                 lit_globe: litGlobe, lit_globe_clean: litGlobeClean, lit_globe_cat: litGlobeCat, lit_box: litBox, lit_box_clean: litBoxClean, lit_box_full: litBoxFull,
                 det_smoke: detSmoke, det_smoke_alarm: detSmokeAlarm, det_co: detCo, det_co_alarm: detCoAlarm, det_leak: detLeak, det_leak_alarm: detLeakAlarm,
-                spk_smart: spkSmart, spk_mini: spkMini, spk_one: spkOne, spk_shelf: spkShelf, spk_move: spkMove, spk_bar: spkBar, spk_dot: spkDot, spk_nest: spkNest, spk_era100: spkEra100, spk_era300: spkEra300, spk_wave: spkWave, spk_bose500: spkBose500, spk_flex: spkFlex, spk_bosebar: spkBoseBar, heat_tank: heatTank, heat_tank_loading: heatTankLoading, heat_tank_low: heatTankLow, heat_fws: heatFws, heat_fws_draw: heatFwsDraw, heat_fws_circ: heatFwsCirc, heat_sth: heatSth, heat_sth_tubes: heatSthTubes, heat_sth_frost: heatSthFrost, heat_sth_stag: heatSthStag, heat_wood: heatWood, heat_wood_embers: heatWoodEmbers, heat_wood_cold: heatWoodCold, heat_wood_water: heatWoodWater, con_ps1: conPs1, con_ps2: conPs2, con_ps3: conPs3, con_ps4: conPs4, con_ps4pro: conPs4Pro, con_ps5: conPs5, con_xbox: conXbox, con_x360: conX360, con_xone: conXone, con_xsx: conXsx, con_xss: conXss, con_switch: conSwitch, con_switch2: conSwitch2, con_lite: conLite, con_vita: conVita, con_nes: conNes, con_snes: conSnes, con_n64: conN64, con_cube: conCube, con_wii: conWii, con_md: conMd,
+                spk_smart: spkSmart, spk_mini: spkMini, spk_one: spkOne, spk_shelf: spkShelf, spk_move: spkMove, spk_bar: spkBar, spk_dot: spkDot, spk_nest: spkNest, spk_era100: spkEra100, spk_era300: spkEra300, spk_wave: spkWave, spk_bose500: spkBose500, spk_flex: spkFlex, spk_bosebar: spkBoseBar, heat_tank: heatTank, heat_tank_loading: heatTankLoading, heat_tank_low: heatTankLow, heat_fws: heatFws, heat_fws_draw: heatFwsDraw, heat_fws_circ: heatFwsCirc, heat_circ: heatCirc, heat_circ_wilo: heatCircWilo, heat_circ_fault: heatCircFault, heat_circ_nodata: heatCircNoData, heat_sth: heatSth, heat_sth_tubes: heatSthTubes, heat_sth_frost: heatSthFrost, heat_sth_stag: heatSthStag, heat_wood: heatWood, heat_wood_embers: heatWoodEmbers, heat_wood_cold: heatWoodCold, heat_wood_water: heatWoodWater, con_ps1: conPs1, con_ps2: conPs2, con_ps3: conPs3, con_ps4: conPs4, con_ps4pro: conPs4Pro, con_ps5: conPs5, con_xbox: conXbox, con_x360: conX360, con_xone: conXone, con_xsx: conXsx, con_xss: conXss, con_switch: conSwitch, con_switch2: conSwitch2, con_lite: conLite, con_vita: conVita, con_nes: conNes, con_snes: conSnes, con_n64: conN64, con_cube: conCube, con_wii: conWii, con_md: conMd,
                 mob_scooter: demo_mobScooter, mob_offroad: demo_mobOffroad, mob_ebike: demo_mobEbike, mob_gyropode: demo_mobGyropode, mob_motorcycle: demo_mobMotorcycle, mob_unplugged: demo_mobUnplugged, mob_poster: demo_mobPoster,
                 net_sw8: netSw(8, 6), net_sw16: netSw(16, 11), net_sw24: netSw(24, 20), net_sw32: netSw(32, 27),
                 net_nas1: netBays(1, ["normal"], L("NAS, 1 bay", "NAS 1 baie")),
@@ -1644,7 +1656,7 @@ function liveGallery() {
     [L("Robots and vacuums", "Robots et aspirateurs"), [rbtVacuum, rbtEmptying, rbtBox, rbtBoxGold, rbtMop, rbtDrying, rbtMower, rbtNavimow, rbtRain, rbtStick, rbtWasher]],
     [L("Electric rides", "Mobilit\u00e9 \u00e9lectrique"), [demo_mobScooter, demo_mobOffroad, demo_mobEbike, demo_mobGyropode, demo_mobMotorcycle, demo_mobUnplugged]],
     [L("Pool", "Piscine"), [poolRunning, poolChlorine, poolBackwash, poolFrost, poolLight, poolError]],
-    [L("Buffer tanks, solar thermal and wood stoves", "Ballons, solaire thermique et po\u00eales \u00e0 bois"), [heatTank, heatTankLoading, heatTankLow, heatFws, heatFwsDraw, heatFwsCirc, heatSth, heatSthTubes, heatSthFrost, heatSthStag, heatWood, heatWoodEmbers, heatWoodCold, heatWoodWater]],
+    [L("Buffer tanks, circulators, solar thermal and wood stoves", "Ballons, circulateurs, solaire thermique et po\u00eales \u00e0 bois"), [heatTank, heatTankLoading, heatTankLow, heatFws, heatFwsDraw, heatFwsCirc, heatCirc, heatCircWilo, heatCircFault, heatCircNoData, heatSth, heatSthTubes, heatSthFrost, heatSthStag, heatWood, heatWoodEmbers, heatWoodCold, heatWoodWater]],
     [L("Energy", "Énergie"), [solarDay, solarRoof, solarNight, batteryCharging, batteryStation, batteryLow, evCharger, evDischarging]],
     [L("Network and servers", "Réseau et serveurs"), [netSwitch, netRouter("on"), netNas, netServer, netRack, upsOnline, upsBattery, upsLow]],
     [L("Screens and tablets", "Écrans et tablettes"), [scrTv, scrProjector, scrComputer, scrLaptop, tabWall, tabFrame, tabPortrait]],

@@ -209,9 +209,9 @@ Click a family to see its appliances at work.
 </details>
 
 <details>
-<summary><b>Buffer tanks, solar thermal and wood stoves</b></summary>
+<summary><b>Buffer tanks, circulators, solar thermal and wood stoves</b></summary>
 
-<img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-heat_storage.gif" alt="Buffer tanks, solar thermal and wood stoves">
+<img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-heat_storage.gif" alt="Buffer tanks, circulators, solar thermal and wood stoves">
 
 </details>
 
@@ -246,7 +246,7 @@ Only `state_entity` is required, except on a fridge where a probe or a door cont
 | `name` | Card title. Defaults to the name of the state entity's device ("Eaton3S550" rather than "Eaton3S550 Status code"), or to the entity's own name when it has no device; without one (a fridge, a pet feeder or an EV charger read from their other entities), the type's name. |
 | `compact` | `true` hides the illustration. `side` draws it small (72 px) on the left, with the name and the state beside it, and the lines under them the width of the card. In both, the buttons and the corner switches move up onto the name's line, so the card has no row of buttons of its own. |
 | `compact_lines` / `compact_lines_open` | With `compact: side`, where the information lines go: `below` (default, under the row the width of the card), `beside` (beside the drawing under the name, on two columns, the label shown on hover) or `toggle` (hidden, a chevron beside the name shows them beside the drawing and hides them again). The chevron's choice is kept by each browser for that card; `compact_lines_open: true` starts it open. |
-| `illustration_size` | The drawing's size, from `0.3` to `1.2` times its own (default `1`), in every mode. The text keeps its size. A slider in the editor. |
+| `illustration_size` | The drawing's size, from `0.3` to `1.6` times its own (default `1`), in every mode. The text keeps its size. A slider in the editor. |
 | `font_scale` | The text's size, from `0.7` to `1.4` times its own (default `1`). The drawing keeps its size. A slider in the editor. |
 | `show_name` / `show_state` | `false` hides the name, or the state line. Both shown by default. |
 | `transparent` | `true` removes the card's background, border and shadow, for a card laid on a wall tablet's background. |
@@ -662,9 +662,9 @@ wood_blades: true
 
 </details>
 
-### Buffer tanks, solar thermal and wood stoves
+### Buffer tanks, circulators, solar thermal and wood stoves
 
-A buffer tank (`storage_tank`) fills with the colour of its layers, blue when cold and red when hot, one marker per probe at its height, its charge above it. The sources on its left (heat pump, boiler, solar, stove) and the consumers on its right (heating circuits, fresh water station) are piped in red for the flow and blue for the return, and the water moves in them while they run. A fresh water station (`fresh_water_station`) heats hot water on demand from the tank: the flow big on its screen while a tap is open, its pump turning. Solar thermal collectors (`solar_thermal`), flat plates or evacuated tubes, send their heat down to the solar station and its pump; frost covers them below 0 °C, stagnation makes them shimmer. A log stove (`wood_stove`) burns, glows or stays cold by its temperature, with a dial on its flue and, with a water jacket, its flow and return and its pump.
+A buffer tank (`storage_tank`) fills with the colour of its layers, blue when cold and red when hot, one marker per probe at its height, its charge above it. The sources on its left (heat pump, boiler, solar, stove) and the consumers on its right (heating circuits, fresh water station) are piped in red for the flow and blue for the return, and the water moves in them while they run. A fresh water station (`fresh_water_station`) heats hot water on demand from the tank: the flow big on its screen while a tap is open, its pump turning. A heating circulator (`water_pump` with `pump_layout: circulator`, a Grundfos ALPHA, a Wilo Stratos and the like) sits on its flow pipe in the colour of its brand, its power on the display and its impeller turning at the speed it reports; a fault or a lost link (*No data*) shows on its display. Solar thermal collectors (`solar_thermal`), flat plates or evacuated tubes, send their heat down to the solar station and its pump; frost covers them below 0 °C, stagnation makes them shimmer. A log stove (`wood_stove`) burns, glows or stays cold by its temperature, with a dial on its flue and, with a water jacket, its flow and return and its pump.
 
 <details>
 <summary><b>Options</b></summary>
@@ -681,7 +681,13 @@ A buffer tank (`storage_tank`) fills with the colour of its layers, blue when co
 | `primary_temperature_entity` / `cold_water_temperature_entity` | fresh water station | The tank's supply and the cold water. A supply under the setpoint plus `supply_margin` (5 by default, in K or °F) is *Supply too cold*. |
 | `pump_entity` / `pump_modulation_entity` | fresh water station, solar thermal | The primary pump (it running is a draw) and its modulation in %. On solar thermal, a modulation under 60 % turns the pump slowly. |
 | `circulation_entity` / `circulation_mode_entity` | fresh water station | The circulation pump, *Circulating* while it runs, and its mode or schedule as a line. |
-| `fault_entity` | fresh water station, solar thermal | A problem sensor: *Fault* while on. |
+| `fault_entity` | fresh water station, solar thermal, circulator | A problem sensor: *Fault* while on. On a circulator the display reads E, its ring flashes red and the impeller stops. |
+| `circulator_model` | circulator | `grundfos` (red) \| `wilo` (green) \| `dab` (blue) \| `generic` (grey), the colour of its head. Left out, it is read from the name: Grundfos, ALPHA or MAGNA, Wilo, Stratos or Yonos, DAB or Evosta. |
+| `power_entity` | circulator | Its power, large on its display. It runs from 2 W, unless `power_on_threshold` says otherwise. |
+| `speed_entity` / `max_speed` | circulator | Its speed in rpm, out of `max_speed` (4500 by default): the impeller and the LED ring turn faster with it. Also a line. |
+| `head_entity` / `flow_entity` / `voltage_entity` | circulator | Its head, its flow and its supply voltage, as lines. A head on its own makes a water pump a circulator. |
+| `control_mode_entity` | circulator | Its control mode (AUTOADAPT, proportional or constant pressure, a speed), under the display and as a line. |
+| `state_entity` | circulator | Switched on while every value it reports is gone means the link to it is down (Bluetooth, Modbus): *No data*, dashes on the display, rather than *Off*. |
 | `state_entity` | solar thermal | The solar pump: *Loading* while it runs. |
 | `collector_style` | solar thermal | `flat` (default) \| `tubes`. Left out, *tube* or *vacuum* in the name draws tubes. |
 | `collector_temperature_entity` / `tank_temperature_entity` | solar thermal | The collector, on the station's screen, and the tank; their difference as a line. A collector at or below 0 °C is *Frost*. |
@@ -695,6 +701,21 @@ A buffer tank (`storage_tank`) fills with the colour of its layers, blue when co
 | `flow_temperature_entity` / `return_temperature_entity` | wood stove | The water circuit, and its difference. Above `overheat_temp` (90 by default) the stove is *Overheating*. |
 | `pump_entity` / `valve_entity` | wood stove | The circuit pump, worth a glance when stopped with the water hot, and the mixing valve, its position in %. |
 | `temperature_entity` / `last_fire_entity` | wood stove | The room, and the last fire from a timestamp. |
+
+```yaml
+type: custom:ha-appliance-card
+appliance_type: water_pump
+pump_layout: circulator
+circulator_model: grundfos
+state_entity: switch.heating_pump
+power_entity: sensor.alpha_power
+speed_entity: sensor.alpha_speed
+max_speed: 4500
+head_entity: sensor.alpha_head
+flow_entity: sensor.alpha_flow
+control_mode_entity: select.alpha_control_mode
+fault_entity: binary_sensor.alpha_fault
+```
 
 ```yaml
 type: custom:ha-appliance-card
@@ -745,7 +766,7 @@ valve_entity: cover.stove_mixer
 | `backwash_entity` / `frost_entity` | pool pump | A backwash sends the dirty water to the drain, the pool stays still; frost protection frosts the pipes. A state that says backwash or frost does the same. |
 | `pool_alert_entity` | pool pump | Anything that should raise the *Error*: the pump smokes and the gauge's needle swings. |
 | `light_entity` | pool pump | The pool's light: it shines on the far wall, and the light switch sits in the corner of the card. |
-| `pump_layout` | water_pump | `booster` (a pump on its pressure tank, with its controller) \| `sump` (a sump pit in cross-section, its float on its cable). Left out, a `level_entity`, a `high_level_entity` or a name that says sump makes a sump pump. On a smart plug left on with its `power_entity`, the pump pumps above `power_on_threshold`, waits below it, and reads *Switched off* once the plug is cut, in red on a sump pump. Without a power meter, the switch is the pump's own and off is only waiting. |
+| `pump_layout` | water_pump | `booster` (a pump on its pressure tank, with its controller) \| `sump` (a sump pit in cross-section, its float on its cable) \| `circulator` (a heating circulator, see *Buffer tanks, circulators, solar thermal and wood stoves*). Left out, a `level_entity`, a `high_level_entity` or a name that says sump makes a sump pump. On a smart plug left on with its `power_entity`, the pump pumps above `power_on_threshold`, waits below it, and reads *Switched off* once the plug is cut, in red on a sump pump. Without a power meter, the switch is the pump's own and off is only waiting. |
 | `pressure_entity` | water_pump (booster) | The pressure, on the controller's display and as a line. Without it, the display shows the plug's power. |
 | `level_entity` / `level_max` | water_pump (sump) | The water level, on the display, as a line and as the height of the water in the pit: a percentage, or a value out of `level_max`. From 90 % it reads *High level*. |
 | `high_level_entity` | water_pump (sump) | A float switch or a high-level alarm: *High level*, the pit full and a beacon flashing. |

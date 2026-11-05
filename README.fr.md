@@ -209,9 +209,9 @@ Clique sur une famille pour voir ses appareils en marche.
 </details>
 
 <details>
-<summary><b>Ballons tampons, solaire thermique et poêles à bois</b></summary>
+<summary><b>Ballons tampons, circulateurs, solaire thermique et poêles à bois</b></summary>
 
-<img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-heat_storage.fr.gif" alt="Ballons tampons, solaire thermique et poêles à bois">
+<img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-heat_storage.fr.gif" alt="Ballons tampons, circulateurs, solaire thermique et poêles à bois">
 
 </details>
 
@@ -246,7 +246,7 @@ Seule `state_entity` est obligatoire, sauf sur un réfrigérateur où une sonde 
 | `name` | Titre de la card. Par défaut, le nom de l'appareil de l'entité d'état (« Eaton3S550 » plutôt que « Eaton3S550 Code d'état »), ou celui de l'entité quand elle n'a pas d'appareil ; sans elle (un frigo, un distributeur ou une borne lus par leurs autres entités), le nom du type. |
 | `compact` | `true` masque l'illustration. `side` la dessine en petit (72 px) à gauche, avec le nom et l'état à côté, et les lignes dessous sur toute la largeur. Dans les deux cas, les boutons et les interrupteurs de coin remontent sur la ligne du nom : la carte n'a plus de rangée de boutons à elle. |
 | `compact_lines` / `compact_lines_open` | Avec `compact: side`, où vont les lignes d'informations : `below` (défaut, sous la ligne, sur toute la largeur), `beside` (à côté du dessin sous le nom, sur deux colonnes, le libellé au survol) ou `toggle` (masquées, un chevron à côté du nom les affiche à côté du dessin et les masque à nouveau). Le choix du chevron est retenu par chaque navigateur pour cette carte ; `compact_lines_open: true` le fait partir ouvert. |
-| `illustration_size` | Taille du dessin, de `0.3` à `1.2` fois la sienne (`1` par défaut), dans tous les modes. Le texte garde sa taille. Un curseur dans l'éditeur. |
+| `illustration_size` | Taille du dessin, de `0.3` à `1.6` fois la sienne (`1` par défaut), dans tous les modes. Le texte garde sa taille. Un curseur dans l'éditeur. |
 | `font_scale` | Taille du texte, de `0.7` à `1.4` fois la sienne (`1` par défaut). Le dessin garde sa taille. Un curseur dans l'éditeur. |
 | `show_name` / `show_state` | `false` masque le nom, ou la ligne d'état. Les deux sont affichés par défaut. |
 | `transparent` | `true` retire le fond, la bordure et l'ombre de la carte, pour une carte posée sur le fond d'une tablette murale. |
@@ -662,9 +662,9 @@ wood_blades: true
 
 </details>
 
-### Ballons tampons, solaire thermique et poêles à bois
+### Ballons tampons, circulateurs, solaire thermique et poêles à bois
 
-Un ballon tampon (`storage_tank`) prend la couleur de ses couches, bleu à froid et rouge à chaud, avec une pastille par sonde à sa hauteur et sa charge au-dessus. Les sources à sa gauche (pompe à chaleur, chaudière, solaire, poêle) et les consommateurs à sa droite (circuits de chauffage, station d'eau fraîche) sont raccordés en rouge pour le départ et en bleu pour le retour, et l'eau y circule quand ils tournent. Une station d'eau fraîche (`fresh_water_station`) produit l'eau chaude à la demande à partir du ballon : le débit en grand sur son écran quand un robinet est ouvert, sa pompe qui tourne. Des capteurs solaires thermiques (`solar_thermal`), plans ou à tubes sous vide, envoient leur chaleur à la station solaire et à sa pompe ; le givre les couvre sous 0 °C, la stagnation les fait onduler. Un poêle à bois (`wood_stove`) brûle, rougeoie ou reste froid selon sa température, avec un cadran sur son conduit et, avec un bouilleur, son départ, son retour et sa pompe.
+Un ballon tampon (`storage_tank`) prend la couleur de ses couches, bleu à froid et rouge à chaud, avec une pastille par sonde à sa hauteur et sa charge au-dessus. Les sources à sa gauche (pompe à chaleur, chaudière, solaire, poêle) et les consommateurs à sa droite (circuits de chauffage, station d'eau fraîche) sont raccordés en rouge pour le départ et en bleu pour le retour, et l'eau y circule quand ils tournent. Une station d'eau fraîche (`fresh_water_station`) produit l'eau chaude à la demande à partir du ballon : le débit en grand sur son écran quand un robinet est ouvert, sa pompe qui tourne. Un circulateur de chauffage (`water_pump` avec `pump_layout: circulator`, un Grundfos ALPHA, un Wilo Stratos…) est posé sur son tuyau de départ aux couleurs de sa marque, sa puissance sur l'écran et sa roue qui tourne à la vitesse qu'il remonte ; un défaut ou une liaison perdue (*Pas de données*) s'affichent sur son écran. Des capteurs solaires thermiques (`solar_thermal`), plans ou à tubes sous vide, envoient leur chaleur à la station solaire et à sa pompe ; le givre les couvre sous 0 °C, la stagnation les fait onduler. Un poêle à bois (`wood_stove`) brûle, rougeoie ou reste froid selon sa température, avec un cadran sur son conduit et, avec un bouilleur, son départ, son retour et sa pompe.
 
 <details>
 <summary><b>Options</b></summary>
@@ -681,7 +681,13 @@ Un ballon tampon (`storage_tank`) prend la couleur de ses couches, bleu à froid
 | `primary_temperature_entity` / `cold_water_temperature_entity` | station d'eau fraîche | Le départ du ballon et l'eau froide. Un départ sous la consigne plus `supply_margin` (5 par défaut, en K ou °F), c'est *Départ trop froid*. |
 | `pump_entity` / `pump_modulation_entity` | station d'eau fraîche, solaire thermique | La pompe primaire (en marche, c'est un puisage) et sa modulation en %. Sur le solaire thermique, une modulation sous 60 % fait tourner la pompe lentement. |
 | `circulation_entity` / `circulation_mode_entity` | station d'eau fraîche | La pompe de bouclage, *Bouclage* quand elle tourne, et son mode ou programme en ligne. |
-| `fault_entity` | station d'eau fraîche, solaire thermique | Un capteur de problème : *En défaut* quand il est actif. |
+| `fault_entity` | station d'eau fraîche, solaire thermique, circulateur | Un capteur de problème : *En défaut* quand il est actif. Sur un circulateur, l'écran affiche E, son anneau clignote en rouge et la roue s'arrête. |
+| `circulator_model` | circulateur | `grundfos` (rouge) \| `wilo` (vert) \| `dab` (bleu) \| `generic` (gris), la couleur de sa tête. Sans réglage, il est lu dans le nom : Grundfos, ALPHA ou MAGNA, Wilo, Stratos ou Yonos, DAB ou Evosta. |
+| `power_entity` | circulateur | Sa puissance, en grand sur son écran. Il est en marche à partir de 2 W, sauf `power_on_threshold`. |
+| `speed_entity` / `max_speed` | circulateur | Sa vitesse en tr/min, rapportée à `max_speed` (4500 par défaut) : la roue et l'anneau de LED tournent d'autant plus vite. Aussi en ligne. |
+| `head_entity` / `flow_entity` / `voltage_entity` | circulateur | Sa hauteur manométrique, son débit et sa tension, en lignes. Une hauteur suffit à faire d'une pompe à eau un circulateur. |
+| `control_mode_entity` | circulateur | Son mode de régulation (AUTOADAPT, pression proportionnelle ou constante, une vitesse), sous l'écran et en ligne. |
+| `state_entity` | circulateur | Allumé alors que toutes ses valeurs ont disparu, c'est la liaison qui est coupée (Bluetooth, Modbus) : *Pas de données*, des tirets sur l'écran, plutôt qu'*Éteint*. |
 | `state_entity` | solaire thermique | La pompe solaire : *En charge* quand elle tourne. |
 | `collector_style` | solaire thermique | `flat` (défaut) \| `tubes`. Sans lui, *tube* ou *vacuum* dans le nom dessine des tubes. |
 | `collector_temperature_entity` / `tank_temperature_entity` | solaire thermique | Les capteurs, sur l'écran de la station, et le ballon ; leur écart en ligne. Des capteurs à 0 °C ou moins, c'est *Gel*. |
@@ -695,6 +701,21 @@ Un ballon tampon (`storage_tank`) prend la couleur de ses couches, bleu à froid
 | `flow_temperature_entity` / `return_temperature_entity` | poêle à bois | Le circuit d'eau, et son écart. Au-dessus de `overheat_temp` (90 par défaut), le poêle est en *Surchauffe*. |
 | `pump_entity` / `valve_entity` | poêle à bois | La pompe du circuit, signalée quand elle est arrêtée avec l'eau chaude, et la vanne mélangeuse, sa position en %. |
 | `temperature_entity` / `last_fire_entity` | poêle à bois | La pièce, et le dernier feu à partir d'un horodatage. |
+
+```yaml
+type: custom:ha-appliance-card
+appliance_type: water_pump
+pump_layout: circulator
+circulator_model: grundfos
+state_entity: switch.pompe_chauffage
+power_entity: sensor.alpha_power
+speed_entity: sensor.alpha_speed
+max_speed: 4500
+head_entity: sensor.alpha_head
+flow_entity: sensor.alpha_flow
+control_mode_entity: select.alpha_control_mode
+fault_entity: binary_sensor.alpha_fault
+```
 
 ```yaml
 type: custom:ha-appliance-card
@@ -745,7 +766,7 @@ valve_entity: cover.vanne_poele
 | `backwash_entity` / `frost_entity` | piscine | Un contre-lavage envoie l'eau sale à l'égout, le bassin ne bouge pas ; le hors-gel givre les tuyaux. Un état qui dit contre-lavage ou hors-gel fait de même. |
 | `pool_alert_entity` | piscine | Tout ce qui doit déclencher l'*Erreur* : la pompe fume et l'aiguille du manomètre s'affole. |
 | `light_entity` | piscine | Le projecteur du bassin : il éclaire la paroi du fond, et son interrupteur se met dans le coin de la carte. |
-| `pump_layout` | pompe à eau | `booster` (surpresseur sur son ballon, avec son contrôleur) \| `sump` (regard de relevage en coupe, son flotteur sur son câble). Sans réglage, un `level_entity`, un `high_level_entity` ou un nom qui dit relevage en fait une pompe de relevage. Sur une prise connectée laissée allumée avec son `power_entity`, elle pompe au-dessus de `power_on_threshold`, attend en dessous, et affiche *Éteinte* dès que la prise est coupée, en rouge sur une pompe de relevage. Sans mesure de puissance, le switch est celui de la pompe et coupé veut seulement dire qu'elle attend. |
+| `pump_layout` | pompe à eau | `booster` (surpresseur sur son ballon, avec son contrôleur) \| `sump` (regard de relevage en coupe, son flotteur sur son câble) \| `circulator` (circulateur de chauffage, voir *Ballons tampons, circulateurs, solaire thermique et poêles à bois*). Sans réglage, un `level_entity`, un `high_level_entity` ou un nom qui dit relevage en fait une pompe de relevage. Sur une prise connectée laissée allumée avec son `power_entity`, elle pompe au-dessus de `power_on_threshold`, attend en dessous, et affiche *Éteinte* dès que la prise est coupée, en rouge sur une pompe de relevage. Sans mesure de puissance, le switch est celui de la pompe et coupé veut seulement dire qu'elle attend. |
 | `pressure_entity` | pompe à eau (surpresseur) | La pression, sur l'écran du contrôleur et en ligne. Sans elle, l'écran affiche la puissance de la prise. |
 | `level_entity` / `level_max` | pompe à eau (relevage) | Le niveau d'eau, sur l'écran, en ligne et comme hauteur d'eau dans le regard : un pourcentage, ou une valeur sur `level_max`. À partir de 90 %, *Niveau haut*. |
 | `high_level_entity` | pompe à eau (relevage) | Un flotteur ou une alarme de niveau haut : *Niveau haut*, le regard plein et un gyrophare qui clignote. |

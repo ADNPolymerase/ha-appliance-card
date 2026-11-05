@@ -2134,7 +2134,48 @@ ${htDial(56, 19, 8.6, c.flue, c.max || 400, c.low || 100)}
 ${txt ? ntLcd(4, 40, 20, 11, txt, true, burning ? "#ffb74d" : embers ? "#ff8a65" : "#90a4ae", ntFit(txt, 20, 7.4)) : ""}`;
 }
 
-const NT_DRAW = { irr_sprinkler: ntIrrSprinkler, irr_tap: ntIrrTap, irr_drip: ntIrrDrip, irr_flowers: ntIrrFlowers, lit_globe: ntLitterGlobe, lit_box: ntLitterBox, det_smoke: ntDetSmoke, det_co: ntDetCo, det_leak: ntDetLeak, spk_smart: ntSpkSmart, spk_homepod_mini: ntSpkMini, spk_sonos_one: ntSpkOne, spk_bookshelf: ntSpkShelf, spk_sonos_move: ntSpkMove, spk_soundbar: ntSpkBar, spk_echo_dot: ntSpkDot, spk_nest_mini: ntSpkNest, spk_sonos_era100: ntSpkEra100, spk_sonos_era300: ntSpkEra300, spk_bose_wave: ntSpkWave, spk_bose_500: ntSpkBose500, spk_bose_soundlink: ntSpkFlex, spk_bose_soundbar: ntSpkBoseBar, con_ps1: conPs1, con_ps2: conPs2, con_ps3: conPs3, con_ps4: (c) => conPs4(c, false), con_ps4_pro: (c) => conPs4(c, true), con_ps5: conPs5, con_xbox: conXbox, con_xbox_360: conX360, con_xbox_one: conXone, con_xbox_series_x: conXsx, con_xbox_series_s: conXss, con_switch: (c) => conSwitch(c, false), con_switch_2: (c) => conSwitch(c, true), con_switch_lite: conSwitchLite, con_ps_vita: conVita, con_nes: conNes, con_snes: conSnes, con_n64: conN64, con_gamecube: conGamecube, con_wii: conWii, con_megadrive: conMegadrive, tank: ntTank, fws: ntFresh, solth: ntSolarThermal, wood: ntWoodStove, mob_scooter: mobScooter, mob_offroad: mobOffroad, mob_ebike: mobEbike, mob_gyropode: mobGyropode, mob_motorcycle: mobMotorcycle, meter_box: ntMeterBox, meter_dome: ntMeterDome, meter_gas: ntGas, meter_water: ntWater, booster: ntBooster, sump: ntSump, pool: ntPoolRobot, floor: ntFloor, spa: ntSpa, sauna: ntSauna, aquarium: ntAquarium, linky: ntLinky, tree: ntTree };
+// A wet-rotor circulator (#88), seen from the front: its round motor head in
+// the maker's colour with the display and the LED ring, its cast body
+// between two brass unions on the flow pipe, the return running behind.
+const CIRC_COLORS = { grundfos: ["#e2363d", "#9d1a20"], wilo: ["#2fb36a", "#147a40"], dab: ["#3b6fd1", "#1d438f"], generic: ["#d6dbe0", "#8e98a3"] };
+function ntCirculator(c) {
+  const hd = ntId(), bd = ntId(), fc = ntId(), win = ntId();
+  const [ca, cb] = CIRC_COLORS[c.model] || CIRC_COLORS.generic;
+  const on = c.on && !c.fault && !c.nodata;
+  const sp = Math.max(0.15, Math.min(1, c.speed === undefined || c.speed === null ? .6 : c.speed));
+  const dur = (2.6 - 2.1 * sp).toFixed(2);
+  const ringCol = c.fault ? "#ff3b30" : on ? "#4cff7a" : "#59626e";
+  const seg = Array.from({ length: 12 }, (_, i) => {
+    const a = (i * 30 - 90) * Math.PI / 180, a2 = a + 0.36;
+    const r = 19.5, x1 = 60 + r * Math.cos(a), y1 = 55 + r * Math.sin(a), x2 = 60 + r * Math.cos(a2), y2 = 55 + r * Math.sin(a2);
+    const op = on ? (0.25 + 0.75 * (i / 11)).toFixed(2) : c.fault ? "1" : ".55";
+    return `<path d="M${x1.toFixed(1)} ${y1.toFixed(1)} A${r} ${r} 0 0 1 ${x2.toFixed(1)} ${y2.toFixed(1)}" stroke="${ringCol}" stroke-opacity="${op}" stroke-width="2.4" stroke-linecap="round" fill="none"/>`;
+  }).join("");
+  const blades = [0, 60, 120, 180, 240, 300].map((d) => `<path d="M60 92 q3 -2.2 6.4 -1 q-3 1.2 -6.4 1z" transform="rotate(${d} 60 92)" fill="#c7ccd2"/>`).join("");
+  const txt = c.nodata ? "- - -" : c.fault ? "E" : c.lcd || "";
+  return `<defs>${ntV(hd, ca, cb)}${ntV(bd, "#4a525c", "#1f2429")}<radialGradient id="${fc}" cx=".4" cy=".35" r=".8"><stop offset="0" stop-color="#2a3038"/><stop offset="1" stop-color="#0b0e12"/></radialGradient><radialGradient id="${win}" cx=".5" cy=".5" r=".6"><stop offset="0" stop-color="#5e6a76"/><stop offset="1" stop-color="#1b2026"/></radialGradient></defs><g transform="translate(0 -8)">
+${htPipe([[-4, 118], [124, 118]], HT_COLD, 5.5)}${on ? htFlow("M124 118 H-4") : ""}
+${htPipe([[-4, 92], [30, 92]], HT_HOT, 8)}${htPipe([[90, 92], [124, 92]], HT_HOT, 8)}${on ? htFlow("M-4 92 H30") + htFlow("M90 92 H124") : ""}
+<path d="M23 83 h9 l1.5 2 v14 l-1.5 2 h-9 l-1.5 -2 v-14z M88 83 h9 l1.5 2 v14 l-1.5 2 h-9 l-1.5 -2 v-14z" fill="#c9a227" stroke="#7a5f0e" stroke-width=".5"/>
+<path d="M25.5 83v18M29.5 83v18M90.5 83v18M94.5 83v18" stroke="#9a7020" stroke-width=".5"/>
+<path d="M33 84 Q33 80 37 80 H83 Q87 80 87 84 V100 Q87 105 82 105 H38 Q33 105 33 100 Z" fill="url(#${bd})"/>
+<rect x="36" y="81.5" width="48" height="2.2" rx="1.1" fill="#fff" opacity=".18"/>
+<circle cx="60" cy="92" r="8.6" fill="#11151a"/><circle cx="60" cy="92" r="7.4" fill="url(#${win})"/>
+<g class="${on ? "nta-spin" : ""}" style="animation-duration:${dur}s">${blades}<circle cx="60" cy="92" r="1.6" fill="#8b949e"/></g>
+<circle cx="60" cy="92" r="7.4" fill="none" stroke="#fff" stroke-opacity=".18" stroke-width=".8"/>
+<rect x="31" y="22" width="58" height="60" rx="16" fill="#000" opacity=".18" transform="translate(1.5 2)"/>
+<rect x="31" y="22" width="58" height="60" rx="16" fill="url(#${hd})"/>
+<rect x="35" y="25" width="50" height="5" rx="2.5" fill="#fff" opacity=".22"/>
+<circle cx="60" cy="55" r="23" fill="#000" opacity=".15"/>
+<circle cx="60" cy="55" r="22" fill="url(#${fc})" stroke="#000" stroke-opacity=".35"/>
+<g class="${on ? "nta-spin" : c.fault ? "nta-blinkfast" : ""}" style="${on ? `animation-duration:${(dur * 2.2).toFixed(2)}s` : ""}">${seg}</g>
+${ntLcd(45, 49, 30, 12, txt, on || c.fault, c.fault ? "#ff8a80" : "#7fe3ff", ntFit(txt, 30, 9))}
+${c.mode ? `<text x="60" y="70" font-size="5.5" text-anchor="middle" fill="#9fb3c8" ${NT_FONT}>${esc(c.mode)}</text>` : ""}
+<circle cx="60" cy="76.5" r="2.4" fill="#000" opacity=".35"/><circle cx="60" cy="76" r="2" fill="${cb}"/>
+${c.nodata ? `<g transform="translate(78 26)"><circle r="6" fill="#607d8b"/><path d="M-2.6 -3 l5.2 6 M2.6 -3 l-5.2 6" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/></g>` : ""}
+${c.fault ? `<g transform="translate(80 26)" class="nta-blinkfast"><path d="M0 -6.5 L6.5 5 H-6.5 Z" fill="#ff3b30" stroke="#fff" stroke-width=".8"/><text y="3.6" font-size="7" font-weight="700" text-anchor="middle" fill="#fff" ${NT_FONT}>!</text></g>` : ""}</g>`;
+}
+const NT_DRAW = { circulator: ntCirculator, irr_sprinkler: ntIrrSprinkler, irr_tap: ntIrrTap, irr_drip: ntIrrDrip, irr_flowers: ntIrrFlowers, lit_globe: ntLitterGlobe, lit_box: ntLitterBox, det_smoke: ntDetSmoke, det_co: ntDetCo, det_leak: ntDetLeak, spk_smart: ntSpkSmart, spk_homepod_mini: ntSpkMini, spk_sonos_one: ntSpkOne, spk_bookshelf: ntSpkShelf, spk_sonos_move: ntSpkMove, spk_soundbar: ntSpkBar, spk_echo_dot: ntSpkDot, spk_nest_mini: ntSpkNest, spk_sonos_era100: ntSpkEra100, spk_sonos_era300: ntSpkEra300, spk_bose_wave: ntSpkWave, spk_bose_500: ntSpkBose500, spk_bose_soundlink: ntSpkFlex, spk_bose_soundbar: ntSpkBoseBar, con_ps1: conPs1, con_ps2: conPs2, con_ps3: conPs3, con_ps4: (c) => conPs4(c, false), con_ps4_pro: (c) => conPs4(c, true), con_ps5: conPs5, con_xbox: conXbox, con_xbox_360: conX360, con_xbox_one: conXone, con_xbox_series_x: conXsx, con_xbox_series_s: conXss, con_switch: (c) => conSwitch(c, false), con_switch_2: (c) => conSwitch(c, true), con_switch_lite: conSwitchLite, con_ps_vita: conVita, con_nes: conNes, con_snes: conSnes, con_n64: conN64, con_gamecube: conGamecube, con_wii: conWii, con_megadrive: conMegadrive, tank: ntTank, fws: ntFresh, solth: ntSolarThermal, wood: ntWoodStove, mob_scooter: mobScooter, mob_offroad: mobOffroad, mob_ebike: mobEbike, mob_gyropode: mobGyropode, mob_motorcycle: mobMotorcycle, meter_box: ntMeterBox, meter_dome: ntMeterDome, meter_gas: ntGas, meter_water: ntWater, booster: ntBooster, sump: ntSump, pool: ntPoolRobot, floor: ntFloor, spa: ntSpa, sauna: ntSauna, aquarium: ntAquarium, linky: ntLinky, tree: ntTree };
 function ntSvg(d) {
   ntN = 0;
   const draw = NT_DRAW[d && d.kind] || ntLinky;

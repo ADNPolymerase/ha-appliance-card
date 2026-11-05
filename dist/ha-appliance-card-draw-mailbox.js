@@ -26,9 +26,12 @@ function mbLetters(n, x0, step, floor, newIdx, sx, sy) {
   }
   return out;
 }
-const mbBadge = (n) => {
+const mbBadge = (n, big) => {
   const txt = n === null || n === undefined ? "" : String(n);
   const w = txt ? (txt.length > 1 ? 30 : 25) : 17;
+  // On the box in three-quarter view, larger and in the free corner above
+  // its roof, so the count reads at card size (HACF).
+  if (big) return `<g transform="translate(${(118 - (4 + w) * 1.8).toFixed(1)} -16) scale(1.8)">${mbBadge(n)}</g>`;
   return `<g class="mb-badge"><rect x="4" y="6" width="${w}" height="12" rx="6" fill="#ffa000"/><rect x="8" y="9" width="9" height="6" rx="1" fill="#fff"/><path d="M8 9 l4.5 3 l4.5 -3" fill="none" stroke="#ffa000" stroke-width=".9"/>${txt ? `<text x="19.5" y="15.4" font-size="8" font-family="Arial, sans-serif" font-weight="700" fill="#fff">${txt}</text>` : ""}</g>`;
 };
 // More than twelve: some no longer fit, and end up on the ground.
@@ -105,10 +108,13 @@ ${letters}
 <linearGradient id="${id("day")}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff6d6"/><stop offset="1" stop-color="#e6dcb8"/></linearGradient>
 <linearGradient id="${id("iw")}" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#5a636c"/><stop offset="1" stop-color="#2c3238"/></linearGradient>
 <linearGradient id="${id("if")}" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#6c757e"/><stop offset="1" stop-color="#3b4249"/></linearGradient>
+<filter id="${id("sh")}" x="-20%" y="-80%" width="140%" height="260%"><feGaussianBlur stdDeviation="1.6"/></filter>
+<filter id="${id("sc")}" x="-10%" y="-200%" width="120%" height="500%"><feGaussianBlur stdDeviation=".7"/></filter>
 <clipPath id="${id("op")}"><rect x="${F.x0}" y="${F.y0}" width="${W}" height="${H}"/></clipPath>
 <clipPath id="${id("sl")}"><rect x="0" y="-10" width="120" height="${F.y0 + 10 + H * .08}"/></clipPath>
 </defs>
-<ellipse cx="${F.x0 + W / 2 + dx / 2}" cy="${F.y1 + 3 + dy / 2}" rx="${W / 2 + 20}" ry="5" fill="#000" opacity=".14"/>
+<path d="M${pp([F.x0 - 1.5, F.y1 + 1.6], [F.x1 + 2.5, F.y1 + 2.2], [F.x1 + dx + 4, F.y1 + dy + 1.6], [F.x0 + dx, F.y1 + dy])} Z" fill="#000" opacity=".5" filter="url(#${id("sh")})"/>
+<path d="M${pp([F.x0, F.y1 + .6], [F.x1, F.y1 + .6], [F.x1 + dx, F.y1 + dy + .6])}" fill="none" stroke="#000" stroke-opacity=".55" stroke-width="1.8" stroke-linejoin="round" filter="url(#${id("sc")})"/>
 <path d="M${pp(pt(W, 0, 0), pt(W, 0, 1), pt(W, H, 1), pt(W, H, 0))} Z" fill="url(#${id("sd")})" stroke="${ink}" stroke-width=".5"/>
 <path d="M${pp(pt(0, 0, 0), pt(0, 0, 1), pt(W, 0, 1), pt(W, 0, 0))} Z" fill="url(#${id("tp")})" stroke="${ink}" stroke-width=".5"/>
 <path d="M${pp(pt(W - .8, 1, 0), pt(W - .8, 1, 1))}" stroke="#fff" stroke-opacity="${sheen}" stroke-width=".5"/>
@@ -118,13 +124,12 @@ ${c.front ? inside : ""}
 ${c.front ? `<rect x="${F.x0 + .4}" y="${F.y0 + .4}" width="${W - .8}" height="${H - .8}" fill="none" stroke="${side}" stroke-width=".9"/>` : ""}
 ${frontDoor}
 <g clip-path="url(#${id("sl")})"><g class="mb-post"><g transform="translate(${F.x0 + W * .4} ${F.y0 - 6})"><rect x="0" y="0" width="14" height="10" rx=".6" fill="#fff" stroke="#c7ccd2" stroke-width=".4"/><path d="M0 0 L7 5 L14 0" fill="none" stroke="#c7ccd2" stroke-width=".45"/></g></g></g>
-${jam}
-<text x="${F.x0 + W / 2}" y="118" font-size="7" font-family="Arial, sans-serif" text-anchor="middle" class="mb-lbl">${esc(c.street || "")}</text>
-<text x="${F.x1 + dx - 2}" y="${F.y1 + dy + 14}" font-size="7" font-family="Arial, sans-serif" text-anchor="middle" class="mb-lbl">${esc(c.house || "")}</text>`;
+${jam}`;
 }
 const MB_SVGS = {
-  // Drawn a size up: the box alone leaves room around it.
-  through_3d: (c) => `<g transform="translate(-3 -10) scale(1.1)">${mbThrough3d(c)}</g>`,
+  // Drawn a size up and without the street and house words: the box
+  // explains itself, and fills the frame (HACF).
+  through_3d: (c) => `<g transform="translate(-13.4 -24.9) scale(1.25)">${mbThrough3d(c)}</g>`,
   // Through a pillar, seen from the side: the street door on the left, the
   // house door on the right. A door hinged on a vertical edge shows its face
   // as it opens.
@@ -184,7 +189,7 @@ function mailboxHtml(cls, c) {
   // A redraw while a letter is on its way resumes it where it was.
   const ago = c.arrive ? `--mb-ago:${(-c.arrive / 1000).toFixed(2)}s` : "";
   return `
-        <div class="machine ${cls} ${flags}" style="${ago}"><svg class="mb-svg" viewBox="0 -8 120 135">${MB_DEFS}${MB_SVGS[layout](c)}${c.present ? mbBadge(c.count) : ""}</svg></div>`;
+        <div class="machine ${cls} ${flags}" style="${ago}"><svg class="mb-svg" viewBox="0 -8 120 135">${MB_DEFS}${MB_SVGS[layout](c)}${c.present ? mbBadge(c.count, layout === "through_3d") : ""}</svg></div>`;
 }
 
 

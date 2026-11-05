@@ -763,7 +763,7 @@ const PRINTER_ONLY_FIELDS = [
 function illustrationSizeOf(v) {
   const n = parseFloat(v);
   if (!isFinite(n) || n <= 0) return 1;
-  return Math.round(Math.min(1.2, Math.max(0.3, n)) * 100) / 100;
+  return Math.round(Math.min(1.6, Math.max(0.3, n)) * 100) / 100;
 }
 
 // The text's size, 0.7 to 1.4 times its own, the drawing left as it is.

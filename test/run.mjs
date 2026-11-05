@@ -9200,7 +9200,7 @@ check('borne : ni un statut reconnu', evMode(evR('SuspendedEVSE', { power_entity
   contains('taille : 1 par defaut', render(W, ws), 'margin: 0 auto 8px; zoom: 1; }');
   contains('taille : 0.5', render({ ...W, illustration_size: 0.5 }, ws), 'margin: 0 auto 8px; zoom: 0.5; }');
   contains('taille : texte accepte', render({ ...W, illustration_size: '0.8' }, ws), 'margin: 0 auto 8px; zoom: 0.8; }');
-  contains('taille : bornee en haut', render({ ...W, illustration_size: 3 }, ws), 'zoom: 1.2; }');
+  contains('taille : bornee en haut', render({ ...W, illustration_size: 3 }, ws), 'zoom: 1.6; }');
   contains('taille : bornee en bas', render({ ...W, illustration_size: 0.1 }, ws), 'zoom: 0.3; }');
   contains('taille : invalide, 1', render({ ...W, illustration_size: 'x' }, ws), 'margin: 0 auto 8px; zoom: 1; }');
   contains('taille : de cote aussi', render({ ...W, compact: 'side', illustration_size: 0.8 }, ws), '.cmp-side .machine { zoom: 0.6; margin: 0; }');
@@ -9217,7 +9217,7 @@ check('borne : ni un statut reconnu', evMode(evR('SuspendedEVSE', { power_entity
   }
   const ed = newEditor({ state_entity: 'sensor.w', appliance_type: 'washer' });
   const em = markup(ed);
-  check('editeur : le curseur de taille', /type="range" data-field="illustration_size"[^>]*min="0.3" max="1.2"/.test(em), true);
+  check('editeur : le curseur de taille', /type="range" data-field="illustration_size"[^>]*min="0.3" max="1.6"/.test(em), true);
   check('editeur : curseur a 1 par defaut', /data-field="illustration_size"[^>]*value="1"/.test(em), true);
   check('editeur : la taille traduite', markup(newEditor({ state_entity: 'sensor.w', appliance_type: 'washer', language: 'fr' })).includes('Taille du dessin'), true);
 
@@ -11693,6 +11693,11 @@ check('borne : ni un statut reconnu', evMode(evR('SuspendedEVSE', { power_entity
   check('bal 3/4 : la lettre qui arrive', /class="mb-post"/.test(html(card(B3, S()))), true);
   check('bal 3/4 : anthracite par defaut, blanc au choix', [/stop-color="#5b6168"/.test(html(card(B3, S()))), /stop-color="#ffffff"/.test(html(card({ ...B3, mailbox_color: 'white' }, S())))].join(), 'true,true');
   check('bal 3/4 : bourrage au-dela de douze', /translate\([\d.]+ [\d.]+\) rotate\(-7\)/.test(html(card(B3, S({ on: true, n: 15 })))), true);
+  check('bal 3/4 : ni rue ni maison (HACF #145)', /class="mb-lbl"/.test(html(card(B3, S({ on: true, n: 2 })))), false);
+  check('bal de cote : rue et maison gardees', /class="mb-lbl"/.test(html(card(BAL, S({ on: true, n: 2 })))), true);
+  check('bal 3/4 : le compteur en grand', /scale\(1\.8\)"><g class="mb-badge">/.test(html(card(B3, S({ on: true, n: 2 })))), true);
+  check('bal de cote : le compteur a sa taille', /scale\(1\.8\)"><g class="mb-badge">/.test(html(card(BAL, S({ on: true, n: 2 })))), false);
+  check('bal 3/4 : une ombre floue au pied', /filter="url\(#mb3-sh\)"/.test(html(card(B3, S()))), true);
   check('editeur bal : la couleur en 3/4 seulement', [/data-field="mailbox_color"/.test(markup(newEditor(B3))), /data-field="mailbox_color"/.test(markup(newEditor(BAL)))].join(), 'true,false');
   check('editeur bal : le champ courrier present', /data-toggle="mail_present_entity"/.test(markup(newEditor(BAL))), true);
   check('editeur camera : le bouton de sonnette', /data-toggle="ring_entity"/.test(markup(newEditor({ appliance_type: 'camera', state_entity: 'camera.porte' }))), true);
@@ -12777,6 +12782,56 @@ function tvT(w) { return { 'switch.tv': { state: 'on', attributes: {} }, 'sensor
   const ed = (cfg) => markup(newEditor(cfg));
   check('editeur vmc en cave : etages et clapets', ['data-field="hrv_floors"', 'data-panel="zone_valves"'].every((f) => ed(BASE).includes(f)), true);
   check('editeur vmc simple flux : ni etages ni clapets', ['data-field="hrv_floors"', 'data-panel="zone_valves"'].some((f) => ed({ ...BASE, hrv_layout: 'single' }).includes(f)), false);
+}
+
+// A heating circulator (#88).
+{
+  const s = (state, attributes = {}) => ({ state: String(state), attributes });
+  const ntCls = (h) => machineCls(h);
+  const kind = (h) => (/\bnt-k-(\w+)/.exec(ntCls(h)) || [, null])[1];
+  const CI = { appliance_type: 'water_pump', pump_layout: 'circulator', name: 'Grundfos ALPHA', state_entity: 'switch.c', power_entity: 'sensor.cw',
+    speed_entity: 'sensor.rpm', max_speed: 4500, head_entity: 'sensor.head', flow_entity: 'sensor.flow', voltage_entity: 'sensor.v',
+    control_mode_entity: 'select.mode', fault_entity: 'binary_sensor.fault' };
+  const ciS = (o = {}) => ({ 'switch.c': s('on'), 'sensor.cw': s(12, { unit_of_measurement: 'W' }), 'sensor.rpm': s(2250, { unit_of_measurement: 'rpm' }),
+    'sensor.head': s(1.8, { unit_of_measurement: 'm' }), 'sensor.flow': s(0.6, { unit_of_measurement: 'm³/h' }), 'sensor.v': s(231, { unit_of_measurement: 'V' }),
+    'select.mode': s('AUTOADAPT'), 'binary_sensor.fault': s('off'), ...o });
+  const run = render(CI, ciS());
+  check('circulateur : son dessin', kind(run), 'circulator');
+  check('circulateur : en marche', stateLine(run), 'Running');
+  check('circulateur : la puissance sur l ecran', />12 W<\/text>/.test(run), true);
+  check('circulateur : la roue tourne', /class="nta-spin" style="animation-duration:1.55s"/.test(run), true);
+  check('circulateur : plus vite a pleine vitesse', /animation-duration:0.50s/.test(render(CI, ciS({ 'sensor.rpm': s(4500) }))), true);
+  check('circulateur : max_speed change la vitesse', /animation-duration:0.50s/.test(render({ ...CI, max_speed: 2250 }, ciS())), true);
+  check('circulateur : rouge Grundfos', /stop-color="#e2363d"/.test(run), true);
+  check('circulateur : vert Wilo au nom', /stop-color="#2fb36a"/.test(render({ ...CI, name: 'Wilo Stratos' }, ciS())), true);
+  check('circulateur : le modele choisi gagne', /stop-color="#3b6fd1"/.test(render({ ...CI, circulator_model: 'dab' }, ciS())), true);
+  check('circulateur : gris par defaut', /stop-color="#d6dbe0"/.test(render({ ...CI, name: 'Pompe' }, ciS())), true);
+  check('circulateur : les lignes', ['Speed', 'Head', 'Water flow', 'Voltage', 'Control mode'].map((l) => infoLine(run, l) ? 1 : 0).join(''), '11111');
+  check('circulateur : hauteur', infoLine(run, 'Head').replace(/ /g, ' '), '1.8 m');
+  check('circulateur : le mode sous l ecran', />AUTOADAPT<\/text>/.test(run), true);
+  check('circulateur : un mode long raccourci', />Proportiona…<\/text>/.test(render(CI, ciS({ 'select.mode': s('Proportional pressure') }))), true);
+  check('circulateur : le mode echappe', /<b>/.test(render(CI, ciS({ 'select.mode': s('<b>x') }))), false);
+  const fault = render(CI, ciS({ 'binary_sensor.fault': s('on') }));
+  check('circulateur : defaut', stateLine(fault), 'Fault');
+  check('circulateur : defaut, E et triangle', [/>E<\/text>/.test(fault), /nta-blinkfast/.test(fault), /class="nta-spin"/.test(fault)].join(), 'true,true,false');
+  check('circulateur : la ligne de defaut', !!infoLine(fault, 'Fault'), true);
+  const gone = { 'sensor.cw': s('unavailable'), 'sensor.rpm': s('unavailable'), 'sensor.head': s('unavailable'), 'sensor.flow': s('unavailable') };
+  const nodata = render(CI, ciS(gone));
+  check('circulateur : pas de donnees', stateLine(nodata), 'No data');
+  check('circulateur : pas de donnees, tirets et roue arretee', [/>- - -<\/text>/.test(nodata), /class="nta-spin"/.test(nodata)].join(), 'true,false');
+  check('circulateur : une seule valeur suffit a rester en marche', stateLine(render(CI, ciS({ ...gone, 'sensor.head': s(1.2) }))), 'Running');
+  check('circulateur : coupe, pas de donnees ne s applique pas', stateLine(render(CI, ciS({ ...gone, 'switch.c': s('off') }))), 'Off');
+  check('circulateur : eteint', stateLine(render(CI, ciS({ 'switch.c': s('off'), 'sensor.cw': s(0) }))), 'Off');
+  check('circulateur : allume sous le seuil, en veille', stateLine(render(CI, ciS({ 'sensor.cw': s(0.5) }))), 'Standby');
+  check('circulateur : hors ligne', stateLine(render({ appliance_type: 'water_pump', pump_layout: 'circulator', power_entity: 'sensor.cw' }, { 'sensor.cw': s('unavailable') })), 'Offline');
+  check('circulateur : une hauteur suffit a le reconnaitre', kind(render({ appliance_type: 'water_pump', state_entity: 'switch.c', head_entity: 'sensor.head' }, ciS())), 'circulator');
+  check('circulateur : un nom de circulateur suffit', kind(render({ appliance_type: 'water_pump', state_entity: 'switch.c', name: 'Circulateur chauffage' }, ciS())), 'circulator');
+  check('circulateur : le surpresseur reste par defaut', kind(render({ appliance_type: 'water_pump', state_entity: 'switch.c' }, ciS())), 'booster');
+  check('circulateur : sans vitesse, aucune valeur cassee', /NaN|undefined/.test(render({ appliance_type: 'water_pump', pump_layout: 'circulator', state_entity: 'switch.c' }, ciS())), false);
+
+  const ed = (cfg) => markup(newEditor(cfg));
+  check('editeur circulateur : ses champs', ['speed_entity', 'head_entity', 'flow_entity', 'voltage_entity', 'control_mode_entity', 'fault_entity'].every((f) => ed(CI).includes(`data-toggle="${f}"`)) && ed(CI).includes('"circulator_model"'), true);
+  check('editeur surpresseur : aucun champ de circulateur', ['data-toggle="head_entity"', 'data-toggle="control_mode_entity"', '"circulator_model"'].some((f) => ed({ appliance_type: 'water_pump', state_entity: 'switch.c' }).includes(f)), false);
 }
 
 if (RECORD) writeFileSync(process.env.HAC_RECORD, JSON.stringify(RECORD));

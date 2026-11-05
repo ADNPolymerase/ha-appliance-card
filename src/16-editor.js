@@ -206,6 +206,19 @@ const SECTIONS = [
     when: (c) => pumpLayoutOf(c, null) === "sump", extra: (c) => c._row("level_max", "level_max", { placeholder: "100" }) },
   { field: "high_level_entity", types: ["water_pump"], labelKey: "section_high_level", includeDomains: ["binary_sensor", "input_boolean", "sensor"],
     when: (c) => pumpLayoutOf(c, null) === "sump" },
+  // A heating circulator (#88).
+  { field: "speed_entity", types: ["water_pump"], labelKey: "circ_speed", includeDomains: ["sensor", "number", "input_number"],
+    when: (c) => pumpLayoutOf(c, null) === "circulator", extra: (c) => c._row("circ_max_speed", "max_speed", { placeholder: "4500" }) },
+  { field: "head_entity", types: ["water_pump"], labelKey: "circ_head", includeDomains: ["sensor", "number", "input_number"],
+    when: (c) => pumpLayoutOf(c, null) === "circulator" },
+  { field: "flow_entity", types: ["water_pump"], labelKey: "section_water_flow", includeDomains: ["sensor", "number", "input_number"],
+    when: (c) => pumpLayoutOf(c, null) === "circulator" },
+  { field: "voltage_entity", types: ["water_pump"], labelKey: "circ_voltage", includeDomains: ["sensor"],
+    when: (c) => pumpLayoutOf(c, null) === "circulator" },
+  { field: "control_mode_entity", types: ["water_pump"], labelKey: "circ_mode", includeDomains: ["select", "sensor", "input_select"],
+    when: (c) => pumpLayoutOf(c, null) === "circulator" },
+  { field: "fault_entity", types: ["water_pump"], labelKey: "heat_fault", includeDomains: ["binary_sensor", "sensor"],
+    when: (c) => pumpLayoutOf(c, null) === "circulator" },
   { field: "temperature_entity", types: ["floor_heating", "spa", "sauna", "aquarium"], labelKey: "temperature", includeDomains: ["sensor", "number", "input_number"] },
   { field: "target_temperature_entity", types: ["sauna"], labelKey: "section_target_temperature", includeDomains: ["number", "sensor", "input_number"] },
   { field: "bubbles_entity", types: ["spa"], labelKey: "section_bubbles", includeDomains: ["switch", "input_boolean", "fan", "binary_sensor"] },
@@ -582,7 +595,8 @@ class ApplianceCardEditor extends HTMLElement {
 
   _sections() {
     const all = sectionsForType(this._currentType(), this._config || {});
-    return this._plug() ? all.filter((sec) => !PLUG_HIDDEN_SECTIONS.has(sec.field)) : all;
+    // A circulator on a plug still reports its own speed (#88).
+    return this._plug() ? all.filter((sec) => !PLUG_HIDDEN_SECTIONS.has(sec.field) || (this._type === "water_pump" && sec.field === "speed_entity")) : all;
   }
 
   // Read from a smart plug: the editor offers the plug, its meter and what
@@ -1364,7 +1378,10 @@ class ApplianceCardEditor extends HTMLElement {
         ${this._type === "water_pump" ? this._row("section_screen_layout", "pump_layout", {
           type: "select",
           options: [{ value: "auto", label: t(hass, "unit_auto") }].concat(PUMP_LAYOUTS.map((v) => ({ value: v, label: t(hass, `layout_pump_${v}`) }))),
-        }) : ""}
+        }) + (pumpLayoutOf(this._config, null) === "circulator" ? this._row("circ_model", "circulator_model", {
+          type: "select",
+          options: [{ value: "auto", label: t(hass, "unit_auto") }].concat(CIRC_MODELS.map((v) => ({ value: v, label: v === "generic" ? t(hass, "circ_model_generic") : v === "dab" ? "DAB" : v[0].toUpperCase() + v.slice(1) }))),
+        }) : "") : ""}
         ${[["irrigation", "irrigation_layout", IRRIGATION_LAYOUTS, "irr"], ["litter_box", "litter_layout", LITTER_LAYOUTS, "lit"], ["detector", "detector_layout", DETECTOR_LAYOUTS, "det"], ["speaker", "speaker_layout", SPEAKER_LAYOUTS, "spk"], ["console", "console_layout", CONSOLE_LAYOUTS, "con"]]
           .filter(([ty]) => this._type === ty).map(([, f, list, p]) => this._row("section_screen_layout", f, { type: "select",
             options: [{ value: "auto", label: t(hass, "unit_auto") }].concat(list.map((v) => ({ value: v, label: t(hass, `layout_${p}_${v}`) }))) })).join("")}
@@ -1561,7 +1578,7 @@ class ApplianceCardEditor extends HTMLElement {
             options: ["below", "beside", "toggle"].map((v) => ({ value: v, label: t(hass, `lines_${v}`) })),
           }) : ""}
           ${this._row("illustration_size", "illustration_size", {
-            type: "range", min: 0.3, max: 1.2, step: 0.05, default: 1,
+            type: "range", min: 0.3, max: 1.6, step: 0.05, default: 1,
             value: this._config.illustration_size === undefined ? "" : illustrationSizeOf(this._config.illustration_size),
           })}
           ${this._row("font_scale", "font_scale", {
