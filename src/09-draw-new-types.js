@@ -3,7 +3,7 @@
 // sauna, an aquarium, a Linky meter and a Christmas tree. Drawn in SVG on a 120 x 135 field; what
 // moves moves only on a machine carrying nt-on, staggered through --d0, and
 // the robot's cable and the sump's float follow their SMIL animations.
-const NT_TYPES = ["water_pump", "floor_heating", "spa", "sauna", "aquarium", "meter", "christmas_tree", "mobility", "irrigation", "litter_box", "detector", "speaker", "console"];
+const NT_TYPES = ["water_pump", "floor_heating", "spa", "sauna", "aquarium", "meter", "christmas_tree", "mobility", "irrigation", "litter_box", "detector", "speaker", "console", "storage_tank", "fresh_water_station", "solar_thermal", "wood_stove"];
 const CONSOLE_LAYOUTS = ["ps1", "ps2", "ps3", "ps4", "ps4_pro", "ps5", "xbox", "xbox_360", "xbox_one", "xbox_series_x", "xbox_series_s", "switch", "switch_2", "switch_lite", "ps_vita", "nes", "snes", "n64", "gamecube", "wii", "megadrive"];
 const IRRIGATION_LAYOUTS = ["sprinkler", "tap"];
 const LITTER_LAYOUTS = ["globe", "box"];
@@ -23,6 +23,10 @@ const NT_ONLY_FIELDS = {
   detector: ["detector_layout", "co_level_entity"],
   speaker: ["speaker_layout", "speaker_color"],
   console: ["console_layout", "game_entity", "playtime_entity", "playtime_left_entity"],
+  storage_tank: ["temperature_entities", "charge_entity", "charge_min_temp", "charge_max_temp", "tank_volume", "sources", "consumers"],
+  fresh_water_station: ["primary_temperature_entity", "cold_water_temperature_entity", "circulation_entity", "circulation_mode_entity"],
+  solar_thermal: ["collector_style", "collector_temperature_entity", "tank_temperature_entity", "collector_shutdown_entity", "tank_full_entity", "stagnation_temp", "heat_power_entity"],
+  wood_stove: ["water_jacket", "burning_temp", "embers_temp", "temperature_scale", "flow_temperature_entity", "valve_entity", "last_fire_entity", "overheat_temp"],
   meter: ["tariff_entity", "high_power", "meter_layout", "today_entity", "total_entity", "export_total_entity", "meter_direction"],
 };
 // Optional readings on the older types: each is a line when its entity is
@@ -89,6 +93,10 @@ function optLines(hass, cfg, type) {
 // By name, in the languages the card speaks; "whirlpool" is left out, it is a
 // maker of washing machines too.
 const NT_NAME_RES = [
+  ["fresh_water_station", /frischwasser|fresh.?water.?(station|module)|freshwater|station.?(d.?)?eau.?(fraiche|chaude)|module.?(d.?)?eau.?chaude|(^|[^a-z])fws([^a-z]|$)/],
+  ["storage_tank", /pufferspeicher|(^|[^a-z])puffer|buffer.?tank|ballon.?tampon|thermal.?store|schichtspeicher|serbatoio.?(inerziale|di.?accumulo)|deposito.?de.?inercia|buffertank|zbiornik.?buforowy/],
+  ["solar_thermal", /solar.?therm|solarthermie|solaire.?thermique|thermique.?solaire|kollektor|collector.?temp|capteur.?solaire|solar.?pump|solarpumpe|solar.?collector/],
+  ["wood_stove", /^(?!.*(pellet|granul)).*((^|[^a-z])kamin|wood.?(stove|burner)|log.?(stove|burner)|poele.?(a.?)?bois|cheminee|holzofen|kachelofen|estufa.?de.?lena|stufa.?a.?legna|houtkachel|braskamin|vedovn|braendeovn|brandeovn|piec.?na.?drewno|fireplace)/],
   ["console", /playstation|(^|[^a-z])ps[1-5]([^a-z0-9]|$)|xbox|nintendo|gamecube|(^|[^a-z])(n64|snes|nes|wii|switch.?lite|switch.?2)([^a-z0-9]|$)|mega.?drive|genesis|console|konsole|consola|konsol/],
   ["litter_box", /litter|litiere|katzenklo|arenero|lettiera|kattlada|kuweta|kattebak|kattesand|(^|[^a-z])pura.?(x|max)/],
   ["irrigation", /arrosage|irrigat|sprinkler|bewasserung|(^|[^a-z])riego|beregening|bevattning|vanning|vanding|nawadnian|zavlaz|opensprinkler|linktap|hydrawise|rachio|rain.?bird/],
@@ -2023,7 +2031,255 @@ ${Array.from({ length: 8 }, (_, i) => `<path d="M${conPt(at(.06 + i * .03, .55))
 <rect x="31" y="89" width="7" height="1.6" rx=".6" fill="#3a3d42"/><circle cx="42" cy="90" r="1" fill="#050506" stroke="#3a3d42" stroke-width=".4"/>
 ${[78, 94].map((x) => `<path d="M${x} 89 H${x + 11} L${x + 10} 95 H${x + 1} Z" fill="#050506"/><path d="M${x + 2} 91 H${x + 9}" stroke="#3a3d42" stroke-width=".6"/>`).join("")}`;
 }
-const NT_DRAW = { irr_sprinkler: ntIrrSprinkler, irr_tap: ntIrrTap, lit_globe: ntLitterGlobe, lit_box: ntLitterBox, det_smoke: ntDetSmoke, det_co: ntDetCo, det_leak: ntDetLeak, spk_smart: ntSpkSmart, spk_homepod_mini: ntSpkMini, spk_sonos_one: ntSpkOne, spk_bookshelf: ntSpkShelf, spk_sonos_move: ntSpkMove, spk_soundbar: ntSpkBar, spk_echo_dot: ntSpkDot, spk_nest_mini: ntSpkNest, spk_sonos_era100: ntSpkEra100, spk_sonos_era300: ntSpkEra300, spk_bose_wave: ntSpkWave, spk_bose_500: ntSpkBose500, spk_bose_soundlink: ntSpkFlex, spk_bose_soundbar: ntSpkBoseBar, con_ps1: conPs1, con_ps2: conPs2, con_ps3: conPs3, con_ps4: (c) => conPs4(c, false), con_ps4_pro: (c) => conPs4(c, true), con_ps5: conPs5, con_xbox: conXbox, con_xbox_360: conX360, con_xbox_one: conXone, con_xbox_series_x: conXsx, con_xbox_series_s: conXss, con_switch: (c) => conSwitch(c, false), con_switch_2: (c) => conSwitch(c, true), con_switch_lite: conSwitchLite, con_ps_vita: conVita, con_nes: conNes, con_snes: conSnes, con_n64: conN64, con_gamecube: conGamecube, con_wii: conWii, con_megadrive: conMegadrive, mob_scooter: mobScooter, mob_offroad: mobOffroad, mob_ebike: mobEbike, mob_gyropode: mobGyropode, mob_motorcycle: mobMotorcycle, meter_box: ntMeterBox, meter_dome: ntMeterDome, meter_gas: ntGas, meter_water: ntWater, booster: ntBooster, sump: ntSump, pool: ntPoolRobot, floor: ntFloor, spa: ntSpa, sauna: ntSauna, aquarium: ntAquarium, linky: ntLinky, tree: ntTree };
+// The heating drawings of #81 to #84, on the same 120 x 135 field.
+// A water temperature as a colour, the usual cold/hot scale: deep blue when
+// cold, pale when tepid, then orange and red, dark red at the hottest.
+const htStops = [[20, [21, 101, 192]], [30, [66, 165, 245]], [38, [207, 216, 220]], [46, [255, 183, 77]], [56, [244, 81, 30]], [68, [198, 40, 40]]];
+function htColor(t) {
+  if (t === null || t === undefined || isNaN(t)) return "#90a4ae";
+  if (t <= htStops[0][0]) return `rgb(${htStops[0][1]})`;
+  for (let i = 1; i < htStops.length; i++) {
+    const [t1, c1] = htStops[i], [t0, c0] = htStops[i - 1];
+    if (t <= t1) { const k = (t - t0) / (t1 - t0); return `rgb(${c0.map((v, j) => Math.round(v + (c1[j] - v) * k)).join(",")})`; }
+  }
+  return `rgb(${htStops[htStops.length - 1][1]})`;
+}
+// A pipe run through points, with bent elbows instead of sharp corners.
+function htPath(pts, r = 4) {
+  let d = `M${pts[0][0]} ${pts[0][1]}`;
+  for (let i = 1; i < pts.length; i++) {
+    const [x, y] = pts[i];
+    if (i === pts.length - 1) { d += ` L${x} ${y}`; break; }
+    const [px, py] = pts[i - 1], [nx, ny] = pts[i + 1];
+    const l1 = Math.hypot(x - px, y - py), l2 = Math.hypot(nx - x, ny - y), k = Math.min(r, l1 / 2, l2 / 2);
+    const a = [x - (x - px) / l1 * k, y - (y - py) / l1 * k], b = [x + (nx - x) / l2 * k, y + (ny - y) / l2 * k];
+    d += ` L${a[0].toFixed(1)} ${a[1].toFixed(1)} Q${x} ${y} ${b[0].toFixed(1)} ${b[1].toFixed(1)}`;
+  }
+  return d;
+}
+// A round pipe: dark edge, its colour, a shade along the lower side and a
+// light streak along the top, so it reads as a tube and not a flat line.
+const htPipe = (pts, col, w = 3.4) => {
+  const d = typeof pts === "string" ? pts : htPath(pts);
+  return `<path d="${d}" stroke="#2f363d" stroke-width="${w + 1}" fill="none" stroke-linecap="butt" stroke-linejoin="round"/>
+<path d="${d}" stroke="${col}" stroke-width="${w}" fill="none" stroke-linejoin="round"/>
+<path d="${d}" transform="translate(.35 .35)" stroke="#000" stroke-opacity=".22" stroke-width="${(w * .35).toFixed(2)}" fill="none" stroke-linejoin="round"/>
+<path d="${d}" transform="translate(-.45 -.45)" stroke="#fff" stroke-opacity=".45" stroke-width="${(w * .28).toFixed(2)}" fill="none" stroke-linejoin="round"/>`;
+};
+// A brass union where a pipe meets a device, across the pipe.
+const htUnion = (x, y, vert, w = 3.4) => vert
+  ? `<rect x="${(x - w / 2 - 1).toFixed(1)}" y="${y - 1.4}" width="${(w + 2).toFixed(1)}" height="2.8" rx=".6" fill="#c9a227" stroke="#7a5f0e" stroke-width=".35"/>`
+  : `<rect x="${x - 1.4}" y="${(y - w / 2 - 1).toFixed(1)}" width="2.8" height="${(w + 2).toFixed(1)}" rx=".6" fill="#c9a227" stroke="#7a5f0e" stroke-width=".35"/>`;
+// A quarter-turn valve on a pipe, its lever along the pipe when open.
+const htValve = (x, y, vert, lever = "#d32f2f") => `<rect x="${x - 2.6}" y="${y - 2.6}" width="5.2" height="5.2" rx="1.2" fill="#d4ac2b" stroke="#7a5f0e" stroke-width=".4"/>
+<path d="M${x} ${y} ${vert ? `V${y - 1} H${x + 5}` : `H${x + 1} V${y - 5}`}" stroke="${lever}" stroke-width="1.5" stroke-linecap="round" fill="none"/>`;
+const htFlow = (pts, col = "#fff", cls = "nta-flow") => `<path class="${cls}" d="${typeof pts === "string" ? pts : htPath(pts)}" stroke="${col}" stroke-opacity=".85" stroke-width="1" stroke-dasharray="2 4" fill="none" stroke-linecap="round"/>`;
+// Heating colours: red for the flow (hot), blue for the return (cold), for
+// the heating circuit and the domestic water alike.
+const HT_HOT = "#e53935", HT_COLD = "#1e88e5";
+
+// Buffer tank: an upright insulated tank whose front shows its layers, hot on
+// top and cold at the bottom, one marker per sensor at its height. The pipes
+// on the left bring the sources' heat, those on the right feed the house.
+function ntTank(c) {
+  const g = ntId(), sh = ntId(), cap = ntId(), gl = ntId(), cp = ntId();
+  const temps = (c.temps || []).filter((t) => t !== null && t !== undefined);
+  const n = temps.length;
+  const x0 = 36, x1 = 80, top = 22, bot = 98, cx = (x0 + x1) / 2, rx = (x1 - x0) / 2;
+  const at = (k) => top + 6 + (bot - top - 12) * k;
+  const fr = (i) => (n <= 1 ? .5 : .08 + .84 * i / (n - 1));
+  const stops = n ? temps.map((t, i) => `<stop offset="${fr(i).toFixed(3)}" stop-color="${htColor(t)}"/>`).join("") : `<stop offset="0" stop-color="#b0bec5"/><stop offset="1" stop-color="#90a4ae"/>`;
+  const marks = temps.map((t, i) => {
+    const y = at(fr(i));
+    return `<circle cx="${x0 + 2.5}" cy="${y.toFixed(1)}" r="1.5" fill="#fff" stroke="#37474f" stroke-width=".6"/><path d="M${x0 + 4} ${y.toFixed(1)} H${cx - 11}" stroke="#fff" stroke-opacity=".6" stroke-width=".6" stroke-dasharray="1 1.4"/>
+<rect x="${cx - 11}" y="${(y - 5.2).toFixed(1)}" width="22" height="10.4" rx="5.2" fill="#000" opacity=".45"/>
+<text x="${cx}" y="${(y + 2.9).toFixed(1)}" font-size="8" font-weight="700" text-anchor="middle" fill="#fff" ${NT_FONT}>${(c.labels && c.labels[i]) || `${Math.round(t)}\u00b0`}</text>`;
+  }).join("");
+  const src = c.loading;
+  // Sources on the left (flow in at the top, return out at the bottom), the
+  // house on the right (flow out at the top, return in at the bottom).
+  const runs = { lh: [[12, 120], [12, 34], [x0 + 1, 34]], lc: [[x0 + 1, 86], [24, 86], [24, 120]], rh: [[x1 - 1, 34], [108, 34], [108, 120]], rc: [[96, 120], [96, 86], [x1 - 1, 86]] };
+  const pipesL = htPipe(runs.lh, HT_HOT) + htPipe(runs.lc, HT_COLD) + htUnion(x0 - 2, 34, false) + htUnion(x0 - 2, 86, false) + htValve(12, 108, true) + htValve(24, 108, true, "#1565c0");
+  const pipesR = htPipe(runs.rh, HT_HOT) + htPipe(runs.rc, HT_COLD) + htUnion(x1 + 2, 34, false) + htUnion(x1 + 2, 86, false) + htValve(108, 108, true) + htValve(96, 108, true, "#1565c0");
+  const rise = [0, 1, 2].map((i) => `<path class="nta-heat ntd${i + 2}" d="M${44 + i * 10} 88 q-1.6 -2.6 0 -5.2 q1.6 -2.6 0 -5.2" stroke="#fff" stroke-width="1" fill="none" opacity="0" stroke-linecap="round"/>`).join("");
+  const pct = c.charge === null || c.charge === undefined ? "" : `${Math.round(c.charge)}%`;
+  return `<defs><linearGradient id="${g}" x1="0" y1="0" x2="0" y2="1">${stops}</linearGradient>
+<linearGradient id="${sh}" x1="0" x2="1"><stop offset="0" stop-color="#000" stop-opacity=".25"/><stop offset=".18" stop-color="#fff" stop-opacity=".3"/><stop offset=".35" stop-color="#fff" stop-opacity="0"/><stop offset=".8" stop-color="#000" stop-opacity=".12"/><stop offset="1" stop-color="#000" stop-opacity=".38"/></linearGradient>
+<linearGradient id="${cap}" x1="0" x2="1"><stop offset="0" stop-color="#9aa3ad"/><stop offset=".3" stop-color="#eef1f4"/><stop offset="1" stop-color="#7d8792"/></linearGradient>${ntBlur(gl, 2)}
+<clipPath id="${cp}"><path d="M${x0} ${top} V${bot} A${rx} 5 0 0 0 ${x1} ${bot} V${top} Z"/></clipPath></defs>
+${ntShadow(cx, 107, 30)}
+<path d="M${x0 + 6} ${bot + 2} l-2 7 M${x1 - 6} ${bot + 2} l2 7 M${cx} ${bot + 4} v6" stroke="#5d6670" stroke-width="2.4" stroke-linecap="round"/>
+${pipesL}${pipesR}
+<g class="nt-run">${htFlow(runs.lh)}${htFlow(runs.lc)}</g>${c.drawing ? htFlow(runs.rh) + htFlow(runs.rc) : ""}
+<path d="M${x0} ${top} V${bot} A${rx} 5 0 0 0 ${x1} ${bot} V${top} Z" fill="url(#${g})"/>
+<g clip-path="url(#${cp})"><g class="nt-run">${rise}</g>
+${src ? `<rect class="nta-warm" x="${x0}" y="${top}" width="${x1 - x0}" height="30" fill="#ffab91" opacity=".15" filter="url(#${gl})"/>` : ""}</g>
+<path d="M${x0} ${top} V${bot} A${rx} 5 0 0 0 ${x1} ${bot} V${top} Z" fill="url(#${sh})"/>
+${[.33, .66].map((k) => `<path d="M${x0} ${(top + (bot - top) * k).toFixed(1)} A${rx} 4 0 0 0 ${x1} ${(top + (bot - top) * k).toFixed(1)}" stroke="#fff" stroke-opacity=".25" stroke-width=".6" fill="none"/>`).join("")}
+<ellipse cx="${cx}" cy="${top}" rx="${rx}" ry="6" fill="url(#${cap})" stroke="#6f7984" stroke-width=".6"/>
+<path d="M${cx - 5} ${top - 4} h10 v3 a5 2 0 0 1 -10 0 Z" fill="#b0b8c1" stroke="#6f7984" stroke-width=".5"/>
+<path d="M${x0} ${bot} A${rx} 5 0 0 0 ${x1} ${bot}" stroke="#6f7984" stroke-width="1.6" fill="none"/>
+${pct ? ntLcd(cx - 13, 0, 26, 12, pct, true, c.loading ? "#ffb74d" : "#fff", 8.6) : ""}
+${marks}`;
+}
+
+// Fresh water station: the controller on top, the black insulating shell with
+// the plate heat exchanger and the primary pump, the tank's two pipes and the
+// two water pipes under it, and the tap that runs while water is drawn.
+function ntFresh(c) {
+  const bx = ntId(), sh = ntId(), px = ntId(), pm = ntId(), wa = ntId();
+  const draw = c.drawing, circ = c.circulating;
+  const plates = Array.from({ length: 9 }, (_, i) => `<rect x="${31 + i * 2.6}" y="44" width="2" height="30" rx=".6" fill="${i % 2 ? "#cfd6dc" : "#e9edf0"}"/>`).join("");
+  const herring = Array.from({ length: 7 }, (_, j) => `<path d="M31 ${47 + j * 4} l11.5 2 l11.5 -2" stroke="#9aa5ae" stroke-width=".45" fill="none"/>`).join("");
+  const txt = c.lcd || "";
+  const tapOn = draw;
+  return `<defs>${ntV(bx, "#f6f7f8", "#d9dde1")}${ntV(sh, "#2d3136", "#15181b")}${ntV(px, "#eef1f3", "#a9b2ba")}${ntV(pm, "#43a047", "#1b5e20")}${ntV(wa, "#e1f5fe", "#81d4fa")}</defs>
+
+${ntShadow(46, 107, 34)}
+${htPipe([[30, 120], [30, 93]], HT_HOT)}${htPipe([[40, 93], [40, 120]], HT_COLD)}${htPipe([[54, 93], [54, 120]], HT_COLD)}
+${htPipe([[64, 93], [64, 100], [96, 100], [96, 58], [101, 58]], HT_HOT)}
+${[30, 40, 54, 64].map((x) => htUnion(x, 96, true)).join("")}${htValve(30, 112, true)}${htValve(40, 112, true, "#1565c0")}${htValve(54, 112, true, "#1565c0")}
+<g class="nt-run">${htFlow([[30, 120], [30, 93]])}${htFlow([[40, 93], [40, 120]])}</g>
+${draw ? `<g>${htFlow([[54, 120], [54, 93]], "#fff", "nta-flow-fast")}${htFlow([[64, 93], [64, 100], [96, 100], [96, 58], [101, 58]], "#fff", "nta-flow-fast")}</g>` : ""}
+${circ ? `${htPipe([[96, 82], [80, 82], [80, 88], [75, 88]], "#ff8a65", 2.4)}${htFlow([[96, 82], [80, 82], [80, 88], [75, 88]])}` : ""}
+<rect x="18" y="4" width="56" height="90" rx="3" fill="url(#${bx})" stroke="#b6bdc4" stroke-width=".7"/>
+<rect x="22" y="8" width="48" height="20" rx="2" fill="#eceff1" stroke="#c3c9cf" stroke-width=".5"/>
+${ntLcd(25, 11, 42, 14, txt, true, draw ? "#4fc3f7" : "#90a4ae", ntFit(txt, 42, 9))}
+<rect x="22" y="32" width="48" height="58" rx="5" fill="url(#${sh})"/>
+<rect x="29" y="42" width="27" height="34" rx="1.5" fill="url(#${px})" stroke="#7d8892" stroke-width=".6"/>${plates}${herring}
+<rect x="29" y="40" width="27" height="3" rx="1" fill="#8d979f"/><rect x="29" y="75" width="27" height="3" rx="1" fill="#8d979f"/>
+${[33, 52].map((x) => `<circle cx="${x}" cy="41.5" r="1.3" fill="#5d6670"/><circle cx="${x}" cy="76.5" r="1.3" fill="#5d6670"/>`).join("")}
+<circle cx="63" cy="60" r="6.4" fill="url(#${pm})" stroke="#0d3b12" stroke-width=".6"/>
+<g class="${draw ? "nta-spin" : ""}"><path d="M63 55.4 V64.6 M58.4 60 H67.6 M59.8 56.8 L66.2 63.2 M66.2 56.8 L59.8 63.2" stroke="#c8e6c9" stroke-width=".8" stroke-linecap="round"/></g>
+<circle cx="63" cy="60" r="1.6" fill="#1b5e20"/>
+<rect x="60" y="68" width="6" height="14" rx="1" fill="#4a525c"/>
+<circle cx="63" cy="46" r="3" fill="#fff" stroke="#8d979f" stroke-width=".5"/><path d="M63 46 L64.6 44.4" stroke="#c62828" stroke-width=".6"/>
+<path d="M104 52 H112 Q116 52 116 56 V62" stroke="#9aa3ab" stroke-width="4" fill="none" stroke-linecap="round"/>
+<rect x="100" y="54" width="7" height="8" rx="1.5" fill="#c3c9cf" stroke="#8a939b" stroke-width=".5"/>
+<path d="M103.5 54 V48 M100 48 H107" stroke="#8a939b" stroke-width="2" stroke-linecap="round"/>
+${tapOn ? `<path class="nta-shimmer" d="M115 63 Q116 80 115 100" stroke="url(#${wa})" stroke-width="3" fill="none" stroke-linecap="round"/>
+<path class="nta-flow-fast" d="M116 64 V100" stroke="#fff" stroke-width=".8" stroke-dasharray="3 5"/>
+<ellipse cx="115.5" cy="101" rx="4.5" ry="1.4" fill="#b3e5fc" opacity=".8"/>
+${[0, 1].map((i) => `<path class="nta-steam ntd${i + 2}" d="M${112 + i * 6} 74 q-1.6 -2.6 0 -5.2 q1.6 -2.6 0 -5.2" stroke="#fff" stroke-width="1.4" fill="none" opacity="0" stroke-linecap="round"/>`).join("")}` : ""}
+`;
+}
+
+// The collector's own copper outlet, where the field pipe screws on.
+const htStub = (pts) => { const d = htPath(pts); return `<path d="${d}" stroke="#5a3a1c" stroke-width="3.2" fill="none"/><path d="${d}" stroke="#c07a3c" stroke-width="2.2" fill="none"/><path d="${d}" transform="translate(-.35 -.35)" stroke="#f1c18e" stroke-width=".6" fill="none"/>`; };
+// Solar thermal: the collectors on their frame, the hot pipe from the top
+// header down to the solar station, its pump and thermometers, and the cold
+// return. Flat plates show their copper absorber; tubes their glass rows.
+function ntSolarThermal(c) {
+  const fr = ntId(), ab = ntId(), gs = ntId(), sb = ntId(), sun = ntId(), ice = ntId(), tb = ntId();
+  const tubes = c.style === "tubes";
+  const tl = [16, 30], tr = [74, 30], br = [84, 66], bl = [6, 66];
+  const L = (a, b, k) => [a[0] + (b[0] - a[0]) * k, a[1] + (b[1] - a[1]) * k];
+  const f = (p) => `${p[0].toFixed(1)} ${p[1].toFixed(1)}`;
+  const quad = `M${f(tl)} L${f(tr)} L${f(br)} L${f(bl)} Z`;
+  let face;
+  if (tubes) {
+    const n = 12;
+    face = `<path d="${quad}" fill="#e7ebee"/>` + Array.from({ length: n }, (_, i) => {
+      const a = L(tl, tr, (i + .5) / n), b = L(bl, br, (i + .5) / n);
+      const w0 = 3.1, w1 = 4.6;
+      return `<path d="M${(a[0] - w0 / 2).toFixed(1)} ${a[1]} L${(b[0] - w1 / 2).toFixed(1)} ${b[1]} A${w1 / 2} 1 0 0 0 ${(b[0] + w1 / 2).toFixed(1)} ${b[1]} L${(a[0] + w0 / 2).toFixed(1)} ${a[1]} Z" fill="url(#${tb})" stroke="#9fb0bd" stroke-width=".3"/>
+<path d="M${a[0].toFixed(1)} ${a[1] + 1} L${b[0].toFixed(1)} ${b[1] - 1}" stroke="#1d2b3a" stroke-width="1.3"/>
+<path d="M${(a[0] - .9).toFixed(1)} ${a[1] + 1} L${(b[0] - 1.4).toFixed(1)} ${b[1] - 1}" stroke="#fff" stroke-width=".4" opacity=".8"/>`;
+    }).join("") + `<path d="M${f([tl[0] - 2, tl[1] - 3])} H${tr[0] + 2} V${tl[1] + 1} H${tl[0] - 2} Z" fill="#c9d0d6" stroke="#8b959e" stroke-width=".6"/>
+<path d="M${f([bl[0] - 1, bl[1]])} H${br[0] + 1}" stroke="#8b959e" stroke-width="2" stroke-linecap="round"/>`;
+  } else {
+    const fins = Array.from({ length: 14 }, (_, i) => { const a = L(tl, tr, (i + .5) / 14), b = L(bl, br, (i + .5) / 14); return `M${f(L(a, b, .05))} L${f(L(a, b, .95))}`; }).join(" ");
+    face = `<path d="${quad}" fill="url(#${ab})" stroke="#d5dbe0" stroke-width="1.6" stroke-linejoin="round"/>
+<path d="${fins}" stroke="#b87333" stroke-opacity=".6" stroke-width=".7"/>
+<path d="M${f(L(tl, bl, .06))} L${f(L(tr, br, .06))} M${f(L(tl, bl, .94))} L${f(L(tr, br, .94))}" stroke="#d08c4c" stroke-width="1.1"/>
+<path d="${quad}" fill="url(#${gs})"/>`;
+  }
+  const frost = c.frost ? `<path d="${quad}" fill="url(#${ice})" opacity=".75"/>${[[24, 40], [44, 46], [62, 38], [30, 58], [56, 58], [72, 54]].map(([x, y]) => ntFlake(x, y, 2.4, "#ffffff", .7)).join("")}` : "";
+  const stag = c.stagnation ? [0, 1, 2, 3].map((i) => `<path class="nta-heat ntd${i + 1}" d="M${24 + i * 16} 30 q-2 -3 0 -6 q2 -3 0 -6" stroke="#ff7043" stroke-width="1.2" fill="none" stroke-linecap="round" opacity="0"/>`).join("") : "";
+  const txt = c.lcd || "";
+  const pumpCls = c.on ? (c.fast ? "nta-spin" : "nta-spin-slow") : "";
+  return `<defs><linearGradient id="${ab}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#26313d"/><stop offset="1" stop-color="#121a22"/></linearGradient>
+<linearGradient id="${gs}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".22"/><stop offset=".4" stop-color="#fff" stop-opacity="0"/><stop offset="1" stop-color="#fff" stop-opacity=".06"/></linearGradient>
+<linearGradient id="${tb}" x1="0" x2="1"><stop offset="0" stop-color="#cfe0ea"/><stop offset=".5" stop-color="#7f97a8"/><stop offset="1" stop-color="#b9cbd6"/></linearGradient>
+<linearGradient id="${ice}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e3f2fd"/><stop offset="1" stop-color="#bbdefb"/></linearGradient>
+${ntV(sb, "#2d3136", "#15181b")}<radialGradient id="${sun}"><stop offset="0" stop-color="#ffee58"/><stop offset="1" stop-color="#ffb300"/></radialGradient><linearGradient id="${fr}"><stop offset="0" stop-color="#aeb6bd"/></linearGradient></defs>
+${c.on ? `<g class="nta-spin-slow"><circle cx="104" cy="8" r="13" fill="none" stroke="#ffd54f" stroke-width="1.2" stroke-dasharray="2 4" opacity=".7"/></g><circle cx="104" cy="8" r="7" fill="url(#${sun})"/>` : ""}
+${ntShadow(46, 101, 42)}
+<path d="M26 66 V97 M66 66 V97" stroke="#7d868e" stroke-width="2"/><path d="M26 82 L14 66 M66 82 L78 66" stroke="#7d868e" stroke-width="1.3"/>
+<path d="M14 66 V98 M78 66 V98" stroke="#aeb6bd" stroke-width="2.4" stroke-linecap="round"/>
+${face}${frost}<g class="nt-run">${stag}</g>
+${htPipe([[81, 30], [93, 30], [93, 54]], HT_HOT, 2.8)}${htPipe([[88, 92], [84, 92], [84, 73]], HT_COLD, 2.8)}${htUnion(93, 52, true, 2.8)}${htUnion(90, 92, false, 2.8)}
+${htStub([[tubes ? 76 : 73.5, 30], [80, 30]])}${htStub([[84, 66.5], [84, 72]])}${htUnion(80.4, 30, false, 2.8)}${htUnion(84, 72.4, true, 2.8)}
+<g class="nt-run">${htFlow([[81, 30], [93, 30], [93, 54]])}${htFlow([[88, 92], [84, 92], [84, 73]])}</g>
+<rect x="88" y="54" width="28" height="48" rx="3.5" fill="url(#${sb})"/>
+${ntLcd(90.5, 57, 23, 11, txt, true, c.on ? "#ffb74d" : "#90a4ae", ntFit(txt, 23, 7.6))}
+${[[96, HT_HOT], [108, HT_COLD]].map(([x, col]) => `<circle cx="${x}" cy="76" r="4.2" fill="#fff" stroke="${col}" stroke-width="1.2"/><path d="M${x} 76 L${x + 1.8} 73.6" stroke="#263238" stroke-width=".6"/>`).join("")}
+<circle cx="102" cy="91" r="5.4" fill="#c62828" stroke="#7f1717" stroke-width=".6"/>
+<g class="${pumpCls}"><path d="M102 87.2 V94.8 M98.2 91 H105.8" stroke="#ffcdd2" stroke-width=".8" stroke-linecap="round"/></g><circle cx="102" cy="91" r="1.3" fill="#7f1717"/>
+${htPipe([[100, 102], [100, 120]], HT_HOT, 2.6)}${htPipe([[108, 102], [108, 120]], HT_COLD, 2.6)}${htUnion(100, 104, true, 2.6)}${htUnion(108, 104, true, 2.6)}`;
+}
+
+
+// The stove's thermometer: a dial from 0 to its top over 220 degrees of arc,
+// grey while too cold, green in the good range, red in its last quarter.
+const htPolar = (cx, cy, r, a) => [cx + r * Math.sin(a * Math.PI / 180), cy - r * Math.cos(a * Math.PI / 180)];
+function htArc(cx, cy, r, a0, a1) {
+  const p = htPolar(cx, cy, r, a0), q = htPolar(cx, cy, r, a1);
+  return `M${p[0].toFixed(2)} ${p[1].toFixed(2)} A${r} ${r} 0 ${a1 - a0 > 180 ? 1 : 0} 1 ${q[0].toFixed(2)} ${q[1].toFixed(2)}`;
+}
+function htDial(cx, cy, r, t, max = 400, low = 100) {
+  const ang = (v) => -110 + Math.max(0, Math.min(max, v)) / max * 220;
+  const zones = [[0, low, "#90a4ae"], [low, max * .75, "#43a047"], [max * .75, max, "#e53935"]].map(([a, b, col]) => `<path d="${htArc(cx, cy, r - 1.6, ang(a), ang(b))}" stroke="${col}" stroke-width="1.6" fill="none"/>`).join("");
+  const ticks = [0, .25, .5, .75, 1].map((k) => k * max).map((v) => { const p = htPolar(cx, cy, r - .7, ang(v)), q = htPolar(cx, cy, r - 2.5, ang(v)); return `<path d="M${p[0].toFixed(2)} ${p[1].toFixed(2)} L${q[0].toFixed(2)} ${q[1].toFixed(2)}" stroke="#37474f" stroke-width=".35"/>`; }).join("");
+  const deg = t === null || t === undefined || isNaN(t) ? -110 : ang(t);
+  return `<circle cx="${cx}" cy="${cy}" r="${r + .9}" fill="#9aa3ab"/><circle cx="${cx}" cy="${cy}" r="${r}" fill="#f7f4ec" stroke="#6f7984" stroke-width=".4"/>${zones}${ticks}
+<path d="M${cx} ${cy + 1.2} V${(cy - r + 1.4).toFixed(2)}" stroke="#212121" stroke-width=".7" stroke-linecap="round" transform="rotate(${deg.toFixed(1)} ${cx} ${cy})"/><circle cx="${cx}" cy="${cy}" r="1" fill="#212121"/>`;
+}
+
+// Log stove: the cast iron body on its legs, the glass door with the logs and
+// the fire, the ash drawer, the flue with its thermometer and, with a water
+// jacket, the flow and return pipes at the back with their pump.
+function ntWoodStove(c) {
+  const bd = ntId(), gl = ntId(), fl = ntId(), fl2 = ntId(), win = ntId(), cp = ntId(), pl = ntId();
+  const st = c.st || "cold"; // burning | embers | cold
+  const burning = st === "burning", embers = st === "embers";
+  const logs = [[40, 78, 18, -6], [54, 79, 18, 7], [47, 72, 17, 2]].map(([x, y, w, a]) => `<g transform="rotate(${a} ${x + w / 2} ${y})">
+<rect x="${x}" y="${y - 3}" width="${w}" height="6" rx="3" fill="${burning ? "#4e342e" : embers ? "#5d2a1a" : "#6d5d55"}"/>
+<path d="M${x + 3} ${y - 1.4} H${x + w - 4} M${x + 5} ${y + 1.2} H${x + w - 3}" stroke="${embers ? "#ff7043" : burning ? "#3e2723" : "#857670"}" stroke-width=".6" ${embers ? 'class="nta-glow"' : ""}/>
+<ellipse cx="${x + w}" cy="${y}" rx="2.2" ry="3" fill="${embers ? "#ff8a50" : burning ? "#8d6e63" : "#a1928b"}" stroke="${embers ? "#bf360c" : "#4e342e"}" stroke-width=".5"/></g>`).join("");
+  const flames = burning ? `<g class="wst-fl"><path class="nta-flick" d="M41 74 Q38 62 44 54 Q44 62 48 60 Q46 50 53 42 Q54 54 58 54 Q60 46 64 46 Q62 56 68 60 Q70 66 68 74 Z" fill="url(#${fl})"/>
+<path class="nta-flick ntd3" d="M46 74 Q45 66 49 62 Q50 67 53 66 Q53 58 57 54 Q58 62 61 64 Q64 68 62 74 Z" fill="url(#${fl2})"/></g>` : "";
+  const glow = burning || embers;
+  const txt = c.lcd || "";
+  const jacket = c.water ? `${htPipe([[80, 50], [100, 50], [100, 30], [118, 30]], HT_HOT, 3)}${htPipe([[118, 88], [80, 88]], HT_COLD, 3)}${htUnion(87, 50, false, 3)}${htUnion(87, 88, false, 3)}
+<g class="${c.pump ? "nt-pumpon" : ""}">${c.pump ? `${htFlow([[80, 50], [100, 50], [100, 30], [118, 30]])}${htFlow([[118, 88], [80, 88]])}` : ""}</g>
+<circle cx="106" cy="88" r="5.2" fill="#1e88e5" stroke="#0d47a1" stroke-width=".6"/>
+<g class="${c.pump ? "nta-spin" : ""}"><path d="M106 84.4 V91.6 M102.4 88 H109.6" stroke="#bbdefb" stroke-width=".8" stroke-linecap="round"/></g><circle cx="106" cy="88" r="1.2" fill="#0d47a1"/>
+${htValve(110, 30, false)}` : "";
+  return `<defs>${ntV(bd, "#3b3f44", "#1c1e21")}${ntBlur(gl, 3)}${ntV(pl, "#4a4f55", "#2a2d31")}
+<linearGradient id="${fl}" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#ff6f00"/><stop offset=".6" stop-color="#ff9800"/><stop offset="1" stop-color="#ffd54f" stop-opacity=".2"/></linearGradient>
+<linearGradient id="${fl2}" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#ffd54f"/><stop offset="1" stop-color="#fff59d" stop-opacity=".4"/></linearGradient>
+<radialGradient id="${win}" cx=".5" cy=".8" r=".9"><stop offset="0" stop-color="${burning ? "#ff8f00" : embers ? "#8a2d10" : "#2b2f33"}"/><stop offset="1" stop-color="#121416"/></radialGradient>
+<clipPath id="${cp}"><rect x="36" y="44" width="40" height="38" rx="3"/></clipPath></defs>
+${ntShadow(56, 108, 34)}
+${glow ? `<ellipse class="nta-glow" cx="56" cy="106" rx="30" ry="4" fill="${burning ? "#ffb74d" : "#ff7043"}" opacity=".4" filter="url(#${gl})"/>` : ""}
+${jacket}
+<rect x="50" y="-6" width="12" height="38" fill="url(#${pl})"/><rect x="48.5" y="10" width="15" height="3" rx="1" fill="#2a2d31"/>
+${htDial(56, 19, 8.6, c.flue, c.max || 400, c.low || 100)}
+<rect x="26" y="32" width="60" height="6" rx="2" fill="#2a2d31"/>
+<rect x="28" y="36" width="56" height="62" rx="2.5" fill="url(#${bd})"/>
+<rect x="33" y="41" width="46" height="44" rx="4" fill="#15171a" stroke="#555b62" stroke-width=".8"/>
+<rect x="36" y="44" width="40" height="38" rx="3" fill="url(#${win})"/>
+<g clip-path="url(#${cp})">${glow ? `<ellipse class="nta-glow" cx="56" cy="80" rx="18" ry="7" fill="${burning ? "#ffab40" : "#ff5722"}" filter="url(#${gl})"/>` : ""}${flames}${logs}
+<path d="M36 82 Q56 76 76 82" fill="${embers ? "#ff7043" : "#3a3d40"}" opacity=".6"/></g>
+<path d="M39 46 L49 46 L39 70 Z" fill="#fff" opacity=".1"/>
+<rect x="76" y="56" width="3" height="14" rx="1.4" fill="#8a9097"/>
+<rect x="33" y="88" width="46" height="7" rx="1.5" fill="#26292d" stroke="#4a5057" stroke-width=".5"/><rect x="51" y="90.5" width="10" height="2" rx="1" fill="#8a9097"/>
+<path d="M31 98 v8 M81 98 v8" stroke="#1c1e21" stroke-width="3" stroke-linecap="round"/>
+${txt ? ntLcd(4, 40, 20, 11, txt, true, burning ? "#ffb74d" : embers ? "#ff8a65" : "#90a4ae", ntFit(txt, 20, 7.4)) : ""}`;
+}
+
+const NT_DRAW = { irr_sprinkler: ntIrrSprinkler, irr_tap: ntIrrTap, lit_globe: ntLitterGlobe, lit_box: ntLitterBox, det_smoke: ntDetSmoke, det_co: ntDetCo, det_leak: ntDetLeak, spk_smart: ntSpkSmart, spk_homepod_mini: ntSpkMini, spk_sonos_one: ntSpkOne, spk_bookshelf: ntSpkShelf, spk_sonos_move: ntSpkMove, spk_soundbar: ntSpkBar, spk_echo_dot: ntSpkDot, spk_nest_mini: ntSpkNest, spk_sonos_era100: ntSpkEra100, spk_sonos_era300: ntSpkEra300, spk_bose_wave: ntSpkWave, spk_bose_500: ntSpkBose500, spk_bose_soundlink: ntSpkFlex, spk_bose_soundbar: ntSpkBoseBar, con_ps1: conPs1, con_ps2: conPs2, con_ps3: conPs3, con_ps4: (c) => conPs4(c, false), con_ps4_pro: (c) => conPs4(c, true), con_ps5: conPs5, con_xbox: conXbox, con_xbox_360: conX360, con_xbox_one: conXone, con_xbox_series_x: conXsx, con_xbox_series_s: conXss, con_switch: (c) => conSwitch(c, false), con_switch_2: (c) => conSwitch(c, true), con_switch_lite: conSwitchLite, con_ps_vita: conVita, con_nes: conNes, con_snes: conSnes, con_n64: conN64, con_gamecube: conGamecube, con_wii: conWii, con_megadrive: conMegadrive, tank: ntTank, fws: ntFresh, solth: ntSolarThermal, wood: ntWoodStove, mob_scooter: mobScooter, mob_offroad: mobOffroad, mob_ebike: mobEbike, mob_gyropode: mobGyropode, mob_motorcycle: mobMotorcycle, meter_box: ntMeterBox, meter_dome: ntMeterDome, meter_gas: ntGas, meter_water: ntWater, booster: ntBooster, sump: ntSump, pool: ntPoolRobot, floor: ntFloor, spa: ntSpa, sauna: ntSauna, aquarium: ntAquarium, linky: ntLinky, tree: ntTree };
 function ntSvg(d) {
   ntN = 0;
   const draw = NT_DRAW[d && d.kind] || ntLinky;
@@ -2103,6 +2359,9 @@ const NT_CSS = `
         @keyframes nt-littilt{0%,6%{transform:rotate(0)}24%{transform:rotate(-14deg)}42%,54%{transform:rotate(-8deg)}68%{transform:rotate(6deg)}80%,84%{transform:rotate(10deg)}92%{transform:rotate(-3deg)}100%{transform:rotate(0)}}
         @keyframes nt-clump{0%,18%{opacity:1;transform:translate(0,0)}34%{opacity:1;transform:translate(-10px,3px)}44%{opacity:0;transform:translate(-14px,6px)}97%{opacity:0;transform:translate(0,0)}100%{opacity:1}}
         .nta-beacon{animation:nt-glow .7s ease-in-out infinite}
+        .nt-on .nta-flick{transform-box:fill-box;transform-origin:center bottom;animation:nt-flick .7s ease-in-out infinite alternate}
+        .nt-on .nta-flick.ntd3{animation-duration:.5s}
+        @keyframes nt-flick{0%{transform:scale(1,1) skewX(0)}50%{transform:scale(.94,1.08) skewX(3deg)}100%{transform:scale(1.04,.95) skewX(-3deg)}}
         @keyframes nt-spin{to{transform:rotate(360deg)}}
         @keyframes nt-flow{to{stroke-dashoffset:-24}}
         @keyframes nt-rise{0%{transform:translateY(0);opacity:0}15%{opacity:.95}100%{transform:translateY(-30px);opacity:0}}
@@ -2147,6 +2406,7 @@ function ntRemaining(hass, id) {
 // One reading of the new types: the mode, the state line, its colour, the
 // lines under it and what the drawing needs.
 function ntReadOf(type, hass, cfg, st, watts, threshold) {
+  if (HEAT_NT.includes(type)) return heatReadOf(type, hass, cfg, st);
   const lines = [];
   const raw = st ? String(st.state).trim().toLowerCase() : "";
   const dead = !st || ["unavailable", "unknown", "none", ""].includes(raw);
@@ -2467,3 +2727,199 @@ function ntControls(hass, cfg, type) {
   return out;
 }
 
+// The heating parts of #81 to #84: a buffer tank, a fresh water station,
+// solar thermal collectors and a log stove. They read temperatures more than
+// a state, so they are read here, apart from the other new types.
+const HEAT_NT = ["storage_tank", "fresh_water_station", "solar_thermal", "wood_stove"];
+const COLLECTOR_STYLES = ["flat", "tubes"];
+// A source or a consumer of a tank is idle on these, and on a number at 0.
+const HEAT_IDLE = ["off", "false", "0", "no", "idle", "standby", "none", "unknown", "unavailable", "", "aus", "inactive", "closed", "stopped", "paused", "nein"];
+function heatActive(hass, id) {
+  const s = id ? stateObj(hass, id) : null;
+  if (!s) return false;
+  const raw = String(s.state).trim().toLowerCase();
+  const n = numberOrNull(s.state);
+  if (n !== null) return n > 0;
+  return !HEAT_IDLE.includes(raw);
+}
+// A temperature in degrees Celsius for the colours, whatever its unit.
+function heatCelsius(hass, id, v) {
+  return /f/i.test(unitOf(hass, id)) ? (v - 32) * 5 / 9 : v;
+}
+function heatNum(v, def) {
+  const n = numberOrNull(v);
+  return n === null ? def : n;
+}
+// A temperature line, as Home Assistant prints it.
+function heatTempLine(hass, cfg, key, icon, labelKey, id) {
+  const v = id ? numericState(hass, id) : null;
+  if (v === null) return null;
+  return { key, icon, label: t(hass, labelKey), value: keepTogether(tempText(hass, cfg, id, v, temperatureUnit(hass, id))), entity: id };
+}
+// The difference between two temperatures, as a line.
+function heatDeltaLine(hass, cfg, key, a, b) {
+  const va = a ? numericState(hass, a) : null, vb = b ? numericState(hass, b) : null;
+  if (va === null || vb === null) return null;
+  const unit = /f/i.test(temperatureUnit(hass, a)) ? "\u00b0F" : "K";
+  return { key, icon: "mdi:delta", label: t(hass, "heat_delta"), value: keepTogether(`${fixedTemp(hass, va - vb, 1)} ${unit}`), entity: a };
+}
+function collectorStyleOf(cfg, st) {
+  if (COLLECTOR_STYLES.includes(cfg.collector_style)) return cfg.collector_style;
+  const hay = stripAccents(`${cfg.state_entity || ""} ${cfg.collector_temperature_entity || ""} ${cfg.name || ""} ${(st && st.attributes.friendly_name) || ""}`).toLowerCase();
+  return /tube|vacuum|vakuum|rohre|roehre|evacuated|sous.?vide/.test(hay) ? "tubes" : "flat";
+}
+function heatReadOf(type, hass, cfg, st) {
+  const lines = [];
+  const raw = st ? String(st.state).trim().toLowerCase() : "";
+  const dead = !st || ["unavailable", "unknown", "none", ""].includes(raw);
+  const out = (mode, labelKey, color, draw) => ({ mode, label: t(hass, labelKey), color, lines, draw: { ...draw, unav: mode === "unav" } });
+  const fault = cfg.fault_entity && heatActive(hass, cfg.fault_entity);
+  const faultLine = () => {
+    const f = ntLine(hass, cfg, "heat_fault", "mdi:alert-circle-outline", "heat_fault", cfg.fault_entity);
+    if (f) lines.push({ ...f, caution: fault });
+  };
+
+  if (type === "storage_tank") {
+    // One to five temperatures, top to bottom; the state entity alone is a
+    // tank with one probe.
+    const ids = entityEntries(cfg.temperature_entities, 5).map((e) => e.entity);
+    const probes = (ids.length ? ids : [cfg.state_entity]).map((id) => ({ id, v: id ? numericState(hass, id) : null })).filter((p) => p.v !== null);
+    if (!probes.length) return out("unav", "ev_offline", NT_COLORS.unav, { kind: "tank", temps: [] });
+    const cs = probes.map((p) => heatCelsius(hass, p.id, p.v));
+    const lo = heatNum(cfg.charge_min_temp, 30), hi = Math.max(lo + 1, heatNum(cfg.charge_max_temp, 60));
+    const loC = heatCelsius(hass, probes[0].id, lo), hiC = heatCelsius(hass, probes[0].id, hi);
+    const own = cfg.charge_entity ? numericState(hass, cfg.charge_entity) : null;
+    const charge = own !== null ? Math.max(0, Math.min(100, own))
+      : 100 * cs.reduce((a, c) => a + Math.max(0, Math.min(1, (c - loC) / (hiC - loC))), 0) / cs.length;
+    const srcs = entityEntries(cfg.sources, 6), cons = entityEntries(cfg.consumers, 6);
+    const name = (e) => e.name || (stateObj(hass, e.entity) && stateObj(hass, e.entity).attributes.friendly_name) || humanizeEntityId(e.entity);
+    const onSrc = srcs.filter((e) => heatActive(hass, e.entity)), onCon = cons.filter((e) => heatActive(hass, e.entity));
+    lines.push({ key: "tank_charge", icon: "mdi:battery-heart-variant", label: t(hass, "tank_charge"), value: keepTogether(`${Math.round(charge)} %`), entity: cfg.charge_entity || probes[0].id });
+    const vol = heatNum(cfg.tank_volume, null);
+    if (vol && vol > 0) {
+      // The heat above the cold temperature: litres x 4.186 kJ per kelvin.
+      const meanC = cs.reduce((a, c) => a + c, 0) / cs.length;
+      const kwh = Math.max(0, vol * 4.186 * (meanC - loC) / 3600);
+      lines.push({ key: "tank_energy", icon: "mdi:lightning-bolt", label: t(hass, "tank_energy"), value: keepTogether(`${netNumber(hass, kwh, kwh < 10 ? 1 : 0)} kWh`), entity: probes[0].id });
+    }
+    if (srcs.length) lines.push({ key: "tank_sources", icon: "mdi:fire", label: t(hass, "tank_sources"), value: onSrc.length ? onSrc.map(name).join(", ") : t(hass, "tank_none"), entity: (onSrc[0] || srcs[0]).entity, wrap: true });
+    if (cons.length) lines.push({ key: "tank_consumers", icon: "mdi:radiator", label: t(hass, "tank_consumers"), value: onCon.length ? onCon.map(name).join(", ") : t(hass, "tank_none"), entity: (onCon[0] || cons[0]).entity, wrap: true });
+    const loading = onSrc.length > 0;
+    const draw = { kind: "tank", on: loading || onCon.length > 0, temps: cs, labels: probes.map((p) => screenTemp(hass, cfg, p.id, p.v)), charge, loading, drawing: onCon.length > 0 };
+    if (loading) return out("loading", "tank_loading", NT_COLORS.heat, draw);
+    if (charge >= 80) return out("charged", "tank_charged", "#e53935", draw);
+    if (charge >= 20) return out("partly", "tank_partly", "#fb8c00", draw);
+    return out("discharged", "tank_discharged", NT_COLORS.run, draw);
+  }
+
+  if (type === "fresh_water_station") {
+    // Drawing water while the flow is above zero or the tank pump runs; the
+    // flow rate big on its screen, the outlet temperature otherwise.
+    const flowNum = st ? numberOrNull(st.state) : null;
+    const pumpOn = cfg.pump_entity ? heatActive(hass, cfg.pump_entity) : false;
+    if (dead && !cfg.pump_entity) return out("unav", "ev_offline", NT_COLORS.unav, { kind: "fws", lcd: "" });
+    const drawing = (flowNum !== null ? flowNum > 0 : !dead && NT_ON.includes(raw)) || pumpOn;
+    const circ = cfg.circulation_entity ? heatActive(hass, cfg.circulation_entity) : false;
+    const outV = cfg.temperature_entity ? numericState(hass, cfg.temperature_entity) : null;
+    const setV = cfg.target_temperature_entity ? numericState(hass, cfg.target_temperature_entity) : null;
+    const supV = cfg.primary_temperature_entity ? numericState(hass, cfg.primary_temperature_entity) : null;
+    if (flowNum !== null && st) lines.push({ key: "fws_flow", icon: "mdi:water-pump", label: t(hass, "fws_flow"), value: keepTogether(formatInfoValue(st, hass, null, cfg, cfg.state_entity)), entity: cfg.state_entity });
+    for (const [key, icon, label, id] of [["fws_out", "mdi:thermometer-water", "fws_outlet", cfg.temperature_entity], ["fws_set", "mdi:thermometer-check", "section_target_temperature", cfg.target_temperature_entity],
+      ["fws_supply", "mdi:thermometer-chevron-up", "fws_supply", cfg.primary_temperature_entity], ["fws_cold", "mdi:snowflake-thermometer", "fws_cold", cfg.cold_water_temperature_entity]]) {
+      const l = heatTempLine(hass, cfg, key, icon, label, id);
+      if (l) lines.push(l);
+    }
+    const mod = ntLine(hass, cfg, "fws_mod", "mdi:speedometer", "heat_pump_mod", cfg.pump_modulation_entity);
+    if (mod) lines.push(mod);
+    const cm = ntLine(hass, cfg, "fws_circ_mode", "mdi:sync", "fws_circ_mode", cfg.circulation_mode_entity);
+    if (cm) lines.push(cm);
+    faultLine();
+    const cold = setV !== null && supV !== null && supV < setV + 5;
+    const lcd = drawing && flowNum !== null && st ? formatInfoValue(st, hass, null, cfg, cfg.state_entity) : outV !== null ? screenTemp(hass, cfg, cfg.temperature_entity, outV).replace("\u00b0", `\u00b0${/f/i.test(temperatureUnit(hass, cfg.temperature_entity)) ? "F" : "C"}`) : "";
+    const draw = { kind: "fws", on: drawing || circ, drawing, circulating: circ, lcd: String(lcd) };
+    if (fault) return out("fault", "heat_fault_state", NT_COLORS.alarm, draw);
+    if (drawing) return out("drawing", "fws_drawing", NT_COLORS.run, draw);
+    if (cold) return out("cold", "fws_too_cold", "#fb8c00", draw);
+    if (circ) return out("circulating", "fws_circulating", NT_COLORS.lit, draw);
+    return out("standby", "fws_standby", NT_COLORS.idle, draw);
+  }
+
+  if (type === "solar_thermal") {
+    // The solar pump runs while the collectors load the tank; a shutdown
+    // entity or a collector above the stagnation limit is stagnation, a
+    // collector at or below freezing is frost.
+    const style = collectorStyleOf(cfg, st);
+    const colV = cfg.collector_temperature_entity ? numericState(hass, cfg.collector_temperature_entity) : null;
+    const colC = colV === null ? null : heatCelsius(hass, cfg.collector_temperature_entity, colV);
+    if (dead && colV === null) return out("unav", "ev_offline", NT_COLORS.unav, { kind: "solth", style, lcd: "" });
+    const modV = cfg.pump_modulation_entity ? numericState(hass, cfg.pump_modulation_entity) : null;
+    const pump = (!dead && (NT_ON.includes(raw) || numberOrNull(st.state) > 0)) || (modV !== null && modV > 0);
+    const stag = (cfg.collector_shutdown_entity && heatActive(hass, cfg.collector_shutdown_entity)) || (colV !== null && colV >= heatNum(cfg.stagnation_temp, /f/i.test(unitOf(hass, cfg.collector_temperature_entity)) ? 248 : 120));
+    const full = cfg.tank_full_entity && heatActive(hass, cfg.tank_full_entity);
+    const frost = colC !== null && colC <= 0;
+    for (const [key, icon, label, id] of [["sth_col", "mdi:solar-panel-large", "sth_collector", cfg.collector_temperature_entity], ["sth_tank", "mdi:storage-tank-outline", "sth_tank", cfg.tank_temperature_entity]]) {
+      const l = heatTempLine(hass, cfg, key, icon, label, id);
+      if (l) lines.push(l);
+    }
+    const dl = heatDeltaLine(hass, cfg, "sth_delta", cfg.collector_temperature_entity, cfg.tank_temperature_entity);
+    if (dl) lines.push(dl);
+    for (const [key, icon, label, id] of [["sth_power", "mdi:fire", "sth_power", cfg.heat_power_entity], ["sth_today", "mdi:solar-power-variant", "sth_today", cfg.today_entity], ["sth_mod", "mdi:speedometer", "heat_pump_mod", cfg.pump_modulation_entity]]) {
+      const l = ntLine(hass, cfg, key, icon, label, id);
+      if (l) lines.push(l);
+    }
+    faultLine();
+    const lcd = colV !== null ? screenTemp(hass, cfg, cfg.collector_temperature_entity, colV).replace("\u00b0", `\u00b0${/f/i.test(temperatureUnit(hass, cfg.collector_temperature_entity)) ? "F" : "C"}`) : "";
+    const draw = { kind: "solth", style, on: pump || stag, lcd, fast: modV === null || modV >= 60, frost: frost && !pump, stagnation: stag };
+    if (fault) return out("fault", "heat_fault_state", NT_COLORS.alarm, draw);
+    if (stag) return out("stagnation", "sth_stagnation", NT_COLORS.alarm, draw);
+    if (pump) return out("loading", "sth_loading", NT_COLORS.heat, draw);
+    if (full) return out("full", "sth_full", NT_COLORS.lit, draw);
+    if (frost) return out("frost", "sth_frost", NT_COLORS.run, draw);
+    return out("standby", "sth_standby", NT_COLORS.idle, draw);
+  }
+
+  // A log stove: burning, embers or cold from its temperature and two
+  // thresholds; a status entity that is simply on is a fire.
+  const scale = heatNum(cfg.temperature_scale, 1) || 1;
+  const vRaw = st ? numberOrNull(st.state) : null;
+  const v = vRaw === null ? null : vRaw * scale;
+  if (dead) return out("unav", "ev_offline", NT_COLORS.unav, { kind: "wood", st: "cold", water: !!cfg.water_jacket });
+  const burnT = heatNum(cfg.burning_temp, 120), embT = Math.min(burnT, heatNum(cfg.embers_temp, 50));
+  const unit = temperatureUnit(hass, cfg.state_entity);
+  const fire = v !== null ? (v >= burnT ? "burning" : v >= embT ? "embers" : "cold") : NT_ON.includes(raw) || /burn|fire|feu|brenn|heiz/.test(raw) ? "burning" : "cold";
+  if (v !== null) lines.push({ key: "wood_temp", icon: "mdi:thermometer-high", label: t(hass, "wood_temp"), value: keepTogether(tempText(hass, { ...cfg, temperature_decimals: scale !== 1 ? "1" : cfg.temperature_decimals }, scale !== 1 ? null : cfg.state_entity, v, unit)), entity: cfg.state_entity });
+  for (const [key, icon, label, id] of [["wood_flow", "mdi:thermometer-chevron-up", "wood_flow", cfg.flow_temperature_entity], ["wood_return", "mdi:thermometer-chevron-down", "wood_return", cfg.return_temperature_entity]]) {
+    const l = heatTempLine(hass, cfg, key, icon, label, id);
+    if (l) lines.push(l);
+  }
+  const dl = heatDeltaLine(hass, cfg, "wood_delta", cfg.flow_temperature_entity, cfg.return_temperature_entity);
+  if (dl) lines.push(dl);
+  const pumpOn = cfg.pump_entity ? heatActive(hass, cfg.pump_entity) : false;
+  const waterId = cfg.flow_temperature_entity || cfg.state_entity;
+  const waterV = cfg.flow_temperature_entity ? numericState(hass, cfg.flow_temperature_entity) : v;
+  const overT = heatNum(cfg.overheat_temp, 90);
+  const over = !!cfg.water_jacket && waterV !== null && waterV >= overT;
+  if (cfg.pump_entity) {
+    // A pump left off while the water is hot is worth a glance.
+    const hot = !!cfg.water_jacket && waterV !== null && waterV >= Math.min(overT, 60) && waterId;
+    lines.push({ key: "wood_pump", icon: "mdi:pump", label: t(hass, "wood_pump"), value: t(hass, pumpOn ? "opt_running" : "opt_stopped"), entity: cfg.pump_entity, caution: !pumpOn && !!hot });
+  }
+  const vs = cfg.valve_entity ? stateObj(hass, cfg.valve_entity) : null;
+  if (vs && !HA_OFFLINE_STATES.includes(String(vs.state).toLowerCase())) {
+    const pos = numberOrNull(vs.attributes.current_position);
+    const n = numberOrNull(vs.state);
+    const val = pos !== null ? `${Math.round(pos)} %` : n !== null ? formatInfoValue(vs, hass, null, cfg, cfg.valve_entity) : t(hass, ["open", "opening", "on"].includes(String(vs.state).toLowerCase()) ? "mb_open" : "mb_closed");
+    lines.push({ key: "wood_valve", icon: "mdi:valve", label: t(hass, "wood_valve"), value: keepTogether(String(val)), entity: cfg.valve_entity });
+  }
+  const room = heatTempLine(hass, cfg, "wood_room", "mdi:home-thermometer-outline", "wood_room", cfg.temperature_entity);
+  if (room) lines.push(room);
+  const last = ntLine(hass, cfg, "wood_last", "mdi:history", "wood_last_fire", cfg.last_fire_entity);
+  if (last) lines.push(last);
+  // The dial reads to 400 degrees on a flue, to 100 on water.
+  const max = burnT >= 100 ? (/f/i.test(unit) ? 800 : 400) : (/f/i.test(unit) ? 212 : 100);
+  const draw = { kind: "wood", on: fire !== "cold", st: fire, flue: v, max, low: embT, water: !!cfg.water_jacket, pump: pumpOn, lcd: "" };
+  if (over) return out("overheat", "wood_overheat", NT_COLORS.alarm, draw);
+  if (fire === "burning") return out("burning", "wood_burning", NT_COLORS.heat, draw);
+  if (fire === "embers") return out("embers", "wood_embers", "#fb8c00", draw);
+  return out("cold", "wood_cold", NT_COLORS.off, draw);
+}

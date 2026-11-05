@@ -232,6 +232,36 @@ const SECTIONS = [
   { field: "game_entity", types: ["console"], labelKey: "con_game", includeDomains: ["sensor", "media_player", "input_text"] },
   { field: "playtime_entity", types: ["console"], labelKey: "con_playtime", includeDomains: ["sensor", "number"] },
   { field: "playtime_left_entity", types: ["console"], labelKey: "con_playtime_left", includeDomains: ["sensor", "number"] },
+  // A buffer tank (#81): its own charge, when its controller counts it.
+  { field: "charge_entity", types: ["storage_tank"], labelKey: "tank_charge", includeDomains: ["sensor", "number", "input_number"] },
+  // A fresh water station (#82): the outlet, its setpoint, the tank's supply
+  // and the cold water, the primary pump, the circulation and a fault.
+  { field: "temperature_entity", types: ["fresh_water_station"], labelKey: "fws_outlet", includeDomains: ["sensor", "number", "input_number"] },
+  { field: "target_temperature_entity", types: ["fresh_water_station"], labelKey: "section_target_temperature", includeDomains: ["number", "sensor", "input_number"] },
+  { field: "primary_temperature_entity", types: ["fresh_water_station"], labelKey: "fws_supply", includeDomains: ["sensor", "number", "input_number"] },
+  { field: "cold_water_temperature_entity", types: ["fresh_water_station"], labelKey: "fws_cold", includeDomains: ["sensor", "number", "input_number"] },
+  { field: "pump_entity", types: ["fresh_water_station"], labelKey: "fws_pump", includeDomains: ["binary_sensor", "switch", "sensor", "input_boolean"] },
+  { field: "circulation_entity", types: ["fresh_water_station"], labelKey: "fws_circulation", includeDomains: ["binary_sensor", "switch", "sensor", "input_boolean"] },
+  { field: "circulation_mode_entity", types: ["fresh_water_station"], labelKey: "fws_circ_mode", includeDomains: ["select", "input_select", "sensor"] },
+  // Solar thermal (#83): the collector and the tank, the heat it brings, the
+  // day's yield, a shutdown and a full tank.
+  { field: "collector_temperature_entity", types: ["solar_thermal"], labelKey: "sth_collector", includeDomains: ["sensor", "number", "input_number"],
+    extra: (c) => c._row("sth_stagnation_temp", "stagnation_temp", { placeholder: "120" }) },
+  { field: "tank_temperature_entity", types: ["solar_thermal"], labelKey: "sth_tank", includeDomains: ["sensor", "number", "input_number"] },
+  { field: "heat_power_entity", types: ["solar_thermal"], labelKey: "sth_power", includeDomains: ["sensor"] },
+  { field: "today_entity", types: ["solar_thermal"], labelKey: "sth_today", includeDomains: ["sensor", "input_number"] },
+  { field: "collector_shutdown_entity", types: ["solar_thermal"], labelKey: "sth_stagnation", includeDomains: ["binary_sensor", "sensor", "input_boolean"] },
+  { field: "tank_full_entity", types: ["solar_thermal"], labelKey: "sth_full", includeDomains: ["binary_sensor", "sensor", "input_boolean"] },
+  { field: "pump_modulation_entity", types: ["fresh_water_station", "solar_thermal"], labelKey: "heat_pump_mod", includeDomains: ["sensor", "number"] },
+  { field: "fault_entity", types: ["fresh_water_station", "solar_thermal"], labelKey: "heat_fault", includeDomains: ["binary_sensor", "sensor"] },
+  // A log stove (#84): its water jacket's flow and return, pump and valve,
+  // the room, the last fire.
+  { field: "flow_temperature_entity", types: ["wood_stove"], labelKey: "wood_flow", includeDomains: ["sensor", "number", "input_number"] },
+  { field: "return_temperature_entity", types: ["wood_stove"], labelKey: "wood_return", includeDomains: ["sensor", "number", "input_number"] },
+  { field: "pump_entity", types: ["wood_stove"], labelKey: "wood_pump", includeDomains: ["binary_sensor", "switch", "sensor", "input_boolean"] },
+  { field: "valve_entity", types: ["wood_stove"], labelKey: "wood_valve", includeDomains: ["cover", "valve", "number", "sensor", "input_number"] },
+  { field: "temperature_entity", types: ["wood_stove"], labelKey: "wood_room", includeDomains: ["sensor", "number", "input_number"] },
+  { field: "last_fire_entity", types: ["wood_stove"], labelKey: "wood_last_fire", includeDomains: ["input_datetime", "sensor"] },
   { field: "cat_present_entity", types: ["litter_box"], labelKey: "sec_cat_present", includeDomains: ["binary_sensor"] },
   { field: "co_level_entity", types: ["detector"], labelKey: "sec_co_level", includeDomains: ["sensor"], when: (c) => detectorLayoutOf(c, null) === "co" },
   { field: "test_entity", types: ["detector"], labelKey: "sec_test", includeDomains: ["button", "input_button", "script", "switch"] },
@@ -1353,6 +1383,16 @@ class ApplianceCardEditor extends HTMLElement {
           type: "select",
           options: TREE_PRESENTS.map((v) => ({ value: v, label: t(hass, `presents_${v}`) })),
         }) : ""}
+        ${this._type === "storage_tank" ? this._row("tank_min_temp", "charge_min_temp", { placeholder: "30" }) + this._row("tank_max_temp", "charge_max_temp", { placeholder: "60" })
+          + this._row("tank_volume", "tank_volume", { placeholder: "750" }) : ""}
+        ${this._type === "solar_thermal" ? this._row("section_screen_layout", "collector_style", {
+          type: "select",
+          options: [{ value: "auto", label: t(hass, "unit_auto") }].concat(COLLECTOR_STYLES.map((v) => ({ value: v, label: t(hass, `layout_sth_${v}`) }))),
+        }) : ""}
+        ${this._type === "wood_stove" ? this._row("wood_water_jacket", "water_jacket", { type: "checkbox" })
+          + this._row("wood_burning_temp", "burning_temp", { placeholder: "120" }) + this._row("wood_embers_temp", "embers_temp", { placeholder: "50" })
+          + (this._config.water_jacket ? this._row("wood_overheat_temp", "overheat_temp", { placeholder: "90" }) : "")
+          + this._row("wood_scale", "temperature_scale", { placeholder: "1" }) : ""}
         ${this._type === "lamp" ? this._row("section_screen_layout", "lamp_layout", {
           type: "select",
           options: [{ value: "auto", label: t(hass, "unit_auto") }].concat(LAMP_LAYOUTS.map((v) => ({ value: v, label: t(hass, `layout_lamp_${v}`) }))),

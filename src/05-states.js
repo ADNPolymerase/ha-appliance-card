@@ -990,6 +990,14 @@ const ENTITY_LISTS = [
   // A ventilation unit run by one entity per speed (#78), in order.
   { panel: "speeds", field: "speed_entities", max: 6, title: "section_speed_list", add: "speeds_add", types: ["hrv"],
     domains: ["input_boolean", "switch", "light"], offers: (hass, id) => ["input_boolean", "switch", "light"].includes(domainOf(id)), icon: () => "mdi:fan" },
+  // A buffer tank (#81): its temperatures top to bottom, and the sources and
+  // consumers drawn on its sides, lit while they run.
+  { panel: "tank_temps", field: "temperature_entities", max: 5, title: "tank_temps_list", add: "tank_temps_add", types: ["storage_tank"],
+    domains: ["sensor", "number", "input_number"], offers: (hass, id) => ["sensor", "number"].includes(domainOf(id)) && /temp/.test(String((stateObj(hass, id) || { attributes: {} }).attributes.device_class || id)), icon: () => "mdi:thermometer" },
+  { panel: "tank_sources", field: "sources", max: 6, title: "tank_sources", add: "tank_sources_add", types: ["storage_tank"],
+    domains: ["binary_sensor", "switch", "sensor", "input_boolean"], offers: () => false, icon: () => "mdi:fire" },
+  { panel: "tank_consumers", field: "consumers", max: 6, title: "tank_consumers", add: "tank_consumers_add", types: ["storage_tank"],
+    domains: ["binary_sensor", "switch", "sensor", "input_boolean"], offers: () => false, icon: () => "mdi:radiator" },
 ];
 
 // What a menu offers: the appliance's own, less what the card already shows

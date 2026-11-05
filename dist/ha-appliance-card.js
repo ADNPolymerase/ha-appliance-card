@@ -158,7 +158,7 @@ const T = {
     layout_robot_floor_washer: "Floor washer", stick_away: "Off the base", stick_away_threshold: "Off the base below this power (W)",
     type_diffuser: "Essential oil diffuser", dif_mist: "Diffusing", dif_inter: "Intermittent", dif_low: "Light mist", dif_empty: "Tank empty", dif_mode: "Mist mode", layout_dif_drop: "Teardrop", layout_dif_cone: "Cone", layout_dif_stone: "Pebble", layout_dif_flame: "Flame", layout_dif_nebulizer: "Nebulizer", section_tank_empty: "Empty tank sensor", type_hrv: "Heat recovery ventilation (HRV/ERV)", hrv_run: "Ventilating", hrv_boost: "Boost", hrv_bypass: "Bypass", hrv_defrost: "Defrosting", hrv_filter: "Replace filter", hrv_away: "Away", hrv_recirc: "Recirculation", hrv_humidity: "Humidity control", hrv_inter: "Intermittent", hrv_inter_paused: "Intermittent, paused", hrv_mode: "Mode", hrv_speed: "Speed", section_speed_list: "Speeds (one entity per speed)", speeds_add: "Add a speed", section_active_mode: "Active mode (when it differs from the one set)", hrv_supply_fan: "Supply fan", hrv_exhaust_fan: "Exhaust fan", section_supply_fan: "Supply fan speed (rpm)", section_exhaust_fan: "Exhaust fan speed (rpm)", fan_max_rpm: "Fan top speed (rpm)", section_exhaust_airflow: "Exhaust airflow", section_target_humidity: "Humidity setpoint", section_humidity_control: "Humidity control switch", layout_hrv_diagram: "Air flows", layout_hrv_one_duct: "Wall unit, one duct", layout_hrv_pair: "Through-wall pair", section_supply_temperature: "Supply air temperature", section_extract_temperature: "Extract air temperature", section_exhaust_temperature: "Exhaust air temperature", section_bypass: "Bypass", section_airflow: "Airflow", hrv_t_outdoor: "fresh air", hrv_t_supply: "supply", hrv_t_extract: "extract", hrv_t_exhaust: "exhaust", hrv_outside: "outside", hrv_room: "room", layout_hrv_single: "Extract only (single flow)", hrv_low_speed: "Low speed", hrv_high_speed: "High speed", section_high_speed: "High speed switch", wp_off: "Switched off", layout_hrv_single_box: "Extract unit alone",
     type_camera: "Camera", cam_idle: "Idle", cam_live: "Streaming", cam_rec: "Recording", cam_motion: "Motion detected", cam_off: "Off", cam_line_last_motion: "Last motion", cam_line_night: "Night vision", cam_line_signal: "Signal", section_motion: "Motion sensor", section_recording: "Recording sensor", section_night_vision: "Night vision", section_privacy: "Privacy mode", section_signal: "Signal strength", layout_cam_indoor: "Indoor, pan and tilt", layout_cam_tube: "Indoor tube", layout_cam_outdoor: "Outdoor", layout_cam_dome: "Dome", layout_cam_doorbell: "Doorbell", cam_ring: "Ringing", cam_line_last_ring: "Last ring", section_ring: "Doorbell button", type_mailbox: "Mailbox", mb_empty: "Empty", mb_mail: "Mail", mb_front_open: "Front door open", mb_back_open: "Back door open", mb_line_count: "Mail received", mb_line_last: "Last mail", mb_front_door: "Front door", mb_back_door: "Back door", mb_open: "Open", mb_closed: "Closed", section_mail_count: "Mail counter", layout_mb_through: "Through the wall", layout_mb_classic: "Classic", mb_street: "street", mb_house: "house", mb_front_side: "Street side", mb_side_left: "Left", mb_side_right: "Right", type_water_pump: "Water pump", type_floor_heating: "Underfloor heating", type_spa: "Spa", type_sauna: "Sauna", type_aquarium: "Aquarium", type_meter: "Electricity meter", type_christmas_tree: "Christmas tree", layout_chest: "Chest freezer", layout_drawers: "Drawer freezer", layout_pump_booster: "Booster set", layout_pump_sump: "Sump pump", layout_floor_water: "Hot water", layout_floor_electric: "Electric", layout_robot_pool: "Pool robot", wp_pumping: "Pumping", wp_high: "High level", spa_bubbles: "Bubbles", sauna_ready: "Ready", aq_lit: "Light on", aq_dark: "Light off", meter_low: "Low use", meter_high: "High use", layout_meter_linky: "Linky", layout_meter_box: "Electricity meter", layout_meter_dome: "Round meter", layout_meter_gas: "Gas meter", layout_meter_water: "Water meter", section_today_use: "Today's use (kWh, m\u00b3)", section_meter_index: "Meter index", meter_index: "Index", meter_flowing: "In use", meter_idle: "No use", meter_export: "Feeding in", meter_export_index: "Export index", meter_direction: "Power direction", meter_dir_auto: "Auto (negative = feed-in)", meter_dir_import: "Consumption only", meter_dir_export: "Feed-in only", meter_flow: "Flow", section_pressure: "Pressure", section_water_level: "Water level", section_high_level: "High level alarm", level_max: "Level when full", section_bubbles: "Bubbles", section_tariff: "Tariff period", high_power: "High use from (W or VA)", tree_palette: "Colours", palette_multicolor: "Multicolour", palette_red_gold: "Red and gold", palette_red_silver: "Red and silver", palette_gold_silver: "Gold and silver", palette_blue_silver: "Blue and silver", palette_white_silver: "White and silver", palette_red_green: "Red and green", presents: "Presents", presents_auto: "On 24 and 25 December", presents_show: "Always", presents_hide: "Never", tree_on: "On", tree_off: "Off",
-    type_lamp: "Lamp", lamp_off: "Off", lamp_on: "On", lamp_line_brightness: "Brightness", lamp_line_color_temp: "Colour temperature", lamp_line_effect: "Effect", lamp_timer: "Timer", show_toggle: "On/off button", line_hide: "Hide this line", line_show: "Show this line", illustration_tap_action: "Tap on the drawing", pic_tap_default: "Card's own", pic_tap_toggle: "Toggle", pic_tap_more: "Details", pic_tap_none: "Nothing", lamp_spots: "Number of spots", layout_lamp_bulb: "Bulb", layout_lamp_bedside: "Bedside lamp", layout_lamp_floor: "Arc floor lamp", layout_lamp_torch: "Torchiere", layout_lamp_pendant: "Pendant", layout_lamp_strip: "LED strip", layout_lamp_spot: "Recessed spots", layout_lamp_panels: "Light panels", layout_lamp_desk: "Desk lamp", layout_lamp_wall: "Wall lantern", layout_lamp_garden_spot: "Garden spotlight", layout_lamp_bollard: "Garden bollard", layout_lamp_string: "String lights", layout_lamp_curtain: "Curtain lights", layout_lamp_icicle: "Icicle lights", layout_lamp_festoon: "Festoon lights", layout_lamp_squares: "Pixel squares", type_irrigation: "Watering", type_litter_box: "Self-cleaning litter box", type_detector: "Smoke, CO or leak detector", type_speaker: "Speaker", type_console: "Game console", con_playing: "Playing", con_on: "On", con_rest: "Rest mode", con_off: "Off", con_game: "Game", con_playtime: "Play time today", con_playtime_left: "Play time left", layout_con_ps1: "PlayStation", layout_con_ps2: "PlayStation 2", layout_con_ps3: "PlayStation 3", layout_con_ps4: "PlayStation 4", layout_con_ps4_pro: "PlayStation 4 Pro", layout_con_ps5: "PlayStation 5", layout_con_xbox: "Xbox", layout_con_xbox_360: "Xbox 360", layout_con_xbox_one: "Xbox One", layout_con_xbox_series_x: "Xbox Series X", layout_con_xbox_series_s: "Xbox Series S", layout_con_switch: "Nintendo Switch", layout_con_switch_2: "Nintendo Switch 2", layout_con_switch_lite: "Nintendo Switch Lite", layout_con_ps_vita: "PS Vita", layout_con_nes: "NES", layout_con_snes: "Super Nintendo", layout_con_n64: "Nintendo 64", layout_con_gamecube: "GameCube", layout_con_wii: "Wii", layout_con_megadrive: "Mega Drive", layout_irr_sprinkler: "Pop-up sprinkler", layout_irr_tap: "Tap timer", layout_lit_globe: "Rotating globe", layout_lit_box: "Closed box", layout_det_smoke: "Smoke detector", layout_det_co: "CO alarm", layout_det_leak: "Water leak sensor", layout_spk_smart: "Smart speaker (HomePod)", layout_spk_bookshelf: "Bookshelf speaker", layout_spk_soundbar: "Soundbar", layout_spk_homepod_mini: "HomePod mini", layout_spk_sonos_one: "Compact (Sonos One)", layout_spk_sonos_move: "Portable (Sonos Move)", layout_spk_echo_dot: "Sphere (Echo Dot)", layout_spk_nest_mini: "Puck (Nest Mini)", layout_spk_sonos_era100: "Sonos Era 100", layout_spk_sonos_era300: "Sonos Era 300", layout_spk_bose_wave: "Bose Wave SoundTouch", layout_spk_bose_500: "Bose Home Speaker 500", layout_spk_bose_soundlink: "Portable (Bose SoundLink)", layout_spk_bose_soundbar: "Soundbar (Bose)", speaker_color: "Speaker colour", irr_watering: "Watering", irr_waiting: "Waiting", irr_rain: "Rain delay", irr_zone: "Zone", section_rain_delay: "Rain delay", section_soil_moisture: "Soil moisture", section_next_run: "Next watering", lit_ready: "Ready", lit_cleaning: "Cleaning", lit_cat: "Cat inside", lit_full: "Drawer full", lit_fault: "Fault", lit_sleep: "Sleeping", sec_waste_drawer: "Waste drawer", sec_litter_level: "Litter level", sec_pet_weight: "Cat's weight", sec_visits: "Visits", sec_last_use: "Last visit", sec_cat_present: "Cat sensor", det_ok: "All clear", det_smoke: "Smoke detected", det_co: "CO detected", det_leak: "Leak detected", sec_test: "Test button", sec_co_level: "CO level", spk_playing: "Playing", spk_paused: "Paused", spk_idle: "Idle", spk_off: "Off", spk_title: "Title", spk_artist: "Artist", spk_source: "Source", spk_volume: "Volume", spk_muted: "Muted", play_pause: "Play/pause", opt_low: "Low", opt_ok: "OK", opt_running: "Running", opt_stopped: "Stopped", lock_locked: "Locked", lock_unlocked: "Unlocked", sec_meat_probe: "Meat probe", sec_meat_probe_target: "Probe target", sec_detergent: "Detergent level", sec_softener: "Softener level", sec_wash_temp: "Wash temperature", sec_spin: "Spin speed", sec_heater_mode: "Mode", sec_showers: "Showers available", sec_pilot_mode: "Pilot wire mode", sec_window: "Window", sec_range: "Range", sec_vehicle_lock: "Lock", sec_water_chlorine: "Chlorine", sec_aq_filter: "Filter pump",
+    type_lamp: "Lamp", lamp_off: "Off", lamp_on: "On", lamp_line_brightness: "Brightness", lamp_line_color_temp: "Colour temperature", lamp_line_effect: "Effect", lamp_timer: "Timer", show_toggle: "On/off button", line_hide: "Hide this line", line_show: "Show this line", illustration_tap_action: "Tap on the drawing", pic_tap_default: "Card's own", pic_tap_toggle: "Toggle", pic_tap_more: "Details", pic_tap_none: "Nothing", lamp_spots: "Number of spots", layout_lamp_bulb: "Bulb", layout_lamp_bedside: "Bedside lamp", layout_lamp_floor: "Arc floor lamp", layout_lamp_torch: "Torchiere", layout_lamp_pendant: "Pendant", layout_lamp_strip: "LED strip", layout_lamp_spot: "Recessed spots", layout_lamp_panels: "Light panels", layout_lamp_desk: "Desk lamp", layout_lamp_wall: "Wall lantern", layout_lamp_garden_spot: "Garden spotlight", layout_lamp_bollard: "Garden bollard", layout_lamp_string: "String lights", layout_lamp_curtain: "Curtain lights", layout_lamp_icicle: "Icicle lights", layout_lamp_festoon: "Festoon lights", layout_lamp_squares: "Pixel squares", type_irrigation: "Watering", type_litter_box: "Self-cleaning litter box", type_detector: "Smoke, CO or leak detector", type_speaker: "Speaker", type_console: "Game console", con_playing: "Playing", con_on: "On", con_rest: "Rest mode", con_off: "Off", con_game: "Game", con_playtime: "Play time today", con_playtime_left: "Play time left", layout_con_ps1: "PlayStation", layout_con_ps2: "PlayStation 2", layout_con_ps3: "PlayStation 3", layout_con_ps4: "PlayStation 4", layout_con_ps4_pro: "PlayStation 4 Pro", layout_con_ps5: "PlayStation 5", layout_con_xbox: "Xbox", layout_con_xbox_360: "Xbox 360", layout_con_xbox_one: "Xbox One", layout_con_xbox_series_x: "Xbox Series X", layout_con_xbox_series_s: "Xbox Series S", layout_con_switch: "Nintendo Switch", layout_con_switch_2: "Nintendo Switch 2", layout_con_switch_lite: "Nintendo Switch Lite", layout_con_ps_vita: "PS Vita", layout_con_nes: "NES", layout_con_snes: "Super Nintendo", layout_con_n64: "Nintendo 64", layout_con_gamecube: "GameCube", layout_con_wii: "Wii", layout_con_megadrive: "Mega Drive", layout_irr_sprinkler: "Pop-up sprinkler", layout_irr_tap: "Tap timer", layout_lit_globe: "Rotating globe", layout_lit_box: "Closed box", layout_det_smoke: "Smoke detector", layout_det_co: "CO alarm", layout_det_leak: "Water leak sensor", layout_spk_smart: "Smart speaker (HomePod)", layout_spk_bookshelf: "Bookshelf speaker", layout_spk_soundbar: "Soundbar", layout_spk_homepod_mini: "HomePod mini", layout_spk_sonos_one: "Compact (Sonos One)", layout_spk_sonos_move: "Portable (Sonos Move)", layout_spk_echo_dot: "Sphere (Echo Dot)", layout_spk_nest_mini: "Puck (Nest Mini)", layout_spk_sonos_era100: "Sonos Era 100", layout_spk_sonos_era300: "Sonos Era 300", layout_spk_bose_wave: "Bose Wave SoundTouch", layout_spk_bose_500: "Bose Home Speaker 500", layout_spk_bose_soundlink: "Portable (Bose SoundLink)", layout_spk_bose_soundbar: "Soundbar (Bose)", speaker_color: "Speaker colour", irr_watering: "Watering", irr_waiting: "Waiting", irr_rain: "Rain delay", irr_zone: "Zone", section_rain_delay: "Rain delay", section_soil_moisture: "Soil moisture", section_next_run: "Next watering", lit_ready: "Ready", lit_cleaning: "Cleaning", lit_cat: "Cat inside", lit_full: "Drawer full", lit_fault: "Fault", lit_sleep: "Sleeping", sec_waste_drawer: "Waste drawer", sec_litter_level: "Litter level", sec_pet_weight: "Cat's weight", sec_visits: "Visits", sec_last_use: "Last visit", sec_cat_present: "Cat sensor", det_ok: "All clear", det_smoke: "Smoke detected", det_co: "CO detected", det_leak: "Leak detected", sec_test: "Test button", sec_co_level: "CO level", spk_playing: "Playing", spk_paused: "Paused", spk_idle: "Idle", spk_off: "Off", spk_title: "Title", spk_artist: "Artist", spk_source: "Source", spk_volume: "Volume", spk_muted: "Muted", play_pause: "Play/pause", opt_low: "Low", opt_ok: "OK", opt_running: "Running", opt_stopped: "Stopped", lock_locked: "Locked", lock_unlocked: "Unlocked", sec_meat_probe: "Meat probe", sec_meat_probe_target: "Probe target", sec_detergent: "Detergent level", sec_softener: "Softener level", sec_wash_temp: "Wash temperature", sec_spin: "Spin speed", sec_heater_mode: "Mode", sec_showers: "Showers available", sec_pilot_mode: "Pilot wire mode", sec_window: "Window", sec_range: "Range", sec_vehicle_lock: "Lock", sec_water_chlorine: "Chlorine", sec_aq_filter: "Filter pump", type_storage_tank: "Buffer tank", type_fresh_water_station: "Fresh water station", type_solar_thermal: "Solar thermal", type_wood_stove: "Wood stove", heat_delta: "Difference", heat_fault: "Fault", heat_fault_state: "Fault", heat_pump_mod: "Pump modulation", tank_charge: "Charge", tank_energy: "Stored energy", tank_sources: "Sources", tank_consumers: "Consumers", tank_none: "None", tank_loading: "Loading", tank_charged: "Charged", tank_partly: "Partly charged", tank_discharged: "Discharged", tank_temps_list: "Tank temperatures (top to bottom)", tank_temps_add: "Add a temperature", tank_sources_add: "Add a source", tank_consumers_add: "Add a consumer", tank_min_temp: "Cold temperature (0 %)", tank_max_temp: "Charged temperature (100 %)", tank_volume: "Volume (litres)", fws_flow: "Flow", fws_outlet: "Outlet temperature", fws_supply: "Tank supply", fws_cold: "Cold water", fws_circ_mode: "Circulation mode", fws_drawing: "Drawing hot water", fws_too_cold: "Supply too cold", fws_circulating: "Circulating", fws_standby: "Standby", fws_pump: "Primary pump", fws_circulation: "Circulation pump", sth_collector: "Collector", sth_tank: "Tank", sth_power: "Heat output", sth_today: "Yield today", sth_stagnation: "Stagnation", sth_loading: "Loading", sth_full: "Tank full", sth_frost: "Frost", sth_standby: "Standby", sth_stagnation_temp: "Stagnation temperature", layout_sth_flat: "Flat plates", layout_sth_tubes: "Evacuated tubes", wood_temp: "Stove temperature", wood_flow: "Flow", wood_return: "Return", wood_pump: "Pump", wood_valve: "Valve", wood_room: "Room", wood_last_fire: "Last fire", wood_overheat: "Overheating", wood_burning: "Burning", wood_embers: "Embers", wood_cold: "Cold", wood_water_jacket: "Water jacket", wood_burning_temp: "Burning from (temperature)", wood_embers_temp: "Embers from (temperature)", wood_overheat_temp: "Overheat above (water)", wood_scale: "Temperature scale (multiplier)",
     speed_power_max: "Power at top speed (W)", speed_power_custom: "Custom speed thresholds", speed_power_2: "Speed 2 from (W)", speed_power_3: "Speed 3 from (W)",
     fw_self_cleaning: "Self-cleaning", fw_dirty_full: "Dirty water tank full", fw_clean_empty: "Clean water tank empty",
     group_energy: "Energy", type_solar: "Solar panels", type_home_battery: "Home battery", solar_producing: "Producing", solar_low: "Low production", solar_night: "Night", section_solar_layout: "Mounting", layout_solar_ground: "On the ground", layout_solar_roof: "On a roof", section_solar_power: "Power produced", section_energy_today: "Energy produced today", solar_line_today: "Today", solar_peak_power: "Peak power of the panels (W)", section_battery_power: "Battery power (+ charging, \u2212 discharging)", power_inverted: "Positive power means discharging", section_charge_power: "Charge power", section_battery_discharge: "Discharge power", section_reserve: "Backup reserve", section_charge_limit: "Charge limit", battery_capacity: "Capacity (kWh)", layout_battery_wall: "Wall battery", layout_battery_station: "Portable power station", bat_idle: "Idle", bat_full: "Full", bat_low: "Low battery", bat_line_full_in: "Full in", bat_line_left: "Remaining", bat_line_reserve: "Reserve",
@@ -2327,6 +2327,14 @@ const ENTITY_LISTS = [
   // A ventilation unit run by one entity per speed (#78), in order.
   { panel: "speeds", field: "speed_entities", max: 6, title: "section_speed_list", add: "speeds_add", types: ["hrv"],
     domains: ["input_boolean", "switch", "light"], offers: (hass, id) => ["input_boolean", "switch", "light"].includes(domainOf(id)), icon: () => "mdi:fan" },
+  // A buffer tank (#81): its temperatures top to bottom, and the sources and
+  // consumers drawn on its sides, lit while they run.
+  { panel: "tank_temps", field: "temperature_entities", max: 5, title: "tank_temps_list", add: "tank_temps_add", types: ["storage_tank"],
+    domains: ["sensor", "number", "input_number"], offers: (hass, id) => ["sensor", "number"].includes(domainOf(id)) && /temp/.test(String((stateObj(hass, id) || { attributes: {} }).attributes.device_class || id)), icon: () => "mdi:thermometer" },
+  { panel: "tank_sources", field: "sources", max: 6, title: "tank_sources", add: "tank_sources_add", types: ["storage_tank"],
+    domains: ["binary_sensor", "switch", "sensor", "input_boolean"], offers: () => false, icon: () => "mdi:fire" },
+  { panel: "tank_consumers", field: "consumers", max: 6, title: "tank_consumers", add: "tank_consumers_add", types: ["storage_tank"],
+    domains: ["binary_sensor", "switch", "sensor", "input_boolean"], offers: () => false, icon: () => "mdi:radiator" },
 ];
 
 // What a menu offers: the appliance's own, less what the card already shows
@@ -3026,6 +3034,12 @@ const TYPE_CAPS = {
   speaker: { ntSpeaker: true },
   // A game console, on PlayStation Network, Xbox, the PS4 integration or a plug.
   console: { ntConsole: true },
+  // The heating of #81 to #84: a buffer tank, a fresh water station, solar
+  // thermal collectors and a log stove, read from their temperatures.
+  storage_tank: { readOnly: true },
+  fresh_water_station: { readOnly: true },
+  solar_thermal: { readOnly: true },
+  wood_stove: { readOnly: true },
   // A thermostat on the wall or a valve on a radiator: the room, the
   // setpoint, and whether it calls for heat. A climate entity says it all.
   thermostat: { thermostat: true, readOnly: true },
@@ -3135,6 +3149,10 @@ const STATE_DOMAINS = {
   detector: ["binary_sensor", "sensor", "input_boolean"],
   speaker: ["media_player"],
   console: ["media_player", "sensor", "switch", "binary_sensor", "device_tracker", "input_boolean"],
+  storage_tank: ["sensor", "number", "input_number", "water_heater"],
+  fresh_water_station: ["sensor", "binary_sensor", "switch"],
+  solar_thermal: ["binary_sensor", "switch", "sensor"],
+  wood_stove: ["sensor", "binary_sensor", "switch", "input_boolean", "climate"],
 };
 // A model, a picture, the players it shows and a session lock belong to a
 // screen.
@@ -3236,10 +3254,10 @@ function compactModeOf(v) {
 const TYPE_GROUPS = [
   ["laundry", ["washer", "dryer"]],
   ["kitchen", ["dishwasher", "oven", "microwave", "hood", "cooktop", "fridge", "kettle", "cooker", "coffee", "rice_cooker", "air_fryer", "toaster"]],
-  ["heating", ["water_heater", "boiler", "heat_pump", "thermostat", "pellet_stove", "space_heater", "towel_warmer", "floor_heating"]],
+  ["heating", ["water_heater", "boiler", "heat_pump", "thermostat", "pellet_stove", "space_heater", "towel_warmer", "floor_heating", "storage_tank", "fresh_water_station", "wood_stove"]],
   ["air", ["air_conditioner", "dehumidifier", "air_purifier", "fan", "diffuser", "hrv"]],
   ["home", ["screen", "iron", "hair_dryer", "printer_3d", "robot", "pool_pump", "scale", "camera", "lamp", "mailbox", "water_pump", "spa", "sauna", "aquarium", "christmas_tree", "mobility", "irrigation", "detector", "speaker", "console"]],
-  ["energy", ["solar", "home_battery", "ev_charger", "meter"]],
+  ["energy", ["solar", "solar_thermal", "home_battery", "ev_charger", "meter"]],
   ["pets", ["pet_feeder", "pet_fountain", "litter_box"]],
   ["network", ["network", "ups"]],
 ];
@@ -4721,7 +4739,7 @@ function lampSpotsOf(cfg, st) {
 // sauna, an aquarium, a Linky meter and a Christmas tree. Drawn in SVG on a 120 x 135 field; what
 // moves moves only on a machine carrying nt-on, staggered through --d0, and
 // the robot's cable and the sump's float follow their SMIL animations.
-const NT_TYPES = ["water_pump", "floor_heating", "spa", "sauna", "aquarium", "meter", "christmas_tree", "mobility", "irrigation", "litter_box", "detector", "speaker", "console"];
+const NT_TYPES = ["water_pump", "floor_heating", "spa", "sauna", "aquarium", "meter", "christmas_tree", "mobility", "irrigation", "litter_box", "detector", "speaker", "console", "storage_tank", "fresh_water_station", "solar_thermal", "wood_stove"];
 const CONSOLE_LAYOUTS = ["ps1", "ps2", "ps3", "ps4", "ps4_pro", "ps5", "xbox", "xbox_360", "xbox_one", "xbox_series_x", "xbox_series_s", "switch", "switch_2", "switch_lite", "ps_vita", "nes", "snes", "n64", "gamecube", "wii", "megadrive"];
 const IRRIGATION_LAYOUTS = ["sprinkler", "tap"];
 const LITTER_LAYOUTS = ["globe", "box"];
@@ -4741,6 +4759,10 @@ const NT_ONLY_FIELDS = {
   detector: ["detector_layout", "co_level_entity"],
   speaker: ["speaker_layout", "speaker_color"],
   console: ["console_layout", "game_entity", "playtime_entity", "playtime_left_entity"],
+  storage_tank: ["temperature_entities", "charge_entity", "charge_min_temp", "charge_max_temp", "tank_volume", "sources", "consumers"],
+  fresh_water_station: ["primary_temperature_entity", "cold_water_temperature_entity", "circulation_entity", "circulation_mode_entity"],
+  solar_thermal: ["collector_style", "collector_temperature_entity", "tank_temperature_entity", "collector_shutdown_entity", "tank_full_entity", "stagnation_temp", "heat_power_entity"],
+  wood_stove: ["water_jacket", "burning_temp", "embers_temp", "temperature_scale", "flow_temperature_entity", "valve_entity", "last_fire_entity", "overheat_temp"],
   meter: ["tariff_entity", "high_power", "meter_layout", "today_entity", "total_entity", "export_total_entity", "meter_direction"],
 };
 // Optional readings on the older types: each is a line when its entity is
@@ -4807,6 +4829,10 @@ function optLines(hass, cfg, type) {
 // By name, in the languages the card speaks; "whirlpool" is left out, it is a
 // maker of washing machines too.
 const NT_NAME_RES = [
+  ["fresh_water_station", /frischwasser|fresh.?water.?(station|module)|freshwater|station.?(d.?)?eau.?(fraiche|chaude)|module.?(d.?)?eau.?chaude|(^|[^a-z])fws([^a-z]|$)/],
+  ["storage_tank", /pufferspeicher|(^|[^a-z])puffer|buffer.?tank|ballon.?tampon|thermal.?store|schichtspeicher|serbatoio.?(inerziale|di.?accumulo)|deposito.?de.?inercia|buffertank|zbiornik.?buforowy/],
+  ["solar_thermal", /solar.?therm|solarthermie|solaire.?thermique|thermique.?solaire|kollektor|collector.?temp|capteur.?solaire|solar.?pump|solarpumpe|solar.?collector/],
+  ["wood_stove", /^(?!.*(pellet|granul)).*((^|[^a-z])kamin|wood.?(stove|burner)|log.?(stove|burner)|poele.?(a.?)?bois|cheminee|holzofen|kachelofen|estufa.?de.?lena|stufa.?a.?legna|houtkachel|braskamin|vedovn|braendeovn|brandeovn|piec.?na.?drewno|fireplace)/],
   ["console", /playstation|(^|[^a-z])ps[1-5]([^a-z0-9]|$)|xbox|nintendo|gamecube|(^|[^a-z])(n64|snes|nes|wii|switch.?lite|switch.?2)([^a-z0-9]|$)|mega.?drive|genesis|console|konsole|consola|konsol/],
   ["litter_box", /litter|litiere|katzenklo|arenero|lettiera|kattlada|kuweta|kattebak|kattesand|(^|[^a-z])pura.?(x|max)/],
   ["irrigation", /arrosage|irrigat|sprinkler|bewasserung|(^|[^a-z])riego|beregening|bevattning|vanning|vanding|nawadnian|zavlaz|opensprinkler|linktap|hydrawise|rachio|rain.?bird/],
@@ -5024,6 +5050,7 @@ function ntRemaining(hass, id) {
 // One reading of the new types: the mode, the state line, its colour, the
 // lines under it and what the drawing needs.
 function ntReadOf(type, hass, cfg, st, watts, threshold) {
+  if (HEAT_NT.includes(type)) return heatReadOf(type, hass, cfg, st);
   const lines = [];
   const raw = st ? String(st.state).trim().toLowerCase() : "";
   const dead = !st || ["unavailable", "unknown", "none", ""].includes(raw);
@@ -5344,6 +5371,202 @@ function ntControls(hass, cfg, type) {
   return out;
 }
 
+// The heating parts of #81 to #84: a buffer tank, a fresh water station,
+// solar thermal collectors and a log stove. They read temperatures more than
+// a state, so they are read here, apart from the other new types.
+const HEAT_NT = ["storage_tank", "fresh_water_station", "solar_thermal", "wood_stove"];
+const COLLECTOR_STYLES = ["flat", "tubes"];
+// A source or a consumer of a tank is idle on these, and on a number at 0.
+const HEAT_IDLE = ["off", "false", "0", "no", "idle", "standby", "none", "unknown", "unavailable", "", "aus", "inactive", "closed", "stopped", "paused", "nein"];
+function heatActive(hass, id) {
+  const s = id ? stateObj(hass, id) : null;
+  if (!s) return false;
+  const raw = String(s.state).trim().toLowerCase();
+  const n = numberOrNull(s.state);
+  if (n !== null) return n > 0;
+  return !HEAT_IDLE.includes(raw);
+}
+// A temperature in degrees Celsius for the colours, whatever its unit.
+function heatCelsius(hass, id, v) {
+  return /f/i.test(unitOf(hass, id)) ? (v - 32) * 5 / 9 : v;
+}
+function heatNum(v, def) {
+  const n = numberOrNull(v);
+  return n === null ? def : n;
+}
+// A temperature line, as Home Assistant prints it.
+function heatTempLine(hass, cfg, key, icon, labelKey, id) {
+  const v = id ? numericState(hass, id) : null;
+  if (v === null) return null;
+  return { key, icon, label: t(hass, labelKey), value: keepTogether(tempText(hass, cfg, id, v, temperatureUnit(hass, id))), entity: id };
+}
+// The difference between two temperatures, as a line.
+function heatDeltaLine(hass, cfg, key, a, b) {
+  const va = a ? numericState(hass, a) : null, vb = b ? numericState(hass, b) : null;
+  if (va === null || vb === null) return null;
+  const unit = /f/i.test(temperatureUnit(hass, a)) ? "\u00b0F" : "K";
+  return { key, icon: "mdi:delta", label: t(hass, "heat_delta"), value: keepTogether(`${fixedTemp(hass, va - vb, 1)} ${unit}`), entity: a };
+}
+function collectorStyleOf(cfg, st) {
+  if (COLLECTOR_STYLES.includes(cfg.collector_style)) return cfg.collector_style;
+  const hay = stripAccents(`${cfg.state_entity || ""} ${cfg.collector_temperature_entity || ""} ${cfg.name || ""} ${(st && st.attributes.friendly_name) || ""}`).toLowerCase();
+  return /tube|vacuum|vakuum|rohre|roehre|evacuated|sous.?vide/.test(hay) ? "tubes" : "flat";
+}
+function heatReadOf(type, hass, cfg, st) {
+  const lines = [];
+  const raw = st ? String(st.state).trim().toLowerCase() : "";
+  const dead = !st || ["unavailable", "unknown", "none", ""].includes(raw);
+  const out = (mode, labelKey, color, draw) => ({ mode, label: t(hass, labelKey), color, lines, draw: { ...draw, unav: mode === "unav" } });
+  const fault = cfg.fault_entity && heatActive(hass, cfg.fault_entity);
+  const faultLine = () => {
+    const f = ntLine(hass, cfg, "heat_fault", "mdi:alert-circle-outline", "heat_fault", cfg.fault_entity);
+    if (f) lines.push({ ...f, caution: fault });
+  };
+
+  if (type === "storage_tank") {
+    // One to five temperatures, top to bottom; the state entity alone is a
+    // tank with one probe.
+    const ids = entityEntries(cfg.temperature_entities, 5).map((e) => e.entity);
+    const probes = (ids.length ? ids : [cfg.state_entity]).map((id) => ({ id, v: id ? numericState(hass, id) : null })).filter((p) => p.v !== null);
+    if (!probes.length) return out("unav", "ev_offline", NT_COLORS.unav, { kind: "tank", temps: [] });
+    const cs = probes.map((p) => heatCelsius(hass, p.id, p.v));
+    const lo = heatNum(cfg.charge_min_temp, 30), hi = Math.max(lo + 1, heatNum(cfg.charge_max_temp, 60));
+    const loC = heatCelsius(hass, probes[0].id, lo), hiC = heatCelsius(hass, probes[0].id, hi);
+    const own = cfg.charge_entity ? numericState(hass, cfg.charge_entity) : null;
+    const charge = own !== null ? Math.max(0, Math.min(100, own))
+      : 100 * cs.reduce((a, c) => a + Math.max(0, Math.min(1, (c - loC) / (hiC - loC))), 0) / cs.length;
+    const srcs = entityEntries(cfg.sources, 6), cons = entityEntries(cfg.consumers, 6);
+    const name = (e) => e.name || (stateObj(hass, e.entity) && stateObj(hass, e.entity).attributes.friendly_name) || humanizeEntityId(e.entity);
+    const onSrc = srcs.filter((e) => heatActive(hass, e.entity)), onCon = cons.filter((e) => heatActive(hass, e.entity));
+    lines.push({ key: "tank_charge", icon: "mdi:battery-heart-variant", label: t(hass, "tank_charge"), value: keepTogether(`${Math.round(charge)} %`), entity: cfg.charge_entity || probes[0].id });
+    const vol = heatNum(cfg.tank_volume, null);
+    if (vol && vol > 0) {
+      // The heat above the cold temperature: litres x 4.186 kJ per kelvin.
+      const meanC = cs.reduce((a, c) => a + c, 0) / cs.length;
+      const kwh = Math.max(0, vol * 4.186 * (meanC - loC) / 3600);
+      lines.push({ key: "tank_energy", icon: "mdi:lightning-bolt", label: t(hass, "tank_energy"), value: keepTogether(`${netNumber(hass, kwh, kwh < 10 ? 1 : 0)} kWh`), entity: probes[0].id });
+    }
+    if (srcs.length) lines.push({ key: "tank_sources", icon: "mdi:fire", label: t(hass, "tank_sources"), value: onSrc.length ? onSrc.map(name).join(", ") : t(hass, "tank_none"), entity: (onSrc[0] || srcs[0]).entity, wrap: true });
+    if (cons.length) lines.push({ key: "tank_consumers", icon: "mdi:radiator", label: t(hass, "tank_consumers"), value: onCon.length ? onCon.map(name).join(", ") : t(hass, "tank_none"), entity: (onCon[0] || cons[0]).entity, wrap: true });
+    const loading = onSrc.length > 0;
+    const draw = { kind: "tank", on: loading || onCon.length > 0, temps: cs, labels: probes.map((p) => screenTemp(hass, cfg, p.id, p.v)), charge, loading, drawing: onCon.length > 0 };
+    if (loading) return out("loading", "tank_loading", NT_COLORS.heat, draw);
+    if (charge >= 80) return out("charged", "tank_charged", "#e53935", draw);
+    if (charge >= 20) return out("partly", "tank_partly", "#fb8c00", draw);
+    return out("discharged", "tank_discharged", NT_COLORS.run, draw);
+  }
+
+  if (type === "fresh_water_station") {
+    // Drawing water while the flow is above zero or the tank pump runs; the
+    // flow rate big on its screen, the outlet temperature otherwise.
+    const flowNum = st ? numberOrNull(st.state) : null;
+    const pumpOn = cfg.pump_entity ? heatActive(hass, cfg.pump_entity) : false;
+    if (dead && !cfg.pump_entity) return out("unav", "ev_offline", NT_COLORS.unav, { kind: "fws", lcd: "" });
+    const drawing = (flowNum !== null ? flowNum > 0 : !dead && NT_ON.includes(raw)) || pumpOn;
+    const circ = cfg.circulation_entity ? heatActive(hass, cfg.circulation_entity) : false;
+    const outV = cfg.temperature_entity ? numericState(hass, cfg.temperature_entity) : null;
+    const setV = cfg.target_temperature_entity ? numericState(hass, cfg.target_temperature_entity) : null;
+    const supV = cfg.primary_temperature_entity ? numericState(hass, cfg.primary_temperature_entity) : null;
+    if (flowNum !== null && st) lines.push({ key: "fws_flow", icon: "mdi:water-pump", label: t(hass, "fws_flow"), value: keepTogether(formatInfoValue(st, hass, null, cfg, cfg.state_entity)), entity: cfg.state_entity });
+    for (const [key, icon, label, id] of [["fws_out", "mdi:thermometer-water", "fws_outlet", cfg.temperature_entity], ["fws_set", "mdi:thermometer-check", "section_target_temperature", cfg.target_temperature_entity],
+      ["fws_supply", "mdi:thermometer-chevron-up", "fws_supply", cfg.primary_temperature_entity], ["fws_cold", "mdi:snowflake-thermometer", "fws_cold", cfg.cold_water_temperature_entity]]) {
+      const l = heatTempLine(hass, cfg, key, icon, label, id);
+      if (l) lines.push(l);
+    }
+    const mod = ntLine(hass, cfg, "fws_mod", "mdi:speedometer", "heat_pump_mod", cfg.pump_modulation_entity);
+    if (mod) lines.push(mod);
+    const cm = ntLine(hass, cfg, "fws_circ_mode", "mdi:sync", "fws_circ_mode", cfg.circulation_mode_entity);
+    if (cm) lines.push(cm);
+    faultLine();
+    const cold = setV !== null && supV !== null && supV < setV + 5;
+    const lcd = drawing && flowNum !== null && st ? formatInfoValue(st, hass, null, cfg, cfg.state_entity) : outV !== null ? screenTemp(hass, cfg, cfg.temperature_entity, outV).replace("\u00b0", `\u00b0${/f/i.test(temperatureUnit(hass, cfg.temperature_entity)) ? "F" : "C"}`) : "";
+    const draw = { kind: "fws", on: drawing || circ, drawing, circulating: circ, lcd: String(lcd) };
+    if (fault) return out("fault", "heat_fault_state", NT_COLORS.alarm, draw);
+    if (drawing) return out("drawing", "fws_drawing", NT_COLORS.run, draw);
+    if (cold) return out("cold", "fws_too_cold", "#fb8c00", draw);
+    if (circ) return out("circulating", "fws_circulating", NT_COLORS.lit, draw);
+    return out("standby", "fws_standby", NT_COLORS.idle, draw);
+  }
+
+  if (type === "solar_thermal") {
+    // The solar pump runs while the collectors load the tank; a shutdown
+    // entity or a collector above the stagnation limit is stagnation, a
+    // collector at or below freezing is frost.
+    const style = collectorStyleOf(cfg, st);
+    const colV = cfg.collector_temperature_entity ? numericState(hass, cfg.collector_temperature_entity) : null;
+    const colC = colV === null ? null : heatCelsius(hass, cfg.collector_temperature_entity, colV);
+    if (dead && colV === null) return out("unav", "ev_offline", NT_COLORS.unav, { kind: "solth", style, lcd: "" });
+    const modV = cfg.pump_modulation_entity ? numericState(hass, cfg.pump_modulation_entity) : null;
+    const pump = (!dead && (NT_ON.includes(raw) || numberOrNull(st.state) > 0)) || (modV !== null && modV > 0);
+    const stag = (cfg.collector_shutdown_entity && heatActive(hass, cfg.collector_shutdown_entity)) || (colV !== null && colV >= heatNum(cfg.stagnation_temp, /f/i.test(unitOf(hass, cfg.collector_temperature_entity)) ? 248 : 120));
+    const full = cfg.tank_full_entity && heatActive(hass, cfg.tank_full_entity);
+    const frost = colC !== null && colC <= 0;
+    for (const [key, icon, label, id] of [["sth_col", "mdi:solar-panel-large", "sth_collector", cfg.collector_temperature_entity], ["sth_tank", "mdi:storage-tank-outline", "sth_tank", cfg.tank_temperature_entity]]) {
+      const l = heatTempLine(hass, cfg, key, icon, label, id);
+      if (l) lines.push(l);
+    }
+    const dl = heatDeltaLine(hass, cfg, "sth_delta", cfg.collector_temperature_entity, cfg.tank_temperature_entity);
+    if (dl) lines.push(dl);
+    for (const [key, icon, label, id] of [["sth_power", "mdi:fire", "sth_power", cfg.heat_power_entity], ["sth_today", "mdi:solar-power-variant", "sth_today", cfg.today_entity], ["sth_mod", "mdi:speedometer", "heat_pump_mod", cfg.pump_modulation_entity]]) {
+      const l = ntLine(hass, cfg, key, icon, label, id);
+      if (l) lines.push(l);
+    }
+    faultLine();
+    const lcd = colV !== null ? screenTemp(hass, cfg, cfg.collector_temperature_entity, colV).replace("\u00b0", `\u00b0${/f/i.test(temperatureUnit(hass, cfg.collector_temperature_entity)) ? "F" : "C"}`) : "";
+    const draw = { kind: "solth", style, on: pump || stag, lcd, fast: modV === null || modV >= 60, frost: frost && !pump, stagnation: stag };
+    if (fault) return out("fault", "heat_fault_state", NT_COLORS.alarm, draw);
+    if (stag) return out("stagnation", "sth_stagnation", NT_COLORS.alarm, draw);
+    if (pump) return out("loading", "sth_loading", NT_COLORS.heat, draw);
+    if (full) return out("full", "sth_full", NT_COLORS.lit, draw);
+    if (frost) return out("frost", "sth_frost", NT_COLORS.run, draw);
+    return out("standby", "sth_standby", NT_COLORS.idle, draw);
+  }
+
+  // A log stove: burning, embers or cold from its temperature and two
+  // thresholds; a status entity that is simply on is a fire.
+  const scale = heatNum(cfg.temperature_scale, 1) || 1;
+  const vRaw = st ? numberOrNull(st.state) : null;
+  const v = vRaw === null ? null : vRaw * scale;
+  if (dead) return out("unav", "ev_offline", NT_COLORS.unav, { kind: "wood", st: "cold", water: !!cfg.water_jacket });
+  const burnT = heatNum(cfg.burning_temp, 120), embT = Math.min(burnT, heatNum(cfg.embers_temp, 50));
+  const unit = temperatureUnit(hass, cfg.state_entity);
+  const fire = v !== null ? (v >= burnT ? "burning" : v >= embT ? "embers" : "cold") : NT_ON.includes(raw) || /burn|fire|feu|brenn|heiz/.test(raw) ? "burning" : "cold";
+  if (v !== null) lines.push({ key: "wood_temp", icon: "mdi:thermometer-high", label: t(hass, "wood_temp"), value: keepTogether(tempText(hass, { ...cfg, temperature_decimals: scale !== 1 ? "1" : cfg.temperature_decimals }, scale !== 1 ? null : cfg.state_entity, v, unit)), entity: cfg.state_entity });
+  for (const [key, icon, label, id] of [["wood_flow", "mdi:thermometer-chevron-up", "wood_flow", cfg.flow_temperature_entity], ["wood_return", "mdi:thermometer-chevron-down", "wood_return", cfg.return_temperature_entity]]) {
+    const l = heatTempLine(hass, cfg, key, icon, label, id);
+    if (l) lines.push(l);
+  }
+  const dl = heatDeltaLine(hass, cfg, "wood_delta", cfg.flow_temperature_entity, cfg.return_temperature_entity);
+  if (dl) lines.push(dl);
+  const pumpOn = cfg.pump_entity ? heatActive(hass, cfg.pump_entity) : false;
+  const waterId = cfg.flow_temperature_entity || cfg.state_entity;
+  const waterV = cfg.flow_temperature_entity ? numericState(hass, cfg.flow_temperature_entity) : v;
+  const overT = heatNum(cfg.overheat_temp, 90);
+  const over = !!cfg.water_jacket && waterV !== null && waterV >= overT;
+  if (cfg.pump_entity) {
+    // A pump left off while the water is hot is worth a glance.
+    const hot = !!cfg.water_jacket && waterV !== null && waterV >= Math.min(overT, 60) && waterId;
+    lines.push({ key: "wood_pump", icon: "mdi:pump", label: t(hass, "wood_pump"), value: t(hass, pumpOn ? "opt_running" : "opt_stopped"), entity: cfg.pump_entity, caution: !pumpOn && !!hot });
+  }
+  const vs = cfg.valve_entity ? stateObj(hass, cfg.valve_entity) : null;
+  if (vs && !HA_OFFLINE_STATES.includes(String(vs.state).toLowerCase())) {
+    const pos = numberOrNull(vs.attributes.current_position);
+    const n = numberOrNull(vs.state);
+    const val = pos !== null ? `${Math.round(pos)} %` : n !== null ? formatInfoValue(vs, hass, null, cfg, cfg.valve_entity) : t(hass, ["open", "opening", "on"].includes(String(vs.state).toLowerCase()) ? "mb_open" : "mb_closed");
+    lines.push({ key: "wood_valve", icon: "mdi:valve", label: t(hass, "wood_valve"), value: keepTogether(String(val)), entity: cfg.valve_entity });
+  }
+  const room = heatTempLine(hass, cfg, "wood_room", "mdi:home-thermometer-outline", "wood_room", cfg.temperature_entity);
+  if (room) lines.push(room);
+  const last = ntLine(hass, cfg, "wood_last", "mdi:history", "wood_last_fire", cfg.last_fire_entity);
+  if (last) lines.push(last);
+  // The dial reads to 400 degrees on a flue, to 100 on water.
+  const max = burnT >= 100 ? (/f/i.test(unit) ? 800 : 400) : (/f/i.test(unit) ? 212 : 100);
+  const draw = { kind: "wood", on: fire !== "cold", st: fire, flue: v, max, low: embT, water: !!cfg.water_jacket, pump: pumpOn, lcd: "" };
+  if (over) return out("overheat", "wood_overheat", NT_COLORS.alarm, draw);
+  if (fire === "burning") return out("burning", "wood_burning", NT_COLORS.heat, draw);
+  if (fire === "embers") return out("embers", "wood_embers", "#fb8c00", draw);
+  return out("cold", "wood_cold", NT_COLORS.off, draw);
+}
 // A bathroom scale: its state entity is the weight. Weighed, and when; the
 // goal reached within half a unit; offline when there is no weight to show.
 const SCALE_ONLY_FIELDS = ["weight_goal_entity", "weight_goal", "fat_ratio_entity", "fat_mass_entity", "muscle_mass_entity", "bone_mass_entity"];
@@ -11498,7 +11721,7 @@ function loadEditor() {
   if (customElements.get("ha-appliance-card-editor")) return Promise.resolve();
   if (!editorLoading) {
     editorLoading = import(assetUrl("ha-appliance-card-editor.js"))
-      .then((m) => m.default({ t, onLanguageLoaded, LANGUAGE_NAMES, localizedHass, activationOf, TH_LAYOUTS, EV_POWER_THRESHOLD, stateObj, parseValueMap, stringifyValueMap, alertsArray, LIST_OTHER, ENTITY_LISTS, listCandidates, defaultCardName, stripDeviceName, domainOf, INFO_MAX, autoSuggest, APPLIANCE_TYPES, STATE_DOMAINS, SCREEN_ONLY_FIELDS, illustrationSizeOf, fontScaleOf, compactModeOf, TYPE_GROUPS, caps, detectApplianceType, SCREEN_STANDBY_W, SCREEN_LAYOUTS, SCREEN_IMAGES, screenLayoutOf, screenIsTablet, HD_HEAT_W, PLUG_THRESHOLDS, ZONE_POWER_W, PLUG_SOURCE_TYPES, plugSourceOf, DW_DRY_MIN, WASH_HEAT_W, WASH_SPIN_W, DRYER_HEAT_W, NET_LAYOUTS, SWITCH_PORTS, NET_BAYS, NET_BUSY_MBIT, NET_TEMP_ALERT, netLayoutOf, ROBOT_LAYOUTS, ROBOT_STATIONS, ROBOT_BOX_COLORS, ROBOT_FLOORS, ROBOT_SERVICES, STICK_AWAY_W, robotLayoutOf, POOL_PRESSURE_ALERT, SOLAR_LAYOUTS, BATTERY_LAYOUTS, BATTERY_IDLE_W, DIFFUSER_LAYOUTS, illustrationTapOf, UNIT_FILTERS, HRV_LAYOUTS, hrvLayoutOf, CAMERA_LAYOUTS, MAILBOX_LAYOUTS, MAILBOX_SIDES, mailboxLayoutOf, LAMP_LAYOUTS, LAMP_SPOTS, lampLayoutOf, CONSOLE_LAYOUTS, IRRIGATION_LAYOUTS, LITTER_LAYOUTS, DETECTOR_LAYOUTS, SPEAKER_LAYOUTS, MOBILITY_LAYOUTS, PUMP_LAYOUTS, FLOOR_LAYOUTS, OPT_LINES, METER_LAYOUTS, meterLayoutOf, detectorLayoutOf, TREE_PALETTES, TREE_PRESENTS, pumpLayoutOf, SPK_COLORS, UPS_BATTERY_LOW, HISTORY_HOURS, BODY_COLORS, esc, MOWER_STYLES, SHELTER_STYLES, SHELTER_COLORS, LAPTOP_COLORS, LAPTOP_STYLES, drawn, stateFreeSource }))
+      .then((m) => m.default({ t, onLanguageLoaded, LANGUAGE_NAMES, localizedHass, activationOf, TH_LAYOUTS, EV_POWER_THRESHOLD, stateObj, parseValueMap, stringifyValueMap, alertsArray, LIST_OTHER, ENTITY_LISTS, listCandidates, defaultCardName, stripDeviceName, domainOf, INFO_MAX, autoSuggest, APPLIANCE_TYPES, STATE_DOMAINS, SCREEN_ONLY_FIELDS, illustrationSizeOf, fontScaleOf, compactModeOf, TYPE_GROUPS, caps, detectApplianceType, SCREEN_STANDBY_W, SCREEN_LAYOUTS, SCREEN_IMAGES, screenLayoutOf, screenIsTablet, HD_HEAT_W, PLUG_THRESHOLDS, ZONE_POWER_W, PLUG_SOURCE_TYPES, plugSourceOf, DW_DRY_MIN, WASH_HEAT_W, WASH_SPIN_W, DRYER_HEAT_W, NET_LAYOUTS, SWITCH_PORTS, NET_BAYS, NET_BUSY_MBIT, NET_TEMP_ALERT, netLayoutOf, ROBOT_LAYOUTS, ROBOT_STATIONS, ROBOT_BOX_COLORS, ROBOT_FLOORS, ROBOT_SERVICES, STICK_AWAY_W, robotLayoutOf, POOL_PRESSURE_ALERT, SOLAR_LAYOUTS, BATTERY_LAYOUTS, BATTERY_IDLE_W, DIFFUSER_LAYOUTS, illustrationTapOf, UNIT_FILTERS, HRV_LAYOUTS, hrvLayoutOf, CAMERA_LAYOUTS, MAILBOX_LAYOUTS, MAILBOX_SIDES, mailboxLayoutOf, LAMP_LAYOUTS, LAMP_SPOTS, lampLayoutOf, CONSOLE_LAYOUTS, IRRIGATION_LAYOUTS, LITTER_LAYOUTS, DETECTOR_LAYOUTS, SPEAKER_LAYOUTS, MOBILITY_LAYOUTS, PUMP_LAYOUTS, FLOOR_LAYOUTS, OPT_LINES, METER_LAYOUTS, meterLayoutOf, detectorLayoutOf, TREE_PALETTES, TREE_PRESENTS, pumpLayoutOf, SPK_COLORS, COLLECTOR_STYLES, UPS_BATTERY_LOW, HISTORY_HOURS, BODY_COLORS, esc, MOWER_STYLES, SHELTER_STYLES, SHELTER_COLORS, LAPTOP_COLORS, LAPTOP_STYLES, drawn, stateFreeSource }))
       .catch((err) => {
         editorLoading = null;
         throw err;

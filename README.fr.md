@@ -22,7 +22,7 @@ Une card Lovelace qui dessine les appareils de la maison et les anime selon leur
 
 ## Fonctionnalités
 
-- **57 types d'appareils, plus de 170 modèles dessinés**, animés pendant qu'ils travaillent et figés à l'arrêt. Le type est reconnu tout seul ou choisi avec `appliance_type`.
+- **61 types d'appareils, plus de 170 modèles dessinés**, animés pendant qu'ils travaillent et figés à l'arrêt. Le type est reconnu tout seul ou choisi avec `appliance_type`.
 - **Toutes les intégrations** : chaque champ est une entité à choisir. Une simple prise connectée suffit, sa puissance dit si l'appareil chauffe, lave ou essore.
 - **L'état compris** : `Idle`, `RUNNING`, `En marche`… deviennent veille, en cours, pause, terminé, différé ou erreur, avec l'étape du cycle (lavage, rinçage, essorage…).
 - **Ce qui compte pour chaque appareil** : programme, temps restant, porte, alertes, niveaux, températures, énergie et coût, marche du jour.
@@ -208,6 +208,13 @@ Clique sur une famille pour voir ses appareils en marche.
 
 </details>
 
+<details>
+<summary><b>Ballons tampons, solaire thermique et poêles à bois</b></summary>
+
+<img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-heat_storage.fr.gif" alt="Ballons tampons, solaire thermique et poêles à bois">
+
+</details>
+
 ## Installation
 
 ### Par HACS
@@ -248,7 +255,7 @@ Seule `state_entity` est obligatoire, sauf sur un réfrigérateur où une sonde 
 | `done_alert` | `true` fait pulser un badge vert sur le dessin en fin de cycle, jusqu'à l'ouverture de la porte ou un appui sur le badge. Pour les appareils à cycle (lave-linge, sèche-linge, lave-vaisselle, four…). |
 | `illustration_color` | `auto` (défaut, suit le thème) \| `white` \| `grey` \| `black` \| `red` (rouge foncé). Ne change que la carrosserie, pas les couleurs d'état. |
 | `language` | `auto` (défaut, suit Home Assistant) ou l'un des 14 codes : `en`, `fr`, `de`, `es`, `it`, `nl`, `pt`, `sv`, `no`, `da`, `pl`, `ru`, `zh`, `cs`. `nb` et `nb-NO` donnent le norvégien. |
-| `appliance_type` | `auto` (défaut) \| `washer` \| `dryer` \| `dishwasher` \| `oven` \| `microwave` \| `hood` \| `cooktop` \| `fridge` \| `kettle` \| `cooker` \| `coffee` \| `rice_cooker` \| `air_fryer` \| `water_heater` \| `boiler` \| `thermostat` \| `heat_pump` \| `printer_3d` \| `pet_feeder` \| `pet_fountain` \| `iron` \| `toaster` \| `pellet_stove` \| `air_conditioner` \| `dehumidifier` \| `space_heater` \| `towel_warmer` \| `air_purifier` \| `fan` \| `ev_charger` \| `hair_dryer` \| `screen` \| `network` \| `robot` \| `pool_pump` \| `scale` \| `ups` \| `solar` \| `home_battery` \| `camera` \| `diffuser` \| `hrv` \| `lamp` \| `mailbox` \| `water_pump` \| `floor_heating` \| `spa` \| `sauna` \| `aquarium` \| `meter` \| `christmas_tree` \| `mobility` \| `irrigation` \| `litter_box` \| `detector` \| `speaker` \| `console`. |
+| `appliance_type` | `auto` (défaut) \| `washer` \| `dryer` \| `dishwasher` \| `oven` \| `microwave` \| `hood` \| `cooktop` \| `fridge` \| `kettle` \| `cooker` \| `coffee` \| `rice_cooker` \| `air_fryer` \| `water_heater` \| `boiler` \| `thermostat` \| `heat_pump` \| `printer_3d` \| `pet_feeder` \| `pet_fountain` \| `iron` \| `toaster` \| `pellet_stove` \| `air_conditioner` \| `dehumidifier` \| `space_heater` \| `towel_warmer` \| `air_purifier` \| `fan` \| `ev_charger` \| `hair_dryer` \| `screen` \| `network` \| `robot` \| `pool_pump` \| `scale` \| `ups` \| `solar` \| `home_battery` \| `camera` \| `diffuser` \| `hrv` \| `lamp` \| `mailbox` \| `water_pump` \| `floor_heating` \| `spa` \| `sauna` \| `aquarium` \| `meter` \| `christmas_tree` \| `mobility` \| `irrigation` \| `litter_box` \| `detector` \| `speaker` \| `console` \| `storage_tank` \| `fresh_water_station` \| `solar_thermal` \| `wood_stove`. |
 | `tap_action` | Ce que fait un appui sur la carte, dans les mots de Home Assistant : `more-info` (défaut : l'entité d'état, ou sur une carte sans elle ce qu'elle lit à sa place), `none`, `navigate`, `url`, `toggle`, `perform-action` ou `fire-dom-event`, celle qu'écoutent les cartes popup bâties sur browser_mod. En YAML seulement. |
 | `illustration_tap_action` | Un appui sur le dessin seul, le reste de la carte gardant `tap_action` : `toggle` (une lampe allumée en la touchant), `more-info`, `none`, ou n'importe quelle action de Home Assistant. Sans lui, le dessin fait comme la carte. Avec `toggle`, le dessin répond comme les boutons, selon `controls_activation` : un appui, deux appuis ou un appui long. |
 | `show_toggle` | `false` retire le bouton allumer / éteindre d'une lampe, pour une carte qu'on allume en touchant son dessin (`illustration_tap_action: toggle`). |
@@ -649,6 +656,73 @@ fan_layout: ceiling
 state_entity: fan.plafond_chambre
 light_entity: light.plafond_chambre
 wood_blades: true
+```
+
+</details>
+
+### Ballons tampons, solaire thermique et poêles à bois
+
+Un ballon tampon (`storage_tank`) prend la couleur de ses couches, bleu à froid et rouge à chaud, avec une pastille par sonde à sa hauteur et sa charge au-dessus. Les sources à sa gauche (pompe à chaleur, chaudière, solaire, poêle) et les consommateurs à sa droite (circuits de chauffage, station d'eau fraîche) sont raccordés en rouge pour le départ et en bleu pour le retour, et l'eau y circule quand ils tournent. Une station d'eau fraîche (`fresh_water_station`) produit l'eau chaude à la demande à partir du ballon : le débit en grand sur son écran quand un robinet est ouvert, sa pompe qui tourne. Des capteurs solaires thermiques (`solar_thermal`), plans ou à tubes sous vide, envoient leur chaleur à la station solaire et à sa pompe ; le givre les couvre sous 0 °C, la stagnation les fait onduler. Un poêle à bois (`wood_stove`) brûle, rougeoie ou reste froid selon sa température, avec un cadran sur son conduit et, avec un bouilleur, son départ, son retour et sa pompe.
+
+<details>
+<summary><b>Options</b></summary>
+
+| Option | Types | Description |
+|---|---|---|
+| `state_entity` | ballon tampon | Sa sonde du haut, ou sa seule sonde. |
+| `temperature_entities` | ballon tampon | Une à cinq sondes, de haut en bas, chacune une pastille sur le ballon. Elles remplacent `state_entity` pour les couches. |
+| `charge_entity` | ballon tampon | La charge calculée par son régulateur, en %. Sans elle, la carte la calcule à partir des couches entre `charge_min_temp` (30 par défaut, 0 %) et `charge_max_temp` (60, 100 %). |
+| `tank_volume` | ballon tampon | Son volume en litres, pour l'énergie stockée au-dessus de `charge_min_temp`, en kWh. |
+| `sources` / `consumers` | ballon tampon | Jusqu'à six entités chacun, avec un `name` facultatif : un capteur binaire, un interrupteur, une pompe ou un statut. Une source en marche, c'est *En charge* ; sinon *Chargé* dès 80 %, *Partiellement chargé*, *Déchargé* sous 20 %. Tout sauf off, inactif, 0 ou équivalent compte comme en marche (*Warmwasser*, *heating*...). |
+| `state_entity` | station d'eau fraîche | Son débit, en L/min : au-dessus de zéro, c'est *Puisage d'eau chaude*. Une pompe ou toute entité marche / arrêt convient aussi. |
+| `temperature_entity` / `target_temperature_entity` | station d'eau fraîche | La température de sortie, sur son écran entre deux puisages, et sa consigne. |
+| `primary_temperature_entity` / `cold_water_temperature_entity` | station d'eau fraîche | Le départ du ballon et l'eau froide. Un départ sous la consigne plus 5 degrés, c'est *Départ trop froid*. |
+| `pump_entity` / `pump_modulation_entity` | station d'eau fraîche, solaire thermique | La pompe primaire (en marche, c'est un puisage) et sa modulation en %. Sur le solaire thermique, une modulation sous 60 % fait tourner la pompe lentement. |
+| `circulation_entity` / `circulation_mode_entity` | station d'eau fraîche | La pompe de bouclage, *Bouclage* quand elle tourne, et son mode ou programme en ligne. |
+| `fault_entity` | station d'eau fraîche, solaire thermique | Un capteur de problème : *En défaut* quand il est actif. |
+| `state_entity` | solaire thermique | La pompe solaire : *En charge* quand elle tourne. |
+| `collector_style` | solaire thermique | `flat` (défaut) \| `tubes`. Sans lui, *tube* ou *vacuum* dans le nom dessine des tubes. |
+| `collector_temperature_entity` / `tank_temperature_entity` | solaire thermique | Les capteurs, sur l'écran de la station, et le ballon ; leur écart en ligne. Des capteurs à 0 °C ou moins, c'est *Gel*. |
+| `stagnation_temp` / `collector_shutdown_entity` | solaire thermique | Des capteurs à cette température ou au-delà (120 °C par défaut), ou l'entité d'arrêt active, c'est *Stagnation*. |
+| `tank_full_entity` | solaire thermique | Le ballon à son maximum : *Ballon plein* quand la pompe est à l'arrêt. |
+| `heat_power_entity` / `today_entity` | solaire thermique | La chaleur apportée et la production du jour, en lignes. |
+| `state_entity` | poêle à bois | Sa température, sur le poêle, le conduit ou l'eau. Un statut simplement actif, c'est un feu. |
+| `burning_temp` / `embers_temp` | poêle à bois | *En feu* à partir de la première (120 par défaut), *Braises* à partir de la seconde (50), *Froid* en dessous. Sur l'eau, plutôt 50 et 30. Le cadran va jusqu'à 400 degrés, ou 100 quand `burning_temp` est sous 100. |
+| `temperature_scale` | poêle à bois | Un facteur pour une valeur brute, `0.01` pour un automate qui envoie 2130 pour 21,3 °C. |
+| `water_jacket` | poêle à bois | `true` dessine les tuyaux de départ et de retour à l'arrière. |
+| `flow_temperature_entity` / `return_temperature_entity` | poêle à bois | Le circuit d'eau, et son écart. Au-dessus de `overheat_temp` (90 par défaut), le poêle est en *Surchauffe*. |
+| `pump_entity` / `valve_entity` | poêle à bois | La pompe du circuit, signalée quand elle est arrêtée avec l'eau chaude, et la vanne mélangeuse, sa position en %. |
+| `temperature_entity` / `last_fire_entity` | poêle à bois | La pièce, et le dernier feu à partir d'un horodatage. |
+
+```yaml
+type: custom:ha-appliance-card
+appliance_type: storage_tank
+state_entity: sensor.ballon_haut
+temperature_entities:
+  - sensor.ballon_haut
+  - sensor.ballon_milieu
+  - sensor.ballon_bas
+tank_volume: 750
+sources:
+  - entity: sensor.pac_activite
+    name: PAC
+  - binary_sensor.pompe_solaire
+consumers:
+  - binary_sensor.pompe_circuit_chauffage
+```
+
+```yaml
+type: custom:ha-appliance-card
+appliance_type: wood_stove
+state_entity: sensor.temperature_poele
+temperature_scale: 0.01
+burning_temp: 50
+embers_temp: 30
+water_jacket: true
+flow_temperature_entity: sensor.poele_depart
+return_temperature_entity: sensor.poele_retour
+pump_entity: binary_sensor.pompe_poele
+valve_entity: cover.vanne_poele
 ```
 
 </details>

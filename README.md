@@ -22,7 +22,7 @@ A Lovelace card that draws the appliances of your home and animates them from th
 
 ## Features
 
-- **57 appliance types, more than 170 models drawn**, animated while they work and still when they stop. The type is detected on its own or set with `appliance_type`.
+- **61 appliance types, more than 170 models drawn**, animated while they work and still when they stop. The type is detected on its own or set with `appliance_type`.
 - **Any integration**: every field is an entity you pick. A plain smart plug is enough, its power tells whether the appliance heats, washes or spins.
 - **State understood**: `Idle`, `RUNNING`, `wash`… become idle, running, paused, finished, delayed or error, with the step of the cycle (wash, rinse, spin…).
 - **What matters for each appliance**: program, time left, door, alerts, levels, temperatures, energy and cost, today's running time.
@@ -208,6 +208,13 @@ Click a family to see its appliances at work.
 
 </details>
 
+<details>
+<summary><b>Buffer tanks, solar thermal and wood stoves</b></summary>
+
+<img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-heat_storage.gif" alt="Buffer tanks, solar thermal and wood stoves">
+
+</details>
+
 ## Installation
 
 ### HACS
@@ -248,7 +255,7 @@ Only `state_entity` is required, except on a fridge where a probe or a door cont
 | `done_alert` | `true` makes a green badge pulse on the drawing when a cycle has finished, until the door opens or the badge is tapped. For appliances with a cycle (washer, dryer, dishwasher, oven…). |
 | `illustration_color` | `auto` (default, follows the theme) \| `white` \| `grey` \| `black` \| `red` (dark red). Only changes the casing, not the state colours. |
 | `language` | `auto` (default, follows Home Assistant) or one of the 14 codes: `en`, `fr`, `de`, `es`, `it`, `nl`, `pt`, `sv`, `no`, `da`, `pl`, `ru`, `zh`, `cs`. `nb` and `nb-NO` give Norwegian. |
-| `appliance_type` | `auto` (default) \| `washer` \| `dryer` \| `dishwasher` \| `oven` \| `microwave` \| `hood` \| `cooktop` \| `fridge` \| `kettle` \| `cooker` \| `coffee` \| `rice_cooker` \| `air_fryer` \| `water_heater` \| `boiler` \| `thermostat` \| `heat_pump` \| `printer_3d` \| `pet_feeder` \| `pet_fountain` \| `iron` \| `toaster` \| `pellet_stove` \| `air_conditioner` \| `dehumidifier` \| `space_heater` \| `towel_warmer` \| `air_purifier` \| `fan` \| `ev_charger` \| `hair_dryer` \| `screen` \| `network` \| `robot` \| `pool_pump` \| `scale` \| `ups` \| `solar` \| `home_battery` \| `camera` \| `diffuser` \| `hrv` \| `lamp` \| `mailbox` \| `water_pump` \| `floor_heating` \| `spa` \| `sauna` \| `aquarium` \| `meter` \| `christmas_tree` \| `mobility` \| `irrigation` \| `litter_box` \| `detector` \| `speaker` \| `console`. |
+| `appliance_type` | `auto` (default) \| `washer` \| `dryer` \| `dishwasher` \| `oven` \| `microwave` \| `hood` \| `cooktop` \| `fridge` \| `kettle` \| `cooker` \| `coffee` \| `rice_cooker` \| `air_fryer` \| `water_heater` \| `boiler` \| `thermostat` \| `heat_pump` \| `printer_3d` \| `pet_feeder` \| `pet_fountain` \| `iron` \| `toaster` \| `pellet_stove` \| `air_conditioner` \| `dehumidifier` \| `space_heater` \| `towel_warmer` \| `air_purifier` \| `fan` \| `ev_charger` \| `hair_dryer` \| `screen` \| `network` \| `robot` \| `pool_pump` \| `scale` \| `ups` \| `solar` \| `home_battery` \| `camera` \| `diffuser` \| `hrv` \| `lamp` \| `mailbox` \| `water_pump` \| `floor_heating` \| `spa` \| `sauna` \| `aquarium` \| `meter` \| `christmas_tree` \| `mobility` \| `irrigation` \| `litter_box` \| `detector` \| `speaker` \| `console` \| `storage_tank` \| `fresh_water_station` \| `solar_thermal` \| `wood_stove`. |
 | `tap_action` | What a tap on the card does, in Home Assistant's own words: `more-info` (default: the state entity, or on a card without one what it reads in its place), `none`, `navigate`, `url`, `toggle`, `perform-action` or `fire-dom-event`, which is what the popup cards built on browser_mod listen for. In YAML only. |
 | `illustration_tap_action` | A tap on the drawing alone, the rest of the card keeping `tap_action`: `toggle` (a lamp lit by touching it), `more-info`, `none`, or any of Home Assistant's actions. Left out, the drawing does what the card does. With `toggle`, the drawing answers like the buttons, as `controls_activation` says: a tap, two taps or a long press. |
 | `show_toggle` | `false` takes away a lamp's on/off button, for a card switched by touching its drawing (`illustration_tap_action: toggle`). |
@@ -649,6 +656,73 @@ fan_layout: ceiling
 state_entity: fan.bedroom_ceiling
 light_entity: light.bedroom_ceiling
 wood_blades: true
+```
+
+</details>
+
+### Buffer tanks, solar thermal and wood stoves
+
+A buffer tank (`storage_tank`) fills with the colour of its layers, blue when cold and red when hot, one marker per probe at its height, its charge above it. The sources on its left (heat pump, boiler, solar, stove) and the consumers on its right (heating circuits, fresh water station) are piped in red for the flow and blue for the return, and the water moves in them while they run. A fresh water station (`fresh_water_station`) heats hot water on demand from the tank: the flow big on its screen while a tap is open, its pump turning. Solar thermal collectors (`solar_thermal`), flat plates or evacuated tubes, send their heat down to the solar station and its pump; frost covers them below 0 °C, stagnation makes them shimmer. A log stove (`wood_stove`) burns, glows or stays cold by its temperature, with a dial on its flue and, with a water jacket, its flow and return and its pump.
+
+<details>
+<summary><b>Options</b></summary>
+
+| Option | Types | Description |
+|---|---|---|
+| `state_entity` | buffer tank | Its top probe, or its only one. |
+| `temperature_entities` | buffer tank | One to five probes, top to bottom, each a marker on the tank. They replace `state_entity` as the layers. |
+| `charge_entity` | buffer tank | The charge its controller computes, in %. Without it, the card works it out from the layers between `charge_min_temp` (30 by default, 0 %) and `charge_max_temp` (60, 100 %). |
+| `tank_volume` | buffer tank | Its volume in litres, for the energy stored above `charge_min_temp`, in kWh. |
+| `sources` / `consumers` | buffer tank | Up to six entities each, with an optional `name`: a binary sensor, a switch, a pump or a status. A source running is *Loading*; otherwise *Charged* from 80 %, *Partly charged*, *Discharged* under 20 %. Anything but off, idle, 0 or the like counts as running (*Warmwasser*, *heating*...). |
+| `state_entity` | fresh water station | Its flow, in L/min: above zero it is *Drawing hot water*. A pump or any on/off entity works too. |
+| `temperature_entity` / `target_temperature_entity` | fresh water station | The outlet temperature, shown on its screen between draws, and its setpoint. |
+| `primary_temperature_entity` / `cold_water_temperature_entity` | fresh water station | The tank's supply and the cold water. A supply under the setpoint plus 5 degrees is *Supply too cold*. |
+| `pump_entity` / `pump_modulation_entity` | fresh water station, solar thermal | The primary pump (it running is a draw) and its modulation in %. On solar thermal, a modulation under 60 % turns the pump slowly. |
+| `circulation_entity` / `circulation_mode_entity` | fresh water station | The circulation pump, *Circulating* while it runs, and its mode or schedule as a line. |
+| `fault_entity` | fresh water station, solar thermal | A problem sensor: *Fault* while on. |
+| `state_entity` | solar thermal | The solar pump: *Loading* while it runs. |
+| `collector_style` | solar thermal | `flat` (default) \| `tubes`. Left out, *tube* or *vacuum* in the name draws tubes. |
+| `collector_temperature_entity` / `tank_temperature_entity` | solar thermal | The collector, on the station's screen, and the tank; their difference as a line. A collector at or below 0 °C is *Frost*. |
+| `stagnation_temp` / `collector_shutdown_entity` | solar thermal | A collector at or above this temperature (120 °C by default), or the shutdown entity on, is *Stagnation*. |
+| `tank_full_entity` | solar thermal | The tank at its maximum: *Tank full* while the pump rests. |
+| `heat_power_entity` / `today_entity` | solar thermal | The heat it brings and the day's yield, as lines. |
+| `state_entity` | wood stove | Its temperature, on the stove, the flue or the water. A status that is simply on is a fire. |
+| `burning_temp` / `embers_temp` | wood stove | *Burning* from the first (120 by default), *Embers* from the second (50), *Cold* below. On water, something like 50 and 30. The dial reads to 400 degrees, or to 100 when `burning_temp` is under 100. |
+| `temperature_scale` | wood stove | A factor for a raw value, `0.01` for a PLC sending 2130 for 21.3 °C. |
+| `water_jacket` | wood stove | `true` draws the flow and return pipes at the back. |
+| `flow_temperature_entity` / `return_temperature_entity` | wood stove | The water circuit, and its difference. Above `overheat_temp` (90 by default) the stove is *Overheating*. |
+| `pump_entity` / `valve_entity` | wood stove | The circuit pump, worth a glance when stopped with the water hot, and the mixing valve, its position in %. |
+| `temperature_entity` / `last_fire_entity` | wood stove | The room, and the last fire from a timestamp. |
+
+```yaml
+type: custom:ha-appliance-card
+appliance_type: storage_tank
+state_entity: sensor.buffer_top
+temperature_entities:
+  - sensor.buffer_top
+  - sensor.buffer_middle
+  - sensor.buffer_bottom
+tank_volume: 750
+sources:
+  - entity: sensor.boiler_hpactivity
+    name: Heat pump
+  - binary_sensor.solar_pump
+consumers:
+  - binary_sensor.heating_circuit_pump
+```
+
+```yaml
+type: custom:ha-appliance-card
+appliance_type: wood_stove
+state_entity: sensor.stove_temperature
+temperature_scale: 0.01
+burning_temp: 50
+embers_temp: 30
+water_jacket: true
+flow_temperature_entity: sensor.stove_flow
+return_temperature_entity: sensor.stove_return
+pump_entity: binary_sensor.stove_pump
+valve_entity: cover.stove_mixer
 ```
 
 </details>

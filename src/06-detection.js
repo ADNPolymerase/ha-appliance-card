@@ -582,6 +582,12 @@ const TYPE_CAPS = {
   speaker: { ntSpeaker: true },
   // A game console, on PlayStation Network, Xbox, the PS4 integration or a plug.
   console: { ntConsole: true },
+  // The heating of #81 to #84: a buffer tank, a fresh water station, solar
+  // thermal collectors and a log stove, read from their temperatures.
+  storage_tank: { readOnly: true },
+  fresh_water_station: { readOnly: true },
+  solar_thermal: { readOnly: true },
+  wood_stove: { readOnly: true },
   // A thermostat on the wall or a valve on a radiator: the room, the
   // setpoint, and whether it calls for heat. A climate entity says it all.
   thermostat: { thermostat: true, readOnly: true },
@@ -691,6 +697,10 @@ const STATE_DOMAINS = {
   detector: ["binary_sensor", "sensor", "input_boolean"],
   speaker: ["media_player"],
   console: ["media_player", "sensor", "switch", "binary_sensor", "device_tracker", "input_boolean"],
+  storage_tank: ["sensor", "number", "input_number", "water_heater"],
+  fresh_water_station: ["sensor", "binary_sensor", "switch"],
+  solar_thermal: ["binary_sensor", "switch", "sensor"],
+  wood_stove: ["sensor", "binary_sensor", "switch", "input_boolean", "climate"],
 };
 // A model, a picture, the players it shows and a session lock belong to a
 // screen.
@@ -792,10 +802,10 @@ function compactModeOf(v) {
 const TYPE_GROUPS = [
   ["laundry", ["washer", "dryer"]],
   ["kitchen", ["dishwasher", "oven", "microwave", "hood", "cooktop", "fridge", "kettle", "cooker", "coffee", "rice_cooker", "air_fryer", "toaster"]],
-  ["heating", ["water_heater", "boiler", "heat_pump", "thermostat", "pellet_stove", "space_heater", "towel_warmer", "floor_heating"]],
+  ["heating", ["water_heater", "boiler", "heat_pump", "thermostat", "pellet_stove", "space_heater", "towel_warmer", "floor_heating", "storage_tank", "fresh_water_station", "wood_stove"]],
   ["air", ["air_conditioner", "dehumidifier", "air_purifier", "fan", "diffuser", "hrv"]],
   ["home", ["screen", "iron", "hair_dryer", "printer_3d", "robot", "pool_pump", "scale", "camera", "lamp", "mailbox", "water_pump", "spa", "sauna", "aquarium", "christmas_tree", "mobility", "irrigation", "detector", "speaker", "console"]],
-  ["energy", ["solar", "home_battery", "ev_charger", "meter"]],
+  ["energy", ["solar", "solar_thermal", "home_battery", "ev_charger", "meter"]],
   ["pets", ["pet_feeder", "pet_fountain", "litter_box"]],
   ["network", ["network", "ups"]],
 ];

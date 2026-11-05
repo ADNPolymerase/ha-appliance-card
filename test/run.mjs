@@ -12549,6 +12549,91 @@ function tvT(w) { return { 'switch.tv': { state: 'on', attributes: {} }, 'sensor
   check('editeur console : le modele et le jeu', ['"console_layout"', 'value="megadrive"', 'data-toggle="game_entity"', 'data-toggle="playtime_entity"'].every((f) => ed({ appliance_type: 'console', state_entity: 'media_player.p' }).includes(f)), true);
 }
 
+// The heating of #81 to #84: a buffer tank, a fresh water station, solar
+// thermal collectors and a log stove.
+{
+  const s = (state, attributes = {}) => ({ state: String(state), attributes });
+  const T = (v) => s(v, { unit_of_measurement: '°C', device_class: 'temperature' });
+  const kindOf = (h) => (h.match(/class="machine [^"]*\bnt-k-([a-z0-9_]+)/) || [])[1];
+  const temps = (h) => [...h.matchAll(/text-anchor="middle" fill="#fff"[^>]*>(-?\d+)°</g)].map((m) => m[1]).join();
+  // A buffer tank: three probes, top to bottom.
+  const tankStates = { 'sensor.oben': T(41.3), 'sensor.mitte': T(37.8), 'sensor.unten': T(29.6) };
+  const TANK = (more = {}, extra = {}) => render({ appliance_type: 'storage_tank', state_entity: 'sensor.oben', temperature_entities: ['sensor.oben', 'sensor.mitte', 'sensor.unten'], ...more }, { ...tankStates, ...extra });
+  const t1 = TANK();
+  check('ballon : son dessin', kindOf(t1), 'tank');
+  check('ballon : une pastille par sonde, de haut en bas', temps(t1), '41,38,30');
+  check('ballon : la charge entre 30 et 60', infoLine(t1, 'Charge').replace(/\s/g, ' '), '21 %');
+  check('ballon : partiellement charge', stateLine(t1), 'Partly charged');
+  check('ballon : charge', stateLine(TANK({}, { 'sensor.oben': T(65), 'sensor.mitte': T(62), 'sensor.unten': T(58) })), 'Charged');
+  check('ballon : decharge', stateLine(TANK({}, { 'sensor.oben': T(26), 'sensor.mitte': T(24), 'sensor.unten': T(22) })), 'Discharged');
+  check('ballon : ses propres bornes', infoLine(TANK({ charge_min_temp: 20, charge_max_temp: 50 }), 'Charge').replace(/\s/g, ' '), '54 %');
+  check('ballon : la charge de son regulateur', infoLine(TANK({ charge_entity: 'sensor.soc' }, { 'sensor.soc': s(73, { unit_of_measurement: '%' }) }), 'Charge').replace(/\s/g, ' '), '73 %');
+  check('ballon : l energie stockee', infoLine(TANK({ tank_volume: 750 }), 'Stored energy').replace(/\s/g, ' '), '5.4 kWh');
+  const loading = TANK({ sources: [{ entity: 'sensor.hp', name: 'Heat pump' }, 'binary_sensor.solar_pump'], consumers: ['binary_sensor.circuit'] },
+    { 'sensor.hp': s('Warmwasser'), 'binary_sensor.solar_pump': s('off'), 'binary_sensor.circuit': s('off') });
+  check('ballon : une source active, en charge', stateLine(loading), 'Loading');
+  check('ballon : la source nommee', infoLine(loading, 'Sources'), 'Heat pump');
+  check('ballon : aucun consommateur actif', infoLine(loading, 'Consumers'), 'None');
+  check('ballon : l eau circule a gauche', /class="machine [^"]*\bnt-on\b/.test(loading), true);
+  const idleSrc = TANK({ sources: ['sensor.hp'] }, { 'sensor.hp': s('off') });
+  check('ballon : une source a l arret ne charge pas', stateLine(idleSrc), 'Partly charged');
+  check('ballon : une seule sonde, l entite d etat', temps(render({ appliance_type: 'storage_tank', state_entity: 'sensor.ballon' }, { 'sensor.ballon': T(52) })), '52');
+  check('ballon : sans sonde lisible, hors ligne', stateLine(render({ appliance_type: 'storage_tank', state_entity: 'sensor.x' }, { 'sensor.x': s('unavailable') })), 'Offline');
+  check('ballon : reconnu par son nom', kindOf(render({ state_entity: 'sensor.pufferspeicher_oben' }, { 'sensor.pufferspeicher_oben': T(50) })), 'tank');
+  check('ballon : reconnu par ses sondes', kindOf(render({ state_entity: 'sensor.a', temperature_entities: ['sensor.a'] }, { 'sensor.a': T(50) })), 'tank');
+
+  // A fresh water station: a flow sensor, the outlet temperature.
+  const FWS = (flow, more = {}, extra = {}) => render({ appliance_type: 'fresh_water_station', state_entity: 'sensor.flow', temperature_entity: 'sensor.out', ...more },
+    { 'sensor.flow': s(flow, { unit_of_measurement: 'L/min' }), 'sensor.out': T(37.1), ...extra });
+  check('station : son dessin', kindOf(FWS(0)), 'fws');
+  check('station : en veille', stateLine(FWS(0)), 'Standby');
+  check('station : puisage', stateLine(FWS(8.5)), 'Drawing hot water');
+  check('station : le debit a l ecran', /8\.5 L\/min/.test(FWS(8.5)), true);
+  check('station : la temperature de sortie', infoLine(FWS(0), 'Outlet temperature').replace(/\s/g, ' '), '37 °C');
+  check('station : la pompe primaire suffit', stateLine(FWS(0, { pump_entity: 'binary_sensor.pump' }, { 'binary_sensor.pump': s('on') })), 'Drawing hot water');
+  check('station : bouclage', stateLine(FWS(0, { circulation_entity: 'binary_sensor.circ' }, { 'binary_sensor.circ': s('on') })), 'Circulating');
+  check('station : depart trop froid', stateLine(FWS(0, { target_temperature_entity: 'sensor.set', primary_temperature_entity: 'sensor.sup' }, { 'sensor.set': T(50), 'sensor.sup': T(48) })), 'Supply too cold');
+  check('station : defaut', stateLine(FWS(8, { fault_entity: 'binary_sensor.f' }, { 'binary_sensor.f': s('on') })), 'Fault');
+  check('station : le mode de bouclage', infoLine(FWS(0, { circulation_mode_entity: 'select.c' }, { 'select.c': s('3x3min') }), 'Circulation mode'), '3x3min');
+  check('station : reconnue par son nom', kindOf(render({ state_entity: 'sensor.frischwasser_flow' }, { 'sensor.frischwasser_flow': s(0, { unit_of_measurement: 'L/min' }) })), 'fws');
+
+  // Solar thermal: the pump, the collector, the tank.
+  const STH = (pump, col, more = {}, extra = {}) => render({ appliance_type: 'solar_thermal', state_entity: 'binary_sensor.solarpump', collector_temperature_entity: 'sensor.col', tank_temperature_entity: 'sensor.tank', ...more },
+    { 'binary_sensor.solarpump': s(pump), 'sensor.col': T(col), 'sensor.tank': T(28.3), ...extra });
+  check('solaire thermique : son dessin', kindOf(STH('on', 60)), 'solth');
+  check('solaire thermique : en charge', stateLine(STH('on', 60)), 'Loading');
+  check('solaire thermique : en veille', stateLine(STH('off', 25)), 'Standby');
+  check('solaire thermique : gel', stateLine(STH('off', -2.3)), 'Frost');
+  check('solaire thermique : stagnation par la temperature', stateLine(STH('off', 130)), 'Stagnation');
+  check('solaire thermique : stagnation par son entite', stateLine(STH('off', 90, { collector_shutdown_entity: 'binary_sensor.shut' }, { 'binary_sensor.shut': s('on') })), 'Stagnation');
+  check('solaire thermique : ballon plein', stateLine(STH('off', 70, { tank_full_entity: 'binary_sensor.full' }, { 'binary_sensor.full': s('on') })), 'Tank full');
+  check('solaire thermique : l ecart', infoLine(STH('on', 60), 'Difference').replace(/\s/g, ' '), '31.7 K');
+  check('solaire thermique : capteurs plans par defaut, tubes au choix', [kindOf(STH('on', 60)), /url\(#nt\d+\)" stroke="#9fb0bd"/.test(STH('on', 60, { collector_style: 'tubes' }))].join(), 'solth,true');
+  check('solaire thermique : la modulation fait tourner la pompe', /nta-spin-slow/.test(STH('off', 50, { pump_modulation_entity: 'sensor.mod' }, { 'sensor.mod': s(30, { unit_of_measurement: '%' }) })), true);
+
+  // A log stove: its temperature and two thresholds.
+  const WOOD = (v, more = {}, extra = {}) => render({ appliance_type: 'wood_stove', state_entity: 'sensor.kamin', ...more }, { 'sensor.kamin': T(v), ...extra });
+  check('poele a bois : son dessin', kindOf(WOOD(200)), 'wood');
+  check('poele a bois : en feu, braises, froid', [stateLine(WOOD(200)), stateLine(WOOD(80)), stateLine(WOOD(20))].join(), 'Burning,Embers,Cold');
+  check('poele a bois : des flammes en feu', /nta-flick/.test(WOOD(200)), true);
+  check('poele a bois : ses propres seuils', stateLine(WOOD(55, { burning_temp: 50, embers_temp: 30 })), 'Burning');
+  check('poele a bois : une valeur x100', stateLine(render({ appliance_type: 'wood_stove', state_entity: 'sensor.plc', temperature_scale: 0.01, burning_temp: 50, embers_temp: 30 }, { 'sensor.plc': T(2130) })), 'Cold');
+  const jacket = WOOD(60, { water_jacket: true, burning_temp: 50, embers_temp: 30, flow_temperature_entity: 'sensor.vl', return_temperature_entity: 'sensor.rl', pump_entity: 'binary_sensor.pump', valve_entity: 'cover.mischer' },
+    { 'sensor.vl': T(62), 'sensor.rl': T(48), 'binary_sensor.pump': s('off'), 'cover.mischer': s('open', { current_position: 40 }) });
+  check('poele a bois : bouilleur, l ecart', infoLine(jacket, 'Difference').replace(/\s/g, ' '), '14.0 K');
+  check('poele a bois : la pompe arretee eau chaude', infoLine(jacket, 'Pump'), 'Stopped');
+  check('poele a bois : la vanne en %', infoLine(jacket, 'Valve').replace(/\s/g, ' '), '40 %');
+  check('poele a bois : surchauffe', stateLine(WOOD(60, { water_jacket: true, flow_temperature_entity: 'sensor.vl' }, { 'sensor.vl': T(95) })), 'Overheating');
+  check('poele a bois : reconnu par son nom', kindOf(render({ state_entity: 'sensor.temperatur_kamin' }, { 'sensor.temperatur_kamin': T(21) })), 'wood');
+  check('poele a bois : un poele a granules n en est pas un', kindOf(render({ state_entity: 'sensor.kamin_pellet_status' }, { 'sensor.kamin_pellet_status': s('off') })) !== 'wood', true);
+
+  const ed = (cfg) => markup(newEditor(cfg));
+  check('editeur ballon : sondes, sources, consommateurs, bornes', ['data-panel="tank_temps"', 'data-panel="tank_sources"', 'data-panel="tank_consumers"', 'data-field="charge_min_temp"', 'data-field="tank_volume"'].every((f) => ed({ appliance_type: 'storage_tank', state_entity: 'sensor.a' }).includes(f)), true);
+  check('editeur station : sortie, pompe, bouclage', ['data-toggle="temperature_entity"', 'data-toggle="pump_entity"', 'data-toggle="circulation_entity"'].every((f) => ed({ appliance_type: 'fresh_water_station', state_entity: 'sensor.f' }).includes(f)), true);
+  check('editeur solaire thermique : capteurs et style', ['data-toggle="collector_temperature_entity"', '"collector_style"', 'value="tubes"'].every((f) => ed({ appliance_type: 'solar_thermal', state_entity: 'binary_sensor.p' }).includes(f)), true);
+  check('editeur poele a bois : bouilleur et seuils', ['data-field="water_jacket"', 'data-field="burning_temp"', 'data-toggle="flow_temperature_entity"'].every((f) => ed({ appliance_type: 'wood_stove', state_entity: 'sensor.k' }).includes(f)), true);
+}
+
 // The extract-only ventilation and the sump pump on a plug left on (#136).
 {
   const s = (state, attributes = {}) => ({ state: String(state), attributes });

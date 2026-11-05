@@ -1477,6 +1477,32 @@ const conN64 = conCard(L("Nintendo 64", "Nintendo 64"), "n64", "playing", { medi
 const conCube = conCard(L("GameCube", "GameCube"), "gamecube", "on");
 const conWii = conCard(L("Wii", "Wii"), "wii", "playing", { media_title: "Wii Sports" });
 const conMd = conCard(L("Mega Drive", "Mega Drive"), "megadrive", "off");
+// The heating of #81 to #84: a buffer tank, a fresh water station, solar
+// thermal collectors and a log stove.
+const tmpSt = (id, v) => st(id, v, { unit_of_measurement: "\u00b0C", device_class: "temperature" });
+const tankCard = (name, vals, more, extra) => () => card({ name, appliance_type: "storage_tank", state_entity: "sensor.tank_t0", temperature_entities: vals.map((v, i) => "sensor.tank_t" + i), ...(more || {}) },
+  vals.map((v, i) => tmpSt("sensor.tank_t" + i, v)).concat(extra || []));
+const heatTank = tankCard(L("Buffer tank", "Ballon tampon"), [62, 58, 52], { tank_volume: 750 });
+const heatTankLoading = tankCard(L("Buffer tank, heat pump on", "Ballon, PAC en marche"), [48, 40, 33, 28, 24], { sources: [{ entity: "binary_sensor.tank_hp", name: L("Heat pump", "PAC") }], consumers: ["binary_sensor.tank_heating"] },
+  [st("binary_sensor.tank_hp", "on"), st("binary_sensor.tank_heating", "on")]);
+const heatTankLow = tankCard(L("Buffer tank, empty", "Ballon vide"), [26, 24, 22]);
+const fwsCard = (name, flow, more, extra) => () => card({ name, appliance_type: "fresh_water_station", state_entity: "sensor.fws_flow", temperature_entity: "sensor.fws_out", ...(more || {}) },
+  [st("sensor.fws_flow", flow, { unit_of_measurement: "L/min" }), tmpSt("sensor.fws_out", 48)].concat(extra || []));
+const heatFws = fwsCard(L("Fresh water station", "Station d'eau fra\u00eeche"), 0);
+const heatFwsDraw = fwsCard(L("Fresh water, tap open", "Eau chaude, robinet ouvert"), 8.5);
+const heatFwsCirc = fwsCard(L("Fresh water, circulation", "Eau chaude, bouclage"), 0, { circulation_entity: "binary_sensor.fws_circ" }, [st("binary_sensor.fws_circ", "on")]);
+const sthCard = (name, pump, col, more, extra) => () => card({ name, appliance_type: "solar_thermal", state_entity: "binary_sensor.sth_pump", collector_temperature_entity: "sensor.sth_col", tank_temperature_entity: "sensor.sth_tank", ...(more || {}) },
+  [st("binary_sensor.sth_pump", pump), tmpSt("sensor.sth_col", col), tmpSt("sensor.sth_tank", 46)].concat(extra || []));
+const heatSth = sthCard(L("Solar thermal", "Solaire thermique"), "on", 68);
+const heatSthTubes = sthCard(L("Evacuated tubes", "Tubes sous vide"), "on", 74, { collector_style: "tubes" });
+const heatSthFrost = sthCard(L("Solar thermal, frost", "Solaire thermique, gel"), "off", -2);
+const heatSthStag = sthCard(L("Solar thermal, stagnation", "Solaire, stagnation"), "off", 128);
+const woodCard = (name, v, more, extra) => () => card({ name, appliance_type: "wood_stove", state_entity: "sensor.wood_t", ...(more || {}) }, [tmpSt("sensor.wood_t", v)].concat(extra || []));
+const heatWood = woodCard(L("Wood stove", "Po\u00eale \u00e0 bois"), 240);
+const heatWoodEmbers = woodCard(L("Wood stove, embers", "Po\u00eale, braises"), 80);
+const heatWoodCold = woodCard(L("Wood stove, cold", "Po\u00eale froid"), 21);
+const heatWoodWater = woodCard(L("Water jacket stove", "Po\u00eale bouilleur"), 230, { water_jacket: true, flow_temperature_entity: "sensor.wood_vl", return_temperature_entity: "sensor.wood_rl", pump_entity: "binary_sensor.wood_pump" },
+  [tmpSt("sensor.wood_vl", 68), tmpSt("sensor.wood_rl", 52), st("binary_sensor.wood_pump", "on")]);
 const spkBoseBar = spkCard(L("Bose Smart Soundbar", "Bose Smart Soundbar"), "bose_soundbar", "paused", { source: "TV" });
 
 // Grouped by kind: the laundry, the kitchen, heating and climate, then the
@@ -1544,7 +1570,7 @@ const EXTRA = { iron, coffee_black: coffeeBlack, boiler_window: boilerWindow, bo
                 irr_sprinkler: irrSprinkler, irr_rain: irrRain, irr_tap: irrTap, irr_tap_off: irrTapOff,
                 lit_globe: litGlobe, lit_globe_clean: litGlobeClean, lit_globe_cat: litGlobeCat, lit_box: litBox, lit_box_clean: litBoxClean, lit_box_full: litBoxFull,
                 det_smoke: detSmoke, det_smoke_alarm: detSmokeAlarm, det_co: detCo, det_co_alarm: detCoAlarm, det_leak: detLeak, det_leak_alarm: detLeakAlarm,
-                spk_smart: spkSmart, spk_mini: spkMini, spk_one: spkOne, spk_shelf: spkShelf, spk_move: spkMove, spk_bar: spkBar, spk_dot: spkDot, spk_nest: spkNest, spk_era100: spkEra100, spk_era300: spkEra300, spk_wave: spkWave, spk_bose500: spkBose500, spk_flex: spkFlex, spk_bosebar: spkBoseBar, con_ps1: conPs1, con_ps2: conPs2, con_ps3: conPs3, con_ps4: conPs4, con_ps4pro: conPs4Pro, con_ps5: conPs5, con_xbox: conXbox, con_x360: conX360, con_xone: conXone, con_xsx: conXsx, con_xss: conXss, con_switch: conSwitch, con_switch2: conSwitch2, con_lite: conLite, con_vita: conVita, con_nes: conNes, con_snes: conSnes, con_n64: conN64, con_cube: conCube, con_wii: conWii, con_md: conMd,
+                spk_smart: spkSmart, spk_mini: spkMini, spk_one: spkOne, spk_shelf: spkShelf, spk_move: spkMove, spk_bar: spkBar, spk_dot: spkDot, spk_nest: spkNest, spk_era100: spkEra100, spk_era300: spkEra300, spk_wave: spkWave, spk_bose500: spkBose500, spk_flex: spkFlex, spk_bosebar: spkBoseBar, heat_tank: heatTank, heat_tank_loading: heatTankLoading, heat_tank_low: heatTankLow, heat_fws: heatFws, heat_fws_draw: heatFwsDraw, heat_fws_circ: heatFwsCirc, heat_sth: heatSth, heat_sth_tubes: heatSthTubes, heat_sth_frost: heatSthFrost, heat_sth_stag: heatSthStag, heat_wood: heatWood, heat_wood_embers: heatWoodEmbers, heat_wood_cold: heatWoodCold, heat_wood_water: heatWoodWater, con_ps1: conPs1, con_ps2: conPs2, con_ps3: conPs3, con_ps4: conPs4, con_ps4pro: conPs4Pro, con_ps5: conPs5, con_xbox: conXbox, con_x360: conX360, con_xone: conXone, con_xsx: conXsx, con_xss: conXss, con_switch: conSwitch, con_switch2: conSwitch2, con_lite: conLite, con_vita: conVita, con_nes: conNes, con_snes: conSnes, con_n64: conN64, con_cube: conCube, con_wii: conWii, con_md: conMd,
                 mob_scooter: demo_mobScooter, mob_offroad: demo_mobOffroad, mob_ebike: demo_mobEbike, mob_gyropode: demo_mobGyropode, mob_motorcycle: demo_mobMotorcycle, mob_unplugged: demo_mobUnplugged, mob_poster: demo_mobPoster,
                 net_sw8: netSw(8, 6), net_sw16: netSw(16, 11), net_sw24: netSw(24, 20), net_sw32: netSw(32, 27),
                 net_nas1: netBays(1, ["normal"], L("NAS, 1 bay", "NAS 1 baie")),
@@ -1596,6 +1622,7 @@ function liveGallery() {
     [L("Robots and vacuums", "Robots et aspirateurs"), [rbtVacuum, rbtEmptying, rbtBox, rbtBoxGold, rbtMop, rbtDrying, rbtMower, rbtNavimow, rbtRain, rbtStick, rbtWasher]],
     [L("Electric rides", "Mobilit\u00e9 \u00e9lectrique"), [demo_mobScooter, demo_mobOffroad, demo_mobEbike, demo_mobGyropode, demo_mobMotorcycle, demo_mobUnplugged]],
     [L("Pool", "Piscine"), [poolRunning, poolChlorine, poolBackwash, poolFrost, poolLight, poolError]],
+    [L("Buffer tanks, solar thermal and wood stoves", "Ballons, solaire thermique et po\u00eales \u00e0 bois"), [heatTank, heatTankLoading, heatTankLow, heatFws, heatFwsDraw, heatFwsCirc, heatSth, heatSthTubes, heatSthFrost, heatSthStag, heatWood, heatWoodEmbers, heatWoodCold, heatWoodWater]],
     [L("Energy", "Énergie"), [solarDay, solarRoof, solarNight, batteryCharging, batteryStation, batteryLow, evCharger, evDischarging]],
     [L("Network and servers", "Réseau et serveurs"), [netSwitch, netRouter("on"), netNas, netServer, netRack, upsOnline, upsBattery, upsLow]],
     [L("Screens and tablets", "Écrans et tablettes"), [scrTv, scrProjector, scrComputer, scrLaptop, tabWall, tabFrame, tabPortrait]],
@@ -1662,7 +1689,7 @@ const POSTER_NAMES = {
   hd_hot: ["Hair dryer", "S\u00e8che-cheveux"], dif_drop: ["Diffuser", "Diffuseur"], hrv_one_duct: ["Ventilation", "VMC"],
   cam_outdoor: ["Camera", "Cam\u00e9ra"], lamp_floor: ["Lamp", "Lampe"], solar_day: ["Solar panels", "Panneaux solaires"],
   battery_charging: ["Home battery", "Batterie domestique"], th_square: ["Thermostat", "Thermostat"],
-  irr_sprinkler: ["Watering", "Arrosage"], lit_globe: ["Litter box", "Liti\u00e8re"], det_smoke: ["Detector", "D\u00e9tecteur"], spk_smart: ["Speaker", "Enceinte"], con_ps5: ["Game console", "Console de jeu"],
+  irr_sprinkler: ["Watering", "Arrosage"], lit_globe: ["Litter box", "Liti\u00e8re"], det_smoke: ["Detector", "D\u00e9tecteur"], spk_smart: ["Speaker", "Enceinte"], con_ps5: ["Game console", "Console de jeu"], heat_tank_loading: ["Buffer tank", "Ballon tampon"], heat_fws_draw: ["Fresh water station", "Station d'eau fra\u00eeche"], heat_sth: ["Solar thermal", "Solaire thermique"], heat_wood_water: ["Wood stove", "Po\u00eale \u00e0 bois"],
   robot_vacuum: ["Robot vacuum", "Robot aspirateur"], robot_drying: ["Mopping robot", "Robot laveur"], robot_mower: ["Robot mower", "Robot tondeuse"],
 };
 const only = (params.get("only") || "").split(",").map((k) => k.trim()).filter(Boolean);
