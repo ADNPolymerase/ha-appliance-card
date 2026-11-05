@@ -28,8 +28,10 @@ function upsStatusOf(hass, cfg, st) {
   const text = stripAccents(raw.toLowerCase());
   const codes = new Set(raw.toUpperCase().split(/[\s,]+/).filter((c) => UPS_CODES.includes(c)));
   // NUT's Status sensor spells its flags out, apcupsd writes them in one word.
-  if (/low.?batt/.test(text)) codes.add("LB");
-  if (/replac/.test(text)) codes.add("RB");
+  if (/low.?batt|batt.?low/.test(text)) codes.add("LB");
+  if (/replac|batt.?fault/.test(text)) codes.add("RB");
+  // Eaton's shutdown_imminent and internal_failure, ups-snmp's hardware fault.
+  if (!/^no.?(fault|failure)/.test(text) && /(^|[^a-z])(fault|failure)|imminent/.test(text)) codes.add("LB");
   if (/overload/.test(text)) codes.add("OVER");
   let mode;
   if (st && (["unavailable", "unknown", ""].includes(text) || /comm.?lost|no.?comm/.test(text))) mode = "unav";
@@ -38,8 +40,10 @@ function upsStatusOf(hass, cfg, st) {
   else if (codes.has("BYPASS")) mode = "bypass";
   else if (codes.has("OL")) mode = "online";
   else if (st) {
-    if (/on.?batt|sur.?batt|batteriebetrieb|discharg|decharg/.test(text)) mode = "battery";
-    else if (/^(off|arret|shutdown)$|^offline|forced.?shutdown|shutting/.test(text)) mode = "off";
+    // aburow's output source, in words: battery, software_bypass, rebooting.
+    if (/on.?batt|sur.?batt|batteriebetrieb|discharg|decharg|^battery|^batterie$/.test(text) && !/batt.?low|battery.?(low|fault)/.test(text)) mode = "battery";
+    else if (/bypass/.test(text)) mode = "bypass";
+    else if (/^(off|arret|shutdown|none)$|^offline|forced.?shutdown|shutting|rebooting|sleeping/.test(text)) mode = "off";
     else mode = "online";
   } else {
     // No status at all: the voltage at the wall says whether the mains is there.

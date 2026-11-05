@@ -154,8 +154,8 @@ function hrvReadOf(hass, cfg, st, norm, powerDerived) {
   if (!powerDerived && (!st || ["unavailable", "unknown", ""].includes(raw))) return { mode: "unav", level: 0 };
   const on = powerDerived ? isActiveState(norm)
     : dom === "climate" ? raw !== "off"
-    : dom === "select" || dom === "input_select" ? !/^(off|stop|standby|0|none)$/.test(raw)
-    : dom === "sensor" ? !/^(off|stop|standby)$/.test(raw)
+    : dom === "select" || dom === "input_select" ? !AIR_STOP_RE.test(raw)
+    : dom === "sensor" ? !AIR_STOP_RE.test(raw)
     : ["on", "true"].includes(raw) || isActiveState(norm);
   if (!on) return { mode: "off", level: 0 };
   const preset = stripAccents(String(dom === "select" || dom === "input_select" ? raw : a.preset_mode || a.fan_mode || "")).toLowerCase();
@@ -203,6 +203,9 @@ function hrvReadOf(hass, cfg, st, norm, powerDerived) {
       filterDays = true;
     } else if (isFinite(fv) && unit && unit !== "%" && !/^(d|day|days|jours?|tage?|dias?|giorni)$/.test(unit)) {
       // Hours run (Flexit) say nothing of what is left.
+      filterText = `${Math.round(fv)} ${unit}`;
+    } else if (isFinite(fv) && /since|used|elapsed|depuis/.test(String(cfg.filter_life_entity || ""))) {
+      // Days since the filter was reset (Brink) count up: no deadline here.
       filterText = `${Math.round(fv)} ${unit}`;
     } else if (isFinite(fv)) {
       const days = /^(d|day|days|jours?|tage?|dias?|giorni)$/.test(unit);

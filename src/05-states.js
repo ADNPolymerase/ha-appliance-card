@@ -5,8 +5,8 @@
 const PRINTER_STATES = {
   printing: "printing", printing_sd: "printing", printing_streaming: "printing", running: "printing",
   processing: "printing", print_started: "printing", printing_recovery: "printing", recovery: "printing",
-  resuming: "printing", finishing: "printing", simulating: "printing",
-  prepare: "preparing", init: "preparing", slicing: "preparing", busy: "preparing", startup: "preparing",
+  resuming: "printing", finishing: "printing", simulating: "printing", building: "printing", dropping: "printing", lifting: "printing",
+  prepare: "preparing", preparing: "preparing", init: "preparing", slicing: "preparing", busy: "preparing", startup: "preparing",
   starting: "preparing", starting_sd: "preparing", starting_streaming: "preparing",
   "self-testing": "preparing", self_testing: "preparing", checking: "preparing", file_checking: "preparing",
   printers_checking: "preparing", devices_testing: "preparing", exposure_testing: "preparing",
@@ -15,7 +15,7 @@ const PRINTER_STATES = {
   paused: "paused", pause: "paused", pausing: "paused",
   attention: "attention",
   complete: "done", completed: "done", finished: "done", finish: "done",
-  cancelled: "cancelled", canceled: "cancelled", cancelling: "cancelled", stopped: "cancelled", stopping: "cancelled",
+  abort: "cancelled", aborted: "cancelled", cancelled: "cancelled", canceled: "cancelled", cancelling: "cancelled", stopped: "cancelled", stopping: "cancelled",
   failed: "failed",
   error: "error", offline_after_error: "error", halted: "error",
   idle: "idle", standby: "idle", operational: "idle", ready: "idle", available: "idle",
@@ -67,6 +67,8 @@ function printerModeOf(raw, stateMap) {
   let mode = Object.prototype.hasOwnProperty.call(PRINTER_STATES, f) ? PRINTER_STATES[f] : "";
   const phase = mode === "preheating" ? "" : printerPhaseOf(f);
   if (!mode && phase) mode = phase === "paused" ? "paused" : "preparing";
+  // A milestone inside a job (Elegoo's preheating_completed): the job goes on.
+  if (!mode && /_complete(d)?$/.test(f) && !/^(print|job)/.test(f)) mode = "printing";
   return { mode, phase: phase === "paused" ? "" : phase };
 }
 
@@ -92,6 +94,15 @@ function normFor(type, raw, stateMap) {
     if (mode) return FRYER_NORMS[mode];
   }
   const norm = normalizeState(raw, stateMap);
+  // A coffee machine warming up has not made anything yet; a kettle holds its
+  // water at temperature, and "heat" is its thermostat at work (Stagg).
+  const mappedOwn = !!stateMap && raw !== undefined && raw !== null && Object.prototype.hasOwnProperty.call(stateMap, String(raw).trim());
+  if (!mappedOwn && raw !== undefined && raw !== null) {
+    const w = String(raw).trim().toLowerCase();
+    if (type === "coffee" && w === "warming") return "preheating";
+    if (type === "kettle" && w === "hold") return "keep_warm";
+    if (type === "kettle" && w === "heat") return "running";
+  }
   // A laundry machine or a dishwasher whose state names its step is running,
   // even on a word the card does not sort: LG reports soaking and detecting,
   // Whirlpool cycle_filling, and a step only exists inside a cycle. An entry
@@ -156,7 +167,7 @@ const HOMEWHIZ_STATES = {
 function doorStateOpen(state, cfg) {
   if (cfg.door_open_state) return state === cfg.door_open_state;
   // Home Connect's door is an enum sensor: open, closed, locked.
-  return ["on", "open", "opened", "true"].includes(String(state).trim().toLowerCase());
+  return ["on", "open", "opened", "true", "ajar"].includes(String(state).trim().toLowerCase());
 }
 const INTEGRATION_STATES = {
   // Miele
@@ -169,9 +180,20 @@ const INTEGRATION_STATES = {
   stop: "idle", fast_preheat: "preheating", time_hold_preheat: "preheating", stone_heating: "preheating", searing: "running", defrosting: "running",
   // Whirlpool
   hard_stop_or_error: "error", exception: "error", power_failure: "error", cancelled: "idle", setting: "idle", system_initialize: "idle",
-  // Home Connect
-  actionrequired: "paused",
+  // Home Connect, with its long key cut to the last part
+  actionrequired: "paused", action_required: "paused",
+  // Midea, ConnectLife, GE, Xiaomi's cookers, Tokit, Nespresso, Philips, De'Longhi
+  start: "running", work: "running", working: "running", add_clothes: "running", refreshing: "running", recovering: "running",
+  order: "delayed", reservation: "delayed", delay_run: "delayed", dsm_delay_run: "delayed",
+  stand_by: "idle", program_select: "idle", low_power: "idle", power_up: "idle", asleep: "idle", online: "idle", waiting: "idle",
+  turned_off: "idle", power_save: "idle", rinsing_ready: "idle",
+  eoc: "done", rinsing_paused: "paused",
+  finishing_unsuccessfully: "error", suspended_alarm: "error", unusual: "error", out_of_order: "error", overheated: "error",
+  precook: "preheating", autokeepwarm: "keep_warm", keeptemp: "keep_warm", keep_temp: "keep_warm", keeping_warm: "keep_warm", warm: "keep_warm",
 };
+// The order a state in snake case is read in: delay_wash is a wait, wash_done
+// is over and heating_off is off, whichever word comes first.
+const SECOND_PASS_ORDER = ["error", "delayed", "paused", "done", "preheating", "keep_warm", "idle", "running"];
 
 function normalizeState(raw, stateMap) {
   if (raw === undefined || raw === null) return "unknown";
@@ -179,11 +201,32 @@ function normalizeState(raw, stateMap) {
   if (["unknown", "unavailable", "none", ""].includes(s.toLowerCase())) return "unknown";
   if (stateMap && Object.prototype.hasOwnProperty.call(stateMap, s)) return mappedState(stateMap[s]);
   if (Object.prototype.hasOwnProperty.call(HOMEWHIZ_STATES, s)) return HOMEWHIZ_STATES[s];
+  // LG's dash is a machine with nothing to report.
+  if (/^-+$/.test(s)) return "idle";
   const exact = s.toLowerCase();
   if (Object.prototype.hasOwnProperty.call(INTEGRATION_STATES, exact)) return INTEGRATION_STATES[exact];
+  // BSH.Common.EnumType.OperationState.ActionRequired, Delay Run, stand-by.
+  const key = exact.slice(exact.lastIndexOf(".") + 1).trim().replace(/[\s-]+/g, "_");
+  if (Object.prototype.hasOwnProperty.call(INTEGRATION_STATES, key)) return INTEGRATION_STATES[key];
   const flat = stripAccents(s);
-  for (const norm of Object.keys(STATE_KEYWORD_PATTERNS)) {
-    if (STATE_KEYWORD_PATTERNS[norm].some((re) => re.test(flat))) return norm;
+  const low = flat.toLowerCase();
+  // A word that says there is none, then one that outranks what comes with
+  // it: no_error is fine, a cleaning paused on a system error is an error.
+  const words = !/^(no|not|kein|keine|sans|ohne)[\s_.-]/.test(low);
+  if (!words) return "idle";
+  if (/(^|[\s_.-])(error|fault|failed|failure)($|[\s_.-])/.test(low)) return "error";
+  if (/(^|[\s_.-])paused?($|[\s_.-])/.test(low)) return "paused";
+  // "_" is a letter to a keyword, so a state in snake case is read in separate
+  // words, and a word further along may change what the first one said.
+  const spaced = low.replace(/[_.]+/g, " ");
+  if (spaced !== low) {
+    for (const norm of SECOND_PASS_ORDER) {
+      if (STATE_KEYWORD_PATTERNS[norm].some((re) => re.test(spaced))) return norm;
+    }
+  } else {
+    for (const norm of Object.keys(STATE_KEYWORD_PATTERNS)) {
+      if (STATE_KEYWORD_PATTERNS[norm].some((re) => re.test(flat))) return norm;
+    }
   }
   // A state_map may end on a catch-all. Machines that run one long programme
   // in many named steps, washer-dryers above all, report dozens of values that
@@ -316,7 +359,8 @@ function remainingSeconds(hass, entityId, unitCfg, hoursMinutes) {
   if (clock) return Number(clock[1]) * 3600 + Number(clock[2]) * 60 + Number(clock[3]);
   // A delayed start is set in hours and minutes, and Home Connect shows it
   // so: "0:59" is 59 minutes away, not 59 seconds (#56).
-  const hm = hoursMinutes && /^(\d+):([0-5]\d)$/.exec(String(st.state).trim());
+  // Miele's own integration says "01:23" with no unit at all.
+  const hm = (hoursMinutes || !st.attributes.unit_of_measurement) && /^(\d+):([0-5]\d)$/.exec(String(st.state).trim());
   if (hm) return Number(hm[1]) * 3600 + Number(hm[2]) * 60;
   const v = parseFloat(st.state);
   if (!Number.isFinite(v) || v < 0) return null;
@@ -811,6 +855,14 @@ function rawStateText(hass, st, raw, cfg) {
     }
   }
   return text;
+}
+
+// A state the card cannot place: Home Assistant's own translation when the
+// integration has one (Midea's order is "Scheduled"), its key made readable
+// otherwise.
+function translatedOrClean(hass, st, raw, cfg) {
+  const text = rawStateText(hass, st, raw, cfg);
+  return text !== String(raw) ? text : cleanStateLabel(raw);
 }
 
 function cleanStateLabel(raw) {

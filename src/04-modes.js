@@ -29,6 +29,8 @@ function boilerModeOf(raw, stateMap) {
   const code = /^(\d+)(?:\.0+)?$/.exec(s);
   if (code && Object.prototype.hasOwnProperty.call(NEFIT_CAUSE_CODES, code[1])) return NEFIT_CAUSE_CODES[code[1]];
   const f = stripAccents(s).toLowerCase();
+  // InComfort's central_heating_wait: a demand, and no flame yet.
+  if (/\bwait|_wait/.test(f)) return "waiting";
   // Hot water first: "chauffage eau chaude" is about the taps, not the radiators.
   // EMS-ESP (Bosch, Buderus, Junkers, Nefit) words its states in the language
   // it is set to: varmvatten, varmtvann, c.w.u., sicak su, horuca/horka voda.
@@ -60,6 +62,9 @@ const HVAC_ACTION_MODES = {
 const MELCLOUD_MODES = {
   heat_water: "hot_water", legionella: "hot_water", heat_zones: "space_heating",
   cool: "cooling", defrost: "defrost", idle: "idle", standby: "idle",
+  // MELCloud Home's operation_status.
+  hotwater: "hot_water", stop: "idle", heatroomtemperature: "space_heating", heatflowtemperature: "space_heating", heatcurve: "space_heating",
+  coolroomtemperature: "cooling", coolflowtemperature: "cooling",
 };
 function heatPumpModeOf(raw, attrs, stateMap, modeEntity) {
   if (raw === undefined || raw === null) return "";
@@ -68,12 +73,23 @@ function heatPumpModeOf(raw, attrs, stateMap, modeEntity) {
     return HEAT_PUMP_MODES.includes(stateMap[s]) ? stateMap[s] : "";
   }
   const a = attrs || {};
+  // On MELCloud Home, hvac_action says idle while the valve is on the tank.
+  const opStatus = String(a.operation_status || "").toLowerCase();
+  if (Object.prototype.hasOwnProperty.call(MELCLOUD_MODES, opStatus)) return MELCLOUD_MODES[opStatus];
   const action = String(a.hvac_action || "").toLowerCase();
   if (Object.prototype.hasOwnProperty.call(HVAC_ACTION_MODES, action)) return HVAC_ACTION_MODES[action];
   const status = String(a.status || "").toLowerCase();
   if (Object.prototype.hasOwnProperty.call(MELCLOUD_MODES, status)) return MELCLOUD_MODES[status];
   if (modeEntity) return "";
   const f = stripAccents(s).toLowerCase();
+  // EMS-ESP's pool, in its languages: not the house, the raw word says it.
+  if (/pool|basen|basseng|piscin|havuz|bazen|medence|zwembad/.test(f)) return "";
+  // Hungarian EMS-ESP, MELCloud Home's sensor and Lambda's own short words.
+  if (f === "leolvasztas") return "defrost";
+  if (f === "hutes" || f === "cc" || /^cool(room|flow)/.test(f)) return "cooling";
+  if (f === "melegviz" || f === "hotwater") return "hot_water";
+  if (f === "futes" || /^heat(room|flow|curve)/.test(f)) return "space_heating";
+  if (f === "ki" || f === "stop" || /^stby/.test(f)) return "idle";
   // With EMS-ESP's own words: odladzanie, tine, buz cozucu, scongelamento;
   // Kyler, kjoling, soguma, raffreddamento, chladenie. The letters NFD does
   // not take apart (\u00f8, \u0142, \u0131) are written out.
@@ -93,11 +109,11 @@ function heatPumpModeOf(raw, attrs, stateMap, modeEntity) {
 // names the phase it stopped in, and a cleaning warning is an alarm, not a
 // cleaning. Eco comes before the stop words, which "ECO STOP" also holds.
 const STOVE_MODES = ["off", "ignition", "burning", "modulating", "eco", "cooling", "cleaning", "alarm"];
-const STOVE_ALARM_RE = /alarm|allarm|alarme|alarma|error|fault|failure|defaut|guasto|warning|pellet.?finished|firewood.?finished|out.?of.?pellet|no.?pellet|door.?open|hatch|probe|pressure|temp.?too.?high|exhaust.?temp|chimney|grate|\bt05\b|\bmem\.?.?al|\bm\.?\s?al/;
+const STOVE_ALARM_RE = /alarm|allarm|alarme|alarma|alert|storung|fehler|error|fault|failure|defaut|guasto|warning|pellet.?finished|firewood.?finished|out.?of.?pellet|no.?pellet|door.?open|hatch|probe|pressure|temp.?too.?high|exhaust.?temp|chimney|grate|\bt05\b|\bmem\.?.?al|\bm\.?\s?al/;
 const STOVE_CLEANING_RE = /clean|pulizia|pul\.|nettoy|netoy|netoage|reinig|reining|limpi|limpeza|limpar|reng|czyszcz|brazier|brasier|brasero|creuset|bracier|bracere|brandkorf|brennt?opf|ashpan|sauber/;
-const STOVE_ECO_RE = /\beco\b|ecomode|stand.?by|cool_fluid|external.?request|frost|bereithalten|etre.?pret|en.?enspera|\bwait\b|\battesa$|\batten\.?$|\bwart\.?$/;
-const STOVE_COOLING_RE = /cool|raffred|refroid|kuhl|kuehl|enfria|esfriar|afkoel|shut.?down|shut.?off|burn.?off|fire_stop|spegnimento|extinct|extincion|extincao|abschaltung|arresto|\barret\b|\bstop\b|stopp|\bsluk\b|blussen|zgasic|kachel.?stopt|loschen|eteindre|chlodz|wygasz/;
-const STOVE_IGNITION_RE = /ignit|ignic|ignicao|accen|acend|allum|zund|zuend|anzuend|einschal|ontsteking|t(a|ae|\u00e6)nding|zap(l|\u0142)on|zapal|rozpal|starting|start|avvio|inicio|comece|commencez|debut|opstart|anlaufen|uruchom|load.?pellet|pellet.?load|carica|carico|carga|charge|laden|awaiting.?flame|waiting.?flame|attesa.?fiamma|atteinte.?flamme|flamme.?dans|attente.?de.?flamme|espera.?llama|llama.?a.?la.?espera|aguardando|warte|wartet|afwachting|afventer|oczekiwanie|flamm?e.?(light|licht|lumiere)|fiamma.?presente|fuoco.?presente|flamme.?presente|flamme.?vorhanden|llama.?presente|fuego.?presente|chama.?presente|vlam.?aanwezig|check.?up|kontrolle|controle|controlo|styring|lighting|fueling|heatup|ign_test|test_fire|stabili[sz]|encend|enciende/;
+const STOVE_ECO_RE = /\beco\b|ecomode|temp_ok|wait_on|wait_time|stand.?by|cool_fluid|external.?request|frost|bereithalten|etre.?pret|en.?enspera|\bwait\b|\battesa$|\batten\.?$|\bwart\.?$/;
+const STOVE_COOLING_RE = /cool|raffred|refroid|kuhl|kuehl|enfria|esfriar|afkoel|shut.?down|shut.?off|burn(ing)?.?off|fire_stop|spegnimento|extinct|extincion|extincao|abschaltung|arresto|\barret\b|\bstop\b|stopp|\bsluk\b|blussen|zgasic|kachel.?stopt|loschen|eteindre|chlodz|wygasz/;
+const STOVE_IGNITION_RE = /ignit|kindl|ignic|ignicao|accen|acend|allum|zund|zuend|anzuend|einschal|ontsteking|t(a|ae|\u00e6)nding|zap(l|\u0142)on|zapal|rozpal|starting|start|avvio|inicio|comece|commencez|debut|opstart|anlaufen|uruchom|load.?pellet|pellet.?load|carica|carico|carga|charge|laden|awaiting.?flame|waiting.?flame|attesa.?fiamma|atteinte.?flamme|flamme.?dans|attente.?de.?flamme|espera.?llama|llama.?a.?la.?espera|aguardando|warte|wartet|afwachting|afventer|oczekiwanie|flamm?e.?(light|licht|lumiere)|fiamma.?presente|fuoco.?presente|flamme.?presente|flamme.?vorhanden|llama.?presente|fuego.?presente|chama.?presente|vlam.?aanwezig|check.?up|kontrolle|controle|controlo|styring|lighting|fueling|heatup|ign_test|test_fire|stabili[sz]|encend|enciende/;
 const STOVE_MODULATING_RE = /modul|burning_mod/;
 const STOVE_BURNING_RE = /burning|\bwork|lavoro|travail|arbeit|betrieb|trabaj|trabalho|werk|\bdrift\b|flame.?on|running|\bon\b|pracuje|split.?log/;
 const STOVE_OFF_RE = /^(off|0)$|off_timer|stove_off|spent|apagad|eteint|^aus$|ausgeschaltet|^uit$|uitgeschakeld|desligad|wylaczon|slukket|vypnut/;
@@ -209,6 +225,17 @@ function acVanePos(raw, axis) {
   // Daikin's swing mode names the axis that swings.
   if (s === "vertical") return axis === "v" ? "swing" : null;
   if (s === "horizontal") return axis === "h" ? "swing" : null;
+  // Mitsubishi's WF-RAC swings or leaves it to the unit.
+  if (/auto$/.test(s)) return null;
+  if (s === "leftright" || s === "rightleft") return axis === "h" ? 0 : null;
+  // LG: Top, MiddleTop1, MiddleTop2, MiddleBottom2, MiddleBottom1, Bottom.
+  const lg = /^middle(top|bottom)([12])$/.exec(s);
+  if (lg && axis === "v") return lg[1] === "top" ? Number(lg[2]) + 1 : 5 - Number(lg[2]);
+  // Kumo's steps between its two ends.
+  if (axis === "v" && ["midhorizontal", "midpoint", "midvertical"].includes(s)) return { midhorizontal: 2, midpoint: 3, midvertical: 4 }[s];
+  // MELCloud Home counts in words.
+  const word = ["one", "two", "three", "four", "five"].indexOf(s);
+  if (word >= 0) return axis === "v" ? word + 1 : word - 2;
   const n = /(\d)/.exec(s);
   if (n) {
     const i = Math.max(1, Math.min(5, Number(n[1])));
@@ -232,17 +259,27 @@ function acVanePos(raw, axis) {
 
 // How fast the fan blows, in five steps: Panasonic's LowMid, Gree's
 // medium high, Daikin's 1 to 5, a fan entity's percentage.
-function acFanSpeedOf(raw, pct) {
+function acFanSpeedOf(raw, pct, modes) {
   if (pct !== null && pct !== undefined) {
     if (pct <= 0) return "";
     return pct <= 20 ? "quiet" : pct <= 45 ? "low" : pct <= 70 ? "medium" : pct <= 90 ? "high" : "turbo";
   }
   const s = stripAccents(String(raw || "")).toLowerCase().replace(/[^a-z0-9]/g, "");
   if (!s) return "";
-  if (/turbo|power|boost|max|strong|highest|super|jet/.test(s)) return "turbo";
-  if (/quiet|silen|night|mute|sleep|lowest|ultralow|silence/.test(s)) return "quiet";
+  if (/quiet|silen|night|mute|sleep|lowest|ultralow|silence|gentle/.test(s)) return "quiet";
+  if (/turbo|power|boost|max|strong|highest|super|jet|^full$/.test(s)) return "turbo";
   const n = /^(\d)$/.exec(s);
   if (n) return ["quiet", "low", "low", "medium", "high", "high"][Math.min(5, Number(n[1]))];
+  // Midea's l1 to l7, Xiaomi's level1, Mysa's speed_1, MELCloud's one to five,
+  // spread over the five steps the drawing has.
+  const words = ["one", "two", "three", "four", "five"].indexOf(s);
+  const rank = words >= 0 ? words + 1 : (/^(?:l|level|speed|fan|stage|step)(\d)$/.exec(s) || [])[1];
+  if (rank) {
+    // How many steps the unit has, when it lists them.
+    const listed = Array.isArray(modes) ? modes.filter((m) => /^(?:l|level|speed|fan|stage|step)_?\d$/i.test(String(m).replace(/\s/g, ""))).length : 0;
+    const scale = words >= 0 ? 5 : listed || 7;
+    return ["quiet", "low", "medium", "high", "turbo"][Math.min(4, Math.floor((Number(rank) - 1) / scale * 5))];
+  }
   if (/high/.test(s)) return "high";
   if (/low/.test(s)) return "low";
   return "medium";
@@ -252,7 +289,7 @@ const AC_FAN_SECONDS = { quiet: 2.2, low: 1.7, medium: 1.2, high: 0.8, turbo: 0.
 // A preset says quiet, eco or boost on the units that keep them there.
 function acPresetOf(raw) {
   const s = stripAccents(String(raw || "")).toLowerCase();
-  if (/eco|econom/.test(s)) return "eco";
+  if (/eco|econom|energy.?sav/.test(s)) return "eco";
   if (/boost|powerful|turbo|power/.test(s)) return "boost";
   if (/quiet|silen|sleep|night/.test(s)) return "quiet";
   return "";
@@ -399,6 +436,9 @@ function thermostatModeOf(st) {
   if (action === "cooling") return "cool";
   if (["idle", "off", "fan", "drying"].includes(action)) return "idle";
   const room = numberOrNull(a.current_temperature), target = numberOrNull(a.temperature);
+  // Nest and ecobee keep a range in heat_cool, not a setpoint.
+  const low = numberOrNull(a.target_temp_low), high = numberOrNull(a.target_temp_high);
+  if (room !== null && target === null && low !== null && high !== null) return room < low - 0.2 ? "heat" : room > high + 0.2 ? "cool" : "idle";
   if (room === null || target === null) return state === "cool" ? "cool" : "heat";
   if (state === "cool") return room > target + 0.2 ? "cool" : "idle";
   return room < target - 0.2 ? "heat" : "idle";
@@ -406,7 +446,7 @@ function thermostatModeOf(st) {
 // A preset that changes what the thermostat means: eco, away, frost guard.
 function thermostatPresetOf(raw) {
   const p = stripAccents(String(raw || "")).toLowerCase();
-  if (/frost|hors.?gel|antigel|antiheladas|frostschutz|vorst/.test(p)) return "frost";
+  if (/frost|hors.?gel|anti.?gel|anti.?freeze|^ice$|antiheladas|frostschutz|vorst/.test(p)) return "frost";
   if (/away|absent|abwesend|ausente|afwezig|vacation|holiday|vacance/.test(p)) return "away";
   if (/eco|night|nuit|sleep|reduit|reduced|spar/.test(p)) return "eco";
   return "";
@@ -424,15 +464,22 @@ function spaceHeaterModeOf(st) {
   const byAction = { heating: "heating", preheating: "heating", idle: "idle", off: "idle", fan: "fan" };
   if (Object.prototype.hasOwnProperty.call(byAction, action)) return byAction[action];
   if (state === "fan_only") return "fan";
+  // No action at all (Tuya): it heats until the setpoint is reached.
+  const room = numberOrNull((st.attributes || {}).current_temperature), target = numberOrNull((st.attributes || {}).temperature);
+  if (state === "heat" && room !== null && target !== null) return room < target ? "heating" : "idle";
   return ["heat", "auto", "heat_cool", "on"].includes(state) ? "heating" : "";
 }
+
+// A unit at rest, in its integration's words (Systemair's manual_stop, Swegon's
+// user_stop and ext_stop, Wolf's aus, a language of its own).
+const AIR_STOP_RE = /^(off|stop|stopped|standby|stand_by|power_?off|0|none|aus|uit|eteint|arret|apagad[oa]?|spento|av|ingen)$|_stop$|^stopped_/;
 
 // Air purifiers and fans. Every integration names its presets its own way
 // (Levoit says sleep, Philips night, Sharp silent, Matter sleep_wind, Xiaomi
 // Home translates them), so they are read by family, lowercased.
 const AIR_PRESETS = {
   heat: /^(heat|heating|warm|hot)$/,
-  night: /sleep|night|silent|quiet|mute|baby|gentle|idle|displayoff|nacht|nuit|noche|notte|nocturn|sommeil|schlaf|sueno|slaap|natt|sen|spanek|\u7761\u7720|\u591c\u95f4/,
+  night: /sleep|night|silent|quiet|mute|baby|idle|displayoff|nacht|nuit|noche|notte|nocturn|sommeil|schlaf|sueno|slaap|natt|sen|spanek|\u7761\u7720|\u591c\u95f4/,
   natural: /natur|breeze|brise/,
   turbo: /turbo|rapid|strong|storm|boost|max|power|realize|fast|super/,
   auto: /auto|smart|allergen|bacteria|pollution|^gas$/,
@@ -474,10 +521,10 @@ const ROTOR_SPEEDS = { 1: 1.1, 2: 0.6, 3: 0.35 };
 const AQ_COLORS = { 1: "#4caf50", 2: "#fdd835", 3: "#ff9800", 4: "#f44336" };
 const AQ_LABELS = { 1: "aq_good", 2: "aq_fair", 3: "aq_poor", 4: "aq_bad" };
 const AQ_WORDS = {
-  excellent: 1, good: 1, very_good: 1, great: 1,
-  fair: 2, moderate: 2, normal: 2, average: 2, acceptable: 2, satisfactory: 2,
+  excellent: 1, good: 1, very_good: 1, great: 1, healthy: 1,
+  fair: 2, moderate: 2, normal: 2, average: 2, acceptable: 2, satisfactory: 2, mild: 2, medium: 2,
   poor: 3, bad: 3, unhealthy: 3, slightly_unhealthy: 3, unhealthy_for_sensitive_groups: 3,
-  very_poor: 4, very_bad: 4, very_unhealthy: 4, extremely_poor: 4, severe: 4, hazardous: 4, danger: 4,
+  very_poor: 4, very_bad: 4, very_unhealthy: 4, extremely_poor: 4, severe: 4, hazardous: 4, danger: 4, harmful: 4, polluted: 4,
 };
 const VESYNC_AQ = ["excellent", "good", "moderate", "poor"];
 function aqLevelOf(st, entityId) {
@@ -496,6 +543,8 @@ function aqLevelOf(st, entityId) {
   }
   const id = String(entityId || st.entity_id || "").toLowerCase();
   const unit = String(a.unit_of_measurement || "").toLowerCase();
+  // Winix's level is an enum from 1 (good) to 4 (very poor).
+  if (a.device_class === "enum" && Array.isArray(a.options) && a.options.map(String).join() === "1,2,3,4") return num;
   if (/allergen|(^|_)iai(_|$)/.test(id)) return num <= 3 ? 1 : num <= 6 ? 2 : num <= 9 ? 3 : 4;
   if (a.device_class === "pm25" || /g\/m/.test(unit)) return num <= 12 ? 1 : num <= 35.4 ? 2 : num <= 55.4 ? 3 : 4;
   if (a.device_class === "aqi" || /aqi/.test(id)) {
@@ -561,7 +610,7 @@ function towelModeOf(raw) {
   if (/^(off|0|arret|stop|aus|uit|apagado|spento)$/.test(f)) return "off";
   if (/boost|turbo|max/.test(f)) return "boost";
   if (/dry|sech|trock|secad|asciug|droog|tork|susz/.test(f)) return "drying";
-  if (/frost|hors.?gel|antigel|anti.?freeze|away|absen|vacation|holiday|vacanc|frostschutz/.test(f)) return "frost";
+  if (/frost|hors.?gel|antigel|anti.?freeze|\bice\b|away|absen|vacation|holiday|vacanc|frostschutz/.test(f)) return "frost";
   if (/eco|night|nuit|reduced|reduit|moon|sleep/.test(f)) return "eco";
   if (/comfort|confort|komfort|^home$|^heat$|^on$/.test(f)) return "comfort";
   return "";
@@ -620,6 +669,9 @@ const FRYER_STATES = {
   finish: "done", cooked: "done", cookend: "done", keepwarmfinish: "done",
   cookstop: "off", preheatstop: "off",
   appointment: "delayed", delay: "delayed",
+  // Xiaomi's dual baskets and steam models.
+  cookcancel: "off", keepwarmcancel: "off", coolingfinish: "done", coolingdown: "done", waitcooking: "delayed", waitcookingpause: "paused",
+  watershortagepause: "paused", watershortpaused: "paused", watershorttimeout: "paused", standbynetworking: "off", connectedstandby: "off",
 };
 const FRYER_NORMS = {
   off: "idle", preheating: "preheating", preheated: "paused", cooking: "running", shake: "running",
@@ -638,7 +690,10 @@ const FRYER_ICONS = {
 function fryerModeOf(raw) {
   if (raw === undefined || raw === null) return "";
   const k = String(raw).trim().toLowerCase().replace(/[\s-]+/g, "_");
-  return Object.prototype.hasOwnProperty.call(FRYER_STATES, k) ? FRYER_STATES[k] : "";
+  if (Object.prototype.hasOwnProperty.call(FRYER_STATES, k)) return FRYER_STATES[k];
+  // The same firmware word, slugged by the integration: keepwarm_finish.
+  const joined = k.replace(/_/g, "");
+  return Object.prototype.hasOwnProperty.call(FRYER_STATES, joined) ? FRYER_STATES[joined] : "";
 }
 // Which way a basket is drawn: cooking hot, keeping warm, ready, pulled out
 // or resting.
@@ -709,7 +764,7 @@ const EV_STATES = {
   cable_connected: "no_vehicle",
   // A car at the box, nothing asked of it yet.
   charger_insert: "connected", plugged_waiting: "connected", ready_to_charge: "connected", ev_connected: "connected",
-  preparing_charging: "connected", waiting_for_vehicle: "connected", wait_for_car: "connected", wait_car: "connected",
+  preparing_charging: "connected", wait_for_car: "connected", wait_car: "connected",
   connected_requesting: "connected", awaiting_start: "connected", waiting_for_start: "connected", sleep_mode: "connected",
   // Waiting for a tag, a card, a button or an app.
   awaiting_authorization: "awaiting_auth", authenticating: "awaiting_auth", authorizing: "awaiting_auth",
@@ -744,6 +799,19 @@ const EV_STATES = {
   erratic_ev: "error", error_temperature_too_high: "error", error_dead_powerboard: "error",
   error_overcurrent: "error", error_pen_fault: "error", charging_fault_1: "error", charging_fault_2: "error",
   see_error_state: "error", waiting_mid_failed: "error", waiting_mid_safety_margin_exceeded: "error",
+  // Read in each integration's own code. Ratio and V2C wait for a car that is
+  // not there, and V2C says when one is: "Vehicle connected (idle)".
+  waiting_for_vehicle: "no_vehicle", no_vehicle: "no_vehicle", cable_disconnected: "no_vehicle", not_plugged_in: "no_vehicle",
+  vehicle_connected_idle: "connected", handshaking: "connected", half_connected: "connected", idle_plugged: "connected",
+  connected_waiting_for_car: "connected", connected_waiting_current: "connected",
+  unauthorized: "awaiting_auth", authentication_waiting: "awaiting_auth", waiting_for_release: "awaiting_auth", rfid: "awaiting_auth",
+  awaiting_authentication: "awaiting_auth",
+  charging_active: "charging", charging_with_cooling: "charging", charging_ventilation: "charging", boost: "charging", excess_pv: "charging",
+  active: "charging", starting: "charging",
+  charging_paused: "paused", charger_paused: "paused", vehicle_paused: "paused", charging_cancelled: "paused",
+  queued_by_power_boost: "paused", queued_by_eco_smart: "paused", stopped: "paused", stop_charging: "paused", no_power: "paused",
+  de_authorizing: "paused", de_authenticating: "paused",
+  waiting_for_schedule: "scheduled",
   // The car giving energy back, to the home or the grid (V2H, V2G). No
   // standard has a status for it, neither OCPP up to 2.1 nor ISO 15118-20:
   // the Wallbox Quasar says it in a word, as do Sigenergy's DC charger and
@@ -754,7 +822,7 @@ const EV_STATES = {
 // suspended-ev, charging normal. Folded to one spelling, lower case with
 // underscores, they meet the table above.
 function evKey(raw) {
-  return String(raw).trim().toLowerCase().replace(/[\s,\-]+/g, "_").replace(/^_+|_+$/g, "");
+  return String(raw).trim().toLowerCase().replace(/[^\p{L}\p{N}_]+/gu, "_").replace(/^_+|_+$/g, "");
 }
 // The pause that may be the end. SuspendedEV is a car that stopped taking the
 // energy the box offers; with energy already in the session and no power
@@ -797,6 +865,9 @@ function evModeOf(raw, stateMap) {
   const k = evKey(s);
   if (Object.prototype.hasOwnProperty.call(EV_STATES, k)) return EV_STATES[k];
   if (stateMap && Object.prototype.hasOwnProperty.call(stateMap, "*")) return EV_MODES.includes(stateMap["*"]) ? stateMap["*"] : "";
+  // Garo's RCD_FAULT, Victron's overheating_detected: every box names its
+  // faults its own way.
+  if (!/^no_/.test(k) && /fault|error|overheat|critical|overvolt|undervolt|residual|failed|abnormal/.test(k)) return "error";
   return "";
 }
 // Whether a car is plugged in: a plug's contact, or a cable or vehicle state
@@ -816,7 +887,7 @@ function evPluggedOf(st) {
 }
 // What an error entity says: a contact on, a code other than zero, or a word
 // other than one of the ways of saying there is none, OCPP's NoError first.
-const EV_NO_ERROR_RE = /^(no.?error|no.?errors|no.?fault|none|ok|off|false|0|-+|kein.?fehler|aucune?.?erreur|pas.?d.?erreur|sin.?error|nessun.?errore|geen.?fout|ingen.?fel|ingen.?feil|ingen.?fejl|brak.?bledu|zadna.?chyba)$/;
+const EV_NO_ERROR_RE = /^(no.?error|no.?errors|no.?fault|no.?faults|no.?alarm|no.?alarms|no.?warning|none|ok|normal|clear|good|healthy|off|false|0|-+|kein.?fehler|aucune?.?erreur|pas.?d.?erreur|sin.?error|nessun.?errore|geen.?fout|ingen.?fel|ingen.?feil|ingen.?fejl|brak.?bledu|zadna.?chyba)$/;
 function evErrorOf(st) {
   if (!st) return { active: false, text: "" };
   const s = String(st.state).trim();

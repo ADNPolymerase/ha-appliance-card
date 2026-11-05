@@ -157,7 +157,7 @@ const T = {
     layout_robot_stick: "Stick vacuum", stick_charged: "Charged",
     layout_robot_floor_washer: "Floor washer", stick_away: "Off the base", stick_away_threshold: "Off the base below this power (W)",
     type_diffuser: "Essential oil diffuser", dif_mist: "Diffusing", dif_inter: "Intermittent", dif_low: "Light mist", dif_empty: "Tank empty", dif_mode: "Mist mode", layout_dif_drop: "Teardrop", layout_dif_cone: "Cone", layout_dif_stone: "Pebble", layout_dif_flame: "Flame", layout_dif_nebulizer: "Nebulizer", section_tank_empty: "Empty tank sensor", type_hrv: "Heat recovery ventilation (HRV/ERV)", hrv_run: "Ventilating", hrv_boost: "Boost", hrv_bypass: "Bypass", hrv_defrost: "Defrosting", hrv_filter: "Replace filter", hrv_away: "Away", hrv_recirc: "Recirculation", hrv_humidity: "Humidity control", hrv_inter: "Intermittent", hrv_inter_paused: "Intermittent, paused", hrv_mode: "Mode", hrv_speed: "Speed", section_speed_list: "Speeds (one entity per speed)", speeds_add: "Add a speed", section_active_mode: "Active mode (when it differs from the one set)", hrv_supply_fan: "Supply fan", hrv_exhaust_fan: "Exhaust fan", section_supply_fan: "Supply fan speed (rpm)", section_exhaust_fan: "Exhaust fan speed (rpm)", fan_max_rpm: "Fan top speed (rpm)", section_exhaust_airflow: "Exhaust airflow", section_target_humidity: "Humidity setpoint", section_humidity_control: "Humidity control switch", layout_hrv_diagram: "Air flows", layout_hrv_one_duct: "Wall unit, one duct", layout_hrv_pair: "Through-wall pair", section_supply_temperature: "Supply air temperature", section_extract_temperature: "Extract air temperature", section_exhaust_temperature: "Exhaust air temperature", section_bypass: "Bypass", section_airflow: "Airflow", hrv_t_outdoor: "fresh air", hrv_t_supply: "supply", hrv_t_extract: "extract", hrv_t_exhaust: "exhaust", hrv_outside: "outside", hrv_room: "room", layout_hrv_single: "Extract only (single flow)", hrv_low_speed: "Low speed", hrv_high_speed: "High speed", section_high_speed: "High speed switch", wp_off: "Switched off", layout_hrv_single_box: "Extract unit alone",
-    type_camera: "Camera", cam_idle: "Idle", cam_live: "Streaming", cam_rec: "Recording", cam_motion: "Motion detected", cam_off: "Off", cam_line_last_motion: "Last motion", cam_line_night: "Night vision", cam_line_signal: "Signal", section_motion: "Motion sensor", section_recording: "Recording sensor", section_night_vision: "Night vision", section_privacy: "Privacy mode", section_signal: "Signal strength", layout_cam_indoor: "Indoor, pan and tilt", layout_cam_tube: "Indoor tube", layout_cam_outdoor: "Outdoor", layout_cam_dome: "Dome", layout_cam_doorbell: "Doorbell", cam_ring: "Ringing", cam_line_last_ring: "Last ring", section_ring: "Doorbell button", type_mailbox: "Mailbox", mb_empty: "Empty", mb_mail: "Mail", mb_front_open: "Front door open", mb_back_open: "Back door open", mb_line_count: "Mail received", mb_line_last: "Last mail", mb_front_door: "Front door", mb_back_door: "Back door", mb_open: "Open", mb_closed: "Closed", section_mail_count: "Mail counter", layout_mb_through: "Through the wall", layout_mb_classic: "Classic", mb_street: "street", mb_house: "house", mb_front_side: "Street side", mb_side_left: "Left", mb_side_right: "Right", type_water_pump: "Water pump", type_floor_heating: "Underfloor heating", type_spa: "Spa", type_sauna: "Sauna", type_aquarium: "Aquarium", type_meter: "Electricity meter", type_christmas_tree: "Christmas tree", layout_chest: "Chest freezer", layout_drawers: "Drawer freezer", layout_pump_booster: "Booster set", layout_pump_sump: "Sump pump", layout_floor_water: "Hot water", layout_floor_electric: "Electric", layout_robot_pool: "Pool robot", wp_pumping: "Pumping", wp_high: "High level", spa_bubbles: "Bubbles", sauna_ready: "Ready", aq_lit: "Light on", aq_dark: "Light off", meter_low: "Low use", meter_high: "High use", layout_meter_linky: "Linky", layout_meter_box: "Electricity meter", layout_meter_dome: "Round meter", layout_meter_gas: "Gas meter", layout_meter_water: "Water meter", section_today_use: "Today's use (kWh, m\u00b3)", section_meter_index: "Meter index", meter_index: "Index", meter_flowing: "In use", meter_idle: "No use", meter_export: "Feeding in", meter_export_index: "Export index", meter_direction: "Power direction", meter_dir_auto: "Auto (negative = feed-in)", meter_dir_import: "Consumption only", meter_dir_export: "Feed-in only", meter_flow: "Flow", section_pressure: "Pressure", section_water_level: "Water level", section_high_level: "High level alarm", level_max: "Level when full", section_bubbles: "Bubbles", section_tariff: "Tariff period", high_power: "High use from (W or VA)", tree_palette: "Colours", palette_multicolor: "Multicolour", palette_red_gold: "Red and gold", palette_red_silver: "Red and silver", palette_gold_silver: "Gold and silver", palette_blue_silver: "Blue and silver", palette_white_silver: "White and silver", palette_red_green: "Red and green", presents: "Presents", presents_auto: "On 24 and 25 December", presents_show: "Always", presents_hide: "Never", tree_on: "On", tree_off: "Off",
+    type_camera: "Camera", cam_idle: "Idle", cam_live: "Streaming", cam_rec: "Recording", cam_motion: "Motion detected", cam_off: "Off", cam_line_last_motion: "Last motion", cam_line_night: "Night vision", cam_line_signal: "Signal", section_motion: "Motion sensor", section_recording: "Recording sensor", section_night_vision: "Night vision", section_privacy: "Privacy mode", section_signal: "Signal strength", layout_cam_indoor: "Indoor, pan and tilt", layout_cam_tube: "Indoor tube", layout_cam_outdoor: "Outdoor", layout_cam_dome: "Dome", layout_cam_doorbell: "Doorbell", cam_ring: "Ringing", cam_line_last_ring: "Last ring", section_ring: "Doorbell button", type_mailbox: "Mailbox", mb_empty: "Empty", mb_mail: "Mail", mb_front_open: "Front door open", mb_back_open: "Back door open", mb_line_count: "Mail received", mb_line_last: "Last mail", mb_front_door: "Front door", mb_back_door: "Back door", mb_open: "Open", mb_closed: "Closed", section_mail_count: "Mail counter", layout_mb_through: "Through the wall", layout_mb_classic: "Classic", mb_street: "street", mb_house: "house", mb_front_side: "Street side", mb_side_left: "Left", mb_side_right: "Right", type_water_pump: "Water pump", type_floor_heating: "Underfloor heating", type_spa: "Spa", type_sauna: "Sauna", type_aquarium: "Aquarium", type_meter: "Electricity meter", type_christmas_tree: "Christmas tree", layout_chest: "Chest freezer", layout_drawers: "Drawer freezer", layout_pump_booster: "Booster set", layout_pump_sump: "Sump pump", layout_floor_water: "Hot water", layout_floor_electric: "Electric", layout_robot_pool: "Pool robot", wp_pumping: "Pumping", wp_high: "High level", spa_bubbles: "Bubbles", sauna_ready: "Ready", aq_lit: "Light on", aq_dark: "Light off", meter_low: "Low use", meter_high: "High use", layout_meter_linky: "Linky", layout_meter_box: "Electricity meter", layout_meter_dome: "Round meter", layout_meter_gas: "Gas meter", layout_meter_water: "Water meter", section_today_use: "Today's use (kWh, m\u00b3)", section_meter_index: "Meter index", meter_index: "Index", meter_flowing: "In use", meter_idle: "No use", meter_export: "Feeding in", meter_export_index: "Export index", meter_direction: "Power direction", meter_dir_auto: "Auto (negative = feed-in)", meter_dir_import: "Consumption only", meter_dir_export: "Feed-in only", meter_dir_inverted: "Inverted (positive is fed in)", meter_flow: "Flow", section_pressure: "Pressure", section_water_level: "Water level", section_high_level: "High level alarm", level_max: "Level when full", section_bubbles: "Bubbles", section_tariff: "Tariff period", high_power: "High use from (W or VA)", tree_palette: "Colours", palette_multicolor: "Multicolour", palette_red_gold: "Red and gold", palette_red_silver: "Red and silver", palette_gold_silver: "Gold and silver", palette_blue_silver: "Blue and silver", palette_white_silver: "White and silver", palette_red_green: "Red and green", presents: "Presents", presents_auto: "On 24 and 25 December", presents_show: "Always", presents_hide: "Never", tree_on: "On", tree_off: "Off",
     type_lamp: "Lamp", lamp_off: "Off", lamp_on: "On", lamp_line_brightness: "Brightness", lamp_line_color_temp: "Colour temperature", lamp_line_effect: "Effect", lamp_timer: "Timer", show_toggle: "On/off button", line_hide: "Hide this line", line_show: "Show this line", illustration_tap_action: "Tap on the drawing", pic_tap_default: "Card's own", pic_tap_toggle: "Toggle", pic_tap_more: "Details", pic_tap_none: "Nothing", lamp_spots: "Number of spots", layout_lamp_bulb: "Bulb", layout_lamp_bedside: "Bedside lamp", layout_lamp_floor: "Arc floor lamp", layout_lamp_torch: "Torchiere", layout_lamp_pendant: "Pendant", layout_lamp_strip: "LED strip", layout_lamp_spot: "Recessed spots", layout_lamp_panels: "Light panels", layout_lamp_desk: "Desk lamp", layout_lamp_wall: "Wall lantern", layout_lamp_garden_spot: "Garden spotlight", layout_lamp_bollard: "Garden bollard", layout_lamp_string: "String lights", layout_lamp_curtain: "Curtain lights", layout_lamp_icicle: "Icicle lights", layout_lamp_festoon: "Festoon lights", layout_lamp_squares: "Pixel squares", type_irrigation: "Watering", type_litter_box: "Self-cleaning litter box", type_detector: "Smoke, CO or leak detector", type_speaker: "Speaker", type_console: "Game console", con_playing: "Playing", con_on: "On", con_rest: "Rest mode", con_off: "Off", con_game: "Game", con_playtime: "Play time today", con_playtime_left: "Play time left", layout_con_ps1: "PlayStation", layout_con_ps2: "PlayStation 2", layout_con_ps3: "PlayStation 3", layout_con_ps4: "PlayStation 4", layout_con_ps4_pro: "PlayStation 4 Pro", layout_con_ps5: "PlayStation 5", layout_con_xbox: "Xbox", layout_con_xbox_360: "Xbox 360", layout_con_xbox_one: "Xbox One", layout_con_xbox_series_x: "Xbox Series X", layout_con_xbox_series_s: "Xbox Series S", layout_con_switch: "Nintendo Switch", layout_con_switch_2: "Nintendo Switch 2", layout_con_switch_lite: "Nintendo Switch Lite", layout_con_ps_vita: "PS Vita", layout_con_nes: "NES", layout_con_snes: "Super Nintendo", layout_con_n64: "Nintendo 64", layout_con_gamecube: "GameCube", layout_con_wii: "Wii", layout_con_megadrive: "Mega Drive", layout_irr_sprinkler: "Pop-up sprinkler", layout_irr_tap: "Tap timer", layout_lit_globe: "Rotating globe", layout_lit_box: "Closed box", layout_det_smoke: "Smoke detector", layout_det_co: "CO alarm", layout_det_leak: "Water leak sensor", layout_spk_smart: "Smart speaker (HomePod)", layout_spk_bookshelf: "Bookshelf speaker", layout_spk_soundbar: "Soundbar", layout_spk_homepod_mini: "HomePod mini", layout_spk_sonos_one: "Compact (Sonos One)", layout_spk_sonos_move: "Portable (Sonos Move)", layout_spk_echo_dot: "Sphere (Echo Dot)", layout_spk_nest_mini: "Puck (Nest Mini)", layout_spk_sonos_era100: "Sonos Era 100", layout_spk_sonos_era300: "Sonos Era 300", layout_spk_bose_wave: "Bose Wave SoundTouch", layout_spk_bose_500: "Bose Home Speaker 500", layout_spk_bose_soundlink: "Portable (Bose SoundLink)", layout_spk_bose_soundbar: "Soundbar (Bose)", speaker_color: "Speaker colour", irr_watering: "Watering", irr_waiting: "Waiting", irr_rain: "Rain delay", irr_zone: "Zone", section_rain_delay: "Rain delay", section_soil_moisture: "Soil moisture", section_next_run: "Next watering", lit_ready: "Ready", lit_cleaning: "Cleaning", lit_cat: "Cat inside", lit_full: "Drawer full", lit_fault: "Fault", lit_sleep: "Sleeping", sec_waste_drawer: "Waste drawer", sec_litter_level: "Litter level", sec_pet_weight: "Cat's weight", sec_visits: "Visits", sec_last_use: "Last visit", sec_cat_present: "Cat sensor", det_ok: "All clear", det_smoke: "Smoke detected", det_co: "CO detected", det_leak: "Leak detected", sec_test: "Test button", sec_co_level: "CO level", spk_playing: "Playing", spk_paused: "Paused", spk_idle: "Idle", spk_off: "Off", spk_title: "Title", spk_artist: "Artist", spk_source: "Source", spk_volume: "Volume", spk_muted: "Muted", play_pause: "Play/pause", opt_low: "Low", opt_ok: "OK", opt_running: "Running", opt_stopped: "Stopped", lock_locked: "Locked", lock_unlocked: "Unlocked", sec_meat_probe: "Meat probe", sec_meat_probe_target: "Probe target", sec_detergent: "Detergent level", sec_softener: "Softener level", sec_wash_temp: "Wash temperature", sec_spin: "Spin speed", sec_heater_mode: "Mode", sec_showers: "Showers available", sec_pilot_mode: "Pilot wire mode", sec_window: "Window", sec_range: "Range", sec_vehicle_lock: "Lock", sec_water_chlorine: "Chlorine", sec_aq_filter: "Filter pump", type_storage_tank: "Buffer tank", type_fresh_water_station: "Fresh water station", type_solar_thermal: "Solar thermal", type_wood_stove: "Wood stove", heat_delta: "Difference", heat_fault: "Fault", heat_fault_state: "Fault", heat_pump_mod: "Pump modulation", tank_charge: "Charge", tank_energy: "Stored energy", tank_sources: "Sources", tank_consumers: "Consumers", tank_none: "None", tank_loading: "Loading", tank_charged: "Charged", tank_partly: "Partly charged", tank_discharged: "Discharged", tank_temps_list: "Tank temperatures (top to bottom)", tank_temps_add: "Add a temperature", tank_sources_add: "Add a source", tank_consumers_add: "Add a consumer", tank_min_temp: "Cold temperature (0 %)", tank_max_temp: "Charged temperature (100 %)", tank_volume: "Volume (litres)", fws_flow: "Flow", fws_outlet: "Outlet temperature", fws_supply: "Tank supply", fws_cold: "Cold water", fws_circ_mode: "Circulation mode", fws_drawing: "Drawing hot water", fws_too_cold: "Supply too cold", fws_circulating: "Circulating", fws_standby: "Standby", fws_pump: "Primary pump", fws_circulation: "Circulation pump", sth_collector: "Collector", sth_tank: "Tank", sth_power: "Heat output", sth_today: "Yield today", sth_stagnation: "Stagnation", sth_loading: "Loading", sth_full: "Tank full", sth_frost: "Frost", sth_standby: "Standby", sth_stagnation_temp: "Stagnation temperature", layout_sth_flat: "Flat plates", layout_sth_tubes: "Evacuated tubes", wood_temp: "Stove temperature", wood_flow: "Flow", wood_return: "Return", wood_pump: "Pump", wood_valve: "Valve", wood_room: "Room", wood_last_fire: "Last fire", wood_overheat: "Overheating", wood_burning: "Burning", wood_embers: "Embers", wood_cold: "Cold", wood_water_jacket: "Water jacket", wood_burning_temp: "Burning from (temperature)", wood_embers_temp: "Embers from (temperature)", wood_overheat_temp: "Overheat above (water)", wood_scale: "Temperature scale (multiplier)", section_mail_present: "Mail inside (on: mail, off: empty)", layout_mb_through_3d: "Through the wall, 3/4 view", mb_color: "Colour", mb_color_anthracite: "Anthracite", mb_color_white: "White", mb_color_grey: "Aluminium grey", mb_color_green: "Green", mb_color_brown: "Brown", layout_irr_drip: "Vegetable patch, drip line", layout_irr_flowers: "Flower bed, micro-sprayers", irr_model: "Tap timer model", irr_model_generic: "Generic", irr_model_sonoff: "Sonoff (black and orange)", irr_wall: "Wall", irr_wall_brick: "Brick", irr_wall_render: "White render", irr_wall_none: "None (standpipe)", irr_duration: "Watering duration", fws_supply_margin: "Supply margin over the setpoint (K)", layout_hrv_single_basement: "Extract unit in the basement", section_hrv_floors: "Floors", zone_valves_list: "Zone dampers", zone_valves_add: "Add a damper", hrv_zones: "Dampers", hrv_zone_open: "open", hrv_zone_shut: "closed", layout_pump_circulator: "Heating circulator", circ_running: "Running", circ_nodata: "No data", circ_speed: "Speed", circ_max_speed: "Maximum speed", circ_head: "Head", circ_voltage: "Voltage", circ_mode: "Control mode", circ_model: "Brand", circ_model_generic: "Generic", type_humidifier: "Humidifier", hum_running: "Humidifying", hum_empty: "Add water", hum_lifted: "Tank removed", hum_mist: "Mist level", hum_night: "Night light", hum_display: "Display", hum_low_water: "Low water",
     speed_power_max: "Power at top speed (W)", speed_power_custom: "Custom speed thresholds", speed_power_2: "Speed 2 from (W)", speed_power_3: "Speed 3 from (W)",
     fw_self_cleaning: "Self-cleaning", fw_dirty_full: "Dirty water tank full", fw_clean_empty: "Clean water tank empty",
@@ -313,24 +313,27 @@ const STATE_KEYWORDS = {
   // OperationState.Ready. "inactive" has to be listed here rather than left
   // to "active" under running: that keyword cannot match inside a word, and
   // would mean the opposite of the state if it could.
-  idle: ["idle", "off", "standby", "veille", "eteint", "arret", "inactif", "inactive", "ready"],
+  idle: ["idle", "off", "stand.?by", "veille", "eteint", "arret", "inactif", "inactive", "ready", "wait", "asleep"],
   // Before "running": ovens report "Preheating", and the "heating" keyword
   // below cannot match it anyway (no word boundary inside "preheating").
   preheating: ["preheat", "pre-heat", "pre_heat", "prechauff", "vorheiz", "precalent", "voorverwarm"],
   // A rice cooker sits in this state for hours after it has finished, and so
   // does an oven on its warming setting. MIoT reports it as status 4,
   // "Keep-warm", and it is neither running nor done.
-  keep_warm: ["keep.?warm", "keepwarm", "warming", "maintien", "au chaud",
+  keep_warm: ["keep.?warm", "keepwarm", "keeping.?warm", "keep.?temp", "warming", "maintien", "au chaud",
     "warmhalten", "mantener caliente", "mantenimento", "warmhouden"],
-  running: ["run", "wash", "spin", "dry", "rinsing", "heating", "cours", "on", "active", "marche", "actif",
-    "cooking\\b(?!\\s*(?:complete|finished|done))", "cuisson\\b(?!\\s*termin)", "brewing", "baking",
+  // "on" stops at the word: Online is not a machine at work.
+  running: ["run", "wash", "spin", "dry", "rinsing", "heating", "cours", "on(?:going)?\\b", "active", "marche", "actif",
+    "cooking\\b(?!\\s*(?:complete|finished|done|end))", "cuisson\\b(?!\\s*termin)", "brew", "bak(?:e|ing)\\b",
+    // What an oven, a coffee machine or a kettle says it is doing.
+    "broil", "roast", "proof", "boil(?!er)", "busy", "making", "deliver", "prepar", "process", "clean(?!ed)", "descal",
     // Aborting is a cancelled cycle still draining, not an error and not
     // finished: the appliance is doing something until it stops.
     "abort"],
-  paused: ["pause", "hold", "suspended"],
-  done: ["end", "done", "finish", "complete", "termin"],
-  delayed: ["delay", "differ", "scheduled", "programmed"],
-  error: ["error", "fault", "alarm", "erreur"],
+  paused: ["pause", "hold", "suspended", "action.?required", "attention"],
+  done: ["end", "done", "finish", "complete", "termin", "made\\b"],
+  delayed: ["delay", "differ", "scheduled", "programmed", "pre.?set\\b", "reservation"],
+  error: ["error", "fault", "alarm", "erreur", "fail", "out.?of.?order", "overheat", "unusual"],
 };
 
 // States where the appliance is actually doing something: they drive the
@@ -558,6 +561,8 @@ function boilerModeOf(raw, stateMap) {
   const code = /^(\d+)(?:\.0+)?$/.exec(s);
   if (code && Object.prototype.hasOwnProperty.call(NEFIT_CAUSE_CODES, code[1])) return NEFIT_CAUSE_CODES[code[1]];
   const f = stripAccents(s).toLowerCase();
+  // InComfort's central_heating_wait: a demand, and no flame yet.
+  if (/\bwait|_wait/.test(f)) return "waiting";
   // Hot water first: "chauffage eau chaude" is about the taps, not the radiators.
   // EMS-ESP (Bosch, Buderus, Junkers, Nefit) words its states in the language
   // it is set to: varmvatten, varmtvann, c.w.u., sicak su, horuca/horka voda.
@@ -589,6 +594,9 @@ const HVAC_ACTION_MODES = {
 const MELCLOUD_MODES = {
   heat_water: "hot_water", legionella: "hot_water", heat_zones: "space_heating",
   cool: "cooling", defrost: "defrost", idle: "idle", standby: "idle",
+  // MELCloud Home's operation_status.
+  hotwater: "hot_water", stop: "idle", heatroomtemperature: "space_heating", heatflowtemperature: "space_heating", heatcurve: "space_heating",
+  coolroomtemperature: "cooling", coolflowtemperature: "cooling",
 };
 function heatPumpModeOf(raw, attrs, stateMap, modeEntity) {
   if (raw === undefined || raw === null) return "";
@@ -597,12 +605,23 @@ function heatPumpModeOf(raw, attrs, stateMap, modeEntity) {
     return HEAT_PUMP_MODES.includes(stateMap[s]) ? stateMap[s] : "";
   }
   const a = attrs || {};
+  // On MELCloud Home, hvac_action says idle while the valve is on the tank.
+  const opStatus = String(a.operation_status || "").toLowerCase();
+  if (Object.prototype.hasOwnProperty.call(MELCLOUD_MODES, opStatus)) return MELCLOUD_MODES[opStatus];
   const action = String(a.hvac_action || "").toLowerCase();
   if (Object.prototype.hasOwnProperty.call(HVAC_ACTION_MODES, action)) return HVAC_ACTION_MODES[action];
   const status = String(a.status || "").toLowerCase();
   if (Object.prototype.hasOwnProperty.call(MELCLOUD_MODES, status)) return MELCLOUD_MODES[status];
   if (modeEntity) return "";
   const f = stripAccents(s).toLowerCase();
+  // EMS-ESP's pool, in its languages: not the house, the raw word says it.
+  if (/pool|basen|basseng|piscin|havuz|bazen|medence|zwembad/.test(f)) return "";
+  // Hungarian EMS-ESP, MELCloud Home's sensor and Lambda's own short words.
+  if (f === "leolvasztas") return "defrost";
+  if (f === "hutes" || f === "cc" || /^cool(room|flow)/.test(f)) return "cooling";
+  if (f === "melegviz" || f === "hotwater") return "hot_water";
+  if (f === "futes" || /^heat(room|flow|curve)/.test(f)) return "space_heating";
+  if (f === "ki" || f === "stop" || /^stby/.test(f)) return "idle";
   // With EMS-ESP's own words: odladzanie, tine, buz cozucu, scongelamento;
   // Kyler, kjoling, soguma, raffreddamento, chladenie. The letters NFD does
   // not take apart (\u00f8, \u0142, \u0131) are written out.
@@ -622,11 +641,11 @@ function heatPumpModeOf(raw, attrs, stateMap, modeEntity) {
 // names the phase it stopped in, and a cleaning warning is an alarm, not a
 // cleaning. Eco comes before the stop words, which "ECO STOP" also holds.
 const STOVE_MODES = ["off", "ignition", "burning", "modulating", "eco", "cooling", "cleaning", "alarm"];
-const STOVE_ALARM_RE = /alarm|allarm|alarme|alarma|error|fault|failure|defaut|guasto|warning|pellet.?finished|firewood.?finished|out.?of.?pellet|no.?pellet|door.?open|hatch|probe|pressure|temp.?too.?high|exhaust.?temp|chimney|grate|\bt05\b|\bmem\.?.?al|\bm\.?\s?al/;
+const STOVE_ALARM_RE = /alarm|allarm|alarme|alarma|alert|storung|fehler|error|fault|failure|defaut|guasto|warning|pellet.?finished|firewood.?finished|out.?of.?pellet|no.?pellet|door.?open|hatch|probe|pressure|temp.?too.?high|exhaust.?temp|chimney|grate|\bt05\b|\bmem\.?.?al|\bm\.?\s?al/;
 const STOVE_CLEANING_RE = /clean|pulizia|pul\.|nettoy|netoy|netoage|reinig|reining|limpi|limpeza|limpar|reng|czyszcz|brazier|brasier|brasero|creuset|bracier|bracere|brandkorf|brennt?opf|ashpan|sauber/;
-const STOVE_ECO_RE = /\beco\b|ecomode|stand.?by|cool_fluid|external.?request|frost|bereithalten|etre.?pret|en.?enspera|\bwait\b|\battesa$|\batten\.?$|\bwart\.?$/;
-const STOVE_COOLING_RE = /cool|raffred|refroid|kuhl|kuehl|enfria|esfriar|afkoel|shut.?down|shut.?off|burn.?off|fire_stop|spegnimento|extinct|extincion|extincao|abschaltung|arresto|\barret\b|\bstop\b|stopp|\bsluk\b|blussen|zgasic|kachel.?stopt|loschen|eteindre|chlodz|wygasz/;
-const STOVE_IGNITION_RE = /ignit|ignic|ignicao|accen|acend|allum|zund|zuend|anzuend|einschal|ontsteking|t(a|ae|\u00e6)nding|zap(l|\u0142)on|zapal|rozpal|starting|start|avvio|inicio|comece|commencez|debut|opstart|anlaufen|uruchom|load.?pellet|pellet.?load|carica|carico|carga|charge|laden|awaiting.?flame|waiting.?flame|attesa.?fiamma|atteinte.?flamme|flamme.?dans|attente.?de.?flamme|espera.?llama|llama.?a.?la.?espera|aguardando|warte|wartet|afwachting|afventer|oczekiwanie|flamm?e.?(light|licht|lumiere)|fiamma.?presente|fuoco.?presente|flamme.?presente|flamme.?vorhanden|llama.?presente|fuego.?presente|chama.?presente|vlam.?aanwezig|check.?up|kontrolle|controle|controlo|styring|lighting|fueling|heatup|ign_test|test_fire|stabili[sz]|encend|enciende/;
+const STOVE_ECO_RE = /\beco\b|ecomode|temp_ok|wait_on|wait_time|stand.?by|cool_fluid|external.?request|frost|bereithalten|etre.?pret|en.?enspera|\bwait\b|\battesa$|\batten\.?$|\bwart\.?$/;
+const STOVE_COOLING_RE = /cool|raffred|refroid|kuhl|kuehl|enfria|esfriar|afkoel|shut.?down|shut.?off|burn(ing)?.?off|fire_stop|spegnimento|extinct|extincion|extincao|abschaltung|arresto|\barret\b|\bstop\b|stopp|\bsluk\b|blussen|zgasic|kachel.?stopt|loschen|eteindre|chlodz|wygasz/;
+const STOVE_IGNITION_RE = /ignit|kindl|ignic|ignicao|accen|acend|allum|zund|zuend|anzuend|einschal|ontsteking|t(a|ae|\u00e6)nding|zap(l|\u0142)on|zapal|rozpal|starting|start|avvio|inicio|comece|commencez|debut|opstart|anlaufen|uruchom|load.?pellet|pellet.?load|carica|carico|carga|charge|laden|awaiting.?flame|waiting.?flame|attesa.?fiamma|atteinte.?flamme|flamme.?dans|attente.?de.?flamme|espera.?llama|llama.?a.?la.?espera|aguardando|warte|wartet|afwachting|afventer|oczekiwanie|flamm?e.?(light|licht|lumiere)|fiamma.?presente|fuoco.?presente|flamme.?presente|flamme.?vorhanden|llama.?presente|fuego.?presente|chama.?presente|vlam.?aanwezig|check.?up|kontrolle|controle|controlo|styring|lighting|fueling|heatup|ign_test|test_fire|stabili[sz]|encend|enciende/;
 const STOVE_MODULATING_RE = /modul|burning_mod/;
 const STOVE_BURNING_RE = /burning|\bwork|lavoro|travail|arbeit|betrieb|trabaj|trabalho|werk|\bdrift\b|flame.?on|running|\bon\b|pracuje|split.?log/;
 const STOVE_OFF_RE = /^(off|0)$|off_timer|stove_off|spent|apagad|eteint|^aus$|ausgeschaltet|^uit$|uitgeschakeld|desligad|wylaczon|slukket|vypnut/;
@@ -738,6 +757,17 @@ function acVanePos(raw, axis) {
   // Daikin's swing mode names the axis that swings.
   if (s === "vertical") return axis === "v" ? "swing" : null;
   if (s === "horizontal") return axis === "h" ? "swing" : null;
+  // Mitsubishi's WF-RAC swings or leaves it to the unit.
+  if (/auto$/.test(s)) return null;
+  if (s === "leftright" || s === "rightleft") return axis === "h" ? 0 : null;
+  // LG: Top, MiddleTop1, MiddleTop2, MiddleBottom2, MiddleBottom1, Bottom.
+  const lg = /^middle(top|bottom)([12])$/.exec(s);
+  if (lg && axis === "v") return lg[1] === "top" ? Number(lg[2]) + 1 : 5 - Number(lg[2]);
+  // Kumo's steps between its two ends.
+  if (axis === "v" && ["midhorizontal", "midpoint", "midvertical"].includes(s)) return { midhorizontal: 2, midpoint: 3, midvertical: 4 }[s];
+  // MELCloud Home counts in words.
+  const word = ["one", "two", "three", "four", "five"].indexOf(s);
+  if (word >= 0) return axis === "v" ? word + 1 : word - 2;
   const n = /(\d)/.exec(s);
   if (n) {
     const i = Math.max(1, Math.min(5, Number(n[1])));
@@ -761,17 +791,27 @@ function acVanePos(raw, axis) {
 
 // How fast the fan blows, in five steps: Panasonic's LowMid, Gree's
 // medium high, Daikin's 1 to 5, a fan entity's percentage.
-function acFanSpeedOf(raw, pct) {
+function acFanSpeedOf(raw, pct, modes) {
   if (pct !== null && pct !== undefined) {
     if (pct <= 0) return "";
     return pct <= 20 ? "quiet" : pct <= 45 ? "low" : pct <= 70 ? "medium" : pct <= 90 ? "high" : "turbo";
   }
   const s = stripAccents(String(raw || "")).toLowerCase().replace(/[^a-z0-9]/g, "");
   if (!s) return "";
-  if (/turbo|power|boost|max|strong|highest|super|jet/.test(s)) return "turbo";
-  if (/quiet|silen|night|mute|sleep|lowest|ultralow|silence/.test(s)) return "quiet";
+  if (/quiet|silen|night|mute|sleep|lowest|ultralow|silence|gentle/.test(s)) return "quiet";
+  if (/turbo|power|boost|max|strong|highest|super|jet|^full$/.test(s)) return "turbo";
   const n = /^(\d)$/.exec(s);
   if (n) return ["quiet", "low", "low", "medium", "high", "high"][Math.min(5, Number(n[1]))];
+  // Midea's l1 to l7, Xiaomi's level1, Mysa's speed_1, MELCloud's one to five,
+  // spread over the five steps the drawing has.
+  const words = ["one", "two", "three", "four", "five"].indexOf(s);
+  const rank = words >= 0 ? words + 1 : (/^(?:l|level|speed|fan|stage|step)(\d)$/.exec(s) || [])[1];
+  if (rank) {
+    // How many steps the unit has, when it lists them.
+    const listed = Array.isArray(modes) ? modes.filter((m) => /^(?:l|level|speed|fan|stage|step)_?\d$/i.test(String(m).replace(/\s/g, ""))).length : 0;
+    const scale = words >= 0 ? 5 : listed || 7;
+    return ["quiet", "low", "medium", "high", "turbo"][Math.min(4, Math.floor((Number(rank) - 1) / scale * 5))];
+  }
   if (/high/.test(s)) return "high";
   if (/low/.test(s)) return "low";
   return "medium";
@@ -779,7 +819,7 @@ function acFanSpeedOf(raw, pct) {
 // A preset says quiet, eco or boost on the units that keep them there.
 function acPresetOf(raw) {
   const s = stripAccents(String(raw || "")).toLowerCase();
-  if (/eco|econom/.test(s)) return "eco";
+  if (/eco|econom|energy.?sav/.test(s)) return "eco";
   if (/boost|powerful|turbo|power/.test(s)) return "boost";
   if (/quiet|silen|sleep|night/.test(s)) return "quiet";
   return "";
@@ -908,6 +948,9 @@ function thermostatModeOf(st) {
   if (action === "cooling") return "cool";
   if (["idle", "off", "fan", "drying"].includes(action)) return "idle";
   const room = numberOrNull(a.current_temperature), target = numberOrNull(a.temperature);
+  // Nest and ecobee keep a range in heat_cool, not a setpoint.
+  const low = numberOrNull(a.target_temp_low), high = numberOrNull(a.target_temp_high);
+  if (room !== null && target === null && low !== null && high !== null) return room < low - 0.2 ? "heat" : room > high + 0.2 ? "cool" : "idle";
   if (room === null || target === null) return state === "cool" ? "cool" : "heat";
   if (state === "cool") return room > target + 0.2 ? "cool" : "idle";
   return room < target - 0.2 ? "heat" : "idle";
@@ -915,7 +958,7 @@ function thermostatModeOf(st) {
 // A preset that changes what the thermostat means: eco, away, frost guard.
 function thermostatPresetOf(raw) {
   const p = stripAccents(String(raw || "")).toLowerCase();
-  if (/frost|hors.?gel|antigel|antiheladas|frostschutz|vorst/.test(p)) return "frost";
+  if (/frost|hors.?gel|anti.?gel|anti.?freeze|^ice$|antiheladas|frostschutz|vorst/.test(p)) return "frost";
   if (/away|absent|abwesend|ausente|afwezig|vacation|holiday|vacance/.test(p)) return "away";
   if (/eco|night|nuit|sleep|reduit|reduced|spar/.test(p)) return "eco";
   return "";
@@ -933,15 +976,22 @@ function spaceHeaterModeOf(st) {
   const byAction = { heating: "heating", preheating: "heating", idle: "idle", off: "idle", fan: "fan" };
   if (Object.prototype.hasOwnProperty.call(byAction, action)) return byAction[action];
   if (state === "fan_only") return "fan";
+  // No action at all (Tuya): it heats until the setpoint is reached.
+  const room = numberOrNull((st.attributes || {}).current_temperature), target = numberOrNull((st.attributes || {}).temperature);
+  if (state === "heat" && room !== null && target !== null) return room < target ? "heating" : "idle";
   return ["heat", "auto", "heat_cool", "on"].includes(state) ? "heating" : "";
 }
+
+// A unit at rest, in its integration's words (Systemair's manual_stop, Swegon's
+// user_stop and ext_stop, Wolf's aus, a language of its own).
+const AIR_STOP_RE = /^(off|stop|stopped|standby|stand_by|power_?off|0|none|aus|uit|eteint|arret|apagad[oa]?|spento|av|ingen)$|_stop$|^stopped_/;
 
 // Air purifiers and fans. Every integration names its presets its own way
 // (Levoit says sleep, Philips night, Sharp silent, Matter sleep_wind, Xiaomi
 // Home translates them), so they are read by family, lowercased.
 const AIR_PRESETS = {
   heat: /^(heat|heating|warm|hot)$/,
-  night: /sleep|night|silent|quiet|mute|baby|gentle|idle|displayoff|nacht|nuit|noche|notte|nocturn|sommeil|schlaf|sueno|slaap|natt|sen|spanek|\u7761\u7720|\u591c\u95f4/,
+  night: /sleep|night|silent|quiet|mute|baby|idle|displayoff|nacht|nuit|noche|notte|nocturn|sommeil|schlaf|sueno|slaap|natt|sen|spanek|\u7761\u7720|\u591c\u95f4/,
   natural: /natur|breeze|brise/,
   turbo: /turbo|rapid|strong|storm|boost|max|power|realize|fast|super/,
   auto: /auto|smart|allergen|bacteria|pollution|^gas$/,
@@ -977,10 +1027,10 @@ const ROTOR_SPEEDS = { 1: 1.1, 2: 0.6, 3: 0.35 };
 
 const AQ_LABELS = { 1: "aq_good", 2: "aq_fair", 3: "aq_poor", 4: "aq_bad" };
 const AQ_WORDS = {
-  excellent: 1, good: 1, very_good: 1, great: 1,
-  fair: 2, moderate: 2, normal: 2, average: 2, acceptable: 2, satisfactory: 2,
+  excellent: 1, good: 1, very_good: 1, great: 1, healthy: 1,
+  fair: 2, moderate: 2, normal: 2, average: 2, acceptable: 2, satisfactory: 2, mild: 2, medium: 2,
   poor: 3, bad: 3, unhealthy: 3, slightly_unhealthy: 3, unhealthy_for_sensitive_groups: 3,
-  very_poor: 4, very_bad: 4, very_unhealthy: 4, extremely_poor: 4, severe: 4, hazardous: 4, danger: 4,
+  very_poor: 4, very_bad: 4, very_unhealthy: 4, extremely_poor: 4, severe: 4, hazardous: 4, danger: 4, harmful: 4, polluted: 4,
 };
 const VESYNC_AQ = ["excellent", "good", "moderate", "poor"];
 function aqLevelOf(st, entityId) {
@@ -999,6 +1049,8 @@ function aqLevelOf(st, entityId) {
   }
   const id = String(entityId || st.entity_id || "").toLowerCase();
   const unit = String(a.unit_of_measurement || "").toLowerCase();
+  // Winix's level is an enum from 1 (good) to 4 (very poor).
+  if (a.device_class === "enum" && Array.isArray(a.options) && a.options.map(String).join() === "1,2,3,4") return num;
   if (/allergen|(^|_)iai(_|$)/.test(id)) return num <= 3 ? 1 : num <= 6 ? 2 : num <= 9 ? 3 : 4;
   if (a.device_class === "pm25" || /g\/m/.test(unit)) return num <= 12 ? 1 : num <= 35.4 ? 2 : num <= 55.4 ? 3 : 4;
   if (a.device_class === "aqi" || /aqi/.test(id)) {
@@ -1038,7 +1090,7 @@ function towelModeOf(raw) {
   if (/^(off|0|arret|stop|aus|uit|apagado|spento)$/.test(f)) return "off";
   if (/boost|turbo|max/.test(f)) return "boost";
   if (/dry|sech|trock|secad|asciug|droog|tork|susz/.test(f)) return "drying";
-  if (/frost|hors.?gel|antigel|anti.?freeze|away|absen|vacation|holiday|vacanc|frostschutz/.test(f)) return "frost";
+  if (/frost|hors.?gel|antigel|anti.?freeze|\bice\b|away|absen|vacation|holiday|vacanc|frostschutz/.test(f)) return "frost";
   if (/eco|night|nuit|reduced|reduit|moon|sleep/.test(f)) return "eco";
   if (/comfort|confort|komfort|^home$|^heat$|^on$/.test(f)) return "comfort";
   return "";
@@ -1063,6 +1115,9 @@ const FRYER_STATES = {
   finish: "done", cooked: "done", cookend: "done", keepwarmfinish: "done",
   cookstop: "off", preheatstop: "off",
   appointment: "delayed", delay: "delayed",
+  // Xiaomi's dual baskets and steam models.
+  cookcancel: "off", keepwarmcancel: "off", coolingfinish: "done", coolingdown: "done", waitcooking: "delayed", waitcookingpause: "paused",
+  watershortagepause: "paused", watershortpaused: "paused", watershorttimeout: "paused", standbynetworking: "off", connectedstandby: "off",
 };
 const FRYER_NORMS = {
   off: "idle", preheating: "preheating", preheated: "paused", cooking: "running", shake: "running",
@@ -1081,7 +1136,10 @@ const FRYER_ICONS = {
 function fryerModeOf(raw) {
   if (raw === undefined || raw === null) return "";
   const k = String(raw).trim().toLowerCase().replace(/[\s-]+/g, "_");
-  return Object.prototype.hasOwnProperty.call(FRYER_STATES, k) ? FRYER_STATES[k] : "";
+  if (Object.prototype.hasOwnProperty.call(FRYER_STATES, k)) return FRYER_STATES[k];
+  // The same firmware word, slugged by the integration: keepwarm_finish.
+  const joined = k.replace(/_/g, "");
+  return Object.prototype.hasOwnProperty.call(FRYER_STATES, joined) ? FRYER_STATES[joined] : "";
 }
 // An EV charger (issue #27). Its status says whether a car is there, whether
 // it waits for its owner to authorise it, charges, is paused by the box or by
@@ -1142,7 +1200,7 @@ const EV_STATES = {
   cable_connected: "no_vehicle",
   // A car at the box, nothing asked of it yet.
   charger_insert: "connected", plugged_waiting: "connected", ready_to_charge: "connected", ev_connected: "connected",
-  preparing_charging: "connected", waiting_for_vehicle: "connected", wait_for_car: "connected", wait_car: "connected",
+  preparing_charging: "connected", wait_for_car: "connected", wait_car: "connected",
   connected_requesting: "connected", awaiting_start: "connected", waiting_for_start: "connected", sleep_mode: "connected",
   // Waiting for a tag, a card, a button or an app.
   awaiting_authorization: "awaiting_auth", authenticating: "awaiting_auth", authorizing: "awaiting_auth",
@@ -1177,6 +1235,19 @@ const EV_STATES = {
   erratic_ev: "error", error_temperature_too_high: "error", error_dead_powerboard: "error",
   error_overcurrent: "error", error_pen_fault: "error", charging_fault_1: "error", charging_fault_2: "error",
   see_error_state: "error", waiting_mid_failed: "error", waiting_mid_safety_margin_exceeded: "error",
+  // Read in each integration's own code. Ratio and V2C wait for a car that is
+  // not there, and V2C says when one is: "Vehicle connected (idle)".
+  waiting_for_vehicle: "no_vehicle", no_vehicle: "no_vehicle", cable_disconnected: "no_vehicle", not_plugged_in: "no_vehicle",
+  vehicle_connected_idle: "connected", handshaking: "connected", half_connected: "connected", idle_plugged: "connected",
+  connected_waiting_for_car: "connected", connected_waiting_current: "connected",
+  unauthorized: "awaiting_auth", authentication_waiting: "awaiting_auth", waiting_for_release: "awaiting_auth", rfid: "awaiting_auth",
+  awaiting_authentication: "awaiting_auth",
+  charging_active: "charging", charging_with_cooling: "charging", charging_ventilation: "charging", boost: "charging", excess_pv: "charging",
+  active: "charging", starting: "charging",
+  charging_paused: "paused", charger_paused: "paused", vehicle_paused: "paused", charging_cancelled: "paused",
+  queued_by_power_boost: "paused", queued_by_eco_smart: "paused", stopped: "paused", stop_charging: "paused", no_power: "paused",
+  de_authorizing: "paused", de_authenticating: "paused",
+  waiting_for_schedule: "scheduled",
   // The car giving energy back, to the home or the grid (V2H, V2G). No
   // standard has a status for it, neither OCPP up to 2.1 nor ISO 15118-20:
   // the Wallbox Quasar says it in a word, as do Sigenergy's DC charger and
@@ -1187,7 +1258,7 @@ const EV_STATES = {
 // suspended-ev, charging normal. Folded to one spelling, lower case with
 // underscores, they meet the table above.
 function evKey(raw) {
-  return String(raw).trim().toLowerCase().replace(/[\s,\-]+/g, "_").replace(/^_+|_+$/g, "");
+  return String(raw).trim().toLowerCase().replace(/[^\p{L}\p{N}_]+/gu, "_").replace(/^_+|_+$/g, "");
 }
 // The pause that may be the end. SuspendedEV is a car that stopped taking the
 // energy the box offers; with energy already in the session and no power
@@ -1230,6 +1301,9 @@ function evModeOf(raw, stateMap) {
   const k = evKey(s);
   if (Object.prototype.hasOwnProperty.call(EV_STATES, k)) return EV_STATES[k];
   if (stateMap && Object.prototype.hasOwnProperty.call(stateMap, "*")) return EV_MODES.includes(stateMap["*"]) ? stateMap["*"] : "";
+  // Garo's RCD_FAULT, Victron's overheating_detected: every box names its
+  // faults its own way.
+  if (!/^no_/.test(k) && /fault|error|overheat|critical|overvolt|undervolt|residual|failed|abnormal/.test(k)) return "error";
   return "";
 }
 // Whether a car is plugged in: a plug's contact, or a cable or vehicle state
@@ -1249,7 +1323,7 @@ function evPluggedOf(st) {
 }
 // What an error entity says: a contact on, a code other than zero, or a word
 // other than one of the ways of saying there is none, OCPP's NoError first.
-const EV_NO_ERROR_RE = /^(no.?error|no.?errors|no.?fault|none|ok|off|false|0|-+|kein.?fehler|aucune?.?erreur|pas.?d.?erreur|sin.?error|nessun.?errore|geen.?fout|ingen.?fel|ingen.?feil|ingen.?fejl|brak.?bledu|zadna.?chyba)$/;
+const EV_NO_ERROR_RE = /^(no.?error|no.?errors|no.?fault|no.?faults|no.?alarm|no.?alarms|no.?warning|none|ok|normal|clear|good|healthy|off|false|0|-+|kein.?fehler|aucune?.?erreur|pas.?d.?erreur|sin.?error|nessun.?errore|geen.?fout|ingen.?fel|ingen.?feil|ingen.?fejl|brak.?bledu|zadna.?chyba)$/;
 function evErrorOf(st) {
   if (!st) return { active: false, text: "" };
   const s = String(st.state).trim();
@@ -1343,8 +1417,8 @@ function modeLabel(hass, st, raw, cfg) {
 const PRINTER_STATES = {
   printing: "printing", printing_sd: "printing", printing_streaming: "printing", running: "printing",
   processing: "printing", print_started: "printing", printing_recovery: "printing", recovery: "printing",
-  resuming: "printing", finishing: "printing", simulating: "printing",
-  prepare: "preparing", init: "preparing", slicing: "preparing", busy: "preparing", startup: "preparing",
+  resuming: "printing", finishing: "printing", simulating: "printing", building: "printing", dropping: "printing", lifting: "printing",
+  prepare: "preparing", preparing: "preparing", init: "preparing", slicing: "preparing", busy: "preparing", startup: "preparing",
   starting: "preparing", starting_sd: "preparing", starting_streaming: "preparing",
   "self-testing": "preparing", self_testing: "preparing", checking: "preparing", file_checking: "preparing",
   printers_checking: "preparing", devices_testing: "preparing", exposure_testing: "preparing",
@@ -1353,7 +1427,7 @@ const PRINTER_STATES = {
   paused: "paused", pause: "paused", pausing: "paused",
   attention: "attention",
   complete: "done", completed: "done", finished: "done", finish: "done",
-  cancelled: "cancelled", canceled: "cancelled", cancelling: "cancelled", stopped: "cancelled", stopping: "cancelled",
+  abort: "cancelled", aborted: "cancelled", cancelled: "cancelled", canceled: "cancelled", cancelling: "cancelled", stopped: "cancelled", stopping: "cancelled",
   failed: "failed",
   error: "error", offline_after_error: "error", halted: "error",
   idle: "idle", standby: "idle", operational: "idle", ready: "idle", available: "idle",
@@ -1405,6 +1479,8 @@ function printerModeOf(raw, stateMap) {
   let mode = Object.prototype.hasOwnProperty.call(PRINTER_STATES, f) ? PRINTER_STATES[f] : "";
   const phase = mode === "preheating" ? "" : printerPhaseOf(f);
   if (!mode && phase) mode = phase === "paused" ? "paused" : "preparing";
+  // A milestone inside a job (Elegoo's preheating_completed): the job goes on.
+  if (!mode && /_complete(d)?$/.test(f) && !/^(print|job)/.test(f)) mode = "printing";
   return { mode, phase: phase === "paused" ? "" : phase };
 }
 
@@ -1430,6 +1506,15 @@ function normFor(type, raw, stateMap) {
     if (mode) return FRYER_NORMS[mode];
   }
   const norm = normalizeState(raw, stateMap);
+  // A coffee machine warming up has not made anything yet; a kettle holds its
+  // water at temperature, and "heat" is its thermostat at work (Stagg).
+  const mappedOwn = !!stateMap && raw !== undefined && raw !== null && Object.prototype.hasOwnProperty.call(stateMap, String(raw).trim());
+  if (!mappedOwn && raw !== undefined && raw !== null) {
+    const w = String(raw).trim().toLowerCase();
+    if (type === "coffee" && w === "warming") return "preheating";
+    if (type === "kettle" && w === "hold") return "keep_warm";
+    if (type === "kettle" && w === "heat") return "running";
+  }
   // A laundry machine or a dishwasher whose state names its step is running,
   // even on a word the card does not sort: LG reports soaking and detecting,
   // Whirlpool cycle_filling, and a step only exists inside a cycle. An entry
@@ -1494,7 +1579,7 @@ const HOMEWHIZ_STATES = {
 function doorStateOpen(state, cfg) {
   if (cfg.door_open_state) return state === cfg.door_open_state;
   // Home Connect's door is an enum sensor: open, closed, locked.
-  return ["on", "open", "opened", "true"].includes(String(state).trim().toLowerCase());
+  return ["on", "open", "opened", "true", "ajar"].includes(String(state).trim().toLowerCase());
 }
 const INTEGRATION_STATES = {
   // Miele
@@ -1507,9 +1592,20 @@ const INTEGRATION_STATES = {
   stop: "idle", fast_preheat: "preheating", time_hold_preheat: "preheating", stone_heating: "preheating", searing: "running", defrosting: "running",
   // Whirlpool
   hard_stop_or_error: "error", exception: "error", power_failure: "error", cancelled: "idle", setting: "idle", system_initialize: "idle",
-  // Home Connect
-  actionrequired: "paused",
+  // Home Connect, with its long key cut to the last part
+  actionrequired: "paused", action_required: "paused",
+  // Midea, ConnectLife, GE, Xiaomi's cookers, Tokit, Nespresso, Philips, De'Longhi
+  start: "running", work: "running", working: "running", add_clothes: "running", refreshing: "running", recovering: "running",
+  order: "delayed", reservation: "delayed", delay_run: "delayed", dsm_delay_run: "delayed",
+  stand_by: "idle", program_select: "idle", low_power: "idle", power_up: "idle", asleep: "idle", online: "idle", waiting: "idle",
+  turned_off: "idle", power_save: "idle", rinsing_ready: "idle",
+  eoc: "done", rinsing_paused: "paused",
+  finishing_unsuccessfully: "error", suspended_alarm: "error", unusual: "error", out_of_order: "error", overheated: "error",
+  precook: "preheating", autokeepwarm: "keep_warm", keeptemp: "keep_warm", keep_temp: "keep_warm", keeping_warm: "keep_warm", warm: "keep_warm",
 };
+// The order a state in snake case is read in: delay_wash is a wait, wash_done
+// is over and heating_off is off, whichever word comes first.
+const SECOND_PASS_ORDER = ["error", "delayed", "paused", "done", "preheating", "keep_warm", "idle", "running"];
 
 function normalizeState(raw, stateMap) {
   if (raw === undefined || raw === null) return "unknown";
@@ -1517,11 +1613,32 @@ function normalizeState(raw, stateMap) {
   if (["unknown", "unavailable", "none", ""].includes(s.toLowerCase())) return "unknown";
   if (stateMap && Object.prototype.hasOwnProperty.call(stateMap, s)) return mappedState(stateMap[s]);
   if (Object.prototype.hasOwnProperty.call(HOMEWHIZ_STATES, s)) return HOMEWHIZ_STATES[s];
+  // LG's dash is a machine with nothing to report.
+  if (/^-+$/.test(s)) return "idle";
   const exact = s.toLowerCase();
   if (Object.prototype.hasOwnProperty.call(INTEGRATION_STATES, exact)) return INTEGRATION_STATES[exact];
+  // BSH.Common.EnumType.OperationState.ActionRequired, Delay Run, stand-by.
+  const key = exact.slice(exact.lastIndexOf(".") + 1).trim().replace(/[\s-]+/g, "_");
+  if (Object.prototype.hasOwnProperty.call(INTEGRATION_STATES, key)) return INTEGRATION_STATES[key];
   const flat = stripAccents(s);
-  for (const norm of Object.keys(STATE_KEYWORD_PATTERNS)) {
-    if (STATE_KEYWORD_PATTERNS[norm].some((re) => re.test(flat))) return norm;
+  const low = flat.toLowerCase();
+  // A word that says there is none, then one that outranks what comes with
+  // it: no_error is fine, a cleaning paused on a system error is an error.
+  const words = !/^(no|not|kein|keine|sans|ohne)[\s_.-]/.test(low);
+  if (!words) return "idle";
+  if (/(^|[\s_.-])(error|fault|failed|failure)($|[\s_.-])/.test(low)) return "error";
+  if (/(^|[\s_.-])paused?($|[\s_.-])/.test(low)) return "paused";
+  // "_" is a letter to a keyword, so a state in snake case is read in separate
+  // words, and a word further along may change what the first one said.
+  const spaced = low.replace(/[_.]+/g, " ");
+  if (spaced !== low) {
+    for (const norm of SECOND_PASS_ORDER) {
+      if (STATE_KEYWORD_PATTERNS[norm].some((re) => re.test(spaced))) return norm;
+    }
+  } else {
+    for (const norm of Object.keys(STATE_KEYWORD_PATTERNS)) {
+      if (STATE_KEYWORD_PATTERNS[norm].some((re) => re.test(flat))) return norm;
+    }
   }
   // A state_map may end on a catch-all. Machines that run one long programme
   // in many named steps, washer-dryers above all, report dozens of values that
@@ -1654,7 +1771,8 @@ function remainingSeconds(hass, entityId, unitCfg, hoursMinutes) {
   if (clock) return Number(clock[1]) * 3600 + Number(clock[2]) * 60 + Number(clock[3]);
   // A delayed start is set in hours and minutes, and Home Connect shows it
   // so: "0:59" is 59 minutes away, not 59 seconds (#56).
-  const hm = hoursMinutes && /^(\d+):([0-5]\d)$/.exec(String(st.state).trim());
+  // Miele's own integration says "01:23" with no unit at all.
+  const hm = (hoursMinutes || !st.attributes.unit_of_measurement) && /^(\d+):([0-5]\d)$/.exec(String(st.state).trim());
   if (hm) return Number(hm[1]) * 3600 + Number(hm[2]) * 60;
   const v = parseFloat(st.state);
   if (!Number.isFinite(v) || v < 0) return null;
@@ -2149,6 +2267,14 @@ function rawStateText(hass, st, raw, cfg) {
     }
   }
   return text;
+}
+
+// A state the card cannot place: Home Assistant's own translation when the
+// integration has one (Midea's order is "Scheduled"), its key made readable
+// otherwise.
+function translatedOrClean(hass, st, raw, cfg) {
+  const text = rawStateText(hass, st, raw, cfg);
+  return text !== String(raw) ? text : cleanStateLabel(raw);
 }
 
 function cleanStateLabel(raw) {
@@ -3783,7 +3909,10 @@ function netDiskEntities(hass, entityId, anchorDevice) {
 }
 
 const NET_SLEEP_NAME_RE = /sleep|standby|spin|hibernat|veille/;
-const NET_FAIL_RE = /crash|fail|fault|degrad|broken|critical|abnormal|defect|missing|disabled|dead/;
+const NET_FAIL_RE = /crash|fail|fault|degrad|broken|critical|abnormal|defect|missing|disabled|dsbl|invalid|wrong|dead/;
+// A device's own state: UniFi's heartbeat_missed and adoption_failed, Omada's
+// isolated and firmware mismatch.
+const NET_STATE_ALERT_RE = /error|fail|heartbeat|isolated|mismatch|warning/;
 const NET_WARN_RE = /warn|attention|caution|not_?initiali/;
 // A disk's LED: failed, to watch, reading or writing, asleep or fine. Each
 // integration says it its own way, so every entity of the disk is read.
@@ -3791,6 +3920,8 @@ function netDiskState(hass, entityId, anchorDevice) {
   const own = stateObj(hass, entityId);
   if (!own) return "empty";
   if (["unavailable", "unknown"].includes(String(own.state).toLowerCase())) return "unknown";
+  // Unraid's slot with nothing in it.
+  if (String(own.state).trim().toLowerCase() === "disk_np") return "empty";
   let fail = false, warn = false, busy = false, sleep = false;
   for (const id of netDiskEntities(hass, entityId, anchorDevice)) {
     const s = hass.states[id];
@@ -3849,20 +3980,23 @@ const ROBOT_STATES = { cleaning: "cleaning", mowing: "cleaning", docked: "chargi
 // A status that says all is well is not an error, whatever it is called.
 // "No error" as the integrations say it, and as people write it in a
 // template of their own (#57): in any of the card's languages.
-const ROBOT_OK_RE = /^(no_?errors?|none|ok|normal|0|null|no_?fault|false|off|all_?good|aucune_erreur|pas_d_?erreurs?|sans_erreur|keine?_fehler|fehlerfrei|sin_error(es)?|ningun_error|nessun_errore|geen_fout(en)?|nenhum_erro|sem_erros?|inga_fel|inget_fel|ingen_feil|ingen_fejl|brak_b(l|\u0142)edow|zadna_chyba|bez_chyby?|\u043d\u0435\u0442_\u043e\u0448\u0438\u0431\u043e\u043a|\u0431\u0435\u0437_\u043e\u0448\u0438\u0431\u043e\u043a|\u65e0\u9519\u8bef|\u65e0\u6545\u969c|\u6b63\u5e38)$/;
+const ROBOT_OK_RE = /^(no_?errors?|(\w+_)?no_\w*error|none|ok|normal|0|255|100|null|no_?fault|false|off|all_?good|aucune_erreur|pas_d_?erreurs?|sans_erreur|keine?_fehler|fehlerfrei|sin_error(es)?|ningun_error|nessun_errore|geen_fout(en)?|nenhum_erro|sem_erros?|inga_fel|inget_fel|ingen_feil|ingen_fejl|brak_b(l|\u0142)edow|zadna_chyba|bez_chyby?|\u043d\u0435\u0442_\u043e\u0448\u0438\u0431\u043e\u043a|\u0431\u0435\u0437_\u043e\u0448\u0438\u0431\u043e\u043a|\u65e0\u9519\u8bef|\u65e0\u6545\u969c|\u6b63\u5e38)$/;
 const robotOkWord = (v) => ROBOT_OK_RE.test(stripAccents(String(v)).trim().toLowerCase().replace(/[\s.:'\u2019-]+/g, "_"));
 // What a status says, first match wins: an error before anything else, then
 // what the station does, then the way home, a pause, the work and the base.
 const ROBOT_WORDS = [
-  ["error", /error|fault|problem|stuck|trapped|jam|blocked|cliff|lifted|wheel_?susp|erreur|fehler/],
+  ["error", /error|fault|problem|stuck|trapped|escaped|jam|blocked|cliff|lifted|wheel_?susp|erreur|fehler/],
   ["empty", /water_?(shortage|empty|low|lack)|no_?water|lack_?of_?water|tank_?empty|manque_?d_?eau/],
   ["full", /bin_?full|(dust_?)?bin_?full|box_?full|full_?bin|bac_?plein/],
   ["emptying", /emptying|empty_?(dust|bin|box)|evac|auto_?empt|dust_?collect|collecting_?dust|vidage/],
-  ["washing", /wash|(clean(ing)?|rins(e|ing))_?(the_?)?(mop|pad)|self_?clean|lavage/],
+  // On the way to the dock to wash its mop, it is still on its way (Dreame).
+  ["returning", /go(ing)?_?to_?wash/],
+  ["washing", /wash|mop_?clean|(clean(ing)?|rins(e|ing))_?(the_?)?(mop|pad)|self_?clean|lavage/],
   ["drying", /dry|sechage|trockn/],
   ["rain", /(^|_)rain|pluie|regen/],
-  ["returning", /return|back_?to|go(ing)?_?(home|back|to_?(dock|base|station))|homing|hm_?(usr|mid|post)?_?(dock|msn)|searching_?(base|dock|station)|retour/],
+  // A return paused halfway is paused (Sunseeker).
   ["paused", /pause/],
+  ["returning", /return|back_?to|go(ing)?_?(home|back|to_?(dock|base|station))|homing|hm_?(usr|mid|post)?_?(dock|msn)|searching_?(base|dock|station)|retour/],
   ["edgecut", /edge_?cut|edgecut|border|bordure|kante/],
   ["cleaning", /clean|mow|vacuum|sweep|mop|zon|spot|segment|room|(^|_)run|work|leav|starting|edge/],
   ["charging", /charg|dock|base|home|station/],
@@ -4077,13 +4211,13 @@ const POOL_ONLY_FIELDS = ["water_temperature_entity", "air_temperature_entity", 
   "filtration_time_entity", "pressure_entity", "pressure_alert", "pool_mode_entity", "chlorine_pump_entity",
   "chlorine_level_entity", "backwash_entity", "frost_entity", "pool_alert_entity"];
 const POOL_NAME_RE = /pool.?pump|swimming.?pool|(^|[^a-z])pool([^a-z]|$)|piscine|pompe.?(de.?)?piscine|oklyn|poolstation|(^|[^a-z])pisc|schwimmbad|poolpumpe|filterpumpe|bomba.?de.?(piscina|filtra)|piscina|pompa.?(piscina|filtraz)|zwembad|zwempomp|bassengpump|poolpump|pompa.?basen|basen|baz(e|\u00e9)n|\u6cf3\u6c60|\u0431\u0430\u0441\u0441\u0435\u0439\u043d/;
-const POOL_OFF_STATES = ["off", "false", "0", "stopped", "stop", "idle", "standby", "closed"];
+const POOL_OFF_STATES = ["off", "false", "0", "stopped", "stop", "idle", "standby", "closed", "sleep", "sleeping", "paused", "disabled", "not_running", "inactive"];
 // What a pump's state or status says, first match wins.
 const POOL_WORDS = [
   ["error", /error|fault|alarm|defaut|failure|blocked|dry.?run|overload|panne|fehler/],
   ["backwash", /backwash|back.?wash|contre.?lavage|ruckspul|r\u00fcckspul|contralavado|controlavaggio|terugspoel/],
-  ["frost", /frost|freez|gel|antigel|hors.?gel|frostschutz|antihielo|antigelo|vorst/],
-  ["off", /^(off|stop(ped)?|idle|standby|arret|aus|apagad|spento|uit|false|0)$/],
+  ["frost", /frost|freez|gel|antigel|hors.?gel|frostschutz|antihielo|antigelo|vorst|^fp_mode$/],
+  ["off", /^(off|stop(ped)?|idle|standby|arret|aus|apagad|spento|uit|false|0|sleep(ing)?|paused|disabled|not_running|inactive)$/],
   ["running", /^(on|true|1|running|run|filtering|filtration|filtrage|marche|en.?marche|ein|an|encendid|acceso|aan|boost|eco|manual|manuel)$/],
 ];
 const POOL_LABELS = { off: "ac_off", running: "pool_filtering", chlorinating: "pool_chlorinating", backwash: "pool_backwash",
@@ -4097,6 +4231,14 @@ const POOL_POWER_W = 50;
 // The gauge reads up to 2.5 bar; a filter that needs washing is past 1.5.
 const POOL_GAUGE_MAX_BAR = 2.5;
 const POOL_PRESSURE_ALERT = 1.8;
+
+// A pressure in bar, whichever unit Home Assistant shows it in.
+function poolPressureBar(hass, entityId) {
+  const v = numericState(hass, entityId);
+  if (v === null) return null;
+  const u = unitOf(hass, entityId).toLowerCase();
+  return u === "psi" ? v / 14.5038 : u === "kpa" ? v / 100 : u === "mbar" || u === "hpa" ? v / 1000 : v;
+}
 
 function poolWord(v) {
   const s = stripAccents(String(v === undefined || v === null ? "" : v)).trim().toLowerCase();
@@ -4140,7 +4282,7 @@ function poolModeOf(hass, cfg, st, watts) {
   } else return "unav";
   if (mode !== "error" && cfg.pool_alert_entity && poolOn(hass, cfg.pool_alert_entity)) mode = "error";
   if (mode !== "error" && cfg.pressure_entity) {
-    const p = numericState(hass, cfg.pressure_entity);
+    const p = poolPressureBar(hass, cfg.pressure_entity);
     const lim = parseFloat(cfg.pressure_alert);
     if (p !== null && mode !== "off" && p >= (isFinite(lim) && lim > 0 ? lim : POOL_PRESSURE_ALERT)) mode = "error";
   }
@@ -4156,7 +4298,12 @@ const SOLAR_ONLY_FIELDS = ["solar_layout", "energy_today_entity", "peak_power", 
 const SOLAR_NAME_RE = /solar|photovolt|(^|[^a-z])pv([^a-z]|$)|panneaux?.?solaires?|powerstream|hoymiles|enphase|apsystems|fronius|solaredge|growatt|solax|wechselrichter|zonnepane|fotovolt|fotowolt|solcell|solpanel|\u592a\u9633\u80fd|\u0441\u043e\u043b\u043d\u0435\u0447/;
 const SOLAR_LAYOUTS = ["ground", "roof"];
 // What an inverter says when it is in trouble.
-const ENERGY_ERROR_RE = /error|fault|alarm|defaut|panne|fehler|failure|storung|st\u00f6rung|guasto|averia|fout/;
+const ENERGY_ERROR_RE = /error|fault|alarm|defaut|panne|fehler|failure|storung|st\u00f6rung|guasto|averia|fout|abnormal/;
+// The ways of saying there is none: Victron's no_alarm, a plain "No Error".
+const ENERGY_NO_ERROR_RE = /^(no|not|kein|keine|aucune?|sans|pas)[\s_.-]*(d.)?(error|fault|alarm|defaut|fehler|erreur|panne|failure)/;
+function energyErrorWord(raw) {
+  return ENERGY_ERROR_RE.test(raw) && !ENERGY_NO_ERROR_RE.test(raw);
+}
 // Below this share of the panels' peak power, the sun is weak.
 const SOLAR_LOW_SHARE = 0.15;
 const SOLAR_LOW_W = 100;
@@ -4199,7 +4346,7 @@ function solarReadOf(hass, cfg, st) {
   const sunUp = sun ? sun.state === "above_horizon" : null;
   let mode;
   if (watts === null && !stOk) mode = "unav";
-  else if ((stOk && ENERGY_ERROR_RE.test(raw)) || (cfg.solar_alert_entity && poolOn(hass, cfg.solar_alert_entity))) mode = "error";
+  else if ((stOk && energyErrorWord(raw)) || (cfg.solar_alert_entity && evErrorOf(stateObj(hass, cfg.solar_alert_entity)).active)) mode = "error";
   else {
     const w = watts === null ? 0 : watts;
     const peak = parseFloat(cfg.peak_power);
@@ -4221,7 +4368,7 @@ function batteryLayoutOf(cfg, st) {
 
 // What the battery does: its level, the power going in or out, its word for
 // an error, and whether it has reached the top it is allowed.
-const BATTERY_NEGATIVE_CHARGE = ["powerwall", "fronius", "sonnenbatterie"];
+const BATTERY_NEGATIVE_CHARGE = ["powerwall", "fronius", "sonnenbatterie", "solarman", "goodwe", "foxess_modbus"];
 function batteryReadOf(hass, cfg, st) {
   const levelId = cfg.battery_entity || (numericEntity(hass, cfg.state_entity) ? cfg.state_entity : "");
   const level = levelId ? numericState(hass, levelId) : null;
@@ -4236,7 +4383,8 @@ function batteryReadOf(hass, cfg, st) {
     const p = wattsOf(hass, cfg.power_entity);
     if (p !== null) {
       // Home Assistant's own convention, negative while charging, is what
-      // Powerwall, Fronius and Sonnen report; power_inverted false overrides it.
+      // Powerwall, Fronius, Sonnen, Solarman, GoodWe and FoxESS report;
+      // power_inverted false overrides it.
       const reg = hass.entities && hass.entities[cfg.power_entity];
       // Fronius's own power_battery_charge says which way it means.
       const inverted = cfg.power_inverted !== undefined ? cfg.power_inverted : !!reg && BATTERY_NEGATIVE_CHARGE.includes(reg.platform) && !/charge|_in$|_out$/i.test(cfg.power_entity);
@@ -4251,13 +4399,17 @@ function batteryReadOf(hass, cfg, st) {
   const reserve = cfg.reserve_entity ? numericState(hass, cfg.reserve_entity) : null;
   let mode;
   if (level === null && net === null && !stOk) mode = "unav";
-  else if ((stOk && ENERGY_ERROR_RE.test(raw)) || (cfg.battery_alert_entity && poolOn(hass, cfg.battery_alert_entity))) mode = "error";
+  else if ((stOk && energyErrorWord(raw)) || (cfg.battery_alert_entity && evErrorOf(stateObj(hass, cfg.battery_alert_entity)).active)) mode = "error";
   else {
     const th = parseFloat(cfg.power_on_threshold);
     const idleW = isFinite(th) && th >= 0 ? th : BATTERY_IDLE_W;
     if (net !== null) mode = net > idleW ? "charging" : net < -idleW ? "discharging" : "idle";
-    else if (stOk && /dis.?charg|decharg|entlad|descarg|scaric|ontlad|urladd|utlad|aflad|rozlad|vybij/.test(raw)) mode = "discharging";
-    else if (stOk && /charg|laden|ladt|cargand|carica|carregand|opladen|laddar|lader|ladowan|nabij/.test(raw)) mode = "charging";
+    // Words that name a charge without one going on: not_charging, To be
+    // charged (GoodWe), fully_charged (Anker). Victron counts its phases.
+    else if (stOk && /not.?charg|no.?charg|^to.?be/.test(raw)) mode = "idle";
+    else if (stOk && /(^|[^a-z])full|fully|(^|[^s])charged$/.test(raw) && !/dis.?charged$/.test(raw)) mode = "full";
+    else if (stOk && /dis.?charg|decharg|entlad|descarg|scaric|ontlad|urladd|utlad|aflad|rozlad|vybij|inverting|power.?assist/.test(raw)) mode = "discharging";
+    else if (stOk && /charg|laden|ladt|cargand|carica|carregand|opladen|laddar|lader|ladowan|nabij|^bulk|^absorption|^equali[sz]e/.test(raw)) mode = "charging";
     else mode = "idle";
     if (mode === "idle" && level !== null && level >= top - 1) mode = "full";
   }
@@ -4297,8 +4449,8 @@ function diffuserReadOf(hass, cfg, st, norm, powerDerived) {
   if (!powerDerived && (!st || ["unavailable", "unknown", ""].includes(raw))) mode = "unav";
   else {
     const on = powerDerived ? isActiveState(norm)
-      : dom === "select" || dom === "input_select" ? !/^(off|stop|0|none|standby|close|closed)$/.test(raw)
-      : ["on", "true"].includes(raw) || isActiveState(norm);
+      : dom === "select" || dom === "input_select" ? !(AIR_STOP_RE.test(raw) || ["close", "closed"].includes(raw))
+      : ["on", "true", "diffusing"].includes(raw) || isActiveState(norm);
     const pct = numberOrNull(a.percentage);
     const word = (dom === "select" || dom === "input_select") ? raw : String(a.preset_mode || a.mode || "").toLowerCase();
     const inter = DIFFUSER_INTER_RE.test(word) || (!(dom === "select" || dom === "input_select") && pct !== null && pct > 0 && pct <= 50 && !DIFFUSER_LOW_RE.test(word));
@@ -4576,8 +4728,8 @@ function hrvReadOf(hass, cfg, st, norm, powerDerived) {
   if (!powerDerived && (!st || ["unavailable", "unknown", ""].includes(raw))) return { mode: "unav", level: 0 };
   const on = powerDerived ? isActiveState(norm)
     : dom === "climate" ? raw !== "off"
-    : dom === "select" || dom === "input_select" ? !/^(off|stop|standby|0|none)$/.test(raw)
-    : dom === "sensor" ? !/^(off|stop|standby)$/.test(raw)
+    : dom === "select" || dom === "input_select" ? !AIR_STOP_RE.test(raw)
+    : dom === "sensor" ? !AIR_STOP_RE.test(raw)
     : ["on", "true"].includes(raw) || isActiveState(norm);
   if (!on) return { mode: "off", level: 0 };
   const preset = stripAccents(String(dom === "select" || dom === "input_select" ? raw : a.preset_mode || a.fan_mode || "")).toLowerCase();
@@ -4625,6 +4777,9 @@ function hrvReadOf(hass, cfg, st, norm, powerDerived) {
       filterDays = true;
     } else if (isFinite(fv) && unit && unit !== "%" && !/^(d|day|days|jours?|tage?|dias?|giorni)$/.test(unit)) {
       // Hours run (Flexit) say nothing of what is left.
+      filterText = `${Math.round(fv)} ${unit}`;
+    } else if (isFinite(fv) && /since|used|elapsed|depuis/.test(String(cfg.filter_life_entity || ""))) {
+      // Days since the filter was reset (Brink) count up: no deadline here.
       filterText = `${Math.round(fv)} ${unit}`;
     } else if (isFinite(fv)) {
       const days = /^(d|day|days|jours?|tage?|dias?|giorni)$/.test(unit);
@@ -4950,8 +5105,12 @@ function optLines(hass, cfg, type) {
       const open = NT_ON.includes(raw);
       value = t(hass, open ? "mb_open" : "mb_closed"); caution = open; if (!open) icon = "mdi:window-closed-variant";
     } else if (o.lock) {
-      const locked = ["locked", "on", "true", "1"].includes(raw) && !(domainOf(id) === "binary_sensor");
-      const unlocked = domainOf(id) === "binary_sensor" ? NT_ON.includes(raw) : !locked;
+      // A binary sensor of class lock is on when unlocked; Bosch's lock_enabled,
+      // with no class on purpose, is on when the lock is on.
+      const lockSt = stateObj(hass, id);
+      const lockClass = domainOf(id) === "binary_sensor" && (!lockSt || !lockSt.attributes || lockSt.attributes.device_class === "lock" || !lockSt.attributes.device_class && !/lock.?enabled|enabled|active/.test(id));
+      const locked = ["locked", "on", "true", "1"].includes(raw) && !lockClass;
+      const unlocked = lockClass ? NT_ON.includes(raw) : !locked;
       value = t(hass, unlocked ? "lock_unlocked" : "lock_locked"); icon = unlocked ? "mdi:lock-open-variant" : "mdi:lock"; caution = unlocked;
     } else if (o.running) {
       const on = NT_ON.includes(raw) || raw === "running";
@@ -5323,7 +5482,8 @@ function ntReadOf(type, hass, cfg, st, watts, threshold) {
     if (zone) lines.push(zone);
     const secs = cfg.remaining_time_entity ? ntRemaining(hass, cfg.remaining_time_entity) : null;
     const left = secs !== null && secs > 0 ? formatDuration(secs, hass) : "";
-    const watering = !!running || (st && ["open", "opening"].includes(raw));
+    // Netro's watering, OpenSprinkler's running programmes.
+    const watering = !!running || (st && ["open", "opening", "watering", "irrigating", "manual", "program", "once_program"].includes(raw));
     const mv = cfg.soil_moisture_entity ? numericState(hass, cfg.soil_moisture_entity) : null;
     const moist = mv === null ? null : Math.max(0, Math.min(1, mv / 100));
     const soil = ntLine(hass, cfg, "irr_soil", "mdi:water-percent", "section_soil_moisture", cfg.soil_moisture_entity);
@@ -5366,12 +5526,15 @@ function ntReadOf(type, hass, cfg, st, watts, threshold) {
       if (l) lines.push(l);
     }
     const code = raw.replace(/\s+/g, "_");
-    const cat = ntOnOff(hass, cfg.cat_present_entity) || ["cst", "csi", "cat_detected", "cat_present"].includes(code) || /cat.?(detect|sensor|present|inside)|chat.?(dedans|present)/.test(raw);
+    const cat = ntOnOff(hass, cfg.cat_present_entity) || ["cst", "csi", "cat_detected", "cat_present"].includes(code) || /cat.?(detect|sensor|present|inside|appear)|pet.?using|chat.?(dedans|present)/.test(raw);
     let mode = "ready";
-    if (/(^|_)(ccp|ec)$|clean|cycl|nettoy|reinig|limpi|puliz|reinigung|empty_cycle/.test(code) && !/complete|ccc/.test(code)) mode = "cleaning";
+    // A pause is not a cycle: PetKit's cleaning_paused_system_error is a fault,
+    // and an error is said before the word it stopped on.
+    const litterFault = /fault|error|erreur|defaut|fehler|jam|pinch/.test(raw);
+    if (!litterFault && !/pause/.test(code) && /(^|_)(ccp|ec|cd|scf)$|clean|cycl|nettoy|reinig|limpi|puliz|reinigung|empty_cycle|dump|empty|level|restor|rak|reset|calibr|odor|(^|_)uv(_|$)|maint/.test(code) && !/complete|ccc/.test(code)) mode = "cleaning";
     else if (["dfs", "sdf", "df2"].includes(code) || /full|plein|voll|lleno|pieno/.test(raw) || (drawer !== null && drawer >= 1)) mode = "full";
-    else if (["csf", "dhf", "dpf", "otf", "pd", "spf", "hpf", "br", "error", "fault"].includes(code) || /fault|error|erreur|defaut|fehler|jam|pinch/.test(raw)) mode = "fault";
-    else if (["off", "sleep", "sleeping", "offline", "p", "paused"].includes(code) || /sleep|veille|schlaf/.test(raw)) mode = "off";
+    else if (["csf", "dhf", "dpf", "otf", "pd", "spf", "hpf", "br", "error", "fault"].includes(code) || litterFault) mode = "fault";
+    else if (["off", "sleep", "sleeping", "offline", "p", "paused"].includes(code) || /sleep|veille|schlaf|pause/.test(raw)) mode = "off";
     if (domainOf(cfg.state_entity) === "vacuum") mode = raw === "cleaning" ? "cleaning" : raw === "error" ? "fault" : mode;
     if (mode === "ready" && cat) mode = "cat";
     const draw = { kind, on: mode === "cleaning", st: mode, cat: mode === "cat" || (cat && mode !== "cleaning"), drawer };
@@ -5383,7 +5546,7 @@ function ntReadOf(type, hass, cfg, st, watts, threshold) {
     // says. A low battery is a line, the light turns amber.
     const layout = detectorLayoutOf(cfg, st);
     const kind = `det_${layout}`;
-    const alarm = !dead && (NT_ON.includes(raw) || /alarm|smoke|detect|leak|wet|fuite|fumee|emergency|warning|mild|heavy|critical|danger/.test(raw)) && !/^(off|ok|clear|dry|normal|idle|test)$|^(no|not|un)[ _-]?/.test(raw);
+    const alarm = !dead && (NT_ON.includes(raw) || /alarm|smoke|detect|leak|wet|fuite|fumee|emergency|warning|mild|heavy|critical|danger/.test(raw)) && !/^(off|ok|clear|dry|normal|idle|test)$|^(no|not|un)[ _-]?|inactive/.test(raw);
     const bv = cfg.battery_entity ? numericState(hass, cfg.battery_entity) : null;
     const bs = cfg.battery_entity ? stateObj(hass, cfg.battery_entity) : null;
     const low = bv !== null ? bv <= 20 : !!bs && domainOf(cfg.battery_entity) === "binary_sensor" && NT_ON.includes(String(bs.state).toLowerCase());
@@ -5404,11 +5567,12 @@ function ntReadOf(type, hass, cfg, st, watts, threshold) {
     const a = (st && st.attributes) || {};
     const gst = cfg.game_entity ? stateObj(hass, cfg.game_entity) : null;
     const gameOk = gst && !["unknown", "unavailable", "", "none", "off", "null"].includes(String(gst.state).trim().toLowerCase());
-    const game = gameOk ? String(gst.state) : a.media_title ? String(a.media_title) : "";
+    // Xbox reports its apps as media too: Netflix is not a game.
+    const game = gameOk ? String(gst.state) : a.media_title && a.media_content_type !== "app" ? String(a.media_title) : "";
     const metered = cfg.power_entity && watts !== null && isFinite(threshold);
     const rest = !metered && ["standby", "rest", "rest_mode"].includes(raw);
     const on = metered ? watts >= threshold
-      : !dead && ["on", "true", "playing", "idle", "paused", "home", "online", "availabletoplay", "availabletocommunicate", "busy", "buffering"].includes(raw);
+      : !dead && ["on", "true", "playing", "idle", "paused", "home", "online", "availabletoplay", "busy", "buffering"].includes(raw);
     // A plug drawing power is a console being played; so is a game running.
     const playing = on && (raw === "playing" || !!game || (metered && domainOf(cfg.state_entity) !== "media_player"));
     if (on && game) lines.push({ key: "con_game", icon: "mdi:gamepad-variant", label: t(hass, "con_game"), value: game, entity: gameOk ? cfg.game_entity : cfg.state_entity, wrap: true });
@@ -5451,7 +5615,8 @@ function ntReadOf(type, hass, cfg, st, watts, threshold) {
     // off draws less), charged below it. A battery entity gives the level,
     // and says charged at 100 % whatever the plug says.
     const kind = `mob_${mobilityLayoutOf(cfg, st)}`;
-    const lv = cfg.battery_entity ? numericState(hass, cfg.battery_entity) : null;
+    const lvUnit = cfg.battery_entity ? unitOf(hass, cfg.battery_entity) : "";
+    const lv = cfg.battery_entity && (!lvUnit || lvUnit === "%") ? numericState(hass, cfg.battery_entity) : null;
     const level = lv === null ? null : Math.max(0, Math.min(100, lv));
     if (level !== null) {
       lines.push({ key: "mob_battery", icon: level >= 95 ? "mdi:battery" : `mdi:battery-${Math.max(10, Math.round(level / 10) * 10)}`, label: t(hass, "section_battery"),
@@ -5465,7 +5630,9 @@ function ntReadOf(type, hass, cfg, st, watts, threshold) {
       return watts >= threshold ? out("charging", "mob_charging", "#fb8c00", { kind, on: true, st: "charging", level })
         : out("full", "mob_charged", NT_COLORS.lit, { kind, on: false, st: "full", level });
     }
-    if (level !== null) return out("charging", "mob_charging", "#fb8c00", { kind, on: true, st: "charging", level });
+    // A level alone says nothing of a charger (Cowboy, MySmartBike): only a
+    // plug that is on means it sits on one.
+    if (level !== null && ["switch", "input_boolean"].includes(domainOf(cfg.state_entity))) return out("charging", "mob_charging", "#fb8c00", { kind, on: true, st: "charging", level });
     return out("idle", "mob_plugged", NT_COLORS.idle, { kind, on: false, st: "plugged", level });
   }
   if (type === "humidifier") {
@@ -5624,8 +5791,10 @@ function ntReadOf(type, hass, cfg, st, watts, threshold) {
     // Which way the power flows (#77): below zero it feeds in, as most smart
     // meter readers report it, unless the meter is set to one direction; at
     // zero nothing is used.
-    const direction = ["import", "export"].includes(cfg.meter_direction) ? cfg.meter_direction : "auto";
-    const flowOf = (w) => direction === "export" ? (Math.abs(w) < 1 ? "none" : "export")
+    const direction = ["import", "export", "inverted"].includes(cfg.meter_direction) ? cfg.meter_direction : "auto";
+    // GoodWe's active_power counts what goes out as positive.
+    const flowOf = (w) => direction === "inverted" ? (Math.abs(w) < 1 ? "none" : w > 0 ? "export" : "import")
+      : direction === "export" ? (Math.abs(w) < 1 ? "none" : "export")
       : direction === "import" ? (w < 1 ? "none" : "import")
       : Math.abs(w) < 1 ? "none" : w < 0 ? "export" : "import";
     const high = parseFloat(cfg.high_power);
@@ -5731,7 +5900,8 @@ function ntControls(hass, cfg, type) {
 const HEAT_NT = ["storage_tank", "fresh_water_station", "solar_thermal", "wood_stove"];
 const COLLECTOR_STYLES = ["flat", "tubes"];
 // A source or a consumer of a tank is idle on these, and on a number at 0.
-const HEAT_IDLE = ["off", "false", "0", "no", "idle", "standby", "none", "unknown", "unavailable", "", "aus", "inactive", "closed", "stopped", "paused", "nein"];
+const HEAT_IDLE = ["off", "false", "0", "no", "idle", "standby", "none", "unknown", "unavailable", "", "aus", "inactive", "closed", "stopped", "paused", "nein",
+  "ok", "normal", "no_fault", "no_error", "clear", "good"];
 function heatActive(hass, id) {
   const s = id ? stateObj(hass, id) : null;
   if (!s) return false;
@@ -5781,10 +5951,12 @@ function heatReadOf(type, hass, cfg, st) {
     // One to five temperatures, top to bottom; the state entity alone is a
     // tank with one probe.
     const ids = entityEntries(cfg.temperature_entities, 5).map((e) => e.entity);
-    const probes = (ids.length ? ids : [cfg.state_entity]).map((id) => ({ id, v: id ? numericState(hass, id) : null })).filter((p) => p.v !== null);
+    // A water_heater or a climate entity carries its reading in an attribute.
+    const probes = (ids.length ? ids : [cfg.state_entity]).map((id) => ({ id, v: id ? numericState(hass, id) ?? numberOrNull(((stateObj(hass, id) || {}).attributes || {}).current_temperature) : null })).filter((p) => p.v !== null);
     if (!probes.length) return out("unav", "ev_offline", NT_COLORS.unav, { kind: "tank", temps: [] });
     const cs = probes.map((p) => heatCelsius(hass, p.id, p.v));
-    const lo = heatNum(cfg.charge_min_temp, 30), hi = Math.max(lo + 1, heatNum(cfg.charge_max_temp, 60));
+    const fahrenheit = /f/i.test(temperatureUnit(hass, probes[0].id));
+    const lo = heatNum(cfg.charge_min_temp, fahrenheit ? 86 : 30), hi = Math.max(lo + 1, heatNum(cfg.charge_max_temp, fahrenheit ? 140 : 60));
     const loC = heatCelsius(hass, probes[0].id, lo), hiC = heatCelsius(hass, probes[0].id, hi);
     const own = cfg.charge_entity ? numericState(hass, cfg.charge_entity) : null;
     const charge = own !== null ? Math.max(0, Math.min(100, own))
@@ -5881,12 +6053,15 @@ function heatReadOf(type, hass, cfg, st) {
   // A log stove: burning, embers or cold from its temperature and two
   // thresholds; a status entity that is simply on is a fire.
   const scale = heatNum(cfg.temperature_scale, 1) || 1;
-  const vRaw = st ? numberOrNull(st.state) : null;
+  const stoveDomain = ["climate", "water_heater"].includes(domainOf(cfg.state_entity));
+  const stoveAction = stoveDomain && st ? String((st.attributes || {}).hvac_action || "").toLowerCase() : "";
+  const vRaw = st ? (stoveDomain ? numberOrNull((st.attributes || {}).current_temperature) : numberOrNull(st.state)) : null;
   const v = vRaw === null ? null : vRaw * scale;
   if (dead) return out("unav", "ev_offline", NT_COLORS.unav, { kind: "wood", st: "cold", water: !!cfg.water_jacket });
-  const burnT = heatNum(cfg.burning_temp, 120), embT = Math.min(burnT, heatNum(cfg.embers_temp, 50));
   const unit = temperatureUnit(hass, cfg.state_entity);
-  const fire = v !== null ? (v >= burnT ? "burning" : v >= embT ? "embers" : "cold") : NT_ON.includes(raw) || /burn|fire|feu|brenn|heiz/.test(raw) ? "burning" : "cold";
+  const inF = /f/i.test(unit);
+  const burnT = heatNum(cfg.burning_temp, inF ? 248 : 120), embT = Math.min(burnT, heatNum(cfg.embers_temp, inF ? 122 : 50));
+  const fire = stoveAction ? (["heating", "preheating"].includes(stoveAction) ? "burning" : "cold") : v !== null ? (v >= burnT ? "burning" : v >= embT ? "embers" : "cold") : NT_ON.includes(raw) || /burn|fire|feu|brenn|heiz/.test(raw) ? "burning" : "cold";
   if (v !== null) lines.push({ key: "wood_temp", icon: "mdi:thermometer-high", label: t(hass, "wood_temp"), value: keepTogether(tempText(hass, { ...cfg, temperature_decimals: scale !== 1 ? "1" : cfg.temperature_decimals }, scale !== 1 ? null : cfg.state_entity, v, unit)), entity: cfg.state_entity });
   for (const [key, icon, label, id] of [["wood_flow", "mdi:thermometer-chevron-up", "wood_flow", cfg.flow_temperature_entity], ["wood_return", "mdi:thermometer-chevron-down", "wood_return", cfg.return_temperature_entity]]) {
     const l = heatTempLine(hass, cfg, key, icon, label, id);
@@ -5897,11 +6072,11 @@ function heatReadOf(type, hass, cfg, st) {
   const pumpOn = cfg.pump_entity ? heatActive(hass, cfg.pump_entity) : false;
   const waterId = cfg.flow_temperature_entity || cfg.state_entity;
   const waterV = cfg.flow_temperature_entity ? numericState(hass, cfg.flow_temperature_entity) : v;
-  const overT = heatNum(cfg.overheat_temp, 90);
+  const overT = heatNum(cfg.overheat_temp, inF ? 194 : 90);
   const over = !!cfg.water_jacket && waterV !== null && waterV >= overT;
   if (cfg.pump_entity) {
     // A pump left off while the water is hot is worth a glance.
-    const hot = !!cfg.water_jacket && waterV !== null && waterV >= Math.min(overT, 60) && waterId;
+    const hot = !!cfg.water_jacket && waterV !== null && waterV >= Math.min(overT, inF ? 140 : 60) && waterId;
     lines.push({ key: "wood_pump", icon: "mdi:pump", label: t(hass, "wood_pump"), value: t(hass, pumpOn ? "opt_running" : "opt_stopped"), entity: cfg.pump_entity, caution: !pumpOn && !!hot });
   }
   const vs = cfg.valve_entity ? stateObj(hass, cfg.valve_entity) : null;
@@ -5953,8 +6128,10 @@ function upsStatusOf(hass, cfg, st) {
   const text = stripAccents(raw.toLowerCase());
   const codes = new Set(raw.toUpperCase().split(/[\s,]+/).filter((c) => UPS_CODES.includes(c)));
   // NUT's Status sensor spells its flags out, apcupsd writes them in one word.
-  if (/low.?batt/.test(text)) codes.add("LB");
-  if (/replac/.test(text)) codes.add("RB");
+  if (/low.?batt|batt.?low/.test(text)) codes.add("LB");
+  if (/replac|batt.?fault/.test(text)) codes.add("RB");
+  // Eaton's shutdown_imminent and internal_failure, ups-snmp's hardware fault.
+  if (!/^no.?(fault|failure)/.test(text) && /(^|[^a-z])(fault|failure)|imminent/.test(text)) codes.add("LB");
   if (/overload/.test(text)) codes.add("OVER");
   let mode;
   if (st && (["unavailable", "unknown", ""].includes(text) || /comm.?lost|no.?comm/.test(text))) mode = "unav";
@@ -5963,8 +6140,10 @@ function upsStatusOf(hass, cfg, st) {
   else if (codes.has("BYPASS")) mode = "bypass";
   else if (codes.has("OL")) mode = "online";
   else if (st) {
-    if (/on.?batt|sur.?batt|batteriebetrieb|discharg|decharg/.test(text)) mode = "battery";
-    else if (/^(off|arret|shutdown)$|^offline|forced.?shutdown|shutting/.test(text)) mode = "off";
+    // aburow's output source, in words: battery, software_bypass, rebooting.
+    if (/on.?batt|sur.?batt|batteriebetrieb|discharg|decharg|^battery|^batterie$/.test(text) && !/batt.?low|battery.?(low|fault)/.test(text)) mode = "battery";
+    else if (/bypass/.test(text)) mode = "bypass";
+    else if (/^(off|arret|shutdown|none)$|^offline|forced.?shutdown|shutting|rebooting|sleeping/.test(text)) mode = "off";
     else mode = "online";
   } else {
     // No status at all: the voltage at the wall says whether the mains is there.
@@ -7951,7 +8130,8 @@ class ApplianceCard extends HTMLElement {
     // as soon as the appliance is plugged in and says nothing about whether
     // it is actually doing anything.
     let powerDerived = false;
-    const watts = cfg.power_entity ? numericState(hass, cfg.power_entity) : null;
+    // In watts whatever the plug counts in: a meter in kW is not 0.5 W.
+    const watts = cfg.power_entity ? wattsOf(hass, cfg.power_entity) : null;
     const hasThreshold = cfg.power_on_threshold !== undefined && cfg.power_on_threshold !== "";
     // Pointing state_entity at the power meter itself can only mean "derive the
     // state from it"; without a default threshold the card would print a bare
@@ -8044,7 +8224,7 @@ class ApplianceCard extends HTMLElement {
     // Never echo the raw state when it came from the power meter: the "raw"
     // text there is a wattage, which is not a state anyone wants to read.
     let stateLabel = !powerDerived && (cfg.state_show_raw || norm === "unknown") && !rawIsMeaningless
-      ? (cfg.state_show_raw ? rawStateText(hass, st, rawState, cfg) : cleanStateLabel(rawState))
+      ? (cfg.state_show_raw ? rawStateText(hass, st, rawState, cfg) : translatedOrClean(hass, st, rawState, cfg))
       : t(hass, norm);
     if (offHidden) stateLabel = t(hass, "ac_off");
 
@@ -8720,8 +8900,12 @@ class ApplianceCard extends HTMLElement {
         if (MELCLOUD_STATUSES.includes(tankStatus)) {
           tankHeating = tankStatus === "heat_water";
           tankLabel = t(hass, tankHeating ? "kettle_heating" : "standby");
-        } else if (String(rawState).trim().toLowerCase() === "off") {
+        } else if (["off", "idle"].includes(String(rawState).trim().toLowerCase())) {
           tankLabel = t(hass, "standby");
+        } else if (String(rawState).trim().toLowerCase() === "heating") {
+          // Aquarea says it in its state: heating, idle, off.
+          tankHeating = true;
+          tankLabel = t(hass, "kettle_heating");
         } else if (!rawIsMeaningless) {
           tankLabel = modeLabel(hass, st, rawState, cfg);
         }
@@ -8766,11 +8950,18 @@ class ApplianceCard extends HTMLElement {
         // two indicators configured) is still a burner at work.
         boilerMode = cfg.hot_water_entity && isOn(cfg.hot_water_entity) ? "hot_water"
           : cfg.heating_entity && isOn(cfg.heating_entity) ? "space_heating"
-          : isActiveState(norm) ? "burner" : "idle";
+          // InComfort's and EMS-ESP's state says it where their contacts do not.
+          : (!powerDerived && boilerModeOf(rawState, cfg.state_map)) || (isActiveState(norm) ? "burner" : "idle");
       } else if (!powerDerived) {
         boilerMode = boilerModeOf(rawState, cfg.state_map);
       }
-      if (!boilerMode) {
+      // A water_heater's state is a mode the user picked (ViCare's and
+      // Overkiz's "on"), never a lit burner.
+      const boilerMoot = !boilerMode && !powerDerived && /^water_heater\./.test(cfg.state_entity || "") && String(rawState).trim().toLowerCase() !== "off";
+      if (boilerMoot) {
+        if (!cfg.state_show_raw && !rawIsMeaningless) stateLabel = modeLabel(hass, st, rawState, cfg);
+        color = STATE_COLORS.idle;
+      } else if (!boilerMode) {
         if (isActiveState(norm)) boilerMode = "burner";
         else if (norm === "idle" || norm === "done") boilerMode = "idle";
       }
@@ -8778,6 +8969,13 @@ class ApplianceCard extends HTMLElement {
         if (!cfg.state_show_raw) stateLabel = t(hass, boilerMode === "idle" ? "standby" : `boiler_${boilerMode}`);
         color = boilerMode === "hot_water" ? "#ef5350"
           : boilerMode === "idle" || boilerMode === "waiting" ? STATE_COLORS.idle : "#ff7043";
+      }
+      // InComfort's faults: flame_detection_fault_e6, no_flame_signal_e4.
+      const boilerRawLow = String(rawState === undefined || rawState === null ? "" : rawState).trim().toLowerCase();
+      if (!powerDerived && /fault|_e\d+$/.test(boilerRawLow)) {
+        boilerMode = "";
+        if (!cfg.state_show_raw) stateLabel = translatedOrClean(hass, st, rawState, cfg);
+        color = STATE_COLORS.error;
       }
       // Its room thermostat, on the wall beside it: the room and the setpoint
       // on a line of their own, and the thermostat drawn.
@@ -8926,9 +9124,12 @@ class ApplianceCard extends HTMLElement {
       // the machine making heat or cold, or only pushing water around. A
       // frequency in hertz or a contact, and unknown when it says nothing.
       const compSt = cfg.compressor_entity ? stateObj(hass, cfg.compressor_entity) : null;
-      const compKnown = !!compSt && !["unknown", "unavailable"].includes(compSt.state);
+      // A temperature or a pressure says nothing of whether it runs (ViCare's
+      // compressor_inlet_temperature), and a word names its phase.
+      const compUnit = cfg.compressor_entity ? unitOf(hass, cfg.compressor_entity).toLowerCase() : "";
+      const compKnown = !!compSt && !["unknown", "unavailable"].includes(compSt.state) && !/\u00b0|^c$|^f$|bar|pa$/.test(compUnit);
       const compHz = compKnown ? numericState(hass, cfg.compressor_entity) : null;
-      const compOn = compKnown && (compHz !== null ? compHz > 0 : ["on", "true", "running"].includes(String(compSt.state).toLowerCase()));
+      const compOn = compKnown && (compHz !== null ? compHz > 0 : !["off", "false", "no", "ready", "pause", "paused", "idle", "standby", "stopped", "stop"].includes(String(compSt.state).toLowerCase()));
       compressorOff = compKnown && !compOn;
       // The indicators (issue #17). A contact says its own mode when it is on;
       // a valve says in words where the water goes, whichever field it sits
@@ -9233,7 +9434,7 @@ class ApplianceCard extends HTMLElement {
       const errCode = errText === "" ? NaN : Number(errText);
       const erred = !!errSt && (Number.isFinite(errCode)
         ? errCode !== 0
-        : ["on", "true", "error", "problem", "fault"].includes(errText) || /jam|block|stuck|clog|bourrage/.test(errText));
+        : ["on", "true", "error", "problem", "fault"].includes(errText) || /jam|block|stuck|clog|bourrage|abnormal|^fault\d|^e\d+$/.test(errText));
       // An error that says which error it is, when the feeder names it: an
       // empty tank is not a fault to look into, it is a bag to go and fetch.
       const errEmpty = !!errSt && /empty|no.?food|lack|out.?of.?food|vide|leer|vacio|vuoto|tom\b|pust|pr(a|\u00e1)zdn/.test(stripAccents(errText));
@@ -9454,7 +9655,7 @@ class ApplianceCard extends HTMLElement {
       const fanSt = cfg.fan_speed_entity ? stateObj(hass, cfg.fan_speed_entity) : null;
       const fanPct = fanSt && domainOf(cfg.fan_speed_entity) === "fan" ? numberOrNull((fanSt.attributes || {}).percentage) : null;
       const fanRaw = fanSt ? fanSt.state : attrs.fan_mode;
-      const speed = acFanSpeedOf(fanRaw, fanPct);
+      const speed = acFanSpeedOf(fanRaw, fanPct, attrs.fan_modes);
 
       // The lights: the purifier, and the preset or the fan saying eco,
       // quiet or boost.
@@ -9667,12 +9868,13 @@ class ApplianceCard extends HTMLElement {
       if (!cfg.state_show_raw) stateLabel = t(hass, TH_LABELS[shown]);
       color = TH_COLORS[shown];
       const room = cfg.current_temperature_entity ? numericState(hass, cfg.current_temperature_entity) : numberOrNull(attrs.current_temperature);
-      const target = cfg.target_temperature_entity ? numericState(hass, cfg.target_temperature_entity) : numberOrNull(attrs.temperature);
+      const target = cfg.target_temperature_entity ? numericState(hass, cfg.target_temperature_entity)
+        : numberOrNull(attrs.temperature) ?? numberOrNull(mode === "cool" ? attrs.target_temp_high : attrs.target_temp_low);
       if (room !== null) {
         extraLines.push({ key: "room_temp", icon: "mdi:home-thermometer-outline", label: t(hass, "ps_line_room"), entity: cfg.current_temperature_entity || cfg.state_entity,
           value: thermoLine(hass, cfg, cfg.current_temperature_entity || cfg.state_entity, room, mode === "off" ? null : target) });
       }
-      const opening = numberOrNull(attrs.valve_position ?? attrs.pi_heating_demand ?? attrs.valve_opening);
+      const opening = numberOrNull(attrs.valve_position ?? attrs.pi_heating_demand ?? attrs.valve_opening ?? attrs.heating_power_request);
       if (opening !== null && mode !== "off") {
         extraLines.push({ key: "valve", icon: "mdi:valve", label: t(hass, "th_line_valve"), value: keepTogether(`${Math.round(opening)} %`), entity: cfg.state_entity });
       }
@@ -9897,6 +10099,9 @@ class ApplianceCard extends HTMLElement {
         // OCPP has no word for it and reports a charge.
         if (feeding && EV_CAR_STATES.includes(mode)) mode = "discharging";
         if (plugged === false && mode && mode !== "error" && mode !== "offline") mode = "no_vehicle";
+        // Tesla's ready is a car plugged in, which only its contact can tell
+        // from a Wallbox's ready, a box with no car at it.
+        if (plugged === true && !mode && evKey(key) === "ready") mode = "connected";
       }
       if (fault.active) mode = "error";
       // The entity's own words on request, while it has some.
@@ -10038,8 +10243,11 @@ class ApplianceCard extends HTMLElement {
       const presetRaw = isSelect ? rawState : a.preset_mode;
       const preset = airPresetOf(presetRaw);
       const offline = !powerDerived && (!st || ["unavailable", "unknown"].includes(raw));
+      // LG's purifier keeps its mode in a select and its power in a switch.
+      const toggleSt = cfg.toggle_entity ? stateObj(hass, cfg.toggle_entity) : null;
       const on = powerDerived ? isActiveState(norm)
-        : isSelect ? !/^(off|standby|power_?off|stop|0|none)$/.test(raw)
+        : toggleSt && String(toggleSt.state).toLowerCase() === "off" ? false
+        : isSelect ? !AIR_STOP_RE.test(stripAccents(raw))
         : dom === "climate" ? raw !== "off"
         : ["on", "true", "1"].includes(raw) || isActiveState(norm);
       const nightSt = cfg.night_mode_entity ? stateObj(hass, cfg.night_mode_entity) : null;
@@ -10349,7 +10557,7 @@ class ApplianceCard extends HTMLElement {
         const pst = cfg.problem_entity ? stateObj(hass, cfg.problem_entity) : null;
         const problem = !!pst && ALERT_ON_STATES.includes(String(pst.state).trim().toLowerCase());
         const watched = layout === "switch" || layout === "rack" ? [] : disks;
-        if (problem || watched.includes("fail") || (temp !== null && temp >= tMax)) mode = "alert";
+        if (problem || (!/^no/.test(raw) && NET_STATE_ALERT_RE.test(raw)) || watched.includes("fail") || (temp !== null && temp >= tMax)) mode = "alert";
         else if ((down || 0) + (up || 0) >= busyBits || watched.includes("busy") || (cpu !== null && cpu >= NET_BUSY_CPU)) mode = "busy";
         warn = mode !== "alert" && watched.includes("warn");
       }
@@ -10418,7 +10626,7 @@ class ApplianceCard extends HTMLElement {
         if (lit && mode !== "unav") stateLabel += ` \u00b7 ${t(hass, "pool_light_on")}`;
       }
       color = POOL_COLORS[shown];
-      const pressure = cfg.pressure_entity ? numericState(hass, cfg.pressure_entity) : null;
+      const pressure = cfg.pressure_entity ? poolPressureBar(hass, cfg.pressure_entity) : null;
       const can = cfg.chlorine_level_entity ? numericState(hass, cfg.chlorine_level_entity) : null;
       if (mode !== "unav") {
         const reading = (key, field, icon, label, digits, fallbackUnit) => {
@@ -10795,8 +11003,11 @@ class ApplianceCard extends HTMLElement {
     // The goal, the fat, the muscles and the bones are lines.
     let scale = null;
     if (cap.scale) {
-      const w = st && !rawIsMeaningless ? numericState(hass, cfg.state_entity) : null;
-      const unit = (st && st.attributes.unit_of_measurement) || "kg";
+      const w0 = st && !rawIsMeaningless ? numericState(hass, cfg.state_entity) : null;
+      // Tuya's scale counts in grams.
+      const inGrams = !!st && st.attributes.unit_of_measurement === "g";
+      const w = w0 !== null && inGrams ? w0 / 1000 : w0;
+      const unit = inGrams ? "kg" : (st && st.attributes.unit_of_measurement) || "kg";
       const goalSt = cfg.weight_goal_entity ? numericState(hass, cfg.weight_goal_entity) : null;
       const goalCfg = parseFloat(cfg.weight_goal);
       const goal = goalSt !== null ? goalSt : isFinite(goalCfg) && goalCfg > 0 ? goalCfg : null;

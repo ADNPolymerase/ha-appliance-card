@@ -1415,7 +1415,7 @@ class ApplianceCardEditor extends HTMLElement {
           options: [{ value: "auto", label: t(hass, "unit_auto") }].concat(METER_LAYOUTS.map((v) => ({ value: v, label: t(hass, `layout_meter_${v}`) }))),
         }) + (["linky", "box", "dome"].includes(meterLayoutOf(this._config, stateObj(hass, this._config.state_entity))) ? this._row("high_power", "high_power", { placeholder: "3000" })
           + this._row("meter_direction", "meter_direction", { type: "select",
-            options: ["auto", "import", "export"].map((v) => ({ value: v, label: t(hass, `meter_dir_${v}`) })) }) : "") : ""}
+            options: ["auto", "import", "export", "inverted"].map((v) => ({ value: v, label: t(hass, `meter_dir_${v}`) })) }) : "") : ""}
         ${this._type === "christmas_tree" ? this._row("tree_palette", "tree_palette", {
           type: "select",
           options: Object.keys(TREE_PALETTES).map((v) => ({ value: v, label: t(hass, `palette_${v}`) })),

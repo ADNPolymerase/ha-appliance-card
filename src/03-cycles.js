@@ -3,24 +3,27 @@ const STATE_KEYWORDS = {
   // OperationState.Ready. "inactive" has to be listed here rather than left
   // to "active" under running: that keyword cannot match inside a word, and
   // would mean the opposite of the state if it could.
-  idle: ["idle", "off", "standby", "veille", "eteint", "arret", "inactif", "inactive", "ready"],
+  idle: ["idle", "off", "stand.?by", "veille", "eteint", "arret", "inactif", "inactive", "ready", "wait", "asleep"],
   // Before "running": ovens report "Preheating", and the "heating" keyword
   // below cannot match it anyway (no word boundary inside "preheating").
   preheating: ["preheat", "pre-heat", "pre_heat", "prechauff", "vorheiz", "precalent", "voorverwarm"],
   // A rice cooker sits in this state for hours after it has finished, and so
   // does an oven on its warming setting. MIoT reports it as status 4,
   // "Keep-warm", and it is neither running nor done.
-  keep_warm: ["keep.?warm", "keepwarm", "warming", "maintien", "au chaud",
+  keep_warm: ["keep.?warm", "keepwarm", "keeping.?warm", "keep.?temp", "warming", "maintien", "au chaud",
     "warmhalten", "mantener caliente", "mantenimento", "warmhouden"],
-  running: ["run", "wash", "spin", "dry", "rinsing", "heating", "cours", "on", "active", "marche", "actif",
-    "cooking\\b(?!\\s*(?:complete|finished|done))", "cuisson\\b(?!\\s*termin)", "brewing", "baking",
+  // "on" stops at the word: Online is not a machine at work.
+  running: ["run", "wash", "spin", "dry", "rinsing", "heating", "cours", "on(?:going)?\\b", "active", "marche", "actif",
+    "cooking\\b(?!\\s*(?:complete|finished|done|end))", "cuisson\\b(?!\\s*termin)", "brew", "bak(?:e|ing)\\b",
+    // What an oven, a coffee machine or a kettle says it is doing.
+    "broil", "roast", "proof", "boil(?!er)", "busy", "making", "deliver", "prepar", "process", "clean(?!ed)", "descal",
     // Aborting is a cancelled cycle still draining, not an error and not
     // finished: the appliance is doing something until it stops.
     "abort"],
-  paused: ["pause", "hold", "suspended"],
-  done: ["end", "done", "finish", "complete", "termin"],
-  delayed: ["delay", "differ", "scheduled", "programmed"],
-  error: ["error", "fault", "alarm", "erreur"],
+  paused: ["pause", "hold", "suspended", "action.?required", "attention"],
+  done: ["end", "done", "finish", "complete", "termin", "made\\b"],
+  delayed: ["delay", "differ", "scheduled", "programmed", "pre.?set\\b", "reservation"],
+  error: ["error", "fault", "alarm", "erreur", "fail", "out.?of.?order", "overheat", "unusual"],
 };
 
 // States where the appliance is actually doing something: they drive the

@@ -77,8 +77,12 @@ function optLines(hass, cfg, type) {
       const open = NT_ON.includes(raw);
       value = t(hass, open ? "mb_open" : "mb_closed"); caution = open; if (!open) icon = "mdi:window-closed-variant";
     } else if (o.lock) {
-      const locked = ["locked", "on", "true", "1"].includes(raw) && !(domainOf(id) === "binary_sensor");
-      const unlocked = domainOf(id) === "binary_sensor" ? NT_ON.includes(raw) : !locked;
+      // A binary sensor of class lock is on when unlocked; Bosch's lock_enabled,
+      // with no class on purpose, is on when the lock is on.
+      const lockSt = stateObj(hass, id);
+      const lockClass = domainOf(id) === "binary_sensor" && (!lockSt || !lockSt.attributes || lockSt.attributes.device_class === "lock" || !lockSt.attributes.device_class && !/lock.?enabled|enabled|active/.test(id));
+      const locked = ["locked", "on", "true", "1"].includes(raw) && !lockClass;
+      const unlocked = lockClass ? NT_ON.includes(raw) : !locked;
       value = t(hass, unlocked ? "lock_unlocked" : "lock_locked"); icon = unlocked ? "mdi:lock-open-variant" : "mdi:lock"; caution = unlocked;
     } else if (o.running) {
       const on = NT_ON.includes(raw) || raw === "running";
@@ -2812,7 +2816,8 @@ function ntReadOf(type, hass, cfg, st, watts, threshold) {
     if (zone) lines.push(zone);
     const secs = cfg.remaining_time_entity ? ntRemaining(hass, cfg.remaining_time_entity) : null;
     const left = secs !== null && secs > 0 ? formatDuration(secs, hass) : "";
-    const watering = !!running || (st && ["open", "opening"].includes(raw));
+    // Netro's watering, OpenSprinkler's running programmes.
+    const watering = !!running || (st && ["open", "opening", "watering", "irrigating", "manual", "program", "once_program"].includes(raw));
     const mv = cfg.soil_moisture_entity ? numericState(hass, cfg.soil_moisture_entity) : null;
     const moist = mv === null ? null : Math.max(0, Math.min(1, mv / 100));
     const soil = ntLine(hass, cfg, "irr_soil", "mdi:water-percent", "section_soil_moisture", cfg.soil_moisture_entity);
@@ -2855,12 +2860,15 @@ function ntReadOf(type, hass, cfg, st, watts, threshold) {
       if (l) lines.push(l);
     }
     const code = raw.replace(/\s+/g, "_");
-    const cat = ntOnOff(hass, cfg.cat_present_entity) || ["cst", "csi", "cat_detected", "cat_present"].includes(code) || /cat.?(detect|sensor|present|inside)|chat.?(dedans|present)/.test(raw);
+    const cat = ntOnOff(hass, cfg.cat_present_entity) || ["cst", "csi", "cat_detected", "cat_present"].includes(code) || /cat.?(detect|sensor|present|inside|appear)|pet.?using|chat.?(dedans|present)/.test(raw);
     let mode = "ready";
-    if (/(^|_)(ccp|ec)$|clean|cycl|nettoy|reinig|limpi|puliz|reinigung|empty_cycle/.test(code) && !/complete|ccc/.test(code)) mode = "cleaning";
+    // A pause is not a cycle: PetKit's cleaning_paused_system_error is a fault,
+    // and an error is said before the word it stopped on.
+    const litterFault = /fault|error|erreur|defaut|fehler|jam|pinch/.test(raw);
+    if (!litterFault && !/pause/.test(code) && /(^|_)(ccp|ec|cd|scf)$|clean|cycl|nettoy|reinig|limpi|puliz|reinigung|empty_cycle|dump|empty|level|restor|rak|reset|calibr|odor|(^|_)uv(_|$)|maint/.test(code) && !/complete|ccc/.test(code)) mode = "cleaning";
     else if (["dfs", "sdf", "df2"].includes(code) || /full|plein|voll|lleno|pieno/.test(raw) || (drawer !== null && drawer >= 1)) mode = "full";
-    else if (["csf", "dhf", "dpf", "otf", "pd", "spf", "hpf", "br", "error", "fault"].includes(code) || /fault|error|erreur|defaut|fehler|jam|pinch/.test(raw)) mode = "fault";
-    else if (["off", "sleep", "sleeping", "offline", "p", "paused"].includes(code) || /sleep|veille|schlaf/.test(raw)) mode = "off";
+    else if (["csf", "dhf", "dpf", "otf", "pd", "spf", "hpf", "br", "error", "fault"].includes(code) || litterFault) mode = "fault";
+    else if (["off", "sleep", "sleeping", "offline", "p", "paused"].includes(code) || /sleep|veille|schlaf|pause/.test(raw)) mode = "off";
     if (domainOf(cfg.state_entity) === "vacuum") mode = raw === "cleaning" ? "cleaning" : raw === "error" ? "fault" : mode;
     if (mode === "ready" && cat) mode = "cat";
     const draw = { kind, on: mode === "cleaning", st: mode, cat: mode === "cat" || (cat && mode !== "cleaning"), drawer };
@@ -2872,7 +2880,7 @@ function ntReadOf(type, hass, cfg, st, watts, threshold) {
     // says. A low battery is a line, the light turns amber.
     const layout = detectorLayoutOf(cfg, st);
     const kind = `det_${layout}`;
-    const alarm = !dead && (NT_ON.includes(raw) || /alarm|smoke|detect|leak|wet|fuite|fumee|emergency|warning|mild|heavy|critical|danger/.test(raw)) && !/^(off|ok|clear|dry|normal|idle|test)$|^(no|not|un)[ _-]?/.test(raw);
+    const alarm = !dead && (NT_ON.includes(raw) || /alarm|smoke|detect|leak|wet|fuite|fumee|emergency|warning|mild|heavy|critical|danger/.test(raw)) && !/^(off|ok|clear|dry|normal|idle|test)$|^(no|not|un)[ _-]?|inactive/.test(raw);
     const bv = cfg.battery_entity ? numericState(hass, cfg.battery_entity) : null;
     const bs = cfg.battery_entity ? stateObj(hass, cfg.battery_entity) : null;
     const low = bv !== null ? bv <= 20 : !!bs && domainOf(cfg.battery_entity) === "binary_sensor" && NT_ON.includes(String(bs.state).toLowerCase());
@@ -2893,11 +2901,12 @@ function ntReadOf(type, hass, cfg, st, watts, threshold) {
     const a = (st && st.attributes) || {};
     const gst = cfg.game_entity ? stateObj(hass, cfg.game_entity) : null;
     const gameOk = gst && !["unknown", "unavailable", "", "none", "off", "null"].includes(String(gst.state).trim().toLowerCase());
-    const game = gameOk ? String(gst.state) : a.media_title ? String(a.media_title) : "";
+    // Xbox reports its apps as media too: Netflix is not a game.
+    const game = gameOk ? String(gst.state) : a.media_title && a.media_content_type !== "app" ? String(a.media_title) : "";
     const metered = cfg.power_entity && watts !== null && isFinite(threshold);
     const rest = !metered && ["standby", "rest", "rest_mode"].includes(raw);
     const on = metered ? watts >= threshold
-      : !dead && ["on", "true", "playing", "idle", "paused", "home", "online", "availabletoplay", "availabletocommunicate", "busy", "buffering"].includes(raw);
+      : !dead && ["on", "true", "playing", "idle", "paused", "home", "online", "availabletoplay", "busy", "buffering"].includes(raw);
     // A plug drawing power is a console being played; so is a game running.
     const playing = on && (raw === "playing" || !!game || (metered && domainOf(cfg.state_entity) !== "media_player"));
     if (on && game) lines.push({ key: "con_game", icon: "mdi:gamepad-variant", label: t(hass, "con_game"), value: game, entity: gameOk ? cfg.game_entity : cfg.state_entity, wrap: true });
@@ -2940,7 +2949,8 @@ function ntReadOf(type, hass, cfg, st, watts, threshold) {
     // off draws less), charged below it. A battery entity gives the level,
     // and says charged at 100 % whatever the plug says.
     const kind = `mob_${mobilityLayoutOf(cfg, st)}`;
-    const lv = cfg.battery_entity ? numericState(hass, cfg.battery_entity) : null;
+    const lvUnit = cfg.battery_entity ? unitOf(hass, cfg.battery_entity) : "";
+    const lv = cfg.battery_entity && (!lvUnit || lvUnit === "%") ? numericState(hass, cfg.battery_entity) : null;
     const level = lv === null ? null : Math.max(0, Math.min(100, lv));
     if (level !== null) {
       lines.push({ key: "mob_battery", icon: level >= 95 ? "mdi:battery" : `mdi:battery-${Math.max(10, Math.round(level / 10) * 10)}`, label: t(hass, "section_battery"),
@@ -2954,7 +2964,9 @@ function ntReadOf(type, hass, cfg, st, watts, threshold) {
       return watts >= threshold ? out("charging", "mob_charging", "#fb8c00", { kind, on: true, st: "charging", level })
         : out("full", "mob_charged", NT_COLORS.lit, { kind, on: false, st: "full", level });
     }
-    if (level !== null) return out("charging", "mob_charging", "#fb8c00", { kind, on: true, st: "charging", level });
+    // A level alone says nothing of a charger (Cowboy, MySmartBike): only a
+    // plug that is on means it sits on one.
+    if (level !== null && ["switch", "input_boolean"].includes(domainOf(cfg.state_entity))) return out("charging", "mob_charging", "#fb8c00", { kind, on: true, st: "charging", level });
     return out("idle", "mob_plugged", NT_COLORS.idle, { kind, on: false, st: "plugged", level });
   }
   if (type === "humidifier") {
@@ -3113,8 +3125,10 @@ function ntReadOf(type, hass, cfg, st, watts, threshold) {
     // Which way the power flows (#77): below zero it feeds in, as most smart
     // meter readers report it, unless the meter is set to one direction; at
     // zero nothing is used.
-    const direction = ["import", "export"].includes(cfg.meter_direction) ? cfg.meter_direction : "auto";
-    const flowOf = (w) => direction === "export" ? (Math.abs(w) < 1 ? "none" : "export")
+    const direction = ["import", "export", "inverted"].includes(cfg.meter_direction) ? cfg.meter_direction : "auto";
+    // GoodWe's active_power counts what goes out as positive.
+    const flowOf = (w) => direction === "inverted" ? (Math.abs(w) < 1 ? "none" : w > 0 ? "export" : "import")
+      : direction === "export" ? (Math.abs(w) < 1 ? "none" : "export")
       : direction === "import" ? (w < 1 ? "none" : "import")
       : Math.abs(w) < 1 ? "none" : w < 0 ? "export" : "import";
     const high = parseFloat(cfg.high_power);
@@ -3220,7 +3234,8 @@ function ntControls(hass, cfg, type) {
 const HEAT_NT = ["storage_tank", "fresh_water_station", "solar_thermal", "wood_stove"];
 const COLLECTOR_STYLES = ["flat", "tubes"];
 // A source or a consumer of a tank is idle on these, and on a number at 0.
-const HEAT_IDLE = ["off", "false", "0", "no", "idle", "standby", "none", "unknown", "unavailable", "", "aus", "inactive", "closed", "stopped", "paused", "nein"];
+const HEAT_IDLE = ["off", "false", "0", "no", "idle", "standby", "none", "unknown", "unavailable", "", "aus", "inactive", "closed", "stopped", "paused", "nein",
+  "ok", "normal", "no_fault", "no_error", "clear", "good"];
 function heatActive(hass, id) {
   const s = id ? stateObj(hass, id) : null;
   if (!s) return false;
@@ -3270,10 +3285,12 @@ function heatReadOf(type, hass, cfg, st) {
     // One to five temperatures, top to bottom; the state entity alone is a
     // tank with one probe.
     const ids = entityEntries(cfg.temperature_entities, 5).map((e) => e.entity);
-    const probes = (ids.length ? ids : [cfg.state_entity]).map((id) => ({ id, v: id ? numericState(hass, id) : null })).filter((p) => p.v !== null);
+    // A water_heater or a climate entity carries its reading in an attribute.
+    const probes = (ids.length ? ids : [cfg.state_entity]).map((id) => ({ id, v: id ? numericState(hass, id) ?? numberOrNull(((stateObj(hass, id) || {}).attributes || {}).current_temperature) : null })).filter((p) => p.v !== null);
     if (!probes.length) return out("unav", "ev_offline", NT_COLORS.unav, { kind: "tank", temps: [] });
     const cs = probes.map((p) => heatCelsius(hass, p.id, p.v));
-    const lo = heatNum(cfg.charge_min_temp, 30), hi = Math.max(lo + 1, heatNum(cfg.charge_max_temp, 60));
+    const fahrenheit = /f/i.test(temperatureUnit(hass, probes[0].id));
+    const lo = heatNum(cfg.charge_min_temp, fahrenheit ? 86 : 30), hi = Math.max(lo + 1, heatNum(cfg.charge_max_temp, fahrenheit ? 140 : 60));
     const loC = heatCelsius(hass, probes[0].id, lo), hiC = heatCelsius(hass, probes[0].id, hi);
     const own = cfg.charge_entity ? numericState(hass, cfg.charge_entity) : null;
     const charge = own !== null ? Math.max(0, Math.min(100, own))
@@ -3370,12 +3387,15 @@ function heatReadOf(type, hass, cfg, st) {
   // A log stove: burning, embers or cold from its temperature and two
   // thresholds; a status entity that is simply on is a fire.
   const scale = heatNum(cfg.temperature_scale, 1) || 1;
-  const vRaw = st ? numberOrNull(st.state) : null;
+  const stoveDomain = ["climate", "water_heater"].includes(domainOf(cfg.state_entity));
+  const stoveAction = stoveDomain && st ? String((st.attributes || {}).hvac_action || "").toLowerCase() : "";
+  const vRaw = st ? (stoveDomain ? numberOrNull((st.attributes || {}).current_temperature) : numberOrNull(st.state)) : null;
   const v = vRaw === null ? null : vRaw * scale;
   if (dead) return out("unav", "ev_offline", NT_COLORS.unav, { kind: "wood", st: "cold", water: !!cfg.water_jacket });
-  const burnT = heatNum(cfg.burning_temp, 120), embT = Math.min(burnT, heatNum(cfg.embers_temp, 50));
   const unit = temperatureUnit(hass, cfg.state_entity);
-  const fire = v !== null ? (v >= burnT ? "burning" : v >= embT ? "embers" : "cold") : NT_ON.includes(raw) || /burn|fire|feu|brenn|heiz/.test(raw) ? "burning" : "cold";
+  const inF = /f/i.test(unit);
+  const burnT = heatNum(cfg.burning_temp, inF ? 248 : 120), embT = Math.min(burnT, heatNum(cfg.embers_temp, inF ? 122 : 50));
+  const fire = stoveAction ? (["heating", "preheating"].includes(stoveAction) ? "burning" : "cold") : v !== null ? (v >= burnT ? "burning" : v >= embT ? "embers" : "cold") : NT_ON.includes(raw) || /burn|fire|feu|brenn|heiz/.test(raw) ? "burning" : "cold";
   if (v !== null) lines.push({ key: "wood_temp", icon: "mdi:thermometer-high", label: t(hass, "wood_temp"), value: keepTogether(tempText(hass, { ...cfg, temperature_decimals: scale !== 1 ? "1" : cfg.temperature_decimals }, scale !== 1 ? null : cfg.state_entity, v, unit)), entity: cfg.state_entity });
   for (const [key, icon, label, id] of [["wood_flow", "mdi:thermometer-chevron-up", "wood_flow", cfg.flow_temperature_entity], ["wood_return", "mdi:thermometer-chevron-down", "wood_return", cfg.return_temperature_entity]]) {
     const l = heatTempLine(hass, cfg, key, icon, label, id);
@@ -3386,11 +3406,11 @@ function heatReadOf(type, hass, cfg, st) {
   const pumpOn = cfg.pump_entity ? heatActive(hass, cfg.pump_entity) : false;
   const waterId = cfg.flow_temperature_entity || cfg.state_entity;
   const waterV = cfg.flow_temperature_entity ? numericState(hass, cfg.flow_temperature_entity) : v;
-  const overT = heatNum(cfg.overheat_temp, 90);
+  const overT = heatNum(cfg.overheat_temp, inF ? 194 : 90);
   const over = !!cfg.water_jacket && waterV !== null && waterV >= overT;
   if (cfg.pump_entity) {
     // A pump left off while the water is hot is worth a glance.
-    const hot = !!cfg.water_jacket && waterV !== null && waterV >= Math.min(overT, 60) && waterId;
+    const hot = !!cfg.water_jacket && waterV !== null && waterV >= Math.min(overT, inF ? 140 : 60) && waterId;
     lines.push({ key: "wood_pump", icon: "mdi:pump", label: t(hass, "wood_pump"), value: t(hass, pumpOn ? "opt_running" : "opt_stopped"), entity: cfg.pump_entity, caution: !pumpOn && !!hot });
   }
   const vs = cfg.valve_entity ? stateObj(hass, cfg.valve_entity) : null;

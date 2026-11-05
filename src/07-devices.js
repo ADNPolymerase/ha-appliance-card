@@ -252,7 +252,10 @@ function netDiskEntities(hass, entityId, anchorDevice) {
 }
 
 const NET_SLEEP_NAME_RE = /sleep|standby|spin|hibernat|veille/;
-const NET_FAIL_RE = /crash|fail|fault|degrad|broken|critical|abnormal|defect|missing|disabled|dead/;
+const NET_FAIL_RE = /crash|fail|fault|degrad|broken|critical|abnormal|defect|missing|disabled|dsbl|invalid|wrong|dead/;
+// A device's own state: UniFi's heartbeat_missed and adoption_failed, Omada's
+// isolated and firmware mismatch.
+const NET_STATE_ALERT_RE = /error|fail|heartbeat|isolated|mismatch|warning/;
 const NET_WARN_RE = /warn|attention|caution|not_?initiali/;
 // A disk's LED: failed, to watch, reading or writing, asleep or fine. Each
 // integration says it its own way, so every entity of the disk is read.
@@ -260,6 +263,8 @@ function netDiskState(hass, entityId, anchorDevice) {
   const own = stateObj(hass, entityId);
   if (!own) return "empty";
   if (["unavailable", "unknown"].includes(String(own.state).toLowerCase())) return "unknown";
+  // Unraid's slot with nothing in it.
+  if (String(own.state).trim().toLowerCase() === "disk_np") return "empty";
   let fail = false, warn = false, busy = false, sleep = false;
   for (const id of netDiskEntities(hass, entityId, anchorDevice)) {
     const s = hass.states[id];
@@ -318,20 +323,23 @@ const ROBOT_STATES = { cleaning: "cleaning", mowing: "cleaning", docked: "chargi
 // A status that says all is well is not an error, whatever it is called.
 // "No error" as the integrations say it, and as people write it in a
 // template of their own (#57): in any of the card's languages.
-const ROBOT_OK_RE = /^(no_?errors?|none|ok|normal|0|null|no_?fault|false|off|all_?good|aucune_erreur|pas_d_?erreurs?|sans_erreur|keine?_fehler|fehlerfrei|sin_error(es)?|ningun_error|nessun_errore|geen_fout(en)?|nenhum_erro|sem_erros?|inga_fel|inget_fel|ingen_feil|ingen_fejl|brak_b(l|\u0142)edow|zadna_chyba|bez_chyby?|\u043d\u0435\u0442_\u043e\u0448\u0438\u0431\u043e\u043a|\u0431\u0435\u0437_\u043e\u0448\u0438\u0431\u043e\u043a|\u65e0\u9519\u8bef|\u65e0\u6545\u969c|\u6b63\u5e38)$/;
+const ROBOT_OK_RE = /^(no_?errors?|(\w+_)?no_\w*error|none|ok|normal|0|255|100|null|no_?fault|false|off|all_?good|aucune_erreur|pas_d_?erreurs?|sans_erreur|keine?_fehler|fehlerfrei|sin_error(es)?|ningun_error|nessun_errore|geen_fout(en)?|nenhum_erro|sem_erros?|inga_fel|inget_fel|ingen_feil|ingen_fejl|brak_b(l|\u0142)edow|zadna_chyba|bez_chyby?|\u043d\u0435\u0442_\u043e\u0448\u0438\u0431\u043e\u043a|\u0431\u0435\u0437_\u043e\u0448\u0438\u0431\u043e\u043a|\u65e0\u9519\u8bef|\u65e0\u6545\u969c|\u6b63\u5e38)$/;
 const robotOkWord = (v) => ROBOT_OK_RE.test(stripAccents(String(v)).trim().toLowerCase().replace(/[\s.:'\u2019-]+/g, "_"));
 // What a status says, first match wins: an error before anything else, then
 // what the station does, then the way home, a pause, the work and the base.
 const ROBOT_WORDS = [
-  ["error", /error|fault|problem|stuck|trapped|jam|blocked|cliff|lifted|wheel_?susp|erreur|fehler/],
+  ["error", /error|fault|problem|stuck|trapped|escaped|jam|blocked|cliff|lifted|wheel_?susp|erreur|fehler/],
   ["empty", /water_?(shortage|empty|low|lack)|no_?water|lack_?of_?water|tank_?empty|manque_?d_?eau/],
   ["full", /bin_?full|(dust_?)?bin_?full|box_?full|full_?bin|bac_?plein/],
   ["emptying", /emptying|empty_?(dust|bin|box)|evac|auto_?empt|dust_?collect|collecting_?dust|vidage/],
-  ["washing", /wash|(clean(ing)?|rins(e|ing))_?(the_?)?(mop|pad)|self_?clean|lavage/],
+  // On the way to the dock to wash its mop, it is still on its way (Dreame).
+  ["returning", /go(ing)?_?to_?wash/],
+  ["washing", /wash|mop_?clean|(clean(ing)?|rins(e|ing))_?(the_?)?(mop|pad)|self_?clean|lavage/],
   ["drying", /dry|sechage|trockn/],
   ["rain", /(^|_)rain|pluie|regen/],
-  ["returning", /return|back_?to|go(ing)?_?(home|back|to_?(dock|base|station))|homing|hm_?(usr|mid|post)?_?(dock|msn)|searching_?(base|dock|station)|retour/],
+  // A return paused halfway is paused (Sunseeker).
   ["paused", /pause/],
+  ["returning", /return|back_?to|go(ing)?_?(home|back|to_?(dock|base|station))|homing|hm_?(usr|mid|post)?_?(dock|msn)|searching_?(base|dock|station)|retour/],
   ["edgecut", /edge_?cut|edgecut|border|bordure|kante/],
   ["cleaning", /clean|mow|vacuum|sweep|mop|zon|spot|segment|room|(^|_)run|work|leav|starting|edge/],
   ["charging", /charg|dock|base|home|station/],
@@ -546,13 +554,13 @@ const POOL_ONLY_FIELDS = ["water_temperature_entity", "air_temperature_entity", 
   "filtration_time_entity", "pressure_entity", "pressure_alert", "pool_mode_entity", "chlorine_pump_entity",
   "chlorine_level_entity", "backwash_entity", "frost_entity", "pool_alert_entity"];
 const POOL_NAME_RE = /pool.?pump|swimming.?pool|(^|[^a-z])pool([^a-z]|$)|piscine|pompe.?(de.?)?piscine|oklyn|poolstation|(^|[^a-z])pisc|schwimmbad|poolpumpe|filterpumpe|bomba.?de.?(piscina|filtra)|piscina|pompa.?(piscina|filtraz)|zwembad|zwempomp|bassengpump|poolpump|pompa.?basen|basen|baz(e|\u00e9)n|\u6cf3\u6c60|\u0431\u0430\u0441\u0441\u0435\u0439\u043d/;
-const POOL_OFF_STATES = ["off", "false", "0", "stopped", "stop", "idle", "standby", "closed"];
+const POOL_OFF_STATES = ["off", "false", "0", "stopped", "stop", "idle", "standby", "closed", "sleep", "sleeping", "paused", "disabled", "not_running", "inactive"];
 // What a pump's state or status says, first match wins.
 const POOL_WORDS = [
   ["error", /error|fault|alarm|defaut|failure|blocked|dry.?run|overload|panne|fehler/],
   ["backwash", /backwash|back.?wash|contre.?lavage|ruckspul|r\u00fcckspul|contralavado|controlavaggio|terugspoel/],
-  ["frost", /frost|freez|gel|antigel|hors.?gel|frostschutz|antihielo|antigelo|vorst/],
-  ["off", /^(off|stop(ped)?|idle|standby|arret|aus|apagad|spento|uit|false|0)$/],
+  ["frost", /frost|freez|gel|antigel|hors.?gel|frostschutz|antihielo|antigelo|vorst|^fp_mode$/],
+  ["off", /^(off|stop(ped)?|idle|standby|arret|aus|apagad|spento|uit|false|0|sleep(ing)?|paused|disabled|not_running|inactive)$/],
   ["running", /^(on|true|1|running|run|filtering|filtration|filtrage|marche|en.?marche|ein|an|encendid|acceso|aan|boost|eco|manual|manuel)$/],
 ];
 const POOL_LABELS = { off: "ac_off", running: "pool_filtering", chlorinating: "pool_chlorinating", backwash: "pool_backwash",
@@ -566,6 +574,14 @@ const POOL_POWER_W = 50;
 // The gauge reads up to 2.5 bar; a filter that needs washing is past 1.5.
 const POOL_GAUGE_MAX_BAR = 2.5;
 const POOL_PRESSURE_ALERT = 1.8;
+
+// A pressure in bar, whichever unit Home Assistant shows it in.
+function poolPressureBar(hass, entityId) {
+  const v = numericState(hass, entityId);
+  if (v === null) return null;
+  const u = unitOf(hass, entityId).toLowerCase();
+  return u === "psi" ? v / 14.5038 : u === "kpa" ? v / 100 : u === "mbar" || u === "hpa" ? v / 1000 : v;
+}
 
 function poolWord(v) {
   const s = stripAccents(String(v === undefined || v === null ? "" : v)).trim().toLowerCase();
@@ -609,7 +625,7 @@ function poolModeOf(hass, cfg, st, watts) {
   } else return "unav";
   if (mode !== "error" && cfg.pool_alert_entity && poolOn(hass, cfg.pool_alert_entity)) mode = "error";
   if (mode !== "error" && cfg.pressure_entity) {
-    const p = numericState(hass, cfg.pressure_entity);
+    const p = poolPressureBar(hass, cfg.pressure_entity);
     const lim = parseFloat(cfg.pressure_alert);
     if (p !== null && mode !== "off" && p >= (isFinite(lim) && lim > 0 ? lim : POOL_PRESSURE_ALERT)) mode = "error";
   }
@@ -625,7 +641,12 @@ const SOLAR_ONLY_FIELDS = ["solar_layout", "energy_today_entity", "peak_power", 
 const SOLAR_NAME_RE = /solar|photovolt|(^|[^a-z])pv([^a-z]|$)|panneaux?.?solaires?|powerstream|hoymiles|enphase|apsystems|fronius|solaredge|growatt|solax|wechselrichter|zonnepane|fotovolt|fotowolt|solcell|solpanel|\u592a\u9633\u80fd|\u0441\u043e\u043b\u043d\u0435\u0447/;
 const SOLAR_LAYOUTS = ["ground", "roof"];
 // What an inverter says when it is in trouble.
-const ENERGY_ERROR_RE = /error|fault|alarm|defaut|panne|fehler|failure|storung|st\u00f6rung|guasto|averia|fout/;
+const ENERGY_ERROR_RE = /error|fault|alarm|defaut|panne|fehler|failure|storung|st\u00f6rung|guasto|averia|fout|abnormal/;
+// The ways of saying there is none: Victron's no_alarm, a plain "No Error".
+const ENERGY_NO_ERROR_RE = /^(no|not|kein|keine|aucune?|sans|pas)[\s_.-]*(d.)?(error|fault|alarm|defaut|fehler|erreur|panne|failure)/;
+function energyErrorWord(raw) {
+  return ENERGY_ERROR_RE.test(raw) && !ENERGY_NO_ERROR_RE.test(raw);
+}
 // Below this share of the panels' peak power, the sun is weak.
 const SOLAR_LOW_SHARE = 0.15;
 const SOLAR_LOW_W = 100;
@@ -668,7 +689,7 @@ function solarReadOf(hass, cfg, st) {
   const sunUp = sun ? sun.state === "above_horizon" : null;
   let mode;
   if (watts === null && !stOk) mode = "unav";
-  else if ((stOk && ENERGY_ERROR_RE.test(raw)) || (cfg.solar_alert_entity && poolOn(hass, cfg.solar_alert_entity))) mode = "error";
+  else if ((stOk && energyErrorWord(raw)) || (cfg.solar_alert_entity && evErrorOf(stateObj(hass, cfg.solar_alert_entity)).active)) mode = "error";
   else {
     const w = watts === null ? 0 : watts;
     const peak = parseFloat(cfg.peak_power);
@@ -690,7 +711,7 @@ function batteryLayoutOf(cfg, st) {
 
 // What the battery does: its level, the power going in or out, its word for
 // an error, and whether it has reached the top it is allowed.
-const BATTERY_NEGATIVE_CHARGE = ["powerwall", "fronius", "sonnenbatterie"];
+const BATTERY_NEGATIVE_CHARGE = ["powerwall", "fronius", "sonnenbatterie", "solarman", "goodwe", "foxess_modbus"];
 function batteryReadOf(hass, cfg, st) {
   const levelId = cfg.battery_entity || (numericEntity(hass, cfg.state_entity) ? cfg.state_entity : "");
   const level = levelId ? numericState(hass, levelId) : null;
@@ -705,7 +726,8 @@ function batteryReadOf(hass, cfg, st) {
     const p = wattsOf(hass, cfg.power_entity);
     if (p !== null) {
       // Home Assistant's own convention, negative while charging, is what
-      // Powerwall, Fronius and Sonnen report; power_inverted false overrides it.
+      // Powerwall, Fronius, Sonnen, Solarman, GoodWe and FoxESS report;
+      // power_inverted false overrides it.
       const reg = hass.entities && hass.entities[cfg.power_entity];
       // Fronius's own power_battery_charge says which way it means.
       const inverted = cfg.power_inverted !== undefined ? cfg.power_inverted : !!reg && BATTERY_NEGATIVE_CHARGE.includes(reg.platform) && !/charge|_in$|_out$/i.test(cfg.power_entity);
@@ -720,13 +742,17 @@ function batteryReadOf(hass, cfg, st) {
   const reserve = cfg.reserve_entity ? numericState(hass, cfg.reserve_entity) : null;
   let mode;
   if (level === null && net === null && !stOk) mode = "unav";
-  else if ((stOk && ENERGY_ERROR_RE.test(raw)) || (cfg.battery_alert_entity && poolOn(hass, cfg.battery_alert_entity))) mode = "error";
+  else if ((stOk && energyErrorWord(raw)) || (cfg.battery_alert_entity && evErrorOf(stateObj(hass, cfg.battery_alert_entity)).active)) mode = "error";
   else {
     const th = parseFloat(cfg.power_on_threshold);
     const idleW = isFinite(th) && th >= 0 ? th : BATTERY_IDLE_W;
     if (net !== null) mode = net > idleW ? "charging" : net < -idleW ? "discharging" : "idle";
-    else if (stOk && /dis.?charg|decharg|entlad|descarg|scaric|ontlad|urladd|utlad|aflad|rozlad|vybij/.test(raw)) mode = "discharging";
-    else if (stOk && /charg|laden|ladt|cargand|carica|carregand|opladen|laddar|lader|ladowan|nabij/.test(raw)) mode = "charging";
+    // Words that name a charge without one going on: not_charging, To be
+    // charged (GoodWe), fully_charged (Anker). Victron counts its phases.
+    else if (stOk && /not.?charg|no.?charg|^to.?be/.test(raw)) mode = "idle";
+    else if (stOk && /(^|[^a-z])full|fully|(^|[^s])charged$/.test(raw) && !/dis.?charged$/.test(raw)) mode = "full";
+    else if (stOk && /dis.?charg|decharg|entlad|descarg|scaric|ontlad|urladd|utlad|aflad|rozlad|vybij|inverting|power.?assist/.test(raw)) mode = "discharging";
+    else if (stOk && /charg|laden|ladt|cargand|carica|carregand|opladen|laddar|lader|ladowan|nabij|^bulk|^absorption|^equali[sz]e/.test(raw)) mode = "charging";
     else mode = "idle";
     if (mode === "idle" && level !== null && level >= top - 1) mode = "full";
   }
@@ -766,8 +792,8 @@ function diffuserReadOf(hass, cfg, st, norm, powerDerived) {
   if (!powerDerived && (!st || ["unavailable", "unknown", ""].includes(raw))) mode = "unav";
   else {
     const on = powerDerived ? isActiveState(norm)
-      : dom === "select" || dom === "input_select" ? !/^(off|stop|0|none|standby|close|closed)$/.test(raw)
-      : ["on", "true"].includes(raw) || isActiveState(norm);
+      : dom === "select" || dom === "input_select" ? !(AIR_STOP_RE.test(raw) || ["close", "closed"].includes(raw))
+      : ["on", "true", "diffusing"].includes(raw) || isActiveState(norm);
     const pct = numberOrNull(a.percentage);
     const word = (dom === "select" || dom === "input_select") ? raw : String(a.preset_mode || a.mode || "").toLowerCase();
     const inter = DIFFUSER_INTER_RE.test(word) || (!(dom === "select" || dom === "input_select") && pct !== null && pct > 0 && pct <= 50 && !DIFFUSER_LOW_RE.test(word));

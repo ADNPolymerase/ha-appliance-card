@@ -757,7 +757,8 @@ class ApplianceCard extends HTMLElement {
     // as soon as the appliance is plugged in and says nothing about whether
     // it is actually doing anything.
     let powerDerived = false;
-    const watts = cfg.power_entity ? numericState(hass, cfg.power_entity) : null;
+    // In watts whatever the plug counts in: a meter in kW is not 0.5 W.
+    const watts = cfg.power_entity ? wattsOf(hass, cfg.power_entity) : null;
     const hasThreshold = cfg.power_on_threshold !== undefined && cfg.power_on_threshold !== "";
     // Pointing state_entity at the power meter itself can only mean "derive the
     // state from it"; without a default threshold the card would print a bare
@@ -850,7 +851,7 @@ class ApplianceCard extends HTMLElement {
     // Never echo the raw state when it came from the power meter: the "raw"
     // text there is a wattage, which is not a state anyone wants to read.
     let stateLabel = !powerDerived && (cfg.state_show_raw || norm === "unknown") && !rawIsMeaningless
-      ? (cfg.state_show_raw ? rawStateText(hass, st, rawState, cfg) : cleanStateLabel(rawState))
+      ? (cfg.state_show_raw ? rawStateText(hass, st, rawState, cfg) : translatedOrClean(hass, st, rawState, cfg))
       : t(hass, norm);
     if (offHidden) stateLabel = t(hass, "ac_off");
 
@@ -1526,8 +1527,12 @@ class ApplianceCard extends HTMLElement {
         if (MELCLOUD_STATUSES.includes(tankStatus)) {
           tankHeating = tankStatus === "heat_water";
           tankLabel = t(hass, tankHeating ? "kettle_heating" : "standby");
-        } else if (String(rawState).trim().toLowerCase() === "off") {
+        } else if (["off", "idle"].includes(String(rawState).trim().toLowerCase())) {
           tankLabel = t(hass, "standby");
+        } else if (String(rawState).trim().toLowerCase() === "heating") {
+          // Aquarea says it in its state: heating, idle, off.
+          tankHeating = true;
+          tankLabel = t(hass, "kettle_heating");
         } else if (!rawIsMeaningless) {
           tankLabel = modeLabel(hass, st, rawState, cfg);
         }
@@ -1572,11 +1577,18 @@ class ApplianceCard extends HTMLElement {
         // two indicators configured) is still a burner at work.
         boilerMode = cfg.hot_water_entity && isOn(cfg.hot_water_entity) ? "hot_water"
           : cfg.heating_entity && isOn(cfg.heating_entity) ? "space_heating"
-          : isActiveState(norm) ? "burner" : "idle";
+          // InComfort's and EMS-ESP's state says it where their contacts do not.
+          : (!powerDerived && boilerModeOf(rawState, cfg.state_map)) || (isActiveState(norm) ? "burner" : "idle");
       } else if (!powerDerived) {
         boilerMode = boilerModeOf(rawState, cfg.state_map);
       }
-      if (!boilerMode) {
+      // A water_heater's state is a mode the user picked (ViCare's and
+      // Overkiz's "on"), never a lit burner.
+      const boilerMoot = !boilerMode && !powerDerived && /^water_heater\./.test(cfg.state_entity || "") && String(rawState).trim().toLowerCase() !== "off";
+      if (boilerMoot) {
+        if (!cfg.state_show_raw && !rawIsMeaningless) stateLabel = modeLabel(hass, st, rawState, cfg);
+        color = STATE_COLORS.idle;
+      } else if (!boilerMode) {
         if (isActiveState(norm)) boilerMode = "burner";
         else if (norm === "idle" || norm === "done") boilerMode = "idle";
       }
@@ -1584,6 +1596,13 @@ class ApplianceCard extends HTMLElement {
         if (!cfg.state_show_raw) stateLabel = t(hass, boilerMode === "idle" ? "standby" : `boiler_${boilerMode}`);
         color = boilerMode === "hot_water" ? "#ef5350"
           : boilerMode === "idle" || boilerMode === "waiting" ? STATE_COLORS.idle : "#ff7043";
+      }
+      // InComfort's faults: flame_detection_fault_e6, no_flame_signal_e4.
+      const boilerRawLow = String(rawState === undefined || rawState === null ? "" : rawState).trim().toLowerCase();
+      if (!powerDerived && /fault|_e\d+$/.test(boilerRawLow)) {
+        boilerMode = "";
+        if (!cfg.state_show_raw) stateLabel = translatedOrClean(hass, st, rawState, cfg);
+        color = STATE_COLORS.error;
       }
       // Its room thermostat, on the wall beside it: the room and the setpoint
       // on a line of their own, and the thermostat drawn.
@@ -1732,9 +1751,12 @@ class ApplianceCard extends HTMLElement {
       // the machine making heat or cold, or only pushing water around. A
       // frequency in hertz or a contact, and unknown when it says nothing.
       const compSt = cfg.compressor_entity ? stateObj(hass, cfg.compressor_entity) : null;
-      const compKnown = !!compSt && !["unknown", "unavailable"].includes(compSt.state);
+      // A temperature or a pressure says nothing of whether it runs (ViCare's
+      // compressor_inlet_temperature), and a word names its phase.
+      const compUnit = cfg.compressor_entity ? unitOf(hass, cfg.compressor_entity).toLowerCase() : "";
+      const compKnown = !!compSt && !["unknown", "unavailable"].includes(compSt.state) && !/\u00b0|^c$|^f$|bar|pa$/.test(compUnit);
       const compHz = compKnown ? numericState(hass, cfg.compressor_entity) : null;
-      const compOn = compKnown && (compHz !== null ? compHz > 0 : ["on", "true", "running"].includes(String(compSt.state).toLowerCase()));
+      const compOn = compKnown && (compHz !== null ? compHz > 0 : !["off", "false", "no", "ready", "pause", "paused", "idle", "standby", "stopped", "stop"].includes(String(compSt.state).toLowerCase()));
       compressorOff = compKnown && !compOn;
       // The indicators (issue #17). A contact says its own mode when it is on;
       // a valve says in words where the water goes, whichever field it sits
@@ -2039,7 +2061,7 @@ class ApplianceCard extends HTMLElement {
       const errCode = errText === "" ? NaN : Number(errText);
       const erred = !!errSt && (Number.isFinite(errCode)
         ? errCode !== 0
-        : ["on", "true", "error", "problem", "fault"].includes(errText) || /jam|block|stuck|clog|bourrage/.test(errText));
+        : ["on", "true", "error", "problem", "fault"].includes(errText) || /jam|block|stuck|clog|bourrage|abnormal|^fault\d|^e\d+$/.test(errText));
       // An error that says which error it is, when the feeder names it: an
       // empty tank is not a fault to look into, it is a bag to go and fetch.
       const errEmpty = !!errSt && /empty|no.?food|lack|out.?of.?food|vide|leer|vacio|vuoto|tom\b|pust|pr(a|\u00e1)zdn/.test(stripAccents(errText));
@@ -2260,7 +2282,7 @@ class ApplianceCard extends HTMLElement {
       const fanSt = cfg.fan_speed_entity ? stateObj(hass, cfg.fan_speed_entity) : null;
       const fanPct = fanSt && domainOf(cfg.fan_speed_entity) === "fan" ? numberOrNull((fanSt.attributes || {}).percentage) : null;
       const fanRaw = fanSt ? fanSt.state : attrs.fan_mode;
-      const speed = acFanSpeedOf(fanRaw, fanPct);
+      const speed = acFanSpeedOf(fanRaw, fanPct, attrs.fan_modes);
 
       // The lights: the purifier, and the preset or the fan saying eco,
       // quiet or boost.
@@ -2473,12 +2495,13 @@ class ApplianceCard extends HTMLElement {
       if (!cfg.state_show_raw) stateLabel = t(hass, TH_LABELS[shown]);
       color = TH_COLORS[shown];
       const room = cfg.current_temperature_entity ? numericState(hass, cfg.current_temperature_entity) : numberOrNull(attrs.current_temperature);
-      const target = cfg.target_temperature_entity ? numericState(hass, cfg.target_temperature_entity) : numberOrNull(attrs.temperature);
+      const target = cfg.target_temperature_entity ? numericState(hass, cfg.target_temperature_entity)
+        : numberOrNull(attrs.temperature) ?? numberOrNull(mode === "cool" ? attrs.target_temp_high : attrs.target_temp_low);
       if (room !== null) {
         extraLines.push({ key: "room_temp", icon: "mdi:home-thermometer-outline", label: t(hass, "ps_line_room"), entity: cfg.current_temperature_entity || cfg.state_entity,
           value: thermoLine(hass, cfg, cfg.current_temperature_entity || cfg.state_entity, room, mode === "off" ? null : target) });
       }
-      const opening = numberOrNull(attrs.valve_position ?? attrs.pi_heating_demand ?? attrs.valve_opening);
+      const opening = numberOrNull(attrs.valve_position ?? attrs.pi_heating_demand ?? attrs.valve_opening ?? attrs.heating_power_request);
       if (opening !== null && mode !== "off") {
         extraLines.push({ key: "valve", icon: "mdi:valve", label: t(hass, "th_line_valve"), value: keepTogether(`${Math.round(opening)} %`), entity: cfg.state_entity });
       }
@@ -2703,6 +2726,9 @@ class ApplianceCard extends HTMLElement {
         // OCPP has no word for it and reports a charge.
         if (feeding && EV_CAR_STATES.includes(mode)) mode = "discharging";
         if (plugged === false && mode && mode !== "error" && mode !== "offline") mode = "no_vehicle";
+        // Tesla's ready is a car plugged in, which only its contact can tell
+        // from a Wallbox's ready, a box with no car at it.
+        if (plugged === true && !mode && evKey(key) === "ready") mode = "connected";
       }
       if (fault.active) mode = "error";
       // The entity's own words on request, while it has some.
@@ -2844,8 +2870,11 @@ class ApplianceCard extends HTMLElement {
       const presetRaw = isSelect ? rawState : a.preset_mode;
       const preset = airPresetOf(presetRaw);
       const offline = !powerDerived && (!st || ["unavailable", "unknown"].includes(raw));
+      // LG's purifier keeps its mode in a select and its power in a switch.
+      const toggleSt = cfg.toggle_entity ? stateObj(hass, cfg.toggle_entity) : null;
       const on = powerDerived ? isActiveState(norm)
-        : isSelect ? !/^(off|standby|power_?off|stop|0|none)$/.test(raw)
+        : toggleSt && String(toggleSt.state).toLowerCase() === "off" ? false
+        : isSelect ? !AIR_STOP_RE.test(stripAccents(raw))
         : dom === "climate" ? raw !== "off"
         : ["on", "true", "1"].includes(raw) || isActiveState(norm);
       const nightSt = cfg.night_mode_entity ? stateObj(hass, cfg.night_mode_entity) : null;
@@ -3155,7 +3184,7 @@ class ApplianceCard extends HTMLElement {
         const pst = cfg.problem_entity ? stateObj(hass, cfg.problem_entity) : null;
         const problem = !!pst && ALERT_ON_STATES.includes(String(pst.state).trim().toLowerCase());
         const watched = layout === "switch" || layout === "rack" ? [] : disks;
-        if (problem || watched.includes("fail") || (temp !== null && temp >= tMax)) mode = "alert";
+        if (problem || (!/^no/.test(raw) && NET_STATE_ALERT_RE.test(raw)) || watched.includes("fail") || (temp !== null && temp >= tMax)) mode = "alert";
         else if ((down || 0) + (up || 0) >= busyBits || watched.includes("busy") || (cpu !== null && cpu >= NET_BUSY_CPU)) mode = "busy";
         warn = mode !== "alert" && watched.includes("warn");
       }
@@ -3224,7 +3253,7 @@ class ApplianceCard extends HTMLElement {
         if (lit && mode !== "unav") stateLabel += ` \u00b7 ${t(hass, "pool_light_on")}`;
       }
       color = POOL_COLORS[shown];
-      const pressure = cfg.pressure_entity ? numericState(hass, cfg.pressure_entity) : null;
+      const pressure = cfg.pressure_entity ? poolPressureBar(hass, cfg.pressure_entity) : null;
       const can = cfg.chlorine_level_entity ? numericState(hass, cfg.chlorine_level_entity) : null;
       if (mode !== "unav") {
         const reading = (key, field, icon, label, digits, fallbackUnit) => {
@@ -3601,8 +3630,11 @@ class ApplianceCard extends HTMLElement {
     // The goal, the fat, the muscles and the bones are lines.
     let scale = null;
     if (cap.scale) {
-      const w = st && !rawIsMeaningless ? numericState(hass, cfg.state_entity) : null;
-      const unit = (st && st.attributes.unit_of_measurement) || "kg";
+      const w0 = st && !rawIsMeaningless ? numericState(hass, cfg.state_entity) : null;
+      // Tuya's scale counts in grams.
+      const inGrams = !!st && st.attributes.unit_of_measurement === "g";
+      const w = w0 !== null && inGrams ? w0 / 1000 : w0;
+      const unit = inGrams ? "kg" : (st && st.attributes.unit_of_measurement) || "kg";
       const goalSt = cfg.weight_goal_entity ? numericState(hass, cfg.weight_goal_entity) : null;
       const goalCfg = parseFloat(cfg.weight_goal);
       const goal = goalSt !== null ? goalSt : isFinite(goalCfg) && goalCfg > 0 ? goalCfg : null;
