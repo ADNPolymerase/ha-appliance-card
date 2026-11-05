@@ -69,6 +69,9 @@ const NT_CSS = `
         @keyframes nt-littilt{0%,6%{transform:rotate(0)}24%{transform:rotate(-14deg)}42%,54%{transform:rotate(-8deg)}68%{transform:rotate(6deg)}80%,84%{transform:rotate(10deg)}92%{transform:rotate(-3deg)}100%{transform:rotate(0)}}
         @keyframes nt-clump{0%,18%{opacity:1;transform:translate(0,0)}34%{opacity:1;transform:translate(-10px,3px)}44%{opacity:0;transform:translate(-14px,6px)}97%{opacity:0;transform:translate(0,0)}100%{opacity:1}}
         .nta-beacon{animation:nt-glow .7s ease-in-out infinite}
+        .nt-on .nta-sweepL,.nt-on .nta-sweepR{transform-box:view-box;animation:nt-sweepL 4.6s ease-in-out infinite}.nt-on .nta-sweepR{animation-name:nt-sweepR}
+        @keyframes nt-sweepL{0%,100%{transform:rotate(-32deg)}50%{transform:rotate(0deg)}}
+        @keyframes nt-sweepR{0%,100%{transform:rotate(32deg)}50%{transform:rotate(0deg)}}
         .nt-on .nta-flick{transform-box:fill-box;transform-origin:center bottom;animation:nt-flick .7s ease-in-out infinite alternate}
         .nt-on .nta-flick.ntd3{animation-duration:.5s}
         @keyframes nt-flick{0%{transform:scale(1,1) skewX(0)}50%{transform:scale(.94,1.08) skewX(3deg)}100%{transform:scale(1.04,.95) skewX(-3deg)}}

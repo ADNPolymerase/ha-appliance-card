@@ -4483,6 +4483,8 @@ class ApplianceCard extends HTMLElement {
     // Bar priority: preheating beats cycle progress (it's the live information
     // while an oven climbs), and a hood has no cycle so its bar is the filter.
     let barPct = offHidden ? null : progressPct;
+    // A watering's progress (#85).
+    if (!offHidden && ntDraw && ntDraw.progress !== undefined && ntDraw.progress !== null) barPct = ntDraw.progress;
     let barColor = color;
     // A filter's life on the bar says so, with its icon and its percentage
     // (#54): a bar alone reads as a cycle's progress.

@@ -870,7 +870,9 @@ battery_entity: sensor.scooter_battery   # optional
 
 | Option | Types | Description |
 |---|---|---|
-| `irrigation_layout` | irrigation | `sprinkler` (a pop-up spray head on its lawn) \| `tap` (a tap timer on the garden tap, its hose and nozzle). Left out, a name that says Gardena, LinkTap, tap or timer makes a tap timer. |
+| `irrigation_layout` | irrigation | `sprinkler` (a pop-up spray head on its lawn) \| `tap` (a tap timer on the garden tap, its hose and nozzle) \| `drip` (a raised vegetable patch whose drip line drips and darkens the soil) \| `flowers` (a flower bed and its two oscillating micro-sprayers). Left out, a name that says Gardena, LinkTap, Sonoff, tap or timer makes a tap timer, *drip*, *potager* or *vegetable* a vegetable patch, *massif* or *flower* a flower bed. |
+| `tap_model` / `tap_wall` | irrigation | The tap timer: `generic` or `sonoff` (Sonoff's black and orange Zigbee valve, read in the name too), on a wall of `brick` (default), white `render`, or `none`, the tap then standing on a pipe out of the ground. |
+| `watering_duration_entity` | irrigation | The watering's duration (Sonoff's own, a number or a helper): the bar fills as it runs. Without it, the bar comes from the time since the watering started and `remaining_time_entity`. |
 | `zone_entity` / `next_run_entity` | irrigation | The zone being watered and the next run, as lines. `remaining_time_entity` shows the time left on the drawing while it waters. |
 | `rain_delay_entity` | irrigation | A rain delay, on or a number of hours: *Rain delay*, the rain falling on the lawn. |
 | `soil_moisture_entity` | irrigation | The soil moisture, in %: a gauge on a stake in the lawn, and a line, amber below 25 %. |

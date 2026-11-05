@@ -813,43 +813,193 @@ ${c.on ? `<rect x="55.4" y="88" width="9.2" height="16" fill="url(#${bd})"/><pat
 <path d="M53 88 Q60 80 67 88 V91 H53 Z" fill="url(#${cap})"/><ellipse cx="60" cy="83.4" rx="3.6" ry="1.6" fill="#263238"/><circle cx="60" cy="83" r="1" fill="#81d4fa"/>` : `<ellipse cx="60" cy="103.4" rx="5" ry="1.5" fill="#1e2328"/><circle cx="60" cy="103.2" r=".9" fill="#8d9aa6"/>`}
 ${c.lcd ? `<rect x="44" y="113" width="32" height="10" rx="5" fill="#1e2328" opacity=".82"/><text x="60" y="120.2" font-size="${ntFit(c.lcd, 30, 6.4).toFixed(1)}" font-weight="700" text-anchor="middle" fill="#b3e5fc" ${NT_FONT}>${esc(c.lcd)}</text>` : ""}`;
 }
-// A tap timer on the garden tap of a brick wall, the hose running down to the
-// terrace and spraying from its nozzle while it waters.
-function ntIrrTap(c) {
-  const br = ntId(), bx = ntId(), bs = ntId(), wl = ntId(), gd = ntId();
+// The wall behind the tap: brick, white render, or none (a standpipe).
+function ntIrrWall(wall) {
+  if (wall === "none") return "";
+  const wl = ntId();
+  const [wm, wdef] = ntFade(60, 40, 74, 62);
+  if (wall === "render") {
+    const dots = Array.from({ length: 140 }, (_, i) => {
+      const x = ((i * 53) % 140) - 10, y = ((i * 37) % 106) - 10;
+      return `<circle cx="${x}" cy="${y}" r="${(i % 3) * .25 + .35}" fill="${i % 2 ? "#cfc8bc" : "#fff"}" opacity=".7"/>`;
+    }).join("");
+    return `<defs>${ntV(wl, "#f7f4ee", "#e2ddd3")}</defs>${wdef}<g mask="url(#${wm})"><rect x="-10" y="-10" width="140" height="106" fill="url(#${wl})"/>${dots}</g>`;
+  }
   const bricks = [];
   for (let r = 0; r < 9; r++) {
     const y = -10 + r * 11;
     bricks.push(`<path d="M-10 ${y} H130" stroke="#b9a07c" stroke-width=".8"/>`);
     for (let x = (r % 2 ? -4 : 8); x < 130; x += 24) bricks.push(`<path d="M${x} ${y} V${y + 11}" stroke="#b9a07c" stroke-width=".8"/>`);
   }
-  const [wm, wdef] = ntFade(60, 40, 74, 62), [gm, gdef] = ntFade(60, 110, 72, 22);
-  return `<defs>${ntV(br, "#f6dc8c", "#a8781e")}${ntV(bx, "#5cbf5f", "#2a7a2e")}${ntV(bs, "#2a7a2e", "#17511b")}${ntV(wl, "#eadcc6", "#d2bf9f")}${ntV(gd, "#c9c2b6", "#a59d8f")}</defs>${wdef}${gdef}
-<g mask="url(#${wm})"><rect x="-10" y="-10" width="140" height="106" fill="url(#${wl})"/>${bricks.join("")}</g>
-<g mask="url(#${gm})"><rect x="-10" y="96" width="140" height="30" fill="url(#${gd})"/><path d="M-10 96.5 H130" stroke="#8d8577" stroke-width="1"/>
-${[0, 1, 2, 3, 4, 5].map((i) => `<path d="M${-6 + i * 26} 125 L${6 + i * 26} 97" stroke="#9a9283" stroke-width=".7"/>`).join("")}<path d="M-10 110 H130" stroke="#9a9283" stroke-width=".7"/></g>
-${c.rain ? ntRainCloud(104, 52, .75) : ""}
-<rect x="50" y="9" width="20" height="9" rx="2" fill="#8a6418" opacity=".25"/>
-<circle cx="56" cy="13" r="7" fill="url(#${br})" stroke="#8a6418" stroke-width=".5"/><ellipse cx="56" cy="14" rx="3.6" ry="3" fill="#7a5714"/>
-<path d="M52 12 H64 Q69 12 69 17 V24 H62 V19 H52 Z" fill="url(#${br})" stroke="#8a6418" stroke-width=".4"/>
-<rect x="54.8" y="1" width="2.6" height="10" fill="#8a6418"/><path d="M49 1 Q56 -3.4 63 1 L61 3.2 Q56 .6 51 3.2 Z" fill="#d32f2f"/>
-<rect x="61.6" y="23" width="7.8" height="5" fill="url(#${br})"/><rect x="60.4" y="27" width="10.2" height="4.4" rx="1.2" fill="#26a69a"/>
+  return `<defs>${ntV(wl, "#eadcc6", "#d2bf9f")}</defs>${wdef}<g mask="url(#${wm})"><rect x="-10" y="-10" width="140" height="106" fill="url(#${wl})"/>${bricks.join("")}</g>`;
+}
+
+// The tap and its timer: the generic green one, or Sonoff's black box with
+// its orange tabs and its green ring.
+function ntIrrTap(c) {
+  const br = ntId(), gd = ntId(), sb = ntId(), ss = ntId(), nt = ntId(), bx = ntId(), bs = ntId(), pp = ntId(), ch = ntId(), hc = ntId();
+  const [gm, gdef] = ntFade(60, 110, 72, 22);
+  const sonoff = c.model === "sonoff";
+  const wall = c.wall || "brick";
+  // The garden tap: a chrome rosette on the wall (an elbow on its standpipe
+  // without one), a brass pipe with its hexagonal valve body and its red
+  // quarter-turn lever, bending down to the threaded spout the timer screws on.
+  const pipeD = wall === "none" ? "M43.5 22 V18 Q43.5 14 47.5 14 H58 Q62 14 62 18 V27" : "M42 14 H58 Q62 14 62 18 V27";
+  const tap = `${wall === "none" ? "" : `<ellipse cx="42.6" cy="14.6" rx="5.4" ry="7.4" fill="#000" opacity=".18"/><ellipse cx="42" cy="14" rx="4.4" ry="6.6" fill="url(#${ch})" stroke="#7d868e" stroke-width=".4"/><ellipse cx="42.6" cy="14" rx="2.2" ry="3.4" fill="#aab3ba"/>`}
+<path d="${pipeD}" fill="none" stroke="#6b4c10" stroke-width="6.4" stroke-linejoin="round"/>
+<path d="${pipeD}" fill="none" stroke="#d4a537" stroke-width="5" stroke-linejoin="round"/>
+<path d="${pipeD}" transform="translate(-.6 -.9)" fill="none" stroke="#fff1b8" stroke-width="1.2" stroke-linejoin="round" opacity=".75"/>
+<path d="M48 9.6 H56 L57.4 14 L56 18.4 H48 L46.6 14 Z" fill="url(#${br})" stroke="#6b4c10" stroke-width=".5"/>
+<path d="M48 9.6 V18.4 M56 9.6 V18.4" stroke="#8a6418" stroke-width=".4"/><path d="M48.4 10.6 H55.6" stroke="#fff1b8" stroke-width=".7" opacity=".8"/>
+<rect x="51" y="5" width="2" height="5" fill="#8a6418"/><circle cx="52" cy="5" r="1.4" fill="#b0802a"/>
+<path d="M44 3.2 Q44 1.6 45.6 1.6 H58.4 Q60 1.6 60 3.2 V4.4 Q60 6 58.4 6 H45.6 Q44 6 44 4.4 Z" fill="#d32f2f" stroke="#8e1b1b" stroke-width=".4"/><path d="M45.4 2.6 H58.6" stroke="#ff8a80" stroke-width=".6" opacity=".8"/>
+${[0, 1, 2].map((i) => `<path d="M59.2 ${22.4 + i * 1.5} H64.8" stroke="#8a6418" stroke-width=".45"/>`).join("")}`;
+  // Without a wall the tap stands on a pipe from the ground.
+  // Without a wall the tap stands on a pipe coming out of the ground: the
+  // hole behind it, the pipe in front of the tap's elbow, a wider collar
+  // where they join.
+  const stand = wall === "none" ? `<ellipse cx="43.5" cy="97.6" rx="7" ry="2.2" fill="#4e3d2c"/><ellipse cx="43.5" cy="97.2" rx="5" ry="1.4" fill="#2f241a"/>
+<rect x="40.5" y="21" width="6" height="77" fill="url(#${pp})"/><path d="M42.3 22 V97" stroke="#fff" stroke-width="1" opacity=".35"/>
+<path d="M40.5 98 A3 1 0 0 0 46.5 98" fill="url(#${pp})"/>
+<rect x="39" y="17.6" width="9" height="6" rx="1.4" fill="url(#${pp})" stroke="#6f777e" stroke-width=".4"/><path d="M39.6 19.2 H47.4" stroke="#fff" stroke-width=".7" opacity=".5"/>` : "";
+  let box;
+  if (sonoff) {
+    // The black box: a knurled nut on the tap, ribs down its side, the
+    // green ring of its button, the orange tab and the outlet.
+    const ribs = Array.from({ length: 8 }, (_, i) => `<path d="M${77 + i * 1.1} ${35.4 + i * .3} V${71.6 - i * .3}" stroke="#121416" stroke-width=".5"/>`).join("");
+    const knurl = Array.from({ length: 8 }, (_, i) => `<path d="M${55.4 + i * 1.8} 26.6 V33" stroke="#0e0f11" stroke-width=".6"/>`).join("");
+    box = `<rect x="54.6" y="26" width="15" height="7.6" rx="1.6" fill="url(#${nt})"/>${knurl}<path d="M55.4 27 H68.8" stroke="#6b7076" stroke-width=".6"/>
+<path d="M68 32 H74 L83.6 34.2 Q86.2 34.8 86.2 37.4 V69.6 Q86.2 72.2 83.6 72.8 L74 75 H68 Z" fill="url(#${ss})" stroke="#0e0f11" stroke-width=".5"/>${ribs}
+<rect x="47" y="32" width="29" height="43" rx="2.6" fill="url(#${sb})" stroke="#0e0f11" stroke-width=".5"/>
+<path d="M49.4 34 V73 M73.6 34 V73" stroke="#4a4f55" stroke-width=".5" opacity=".7"/>
+<text x="61.5" y="52" font-size="4.2" font-weight="700" text-anchor="middle" fill="#cfd3d6" ${NT_FONT}>SONOFF</text>
+<text x="61.5" y="55.6" font-size="1.6" text-anchor="middle" fill="#8d9298" ${NT_FONT}>Zigbee Smart Water Valve</text>
+<ellipse cx="81.2" cy="53.5" rx="2.7" ry="3.6" fill="none" stroke="${c.on ? "#69f0ae" : "#2e7d32"}" stroke-width="1.1" class="${c.on ? "nta-glow" : ""}"/>
+<ellipse cx="81.2" cy="53.5" rx="1.6" ry="2.3" fill="#9aa0a6"/>
+${c.on ? `<ellipse cx="81.2" cy="53.5" rx="4.4" ry="5.4" fill="#69f0ae" opacity=".25"/>` : ""}
+<rect x="62" y="70.4" width="2.4" height="1.6" rx=".6" fill="#ff6d00"/>
+<path d="M60 75 H73 L71.6 79 H61.4 Z" fill="#ff6d00"/><path d="M66 79 V82" stroke="#e65100" stroke-width="1.6"/>
+<rect x="52" y="75" width="8" height="6" fill="#7d858c"/>${[0, 1, 2].map((i) => `<path d="M52 ${76.2 + i * 1.6} H60" stroke="#5d656c" stroke-width=".5"/>`).join("")}
+`;
+  } else {
+    box = `<rect x="56.6" y="26.4" width="10.8" height="5.4" rx="1.2" fill="#26a69a"/><path d="M57.4 27.6 H66.6" stroke="#80cbc4" stroke-width=".6"/>
 ${ntRoundBox(47, 31, 34, 42, 6, 8, `url(#${bx})`, `url(#${bs})`, "#7ed37f", "#17511b")}
 <path d="M51 35.6 Q64 32.6 77 35.6" fill="none" stroke="#fff" stroke-width="1.3" opacity=".45" stroke-linecap="round"/>
 <rect x="50.6" y="38" width="26.8" height="15.4" rx="2.4" fill="#1b2a1c"/>
 ${ntLcd(51.6, 39, 24.8, 13.4, c.lcd || "--", c.on, "#b9f6ca", ntFit(c.lcd || "--", 24, 7))}
 <circle cx="57" cy="62" r="3.6" fill="#e8f5e9" stroke="#17511b" stroke-width=".5"/><circle cx="71" cy="62" r="3.6" fill="#e8f5e9" stroke="#17511b" stroke-width=".5"/>
 <path d="M55.4 62 h3.2 M69.4 62 h3.2 M71 60.4 v3.2" stroke="#2a7a2e" stroke-width=".9"/>
-<rect x="59.6" y="73" width="9" height="5.4" rx="1.4" fill="#ffb300"/><rect x="60.8" y="77.6" width="6.6" height="4" fill="#ffca28"/>
+<rect x="59.6" y="73" width="9" height="5.4" rx="1.4" fill="#ffb300"/><rect x="60.8" y="77.6" width="6.6" height="4" fill="#ffca28"/>`;
+  }
+  const hx = sonoff ? 56 : 64.1;
+  const hy = 88.5;
+  const hose = `M${hx} ${hy} C${hx} 102 50 106 40 110 C28 115 34 121 56 119 C72 117 84 112 91 109.4`;
+  // The hose's quick connector on the outlet: a grey collar and its ribs.
+  const coupler = `<rect x="${hx - 4.2}" y="${sonoff ? 80.6 : 81.2}" width="8.4" height="7.6" rx="1.6" fill="url(#${hc})" stroke="#2b2e32" stroke-width=".4"/>
+${[0, 1, 2].map((i) => `<path d="M${hx - 3.6} ${(sonoff ? 82.4 : 83) + i * 1.8} H${hx + 3.6}" stroke="#2b2e32" stroke-width=".4" opacity=".7"/>`).join("")}
+<path d="M${hx - 3} ${hy} H${hx + 3}" stroke="#1d1f22" stroke-width="1"/>`;
+  return `<defs>${ntV(br, "#f6dc8c", "#a8781e")}${ntV(gd, "#c9c2b6", "#a59d8f")}${ntV(sb, "#3a3e43", "#202326")}${ntV(nt, "#2b2e32", "#111315")}
+<linearGradient id="${ss}" x1="0" x2="1"><stop offset="0" stop-color="#2a2d31"/><stop offset="1" stop-color="#16181a"/></linearGradient>
+<radialGradient id="${ch}" cx=".4" cy=".35"><stop offset="0" stop-color="#f4f6f8"/><stop offset="1" stop-color="#8d969e"/></radialGradient><linearGradient id="${hc}" x1="0" x2="1"><stop offset="0" stop-color="#4a4f55"/><stop offset=".45" stop-color="#9aa1a8"/><stop offset="1" stop-color="#3a3e43"/></linearGradient>${ntV(bx, "#5cbf5f", "#2a7a2e")}${ntV(bs, "#2a7a2e", "#17511b")}<linearGradient id="${pp}" x1="0" x2="1"><stop offset="0" stop-color="#9aa3ab"/><stop offset=".4" stop-color="#d9dee2"/><stop offset="1" stop-color="#7d868e"/></linearGradient></defs>${gdef}
+${ntIrrWall(wall)}
+<g mask="url(#${gm})"><rect x="-10" y="96" width="140" height="30" fill="url(#${gd})"/><path d="M-10 96.5 H130" stroke="#8d8577" stroke-width="1"/>
+${[0, 1, 2, 3, 4, 5].map((i) => `<path d="M${-6 + i * 26} 125 L${6 + i * 26} 97" stroke="#9a9283" stroke-width=".7"/>`).join("")}<path d="M-10 110 H130" stroke="#9a9283" stroke-width=".7"/></g>
+${tap}${stand}${box}
 <ellipse cx="88" cy="114" rx="30" ry="4" fill="#000" opacity=".12"/>
-<path d="M64 81 C62 100 50 106 40 110 C28 115 34 121 56 119 C72 117 84 112 92 109" fill="none" stroke="#1b5e20" stroke-width="5.6" stroke-linecap="round"/>
-<path d="M64 81 C62 100 50 106 40 110 C28 115 34 121 56 119 C72 117 84 112 92 109" fill="none" stroke="#43a047" stroke-width="3.8" stroke-linecap="round"/>
-<path d="M63 84 C61 99 50 105 41 109" fill="none" stroke="#a5d6a7" stroke-width="1" opacity=".7"/>
-<path class="nt-run nta-flow" d="M64 81 C62 100 50 106 40 110 C28 115 34 121 56 119 C72 117 84 112 92 109" fill="none" stroke="#b3e5fc" stroke-width="1.2" stroke-dasharray="3 5"/>
-<g transform="rotate(-14 96 108)"><rect x="90" y="105" width="11" height="6" rx="2" fill="#ffb300"/><path d="M100 105.4 L106 104 V112 L100 110.6 Z" fill="#f57c00"/></g>
+<path d="${hose}" fill="none" stroke="${sonoff ? "#1c1d1f" : "#1b5e20"}" stroke-width="5.6" stroke-linecap="round"/>
+<path d="${hose}" fill="none" stroke="${sonoff ? "#3b3e42" : "#43a047"}" stroke-width="3.8" stroke-linecap="round"/>
+<path class="nt-run nta-flow" d="${hose}" fill="none" stroke="#b3e5fc" stroke-width="1.2" stroke-dasharray="3 5"/>
+${coupler}
+<g transform="rotate(-14 96 108)"><rect x="90" y="105" width="11" height="6" rx="2" fill="${sonoff ? "#ff6d00" : "#ffb300"}"/><path d="M100 105.4 L106 104 V112 L100 110.6 Z" fill="${sonoff ? "#212121" : "#f57c00"}"/></g>
 <g class="nt-run">${[["M106 105 Q114 99 125 101", 0], ["M106 107 Q115 103 125 107", 2], ["M106 109 Q114 108 124 114", 4]].map(([d, i]) => ntJet(d, i)).join("")}
 <path d="M106 107 L126 98 L126 116 Z" fill="#e1f5fe" opacity=".35"/></g>
-${ntSoil(14, 78, c.moist)}`;
+${sonoff && c.lcd ? `<rect x="6" y="101" width="30" height="10" rx="5" fill="#1e2328" opacity=".82"/><text x="21" y="108.2" font-size="${ntFit(c.lcd, 28, 6.4).toFixed(1)}" font-weight="700" text-anchor="middle" fill="#b3e5fc" ${NT_FONT}>${esc(c.lcd)}</text>` : ""}`;
+}
+
+// A vegetable patch: a raised wooden bed in three-quarter view, rows of
+// lettuces, tomatoes and carrots, a black drip line along each row whose
+// emitters drip and darken the soil while it waters.
+function ntIrrDrip(c) {
+  const wd = ntId(), wds = ntId(), so = ntId(), wet = ntId();
+  // The bed: front x 14..106, top y 66, front face to 92; depth (10, -16).
+  const fx0 = 6, fx1 = 92, ty = 74, by = 98, dx = 18, dy = -40;
+  const P = (u, w) => [fx0 + u + dx * w, ty + dy * w]; // u across, w 0 front .. 1 back
+  const rows = [.2, .5, .8];
+  const plant = (kind, x, y, s) => {
+    if (kind === "lettuce") return `<g transform="translate(${x} ${y}) scale(${s})">${[[-3, 0], [3, 0], [0, -2.5], [-1.6, 1.6], [1.6, 1.6]].map(([a, b], i) => `<ellipse cx="${a}" cy="${b - 2}" rx="3.6" ry="2.6" fill="${["#7cb342", "#9ccc65", "#689f38", "#aed581", "#8bc34a"][i]}"/>`).join("")}<ellipse cx="0" cy="-2.4" rx="1.6" ry="1.2" fill="#dcedc8"/></g>`;
+    if (kind === "tomato") return `<g transform="translate(${x} ${y}) scale(${s})"><path d="M0 0 V-16" stroke="#a1887f" stroke-width=".7"/><path d="M0 -3 q-5 -2 -6 -6 M0 -7 q5 -2 6 -6 M0 -10 q-4 -2 -5 -5 M0 -13 q4 -1 4 -4" stroke="#558b2f" stroke-width="1.3" fill="none" stroke-linecap="round"/>${[[-4, -7], [3.6, -10], [-2.6, -12.4], [2, -5]].map(([a, b]) => `<circle cx="${a}" cy="${b}" r="1.5" fill="#e53935"/><circle cx="${a - .4}" cy="${b - .5}" r=".4" fill="#fff" opacity=".6"/>`).join("")}</g>`;
+    return `<g transform="translate(${x} ${y}) scale(${s})"><path d="M0 0 L-2.6 -6 M0 0 L0 -7 M0 0 L2.6 -6" stroke="#7cb342" stroke-width="1" stroke-linecap="round"/><path d="M-.8 .2 L.8 .2 L0 2.4 Z" fill="#fb8c00"/></g>`;
+  };
+  const kinds = ["carrot", "lettuce", "tomato"];
+  let rowsSvg = "";
+  // Back rows first, so the front ones overlap them.
+  [...rows].reverse().forEach((w, ri) => {
+    const k = kinds[2 - ri];
+    const [ax, ay] = P(4, w), [bx2, by2] = P(fx1 - fx0 - 4, w);
+    const s = 1.2 + (1 - w) * .5;
+    const line = `<path d="M${ax} ${ay + 1.5} L${bx2} ${by2 + 1.5}" stroke="#111" stroke-width="1.6"/><path d="M${ax} ${ay + 1} L${bx2} ${by2 + 1}" stroke="#555" stroke-width=".4"/>`;
+    const emit = [.08, .3, .54, .78, .96].map((t, i) => {
+      const x = ax + (bx2 - ax) * t, y = ay + (by2 - ay) * t + 1.5;
+      return `<g><rect x="${(x - .8).toFixed(1)}" y="${(y - .8).toFixed(1)}" width="1.6" height="1.6" rx=".4" fill="#5d4037"/>
+<g class="nt-run"><ellipse cx="${x.toFixed(1)}" cy="${(y + 1.2).toFixed(1)}" rx="${(4.6 * s).toFixed(1)}" ry="${(1.6 * s).toFixed(1)}" fill="url(#${wet})"/>
+<path class="nta-fall ntd${(i + ri) % 6 + 1}" d="M${x.toFixed(1)} ${(y - 3.4).toFixed(1)} q-1.3 2 0 2.8 q1.3 -.8 0 -2.8 Z" fill="#29b6f6"/>
+<ellipse class="nta-pop ntd${(i + ri + 2) % 6 + 1}" cx="${x.toFixed(1)}" cy="${(y + 1.2).toFixed(1)}" rx="${(2.3 * s).toFixed(1)}" ry="${(.8 * s).toFixed(1)}" fill="none" stroke="#81d4fa" stroke-width=".7"/></g></g>`;
+    }).join("");
+    const plants = [.2, .43, .66, .88].map((t) => plant(k, ax + (bx2 - ax) * t - 2, ay + (by2 - ay) * t - 1, s)).join("");
+    rowsSvg += line + emit + plants;
+  });
+  const top = [P(0, 0), P(fx1 - fx0, 0), P(fx1 - fx0, 1), P(0, 1)].map((p) => p.join(" ")).join(" L");
+  const side = `M${fx1} ${ty} L${fx1 + dx} ${ty + dy} L${fx1 + dx} ${by + dy} L${fx1} ${by} Z`;
+  const boards = [ty + 8, ty + 16].map((y) => `<path d="M${fx0} ${y} H${fx1}" stroke="#6d4c2f" stroke-width=".6"/>`).join("");
+  return `<defs>${ntV(wd, "#c49a6c", "#8d6239")}${ntV(wds, "#9b7146", "#6d4c2f")}<linearGradient id="${so}" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#6d4c33"/><stop offset="1" stop-color="#4e3524"/></linearGradient>
+<radialGradient id="${wet}"><stop offset="0" stop-color="#21140c" stop-opacity=".95"/><stop offset="1" stop-color="#2d1d12" stop-opacity="0"/></radialGradient></defs>
+${c.rain ? ntRainCloud(60) : ""}
+${ntFoot(`${fx0 - 4} ${by + 6} ${fx1 + dx + 4} ${by + dy + 6} ${fx1 + dx + 4} ${by + 2} ${fx0 - 4} ${by + 2}`, .22)}
+<path d="M${top} Z" fill="url(#${so})"/>
+<path d="M${P(0, 1).join(" ")} L${P(fx1 - fx0, 1).join(" ")}" stroke="#8d6239" stroke-width="3"/>
+<path d="M${P(0, 0).join(" ")} L${P(0, 1).join(" ")}" stroke="#a87e52" stroke-width="2.4"/>
+
+${rowsSvg}
+<path d="${side}" fill="url(#${wds})"/>
+<rect x="${fx0}" y="${ty}" width="${fx1 - fx0}" height="${by - ty}" fill="url(#${wd})"/>${boards}
+<path d="M${fx0} ${ty} H${fx1}" stroke="#d7b285" stroke-width="1.4"/>
+${c.lcd ? `<rect x="40" y="106" width="32" height="10" rx="5" fill="#1e2328" opacity=".82"/><text x="56" y="113.2" font-size="${ntFit(c.lcd, 30, 6.4).toFixed(1)}" font-weight="700" text-anchor="middle" fill="#b3e5fc" ${NT_FONT}>${esc(c.lcd)}</text>` : ""}
+${ntSoil(108, 40, c.moist)}`;
+}
+
+// A flower bed: a curved border of mulch with tulips, daisies and lavender,
+// two small sprayers throwing low fans of water while it waters.
+function ntIrrFlowers(c) {
+  const ml = ntId(), ed = ntId(), mi = ntId();
+  const cx = 58, cy = 96, rx = 54, ry = 18;
+  const flowers = [];
+  for (let i = 0; i < 22; i++) {
+    const a = (i * 137.5) * Math.PI / 180, q = Math.sqrt(((i * 53) % 89) / 89) * .82;
+    const x = cx + Math.cos(a) * rx * q, y = cy + Math.sin(a) * ry * q;
+    const h = 16 + (i % 4) * 4, k = i % 4;
+    const stem = `<path d="M${x.toFixed(1)} ${y.toFixed(1)} V${(y - h).toFixed(1)}" stroke="#558b2f" stroke-width=".8"/><path d="M${x.toFixed(1)} ${(y - 3).toFixed(1)} q-2.6 -1 -3 -4" stroke="#7cb342" stroke-width="1" fill="none"/>`;
+    const fy = y - h;
+    const sc = 1.6;
+    const head0 = k === 0 ? `<path d="M${x - 2.2} ${fy} Q${x} ${fy - 6} ${x + 2.2} ${fy} Q${x} ${fy + 1.6} ${x - 2.2} ${fy} Z" fill="${["#e53935", "#ffb300", "#ec407a"][i % 3]}"/>`
+      : k === 1 ? `${[0, 1, 2, 3, 4, 5].map((j) => `<ellipse cx="${(x + Math.cos(j) * 1.9).toFixed(1)}" cy="${(fy + Math.sin(j) * 1.2).toFixed(1)}" rx="1.3" ry=".8" fill="#fff"/>`).join("")}<circle cx="${x}" cy="${fy}" r="1" fill="#ffb300"/>`
+      : k === 2 ? `${[0, 1, 2, 3, 4].map((j) => `<circle cx="${x}" cy="${(fy + j * 1.3).toFixed(1)}" r=".9" fill="#9575cd"/>`).join("")}`
+      : `<circle cx="${x}" cy="${fy}" r="2.1" fill="#f06292"/><circle cx="${x}" cy="${fy}" r=".8" fill="#fff59d"/>`;
+    const head = `<g transform="translate(${x} ${fy}) scale(${sc}) translate(${-x} ${-fy})">${head0}</g>`;
+    flowers.push({ y, svg: stem + head });
+  }
+  flowers.sort((a, b) => a.y - b.y);
+  const jets = [[14, 100, 1], [102, 98, -1]];
+  return `<defs><radialGradient id="${ml}" cx=".45" cy=".35" r=".7"><stop offset="0" stop-color="#8d6e52"/><stop offset="1" stop-color="#5d4330"/></radialGradient>${ntV(ed, "#b0aaa0", "#7d776d")}${ntBlur(mi, 2.4)}</defs>
+${c.rain ? ntRainCloud(92) : ""}
+${ntFoot(`${cx - rx + 4} ${cy + ry + 6} ${cx + rx - 4} ${cy + ry + 6} ${cx + rx} ${cy + 4} ${cx - rx} ${cy + 4}`, .22)}
+<path d="M${cx - rx} ${cy} V${cy + 5} A${rx} ${ry} 0 0 0 ${cx + rx} ${cy + 5} V${cy} Z" fill="url(#${ed})"/>
+<ellipse cx="${cx}" cy="${cy}" rx="${rx}" ry="${ry}" fill="url(#${ml})"/>
+${Array.from({ length: 40 }, (_, i) => `<circle cx="${(cx + Math.cos(i * 2.4) * rx * .9 * ((i % 7) / 7)).toFixed(1)}" cy="${(cy + Math.sin(i * 2.4) * ry * .9 * ((i % 5) / 5)).toFixed(1)}" r=".6" fill="#a1887f" opacity=".6"/>`).join("")}
+${flowers.map((f) => f.svg).join("")}
+${jets.map(([x, y, s], i) => `<rect x="${x - 1}" y="${y - 6}" width="2" height="6" fill="#455a64"/><circle cx="${x}" cy="${y - 6.4}" r="1.4" fill="#263238"/>
+<g class="nt-run"><g class="nta-sweep${s > 0 ? "L" : "R"}${i ? " ntd3" : ""}" style="transform-origin:${x}px ${y - 7}px">${[0, 1].map((j) => ((d, k) => `<path class="nta-flow ntd${k + 1}" style="animation-duration:1.3s" d="${d}" fill="none" stroke="#29b6f6" stroke-width="1.8" stroke-dasharray="0 4" stroke-linecap="round"/><path class="nta-flow ntd${k + 1}" style="animation-duration:1.3s" d="${d}" fill="none" stroke="#0277bd" stroke-width="1" stroke-dasharray="0 6" stroke-linecap="round"/>`)(`M${x} ${y - 7} Q${x + s * (14 + j * 10)} ${y - 26 - j * 4} ${x + s * (30 + j * 12)} ${y - 4 + j * 3}`, i * 2 + j)).join("")}</g></g>`).join("")}
+${c.lcd ? `<rect x="44" y="113" width="32" height="10" rx="5" fill="#1e2328" opacity=".82"/><text x="60" y="120.2" font-size="${ntFit(c.lcd, 30, 6.4).toFixed(1)}" font-weight="700" text-anchor="middle" fill="#b3e5fc" ${NT_FONT}>${esc(c.lcd)}</text>` : ""}
+${ntSoil(108, 60, c.moist)}`;
 }
 // The status light of a litter box: ready, cleaning, a cat in, full.
 const litLed = (c) => ({ ready: "#43a047", cleaning: "#29b6f6", cat: "#ff9800", full: "#e53935", fault: "#e53935", off: "#5d6773" }[c.st] || "#5d6773");
@@ -2014,7 +2164,7 @@ ${htDial(56, 19, 8.6, c.flue, c.max || 400, c.low || 100)}
 ${txt ? ntLcd(4, 40, 20, 11, txt, true, burning ? "#ffb74d" : embers ? "#ff8a65" : "#90a4ae", ntFit(txt, 20, 7.4)) : ""}`;
 }
 
-const NT_DRAW = { irr_sprinkler: ntIrrSprinkler, irr_tap: ntIrrTap, lit_globe: ntLitterGlobe, lit_box: ntLitterBox, det_smoke: ntDetSmoke, det_co: ntDetCo, det_leak: ntDetLeak, spk_smart: ntSpkSmart, spk_homepod_mini: ntSpkMini, spk_sonos_one: ntSpkOne, spk_bookshelf: ntSpkShelf, spk_sonos_move: ntSpkMove, spk_soundbar: ntSpkBar, spk_echo_dot: ntSpkDot, spk_nest_mini: ntSpkNest, spk_sonos_era100: ntSpkEra100, spk_sonos_era300: ntSpkEra300, spk_bose_wave: ntSpkWave, spk_bose_500: ntSpkBose500, spk_bose_soundlink: ntSpkFlex, spk_bose_soundbar: ntSpkBoseBar, con_ps1: conPs1, con_ps2: conPs2, con_ps3: conPs3, con_ps4: (c) => conPs4(c, false), con_ps4_pro: (c) => conPs4(c, true), con_ps5: conPs5, con_xbox: conXbox, con_xbox_360: conX360, con_xbox_one: conXone, con_xbox_series_x: conXsx, con_xbox_series_s: conXss, con_switch: (c) => conSwitch(c, false), con_switch_2: (c) => conSwitch(c, true), con_switch_lite: conSwitchLite, con_ps_vita: conVita, con_nes: conNes, con_snes: conSnes, con_n64: conN64, con_gamecube: conGamecube, con_wii: conWii, con_megadrive: conMegadrive, tank: ntTank, fws: ntFresh, solth: ntSolarThermal, wood: ntWoodStove, mob_scooter: mobScooter, mob_offroad: mobOffroad, mob_ebike: mobEbike, mob_gyropode: mobGyropode, mob_motorcycle: mobMotorcycle, meter_box: ntMeterBox, meter_dome: ntMeterDome, meter_gas: ntGas, meter_water: ntWater, booster: ntBooster, sump: ntSump, pool: ntPoolRobot, floor: ntFloor, spa: ntSpa, sauna: ntSauna, aquarium: ntAquarium, linky: ntLinky, tree: ntTree };
+const NT_DRAW = { irr_sprinkler: ntIrrSprinkler, irr_tap: ntIrrTap, irr_drip: ntIrrDrip, irr_flowers: ntIrrFlowers, lit_globe: ntLitterGlobe, lit_box: ntLitterBox, det_smoke: ntDetSmoke, det_co: ntDetCo, det_leak: ntDetLeak, spk_smart: ntSpkSmart, spk_homepod_mini: ntSpkMini, spk_sonos_one: ntSpkOne, spk_bookshelf: ntSpkShelf, spk_sonos_move: ntSpkMove, spk_soundbar: ntSpkBar, spk_echo_dot: ntSpkDot, spk_nest_mini: ntSpkNest, spk_sonos_era100: ntSpkEra100, spk_sonos_era300: ntSpkEra300, spk_bose_wave: ntSpkWave, spk_bose_500: ntSpkBose500, spk_bose_soundlink: ntSpkFlex, spk_bose_soundbar: ntSpkBoseBar, con_ps1: conPs1, con_ps2: conPs2, con_ps3: conPs3, con_ps4: (c) => conPs4(c, false), con_ps4_pro: (c) => conPs4(c, true), con_ps5: conPs5, con_xbox: conXbox, con_xbox_360: conX360, con_xbox_one: conXone, con_xbox_series_x: conXsx, con_xbox_series_s: conXss, con_switch: (c) => conSwitch(c, false), con_switch_2: (c) => conSwitch(c, true), con_switch_lite: conSwitchLite, con_ps_vita: conVita, con_nes: conNes, con_snes: conSnes, con_n64: conN64, con_gamecube: conGamecube, con_wii: conWii, con_megadrive: conMegadrive, tank: ntTank, fws: ntFresh, solth: ntSolarThermal, wood: ntWoodStove, mob_scooter: mobScooter, mob_offroad: mobOffroad, mob_ebike: mobEbike, mob_gyropode: mobGyropode, mob_motorcycle: mobMotorcycle, meter_box: ntMeterBox, meter_dome: ntMeterDome, meter_gas: ntGas, meter_water: ntWater, booster: ntBooster, sump: ntSump, pool: ntPoolRobot, floor: ntFloor, spa: ntSpa, sauna: ntSauna, aquarium: ntAquarium, linky: ntLinky, tree: ntTree };
 function ntSvg(d) {
   ntN = 0;
   const draw = NT_DRAW[d && d.kind] || ntLinky;
@@ -2094,6 +2244,9 @@ const NT_CSS = `
         @keyframes nt-littilt{0%,6%{transform:rotate(0)}24%{transform:rotate(-14deg)}42%,54%{transform:rotate(-8deg)}68%{transform:rotate(6deg)}80%,84%{transform:rotate(10deg)}92%{transform:rotate(-3deg)}100%{transform:rotate(0)}}
         @keyframes nt-clump{0%,18%{opacity:1;transform:translate(0,0)}34%{opacity:1;transform:translate(-10px,3px)}44%{opacity:0;transform:translate(-14px,6px)}97%{opacity:0;transform:translate(0,0)}100%{opacity:1}}
         .nta-beacon{animation:nt-glow .7s ease-in-out infinite}
+        .nt-on .nta-sweepL,.nt-on .nta-sweepR{transform-box:view-box;animation:nt-sweepL 4.6s ease-in-out infinite}.nt-on .nta-sweepR{animation-name:nt-sweepR}
+        @keyframes nt-sweepL{0%,100%{transform:rotate(-32deg)}50%{transform:rotate(0deg)}}
+        @keyframes nt-sweepR{0%,100%{transform:rotate(32deg)}50%{transform:rotate(0deg)}}
         .nt-on .nta-flick{transform-box:fill-box;transform-origin:center bottom;animation:nt-flick .7s ease-in-out infinite alternate}
         .nt-on .nta-flick.ntd3{animation-duration:.5s}
         @keyframes nt-flick{0%{transform:scale(1,1) skewX(0)}50%{transform:scale(.94,1.08) skewX(3deg)}100%{transform:scale(1.04,.95) skewX(-3deg)}}

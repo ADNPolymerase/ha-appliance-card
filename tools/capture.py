@@ -81,7 +81,7 @@ FAMILIES = (
     ("lamps", "lamp_bulb,lamp_bedside,lamp_floor,lamp_torch,lamp_pendant,lamp_strip,lamp_spots,lamp_panels,lamp_desk,lamp_wall", 5),
     ("mailboxes", "mb_through,mb_postman,mb_collect,mb_right,mb_3d,mb_3d_open,mb_3d_back,mb_3d_green,mb_classic,mb_classic_open,cam_doorbell,cam_doorbell_idle", 4),
     ("litter", "lit_globe,lit_globe_clean,lit_globe_cat,lit_box,lit_box_clean,lit_box_full", 3),
-    ("watering", "irr_sprinkler,irr_rain,irr_tap,irr_tap_off", 4),
+    ("watering", "irr_sprinkler,irr_rain,irr_tap,irr_tap_off,irr_sonoff,irr_sonoff_pipe,irr_drip,irr_flowers", 4),
     ("detectors", "det_smoke,det_smoke_alarm,det_co,det_co_alarm,det_leak,det_leak_alarm", 3),
     ("speakers", "spk_smart,spk_mini,spk_one,spk_era100,spk_era300,spk_move,spk_bar,spk_wave,spk_bose500,spk_flex,spk_bosebar,spk_shelf,spk_dot,spk_nest", 7),
     ("consoles", "con_ps1,con_ps2,con_ps3,con_ps4,con_ps4pro,con_ps5,con_xbox,con_x360,con_xone,con_xsx,con_xss,con_switch,con_switch2,con_lite,con_vita,con_nes,con_snes,con_n64,con_cube,con_wii,con_md", 5),

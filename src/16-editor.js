@@ -222,6 +222,8 @@ const SECTIONS = [
   { field: "rain_delay_entity", types: ["irrigation"], labelKey: "section_rain_delay", includeDomains: ["binary_sensor", "switch", "input_boolean", "sensor", "number"] },
   { field: "soil_moisture_entity", types: ["irrigation"], labelKey: "section_soil_moisture", includeDomains: ["sensor"] },
   { field: "next_run_entity", types: ["irrigation"], labelKey: "section_next_run", includeDomains: ["sensor", "input_datetime"] },
+  // The watering's duration, for its progress bar (#85).
+  { field: "watering_duration_entity", types: ["irrigation"], labelKey: "irr_duration", includeDomains: ["number", "input_number", "sensor", "select"] },
   { field: "waste_drawer_entity", types: ["litter_box"], labelKey: "sec_waste_drawer", includeDomains: ["sensor", "number"] },
   { field: "litter_level_entity", types: ["litter_box"], labelKey: "sec_litter_level", includeDomains: ["sensor", "number"] },
   { field: "pet_weight_entity", types: ["litter_box"], labelKey: "sec_pet_weight", includeDomains: ["sensor"] },
@@ -1362,6 +1364,13 @@ class ApplianceCardEditor extends HTMLElement {
         ${[["irrigation", "irrigation_layout", IRRIGATION_LAYOUTS, "irr"], ["litter_box", "litter_layout", LITTER_LAYOUTS, "lit"], ["detector", "detector_layout", DETECTOR_LAYOUTS, "det"], ["speaker", "speaker_layout", SPEAKER_LAYOUTS, "spk"], ["console", "console_layout", CONSOLE_LAYOUTS, "con"]]
           .filter(([ty]) => this._type === ty).map(([, f, list, p]) => this._row("section_screen_layout", f, { type: "select",
             options: [{ value: "auto", label: t(hass, "unit_auto") }].concat(list.map((v) => ({ value: v, label: t(hass, `layout_${p}_${v}`) }))) })).join("")}
+        ${this._type === "irrigation" && irrigationLayoutOf(this._config, stateObj(hass, this._config.state_entity)) === "tap" ? this._row("irr_model", "tap_model", {
+          type: "select",
+          options: [{ value: "auto", label: t(hass, "unit_auto") }].concat(TAP_MODELS.map((v) => ({ value: v, label: t(hass, `irr_model_${v}`) }))),
+        }) + this._row("irr_wall", "tap_wall", {
+          type: "select",
+          options: TAP_WALLS.map((v) => ({ value: v, label: t(hass, `irr_wall_${v}`) })),
+        }) : ""}
         ${this._type === "speaker" ? this._row("speaker_color", "speaker_color", {
           type: "select",
           options: [{ value: "auto", label: t(hass, "unit_auto") }].concat(SPK_COLORS.map((v) => ({ value: v, label: t(hass, `color_${v}`) }))),

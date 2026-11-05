@@ -1428,6 +1428,16 @@ const irrTap = irrCard(L("Tap timer", "Programmateur"), { irrigation_layout: "ta
   [st("valve.irr_tap", "open"), st("sensor.irr_tap_left", 12, { unit_of_measurement: "min" })]);
 const irrTapOff = irrCard(L("Dry soil", "Sol sec"), { irrigation_layout: "tap", state_entity: "valve.irr_tap2", soil_moisture_entity: "sensor.irr_soil3" },
   [st("valve.irr_tap2", "closed"), st("sensor.irr_soil3", 14, { unit_of_measurement: "%" })]);
+// #85: Sonoff's tap timer on white render or a standpipe, a vegetable patch
+// on a drip line, a flower bed and its oscillating sprayers.
+const irrSonoff = irrCard(L("Sonoff valve", "Vanne Sonoff"), { irrigation_layout: "tap", tap_model: "sonoff", tap_wall: "render", state_entity: "switch.irr_sonoff", remaining_time_entity: "sensor.irr_sonoff_left", watering_duration_entity: "number.irr_sonoff_dur" },
+  [{ ...st("switch.irr_sonoff", "on"), last_changed: ago(1.2) }, st("sensor.irr_sonoff_left", 48, { unit_of_measurement: "s" }), st("number.irr_sonoff_dur", 2, { unit_of_measurement: "min" })]);
+const irrSonoffPipe = irrCard(L("Garden standpipe", "Robinet sur tuyau"), { irrigation_layout: "tap", tap_model: "sonoff", tap_wall: "none", state_entity: "switch.irr_sonoff2" },
+  [st("switch.irr_sonoff2", "off")]);
+const irrDrip = irrCard(L("Vegetable patch", "Potager"), { irrigation_layout: "drip", state_entity: "switch.irr_drip", remaining_time_entity: "sensor.irr_drip_left", soil_moisture_entity: "sensor.irr_drip_soil" },
+  [{ ...st("switch.irr_drip", "on"), last_changed: ago(8) }, st("sensor.irr_drip_left", 12, { unit_of_measurement: "min" }), st("sensor.irr_drip_soil", 31, { unit_of_measurement: "%" })]);
+const irrFlowers = irrCard(L("Flower bed", "Massif de fleurs"), { irrigation_layout: "flowers", state_entity: "switch.irr_flowers", remaining_time_entity: "sensor.irr_flowers_left" },
+  [{ ...st("switch.irr_flowers", "on"), last_changed: ago(2) }, st("sensor.irr_flowers_left", 3, { unit_of_measurement: "min" })]);
 const litCard = (name, layout, status, drawer, more = {}) => () => card({ name, appliance_type: "litter_box", litter_layout: layout, state_entity: "sensor.lit_" + layout + status, waste_drawer_entity: "sensor.lit_drawer_" + layout + status, ...more },
   [st("sensor.lit_" + layout + status, status), st("sensor.lit_drawer_" + layout + status, drawer, { unit_of_measurement: "%" }), st("sensor.lit_weight", 4.6, { unit_of_measurement: "kg" })]);
 const litGlobe = litCard(L("Litter-Robot", "Litter-Robot"), "globe", "rdy", 45, { pet_weight_entity: "sensor.lit_weight" });
@@ -1572,7 +1582,7 @@ const EXTRA = { iron, coffee_black: coffeeBlack, boiler_window: boilerWindow, bo
                 nt_chest: demoChest, nt_drawers: demoDrawers, nt_booster: demoBooster, nt_sump: demoSump, nt_sump_high: demoSumpHigh, nt_sump_off: demoSumpOff, nt_pool: demoPool,
                 nt_floor: demoFloorWater, nt_floor_elec: demoFloorElec, nt_spa: demoSpa, nt_sauna: demoSauna, nt_aquarium: demoAquarium, nt_linky: demoLinky,
                 nt_tree: demoTree, nt_tree_red: demoTreeRed,
-                irr_sprinkler: irrSprinkler, irr_rain: irrRain, irr_tap: irrTap, irr_tap_off: irrTapOff,
+                irr_sprinkler: irrSprinkler, irr_rain: irrRain, irr_tap: irrTap, irr_tap_off: irrTapOff, irr_sonoff: irrSonoff, irr_sonoff_pipe: irrSonoffPipe, irr_drip: irrDrip, irr_flowers: irrFlowers,
                 lit_globe: litGlobe, lit_globe_clean: litGlobeClean, lit_globe_cat: litGlobeCat, lit_box: litBox, lit_box_clean: litBoxClean, lit_box_full: litBoxFull,
                 det_smoke: detSmoke, det_smoke_alarm: detSmokeAlarm, det_co: detCo, det_co_alarm: detCoAlarm, det_leak: detLeak, det_leak_alarm: detLeakAlarm,
                 spk_smart: spkSmart, spk_mini: spkMini, spk_one: spkOne, spk_shelf: spkShelf, spk_move: spkMove, spk_bar: spkBar, spk_dot: spkDot, spk_nest: spkNest, spk_era100: spkEra100, spk_era300: spkEra300, spk_wave: spkWave, spk_bose500: spkBose500, spk_flex: spkFlex, spk_bosebar: spkBoseBar, heat_tank: heatTank, heat_tank_loading: heatTankLoading, heat_tank_low: heatTankLow, heat_fws: heatFws, heat_fws_draw: heatFwsDraw, heat_fws_circ: heatFwsCirc, heat_sth: heatSth, heat_sth_tubes: heatSthTubes, heat_sth_frost: heatSthFrost, heat_sth_stag: heatSthStag, heat_wood: heatWood, heat_wood_embers: heatWoodEmbers, heat_wood_cold: heatWoodCold, heat_wood_water: heatWoodWater, con_ps1: conPs1, con_ps2: conPs2, con_ps3: conPs3, con_ps4: conPs4, con_ps4pro: conPs4Pro, con_ps5: conPs5, con_xbox: conXbox, con_x360: conX360, con_xone: conXone, con_xsx: conXsx, con_xss: conXss, con_switch: conSwitch, con_switch2: conSwitch2, con_lite: conLite, con_vita: conVita, con_nes: conNes, con_snes: conSnes, con_n64: conN64, con_cube: conCube, con_wii: conWii, con_md: conMd,
@@ -1639,7 +1649,7 @@ function liveGallery() {
     [L("Around the house", "Autour de la maison"), [demoChest, demoDrawers, demoBooster, demoSump, demoSumpHigh, demoSumpOff, demoPool, demoFloorWater, demoFloorElec, demoSpa, demoSauna, demoAquarium, demoLinky, demoTree, demoTreeRed]],
     [L("Pets", "Animaux"), [petFeeder, roundFeeder, doubleFeeder, dualFeeder, wetFeeder, petFountain, roundFountain]],
     [L("Litter boxes", "Liti\u00e8res"), [litGlobe, litGlobeClean, litGlobeCat, litBox, litBoxClean, litBoxFull]],
-    [L("Garden watering", "Arrosage"), [irrSprinkler, irrRain, irrTap, irrTapOff]],
+    [L("Garden watering", "Arrosage"), [irrSprinkler, irrRain, irrTap, irrTapOff, irrSonoff, irrSonoffPipe, irrDrip, irrFlowers]],
     [L("Smoke, CO and leak detectors", "D\u00e9tecteurs de fum\u00e9e, CO et fuite"), [detSmoke, detSmokeAlarm, detCo, detCoAlarm, detLeak, detLeakAlarm]],
     [L("Speakers", "Enceintes"), [spkSmart, spkMini, spkOne, spkEra100, spkEra300, spkMove, spkBar, spkWave, spkBose500, spkFlex, spkBoseBar, spkShelf, spkDot, spkNest]],
     [L("Game consoles", "Consoles de jeu"), [conPs1, conPs2, conPs3, conPs4, conPs4Pro, conPs5, conXbox, conX360, conXone, conXsx, conXss, conSwitch, conSwitch2, conLite, conVita, conNes, conSnes, conN64, conCube, conWii, conMd]],

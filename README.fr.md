@@ -870,7 +870,9 @@ battery_entity: sensor.trottinette_batterie   # facultatif
 
 | Option | Types | Description |
 |---|---|---|
-| `irrigation_layout` | arrosage | `sprinkler` (une tête escamotable sur sa pelouse) \| `tap` (un programmateur sur le robinet du jardin, son tuyau et sa lance). Non renseigné, un nom qui dit Gardena, LinkTap, robinet ou timer donne un programmateur. |
+| `irrigation_layout` | arrosage | `sprinkler` (une tête escamotable sur sa pelouse) \| `tap` (un programmateur sur le robinet du jardin, son tuyau et sa lance) \| `drip` (un potager en bac dont la ligne de goutte à goutte goutte et fonce la terre) \| `flowers` (un massif de fleurs et ses deux micro-asperseurs oscillants). Non renseigné, un nom qui dit Gardena, LinkTap, Sonoff, robinet ou timer donne un programmateur, *goutte*, *potager* ou *vegetable* un potager, *massif* ou *fleur* un massif. |
+| `tap_model` / `tap_wall` | arrosage | Le programmateur : `generic` ou `sonoff` (la vanne Zigbee noire et orange de Sonoff, reconnue aussi par le nom), sur un mur en `brick` (défaut), en crépi blanc `render`, ou `none`, le robinet étant alors monté sur un tuyau sortant du sol. |
+| `watering_duration_entity` | arrosage | La durée de l'arrosage (celle du Sonoff, un number ou une entrée) : la barre se remplit pendant l'arrosage. Sans elle, la barre vient du temps écoulé depuis le début de l'arrosage et de `remaining_time_entity`. |
 | `zone_entity` / `next_run_entity` | arrosage | La zone arrosée et le prochain arrosage, en lignes. `remaining_time_entity` affiche le temps restant sur le dessin pendant l'arrosage. |
 | `rain_delay_entity` | arrosage | Une pause pluie, allumée ou un nombre d'heures : *Pause pluie*, la pluie qui tombe sur la pelouse. |
 | `soil_moisture_entity` | arrosage | L'humidité du sol, en % : une jauge sur un piquet dans la pelouse, et une ligne, orange sous 25 %. |

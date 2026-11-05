@@ -12469,6 +12469,30 @@ function tvT(w) { return { 'switch.tv': { state: 'on', attributes: {} }, 'sensor
   check('arrosage : humidite du sol en ligne', infoLine(soil, 'Soil moisture').replace(/\s/g, ' '), '14 %');
   check('arrosage : sol sec en orange', /info-line[^"]*caution[^"]*"[^>]*title="Soil moisture"|title="Soil moisture"[^>]*caution/.test(soil) || /caution/.test(soil), true);
 
+  // #85: Sonoff's tap timer, the walls, a vegetable patch, a flower bed, the
+  // progress of a watering.
+  check('arrosage : Sonoff par son nom', /SONOFF/.test(render({ appliance_type: 'irrigation', state_entity: 'switch.sonoff_swv_vanne' }, { 'switch.sonoff_swv_vanne': s('on') })), true);
+  check('arrosage : Sonoff, un programmateur', kindOf(render({ appliance_type: 'irrigation', state_entity: 'switch.sonoff_swv_vanne' }, { 'switch.sonoff_swv_vanne': s('on') })), 'irr_tap');
+  check('arrosage : le modele choisi gagne', /SONOFF/.test(render({ ...IR, irrigation_layout: 'tap', tap_model: 'generic' }, { 'switch.irr': s('on') })), false);
+  const TP = (wall) => render({ ...IR, irrigation_layout: 'tap', tap_wall: wall }, { 'switch.irr': s('off') });
+  check('arrosage : mur en briques par defaut', /stroke="#b9a07c"/.test(TP(undefined)), true);
+  check('arrosage : crepi blanc', [/stroke="#b9a07c"/.test(TP('render')), /stop-color="#f7f4ee"/.test(TP('render'))].join(), 'false,true');
+  check('arrosage : sans mur, sur un tuyau', [/stop-color="#f7f4ee"|stroke="#b9a07c"/.test(TP('none')), /fill="#2f241a"/.test(TP('none'))].join(), 'false,true');
+  check('arrosage : potager par son nom', kindOf(render({ appliance_type: 'irrigation', state_entity: 'switch.goutte_a_goutte_potager' }, { 'switch.goutte_a_goutte_potager': s('on') })), 'irr_drip');
+  check('arrosage : massif par son nom', kindOf(render({ appliance_type: 'irrigation', state_entity: 'switch.massif_fleurs' }, { 'switch.massif_fleurs': s('on') })), 'irr_flowers');
+  check('arrosage : le goutte a goutte goutte', /class="nta-pop/.test(render({ ...IR, irrigation_layout: 'drip' }, { 'switch.irr': s('on') })), true);
+  check('arrosage : le massif balaie', /class="nta-sweepL/.test(render({ ...IR, irrigation_layout: 'flowers' }, { 'switch.irr': s('on') })), true);
+  const bar = (h) => (/class="bar-fill" style="width:(\d+)%/.exec(h) || [, null])[1];
+  check('arrosage : la barre par la duree', bar(render({ ...IR, remaining_time_entity: 'sensor.left', watering_duration_entity: 'number.dur' },
+    { 'switch.irr': s('on'), 'sensor.left': s(48, { unit_of_measurement: 's' }), 'number.dur': s(2, { unit_of_measurement: 'min' }) })), '60');
+  const since = new Date(Date.now() - 72000).toISOString();
+  check('arrosage : la barre par le temps ecoule', bar(render({ ...IR, remaining_time_entity: 'sensor.left' },
+    { 'switch.irr': { ...s('on'), last_changed: since }, 'sensor.left': s(48, { unit_of_measurement: 's' }) })), '60');
+  check('arrosage : pas de barre a l arret', bar(render({ ...IR, remaining_time_entity: 'sensor.left' }, { 'switch.irr': s('off'), 'sensor.left': s(0, { unit_of_measurement: 's' }) })), null);
+  check('arrosage : la duree en ligne', infoLine(render({ ...IR, watering_duration_entity: 'number.dur' }, { 'switch.irr': s('off'), 'number.dur': s(2, { unit_of_measurement: 'min' }) }), 'Watering duration').replace(/\s/g, ' '), '2 min');
+  check('editeur arrosage : modele et mur en programmateur seulement', [['tap_model', 'tap_wall'].every((f) => markup(newEditor({ ...IR, irrigation_layout: 'tap' })).includes(`data-field="${f}"`)), markup(newEditor(IR)).includes('data-field="tap_model"')].join(), 'true,false');
+  check('editeur arrosage : la duree', markup(newEditor(IR)).includes('data-toggle="watering_duration_entity"'), true);
+
   const LT = (st, more = {}, ents = {}) => render({ appliance_type: 'litter_box', state_entity: 'sensor.lr', ...more }, { 'sensor.lr': s(st), ...ents });
   check('litiere : prete', stateLine(LT('rdy')), 'Ready');
   check('litiere : nettoyage', stateLine(LT('ccp')), 'Cleaning');
