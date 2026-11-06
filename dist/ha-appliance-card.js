@@ -1,5 +1,5 @@
 // Built by tools/build.mjs from the files of src/: edit those, not this file.
-const CARD_VERSION = "4.13.0";
+const CARD_VERSION = "4.14.0";
 
 console.info(
   "%c HA-APPLIANCE-CARD %c v" + CARD_VERSION + " ",
@@ -50,7 +50,7 @@ const T = {
     pause_entity: "Pause button entity",
     resume_entity: "Resume button entity",
     stop_entity: "Stop / reset button entity",
-    section_program: "Program", section_remaining: "Remaining time",
+    section_program: "Program", section_active_program: "Running program", section_remaining: "Remaining time",
     section_ready_at: "Ready at",
     section_progress: "Progress % (override)", section_door: "Door sensor",
     section_alerts: "Alerts", section_connectivity: "Connectivity",
@@ -148,7 +148,7 @@ const T = {
     compact_lines: "Information", lines_below: "Under the card", lines_beside: "Beside the drawing", lines_toggle: "Hidden, a chevron shows them", lines_show: "Show the information", lines_hide: "Hide the information",
     type_mobility: "Electric ride", layout_mob_scooter: "Scooter", layout_mob_offroad: "Off-road scooter", layout_mob_ebike: "E-bike", layout_mob_gyropode: "Gyropode", layout_mob_motorcycle: "Electric motorcycle", mob_charging: "Charging", mob_charged: "Charged", mob_unplugged: "Unplugged", mob_plugged: "Plugged in", type_hair_dryer: "Hair dryer", layout_hd_pistol: "Classic", layout_hd_ring: "Ring", hd_cool: "Cool air", hd_hot: "Hot air", hd_heat_threshold: "Hot air above this power (W)", fill_height: "Fill the height of its slot", done_alert: "Flash at the end of the cycle", done_seen: "Seen", no_power_threshold: "No power draw below (W)", group_appearance: "Appearance", show_name: "Show the name", show_state: "Show the state", transparent: "Transparent background", font_scale: "Text size", illustration_size: "Drawing size", compact_mode: "Compact mode", compact_off: "Off", compact_hide: "No drawing", compact_side: "Drawing on the side", group_laundry: "Laundry", group_kitchen: "Kitchen", group_heating: "Heating and hot water", group_air: "Air and climate", group_home: "Home and media", group_pets: "Pets", illustration_frame: "Same drawing height as the cards beside it", section_screen_source: "Input source", screen_source: "Input",
     type_network: "Network device (switch, NAS, server)", group_network: "Network and servers", layout_net_switch: "Switch", layout_net_server: "Server", layout_net_nas: "NAS", layout_net_rack: "Rack", net_ports_count: "Ports drawn", net_bays: "NAS bays", net_online: "Online", net_busy: "Busy", net_alert: "Alert", net_warn: "Disk to watch", section_net_cpu: "CPU usage (%)", section_net_memory: "Memory usage (%)", section_net_volume: "Volume used (%)", section_net_download: "Download rate", section_net_upload: "Upload rate", section_net_ports: "Active ports", net_ports_total: "Port count", section_net_poe: "PoE power", section_net_problem: "Problem alert", section_net_temperature: "Temperature", net_temp_alert: "Alert above this temperature (\u00b0C)", net_busy_threshold: "Busy above this rate (Mbit/s)", net_line_rate: "Throughput", net_line_load: "Load", net_line_volume: "Volume", section_net_disk1: "Disk 1", section_net_disk2: "Disk 2", section_net_disk3: "Disk 3", section_net_disk4: "Disk 4",
-    type_robot: "Robot (vacuum, mop, mower)", layout_robot_vacuum: "Robot vacuum", layout_robot_mop: "Mopping robot", layout_robot_mower: "Robot mower", section_robot_station: "Base", robot_station_station: "Emptying or washing station", robot_station_base: "Charging base only", robot_shelter: "Shelter over the base", robot_shelter_style: "Shelter style", mower_style: "Mower style", mower_classic: "Classic", mower_navimow: "Navimow, orange wheels", shelter_lean_to: "Wooden lean-to", shelter_shell: "Shell", shelter_garage: "Garage", robot_shelter_color: "Shell colour", delay_starts_in: "Starts in", section_delay: "Delayed start countdown", state_entity_optional: "State entity (optional)", color_green: "Green", color_orange: "Orange", robot_charging: "Charging", robot_docked: "Docked", robot_cleaning: "Cleaning", robot_mopping: "Mopping", robot_mowing: "Mowing", robot_edgecut: "Edge cutting", robot_returning: "Returning to base", robot_emptying: "Emptying the bin", robot_bin_full: "Bin full", robot_washing: "Washing the pads", robot_drying: "Drying the pads", robot_water_empty: "Water tank empty", robot_rain: "Rain delay", robot_idle: "Stopped", section_robot_status: "Detailed status", section_battery: "Battery", section_robot_bin: "Bin full alert", section_robot_water: "Water tank", section_robot_rain: "Rain", section_robot_error: "Error", robot_station_box: "Rectangular station", robot_station_color: "Station colour", color_gold: "Gold", robot_camera: "Camera module on the robot", section_robot_clean_tank: "Clean water", section_robot_dirty_tank: "Dirty water",
+    type_robot: "Robot (vacuum, mop, mower)", layout_robot_vacuum: "Robot vacuum", layout_robot_mop: "Mopping robot", layout_robot_combo: "Vacuum and mop robot", layout_robot_mower: "Robot mower", section_robot_station: "Base", robot_station_station: "Emptying or washing station", robot_station_base: "Charging base only", robot_shelter: "Shelter over the base", robot_shelter_style: "Shelter style", mower_style: "Mower style", mower_classic: "Classic", mower_navimow: "Navimow, orange wheels", shelter_lean_to: "Wooden lean-to", shelter_shell: "Shell", shelter_garage: "Garage", robot_shelter_color: "Shell colour", delay_starts_in: "Starts in", section_delay: "Delayed start countdown", state_entity_optional: "State entity (optional)", color_green: "Green", color_orange: "Orange", robot_charging: "Charging", robot_docked: "Docked", robot_cleaning: "Cleaning", robot_mopping: "Mopping", robot_mowing: "Mowing", robot_edgecut: "Edge cutting", robot_returning: "Returning to base", robot_emptying: "Emptying the bin", robot_bin_full: "Bin full", robot_washing: "Washing the pads", robot_drying: "Drying the pads", robot_water_empty: "Water tank empty", robot_rain: "Rain delay", robot_idle: "Stopped", section_robot_status: "Detailed status", section_battery: "Battery", section_robot_bin: "Bin full alert", section_robot_water: "Water tank", section_robot_rain: "Rain", section_robot_error: "Error", robot_station_box: "Rectangular station", robot_station_color: "Station colour", color_gold: "Gold", robot_camera: "Camera module on the robot", section_robot_clean_tank: "Clean water", section_robot_dirty_tank: "Dirty water",
     type_pool_pump: "Pool pump", pool_filtering: "Filtering", pool_chlorinating: "Chlorine injection", pool_backwash: "Backwash", pool_frost: "Frost protection", pool_light_on: "light on", section_water_temperature: "Water temperature", section_air_temperature: "Air temperature", section_ph: "pH", section_redox: "RedOx (ORP)", section_filtration_time: "Filtration time today", section_pressure: "Filter pressure", pool_pressure_alert: "Alert above this pressure (bar)", section_pool_mode: "Pump mode", section_chlorine_pump: "Chlorine pump", section_chlorine_level: "Chlorine tank level", section_backwash: "Backwash", section_frost: "Frost protection", section_pool_alert: "Alert", pool_line_water: "Water", pool_line_air: "Air", pool_line_filtered: "Filtered today", pool_line_pressure: "Pressure", pool_line_chlorine: "Chlorine tank", pool_line_mode: "Mode",
     history_last: "Last {h} h", show_history: "Show the history", section_history: "History sensor", history_hours: "Hours of history", history_empty: "No history yet", history_last_days: "Last {d} days", history_chip_h: "{h} h", history_chip_d: "{d} d", history_periods: "History periods", history_total: "Total", delay_set: "Delayed start", delay_none: "None", section_delay_set: "Delayed start setting", hide_when_off: "Show only the state when off", robot_winter: "Winter storage", section_robot_winter: "Winter storage switch",
     type_scale: "Bathroom scale", scale_weighed: "Weighed", scale_goal_reached: "Goal reached", section_weight_goal: "Weight goal", scale_goal_value: "Weight goal, without a sensor", section_fat_ratio: "Body fat (%)", section_fat_mass: "Fat mass", section_muscle_mass: "Muscle mass", section_bone_mass: "Bone mass", scale_line_goal: "Goal", scale_line_fat: "Fat", scale_line_muscle: "Muscle", scale_line_bone: "Bone", scale_to_lose: "to lose", scale_to_gain: "to gain",
@@ -162,7 +162,7 @@ const T = {
     speed_power_max: "Power at top speed (W)", speed_power_custom: "Custom speed thresholds", speed_power_2: "Speed 2 from (W)", speed_power_3: "Speed 3 from (W)",
     fw_self_cleaning: "Self-cleaning", fw_dirty_full: "Dirty water tank full", fw_clean_empty: "Clean water tank empty",
     group_energy: "Energy", type_solar: "Solar panels", type_home_battery: "Home battery", solar_producing: "Producing", solar_low: "Low production", solar_night: "Night", section_solar_layout: "Mounting", layout_solar_ground: "On the ground", layout_solar_roof: "On a roof", section_solar_power: "Power produced", section_energy_today: "Energy produced today", solar_line_today: "Today", solar_peak_power: "Peak power of the panels (W)", section_battery_power: "Battery power (+ charging, \u2212 discharging)", power_inverted: "Positive power means discharging", section_charge_power: "Charge power", section_battery_discharge: "Discharge power", section_reserve: "Backup reserve", section_charge_limit: "Charge limit", battery_capacity: "Capacity (kWh)", layout_battery_wall: "Wall battery", layout_battery_station: "Portable power station", bat_idle: "Idle", bat_full: "Full", bat_low: "Low battery", bat_line_full_in: "Full in", bat_line_left: "Remaining", bat_line_reserve: "Reserve",
-    robot_controls: "Start, pause and return buttons", robot_go_home: "Return to base", battery_corner: "Show the battery in a corner of the card", section_robot_floor: "Floor", floor_rug: "Rug", floor_tiles: "Tiles", floor_parquet: "Parquet", floor_smooth: "Smooth floor",
+    robot_controls: "Start, pause and return buttons", robot_go_home: "Return to base", battery_corner: "Show the battery in a corner of the card", section_robot_clean_mode: "Cleaning mode", section_robot_floor: "Floor", floor_rug: "Rug", floor_tiles: "Tiles", floor_parquet: "Parquet", floor_smooth: "Smooth floor",
     layout_net_router: "Router / box", section_net_clients: "Connected clients", section_net_wan: "Internet link", section_net_wifi: "Wi-Fi", net_line_clients: "Clients", net_no_internet: "No internet",
     section_purifier_layout: "Model", layout_purifier_cylinder: "Cylinder", layout_purifier_box: "Square box", layout_purifier_ring: "Bladeless ring",
     pf_purifying: "Purifying", pf_auto: "Auto", pf_night: "Night mode", section_air_quality: "Air quality",
@@ -2602,7 +2602,8 @@ function siblingEntityIds(hass, entityId) {
 const AUTO_PATTERNS = {
   // Miele's program_phase and program_type, Home Connect's progress: not the
   // programme itself.
-  program_entity: /^(?!.*(phase|finish|progress|type|time|remain|duration)).*program/i,
+  program_entity: /^(?!.*(phase|finish|progress|type|time|remain|duration|a[ck]tiv|actif|attivo)).*program/i,
+  active_program_entity: /a[ck]tiv\w*.?program|program\w*.?(a[ck]tiv|actif|attivo)/i,
   // What is left of the cycle, not of the filter or the detergent.
   remaining_time_entity: /^(?!.*(filter|water|clean|detergent|softener|salt|rinse.?aid|batter|range|capacity)).*(time.?to.?end|remain|time.?left|left.?time|finish.?(in|time)|completion.?time|end.?time)/i,
   progress_entity: /^(?!.*(update|firmware|filter)).*(progress|percent_?complete)/i,
@@ -2750,6 +2751,7 @@ const TYPE_AUTO_PATTERNS = {
     // Roborock's water_box_attached is on while the box is in place, its
     // dirty_box_full the wrong tank.
     robot_water_entity: /^(?!.*(attached|carriage|dirty)).*(water_?(shortage|box|tank|level)|low_?water|mop_?water|clean_?water|(^|[._])tank_level)/i,
+    robot_clean_mode_entity: /clean\w*.?mode|mode.?(de.?)?nettoy|reinigungs.?modus/i,
     robot_error_entity: /error|erreur|fault/i,
     robot_rain_entity: /rain|pluie|regen/i,
   },
@@ -4136,16 +4138,18 @@ function netDiskState(hass, entityId, anchorDevice) {
 // integrations say more in a status of their own, read here for what the
 // drawing can show: the station emptying the bin or washing and drying the
 // pads, rain keeping a mower home, its edge cut.
-const ROBOT_LAYOUTS = ["vacuum", "mop", "mower", "stick", "floor_washer", "pool"];
+const ROBOT_LAYOUTS = ["vacuum", "mop", "combo", "mower", "stick", "floor_washer", "pool"];
 const ROBOT_STATIONS = ["station", "box", "base"];
 // A rectangular station's front, as the brands make them (#69).
 const ROBOT_BOX_COLORS = ["white", "black", "gold"];
 const ROBOT_ONLY_FIELDS = ["robot_layout", "robot_station", "robot_station_color", "robot_camera", "robot_shelter", "robot_shelter_style", "mower_style", "robot_shelter_color", "robot_floor", "robot_controls", "away_threshold", "robot_status_entity", "robot_bin_entity",
-  "robot_water_entity", "robot_clean_tank_entity", "robot_dirty_tank_entity", "robot_rain_entity", "robot_error_entity", "robot_winter", "robot_winter_entity"];
+  "robot_water_entity", "robot_clean_mode_entity", "robot_clean_tank_entity", "robot_dirty_tank_entity", "robot_rain_entity", "robot_error_entity", "robot_winter", "robot_winter_entity"];
 // A robot by its name, its maker's or its integration's. A robot cook is a
 // cooker, so the word robot needs what it does.
 const ROBOT_NAME_RE = /dolphin|sileno|tapo.?rv\d+|proscenic|hombot|ambrogio|tineco|aspirateur.?balai|floor.?one|ifloor|laveur.?de.?sol|floor.?washer|nass.?trocken|lavapavimenti|stick.?vac|cordless.?vac|akkusauger|stielsauger|roomba|braava|roborock|ecovacs|deebot|dreame|neato|eufy.?clean|robovac|xiaomi.?vacuum|conga|robot.?(vacuum|aspir|mop|laveur|mower|tondeuse)|robot.?(clean|sweep)|vacuum|aspirateur|saugroboter|staubsauger|wischroboter|aspiradora|aspirapolvere|robotstofzuiger|stofzuiger|dammsugare|st(o|\u00f8)vsuger|odkurzacz|vysavac|landroid|automower|mammotion|navimow|(^|[^a-z])luba([^a-z]|$)|lawn.?mower|(^|[^a-z])mower|tondeuse|m(a|ae|\u00e4)hroboter|robotmaaier|grasmaaier|cortac(e|\u00e9)sped|tosaerba|corta.?relva|robotgr(a|\u00e4)sklipp|robotgressklipp|robotpl(a|\u00e6)neklipp|kosiarka|sekacka|\u626b\u5730|\u5438\u5c18|\u62d6\u5730|\u5272\u8349|\u043f\u044b\u043b\u0435\u0441\u043e\u0441|\u0433\u0430\u0437\u043e\u043d\u043e\u043a\u043e\u0441/;
 const ROBOT_MOWER_RE = /mow|m(a|ae|\u00e4)h|tondeuse|maaier|cortac|tosaerba|relva|klipp|kosiark|sekack|landroid|automower|worx|mammotion|navimow|(^|[^a-z])luba([^a-z]|$)|\u5272\u8349|\u0433\u0430\u0437\u043e\u043d\u043e\u043a\u043e\u0441/;
+// A robot that vacuums and mops in the same cycle (#91), named as such.
+const ROBOT_COMBO_RE = /combo|hybrid|2.?[ei]n.?1|saug.?(und.?)?wisch|aspirateur.?laveur|\u626b\u62d6/;
 const ROBOT_MOP_RE = /(^|[^a-z])mop|braava|wisch|serpill|laveur|fregas|lavapavim|dweil|moppe|mopuj|mopov|\u62d6\u5730/;
 // Home Assistant's own words, the same for a vacuum and a mower.
 const ROBOT_STATES = { cleaning: "cleaning", mowing: "cleaning", docked: "charging", returning: "returning", paused: "paused", idle: "idle", error: "error" };
@@ -4179,7 +4183,7 @@ const ROBOT_LABELS = {
   error: "error", emptying: "robot_emptying", full: "robot_bin_full", washing: "robot_washing", drying: "robot_drying",
   empty: "robot_water_empty", rain: "robot_rain", edgecut: "robot_edgecut", winter: "robot_winter", unav: "ev_offline", off: "ac_off", away: "stick_away",
 };
-const ROBOT_WORK_LABELS = { vacuum: "robot_cleaning", mop: "robot_mopping", mower: "robot_mowing", stick: "robot_cleaning", floor_washer: "robot_cleaning", pool: "robot_cleaning" };
+const ROBOT_WORK_LABELS = { vacuum: "robot_cleaning", mop: "robot_mopping", combo: "robot_cleaning", mower: "robot_mowing", stick: "robot_cleaning", floor_washer: "robot_cleaning", pool: "robot_cleaning" };
 const ROBOT_COLORS = {
   charging: "#43a047", docked: "#43a047", emptying: "#43a047",
   cleaning: "#1e88e5", edgecut: "#1e88e5", returning: "#1e88e5", washing: "#1e88e5",
@@ -4284,6 +4288,7 @@ function robotLayoutOf(cfg, st) {
   if (ROBOT_MOWER_RE.test(name)) return "mower";
   if (ROBOT_WASHER_RE.test(name)) return "floor_washer";
   if (ROBOT_STICK_RE.test(name)) return "stick";
+  if (ROBOT_COMBO_RE.test(name)) return "combo";
   if (ROBOT_MOP_RE.test(name)) return "mop";
   return "vacuum";
 }
@@ -4341,6 +4346,21 @@ function robotModeOf(hass, cfg, st, layout) {
 // from any on and off entity, an input_boolean or a date-driven automation.
 function robotWinter(hass, cfg) {
   return cfg.robot_winter === true || (!!cfg.robot_winter_entity && robotRaised(hass, cfg.robot_winter_entity, /winter|hiver/));
+}
+
+// What a robot that does both is set to do (#91): Dreame's cleaning_mode says
+// sweeping, mopping, both, or mopping after sweeping; a mop intensity set to
+// off means it only vacuums. Null when nothing says it: both, then.
+function robotCleanModeOf(hass, cfg) {
+  const id = cfg.robot_clean_mode_entity;
+  const st = id ? stateObj(hass, id) : null;
+  if (!st || HA_OFFLINE_STATES.includes(String(st.state).toLowerCase())) return null;
+  const v = stripAccents(String(st.state)).trim().toLowerCase();
+  if (/mop|water|wisch|serpill/.test(id) && !/mode/.test(id)) return ["off", "none", "no_water", "dry"].includes(v) ? "vacuum" : "both";
+  if (/(sweep|vacuum|aspir|saug|vac)\w*[\s_+&-]*(and|et|und|then|puis|after|plus|\+|&)?[\s_+&-]*(mop|lav|wisch)|(mop|lav|wisch)\w*[\s_+&-]*(and|et|und|then|puis|after|apres|nach|\+|&)[\s_+&-]*(sweep|vacuum|aspir|saug)|both|combo/.test(v)) return "both";
+  if (/mop|lavage|laver|wisch|serpill|fregar/.test(v)) return "mop";
+  if (/sweep|vacuum|aspir|saug|^dry/.test(v)) return "vacuum";
+  return null;
 }
 
 // The tank's level, when a number says it.
@@ -8423,10 +8443,17 @@ class ApplianceCard extends HTMLElement {
 
     // Program
     let programText = null;
-    if (cfg.program_entity && !offHidden) {
-      const pst = stateObj(hass, cfg.program_entity);
-      if (pst && !["unknown", "unavailable"].includes(pst.state)) {
-        programText = cap.printer3d ? printerFileName(pst.state) : programLabel(hass, pst, pst.state, cfg);
+    if (!offHidden) {
+      // During a cycle the running programme comes first: a selected-programme
+      // entity can go blank once the cycle starts (#92). Between cycles it is
+      // the other way round, so the line shows what the menu will change.
+      const ids = betweenCycles(norm) ? [cfg.program_entity, cfg.active_program_entity] : [cfg.active_program_entity, cfg.program_entity];
+      for (const id of ids) {
+        const pst = id ? stateObj(hass, id) : null;
+        if (pst && !["unknown", "unavailable"].includes(pst.state)) {
+          programText = cap.printer3d ? printerFileName(pst.state) : programLabel(hass, pst, pst.state, cfg);
+          break;
+        }
       }
     }
 
@@ -11333,9 +11360,10 @@ class ApplianceCard extends HTMLElement {
       color = ROBOT_COLORS[mode];
       const water = robotWaterPct(hass, cfg);
       // The station's two water tanks, on the lines and on its front (#69).
-      const tankOn = layout === "vacuum" || layout === "mop";
+      const tankOn = ["vacuum", "mop", "combo"].includes(layout);
       const cleanTank = tankOn ? robotTank(hass, cfg.robot_clean_tank_entity) : null;
       const dirtyTank = tankOn ? robotTank(hass, cfg.robot_dirty_tank_entity) : null;
+      const cleanMode = layout === "combo" ? robotCleanModeOf(hass, cfg) : null;
       if (mode !== "unav" && mode !== "winter") {
         if (battery !== null && !cfg.battery_corner) {
           extraLines.push({ key: "robot_battery", icon: robotBatteryIcon(battery, mode === "charging"), label: t(hass, "section_battery"),
@@ -11344,6 +11372,10 @@ class ApplianceCard extends HTMLElement {
         if (water !== null) {
           extraLines.push({ key: "robot_water", icon: "mdi:water", label: t(hass, "section_robot_water"),
             value: keepTogether(`${Math.round(water)} %`), entity: cfg.robot_water_entity });
+        }
+        if (cleanMode) {
+          const cm = stateObj(hass, cfg.robot_clean_mode_entity);
+          extraLines.push({ key: "robot_clean_mode", icon: "mdi:broom", label: t(hass, "section_robot_clean_mode"), value: formatInfoValue(cm, hass, null, cfg, cfg.robot_clean_mode_entity), entity: cfg.robot_clean_mode_entity });
         }
         for (const [key, tk, id] of [["robot_clean_tank", cleanTank, cfg.robot_clean_tank_entity], ["robot_dirty_tank", dirtyTank, cfg.robot_dirty_tank_entity]]) {
           if (!tk) continue;
@@ -11382,7 +11414,7 @@ class ApplianceCard extends HTMLElement {
         const secs = ntRemaining(hass, cfg.remaining_time_entity);
         if (secs !== null) poolTime = formatDuration(secs, hass);
       }
-      robot = { layout, mode, water, battery, poolTime, floor: cfg.robot_floor, base: cfg.robot_station === "base", shelter: cfg.robot_shelter ? (SHELTER_STYLES.includes(cfg.robot_shelter_style) ? cfg.robot_shelter_style : "lean_to") : "",
+      robot = { layout, mode, water, cleanMode, battery, poolTime, floor: cfg.robot_floor, base: cfg.robot_station === "base", shelter: cfg.robot_shelter ? (SHELTER_STYLES.includes(cfg.robot_shelter_style) ? cfg.robot_shelter_style : "lean_to") : "",
         shelterColor: cfg.robot_shelter_color, mowerStyle: mowerStyleOf(cfg, st),
         box: cfg.robot_station === "box", boxColor: cfg.robot_station_color, camera: !!cfg.robot_camera, cleanTank, dirtyTank };
     }
@@ -11579,9 +11611,14 @@ class ApplianceCard extends HTMLElement {
       toggleOn = !!tst && ["on", "true", "open"].includes(String(tst.state).toLowerCase());
     }
 
+    // A two-speed unit's power button when it is the speed switch: it shows
+    // the speed it is at, not a power sign (HACF #150).
+    const speedToggle = !!cap.hrv && !!cfg.toggle_entity && cfg.toggle_entity === cfg.high_speed_entity;
+
     // Action buttons
     const actions = [
-      { key: "toggle", entity: toggleEntity, icon: "mdi:power", label: t(hass, "toggle"), on: toggleOn, plugDefault: plugToggle },
+      { key: "toggle", entity: toggleEntity, icon: speedToggle ? (toggleOn ? "mdi:fan-speed-2" : "mdi:fan-speed-1") : "mdi:power",
+        label: speedToggle ? t(hass, toggleOn ? "hrv_high_speed" : "hrv_low_speed") : t(hass, "toggle"), on: toggleOn, plugDefault: plugToggle },
       { key: "start", entity: cfg.start_entity, icon: "mdi:play", label: t(hass, "start") },
       { key: "pause", entity: cfg.pause_entity, icon: "mdi:pause", label: t(hass, "pause") },
       { key: "resume", entity: cfg.resume_entity, icon: "mdi:play-pause", label: t(hass, "resume") },
@@ -11602,6 +11639,7 @@ class ApplianceCard extends HTMLElement {
       // editor does not offer it, since a menu long enough to hold every
       // icon of the card would be a menu nobody reads.
       .map((a) => (a.key && cfg[`${a.key}_icon`] ? { ...a, icon: cfg[`${a.key}_icon`] } : a))
+      .map((a) => (a.key === "toggle" && a.on && cfg.toggle_icon_on ? { ...a, icon: cfg.toggle_icon_on } : a))
       // A fridge offers no cycle to drive, only its plug: the switch shows
       // when one is set, and nothing else does.
       // A type that already offers its state's switch keeps its own button.
@@ -11729,7 +11767,7 @@ class ApplianceCard extends HTMLElement {
         /* A drawing as wide as the rectangular station or a laptop would run
            under the battery in its corner: it is drawn lower instead (#69),
            and so is every robot's, so floors side by side stay level. */
-        .batt-badge ~ .top .machine.rbt-l-vacuum, .batt-badge ~ .top .machine.rbt-l-mop, .batt-badge ~ .top .machine.scr-laptop { margin-top: 18px; }
+        .batt-badge ~ .top .machine.rbt-l-vacuum, .batt-badge ~ .top .machine.rbt-l-mop, .batt-badge ~ .top .machine.rbt-l-combo, .batt-badge ~ .top .machine.scr-laptop { margin-top: 18px; }
         .batt-badge.right { right: 10px; }
         .batt-badge.low { color: var(--warning-color, #ff9800); }
         /* Switches at hand, lined up under the light on the left and under

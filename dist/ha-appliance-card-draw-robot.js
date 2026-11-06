@@ -2704,7 +2704,7 @@ function robotHtml(cls, r) {
   }
   const layout = ROBOT_LAYOUTS.includes(r.layout) ? r.layout : "vacuum";
   // The floor it works on: the one of its kind, or the one chosen (#49).
-  const floor = ROBOT_FLOORS.includes(r.floor) ? r.floor : layout === "mop" ? "tiles" : "rug";
+  const floor = ROBOT_FLOORS.includes(r.floor) ? r.floor : layout === "mop" || layout === "combo" ? "tiles" : "rug";
   const floorCls = `rbt-floor rbt-${floor}`;
   const mode = r.mode || "idle";
   const draw = mode === "edgecut" ? "cleaning" : mode === "docked" ? "charging" : mode === "rain" ? "charging rbt-m-raining" : mode;
@@ -2735,16 +2735,24 @@ function robotHtml(cls, r) {
           ${airFlow("rbt-vapor", 44, 17)}
           <div class="rbt-bubbles">${"<b></b>".repeat(4)}</div>`;
   } else {
-    const tanks = r.cleanTank || r.dirtyTank ? [tankLevel(r.cleanTank, 75, 5), tankLevel(r.dirtyTank, 20, 95)] : null;
+    const combo = layout === "combo";
+    const lvl = r.water !== null && r.water !== undefined ? ` style="--lvl: ${Math.round(r.water)}%"` : "";
+    const tanks = combo || r.cleanTank || r.dirtyTank ? [tankLevel(r.cleanTank, 75, 5), tankLevel(r.dirtyTank, 20, 95)] : null;
     const dock = r.box ? robotBoxHtml(r.boxColor, tanks)
+      : combo ? `<div class="rbt-mcap"></div><div class="rbt-mdock"${tankVars(r)}><div class="rbt-tk rbt-c"><i></i></div><div class="rbt-tk rbt-d"><i></i></div><i class="rbt-dled"></i><div class="rbt-bin"><div class="rbt-fill"></div>${"<b></b>".repeat(3)}</div></div>
+          <div class="rbt-plate"></div><div class="rbt-pcap"></div>`
       : `<div class="rbt-dock"><i class="rbt-dled"></i><div class="rbt-bin"><div class="rbt-fill"></div>${"<b></b>".repeat(3)}</div></div><div class="rbt-dcap"></div>
           <div class="rbt-plate"></div><div class="rbt-pcap"></div>`;
-    inner = `<div class="${floorCls}"></div>
+    const wet = combo && r.cleanMode !== "vacuum" ? `<i class="rbt-trace rbt-t1 rbt-wet"></i><i class="rbt-trace rbt-t2 rbt-wet"></i>` : "";
+    const wash = combo ? `${airFlow("rbt-vapor", 44, 17)}
+          <div class="rbt-bubbles">${"<b></b>".repeat(4)}</div>` : "";
+    inner = `<div class="${floorCls}">${wet}</div>
           ${dock}
-          <div class="rbt-rb"><div class="rbt-brush"><i></i></div><div class="rbt-sd"></div><div class="rbt-bmp"></div><div class="rbt-tp"></div><div class="rbt-lidw"></div><div class="rbt-lid"></div><div class="rbt-ring"></div>${cam}${err}</div>`;
+          <div class="rbt-rb"${combo ? lvl : ""}>${combo ? `<div class="rbt-pad"></div>` : ""}<div class="rbt-brush"><i></i></div><div class="rbt-sd"></div><div class="rbt-bmp"></div><div class="rbt-tp"></div><div class="rbt-lidw"></div><div class="rbt-lid"></div>${combo ? `<div class="rbt-tank"><i></i></div>` : ""}<div class="rbt-ring"></div>${cam}${err}</div>
+          ${wash}`;
   }
   return `
-        <div class="machine ${cls} rbt rbt-l-${layout} rbt-m-${draw}${r.base ? " rbt-base" : ""}${r.box && layout !== "mower" ? ` rbt-box rbx-${ROBOT_BOX_SKINS[r.boxColor] ? r.boxColor : "white"}` : ""}${r.shelter ? ` rbt-roof rbt-sh-${r.shelter}` : ""}">
+        <div class="machine ${cls} rbt rbt-l-${layout} rbt-m-${draw}${r.cleanMode ? ` rbt-cm-${r.cleanMode}` : ""}${r.base ? " rbt-base" : ""}${r.box && layout !== "mower" ? ` rbt-box rbx-${ROBOT_BOX_SKINS[r.boxColor] ? r.boxColor : "white"}` : ""}${r.shelter ? ` rbt-roof rbt-sh-${r.shelter}` : ""}">
           ${inner}
         </div>`;
 }
@@ -2863,6 +2871,17 @@ css: () => `${NT_CSS}${MINI_LCD_CSS}
         .rbt-m-returning .rbt-rb{animation:rbt-ret 4.5s ease-in-out infinite}
         .rbt-m-paused .rbt-rb,.rbt-m-error .rbt-rb{transform:translate(-16px,14px)}
         .rbt-m-error .rbt-rb{transform:translate(-16px,14px) rotate(-9deg)}
+        .rbt-rb .rbt-pad{left:8px;bottom:-1.5px;width:36px;height:4px;border-radius:0 0 7px 7px;background:#cfd8dc}
+        .rbt-m-cleaning .rbt-rb .rbt-pad{background:#81d4fa}
+        .rbt-cm-vacuum.rbt-m-cleaning .rbt-rb .rbt-pad{background:#cfd8dc}
+        .rbt-cm-mop.rbt-m-cleaning .rbt-rb .rbt-brush i{animation:none}
+        .rbt-rb .rbt-tank{left:6px;top:5px;width:11px;height:7px;border-radius:2.5px;background:rgba(15,18,22,.35);overflow:hidden;box-shadow:inset 0 0 0 1px rgba(255,255,255,.18)}
+        .rbt-rb .rbt-tank i{position:absolute;left:0;right:0;bottom:0;height:var(--lvl,70%);background:linear-gradient(180deg,#81d4fa,#29b6f6)}
+        .rbt-m-empty .rbt-rb .rbt-tank i{background:#ff9800;height:12%}
+        .rbt-l-combo.rbt-m-empty .rbt-rb{transform:translate(-16px,14px)}
+        .rbt-l-combo .rbt-mdock .rbt-tk{height:19px}
+        .rbt-mdock .rbt-bin{left:13px;top:26px;width:26px;height:14px}
+        .rbt-l-combo .rbt-mdock .rbt-dled{top:42px}
         .rbt-ring{box-shadow:0 0 0 1.3px #59606a}
         .rbt-m-charging .rbt-ring{box-shadow:0 0 0 1.3px #2ecc71,0 0 4px #2ecc71;animation:rbt-breathe 2.4s ease-in-out infinite}
         .rbt-m-cleaning .rbt-ring{box-shadow:0 0 0 1.3px #4fc3f7,0 0 4px #4fc3f7}
@@ -2907,7 +2926,7 @@ css: () => `${NT_CSS}${MINI_LCD_CSS}
         @keyframes rbt-bub{0%{transform:translateY(0) scale(.5);opacity:0}30%{opacity:1}100%{transform:translateY(-12px) scale(1);opacity:0}}
         .rbt-vapor{left:26px;top:70px;width:44px;height:17px}
         .rbt-m-drying .rbt-vapor{display:block}
-        .rbt-vapor path{stroke:#ff8a65}
+        .rbt-vapor path{stroke:#ff6d00}
         .rbt-smoke{position:absolute;display:none;overflow:visible;left:6px;top:-30px;width:40px;height:30px}
         .rbt-m-error .rbt-smoke{display:block}
         .rbt-smoke .rbt-pf{transform-box:fill-box;transform-origin:50% 100%;animation:rbt-puff 2s ease-out infinite}
@@ -3003,7 +3022,7 @@ css: () => `${NT_CSS}${MINI_LCD_CSS}
         .rbt-vapor path:nth-child(2) { --d0: -0.45s; }
         .rbt-vapor path:nth-child(3) { --d0: -0.9s; }
         .rbx{position:absolute;left:0;top:0;width:96px;height:106px;overflow:visible}
-        .rbt-l-vacuum .rbt-floor,.rbt-l-mop .rbt-floor{left:0;width:78px;clip-path:none;overflow:hidden;transform:skewX(-28deg);transform-origin:50% 100%}
+        .rbt-l-vacuum .rbt-floor,.rbt-l-mop .rbt-floor,.rbt-l-combo .rbt-floor{left:0;width:78px;clip-path:none;overflow:hidden;transform:skewX(-28deg);transform-origin:50% 100%}
         .machine.rbt.rbx-white,.machine.rbt.rbx-gold{--b:var(--ac-body,#eef1f3);--bh:var(--ac-body-hi,#ffffff);--bl:var(--ac-body-lo,#aab3ba);--dk:#3a4046;--dkh:#555c63}
         .rbx-lv.rbx-c{fill:#29b6f6}
         .rbx-lv.rbx-d{fill:#8d6e4f}

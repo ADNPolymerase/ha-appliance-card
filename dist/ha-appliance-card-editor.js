@@ -33,6 +33,8 @@ const SECTIONS = [
         { value: "raw", label: t(hass, "program_format_raw") },
       ],
     }) },
+  // What is running now, when the program entity only says what is selected (#92).
+  { field: "active_program_entity", types: CYCLE_TYPES.filter((ty) => ty !== "printer_3d"), labelKey: "section_active_program", includeDomains: ["sensor", "select", "input_select"] },
   { field: "delay_entity", types: CYCLE_TYPES, labelKey: "section_delay", includeDomains: ["sensor", "number", "input_number"] },
   // The delayed start set from the card between cycles (#79).
   { field: "delay_set_entity", types: CYCLE_TYPES, labelKey: "section_delay_set", includeDomains: ["number", "input_number", "select", "input_select"] },
@@ -296,10 +298,12 @@ const SECTIONS = [
     when: (c) => robotLayoutOf(c, null) !== "mower" },
   { field: "robot_water_entity", types: ["robot"], labelKey: "section_robot_water", includeDomains: ["binary_sensor", "sensor"],
     when: (c) => robotLayoutOf(c, null) !== "mower" },
+  { field: "robot_clean_mode_entity", types: ["robot"], labelKey: "section_robot_clean_mode", includeDomains: ["select", "sensor", "input_select"],
+    when: (c) => robotLayoutOf(c, null) === "combo" },
   { field: "robot_clean_tank_entity", types: ["robot"], labelKey: "section_robot_clean_tank", includeDomains: ["sensor", "binary_sensor"],
-    when: (c) => ["vacuum", "mop"].includes(robotLayoutOf(c, null)) },
+    when: (c) => ["vacuum", "mop", "combo"].includes(robotLayoutOf(c, null)) },
   { field: "robot_dirty_tank_entity", types: ["robot"], labelKey: "section_robot_dirty_tank", includeDomains: ["sensor", "binary_sensor"],
-    when: (c) => ["vacuum", "mop"].includes(robotLayoutOf(c, null)) },
+    when: (c) => ["vacuum", "mop", "combo"].includes(robotLayoutOf(c, null)) },
   { field: "robot_rain_entity", types: ["robot"], labelKey: "section_robot_rain", includeDomains: ["binary_sensor", "sensor", "switch"],
     when: (c) => robotLayoutOf(c, null) === "mower" },
   { field: "robot_winter_entity", types: ["robot"], labelKey: "section_robot_winter", includeDomains: ["input_boolean", "switch", "binary_sensor"],
@@ -564,7 +568,7 @@ const SECTIONS = [
 // integration of the appliance reports or drives (its programme, its time
 // left, its phase, its buttons, its consumables). A sensor beside the plug,
 // a thermometer, a pool's pH, a door contact, stays on offer.
-const PLUG_HIDDEN_SECTIONS = new Set(["program_entity", "delay_entity", "remaining_time_entity", "progress_entity", "phase_entity",
+const PLUG_HIDDEN_SECTIONS = new Set(["program_entity", "active_program_entity", "delay_entity", "remaining_time_entity", "progress_entity", "phase_entity",
   "heating_entity", "basket_entity", "shake_entity", "basket2_state_entity", "power_level_entity", "fan_entity", "boost_entity",
   "filter_life_entity", "filter_reset_entity", "pump_clean_entity", "pump_reset_entity", "pump_running_entity", "air_quality_entity",
   "display_entity", "night_mode_entity", "heater_entity", "pool_mode_entity", "child_lock_entity", "light_entity", "tank_entity",
