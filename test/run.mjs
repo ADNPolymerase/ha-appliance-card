@@ -13275,5 +13275,110 @@ function tvT(w) { return { 'switch.tv': { state: 'on', attributes: {} }, 'sensor
     check('balance : 78,5 kg et non 78500', /3[.,]5/.test(SC(78500, 'g')), true); }
 }
 
+// ── Lot 3 of the compatibility pass: what the editor fills in by itself ──
+{
+  const s = (state, attributes = {}) => ({ state, attributes: { friendly_name: 'X', ...attributes }, last_changed: new Date(T0).toISOString() });
+  const SUG = (cfg, map) => { const e = new Editor(); e.setConfig({ type: 'custom:ha-appliance-card', ...cfg });
+    const states = { [cfg.state_entity]: s('idle'), ...map }; const entities = {};
+    for (const id of Object.keys(states)) entities[id] = { device_id: 'd1', platform: 'x' };
+    e.hass = { ...HASS(states), entities, devices: { d1: { name: 'X' } } }; e._hass = e.hass;
+    const sg = e.constructor.suggestFor ? e.constructor.suggestFor : null;
+    if (sg) return sg(e.hass, e._config);
+    if (typeof e._suggest === 'function') return e._suggest() || {};
+    e._onSuggest && e._onSuggest();
+    return (e.events && e.events.at(-1)?.detail?.config) || {}; };
+  const T = { unit_of_measurement: '°C', device_class: 'temperature' }, W = { unit_of_measurement: 'W', device_class: 'power' }, P = { unit_of_measurement: '%' };
+  // A fridge's watts are no temperature: the false alert of SmartThings.
+  { const r = SUG({ appliance_type: 'fridge', state_entity: 'sensor.refrigerator_status' }, { 'sensor.refrigerator_power': s('120', W), 'sensor.refrigerator_cooler_temperature': s('4', T), 'sensor.refrigerator_freezer_temperature': s('-18', T), 'binary_sensor.refrigerator_cooler_door': s('off'), 'binary_sensor.refrigerator_freezer_door': s('off') });
+    check('frigo : pas les watts', r.fridge_temperature_entity, 'sensor.refrigerator_cooler_temperature');
+    check('frigo : le congelateur a la sienne', r.freezer_temperature_entity, 'sensor.refrigerator_freezer_temperature');
+    check('frigo : la porte du frigo', r.door_entity, 'binary_sensor.refrigerator_cooler_door');
+    check('frigo : la porte du congelateur', r.freezer_door_entity, 'binary_sensor.refrigerator_freezer_door'); }
+  { const r = SUG({ appliance_type: 'fridge', state_entity: 'sensor.frigo_status' }, { 'sensor.frigo_power': s('120', W), 'sensor.frigo_program_type': s('x') });
+    check('frigo : rien plutot qu un mauvais', r.fridge_temperature_entity, undefined); }
+  // Hood, oven.
+  { const r = SUG({ appliance_type: 'hood', state_entity: 'sensor.hood_state' }, { 'sensor.hood_program_progress': s('40', P), 'select.hood_venting_level': s('2') });
+    check('hotte : pas la progression', r.fan_entity, 'select.hood_venting_level'); }
+  { const r = SUG({ appliance_type: 'oven', state_entity: 'sensor.oven_state' }, { 'number.oven_setpoint_temperature': s('180', T), 'sensor.oven_food_probe_temperature': s('50', T), 'sensor.oven_current_cavity_temperature': s('178', T) });
+    check('four : la cavite', r.current_temperature_entity, 'sensor.oven_current_cavity_temperature');
+    check('four : la consigne', r.target_temperature_entity, 'number.oven_setpoint_temperature'); }
+  // Water heater, boiler.
+  { const r = SUG({ appliance_type: 'water_heater', state_entity: 'sensor.vicare_state' }, { 'sensor.vicare_outside_temperature': s('9', T), 'sensor.vicare_dhw_max_temperature': s('60', T), 'sensor.vicare_heating_gas_consumption_today': s('12', { unit_of_measurement: 'kWh' }), 'sensor.vicare_dhw_storage_temperature': s('52', T) });
+    check('chauffe-eau : pas l exterieure', r.temperature_entity, 'sensor.vicare_dhw_storage_temperature');
+    check('chauffe-eau : pas la conso en temoin', r.heating_entity, undefined); }
+  { const r = SUG({ appliance_type: 'water_heater', state_entity: 'water_heater.t' }, { 'water_heater.t': s('eco', { current_temperature: 52 }), 'sensor.t_temperature': s('52', T) });
+    check('chauffe-eau : il porte sa temperature', r.temperature_entity, undefined); }
+  { const r = SUG({ appliance_type: 'boiler', state_entity: 'sensor.boiler_status' }, { 'sensor.boiler_selflowtemp': s('0', T), 'sensor.boiler_curflowtemp': s('60', T), 'sensor.boiler_dhw_settemp': s('55', T), 'binary_sensor.boiler_heatingactive': s('on') });
+    check('chaudiere : le depart reel', r.temperature_entity, 'sensor.boiler_curflowtemp');
+    check('chaudiere : pas une consigne en eau chaude', r.hot_water_entity, undefined);
+    check('chaudiere : heatingactive', r.heating_entity, 'binary_sensor.boiler_heatingactive'); }
+  { const r = SUG({ appliance_type: 'heat_pump', state_entity: 'sensor.v_state' }, { 'sensor.v_compressor_inlet_temperature': s('45', T), 'sensor.v_compressor_phase': s('heating') });
+    check('pac : compresseur en mots, pas en degres', r.compressor_entity, 'sensor.v_compressor_phase'); }
+  // Batteries and solar.
+  { const r = SUG({ appliance_type: 'mobility', state_entity: 'sensor.bike_status' }, { 'binary_sensor.bike_battery_charging': s('off', { device_class: 'battery_charging' }), 'sensor.bike_battery_capacity': s('500', { unit_of_measurement: 'Wh' }), 'sensor.bike_battery_level': s('60', P) });
+    check('velo : le niveau, ni la capacite ni le contact', r.battery_entity, 'sensor.bike_battery_level'); }
+  { const r = SUG({ appliance_type: 'solar', state_entity: 'sensor.inverter_status' }, { 'sensor.inverter_battery_power': s('500', W), 'sensor.inverter_pv1_power': s('300', W), 'sensor.inverter_ac_power': s('800', W), 'sensor.inverter_energy_day': s('12', { unit_of_measurement: 'kWh' }) });
+    check('solaire : ni la batterie ni une chaine', r.power_entity, 'sensor.inverter_ac_power');
+    check('solaire : energy_day', r.energy_today_entity, 'sensor.inverter_energy_day'); }
+  { const r = SUG({ appliance_type: 'home_battery', state_entity: 'sensor.bat_state' }, { 'sensor.bat_storage_power': s('500', W), 'sensor.bat_level': s('50', P) });
+    check('batterie : sa puissance', r.power_entity, 'sensor.bat_storage_power'); }
+  // HRV, camera, robot.
+  { const r = SUG({ appliance_type: 'hrv', state_entity: 'fan.v' }, { 'sensor.v_supply_humidity': s('50', P), 'sensor.v_supply_temperature': s('20', T), 'sensor.v_inside_temperature': s('21', T), 'sensor.v_total_airflow_out': s('100'), 'sensor.v_total_airflow_in': s('100'), 'sensor.v_supply_fan_speed': s('1200'), 'sensor.v_airflow_constraint': s('x') });
+    check('vmc : pas l humidite', r.supply_temperature_entity, 'sensor.v_supply_temperature');
+    check('vmc : inside', r.extract_temperature_entity, 'sensor.v_inside_temperature');
+    check('vmc : le debit entrant', r.airflow_entity, 'sensor.v_total_airflow_in');
+    check('vmc : le debit sortant', r.exhaust_airflow_entity, 'sensor.v_total_airflow_out');
+    check('vmc : fan speed', r.supply_fan_entity, 'sensor.v_supply_fan_speed'); }
+  { const r = SUG({ appliance_type: 'camera', state_entity: 'camera.c' }, { 'sensor.c_person_count': s('1'), 'binary_sensor.c_motion': s('off'), 'event.c_ding': s('x'), 'binary_sensor.c_is_dark': s('on'), 'binary_sensor.c_recording': s('off') });
+    check('camera : pas le compteur', r.motion_entity, 'binary_sensor.c_motion');
+    check('camera : is_dark', r.night_entity, 'binary_sensor.c_is_dark'); }
+  { const r = SUG({ appliance_type: 'robot', state_entity: 'vacuum.deebot' }, { 'sensor.deebot_station_state': s('idle') });
+    check('robot : station_state', r.robot_status_entity, 'sensor.deebot_station_state'); }
+  // Coffee.
+  { const r = SUG({ appliance_type: 'coffee', state_entity: 'sensor.ecam_status' }, { 'sensor.ecam_descales_done': s('3'), 'binary_sensor.ecam_descaling_needed': s('off'), 'binary_sensor.ecam_coffee_beans_empty': s('off'), 'binary_sensor.ecam_drip_tray_missing': s('off'), 'binary_sensor.ecam_grounds_container_full': s('off'), 'sensor.ecam_hot_water_cups': s('412'), 'switch.ecam_multiple_beverages': s('off') });
+    check('cafe : ce qui dit qu il faut detartrer', r.descaling_entity, 'binary_sensor.ecam_descaling_needed');
+    check('cafe : grains', r.beans_entity, 'binary_sensor.ecam_coffee_beans_empty');
+    check('cafe : le bac plein', r.tray_entity, 'binary_sensor.ecam_grounds_container_full');
+    check('cafe : pas le compteur de tasses', r.cups_entity, 'switch.ecam_multiple_beverages'); }
+  // New types.
+  { const r = SUG({ appliance_type: 'irrigation', state_entity: 'valve.tap' }, { 'sensor.tap_remain_duration': s('60', { unit_of_measurement: 's' }), 'sensor.tap_total_duration': s('600', { unit_of_measurement: 's' }), 'binary_sensor.tap_rain_sensor': s('off'), 'sensor.tap_next_cycle': s('x') });
+    check('arrosage : temps restant', r.remaining_time_entity, 'sensor.tap_remain_duration');
+    check('arrosage : duree', r.watering_duration_entity, 'sensor.tap_total_duration');
+    check('arrosage : pluie', r.rain_delay_entity, 'binary_sensor.tap_rain_sensor');
+    check('arrosage : prochain', r.next_run_entity, 'sensor.tap_next_cycle'); }
+  { const r = SUG({ appliance_type: 'water_pump', state_entity: 'switch.alpha3', pump_layout: 'circulator' }, { 'sensor.alpha3_head': s('3'), 'sensor.alpha3_flow': s('1'), 'sensor.alpha3_speed': s('2000'), 'sensor.alpha3_voltage': s('230') });
+    check('circulateur : hauteur', r.head_entity, 'sensor.alpha3_head');
+    check('circulateur : debit', r.flow_entity, 'sensor.alpha3_flow'); }
+  { const r = SUG({ appliance_type: 'water_pump', state_entity: 'switch.sump' }, { 'sensor.sump_level_battery_level': s('95', P), 'sensor.sump_level': s('30') });
+    check('relevage : pas la batterie', r.level_entity, 'sensor.sump_level'); }
+  { const r = SUG({ appliance_type: 'litter_box', state_entity: 'sensor.minou_status' }, { 'binary_sensor.minou_wastebin_filled': s('off'), 'sensor.minou_cat_weight': s('4', { unit_of_measurement: 'kg' }), 'sensor.minou_times_used': s('3') });
+    check('litiere : bac', r.waste_drawer_entity, 'binary_sensor.minou_wastebin_filled');
+    check('litiere : poids', r.pet_weight_entity, 'sensor.minou_cat_weight');
+    check('litiere : visites', r.visits_entity, 'sensor.minou_times_used'); }
+  { const r = SUG({ appliance_type: 'spa', state_entity: 'climate.spa' }, { 'fan.spa_pump_1': s('off'), 'light.spa_light': s('off'), 'binary_sensor.spa_circ_pump': s('on') });
+    check('spa : pompe de massage', r.bubbles_entity, 'fan.spa_pump_1');
+    check('spa : lumiere', r.light_entity, 'light.spa_light'); }
+  { const r = SUG({ appliance_type: 'air_purifier', state_entity: 'fan.blue' }, { 'sensor.blue_pm_2_5': s('5') });
+    check('purificateur : pm_2_5', r.air_quality_entity, 'sensor.blue_pm_2_5'); }
+  // One entity, one field; a type's own fields choose first.
+  { const r = SUG({ appliance_type: 'ev_charger', state_entity: 'sensor.box_status' }, { 'sensor.box_session_energy': s('3', { unit_of_measurement: 'kWh' }) });
+    check('borne : la session d abord', r.session_energy_entity, 'sensor.box_session_energy');
+    check('borne : la meme entite ne sert pas deux fois', r.energy_entity, undefined); }
+  // The device's name says nothing: feeder_robot_give_snack is no feed button.
+  { const r = SUG({ appliance_type: 'pet_feeder', state_entity: 'sensor.feeder_robot_status' }, { 'button.feeder_robot_give_snack': s('x'), 'button.feeder_robot_manual_feed': s('x') });
+    check('distributeur : le nom de l appareil ne compte pas', r.start_entity, 'button.feeder_robot_manual_feed'); }
+  { const r = SUG({ appliance_type: 'heat_pump', state_entity: 'sensor.hp_state' }, { 'sensor.hp_outdoor_fan_power': s('50', W), 'sensor.hp_outdoor_temp': s('5', T) });
+    check('pac : une temperature n a pas de watts', r.outdoor_temperature_entity, 'sensor.hp_outdoor_temp'); }
+  { const r = SUG({ appliance_type: 'hood', state_entity: 'sensor.hood_state' }, { 'sensor.hood_program_progress': s('40', P) });
+    check('hotte : rien plutot que la progression', r.fan_entity, undefined); }
+  { const r = SUG({ appliance_type: 'heat_pump', state_entity: 'sensor.w_state' }, { 'sensor.w_compressor_pressure': s('12', { unit_of_measurement: 'bar' }) });
+    check('pac : une pression n est pas un compresseur', r.compressor_entity, undefined); }
+  // Reading: a contact on the waste bin, beans as a level.
+  { const L = (st0) => stateLine(render({ appliance_type: 'litter_box', state_entity: 'sensor.l', waste_drawer_entity: 'binary_sensor.b' }, { 'sensor.l': s('idle'), 'binary_sensor.b': s(st0) }));
+    check('litiere : bac plein en contact', L('on') === L('off'), false);
+    const C = (v) => stateLine(render({ appliance_type: 'coffee', state_entity: 'sensor.c', beans_entity: 'sensor.b' }, { 'sensor.c': s('idle'), 'sensor.b': s(v, P) }));
+    check('cafe : grains a zero', C('0') === C('60'), false); }
+}
+
 if (RECORD) writeFileSync(process.env.HAC_RECORD, JSON.stringify(RECORD));
 report();

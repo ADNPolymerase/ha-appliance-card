@@ -2851,10 +2851,12 @@ function ntReadOf(type, hass, cfg, st, watts, threshold) {
     const dv = cfg.waste_drawer_entity ? numericState(hass, cfg.waste_drawer_entity) : null;
     const drawer = dv === null ? null : Math.max(0, Math.min(1, dv / 100));
     const dl = ntLine(hass, cfg, "lit_drawer", "mdi:delete-variant", "sec_waste_drawer", cfg.waste_drawer_entity);
-    if (dl) lines.push({ ...dl, caution: drawer !== null && drawer >= 0.8 });
+    // A contact says full (Tuya's bag_full, PetKit's wastebin), not how full.
+    const drawerFull = ntOnOff(hass, domainOf(cfg.waste_drawer_entity) === "binary_sensor" ? cfg.waste_drawer_entity : "");
+    if (dl) lines.push({ ...dl, caution: drawerFull || (drawer !== null && drawer >= 0.8) });
     const lv = cfg.litter_level_entity ? numericState(hass, cfg.litter_level_entity) : null;
     const ll = ntLine(hass, cfg, "lit_level", "mdi:texture-box", "sec_litter_level", cfg.litter_level_entity);
-    if (ll) lines.push({ ...ll, caution: lv !== null && unitOf(hass, cfg.litter_level_entity) === "%" && lv <= 20 });
+    if (ll) lines.push({ ...ll, caution: (lv !== null && unitOf(hass, cfg.litter_level_entity) === "%" && lv <= 20) || ntOnOff(hass, domainOf(cfg.litter_level_entity) === "binary_sensor" ? cfg.litter_level_entity : "") });
     for (const [key, icon, label, id] of [["lit_weight", "mdi:scale", "sec_pet_weight", cfg.pet_weight_entity], ["lit_visits", "mdi:paw", "sec_visits", cfg.visits_entity], ["lit_last", "mdi:clock-outline", "sec_last_use", cfg.last_use_entity]]) {
       const l = ntLine(hass, cfg, key, icon, label, id);
       if (l) lines.push(l);
@@ -2866,7 +2868,7 @@ function ntReadOf(type, hass, cfg, st, watts, threshold) {
     // and an error is said before the word it stopped on.
     const litterFault = /fault|error|erreur|defaut|fehler|jam|pinch/.test(raw);
     if (!litterFault && !/pause/.test(code) && /(^|_)(ccp|ec|cd|scf)$|clean|cycl|nettoy|reinig|limpi|puliz|reinigung|empty_cycle|dump|empty|level|restor|rak|reset|calibr|odor|(^|_)uv(_|$)|maint/.test(code) && !/complete|ccc/.test(code)) mode = "cleaning";
-    else if (["dfs", "sdf", "df2"].includes(code) || /full|plein|voll|lleno|pieno/.test(raw) || (drawer !== null && drawer >= 1)) mode = "full";
+    else if (["dfs", "sdf", "df2"].includes(code) || /full|plein|voll|lleno|pieno/.test(raw) || drawerFull || (drawer !== null && drawer >= 1)) mode = "full";
     else if (["csf", "dhf", "dpf", "otf", "pd", "spf", "hpf", "br", "error", "fault"].includes(code) || litterFault) mode = "fault";
     else if (["off", "sleep", "sleeping", "offline", "p", "paused"].includes(code) || /sleep|veille|schlaf|pause/.test(raw)) mode = "off";
     if (domainOf(cfg.state_entity) === "vacuum") mode = raw === "cleaning" ? "cleaning" : raw === "error" ? "fault" : mode;

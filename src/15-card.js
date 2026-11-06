@@ -1444,7 +1444,9 @@ class ApplianceCard extends HTMLElement {
           noWater = flagged(cfg.water_entity, ON);
         }
       }
-      const noBeans = flagged(cfg.beans_entity, ON);
+      // Philips gives the beans as a level.
+      const beansLevel = cfg.beans_entity ? numericState(hass, cfg.beans_entity) : null;
+      const noBeans = beansLevel !== null ? beansLevel <= 0 : flagged(cfg.beans_entity, ON);
       const trayFull = flagged(cfg.tray_entity, ON);
       const descale = flagged(cfg.descaling_entity, ON);
       // Order of what stops you getting a coffee first.

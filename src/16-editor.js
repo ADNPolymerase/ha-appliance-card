@@ -237,8 +237,8 @@ const SECTIONS = [
   { field: "next_run_entity", types: ["irrigation"], labelKey: "section_next_run", includeDomains: ["sensor", "input_datetime"] },
   // The watering's duration, for its progress bar (#85).
   { field: "watering_duration_entity", types: ["irrigation"], labelKey: "irr_duration", includeDomains: ["number", "input_number", "sensor", "select"] },
-  { field: "waste_drawer_entity", types: ["litter_box"], labelKey: "sec_waste_drawer", includeDomains: ["sensor", "number"] },
-  { field: "litter_level_entity", types: ["litter_box"], labelKey: "sec_litter_level", includeDomains: ["sensor", "number"] },
+  { field: "waste_drawer_entity", types: ["litter_box"], labelKey: "sec_waste_drawer", includeDomains: ["sensor", "number", "binary_sensor"] },
+  { field: "litter_level_entity", types: ["litter_box"], labelKey: "sec_litter_level", includeDomains: ["sensor", "number", "binary_sensor"] },
   { field: "pet_weight_entity", types: ["litter_box"], labelKey: "sec_pet_weight", includeDomains: ["sensor"] },
   { field: "visits_entity", types: ["litter_box"], labelKey: "sec_visits", includeDomains: ["sensor", "counter"] },
   { field: "last_use_entity", types: ["litter_box"], labelKey: "sec_last_use", includeDomains: ["sensor", "input_datetime"] },

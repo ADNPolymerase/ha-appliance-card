@@ -1178,8 +1178,12 @@ function siblingEntityIds(hass, entityId) {
 }
 
 const AUTO_PATTERNS = {
-  program_entity: /program/i,
-  remaining_time_entity: /time.?to.?end|remaining|finish.?in/i,
+  // Miele's program_phase and program_type, Home Connect's progress: not the
+  // programme itself.
+  program_entity: /^(?!.*(phase|finish|progress|type|time|remain|duration)).*program/i,
+  // What is left of the cycle, not of the filter or the detergent.
+  remaining_time_entity: /^(?!.*(filter|water|clean|detergent|softener|salt|rinse.?aid|batter|range|capacity)).*(time.?to.?end|remain|time.?left|left.?time|finish.?(in|time)|completion.?time|end.?time)/i,
+  progress_entity: /^(?!.*(update|firmware|filter)).*(progress|percent_?complete)/i,
   // A door lock (hOn, Electrolux) is not the door.
   door_entity: /^(?!.*(lock|alarm|assistant)).*door/i,
   alerts_entity: /alert/i,
@@ -1192,10 +1196,10 @@ const AUTO_PATTERNS = {
   // Resetting a filter or a counter stops nothing.
   stop_entity: /^(?!.*(filter|descal|counter|statistic|maintenance|hours|usage)).*(stop|reset)/i,
   power_entity: /_power$|power_w$|watt/i,
-  energy_entity: /^(?!.*(cost|price|tarif|prix)).*(energy|kwh)/i,
+  energy_entity: /^(?!.*(cost|price|tarif|prix|batter)).*(energy|kwh)/i,
 };
 
 // The step of a cycle: Miele names it a program phase, Electrolux a cycle
 // phase, SmartThings a job state, hOn a pr phase, HomeWhiz a sub state.
-const PHASE_ENTITY_RE = /program.?phase|cycle.?phase|job.?state|pr.?phase|machine.?phase|sub.?state/i;
+const PHASE_ENTITY_RE = /program.?phase|cycle.?phase|job.?state|pr.?phase|machine.?phase|sub.?state|(^|_)phase$/i;
 

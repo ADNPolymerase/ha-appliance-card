@@ -2590,8 +2590,12 @@ function siblingEntityIds(hass, entityId) {
 }
 
 const AUTO_PATTERNS = {
-  program_entity: /program/i,
-  remaining_time_entity: /time.?to.?end|remaining|finish.?in/i,
+  // Miele's program_phase and program_type, Home Connect's progress: not the
+  // programme itself.
+  program_entity: /^(?!.*(phase|finish|progress|type|time|remain|duration)).*program/i,
+  // What is left of the cycle, not of the filter or the detergent.
+  remaining_time_entity: /^(?!.*(filter|water|clean|detergent|softener|salt|rinse.?aid|batter|range|capacity)).*(time.?to.?end|remain|time.?left|left.?time|finish.?(in|time)|completion.?time|end.?time)/i,
+  progress_entity: /^(?!.*(update|firmware|filter)).*(progress|percent_?complete)/i,
   // A door lock (hOn, Electrolux) is not the door.
   door_entity: /^(?!.*(lock|alarm|assistant)).*door/i,
   alerts_entity: /alert/i,
@@ -2604,24 +2608,31 @@ const AUTO_PATTERNS = {
   // Resetting a filter or a counter stops nothing.
   stop_entity: /^(?!.*(filter|descal|counter|statistic|maintenance|hours|usage)).*(stop|reset)/i,
   power_entity: /_power$|power_w$|watt/i,
-  energy_entity: /^(?!.*(cost|price|tarif|prix)).*(energy|kwh)/i,
+  energy_entity: /^(?!.*(cost|price|tarif|prix|batter)).*(energy|kwh)/i,
 };
 
 // The step of a cycle: Miele names it a program phase, Electrolux a cycle
 // phase, SmartThings a job state, hOn a pr phase, HomeWhiz a sub state.
-const PHASE_ENTITY_RE = /program.?phase|cycle.?phase|job.?state|pr.?phase|machine.?phase|sub.?state/i;
+const PHASE_ENTITY_RE = /program.?phase|cycle.?phase|job.?state|pr.?phase|machine.?phase|sub.?state|(^|_)phase$/i;
 
 // Suggested only for the types that can actually use them, so a washing
 // machine doesn't end up with a "filter life" field pre-filled.
 const TYPE_AUTO_PATTERNS = {
   water_pump: {
     pressure_entity: /pressure|pression|druck|presion|pressione|druk|tryck|trykk|cisnien|tlak/i,
-    level_entity: /level|niveau|hauteur|pegel|nivel|livello|niva|poziom|hladina/i,
-    high_level_entity: /high|alarm|haut|alert|hoch|flood|inond/i,
+    level_entity: /^(?!.*(batter|signal|rf_)).*(level|niveau|hauteur|pegel|nivel|livello|niva|poziom|hladina)/i,
+    high_level_entity: /^(?!.*(batter|signal|rf_)).*(high|alarm|haut|alert|hoch|flood|inond)/i,
+    // A Grundfos Alpha3 over ESPHome.
+    head_entity: /(^|[._])head$/i,
+    flow_entity: /(^|[._])flow(_rate)?$/i,
+    speed_entity: /(^|[._])speed$|rpm/i,
+    voltage_entity: /voltage/i,
   },
   spa: {
-    bubbles_entity: /bubble|bulle|blase|burbuj|bolle|jet|massage|whirl/i,
+    // Balboa's and Gecko's massage pumps; the circulation one runs all day.
+    bubbles_entity: /^(?!.*(circ|filter)).*(bubble|bulle|blase|burbuj|bolle|jet|massage|whirl|pump|pompe|pumpe|blower|soufflant)/i,
     temperature_entity: /temp/i,
+    light_entity: /light|lamp|led/i,
   },
   sauna: { temperature_entity: /temp/i },
   floor_heating: { temperature_entity: /temp/i },
@@ -2636,32 +2647,35 @@ const TYPE_AUTO_PATTERNS = {
   // Vallox, Zehnder, Danfoss: four temperatures, a bypass or a cell state, a
   // filter, an airflow.
   hrv: {
-    outdoor_temperature_entity: /^(?!.*(fan|rpm|cfm|flow))(.*(outdoor|outside|exterieur|aussen|frisch|fresh)|.*temp\w*_ext)/i,
-    supply_temperature_entity: /^(?!.*(fan|rpm|cfm|flow)).*(supply|soufflage|zuluft|insufl|impuls|mandata|toevoer|tillu)/i,
-    extract_temperature_entity: /^(?!.*fan).*(extract|reprise|abluft|extrac|ripresa|afzuig|franlu|indoor)/i,
-    exhaust_temperature_entity: /^(?!.*fan).*(exhaust|rejet|fortluft|expuls|espuls|afvoer|avlu)/i,
+    outdoor_temperature_entity: /^(?!.*(fan|rpm|cfm|flow|humid|duty|speed|power|energy))(.*(outdoor|outside|exterieur|aussen|frisch|fresh)|.*temp\w*_ext)/i,
+    supply_temperature_entity: /^(?!.*(fan|rpm|cfm|flow|humid|duty|speed|power|energy)).*(supply|soufflage|zuluft|insufl|impuls|mandata|toevoer|tillu)/i,
+    extract_temperature_entity: /^(?!.*(fan|rpm|cfm|flow|humid|duty|speed|power|energy)).*(extract|reprise|abluft|extrac|ripresa|afzuig|franlu|indoor|inside)/i,
+    exhaust_temperature_entity: /^(?!.*(fan|rpm|cfm|flow|humid|duty|speed|power|energy)).*(exhaust|rejet|fortluft|expuls|espuls|afvoer|avlu)/i,
     // Renson's activation temperature and Vallox's lock are no bypass.
     bypass_entity: /^(?!.*(temp|activation|lock|timeout|threshold)).*(bypass|by.?pass|cell.?state)/i,
     // Flexit's operating hours count up: they are no life left.
     filter_life_entity: /^(?!.*(operating|hours|usage)).*(filter|filtre)/i,
-    airflow_entity: /air.?flow|debit|luftmenge|caudal|portata|m3|(supply|fresh|soufflage|zuluft).*(cfm|flow)/i,
+    // Renson's total_airflow_out is the extract side, ComfoConnect's constraint no flow.
+    airflow_entity: /^(?!.*(exhaust|extract|stale|rejet|abluft|fortluft|vicie|_out(_|$)|constraint)).*(air.?flow|debit|luftmenge|caudal|portata|m3|(supply|fresh|soufflage|zuluft).*(cfm|flow))/i,
     // Broan / Venmar over ESPHome: each fan's rpm and the air it moves.
-    supply_fan_entity: /(supply|fresh|soufflage|zuluft|insufl).*rpm/i,
-    exhaust_fan_entity: /(exhaust|extract|stale|rejet|abluft|fortluft|vicie).*rpm/i,
-    exhaust_airflow_entity: /(exhaust|extract|stale|rejet|abluft|fortluft|vicie).*(cfm|flow|debit|m3)/i,
+    supply_fan_entity: /(supply|fresh|soufflage|zuluft|insufl).*(rpm|fan.?speed|air.?speed)/i,
+    exhaust_fan_entity: /(exhaust|extract|stale|rejet|abluft|fortluft|vicie).*(rpm|fan.?speed|air.?speed)/i,
+    exhaust_airflow_entity: /(exhaust|extract|stale|rejet|abluft|fortluft|vicie).*(cfm|flow|debit|m3)|air.?flow.?out/i,
   },
   // Arlo calls its sensors motion_camera_x and connected_camera_x, Reolink
   // and Tapo name a privacy switch, and most of them an infrared mode.
   camera: {
-    motion_entity: /motion|mouvement|bewegung|movimiento|movimento|person|human/i,
+    // Frigate's person count is a number, its motion a contact.
+    motion_entity: /^(?!sensor\..*(count|last|sensitiv)).*(motion|mouvement|bewegung|movimiento|movimento|person|human)/i,
     // Reolink's record switches are settings, on all the time.
     recording_entity: /^(?!switch\.)(?!.*(audio|capacity|oldest|mode|last)).*(record|enregistr|aufnahme|grabac)/i,
-    night_entity: /night|nuit|infra.?red|(^|[._])ir([._]|$)|nacht|notte|noche/i,
+    night_entity: /night|nuit|infra.?red|(^|[._])ir([._]|$)|nacht|notte|noche|is_dark/i,
     privacy_entity: /privacy|confidential|privat|lens.?mask/i,
     battery_entity: /batter|akku/i,
     signal_entity: /signal|rssi|wifi/i,
     connectivity_entity: /connect|online/i,
-    ring_entity: /ring|visitor|visiteur|doorbell|sonnette|klingel|press|appui/i,
+    // Ring's ding and Nest's chime, whole words: recording holds a "ding".
+    ring_entity: /^(?!.*record).*(ring|visitor|visiteur|doorbell|sonnette|klingel|press|appui)|(^|[._])(ding|chime)([._]|$)/i,
   },
   // A mailbox: a counter of the mail, and a contact on each door.
   mailbox: {
@@ -2670,12 +2684,15 @@ const TYPE_AUTO_PATTERNS = {
     back_door_entity: /back|rear|arriere|hinten|traser|posterior|achter|empt|vidage/i,
   },
   solar: {
-    power_entity: /(solar|pv|production|produced|inverter|onduleur).*(power|watt)|(power|watt).*(solar|pv)/i,
-    energy_today_entity: /(today|daily|aujourd|heute|_day_|jour).*(energy|kwh|production|yield)|(energy|production|yield).*(today|daily|aujourd|heute|jour)/i,
+    // The inverter's total, not one string nor what the battery or the house do.
+    power_entity: /^(?!.*(batter|grid|load|storage|consum|today|daily|total|energy|max|peak|pv\d)).*((solar|pv|production|produced|inverter|onduleur|generation).*(power|watt)|(power|watt).*(solar|pv|production)|(^|[._])ac.?power|output.?power)/i,
+    energy_today_entity: /(today|daily|aujourd|heute|_day_|jour).*(energy|kwh|production|yield)|(energy|production|yield).*(today|daily|aujourd|heute|jour)|(energy|yield)_?day$/i,
     solar_alert_entity: /error|fault|alarm|defaut/i,
   },
   home_battery: {
     battery_entity: /battery_?level|state_?of_?charge|(^|[._])soc([._]|$)|batter/i,
+    // One signed power, the battery's and nobody else's (Huawei, Tesla).
+    power_entity: /^(?!.*(solar|pv\d?_|grid|load|house|home_)).*(charge.?(or.?)?discharge.?power|(batter|storage).*(power|watt))/i,
     // Huawei's charge/discharge power is one signed sensor: it is power_entity.
     charge_power_entity: /^(?!.*dis)(?!.*out).*(charg|input|_in_|total_in).*(power|watt)/i,
     discharge_power_entity: /^(?!.*charge.?(or.?)?discharge)(?!.*in.?out).*(discharg|output|_out_|total_out).*(power|watt)/i,
@@ -2708,31 +2725,35 @@ const TYPE_AUTO_PATTERNS = {
   // NUT names its sensors in the user's language: "ups_charge" is the load in
   // French, "ups_charge_de_la_batterie" the battery.
   ups: {
-    battery_entity: /^(?!.*(low|faible|niedrig))(?=.*(batt|akku)).*(charge|ladung|carica|carga|lading)/i,
-    runtime_entity: /^(?!.*(low|faible|niedrig|bas)).*(runtime|autonomie|laufzeit|autonomia)/i,
+    // apcupsd calls it battery, its own "bcharge" in the raw names.
+    battery_entity: /^(?!.*(low|faible|niedrig))((?=.*(batt|akku)).*(charge|ladung|carica|carga|lading)|.*(battery$|bcharge))/i,
+    runtime_entity: /^(?!.*(low|faible|niedrig|bas)).*(runtime|autonomie|laufzeit|autonomia|time.?left)/i,
     load_entity: /^(?!.*batt).*(^|[._])(load|charge|last|carico|carga|belastning|obciazenie)$/i,
     input_voltage_entity: /^(?!.*(nominal|transf)).*(input.?voltage|tension.?d.?entree|eingangsspannung)/i,
   },
   robot: {
-    robot_status_entity: /status|activity|phase|etat/i,
+    // Ecovacs's station_state, Dreame's state carry the washing and the emptying.
+    robot_status_entity: /status|activity|phase|etat|(^|[._])state$/i,
     battery_entity: /batter|akku/i,
     robot_bin_entity: /bin_?full|dust_?bin_?full|box_?full/i,
     // Roborock's water_box_attached is on while the box is in place, its
     // dirty_box_full the wrong tank.
-    robot_water_entity: /^(?!.*(attached|carriage|dirty)).*(water_?(shortage|box|tank|level)|low_?water|mop_?water|clean_?water)/i,
+    robot_water_entity: /^(?!.*(attached|carriage|dirty)).*(water_?(shortage|box|tank|level)|low_?water|mop_?water|clean_?water|(^|[._])tank_level)/i,
     robot_error_entity: /error|erreur|fault/i,
     robot_rain_entity: /rain|pluie|regen/i,
   },
   oven: {
-    target_temperature_entity: /target.?temp|setpoint|temperature_setting/i,
-    current_temperature_entity: /current.?temp|cavity.?temp|^(?!.*target).*temperature/i,
+    // A meat probe has a target and a reading of its own.
+    target_temperature_entity: /^(?!.*(probe|core|meat|food)).*(target.?temp|setpoint|temperature_setting)/i,
+    current_temperature_entity: /^(?!.*(target|setpoint|probe|core|meat|food)).*(current.?temp|cavity.?temp|temperature)/i,
     light_entity: /light|lamp/i,
   },
   microwave: {
     power_level_entity: /power.?level|watt.?level/i,
   },
   hood: {
-    fan_entity: /fan|hood|vent/i,
+    // Home Connect's program_progress sits on a device named hood.
+    fan_entity: /^fan\.|fan.?(speed|level)|venting/i,
     light_entity: /light|lamp/i,
     filter_life_entity: /filter/i,
   },
@@ -2740,9 +2761,11 @@ const TYPE_AUTO_PATTERNS = {
     child_lock_entity: /child.?lock|lock/i,
   },
   fridge: {
-    fridge_temperature_entity: /fridge|refriger|frigo|cooler/i,
-    freezer_temperature_entity: /freezer|congel/i,
-    freezer_door_entity: /freezer.?door|door.?freezer/i,
+    fridge_temperature_entity: /^(?!.*(freez|congel|gefrier|vriezer|target|setpoint|set_)).*((fridge|refriger|frigo|cooler|kuhl|koel).*temp|temp.*(fridge|refriger|frigo|cooler))/i,
+    freezer_temperature_entity: /^(?!.*(target|setpoint|set_)).*((freez|congel|gefrier|vriezer).*temp|temp.*(freez|congel|gefrier|vriezer))/i,
+    // The freezer's door is a field of its own (hOn's door_open_freezer).
+    door_entity: /^(?!.*(lock|alarm|assistant|freez|congel)).*door/i,
+    freezer_door_entity: /freez.*door|door.*freez|congel.*door|door.*congel/i,
     ice_maker_entity: /ice.?maker|ice/i,
   },
   washer: {
@@ -2755,11 +2778,14 @@ const TYPE_AUTO_PATTERNS = {
     phase_entity: PHASE_ENTITY_RE,
   },
   kettle: {
-    temperature_entity: /temperature|water.?temp/i,
+    // Tuya's number is the setpoint.
+    temperature_entity: /^sensor\.(?!.*(target|set|boiling)).*(temperature|water.?temp)/i,
   },
   water_heater: {
-    temperature_entity: /temperature|water.?temp/i,
-    heating_entity: /heating|chauffe/i,
+    // ViCare and Overkiz list the outside, the setpoints and the boiler too.
+    temperature_entity: /^(?!.*(target|set|min|max|outside|outdoor|room|ambient|supply|flow|return|boiler|compressor))(.*(dhw|tank|cylinder|storage|water).*temp|.*[._]temperature$)/i,
+    // A contact, not ViCare's "heating gas consumption".
+    heating_entity: /^(binary_sensor|switch|input_boolean)\..*(heating|chauffe)/i,
   },
   // Octopus Energy names both a live and a lifetime reading, and its flow
   // temperature is a target: only the live ones say what the pump does now.
@@ -2771,7 +2797,7 @@ const TYPE_AUTO_PATTERNS = {
     outdoor_temperature_entity: /outdoor|outside|exterieur|aussen/i,
     // A flow rate, never the flow temperature, nor HeishaMon's flow rate mode.
     water_flow_entity: /^(?!.*(temp|mode)).*(pump.?flow|water.?flow|flow.?rate|debit|caudal|durchfluss|portata)/i,
-    compressor_entity: /(compressor|compresseur|kompressor|compresor)(?!.*(power|current|energy|hours|starts|count))/i,
+    compressor_entity: /^(?!.*(temp|pressure|control|state$)).*(compressor|compresseur|kompressor|compresor)(?!.*(power|current|energy|hours|starts|count))/i,
     fan_speed_entity: /fan.?\d?.?(motor)?.?(speed|rpm)|ventilateur.*vitesse|luefter.?drehzahl/i,
     heat_output_entity: /^(?!.*lifetime).*heat.?(power.?)?(output|produc)/i,
     cop_entity: /(^|[._])cop$/i,
@@ -2787,9 +2813,10 @@ const TYPE_AUTO_PATTERNS = {
   },
   boiler: {
     thermostat_entity: /^climate\./i,
-    temperature_entity: /flow|supply|depart|temperature/i,
-    hot_water_entity: /hot.?water|dhw|eau.?chaude/i,
-    heating_entity: /central.?heating|chauffage/i,
+    // EMS-ESP's selflowtemp is a setpoint, ViCare lists the outside too.
+    temperature_entity: /^(?!.*(target|set|sel|outside|outdoor|room|return|ret|dhw|min|max|rate)).*(flow|supply|depart|boiler.?temp|[._]temperature$)/i,
+    hot_water_entity: /^(?!.*(temp|set|flow|press|gas|consum|energy|power|hours|starts|valve)).*(hot.?water|dhw|eau.?chaude|tap.?water)/i,
+    heating_entity: /^(?!.*(temp|set|flow|press|gas|consum|energy|power|hours|starts|valve)).*(central.?heating|chauffage|heating.?active)/i,
   },
   cooker: {
     target_temperature_entity: /target.?temp|setpoint/i,
@@ -2823,23 +2850,24 @@ const TYPE_AUTO_PATTERNS = {
   // a Python repr, which belongs in a template rather than on a card.
   pet_feeder: {
     start_entity: /^(button|script|automation|select|number)\.(?!.*(cancel|disable|enable|delete|skip|schedule|plan|reset|desiccant|restart)).*(feed|start|distribu|croquette|portion)/i,
-    portions_today_entity: /portions?.?(per.?day|today|du.?jour)|distributions?.?(per.?day|today|du.?jour)/i,
-    weight_today_entity: /weight.?(per.?day|today)|poids.?du.?jour/i,
+    portions_today_entity: /portions?.?(per.?day|today|du.?jour)|distributions?.?(per.?day|today|du.?jour)|today.?s.?feeding.?times/i,
+    weight_today_entity: /weight.?(per.?day|today)|poids.?du.?jour|today.?s.?feeding.?quantity|food.?dispensed.?today/i,
+    last_feed_entity: /last.?(feed|feeding|meal)/i,
     portion_weight_entity: /portion.?weight|poids.?(d.)?une?.?portion/i,
     serving_size_entity: /serving.?size|feeding.?size|taille.*portion/i,
     schedule_entity: /schedule.?(pretty|text|readable)|planning/i,
     error_entity: /error|fault|defaut/i,
-    level_entity: /food.?(level|remain)|level.?(of.)?food|lack.?of.?food|niveau.*croquette|remaining.?food/i,
+    level_entity: /food.?(level|remain|status|low)|level.?(of.)?food|lack.?of.?food|niveau.*croquette|remaining.?food/i,
   },
   // A fountain's wear counters and their reset buttons, by the words the
   // Tuya, Petkit and Xiaomi integrations use.
   pet_fountain: {
-    filter_life_entity: /^sensor\..*filter.?(day|life|remain|time|percent|left)|^sensor\..*filter$/i,
+    filter_life_entity: /^sensor\..*filter.?(day|life|remain|time|percent|left|duration)|^sensor\..*filter$/i,
     filter_reset_entity: /^(button|script|switch)\..*(reset.?filter|filter.?reset)/i,
-    pump_clean_entity: /^sensor\..*(pump.?(clean|day|time|remain)|remain.?clean|clean.?(day|time|left)|cleaning.?day)/i,
+    pump_clean_entity: /^sensor\..*(pump.?(clean|day|time|remain|duration)|remain.?clean|clean.?(day|time|left)|cleaning.?day)/i,
     pump_reset_entity: /^(button|script|switch)\..*(reset.?pump|pump.?reset|reset.?clean|clean.?reset|cleaning.?reset)/i,
-    water_level_entity: /water.?(level|shortage|lack|state|percent)|low.?water|lack.?(of.?water|.?warning)|no.?water|weight.?percent|tank.?(low|empty|state)/i,
-    pump_running_entity: /pump.?(running|run$|status|state)|watering.?status/i,
+    water_level_entity: /water.?(level|shortage|lack|state|percent)|low.?water|lack.?(of.?water|.?warning)|no.?water|weight.?percent|tank.?(low|empty|state)|remaining.?water/i,
+    pump_running_entity: /pump.?(running|run$|status|state)|watering.?status|^binary_sensor\..*pump$/i,
   },
   // Names read in the integrations' code: Palazzetti, Micronova's Agua IOT,
   // Edilkamin, Rika Firenet, Duepi EVO. The status sits next to a climate
@@ -2880,13 +2908,13 @@ const TYPE_AUTO_PATTERNS = {
   dehumidifier: {
     tank_entity: /tank.?(full|level)|water.?(tank|level|full)|bucket|full.?tank/i,
     current_humidity_entity: /(current|indoor|room).?humid/i,
-    fan_speed_entity: /fan.?(speed|mode|level)|wind.?speed/i,
+    fan_speed_entity: /fan.?(speed|mode|level)|wind.?speed|(^|_)speed$|^fan\./i,
     power_entity: /power$|power_w$|watt/i,
   },
   // The air a purifier measures, its night mode and its heater, by the names
   // VeSync, Philips, Dyson, Winix and Xiaomi give them.
   air_purifier: {
-    air_quality_entity: /^sensor\..*(pm2.?5|air.?quality|aqi|allergen)/i,
+    air_quality_entity: /^sensor\..*(pm.?2.?5|air.?quality|aqi|allergen)/i,
     night_mode_entity: /^(switch|binary_sensor)\..*(night|sleep)/i,
     heater_entity: /^climate\./i,
   },
@@ -2905,7 +2933,7 @@ const TYPE_AUTO_PATTERNS = {
     outdoor_temperature_entity: /outdoor|outside|exterieur|aussen/i,
     current_temperature_entity: /inside.?temp|indoor.?temp|room.?temp/i,
     defrost_entity: /defrost|degivr|abtau/i,
-    power_entity: /(current|real).?power|power_w$|watt/i,
+    power_entity: /(current|real(.?time)?).?power|power_w$|watt/i,
   },
   // Names read in the integrations: the plug of the Tesla Wall Connector and
   // OpenEVSE, the cable of a Modbus box, the session of OCPP, Peblar, Tesla,
@@ -2914,20 +2942,62 @@ const TYPE_AUTO_PATTERNS = {
   // charge, and a phase's power is not the total.
   ev_charger: {
     vehicle_entity: /vehicle.?connected(?!.?since)|cable.?state|plug.?state|vehicle.?status|(ev|car).?connected/i,
-    session_energy_entity: /session.?energy|energy.?session|charged.?energy|(usage|energy).?this.?session/i,
+    session_energy_entity: /session.?energy|energy.?session|charged.?energy|added.?energy|(usage|energy).?this.?session/i,
     current_limit_entity: /^(number|input_number)\..*(current.?limit|charge.?limit|max(imum)?.?current|charging.?current|charge.?rate|dynamic.?limit)/i,
     error_entity: /error.?code|fault.?code|active.?errors/i,
-    power_entity: /^sensor\.(?!.*(factor|limit|offered|reactive|apparent|phase|_l[123](_|$))).*(active.?power|charging.?power|total.?power|current.?power|power.?active.?import|power.?total|_power$|power_w$)/i,
+    power_entity: /^sensor\.(?!.*(factor|limit|offered|reactive|apparent|phase|discharg|powershare|export|_l[123](_|$))).*(active.?power|charging.?power|total.?power|current.?power|power.?active.?import|power.?total|_power$|power_w$)/i,
     discharge_power_entity: /^sensor\.(?!.*(factor|limit|reactive|apparent|[._]m(ax|in)(imum)?[._]|_l[123](_|$))).*(power.?active.?export|export.?power|discharg\w*.?power|powershare.*power)/i,
     start_entity: /^(button|script|switch)\.(?!.*(restart|delay)).*start/i,
     stop_entity: /^(button|script|switch)\.(?!.*(restart|reset)).*stop/i,
   },
+  // Hydrawise, Rachio, Rain Bird, LinkTap.
+  irrigation: {
+    zone_entity: /zone|station/i,
+    rain_delay_entity: /rain.?(delay|sensor)|rainsensor|^binary_sensor\..*[._]rain$/i,
+    soil_moisture_entity: /soil|moisture|humidite.?sol/i,
+    next_run_entity: /next.?(run|cycle|water)/i,
+    watering_duration_entity: /(total|watering).?duration/i,
+  },
+  // Z2M's battery_low, X-Sense's and Nest's battery.
+  detector: {
+    battery_entity: /batter/i,
+    co_level_entity: /(^|[._])co([._]|$)|carbon.?monoxide|co.?level|co.?ppm/i,
+  },
+  // PSN's and Xbox's now_playing, Nintendo's screen time.
+  console: {
+    game_entity: /now.?playing|current.?game|game.?title/i,
+    playtime_entity: /(play|online|screen).?time/i,
+  },
+  // Litter-Robot, PetKit, Tuya's bag_full, Neakasa.
+  litter_box: {
+    waste_drawer_entity: /waste.?(drawer|bin|bucket)|wastebin|bag.?full/i,
+    litter_level_entity: /litter.?level|sand.?(level|percent|lack)/i,
+    pet_weight_entity: /(pet|cat).?weight/i,
+    visits_entity: /visits|times.?used|excretion.?times/i,
+    cat_present_entity: /cat.?(present|detected)|toilet.?occupied/i,
+    last_use_entity: /last.?(seen|visit|used)/i,
+  },
+  // Xiaomi's cooker counts the time left.
+  rice_cooker: { remaining_time_entity: /left.?time|time.?left|remain/i },
+  // Fully Kiosk's tablet.
+  screen: {
+    screensaver_entity: /screensaver$/i,
+    charging_entity: /plugged/i,
+    url_entity: /current_page/i,
+    brightness_entity: /screen_brightness/i,
+    screenshot_entity: /screenshot/i,
+    reload_entity: /load_start_url/i,
+    restart_entity: /restart_browser/i,
+  },
   coffee: {
     water_entity: /water.?tank|water.?level|reservoir/i,
-    beans_entity: /bean.?container|bean.?empty/i,
-    tray_entity: /drip.?tray|tray/i,
-    descaling_entity: /descal|calc/i,
-    cups_entity: /cups|multiple.?beverages|tasses/i,
+    beans_entity: /beans?.?(container|empty|lack|level)/i,
+    // Full, whichever container fills first, not De'Longhi's tray in place.
+    tray_entity: /^(?!.*missing).*(grounds?.?container|capsule.?container|waste.?container|drip.?tray|tray)/i,
+    // What says it is due, not Nespresso's brews since nor De'Longhi's count.
+    descaling_entity: /^binary_sensor\..*(descal|calc)|^sensor\.(?!.*(count|done|progress|since|until|days|counter|autonomy)).*(descal|calc)/i,
+    // An option, not Home Connect's lifetime count of hot water cups.
+    cups_entity: /^(select|number|switch|input_\w+)\..*(cups|multiple.?beverages|tasses)|cup.?(number|count)/i,
     strength_entity: /strength|bean.?amount|force/i,
   },
 };
@@ -2988,8 +3058,8 @@ function netSuggest(hass, cfg) {
       && !/guest|invite|iot|wired|cable|filaire|main|principal/.test(words(id));
     set("clients_entity", pool.find((id) => clients(id) && /total/.test(words(id))) || pool.find(clients));
     set("wan_entity", own.find((id) => domainOf(id) === "binary_sensor" && attr(id).device_class === "connectivity")
-      || pool.find((id) => sensor(id) && /internet|wan/.test(words(id)) && /status|etat|state/.test(words(id))));
-    set("wifi_entity", own.find((id) => domainOf(id) === "switch" && /wifi|wlan/.test(words(id)) && !/guest|invite|wps/.test(words(id))));
+      || pool.find((id) => sensor(id) && /internet|wan/.test(words(id)) && !/port/.test(words(id)) && /status|etat|state/.test(words(id))));
+    set("wifi_entity", own.find((id) => domainOf(id) === "switch" && /wi.?fi|wlan/.test(words(id)) && !/guest|invite|wps/.test(words(id))));
   }
   if (![1, 2, 3, 4].some((i) => cfg[`disk${i}_entity`])) {
     // A disk is best shown by its status, else by its temperature.
@@ -3045,6 +3115,42 @@ function emsSuggest(hass, cfg, siblings, domains) {
   return patch;
 }
 
+// The start every id of a device shares, cut at a word.
+function commonPrefixOf(ids) {
+  const objects = ids.map((id) => id.split(".")[1] || "");
+  if (objects.length < 3) return "";
+  let words = objects[0].split("_");
+  for (const o of objects.slice(1)) {
+    const w = o.split("_");
+    let i = 0;
+    while (i < words.length && i < w.length && words[i] === w[i]) i += 1;
+    words = words.slice(0, i);
+  }
+  // At least one word must be left of the shortest id.
+  const shortest = Math.min(...objects.map((o) => o.split("_").length));
+  if (words.length >= shortest) words = words.slice(0, shortest - 1);
+  return words.length ? `${words.join("_")}_` : "";
+}
+
+const SHARED_FIELDS = ["heating_entity", "cooling_entity"];
+// Whether an entity's unit and class can be what a field reads. No unit says
+// nothing: a template or a word is left to its name.
+function fieldFits(hass, field, id) {
+  const dom = domainOf(id);
+  const a = (hass.states[id] && hass.states[id].attributes) || {};
+  const dc = a.device_class;
+  if (field === "battery_entity" && dom === "binary_sensor") return dc === "battery";
+  if (!["sensor", "number", "input_number"].includes(dom)) return true;
+  const u = String(a.unit_of_measurement || "").toLowerCase();
+  if (/temperature_entity$/.test(field)) return (!u || /\u00b0|^c$|^f$|^k$/.test(u)) && (!dc || dc === "temperature");
+  if (field === "battery_entity") return (!u || u === "%") && (!dc || dc === "battery");
+  if (/(^|_)power_entity$/.test(field)) return (!u || /^(m|k|g)?w$/.test(u)) && (!dc || dc === "power");
+  if (/humidity_entity$/.test(field)) return (!u || u === "%") && (!dc || dc === "humidity");
+  if (field === "progress_entity") return !u || u === "%";
+  if (field === "remaining_time_entity") return !["%", "w", "kw", "kwh", "wh", "l", "kg", "g", "km", "m"].includes(u) && !/\u00b0/.test(u);
+  return true;
+}
+
 // The sections live in the editor, which is a file of its own in a release:
 // it hands them over, since only the editor ever asks for suggestions.
 function autoSuggest(hass, cfg, sectionsFor) {
@@ -3057,7 +3163,10 @@ function autoSuggest(hass, cfg, sectionsFor) {
   const sections = sectionsFor(type, cfg);
   const allowed = new Set(sections.map((s) => s.field));
   const domains = Object.fromEntries(sections.map((s) => [s.field, s.includeDomains]));
-  const patterns = { ...AUTO_PATTERNS, ...(TYPE_AUTO_PATTERNS[type] || {}) };
+  // A type's own fields choose first: the generic ones would take a session's
+  // energy for the meter's.
+  const patterns = { ...(TYPE_AUTO_PATTERNS[type] || {}) };
+  for (const [field, re] of Object.entries(AUTO_PATTERNS)) if (!patterns[field]) patterns[field] = re;
   const patch = type === "heat_pump" ? emsSuggest(hass, cfg, siblings, domains) : {};
   // On an EMS-ESP heat pump curflowtemp is never the pump's flow, even when
   // hptc1 is missing: better no flow than the buffer tank's.
@@ -3069,10 +3178,23 @@ function autoSuggest(hass, cfg, sectionsFor) {
   if (type === "washer" && cfg.washer_dryer === undefined && isWasherDryer(cfg, hass.states[cfg.state_entity])) {
     patch.washer_dryer = true;
   }
+  // The words the device's own name brings to every id of the device: on a
+  // fridge, "fridge_power" holds "fridge" without being about it. An id is
+  // tried without them first.
+  const prefix = commonPrefixOf(siblings.concat(cfg.state_entity));
+  const bare = (id) => prefix ? `${domainOf(id)}.${(id.split(".")[1] || "").slice(prefix.length)}` : id;
+  const ownReading = (hass.states[cfg.state_entity].attributes || {}).current_temperature;
   for (const [field, re] of Object.entries(patterns)) {
     if (cfg[field] || patch[field] || !allowed.has(field)) continue;
-    const match = siblings.find((id) => re.test(id) && domains[field].includes(domainOf(id))
+    // A water_heater carries its own reading.
+    if (field === "temperature_entity" && ["water_heater", "kettle"].includes(type) && ownReading !== undefined && ownReading !== null) continue;
+    // A field does not take what another has: a fridge's and a freezer's
+    // temperature are two entities. A valve says both heating and cooling.
+    const used = new Set(Object.entries(patch).concat(Object.entries(cfg))
+      .filter(([k]) => !(SHARED_FIELDS.includes(k) && SHARED_FIELDS.includes(field))).map(([, v]) => v));
+    const fit = siblings.filter((id) => domains[field].includes(domainOf(id)) && !used.has(id) && fieldFits(hass, field, id)
       && !(emsHeatPump && field === "temperature_entity" && /(^|[._])curflowtemp$/.test(id)));
+    const match = fit.find((id) => re.test(bare(id))) || fit.find((id) => re.test(id));
     if (match) patch[field] = match;
   }
   if (type === "network") Object.assign(patch, netSuggest(hass, cfg));
@@ -5517,10 +5639,12 @@ function ntReadOf(type, hass, cfg, st, watts, threshold) {
     const dv = cfg.waste_drawer_entity ? numericState(hass, cfg.waste_drawer_entity) : null;
     const drawer = dv === null ? null : Math.max(0, Math.min(1, dv / 100));
     const dl = ntLine(hass, cfg, "lit_drawer", "mdi:delete-variant", "sec_waste_drawer", cfg.waste_drawer_entity);
-    if (dl) lines.push({ ...dl, caution: drawer !== null && drawer >= 0.8 });
+    // A contact says full (Tuya's bag_full, PetKit's wastebin), not how full.
+    const drawerFull = ntOnOff(hass, domainOf(cfg.waste_drawer_entity) === "binary_sensor" ? cfg.waste_drawer_entity : "");
+    if (dl) lines.push({ ...dl, caution: drawerFull || (drawer !== null && drawer >= 0.8) });
     const lv = cfg.litter_level_entity ? numericState(hass, cfg.litter_level_entity) : null;
     const ll = ntLine(hass, cfg, "lit_level", "mdi:texture-box", "sec_litter_level", cfg.litter_level_entity);
-    if (ll) lines.push({ ...ll, caution: lv !== null && unitOf(hass, cfg.litter_level_entity) === "%" && lv <= 20 });
+    if (ll) lines.push({ ...ll, caution: (lv !== null && unitOf(hass, cfg.litter_level_entity) === "%" && lv <= 20) || ntOnOff(hass, domainOf(cfg.litter_level_entity) === "binary_sensor" ? cfg.litter_level_entity : "") });
     for (const [key, icon, label, id] of [["lit_weight", "mdi:scale", "sec_pet_weight", cfg.pet_weight_entity], ["lit_visits", "mdi:paw", "sec_visits", cfg.visits_entity], ["lit_last", "mdi:clock-outline", "sec_last_use", cfg.last_use_entity]]) {
       const l = ntLine(hass, cfg, key, icon, label, id);
       if (l) lines.push(l);
@@ -5532,7 +5656,7 @@ function ntReadOf(type, hass, cfg, st, watts, threshold) {
     // and an error is said before the word it stopped on.
     const litterFault = /fault|error|erreur|defaut|fehler|jam|pinch/.test(raw);
     if (!litterFault && !/pause/.test(code) && /(^|_)(ccp|ec|cd|scf)$|clean|cycl|nettoy|reinig|limpi|puliz|reinigung|empty_cycle|dump|empty|level|restor|rak|reset|calibr|odor|(^|_)uv(_|$)|maint/.test(code) && !/complete|ccc/.test(code)) mode = "cleaning";
-    else if (["dfs", "sdf", "df2"].includes(code) || /full|plein|voll|lleno|pieno/.test(raw) || (drawer !== null && drawer >= 1)) mode = "full";
+    else if (["dfs", "sdf", "df2"].includes(code) || /full|plein|voll|lleno|pieno/.test(raw) || drawerFull || (drawer !== null && drawer >= 1)) mode = "full";
     else if (["csf", "dhf", "dpf", "otf", "pd", "spf", "hpf", "br", "error", "fault"].includes(code) || litterFault) mode = "fault";
     else if (["off", "sleep", "sleeping", "offline", "p", "paused"].includes(code) || /sleep|veille|schlaf|pause/.test(raw)) mode = "off";
     if (domainOf(cfg.state_entity) === "vacuum") mode = raw === "cleaning" ? "cleaning" : raw === "error" ? "fault" : mode;
@@ -8817,7 +8941,9 @@ class ApplianceCard extends HTMLElement {
           noWater = flagged(cfg.water_entity, ON);
         }
       }
-      const noBeans = flagged(cfg.beans_entity, ON);
+      // Philips gives the beans as a level.
+      const beansLevel = cfg.beans_entity ? numericState(hass, cfg.beans_entity) : null;
+      const noBeans = beansLevel !== null ? beansLevel <= 0 : flagged(cfg.beans_entity, ON);
       const trayFull = flagged(cfg.tray_entity, ON);
       const descale = flagged(cfg.descaling_entity, ON);
       // Order of what stops you getting a coffee first.
