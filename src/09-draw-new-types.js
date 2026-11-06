@@ -110,18 +110,18 @@ const NT_NAME_RES = [
   ["storage_tank", /pufferspeicher|(^|[^a-z])puffer|buffer.?tank|ballon.?tampon|thermal.?store|schichtspeicher|serbatoio.?(inerziale|di.?accumulo)|deposito.?de.?inercia|buffertank|zbiornik.?buforowy/],
   ["solar_thermal", /solar.?therm|solarthermie|solaire.?thermique|thermique.?solaire|kollektor|collector.?temp|capteur.?solaire|solar.?pump|solarpumpe|solar.?collector/],
   ["wood_stove", /^(?!.*(pellet|granul)).*((^|[^a-z])kamin|wood.?(stove|burner)|log.?(stove|burner)|poele.?(a.?)?bois|cheminee|holzofen|kachelofen|estufa.?de.?lena|stufa.?a.?legna|houtkachel|braskamin|vedovn|braendeovn|brandeovn|piec.?na.?drewno|fireplace)/],
-  ["console", /playstation|(^|[^a-z])ps[1-5]([^a-z0-9]|$)|xbox|nintendo|gamecube|(^|[^a-z])(n64|snes|nes|wii|switch.?lite|switch.?2)([^a-z0-9]|$)|mega.?drive|genesis|console|konsole|consola|konsol/],
-  ["litter_box", /litter|litiere|katzenklo|arenero|lettiera|kattlada|kuweta|kattebak|kattesand|(^|[^a-z])pura.?(x|max)/],
-  ["irrigation", /arrosage|irrigat|sprinkler|bewasserung|(^|[^a-z])riego|beregening|bevattning|vanning|vanding|nawadnian|zavlaz|opensprinkler|linktap|hydrawise|rachio|rain.?bird/],
-  ["detector", /smoke|fumee|detecteur.?(de.?)?(fumee|co|fuite)|monoxyde|carbon.?monoxide|(^|[^a-z])co.?(alarm|detector)|rauchmelder|detector.?de.?humo|rilevatore|rookmelder|brandvarnare|roykvarsler|roegalarm|czujnik.?dymu|water.?leak|fuite.?d.?eau|wassermelder|leak.?sensor/],
+  ["console", /used.?screen.?time|suspend.?software|playstation|(^|[^a-z])ps[1-5]([^a-z0-9]|$)|xbox|nintendo|gamecube|(^|[^a-z])(n64|snes|nes|wii|switch.?lite|switch.?2)([^a-z0-9]|$)|mega.?drive|genesis|console|konsole|consola|konsol/],
+  ["litter_box", /scoopfree|purobot|litter|litiere|katzenklo|arenero|lettiera|kattlada|kuweta|kattebak|kattesand|(^|[^a-z])pura.?(x|max)/],
+  ["irrigation", /arrosage|arroseur|watering|bhyve|netro|gardena(?!.?(sileno|mow))|irrigat|sprinkler|bewasserung|(^|[^a-z])riego|beregening|bevattning|vanning|vanding|nawadnian|zavlaz|opensprinkler|linktap|hydrawise|rachio|rain.?bird/],
+  ["detector", /x.?sense|smoke|fumee|detecteur.?(de.?)?(fumee|co|fuite)|monoxyde|carbon.?monoxide|(^|[^a-z])co.?(alarm|detector)|rauchmelder|detector.?de.?humo|rilevatore|rookmelder|brandvarnare|roykvarsler|roegalarm|czujnik.?dymu|water.?leak|fuite.?d.?eau|wassermelder|leak.?sensor/],
   ["christmas_tree", /christmas|xmas|(^|[^a-z])sapin|(^|[^a-z])noel([^a-z]|$)|weihnacht|tannenbaum|navidad|natale|kerstboom|julgran|juletre|juletrae|choink|vanocni.?strom/],
   ["aquarium", /aquari|akwari|akvari/],
-  ["mobility", /trottinette|e-?scooter|(^|[^a-z])scooter([^a-z]|$)|ninebot|(^|[^a-z])(velo|e-?bike|ebike|vae|pedelec)([^a-z]|$)|gyropode|gyroroue|monowheel|hoverboard|(^|[^a-z])moto([^a-z]|$)|motorcycle|super.?soco|sur.?ron|ausom|dualtron|kaabo|patinete|monopattino|hulajnoga|elsparkcykel|elsparkesykkel|kolobezka/],
-  ["sauna", /sauna/],
-  ["spa", /(^|[^a-z])(spa|jacuzzi|hot.?tub|bain.?nordique|whirlpoolwanne)([^a-z]|$)/],
-  ["meter", /linky|compteur.?(electrique|edf|enedis)|smart.?meter|(^|[^a-z])(teleinfo|papp|sinsts)([^a-z]|$)/],
+  ["mobility", /cowboy|vanmoof|(^|[.])niu([._\s]|$)|trottinette|e-?scooter|(^|[^a-z])scooter([^a-z]|$)|ninebot|(^|[^a-z])(velo|e-?bike|ebike|vae|pedelec)([^a-z]|$)|gyropode|gyroroue|monowheel|hoverboard|(^|[^a-z])moto([^a-z]|$)|motorcycle|super.?soco|sur.?ron|ausom|dualtron|kaabo|patinete|monopattino|hulajnoga|elsparkcykel|elsparkesykkel|kolobezka/],
+  ["sauna", /sauna|saunum|huum|harvia|(^|[^a-z])(tylo|effe)([^a-z]|$)/],
+  ["spa", /balboa|spanet|arctic.?spa|(^|[^a-z])(spa|gecko|jacuzzi|hot.?tub|bain.?nordique|whirlpoolwanne)([^a-z]|$)/],
+  ["meter", /linky|compteur.?(electrique|edf|enedis)|smart.?meter|(^|[\s.])(electricity|gas|water).?meter|p1.?meter|(^|[^a-z])dsmr([^a-z]|$)|shelly.?(pro.?)?3?em([^a-z]|$)|tibber.?pulse|iammeter|ksem|homewizard.?(p1|kwh|energy)|(^|[^a-z])(teleinfo|papp|sinsts)([^a-z]|$)/],
   ["floor_heating", /plancher.?chauffant|underfloor|floor.?heat|fussbodenheizung|suelo.?radiante|pavimento.?radiante|vloerverwarming|golvvarme|gulvvarme|ogrzewanie.?podlog|podlahov/],
-  ["water_pump", /surpresseur|booster|relevage|(^|[^a-z])sump|pompe.?(a.?eau|de.?puits|immergee)|water.?pump|well.?pump|(^|[^a-z])forage|tauchpumpe|hauswasser|hebeanlage/],
+  ["water_pump", /grundfos|wilo|(^|[^a-z])alpha[23]([^a-z]|$)|surpresseur|booster|relevage|(^|[^a-z])sump|pompe.?(a.?eau|de.?puits|immergee)|water.?pump|well.?pump|(^|[^a-z])forage|tauchpumpe|hauswasser|hebeanlage/],
 ];
 // A meter's drawing: the one chosen, else its unit and its name (#68). A
 // Linky stays a Linky; gas and water by their device class or their name;
@@ -291,7 +291,7 @@ function ntOnOff(hass, id) {
 // The temperature: its own entity, or the thermostat's.
 function ntTemp(hass, cfg, st) {
   if (cfg.temperature_entity) {
-    const v = numericState(hass, cfg.temperature_entity);
+    const v = tempState(hass, cfg.temperature_entity);
     return v === null ? null : { v, text: tempText(hass, cfg, cfg.temperature_entity, v, temperatureUnit(hass, cfg.temperature_entity)) };
   }
   const v = st ? numberOrNull((st.attributes || {}).current_temperature) : null;
@@ -3215,9 +3215,9 @@ function ntReadOf(type, hass, cfg, st, watts, threshold) {
 function ntControls(hass, cfg, type) {
   const out = [];
   const st = stateObj(hass, cfg.state_entity);
-  if (st && !cfg.toggle_entity && type !== "meter" && (["light", "switch", "input_boolean"].includes(domainOf(cfg.state_entity)) || (type === "humidifier" && domainOf(cfg.state_entity) === "humidifier"))) {
+  if (st && !cfg.toggle_entity && type !== "meter" && (["light", "switch", "input_boolean", "valve"].includes(domainOf(cfg.state_entity)) || (type === "humidifier" && domainOf(cfg.state_entity) === "humidifier"))) {
     out.push({ key: "toggle", entity: cfg.state_entity, icon: type === "christmas_tree" ? "mdi:pine-tree" : type === "aquarium" ? "mdi:lightbulb" : type === "mobility" ? "mdi:power-plug" : "mdi:power", label: t(hass, "toggle"),
-      on: String(st.state).toLowerCase() === "on" });
+      on: ["on", "open", "opening"].includes(String(st.state).toLowerCase()) });
   }
   if (type === "speaker" && st && ["playing", "paused", "buffering", "idle", "on"].includes(String(st.state).toLowerCase())) {
     const playing = ["playing", "buffering"].includes(String(st.state).toLowerCase());

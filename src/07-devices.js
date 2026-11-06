@@ -8,7 +8,7 @@ const SCREEN_LAYOUTS = ["tv_feet", "tv_stand", "tv_wall", "projector", "computer
 // that reports its screen, its screensaver and its charger.
 const SCREEN_TABLETS = ["tablet_wall", "tablet_frame", "tablet_portrait"];
 const SCREEN_TABLET_RE = /tablet|kiosk|wall ?panel|(^|[^a-z])fully([^a-z]|$)|\u5e73\u677f|\u043f\u043b\u0430\u043d\u0448\u0435\u0442/;
-const SCREEN_NAME_RE = /(^|[^a-z])tv([^a-z]|$)|(^|[^a-z])t(e|\u00e9)l(e|\u00e9)([^a-z]|$)|t(e|\u00e9)l(e|\u00e9)vis|fernseher|televize|telewizor|\u0442\u0435\u043b\u0435\u0432\u0438\u0437\u043e\u0440|\u7535\u89c6|beamer|project(or|eur)|proyector|proiettore|projektor|\u6295\u5f71|\u043f\u0440\u043e\u0435\u043a\u0442\u043e\u0440|computer|ordinateur|desktop|imac|ordenador|computador|komputer|po(c|\u010d)(i|\u00ed)ta(c|\u010d)|\u7535\u8111|\u043a\u043e\u043c\u043f\u044c\u044e\u0442\u0435\u0440|tablet|kiosk|wall ?panel|\u5e73\u677f|\u043f\u043b\u0430\u043d\u0448\u0435\u0442|laptop|notebook|macbook|chromebook|thinkpad|\u7b14\u8bb0\u672c|\u043d\u043e\u0443\u0442\u0431\u0443\u043a/;
+const SCREEN_NAME_RE = /bravia|android.?tv|webos|apple.?tv|chromecast|fire.?tv|(^|[^a-z])tv([^a-z]|$)|(^|[^a-z])t(e|\u00e9)l(e|\u00e9)([^a-z]|$)|t(e|\u00e9)l(e|\u00e9)vis|fernseher|televize|telewizor|\u0442\u0435\u043b\u0435\u0432\u0438\u0437\u043e\u0440|\u7535\u89c6|beamer|project(or|eur)|proyector|proiettore|projektor|\u6295\u5f71|\u043f\u0440\u043e\u0435\u043a\u0442\u043e\u0440|computer|ordinateur|desktop|imac|ordenador|computador|komputer|po(c|\u010d)(i|\u00ed)ta(c|\u010d)|\u7535\u8111|\u043a\u043e\u043c\u043f\u044c\u044e\u0442\u0435\u0440|tablet|kiosk|wall ?panel|\u5e73\u677f|\u043f\u043b\u0430\u043d\u0448\u0435\u0442|laptop|notebook|macbook|chromebook|thinkpad|\u7b14\u8bb0\u672c|\u043d\u043e\u0443\u0442\u0431\u0443\u043a/;
 // A laptop, by its name: the word for one, or a model everybody knows.
 const SCREEN_LAPTOP_RE = /laptop|notebook|macbook|chromebook|thinkpad|ultrabook|(ordinateur|pc|computer|ordenador|computador)[ _]portable|portatil|baerbar|b\u00e6rbar|barbar dator|\u7b14\u8bb0\u672c|\u043d\u043e\u0443\u0442\u0431\u0443\u043a/;
 const SCREEN_PROJECTOR_RE = /beamer|project(or|eur)|proyector|proiettore|projektor|\u6295\u5f71|\u043f\u0440\u043e\u0435\u043a\u0442\u043e\u0440/;
@@ -164,7 +164,7 @@ const NET_SWITCH_RE = /(?<!nintendo.?)switch|(^|[\s._-])(usw|edgeswitch|poe)([\s
 const NET_RACK_RE = /(^|[\s._-])(rack|baie|homelab)([\s._-]|$)/;
 const NET_SERVER_RE = /(^|[\s._-])(server|serveur|servidor|serwer|proxmox|pve|esxi|unifi)([\s._-]|\d|$)/;
 // A router or the box an ISP lends: by its name, its maker's, or the ISP's.
-const NET_ROUTER_RE = /(^|[\s._-])(router|routeur|ruter|udm|bbox|livebox|freebox|fritz.?box|modem|archer)([\s._-]|\d|$)/;
+const NET_ROUTER_RE = /(^|[\s._-])(router|routeur|ruter|udm|bbox|livebox|freebox|fritz.?box|modem|archer|keenetic|openwrt|mikrotik|omada|gl.?inet|asuswrt|rt.?a[xc]\d+|deco.?[mxpse]\d+)([\s._-]|\d|$)/;
 const NET_NAME_RE = new RegExp([NET_NAS_RE, NET_SWITCH_RE, NET_RACK_RE, NET_SERVER_RE, NET_ROUTER_RE].map((r) => `(${r.source})`).join("|"));
 // The switches drawn: one row of eight, then two rows of eight, twelve and
 // sixteen, numbered like the real ones, odd on top and even below.
@@ -315,7 +315,7 @@ const ROBOT_ONLY_FIELDS = ["robot_layout", "robot_station", "robot_station_color
   "robot_water_entity", "robot_clean_tank_entity", "robot_dirty_tank_entity", "robot_rain_entity", "robot_error_entity", "robot_winter", "robot_winter_entity"];
 // A robot by its name, its maker's or its integration's. A robot cook is a
 // cooker, so the word robot needs what it does.
-const ROBOT_NAME_RE = /tineco|aspirateur.?balai|floor.?one|ifloor|laveur.?de.?sol|floor.?washer|nass.?trocken|lavapavimenti|stick.?vac|cordless.?vac|akkusauger|stielsauger|roomba|braava|roborock|ecovacs|deebot|dreame|neato|eufy.?clean|robovac|xiaomi.?vacuum|conga|robot.?(vacuum|aspir|mop|laveur|mower|tondeuse)|robot.?(clean|sweep)|vacuum|aspirateur|saugroboter|staubsauger|wischroboter|aspiradora|aspirapolvere|robotstofzuiger|stofzuiger|dammsugare|st(o|\u00f8)vsuger|odkurzacz|vysavac|landroid|automower|mammotion|navimow|(^|[^a-z])luba([^a-z]|$)|lawn.?mower|(^|[^a-z])mower|tondeuse|m(a|ae|\u00e4)hroboter|robotmaaier|grasmaaier|cortac(e|\u00e9)sped|tosaerba|corta.?relva|robotgr(a|\u00e4)sklipp|robotgressklipp|robotpl(a|\u00e6)neklipp|kosiarka|sekacka|\u626b\u5730|\u5438\u5c18|\u62d6\u5730|\u5272\u8349|\u043f\u044b\u043b\u0435\u0441\u043e\u0441|\u0433\u0430\u0437\u043e\u043d\u043e\u043a\u043e\u0441/;
+const ROBOT_NAME_RE = /dolphin|sileno|tapo.?rv\d+|proscenic|hombot|ambrogio|tineco|aspirateur.?balai|floor.?one|ifloor|laveur.?de.?sol|floor.?washer|nass.?trocken|lavapavimenti|stick.?vac|cordless.?vac|akkusauger|stielsauger|roomba|braava|roborock|ecovacs|deebot|dreame|neato|eufy.?clean|robovac|xiaomi.?vacuum|conga|robot.?(vacuum|aspir|mop|laveur|mower|tondeuse)|robot.?(clean|sweep)|vacuum|aspirateur|saugroboter|staubsauger|wischroboter|aspiradora|aspirapolvere|robotstofzuiger|stofzuiger|dammsugare|st(o|\u00f8)vsuger|odkurzacz|vysavac|landroid|automower|mammotion|navimow|(^|[^a-z])luba([^a-z]|$)|lawn.?mower|(^|[^a-z])mower|tondeuse|m(a|ae|\u00e4)hroboter|robotmaaier|grasmaaier|cortac(e|\u00e9)sped|tosaerba|corta.?relva|robotgr(a|\u00e4)sklipp|robotgressklipp|robotpl(a|\u00e6)neklipp|kosiarka|sekacka|\u626b\u5730|\u5438\u5c18|\u62d6\u5730|\u5272\u8349|\u043f\u044b\u043b\u0435\u0441\u043e\u0441|\u0433\u0430\u0437\u043e\u043d\u043e\u043a\u043e\u0441/;
 const ROBOT_MOWER_RE = /mow|m(a|ae|\u00e4)h|tondeuse|maaier|cortac|tosaerba|relva|klipp|kosiark|sekack|landroid|automower|worx|mammotion|navimow|(^|[^a-z])luba([^a-z]|$)|\u5272\u8349|\u0433\u0430\u0437\u043e\u043d\u043e\u043a\u043e\u0441/;
 const ROBOT_MOP_RE = /(^|[^a-z])mop|braava|wisch|serpill|laveur|fregas|lavapavim|dweil|moppe|mopuj|mopov|\u62d6\u5730/;
 // Home Assistant's own words, the same for a vacuum and a mower.
@@ -553,7 +553,7 @@ function robotBatteryIcon(pct, charging) {
 const POOL_ONLY_FIELDS = ["water_temperature_entity", "air_temperature_entity", "ph_entity", "redox_entity",
   "filtration_time_entity", "pressure_entity", "pressure_alert", "pool_mode_entity", "chlorine_pump_entity",
   "chlorine_level_entity", "backwash_entity", "frost_entity", "pool_alert_entity"];
-const POOL_NAME_RE = /pool.?pump|swimming.?pool|(^|[^a-z])pool([^a-z]|$)|piscine|pompe.?(de.?)?piscine|oklyn|poolstation|(^|[^a-z])pisc|schwimmbad|poolpumpe|filterpumpe|bomba.?de.?(piscina|filtra)|piscina|pompa.?(piscina|filtraz)|zwembad|zwempomp|bassengpump|poolpump|pompa.?basen|basen|baz(e|\u00e9)n|\u6cf3\u6c60|\u0431\u0430\u0441\u0441\u0435\u0439\u043d/;
+const POOL_NAME_RE = /pool.?pump|swimming.?pool|(^|[^a-z])pool([^a-z]|$)|piscine|pompe.?(de.?)?piscine|oklyn|neopool|iopool|flipr|hayward|pentair|filter.?pump|(^|[^a-z])(exo|intex)([^a-z]|$)|poolstation|(^|[^a-z])pisc|schwimmbad|poolpumpe|filterpumpe|bomba.?de.?(piscina|filtra)|piscina|pompa.?(piscina|filtraz)|zwembad|zwempomp|bassengpump|poolpump|pompa.?basen|basen|baz(e|\u00e9)n|\u6cf3\u6c60|\u0431\u0430\u0441\u0441\u0435\u0439\u043d/;
 const POOL_OFF_STATES = ["off", "false", "0", "stopped", "stop", "idle", "standby", "closed", "sleep", "sleeping", "paused", "disabled", "not_running", "inactive"];
 // What a pump's state or status says, first match wins.
 const POOL_WORDS = [
@@ -638,7 +638,7 @@ function poolModeOf(hass, cfg, st, watts) {
 // with their inverter. The sun shines, a few clouds pass, or the moon is up;
 // in production a gleam runs over the cells and the energy down the cable.
 const SOLAR_ONLY_FIELDS = ["solar_layout", "energy_today_entity", "peak_power", "solar_alert_entity"];
-const SOLAR_NAME_RE = /solar|photovolt|(^|[^a-z])pv([^a-z]|$)|panneaux?.?solaires?|powerstream|hoymiles|enphase|apsystems|fronius|solaredge|growatt|solax|wechselrichter|zonnepane|fotovolt|fotowolt|solcell|solpanel|\u592a\u9633\u80fd|\u0441\u043e\u043b\u043d\u0435\u0447/;
+const SOLAR_NAME_RE = /solar|photovolt|(^|[^a-z])pv([^a-z]|$)|panneaux?.?solaires?|powerstream|hoymiles|enphase|envoy|apsystems|fronius|solaredge|growatt|solax|solis|sungrow|goodwe|foxess|sunsynk|kostal|(^|[^a-z])(sma|deye|sofar|tigo)([^a-z]|$)|^(?!.*(heat.?pump|compress|wash|fridge)).*inverter|wechselrichter|zonnepane|fotovolt|fotowolt|solcell|solpanel|\u592a\u9633\u80fd|\u0441\u043e\u043b\u043d\u0435\u0447/;
 const SOLAR_LAYOUTS = ["ground", "roof"];
 // What an inverter says when it is in trouble.
 const ENERGY_ERROR_RE = /error|fault|alarm|defaut|panne|fehler|failure|storung|st\u00f6rung|guasto|averia|fout|abnormal/;
@@ -658,7 +658,7 @@ const SOLAR_COLORS = { day: "#f9a825", low: "#9e9d24", night: "#5c6bc0", error: 
 // line marks the reserve it keeps for a power cut.
 const BATTERY_ONLY_FIELDS = ["battery_layout", "charge_power_entity", "reserve_entity", "charge_limit_entity", "battery_capacity",
   "power_inverted", "battery_alert_entity"];
-const BATTERY_NAME_RE = /home.?battery|house.?battery|powerwall|delta.?(pro|max|2)|ecoflow|bluetti|anker.?solix|solix|jackery|zendure|marstek|sonnen|power.?station|station.?(d.?)?energie|batterie.?(domestique|maison|murale|solaire)|hausbatterie|stromspeicher|heimspeicher|batteriespeicher|thuisbatterij|bateria.?domestica|batteria.?domestica|hemmabatteri|hjemmebatteri|magazyn.?energii|domaci.?baterie|\u5bb6\u7528\u7535\u6c60|\u0434\u043e\u043c\u0430\u0448\u043d.?\u0430\u043a\u043a\u0443\u043c/;
+const BATTERY_NAME_RE = /home.?battery|house.?battery|powerwall|delta.?(pro|max|2)|ecoflow|bluetti|anker.?solix|solix|jackery|zendure|marstek|sonnen|senec|e3dc|sigen|pylontech|victron|(^|[^a-z])(sax|byd)([^a-z]|$)|power.?station|station.?(d.?)?energie|batterie.?(domestique|maison|murale|solaire)|hausbatterie|stromspeicher|heimspeicher|batteriespeicher|thuisbatterij|bateria.?domestica|batteria.?domestica|hemmabatteri|hjemmebatteri|magazyn.?energii|domaci.?baterie|\u5bb6\u7528\u7535\u6c60|\u0434\u043e\u043c\u0430\u0448\u043d.?\u0430\u043a\u043a\u0443\u043c/;
 const BATTERY_STATION_RE = /delta|ecoflow|bluetti|jackery|anker|solix|zendure|river|power.?station|station/;
 const BATTERY_LAYOUTS = ["wall", "station"];
 // Under this power either way, the battery rests: a station feeding its own
@@ -765,7 +765,7 @@ function batteryReadOf(hass, cfg, st) {
 // from a sensor.
 const DIFFUSER_ONLY_FIELDS = ["diffuser_layout", "tank_empty_entity"];
 const DIFFUSER_LAYOUTS = ["drop", "cone", "stone", "flame", "nebulizer"];
-const DIFFUSER_NAME_RE = /diffus(er|eur|or|ore)|aroma.?(diffus|therap)|duftspender|essential.?oil|huiles?.?essentielles?|doftspridare|duftspreder/;
+const DIFFUSER_NAME_RE = /diffus(er|eur|or|ore)|aroma.?(diffus|therap)|airversa|mod100|(^|[._\s])spray(\s|$)|^(?!.*(coffee|cafe|espresso|kaffee|barista|jura|delonghi)).*((^|[._\s])(aroma|scent)([._\s]|$))|duftspender|essential.?oil|huiles?.?essentielles?|doftspridare|duftspreder/;
 const DIFFUSER_LABELS = { mist: "dif_mist", low: "dif_low", inter: "dif_inter", empty: "dif_empty", off: "ac_off", unav: "ev_offline" };
 const DIFFUSER_COLORS = { mist: "#26a69a", low: "#26a69a", inter: "#26a69a", empty: "#f44336", off: "var(--disabled-text-color, #9e9e9e)", unav: "var(--disabled-text-color, #9e9e9e)" };
 // Meross's eco mode mists less, it does not pause (#53): a lower mist and a

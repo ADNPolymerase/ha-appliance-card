@@ -13380,5 +13380,208 @@ function tvT(w) { return { 'switch.tv': { state: 'on', attributes: {} }, 'sensor
     check('cafe : grains a zero', C('0') === C('60'), false); }
 }
 
+// ── Lot 4 of the compatibility pass: what a card is, from its entity ──
+{
+  const T0L = Date.now();
+  const s = (state, attributes = {}) => ({ state, attributes: { ...attributes }, last_changed: new Date(T0L - 3600000).toISOString() });
+  const TYPE = (id, attrs = {}, state = 'on') => { const e = new Editor(); e.setConfig({ type: 'custom:ha-appliance-card', state_entity: id });
+    e.hass = HASS({ [id]: s(state, attrs) }); return e._type; };
+  const is = (want, ids) => { for (const id of ids) check(`detection ${want} : ${id}`, TYPE(id), want); };
+  // No media player is a washing machine.
+  check('lecteur : Apple TV sans classe', TYPE('media_player.salon'), 'screen');
+  check('lecteur : Cast', TYPE('media_player.chromecast_salon'), 'screen');
+  check('lecteur : ampli de classe receiver', TYPE('media_player.ampli', { device_class: 'receiver' }), 'speaker');
+  check('lecteur : classe tv', TYPE('media_player.lg', { device_class: 'tv' }), 'screen');
+  is('speaker', ['media_player.wiim_mini', 'media_player.bluesound_node', 'media_player.heos_1', 'media_player.denon_home_150', 'media_player.linkplay']);
+  is('console', ['media_player.xbox_series_x', 'media_player.ps5_salon']);
+  // A valve is a tap, unless it says gas.
+  check('vanne : eau', TYPE('valve.front_lawn', { device_class: 'water' }), 'irrigation');
+  check('vanne : sans classe (LinkTap)', TYPE('valve.tap'), 'irrigation');
+  check('vanne : gaz', TYPE('valve.main', { device_class: 'gas' }) === 'irrigation', false);
+  // Climate entities.
+  check('Flexit : ne fait que souffler', TYPE('climate.nordic_s4', { hvac_modes: ['off', 'fan_only'] }), 'hrv');
+  check('un split : souffle et refroidit', TYPE('climate.salon', { hvac_modes: ['off', 'cool', 'fan_only'] }), 'air_conditioner');
+  check('un split : deshumidifie', TYPE('climate.chambre', { hvac_modes: ['off', 'heat', 'cool', 'dry'] }), 'air_conditioner');
+  check('un split : chaud et froid sans plus', TYPE('climate.bureau', { hvac_modes: ['off', 'heat', 'cool'] }), 'air_conditioner');
+  check('un split : auto et ventilation', TYPE('climate.sejour', { hvac_modes: ['off', 'heat', 'cool', 'auto', 'fan_only'] }), 'air_conditioner');
+  check('Nest : heat_cool sans dry', TYPE('climate.hallway', { hvac_modes: ['off', 'heat', 'cool', 'heat_cool'] }), 'thermostat');
+  check('ecobee : auto sans dry', TYPE('climate.home', { hvac_modes: ['off', 'heat', 'cool', 'auto'] }), 'thermostat');
+  check('climat : chauffe seul', TYPE('climate.hc1', { hvac_modes: ['off', 'heat'] }), 'thermostat');
+  check('_ac_ : onduleur solaire', TYPE('sensor.kostal_ac_power'), 'solar');
+  check('_ac_ : sans marque, un capteur reste muet', TYPE('sensor.salon_ac_power') === 'air_conditioner', false);
+  check('_ac_ : un interrupteur', TYPE('switch.salon_ac'), 'air_conditioner');
+  check('_ac_ : un climate', TYPE('climate.bureau_ac'), 'air_conditioner');
+  check('_ac_ : un select', TYPE('select.chambre_ac_mode'), 'air_conditioner');
+  // A fan that is no robot, a purifier by its name.
+  check('Dreame : ventilateur', TYPE('fan.dreame_air') === 'robot', false);
+  check('Dreame : aspirateur', TYPE('vacuum.dreame_l10'), 'robot');
+  check('Dreame : capteur', TYPE('sensor.dreame_state'), 'robot');
+  check('purificateur par son nom affiche', TYPE('fan.salon', { friendly_name: "Purificateur d'air" }), 'air_purifier');
+  is('air_purifier', ['fan.blue_pure_311', 'fan.core_400s', 'fan.winix_c545', 'fan.zhimi_airp_mb5', 'fan.levoit_vital_200s', 'fan.coway_airmega']);
+  check('zhimi : son ventilateur', TYPE('fan.zhimi_fan_za5'), 'fan');
+  // Laundry and cold in the other languages.
+  is('washer', ['sensor.laundry_machine_status', 'sensor.panasonic_laundry_state']);
+  is('dryer', ['sensor.trockner_status', 'sensor.secadora_status', 'sensor.asciugatrice_status', 'sensor.droger_status', 'sensor.torktumlare_status', 'sensor.tumble_status']);
+  is('dishwasher', ['sensor.geschirrspuler_operation_state', 'sensor.spuelmaschine_status', 'sensor.lavavajillas_status', 'sensor.lavastoviglie_status', 'sensor.vaatwasser_status', 'sensor.diskmaskin_status']);
+  is('fridge', ['sensor.congelateur_status', 'sensor.gefrierschrank_status', 'sensor.vriezer_status', 'sensor.wine_cabinet_status', 'sensor.frys_status']);
+  is('cooktop', ['sensor.hob_status', 'sensor.hob_zone_1_status', 'sensor.sensor_hob_zone_operationstate']);
+  check('hob : pas dans un mot', TYPE('sensor.hobby_status') === 'cooktop', false);
+  // Kitchen makers.
+  is('printer_3d', ['sensor.a1mini_0309_print_status', 'sensor.a2l_01_status', 'sensor.h2c_01_status', 'sensor.h2dpro_01_status', 'sensor.x2d_01_status', 'sensor.x1_00m_print_status', 'sensor.mainsailos_current_print_state', 'sensor.ultimaker_s5_printer_status', 'sensor.dremel_3d45_status', 'sensor.neptune_4_status', 'sensor.saturn_4_status', 'sensor.mars_5_status', 'sensor.k2_plus_print_status']);
+  check('x1 : un portable', TYPE('sensor.x1_carbon_battery') === 'printer_3d', false);
+  check('mars : la planete', TYPE('sensor.mars_distance') === 'printer_3d', false);
+  is('coffee', ['sensor.jura_e8_status', 'sensor.sage_barista_touch_state', 'sensor.delonghi_primadonna_machine_status', 'sensor.fellow_aiden_brew_phase']);
+  check('coffee : son reglage d arome', TYPE('select.delonghi_aroma'), 'coffee');
+  is('kettle', ['sensor.stagg_ekg_pro_status', 'sensor.fellow_ekg_status']);
+  is('cooker', ['sensor.tokit_cooker_status', 'sensor.xiaomi_cooker_mode']);
+  is('rice_cooker', ['sensor.rice_cooker_cook_status', 'sensor.chunmi_pre_cooker_cook_status']);
+  is('air_fryer', ['sensor.kitchen_cooking_status', 'sensor.cosori_cook_status']);
+  check('cook status : un four', TYPE('sensor.oven_cooking_status'), 'oven');
+  check('cook status : une plaque', TYPE('sensor.hob_cooking_status'), 'cooktop');
+  check('options : friteuse', TYPE('sensor.cuisine_etat', { options: ['cooking', 'preheat_end'] }), 'air_fryer');
+  is('robot', ['sensor.mydolphin_status', 'sensor.tapo_rv30_status', 'sensor.proscenic_status', 'sensor.hombot_status', 'sensor.ambrogio_state']);
+  // Pets.
+  is('litter_box', ['sensor.scoopfree_rake_status', 'sensor.purobot_max_work_state']);
+  check('Litter-Robot : ses codes', TYPE('sensor.minou_status_code', { options: ['ccp', 'rdy', 'off'] }), 'litter_box');
+  is('pet_feeder', ['sensor.smartfeed_food_level', 'sensor.fresh_element_solo_state', 'sensor.yumshare_state']);
+  is('pet_fountain', ['sensor.eversweet_3_pro_state']);
+  // Energy.
+  is('solar', ['sensor.solis_inverter_active_power', 'sensor.sungrow_total_dc_power', 'sensor.deye_total_power', 'sensor.goodwe_ppv', 'sensor.foxess_generation_power', 'sensor.sunsynk_inverter_power', 'sensor.inverter_active_power', 'sensor.tigo_power', 'sensor.sma_power', 'sensor.envoy_122_current_power_production', 'sensor.sofar_power']);
+  check('inverter : une pompe a chaleur', TYPE('sensor.heat_pump_inverter_frequency'), 'heat_pump');
+  check('inverter : un climatiseur', TYPE('climate.inverter_salon', { hvac_modes: ['off', 'cool', 'dry'] }), 'air_conditioner');
+  check('sma : pas dans un mot', TYPE('sensor.smart_status') === 'solar', false);
+  is('home_battery', ['sensor.solarbank_e1600_battery_percentage', 'sensor.solarflow_2400_ac_electric_level', 'sensor.senec_battery', 'sensor.e3dc_soc', 'sensor.sigen_soc', 'sensor.sax_soc', 'sensor.victron_soc', 'sensor.pylontech_soc', 'sensor.byd_soc']);
+  is('ev_charger', ['sensor.goe_123_car', 'sensor.kathrein_wallbox_state', 'sensor.heidelberg_energy_control_state', 'sensor.garo_status', 'sensor.elli_charger_status', 'sensor.trydan_state', 'sensor.autel_status', 'sensor.warp2_state', 'sensor.pracht_state', 'sensor.evcc_status', 'sensor.victron_evse_status']);
+  check('heidelberg : la ville', TYPE('sensor.heidelberg_temperature') === 'ev_charger', false);
+  check('elli : une personne', TYPE('sensor.elli_phone_battery') === 'ev_charger', false);
+  is('meter', ['sensor.electricity_meter_power_consumption', 'sensor.gas_meter_gas_consumption', 'sensor.p1_meter_active_power', 'sensor.dsmr_power', 'sensor.shelly_em_power', 'sensor.shelly_pro_3em_power', 'sensor.tibber_pulse_power', 'sensor.iammeter_power', 'sensor.ksem_power', 'sensor.homewizard_p1_power']);
+  check('compteur : celui d une machine', TYPE('sensor.dishwasher_energy_meter'), 'dishwasher');
+  // Network, mobility.
+  is('network', ['sensor.keenetic_status', 'sensor.openwrt_uptime', 'sensor.mikrotik_cpu', 'sensor.deco_m5_status', 'sensor.omada_clients', 'sensor.glinet_cpu', 'sensor.rt_ax88u_status']);
+  check('deco : la decoration', TYPE('switch.deco_salon') === 'network', false);
+  is('mobility', ['sensor.cowboy_battery', 'sensor.niu_soc', 'sensor.vanmoof_battery']);
+  check('niu : pas dans un mot', TYPE('sensor.uniu_status') === 'mobility', false);
+  // Air.
+  is('hrv', ['fan.ventilation', 'fan.helios_kwl', 'climate.helios', 'climate.flexit_nordic_s4', 'climate.systemair_cd4', 'sensor.swegon_mode', 'sensor.pluggit_mode', 'sensor.thessla_mode', 'fan.ambientika', 'sensor.brink_mode']);
+  check('ventilation : celle d un climatiseur', TYPE('select.clim_ventilation_mode') === 'hrv', false);
+  check('ventilation : celle d une salle de bain', TYPE('binary_sensor.bathroom_ventilation') === 'hrv', false);
+  is('diffuser', ['select.mod100_spray', 'select.bureau_spray', 'switch.bureau_spray', 'fan.aroma', 'switch.airversa', 'select.salon_scent']);
+  check('spray : le niveau d un robot', TYPE('select.robot_spray_level') === 'diffuser', false);
+  // Heating and water.
+  is('heat_pump', ['sensor.thermia_status', 'sensor.yutaki_status', 'sensor.arotherm_status', 'sensor.vitocal_status', 'sensor.lambda_wp_status', 'sensor.eu08l_hp1_state']);
+  check('lambda : la sonde d un poele', TYPE('sensor.froeling_lambda') , 'pellet_stove');
+  is('pellet_stove', ['sensor.pellematic_status', 'sensor.oekofen_status', 'sensor.froeling_state', 'sensor.ecomax_status', 'sensor.hargassner_status', 'sensor.centrometal_status', 'sensor.thermorossi_status', 'climate.firenet']);
+  is('spa', ['climate.balboa', 'climate.spanet', 'sensor.gecko_status', 'sensor.arctic_spa_status']);
+  check('Gecko : son icone', TYPE('water_heater.family', { icon: 'mdi:hot-tub' }), 'spa');
+  check('une autre icone ne fait pas un spa', TYPE('water_heater.family', { icon: 'mdi:water-boiler' }) === 'spa', false);
+  is('sauna', ['climate.saunum_leil', 'climate.huum', 'climate.harvia', 'switch.tylo', 'climate.effe']);
+  is('pool_pump', ['switch.filter_pump', 'sensor.neopool_ph', 'sensor.iopool_status', 'sensor.flipr_ph', 'sensor.exo_status', 'sensor.hayward_status', 'sensor.pentair_status', 'switch.intex_pump']);
+  check('whirlpool : une marque de lave-linge', TYPE('sensor.whirlpool_status'), 'washer');
+  is('irrigation', ['sensor.gardena_water_status', 'sensor.bhyve_status', 'sensor.netro_status', 'binary_sensor.front_lawn_watering', 'switch.arroseur']);
+  check('Gardena : sa tondeuse', TYPE('sensor.gardena_sileno_state'), 'robot');
+  is('water_pump', ['switch.grundfos_pump_control', 'sensor.alpha3_power', 'switch.wilo_pump']);
+  is('detector', ['binary_sensor.xsense_kitchen', 'binary_sensor.kitchen_alarm_status']);
+  check('alarm_status : pas sur un capteur', TYPE('sensor.kitchen_alarm_status') === 'detector', false);
+  is('console', ['sensor.switch_used_screen_time', 'switch.switch_suspend_software']);
+  is('mailbox', ['sensor.mail_usps_mail']);
+  is('screen', ['switch.bravia', 'remote.androidtv', 'switch.webos_salon', 'remote.apple_tv']);
+  // A scale.
+  check('Renpho : par sa marque', TYPE('sensor.renpho_weight', { unit_of_measurement: 'kg' }, '72'), 'scale');
+  check('Renpho : Weight en kg sans classe', TYPE('sensor.weight', { unit_of_measurement: 'kg' }, '72'), 'scale');
+  check('poids : sans unite de poids', TYPE('sensor.weight', { unit_of_measurement: '%' }, '72') === 'scale', false);
+  check('poids : en grammes de personne', TYPE('sensor.salle_de_bain', { unit_of_measurement: 'g', device_class: 'weight' }, '78500'), 'scale');
+  check('poids : en grammes de cafe', TYPE('sensor.salle_de_bain', { unit_of_measurement: 'g', device_class: 'weight' }, '500') === 'scale', false);
+  check('poids : celui du chat', TYPE('sensor.minou_pet_weight', { unit_of_measurement: 'kg', device_class: 'weight' }, '4') === 'scale', false);
+
+  // Temperatures on a climate entity.
+  { const h = render({ appliance_type: 'pool_pump', state_entity: 'switch.pump', water_temperature_entity: 'climate.pool_heat' }, { 'switch.pump': s('on'), 'climate.pool_heat': s('heat', { current_temperature: 27 }) });
+    check('piscine : eau lue sur le climate', /27\s°C/.test(h), true); }
+  { const h = render({ appliance_type: 'pool_pump', state_entity: 'switch.pump', water_temperature_entity: 'climate.pool_heat' }, { 'switch.pump': s('on'), 'climate.pool_heat': s('off', {}) });
+    check('piscine : climate sans temperature, pas de ligne', /pool_water|mdi:pool-thermometer/.test(h), false); }
+  { const h = render({ appliance_type: 'aquarium', state_entity: 'light.bac', temperature_entity: 'climate.bac' }, { 'light.bac': s('on'), 'climate.bac': s('heat', { current_temperature: 25 }) });
+    contains('aquarium : temperature lue sur le climate', h, '25 °C'); }
+  { const h = render({ appliance_type: 'fridge', fridge_temperature_entity: 'climate.fridge', freezer_temperature_entity: 'climate.freezer' }, { 'climate.fridge': s('cool', { current_temperature: 4 }), 'climate.freezer': s('cool', { current_temperature: -18 }) });
+    check('frigo : pas de tirets', h.includes('--°'), false); contains('frigo : sa temperature', h, '4°'); }
+  // Fields offered and filled.
+  { const e = new Editor(); e.setConfig({ type: 'custom:ha-appliance-card', appliance_type: 'pool_pump', state_entity: 'switch.pump' }); e.hass = HASS({ 'switch.pump': s('on') });
+    check('editeur : eau de piscine sur climate', e._sections().find((x) => x.field === 'water_temperature_entity').includeDomains.includes('climate'), true); }
+  { const e = new Editor(); e.setConfig({ type: 'custom:ha-appliance-card', appliance_type: 'camera', state_entity: 'camera.c' }); e.hass = HASS({ 'camera.c': s('idle') });
+    check('editeur : mouvement en event', e._sections().find((x) => x.field === 'motion_entity').includeDomains.includes('event'), true);
+    check('editeur : interrupteur en vanne', e._sections().find((x) => x.field === 'toggle_entity').includeDomains.includes('valve'), true); }
+  // Motion that is an event.
+  const iso = (ms) => new Date(ms).toISOString();
+  { const h = render({ appliance_type: 'camera', state_entity: 'camera.c', motion_entity: 'event.c_motion' }, { 'camera.c': s('idle'), 'event.c_motion': s(iso(Date.now() - 5000), { event_type: 'camera_motion' }) });
+    contains('Nest : mouvement il y a 5 s', h, 'Motion'); }
+  { const h = render({ appliance_type: 'camera', state_entity: 'camera.c', motion_entity: 'event.c_motion' }, { 'camera.c': s('idle'), 'event.c_motion': s(iso(Date.now() - 120000), { event_type: 'camera_motion' }) });
+    check('Nest : mouvement passe', stateLine(h).includes('Motion'), false); }
+  { const h = render({ appliance_type: 'camera', state_entity: 'camera.c', motion_entity: 'sensor.person_count' }, { 'camera.c': s('idle'), 'sensor.person_count': s('2') });
+    contains('Frigate : deux personnes', h, 'Motion'); }
+  { const h = render({ appliance_type: 'camera', state_entity: 'camera.c', motion_entity: 'sensor.person_count' }, { 'camera.c': s('idle'), 'sensor.person_count': s('0') });
+    check('Frigate : personne', stateLine(h).includes('Motion'), false); }
+  // A boiler on a climate entity.
+  { const h = render({ appliance_type: 'boiler', state_entity: 'climate.remeha' }, { 'climate.remeha': s('heat', { hvac_action: 'heating' }) });
+    check('Remeha : chauffe', stateLine(h), 'Heating'); }
+  { const h = render({ appliance_type: 'boiler', state_entity: 'climate.remeha' }, { 'climate.remeha': s('heat', { hvac_action: 'idle' }) });
+    check('Remeha : en attente', stateLine(h) === 'Heating', false); }
+  check('NIU : la carte reseau d un lave-linge', TYPE('sensor.lave_linge_network_interface_niu_sw_update') === 'mobility', false);
+  check('NIU : et son nom affiche', TYPE('sensor.lave_linge_x', { friendly_name: 'Lave-linge Network Interface NIU SW' }) === 'mobility', false);
+  // The last motion of an event entity is its state.
+  { const h = render({ appliance_type: 'camera', state_entity: 'camera.c', motion_entity: 'event.c_motion' }, { 'camera.c': s('idle'), 'event.c_motion': { state: iso(Date.now() - 120000), attributes: {}, last_changed: iso(Date.now() - 86400000 * 3) } });
+    contains('Nest : dernier mouvement', h, 'mdi:motion-sensor');
+    const norm = (x) => x.replace(/[\u00a0\u202f]/g, ' ');
+    const old = norm(new Date(Date.now() - 86400000 * 3).toLocaleString('en', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' }));
+    check('Nest : il y a deux minutes, pas trois jours', norm(h).includes(old), false); }
+  // A ventilation unit on a climate entity has its presets.
+  { const calls = []; const c = new Card();
+    c.setConfig({ type: 'custom:ha-appliance-card', appliance_type: 'hrv', state_entity: 'climate.flexit' });
+    c._hass = { ...HASS({ 'climate.flexit': s('fan_only', { hvac_modes: ['off', 'fan_only'], preset_mode: 'home', preset_modes: ['away', 'home', 'high', 'fireplace'] }) }), callService: (domain, service, data) => calls.push({ domain, service, data }) };
+    c._render();
+    const btn = c._root.querySelectorAll('.action-btn, .light-badge').find((n) => n.getAttribute('data-menu'));
+    check('Flexit : un menu', !!btn, true);
+    c._pickMode('high');
+    check('Flexit : son preset', JSON.stringify(calls.at(-1)), JSON.stringify({ domain: 'climate', service: 'set_preset_mode', data: { entity_id: 'climate.flexit', preset_mode: 'high' } }));
+    c.disconnectedCallback(); }
+  // A valve is driven from the card.
+  { const h = render({ appliance_type: 'irrigation', state_entity: 'valve.tap' }, { 'valve.tap': s('open', { device_class: 'water' }) });
+    check('vanne : un bouton, allume', /class="action-btn[^"]*\bon\b[^"]*"[^>]*data-entity="valve\.tap"/.test(h), true);
+    contains('vanne : ouverte, elle arrose', stateLine(h), 'Watering'); }
+  { const h = render({ appliance_type: 'irrigation', state_entity: 'valve.tap' }, { 'valve.tap': s('closed', { device_class: 'water' }) });
+    check('vanne fermee : un bouton, eteint', /class="action-btn[^"]*\bon\b[^"]*"[^>]*data-entity="valve\.tap"/.test(h), false);
+    check('vanne fermee : le bouton', h.includes('data-entity="valve.tap"'), true); }
+  { const calls = []; const c = new Card();
+    c.setConfig({ type: 'custom:ha-appliance-card', appliance_type: 'irrigation', state_entity: 'valve.tap' });
+    c._hass = { ...HASS({ 'valve.tap': s('closed') }), callService: (domain, service, data) => calls.push({ domain, service, data }) };
+    c._call('valve.tap');
+    check('vanne : se bascule', JSON.stringify(calls.at(-1)), JSON.stringify({ domain: 'valve', service: 'toggle', data: { entity_id: 'valve.tap' } })); }
+  // What the editor fills in.
+  { const SUG = (cfg, map) => { const e = new Editor(); e.setConfig({ type: 'custom:ha-appliance-card', ...cfg });
+      const states = { [cfg.state_entity]: s('idle'), ...map }; const entities = {};
+      for (const id of Object.keys(states)) entities[id] = { device_id: 'd1', platform: 'x' };
+      e.hass = { ...HASS(states), entities, devices: { d1: { name: 'X' } } };
+      return (e.events && e.events.at(-1)?.detail?.config) || {}; };
+    const r = SUG({ appliance_type: 'pool_pump', state_entity: 'switch.pool_pump' }, { 'climate.spa_heat': s('heat', { current_temperature: 37 }), 'climate.pool_heat': s('heat', { current_temperature: 27 }), 'binary_sensor.pool_freeze_mode': s('off') });
+    check('Pentair : eau sur son climate', r.water_temperature_entity, 'climate.pool_heat');
+    check('Pentair : mode gel', r.frost_entity, 'binary_sensor.pool_freeze_mode');
+    const a = SUG({ appliance_type: 'aquarium', state_entity: 'light.bac' }, { 'climate.bac': s('heat', { current_temperature: 25 }) });
+    check('aquarium : temperature sur son climate', a.temperature_entity, 'climate.bac');
+    const f = SUG({ appliance_type: 'fridge', state_entity: 'sensor.frigo_etat' }, { 'climate.frigo_cooler': s('cool', { current_temperature: 4 }), 'climate.frigo_freezer': s('cool', { current_temperature: -18 }) });
+    check('frigo : refrigerateur sur son climate', f.fridge_temperature_entity, 'climate.frigo_cooler');
+    check('frigo : congelateur sur son climate', f.freezer_temperature_entity, 'climate.frigo_freezer');
+    const cam = SUG({ appliance_type: 'camera', state_entity: 'camera.porte' }, { 'event.porte_motion': s(iso(Date.now() - 86400000)), 'event.porte_chime': s(iso(Date.now() - 86400000)) });
+    check('Nest : mouvement rempli', cam.motion_entity, 'event.porte_motion');
+    check('Nest : sonnette remplie', cam.ring_entity, 'event.porte_chime'); }
+  // What the state picker offers once the type is set.
+  { const offered = (type, dom) => { const e = new Editor(); e.setConfig({ type: 'custom:ha-appliance-card', appliance_type: type, state_entity: 'sensor.x' }); e.hass = HASS({ 'sensor.x': s('on') });
+      return (e._root.querySelector('[data-slot="state_entity"]')?.children.at(-1)?.includeDomains || []).includes(dom); };
+    check('editeur : hotte en fan', offered('hood', 'fan'), true);
+    check('editeur : bouilloire en water_heater', offered('kettle', 'water_heater'), true);
+    check('editeur : chaudiere en climate', offered('boiler', 'climate'), true);
+    check('editeur : une hotte reste sans climate', offered('hood', 'climate'), false); }
+  // Domains the editor offers once the type is set.
+  { const e = new Editor(); e.setConfig({ type: 'custom:ha-appliance-card', appliance_type: 'hood', state_entity: 'fan.hotte' }); e.hass = HASS({ 'fan.hotte': s('on', { percentage: 50 }) });
+    const h = render({ appliance_type: 'hood', state_entity: 'fan.hotte' }, { 'fan.hotte': s('on', { percentage: 50 }) });
+    check('hotte en fan : tourne', /run/i.test(stateLine(h)), true); }
+}
+
 if (RECORD) writeFileSync(process.env.HAC_RECORD, JSON.stringify(RECORD));
 report();

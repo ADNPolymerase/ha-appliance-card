@@ -430,7 +430,7 @@ phase_entity: sensor.washer_dryer_program_phase
 | `zones` / `zones_layout` / `zones_count` | cooktop | Up to 6 zones `{ level_entity, residual_heat_entity?, name? }`, level as a number or a word (`boost`), `H` for residual heat. Layout `2x1` \| `2x2` \| `3x2`, and how many zones to draw without entities (default 4). |
 | `child_lock_entity` | cooktop | Padlock on the illustration. |
 | `fridge_layout` | fridge | Drawn in three-quarter view: `freezer_bottom` (default) \| `freezer_top` \| `side_by_side` \| `single` \| `wine` (glass door, bottles lying on wooden racks behind it, for a wine cooler) \| `chest` (a chest freezer, its lid lifting on its back hinge) \| `drawers` (an upright freezer, see-through drawers behind its door). On these two the freezer probe, or the fridge one, is on the display, and the warning threshold is -12 by default. |
-| `fridge_temperature_entity` / `freezer_temperature_entity` / `fridge_max_temperature` / `temperature_hide_in_list` | fridge | Temperatures shown on the doors and in the list, `--°` when the probe goes quiet (`temperature_hide_in_list` leaves them on the doors only). Above the maximum (default 8 °C, 18 °C for `wine`), the state reads *Temperature high*. |
+| `fridge_temperature_entity` / `freezer_temperature_entity` / `fridge_max_temperature` / `temperature_hide_in_list` | fridge | Temperatures shown on the doors and in the list, from a sensor or a `climate` entity's current temperature, `--°` when the probe goes quiet (`temperature_hide_in_list` leaves them on the doors only). Above the maximum (default 8 °C, 18 °C for `wine`), the state reads *Temperature high*. |
 | `door_entity` / `freezer_door_entity` | fridge | Each door turns on its hinge for its own sensor: its outside first, then its inside with its balconies, and the lit inside of the compartment. |
 | `ice_maker_entity` | fridge | On `freezer_bottom`, adds an ice dispenser to the fridge door; the side-by-side always has one. Ice cubes fall into the glass while it produces. The other layouts have no dispenser. |
 | `power_entity` / `power_on_threshold` / `no_power_threshold` / `no_power_after` | fridge | With nothing wrong, the state reads *Cooling* at or above the threshold and *Standby* below it: set the threshold between your fridge's draw at rest and while cooling (10 W for one that rests at 6 W). Staying below `no_power_threshold` (default 1 W, whatever the cooling threshold) for more than `no_power_after` minutes (default 30) reads *No power draw*, in orange: a long compressor pause looks the same. Counted from the reading's last change, so a page reload does not restart it. |
@@ -764,7 +764,7 @@ valve_entity: cover.stove_mixer
 
 | Option | Types | Description |
 |---|---|---|
-| `water_temperature_entity` / `air_temperature_entity` | pool pump | The water and the air, shown as lines. |
+| `water_temperature_entity` / `air_temperature_entity` | pool pump | The water and the air, shown as lines. The water may be a `climate` entity (Pentair). |
 | `ph_entity` / `redox_entity` | pool pump | The pH and the RedOx (ORP), shown as lines. |
 | `filtration_time_entity` | pool pump | Time filtered today, in hours, minutes or seconds: *4h30*. |
 | `pressure_entity` / `pressure_alert` | pool pump | The filter's pressure: the gauge's needle follows it, and at `pressure_alert` (1.8 bar by default) or above, with the pump running, it is an *Error*. |
@@ -1395,7 +1395,7 @@ disk2_entity: sensor.nas_drive_2_status
 | `muscle_mass_entity` / `bone_mass_entity` | scale | Muscle and bone mass, as lines. |
 | `camera_layout` | camera | `indoor` (a pan and tilt camera) \| `tube` (Netatmo Welcome) \| `outdoor` (a battery camera like an Arlo, on its wall bracket) \| `dome` (on the ceiling) \| `doorbell` (a video doorbell). Left out, a camera with a `ring_entity` or a name that says doorbell is a doorbell, a Netatmo indoor camera is a tube, a name that says dome a dome, and a name or a brand that says outdoor, garden, front, back, Arlo or spotlight an outdoor camera. |
 | `ring_entity` | camera | The doorbell's button: a binary sensor on while it is pressed (Reolink's *visitor*), or an event entity (Ring, Nest, UniFi Protect), *Ringing* for 30 seconds after its last `ring`. The ring of light beats, then a *Last ring* line. |
-| `motion_entity` | camera | A motion sensor: *Motion detected* while it is on, orange waves in front of the lens, then a *Last motion* line. |
+| `motion_entity` | camera | A motion sensor: *Motion detected* while it is on, orange waves in front of the lens, then a *Last motion* line. A count above zero (Frigate) also means motion, and an `event` entity (Nest, Ring) means motion for 30 seconds after it fires. |
 | `recording_entity` | camera | A recording sensor, for the integrations whose camera entity does not say *recording*. |
 | `night_entity` | camera | The infrared mode: the ring of LEDs around the lens glows red, and a *Night vision* line. |
 | `privacy_entity` | camera | A privacy switch (Reolink, Tapo): on, the camera is *Off*, its head bowed or its shutter closed. Netatmo's `monitoring` attribute does the same. Set it as `toggle_entity` too for a button. |
@@ -1574,7 +1574,7 @@ state_entity: media_player.kitchen
 | `light_entity` | oven, hood, 3D printer | Light, as a small toggle in the header. A lit printer's chamber lights up too. |
 | `temperature_decimals` | fridge, kettle, water heater, boiler, heat pump | `0` (default, whole degree), `1` (one decimal) or `auto` (the entity's display precision), on the appliance's screen and in the list. |
 | `temperature_entity` | kettle, water heater, boiler, heat pump | Water temperature (flow temperature on a boiler or a heat pump), shown on the appliance and in the list. A `water_heater` entity provides its own. On a water heater the hot water fills the tank from 15 to 65 °C. |
-| `temperature_entity` | floor_heating, spa, sauna, aquarium | The temperature on the display and as a line. Left out, a thermostat's `current_temperature` is used. |
+| `temperature_entity` | floor_heating, spa, sauna, aquarium | The temperature on the display and as a line, from a sensor or a `climate` entity. Left out, a thermostat's `current_temperature` is used. |
 
 </details>
 

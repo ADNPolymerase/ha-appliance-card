@@ -454,6 +454,16 @@ function unitOf(hass, entityId) {
   return (st && st.attributes.unit_of_measurement) || "";
 }
 
+// A reading that lives on a climate entity (Pentair's pool water, a wine
+// cabinet's zone): its state is a mode, its temperature an attribute.
+function tempState(hass, entityId) {
+  if (["climate", "water_heater"].includes(domainOf(entityId || ""))) {
+    const st = stateObj(hass, entityId);
+    return st ? numberOrNull((st.attributes || {}).current_temperature) : null;
+  }
+  return numericState(hass, entityId);
+}
+
 function temperatureUnit(hass, entityId) {
   return (
     unitOf(hass, entityId) ||

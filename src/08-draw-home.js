@@ -84,7 +84,7 @@ const UNIT_FILTERS = { power: /^[mkMG]?W$/, energy: /^[mkMG]?Wh$/ };
 const HRV_ONLY_FIELDS = ["hrv_layout", "active_mode_entity", "supply_temperature_entity", "extract_temperature_entity", "exhaust_temperature_entity", "bypass_entity", "airflow_entity",
   "supply_fan_entity", "exhaust_fan_entity", "exhaust_airflow_entity", "fan_max_rpm", "humidity_control_entity", "filter_life_full", "high_speed_entity", "speed_entities", "zone_valves", "hrv_floors"];
 const HRV_LAYOUTS = ["diagram", "one_duct", "pair", "single", "single_box", "single_basement"];
-const HRV_NAME_RE = /(^|[^a-z])(hrv|erv|vmc|wtw|ftx|mvhr)([^a-z]|$)|double.?flux|heat.?recovery|recuperat|comfoair|comfoconnect|vallox|zehnder|lunos|twinfresh|danfoss.?air|renson|endura|brink.?(flair|renovent)|wohnraumluft/;
+const HRV_NAME_RE = /(^|[^a-z])(hrv|erv|vmc|wtw|ftx|mvhr|kwl|helios|brink)([^a-z]|$)|(^|[\s.])ventilation|flexit|pluggit|systemair|swegon|thessla|ambientika|double.?flux|heat.?recovery|recuperat|comfoair|comfoconnect|vallox|zehnder|lunos|twinfresh|danfoss.?air|renson|endura|brink.?(flair|renovent)|wohnraumluft/;
 const HRV_LABELS = { run: "hrv_run", boost: "hrv_boost", bypass: "hrv_bypass", defrost: "hrv_defrost", filter: "hrv_filter", away: "hrv_away",
   rec: "hrv_recirc", hum: "hrv_humidity", inter: "hrv_inter", off: "ac_off", unav: "ev_offline" };
 const HRV_COLORS = { run: "#03a9f4", boost: "#ff9800", bypass: "#26a69a", defrost: "#4fc3f7", filter: "#ff9800", away: "#607d8b",
@@ -141,7 +141,7 @@ function hrvModeOptions(hass, cfg) {
   if ((dom === "select" || dom === "input_select") && Array.isArray(a.options) && a.options.length > 1) {
     return { entity: cfg.state_entity, current: st.state, options: a.options.filter((o) => String(o).trim() !== ""), dom };
   }
-  if (dom === "fan" && Array.isArray(a.preset_modes) && a.preset_modes.length > 1) {
+  if (["fan", "climate"].includes(dom) && Array.isArray(a.preset_modes) && a.preset_modes.length > 1) {
     return { entity: cfg.state_entity, current: a.preset_mode, options: a.preset_modes, dom };
   }
   return speeds;
@@ -446,6 +446,20 @@ function camRinging(hass, id) {
   if (at === null) return false;
   return domainOf(id) === "event" ? Date.now() - at < CAM_RING_MS : camOn(hass, id);
 }
+// Motion: an entity that says so, a count above nothing (Frigate's people), or
+// an event entity whose state is the time it last saw something (Nest, Ring),
+// drawn moving as long as a ring.
+function camMotionAt(hass, id) {
+  const st = id ? stateObj(hass, id) : null;
+  if (!st) return NaN;
+  return Date.parse(domainOf(id) === "event" ? st.state : st.last_changed);
+}
+function camMoving(hass, id) {
+  const st = id ? stateObj(hass, id) : null;
+  if (!st) return false;
+  if (domainOf(id) === "event") return Date.now() - camMotionAt(hass, id) < CAM_RING_MS;
+  return camOn(hass, id) || (domainOf(id) === "sensor" && parseFloat(st.state) > 0);
+}
 function cameraReadOf(hass, cfg, st) {
   const raw = st ? String(st.state).trim().toLowerCase() : "";
   const a = (st && st.attributes) || {};
@@ -456,7 +470,7 @@ function cameraReadOf(hass, cfg, st) {
   else if (raw === "off" || a.monitoring === false || camOn(hass, cfg.privacy_entity)) mode = "off";
   else if (camRinging(hass, cfg.ring_entity)) mode = "ring";
   else if (raw === "recording" || (camOn(hass, cfg.recording_entity) && !/record.?audio/i.test(cfg.recording_entity))) mode = "rec";
-  else if (raw === "motion" || camOn(hass, cfg.motion_entity)) mode = "motion";
+  else if (raw === "motion" || camMoving(hass, cfg.motion_entity)) mode = "motion";
   // Nest and Netatmo always say streaming: nobody is watching for all that.
   else if (raw === "streaming" && !/netatmo|google nest/i.test(String(a.brand || ""))) mode = "live";
   else mode = "idle";
@@ -630,7 +644,7 @@ const MAILBOX_ON = ["on", "true", "1", "yes", "open", "opened", "detected", "mai
 // How long a letter takes to arrive, and a door to swing open.
 const MAILBOX_ARRIVE_MS = 2200;
 const MAILBOX_SWING_MS = 700;
-const MAILBOX_NAME_RE = /mail.?box|letter.?box|boite.?aux.?lettres|(^|[\s._])bal([\s._]|$)|briefkasten|buzon|brievenbus|postkasse|brevlada|skrzynka|cassetta.?postale|caixa.?de.?correio|schranka/;
+const MAILBOX_NAME_RE = /mail.?box|(^|[._])mail_usps|letter.?box|boite.?aux.?lettres|(^|[\s._])bal([\s._]|$)|briefkasten|buzon|brievenbus|postkasse|brevlada|skrzynka|cassetta.?postale|caixa.?de.?correio|schranka/;
 function mailboxOpen(hass, id) {
   const st = id ? stateObj(hass, id) : null;
   return !!st && MAILBOX_ON.includes(String(st.state).toLowerCase());

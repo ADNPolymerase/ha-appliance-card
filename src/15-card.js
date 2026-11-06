@@ -175,7 +175,7 @@ class ApplianceCard extends HTMLElement {
       if (id) this._hass.callService(domainOf(id), "turn_on", { entity_id: id });
       return this._render();
     }
-    if (menu.dom === "fan") this._hass.callService("fan", "set_preset_mode", { entity_id: menu.entity, preset_mode: option });
+    if (["fan", "climate"].includes(menu.dom)) this._hass.callService(menu.dom, "set_preset_mode", { entity_id: menu.entity, preset_mode: option });
     else if (menu.dom === "media_player") this._hass.callService("media_player", "select_source", { entity_id: menu.entity, source: option });
     else this._hass.callService(menu.dom, "select_option", { entity_id: menu.entity, option });
     this._render();
@@ -584,7 +584,7 @@ class ApplianceCard extends HTMLElement {
     if (READ_ONLY_DOMAINS.includes(domain)) return this._moreInfo(entityId);
     if (domain === "button" || domain === "input_button") {
       this._hass.callService(domain, "press", { entity_id: entityId });
-    } else if (["switch", "input_boolean", "fan", "light"].includes(domain)) {
+    } else if (["switch", "input_boolean", "fan", "light", "valve"].includes(domain)) {
       this._hass.callService(domain, "toggle", { entity_id: entityId });
     } else if (domain === "script") {
       this._hass.callService("script", "turn_on", { entity_id: entityId });
@@ -1244,7 +1244,7 @@ class ApplianceCard extends HTMLElement {
       // dashes rather than a stale number. Nothing is drawn without an entity.
       const readTemp = (entityId) => {
         if (!entityId) return { value: null, text: undefined };
-        const v = numericState(hass, entityId);
+        const v = tempState(hass, entityId);
         return v === null
           ? { value: null, text: "--\u00b0" }
           : { value: v, text: screenTemp(hass, cfg, entityId, v) };
@@ -1583,10 +1583,14 @@ class ApplianceCard extends HTMLElement {
           : (!powerDerived && boilerModeOf(rawState, cfg.state_map)) || (isActiveState(norm) ? "burner" : "idle");
       } else if (!powerDerived) {
         boilerMode = boilerModeOf(rawState, cfg.state_map);
+        // A climate entity (Remeha) says what it does in its action; its state
+        // is the mode it was set to.
+        const boilerAction = /^climate\./.test(cfg.state_entity || "") && st ? String(st.attributes.hvac_action || "") : "";
+        if (boilerAction) boilerMode = boilerAction === "heating" ? "space_heating" : "idle";
       }
       // A water_heater's state is a mode the user picked (ViCare's and
       // Overkiz's "on"), never a lit burner.
-      const boilerMoot = !boilerMode && !powerDerived && /^water_heater\./.test(cfg.state_entity || "") && String(rawState).trim().toLowerCase() !== "off";
+      const boilerMoot = !boilerMode && !powerDerived && /^(water_heater|climate)\./.test(cfg.state_entity || "") && String(rawState).trim().toLowerCase() !== "off";
       if (boilerMoot) {
         if (!cfg.state_show_raw && !rawIsMeaningless) stateLabel = modeLabel(hass, st, rawState, cfg);
         color = STATE_COLORS.idle;
@@ -3259,6 +3263,12 @@ class ApplianceCard extends HTMLElement {
       const can = cfg.chlorine_level_entity ? numericState(hass, cfg.chlorine_level_entity) : null;
       if (mode !== "unav") {
         const reading = (key, field, icon, label, digits, fallbackUnit) => {
+          // Pentair's water temperature is on its climate entity alone.
+          if (domainOf(cfg[field] || "") === "climate") {
+            const v = tempState(hass, cfg[field]);
+            if (v !== null) extraLines.push({ key, icon, label, entity: cfg[field], value: keepTogether(tempText(hass, cfg, cfg[field], v, temperatureUnit(hass, cfg[field]))) });
+            return;
+          }
           const e = numericEntity(hass, cfg[field]);
           if (!e) return;
           // pH has no unit, whatever the integration writes after it.
@@ -3504,7 +3514,7 @@ class ApplianceCard extends HTMLElement {
             value: keepTogether(`${netNumber(hass, sig, 0)}${unit ? ` ${unit}` : ""}`), entity: cfg.signal_entity || cfg.state_entity });
         }
         const mst = cfg.motion_entity ? stateObj(hass, cfg.motion_entity) : null;
-        const seen = mst && mode !== "motion" ? Date.parse(mst.last_changed) : NaN;
+        const seen = mst && mode !== "motion" ? camMotionAt(hass, cfg.motion_entity) : NaN;
         if (isFinite(seen)) {
           extraLines.push({ key: "cam_motion", icon: "mdi:motion-sensor", label: t(hass, "cam_line_last_motion"),
             value: keepTogether(feedTime(hass, seen)), entity: cfg.motion_entity });
@@ -3518,6 +3528,8 @@ class ApplianceCard extends HTMLElement {
         if (this._ringTimer) { clearTimeout(this._ringTimer); this._ringTimer = null; }
         if (mode === "ring" && domainOf(cfg.ring_entity) === "event") {
           this._ringTimer = setTimeout(() => { this._ringTimer = null; this._render(); }, Math.max(0, CAM_RING_MS - (Date.now() - ringAt)) + 50);
+        } else if (mode === "motion" && domainOf(cfg.motion_entity) === "event") {
+          this._ringTimer = setTimeout(() => { this._ringTimer = null; this._render(); }, Math.max(0, CAM_RING_MS - (Date.now() - camMotionAt(hass, cfg.motion_entity))) + 50);
         }
         if (night) {
           extraLines.push({ key: "cam_night", icon: "mdi:weather-night", label: t(hass, "cam_line_night"), value: "IR", entity: cfg.night_entity });

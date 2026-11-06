@@ -1,7 +1,7 @@
 // A bathroom scale: its state entity is the weight. Weighed, and when; the
 // goal reached within half a unit; offline when there is no weight to show.
 const SCALE_ONLY_FIELDS = ["weight_goal_entity", "weight_goal", "fat_ratio_entity", "fat_mass_entity", "muscle_mass_entity", "bone_mass_entity"];
-const SCALE_NAME_RE = /withings|body.?(cardio|comp|scan)|(^|[^a-z])(scale|waage|bascula|bilancia|weegschaal|waga)([^a-z]|$)|pese.?personne|personenwaage|\u4f53\u91cd\u79e4|\u0432\u0435\u0441\u044b/;
+const SCALE_NAME_RE = /withings|renpho|body.?(cardio|comp|scan)|(^|[^a-z])(scale|waage|bascula|bilancia|weegschaal|waga)([^a-z]|$)|pese.?personne|personenwaage|\u4f53\u91cd\u79e4|\u0432\u0435\u0441\u044b/;
 const SCALE_COLORS = { weighed: "#1e88e5", goal: "#43a047", unav: "var(--disabled-text-color, #9e9e9e)" };
 const SCALE_GOAL_MARGIN = 0.5;
 // The screen stays lit for an hour after a weighing.

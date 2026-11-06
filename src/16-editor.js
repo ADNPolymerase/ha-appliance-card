@@ -137,7 +137,7 @@ const SECTIONS = [
   // A robot: its detailed status, its battery, and what raises something:
   // a full bin or an empty tank on a vacuum or a mop, rain on a mower.
   // A pool pump: the readings of its water, its filter and its chlorine pump.
-  { field: "water_temperature_entity", types: ["pool_pump"], labelKey: "section_water_temperature", includeDomains: ["sensor"] },
+  { field: "water_temperature_entity", types: ["pool_pump"], labelKey: "section_water_temperature", includeDomains: ["sensor", "climate"] },
   { field: "air_temperature_entity", types: ["pool_pump"], labelKey: "section_air_temperature", includeDomains: ["sensor"] },
   { field: "ph_entity", types: ["pool_pump"], labelKey: "section_ph", includeDomains: ["sensor"] },
   { field: "redox_entity", types: ["pool_pump"], labelKey: "section_redox", includeDomains: ["sensor"] },
@@ -192,7 +192,7 @@ const SECTIONS = [
   { field: "timer_entity", types: ["lamp"], labelKey: "lamp_timer", includeDomains: ["select", "input_select"] },
   // A camera: what it sees, whether it records, its night vision, its
   // privacy switch and its signal.
-  { field: "motion_entity", types: ["camera"], labelKey: "section_motion", includeDomains: ["binary_sensor", "sensor"] },
+  { field: "motion_entity", types: ["camera"], labelKey: "section_motion", includeDomains: ["binary_sensor", "sensor", "event"] },
   { field: "recording_entity", types: ["camera"], labelKey: "section_recording", includeDomains: ["binary_sensor", "switch", "sensor"] },
   { field: "night_entity", types: ["camera"], labelKey: "section_night_vision", includeDomains: ["binary_sensor", "switch", "select", "sensor", "input_boolean"] },
   { field: "privacy_entity", types: ["camera"], labelKey: "section_privacy", includeDomains: ["switch", "binary_sensor", "input_boolean"] },
@@ -219,7 +219,7 @@ const SECTIONS = [
     when: (c) => pumpLayoutOf(c, null) === "circulator" },
   { field: "fault_entity", types: ["water_pump"], labelKey: "heat_fault", includeDomains: ["binary_sensor", "sensor"],
     when: (c) => pumpLayoutOf(c, null) === "circulator" },
-  { field: "temperature_entity", types: ["floor_heating", "spa", "sauna", "aquarium"], labelKey: "temperature", includeDomains: ["sensor", "number", "input_number"] },
+  { field: "temperature_entity", types: ["floor_heating", "spa", "sauna", "aquarium"], labelKey: "temperature", includeDomains: ["sensor", "number", "input_number", "climate"] },
   { field: "target_temperature_entity", types: ["sauna"], labelKey: "section_target_temperature", includeDomains: ["number", "sensor", "input_number"] },
   { field: "bubbles_entity", types: ["spa"], labelKey: "section_bubbles", includeDomains: ["switch", "input_boolean", "fan", "binary_sensor"] },
   { field: "tariff_entity", types: ["meter"], labelKey: "section_tariff", includeDomains: ["sensor", "select", "input_select"] },
@@ -320,7 +320,7 @@ const SECTIONS = [
 
   // Fridge. One option describes both the number of doors and where the
   // freezer sits, because on a real fridge those are the same fact.
-  { field: "fridge_temperature_entity", types: ["fridge"], labelKey: "section_fridge_temperature", includeDomains: ["sensor", "number", "input_number"], extra: (c, hass) =>
+  { field: "fridge_temperature_entity", types: ["fridge"], labelKey: "section_fridge_temperature", includeDomains: ["sensor", "number", "input_number", "climate"], extra: (c, hass) =>
       c._row("fridge_max_temperature", "fridge_max_temperature", { placeholder: c._config.fridge_layout === "wine" ? "18" : ["chest", "drawers"].includes(c._config.fridge_layout) ? "-12" : "8" })
       + c._row("door_hide_in_list", "temperature_hide_in_list", { type: "checkbox" })
       + c._row("temperature_decimals", "temperature_decimals", {
@@ -331,7 +331,7 @@ const SECTIONS = [
           { value: "auto", label: t(hass, "precision_auto") },
         ],
       }) },
-  { field: "freezer_temperature_entity", types: ["fridge"], labelKey: "section_freezer_temperature", includeDomains: ["sensor", "number", "input_number"] },
+  { field: "freezer_temperature_entity", types: ["fridge"], labelKey: "section_freezer_temperature", includeDomains: ["sensor", "number", "input_number", "climate"] },
   { field: "freezer_door_entity", types: ["fridge"], labelKey: "section_freezer_door", includeDomains: ["binary_sensor", "sensor"] },
   { field: "ice_maker_entity", types: ["fridge"], labelKey: "section_ice_maker", includeDomains: ["switch", "binary_sensor", "sensor", "input_boolean"] },
   // The smart plug's switch: off means unplugged, with no half hour to wait.
@@ -494,7 +494,7 @@ const SECTIONS = [
   // Any type: the on/off control. Named toggle_entity rather than
   // power_switch_entity so it cannot be confused with power_entity below,
   // which is the wattage meter.
-  { field: "toggle_entity", types: APPLIANCE_TYPES, labelKey: "section_toggle", includeDomains: ACTION_DOMAINS.concat(["fan"]), extra: (c) => c._row("hide_when_off", "hide_when_off", { type: "checkbox" }) },
+  { field: "toggle_entity", types: APPLIANCE_TYPES, labelKey: "section_toggle", includeDomains: ACTION_DOMAINS.concat(["fan", "valve"]), extra: (c) => c._row("hide_when_off", "hide_when_off", { type: "checkbox" }) },
 
   // Any type: a plug's power meter, optionally driving the state itself.
   // A charger's threshold says when power flows: it stands in for a missing

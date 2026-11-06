@@ -430,7 +430,7 @@ phase_entity: sensor.lavante_sechante_phase
 | `zones` / `zones_layout` / `zones_count` | plaque | Jusqu'à 6 foyers `{ level_entity, residual_heat_entity?, name? }`, niveau en chiffre ou en mot (`boost`), `H` pour la chaleur résiduelle. Disposition `2x1` \| `2x2` \| `3x2`, et nombre de foyers à dessiner sans entité (4 par défaut). |
 | `child_lock_entity` | plaque | Cadenas sur l'illustration. |
 | `fridge_layout` | frigo | `freezer_bottom` (défaut) \| `freezer_top` \| `side_by_side` \| `single` \| `wine` (porte vitrée et bouteilles, pour une cave à vin) \| `chest` (congélateur coffre) \| `drawers` (congélateur armoire à tiroirs transparents). Sur ces deux-là, la sonde du congélateur, ou celle du frigo, est sur l'écran, et le seuil d'alerte vaut -12 par défaut. |
-| `fridge_temperature_entity` / `freezer_temperature_entity` / `fridge_max_temperature` / `temperature_hide_in_list` | frigo | Températures affichées sur les portes et dans la liste, `--°` si la sonde se tait (`temperature_hide_in_list` ne les laisse que sur les portes). Au-dessus du maximum (8 °C par défaut, 18 °C pour `wine`), l'état passe en *Température haute*. |
+| `fridge_temperature_entity` / `freezer_temperature_entity` / `fridge_max_temperature` / `temperature_hide_in_list` | frigo | Températures affichées sur les portes et dans la liste, lues sur un capteur ou sur la température actuelle d'une entité `climate`, `--°` si la sonde se tait (`temperature_hide_in_list` ne les laisse que sur les portes). Au-dessus du maximum (8 °C par défaut, 18 °C pour `wine`), l'état passe en *Température haute*. |
 | `door_entity` / `freezer_door_entity` | frigo | Chaque porte s'ouvre pour son propre capteur. |
 | `ice_maker_entity` | frigo | Les glaçons tombent quand elle produit. |
 | `power_entity` / `power_on_threshold` / `no_power_threshold` / `no_power_after` | frigo | Sans problème, l'état lit *Refroidissement* au seuil ou au-dessus et *En veille* en dessous : réglez le seuil entre la consommation de votre frigo au repos et en froid (10 W pour un frigo qui descend à 6 W en pause). Rester sous `no_power_threshold` (1 W par défaut, quel que soit le seuil de froid) plus de `no_power_after` minutes (30 par défaut) signale *Aucune consommation*, en orange : une longue pause du compresseur ressemble à ça. Compté depuis le dernier changement de la mesure : recharger la page ne le remet pas à zéro. |
@@ -764,7 +764,7 @@ valve_entity: cover.vanne_poele
 
 | Option | Types | Description |
 |---|---|---|
-| `water_temperature_entity` / `air_temperature_entity` | piscine | L'eau et l'air, affichés en lignes. |
+| `water_temperature_entity` / `air_temperature_entity` | piscine | L'eau et l'air, affichés en lignes. L'eau peut être une entité `climate` (Pentair). |
 | `ph_entity` / `redox_entity` | piscine | Le pH et le RedOx (ORP), affichés en lignes. |
 | `filtration_time_entity` | piscine | La durée de filtration du jour, en heures, minutes ou secondes : *4h30*. |
 | `pressure_entity` / `pressure_alert` | piscine | La pression du filtre : l'aiguille du manomètre la suit, et à `pressure_alert` (1,8 bar par défaut) ou plus, pompe en marche, c'est une *Erreur*. |
@@ -1397,7 +1397,7 @@ disk2_entity: sensor.nas_drive_2_status
 | `muscle_mass_entity` / `bone_mass_entity` | pèse-personne | Les masses musculaire et osseuse, en lignes. |
 | `camera_layout` | caméra | `indoor` (caméra orientable) \| `tube` (Netatmo Welcome) \| `outdoor` (caméra sur batterie façon Arlo, sur son support mural) \| `dome` (au plafond) \| `doorbell` (sonnette vidéo). Sans réglage, une caméra avec un `ring_entity` ou un nom qui dit sonnette ou doorbell est une sonnette, une caméra intérieure Netatmo est un tube, un nom qui dit dôme un dôme, et un nom ou une marque qui dit extérieur, jardin, avant, arrière, Arlo ou spotlight une caméra extérieure. |
 | `ring_entity` | caméra | Le bouton de la sonnette : un binary_sensor allumé pendant l'appui (le *visitor* de Reolink), ou une entité event (Ring, Nest, UniFi Protect), *On sonne* pendant 30 secondes après son dernier `ring`. L'anneau lumineux bat, puis une ligne *Dernier appel*. |
-| `motion_entity` | caméra | Un capteur de mouvement : *Mouvement détecté* tant qu'il est actif, des ondes orange devant l'objectif, puis une ligne *Dernier mouvement*. |
+| `motion_entity` | caméra | Un capteur de mouvement : *Mouvement détecté* tant qu'il est actif, des ondes orange devant l'objectif, puis une ligne *Dernier mouvement*. Un compteur au-dessus de zéro (Frigate) vaut aussi mouvement, et une entité `event` (Nest, Ring) vaut mouvement pendant 30 secondes après son déclenchement. |
 | `recording_entity` | caméra | Un capteur d'enregistrement, pour les intégrations dont l'entité caméra ne dit pas *recording*. |
 | `night_entity` | caméra | Le mode infrarouge : la couronne de LED autour de l'objectif s'allume en rouge, et une ligne *Vision nocturne*. |
 | `privacy_entity` | caméra | Un interrupteur de confidentialité (Reolink, Tapo) : activé, la caméra est *Désactivée*, tête baissée ou volet fermé. L'attribut `monitoring` de Netatmo fait de même. Mettez-le aussi en `toggle_entity` pour avoir un bouton. |
@@ -1576,7 +1576,7 @@ state_entity: media_player.cuisine
 | `light_entity` | four, hotte, imprimante 3D | Éclairage, en petite bascule dans l'en-tête. Allumé, il éclaire aussi l'enceinte de l'imprimante. |
 | `temperature_decimals` | frigo, bouilloire, chauffe-eau, chaudière, pompe à chaleur | `0` (défaut, au degré), `1` (au dixième) ou `auto` (la précision d'affichage de l'entité), sur l'écran de l'appareil et dans la liste. |
 | `temperature_entity` | bouilloire, chauffe-eau, chaudière, pompe à chaleur | Température de l'eau (de départ sur une chaudière ou une pompe à chaleur), affichée sur l'appareil et dans la liste. Une entité `water_heater` donne la sienne toute seule. Sur un chauffe-eau, l'eau chaude remplit la cuve de 15 à 65 °C. |
-| `temperature_entity` | plancher chauffant, spa, sauna, aquarium | La température sur l'écran et en ligne. Sans elle, le `current_temperature` du thermostat. |
+| `temperature_entity` | plancher chauffant, spa, sauna, aquarium | La température sur l'écran et en ligne, lue sur un capteur ou une entité `climate`. Sans elle, le `current_temperature` du thermostat. |
 
 </details>
 
