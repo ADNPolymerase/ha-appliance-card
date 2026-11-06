@@ -1,5 +1,5 @@
 // Built by tools/build.mjs from the files of src/: edit those, not this file.
-const CARD_VERSION = "4.12.0";
+const CARD_VERSION = "4.13.0";
 
 console.info(
   "%c HA-APPLIANCE-CARD %c v" + CARD_VERSION + " ",
@@ -1377,7 +1377,7 @@ function evOptionsSayCharger(st) {
 // The names a charger goes by: what it is, in the languages of the card, its
 // makers and the integrations that read it, and the icons Home Assistant
 // draws charging stations with.
-const EV_NAME_RE = /wall.?box|ev.?charg|car.?charg|evse|charge.?point|charging.?station|wall.?connector|ocpp|status.?connector|peblar|nrgkick|openevse|lektrico|blue.?current|webasto|easee|zaptec|go.?e.?charger|wattpilot|zappi|hypervolt|nexblue|technove|pod.?point|charge.?amps|(^|[^a-z])(ohme|keba|alfen)([^a-z]|$)|ladestation|lades(a|ae|\u00e4)ule|ladepunkt|borne.?(de.?)?recharge|laadpaal|laadpunt|laadstation|punto.?de.?recarga|estacion.?de.?carga|cargador.?(de.?)?(ve|coche|vehiculo)|colonnina|stazione.?di.?ricarica|posto.?de.?carregamento|carregador.?(de.?)?(ve|carro)|laddbox|laddstolpe|ladeboks|ladestasjon|stacja.?ladowania|nab(i|\u00ed)jec(i|\u00ed).?stanic|\u0437\u0430\u0440\u044f\u0434\u043d\u0430\u044f.?\u0441\u0442\u0430\u043d\u0446|\u5145\u7535\u6869|ev-station|ev-plug/;
+const EV_NAME_RE = /(^|[^a-z])(goe|garo|autel|trydan|v2c|evcc|warp[0-9]?|pracht)([^a-z0-9]|$)|kathrein|heidelberg.?(energy|wallbox)|amperfied|elli.?(charger|wallbox)|wall.?box|ev.?charg|car.?charg|evse|charge.?point|charging.?station|wall.?connector|ocpp|status.?connector|peblar|nrgkick|openevse|lektrico|blue.?current|webasto|easee|zaptec|go.?e.?charger|wattpilot|zappi|hypervolt|nexblue|technove|pod.?point|charge.?amps|(^|[^a-z])(ohme|keba|alfen)([^a-z]|$)|ladestation|lades(a|ae|\u00e4)ule|ladepunkt|borne.?(de.?)?recharge|laadpaal|laadpunt|laadstation|punto.?de.?recarga|estacion.?de.?carga|cargador.?(de.?)?(ve|coche|vehiculo)|colonnina|stazione.?di.?ricarica|posto.?de.?carregamento|carregador.?(de.?)?(ve|carro)|laddbox|laddstolpe|ladeboks|ladestasjon|stacja.?ladowania|nab(i|\u00ed)jec(i|\u00ed).?stanic|\u0437\u0430\u0440\u044f\u0434\u043d\u0430\u044f.?\u0441\u0442\u0430\u043d\u0446|\u5145\u7535\u6869|ev-station|ev-plug/;
 
 // What a heat pump's valve says. HeishaMon reads its 2-way valve Heating or
 // Cooling and its 3-way valve Room or Tank: a position, which names the mode
@@ -1864,6 +1864,16 @@ function formatEta(totalSeconds, hass) {
 function unitOf(hass, entityId) {
   const st = stateObj(hass, entityId);
   return (st && st.attributes.unit_of_measurement) || "";
+}
+
+// A reading that lives on a climate entity (Pentair's pool water, a wine
+// cabinet's zone): its state is a mode, its temperature an attribute.
+function tempState(hass, entityId) {
+  if (["climate", "water_heater"].includes(domainOf(entityId || ""))) {
+    const st = stateObj(hass, entityId);
+    return st ? numberOrNull((st.attributes || {}).current_temperature) : null;
+  }
+  return numericState(hass, entityId);
 }
 
 function temperatureUnit(hass, entityId) {
@@ -2636,7 +2646,7 @@ const TYPE_AUTO_PATTERNS = {
   },
   sauna: { temperature_entity: /temp/i },
   floor_heating: { temperature_entity: /temp/i },
-  aquarium: { temperature_entity: /temp/i },
+  aquarium: { temperature_entity: /temp|^climate\./i },
   mobility: { battery_entity: /batter|akku|(^|[._])soc([._]|$)/i },
   // linkytic's tarif_option is the contract, ptec the period running now.
   meter: { tariff_entity: /^(?!.*(option|index)).*(tarif|ptec|period|hchp|tempo)/i },
@@ -2701,7 +2711,8 @@ const TYPE_AUTO_PATTERNS = {
     battery_alert_entity: /error|fault|alarm|defaut/i,
   },
   pool_pump: {
-    water_temperature_entity: /(water|eau|wasser|agua|acqua).*temp|temp.*(water|eau|wasser|agua|acqua)/i,
+    // Pentair's water temperature is only on its climate entity.
+    water_temperature_entity: /(water|eau|wasser|agua|acqua).*temp|temp.*(water|eau|wasser|agua|acqua)|^climate\.(?!.*spa)/i,
     air_temperature_entity: /(air|luft|aire|aria).*temp|temp.*(air|luft|aire|aria)/i,
     ph_entity: /(^|[._])ph([._]|$)|ph_corr/i,
     redox_entity: /redox|orp/i,
@@ -2710,7 +2721,7 @@ const TYPE_AUTO_PATTERNS = {
     pool_mode_entity: /mode/i,
     chlorine_pump_entity: /chlor|electroly|dosing|dosage/i,
     backwash_entity: /backwash|contre_?lavage/i,
-    frost_entity: /frost|hors_?gel|antigel/i,
+    frost_entity: /frost|freez|hors_?gel|antigel/i,
     light_entity: /light|lamp|lampe|projecteur|spot/i,
   },
   // Withings names its sensors in the user's language as well: fat_mass,
@@ -2761,8 +2772,8 @@ const TYPE_AUTO_PATTERNS = {
     child_lock_entity: /child.?lock|lock/i,
   },
   fridge: {
-    fridge_temperature_entity: /^(?!.*(freez|congel|gefrier|vriezer|target|setpoint|set_)).*((fridge|refriger|frigo|cooler|kuhl|koel).*temp|temp.*(fridge|refriger|frigo|cooler))/i,
-    freezer_temperature_entity: /^(?!.*(target|setpoint|set_)).*((freez|congel|gefrier|vriezer).*temp|temp.*(freez|congel|gefrier|vriezer))/i,
+    fridge_temperature_entity: /^(?!.*(freez|congel|gefrier|vriezer|target|setpoint|set_)).*((fridge|refriger|frigo|cooler|kuhl|koel).*temp|temp.*(fridge|refriger|frigo|cooler)|^climate\..*(fridge|refriger|frigo|cooler))/i,
+    freezer_temperature_entity: /^(?!.*(target|setpoint|set_)).*((freez|congel|gefrier|vriezer).*temp|temp.*(freez|congel|gefrier|vriezer)|^climate\..*(freez|congel|gefrier|vriezer))/i,
     // The freezer's door is a field of its own (hOn's door_open_freezer).
     door_entity: /^(?!.*(lock|alarm|assistant|freez|congel)).*door/i,
     freezer_door_entity: /freez.*door|door.*freez|congel.*door|door.*congel/i,
@@ -3422,7 +3433,8 @@ const AC_ONLY_FIELDS = ["vane_vertical_entity", "vane_horizontal_entity", "purif
 // plug itself.
 const STATE_DOMAINS = {
   thermostat: ["climate"],
-  water_heater: ["water_heater"], boiler: ["water_heater"], heat_pump: ["climate", "water_heater"],
+  hood: ["fan", "switch", "select"], kettle: ["water_heater", "switch"],
+  water_heater: ["water_heater"], boiler: ["water_heater", "climate"], heat_pump: ["climate", "water_heater"],
   pellet_stove: ["climate"], air_conditioner: ["climate", "select", "switch"], dehumidifier: ["humidifier", "switch"], humidifier: ["humidifier", "switch", "fan", "input_boolean"],
   space_heater: ["climate", "switch"], towel_warmer: ["climate", "select", "switch"], iron: ["switch"], toaster: ["switch"], hair_dryer: ["switch"], air_fryer: ["switch"],
   screen: ["switch", "media_player", "input_boolean", "binary_sensor"],
@@ -3567,6 +3579,16 @@ function caps(type) {
   return TYPE_CAPS[type] || TYPE_CAPS.washer;
 }
 
+const RICE_COOKER_RE = /rice.?cooker|ricecooker|pre.?cooker|cuiseur.?(a.?)?riz|reiskocher|arrocera|cuociriso|rijstkoker|multicooker.?rice/;
+// VeSync's air fryer reports a cook status; so do ovens and hobs, by name.
+const COOK_STATUS_RE = /^(?!.*(oven|four|hob|cooktop|microwave|cooker|kettle|coffee)).*cook(ing)?.?status/;
+function optionsInclude(st, words) {
+  const options = st && st.attributes && Array.isArray(st.attributes.options) ? st.attributes.options.map((o) => String(o).toLowerCase()) : [];
+  return words.every((w) => options.includes(w));
+}
+// Names that say an air conditioner only where one can live: a solar
+// inverter's ac_power is alternating current.
+const AC_WORD_RE = /(^|[\s._])ac([\s._]|$)/;
 function detectApplianceType(cfg, st) {
   if (cfg.appliance_type && cfg.appliance_type !== "auto") return cfg.appliance_type;
   // A humidifier by its own fields or its entity's class, before a humidity
@@ -3619,16 +3641,23 @@ function detectApplianceType(cfg, st) {
     // the HACF drawings by their name, before a light makes a lamp of them.
     const named = stripAccents(`${cfg.icon || ""} ${cfg.state_entity || ""} ${(st && st.attributes.friendly_name) || ""} ${cfg.name || ""}`).toLowerCase();
     for (const [ty, re] of NT_NAME_RES) if (re.test(named)) return ty;
+    // Gecko calls its spa nothing but its name: the icon says it.
+    if (st && st.attributes.icon === "mdi:hot-tub") return "spa";
   }
-  // Home Assistant has a domain of its own for each of them.
+  // Home Assistant has a domain of its own for each of them. A valve is a
+  // tap unless it says gas.
+  if (domainOf(cfg.state_entity) === "valve" && !(st && st.attributes.device_class === "gas")) return "irrigation";
   if (["vacuum", "lawn_mower"].includes(domainOf(cfg.state_entity))) return "robot";
   if (domainOf(cfg.state_entity) === "camera") return "camera";
   if (domainOf(cfg.state_entity) === "light") return "lamp";
-  // A smoke, CO, gas or water sensor by its device class; a media player
-  // that is no television.
-  if (domainOf(cfg.state_entity) === "binary_sensor" && ["smoke", "carbon_monoxide", "gas", "moisture"].includes(String((st && st.attributes.device_class) || ""))) return "detector";
+  // A smoke, CO, gas or water sensor by its device class (X-Sense gives none,
+  // only its alarm_status); a media player that is no television. A player
+  // nothing says anything about is a screen: Apple TV, Cast and Plex name no
+  // class. It is never a washing machine.
+  if (domainOf(cfg.state_entity) === "binary_sensor" && (["smoke", "carbon_monoxide", "gas", "moisture"].includes(String((st && st.attributes.device_class) || "")) || /_alarm_status$/.test(String(cfg.state_entity)))) return "detector";
   if (domainOf(cfg.state_entity) === "media_player" && st && st.attributes.device_class !== "tv"
-    && (st.attributes.device_class === "speaker" || /sonos|homepod|echo|nest.?(audio|mini)|google.?home|speaker|enceinte|lautsprecher|altavoz|altoparlante|soundbar|barre.?de.?son|music.?assistant|airplay|snapcast|bose/.test(stripAccents(`${cfg.state_entity} ${st.attributes.friendly_name || ""}`).toLowerCase()))) return "speaker";
+    && (st.attributes.device_class === "speaker" || /sonos|homepod|echo|nest.?(audio|mini)|google.?home|speaker|enceinte|lautsprecher|altavoz|altoparlante|soundbar|barre.?de.?son|music.?assistant|airplay|snapcast|bose|wiim|bluesound|linkplay|heos|denon|marantz|yamaha|hivi/.test(stripAccents(`${cfg.state_entity} ${st.attributes.friendly_name || ""}`).toLowerCase()))) return "speaker";
+  if (domainOf(cfg.state_entity) === "media_player" && st) return st.attributes.device_class === "receiver" ? "speaker" : "screen";
   {
     // A diffuser and a ventilation unit by their name or their maker's.
     const named = stripAccents(`${cfg.icon || ""} ${cfg.state_entity || ""} ${(st && st.attributes.friendly_name) || ""}`).toLowerCase();
@@ -3643,7 +3672,7 @@ function detectApplianceType(cfg, st) {
   const hay = `${cfg.icon || ""} ${cfg.state_entity || ""} ${(st && st.attributes.icon) || ""}`.toLowerCase();
   // Before everything else: a printer's entities are named after its maker or
   // its software, and a Bambu Lab one after its model ("p1s_...", "a1_...").
-  if (/3d.?print|print.?3d|printer-3d|octoprint|prusa|bambu|klipper|moonraker|creality|elegoo|centauri|anycubic|kobra|flashforge|snapmaker|voron|reprap|duet3d|(^|[\s._])(x1c|x1e|p1s|p1p|p2s|a1|a1_mini|h2d|h2s)_|(^|[\s._-])ender[._-]?\d/.test(hay)) return "printer_3d";
+  if (/3d.?print|print.?3d|printer-3d|octoprint|prusa|bambu|klipper|moonraker|creality|elegoo|centauri|anycubic|kobra|flashforge|snapmaker|voron|reprap|duet3d|ultimaker|dremel|mainsail|neptune.?[1-4]|saturn.?[1-4]|(^|[\s._])mars.?[1-5]|(^|[\s._])k[12]_(plus|max|pro|se)|(^|[\s._])(x1c|x1e|p1s|p1p|p2s|a1|a1_mini|a1mini|a2l|h2c|h2d|h2dpro|h2s|x2d)_|(^|[\s.])x1_(?!carbon|yoga|nano|extreme)|(^|[\s._-])ender[._-]?\d/.test(hay)) return "printer_3d";
   // An EV charger, by its name in any language, by its maker's or its
   // integration's, or by the icon of a charging station. "Charger" alone
   // could be a phone's on a plug, so it needs its car. An integration that
@@ -3655,36 +3684,47 @@ function detectApplianceType(cfg, st) {
   // A hair dryer, before the tumble dryer that "dryer" and "seche" would make
   // of it.
   if (HAIR_DRYER_RE.test(hay)) return "hair_dryer";
-  if (/air.?fr[iy]er|airfryer|friteuse|fritteuse|hei(ss|\u00df)luft|freidora|fritadeira|friggitrice|frituurpan|frytkownic|frit[e\u00e9]z|cosori|cook.?status|\u7a7a\u6c14\u70b8|\u0430\u044d\u0440\u043e\u0433\u0440\u0438\u043b|\u0430\u044d\u0440\u043e\u0444\u0440\u0438\u0442/.test(hay)) return "air_fryer";
+  // A rice cooker before it: Xiaomi's says cook_status too.
+  if (RICE_COOKER_RE.test(hay)) return "rice_cooker";
+  if (COOK_STATUS_RE.test(hay) || optionsInclude(st, ["preheat_end"])) return "air_fryer";
+  if (/air.?fr[iy]er|airfryer|friteuse|fritteuse|hei(ss|\u00df)luft|freidora|fritadeira|friggitrice|frituurpan|frytkownic|frit[e\u00e9]z|cosori|\u7a7a\u6c14\u70b8|\u0430\u044d\u0440\u043e\u0433\u0440\u0438\u043b|\u0430\u044d\u0440\u043e\u0444\u0440\u0438\u0442/.test(hay)) return "air_fryer";
   // A pet fountain, by its name in any language. Before the feeder, since a
   // maker that sells both often puts the word pet in front of each.
-  if (/fountain|trinkbrunnen|wasserbrunnen|fontaine|abreuvoir|fuente|bebedero|fontanella|drinkfontein|font(a|\u00e4)n|vannfontene|font(a|\u00e6)ne|poide(l|\u0142)ko|font(a|\u00e1)nk|\u996e\u6c34\u673a|\u043f\u043e\u0438\u043b\u043a/.test(hay)) return "pet_fountain";
+  if (/fountain|eversweet|trinkbrunnen|wasserbrunnen|fontaine|abreuvoir|fuente|bebedero|fontanella|drinkfontein|font(a|\u00e4)n|vannfontene|font(a|\u00e6)ne|poide(l|\u0142)ko|font(a|\u00e1)nk|\u996e\u6c34\u673a|\u043f\u043e\u0438\u043b\u043a/.test(hay)) return "pet_fountain";
   // A feeder names itself after what it holds as often as after what it is.
-  if (/feeder|pet.?feed|croquette|kibble|futterautomat|comedero|alimentador|voerautomaat|foderautomat|f\u00f4rautomat|forautomat|karmnik|krmitko|\u5582\u98df|\u043a\u043e\u0440\u043c\u0443\u0448\u043a/.test(hay)) return "pet_feeder";
+  if (/feeder|pet.?feed|smart.?feed|fresh.?element|yumshare|croquette|kibble|futterautomat|comedero|alimentador|voerautomaat|foderautomat|f\u00f4rautomat|forautomat|karmnik|krmitko|\u5582\u98df|\u043a\u043e\u0440\u043c\u0443\u0448\u043a/.test(hay)) return "pet_feeder";
+  // A Litter-Robot's status code says what it is; its name need not.
+  if (optionsInclude(st, ["ccp", "rdy"])) return "litter_box";
   // A robot vacuum, mop or mower by its name or its maker's, read without
-  // the entities' domains.
-  if (ROBOT_NAME_RE.test(stripAccents(hay.replace(/\b[a-z_]+\./g, " ")))) return "robot";
+  // the entities' domains. Dreame's purifier is no robot.
+  if (!["fan", "climate"].includes(domainOf(cfg.state_entity)) && ROBOT_NAME_RE.test(stripAccents(hay.replace(/\b[a-z_]+\./g, " ")))) return "robot";
   // A UPS, by its name in any language or by its maker's line.
   if (UPS_NAME_RE.test(stripAccents(hay.replace(/\b[a-z_]+\./g, " ")))) return "ups";
   // A pool pump, by its name in any language or by Oklyn's.
   if (POOL_NAME_RE.test(stripAccents(hay.replace(/\b[a-z_]+\./g, " ")))) return "pool_pump";
   // Solar panels by their name or their inverter's maker, before a home
   // battery: an EcoFlow PowerStream is the inverter of a battery's panels.
-  if (SOLAR_NAME_RE.test(stripAccents(hay.replace(/\b[a-z_]+\./g, " ")))) return "solar";
+  // Anker's Solarbank and Zendure's SolarFlow say solar and are batteries.
+  if (/solar.?bank|solar.?flow/.test(hay)) return "home_battery";
+  if (domainOf(cfg.state_entity) !== "climate" && SOLAR_NAME_RE.test(stripAccents(hay.replace(/\b[a-z_]+\./g, " ")))) return "solar";
   if (BATTERY_NAME_RE.test(stripAccents(hay.replace(/\b[a-z_]+\./g, " ")))) return "home_battery";
   // A bathroom scale, by its name or its maker's, or a weight sensor in
   // kilograms, pounds or stones.
   if (SCALE_NAME_RE.test(stripAccents(hay.replace(/\b[a-z_]+\./g, " ")))) return "scale";
-  if (st && domainOf(cfg.state_entity) === "sensor" && st.attributes.device_class === "weight"
-    && /^(kg|lb|lbs|st)$/i.test(String(st.attributes.unit_of_measurement || ""))) return "scale";
+  // Renpho's gives no class, only a name. A pet's or a bag's weight is not a
+  // person's; Tuya's counts in grams.
+  if (st && domainOf(cfg.state_entity) === "sensor" && !/pet|cat|chat|dog|chien|food|litter|bag|bean|grain/.test(hay)) {
+    const wUnit = String(st.attributes.unit_of_measurement || "");
+    const weighs = st.attributes.device_class === "weight" || /weight|poids|gewicht|peso/.test(hay);
+    if (weighs && (/^(kg|lb|lbs|st)$/i.test(wUnit) || (wUnit === "g" && parseFloat(st.state) > 2000))) return "scale";
+  }
   // "microwave" before "oven": plenty of devices are named "microwave_oven".
   if (/microwave|micro.?onde|mikrowelle|magnetron|mikrob/.test(hay)) return "microwave";
-  if (/coffee|cafeti|cafe|kaffee|espresso|cafetera|macchina.?caff|koffie|kaffemask|ekspres.?do.?kawy/.test(hay)) return "coffee";
-  if (/rice.?cooker|ricecooker|cuiseur.?(a.?)?riz|reiskocher|arrocera|cuociriso|rijstkoker|multicooker.?rice/.test(hay)) return "rice_cooker";
-  if (/cook.?processor|cookit|thermomix|robot.?cuiseur|companion|monsieur.?cuisine|cookeo|k\u00fcchenmaschine|kuchenmaschine|multicooker/.test(hay)) return "cooker";
-  if (/wine.?(cooler|cellar|fridge)|cave.?(a|\u00e0).?vin|weink(u|ue|\u00fc)hl|weinklima|vinoteca|cantinetta|wijnklimaat|vinkyl|vinkj|vink\u00f8l|winiark|vinotek/.test(hay)) return "fridge";
-  if (/fridge|freezer|frigo|r\u00e9frig|refrig|kuhlschrank|k\u00fchlschrank|nevera|frigor|koelkast|kyl(skap)?\b|kj\u00f8leskap|lod\u00f3wka|lodowka/.test(hay)) return "fridge";
-  if (/kettle|bouilloire|wasserkocher|hervidor|bollitore|waterkoker|vattenkokare|vannkoker|elkedel|czajnik/.test(hay)) return "kettle";
+  if (/coffee|cafeti|cafe|kaffee|espresso|cafetera|macchina.?caff|koffie|kaffemask|ekspres.?do.?kawy|delonghi|de.?longhi|primadonna|barista|fellow.?aiden|(^|[^a-z])(jura|aiden)([^a-z]|$)/.test(hay)) return "coffee";
+  if (/cook.?processor|cookit|thermomix|robot.?cuiseur|companion|monsieur.?cuisine|cookeo|k\u00fcchenmaschine|kuchenmaschine|multicooker|tokit|(^|[\s._])cooker([\s._]|$)/.test(hay)) return "cooker";
+  if (/wine.?(cooler|cellar|fridge|cabinet|conditioning|storage)|cave.?(a|\u00e0).?vin|weink(u|ue|\u00fc)hl|weinklima|vinoteca|cantinetta|wijnklimaat|vinkyl|vinkj|vink\u00f8l|winiark|vinotek/.test(hay)) return "fridge";
+  if (/fridge|freezer|frigo|r\u00e9frig|refrig|kuhlschrank|k\u00fchlschrank|nevera|frigor|koelkast|kyl(skap)?\b|kj\u00f8leskap|lod\u00f3wka|lodowka|congel|gefrier|vriezer|(^|[^a-z])frys/.test(hay)) return "fridge";
+  if (/kettle|stagg|fellow.?ekg|bouilloire|wasserkocher|hervidor|bollitore|waterkoker|vattenkokare|vannkoker|elkedel|czajnik/.test(hay)) return "kettle";
   // An iron, and the steam generator that is one on a boiler. Spanish and
   // Portuguese call a griddle a plancha as well, so theirs is the ironing one:
   // plancha de ropa, centro de planchado, ferro de engomar.
@@ -3709,13 +3749,15 @@ function detectApplianceType(cfg, st) {
   if (/space.?heater|fan.?heater|ceramic.?heater|oil.?(filled|heater|radiator)|panel.?heater|soufflant|bain.?d.?huile|chauffage.?d.?appoint|petit.?chauffage|convecteur|heizl(u|ue|\u00fc)fter|(o|oe|\u00f6)lradiator|calefactor|termoventil|stufetta|stufa.?elettric|scaldino|termoconvett|ventilatorkachel|varmefl|termowentyl|\u6696\u98ce\u673a|\u6cb9\u6c40/.test(hay)) return "space_heater";
   // An air purifier, by its name in any language or by Dyson's, which makes
   // little else for Home Assistant. Before the heater, since a Dyson heats too.
-  if (/purif|air.?clean|luftrein|depura|luchtrein|luftren|oczyszcz|cisticka|\u51c0\u5316|\u043e\u0447\u0438\u0441\u0442\u0438\u0442|dyson/.test(hay)) return "air_purifier";
-  if (/pellet|stufa|poele|po\u00eale|granule|granul\u00e9|pilleovn|palazzetti|micronova|aguaiot|extraflame|ravelli|piazzetta|edilkamin|duepi|(^|[^a-z])(rika|mcz)([^a-z]|$)|\u043f\u0435\u043b\u043b\u0435\u0442|\u9897\u7c92\u7089/.test(hay)) return "pellet_stove";
+  // Blueair, Winix, Levoit and Coway make little else; VeSync names a Levoit
+  // after its model, and a room may be all an id says.
+  if (/purif|air.?clean|luftrein|depura|luchtrein|luftren|oczyszcz|cisticka|\u51c0\u5316|\u043e\u0447\u0438\u0441\u0442\u0438\u0442|dyson|blueair|blue.?pure|winix|levoit|coway|zhimi.?air|(^|[\s._])(core|vital).?\d{3}s|lv.?pur/.test(`${hay} ${stripAccents(String((st && st.attributes.friendly_name) || "")).toLowerCase()}`)) return "air_purifier";
+  if (/pellet|pellematic|oekofen|froeling|ecomax|hargassner|centrometal|thermorossi|firenet|stufa|poele|po\u00eale|granule|granul\u00e9|pilleovn|palazzetti|micronova|aguaiot|extraflame|ravelli|piazzetta|edilkamin|duepi|(^|[^a-z])(rika|mcz)([^a-z]|$)|\u043f\u0435\u043b\u043b\u0435\u0442|\u9897\u7c92\u7089/.test(hay)) return "pellet_stove";
   // InComfort exposes an Intergas combi boiler as water_heater.boiler: the
   // domain says tank, the name says boiler, and the name is the one that knows.
   const eid = String(cfg.state_entity || "").toLowerCase();
   // First: a heat pump's own water heater is still the heat pump.
-  if (/heat.?pump|pompe.?(a|\u00e0).?chaleur|w(a|ae|\u00e4)rmepumpe|bomba.?de.?calor|pompa.?di.?calore|warmtepomp|v(a|\u00e4)rmepump|pompa.?ciep|tepelne.?cerpadlo|ecodan|altherma|aquarea/.test(hay)
+  if (/heat.?pump|pompe.?(a|\u00e0).?chaleur|w(a|ae|\u00e4)rmepumpe|bomba.?de.?calor|pompa.?di.?calore|warmtepomp|v(a|\u00e4)rmepump|pompa.?ciep|tepelne.?cerpadlo|ecodan|altherma|aquarea|thermia|yutaki|arotherm|vitocal|lambda.?(wp|heat|hp)|(^|[\s._])eu\d{2}l[\s._]/.test(hay)
     // EMS-ESP's compressor activity sits on its boiler device, under a
     // boiler's name: its short name says heat pump.
     || /(^|[._])hpactivity$/.test(eid)) return "heat_pump";
@@ -3723,12 +3765,19 @@ function detectApplianceType(cfg, st) {
   // a climate entity named after its room that can cool, dry or only blow:
   // a boiler's or a stove's only heats. "Clim" and "AC" stand alone, or every
   // climate entity would be one.
+  // A ventilation unit that only blows (Flexit, Systemair), before the
+  // thermostat's name makes one of it.
+  const hvacModes = st && Array.isArray(st.attributes.hvac_modes) ? st.attributes.hvac_modes : [];
+  if (/^climate\./.test(eid) && hvacModes.includes("fan_only") && hvacModes.every((m) => ["off", "fan_only"].includes(m))) return "hrv";
   // A thermostat or a radiator valve, by its name or its maker's. Before the
   // air conditioner, since a Nest or an ecobee cools as well.
   if (/^climate\./.test(eid) && THERMOSTAT_NAME_RE.test(stripAccents(`${hay} ${(st && st.attributes.friendly_name) || ""}`.toLowerCase()))) return "thermostat";
-  if (/air.?con|aircon|airco|mini.?split|(^|[\s._])(split|clim|ac)([\s._]|$)|climatis|climatiz|condicionad|klimaanl|klimatyz|klimatiz|luftkondit|kondicion|sensibo|melcloud|\u043a\u043e\u043d\u0434\u0438\u0446\u0438\u043e\u043d\u0435\u0440|\u7a7a\u8c03/.test(hay)) return "air_conditioner";
-  const hvacModes = st && Array.isArray(st.attributes.hvac_modes) ? st.attributes.hvac_modes : [];
-  if (/^climate\./.test(eid) && hvacModes.some((m) => ["cool", "dry", "fan_only"].includes(m))) return "air_conditioner";
+  if (AC_WORD_RE.test(hay) && ["climate", "switch", "select"].includes(domainOf(cfg.state_entity))) return "air_conditioner";
+  if (/air.?con|aircon|airco|mini.?split|(^|[\s._])(split|clim)([\s._]|$)|climatis|climatiz|condicionad|klimaanl|klimatyz|klimatiz|luftkondit|kondicion|sensibo|melcloud|\u043a\u043e\u043d\u0434\u0438\u0446\u0438\u043e\u043d\u0435\u0440|\u7a7a\u8c03/.test(hay)) return "air_conditioner";
+  // Cooling alone does not make one: a Nest or an ecobee cools too, and says
+  // heat_cool where a split says dry or fan_only.
+  if (/^climate\./.test(eid) && (hvacModes.some((m) => ["dry", "fan_only"].includes(m))
+    || (hvacModes.includes("cool") && !hvacModes.some((m) => ["heat_cool", "auto"].includes(m))))) return "air_conditioner";
   if (/^water_heater\..*(boiler|chaudiere)/.test(eid) && !/water.?boiler/.test(eid)) return "boiler";
   // Before the boiler: MDI names a storage tank "water-boiler", and water_heater
   // is the Home Assistant domain for one.
@@ -3741,13 +3790,14 @@ function detectApplianceType(cfg, st) {
   // A fan, by its name in any language, which a fan.* entity id carries; not
   // ventilation, which is a building's.
   if (/ventilat(eur|or|ore)|ventilador|wentylator|fl(a|\u00e4)kt|vifte|ceiling.?fan|(^|[\s._])fan([\s._]|$)|\u98ce\u6247|\u540a\u6247|\u0432\u0435\u043d\u0442\u0438\u043b\u044f\u0442\u043e\u0440/.test(hay)) return "fan";
-  if (/cooktop|hotplate|plaque|kochfeld|kookplaat|induction|induktion|kogeplade/.test(hay)) return "cooktop";
+  if (/cooktop|hotplate|plaque|kochfeld|kookplaat|induction|induktion|kogeplade|(^|[^a-z])hob([^a-z]|$)/.test(hay)) return "cooktop";
   if (/oven|four|backofen|horno|forno|piekarnik/.test(hay)) return "oven";
   // Before the dryer: a washer-dryer says "dry" in every language, and it is a
   // washer that also dries, not a dryer that also washes.
   if (WASHER_DRYER_RE.test(stripAccents(hay))) return "washer";
-  if (/dry|dryer|seche|s\u00e8che|tumble/.test(hay)) return "dryer";
-  if (/dish|vaisselle/.test(hay)) return "dishwasher";
+  // Not in the word laundry.
+  if (/(?<!laun)dry|seche|s\u00e8che|tumble|trockner|secadora|asciugatrice|droger|torktumlare/.test(hay)) return "dryer";
+  if (/dish|vaisselle|geschirrsp|spuelmasch|spulmasch|lavavajillas|lavastoviglie|vaatwasser|diskmaskin/.test(hay)) return "dishwasher";
   return "washer";
 }
 
@@ -3790,7 +3840,7 @@ const SCREEN_LAYOUTS = ["tv_feet", "tv_stand", "tv_wall", "projector", "computer
 // that reports its screen, its screensaver and its charger.
 const SCREEN_TABLETS = ["tablet_wall", "tablet_frame", "tablet_portrait"];
 const SCREEN_TABLET_RE = /tablet|kiosk|wall ?panel|(^|[^a-z])fully([^a-z]|$)|\u5e73\u677f|\u043f\u043b\u0430\u043d\u0448\u0435\u0442/;
-const SCREEN_NAME_RE = /(^|[^a-z])tv([^a-z]|$)|(^|[^a-z])t(e|\u00e9)l(e|\u00e9)([^a-z]|$)|t(e|\u00e9)l(e|\u00e9)vis|fernseher|televize|telewizor|\u0442\u0435\u043b\u0435\u0432\u0438\u0437\u043e\u0440|\u7535\u89c6|beamer|project(or|eur)|proyector|proiettore|projektor|\u6295\u5f71|\u043f\u0440\u043e\u0435\u043a\u0442\u043e\u0440|computer|ordinateur|desktop|imac|ordenador|computador|komputer|po(c|\u010d)(i|\u00ed)ta(c|\u010d)|\u7535\u8111|\u043a\u043e\u043c\u043f\u044c\u044e\u0442\u0435\u0440|tablet|kiosk|wall ?panel|\u5e73\u677f|\u043f\u043b\u0430\u043d\u0448\u0435\u0442|laptop|notebook|macbook|chromebook|thinkpad|\u7b14\u8bb0\u672c|\u043d\u043e\u0443\u0442\u0431\u0443\u043a/;
+const SCREEN_NAME_RE = /bravia|android.?tv|webos|apple.?tv|chromecast|fire.?tv|(^|[^a-z])tv([^a-z]|$)|(^|[^a-z])t(e|\u00e9)l(e|\u00e9)([^a-z]|$)|t(e|\u00e9)l(e|\u00e9)vis|fernseher|televize|telewizor|\u0442\u0435\u043b\u0435\u0432\u0438\u0437\u043e\u0440|\u7535\u89c6|beamer|project(or|eur)|proyector|proiettore|projektor|\u6295\u5f71|\u043f\u0440\u043e\u0435\u043a\u0442\u043e\u0440|computer|ordinateur|desktop|imac|ordenador|computador|komputer|po(c|\u010d)(i|\u00ed)ta(c|\u010d)|\u7535\u8111|\u043a\u043e\u043c\u043f\u044c\u044e\u0442\u0435\u0440|tablet|kiosk|wall ?panel|\u5e73\u677f|\u043f\u043b\u0430\u043d\u0448\u0435\u0442|laptop|notebook|macbook|chromebook|thinkpad|\u7b14\u8bb0\u672c|\u043d\u043e\u0443\u0442\u0431\u0443\u043a/;
 // A laptop, by its name: the word for one, or a model everybody knows.
 const SCREEN_LAPTOP_RE = /laptop|notebook|macbook|chromebook|thinkpad|ultrabook|(ordinateur|pc|computer|ordenador|computador)[ _]portable|portatil|baerbar|b\u00e6rbar|barbar dator|\u7b14\u8bb0\u672c|\u043d\u043e\u0443\u0442\u0431\u0443\u043a/;
 const SCREEN_PROJECTOR_RE = /beamer|project(or|eur)|proyector|proiettore|projektor|\u6295\u5f71|\u043f\u0440\u043e\u0435\u043a\u0442\u043e\u0440/;
@@ -3943,7 +3993,7 @@ const NET_SWITCH_RE = /(?<!nintendo.?)switch|(^|[\s._-])(usw|edgeswitch|poe)([\s
 const NET_RACK_RE = /(^|[\s._-])(rack|baie|homelab)([\s._-]|$)/;
 const NET_SERVER_RE = /(^|[\s._-])(server|serveur|servidor|serwer|proxmox|pve|esxi|unifi)([\s._-]|\d|$)/;
 // A router or the box an ISP lends: by its name, its maker's, or the ISP's.
-const NET_ROUTER_RE = /(^|[\s._-])(router|routeur|ruter|udm|bbox|livebox|freebox|fritz.?box|modem|archer)([\s._-]|\d|$)/;
+const NET_ROUTER_RE = /(^|[\s._-])(router|routeur|ruter|udm|bbox|livebox|freebox|fritz.?box|modem|archer|keenetic|openwrt|mikrotik|omada|gl.?inet|asuswrt|rt.?a[xc]\d+|deco.?[mxpse]\d+)([\s._-]|\d|$)/;
 const NET_NAME_RE = new RegExp([NET_NAS_RE, NET_SWITCH_RE, NET_RACK_RE, NET_SERVER_RE, NET_ROUTER_RE].map((r) => `(${r.source})`).join("|"));
 // The switches drawn: one row of eight, then two rows of eight, twelve and
 // sixteen, numbered like the real ones, odd on top and even below.
@@ -4094,7 +4144,7 @@ const ROBOT_ONLY_FIELDS = ["robot_layout", "robot_station", "robot_station_color
   "robot_water_entity", "robot_clean_tank_entity", "robot_dirty_tank_entity", "robot_rain_entity", "robot_error_entity", "robot_winter", "robot_winter_entity"];
 // A robot by its name, its maker's or its integration's. A robot cook is a
 // cooker, so the word robot needs what it does.
-const ROBOT_NAME_RE = /tineco|aspirateur.?balai|floor.?one|ifloor|laveur.?de.?sol|floor.?washer|nass.?trocken|lavapavimenti|stick.?vac|cordless.?vac|akkusauger|stielsauger|roomba|braava|roborock|ecovacs|deebot|dreame|neato|eufy.?clean|robovac|xiaomi.?vacuum|conga|robot.?(vacuum|aspir|mop|laveur|mower|tondeuse)|robot.?(clean|sweep)|vacuum|aspirateur|saugroboter|staubsauger|wischroboter|aspiradora|aspirapolvere|robotstofzuiger|stofzuiger|dammsugare|st(o|\u00f8)vsuger|odkurzacz|vysavac|landroid|automower|mammotion|navimow|(^|[^a-z])luba([^a-z]|$)|lawn.?mower|(^|[^a-z])mower|tondeuse|m(a|ae|\u00e4)hroboter|robotmaaier|grasmaaier|cortac(e|\u00e9)sped|tosaerba|corta.?relva|robotgr(a|\u00e4)sklipp|robotgressklipp|robotpl(a|\u00e6)neklipp|kosiarka|sekacka|\u626b\u5730|\u5438\u5c18|\u62d6\u5730|\u5272\u8349|\u043f\u044b\u043b\u0435\u0441\u043e\u0441|\u0433\u0430\u0437\u043e\u043d\u043e\u043a\u043e\u0441/;
+const ROBOT_NAME_RE = /dolphin|sileno|tapo.?rv\d+|proscenic|hombot|ambrogio|tineco|aspirateur.?balai|floor.?one|ifloor|laveur.?de.?sol|floor.?washer|nass.?trocken|lavapavimenti|stick.?vac|cordless.?vac|akkusauger|stielsauger|roomba|braava|roborock|ecovacs|deebot|dreame|neato|eufy.?clean|robovac|xiaomi.?vacuum|conga|robot.?(vacuum|aspir|mop|laveur|mower|tondeuse)|robot.?(clean|sweep)|vacuum|aspirateur|saugroboter|staubsauger|wischroboter|aspiradora|aspirapolvere|robotstofzuiger|stofzuiger|dammsugare|st(o|\u00f8)vsuger|odkurzacz|vysavac|landroid|automower|mammotion|navimow|(^|[^a-z])luba([^a-z]|$)|lawn.?mower|(^|[^a-z])mower|tondeuse|m(a|ae|\u00e4)hroboter|robotmaaier|grasmaaier|cortac(e|\u00e9)sped|tosaerba|corta.?relva|robotgr(a|\u00e4)sklipp|robotgressklipp|robotpl(a|\u00e6)neklipp|kosiarka|sekacka|\u626b\u5730|\u5438\u5c18|\u62d6\u5730|\u5272\u8349|\u043f\u044b\u043b\u0435\u0441\u043e\u0441|\u0433\u0430\u0437\u043e\u043d\u043e\u043a\u043e\u0441/;
 const ROBOT_MOWER_RE = /mow|m(a|ae|\u00e4)h|tondeuse|maaier|cortac|tosaerba|relva|klipp|kosiark|sekack|landroid|automower|worx|mammotion|navimow|(^|[^a-z])luba([^a-z]|$)|\u5272\u8349|\u0433\u0430\u0437\u043e\u043d\u043e\u043a\u043e\u0441/;
 const ROBOT_MOP_RE = /(^|[^a-z])mop|braava|wisch|serpill|laveur|fregas|lavapavim|dweil|moppe|mopuj|mopov|\u62d6\u5730/;
 // Home Assistant's own words, the same for a vacuum and a mower.
@@ -4332,7 +4382,7 @@ function robotBatteryIcon(pct, charging) {
 const POOL_ONLY_FIELDS = ["water_temperature_entity", "air_temperature_entity", "ph_entity", "redox_entity",
   "filtration_time_entity", "pressure_entity", "pressure_alert", "pool_mode_entity", "chlorine_pump_entity",
   "chlorine_level_entity", "backwash_entity", "frost_entity", "pool_alert_entity"];
-const POOL_NAME_RE = /pool.?pump|swimming.?pool|(^|[^a-z])pool([^a-z]|$)|piscine|pompe.?(de.?)?piscine|oklyn|poolstation|(^|[^a-z])pisc|schwimmbad|poolpumpe|filterpumpe|bomba.?de.?(piscina|filtra)|piscina|pompa.?(piscina|filtraz)|zwembad|zwempomp|bassengpump|poolpump|pompa.?basen|basen|baz(e|\u00e9)n|\u6cf3\u6c60|\u0431\u0430\u0441\u0441\u0435\u0439\u043d/;
+const POOL_NAME_RE = /pool.?pump|swimming.?pool|(^|[^a-z])pool([^a-z]|$)|piscine|pompe.?(de.?)?piscine|oklyn|neopool|iopool|flipr|hayward|pentair|filter.?pump|(^|[^a-z])(exo|intex)([^a-z]|$)|poolstation|(^|[^a-z])pisc|schwimmbad|poolpumpe|filterpumpe|bomba.?de.?(piscina|filtra)|piscina|pompa.?(piscina|filtraz)|zwembad|zwempomp|bassengpump|poolpump|pompa.?basen|basen|baz(e|\u00e9)n|\u6cf3\u6c60|\u0431\u0430\u0441\u0441\u0435\u0439\u043d/;
 const POOL_OFF_STATES = ["off", "false", "0", "stopped", "stop", "idle", "standby", "closed", "sleep", "sleeping", "paused", "disabled", "not_running", "inactive"];
 // What a pump's state or status says, first match wins.
 const POOL_WORDS = [
@@ -4417,7 +4467,7 @@ function poolModeOf(hass, cfg, st, watts) {
 // with their inverter. The sun shines, a few clouds pass, or the moon is up;
 // in production a gleam runs over the cells and the energy down the cable.
 const SOLAR_ONLY_FIELDS = ["solar_layout", "energy_today_entity", "peak_power", "solar_alert_entity"];
-const SOLAR_NAME_RE = /solar|photovolt|(^|[^a-z])pv([^a-z]|$)|panneaux?.?solaires?|powerstream|hoymiles|enphase|apsystems|fronius|solaredge|growatt|solax|wechselrichter|zonnepane|fotovolt|fotowolt|solcell|solpanel|\u592a\u9633\u80fd|\u0441\u043e\u043b\u043d\u0435\u0447/;
+const SOLAR_NAME_RE = /solar|photovolt|(^|[^a-z])pv([^a-z]|$)|panneaux?.?solaires?|powerstream|hoymiles|enphase|envoy|apsystems|fronius|solaredge|growatt|solax|solis|sungrow|goodwe|foxess|sunsynk|kostal|(^|[^a-z])(sma|deye|sofar|tigo)([^a-z]|$)|^(?!.*(heat.?pump|compress|wash|fridge)).*inverter|wechselrichter|zonnepane|fotovolt|fotowolt|solcell|solpanel|\u592a\u9633\u80fd|\u0441\u043e\u043b\u043d\u0435\u0447/;
 const SOLAR_LAYOUTS = ["ground", "roof"];
 // What an inverter says when it is in trouble.
 const ENERGY_ERROR_RE = /error|fault|alarm|defaut|panne|fehler|failure|storung|st\u00f6rung|guasto|averia|fout|abnormal/;
@@ -4437,7 +4487,7 @@ const SOLAR_COLORS = { day: "#f9a825", low: "#9e9d24", night: "#5c6bc0", error: 
 // line marks the reserve it keeps for a power cut.
 const BATTERY_ONLY_FIELDS = ["battery_layout", "charge_power_entity", "reserve_entity", "charge_limit_entity", "battery_capacity",
   "power_inverted", "battery_alert_entity"];
-const BATTERY_NAME_RE = /home.?battery|house.?battery|powerwall|delta.?(pro|max|2)|ecoflow|bluetti|anker.?solix|solix|jackery|zendure|marstek|sonnen|power.?station|station.?(d.?)?energie|batterie.?(domestique|maison|murale|solaire)|hausbatterie|stromspeicher|heimspeicher|batteriespeicher|thuisbatterij|bateria.?domestica|batteria.?domestica|hemmabatteri|hjemmebatteri|magazyn.?energii|domaci.?baterie|\u5bb6\u7528\u7535\u6c60|\u0434\u043e\u043c\u0430\u0448\u043d.?\u0430\u043a\u043a\u0443\u043c/;
+const BATTERY_NAME_RE = /home.?battery|house.?battery|powerwall|delta.?(pro|max|2)|ecoflow|bluetti|anker.?solix|solix|jackery|zendure|marstek|sonnen|senec|e3dc|sigen|pylontech|victron|(^|[^a-z])(sax|byd)([^a-z]|$)|power.?station|station.?(d.?)?energie|batterie.?(domestique|maison|murale|solaire)|hausbatterie|stromspeicher|heimspeicher|batteriespeicher|thuisbatterij|bateria.?domestica|batteria.?domestica|hemmabatteri|hjemmebatteri|magazyn.?energii|domaci.?baterie|\u5bb6\u7528\u7535\u6c60|\u0434\u043e\u043c\u0430\u0448\u043d.?\u0430\u043a\u043a\u0443\u043c/;
 const BATTERY_STATION_RE = /delta|ecoflow|bluetti|jackery|anker|solix|zendure|river|power.?station|station/;
 const BATTERY_LAYOUTS = ["wall", "station"];
 // Under this power either way, the battery rests: a station feeding its own
@@ -4544,7 +4594,7 @@ function batteryReadOf(hass, cfg, st) {
 // from a sensor.
 const DIFFUSER_ONLY_FIELDS = ["diffuser_layout", "tank_empty_entity"];
 const DIFFUSER_LAYOUTS = ["drop", "cone", "stone", "flame", "nebulizer"];
-const DIFFUSER_NAME_RE = /diffus(er|eur|or|ore)|aroma.?(diffus|therap)|duftspender|essential.?oil|huiles?.?essentielles?|doftspridare|duftspreder/;
+const DIFFUSER_NAME_RE = /diffus(er|eur|or|ore)|aroma.?(diffus|therap)|airversa|mod100|(^|[._\s])spray(\s|$)|^(?!.*(coffee|cafe|espresso|kaffee|barista|jura|delonghi)).*((^|[._\s])(aroma|scent)([._\s]|$))|duftspender|essential.?oil|huiles?.?essentielles?|doftspridare|duftspreder/;
 const DIFFUSER_LABELS = { mist: "dif_mist", low: "dif_low", inter: "dif_inter", empty: "dif_empty", off: "ac_off", unav: "ev_offline" };
 const DIFFUSER_COLORS = { mist: "#26a69a", low: "#26a69a", inter: "#26a69a", empty: "#f44336", off: "var(--disabled-text-color, #9e9e9e)", unav: "var(--disabled-text-color, #9e9e9e)" };
 // Meross's eco mode mists less, it does not pause (#53): a lower mist and a
@@ -4781,7 +4831,7 @@ const UNIT_FILTERS = { power: /^[mkMG]?W$/, energy: /^[mkMG]?Wh$/ };
 const HRV_ONLY_FIELDS = ["hrv_layout", "active_mode_entity", "supply_temperature_entity", "extract_temperature_entity", "exhaust_temperature_entity", "bypass_entity", "airflow_entity",
   "supply_fan_entity", "exhaust_fan_entity", "exhaust_airflow_entity", "fan_max_rpm", "humidity_control_entity", "filter_life_full", "high_speed_entity", "speed_entities", "zone_valves", "hrv_floors"];
 const HRV_LAYOUTS = ["diagram", "one_duct", "pair", "single", "single_box", "single_basement"];
-const HRV_NAME_RE = /(^|[^a-z])(hrv|erv|vmc|wtw|ftx|mvhr)([^a-z]|$)|double.?flux|heat.?recovery|recuperat|comfoair|comfoconnect|vallox|zehnder|lunos|twinfresh|danfoss.?air|renson|endura|brink.?(flair|renovent)|wohnraumluft/;
+const HRV_NAME_RE = /(^|[^a-z])(hrv|erv|vmc|wtw|ftx|mvhr|kwl|helios|brink)([^a-z]|$)|(^|[\s.])ventilation|flexit|pluggit|systemair|swegon|thessla|ambientika|double.?flux|heat.?recovery|recuperat|comfoair|comfoconnect|vallox|zehnder|lunos|twinfresh|danfoss.?air|renson|endura|brink.?(flair|renovent)|wohnraumluft/;
 const HRV_LABELS = { run: "hrv_run", boost: "hrv_boost", bypass: "hrv_bypass", defrost: "hrv_defrost", filter: "hrv_filter", away: "hrv_away",
   rec: "hrv_recirc", hum: "hrv_humidity", inter: "hrv_inter", off: "ac_off", unav: "ev_offline" };
 const HRV_COLORS = { run: "#03a9f4", boost: "#ff9800", bypass: "#26a69a", defrost: "#4fc3f7", filter: "#ff9800", away: "#607d8b",
@@ -4838,7 +4888,7 @@ function hrvModeOptions(hass, cfg) {
   if ((dom === "select" || dom === "input_select") && Array.isArray(a.options) && a.options.length > 1) {
     return { entity: cfg.state_entity, current: st.state, options: a.options.filter((o) => String(o).trim() !== ""), dom };
   }
-  if (dom === "fan" && Array.isArray(a.preset_modes) && a.preset_modes.length > 1) {
+  if (["fan", "climate"].includes(dom) && Array.isArray(a.preset_modes) && a.preset_modes.length > 1) {
     return { entity: cfg.state_entity, current: a.preset_mode, options: a.preset_modes, dom };
   }
   return speeds;
@@ -4980,6 +5030,20 @@ function camRinging(hass, id) {
   if (at === null) return false;
   return domainOf(id) === "event" ? Date.now() - at < CAM_RING_MS : camOn(hass, id);
 }
+// Motion: an entity that says so, a count above nothing (Frigate's people), or
+// an event entity whose state is the time it last saw something (Nest, Ring),
+// drawn moving as long as a ring.
+function camMotionAt(hass, id) {
+  const st = id ? stateObj(hass, id) : null;
+  if (!st) return NaN;
+  return Date.parse(domainOf(id) === "event" ? st.state : st.last_changed);
+}
+function camMoving(hass, id) {
+  const st = id ? stateObj(hass, id) : null;
+  if (!st) return false;
+  if (domainOf(id) === "event") return Date.now() - camMotionAt(hass, id) < CAM_RING_MS;
+  return camOn(hass, id) || (domainOf(id) === "sensor" && parseFloat(st.state) > 0);
+}
 function cameraReadOf(hass, cfg, st) {
   const raw = st ? String(st.state).trim().toLowerCase() : "";
   const a = (st && st.attributes) || {};
@@ -4990,7 +5054,7 @@ function cameraReadOf(hass, cfg, st) {
   else if (raw === "off" || a.monitoring === false || camOn(hass, cfg.privacy_entity)) mode = "off";
   else if (camRinging(hass, cfg.ring_entity)) mode = "ring";
   else if (raw === "recording" || (camOn(hass, cfg.recording_entity) && !/record.?audio/i.test(cfg.recording_entity))) mode = "rec";
-  else if (raw === "motion" || camOn(hass, cfg.motion_entity)) mode = "motion";
+  else if (raw === "motion" || camMoving(hass, cfg.motion_entity)) mode = "motion";
   // Nest and Netatmo always say streaming: nobody is watching for all that.
   else if (raw === "streaming" && !/netatmo|google nest/i.test(String(a.brand || ""))) mode = "live";
   else mode = "idle";
@@ -5024,7 +5088,7 @@ const MAILBOX_ON = ["on", "true", "1", "yes", "open", "opened", "detected", "mai
 // How long a letter takes to arrive, and a door to swing open.
 const MAILBOX_ARRIVE_MS = 2200;
 const MAILBOX_SWING_MS = 700;
-const MAILBOX_NAME_RE = /mail.?box|letter.?box|boite.?aux.?lettres|(^|[\s._])bal([\s._]|$)|briefkasten|buzon|brievenbus|postkasse|brevlada|skrzynka|cassetta.?postale|caixa.?de.?correio|schranka/;
+const MAILBOX_NAME_RE = /mail.?box|(^|[._])mail_usps|letter.?box|boite.?aux.?lettres|(^|[\s._])bal([\s._]|$)|briefkasten|buzon|brievenbus|postkasse|brevlada|skrzynka|cassetta.?postale|caixa.?de.?correio|schranka/;
 function mailboxOpen(hass, id) {
   const st = id ? stateObj(hass, id) : null;
   return !!st && MAILBOX_ON.includes(String(st.state).toLowerCase());
@@ -5260,18 +5324,18 @@ const NT_NAME_RES = [
   ["storage_tank", /pufferspeicher|(^|[^a-z])puffer|buffer.?tank|ballon.?tampon|thermal.?store|schichtspeicher|serbatoio.?(inerziale|di.?accumulo)|deposito.?de.?inercia|buffertank|zbiornik.?buforowy/],
   ["solar_thermal", /solar.?therm|solarthermie|solaire.?thermique|thermique.?solaire|kollektor|collector.?temp|capteur.?solaire|solar.?pump|solarpumpe|solar.?collector/],
   ["wood_stove", /^(?!.*(pellet|granul)).*((^|[^a-z])kamin|wood.?(stove|burner)|log.?(stove|burner)|poele.?(a.?)?bois|cheminee|holzofen|kachelofen|estufa.?de.?lena|stufa.?a.?legna|houtkachel|braskamin|vedovn|braendeovn|brandeovn|piec.?na.?drewno|fireplace)/],
-  ["console", /playstation|(^|[^a-z])ps[1-5]([^a-z0-9]|$)|xbox|nintendo|gamecube|(^|[^a-z])(n64|snes|nes|wii|switch.?lite|switch.?2)([^a-z0-9]|$)|mega.?drive|genesis|console|konsole|consola|konsol/],
-  ["litter_box", /litter|litiere|katzenklo|arenero|lettiera|kattlada|kuweta|kattebak|kattesand|(^|[^a-z])pura.?(x|max)/],
-  ["irrigation", /arrosage|irrigat|sprinkler|bewasserung|(^|[^a-z])riego|beregening|bevattning|vanning|vanding|nawadnian|zavlaz|opensprinkler|linktap|hydrawise|rachio|rain.?bird/],
-  ["detector", /smoke|fumee|detecteur.?(de.?)?(fumee|co|fuite)|monoxyde|carbon.?monoxide|(^|[^a-z])co.?(alarm|detector)|rauchmelder|detector.?de.?humo|rilevatore|rookmelder|brandvarnare|roykvarsler|roegalarm|czujnik.?dymu|water.?leak|fuite.?d.?eau|wassermelder|leak.?sensor/],
+  ["console", /used.?screen.?time|suspend.?software|playstation|(^|[^a-z])ps[1-5]([^a-z0-9]|$)|xbox|nintendo|gamecube|(^|[^a-z])(n64|snes|nes|wii|switch.?lite|switch.?2)([^a-z0-9]|$)|mega.?drive|genesis|console|konsole|consola|konsol/],
+  ["litter_box", /scoopfree|purobot|litter|litiere|katzenklo|arenero|lettiera|kattlada|kuweta|kattebak|kattesand|(^|[^a-z])pura.?(x|max)/],
+  ["irrigation", /arrosage|arroseur|watering|bhyve|netro|gardena(?!.?(sileno|mow))|irrigat|sprinkler|bewasserung|(^|[^a-z])riego|beregening|bevattning|vanning|vanding|nawadnian|zavlaz|opensprinkler|linktap|hydrawise|rachio|rain.?bird/],
+  ["detector", /x.?sense|smoke|fumee|detecteur.?(de.?)?(fumee|co|fuite)|monoxyde|carbon.?monoxide|(^|[^a-z])co.?(alarm|detector)|rauchmelder|detector.?de.?humo|rilevatore|rookmelder|brandvarnare|roykvarsler|roegalarm|czujnik.?dymu|water.?leak|fuite.?d.?eau|wassermelder|leak.?sensor/],
   ["christmas_tree", /christmas|xmas|(^|[^a-z])sapin|(^|[^a-z])noel([^a-z]|$)|weihnacht|tannenbaum|navidad|natale|kerstboom|julgran|juletre|juletrae|choink|vanocni.?strom/],
   ["aquarium", /aquari|akwari|akvari/],
-  ["mobility", /trottinette|e-?scooter|(^|[^a-z])scooter([^a-z]|$)|ninebot|(^|[^a-z])(velo|e-?bike|ebike|vae|pedelec)([^a-z]|$)|gyropode|gyroroue|monowheel|hoverboard|(^|[^a-z])moto([^a-z]|$)|motorcycle|super.?soco|sur.?ron|ausom|dualtron|kaabo|patinete|monopattino|hulajnoga|elsparkcykel|elsparkesykkel|kolobezka/],
-  ["sauna", /sauna/],
-  ["spa", /(^|[^a-z])(spa|jacuzzi|hot.?tub|bain.?nordique|whirlpoolwanne)([^a-z]|$)/],
-  ["meter", /linky|compteur.?(electrique|edf|enedis)|smart.?meter|(^|[^a-z])(teleinfo|papp|sinsts)([^a-z]|$)/],
+  ["mobility", /cowboy|vanmoof|(^|[.])niu([._\s]|$)|trottinette|e-?scooter|(^|[^a-z])scooter([^a-z]|$)|ninebot|(^|[^a-z])(velo|e-?bike|ebike|vae|pedelec)([^a-z]|$)|gyropode|gyroroue|monowheel|hoverboard|(^|[^a-z])moto([^a-z]|$)|motorcycle|super.?soco|sur.?ron|ausom|dualtron|kaabo|patinete|monopattino|hulajnoga|elsparkcykel|elsparkesykkel|kolobezka/],
+  ["sauna", /sauna|saunum|huum|harvia|(^|[^a-z])(tylo|effe)([^a-z]|$)/],
+  ["spa", /balboa|spanet|arctic.?spa|(^|[^a-z])(spa|gecko|jacuzzi|hot.?tub|bain.?nordique|whirlpoolwanne)([^a-z]|$)/],
+  ["meter", /linky|compteur.?(electrique|edf|enedis)|smart.?meter|(^|[\s.])(electricity|gas|water).?meter|p1.?meter|(^|[^a-z])dsmr([^a-z]|$)|shelly.?(pro.?)?3?em([^a-z]|$)|tibber.?pulse|iammeter|ksem|homewizard.?(p1|kwh|energy)|(^|[^a-z])(teleinfo|papp|sinsts)([^a-z]|$)/],
   ["floor_heating", /plancher.?chauffant|underfloor|floor.?heat|fussbodenheizung|suelo.?radiante|pavimento.?radiante|vloerverwarming|golvvarme|gulvvarme|ogrzewanie.?podlog|podlahov/],
-  ["water_pump", /surpresseur|booster|relevage|(^|[^a-z])sump|pompe.?(a.?eau|de.?puits|immergee)|water.?pump|well.?pump|(^|[^a-z])forage|tauchpumpe|hauswasser|hebeanlage/],
+  ["water_pump", /grundfos|wilo|(^|[^a-z])alpha[23]([^a-z]|$)|surpresseur|booster|relevage|(^|[^a-z])sump|pompe.?(a.?eau|de.?puits|immergee)|water.?pump|well.?pump|(^|[^a-z])forage|tauchpumpe|hauswasser|hebeanlage/],
 ];
 // A meter's drawing: the one chosen, else its unit and its name (#68). A
 // Linky stays a Linky; gas and water by their device class or their name;
@@ -5441,7 +5505,7 @@ function ntOnOff(hass, id) {
 // The temperature: its own entity, or the thermostat's.
 function ntTemp(hass, cfg, st) {
   if (cfg.temperature_entity) {
-    const v = numericState(hass, cfg.temperature_entity);
+    const v = tempState(hass, cfg.temperature_entity);
     return v === null ? null : { v, text: tempText(hass, cfg, cfg.temperature_entity, v, temperatureUnit(hass, cfg.temperature_entity)) };
   }
   const v = st ? numberOrNull((st.attributes || {}).current_temperature) : null;
@@ -6003,9 +6067,9 @@ function ntReadOf(type, hass, cfg, st, watts, threshold) {
 function ntControls(hass, cfg, type) {
   const out = [];
   const st = stateObj(hass, cfg.state_entity);
-  if (st && !cfg.toggle_entity && type !== "meter" && (["light", "switch", "input_boolean"].includes(domainOf(cfg.state_entity)) || (type === "humidifier" && domainOf(cfg.state_entity) === "humidifier"))) {
+  if (st && !cfg.toggle_entity && type !== "meter" && (["light", "switch", "input_boolean", "valve"].includes(domainOf(cfg.state_entity)) || (type === "humidifier" && domainOf(cfg.state_entity) === "humidifier"))) {
     out.push({ key: "toggle", entity: cfg.state_entity, icon: type === "christmas_tree" ? "mdi:pine-tree" : type === "aquarium" ? "mdi:lightbulb" : type === "mobility" ? "mdi:power-plug" : "mdi:power", label: t(hass, "toggle"),
-      on: String(st.state).toLowerCase() === "on" });
+      on: ["on", "open", "opening"].includes(String(st.state).toLowerCase()) });
   }
   if (type === "speaker" && st && ["playing", "paused", "buffering", "idle", "on"].includes(String(st.state).toLowerCase())) {
     const playing = ["playing", "buffering"].includes(String(st.state).toLowerCase());
@@ -6225,7 +6289,7 @@ function heatReadOf(type, hass, cfg, st) {
 // A bathroom scale: its state entity is the weight. Weighed, and when; the
 // goal reached within half a unit; offline when there is no weight to show.
 const SCALE_ONLY_FIELDS = ["weight_goal_entity", "weight_goal", "fat_ratio_entity", "fat_mass_entity", "muscle_mass_entity", "bone_mass_entity"];
-const SCALE_NAME_RE = /withings|body.?(cardio|comp|scan)|(^|[^a-z])(scale|waage|bascula|bilancia|weegschaal|waga)([^a-z]|$)|pese.?personne|personenwaage|\u4f53\u91cd\u79e4|\u0432\u0435\u0441\u044b/;
+const SCALE_NAME_RE = /withings|renpho|body.?(cardio|comp|scan)|(^|[^a-z])(scale|waage|bascula|bilancia|weegschaal|waga)([^a-z]|$)|pese.?personne|personenwaage|\u4f53\u91cd\u79e4|\u0432\u0435\u0441\u044b/;
 const SCALE_COLORS = { weighed: "#1e88e5", goal: "#43a047", unav: "var(--disabled-text-color, #9e9e9e)" };
 const SCALE_GOAL_MARGIN = 0.5;
 // The screen stays lit for an hour after a weighing.
@@ -7672,7 +7736,7 @@ class ApplianceCard extends HTMLElement {
       if (id) this._hass.callService(domainOf(id), "turn_on", { entity_id: id });
       return this._render();
     }
-    if (menu.dom === "fan") this._hass.callService("fan", "set_preset_mode", { entity_id: menu.entity, preset_mode: option });
+    if (["fan", "climate"].includes(menu.dom)) this._hass.callService(menu.dom, "set_preset_mode", { entity_id: menu.entity, preset_mode: option });
     else if (menu.dom === "media_player") this._hass.callService("media_player", "select_source", { entity_id: menu.entity, source: option });
     else this._hass.callService(menu.dom, "select_option", { entity_id: menu.entity, option });
     this._render();
@@ -8081,7 +8145,7 @@ class ApplianceCard extends HTMLElement {
     if (READ_ONLY_DOMAINS.includes(domain)) return this._moreInfo(entityId);
     if (domain === "button" || domain === "input_button") {
       this._hass.callService(domain, "press", { entity_id: entityId });
-    } else if (["switch", "input_boolean", "fan", "light"].includes(domain)) {
+    } else if (["switch", "input_boolean", "fan", "light", "valve"].includes(domain)) {
       this._hass.callService(domain, "toggle", { entity_id: entityId });
     } else if (domain === "script") {
       this._hass.callService("script", "turn_on", { entity_id: entityId });
@@ -8741,7 +8805,7 @@ class ApplianceCard extends HTMLElement {
       // dashes rather than a stale number. Nothing is drawn without an entity.
       const readTemp = (entityId) => {
         if (!entityId) return { value: null, text: undefined };
-        const v = numericState(hass, entityId);
+        const v = tempState(hass, entityId);
         return v === null
           ? { value: null, text: "--\u00b0" }
           : { value: v, text: screenTemp(hass, cfg, entityId, v) };
@@ -9080,10 +9144,14 @@ class ApplianceCard extends HTMLElement {
           : (!powerDerived && boilerModeOf(rawState, cfg.state_map)) || (isActiveState(norm) ? "burner" : "idle");
       } else if (!powerDerived) {
         boilerMode = boilerModeOf(rawState, cfg.state_map);
+        // A climate entity (Remeha) says what it does in its action; its state
+        // is the mode it was set to.
+        const boilerAction = /^climate\./.test(cfg.state_entity || "") && st ? String(st.attributes.hvac_action || "") : "";
+        if (boilerAction) boilerMode = boilerAction === "heating" ? "space_heating" : "idle";
       }
       // A water_heater's state is a mode the user picked (ViCare's and
       // Overkiz's "on"), never a lit burner.
-      const boilerMoot = !boilerMode && !powerDerived && /^water_heater\./.test(cfg.state_entity || "") && String(rawState).trim().toLowerCase() !== "off";
+      const boilerMoot = !boilerMode && !powerDerived && /^(water_heater|climate)\./.test(cfg.state_entity || "") && String(rawState).trim().toLowerCase() !== "off";
       if (boilerMoot) {
         if (!cfg.state_show_raw && !rawIsMeaningless) stateLabel = modeLabel(hass, st, rawState, cfg);
         color = STATE_COLORS.idle;
@@ -10756,6 +10824,12 @@ class ApplianceCard extends HTMLElement {
       const can = cfg.chlorine_level_entity ? numericState(hass, cfg.chlorine_level_entity) : null;
       if (mode !== "unav") {
         const reading = (key, field, icon, label, digits, fallbackUnit) => {
+          // Pentair's water temperature is on its climate entity alone.
+          if (domainOf(cfg[field] || "") === "climate") {
+            const v = tempState(hass, cfg[field]);
+            if (v !== null) extraLines.push({ key, icon, label, entity: cfg[field], value: keepTogether(tempText(hass, cfg, cfg[field], v, temperatureUnit(hass, cfg[field]))) });
+            return;
+          }
           const e = numericEntity(hass, cfg[field]);
           if (!e) return;
           // pH has no unit, whatever the integration writes after it.
@@ -11001,7 +11075,7 @@ class ApplianceCard extends HTMLElement {
             value: keepTogether(`${netNumber(hass, sig, 0)}${unit ? ` ${unit}` : ""}`), entity: cfg.signal_entity || cfg.state_entity });
         }
         const mst = cfg.motion_entity ? stateObj(hass, cfg.motion_entity) : null;
-        const seen = mst && mode !== "motion" ? Date.parse(mst.last_changed) : NaN;
+        const seen = mst && mode !== "motion" ? camMotionAt(hass, cfg.motion_entity) : NaN;
         if (isFinite(seen)) {
           extraLines.push({ key: "cam_motion", icon: "mdi:motion-sensor", label: t(hass, "cam_line_last_motion"),
             value: keepTogether(feedTime(hass, seen)), entity: cfg.motion_entity });
@@ -11015,6 +11089,8 @@ class ApplianceCard extends HTMLElement {
         if (this._ringTimer) { clearTimeout(this._ringTimer); this._ringTimer = null; }
         if (mode === "ring" && domainOf(cfg.ring_entity) === "event") {
           this._ringTimer = setTimeout(() => { this._ringTimer = null; this._render(); }, Math.max(0, CAM_RING_MS - (Date.now() - ringAt)) + 50);
+        } else if (mode === "motion" && domainOf(cfg.motion_entity) === "event") {
+          this._ringTimer = setTimeout(() => { this._ringTimer = null; this._render(); }, Math.max(0, CAM_RING_MS - (Date.now() - camMotionAt(hass, cfg.motion_entity))) + 50);
         }
         if (night) {
           extraLines.push({ key: "cam_night", icon: "mdi:weather-night", label: t(hass, "cam_line_night"), value: "IR", entity: cfg.night_entity });
