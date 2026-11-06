@@ -2241,6 +2241,17 @@ const ILLUSTRATION_CSS = {
         .rbt-m-returning .rbt-rb{animation:rbt-ret 4.5s ease-in-out infinite}
         .rbt-m-paused .rbt-rb,.rbt-m-error .rbt-rb{transform:translate(-16px,14px)}
         .rbt-m-error .rbt-rb{transform:translate(-16px,14px) rotate(-9deg)}
+        .rbt-rb .rbt-pad{left:8px;bottom:-1.5px;width:36px;height:4px;border-radius:0 0 7px 7px;background:#cfd8dc}
+        .rbt-m-cleaning .rbt-rb .rbt-pad{background:#81d4fa}
+        .rbt-cm-vacuum.rbt-m-cleaning .rbt-rb .rbt-pad{background:#cfd8dc}
+        .rbt-cm-mop.rbt-m-cleaning .rbt-rb .rbt-brush i{animation:none}
+        .rbt-rb .rbt-tank{left:6px;top:5px;width:11px;height:7px;border-radius:2.5px;background:rgba(15,18,22,.35);overflow:hidden;box-shadow:inset 0 0 0 1px rgba(255,255,255,.18)}
+        .rbt-rb .rbt-tank i{position:absolute;left:0;right:0;bottom:0;height:var(--lvl,70%);background:linear-gradient(180deg,#81d4fa,#29b6f6)}
+        .rbt-m-empty .rbt-rb .rbt-tank i{background:#ff9800;height:12%}
+        .rbt-l-combo.rbt-m-empty .rbt-rb{transform:translate(-16px,14px)}
+        .rbt-l-combo .rbt-mdock .rbt-tk{height:19px}
+        .rbt-mdock .rbt-bin{left:13px;top:26px;width:26px;height:14px}
+        .rbt-l-combo .rbt-mdock .rbt-dled{top:42px}
         .rbt-ring{box-shadow:0 0 0 1.3px #59606a}
         .rbt-m-charging .rbt-ring{box-shadow:0 0 0 1.3px #2ecc71,0 0 4px #2ecc71;animation:rbt-breathe 2.4s ease-in-out infinite}
         .rbt-m-cleaning .rbt-ring{box-shadow:0 0 0 1.3px #4fc3f7,0 0 4px #4fc3f7}
@@ -2285,7 +2296,7 @@ const ILLUSTRATION_CSS = {
         @keyframes rbt-bub{0%{transform:translateY(0) scale(.5);opacity:0}30%{opacity:1}100%{transform:translateY(-12px) scale(1);opacity:0}}
         .rbt-vapor{left:26px;top:70px;width:44px;height:17px}
         .rbt-m-drying .rbt-vapor{display:block}
-        .rbt-vapor path{stroke:#ff8a65}
+        .rbt-vapor path{stroke:#ff6d00}
         .rbt-smoke{position:absolute;display:none;overflow:visible;left:6px;top:-30px;width:40px;height:30px}
         .rbt-m-error .rbt-smoke{display:block}
         .rbt-smoke .rbt-pf{transform-box:fill-box;transform-origin:50% 100%;animation:rbt-puff 2s ease-out infinite}
@@ -2381,7 +2392,7 @@ const ILLUSTRATION_CSS = {
         .rbt-vapor path:nth-child(2) { --d0: -0.45s; }
         .rbt-vapor path:nth-child(3) { --d0: -0.9s; }
         .rbx{position:absolute;left:0;top:0;width:96px;height:106px;overflow:visible}
-        .rbt-l-vacuum .rbt-floor,.rbt-l-mop .rbt-floor{left:0;width:78px;clip-path:none;overflow:hidden;transform:skewX(-28deg);transform-origin:50% 100%}
+        .rbt-l-vacuum .rbt-floor,.rbt-l-mop .rbt-floor,.rbt-l-combo .rbt-floor{left:0;width:78px;clip-path:none;overflow:hidden;transform:skewX(-28deg);transform-origin:50% 100%}
         .machine.rbt.rbx-white,.machine.rbt.rbx-gold{--b:var(--ac-body,#eef1f3);--bh:var(--ac-body-hi,#ffffff);--bl:var(--ac-body-lo,#aab3ba);--dk:#3a4046;--dkh:#555c63}
         .rbx-lv.rbx-c{fill:#29b6f6}
         .rbx-lv.rbx-d{fill:#8d6e4f}

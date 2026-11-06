@@ -862,10 +862,17 @@ class ApplianceCard extends HTMLElement {
 
     // Program
     let programText = null;
-    if (cfg.program_entity && !offHidden) {
-      const pst = stateObj(hass, cfg.program_entity);
-      if (pst && !["unknown", "unavailable"].includes(pst.state)) {
-        programText = cap.printer3d ? printerFileName(pst.state) : programLabel(hass, pst, pst.state, cfg);
+    if (!offHidden) {
+      // During a cycle the running programme comes first: a selected-programme
+      // entity can go blank once the cycle starts (#92). Between cycles it is
+      // the other way round, so the line shows what the menu will change.
+      const ids = betweenCycles(norm) ? [cfg.program_entity, cfg.active_program_entity] : [cfg.active_program_entity, cfg.program_entity];
+      for (const id of ids) {
+        const pst = id ? stateObj(hass, id) : null;
+        if (pst && !["unknown", "unavailable"].includes(pst.state)) {
+          programText = cap.printer3d ? printerFileName(pst.state) : programLabel(hass, pst, pst.state, cfg);
+          break;
+        }
       }
     }
 
@@ -3772,9 +3779,10 @@ class ApplianceCard extends HTMLElement {
       color = ROBOT_COLORS[mode];
       const water = robotWaterPct(hass, cfg);
       // The station's two water tanks, on the lines and on its front (#69).
-      const tankOn = layout === "vacuum" || layout === "mop";
+      const tankOn = ["vacuum", "mop", "combo"].includes(layout);
       const cleanTank = tankOn ? robotTank(hass, cfg.robot_clean_tank_entity) : null;
       const dirtyTank = tankOn ? robotTank(hass, cfg.robot_dirty_tank_entity) : null;
+      const cleanMode = layout === "combo" ? robotCleanModeOf(hass, cfg) : null;
       if (mode !== "unav" && mode !== "winter") {
         if (battery !== null && !cfg.battery_corner) {
           extraLines.push({ key: "robot_battery", icon: robotBatteryIcon(battery, mode === "charging"), label: t(hass, "section_battery"),
@@ -3783,6 +3791,10 @@ class ApplianceCard extends HTMLElement {
         if (water !== null) {
           extraLines.push({ key: "robot_water", icon: "mdi:water", label: t(hass, "section_robot_water"),
             value: keepTogether(`${Math.round(water)} %`), entity: cfg.robot_water_entity });
+        }
+        if (cleanMode) {
+          const cm = stateObj(hass, cfg.robot_clean_mode_entity);
+          extraLines.push({ key: "robot_clean_mode", icon: "mdi:broom", label: t(hass, "section_robot_clean_mode"), value: formatInfoValue(cm, hass, null, cfg, cfg.robot_clean_mode_entity), entity: cfg.robot_clean_mode_entity });
         }
         for (const [key, tk, id] of [["robot_clean_tank", cleanTank, cfg.robot_clean_tank_entity], ["robot_dirty_tank", dirtyTank, cfg.robot_dirty_tank_entity]]) {
           if (!tk) continue;
@@ -3821,7 +3833,7 @@ class ApplianceCard extends HTMLElement {
         const secs = ntRemaining(hass, cfg.remaining_time_entity);
         if (secs !== null) poolTime = formatDuration(secs, hass);
       }
-      robot = { layout, mode, water, battery, poolTime, floor: cfg.robot_floor, base: cfg.robot_station === "base", shelter: cfg.robot_shelter ? (SHELTER_STYLES.includes(cfg.robot_shelter_style) ? cfg.robot_shelter_style : "lean_to") : "",
+      robot = { layout, mode, water, cleanMode, battery, poolTime, floor: cfg.robot_floor, base: cfg.robot_station === "base", shelter: cfg.robot_shelter ? (SHELTER_STYLES.includes(cfg.robot_shelter_style) ? cfg.robot_shelter_style : "lean_to") : "",
         shelterColor: cfg.robot_shelter_color, mowerStyle: mowerStyleOf(cfg, st),
         box: cfg.robot_station === "box", boxColor: cfg.robot_station_color, camera: !!cfg.robot_camera, cleanTank, dirtyTank };
     }
@@ -4018,9 +4030,14 @@ class ApplianceCard extends HTMLElement {
       toggleOn = !!tst && ["on", "true", "open"].includes(String(tst.state).toLowerCase());
     }
 
+    // A two-speed unit's power button when it is the speed switch: it shows
+    // the speed it is at, not a power sign (HACF #150).
+    const speedToggle = !!cap.hrv && !!cfg.toggle_entity && cfg.toggle_entity === cfg.high_speed_entity;
+
     // Action buttons
     const actions = [
-      { key: "toggle", entity: toggleEntity, icon: "mdi:power", label: t(hass, "toggle"), on: toggleOn, plugDefault: plugToggle },
+      { key: "toggle", entity: toggleEntity, icon: speedToggle ? (toggleOn ? "mdi:fan-speed-2" : "mdi:fan-speed-1") : "mdi:power",
+        label: speedToggle ? t(hass, toggleOn ? "hrv_high_speed" : "hrv_low_speed") : t(hass, "toggle"), on: toggleOn, plugDefault: plugToggle },
       { key: "start", entity: cfg.start_entity, icon: "mdi:play", label: t(hass, "start") },
       { key: "pause", entity: cfg.pause_entity, icon: "mdi:pause", label: t(hass, "pause") },
       { key: "resume", entity: cfg.resume_entity, icon: "mdi:play-pause", label: t(hass, "resume") },
@@ -4041,6 +4058,7 @@ class ApplianceCard extends HTMLElement {
       // editor does not offer it, since a menu long enough to hold every
       // icon of the card would be a menu nobody reads.
       .map((a) => (a.key && cfg[`${a.key}_icon`] ? { ...a, icon: cfg[`${a.key}_icon`] } : a))
+      .map((a) => (a.key === "toggle" && a.on && cfg.toggle_icon_on ? { ...a, icon: cfg.toggle_icon_on } : a))
       // A fridge offers no cycle to drive, only its plug: the switch shows
       // when one is set, and nothing else does.
       // A type that already offers its state's switch keeps its own button.
@@ -4168,7 +4186,7 @@ class ApplianceCard extends HTMLElement {
         /* A drawing as wide as the rectangular station or a laptop would run
            under the battery in its corner: it is drawn lower instead (#69),
            and so is every robot's, so floors side by side stay level. */
-        .batt-badge ~ .top .machine.rbt-l-vacuum, .batt-badge ~ .top .machine.rbt-l-mop, .batt-badge ~ .top .machine.scr-laptop { margin-top: 18px; }
+        .batt-badge ~ .top .machine.rbt-l-vacuum, .batt-badge ~ .top .machine.rbt-l-mop, .batt-badge ~ .top .machine.rbt-l-combo, .batt-badge ~ .top .machine.scr-laptop { margin-top: 18px; }
         .batt-badge.right { right: 10px; }
         .batt-badge.low { color: var(--warning-color, #ff9800); }
         /* Switches at hand, lined up under the light on the left and under

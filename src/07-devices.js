@@ -307,16 +307,18 @@ function netDiskState(hass, entityId, anchorDevice) {
 // integrations say more in a status of their own, read here for what the
 // drawing can show: the station emptying the bin or washing and drying the
 // pads, rain keeping a mower home, its edge cut.
-const ROBOT_LAYOUTS = ["vacuum", "mop", "mower", "stick", "floor_washer", "pool"];
+const ROBOT_LAYOUTS = ["vacuum", "mop", "combo", "mower", "stick", "floor_washer", "pool"];
 const ROBOT_STATIONS = ["station", "box", "base"];
 // A rectangular station's front, as the brands make them (#69).
 const ROBOT_BOX_COLORS = ["white", "black", "gold"];
 const ROBOT_ONLY_FIELDS = ["robot_layout", "robot_station", "robot_station_color", "robot_camera", "robot_shelter", "robot_shelter_style", "mower_style", "robot_shelter_color", "robot_floor", "robot_controls", "away_threshold", "robot_status_entity", "robot_bin_entity",
-  "robot_water_entity", "robot_clean_tank_entity", "robot_dirty_tank_entity", "robot_rain_entity", "robot_error_entity", "robot_winter", "robot_winter_entity"];
+  "robot_water_entity", "robot_clean_mode_entity", "robot_clean_tank_entity", "robot_dirty_tank_entity", "robot_rain_entity", "robot_error_entity", "robot_winter", "robot_winter_entity"];
 // A robot by its name, its maker's or its integration's. A robot cook is a
 // cooker, so the word robot needs what it does.
 const ROBOT_NAME_RE = /dolphin|sileno|tapo.?rv\d+|proscenic|hombot|ambrogio|tineco|aspirateur.?balai|floor.?one|ifloor|laveur.?de.?sol|floor.?washer|nass.?trocken|lavapavimenti|stick.?vac|cordless.?vac|akkusauger|stielsauger|roomba|braava|roborock|ecovacs|deebot|dreame|neato|eufy.?clean|robovac|xiaomi.?vacuum|conga|robot.?(vacuum|aspir|mop|laveur|mower|tondeuse)|robot.?(clean|sweep)|vacuum|aspirateur|saugroboter|staubsauger|wischroboter|aspiradora|aspirapolvere|robotstofzuiger|stofzuiger|dammsugare|st(o|\u00f8)vsuger|odkurzacz|vysavac|landroid|automower|mammotion|navimow|(^|[^a-z])luba([^a-z]|$)|lawn.?mower|(^|[^a-z])mower|tondeuse|m(a|ae|\u00e4)hroboter|robotmaaier|grasmaaier|cortac(e|\u00e9)sped|tosaerba|corta.?relva|robotgr(a|\u00e4)sklipp|robotgressklipp|robotpl(a|\u00e6)neklipp|kosiarka|sekacka|\u626b\u5730|\u5438\u5c18|\u62d6\u5730|\u5272\u8349|\u043f\u044b\u043b\u0435\u0441\u043e\u0441|\u0433\u0430\u0437\u043e\u043d\u043e\u043a\u043e\u0441/;
 const ROBOT_MOWER_RE = /mow|m(a|ae|\u00e4)h|tondeuse|maaier|cortac|tosaerba|relva|klipp|kosiark|sekack|landroid|automower|worx|mammotion|navimow|(^|[^a-z])luba([^a-z]|$)|\u5272\u8349|\u0433\u0430\u0437\u043e\u043d\u043e\u043a\u043e\u0441/;
+// A robot that vacuums and mops in the same cycle (#91), named as such.
+const ROBOT_COMBO_RE = /combo|hybrid|2.?[ei]n.?1|saug.?(und.?)?wisch|aspirateur.?laveur|\u626b\u62d6/;
 const ROBOT_MOP_RE = /(^|[^a-z])mop|braava|wisch|serpill|laveur|fregas|lavapavim|dweil|moppe|mopuj|mopov|\u62d6\u5730/;
 // Home Assistant's own words, the same for a vacuum and a mower.
 const ROBOT_STATES = { cleaning: "cleaning", mowing: "cleaning", docked: "charging", returning: "returning", paused: "paused", idle: "idle", error: "error" };
@@ -350,7 +352,7 @@ const ROBOT_LABELS = {
   error: "error", emptying: "robot_emptying", full: "robot_bin_full", washing: "robot_washing", drying: "robot_drying",
   empty: "robot_water_empty", rain: "robot_rain", edgecut: "robot_edgecut", winter: "robot_winter", unav: "ev_offline", off: "ac_off", away: "stick_away",
 };
-const ROBOT_WORK_LABELS = { vacuum: "robot_cleaning", mop: "robot_mopping", mower: "robot_mowing", stick: "robot_cleaning", floor_washer: "robot_cleaning", pool: "robot_cleaning" };
+const ROBOT_WORK_LABELS = { vacuum: "robot_cleaning", mop: "robot_mopping", combo: "robot_cleaning", mower: "robot_mowing", stick: "robot_cleaning", floor_washer: "robot_cleaning", pool: "robot_cleaning" };
 const ROBOT_COLORS = {
   charging: "#43a047", docked: "#43a047", emptying: "#43a047",
   cleaning: "#1e88e5", edgecut: "#1e88e5", returning: "#1e88e5", washing: "#1e88e5",
@@ -455,6 +457,7 @@ function robotLayoutOf(cfg, st) {
   if (ROBOT_MOWER_RE.test(name)) return "mower";
   if (ROBOT_WASHER_RE.test(name)) return "floor_washer";
   if (ROBOT_STICK_RE.test(name)) return "stick";
+  if (ROBOT_COMBO_RE.test(name)) return "combo";
   if (ROBOT_MOP_RE.test(name)) return "mop";
   return "vacuum";
 }
@@ -512,6 +515,21 @@ function robotModeOf(hass, cfg, st, layout) {
 // from any on and off entity, an input_boolean or a date-driven automation.
 function robotWinter(hass, cfg) {
   return cfg.robot_winter === true || (!!cfg.robot_winter_entity && robotRaised(hass, cfg.robot_winter_entity, /winter|hiver/));
+}
+
+// What a robot that does both is set to do (#91): Dreame's cleaning_mode says
+// sweeping, mopping, both, or mopping after sweeping; a mop intensity set to
+// off means it only vacuums. Null when nothing says it: both, then.
+function robotCleanModeOf(hass, cfg) {
+  const id = cfg.robot_clean_mode_entity;
+  const st = id ? stateObj(hass, id) : null;
+  if (!st || HA_OFFLINE_STATES.includes(String(st.state).toLowerCase())) return null;
+  const v = stripAccents(String(st.state)).trim().toLowerCase();
+  if (/mop|water|wisch|serpill/.test(id) && !/mode/.test(id)) return ["off", "none", "no_water", "dry"].includes(v) ? "vacuum" : "both";
+  if (/(sweep|vacuum|aspir|saug|vac)\w*[\s_+&-]*(and|et|und|then|puis|after|plus|\+|&)?[\s_+&-]*(mop|lav|wisch)|(mop|lav|wisch)\w*[\s_+&-]*(and|et|und|then|puis|after|apres|nach|\+|&)[\s_+&-]*(sweep|vacuum|aspir|saug)|both|combo/.test(v)) return "both";
+  if (/mop|lavage|laver|wisch|serpill|fregar/.test(v)) return "mop";
+  if (/sweep|vacuum|aspir|saug|^dry/.test(v)) return "vacuum";
+  return null;
 }
 
 // The tank's level, when a number says it.

@@ -1190,7 +1190,8 @@ function siblingEntityIds(hass, entityId) {
 const AUTO_PATTERNS = {
   // Miele's program_phase and program_type, Home Connect's progress: not the
   // programme itself.
-  program_entity: /^(?!.*(phase|finish|progress|type|time|remain|duration)).*program/i,
+  program_entity: /^(?!.*(phase|finish|progress|type|time|remain|duration|a[ck]tiv|actif|attivo)).*program/i,
+  active_program_entity: /a[ck]tiv\w*.?program|program\w*.?(a[ck]tiv|actif|attivo)/i,
   // What is left of the cycle, not of the filter or the detergent.
   remaining_time_entity: /^(?!.*(filter|water|clean|detergent|softener|salt|rinse.?aid|batter|range|capacity)).*(time.?to.?end|remain|time.?left|left.?time|finish.?(in|time)|completion.?time|end.?time)/i,
   progress_entity: /^(?!.*(update|firmware|filter)).*(progress|percent_?complete)/i,

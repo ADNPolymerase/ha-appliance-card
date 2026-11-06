@@ -10004,7 +10004,7 @@ check('borne : ni un statut reconnu', evMode(evR('SuspendedEVSE', { power_entity
   check('station : descendue sous la batterie en coin', /\.batt-badge ~ \.top \.machine\.rbt-l-vacuum[^{]*\{ margin-top: 18px; \}/.test(box({ battery_corner: true })), true);
   // Side by side, every vacuum's floor is level and leans the same way,
   // whatever its station (#69).
-  check('sols : le meme sol incline pour tous', /\.rbt-l-vacuum \.rbt-floor,\.rbt-l-mop \.rbt-floor\{[^}]*skewX\(-28deg\)/.test(box()), true);
+  check('sols : le meme sol incline pour tous', /\.rbt-l-vacuum \.rbt-floor,\.rbt-l-mop \.rbt-floor,\.rbt-l-combo \.rbt-floor\{[^}]*skewX\(-28deg\)/.test(box()), true);
   check('sols : la base seule n est plus tassee', /\.rbt-base:not\(\.rbt-l-mower\) \{ height: 80px/.test(box({ robot_station: 'base' })), false);
   check('station : la batterie avant le dessin', /class="batt-badge [\s\S]*class="top"[\s\S]*class="machine [^"]*rbt-box/.test(box({ battery_corner: true })), true);
   check('camera : sur le robot', /class="rbt-cam"/.test(box({ robot_camera: true })), true);
@@ -13581,6 +13581,120 @@ function tvT(w) { return { 'switch.tv': { state: 'on', attributes: {} }, 'sensor
   { const e = new Editor(); e.setConfig({ type: 'custom:ha-appliance-card', appliance_type: 'hood', state_entity: 'fan.hotte' }); e.hass = HASS({ 'fan.hotte': s('on', { percentage: 50 }) });
     const h = render({ appliance_type: 'hood', state_entity: 'fan.hotte' }, { 'fan.hotte': s('on', { percentage: 50 }) });
     check('hotte en fan : tourne', /run/i.test(stateLine(h)), true); }
+}
+
+// ── The running programme, a two-speed unit's button, a robot that does both ──
+{
+  const T0L = Date.now();
+  const s = (state, attributes = {}) => ({ state, attributes: { ...attributes }, last_changed: new Date(T0L - 3600000).toISOString() });
+  // #92: homeconnect_local's selected programme goes blank during a cycle.
+  const OPTS = { options: ['Eco 50', 'Intensif 70'] };
+  const dw = (state, sel, act, extra = {}) => render({ appliance_type: 'dishwasher', state_entity: 'sensor.dw', program_entity: 'select.sel', active_program_entity: 'sensor.act', ...extra },
+    { 'sensor.dw': s(state), 'select.sel': s(sel, OPTS), 'sensor.act': s(act) });
+  check('programme : l\'actif pendant le cycle', infoLine(dw('run', 'unknown', 'Eco 50'), 'Program'), 'Eco 50');
+  check('programme : l\'actif avant le selectionne', infoLine(dw('run', 'Intensif 70', 'Eco 50'), 'Program'), 'Eco 50');
+  check('programme : le selectionne si l\'actif se tait', infoLine(dw('run', 'Intensif 70', 'unknown'), 'Program'), 'Intensif 70');
+  check('programme : le selectionne entre deux cycles', infoLine(dw('idle', 'Intensif 70', 'Eco 50'), 'Program'), 'Intensif 70');
+  check('programme : l\'actif seul entre deux cycles', infoLine(dw('idle', 'unknown', 'Eco 50'), 'Program'), 'Eco 50');
+  check('programme : l\'actif en pause', infoLine(dw('paused', 'Intensif 70', 'Eco 50'), 'Program'), 'Eco 50');
+  check('programme : rien sans valeur', infoLine(dw('run', 'unknown', 'unavailable'), 'Program'), null);
+  check('programme : l\'actif sans programme choisi', infoLine(render({ appliance_type: 'dishwasher', state_entity: 'sensor.dw', active_program_entity: 'sensor.act' }, { 'sensor.dw': s('run'), 'sensor.act': s('Eco 50') }), 'Program'), 'Eco 50');
+  check('programme : sans actif, comme avant', infoLine(render({ appliance_type: 'dishwasher', state_entity: 'sensor.dw', program_entity: 'select.sel' }, { 'sensor.dw': s('run'), 'select.sel': s('Eco 50', OPTS) }), 'Program'), 'Eco 50');
+  { const SUG = (cfg, map) => { const e = new Editor(); e.setConfig({ type: 'custom:ha-appliance-card', ...cfg });
+      const states = { [cfg.state_entity]: s('idle'), ...map }; const entities = {};
+      for (const id of Object.keys(states)) entities[id] = { device_id: 'd1', platform: 'x' };
+      e.hass = { ...HASS(states), entities, devices: { d1: { name: 'X' } } };
+      e._applySuggestions(); return e.events.at(-1)?.detail?.config || {}; };
+    const D = { appliance_type: 'dishwasher', state_entity: 'sensor.lave_etat' };
+    const en = SUG(D, { 'select.lave_selected_program': s('Eco 50', OPTS), 'sensor.lave_active_program': s('Eco 50') });
+    check('remplissage : le selectionne au programme', en.program_entity, 'select.lave_selected_program');
+    check('remplissage : l\'actif a sa place', en.active_program_entity, 'sensor.lave_active_program');
+    const fr = SUG(D, { 'select.lave_selected_program': s('Eco 50', OPTS), 'sensor.lave_programme_actif': s('Eco 50') });
+    check('remplissage : Programme actif', fr.active_program_entity, 'sensor.lave_programme_actif');
+    check('remplissage : Programme actif, pas au programme', fr.program_entity, 'select.lave_selected_program');
+    const de = SUG(D, { 'sensor.lave_aktives_programm': s('Eco 50') });
+    check('remplissage : aktives Programm', de.active_program_entity, 'sensor.lave_aktives_programm');
+    const one = SUG(D, { 'select.lave_program': s('Eco 50', OPTS) });
+    check('remplissage : un seul programme', one.program_entity, 'select.lave_program');
+    check('remplissage : pas d\'actif invente', one.active_program_entity, undefined);
+    const e = new Editor(); e.setConfig({ type: 'custom:ha-appliance-card', ...D }); e.hass = HASS({ 'sensor.lave_etat': s('run') });
+    check('editeur : le champ existe', e._sections().some((x) => x.field === 'active_program_entity'), true);
+    const p = new Editor(); p.setConfig({ type: 'custom:ha-appliance-card', appliance_type: 'printer_3d', state_entity: 'sensor.lave_etat' }); p.hass = HASS({ 'sensor.lave_etat': s('run') });
+    check('editeur : pas sur une imprimante', p._sections().some((x) => x.field === 'active_program_entity'), false); }
+  // A two-speed unit whose button is its speed switch (HACF #150).
+  const vmc = (speed, extra = {}) => render({ appliance_type: 'hrv', hrv_layout: 'single', state_entity: 'switch.vmc', high_speed_entity: 'switch.vit', toggle_entity: 'switch.vit', ...extra },
+    { 'switch.vmc': s('on'), 'switch.vit': s(speed), 'switch.autre': s('on') });
+  check('VMC : petite vitesse', /icon="mdi:fan-speed-1"/.test(vmc('off')), true);
+  check('VMC : grande vitesse', /icon="mdi:fan-speed-2"/.test(vmc('on')), true);
+  check('VMC : plus de marche/arret', /icon="mdi:power"/.test(vmc('on')), false);
+  check('VMC : le nom du bouton dit la vitesse', /title="High speed"|aria-label="High speed"/.test(vmc('on')), true);
+  check('VMC : un autre interrupteur reste marche/arret', /icon="mdi:power"/.test(vmc('on', { toggle_entity: 'switch.autre' })), true);
+  check('VMC : icones choisies, coupe', /icon="mdi:fan-chevron-down"/.test(vmc('off', { toggle_icon: 'mdi:fan-chevron-down', toggle_icon_on: 'mdi:fan-chevron-up' })), true);
+  check('VMC : icones choisies, allume', /icon="mdi:fan-chevron-up"/.test(vmc('on', { toggle_icon: 'mdi:fan-chevron-down', toggle_icon_on: 'mdi:fan-chevron-up' })), true);
+  const lamp = (st) => render({ appliance_type: 'hood', state_entity: 'switch.h', toggle_entity: 'switch.h', toggle_icon_on: 'mdi:fan' }, { 'switch.h': s(st) });
+  check('icone allumee : tout type', /icon="mdi:fan"/.test(lamp('on')), true);
+  check('icone allumee : pas coupe', /icon="mdi:fan"/.test(lamp('off')), false);
+  // A robot that vacuums and mops (#91).
+  const rb = (cfg = {}, state = 'cleaning', extra = {}) => render({ appliance_type: 'robot', state_entity: 'vacuum.r', robot_layout: 'combo', ...cfg }, { 'vacuum.r': s(state), ...extra });
+  check('combo : son modele', /rbt-l-combo/.test(rb()), true);
+  check('combo : la brosse', /class="rbt-brush"/.test(rb()), true);
+  check('combo : le patin', /class="rbt-rb"[^]*class="rbt-pad"/.test(rb()), true);
+  check('combo : le reservoir sur le robot', /class="rbt-rb"[^]*class="rbt-tank"/.test(rb()), true);
+  check('combo : le sol mouille', /class="rbt-trace rbt-t1 rbt-wet"/.test(rb()), true);
+  check('combo : le carrelage par defaut', /rbt-floor rbt-tiles/.test(rb()), true);
+  check('combo : un sol choisi', /rbt-floor rbt-parquet/.test(rb({ robot_floor: 'parquet' })), true);
+  check('combo : la station lave et vide', /class="rbt-mdock"[^]*class="rbt-tk rbt-c"[^]*class="rbt-bin"/.test(rb()), true);
+  check('combo : les bulles', /class="rbt-bubbles"/.test(rb()), true);
+  check('combo : son niveau d\'eau', /class="rbt-rb" style="--lvl: 40%"/.test(rb({ robot_water_entity: 'sensor.w' }, 'cleaning', { 'sensor.w': s('40') })), true);
+  check('combo : les cuves en lignes', /^60\s%$/.test(infoLine(rb({ robot_clean_tank_entity: 'sensor.c' }, 'docked', { 'sensor.c': s('60') }), 'Clean water')), true);
+  check('combo : station boite sans tour', /class="rbt-mdock"/.test(rb({ robot_station: 'box' }, 'docked')), false);
+  check('combo : ses cuves sur la station boite', /class="rbx-lv rbx-c"/.test(rb({ robot_station: 'box' }, 'docked')), true);
+  check('aspirateur : pas de cuves sans entite', /class="rbx-lv rbx-c"/.test(rb({ robot_station: 'box', robot_layout: 'vacuum' }, 'docked')), false);
+  check('combo : le mot juste', stateLine(rb()), 'Cleaning');
+  // What it is set to do (#91).
+  const CM = (id, v, state = 'cleaning') => rb({ robot_clean_mode_entity: id }, state, { [id]: s(v) });
+  const cmOf = (h) => (/class="machine[^"]* rbt-cm-(\w+)/.exec(h) || [])[1];
+  const WET = /class="rbt-trace rbt-t1 rbt-wet"/;
+  for (const [v, want] of [['sweeping', 'vacuum'], ['mopping', 'mop'], ['sweeping_and_mopping', 'both'], ['mopping_after_sweeping', 'both'], ['vacuum_and_mop', 'both'], ['vacuum', 'vacuum'], ['mop', 'mop'], ['mop_after_vacuum', 'both'], ['Aspiration', 'vacuum'], ['Lavage', 'mop'], ['Aspiration et lavage', 'both'], ['Saugen und Wischen', 'both'], ['Wischen', 'mop'], ['Saugen', 'vacuum']]) {
+    check(`mode de nettoyage : ${v}`, cmOf(CM('select.r_cleaning_mode', v)), want);
+  }
+  check('mode : aspiration, sol sec', WET.test(CM('select.r_cleaning_mode', 'sweeping')), false);
+  check('mode : lavage, sol mouille', WET.test(CM('select.r_cleaning_mode', 'mopping')), true);
+  check('mode : les deux, sol mouille', WET.test(CM('select.r_cleaning_mode', 'sweeping_and_mopping')), true);
+  check('mode : un mot inconnu ne change rien', cmOf(CM('select.r_cleaning_mode', 'turbo')), undefined);
+  check('mode : un mot inconnu, sol mouille', WET.test(CM('select.r_cleaning_mode', 'turbo')), true);
+  check('mode : indisponible ne change rien', cmOf(CM('select.r_cleaning_mode', 'unavailable')), undefined);
+  check('mode : une intensite indisponible ne change rien', cmOf(CM('select.r_mop_intensity', 'unavailable')), undefined);
+  check('mode : pas de ligne si indisponible', infoLine(CM('select.r_mop_intensity', 'unavailable'), 'Cleaning mode'), null);
+  check('mode : un mode de serpillere n\'est pas une intensite', cmOf(CM('select.r_mop_mode', 'mop_only')), 'mop');
+  check('mode : both', cmOf(CM('select.r_cleaning_mode', 'both')), 'both');
+  check('mode : combo', cmOf(CM('select.r_cleaning_mode', 'combo')), 'both');
+  check('mode : sans entite, les deux', cmOf(rb()), undefined);
+  check('mode : intensite de serpillere coupee', cmOf(CM('select.r_mop_intensity', 'off')), 'vacuum');
+  check('mode : intensite de serpillere reglee', cmOf(CM('select.r_mop_intensity', 'moderate')), 'both');
+  check('mode : pas sur un autre modele', cmOf(rb({ robot_layout: 'vacuum', robot_clean_mode_entity: 'select.m' }, 'cleaning', { 'select.m': s('mopping') })), undefined);
+  check('mode : en ligne', infoLine(CM('select.r_cleaning_mode', 'mopping'), 'Cleaning mode'), 'mopping');
+  check('mode : pas de ligne sur un autre modele', infoLine(rb({ robot_layout: 'vacuum', robot_clean_mode_entity: 'select.m' }, 'cleaning', { 'select.m': s('mopping') }), 'Cleaning mode'), null);
+  check('mode : la brosse s\'arrete au lavage', /\.rbt-cm-mop\.rbt-m-cleaning \.rbt-rb \.rbt-brush i\{animation:none\}/.test(rb()), true);
+  check('mode : le patin sec a l\'aspiration', /\.rbt-cm-vacuum\.rbt-m-cleaning \.rbt-rb \.rbt-pad\{background:#cfd8dc\}/.test(rb()), true);
+  { const e = new Editor(); e.setConfig({ type: 'custom:ha-appliance-card', appliance_type: 'robot', state_entity: 'vacuum.r', robot_layout: 'combo' }); e.hass = HASS({ 'vacuum.r': s('docked') });
+    check('editeur : le mode sur un combo', e._sections().some((x) => x.field === 'robot_clean_mode_entity'), true);
+    const v = new Editor(); v.setConfig({ type: 'custom:ha-appliance-card', appliance_type: 'robot', state_entity: 'vacuum.r', robot_layout: 'vacuum' }); v.hass = HASS({ 'vacuum.r': s('docked') });
+    check('editeur : pas de mode sur un aspirateur', v._sections().some((x) => x.field === 'robot_clean_mode_entity'), false);
+    const m = new Editor(); m.setConfig({ type: 'custom:ha-appliance-card', appliance_type: 'robot', state_entity: 'vacuum.r', robot_layout: 'combo' });
+    const states = { 'vacuum.r': s('docked'), 'select.r_cleaning_mode': s('mopping') }; const entities = {}; for (const id of Object.keys(states)) entities[id] = { device_id: 'd1', platform: 'x' };
+    m.hass = { ...HASS(states), entities, devices: { d1: { name: 'X' } } };
+    check('remplissage : le mode de nettoyage', m.events?.at(-1)?.detail?.config?.robot_clean_mode_entity, 'select.r_cleaning_mode'); }
+  const vac = render({ appliance_type: 'robot', state_entity: 'vacuum.r', robot_layout: 'vacuum' }, { 'vacuum.r': s('cleaning') });
+  check('aspirateur : ni patin ni reservoir', /class="rbt-pad"|class="rbt-tank"/.test(vac), false);
+  check('aspirateur : pas de sol mouille', /class="rbt-trace/.test(vac), false);
+  check('aspirateur : sa station', /class="rbt-dock"/.test(vac), true);
+  const named = (id) => (/class="machine[^"]* rbt-l-(\w+)/.exec(render({ appliance_type: 'robot', state_entity: id }, { [id]: s('docked') })) || [])[1];
+  for (const id of ['vacuum.roomba_combo_j7', 'vacuum.robot_2_in_1', 'vacuum.aspirateur_laveur', 'vacuum.hybrid_x']) check(`combo : ${id}`, named(id), 'combo');
+  check('nom : un aspirateur reste aspirateur', named('vacuum.roborock_s7'), 'vacuum');
+  check('nom : un laveur reste laveur', named('vacuum.braava_jet'), 'mop');
+  { const e = new Editor(); e.setConfig({ type: 'custom:ha-appliance-card', appliance_type: 'robot', state_entity: 'vacuum.r', robot_layout: 'combo' }); e.hass = HASS({ 'vacuum.r': s('docked') });
+    check('editeur : les cuves du combo', ['robot_clean_tank_entity', 'robot_dirty_tank_entity'].every((f) => e._sections().some((x) => x.field === f)), true); }
 }
 
 if (RECORD) writeFileSync(process.env.HAC_RECORD, JSON.stringify(RECORD));

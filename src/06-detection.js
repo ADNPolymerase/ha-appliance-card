@@ -123,6 +123,7 @@ const TYPE_AUTO_PATTERNS = {
     // Roborock's water_box_attached is on while the box is in place, its
     // dirty_box_full the wrong tank.
     robot_water_entity: /^(?!.*(attached|carriage|dirty)).*(water_?(shortage|box|tank|level)|low_?water|mop_?water|clean_?water|(^|[._])tank_level)/i,
+    robot_clean_mode_entity: /clean\w*.?mode|mode.?(de.?)?nettoy|reinigungs.?modus/i,
     robot_error_entity: /error|erreur|fault/i,
     robot_rain_entity: /rain|pluie|regen/i,
   },

@@ -1219,6 +1219,8 @@ const rbtBox = robot("Deebot", "vacuum.deebot", "docked", { battery_level: 100 }
   [st("sensor.deebot_clean_water", 70, { unit_of_measurement: "%" }), st("sensor.deebot_dirty_water", 30, { unit_of_measurement: "%" })]);
 const rbtBoxGold = robot("Dreame", "vacuum.dreame", "docked", { battery_level: 96, status: "Emptying the bin" },
   { robot_station: "box", robot_station_color: "gold", robot_camera: true });
+const rbtCombo = robot("Roomba Combo", "vacuum.roomba_combo", "cleaning", { battery_level: 66 }, { robot_water_entity: "sensor.combo_water" },
+  [st("sensor.combo_water", 60, { unit_of_measurement: "%" })]);
 const rbtDrying = robot("Braava", "vacuum.braava", "docked", { battery_level: 100 }, { robot_status_entity: "sensor.braava_status" },
   [st("sensor.braava_status", "drying_mop")]);
 const rbtMower = robot("Landroid", "lawn_mower.landroid", "mowing", {}, { battery_entity: "sensor.landroid_battery" },
@@ -1664,7 +1666,7 @@ function liveGallery() {
     [L("Kitchen", "Cuisine"), [dishwasher, oven, microwave, hood, cooktop, fridge, kettle, cooker, coffee, coffeeBlack, riceCooker, airFryer, toaster]],
     [L("Heating and climate", "Chauffage et climat"), [waterHeater, boiler, boilerWindow, boilerThermo, thSquare, thRound, thGlass, thValve, heatPump, pelletStove, spaceHeater, towelWarmer, towelPanel, airConditioner, dehumidifier, humidifier, humidifierNight, humidifierEmpty, humidifierLifted]],
     [L("Air purifiers and fans", "Purificateurs et ventilateurs"), [purifier, boxPurifier, ringPurifier, fan, ceilingFan]],
-    [L("Robots and vacuums", "Robots et aspirateurs"), [rbtVacuum, rbtEmptying, rbtBox, rbtBoxGold, rbtMop, rbtDrying, rbtMower, rbtNavimow, rbtRain, rbtStick, rbtWasher]],
+    [L("Robots and vacuums", "Robots et aspirateurs"), [rbtVacuum, rbtEmptying, rbtBox, rbtBoxGold, rbtMop, rbtCombo, rbtDrying, rbtMower, rbtNavimow, rbtRain, rbtStick, rbtWasher]],
     [L("Electric rides", "Mobilit\u00e9 \u00e9lectrique"), [demo_mobScooter, demo_mobOffroad, demo_mobEbike, demo_mobGyropode, demo_mobMotorcycle, demo_mobUnplugged]],
     [L("Pool", "Piscine"), [poolRunning, poolChlorine, poolBackwash, poolFrost, poolLight, poolError]],
     [L("Buffer tanks, circulators, solar thermal and wood stoves", "Ballons, circulateurs, solaire thermique et po\u00eales \u00e0 bois"), [heatTank, heatTankLoading, heatTankLow, heatFws, heatFwsDraw, heatFwsCirc, heatCirc, heatCircWilo, heatCircFault, heatCircNoData, heatSth, heatSthTubes, heatSthFrost, heatSthStag, heatWood, heatWoodEmbers, heatWoodCold, heatWoodWater]],
