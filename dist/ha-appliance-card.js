@@ -1,5 +1,5 @@
 // Built by tools/build.mjs from the files of src/: edit those, not this file.
-const CARD_VERSION = "4.15.0";
+const CARD_VERSION = "4.15.1";
 
 console.info(
   "%c HA-APPLIANCE-CARD %c v" + CARD_VERSION + " ",
@@ -8221,7 +8221,8 @@ class ApplianceCard extends HTMLElement {
       return this._hass.callService(domain, "select_option", { entity_id: entityId, option });
     }
     // A humidifier's setpoint, from its slider (#89).
-    if (domain === "humidifier" && opts && opts.value !== undefined) {
+    // A button sends no value, which reads as null: its power button is a toggle (#94).
+    if (domain === "humidifier" && opts && opts.value !== undefined && opts.value !== null && opts.value !== "") {
       return this._hass.callService("humidifier", "set_humidity", { entity_id: entityId, humidity: Number(opts.value) });
     }
     if (domain === "number" || domain === "input_number") {
@@ -8238,7 +8239,7 @@ class ApplianceCard extends HTMLElement {
     if (READ_ONLY_DOMAINS.includes(domain)) return this._moreInfo(entityId);
     if (domain === "button" || domain === "input_button") {
       this._hass.callService(domain, "press", { entity_id: entityId });
-    } else if (["switch", "input_boolean", "fan", "light", "valve"].includes(domain)) {
+    } else if (["switch", "input_boolean", "fan", "light", "valve", "humidifier"].includes(domain)) {
       this._hass.callService(domain, "toggle", { entity_id: entityId });
     } else if (domain === "script") {
       this._hass.callService("script", "turn_on", { entity_id: entityId });
