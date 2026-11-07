@@ -13815,5 +13815,16 @@ function tvT(w) { return { 'switch.tv': { state: 'on', attributes: {} }, 'sensor
   check('detection : une boite suffit', ed({ ams_entities: ['sensor.t'] })._type, 'printer_3d');
 }
 
+// ── A humidifier's power button is a toggle, not a setpoint of 0 (#94) ──
+{
+  const calls = []; const c = new Card(); c._hass = { states: {}, callService: (...a) => calls.push(a) };
+  const last = (opts) => { calls.length = 0; c._call('humidifier.h', opts); return calls[0]; };
+  check('humidificateur : le bouton (valeur nulle) bascule', JSON.stringify(last({ option: null, value: null })), JSON.stringify(['humidifier', 'toggle', { entity_id: 'humidifier.h' }]));
+  check('humidificateur : le bouton (valeur vide) bascule', last({ value: '' })[1], 'toggle');
+  check('humidificateur : le bouton sans rien bascule', last()[1], 'toggle');
+  check('humidificateur : le curseur regle la consigne', JSON.stringify(last({ value: 55 })), JSON.stringify(['humidifier', 'set_humidity', { entity_id: 'humidifier.h', humidity: 55 }]));
+  check('humidificateur : le curseur a 0 reste une consigne', last({ value: 0 })[1], 'set_humidity');
+}
+
 if (RECORD) writeFileSync(process.env.HAC_RECORD, JSON.stringify(RECORD));
 report();
