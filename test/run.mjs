@@ -13826,5 +13826,22 @@ function tvT(w) { return { 'switch.tv': { state: 'on', attributes: {} }, 'sensor
   check('humidificateur : le curseur a 0 reste une consigne', last({ value: 0 })[1], 'set_humidity');
 }
 
+// ── The speed button follows the motor (HACF #157), Line-in said once (#95) ──
+{
+  const T0L = Date.now();
+  const s = (state, attributes = {}) => ({ state, attributes: { ...attributes }, last_changed: new Date(T0L - 3600000).toISOString() });
+  const vmc = (motor, extra = {}) => render({ appliance_type: 'hrv', hrv_layout: 'single', state_entity: 'switch.moteur', high_speed_entity: 'switch.vit', toggle_entity: 'switch.vit', ...extra },
+    { 'switch.moteur': s(motor), 'switch.vit': s('on'), 'switch.p': s('off') });
+  const btn = (h) => /data-key="toggle"|icon="mdi:fan-speed-\d"/.test(h.split('</style>').pop());
+  check('VMC : moteur allume, bouton de vitesse', btn(vmc('on')), true);
+  check('VMC : moteur coupe, pas de bouton de vitesse', btn(vmc('off')), false);
+  check('VMC : un bouton marche/arret reste, moteur coupe', /icon="mdi:power"/.test(vmc('off', { toggle_entity: 'switch.p' }).split('</style>').pop()), true);
+  const spk = (title, source) => render({ appliance_type: 'speaker', state_entity: 'media_player.s' }, { 'media_player.s': s('paused', { device_class: 'speaker', media_title: title, source }) });
+  check('enceinte : Line-in une seule fois', infoLine(spk('Line-in', 'Line-in'), 'Source'), null);
+  check('enceinte : Line-in garde son titre', infoLine(spk('Line-in', 'Line-in'), 'Title'), 'Line-in');
+  check('enceinte : casse differente', infoLine(spk('Line-in', 'line-in'), 'Source'), null);
+  check('enceinte : source differente gardee', infoLine(spk('Song', 'Spotify'), 'Source'), 'Spotify');
+}
+
 if (RECORD) writeFileSync(process.env.HAC_RECORD, JSON.stringify(RECORD));
 report();
