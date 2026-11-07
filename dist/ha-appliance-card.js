@@ -1,5 +1,5 @@
 // Built by tools/build.mjs from the files of src/: edit those, not this file.
-const CARD_VERSION = "4.14.0";
+const CARD_VERSION = "4.15.0";
 
 console.info(
   "%c HA-APPLIANCE-CARD %c v" + CARD_VERSION + " ",
@@ -50,7 +50,7 @@ const T = {
     pause_entity: "Pause button entity",
     resume_entity: "Resume button entity",
     stop_entity: "Stop / reset button entity",
-    section_program: "Program", section_active_program: "Running program", section_remaining: "Remaining time",
+    section_program: "Program", type_filament_dryer: "Filament dryer", fd_drying: "Drying", section_spool_count: "Spools", section_printer_style: "Printer model", printer_style_classic: "Simple drawing", printer_style_bambu_x: "Enclosed, Bambu P1S / X1 style", printer_style_elegoo_c: "Enclosed, Elegoo Centauri style", printer_style_bambu_a: "Open, Bambu A1 style", printer_style_elegoo_n: "Open, Elegoo Neptune style", ams_box: "Filament box", ams_spool: "Spool", section_ams_list: "Spools in the box", ams_add: "Add a spool", section_ams_position: "Box position", ams_position_side: "Beside the printer", ams_position_top: "On top of the printer", section_active_program: "Running program", section_remaining: "Remaining time",
     section_ready_at: "Ready at",
     section_progress: "Progress % (override)", section_door: "Door sensor",
     section_alerts: "Alerts", section_connectivity: "Connectivity",
@@ -2486,6 +2486,9 @@ const ENTITY_LISTS = [
     domains: ["binary_sensor", "sensor"], offers: isAlertCandidate, icon: alertIcon },
   { panel: "corners", field: "corner_entities", max: CORNERS_MAX, title: "section_corner_list", add: "corners_add",
     domains: ["switch", "input_boolean", "lock", "light", "fan"], offers: isCornerCandidate, icon: cornerIcon },
+  // A filament box beside a 3D printer (#93): one entity per spool.
+  { panel: "ams", field: "ams_entities", max: 4, title: "section_ams_list", add: "ams_add", types: ["printer_3d"],
+    domains: ["sensor", "select", "input_text"], offers: (hass, id) => /tray|spool|bobine|ams/.test(id), icon: () => "mdi:printer-3d-nozzle-outline" },
   // A ventilation unit run by one entity per speed (#78), in order.
   { panel: "speeds", field: "speed_entities", max: 6, title: "section_speed_list", add: "speeds_add", types: ["hrv"],
     domains: ["input_boolean", "switch", "light"], offers: (hass, id) => ["input_boolean", "switch", "light"].includes(domainOf(id)), icon: () => "mdi:fan" },
@@ -2646,6 +2649,7 @@ const TYPE_AUTO_PATTERNS = {
     light_entity: /light|lamp|led/i,
   },
   sauna: { temperature_entity: /temp/i },
+  filament_dryer: { temperature_entity: /temp/i, humidity_entity: /humid|hygro/i, remaining_time_entity: /remain|time_left|restant/i },
   floor_heating: { temperature_entity: /temp/i },
   aquarium: { temperature_entity: /temp|^climate\./i },
   mobility: { battery_entity: /batter|akku|(^|[._])soc([._]|$)/i },
@@ -2851,6 +2855,8 @@ const TYPE_AUTO_PATTERNS = {
     chamber_temperature_entity: /^sensor\.(?!.*target).*(chamber|box|enclosure).*temp/i,
     current_layer_entity: /current_layer|working_layer/i,
     total_layers_entity: /total_layer/i,
+    ams_humidity_entity: /^sensor\..*ams.*humidity(?!.?index)/i,
+    ams_drying_entity: /^binary_sensor\..*ams.*drying/i,
     light_entity: /^(light|switch)\..*(light|led)/i,
     start_entity: /^(button|script)\.(?!.*restart).*start/i,
     pause_entity: /^(button|script)\..*pause/i,
@@ -3334,6 +3340,7 @@ const TYPE_CAPS = {
   floor_heating: { ntFloor: true },
   spa: { ntSpa: true },
   sauna: { ntSauna: true },
+  filament_dryer: { ntDryer: true },
   aquarium: { ntAqua: true },
   meter: { ntMeter: true, readOnly: true },
   christmas_tree: { ntTree: true },
@@ -3455,6 +3462,7 @@ const STATE_DOMAINS = {
   floor_heating: ["climate", "switch", "input_boolean", "binary_sensor"],
   spa: ["climate", "water_heater", "switch", "input_boolean", "binary_sensor"],
   sauna: ["climate", "switch", "input_boolean", "binary_sensor"],
+  filament_dryer: ["switch", "sensor", "binary_sensor", "input_boolean", "climate", "select"],
   aquarium: ["light", "switch", "input_boolean"],
   meter: ["sensor"],
   christmas_tree: ["light", "switch", "input_boolean"],
@@ -3521,6 +3529,11 @@ const PRINTER_ONLY_FIELDS = [
   "total_layers_entity",
   "printer_layout",
   "printed_part",
+  "printer_style",
+  "ams_entities",
+  "ams_position",
+  "ams_humidity_entity",
+  "ams_drying_entity",
 ];
 
 // The compact modes: "hide" draws no appliance, the card's original compact
@@ -3571,7 +3584,7 @@ const TYPE_GROUPS = [
   ["kitchen", ["dishwasher", "oven", "microwave", "hood", "cooktop", "fridge", "kettle", "cooker", "coffee", "rice_cooker", "air_fryer", "toaster"]],
   ["heating", ["water_heater", "boiler", "heat_pump", "thermostat", "pellet_stove", "space_heater", "towel_warmer", "floor_heating", "storage_tank", "fresh_water_station", "wood_stove"]],
   ["air", ["air_conditioner", "dehumidifier", "humidifier", "air_purifier", "fan", "diffuser", "hrv"]],
-  ["home", ["screen", "iron", "hair_dryer", "printer_3d", "robot", "pool_pump", "scale", "camera", "lamp", "mailbox", "water_pump", "spa", "sauna", "aquarium", "christmas_tree", "mobility", "irrigation", "detector", "speaker", "console"]],
+  ["home", ["screen", "iron", "hair_dryer", "printer_3d", "filament_dryer", "robot", "pool_pump", "scale", "camera", "lamp", "mailbox", "water_pump", "spa", "sauna", "aquarium", "christmas_tree", "mobility", "irrigation", "detector", "speaker", "console"]],
   ["energy", ["solar", "solar_thermal", "home_battery", "ev_charger", "meter"]],
   ["pets", ["pet_feeder", "pet_fountain", "litter_box"]],
   ["network", ["network", "ups"]],
@@ -3948,7 +3961,7 @@ const HD_HIGH_W = 1200;
 const PLUG_THRESHOLDS = {
   washer: 10, dryer: 10, dishwasher: 10, oven: 50, microwave: 50, cooker: 20, coffee: 200, rice_cooker: 100,
   air_fryer: 50, kettle: 50, toaster: 50, water_heater: 50, space_heater: 30, towel_warmer: 10, dehumidifier: 30, humidifier: 5,
-  air_purifier: 3, fan: 3, hood: 5, pool_pump: 50, printer_3d: 30, cooktop: 50, pet_fountain: 1,
+  air_purifier: 3, fan: 3, hood: 5, pool_pump: 50, printer_3d: 30, filament_dryer: 15, cooktop: 50, pet_fountain: 1,
   spa: 50, sauna: 100, aquarium: 3, water_pump: 30, floor_heating: 30, christmas_tree: 2, iron: 10, mobility: 40, irrigation: 3, litter_box: 5, speaker: 3, console: 8,
 };
 // A coffee machine or a rice cooker drawing more than this, under its
@@ -4346,6 +4359,41 @@ function robotModeOf(hass, cfg, st, layout) {
 // from any on and off entity, an input_boolean or a date-driven automation.
 function robotWinter(hass, cfg) {
   return cfg.robot_winter === true || (!!cfg.robot_winter_entity && robotRaised(hass, cfg.robot_winter_entity, /winter|hiver/));
+}
+
+// The printers drawn after real ones (#93): chosen, or from the model's name.
+const PRINTER_STYLES = ["bambu_x", "elegoo_c", "bambu_a", "elegoo_n"];
+function printerStyleOf(cfg, st) {
+  if (PRINTER_STYLES.includes(cfg.printer_style)) return cfg.printer_style;
+  if (cfg.printer_style === "classic") return "";
+  const hay = stripAccents(`${cfg.state_entity || ""} ${cfg.name || ""} ${(st && st.attributes && st.attributes.friendly_name) || ""}`).toLowerCase();
+  const style = /(^|[._\s-])a1([._\s-]|$)|a1.?mini/.test(hay) ? "bambu_a"
+    : /bambu|(^|[._\s-])(p1s|p1p|p2s|x1|x1c|x1e|x1.?carbon|h2d|h2s)([._\s-]|$)/.test(hay) ? "bambu_x"
+    : /centauri/.test(hay) ? "elegoo_c"
+    : /neptune/.test(hay) ? "elegoo_n" : "";
+  // A layout set by hand wins over a guess that contradicts it.
+  const open = style === "bambu_a" || style === "elegoo_n";
+  if (style && ((cfg.printer_layout === "open" && !open) || (cfg.printer_layout === "enclosed" && open))) return "";
+  return style;
+}
+// A filament box beside a printer (#93): one entity per spool. Bambu Lab keeps
+// color, empty and active in attributes, Spoolman its filament_color_hex.
+function spoolColorOf(a) {
+  const c = String(a.color ?? a.filament_color_hex ?? a.color_hex ?? a.hex_color ?? "").trim();
+  const m = /^#?([0-9a-f]{6})([0-9a-f]{2})?$/i.exec(c);
+  return m ? `#${m[1]}` : "#9e9e9e";
+}
+function printerAmsOf(hass, cfg) {
+  const entries = entityEntries(cfg.ams_entities, 4);
+  if (!entries.length) return null;
+  const slots = entries.map((e) => {
+    const st = stateObj(hass, e.entity);
+    const a = (st && st.attributes) || {};
+    const raw = st ? String(st.state).trim().toLowerCase() : "";
+    const empty = !st || a.empty === true || ["empty", "none", "unknown", "unavailable", ""].includes(raw);
+    return { entity: e.entity, empty, color: empty ? "" : spoolColorOf(a), on: !empty && (a.active === true || a.in_use === true) };
+  });
+  return { slots, pos: cfg.ams_position === "top" ? "top" : "side", active: slots.find((x) => x.on) || null, drying: !!cfg.ams_drying_entity && robotRaised(hass, cfg.ams_drying_entity, /dry|sech/) };
 }
 
 // What a robot that does both is set to do (#91): Dreame's cleaning_mode says
@@ -5237,7 +5285,10 @@ function lampSpotsOf(cfg, st) {
 // sauna, an aquarium, a Linky meter and a Christmas tree. Drawn in SVG on a 120 x 135 field; what
 // moves moves only on a machine carrying nt-on, staggered through --d0, and
 // the robot's cable and the sump's float follow their SMIL animations.
-const NT_TYPES = ["water_pump", "floor_heating", "spa", "sauna", "aquarium", "meter", "christmas_tree", "mobility", "irrigation", "litter_box", "detector", "speaker", "console", "storage_tank", "fresh_water_station", "solar_thermal", "wood_stove", "humidifier"];
+const NT_TYPES = ["water_pump", "floor_heating", "spa", "sauna", "aquarium", "meter", "christmas_tree", "mobility", "irrigation", "litter_box", "detector", "speaker", "console", "storage_tank", "fresh_water_station", "solar_thermal", "wood_stove", "humidifier", "filament_dryer"];
+// How many spools a filament dryer holds (#93).
+const FD_COUNTS = [1, 2, 4];
+const FD_COLORS = ["#43a047", "#fb8c00", "#8e24aa", "#eceff1"];
 const CONSOLE_LAYOUTS = ["ps1", "ps2", "ps3", "ps4", "ps4_pro", "ps5", "xbox", "xbox_360", "xbox_one", "xbox_series_x", "xbox_series_s", "switch", "switch_2", "switch_lite", "ps_vita", "nes", "snes", "n64", "gamecube", "wii", "megadrive"];
 const IRRIGATION_LAYOUTS = ["sprinkler", "tap", "drip", "flowers"];
 // A tap timer: the generic one or Sonoff's, on a brick wall, white render or
@@ -5253,6 +5304,7 @@ const CIRC_MODELS = ["grundfos", "wilo", "dab", "generic"];
 const FLOOR_LAYOUTS = ["water", "electric"];
 const HUMIDIFIER_ONLY_FIELDS = ["mist_level_entity", "low_water_entity", "tank_lifted_entity", "night_light_entity"];
 const NT_ONLY_FIELDS = {
+  filament_dryer: ["spool_count", "spool_colors"],
   humidifier: HUMIDIFIER_ONLY_FIELDS,
   water_pump: ["pump_layout", "pressure_entity", "level_entity", "high_level_entity", "level_max", "head_entity", "control_mode_entity", "circulator_model", "max_speed"],
   floor_heating: ["floor_layout"],
@@ -5338,6 +5390,7 @@ function optLines(hass, cfg, type) {
 // By name, in the languages the card speaks; "whirlpool" is left out, it is a
 // maker of washing machines too.
 const NT_NAME_RES = [
+  ["filament_dryer", /filament.?dry|dry.?box|filament.?(trockner|droger)|sech\w*.?(de.?)?(filament|bobine)|space.?pi|sunlu.?(s[124]|fd)|polydryer|filadryer/],
   // Not its domain alone, humidifier.basement may well dry the basement.
   ["humidifier", /^(?!.*(dehumid|deshumid|entfeucht|deumidif|ontvocht|avfukt|affugt|osuszacz|odvlh)).*(humidifier(?!\.)|humidificateur|luftbefeuchter|humidificador|umidificatore|luchtbevochtiger|luftfuktare|luftfukter|luftfugter|nawilzacz|zvlhcovac|\u52a0\u6e7f)/],
   ["fresh_water_station", /frischwasser|fresh.?water.?(station|module)|freshwater|station.?(d.?)?eau.?(fraiche|chaude)|module.?(d.?)?eau.?chaude|(^|[^a-z])fws([^a-z]|$)/],
@@ -5645,6 +5698,15 @@ function speakerColorOf(cfg, st) {
   if (cfg.illustration_color === "grey") return "silver";
   return "";
 }
+// A tank humidifier (#89), its body a soft squircle seen from just above: a
+// white base with its display and buttons, a smoked tank tapering upwards with
+// its water, its tube and its night light, the mist rising from the nozzle.
+// What a filament dryer holds: its spools and their colours.
+function fdLook(cfg) {
+  const n = parseInt(cfg.spool_count, 10);
+  const list = Array.isArray(cfg.spool_colors) ? cfg.spool_colors.filter((c) => /^#[0-9a-f]{3,8}$/i.test(String(c))) : [];
+  return { count: FD_COUNTS.includes(n) ? n : 2, colors: list.length ? list : FD_COLORS };
+}
 const NT_COLORS = { off: "var(--disabled-text-color, #9e9e9e)", idle: "var(--secondary-text-color, #727272)", run: "#1e88e5",
   heat: "#f4511e", alarm: "#e53935", lit: "#43a047", high: "#e53935", unav: "var(--disabled-text-color, #9e9e9e)" };
 // How a remaining time reads on the robot's power supply: seconds, minutes or
@@ -5674,10 +5736,10 @@ function ntReadOf(type, hass, cfg, st, watts, threshold) {
   const out = (mode, labelKey, color, draw) => ({ mode, label: t(hass, labelKey), color, lines, draw: { ...draw, unav } });
   if (unav) {
     const ml = meterLayoutOf(cfg, st);
-    const kinds = { humidifier: "humidifier", water_pump: pumpLayoutOf(cfg, st), floor_heating: "floor", spa: "spa", sauna: "sauna", aquarium: "aquarium", meter: ml === "linky" ? "linky" : `meter_${ml}`, christmas_tree: "tree", mobility: `mob_${mobilityLayoutOf(cfg, st)}`,
+    const kinds = { filament_dryer: "dryer", humidifier: "humidifier", water_pump: pumpLayoutOf(cfg, st), floor_heating: "floor", spa: "spa", sauna: "sauna", aquarium: "aquarium", meter: ml === "linky" ? "linky" : `meter_${ml}`, christmas_tree: "tree", mobility: `mob_${mobilityLayoutOf(cfg, st)}`,
       irrigation: `irr_${irrigationLayoutOf(cfg, st)}`, litter_box: `lit_${litterLayoutOf(cfg, st)}`, detector: `det_${detectorLayoutOf(cfg, st)}`, speaker: `spk_${speakerLayoutOf(cfg, st)}`, console: `con_${consoleLayoutOf(cfg, st)}` };
     return out("unav", "ev_offline", NT_COLORS.unav, { kind: kinds[type], on: false, electric: floorLayoutOf(cfg) === "electric", model: type === "water_pump" ? circModelOf(cfg, st) : "",
-      palette: cfg.tree_palette, presents: type === "christmas_tree" && treePresents(cfg), color: type === "speaker" ? speakerColorOf(cfg, st) : "" });
+      palette: cfg.tree_palette, ...(type === "filament_dryer" ? fdLook(cfg) : {}), presents: type === "christmas_tree" && treePresents(cfg), color: type === "speaker" ? speakerColorOf(cfg, st) : "" });
   }
   if (type === "irrigation") {
     // Watering while its valve or switch is on; waiting otherwise, or held
@@ -5955,6 +6017,17 @@ function ntReadOf(type, hass, cfg, st, watts, threshold) {
     const lcd = layout === "sump" ? levelText || "" : pressure || (cfg.power_entity && watts !== null ? `${Math.round(watts)} W` : "");
     if (alarm) return out("alarm", "wp_high", NT_COLORS.alarm, { kind: "sump", on, alarm, level, lcd });
     return out(on ? "run" : "idle", on ? "wp_pumping" : "ac_idle", on ? NT_COLORS.run : NT_COLORS.idle, { kind: layout, on, alarm: false, level, lcd });
+  }
+  if (type === "filament_dryer") {
+    const isOff = !dead && raw === "off" && !(cfg.power_entity && watts !== null && watts >= threshold);
+    if (tmp) lines.push({ key: "nt_temp", icon: "mdi:thermometer", label: t(hass, "temperature"), value: keepTogether(tmp.text), entity: cfg.temperature_entity || cfg.state_entity });
+    const hum = ntLine(hass, cfg, "nt_humidity", "mdi:water-percent", "ac_line_humidity", cfg.humidity_entity);
+    if (hum) lines.push(hum);
+    const drying = !isOff && (!!running || /dry|heat|sech|trock/.test(raw));
+    const hv = cfg.humidity_entity ? numericState(hass, cfg.humidity_entity) : null;
+    const draw = { kind: "dryer", on: drying, ...fdLook(cfg), lcd: tmp ? tmp.text : "", hum: hv === null ? "" : `${Math.round(hv)}%` };
+    if (isOff) return out("off", "ac_off", NT_COLORS.off, draw);
+    return drying ? out("drying", "fd_drying", NT_COLORS.heat, draw) : out("idle", "ac_idle", NT_COLORS.idle, draw);
   }
   if (type === "floor_heating" || type === "sauna") {
     const isOff = !dead && raw === "off" && !(cfg.power_entity && watts !== null && watts >= threshold);
@@ -8466,7 +8539,7 @@ class ApplianceCard extends HTMLElement {
       // the appliance goes idle) don't show a leftover "remaining time".
       // A printer keeps its last job's times once it is done with it, so it
       // hides them outside a job unless told otherwise; a pause is still one.
-      const hideIdle = cfg.remaining_time_hide_when_idle !== undefined ? cfg.remaining_time_hide_when_idle : !!cap.printer3d;
+      const hideIdle = cfg.remaining_time_hide_when_idle !== undefined ? cfg.remaining_time_hide_when_idle : !!cap.printer3d || !!cap.ntDryer;
       if (!hideIdle || isActiveState(norm) || (cap.printer3d && norm === "paused")) {
         remSec = remainingSeconds(hass, cfg.remaining_time_entity, cfg.remaining_time_unit);
       }
@@ -9318,8 +9391,21 @@ class ApplianceCard extends HTMLElement {
       if (nozzle.cur !== null) displayText = screenTemp(hass, cfg, nozzle.entity, nozzle.cur);
 
       const job = isActiveState(norm) || norm === "paused" || norm === "error";
+      const pStyle = printerStyleOf(cfg, st);
+      const ams = printerAmsOf(hass, cfg);
+      if (ams && ams.active) {
+        const as = stateObj(hass, ams.active.entity);
+        extraLines.push({ key: "ams_spool", icon: "mdi:printer-3d-nozzle-outline", label: t(hass, "ams_spool"), value: formatInfoValue(as, hass, null, cfg, ams.active.entity), entity: ams.active.entity });
+      }
+      if (cfg.ams_humidity_entity && ams) {
+        const hs = stateObj(hass, cfg.ams_humidity_entity);
+        if (hs && !HA_OFFLINE_STATES.includes(String(hs.state).toLowerCase())) extraLines.push({ key: "ams_humidity", icon: "mdi:water-percent", label: t(hass, "ac_line_humidity"), value: keepTogether(formatInfoValue(hs, hass, null, cfg, cfg.ams_humidity_entity)), entity: cfg.ams_humidity_entity });
+      }
+      if (ams && ams.drying) extraLines.push({ key: "ams_drying", icon: "mdi:heat-wave", label: t(hass, "ams_box"), value: t(hass, "fd_drying"), entity: cfg.ams_drying_entity });
       p3 = {
-        layout: cfg.printer_layout === "open" ? "open" : "enclosed",
+        layout: pStyle ? (pStyle === "bambu_a" || pStyle === "elegoo_n" ? "open" : "enclosed") : cfg.printer_layout === "open" ? "open" : "enclosed",
+        style: pStyle,
+        ams,
         part: ["pyramid", "duck"].includes(cfg.printed_part) ? cfg.printed_part : "cube",
         // The part on the bed grows with the job, and stays whole once done.
         height: norm === "done" ? 1 : norm === "error" ? (reached || 0) / 100 : (progressPct || 0) / 100,
@@ -12568,7 +12654,7 @@ function loadEditor() {
   if (customElements.get("ha-appliance-card-editor")) return Promise.resolve();
   if (!editorLoading) {
     editorLoading = import(assetUrl("ha-appliance-card-editor.js"))
-      .then((m) => m.default({ t, onLanguageLoaded, LANGUAGE_NAMES, localizedHass, activationOf, TH_LAYOUTS, EV_POWER_THRESHOLD, stateObj, parseValueMap, stringifyValueMap, alertsArray, LIST_OTHER, ENTITY_LISTS, listCandidates, defaultCardName, stripDeviceName, domainOf, INFO_MAX, autoSuggest, APPLIANCE_TYPES, STATE_DOMAINS, SCREEN_ONLY_FIELDS, illustrationSizeOf, fontScaleOf, compactModeOf, TYPE_GROUPS, caps, detectApplianceType, SCREEN_STANDBY_W, SCREEN_LAYOUTS, SCREEN_IMAGES, screenLayoutOf, screenIsTablet, HD_HEAT_W, PLUG_THRESHOLDS, ZONE_POWER_W, PLUG_SOURCE_TYPES, plugSourceOf, DW_DRY_MIN, WASH_HEAT_W, WASH_SPIN_W, DRYER_HEAT_W, NET_LAYOUTS, SWITCH_PORTS, NET_BAYS, NET_BUSY_MBIT, NET_TEMP_ALERT, netLayoutOf, ROBOT_LAYOUTS, ROBOT_STATIONS, ROBOT_BOX_COLORS, ROBOT_FLOORS, ROBOT_SERVICES, STICK_AWAY_W, robotLayoutOf, POOL_PRESSURE_ALERT, SOLAR_LAYOUTS, BATTERY_LAYOUTS, BATTERY_IDLE_W, DIFFUSER_LAYOUTS, illustrationTapOf, UNIT_FILTERS, HRV_LAYOUTS, hrvLayoutOf, CAMERA_LAYOUTS, MAILBOX_LAYOUTS, MAILBOX_SIDES, mailboxLayoutOf, MAILBOX_COLORS_3D, LAMP_LAYOUTS, LAMP_SPOTS, lampLayoutOf, CONSOLE_LAYOUTS, IRRIGATION_LAYOUTS, TAP_MODELS, TAP_WALLS, LITTER_LAYOUTS, DETECTOR_LAYOUTS, SPEAKER_LAYOUTS, MOBILITY_LAYOUTS, PUMP_LAYOUTS, CIRC_MODELS, FLOOR_LAYOUTS, OPT_LINES, METER_LAYOUTS, meterLayoutOf, irrigationLayoutOf, detectorLayoutOf, TREE_PALETTES, TREE_PRESENTS, pumpLayoutOf, SPK_COLORS, COLLECTOR_STYLES, UPS_BATTERY_LOW, HISTORY_HOURS, BODY_COLORS, esc, MOWER_STYLES, SHELTER_STYLES, SHELTER_COLORS, LAPTOP_COLORS, LAPTOP_STYLES, drawn, stateFreeSource }))
+      .then((m) => m.default({ t, onLanguageLoaded, LANGUAGE_NAMES, localizedHass, activationOf, TH_LAYOUTS, EV_POWER_THRESHOLD, stateObj, parseValueMap, stringifyValueMap, alertsArray, entityEntries, LIST_OTHER, ENTITY_LISTS, listCandidates, defaultCardName, stripDeviceName, domainOf, INFO_MAX, autoSuggest, APPLIANCE_TYPES, STATE_DOMAINS, SCREEN_ONLY_FIELDS, illustrationSizeOf, fontScaleOf, compactModeOf, TYPE_GROUPS, caps, detectApplianceType, SCREEN_STANDBY_W, SCREEN_LAYOUTS, SCREEN_IMAGES, screenLayoutOf, screenIsTablet, HD_HEAT_W, PLUG_THRESHOLDS, ZONE_POWER_W, PLUG_SOURCE_TYPES, plugSourceOf, DW_DRY_MIN, WASH_HEAT_W, WASH_SPIN_W, DRYER_HEAT_W, NET_LAYOUTS, SWITCH_PORTS, NET_BAYS, NET_BUSY_MBIT, NET_TEMP_ALERT, netLayoutOf, ROBOT_LAYOUTS, ROBOT_STATIONS, ROBOT_BOX_COLORS, ROBOT_FLOORS, ROBOT_SERVICES, STICK_AWAY_W, robotLayoutOf, PRINTER_STYLES, printerStyleOf, POOL_PRESSURE_ALERT, SOLAR_LAYOUTS, BATTERY_LAYOUTS, BATTERY_IDLE_W, DIFFUSER_LAYOUTS, illustrationTapOf, UNIT_FILTERS, HRV_LAYOUTS, hrvLayoutOf, CAMERA_LAYOUTS, MAILBOX_LAYOUTS, MAILBOX_SIDES, mailboxLayoutOf, MAILBOX_COLORS_3D, LAMP_LAYOUTS, LAMP_SPOTS, lampLayoutOf, FD_COUNTS, CONSOLE_LAYOUTS, IRRIGATION_LAYOUTS, TAP_MODELS, TAP_WALLS, LITTER_LAYOUTS, DETECTOR_LAYOUTS, SPEAKER_LAYOUTS, MOBILITY_LAYOUTS, PUMP_LAYOUTS, CIRC_MODELS, FLOOR_LAYOUTS, OPT_LINES, METER_LAYOUTS, meterLayoutOf, irrigationLayoutOf, detectorLayoutOf, TREE_PALETTES, TREE_PRESENTS, pumpLayoutOf, SPK_COLORS, COLLECTOR_STYLES, UPS_BATTERY_LOW, HISTORY_HOURS, BODY_COLORS, esc, MOWER_STYLES, SHELTER_STYLES, SHELTER_COLORS, LAPTOP_COLORS, LAPTOP_STYLES, drawn, stateFreeSource }))
       .catch((err) => {
         editorLoading = null;
         throw err;

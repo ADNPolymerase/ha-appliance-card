@@ -2175,9 +2175,42 @@ ${c.mode ? `<text x="60" y="70" font-size="5.5" text-anchor="middle" fill="#9fb3
 ${c.nodata ? `<g transform="translate(78 26)"><circle r="6" fill="#607d8b"/><path d="M-2.6 -3 l5.2 6 M2.6 -3 l-5.2 6" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/></g>` : ""}
 ${c.fault ? `<g transform="translate(80 26)" class="nta-blinkfast"><path d="M0 -6.5 L6.5 5 H-6.5 Z" fill="#ff3b30" stroke="#fff" stroke-width=".8"/><text y="3.6" font-size="7" font-weight="700" text-anchor="middle" fill="#fff" ${NT_FONT}>!</text></g>` : ""}</g>`;
 }
-// A tank humidifier (#89), its body a soft squircle seen from just above: a
-// white base with its display and buttons, a smoked tank tapering upwards with
-// its water, its tube and its night light, the mist rising from the nozzle.
+// A spool seen from the front, standing on its rollers: the wound filament
+// between its two flanges, edge on. Its stripes hardly move as it turns, so a
+// sheen rolls down it.
+function fdSpool(x, y, w, h, color, i) {
+  let lines = "";
+  for (let k = 1; k < Math.floor((w - 7) / 1.6); k++) lines += `<rect x="${x + 3.5 + k * 1.6}" y="${y + 4}" width=".45" height="${h - 8}" fill="#000" opacity=".13"/>`;
+  return `<clipPath id="fd-c${i}"><rect x="${x + 3.5}" y="${y + 4}" width="${w - 7}" height="${h - 8}"/></clipPath>`
+    + `<rect x="${x + 3.5}" y="${y + 4}" width="${w - 7}" height="${h - 8}" fill="${esc(color)}"/>${lines}`
+    + `<rect x="${x + 3.5}" y="${y + 4}" width="${w - 7}" height="${h - 8}" fill="url(#fd-cyl)"/>`
+    + `<g clip-path="url(#fd-c${i})"><rect class="nt-run ntfd-roll" x="${x + 3.5}" y="${y - 14}" width="${w - 7}" height="10" fill="#fff" opacity=".28"/></g>`
+    + `<rect x="${x}" y="${y}" width="4" height="${h}" rx="2" fill="url(#fd-flg)"/><rect x="${x + w - 4}" y="${y}" width="4" height="${h}" rx="2" fill="url(#fd-flg)"/>`
+    + `<rect x="${x + w / 2 - 5}" y="${y + h + .5}" width="10" height="3" rx="1.5" fill="#6a7178"/>`;
+}
+// A filament dryer from the front (#93): as wide as its spools, a window on
+// them, its screen below.
+function ntFilamentDryer(c) {
+  const n = c.count;
+  const colors = c.colors;
+  const SW = 26, G = 4, M = 9, W = n * SW + (n - 1) * G + 2 * M, H = 132, cx = W / 2;
+  let spools = "";
+  for (let i = 0; i < n; i++) spools += fdSpool(M + i * (SW + G), 10, SW, 59, colors[i % colors.length], i);
+  const heat = [.2, .42, .62, .82].slice(0, n === 1 ? 2 : 4).map((k, i) => `<path class="ntfd-h ntd${i + 1}" d="M${k * W} -3 q-3 -4 0 -8"/>`).join("");
+  const lw = n === 1 ? 38 : 44;
+  return `<defs><linearGradient id="fd-body" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fbfcfc"/><stop offset="1" stop-color="#d5dade"/></linearGradient>
+    <linearGradient id="fd-cyl" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#000" stop-opacity=".42"/><stop offset=".3" stop-color="#fff" stop-opacity=".22"/><stop offset=".55" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".48"/></linearGradient>
+    <linearGradient id="fd-flg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#23272c"/><stop offset=".35" stop-color="#6a7178"/><stop offset="1" stop-color="#1b1e22"/></linearGradient></defs>
+    <g transform="translate(${((120 - W * .9) / 2).toFixed(1)} 3) scale(.9)"><g class="nt-run">${heat}</g>
+    <rect x="1" y="1" width="${W - 2}" height="${H - 12}" rx="9" fill="url(#fd-body)" stroke="#a7adb3"/><rect x="5" y="5" width="${W - 10}" height="71" rx="6" fill="#20242a"/>${spools}
+    <path d="M9 9 L${Math.min(36, W * .34)} 9 L18 72 L9 72 Z" fill="#fff" opacity=".06"/>
+    <rect x="${cx - lw / 2}" y="83" width="${lw}" height="26" rx="3" fill="#102027"/>
+    <text x="${cx}" y="94" text-anchor="middle" font-size="9" font-family="monospace" fill="${c.on ? "#ff9800" : "#78909c"}">${esc(c.lcd || "--")}</text>
+    <text x="${cx}" y="105" text-anchor="middle" font-size="8" font-family="monospace" fill="#4fc3f7">${esc(c.hum || "")}</text>
+    ${W > 80 ? `<circle cx="${cx - 32}" cy="96" r="4" fill="#cfd4d8" stroke="#9aa1a8" stroke-width=".6"/>` : ""}
+    <circle cx="${n === 1 ? cx : W - 7}" cy="${n === 1 ? 79.5 : 96}" r="${n === 1 ? 1.6 : 2.2}" class="ntfd-led" fill="${c.on ? "#ff6d00" : "#9aa1a8"}"/>
+    <rect x="${W * .12}" y="${H - 11}" width="14" height="4" rx="1.4" fill="#454b52"/><rect x="${W * .88 - 14}" y="${H - 11}" width="14" height="4" rx="1.4" fill="#454b52"/></g>`;
+}
 function ntHumidifier(c) {
   const id = (n) => `hu-${n}`;
   const on = c.on && !c.lifted && !c.empty;
@@ -2245,7 +2278,7 @@ ${glow ? `<path d="${body(tY, tR)}" fill="url(#${id("nl")})" opacity="${glow}"/>
 ${c.lifted ? `<g class="hu-blink" transform="translate(104 66)"><path d="M0 -8 L8 6 H-8 Z" fill="#ff3b30" stroke="#fff" stroke-width=".9"/><text y="4.4" font-size="9" font-weight="700" text-anchor="middle" fill="#fff" ${NT_FONT}>!</text></g>` : ""}
 ${c.empty ? `<g class="hu-blink" transform="translate(106 44)"><circle r="8" fill="#ff3b30" stroke="#fff" stroke-width=".9"/><path d="M0 -5 q-3.6 4.2 -3.6 6.2 a3.6 3.6 0 0 0 7.2 0 q0 -2 -3.6 -6.2z" fill="#fff"/></g>` : ""}`;
 }
-const NT_DRAW = { humidifier: ntHumidifier, circulator: ntCirculator, irr_sprinkler: ntIrrSprinkler, irr_tap: ntIrrTap, irr_drip: ntIrrDrip, irr_flowers: ntIrrFlowers, lit_globe: ntLitterGlobe, lit_box: ntLitterBox, det_smoke: ntDetSmoke, det_co: ntDetCo, det_leak: ntDetLeak, spk_smart: ntSpkSmart, spk_homepod_mini: ntSpkMini, spk_sonos_one: ntSpkOne, spk_bookshelf: ntSpkShelf, spk_sonos_move: ntSpkMove, spk_soundbar: ntSpkBar, spk_echo_dot: ntSpkDot, spk_nest_mini: ntSpkNest, spk_sonos_era100: ntSpkEra100, spk_sonos_era300: ntSpkEra300, spk_bose_wave: ntSpkWave, spk_bose_500: ntSpkBose500, spk_bose_soundlink: ntSpkFlex, spk_bose_soundbar: ntSpkBoseBar, con_ps1: conPs1, con_ps2: conPs2, con_ps3: conPs3, con_ps4: (c) => conPs4(c, false), con_ps4_pro: (c) => conPs4(c, true), con_ps5: conPs5, con_xbox: conXbox, con_xbox_360: conX360, con_xbox_one: conXone, con_xbox_series_x: conXsx, con_xbox_series_s: conXss, con_switch: (c) => conSwitch(c, false), con_switch_2: (c) => conSwitch(c, true), con_switch_lite: conSwitchLite, con_ps_vita: conVita, con_nes: conNes, con_snes: conSnes, con_n64: conN64, con_gamecube: conGamecube, con_wii: conWii, con_megadrive: conMegadrive, tank: ntTank, fws: ntFresh, solth: ntSolarThermal, wood: ntWoodStove, mob_scooter: mobScooter, mob_offroad: mobOffroad, mob_ebike: mobEbike, mob_gyropode: mobGyropode, mob_motorcycle: mobMotorcycle, meter_box: ntMeterBox, meter_dome: ntMeterDome, meter_gas: ntGas, meter_water: ntWater, booster: ntBooster, sump: ntSump, pool: ntPoolRobot, floor: ntFloor, spa: ntSpa, sauna: ntSauna, aquarium: ntAquarium, linky: ntLinky, tree: ntTree };
+const NT_DRAW = { dryer: ntFilamentDryer, humidifier: ntHumidifier, circulator: ntCirculator, irr_sprinkler: ntIrrSprinkler, irr_tap: ntIrrTap, irr_drip: ntIrrDrip, irr_flowers: ntIrrFlowers, lit_globe: ntLitterGlobe, lit_box: ntLitterBox, det_smoke: ntDetSmoke, det_co: ntDetCo, det_leak: ntDetLeak, spk_smart: ntSpkSmart, spk_homepod_mini: ntSpkMini, spk_sonos_one: ntSpkOne, spk_bookshelf: ntSpkShelf, spk_sonos_move: ntSpkMove, spk_soundbar: ntSpkBar, spk_echo_dot: ntSpkDot, spk_nest_mini: ntSpkNest, spk_sonos_era100: ntSpkEra100, spk_sonos_era300: ntSpkEra300, spk_bose_wave: ntSpkWave, spk_bose_500: ntSpkBose500, spk_bose_soundlink: ntSpkFlex, spk_bose_soundbar: ntSpkBoseBar, con_ps1: conPs1, con_ps2: conPs2, con_ps3: conPs3, con_ps4: (c) => conPs4(c, false), con_ps4_pro: (c) => conPs4(c, true), con_ps5: conPs5, con_xbox: conXbox, con_xbox_360: conX360, con_xbox_one: conXone, con_xbox_series_x: conXsx, con_xbox_series_s: conXss, con_switch: (c) => conSwitch(c, false), con_switch_2: (c) => conSwitch(c, true), con_switch_lite: conSwitchLite, con_ps_vita: conVita, con_nes: conNes, con_snes: conSnes, con_n64: conN64, con_gamecube: conGamecube, con_wii: conWii, con_megadrive: conMegadrive, tank: ntTank, fws: ntFresh, solth: ntSolarThermal, wood: ntWoodStove, mob_scooter: mobScooter, mob_offroad: mobOffroad, mob_ebike: mobEbike, mob_gyropode: mobGyropode, mob_motorcycle: mobMotorcycle, meter_box: ntMeterBox, meter_dome: ntMeterDome, meter_gas: ntGas, meter_water: ntWater, booster: ntBooster, sump: ntSump, pool: ntPoolRobot, floor: ntFloor, spa: ntSpa, sauna: ntSauna, aquarium: ntAquarium, linky: ntLinky, tree: ntTree };
 function ntSvg(d) {
   ntN = 0;
   const draw = NT_DRAW[d && d.kind] || ntLinky;
@@ -2261,6 +2294,10 @@ function ntHtml(cls, d) {
 // except a meter's LED and an alarm's beacon. Each part's stagger is its --d0.
 const NT_CSS = `
         svg.nt-svg{position:absolute;left:0;top:0;width:96px;height:108px;overflow:visible}
+        .ntfd-h{fill:none;stroke:#ff6d00;stroke-width:1.8;stroke-linecap:round;opacity:0;animation:ntfd-heat 2.4s ease-in-out infinite;animation-delay:calc(var(--d0,0s) + var(--anim-offset,0s))}
+        @keyframes ntfd-heat{0%{opacity:0;transform:translateY(4px)}40%{opacity:1}100%{opacity:0;transform:translateY(-7px)}}
+        .nt-on .ntfd-roll{animation:ntfd-roll 2.4s linear infinite;animation-delay:var(--anim-offset,0s)}
+        @keyframes ntfd-roll{to{transform:translateY(76px)}}
         .machine.nt:not(.nt-on) .nt-run{display:none}
         .machine.nt-unav{opacity:.45;filter:grayscale(1)}
         .ntd1{--d0:.3s}.ntd2{--d0:.7s}.ntd3{--d0:1.1s}.ntd4{--d0:1.5s}.ntd5{--d0:1.9s}.ntd6{--d0:2.3s}
