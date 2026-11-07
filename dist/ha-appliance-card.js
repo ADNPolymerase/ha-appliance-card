@@ -290,6 +290,7 @@ const LANGUAGE_NAMES = {
   it: "Italiano", nl: "Nederlands", pt: "Portugu\u00eas", sv: "Svenska",
   no: "Norsk", da: "Dansk", pl: "Polski", ru: "\u0420\u0443\u0441\u0441\u043a\u0438\u0439",
   zh: "\u4e2d\u6587", cs: "\u010ce\u0161tina",
+  hu: "Magyar",
 };
 
 // A card can be pinned to one language whatever Home Assistant is set to.
