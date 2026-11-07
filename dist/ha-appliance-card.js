@@ -1,5 +1,5 @@
 // Built by tools/build.mjs from the files of src/: edit those, not this file.
-const CARD_VERSION = "4.15.1";
+const CARD_VERSION = "4.15.2";
 
 console.info(
   "%c HA-APPLIANCE-CARD %c v" + CARD_VERSION + " ",
@@ -5868,7 +5868,8 @@ function ntReadOf(type, hass, cfg, st, watts, threshold) {
       if (a.media_title) lines.push({ key: "spk_title", icon: "mdi:music-note", label: t(hass, "spk_title"), value: String(a.media_title), entity: cfg.state_entity, wrap: true });
       if (a.media_artist) lines.push({ key: "spk_artist", icon: "mdi:account-music", label: t(hass, "spk_artist"), value: String(a.media_artist), entity: cfg.state_entity, wrap: true });
       const src = a.app_name || a.source;
-      if (src) lines.push({ key: "spk_source", icon: "mdi:import", label: t(hass, "spk_source"), value: String(src), entity: cfg.state_entity });
+      // Line-in fills both the title and the source (#95): said once.
+      if (src && String(src).trim().toLowerCase() !== String(a.media_title || "").trim().toLowerCase()) lines.push({ key: "spk_source", icon: "mdi:import", label: t(hass, "spk_source"), value: String(src), entity: cfg.state_entity });
       const vol = numberOrNull(a.volume_level);
       if (vol !== null) lines.push({ key: "spk_volume", icon: a.is_volume_muted ? "mdi:volume-off" : vol < 0.34 ? "mdi:volume-low" : vol < 0.67 ? "mdi:volume-medium" : "mdi:volume-high", label: t(hass, "spk_volume"),
         value: keepTogether(a.is_volume_muted ? t(hass, "spk_muted") : `${Math.round(vol * 100)} %`), entity: cfg.state_entity });
@@ -11740,7 +11741,10 @@ class ApplianceCard extends HTMLElement {
         const ast = stateObj(hass, a.entity);
         return !!ast && String(ast.state).toLowerCase() !== "unavailable";
       })
-      .filter((a) => controlFitsState(a.key, norm, cap, cfg, toggleOn));
+      .filter((a) => controlFitsState(a.key, norm, cap, cfg, toggleOn))
+      // The speed button means nothing while the motor is off (HACF #157). It
+      // is never the power button here: the motor is state_entity.
+      .filter((a) => !(a.key === "toggle" && speedToggle && ["off", "false"].includes(String(rawState).toLowerCase())));
 
     const spinning = isActiveState(norm);
 
