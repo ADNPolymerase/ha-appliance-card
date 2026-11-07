@@ -221,7 +221,9 @@ const SECTIONS = [
     when: (c) => pumpLayoutOf(c, null) === "circulator" },
   { field: "fault_entity", types: ["water_pump"], labelKey: "heat_fault", includeDomains: ["binary_sensor", "sensor"],
     when: (c) => pumpLayoutOf(c, null) === "circulator" },
-  { field: "temperature_entity", types: ["floor_heating", "spa", "sauna", "aquarium"], labelKey: "temperature", includeDomains: ["sensor", "number", "input_number", "climate"] },
+  { field: "temperature_entity", types: ["floor_heating", "spa", "sauna", "aquarium", "filament_dryer"], labelKey: "temperature", includeDomains: ["sensor", "number", "input_number", "climate"] },
+  { field: "humidity_entity", types: ["filament_dryer"], labelKey: "ac_line_humidity", includeDomains: ["sensor", "number", "input_number"] },
+  { field: "remaining_time_entity", types: ["filament_dryer"], labelKey: "section_remaining", includeDomains: ["sensor", "input_number"] },
   { field: "target_temperature_entity", types: ["sauna"], labelKey: "section_target_temperature", includeDomains: ["number", "sensor", "input_number"] },
   { field: "bubbles_entity", types: ["spa"], labelKey: "section_bubbles", includeDomains: ["switch", "input_boolean", "fan", "binary_sensor"] },
   { field: "tariff_entity", types: ["meter"], labelKey: "section_tariff", includeDomains: ["sensor", "select", "input_select"] },
@@ -443,6 +445,8 @@ const SECTIONS = [
   // put it; Creality keeps it as an attribute of the reading instead.
   { field: "program_entity", types: ["printer_3d"], labelKey: "section_print_file", includeDomains: ["sensor", "select", "input_select", "input_text"] },
   { field: "phase_entity", types: ["printer_3d"], labelKey: "section_print_stage", includeDomains: ["sensor", "input_select"] },
+  { field: "ams_humidity_entity", types: ["printer_3d"], labelKey: "ac_line_humidity", includeDomains: ["sensor"], when: (c) => entityEntries(c.ams_entities, 4).length > 0 },
+  { field: "ams_drying_entity", types: ["printer_3d"], labelKey: "fd_drying", includeDomains: ["binary_sensor", "sensor", "switch"], when: (c) => entityEntries(c.ams_entities, 4).length > 0 },
   { field: "nozzle_temperature_entity", types: ["printer_3d"], labelKey: "section_nozzle_temperature", includeDomains: ["sensor"], extra: (c, hass) =>
       c._row("temperature_decimals", "temperature_decimals", {
         type: "select",
@@ -1518,12 +1522,24 @@ class ApplianceCardEditor extends HTMLElement {
           type: "select",
           options: ["random"].concat(SCREEN_IMAGES).map((v) => ({ value: v, label: t(hass, `img_${v}`) })),
         }) : ""}
-        ${this._type === "printer_3d" ? this._row("section_printer_layout", "printer_layout", {
+        ${this._type === "printer_3d" ? this._row("section_printer_style", "printer_style", {
+          type: "select",
+          options: [{ value: "auto", label: t(hass, "unit_auto") }, { value: "classic", label: t(hass, "printer_style_classic") }].concat(PRINTER_STYLES.map((v) => ({ value: v, label: t(hass, `printer_style_${v}`) }))),
+        }) : ""}
+        ${this._type === "printer_3d" && !printerStyleOf(this._config, stateObj(hass, this._config.state_entity)) ? this._row("section_printer_layout", "printer_layout", {
           type: "select",
           options: [
             { value: "enclosed", label: t(hass, "layout_enclosed") },
             { value: "open", label: t(hass, "layout_open") },
           ],
+        }) : ""}
+        ${this._type === "printer_3d" && entityEntries(this._config.ams_entities, 4).length ? this._row("section_ams_position", "ams_position", {
+          type: "select",
+          options: ["side", "top"].map((v) => ({ value: v, label: t(hass, `ams_position_${v}`) })),
+        }) : ""}
+        ${this._type === "filament_dryer" ? this._row("section_spool_count", "spool_count", {
+          type: "select",
+          options: FD_COUNTS.map((v) => ({ value: String(v), label: String(v) })),
         }) : ""}
         ${this._type === "printer_3d" ? this._row("section_printed_part", "printed_part", {
           type: "select",

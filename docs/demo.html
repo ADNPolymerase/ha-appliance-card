@@ -847,6 +847,23 @@ const towelPanel = () => card({
 
 // A Bambu Lab printer halfway through a part, as its integration reports it:
 // a lowercase status, a remaining time in hours.
+// The printers drawn after real ones, their filament box, a filament dryer (#93).
+const P3_BASE = { appliance_type: "printer_3d", state_entity: "sensor.printer_print_status", progress_entity: "sensor.printer_progress", nozzle_temperature_entity: "sensor.printer_nozzle_temp" };
+const P3_STATES = () => [st("sensor.printer_print_status", "running"), st("sensor.printer_progress", 55, { unit_of_measurement: "%" }), st("sensor.printer_nozzle_temp", 219, { unit_of_measurement: "\u00b0C" }),
+  st("sensor.tray_1", "PLA", { color: "#E53935FF", active: false, empty: false }), st("sensor.tray_2", "PLA", { color: "#1E88E5FF", active: true, empty: false }), st("sensor.tray_3", "Empty", { empty: true }), st("sensor.tray_4", "PETG", { color: "#F4F4F4FF", active: false, empty: false })];
+const p3Style = (name, printer_style, more = {}) => () => card({ ...P3_BASE, name, printer_style, ...more }, P3_STATES());
+const AMS4 = ["sensor.tray_1", "sensor.tray_2", "sensor.tray_3", "sensor.tray_4"];
+const printerBambu = p3Style("P1S", "bambu_x");
+const printerCentauri = p3Style("Centauri", "elegoo_c");
+const printerA1 = p3Style("A1", "bambu_a");
+const printerNeptune = p3Style("Neptune", "elegoo_n");
+const printerAms = p3Style("P1S + AMS", "bambu_x", { ams_entities: AMS4 });
+const printerAmsTop = p3Style("Centauri + AMS", "elegoo_c", { ams_entities: AMS4, ams_position: "top" });
+const fdCard = (n, state) => () => card({ name: L(`Filament dryer, ${n}`, `S\u00e9cheur de filament, ${n}`), appliance_type: "filament_dryer", state_entity: "switch.dryer", spool_count: n, temperature_entity: "sensor.dryer_temp", humidity_entity: "sensor.dryer_hum" },
+  [st("switch.dryer", state), st("sensor.dryer_temp", 55, { unit_of_measurement: "\u00b0C" }), st("sensor.dryer_hum", 18, { unit_of_measurement: "%" })]);
+const dryer1 = fdCard(1, "on");
+const dryer2 = fdCard(2, "on");
+const dryer4 = fdCard(4, "off");
 const printer3d = () => card({
   name: L("3D printer", "Imprimante 3D"),
   appliance_type: "printer_3d",
@@ -1590,7 +1607,8 @@ const ALL = { washer, dryer, steam_generator: steamGenerator,
               printer_3d: printer3d, ev_charger: evCharger };
 // The variants the family captures fill their grids with; the gallery of all
 // types leaves them out.
-const EXTRA = { iron, coffee_black: coffeeBlack, boiler_window: boilerWindow, boiler_thermo: boilerThermo,
+const EXTRA = { printer_bambu: printerBambu, printer_centauri: printerCentauri, printer_a1: printerA1, printer_neptune: printerNeptune, printer_ams: printerAms, printer_ams_top: printerAmsTop, dryer_1: dryer1, dryer_2: dryer2, dryer_4: dryer4,
+                iron, coffee_black: coffeeBlack, boiler_window: boilerWindow, boiler_thermo: boilerThermo,
                 th_square: thSquare, th_round: thRound, th_glass: thGlass, th_valve: thValve, towel_panel: towelPanel, round_feeder: roundFeeder, double_feeder: doubleFeeder, ev_discharging: evDischarging,
                 box_purifier: boxPurifier, ring_purifier: ringPurifier,
                 net_switch: netSwitch, net_nas: netNas, net_server: netServer, net_rack: netRack,
@@ -1673,7 +1691,7 @@ function liveGallery() {
     [L("Energy", "Énergie"), [solarDay, solarRoof, solarNight, batteryCharging, batteryStation, batteryLow, evCharger, evDischarging]],
     [L("Network and servers", "Réseau et serveurs"), [netSwitch, netRouter("on"), netNas, netServer, netRack, upsOnline, upsBattery, upsLow]],
     [L("Screens and tablets", "Écrans et tablettes"), [scrTv, scrProjector, scrComputer, scrLaptop, tabWall, tabFrame, tabPortrait]],
-    [L("Home and media", "Maison et multimédia"), [hdHot, hdRing, printer3d, scaleFresh, scaleGoal]],
+    [L("Home and media", "Maison et multimédia"), [hdHot, hdRing, printer3d, printerBambu, printerCentauri, printerA1, printerNeptune, printerAms, printerAmsTop, dryer1, dryer2, dryer4, scaleFresh, scaleGoal]],
     [L("Diffusers and ventilation", "Diffuseurs et ventilation"), [difDrop, difCone, difStone, difFlame, difNebulizer, hrvDiagram, hrvOneDuct, hrvPair, hrvBypass, hrvSingle, hrvSingleHigh, hrvSingleOff, hrvSingleBox, hrvSingleBoxHigh, hrvBasement, hrvBasementShut]],
     [L("Cameras", "Cam\u00e9ras"), [camIndoor, camTube, camOutdoor, camDome, camPrivacy, camOffline]],
     [L("Lamps", "Lampes"), [lampBulb, lampBedside, lampFloor, lampTorch, lampPendant, lampStrip, lampSpots, lampPanels, lampDesk, lampWall, lampOff]],
@@ -1728,7 +1746,7 @@ const POSTER_NAMES = {
   coffee: ["Coffee machine", "Machine \u00e0 caf\u00e9"], air_fryer: ["Air fryer", "Friteuse \u00e0 air"], toaster: ["Toaster", "Grille-pain"],
   boiler: ["Boiler", "Chaudi\u00e8re"], space_heater: ["Heater", "Radiateur"], towel_warmer: ["Towel rail", "S\u00e8che-serviettes"],
   air_purifier: ["Air purifier", "Purificateur"], fan: ["Fan", "Ventilateur"], pet_fountain: ["Pet fountain", "Fontaine \u00e0 eau"],
-  printer_3d: ["3D printer", "Imprimante 3D"], net_switch: ["Network", "R\u00e9seau"], scr_tv: ["Screen", "\u00c9cran"],
+  printer_3d: ["3D printer", "Imprimante 3D"], filament_dryer: ["Filament dryer", "S\u00e9cheur de filament"], net_switch: ["Network", "R\u00e9seau"], scr_tv: ["Screen", "\u00c9cran"],
   robot_stick: ["Stick vacuum", "Aspirateur balai"], robot_washer: ["Floor washer", "Laveur de sol"], nt_pool: ["Pool robot", "Robot de piscine"],
   nt_spa: ["Hot tub", "Spa"], nt_sauna: ["Sauna", "Sauna"], nt_aquarium: ["Aquarium", "Aquarium"], nt_linky: ["Meter", "Compteur"],
   mob_poster: ["Electric ride", "Mobilit\u00e9 \u00e9lectrique"],

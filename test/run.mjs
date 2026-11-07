@@ -3873,7 +3873,7 @@ contains('duree : horloge a zero', remIn('00:00:00', {}), 'Done');
 }
 
 // ── Detection ──
-const p3drawn = h => /class="p3-/.test(h);
+const p3drawn = h => /class="p3-|class="p3r"/.test(h);
 for (const [id, want, icon] of [
   ['sensor.p1s_01p00a123_print_status', true], ['sensor.x1c_00m09c_print_status', true], ['sensor.a1_mini_03919_print_status', true],
   ['sensor.octoprint_current_state', true], ['sensor.voron_current_print_state', true], ['sensor.prusa_mk4', true],
@@ -13695,6 +13695,124 @@ function tvT(w) { return { 'switch.tv': { state: 'on', attributes: {} }, 'sensor
   check('nom : un laveur reste laveur', named('vacuum.braava_jet'), 'mop');
   { const e = new Editor(); e.setConfig({ type: 'custom:ha-appliance-card', appliance_type: 'robot', state_entity: 'vacuum.r', robot_layout: 'combo' }); e.hass = HASS({ 'vacuum.r': s('docked') });
     check('editeur : les cuves du combo', ['robot_clean_tank_entity', 'robot_dirty_tank_entity'].every((f) => e._sections().some((x) => x.field === f)), true); }
+}
+
+// ── Printers drawn after real ones, their filament box, a filament dryer (#93) ──
+{
+  const T0L = Date.now();
+  const s = (state, attributes = {}) => ({ state, attributes: { ...attributes }, last_changed: new Date(T0L - 3600000).toISOString() });
+  const P = (cfg = {}, st = 'printing', extra = {}, id = 'sensor.atelier') => render({ appliance_type: 'printer_3d', state_entity: id, progress_entity: 'sensor.prog', ...cfg }, { [id]: s(st), 'sensor.prog': s('50', { unit_of_measurement: '%' }), ...extra });
+  const styleOf = (h) => (/class="machine[^"]* p3-s-(\w+)/.exec(h) || [])[1];
+  // Chosen, or from the model's name.
+  check('style : le dessin simple sans nom connu', styleOf(P()), undefined);
+  check('style : le dessin simple garde sa vitre', /class="p3-window"/.test(P()), true);
+  for (const v of ['bambu_x', 'elegoo_c', 'bambu_a', 'elegoo_n']) {
+    check(`style : ${v} choisi`, styleOf(P({ printer_style: v })), v);
+    check(`style : ${v} son dessin`, /<svg class="p3r"/.test(P({ printer_style: v })), true);
+    check(`style : ${v} sans vitre simple`, /class="p3-window"/.test(P({ printer_style: v })), false);
+  }
+  for (const [id, want] of [['sensor.p1s_01p00a_print_status', 'bambu_x'], ['sensor.x1c_00m_print_status', 'bambu_x'], ['sensor.bambu_lab_printer', 'bambu_x'], ['sensor.a1_mini_03919_print_status', 'bambu_a'], ['sensor.a1_03919_status', 'bambu_a'], ['sensor.centauri_carbon_status', 'elegoo_c'], ['sensor.neptune_4_status', 'elegoo_n']]) {
+    check(`style : ${id}`, styleOf(P({}, 'printing', {}, id)), want);
+  }
+  check('style : a1mini sans separateur', styleOf(P({}, 'printing', {}, 'sensor.a1mini_status')), 'bambu_a');
+  check('style : classic garde l\'ancien dessin', styleOf(P({ printer_style: 'classic' }, 'printing', {}, 'sensor.p1s_status')), undefined);
+  check('style : un mot inconnu ne casse rien', styleOf(P({ printer_style: 'xxx' })), undefined);
+  check('style : ouvert a la main contre un nom ferme', styleOf(P({ printer_layout: 'open' }, 'printing', {}, 'sensor.p1s_status')), undefined);
+  check('style : ferme a la main contre un nom ouvert', styleOf(P({ printer_layout: 'enclosed' }, 'printing', {}, 'sensor.neptune_status')), undefined);
+  check('style : ouvert a la main et nom ouvert', styleOf(P({ printer_layout: 'open' }, 'printing', {}, 'sensor.neptune_status')), 'elegoo_n');
+  check('style : un fichier a1 dans un mot', styleOf(P({}, 'printing', {}, 'sensor.vitra1_status')), undefined);
+  // A closed one: the bed drops; an open one: the gantry climbs.
+  const bedY = (h) => Number((/<path d="M\d+(?:\.\d+)? (\d+(?:\.\d+)?) L[^"]*" fill="url\(#p3r-pei\)"/.exec(h) || [])[1] ?? NaN);
+  const closed = (pct) => P({ printer_style: 'bambu_x' }, 'printing', { 'sensor.prog': s(String(pct), { unit_of_measurement: '%' }) });
+  check('fermee : le plateau descend', bedY(closed(80)) > bedY(closed(20)), true);
+  const gantryY = (h) => Number((/<rect x="14" y="([\d.]+)" width="92" height="4\.2"/.exec(h) || [])[1] ?? NaN);
+  const openP = (pct) => P({ printer_style: 'bambu_a' }, 'printing', { 'sensor.prog': s(String(pct), { unit_of_measurement: '%' }) });
+  check('ouverte : le portique monte', gantryY(openP(80)) < gantryY(openP(20)), true);
+  check('ouverte : le plateau ne bouge pas de haut en bas', bedY(openP(80)), bedY(openP(20)));
+  check('ouverte : pas de deplacement vertical', /@keyframes p3r-slide \{ 0%, 100% \{ transform: scale/.test(openP(50)), true);
+  check('piece : le canard', /class="p3r-part" transform/.test(P({ printer_style: 'bambu_x', printed_part: 'duck' })), true);
+  check('piece : la pyramide', /class="p3r-part" d="M\d+ [\d.]+ L/.test(P({ printer_style: 'bambu_x', printed_part: 'pyramid' })), true);
+  check('piece : rien a 0 %', /p3r-part"/.test(closed(0).split('</style>').pop()), false);
+  check('a l\'arret : la tete ne bouge pas', /class="machine[^"]*\bmoving\b/.test(P({ printer_style: 'bambu_x' }, 'idle')), false);
+  check('en marche : la tete bouge', /class="machine[^"]*\bmoving\b/.test(P({ printer_style: 'bambu_x' })), true);
+  check('ecran : la buse', /<text[^>]*>210/.test(P({ printer_style: 'bambu_x', nozzle_temperature_entity: 'sensor.n' }, 'printing', { 'sensor.n': s('210', { unit_of_measurement: '°C', device_class: 'temperature' }) })), true);
+  // The filament box.
+  const T = (a = {}, st = 'Generic PLA') => s(st, { color: '#1E88E5FF', active: false, empty: false, ...a });
+  const trays = { 'sensor.t1': T({ color: '#E53935FF' }), 'sensor.t2': T({ active: true }), 'sensor.t3': s('Empty', { empty: true, color: '#00000000' }), 'sensor.t4': T({ color: 'f4f4f4' }) };
+  const A = (cfg = {}, extra = {}) => P({ printer_style: 'bambu_x', ams_entities: ['sensor.t1', 'sensor.t2', 'sensor.t3', 'sensor.t4'], ...cfg }, 'printing', { ...trays, ...extra });
+  const body = (h) => h.split('</style>').pop();
+  check('boite : dessinee', /<svg class="p3a"/.test(A()), true);
+  check('boite : absente sans bobines', /<svg class="p3a"/.test(P({ printer_style: 'bambu_x' })), false);
+  check('boite : couleur sans alpha', body(A()).includes('fill="#E53935"'), true);
+  check('boite : couleur sans diese (Spoolman)', body(A()).includes('fill="#f4f4f4"'), true);
+  check('boite : une place vide', /stroke-dasharray="1\.8 1\.8"/.test(body(A())), true);
+  check('boite : le voyant de la bobine active', (body(A()).match(/class="p3a-on"/g) || []).length, 1);
+  const onlyTray = (t) => body(A({ ams_entities: ['sensor.x'] }, { 'sensor.x': t }));
+  const EMPTY = /stroke-dasharray="1\.8 1\.8"/;
+  check('boite : vide d\'apres son attribut', EMPTY.test(onlyTray(s('PLA', { color: '#E53935', empty: true }))), true);
+  check('boite : vide d\'apres son etat', EMPTY.test(onlyTray(s('Empty', { color: '#E53935' }))), true);
+  check('boite : bobine pleine', EMPTY.test(onlyTray(s('PLA', { color: '#E53935' }))), false);
+  check('boite : une bobine vide n\'est jamais active', /class="p3a-on"/.test(onlyTray(s('PLA', { color: '#E53935', empty: true, active: true }))), false);
+  check('boite : in_use vaut active', /class="p3a-on"/.test(onlyTray(s('PLA', { color: '#E53935', in_use: true }))), true);
+  check('boite : la bobine active tourne', (body(A()).match(/class="p3a-turn"/g) || []).length, 1);
+  check('boite : le tube a sa couleur', /stroke="#1E88E5" stroke-width="1\.2"/.test(body(A())), true);
+  check('boite : sans bobine active, pas de filament', /p3a-flow/.test(body(A({ ams_entities: ['sensor.t1'] }))), false);
+  check('boite : a cote, la carte s\'elargit', /border-right:\d+px solid transparent/.test(body(A())), true);
+  check('boite : a cote, le raccord sur le toit', /<rect x="[\d.]+" y="5\.4" width="7" height="5\.5"/.test(body(A())), true);
+  check('boite : dessus, pas de tube', /p3a-flow/.test(body(A({ ams_position: 'top' }))), false);
+  check('boite : dessus, place au-dessus', /border-top:\d+px solid transparent/.test(body(A({ ams_position: 'top' }))), true);
+  check('boite : dessus, pas plus large', /border-right/.test(body(A({ ams_position: 'top' }))), false);
+  check('boite : sur le dessin simple', /<svg class="p3a"/.test(A({ printer_style: 'classic' })), true);
+  check('boite : le dessin simple garde sa vitre', /class="p3-window"/.test(A({ printer_style: 'classic' })), true);
+  check('boite : au plus 4', (body(A({ ams_entities: ['sensor.t1', 'sensor.t1', 'sensor.t1', 'sensor.t1', 'sensor.t1', 'sensor.t1'] })).match(/r="[\d.]+" fill="#2a2e33"/g) || []).length, 4);
+  check('boite : une couleur douteuse ecartee', body(A({ ams_entities: ['sensor.x'] }, { 'sensor.x': s('PLA', { color: '"><script>' }) })).includes('<script>'), false);
+  check('boite : ligne de la bobine', infoLine(A(), 'Spool'), 'Generic PLA');
+  check('boite : pas de ligne sans bobine active', infoLine(A({ ams_entities: ['sensor.t1'] }), 'Spool'), null);
+  check('boite : humidite', /22/.test(infoLine(A({ ams_humidity_entity: 'sensor.h' }, { 'sensor.h': s('22', { unit_of_measurement: '%' }) }), 'Humidity') || ''), true);
+  check('boite : sechage en ligne', infoLine(A({ ams_drying_entity: 'binary_sensor.d' }, { 'binary_sensor.d': s('on') }), 'Filament box'), 'Drying');
+  check('boite : sechage, les traits', /class="p3a-h"/.test(body(A({ ams_drying_entity: 'binary_sensor.d' }, { 'binary_sensor.d': s('on') }))), true);
+  check('boite : pas de sechage, pas de traits', /class="p3a-h"/.test(body(A({ ams_drying_entity: 'binary_sensor.d' }, { 'binary_sensor.d': s('off') }))), false);
+  check('Neptune : sa bobine sur le dessus', /fill="url\(#p3r-sp\)"/.test(body(P({ printer_style: 'elegoo_n' }))), true);
+  check('Neptune : plus de bobine avec une boite', /fill="url\(#p3r-sp\)"/.test(body(A({ printer_style: 'elegoo_n' }))), false);
+  // The dryer.
+  const D = (cfg = {}, st = 'on', extra = {}) => render({ appliance_type: 'filament_dryer', state_entity: 'switch.d', ...cfg }, { 'switch.d': s(st), ...extra });
+  const mach = (h) => (/class="machine[^"]*"/.exec(h) || [''])[0];
+  check('sécheur : son dessin', /nt-k-dryer/.test(mach(D())), true);
+  check('sécheur : en marche', stateLine(D()), 'Drying');
+  check('sécheur : coupe', stateLine(D({}, 'off')), 'Off');
+  check('sécheur : hors ligne', /nt-unav/.test(mach(D({}, 'unavailable'))), true);
+  const nb = (h) => (h.split('</style>').pop().match(/fill="url\(#fd-cyl\)"/g) || []).length;
+  check('sécheur : 2 bobines par defaut', nb(D()), 2);
+  for (const n of [1, 2, 4]) check(`sécheur : ${n} bobines`, nb(D({ spool_count: n })), n);
+  check('sécheur : nombre en texte', nb(D({ spool_count: '4' })), 4);
+  check('sécheur : nombre refuse', nb(D({ spool_count: 3 })), 2);
+  check('sécheur : hors ligne garde ses bobines', nb(D({ spool_count: 4 }, 'unavailable')), 4);
+  check('sécheur : couleurs choisies', D({ spool_colors: ['#123456'] }).split('</style>').pop().includes('fill="#123456"'), true);
+  check('sécheur : couleur invalide ecartee', D({ spool_colors: ['rouge'] }).split('</style>').pop().includes('fill="rouge"'), false);
+  check('sécheur : le voyant hors de l\'ecran a 1 bobine', /cx="22" cy="79\.5"[^>]*ntfd-led/.test(D({ spool_count: 1 })), true);
+  check('sécheur : couleur douteuse ecartee', D({ spool_colors: ['"><b>'] }).split('</style>').pop().includes('"><b>'), false);
+  const full = D({ temperature_entity: 'sensor.t', humidity_entity: 'sensor.h', remaining_time_entity: 'sensor.r' }, 'on', { 'sensor.t': s('55', { unit_of_measurement: '°C', device_class: 'temperature' }), 'sensor.h': s('18', { unit_of_measurement: '%' }), 'sensor.r': s('7800', { unit_of_measurement: 's' }) });
+  check('sécheur : temperature', /55/.test(infoLine(full, 'Temperature') || ''), true);
+  check('sécheur : humidite', /18/.test(infoLine(full, 'Humidity') || ''), true);
+  check('sécheur : temps restant', !!infoLine(full, 'Remaining time'), true);
+  check('sécheur : une seule ligne de temps', (full.split('</style>').pop().match(/<span class="label">Remaining time/g) || []).length, 1);
+  check('sécheur : ecran', />18%</.test(full), true);
+  check('sécheur : pas de temps restant a l\'arret', infoLine(D({ remaining_time_entity: 'sensor.r' }, 'off', { 'sensor.r': s('7800', { unit_of_measurement: 's' }) }), 'Remaining time'), null);
+  check('sécheur : un capteur en mots', stateLine(render({ appliance_type: 'filament_dryer', state_entity: 'sensor.d' }, { 'sensor.d': s('drying') })), 'Drying');
+  check('sécheur : pas de traits a l\'arret', /<g class="nt-run">/.test(D({}, 'off')), true);
+  const TYPE = (id) => { const e = new Editor(); e.setConfig({ type: 'custom:ha-appliance-card', state_entity: id }); e.hass = HASS({ [id]: s('on') }); return e._type; };
+  for (const id of ['switch.filament_dryer', 'sensor.sunlu_s4_status', 'switch.creality_space_pi', 'switch.drybox', 'switch.secheur_de_filament']) check(`detection sécheur : ${id}`, TYPE(id), 'filament_dryer');
+  check('detection : un seche-linge reste', TYPE('sensor.dryer_status'), 'dryer');
+  check('detection : par son nombre de bobines', (() => { const e = new Editor(); e.setConfig({ type: 'custom:ha-appliance-card', state_entity: 'switch.x', spool_count: 2 }); e.hass = HASS({ 'switch.x': s('on') }); return e._type; })(), 'filament_dryer');
+  // In the editor.
+  const ed = (cfg) => { const e = new Editor(); e.setConfig({ type: 'custom:ha-appliance-card', state_entity: 'sensor.atelier', ...cfg }); e.hass = HASS({ 'sensor.atelier': s('idle') }); return e; };
+  const has = (e, f) => e._sections().some((x) => x.field === f);
+  check('editeur : humidite de la boite cachee sans boite', has(ed({ appliance_type: 'printer_3d' }), 'ams_humidity_entity'), false);
+  check('editeur : humidite de la boite', has(ed({ appliance_type: 'printer_3d', ams_entities: ['sensor.t'] }), 'ams_humidity_entity'), true);
+  check('editeur : sécheur, temperature', has(ed({ appliance_type: 'filament_dryer' }), 'temperature_entity'), true);
+  check('editeur : sécheur, humidite', has(ed({ appliance_type: 'filament_dryer' }), 'humidity_entity'), true);
+  check('editeur : sécheur, temps restant', has(ed({ appliance_type: 'filament_dryer' }), 'remaining_time_entity'), true);
+  check('detection : une boite suffit', ed({ ams_entities: ['sensor.t'] })._type, 'printer_3d');
 }
 
 if (RECORD) writeFileSync(process.env.HAC_RECORD, JSON.stringify(RECORD));

@@ -163,6 +163,31 @@ const ILLUSTRATION_CSS = {
         }
         .p3-base .p3-lcd { bottom: 2px; }
         .p3-base .p3-knob { bottom: 3px; }
+        svg.p3r, svg.p3a { position: absolute; left: 0; top: 0; width: 96px; height: 108px; overflow: visible; }
+        svg.p3a { z-index: 3; }
+        .p3r-part { fill: ${color}; }
+        .p3r-glow { fill: #2a2d31; }
+        .machine.bed-hot .p3r-glow { fill: #ff7043; }
+        .p3r-nz { fill: #8a9096; }
+        .machine.nozzle-hot .p3r-nz { fill: #ff7043; }
+        .p3r-light { opacity: 0.3; }
+        .machine.lit .p3r-light { opacity: 1; }
+        .p3r-led { opacity: 0.35; }
+        .machine.moving .p3r-led { opacity: 0.9; }
+        .machine.moving .p3r-hd { animation: p3r-hd 2.4s ease-in-out infinite; animation-delay: var(--anim-offset, 0s); }
+        .machine.moving .p3r-slide { transform-box: fill-box; transform-origin: 50% 100%; animation: p3r-slide 2.4s ease-in-out infinite; animation-delay: var(--anim-offset, 0s); }
+        .machine.moving .p3r-fan { transform-box: fill-box; transform-origin: 50% 50%; animation: p3r-fan 0.6s linear infinite; animation-delay: var(--anim-offset, 0s); }
+        @keyframes p3r-hd { 0%, 100% { transform: translateX(-16px); } 50% { transform: translateX(16px); } }
+        @keyframes p3r-slide { 0%, 100% { transform: scale(0.965); } 50% { transform: scale(1.03); } }
+        @keyframes p3r-fan { to { transform: rotate(360deg); } }
+        .p3a-on { fill: #2ecc71; }
+        .p3a-turn { transform-box: fill-box; transform-origin: 50% 50%; }
+        .machine.moving .p3a-turn { animation: p3r-fan 2.4s linear infinite; animation-delay: var(--anim-offset, 0s); }
+        .p3a-flow { stroke-dasharray: 2 10; }
+        .machine.moving .p3a-flow { animation: p3a-flow 1.2s linear infinite; animation-delay: var(--anim-offset, 0s); }
+        @keyframes p3a-flow { to { stroke-dashoffset: -12; } }
+        .p3a-h { fill: none; stroke: #ff6d00; stroke-width: 1.5; stroke-linecap: round; opacity: 0; animation: p3a-heat 2.4s ease-in-out infinite; animation-delay: var(--anim-offset, 0s); }
+        @keyframes p3a-heat { 0% { opacity: 0; transform: translateY(3px); } 40% { opacity: 1; } 100% { opacity: 0; transform: translateY(-6px); } }
         @keyframes p3-move { from { transform: translateX(-14px); } to { transform: translateX(14px); } }
         @keyframes p3-draw { 0% { opacity: 0; } 30% { opacity: 0.9; } 100% { opacity: 0; } }
         .machine.moving .p3-head { animation: p3-move 1.6s ease-in-out infinite alternate; animation-delay: var(--anim-offset, 0s); }

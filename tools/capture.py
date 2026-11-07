@@ -65,7 +65,7 @@ FAMILIES = (
     ("thermostats", "boiler_thermo,th_square,th_round,th_glass,th_valve", 5),
     ("air", "air_purifier,box_purifier,ring_purifier,fan,ceiling_fan", 5),
     ("pets", "pet_feeder,round_feeder,double_feeder,dual_feeder,wet_feeder,pet_fountain,round_fountain", 3),
-    ("garage", "ev_charger,ev_discharging,printer_3d", 3),
+    ("garage", "ev_charger,ev_discharging,printer_3d,printer_bambu,printer_centauri,printer_a1,printer_neptune,printer_ams,printer_ams_top,dryer_1,dryer_2,dryer_4", 4),
     ("mobility", "mob_scooter,mob_offroad,mob_ebike,mob_gyropode,mob_motorcycle,mob_unplugged", 3),
     ("network", "net_switch,net_nas,net_server,net_rack,net_router", 5),
     ("network-routers", "net_router,net_router_down", 2),

@@ -117,7 +117,7 @@ const HD_HIGH_W = 1200;
 const PLUG_THRESHOLDS = {
   washer: 10, dryer: 10, dishwasher: 10, oven: 50, microwave: 50, cooker: 20, coffee: 200, rice_cooker: 100,
   air_fryer: 50, kettle: 50, toaster: 50, water_heater: 50, space_heater: 30, towel_warmer: 10, dehumidifier: 30, humidifier: 5,
-  air_purifier: 3, fan: 3, hood: 5, pool_pump: 50, printer_3d: 30, cooktop: 50, pet_fountain: 1,
+  air_purifier: 3, fan: 3, hood: 5, pool_pump: 50, printer_3d: 30, filament_dryer: 15, cooktop: 50, pet_fountain: 1,
   spa: 50, sauna: 100, aquarium: 3, water_pump: 30, floor_heating: 30, christmas_tree: 2, iron: 10, mobility: 40, irrigation: 3, litter_box: 5, speaker: 3, console: 8,
 };
 // A coffee machine or a rice cooker drawing more than this, under its
@@ -515,6 +515,41 @@ function robotModeOf(hass, cfg, st, layout) {
 // from any on and off entity, an input_boolean or a date-driven automation.
 function robotWinter(hass, cfg) {
   return cfg.robot_winter === true || (!!cfg.robot_winter_entity && robotRaised(hass, cfg.robot_winter_entity, /winter|hiver/));
+}
+
+// The printers drawn after real ones (#93): chosen, or from the model's name.
+const PRINTER_STYLES = ["bambu_x", "elegoo_c", "bambu_a", "elegoo_n"];
+function printerStyleOf(cfg, st) {
+  if (PRINTER_STYLES.includes(cfg.printer_style)) return cfg.printer_style;
+  if (cfg.printer_style === "classic") return "";
+  const hay = stripAccents(`${cfg.state_entity || ""} ${cfg.name || ""} ${(st && st.attributes && st.attributes.friendly_name) || ""}`).toLowerCase();
+  const style = /(^|[._\s-])a1([._\s-]|$)|a1.?mini/.test(hay) ? "bambu_a"
+    : /bambu|(^|[._\s-])(p1s|p1p|p2s|x1|x1c|x1e|x1.?carbon|h2d|h2s)([._\s-]|$)/.test(hay) ? "bambu_x"
+    : /centauri/.test(hay) ? "elegoo_c"
+    : /neptune/.test(hay) ? "elegoo_n" : "";
+  // A layout set by hand wins over a guess that contradicts it.
+  const open = style === "bambu_a" || style === "elegoo_n";
+  if (style && ((cfg.printer_layout === "open" && !open) || (cfg.printer_layout === "enclosed" && open))) return "";
+  return style;
+}
+// A filament box beside a printer (#93): one entity per spool. Bambu Lab keeps
+// color, empty and active in attributes, Spoolman its filament_color_hex.
+function spoolColorOf(a) {
+  const c = String(a.color ?? a.filament_color_hex ?? a.color_hex ?? a.hex_color ?? "").trim();
+  const m = /^#?([0-9a-f]{6})([0-9a-f]{2})?$/i.exec(c);
+  return m ? `#${m[1]}` : "#9e9e9e";
+}
+function printerAmsOf(hass, cfg) {
+  const entries = entityEntries(cfg.ams_entities, 4);
+  if (!entries.length) return null;
+  const slots = entries.map((e) => {
+    const st = stateObj(hass, e.entity);
+    const a = (st && st.attributes) || {};
+    const raw = st ? String(st.state).trim().toLowerCase() : "";
+    const empty = !st || a.empty === true || ["empty", "none", "unknown", "unavailable", ""].includes(raw);
+    return { entity: e.entity, empty, color: empty ? "" : spoolColorOf(a), on: !empty && (a.active === true || a.in_use === true) };
+  });
+  return { slots, pos: cfg.ams_position === "top" ? "top" : "side", active: slots.find((x) => x.on) || null, drying: !!cfg.ams_drying_entity && robotRaised(hass, cfg.ams_drying_entity, /dry|sech/) };
 }
 
 // What a robot that does both is set to do (#91): Dreame's cleaning_mode says

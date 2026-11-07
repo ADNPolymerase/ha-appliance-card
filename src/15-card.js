@@ -885,7 +885,7 @@ class ApplianceCard extends HTMLElement {
       // the appliance goes idle) don't show a leftover "remaining time".
       // A printer keeps its last job's times once it is done with it, so it
       // hides them outside a job unless told otherwise; a pause is still one.
-      const hideIdle = cfg.remaining_time_hide_when_idle !== undefined ? cfg.remaining_time_hide_when_idle : !!cap.printer3d;
+      const hideIdle = cfg.remaining_time_hide_when_idle !== undefined ? cfg.remaining_time_hide_when_idle : !!cap.printer3d || !!cap.ntDryer;
       if (!hideIdle || isActiveState(norm) || (cap.printer3d && norm === "paused")) {
         remSec = remainingSeconds(hass, cfg.remaining_time_entity, cfg.remaining_time_unit);
       }
@@ -1737,8 +1737,21 @@ class ApplianceCard extends HTMLElement {
       if (nozzle.cur !== null) displayText = screenTemp(hass, cfg, nozzle.entity, nozzle.cur);
 
       const job = isActiveState(norm) || norm === "paused" || norm === "error";
+      const pStyle = printerStyleOf(cfg, st);
+      const ams = printerAmsOf(hass, cfg);
+      if (ams && ams.active) {
+        const as = stateObj(hass, ams.active.entity);
+        extraLines.push({ key: "ams_spool", icon: "mdi:printer-3d-nozzle-outline", label: t(hass, "ams_spool"), value: formatInfoValue(as, hass, null, cfg, ams.active.entity), entity: ams.active.entity });
+      }
+      if (cfg.ams_humidity_entity && ams) {
+        const hs = stateObj(hass, cfg.ams_humidity_entity);
+        if (hs && !HA_OFFLINE_STATES.includes(String(hs.state).toLowerCase())) extraLines.push({ key: "ams_humidity", icon: "mdi:water-percent", label: t(hass, "ac_line_humidity"), value: keepTogether(formatInfoValue(hs, hass, null, cfg, cfg.ams_humidity_entity)), entity: cfg.ams_humidity_entity });
+      }
+      if (ams && ams.drying) extraLines.push({ key: "ams_drying", icon: "mdi:heat-wave", label: t(hass, "ams_box"), value: t(hass, "fd_drying"), entity: cfg.ams_drying_entity });
       p3 = {
-        layout: cfg.printer_layout === "open" ? "open" : "enclosed",
+        layout: pStyle ? (pStyle === "bambu_a" || pStyle === "elegoo_n" ? "open" : "enclosed") : cfg.printer_layout === "open" ? "open" : "enclosed",
+        style: pStyle,
+        ams,
         part: ["pyramid", "duck"].includes(cfg.printed_part) ? cfg.printed_part : "cube",
         // The part on the bed grows with the job, and stays whole once done.
         height: norm === "done" ? 1 : norm === "error" ? (reached || 0) / 100 : (progressPct || 0) / 100,
