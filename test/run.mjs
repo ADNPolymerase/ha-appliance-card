@@ -14081,5 +14081,42 @@ function tvT(w) { return { 'switch.tv': { state: 'on', attributes: {} }, 'sensor
   check('editeur raccourcis : seulement le robot', markup(newEditor({ appliance_type: 'washer', state_entity: 'switch.m' })).includes('data-role="shortcuts-add-select"'), false);
 }
 
+// ── A delay set as a finish time (#99) ──
+{
+  const s = (state, attributes = {}) => ({ state: String(state), attributes });
+  const make = (cfg, states) => {
+    const calls = [];
+    const c = new Card();
+    c.setConfig({ type: 'custom:ha-appliance-card', appliance_type: 'washer', state_entity: 'sensor.w', delay_set_entity: 'time.klaar', ...cfg });
+    c._hass = { ...HASS(states), callService: (d, sv, data) => calls.push([d, sv, data]) };
+    c._render();
+    return { c, calls, m: () => markup(c) };
+  };
+  const ST = (op, t) => ({ 'sensor.w': s(op), 'time.klaar': s(t, { icon: 'mdi:clock-end', friendly_name: 'Klaar om' }) });
+  const line = (h) => (/data-line-menu="delay"[\s\S]*?<span class="label">[^<]*<\/span><span>([^<]*)<\/span>/.exec(h) || [])[1];
+  const idle = make({}, ST('Ready', 'unknown'));
+  check('heure de fin : unknown, la ligne reste', line(idle.m()), 'None');
+  idle.c._lineMenu = 'delay'; idle.c._render();
+  const vals = [...idle.m().matchAll(/data-line-option="([^"]*)"/g)].map((m) => m[1]);
+  check('heure de fin : 24 h de demi-heures', vals.length, 48);
+  check('heure de fin : le format d une entite time', vals.every((v) => /^\d{2}:(00|30):00$/.test(v)), true);
+  const mins = (v) => +v.slice(0, 2) * 60 + +v.slice(3, 5);
+  const now = new Date(), nowM = now.getHours() * 60 + now.getMinutes();
+  const ahead = (mins(vals[0]) - nowM + 1440) % 1440;
+  check('heure de fin : la prochaine demi-heure', ahead > 0 && ahead <= 30, true);
+  check('heure de fin : de demi-heure en demi-heure', vals.slice(1).every((v, i) => (mins(v) - mins(vals[i]) + 1440) % 1440 === 30), true);
+  check('heure de fin : Aucun n est pas propose', vals.includes(''), false);
+  idle.c._pickLine('delay', vals[3]);
+  check('heure de fin : ecrite avec time.set_value', JSON.stringify(idle.calls), JSON.stringify([['time', 'set_value', { entity_id: 'time.klaar', time: vals[3] }]]));
+  const set = make({}, ST('Ready', '18:30:00'));
+  check('heure de fin : l heure reglee', /^(18:30|0?6:30.PM)$/.test(line(set.m())), true);
+  const odd = make({}, ST('Ready', '07:17:00')); odd.c._lineMenu = 'delay'; odd.c._render();
+  check('heure de fin : une heure hors grille reste cochee', /<div class="mode-row sel"[^>]*data-line-option="07:17:00"/.test(odd.m()), true);
+  check('heure de fin : indisponible, pas de ligne', /data-line-menu="delay"/.test(make({}, ST('Ready', 'unavailable')).m()), false);
+  check('heure de fin : pas pendant un cycle', /data-line-menu="delay"/.test(make({}, ST('Running', 'unknown')).m()), false);
+  // The older entities keep their own rule: unknown hides them.
+  check('heure de fin : un number inconnu reste masque', /data-line-menu="delay"/.test(make({ delay_set_entity: 'number.d' }, { 'sensor.w': s('Ready'), 'number.d': s('unknown', { unit_of_measurement: 's' }) }).m()), false);
+}
+
 if (RECORD) writeFileSync(process.env.HAC_RECORD, JSON.stringify(RECORD));
 report();

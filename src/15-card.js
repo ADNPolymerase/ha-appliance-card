@@ -188,6 +188,7 @@ class ApplianceCard extends HTMLElement {
     this._lineMenu = null;
     if (menu && menu.options.includes(option)) {
       if (menu.kind === "shortcut" && menu.dom === "button") this._hass.callService(domainOf(option), domainOf(option) === "script" ? "turn_on" : "press", { entity_id: option });
+      else if (menu.dom === "time") this._hass.callService("time", "set_value", { entity_id: menu.entity, time: option });
       else if (["number", "input_number"].includes(menu.dom)) this._hass.callService(menu.dom, "set_value", { entity_id: menu.entity, value: Number(option) });
       else if (menu.dom === "humidifier") this._hass.callService("humidifier", "set_mode", { entity_id: menu.entity, mode: option });
       else this._hass.callService(menu.dom, "select_option", { entity_id: menu.entity, option });

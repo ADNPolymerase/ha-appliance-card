@@ -4842,6 +4842,21 @@ function programMenuOf(hass, cfg, cap, norm) {
   const opts = st && Array.isArray(st.attributes.options) ? st.attributes.options.map(String) : [];
   return opts.length > 1 ? { kind: "program", entity: id, dom: domainOf(id), options: opts, current: String(st.state) } : null;
 }
+// A delay set as the time to finish at (#99, Samsung): a time entity, unknown
+// while nothing is set. The next 24 hours, half an hour apart, from the next
+// half hour on. Home Assistant cannot set a time back to unknown, so None is
+// shown and never offered.
+function finishTimeMenu(id, st) {
+  if (!st || String(st.state).toLowerCase() === "unavailable") return null;
+  const pad = (n) => String(n).padStart(2, "0");
+  const first = new Date();
+  first.setMinutes(first.getMinutes() < 30 ? 30 : 60, 0, 0);
+  const options = [...Array(48)].map((_, i) => { const d = new Date(first.getTime() + i * 1800000); return `${pad(d.getHours())}:${pad(d.getMinutes())}:00`; });
+  const set = /^(\d{1,2}):(\d{2})/.exec(String(st.state));
+  const current = set ? `${pad(+set[1])}:${set[2]}:00` : "";
+  if (current && !options.includes(current)) options.unshift(current);
+  return { kind: "delay", entity: id, dom: "time", finish: true, options: [...new Set(options)], current };
+}
 // A humidifier's modes, picked in the card (#89).
 function humidifierModeMenuOf(hass, cfg) {
   const st = stateObj(hass, cfg.state_entity);
@@ -4864,6 +4879,7 @@ function delayMenuOf(hass, cfg, cap, norm) {
   const id = cfg.delay_set_entity;
   if (!id || !cap || !cap.cycle || !betweenCycles(norm)) return null;
   const st = stateObj(hass, id);
+  if (domainOf(id) === "time") return finishTimeMenu(id, st);
   if (!st || HA_OFFLINE_STATES.includes(String(st.state).toLowerCase())) return null;
   const dom = domainOf(id);
   if (["select", "input_select"].includes(dom)) {
@@ -4910,6 +4926,12 @@ function lineMenuLabel(hass, cfg, menu, option) {
     if (menu.labels[option]) return menu.labels[option];
     const st = stateObj(hass, option);
     return stripDeviceName(hass, st && st.attributes.friendly_name, option, cfg.name).replace(/^(shortcut|raccourci)[\s_:-]+/i, "");
+  }
+  if (menu.finish) {
+    if (!option) return t(hass, "delay_none");
+    const [h, m] = option.split(":").map(Number), at = new Date();
+    at.setHours(h, m, 0, 0);
+    return clockTime(at, hass);
   }
   if (!menu.sec) return option;
   const s = parseFloat(option) * menu.sec;
@@ -8091,6 +8113,7 @@ class ApplianceCard extends HTMLElement {
     this._lineMenu = null;
     if (menu && menu.options.includes(option)) {
       if (menu.kind === "shortcut" && menu.dom === "button") this._hass.callService(domainOf(option), domainOf(option) === "script" ? "turn_on" : "press", { entity_id: option });
+      else if (menu.dom === "time") this._hass.callService("time", "set_value", { entity_id: menu.entity, time: option });
       else if (["number", "input_number"].includes(menu.dom)) this._hass.callService(menu.dom, "set_value", { entity_id: menu.entity, value: Number(option) });
       else if (menu.dom === "humidifier") this._hass.callService("humidifier", "set_mode", { entity_id: menu.entity, mode: option });
       else this._hass.callService(menu.dom, "select_option", { entity_id: menu.entity, option });

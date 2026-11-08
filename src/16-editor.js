@@ -41,7 +41,7 @@ const SECTIONS = [
   { field: "active_program_entity", types: CYCLE_TYPES.filter((ty) => ty !== "printer_3d"), labelKey: "section_active_program", includeDomains: ["sensor", "select", "input_select"] },
   { field: "delay_entity", types: CYCLE_TYPES, labelKey: "section_delay", includeDomains: ["sensor", "number", "input_number"] },
   // The delayed start set from the card between cycles (#79).
-  { field: "delay_set_entity", types: CYCLE_TYPES, labelKey: "section_delay_set", includeDomains: ["number", "input_number", "select", "input_select"] },
+  { field: "delay_set_entity", types: CYCLE_TYPES, labelKey: "section_delay_set", includeDomains: ["number", "input_number", "select", "input_select", "time"] },
   { field: "remaining_time_entity", types: CYCLE_TYPES, labelKey: "section_remaining", includeDomains: ["sensor", "input_number"], extra: (c, hass) => c._row("remaining_time_unit", "remaining_time_unit", {
       type: "select",
       options: [
