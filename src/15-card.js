@@ -4073,6 +4073,15 @@ class ApplianceCard extends HTMLElement {
       // icon of the card would be a menu nobody reads.
       .map((a) => (a.key && cfg[`${a.key}_icon`] ? { ...a, icon: cfg[`${a.key}_icon`] } : a))
       .map((a) => (a.key === "toggle" && a.on && cfg.toggle_icon_on ? { ...a, icon: cfg.toggle_icon_on } : a))
+      // A toggle that only tunes a running appliance, a VMC's speed switch next
+      // to a separate motor switch, has no use once the motor is off (HACF
+      // #157). Never when the toggle is the state itself: that is how it turns
+      // back on.
+      .filter((a) => {
+        if (a.key !== "toggle" || !cfg.toggle_hide_when_off || !cfg.state_entity || a.entity === cfg.state_entity) return true;
+        const st = stateObj(hass, cfg.state_entity);
+        return !(st && String(st.state).toLowerCase() === "off");
+      })
       // A fridge offers no cycle to drive, only its plug: the switch shows
       // when one is set, and nothing else does.
       // A type that already offers its state's switch keeps its own button.

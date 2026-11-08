@@ -896,10 +896,17 @@ check('lave-vaisselle : Prewash pose la classe phase-prewash',
 // A wash phase must keep the wash animation: only its character changes.
 check('lave-vaisselle : Prewash reste en lavage',
   machineCls(dishwasherPrewash).includes('spinning'), true);
-// The three wash phases deliberately share one animation: a dishwasher is
-// doing the same thing in all of them, so none of them overrides the default.
-check('lave-vaisselle : Prewash ne surcharge rien',
-  /\.machine\.phase-prewash /.test(dishwasherPrewash), false);
+// A pre-wash is a cold spray: its own colours, slower arm, jets and specks
+// washed off the plates (#92). Rinsing and the main wash keep the default.
+contains('lave-vaisselle : Prewash a ses jets', dishwasherPrewash, 'animation-name: dw-jet');
+contains('lave-vaisselle : Prewash lave les assiettes', dishwasherPrewash, 'animation: dw-soil-off');
+contains('lave-vaisselle : Prewash ralentit le bras', dishwasherPrewash, '.machine.phase-prewash.spinning .dw-spray { animation-duration: 4.2s; }');
+// homeconnect_local says prerinse and finalrinse, in one word (#92).
+for (const [raw, cls] of [['prerinse', 'phase-prewash'], ['pre_rinse', 'phase-prewash'], ['Pr\u00e9lavage', 'phase-prewash'], ['finalrinse', 'phase-rinsing'], ['mainwash', 'phase-mainwash']]) {
+  const html = render({ appliance_type: 'dishwasher', state_entity: 'sensor.dw', phase_entity: 'sensor.dw_phase' },
+    { 'sensor.dw': { state: 'Running', attributes: {} }, 'sensor.dw_phase': { state: raw, attributes: {} } });
+  check(`lave-vaisselle : phase ${raw} donne ${cls}`, machineCls(html).includes(cls), true);
+}
 
 const dishwasherRinsing = render({ appliance_type: 'dishwasher', state_entity: 'sensor.dw',
                                   phase_entity: 'sensor.dw_phase' },
@@ -13644,6 +13651,17 @@ function tvT(w) { return { 'switch.tv': { state: 'on', attributes: {} }, 'sensor
   check('VMC : un autre interrupteur reste marche/arret', /icon="mdi:power"/.test(vmc('on', { toggle_entity: 'switch.autre' })), true);
   check('VMC : icones choisies, coupe', /icon="mdi:fan-chevron-down"/.test(vmc('off', { toggle_icon: 'mdi:fan-chevron-down', toggle_icon_on: 'mdi:fan-chevron-up' })), true);
   check('VMC : icones choisies, allume', /icon="mdi:fan-chevron-up"/.test(vmc('on', { toggle_icon: 'mdi:fan-chevron-down', toggle_icon_on: 'mdi:fan-chevron-up' })), true);
+  {
+    // HACF #157: the speed button goes with the motor.
+    const hasBtn = (html, id) => html.includes(`class="action-btn`) && new RegExp(`action-btn[^>]*data-entity="${id}"`).test(html);
+    const two = (motor, extra = {}) => render({ appliance_type: 'hrv', state_entity: 'switch.moteur', toggle_entity: 'switch.vitesse', toggle_hide_when_off: true, ...extra },
+      { 'switch.moteur': { state: motor, attributes: {} }, 'switch.vitesse': { state: 'on', attributes: {} } });
+    check('toggle_hide_when_off : moteur coupe, plus de bouton', hasBtn(two('off'), 'switch.vitesse'), false);
+    check('toggle_hide_when_off : moteur en marche, bouton la', hasBtn(two('on'), 'switch.vitesse'), true);
+    check('toggle_hide_when_off : sans option, bouton la', hasBtn(two('off', { toggle_hide_when_off: false }), 'switch.vitesse'), true);
+    const same = render({ appliance_type: 'hrv', state_entity: 'switch.moteur', toggle_entity: 'switch.moteur', toggle_hide_when_off: true }, { 'switch.moteur': { state: 'off', attributes: {} } });
+    check('toggle_hide_when_off : jamais si le bouton est l etat', hasBtn(same, 'switch.moteur'), true);
+  }
   const lamp = (st) => render({ appliance_type: 'hood', state_entity: 'switch.h', toggle_entity: 'switch.h', toggle_icon_on: 'mdi:fan' }, { 'switch.h': s(st) });
   check('icone allumee : tout type', /icon="mdi:fan"/.test(lamp('on')), true);
   check('icone allumee : pas coupe', /icon="mdi:fan"/.test(lamp('off')), false);

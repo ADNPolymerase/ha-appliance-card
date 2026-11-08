@@ -398,6 +398,35 @@ const ILLUSTRATION_CSS = {
           box-shadow: inset 0 0 0 1px rgba(225, 235, 236, 0.3),
             inset 0 0 15px rgba(255, 112, 67, 0.32), 0 0 8px rgba(255, 112, 67, 0.3);
         }
+        /* Pre-wash: a short cold spray that loosens what is stuck on the
+           dishes before the main wash. Cold blue instead of the state colour,
+           the arm turning slower, quick thin jets, little water in the sump,
+           and specks on the plates fading away as the jets wash them off. */
+        .machine.phase-prewash .dw-cavity { background: linear-gradient(180deg, #2f4a57, #6f8f9b); }
+        .machine.phase-prewash .dw-spray {
+          background: linear-gradient(90deg, transparent 0 3%, #81d4fa 10% 90%, transparent 97%);
+          box-shadow: 0 0 6px #81d4fa;
+        }
+        .machine.phase-prewash .dw-spray-hub { border-color: #81d4fa; }
+        .machine.phase-prewash .dw-spray::before,
+        .machine.phase-prewash .dw-spray::after,
+        .machine.phase-prewash .dw-drop { background: #b3e5fc; }
+        .machine.phase-prewash.spinning .dw-spray { animation-duration: 4.2s; }
+        .machine.phase-prewash .dw-drop { width: 2px; height: 8px; border-radius: 1px; }
+        .machine.phase-prewash.spinning .dw-drop { animation-name: dw-jet; animation-duration: 0.9s; }
+        .machine.phase-prewash .dw-water { height: 7px; border-top-color: #81d4fa; }
+        .machine.phase-prewash .dw-wave { border-top-color: #81d4fa; }
+        .machine.phase-prewash .dw-plate::after {
+          content: ""; position: absolute; inset: 3px 1px; border-radius: 50%;
+          background:
+            radial-gradient(circle at 40% 25%, #a1887f 0 1px, transparent 1.6px),
+            radial-gradient(circle at 65% 55%, #8d6e63 0 1.2px, transparent 1.8px),
+            radial-gradient(circle at 35% 78%, #a1887f 0 1px, transparent 1.6px);
+        }
+        .machine.phase-prewash.spinning .dw-plate::after { animation: dw-soil-off 3.6s ease-in-out infinite; animation-delay: var(--anim-offset, 0s); }
+        .machine.phase-prewash.spinning .dw-plate-b::after { animation-delay: calc(-0.9s + var(--anim-offset, 0s)); }
+        .machine.phase-prewash.spinning .dw-plate-c::after { animation-delay: calc(-1.8s + var(--anim-offset, 0s)); }
+        .machine.phase-prewash.spinning .dw-plate-d::after { animation-delay: calc(-2.7s + var(--anim-offset, 0s)); }
         .dw-door {
           position: absolute; top: 22px; right: 8px; bottom: 8px; left: 8px; z-index: 5;
           padding: 0; border: 3px solid #34383b; border-radius: 4px;
@@ -436,6 +465,12 @@ const ILLUSTRATION_CSS = {
           82% { opacity: 0.62; }
           100% { opacity: 0; transform: translateY(28px) scale(1); }
         }
+        @keyframes dw-jet {
+          0% { opacity: 0; transform: translateY(-4px); }
+          18% { opacity: 0.9; }
+          100% { opacity: 0; transform: translateY(30px); }
+        }
+        @keyframes dw-soil-off { 0%, 20% { opacity: 1; } 70%, 85% { opacity: 0; } 100% { opacity: 1; } }
         @keyframes dw-water-pulse { 0%, 100% { transform: scaleX(0.97); } 50% { transform: scaleX(1.02); } }
         @keyframes dw-wave-drift { 0%, 100% { transform: translateX(-3%); } 50% { transform: translateX(3%); } }
         @keyframes dw-heat-rise {
