@@ -187,7 +187,8 @@ class ApplianceCard extends HTMLElement {
     const menu = this._lineMenus && this._lineMenus[kind];
     this._lineMenu = null;
     if (menu && menu.options.includes(option)) {
-      if (["number", "input_number"].includes(menu.dom)) this._hass.callService(menu.dom, "set_value", { entity_id: menu.entity, value: Number(option) });
+      if (menu.kind === "shortcut" && menu.dom === "button") this._hass.callService(domainOf(option), domainOf(option) === "script" ? "turn_on" : "press", { entity_id: option });
+      else if (["number", "input_number"].includes(menu.dom)) this._hass.callService(menu.dom, "set_value", { entity_id: menu.entity, value: Number(option) });
       else if (menu.dom === "humidifier") this._hass.callService("humidifier", "set_mode", { entity_id: menu.entity, mode: option });
       else this._hass.callService(menu.dom, "select_option", { entity_id: menu.entity, option });
     }
@@ -4434,7 +4435,7 @@ class ApplianceCard extends HTMLElement {
     // The program and the delayed start, picked in the card between cycles (#79).
     const programMenu = offHidden ? null : programMenuOf(hass, cfg, cap, norm);
     const delayMenu = offHidden ? null : delayMenuOf(hass, cfg, cap, norm);
-    this._lineMenus = { program: programMenu, delay: delayMenu, hum_mode: applianceType === "humidifier" ? humidifierModeMenuOf(hass, cfg) : null, hum_mist: applianceType === "humidifier" ? humidifierMistMenuOf(hass, cfg) : null };
+    this._lineMenus = { program: programMenu, delay: delayMenu, hum_mode: applianceType === "humidifier" ? humidifierModeMenuOf(hass, cfg) : null, hum_mist: applianceType === "humidifier" ? humidifierMistMenuOf(hass, cfg) : null, shortcut: offHidden ? null : shortcutMenuOf(hass, cfg, cap) };
     if (!this._lineMenus[this._lineMenu]) this._lineMenu = null;
     let lines = [];
     if (programText) {
@@ -4505,6 +4506,11 @@ class ApplianceCard extends HTMLElement {
         key: e.entity,
       });
     });
+
+    if (this._lineMenus.shortcut) {
+      const sm = this._lineMenus.shortcut;
+      lines.push({ key: "robot_shortcut", icon: "mdi:gesture-tap-button", label: t(hass, "robot_shortcut"), value: sm.current ? lineMenuLabel(hass, cfg, sm, sm.current) : t(hass, "robot_shortcut_pick"), menu: "shortcut" });
+    }
 
     // The order you chose, then everything else where the card puts it. A list
     // naming one line pins that line to the top without having to describe the

@@ -312,7 +312,7 @@ const ROBOT_STATIONS = ["station", "box", "base"];
 // A rectangular station's front, as the brands make them (#69).
 const ROBOT_BOX_COLORS = ["white", "black", "gold"];
 const ROBOT_ONLY_FIELDS = ["robot_layout", "robot_station", "robot_station_color", "robot_camera", "robot_shelter", "robot_shelter_style", "mower_style", "robot_shelter_color", "robot_floor", "robot_controls", "away_threshold", "robot_status_entity", "robot_bin_entity",
-  "robot_water_entity", "robot_clean_mode_entity", "robot_clean_tank_entity", "robot_dirty_tank_entity", "robot_rain_entity", "robot_error_entity", "robot_winter", "robot_winter_entity"];
+  "shortcut_entities", "robot_water_entity", "robot_clean_mode_entity", "robot_clean_tank_entity", "robot_dirty_tank_entity", "robot_rain_entity", "robot_error_entity", "robot_winter", "robot_winter_entity"];
 // A robot by its name, its maker's or its integration's. A robot cook is a
 // cooker, so the word robot needs what it does.
 const ROBOT_NAME_RE = /dolphin|sileno|tapo.?rv\d+|proscenic|hombot|ambrogio|tineco|aspirateur.?balai|floor.?one|ifloor|laveur.?de.?sol|floor.?washer|nass.?trocken|lavapavimenti|stick.?vac|cordless.?vac|akkusauger|stielsauger|roomba|braava|roborock|ecovacs|deebot|dreame|neato|eufy.?clean|robovac|xiaomi.?vacuum|conga|robot.?(vacuum|aspir|mop|laveur|mower|tondeuse)|robot.?(clean|sweep)|vacuum|aspirateur|saugroboter|staubsauger|wischroboter|aspiradora|aspirapolvere|robotstofzuiger|stofzuiger|dammsugare|st(o|\u00f8)vsuger|odkurzacz|vysavac|landroid|automower|mammotion|navimow|(^|[^a-z])luba([^a-z]|$)|lawn.?mower|(^|[^a-z])mower|tondeuse|m(a|ae|\u00e4)hroboter|robotmaaier|grasmaaier|cortac(e|\u00e9)sped|tosaerba|corta.?relva|robotgr(a|\u00e4)sklipp|robotgressklipp|robotpl(a|\u00e6)neklipp|kosiarka|sekacka|\u626b\u5730|\u5438\u5c18|\u62d6\u5730|\u5272\u8349|\u043f\u044b\u043b\u0435\u0441\u043e\u0441|\u0433\u0430\u0437\u043e\u043d\u043e\u043a\u043e\u0441/;
@@ -990,11 +990,35 @@ function delayMenuOf(hass, cfg, cap, norm) {
   const cur = parseFloat(st.state);
   return opts.length > 1 ? { kind: "delay", entity: id, dom, options: opts, current: Number.isFinite(cur) ? String(Math.round(cur)) : "", sec } : null;
 }
+// A robot's own cleaning routines (#91), picked in the card: one select, or a
+// button each, as Dreame makes them. Never pressed, a button's state is unknown.
+const SHORTCUT_PRESS = ["button", "input_button", "script"];
+function shortcutMenuOf(hass, cfg, cap) {
+  if (!cap || !cap.robot || !cfg.shortcut_entities) return null;
+  const robot = stateObj(hass, cfg.state_entity);
+  if (!robot || HA_OFFLINE_STATES.includes(String(robot.state).toLowerCase())) return null;
+  const usable = (id) => { const st = stateObj(hass, id); return !!st && String(st.state).toLowerCase() !== "unavailable"; };
+  const entries = entityEntries(cfg.shortcut_entities, 12);
+  const sel = entries.map((e) => e.entity).find((id) => ["select", "input_select"].includes(domainOf(id)));
+  if (sel) {
+    const st = stateObj(hass, sel);
+    if (!usable(sel)) return null;
+    const opts = Array.isArray(st.attributes.options) ? st.attributes.options.map(String) : [];
+    return opts.length ? { kind: "shortcut", entity: sel, dom: domainOf(sel), options: opts, current: String(st.state) } : null;
+  }
+  const buttons = entries.filter((e) => SHORTCUT_PRESS.includes(domainOf(e.entity)) && usable(e.entity));
+  return buttons.length ? { kind: "shortcut", dom: "button", options: buttons.map((e) => e.entity), labels: Object.fromEntries(buttons.map((e) => [e.entity, e.label || ""])), current: "" } : null;
+}
 // How a line's menu says an option: a program cleaned up, a delay as its
 // length and the time it would start.
 function lineMenuLabel(hass, cfg, menu, option) {
   if (menu.kind === "program") return programLabel(hass, stateObj(hass, menu.entity), option, cfg);
   if (menu.kind === "hum_mode") return attrLabel(hass, stateObj(hass, menu.entity), "mode", option, cfg);
+  if (menu.kind === "shortcut" && menu.dom === "button") {
+    if (menu.labels[option]) return menu.labels[option];
+    const st = stateObj(hass, option);
+    return stripDeviceName(hass, st && st.attributes.friendly_name, option, cfg.name).replace(/^(shortcut|raccourci)[\s_:-]+/i, "");
+  }
   if (!menu.sec) return option;
   const s = parseFloat(option) * menu.sec;
   return s > 0 ? `${formatDuration(s, hass)} \u00b7 ${formatEta(s, hass)}` : t(hass, "delay_none");

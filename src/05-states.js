@@ -1111,6 +1111,9 @@ const ENTITY_LISTS = [
   // A ventilation unit run by one entity per speed (#78), in order.
   { panel: "speeds", field: "speed_entities", max: 6, title: "section_speed_list", add: "speeds_add", types: ["hrv"],
     domains: ["input_boolean", "switch", "light"], offers: (hass, id) => ["input_boolean", "switch", "light"].includes(domainOf(id)), icon: () => "mdi:fan" },
+  // A robot's own cleaning routines (#91): a button each, or one select.
+  { panel: "shortcuts", field: "shortcut_entities", max: 12, title: "robot_shortcut_list", add: "robot_shortcut_add", types: ["robot"],
+    domains: ["button", "input_button", "script", "select", "input_select"], offers: (hass, id) => ["button", "select"].includes(domainOf(id)) && /shortcut|raccourci|routine/.test(id), icon: () => "mdi:gesture-tap-button" },
   // A buffer tank (#81): its temperatures top to bottom, and the sources and
   // consumers drawn on its sides, lit while they run.
   { panel: "tank_temps", field: "temperature_entities", max: 5, title: "tank_temps_list", add: "tank_temps_add", types: ["storage_tank"],

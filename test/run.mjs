@@ -14028,5 +14028,58 @@ function tvT(w) { return { 'switch.tv': { state: 'on', attributes: {} }, 'sensor
   check('editeur capteur th : le modele, l humidite, la pile', ['"climate_sensor_layout"', 'value="lcd_round"', 'data-toggle="humidity_entity"', 'data-toggle="battery_entity"'].every((f) => ed.includes(f)), true);
 }
 
+// ── A robot's shortcuts (#91) ──
+{
+  const s = (state, attributes = {}) => ({ state: String(state), attributes });
+  const make = (cfg, states) => {
+    const calls = [];
+    const c = new Card();
+    c.setConfig({ type: 'custom:ha-appliance-card', appliance_type: 'robot', state_entity: 'vacuum.mova', ...cfg });
+    c._hass = { ...HASS({ 'vacuum.mova': s('docked', { friendly_name: 'Mova' }), ...states }), callService: (d, sv, data) => calls.push([d, sv, data]) };
+    c._render();
+    return { c, calls, m: () => markup(c) };
+  };
+  const B = { 'button.a': s('unknown', { friendly_name: 'Mova Shortcut Cuisine' }), 'button.b': s('2026-11-08T10:00:00+00:00', { friendly_name: 'Salon' }), 'input_button.c': s('unknown', { friendly_name: 'Chambre' }), 'script.d': s('off', { friendly_name: 'Tout' }) };
+  const ALL = { name: 'Mova', shortcut_entities: ['button.a', 'button.b', 'input_button.c', 'script.d'] };
+  const opts = (h) => [...h.matchAll(/data-line-option="([^"]*)"><span>([^<]*)</g)].map((m) => `${m[1]}=${m[2]}`).join();
+  check('raccourcis : rien sans option', /data-line-menu="shortcut"/.test(make({}, B).m()), false);
+  const r = make(ALL, B);
+  check('raccourcis : une seule ligne', (r.m().match(/data-line-menu="shortcut"/g) || []).length, 1);
+  check('raccourcis : pas de rangee de boutons', /data-entity="button\.a"/.test(r.m()), false);
+  check('raccourcis : la ligne invite a choisir', />Choose</.test(r.m()), true);
+  r.c._lineMenu = 'shortcut'; r.c._render();
+  check('raccourcis : les noms, sans l appareil ni le mot', opts(r.m()), 'button.a=Cuisine,button.b=Salon,input_button.c=Chambre,script.d=Tout');
+  r.c._pickLine('shortcut', 'button.b');
+  check('raccourcis : un bouton est presse', JSON.stringify(r.calls), JSON.stringify([['button', 'press', { entity_id: 'button.b' }]]));
+  check('raccourcis : le menu se referme', r.c._lineMenu, null);
+  r.calls.length = 0; r.c._pickLine('shortcut', 'input_button.c'); r.c._pickLine('shortcut', 'script.d');
+  check('raccourcis : input_button et script', JSON.stringify(r.calls), JSON.stringify([['input_button', 'press', { entity_id: 'input_button.c' }], ['script', 'turn_on', { entity_id: 'script.d' }]]));
+  r.calls.length = 0; r.c._pickLine('shortcut', 'button.ailleurs');
+  check('raccourcis : rien d autre ne se presse', r.calls.length, 0);
+  const lab = make({ shortcut_entities: [{ entity: 'button.a', label: 'Ma piece' }] }, B); lab.c._lineMenu = 'shortcut'; lab.c._render();
+  check('raccourcis : un libelle choisi', opts(lab.m()), 'button.a=Ma piece');
+  const gone = make(ALL, { ...B, 'button.a': s('unavailable') }); gone.c._lineMenu = 'shortcut'; gone.c._render();
+  check('raccourcis : un bouton indisponible disparait', opts(gone.m()).includes('button.a'), false);
+  check('raccourcis : tous indisponibles, pas de ligne', /data-line-menu="shortcut"/.test(make({ shortcut_entities: ['button.a'] }, { 'button.a': s('unavailable') }).m()), false);
+  check('raccourcis : robot hors ligne, pas de ligne', /data-line-menu="shortcut"/.test(make(ALL, { ...B, 'vacuum.mova': s('unavailable') }).m()), false);
+  check('raccourcis : seulement sur un robot', /data-line-menu="shortcut"/.test(make({ ...ALL, appliance_type: 'washer' }, B).m()), false);
+  check('raccourcis : la ligne se masque', /data-line-menu="shortcut"/.test(make({ ...ALL, hidden_lines: ['robot_shortcut'] }, B).m()), false);
+  const placed = make({ ...ALL, lines_order: ['robot_shortcut'], robot_water_entity: 'sensor.w' }, { ...B, 'sensor.w': s(50, { unit_of_measurement: '%' }) });
+  check('raccourcis : la ligne se place', placed.c._drawnLines[0].key, 'robot_shortcut');
+  check('raccourcis : sinon en dernier', make({ ...ALL, robot_water_entity: 'sensor.w' }, { ...B, 'sensor.w': s(50, { unit_of_measurement: '%' }) }).c._drawnLines.at(-1).key, 'robot_shortcut');
+  // One select instead.
+  const S = { 'select.r': s('Cuisine', { options: ['Cuisine', 'Salon'], friendly_name: 'Routines' }) };
+  const sel = make({ shortcut_entities: 'select.r' }, S);
+  check('raccourcis : un select, son option en cours', />Cuisine</.test(sel.m()), true);
+  sel.c._lineMenu = 'shortcut'; sel.c._render();
+  check('raccourcis : les options du select', opts(sel.m()), 'Cuisine=Cuisine,Salon=Salon');
+  sel.c._pickLine('shortcut', 'Salon');
+  check('raccourcis : le select est regle', JSON.stringify(sel.calls), JSON.stringify([['select', 'select_option', { entity_id: 'select.r', option: 'Salon' }]]));
+  // The editor.
+  const ed = markup(newEditor({ appliance_type: 'robot', state_entity: 'vacuum.m' }));
+  check('editeur raccourcis : le panneau', ed.includes('data-role="shortcuts-add-select"'), true);
+  check('editeur raccourcis : seulement le robot', markup(newEditor({ appliance_type: 'washer', state_entity: 'switch.m' })).includes('data-role="shortcuts-add-select"'), false);
+}
+
 if (RECORD) writeFileSync(process.env.HAC_RECORD, JSON.stringify(RECORD));
 report();
