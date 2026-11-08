@@ -222,7 +222,7 @@ const SECTIONS = [
   { field: "fault_entity", types: ["water_pump"], labelKey: "heat_fault", includeDomains: ["binary_sensor", "sensor"],
     when: (c) => pumpLayoutOf(c, null) === "circulator" },
   { field: "temperature_entity", types: ["floor_heating", "spa", "sauna", "aquarium", "filament_dryer"], labelKey: "temperature", includeDomains: ["sensor", "number", "input_number", "climate"] },
-  { field: "humidity_entity", types: ["filament_dryer"], labelKey: "ac_line_humidity", includeDomains: ["sensor", "number", "input_number"] },
+  { field: "humidity_entity", types: ["filament_dryer", "climate_sensor"], labelKey: "ac_line_humidity", includeDomains: ["sensor", "number", "input_number"] },
   { field: "remaining_time_entity", types: ["filament_dryer"], labelKey: "section_remaining", includeDomains: ["sensor", "input_number"] },
   { field: "target_temperature_entity", types: ["sauna"], labelKey: "section_target_temperature", includeDomains: ["number", "sensor", "input_number"] },
   { field: "bubbles_entity", types: ["spa"], labelKey: "section_bubbles", includeDomains: ["switch", "input_boolean", "fan", "binary_sensor"] },
@@ -294,7 +294,7 @@ const SECTIONS = [
   { field: "mail_present_entity", types: ["mailbox"], labelKey: "section_mail_present", includeDomains: ["input_boolean", "binary_sensor", "switch", "sensor"] },
   { field: "front_door_entity", types: ["mailbox"], labelKey: "mb_front_door", includeDomains: ["binary_sensor", "sensor", "input_boolean", "switch"] },
   { field: "back_door_entity", types: ["mailbox"], labelKey: "mb_back_door", includeDomains: ["binary_sensor", "sensor", "input_boolean", "switch"] },
-  { field: "battery_entity", types: ["robot", "home_battery", "ups", "camera", "screen", "mobility", "detector"], labelKey: "section_battery", includeDomains: ["sensor", "binary_sensor"],
+  { field: "battery_entity", types: ["robot", "home_battery", "ups", "camera", "screen", "mobility", "detector", "climate_sensor"], labelKey: "section_battery", includeDomains: ["sensor", "binary_sensor"],
     when: (c) => !(c.appliance_type === "screen" || SCREEN_ONLY_FIELDS.some((f) => c[f])) || screenIsTablet(c) || screenLayoutOf(c) === "laptop", extra: (c) =>
       (caps(c._currentType()).ups ? c._row("ups_battery_low", "battery_low", { placeholder: String(UPS_BATTERY_LOW) }) : "") },
   // A UPS: the time left on its battery, its load and the mains voltage.
@@ -1402,7 +1402,7 @@ class ApplianceCardEditor extends HTMLElement {
           type: "select",
           options: [{ value: "auto", label: t(hass, "unit_auto") }].concat(CIRC_MODELS.map((v) => ({ value: v, label: v === "generic" ? t(hass, "circ_model_generic") : v === "dab" ? "DAB" : v[0].toUpperCase() + v.slice(1) }))),
         }) : "") : ""}
-        ${[["irrigation", "irrigation_layout", IRRIGATION_LAYOUTS, "irr"], ["litter_box", "litter_layout", LITTER_LAYOUTS, "lit"], ["detector", "detector_layout", DETECTOR_LAYOUTS, "det"], ["speaker", "speaker_layout", SPEAKER_LAYOUTS, "spk"], ["console", "console_layout", CONSOLE_LAYOUTS, "con"], ["streamer", "streamer_layout", STREAMER_LAYOUTS, "str"]]
+        ${[["irrigation", "irrigation_layout", IRRIGATION_LAYOUTS, "irr"], ["litter_box", "litter_layout", LITTER_LAYOUTS, "lit"], ["detector", "detector_layout", DETECTOR_LAYOUTS, "det"], ["speaker", "speaker_layout", SPEAKER_LAYOUTS, "spk"], ["console", "console_layout", CONSOLE_LAYOUTS, "con"], ["streamer", "streamer_layout", STREAMER_LAYOUTS, "str"], ["climate_sensor", "climate_sensor_layout", THS_LAYOUTS, "ths"]]
           .filter(([ty]) => this._type === ty).map(([, f, list, p]) => this._row("section_screen_layout", f, { type: "select",
             options: [{ value: "auto", label: t(hass, "unit_auto") }].concat(list.map((v) => ({ value: v, label: t(hass, `layout_${p}_${v}`) }))) })).join("")}
         ${this._type === "irrigation" && irrigationLayoutOf(this._config, stateObj(hass, this._config.state_entity)) === "tap" ? this._row("irr_model", "tap_model", {

@@ -13971,5 +13971,62 @@ function tvT(w) { return { 'switch.tv': { state: 'on', attributes: {} }, 'sensor
   check('editeur boitier : le modele et l appli', ['"streamer_layout"', 'value="fire_tv_cube"', 'data-toggle="app_entity"'].every((f) => ed.includes(f)), true);
 }
 
+// ── Temperature and humidity sensors ──
+{
+  const T0S = Date.now();
+  const s = (state, attributes = {}) => ({ state: String(state), attributes: { ...attributes }, last_changed: new Date(T0S - 3600000).toISOString() });
+  const C = { unit_of_measurement: '°C', device_class: 'temperature' };
+  const P = { unit_of_measurement: '%' };
+  const TH = (v, more = {}, extra = {}, attrs = C) => render({ appliance_type: 'climate_sensor', state_entity: 'sensor.t', ...more }, { 'sensor.t': s(v, attrs), ...extra });
+  const kind = (h) => (/\bnt-k-(\w+)/.exec(machineCls(h)) || [, null])[1];
+  const svg = (h) => (h.match(/<svg class="nt-svg"[\s\S]*?<\/svg>/) || [''])[0];
+  const LAYOUTS = ['disc', 'square', 'cushion', 'stick', 'lcd_stand', 'lcd_probe', 'lcd_round'];
+  const LCDS = ['lcd_stand', 'lcd_probe', 'lcd_round'];
+  const HUM = (v) => ({ 'sensor.h': s(v, P) });
+  const TYPE = (id, attrs = {}, state = '21.5') => { const e = new Editor(); e.setConfig({ type: 'custom:ha-appliance-card', state_entity: id }); e.hass = HASS({ [id]: s(state, attrs) }); return e._type; };
+  // The temperature is the state, the humidity and the battery are lines.
+  check('capteur th : la temperature est son etat', stateLine(TH(23.8)).replace(/ /g, ' '), '23.8 °C');
+  const lined = TH(23.8, { humidity_entity: 'sensor.h', battery_entity: 'sensor.b' }, { ...HUM(68.6), 'sensor.b': s(90, P) });
+  check('capteur th : humidite et pile en ligne', ['68.6', '90'].every((v) => lined.includes(v)) && /mdi:water-percent/.test(lined) && /mdi:battery"/.test(lined), true);
+  check('capteur th : pile faible signalee', /mdi:battery-alert-variant-outline/.test(TH(20, { battery_entity: 'sensor.b' }, { 'sensor.b': s(12, P) })), true);
+  check('capteur th : pile faible en capteur binaire', /mdi:battery-alert-variant-outline/.test(TH(20, { battery_entity: 'binary_sensor.b' }, { 'binary_sensor.b': s('on', { device_class: 'battery' }) })), true);
+  check('capteur th : hors ligne', LCDS.map((l) => [machineCls(TH('unavailable', { climate_sensor_layout: l })).includes('nt-unav'), svg(TH('unavailable', { climate_sensor_layout: l })).includes('<polygon')].join()).join('|'), 'true,false|true,false|true,false');
+  check('capteur th : hors ligne, dessin garde', kind(TH('unavailable', { climate_sensor_layout: 'lcd_round' })), 'ths_lcd_round');
+  const cells = (b) => (svg(TH(20, { climate_sensor_layout: 'lcd_stand', battery_entity: 'sensor.b' }, { 'sensor.b': s(b, P) })).match(/width="1\.5" height="2\.6"/g) || []).length;
+  check('capteur th : la pile de l ecran suit le niveau', [100, 50, 25, 0].map(cells).join(), '4,2,1,0');
+  // The model.
+  check('capteur th : choisi', LAYOUTS.map((l) => kind(TH(20, { climate_sensor_layout: l }))).join(), LAYOUTS.map((l) => `ths_${l}`).join());
+  check('capteur th : chaque dessin, sans NaN ni undefined', LAYOUTS.every((l) => [[23.8, 68.6], [-40, 100], ['unavailable', null]].every(([t, h]) => { const x = svg(TH(t, { climate_sensor_layout: l, humidity_entity: 'sensor.h' }, h === null ? {} : HUM(h))); return x.length > 200 && !/NaN|undefined/.test(x); })), true);
+  const byModel = (name) => kind(TH(20, { name }));
+  check('capteur th : les modeles par le nom', ['SNZB-02P', 'SNZB-02D', 'SNZB-02LD', 'SNZB-02WD', 'SNZB-02', 'ZG-227Z', 'WSDCGQ11LM', 'Aqara T1', 'TH01', 'TS0201', 'Salon'].map(byModel).join(),
+    'ths_disc,ths_lcd_stand,ths_lcd_probe,ths_lcd_probe,ths_square,ths_disc,ths_cushion,ths_cushion,ths_stick,ths_lcd_round,ths_disc');
+  // Which entity makes one.
+  check('capteur th : reconnu par le modele', [TYPE('sensor.salon', { friendly_name: 'SNZB-02P Temperature' }), TYPE('sensor.tuya', { friendly_name: 'TS0201 Temperature' }), TYPE('sensor.t', { friendly_name: 'WSDCGQ11LM' })].join(), 'climate_sensor,climate_sensor,climate_sensor');
+  check('capteur th : une temperature que rien ne nomme', TYPE('sensor.cave_temp', { device_class: 'temperature' }), 'climate_sensor');
+  check('capteur th : la sonde d un four reste un four', TYPE('sensor.four_temperature', { device_class: 'temperature' }), 'oven');
+  check('capteur th : un capteur quelconque ne change pas', TYPE('sensor.quelque_chose', {}), 'washer');
+  // The digits: every cell of a value, and always inside the screen.
+  const segs = (x) => (x.match(/<polygon/g) || []).length;
+  const onDigits = (t, h) => svg(TH(t, { climate_sensor_layout: 'lcd_stand', humidity_entity: 'sensor.h' }, HUM(h)));
+  check('capteur th : une troisieme place pour 100 %', segs(onDigits(20, 100)) > segs(onDigits(20, 99)), true);
+  check('capteur th : une troisieme place pour le moins', segs(onDigits(-12.5, 50)) > segs(onDigits(12.5, 50)), true);
+  check('capteur th : 23,96 s arrondit a 24,0', onDigits(23.96, 50), onDigits(24, 50));
+  check('capteur th : -0,04 sans signe moins', onDigits(-0.04, 50), onDigits(0, 50));
+  const BOX = { lcd_stand: (x, y) => x >= 6 && x <= 64 && y >= 6 && y <= 64, lcd_probe: (x, y) => x >= 7 && x <= 59 && y >= 6 && y <= 50, lcd_round: (x, y) => Math.hypot(x - 35, y - 35) <= 27 };
+  check('capteur th : les chiffres restent dans l ecran', LCDS.flatMap((l) => [23.8, -12.5, -40, 0, 9.5, 45.6, 125].flatMap((t) => [68.6, 100, 5.2, 0].map((h) => {
+    const pts = [...svg(TH(t, { climate_sensor_layout: l, humidity_entity: 'sensor.h' }, HUM(h))).matchAll(/<polygon points="([^"]+)"/g)].flatMap((m) => m[1].split(' ').map((p) => p.split(',').map(Number)));
+    return pts.length > 20 && pts.every(([x, y]) => BOX[l](x, y)) ? '' : `${l} ${t} ${h}`;
+  }))).filter(Boolean).join('|'), '');
+  // The colour, read in Celsius, and the unit shown.
+  const col = (v, attrs = C) => { const m = /fill="(#[0-9a-f]{6})"\/?><rect/.exec(svg(TH(v, { climate_sensor_layout: 'disc' }, {}, attrs))); return m && m[1]; };
+  check('capteur th : la couleur du thermometre', [4, 21, 28, 33].map((v) => col(v)).join(), '#2f8fe0,#43a047,#fb8c00,#e53935');
+  const F = { unit_of_measurement: '°F', device_class: 'temperature' };
+  check('capteur th : en Fahrenheit, la couleur suit', [col(70, F), col(95, F)].join(), '#43a047,#e53935');
+  check('capteur th : en Fahrenheit, l ecran le dit', svg(TH(70, { climate_sensor_layout: 'lcd_stand' }, {}, F)).includes('°F'), true);
+  // The editor.
+  const ed = markup(newEditor({ appliance_type: 'climate_sensor', state_entity: 'sensor.t' }));
+  check('editeur capteur th : le modele, l humidite, la pile', ['"climate_sensor_layout"', 'value="lcd_round"', 'data-toggle="humidity_entity"', 'data-toggle="battery_entity"'].every((f) => ed.includes(f)), true);
+}
+
 if (RECORD) writeFileSync(process.env.HAC_RECORD, JSON.stringify(RECORD));
 report();

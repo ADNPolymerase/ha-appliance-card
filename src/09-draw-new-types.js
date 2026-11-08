@@ -3,7 +3,7 @@
 // sauna, an aquarium, a Linky meter and a Christmas tree. Drawn in SVG on a 120 x 135 field; what
 // moves moves only on a machine carrying nt-on, staggered through --d0, and
 // the robot's cable and the sump's float follow their SMIL animations.
-const NT_TYPES = ["water_pump", "floor_heating", "spa", "sauna", "aquarium", "meter", "christmas_tree", "mobility", "irrigation", "litter_box", "detector", "speaker", "console", "streamer", "storage_tank", "fresh_water_station", "solar_thermal", "wood_stove", "humidifier", "filament_dryer"];
+const NT_TYPES = ["water_pump", "floor_heating", "spa", "sauna", "aquarium", "meter", "christmas_tree", "mobility", "irrigation", "litter_box", "detector", "speaker", "console", "streamer", "climate_sensor", "storage_tank", "fresh_water_station", "solar_thermal", "wood_stove", "humidifier", "filament_dryer"];
 // How many spools a filament dryer holds (#93).
 const FD_COUNTS = [1, 2, 4];
 const FD_COLORS = ["#43a047", "#fb8c00", "#8e24aa", "#eceff1"];
@@ -89,6 +89,20 @@ function streamerBrandOf(cfg, st) {
   const hay = stripAccents(`${cfg.state_entity || ""} ${cfg.name || ""} ${stHay(st)}`).toLowerCase();
   return /livebox|orange/.test(hay) ? "#ff7900" : /bbox|bouygues/.test(hay) ? "#00a6e0" : /sfr/.test(hay) ? "#e2001a" : /roku/.test(hay) ? "#6f2da8" : "";
 }
+// A temperature and humidity sensor by its name or its device's model: Sonoff's
+// disc, square and screens, Aqara's cushion, the Tuya round screen, a stick.
+const THS_LAYOUTS = ["disc", "square", "cushion", "stick", "lcd_stand", "lcd_probe", "lcd_round"];
+const THS_NAME_RE = /snzb.?02|wsdcgq|lumi.?(weather|sensor.?ht)|(^|[^a-z0-9])ts0201([^a-z0-9]|$)|zg.?227|(^|[^a-z0-9])th01([^a-z0-9]|$)|temp(erature)?.?(and.?|&.?)?humidity.?sensor|thermo.?hygro/;
+function thsLayoutOf(cfg, st) {
+  if (THS_LAYOUTS.includes(cfg.climate_sensor_layout)) return cfg.climate_sensor_layout;
+  const hay = stripAccents(`${cfg.state_entity || ""} ${cfg.name || ""} ${stHay(st)}`).toLowerCase();
+  const re = [["lcd_probe", /snzb.?02.?(ld|wd)/], ["lcd_stand", /snzb.?02.?d/], ["disc", /snzb.?02.?p|zg.?227/], ["square", /snzb.?02/], ["cushion", /wsdcgq|lumi.?(weather|sensor.?ht)|aqara/],
+    ["stick", /(^|[^a-z0-9])th01([^a-z0-9]|$)/], ["lcd_round", /ts0201|with.?display/]];
+  const hit = re.find(([, r]) => r.test(hay));
+  return hit ? hit[0] : "disc";
+}
+// Its colour, read in Celsius: cold, comfortable, warm, hot.
+const thsColor = (c) => c === null || c === undefined ? "#9aa0a6" : c < 16 ? "#2f8fe0" : c < 26 ? "#43a047" : c < 30 ? "#fb8c00" : "#e53935";
 const MOBILITY_LAYOUTS = ["scooter", "offroad", "ebike", "gyropode", "motorcycle"];
 const PUMP_LAYOUTS = ["booster", "sump", "circulator"];
 const CIRC_MODELS = ["grundfos", "wilo", "dab", "generic"];
@@ -108,6 +122,7 @@ const NT_ONLY_FIELDS = {
   speaker: ["speaker_layout", "speaker_color"],
   console: ["console_layout", "game_entity", "playtime_entity", "playtime_left_entity"],
   streamer: ["streamer_layout", "app_entity"],
+  climate_sensor: ["climate_sensor_layout"],
   storage_tank: ["temperature_entities", "charge_entity", "charge_min_temp", "charge_max_temp", "tank_volume", "sources", "consumers"],
   fresh_water_station: ["primary_temperature_entity", "cold_water_temperature_entity", "circulation_entity", "circulation_mode_entity", "supply_margin"],
   solar_thermal: ["collector_style", "collector_temperature_entity", "tank_temperature_entity", "collector_shutdown_entity", "tank_full_entity", "stagnation_temp", "heat_power_entity"],
@@ -191,6 +206,7 @@ const NT_NAME_RES = [
   ["wood_stove", /^(?!.*(pellet|granul)).*((^|[^a-z])kamin|wood.?(stove|burner)|log.?(stove|burner)|poele.?(a.?)?bois|cheminee|holzofen|kachelofen|estufa.?de.?lena|stufa.?a.?legna|houtkachel|braskamin|vedovn|braendeovn|brandeovn|piec.?na.?drewno|fireplace)/],
   ["console", /used.?screen.?time|suspend.?software|playstation|(^|[^a-z])ps[1-5]([^a-z0-9]|$)|xbox|nintendo|gamecube|(^|[^a-z])(n64|snes|nes|wii|switch.?lite|switch.?2)([^a-z0-9]|$)|mega.?drive|genesis|console|konsole|consola|konsol/],
   ["streamer", STREAMER_NAME_RE],
+  ["climate_sensor", THS_NAME_RE],
   ["litter_box", /scoopfree|purobot|litter|litiere|katzenklo|arenero|lettiera|kattlada|kuweta|kattebak|kattesand|(^|[^a-z])pura.?(x|max)/],
   ["irrigation", /arrosage|arroseur|watering|bhyve|netro|gardena(?!.?(sileno|mow))|irrigat|sprinkler|bewasserung|(^|[^a-z])riego|beregening|bevattning|vanning|vanding|nawadnian|zavlaz|opensprinkler|linktap|hydrawise|rachio|rain.?bird/],
   ["detector", /x.?sense|smoke|fumee|detecteur.?(de.?)?(fumee|co|fuite)|monoxyde|carbon.?monoxide|(^|[^a-z])co.?(alarm|detector)|rauchmelder|detector.?de.?humo|rilevatore|rookmelder|brandvarnare|roykvarsler|roegalarm|czujnik.?dymu|water.?leak|fuite.?d.?eau|wassermelder|leak.?sensor/],
@@ -3234,7 +3250,88 @@ ${glow ? `<path d="${body(tY, tR)}" fill="url(#${id("nl")})" opacity="${glow}"/>
 ${c.lifted ? `<g class="hu-blink" transform="translate(104 66)"><path d="M0 -8 L8 6 H-8 Z" fill="#ff3b30" stroke="#fff" stroke-width=".9"/><text y="4.4" font-size="9" font-weight="700" text-anchor="middle" fill="#fff" ${NT_FONT}>!</text></g>` : ""}
 ${c.empty ? `<g class="hu-blink" transform="translate(106 44)"><circle r="8" fill="#ff3b30" stroke="#fff" stroke-width=".9"/><path d="M0 -5 q-3.6 4.2 -3.6 6.2 a3.6 3.6 0 0 0 7.2 0 q0 -2 -3.6 -6.2z" fill="#fff"/></g>` : ""}`;
 }
-const NT_DRAW = { dryer: ntFilamentDryer, humidifier: ntHumidifier, circulator: ntCirculator, irr_sprinkler: ntIrrSprinkler, irr_tap: ntIrrTap, irr_drip: ntIrrDrip, irr_flowers: ntIrrFlowers, lit_globe: ntLitterGlobe, lit_box: ntLitterBox, det_smoke: ntDetSmoke, det_co: ntDetCo, det_leak: ntDetLeak, spk_smart: ntSpkSmart, spk_homepod_mini: ntSpkMini, spk_sonos_one: ntSpkOne, spk_bookshelf: ntSpkShelf, spk_sonos_move: ntSpkMove, spk_soundbar: ntSpkBar, spk_echo_dot: ntSpkDot, spk_echo_dot_max: ntSpkDotMax, spk_nest_mini: ntSpkNest, spk_sonos_era100: ntSpkEra100, spk_sonos_era300: ntSpkEra300, spk_bose_wave: ntSpkWave, spk_bose_500: ntSpkBose500, spk_bose_soundlink: ntSpkFlex, spk_bose_soundbar: ntSpkBoseBar, spk_sonos_five: ntSpkFive, spk_sonos_play: ntSpkPlay, spk_sonos_roam: ntSpkRoam, spk_sonos_ray: ntSpkRay, spk_sonos_amp: ntSpkAmp, spk_sonos_port: ntSpkPort, spk_bose_ultra: ntSpkBoseUltra, spk_bose_portable: ntSpkBosePortable, spk_bose_amp: ntSpkBoseAmp, str_apple_tv: (c) => strZoom(strAppleTv(c), 54, 1.45), str_fire_tv_cube: strFireCube, str_fire_tv_stick: (c) => strStick(c, true), str_google_tv_streamer: strGoogleStreamer, str_chromecast: strChromecast, str_shield: strShield, str_shield_pro: strShieldPro, str_roku: strRoku, str_mi_box: strMiBox, str_freebox: strFreebox, str_decoder: strDecoder, str_box: strBox, str_stick: (c) => strStick(c, false), con_ps1: conPs1, con_ps2: conPs2, con_ps3: conPs3, con_ps4: (c) => conPs4(c, false), con_ps4_pro: (c) => conPs4(c, true), con_ps5: conPs5, con_xbox: conXbox, con_xbox_360: conX360, con_xbox_one: conXone, con_xbox_series_x: conXsx, con_xbox_series_s: conXss, con_switch: (c) => conSwitch(c, false), con_switch_2: (c) => conSwitch(c, true), con_switch_lite: conSwitchLite, con_ps_vita: conVita, con_nes: conNes, con_snes: conSnes, con_n64: conN64, con_gamecube: conGamecube, con_wii: conWii, con_megadrive: conMegadrive, tank: ntTank, fws: ntFresh, solth: ntSolarThermal, wood: ntWoodStove, mob_scooter: mobScooter, mob_offroad: mobOffroad, mob_ebike: mobEbike, mob_gyropode: mobGyropode, mob_motorcycle: mobMotorcycle, meter_box: ntMeterBox, meter_dome: ntMeterDome, meter_gas: ntGas, meter_water: ntWater, booster: ntBooster, sump: ntSump, pool: ntPoolRobot, floor: ntFloor, spa: ntSpa, sauna: ntSauna, aquarium: ntAquarium, linky: ntLinky, tree: ntTree };
+// The temperature and humidity sensors. The ones lying flat use the streaming
+// boxes' three-quarter view; the ones with a screen stand almost facing us, so
+// that their digits can be read.
+const THS_WHITE = ["#b9bdc3", "#e9ebee", "#f4f5f7", "#b4b8be", "#858a91"];
+const thsGrad = (id) => `<radialGradient id="${id}" cx=".4" cy=".35" r=".85"><stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#e4e6ea"/></radialGradient>`;
+// A thermometer filled up to its temperature.
+function thsThermo(s, c) {
+  const col = thsColor(c), lvl = c === null || c === undefined ? .25 : Math.max(.12, Math.min(1, (c + 5) / 40));
+  const H = s * 1.5, W = s * .36, R = s * .42, top = -H * .62, foot = H * .38, inner = W * .42, y0 = foot - (foot - top) * lvl;
+  return `<path d="M${-W / 2} ${top} a${W / 2} ${W / 2} 0 0 1 ${W} 0 V${foot - R * .55} A${R} ${R} 0 1 1 ${-W / 2} ${foot - R * .55} Z" fill="none" stroke="#a9aeb5" stroke-width="${s * .09}"/><circle cy="${foot + R * .28}" r="${R * .62}" fill="${col}"/><rect x="${-inner / 2}" y="${y0}" width="${inner}" height="${foot - y0 + R * .2}" rx="${inner / 2}" fill="${col}"/>`;
+}
+// Seven-segment digits.
+const THS_SEG = { 0: "abcdef", 1: "bc", 2: "abged", 3: "abgcd", 4: "fgbc", 5: "afgcd", 6: "afgedc", 7: "abc", 8: "abcdefg", 9: "abcdfg", "-": "g", " ": "" };
+function thsDigit(ch, x, y, w, h, col, ghost) {
+  const t = Math.max(.9, w * .2), m = y + h / 2, g = t * .14;
+  const S = { a: [[x + g, y], [x + w - g, y], [x + w - t - g, y + t], [x + t + g, y + t]], d: [[x + t + g, y + h - t], [x + w - t - g, y + h - t], [x + w - g, y + h], [x + g, y + h]],
+    g: [[x + t * .6, m], [x + t, m - t / 2], [x + w - t, m - t / 2], [x + w - t * .6, m], [x + w - t, m + t / 2], [x + t, m + t / 2]], f: [[x, y + g], [x + t, y + t + g], [x + t, m - t / 2 - g], [x, m - g]],
+    e: [[x, m + g], [x + t, m + t / 2 + g], [x + t, y + h - t - g], [x, y + h - g]], b: [[x + w, y + g], [x + w, m - g], [x + w - t, m - t / 2 - g], [x + w - t, y + t + g]], c: [[x + w, m + g], [x + w, y + h - g], [x + w - t, y + h - t - g], [x + w - t, m + t / 2 + g]] };
+  const on = THS_SEG[ch] || "";
+  return Object.keys(S).map((k) => on.includes(k) || ghost ? `<polygon points="${S[k].map((p) => p.map((v) => +v.toFixed(2)).join(",")).join(" ")}" fill="${on.includes(k) ? col : ghost}"/>` : "").join("");
+}
+// A reading centred on cx: two digits at least, a minus sign or a hundreds
+// digit taking a third place, then its tenths and its unit.
+function thsNumber(v, cx, y, big, col, ghost, unit) {
+  const w = big * .56, gp = big * .12, sw = big * .32, sh = big * .56, uw = Math.max(sw, big * (unit === "%" ? .34 : .44));
+  let cells = "--", dec = null;
+  if (v !== null && v !== undefined) { const [a, b] = Math.abs(v).toFixed(1).split("."); cells = (v < 0 && (+a || +b) ? "-" : "") + a; dec = b; }
+  cells = cells.padStart(2, " ");
+  const n = cells.length, x = cx - (n * w + (n - 1) * gp + big * .14 + uw) / 2, sx = x + n * w + (n - 1) * gp + big * .14;
+  const out = [...cells].map((ch, i) => thsDigit(ch, x + i * (w + gp), y, w, big, col, ghost)).join("");
+  if (dec === null) return out;
+  return `${out}<circle cx="${+(sx - big * .08).toFixed(2)}" cy="${+(y + big * .96).toFixed(2)}" r="${+(big * .05).toFixed(2)}" fill="${col}"/>${thsDigit(dec, sx, y + big - sh, sw, sh, col, ghost)}<text x="${+(sx + sw * .02).toFixed(2)}" y="${+(y + big * .34).toFixed(2)}" font-size="${+(big * .32).toFixed(2)}" font-weight="500" fill="${col}" ${NT_FONT}>${unit}</text>`;
+}
+const thsSignal = (x, y, c) => [0, 1, 2, 3].map((i) => `<rect x="${x + i * 2}" y="${+(y + 3.6 - i * 1.2).toFixed(2)}" width="1.2" height="${+(1.4 + i * 1.2).toFixed(2)}" fill="${c}"/>`).join("");
+const thsBattery = (x, y, c, lvl) => `<rect x="${x}" y="${y}" width="9" height="4.6" fill="none" stroke="${c}" stroke-width=".6"/><rect x="${x + 9.2}" y="${y + 1.3}" width=".9" height="2" fill="${c}"/>${[...Array(Math.round(lvl * 4))].map((_, i) => `<rect x="${+(x + 1 + i * 1.95).toFixed(2)}" y="${y + 1}" width="1.5" height="2.6" fill="${c}"/>`).join("")}`;
+const thsDrop = (x, y, s, c) => `<path d="M${x} ${y - s} C${x + s * .3} ${y - s * .4} ${x + s * .75} ${y - s * .1} ${x + s * .75} ${y + s * .35} A${s * .75} ${s * .75} 0 0 1 ${x - s * .75} ${y + s * .35} C${x - s * .75} ${y - s * .1} ${x - s * .3} ${y - s * .4} ${x} ${y - s} Z" fill="none" stroke="${c}" stroke-width=".7"/>`;
+// A standing plate, turned a little to the left: its face, and its depth going
+// back to the right and up, on the screen and not in the plane of its face.
+const thsFace = (x, y, inner, k = 1.12) => `<g transform="matrix(${+(.92 * k).toFixed(3)} ${+(.1 * k).toFixed(3)} 0 ${k} ${x} ${y})">${inner}</g>`;
+function thsDepth(x, y, shape, d, fill) { let o = ""; for (let i = d; i > 0; i -= .5) o += thsFace(+(x + .4 * i).toFixed(2), +(y - .22 * i).toFixed(2), shape(fill)); return o; }
+const thsSide = (id) => `<linearGradient id="${id}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#d9dce0"/><stop offset=".55" stop-color="#b3b7bd"/><stop offset="1" stop-color="#8d9299"/></linearGradient>`;
+const thsFront = (id) => `<linearGradient id="${id}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff"/><stop offset="1" stop-color="#e1e4e8"/></linearGradient>`;
+const thsLcd = (id, a, b) => `<linearGradient id="${id}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${a}"/><stop offset="1" stop-color="${b}"/></linearGradient>`;
+const thsBlur = (id) => `<filter id="${id}" x="-30%" y="-100%" width="160%" height="300%"><feGaussianBlur stdDeviation="2"/></filter>`;
+const THS_INK = "#1d2124", THS_GHOST = "rgba(0,0,0,.055)";
+function ntThsDisc(c) {
+  const t = ntId();
+  return `<defs>${thsGrad(t)}</defs>${strIsoDisc(60, 58, 33, 11, `url(#${t})`, THS_WHITE)}${strIsoTop(60, 58, `<g transform="rotate(-45)"><g transform="translate(0 -2) scale(1.55)">${thsThermo(7, c.tc)}</g><circle cy="15" r="1.1" fill="#555"/></g>`)}`;
+}
+function ntThsSquare(c) {
+  const t = ntId(), g = strIsoGeom(60, 52, 60, 60, 3.5);
+  return `<defs>${thsGrad(t)}</defs>${strIsoBox(g, 11, `url(#${t})`, THS_WHITE, .3)}${strIsoTop(60, 52, `<g transform="rotate(-45) scale(1.1)">${thsThermo(7, c.tc)}</g>`)}`;
+}
+function ntThsCushion(c) {
+  const t = ntId(), g = strIsoGeom(60, 53, 62, 62, 15);
+  return `<defs>${thsGrad(t)}</defs>${strIsoBox(g, 10, `url(#${t})`, THS_WHITE, .3)}${strIsoTop(60, 53, `<g transform="scale(1.75)">${thsThermo(7, c.tc)}</g><text x="6" y="26" font-size="5.2" fill="#9ea3a9" ${NT_FONT}>Aqara</text><circle cx="-23" cy="0" r=".9" fill="#43a047"/>`)}`;
+}
+function ntThsStick(c) {
+  const t = ntId(), g = strIsoGeom(62, 24, 26, 13, 4), p = g.P[0];
+  return `<defs>${thsGrad(t)}</defs>${strIsoBox(g, 78, `url(#${t})`, THS_WHITE, .3)}${strIsoLeft(p[0] + 1, p[1] + 5, `<g transform="translate(11.5 26) scale(1.25)">${thsThermo(7, c.tc)}</g>${thsDrop(19, 10, 2.2, "#8a8f96")}<path d="M9 60 q2.6 -2.2 5.2 0 M10.3 62 q1.3 -1.1 2.6 0" fill="none" stroke="#9ea3a9" stroke-width=".7"/><circle cx="11.6" cy="64" r=".7" fill="#9ea3a9"/>`)}`;
+}
+function ntThsLcdStand(c) {
+  const X = 21, Y = 13, shape = (f) => `<rect width="70" height="70" rx="12" fill="${f}"/>`, s = ntId(), t = ntId(), e = ntId(), bl = ntId();
+  return `<defs>${c.unav ? thsLcd(s, "#5c6063", "#46494c") : thsLcd(s, "#c9cfc9", "#a7aea8")}${thsFront(t)}${thsSide(e)}${thsBlur(bl)}</defs>
+${thsFace(X + 3, Y, `<rect x="0" y="67" width="76" height="7" rx="3.5" fill="#000" opacity=".32" filter="url(#${bl})"/>`)}
+<path d="M90 70 L109 96 L105 98.6 L90 84 Z" fill="#c4c8cd"/><path d="M109 96 L105 98.6" stroke="#8d9299" stroke-width="1" stroke-linecap="round"/>
+${thsDepth(X, Y, shape, 13, `url(#${e})`)}${thsFace(X, Y, `${shape(`url(#${t})`)}<rect x="5" y="5" width="60" height="60" rx="8.5" fill="#8f958f"/><rect x="5.6" y="5.6" width="58.8" height="58.8" rx="8" fill="url(#${s})"/>${c.unav ? "" : `${thsSignal(10, 10, THS_INK)}${thsBattery(50, 10, THS_INK, c.b)}${thsNumber(c.t, 35, 18, 20, THS_INK, THS_GHOST, c.unit)}<path d="M9 42 H61" stroke="${THS_INK}" stroke-width=".5"/>${thsDrop(11, 51, 2.6, THS_INK)}${thsNumber(c.h, 40, 44.5, 17, THS_INK, THS_GHOST, "%")}`}`)}`;
+}
+function ntThsLcdProbe(c) {
+  const X = 22, Y = 15, shape = (f) => `<rect width="66" height="66" rx="12" fill="${f}"/>`, hook = (f) => `<path d="M26 2 C26 -7 40 -7 40 2 Z" fill="${f}"/>`, s = ntId(), t = ntId(), e = ntId(), G = "#0f1f12";
+  return `<defs>${c.unav ? thsLcd(s, "#5c6063", "#46494c") : thsLcd(s, "#c9dcb4", "#a6c08e")}${thsFront(t)}${thsSide(e)}</defs>
+<path d="M62 86 C60 100 74 104 72 120" fill="none" stroke="#dfe2e6" stroke-width="2.6"/><path d="M62 86 C60 100 74 104 72 120" fill="none" stroke="#9aa0a6" stroke-width=".5" transform="translate(1 .4)"/>
+${thsDepth(X, Y, hook, 9, `url(#${e})`)}${thsFace(X, Y, `${hook("#eef0f2")}<circle cx="33" cy="-1.6" r="1.8" fill="#6d7278"/>`)}
+${thsDepth(X, Y, shape, 12, `url(#${e})`)}${thsFace(X, Y, `${shape(`url(#${t})`)}<rect x="6" y="5" width="54" height="46" rx="7" fill="#7f9272"/><rect x="6.6" y="5.6" width="52.8" height="44.8" rx="6.5" fill="url(#${s})"/>${c.unav ? "" : `${thsSignal(11, 9, G)}${thsBattery(44, 9, G, c.b)}${thsNumber(c.t, 33, 17, 20, G, "rgba(0,0,0,.05)", c.unit)}<text x="33" y="48" text-anchor="middle" font-size="7" font-weight="600" fill="${G}" ${NT_FONT}>${c.h === null || c.h === undefined ? "--" : c.h.toFixed(1)}%</text>`}<text x="33" y="60.5" font-size="6" text-anchor="middle" font-weight="700" fill="#858a91" ${NT_FONT}>SONOFF</text>`)}`;
+}
+function ntThsLcdRound(c) {
+  const X = 21, Y = 15, shape = (f) => `<circle cx="35" cy="35" r="35" fill="${f}"/>`, s = ntId(), t = ntId(), e = ntId(), bl = ntId();
+  return `<defs>${c.unav ? thsLcd(s, "#5c6063", "#46494c") : thsLcd(s, "#c9cfc9", "#a7aea8")}${thsFront(t)}${thsSide(e)}${thsBlur(bl)}</defs>
+${thsFace(X + 2, Y, `<ellipse cx="38" cy="70" rx="24" ry="3.4" fill="#000" opacity=".32" filter="url(#${bl})"/>`)}
+${thsDepth(X, Y, shape, 12, `url(#${e})`)}${thsFace(X, Y, `${shape(`url(#${t})`)}<circle cx="35" cy="35" r="28.5" fill="#8f958f"/><circle cx="35" cy="35" r="28" fill="url(#${s})"/>${c.unav ? "" : `${thsSignal(25, 11.5, THS_INK)}${thsBattery(35.5, 11.5, THS_INK, c.b)}${thsNumber(c.t, 35, 18, 15.5, THS_INK, THS_GHOST, c.unit)}<path d="M10 38 H60" stroke="${THS_INK}" stroke-width=".5"/>${thsNumber(c.h, 35, 41, 13, THS_INK, THS_GHOST, "%")}`}`)}`;
+}
+const NT_DRAW = { ths_disc: ntThsDisc, ths_square: ntThsSquare, ths_cushion: ntThsCushion, ths_stick: ntThsStick, ths_lcd_stand: ntThsLcdStand, ths_lcd_probe: ntThsLcdProbe, ths_lcd_round: ntThsLcdRound, dryer: ntFilamentDryer, humidifier: ntHumidifier, circulator: ntCirculator, irr_sprinkler: ntIrrSprinkler, irr_tap: ntIrrTap, irr_drip: ntIrrDrip, irr_flowers: ntIrrFlowers, lit_globe: ntLitterGlobe, lit_box: ntLitterBox, det_smoke: ntDetSmoke, det_co: ntDetCo, det_leak: ntDetLeak, spk_smart: ntSpkSmart, spk_homepod_mini: ntSpkMini, spk_sonos_one: ntSpkOne, spk_bookshelf: ntSpkShelf, spk_sonos_move: ntSpkMove, spk_soundbar: ntSpkBar, spk_echo_dot: ntSpkDot, spk_echo_dot_max: ntSpkDotMax, spk_nest_mini: ntSpkNest, spk_sonos_era100: ntSpkEra100, spk_sonos_era300: ntSpkEra300, spk_bose_wave: ntSpkWave, spk_bose_500: ntSpkBose500, spk_bose_soundlink: ntSpkFlex, spk_bose_soundbar: ntSpkBoseBar, spk_sonos_five: ntSpkFive, spk_sonos_play: ntSpkPlay, spk_sonos_roam: ntSpkRoam, spk_sonos_ray: ntSpkRay, spk_sonos_amp: ntSpkAmp, spk_sonos_port: ntSpkPort, spk_bose_ultra: ntSpkBoseUltra, spk_bose_portable: ntSpkBosePortable, spk_bose_amp: ntSpkBoseAmp, str_apple_tv: (c) => strZoom(strAppleTv(c), 54, 1.45), str_fire_tv_cube: strFireCube, str_fire_tv_stick: (c) => strStick(c, true), str_google_tv_streamer: strGoogleStreamer, str_chromecast: strChromecast, str_shield: strShield, str_shield_pro: strShieldPro, str_roku: strRoku, str_mi_box: strMiBox, str_freebox: strFreebox, str_decoder: strDecoder, str_box: strBox, str_stick: (c) => strStick(c, false), con_ps1: conPs1, con_ps2: conPs2, con_ps3: conPs3, con_ps4: (c) => conPs4(c, false), con_ps4_pro: (c) => conPs4(c, true), con_ps5: conPs5, con_xbox: conXbox, con_xbox_360: conX360, con_xbox_one: conXone, con_xbox_series_x: conXsx, con_xbox_series_s: conXss, con_switch: (c) => conSwitch(c, false), con_switch_2: (c) => conSwitch(c, true), con_switch_lite: conSwitchLite, con_ps_vita: conVita, con_nes: conNes, con_snes: conSnes, con_n64: conN64, con_gamecube: conGamecube, con_wii: conWii, con_megadrive: conMegadrive, tank: ntTank, fws: ntFresh, solth: ntSolarThermal, wood: ntWoodStove, mob_scooter: mobScooter, mob_offroad: mobOffroad, mob_ebike: mobEbike, mob_gyropode: mobGyropode, mob_motorcycle: mobMotorcycle, meter_box: ntMeterBox, meter_dome: ntMeterDome, meter_gas: ntGas, meter_water: ntWater, booster: ntBooster, sump: ntSump, pool: ntPoolRobot, floor: ntFloor, spa: ntSpa, sauna: ntSauna, aquarium: ntAquarium, linky: ntLinky, tree: ntTree };
 function ntSvg(d) {
   ntN = 0;
   const draw = NT_DRAW[d && d.kind] || ntLinky;
@@ -3386,7 +3483,7 @@ function ntReadOf(type, hass, cfg, st, watts, threshold) {
   if (unav) {
     const ml = meterLayoutOf(cfg, st);
     const kinds = { filament_dryer: "dryer", humidifier: "humidifier", water_pump: pumpLayoutOf(cfg, st), floor_heating: "floor", spa: "spa", sauna: "sauna", aquarium: "aquarium", meter: ml === "linky" ? "linky" : `meter_${ml}`, christmas_tree: "tree", mobility: `mob_${mobilityLayoutOf(cfg, st)}`,
-      irrigation: `irr_${irrigationLayoutOf(cfg, st)}`, litter_box: `lit_${litterLayoutOf(cfg, st)}`, detector: `det_${detectorLayoutOf(cfg, st)}`, speaker: `spk_${speakerLayoutOf(cfg, st)}`, console: `con_${consoleLayoutOf(cfg, st)}`, streamer: `str_${streamerLayoutOf(cfg, st)}` };
+      irrigation: `irr_${irrigationLayoutOf(cfg, st)}`, litter_box: `lit_${litterLayoutOf(cfg, st)}`, detector: `det_${detectorLayoutOf(cfg, st)}`, speaker: `spk_${speakerLayoutOf(cfg, st)}`, console: `con_${consoleLayoutOf(cfg, st)}`, streamer: `str_${streamerLayoutOf(cfg, st)}`, climate_sensor: `ths_${thsLayoutOf(cfg, st)}` };
     return out("unav", "ev_offline", NT_COLORS.unav, { kind: kinds[type], on: false, electric: floorLayoutOf(cfg) === "electric", model: type === "water_pump" ? circModelOf(cfg, st) : "",
       palette: cfg.tree_palette, ...(type === "filament_dryer" ? fdLook(cfg) : {}), presents: type === "christmas_tree" && treePresents(cfg), color: type === "speaker" ? speakerColorOf(cfg, st) : "" });
   }
@@ -3477,6 +3574,26 @@ function ntReadOf(type, hass, cfg, st, watts, threshold) {
     const draw = { kind, on: alarm, low, lcd: cv !== null ? `${Math.round(cv)} ppm` : alarm ? "ALARM" : "OK" };
     if (alarm) return out("alarm", { smoke: "det_smoke", co: "det_co", leak: "det_leak" }[layout], NT_COLORS.alarm, draw);
     return out("ok", "det_ok", NT_COLORS.lit, draw);
+  }
+  if (type === "climate_sensor") {
+    // The temperature is its state, the humidity and the battery its lines.
+    // A screen shows them on the drawing, a thermometer fills up and changes
+    // colour on the models that have none.
+    const a = (st && st.attributes) || {};
+    const v = numberOrNull(st && st.state);
+    const unit = String(a.unit_of_measurement || "\u00b0C");
+    const celsius = v === null ? null : /f/i.test(unit) ? (v - 32) / 1.8 : v;
+    const hl = ntLine(hass, cfg, "ths_humidity", "mdi:water-percent", "ac_line_humidity", cfg.humidity_entity);
+    if (hl) lines.push(hl);
+    const bv = cfg.battery_entity ? numericState(hass, cfg.battery_entity) : null;
+    const bs = cfg.battery_entity ? stateObj(hass, cfg.battery_entity) : null;
+    const binaryBat = domainOf(cfg.battery_entity) === "binary_sensor";
+    const low = bv !== null ? bv <= 20 : !!bs && binaryBat && NT_ON.includes(String(bs.state).toLowerCase());
+    const bl = ntLine(hass, cfg, "ths_battery", low ? "mdi:battery-alert-variant-outline" : "mdi:battery", "section_battery", cfg.battery_entity);
+    if (bl) lines.push({ ...bl, value: binaryBat ? t(hass, low ? "opt_low" : "opt_ok") : bl.value, caution: low });
+    const draw = { kind: `ths_${thsLayoutOf(cfg, st)}`, on: false, t: v, tc: celsius, unit, h: cfg.humidity_entity ? numericState(hass, cfg.humidity_entity) : null,
+      b: bv !== null ? Math.max(0, Math.min(1, bv / 100)) : low ? .25 : 1 };
+    return { ...out("ok", "type_climate_sensor", thsColor(celsius), draw), label: keepTogether(formatInfoValue(st, hass, null, cfg, cfg.state_entity)) };
   }
   if (type === "console") {
     // A console: a media player from PlayStation Network, Xbox or the PS4

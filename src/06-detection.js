@@ -18,6 +18,7 @@ const TYPE_AUTO_PATTERNS = {
     light_entity: /light|lamp|led/i,
   },
   sauna: { temperature_entity: /temp/i },
+  climate_sensor: { humidity_entity: /humid|hygro/i, battery_entity: /batter/i },
   filament_dryer: { temperature_entity: /temp/i, humidity_entity: /humid|hygro/i, remaining_time_entity: /remain|time_left|restant/i },
   floor_heating: { temperature_entity: /temp/i },
   aquarium: { temperature_entity: /temp|^climate\./i },
@@ -729,6 +730,7 @@ const TYPE_CAPS = {
   console: { ntConsole: true },
   // A streaming box: Apple TV, Fire TV, Chromecast, Shield, Roku, a set-top box.
   streamer: { ntStreamer: true },
+  climate_sensor: { readOnly: true },
   // The heating of #81 to #84: a buffer tank, a fresh water station, solar
   // thermal collectors and a log stove, read from their temperatures.
   storage_tank: { readOnly: true },
@@ -848,6 +850,7 @@ const STATE_DOMAINS = {
   speaker: ["media_player"],
   console: ["media_player", "sensor", "switch", "binary_sensor", "device_tracker", "input_boolean"],
   streamer: ["media_player", "remote", "switch", "binary_sensor", "input_boolean", "sensor"],
+  climate_sensor: ["sensor", "number", "input_number"],
   storage_tank: ["sensor", "number", "input_number", "water_heater"],
   fresh_water_station: ["sensor", "binary_sensor", "switch"],
   solar_thermal: ["binary_sensor", "switch", "sensor"],
@@ -959,7 +962,7 @@ const TYPE_GROUPS = [
   ["laundry", ["washer", "dryer"]],
   ["kitchen", ["dishwasher", "oven", "microwave", "hood", "cooktop", "fridge", "kettle", "cooker", "coffee", "rice_cooker", "air_fryer", "toaster"]],
   ["heating", ["water_heater", "boiler", "heat_pump", "thermostat", "pellet_stove", "space_heater", "towel_warmer", "floor_heating", "storage_tank", "fresh_water_station", "wood_stove"]],
-  ["air", ["air_conditioner", "dehumidifier", "humidifier", "air_purifier", "fan", "diffuser", "hrv"]],
+  ["air", ["air_conditioner", "dehumidifier", "humidifier", "air_purifier", "fan", "diffuser", "hrv", "climate_sensor"]],
   ["home", ["screen", "iron", "hair_dryer", "printer_3d", "filament_dryer", "robot", "pool_pump", "scale", "camera", "lamp", "mailbox", "water_pump", "spa", "sauna", "aquarium", "christmas_tree", "mobility", "irrigation", "detector", "speaker", "console", "streamer"]],
   ["energy", ["solar", "solar_thermal", "home_battery", "ev_charger", "meter"]],
   ["pets", ["pet_feeder", "pet_fountain", "litter_box"]],
@@ -1190,6 +1193,8 @@ function detectApplianceType(cfg, st) {
   // Not in the word laundry.
   if (/(?<!laun)dry|seche|s\u00e8che|tumble|trockner|secadora|asciugatrice|droger|torktumlare/.test(hay)) return "dryer";
   if (/dish|vaisselle|geschirrsp|spuelmasch|spulmasch|lavavajillas|lavastoviglie|vaatwasser|diskmaskin/.test(hay)) return "dishwasher";
+  // A temperature sensor nothing above has claimed.
+  if (st && domainOf(cfg.state_entity) === "sensor" && st.attributes.device_class === "temperature") return "climate_sensor";
   return "washer";
 }
 
