@@ -356,6 +356,10 @@ const TYPE_AUTO_PATTERNS = {
     game_entity: /now.?playing|current.?game|game.?title/i,
     playtime_entity: /(play|online|screen).?time/i,
   },
+  // An Android TV's or a Fire TV's current app, from ADB or a sensor.
+  streamer: {
+    app_entity: /current.?app|app.?name|foreground.?app|running.?app|current.?activity/i,
+  },
   // Litter-Robot, PetKit, Tuya's bag_full, Neakasa.
   litter_box: {
     waste_drawer_entity: /waste.?(drawer|bin|bucket)|wastebin|bag.?full/i,
@@ -723,6 +727,8 @@ const TYPE_CAPS = {
   speaker: { ntSpeaker: true },
   // A game console, on PlayStation Network, Xbox, the PS4 integration or a plug.
   console: { ntConsole: true },
+  // A streaming box: Apple TV, Fire TV, Chromecast, Shield, Roku, a set-top box.
+  streamer: { ntStreamer: true },
   // The heating of #81 to #84: a buffer tank, a fresh water station, solar
   // thermal collectors and a log stove, read from their temperatures.
   storage_tank: { readOnly: true },
@@ -841,6 +847,7 @@ const STATE_DOMAINS = {
   detector: ["binary_sensor", "sensor", "input_boolean"],
   speaker: ["media_player"],
   console: ["media_player", "sensor", "switch", "binary_sensor", "device_tracker", "input_boolean"],
+  streamer: ["media_player", "remote", "switch", "binary_sensor", "input_boolean", "sensor"],
   storage_tank: ["sensor", "number", "input_number", "water_heater"],
   fresh_water_station: ["sensor", "binary_sensor", "switch"],
   solar_thermal: ["binary_sensor", "switch", "sensor"],
@@ -953,7 +960,7 @@ const TYPE_GROUPS = [
   ["kitchen", ["dishwasher", "oven", "microwave", "hood", "cooktop", "fridge", "kettle", "cooker", "coffee", "rice_cooker", "air_fryer", "toaster"]],
   ["heating", ["water_heater", "boiler", "heat_pump", "thermostat", "pellet_stove", "space_heater", "towel_warmer", "floor_heating", "storage_tank", "fresh_water_station", "wood_stove"]],
   ["air", ["air_conditioner", "dehumidifier", "humidifier", "air_purifier", "fan", "diffuser", "hrv"]],
-  ["home", ["screen", "iron", "hair_dryer", "printer_3d", "filament_dryer", "robot", "pool_pump", "scale", "camera", "lamp", "mailbox", "water_pump", "spa", "sauna", "aquarium", "christmas_tree", "mobility", "irrigation", "detector", "speaker", "console"]],
+  ["home", ["screen", "iron", "hair_dryer", "printer_3d", "filament_dryer", "robot", "pool_pump", "scale", "camera", "lamp", "mailbox", "water_pump", "spa", "sauna", "aquarium", "christmas_tree", "mobility", "irrigation", "detector", "speaker", "console", "streamer"]],
   ["energy", ["solar", "solar_thermal", "home_battery", "ev_charger", "meter"]],
   ["pets", ["pet_feeder", "pet_fountain", "litter_box"]],
   ["network", ["network", "ups"]],
@@ -1024,7 +1031,8 @@ function detectApplianceType(cfg, st) {
     // A spa, a sauna, an aquarium, a meter, a Christmas tree and the rest of
     // the HACF drawings by their name, before a light makes a lamp of them.
     const named = stripAccents(`${cfg.icon || ""} ${cfg.state_entity || ""} ${stHay(st)} ${cfg.name || ""}`).toLowerCase();
-    for (const [ty, re] of NT_NAME_RES) if (re.test(named)) return ty;
+    // A television that says it is one is no streaming box, Fire TV inside or not.
+    for (const [ty, re] of NT_NAME_RES) if (re.test(named) && !(ty === "streamer" && st && st.attributes.device_class === "tv")) return ty;
     // Gecko calls its spa nothing but its name: the icon says it.
     if (st && st.attributes.icon === "mdi:hot-tub") return "spa";
   }

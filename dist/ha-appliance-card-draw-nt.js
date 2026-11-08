@@ -1668,6 +1668,234 @@ ${[-1.5, -.5, .5, 1.5].map((k, i) => `<circle class="${c.on ? `nta-glow ntd${i +
 ${c.on ? `<circle cx="${60 + k * 8}" cy="76" r="1.2" fill="#fff"/>` : ""}`).join("")}
 ${c.st === "paused" ? spkPause(60, 44, "#8d8a83") : ""}${c.muted ? spkMute(96, 52) : ""}`;
 }
+// The app's tile above a box while it plays, dimmed with its bars in pause.
+function strTile(c, x, y) {
+  if (c.st !== "playing" && c.st !== "paused") return "";
+  const ap = c.app || { bg: "#1e88e5", fg: "#ffffff", mark: "\u25b6" };
+  const fs = ap.mark.length > 3 ? 4.6 : ap.mark.length > 2 ? 5.8 : ap.mark.length > 1 ? 7.4 : 10;
+  const gl = ntId();
+  return `<defs>${ntBlur(gl, 2.4)}</defs><g opacity="${c.st === "paused" ? .5 : 1}">
+${c.on ? `<rect class="nta-glow" x="${x - 12}" y="${y - 12}" width="24" height="24" rx="6" fill="${ap.bg}" filter="url(#${gl})" opacity=".55"/>` : ""}
+<rect x="${x - 11}" y="${y - 11}" width="22" height="22" rx="5.4" fill="${ap.bg}" stroke="#ffffff" stroke-opacity=".3" stroke-width=".6"/>
+<text x="${x}" y="${(y + fs * .36).toFixed(2)}" text-anchor="middle" font-size="${fs}" font-weight="800" fill="${ap.fg}" ${NT_FONT}>${esc(ap.mark)}</text></g>
+${c.st === "paused" ? `<circle cx="${x + 10}" cy="${y + 10}" r="5" fill="#ffffff" stroke="#cfd6dc" stroke-width=".6"/><rect x="${x + 8}" y="${y + 7.6}" width="1.4" height="4.8" rx=".5" fill="#5d6773"/><rect x="${x + 10.6}" y="${y + 7.6}" width="1.4" height="4.8" rx=".5" fill="#5d6773"/>` : ""}`;
+}
+// A small box drawn larger, centred on the field, its foot kept in place.
+const strZoom = (svg, cx, k) => `<g transform="translate(60 88) scale(${k}) translate(${-cx} -88)">${svg}</g>`;
+// A box's light: its colour while on, amber on standby, dark when off.
+const strLed = (c, x, y, col = "#ffffff", r = .9) => `<circle class="${c.on ? "nta-glow" : ""}" cx="${x}" cy="${y}" r="${r}" fill="${["playing", "paused", "home"].includes(c.st) ? col : c.st === "standby" ? "#ffb300" : "#3a3e44"}"/>`;
+const strMute = (c, x, y) => (c.muted ? spkMute(x, y) : "");
+// The apple of an Apple TV.
+const STR_APPLE = "M0 -2.2 C-1.6 -3.4 -4 -2.6 -4 .2 C-4 2.6 -2.2 4.4 -1.2 4.4 C-.6 4.4 -.4 4 0 4 C.4 4 .6 4.4 1.2 4.4 C2.2 4.4 4 2.6 4 .2 C4 -2.6 1.6 -3.4 0 -2.2 Z M.2 -2.8 C.2 -4 1 -4.8 2 -5 C2 -3.8 1.2 -3 .2 -2.8 Z";
+// Apple TV 4K: the squircle seen from above at an angle, its matte top with
+// the apple alone, its glossy band, and the silver Siri Remote lying by it.
+function strAppleTv(c) {
+  const sd = ntId(), tp = ntId(), bl = ntId();
+  // A rounded square in that view: a diamond whose corners are rounded off.
+  const P = [[24, 82], [54, 69], [84, 82], [54, 95]], f = .3;
+  const lerp = (a, b, k) => [+(a[0] + (b[0] - a[0]) * k).toFixed(2), +(a[1] + (b[1] - a[1]) * k).toFixed(2)];
+  const top = (dy = 0) => P.map((c, i) => { const a = lerp(c, P[(i + 3) % 4], f), b = lerp(c, P[(i + 1) % 4], f);
+    return `${i ? "L" : "M"}${a[0]} ${a[1] + dy} Q${c[0]} ${c[1] + dy} ${b[0]} ${b[1] + dy}`; }).join(" ") + " Z";
+  const ex = (i) => +(.25 * lerp(P[i], P[(i + 3) % 4], f)[0] + .5 * P[i][0] + .25 * lerp(P[i], P[(i + 1) % 4], f)[0]).toFixed(2);
+  return `<defs><linearGradient id="${sd}" x1="0" x2="1"><stop offset="0" stop-color="#0b0c0e"/><stop offset=".35" stop-color="#3a3e44"/><stop offset=".55" stop-color="#121417"/><stop offset="1" stop-color="#050607"/></linearGradient>
+<radialGradient id="${tp}" cx=".45" cy=".4" r=".7"><stop offset="0" stop-color="#2e3135"/><stop offset="1" stop-color="#17191c"/></radialGradient>
+<filter id="${bl}" x="-30%" y="-60%" width="160%" height="220%"><feGaussianBlur stdDeviation="1.4"/></filter></defs>
+${strTile(c, 52, 44)}
+<path d="${top(12.4)}" fill="#000" opacity=".28" filter="url(#${bl})" transform="translate(2 0)"/>
+<path d="${top(10)}" fill="url(#${sd})"/><rect x="${ex(0)}" y="82" width="${+(ex(2) - ex(0)).toFixed(2)}" height="10" fill="url(#${sd})"/>
+<path d="${top()}" fill="url(#${tp})"/>
+<path d="M33 79.4 L44 74.4" fill="none" stroke="#ffffff" stroke-width=".6" opacity=".1" stroke-linecap="round"/>
+<g transform="translate(54 82) scale(1.2 .55)"><path d="${STR_APPLE}" fill="#08090a"/></g>
+${strLed(c, 44, 92.6, "#ffffff", .6)}
+${strMute(c, 94, 60)}`;
+}
+// The three-quarter view of the streaming boxes, the Apple TV's: a box's top
+// is a diamond, its edges running down to the right along A and down to the
+// left along B, its corners rounded, its two front faces below it.
+const ISO_A = [.9177, .3971], ISO_B = [-.9177, .3971];
+function strIsoGeom(cx, cy, a, b, r, lift = [0, 0, 0, 0]) {
+  const ha = [ISO_A[0] * a / 2, ISO_A[1] * a / 2], hb = [ISO_B[0] * b / 2, ISO_B[1] * b / 2];
+  // Left, top (back), right, front.
+  const P = [[cx - ha[0] + hb[0], cy - ha[1] + hb[1]], [cx - ha[0] - hb[0], cy - ha[1] - hb[1]], [cx + ha[0] - hb[0], cy + ha[1] - hb[1]], [cx + ha[0] + hb[0], cy + ha[1] + hb[1]]]
+    .map((p, i) => [p[0], p[1] - lift[i]]);
+  const n = (v) => +v.toFixed(2);
+  const toward = (c, o) => { const len = Math.hypot(o[0] - c[0], o[1] - c[1]); const k = Math.min(.45, r / (len || 1)); return [c[0] + (o[0] - c[0]) * k, c[1] + (o[1] - c[1]) * k]; };
+  const corner = (i) => [toward(P[i], P[(i + 3) % 4]), P[i], toward(P[i], P[(i + 1) % 4])];
+  const top = (dy = 0) => [0, 1, 2, 3].map((i) => { const [a1, c, b1] = corner(i);
+    return `${i ? "L" : "M"}${n(a1[0])} ${n(a1[1] + dy)} Q${n(c[0])} ${n(c[1] + dy)} ${n(b1[0])} ${n(b1[1] + dy)}`; }).join(" ") + " Z";
+  const ext = (i) => { const [a1, c, b1] = corner(i); return [n(.25 * a1[0] + .5 * c[0] + .25 * b1[0]), n(.25 * a1[1] + .5 * c[1] + .25 * b1[1])]; };
+  return { P, top, L: ext(0), R: ext(2), F: P[3] };
+}
+// A box in that view: its band of sides lit from the left, darker on the
+// right face, its top, its shadow on the table.
+function strIsoBox(g, h, topFill, faces, shadow = .28) {
+  const sd = ntId(), bl = ntId();
+  const [L, R, F] = [g.L, g.R, g.F];
+  const k = Math.max(0, Math.min(1, (F[0] - L[0]) / ((R[0] - L[0]) || 1)));
+  return `<defs><linearGradient id="${sd}" gradientUnits="userSpaceOnUse" x1="${L[0]}" y1="0" x2="${R[0]}" y2="0"><stop offset="0" stop-color="${faces[0]}"/><stop offset="${(k * .7).toFixed(3)}" stop-color="${faces[1]}"/>
+<stop offset="${k.toFixed(3)}" stop-color="${faces[2]}"/><stop offset="${Math.min(1, k + .04).toFixed(3)}" stop-color="${faces[3]}"/><stop offset="1" stop-color="${faces[4]}"/></linearGradient>
+<filter id="${bl}" x="-30%" y="-60%" width="160%" height="220%"><feGaussianBlur stdDeviation="1.4"/></filter></defs>
+<path d="${g.top(h + 2.4)}" fill="#000" opacity="${shadow}" filter="url(#${bl})" transform="translate(2 0)"/>
+<path d="${g.top(h)}" fill="url(#${sd})"/><path d="M${L[0]} ${L[1]} L${R[0]} ${R[1]} L${R[0]} ${R[1] + h} L${L[0]} ${L[1] + h} Z" fill="url(#${sd})"/>
+<path d="${g.top()}" fill="${topFill}"/>`;
+}
+const STR_DARK_FACES = ["#0b0c0e", "#2c2f34", "#3a3e44", "#121417", "#050607"];
+// A mark laid on a box's top, along its A edge; on its left face; on its right face.
+const strIsoTop = (x, y, inner) => `<g transform="matrix(.9177 .3971 -.9177 .3971 ${x} ${y})">${inner}</g>`;
+const strIsoLeft = (x, y, inner) => `<g transform="matrix(.9177 .3971 0 1 ${x} ${y})">${inner}</g>`;
+// A point on the left face: t along its top edge, d below it.
+const strOnLeft = (g, t, d) => [+(g.P[0][0] + (g.P[3][0] - g.P[0][0]) * t).toFixed(2), +(g.P[0][1] + (g.P[3][1] - g.P[0][1]) * t + d).toFixed(2)];
+const strOnRight = (g, t, d) => [+(g.P[3][0] + (g.P[2][0] - g.P[3][0]) * t).toFixed(2), +(g.P[3][1] + (g.P[2][1] - g.P[3][1]) * t + d).toFixed(2)];
+const strTopGrad = (id, a = "#30343a", b = "#16181b") => `<radialGradient id="${id}" cx=".45" cy=".4" r=".7"><stop offset="0" stop-color="${a}"/><stop offset="1" stop-color="${b}"/></radialGradient>`;
+// A disc lying on the table, seen the same way: an ellipse and its band.
+function strIsoDisc(cx, cy, rad, h, topFill, faces) {
+  const rx = +(rad * 1.298).toFixed(2), ry = +(rad * .5616).toFixed(2), sd = ntId(), bl = ntId();
+  return `<defs><linearGradient id="${sd}" x1="0" x2="1"><stop offset="0" stop-color="${faces[0]}"/><stop offset=".3" stop-color="${faces[1]}"/><stop offset=".55" stop-color="${faces[3]}"/><stop offset="1" stop-color="${faces[4]}"/></linearGradient>
+<filter id="${bl}" x="-30%" y="-60%" width="160%" height="220%"><feGaussianBlur stdDeviation="1.4"/></filter></defs>
+<ellipse cx="${cx + 2}" cy="${cy + h + 2.4}" rx="${rx}" ry="${ry}" fill="#000" opacity=".28" filter="url(#${bl})"/>
+<path d="M${cx - rx} ${cy} V${cy + h} A${rx} ${ry} 0 0 0 ${cx + rx} ${cy + h} V${cy} Z" fill="url(#${sd})"/>
+<ellipse cx="${cx}" cy="${cy}" rx="${rx}" ry="${ry}" fill="${topFill}"/>`;
+}
+
+// Fire TV Cube: the cube in fabric, its glossy top and the blue light bar
+// along its front edge.
+function strFireCube(c) {
+  const g = strIsoGeom(60, 50, 38, 38, 4), t = ntId(), h = ntId(), lb = ntId(), gl = ntId();
+  const [p0, p3, p2] = [g.P[0], g.P[3], g.P[2]], H = 40;
+  return `<defs>${strTopGrad(t, "#3a3e44", "#0e1012")}${spkHoles(h, "#000000", 1.15, .36)}${ntBlur(gl, 1.4)}
+<linearGradient id="${lb}" x1="0" x2="1"><stop offset="0" stop-color="#00e5ff" stop-opacity=".25"/><stop offset=".5" stop-color="#2979ff"/><stop offset="1" stop-color="#00e5ff" stop-opacity=".25"/></linearGradient></defs>
+${strTile(c, 60, 18)}
+${strIsoBox(g, H, `url(#${t})`, ["#16181b", "#2c2f34", "#33363b", "#141619", "#08090a"])}
+<path d="M${p0[0] + 1} ${p0[1] + 3} L${p3[0]} ${p3[1] + 3} V${p3[1] + H - 1} L${p0[0] + 1} ${p0[1] + H - 1} Z" fill="url(#${h})"/>
+<path d="M${p3[0] + 1} ${p3[1] + 3} L${p2[0] - 3} ${p2[1] + 4} V${p2[1] + H - 2} L${p3[0] + 1} ${p3[1] + H - 1} Z" fill="url(#${h})" opacity=".7"/>
+${c.on ? `<path class="nta-glow" d="M${p0[0] + 4} ${p0[1] + 1.4} L${p3[0] - 3} ${p3[1] - .4}" stroke="url(#${lb})" stroke-width="2" stroke-linecap="round" filter="url(#${gl})"/><path d="M${p0[0] + 5} ${p0[1] + 1.4} L${p3[0] - 4} ${p3[1] - .4}" stroke="url(#${lb})" stroke-width=".9" stroke-linecap="round"/>` : ""}
+${strIsoLeft(...strOnLeft(g, .32, 33), `<text x="0" y="0" font-size="4" font-weight="700" fill="#7d848b" ${NT_FONT}>amazon</text><path d="M1 1.2 Q7 3.2 13 1" fill="none" stroke="#ff9900" stroke-width=".6" stroke-linecap="round"/>`)}
+${strMute(c, 98, 46)}`;
+}
+// Fire TV Stick, or any stick: the stick lying with its HDMI plug and its
+// power cable; a Roku stick with its purple end.
+function strStick(c, fire) {
+  const g = strIsoGeom(56, 78, 66, 14, 4), t = ntId(), m = ntId();
+  const end = strOnRight(g, .5, 4), plug = strIsoGeom(end[0] + 7, end[1] - 1, 10, 7, 1);
+  const accent = c.brand || "";
+  return `<defs>${strTopGrad(t)}${ntV(m, "#f1f3f5", "#aeb5bb")}</defs>
+${strTile(c, 50, 44)}
+<path d="M${g.L[0] + 2} ${g.L[1] + 4} Q${g.L[0] - 8} ${g.L[1] + 5} ${g.L[0] - 10} ${g.L[1] + 14} T${g.L[0] - 16} ${g.L[1] + 24}" fill="none" stroke="#1a1c1f" stroke-width="1.6" stroke-linecap="round"/>
+${strIsoBox(g, 9, `url(#${t})`, STR_DARK_FACES)}
+${strIsoBox(plug, 4, "#f7f8f9", ["#c9ced3", "#e9ecef", "#f1f3f5", "#aeb5bb", "#8f969d"], .1)}
+${accent ? `<path d="${strIsoGeom(56 - 26 * .9177, 78 - 26 * .3971, 14, 14, 4).top()}" fill="${accent}"/>` : ""}
+${fire ? strIsoTop(46, 74, `<text x="0" y="1.6" font-size="5.6" font-weight="700" fill="#7d848b" ${NT_FONT}>fire tv</text>`) : ""}
+${strLed(c, ...strOnLeft(g, .12, 4.5), "#ffffff", .6)}${strMute(c, 96, 60)}`;
+}
+// Google TV Streamer: the porcelain wedge, low at the front and rising to
+// the back.
+function strGoogleStreamer(c) {
+  const g = strIsoGeom(60, 76, 56, 40, 9, [3, 7, 3, 0]), t = ntId();
+  return `<defs><linearGradient id="${t}" x1="0" y1="1" x2=".4" y2="0"><stop offset="0" stop-color="#e4e0d8"/><stop offset="1" stop-color="#faf8f4"/></linearGradient></defs>
+${strTile(c, 60, 34)}
+${strIsoBox(g, 7, `url(#${t})`, ["#bdb6aa", "#d6d0c5", "#ddd8ce", "#bfb8ac", "#a59e91"], .22)}
+${strLed(c, ...strOnLeft(g, .8, 3.6), "#ffffff", .6)}${strMute(c, 98, 56)}`;
+}
+// Chromecast with Google TV: the snow-white puck lying flat, its cable
+// running to the HDMI plug.
+function strChromecast(c) {
+  const t = ntId();
+  const plug = strIsoGeom(102, 99, 9, 6, 1);
+  return `<defs><radialGradient id="${t}" cx=".4" cy=".35" r=".75"><stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#e3e1dc"/></radialGradient></defs>
+${strTile(c, 52, 46)}
+<path d="M80 88 Q94 89 96 96 T102 99" fill="none" stroke="#c9c6bf" stroke-width="3" stroke-linecap="round"/><path d="M80 88 Q94 89 96 96 T102 99" fill="none" stroke="#f1efea" stroke-width="2" stroke-linecap="round"/>
+${strIsoBox(plug, 4, "#f7f6f2", ["#d9d6cf", "#ece9e3", "#f1efea", "#c9c6bf", "#b3b0a9"], .1)}
+${strIsoDisc(54, 86, 22, 6, `url(#${t})`, ["#c9c6bf", "#e3e1dc", "#ece9e3", "#d1cec7", "#a9a6a0"])}
+<text x="0" y="0" transform="translate(54 87.6) scale(1.3 .56)" text-anchor="middle" font-size="9" font-weight="700" fill="#c3c0b9" ${NT_FONT}>G</text>
+${strLed(c, 44, 96, "#ffffff", .55)}${strMute(c, 90, 62)}`;
+}
+// NVIDIA Shield TV: the black tube lying on the table, its end with the
+// ports towards us, the green mark.
+function strShield(c) {
+  const b = ntId(), bl = ntId();
+  return `<defs><linearGradient id="${b}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#4a4f55"/><stop offset=".35" stop-color="#25282c"/><stop offset="1" stop-color="#0b0c0e"/></linearGradient>
+<filter id="${bl}" x="-30%" y="-60%" width="160%" height="220%"><feGaussianBlur stdDeviation="1.4"/></filter></defs>
+${strTile(c, 54, 44)}
+<g transform="rotate(23.4 60 84)">
+<rect x="22" y="${84 + 8}" width="76" height="6" rx="3" fill="#000" opacity=".3" filter="url(#${bl})"/>
+<path d="M24 76 H92 Q97 76 97 84 Q97 92 92 92 H24 Q20 92 20 84 Q20 76 24 76 Z" fill="url(#${b})"/>
+<path d="M24 77.6 H90" stroke="#ffffff" stroke-width=".7" opacity=".25" stroke-linecap="round"/>
+<ellipse cx="94" cy="84" rx="3.6" ry="8" fill="#151719"/><rect x="92.6" y="80.6" width="2.6" height="2.2" rx=".3" fill="#5d646b"/><circle cx="94" cy="87" r=".8" fill="#5d646b"/>
+<path d="M28 84 Q31 81.6 34 84 Q31 86.4 28 84 Z" fill="#76b900"/><circle cx="31" cy="84" r=".8" fill="#0b0c0e"/>
+${strLed(c, 86, 80.4, "#76ff03", .6)}</g>
+${strMute(c, 96, 62)}`;
+}
+// NVIDIA Shield TV Pro: the angular black box, its faceted top and the
+// green light along one facet.
+function strShieldPro(c) {
+  const g = strIsoGeom(60, 68, 58, 40, 2), t = ntId(), gl = ntId();
+  const [L, T, R, F] = g.P;
+  const mid = (p, q, k = .5) => [+(p[0] + (q[0] - p[0]) * k).toFixed(2), +(p[1] + (q[1] - p[1]) * k).toFixed(2)];
+  const a = mid(T, R, .45), b2 = mid(L, F, .55), m1 = mid(T, L), m2 = mid(R, F);
+  const lit = ["playing", "paused", "home"].includes(c.st);
+  return `<defs>${strTopGrad(t, "#2f3237", "#121417")}${ntBlur(gl, 1.2)}</defs>
+${strTile(c, 60, 30)}
+${strIsoBox(g, 16, `url(#${t})`, STR_DARK_FACES)}
+<path d="M${m1[0]} ${m1[1]} L${a[0]} ${a[1]} L${b2[0]} ${b2[1]} L${m2[0]} ${m2[1]} M${a[0]} ${a[1]} L${m2[0]} ${m2[1]} M${m1[0]} ${m1[1]} L${b2[0]} ${b2[1]}" fill="none" stroke="#4a4f55" stroke-width=".6"/>
+${c.on ? `<path class="nta-glow" d="M${a[0]} ${a[1]} L${b2[0]} ${b2[1]}" stroke="#76ff03" stroke-width="1.6" stroke-linecap="round" filter="url(#${gl})"/>` : ""}
+<path d="M${a[0]} ${a[1]} L${b2[0]} ${b2[1]}" stroke="${lit ? "#76ff03" : c.st === "standby" ? "#ffb300" : "#3a3e44"}" stroke-width=".8" stroke-linecap="round"/>
+${strMute(c, 98, 52)}`;
+}
+// Roku Ultra: the black rounded box, the name on its glossy top and its
+// purple tag.
+function strRoku(c) {
+  const g = strIsoGeom(60, 70, 44, 44, 8), t = ntId();
+  const tag = strOnRight(g, .55, 3);
+  return `<defs>${strTopGrad(t)}</defs>
+${strTile(c, 60, 32)}
+${strIsoBox(g, 16, `url(#${t})`, STR_DARK_FACES)}
+${strIsoTop(50, 66, `<text x="0" y="2.4" font-size="8.6" font-weight="800" font-style="italic" fill="#8f98a2" ${NT_FONT}>Roku</text>`)}
+<path d="M${tag[0]} ${tag[1]} l4 -1.7 v7 l-4 1.7 Z" fill="#6f2da8"/>
+${strLed(c, ...strOnLeft(g, .75, 8), "#ffffff", .6)}${strMute(c, 98, 52)}`;
+}
+// Xiaomi TV Box S: the matte black square with very round corners.
+function strMiBox(c) {
+  const g = strIsoGeom(60, 72, 46, 46, 11), t = ntId();
+  return `<defs>${strTopGrad(t, "#2c2f33", "#1d1f22")}</defs>
+${strTile(c, 60, 34)}
+${strIsoBox(g, 13, `url(#${t})`, ["#0e0f11", "#25272b", "#2b2d31", "#151719", "#0a0b0c"])}
+${strIsoTop(56, 70, `<text x="0" y="2" font-size="6" font-weight="700" fill="#4a4f55" ${NT_FONT}>mi</text>`)}
+${strLed(c, ...strOnLeft(g, .78, 6.5), "#ffffff", .6)}${strMute(c, 98, 54)}`;
+}
+// Freebox Pop player: the black puck, its name on top and its light.
+function strFreebox(c) {
+  const t = ntId();
+  return `<defs>${strTopGrad(t, "#3c4046", "#121417")}</defs>
+${strTile(c, 60, 40)}
+${strIsoDisc(60, 80, 26, 11, `url(#${t})`, ["#08090a", "#25282c", "#2e3136", "#121417", "#050607"])}
+<text x="0" y="0" transform="translate(60 83) scale(1.3 .56)" text-anchor="middle" font-size="9" font-weight="800" font-style="italic" fill="#7d848b" ${NT_FONT}>free</text>
+${strLed(c, 60, 100, "#ffffff", .6)}${strMute(c, 98, 56)}`;
+}
+// An operator's set-top box (Orange, Bouygues, SFR): the wide glossy box,
+// its display with the channel and the operator's coloured light.
+function strDecoder(c) {
+  const g = strIsoGeom(58, 71, 70, 36, 2), t = ntId();
+  const lit = ["playing", "paused", "home"].includes(c.st);
+  const disp = c.st === "off" ? "" : c.st === "standby" ? "- -" : c.channel || (c.st === "home" ? "TV" : "\u25b6");
+  const [L, T, R, F] = g.P;
+  const mid = (p, q, k) => [+(p[0] + (q[0] - p[0]) * k).toFixed(2), +(p[1] + (q[1] - p[1]) * k).toFixed(2)];
+  const d1 = mid(T, R, .3), d2 = mid(L, F, .3), d3 = mid(T, R, .75), d4 = mid(L, F, .75);
+  return `<defs>${strTopGrad(t, "#34383e", "#0e1012")}</defs>
+${strTile(c, 58, 30)}
+${strIsoBox(g, 11, `url(#${t})`, STR_DARK_FACES)}
+<path d="M${d1[0]} ${d1[1]} L${d2[0]} ${d2[1]} M${d3[0]} ${d3[1]} L${d4[0]} ${d4[1]}" stroke="#4a4f55" stroke-width=".6" opacity=".7"/>
+${strIsoLeft(...strOnLeft(g, .58, 2.6), `<rect x="0" y="0" width="20" height="6.4" rx="1" fill="#05070a"/>${disp ? `<text x="10" y="5" text-anchor="middle" font-size="4.8" font-weight="700" fill="${lit ? "#7fffd4" : "#ffb300"}" ${NT_FONT}>${esc(String(disp).slice(0, 5))}</text>` : ""}`)}
+${strIsoLeft(...strOnLeft(g, .08, 4.4), `<rect x="0" y="0" width="5" height="1.8" rx=".9" fill="${c.st === "off" ? "#3a3e44" : c.st === "standby" ? "#ffb300" : c.brand || "#ffffff"}"${c.on ? ` class="nta-glow"` : ""}/>`)}
+${strMute(c, 100, 50)}`;
+}
+// An Android TV box, or any other: the small black box and its blue light.
+function strBox(c) {
+  const g = strIsoGeom(60, 75, 40, 40, 6), t = ntId();
+  return `<defs>${strTopGrad(t)}</defs>
+${strTile(c, 60, 40)}
+${strIsoBox(g, 12, `url(#${t})`, STR_DARK_FACES)}
+${strLed(c, ...strOnLeft(g, .7, 6), "#2979ff", .8)}${strMute(c, 96, 56)}`;
+}
 // Game consoles. Sparks rise while a game runs; a console's light is lit
 // when it is on, amber in rest mode, dark when it is off.
 // What rises while a game runs: the PlayStation symbols, the Xbox buttons,
@@ -2489,7 +2717,7 @@ ${glow ? `<path d="${body(tY, tR)}" fill="url(#${id("nl")})" opacity="${glow}"/>
 ${c.lifted ? `<g class="hu-blink" transform="translate(104 66)"><path d="M0 -8 L8 6 H-8 Z" fill="#ff3b30" stroke="#fff" stroke-width=".9"/><text y="4.4" font-size="9" font-weight="700" text-anchor="middle" fill="#fff" ${NT_FONT}>!</text></g>` : ""}
 ${c.empty ? `<g class="hu-blink" transform="translate(106 44)"><circle r="8" fill="#ff3b30" stroke="#fff" stroke-width=".9"/><path d="M0 -5 q-3.6 4.2 -3.6 6.2 a3.6 3.6 0 0 0 7.2 0 q0 -2 -3.6 -6.2z" fill="#fff"/></g>` : ""}`;
 }
-const NT_DRAW = { dryer: ntFilamentDryer, humidifier: ntHumidifier, circulator: ntCirculator, irr_sprinkler: ntIrrSprinkler, irr_tap: ntIrrTap, irr_drip: ntIrrDrip, irr_flowers: ntIrrFlowers, lit_globe: ntLitterGlobe, lit_box: ntLitterBox, det_smoke: ntDetSmoke, det_co: ntDetCo, det_leak: ntDetLeak, spk_smart: ntSpkSmart, spk_homepod_mini: ntSpkMini, spk_sonos_one: ntSpkOne, spk_bookshelf: ntSpkShelf, spk_sonos_move: ntSpkMove, spk_soundbar: ntSpkBar, spk_echo_dot: ntSpkDot, spk_echo_dot_max: ntSpkDotMax, spk_nest_mini: ntSpkNest, spk_sonos_era100: ntSpkEra100, spk_sonos_era300: ntSpkEra300, spk_bose_wave: ntSpkWave, spk_bose_500: ntSpkBose500, spk_bose_soundlink: ntSpkFlex, spk_bose_soundbar: ntSpkBoseBar, spk_sonos_five: ntSpkFive, spk_sonos_play: ntSpkPlay, spk_sonos_roam: ntSpkRoam, spk_sonos_ray: ntSpkRay, spk_sonos_amp: ntSpkAmp, spk_sonos_port: ntSpkPort, spk_bose_ultra: ntSpkBoseUltra, spk_bose_portable: ntSpkBosePortable, spk_bose_amp: ntSpkBoseAmp, con_ps1: conPs1, con_ps2: conPs2, con_ps3: conPs3, con_ps4: (c) => conPs4(c, false), con_ps4_pro: (c) => conPs4(c, true), con_ps5: conPs5, con_xbox: conXbox, con_xbox_360: conX360, con_xbox_one: conXone, con_xbox_series_x: conXsx, con_xbox_series_s: conXss, con_switch: (c) => conSwitch(c, false), con_switch_2: (c) => conSwitch(c, true), con_switch_lite: conSwitchLite, con_ps_vita: conVita, con_nes: conNes, con_snes: conSnes, con_n64: conN64, con_gamecube: conGamecube, con_wii: conWii, con_megadrive: conMegadrive, tank: ntTank, fws: ntFresh, solth: ntSolarThermal, wood: ntWoodStove, mob_scooter: mobScooter, mob_offroad: mobOffroad, mob_ebike: mobEbike, mob_gyropode: mobGyropode, mob_motorcycle: mobMotorcycle, meter_box: ntMeterBox, meter_dome: ntMeterDome, meter_gas: ntGas, meter_water: ntWater, booster: ntBooster, sump: ntSump, pool: ntPoolRobot, floor: ntFloor, spa: ntSpa, sauna: ntSauna, aquarium: ntAquarium, linky: ntLinky, tree: ntTree };
+const NT_DRAW = { dryer: ntFilamentDryer, humidifier: ntHumidifier, circulator: ntCirculator, irr_sprinkler: ntIrrSprinkler, irr_tap: ntIrrTap, irr_drip: ntIrrDrip, irr_flowers: ntIrrFlowers, lit_globe: ntLitterGlobe, lit_box: ntLitterBox, det_smoke: ntDetSmoke, det_co: ntDetCo, det_leak: ntDetLeak, spk_smart: ntSpkSmart, spk_homepod_mini: ntSpkMini, spk_sonos_one: ntSpkOne, spk_bookshelf: ntSpkShelf, spk_sonos_move: ntSpkMove, spk_soundbar: ntSpkBar, spk_echo_dot: ntSpkDot, spk_echo_dot_max: ntSpkDotMax, spk_nest_mini: ntSpkNest, spk_sonos_era100: ntSpkEra100, spk_sonos_era300: ntSpkEra300, spk_bose_wave: ntSpkWave, spk_bose_500: ntSpkBose500, spk_bose_soundlink: ntSpkFlex, spk_bose_soundbar: ntSpkBoseBar, spk_sonos_five: ntSpkFive, spk_sonos_play: ntSpkPlay, spk_sonos_roam: ntSpkRoam, spk_sonos_ray: ntSpkRay, spk_sonos_amp: ntSpkAmp, spk_sonos_port: ntSpkPort, spk_bose_ultra: ntSpkBoseUltra, spk_bose_portable: ntSpkBosePortable, spk_bose_amp: ntSpkBoseAmp, str_apple_tv: (c) => strZoom(strAppleTv(c), 54, 1.45), str_fire_tv_cube: strFireCube, str_fire_tv_stick: (c) => strStick(c, true), str_google_tv_streamer: strGoogleStreamer, str_chromecast: strChromecast, str_shield: strShield, str_shield_pro: strShieldPro, str_roku: strRoku, str_mi_box: strMiBox, str_freebox: strFreebox, str_decoder: strDecoder, str_box: strBox, str_stick: (c) => strStick(c, false), con_ps1: conPs1, con_ps2: conPs2, con_ps3: conPs3, con_ps4: (c) => conPs4(c, false), con_ps4_pro: (c) => conPs4(c, true), con_ps5: conPs5, con_xbox: conXbox, con_xbox_360: conX360, con_xbox_one: conXone, con_xbox_series_x: conXsx, con_xbox_series_s: conXss, con_switch: (c) => conSwitch(c, false), con_switch_2: (c) => conSwitch(c, true), con_switch_lite: conSwitchLite, con_ps_vita: conVita, con_nes: conNes, con_snes: conSnes, con_n64: conN64, con_gamecube: conGamecube, con_wii: conWii, con_megadrive: conMegadrive, tank: ntTank, fws: ntFresh, solth: ntSolarThermal, wood: ntWoodStove, mob_scooter: mobScooter, mob_offroad: mobOffroad, mob_ebike: mobEbike, mob_gyropode: mobGyropode, mob_motorcycle: mobMotorcycle, meter_box: ntMeterBox, meter_dome: ntMeterDome, meter_gas: ntGas, meter_water: ntWater, booster: ntBooster, sump: ntSump, pool: ntPoolRobot, floor: ntFloor, spa: ntSpa, sauna: ntSauna, aquarium: ntAquarium, linky: ntLinky, tree: ntTree };
 function ntSvg(d) {
   ntN = 0;
   const draw = NT_DRAW[d && d.kind] || ntLinky;

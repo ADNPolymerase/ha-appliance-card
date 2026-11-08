@@ -1506,6 +1506,32 @@ const spkEra300 = spkCard(L("Sonos Era 300", "Sonos Era 300"), "sonos_era300", "
 const spkWave = spkCard(L("Bose Wave SoundTouch", "Bose Wave SoundTouch"), "bose_wave", "playing", { media_title: "Radio Classique", source: "Radio" });
 const spkBose500 = spkCard(L("Bose Home Speaker 500", "Bose Home Speaker 500"), "bose_500", "playing", { media_title: "Take Five", media_artist: "Dave Brubeck" });
 const spkFlex = spkCard(L("Bose SoundLink Flex", "Bose SoundLink Flex"), "bose_soundlink", "playing", { media_title: "Happy", media_artist: "Pharrell Williams" }, "blue");
+const spkFive = spkCard(L("Sonos Five", "Sonos Five"), "sonos_five", "playing", { media_title: "Line-in", source: "Line-in" });
+const spkPlay = spkCard(L("Sonos Play", "Sonos Play"), "sonos_play", "playing", { media_title: "Get Lucky", media_artist: "Daft Punk" }, "white");
+const spkRoam = spkCard(L("Sonos Roam 2", "Sonos Roam 2"), "sonos_roam", "paused", { media_title: "Podcast" });
+const spkRay = spkCard(L("Sonos Ray", "Sonos Ray"), "sonos_ray", "playing", { source: "TV" });
+const spkAmp = spkCard(L("Sonos Amp", "Sonos Amp"), "sonos_amp", "playing", { media_title: "Kind of Blue", media_artist: "Miles Davis" });
+const spkPort = spkCard(L("Sonos Port", "Sonos Port"), "sonos_port", "idle", {}, "white");
+const spkUltra = spkCard(L("Bose Lifestyle Ultra", "Bose Lifestyle Ultra"), "bose_ultra", "playing", { media_title: "Clocks", media_artist: "Coldplay" });
+const spkPortable = spkCard(L("Bose Portable", "Bose Portable"), "bose_portable", "playing", { media_title: "Riptide", media_artist: "Vance Joy" });
+const spkBoseAmp = spkCard(L("Bose Music Amplifier", "Bose Music Amplifier"), "bose_amp", "playing", { media_title: "Radio" });
+const spkDotMax = spkCard(L("Echo Dot Max", "Echo Dot Max"), "echo_dot_max", "playing", { media_title: "Radio" });
+const strCard = (name, layout, state, attrs) => () => card({ name, appliance_type: "streamer", streamer_layout: layout, state_entity: "media_player.str_" + layout },
+  [st("media_player.str_" + layout, state, attrs || {})]);
+const strEp = (app, series, title, s, e) => ({ app_name: app, media_series_title: series, media_title: title, media_season: s, media_episode: e, media_duration: 3240, media_position: 1500, media_position_updated_at: new Date().toISOString() });
+const strAppleTv = strCard(L("Apple TV", "Apple TV"), "apple_tv", "playing", strEp("Apple TV", "Severance", "Hello, Ms. Cobel", 2, 1));
+const strCube = strCard(L("Fire TV Cube", "Fire TV Cube"), "fire_tv_cube", "playing", { app_name: "Prime Video", media_title: "The Boys" });
+const strFireStick = strCard(L("Fire TV Stick", "Fire TV Stick"), "fire_tv_stick", "playing", strEp("Netflix", "Stranger Things", "The Hellfire Club", 4, 1));
+const strGts = strCard(L("Google TV Streamer", "Google TV Streamer"), "google_tv_streamer", "playing", { app_name: "YouTube", media_title: "Lo-fi beats" });
+const strCast = strCard(L("Chromecast", "Chromecast"), "chromecast", "paused", strEp("Disney+", "The Mandalorian", "The Gunslinger", 2, 4));
+const strShield = strCard(L("Shield TV", "Shield TV"), "shield", "playing", { app_name: "Plex", media_title: "Dune: Part Two", media_duration: 9960, media_position: 4100, media_position_updated_at: new Date().toISOString() });
+const strShieldPro = strCard(L("Shield TV Pro", "Shield TV Pro"), "shield_pro", "on", { app_name: "Kodi" });
+const strRoku = strCard(L("Roku Ultra", "Roku Ultra"), "roku", "playing", { app_name: "Spotify", media_title: "Blinding Lights", media_artist: "The Weeknd" });
+const strMiBox = strCard(L("Xiaomi TV Box", "Xiaomi TV Box"), "mi_box", "idle", {});
+const strFreebox = strCard(L("Freebox Player", "Freebox Player"), "freebox", "playing", { app_name: "myCANAL", media_title: "Ligue 1" });
+const strDecoder = strCard(L("Orange TV", "D\u00e9codeur Orange"), "decoder", "playing", { media_title: "Le journal", media_channel: "2" });
+const strBox = strCard(L("Android TV box", "Bo\u00eetier Android TV"), "box", "standby", {});
+const strStick = strCard(L("HDMI stick", "Cl\u00e9 HDMI"), "stick", "off", {});
 const conCard = (name, layout, state, attrs, more) => () => card({ name, appliance_type: "console", console_layout: layout, state_entity: "media_player.con_" + layout, ...(more || {}) },
   [st("media_player.con_" + layout, state, attrs || {}), st("sensor.con_played", 74, { unit_of_measurement: "min" }), st("sensor.con_left", 46, { unit_of_measurement: "min" })]);
 const conPs1 = conCard(L("PlayStation", "PlayStation"), "ps1", "on");
@@ -1635,7 +1661,7 @@ const EXTRA = { printer_bambu: printerBambu, printer_centauri: printerCentauri, 
                 irr_sprinkler: irrSprinkler, irr_rain: irrRain, irr_tap: irrTap, irr_tap_off: irrTapOff, irr_sonoff: irrSonoff, irr_sonoff_pipe: irrSonoffPipe, irr_drip: irrDrip, irr_flowers: irrFlowers,
                 lit_globe: litGlobe, lit_globe_clean: litGlobeClean, lit_globe_cat: litGlobeCat, lit_box: litBox, lit_box_clean: litBoxClean, lit_box_full: litBoxFull,
                 det_smoke: detSmoke, det_smoke_alarm: detSmokeAlarm, det_co: detCo, det_co_alarm: detCoAlarm, det_leak: detLeak, det_leak_alarm: detLeakAlarm,
-                spk_smart: spkSmart, spk_mini: spkMini, spk_one: spkOne, spk_shelf: spkShelf, spk_move: spkMove, spk_bar: spkBar, spk_dot: spkDot, spk_nest: spkNest, spk_era100: spkEra100, spk_era300: spkEra300, spk_wave: spkWave, spk_bose500: spkBose500, spk_flex: spkFlex, spk_bosebar: spkBoseBar, heat_tank: heatTank, heat_tank_loading: heatTankLoading, heat_tank_low: heatTankLow, heat_fws: heatFws, heat_fws_draw: heatFwsDraw, heat_fws_circ: heatFwsCirc, heat_circ: heatCirc, heat_circ_wilo: heatCircWilo, heat_circ_fault: heatCircFault, heat_circ_nodata: heatCircNoData, heat_sth: heatSth, heat_sth_tubes: heatSthTubes, heat_sth_frost: heatSthFrost, heat_sth_stag: heatSthStag, heat_wood: heatWood, heat_wood_embers: heatWoodEmbers, heat_wood_cold: heatWoodCold, heat_wood_water: heatWoodWater, con_ps1: conPs1, con_ps2: conPs2, con_ps3: conPs3, con_ps4: conPs4, con_ps4pro: conPs4Pro, con_ps5: conPs5, con_xbox: conXbox, con_x360: conX360, con_xone: conXone, con_xsx: conXsx, con_xss: conXss, con_switch: conSwitch, con_switch2: conSwitch2, con_lite: conLite, con_vita: conVita, con_nes: conNes, con_snes: conSnes, con_n64: conN64, con_cube: conCube, con_wii: conWii, con_md: conMd,
+                spk_smart: spkSmart, spk_mini: spkMini, spk_one: spkOne, spk_shelf: spkShelf, spk_move: spkMove, spk_bar: spkBar, spk_dot: spkDot, spk_nest: spkNest, spk_era100: spkEra100, spk_era300: spkEra300, spk_wave: spkWave, spk_bose500: spkBose500, spk_flex: spkFlex, spk_bosebar: spkBoseBar, spk_five: spkFive, spk_play: spkPlay, spk_roam: spkRoam, spk_ray: spkRay, spk_amp: spkAmp, spk_port: spkPort, spk_ultra: spkUltra, spk_portable: spkPortable, spk_boseamp: spkBoseAmp, spk_dotmax: spkDotMax, str_appletv: strAppleTv, str_cube: strCube, str_firestick: strFireStick, str_gts: strGts, str_cast: strCast, str_shield: strShield, str_shieldpro: strShieldPro, str_roku: strRoku, str_mibox: strMiBox, str_freebox: strFreebox, str_decoder: strDecoder, str_box: strBox, str_stick: strStick, heat_tank: heatTank, heat_tank_loading: heatTankLoading, heat_tank_low: heatTankLow, heat_fws: heatFws, heat_fws_draw: heatFwsDraw, heat_fws_circ: heatFwsCirc, heat_circ: heatCirc, heat_circ_wilo: heatCircWilo, heat_circ_fault: heatCircFault, heat_circ_nodata: heatCircNoData, heat_sth: heatSth, heat_sth_tubes: heatSthTubes, heat_sth_frost: heatSthFrost, heat_sth_stag: heatSthStag, heat_wood: heatWood, heat_wood_embers: heatWoodEmbers, heat_wood_cold: heatWoodCold, heat_wood_water: heatWoodWater, con_ps1: conPs1, con_ps2: conPs2, con_ps3: conPs3, con_ps4: conPs4, con_ps4pro: conPs4Pro, con_ps5: conPs5, con_xbox: conXbox, con_x360: conX360, con_xone: conXone, con_xsx: conXsx, con_xss: conXss, con_switch: conSwitch, con_switch2: conSwitch2, con_lite: conLite, con_vita: conVita, con_nes: conNes, con_snes: conSnes, con_n64: conN64, con_cube: conCube, con_wii: conWii, con_md: conMd,
                 mob_scooter: demo_mobScooter, mob_offroad: demo_mobOffroad, mob_ebike: demo_mobEbike, mob_gyropode: demo_mobGyropode, mob_motorcycle: demo_mobMotorcycle, mob_unplugged: demo_mobUnplugged, mob_poster: demo_mobPoster,
                 net_sw8: netSw(8, 6), net_sw16: netSw(16, 11), net_sw24: netSw(24, 20), net_sw32: netSw(32, 27),
                 net_nas1: netBays(1, ["normal"], L("NAS, 1 bay", "NAS 1 baie")),
@@ -1701,8 +1727,9 @@ function liveGallery() {
     [L("Litter boxes", "Liti\u00e8res"), [litGlobe, litGlobeClean, litGlobeCat, litBox, litBoxClean, litBoxFull]],
     [L("Garden watering", "Arrosage"), [irrSprinkler, irrRain, irrTap, irrTapOff, irrSonoff, irrSonoffPipe, irrDrip, irrFlowers]],
     [L("Smoke, CO and leak detectors", "D\u00e9tecteurs de fum\u00e9e, CO et fuite"), [detSmoke, detSmokeAlarm, detCo, detCoAlarm, detLeak, detLeakAlarm]],
-    [L("Speakers", "Enceintes"), [spkSmart, spkMini, spkOne, spkEra100, spkEra300, spkMove, spkBar, spkWave, spkBose500, spkFlex, spkBoseBar, spkShelf, spkDot, spkNest]],
+    [L("Speakers", "Enceintes"), [spkSmart, spkMini, spkOne, spkEra100, spkEra300, spkMove, spkFive, spkPlay, spkRoam, spkBar, spkRay, spkAmp, spkPort, spkWave, spkBose500, spkUltra, spkPortable, spkFlex, spkBoseBar, spkBoseAmp, spkShelf, spkDot, spkDotMax, spkNest]],
     [L("Game consoles", "Consoles de jeu"), [conPs1, conPs2, conPs3, conPs4, conPs4Pro, conPs5, conXbox, conX360, conXone, conXsx, conXss, conSwitch, conSwitch2, conLite, conVita, conNes, conSnes, conN64, conCube, conWii, conMd]],
+    [L("Streaming boxes", "Bo\u00eetiers de streaming"), [strAppleTv, strCube, strFireStick, strGts, strCast, strShield, strShieldPro, strRoku, strMiBox, strFreebox, strDecoder, strBox, strStick]],
   ];
   // Each family folds, the first one open: forty cards in a row are hard to
   // read, a list of families is not.

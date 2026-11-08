@@ -251,6 +251,8 @@ const SECTIONS = [
   { field: "game_entity", types: ["console"], labelKey: "con_game", includeDomains: ["sensor", "media_player", "input_text"] },
   { field: "playtime_entity", types: ["console"], labelKey: "con_playtime", includeDomains: ["sensor", "number"] },
   { field: "playtime_left_entity", types: ["console"], labelKey: "con_playtime_left", includeDomains: ["sensor", "number"] },
+  // A streaming box: the app it is in when its player does not say it.
+  { field: "app_entity", types: ["streamer"], labelKey: "str_app", includeDomains: ["sensor", "media_player", "input_text", "select"] },
   // A buffer tank (#81): its own charge, when its controller counts it.
   { field: "charge_entity", types: ["storage_tank"], labelKey: "tank_charge", includeDomains: ["sensor", "number", "input_number"] },
   // A fresh water station (#82): the outlet, its setpoint, the tank's supply
@@ -1400,7 +1402,7 @@ class ApplianceCardEditor extends HTMLElement {
           type: "select",
           options: [{ value: "auto", label: t(hass, "unit_auto") }].concat(CIRC_MODELS.map((v) => ({ value: v, label: v === "generic" ? t(hass, "circ_model_generic") : v === "dab" ? "DAB" : v[0].toUpperCase() + v.slice(1) }))),
         }) : "") : ""}
-        ${[["irrigation", "irrigation_layout", IRRIGATION_LAYOUTS, "irr"], ["litter_box", "litter_layout", LITTER_LAYOUTS, "lit"], ["detector", "detector_layout", DETECTOR_LAYOUTS, "det"], ["speaker", "speaker_layout", SPEAKER_LAYOUTS, "spk"], ["console", "console_layout", CONSOLE_LAYOUTS, "con"]]
+        ${[["irrigation", "irrigation_layout", IRRIGATION_LAYOUTS, "irr"], ["litter_box", "litter_layout", LITTER_LAYOUTS, "lit"], ["detector", "detector_layout", DETECTOR_LAYOUTS, "det"], ["speaker", "speaker_layout", SPEAKER_LAYOUTS, "spk"], ["console", "console_layout", CONSOLE_LAYOUTS, "con"], ["streamer", "streamer_layout", STREAMER_LAYOUTS, "str"]]
           .filter(([ty]) => this._type === ty).map(([, f, list, p]) => this._row("section_screen_layout", f, { type: "select",
             options: [{ value: "auto", label: t(hass, "unit_auto") }].concat(list.map((v) => ({ value: v, label: t(hass, `layout_${p}_${v}`) }))) })).join("")}
         ${this._type === "irrigation" && irrigationLayoutOf(this._config, stateObj(hass, this._config.state_entity)) === "tap" ? this._row("irr_model", "tap_model", {

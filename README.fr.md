@@ -22,7 +22,7 @@ Une card Lovelace qui dessine les appareils de la maison et les anime selon leur
 
 ## Fonctionnalités
 
-- **63 types d'appareils, plus de 170 modèles dessinés**, animés pendant qu'ils travaillent et figés à l'arrêt. Le type est reconnu tout seul, d'après l'entité et la marque et le modèle de son appareil, ou choisi avec `appliance_type`.
+- **64 types d'appareils, plus de 170 modèles dessinés**, animés pendant qu'ils travaillent et figés à l'arrêt. Le type est reconnu tout seul, d'après l'entité et la marque et le modèle de son appareil, ou choisi avec `appliance_type`.
 - **Toutes les intégrations** : chaque champ est une entité à choisir. Une simple prise connectée suffit, sa puissance dit si l'appareil chauffe, lave ou essore.
 - **L'état compris** : `Idle`, `RUNNING`, `En marche`… deviennent veille, en cours, pause, terminé, différé ou erreur, avec l'étape du cycle (lavage, rinçage, essorage…).
 - **Ce qui compte pour chaque appareil** : programme, temps restant, porte, alertes, niveaux, températures, énergie et coût, marche du jour.
@@ -209,6 +209,13 @@ Clique sur une famille pour voir ses appareils en marche.
 </details>
 
 <details>
+<summary><b>Boîtiers de streaming</b></summary>
+
+<img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-streamers.fr.gif" alt="Boîtiers de streaming">
+
+</details>
+
+<details>
 <summary><b>Ballons tampons, circulateurs, solaire thermique et poêles à bois</b></summary>
 
 <img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-heat_storage.fr.gif" alt="Ballons tampons, circulateurs, solaire thermique et poêles à bois">
@@ -255,7 +262,7 @@ Seule `state_entity` est obligatoire, sauf sur un réfrigérateur où une sonde 
 | `done_alert` | `true` fait pulser un badge vert sur le dessin en fin de cycle, jusqu'à l'ouverture de la porte ou un appui sur le badge. Pour les appareils à cycle (lave-linge, sèche-linge, lave-vaisselle, four…). |
 | `illustration_color` | `auto` (défaut, suit le thème) \| `white` \| `grey` \| `black` \| `red` (rouge foncé). Ne change que la carrosserie, pas les couleurs d'état. |
 | `language` | `auto` (défaut, suit Home Assistant) ou l'un des 15 codes : `en`, `fr`, `de`, `es`, `it`, `nl`, `pt`, `sv`, `no`, `da`, `pl`, `ru`, `zh`, `cs`, `hu`. `nb` et `nb-NO` donnent le norvégien. |
-| `appliance_type` | `auto` (défaut) \| `washer` \| `dryer` \| `dishwasher` \| `oven` \| `microwave` \| `hood` \| `cooktop` \| `fridge` \| `kettle` \| `cooker` \| `coffee` \| `rice_cooker` \| `air_fryer` \| `water_heater` \| `boiler` \| `thermostat` \| `heat_pump` \| `printer_3d` \| `filament_dryer` \| `pet_feeder` \| `pet_fountain` \| `iron` \| `toaster` \| `pellet_stove` \| `air_conditioner` \| `dehumidifier` \| `humidifier` \| `space_heater` \| `towel_warmer` \| `air_purifier` \| `fan` \| `ev_charger` \| `hair_dryer` \| `screen` \| `network` \| `robot` \| `pool_pump` \| `scale` \| `ups` \| `solar` \| `home_battery` \| `camera` \| `diffuser` \| `hrv` \| `lamp` \| `mailbox` \| `water_pump` \| `floor_heating` \| `spa` \| `sauna` \| `aquarium` \| `meter` \| `christmas_tree` \| `mobility` \| `irrigation` \| `litter_box` \| `detector` \| `speaker` \| `console` \| `storage_tank` \| `fresh_water_station` \| `solar_thermal` \| `wood_stove`. |
+| `appliance_type` | `auto` (défaut) \| `washer` \| `dryer` \| `dishwasher` \| `oven` \| `microwave` \| `hood` \| `cooktop` \| `fridge` \| `kettle` \| `cooker` \| `coffee` \| `rice_cooker` \| `air_fryer` \| `water_heater` \| `boiler` \| `thermostat` \| `heat_pump` \| `printer_3d` \| `filament_dryer` \| `pet_feeder` \| `pet_fountain` \| `iron` \| `toaster` \| `pellet_stove` \| `air_conditioner` \| `dehumidifier` \| `humidifier` \| `space_heater` \| `towel_warmer` \| `air_purifier` \| `fan` \| `ev_charger` \| `hair_dryer` \| `screen` \| `network` \| `robot` \| `pool_pump` \| `scale` \| `ups` \| `solar` \| `home_battery` \| `camera` \| `diffuser` \| `hrv` \| `lamp` \| `mailbox` \| `water_pump` \| `floor_heating` \| `spa` \| `sauna` \| `aquarium` \| `meter` \| `christmas_tree` \| `mobility` \| `irrigation` \| `litter_box` \| `detector` \| `speaker` \| `console` \| `streamer` \| `storage_tank` \| `fresh_water_station` \| `solar_thermal` \| `wood_stove`. |
 | `tap_action` | Ce que fait un appui sur la carte, dans les mots de Home Assistant : `more-info` (défaut : l'entité d'état, ou sur une carte sans elle ce qu'elle lit à sa place), `none`, `navigate`, `url`, `toggle`, `perform-action` ou `fire-dom-event`, celle qu'écoutent les cartes popup bâties sur browser_mod. En YAML seulement. |
 | `illustration_tap_action` | Un appui sur le dessin seul, le reste de la carte gardant `tap_action` : `toggle` (une lampe allumée en la touchant), `more-info`, `none`, ou n'importe quelle action de Home Assistant. Sans lui, le dessin fait comme la carte. Avec `toggle`, le dessin répond comme les boutons, selon `controls_activation` : un appui, deux appuis ou un appui long. |
 | `show_toggle` | `false` retire le bouton allumer / éteindre d'une lampe, pour une carte qu'on allume en touchant son dessin (`illustration_tap_action: toggle`). |
@@ -1436,6 +1443,8 @@ disk2_entity: sensor.nas_drive_2_status
 | `console_layout` | console de jeu | `ps1` \| `ps2` \| `ps3` \| `ps4` \| `ps4_pro` \| `ps5` \| `xbox` \| `xbox_360` \| `xbox_one` \| `xbox_series_x` \| `xbox_series_s` \| `switch` \| `switch_2` \| `switch_lite` \| `ps_vita` \| `nes` \| `snes` \| `n64` \| `gamecube` \| `wii` \| `megadrive`. Non renseigné, il se lit dans le nom (PS4 Pro, Series S, Switch Lite, N64...), une marque seule dessinant sa dernière console. L'état est un `media_player` (PlayStation Network, Xbox, l'intégration PS4), le statut en ligne de PlayStation Network, une prise connectée, ou tout ce qui s'allume et s'éteint : *En jeu* pendant une partie, *Allumée* dans ses menus, *Mode repos* en veille, *Éteinte*. Des étincelles montent pendant le jeu, sa lumière est allumée en marche et orange au repos. |
 | `game_entity` | console de jeu | Le jeu en cours, quand l'état ne le dit pas (le capteur *Lecture en cours* de PlayStation Network). Sans lui, le titre du lecteur. |
 | `playtime_entity` / `playtime_left_entity` | console de jeu | Le temps de jeu du jour et le temps restant, tels qu'un contrôle parental les compte (Contrôle parental Nintendo Switch), en lignes. |
+| `streamer_layout` | boîtier de streaming | `apple_tv` \| `fire_tv_cube` \| `fire_tv_stick` \| `google_tv_streamer` \| `chromecast` \| `shield` (le tube) \| `shield_pro` \| `roku` \| `mi_box` (Xiaomi TV Box) \| `freebox` (Freebox Player) \| `decoder` (le décodeur d'un opérateur : Orange, Bouygues, SFR...) \| `box` (n'importe quel boîtier Android TV) \| `stick` (n'importe quelle clé HDMI, une clé Roku en violet). Non renseigné, il se lit dans le nom, puis dans la marque et le modèle de l'appareil (une Apple TV nommée d'après sa pièce, un Fire TV par son code de modèle Amazon). L'état est un `media_player` (Apple TV, Android TV Remote, Android TV / Fire TV par ADB, Google Cast, Roku, Kodi, le boîtier d'un opérateur), sa `remote`, une prise connectée ou n'importe quoi d'allumé ou d'éteint : *Lecture*, *En pause*, *Accueil*, *En veille* ou *Éteint*. Lignes : l'appli (son nom, ou son paquet changé en nom), le titre, la série avec sa saison et son épisode ou l'artiste, la chaîne, la source, le temps restant et le volume. Pendant la lecture, la tuile de l'appli flotte au-dessus du boîtier, à ses couleurs (Netflix, YouTube, Disney+, Prime Video, Apple TV, Plex, Spotify, myCANAL, Kodi et d'autres). Avec une prise connectée, `power_entity` dit allumé (4 W ou plus par défaut, `power_on_threshold`), en veille ou éteint. |
+| `app_entity` | boîtier de streaming | L'appli en cours, quand le lecteur ne la donne pas (l'appli courante d'une Android TV par ADB, un capteur). |
 | `spots` | lampe | Le nombre de spots dessinés, de 1 à 4. Sans réglage, un groupe de lumières dessine un spot par lumière, jusqu'à quatre. |
 | `timer_entity` | lampe | Un `select` de durées (un minuteur d'extinction) : une pastille qui montre celle choisie et ouvre la liste. |
 
@@ -1559,6 +1568,22 @@ state_entity: switch.prise_switch
 power_entity: sensor.prise_switch_puissance
 playtime_entity: sensor.switch_temps_de_jeu
 playtime_left_entity: sensor.switch_temps_restant
+```
+
+Un boîtier de streaming est un lecteur, ici une Apple TV, reconnue d'après son appareil même nommée d'après sa pièce ; ou un décodeur sur une prise connectée :
+
+```yaml
+type: custom:ha-appliance-card
+appliance_type: streamer
+state_entity: media_player.salon
+```
+
+```yaml
+type: custom:ha-appliance-card
+appliance_type: streamer
+streamer_layout: decoder
+state_entity: switch.prise_decodeur
+power_entity: sensor.prise_decodeur_puissance
 ```
 
 Une enceinte est un lecteur multimédia :

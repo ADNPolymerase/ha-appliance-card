@@ -13400,7 +13400,8 @@ function tvT(w) { return { 'switch.tv': { state: 'on', attributes: {} }, 'sensor
   const is = (want, ids) => { for (const id of ids) check(`detection ${want} : ${id}`, TYPE(id), want); };
   // No media player is a washing machine.
   check('lecteur : Apple TV sans classe', TYPE('media_player.salon'), 'screen');
-  check('lecteur : Cast', TYPE('media_player.chromecast_salon'), 'screen');
+  check('lecteur : Cast', TYPE('media_player.chromecast_salon'), 'streamer');
+  check('lecteur : une tele Fire TV reste une tele', TYPE('media_player.toshiba_fire_tv', { device_class: 'tv' }), 'screen');
   check('lecteur : ampli de classe receiver', TYPE('media_player.ampli', { device_class: 'receiver' }), 'speaker');
   check('lecteur : classe tv', TYPE('media_player.lg', { device_class: 'tv' }), 'screen');
   is('speaker', ['media_player.wiim_mini', 'media_player.bluesound_node', 'media_player.heos_1', 'media_player.denon_home_150', 'media_player.linkplay']);
@@ -13495,7 +13496,8 @@ function tvT(w) { return { 'switch.tv': { state: 'on', attributes: {} }, 'sensor
   check('alarm_status : pas sur un capteur', TYPE('sensor.kitchen_alarm_status') === 'detector', false);
   is('console', ['sensor.switch_used_screen_time', 'switch.switch_suspend_software']);
   is('mailbox', ['sensor.mail_usps_mail']);
-  is('screen', ['switch.bravia', 'remote.androidtv', 'switch.webos_salon', 'remote.apple_tv']);
+  is('screen', ['switch.bravia', 'remote.androidtv', 'switch.webos_salon']);
+  is('streamer', ['remote.apple_tv', 'media_player.shield', 'media_player.fire_tv_stick_4k', 'remote.livebox_tv_uhd', 'switch.prise_freebox_player']);
   // A scale.
   check('Renpho : par sa marque', TYPE('sensor.renpho_weight', { unit_of_measurement: 'kg' }, '72'), 'scale');
   check('Renpho : Weight en kg sans classe', TYPE('sensor.weight', { unit_of_measurement: 'kg' }, '72'), 'scale');
@@ -13860,7 +13862,7 @@ function tvT(w) { return { 'switch.tv': { state: 'on', attributes: {} }, 'sensor
   const s = (state, attributes = {}) => ({ state, attributes: { ...attributes }, last_changed: new Date(T0L - 3600000).toISOString() });
   const REG = (id, dev, st) => { const h = HASS({ [id]: st }); h.entities = { [id]: { device_id: 'd1', platform: 'x' } }; h.devices = { d1: { name: 'Wohnzimmer', ...dev } }; return h; };
   const TYPE = (id, dev, st = s('on')) => { const e = new Editor(); e.setConfig({ type: 'custom:ha-appliance-card', state_entity: id }); e.hass = REG(id, dev, st); return e._type; };
-  check('registre : Apple TV nommee comme la piece', TYPE('media_player.wohnzimmer_2', { manufacturer: 'Apple', model: 'Apple TV 4K (gen 3)' }, s('off', { friendly_name: 'Wohnzimmer (2)' })), 'screen');
+  check('registre : Apple TV nommee comme la piece', TYPE('media_player.wohnzimmer_2', { manufacturer: 'Apple', model: 'Apple TV 4K (gen 3)' }, s('off', { friendly_name: 'Wohnzimmer (2)' })), 'streamer');
   check('registre : sans registre, comme avant', (() => { const e = new Editor(); e.setConfig({ type: 'custom:ha-appliance-card', state_entity: 'media_player.wohnzimmer_2' }); e.hass = HASS({ 'media_player.wohnzimmer_2': s('off', { friendly_name: 'Wohnzimmer (2)' }) }); return e._type; })(), 'screen');
   check('registre : purificateur Dyson nomme comme la piece', TYPE('fan.wohnzimmer', { manufacturer: 'Dyson', model: '358E' }, s('on', { friendly_name: 'Wohnzimmer' })), 'air_purifier');
   check('registre : console Nintendo', TYPE('sensor.switch_screen_time', { manufacturer: 'Nintendo', model: 'Switch' }), 'console');
@@ -13895,6 +13897,60 @@ function tvT(w) { return { 'switch.tv': { state: 'on', attributes: {} }, 'sensor
   check('Echo Dot : l\'anneau rouge quand il est muet', [draw('echo_dot', '', 'idle', { is_volume_muted: true }).includes('stroke="#ff1744"'), draw('echo_dot', '', 'idle').includes('stroke="#ff1744"'), draw('echo_dot_max', '', 'idle', { is_volume_muted: true }).includes('stroke="#ff1744"')].join(), 'true,false,true');
   check('Echo Dot : les couleurs', [draw('echo_dot').includes('#3a4249'), draw('echo_dot', 'white').includes('#e4e5e3'), draw('echo_dot', 'blue').includes('#41637f'), draw('echo_dot_max').includes('#e4e5e3'), draw('echo_dot_max', 'black').includes('#3a4249')].join(), 'true,true,true,true,true');
   check('registre : rien sans modele', TYPE('media_player.x', { manufacturer: '', model: '' }, s('playing', { device_class: 'speaker' })), 'speaker');
+}
+
+// ── Streaming boxes (#97) ──
+{
+  const T0S = Date.now();
+  const s = (state, attributes = {}) => ({ state, attributes: { ...attributes }, last_changed: new Date(T0S - 3600000).toISOString() });
+  const STR = (st, attrs = {}, more = {}, extra = {}) => render({ appliance_type: 'streamer', state_entity: 'media_player.b', ...more }, { 'media_player.b': s(st, attrs), ...extra });
+  const kind = (h) => (/\bnt-k-(\w+)/.exec(machineCls(h)) || [, null])[1];
+  const svg = (h) => (h.match(/<svg class="nt-svg"[\s\S]*?<\/svg>/) || [''])[0];
+  check('boitier : lecture, pause, accueil, veille, eteint', ['playing', 'paused', 'idle', 'on', 'standby', 'off', 'buffering'].map((x) => stateLine(STR(x))).join('|'), 'Playing|Paused|Home screen|Home screen|Standby|Off|Playing');
+  check('boitier : indisponible', stateLine(STR('unavailable')), stateLine(render({ appliance_type: 'speaker', state_entity: 'media_player.x' }, { 'media_player.x': s('unavailable') })));
+  check('boitier : sa telecommande', ['on', 'off'].map((x) => stateLine(render({ appliance_type: 'streamer', state_entity: 'remote.apple_tv' }, { 'remote.apple_tv': s(x) }))).join('|'), 'Home screen|Off');
+  const plug = (on, w) => stateLine(render({ appliance_type: 'streamer', state_entity: 'switch.p', power_entity: 'sensor.w' }, { 'switch.p': s(on), 'sensor.w': s(w, { unit_of_measurement: 'W' }) }));
+  check('boitier : sur une prise', [plug('on', 6), plug('on', 1.5), plug('on', 0.2), plug('off', 0)].join('|'), 'Home screen|Standby|Off|Off');
+  check('boitier : le lecteur prime sur la prise', stateLine(render({ appliance_type: 'streamer', state_entity: 'media_player.b', power_entity: 'sensor.w' }, { 'media_player.b': s('playing'), 'sensor.w': s(1, { unit_of_measurement: 'W' }) })), 'Playing');
+  // The lines.
+  const ep = { app_name: 'Netflix', media_title: 'The Hellfire Club', media_series_title: 'Stranger Things', media_season: 4, media_episode: 1, media_duration: 3000, media_position: 1200, media_position_updated_at: new Date(T0S).toISOString(), volume_level: 0.4 };
+  const h = STR('paused', ep);
+  check('boitier : l appli', infoLine(h, 'App'), 'Netflix');
+  check('boitier : le titre', infoLine(h, 'Title'), 'The Hellfire Club');
+  check('boitier : la serie, sa saison et son episode', infoLine(h, 'Series'), 'Stranger Things · S4 E1');
+  check('boitier : le temps restant', infoLine(h, 'Time left').replace(/\s/g, ' '), '30 min');
+  check('boitier : le volume', infoLine(h, 'Volume').replace(/\s/g, ' '), '40 %');
+  check('boitier : un paquet devient un nom', infoLine(STR('playing', { app_id: 'com.netflix.ninja' }), 'App'), 'Netflix');
+  check('boitier : un paquet inconnu, son dernier mot', infoLine(STR('playing', { app_id: 'com.example.mytv' }), 'App'), 'Mytv');
+  check('boitier : l appli lue dans app_entity', infoLine(STR('playing', { app_name: 'Netflix' }, { app_entity: 'sensor.app' }, { 'sensor.app': s('Disney+') }), 'App'), 'Disney+');
+  check('boitier : l ecran d accueil n est pas une appli', infoLine(STR('idle', { app_name: 'Google TV Home', app_id: 'com.google.android.apps.tv.launcherx' }), 'App'), null);
+  check('boitier : la chaine d un decodeur', infoLine(STR('playing', { media_channel: 'TF1', media_title: 'Le journal' }), 'Channel'), 'TF1');
+  check('boitier : la source dite une fois', [infoLine(STR('playing', { app_name: 'YouTube', source: 'YouTube' }), 'Source'), infoLine(STR('playing', { source: 'HDMI 2' }), 'Source')].map(String).join('|'), 'null|HDMI 2');
+  check('boitier : rien en veille', ['App', 'Title'].map((l) => infoLine(STR('standby', ep), l)).map(String).join('|'), 'null|null');
+  // The app's tile.
+  check('boitier : la tuile Netflix en lecture', svg(STR('playing', { app_name: 'Netflix' })).includes('#e50914'), true);
+  check('boitier : pas de tuile a l accueil', svg(STR('idle', { app_name: 'Netflix' })).includes('#e50914'), false);
+  check('boitier : en pause, la tuile et ses barres', /opacity="0\.5"[\s\S]*#e50914/.test(svg(STR('paused', { app_name: 'Netflix' }))) && svg(STR('paused', { app_name: 'Netflix' })).includes('r="5" fill="#ffffff"'), true);
+  check('boitier : une appli inconnue, sa lettre', />W<\/text>/.test(svg(STR('playing', { app_name: 'Waipu' }))), true);
+  check('boitier : une source connue sert d appli', svg(STR('playing', { source: 'Disney+' })).includes('#0b2c8f'), true);
+  check('boitier : un titre ne sert pas d appli', />T<\/text>/.test(svg(STR('playing', { media_title: 'The Show' }))), false);
+  // The models, by name, by the device registry, and set.
+  const byName = (id, attrs = {}) => kind(render({ appliance_type: 'streamer', state_entity: `media_player.${id}` }, { [`media_player.${id}`]: s('playing', attrs) }));
+  check('boitier : les modeles par le nom', ['apple_tv_salon', 'fire_tv_cube', 'fire_tv_stick_4k', 'google_tv_streamer', 'chromecast_chambre', 'shield', 'shield_tv_pro', 'roku_ultra', 'roku_streaming_stick', 'mi_box_s', 'freebox_player_pop', 'livebox_tv_uhd', 'bbox_miami', 'android_tv_box', 'dongle_hdmi'].map((x) => byName(x)).join(),
+    'str_apple_tv,str_fire_tv_cube,str_fire_tv_stick,str_google_tv_streamer,str_chromecast,str_shield,str_shield_pro,str_roku,str_stick,str_mi_box,str_freebox,str_decoder,str_decoder,str_box,str_stick');
+  const REGS = (id, dev) => { const hh = HASS({ [id]: s('idle', { friendly_name: 'Wohnzimmer' }) }); hh.entities = { [id]: { device_id: 'd1', platform: 'x' } }; hh.devices = { d1: { name: 'Wohnzimmer', ...dev } }; return hh; };
+  const reg = (dev) => { const c = new Card(); c.setConfig({ type: 'custom:ha-appliance-card', state_entity: 'media_player.wohnzimmer' }); c.hass = REGS('media_player.wohnzimmer', dev); return kind(markup(c)); };
+  check('boitier : par le registre', [{ manufacturer: 'Apple', model: 'Apple TV 4K (gen 3)' }, { manufacturer: 'Amazon', model: 'AFTMM' }, { manufacturer: 'Amazon', model: 'AFTGAZL' }, { manufacturer: 'Google Inc.', model: 'Chromecast' }, { manufacturer: 'Google Inc.', model: 'Google TV Streamer' }, { manufacturer: 'NVIDIA', model: 'SHIELD Android TV' }, { manufacturer: 'Roku', model: 'Roku Ultra' }].map(reg).join(),
+    'str_apple_tv,str_fire_tv_stick,str_fire_tv_cube,str_chromecast,str_google_tv_streamer,str_shield,str_roku');
+  check('boitier : un Echo d Amazon n en est pas un', reg({ manufacturer: 'Amazon', model: 'Echo Dot' }), 'spk_echo_dot');
+  check('boitier : choisi', ['apple_tv', 'fire_tv_cube', 'fire_tv_stick', 'google_tv_streamer', 'chromecast', 'shield', 'shield_pro', 'roku', 'mi_box', 'freebox', 'decoder', 'box', 'stick'].map((l) => kind(STR('playing', {}, { streamer_layout: l }))).join(), ['apple_tv', 'fire_tv_cube', 'fire_tv_stick', 'google_tv_streamer', 'chromecast', 'shield', 'shield_pro', 'roku', 'mi_box', 'freebox', 'decoder', 'box', 'stick'].map((l) => `str_${l}`).join());
+  check('boitier : chaque dessin, sans NaN ni undefined', ['apple_tv', 'fire_tv_cube', 'fire_tv_stick', 'google_tv_streamer', 'chromecast', 'shield', 'shield_pro', 'roku', 'mi_box', 'freebox', 'decoder', 'box', 'stick'].flatMap((l) => ['playing', 'paused', 'idle', 'standby', 'off', 'unavailable'].map((x) => svg(STR(x, { app_name: 'Netflix', is_volume_muted: true, volume_level: .2, media_channel: '12' }, { streamer_layout: l })))).filter((x) => x.length < 800 || /NaN|undefined/.test(x)).length, 0);
+  check('boitier : la sourdine se voit', ['apple_tv', 'fire_tv_cube', 'fire_tv_stick', 'google_tv_streamer', 'chromecast', 'shield', 'shield_pro', 'roku', 'mi_box', 'freebox', 'decoder', 'box', 'stick'].filter((l) => !svg(STR('playing', { is_volume_muted: true, volume_level: .2 }, { streamer_layout: l })).includes('#e53935')).join(), '');
+  check('boitier : la lumiere orange d un decodeur Orange', svg(render({ appliance_type: 'streamer', state_entity: 'media_player.livebox_tv' }, { 'media_player.livebox_tv': s('playing') })).includes('fill="#ff7900"'), true);
+  check('boitier : le decodeur affiche la chaine', />12<\/text>/.test(svg(STR('playing', { media_channel: '12' }, { streamer_layout: 'decoder' }))), true);
+  // The editor.
+  const ed = markup(newEditor({ appliance_type: 'streamer', state_entity: 'media_player.m' }));
+  check('editeur boitier : le modele et l appli', ['"streamer_layout"', 'value="fire_tv_cube"', 'data-toggle="app_entity"'].every((f) => ed.includes(f)), true);
 }
 
 if (RECORD) writeFileSync(process.env.HAC_RECORD, JSON.stringify(RECORD));

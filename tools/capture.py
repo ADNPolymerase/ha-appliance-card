@@ -83,7 +83,8 @@ FAMILIES = (
     ("litter", "lit_globe,lit_globe_clean,lit_globe_cat,lit_box,lit_box_clean,lit_box_full", 3),
     ("watering", "irr_sprinkler,irr_rain,irr_tap,irr_tap_off,irr_sonoff,irr_sonoff_pipe,irr_drip,irr_flowers", 4),
     ("detectors", "det_smoke,det_smoke_alarm,det_co,det_co_alarm,det_leak,det_leak_alarm", 3),
-    ("speakers", "spk_smart,spk_mini,spk_one,spk_era100,spk_era300,spk_move,spk_bar,spk_wave,spk_bose500,spk_flex,spk_bosebar,spk_shelf,spk_dot,spk_nest", 7),
+    ("speakers", "spk_smart,spk_mini,spk_one,spk_era100,spk_era300,spk_move,spk_five,spk_play,spk_roam,spk_bar,spk_ray,spk_amp,spk_port,spk_wave,spk_bose500,spk_ultra,spk_portable,spk_flex,spk_bosebar,spk_boseamp,spk_shelf,spk_dot,spk_dotmax,spk_nest", 8),
+    ("streamers", "str_appletv,str_cube,str_firestick,str_gts,str_cast,str_shield,str_shieldpro,str_roku,str_mibox,str_freebox,str_decoder,str_box,str_stick", 5),
     ("consoles", "con_ps1,con_ps2,con_ps3,con_ps4,con_ps4pro,con_ps5,con_xbox,con_x360,con_xone,con_xsx,con_xss,con_switch,con_switch2,con_lite,con_vita,con_nes,con_snes,con_n64,con_cube,con_wii,con_md", 5),
     ("heat_storage", "heat_tank,heat_tank_loading,heat_tank_low,heat_fws,heat_fws_draw,heat_fws_circ,heat_circ,heat_circ_wilo,heat_circ_fault,heat_circ_nodata,heat_sth,heat_sth_tubes,heat_sth_frost,heat_sth_stag,heat_wood,heat_wood_embers,heat_wood_cold,heat_wood_water", 5),
 )
@@ -113,7 +114,7 @@ GIF_WIDE = {"ventilation": (2, 400)}
 # electric ride's gauge fills in 5 s, and its fourth bar has to be seen.
 # The litter boxes, the watering, the detectors and the speakers share one 7 s
 # cycle, the litter box's full cleaning, every motion fitting it whole.
-GIF_TIMING = {"mobility": (25, 200), "litter": (35, 200), "watering": (35, 200), "detectors": (35, 200), "speakers": (35, 200), "consoles": (35, 200)}
+GIF_TIMING = {"mobility": (25, 200), "litter": (35, 200), "watering": (35, 200), "detectors": (35, 200), "speakers": (35, 200), "consoles": (35, 200), "streamers": (35, 200)}
 
 
 def gif_cols(count):
