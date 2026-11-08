@@ -441,7 +441,7 @@ function netSuggest(hass, cfg) {
   set("poe_entity", pool.find((id) => sensor(id) && /poe/.test(words(id)) && /^k?W$/.test(String(attr(id).unit_of_measurement || ""))));
   set("problem_entity", own.find((id) => domainOf(id) === "binary_sensor" && notDisk(id) && ["problem", "safety"].includes(attr(id).device_class)));
   // A router: how many clients, the internet link and the main Wi-Fi.
-  if (netLayoutOf(cfg, hass.states[cfg.state_entity]) === "router") {
+  if (netLayoutOf(cfg, stateObj(hass, cfg.state_entity)) === "router") {
     const clients = (id) => sensor(id) && Number.isFinite(Number(hass.states[id].state)) && /client|connected|connectes|appareils|devices/.test(words(id))
       && !/guest|invite|iot|wired|cable|filaire|main|principal/.test(words(id));
     set("clients_entity", pool.find((id) => clients(id) && /total/.test(words(id))) || pool.find(clients));
@@ -542,9 +542,9 @@ function fieldFits(hass, field, id) {
 // The sections live in the editor, which is a file of its own in a release:
 // it hands them over, since only the editor ever asks for suggestions.
 function autoSuggest(hass, cfg, sectionsFor) {
-  if (!cfg.state_entity || !hass.states[cfg.state_entity]) return {};
+  if (!cfg.state_entity || !stateObj(hass, cfg.state_entity)) return {};
   const siblings = siblingEntityIds(hass, cfg.state_entity).filter((id) => id !== cfg.state_entity);
-  const type = detectApplianceType(cfg, hass.states[cfg.state_entity]);
+  const type = detectApplianceType(cfg, stateObj(hass, cfg.state_entity));
   // Only ever fill fields the current type actually shows: a suggestion the
   // editor then hides is just a stray key in the user's YAML. Nor one its own
   // picker would refuse: a sensor whose name says start is no start button.
@@ -563,7 +563,7 @@ function autoSuggest(hass, cfg, sectionsFor) {
   // A machine whose name says it washes and dries gets the option written
   // down, so that the editor shows it ticked and the YAML says what the card
   // is doing, rather than both relying on the name for ever.
-  if (type === "washer" && cfg.washer_dryer === undefined && isWasherDryer(cfg, hass.states[cfg.state_entity])) {
+  if (type === "washer" && cfg.washer_dryer === undefined && isWasherDryer(cfg, stateObj(hass, cfg.state_entity))) {
     patch.washer_dryer = true;
   }
   // The words the device's own name brings to every id of the device: on a
@@ -982,7 +982,7 @@ function detectApplianceType(cfg, st) {
   // VeSync gives its humidifiers no class at all: the domain says it, unless
   // the name or the action say it dries.
   if (st && domainOf(cfg.state_entity) === "humidifier" && !DIFFUSER_ONLY_FIELDS.some((f) => cfg[f])) {
-    const named = stripAccents(`${cfg.state_entity || ""} ${st.attributes.friendly_name || ""} ${cfg.name || ""}`).toLowerCase();
+    const named = stripAccents(`${cfg.state_entity || ""} ${stHay(st)} ${cfg.name || ""}`).toLowerCase();
     const dc = st.attributes.device_class;
     if (!DIFFUSER_NAME_RE.test(named) && (dc === "humidifier" || (!dc && !/dehumid|deshumid|entfeucht|deumidif|ontvocht|avfukt|affugt|osuszacz|odvlh|\u9664\u6e7f/.test(named) && st.attributes.action !== "drying"))) return "humidifier";
   }
@@ -1023,7 +1023,7 @@ function detectApplianceType(cfg, st) {
   {
     // A spa, a sauna, an aquarium, a meter, a Christmas tree and the rest of
     // the HACF drawings by their name, before a light makes a lamp of them.
-    const named = stripAccents(`${cfg.icon || ""} ${cfg.state_entity || ""} ${(st && st.attributes.friendly_name) || ""} ${cfg.name || ""}`).toLowerCase();
+    const named = stripAccents(`${cfg.icon || ""} ${cfg.state_entity || ""} ${stHay(st)} ${cfg.name || ""}`).toLowerCase();
     for (const [ty, re] of NT_NAME_RES) if (re.test(named)) return ty;
     // Gecko calls its spa nothing but its name: the icon says it.
     if (st && st.attributes.icon === "mdi:hot-tub") return "spa";
@@ -1040,11 +1040,11 @@ function detectApplianceType(cfg, st) {
   // class. It is never a washing machine.
   if (domainOf(cfg.state_entity) === "binary_sensor" && (["smoke", "carbon_monoxide", "gas", "moisture"].includes(String((st && st.attributes.device_class) || "")) || /_alarm_status$/.test(String(cfg.state_entity)))) return "detector";
   if (domainOf(cfg.state_entity) === "media_player" && st && st.attributes.device_class !== "tv"
-    && (st.attributes.device_class === "speaker" || /sonos|homepod|echo|nest.?(audio|mini)|google.?home|speaker|enceinte|lautsprecher|altavoz|altoparlante|soundbar|barre.?de.?son|music.?assistant|airplay|snapcast|bose|wiim|bluesound|linkplay|heos|denon|marantz|yamaha|hivi/.test(stripAccents(`${cfg.state_entity} ${st.attributes.friendly_name || ""}`).toLowerCase()))) return "speaker";
+    && (st.attributes.device_class === "speaker" || /sonos|homepod|echo|nest.?(audio|mini)|google.?home|speaker|enceinte|lautsprecher|altavoz|altoparlante|soundbar|barre.?de.?son|music.?assistant|airplay|snapcast|bose|wiim|bluesound|linkplay|heos|denon|marantz|yamaha|hivi/.test(stripAccents(`${cfg.state_entity} ${stHay(st)}`).toLowerCase()))) return "speaker";
   if (domainOf(cfg.state_entity) === "media_player" && st) return st.attributes.device_class === "receiver" ? "speaker" : "screen";
   {
     // A diffuser and a ventilation unit by their name or their maker's.
-    const named = stripAccents(`${cfg.icon || ""} ${cfg.state_entity || ""} ${(st && st.attributes.friendly_name) || ""}`).toLowerCase();
+    const named = stripAccents(`${cfg.icon || ""} ${cfg.state_entity || ""} ${stHay(st)}`).toLowerCase();
     if (DIFFUSER_NAME_RE.test(named)) return "diffuser";
     if (HRV_NAME_RE.test(named)) return "hrv";
     if (MAILBOX_NAME_RE.test(named)) return "mailbox";
@@ -1135,7 +1135,7 @@ function detectApplianceType(cfg, st) {
   // little else for Home Assistant. Before the heater, since a Dyson heats too.
   // Blueair, Winix, Levoit and Coway make little else; VeSync names a Levoit
   // after its model, and a room may be all an id says.
-  if (/purif|air.?clean|luftrein|depura|luchtrein|luftren|oczyszcz|cisticka|\u51c0\u5316|\u043e\u0447\u0438\u0441\u0442\u0438\u0442|dyson|blueair|blue.?pure|winix|levoit|coway|zhimi.?air|(^|[\s._])(core|vital).?\d{3}s|lv.?pur/.test(`${hay} ${stripAccents(String((st && st.attributes.friendly_name) || "")).toLowerCase()}`)) return "air_purifier";
+  if (/purif|air.?clean|luftrein|depura|luchtrein|luftren|oczyszcz|cisticka|\u51c0\u5316|\u043e\u0447\u0438\u0441\u0442\u0438\u0442|dyson|blueair|blue.?pure|winix|levoit|coway|zhimi.?air|(^|[\s._])(core|vital).?\d{3}s|lv.?pur/.test(`${hay} ${stripAccents(stHay(st)).toLowerCase()}`)) return "air_purifier";
   if (/pellet|pellematic|oekofen|froeling|ecomax|hargassner|centrometal|thermorossi|firenet|stufa|poele|po\u00eale|granule|granul\u00e9|pilleovn|palazzetti|micronova|aguaiot|extraflame|ravelli|piazzetta|edilkamin|duepi|(^|[^a-z])(rika|mcz)([^a-z]|$)|\u043f\u0435\u043b\u043b\u0435\u0442|\u9897\u7c92\u7089/.test(hay)) return "pellet_stove";
   // InComfort exposes an Intergas combi boiler as water_heater.boiler: the
   // domain says tank, the name says boiler, and the name is the one that knows.
@@ -1155,7 +1155,7 @@ function detectApplianceType(cfg, st) {
   if (/^climate\./.test(eid) && hvacModes.includes("fan_only") && hvacModes.every((m) => ["off", "fan_only"].includes(m))) return "hrv";
   // A thermostat or a radiator valve, by its name or its maker's. Before the
   // air conditioner, since a Nest or an ecobee cools as well.
-  if (/^climate\./.test(eid) && THERMOSTAT_NAME_RE.test(stripAccents(`${hay} ${(st && st.attributes.friendly_name) || ""}`.toLowerCase()))) return "thermostat";
+  if (/^climate\./.test(eid) && THERMOSTAT_NAME_RE.test(stripAccents(`${hay} ${stHay(st)}`.toLowerCase()))) return "thermostat";
   if (AC_WORD_RE.test(hay) && ["climate", "switch", "select"].includes(domainOf(cfg.state_entity))) return "air_conditioner";
   if (/air.?con|aircon|airco|mini.?split|(^|[\s._])(split|clim)([\s._]|$)|climatis|climatiz|condicionad|klimaanl|klimatyz|klimatiz|luftkondit|kondicion|sensibo|melcloud|\u043a\u043e\u043d\u0434\u0438\u0446\u0438\u043e\u043d\u0435\u0440|\u7a7a\u8c03/.test(hay)) return "air_conditioner";
   // Cooling alone does not make one: a Nest or an ecobee cools too, and says

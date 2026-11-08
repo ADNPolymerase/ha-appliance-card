@@ -61,7 +61,7 @@ const SRC = sourceText();
 const enBlock = SRC.slice(SRC.indexOf('\n  en: {'), SRC.indexOf('\n  fr: {'));
 const enKeys = new Set([...enBlock.matchAll(/(?:^|[\s,{])([a-z][a-z0-9_]*):\s*"/g)].map((m) => m[1]));
 const langs = readdirSync(OUT).filter((n) => n.endsWith('.json'));
-check('13 langues livrees a part', langs.length, 13);
+check('14 langues livrees a part', langs.length, 14);
 for (const file of langs) {
   const dict = JSON.parse(readFileSync(join(OUT, file), 'utf8'));
   check(`${file} : du texte, rien que du texte`,

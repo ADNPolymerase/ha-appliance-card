@@ -1135,7 +1135,7 @@ const MOWER_STYLES = ["classic", "navimow"];
 // The mower's style: the one chosen, else its name (Navimow, Segway).
 function mowerStyleOf(cfg, st) {
   if (MOWER_STYLES.includes(cfg.mower_style)) return cfg.mower_style;
-  const hay = stripAccents(`${cfg.state_entity || ""} ${cfg.name || ""} ${(st && st.attributes && st.attributes.friendly_name) || ""}`).toLowerCase();
+  const hay = stripAccents(`${cfg.state_entity || ""} ${cfg.name || ""} ${stHay(st)}`).toLowerCase();
   return /navimow|segway/.test(hay) ? "navimow" : "classic";
 }
 // Five appliances drawn in volume: a cooker with a clear jug, a Japanese rice
@@ -1911,7 +1911,7 @@ const LAPTOP_STYLES = ["thin", "classic"];
 const LAPTOP_THIN_RE = /macbook|apple|mac ?book/;
 function laptopStyleOf(cfg, st) {
   if (LAPTOP_STYLES.includes(cfg.laptop_style)) return cfg.laptop_style;
-  const name = stripAccents(`${cfg.state_entity || ""} ${(st && st.attributes && st.attributes.friendly_name) || ""}`.toLowerCase());
+  const name = stripAccents(`${cfg.state_entity || ""} ${stHay(st)}`.toLowerCase());
   return LAPTOP_THIN_RE.test(name) ? "thin" : "classic";
 }
 function laptopKeys(classic) {

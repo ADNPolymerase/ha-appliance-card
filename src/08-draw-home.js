@@ -84,7 +84,7 @@ const UNIT_FILTERS = { power: /^[mkMG]?W$/, energy: /^[mkMG]?Wh$/ };
 const HRV_ONLY_FIELDS = ["hrv_layout", "active_mode_entity", "supply_temperature_entity", "extract_temperature_entity", "exhaust_temperature_entity", "bypass_entity", "airflow_entity",
   "supply_fan_entity", "exhaust_fan_entity", "exhaust_airflow_entity", "fan_max_rpm", "humidity_control_entity", "filter_life_full", "high_speed_entity", "speed_entities", "zone_valves", "hrv_floors"];
 const HRV_LAYOUTS = ["diagram", "one_duct", "pair", "single", "single_box", "single_basement"];
-const HRV_NAME_RE = /(^|[^a-z])(hrv|erv|vmc|wtw|ftx|mvhr|kwl|helios|brink)([^a-z]|$)|(^|[\s.])ventilation|flexit|pluggit|systemair|swegon|thessla|ambientika|double.?flux|heat.?recovery|recuperat|comfoair|comfoconnect|vallox|zehnder|lunos|twinfresh|danfoss.?air|renson|endura|brink.?(flair|renovent)|wohnraumluft/;
+const HRV_NAME_RE = /(^|[^a-z])(hrv|erv|vmc(?!\d)|wtw|ftx|mvhr|kwl|helios|brink)([^a-z]|$)|(^|[\s.])ventilation|flexit|pluggit|systemair|swegon|thessla|ambientika|double.?flux|heat.?recovery|recuperat|comfoair|comfoconnect|vallox|zehnder|lunos|twinfresh|danfoss.?air|renson|endura|brink.?(flair|renovent)|wohnraumluft/;
 const HRV_LABELS = { run: "hrv_run", boost: "hrv_boost", bypass: "hrv_bypass", defrost: "hrv_defrost", filter: "hrv_filter", away: "hrv_away",
   rec: "hrv_recirc", hum: "hrv_humidity", inter: "hrv_inter", off: "ac_off", unav: "ev_offline" };
 const HRV_COLORS = { run: "#03a9f4", boost: "#ff9800", bypass: "#26a69a", defrost: "#4fc3f7", filter: "#ff9800", away: "#607d8b",
@@ -233,7 +233,7 @@ function hrvReadOf(hass, cfg, st, norm, powerDerived) {
 function hrvLayoutOf(cfg, st) {
   if (HRV_LAYOUTS.includes(cfg.hrv_layout)) return cfg.hrv_layout;
   const a = (st && st.attributes) || {};
-  const hay = stripAccents(`${cfg.state_entity || ""} ${cfg.name || ""} ${a.friendly_name || ""}`).toLowerCase();
+  const hay = stripAccents(`${cfg.state_entity || ""} ${cfg.name || ""} ${a.friendly_name || ""} ${a[DEVICE_ATTR] || ""}`).toLowerCase();
   if (/lunos.?e2|e\u00b2|twinfresh|pair|paire|decentral|dezentral/.test(hay)) return "pair";
   if (/ego|comfoair.?70|single.?room|monotube|un.?conduit/.test(hay)) return "one_duct";
   if (/simple.?flux|single.?flow|extract|hygro/.test(hay)) return "single";
@@ -482,7 +482,7 @@ function cameraReadOf(hass, cfg, st) {
 function cameraLayoutOf(cfg, st) {
   if (CAMERA_LAYOUTS.includes(cfg.camera_layout)) return cfg.camera_layout;
   const a = (st && st.attributes) || {};
-  const hay = stripAccents(`${cfg.state_entity || ""} ${cfg.name || ""} ${a.friendly_name || ""} ${a.brand || ""} ${a.model_name || a.model || ""}`).toLowerCase();
+  const hay = stripAccents(`${cfg.state_entity || ""} ${cfg.name || ""} ${a.friendly_name || ""} ${a[DEVICE_ATTR] || ""} ${a.brand || ""} ${a.model_name || a.model || ""}`).toLowerCase();
   if (cfg.ring_entity || /doorbell|sonnette|klingel|timbre|campanello|deurbel|campainha|dorrklocka|ringeklokke|dorklokke|dzwonek|zvonek|visitor/.test(hay)) return "doorbell";
   if (/dome|kuppel|domo|cupola|turret/.test(hay)) return "dome";
   if (/netatmo/.test(hay) && !/presence|outdoor|exterieur|exterior/.test(hay)) return "tube";
@@ -930,7 +930,7 @@ function lampReadOf(hass, cfg, st) {
 function lampLayoutOf(cfg, st) {
   if (LAMP_LAYOUTS.includes(cfg.lamp_layout)) return cfg.lamp_layout;
   const a = (st && st.attributes) || {};
-  const hay = stripAccents(`${cfg.state_entity || ""} ${cfg.name || ""} ${a.friendly_name || ""} ${a.model || ""}`).toLowerCase();
+  const hay = stripAccents(`${cfg.state_entity || ""} ${cfg.name || ""} ${a.friendly_name || ""} ${a[DEVICE_ATTR] || ""} ${a.model || ""}`).toLowerCase();
   if (/strip|ruban|bandeau|streifen|(^|[^a-z])tira|striscia|wled|govee|neon|gradient/.test(hay)) return "strip";
   if (/nanoleaf|panel|panneau|shapes|canvas|hexagon|triangle/.test(hay)) return "panels";
   if (/chevet|bedside|night.?stand|nachttisch|mesita|comodino|nachtkastje/.test(hay)) return "bedside";

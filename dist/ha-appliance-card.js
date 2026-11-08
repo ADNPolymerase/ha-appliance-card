@@ -158,7 +158,7 @@ const T = {
     layout_robot_floor_washer: "Floor washer", stick_away: "Off the base", stick_away_threshold: "Off the base below this power (W)",
     type_diffuser: "Essential oil diffuser", dif_mist: "Diffusing", dif_inter: "Intermittent", dif_low: "Light mist", dif_empty: "Tank empty", dif_mode: "Mist mode", layout_dif_drop: "Teardrop", layout_dif_cone: "Cone", layout_dif_stone: "Pebble", layout_dif_flame: "Flame", layout_dif_nebulizer: "Nebulizer", section_tank_empty: "Empty tank sensor", type_hrv: "Heat recovery ventilation (HRV/ERV)", hrv_run: "Ventilating", hrv_boost: "Boost", hrv_bypass: "Bypass", hrv_defrost: "Defrosting", hrv_filter: "Replace filter", hrv_away: "Away", hrv_recirc: "Recirculation", hrv_humidity: "Humidity control", hrv_inter: "Intermittent", hrv_inter_paused: "Intermittent, paused", hrv_mode: "Mode", hrv_speed: "Speed", section_speed_list: "Speeds (one entity per speed)", speeds_add: "Add a speed", section_active_mode: "Active mode (when it differs from the one set)", hrv_supply_fan: "Supply fan", hrv_exhaust_fan: "Exhaust fan", section_supply_fan: "Supply fan speed (rpm)", section_exhaust_fan: "Exhaust fan speed (rpm)", fan_max_rpm: "Fan top speed (rpm)", section_exhaust_airflow: "Exhaust airflow", section_target_humidity: "Humidity setpoint", section_humidity_control: "Humidity control switch", layout_hrv_diagram: "Air flows", layout_hrv_one_duct: "Wall unit, one duct", layout_hrv_pair: "Through-wall pair", section_supply_temperature: "Supply air temperature", section_extract_temperature: "Extract air temperature", section_exhaust_temperature: "Exhaust air temperature", section_bypass: "Bypass", section_airflow: "Airflow", hrv_t_outdoor: "fresh air", hrv_t_supply: "supply", hrv_t_extract: "extract", hrv_t_exhaust: "exhaust", hrv_outside: "outside", hrv_room: "room", layout_hrv_single: "Extract only (single flow)", hrv_low_speed: "Low speed", hrv_high_speed: "High speed", section_high_speed: "High speed switch", wp_off: "Switched off", layout_hrv_single_box: "Extract unit alone",
     type_camera: "Camera", cam_idle: "Idle", cam_live: "Streaming", cam_rec: "Recording", cam_motion: "Motion detected", cam_off: "Off", cam_line_last_motion: "Last motion", cam_line_night: "Night vision", cam_line_signal: "Signal", section_motion: "Motion sensor", section_recording: "Recording sensor", section_night_vision: "Night vision", section_privacy: "Privacy mode", section_signal: "Signal strength", layout_cam_indoor: "Indoor, pan and tilt", layout_cam_tube: "Indoor tube", layout_cam_outdoor: "Outdoor", layout_cam_dome: "Dome", layout_cam_doorbell: "Doorbell", cam_ring: "Ringing", cam_line_last_ring: "Last ring", section_ring: "Doorbell button", type_mailbox: "Mailbox", mb_empty: "Empty", mb_mail: "Mail", mb_front_open: "Front door open", mb_back_open: "Back door open", mb_line_count: "Mail received", mb_line_last: "Last mail", mb_front_door: "Front door", mb_back_door: "Back door", mb_open: "Open", mb_closed: "Closed", section_mail_count: "Mail counter", layout_mb_through: "Through the wall", layout_mb_classic: "Classic", mb_street: "street", mb_house: "house", mb_front_side: "Street side", mb_side_left: "Left", mb_side_right: "Right", type_water_pump: "Water pump", type_floor_heating: "Underfloor heating", type_spa: "Spa", type_sauna: "Sauna", type_aquarium: "Aquarium", type_meter: "Electricity meter", type_christmas_tree: "Christmas tree", layout_chest: "Chest freezer", layout_drawers: "Drawer freezer", layout_pump_booster: "Booster set", layout_pump_sump: "Sump pump", layout_floor_water: "Hot water", layout_floor_electric: "Electric", layout_robot_pool: "Pool robot", wp_pumping: "Pumping", wp_high: "High level", spa_bubbles: "Bubbles", sauna_ready: "Ready", aq_lit: "Light on", aq_dark: "Light off", meter_low: "Low use", meter_high: "High use", layout_meter_linky: "Linky", layout_meter_box: "Electricity meter", layout_meter_dome: "Round meter", layout_meter_gas: "Gas meter", layout_meter_water: "Water meter", section_today_use: "Today's use (kWh, m\u00b3)", section_meter_index: "Meter index", meter_index: "Index", meter_flowing: "In use", meter_idle: "No use", meter_export: "Feeding in", meter_export_index: "Export index", meter_direction: "Power direction", meter_dir_auto: "Auto (negative = feed-in)", meter_dir_import: "Consumption only", meter_dir_export: "Feed-in only", meter_dir_inverted: "Inverted (positive is fed in)", meter_flow: "Flow", section_pressure: "Pressure", section_water_level: "Water level", section_high_level: "High level alarm", level_max: "Level when full", section_bubbles: "Bubbles", section_tariff: "Tariff period", high_power: "High use from (W or VA)", tree_palette: "Colours", palette_multicolor: "Multicolour", palette_red_gold: "Red and gold", palette_red_silver: "Red and silver", palette_gold_silver: "Gold and silver", palette_blue_silver: "Blue and silver", palette_white_silver: "White and silver", palette_red_green: "Red and green", presents: "Presents", presents_auto: "On 24 and 25 December", presents_show: "Always", presents_hide: "Never", tree_on: "On", tree_off: "Off",
-    type_lamp: "Lamp", lamp_off: "Off", lamp_on: "On", lamp_line_brightness: "Brightness", lamp_line_color_temp: "Colour temperature", lamp_line_effect: "Effect", lamp_timer: "Timer", show_toggle: "On/off button", line_hide: "Hide this line", line_show: "Show this line", illustration_tap_action: "Tap on the drawing", pic_tap_default: "Card's own", pic_tap_toggle: "Toggle", pic_tap_more: "Details", pic_tap_none: "Nothing", lamp_spots: "Number of spots", layout_lamp_bulb: "Bulb", layout_lamp_bedside: "Bedside lamp", layout_lamp_floor: "Arc floor lamp", layout_lamp_torch: "Torchiere", layout_lamp_pendant: "Pendant", layout_lamp_strip: "LED strip", layout_lamp_spot: "Recessed spots", layout_lamp_panels: "Light panels", layout_lamp_desk: "Desk lamp", layout_lamp_wall: "Wall lantern", layout_lamp_garden_spot: "Garden spotlight", layout_lamp_bollard: "Garden bollard", layout_lamp_string: "String lights", layout_lamp_curtain: "Curtain lights", layout_lamp_icicle: "Icicle lights", layout_lamp_festoon: "Festoon lights", layout_lamp_squares: "Pixel squares", type_irrigation: "Watering", type_litter_box: "Self-cleaning litter box", type_detector: "Smoke, CO or leak detector", type_speaker: "Speaker", type_console: "Game console", con_playing: "Playing", con_on: "On", con_rest: "Rest mode", con_off: "Off", con_game: "Game", con_playtime: "Play time today", con_playtime_left: "Play time left", layout_con_ps1: "PlayStation", layout_con_ps2: "PlayStation 2", layout_con_ps3: "PlayStation 3", layout_con_ps4: "PlayStation 4", layout_con_ps4_pro: "PlayStation 4 Pro", layout_con_ps5: "PlayStation 5", layout_con_xbox: "Xbox", layout_con_xbox_360: "Xbox 360", layout_con_xbox_one: "Xbox One", layout_con_xbox_series_x: "Xbox Series X", layout_con_xbox_series_s: "Xbox Series S", layout_con_switch: "Nintendo Switch", layout_con_switch_2: "Nintendo Switch 2", layout_con_switch_lite: "Nintendo Switch Lite", layout_con_ps_vita: "PS Vita", layout_con_nes: "NES", layout_con_snes: "Super Nintendo", layout_con_n64: "Nintendo 64", layout_con_gamecube: "GameCube", layout_con_wii: "Wii", layout_con_megadrive: "Mega Drive", layout_irr_sprinkler: "Pop-up sprinkler", layout_irr_tap: "Tap timer", layout_lit_globe: "Rotating globe", layout_lit_box: "Closed box", layout_det_smoke: "Smoke detector", layout_det_co: "CO alarm", layout_det_leak: "Water leak sensor", layout_spk_smart: "Smart speaker (HomePod)", layout_spk_bookshelf: "Bookshelf speaker", layout_spk_soundbar: "Soundbar", layout_spk_homepod_mini: "HomePod mini", layout_spk_sonos_one: "Compact (Sonos One)", layout_spk_sonos_move: "Portable (Sonos Move)", layout_spk_echo_dot: "Sphere (Echo Dot)", layout_spk_nest_mini: "Puck (Nest Mini)", layout_spk_sonos_era100: "Sonos Era 100", layout_spk_sonos_era300: "Sonos Era 300", layout_spk_bose_wave: "Bose Wave SoundTouch", layout_spk_bose_500: "Bose Home Speaker 500", layout_spk_bose_soundlink: "Portable (Bose SoundLink)", layout_spk_bose_soundbar: "Soundbar (Bose)", speaker_color: "Speaker colour", irr_watering: "Watering", irr_waiting: "Waiting", irr_rain: "Rain delay", irr_zone: "Zone", section_rain_delay: "Rain delay", section_soil_moisture: "Soil moisture", section_next_run: "Next watering", lit_ready: "Ready", lit_cleaning: "Cleaning", lit_cat: "Cat inside", lit_full: "Drawer full", lit_fault: "Fault", lit_sleep: "Sleeping", sec_waste_drawer: "Waste drawer", sec_litter_level: "Litter level", sec_pet_weight: "Cat's weight", sec_visits: "Visits", sec_last_use: "Last visit", sec_cat_present: "Cat sensor", det_ok: "All clear", det_smoke: "Smoke detected", det_co: "CO detected", det_leak: "Leak detected", sec_test: "Test button", sec_co_level: "CO level", spk_playing: "Playing", spk_paused: "Paused", spk_idle: "Idle", spk_off: "Off", spk_title: "Title", spk_artist: "Artist", spk_source: "Source", spk_volume: "Volume", spk_muted: "Muted", play_pause: "Play/pause", opt_low: "Low", opt_ok: "OK", opt_running: "Running", opt_stopped: "Stopped", lock_locked: "Locked", lock_unlocked: "Unlocked", sec_meat_probe: "Meat probe", sec_meat_probe_target: "Probe target", sec_detergent: "Detergent level", sec_softener: "Softener level", sec_wash_temp: "Wash temperature", sec_spin: "Spin speed", sec_heater_mode: "Mode", sec_showers: "Showers available", sec_pilot_mode: "Pilot wire mode", sec_window: "Window", sec_range: "Range", sec_vehicle_lock: "Lock", sec_water_chlorine: "Chlorine", sec_aq_filter: "Filter pump", type_storage_tank: "Buffer tank", type_fresh_water_station: "Fresh water station", type_solar_thermal: "Solar thermal", type_wood_stove: "Wood stove", heat_delta: "Difference", heat_fault: "Fault", heat_fault_state: "Fault", heat_pump_mod: "Pump modulation", tank_charge: "Charge", tank_energy: "Stored energy", tank_sources: "Sources", tank_consumers: "Consumers", tank_none: "None", tank_loading: "Loading", tank_charged: "Charged", tank_partly: "Partly charged", tank_discharged: "Discharged", tank_temps_list: "Tank temperatures (top to bottom)", tank_temps_add: "Add a temperature", tank_sources_add: "Add a source", tank_consumers_add: "Add a consumer", tank_min_temp: "Cold temperature (0 %)", tank_max_temp: "Charged temperature (100 %)", tank_volume: "Volume (litres)", fws_flow: "Flow", fws_outlet: "Outlet temperature", fws_supply: "Tank supply", fws_cold: "Cold water", fws_circ_mode: "Circulation mode", fws_drawing: "Drawing hot water", fws_too_cold: "Supply too cold", fws_circulating: "Circulating", fws_standby: "Standby", fws_pump: "Primary pump", fws_circulation: "Circulation pump", sth_collector: "Collector", sth_tank: "Tank", sth_power: "Heat output", sth_today: "Yield today", sth_stagnation: "Stagnation", sth_loading: "Loading", sth_full: "Tank full", sth_frost: "Frost", sth_standby: "Standby", sth_stagnation_temp: "Stagnation temperature", layout_sth_flat: "Flat plates", layout_sth_tubes: "Evacuated tubes", wood_temp: "Stove temperature", wood_flow: "Flow", wood_return: "Return", wood_pump: "Pump", wood_valve: "Valve", wood_room: "Room", wood_last_fire: "Last fire", wood_overheat: "Overheating", wood_burning: "Burning", wood_embers: "Embers", wood_cold: "Cold", wood_water_jacket: "Water jacket", wood_burning_temp: "Burning from (temperature)", wood_embers_temp: "Embers from (temperature)", wood_overheat_temp: "Overheat above (water)", wood_scale: "Temperature scale (multiplier)", section_mail_present: "Mail inside (on: mail, off: empty)", layout_mb_through_3d: "Through the wall, 3/4 view", mb_color: "Colour", mb_color_anthracite: "Anthracite", mb_color_white: "White", mb_color_grey: "Aluminium grey", mb_color_green: "Green", mb_color_brown: "Brown", layout_irr_drip: "Vegetable patch, drip line", layout_irr_flowers: "Flower bed, micro-sprayers", irr_model: "Tap timer model", irr_model_generic: "Generic", irr_model_sonoff: "Sonoff (black and orange)", irr_wall: "Wall", irr_wall_brick: "Brick", irr_wall_render: "White render", irr_wall_none: "None (standpipe)", irr_duration: "Watering duration", fws_supply_margin: "Supply margin over the setpoint (K)", layout_hrv_single_basement: "Extract unit in the basement", section_hrv_floors: "Floors", zone_valves_list: "Zone dampers", zone_valves_add: "Add a damper", hrv_zones: "Dampers", hrv_zone_open: "open", hrv_zone_shut: "closed", layout_pump_circulator: "Heating circulator", circ_running: "Running", circ_nodata: "No data", circ_speed: "Speed", circ_max_speed: "Maximum speed", circ_head: "Head", circ_voltage: "Voltage", circ_mode: "Control mode", circ_model: "Brand", circ_model_generic: "Generic", type_humidifier: "Humidifier", hum_running: "Humidifying", hum_empty: "Add water", hum_lifted: "Tank removed", hum_mist: "Mist level", hum_night: "Night light", hum_display: "Display", hum_low_water: "Low water",
+    type_lamp: "Lamp", lamp_off: "Off", lamp_on: "On", lamp_line_brightness: "Brightness", lamp_line_color_temp: "Colour temperature", lamp_line_effect: "Effect", lamp_timer: "Timer", show_toggle: "On/off button", line_hide: "Hide this line", line_show: "Show this line", illustration_tap_action: "Tap on the drawing", pic_tap_default: "Card's own", pic_tap_toggle: "Toggle", pic_tap_more: "Details", pic_tap_none: "Nothing", lamp_spots: "Number of spots", layout_lamp_bulb: "Bulb", layout_lamp_bedside: "Bedside lamp", layout_lamp_floor: "Arc floor lamp", layout_lamp_torch: "Torchiere", layout_lamp_pendant: "Pendant", layout_lamp_strip: "LED strip", layout_lamp_spot: "Recessed spots", layout_lamp_panels: "Light panels", layout_lamp_desk: "Desk lamp", layout_lamp_wall: "Wall lantern", layout_lamp_garden_spot: "Garden spotlight", layout_lamp_bollard: "Garden bollard", layout_lamp_string: "String lights", layout_lamp_curtain: "Curtain lights", layout_lamp_icicle: "Icicle lights", layout_lamp_festoon: "Festoon lights", layout_lamp_squares: "Pixel squares", type_irrigation: "Watering", type_litter_box: "Self-cleaning litter box", type_detector: "Smoke, CO or leak detector", type_speaker: "Speaker", type_console: "Game console", con_playing: "Playing", con_on: "On", con_rest: "Rest mode", con_off: "Off", con_game: "Game", con_playtime: "Play time today", con_playtime_left: "Play time left", layout_con_ps1: "PlayStation", layout_con_ps2: "PlayStation 2", layout_con_ps3: "PlayStation 3", layout_con_ps4: "PlayStation 4", layout_con_ps4_pro: "PlayStation 4 Pro", layout_con_ps5: "PlayStation 5", layout_con_xbox: "Xbox", layout_con_xbox_360: "Xbox 360", layout_con_xbox_one: "Xbox One", layout_con_xbox_series_x: "Xbox Series X", layout_con_xbox_series_s: "Xbox Series S", layout_con_switch: "Nintendo Switch", layout_con_switch_2: "Nintendo Switch 2", layout_con_switch_lite: "Nintendo Switch Lite", layout_con_ps_vita: "PS Vita", layout_con_nes: "NES", layout_con_snes: "Super Nintendo", layout_con_n64: "Nintendo 64", layout_con_gamecube: "GameCube", layout_con_wii: "Wii", layout_con_megadrive: "Mega Drive", layout_irr_sprinkler: "Pop-up sprinkler", layout_irr_tap: "Tap timer", layout_lit_globe: "Rotating globe", layout_lit_box: "Closed box", layout_det_smoke: "Smoke detector", layout_det_co: "CO alarm", layout_det_leak: "Water leak sensor", layout_spk_smart: "Smart speaker (HomePod)", layout_spk_bookshelf: "Bookshelf speaker", layout_spk_soundbar: "Soundbar", layout_spk_homepod_mini: "HomePod mini", layout_spk_sonos_one: "Compact (Sonos One)", layout_spk_sonos_move: "Portable (Sonos Move)", layout_spk_echo_dot: "Sphere (Echo Dot)", layout_spk_nest_mini: "Puck (Nest Mini)", layout_spk_sonos_era100: "Sonos Era 100", layout_spk_sonos_era300: "Sonos Era 300", layout_spk_bose_wave: "Bose Wave SoundTouch", layout_spk_bose_500: "Bose Home Speaker 500", layout_spk_sonos_five: "Sonos Five", layout_spk_sonos_play: "Sonos Play", layout_spk_sonos_roam: "Sonos Roam", layout_spk_sonos_ray: "Sonos Ray", layout_spk_sonos_amp: "Sonos Amp", layout_spk_sonos_port: "Sonos Port", layout_spk_bose_ultra: "Bose Lifestyle Ultra", layout_spk_bose_portable: "Bose Portable Smart Speaker", layout_spk_bose_amp: "Bose Music Amplifier", layout_spk_echo_dot_max: "Echo Dot Max", layout_spk_bose_soundlink: "Portable (Bose SoundLink)", layout_spk_bose_soundbar: "Soundbar (Bose)", speaker_color: "Speaker colour", irr_watering: "Watering", irr_waiting: "Waiting", irr_rain: "Rain delay", irr_zone: "Zone", section_rain_delay: "Rain delay", section_soil_moisture: "Soil moisture", section_next_run: "Next watering", lit_ready: "Ready", lit_cleaning: "Cleaning", lit_cat: "Cat inside", lit_full: "Drawer full", lit_fault: "Fault", lit_sleep: "Sleeping", sec_waste_drawer: "Waste drawer", sec_litter_level: "Litter level", sec_pet_weight: "Cat's weight", sec_visits: "Visits", sec_last_use: "Last visit", sec_cat_present: "Cat sensor", det_ok: "All clear", det_smoke: "Smoke detected", det_co: "CO detected", det_leak: "Leak detected", sec_test: "Test button", sec_co_level: "CO level", spk_playing: "Playing", spk_paused: "Paused", spk_idle: "Idle", spk_off: "Off", spk_title: "Title", spk_artist: "Artist", spk_source: "Source", spk_volume: "Volume", spk_muted: "Muted", play_pause: "Play/pause", opt_low: "Low", opt_ok: "OK", opt_running: "Running", opt_stopped: "Stopped", lock_locked: "Locked", lock_unlocked: "Unlocked", sec_meat_probe: "Meat probe", sec_meat_probe_target: "Probe target", sec_detergent: "Detergent level", sec_softener: "Softener level", sec_wash_temp: "Wash temperature", sec_spin: "Spin speed", sec_heater_mode: "Mode", sec_showers: "Showers available", sec_pilot_mode: "Pilot wire mode", sec_window: "Window", sec_range: "Range", sec_vehicle_lock: "Lock", sec_water_chlorine: "Chlorine", sec_aq_filter: "Filter pump", type_storage_tank: "Buffer tank", type_fresh_water_station: "Fresh water station", type_solar_thermal: "Solar thermal", type_wood_stove: "Wood stove", heat_delta: "Difference", heat_fault: "Fault", heat_fault_state: "Fault", heat_pump_mod: "Pump modulation", tank_charge: "Charge", tank_energy: "Stored energy", tank_sources: "Sources", tank_consumers: "Consumers", tank_none: "None", tank_loading: "Loading", tank_charged: "Charged", tank_partly: "Partly charged", tank_discharged: "Discharged", tank_temps_list: "Tank temperatures (top to bottom)", tank_temps_add: "Add a temperature", tank_sources_add: "Add a source", tank_consumers_add: "Add a consumer", tank_min_temp: "Cold temperature (0 %)", tank_max_temp: "Charged temperature (100 %)", tank_volume: "Volume (litres)", fws_flow: "Flow", fws_outlet: "Outlet temperature", fws_supply: "Tank supply", fws_cold: "Cold water", fws_circ_mode: "Circulation mode", fws_drawing: "Drawing hot water", fws_too_cold: "Supply too cold", fws_circulating: "Circulating", fws_standby: "Standby", fws_pump: "Primary pump", fws_circulation: "Circulation pump", sth_collector: "Collector", sth_tank: "Tank", sth_power: "Heat output", sth_today: "Yield today", sth_stagnation: "Stagnation", sth_loading: "Loading", sth_full: "Tank full", sth_frost: "Frost", sth_standby: "Standby", sth_stagnation_temp: "Stagnation temperature", layout_sth_flat: "Flat plates", layout_sth_tubes: "Evacuated tubes", wood_temp: "Stove temperature", wood_flow: "Flow", wood_return: "Return", wood_pump: "Pump", wood_valve: "Valve", wood_room: "Room", wood_last_fire: "Last fire", wood_overheat: "Overheating", wood_burning: "Burning", wood_embers: "Embers", wood_cold: "Cold", wood_water_jacket: "Water jacket", wood_burning_temp: "Burning from (temperature)", wood_embers_temp: "Embers from (temperature)", wood_overheat_temp: "Overheat above (water)", wood_scale: "Temperature scale (multiplier)", section_mail_present: "Mail inside (on: mail, off: empty)", layout_mb_through_3d: "Through the wall, 3/4 view", mb_color: "Colour", mb_color_anthracite: "Anthracite", mb_color_white: "White", mb_color_grey: "Aluminium grey", mb_color_green: "Green", mb_color_brown: "Brown", layout_irr_drip: "Vegetable patch, drip line", layout_irr_flowers: "Flower bed, micro-sprayers", irr_model: "Tap timer model", irr_model_generic: "Generic", irr_model_sonoff: "Sonoff (black and orange)", irr_wall: "Wall", irr_wall_brick: "Brick", irr_wall_render: "White render", irr_wall_none: "None (standpipe)", irr_duration: "Watering duration", fws_supply_margin: "Supply margin over the setpoint (K)", layout_hrv_single_basement: "Extract unit in the basement", section_hrv_floors: "Floors", zone_valves_list: "Zone dampers", zone_valves_add: "Add a damper", hrv_zones: "Dampers", hrv_zone_open: "open", hrv_zone_shut: "closed", layout_pump_circulator: "Heating circulator", circ_running: "Running", circ_nodata: "No data", circ_speed: "Speed", circ_max_speed: "Maximum speed", circ_head: "Head", circ_voltage: "Voltage", circ_mode: "Control mode", circ_model: "Brand", circ_model_generic: "Generic", type_humidifier: "Humidifier", hum_running: "Humidifying", hum_empty: "Add water", hum_lifted: "Tank removed", hum_mist: "Mist level", hum_night: "Night light", hum_display: "Display", hum_low_water: "Low water",
     speed_power_max: "Power at top speed (W)", speed_power_custom: "Custom speed thresholds", speed_power_2: "Speed 2 from (W)", speed_power_3: "Speed 3 from (W)",
     fw_self_cleaning: "Self-cleaning", fw_dirty_full: "Dirty water tank full", fw_clean_empty: "Clean water tank empty",
     group_energy: "Energy", type_solar: "Solar panels", type_home_battery: "Home battery", solar_producing: "Producing", solar_low: "Low production", solar_night: "Night", section_solar_layout: "Mounting", layout_solar_ground: "On the ground", layout_solar_roof: "On a roof", section_solar_power: "Power produced", section_energy_today: "Energy produced today", solar_line_today: "Today", solar_peak_power: "Peak power of the panels (W)", section_battery_power: "Battery power (+ charging, \u2212 discharging)", power_inverted: "Positive power means discharging", section_charge_power: "Charge power", section_battery_discharge: "Discharge power", section_reserve: "Backup reserve", section_charge_limit: "Charge limit", battery_capacity: "Capacity (kWh)", layout_battery_wall: "Wall battery", layout_battery_station: "Portable power station", bat_idle: "Idle", bat_full: "Full", bat_low: "Low battery", bat_line_full_in: "Full in", bat_line_left: "Remaining", bat_line_reserve: "Reserve",
@@ -930,7 +930,7 @@ const TH_COLORS = { off: "var(--disabled-text-color, #9e9e9e)", heat: "#ff7043",
 function thermostatLayoutOf(cfg, st) {
   if (TH_LAYOUTS.includes(cfg.thermostat_layout)) return cfg.thermostat_layout;
   const a = (st && st.attributes) || {};
-  const name = stripAccents(`${cfg.state_entity || ""} ${a.friendly_name || ""} ${cfg.name || ""}`).toLowerCase();
+  const name = stripAccents(`${cfg.state_entity || ""} ${a.friendly_name || ""} ${a[DEVICE_ATTR] || ""} ${cfg.name || ""}`).toLowerCase();
   if (/nest|honeywell|lyric|\bt6\b|round/.test(name)) return "round";
   if (/ecobee|ct200|easycontrol/.test(name)) return "glass";
   if (/\btrv|valve|vanne|ventil|radiat|heizk(o|oe)rper|kopf|tete|danfoss|aqara|sonoff|fritz|thermostatic|thermostatique/.test(name)
@@ -1695,8 +1695,28 @@ const STATE_COLORS = {
 // Helpers
 // ---------------------------------------------------------------------------
 
+// The device's maker and model, from the device registry (#96): entities are
+// often named after the room, the model says what the appliance is. Carried in
+// an attribute of its own that only the name matching reads, never shown.
+const DEVICE_ATTR = "__hac_device";
+const DEVICE_STATES = new WeakMap();
 function stateObj(hass, entityId) {
-  return entityId && hass.states[entityId] ? hass.states[entityId] : null;
+  const s = entityId && hass.states[entityId] ? hass.states[entityId] : null;
+  if (!s) return null;
+  const reg = hass.entities && hass.entities[entityId];
+  const dev = reg && reg.device_id && hass.devices && hass.devices[reg.device_id];
+  const text = dev ? [dev.manufacturer, dev.model, dev.model_id].filter((v) => v && typeof v === "string").join(" ") : "";
+  if (!text) return s;
+  const hit = DEVICE_STATES.get(s);
+  if (hit && hit.text === text) return hit.out;
+  const out = { ...s, attributes: { ...s.attributes, [DEVICE_ATTR]: text } };
+  DEVICE_STATES.set(s, { text, out });
+  return out;
+}
+// What a state's name says, with its device's maker and model.
+function stHay(st) {
+  const a = (st && st.attributes) || {};
+  return `${a.friendly_name || ""} ${a[DEVICE_ATTR] || ""}`;
 }
 
 // An entity you cannot act on. Integrations routinely drop an option to
@@ -2127,7 +2147,7 @@ const WASHER_DRYER_RE = /washer.?dryer|washerdryer|washer.?drier|wash.?(and|n)?.
 // so answers for the setups that never open the editor.
 function isWasherDryer(cfg, st) {
   if (cfg.washer_dryer !== undefined && cfg.washer_dryer !== "") return !!cfg.washer_dryer;
-  const hay = stripAccents(`${cfg.icon || ""} ${cfg.state_entity || ""} ${cfg.name || ""} ${(st && st.attributes.friendly_name) || ""}`);
+  const hay = stripAccents(`${cfg.icon || ""} ${cfg.state_entity || ""} ${cfg.name || ""} ${stHay(st)}`);
   return WASHER_DRYER_RE.test(hay);
 }
 
@@ -2353,7 +2373,7 @@ function activeAlerts(hass, entityId) {
   if (!st) return [];
   const active = [];
   for (const [key, val] of Object.entries(st.attributes)) {
-    if (["icon", "friendly_name", "device_class", "unit_of_measurement"].includes(key)) continue;
+    if (["icon", "friendly_name", "device_class", "unit_of_measurement", DEVICE_ATTR].includes(key)) continue;
     const v = String(val).toLowerCase();
     if (v === "on" || v === "true" || v === "1" || v === "active") active.push(key);
   }
@@ -3073,7 +3093,7 @@ function netSuggest(hass, cfg) {
   set("poe_entity", pool.find((id) => sensor(id) && /poe/.test(words(id)) && /^k?W$/.test(String(attr(id).unit_of_measurement || ""))));
   set("problem_entity", own.find((id) => domainOf(id) === "binary_sensor" && notDisk(id) && ["problem", "safety"].includes(attr(id).device_class)));
   // A router: how many clients, the internet link and the main Wi-Fi.
-  if (netLayoutOf(cfg, hass.states[cfg.state_entity]) === "router") {
+  if (netLayoutOf(cfg, stateObj(hass, cfg.state_entity)) === "router") {
     const clients = (id) => sensor(id) && Number.isFinite(Number(hass.states[id].state)) && /client|connected|connectes|appareils|devices/.test(words(id))
       && !/guest|invite|iot|wired|cable|filaire|main|principal/.test(words(id));
     set("clients_entity", pool.find((id) => clients(id) && /total/.test(words(id))) || pool.find(clients));
@@ -3174,9 +3194,9 @@ function fieldFits(hass, field, id) {
 // The sections live in the editor, which is a file of its own in a release:
 // it hands them over, since only the editor ever asks for suggestions.
 function autoSuggest(hass, cfg, sectionsFor) {
-  if (!cfg.state_entity || !hass.states[cfg.state_entity]) return {};
+  if (!cfg.state_entity || !stateObj(hass, cfg.state_entity)) return {};
   const siblings = siblingEntityIds(hass, cfg.state_entity).filter((id) => id !== cfg.state_entity);
-  const type = detectApplianceType(cfg, hass.states[cfg.state_entity]);
+  const type = detectApplianceType(cfg, stateObj(hass, cfg.state_entity));
   // Only ever fill fields the current type actually shows: a suggestion the
   // editor then hides is just a stray key in the user's YAML. Nor one its own
   // picker would refuse: a sensor whose name says start is no start button.
@@ -3195,7 +3215,7 @@ function autoSuggest(hass, cfg, sectionsFor) {
   // A machine whose name says it washes and dries gets the option written
   // down, so that the editor shows it ticked and the YAML says what the card
   // is doing, rather than both relying on the name for ever.
-  if (type === "washer" && cfg.washer_dryer === undefined && isWasherDryer(cfg, hass.states[cfg.state_entity])) {
+  if (type === "washer" && cfg.washer_dryer === undefined && isWasherDryer(cfg, stateObj(hass, cfg.state_entity))) {
     patch.washer_dryer = true;
   }
   // The words the device's own name brings to every id of the device: on a
@@ -3614,7 +3634,7 @@ function detectApplianceType(cfg, st) {
   // VeSync gives its humidifiers no class at all: the domain says it, unless
   // the name or the action say it dries.
   if (st && domainOf(cfg.state_entity) === "humidifier" && !DIFFUSER_ONLY_FIELDS.some((f) => cfg[f])) {
-    const named = stripAccents(`${cfg.state_entity || ""} ${st.attributes.friendly_name || ""} ${cfg.name || ""}`).toLowerCase();
+    const named = stripAccents(`${cfg.state_entity || ""} ${stHay(st)} ${cfg.name || ""}`).toLowerCase();
     const dc = st.attributes.device_class;
     if (!DIFFUSER_NAME_RE.test(named) && (dc === "humidifier" || (!dc && !/dehumid|deshumid|entfeucht|deumidif|ontvocht|avfukt|affugt|osuszacz|odvlh|\u9664\u6e7f/.test(named) && st.attributes.action !== "drying"))) return "humidifier";
   }
@@ -3655,7 +3675,7 @@ function detectApplianceType(cfg, st) {
   {
     // A spa, a sauna, an aquarium, a meter, a Christmas tree and the rest of
     // the HACF drawings by their name, before a light makes a lamp of them.
-    const named = stripAccents(`${cfg.icon || ""} ${cfg.state_entity || ""} ${(st && st.attributes.friendly_name) || ""} ${cfg.name || ""}`).toLowerCase();
+    const named = stripAccents(`${cfg.icon || ""} ${cfg.state_entity || ""} ${stHay(st)} ${cfg.name || ""}`).toLowerCase();
     for (const [ty, re] of NT_NAME_RES) if (re.test(named)) return ty;
     // Gecko calls its spa nothing but its name: the icon says it.
     if (st && st.attributes.icon === "mdi:hot-tub") return "spa";
@@ -3672,11 +3692,11 @@ function detectApplianceType(cfg, st) {
   // class. It is never a washing machine.
   if (domainOf(cfg.state_entity) === "binary_sensor" && (["smoke", "carbon_monoxide", "gas", "moisture"].includes(String((st && st.attributes.device_class) || "")) || /_alarm_status$/.test(String(cfg.state_entity)))) return "detector";
   if (domainOf(cfg.state_entity) === "media_player" && st && st.attributes.device_class !== "tv"
-    && (st.attributes.device_class === "speaker" || /sonos|homepod|echo|nest.?(audio|mini)|google.?home|speaker|enceinte|lautsprecher|altavoz|altoparlante|soundbar|barre.?de.?son|music.?assistant|airplay|snapcast|bose|wiim|bluesound|linkplay|heos|denon|marantz|yamaha|hivi/.test(stripAccents(`${cfg.state_entity} ${st.attributes.friendly_name || ""}`).toLowerCase()))) return "speaker";
+    && (st.attributes.device_class === "speaker" || /sonos|homepod|echo|nest.?(audio|mini)|google.?home|speaker|enceinte|lautsprecher|altavoz|altoparlante|soundbar|barre.?de.?son|music.?assistant|airplay|snapcast|bose|wiim|bluesound|linkplay|heos|denon|marantz|yamaha|hivi/.test(stripAccents(`${cfg.state_entity} ${stHay(st)}`).toLowerCase()))) return "speaker";
   if (domainOf(cfg.state_entity) === "media_player" && st) return st.attributes.device_class === "receiver" ? "speaker" : "screen";
   {
     // A diffuser and a ventilation unit by their name or their maker's.
-    const named = stripAccents(`${cfg.icon || ""} ${cfg.state_entity || ""} ${(st && st.attributes.friendly_name) || ""}`).toLowerCase();
+    const named = stripAccents(`${cfg.icon || ""} ${cfg.state_entity || ""} ${stHay(st)}`).toLowerCase();
     if (DIFFUSER_NAME_RE.test(named)) return "diffuser";
     if (HRV_NAME_RE.test(named)) return "hrv";
     if (MAILBOX_NAME_RE.test(named)) return "mailbox";
@@ -3767,7 +3787,7 @@ function detectApplianceType(cfg, st) {
   // little else for Home Assistant. Before the heater, since a Dyson heats too.
   // Blueair, Winix, Levoit and Coway make little else; VeSync names a Levoit
   // after its model, and a room may be all an id says.
-  if (/purif|air.?clean|luftrein|depura|luchtrein|luftren|oczyszcz|cisticka|\u51c0\u5316|\u043e\u0447\u0438\u0441\u0442\u0438\u0442|dyson|blueair|blue.?pure|winix|levoit|coway|zhimi.?air|(^|[\s._])(core|vital).?\d{3}s|lv.?pur/.test(`${hay} ${stripAccents(String((st && st.attributes.friendly_name) || "")).toLowerCase()}`)) return "air_purifier";
+  if (/purif|air.?clean|luftrein|depura|luchtrein|luftren|oczyszcz|cisticka|\u51c0\u5316|\u043e\u0447\u0438\u0441\u0442\u0438\u0442|dyson|blueair|blue.?pure|winix|levoit|coway|zhimi.?air|(^|[\s._])(core|vital).?\d{3}s|lv.?pur/.test(`${hay} ${stripAccents(stHay(st)).toLowerCase()}`)) return "air_purifier";
   if (/pellet|pellematic|oekofen|froeling|ecomax|hargassner|centrometal|thermorossi|firenet|stufa|poele|po\u00eale|granule|granul\u00e9|pilleovn|palazzetti|micronova|aguaiot|extraflame|ravelli|piazzetta|edilkamin|duepi|(^|[^a-z])(rika|mcz)([^a-z]|$)|\u043f\u0435\u043b\u043b\u0435\u0442|\u9897\u7c92\u7089/.test(hay)) return "pellet_stove";
   // InComfort exposes an Intergas combi boiler as water_heater.boiler: the
   // domain says tank, the name says boiler, and the name is the one that knows.
@@ -3787,7 +3807,7 @@ function detectApplianceType(cfg, st) {
   if (/^climate\./.test(eid) && hvacModes.includes("fan_only") && hvacModes.every((m) => ["off", "fan_only"].includes(m))) return "hrv";
   // A thermostat or a radiator valve, by its name or its maker's. Before the
   // air conditioner, since a Nest or an ecobee cools as well.
-  if (/^climate\./.test(eid) && THERMOSTAT_NAME_RE.test(stripAccents(`${hay} ${(st && st.attributes.friendly_name) || ""}`.toLowerCase()))) return "thermostat";
+  if (/^climate\./.test(eid) && THERMOSTAT_NAME_RE.test(stripAccents(`${hay} ${stHay(st)}`.toLowerCase()))) return "thermostat";
   if (AC_WORD_RE.test(hay) && ["climate", "switch", "select"].includes(domainOf(cfg.state_entity))) return "air_conditioner";
   if (/air.?con|aircon|airco|mini.?split|(^|[\s._])(split|clim)([\s._]|$)|climatis|climatiz|condicionad|klimaanl|klimatyz|klimatiz|luftkondit|kondicion|sensibo|melcloud|\u043a\u043e\u043d\u0434\u0438\u0446\u0438\u043e\u043d\u0435\u0440|\u7a7a\u8c03/.test(hay)) return "air_conditioner";
   // Cooling alone does not make one: a Nest or an ecobee cools too, and says
@@ -3885,7 +3905,7 @@ const MEDIA_RANK = { playing: 4, buffering: 4, paused: 3, idle: 2.5, on: 2 };
 // its fields suggest. A tablet's own fields say it is one before its name does.
 function screenLayoutOf(cfg, st) {
   if (SCREEN_LAYOUTS.includes(cfg.screen_layout)) return cfg.screen_layout;
-  const name = stripAccents(`${cfg.state_entity || ""} ${cfg.media_entity || ""} ${(st && st.attributes.friendly_name) || ""}`.toLowerCase());
+  const name = stripAccents(`${cfg.state_entity || ""} ${cfg.media_entity || ""} ${stHay(st)}`.toLowerCase());
   if (cfg.screensaver_entity || cfg.charging_entity || cfg.url_entity || SCREEN_TABLET_RE.test(name)) return "tablet_wall";
   if (SCREEN_LAPTOP_RE.test(name)) return "laptop";
   return cfg.lock_entity || SCREEN_COMPUTER_RE.test(name) ? "computer" : SCREEN_PROJECTOR_RE.test(name) ? "projector" : "tv_feet";
@@ -4031,7 +4051,7 @@ const NET_RATE_BITS = {
 
 function netLayoutOf(cfg, st) {
   if (NET_LAYOUTS.includes(cfg.network_layout)) return cfg.network_layout;
-  const name = stripAccents(`${(cfg.state_entity || "").split(".")[1] || ""} ${(st && st.attributes.friendly_name) || ""} ${cfg.name || ""}`.toLowerCase());
+  const name = stripAccents(`${(cfg.state_entity || "").split(".")[1] || ""} ${stHay(st)} ${cfg.name || ""}`.toLowerCase());
   if (NET_RACK_RE.test(name)) return "rack";
   if (NET_NAS_RE.test(name)) return "nas";
   if (NET_ROUTER_RE.test(name) || cfg.clients_entity || cfg.wan_entity || cfg.wifi_entity) return "router";
@@ -4297,7 +4317,7 @@ function haptic(kind) {
 function robotLayoutOf(cfg, st) {
   if (ROBOT_LAYOUTS.includes(cfg.robot_layout)) return cfg.robot_layout;
   if (domainOf(cfg.state_entity) === "lawn_mower") return "mower";
-  const name = stripAccents(`${(cfg.state_entity || "").split(".")[1] || ""} ${(st && st.attributes.friendly_name) || ""} ${cfg.name || ""}`.toLowerCase());
+  const name = stripAccents(`${(cfg.state_entity || "").split(".")[1] || ""} ${stHay(st)} ${cfg.name || ""}`.toLowerCase());
   if (ROBOT_POOL_RE.test(name)) return "pool";
   if (ROBOT_MOWER_RE.test(name)) return "mower";
   if (ROBOT_WASHER_RE.test(name)) return "floor_washer";
@@ -4367,7 +4387,7 @@ const PRINTER_STYLES = ["bambu_x", "elegoo_c", "bambu_a", "elegoo_n"];
 function printerStyleOf(cfg, st) {
   if (PRINTER_STYLES.includes(cfg.printer_style)) return cfg.printer_style;
   if (cfg.printer_style === "classic") return "";
-  const hay = stripAccents(`${cfg.state_entity || ""} ${cfg.name || ""} ${(st && st.attributes && st.attributes.friendly_name) || ""}`).toLowerCase();
+  const hay = stripAccents(`${cfg.state_entity || ""} ${cfg.name || ""} ${stHay(st)}`).toLowerCase();
   const style = /(^|[._\s-])a1([._\s-]|$)|a1.?mini/.test(hay) ? "bambu_a"
     : /bambu|(^|[._\s-])(p1s|p1p|p2s|x1|x1c|x1e|x1.?carbon|h2d|h2s)([._\s-]|$)/.test(hay) ? "bambu_x"
     : /centauri/.test(hay) ? "elegoo_c"
@@ -4603,7 +4623,7 @@ function solarReadOf(hass, cfg, st) {
 
 function batteryLayoutOf(cfg, st) {
   if (BATTERY_LAYOUTS.includes(cfg.battery_layout)) return cfg.battery_layout;
-  const hay = stripAccents(`${cfg.name || ""} ${cfg.state_entity || ""} ${cfg.battery_entity || ""} ${(st && st.attributes.friendly_name) || ""}`.toLowerCase());
+  const hay = stripAccents(`${cfg.name || ""} ${cfg.state_entity || ""} ${cfg.battery_entity || ""} ${stHay(st)}`.toLowerCase());
   return BATTERY_STATION_RE.test(hay) ? "station" : "wall";
 }
 
@@ -4704,7 +4724,7 @@ function diffuserReadOf(hass, cfg, st, norm, powerDerived) {
 function diffuserLayoutOf(cfg, st) {
   if (DIFFUSER_LAYOUTS.includes(cfg.diffuser_layout)) return cfg.diffuser_layout;
   const a = (st && st.attributes) || {};
-  const hay = stripAccents(`${cfg.state_entity || ""} ${cfg.name || ""} ${a.friendly_name || ""}`).toLowerCase();
+  const hay = stripAccents(`${cfg.state_entity || ""} ${cfg.name || ""} ${a.friendly_name || ""} ${a[DEVICE_ATTR] || ""}`).toLowerCase();
   if (/nebuli|waterless|sans.?eau/.test(hay)) return "nebulizer";
   if (/flame|flamme|flamm|llama|fiamma/.test(hay)) return "flame";
   if (/stone|galet|pebble|vitruvi|govee/.test(hay)) return "stone";
@@ -4900,7 +4920,7 @@ const UNIT_FILTERS = { power: /^[mkMG]?W$/, energy: /^[mkMG]?Wh$/ };
 const HRV_ONLY_FIELDS = ["hrv_layout", "active_mode_entity", "supply_temperature_entity", "extract_temperature_entity", "exhaust_temperature_entity", "bypass_entity", "airflow_entity",
   "supply_fan_entity", "exhaust_fan_entity", "exhaust_airflow_entity", "fan_max_rpm", "humidity_control_entity", "filter_life_full", "high_speed_entity", "speed_entities", "zone_valves", "hrv_floors"];
 const HRV_LAYOUTS = ["diagram", "one_duct", "pair", "single", "single_box", "single_basement"];
-const HRV_NAME_RE = /(^|[^a-z])(hrv|erv|vmc|wtw|ftx|mvhr|kwl|helios|brink)([^a-z]|$)|(^|[\s.])ventilation|flexit|pluggit|systemair|swegon|thessla|ambientika|double.?flux|heat.?recovery|recuperat|comfoair|comfoconnect|vallox|zehnder|lunos|twinfresh|danfoss.?air|renson|endura|brink.?(flair|renovent)|wohnraumluft/;
+const HRV_NAME_RE = /(^|[^a-z])(hrv|erv|vmc(?!\d)|wtw|ftx|mvhr|kwl|helios|brink)([^a-z]|$)|(^|[\s.])ventilation|flexit|pluggit|systemair|swegon|thessla|ambientika|double.?flux|heat.?recovery|recuperat|comfoair|comfoconnect|vallox|zehnder|lunos|twinfresh|danfoss.?air|renson|endura|brink.?(flair|renovent)|wohnraumluft/;
 const HRV_LABELS = { run: "hrv_run", boost: "hrv_boost", bypass: "hrv_bypass", defrost: "hrv_defrost", filter: "hrv_filter", away: "hrv_away",
   rec: "hrv_recirc", hum: "hrv_humidity", inter: "hrv_inter", off: "ac_off", unav: "ev_offline" };
 const HRV_COLORS = { run: "#03a9f4", boost: "#ff9800", bypass: "#26a69a", defrost: "#4fc3f7", filter: "#ff9800", away: "#607d8b",
@@ -5048,7 +5068,7 @@ function hrvReadOf(hass, cfg, st, norm, powerDerived) {
 function hrvLayoutOf(cfg, st) {
   if (HRV_LAYOUTS.includes(cfg.hrv_layout)) return cfg.hrv_layout;
   const a = (st && st.attributes) || {};
-  const hay = stripAccents(`${cfg.state_entity || ""} ${cfg.name || ""} ${a.friendly_name || ""}`).toLowerCase();
+  const hay = stripAccents(`${cfg.state_entity || ""} ${cfg.name || ""} ${a.friendly_name || ""} ${a[DEVICE_ATTR] || ""}`).toLowerCase();
   if (/lunos.?e2|e\u00b2|twinfresh|pair|paire|decentral|dezentral/.test(hay)) return "pair";
   if (/ego|comfoair.?70|single.?room|monotube|un.?conduit/.test(hay)) return "one_duct";
   if (/simple.?flux|single.?flow|extract|hygro/.test(hay)) return "single";
@@ -5135,7 +5155,7 @@ function cameraReadOf(hass, cfg, st) {
 function cameraLayoutOf(cfg, st) {
   if (CAMERA_LAYOUTS.includes(cfg.camera_layout)) return cfg.camera_layout;
   const a = (st && st.attributes) || {};
-  const hay = stripAccents(`${cfg.state_entity || ""} ${cfg.name || ""} ${a.friendly_name || ""} ${a.brand || ""} ${a.model_name || a.model || ""}`).toLowerCase();
+  const hay = stripAccents(`${cfg.state_entity || ""} ${cfg.name || ""} ${a.friendly_name || ""} ${a[DEVICE_ATTR] || ""} ${a.brand || ""} ${a.model_name || a.model || ""}`).toLowerCase();
   if (cfg.ring_entity || /doorbell|sonnette|klingel|timbre|campanello|deurbel|campainha|dorrklocka|ringeklokke|dorklokke|dzwonek|zvonek|visitor/.test(hay)) return "doorbell";
   if (/dome|kuppel|domo|cupola|turret/.test(hay)) return "dome";
   if (/netatmo/.test(hay) && !/presence|outdoor|exterieur|exterior/.test(hay)) return "tube";
@@ -5252,7 +5272,7 @@ function lampReadOf(hass, cfg, st) {
 function lampLayoutOf(cfg, st) {
   if (LAMP_LAYOUTS.includes(cfg.lamp_layout)) return cfg.lamp_layout;
   const a = (st && st.attributes) || {};
-  const hay = stripAccents(`${cfg.state_entity || ""} ${cfg.name || ""} ${a.friendly_name || ""} ${a.model || ""}`).toLowerCase();
+  const hay = stripAccents(`${cfg.state_entity || ""} ${cfg.name || ""} ${a.friendly_name || ""} ${a[DEVICE_ATTR] || ""} ${a.model || ""}`).toLowerCase();
   if (/strip|ruban|bandeau|streifen|(^|[^a-z])tira|striscia|wled|govee|neon|gradient/.test(hay)) return "strip";
   if (/nanoleaf|panel|panneau|shapes|canvas|hexagon|triangle/.test(hay)) return "panels";
   if (/chevet|bedside|night.?stand|nachttisch|mesita|comodino|nachtkastje/.test(hay)) return "bedside";
@@ -5298,7 +5318,7 @@ const TAP_MODELS = ["generic", "sonoff"];
 const TAP_WALLS = ["brick", "render", "none"];
 const LITTER_LAYOUTS = ["globe", "box"];
 const DETECTOR_LAYOUTS = ["smoke", "co", "leak"];
-const SPEAKER_LAYOUTS = ["smart", "homepod_mini", "sonos_one", "sonos_era100", "sonos_era300", "sonos_move", "soundbar", "bose_wave", "bose_500", "bose_soundlink", "bose_soundbar", "bookshelf", "echo_dot", "nest_mini"];
+const SPEAKER_LAYOUTS = ["smart", "homepod_mini", "sonos_one", "sonos_era100", "sonos_era300", "sonos_move", "soundbar", "bose_wave", "bose_500", "bose_soundlink", "bose_soundbar", "bookshelf", "echo_dot", "nest_mini", "sonos_five", "sonos_play", "sonos_roam", "sonos_ray", "sonos_amp", "sonos_port", "bose_ultra", "bose_portable", "bose_amp", "echo_dot_max"];
 const MOBILITY_LAYOUTS = ["scooter", "offroad", "ebike", "gyropode", "motorcycle"];
 const PUMP_LAYOUTS = ["booster", "sump", "circulator"];
 const CIRC_MODELS = ["grundfos", "wilo", "dab", "generic"];
@@ -5418,7 +5438,7 @@ const METER_LAYOUTS = ["linky", "box", "dome", "gas", "water"];
 function meterLayoutOf(cfg, st) {
   if (METER_LAYOUTS.includes(cfg.meter_layout)) return cfg.meter_layout;
   const a = (st && st.attributes) || {};
-  const hay = stripAccents(`${cfg.state_entity || ""} ${cfg.total_entity || ""} ${cfg.name || ""} ${a.friendly_name || ""}`).toLowerCase();
+  const hay = stripAccents(`${cfg.state_entity || ""} ${cfg.total_entity || ""} ${cfg.name || ""} ${a.friendly_name || ""} ${a[DEVICE_ATTR] || ""}`).toLowerCase();
   if (/linky|teleinfo|papp|sinsts/.test(hay)) return "linky";
   if (a.device_class === "gas" || /(^|[^a-z])(gas|gaz)([^a-z]|$)|gazpar/.test(hay)) return "gas";
   if (a.device_class === "water" || /water|(^|[^a-z])eau([^a-z]|$)|wasser|agua|acqua|water_meter/.test(hay)) return "water";
@@ -5429,19 +5449,19 @@ function meterLayoutOf(cfg, st) {
 // The new drawings, picked or read from the name, the device class.
 function irrigationLayoutOf(cfg, st) {
   if (IRRIGATION_LAYOUTS.includes(cfg.irrigation_layout)) return cfg.irrigation_layout;
-  const hay = stripAccents(`${cfg.state_entity || ""} ${cfg.name || ""} ${(st && st.attributes.friendly_name) || ""}`).toLowerCase();
+  const hay = stripAccents(`${cfg.state_entity || ""} ${cfg.name || ""} ${stHay(st)}`).toLowerCase();
   if (/goutte|drip|potager|vegetable|gemuse|huerto|(^|[^a-z])orto([^a-z]|$)|moestuin|kokska|warzyw/.test(hay)) return "drip";
   if (/massif|parterre|flower|fleur|blumen|flores|aiuola|bloem|rabatt|kwiat/.test(hay)) return "flowers";
   return /gardena|linktap|sonoff|(^|[^a-z])swv|robinet|(^|[^a-z])tap([^a-z]|$)|faucet|wasserhahn|grifo|rubinetto|kraan|kran|timer|valve|vanne/.test(hay) ? "tap" : "sprinkler";
 }
 function tapModelOf(cfg, st) {
   if (TAP_MODELS.includes(cfg.tap_model)) return cfg.tap_model;
-  const hay = stripAccents(`${cfg.state_entity || ""} ${cfg.name || ""} ${(st && st.attributes.friendly_name) || ""}`).toLowerCase();
+  const hay = stripAccents(`${cfg.state_entity || ""} ${cfg.name || ""} ${stHay(st)}`).toLowerCase();
   return /sonoff|(^|[^a-z])swv/.test(hay) ? "sonoff" : "generic";
 }
 function litterLayoutOf(cfg, st) {
   if (LITTER_LAYOUTS.includes(cfg.litter_layout)) return cfg.litter_layout;
-  const hay = stripAccents(`${cfg.state_entity || ""} ${cfg.name || ""} ${(st && st.attributes.friendly_name) || ""}`).toLowerCase();
+  const hay = stripAccents(`${cfg.state_entity || ""} ${cfg.name || ""} ${stHay(st)}`).toLowerCase();
   return /petkit|pura|(^|[^a-z])box([^a-z]|$)|caja|scooper/.test(hay) ? "box" : "globe";
 }
 function detectorLayoutOf(cfg, st) {
@@ -5450,34 +5470,46 @@ function detectorLayoutOf(cfg, st) {
   if (dc === "moisture") return "leak";
   if (dc === "carbon_monoxide" || dc === "gas") return "co";
   if (dc === "smoke") return "smoke";
-  const hay = stripAccents(`${cfg.state_entity || ""} ${cfg.name || ""} ${(st && st.attributes.friendly_name) || ""}`).toLowerCase();
+  const hay = stripAccents(`${cfg.state_entity || ""} ${cfg.name || ""} ${stHay(st)}`).toLowerCase();
   if (/leak|fuite|water|(^|[^a-z])eau([^a-z]|$)|wasser|fuga|perdita|lekk|lack|moisture|flood/.test(hay)) return "leak";
   if (/(^|[^a-z])co([^a-z0-9]|$)|monox|carbon|(^|[^a-z])gas([^a-z]|$)|(^|[^a-z])gaz([^a-z]|$)/.test(hay)) return "co";
   return "smoke";
 }
 function speakerLayoutOf(cfg, st) {
   if (SPEAKER_LAYOUTS.includes(cfg.speaker_layout)) return cfg.speaker_layout;
-  const hay = stripAccents(`${cfg.state_entity || ""} ${cfg.name || ""} ${(st && st.attributes.friendly_name) || ""}`).toLowerCase();
+  const hay = stripAccents(`${cfg.state_entity || ""} ${cfg.name || ""} ${stHay(st)}`).toLowerCase();
+  // The Wi-Fi ones the device registry names (#95): Bose before its soundbar,
+  // whose name also says Ultra.
+  if (/bose/.test(hay) && /lifestyle.?ultra/.test(hay)) return "bose_ultra";
+  if (/bose/.test(hay) && /music.?amp|amplifier|amplificateur/.test(hay)) return "bose_amp";
+  if (/bose/.test(hay) && /portable/.test(hay)) return "bose_portable";
   if (/bose/.test(hay) && /soundbar|barre.?de.?son|tv.?speaker|(^|[^a-z])(smart.?soundbar|ultra)([^a-z]|$)/.test(hay)) return "bose_soundbar";
-  if (/soundbar|barre.?de.?son|(^|[^a-z])(beam|arc|ray|playbar|playbase)([^a-z]|$)/.test(hay)) return "soundbar";
+  if (/sonos.?ray|(^|[^a-z])ray([^a-z]|$)/.test(hay)) return "sonos_ray";
+  if (/soundbar|barre.?de.?son|(^|[^a-z])(beam|arc|playbar|playbase)([^a-z]|$)/.test(hay)) return "soundbar";
+  if (/sonos.?(connect.?)?amp([^a-z]|$)/.test(hay)) return "sonos_amp";
+  if (/sonos.?(port|connect)([^a-z]|$)/.test(hay)) return "sonos_port";
+  if (/roam/.test(hay)) return "sonos_roam";
+  if (/sonos.?(five|play.?5)|(^|[^a-z])five([^a-z]|$)/.test(hay)) return "sonos_five";
   if (/(^|[^a-z])wave([^a-z]|$)|soundtouch.?wave/.test(hay)) return "bose_wave";
   if (/soundlink|(^|[^a-z])(flex|revolve)([^a-z]|$)/.test(hay)) return "bose_soundlink";
   if (/bose/.test(hay)) return "bose_500";
   if (/homepod.?mini/.test(hay)) return "homepod_mini";
-  if (/sonos.?(move|roam)|portable|(^|[^a-z])(jbl|ue.?boom|boombox)/.test(hay)) return "sonos_move";
+  if (/sonos.?move|portable|(^|[^a-z])(jbl|ue.?boom|boombox)/.test(hay)) return "sonos_move";
   if (/era.?300/.test(hay)) return "sonos_era300";
   if (/era.?100/.test(hay)) return "sonos_era100";
   if (/sonos.?(one|play.?1|symfonisk)/.test(hay)) return "sonos_one";
+  if (/sonos.?play([^a-z0-9:]|$)/.test(hay)) return "sonos_play";
+  if (/dot.?max/.test(hay)) return "echo_dot_max";
   if (/echo.?dot|(^|[^a-z])dot([^a-z]|$)/.test(hay)) return "echo_dot";
   if (/nest.?mini|google.?home.?mini|home.?mini/.test(hay)) return "nest_mini";
-  if (/bookshelf|sonos.?(five|play.?5)|(^|[^a-z])(kef|denon|yamaha|marantz|monitor)([^a-z]|$)|bibliotheque|regallautsprecher/.test(hay)) return "bookshelf";
+  if (/bookshelf|sonos.?play.?3|(^|[^a-z])(kef|denon|yamaha|marantz|monitor)([^a-z]|$)|bibliotheque|regallautsprecher/.test(hay)) return "bookshelf";
   return "smart";
 }
 // A console's model, by its name: the generation of a PlayStation, which
 // Xbox, which Switch, the retro ones; a brand alone draws its latest.
 function consoleLayoutOf(cfg, st) {
   if (CONSOLE_LAYOUTS.includes(cfg.console_layout)) return cfg.console_layout;
-  const hay = stripAccents(`${cfg.state_entity || ""} ${cfg.name || ""} ${(st && st.attributes.friendly_name) || ""}`).toLowerCase();
+  const hay = stripAccents(`${cfg.state_entity || ""} ${cfg.name || ""} ${stHay(st)}`).toLowerCase();
   const re = [["ps_vita", /vita/], ["ps4_pro", /ps.?4.?pro|playstation.?4.?pro/], ["ps1", /(^|[^a-z])(ps.?1|psx|psone)([^0-9]|$)|playstation.?1([^0-9]|$)/], ["ps2", /ps.?2([^0-9]|$)|playstation.?2/],
     ["ps3", /ps.?3([^0-9]|$)|playstation.?3/], ["ps4", /ps.?4([^0-9]|$)|playstation.?4/], ["ps5", /ps.?5([^0-9]|$)|playstation/],
     ["xbox_series_s", /series.?s([^a-z]|$)|xbox.?s([^a-z]|$)/], ["xbox_series_x", /series.?x|xbox.?x([^a-z]|$)/], ["xbox_360", /360/], ["xbox_one", /xbox.?one/],
@@ -5496,7 +5528,7 @@ function ntLine(hass, cfg, key, icon, labelKey, id) {
 // An electric ride's drawing: the one chosen, else its name.
 function mobilityLayoutOf(cfg, st) {
   if (MOBILITY_LAYOUTS.includes(cfg.mobility_layout)) return cfg.mobility_layout;
-  const hay = stripAccents(`${cfg.state_entity || ""} ${cfg.name || ""} ${(st && st.attributes.friendly_name) || ""}`).toLowerCase();
+  const hay = stripAccents(`${cfg.state_entity || ""} ${cfg.name || ""} ${stHay(st)}`).toLowerCase();
   if (/ausom|dualtron|kaabo|off.?road|tout.?terrain|gelande|todoterreno|fuoristrada|teren/.test(hay)) return "offroad";
   if (/gyropode|gyroroue|monowheel|hoverboard|segway.?pt|one.?wheel/.test(hay)) return "gyropode";
   if (/(^|[^a-z])moto([^a-z]|$)|motorcycle|motorrad|motocicl|motocykl|super.?soco|sur.?ron|talaria|horwin|zero.?s/.test(hay)) return "motorcycle";
@@ -5527,7 +5559,7 @@ function pumpLayoutOf(cfg, st) {
   if (PUMP_LAYOUTS.includes(cfg.pump_layout)) return cfg.pump_layout;
   if (cfg.level_entity || cfg.high_level_entity) return "sump";
   if (cfg.head_entity || cfg.control_mode_entity || CIRC_MODELS.includes(cfg.circulator_model)) return "circulator";
-  const hay = stripAccents(`${cfg.state_entity || ""} ${cfg.name || ""} ${(st && st.attributes.friendly_name) || ""}`).toLowerCase();
+  const hay = stripAccents(`${cfg.state_entity || ""} ${cfg.name || ""} ${stHay(st)}`).toLowerCase();
   if (/relevage|sump|tauch|hebe|vide.?cave|drain|eaux.?usees|crue/.test(hay)) return "sump";
   return /circulat|umwalz|circolat|grundfos|alpha|magna|wilo|stratos|yonos|evosta|heizungspumpe/.test(hay) ? "circulator" : "booster";
 }
@@ -5535,7 +5567,7 @@ function pumpLayoutOf(cfg, st) {
 // name (#88).
 function circModelOf(cfg, st) {
   if (CIRC_MODELS.includes(cfg.circulator_model)) return cfg.circulator_model;
-  const hay = stripAccents(`${cfg.state_entity || ""} ${cfg.power_entity || ""} ${cfg.name || ""} ${(st && st.attributes.friendly_name) || ""}`).toLowerCase();
+  const hay = stripAccents(`${cfg.state_entity || ""} ${cfg.power_entity || ""} ${cfg.name || ""} ${stHay(st)}`).toLowerCase();
   if (/grundfos|alpha|magna|\bups/.test(hay)) return "grundfos";
   if (/wilo|stratos|yonos|\bpara\b/.test(hay)) return "wilo";
   if (/\bdab\b|evosta/.test(hay)) return "dab";
@@ -5689,7 +5721,7 @@ const SPK_COLORS = ["white", "black", "silver", "yellow", "orange", "blue"];
 // card's illustration_color.
 function speakerColorOf(cfg, st) {
   if (SPK_COLORS.includes(cfg.speaker_color)) return cfg.speaker_color;
-  const hay = stripAccents(`${cfg.state_entity || ""} ${cfg.name || ""} ${(st && st.attributes.friendly_name) || ""}`).toLowerCase();
+  const hay = stripAccents(`${cfg.state_entity || ""} ${cfg.name || ""} ${stHay(st)}`).toLowerCase();
   const words = [["white", /white|blanc|weiss|blanco|bianco|wit|vit|hvit|arctic|stone/], ["black", /black|noir|midnight|minuit|schwarz|negro|nero|zwart|svart|graphite|space.?gr[ae]y/],
     ["silver", /silver|argent|platin|silber/], ["yellow", /yellow|jaune|gelb|amarillo|giallo/], ["orange", /orange/], ["blue", /blue|bleu|blau|azul|blu([^a-z]|$)/]];
   const hit = words.find(([, re]) => re.test(hay));
@@ -6216,7 +6248,7 @@ function heatDeltaLine(hass, cfg, key, a, b) {
 }
 function collectorStyleOf(cfg, st) {
   if (COLLECTOR_STYLES.includes(cfg.collector_style)) return cfg.collector_style;
-  const hay = stripAccents(`${cfg.state_entity || ""} ${cfg.collector_temperature_entity || ""} ${cfg.name || ""} ${(st && st.attributes.friendly_name) || ""}`).toLowerCase();
+  const hay = stripAccents(`${cfg.state_entity || ""} ${cfg.collector_temperature_entity || ""} ${cfg.name || ""} ${stHay(st)}`).toLowerCase();
   return /tube|vacuum|vakuum|rohre|roehre|evacuated|sous.?vide/.test(hay) ? "tubes" : "flat";
 }
 function heatReadOf(type, hass, cfg, st) {
@@ -7456,7 +7488,7 @@ const MOWER_STYLES = ["classic", "navimow"];
 // The mower's style: the one chosen, else its name (Navimow, Segway).
 function mowerStyleOf(cfg, st) {
   if (MOWER_STYLES.includes(cfg.mower_style)) return cfg.mower_style;
-  const hay = stripAccents(`${cfg.state_entity || ""} ${cfg.name || ""} ${(st && st.attributes && st.attributes.friendly_name) || ""}`).toLowerCase();
+  const hay = stripAccents(`${cfg.state_entity || ""} ${cfg.name || ""} ${stHay(st)}`).toLowerCase();
   return /navimow|segway/.test(hay) ? "navimow" : "classic";
 }
 const svgShadow = (cx, rx) => `<ellipse cx="${cx}" cy="103" rx="${rx}" ry="3" fill="rgba(0,0,0,.14)"/>`;
@@ -7506,7 +7538,7 @@ const LAPTOP_STYLES = ["thin", "classic"];
 const LAPTOP_THIN_RE = /macbook|apple|mac ?book/;
 function laptopStyleOf(cfg, st) {
   if (LAPTOP_STYLES.includes(cfg.laptop_style)) return cfg.laptop_style;
-  const name = stripAccents(`${cfg.state_entity || ""} ${(st && st.attributes && st.attributes.friendly_name) || ""}`.toLowerCase());
+  const name = stripAccents(`${cfg.state_entity || ""} ${stHay(st)}`.toLowerCase());
   return LAPTOP_THIN_RE.test(name) ? "thin" : "classic";
 }
 // Three dishes for the oven, three for the microwave. The card picks one each
@@ -10619,7 +10651,7 @@ class ApplianceCard extends HTMLElement {
       }
       if (!cfg.state_show_raw) stateLabel = t(hass, airLabel(s.mode, s.preset === "auto" ? "pf_auto" : "pf_purifying"));
       color = AIR_COLORS[s.mode];
-      const name = `${cfg.state_entity || ""} ${(st && st.attributes.friendly_name) || ""}`.toLowerCase();
+      const name = `${cfg.state_entity || ""} ${stHay(st)}`.toLowerCase();
       purifier = {
         mode: s.mode, level: s.level, spd: s.spd, warm: s.warm, aq,
         osc: s.a.oscillating === true, back: String(s.a.direction || "").toLowerCase() === "reverse",
@@ -10631,7 +10663,7 @@ class ApplianceCard extends HTMLElement {
     let fanCtx = null;
     if (cap.fanAppliance) {
       const s = airState();
-      const name = `${cfg.state_entity || ""} ${(st && st.attributes.friendly_name) || ""}`.toLowerCase();
+      const name = `${cfg.state_entity || ""} ${stHay(st)}`.toLowerCase();
       const layout = ["stand", "table", "ceiling"].includes(cfg.fan_layout) ? cfg.fan_layout : FAN_CEILING_RE.test(stripAccents(name)) ? "ceiling" : "stand";
       const ceiling = layout === "ceiling";
       // Summer draws the air up, winter sends it down. Most integrations call

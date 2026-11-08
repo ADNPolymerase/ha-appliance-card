@@ -40,7 +40,7 @@ const MEDIA_RANK = { playing: 4, buffering: 4, paused: 3, idle: 2.5, on: 2 };
 // its fields suggest. A tablet's own fields say it is one before its name does.
 function screenLayoutOf(cfg, st) {
   if (SCREEN_LAYOUTS.includes(cfg.screen_layout)) return cfg.screen_layout;
-  const name = stripAccents(`${cfg.state_entity || ""} ${cfg.media_entity || ""} ${(st && st.attributes.friendly_name) || ""}`.toLowerCase());
+  const name = stripAccents(`${cfg.state_entity || ""} ${cfg.media_entity || ""} ${stHay(st)}`.toLowerCase());
   if (cfg.screensaver_entity || cfg.charging_entity || cfg.url_entity || SCREEN_TABLET_RE.test(name)) return "tablet_wall";
   if (SCREEN_LAPTOP_RE.test(name)) return "laptop";
   return cfg.lock_entity || SCREEN_COMPUTER_RE.test(name) ? "computer" : SCREEN_PROJECTOR_RE.test(name) ? "projector" : "tv_feet";
@@ -186,7 +186,7 @@ const NET_RATE_BITS = {
 
 function netLayoutOf(cfg, st) {
   if (NET_LAYOUTS.includes(cfg.network_layout)) return cfg.network_layout;
-  const name = stripAccents(`${(cfg.state_entity || "").split(".")[1] || ""} ${(st && st.attributes.friendly_name) || ""} ${cfg.name || ""}`.toLowerCase());
+  const name = stripAccents(`${(cfg.state_entity || "").split(".")[1] || ""} ${stHay(st)} ${cfg.name || ""}`.toLowerCase());
   if (NET_RACK_RE.test(name)) return "rack";
   if (NET_NAS_RE.test(name)) return "nas";
   if (NET_ROUTER_RE.test(name) || cfg.clients_entity || cfg.wan_entity || cfg.wifi_entity) return "router";
@@ -452,7 +452,7 @@ function haptic(kind) {
 function robotLayoutOf(cfg, st) {
   if (ROBOT_LAYOUTS.includes(cfg.robot_layout)) return cfg.robot_layout;
   if (domainOf(cfg.state_entity) === "lawn_mower") return "mower";
-  const name = stripAccents(`${(cfg.state_entity || "").split(".")[1] || ""} ${(st && st.attributes.friendly_name) || ""} ${cfg.name || ""}`.toLowerCase());
+  const name = stripAccents(`${(cfg.state_entity || "").split(".")[1] || ""} ${stHay(st)} ${cfg.name || ""}`.toLowerCase());
   if (ROBOT_POOL_RE.test(name)) return "pool";
   if (ROBOT_MOWER_RE.test(name)) return "mower";
   if (ROBOT_WASHER_RE.test(name)) return "floor_washer";
@@ -522,7 +522,7 @@ const PRINTER_STYLES = ["bambu_x", "elegoo_c", "bambu_a", "elegoo_n"];
 function printerStyleOf(cfg, st) {
   if (PRINTER_STYLES.includes(cfg.printer_style)) return cfg.printer_style;
   if (cfg.printer_style === "classic") return "";
-  const hay = stripAccents(`${cfg.state_entity || ""} ${cfg.name || ""} ${(st && st.attributes && st.attributes.friendly_name) || ""}`).toLowerCase();
+  const hay = stripAccents(`${cfg.state_entity || ""} ${cfg.name || ""} ${stHay(st)}`).toLowerCase();
   const style = /(^|[._\s-])a1([._\s-]|$)|a1.?mini/.test(hay) ? "bambu_a"
     : /bambu|(^|[._\s-])(p1s|p1p|p2s|x1|x1c|x1e|x1.?carbon|h2d|h2s)([._\s-]|$)/.test(hay) ? "bambu_x"
     : /centauri/.test(hay) ? "elegoo_c"
@@ -758,7 +758,7 @@ function solarReadOf(hass, cfg, st) {
 
 function batteryLayoutOf(cfg, st) {
   if (BATTERY_LAYOUTS.includes(cfg.battery_layout)) return cfg.battery_layout;
-  const hay = stripAccents(`${cfg.name || ""} ${cfg.state_entity || ""} ${cfg.battery_entity || ""} ${(st && st.attributes.friendly_name) || ""}`.toLowerCase());
+  const hay = stripAccents(`${cfg.name || ""} ${cfg.state_entity || ""} ${cfg.battery_entity || ""} ${stHay(st)}`.toLowerCase());
   return BATTERY_STATION_RE.test(hay) ? "station" : "wall";
 }
 
@@ -859,7 +859,7 @@ function diffuserReadOf(hass, cfg, st, norm, powerDerived) {
 function diffuserLayoutOf(cfg, st) {
   if (DIFFUSER_LAYOUTS.includes(cfg.diffuser_layout)) return cfg.diffuser_layout;
   const a = (st && st.attributes) || {};
-  const hay = stripAccents(`${cfg.state_entity || ""} ${cfg.name || ""} ${a.friendly_name || ""}`).toLowerCase();
+  const hay = stripAccents(`${cfg.state_entity || ""} ${cfg.name || ""} ${a.friendly_name || ""} ${a[DEVICE_ATTR] || ""}`).toLowerCase();
   if (/nebuli|waterless|sans.?eau/.test(hay)) return "nebulizer";
   if (/flame|flamme|flamm|llama|fiamma/.test(hay)) return "flame";
   if (/stone|galet|pebble|vitruvi|govee/.test(hay)) return "stone";

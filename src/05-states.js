@@ -282,8 +282,28 @@ const STATE_COLORS = {
 // Helpers
 // ---------------------------------------------------------------------------
 
+// The device's maker and model, from the device registry (#96): entities are
+// often named after the room, the model says what the appliance is. Carried in
+// an attribute of its own that only the name matching reads, never shown.
+const DEVICE_ATTR = "__hac_device";
+const DEVICE_STATES = new WeakMap();
 function stateObj(hass, entityId) {
-  return entityId && hass.states[entityId] ? hass.states[entityId] : null;
+  const s = entityId && hass.states[entityId] ? hass.states[entityId] : null;
+  if (!s) return null;
+  const reg = hass.entities && hass.entities[entityId];
+  const dev = reg && reg.device_id && hass.devices && hass.devices[reg.device_id];
+  const text = dev ? [dev.manufacturer, dev.model, dev.model_id].filter((v) => v && typeof v === "string").join(" ") : "";
+  if (!text) return s;
+  const hit = DEVICE_STATES.get(s);
+  if (hit && hit.text === text) return hit.out;
+  const out = { ...s, attributes: { ...s.attributes, [DEVICE_ATTR]: text } };
+  DEVICE_STATES.set(s, { text, out });
+  return out;
+}
+// What a state's name says, with its device's maker and model.
+function stHay(st) {
+  const a = (st && st.attributes) || {};
+  return `${a.friendly_name || ""} ${a[DEVICE_ATTR] || ""}`;
 }
 
 // An entity you cannot act on. Integrations routinely drop an option to
@@ -714,7 +734,7 @@ const WASHER_DRYER_RE = /washer.?dryer|washerdryer|washer.?drier|wash.?(and|n)?.
 // so answers for the setups that never open the editor.
 function isWasherDryer(cfg, st) {
   if (cfg.washer_dryer !== undefined && cfg.washer_dryer !== "") return !!cfg.washer_dryer;
-  const hay = stripAccents(`${cfg.icon || ""} ${cfg.state_entity || ""} ${cfg.name || ""} ${(st && st.attributes.friendly_name) || ""}`);
+  const hay = stripAccents(`${cfg.icon || ""} ${cfg.state_entity || ""} ${cfg.name || ""} ${stHay(st)}`);
   return WASHER_DRYER_RE.test(hay);
 }
 
@@ -940,7 +960,7 @@ function activeAlerts(hass, entityId) {
   if (!st) return [];
   const active = [];
   for (const [key, val] of Object.entries(st.attributes)) {
-    if (["icon", "friendly_name", "device_class", "unit_of_measurement"].includes(key)) continue;
+    if (["icon", "friendly_name", "device_class", "unit_of_measurement", DEVICE_ATTR].includes(key)) continue;
     const v = String(val).toLowerCase();
     if (v === "on" || v === "true" || v === "1" || v === "active") active.push(key);
   }

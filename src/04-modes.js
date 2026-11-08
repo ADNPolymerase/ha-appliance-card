@@ -417,7 +417,7 @@ const TH_COLORS = { off: "var(--disabled-text-color, #9e9e9e)", heat: "#ff7043",
 function thermostatLayoutOf(cfg, st) {
   if (TH_LAYOUTS.includes(cfg.thermostat_layout)) return cfg.thermostat_layout;
   const a = (st && st.attributes) || {};
-  const name = stripAccents(`${cfg.state_entity || ""} ${a.friendly_name || ""} ${cfg.name || ""}`).toLowerCase();
+  const name = stripAccents(`${cfg.state_entity || ""} ${a.friendly_name || ""} ${a[DEVICE_ATTR] || ""} ${cfg.name || ""}`).toLowerCase();
   if (/nest|honeywell|lyric|\bt6\b|round/.test(name)) return "round";
   if (/ecobee|ct200|easycontrol/.test(name)) return "glass";
   if (/\btrv|valve|vanne|ventil|radiat|heizk(o|oe)rper|kopf|tete|danfoss|aqara|sonoff|fritz|thermostatic|thermostatique/.test(name)

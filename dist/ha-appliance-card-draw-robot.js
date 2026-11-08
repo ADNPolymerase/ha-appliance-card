@@ -1178,6 +1178,11 @@ ${detLed(c, 60, 86, 2)}
 <path class="nta-drip ntd${d}" d="M${x} 78 q-2.6 3.8 0 5.4 q2.6 -1.6 0 -5.4 Z" fill="#4fc3f7" stroke="#0288d1" stroke-width=".3"/>`).join("")}</g>
 ${ntWaves(60, 66, "#e53935", 36)}</g>`;
 }
+// The shadow under a speaker, following its foot: an ellipse under a round
+// one, the footprint of a box seen in three-quarter view.
+const spkFootShadow = (cx, cy, rx, ry, op = .26) => { const id = ntId(); return `<filter id="${id}" x="-30%" y="-150%" width="160%" height="400%"><feGaussianBlur stdDeviation="1.1"/></filter><ellipse cx="${cx}" cy="${cy}" rx="${rx}" ry="${ry}" fill="#000" opacity="${op}" filter="url(#${id})"/>`; };
+const spkColShadow = (cx, rx, yb, ry) => spkFootShadow(cx + 1, +(yb + .8).toFixed(2), rx + 2, +(ry + 1).toFixed(2));
+const spkBoxShadow = (x0, y1, w, d, op = .3) => ntFoot(`${x0 - .5} ${y1 + .8} ${x0 + w + .5} ${y1 + .8} ${x0 + w + d + 1.5} ${y1 - d + .8} ${x0 + d - .5} ${y1 - d}`, op);
 // Musical notes rising while a speaker plays.
 const spkNotes = (x, y) => `<g class="nt-run">${[["\u266a", 0, 0, 10], ["\u266b", 15, 7, 11], ["\u266a", -14, 10, 9]].map(([n, dx, dy, fs], i) => `<text class="nta-rise ntd${i * 2 + 1}" x="${x + dx}" y="${y + dy}" font-size="${fs}" fill="var(--primary-color, #03a9f4)" ${NT_FONT}>${n}</text>`).join("")}</g>`;
 const spkMute = (x, y) => `<g><circle cx="${x + 6}" cy="${y}" r="7" fill="#fff" stroke="#cfd6dc" stroke-width=".6"/><path d="M${x + 1.4} ${y - 2} h2.4 l3.4 -2.6 v9.2 l-3.4 -2.6 h-2.4 Z" fill="#5d6773"/><path d="M${x + 8.6} ${y - 1.8} l3.6 3.6 M${x + 12.2} ${y - 1.8} l-3.6 3.6" stroke="#e53935" stroke-width="1.3" stroke-linecap="round"/></g>`;
@@ -1189,6 +1194,9 @@ const SPK_PALETTES = {
     blue: ["#9fc0de", "#4f7ca6", "#2f557a", "#45719a", "#7ea3c6"] },
   sonos: { black: ["#4a5058", "#2a2e33", "#16191c", "#1f2226", "#0b0d0f"], white: ["#ffffff", "#ecebe8", "#c8c7c3", "#f6f5f2", "#b9b8b3"] },
   bose500: { silver: ["#f1f3f5", "#cfd3d7", "#9aa1a8", "#e3e6e9", "#8e959c"], black: ["#565b61", "#2e3236", "#17191c", "#3a3e43", "#0d0f11"] },
+  boseultra: { black: ["#4a4e54", "#2a2d31", "#141619", "#1f2226", "#5d646b"], sand: ["#f1ebe1", "#d9cfc0", "#b3a794", "#e6ded2", "#8c8272"] },
+  echo: { black: ["#6f7983", "#3a4249", "#1a1e22", "#2a2f34", "#5d6670"], white: ["#ffffff", "#e4e5e3", "#b9bbb8", "#dfe1df", "#9a9d9a"],
+    blue: ["#86a6bf", "#41637f", "#213d53", "#2d4a62", "#5b7c96"] },
   wave: { black: ["#5e636a", "#3a3e44", "#1f2226", "#4a4f55", "#15171a"], silver: ["#eef0f2", "#c9cdd1", "#959ca3", "#dfe2e5", "#6f767d"] },
   flex: { black: ["#4b4f55", "#2b2e32", "#151719", "#36393e", "#0f1012"], white: ["#f6f4ee", "#dedbd2", "#b5b1a6", "#ebe8e0", "#8f8b80"],
     blue: ["#8fb1d1", "#4a72a0", "#2b4b71", "#5a82ae", "#1e3550"] },
@@ -1222,7 +1230,7 @@ function ntSpkSmart(c) {
   return `<defs>${spkSide(b, p)}${spkKnit(k, light ? "#bdbab4" : "#0c0e10")}${spkFoot(sh)}${spkGlowDefs(r, gl)}
 <radialGradient id="${tp}" cx=".5" cy=".45" r=".6"><stop offset="0" stop-color="${p[4]}"/><stop offset="1" stop-color="${p[3]}"/></radialGradient></defs>
 ${spkNotes(66, 4)}${ntWaves(60, 70, "var(--primary-color, #03a9f4)", 33)}
-${ntShadow(60, 112, 24)}
+${spkFootShadow(60, 111.2, 21, 2.6)}
 <path d="${body}" fill="url(#${b})"/><path d="${body}" fill="url(#${k})"/><path d="${body}" fill="url(#${sh})"/>
 <path d="M39 46 Q40 40.6 47 39" fill="none" stroke="#fff" stroke-width="1.6" opacity="${light ? .9 : .25}" stroke-linecap="round"/>
 <path d="M41 50 V96" stroke="#fff" stroke-width="2.6" opacity="${light ? .45 : .12}" stroke-linecap="round"/>
@@ -1242,7 +1250,7 @@ function ntSpkMini(c) {
 ${spkKnit(k, light ? "#000" : "#0c0e10")}${spkGlowDefs(r, gl)}
 <radialGradient id="${tp}" cx=".5" cy=".45" r=".6"><stop offset="0" stop-color="${p[4]}"/><stop offset="1" stop-color="${p[3]}"/></radialGradient></defs>
 ${spkNotes(64, 18)}${ntWaves(60, 78, "var(--primary-color, #03a9f4)", 36)}
-${ntShadow(60, 107, 22)}
+${spkFootShadow(60, 104, 18, 2.6)}
 <ellipse cx="60" cy="103.4" rx="15.6" ry="2.2" fill="${p[2]}"/><ellipse cx="60" cy="103.8" rx="11" ry="1.4" fill="#000" opacity=".35"/>
 <path d="${ball}" fill="url(#${b})"/><path d="${ball}" fill="url(#${k})" opacity="${light ? .35 : 1}"/>
 <path d="M36 72 Q37 60 46 56" fill="none" stroke="#fff" stroke-width="2.2" opacity="${light ? .55 : .2}" stroke-linecap="round"/>
@@ -1262,7 +1270,7 @@ function ntSpkOne(c) {
   const light = c.color === "white";
   return `<defs>${spkSide(f, p)}${spkHoles(h, light ? "#a9a8a3" : "#08090a")}${spkFoot(sh)}</defs>
 ${spkNotes(62, 2)}${ntWaves(60, 68, "var(--primary-color, #03a9f4)", 32)}
-${ntShadow(60, 111, 26)}
+${spkFootShadow(60, 110.6, 24, 2.6)}
 <path d="M35 44 Q35 33 46 33 H74 Q85 33 85 44 V100 Q85 110 75 110 H45 Q35 110 35 100 Z" fill="url(#${f})"/>
 <path d="M37 47 Q37 40 44 40 H76 Q83 40 83 47 V99 Q83 107 76 107 H44 Q37 107 37 99 Z" fill="url(#${h})"/>
 <path d="M35 44 Q35 33 46 33 H74 Q85 33 85 44 V100 Q85 110 75 110 H45 Q35 110 35 100 Z" fill="url(#${sh})"/>
@@ -1280,7 +1288,7 @@ function ntSpkEra100(c) {
   const body = "M37 44 Q37 26 60 26 Q83 26 83 44 V96 Q83 111 68 111 H52 Q37 111 37 96 Z";
   return `<defs>${spkSide(f, p)}${spkHoles(h, light ? "#a9a8a3" : "#08090a", 1.7, .44)}${spkFoot(sh)}</defs>
 ${spkNotes(64, -2)}${ntWaves(60, 68, "var(--primary-color, #03a9f4)", 31)}
-${ntShadow(60, 112, 24)}
+${spkFootShadow(60, 111.4, 21, 2.6)}
 <path d="${body}" fill="url(#${f})"/>
 <path d="M39 46 Q39 34 60 34 Q81 34 81 46 V95 Q81 108 67 108 H53 Q39 108 39 95 Z" fill="url(#${h})"/>
 <path d="${body}" fill="url(#${sh})"/>
@@ -1300,7 +1308,7 @@ function ntSpkEra300(c) {
   const grille = "M25 51 C25 44 31 42.6 37 42.6 H83 C89 42.6 95 44 95 51 C95 62 84.4 68 84.4 78 C84.4 88 94 94 94 101 C94 106 89 108 84 108 H36 C31 108 26 106 26 101 C26 94 35.6 88 35.6 78 C35.6 68 25 62 25 51 Z";
   return `<defs>${spkSide(f, p)}${spkHoles(h, light ? "#a9a8a3" : "#08090a", 1.7, .44)}${spkFoot(sh)}</defs>
 ${spkNotes(64, 10)}${ntWaves(60, 76, "var(--primary-color, #03a9f4)", 44)}
-${ntShadow(60, 112, 36)}
+${spkFootShadow(60, 111.4, 34, 2.6)}
 <path d="${body}" fill="url(#${f})"/><path d="${grille}" fill="url(#${h})"/><path d="${body}" fill="url(#${sh})"/>
 <path d="M25 44 Q30 38.6 40 38.6 H80 Q90 38.6 95 44 Q60 47 25 44 Z" fill="${p[3]}"/>
 ${sonosTop(c, 60, 42.2, .8, light ? "#8f8e89" : "#c7ccd1")}${spkLed(c, 82, 41.6, .8)}
@@ -1315,7 +1323,7 @@ function ntSpkMove(c) {
   const body = "M37 36 Q37 17 60 17 Q83 17 83 36 V95 Q83 108 60 108 Q37 108 37 95 Z";
   return `<defs>${spkSide(f, p)}${spkHoles(h, light ? "#a9a8a3" : "#08090a", 1.8, .46)}${ntV(bs, light ? "#e2e1dd" : "#3a4047", light ? "#b3b2ad" : "#16191d")}${spkFoot(sh)}</defs>
 ${spkNotes(62, -6)}${ntWaves(60, 64, "var(--primary-color, #03a9f4)", 32)}
-${ntShadow(60, 113, 26)}
+${spkFootShadow(60, 113.8, 26, 2.4)}
 <path d="M39 105 H81 L85 111 Q85 113.6 81 113.6 H39 Q35 113.6 35 111 Z" fill="url(#${bs})"/>
 <path d="${body}" fill="url(#${f})"/>
 <path d="M39 40 Q39 32 47 32 H73 Q81 32 81 40 V94 Q81 105 60 105 Q39 105 39 94 Z" fill="url(#${h})"/>
@@ -1333,7 +1341,7 @@ function spkTvCabinet(tv, sc, cb, ct) {
 <path d="M13 1 L54 1 L30 53 L13 53 Z" fill="#fff" opacity=".05"/>
 ${spkNotes(60, 40)}
 ${ntWaves(60, 78, "var(--primary-color, #03a9f4)", 54)}
-${ntFoot("6 118 104 118 116 108 18 108", .3)}
+${spkBoxShadow(6, 118, 96, 11)}
 ${ntRoundBox(6, 94, 96, 24, 11, 2, `url(#${cb})`, "#5d4430", `url(#${ct})`)}
 <path d="M54 96 V116" stroke="#5d4430" stroke-width=".8"/><circle cx="50" cy="106" r="1.1" fill="#e0d2bf"/><circle cx="58" cy="106" r="1.1" fill="#e0d2bf"/>`;
 }
@@ -1343,95 +1351,106 @@ const spkTvDefs = (tv, sc, cb, ct) => `${ntV(tv, "#2b3036", "#121518")}${ntV(cb,
 // rounded bar, perforated all along, its light on top.
 function ntSpkBar(c) {
   const p = spkPal("sonos", c.color);
-  const b = ntId(), tv = ntId(), cb = ntId(), ct = ntId(), sc = ntId(), h = ntId();
+  const b = ntId(), tv = ntId(), cb = ntId(), ct = ntId(), sc = ntId(), h = ntId(), sd = ntId();
   const light = c.color === "white";
-  return `<defs>${spkTvDefs(tv, sc, cb, ct)}${ntV(b, p[0], p[2])}${spkHoles(h, light ? "#a9a8a3" : "#08090a", 1.6, .42)}</defs>
+  return `<defs>${spkTvDefs(tv, sc, cb, ct)}${ntV(b, p[0], p[2])}${ntV(sd, p[2], p[4])}${spkHoles(h, light ? "#a9a8a3" : "#08090a", 1.6, .42)}</defs>
 ${spkTvCabinet(tv, sc, cb, ct)}
-<ellipse cx="60" cy="85" rx="48" ry="2.4" fill="#000" opacity=".22"/>
-<path d="M18 70 H102 Q109 70 109 77 Q109 84 102 84 H18 Q11 84 11 77 Q11 70 18 70 Z" fill="url(#${b})"/>
-<path d="M18 74 H102 Q106 74 106 78 Q106 82 102 82 H18 Q14 82 14 78 Q14 74 18 74 Z" fill="url(#${h})"/>
-<path d="M20 71.6 H100" stroke="#fff" stroke-width=".8" opacity="${light ? .9 : .3}" stroke-linecap="round"/>
-${spkLed(c, 60, 72.6, .9)}
+<g transform="translate(3 7)">${spkBoxShadow(10, 84, 92, 5, .32)}
+${ntRoundBox(10, 71, 92, 13, 5, 6, `url(#${b})`, `url(#${sd})`, p[3])}
+<path d="M14 74.4 H98 Q100.6 74.4 100.6 78 Q100.6 82 96 82 H16 Q11.4 82 11.4 78 Q11.4 74.4 14 74.4 Z" fill="url(#${h})"/>
+${spkLed(c, 58, 68.6, .8)}</g>
 ${c.st === "paused" ? spkPause(60, 28) : ""}${c.muted ? spkMute(92, 62) : ""}`;
 }
-// A Bose Smart Soundbar on the same cabinet: a slimmer bar wrapped in its
-// metal grille, the glass on top and its light bar.
+// A Bose Smart Soundbar on the same cabinet and seen like it: a slim bar
+// wrapped in its metal grille, the glass on top with its light bar.
 function ntSpkBoseBar(c) {
   const p = spkPal("bose500", c.color === "white" ? "silver" : c.color);
-  const b = ntId(), tv = ntId(), cb = ntId(), ct = ntId(), sc = ntId(), h = ntId(), g = ntId();
+  const b = ntId(), tv = ntId(), cb = ntId(), ct = ntId(), sc = ntId(), h = ntId(), g = ntId(), gl = ntId(), sd = ntId();
   const light = c.color === "white" || c.color === "silver";
-  return `<defs>${spkTvDefs(tv, sc, cb, ct)}${ntV(b, p[0], p[2])}${spkHoles(h, light ? "#7d848b" : "#050607", 1.5, .4)}${ntBlur(g, 1.2)}</defs>
+  return `<defs>${spkTvDefs(tv, sc, cb, ct)}${ntV(b, p[0], p[2])}${ntV(sd, p[2], p[4])}${spkHoles(h, light ? "#7d848b" : "#050607", 1.3, .36)}${ntBlur(g, 1.2)}
+<linearGradient id="${gl}" x1="0" x2="1"><stop offset="0" stop-color="#0b0d0f"/><stop offset=".3" stop-color="#3a3f45"/><stop offset=".42" stop-color="#0b0d0f"/><stop offset="1" stop-color="#16191c"/></linearGradient></defs>
 ${spkTvCabinet(tv, sc, cb, ct)}
-<ellipse cx="60" cy="84" rx="50" ry="2.2" fill="#000" opacity=".22"/>
-<path d="M14 73 Q14 71 17 71 H103 Q106 71 106 73 V80 Q106 83 103 83 H17 Q14 83 14 80 Z" fill="url(#${b})"/>
-<path d="M14 74 H106 V80 Q106 83 103 83 H17 Q14 83 14 80 Z" fill="url(#${h})"/>
-<path d="M15 71.8 H105" stroke="#0b0d0f" stroke-width="1.6" stroke-linecap="round"/>
-${c.on ? `<path class="nta-glow" d="M54 71.8 H66" stroke="#fff" stroke-width="1.4" stroke-linecap="round" filter="url(#${g})"/><path d="M55 71.8 H65" stroke="#fff" stroke-width=".7" stroke-linecap="round"/>` : ""}
-${spkLogo(60, 81.4, light ? "#5d646b" : "#9aa1a8", 3.2)}
+<g transform="translate(2 8)">${spkBoxShadow(12, 83, 90, 4, .32)}
+${ntRoundBox(12, 73, 90, 10, 4, 2.4, `url(#${b})`, `url(#${sd})`, `url(#${gl})`)}
+<path d="M12 74.6 H102 V80.6 Q102 83 99.6 83 H14.4 Q12 83 12 80.6 Z" fill="url(#${h})"/>
+${c.on ? `<path class="nta-glow" d="M52 71 H68" stroke="#fff" stroke-width="1.2" stroke-linecap="round" filter="url(#${g})"/><path d="M53 71 H67" stroke="#fff" stroke-width=".6" stroke-linecap="round"/>` : ""}
+${spkLogo(57, 81, light ? "#5d646b" : "#9aa1a8", 2.8)}</g>
 ${c.st === "paused" ? spkPause(60, 28) : ""}${c.muted ? spkMute(92, 62) : ""}`;
 }
-// A Bose Wave SoundTouch: the wide table unit with its arched top and the CD
-// slot, the display between its grilles, on its SoundTouch pedestal.
+// A Bose Wave SoundTouch in three-quarter view: the wide unit, its grilles
+// either side of the black glass with the display and the CD slot, on its
+// pedestal.
 function ntSpkWave(c) {
   const p = spkPal("wave", c.color);
-  const b = ntId(), sh = ntId(), h = ntId(), ped = ntId();
+  const b = ntId(), tp = ntId(), h = ntId(), gl = ntId(), ped = ntId(), sd = ntId(), pt = ntId();
   const light = c.color === "silver" || c.color === "white";
   const lit = c.on || c.st === "paused" || c.st === "idle";
-  const body = "M20 72 Q20 64.6 27 63.8 Q60 60.6 93 63.8 Q100 64.6 100 72 V96 Q100 102 94 102 H26 Q20 102 20 96 Z";
-  return `<defs>${ntV(b, p[1], p[2])}${spkHoles(h, light ? "#6f767d" : "#0b0c0e", 1.5, .45)}${ntV(ped, p[2], "#111316")}
-<linearGradient id="${sh}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${p[0]}"/><stop offset=".22" stop-color="${p[0]}" stop-opacity="0"/></linearGradient></defs>
-${spkNotes(60, 36)}${ntWaves(60, 86, "var(--primary-color, #03a9f4)", 41)}
-${ntFoot("24 110 96 110 102 102 18 102", .28)}
-<path d="M32 101 H88 L86 107 H34 Z" fill="url(#${ped})"/>
-<path d="${body}" fill="url(#${b})"/><path d="${body}" fill="url(#${sh})"/>
-<path d="M27 64.6 Q60 61.6 93 64.6" fill="none" stroke="#fff" stroke-width=".9" opacity="${light ? .9 : .35}" stroke-linecap="round"/>
-<rect x="23" y="72" width="74" height="27" rx="4" fill="url(#${h})"/>
-<rect x="45" y="68.6" width="30" height="1.4" rx=".7" fill="#0b0c0e"/>
-<rect x="47" y="73.6" width="26" height="11" rx="1.6" fill="#0d1116" stroke="${light ? "#8e959c" : "#000"}" stroke-width=".5"/>
-${lit ? `<text x="60" y="81.6" text-anchor="middle" font-size="5.2" fill="#7fd3ff" ${NT_FONT}${c.on ? ` class="nta-glow"` : ""}>${c.on ? "\u25b6 \u266a" : c.st === "paused" ? "II" : "12:00"}</text>` : ""}
-${spkLogo(60, 93, light ? "#5d646b" : "#9aa1a8", 4.4)}
-${c.muted ? spkMute(96, 56) : ""}`;
+  return `<defs>${ntV(b, p[1], p[2])}${ntV(tp, p[0], p[1])}${ntV(ped, p[1], p[2])}${ntV(pt, p[0], p[3])}${ntV(sd, p[2], p[4])}${ntV(gl, "#1d2228", "#06080a")}
+<pattern id="${h}" width="1.4" height="1.2" patternUnits="userSpaceOnUse"><rect width="1" height=".6" fill="${light ? "#5d646b" : "#0b0c0e"}"/></pattern></defs>
+${spkNotes(60, 30)}${ntWaves(60, 82, "var(--primary-color, #03a9f4)", 46)}
+${spkBoxShadow(12, 104, 90, 7)}
+${ntRoundBox(12, 94, 90, 10, 7, 2, `url(#${ped})`, `url(#${sd})`, `url(#${pt})`)}
+<rect x="36" y="97.4" width="40" height="3.2" rx="1.6" fill="#0b0c0e"/>
+<path d="M54.6 99.4 Q56 98.2 57.4 99.4 M55.2 99.9 Q56 99.2 56.8 99.9" fill="none" stroke="#e3e6e9" stroke-width=".35" stroke-linecap="round"/><circle cx="56" cy="100.3" r=".3" fill="#e3e6e9"/>
+${ntRoundBox(15, 66, 84, 27, 6, 3, `url(#${b})`, `url(#${sd})`, `url(#${tp})`)}
+<rect x="18" y="68.6" width="23" height="22" rx="2" fill="url(#${h})"/><rect x="73" y="68.6" width="23" height="22" rx="2" fill="url(#${h})"/>
+<rect x="41.6" y="66.6" width="30.8" height="26" rx="1.4" fill="url(#${gl})"/>
+<path d="M42.2 67.2 L57 67.2 L50 92.4 L42.2 92.4 Z" fill="#fff" opacity=".05"/>
+${lit ? `<text x="57" y="74.8" text-anchor="middle" font-size="5" fill="#7fd3ff" ${NT_FONT}${c.on ? ` class="nta-glow"` : ""}>${c.on ? "\u25b6 \u266a" : c.st === "paused" ? "II" : "12:00"}</text>
+<text x="57" y="78.8" text-anchor="middle" font-size="2.4" letter-spacing=".5" fill="#7fd3ff" ${NT_FONT}>SOUNDTOUCH</text>` : ""}
+<rect x="45" y="82.2" width="24" height="1.2" rx=".6" fill="#000" stroke="#3a3e44" stroke-width=".3"/>
+${spkLogo(57, 89.2, "#e3e6e9", 3.2)}
+${c.muted ? spkMute(96, 54) : ""}`;
 }
-// A Bose Home Speaker 500: a flattened oval of perforated aluminium, its small
-// screen on the front, the light bar on top.
+// A Bose Home Speaker 500: an oval column of aluminium, smooth above and
+// perforated below, its top perforated too, the screen in a black panel
+// with the logo under it.
 function ntSpkBose500(c) {
-  const p = spkPal("bose500", c.color === "white" ? "silver" : c.color);
-  const f = ntId(), h = ntId(), sh = ntId(), art = ntId(), g = ntId();
+  const p = spkPal("bose500", c.color === "black" ? "black" : "silver");
+  const f = ntId(), h = ntId(), sh = ntId(), art = ntId(), g = ntId(), gl = ntId();
   const light = c.color !== "black";
-  const body = "M60 29 C78 29 84 33 85.4 49 C86.4 62 86.4 78 85.4 91 C84 107 78 111 60 111 C42 111 36 107 34.6 91 C33.6 78 33.6 62 34.6 49 C36 33 42 29 60 29 Z";
-  return `<defs>${spkSide(f, p)}${spkHoles(h, light ? "#6f767d" : "#050607", 1.4, .38)}${spkFoot(sh)}${ntBlur(g, 1.2)}
-<linearGradient id="${art}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ff7043"/><stop offset=".5" stop-color="#7e57c2"/><stop offset="1" stop-color="#26c6da"/></linearGradient></defs>
-${spkNotes(64, 2)}${ntWaves(60, 72, "var(--primary-color, #03a9f4)", 33)}
-${ntShadow(60, 112, 22)}
-<path d="${body}" fill="url(#${f})"/><path d="${body}" fill="url(#${h})"/><path d="${body}" fill="url(#${sh})"/>
-<rect x="50" y="44" width="20" height="14" rx="1.6" fill="#0b0d10" stroke="${light ? "#8e959c" : "#000"}" stroke-width=".5"/>
-${c.on ? `<rect x="51.6" y="45.6" width="10.8" height="10.8" rx=".8" fill="url(#${art})"/><path d="M64 48 h4.6 M64 51 h3.4 M64 54 h4" stroke="#cfd8dc" stroke-width=".8"/>`
-    : c.st === "paused" ? `<rect x="51.6" y="45.6" width="10.8" height="10.8" rx=".8" fill="url(#${art})" opacity=".45"/>${spkPause(57, 51)}`
-    : c.st === "idle" ? `<text x="60" y="53.2" text-anchor="middle" font-size="5" fill="#cfd8dc" ${NT_FONT}>12:00</text>` : ""}
-${c.on ? `<path class="nta-glow" d="M52 29.4 Q60 28.2 68 29.4" fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round" filter="url(#${g})"/>` : ""}
-<path d="M52 29.4 Q60 28.2 68 29.4" fill="none" stroke="${c.on ? "#fff" : "#0b0d10"}" stroke-width=".8" stroke-linecap="round"/>
-<path d="M39 50 Q37.6 70 39 90" fill="none" stroke="#fff" stroke-width="2.2" opacity="${light ? .55 : .12}" stroke-linecap="round"/>
-${spkLogo(60, 102, light ? "#5d646b" : "#9aa1a8", 3.6)}
+  const body = spkColumn(60, 27, 46, 104.6, 5.4);
+  const low = "M33 83 A27 5.4 0 0 0 87 83 V104.6 A27 5.4 0 0 1 33 104.6 Z";
+  return `<defs>${spkSide(f, p)}${spkHoles(h, light ? "#6f767d" : "#050607", 1.3, .36)}${spkFoot(sh)}${ntBlur(g, 1.2)}${ntV(gl, "#1e2226", "#050607")}
+<linearGradient id="${art}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#4dd0e1"/><stop offset=".55" stop-color="#26a6c9"/><stop offset="1" stop-color="#1565c0"/></linearGradient></defs>
+${spkNotes(66, 6)}${ntWaves(60, 76, "var(--primary-color, #03a9f4)", 34)}
+${spkColShadow(60, 27, 104.6, 5.4)}
+<path d="${body}" fill="url(#${f})"/>
+<path d="${low}" fill="${p[2]}" opacity=".3"/><path d="${low}" fill="url(#${h})"/>
+<path d="${body}" fill="url(#${sh})"/>
+<ellipse cx="60" cy="46" rx="27" ry="5.4" fill="${p[2]}"/><ellipse cx="60" cy="45.8" rx="25.8" ry="4.8" fill="${p[3]}"/><ellipse cx="60" cy="45.8" rx="25.8" ry="4.8" fill="url(#${h})" opacity=".7"/>
+${[48, 54, 60, 66, 72].map((x) => `<circle cx="${x}" cy="${(45.8 + 4.8 * Math.sqrt(1 - ((x - 60) / 25.8) ** 2) - 1.2).toFixed(2)}" r=".5" fill="${light ? "#5d646b" : "#9aa1a8"}"/>`).join("")}
+<rect x="48.4" y="54" width="23.2" height="34" rx="2.4" fill="url(#${gl})" stroke="${light ? "#8e959c" : "#000"}" stroke-width=".4"/>
+<rect x="50.4" y="56" width="19.2" height="23" rx="1" fill="#020304"/>
+${c.on ? `<rect x="52.4" y="57.6" width="15.2" height="12.4" rx=".6" fill="url(#${art})"/><circle cx="60" cy="63.8" r="3" fill="#0d47a1" opacity=".6"/><path d="M54 73 h12 M55.6 75.6 h8.8" stroke="#cfd8dc" stroke-width=".7"/>`
+    : c.st === "paused" ? `<rect x="52.4" y="57.6" width="15.2" height="12.4" rx=".6" fill="url(#${art})" opacity=".45"/>${spkPause(60, 63.8)}<path d="M54 73 h12" stroke="#8f98a2" stroke-width=".7"/>`
+    : c.st === "idle" ? `<text x="60" y="69.6" text-anchor="middle" font-size="5" fill="#cfd8dc" ${NT_FONT}>12:00</text>` : ""}
+${spkLogo(60, 84.4, "#c9ced3", 3)}
+${c.on ? `<path class="nta-glow" d="M50 50.4 Q60 51.4 70 50.4" fill="none" stroke="#fff" stroke-width="1.4" stroke-linecap="round" filter="url(#${g})"/><path d="M51 50.4 Q60 51.2 69 50.4" fill="none" stroke="#fff" stroke-width=".6" stroke-linecap="round"/>` : ""}
+<path d="M37 54 V101" stroke="#fff" stroke-width="2.2" opacity="${light ? .55 : .1}" stroke-linecap="round"/>
 ${c.muted ? spkMute(72, 100) : ""}`;
 }
-// A Bose SoundLink Flex: a rounded slab of soft-touch silicone, its metal
-// grille and logo on the front, the buttons along the top and its loop.
+// A Bose SoundLink Flex: a soft pill perforated all over its front, the
+// logo at the top, the buttons on its top edge and the loop at its side.
 function ntSpkFlex(c) {
   const p = spkPal("flex", c.color);
-  const b = ntId(), h = ntId(), gr = ntId(), sh = ntId();
+  const b = ntId(), h = ntId(), sh = ntId();
   const light = c.color === "white";
-  const body = "M16 72 Q16 62 26 62 H94 Q104 62 104 72 V98 Q104 108 94 108 H26 Q16 108 16 98 Z";
-  return `<defs>${ntV(b, p[0], p[2])}${ntV(gr, light ? "#cfccc3" : "#3b3f45", light ? "#a29e93" : "#16181b")}${spkHoles(h, light ? "#6f6b62" : "#050607", 1.5, .42)}${spkFoot(sh)}</defs>
-${spkNotes(64, 26)}${ntWaves(60, 86, "var(--primary-color, #03a9f4)", 50)}
-${ntShadow(60, 110, 42)}
-<path d="M12 78 Q8 78 8 83 V89 Q8 94 12 94" fill="none" stroke="${p[3]}" stroke-width="3" stroke-linecap="round"/>
-<path d="${body}" fill="url(#${b})"/><path d="${body}" fill="url(#${sh})"/>
-<rect x="22" y="68" width="76" height="35" rx="6" fill="url(#${gr})"/><rect x="22" y="68" width="76" height="35" rx="6" fill="url(#${h})"/>
-${spkLogo(60, 88, light ? "#4a4740" : "#c9cdd1", 5.4)}
-${[-12, -4, 4, 12].map((dx, i) => `<rect x="${60 + dx - 2.6}" y="60.6" width="5.2" height="2.4" rx="1.2" fill="${p[3]}" stroke="${p[2]}" stroke-width=".4"/>${i === 1 && c.on ? `<circle class="nta-glow" cx="${60 + dx}" cy="61.8" r=".7" fill="#fff"/>` : ""}`).join("")}
-<path d="M24 65 H96" stroke="#fff" stroke-width="1.2" opacity="${light ? .7 : .2}" stroke-linecap="round"/>
-${spkLed(c, 96, 65.6, .8)}
-${c.st === "paused" ? spkPause(60, 46, "#8f98a2") : ""}${c.muted ? spkMute(84, 50) : ""}`;
+  const body = "M31 62 H89 Q106 62 106 79 V87 Q106 104 89 104 H31 Q14 104 14 87 V79 Q14 62 31 62 Z";
+  const face = "M31 65 H89 Q103 65 103 79 V87 Q103 101 89 101 H31 Q17 101 17 87 V79 Q17 65 31 65 Z";
+  return `<defs>${ntV(b, p[0], p[2])}${spkHoles(h, light ? "#8f8b80" : "#050607", 1.35, .42)}${spkFoot(sh)}
+</defs>
+${spkNotes(64, 26)}${ntWaves(60, 84, "var(--primary-color, #03a9f4)", 52)}
+${spkFootShadow(60, 104.4, 40, 2.6)}
+<path d="M104 77 Q113 77 113 82.4 V88.6 Q113 94 104 94" fill="none" stroke="${p[4]}" stroke-width="3.4" stroke-linecap="round"/>
+${[-10, -5, 0, 5, 10].map((dx, i) => `<rect x="${60 + dx - 1.8}" y="60.8" width="3.6" height="2.4" rx="1" fill="${p[3]}" stroke="${p[2]}" stroke-width=".3"/>${i === 2 && c.on ? `<circle class="nta-glow" cx="${60 + dx}" cy="61.6" r=".6" fill="#fff"/>` : ""}`).join("")}
+<path d="${body}" fill="url(#${b})"/>
+<path d="${face}" fill="url(#${h})"/>
+<path d="${body}" fill="url(#${sh})"/>
+<path d="M30 63.6 H90" stroke="#fff" stroke-width="1" opacity="${light ? .8 : .22}" stroke-linecap="round"/>
+<text x="60" y="75" text-anchor="middle" font-size="5" font-weight="800" letter-spacing=".6" fill="${light ? "#6f6b62" : "#e3e6e9"}" stroke="${p[1]}" stroke-width="1.1" paint-order="stroke" ${NT_FONT}>BOSE</text>
+${spkLed(c, 92, 66.8, .7)}
+${c.st === "paused" ? spkPause(60, 88, light ? "#6f6b62" : "#fff") : ""}${c.muted ? spkMute(84, 50) : ""}`;
 }
 // A bookshelf speaker in three-quarter view: its tweeter, and a woofer whose
 // cone beats with the music.
@@ -1442,9 +1461,8 @@ function ntSpkShelf(c) {
 <radialGradient id="${sr}" cx=".5" cy=".5" r=".5"><stop offset=".78" stop-color="#1b1f23"/><stop offset=".9" stop-color="#4a525b"/><stop offset="1" stop-color="#1b1f23"/></radialGradient>
 <radialGradient id="${tw}" cx=".4" cy=".35" r=".6"><stop offset="0" stop-color="#e3e7eb"/><stop offset="1" stop-color="#6b7580"/></radialGradient></defs>
 ${spkNotes(60, 2)}${ntWaves(54, 64, "var(--primary-color, #03a9f4)", 36)}
-${ntFoot("24 116 84 116 98 104 38 104", .3)}
+${spkBoxShadow(26, 114, 56, 13)}
 ${ntRoundBox(26, 20, 56, 94, 13, 3, `url(#${f})`, `url(#${sd})`, `url(#${tp})`, "#111417")}
-${[0, 1, 2, 3].map((i) => `<path d="M${85 + i * 2.6} ${19 - i * 2.6} V${110 - i * 2.6}" stroke="#4a3624" stroke-width=".5" opacity=".5"/>`).join("")}
 <path d="M29 23 H79" stroke="#5d6670" stroke-width=".8" opacity=".6"/>
 <circle cx="54" cy="40" r="10" fill="#111417" stroke="#4a525b" stroke-width="1"/><circle cx="54" cy="40" r="7" fill="#22272c"/>
 <circle cx="54" cy="40" r="4.2" fill="url(#${tw})"/><circle cx="52.6" cy="38.6" r="1.2" fill="#fff" opacity=".7"/>
@@ -1458,26 +1476,219 @@ ${c.st === "paused" ? spkPause(54, 78) : ""}${c.muted ? spkMute(66, 26) : ""}`;
 // A mesh of fabric, for the speakers dressed in it.
 const spkMesh = (id, op = .35) => `<pattern id="${id}" width="3" height="3" patternUnits="userSpaceOnUse"><path d="M0 3 L3 0 M-1 1 L1 -1 M2 4 L4 2" stroke="#000" stroke-width=".5" opacity="${op}"/></pattern>`;
 const spkGlowDefs = (r, gl) => `<linearGradient id="${r}" x1="0" x2="1"><stop offset="0" stop-color="#ff4081"/><stop offset=".33" stop-color="#7c4dff"/><stop offset=".66" stop-color="#18ffff"/><stop offset="1" stop-color="#ffab40"/></linearGradient>${ntBlur(gl, 2.2)}`;
-// An Echo Dot: a ball of fabric, the light ring around its foot.
+// A column seen a little from above: its top and its foot are ellipses.
+function spkColumn(cx, rx, yt, yb, ry) {
+  return `M${cx - rx} ${yt} A${rx} ${ry} 0 0 1 ${cx + rx} ${yt} V${yb} A${rx} ${ry} 0 0 1 ${cx - rx} ${yb} Z`;
+}
+// A Sonos Five (#95): the big box in three-quarter view, its grille the
+// whole front, the touch controls on its top.
+function ntSpkFive(c) {
+  const p = spkPal("sonos", c.color);
+  const f = ntId(), h = ntId(), sh = ntId(), sd = ntId(), tp = ntId();
+  const light = c.color === "white";
+  return `<defs>${ntV(f, p[0], p[1])}${ntV(sd, p[2], p[4])}${ntV(tp, p[3], p[1])}${spkHoles(h, light ? "#a9a8a3" : "#08090a", 1.7, .46)}${spkFoot(sh)}</defs>
+${spkNotes(66, 14)}${ntWaves(60, 78, "var(--primary-color, #03a9f4)", 50)}
+${spkBoxShadow(12, 106, 80, 10)}
+${ntRoundBox(12, 54, 80, 52, 10, 8, `url(#${f})`, `url(#${sd})`, `url(#${tp})`)}
+<path d="M22 56.4 H82 Q89.6 56.4 89.6 64 V96 Q89.6 103.6 82 103.6 H22 Q14.4 103.6 14.4 96 V64 Q14.4 56.4 22 56.4 Z" fill="url(#${h})"/>
+<path d="M20 54 H84 Q92 54 92 62 V98 Q92 106 84 106 H20 Q12 106 12 98 V62 Q12 54 20 54 Z" fill="url(#${sh})"/>
+${sonosTop(c, 57, 49, .6, light ? "#8f8e89" : "#c7ccd1")}${spkLed(c, 77, 49, .7)}
+<text x="52" y="61.4" text-anchor="middle" font-size="2.4" font-weight="700" letter-spacing="1" fill="${light ? "#a9a8a3" : "#4a5058"}" ${NT_FONT}>SONOS</text>
+<path d="M16.6 63 V96" stroke="#fff" stroke-width="1.8" opacity="${light ? .6 : .1}" stroke-linecap="round"/>
+${c.st === "paused" ? spkPause(52, 82, light ? "#6f6e69" : "#fff") : ""}${c.muted ? spkMute(82, 100) : ""}`;
+}
+// A Sonos Play: an oval column under one grille, its top flat with the
+// controls, the logo running down near the top.
+function ntSpkPlay(c) {
+  const p = spkPal("sonos", c.color);
+  const f = ntId(), h = ntId(), sh = ntId();
+  const light = c.color === "white";
+  const body = spkColumn(60, 21, 39, 104, 5);
+  return `<defs>${spkSide(f, p)}${spkHoles(h, light ? "#a9a8a3" : "#08090a", 1.5, .4)}${spkFoot(sh)}</defs>
+${spkNotes(64, 4)}${ntWaves(60, 72, "var(--primary-color, #03a9f4)", 29)}
+${spkColShadow(60, 21, 104, 5)}
+<path d="${body}" fill="url(#${f})"/><path d="${body}" fill="url(#${h})"/><path d="${body}" fill="url(#${sh})"/>
+<ellipse cx="60" cy="39" rx="21" ry="5" fill="${p[2]}"/><ellipse cx="60" cy="38.8" rx="19.8" ry="4.4" fill="${p[3]}"/>
+${sonosTop(c, 58, 38.8, .48, light ? "#8f8e89" : "#c7ccd1")}${spkLed(c, 71, 38.6, .6)}
+<text x="0" y="0" transform="translate(73.4 48) rotate(90)" font-size="3.2" font-weight="700" letter-spacing="1.2" fill="${light ? "#8f8e89" : "#5d646b"}" ${NT_FONT}>SONOS</text>
+<path d="M42 47 V102" stroke="#fff" stroke-width="2" opacity="${light ? .6 : .1}" stroke-linecap="round"/>
+${c.st === "paused" ? spkPause(58, 80, light ? "#6f6e69" : "#fff") : ""}${c.muted ? spkMute(66, 102) : ""}`;
+}
+// A Sonos Roam: a slim three-sided column, its nearest edge towards us and
+// two faces seen, the rounded triangle of its top with the buttons.
+function ntSpkRoam(c) {
+  const p = spkPal("sonos", c.color);
+  const h = ntId(), sh = ntId(), a = ntId(), b = ntId();
+  const light = c.color === "white";
+  const left = "M45 36 L64 39.6 V108.6 L45 105 Z", right = "M64 39.6 L76 35.4 V104.4 L64 108.6 Z";
+  return `<defs>${ntV(a, p[0], p[2])}${ntV(b, p[2], p[4])}${spkHoles(h, light ? "#a9a8a3" : "#08090a", 1.5, .38)}${spkFoot(sh)}</defs>
+${spkNotes(62, 2)}${ntWaves(60, 72, "var(--primary-color, #03a9f4)", 22)}
+${ntFoot("44 105.8 64 109.8 77.2 105.2 58 102.4", .3)}
+<path d="${right}" fill="url(#${b})" stroke="url(#${b})" stroke-width="2.4" stroke-linejoin="round"/>
+<path d="${left}" fill="url(#${a})" stroke="url(#${a})" stroke-width="2.4" stroke-linejoin="round"/>
+<path d="M47 40 L62 42.8 V104.8 L47 102 Z" fill="url(#${h})" opacity=".85"/>
+<path d="${left}" fill="url(#${sh})"/>
+<path d="M45 36 L64 39.6 L76 35.4 Z" fill="${p[3]}" stroke="${p[3]}" stroke-width="2.4" stroke-linejoin="round"/>
+${[[57, 36.6], [62, 37], [67, 36.4]].map(([x, y]) => `<ellipse cx="${x}" cy="${y}" rx="1.1" ry=".45" fill="${light ? "#a9a8a3" : "#5d646b"}"/>`).join("")}${spkLed(c, 52, 36.6, .5)}
+<text x="0" y="0" transform="translate(57 45) rotate(90)" font-size="3.4" font-weight="700" letter-spacing="1.2" fill="${light ? "#8f8e89" : "#5d646b"}" ${NT_FONT}>SONOS</text>
+${c.st === "paused" ? spkPause(55, 84, light ? "#6f6e69" : "#fff") : ""}${c.muted ? spkMute(66, 102) : ""}`;
+}
+// A Sonos Ray: a short bar with rounded ends on the TV cabinet, seen like
+// the cabinet, its grille across the top of the front.
+function ntSpkRay(c) {
+  const p = spkPal("sonos", c.color);
+  const b = ntId(), tv = ntId(), cb = ntId(), ct = ntId(), sc = ntId(), h = ntId(), sd = ntId();
+  const light = c.color === "white";
+  return `<defs>${spkTvDefs(tv, sc, cb, ct)}${ntV(b, p[0], p[2])}${ntV(sd, p[2], p[4])}${spkHoles(h, light ? "#a9a8a3" : "#08090a", 1.4, .38)}</defs>
+${spkTvCabinet(tv, sc, cb, ct)}
+<g transform="translate(-2 7)">${spkBoxShadow(32, 84, 54, 4, .32)}
+${ntRoundBox(32, 72, 54, 12, 4, 5, `url(#${b})`, `url(#${sd})`, p[3])}
+<path d="M37 73.4 H81 Q84.6 73.4 84.6 77 V79.6 H33.4 V77 Q33.4 73.4 37 73.4 Z" fill="url(#${h})"/>
+<path d="M33.6 80 H84.4 Q83 82.8 81 82.8 H37 Q35 82.8 33.6 80 Z" fill="${p[2]}" opacity=".6"/>
+<text x="59" y="82.4" text-anchor="middle" font-size="1.8" font-weight="700" letter-spacing=".6" fill="${light ? "#a9a8a3" : "#5d646b"}" ${NT_FONT}>SONOS</text>
+${spkLed(c, 74, 70, .65)}</g>
+${c.st === "paused" ? spkPause(60, 28) : ""}${c.muted ? spkMute(80, 62) : ""}`;
+}
+// A flat square box seen from above at an angle: a Sonos Amp with the dish of
+// its top, a Sonos Port with a plain one, a Bose Music Amplifier with glass.
+function spkBox(c, pal, top, extra) {
+  const a = ntId(), b = ntId();
+  return `<defs>${ntV(a, pal[1], pal[2])}${ntV(b, pal[2], pal[4])}</defs>
+${spkNotes(66, 30)}${ntWaves(60, 86, "var(--primary-color, #03a9f4)", 44)}
+${ntFoot("15 88.8 60 107 105 88.8 60 71", .3)}
+<path d="M16 80 L60 98 V106 L16 88 Z" fill="url(#${a})"/><path d="M60 98 L104 80 V88 L60 106 Z" fill="url(#${b})"/>
+<path d="M60 62 L104 80 L60 98 L16 80 Z" fill="${top}"/>${extra}`;
+}
+// The light of a Sonos box: a short dash on its front face.
+const spkDash = (c, x, y, s = -.41) => `<path${c.on ? ` class="nta-glow"` : ""} d="M${x - 1.8} ${(y - 1.8 * s).toFixed(2)} L${x + 1.8} ${(y + 1.8 * s).toFixed(2)}" stroke="${c.on ? "#fff" : c.st === "paused" ? "#ffb300" : "#7d848b"}" stroke-width="1" stroke-linecap="round"/>`;
+function ntSpkAmp(c) {
+  const p = spkPal("sonos", c.color);
+  const light = c.color === "white";
+  const d = ntId();
+  return spkBox(c, p, p[1], `<defs><linearGradient id="${d}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${p[2]}"/><stop offset=".7" stop-color="${p[1]}"/><stop offset="1" stop-color="${p[0]}"/></linearGradient></defs>
+<ellipse cx="60" cy="80" rx="30.4" ry="12.4" fill="${p[0]}" opacity="${light ? .9 : .35}"/><ellipse cx="60" cy="79.6" rx="28.6" ry="11.6" fill="url(#${d})"/>
+<path d="M33 82 Q60 95 87 82" fill="none" stroke="${p[0]}" stroke-width=".7" opacity=".6"/>
+<text x="0" y="0" transform="translate(60 81) scale(1 .42) rotate(-22)" text-anchor="middle" font-size="5" font-weight="700" letter-spacing="1.2" fill="${light ? "#a9a8a3" : "#5d646b"}" ${NT_FONT}>SONOS</text>
+${spkDash(c, 82, 93.2)}${c.muted ? spkMute(92, 70) : ""}`);
+}
+function ntSpkPort(c) {
+  const p = spkPal("sonos", c.color);
+  const light = c.color === "white";
+  return spkBox(c, p, p[1], `<text x="0" y="0" transform="translate(60 81) scale(1 .42) rotate(-22)" text-anchor="middle" font-size="6" font-weight="700" letter-spacing="1.4" fill="${light ? "#a9a8a3" : "#5d646b"}" ${NT_FONT}>SONOS</text>
+${spkDash(c, 82, 93.2)}${c.muted ? spkMute(92, 70) : ""}`);
+}
+// A Bose Music Amplifier: a black box in three-quarter view, its glass top
+// catching the light, the power button and logo on its front.
+function ntSpkBoseAmp(c) {
+  const fr = ntId(), sd = ntId(), rf = ntId();
+  return `<defs>${ntV(fr, "#2a2d32", "#0e1012")}${ntV(sd, "#17191c", "#060708")}
+<linearGradient id="${rf}" x1="0" y1="1" x2="1" y2="0"><stop offset="0" stop-color="#d9dde1"/><stop offset=".46" stop-color="#9aa1a8"/><stop offset=".47" stop-color="#1b1d21"/><stop offset="1" stop-color="#0b0c0e"/></linearGradient></defs>
+${spkNotes(66, 34)}${ntWaves(60, 84, "var(--primary-color, #03a9f4)", 46)}
+${spkBoxShadow(16, 97, 78, 10)}
+${ntRoundBox(16, 76, 78, 21, 10, 1.2, `url(#${fr})`, `url(#${sd})`, `url(#${rf})`)}
+<path d="M17.4 76.6 H92.6" stroke="#5d646b" stroke-width=".5"/>
+<circle cx="25" cy="86.4" r="2.6" fill="#0b0c0e" stroke="#5d646b" stroke-width=".5"/>
+<path d="M23.9 85.4 A1.5 1.5 0 1 0 26.1 85.4 M25 84.4 V86.2" fill="none" stroke="#9aa1a8" stroke-width=".45" stroke-linecap="round"/>
+${spkLogo(56, 88, "#c9ced3", 3.6)}${spkLed(c, 25, 92.4, .55)}
+${c.muted ? spkMute(94, 60) : ""}`;
+}
+// A Bose Lifestyle Ultra: a short oval column dressed in fabric, its top
+// smooth with the grille of the up-firing driver and the touch controls.
+function ntSpkBoseUltra(c) {
+  const p = spkPal("boseultra", c.color === "black" || !c.color ? "black" : "sand");
+  const f = ntId(), h = ntId(), sh = ntId(), gr = ntId(), cl = ntId();
+  const light = p === SPK_PALETTES.boseultra.sand;
+  const body = spkColumn(60, 26, 51, 105, 5.4);
+  return `<defs>${spkSide(f, p)}${spkKnit(h, light ? "#8c8272" : "#000")}${spkFoot(sh)}${spkHoles(gr, light ? "#8c8272" : "#000", 1, .3)}
+<clipPath id="${cl}"><path d="${body}"/></clipPath></defs>
+${spkNotes(64, 12)}${ntWaves(60, 78, "var(--primary-color, #03a9f4)", 31)}
+${spkColShadow(60, 26, 105, 5.4)}
+<path d="${body}" fill="url(#${f})"/>
+<g clip-path="url(#${cl})"><path d="M30 40 H80.4 Q82.6 70 80.4 120 H30 Z" fill="${p[1]}" opacity=".55"/><path d="M30 40 H80.4 Q82.6 70 80.4 120 H30 Z" fill="url(#${h})"/></g>
+<path d="M80.4 54 Q82.6 78 80.4 109" fill="none" stroke="${p[2]}" stroke-width=".6"/>
+<path d="${body}" fill="url(#${sh})"/>
+<ellipse cx="60" cy="51" rx="26" ry="5.4" fill="${p[2]}"/><ellipse cx="60" cy="50.8" rx="24.8" ry="4.8" fill="${p[3]}"/>
+<ellipse cx="68.6" cy="50.8" rx="9.4" ry="2.8" fill="${p[2]}"/><ellipse cx="68.6" cy="50.8" rx="9.4" ry="2.8" fill="url(#${gr})"/>
+<ellipse cx="50.4" cy="50.8" rx="4.6" ry="1.4" fill="none" stroke="${p[4]}" stroke-width=".5"/>
+${spkLed(c, 50.4, 50.8, .55)}${[44, 56.6].map((x) => `<circle cx="${x}" cy="50.8" r=".5" fill="${p[4]}"/>`).join("")}
+${spkLogo(72, 103, light ? "#6d6455" : "#e3e6e9", 2.8)}
+<path d="M37 60 V100" stroke="#fff" stroke-width="2" opacity="${light ? .45 : .08}" stroke-linecap="round"/>
+${c.st === "paused" ? spkPause(58, 80, light ? "#6d6455" : "#fff") : ""}${c.muted ? spkMute(70, 100) : ""}`;
+}
+// A Bose Portable Smart Speaker: a column smooth on top and perforated
+// below, its light ring round the top and its handle above.
+function ntSpkBosePortable(c) {
+  const p = spkPal("bose500", c.color === "black" ? "black" : "silver");
+  const f = ntId(), h = ntId(), sh = ntId(), g = ntId(), hd = ntId();
+  const light = c.color !== "black";
+  const body = spkColumn(60, 20, 45, 105.6, 4.4);
+  const low = "M40 78 A20 4.4 0 0 0 80 78 V105.6 A20 4.4 0 0 1 40 105.6 Z";
+  return `<defs>${spkSide(f, p)}${spkHoles(h, light ? "#7d848b" : "#050607", 1.4, .4)}${spkFoot(sh)}${ntBlur(g, 1)}
+<linearGradient id="${hd}" x1="0" x2="1"><stop offset="0" stop-color="${p[2]}"/><stop offset=".4" stop-color="${p[0]}"/><stop offset="1" stop-color="${p[2]}"/></linearGradient></defs>
+${spkNotes(66, 0)}${ntWaves(60, 78, "var(--primary-color, #03a9f4)", 27)}
+${spkColShadow(60, 20, 105.6, 4.4)}
+<path d="M43.4 44.6 C43.4 15 76.6 15 76.6 44.6" fill="none" stroke="url(#${hd})" stroke-width="4.2" stroke-linecap="round"/>
+<path d="M43.4 44.6 C43.4 15 76.6 15 76.6 44.6" fill="none" stroke="${p[4]}" stroke-width=".6" opacity=".5"/>
+<path d="${body}" fill="url(#${f})"/>
+<path d="${low}" fill="${p[2]}" opacity=".35"/><path d="${low}" fill="url(#${h})"/>
+<path d="M40 78 A20 4.4 0 0 0 80 78" fill="none" stroke="${p[2]}" stroke-width=".6"/>
+<path d="${body}" fill="url(#${sh})"/>
+<ellipse cx="60" cy="45" rx="20" ry="4.4" fill="${p[2]}"/><ellipse cx="60" cy="44.8" rx="18.8" ry="3.8" fill="${p[3]}"/><ellipse cx="60" cy="45" rx="15" ry="2.8" fill="${p[1]}"/>
+${c.on ? `<path class="nta-glow" d="M45.4 46.2 A15 2.8 0 0 0 74.6 46.2" fill="none" stroke="#fff" stroke-width="1.4" stroke-linecap="round" filter="url(#${g})"/><path d="M46 46.4 A14.4 2.6 0 0 0 74 46.4" fill="none" stroke="#fff" stroke-width=".6" stroke-linecap="round"/>` : ""}
+${spkLogo(60, 60, light ? "#7d848b" : "#9aa1a8", 3)}
+<path d="M43 52 V102" stroke="#fff" stroke-width="2" opacity="${light ? .55 : .1}" stroke-linecap="round"/>
+${c.st === "paused" ? spkPause(60, 69, light ? "#6f6e69" : "#fff") : ""}${c.muted ? spkMute(70, 102) : ""}`;
+}
+// The knit of an Echo: fine woven rows, no holes.
+const spkWeave = (id, col, op) => `<pattern id="${id}" width="1.8" height="1.8" patternUnits="userSpaceOnUse"><path d="M0 .45 H1.8 M0 1.35 H1.8" stroke="${col}" stroke-width=".45" opacity="${op}"/><path d="M.45 0 V1.8 M1.35 0 V1.8" stroke="${col}" stroke-width=".3" opacity="${(op * .6).toFixed(2)}"/></pattern>`;
+// The light ring of an Echo: blue while it plays, red when muted.
+const echoRing = (c, d, rg, gl, rest) => (c.on || c.muted
+  ? `<path class="${c.on ? "nta-glow" : ""}" d="${d}" fill="none" stroke="${c.muted ? "#ff1744" : `url(#${rg})`}" stroke-width="2.6" stroke-linecap="round" filter="url(#${gl})"/><path d="${d}" fill="none" stroke="${c.muted ? "#ff1744" : `url(#${rg})`}" stroke-width="1.1" stroke-linecap="round"/>`
+  : `<path d="${d}" fill="none" stroke="${rest}" stroke-width="1.1" stroke-linecap="round"/>`);
+const echoDefs = (b, m, rg, gl, p, light) => `<radialGradient id="${b}" cx=".36" cy=".28" r=".85"><stop offset="0" stop-color="${p[0]}"/><stop offset=".6" stop-color="${p[1]}"/><stop offset="1" stop-color="${p[2]}"/></radialGradient>${spkWeave(m, light ? "#8f928f" : "#000", light ? .3 : .5)}
+<linearGradient id="${rg}" x1="0" x2="1"><stop offset="0" stop-color="#00e5ff"/><stop offset=".5" stop-color="#2979ff"/><stop offset="1" stop-color="#00e5ff"/></linearGradient>${ntBlur(gl, 1.6)}`;
+// An Echo Dot: a ball of knit on its flat foot, the light ring round the foot.
 function ntSpkDot(c) {
+  const p = spkPal("echo", c.color);
   const b = ntId(), m = ntId(), rg = ntId(), gl = ntId();
-  return `<defs><radialGradient id="${b}" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#6f7983"/><stop offset=".6" stop-color="#3a4249"/><stop offset="1" stop-color="#1a1e22"/></radialGradient>${spkMesh(m)}
-<linearGradient id="${rg}" x1="0" x2="1"><stop offset="0" stop-color="#00e5ff"/><stop offset=".5" stop-color="#2979ff"/><stop offset="1" stop-color="#00e5ff"/></linearGradient>${ntBlur(gl, 2)}</defs>
-${spkNotes(62, 14)}${ntWaves(60, 70, "#00b8d4", 38)}
-${ntShadow(60, 110, 26)}
-<circle cx="60" cy="72" r="34" fill="url(#${b})"/><circle cx="60" cy="72" r="34" fill="url(#${m})"/>
-<path d="M34 60 Q40 44 56 40" fill="none" stroke="#fff" stroke-width="2.4" opacity=".16" stroke-linecap="round"/>
-<path d="M30 92 Q60 108 90 92" fill="none" stroke="#1a1e22" stroke-width="4" stroke-linecap="round"/>
-${c.on ? `<path class="nta-glow" d="M30 92 Q60 108 90 92" fill="none" stroke="url(#${rg})" stroke-width="5" stroke-linecap="round" filter="url(#${gl})"/><path d="M30 92 Q60 108 90 92" fill="none" stroke="url(#${rg})" stroke-width="2.4" stroke-linecap="round"/>` : ""}
-${[[46, 52], [74, 52], [52, 46], [68, 46]].map(([x, y]) => `<circle cx="${x}" cy="${y}" r="2" fill="#262b30" stroke="#5d6670" stroke-width=".5"/>`).join("")}
-${c.st === "paused" ? spkPause(60, 74) : ""}${c.muted ? spkMute(72, 46) : ""}`;
+  const light = c.color === "white";
+  const ball = "M43.8 101 A35 35 0 1 1 76.2 101 Z";
+  return `<defs>${echoDefs(b, m, rg, gl, p, light)}</defs>
+${spkNotes(62, 12)}${ntWaves(60, 68, "#00b8d4", 39)}
+${spkFootShadow(60, 103.4, 19, 2.6)}
+<ellipse cx="60" cy="101.4" rx="16.6" ry="2.6" fill="${p[2]}"/>
+<path d="${ball}" fill="url(#${b})"/><path d="${ball}" fill="url(#${m})"/>
+<path d="M33 58 Q39 42 55 38" fill="none" stroke="#fff" stroke-width="2.4" opacity="${light ? .55 : .14}" stroke-linecap="round"/>
+${echoRing(c, "M44.2 101.8 A15.8 2.2 0 0 0 75.8 101.8", rg, gl, light ? "#9a9d9a" : "#0b0d0f")}
+${c.st === "paused" ? spkPause(60, 72, light ? "#7d807d" : "#fff") : ""}${c.muted ? spkMute(72, 46) : ""}`;
+}
+// An Echo Dot Max: a ball of knit with a round grey face set in its front,
+// the buttons on it and the light ring round it.
+function ntSpkDotMax(c) {
+  const p = spkPal("echo", c.color === "black" ? "black" : "white");
+  const b = ntId(), m = ntId(), rg = ntId(), gl = ntId(), tp = ntId();
+  const light = c.color !== "black";
+  const ball = "M43.8 105 A35 35 0 1 1 76.2 105 Z";
+  const ic = light ? "#7d807d" : "#c9cdd1";
+  return `<defs>${echoDefs(b, m, rg, gl, p, light)}<radialGradient id="${tp}" cx=".45" cy=".35" r=".75"><stop offset="0" stop-color="${p[0]}"/><stop offset="1" stop-color="${p[3]}"/></radialGradient></defs>
+${spkNotes(64, 10)}${ntWaves(60, 72, "#00b8d4", 39)}
+${spkFootShadow(60, 105.8, 18.4, 2.6)}
+<ellipse cx="60" cy="105" rx="16.2" ry="2.4" fill="${p[2]}"/>
+<path d="${ball}" fill="url(#${b})"/><path d="${ball}" fill="url(#${m})"/>
+<path d="M29 62 Q34 46 50 41" fill="none" stroke="#fff" stroke-width="2.4" opacity="${light ? .55 : .14}" stroke-linecap="round"/>
+<circle cx="60" cy="63" r="19.6" fill="${p[2]}" opacity=".7"/>
+${echoRing(c, "M41.4 63 A18.6 18.6 0 1 1 78.6 63 A18.6 18.6 0 1 1 41.4 63", rg, gl, light ? "#c3c5c2" : "#0b0d0f")}
+<circle cx="60" cy="63" r="17.2" fill="url(#${tp})"/>
+<g transform="translate(60 63)" fill="none" stroke="${ic}" stroke-width="1.2" stroke-linecap="round">
+<path d="M-14 0 H-10 M10 0 H14 M12 -2 V2"/><circle r="4.4" stroke-width=".7"/><circle r="2.3"/><path d="M-1.8 2 L1.8 -2"/></g>
+${c.st === "paused" ? spkPause(60, 92, light ? "#7d807d" : "#fff") : ""}${c.muted ? spkMute(76, 98) : ""}`;
 }
 // A Nest Mini: a pebble of fabric on the table, four lights under the fabric.
 function ntSpkNest(c) {
   const t = ntId(), sd = ntId(), m = ntId(), gl = ntId();
   return `<defs><radialGradient id="${t}" cx=".42" cy=".3" r=".75"><stop offset="0" stop-color="#fbfbfa"/><stop offset=".7" stop-color="#e2e0db"/><stop offset="1" stop-color="#c8c5be"/></radialGradient>${ntV(sd, "#d9d6d0", "#99958d")}${spkMesh(m, .16)}${ntBlur(gl, 1.4)}</defs>
 ${spkNotes(60, 26)}${c.on ? ntWaves(60, 76, "var(--primary-color, #03a9f4)", 52) : ""}
-${ntShadow(60, 104, 48)}
+${spkFootShadow(60, 101.2, 42, 3)}
 <path d="M12 80 Q12 100 60 102 Q108 100 108 80 Z" fill="url(#${sd})"/>
 <path d="M12 80 Q12 100 60 102 Q108 100 108 80 Z" fill="url(#${m})"/>
 <path d="M12 80 Q12 60 60 58 Q108 60 108 80 Q108 92 60 93 Q12 92 12 80 Z" fill="url(#${t})"/>
@@ -2308,7 +2519,7 @@ ${glow ? `<path d="${body(tY, tR)}" fill="url(#${id("nl")})" opacity="${glow}"/>
 ${c.lifted ? `<g class="hu-blink" transform="translate(104 66)"><path d="M0 -8 L8 6 H-8 Z" fill="#ff3b30" stroke="#fff" stroke-width=".9"/><text y="4.4" font-size="9" font-weight="700" text-anchor="middle" fill="#fff" ${NT_FONT}>!</text></g>` : ""}
 ${c.empty ? `<g class="hu-blink" transform="translate(106 44)"><circle r="8" fill="#ff3b30" stroke="#fff" stroke-width=".9"/><path d="M0 -5 q-3.6 4.2 -3.6 6.2 a3.6 3.6 0 0 0 7.2 0 q0 -2 -3.6 -6.2z" fill="#fff"/></g>` : ""}`;
 }
-const NT_DRAW = { dryer: ntFilamentDryer, humidifier: ntHumidifier, circulator: ntCirculator, irr_sprinkler: ntIrrSprinkler, irr_tap: ntIrrTap, irr_drip: ntIrrDrip, irr_flowers: ntIrrFlowers, lit_globe: ntLitterGlobe, lit_box: ntLitterBox, det_smoke: ntDetSmoke, det_co: ntDetCo, det_leak: ntDetLeak, spk_smart: ntSpkSmart, spk_homepod_mini: ntSpkMini, spk_sonos_one: ntSpkOne, spk_bookshelf: ntSpkShelf, spk_sonos_move: ntSpkMove, spk_soundbar: ntSpkBar, spk_echo_dot: ntSpkDot, spk_nest_mini: ntSpkNest, spk_sonos_era100: ntSpkEra100, spk_sonos_era300: ntSpkEra300, spk_bose_wave: ntSpkWave, spk_bose_500: ntSpkBose500, spk_bose_soundlink: ntSpkFlex, spk_bose_soundbar: ntSpkBoseBar, con_ps1: conPs1, con_ps2: conPs2, con_ps3: conPs3, con_ps4: (c) => conPs4(c, false), con_ps4_pro: (c) => conPs4(c, true), con_ps5: conPs5, con_xbox: conXbox, con_xbox_360: conX360, con_xbox_one: conXone, con_xbox_series_x: conXsx, con_xbox_series_s: conXss, con_switch: (c) => conSwitch(c, false), con_switch_2: (c) => conSwitch(c, true), con_switch_lite: conSwitchLite, con_ps_vita: conVita, con_nes: conNes, con_snes: conSnes, con_n64: conN64, con_gamecube: conGamecube, con_wii: conWii, con_megadrive: conMegadrive, tank: ntTank, fws: ntFresh, solth: ntSolarThermal, wood: ntWoodStove, mob_scooter: mobScooter, mob_offroad: mobOffroad, mob_ebike: mobEbike, mob_gyropode: mobGyropode, mob_motorcycle: mobMotorcycle, meter_box: ntMeterBox, meter_dome: ntMeterDome, meter_gas: ntGas, meter_water: ntWater, booster: ntBooster, sump: ntSump, pool: ntPoolRobot, floor: ntFloor, spa: ntSpa, sauna: ntSauna, aquarium: ntAquarium, linky: ntLinky, tree: ntTree };
+const NT_DRAW = { dryer: ntFilamentDryer, humidifier: ntHumidifier, circulator: ntCirculator, irr_sprinkler: ntIrrSprinkler, irr_tap: ntIrrTap, irr_drip: ntIrrDrip, irr_flowers: ntIrrFlowers, lit_globe: ntLitterGlobe, lit_box: ntLitterBox, det_smoke: ntDetSmoke, det_co: ntDetCo, det_leak: ntDetLeak, spk_smart: ntSpkSmart, spk_homepod_mini: ntSpkMini, spk_sonos_one: ntSpkOne, spk_bookshelf: ntSpkShelf, spk_sonos_move: ntSpkMove, spk_soundbar: ntSpkBar, spk_echo_dot: ntSpkDot, spk_echo_dot_max: ntSpkDotMax, spk_nest_mini: ntSpkNest, spk_sonos_era100: ntSpkEra100, spk_sonos_era300: ntSpkEra300, spk_bose_wave: ntSpkWave, spk_bose_500: ntSpkBose500, spk_bose_soundlink: ntSpkFlex, spk_bose_soundbar: ntSpkBoseBar, spk_sonos_five: ntSpkFive, spk_sonos_play: ntSpkPlay, spk_sonos_roam: ntSpkRoam, spk_sonos_ray: ntSpkRay, spk_sonos_amp: ntSpkAmp, spk_sonos_port: ntSpkPort, spk_bose_ultra: ntSpkBoseUltra, spk_bose_portable: ntSpkBosePortable, spk_bose_amp: ntSpkBoseAmp, con_ps1: conPs1, con_ps2: conPs2, con_ps3: conPs3, con_ps4: (c) => conPs4(c, false), con_ps4_pro: (c) => conPs4(c, true), con_ps5: conPs5, con_xbox: conXbox, con_xbox_360: conX360, con_xbox_one: conXone, con_xbox_series_x: conXsx, con_xbox_series_s: conXss, con_switch: (c) => conSwitch(c, false), con_switch_2: (c) => conSwitch(c, true), con_switch_lite: conSwitchLite, con_ps_vita: conVita, con_nes: conNes, con_snes: conSnes, con_n64: conN64, con_gamecube: conGamecube, con_wii: conWii, con_megadrive: conMegadrive, tank: ntTank, fws: ntFresh, solth: ntSolarThermal, wood: ntWoodStove, mob_scooter: mobScooter, mob_offroad: mobOffroad, mob_ebike: mobEbike, mob_gyropode: mobGyropode, mob_motorcycle: mobMotorcycle, meter_box: ntMeterBox, meter_dome: ntMeterDome, meter_gas: ntGas, meter_water: ntWater, booster: ntBooster, sump: ntSump, pool: ntPoolRobot, floor: ntFloor, spa: ntSpa, sauna: ntSauna, aquarium: ntAquarium, linky: ntLinky, tree: ntTree };
 function ntSvg(d) {
   ntN = 0;
   const draw = NT_DRAW[d && d.kind] || ntLinky;

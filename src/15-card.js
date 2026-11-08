@@ -2963,7 +2963,7 @@ class ApplianceCard extends HTMLElement {
       }
       if (!cfg.state_show_raw) stateLabel = t(hass, airLabel(s.mode, s.preset === "auto" ? "pf_auto" : "pf_purifying"));
       color = AIR_COLORS[s.mode];
-      const name = `${cfg.state_entity || ""} ${(st && st.attributes.friendly_name) || ""}`.toLowerCase();
+      const name = `${cfg.state_entity || ""} ${stHay(st)}`.toLowerCase();
       purifier = {
         mode: s.mode, level: s.level, spd: s.spd, warm: s.warm, aq,
         osc: s.a.oscillating === true, back: String(s.a.direction || "").toLowerCase() === "reverse",
@@ -2975,7 +2975,7 @@ class ApplianceCard extends HTMLElement {
     let fanCtx = null;
     if (cap.fanAppliance) {
       const s = airState();
-      const name = `${cfg.state_entity || ""} ${(st && st.attributes.friendly_name) || ""}`.toLowerCase();
+      const name = `${cfg.state_entity || ""} ${stHay(st)}`.toLowerCase();
       const layout = ["stand", "table", "ceiling"].includes(cfg.fan_layout) ? cfg.fan_layout : FAN_CEILING_RE.test(stripAccents(name)) ? "ceiling" : "stand";
       const ceiling = layout === "ceiling";
       // Summer draws the air up, winter sends it down. Most integrations call

@@ -13854,5 +13854,48 @@ function tvT(w) { return { 'switch.tv': { state: 'on', attributes: {} }, 'sensor
   check('enceinte : source differente gardee', infoLine(spk('Song', 'Spotify'), 'Source'), 'Spotify');
 }
 
+// ── The device registry says what an entity named after its room is (#96) ──
+{
+  const T0L = Date.now();
+  const s = (state, attributes = {}) => ({ state, attributes: { ...attributes }, last_changed: new Date(T0L - 3600000).toISOString() });
+  const REG = (id, dev, st) => { const h = HASS({ [id]: st }); h.entities = { [id]: { device_id: 'd1', platform: 'x' } }; h.devices = { d1: { name: 'Wohnzimmer', ...dev } }; return h; };
+  const TYPE = (id, dev, st = s('on')) => { const e = new Editor(); e.setConfig({ type: 'custom:ha-appliance-card', state_entity: id }); e.hass = REG(id, dev, st); return e._type; };
+  check('registre : Apple TV nommee comme la piece', TYPE('media_player.wohnzimmer_2', { manufacturer: 'Apple', model: 'Apple TV 4K (gen 3)' }, s('off', { friendly_name: 'Wohnzimmer (2)' })), 'screen');
+  check('registre : sans registre, comme avant', (() => { const e = new Editor(); e.setConfig({ type: 'custom:ha-appliance-card', state_entity: 'media_player.wohnzimmer_2' }); e.hass = HASS({ 'media_player.wohnzimmer_2': s('off', { friendly_name: 'Wohnzimmer (2)' }) }); return e._type; })(), 'screen');
+  check('registre : purificateur Dyson nomme comme la piece', TYPE('fan.wohnzimmer', { manufacturer: 'Dyson', model: '358E' }, s('on', { friendly_name: 'Wohnzimmer' })), 'air_purifier');
+  check('registre : console Nintendo', TYPE('sensor.switch_screen_time', { manufacturer: 'Nintendo', model: 'Switch' }), 'console');
+  check('registre : une camera VMC2030A n\'est pas une VMC', TYPE('sensor.camera_avant', { manufacturer: 'Arlo', model: 'VMC2030A' }) === 'hrv', false);
+  check('registre : une VMC reste une VMC', TYPE('fan.vmc', {}), 'hrv');
+  const spk = (dev) => { const id = 'media_player.salon'; const h = REG(id, dev, s('paused', { device_class: 'speaker', friendly_name: 'Salon' })); const c = new Card(); c.setConfig({ type: 'custom:ha-appliance-card', appliance_type: 'speaker', state_entity: id }); c.hass = h; return markup(c); };
+  check('registre : HomePod mini d\'apres son modele', /nt-k-spk_homepod_mini/.test(spk({ manufacturer: 'Apple', model: 'HomePod mini' })), true);
+  check('registre : le nom affiche ne change pas', /Salon/.test(spk({ manufacturer: 'Apple', model: 'HomePod mini' })) && !/HomePod mini<\/div>/.test(spk({ manufacturer: 'Apple', model: 'HomePod mini' })), true);
+  check('registre : le modele n\'apparait pas en attribut', /__hac_device/.test(spk({ manufacturer: 'Apple', model: 'HomePod mini' })), false);
+  const lay = (dev) => (spk(dev).match(/nt-k-(spk_[a-z0-9_]+)/) || [])[1];
+  check('enceintes Wi-Fi : d\'apres le modele du registre (#95)', [['Sonos', 'Five'], ['Sonos', 'Play:5'], ['Sonos', 'Play'], ['Sonos', 'Roam 2'], ['Sonos', 'Ray'], ['Sonos', 'Amp'], ['Sonos', 'Port'],
+    ['Sonos', 'One'], ['Sonos', 'Era 100'], ['Bose', 'Bose Lifestyle Ultra Speaker'], ['Bose', 'Bose Portable Smart Speaker'], ['Bose', 'Bose Music Amplifier'], ['Bose', 'Bose Smart Ultra Soundbar'],
+    ['Bose', 'Bose Home Speaker 500'], ['Bose', 'SoundTouch Wave']].map(([manufacturer, model]) => lay({ manufacturer, model })).join(),
+    'spk_sonos_five,spk_sonos_five,spk_sonos_play,spk_sonos_roam,spk_sonos_ray,spk_sonos_amp,spk_sonos_port,spk_sonos_one,spk_sonos_era100,spk_bose_ultra,spk_bose_portable,spk_bose_amp,spk_bose_soundbar,spk_bose_500,spk_bose_wave');
+  const byId = (id) => { const c = new Card(); c.setConfig({ type: 'custom:ha-appliance-card', appliance_type: 'speaker', state_entity: `media_player.${id}` }); c.hass = HASS({ [`media_player.${id}`]: s('playing', { device_class: 'speaker' }) }); return (markup(c).match(/nt-k-(spk_[a-z0-9_]+)/) || [])[1]; };
+  check('enceintes Wi-Fi : d\'apres le nom', ['sonos_five_salon', 'sonos_play_cuisine', 'sonos_roam_2', 'sonos_ray', 'sonos_amp_terrasse', 'sonos_port', 'bose_lifestyle_ultra', 'bose_portable_smart_speaker', 'bose_music_amplifier'].map(byId).join(),
+    'spk_sonos_five,spk_sonos_play,spk_sonos_roam,spk_sonos_ray,spk_sonos_amp,spk_sonos_port,spk_bose_ultra,spk_bose_portable,spk_bose_amp');
+  check('enceintes Wi-Fi : une enceinte portable quelconque reste la Move', byId('jbl_portable'), 'spk_sonos_move');
+  const draw = (l, color, st = 'playing', attrs = {}) => { const c = new Card(); c.setConfig({ type: 'custom:ha-appliance-card', appliance_type: 'speaker', state_entity: 'media_player.m', speaker_layout: l, ...(color ? { speaker_color: color } : {}) }); c.hass = HASS({ 'media_player.m': s(st, { device_class: 'speaker', ...attrs }) }); return (markup(c).match(/<svg class="nt-svg"[\s\S]*?<\/svg>/) || [''])[0]; };
+  const NEW = ['sonos_five', 'sonos_play', 'sonos_roam', 'sonos_ray', 'sonos_amp', 'sonos_port', 'bose_ultra', 'bose_portable', 'bose_amp', 'bose_500', 'bose_wave', 'bose_soundlink', 'bose_soundbar'];
+  check('enceintes Wi-Fi : chaque dessin est trace', NEW.filter((l) => draw(l).length < 1500).join(), '');
+  check('enceintes Wi-Fi : pas de NaN ni undefined', NEW.flatMap((l) => ['playing', 'paused', 'idle', 'off'].map((st) => draw(l, 'white', st, { is_volume_muted: true }))).filter((h) => /NaN|undefined/.test(h)).length, 0);
+  check('enceintes Wi-Fi : la sourdine se voit', NEW.filter((l) => !draw(l, '', 'playing', { is_volume_muted: true }).includes('#e53935')).join(), '');
+  check('enceintes Wi-Fi : le blanc change le dessin', ['sonos_five', 'sonos_play', 'sonos_roam', 'sonos_ray', 'sonos_amp', 'sonos_port', 'bose_ultra', 'bose_500', 'bose_soundlink'].filter((l) => draw(l, 'white') === draw(l, 'black')).join(), '');
+  check('enceintes Wi-Fi : Lifestyle Ultra sable', draw('bose_ultra', 'white').includes('#d9cfc0') && draw('bose_ultra').includes('#2a2d31'), true);
+  check('enceintes Wi-Fi : Home Speaker 500, la pochette en lecture seulement', [draw('bose_500', '', 'playing').includes('<rect x="52.4" y="57.6"'), draw('bose_500', '', 'off').includes('<rect x="52.4" y="57.6"'), draw('bose_500', '', 'idle').includes('12:00')].join(), 'true,false,true');
+  check('enceintes Wi-Fi : Wave, l\'afficheur eteint quand elle l\'est', [draw('bose_wave', '', 'idle').includes('SOUNDTOUCH'), draw('bose_wave', '', 'off').includes('SOUNDTOUCH')].join(), 'true,false');
+  check('enceintes Wi-Fi : Portable, l\'anneau lumineux en lecture', [draw('bose_portable', '', 'playing').includes('M46 46.4'), draw('bose_portable', '', 'paused').includes('M46 46.4')].join(), 'true,false');
+  check('enceintes Wi-Fi : le trait de lumiere des Sonos Amp et Port', ['sonos_amp', 'sonos_port'].map((l) => /stroke="#fff" stroke-width="1" stroke-linecap/.test(draw(l, '', 'playing')) && /stroke="#ffb300" stroke-width="1"/.test(draw(l, '', 'paused'))).join(), 'true,true');
+  check('Echo Dot Max : par son nom et par le registre', [byId('echo_dot_max_cuisine'), lay({ manufacturer: 'Amazon', model: 'Echo Dot Max' }), byId('echo_dot_salon')].join(), 'spk_echo_dot_max,spk_echo_dot_max,spk_echo_dot');
+  check('Echo Dot : tisse, sans trous sur le dessus', /r="2" fill="#262b30"/.test(draw('echo_dot')), false);
+  check('Echo Dot : l\'anneau rouge quand il est muet', [draw('echo_dot', '', 'idle', { is_volume_muted: true }).includes('stroke="#ff1744"'), draw('echo_dot', '', 'idle').includes('stroke="#ff1744"'), draw('echo_dot_max', '', 'idle', { is_volume_muted: true }).includes('stroke="#ff1744"')].join(), 'true,false,true');
+  check('Echo Dot : les couleurs', [draw('echo_dot').includes('#3a4249'), draw('echo_dot', 'white').includes('#e4e5e3'), draw('echo_dot', 'blue').includes('#41637f'), draw('echo_dot_max').includes('#e4e5e3'), draw('echo_dot_max', 'black').includes('#3a4249')].join(), 'true,true,true,true,true');
+  check('registre : rien sans modele', TYPE('media_player.x', { manufacturer: '', model: '' }, s('playing', { device_class: 'speaker' })), 'speaker');
+}
+
 if (RECORD) writeFileSync(process.env.HAC_RECORD, JSON.stringify(RECORD));
 report();
