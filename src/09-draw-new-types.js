@@ -107,6 +107,7 @@ const MOBILITY_LAYOUTS = ["scooter", "offroad", "ebike", "gyropode", "motorcycle
 const PUMP_LAYOUTS = ["booster", "sump", "circulator"];
 const CIRC_MODELS = ["grundfos", "wilo", "dab", "generic"];
 const FLOOR_LAYOUTS = ["water", "electric"];
+const SPK_RADIO_URI_RE = /^(x-rincon-mp3radio|x-sonosapi-stream|x-sonosapi-radio|x-sonosapi-hls)|^radio[:/]/i;
 const HUMIDIFIER_ONLY_FIELDS = ["mist_level_entity", "low_water_entity", "tank_lifted_entity", "night_light_entity"];
 const NT_ONLY_FIELDS = {
   filament_dryer: ["spool_count", "spool_colors"],
@@ -460,6 +461,75 @@ function humTankOut(hass, id) {
   if (!s || HA_OFFLINE_STATES.includes(String(s.state).toLowerCase())) return false;
   if (["connectivity", "plug", "presence"].includes(s.attributes.device_class)) return String(s.state).toLowerCase() === "off";
   return heatActive(hass, id);
+}
+// A Dyson Humidify+Cool: 358, 358E, 358K or 520 in the device registry, PH01
+// to PH05 in a name (#96).
+const DYSON_HUMIDIFY_RE = /humidify|(^|[^a-z0-9])(358[a-z]?|ph0[1-5]|ph[12])($|[^a-z0-9])/;
+// The other Dyson columns, by the type code of the device registry or the name
+// on the box. Filterless ones first: an AM09 is a Hot+Cool too.
+const DYSON_LAYOUT_RES = [
+  ["ring_tower", /(^|[^a-z0-9])am0?7($|[^a-z0-9])/],
+  ["ring_heater", /(^|[^a-z0-9])(am0?[459]|hf1)($|[^a-z0-9])/],
+  ["ring_desk", /(^|[^a-z0-9])(469|520|dp0[1-4]|cf1|am0?6)($|[^a-z0-9])|desk/],
+  ["ring_heat", /(^|[^a-z0-9])(455|527[a-z]?|hp0[0-9]|hp[12])($|[^a-z0-9])|hot.{0,5}cool/],
+];
+// The gold drum of the Formaldehyde and De-NOx machines.
+const DYSON_GOLD_RE = /formaldehyde|de.?nox|(^|[^a-z0-9])(358e|438e|527e|ph0?[245]|hp09|hp2|tp09)($|[^a-z0-9])/;
+const PURIFIER_LAYOUTS = ["cylinder", "box", "ring", "ring_heat", "ring_humidify", "ring_desk", "ring_heater", "ring_tower"];
+// Which Dyson column a card draws, from its entities and its name.
+function dysonLayoutOf(cfg, name, dom) {
+  if (cfg.humidifier_entity || DYSON_HUMIDIFY_RE.test(name)) return "ring_humidify";
+  const hit = DYSON_LAYOUT_RES.find(([, re]) => re.test(name));
+  if (hit) return hit[0];
+  return cfg.heater_entity || dom === "climate" ? "ring_heat" : "ring";
+}
+// When its next deep clean is due, in days: from a timestamp, or from a count
+// of hours, minutes or days. Null when the sensor says nothing.
+function deepCleanDays(hass, id) {
+  const s = id ? stateObj(hass, id) : null;
+  if (!s || HA_OFFLINE_STATES.includes(String(s.state).toLowerCase())) return null;
+  if (s.attributes.device_class === "timestamp") {
+    const at = Date.parse(s.state);
+    return isFinite(at) ? (at - Date.now()) / 86400000 : null;
+  }
+  const v = numberOrNull(s.state);
+  if (v === null) return null;
+  const unit = String(s.attributes.unit_of_measurement || "h").trim().toLowerCase();
+  return /^d/.test(unit) ? v : /^min/.test(unit) ? v / 1440 : /^s/.test(unit) ? v / 86400 : v / 24;
+}
+function relativeDays(hass, days) {
+  const n = Math.max(1, Math.ceil(days));
+  try { return new Intl.RelativeTimeFormat(lang(hass), { numeric: "always" }).format(n, "day"); } catch (e) { return `${n} d`; }
+}
+// The humidifier half of a purifier: its entity says whether it humidifies and
+// what it aims at, the tank and the deep clean are entities of their own.
+function purifierHumidifierOf(hass, cfg, tr) {
+  const out = { on: false, lines: [], water: null, tankOut: false, low: false };
+  const hs = cfg.humidifier_entity ? stateObj(hass, cfg.humidifier_entity) : null;
+  if (hs && !HA_OFFLINE_STATES.includes(String(hs.state).toLowerCase())) {
+    const a = hs.attributes || {};
+    const action = String(a.action || "").toLowerCase();
+    out.on = String(hs.state).toLowerCase() === "on" && !["off", "idle"].includes(action);
+    const target = cfg.target_humidity_entity ? numericState(hass, cfg.target_humidity_entity) : numberOrNull(a.humidity);
+    const auto = /auto/i.test(String(a.mode || ""));
+    if (String(hs.state).toLowerCase() === "on" && (target !== null || auto)) {
+      out.lines.push({ key: "pf_target_humidity", icon: "mdi:water-percent", label: tr(hass, "section_target_humidity"),
+        value: [auto ? tr(hass, "pf_auto") : "", target !== null ? `${Math.round(target)} %` : ""].filter(Boolean).map(keepTogether).join(" \u00b7 "), entity: cfg.humidifier_entity });
+    }
+  }
+  out.water = humWaterOf(hass, cfg.water_level_entity);
+  out.tankOut = humTankOut(hass, cfg.tank_lifted_entity);
+  const lowRaw = cfg.low_water_entity ? String((stateObj(hass, cfg.low_water_entity) || {}).state || "").trim().toLowerCase() : "";
+  out.low = (!!cfg.low_water_entity && !/^(ok|normal|sufficient|full|good)$/.test(lowRaw) && heatActive(hass, cfg.low_water_entity)) || (out.water !== null && out.water <= .05);
+  if (out.tankOut) out.lines.push({ key: "pf_tank", icon: "mdi:cup-off-outline", label: tr(hass, "section_tank"), value: tr(hass, "hum_lifted"), entity: cfg.tank_lifted_entity, warn: true });
+  else if (out.low) out.lines.push({ key: "pf_tank", icon: "mdi:water-off-outline", label: tr(hass, "section_tank"), value: tr(hass, "hum_low_water"), entity: cfg.low_water_entity || cfg.water_level_entity, warn: true });
+  else if (out.water !== null) out.lines.push({ key: "pf_tank", icon: "mdi:waves-arrow-up", label: tr(hass, "section_tank"), value: keepTogether(`${Math.round(out.water * 100)} %`), entity: cfg.water_level_entity });
+  const days = deepCleanDays(hass, cfg.deep_clean_entity);
+  if (days !== null) {
+    out.lines.push({ key: "pf_deep_clean", icon: "mdi:spray-bottle", label: tr(hass, "pf_deep_clean"),
+      value: days <= 0 ? tr(hass, "pf_clean_due") : relativeDays(hass, days), entity: cfg.deep_clean_entity, warn: days <= 0 });
+  }
+  return out;
 }
 function humDisplayOn(hass, id) {
   const s = id ? stateObj(hass, id) : null;
@@ -3678,11 +3748,20 @@ function ntReadOf(type, hass, cfg, st, watts, threshold) {
     const paused = raw === "paused";
     const offish = dead || ["off", "standby", "unavailable"].includes(raw);
     if (!offish) {
-      if (a.media_title) lines.push({ key: "spk_title", icon: "mdi:music-note", label: t(hass, "spk_title"), value: String(a.media_title), entity: cfg.state_entity, wrap: true });
-      if (a.media_artist) lines.push({ key: "spk_artist", icon: "mdi:account-music", label: t(hass, "spk_artist"), value: String(a.media_artist), entity: cfg.state_entity, wrap: true });
+      const same = (x, y) => String(x || "").trim().toLowerCase() === String(y || "").trim().toLowerCase();
       const src = a.app_name || a.source;
-      // Line-in fills both the title and the source (#95): said once.
-      if (src && String(src).trim().toLowerCase() !== String(a.media_title || "").trim().toLowerCase()) lines.push({ key: "spk_source", icon: "mdi:import", label: t(hass, "spk_source"), value: String(src), entity: cfg.state_entity });
+      const channel = a.media_channel ? String(a.media_channel) : "";
+      // A radio without a song names the station as its title, a line input
+      // names itself: neither is a track, so neither is called a title (#96).
+      const radio = !!channel || a.media_content_type === "channel" || SPK_RADIO_URI_RE.test(String(a.media_content_id || ""));
+      const stationTitle = radio && !!a.media_title && !a.media_artist && (!channel || same(channel, a.media_title));
+      const inputTitle = !stationTitle && !!src && same(src, a.media_title);
+      const station = stationTitle ? String(a.media_title) : channel;
+      const stationLine = station ? { key: "spk_station", icon: "mdi:radio", label: t(hass, "spk_station"), value: station, entity: cfg.state_entity, wrap: true } : null;
+      if (a.media_title && !stationTitle && !inputTitle) lines.push({ key: "spk_title", icon: "mdi:music-note", label: t(hass, "spk_title"), value: String(a.media_title), entity: cfg.state_entity, wrap: true });
+      if (a.media_artist) lines.push({ key: "spk_artist", icon: "mdi:account-music", label: t(hass, "spk_artist"), value: String(a.media_artist), entity: cfg.state_entity, wrap: true });
+      if (stationLine) lines.push(stationLine);
+      if (src && !same(src, station) && (inputTitle || !same(src, a.media_title))) lines.push({ key: "spk_source", icon: "mdi:import", label: t(hass, "spk_source"), value: String(src), entity: cfg.state_entity });
       const vol = numberOrNull(a.volume_level);
       if (vol !== null) lines.push({ key: "spk_volume", icon: a.is_volume_muted ? "mdi:volume-off" : vol < 0.34 ? "mdi:volume-low" : vol < 0.67 ? "mdi:volume-medium" : "mdi:volume-high", label: t(hass, "spk_volume"),
         value: keepTogether(a.is_volume_muted ? t(hass, "spk_muted") : `${Math.round(vol * 100)} %`), entity: cfg.state_entity });

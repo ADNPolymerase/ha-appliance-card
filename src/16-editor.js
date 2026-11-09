@@ -29,6 +29,8 @@ const START_TYPES = CONTROL_TYPES.concat(["pet_feeder"]);
 // the kettle, the iron and the toaster, which a plug reads the same way.
 const LAST_CYCLE_TYPES = CYCLE_TYPES.concat(["kettle", "iron", "toaster", "hair_dryer"]);
 
+// The tank and deep clean of a purifier only make sense on one that humidifies.
+const purifierHasTank = (c) => c.appliance_type !== "air_purifier" || !!c.humidifier_entity || c.purifier_layout === "ring_humidify";
 const SECTIONS = [
   { field: "program_entity", types: CYCLE_TYPES.filter((ty) => ty !== "printer_3d"), labelKey: "section_program", includeDomains: ["select", "sensor", "input_select"], extra: (c, hass) => c._row("program_format", "program_format", {
       type: "select",
@@ -93,6 +95,8 @@ const SECTIONS = [
   // Air purifier and fan
   { field: "air_quality_entity", types: ["air_purifier"], labelKey: "section_air_quality", includeDomains: ["sensor"] },
   { field: "display_entity", types: ["air_purifier"], labelKey: "section_screen", includeDomains: ["sensor", "number"] },
+  { field: "humidifier_entity", types: ["air_purifier"], labelKey: "section_humidifier", includeDomains: ["humidifier"] },
+  { field: "deep_clean_entity", types: ["air_purifier"], labelKey: "pf_deep_clean", includeDomains: ["sensor"], when: purifierHasTank },
   // A screen: the players that show something on it, and on a computer the
   // lock of its session.
   { field: "media_entity", types: ["screen"], labelKey: "section_media", includeDomains: ["media_player"] },
@@ -416,13 +420,13 @@ const SECTIONS = [
   // A tank humidifier: its humidifier entity carries the humidity and its
   // target, the other parts are entities of their own (#89).
   { field: "current_humidity_entity", types: ["humidifier"], labelKey: "section_current_humidity", includeDomains: ["sensor"] },
-  { field: "target_humidity_entity", types: ["humidifier"], labelKey: "section_target_humidity", includeDomains: ["number", "sensor", "input_number"] },
+  { field: "target_humidity_entity", types: ["humidifier", "air_purifier"], labelKey: "section_target_humidity", includeDomains: ["number", "sensor", "input_number"], when: purifierHasTank },
   { field: "mist_level_entity", types: ["humidifier"], labelKey: "hum_mist", includeDomains: ["number", "sensor", "select", "input_number", "input_select"] },
   { field: "night_light_entity", types: ["humidifier"], labelKey: "hum_night", includeDomains: ["select", "light", "switch", "number", "sensor", "input_select"] },
   { field: "display_entity", types: ["humidifier"], labelKey: "hum_display", includeDomains: ["switch", "binary_sensor", "input_boolean", "select", "light", "number"] },
-  { field: "low_water_entity", types: ["humidifier"], labelKey: "hum_low_water", includeDomains: ["binary_sensor", "sensor"] },
-  { field: "tank_lifted_entity", types: ["humidifier"], labelKey: "hum_lifted", includeDomains: ["binary_sensor", "sensor"] },
-  { field: "water_level_entity", types: ["humidifier"], labelKey: "section_water_level", includeDomains: ["sensor", "number"] },
+  { field: "low_water_entity", types: ["humidifier", "air_purifier"], labelKey: "hum_low_water", includeDomains: ["binary_sensor", "sensor"], when: purifierHasTank },
+  { field: "tank_lifted_entity", types: ["humidifier", "air_purifier"], labelKey: "hum_lifted", includeDomains: ["binary_sensor", "sensor"], when: purifierHasTank },
+  { field: "water_level_entity", types: ["humidifier", "air_purifier"], labelKey: "section_water_level", includeDomains: ["sensor", "number"], when: purifierHasTank },
   { field: "tank_entity", types: ["dehumidifier"], labelKey: "section_tank", includeDomains: ["binary_sensor", "sensor", "number"] },
   { field: "current_humidity_entity", types: ["dehumidifier"], labelKey: "section_current_humidity", includeDomains: ["sensor"] },
   { field: "fan_speed_entity", types: ["dehumidifier"], labelKey: "section_fan_speed", includeDomains: ["select", "fan", "sensor", "input_select"] },
@@ -1499,6 +1503,11 @@ class ApplianceCardEditor extends HTMLElement {
             { value: "cylinder", label: t(hass, "layout_purifier_cylinder") },
             { value: "box", label: t(hass, "layout_purifier_box") },
             { value: "ring", label: t(hass, "layout_purifier_ring") },
+            { value: "ring_heat", label: t(hass, "layout_purifier_ring_heat") },
+            { value: "ring_humidify", label: t(hass, "layout_purifier_ring_humidify") },
+            { value: "ring_desk", label: t(hass, "layout_purifier_ring_desk") },
+            { value: "ring_heater", label: t(hass, "layout_purifier_ring_heater") },
+            { value: "ring_tower", label: t(hass, "layout_purifier_ring_tower") },
           ],
         }) : ""}
         ${this._type === "fan" ? this._row("section_fan_layout", "fan_layout", {

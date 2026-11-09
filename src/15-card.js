@@ -2959,17 +2959,23 @@ class ApplianceCard extends HTMLElement {
           ? `${Math.round(n)}${unitOf(hass, cfg.air_quality_entity) ? ` ${unitOf(hass, cfg.air_quality_entity)}` : ""}` : "";
         const word = aq ? t(hass, AQ_LABELS[aq]) : reading ? "" : cleanStateLabel(aqSt.state);
         extraLines.push({
-          key: "air_quality", icon: "mdi:air-filter", label: t(hass, "section_air_quality"),
+          key: "air_quality", icon: "mdi:leaf", label: t(hass, "section_air_quality"),
           value: [word, reading].filter(Boolean).map(keepTogether).join(" \u00b7 "), entity: cfg.air_quality_entity,
         });
       }
-      if (!cfg.state_show_raw) stateLabel = t(hass, airLabel(s.mode, s.preset === "auto" ? "pf_auto" : "pf_purifying"));
-      color = AIR_COLORS[s.mode];
+      const hum = purifierHumidifierOf(hass, cfg, t);
+      extraLines.push(...hum.lines);
+      const humidifying = hum.on && ["run", "night"].includes(s.mode);
+      if (!cfg.state_show_raw) stateLabel = t(hass, airLabel(s.mode, humidifying ? "pf_humidifying" : s.preset === "auto" ? "pf_auto" : "pf_purifying"));
+      color = humidifying && s.mode === "run" ? "#29b6f6" : AIR_COLORS[s.mode];
       const name = `${cfg.state_entity || ""} ${stHay(st)}`.toLowerCase();
       purifier = {
         mode: s.mode, level: s.level, spd: s.spd, warm: s.warm, aq,
         osc: s.a.oscillating === true, back: String(s.a.direction || "").toLowerCase() === "reverse",
-        layout: ["cylinder", "box", "ring"].includes(cfg.purifier_layout) ? cfg.purifier_layout : /dyson/.test(name) ? "ring" : "cylinder",
+        layout: PURIFIER_LAYOUTS.includes(cfg.purifier_layout) ? cfg.purifier_layout
+          : !/dyson/.test(name) ? "cylinder" : dysonLayoutOf(cfg, name, domainOf(cfg.state_entity)),
+        gold: DYSON_GOLD_RE.test(name),
+        hum: humidifying, water: hum.water, tankOut: hum.tankOut, tankLow: hum.low,
         screen: cfg.display_entity ? airScreenOf(stateObj(hass, cfg.display_entity)) : undefined,
       };
     }

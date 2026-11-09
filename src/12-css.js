@@ -1649,8 +1649,7 @@ const ILLUSTRATION_CSS = {
   air_purifier: () => `${AIR_CSS}
         .pf-bar { position: absolute; z-index: 5; display: flex; gap: 0.8px; }
         .pf-bar i { flex: 1; border-radius: 1px; background: rgba(0, 0, 0, 0.16); }
-        .machine.on.aq1 .pf-bar i:nth-child(-n+1), .machine.on.aq2 .pf-bar i:nth-child(-n+2), .machine.on.aq3 .pf-bar i:nth-child(-n+3), .machine.on.aq4 .pf-bar i,
-        .machine.on.aq1 .dy-disp i:nth-child(-n+1), .machine.on.aq2 .dy-disp i:nth-child(-n+2), .machine.on.aq3 .dy-disp i:nth-child(-n+3), .machine.on.aq4 .dy-disp i {
+        .machine.on.aq1 .pf-bar i:nth-child(-n+1), .machine.on.aq2 .pf-bar i:nth-child(-n+2), .machine.on.aq3 .pf-bar i:nth-child(-n+3), .machine.on.aq4 .pf-bar i {
           background: var(--aq); box-shadow: 0 0 2px var(--aq);
         }
         .pf-lcd {
@@ -1669,7 +1668,7 @@ const ILLUSTRATION_CSS = {
            its standby: only a purifier out of reach shows nothing. */
         .machine:not(.on) .pf-lcd span, .machine:not(.on) .dy-round span { opacity: 0.45; text-shadow: none; }
         .machine.mode-offline .pf-lcd span, .machine.mode-offline .dy-round span { display: none; }
-        .machine.mode-night .pf-bar, .machine.mode-night .dy-disp i { opacity: 0.35; }
+        .machine.mode-night .pf-bar { opacity: 0.35; }
         .machine.mode-night .pf-lcd, .machine.mode-night .dy-round span { opacity: 0.7; }
         .cy-body, .cy-ring, .cy-ctrl, .cy-perf, .co-top, .co-fan, .co-hub, .co-lid, .co-body, .co-perf { position: absolute; }
         .cy-body {
@@ -1703,21 +1702,7 @@ const ILLUSTRATION_CSS = {
           z-index: 3; background: radial-gradient(circle, rgba(0, 0, 0, 0.42) 0.7px, transparent 0.95px) 0 0 / 2.8px 2.8px;
           -webkit-mask-image: linear-gradient(180deg, transparent, #000 40%); mask-image: linear-gradient(180deg, transparent, #000 40%);
         }
-        .dy-foot, .dy-base, .dy-cap, .dy-disp, .dy-loop, .dy-back { position: absolute; }
-        .dy-foot {
-          z-index: 3; border-radius: 50%; box-shadow: 0 1.5px 2px rgba(0, 0, 0, 0.25), inset 0 0 0 0.6px rgba(0, 0, 0, 0.3);
-          background: radial-gradient(ellipse at 50% 35%, var(--ac-body-hi, #ffffff), var(--ac-body, #eceff1) 55%, var(--ac-body-lo, #cfd6db));
-        }
-        .dy-base {
-          z-index: 4; border-radius: 3px 3px 2px 2px / 2px 2px 1px 1px; box-shadow: inset 0 0 0 0.6px rgba(0, 0, 0, 0.3);
-          background: linear-gradient(90deg, var(--ac-body-lo, #cfd6db), var(--ac-body-hi, #ffffff) 30%, var(--ac-body, #eceff1) 62%, var(--ac-body-lo, #cfd6db));
-        }
-        .dy-cap { z-index: 4; border-radius: 50%; background: linear-gradient(180deg, var(--ac-body-hi, #ffffff), var(--ac-body, #eceff1)); box-shadow: inset 0 0 0 0.6px rgba(0, 0, 0, 0.3); }
-        .dy-disp {
-          z-index: 5; display: flex; gap: 0.6px; padding: 1.5px 1.3px; box-sizing: border-box; border-radius: 1px;
-          background: #0d1013; box-shadow: 0 0 0 0.6px rgba(255, 255, 255, 0.25);
-        }
-        .dy-disp i { flex: 1; border-radius: 0.4px; background: rgba(255, 255, 255, 0.1); }
+        .dy-loop, .dy-back { position: absolute; }
         .dy-head { position: absolute; left: 0; top: 0; width: 96px; height: 108px; z-index: 5; transform-origin: 48px 50%; }
         .dy-loop {
           z-index: 5; box-sizing: border-box; border: 4.5px solid; border-radius: 16px;
@@ -1735,7 +1720,47 @@ const ILLUSTRATION_CSS = {
         .machine.on.back .dy-back { display: block; }
         .machine.lv1 .dy-back b:nth-child(n+3), .machine.lv2 .dy-back b:nth-child(n+4) { display: none; }
         .machine.mode-night .dy-back { opacity: 0.45; }
-        .machine.pf-ring .wind.l { transform: scaleX(-1); display: none; }
+        .machine[class*="pf-ring"] .wind.l { transform: scaleX(-1); display: none; }
+        .hu-foot, .hu-tank, .hu-mist, .hu-body { position: absolute; }
+        .hu-body { left: 0; top: 0; display: block; overflow: visible; pointer-events: none; }
+        .hu-body { z-index: 3; }
+        .hu-foot {
+          z-index: 1; border-radius: 50%; box-shadow: 0 1.5px 2px rgba(0, 0, 0, 0.35), inset 0 -1px 0 rgba(0, 0, 0, 0.4), inset 0 0 0 0.5px rgba(0, 0, 0, 0.35);
+          background: linear-gradient(90deg, #66696d, #d6d8db 34%, #a4a7ab 68%, #606367);
+        }
+        .machine[class*="pf-ring"] .dy-round { box-shadow: 0 0 0 0.7px #6f7276; }
+        .machine.on[class*="pf-ring"] .dy-round { box-shadow: 0 0 0 0.9px var(--aq, #6f7276); }
+        .machine[class*="pf-ring"] .dy-round span { font-size: 9.6px; line-height: 18px; letter-spacing: -0.4px; }
+        .machine[class*="pf-ring"] .dy-loop { border-color: var(--ac-body-hi, #ffffff); }
+        .machine[class*="pf-ring"] .dy-loop.nk { border-color: #d3d6d9 #c3c6ca #b0b4b8 #c3c6ca; }
+        .machine.pf-ring_desk .dy-loop, .machine.pf-ring_desk .dy-back, .machine.pf-ring_desk .dy-back b { border-radius: 50%; }
+        .hu-foot.w { background: linear-gradient(90deg, #a9afb5, #ffffff 34%, #e6e9eb 68%, #a0a6ac); }
+        .machine[class*="pf-ring"] .dy-loop::before, .machine[class*="pf-ring"] .dy-loop::after { content: ""; position: absolute; top: 13px; bottom: 13px; width: 0.6px; background: rgba(0, 0, 0, 0.42); }
+        .machine[class*="pf-ring"] .dy-loop::before { left: -2.6px; }
+        .machine[class*="pf-ring"] .dy-loop::after { right: -2.6px; }
+        .hu-tank {
+          z-index: 2; overflow: hidden; border-radius: 0 0 15.5px 15.5px / 0 0 2.4px 2.4px; background: rgba(175, 210, 230, 0.18);
+          box-shadow: inset 0 0 0 0.55px rgba(255, 255, 255, 0.35), inset 0 -1px 1px rgba(0, 0, 0, 0.25);
+        }
+        .hu-tank::after { content: ""; position: absolute; left: 13%; top: 4px; bottom: 2px; width: 2.2px; border-radius: 1px; background: rgba(255, 255, 255, 0.45); }
+        .hu-tank u { position: absolute; left: 37%; width: 26%; top: 3.5px; bottom: 3px; border-radius: 1.5px 1.5px 0 0; background: linear-gradient(90deg, #5f7482, #c6d5de 40%, #7f95a3); opacity: 0.85; }
+        .hu-tank u::after { content: ""; position: absolute; left: -48%; right: -48%; bottom: -1.5px; height: 5px; border-radius: 2px; background: linear-gradient(90deg, #5f7482, #c6d5de 40%, #7f95a3); }
+        .hu-tank.out u, .hu-tank.out b { display: none; }
+        .hu-water { position: absolute; left: 0; right: 0; bottom: 0; background: linear-gradient(180deg, #a9dcf3, #63b9e6); opacity: 0.72; box-shadow: inset 0 0.6px 0 rgba(255, 255, 255, 0.75); }
+        .hu-tank.low .hu-water { background: linear-gradient(180deg, #ffb74d, #fb8c00); }
+        .hu-tank.out { background: transparent; box-shadow: inset 0 0 0 0.8px rgba(229, 57, 53, 0.7); }
+        .hu-tank b { position: absolute; bottom: 1px; width: 2px; height: 2px; border-radius: 50%; background: rgba(255, 255, 255, 0.85); opacity: 0; }
+        .hu-tank b:nth-of-type(1) { left: 22%; } .hu-tank b:nth-of-type(2) { left: 50%; } .hu-tank b:nth-of-type(3) { left: 76%; }
+        .machine.hum .hu-tank b { animation: hu-rise 2.1s ease-in infinite; animation-delay: var(--anim-offset, 0s); }
+        .hu-mist { left: 0; top: 0; width: 96px; height: 60px; z-index: 6; pointer-events: none; }
+        .hu-mist.l { display: none; transform: scaleX(-1); }
+        .machine.on.osc .hu-mist { animation: wind-r 5s ease-in-out infinite; animation-delay: var(--anim-offset, 0s); }
+        .machine.on.osc .hu-mist.l { display: block; animation: wind-l 5s ease-in-out infinite; animation-delay: var(--anim-offset, 0s); }
+        .hu-mist s { position: absolute; left: 60px; width: 8px; height: 8px; border-radius: 50%; background: radial-gradient(circle, rgba(190, 232, 252, 0.95), rgba(150, 215, 245, 0.45) 45%, rgba(150, 215, 245, 0) 72%); opacity: 0; animation: hu-drift 2.4s ease-out infinite; animation-delay: var(--anim-offset, 0s); }
+        .hu-mist s:nth-child(1) { top: 16px; } .hu-mist s:nth-child(2) { top: 27px; animation-delay: calc(-0.6s + var(--anim-offset, 0s)); } .hu-mist s:nth-child(3) { top: 38px; animation-delay: calc(-1.2s + var(--anim-offset, 0s)); } .hu-mist s:nth-child(4) { top: 47px; animation-delay: calc(-1.8s + var(--anim-offset, 0s)); }
+        .machine.hum .hu-tank b:nth-of-type(2) { animation-delay: calc(-0.7s + var(--anim-offset, 0s)); } .machine.hum .hu-tank b:nth-of-type(3) { animation-delay: calc(-1.4s + var(--anim-offset, 0s)); }
+        @keyframes hu-rise { 0% { transform: translateY(0); opacity: 0; } 25% { opacity: 1; } 100% { transform: translateY(-12px); opacity: 0; } }
+        @keyframes hu-drift { 0% { transform: translate(0, 0) scale(0.5); opacity: 0; } 22% { opacity: 0.95; } 100% { transform: translate(30px, -7px) scale(2.3); opacity: 0; } }
         .machine.on.osc .dy-head { animation: pf-pivot 5s ease-in-out infinite; animation-delay: var(--anim-offset, 0s); }
         .machine.on.osc .wind.r { animation: wind-r 5s ease-in-out infinite; animation-delay: var(--anim-offset, 0s); }
         .machine.on.osc .wind.l { display: block; animation: wind-l 5s ease-in-out infinite; animation-delay: var(--anim-offset, 0s); }

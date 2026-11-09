@@ -49,6 +49,10 @@ const AIR_CSS = `
         .machine.lv1 .wind path:nth-child(n+3), .machine.lv2 .wind path:nth-child(n+4) { display: none; }
         .machine.on .wind { display: block; }
         .machine.mode-heat, .machine.warm { --air: #ff7043; }
+        .machine.mode-heat .wind path:nth-child(3n+1), .machine.warm .wind path:nth-child(3n+1) { stroke: #ffa726; }
+        .machine.mode-heat .wind path:nth-child(3n+2), .machine.warm .wind path:nth-child(3n+2) { stroke: #ff7043; }
+        .machine.mode-heat .wind path:nth-child(3n), .machine.warm .wind path:nth-child(3n) { stroke: #e53935; }
+        .machine.hum { --air: #4fc3f7; }
         .machine.mode-night .wind { opacity: 0.45; }
         .machine.mode-offline { opacity: 0.45; filter: grayscale(1); }
         @keyframes wind-flow { to { stroke-dashoffset: -20; } }
@@ -63,7 +67,7 @@ function airBox(cls, x, y, w, h, inner = "") {
 // The classes and the variables every purifier and fan drawing carries.
 function airMachine(cls, a, extra) {
   const on = ["run", "night", "heat"].includes(a.mode);
-  const c = [cls, extra, `mode-${a.mode || "off"}`, on ? "on" : "", `lv${a.level || 2}`, a.aq ? `aq${a.aq}` : "",
+  const c = [cls, extra, `mode-${a.mode || "off"}`, on ? "on" : "", `lv${a.level || 2}`, a.aq ? `aq${a.aq}` : "", a.hum ? "hum" : "",
     a.osc ? "osc" : "", a.back ? "back" : "", a.warm ? "warm" : "", a.natural ? "nat" : "", a.winter ? "rev" : "",
     a.lamp ? "lamp" : "", a.lit ? "lit" : "", a.wood ? "wood" : ""].filter(Boolean).join(" ");
   const style = `--spd: ${a.spd || 1.6}s; --rot: ${a.rot || 0.6}s${a.aq ? `; --aq: ${AQ_COLORS[a.aq]}` : ""}`;

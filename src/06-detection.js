@@ -306,6 +306,11 @@ const TYPE_AUTO_PATTERNS = {
     air_quality_entity: /^sensor\..*(pm.?2.?5|air.?quality|aqi|allergen)/i,
     night_mode_entity: /^(switch|binary_sensor)\..*(night|sleep)/i,
     heater_entity: /^climate\./i,
+    humidifier_entity: /^humidifier\./i,
+    deep_clean_entity: /deep.?clean/i,
+    low_water_entity: /low.?water|water.?(lack|shortage|empty)|no.?water|tank.?empty/i,
+    tank_lifted_entity: /lifted|detached|tank.?(removed|missing|off)/i,
+    water_level_entity: /water.?level/i,
   },
   fan: {
     light_entity: /^light\./i,
@@ -866,7 +871,7 @@ const NETWORK_ONLY_FIELDS = ["network_layout", "switch_ports", "bays", "busy_thr
   "memory_entity", "volume_entity", "download_entity", "upload_entity", "ports_entity", "ports_total", "poe_entity",
   "problem_entity", "disk1_entity", "disk2_entity", "disk3_entity", "disk4_entity", "clients_entity", "wan_entity", "wifi_entity"];
 const SCREEN_MEDIA_FIELDS = ["media_entity", "media2_entity", "media3_entity"];
-const PURIFIER_ONLY_FIELDS = ["purifier_layout", "air_quality_entity", "display_entity"];
+const PURIFIER_ONLY_FIELDS = ["purifier_layout", "air_quality_entity", "display_entity", "humidifier_entity", "deep_clean_entity"];
 const FAN_ONLY_FIELDS = ["fan_layout", "wood_blades", "fan_direction_inverted", "oscillating"];
 // A water tank and a humidity reading belong to a dehumidifier, and the
 // choice of a heater's model to a heater.
@@ -988,7 +993,7 @@ function detectApplianceType(cfg, st) {
   // A humidifier by its own fields or its entity's class, before a humidity
   // sensor makes a dehumidifier of it. Essential oil diffusers often report
   // as humidifiers too, and keep their drawing.
-  if (HUMIDIFIER_ONLY_FIELDS.some((f) => cfg[f])) return "humidifier";
+  if (!cfg.humidifier_entity && HUMIDIFIER_ONLY_FIELDS.some((f) => cfg[f])) return "humidifier";
   // VeSync gives its humidifiers no class at all: the domain says it, unless
   // the name or the action say it dries.
   if (st && domainOf(cfg.state_entity) === "humidifier" && !DIFFUSER_ONLY_FIELDS.some((f) => cfg[f])) {
@@ -1029,7 +1034,7 @@ function detectApplianceType(cfg, st) {
   if (MAILBOX_ONLY_FIELDS.some((f) => cfg[f])) return "mailbox";
   if (DIFFUSER_ONLY_FIELDS.some((f) => cfg[f])) return "diffuser";
   if (HRV_ONLY_FIELDS.some((f) => cfg[f])) return "hrv";
-  for (const [ty, fields] of Object.entries(NT_ONLY_FIELDS)) if (fields.some((f) => cfg[f] !== undefined && cfg[f] !== "")) return ty;
+  for (const [ty, fields] of Object.entries(NT_ONLY_FIELDS)) if (!(ty === "humidifier" && cfg.humidifier_entity) && fields.some((f) => cfg[f] !== undefined && cfg[f] !== "")) return ty;
   {
     // A spa, a sauna, an aquarium, a meter, a Christmas tree and the rest of
     // the HACF drawings by their name, before a light makes a lamp of them.

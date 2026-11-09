@@ -9522,9 +9522,9 @@ check('borne : ni un statut reconnu', evMode(evR('SuspendedEVSE', { power_entity
   contains('anneau : les anneaux vont vers le centre', ring({}), '100% { transform: scale(0.08); opacity: 0; }');
   check('anneau : les anneaux ont la forme de la boucle', /class="dy-back"[^>]*><b>/.test(ring({ direction: 'reverse' })), true);
   check('anneau : quatre anneaux', (ring({}).match(/<b><\/b>/g) || []).length, 4);
-  check('anneau : la jauge en bas', /class="dy-disp"/.test(ring({})), true);
+  check('anneau : pas de jauge, absente du vrai appareil', /class="dy-disp"/.test(ring({})), false);
   check('ecran : sans option, pas d\'ecran', /class="pf-lcd"/.test(pf('on')), false);
-  check('ecran : sans option, pas d\'ecran rond', /class="dy-round"/.test(ring({})), false);
+  check('ecran : sans option, le petit ecran rond sans chiffre', /class="dy-round" style="[^"]*width: 8px[^"]*"><\/div>/.test(ring({})), true);
   const scr = (layout, sensor) => render({ ...PF, purifier_layout: layout, display_entity: 'sensor.salon_x' },
     { 'fan.salon': { state: 'on', attributes: {} }, 'sensor.salon_x': sensor });
   check('ecran : le chiffre', /class="pf-lcd"[^>]*><span>18<\/span>/.test(scr('cylinder', { state: '18.4', attributes: PM })), true);
@@ -13868,9 +13868,9 @@ function tvT(w) { return { 'switch.tv': { state: 'on', attributes: {} }, 'sensor
   check('VMC : moteur coupe, pas de bouton de vitesse', btn(vmc('off')), false);
   check('VMC : un bouton marche/arret reste, moteur coupe', /icon="mdi:power"/.test(vmc('off', { toggle_entity: 'switch.p' }).split('</style>').pop()), true);
   const spk = (title, source) => render({ appliance_type: 'speaker', state_entity: 'media_player.s' }, { 'media_player.s': s('paused', { device_class: 'speaker', media_title: title, source }) });
-  check('enceinte : Line-in une seule fois', infoLine(spk('Line-in', 'Line-in'), 'Source'), null);
-  check('enceinte : Line-in garde son titre', infoLine(spk('Line-in', 'Line-in'), 'Title'), 'Line-in');
-  check('enceinte : casse differente', infoLine(spk('Line-in', 'line-in'), 'Source'), null);
+  check('enceinte : Line-in une seule fois', infoLine(spk('Line-in', 'Line-in'), 'Title'), null);
+  check('enceinte : Line-in est une source (#96)', infoLine(spk('Line-in', 'Line-in'), 'Source'), 'Line-in');
+  check('enceinte : casse differente', infoLine(spk('Line-in', 'line-in'), 'Title'), null);
   check('enceinte : source differente gardee', infoLine(spk('Song', 'Spotify'), 'Source'), 'Spotify');
 }
 
@@ -14116,6 +14116,78 @@ function tvT(w) { return { 'switch.tv': { state: 'on', attributes: {} }, 'sensor
   check('heure de fin : pas pendant un cycle', /data-line-menu="delay"/.test(make({}, ST('Running', 'unknown')).m()), false);
   // The older entities keep their own rule: unknown hides them.
   check('heure de fin : un number inconnu reste masque', /data-line-menu="delay"/.test(make({ delay_set_entity: 'number.d' }, { 'sensor.w': s('Ready'), 'number.d': s('unknown', { unit_of_measurement: 's' }) }).m()), false);
+}
+
+
+// ── Dyson Humidify+Cool, radio and line input (#96) ──
+{
+  const T0H = Date.now();
+  const s = (state, attributes = {}) => ({ state, attributes: { ...attributes }, last_changed: new Date(T0H - 3600000).toISOString() });
+  const hu = { appliance_type: 'air_purifier', state_entity: 'fan.dyson', humidifier_entity: 'humidifier.dyson', deep_clean_entity: 'sensor.dc' };
+  const base = (hum, dc = '571', extra = {}) => ({ 'fan.dyson': s('on', { percentage: 50 }), 'humidifier.dyson': s(hum, { humidity: 50, mode: 'auto', ...extra }), 'sensor.dc': s(dc, { unit_of_measurement: 'h' }) });
+  const on = render(hu, base('on'));
+  check('humidify : le reservoir', /class="hu-tank/.test(on), true);
+  check('humidify : la brume', /class="hu-mist"/.test(on), true);
+  check('humidify : l etat', /Humidifying/.test(on), true);
+  check('humidify : la cible', infoLine(on, 'Humidity setpoint'), 'Auto \u00b7 50\u00a0%');
+  check('humidify : nettoyage dans 24 jours', infoLine(on, 'Deep clean'), 'in 24 days');
+  const dry = render(hu, base('off'));
+  check('humidify : eteint, le reservoir reste', /class="hu-tank/.test(dry), true);
+  check('humidify : eteint, pas de brume', /class="hu-mist"/.test(dry), false);
+  check('humidify : eteint, il purifie', /Humidifying/.test(dry), false);
+  check('humidify : a l arret du cycle, pas de brume', /class="hu-mist"/.test(render(hu, base('on', '571', { action: 'idle' }))), false);
+  const due = render(hu, base('on', '0'));
+  check('humidify : nettoyage du', infoLine(due, 'Deep clean'), 'Due');
+  check('humidify : du, en alerte', /class="info-line warn[^"]*"[^>]*><ha-icon icon="mdi:spray-bottle"/.test(due), true);
+  const tank = (extra, states) => render({ ...hu, ...extra }, { ...base('on'), ...states });
+  check('humidify : manque d eau', /class="hu-tank low/.test(tank({ low_water_entity: 'binary_sensor.l' }, { 'binary_sensor.l': s('on') })), true);
+  check('humidify : reservoir retire', /class="hu-tank out/.test(tank({ tank_lifted_entity: 'binary_sensor.t' }, { 'binary_sensor.t': s('on') })), true);
+  check('humidify : reservoir retire, pas de brume', /class="hu-mist"/.test(tank({ tank_lifted_entity: 'binary_sensor.t' }, { 'binary_sensor.t': s('on') })), false);
+  check('humidify : niveau d eau', /class="hu-water" style="height: 40%"/.test(tank({ water_level_entity: 'sensor.w' }, { 'sensor.w': s('40', { unit_of_measurement: '%' }) })), true);
+  const named = (fn) => render({ appliance_type: 'air_purifier', state_entity: 'fan.x' }, { 'fan.x': s('on', { friendly_name: fn }) });
+  check('humidify : reconnu au modele', /class="hu-tank/.test(named('Dyson 358E')), true);
+  check('humidify : PH04', /class="hu-tank/.test(named('Dyson PH04')), true);
+  check('humidify : un TP07 reste un anneau', /class="hu-tank/.test(named('Dyson TP07')), false);
+  check('humidify : un 358 qui n est pas Dyson', /class="hu-tank/.test(named('Coway 358')), false);
+  const dial = render({ ...hu, display_entity: 'sensor.t' }, { ...base('on'), 'sensor.t': s('21.4', { unit_of_measurement: '\u00b0C' }) });
+  check('humidify : cadran agrandi pour le chiffre', /class="dy-round" style="[^"]*width: 18px[^"]*"><span>21\u00b0<\/span>/.test(dial), true);
+  check('humidify : le cadran descend sous le cone', /class="dy-round" style="left: 39px; top: 56.5px/.test(dial), true);
+  check('humidify : la boucle garde sa hauteur', /class="dy-loop" style="[^"]*height: 54px/.test(dial), true);
+  const lay = (fn, c = {}) => (render({ appliance_type: 'air_purifier', state_entity: 'fan.x', ...c }, { 'fan.x': s('on', { friendly_name: fn }) }).match(/class="machine[^"]*pf-(ring[a-z_]*)/) || [])[1];
+  check('colonne : TP07', lay('Dyson TP07'), 'ring');
+  check('colonne : 438', lay('Dyson 438'), 'ring');
+  check('colonne : HP07', lay('Dyson HP07'), 'ring_heat');
+  check('colonne : 527E', lay('Dyson 527E'), 'ring_heat');
+  check('colonne : Hot+Cool au nom', lay('Dyson Hot+Cool'), 'ring_heat');
+  check('colonne : 520 est un Desk, pas un humidificateur', lay('Dyson 520'), 'ring_desk');
+  check('colonne : CF1', lay('Dyson CF1'), 'ring_desk');
+  check('colonne : AM09 sans filtre', lay('Dyson AM09'), 'ring_heater');
+  check('colonne : HF1', lay('Dyson HF1'), 'ring_heater');
+  check('colonne : AM07', lay('Dyson AM07'), 'ring_tower');
+  check('colonne : avec un chauffage', lay('Dyson', { heater_entity: 'switch.h' }), 'ring_heat');
+  check('colonne : tambour dore HP09', /url\(#hc-gold\)/.test(render({ appliance_type: 'air_purifier', state_entity: 'fan.x' }, { 'fan.x': s('on', { friendly_name: 'Dyson HP09' }) })), true);
+  check('colonne : tambour argent HP07', /url\(#hc-gold\)/.test(render({ appliance_type: 'air_purifier', state_entity: 'fan.x' }, { 'fan.x': s('on', { friendly_name: 'Dyson HP07' }) })), false);
+  const hot = (fn, c, st) => /class="machine[^"]*mode-heat/.test(render({ appliance_type: 'air_purifier', state_entity: 'fan.x', ...c }, { 'fan.x': s('on', { friendly_name: fn }), ...st }));
+  check('chauffe : preset heat', hot('Dyson HP07', {}, { 'fan.x': s('on', { friendly_name: 'Dyson HP07', preset_mode: 'heat' }) }), true);
+  check('chauffe : entite climate', hot('Dyson HP07', { state_entity: 'climate.x' }, { 'climate.x': s('heat', { friendly_name: 'Dyson HP07', hvac_action: 'heating' }) }), true);
+  check('chauffe : climate au repos', hot('Dyson HP07', { state_entity: 'climate.x' }, { 'climate.x': s('heat', { friendly_name: 'Dyson HP07', hvac_action: 'idle' }) }), false);
+  check('chauffe : heater_entity', hot('Dyson AM09', { heater_entity: 'switch.h' }, { 'switch.h': s('on') }), true);
+  check('chauffe : sans chauffage, reste bleu', hot('Dyson AM09', {}, {}), false);
+  contains('chauffe : traits orange a rouge', render({ appliance_type: 'air_purifier', state_entity: 'fan.x' }, { 'fan.x': s('on', { friendly_name: 'Dyson HP07', preset_mode: 'heat' }) }), 'path:nth-child(3n) { stroke: #e53935; }');
+  check('humidify : forme imposee', /class="hu-tank/.test(render({ ...hu, purifier_layout: 'ring' }, base('on'))), false);
+  check('humidify : sans humidificateur, pas de ligne', infoLine(render({ appliance_type: 'air_purifier', state_entity: 'fan.dyson' }, { 'fan.dyson': s('on') }), 'Humidity setpoint'), null);
+  const aq = render({ appliance_type: 'air_purifier', state_entity: 'fan.a', air_quality_entity: 'sensor.q', filter_life_entity: 'sensor.f' }, { 'fan.a': s('on'), 'sensor.q': s('5', { unit_of_measurement: 'µg/m³' }), 'sensor.f': s('28', { unit_of_measurement: '%' }) });
+  check('purificateur : qualite de l air et filtre ont deux icones', /icon="mdi:leaf"/.test(aq), true);
+  const spk = (a) => render({ appliance_type: 'speaker', state_entity: 'media_player.s' }, { 'media_player.s': s('playing', { device_class: 'speaker', ...a }) });
+  const radio = spk({ media_title: 'N-JOY', media_channel: 'N-JOY' });
+  check('radio : la station', infoLine(radio, 'Station'), 'N-JOY');
+  check('radio : pas de titre', infoLine(radio, 'Title'), null);
+  const song = spk({ media_title: 'Song', media_artist: 'Band', media_channel: 'N-JOY' });
+  check('radio : le morceau reste un titre', infoLine(song, 'Title'), 'Song');
+  check('radio : et la station', infoLine(song, 'Station'), 'N-JOY');
+  check('radio : reconnue a son flux', infoLine(spk({ media_title: 'N-JOY', media_content_id: 'x-sonosapi-stream:s1234' }), 'Station'), 'N-JOY');
+  check('radio : une source identique n est pas repetee', infoLine(spk({ media_title: 'N-JOY', media_channel: 'N-JOY', source: 'N-JOY' }), 'Source'), null);
+  check('musique : reste un titre', infoLine(spk({ media_title: 'Song', media_artist: 'Band', source: 'Spotify' }), 'Title'), 'Song');
 }
 
 if (RECORD) writeFileSync(process.env.HAC_RECORD, JSON.stringify(RECORD));
