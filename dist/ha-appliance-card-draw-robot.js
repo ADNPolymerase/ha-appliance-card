@@ -289,6 +289,252 @@ ${ntLcd(59.5, 68.5, 24, 12, txt, true, c.heating ? "#ffb74d" : "#80deea", ntFit(
 }
 
 // Sauna cabin with a glass door: the stones glow and steam rises inside
+// A pellet smoker in three-quarter view (#101), after Traeger's photographs of
+// the Timberline: the barrel lid with its end cap, the steel shelf across the
+// front, the hopper with its wooden board and controller. Drawn on the
+// photograph's own 900 grid. The display and the pellet window are larger than
+// life so they read at card size.
+function ntPelletTimberline(c) {
+  const lid = ntId(), cap = ntId(), box = ntId(), side = ntId(), steel = ntId(), wood = ntId(), gl = ntId(), win = ntId(), pel = ntId();
+  const st = c.st || "off", hot = ["ignite", "preheat", "cook"].includes(st);
+  const edge = `stroke="#5f666e" stroke-width="2.4" stroke-linejoin="round"`;
+  const lvl = c.pellet === null || c.pellet === undefined ? null : Math.max(0, Math.min(100, c.pellet));
+  const yl = lvl === null ? 0 : 486 - lvl * .86;
+  const wisps = { ignite: 2, preheat: 3, cook: 4, cool: 2 }[st] || 0;
+  const count = c.smoke && hot ? 7 : wisps;
+  const smoke = [78, 69, 85, 61, 74, 90, 65].slice(0, count).map((x, i) =>
+    `<path class="ntg-smoke ntd${(i % 6) + 1}${c.smoke && hot ? " ntg-dense" : ""}" d="M${x} 13 q-3.4 -4.5 0 -9 q3.4 -4.5 0 -9" stroke="#aab2ba" stroke-width="${c.smoke && hot ? 3.4 : 2.4}" fill="none" stroke-linecap="round" opacity="0"/>`).join("");
+  const flecks = lvl === null ? "" : [[622, 470], [650, 486], [680, 462], [706, 490], [731, 472], [640, 452], [694, 440], [720, 452], [610, 490], [664, 430]]
+    .filter(([, y]) => y > yl + 8).map(([x, y]) => `<rect x="${x}" y="${y}" width="15" height="6" rx="3" fill="#7d4e1d" transform="rotate(${(x * 7) % 60 - 30} ${x} ${y})"/>`).join("");
+  const screen = c.alert ? "#ffd9d3" : "#dceefc", ink = c.alert ? "#c62828" : "#14232e";
+  const lit = st !== "off" && !c.unav;
+  const txt = lit ? c.lcd || "" : "";
+  return `<defs>${ntV(lid, "#50565d", "#1f2125")}${ntV(cap, "#3b4047", "#191b1e")}${ntV(box, "#34383e", "#17191c")}${ntV(side, "#24272b", "#101214")}${ntV(wood, "#e6ab62", "#c98a3f")}${ntV(pel, "#d59a4d", "#a66d2a")}${ntBlur(gl, 7)}
+<linearGradient id="${steel}" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#c9d0d6"/><stop offset=".45" stop-color="#f4f6f8"/><stop offset="1" stop-color="#aeb6be"/></linearGradient>
+<clipPath id="${win}"><polygon points="602,400 750,408 750,503 602,486"/></clipPath></defs>
+${ntFoot("15 110 66 118 110 100 56 91")}
+<g transform="translate(1.25 2.1) scale(.13)">
+<polygon points="320,478 352,482 322,640 300,636" fill="#25282c" ${edge}/>
+<circle cx="301" cy="650" r="17" fill="#17191c" ${edge}/>
+<polygon points="225,644 322,512 322,566 228,664" fill="#2c3035"/>
+<polygon points="615,505 645,510 712,680 690,690" fill="#25282c" ${edge}/>
+<ellipse cx="702" cy="672" rx="40" ry="54" fill="#17191c" ${edge}/><ellipse cx="702" cy="672" rx="19" ry="28" fill="#2c3035"/>
+<polygon points="600,634 655,578 668,640 612,714" fill="url(#${steel})"/>
+<path d="M618 650 l14 -18 l9 8 l10 -14" stroke="#7d868f" stroke-width="3.4" fill="none"/>
+<polygon points="78,240 196,210 196,262 80,262" fill="url(#${steel})" stroke="#8c959e" stroke-width="2"/>
+<path d="M112 244v10M136 240v14M160 235v19" stroke="#6f7881" stroke-width="5" stroke-linecap="round"/>
+<polygon points="142,262 196,262 196,302" fill="#aeb6be"/>
+<polygon points="228,420 284,430 178,732 136,722" fill="#24272b" ${edge}/>
+<path d="M225 330 L572 372 L574 506 L520 500 L262 470 Q226 420 225 330 Z" fill="url(#${box})" ${edge}/>
+<polygon points="768,196 825,170 825,502 768,528" fill="url(#${side})" ${edge}/>
+<polygon points="578,183 768,196 768,528 574,505" fill="url(#${box})" ${edge}/>
+<polygon points="590,186 768,200 768,224 590,212" fill="#23262a"/>
+<polygon points="607,178 670,155 815,163 768,194" fill="url(#${wood})"/><polygon points="607,178 768,194 768,203 607,187" fill="#9c6227"/>
+<polygon points="136,722 176,730 170,756 134,746" fill="#111315"/>
+<circle cx="154" cy="756" r="23" fill="#17191c" ${edge}/><circle cx="154" cy="756" r="8" fill="#6f7881"/>
+<polygon points="512,350 562,356 614,772 568,780" fill="#24272b" ${edge}/>
+</g>
+<g class="nt-run">${smoke}</g>
+<g transform="translate(1.25 2.1) scale(.13)">
+<path d="M596 38 Q620 36 636 52 C652 80 660 150 660 236 L570 308 L576 150 C578 110 585 70 596 38 Z" fill="url(#${cap})" ${edge}/>
+<path d="M608 66 L648 88 L652 122 L604 104 Z" fill="#101214" stroke="#50565d" stroke-width="2.4"/>
+<path d="M200 284 C195 190 205 90 245 48 Q258 32 280 30 L596 38 C585 70 578 110 576 150 L570 308 Z" fill="url(#${lid})" ${edge}/>
+<path d="M226 150 C232 90 250 56 284 46 L560 52" stroke="#fff" stroke-width="9" stroke-linecap="round" fill="none" opacity=".1"/>
+<circle cx="592" cy="60" r="3.4" fill="#e8ecef"/><circle cx="589" cy="74" r="3.4" fill="#e8ecef"/><circle cx="586" cy="88" r="3.4" fill="#e8ecef"/>
+${lit && !c.small ? "" : `<path d="M318 98 L356 74 L380 86 L408 66 L442 94 L454 86" stroke="#6b7279" stroke-width="3.6" fill="none" stroke-linejoin="round"/>`}
+<polygon points="200,284 570,308 570,350 205,316" fill="#15171a" ${edge}/>
+${hot ? `<path class="nta-glow" d="M206 287 L564 311" stroke="#ff7a1a" stroke-width="11" stroke-linecap="round" filter="url(#${gl})"/>` : ""}
+${c.warm && hot ? `<path class="nta-glow" d="M210 306 L560 330" stroke="#ffb74d" stroke-width="16" stroke-linecap="round" filter="url(#${gl})"/>` : ""}
+<path d="M264 264v-14M432 290v-14" stroke="#8c959e" stroke-width="9"/>
+<path d="M254 262 L446 292" stroke="#8c959e" stroke-width="24" stroke-linecap="round"/>
+<path d="M254 259 L446 289" stroke="url(#${steel})" stroke-width="18" stroke-linecap="round"/>
+<circle cx="448" cy="292" r="9" fill="#f28c28"/>
+<polygon points="175,322 218,311 545,338 722,350 745,358" fill="#e4e8ec"/>
+<polygon points="175,322 745,358 745,386 718,384 178,346" fill="url(#${steel})" stroke="#8c959e" stroke-width="2"/>
+<polygon points="730,386 745,386 745,414" fill="#aeb6be"/>
+${c.small || c.probeTemp === null || c.probeTemp === undefined ? `<polygon points="296,418 458,440 458,472 296,450" fill="#121416"/>
+<polygon points="310,428 440,446 440,462 310,444" fill="#b4582a" stroke="#f0d8c6" stroke-width="2.4"/>
+<path d="M322 437 L428 451" stroke="#fff" stroke-width="5" stroke-dasharray="15 5"/>` : ""}
+<polygon points="598,226 758,236 758,348 598,340" fill="#101214" stroke="#50565d" stroke-width="2.4"/>
+<polygon points="606,306 750,314 750,342 606,334" fill="#d9dee3"/>
+<circle cx="634" cy="321" r="11" fill="url(#${steel})" stroke="#6f7881" stroke-width="2"/>
+<path d="M660 322h14M682 323h14" stroke="#4b5259" stroke-width="6" stroke-linecap="round"/>
+<rect x="710" y="317" width="30" height="13" rx="3" fill="#d32f2f"/>
+${c.probe ? `<path d="M608 332 C592 452 492 448 486 322" stroke="${c.probeDone ? "#66bb6a" : "#e8ecef"}" stroke-width="4.6" fill="none" stroke-linecap="round"/><circle cx="608" cy="332" r="6.5" fill="#8c959e"/>` : ""}
+${lvl === null ? "" : `<polygon points="602,400 750,408 750,503 602,486" fill="#0d0e10"/><g clip-path="url(#${win})"><path d="M602 ${yl} q37 -7 74 3 t74 5 V510 H602 Z" fill="url(#${pel})"/>${flecks}</g><polygon points="602,400 750,408 750,503 602,486" fill="none" stroke="${lvl <= 15 ? "#e53935" : "#7d868f"}" stroke-width="4"/>`}
+<ellipse cx="582" cy="828" rx="59" ry="61" fill="#17191c" ${edge}/>
+${Array.from({ length: 16 }, (_, i) => `<path d="M582 770v9" stroke="#3a3f45" stroke-width="5" transform="rotate(${i * 22.5} 582 828)"/>`).join("")}
+<circle cx="582" cy="828" r="36" fill="#23262a"/><circle cx="582" cy="828" r="31" fill="none" stroke="#f59e2a" stroke-width="5"/>
+</g>
+<rect x="80.1" y="33" width="18.6" height="8.6" rx="1" fill="${lit ? screen : "#0b0d0f"}" stroke="#000" stroke-width=".3"${c.alert ? ` class="nta-glow"` : ""}/>
+${txt ? `<text x="89.4" y="${(37.3 + ntFit(txt, 18.6, 7.6) * .36).toFixed(2)}" font-size="${ntFit(txt, 18.6, 7.6).toFixed(2)}" font-weight="700" text-anchor="middle" fill="${ink}" ${NT_FONT}>${esc(txt)}</text>` : ""}
+${grillTemps(c, 50, 26, 19, 49.5, 52.2, "light")}`;
+}
+// What the three drawings below share: the smoke, the display, the window
+// on the pellets and the shading, on the 120 x 135 field.
+function grillSmoke(c, xs, y) {
+  const hot = ["ignite", "preheat", "cook"].includes(c.st);
+  const dense = c.smoke && hot;
+  const count = dense ? xs.length : ({ ignite: 2, preheat: 3, cook: 4, cool: 2 }[c.st] || 0);
+  return `<g class="nt-run">${xs.slice(0, count).map((x, i) => `<path class="ntg-smoke ntd${(i % 6) + 1}${dense ? " ntg-dense" : ""}" d="M${x} ${y} q-3.4 -4.5 0 -9 q3.4 -4.5 0 -9" stroke="#aab2ba" stroke-width="${dense ? 3.4 : 2.4}" fill="none" stroke-linecap="round" opacity="0"/>`).join("")}</g>`;
+}
+function grillLcd(c, x, y, w, h) {
+  const lit = c.st !== "off" && !c.unav;
+  const txt = lit ? c.lcd || "" : "";
+  const fs = ntFit(txt, w, 7.6);
+  return `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="1" fill="${!lit ? "#0b0d0f" : c.alert ? "#ffd9d3" : "#dceefc"}" stroke="#000" stroke-width=".3"${c.alert ? ` class="nta-glow"` : ""}/>${txt ? `<text x="${x + w / 2}" y="${(y + h / 2 + fs * .36).toFixed(2)}" font-size="${fs.toFixed(2)}" font-weight="700" text-anchor="middle" fill="${c.alert ? "#c62828" : "#14232e"}" ${NT_FONT}>${esc(txt)}</text>` : ""}`;
+}
+function grillWindow(c, x, y, w, h) {
+  if (c.pellet === null || c.pellet === undefined) return "";
+  const lvl = Math.max(0, Math.min(100, c.pellet)), cp = ntId(), pel = ntId();
+  const top = y + h - h * lvl / 100;
+  return `<defs>${ntV(pel, "#d59a4d", "#a66d2a")}<clipPath id="${cp}"><rect x="${x}" y="${y}" width="${w}" height="${h}" rx=".8"/></clipPath></defs><rect x="${x}" y="${y}" width="${w}" height="${h}" rx=".8" fill="#0d0e10"/><g clip-path="url(#${cp})"><path d="M${x} ${top.toFixed(1)} q${w / 4} -1.2 ${w / 2} .3 t${w / 2} .3 V${y + h} H${x} Z" fill="url(#${pel})"/></g><rect x="${x}" y="${y}" width="${w}" height="${h}" rx=".8" fill="none" stroke="${lvl <= 15 ? "#e53935" : "#7d868f"}" stroke-width=".55"/>`;
+}
+const grillHot = (c) => ["ignite", "preheat", "cook"].includes(c.st);
+// The temperatures, large enough to read across the room: the grill's on the
+// body in the colour of what it is doing, the probe's on a badge of its own
+// with a gauge towards its target. The controller then shows the setpoint.
+function grillTemps(c, x, y, fs, px, py, ink, plate) {
+  if (c.st === "off" || c.unav || c.small) return "";
+  const t = c.temp === null || c.temp === undefined ? null : Math.round(c.temp);
+  const near = c.aim > 0 && Math.abs(c.temp - c.aim) <= Math.max(6, c.aim * .04);
+  const hot = grillHot(c), light = ink === "light";
+  const col = c.alert ? (light ? "#ff8a80" : "#c62828") : c.st === "cool" ? (light ? "#81d4fa" : "#0277bd") : hot && near ? (light ? "#a5e6a8" : "#2e7d32") : hot ? (light ? "#ffb74d" : "#d84315") : (light ? "#eef2f5" : "#263238");
+  const halo = light ? "#000" : "#fff";
+  const big = t === null ? "" : `${plate ? `<rect x="${x - fs * 1.32}" y="${y - fs * .93}" width="${fs * 2.64}" height="${fs * 1.14}" rx="2.4" fill="#101214" opacity=".78"/>` : ""}<text x="${x}" y="${y}" font-size="${fs}" font-weight="800" text-anchor="middle" fill="${col}" stroke="${halo}" stroke-opacity=".45" stroke-width="1.5" style="paint-order:stroke" ${NT_FONT}>${t}\u00b0</text>`;
+  if (c.probeTemp === null || c.probeTemp === undefined) return big;
+  const w = 30, h = 11.5, x0 = px - w / 2, pv = Math.round(c.probeTemp);
+  const pct = c.probeAim > 0 ? Math.max(0, Math.min(1, c.probeTemp / c.probeAim)) : null;
+  const done = c.probeDone || (pct !== null && pct >= 1);
+  return `${big}<rect x="${x0}" y="${py}" width="${w}" height="${h}" rx="3" fill="#101214" stroke="${done ? "#66bb6a" : "#5f666e"}" stroke-width=".6"/>
+<path d="M${x0 + 6} ${py + 2.2}v5" stroke="#e8ecef" stroke-width="1.5" stroke-linecap="round"/><circle cx="${x0 + 6}" cy="${py + 8}" r="1.9" fill="${done ? "#66bb6a" : "#ff8a65"}"/>
+<text x="${x0 + 18.5}" y="${py + (pct === null ? 8.4 : 7.4)}" font-size="9" font-weight="800" text-anchor="middle" fill="${done ? "#a5e6a8" : "#fff"}" ${NT_FONT}>${pv}\u00b0</text>
+${pct === null ? "" : `<rect x="${x0 + 10}" y="${py + 8.9}" width="17" height="1.3" rx=".6" fill="#3a3f45"/><rect x="${x0 + 10}" y="${py + 8.9}" width="${(17 * pct).toFixed(1)}" height="1.3" rx=".6" fill="${done ? "#66bb6a" : "#ff8a65"}"/>`}`;
+}
+const GRILL_EDGE = `stroke="#5f666e" stroke-width="2.4" stroke-linejoin="round"`;
+// A classic drum on legs, as Pit Boss and Z Grills build it: the hopper and
+// its controller on the left, the chimney on the right.
+function ntPelletDrum(c) {
+  const lid = ntId(), cap = ntId(), box = ntId(), steel = ntId(), gl = ntId();
+  const edge = GRILL_EDGE;
+  return `<defs>${ntV(lid, "#50565d", "#1f2125")}${ntV(cap, "#3b4047", "#191b1e")}${ntV(box, "#34383e", "#17191c")}${ntBlur(gl, 7)}
+<linearGradient id="${steel}" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#c9d0d6"/><stop offset=".45" stop-color="#f4f6f8"/><stop offset="1" stop-color="#aeb6be"/></linearGradient></defs>
+${ntFoot("14 112 96 116 112 104 34 98")}
+<g transform="translate(1.25 2.1) scale(.13)">
+<polygon points="300,560 340,560 318,770 286,770" fill="#1c1e22"/><polygon points="600,560 640,560 668,770 636,770" fill="#1c1e22"/>
+<circle cx="303" cy="782" r="17" fill="#17191c" ${edge}/><circle cx="652" cy="782" r="17" fill="#17191c" ${edge}/>
+<polygon points="222,690 740,690 770,722 196,722" fill="#2c3035" ${edge}/>
+<path d="M250 706H728" stroke="#50565d" stroke-width="3" stroke-dasharray="12 8"/>
+<polygon points="212,500 272,500 232,812 190,812" fill="#24272b" ${edge}/>
+<polygon points="672,500 732,500 782,812 740,812" fill="#24272b" ${edge}/>
+<circle cx="208" cy="826" r="23" fill="#17191c" ${edge}/><circle cx="208" cy="826" r="8" fill="#6f7881"/>
+<circle cx="762" cy="818" r="46" fill="#17191c" ${edge}/><circle cx="762" cy="818" r="24" fill="#c9d0d6"/><circle cx="762" cy="818" r="9" fill="#17191c"/>
+<path d="M628 566 q0 -22 26 -22 q26 0 26 22" stroke="#aeb6be" stroke-width="4" fill="none"/>
+<polygon points="622,566 686,566 678,642 630,642" fill="url(#${steel})" stroke="#8c959e" stroke-width="2"/>
+<rect x="648" y="128" width="40" height="150" fill="url(#${box})" ${edge}/>
+<rect x="634" y="112" width="68" height="20" rx="4" fill="#111315" ${edge}/>
+</g>
+${grillSmoke(c, [86.5, 84, 89, 85, 88, 83, 90], 15)}
+<g transform="translate(1.25 2.1) scale(.13)">
+<polygon points="682,418 866,418 884,446 682,446" fill="#3b4047" ${edge}/>
+<path d="M610 500 L610 300 C610 256 590 224 560 216 L600 216 Q650 222 674 274 C686 306 688 400 688 500 Z" fill="url(#${cap})" ${edge}/>
+<path d="M216 500 L216 330 C216 250 262 214 336 214 L560 216 C590 224 610 256 610 300 L610 500 Z" fill="url(#${lid})" ${edge}/>
+<path d="M240 300 C246 262 276 236 330 232 L548 234" stroke="#fff" stroke-width="9" stroke-linecap="round" fill="none" opacity=".1"/>
+<circle cx="412" cy="258" r="13" fill="#d9dee3"/>
+<path d="M216 372 L610 372 L688 372" stroke="#0c0d0f" stroke-width="5"/>
+${grillHot(c) ? `<path class="nta-glow" d="M222 373 L606 373" stroke="#ff7a1a" stroke-width="11" stroke-linecap="round" filter="url(#${gl})"/>` : ""}
+${c.warm && grillHot(c) ? `<path class="nta-glow" d="M226 392 L602 392" stroke="#ffb74d" stroke-width="16" stroke-linecap="round" filter="url(#${gl})"/>` : ""}
+<path d="M312 340v-20M508 340v-20" stroke="#8c959e" stroke-width="9"/>
+<path d="M300 322 Q410 306 520 322" stroke="url(#${steel})" stroke-width="18" stroke-linecap="round" fill="none"/>
+<polygon points="210,500 690,500 690,540 210,540" fill="#17191c" ${edge}/>
+<polygon points="34,316 62,288 240,288 224,316" fill="#3b4047" ${edge}/>
+<polygon points="34,316 224,316 224,596 42,596" fill="url(#${box})" ${edge}/>
+<rect x="52" y="334" width="156" height="128" rx="6" fill="#101214" stroke="#50565d" stroke-width="2.4"/>
+<circle cx="80" cy="440" r="11" fill="url(#${steel})" stroke="#6f7881" stroke-width="2"/><path d="M108 441h14M130 441h14" stroke="#7d868f" stroke-width="6" stroke-linecap="round"/><rect x="160" y="434" width="34" height="13" rx="3" fill="#d32f2f"/>
+${c.probe ? `<path d="M210 450 C226 520 258 516 262 392" stroke="${c.probeDone ? "#66bb6a" : "#e8ecef"}" stroke-width="4.6" fill="none" stroke-linecap="round"/><circle cx="210" cy="450" r="6.5" fill="#8c959e"/>` : ""}
+</g>
+${grillLcd(c, 9.4, 46.8, 21, 9.4)}${grillWindow(c, 9.6, 64.5, 20.4, 12)}
+${grillTemps(c, 56, 65, 16, 62, 76, "light")}`;
+}
+// A recteq on its cart: the lid black above, steel below, the two horn
+// handles, the hopper on the right and a shelf under the frame.
+function ntPelletCart(c) {
+  const lid = ntId(), low = ntId(), cap = ntId(), box = ntId(), steel = ntId(), gl = ntId();
+  const edge = GRILL_EDGE;
+  const horn = (x, f) => `<path d="M${x} 320 C${x + f * 30} 300 ${x + f * 66} 336 ${x + f * 104} 316" stroke="url(#${steel})" stroke-width="13" stroke-linecap="round" fill="none"/>`;
+  return `<defs>${ntV(lid, "#3f444a", "#14161a")}${ntV(low, "#f1f3f5", "#b4bcc4")}${ntV(cap, "#c7ced5", "#8e979f")}${ntV(box, "#34383e", "#17191c")}${ntBlur(gl, 7)}
+<linearGradient id="${steel}" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#c9d0d6"/><stop offset=".45" stop-color="#f4f6f8"/><stop offset="1" stop-color="#aeb6be"/></linearGradient></defs>
+${ntFoot("14 112 102 114 114 104 34 98")}
+${grillSmoke(c, [70, 62, 76, 56, 66, 80, 59], 25)}
+<g transform="translate(1.25 2.1) scale(.13)">
+<polygon points="268,590 306,590 306,770 274,770" fill="#1c1e22"/><polygon points="664,590 702,590 708,770 672,770" fill="#1c1e22"/>
+<circle cx="290" cy="782" r="17" fill="#17191c" ${edge}/><circle cx="690" cy="782" r="17" fill="#17191c" ${edge}/>
+<polygon points="168,694 776,694 796,728 150,728" fill="#2c3035" ${edge}/>
+<path d="M186 711H764" stroke="#7d868f" stroke-width="3" stroke-dasharray="10 6"/>
+<polygon points="158,540 206,540 182,812 142,812" fill="#24272b" ${edge}/>
+<polygon points="742,540 790,540 826,812 786,812" fill="#24272b" ${edge}/>
+<circle cx="160" cy="826" r="23" fill="#17191c" ${edge}/><circle cx="160" cy="826" r="8" fill="#6f7881"/>
+<circle cx="806" cy="826" r="23" fill="#17191c" ${edge}/><circle cx="806" cy="826" r="8" fill="#6f7881"/>
+<path d="M212 568 q0 -20 22 -20 q22 0 22 20" stroke="#aeb6be" stroke-width="4" fill="none"/>
+<polygon points="206,568 262,568 256,636 212,636" fill="url(#${steel})" stroke="#8c959e" stroke-width="2"/>
+<polygon points="630,296 668,262 838,262 816,296" fill="#50565d" ${edge}/>
+<polygon points="630,296 816,296 816,482 630,482" fill="url(#${box})" ${edge}/>
+<polygon points="816,296 838,262 838,446 816,482" fill="#17191c" ${edge}/>
+<rect x="646" y="312" width="156" height="128" rx="6" fill="#101214" stroke="#50565d" stroke-width="2.4"/>
+<circle cx="674" cy="418" r="11" fill="url(#${steel})" stroke="#6f7881" stroke-width="2"/><path d="M700 419h14M722 419h14" stroke="#7d868f" stroke-width="6" stroke-linecap="round"/><rect x="752" y="412" width="34" height="13" rx="3" fill="#d32f2f"/>
+<path d="M556 482 L556 300 C556 240 536 196 498 186 L560 188 Q612 196 636 262 C646 300 648 400 648 482 Z" fill="url(#${cap})" ${edge}/>
+<path d="M126 482 L126 300 C126 232 164 186 238 186 L498 186 C536 196 556 240 556 300 L556 482 Z" fill="url(#${low})" ${edge}/>
+<path d="M126 360 L126 300 C126 232 164 186 238 186 L498 186 C536 196 556 240 556 300 L556 360 Z" fill="url(#${lid})" stroke="#5f666e" stroke-width="2.4"/>
+<path d="M148 290 C152 244 186 208 240 204 L490 206" stroke="#fff" stroke-width="9" stroke-linecap="round" fill="none" opacity=".1"/>
+<circle cx="340" cy="228" r="24" fill="#e6eaee" stroke="#8c959e" stroke-width="3"/><path d="M340 228 L352 214" stroke="#c62828" stroke-width="4"/>
+${grillHot(c) ? `<path class="nta-glow" d="M132 361 L552 361" stroke="#ff7a1a" stroke-width="11" stroke-linecap="round" filter="url(#${gl})"/>` : ""}
+${c.warm && grillHot(c) ? `<path class="nta-glow" d="M136 386 L548 386" stroke="#ffb74d" stroke-width="16" stroke-linecap="round" filter="url(#${gl})"/>` : ""}
+${horn(182, 1)}${horn(392, 1)}
+<polygon points="118,482 820,482 820,560 118,560" fill="#17191c" ${edge}/>
+<rect x="404" y="506" width="90" height="28" rx="3" fill="#2c3035" stroke="#8c959e" stroke-width="2"/>
+${c.probe ? `<path d="M640 430 C624 530 560 540 546 392" stroke="${c.probeDone ? "#2e7d32" : "#4b5259"}" stroke-width="4.6" fill="none" stroke-linecap="round"/><circle cx="640" cy="430" r="6.5" fill="#8c959e"/>` : ""}
+</g>
+${grillLcd(c, 86.4, 43.8, 21, 9.4)}${grillWindow(c, 86.6, 65.4, 20.4, 8.6)}
+${grillTemps(c, 44, 63, 16, 62, 76, "dark")}`;
+}
+// A vertical smoker: the tall cabinet behind its glass door, the racks, the
+// chimney on top and the shelf at its side.
+function ntPelletVertical(c) {
+  const body = ntId(), sd = ntId(), glass = ntId(), steel = ntId(), glow = ntId();
+  const edge = GRILL_EDGE, hot = grillHot(c);
+  const racks = [300, 360, 420, 480, 540].map((y) => `<path d="M344 ${y}H606" stroke="#c9d0d6" stroke-width="5"/>${Array.from({ length: 8 }, (_, i) => `<path d="M${362 + i * 32} ${y - 4}v8" stroke="#8c959e" stroke-width="2.4"/>`).join("")}`).join("");
+  return `<defs>${ntV(body, "#3b4047", "#191b1e")}${ntV(sd, "#25282c", "#101214")}${ntV(glass, "#5a6168", "#2d3136")}
+<radialGradient id="${glow}" cx=".5" cy=".82" r=".9"><stop offset="0" stop-color="#ff8a3d" stop-opacity="${hot ? .85 : 0}"/><stop offset="1" stop-color="#ff8a3d" stop-opacity="0"/></radialGradient>
+<linearGradient id="${steel}" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#c9d0d6"/><stop offset=".45" stop-color="#f4f6f8"/><stop offset="1" stop-color="#aeb6be"/></linearGradient></defs>
+${ntFoot("30 113 88 115 104 106 46 102")}
+<g transform="translate(1.25 2.1) scale(.13)">
+<polygon points="418,66 498,66 498,92 418,92" fill="#111315" ${edge}/><rect x="434" y="90" width="48" height="76" fill="url(#${sd})" ${edge}/>
+</g>
+${grillSmoke(c, [61, 58.5, 63.5, 60, 62.5, 57.5, 64.5], 10)}
+<g transform="translate(1.25 2.1) scale(.13)">
+<polygon points="330,664 382,664 342,800 300,800" fill="#24272b" ${edge}/>
+<polygon points="568,664 620,664 660,800 618,800" fill="#24272b" ${edge}/>
+<circle cx="322" cy="818" r="24" fill="#17191c" ${edge}/><circle cx="322" cy="818" r="8" fill="#6f7881"/>
+<circle cx="640" cy="818" r="24" fill="#17191c" ${edge}/><circle cx="640" cy="818" r="8" fill="#6f7881"/>
+<polygon points="700,364 868,352 886,376 700,392" fill="#3b4047" ${edge}/>
+<polygon points="292,152 342,112 736,112 680,152" fill="#50565d" ${edge}/>
+<polygon points="680,152 736,112 736,632 680,672" fill="url(#${sd})" ${edge}/>
+<rect x="292" y="152" width="388" height="520" rx="16" fill="url(#${body})" ${edge}/>
+<rect x="324" y="258" width="304" height="310" rx="10" fill="#101214" stroke="#50565d" stroke-width="3"/>
+<rect x="336" y="270" width="280" height="286" rx="6" fill="url(#${glass})"/>
+${racks}
+<rect x="336" y="270" width="280" height="286" rx="6" fill="url(#${glow})"${hot ? ` class="nta-warm"` : ""}/>
+${c.warm && hot ? `<rect class="nta-glow" x="336" y="470" width="280" height="86" fill="#ffb74d" opacity=".5"/>` : ""}
+<path d="M352 282 L420 282 L352 420 Z" fill="#fff" opacity=".1"/>
+<rect x="638" y="296" width="22" height="200" rx="9" fill="url(#${steel})" stroke="#8c959e" stroke-width="2"/>
+<circle cx="342" cy="210" r="11" fill="url(#${steel})" stroke="#6f7881" stroke-width="2"/><rect x="600" y="202" width="34" height="14" rx="3" fill="#d32f2f"/>
+${c.probe ? `<path d="M600 240 C690 260 660 430 606 420" stroke="${c.probeDone ? "#66bb6a" : "#e8ecef"}" stroke-width="4.6" fill="none" stroke-linecap="round"/><circle cx="600" cy="240" r="6.5" fill="#8c959e"/>` : ""}
+</g>
+${grillLcd(c, 49.6, 23.6, 28, 9.8)}${grillWindow(c, 44.4, 78, 38.6, 8.4)}
+${grillTemps(c, 63, 54, 18, 63, 60, "light", true)}`;
+}
+const GRILL_DRAW = { timberline: ntPelletTimberline, drum: ntPelletDrum, cart: ntPelletCart, vertical: ntPelletVertical };
+function ntPelletGrill(c) { return (GRILL_DRAW[c.layout] || ntPelletTimberline)(c); }
 function ntSauna(c) {
   const g = ntId(), cp = ntId(), gl = ntId(), inside = ntId(), st = ntId();
   const on = c.on;
@@ -2828,7 +3074,7 @@ function ntThsLcdRound(c) {
 ${thsFace(X + 2, Y, `<ellipse cx="38" cy="70" rx="24" ry="3.4" fill="#000" opacity=".32" filter="url(#${bl})"/>`)}
 ${thsDepth(X, Y, shape, 12, `url(#${e})`)}${thsFace(X, Y, `${shape(`url(#${t})`)}<circle cx="35" cy="35" r="28.5" fill="#8f958f"/><circle cx="35" cy="35" r="28" fill="url(#${s})"/>${c.unav ? "" : `${thsSignal(25, 11.5, THS_INK)}${thsBattery(35.5, 11.5, THS_INK, c.b)}${thsNumber(c.t, 35, 18, 15.5, THS_INK, THS_GHOST, c.unit)}<path d="M10 38 H60" stroke="${THS_INK}" stroke-width=".5"/>${thsNumber(c.h, 35, 41, 13, THS_INK, THS_GHOST, "%")}`}`)}`;
 }
-const NT_DRAW = { ths_disc: ntThsDisc, ths_square: ntThsSquare, ths_cushion: ntThsCushion, ths_stick: ntThsStick, ths_lcd_stand: ntThsLcdStand, ths_lcd_probe: ntThsLcdProbe, ths_lcd_round: ntThsLcdRound, dryer: ntFilamentDryer, humidifier: ntHumidifier, circulator: ntCirculator, irr_sprinkler: ntIrrSprinkler, irr_tap: ntIrrTap, irr_drip: ntIrrDrip, irr_flowers: ntIrrFlowers, lit_globe: ntLitterGlobe, lit_box: ntLitterBox, det_smoke: ntDetSmoke, det_co: ntDetCo, det_leak: ntDetLeak, spk_smart: ntSpkSmart, spk_homepod_mini: ntSpkMini, spk_sonos_one: ntSpkOne, spk_bookshelf: ntSpkShelf, spk_sonos_move: ntSpkMove, spk_soundbar: ntSpkBar, spk_echo_dot: ntSpkDot, spk_echo_dot_max: ntSpkDotMax, spk_nest_mini: ntSpkNest, spk_sonos_era100: ntSpkEra100, spk_sonos_era300: ntSpkEra300, spk_bose_wave: ntSpkWave, spk_bose_500: ntSpkBose500, spk_bose_soundlink: ntSpkFlex, spk_bose_soundbar: ntSpkBoseBar, spk_sonos_five: ntSpkFive, spk_sonos_play: ntSpkPlay, spk_sonos_roam: ntSpkRoam, spk_sonos_ray: ntSpkRay, spk_sonos_amp: ntSpkAmp, spk_sonos_port: ntSpkPort, spk_bose_ultra: ntSpkBoseUltra, spk_bose_portable: ntSpkBosePortable, spk_bose_amp: ntSpkBoseAmp, str_apple_tv: (c) => strZoom(strAppleTv(c), 54, 1.45), str_fire_tv_cube: strFireCube, str_fire_tv_stick: (c) => strStick(c, true), str_google_tv_streamer: strGoogleStreamer, str_chromecast: strChromecast, str_shield: strShield, str_shield_pro: strShieldPro, str_roku: strRoku, str_mi_box: strMiBox, str_freebox: strFreebox, str_decoder: strDecoder, str_box: strBox, str_stick: (c) => strStick(c, false), con_ps1: conPs1, con_ps2: conPs2, con_ps3: conPs3, con_ps4: (c) => conPs4(c, false), con_ps4_pro: (c) => conPs4(c, true), con_ps5: conPs5, con_xbox: conXbox, con_xbox_360: conX360, con_xbox_one: conXone, con_xbox_series_x: conXsx, con_xbox_series_s: conXss, con_switch: (c) => conSwitch(c, false), con_switch_2: (c) => conSwitch(c, true), con_switch_lite: conSwitchLite, con_ps_vita: conVita, con_nes: conNes, con_snes: conSnes, con_n64: conN64, con_gamecube: conGamecube, con_wii: conWii, con_megadrive: conMegadrive, tank: ntTank, fws: ntFresh, solth: ntSolarThermal, wood: ntWoodStove, mob_scooter: mobScooter, mob_offroad: mobOffroad, mob_ebike: mobEbike, mob_gyropode: mobGyropode, mob_motorcycle: mobMotorcycle, meter_box: ntMeterBox, meter_dome: ntMeterDome, meter_gas: ntGas, meter_water: ntWater, booster: ntBooster, sump: ntSump, pool: ntPoolRobot, floor: ntFloor, spa: ntSpa, sauna: ntSauna, aquarium: ntAquarium, linky: ntLinky, tree: ntTree };
+const NT_DRAW = { pellet_grill: ntPelletGrill, ths_disc: ntThsDisc, ths_square: ntThsSquare, ths_cushion: ntThsCushion, ths_stick: ntThsStick, ths_lcd_stand: ntThsLcdStand, ths_lcd_probe: ntThsLcdProbe, ths_lcd_round: ntThsLcdRound, dryer: ntFilamentDryer, humidifier: ntHumidifier, circulator: ntCirculator, irr_sprinkler: ntIrrSprinkler, irr_tap: ntIrrTap, irr_drip: ntIrrDrip, irr_flowers: ntIrrFlowers, lit_globe: ntLitterGlobe, lit_box: ntLitterBox, det_smoke: ntDetSmoke, det_co: ntDetCo, det_leak: ntDetLeak, spk_smart: ntSpkSmart, spk_homepod_mini: ntSpkMini, spk_sonos_one: ntSpkOne, spk_bookshelf: ntSpkShelf, spk_sonos_move: ntSpkMove, spk_soundbar: ntSpkBar, spk_echo_dot: ntSpkDot, spk_echo_dot_max: ntSpkDotMax, spk_nest_mini: ntSpkNest, spk_sonos_era100: ntSpkEra100, spk_sonos_era300: ntSpkEra300, spk_bose_wave: ntSpkWave, spk_bose_500: ntSpkBose500, spk_bose_soundlink: ntSpkFlex, spk_bose_soundbar: ntSpkBoseBar, spk_sonos_five: ntSpkFive, spk_sonos_play: ntSpkPlay, spk_sonos_roam: ntSpkRoam, spk_sonos_ray: ntSpkRay, spk_sonos_amp: ntSpkAmp, spk_sonos_port: ntSpkPort, spk_bose_ultra: ntSpkBoseUltra, spk_bose_portable: ntSpkBosePortable, spk_bose_amp: ntSpkBoseAmp, str_apple_tv: (c) => strZoom(strAppleTv(c), 54, 1.45), str_fire_tv_cube: strFireCube, str_fire_tv_stick: (c) => strStick(c, true), str_google_tv_streamer: strGoogleStreamer, str_chromecast: strChromecast, str_shield: strShield, str_shield_pro: strShieldPro, str_roku: strRoku, str_mi_box: strMiBox, str_freebox: strFreebox, str_decoder: strDecoder, str_box: strBox, str_stick: (c) => strStick(c, false), con_ps1: conPs1, con_ps2: conPs2, con_ps3: conPs3, con_ps4: (c) => conPs4(c, false), con_ps4_pro: (c) => conPs4(c, true), con_ps5: conPs5, con_xbox: conXbox, con_xbox_360: conX360, con_xbox_one: conXone, con_xbox_series_x: conXsx, con_xbox_series_s: conXss, con_switch: (c) => conSwitch(c, false), con_switch_2: (c) => conSwitch(c, true), con_switch_lite: conSwitchLite, con_ps_vita: conVita, con_nes: conNes, con_snes: conSnes, con_n64: conN64, con_gamecube: conGamecube, con_wii: conWii, con_megadrive: conMegadrive, tank: ntTank, fws: ntFresh, solth: ntSolarThermal, wood: ntWoodStove, mob_scooter: mobScooter, mob_offroad: mobOffroad, mob_ebike: mobEbike, mob_gyropode: mobGyropode, mob_motorcycle: mobMotorcycle, meter_box: ntMeterBox, meter_dome: ntMeterDome, meter_gas: ntGas, meter_water: ntWater, booster: ntBooster, sump: ntSump, pool: ntPoolRobot, floor: ntFloor, spa: ntSpa, sauna: ntSauna, aquarium: ntAquarium, linky: ntLinky, tree: ntTree };
 function ntSvg(d) {
   ntN = 0;
   const draw = NT_DRAW[d && d.kind] || ntLinky;
@@ -2848,6 +3094,9 @@ const NT_CSS = `
         @keyframes ntfd-heat{0%{opacity:0;transform:translateY(4px)}40%{opacity:1}100%{opacity:0;transform:translateY(-7px)}}
         .nt-on .ntfd-roll{animation:ntfd-roll 2.4s linear infinite;animation-delay:var(--anim-offset,0s)}
         @keyframes ntfd-roll{to{transform:translateY(76px)}}
+        .nt-on .ntg-smoke{transform-box:fill-box;transform-origin:center bottom;animation:ntg-smoke 4s ease-out infinite;animation-delay:calc(var(--d0,0s) + var(--anim-offset,0s))}
+        .nt-on .ntg-dense{animation-duration:2s}
+        @keyframes ntg-smoke{0%{transform:translate(0,4px) scale(.7);opacity:0}25%{opacity:.75}100%{transform:translate(4px,-14px) scale(1.6);opacity:0}}
         .machine.nt:not(.nt-on) .nt-run{display:none}
         .machine.nt-unav{opacity:.45;filter:grayscale(1)}
         .ntd1{--d0:.3s}.ntd2{--d0:.7s}.ntd3{--d0:1.1s}.ntd4{--d0:1.5s}.ntd5{--d0:1.9s}.ntd6{--d0:2.3s}

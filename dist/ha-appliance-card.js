@@ -1,5 +1,5 @@
 // Built by tools/build.mjs from the files of src/: edit those, not this file.
-const CARD_VERSION = "4.20.1";
+const CARD_VERSION = "4.21.0";
 
 console.info(
   "%c HA-APPLIANCE-CARD %c v" + CARD_VERSION + " ",
@@ -13,6 +13,9 @@ console.info(
 
 const T = {
   en: {
+    pg_large_temperature: "Large temperature on the drawing",
+    pg_pellets_low: "Low", section_probe_target: "Probe target", section_probe_2: "Probe 2", section_probe_2_target: "Probe 2 target", layout_pg_timberline: "Cabinet, no chimney (Timberline)", layout_pg_drum: "Drum with chimney (Pit Boss, Z Grills)", layout_pg_cart: "Drum on a cart (recteq)", layout_pg_vertical: "Vertical smoker",
+    type_pellet_grill: "Pellet grill", pg_asleep: "Asleep", pg_ready: "Ready", pg_igniting: "Igniting", pg_preheating: "Preheating", pg_cooking: "Cooking", pg_cool_down: "Cooling down", pg_shutdown: "Shutting down", pg_probe_done: "Probe at temperature", pg_probe_out: "Fell out", pg_timer_done: "Timer finished", pg_grill: "Grill", pg_probe: "Probe", pg_super_smoke: "Super Smoke", pg_keep_warm: "Keep Warm", section_grill_state: "Grill state", section_probe_state: "Probe state", section_probe_alarm: "Probe alarm", section_timer_done: "Timer finished",
     idle: "Idle", running: "Running", paused: "Paused", done: "Finished",
     delayed: "Delayed start", error: "Error", unknown: "Unknown",
     program: "Program", remaining: "remaining", ready_at: "ready at", time_done: "Done",
@@ -2699,6 +2702,25 @@ const TYPE_AUTO_PATTERNS = {
     light_entity: /light|lamp|led/i,
   },
   sauna: { temperature_entity: /temp/i },
+  // Pellet grills: Traeger's, Pit Boss's, Camp Chef's, Grilla's, recteq's and
+  // GMG's names for the same things.
+  pellet_grill: {
+    grill_state_entity: /^sensor\.(?!.*(probe|wifi|ota|heating|cook.?mode|active.?mode)).*(grill.?state|system.?status|running.?status|status|mode)$/i,
+    temperature_entity: /^sensor\.(?!.*(target|set|probe|ambient)).*(grill.?temp|chamber.?temp|pit.?temp)/i,
+    target_temperature_entity: /^(?!.*probe).*(target|set).?(grill.?)?temp/i,
+    pellet_level_entity: /pellet/i,
+    probe_entity: /^(?!.*(state|status|alarm|target|set|connect|present)).*(probe.?p?[01]?(.?temp(erature)?)?$|[._]p1.?temp)/i,
+    probe_target_entity: /(target|set).*probe.?p?[01]?(.?temp(erature)?)?$|probe.?p?[01]?.?target|[._]p1.?target/i,
+    probe_2_entity: /^(?!.*(state|status|alarm|target|set|connect|present)).*(probe.?p?[12](.?temp(erature)?)?$|[._]p2.?temp)/i,
+    probe_2_target_entity: /(target|set).*probe.?p?2(.?temp(erature)?)?$|probe.?p?2.?target|[._]p2.?target/i,
+    probe_state_entity: /probe.?state|probe.?status/i,
+    probe_alarm_entity: /probe.?alarm/i,
+    timer_end_entity: /^sensor\..*(cook.?timer.?(end|remaining)$|cook.?timer$|recipe.?time|timer.?end)/i,
+    timer_complete_entity: /timer.?complete|timer.?done/i,
+    error_entity: /(^|[._])errors?$|error.?code|any.?problem|(^|[._])problem$|(^|[._])fault$|fault.?present/i,
+    super_smoke_entity: /(^|[._])smoke$|super.?smoke|smoke.?(mode|plus)/i,
+    keep_warm_entity: /keep.?warm/i,
+  },
   climate_sensor: { humidity_entity: /humid|hygro/i, battery_entity: /batter/i },
   filament_dryer: { temperature_entity: /temp/i, humidity_entity: /humid|hygro/i, remaining_time_entity: /remain|time_left|restant/i },
   floor_heating: { temperature_entity: /temp/i },
@@ -3400,6 +3422,7 @@ const TYPE_CAPS = {
   floor_heating: { ntFloor: true },
   spa: { ntSpa: true },
   sauna: { ntSauna: true },
+  pellet_grill: { readOnly: true },
   filament_dryer: { ntDryer: true },
   aquarium: { ntAqua: true },
   meter: { ntMeter: true, readOnly: true },
@@ -3525,6 +3548,7 @@ const STATE_DOMAINS = {
   floor_heating: ["climate", "switch", "input_boolean", "binary_sensor"],
   spa: ["climate", "water_heater", "switch", "input_boolean", "binary_sensor"],
   sauna: ["climate", "switch", "input_boolean", "binary_sensor"],
+  pellet_grill: ["climate", "sensor"],
   filament_dryer: ["switch", "sensor", "binary_sensor", "input_boolean", "climate", "select"],
   aquarium: ["light", "switch", "input_boolean"],
   meter: ["sensor"],
@@ -3646,7 +3670,7 @@ function compactModeOf(v) {
 // thirty types in one list were hard to find one's way in.
 const TYPE_GROUPS = [
   ["laundry", ["washer", "dryer"]],
-  ["kitchen", ["dishwasher", "oven", "microwave", "hood", "cooktop", "fridge", "kettle", "cooker", "coffee", "rice_cooker", "air_fryer", "toaster"]],
+  ["kitchen", ["dishwasher", "oven", "microwave", "hood", "cooktop", "fridge", "kettle", "cooker", "coffee", "rice_cooker", "air_fryer", "toaster", "pellet_grill"]],
   ["heating", ["water_heater", "boiler", "heat_pump", "thermostat", "pellet_stove", "space_heater", "towel_warmer", "floor_heating", "storage_tank", "fresh_water_station", "wood_stove"]],
   ["air", ["air_conditioner", "dehumidifier", "humidifier", "air_purifier", "fan", "diffuser", "hrv", "climate_sensor"]],
   ["home", ["screen", "iron", "hair_dryer", "printer_3d", "filament_dryer", "robot", "pool_pump", "scale", "camera", "lamp", "mailbox", "water_pump", "spa", "sauna", "aquarium", "christmas_tree", "mobility", "irrigation", "detector", "speaker", "console", "streamer"]],
@@ -4030,7 +4054,7 @@ const PLUG_THRESHOLDS = {
   washer: 10, dryer: 10, dishwasher: 10, oven: 50, microwave: 50, cooker: 20, coffee: 200, rice_cooker: 100,
   air_fryer: 50, kettle: 50, toaster: 50, water_heater: 50, space_heater: 30, towel_warmer: 10, dehumidifier: 30, humidifier: 5,
   air_purifier: 3, fan: 3, hood: 5, pool_pump: 50, printer_3d: 30, filament_dryer: 15, cooktop: 50, pet_fountain: 1,
-  spa: 50, sauna: 100, aquarium: 3, water_pump: 30, floor_heating: 30, christmas_tree: 2, iron: 10, mobility: 40, irrigation: 3, litter_box: 5, speaker: 3, console: 8, streamer: 4,
+  pellet_grill: 30, spa: 50, sauna: 100, aquarium: 3, water_pump: 30, floor_heating: 30, christmas_tree: 2, iron: 10, mobility: 40, irrigation: 3, litter_box: 5, speaker: 3, console: 8, streamer: 4,
 };
 // A coffee machine or a rice cooker drawing more than this, under its
 // threshold, is keeping warm.
@@ -5399,7 +5423,7 @@ function lampSpotsOf(cfg, st) {
 // sauna, an aquarium, a Linky meter and a Christmas tree. Drawn in SVG on a 120 x 135 field; what
 // moves moves only on a machine carrying nt-on, staggered through --d0, and
 // the robot's cable and the sump's float follow their SMIL animations.
-const NT_TYPES = ["water_pump", "floor_heating", "spa", "sauna", "aquarium", "meter", "christmas_tree", "mobility", "irrigation", "litter_box", "detector", "speaker", "console", "streamer", "climate_sensor", "storage_tank", "fresh_water_station", "solar_thermal", "wood_stove", "humidifier", "filament_dryer"];
+const NT_TYPES = ["pellet_grill", "water_pump", "floor_heating", "spa", "sauna", "aquarium", "meter", "christmas_tree", "mobility", "irrigation", "litter_box", "detector", "speaker", "console", "streamer", "climate_sensor", "storage_tank", "fresh_water_station", "solar_thermal", "wood_stove", "humidifier", "filament_dryer"];
 // How many spools a filament dryer holds (#93).
 const FD_COUNTS = [1, 2, 4];
 const FD_COLORS = ["#43a047", "#fb8c00", "#8e24aa", "#eceff1"];
@@ -5411,6 +5435,7 @@ const TAP_MODELS = ["generic", "sonoff"];
 const TAP_WALLS = ["brick", "render", "none"];
 const LITTER_LAYOUTS = ["globe", "box"];
 const DETECTOR_LAYOUTS = ["smoke", "co", "leak"];
+const GRILL_LAYOUTS = ["timberline", "drum", "cart", "vertical"];
 const SPEAKER_LAYOUTS = ["smart", "homepod_mini", "sonos_one", "sonos_era100", "sonos_era300", "sonos_move", "soundbar", "bose_wave", "bose_500", "bose_soundlink", "bose_soundbar", "bookshelf", "echo_dot", "nest_mini", "sonos_five", "sonos_play", "sonos_roam", "sonos_ray", "sonos_amp", "sonos_port", "bose_ultra", "bose_portable", "bose_amp", "echo_dot_max"];
 // Streaming boxes (#97). The app a box is in: its colour and its mark, read
 // from the app's name or its package. A launcher is the home screen.
@@ -5520,6 +5545,7 @@ const NT_ONLY_FIELDS = {
   console: ["console_layout", "game_entity", "playtime_entity", "playtime_left_entity"],
   streamer: ["streamer_layout", "app_entity"],
   climate_sensor: ["climate_sensor_layout"],
+  pellet_grill: ["grill_layout", "large_temperature", "grill_state_entity", "pellet_level_entity", "probe_entity", "probe_target_entity", "probe_2_entity", "probe_2_target_entity", "probe_state_entity", "probe_alarm_entity", "timer_end_entity", "timer_complete_entity", "super_smoke_entity", "keep_warm_entity"],
   storage_tank: ["temperature_entities", "charge_entity", "charge_min_temp", "charge_max_temp", "tank_volume", "sources", "consumers"],
   fresh_water_station: ["primary_temperature_entity", "cold_water_temperature_entity", "circulation_entity", "circulation_mode_entity", "supply_margin"],
   solar_thermal: ["collector_style", "collector_temperature_entity", "tank_temperature_entity", "collector_shutdown_entity", "tank_full_entity", "stagnation_temp", "heat_power_entity"],
@@ -5600,6 +5626,7 @@ const NT_NAME_RES = [
   ["fresh_water_station", /frischwasser|fresh.?water.?(station|module)|freshwater|station.?(d.?)?eau.?(fraiche|chaude)|module.?(d.?)?eau.?chaude|(^|[^a-z])fws([^a-z]|$)/],
   ["storage_tank", /pufferspeicher|(^|[^a-z])puffer|buffer.?tank|ballon.?tampon|thermal.?store|schichtspeicher|serbatoio.?(inerziale|di.?accumulo)|deposito.?de.?inercia|buffertank|zbiornik.?buforowy/],
   ["solar_thermal", /solar.?therm|solarthermie|solaire.?thermique|thermique.?solaire|kollektor|collector.?temp|capteur.?solaire|solar.?pump|solarpumpe|solar.?collector/],
+  ["pellet_grill", /traeger|timberline|ironwood|woodridge|pit.?boss|prime.?polaris|recteq|rec.?tec.?grill|camp.?chef|woodwind|z.?grills|green.?mountain.?grill|(^|[^a-z])gmg([^a-z]|$)|grilla|pifire|smokefire|searwood|pellet.?(grill|smoker)|grill.?a.?pellet|(barbecue|fumoir).?(a.?)?granul/],
   ["wood_stove", /^(?!.*(pellet|granul)).*((^|[^a-z])kamin|wood.?(stove|burner)|log.?(stove|burner)|poele.?(a.?)?bois|cheminee|holzofen|kachelofen|estufa.?de.?lena|stufa.?a.?legna|houtkachel|braskamin|vedovn|braendeovn|brandeovn|piec.?na.?drewno|fireplace)/],
   ["console", /used.?screen.?time|suspend.?software|playstation|(^|[^a-z])ps[1-5]([^a-z0-9]|$)|xbox|nintendo|gamecube|(^|[^a-z])(n64|snes|nes|wii|switch.?lite|switch.?2)([^a-z0-9]|$)|mega.?drive|genesis|console|konsole|consola|konsol/],
   ["streamer", STREAMER_NAME_RE],
@@ -5709,6 +5736,16 @@ function ntLine(hass, cfg, key, icon, labelKey, id) {
   const s = id ? stateObj(hass, id) : null;
   if (!s || String(s.state) === "" || HA_OFFLINE_STATES.includes(String(s.state).toLowerCase())) return null;
   return { key, icon, label: t(hass, labelKey), value: keepTogether(formatInfoValue(s, hass, null, cfg, id)), entity: id };
+}
+// A pellet grill's drawing: the one chosen, else its name. Traeger's lids have
+// no chimney; recteq's stand on a cart; the rest are drums.
+function grillLayoutOf(cfg, st) {
+  if (GRILL_LAYOUTS.includes(cfg.grill_layout)) return cfg.grill_layout;
+  const hay = stripAccents(`${cfg.state_entity || ""} ${cfg.name || ""} ${stHay(st)}`).toLowerCase();
+  if (/vertical|lockhart|smoke.?vault/.test(hay)) return "vertical";
+  if (/recteq|rec.?tec|patio.?legend|deck.?boss|backyard.?beast|bullseye/.test(hay)) return "cart";
+  if (/traeger|timberline|ironwood|woodridge|westwood|smokefire|searwood/.test(hay)) return "timberline";
+  return "drum";
 }
 // An electric ride's drawing: the one chosen, else its name.
 function mobilityLayoutOf(cfg, st) {
@@ -6015,6 +6052,16 @@ function ntRemaining(hass, id) {
   const u = String((s.attributes || {}).unit_of_measurement || "min").toLowerCase();
   return u === "s" ? v : u === "h" ? v * 3600 : v * 60;
 }
+// What the pellet grill integrations call their states (#101): Traeger's
+// sleeping to cool_down, a thermostat's heat and off.
+const GRILL_PHASES = { sleeping: "off", sleep: "off", asleep: "off", off: "off", stop: "off", idle: "ready", ready: "ready", standby: "ready", monitor: "ready", paused: "ready", done: "ready", shutdown: "shutdown", shutting_down: "shutdown", igniting: "ignite", ignite: "ignite", startup: "ignite", starting: "ignite", reignite: "ignite", prime: "ignite", preheating: "preheat", preheat: "preheat", cook_manual: "cook", cook_custom: "cook", manual_cook: "cook", custom_cook: "cook", cooking: "cook", cook: "cook", heat: "cook", heating: "cook", at_temperature: "cook", running: "cook", run: "cook", stable: "cook", hold: "cook", feed: "cook", manual: "cook", high: "cook", smoke: "cook", cook_program: "cook", recipe: "cook", cool_down: "cool", cooldown: "cool", cool: "cool", cooling: "cool", fan: "cool", fan_only: "cool", error: "error", fault: "error", offline: "unav" };
+// A cook timer's end: a date, a Unix time, or the time left.
+function grillTimerLeft(hass, id) {
+  const s = id ? stateObj(hass, id) : null;
+  const v = s ? numberOrNull(s.state) : null;
+  if (v !== null && v > 1e9) return Math.max(0, v - Date.now() / 1000);
+  return ntRemaining(hass, id);
+}
 // One reading of the new types: the mode, the state line, its colour, the
 // lines under it and what the drawing needs.
 function ntReadOf(type, hass, cfg, st, watts, threshold) {
@@ -6029,10 +6076,66 @@ function ntReadOf(type, hass, cfg, st, watts, threshold) {
   const out = (mode, labelKey, color, draw) => ({ mode, label: t(hass, labelKey), color, lines, draw: { ...draw, unav } });
   if (unav) {
     const ml = meterLayoutOf(cfg, st);
-    const kinds = { filament_dryer: "dryer", humidifier: "humidifier", water_pump: pumpLayoutOf(cfg, st), floor_heating: "floor", spa: "spa", sauna: "sauna", aquarium: "aquarium", meter: ml === "linky" ? "linky" : `meter_${ml}`, christmas_tree: "tree", mobility: `mob_${mobilityLayoutOf(cfg, st)}`,
+    const kinds = { pellet_grill: "pellet_grill", filament_dryer: "dryer", humidifier: "humidifier", water_pump: pumpLayoutOf(cfg, st), floor_heating: "floor", spa: "spa", sauna: "sauna", aquarium: "aquarium", meter: ml === "linky" ? "linky" : `meter_${ml}`, christmas_tree: "tree", mobility: `mob_${mobilityLayoutOf(cfg, st)}`,
       irrigation: `irr_${irrigationLayoutOf(cfg, st)}`, litter_box: `lit_${litterLayoutOf(cfg, st)}`, detector: `det_${detectorLayoutOf(cfg, st)}`, speaker: `spk_${speakerLayoutOf(cfg, st)}`, console: `con_${consoleLayoutOf(cfg, st)}`, streamer: `str_${streamerLayoutOf(cfg, st)}`, climate_sensor: `ths_${thsLayoutOf(cfg, st)}` };
     return out("unav", "ev_offline", NT_COLORS.unav, { kind: kinds[type], on: false, electric: floorLayoutOf(cfg) === "electric", model: type === "water_pump" ? circModelOf(cfg, st) : "",
-      palette: cfg.tree_palette, ...(type === "filament_dryer" ? fdLook(cfg) : {}), presents: type === "christmas_tree" && treePresents(cfg), color: type === "speaker" ? speakerColorOf(cfg, st) : "" });
+      palette: cfg.tree_palette, ...(type === "pellet_grill" ? { layout: grillLayoutOf(cfg, st) } : {}), ...(type === "filament_dryer" ? fdLook(cfg) : {}), presents: type === "christmas_tree" && treePresents(cfg), color: type === "speaker" ? speakerColorOf(cfg, st) : "" });
+  }
+  if (type === "pellet_grill") {
+    const dead2 = (s) => !s || ["unavailable", "unknown", "none", ""].includes(String(s.state).trim().toLowerCase());
+    const gs = cfg.grill_state_entity ? stateObj(hass, cfg.grill_state_entity) : null;
+    const word = (dead2(gs) ? raw : String(gs.state).trim().toLowerCase()).replace(/[\s-]+/g, "_");
+    const action = String((st && st.attributes && st.attributes.hvac_action) || "").toLowerCase();
+    const phase = (word === "heat" && action === "preheating" ? "preheat" : GRILL_PHASES[word]) || (running ? "cook" : "off");
+    const active = ["ignite", "preheat", "cook"].includes(phase);
+    const unit = (hass && hass.config && hass.config.unit_system && hass.config.unit_system.temperature) || "\u00b0C";
+    // The grill's own thermostat, whichever entity the card was given.
+    const thermo = domainOf(cfg.state_entity) === "climate" ? st : domainOf(cfg.temperature_entity) === "climate" ? stateObj(hass, cfg.temperature_entity) : null;
+    const aim = cfg.target_temperature_entity ? numericState(hass, cfg.target_temperature_entity) : thermo ? numberOrNull((thermo.attributes || {}).temperature) : null;
+    const span = (now, to, text) => (to !== null && to > 0 ? keepTogether(`${Math.round(now)} \u2192 ${text(to)}`) : keepTogether(text(now)));
+    if (tmp) lines.push({ key: "pg_grill", icon: "mdi:grill", label: t(hass, "pg_grill"), value: active ? span(tmp.v, aim, (v) => tempText(hass, cfg, null, v, unit)) : keepTogether(tmp.text), entity: cfg.temperature_entity || cfg.state_entity });
+    // A probe that is not plugged in has no reading at all. A climate entity
+    // carries both temperatures; a plain sensor only its own.
+    const ps = cfg.probe_entity ? stateObj(hass, cfg.probe_entity) : null;
+    const probeClimate = domainOf(cfg.probe_entity) === "climate";
+    const pv = dead2(ps) ? null : probeClimate ? numberOrNull((ps.attributes || {}).current_temperature) : numberOrNull(ps.state);
+    const pAim = pv === null ? null : cfg.probe_target_entity ? numericState(hass, cfg.probe_target_entity) : probeClimate ? numberOrNull((ps.attributes || {}).temperature) : null;
+    const pState = cfg.probe_state_entity && !dead2(stateObj(hass, cfg.probe_state_entity)) ? String(stateObj(hass, cfg.probe_state_entity).state).trim().toLowerCase() : "";
+    const fellOut = pState === "fell_out";
+    if (pv !== null) lines.push({ key: "pg_probe", icon: "mdi:thermometer-probe", label: t(hass, "pg_probe"), value: fellOut ? t(hass, "pg_probe_out") : span(pv, pAim, (v) => tempText(hass, cfg, probeClimate ? null : cfg.probe_entity, v, unit)), entity: cfg.probe_entity, ...(fellOut ? { warn: true } : {}) });
+    // A second probe, Pit Boss's and Camp Chef's meats.
+    const p2 = cfg.probe_2_entity ? stateObj(hass, cfg.probe_2_entity) : null;
+    const p2Climate = domainOf(cfg.probe_2_entity) === "climate";
+    const p2v = dead2(p2) ? null : p2Climate ? numberOrNull((p2.attributes || {}).current_temperature) : numberOrNull(p2.state);
+    const p2Aim = p2v === null ? null : cfg.probe_2_target_entity ? numericState(hass, cfg.probe_2_target_entity) : p2Climate ? numberOrNull((p2.attributes || {}).temperature) : null;
+    if (p2v !== null) lines.push({ key: "pg_probe2", icon: "mdi:thermometer-probe", label: `${t(hass, "pg_probe")} 2`, value: span(p2v, p2Aim, (v) => tempText(hass, cfg, p2Climate ? null : cfg.probe_2_entity, v, unit)), entity: cfg.probe_2_entity });
+    // A level in %, or a binary sensor that says the hopper is low (Pit Boss, GMG).
+    const pelBinary = domainOf(cfg.pellet_level_entity) === "binary_sensor";
+    const pelLow = pelBinary && ntOnOff(hass, cfg.pellet_level_entity);
+    const pellet = pelBinary ? (pelLow ? 8 : null) : cfg.pellet_level_entity ? numericState(hass, cfg.pellet_level_entity) : null;
+    const pelLine = pelBinary ? (pelLow ? { key: "pg_pellets", icon: "mdi:barley", label: t(hass, "section_pellet_level"), value: t(hass, "pg_pellets_low"), entity: cfg.pellet_level_entity, warn: true } : null) : ntLine(hass, cfg, "pg_pellets", "mdi:barley", "section_pellet_level", cfg.pellet_level_entity);
+    if (pelLine) lines.push(pellet !== null && pellet <= 15 ? { ...pelLine, warn: true } : pelLine);
+    const left = grillTimerLeft(hass, cfg.timer_end_entity);
+    if (left !== null && left > 0) lines.push({ key: "pg_time", icon: "mdi:timer-outline", label: t(hass, "section_remaining"), value: keepTogether(formatDuration(left, hass)), entity: cfg.timer_end_entity });
+    const smokeLine = ntLine(hass, cfg, "pg_smoke", "mdi:smoke", "pg_super_smoke", cfg.super_smoke_entity);
+    if (smokeLine) lines.push(smokeLine);
+    const warmLine = ntLine(hass, cfg, "pg_warm", "mdi:heat-wave", "pg_keep_warm", cfg.keep_warm_entity);
+    if (warmLine) lines.push(warmLine);
+    // An error counts as none when it reads zero or says so.
+    const es = cfg.error_entity ? stateObj(hass, cfg.error_entity) : null;
+    const eRaw = dead2(es) ? "" : String(es.state).trim().toLowerCase();
+    const error = !!eRaw && !["0", "off", "false", "no", "ok", "normal", "no_error", "no error", "clear"].includes(eRaw);
+    if (error) lines.push({ key: "pg_error", icon: "mdi:alert-circle-outline", label: t(hass, "error"), value: ["on", "true", "1", "problem"].includes(eRaw) ? "" : keepTogether(String(es.state)), entity: cfg.error_entity, warn: true });
+    const asleep = phase === "off" || phase === "ready";
+    const probeDone = !asleep && (ntOnOff(hass, cfg.probe_alarm_entity) || pState === "at_temp");
+    const timerDone = !asleep && ntOnOff(hass, cfg.timer_complete_entity);
+    const draw = { kind: "pellet_grill", layout: grillLayoutOf(cfg, st), on: active || phase === "cool", st: phase, small: cfg.large_temperature === false, lcd: cfg.large_temperature !== false && active && aim > 0 ? `\u2192${Math.round(aim)}\u00b0` : tmp ? `${Math.round(tmp.v)}\u00b0` : "", temp: tmp ? tmp.v : null, aim: active ? aim : null, probeTemp: pv !== null ? pv : p2v, probeAim: pv !== null ? pAim : p2Aim, pellet, smoke: ntOnOff(hass, cfg.super_smoke_entity), warm: ntOnOff(hass, cfg.keep_warm_entity), probe: pv !== null || p2v !== null, probeDone, alert: error || probeDone || timerDone };
+    if (phase === "unav") { const r = out("unav", "ev_offline", NT_COLORS.unav, draw); r.draw.unav = true; r.draw.on = false; return r; }
+    if (error || phase === "error") return out("error", "error", NT_COLORS.alarm, { ...draw, alert: true, on: false });
+    if (probeDone) return out("probe_done", "pg_probe_done", NT_COLORS.alarm, draw);
+    if (timerDone) return out("timer_done", "pg_timer_done", NT_COLORS.alarm, draw);
+    const [labelKey, color] = { off: ["pg_asleep", NT_COLORS.off], ready: ["pg_ready", NT_COLORS.idle], ignite: ["pg_igniting", NT_COLORS.heat], preheat: ["pg_preheating", NT_COLORS.heat], cook: ["pg_cooking", NT_COLORS.heat], cool: ["pg_cool_down", "#29b6f6"], shutdown: ["pg_shutdown", NT_COLORS.idle] }[phase];
+    return out(phase, labelKey, color, draw);
   }
   if (type === "irrigation") {
     // Watering while its valve or switch is on; waiting otherwise, or held
@@ -13050,7 +13153,7 @@ function loadEditor() {
   if (customElements.get("ha-appliance-card-editor")) return Promise.resolve();
   if (!editorLoading) {
     editorLoading = import(assetUrl("ha-appliance-card-editor.js"))
-      .then((m) => m.default({ t, onLanguageLoaded, LANGUAGE_NAMES, localizedHass, activationOf, TH_LAYOUTS, EV_POWER_THRESHOLD, stateObj, parseValueMap, stringifyValueMap, alertsArray, entityEntries, LIST_OTHER, ENTITY_LISTS, listCandidates, defaultCardName, stripDeviceName, domainOf, INFO_MAX, autoSuggest, APPLIANCE_TYPES, STATE_DOMAINS, SCREEN_ONLY_FIELDS, illustrationSizeOf, fontScaleOf, compactModeOf, TYPE_GROUPS, caps, detectApplianceType, SCREEN_STANDBY_W, SCREEN_LAYOUTS, SCREEN_IMAGES, screenLayoutOf, screenIsTablet, HD_HEAT_W, PLUG_THRESHOLDS, ZONE_POWER_W, PLUG_SOURCE_TYPES, plugSourceOf, DW_DRY_MIN, WASH_HEAT_W, WASH_SPIN_W, DRYER_HEAT_W, NET_LAYOUTS, SWITCH_PORTS, NET_BAYS, NET_BUSY_MBIT, NET_TEMP_ALERT, netLayoutOf, ROBOT_LAYOUTS, ROBOT_STATIONS, ROBOT_BOX_COLORS, ROBOT_FLOORS, ROBOT_SERVICES, STICK_AWAY_W, robotLayoutOf, PRINTER_STYLES, printerStyleOf, POOL_PRESSURE_ALERT, SOLAR_LAYOUTS, BATTERY_LAYOUTS, BATTERY_IDLE_W, DIFFUSER_LAYOUTS, illustrationTapOf, UNIT_FILTERS, HRV_LAYOUTS, hrvLayoutOf, CAMERA_LAYOUTS, MAILBOX_LAYOUTS, MAILBOX_SIDES, mailboxLayoutOf, MAILBOX_COLORS_3D, LAMP_LAYOUTS, LAMP_SPOTS, lampLayoutOf, FD_COUNTS, CONSOLE_LAYOUTS, IRRIGATION_LAYOUTS, TAP_MODELS, TAP_WALLS, LITTER_LAYOUTS, DETECTOR_LAYOUTS, SPEAKER_LAYOUTS, STREAMER_LAYOUTS, THS_LAYOUTS, MOBILITY_LAYOUTS, PUMP_LAYOUTS, CIRC_MODELS, FLOOR_LAYOUTS, OPT_LINES, METER_LAYOUTS, meterLayoutOf, irrigationLayoutOf, detectorLayoutOf, TREE_PALETTES, TREE_PRESENTS, pumpLayoutOf, SPK_COLORS, COLLECTOR_STYLES, UPS_BATTERY_LOW, HISTORY_HOURS, BODY_COLORS, esc, MOWER_STYLES, SHELTER_STYLES, SHELTER_COLORS, LAPTOP_COLORS, LAPTOP_STYLES, drawn, stateFreeSource }))
+      .then((m) => m.default({ t, onLanguageLoaded, LANGUAGE_NAMES, localizedHass, activationOf, TH_LAYOUTS, EV_POWER_THRESHOLD, stateObj, parseValueMap, stringifyValueMap, alertsArray, entityEntries, LIST_OTHER, ENTITY_LISTS, listCandidates, defaultCardName, stripDeviceName, domainOf, INFO_MAX, autoSuggest, APPLIANCE_TYPES, STATE_DOMAINS, SCREEN_ONLY_FIELDS, illustrationSizeOf, fontScaleOf, compactModeOf, TYPE_GROUPS, caps, detectApplianceType, SCREEN_STANDBY_W, SCREEN_LAYOUTS, SCREEN_IMAGES, screenLayoutOf, screenIsTablet, HD_HEAT_W, PLUG_THRESHOLDS, ZONE_POWER_W, PLUG_SOURCE_TYPES, plugSourceOf, DW_DRY_MIN, WASH_HEAT_W, WASH_SPIN_W, DRYER_HEAT_W, NET_LAYOUTS, SWITCH_PORTS, NET_BAYS, NET_BUSY_MBIT, NET_TEMP_ALERT, netLayoutOf, ROBOT_LAYOUTS, ROBOT_STATIONS, ROBOT_BOX_COLORS, ROBOT_FLOORS, ROBOT_SERVICES, STICK_AWAY_W, robotLayoutOf, PRINTER_STYLES, printerStyleOf, POOL_PRESSURE_ALERT, SOLAR_LAYOUTS, BATTERY_LAYOUTS, BATTERY_IDLE_W, DIFFUSER_LAYOUTS, illustrationTapOf, UNIT_FILTERS, HRV_LAYOUTS, hrvLayoutOf, CAMERA_LAYOUTS, MAILBOX_LAYOUTS, MAILBOX_SIDES, mailboxLayoutOf, MAILBOX_COLORS_3D, LAMP_LAYOUTS, LAMP_SPOTS, lampLayoutOf, FD_COUNTS, CONSOLE_LAYOUTS, IRRIGATION_LAYOUTS, TAP_MODELS, TAP_WALLS, LITTER_LAYOUTS, DETECTOR_LAYOUTS, GRILL_LAYOUTS, SPEAKER_LAYOUTS, STREAMER_LAYOUTS, THS_LAYOUTS, MOBILITY_LAYOUTS, PUMP_LAYOUTS, CIRC_MODELS, FLOOR_LAYOUTS, OPT_LINES, METER_LAYOUTS, meterLayoutOf, irrigationLayoutOf, detectorLayoutOf, TREE_PALETTES, TREE_PRESENTS, pumpLayoutOf, SPK_COLORS, COLLECTOR_STYLES, UPS_BATTERY_LOW, HISTORY_HOURS, BODY_COLORS, esc, MOWER_STYLES, SHELTER_STYLES, SHELTER_COLORS, LAPTOP_COLORS, LAPTOP_STYLES, drawn, stateFreeSource }))
       .catch((err) => {
         editorLoading = null;
         throw err;

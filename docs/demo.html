@@ -1669,6 +1669,14 @@ const EXTRA = { printer_bambu: printerBambu, printer_centauri: printerCentauri, 
                 net_nas4: netBays(4, ["normal", "normal", "normal", "warning"], L("NAS, 4 bays", "NAS 4 baies")),
                 scr_tv: scrTv, scr_projector: scrProjector, scr_computer: scrComputer, scr_laptop: scrLaptop,
                 tab_wall: tabWall, tab_frame: tabFrame, tab_portrait: tabPortrait, hd_hot: hdHot, hd_ring: hdRing };
+// Pellet grills (#101): every shape in every state, for the captures.
+const PG_NAMES = { timberline: L("Timberline", "Timberline"), drum: L("Drum", "Tonneau"), cart: L("Cart", "Chariot"), vertical: L("Vertical", "Vertical") };
+const pgCard = (layout, word, o = {}) => () => card({ name: PG_NAMES[layout], appliance_type: "pellet_grill", grill_layout: layout, state_entity: "climate.g", grill_state_entity: "sensor.g_state", pellet_level_entity: "sensor.g_pellets",
+    ...(o.probe ? { probe_entity: "climate.g_probe", probe_alarm_entity: "binary_sensor.g_alarm" } : {}), super_smoke_entity: "switch.g_smoke", keep_warm_entity: "switch.g_warm", error_entity: "sensor.g_error" },
+  [st("climate.g", word === "sleeping" || word === "idle" ? "off" : word === "cool_down" ? "cool" : "heat", { current_temperature: o.c ?? 107, temperature: 107 }), st("sensor.g_state", word), st("sensor.g_pellets", o.pel ?? 68, { unit_of_measurement: "%" }),
+    st("climate.g_probe", "heat", { current_temperature: o.alarm ? 74 : 58, temperature: 74 }), st("binary_sensor.g_alarm", o.alarm ? "on" : "off"), st("switch.g_smoke", o.smoke ? "on" : "off"), st("switch.g_warm", o.warm ? "on" : "off"), st("sensor.g_error", o.err || "0")]);
+const PG_STATES = { off: ["sleeping", { c: 18 }], ready: ["idle", { c: 18 }], ignite: ["igniting", { c: 45 }], preheat: ["preheating", { c: 82 }], cook: ["cook_manual", { probe: true }], smoke: ["cook_custom", { smoke: true, c: 90 }], warm: ["cook_manual", { warm: true, c: 74 }], probe: ["cook_manual", { probe: true, alarm: true }], low: ["cook_manual", { pel: 9 }], cool: ["cool_down", { c: 150 }], error: ["cook_manual", { err: "5" }] };
+for (const layout of Object.keys(PG_NAMES)) for (const [k, [word, o]] of Object.entries(PG_STATES)) EXTRA[`pg_${layout}_${k}`] = pgCard(layout, word, o);
 // ?view=live: the public demo, linked from the README. Every family under
 // its own title, a grid that fits a phone, the language and the theme to
 // pick. The other views stay as they are: the captures depend on them.
@@ -1712,6 +1720,7 @@ function liveGallery() {
     [L("Air purifiers and fans", "Purificateurs et ventilateurs"), [purifier, boxPurifier, ringPurifier, fan, ceilingFan]],
     [L("Robots and vacuums", "Robots et aspirateurs"), [rbtVacuum, rbtEmptying, rbtBox, rbtBoxGold, rbtMop, rbtCombo, rbtDrying, rbtMower, rbtNavimow, rbtRain, rbtStick, rbtWasher]],
     [L("Electric rides", "Mobilit\u00e9 \u00e9lectrique"), [demo_mobScooter, demo_mobOffroad, demo_mobEbike, demo_mobGyropode, demo_mobMotorcycle, demo_mobUnplugged]],
+    [L("Pellet grills and smokers", "Barbecues et fumoirs \u00e0 pellets"), [EXTRA.pg_timberline_cook, EXTRA.pg_timberline_smoke, EXTRA.pg_timberline_off, EXTRA.pg_drum_preheat, EXTRA.pg_drum_cook, EXTRA.pg_cart_cook, EXTRA.pg_cart_warm, EXTRA.pg_vertical_smoke]],
     [L("Pool", "Piscine"), [poolRunning, poolChlorine, poolBackwash, poolFrost, poolLight, poolError]],
     [L("Buffer tanks, circulators, solar thermal and wood stoves", "Ballons, circulateurs, solaire thermique et po\u00eales \u00e0 bois"), [heatTank, heatTankLoading, heatTankLow, heatFws, heatFwsDraw, heatFwsCirc, heatCirc, heatCircWilo, heatCircFault, heatCircNoData, heatSth, heatSthTubes, heatSthFrost, heatSthStag, heatWood, heatWoodEmbers, heatWoodCold, heatWoodWater]],
     [L("Energy", "Énergie"), [solarDay, solarRoof, solarNight, batteryCharging, batteryStation, batteryLow, evCharger, evDischarging]],
@@ -1781,7 +1790,7 @@ const POSTER_NAMES = {
   hd_hot: ["Hair dryer", "S\u00e8che-cheveux"], dif_drop: ["Diffuser", "Diffuseur"], hrv_one_duct: ["Ventilation", "VMC"],
   cam_outdoor: ["Camera", "Cam\u00e9ra"], lamp_floor: ["Lamp", "Lampe"], solar_day: ["Solar panels", "Panneaux solaires"],
   battery_charging: ["Home battery", "Batterie domestique"], th_square: ["Thermostat", "Thermostat"],
-  irr_sprinkler: ["Watering", "Arrosage"], lit_globe: ["Litter box", "Liti\u00e8re"], det_smoke: ["Detector", "D\u00e9tecteur"], spk_smart: ["Speaker", "Enceinte"], con_ps5: ["Game console", "Console de jeu"], heat_tank_loading: ["Buffer tank", "Ballon tampon"], heat_fws_draw: ["Fresh water station", "Station d'eau fra\u00eeche"], heat_sth: ["Solar thermal", "Solaire thermique"], heat_wood_water: ["Wood stove", "Po\u00eale \u00e0 bois"],
+  pg_timberline_cook: ["Pellet grill", "Barbecue \u00e0 pellets"], irr_sprinkler: ["Watering", "Arrosage"], lit_globe: ["Litter box", "Liti\u00e8re"], det_smoke: ["Detector", "D\u00e9tecteur"], spk_smart: ["Speaker", "Enceinte"], con_ps5: ["Game console", "Console de jeu"], heat_tank_loading: ["Buffer tank", "Ballon tampon"], heat_fws_draw: ["Fresh water station", "Station d'eau fra\u00eeche"], heat_sth: ["Solar thermal", "Solaire thermique"], heat_wood_water: ["Wood stove", "Po\u00eale \u00e0 bois"],
   robot_vacuum: ["Robot vacuum", "Robot aspirateur"], robot_drying: ["Mopping robot", "Robot laveur"], robot_mower: ["Robot mower", "Robot tondeuse"],
 };
 const only = (params.get("only") || "").split(",").map((k) => k.trim()).filter(Boolean);

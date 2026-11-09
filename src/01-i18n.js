@@ -1,5 +1,8 @@
 const T = {
   en: {
+    pg_large_temperature: "Large temperature on the drawing",
+    pg_pellets_low: "Low", section_probe_target: "Probe target", section_probe_2: "Probe 2", section_probe_2_target: "Probe 2 target", layout_pg_timberline: "Cabinet, no chimney (Timberline)", layout_pg_drum: "Drum with chimney (Pit Boss, Z Grills)", layout_pg_cart: "Drum on a cart (recteq)", layout_pg_vertical: "Vertical smoker",
+    type_pellet_grill: "Pellet grill", pg_asleep: "Asleep", pg_ready: "Ready", pg_igniting: "Igniting", pg_preheating: "Preheating", pg_cooking: "Cooking", pg_cool_down: "Cooling down", pg_shutdown: "Shutting down", pg_probe_done: "Probe at temperature", pg_probe_out: "Fell out", pg_timer_done: "Timer finished", pg_grill: "Grill", pg_probe: "Probe", pg_super_smoke: "Super Smoke", pg_keep_warm: "Keep Warm", section_grill_state: "Grill state", section_probe_state: "Probe state", section_probe_alarm: "Probe alarm", section_timer_done: "Timer finished",
     idle: "Idle", running: "Running", paused: "Paused", done: "Finished",
     delayed: "Delayed start", error: "Error", unknown: "Unknown",
     program: "Program", remaining: "remaining", ready_at: "ready at", time_done: "Done",
@@ -173,6 +176,9 @@ const T = {
     ev_discharging: "Discharging", section_discharge_power: "Power the car gives back (to the home or the grid)", ev_line_discharge: "Discharge",
   },
   fr: {
+    pg_large_temperature: "Temp\u00e9rature en grand sur le dessin",
+    pg_pellets_low: "Bas", section_probe_target: "Cible de la sonde", section_probe_2: "Sonde 2", section_probe_2_target: "Cible de la sonde 2", layout_pg_timberline: "Cuve sans chemin\u00e9e (Timberline)", layout_pg_drum: "Tonneau \u00e0 chemin\u00e9e (Pit Boss, Z Grills)", layout_pg_cart: "Tonneau sur chariot (recteq)", layout_pg_vertical: "Fumoir vertical",
+    type_pellet_grill: "Barbecue \u00e0 pellets", pg_asleep: "En veille", pg_ready: "Pr\u00eat", pg_igniting: "Allumage", pg_preheating: "Pr\u00e9chauffage", pg_cooking: "Cuisson", pg_cool_down: "Refroidissement", pg_shutdown: "Arr\u00eat en cours", pg_probe_done: "Sonde \u00e0 temp\u00e9rature", pg_probe_out: "Sortie de la viande", pg_timer_done: "Minuteur termin\u00e9", pg_grill: "Grill", pg_probe: "Sonde", pg_super_smoke: "Super Smoke", pg_keep_warm: "Maintien au chaud", section_grill_state: "\u00c9tat du grill", section_probe_state: "\u00c9tat de la sonde", section_probe_alarm: "Alarme de la sonde", section_timer_done: "Minuteur termin\u00e9",
     idle: "En veille", running: "En cours", paused: "En pause", done: "Termin\u00e9",
     delayed: "D\u00e9part diff\u00e9r\u00e9", error: "Erreur", unknown: "Inconnu",
     program: "Programme", remaining: "restant", ready_at: "fin ~", time_done: "Fin",
@@ -346,6 +352,9 @@ const T = {
     ev_discharging: "En d\u00e9charge", section_discharge_power: "Puissance rendue par la voiture (\u00e0 la maison ou au r\u00e9seau)", ev_line_discharge: "D\u00e9charge",
   },
   ru: {
+    pg_large_temperature: "\u041a\u0440\u0443\u043f\u043d\u0430\u044f \u0442\u0435\u043c\u043f\u0435\u0440\u0430\u0442\u0443\u0440\u0430 \u043d\u0430 \u0440\u0438\u0441\u0443\u043d\u043a\u0435",
+    pg_pellets_low: "\u041c\u0430\u043b\u043e", section_probe_target: "\u0426\u0435\u043b\u044c \u0449\u0443\u043f\u0430", section_probe_2: "\u0429\u0443\u043f 2", section_probe_2_target: "\u0426\u0435\u043b\u044c \u0449\u0443\u043f\u0430 2", layout_pg_timberline: "\u0411\u0435\u0437 \u0442\u0440\u0443\u0431\u044b (Timberline)", layout_pg_drum: "\u0411\u043e\u0447\u043a\u0430 \u0441 \u0442\u0440\u0443\u0431\u043e\u0439 (Pit Boss, Z Grills)", layout_pg_cart: "\u0411\u043e\u0447\u043a\u0430 \u043d\u0430 \u0442\u0435\u043b\u0435\u0436\u043a\u0435 (recteq)", layout_pg_vertical: "\u0412\u0435\u0440\u0442\u0438\u043a\u0430\u043b\u044c\u043d\u0430\u044f \u043a\u043e\u043f\u0442\u0438\u043b\u044c\u043d\u044f",
+    type_pellet_grill: "\u041f\u0435\u043b\u043b\u0435\u0442\u043d\u044b\u0439 \u0433\u0440\u0438\u043b\u044c", pg_asleep: "\u0421\u043f\u044f\u0449\u0438\u0439 \u0440\u0435\u0436\u0438\u043c", pg_ready: "\u0413\u043e\u0442\u043e\u0432", pg_igniting: "\u0420\u043e\u0437\u0436\u0438\u0433", pg_preheating: "\u0420\u0430\u0437\u043e\u0433\u0440\u0435\u0432", pg_cooking: "\u0413\u043e\u0442\u043e\u0432\u043a\u0430", pg_cool_down: "\u041e\u0441\u0442\u044b\u0432\u0430\u043d\u0438\u0435", pg_shutdown: "\u0412\u044b\u043a\u043b\u044e\u0447\u0435\u043d\u0438\u0435", pg_probe_done: "\u0429\u0443\u043f \u0434\u043e\u0441\u0442\u0438\u0433 \u0442\u0435\u043c\u043f\u0435\u0440\u0430\u0442\u0443\u0440\u044b", pg_probe_out: "\u0429\u0443\u043f \u0432\u044b\u043f\u0430\u043b", pg_timer_done: "\u0422\u0430\u0439\u043c\u0435\u0440 \u0437\u0430\u0432\u0435\u0440\u0448\u0451\u043d", pg_grill: "\u0413\u0440\u0438\u043b\u044c", pg_probe: "\u0429\u0443\u043f", pg_super_smoke: "Super Smoke", pg_keep_warm: "\u041f\u043e\u0434\u0434\u0435\u0440\u0436\u0430\u043d\u0438\u0435 \u0442\u0435\u043f\u043b\u0430", section_grill_state: "\u0421\u043e\u0441\u0442\u043e\u044f\u043d\u0438\u0435 \u0433\u0440\u0438\u043b\u044f", section_probe_state: "\u0421\u043e\u0441\u0442\u043e\u044f\u043d\u0438\u0435 \u0449\u0443\u043f\u0430", section_probe_alarm: "\u0422\u0440\u0435\u0432\u043e\u0433\u0430 \u0449\u0443\u043f\u0430", section_timer_done: "\u0422\u0430\u0439\u043c\u0435\u0440 \u0437\u0430\u0432\u0435\u0440\u0448\u0451\u043d",
     idle: "\u041e\u0436\u0438\u0434\u0430\u043d\u0438\u0435", running: "\u0420\u0430\u0431\u043e\u0442\u0430\u0435\u0442", paused: "\u041d\u0430 \u043f\u0430\u0443\u0437\u0435", done: "\u0417\u0430\u0432\u0435\u0440\u0448\u0435\u043d\u043e",
     delayed: "\u041e\u0442\u043b\u043e\u0436\u0435\u043d\u043d\u044b\u0439 \u0441\u0442\u0430\u0440\u0442", error: "\u041e\u0448\u0438\u0431\u043a\u0430", unknown: "\u041d\u0435\u0438\u0437\u0432\u0435\u0441\u0442\u043d\u043e",
     program: "\u041f\u0440\u043e\u0433\u0440\u0430\u043c\u043c\u0430", remaining: "\u043e\u0441\u0442\u0430\u043b\u043e\u0441\u044c", ready_at: "\u043e\u043a\u043e\u043d\u0447\u0430\u043d\u0438\u0435 ~", time_done: "\u0413\u043e\u0442\u043e\u0432\u043e",
@@ -519,6 +528,9 @@ const T = {
     ev_discharging: "\u0420\u0430\u0437\u0440\u044f\u0434\u043a\u0430", section_discharge_power: "\u041c\u043e\u0449\u043d\u043e\u0441\u0442\u044c, \u043e\u0442\u0434\u0430\u0432\u0430\u0435\u043c\u0430\u044f \u0430\u0432\u0442\u043e\u043c\u043e\u0431\u0438\u043b\u0435\u043c (\u0432 \u0434\u043e\u043c \u0438\u043b\u0438 \u0432 \u0441\u0435\u0442\u044c)", ev_line_discharge: "\u0420\u0430\u0437\u0440\u044f\u0434",
   },
   de: {
+    pg_large_temperature: "Gro\u00dfe Temperatur auf der Zeichnung",
+    pg_pellets_low: "Niedrig", section_probe_target: "Sondenziel", section_probe_2: "Sonde 2", section_probe_2_target: "Ziel Sonde 2", layout_pg_timberline: "Ohne Kamin (Timberline)", layout_pg_drum: "Fass mit Kamin (Pit Boss, Z Grills)", layout_pg_cart: "Fass auf Wagen (recteq)", layout_pg_vertical: "Vertikaler Smoker",
+    type_pellet_grill: "Pelletgrill", pg_asleep: "Ruhezustand", pg_ready: "Bereit", pg_igniting: "Z\u00fcndung", pg_preheating: "Vorheizen", pg_cooking: "Grillen", pg_cool_down: "Abk\u00fchlen", pg_shutdown: "Wird heruntergefahren", pg_probe_done: "Sonde auf Temperatur", pg_probe_out: "Herausgerutscht", pg_timer_done: "Timer beendet", pg_grill: "Grill", pg_probe: "Sonde", pg_super_smoke: "Super Smoke", pg_keep_warm: "Warmhalten", section_grill_state: "Grillstatus", section_probe_state: "Sondenstatus", section_probe_alarm: "Sondenalarm", section_timer_done: "Timer beendet",
     idle: "Inaktiv", running: "L\u00e4uft", paused: "Pausiert", done: "Fertig",
     delayed: "Startverz\u00f6gerung", error: "Fehler", unknown: "Unbekannt",
     program: "Programm", remaining: "verbleibend", ready_at: "fertig um", time_done: "Fertig",
@@ -692,6 +704,9 @@ const T = {
     ev_discharging: "Entl\u00e4dt", section_discharge_power: "Leistung, die das Auto abgibt (ins Haus oder ins Netz)", ev_line_discharge: "Entladung",
   },
   es: {
+    pg_large_temperature: "Temperatura grande en el dibujo",
+    pg_pellets_low: "Bajo", section_probe_target: "Objetivo de la sonda", section_probe_2: "Sonda 2", section_probe_2_target: "Objetivo de la sonda 2", layout_pg_timberline: "Sin chimenea (Timberline)", layout_pg_drum: "Barril con chimenea (Pit Boss, Z Grills)", layout_pg_cart: "Barril sobre carro (recteq)", layout_pg_vertical: "Ahumador vertical",
+    type_pellet_grill: "Parrilla de pellets", pg_asleep: "En reposo", pg_ready: "Lista", pg_igniting: "Encendiendo", pg_preheating: "Precalentando", pg_cooking: "Cocinando", pg_cool_down: "Enfriando", pg_shutdown: "Apagando", pg_probe_done: "Sonda a temperatura", pg_probe_out: "Sonda fuera", pg_timer_done: "Temporizador terminado", pg_grill: "Parrilla", pg_probe: "Sonda", pg_super_smoke: "Super Smoke", pg_keep_warm: "Mantener caliente", section_grill_state: "Estado de la parrilla", section_probe_state: "Estado de la sonda", section_probe_alarm: "Alarma de la sonda", section_timer_done: "Temporizador terminado",
     idle: "Inactivo", running: "En marcha", paused: "En pausa", done: "Finalizado",
     delayed: "Inicio diferido", error: "Error", unknown: "Desconocido",
     program: "Programa", remaining: "restante", ready_at: "listo a las", time_done: "Fin",
@@ -865,6 +880,9 @@ const T = {
     ev_discharging: "Descargando", section_discharge_power: "Potencia que devuelve el coche (a la casa o a la red)", ev_line_discharge: "Descarga",
   },
   it: {
+    pg_large_temperature: "Temperatura grande sul disegno",
+    pg_pellets_low: "Basso", section_probe_target: "Obiettivo sonda", section_probe_2: "Sonda 2", section_probe_2_target: "Obiettivo sonda 2", layout_pg_timberline: "Senza camino (Timberline)", layout_pg_drum: "Botte con camino (Pit Boss, Z Grills)", layout_pg_cart: "Botte su carrello (recteq)", layout_pg_vertical: "Affumicatore verticale",
+    type_pellet_grill: "Barbecue a pellet", pg_asleep: "In standby", pg_ready: "Pronto", pg_igniting: "Accensione", pg_preheating: "Preriscaldamento", pg_cooking: "Cottura", pg_cool_down: "Raffreddamento", pg_shutdown: "Spegnimento", pg_probe_done: "Sonda a temperatura", pg_probe_out: "Sonda uscita", pg_timer_done: "Timer terminato", pg_grill: "Griglia", pg_probe: "Sonda", pg_super_smoke: "Super Smoke", pg_keep_warm: "Mantenimento in caldo", section_grill_state: "Stato della griglia", section_probe_state: "Stato della sonda", section_probe_alarm: "Allarme sonda", section_timer_done: "Timer terminato",
     idle: "Inattivo", running: "In funzione", paused: "In pausa", done: "Terminato",
     delayed: "Avvio ritardato", error: "Errore", unknown: "Sconosciuto",
     program: "Programma", remaining: "rimanente", ready_at: "pronto alle", time_done: "Fine",
@@ -1038,6 +1056,9 @@ const T = {
     ev_discharging: "In scarica", section_discharge_power: "Potenza restituita dall'auto (alla casa o alla rete)", ev_line_discharge: "Scarica",
   },
   nl: {
+    pg_large_temperature: "Grote temperatuur op de tekening",
+    pg_pellets_low: "Laag", section_probe_target: "Doel sonde", section_probe_2: "Sonde 2", section_probe_2_target: "Doel sonde 2", layout_pg_timberline: "Zonder schoorsteen (Timberline)", layout_pg_drum: "Ton met schoorsteen (Pit Boss, Z Grills)", layout_pg_cart: "Ton op wagen (recteq)", layout_pg_vertical: "Verticale smoker",
+    type_pellet_grill: "Pelletgrill", pg_asleep: "Slaapstand", pg_ready: "Gereed", pg_igniting: "Ontsteken", pg_preheating: "Voorverwarmen", pg_cooking: "Garen", pg_cool_down: "Afkoelen", pg_shutdown: "Wordt uitgeschakeld", pg_probe_done: "Sonde op temperatuur", pg_probe_out: "Uit het vlees", pg_timer_done: "Timer afgelopen", pg_grill: "Grill", pg_probe: "Sonde", pg_super_smoke: "Super Smoke", pg_keep_warm: "Warmhouden", section_grill_state: "Grillstatus", section_probe_state: "Sondestatus", section_probe_alarm: "Sonde-alarm", section_timer_done: "Timer afgelopen",
     idle: "Inactief", running: "Actief", paused: "Gepauzeerd", done: "Klaar",
     delayed: "Uitgestelde start", error: "Fout", unknown: "Onbekend",
     program: "Programma", remaining: "resterend", ready_at: "klaar om", time_done: "Klaar",
@@ -1211,6 +1232,9 @@ const T = {
     ev_discharging: "Ontladen", section_discharge_power: "Vermogen dat de auto teruglevert (aan het huis of het net)", ev_line_discharge: "Ontlading",
   },
   pt: {
+    pg_large_temperature: "Temperatura grande no desenho",
+    pg_pellets_low: "Baixo", section_probe_target: "Alvo da sonda", section_probe_2: "Sonda 2", section_probe_2_target: "Alvo da sonda 2", layout_pg_timberline: "Sem chamin\u00e9 (Timberline)", layout_pg_drum: "Barril com chamin\u00e9 (Pit Boss, Z Grills)", layout_pg_cart: "Barril em carrinho (recteq)", layout_pg_vertical: "Fumeiro vertical",
+    type_pellet_grill: "Churrasqueira a pellets", pg_asleep: "Em repouso", pg_ready: "Pronta", pg_igniting: "A acender", pg_preheating: "A pr\u00e9-aquecer", pg_cooking: "A cozinhar", pg_cool_down: "A arrefecer", pg_shutdown: "A desligar", pg_probe_done: "Sonda \u00e0 temperatura", pg_probe_out: "Sonda fora", pg_timer_done: "Temporizador conclu\u00eddo", pg_grill: "Grelha", pg_probe: "Sonda", pg_super_smoke: "Super Smoke", pg_keep_warm: "Manter quente", section_grill_state: "Estado da grelha", section_probe_state: "Estado da sonda", section_probe_alarm: "Alarme da sonda", section_timer_done: "Temporizador conclu\u00eddo",
     idle: "Inativo", running: "Em funcionamento", paused: "Em pausa", done: "Conclu\u00eddo",
     delayed: "In\u00edcio diferido", error: "Erro", unknown: "Desconhecido",
     program: "Programa", remaining: "restante", ready_at: "pronto \u00e0s", time_done: "Fim",
@@ -1384,6 +1408,9 @@ const T = {
     ev_discharging: "A descarregar", section_discharge_power: "Pot\u00eancia devolvida pelo carro (\u00e0 casa ou \u00e0 rede)", ev_line_discharge: "Descarga",
   },
   sv: {
+    pg_large_temperature: "Stor temperatur p\u00e5 bilden",
+    pg_pellets_low: "L\u00e5g", section_probe_target: "Sondm\u00e5l", section_probe_2: "Sond 2", section_probe_2_target: "M\u00e5l sond 2", layout_pg_timberline: "Utan skorsten (Timberline)", layout_pg_drum: "Tunna med skorsten (Pit Boss, Z Grills)", layout_pg_cart: "Tunna p\u00e5 vagn (recteq)", layout_pg_vertical: "Vertikal r\u00f6k",
+    type_pellet_grill: "Pelletsgrill", pg_asleep: "Vilol\u00e4ge", pg_ready: "Redo", pg_igniting: "T\u00e4nder", pg_preheating: "F\u00f6rv\u00e4rmer", pg_cooking: "Tillagar", pg_cool_down: "Svalnar", pg_shutdown: "St\u00e4ngs av", pg_probe_done: "Sond p\u00e5 temperatur", pg_probe_out: "Utdragen", pg_timer_done: "Timer klar", pg_grill: "Grill", pg_probe: "Sond", pg_super_smoke: "Super Smoke", pg_keep_warm: "Varmh\u00e5llning", section_grill_state: "Grillstatus", section_probe_state: "Sondstatus", section_probe_alarm: "Sondlarm", section_timer_done: "Timer klar",
     idle: "Inaktiv", running: "Ig\u00e5ng", paused: "Pausad", done: "Klar",
     delayed: "F\u00f6rdr\u00f6jd start", error: "Fel", unknown: "Ok\u00e4nd",
     program: "Program", remaining: "kvar", ready_at: "klar kl.", time_done: "Klar",
@@ -1557,6 +1584,9 @@ const T = {
     ev_discharging: "Laddar ur", section_discharge_power: "Effekt som bilen ger tillbaka (till hemmet eller eln\u00e4tet)", ev_line_discharge: "Urladdning",
   },
   no: {
+    pg_large_temperature: "Stor temperatur p\u00e5 tegningen",
+    pg_pellets_low: "Lav", section_probe_target: "Sondem\u00e5l", section_probe_2: "Sonde 2", section_probe_2_target: "M\u00e5l sonde 2", layout_pg_timberline: "Uten pipe (Timberline)", layout_pg_drum: "T\u00f8nne med pipe (Pit Boss, Z Grills)", layout_pg_cart: "T\u00f8nne p\u00e5 vogn (recteq)", layout_pg_vertical: "Vertikal r\u00f8yker",
+    type_pellet_grill: "Pelletsgrill", pg_asleep: "Hviler", pg_ready: "Klar", pg_igniting: "Tenner", pg_preheating: "Forvarmer", pg_cooking: "Tilbereder", pg_cool_down: "Kj\u00f8ler ned", pg_shutdown: "Sl\u00e5r seg av", pg_probe_done: "Sonde p\u00e5 temperatur", pg_probe_out: "Falt ut", pg_timer_done: "Timer ferdig", pg_grill: "Grill", pg_probe: "Sonde", pg_super_smoke: "Super Smoke", pg_keep_warm: "Varmholding", section_grill_state: "Grillstatus", section_probe_state: "Sondestatus", section_probe_alarm: "Sondealarm", section_timer_done: "Timer ferdig",
     idle: "Inaktiv", running: "I gang", paused: "Pauset", done: "Ferdig",
     delayed: "Utsatt start", error: "Feil", unknown: "Ukjent",
     program: "Program", remaining: "gjenst\u00e5r", ready_at: "ferdig kl.", time_done: "Ferdig",
@@ -1730,6 +1760,9 @@ const T = {
     ev_discharging: "Lader ut", section_discharge_power: "Effekt bilen gir tilbake (til hjemmet eller str\u00f8mnettet)", ev_line_discharge: "Utlading",
   },
   da: {
+    pg_large_temperature: "Stor temperatur p\u00e5 tegningen",
+    pg_pellets_low: "Lav", section_probe_target: "Sondem\u00e5l", section_probe_2: "Sonde 2", section_probe_2_target: "M\u00e5l sonde 2", layout_pg_timberline: "Uden skorsten (Timberline)", layout_pg_drum: "T\u00f8nde med skorsten (Pit Boss, Z Grills)", layout_pg_cart: "T\u00f8nde p\u00e5 vogn (recteq)", layout_pg_vertical: "Lodret ryger",
+    type_pellet_grill: "Pilletgrill", pg_asleep: "Dvale", pg_ready: "Klar", pg_igniting: "T\u00e6nder", pg_preheating: "Forvarmer", pg_cooking: "Tilbereder", pg_cool_down: "K\u00f8ler ned", pg_shutdown: "Lukker ned", pg_probe_done: "Sonde p\u00e5 temperatur", pg_probe_out: "Faldet ud", pg_timer_done: "Timer f\u00e6rdig", pg_grill: "Grill", pg_probe: "Sonde", pg_super_smoke: "Super Smoke", pg_keep_warm: "Varmholdelse", section_grill_state: "Grillstatus", section_probe_state: "Sondestatus", section_probe_alarm: "Sondealarm", section_timer_done: "Timer f\u00e6rdig",
     idle: "Inaktiv", running: "I gang", paused: "Sat p\u00e5 pause", done: "F\u00e6rdig",
     delayed: "Forsinket start", error: "Fejl", unknown: "Ukendt",
     program: "Program", remaining: "resterer", ready_at: "f\u00e6rdig kl.", time_done: "F\u00e6rdig",
@@ -1903,6 +1936,9 @@ const T = {
     ev_discharging: "Aflader", section_discharge_power: "Effekt, bilen giver tilbage (til hjemmet eller elnettet)", ev_line_discharge: "Afladning",
   },
   pl: {
+    pg_large_temperature: "Du\u017ca temperatura na rysunku",
+    pg_pellets_low: "Niski", section_probe_target: "Cel sondy", section_probe_2: "Sonda 2", section_probe_2_target: "Cel sondy 2", layout_pg_timberline: "Bez komina (Timberline)", layout_pg_drum: "Beczka z kominem (Pit Boss, Z Grills)", layout_pg_cart: "Beczka na w\u00f3zku (recteq)", layout_pg_vertical: "W\u0119dzarnia pionowa",
+    type_pellet_grill: "Grill na pellet", pg_asleep: "U\u015bpiony", pg_ready: "Gotowy", pg_igniting: "Rozpalanie", pg_preheating: "Nagrzewanie", pg_cooking: "Gotowanie", pg_cool_down: "Ch\u0142odzenie", pg_shutdown: "Wy\u0142\u0105czanie", pg_probe_done: "Sonda osi\u0105gn\u0119\u0142a temperatur\u0119", pg_probe_out: "Wypad\u0142a", pg_timer_done: "Minutnik zako\u0144czony", pg_grill: "Grill", pg_probe: "Sonda", pg_super_smoke: "Super Smoke", pg_keep_warm: "Utrzymywanie ciep\u0142a", section_grill_state: "Stan grilla", section_probe_state: "Stan sondy", section_probe_alarm: "Alarm sondy", section_timer_done: "Minutnik zako\u0144czony",
     idle: "Bezczynny", running: "W trakcie", paused: "Wstrzymany", done: "Zako\u0144czony",
     delayed: "Op\u00f3\u017aniony start", error: "B\u0142\u0105d", unknown: "Nieznany",
     program: "Program", remaining: "pozosta\u0142o", ready_at: "koniec o", time_done: "Koniec",
@@ -2076,6 +2112,9 @@ const T = {
     ev_discharging: "Roz\u0142adowywanie", section_discharge_power: "Moc oddawana przez samoch\u00f3d (do domu lub do sieci)", ev_line_discharge: "Roz\u0142adowanie",
   },
   zh: {
+    pg_large_temperature: "\u56fe\u4e0a\u663e\u793a\u5927\u53f7\u6e29\u5ea6",
+    pg_pellets_low: "\u504f\u4f4e", section_probe_target: "\u63a2\u9488\u76ee\u6807", section_probe_2: "\u63a2\u9488 2", section_probe_2_target: "\u63a2\u9488 2 \u76ee\u6807", layout_pg_timberline: "\u65e0\u70df\u56f1 (Timberline)", layout_pg_drum: "\u5e26\u70df\u56f1\u6876\u5f0f (Pit Boss, Z Grills)", layout_pg_cart: "\u63a8\u8f66\u6876\u5f0f (recteq)", layout_pg_vertical: "\u7acb\u5f0f\u70df\u718f\u7089",
+    type_pellet_grill: "\u9897\u7c92\u70e4\u7089", pg_asleep: "\u4f11\u7720", pg_ready: "\u5c31\u7eea", pg_igniting: "\u70b9\u706b\u4e2d", pg_preheating: "\u9884\u70ed\u4e2d", pg_cooking: "\u70f9\u996a\u4e2d", pg_cool_down: "\u51b7\u5374\u4e2d", pg_shutdown: "\u6b63\u5728\u5173\u673a", pg_probe_done: "\u63a2\u9488\u5df2\u8fbe\u6e29\u5ea6", pg_probe_out: "\u63a2\u9488\u8131\u843d", pg_timer_done: "\u5b9a\u65f6\u7ed3\u675f", pg_grill: "\u70e4\u7089", pg_probe: "\u63a2\u9488", pg_super_smoke: "Super Smoke", pg_keep_warm: "\u4fdd\u6e29", section_grill_state: "\u70e4\u7089\u72b6\u6001", section_probe_state: "\u63a2\u9488\u72b6\u6001", section_probe_alarm: "\u63a2\u9488\u8b66\u62a5", section_timer_done: "\u5b9a\u65f6\u7ed3\u675f",
     idle: "\u7a7a\u95f2", running: "\u8fd0\u884c\u4e2d", paused: "\u6682\u505c", done: "\u5b8c\u6210",
     delayed: "\u5ef6\u8fdf\u542f\u52a8", error: "\u9519\u8bef", unknown: "\u672a\u77e5",
     program: "\u7a0b\u5e8f", remaining: "\u5269\u4f59\u65f6\u95f4", ready_at: "\u9884\u8ba1\u5b8c\u6210", time_done: "\u5b8c\u6210",
@@ -2249,6 +2288,9 @@ const T = {
     ev_discharging: "\u653e\u7535\u4e2d", section_discharge_power: "\u8f66\u8f86\u56de\u9988\u529f\u7387\uff08\u5411\u5bb6\u5ead\u6216\u7535\u7f51\uff09", ev_line_discharge: "\u653e\u7535",
   },
   cs: {
+    pg_large_temperature: "Velk\u00e1 teplota na obr\u00e1zku",
+    pg_pellets_low: "N\u00edzk\u00e1", section_probe_target: "C\u00edl sondy", section_probe_2: "Sonda 2", section_probe_2_target: "C\u00edl sondy 2", layout_pg_timberline: "Bez kom\u00edna (Timberline)", layout_pg_drum: "Sud s kom\u00ednem (Pit Boss, Z Grills)", layout_pg_cart: "Sud na voz\u00edku (recteq)", layout_pg_vertical: "Vertik\u00e1ln\u00ed ud\u00edrna",
+    type_pellet_grill: "Gril na pelety", pg_asleep: "Sp\u00e1nek", pg_ready: "P\u0159ipraven", pg_igniting: "Zapalov\u00e1n\u00ed", pg_preheating: "P\u0159edeh\u0159ev", pg_cooking: "Pe\u010den\u00ed", pg_cool_down: "Chladnut\u00ed", pg_shutdown: "Vyp\u00edn\u00e1n\u00ed", pg_probe_done: "Sonda na teplot\u011b", pg_probe_out: "Vypadla", pg_timer_done: "\u010casova\u010d dokon\u010den", pg_grill: "Gril", pg_probe: "Sonda", pg_super_smoke: "Super Smoke", pg_keep_warm: "Udr\u017eov\u00e1n\u00ed tepla", section_grill_state: "Stav grilu", section_probe_state: "Stav sondy", section_probe_alarm: "Alarm sondy", section_timer_done: "\u010casova\u010d dokon\u010den",
     idle: "Ne\u010dinn\u00e9", running: "V provozu", paused: "Pozastaveno", done: "Dokon\u010deno",
     delayed: "Odlo\u017een\u00fd start", error: "Chyba", unknown: "Nezn\u00e1m\u00fd stav",
     program: "Program", remaining: "zb\u00fdv\u00e1", ready_at: "hotovo v", time_done: "Hotovo",
@@ -2422,6 +2464,9 @@ const T = {
     ev_discharging: "Vyb\u00edj\u00ed", section_discharge_power: "V\u00fdkon, kter\u00fd auto vrac\u00ed (do domu nebo do s\u00edt\u011b)", ev_line_discharge: "Vyb\u00edjen\u00ed",
   },
   hu: {
+    pg_large_temperature: "Nagy h\u0151m\u00e9rs\u00e9klet a rajzon",
+    pg_pellets_low: "Alacsony", section_probe_target: "Szonda c\u00e9l\u00e9rt\u00e9ke", section_probe_2: "2. szonda", section_probe_2_target: "2. szonda c\u00e9l\u00e9rt\u00e9ke", layout_pg_timberline: "K\u00e9m\u00e9ny n\u00e9lk\u00fcl (Timberline)", layout_pg_drum: "Hord\u00f3 k\u00e9m\u00e9nnyel (Pit Boss, Z Grills)", layout_pg_cart: "Hord\u00f3 kocsin (recteq)", layout_pg_vertical: "F\u00fcgg\u0151leges f\u00fcst\u00f6l\u0151",
+    type_pellet_grill: "Pellet grill", pg_asleep: "Alv\u00f3", pg_ready: "K\u00e9sz", pg_igniting: "Gy\u00fajt\u00e1s", pg_preheating: "El\u0151meleg\u00edt\u00e9s", pg_cooking: "S\u00fct\u00e9s", pg_cool_down: "H\u0171t\u00e9s", pg_shutdown: "Le\u00e1ll\u00edt\u00e1s", pg_probe_done: "Szonda el\u00e9rte a h\u0151fokot", pg_probe_out: "Kiesett", pg_timer_done: "Id\u0151z\u00edt\u0151 lej\u00e1rt", pg_grill: "Grill", pg_probe: "Szonda", pg_super_smoke: "Super Smoke", pg_keep_warm: "Melegen tart\u00e1s", section_grill_state: "Grill \u00e1llapota", section_probe_state: "Szonda \u00e1llapota", section_probe_alarm: "Szondariaszt\u00e1s", section_timer_done: "Id\u0151z\u00edt\u0151 lej\u00e1rt",
     idle: "\u00dcresj\u00e1rat", running: "Folyamatban", paused: "Sz\u00fcneteltetve", done: "K\u00e9sz", delayed: "K\u00e9sleltetett ind\u00edt\u00e1s",
     error: "Hiba", unknown: "Ismeretlen", program: "Program", remaining: "h\u00e1tral\u00e9v\u0151", ready_at: "k\u00e9sz ekkor:", time_done: "K\u00e9sz",
     door_open: "Ajt\u00f3 nyitva", door_closed: "Ajt\u00f3 z\u00e1rva", alerts: "Riaszt\u00e1sok", alerts_n_one: "{n} riaszt\u00e1s", alerts_n_few: "{n} riaszt\u00e1s",

@@ -60,6 +60,13 @@ Clique sur une famille pour voir ses appareils en marche.
 </details>
 
 <details>
+<summary><b>Barbecues et fumoirs à pellets</b></summary>
+
+<img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-grills.fr.gif" alt="Barbecues et fumoirs à pellets">
+
+</details>
+
+<details>
 <summary><b>Chauffage et climat</b></summary>
 
 <img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-climate.fr.gif" alt="Chauffage et climat">
@@ -269,7 +276,7 @@ Seule `state_entity` est obligatoire, sauf sur un réfrigérateur où une sonde 
 | `done_alert` | `true` fait pulser un badge vert sur le dessin en fin de cycle, jusqu'à l'ouverture de la porte ou un appui sur le badge. Pour les appareils à cycle (lave-linge, sèche-linge, lave-vaisselle, four…). |
 | `illustration_color` | `auto` (défaut, suit le thème) \| `white` \| `grey` \| `black` \| `red` (rouge foncé). Ne change que la carrosserie, pas les couleurs d'état. |
 | `language` | `auto` (défaut, suit Home Assistant) ou l'un des 15 codes : `en`, `fr`, `de`, `es`, `it`, `nl`, `pt`, `sv`, `no`, `da`, `pl`, `ru`, `zh`, `cs`, `hu`. `nb` et `nb-NO` donnent le norvégien. |
-| `appliance_type` | `auto` (défaut) \| `washer` \| `dryer` \| `dishwasher` \| `oven` \| `microwave` \| `hood` \| `cooktop` \| `fridge` \| `kettle` \| `cooker` \| `coffee` \| `rice_cooker` \| `air_fryer` \| `water_heater` \| `boiler` \| `thermostat` \| `heat_pump` \| `printer_3d` \| `filament_dryer` \| `pet_feeder` \| `pet_fountain` \| `iron` \| `toaster` \| `pellet_stove` \| `air_conditioner` \| `dehumidifier` \| `humidifier` \| `space_heater` \| `towel_warmer` \| `air_purifier` \| `fan` \| `ev_charger` \| `hair_dryer` \| `screen` \| `network` \| `robot` \| `pool_pump` \| `scale` \| `ups` \| `solar` \| `home_battery` \| `camera` \| `diffuser` \| `hrv` \| `lamp` \| `mailbox` \| `water_pump` \| `floor_heating` \| `spa` \| `sauna` \| `aquarium` \| `meter` \| `christmas_tree` \| `mobility` \| `irrigation` \| `litter_box` \| `detector` \| `speaker` \| `console` \| `streamer` \| `climate_sensor` \| `storage_tank` \| `fresh_water_station` \| `solar_thermal` \| `wood_stove`. |
+| `appliance_type` | `auto` (défaut) \| `washer` \| `dryer` \| `dishwasher` \| `oven` \| `microwave` \| `hood` \| `cooktop` \| `fridge` \| `kettle` \| `cooker` \| `coffee` \| `rice_cooker` \| `air_fryer` \| `pellet_grill` \| `water_heater` \| `boiler` \| `thermostat` \| `heat_pump` \| `printer_3d` \| `filament_dryer` \| `pet_feeder` \| `pet_fountain` \| `iron` \| `toaster` \| `pellet_stove` \| `air_conditioner` \| `dehumidifier` \| `humidifier` \| `space_heater` \| `towel_warmer` \| `air_purifier` \| `fan` \| `ev_charger` \| `hair_dryer` \| `screen` \| `network` \| `robot` \| `pool_pump` \| `scale` \| `ups` \| `solar` \| `home_battery` \| `camera` \| `diffuser` \| `hrv` \| `lamp` \| `mailbox` \| `water_pump` \| `floor_heating` \| `spa` \| `sauna` \| `aquarium` \| `meter` \| `christmas_tree` \| `mobility` \| `irrigation` \| `litter_box` \| `detector` \| `speaker` \| `console` \| `streamer` \| `climate_sensor` \| `storage_tank` \| `fresh_water_station` \| `solar_thermal` \| `wood_stove`. |
 | `tap_action` | Ce que fait un appui sur la carte, dans les mots de Home Assistant : `more-info` (défaut : l'entité d'état, ou sur une carte sans elle ce qu'elle lit à sa place), `none`, `navigate`, `url`, `toggle`, `perform-action` ou `fire-dom-event`, celle qu'écoutent les cartes popup bâties sur browser_mod. En YAML seulement. |
 | `illustration_tap_action` | Un appui sur le dessin seul, le reste de la carte gardant `tap_action` : `toggle` (une lampe allumée en la touchant), `more-info`, `none`, ou n'importe quelle action de Home Assistant. Sans lui, le dessin fait comme la carte. Avec `toggle`, le dessin répond comme les boutons, selon `controls_activation` : un appui, deux appuis ou un appui long. |
 | `show_toggle` | `false` retire le bouton allumer / éteindre d'une lampe, pour une carte qu'on allume en touchant son dessin (`illustration_tap_action: toggle`). |
@@ -497,6 +504,48 @@ shake_entity: binary_sensor.airfryer_shake_reminder
 ```
 
 Une entité qui porte le nom d'une friteuse (ou le `cook_status` de Cosori) est reconnue d'elle-même, et l'éditeur remplit le reste. Avec une simple prise connectée, elle affiche *Cuisson*, puis *Terminé*.
+
+</details>
+
+<details>
+<summary><b>Barbecues et fumoirs à pellets</b></summary>
+
+`appliance_type: pellet_grill`, en affichage seul (#101). Quatre formes, dessinées d'après les photos des fabricants : la température du grill s'affiche en grand sur la cuve (orange pendant la montée, verte à la consigne), le contrôleur montre la consigne, la sonde a son badge avec une jauge vers sa cible, la jointure du couvercle rougeoie pendant la chauffe, la fumée monte de l'arrière, plus dense en Super Smoke, et la fenêtre de la trémie montre les pellets restants.
+
+```yaml
+type: custom:ha-appliance-card
+appliance_type: pellet_grill
+state_entity: climate.traeger_climate
+grill_state_entity: sensor.traeger_grill_state
+pellet_level_entity: sensor.traeger_pellet_level
+probe_entity: climate.traeger_probe_p0
+probe_state_entity: sensor.traeger_probe_state_p0
+probe_alarm_entity: binary_sensor.traeger_probe_alarm_p0
+timer_end_entity: sensor.traeger_cook_timer_end
+timer_complete_entity: binary_sensor.traeger_cook_timer_complete
+error_entity: sensor.traeger_errors
+super_smoke_entity: switch.traeger_smoke
+keep_warm_entity: switch.traeger_keepwarm
+```
+
+| Option | Description |
+|---|---|
+| `state_entity` | L'entité `climate` du grill, ou son capteur d'état. |
+| `large_temperature` | `false` retire la grande température et le badge de sonde : le contrôleur montre alors la température, comme sur le vrai grill. Activée par défaut. |
+| `grill_state_entity` | Le capteur d'état quand `state_entity` est le `climate` : *En veille*, *Prêt*, *Allumage*, *Préchauffage*, *Cuisson*, *Refroidissement*, *Arrêt en cours*. |
+| `temperature_entity` / `target_temperature_entity` | La température et la consigne du grill quand elles ne sont pas sur `state_entity`. La consigne s'affiche pendant la chauffe et la cuisson. |
+| `grill_layout` | `timberline` (sans cheminée), `drum` (cheminée, trémie à gauche, comme Pit Boss et Z Grills), `cart` (recteq), `vertical`. Sans cette option, choisi d'après le nom. |
+| `probe_target_entity` | La cible de la sonde quand `probe_entity` est un simple `sensor`. |
+| `probe_2_entity` / `probe_2_target_entity` | Une seconde sonde. |
+| `pellet_level_entity` | Les pellets restants, en %, ou un capteur binaire allumé quand la trémie est basse. À 15 % ou moins, la ligne et la fenêtre passent en rouge. |
+| `probe_entity` | La sonde à viande, un `climate` (température et cible) ou un `sensor`. La ligne et le câble n'apparaissent que sonde branchée. |
+| `probe_state_entity` / `probe_alarm_entity` | À température, l'état indique *Sonde à température* ; une sonde sortie de la viande est signalée sur sa ligne. |
+| `timer_end_entity` | La fin du minuteur de cuisson, une date ou un temps Unix. La ligne s'affiche pendant le décompte. |
+| `timer_complete_entity` | *Minuteur terminé*, tant que le grill est allumé. |
+| `error_entity` | Un capteur à `0` quand tout va bien, ou un capteur binaire. |
+| `super_smoke_entity` / `keep_warm_entity` | Une ligne chacun tant que leur interrupteur est disponible. |
+
+Une entité au nom de Traeger, Pit Boss, recteq, Camp Chef, Grilla, GMG, PiFire ou Z Grills est reconnue d'elle-même, et l'éditeur remplit le reste. Les états et les noms d'entités viennent du code de ces intégrations : Traeger (`sebirdman/hass_traeger`, `Traeger-WiFire`), Pit Boss (`ha-pitboss`, `homeassistant-pitboss`, `ha-prime-polaris`), Camp Chef (`ha-campchef`, `ha-camp-chef-connect`), Grilla (`ha-grilla`), recteq, GMG (`gmg-ha`) et PiFire. Seul un relevé Traeger vient d'un vrai grill.
 
 </details>
 

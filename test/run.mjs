@@ -14196,5 +14196,122 @@ function tvT(w) { return { 'switch.tv': { state: 'on', attributes: {} }, 'sensor
   check('musique : reste un titre', infoLine(spk({ media_title: 'Song', media_artist: 'Band', source: 'Spotify' }), 'Title'), 'Song');
 }
 
+// ── A pellet grill (#101) ────────────────────────────────
+{
+  const s = (state, attributes = {}) => ({ state: String(state), attributes });
+  const PG = { appliance_type: 'pellet_grill', grill_layout: 'timberline', state_entity: 'climate.t', grill_state_entity: 'sensor.gs', pellet_level_entity: 'sensor.p', probe_entity: 'climate.pr', probe_state_entity: 'sensor.ps', probe_alarm_entity: 'binary_sensor.pa', timer_end_entity: 'sensor.te', timer_complete_entity: 'binary_sensor.tc', error_entity: 'sensor.e', super_smoke_entity: 'switch.sm', keep_warm_entity: 'switch.kw' };
+  const pgS = (gs, x = {}) => ({ 'climate.t': s(x.cl || 'heat', { current_temperature: x.c ?? 225, temperature: x.t ?? 250 }), 'sensor.gs': s(gs), 'sensor.p': s(x.pel ?? 70, { unit_of_measurement: '%' }),
+    'climate.pr': x.probe ? s('heat', { current_temperature: x.probe[0], temperature: x.probe[1] }) : s('unavailable'), 'sensor.ps': s(x.ps || 'idle'), 'binary_sensor.pa': s(x.pa || 'off'),
+    'sensor.te': s(x.te ?? '1970-01-01T00:00:00+00:00', { device_class: 'timestamp' }), 'binary_sensor.tc': s(x.tc || '0'), 'sensor.e': s(x.e ?? '0'), 'switch.sm': s(x.sm || 'unavailable'), 'switch.kw': s(x.kw || 'unavailable') });
+  const pg = (gs, x, more = {}) => render({ ...PG, ...more }, pgS(gs, x));
+  for (const [w, label] of [['sleeping', 'Asleep'], ['idle', 'Ready'], ['igniting', 'Igniting'], ['preheating', 'Preheating'], ['cook_manual', 'Cooking'], ['cook_custom', 'Cooking'], ['cool_down', 'Cooling down'], ['shutdown', 'Shutting down'], ['offline', 'Offline']])
+    check(`grill : ${w}`, stateLine(pg(w)), label);
+  const pgC = (state, a = {}) => stateLine(render({ appliance_type: 'pellet_grill', state_entity: 'climate.t' }, { 'climate.t': s(state, a) }));
+  check('grill : thermostat seul, eteint', pgC('off', { current_temperature: 63 }), 'Asleep');
+  check('grill : thermostat seul, en chauffe', pgC('heat', { current_temperature: 200, temperature: 225 }), 'Cooking');
+  check('grill : thermostat seul, refroidit', pgC('cool', { current_temperature: 300 }), 'Cooling down');
+  check('grill : hors ligne grise', /nt-unav/.test(pg('offline')), true);
+  check('grill : la consigne en cuisson', /225\s→\s250/.test(pg('cook_manual')), true);
+  check('grill : pas de consigne en veille', /→/.test(pg('sleeping')), false);
+  check('grill : ecran eteint en veille', /fill="#14232e"/.test(pg('sleeping')), false);
+  check('grill : ecran allume pret', />225°<\/text>/.test(pg('idle')), true);
+  const bigT = (h) => /font-size="19" font-weight="800"[^>]*>225\u00b0<\/text>/.test(h);
+  check('grill : grande temperature prete', bigT(pg('idle')), true);
+  check('grill : grande temperature en cuisson', bigT(pg('cook_manual')), true);
+  check('grill : pas de grande temperature en veille', bigT(pg('sleeping')), false);
+  check('grill : la consigne sur le controleur', />\u2192250\u00b0<\/text>/.test(pg('cook_manual')), true);
+  check('grill : pas de consigne au controleur pret', />\u2192250\u00b0<\/text>/.test(pg('idle')), false);
+  check('grill : orange en chauffe', /fill="#ffb74d"[^>]*>140\u00b0</.test(pg('preheating', { c: 140 })), true);
+  check('grill : vert a la consigne', /fill="#a5e6a8"[^>]*>250\u00b0</.test(pg('cook_manual', { c: 250 })), true);
+  check('grill : badge de sonde', />121\u00b0<\/text>/.test(pg('cook_manual', { probe: [121, 165] })), true);
+  const OFFT = { large_temperature: false };
+  check('grill : option, pas de grand chiffre', bigT(pg('cook_manual', {}, OFFT)), false);
+  check('grill : option, le controleur montre la temperature', />225\u00b0<\/text>/.test(pg('cook_manual', {}, OFFT)), true);
+  check('grill : option, pas de consigne au controleur', />\u2192250\u00b0<\/text>/.test(pg('cook_manual', {}, OFFT)), false);
+  check('grill : option, pas de badge de sonde', /font-size="9" font-weight="800"/.test(pg('cook_manual', { probe: [121, 165] }, OFFT)), false);
+  check('grill : option, la plaque revient', /points="310,428/.test(pg('cook_manual', { probe: [121, 165] }, OFFT)), true);
+  check('grill : option, le cable reste', /M608 332/.test(pg('cook_manual', { probe: [121, 165] }, OFFT)), true);
+  check('grill : option vraie comme par defaut', bigT(pg('cook_manual', {}, { large_temperature: true })), true);
+  { const E = new Editor(); E.setConfig({ type: 'custom:ha-appliance-card', appliance_type: 'pellet_grill', state_entity: 'climate.t' }); E.hass = HASS({ 'climate.t': s('off') });
+    const h = E.shadowRoot ? E.shadowRoot.innerHTML : E.innerHTML;
+    check('grill : editeur, option cochee par defaut', /data-field="large_temperature"[^>]*checked/.test(h), true); }
+  check('grill : pas de badge sans sonde', /font-size="9" font-weight="800"/.test(pg('cook_manual')), false);
+  check('grill : jauge de la sonde', new RegExp(`width="${(17 * 121 / 165).toFixed(1)}"`).test(pg('cook_manual', { probe: [121, 165] })), true);
+  check('grill : minuteur 1970 sans ligne', /timer-outline/.test(pg('cook_manual')), false);
+  check('grill : minuteur actif', /timer-outline/.test(pg('cook_manual', { te: new Date(Date.now() + 3600e3).toISOString() })), true);
+  check('grill : minuteur en temps Unix', /timer-outline/.test(pg('cook_manual', { te: Math.round(Date.now() / 1000) + 3600 })), true);
+  check('grill : minuteur Unix a zero', /timer-outline/.test(pg('cook_manual', { te: 0 })), false);
+  check('grill : sonde absente sans ligne', /thermometer-probe/.test(pg('cook_manual')), false);
+  check('grill : sonde et sa cible', /121\s→\s165/.test(pg('cook_manual', { probe: [121, 165] })), true);
+  check('grill : cable de sonde dessine', /M608 332/.test(pg('cook_manual', { probe: [121, 165] })), true);
+  check('grill : pas de cable sans sonde', /M608 332/.test(pg('cook_manual')), false);
+  check('grill : sonde sortie', />Fell out</.test(pg('cook_manual', { probe: [230, 165], ps: 'fell_out' })), true);
+  check('grill : alarme de sonde', stateLine(pg('cook_manual', { probe: [165, 165], pa: 'on' })), 'Probe at temperature');
+  check('grill : sonde arrivee par son etat', stateLine(pg('cook_manual', { probe: [165, 165], ps: 'at_temp' })), 'Probe at temperature');
+  check('grill : minuteur fini (etat 1)', stateLine(pg('cook_manual', { tc: '1' })), 'Timer finished');
+  check('grill : minuteur fini ignore en veille', stateLine(pg('sleeping', { tc: '1' })), 'Asleep');
+  check('grill : erreur zero', stateLine(pg('cook_manual', { e: '0' })), 'Cooking');
+  check('grill : erreur', stateLine(pg('cook_manual', { e: '5' })), 'Error');
+  check('grill : erreur meme en veille', stateLine(pg('sleeping', { e: '5' })), 'Error');
+  const wisps = (h) => (h.match(/class="ntg-smoke/g) || []).length;
+  check('grill : pas de fumee en veille', wisps(pg('sleeping')), 0);
+  check('grill : pas de fumee pret', wisps(pg('idle')), 0);
+  check('grill : quatre volutes en cuisson', wisps(pg('cook_manual')), 4);
+  check('grill : super smoke plus dense', wisps(pg('cook_manual', { sm: 'on' })), 7);
+  check('grill : anime en cuisson', /nt-on/.test(pg('cook_manual')), true);
+  check('grill : Super Smoke visible', /Super Smoke/.test(pg('cook_manual', { sm: 'off' })), true);
+  check('grill : Super Smoke cache si indisponible', /Super Smoke/.test(pg('cook_manual')), false);
+  check('grill : Keep Warm visible', /Keep Warm/.test(pg('cook_manual', { kw: 'on' })), true);
+  check('grill : reserve basse encadree', /stroke="#e53935" stroke-width="4"/.test(pg('cook_manual', { pel: 10 })), true);
+  check('grill : reserve normale', /stroke="#e53935" stroke-width="4"/.test(pg('cook_manual', { pel: 60 })), false);
+  check('grill : affichage seul', actionBtns(pg('cook_manual')).length, 0);
+  // What the other integrations call the same states (#101).
+  const pgW = (w) => stateLine(render({ appliance_type: 'pellet_grill', state_entity: 'sensor.s' }, { 'sensor.s': s(w) }));
+  for (const [w, label] of [['Manual Cook', 'Cooking'], ['Custom Cook', 'Cooking'], ['Cool Down', 'Cooling down'], ['Sleeping', 'Asleep'], ['at_temperature', 'Cooking'], ['Shutting Down', 'Shutting down'], ['Starting', 'Igniting'], ['running', 'Cooking'], ['stable', 'Cooking'], ['hold', 'Cooking'], ['standby', 'Ready'], ['Startup', 'Igniting'], ['Stop', 'Asleep'], ['Monitor', 'Ready'], ['fan', 'Cooling down'], ['cook_program', 'Cooking'], ['error', 'Error']])
+    check(`grill : etat ${w}`, pgW(w), label);
+  check('grill : GMG en ventilation', pgC('fan_only', { current_temperature: 300 }), 'Cooling down');
+  check('grill : Pit Boss prechauffe', pgC('heat', { hvac_action: 'preheating', current_temperature: 90, temperature: 225 }), 'Preheating');
+  // A probe as plain sensors, and a second one.
+  const pgP = (x) => render({ appliance_type: 'pellet_grill', grill_layout: 'drum', state_entity: 'climate.t', probe_entity: 'sensor.p1', probe_target_entity: 'number.p1t', probe_2_entity: 'sensor.p2', pellet_level_entity: 'binary_sensor.low' }, { 'climate.t': s('heat', { current_temperature: 225, temperature: 250 }), 'sensor.p1': s(120, { unit_of_measurement: '°F' }), 'number.p1t': s(165), 'sensor.p2': s(x.p2 ?? 'unavailable', { unit_of_measurement: '°F' }), 'binary_sensor.low': s(x.low || 'off') });
+  check('grill : sonde en capteur et sa cible', /120\s→\s165/.test(pgP({})), true);
+  check('grill : seconde sonde absente', /Probe 2/.test(pgP({})), false);
+  check('grill : seconde sonde', /Probe 2/.test(pgP({ p2: 98 })), true);
+  check('grill : reserve binaire basse', />Low</.test(pgP({ low: 'on' })), true);
+  check('grill : reserve binaire correcte', /Pellet level/.test(pgP({})), false);
+  // The drawing a grill gets from its name.
+  const pgL = (id, f, l) => (new RegExp(l === 'timberline' ? 'M448|cx="448"' : l === 'drum' ? 'x="648" y="128"' : l === 'cart' ? 'cx="340" cy="228"' : 'x="336" y="270"')).test(render({ appliance_type: 'pellet_grill', state_entity: id }, { [id]: s('heat', { friendly_name: f, current_temperature: 200 }) }));
+  check('grill : Timberline', pgL('climate.traeger_x', 'Timberline 850', 'timberline'), true);
+  check('grill : Pit Boss en tonneau', pgL('climate.pit_boss_850', 'Pit Boss', 'drum'), true);
+  check('grill : recteq sur chariot', pgL('climate.recteq_rt700', 'recteq', 'cart'), true);
+  check('grill : vertical', pgL('climate.pit_boss_vertical', 'Pit Boss Vertical', 'vertical'), true);
+  check('grill : forme imposee', /x="336" y="270"/.test(render({ ...PG, grill_layout: 'vertical' }, pgS('cook_manual'))), true);
+  check('grill : hors ligne garde sa forme', /x="648" y="128"/.test(render({ appliance_type: 'pellet_grill', grill_layout: 'drum', state_entity: 'climate.t' }, { 'climate.t': s('unavailable') })), true);
+  // The grill by its names, never a pellet stove or a smoke detector.
+  const pgAuto = (id, a = {}) => /nt-k-pellet_grill/.test(render({ state_entity: id }, { [id]: s(a.state || 'off', a) }));
+  check('grill : reconnu par Traeger', pgAuto('climate.traeger_abc_climate', { current_temperature: 63 }), true);
+  check('grill : reconnu par son capteur', pgAuto('sensor.traeger_abc_grill_state', { state: 'sleeping' }), true);
+  check('grill : reconnu par Timberline', pgAuto('climate.grill', { friendly_name: 'Timberline 850', current_temperature: 63 }), true);
+  check('grill : reconnu par Pit Boss', pgAuto('climate.pit_boss_grill', { current_temperature: 200 }), true);
+  check('grill : reconnu par Camp Chef', pgAuto('climate.camp_chef_woodwind', { current_temperature: 200 }), true);
+  check('grill : reconnu par GMG', pgAuto('climate.gmg_daniel_boone', { current_temperature: 200 }), true);
+  check('grill : reconnu par recteq', pgAuto('sensor.recteq_rt700_mode', { state: 'off' }), true);
+  check('grill : poele a granules inchange', pgAuto('climate.palazzetti_stove', { current_temperature: 20 }), false);
+  { const E = new Editor(); E.setConfig({ type: 'custom:ha-appliance-card', appliance_type: 'pellet_grill', state_entity: 'climate.traeger_x_climate' });
+    const ids = { 'climate.traeger_x_climate': s('off'), 'sensor.traeger_x_grill_state': s('sleeping'), 'sensor.traeger_x_heating_state': s('idle'), 'sensor.traeger_x_pellet_level': s(70, { unit_of_measurement: '%' }), 'climate.x_probe_p0': s('unavailable'), 'sensor.x_probe_state_p0': s('unavailable'), 'binary_sensor.x_probe_alarm_p0': s('unavailable'), 'number.traeger_x_cook_timer': s(0, { unit_of_measurement: 'min' }), 'sensor.traeger_x_cook_timer_start': s('1970-01-01T00:00:00+00:00', { device_class: 'timestamp' }), 'sensor.traeger_x_cook_timer_end': s('1970-01-01T00:00:00+00:00', { device_class: 'timestamp' }), 'binary_sensor.traeger_x_cook_timer_complete': s('0'), 'sensor.traeger_x_errors': s('0'), 'switch.traeger_x_smoke': s('unavailable'), 'switch.traeger_x_keepwarm': s('unavailable') };
+    const entities = {}; for (const id of Object.keys(ids)) entities[id] = { device_id: 'd1', platform: 'traeger' };
+    E.hass = { ...HASS(ids), entities, devices: { d1: { name: 'Timberline 850' } } };
+    const c = E.events?.at(-1)?.detail?.config || {};
+    for (const [f, v] of [['grill_state_entity', 'sensor.traeger_x_grill_state'], ['pellet_level_entity', 'sensor.traeger_x_pellet_level'], ['probe_entity', 'climate.x_probe_p0'], ['probe_state_entity', 'sensor.x_probe_state_p0'], ['probe_alarm_entity', 'binary_sensor.x_probe_alarm_p0'], ['timer_end_entity', 'sensor.traeger_x_cook_timer_end'], ['timer_complete_entity', 'binary_sensor.traeger_x_cook_timer_complete'], ['error_entity', 'sensor.traeger_x_errors'], ['super_smoke_entity', 'switch.traeger_x_smoke'], ['keep_warm_entity', 'switch.traeger_x_keepwarm']])
+      check(`grill : remplissage ${f}`, c[f], v); }
+  // The same fields, from what the other integrations name them.
+  const pgFill = (state, ids) => { const E = new Editor(); E.setConfig({ type: 'custom:ha-appliance-card', appliance_type: 'pellet_grill', state_entity: state });
+    const all = { [state]: s('off'), ...Object.fromEntries(Object.keys(ids).map((id) => [id, s(ids[id])])) }; const entities = {}; for (const id of Object.keys(all)) entities[id] = { device_id: 'd1', platform: 'x' };
+    E.hass = { ...HASS(all), entities, devices: { d1: { name: 'Grill' } } }; return E.events?.at(-1)?.detail?.config || {}; };
+  { const c = pgFill('climate.pit_grill', { 'sensor.pit_status': 'off', 'sensor.pit_probe1_temp': '70', 'sensor.pit_probe2_temp': '71', 'number.pit_probe1_target': '165', 'number.pit_probe2_target': '200', 'binary_sensor.pit_no_pellets': 'off', 'binary_sensor.pit_any_problem': 'off', 'sensor.pit_recipe_time': '0', 'sensor.pit_uptime': '5' });
+    for (const [f, v] of [['grill_state_entity', 'sensor.pit_status'], ['probe_entity', 'sensor.pit_probe1_temp'], ['probe_target_entity', 'number.pit_probe1_target'], ['probe_2_entity', 'sensor.pit_probe2_temp'], ['probe_2_target_entity', 'number.pit_probe2_target'], ['pellet_level_entity', 'binary_sensor.pit_no_pellets'], ['error_entity', 'binary_sensor.pit_any_problem'], ['timer_end_entity', 'sensor.pit_recipe_time']]) check(`grill : Pit Boss ${f}`, c[f], v); }
+  { const c = pgFill('sensor.camp_mode', { 'sensor.camp_chamber_temperature': '200', 'sensor.camp_set_temperature': '225', 'sensor.camp_pellet_level': '40', 'sensor.camp_probe_1': '90', 'sensor.camp_probe_2': '95', 'binary_sensor.camp_fault': 'off', 'sensor.camp_last_fault': 'none', 'sensor.camp_wifi_rssi': '-50' });
+    for (const [f, v] of [['temperature_entity', 'sensor.camp_chamber_temperature'], ['target_temperature_entity', 'sensor.camp_set_temperature'], ['pellet_level_entity', 'sensor.camp_pellet_level'], ['probe_entity', 'sensor.camp_probe_1'], ['probe_2_entity', 'sensor.camp_probe_2'], ['error_entity', 'binary_sensor.camp_fault']]) check(`grill : Camp Chef ${f}`, c[f], v); }
+}
+
 if (RECORD) writeFileSync(process.env.HAC_RECORD, JSON.stringify(RECORD));
 report();

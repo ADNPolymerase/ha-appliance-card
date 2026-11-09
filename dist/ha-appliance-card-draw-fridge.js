@@ -9,6 +9,9 @@ const NT_CSS = `
         @keyframes ntfd-heat{0%{opacity:0;transform:translateY(4px)}40%{opacity:1}100%{opacity:0;transform:translateY(-7px)}}
         .nt-on .ntfd-roll{animation:ntfd-roll 2.4s linear infinite;animation-delay:var(--anim-offset,0s)}
         @keyframes ntfd-roll{to{transform:translateY(76px)}}
+        .nt-on .ntg-smoke{transform-box:fill-box;transform-origin:center bottom;animation:ntg-smoke 4s ease-out infinite;animation-delay:calc(var(--d0,0s) + var(--anim-offset,0s))}
+        .nt-on .ntg-dense{animation-duration:2s}
+        @keyframes ntg-smoke{0%{transform:translate(0,4px) scale(.7);opacity:0}25%{opacity:.75}100%{transform:translate(4px,-14px) scale(1.6);opacity:0}}
         .machine.nt:not(.nt-on) .nt-run{display:none}
         .machine.nt-unav{opacity:.45;filter:grayscale(1)}
         .ntd1{--d0:.3s}.ntd2{--d0:.7s}.ntd3{--d0:1.1s}.ntd4{--d0:1.5s}.ntd5{--d0:1.9s}.ntd6{--d0:2.3s}

@@ -60,6 +60,7 @@ SCALE = 1
 # the grids out.
 FAMILIES = (
     ("laundry", "washer,dryer,dishwasher,iron,steam_generator", 5),
+    ("grills", "pg_timberline_off,pg_timberline_cook,pg_timberline_smoke,pg_timberline_probe,pg_drum_preheat,pg_drum_cook,pg_cart_cook,pg_vertical_smoke", 4),
     ("kitchen", "oven,microwave,hood,cooktop,fridge,kettle,cooker,coffee,coffee_black,rice_cooker,air_fryer,toaster", 6),
     ("climate", "water_heater,boiler,boiler_window,heat_pump,pellet_stove,space_heater,towel_warmer,towel_panel,air_conditioner,dehumidifier,humidifier,humidifier_night,humidifier_empty,humidifier_lifted", 5),
     ("thermostats", "boiler_thermo,th_square,th_round,th_glass,th_valve", 5),
@@ -114,7 +115,7 @@ GIF_WIDE = {"ventilation": (2, 400)}
 # electric ride's gauge fills in 5 s, and its fourth bar has to be seen.
 # The litter boxes, the watering, the detectors and the speakers share one 7 s
 # cycle, the litter box's full cleaning, every motion fitting it whole.
-GIF_TIMING = {"mobility": (25, 200), "litter": (35, 200), "watering": (35, 200), "detectors": (35, 200), "speakers": (35, 200), "consoles": (35, 200), "streamers": (35, 200)}
+GIF_TIMING = {"grills": (20, 200), "mobility": (25, 200), "litter": (35, 200), "watering": (35, 200), "detectors": (35, 200), "speakers": (35, 200), "consoles": (35, 200), "streamers": (35, 200)}
 
 
 def gif_cols(count):
@@ -189,7 +190,7 @@ POSTER = (
     ("robot_vacuum", 2), ("mob_poster", 5), ("robot_mower", 2), ("robot_stick", 1), ("robot_washer", 1), ("nt_pool", 1), ("pool_running", 1), ("nt_spa", 1),
     ("solar_day", 2), ("battery_charging", 2), ("ups_online", 1), ("nt_linky", 5), ("nt_booster", 2), ("nt_floor", 2), ("nt_sauna", 1), ("nt_aquarium", 1),
     ("scale_fresh", 1), ("hd_hot", 2), ("dif_drop", 5), ("hrv_one_duct", 5), ("cam_outdoor", 5), ("lamp_floor", 10), ("mb_classic", 2), ("nt_tree", 1),
-    ("irr_sprinkler", 2), ("lit_globe", 2), ("det_smoke", 3), ("spk_smart", 14), ("con_ps5", 20),
+    ("pg_timberline_cook", 4), ("irr_sprinkler", 2), ("lit_globe", 2), ("det_smoke", 3), ("spk_smart", 14), ("con_ps5", 20),
 )
 
 
