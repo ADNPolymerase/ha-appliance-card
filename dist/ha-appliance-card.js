@@ -1,5 +1,5 @@
 // Built by tools/build.mjs from the files of src/: edit those, not this file.
-const CARD_VERSION = "4.20.0";
+const CARD_VERSION = "4.20.1";
 
 console.info(
   "%c HA-APPLIANCE-CARD %c v" + CARD_VERSION + " ",
@@ -2237,6 +2237,21 @@ function screenTemp(hass, cfg, entityId, value) {
   return `${local !== null ? local : Math.round(value)}\u00b0`;
 }
 
+// A measurement with no precision to go by, on a card pinned to another
+// language: the digits stay as reported and only the separator follows the
+// language, which is what the frontend does. Limited to a reading with a unit,
+// so that a bare code or serial number keeps its exact digits.
+function reportedNumber(st, hass, unit) {
+  const raw = String(st.state).trim();
+  if (!unit || !/^-?\d+\.\d+$/.test(raw)) return null;
+  const digits = raw.split(".")[1].length;
+  try {
+    return new Intl.NumberFormat(lang(hass), { minimumFractionDigits: digits, maximumFractionDigits: digits }).format(Number(raw));
+  } catch (e) {
+    return null;
+  }
+}
+
 function formatInfoValue(st, hass, valueMap, cfg, entityId, hideUnit) {
   const mapped = mapInfoValue(st.state, valueMap);
   // A mapped label replaces the value outright: appending a unit to it
@@ -2273,7 +2288,7 @@ function formatInfoValue(st, hass, valueMap, cfg, entityId, hideUnit) {
       /* fall through to the local formatting */
     }
   }
-  const value = localNumber(st, hass, entityId) || st.state;
+  const value = localNumber(st, hass, entityId) || reportedNumber(st, hass, unit) || st.state;
   return hideUnit || !unit ? `${value}` : `${value} ${unit}`;
 }
 

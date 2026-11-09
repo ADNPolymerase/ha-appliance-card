@@ -1520,6 +1520,12 @@ check('info : un formateur en erreur retombe sur le repli',
 check('info : langue forcee, la precision est appliquee localement',
   infoLine(fmtCard({ entity: 'sensor.t' }, probe, { language: 'fr' },
     { entities: { 'sensor.t': { display_precision: 1 } }, formatEntityState: () => 'NE PAS UTILISER' }), 'Top'), '48,8 °C');
+const hcho = { 'sensor.h': { entity_id: 'sensor.h', state: '0.009', attributes: { friendly_name: 'HCHO', unit_of_measurement: 'mg/m\u00b3' } } };
+check('info : langue forcee, un petit decimal sans precision suit la langue',
+  infoLine(fmtCard({ entity: 'sensor.h' }, hcho, { language: 'de' }, { formatEntityState: () => 'NE PAS UTILISER' }), 'HCHO'), '0,009 mg/m\u00b3');
+check('info : langue forcee, un nombre sans unite garde ses chiffres',
+  infoLine(fmtCard({ entity: 'sensor.s' }, { 'sensor.s': { entity_id: 'sensor.s', state: '12.50', attributes: { friendly_name: 'Code' } } },
+    { language: 'de' }, {}), 'Code'), '12.50');
 check('info : repli, la precision retrouvee sans entity_id dans l\'etat',
   infoLine(fmtCard({ entity: 'sensor.t' },
     { 'sensor.t': { state: '48.79', attributes: { friendly_name: 'Top', unit_of_measurement: '°C' } } },
