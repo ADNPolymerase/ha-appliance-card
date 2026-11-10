@@ -14314,4 +14314,33 @@ function tvT(w) { return { 'switch.tv': { state: 'on', attributes: {} }, 'sensor
 }
 
 if (RECORD) writeFileSync(process.env.HAC_RECORD, JSON.stringify(RECORD));
+// == Pellet grills: what integrations and plugs really send ===================
+{
+  const s = (state, attributes = {}) => ({ state: String(state), attributes });
+  const G = { appliance_type: 'pellet_grill', state_entity: 'sensor.g', temperature_entity: 'sensor.t' };
+  const hot = { 'sensor.t': s(120, { unit_of_measurement: '°C' }) };
+  const word = (w) => stateLine(render(G, { 'sensor.g': s(w), ...hot }));
+  for (const w of ['SMOKING', 'smoke_mode', 'grilling', 'sear', 'cooking_at_temp', 'boost', 'lit']) check(`grill : le mot ${w} est une cuisson`, word(w), 'Cooking');
+  for (const [w, label] of [['heating_up', 'Preheating'], ['startup_mode', 'Igniting'], ['Shut Down', 'Shutting down'], ['cooling_down', 'Cooling down'], ['standby_mode', 'Ready'], ['deep_sleep', 'Asleep'], ['error_5', 'Error'], ['flame_out', 'Error'], ['overheat', 'Error'], ['disconnected', 'Offline']]) check(`grill : le mot ${w}`, word(w), label);
+  check('grill : un mot inconnu ne prend pas une cuisson', word('foo'), 'Asleep');
+  check('grill : consigne atteinte, mot libre', stateLine(render({ appliance_type: 'pellet_grill', state_entity: 'climate.g', grill_state_entity: 'sensor.s' }, { 'climate.g': s('heat', { current_temperature: 107, temperature: 107, hvac_action: 'idle' }), 'sensor.s': s('smoking') })), 'Cooking');
+  const P = { 'sensor.p': (w) => s(w, { unit_of_measurement: 'W' }) };
+  const plug = (w, sw) => stateLine(render({ appliance_type: 'pellet_grill', power_entity: 'sensor.p', ...(sw ? { state_entity: 'switch.x' } : {}) }, { 'sensor.p': P['sensor.p'](w), ...(sw ? { 'switch.x': s(sw) } : {}) }));
+  check('grill prise : a zero', plug(0), 'Asleep');
+  check('grill prise : ventilateur et vis', plug(20), 'Cooking');
+  check('grill prise : bougie', plug(300), 'Igniting');
+  check('grill prise : allumee sans tirer', plug(1, 'on'), 'Ready');
+  check('grill prise : coupee', plug(0, 'off'), 'Asleep');
+  const lines = (cfg, st) => render({ appliance_type: 'pellet_grill', state_entity: 'sensor.g', ...cfg }, { 'sensor.g': s('cooking'), ...st });
+  for (const v of [0, -1, 999]) check(`grill : sonde a ${v} = pas de sonde`, /Probe/.test(lines({ probe_entity: 'sensor.p' }, { 'sensor.p': s(v, { unit_of_measurement: '°C' }) })), false);
+  check('grill : vraie sonde', /Probe/.test(lines({ probe_entity: 'sensor.p' }, { 'sensor.p': s(58, { unit_of_measurement: '°C' }) })), true);
+  const end = new Date(now() + 3000000).toISOString();
+  const left = (id, st) => /Remaining time/.test(lines({ timer_end_entity: id }, { [id]: st }));
+  check('grill : minuteur timer', left('timer.g', s('active', { finishes_at: end })), true);
+  check('grill : minuteur timer au repos', left('timer.g', s('idle', {})), false);
+  check('grill : minuteur horloge', left('sensor.e', s('0:50:00')), true);
+  check('grill : minuteur 1970', left('sensor.e', s('1970-01-01T00:00:00+00:00', { device_class: 'timestamp' })), false);
+  check('grill : minuteur Unix en millisecondes', /Remaining time\s+(49|50)\s+min/.test(lines({ timer_end_entity: 'sensor.e' }, { 'sensor.e': s(now() + 3000000) }).replace(/<[^>]+>/g, ' ')), true);
+}
+
 report();

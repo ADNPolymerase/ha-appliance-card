@@ -235,7 +235,7 @@ const SECTIONS = [
   { field: "probe_2_target_entity", types: ["pellet_grill"], labelKey: "section_probe_2_target", includeDomains: ["number", "sensor", "input_number"] },
   { field: "probe_state_entity", types: ["pellet_grill"], labelKey: "section_probe_state", includeDomains: ["sensor"] },
   { field: "probe_alarm_entity", types: ["pellet_grill"], labelKey: "section_probe_alarm", includeDomains: ["binary_sensor", "sensor"] },
-  { field: "timer_end_entity", types: ["pellet_grill"], labelKey: "section_remaining", includeDomains: ["sensor", "input_datetime"] },
+  { field: "timer_end_entity", types: ["pellet_grill"], labelKey: "section_remaining", includeDomains: ["sensor", "input_datetime", "timer", "number"] },
   { field: "timer_complete_entity", types: ["pellet_grill"], labelKey: "section_timer_done", includeDomains: ["binary_sensor", "sensor"] },
   { field: "error_entity", types: ["pellet_grill"], labelKey: "section_error", includeDomains: ["binary_sensor", "sensor"] },
   { field: "super_smoke_entity", types: ["pellet_grill"], labelKey: "pg_super_smoke", includeDomains: ["switch", "binary_sensor", "input_boolean"] },
@@ -601,6 +601,7 @@ const PLUG_HIDDEN_SECTIONS = new Set(["program_entity", "active_program_entity",
   "display_entity", "night_mode_entity", "heater_entity", "pool_mode_entity", "child_lock_entity", "light_entity", "tank_entity",
   "fan_speed_entity", "speed_entity", "water_entity", "beans_entity", "tray_entity", "descaling_entity", "cups_entity", "strength_entity",
   "nozzle_temperature_entity", "nozzle_target_entity", "bed_temperature_entity", "bed_target_entity", "chamber_temperature_entity",
+  "grill_state_entity", "pellet_level_entity", "probe_state_entity", "probe_alarm_entity", "timer_end_entity", "timer_complete_entity", "error_entity", "super_smoke_entity", "keep_warm_entity",
   "current_layer_entity", "total_layers_entity", "connectivity_entity", "alerts_entity", "toggle_entity", "start_entity", "pause_entity", "resume_entity", "stop_entity"]);
 
 // A section can also hang on the rest of the config: the second hopper only

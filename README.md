@@ -22,7 +22,7 @@ A Lovelace card that draws the appliances of your home and animates them from th
 
 ## Features
 
-- **64 appliance types, more than 170 models drawn**, animated while they work and still when they stop. The type is detected on its own, from the entity and from the maker and model of its device, or set with `appliance_type`.
+- **66 appliance types, more than 170 models drawn**, animated while they work and still when they stop. The type is detected on its own, from the entity and from the maker and model of its device, or set with `appliance_type`.
 - **Any integration**: every field is an entity you pick. A plain smart plug is enough, its power tells whether the appliance heats, washes or spins.
 - **State understood**: `Idle`, `RUNNING`, `wash`… become idle, running, paused, finished, delayed or error, with the step of the cycle (wash, rinse, spin…).
 - **What matters for each appliance**: program, time left, door, alerts, levels, temperatures, energy and cost, today's running time.
@@ -532,20 +532,22 @@ keep_warm_entity: switch.traeger_keepwarm
 |---|---|
 | `state_entity` | The grill's `climate` entity, or its state sensor. |
 | `large_temperature` | `false` removes the large temperature and the probe badge: the controller then shows the temperature, as on the real grill. On by default. |
-| `grill_state_entity` | The state sensor when `state_entity` is the `climate`: *Asleep*, *Ready*, *Igniting*, *Preheating*, *Cooking*, *Cooling down*, *Shutting down*. |
+| `grill_state_entity` | The state sensor when `state_entity` is the `climate`: *Asleep*, *Ready*, *Igniting*, *Preheating*, *Cooking*, *Cooling down*, *Shutting down*. Other integrations' words are read by what they say (`smoking`, `sear`, `cooling_down`, `flame_out`...). |
 | `temperature_entity` / `target_temperature_entity` | The grill's temperature and setpoint when they are not on `state_entity`. The setpoint shows while heating and cooking. |
 | `grill_layout` | `timberline` (no chimney), `drum` (chimney, hopper on the left, as Pit Boss and Z Grills), `cart` (recteq), `vertical`. Left out, chosen from the name. |
+| `probe_entity` | The meat probe, a `climate` (temperature and target) or a `sensor`. The line and the cable only appear with a probe plugged in; a reading of 0 or less, or above 572, counts as none. |
 | `probe_target_entity` | The probe's target when `probe_entity` is a plain `sensor`. |
 | `probe_2_entity` / `probe_2_target_entity` | A second probe. |
 | `pellet_level_entity` | Pellets left, in %, or a binary sensor that is on when the hopper is low. At 15 % or less, the line and the window turn red. |
-| `probe_entity` | The meat probe, a `climate` (temperature and target) or a `sensor`. The line and the cable only appear with a probe plugged in. |
 | `probe_state_entity` / `probe_alarm_entity` | At temperature, the state reads *Probe at temperature*; a probe that fell out says so on its line. |
-| `timer_end_entity` | The end of the cook timer, a date or a Unix time. The line shows while it counts down. |
+| `timer_end_entity` | The end of the cook timer: a date, a Unix time, a `timer`, a clock or the time left. The line shows while it counts down. |
 | `timer_complete_entity` | *Timer finished*, while the grill is lit. |
 | `error_entity` | A sensor reading `0` when all is well, or a binary sensor. |
 | `super_smoke_entity` / `keep_warm_entity` | A line each while their switch is available. |
 
 An entity named after Traeger, Pit Boss, recteq, Camp Chef, Grilla, GMG, PiFire or Z Grills is recognised on its own, and the editor fills in the rest. States and entity names were read from the code of these integrations: Traeger (`sebirdman/hass_traeger`, `Traeger-WiFire`), Pit Boss (`ha-pitboss`, `homeassistant-pitboss`, `ha-prime-polaris`), Camp Chef (`ha-campchef`, `ha-camp-chef-connect`), Grilla (`ha-grilla`), recteq, GMG (`gmg-ha`) and PiFire. Only a Traeger snapshot has been seen from a real grill.
+
+On a smart plug alone (`power_entity`, with its switch if it has one): *Asleep*, *Ready* while the plug is on and draws nothing, *Igniting* above 150 W, *Cooking* from 15 W. A temperature or probe sensor can be added; `power_on_threshold` sets another limit.
 
 </details>
 
@@ -1493,6 +1495,7 @@ disk2_entity: sensor.nas_drive_2_status
 | `presents` | christmas_tree | `auto` (default, presents under the tree on 24 and 25 December only) \| `show` \| `hide`. |
 | `detector_layout` | detector | `smoke` (a smoke detector on the ceiling) \| `co` (a CO alarm on the wall, its display in ppm) \| `leak` (a leak sensor on the floor). Left out, the device class picks it (`smoke`, `carbon_monoxide` or `gas`, `moisture`), or the name. On is an alarm: the smoke rises to the ceiling, the CO display turns red, the water drips into a puddle. |
 | `battery_entity` | detector | The battery, in % or as a low-battery sensor: a line, and the light turns amber at 20 % or less. |
+| `test_entity` | detector | A button, script or switch that runs the alarm test: a *Test* button on the card. |
 | `co_level_entity` | detector | The CO level, on the alarm's display and as a line. |
 | `speaker_layout` | speaker | `smart` (HomePod) \| `homepod_mini` \| `sonos_one` \| `sonos_era100` \| `sonos_era300` \| `sonos_move` \| `soundbar` (Sonos Arc or Beam, under its TV) \| `bose_wave` (Wave SoundTouch) \| `bose_500` (Home Speaker 500) \| `bose_soundlink` (SoundLink Flex) \| `bose_soundbar` (Smart Soundbar, under its TV) \| `sonos_five` \| `sonos_play` \| `sonos_roam` \| `sonos_ray` (under its TV) \| `sonos_amp` \| `sonos_port` \| `bose_ultra` (Lifestyle Ultra) \| `bose_portable` (Portable Smart Speaker) \| `bose_amp` (Music Amplifier) \| `bookshelf` \| `echo_dot` \| `echo_dot_max` \| `nest_mini`. Left out, it is read in the name, then in the model of its device: HomePod mini, Era 100, Era 300, Move, Five, Play, Roam, Ray, Amp, Port, Arc, Beam, Lifestyle Ultra, Portable, Music Amplifier, Echo Dot Max, Wave, SoundLink, Flex, another Bose. The state is a `media_player`: what it plays, the artist, the source and the volume are lines. |
 | `speaker_color` | speaker | `white` \| `black` \| `silver` \| `yellow` \| `orange` \| `blue`, each model in the colours it is sold in: a HomePod white or midnight, a HomePod mini in all five, a Sonos white or black, a Bose 500, Portable or Wave silver or black, a Lifestyle Ultra black or sand (`white`), an Echo Dot charcoal, white or blue, an Echo Dot Max white or black, a SoundLink black, white or blue. Left out, a colour in the name picks it (a HomePod named *white*), then `illustration_color`; otherwise each model has its own. |

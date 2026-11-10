@@ -135,11 +135,11 @@ function mkHass(states) {
 const PLUG_WATTS = { washer: 1900, dryer: 2000, dishwasher: 1800, oven: 2400, microwave: 900, kettle: 2200, coffee: 1200, cooker: 800,
   rice_cooker: 500, air_fryer: 1500, toaster: 900, iron: 2200, fridge: 70, water_heater: 2000, space_heater: 1500, towel_warmer: 600,
   dehumidifier: 250, air_purifier: 30, fan: 35, hood: 120, screen: 120, hair_dryer: 1200, printer_3d: 200, pool_pump: 750, robot: 24,
-  cooktop: 2600, pet_fountain: 2, water_pump: 800, floor_heating: 1200, spa: 2000, sauna: 6000, aquarium: 60, christmas_tree: 20 };
+  cooktop: 2600, pet_fountain: 2, water_pump: 800, floor_heating: 1200, spa: 2000, sauna: 6000, aquarium: 60, christmas_tree: 20, pellet_grill: 45 };
 const PLUG_MAX = { washer: 2400, dryer: 2800, dishwasher: 2200, oven: 3500, microwave: 1300, kettle: 2400, coffee: 1500, cooker: 1200,
   rice_cooker: 800, air_fryer: 2000, toaster: 1200, iron: 2600, fridge: 200, water_heater: 3000, space_heater: 2000, towel_warmer: 1000,
   dehumidifier: 400, air_purifier: 80, fan: 80, hood: 300, screen: 250, hair_dryer: 2200, printer_3d: 400, pool_pump: 1500, robot: 60,
-  cooktop: 7200, pet_fountain: 5, water_pump: 1500, floor_heating: 2500, spa: 3000, sauna: 9000, aquarium: 150, christmas_tree: 50 };
+  cooktop: 7200, pet_fountain: 5, water_pump: 1500, floor_heating: 2500, spa: 3000, sauna: 9000, aquarium: 150, christmas_tree: 50, pellet_grill: 400 };
 const plugOnly = params.get("plug") === "1";
 const plugSeen = new Set();
 function plugConfig(config) {
@@ -1672,10 +1672,10 @@ const EXTRA = { printer_bambu: printerBambu, printer_centauri: printerCentauri, 
 // Pellet grills (#101): every shape in every state, for the captures.
 const PG_NAMES = { timberline: L("Timberline", "Timberline"), drum: L("Drum", "Tonneau"), cart: L("Cart", "Chariot"), vertical: L("Vertical", "Vertical") };
 const pgCard = (layout, word, o = {}) => () => card({ name: PG_NAMES[layout], appliance_type: "pellet_grill", grill_layout: layout, state_entity: "climate.g", grill_state_entity: "sensor.g_state", pellet_level_entity: "sensor.g_pellets",
-    ...(o.probe ? { probe_entity: "climate.g_probe", probe_alarm_entity: "binary_sensor.g_alarm" } : {}), super_smoke_entity: "switch.g_smoke", keep_warm_entity: "switch.g_warm", error_entity: "sensor.g_error" },
+    ...(o.probe ? { probe_entity: "climate.g_probe", probe_alarm_entity: "binary_sensor.g_alarm" } : {}), super_smoke_entity: "switch.g_smoke", keep_warm_entity: "switch.g_warm", error_entity: "sensor.g_error", ...(o.cfg || {}) },
   [st("climate.g", word === "sleeping" || word === "idle" ? "off" : word === "cool_down" ? "cool" : "heat", { current_temperature: o.c ?? 107, temperature: 107 }), st("sensor.g_state", word), st("sensor.g_pellets", o.pel ?? 68, { unit_of_measurement: "%" }),
     st("climate.g_probe", "heat", { current_temperature: o.alarm ? 74 : 58, temperature: 74 }), st("binary_sensor.g_alarm", o.alarm ? "on" : "off"), st("switch.g_smoke", o.smoke ? "on" : "off"), st("switch.g_warm", o.warm ? "on" : "off"), st("sensor.g_error", o.err || "0")]);
-const PG_STATES = { off: ["sleeping", { c: 18 }], ready: ["idle", { c: 18 }], ignite: ["igniting", { c: 45 }], preheat: ["preheating", { c: 82 }], cook: ["cook_manual", { probe: true }], smoke: ["cook_custom", { smoke: true, c: 90 }], warm: ["cook_manual", { warm: true, c: 74 }], probe: ["cook_manual", { probe: true, alarm: true }], low: ["cook_manual", { pel: 9 }], cool: ["cool_down", { c: 150 }], error: ["cook_manual", { err: "5" }] };
+const PG_STATES = { off: ["sleeping", { c: 18 }], ready: ["idle", { c: 18 }], ignite: ["igniting", { c: 45 }], preheat: ["preheating", { c: 82 }], cook: ["cook_manual", { probe: true }], smoke: ["cook_custom", { smoke: true, c: 90 }], warm: ["cook_manual", { warm: true, c: 74 }], probe: ["cook_manual", { probe: true, alarm: true }], low: ["cook_manual", { pel: 9 }], cool: ["cool_down", { c: 150 }], error: ["cook_manual", { err: "5" }], plain: ["cook_manual", { cfg: { large_temperature: false } }] };
 for (const layout of Object.keys(PG_NAMES)) for (const [k, [word, o]] of Object.entries(PG_STATES)) EXTRA[`pg_${layout}_${k}`] = pgCard(layout, word, o);
 // ?view=live: the public demo, linked from the README. Every family under
 // its own title, a grid that fits a phone, the language and the theme to
@@ -1704,8 +1704,8 @@ function liveGallery() {
   const wrap = document.getElementById("wrap");
   wrap.innerHTML = `<header>
     <h1>HA Appliance Card</h1>
-    <p>${L("A Lovelace card for 52 kinds of home appliances, each drawn and animated from its own data. These cards run on made-up states: in Home Assistant every field is an entity you pick.",
-      "Une card Lovelace pour 52 types d'appareils, chacun dessiné et animé à partir de ses propres données. Ces cartes tournent sur des états inventés : dans Home Assistant, chaque champ est une entité que vous choisissez.")}</p>
+    <p>${L("A Lovelace card for 66 kinds of home appliances, each drawn and animated from its own data. These cards run on made-up states: in Home Assistant every field is an entity you pick.",
+      "Une card Lovelace pour 66 types d'appareils, chacun dessiné et animé à partir de ses propres données. Ces cartes tournent sur des états inventés : dans Home Assistant, chaque champ est une entité que vous choisissez.")}</p>
     <nav>${link("lang", "en", "English", !fr)}${link("lang", "fr", "Français", fr)}<span></span>${link("theme", "light", L("Light", "Clair"), !dark)}${link("theme", "dark", L("Dark", "Sombre"), dark)}<span></span>${link("plug", "0", L("Integrations", "Intégrations"), !plugOnly)}${link("plug", "1", L("Smart plug only", "Prise connectée seule"), plugOnly)}<span></span><a href="https://github.com/ADNPolymerase/ha-appliance-card">GitHub</a></nav>
     <p class="hint">${plugOnly
       ? L("Each card below has nothing but a smart plug: its switch and its power meter. Open “Change the values” and move the power, or press the power button.",
@@ -1720,7 +1720,7 @@ function liveGallery() {
     [L("Air purifiers and fans", "Purificateurs et ventilateurs"), [purifier, boxPurifier, ringPurifier, fan, ceilingFan]],
     [L("Robots and vacuums", "Robots et aspirateurs"), [rbtVacuum, rbtEmptying, rbtBox, rbtBoxGold, rbtMop, rbtCombo, rbtDrying, rbtMower, rbtNavimow, rbtRain, rbtStick, rbtWasher]],
     [L("Electric rides", "Mobilit\u00e9 \u00e9lectrique"), [demo_mobScooter, demo_mobOffroad, demo_mobEbike, demo_mobGyropode, demo_mobMotorcycle, demo_mobUnplugged]],
-    [L("Pellet grills and smokers", "Barbecues et fumoirs \u00e0 pellets"), [EXTRA.pg_timberline_cook, EXTRA.pg_timberline_smoke, EXTRA.pg_timberline_off, EXTRA.pg_drum_preheat, EXTRA.pg_drum_cook, EXTRA.pg_cart_cook, EXTRA.pg_cart_warm, EXTRA.pg_vertical_smoke]],
+    [L("Pellet grills and smokers", "Barbecues et fumoirs \u00e0 pellets"), [EXTRA.pg_timberline_cook, EXTRA.pg_timberline_plain, EXTRA.pg_timberline_off, EXTRA.pg_timberline_low, EXTRA.pg_drum_preheat, EXTRA.pg_drum_probe, EXTRA.pg_drum_error, EXTRA.pg_cart_cool, EXTRA.pg_cart_warm, EXTRA.pg_vertical_smoke]],
     [L("Pool", "Piscine"), [poolRunning, poolChlorine, poolBackwash, poolFrost, poolLight, poolError]],
     [L("Buffer tanks, circulators, solar thermal and wood stoves", "Ballons, circulateurs, solaire thermique et po\u00eales \u00e0 bois"), [heatTank, heatTankLoading, heatTankLow, heatFws, heatFwsDraw, heatFwsCirc, heatCirc, heatCircWilo, heatCircFault, heatCircNoData, heatSth, heatSthTubes, heatSthFrost, heatSthStag, heatWood, heatWoodEmbers, heatWoodCold, heatWoodWater]],
     [L("Energy", "Énergie"), [solarDay, solarRoof, solarNight, batteryCharging, batteryStation, batteryLow, evCharger, evDischarging]],

@@ -3803,11 +3803,31 @@ function ntRemaining(hass, id) {
 // What the pellet grill integrations call their states (#101): Traeger's
 // sleeping to cool_down, a thermostat's heat and off.
 const GRILL_PHASES = { sleeping: "off", sleep: "off", asleep: "off", off: "off", stop: "off", idle: "ready", ready: "ready", standby: "ready", monitor: "ready", paused: "ready", done: "ready", shutdown: "shutdown", shutting_down: "shutdown", igniting: "ignite", ignite: "ignite", startup: "ignite", starting: "ignite", reignite: "ignite", prime: "ignite", preheating: "preheat", preheat: "preheat", cook_manual: "cook", cook_custom: "cook", manual_cook: "cook", custom_cook: "cook", cooking: "cook", cook: "cook", heat: "cook", heating: "cook", at_temperature: "cook", running: "cook", run: "cook", stable: "cook", hold: "cook", feed: "cook", manual: "cook", high: "cook", smoke: "cook", cook_program: "cook", recipe: "cook", cool_down: "cool", cooldown: "cool", cool: "cool", cooling: "cool", fan: "cool", fan_only: "cool", error: "error", fault: "error", offline: "unav" };
-// A cook timer's end: a date, a Unix time, or the time left.
+// What another integration may call them: the words above decide first.
+function grillPhaseOf(word) {
+  if (GRILL_PHASES[word]) return GRILL_PHASES[word];
+  const rules = [[/error|fault|alarm|overheat|fail|flame.?out|no.?flame/, "error"], [/disconnect|offline|not.?connected/, "unav"], [/shut/, "shutdown"], [/cool/, "cool"],
+    [/pre.?heat|heating.?up|warming.?up/, "preheat"], [/ignit|start|prime/, "ignite"], [/sleep|stop|(^|_)off($|_)/, "off"], [/idle|ready|stand.?by|wait|pause|done|finish|complete/, "ready"],
+    [/cook|smok|grill|sear|roast|bak|boost|hold|warm|heat|run|burn|^lit$/, "cook"]];
+  const rule = rules.find(([re]) => re.test(word));
+  return rule ? rule[1] : "";
+}
+// Above this a grill on a plug is lighting its igniter (300 to 500 W); it
+// runs its fan and auger on 30 to 50 W.
+const GRILL_IGNITER_W = 150;
+// A probe that is not plugged in reads a fixed value on some controllers.
+const grillProbeOf = (v) => (v !== null && v > 0 && v <= 572 ? v : null);
+// A cook timer's end: a date, a Unix time, a clock, a timer, or the time left.
 function grillTimerLeft(hass, id) {
   const s = id ? stateObj(hass, id) : null;
-  const v = s ? numberOrNull(s.state) : null;
-  if (v !== null && v > 1e9) return Math.max(0, v - Date.now() / 1000);
+  if (!s) return null;
+  if (domainOf(id) === "timer") {
+    const end = Date.parse((s.attributes || {}).finishes_at);
+    return s.state === "active" && isFinite(end) ? Math.max(0, (end - Date.now()) / 1000) : null;
+  }
+  const v = numberOrNull(s.state);
+  if (v !== null && v > 1e9) return Math.max(0, (v > 1e12 ? v / 1000 : v) - Date.now() / 1000);
+  if (/^\d+:[0-5]\d(:[0-5]\d)?$/.test(String(s.state).trim())) return remainingSeconds(hass, id, undefined, true);
   return ntRemaining(hass, id);
 }
 // One reading of the new types: the mode, the state line, its colour, the
@@ -3834,7 +3854,9 @@ function ntReadOf(type, hass, cfg, st, watts, threshold) {
     const gs = cfg.grill_state_entity ? stateObj(hass, cfg.grill_state_entity) : null;
     const word = (dead2(gs) ? raw : String(gs.state).trim().toLowerCase()).replace(/[\s-]+/g, "_");
     const action = String((st && st.attributes && st.attributes.hvac_action) || "").toLowerCase();
-    const phase = (word === "heat" && action === "preheating" ? "preheat" : GRILL_PHASES[word]) || (running ? "cook" : "off");
+    const onPlug = plugSourceOf(cfg, "pellet_grill") && !cfg.grill_state_entity;
+    const phase = onPlug ? (!running ? (raw === "on" ? "ready" : "off") : watts >= GRILL_IGNITER_W ? "ignite" : "cook")
+      : (word === "heat" && action === "preheating" ? "preheat" : grillPhaseOf(word)) || (running ? "cook" : "off");
     const active = ["ignite", "preheat", "cook"].includes(phase);
     const unit = (hass && hass.config && hass.config.unit_system && hass.config.unit_system.temperature) || "\u00b0C";
     // The grill's own thermostat, whichever entity the card was given.
@@ -3846,7 +3868,7 @@ function ntReadOf(type, hass, cfg, st, watts, threshold) {
     // carries both temperatures; a plain sensor only its own.
     const ps = cfg.probe_entity ? stateObj(hass, cfg.probe_entity) : null;
     const probeClimate = domainOf(cfg.probe_entity) === "climate";
-    const pv = dead2(ps) ? null : probeClimate ? numberOrNull((ps.attributes || {}).current_temperature) : numberOrNull(ps.state);
+    const pv = dead2(ps) ? null : grillProbeOf(probeClimate ? numberOrNull((ps.attributes || {}).current_temperature) : numberOrNull(ps.state));
     const pAim = pv === null ? null : cfg.probe_target_entity ? numericState(hass, cfg.probe_target_entity) : probeClimate ? numberOrNull((ps.attributes || {}).temperature) : null;
     const pState = cfg.probe_state_entity && !dead2(stateObj(hass, cfg.probe_state_entity)) ? String(stateObj(hass, cfg.probe_state_entity).state).trim().toLowerCase() : "";
     const fellOut = pState === "fell_out";
@@ -3854,7 +3876,7 @@ function ntReadOf(type, hass, cfg, st, watts, threshold) {
     // A second probe, Pit Boss's and Camp Chef's meats.
     const p2 = cfg.probe_2_entity ? stateObj(hass, cfg.probe_2_entity) : null;
     const p2Climate = domainOf(cfg.probe_2_entity) === "climate";
-    const p2v = dead2(p2) ? null : p2Climate ? numberOrNull((p2.attributes || {}).current_temperature) : numberOrNull(p2.state);
+    const p2v = dead2(p2) ? null : grillProbeOf(p2Climate ? numberOrNull((p2.attributes || {}).current_temperature) : numberOrNull(p2.state));
     const p2Aim = p2v === null ? null : cfg.probe_2_target_entity ? numericState(hass, cfg.probe_2_target_entity) : p2Climate ? numberOrNull((p2.attributes || {}).temperature) : null;
     if (p2v !== null) lines.push({ key: "pg_probe2", icon: "mdi:thermometer-probe", label: `${t(hass, "pg_probe")} 2`, value: span(p2v, p2Aim, (v) => tempText(hass, cfg, p2Climate ? null : cfg.probe_2_entity, v, unit)), entity: cfg.probe_2_entity });
     // A level in %, or a binary sensor that says the hopper is low (Pit Boss, GMG).
