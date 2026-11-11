@@ -3413,6 +3413,7 @@ class ApplianceCard extends HTMLElement {
     // filter as lines, the four temperatures on the drawing.
     let hrv = null;
     let hrvFilterPct = null;
+    let hrvFilterBarText = "";
     if (cap.hrv) {
       // A unit that changes mode on its own (an ERV in smart mode, #54)
       // reports the mode it is in apart from the one set: the drawing and
@@ -3465,7 +3466,10 @@ class ApplianceCard extends HTMLElement {
       if (live) {
         const speedSlider = !!cfg.fan_speed_entity && ["number", "input_number"].includes(domainOf(cfg.fan_speed_entity))
           && (/manu/.test(stripAccents(String((st && st.state) || "")).toLowerCase()) || (menu && /manu/i.test(String(menu.current || ""))));
-        if (h.pct !== null && h.pct > 0 && !speedSlider) {
+        // A speed set by hand (a Broan's number, #54) only matters in Manual,
+        // where its slider shows: in the other modes the unit runs its own.
+        const handSet = settable(cfg.fan_speed_entity) && !!menu && numberOrNull(((st && st.attributes) || {}).percentage) === null;
+        if (h.pct !== null && h.pct > 0 && !speedSlider && !handSet) {
           extraLines.push({ key: "hrv_speed", icon: "mdi:fan", label: t(hass, "section_fan_speed"), value: keepTogether(`${Math.round(h.pct)} %`), entity: cfg.fan_speed_entity || cfg.state_entity });
         }
         // Each fan on a line of its own when it reports its speed, with the
@@ -3499,7 +3503,9 @@ class ApplianceCard extends HTMLElement {
         const full = parseFloat(cfg.filter_life_full);
         hrvFilterPct = Math.max(0, Math.min(100, h.filterDays ? (h.filterValue / (isFinite(full) && full > 0 ? full : 90)) * 100 : h.filterValue));
       }
-      if (h.filterText) {
+      // The bar says the days left itself, so no line repeats them (#54).
+      if (hrvFilterPct !== null && h.filterDays) hrvFilterBarText = h.filterText;
+      if (h.filterText && (hrvFilterPct === null || progressPct !== null)) {
         extraLines.push({ key: "hrv_filter", icon: "mdi:air-filter", label: t(hass, "filter"), value: keepTogether(h.filterText), entity: cfg.filter_life_entity, caution: h.filterDue });
       }
       const temp = (id) => {
@@ -3516,7 +3522,7 @@ class ApplianceCard extends HTMLElement {
         extraLines.push({ key: "hrv_zones", icon: "mdi:valve", label: t(hass, "hrv_zones"), entity: zoneEntries[0].entity, wrap: true,
           value: zoneEntries.map((e, i) => `${zname(e)} : ${t(hass, zones[i].open ? "hrv_zone_open" : "hrv_zone_shut")}`).join(" \u00b7 ") });
       }
-      hrv = { ...h, layout: hrvLayout, zones, floors: cfg.hrv_floors, dark: cfg.illustration_color === "black",
+      hrv = { ...h, layout: hrvLayout, zones, floors: cfg.hrv_floors, dark: ["black", "red"].includes(cfg.illustration_color),
         lcd: h.mode === "run" ? `V${h.level}` : HRV_LCD[h.mode] || "",
         t: { o: temp(cfg.outdoor_temperature_entity), s: temp(cfg.supply_temperature_entity), e: temp(cfg.extract_temperature_entity), x: temp(cfg.exhaust_temperature_entity) },
         n: { o: t(hass, "hrv_t_outdoor"), s: t(hass, "hrv_t_supply"), e: t(hass, "hrv_t_extract"), x: t(hass, "hrv_t_exhaust"), out: t(hass, "hrv_outside"), room: t(hass, "hrv_room") } };
@@ -4619,6 +4625,7 @@ class ApplianceCard extends HTMLElement {
     // A filter's life on the bar says so, with its icon and its percentage
     // (#54): a bar alone reads as a cycle's progress.
     let barLabel = "";
+    let barText = "";
     // The countdown of a delayed start, as a bar that fills up to the start.
     const delayPct = delaySec !== null && norm === "delayed" ? this._delayProgress(cfg.delay_entity, delaySec) : null;
     if (delayPct !== null && progressPct === null) barPct = delayPct;
@@ -4633,6 +4640,7 @@ class ApplianceCard extends HTMLElement {
       barPct = hrvFilterPct;
       barColor = hrv && hrv.filterDue ? "var(--error-color, #f44336)" : "var(--warning-color, #ff9800)";
       barLabel = t(hass, "section_filter_life");
+      barText = hrvFilterBarText;
     }
 
     // hide_when_off also drops an empty bar between cycles (#79).
@@ -4640,7 +4648,7 @@ class ApplianceCard extends HTMLElement {
     const barHtml = barPct !== null
       ? `
         <div class="bar-row${barLabel ? " labelled" : ""}"${barLabel ? ` title="${esc(barLabel)}"` : ""}>${barLabel ? `<ha-icon icon="mdi:air-filter"></ha-icon><span class="bar-lbl">${esc(barLabel)}</span>` : ""}
-          <div class="bar"><div class="bar-fill" style="width:${barPct.toFixed(0)}%;background:${barColor}"></div></div>${barLabel ? `<span class="bar-pct">${barPct.toFixed(0)}\u00a0%</span>` : ""}
+          <div class="bar"><div class="bar-fill" style="width:${barPct.toFixed(0)}%;background:${barColor}"></div></div>${barLabel ? `<span class="bar-pct">${esc(barText ? barText.replace(" ", "\u00a0") : `${barPct.toFixed(0)}\u00a0%`)}</span>` : ""}
         </div>`
       : "";
 

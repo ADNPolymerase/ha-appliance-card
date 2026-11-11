@@ -11399,8 +11399,8 @@ check('borne : ni un statut reconnu', evMode(evR('SuspendedEVSE', { power_entity
   // #54, second round: the air each fan moves on the drawing, the filter as a
   // bar, sliders for the speed in Manual and the setpoint under humidity
   // control, fans turning on their centre.
-  check('broan : le debit du soufflage sur le dessin', /class="hv-n hv-cfm" x="160"[^>]*>50 CFM<\/text>/.test(broan('min')), true);
-  check('broan : le debit de l extraction sur le dessin', /class="hv-n hv-cfm" x="76"[^>]*>50 CFM<\/text>/.test(broan('min')), true);
+  check('broan : le debit du soufflage sur le dessin', /class="hv-n hv-cfm hv-cfm-in" x="160"[^>]*>50 CFM<\/text>/.test(broan('min')), true);
+  check('broan : le debit de l extraction sur le dessin', /class="hv-n hv-cfm hv-cfm-in" x="76"[^>]*>50 CFM<\/text>/.test(broan('min')), true);
   check('broan : arretee, pas de debit dessine', /hv-cfm" x/.test(broan('off')), false);
   check('broan : les pales tournent sur leur centre', /class="hv-fan hv-fs" style="transform-origin:160px 98px"/.test(broan('min')), true);
   const fl = (v, unit, extra = {}) => render({ ...bcfg, filter_life_entity: 'sensor.erv_filter', ...extra }, { ...bst('min'), 'sensor.erv_filter': s(v, { unit_of_measurement: unit }) });
@@ -11436,7 +11436,39 @@ check('borne : ni un statut reconnu', evMode(evR('SuspendedEVSE', { power_entity
   check('broan : plus de ligne du mode en double', infoLine(broan('smart'), 'Mode'), null);
   check('broan : soufflage en tr/min et debit', infoLine(broan('min'), 'Supply fan').replace(/\s/g, ' '), '1,084 RPM · 50 CFM');
   check('broan : extraction en tr/min et debit', infoLine(broan('min'), 'Exhaust fan').replace(/\s/g, ' '), '1,362 RPM · 50 CFM');
-  check('broan : la vitesse en % depuis un number', infoLine(broan('min'), 'Fan speed').replace(/\s/g, ' '), '50 %');
+  // #54, third round: the speed set by hand only shows in Manual, as its
+  // slider; the filter's days on its bar; each fan its own top speed; the
+  // airflow on the unit's body readable in a dark theme.
+  check('broan : la vitesse reglee a la main absente hors manuel', infoLine(broan('min'), 'Fan speed'), null);
+  check('broan : ni en smart', infoLine(broan('smart'), 'Fan speed'), null);
+  check('broan : le filtre en jours sur la barre', /class="bar-pct">45&nbsp;d<|class="bar-pct">45\u00a0d</.test(fl(45, 'd')), true);
+  check('broan : plus de ligne filtre sous la barre', infoLine(fl(45, 'd'), 'Filter'), null);
+  check('broan : le filtre en % sur la barre', /class="bar-pct">30\u00a0%</.test(fl(30, '%')), true);
+  check('broan : un filtre en heures garde sa ligne', infoLine(fl(300, 'h'), 'Filter') !== null, true);
+  check('broan : la vitesse max de l extraction a part', /--hv-ep:1\.92s/.test(broan('min', {}, { exhaust_fan_max_rpm: 4000 })), true);
+  check('broan : le soufflage garde la sienne', /--hv-sp:1\.52s/.test(broan('min', {}, { exhaust_fan_max_rpm: 4000 })), true);
+  // The unit in 3/4 (#54): its four ports on top, the outside pair in front,
+  // a fan turning in each outgoing port, the airs listed on each side.
+  {
+    const bx = (mode, extra = {}) => broan(mode, {}, { hrv_layout: 'box', ...extra });
+    check('caisson 3/4 : son dessin', /hv-l-box\b/.test(bx('max')), true);
+    check('caisson 3/4 : un Broan par son nom', /hv-l-box\b/.test(render({ ...bcfg, name: 'Broan ERV' }, bst('max'))), true);
+    check('caisson 3/4 : un Venmar aussi', /hv-l-box\b/.test(render({ ...bcfg, name: 'Venmar AVS' }, bst('max'))), true);
+    check('caisson 3/4 : le schema reste choisi a la main', /hv-l-diagram\b/.test(render({ ...bcfg, name: 'Broan ERV', hrv_layout: 'diagram' }, bst('max'))), true);
+    check('caisson 3/4 : le ventilateur du soufflage dans son piquage', /hv-fan hv-pfan hv-fs/.test(bx('max')), true);
+    check('caisson 3/4 : celui de l extraction aussi', /hv-fan hv-pfan hv-fe/.test(bx('max')), true);
+    check('caisson 3/4 : chacun a son rythme', /--hv-ep:1\.92s/.test(bx('min', { exhaust_fan_max_rpm: 4000 })), true);
+    check('caisson 3/4 : le debit du soufflage a droite', /class="hv-n hv-cfm" x="224"[^>]*>50 CFM</.test(bx('min')), true);
+    check('caisson 3/4 : celui de l extraction a gauche', /class="hv-n hv-cfm" x="12"[^>]*>50 CFM</.test(bx('min')), true);
+    check('caisson 3/4 : plus de debit sur le corps', /class="hv-n hv-cfm hv-cfm-in"/.test(bx('min')), false);
+    check('caisson 3/4 : le bypass en bleu', /<g class="hv-bypass">[^]*?#42a5f5/.test(bx('max')), true);
+    check('caisson 3/4 : contour lisible sur un corps blanc', /\.hv-bf,\.hv-bt,\.hv-bs\{stroke:#6f7880/.test(bx('max', { illustration_color: 'white' })), true);
+    check('caisson 3/4 : le ventilateur tourne sur son centre', /\.hv-pfan\{transform-box:fill-box;transform-origin:center\}/.test(bx('max')), true);
+  }
+  check('broan : sans max d extraction, celle commune', /--hv-ep:2\.26s/.test(broan('min', {}, { fan_max_rpm: 8000 })), true);
+  check('broan : le debit lisible sur le corps', /\.hv-cfm-in\{fill:#455a64\}/.test(broan('min')), true);
+  check('broan : et sur un corps sombre', /\.hv-dark \.hv-cfm-in\{fill:#dfe4e8\}/.test(broan('min')), true);
+  check('broan : un corps rouge est sombre aussi', machineCls(broan('min', {}, { illustration_color: 'red' })).includes('hv-dark'), true);
   check('broan : en manuel, le curseur remplace la ligne de vitesse', infoLine(broan('manual'), 'Fan speed'), null);
   const paces = broan('min');
   check('broan : chaque ventilateur a sa vitesse (soufflage)', /--hv-sp:1\.52s/.test(paces), true);
@@ -13052,7 +13084,7 @@ function tvT(w) { return { 'switch.tv': { state: 'on', attributes: {} }, 'sensor
   const far = new Date(now() + 40 * 86400000).toISOString();
   const vallox = H({ filter_life_entity: 'sensor.f' }, { 'sensor.f': s(far, { device_class: 'timestamp' }) });
   check('vallox : une date de filtre', /2027 %|20\d\d %/.test(vallox), false);
-  check('vallox : en jours', /40\s*d/.test(infoLine(vallox, 'Filter')), true);
+  check('vallox : en jours, sur la barre', /class="bar-pct">40\u00a0d</.test(vallox), true);
   const flexit = H({ filter_life_entity: 'sensor.f' }, { 'sensor.f': s(3120, { unit_of_measurement: 'h' }) });
   check('flexit : des heures ne sont pas des %', infoLine(flexit, 'Filter').replace(/\s/g, ' '), '3120 h');
   check('flexit : binaire accepte', /hv-/.test(H({ filter_life_entity: 'binary_sensor.f' }, { 'binary_sensor.f': s('on') })), true);

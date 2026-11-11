@@ -1343,6 +1343,7 @@ const hrvCard = (name, layout, state, attrs, more = [], cfg = {}) => () => card(
    st("sensor.vmc_extract", 21, { unit_of_measurement: "\u00b0C" }), st("sensor.vmc_exhaust", 6, { unit_of_measurement: "\u00b0C" }),
    st("sensor.vmc_airflow", 85, { unit_of_measurement: "m\u00b3/h" }), st("sensor.vmc_filter", 72, { unit_of_measurement: "days" }), ...more]);
 const hrvDiagram = hrvCard(L("Ventilation", "VMC double flux"), "diagram", "on", { percentage: 50 });
+const hrvBox = hrvCard(L("Basement ERV", "VMC du sous-sol"), "box", "on", { percentage: 60 }, [], { illustration_color: "grey" });
 const hrvOneDuct = hrvCard(L("Bedroom ventilation", "VMC chambre"), "one_duct", "on", { percentage: 90, preset_mode: "boost" });
 const hrvPair = hrvCard(L("Studio ventilation", "VMC studio"), "pair", "on", { percentage: 40 }, [st("binary_sensor.vmc_bypass", "off")], { bypass_entity: "binary_sensor.vmc_bypass" });
 const hrvBypass = hrvCard(L("Summer night", "Nuit d'\u00e9t\u00e9"), "diagram", "on", { percentage: 70 }, [st("binary_sensor.vmc_bypass", "on")], { bypass_entity: "binary_sensor.vmc_bypass" });
@@ -1649,7 +1650,7 @@ const EXTRA = { printer_bambu: printerBambu, printer_centauri: printerCentauri, 
                 ups_online: upsOnline, ups_charging: upsCharging, ups_battery: upsBattery, ups_low: upsLow,
                 ups_replace: upsReplace, ups_off: upsOff,
                 dif_drop: difDrop, dif_cone: difCone, dif_stone: difStone, dif_flame: difFlame, dif_nebulizer: difNebulizer,
-                hrv_diagram: hrvDiagram, hrv_one_duct: hrvOneDuct, hrv_pair: hrvPair, hrv_bypass: hrvBypass, hrv_single: hrvSingle, hrv_single_high: hrvSingleHigh, hrv_single_off: hrvSingleOff, hrv_single_box: hrvSingleBox, hrv_single_box_high: hrvSingleBoxHigh, hrv_basement: hrvBasement, hrv_basement_shut: hrvBasementShut,
+                hrv_diagram: hrvDiagram, hrv_box: hrvBox, hrv_one_duct: hrvOneDuct, hrv_pair: hrvPair, hrv_bypass: hrvBypass, hrv_single: hrvSingle, hrv_single_high: hrvSingleHigh, hrv_single_off: hrvSingleOff, hrv_single_box: hrvSingleBox, hrv_single_box_high: hrvSingleBoxHigh, hrv_basement: hrvBasement, hrv_basement_shut: hrvBasementShut,
                 cam_indoor: camIndoor, cam_tube: camTube, cam_outdoor: camOutdoor, cam_dome: camDome, cam_privacy: camPrivacy, cam_offline: camOffline,
                 lamp_bulb: lampBulb, lamp_bedside: lampBedside, lamp_floor: lampFloor, lamp_torch: lampTorch, lamp_pendant: lampPendant,
                 lamp_strip: lampStrip, lamp_spots: lampSpots, lamp_panels: lampPanels, lamp_desk: lampDesk, lamp_wall: lampWall, lamp_off: lampOff,
@@ -1727,7 +1728,7 @@ function liveGallery() {
     [L("Network and servers", "Réseau et serveurs"), [netSwitch, netRouter("on"), netNas, netServer, netRack, upsOnline, upsBattery, upsLow]],
     [L("Screens and tablets", "Écrans et tablettes"), [scrTv, scrProjector, scrComputer, scrLaptop, tabWall, tabFrame, tabPortrait]],
     [L("Home and media", "Maison et multimédia"), [hdHot, hdRing, printer3d, printerBambu, printerCentauri, printerA1, printerNeptune, printerAms, printerAmsTop, dryer1, dryer2, dryer4, scaleFresh, scaleGoal]],
-    [L("Diffusers and ventilation", "Diffuseurs et ventilation"), [difDrop, difCone, difStone, difFlame, difNebulizer, hrvDiagram, hrvOneDuct, hrvPair, hrvBypass, hrvSingle, hrvSingleHigh, hrvSingleOff, hrvSingleBox, hrvSingleBoxHigh, hrvBasement, hrvBasementShut]],
+    [L("Diffusers and ventilation", "Diffuseurs et ventilation"), [difDrop, difCone, difStone, difFlame, difNebulizer, hrvDiagram, hrvBox, hrvOneDuct, hrvPair, hrvBypass, hrvSingle, hrvSingleHigh, hrvSingleOff, hrvSingleBox, hrvSingleBoxHigh, hrvBasement, hrvBasementShut]],
     [L("Cameras", "Cam\u00e9ras"), [camIndoor, camTube, camOutdoor, camDome, camPrivacy, camOffline]],
     [L("Lamps", "Lampes"), [lampBulb, lampBedside, lampFloor, lampTorch, lampPendant, lampStrip, lampSpots, lampPanels, lampDesk, lampWall, lampOff]],
     [L("Mailboxes and doorbells", "Boîtes aux lettres et sonnettes"), [mbThrough, mbPostman, mbCollect, mbRight, mb3d, mb3dOpen, mb3dBack, mb3dGreen, mbClassic, mbClassicOpen, camDoorbell, camDoorbellIdle]],

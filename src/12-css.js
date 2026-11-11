@@ -2051,6 +2051,21 @@ const ILLUSTRATION_CSS = {
         .hv-t{font:600 9px Arial,sans-serif;fill:var(--primary-text-color,#212121)}
         .hv-n{font:400 8px Arial,sans-serif;fill:var(--secondary-text-color,#727272)}
         .hv-cfm{font-size:7.5px;font-weight:600}
+        .hv-cfm-in{fill:#455a64}
+        .hv-dark .hv-cfm-in{fill:#dfe4e8}
+        .hv-bf{fill:var(--ac-body,#b6bbbf)}
+        .hv-bt{fill:var(--ac-body-hi,#d0d5d8)}
+        .hv-bs{fill:var(--ac-body-lo,#8e9498)}
+        .hv-bf,.hv-bt,.hv-bs{stroke:#6f7880;stroke-width:.8;stroke-linejoin:round}
+        .hv-edge{fill:none;stroke:var(--ac-body-hi,#d0d5d8);stroke-width:.8}
+        .hv-panel{fill:#5d666d}
+        .hv-strap{fill:none;stroke:#9aa3ad;stroke-width:.7}
+        .hv-pk{fill:#2b3034}.hv-pkr{fill:#41484e}
+        .hv-pm{fill:#a9b1b8}.hv-pmr{fill:#cfd5da}
+        .hv-pfan{transform-box:fill-box;transform-origin:center}
+        .hv-pfan path{fill:#8d979f}
+        .hv-flow.hv-thin{stroke-width:3.4}
+        .hv-dash.hv-thin{stroke-width:1.3;stroke-dasharray:3 9}
         .hv-lcd{font:700 6px Arial,sans-serif;fill:#7fe3ff}
         .hv-pa,.hv-pb{opacity:0}
         .hv-on .hv-pa{animation:hv-pa 140s linear infinite;animation-delay:var(--anim-offset,0s)}

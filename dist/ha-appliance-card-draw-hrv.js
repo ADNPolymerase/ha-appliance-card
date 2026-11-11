@@ -26,7 +26,7 @@ const HRV_SVGS = {
 <path class="hv-flow" d="M226 34 H174 C146 34 140 52 118 66 C96 80 90 98 62 98 H10" stroke="url(#hv-g-ex)"/><path class="hv-dash hv-de" d="M226 34 H174 C146 34 140 52 118 66 C96 80 90 98 62 98 H10"/></g>
 <g class="hv-rc"><path class="hv-flow" d="M226 34 H170 C128 34 128 98 170 98 H226" stroke="#ff9800"/><path class="hv-dash hv-ds" d="M226 34 H170 C128 34 128 98 170 98 H226"/></g>
 <path class="hv-damper" d="M58 27 L66 41 M58 91 L66 105"/>${hvFan(160, 98, 8, "hv-fs")}${hvFan(76, 98, 8, "hv-fe")}
-${h.flowS ? `<text class="hv-n hv-cfm" x="160" y="85" text-anchor="middle">${h.flowS}</text>` : ""}${h.flowE ? `<text class="hv-n hv-cfm" x="76" y="85" text-anchor="middle">${h.flowE}</text>` : ""}
+${h.flowS ? `<text class="hv-n hv-cfm hv-cfm-in" x="160" y="85" text-anchor="middle">${h.flowS}</text>` : ""}${h.flowE ? `<text class="hv-n hv-cfm hv-cfm-in" x="76" y="85" text-anchor="middle">${h.flowE}</text>` : ""}
 ${hvLab(8, 26, h.t.o, "", "start")}${hvLab(228, 118, h.t.s, "", "end")}${hvLab(228, 26, h.t.e, "", "end")}${hvLab(8, 118, h.t.x, "", "start")}
 <text class="hv-frost" x="118" y="16" text-anchor="middle">\u2744</text><g class="hv-filt"><circle cx="168" cy="27" r="6"/><text x="168" y="30.5" text-anchor="middle">!</text></g>${hvBadges(h, 118, 4)}`,
   one_duct: (h) => `<defs><linearGradient id="hv-g-fa" gradientUnits="userSpaceOnUse" x1="130" x2="182"><stop offset="0" stop-color="#42a5f5"/><stop offset="1" stop-color="#ff9800"/></linearGradient>
@@ -36,7 +36,7 @@ ${hvLab(8, 26, h.t.o, "", "start")}${hvLab(228, 118, h.t.s, "", "end")}${hvLab(2
 <rect x="118" y="28" width="78" height="72" rx="7" class="hv-box"/>
 <rect x="132" y="50" width="46" height="28" rx="2" fill="#3a4148" stroke="#7b858f"/>${Array.from({ length: 11 }, (_, i) => `<path d="M${136 + i * 4} 51 V77" stroke="#7b858f" stroke-width=".7"/>`).join("")}
 ${hvFan(188, 56, 6.5, "hv-fs")}${hvFan(126, 72, 6.5, "hv-fe")}
-${h.flowS ? `<text class="hv-n hv-cfm" x="188" y="47" text-anchor="middle">${h.flowS}</text>` : ""}${h.flowE ? `<text class="hv-n hv-cfm" x="126" y="86" text-anchor="middle">${h.flowE}</text>` : ""}
+${h.flowS ? `<text class="hv-n hv-cfm hv-cfm-in" x="188" y="47" text-anchor="middle">${h.flowS}</text>` : ""}${h.flowE ? `<text class="hv-n hv-cfm hv-cfm-in" x="126" y="86" text-anchor="middle">${h.flowE}</text>` : ""}
 <g class="hv-through"><path class="hv-flow" d="M22 56 H214" stroke="url(#hv-g-fa)"/><path class="hv-dash hv-ds" d="M22 56 H214"/></g>
 <g class="hv-bypass"><path class="hv-flow" d="M22 56 H124 C130 56 130 40 140 40 H170 C180 40 180 56 186 56 H214" stroke="#42a5f5"/><path class="hv-dash hv-ds" d="M22 56 H124 C130 56 130 40 140 40 H170 C180 40 180 56 186 56 H214"/></g>
 <path class="hv-flow" d="M214 72 H22" stroke="url(#hv-g-ex)"/><path class="hv-dash hv-rev hv-de" d="M22 72 H214"/>
@@ -152,6 +152,43 @@ ${hvLab(6, 16, h.t.o, "", "start")}${hvLab(230, 16, h.t.s, "", "end")}
 <text class="hv-n" x="6" y="126">${h.n.out}</text><text class="hv-n" x="230" y="126" text-anchor="end">${h.n.room}</text>
 <g class="hv-filt"><circle cx="118" cy="66" r="6"/><text x="118" y="69.5" text-anchor="middle">!</text></g>${hvBadges(h, 118, 58)}`;
   },
+  // A Broan, Venmar or VanEE unit in 3/4, like the other appliances (#54):
+  // a sheet-metal box hung by its straps, its four round ports on top, the
+  // outside pair in front with their black insulated collars and the house
+  // pair behind, the fan of each outgoing port turning inside its collar, and
+  // the control panel with its screen on the left side. The four airs are
+  // listed on each side: outside on the left, the house on the right.
+  box: (h) => {
+    const fan = (x, y, r, cls) => `<g transform="translate(${x} ${y}) scale(1 .42)"><g class="hv-fan hv-pfan ${cls}"><circle r="${r}" fill="none"/>${[0, 120, 240].map((d) => `<path d="M0 0 q${(r * 0.45).toFixed(1)} -${(r * 0.85).toFixed(1)} 0 -${(r * 0.85).toFixed(1)} q-${(r * 0.45).toFixed(1)} ${(r * 0.3).toFixed(1)} 0 ${(r * 0.85).toFixed(1)}z" transform="rotate(${d})"/>`).join("")}</g></g>`;
+    const port = (x, yb, black, cls) => {
+      const r = black ? 13 : 12, ry = r * 0.42, yt = yb - 6;
+      return `<path d="M${x - r} ${yt} V${yb} A${r} ${ry} 0 0 0 ${x + r} ${yb} V${yt} Z" class="${black ? "hv-pk" : "hv-pm"}"/>
+<ellipse cx="${x}" cy="${yt}" rx="${r}" ry="${ry.toFixed(2)}" class="${black ? "hv-pkr" : "hv-pmr"}"/><ellipse cx="${x}" cy="${yt + 0.4}" rx="${r - 2.6}" ry="${(ry - 1.1).toFixed(2)}" fill="#1c2125"/>${cls ? fan(x, yt + 0.4, r - 4, cls) : ""}`;
+    };
+    const arrow = (x, from, to, color, dash) => {
+      const d = to < from ? -1 : 1;
+      return `<path class="hv-flow hv-thin" d="M${x} ${from} V${to - d * 3}" stroke="${color}"/><path class="hv-dash hv-thin" d="M${x} ${from} V${to - d * 3}"/><path d="M${x - 4} ${to - d * 4} L${x} ${to + d * 1.5} L${x + 4} ${to - d * 4}Z" fill="${color}"/>`;
+    };
+    const lab = (x, y, color, temp, name, flow, anchor) => {
+      const end = anchor === "end";
+      return `<circle cx="${end ? x + 6 : x - 6}" cy="${y - 3}" r="3" fill="${color}"/><text class="hv-t" x="${x}" y="${y}" text-anchor="${anchor}">${temp || name}</text>
+${temp ? `<text class="hv-n" x="${x}" y="${y + 9}" text-anchor="${anchor}">${name}</text>` : ""}${flow ? `<text class="hv-n hv-cfm" x="${x}" y="${y + (temp ? 18 : 9)}" text-anchor="${anchor}">${flow}</text>` : ""}`;
+    };
+    return `<path d="M64 34 L58 0 M136 34 L142 0 M94 50 L88 0 M166 50 L172 0" class="hv-strap"/>
+<path d="M92 50 L62 34 V108 L92 124 Z" class="hv-bs"/><path d="M92 50 H168 L138 34 H62 Z" class="hv-bt"/><rect x="92" y="50" width="76" height="74" class="hv-bf"/>
+<path d="M92 50 V124 M92 50 H168" class="hv-edge"/>
+<path d="M88 90 L72 81.5 V104.5 L88 113 Z" class="hv-panel"/><path d="M86 92.6 L74 86.2 V94.2 L86 100.6 Z" fill="#0e1b2c"/>
+<text class="hv-lcd" transform="matrix(1 .533 0 1 80 95.6)" x="0" y="0" text-anchor="middle">${h.lcd}</text><circle cx="80" cy="103.5" r="1.4" class="hv-led"/>
+<rect x="146" y="55" width="18" height="8" rx="1" fill="#1a3a6e"/><path d="M149 59 H161" stroke="#fff" stroke-width="1.3"/>
+<rect x="96" y="117" width="13" height="3" rx=".6" fill="#3a4148"/><path d="M97 124 V127 M163 124 V127 M65 108 V111" stroke="#3a4148" stroke-width="3"/>
+${port(92, 37.8, false, "")}${port(127, 37.8, false, "hv-fs")}
+${port(105, 45.5, true, "")}${port(140, 45.5, true, "hv-fe")}
+<g class="hv-through">${arrow(127, 25, 4, "#ff9800", "hv-ds")}</g><g class="hv-bypass">${arrow(127, 25, 4, "#42a5f5", "hv-ds")}</g>${arrow(92, 3, 25, "#ef5350", "hv-de")}
+<g class="hv-out">${arrow(108.5, 12, 33, "#42a5f5", "hv-ds")}${arrow(143.5, 33, 12, "#78909c", "hv-de")}</g>
+${lab(12, 56, "#42a5f5", h.t.o, h.n.o, "", "start")}${lab(12, 90, "#78909c", h.t.x, h.n.x, h.flowE, "start")}
+${lab(224, 56, "#ff9800", h.t.s, h.n.s, h.flowS, "end")}${lab(224, 90, "#ef5350", h.t.e, h.n.e, "", "end")}
+<text class="hv-frost" x="130" y="96" text-anchor="middle">\u2744</text><g class="hv-filt"><circle cx="103" cy="61" r="6"/><text x="103" y="64.5" text-anchor="middle">!</text></g>${hvBadges(h, 192, 117)}`;
+  },
 };
 function hrvHtml(cls, h) {
   const layout = HRV_LAYOUTS.includes(h.layout) ? h.layout : "diagram";
@@ -209,6 +246,21 @@ css: () => `
         .hv-t{font:600 9px Arial,sans-serif;fill:var(--primary-text-color,#212121)}
         .hv-n{font:400 8px Arial,sans-serif;fill:var(--secondary-text-color,#727272)}
         .hv-cfm{font-size:7.5px;font-weight:600}
+        .hv-cfm-in{fill:#455a64}
+        .hv-dark .hv-cfm-in{fill:#dfe4e8}
+        .hv-bf{fill:var(--ac-body,#b6bbbf)}
+        .hv-bt{fill:var(--ac-body-hi,#d0d5d8)}
+        .hv-bs{fill:var(--ac-body-lo,#8e9498)}
+        .hv-bf,.hv-bt,.hv-bs{stroke:#6f7880;stroke-width:.8;stroke-linejoin:round}
+        .hv-edge{fill:none;stroke:var(--ac-body-hi,#d0d5d8);stroke-width:.8}
+        .hv-panel{fill:#5d666d}
+        .hv-strap{fill:none;stroke:#9aa3ad;stroke-width:.7}
+        .hv-pk{fill:#2b3034}.hv-pkr{fill:#41484e}
+        .hv-pm{fill:#a9b1b8}.hv-pmr{fill:#cfd5da}
+        .hv-pfan{transform-box:fill-box;transform-origin:center}
+        .hv-pfan path{fill:#8d979f}
+        .hv-flow.hv-thin{stroke-width:3.4}
+        .hv-dash.hv-thin{stroke-width:1.3;stroke-dasharray:3 9}
         .hv-lcd{font:700 6px Arial,sans-serif;fill:#7fe3ff}
         .hv-pa,.hv-pb{opacity:0}
         .hv-on .hv-pa{animation:hv-pa 140s linear infinite;animation-delay:var(--anim-offset,0s)}
