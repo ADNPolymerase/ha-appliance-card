@@ -9934,6 +9934,33 @@ check('borne : ni un statut reconnu', evMode(evR('SuspendedEVSE', { power_entity
   // What raises something.
   check('robot : bac plein', vac('docked', {}, { robot_bin_entity: 'binary_sensor.b' }, { 'binary_sensor.b': s('on') }), 'Bin full');
   check('robot : bac plein ignore au travail', vac('cleaning', {}, { robot_bin_entity: 'binary_sensor.b' }, { 'binary_sensor.b': s('on') }), 'Cleaning');
+  // The station's bag full (#104): said in a key, in a sentence, in an
+  // error or a status, whatever the robot does; its own bin stays a bin.
+  const bagCls = (state, attrs = {}, cfg = {}, more = {}) => machineCls(render({ state_entity: 'vacuum.x', robot_station: 'box', ...cfg }, { 'vacuum.x': s(state, attrs), ...more }));
+  check('sac plein : cle Dreame dans l\'entite d\'erreur', vac('docked', {}, { robot_error_entity: 'sensor.e' }, { 'sensor.e': s('dust_bag_full') }), 'Bag full');
+  check('sac plein : en erreur pour le sac seul (#104)', vac('error', {}, { robot_error_entity: 'sensor.e' }, { 'sensor.e': s('Sac plein') }), 'Bag full');
+  check('sac plein : le robot est a sa station', /rbt-m-charging/.test(bagCls('error', {}, { robot_error_entity: 'sensor.e' }, { 'sensor.e': s('Sac plein') })), true);
+  check('sac plein : description Ecovacs a cote du code', vac('docked', {}, { robot_error_entity: 'sensor.e' }, { 'sensor.e': s('312', { description: 'Dust Bag Full' }) }), 'Bag full');
+  check('sac plein : phrase Valetudo', vac('error', { status: 'Auto-Empty Dock dust bag full or dust duct clogged' }), 'Bag full');
+  check('sac plein : phrase Dreame, events bouches', vac('docked', {}, { robot_status_entity: 'sensor.st' }, { 'sensor.st': s('Dust bag is full or vents are blocked.') }), 'Bag full');
+  check('sac plein : allemand', vac('docked', {}, { robot_error_entity: 'sensor.e' }, { 'sensor.e': s('Der Staubbeutel ist voll') }), 'Bag full');
+  check('sac plein : dit pendant le nettoyage', vac('cleaning', {}, { robot_error_entity: 'sensor.e' }, { 'sensor.e': s('dust_bag_full') }), 'Bag full');
+  check('sac plein : le robot nettoie toujours', /rbt-m-cleaning/.test(bagCls('cleaning', {}, { robot_error_entity: 'sensor.e' }, { 'sensor.e': s('dust_bag_full') })), true);
+  check('sac plein : la station deborde', / rbt-bag( |$)/.test(bagCls('docked', {}, { robot_error_entity: 'sensor.e' }, { 'sensor.e': s('dust_bag_full') })), true);
+  check('sac plein : en francais', vac('docked', {}, { language: 'fr', robot_error_entity: 'sensor.e' }, { 'sensor.e': s('dust_bag_full') }), 'Sac plein');
+  check('sac plein : par l\'entite du bac en texte', vac('docked', {}, { robot_bin_entity: 'sensor.b' }, { 'sensor.b': s('dust_bag_full') }), 'Bag full');
+  // Not a full bag.
+  check('pas sac plein : bin_full de Dreame reste une erreur', vac('docked', {}, { robot_error_entity: 'sensor.e' }, { 'sensor.e': s('bin_full') }), 'Error');
+  check('pas sac plein : phrase de bin_full Dreame', vac('docked', {}, { robot_error_entity: 'sensor.e' }, { 'sensor.e': s('The dust collection bag is full, or the air duct is blocked.') }), 'Error');
+  check('pas sac plein : bin_full Dreame en francais', vac('docked', {}, { robot_error_entity: 'sensor.e' }, { 'sensor.e': s('Le sac à poussière est plein ou le conduit est obstrué.') }), 'Error');
+  check('pas sac plein : Roborock, station a nettoyer', vac('error', {}, { robot_error_entity: 'sensor.e' }, { 'sensor.e': s('collect_dust_error_3') }), 'Error');
+  check('pas sac plein : sac absent', vac('docked', {}, { robot_error_entity: 'sensor.e' }, { 'sensor.e': s('dust bag not installed') }), 'Error');
+  check('pas sac plein : pas plein', vac('docked', { battery_level: 100 }, { robot_status_entity: 'sensor.st' }, { 'sensor.st': s('dust bag not full') }), 'Docked');
+  check('pas sac plein : vidage en cours', vac('docked', { status: 'auto_emptying' }), 'Emptying the bin');
+  check('pas sac plein : reservoir sale plein', vac('docked', {}, { robot_error_entity: 'sensor.e' }, { 'sensor.e': s('dirty tank full') }), 'Error');
+  check('pas sac plein : une vraie erreur l\'emporte', vac('error', {}, { robot_error_entity: 'sensor.e', robot_status_entity: 'sensor.st' }, { 'sensor.e': s('wheel stuck'), 'sensor.st': s('dust_bag_full') }), 'Error');
+  check('pas sac plein : le bac du robot reste le bac', vac('docked', {}, { robot_bin_entity: 'binary_sensor.b' }, { 'binary_sensor.b': s('on') }), 'Bin full');
+  check('pas sac plein : pas de debordement sans sac', / rbt-bag( |$)/.test(bagCls('docked', {}, { robot_bin_entity: 'binary_sensor.b' }, { 'binary_sensor.b': s('on') })), false);
   check('robot : reservoir vide', vac('idle', {}, { robot_water_entity: 'binary_sensor.w' }, { 'binary_sensor.w': s('on') }), 'Water tank empty');
   check('robot : reservoir a 3 %', vac('docked', {}, { robot_water_entity: 'sensor.w' }, { 'sensor.w': s(3, { unit_of_measurement: '%' }) }), 'Water tank empty');
   check('robot : reservoir a 40 %', vac('docked', { battery_level: 100 }, { robot_water_entity: 'sensor.w' }, { 'sensor.w': s(40, { unit_of_measurement: '%' }) }), 'Docked');

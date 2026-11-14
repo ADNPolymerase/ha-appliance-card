@@ -3805,6 +3805,13 @@ class ApplianceCard extends HTMLElement {
         stateLabel = t(hass, mode === "cleaning" ? ROBOT_WORK_LABELS[layout] : stick && mode === "docked" ? "stick_charged" : washer[mode] || ROBOT_LABELS[mode]);
       }
       color = ROBOT_COLORS[mode];
+      // The station's bag full (#104): said whatever the robot does, which
+      // goes on working; an error of its own says more.
+      const bag = !stick && !["mower", "pool"].includes(layout) && !["error", "unav", "winter", "off"].includes(mode) && robotBagFull(hass, cfg, st);
+      if (bag) {
+        if (!cfg.state_show_raw) stateLabel = t(hass, "robot_bag_full");
+        color = ROBOT_COLORS.full;
+      }
       const water = robotWaterPct(hass, cfg);
       // The station's two water tanks, on the lines and on its front (#69).
       const tankOn = ["vacuum", "mop", "combo"].includes(layout);
@@ -3863,7 +3870,7 @@ class ApplianceCard extends HTMLElement {
       }
       robot = { layout, mode, water, cleanMode, battery, poolTime, floor: cfg.robot_floor, base: cfg.robot_station === "base", shelter: cfg.robot_shelter ? (SHELTER_STYLES.includes(cfg.robot_shelter_style) ? cfg.robot_shelter_style : "lean_to") : "",
         shelterColor: cfg.robot_shelter_color, mowerStyle: mowerStyleOf(cfg, st),
-        box: cfg.robot_station === "box", boxColor: cfg.robot_station_color, camera: !!cfg.robot_camera, cleanTank, dirtyTank };
+        box: cfg.robot_station === "box", boxColor: cfg.robot_station_color, camera: !!cfg.robot_camera, cleanTank, dirtyTank, bag };
     }
 
     // The last cycle, on request: how long it ran and when it ended. Shown

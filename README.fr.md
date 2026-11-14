@@ -993,7 +993,7 @@ battery_entity: sensor.trottinette_batterie   # facultatif
 | `robot_bin_entity` / `robot_water_entity` | robot | Un bac plein, un réservoir d'eau vide : un capteur binaire allumé, un capteur qui le dit, ou un niveau en % (vide à 5 % ou moins, son niveau dessiné dans le robot). |
 | `robot_rain_entity` | robot | La pluie qui garde une tondeuse sur sa base : un nuage et sa pluie sur la pelouse. |
 | `robot_winter` / `robot_winter_entity` | robot | Une tondeuse rangée pour l'hiver : `true`, ou n'importe quelle entité on/off (un `input_boolean`, une automatisation à date fixe). Elle affiche *Hivernage* quoi que dise son intégration, débranchée comprise, sous la neige qui tombe sur sa pelouse, sa base et elle-même, sans aucune ligne. |
-| `robot_error_entity` | robot | L'erreur, en mots : le robot fume et son texte s'affiche. *no error*, *none*, `0` et leurs semblables n'en sont pas, dans toutes les langues de la carte (*Aucune erreur*, *Pas d'erreur*, *Keine Fehler*...) : un capteur template qui met un code d'erreur en mots marche tel quel. |
+| `robot_error_entity` | robot | L'erreur, en mots : le robot fume et son texte s'affiche. *no error*, *none*, `0` et leurs semblables n'en sont pas, dans toutes les langues de la carte (*Aucune erreur*, *Pas d'erreur*, *Keine Fehler*...) : un capteur template qui met un code d'erreur en mots marche tel quel. Un sac de station plein (*dust_bag_full*, *Dust Bag Full*, *Sac plein*, *Staubbeutel voll*..., dans cette entité, le statut ou les attributs du robot) n'est pas une erreur : l'état affiche *Sac plein*, même pendant le nettoyage, et la station déborde. |
 
 </details>
 

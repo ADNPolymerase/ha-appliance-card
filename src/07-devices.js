@@ -462,6 +462,34 @@ function robotLayoutOf(cfg, st) {
   return "vacuum";
 }
 
+// The station's dust bag full (#104): the integrations word it in their
+// error or their status, in a key or in a sentence, never in the same way.
+// The robot works on and the station overflows; the robot's own bin full
+// stays what it was. Dreame's bin_full is worded "the dust collection bag is
+// full" (Staubsaugerbeutel, "or the duct is blocked" in French): the robot's
+// bin, not the station's bag. Not full, missing, emptying and the water
+// tanks are not a full bag either.
+const ROBOT_BAG_RE = /dust_?bag_?(is_)?full|dustbag_?(\w+_)?full|replace_(the_)?dust_?bag|(^|_)bag_(is_)?full|(^|_)sac(_a_poussiere)?_(est_)?plein|staubbeutel_(ist_)?voll|sacchetto(_\w+)?_pieno|bolsa(_\w+)?_llena|stofzak(_\w+)?_vol($|_)|saco(_\w+)?_cheio|dammpasen(_ar)?_full|st(o|\u00f8)vposen(_er)?_ful|worek(_\w+)?_pe(l|\u0142)ny|sacek(_\w+)?_plny|tele_a_porzsak|porzsak(_\w+)?_tele|\u043c\u0435\u0448\u043e\u043a(_\w+)?_\u043f\u043e\u043b\u043e\u043d|\u5c18\u888b\u5df2\u6ee1|\u96c6\u5c18\u888b\u5df2\u6ee1/;
+const ROBOT_BAG_NOT_RE = /collection_bag|ou_le_conduit|(^|_)(not|pas|nicht|kein|non|no|niet|ikke|inte|nie|ne)_(\w+_)?(full|plein|voll|pieno|llena|vol|cheio|ful|pelny|pe\u0142ny|plny)/;
+function robotBagWord(v) {
+  const s = stripAccents(String(v === undefined || v === null ? "" : v)).trim().toLowerCase().replace(/[\s.,;:!'\u2019()-]+/g, "_");
+  return !!s && ROBOT_BAG_RE.test(s) && !ROBOT_BAG_NOT_RE.test(s);
+}
+const ROBOT_BAG_ATTRS = ["description", "message", "error", "error_message", "last_error_message", "status"];
+// An entity, or the robot itself, that says its bag is full: its state, or
+// the sentence an integration puts beside a code (Ecovacs' description).
+function robotEntityBag(hass, entityId, s) {
+  const st = s || (entityId ? stateObj(hass, entityId) : null);
+  if (!st) return false;
+  if (robotBagWord(st.state)) return true;
+  const a = st.attributes || {};
+  return ROBOT_BAG_ATTRS.some((k) => typeof a[k] === "string" && robotBagWord(a[k]));
+}
+function robotBagFull(hass, cfg, st) {
+  return [cfg.robot_error_entity, cfg.robot_status_entity, cfg.robot_bin_entity].some((id) => id && robotEntityBag(hass, id))
+    || robotEntityBag(hass, null, st);
+}
+
 // An entity that raises something: a binary sensor on, a sensor that says
 // so. A number is read by whoever asked.
 function robotRaised(hass, entityId, re) {
@@ -483,7 +511,9 @@ function robotModeOf(hass, cfg, st, layout) {
   }
   let mode = ROBOT_STATES[raw] || robotWord(raw) || "";
   const statusSt = cfg.robot_status_entity ? stateObj(hass, cfg.robot_status_entity) : null;
-  const detail = robotWord(statusSt ? statusSt.state : st && st.attributes ? st.attributes.status : "");
+  const statusText = statusSt ? statusSt.state : st && st.attributes ? st.attributes.status : "";
+  // A full bag worded "full or the vents are blocked" is not an error.
+  const detail = robotBagWord(statusText) ? "" : robotWord(statusText);
   if (!mode) mode = detail || "idle";
   const edge = mode === "edgecut" || detail === "edgecut";
   if (mode === "edgecut") mode = "cleaning";
@@ -495,10 +525,15 @@ function robotModeOf(hass, cfg, st, layout) {
     else if (["full", "empty", "rain"].includes(detail) && ["charging", "idle", "paused"].includes(mode)) mode = detail;
   }
   if (mode === "rain" && layout !== "mower") mode = "charging";
-  if (mode !== "error" && cfg.robot_error_entity && robotRaised(hass, cfg.robot_error_entity, /./)) mode = "error";
+  const errorBag = !!cfg.robot_error_entity && robotEntityBag(hass, cfg.robot_error_entity);
+  if (mode !== "error" && cfg.robot_error_entity && !errorBag && robotRaised(hass, cfg.robot_error_entity, /./)) mode = "error";
+  // In error for its full bag alone (#104), the robot is at its station: the
+  // bag is said on its own, the robot is not stuck.
+  else if (mode === "error" && detail !== "error" && robotBagFull(hass, cfg, st)
+    && !(cfg.robot_error_entity && !errorBag && robotRaised(hass, cfg.robot_error_entity, /./))) mode = "charging";
   const atRest = ["charging", "idle", "paused"].includes(mode);
   if (atRest && layout === "mower" && cfg.robot_rain_entity && robotRaised(hass, cfg.robot_rain_entity, /rain|pluie|regen|delay/)) mode = "rain";
-  if (atRest && cfg.robot_bin_entity && robotRaised(hass, cfg.robot_bin_entity, /full|plein|voll/)) mode = "full";
+  if (atRest && cfg.robot_bin_entity && !robotEntityBag(hass, cfg.robot_bin_entity) && robotRaised(hass, cfg.robot_bin_entity, /full|plein|voll/)) mode = "full";
   if (atRest && cfg.robot_water_entity) {
     const w = numericEntity(hass, cfg.robot_water_entity);
     // Roborock and Xiaomi say the box is attached: on is all is well.

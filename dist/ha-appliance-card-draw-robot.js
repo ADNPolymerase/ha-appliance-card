@@ -3488,8 +3488,8 @@ function robotBoxHtml(color, tanks) {
 <linearGradient id="${g}b" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${c.bay}"/><stop offset="1" stop-color="${c.bay2}"/></linearGradient></defs>
 <path d="M${X1} ${Y0} L${X1 + DX} ${Y0 + DY} V${Y1 + DY} L${X1} ${Y1} Z" fill="${c.side}" stroke="${c.edge}" stroke-width=".45"/>
 <path d="M${X0} ${Y0} L${X0 + DX} ${Y0 + DY} H${X1 + DX} L${X1} ${Y0} Z" fill="${c.top}" stroke="${c.edge}" stroke-width=".45"/>
-<path d="M20.5 9.2 L24.5 5.3 H52 L48 9.2 Z M50 9.2 L54 5.3 H85 L81 9.2 Z" fill="none" stroke="${c.edge}" stroke-width=".5"/>
-<rect x="33" y="6.6" width="5" height="1.2" rx=".6" fill="${c.side}"/><rect x="64" y="6.6" width="5" height="1.2" rx=".6" fill="${c.side}"/>
+<path d="M20.5 9.2 L26.9 5.3 H54.4 L48 9.2 Z M50 9.2 L56.4 5.3 H84.4 L78 9.2 Z" fill="none" stroke="${c.edge}" stroke-width=".5"/>
+<rect x="35" y="6.6" width="5" height="1.2" rx=".6" fill="${c.side}"/><rect x="64.5" y="6.6" width="5" height="1.2" rx=".6" fill="${c.side}"/>
 <rect x="${X0}" y="${Y0}" width="${X1 - X0}" height="${Y1 - Y0}" fill="url(#${g}f)" stroke="${c.edge}" stroke-width=".45"/>${gauges}
 <circle cx="48" cy="20" r="2.6" fill="none" stroke="${c.edge}" stroke-width=".6"/>
 <rect x="22" y="34" width="52" height="13" rx="2.4" fill="${panel}" stroke="${c.edge}" stroke-width=".45"/>
@@ -3499,8 +3499,31 @@ function robotBoxHtml(color, tanks) {
 <rect x="20" y="${BT}" width="56" height="${Y1 - BT}" rx="3" fill="url(#${g}b)"/>
 <path d="M22.5 ${BT + 2.4} H73.5" stroke="rgba(255,255,255,.14)" stroke-width=".7"/>
 <path d="M20 ${Y1} H83 L75 89 H12 Z" fill="${c.side}" stroke="${c.edge}" stroke-width=".45" opacity=".9"/>
-<path d="M24 77.5 H79 M19 82.5 H77" stroke="rgba(0,0,0,.1)" stroke-width=".5"/></svg>`;
+<path d="M24 77.5 H79 M19 82.5 H77" stroke="rgba(0,0,0,.1)" stroke-width=".5"/>${robotSpill(c)}</svg>`;
 }
+
+// A full bag (#104): the lid of the dirty side pushed up, the dust heaped out
+// of it, running over the front and falling to the floor, puffs above.
+function robotSpill(c) {
+  const grain = (x, d, dx) => `<circle cx="${x}" cy="11" r=".75" style="--d0: ${d}s; --dx: ${dx}px"/>`;
+  return `<g class="rbx-spill">
+<path class="rbx-lidup" d="M56.4 5.3 H84.4 L86.4 -3.7 H58.4 Z" fill="${c.top}" stroke="${c.edge}" stroke-width=".45"/>
+<path d="M50 9.3 L56.4 5.3 H84.4 L78 9.3 Z" fill="#3a3027"/>
+<path d="M50.4 9.6 C51 5 55 2.4 59.6 2.8 C61.8 .4 66.2 0 69 2 C72.6 .8 76.4 2.4 78 5.2 C78.6 6.6 78.4 8 78.2 9.6 V15 A1.4 1.4 0 0 1 75.4 15 V10.8 H72.6 V13 A1.2 1.2 0 0 1 70.2 13 V10.8 H66 V18.4 A1.5 1.5 0 0 1 63 18.4 V10.8 H57.4 V15.4 A1.3 1.3 0 0 1 54.8 15.4 V10.8 H50.4 Z" fill="#8f7b62" stroke="#6b5a46" stroke-width=".4" stroke-linejoin="round"/>
+<path d="M55 4.8 q2 -1.4 4 -.2 M64 2.6 q2.2 -1 4.2 .3 M71.5 4.6 q1.8 -.9 3.6 .4" fill="none" stroke="#b5a084" stroke-width=".55" stroke-linecap="round"/>
+<g class="rbx-fall" fill="#8f7b62">${grain(56, 0, -1)}${grain(64.5, .5, -2)}${grain(71.4, .9, -1.5)}${grain(76.8, .3, -2.5)}</g>
+<g class="rbx-puff" fill="#b8b2aa"><circle cx="60" cy="0" r="3.2"/><circle cx="68" cy="-2" r="3.8" style="--d0: .8s"/><circle cx="76" cy="0" r="3" style="--d0: 1.5s"/></g></g>`;
+}
+
+// The same full bag on the round dock: its cap lifted and the dust over it.
+const ROBOT_TOWER_SPILL = `<svg class="rbt-spill" viewBox="0 0 44 44" aria-hidden="true">
+<path d="M2 18 A20 6 0 0 1 42 18 C42 10 36 2.5 22 2 C8 2.5 2 10 2 18 Z" style="fill: var(--bl, #2b2f34)"/>
+<path class="rbt-capup" d="M2 18 A20 6 0 0 1 42 18 C42 10 36 2.5 22 2 C8 2.5 2 10 2 18 Z" style="fill: var(--b, #eef1f3)" stroke="rgba(0,0,0,.18)" stroke-width=".5"/>
+<ellipse cx="22" cy="18" rx="20" ry="6" fill="#3a3027"/>
+<path d="M4 21 C4.5 13 11.5 9.5 17.5 10.5 C20 8 25 8 27.5 10.4 C32.5 9.4 39 12.5 40 21 V26.5 A1.4 1.4 0 0 1 37.2 26.5 V23.6 H25 V33 A1.5 1.5 0 0 1 22 33 V23.6 H14 V28.5 A1.4 1.4 0 0 1 11.2 28.5 V23.6 H4 Z" fill="#8f7b62" stroke="#6b5a46" stroke-width=".45" stroke-linejoin="round"/>
+<path d="M11 15 q2 -1.4 4 -.2 M20 12.6 q2.2 -1 4.2 .3 M28.5 14.6 q1.8 -.9 3.6 .4" fill="none" stroke="#b5a084" stroke-width=".6" stroke-linecap="round"/>
+<g class="rbx-fall" fill="#8f7b62"><circle cx="8" cy="24" r=".9" style="--d0: .2s; --dx: -2px"/><circle cx="36" cy="24" r=".9" style="--d0: .7s; --dx: 2px"/><circle cx="18" cy="24" r=".8" style="--d0: 1.1s; --dx: -1px"/></g>
+<g class="rbx-puff" fill="#b8b2aa"><circle cx="14" cy="9" r="3.4"/><circle cx="23" cy="6" r="4" style="--d0: .8s"/><circle cx="31" cy="9" r="3.2" style="--d0: 1.5s"/></g></svg>`;
 
 function robotHtml(cls, r) {
   if (r.layout === "pool") return ntHtml(`${cls} rbt rbt-l-pool rbt-m-${r.mode || "docked"}`, { kind: "pool", on: r.mode === "cleaning", lcd: r.poolTime || "" });
@@ -3547,7 +3570,7 @@ function robotHtml(cls, r) {
     const dock = r.box ? robotBoxHtml(r.boxColor, tanks)
       : combo ? `<div class="rbt-mcap"></div><div class="rbt-mdock"${tankVars(r)}><div class="rbt-tk rbt-c"><i></i></div><div class="rbt-tk rbt-d"><i></i></div><i class="rbt-dled"></i><div class="rbt-bin"><div class="rbt-fill"></div>${"<b></b>".repeat(3)}</div></div>
           <div class="rbt-plate"></div><div class="rbt-pcap"></div>`
-      : `<div class="rbt-dock"><i class="rbt-dled"></i><div class="rbt-bin"><div class="rbt-fill"></div>${"<b></b>".repeat(3)}</div></div><div class="rbt-dcap"></div>
+      : `<div class="rbt-dock"><i class="rbt-dled"></i><div class="rbt-bin"><div class="rbt-fill"></div>${"<b></b>".repeat(3)}</div></div><div class="rbt-dcap"></div>${ROBOT_TOWER_SPILL}
           <div class="rbt-plate"></div><div class="rbt-pcap"></div>`;
     const wet = combo && r.cleanMode !== "vacuum" ? `<i class="rbt-trace rbt-t1 rbt-wet"></i><i class="rbt-trace rbt-t2 rbt-wet"></i>` : "";
     const wash = combo ? `${airFlow("rbt-vapor", 44, 17)}
@@ -3558,7 +3581,7 @@ function robotHtml(cls, r) {
           ${wash}`;
   }
   return `
-        <div class="machine ${cls} rbt rbt-l-${layout} rbt-m-${draw}${r.cleanMode ? ` rbt-cm-${r.cleanMode}` : ""}${r.base ? " rbt-base" : ""}${r.box && layout !== "mower" ? ` rbt-box rbx-${ROBOT_BOX_SKINS[r.boxColor] ? r.boxColor : "white"}` : ""}${r.shelter ? ` rbt-roof rbt-sh-${r.shelter}` : ""}">
+        <div class="machine ${cls} rbt rbt-l-${layout} rbt-m-${draw}${r.cleanMode ? ` rbt-cm-${r.cleanMode}` : ""}${r.base ? " rbt-base" : ""}${r.bag ? " rbt-bag" : ""}${r.box && layout !== "mower" ? ` rbt-box rbx-${ROBOT_BOX_SKINS[r.boxColor] ? r.boxColor : "white"}` : ""}${r.shelter ? ` rbt-roof rbt-sh-${r.shelter}` : ""}">
           ${inner}
         </div>`;
 }
@@ -3838,6 +3861,18 @@ css: () => `${NT_CSS}${MINI_LCD_CSS}
         .rbt-m-emptying .rbx-dustlv{animation:rbx-fill 6s ease-in-out infinite}
         .rbt-m-full .rbx-dustlv{transform:scaleY(1.85)}
         .rbt-m-full .rbx-dust{display:none}
+        .rbx-spill{display:none}
+        .rbt-bag .rbx-spill{display:inline}
+        .rbt-bag .rbx-led{fill:#ff9800}
+        .rbt-spill{display:none;left:26px;top:-4px;width:44px;height:44px;overflow:visible}
+        .rbt-bag .rbt-spill{display:block}
+        .rbt-bag .rbt-dcap{visibility:hidden}
+        .rbx-lidup,.rbt-capup{transform-box:fill-box;transform-origin:50% 100%;animation:rbx-lid 1.6s ease-in-out infinite}
+        .rbx-fall circle{opacity:0;transform-box:fill-box;animation:rbx-fall 1.4s ease-in infinite;animation-delay:var(--d0,0s)}
+        .rbx-puff circle{opacity:0;transform-box:fill-box;transform-origin:center;animation:rbx-puff 2.2s ease-out infinite;animation-delay:var(--d0,0s)}
+        @keyframes rbx-lid{0%,100%{transform:rotate(0)}50%{transform:rotate(-2.5deg) translateY(-.4px)}}
+        @keyframes rbx-fall{0%{transform:translate(0,0);opacity:0}12%{opacity:1}100%{transform:translate(var(--dx,-1px),62px);opacity:0}}
+        @keyframes rbx-puff{0%{transform:translateY(2px) scale(.5);opacity:0}30%{opacity:.75}100%{transform:translateY(-8px) scale(1.5);opacity:0}}
         .rbx-dust circle{opacity:0;animation:rbx-dust .9s linear infinite}
         .rbx-dust circle:nth-child(2){--d0:.3s}
         .rbx-dust circle:nth-child(3){--d0:.6s}

@@ -993,7 +993,7 @@ battery_entity: sensor.scooter_battery   # optional
 | `robot_bin_entity` / `robot_water_entity` | robot | A full bin, an empty water tank: a binary sensor that is on, a sensor that says so, or a tank level in % (empty at 5 % or less, its level drawn in the robot). |
 | `robot_rain_entity` | robot | Rain keeping a mower on its base: a cloud and its rain over the lawn. |
 | `robot_winter` / `robot_winter_entity` | robot | A mower put away for the winter: `true`, or any on and off entity (an `input_boolean`, an automation by date). It reads *Winter storage* whatever its integration says, unplugged included, under snow falling on its lawn, its base and itself, with no line. |
-| `robot_error_entity` | robot | The error, worded: the robot puffs smoke and its text is shown. *no error*, *none*, `0` and the like are not errors, in any of the card's languages (*Aucune erreur*, *Keine Fehler*...), so a template sensor that words an error code works as it is. |
+| `robot_error_entity` | robot | The error, worded: the robot puffs smoke and its text is shown. *no error*, *none*, `0` and the like are not errors, in any of the card's languages (*Aucune erreur*, *Keine Fehler*...), so a template sensor that words an error code works as it is. A full station dust bag (*dust_bag_full*, *Dust Bag Full*, *Sac plein*, *Staubbeutel voll*..., from this entity, the status or the robot's attributes) is not an error: the state reads *Bag full*, even while the robot cleans, and the station overflows. |
 
 </details>
 

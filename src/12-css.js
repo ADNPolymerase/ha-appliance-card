@@ -2502,6 +2502,18 @@ const ILLUSTRATION_CSS = {
         .rbt-m-emptying .rbx-dustlv{animation:rbx-fill 6s ease-in-out infinite}
         .rbt-m-full .rbx-dustlv{transform:scaleY(1.85)}
         .rbt-m-full .rbx-dust{display:none}
+        .rbx-spill{display:none}
+        .rbt-bag .rbx-spill{display:inline}
+        .rbt-bag .rbx-led{fill:#ff9800}
+        .rbt-spill{display:none;left:26px;top:-4px;width:44px;height:44px;overflow:visible}
+        .rbt-bag .rbt-spill{display:block}
+        .rbt-bag .rbt-dcap{visibility:hidden}
+        .rbx-lidup,.rbt-capup{transform-box:fill-box;transform-origin:50% 100%;animation:rbx-lid 1.6s ease-in-out infinite}
+        .rbx-fall circle{opacity:0;transform-box:fill-box;animation:rbx-fall 1.4s ease-in infinite;animation-delay:var(--d0,0s)}
+        .rbx-puff circle{opacity:0;transform-box:fill-box;transform-origin:center;animation:rbx-puff 2.2s ease-out infinite;animation-delay:var(--d0,0s)}
+        @keyframes rbx-lid{0%,100%{transform:rotate(0)}50%{transform:rotate(-2.5deg) translateY(-.4px)}}
+        @keyframes rbx-fall{0%{transform:translate(0,0);opacity:0}12%{opacity:1}100%{transform:translate(var(--dx,-1px),62px);opacity:0}}
+        @keyframes rbx-puff{0%{transform:translateY(2px) scale(.5);opacity:0}30%{opacity:.75}100%{transform:translateY(-8px) scale(1.5);opacity:0}}
         .rbx-dust circle{opacity:0;animation:rbx-dust .9s linear infinite}
         .rbx-dust circle:nth-child(2){--d0:.3s}
         .rbx-dust circle:nth-child(3){--d0:.6s}
