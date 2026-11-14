@@ -911,7 +911,11 @@ class ApplianceCard extends HTMLElement {
     // The elapsed time needs one too (HACF): a plug alone says nothing of the
     // time left, but it does say since when the machine has been running.
     const elapsedWanted = !!cfg.show_elapsed;
-    if (role === "out" || ((cfg.progress_entity || !cfg.remaining_time_entity) && !elapsedWanted)) {
+    // A 3D printer on a plug alone grows its part with the time it has
+    // printed, so it needs the start as well.
+    const p3PlugRun = !!cap.printer3d && powerDerived && !cfg.progress_entity && !cfg.remaining_time_entity;
+    const startWanted = elapsedWanted || p3PlugRun;
+    if (role === "out" || ((cfg.progress_entity || !cfg.remaining_time_entity) && !startWanted)) {
       this._cycle = null;
     } else if (!this._cycle) {
       // A gap opens nothing: the card waits for a state it can read.
@@ -922,7 +926,7 @@ class ApplianceCard extends HTMLElement {
         const seenStart = this._prevNormState !== null && cycleRole(this._prevNormState) === "out";
         this._cycle = { start: since, pausedMs: 0, pausedSince: role === "paused" ? since : null };
         if (!seenStart && !powerDerived) this._lookUpCycle(this._cycle, cfg, applianceType);
-        else if (!seenStart && powerDerived && elapsedWanted) this._lookUpPowerCycle(this._cycle, cfg, threshold);
+        else if (!seenStart && powerDerived && startWanted) this._lookUpPowerCycle(this._cycle, cfg, threshold);
       }
     } else if (role === "paused" && this._cycle.pausedSince === null) {
       this._cycle.pausedSince = since;
@@ -1751,13 +1755,20 @@ class ApplianceCard extends HTMLElement {
         if (hs && !HA_OFFLINE_STATES.includes(String(hs.state).toLowerCase())) extraLines.push({ key: "ams_humidity", icon: "mdi:water-percent", label: t(hass, "ac_line_humidity"), value: keepTogether(formatInfoValue(hs, hass, null, cfg, cfg.ams_humidity_entity)), entity: cfg.ams_humidity_entity });
       }
       if (ams && ams.drying) extraLines.push({ key: "ams_drying", icon: "mdi:heat-wave", label: t(hass, "ams_box"), value: t(hass, "fd_drying"), entity: cfg.ams_drying_entity });
+      // On a plug alone the printer says nothing of its progress: the part
+      // grows with the time it has been printing instead, from the start the
+      // meter's history gives, whole in half an hour and then again from the
+      // bed, until the plug drops and it is drawn finished.
+      const runHeight = p3PlugRun && isActiveState(norm) && this._cycle
+        ? (Math.max(0, Date.now() - this._cycle.start - this._cycle.pausedMs) % P3_RUN_LOOP_MS) / P3_RUN_LOOP_MS
+        : null;
       p3 = {
         layout: pStyle ? (pStyle === "bambu_a" || pStyle === "elegoo_n" ? "open" : "enclosed") : cfg.printer_layout === "open" ? "open" : "enclosed",
         style: pStyle,
         ams,
         part: ["pyramid", "duck"].includes(cfg.printed_part) ? cfg.printed_part : "cube",
         // The part on the bed grows with the job, and stays whole once done.
-        height: norm === "done" ? 1 : norm === "error" ? (reached || 0) / 100 : (progressPct || 0) / 100,
+        height: norm === "done" ? 1 : norm === "error" ? (reached || 0) / 100 : runHeight !== null ? runHeight : (progressPct || 0) / 100,
         moving: isActiveState(norm) && shown !== "preheating",
         nozzleHot: nozzle.target !== null ? nozzle.target > 0 : isActiveState(norm),
         bedHot: bed.target !== null ? bed.target > 0 : isActiveState(norm),

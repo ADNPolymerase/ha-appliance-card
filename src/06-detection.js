@@ -1251,6 +1251,9 @@ const FRIDGE_UNPLUGGED_AFTER_MS = 30 * 60 * 1000;
 const P3_HEAT_MARGIN = 5;
 // Height of a finished part on the drawing, in pixels.
 const P3_PART_MAX = 40;
+// A print read from a plug alone: its part grows from nothing to whole in
+// half an hour, then starts again, for as long as the plug says it prints.
+const P3_RUN_LOOP_MS = 30 * 60000;
 // A card that counts minutes of its own, the fridge without power and the
 // iron left on, redraws on this beat: the count is shown in whole minutes, so
 // half a minute is close enough to keep it honest.

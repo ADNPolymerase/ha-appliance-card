@@ -3845,6 +3845,28 @@ contains('piece : un cube par defaut', p3Cls(busy), 'p3-part-cube');
 contains('piece : une pyramide', p3Cls(job({ printed_part: 'pyramid' })), 'p3-part-pyramid');
 contains('piece : un canard', p3Cls(job({ printed_part: 'duck' })), 'p3-part-duck');
 contains('piece : une forme inconnue reste un cube', p3Cls(job({ printed_part: 'benchy' })), 'p3-part-cube');
+// On a plug alone, the part grows with the time printed: the plug gives no
+// progress, its history gives the start.
+{
+  const plugCfg = { appliance_type: 'printer_3d', source: 'plug', state_entity: 'sensor.p3_a', power_entity: 'sensor.p3_w', power_on_threshold: 20, printer_style: 'elegoo_c' };
+  const st = (v, a = {}) => ({ state: String(v), attributes: a });
+  const W = (w) => ({ 'sensor.p3_a': st(1.2), 'sensor.p3_w': st(w, { unit_of_measurement: 'W' }) });
+  const { card } = build(plugCfg, W(150));
+  const hOf = (h) => Number((/--p3-h:(\d+)px/.exec(h) || [, -1])[1]);
+  check('prise : au depart, pas encore de piece', hOf(markup(card)), 0);
+  card._cycle.start -= 15 * 60000;
+  const after15 = rerender(card, W(150));
+  check('prise : a mi-parcours, la moitie de la piece', hOf(after15), 20);
+  contains('prise : la piece est dessinee', machineCls(after15), 'has-part');
+  card._cycle.start -= 14 * 60000;
+  check('prise : presque entiere a 29 min', hOf(rerender(card, W(150))) >= 38, true);
+  card._cycle.start -= 2 * 60000;
+  check('prise : repart de zero toutes les 30 min', hOf(rerender(card, W(150))) <= 2, true);
+  check('prise : entiere une fois finie', hOf(rerender(card, W(5))), 40);
+  const prog = build({ ...plugCfg, progress_entity: 'sensor.p3_p' }, { ...W(150), 'sensor.p3_p': st(25, { unit_of_measurement: '%' }) });
+  prog.card._cycle && (prog.card._cycle.start -= 60 * 60000);
+  check('prise : une progression connue garde la main', hOf(rerender(prog.card, { ...W(150), 'sensor.p3_p': st(25, { unit_of_measurement: '%' }) })), 10);
+}
 check('piece : le canard a un oeil', /<b class="p3-eye"><\/b>/.test(job({ printed_part: 'duck' })), true);
 check('piece : le cube n\'en a pas', /p3-eye"/.test(busy), false);
 check('piece : la pyramide non plus', /p3-eye"/.test(job({ printed_part: 'pyramid' })), false);
