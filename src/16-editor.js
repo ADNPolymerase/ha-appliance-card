@@ -1645,6 +1645,7 @@ class ApplianceCardEditor extends HTMLElement {
           ${this._row("show_name", "show_name", { type: "checkbox", defaultOn: true })}
           ${this._row("show_state", "show_state", { type: "checkbox", defaultOn: true })}
           ${this._row("transparent", "transparent", { type: "checkbox" })}
+          ${this._row("values_right", "values_right", { type: "checkbox" })}
           ${this._row("fill_height", "fill_height", { type: "checkbox" })}
           ${this._row("illustration_frame", "illustration_frame", { type: "checkbox" })}
         </div>

@@ -271,6 +271,7 @@ Only `state_entity` is required, except on a fridge where a probe or a door cont
 | `font_scale` | The text's size, from `0.7` to `1.4` times its own (default `1`). The drawing keeps its size. A slider in the editor. |
 | `show_name` / `show_state` | `false` hides the name, or the state line. Both shown by default. |
 | `transparent` | `true` removes the card's background, border and shadow, for a card laid on a wall tablet's background. |
+| `values_right` | `true` puts the values of the lines against the right edge, like Home Assistant's entity rows. Lines without a label and the lines beside the drawing in compact mode keep their place. |
 | `fill_height` | `true` makes the card take the full height of its slot, with the buttons at the bottom: two cards side by side then have the same height. Off by default, since next to a much taller card it would stretch to that card's height. |
 | `illustration_frame` | `true` sets every drawing at the bottom of a frame of the full drawing height: two cards side by side whose drawings differ in height, such as a robot with its station next to one on a plain base, then have their floors level. Off by default. |
 | `done_alert` | `true` makes a green badge pulse on the drawing when a cycle has finished, until the door opens or the badge is tapped. For appliances with a cycle (washer, dryer, dishwasher, oven…). |

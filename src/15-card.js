@@ -4304,6 +4304,10 @@ class ApplianceCard extends HTMLElement {
            venting level or a power level is actually changed, and it costs no
            extra height on the card. */
         .info-lines.compact { gap: 4px; }
+        /* Values against the right edge, like Home Assistant's entity rows
+           (#107): the label keeps the left, the value takes the rest. */
+        .info-lines.right .info-line .label + span { margin-left: auto; text-align: right; }
+        .info-lines.right .info-line .label { min-width: 0; }
         .info-lines.compact .info-line { font-size: 0.92em; }
         .info-lines.compact .info-line ha-icon { --mdc-icon-size: 18px; }
         .history-toggle {
@@ -4634,7 +4638,7 @@ class ApplianceCard extends HTMLElement {
       ? `<div class="line-menu" role="listbox">${lineMenu.options.map((o) => `<div class="mode-row${o === lineMenu.current ? " sel" : ""}" role="option" aria-selected="${o === lineMenu.current}" data-line-option="${esc(o)}"><span>${esc(lineMenuLabel(hass, cfg, lineMenu, o))}</span>${o === lineMenu.current ? `<ha-icon icon="mdi:check"></ha-icon>` : ""}</div>`).join("")}</div>`
       : "";
     const linesHtml = lines.length
-      ? `<div class="info-lines${infoEntities.length > INFO_COMPACT_ABOVE ? " compact" : ""}">${lines
+      ? `<div class="info-lines${infoEntities.length > INFO_COMPACT_ABOVE ? " compact" : ""}${cfg.values_right ? " right" : ""}">${lines
           .map((l) => ({ ...l, open: !!l.entity && entityUsable(hass, l.entity) }))
           .map(
             (l) =>

@@ -271,6 +271,7 @@ Seule `state_entity` est obligatoire, sauf sur un réfrigérateur où une sonde 
 | `font_scale` | Taille du texte, de `0.7` à `1.4` fois la sienne (`1` par défaut). Le dessin garde sa taille. Un curseur dans l'éditeur. |
 | `show_name` / `show_state` | `false` masque le nom, ou la ligne d'état. Les deux sont affichés par défaut. |
 | `transparent` | `true` retire le fond, la bordure et l'ombre de la carte, pour une carte posée sur le fond d'une tablette murale. |
+| `values_right` | `true` place les valeurs des lignes contre le bord droit, comme les lignes d'entités de Home Assistant. Les lignes sans libellé et celles à côté du dessin en mode compact gardent leur place. |
 | `fill_height` | `true` fait occuper à la carte toute la hauteur de sa case, boutons en bas : deux cartes côte à côte ont alors la même hauteur. Désactivé par défaut, car à côté d'une carte bien plus haute, la carte s'étirerait jusqu'à sa hauteur. |
 | `illustration_frame` | `true` pose chaque dessin en bas d'un cadre de la hauteur complète : deux cartes côte à côte dont les dessins n'ont pas la même hauteur, comme un robot avec sa station à côté d'un robot sur une simple base, ont alors leur sol au même niveau. Désactivé par défaut. |
 | `done_alert` | `true` fait pulser un badge vert sur le dessin en fin de cycle, jusqu'à l'ouverture de la porte ou un appui sur le badge. Pour les appareils à cycle (lave-linge, sèche-linge, lave-vaisselle, four…). |

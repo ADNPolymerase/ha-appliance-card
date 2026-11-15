@@ -14481,4 +14481,14 @@ if (RECORD) writeFileSync(process.env.HAC_RECORD, JSON.stringify(RECORD));
   check('106 : icone centree dans le bouton', /\.action-btn ha-icon, \.light-badge ha-icon \{ display: flex;/.test(SRC), true);
 }
 
+// Values against the right edge, on request (#107).
+{
+  const cfg = { appliance_type: 'server', state_entity: 'binary_sensor.s', info_entities: [{ entity: 'sensor.t', label: 'Temp' }] };
+  const st = { 'binary_sensor.s': { state: 'on', attributes: {} }, 'sensor.t': { state: '55', attributes: { unit_of_measurement: '\u00b0C' } } };
+  check('107 : valeurs a droite sur demande', /class="info-lines[^"]* right"/.test(render({ ...cfg, values_right: true }, st)), true);
+  check('107 : a gauche par defaut', /class="info-lines[^"]* right"/.test(render(cfg, st)), false);
+  check('107 : la regle pousse la valeur', /\.info-lines\.right \.info-line \.label \+ span \{ margin-left: auto;/.test(SRC), true);
+  check('107 : case dans l\'editeur', /this\._row\("values_right", "values_right", \{ type: "checkbox" \}\)/.test(SRC), true);
+}
+
 report();
