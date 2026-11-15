@@ -20,18 +20,18 @@ const PRINTER_STATES = {
   error: "error", offline_after_error: "error", halted: "error",
   idle: "idle", standby: "idle", operational: "idle", ready: "idle", available: "idle",
   open_serial: "idle", detect_serial: "idle", connecting: "idle",
-  offline: "offline", off: "offline", shutdown: "offline", disconnected: "offline",
+  offline: "offline", disconnected: "offline", off: "off", shutdown: "off",
 };
 // How each of those runs the card: a cancelled job is over without being
 // finished, and a failed one reads as an error.
 const PRINTER_NORMS = {
   printing: "running", preparing: "running", preheating: "preheating", paused: "paused", attention: "paused",
-  done: "done", cancelled: "idle", failed: "error", error: "error", idle: "idle", offline: "idle",
+  done: "done", cancelled: "idle", failed: "error", error: "error", idle: "idle", offline: "idle", off: "idle",
 };
 const PRINTER_LABELS = {
   printing: "p3_printing", preparing: "p3_preparing", preheating: "preheating", paused: "paused",
   attention: "p3_attention", done: "done", cancelled: "p3_cancelled", failed: "p3_failed", error: "error",
-  idle: "idle", offline: "p3_offline", leveling: "p3_leveling", filament: "p3_filament",
+  idle: "idle", offline: "p3_offline", off: "p3_off", leveling: "p3_leveling", filament: "p3_filament",
   cooling: "p3_cooling", calibrating: "p3_calibrating", homing: "p3_homing",
 };
 // The same warm tone as every heater on the card, and the cold blue of the

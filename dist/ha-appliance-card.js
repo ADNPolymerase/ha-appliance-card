@@ -1,5 +1,5 @@
 // Built by tools/build.mjs from the files of src/: edit those, not this file.
-const CARD_VERSION = "4.26.0";
+const CARD_VERSION = "4.26.1";
 
 console.info(
   "%c HA-APPLIANCE-CARD %c v" + CARD_VERSION + " ",
@@ -24,8 +24,6 @@ const T = {
     connected: "Connected", disconnected: "Disconnected",
     start: "Start", pause: "Pause", resume: "Resume", stop: "Stop",
     name: "Name", icon: "Icon", entity: "Entity",
-    main_settings: "Main entities", display_settings: "Display",
-    action_settings: "Controls",
     group_general: "General settings",
     compact: "Compact mode (hide icon)",
     state_show_raw: "Always show the entity's raw text instead of the translated label",
@@ -78,7 +76,7 @@ const T = {
     power_level: "Power level", child_lock: "Child lock",
     residual_heat: "Residual heat", boost: "Boost",
     light: "Light", filter_reset: "Reset filter",
-    zone: "Zone", zones_active: "active zones",
+    zone: "Zone",
     section_target_temperature: "Target temperature", section_current_temperature: "Current temperature",
     section_light: "Light", section_heating: "Heating indicator",
     section_power_level: "Power level", section_fan: "Fan",
@@ -134,7 +132,7 @@ const T = {
     layout_open: "Open frame (moving bed)", unit_hours: "Hours", p3_nozzle: "Nozzle",
     p3_bed: "Bed", p3_chamber: "Chamber", p3_layer: "Layer",
     p3_file: "File", p3_printing: "Printing", p3_preparing: "Preparing",
-    p3_cancelled: "Cancelled", p3_failed: "Failed", p3_offline: "Offline",
+    p3_cancelled: "Cancelled", p3_failed: "Failed", p3_offline: "Offline", p3_off: "Off",
     p3_attention: "Needs attention", p3_leveling: "Bed levelling", p3_filament: "Changing filament",
     p3_cooling: "Cooling", p3_calibrating: "Calibrating", p3_homing: "Homing",
     section_printed_part: "Printed part", part_cube: "Cube", part_pyramid: "Pyramid", part_duck: "Rubber duck",
@@ -1436,18 +1434,18 @@ const PRINTER_STATES = {
   error: "error", offline_after_error: "error", halted: "error",
   idle: "idle", standby: "idle", operational: "idle", ready: "idle", available: "idle",
   open_serial: "idle", detect_serial: "idle", connecting: "idle",
-  offline: "offline", off: "offline", shutdown: "offline", disconnected: "offline",
+  offline: "offline", disconnected: "offline", off: "off", shutdown: "off",
 };
 // How each of those runs the card: a cancelled job is over without being
 // finished, and a failed one reads as an error.
 const PRINTER_NORMS = {
   printing: "running", preparing: "running", preheating: "preheating", paused: "paused", attention: "paused",
-  done: "done", cancelled: "idle", failed: "error", error: "error", idle: "idle", offline: "idle",
+  done: "done", cancelled: "idle", failed: "error", error: "error", idle: "idle", offline: "idle", off: "idle",
 };
 const PRINTER_LABELS = {
   printing: "p3_printing", preparing: "p3_preparing", preheating: "preheating", paused: "paused",
   attention: "p3_attention", done: "done", cancelled: "p3_cancelled", failed: "p3_failed", error: "error",
-  idle: "idle", offline: "p3_offline", leveling: "p3_leveling", filament: "p3_filament",
+  idle: "idle", offline: "p3_offline", off: "p3_off", leveling: "p3_leveling", filament: "p3_filament",
   cooling: "p3_cooling", calibrating: "p3_calibrating", homing: "p3_homing",
 };
 // The same warm tone as every heater on the card, and the cold blue of the
@@ -4437,9 +4435,6 @@ function robotNoticeWord(v) {
   if (ROBOT_BATT_RE.test(s) && !ROBOT_BATT_NOT_RE.test(s)) return "battery";
   return "";
 }
-function robotBagWord(v) {
-  return robotNoticeWord(v) === "bag";
-}
 // An entity, or the robot itself, that asks for something: its state, or
 // the sentence an integration puts beside a code (Ecovacs' description).
 function robotEntityNotice(hass, entityId, s) {
@@ -4476,9 +4471,6 @@ function robotNoticeOf(hass, cfg, st) {
     if (tk && (tk.pct !== null ? (n === "water" ? tk.pct > 15 : tk.pct < 85) : tk.raised === false)) return "";
   }
   return n;
-}
-function robotBagFull(hass, cfg, st) {
-  return robotNoticeOf(hass, cfg, st) === "bag";
 }
 
 // An entity that raises something: a binary sensor on, a sensor that says
@@ -6114,10 +6106,6 @@ const ntFlake = (x, y, r, color, w = .8) =>
   `<path d="M${x} ${y - r}v${2 * r}M${x - r} ${y}h${2 * r}M${x - r * .7} ${y - r * .7}l${r * 1.4} ${r * 1.4}M${x + r * .7} ${y - r * .7}l${-r * 1.4} ${r * 1.4}" stroke="${color}" stroke-width="${w}" stroke-linecap="round"/>`;
 // A puff of smoke: three soft blobs, light grey.
 const ntPuff = (x, y, r, cls, f) => `<g class="${cls}" filter="url(#${f})"><circle cx="${x}" cy="${y}" r="${r}" fill="#cfd8dc" opacity=".8"/><circle cx="${(x + r * .8).toFixed(1)}" cy="${(y - r * .5).toFixed(1)}" r="${(r * .75).toFixed(1)}" fill="#eceff1" opacity=".85"/><circle cx="${(x - r * .7).toFixed(1)}" cy="${(y - r * .3).toFixed(1)}" r="${(r * .6).toFixed(1)}" fill="#b0bec5" opacity=".75"/></g>`;
-// The smoke as it behaves: it rises from below, swells and thins out, then
-// spreads under the ceiling to both sides of the detector.
-const ntSmoke = (f) => `<g class="nt-run">${[[42, 114, 9, 1], [58, 118, 10, 3], [74, 114, 9, 5], [50, 120, 8, 2], [66, 118, 9, 4], [82, 120, 8, 6], [36, 120, 7, 4], [60, 112, 8, 6]].map(([x, y, r, d]) => ntPuff(x, y, r, `nta-smoke ntd${d}`, f)).join("")}
-${[[48, 50, 7, "nta-spreadL ntd2"], [72, 50, 7, "nta-spreadR ntd4"], [44, 54, 6, "nta-spreadL ntd5"], [76, 54, 6, "nta-spreadR ntd1"], [54, 56, 6, "nta-spreadL ntd3"], [66, 56, 6, "nta-spreadR ntd6"]].map(([x, y, r, cls]) => ntPuff(x, y, r, cls, f)).join("")}</g>`;
 // The colours each speaker comes in, the first one its own when none is set:
 // [highlight, body, shade, top, detail]. A colour a model is not sold in
 // falls back to its first.
@@ -6136,12 +6124,6 @@ function speakerColorOf(cfg, st) {
   if (cfg.illustration_color === "grey") return "silver";
   return "";
 }
-// A mark printed on a box's top, laid on it in the same view as the box.
-const strOnTop = (x, y, inner) => `<g transform="matrix(1 0 -.5 .5 ${x} ${y})">${inner}</g>`;
-// A black box: matte sides, a glossy top.
-const strDark = (f, s, t) => `${ntV(f, "#2b2e33", "#141619")}${ntV(s, "#18191c", "#08090a")}<linearGradient id="${t}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#3c4046"/><stop offset=".5" stop-color="#121417"/><stop offset="1" stop-color="#24272c"/></linearGradient>`;
-
-const strIsoRight = (x, y, inner) => `<g transform="matrix(.9177 -.3971 0 1 ${x} ${y})">${inner}</g>`;
 // A tank humidifier (#89), its body a soft squircle seen from just above: a
 // white base with its display and buttons, a smoked tank tapering upwards with
 // its water, its tube and its night light, the mist rising from the nozzle.
@@ -8110,7 +8092,6 @@ function mowerStyleOf(cfg, st) {
   const hay = stripAccents(`${cfg.state_entity || ""} ${cfg.name || ""} ${stHay(st)}`).toLowerCase();
   return /navimow|segway/.test(hay) ? "navimow" : "classic";
 }
-const svgShadow = (cx, rx) => `<ellipse cx="${cx}" cy="103" rx="${rx}" ry="3" fill="rgba(0,0,0,.14)"/>`;
 // The shelter over a mower's base, seen three-quarters like the mower: a part
 // behind it (the far posts, the shadow, the inside of a shell) and a part in
 // front (the near posts, the roof). The rain stops on the roof.
@@ -8314,6 +8295,8 @@ class ApplianceCard extends HTMLElement {
   }
 
   setConfig(config) {
+    // A new configuration may change what a tap does with the same markup.
+    this._lastCardHtml = undefined;
     if (!config || (!config.state_entity && !stateFreeSource(config))) {
       throw new Error("ha-appliance-card: 'state_entity' is required");
     }
@@ -12007,6 +11990,13 @@ class ApplianceCard extends HTMLElement {
     // The card's colour on the drawings made after a real product (a
     // Christmas tree's colour is its lights').
     if (ntDraw && BODY_COLORS[cfg.illustration_color] && applianceType !== "christmas_tree" && !(applianceType === "speaker" && cfg.speaker_color)) ntDraw = { ...ntDraw, tint: cfg.illustration_color };
+    // A smart plug switched off: the appliance on it is off, whatever it
+    // says at rest (a washer's Idle, a heater's Standby, a printer's
+    // Offline). A fridge, a ride or a pump says it in words of its own.
+    if (plugState && ["switch", "input_boolean"].includes(domainOf(cfg.state_entity)) && st && String(st.state).toLowerCase() === "off"
+      && !cfg.state_show_raw && !["fridge", "mobility", "water_pump"].includes(applianceType)) {
+      stateLabel = t(hass, ["printer_3d", "coffee", "air_fryer", "hood", "cooktop", "litter_box"].includes(applianceType) ? "p3_off" : "ac_off");
+    }
 
     extraLines.push(...optLines(hass, cfg, applianceType));
 
@@ -13113,7 +13103,6 @@ class ApplianceCard extends HTMLElement {
       this._root.appendChild(this._styleEl);
       this._root.appendChild(this._card);
     }
-    this._styleEl.textContent = css;
     // A finished cycle can flash until someone has seen it: the door opening
     // says so, and so does a tap on the badge. Read again after a reload: the
     // door having moved since the cycle ended counts as seen.
@@ -13159,7 +13148,7 @@ class ApplianceCard extends HTMLElement {
     const linesBelow = linesMode === "below" ? linesHtml : "";
     const chevron = compact === "side" && linesMode === "toggle" && linesHtml
       ? `<div class="cmp-more${this._linesOpen ? " open" : ""}" data-lines-toggle role="button" tabindex="0" aria-expanded="${!!this._linesOpen}" title="${esc(t(hass, this._linesOpen ? "lines_hide" : "lines_show"))}"><ha-icon icon="mdi:chevron-down"></ha-icon></div>` : "";
-    this._card.innerHTML = compact === "side" ? `
+    const cardHtml = compact === "side" ? `
         <div class="cmp-wrap">
           <div class="cmp-pic" ${picTap ? 'data-pic-tap="1"' : 'data-tap="1"'}>${iconHtml}</div>
           <div class="cmp-col">
@@ -13198,11 +13187,23 @@ class ApplianceCard extends HTMLElement {
         <div class="fill-gap"></div>
         ${actionsHtml}
     `;
-
+    // Nothing on the card moved (a state it reads changed to what it showed,
+    // a sensor it does not draw ticked): its subtree is left as it is, and so
+    // are its animations, which a rewrite would restart.
     if (this.style && typeof this.style.setProperty === "function") {
       if (cfg.fill_height) this.style.setProperty("height", "100%");
       else this.style.removeProperty("height");
     }
+    const cssKey = css.replace(/--anim-offset: [^;]*;/, "");
+    if (cardHtml === this._lastCardHtml && cssKey === this._lastCssKey) {
+      this._fridgeSwing(applianceType === "fridge" && compact !== "hide" ? illustrationCtx : null);
+      return;
+    }
+    this._lastCardHtml = cardHtml;
+    this._lastCssKey = cssKey;
+    this._styleEl.textContent = css;
+    this._card.innerHTML = cardHtml;
+
     this._fitDrawing();
     const header = this._root.getElementById("header");
     if (header) header.addEventListener("click", () => this._tap(cfg, tapFallback));

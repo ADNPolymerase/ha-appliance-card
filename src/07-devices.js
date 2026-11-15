@@ -494,9 +494,6 @@ function robotNoticeWord(v) {
   if (ROBOT_BATT_RE.test(s) && !ROBOT_BATT_NOT_RE.test(s)) return "battery";
   return "";
 }
-function robotBagWord(v) {
-  return robotNoticeWord(v) === "bag";
-}
 // An entity, or the robot itself, that asks for something: its state, or
 // the sentence an integration puts beside a code (Ecovacs' description).
 function robotEntityNotice(hass, entityId, s) {
@@ -533,9 +530,6 @@ function robotNoticeOf(hass, cfg, st) {
     if (tk && (tk.pct !== null ? (n === "water" ? tk.pct > 15 : tk.pct < 85) : tk.raised === false)) return "";
   }
   return n;
-}
-function robotBagFull(hass, cfg, st) {
-  return robotNoticeOf(hass, cfg, st) === "bag";
 }
 
 // An entity that raises something: a binary sensor on, a sensor that says

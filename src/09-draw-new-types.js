@@ -1919,10 +1919,6 @@ const ntFade = (cx, cy, rx, ry) => { const m = ntId(), g = ntId(); return [m, `<
 const ntRoom = (id) => `<defs><linearGradient id="${id}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f1f3f5"/><stop offset="1" stop-color="#dde2e7"/></linearGradient></defs>`;
 // A puff of smoke: three soft blobs, light grey.
 const ntPuff = (x, y, r, cls, f) => `<g class="${cls}" filter="url(#${f})"><circle cx="${x}" cy="${y}" r="${r}" fill="#cfd8dc" opacity=".8"/><circle cx="${(x + r * .8).toFixed(1)}" cy="${(y - r * .5).toFixed(1)}" r="${(r * .75).toFixed(1)}" fill="#eceff1" opacity=".85"/><circle cx="${(x - r * .7).toFixed(1)}" cy="${(y - r * .3).toFixed(1)}" r="${(r * .6).toFixed(1)}" fill="#b0bec5" opacity=".75"/></g>`;
-// The smoke as it behaves: it rises from below, swells and thins out, then
-// spreads under the ceiling to both sides of the detector.
-const ntSmoke = (f) => `<g class="nt-run">${[[42, 114, 9, 1], [58, 118, 10, 3], [74, 114, 9, 5], [50, 120, 8, 2], [66, 118, 9, 4], [82, 120, 8, 6], [36, 120, 7, 4], [60, 112, 8, 6]].map(([x, y, r, d]) => ntPuff(x, y, r, `nta-smoke ntd${d}`, f)).join("")}
-${[[48, 50, 7, "nta-spreadL ntd2"], [72, 50, 7, "nta-spreadR ntd4"], [44, 54, 6, "nta-spreadL ntd5"], [76, 54, 6, "nta-spreadR ntd1"], [54, 56, 6, "nta-spreadL ntd3"], [66, 56, 6, "nta-spreadR ntd6"]].map(([x, y, r, cls]) => ntPuff(x, y, r, cls, f)).join("")}</g>`;
 // A smoke detector on the ceiling, seen from below: its face towards us, its
 // vented rim going up to the ceiling. On alarm the smoke rises from the room
 // and spreads under the ceiling around it.
@@ -2572,13 +2568,9 @@ ${c.st === "paused" ? `<circle cx="${x + 10}" cy="${y + 10}" r="5" fill="#ffffff
 const strZoom = (svg, cx, k) => `<g transform="translate(60 88) scale(${k}) translate(${-cx} -88)">${svg}</g>`;
 // A box's light: its colour while on, amber on standby, dark when off.
 const strLed = (c, x, y, col = "#ffffff", r = .9) => `<circle class="${c.on ? "nta-glow" : ""}" cx="${x}" cy="${y}" r="${r}" fill="${["playing", "paused", "home"].includes(c.st) ? col : c.st === "standby" ? "#ffb300" : "#3a3e44"}"/>`;
-// A mark printed on a box's top, laid on it in the same view as the box.
-const strOnTop = (x, y, inner) => `<g transform="matrix(1 0 -.5 .5 ${x} ${y})">${inner}</g>`;
 const strMute = (c, x, y) => (c.muted ? spkMute(x, y) : "");
 // The apple of an Apple TV.
 const STR_APPLE = "M0 -2.2 C-1.6 -3.4 -4 -2.6 -4 .2 C-4 2.6 -2.2 4.4 -1.2 4.4 C-.6 4.4 -.4 4 0 4 C.4 4 .6 4.4 1.2 4.4 C2.2 4.4 4 2.6 4 .2 C4 -2.6 1.6 -3.4 0 -2.2 Z M.2 -2.8 C.2 -4 1 -4.8 2 -5 C2 -3.8 1.2 -3 .2 -2.8 Z";
-// A black box: matte sides, a glossy top.
-const strDark = (f, s, t) => `${ntV(f, "#2b2e33", "#141619")}${ntV(s, "#18191c", "#08090a")}<linearGradient id="${t}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#3c4046"/><stop offset=".5" stop-color="#121417"/><stop offset="1" stop-color="#24272c"/></linearGradient>`;
 
 // Apple TV 4K: the squircle seen from above at an angle, its matte top with
 // the apple alone, its glossy band, and the silver Siri Remote lying by it.
@@ -2633,10 +2625,9 @@ function strIsoBox(g, h, topFill, faces, shadow = .28) {
 <path d="${g.top()}" fill="${topFill}"/>`;
 }
 const STR_DARK_FACES = ["#0b0c0e", "#2c2f34", "#3a3e44", "#121417", "#050607"];
-// A mark laid on a box's top, along its A edge; on its left face; on its right face.
+// A mark laid on a box's top, along its A edge; on its left face.
 const strIsoTop = (x, y, inner) => `<g transform="matrix(.9177 .3971 -.9177 .3971 ${x} ${y})">${inner}</g>`;
 const strIsoLeft = (x, y, inner) => `<g transform="matrix(.9177 .3971 0 1 ${x} ${y})">${inner}</g>`;
-const strIsoRight = (x, y, inner) => `<g transform="matrix(.9177 -.3971 0 1 ${x} ${y})">${inner}</g>`;
 // A point on the left face: t along its top edge, d below it.
 const strOnLeft = (g, t, d) => [+(g.P[0][0] + (g.P[3][0] - g.P[0][0]) * t).toFixed(2), +(g.P[0][1] + (g.P[3][1] - g.P[0][1]) * t + d).toFixed(2)];
 const strOnRight = (g, t, d) => [+(g.P[3][0] + (g.P[2][0] - g.P[3][0]) * t).toFixed(2), +(g.P[3][1] + (g.P[2][1] - g.P[3][1]) * t + d).toFixed(2)];

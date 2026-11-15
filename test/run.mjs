@@ -3660,7 +3660,7 @@ for (const [raw, want] of [
   ['cancelled', 'Cancelled'], ['stopped', 'Cancelled'], ['cancelling', 'Cancelled'],
   ['failed', 'Failed'], ['error', 'Error'], ['offline_after_error', 'Error'],
   ['operational', 'Idle'], ['standby', 'Idle'], ['ready', 'Idle'], ['idle', 'Idle'], ['available', 'Idle'],
-  ['offline', 'Offline'], ['shutdown', 'Offline'],
+  ['offline', 'Offline'], ['shutdown', 'Off'],
   ['leveling', 'Bed levelling'], ['levelling', 'Bed levelling'], ['homing', 'Homing'],
   ['loading_unloading', 'Changing filament'], ['input_shaping', 'Calibrating'], ['pid_tuning', 'Calibrating'],
 ]) {
@@ -7006,7 +7006,7 @@ check('friteuse double : un seul panier, pas de ligne', infoLine(afRender('cooki
 // On a smart plug alone.
 check('friteuse prise : cuit', stateLine(plug3('air_fryer', 1500)), 'Cooking');
 check('friteuse prise : cuit, chaud', afZones(plug3('air_fryer', 1500)), 'hot/-');
-check('friteuse prise : eteinte', stateLine(plugOff3('air_fryer')), 'Idle');
+check('friteuse prise : eteinte', stateLine(plugOff3('air_fryer')), 'Off');
 {
   const { card } = build({ appliance_type: 'air_fryer', state_entity: 'switch.p', power_entity: 'sensor.p_w', power_on_threshold: 30 },
     { 'switch.p': { state: 'on', attributes: {} }, 'sensor.p_w': { state: '1500', attributes: { unit_of_measurement: 'W' } } });
@@ -7376,6 +7376,7 @@ check('texte brut decoche : le libelle de la card',
   const redraw = mk('hold');
   fire(redraw.btn(), 'pointerdown', ev);
   redraw.c._root.__qsa = null;
+  redraw.c._lastCardHtml = undefined; // a redraw that does rewrite the buttons
   redraw.c._render();
   await wait(200);
   fire(redraw.c._root.querySelectorAll('.action-btn, .light-badge').find(n => n.getAttribute('data-entity') === 'button.stop'), 'pointerup', ev);
@@ -7467,6 +7468,7 @@ check('texte brut decoche : le libelle de la card',
   const cr = mk('confirm');
   fire(cr.btn(), 'click', ev);
   cr.c._root.__qsa = null;
+  cr.c._lastCardHtml = undefined; // a redraw that does rewrite the buttons
   cr.c._render();
   fire(cr.c._root.querySelectorAll('.action-btn, .light-badge').find(n => n.getAttribute('data-entity') === 'button.stop'), 'click', ev);
   check('confirmer : un redessin entre les deux taps ne perd rien', cr.calls.at(-1)?.service, 'press');
@@ -14073,6 +14075,23 @@ function tvT(w) { return { 'switch.tv': { state: 'on', attributes: {} }, 'sensor
   check('couleur : l Apple TV prend la couleur, pas sa tuile', [atv('') !== atv('grey'), /hsl\(/.test(atv('grey')), atv('grey').includes('#000000') && atv('grey').includes('#e50914')].join(), 'true,true,true');
   check('couleur : sans couleur choisie, aucun dessin teinte', /hsl\(/.test(atv('')), false);
   check('couleur : une scene ne se teinte pas (fosse de relevage)', /hsl\(/.test(svg(render({ appliance_type: 'water_pump', pump_layout: 'sump', state_entity: 'switch.p', illustration_color: 'red' }, { 'switch.p': s('on') }))), false);
+  // A smart plug switched off: the appliance on it is off, whatever it
+  // says at rest (a printer used to read Offline, a washer Idle).
+  { const types = ['washer', 'dryer', 'dishwasher', 'oven', 'microwave', 'cooker', 'coffee', 'rice_cooker', 'air_fryer', 'kettle', 'toaster', 'water_heater', 'space_heater', 'towel_warmer', 'dehumidifier', 'humidifier', 'air_purifier', 'fan', 'hood', 'pool_pump', 'printer_3d', 'filament_dryer', 'cooktop', 'pet_fountain', 'pellet_grill', 'spa', 'sauna', 'aquarium', 'floor_heating', 'christmas_tree', 'iron', 'irrigation', 'litter_box', 'speaker', 'console', 'streamer', 'hair_dryer', 'screen'];
+    const off = (t, lang) => stateLine(render({ appliance_type: t, state_entity: 'switch.pr', power_entity: 'sensor.pw', ...(lang ? { language: lang } : {}) }, { 'switch.pr': s('off'), 'sensor.pw': s('0', { unit_of_measurement: 'W' }) }));
+    check('prise coupee : chaque type est eteint', types.filter((t) => off(t) !== 'Off').join(), '');
+    check('prise coupee : imprimante et friteuse au feminin', [off('printer_3d', 'fr'), off('air_fryer', 'fr'), off('washer', 'fr')].join('|'), '\u00c9teinte|\u00c9teinte|\u00c9teint');
+  }
+  // Nothing it shows moved: the card leaves its subtree (and its animations)
+  // alone; a change it shows rewrites it.
+  { const b = build({ appliance_type: 'washer', state_entity: 'sensor.w' }, { 'sensor.w': s('Running') });
+    let writes = 0;
+    const el = b.card._card, proto = Object.getPrototypeOf(el), desc = Object.getOwnPropertyDescriptor(proto, 'innerHTML');
+    Object.defineProperty(el, 'innerHTML', { configurable: true, get() { return desc.get.call(this); }, set(v) { writes++; desc.set.call(this, v); } });
+    rerender(b.card, { 'sensor.w': s('Running') });
+    const after1 = writes;
+    rerender(b.card, { 'sensor.w': s('Idle') });
+    check('rendu : rien de change, rien de reecrit ; un changement, reecrit', [after1, writes].join(), '0,1'); }
   check('boitier : l appli lue dans app_entity', infoLine(STR('playing', { app_name: 'Netflix' }, { app_entity: 'sensor.app' }, { 'sensor.app': s('Disney+') }), 'App'), 'Disney+');
   check('boitier : l ecran d accueil n est pas une appli', infoLine(STR('idle', { app_name: 'Google TV Home', app_id: 'com.google.android.apps.tv.launcherx' }), 'App'), null);
   check('boitier : la chaine d un decodeur', infoLine(STR('playing', { media_channel: 'TF1', media_title: 'Le journal' }), 'Channel'), 'TF1');
@@ -14457,7 +14476,7 @@ if (RECORD) writeFileSync(process.env.HAC_RECORD, JSON.stringify(RECORD));
   check('grill prise : ventilateur et vis', plug(20), 'Cooking');
   check('grill prise : bougie', plug(300), 'Igniting');
   check('grill prise : allumee sans tirer', plug(1, 'on'), 'Ready');
-  check('grill prise : coupee', plug(0, 'off'), 'Asleep');
+  check('grill prise : coupee', plug(0, 'off'), 'Off');
   const lines = (cfg, st) => render({ appliance_type: 'pellet_grill', state_entity: 'sensor.g', ...cfg }, { 'sensor.g': s('cooking'), ...st });
   for (const v of [0, -1, 999]) check(`grill : sonde a ${v} = pas de sonde`, /Probe/.test(lines({ probe_entity: 'sensor.p' }, { 'sensor.p': s(v, { unit_of_measurement: '°C' }) })), false);
   check('grill : vraie sonde', /Probe/.test(lines({ probe_entity: 'sensor.p' }, { 'sensor.p': s(58, { unit_of_measurement: '°C' }) })), true);

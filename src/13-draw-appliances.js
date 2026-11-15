@@ -1251,7 +1251,6 @@ function mowerStyleOf(cfg, st) {
 // draws its gradients again; the words on their screens stay in HTML.
 let drawN = 0;
 const svgGrad = (id, stops, x2 = 1, y2 = 0) => `<linearGradient id="${id}" x1="0" y1="0" x2="${x2}" y2="${y2}">${stops.map(([o, c]) => `<stop offset="${o}" style="stop-color:${c}"/>`).join("")}</linearGradient>`;
-const svgShadow = (cx, rx) => `<ellipse cx="${cx}" cy="103" rx="${rx}" ry="3" fill="rgba(0,0,0,.14)"/>`;
 // A soft shadow on the floor with a contact line, so the appliance stands
 // on it rather than floating above it.
 const svgFloor = (g, cx, rx, cy) => `<radialGradient id="${g}o" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#000" stop-opacity=".22"/><stop offset=".7" stop-color="#000" stop-opacity=".10"/><stop offset="1" stop-color="#000" stop-opacity="0"/></radialGradient><ellipse cx="${cx}" cy="${cy}" rx="${rx}" ry="4" fill="url(#${g}o)"/><path d="M${cx - rx + 6} ${cy + 0.4} H${cx + rx - 6}" stroke="rgba(0,0,0,.16)" stroke-width="1.2" stroke-linecap="round"/>`;

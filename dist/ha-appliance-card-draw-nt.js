@@ -1959,6 +1959,7 @@ const strLed = (c, x, y, col = "#ffffff", r = .9) => `<circle class="${c.on ? "n
 const strMute = (c, x, y) => (c.muted ? spkMute(x, y) : "");
 // The apple of an Apple TV.
 const STR_APPLE = "M0 -2.2 C-1.6 -3.4 -4 -2.6 -4 .2 C-4 2.6 -2.2 4.4 -1.2 4.4 C-.6 4.4 -.4 4 0 4 C.4 4 .6 4.4 1.2 4.4 C2.2 4.4 4 2.6 4 .2 C4 -2.6 1.6 -3.4 0 -2.2 Z M.2 -2.8 C.2 -4 1 -4.8 2 -5 C2 -3.8 1.2 -3 .2 -2.8 Z";
+
 // Apple TV 4K: the squircle seen from above at an angle, its matte top with
 // the apple alone, its glossy band, and the silver Siri Remote lying by it.
 function strAppleTv(c) {
@@ -2012,7 +2013,7 @@ function strIsoBox(g, h, topFill, faces, shadow = .28) {
 <path d="${g.top()}" fill="${topFill}"/>`;
 }
 const STR_DARK_FACES = ["#0b0c0e", "#2c2f34", "#3a3e44", "#121417", "#050607"];
-// A mark laid on a box's top, along its A edge; on its left face; on its right face.
+// A mark laid on a box's top, along its A edge; on its left face.
 const strIsoTop = (x, y, inner) => `<g transform="matrix(.9177 .3971 -.9177 .3971 ${x} ${y})">${inner}</g>`;
 const strIsoLeft = (x, y, inner) => `<g transform="matrix(.9177 .3971 0 1 ${x} ${y})">${inner}</g>`;
 // A point on the left face: t along its top edge, d below it.

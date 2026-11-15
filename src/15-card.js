@@ -6,6 +6,8 @@ class ApplianceCard extends HTMLElement {
   }
 
   setConfig(config) {
+    // A new configuration may change what a tap does with the same markup.
+    this._lastCardHtml = undefined;
     if (!config || (!config.state_entity && !stateFreeSource(config))) {
       throw new Error("ha-appliance-card: 'state_entity' is required");
     }
@@ -3699,6 +3701,13 @@ class ApplianceCard extends HTMLElement {
     // The card's colour on the drawings made after a real product (a
     // Christmas tree's colour is its lights').
     if (ntDraw && BODY_COLORS[cfg.illustration_color] && applianceType !== "christmas_tree" && !(applianceType === "speaker" && cfg.speaker_color)) ntDraw = { ...ntDraw, tint: cfg.illustration_color };
+    // A smart plug switched off: the appliance on it is off, whatever it
+    // says at rest (a washer's Idle, a heater's Standby, a printer's
+    // Offline). A fridge, a ride or a pump says it in words of its own.
+    if (plugState && ["switch", "input_boolean"].includes(domainOf(cfg.state_entity)) && st && String(st.state).toLowerCase() === "off"
+      && !cfg.state_show_raw && !["fridge", "mobility", "water_pump"].includes(applianceType)) {
+      stateLabel = t(hass, ["printer_3d", "coffee", "air_fryer", "hood", "cooktop", "litter_box"].includes(applianceType) ? "p3_off" : "ac_off");
+    }
 
     extraLines.push(...optLines(hass, cfg, applianceType));
 
@@ -4805,7 +4814,6 @@ class ApplianceCard extends HTMLElement {
       this._root.appendChild(this._styleEl);
       this._root.appendChild(this._card);
     }
-    this._styleEl.textContent = css;
     // A finished cycle can flash until someone has seen it: the door opening
     // says so, and so does a tap on the badge. Read again after a reload: the
     // door having moved since the cycle ended counts as seen.
@@ -4851,7 +4859,7 @@ class ApplianceCard extends HTMLElement {
     const linesBelow = linesMode === "below" ? linesHtml : "";
     const chevron = compact === "side" && linesMode === "toggle" && linesHtml
       ? `<div class="cmp-more${this._linesOpen ? " open" : ""}" data-lines-toggle role="button" tabindex="0" aria-expanded="${!!this._linesOpen}" title="${esc(t(hass, this._linesOpen ? "lines_hide" : "lines_show"))}"><ha-icon icon="mdi:chevron-down"></ha-icon></div>` : "";
-    this._card.innerHTML = compact === "side" ? `
+    const cardHtml = compact === "side" ? `
         <div class="cmp-wrap">
           <div class="cmp-pic" ${picTap ? 'data-pic-tap="1"' : 'data-tap="1"'}>${iconHtml}</div>
           <div class="cmp-col">
@@ -4890,11 +4898,23 @@ class ApplianceCard extends HTMLElement {
         <div class="fill-gap"></div>
         ${actionsHtml}
     `;
-
+    // Nothing on the card moved (a state it reads changed to what it showed,
+    // a sensor it does not draw ticked): its subtree is left as it is, and so
+    // are its animations, which a rewrite would restart.
     if (this.style && typeof this.style.setProperty === "function") {
       if (cfg.fill_height) this.style.setProperty("height", "100%");
       else this.style.removeProperty("height");
     }
+    const cssKey = css.replace(/--anim-offset: [^;]*;/, "");
+    if (cardHtml === this._lastCardHtml && cssKey === this._lastCssKey) {
+      this._fridgeSwing(applianceType === "fridge" && compact !== "hide" ? illustrationCtx : null);
+      return;
+    }
+    this._lastCardHtml = cardHtml;
+    this._lastCssKey = cssKey;
+    this._styleEl.textContent = css;
+    this._card.innerHTML = cardHtml;
+
     this._fitDrawing();
     const header = this._root.getElementById("header");
     if (header) header.addEventListener("click", () => this._tap(cfg, tapFallback));
