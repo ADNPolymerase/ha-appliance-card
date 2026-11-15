@@ -143,6 +143,8 @@ const PLUG_MAX = { washer: 2400, dryer: 2800, dishwasher: 2200, oven: 3500, micr
   cooktop: 7200, pet_fountain: 5, water_pump: 1500, floor_heating: 2500, spa: 3000, sauna: 9000, aquarium: 150, christmas_tree: 50, pellet_grill: 400,
   humidifier: 50, filament_dryer: 120, mobility: 600, irrigation: 15, litter_box: 40, speaker: 40, console: 250, streamer: 15 };
 const plugOnly = params.get("plug") === "1";
+// ?color= draws every card of the live gallery in one illustration colour.
+const demoColor = ["white", "grey", "black", "red"].includes(params.get("color")) ? params.get("color") : "";
 const plugSeen = new Set();
 // The plug-only view counts each family first without drawing it (plugDry),
 // noting which cards it keeps (plugRecord); a family opened later draws
@@ -240,7 +242,7 @@ function card(config, entities) {
     cell.className = "cell";
     cell.appendChild(el);
     row.appendChild(cell);
-    el.setConfig({ type: "custom:ha-appliance-card", ...config });
+    el.setConfig({ type: "custom:ha-appliance-card", ...config, ...(demoColor ? { illustration_color: demoColor } : {}) });
     const sim = { states, config, refresh: () => {}, note: () => {} };
     sim.push = () => { el.hass = { ...mkHass({ ...states }), callService: (d, s, data) => simulate(sim, d, s, data) }; };
     sim.set = (id, value, attr, fromTimer) => {
@@ -1720,7 +1722,7 @@ function liveGallery() {
     <h1>HA Appliance Card</h1>
     <p>${L("A Lovelace card for 66 kinds of home appliances, each drawn and animated from its own data. These cards run on made-up states: in Home Assistant every field is an entity you pick.",
       "Une card Lovelace pour 66 types d'appareils, chacun dessiné et animé à partir de ses propres données. Ces cartes tournent sur des états inventés : dans Home Assistant, chaque champ est une entité que vous choisissez.")}</p>
-    <nav>${link("lang", "en", "English", !fr)}${link("lang", "fr", "Français", fr)}<span></span>${link("theme", "light", L("Light", "Clair"), !dark)}${link("theme", "dark", L("Dark", "Sombre"), dark)}<span></span>${link("plug", "0", L("Integrations", "Intégrations"), !plugOnly)}${link("plug", "1", L("Smart plug only", "Prise connectée seule"), plugOnly)}<span></span><a href="https://github.com/ADNPolymerase/ha-appliance-card">GitHub</a></nav>
+    <nav>${link("lang", "en", "English", !fr)}${link("lang", "fr", "Français", fr)}<span></span>${link("theme", "light", L("Light", "Clair"), !dark)}${link("theme", "dark", L("Dark", "Sombre"), dark)}<span></span>${link("plug", "0", L("Integrations", "Intégrations"), !plugOnly)}${link("plug", "1", L("Smart plug only", "Prise connectée seule"), plugOnly)}<span></span>${link("color", "", L("Own colours", "Couleurs d'origine"), !demoColor)}${[["white", "White", "Blanc"], ["grey", "Grey", "Gris"], ["black", "Black", "Noir"], ["red", "Red", "Rouge"]].map(([v, en, f]) => link("color", v, L(en, f), demoColor === v)).join("")}<span></span><a href="https://github.com/ADNPolymerase/ha-appliance-card">GitHub</a></nav>
     <p class="hint">${plugOnly
       ? L("Each card below has nothing but a smart plug: its switch and its power meter. Open “Change the values” and move the power, or press the power button.",
         "Chaque carte ci-dessous n’a qu’une prise connectée : son interrupteur et sa mesure de puissance. Ouvrez « Modifier les valeurs » et faites varier la puissance, ou appuyez sur le bouton d’alimentation.")
