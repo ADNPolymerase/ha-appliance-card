@@ -1751,11 +1751,20 @@ function liveGallery() {
     grid.className = "grid";
     sec.appendChild(grid);
     wrap.appendChild(sec);
-    row = grid;
-    makers.forEach((f) => f());
-    // A family with nothing on a plug is left out of the plug-only view.
-    if (!grid.children.length) sec.remove();
-    else sec.querySelector("small").textContent = grid.children.length;
+    const build = () => {
+      if (sec.dataset.built) return;
+      sec.dataset.built = "1";
+      row = grid;
+      makers.forEach((f) => f());
+      // A family with nothing on a plug is left out of the plug-only view.
+      if (!grid.children.length) sec.remove();
+      else sec.querySelector("small").textContent = grid.children.length;
+    };
+    // A folded family is drawn when it is opened: two hundred animated
+    // cards built at once froze the page for long seconds. The plug-only
+    // view builds them all, to count and drop the families with no plug.
+    if (n === 0 || plugOnly) build();
+    else sec.addEventListener("toggle", () => sec.open && build());
   });
 }
 // On the poster a card is named for what it is, not for the room the demo
