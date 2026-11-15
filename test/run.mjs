@@ -14063,6 +14063,16 @@ function tvT(w) { return { 'switch.tv': { state: 'on', attributes: {} }, 'sensor
   const markOf = (n, id = '') => (svg(STR('playing', { app_name: n, app_id: id }, { streamer_layout: 'apple_tv' })).match(/>(TFOU|okoo|RB|NHL|FIS|VPN|RA|FT|A|D\+|D|max|N)</) || [])[1];
   check('boitier : applis Apple et francaises a leur tuile', [['TFOU MAX'], ['Okoo'], ['Red Bull TV'], ['NHL'], ['FIS TV'], ['FaceTime'], ['Disney+'], ['Disney Dreamlight Valley']].map(([n]) => markOf(n)).join(), 'TFOU,okoo,RB,NHL,FIS,FT,D+,D');
   check('boitier : le logo de l appli quand il existe, ses lettres sinon', [/<path d="m5\.398 0/.test(svg(STR('playing', { app_name: 'Netflix' }, { streamer_layout: 'apple_tv' }))), />C\+</.test(svg(STR('playing', { app_name: 'CANAL+' }, { streamer_layout: 'apple_tv' })))].join(), 'true,true');
+  // A speaker on a smart plug alone: what it draws says it.
+  const SPKP = (on, w, more = {}) => stateLine(render({ appliance_type: 'speaker', state_entity: 'switch.p', power_entity: 'sensor.w', ...more }, { 'switch.p': s(on), 'sensor.w': s(String(w), { unit_of_measurement: 'W' }) }));
+  check('enceinte sur prise : joue, attend, eteinte', [SPKP('on', 8), SPKP('on', 1.5), SPKP('on', 0), SPKP('off', 0), SPKP('on', 2, { power_on_threshold: 1 })].join('|'), 'Playing|Idle|Off|Off|Playing');
+  check('enceinte media_player : la puissance ne decide pas', stateLine(render({ appliance_type: 'speaker', state_entity: 'media_player.sp', power_entity: 'sensor.w' }, { 'media_player.sp': s('paused'), 'sensor.w': s('9', { unit_of_measurement: 'W' }) })), 'Paused');
+  // The card's colour on a drawing made after a real product (option 1 of
+  // JD's choice): the shell takes it, the app's tile does not.
+  const atv = (col) => svg(STR('playing', { app_name: 'Netflix' }, { streamer_layout: 'apple_tv', ...(col ? { illustration_color: col } : {}) }));
+  check('couleur : l Apple TV prend la couleur, pas sa tuile', [atv('') !== atv('grey'), /hsl\(/.test(atv('grey')), atv('grey').includes('#000000') && atv('grey').includes('#e50914')].join(), 'true,true,true');
+  check('couleur : sans couleur choisie, aucun dessin teinte', /hsl\(/.test(atv('')), false);
+  check('couleur : une scene ne se teinte pas (fosse de relevage)', /hsl\(/.test(svg(render({ appliance_type: 'water_pump', pump_layout: 'sump', state_entity: 'switch.p', illustration_color: 'red' }, { 'switch.p': s('on') }))), false);
   check('boitier : l appli lue dans app_entity', infoLine(STR('playing', { app_name: 'Netflix' }, { app_entity: 'sensor.app' }, { 'sensor.app': s('Disney+') }), 'App'), 'Disney+');
   check('boitier : l ecran d accueil n est pas une appli', infoLine(STR('idle', { app_name: 'Google TV Home', app_id: 'com.google.android.apps.tv.launcherx' }), 'App'), null);
   check('boitier : la chaine d un decodeur', infoLine(STR('playing', { media_channel: 'TF1', media_title: 'Le journal' }), 'Channel'), 'TF1');

@@ -1,5 +1,5 @@
 // Built by tools/build.mjs from the files of src/: edit those, not this file.
-const CARD_VERSION = "4.25.2";
+const CARD_VERSION = "4.26.0";
 
 console.info(
   "%c HA-APPLIANCE-CARD %c v" + CARD_VERSION + " ",
@@ -6151,6 +6151,39 @@ function fdLook(cfg) {
   const list = Array.isArray(cfg.spool_colors) ? cfg.spool_colors.filter((c) => /^#[0-9a-f]{3,8}$/i.test(String(c))) : [];
   return { count: FD_COUNTS.includes(n) ? n : 2, colors: list.length ? list : FD_COLORS };
 }
+// The card's colour on a drawing made after a real product: its shell, the
+// greys, blacks and whites it is drawn in, takes the colour, lightest to
+// darkest as before; what has a colour of its own (a screen's glow, a
+// flame, water, a logo) keeps it, and so does a black shadow. A colour
+// written in capitals is kept too: a screen's glass, which no shell colour
+// should light up.
+const NT_TINTS = { white: [.66, 1, 0, 0], grey: [.34, .86, 0, 0], black: [.07, .42, 0, 0], red: [.12, .58, 356, .58] };
+function ntHsl(hex) {
+  const h = hex.length === 4 ? hex.replace(/[0-9a-f]/g, (x) => x + x) : hex;
+  const [r, g, b] = [1, 3, 5].map((i) => parseInt(h.slice(i, i + 2), 16) / 255);
+  const mx = Math.max(r, g, b), mn = Math.min(r, g, b), l = (mx + mn) / 2, d = mx - mn;
+  return { l, s: d === 0 ? 0 : d / (1 - Math.abs(2 * l - 1)) };
+}
+function ntTint(svg, tint) {
+  const T = NT_TINTS[tint];
+  if (!T) return svg;
+  if (svg.includes("<!--k-->")) return svg.split(/(<!--k-->[\s\S]*?<!--\/k-->)/).map((part) => (part.startsWith("<!--k-->") ? part : ntTintRaw(part, svg, T))).join("");
+  return ntTintRaw(svg, svg, T);
+}
+function ntTintRaw(part, svg, T) {
+  const RE = /#(?:[0-9a-f]{6}|[0-9a-f]{3})(?![0-9a-zA-Z])/g;
+  const shell = (x) => { const c = ntHsl(x); return c.s <= .16 && c.l >= .05 ? c : null; };
+  const free = svg.replace(/<!--k-->[\s\S]*?<!--\/k-->/g, "");
+  const ls = (free.match(RE) || []).map(shell).filter(Boolean).map((c) => c.l);
+  if (!ls.length) return part;
+  const lo = Math.min(...ls), hi = Math.max(...ls), span = hi - lo || 1;
+  return part.replace(RE, (x) => {
+    const c = shell(x);
+    if (!c) return x;
+    const l = T[0] + (hi === lo ? .5 : (c.l - lo) / span) * (T[1] - T[0]);
+    return `hsl(${T[2]} ${Math.round(T[3] * 100)}% ${Math.round(l * 1000) / 10}%)`;
+  });
+}
 const NT_COLORS = { off: "var(--disabled-text-color, #9e9e9e)", idle: "var(--secondary-text-color, #727272)", run: "#1e88e5",
   heat: "#f4511e", alarm: "#e53935", lit: "#43a047", high: "#e53935", unav: "var(--disabled-text-color, #9e9e9e)" };
 // How a remaining time reads on the robot's power supply: seconds, minutes or
@@ -6462,10 +6495,15 @@ function ntReadOf(type, hass, cfg, st, watts, threshold) {
     const layout = speakerLayoutOf(cfg, st);
     const kind = `spk_${layout}`;
     const a = (st && st.attributes) || {};
-    const playing = raw === "playing" || raw === "buffering";
-    const paused = raw === "paused";
-    const offish = dead || ["off", "standby", "unavailable"].includes(raw);
-    if (!offish) {
+    // On a smart plug alone, what it draws says it: playing from its
+    // threshold (3 W by default), idle below, off when it draws nothing or
+    // its plug is off. A media player says more and keeps the say.
+    const metered = !!cfg.power_entity && watts !== null && isFinite(threshold) && domainOf(cfg.state_entity) !== "media_player";
+    const plugOff = metered && (dead || ["off", "false", "0", "no"].includes(raw) || watts <= SCREEN_OFF_W);
+    const playing = metered ? !plugOff && watts >= threshold : raw === "playing" || raw === "buffering";
+    const paused = !metered && raw === "paused";
+    const offish = metered ? plugOff : dead || ["off", "standby", "unavailable"].includes(raw);
+    if (!offish && !metered) {
       const same = (x, y) => String(x || "").trim().toLowerCase() === String(y || "").trim().toLowerCase();
       const src = a.app_name || a.source;
       const channel = a.media_channel ? String(a.media_channel) : "";
@@ -8186,7 +8224,8 @@ function illustrationHtml(type, ctx) {
     .join(" ");
 
   const draw = drawingOf(drawKeyOf(type));
-  return draw ? draw(cls, ctx, type) : "";
+  const html = draw ? draw(cls, ctx, type) : "";
+  return html && ctx.tint ? ntTint(html, ctx.tint) : html;
 }
 
 const DRAW_KEYS = ["dishwasher","laundry","pet_feeder","oven","microwave","hood","nt","fridge","water_heater","thermostat","boiler","air_conditioner","pet_fountain","dehumidifier","space_heater","towel_warmer","air_fryer","ev_charger","pellet_stove","heat_pump","printer_3d","toaster","hair_dryer","network","robot","pool_pump","solar","home_battery","scale","ups","camera","lamp","mailbox","diffuser","hrv","screen","air_purifier","fan","iron","kettle","cooker","coffee","rice_cooker","cooktop"];
@@ -8197,7 +8236,7 @@ function requestDrawing(key) {
   drawState[key] = "loading";
   import(assetUrl(`ha-appliance-card-draw-${key}.js`))
     .then((m) => {
-      if (!drawDeps) drawDeps = { BATTERY_LAYOUTS, CAMERA_LAYOUTS, DIFFUSER_LAYOUTS, EV_FLOW_DEFAULT, FR3, HRV_LAYOUTS, LAMP_LAYOUTS, LAMP_SPOTS, LAMP_WARM, LAPTOP_COLORS, MAILBOX_LAYOUTS, MAILBOX_MAX_LETTERS, MB3_PAL, MW_DISHES, NET_LAYOUTS, OVEN_DISHES, ROBOT_FLOORS, ROBOT_LAYOUTS, SCREEN_LAYOUTS, SCREEN_LIT, SCREEN_TABLETS, SHELTER_COLORS, SOLAR_LAYOUTS, T, TOASTER_LAYOUTS, TREE_PALETTES, esc, ntFlake, t, thsColor, zoneColumns };
+      if (!drawDeps) drawDeps = { BATTERY_LAYOUTS, CAMERA_LAYOUTS, DIFFUSER_LAYOUTS, EV_FLOW_DEFAULT, FR3, HRV_LAYOUTS, LAMP_LAYOUTS, LAMP_SPOTS, LAMP_WARM, LAPTOP_COLORS, MAILBOX_LAYOUTS, MAILBOX_MAX_LETTERS, MB3_PAL, MW_DISHES, NET_LAYOUTS, OVEN_DISHES, ROBOT_FLOORS, ROBOT_LAYOUTS, SCREEN_LAYOUTS, SCREEN_LIT, SCREEN_TABLETS, SHELTER_COLORS, SOLAR_LAYOUTS, T, TOASTER_LAYOUTS, TREE_PALETTES, esc, ntFlake, ntTint, t, thsColor, zoneColumns };
       drawn[key] = m.default(drawDeps);
       drawState[key] = "ready";
       for (const fn of Array.from(langListeners)) {
@@ -11965,6 +12004,10 @@ class ApplianceCard extends HTMLElement {
       }
     }
 
+    // The card's colour on the drawings made after a real product (a
+    // Christmas tree's colour is its lights').
+    if (ntDraw && BODY_COLORS[cfg.illustration_color] && applianceType !== "christmas_tree" && !(applianceType === "speaker" && cfg.speaker_color)) ntDraw = { ...ntDraw, tint: cfg.illustration_color };
+
     extraLines.push(...optLines(hass, cfg, applianceType));
 
     // A bathroom scale: its state entity is the weight, shown on its screen.
@@ -12272,7 +12315,14 @@ class ApplianceCard extends HTMLElement {
       if (this._dish === undefined || (cooking && !this._dishOn)) this._dish = Math.floor(Math.random() * COOK_DISHES[applianceType]);
       this._dishOn = cooking;
     }
+    // The card's colour on the drawings made after real products that do not
+    // follow it of themselves: printers, Nest and ecobee, a hob, a scale,
+    // the wall tablets (the others take it through their body colour).
+    const tintable = BODY_COLORS[cfg.illustration_color] && ((applianceType === "printer_3d" && !!cfg.printer_style)
+      || (applianceType === "thermostat" && ["th_round", "th_glass"].includes(thermostatLayoutOf(cfg, st)))
+      || ["cooktop", "scale"].includes(applianceType) || (applianceType === "screen" && SCREEN_TABLETS.includes(screenLayoutOf(cfg, st))));
     const illustrationCtx = {
+      tint: tintable ? cfg.illustration_color : "",
       ...(fridgeCtx || {}),
       ...(coffeeCtx || {}),
       speed: mixer.level,

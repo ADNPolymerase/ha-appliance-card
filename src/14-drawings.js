@@ -22,7 +22,8 @@ function illustrationHtml(type, ctx) {
     .join(" ");
 
   const draw = drawingOf(drawKeyOf(type));
-  return draw ? draw(cls, ctx, type) : "";
+  const html = draw ? draw(cls, ctx, type) : "";
+  return html && ctx.tint ? ntTint(html, ctx.tint) : html;
 }
 
 // The printers drawn after real ones (#93). All in one 120 x 135 box, 0.8 px to

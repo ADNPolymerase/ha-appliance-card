@@ -3696,6 +3696,10 @@ class ApplianceCard extends HTMLElement {
       }
     }
 
+    // The card's colour on the drawings made after a real product (a
+    // Christmas tree's colour is its lights').
+    if (ntDraw && BODY_COLORS[cfg.illustration_color] && applianceType !== "christmas_tree" && !(applianceType === "speaker" && cfg.speaker_color)) ntDraw = { ...ntDraw, tint: cfg.illustration_color };
+
     extraLines.push(...optLines(hass, cfg, applianceType));
 
     // A bathroom scale: its state entity is the weight, shown on its screen.
@@ -4003,7 +4007,14 @@ class ApplianceCard extends HTMLElement {
       if (this._dish === undefined || (cooking && !this._dishOn)) this._dish = Math.floor(Math.random() * COOK_DISHES[applianceType]);
       this._dishOn = cooking;
     }
+    // The card's colour on the drawings made after real products that do not
+    // follow it of themselves: printers, Nest and ecobee, a hob, a scale,
+    // the wall tablets (the others take it through their body colour).
+    const tintable = BODY_COLORS[cfg.illustration_color] && ((applianceType === "printer_3d" && !!cfg.printer_style)
+      || (applianceType === "thermostat" && ["th_round", "th_glass"].includes(thermostatLayoutOf(cfg, st)))
+      || ["cooktop", "scale"].includes(applianceType) || (applianceType === "screen" && SCREEN_TABLETS.includes(screenLayoutOf(cfg, st))));
     const illustrationCtx = {
+      tint: tintable ? cfg.illustration_color : "",
       ...(fridgeCtx || {}),
       ...(coffeeCtx || {}),
       speed: mixer.level,

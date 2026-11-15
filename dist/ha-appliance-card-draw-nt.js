@@ -1,6 +1,6 @@
 // Built by tools/build.mjs from the files of src/: edit those, not this file.
 // The nt drawing and its CSS, loaded by the card the first time it shows one.
-export default function defineDrawing({ BATTERY_LAYOUTS, CAMERA_LAYOUTS, DIFFUSER_LAYOUTS, EV_FLOW_DEFAULT, FR3, HRV_LAYOUTS, LAMP_LAYOUTS, LAMP_SPOTS, LAMP_WARM, LAPTOP_COLORS, MAILBOX_LAYOUTS, MAILBOX_MAX_LETTERS, MB3_PAL, MW_DISHES, NET_LAYOUTS, OVEN_DISHES, ROBOT_FLOORS, ROBOT_LAYOUTS, SCREEN_LAYOUTS, SCREEN_LIT, SCREEN_TABLETS, SHELTER_COLORS, SOLAR_LAYOUTS, T, TOASTER_LAYOUTS, TREE_PALETTES, esc, ntFlake, t, thsColor, zoneColumns }) {
+export default function defineDrawing({ BATTERY_LAYOUTS, CAMERA_LAYOUTS, DIFFUSER_LAYOUTS, EV_FLOW_DEFAULT, FR3, HRV_LAYOUTS, LAMP_LAYOUTS, LAMP_SPOTS, LAMP_WARM, LAPTOP_COLORS, MAILBOX_LAYOUTS, MAILBOX_MAX_LETTERS, MB3_PAL, MW_DISHES, NET_LAYOUTS, OVEN_DISHES, ROBOT_FLOORS, ROBOT_LAYOUTS, SCREEN_LAYOUTS, SCREEN_LIT, SCREEN_TABLETS, SHELTER_COLORS, SOLAR_LAYOUTS, T, TOASTER_LAYOUTS, TREE_PALETTES, esc, ntFlake, ntTint, t, thsColor, zoneColumns }) {
 // Drawing helpers
 let ntN = 0;
 const ntId = () => `nt${++ntN}`;
@@ -348,7 +348,8 @@ function grillSmoke(c, xs, y) {
   const count = dense ? xs.length : ({ ignite: 2, preheat: 3, cook: 4, cool: 2 }[c.st] || 0);
   return `<g class="nt-run">${xs.slice(0, count).map((x, i) => `<path class="ntg-smoke ntd${(i % 6) + 1}${dense ? " ntg-dense" : ""}" d="M${x} ${y} q-3.4 -4.5 0 -9 q3.4 -4.5 0 -9" stroke="#aab2ba" stroke-width="${dense ? 3.4 : 2.4}" fill="none" stroke-linecap="round" opacity="0"/>`).join("")}</g>`;
 }
-function grillLcd(c, x, y, w, h) {
+function grillLcd(c, x, y, w, h) { const out = grillLcdRaw(c, x, y, w, h); return out ? ntKeep(out) : ""; }
+function grillLcdRaw(c, x, y, w, h) {
   const lit = c.st !== "off" && !c.unav;
   const txt = lit ? c.lcd || "" : "";
   const fs = ntFit(txt, w, 7.6);
@@ -783,7 +784,8 @@ ${presents}`;
 // to the left. The charger's light is red while it charges, green once
 // full; the current runs from the charger to the vehicle.
 // A wheel: tyre, rim, hub; knobs for an off-road tyre, spokes for a bike.
-function mobWheel(cx, cy, r, o = {}) {
+function mobWheel(cx, cy, r, o = {}) { const out = mobWheelRaw(cx, cy, r, o); return out ? ntKeep(out) : ""; }
+function mobWheelRaw(cx, cy, r, o = {}) {
   const t = o.tyre || "#1e2226";
   let s = `<circle cx="${cx}" cy="${cy}" r="${r}" fill="${t}"/>`;
   if (o.knobby) {
@@ -1938,7 +1940,8 @@ const STR_LOGOS = {
   retroarch: "M6.84 5.76L8.4 7.68H5.28l-.72 2.88H2.64l.72-2.88H1.44L0 13.44h3.84l-.48 1.92h3.36L4.2 18.24h2.82l2.34-2.88h5.28l2.34 2.88h2.82l-2.52-2.88h3.36l-.48-1.92H24l-1.44-5.76h-1.92l.72 2.88h-1.92l-.72-2.88H15.6l1.56-1.92h-2.04l-1.68 1.92h-2.88L8.88 5.76zm.24 3.84H9v1.92H7.08zm7.925 0h1.92v1.92h-1.92Z",
 };
 // The app's tile above a box while it plays, dimmed with its bars in pause.
-function strTile(c, x, y) {
+function strTile(c, x, y) { const out = strTileRaw(c, x, y); return out ? ntKeep(out) : ""; }
+function strTileRaw(c, x, y) {
   if (c.st !== "playing" && c.st !== "paused") return "";
   const ap = c.app || { bg: "#1e88e5", fg: "#ffffff", mark: "\u25b6" };
   const fs = ap.mark.length > 3 ? 4.6 : ap.mark.length > 2 ? 5.8 : ap.mark.length > 1 ? 7.4 : 10;
@@ -2822,7 +2825,7 @@ ${htValve(110, 30, false)}` : "";
   return `<defs>${ntV(bd, "#3b3f44", "#1c1e21")}${ntBlur(gl, 3)}${ntV(pl, "#4a4f55", "#2a2d31")}
 <linearGradient id="${fl}" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#ff6f00"/><stop offset=".6" stop-color="#ff9800"/><stop offset="1" stop-color="#ffd54f" stop-opacity=".2"/></linearGradient>
 <linearGradient id="${fl2}" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#ffd54f"/><stop offset="1" stop-color="#fff59d" stop-opacity=".4"/></linearGradient>
-<radialGradient id="${win}" cx=".5" cy=".8" r=".9"><stop offset="0" stop-color="${burning ? "#ff8f00" : embers ? "#8a2d10" : "#2b2f33"}"/><stop offset="1" stop-color="#121416"/></radialGradient>
+<radialGradient id="${win}" cx=".5" cy=".8" r=".9"><stop offset="0" stop-color="${burning ? "#ff8f00" : embers ? "#8a2d10" : "#2B2F33"}"/><stop offset="1" stop-color="#121416"/></radialGradient>
 <clipPath id="${cp}"><rect x="36" y="44" width="40" height="38" rx="3"/></clipPath></defs>
 ${ntShadow(56, 108, 34)}
 ${glow ? `<ellipse class="nta-glow" cx="56" cy="106" rx="30" ry="4" fill="${burning ? "#ffb74d" : "#ff7043"}" opacity=".4" filter="url(#${gl})"/>` : ""}
@@ -2831,7 +2834,7 @@ ${jacket}
 ${htDial(56, 19, 8.6, c.flue, c.max || 400, c.low || 100)}
 <rect x="26" y="32" width="60" height="6" rx="2" fill="#2a2d31"/>
 <rect x="28" y="36" width="56" height="62" rx="2.5" fill="url(#${bd})"/>
-<rect x="33" y="41" width="46" height="44" rx="4" fill="#15171a" stroke="#555b62" stroke-width=".8"/>
+<rect x="33" y="41" width="46" height="44" rx="4" fill="#15171A" stroke="#555B62" stroke-width=".8"/>
 <rect x="36" y="44" width="40" height="38" rx="3" fill="url(#${win})"/>
 <g clip-path="url(#${cp})">${glow ? `<ellipse class="nta-glow" cx="56" cy="80" rx="18" ry="7" fill="${burning ? "#ffab40" : "#ff5722"}" filter="url(#${gl})"/>` : ""}${flames}${logs}
 <path d="M36 82 Q56 76 76 82" fill="${embers ? "#ff7043" : "#3a3d40"}" opacity=".6"/></g>
@@ -3068,10 +3071,27 @@ ${thsFace(X + 2, Y, `<ellipse cx="38" cy="70" rx="24" ry="3.4" fill="#000" opaci
 ${thsDepth(X, Y, shape, 12, `url(#${e})`)}${thsFace(X, Y, `${shape(`url(#${t})`)}<circle cx="35" cy="35" r="28.5" fill="#8f958f"/><circle cx="35" cy="35" r="28" fill="url(#${s})"/>${c.unav ? "" : `${thsSignal(25, 11.5, THS_INK)}${thsBattery(35.5, 11.5, THS_INK, c.b)}${thsNumber(c.t, 35, 18, 15.5, THS_INK, THS_GHOST, c.unit)}<path d="M10 38 H60" stroke="${THS_INK}" stroke-width=".5"/>${thsNumber(c.h, 35, 41, 13, THS_INK, THS_GHOST, "%")}`}`)}`;
 }
 const NT_DRAW = { pellet_grill: ntPelletGrill, ths_disc: ntThsDisc, ths_square: ntThsSquare, ths_cushion: ntThsCushion, ths_stick: ntThsStick, ths_lcd_stand: ntThsLcdStand, ths_lcd_probe: ntThsLcdProbe, ths_lcd_round: ntThsLcdRound, dryer: ntFilamentDryer, humidifier: ntHumidifier, circulator: ntCirculator, irr_sprinkler: ntIrrSprinkler, irr_tap: ntIrrTap, irr_drip: ntIrrDrip, irr_flowers: ntIrrFlowers, lit_globe: ntLitterGlobe, lit_box: ntLitterBox, det_smoke: ntDetSmoke, det_co: ntDetCo, det_leak: ntDetLeak, spk_smart: ntSpkSmart, spk_homepod_mini: ntSpkMini, spk_sonos_one: ntSpkOne, spk_bookshelf: ntSpkShelf, spk_sonos_move: ntSpkMove, spk_soundbar: ntSpkBar, spk_echo_dot: ntSpkDot, spk_echo_dot_max: ntSpkDotMax, spk_nest_mini: ntSpkNest, spk_sonos_era100: ntSpkEra100, spk_sonos_era300: ntSpkEra300, spk_bose_wave: ntSpkWave, spk_bose_500: ntSpkBose500, spk_bose_soundlink: ntSpkFlex, spk_bose_soundbar: ntSpkBoseBar, spk_sonos_five: ntSpkFive, spk_sonos_play: ntSpkPlay, spk_sonos_roam: ntSpkRoam, spk_sonos_ray: ntSpkRay, spk_sonos_amp: ntSpkAmp, spk_sonos_port: ntSpkPort, spk_bose_ultra: ntSpkBoseUltra, spk_bose_portable: ntSpkBosePortable, spk_bose_amp: ntSpkBoseAmp, str_apple_tv: (c) => strZoom(strAppleTv(c), 54, 1.45), str_fire_tv_cube: strFireCube, str_fire_tv_stick: (c) => strStick(c, true), str_google_tv_streamer: strGoogleStreamer, str_chromecast: strChromecast, str_shield: strShield, str_shield_pro: strShieldPro, str_roku: strRoku, str_mi_box: strMiBox, str_freebox: strFreebox, str_decoder: strDecoder, str_box: strBox, str_stick: (c) => strStick(c, false), con_ps1: conPs1, con_ps2: conPs2, con_ps3: conPs3, con_ps4: (c) => conPs4(c, false), con_ps4_pro: (c) => conPs4(c, true), con_ps5: conPs5, con_xbox: conXbox, con_xbox_360: conX360, con_xbox_one: conXone, con_xbox_series_x: conXsx, con_xbox_series_s: conXss, con_switch: (c) => conSwitch(c, false), con_switch_2: (c) => conSwitch(c, true), con_switch_lite: conSwitchLite, con_ps_vita: conVita, con_nes: conNes, con_snes: conSnes, con_n64: conN64, con_gamecube: conGamecube, con_wii: conWii, con_megadrive: conMegadrive, tank: ntTank, fws: ntFresh, solth: ntSolarThermal, wood: ntWoodStove, mob_scooter: mobScooter, mob_offroad: mobOffroad, mob_ebike: mobEbike, mob_gyropode: mobGyropode, mob_motorcycle: mobMotorcycle, meter_box: ntMeterBox, meter_dome: ntMeterDome, meter_gas: ntGas, meter_water: ntWater, booster: ntBooster, sump: ntSump, pool: ntPoolRobot, floor: ntFloor, spa: ntSpa, sauna: ntSauna, aquarium: ntAquarium, linky: ntLinky, tree: ntTree };
+// What a tint leaves alone: a part wrapped by ntKeep (an app's tile, a
+// display, a tyre).
+const ntKeep = (s) => `<!--k-->${s}<!--/k-->`;
+// The drawings a tint applies to: appliances, not the scenes around them
+// (a sump's pit, a floor, a garden, a pool, a roof).
+const NT_TINTED = /^(con_|str_|spk_|lit_|det_|mob_|irr_tap$|dryer$|humidifier$|fws$|wood$|booster$|circulator$|pellet_grill$)/;
 function ntSvg(d) {
   ntN = 0;
   const draw = NT_DRAW[d && d.kind] || ntLinky;
-  return `<svg class="nt-svg" viewBox="0 -10 120 135">${draw(d || {})}</svg>`;
+  const body = draw(d || {});
+  // A speaker sold in the colour asked is drawn in it, and not tinted.
+  let tint = d && d.tint && NT_TINTED.test(d.kind || "") ? d.tint : "";
+  if (tint && /^spk_/.test(d.kind) && d.color) {
+    const n = ntN;
+    ntN = 0;
+    const plain = draw({ ...d, color: "" });
+    ntN = 0;
+    if (plain !== draw(d)) tint = "";
+    ntN = n;
+  }
+  return `<svg class="nt-svg" viewBox="0 -10 120 135">${tint ? ntTint(body, tint) : body}</svg>`;
 }
 function ntHtml(cls, d) {
   const flags = ["nt", `nt-k-${(d && d.kind) || "none"}`, d && /^(irr|lit|det|spk)_/.test(d.kind) ? "nt-c7" : "", d && d.on ? "nt-on" : "", d && d.unav ? "nt-unav" : ""].filter(Boolean).join(" ");
