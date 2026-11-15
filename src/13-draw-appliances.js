@@ -1865,6 +1865,19 @@ const ROBOT_TOWER_SPILL = `<svg class="rbt-spill" viewBox="0 0 44 44" aria-hidde
 <g class="rbx-fall" fill="#8f7b62"><circle cx="8" cy="24" r=".9" style="--d0: .2s; --dx: -2px"/><circle cx="36" cy="24" r=".9" style="--d0: .7s; --dx: 2px"/><circle cx="18" cy="24" r=".8" style="--d0: 1.1s; --dx: -1px"/></g>
 <g class="rbx-puff" fill="#b8b2aa"><circle cx="14" cy="9" r="3.4"/><circle cx="23" cy="6" r="4" style="--d0: .8s"/><circle cx="31" cy="9" r="3.2" style="--d0: 1.5s"/></g></svg>`;
 
+// What the robot asks for (#104), in a small sign over it: a drop crossed
+// out for its water, a brown drop for the dirty water, a battery nearly
+// flat. The full bag has its own overflowing station.
+const ROBOT_ASK_SVGS = {
+  water: `<path d="M6 1.2 C6 1.2 2.4 5.4 2.4 7.6 A3.6 3.6 0 0 0 9.6 7.6 C9.6 5.4 6 1.2 6 1.2 Z" fill="none" stroke="#29b6f6" stroke-width="1.1"/><path d="M2.2 10.4 L10 2.6" stroke="#ff5722" stroke-width="1.3" stroke-linecap="round"/>`,
+  dirty: `<path d="M6 1.2 C6 1.2 2.4 5.4 2.4 7.6 A3.6 3.6 0 0 0 9.6 7.6 C9.6 5.4 6 1.2 6 1.2 Z" fill="#8d6e4f" stroke="#5d4632" stroke-width=".7"/><path d="M4.4 7.4 Q6 6.4 7.6 7.4" fill="none" stroke="#c9a77f" stroke-width=".7" stroke-linecap="round"/>`,
+  battery: `<rect x="1" y="3.4" width="9" height="5.2" rx="1" fill="none" stroke="#f44336" stroke-width="1"/><rect x="10.2" y="5" width="1.2" height="2" rx=".4" fill="#f44336"/><rect class="rbt-ask-lv" x="2.1" y="4.5" width="1.7" height="3" rx=".4" fill="#f44336"/>`,
+};
+function robotAskHtml(notice) {
+  const svg = ROBOT_ASK_SVGS[notice];
+  return svg ? `<i class="rbt-ask"><svg viewBox="0 0 12 12" aria-hidden="true">${svg}</svg></i>` : "";
+}
+
 function robotHtml(cls, r) {
   if (r.layout === "pool") return ntHtml(`${cls} rbt rbt-l-pool rbt-m-${r.mode || "docked"}`, { kind: "pool", on: r.mode === "cleaning", lcd: r.poolTime || "" });
   if (r.layout === "stick" || r.layout === "floor_washer") {
@@ -1882,7 +1895,7 @@ function robotHtml(cls, r) {
   const snow = layout === "mower" && mode === "winter"
     ? `<div class="rbt-snow">${Array.from({ length: 20 }, (_, i) => `<b style="left: ${4 + ((i * 29) % 90)}px; --s: ${(1.8 + (i % 3) * .6).toFixed(1)}px; --d: ${(3.2 + (i % 5) * .5).toFixed(1)}s; --d0: ${(-((i * .61) % 4)).toFixed(2)}s"></b>`).join("")}</div>`
     : "";
-  const err = ROBOT_MANGA + ROBOT_ANGER;
+  const err = ROBOT_MANGA + ROBOT_ANGER + robotAskHtml(r.notice);
   // The camera module some robots carry on their bumper (#69).
   const cam = r.camera ? `<i class="rbt-cam"></i><i class="rbt-camb"></i>` : "";
   let inner;
@@ -1921,7 +1934,7 @@ function robotHtml(cls, r) {
           ${wash}`;
   }
   return `
-        <div class="machine ${cls} rbt rbt-l-${layout} rbt-m-${draw}${r.cleanMode ? ` rbt-cm-${r.cleanMode}` : ""}${r.base ? " rbt-base" : ""}${r.bag ? " rbt-bag" : ""}${r.box && layout !== "mower" ? ` rbt-box rbx-${ROBOT_BOX_SKINS[r.boxColor] ? r.boxColor : "white"}` : ""}${r.shelter ? ` rbt-roof rbt-sh-${r.shelter}` : ""}">
+        <div class="machine ${cls} rbt rbt-l-${layout} rbt-m-${draw}${r.cleanMode ? ` rbt-cm-${r.cleanMode}` : ""}${r.base ? " rbt-base" : ""}${r.bag ? " rbt-bag" : ""}${r.notice && r.notice !== "bag" ? ` rbt-n-${r.notice}` : ""}${r.box && layout !== "mower" ? ` rbt-box rbx-${ROBOT_BOX_SKINS[r.boxColor] ? r.boxColor : "white"}` : ""}${r.shelter ? ` rbt-roof rbt-sh-${r.shelter}` : ""}">
           ${inner}
         </div>`;
 }

@@ -3525,6 +3525,19 @@ const ROBOT_TOWER_SPILL = `<svg class="rbt-spill" viewBox="0 0 44 44" aria-hidde
 <g class="rbx-fall" fill="#8f7b62"><circle cx="8" cy="24" r=".9" style="--d0: .2s; --dx: -2px"/><circle cx="36" cy="24" r=".9" style="--d0: .7s; --dx: 2px"/><circle cx="18" cy="24" r=".8" style="--d0: 1.1s; --dx: -1px"/></g>
 <g class="rbx-puff" fill="#b8b2aa"><circle cx="14" cy="9" r="3.4"/><circle cx="23" cy="6" r="4" style="--d0: .8s"/><circle cx="31" cy="9" r="3.2" style="--d0: 1.5s"/></g></svg>`;
 
+// What the robot asks for (#104), in a small sign over it: a drop crossed
+// out for its water, a brown drop for the dirty water, a battery nearly
+// flat. The full bag has its own overflowing station.
+const ROBOT_ASK_SVGS = {
+  water: `<path d="M6 1.2 C6 1.2 2.4 5.4 2.4 7.6 A3.6 3.6 0 0 0 9.6 7.6 C9.6 5.4 6 1.2 6 1.2 Z" fill="none" stroke="#29b6f6" stroke-width="1.1"/><path d="M2.2 10.4 L10 2.6" stroke="#ff5722" stroke-width="1.3" stroke-linecap="round"/>`,
+  dirty: `<path d="M6 1.2 C6 1.2 2.4 5.4 2.4 7.6 A3.6 3.6 0 0 0 9.6 7.6 C9.6 5.4 6 1.2 6 1.2 Z" fill="#8d6e4f" stroke="#5d4632" stroke-width=".7"/><path d="M4.4 7.4 Q6 6.4 7.6 7.4" fill="none" stroke="#c9a77f" stroke-width=".7" stroke-linecap="round"/>`,
+  battery: `<rect x="1" y="3.4" width="9" height="5.2" rx="1" fill="none" stroke="#f44336" stroke-width="1"/><rect x="10.2" y="5" width="1.2" height="2" rx=".4" fill="#f44336"/><rect class="rbt-ask-lv" x="2.1" y="4.5" width="1.7" height="3" rx=".4" fill="#f44336"/>`,
+};
+function robotAskHtml(notice) {
+  const svg = ROBOT_ASK_SVGS[notice];
+  return svg ? `<i class="rbt-ask"><svg viewBox="0 0 12 12" aria-hidden="true">${svg}</svg></i>` : "";
+}
+
 function robotHtml(cls, r) {
   if (r.layout === "pool") return ntHtml(`${cls} rbt rbt-l-pool rbt-m-${r.mode || "docked"}`, { kind: "pool", on: r.mode === "cleaning", lcd: r.poolTime || "" });
   if (r.layout === "stick" || r.layout === "floor_washer") {
@@ -3542,7 +3555,7 @@ function robotHtml(cls, r) {
   const snow = layout === "mower" && mode === "winter"
     ? `<div class="rbt-snow">${Array.from({ length: 20 }, (_, i) => `<b style="left: ${4 + ((i * 29) % 90)}px; --s: ${(1.8 + (i % 3) * .6).toFixed(1)}px; --d: ${(3.2 + (i % 5) * .5).toFixed(1)}s; --d0: ${(-((i * .61) % 4)).toFixed(2)}s"></b>`).join("")}</div>`
     : "";
-  const err = ROBOT_MANGA + ROBOT_ANGER;
+  const err = ROBOT_MANGA + ROBOT_ANGER + robotAskHtml(r.notice);
   // The camera module some robots carry on their bumper (#69).
   const cam = r.camera ? `<i class="rbt-cam"></i><i class="rbt-camb"></i>` : "";
   let inner;
@@ -3581,7 +3594,7 @@ function robotHtml(cls, r) {
           ${wash}`;
   }
   return `
-        <div class="machine ${cls} rbt rbt-l-${layout} rbt-m-${draw}${r.cleanMode ? ` rbt-cm-${r.cleanMode}` : ""}${r.base ? " rbt-base" : ""}${r.bag ? " rbt-bag" : ""}${r.box && layout !== "mower" ? ` rbt-box rbx-${ROBOT_BOX_SKINS[r.boxColor] ? r.boxColor : "white"}` : ""}${r.shelter ? ` rbt-roof rbt-sh-${r.shelter}` : ""}">
+        <div class="machine ${cls} rbt rbt-l-${layout} rbt-m-${draw}${r.cleanMode ? ` rbt-cm-${r.cleanMode}` : ""}${r.base ? " rbt-base" : ""}${r.bag ? " rbt-bag" : ""}${r.notice && r.notice !== "bag" ? ` rbt-n-${r.notice}` : ""}${r.box && layout !== "mower" ? ` rbt-box rbx-${ROBOT_BOX_SKINS[r.boxColor] ? r.boxColor : "white"}` : ""}${r.shelter ? ` rbt-roof rbt-sh-${r.shelter}` : ""}">
           ${inner}
         </div>`;
 }
@@ -3867,6 +3880,20 @@ css: () => `${NT_CSS}${MINI_LCD_CSS}
         .rbt-spill{display:none;left:26px;top:-4px;width:44px;height:44px;overflow:visible}
         .rbt-bag .rbt-spill{display:block}
         .rbt-bag .rbt-dcap{visibility:hidden}
+        .rbt-ask{display:none;position:absolute;z-index:3;width:12px;height:12px;left:20px;top:-15px;padding:1.5px;border-radius:4px;background:rgba(255,255,255,.92);box-shadow:0 1px 3px rgba(0,0,0,.25);animation:rbt-ask 1.6s ease-in-out infinite}
+        .rbt-ask svg{display:block;width:12px;height:12px}
+        .rbt-rm .rbt-ask{left:18px}
+        .rbt-mw .rbt-ask{left:24px;top:-17px}
+        .rbt-n-water .rbt-ask,.rbt-n-dirty .rbt-ask,.rbt-n-battery .rbt-ask{display:block}
+        .rbt-ask-lv{animation:rbt-blink 1s steps(1) infinite}
+        @keyframes rbt-ask{0%,100%{transform:translateY(0)}50%{transform:translateY(-2px)}}
+        .rbt-n-water .rbx-lv.rbx-c,.rbt-n-dirty .rbx-lv.rbx-d{animation:rbt-blink 1s steps(1) infinite}
+        .rbt-n-water .rbx-lv.rbx-c{fill:#ff5722}
+        .rbt-n-water .rbt-mdock .rbt-tk.rbt-c i{background:#ff5722;animation:rbt-blink 1s steps(1) infinite}
+        .rbt-n-dirty .rbt-mdock .rbt-tk.rbt-d i{animation:rbt-blink 1s steps(1) infinite}
+        .rbt-n-water .rbt-mdock .rbt-tk.rbt-c,.rbt-n-dirty .rbt-mdock .rbt-tk.rbt-d{box-shadow:inset 0 0 0 1px #ff9800}
+        .rbt-n-water .rbt-tank i{background:#ff9800;height:12%}
+        .rbt-n-water .rbx-led,.rbt-n-dirty .rbx-led,.rbt-n-water .rbt-dled,.rbt-n-dirty .rbt-dled{fill:#ff9800;background:#ff9800;box-shadow:0 0 3px #ff9800}
         .rbx-lidup,.rbt-capup{transform-box:fill-box;transform-origin:50% 100%;animation:rbx-lid 1.6s ease-in-out infinite}
         .rbx-fall circle{opacity:0;transform-box:fill-box;animation:rbx-fall 1.4s ease-in infinite;animation-delay:var(--d0,0s)}
         .rbx-puff circle{opacity:0;transform-box:fill-box;transform-origin:center;animation:rbx-puff 2.2s ease-out infinite;animation-delay:var(--d0,0s)}

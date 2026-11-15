@@ -2134,7 +2134,18 @@ class ApplianceCard extends HTMLElement {
       this._feedSeen = counts;
       feeding = (!!st && ["on", "true", "dispensing", "feeding", "running"].includes(String(rawState).toLowerCase()))
         || Date.now() < (this._feedUntil || 0);
-      norm = errEmpty || ((levelEmpty || levelBEmpty) && !erred) ? "feeder_empty"
+      // Gone offline (#105): its state unavailable, or every entity it was
+      // given at once. Its last level and its last fault are stale then.
+      const fdIds = [cfg.state_entity, cfg.level_entity, cfg.level_b_entity, cfg.error_entity, cfg.portions_today_entity, cfg.weight_today_entity].filter(Boolean);
+      const fdGone = (id) => {
+        const fs = stateObj(hass, id);
+        return !fs || String(fs.state).toLowerCase() === "unavailable";
+      };
+      const feederOffline = (!!st && (String(rawState).toLowerCase() === "unavailable" || /^offline$/i.test(String(rawState).trim())))
+        || (fdIds.length > 0 && fdIds.every(fdGone) && fdIds.some((id) => stateObj(hass, id)));
+      if (feederOffline) feeding = false;
+      norm = feederOffline ? "feeder_offline"
+        : errEmpty || ((levelEmpty || levelBEmpty) && !erred) ? "feeder_empty"
         : erred ? "error"
         : feeding ? "feeder_feeding" : "feeder_ready";
       feederEmpty = norm === "feeder_empty";
@@ -2143,7 +2154,7 @@ class ApplianceCard extends HTMLElement {
       // The screen shows what the real ones show: the time. While it serves it
       // shows the portion being served, when the card knows the serving size.
       const serving = cfg.serving_size_entity ? numericState(hass, cfg.serving_size_entity) : null;
-      feederScreen = feeding && serving !== null ? `P ${Math.round(serving)}` : feederClock(hass);
+      feederScreen = feederOffline ? "" : feeding && serving !== null ? `P ${Math.round(serving)}` : feederClock(hass);
       // A clock has to tick on its own: nothing in the states changes when a
       // minute goes by.
       this._clearClockTimer();
@@ -2171,7 +2182,7 @@ class ApplianceCard extends HTMLElement {
           warn: levelBEmpty,
         });
       }
-      color = STATE_COLORS[norm];
+      color = feederOffline ? FT_COLORS.offline : STATE_COLORS[norm];
       // The heap is drawn from a percentage. A tank counted in grams or in
       // litres only says how full it is once its capacity is known, so without
       // that capacity the drawing stays at its resting height rather than
@@ -2197,7 +2208,8 @@ class ApplianceCard extends HTMLElement {
       const restFill = cfg.feeder_layout !== "dual_split" || feederFillB === null ? feederFill
         : feederFill === null ? feederFillB : Math.min(feederFill, feederFillB);
       if (!cfg.state_show_raw) {
-        stateLabel = norm !== "feeder_ready" ? t(hass, norm)
+        stateLabel = feederOffline ? t(hass, "ev_offline")
+          : norm !== "feeder_ready" ? t(hass, norm)
           : restFill === null ? ""
           : t(hass, "feeder_level").replace("{pct}",
             new Intl.NumberFormat(lang(hass), { style: "percent", maximumFractionDigits: 0 }).format(restFill / 100));
@@ -3816,18 +3828,25 @@ class ApplianceCard extends HTMLElement {
         stateLabel = t(hass, mode === "cleaning" ? ROBOT_WORK_LABELS[layout] : stick && mode === "docked" ? "stick_charged" : washer[mode] || ROBOT_LABELS[mode]);
       }
       color = ROBOT_COLORS[mode];
-      // The station's bag full (#104): said whatever the robot does, which
-      // goes on working; an error of its own says more.
-      const bag = !stick && !["mower", "pool"].includes(layout) && !["error", "unav", "winter", "off"].includes(mode) && robotBagFull(hass, cfg, st);
-      if (bag) {
-        if (!cfg.state_show_raw) stateLabel = t(hass, "robot_bag_full");
-        color = ROBOT_COLORS.full;
-      }
+      // What the robot asks for (#104): the station's bag full, its water
+      // empty, the dirty water full, its battery low. Said whatever the robot
+      // does, which goes on working; an error of its own says more. A vacuum
+      // alone has no water to run out of.
+      let notice = !stick && layout !== "pool" && !["error", "unav", "winter", "off"].includes(mode) ? robotNoticeOf(hass, cfg, st) : "";
+      if (layout === "mower" && notice !== "battery") notice = "";
+      if (notice === "water" && mode === "empty") notice = "";
+      const bag = notice === "bag";
+      if (notice && !cfg.state_show_raw) stateLabel = t(hass, ROBOT_NOTICE_LABELS[notice]);
+      if (notice) color = notice === "battery" ? ROBOT_COLORS.empty : ROBOT_COLORS.full;
       const water = robotWaterPct(hass, cfg);
       // The station's two water tanks, on the lines and on its front (#69).
+      // A tank the robot says is empty or full shows it, even without its
+      // own sensor.
       const tankOn = ["vacuum", "mop", "combo"].includes(layout);
       const cleanTank = tankOn ? robotTank(hass, cfg.robot_clean_tank_entity) : null;
       const dirtyTank = tankOn ? robotTank(hass, cfg.robot_dirty_tank_entity) : null;
+      const drawClean = notice === "water" && tankOn ? { pct: null, raised: true } : cleanTank;
+      const drawDirty = notice === "dirty" && tankOn ? { pct: null, raised: true } : dirtyTank;
       const cleanMode = layout === "combo" ? robotCleanModeOf(hass, cfg) : null;
       if (mode !== "unav" && mode !== "winter") {
         if (battery !== null && !cfg.battery_corner) {
@@ -3879,9 +3898,9 @@ class ApplianceCard extends HTMLElement {
         const secs = ntRemaining(hass, cfg.remaining_time_entity);
         if (secs !== null) poolTime = formatDuration(secs, hass);
       }
-      robot = { layout, mode, water, cleanMode, battery, poolTime, floor: cfg.robot_floor, base: cfg.robot_station === "base", shelter: cfg.robot_shelter ? (SHELTER_STYLES.includes(cfg.robot_shelter_style) ? cfg.robot_shelter_style : "lean_to") : "",
+      robot = { layout, mode, water: notice === "water" && ["mop", "combo"].includes(layout) ? 0 : water, cleanMode, battery, poolTime, floor: cfg.robot_floor, base: cfg.robot_station === "base", shelter: cfg.robot_shelter ? (SHELTER_STYLES.includes(cfg.robot_shelter_style) ? cfg.robot_shelter_style : "lean_to") : "",
         shelterColor: cfg.robot_shelter_color, mowerStyle: mowerStyleOf(cfg, st),
-        box: cfg.robot_station === "box", boxColor: cfg.robot_station_color, camera: !!cfg.robot_camera, cleanTank, dirtyTank, bag };
+        box: cfg.robot_station === "box", boxColor: cfg.robot_station_color, camera: !!cfg.robot_camera, cleanTank: drawClean, dirtyTank: drawDirty, bag, notice };
     }
 
     // The last cycle, on request: how long it ran and when it ended. Shown
@@ -4392,6 +4411,9 @@ class ApplianceCard extends HTMLElement {
         @keyframes ac-armed { to { opacity: 0.65; } }
         @media (prefers-reduced-motion: reduce) { .armed { animation-name: none; } }
         .action-btn ha-icon { --mdc-icon-size: 20px; }
+        /* An icon is an inline box: on a theme with a tall line height it sits
+           on the text's baseline, below the middle of its round button (#106). */
+        .action-btn ha-icon, .light-badge ha-icon { display: flex; align-items: center; justify-content: center; line-height: 0; }
         /* The compact modes. The name's line carries every icon, so none of
            them sits on top of anything. */
         .cmp-head { display: flex; align-items: center; gap: 6px; min-height: 32px; }

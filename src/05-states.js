@@ -981,12 +981,16 @@ function programLabel(hass, st, raw, cfg) {
   return cleanProgramName(raw);
 }
 
+// What Home Assistant itself writes in every entity's attributes: never an
+// alert. An entity gone offline keeps only these, restored among them (#105).
+const ALERT_META_ATTRS = ["icon", "friendly_name", "device_class", "unit_of_measurement", "restored", "assumed_state",
+  "supported_features", "editable", "attribution", "entity_picture", "state_class", "options"];
 function activeAlerts(hass, entityId) {
   const st = stateObj(hass, entityId);
-  if (!st) return [];
+  if (!st || String(st.state).toLowerCase() === "unavailable") return [];
   const active = [];
   for (const [key, val] of Object.entries(st.attributes)) {
-    if (["icon", "friendly_name", "device_class", "unit_of_measurement", DEVICE_ATTR].includes(key)) continue;
+    if (ALERT_META_ATTRS.includes(key) || key === DEVICE_ATTR) continue;
     const v = String(val).toLowerCase();
     if (v === "on" || v === "true" || v === "1" || v === "active") active.push(key);
   }

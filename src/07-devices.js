@@ -347,6 +347,8 @@ const ROBOT_WORDS = [
   ["charging", /charg|dock|base|home|station/],
   ["idle", /idle|ready|standby|stop|sleep|wait/],
 ];
+// What a robot asks for without being stuck (#104).
+const ROBOT_NOTICE_LABELS = { bag: "robot_bag_full", water: "robot_water_empty", dirty: "fw_dirty_full", battery: "robot_low_battery" };
 const ROBOT_LABELS = {
   charging: "robot_charging", docked: "robot_docked", returning: "robot_returning", paused: "paused", idle: "robot_idle",
   error: "error", emptying: "robot_emptying", full: "robot_bin_full", washing: "robot_washing", drying: "robot_drying",
@@ -476,18 +478,68 @@ function robotBagWord(v) {
   return !!s && ROBOT_BAG_RE.test(s) && !ROBOT_BAG_NOT_RE.test(s);
 }
 const ROBOT_BAG_ATTRS = ["description", "message", "error", "error_message", "last_error_message", "status"];
-// An entity, or the robot itself, that says its bag is full: its state, or
+// The other things a robot asks for without being stuck (#104): its water
+// tank empty, the station's dirty water full, its battery low. Worded in a
+// key, a code's description or a sentence, in any language. A dirty tank is
+// never the clean one, and a water box missing or a battery fault are faults.
+const ROBOT_DIRTY_WORD_RE = /dirty|waste|sewage|used_water|(^|_)(sale|sales|usee|usees)($|_)|schmutz|abwasser|vuil|sporc|sucia|sujo|suja|smuts|skitt|snavs|brudn|spinav|szenny|\u0433\u0440\u044f\u0437\u043d|\u6c61/;
+const ROBOT_FULL_WORD_RE = /(^|_)(full|plein|pleine|voll|pieno|piena|lleno|llena|vol|cheio|cheia|fuld|pelny|pe\u0142ny|plny|plna|tele|hoare)($|_)|\u043f\u043e\u043b\u043e\u043d|\u5df2?\u6ee1/;
+const ROBOT_WATER_WORD_RE = /water|wasser|(^|_)(d_)?eau($|_)|(^|_)(agua|acqua|agu|vand|vann|vatten|wody|woda|vody|voda|viz|v\u00edz)|vandtank|vanntank|vattentank|viztartaly|\u0432\u043e\u0434|\u6c34/;
+const ROBOT_EMPTY_WORD_RE = /(^|_)(empty|vide|leer|vacio|vuoto|hoare|leeg|tom|tomt|pusty|pusta|prazdna|prazdny|ures|vazio|vazia)($|_)|insufficient|(^|_)lack|manque|shortage|(^|_)(low|no|kein|pas_d|sans)_(\w+_)?(water|wasser|eau|agua|acqua)($|_)|(water|wasser|eau)_(low|bas|niedrig|insuffisant)|\u043f\u0443\u0441\u0442|\u7f3a\u6c34|\u5df2\u7a7a/;
+const ROBOT_NOT_RE = /emptying|(^|_)(not|pas|nicht|kein|non|no|niet|ikke|inte|nie|ne)_(\w+_)?(full|plein|voll|pieno|llena|lleno|vol|cheio|ful|fuld|pelny|pe\u0142ny|plny|empty|vide|leer|vuoto|vacio|leeg|tom)($|_)|missing|not_installed|absent|(^|_)install/;
+const ROBOT_BATT_RE = /low_?(power|battery|batt)|battery_(is_)?(low|weak)|batt_low|batterie_(est_)?(faible|basse|presque_vide|vide)|niveau_de_batterie_(bas|faible)|akku(stand)?_(ist_)?(schwach|leer|fast_leer|niedrig)|niedriger_akku|bateria_(baja|agotada|fraca|baixa|descargada)|batteria_(scarica|bassa|quasi_scarica)|batterij_(bijna_leeg|laag|leeg)|lage_batterij|(lagt|lavt|lav)_batteri|batteri(et)?_(lavt|lagt|svagt|lav)|niski_poziom_baterii|(slaba|vybita)_bater|alacsony_(akku|toltottseg)|\u043d\u0438\u0437\u043a\w*_\u0437\u0430\u0440\u044f\u0434|\u0440\u0430\u0437\u0440\u044f\u0436|\u7535\u91cf(\u4f4e|\u4e0d\u8db3)|\u7535\u6c60\u7535\u91cf\u4f4e/;
+const ROBOT_BATT_NOT_RE = /battery_(error|fault|abnormal|temperature)|batterie_(defectueuse|en_erreur)|not_low/;
+function robotNoticeWord(v) {
+  const s = stripAccents(String(v === undefined || v === null ? "" : v)).trim().toLowerCase().replace(/[\s.,;:!'\u2019()/-]+/g, "_");
+  if (!s) return "";
+  if (ROBOT_BAG_RE.test(s) && !ROBOT_BAG_NOT_RE.test(s)) return "bag";
+  if (ROBOT_DIRTY_WORD_RE.test(s) && ROBOT_FULL_WORD_RE.test(s) && !ROBOT_NOT_RE.test(s)) return "dirty";
+  if (!ROBOT_DIRTY_WORD_RE.test(s) && ROBOT_WATER_WORD_RE.test(s) && ROBOT_EMPTY_WORD_RE.test(s) && !ROBOT_NOT_RE.test(s)) return "water";
+  if (ROBOT_BATT_RE.test(s) && !ROBOT_BATT_NOT_RE.test(s)) return "battery";
+  return "";
+}
+function robotBagWord(v) {
+  return robotNoticeWord(v) === "bag";
+}
+// An entity, or the robot itself, that asks for something: its state, or
 // the sentence an integration puts beside a code (Ecovacs' description).
-function robotEntityBag(hass, entityId, s) {
+function robotEntityNotice(hass, entityId, s) {
   const st = s || (entityId ? stateObj(hass, entityId) : null);
-  if (!st) return false;
-  if (robotBagWord(st.state)) return true;
+  if (!st) return "";
+  const n = robotNoticeWord(st.state);
+  if (n) return n;
   const a = st.attributes || {};
-  return ROBOT_BAG_ATTRS.some((k) => typeof a[k] === "string" && robotBagWord(a[k]));
+  for (const k of ROBOT_BAG_ATTRS) {
+    const w = typeof a[k] === "string" ? robotNoticeWord(a[k]) : "";
+    if (w) return w;
+  }
+  return "";
+}
+function robotEntityBag(hass, entityId, s) {
+  return robotEntityNotice(hass, entityId, s) === "bag";
+}
+// What the robot asks for, the bag first: from its error, its status, its
+// bin entity, then its own state's attributes. A level the card can read
+// says better: a battery back above 30 %, a tank that says otherwise, and
+// the stale word is dropped (#104).
+function robotNoticeOf(hass, cfg, st) {
+  let n = "";
+  for (const id of [cfg.robot_error_entity, cfg.robot_status_entity, cfg.robot_bin_entity]) {
+    n = id ? robotEntityNotice(hass, id) : "";
+    if (n) break;
+  }
+  if (!n) n = robotEntityNotice(hass, null, st);
+  if (n === "battery") {
+    const b = robotBattery(hass, cfg, st);
+    if (b !== null && b >= 30) return "";
+  } else if (n === "water" || n === "dirty") {
+    const tk = robotTank(hass, n === "water" ? cfg.robot_clean_tank_entity : cfg.robot_dirty_tank_entity);
+    if (tk && (tk.pct !== null ? (n === "water" ? tk.pct > 15 : tk.pct < 85) : tk.raised === false)) return "";
+  }
+  return n;
 }
 function robotBagFull(hass, cfg, st) {
-  return [cfg.robot_error_entity, cfg.robot_status_entity, cfg.robot_bin_entity].some((id) => id && robotEntityBag(hass, id))
-    || robotEntityBag(hass, null, st);
+  return robotNoticeOf(hass, cfg, st) === "bag";
 }
 
 // An entity that raises something: a binary sensor on, a sensor that says
@@ -512,8 +564,9 @@ function robotModeOf(hass, cfg, st, layout) {
   let mode = ROBOT_STATES[raw] || robotWord(raw) || "";
   const statusSt = cfg.robot_status_entity ? stateObj(hass, cfg.robot_status_entity) : null;
   const statusText = statusSt ? statusSt.state : st && st.attributes ? st.attributes.status : "";
-  // A full bag worded "full or the vents are blocked" is not an error.
-  const detail = robotBagWord(statusText) ? "" : robotWord(statusText);
+  // A full bag worded "full or the vents are blocked" is not an error, nor
+  // an empty tank or a low battery (#104).
+  const detail = robotNoticeWord(statusText) ? "" : robotWord(statusText);
   if (!mode) mode = detail || "idle";
   const edge = mode === "edgecut" || detail === "edgecut";
   if (mode === "edgecut") mode = "cleaning";
@@ -525,12 +578,15 @@ function robotModeOf(hass, cfg, st, layout) {
     else if (["full", "empty", "rain"].includes(detail) && ["charging", "idle", "paused"].includes(mode)) mode = detail;
   }
   if (mode === "rain" && layout !== "mower") mode = "charging";
-  const errorBag = !!cfg.robot_error_entity && robotEntityBag(hass, cfg.robot_error_entity);
-  if (mode !== "error" && cfg.robot_error_entity && !errorBag && robotRaised(hass, cfg.robot_error_entity, /./)) mode = "error";
-  // In error for its full bag alone (#104), the robot is at its station: the
-  // bag is said on its own, the robot is not stuck.
-  else if (mode === "error" && detail !== "error" && robotBagFull(hass, cfg, st)
-    && !(cfg.robot_error_entity && !errorBag && robotRaised(hass, cfg.robot_error_entity, /./))) mode = "charging";
+  const errorNotice = !!cfg.robot_error_entity && !!robotEntityNotice(hass, cfg.robot_error_entity);
+  if (mode !== "error" && cfg.robot_error_entity && !errorNotice && robotRaised(hass, cfg.robot_error_entity, /./)) mode = "error";
+  // In error for its full bag or its water alone (#104), the robot is at its
+  // station; for its low battery, it waits where it stopped. Said on its
+  // own: the robot is not stuck.
+  else if (mode === "error" && detail !== "error" && !(cfg.robot_error_entity && !errorNotice && robotRaised(hass, cfg.robot_error_entity, /./))) {
+    const n = robotNoticeOf(hass, cfg, st);
+    if (n) mode = n === "battery" ? "idle" : "charging";
+  }
   const atRest = ["charging", "idle", "paused"].includes(mode);
   if (atRest && layout === "mower" && cfg.robot_rain_entity && robotRaised(hass, cfg.robot_rain_entity, /rain|pluie|regen|delay/)) mode = "rain";
   if (atRest && cfg.robot_bin_entity && !robotEntityBag(hass, cfg.robot_bin_entity) && robotRaised(hass, cfg.robot_bin_entity, /full|plein|voll/)) mode = "full";

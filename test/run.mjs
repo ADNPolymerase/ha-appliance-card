@@ -9979,7 +9979,37 @@ check('borne : ni un statut reconnu', evMode(evR('SuspendedEVSE', { power_entity
   check('pas sac plein : sac absent', vac('docked', {}, { robot_error_entity: 'sensor.e' }, { 'sensor.e': s('dust bag not installed') }), 'Error');
   check('pas sac plein : pas plein', vac('docked', { battery_level: 100 }, { robot_status_entity: 'sensor.st' }, { 'sensor.st': s('dust bag not full') }), 'Docked');
   check('pas sac plein : vidage en cours', vac('docked', { status: 'auto_emptying' }), 'Emptying the bin');
-  check('pas sac plein : reservoir sale plein', vac('docked', {}, { robot_error_entity: 'sensor.e' }, { 'sensor.e': s('dirty tank full') }), 'Error');
+  check('pas sac plein : reservoir sale plein', vac('docked', {}, { robot_error_entity: 'sensor.e' }, { 'sensor.e': s('dirty tank full') }), 'Dirty water tank full');
+  // The rest a robot asks for without being stuck (#104).
+  const cls104 = (state, attrs = {}, cfg = {}, more = {}) => machineCls(render({ state_entity: 'vacuum.x', ...cfg }, { 'vacuum.x': s(state, attrs), ...more }));
+  check('104 : bac d\'eau sale plein en francais', vac('error', {}, { robot_error_entity: 'sensor.e' }, { 'sensor.e': s('Bac d\'eau sale plein') }), 'Dirty water tank full');
+  check('104 : eau sale, robot a sa station', /rbt-m-charging/.test(cls104('error', {}, { robot_error_entity: 'sensor.e' }, { 'sensor.e': s('Bac d\'eau sale plein') })), true);
+  check('104 : eau sale en francais affiche', vac('error', {}, { language: 'fr', robot_error_entity: 'sensor.e' }, { 'sensor.e': s('Bac d\'eau sale plein') }).replace('&#39;', "'"), 'R\u00e9servoir d\'eau sale plein');
+  check('104 : Roborock dirty_water_box_hoare', vac('error', {}, { robot_error_entity: 'sensor.e' }, { 'sensor.e': s('dirty_water_box_hoare') }), 'Dirty water tank full');
+  check('104 : Roborock dock waste_water_tank_full', vac('docked', {}, { robot_error_entity: 'sensor.e' }, { 'sensor.e': s('waste_water_tank_full') }), 'Dirty water tank full');
+  check('104 : allemand Schmutzwassertank voll', vac('docked', {}, { robot_error_entity: 'sensor.e' }, { 'sensor.e': s('Schmutzwassertank voll') }), 'Dirty water tank full');
+  check('104 : reservoir d\'eau vide', vac('error', {}, { robot_error_entity: 'sensor.e' }, { 'sensor.e': s('R\u00e9servoir d\'eau vide') }), 'Water tank empty');
+  check('104 : Roborock clear_water_box_hoare', vac('error', {}, { robot_error_entity: 'sensor.e' }, { 'sensor.e': s('clear_water_box_hoare') }), 'Water tank empty');
+  check('104 : Roborock dock water_empty', vac('docked', {}, { robot_error_entity: 'sensor.e' }, { 'sensor.e': s('water_empty') }), 'Water tank empty');
+  check('104 : Ecovacs description', vac('docked', {}, { robot_error_entity: 'sensor.e' }, { 'sensor.e': s('105', { description: 'Clean water tank is empty' }) }), 'Water tank empty');
+  check('104 : erreur en anglais avec Error:', vac('error', {}, { robot_error_entity: 'sensor.e' }, { 'sensor.e': s('Error: water tank empty') }), 'Water tank empty');
+  check('104 : eau vide pendant le lavage', vac('cleaning', {}, { robot_error_entity: 'sensor.e' }, { 'sensor.e': s('water tank empty') }), 'Water tank empty');
+  check('104 : batterie faible', vac('error', {}, { robot_error_entity: 'sensor.e' }, { 'sensor.e': s('Batterie faible') }), 'Low battery');
+  check('104 : batterie faible en francais', vac('error', {}, { language: 'fr', robot_error_entity: 'sensor.e' }, { 'sensor.e': s('low_battery') }), 'Batterie faible');
+  check('104 : batterie faible, robot pas en erreur', /rbt-m-error/.test(cls104('error', {}, { robot_error_entity: 'sensor.e' }, { 'sensor.e': s('low_battery') })), false);
+  check('104 : batterie revenue a 80 %, mot perime', vac('docked', { battery_level: 80 }, { robot_error_entity: 'sensor.e' }, { 'sensor.e': s('low_battery') }), 'Charging');
+  check('104 : batterie a 12 %', vac('docked', { battery_level: 12 }, { robot_error_entity: 'sensor.e' }, { 'sensor.e': s('low_battery') }), 'Low battery');
+  check('104 : reservoir propre a 60 %, mot perime', vac('docked', { battery_level: 100 }, { robot_error_entity: 'sensor.e', robot_clean_tank_entity: 'sensor.c' }, { 'sensor.e': s('water_empty'), 'sensor.c': s(60, { unit_of_measurement: '%' }) }), 'Docked');
+  check('104 : signe batterie sur le robot', / rbt-n-battery( |$)/.test(cls104('docked', { battery_level: 10 }, { robot_error_entity: 'sensor.e' }, { 'sensor.e': s('low_battery') })), true);
+  check('104 : jauge eau sale sur la station', / rbt-n-dirty( |$)/.test(cls104('docked', {}, { robot_station: 'box', robot_error_entity: 'sensor.e' }, { 'sensor.e': s('dirty_water_box_hoare') })), true);
+  check('104 : tondeuse, pas d\'eau', mow('docked', { robot_error_entity: 'sensor.e' }, { 'sensor.e': s('water tank empty') }), 'Docked');
+  check('104 : tondeuse, batterie faible', mow('docked', { robot_error_entity: 'sensor.e' }, { 'sensor.e': s('low battery') }), 'Low battery');
+  // Not a notice.
+  check('pas 104 : erreur de batterie', vac('error', {}, { robot_error_entity: 'sensor.e' }, { 'sensor.e': s('battery_error') }), 'Error');
+  check('pas 104 : reservoir absent', vac('error', {}, { robot_error_entity: 'sensor.e' }, { 'sensor.e': s('water tank not installed') }), 'Error');
+  check('pas 104 : bac a poussiere vide', vac('docked', { battery_level: 100 }, { robot_status_entity: 'sensor.st' }, { 'sensor.st': s('dust bin empty') }), 'Docked');
+  check('pas 104 : niveau d\'eau du bureau', vac('docked', { battery_level: 100 }, { robot_status_entity: 'sensor.st' }, { 'sensor.st': s('bureau vide') }), 'Docked');
+  check('pas 104 : eau sale pas pleine', vac('docked', { battery_level: 100 }, { robot_status_entity: 'sensor.st' }, { 'sensor.st': s('dirty water tank not full') }), 'Docked');
   check('pas sac plein : une vraie erreur l\'emporte', vac('error', {}, { robot_error_entity: 'sensor.e', robot_status_entity: 'sensor.st' }, { 'sensor.e': s('wheel stuck'), 'sensor.st': s('dust_bag_full') }), 'Error');
   check('pas sac plein : le bac du robot reste le bac', vac('docked', {}, { robot_bin_entity: 'binary_sensor.b' }, { 'binary_sensor.b': s('on') }), 'Bin full');
   check('pas sac plein : pas de debordement sans sac', / rbt-bag( |$)/.test(bagCls('docked', {}, { robot_bin_entity: 'binary_sensor.b' }, { 'binary_sensor.b': s('on') })), false);
@@ -14422,6 +14452,33 @@ if (RECORD) writeFileSync(process.env.HAC_RECORD, JSON.stringify(RECORD));
   check('grill : minuteur horloge', left('sensor.e', s('0:50:00')), true);
   check('grill : minuteur 1970', left('sensor.e', s('1970-01-01T00:00:00+00:00', { device_class: 'timestamp' })), false);
   check('grill : minuteur Unix en millisecondes', /Remaining time\s+(49|50)\s+min/.test(lines({ timer_end_entity: 'sensor.e' }, { 'sensor.e': s(now() + 3000000) }).replace(/<[^>]+>/g, ' ')), true);
+}
+
+// An offline device's leftovers (#105): an alerts entity gone unavailable
+// keeps restored among its attributes, never an alert; a feeder whose
+// entities are all gone says it is offline; the buttons' icons sit in the
+// middle of their round (#106).
+{
+  const OFF = { state: 'unavailable', attributes: { restored: true, friendly_name: 'x', supported_features: 0 } };
+  check('105 : restored n\'est pas une alerte',
+    /class="alerts-pill/.test(render({ appliance_type: 'pet_fountain', state_entity: 'switch.f', alerts_entity: 'sensor.al' },
+      { 'switch.f': OFF, 'sensor.al': OFF })), false);
+  check('105 : restored ignore meme sur une entite vivante',
+    /class="alerts-pill/.test(render({ appliance_type: 'washer', state_entity: 'sensor.w', alerts_entity: 'sensor.al' },
+      { 'sensor.w': { state: 'Running', attributes: {} }, 'sensor.al': { state: 'on', attributes: { restored: true } } })), false);
+  check('105 : entite d\'alertes indisponible, alerte perimee', /class="alerts-pill/.test(render({ appliance_type: 'washer', state_entity: 'sensor.w', alerts_entity: 'sensor.al' },
+    { 'sensor.w': { state: 'Running', attributes: {} }, 'sensor.al': { state: 'unavailable', attributes: { door_open: 'on' } } })), false);
+  check('105 : une alerte vivante reste', /door_open/.test(render({ appliance_type: 'washer', state_entity: 'sensor.w', alerts_entity: 'sensor.al' },
+    { 'sensor.w': { state: 'Running', attributes: {} }, 'sensor.al': { state: 'on', attributes: { door_open: 'on' } } })), true);
+  const gone = {};
+  for (const id of Object.keys(FEEDER_IN)) gone[id] = OFF;
+  check('105 : distributeur hors ligne', stateLine(feeder({}, gone)), 'Offline');
+  check('105 : distributeur hors ligne en francais', stateLine(feeder({ language: 'fr' }, gone)), 'Hors ligne');
+  check('105 : distributeur hors ligne par son etat', stateLine(render({ appliance_type: 'pet_feeder', state_entity: 'sensor.fd' }, { 'sensor.fd': OFF })), 'Offline');
+  check('105 : distributeur hors ligne, pas d\'erreur', stateLine(render({ appliance_type: 'pet_feeder', state_entity: 'sensor.fd', error_entity: 'binary_sensor.e' }, { 'sensor.fd': OFF, 'binary_sensor.e': { state: 'on', attributes: {} } })), 'Offline');
+  check('105 : distributeur en ligne', stateLine(feeder()) !== 'Offline', true);
+  check('105 : un seul capteur absent ne suffit pas', stateLine(feeder({}, { 'sensor.croquettes_portions_per_day': OFF })) !== 'Offline', true);
+  check('106 : icone centree dans le bouton', /\.action-btn ha-icon, \.light-badge ha-icon \{ display: flex;/.test(SRC), true);
 }
 
 report();

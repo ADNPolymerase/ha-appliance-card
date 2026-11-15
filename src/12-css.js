@@ -2508,6 +2508,20 @@ const ILLUSTRATION_CSS = {
         .rbt-spill{display:none;left:26px;top:-4px;width:44px;height:44px;overflow:visible}
         .rbt-bag .rbt-spill{display:block}
         .rbt-bag .rbt-dcap{visibility:hidden}
+        .rbt-ask{display:none;position:absolute;z-index:3;width:12px;height:12px;left:20px;top:-15px;padding:1.5px;border-radius:4px;background:rgba(255,255,255,.92);box-shadow:0 1px 3px rgba(0,0,0,.25);animation:rbt-ask 1.6s ease-in-out infinite}
+        .rbt-ask svg{display:block;width:12px;height:12px}
+        .rbt-rm .rbt-ask{left:18px}
+        .rbt-mw .rbt-ask{left:24px;top:-17px}
+        .rbt-n-water .rbt-ask,.rbt-n-dirty .rbt-ask,.rbt-n-battery .rbt-ask{display:block}
+        .rbt-ask-lv{animation:rbt-blink 1s steps(1) infinite}
+        @keyframes rbt-ask{0%,100%{transform:translateY(0)}50%{transform:translateY(-2px)}}
+        .rbt-n-water .rbx-lv.rbx-c,.rbt-n-dirty .rbx-lv.rbx-d{animation:rbt-blink 1s steps(1) infinite}
+        .rbt-n-water .rbx-lv.rbx-c{fill:#ff5722}
+        .rbt-n-water .rbt-mdock .rbt-tk.rbt-c i{background:#ff5722;animation:rbt-blink 1s steps(1) infinite}
+        .rbt-n-dirty .rbt-mdock .rbt-tk.rbt-d i{animation:rbt-blink 1s steps(1) infinite}
+        .rbt-n-water .rbt-mdock .rbt-tk.rbt-c,.rbt-n-dirty .rbt-mdock .rbt-tk.rbt-d{box-shadow:inset 0 0 0 1px #ff9800}
+        .rbt-n-water .rbt-tank i{background:#ff9800;height:12%}
+        .rbt-n-water .rbx-led,.rbt-n-dirty .rbx-led,.rbt-n-water .rbt-dled,.rbt-n-dirty .rbt-dled{fill:#ff9800;background:#ff9800;box-shadow:0 0 3px #ff9800}
         .rbx-lidup,.rbt-capup{transform-box:fill-box;transform-origin:50% 100%;animation:rbx-lid 1.6s ease-in-out infinite}
         .rbx-fall circle{opacity:0;transform-box:fill-box;animation:rbx-fall 1.4s ease-in infinite;animation-delay:var(--d0,0s)}
         .rbx-puff circle{opacity:0;transform-box:fill-box;transform-origin:center;animation:rbx-puff 2.2s ease-out infinite;animation-delay:var(--d0,0s)}
