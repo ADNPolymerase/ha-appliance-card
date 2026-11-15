@@ -135,22 +135,34 @@ function mkHass(states) {
 const PLUG_WATTS = { washer: 1900, dryer: 2000, dishwasher: 1800, oven: 2400, microwave: 900, kettle: 2200, coffee: 1200, cooker: 800,
   rice_cooker: 500, air_fryer: 1500, toaster: 900, iron: 2200, fridge: 70, water_heater: 2000, space_heater: 1500, towel_warmer: 600,
   dehumidifier: 250, air_purifier: 30, fan: 35, hood: 120, screen: 120, hair_dryer: 1200, printer_3d: 200, pool_pump: 750, robot: 24,
-  cooktop: 2600, pet_fountain: 2, water_pump: 800, floor_heating: 1200, spa: 2000, sauna: 6000, aquarium: 60, christmas_tree: 20, pellet_grill: 45 };
+  cooktop: 2600, pet_fountain: 2, water_pump: 800, floor_heating: 1200, spa: 2000, sauna: 6000, aquarium: 60, christmas_tree: 20, pellet_grill: 45,
+  humidifier: 25, filament_dryer: 60, mobility: 150, irrigation: 6, litter_box: 10, speaker: 8, console: 120, streamer: 6 };
 const PLUG_MAX = { washer: 2400, dryer: 2800, dishwasher: 2200, oven: 3500, microwave: 1300, kettle: 2400, coffee: 1500, cooker: 1200,
   rice_cooker: 800, air_fryer: 2000, toaster: 1200, iron: 2600, fridge: 200, water_heater: 3000, space_heater: 2000, towel_warmer: 1000,
   dehumidifier: 400, air_purifier: 80, fan: 80, hood: 300, screen: 250, hair_dryer: 2200, printer_3d: 400, pool_pump: 1500, robot: 60,
-  cooktop: 7200, pet_fountain: 5, water_pump: 1500, floor_heating: 2500, spa: 3000, sauna: 9000, aquarium: 150, christmas_tree: 50, pellet_grill: 400 };
+  cooktop: 7200, pet_fountain: 5, water_pump: 1500, floor_heating: 2500, spa: 3000, sauna: 9000, aquarium: 150, christmas_tree: 50, pellet_grill: 400,
+  humidifier: 50, filament_dryer: 120, mobility: 600, irrigation: 15, litter_box: 40, speaker: 40, console: 250, streamer: 15 };
 const plugOnly = params.get("plug") === "1";
 const plugSeen = new Set();
+// The plug-only view counts each family first without drawing it (plugDry),
+// noting which cards it keeps (plugRecord); a family opened later draws
+// those cards and no other (plugFamily).
+let plugDry = false, plugCount = 0, plugRecord = null, plugFamily = null;
 function plugConfig(config) {
   const type = config.appliance_type || (/^(vacuum|lawn_mower)\./.test(config.state_entity || "") ? "robot" : "");
   if (!PLUG_WATTS[type] || (type === "robot" && !["stick", "floor_washer"].includes(config.robot_layout))) return null;
-  // Six pool pumps on a plug draw the same pump: one of each is enough.
-  const seen = [type, config.robot_layout, config.purifier_layout, config.fan_layout, config.iron_layout].join("/");
-  if (plugSeen.has(seen)) return null;
-  plugSeen.add(seen);
+  // Six pool pumps on a plug draw the same pump: one of each shape is enough.
+  const seen = [type, ...Object.keys(config).filter((k) => /_layout$|^printer_style$|^spool_count$/.test(k)).sort().map((k) => k + "=" + config[k])].join("/");
+  if (plugFamily) {
+    if (!plugFamily.has(seen)) return null;
+    plugFamily.delete(seen);
+  } else {
+    if (plugSeen.has(seen)) return null;
+    plugSeen.add(seen);
+    if (plugRecord) plugRecord.add(seen);
+  }
   const keep = {};
-  for (const [k, v] of Object.entries(config)) if (/_layout$|^illustration_color$|^name$|^washer_dryer$|^tree_palette$|^presents$/.test(k)) keep[k] = v;
+  for (const [k, v] of Object.entries(config)) if (/_layout$|^illustration_color$|^name$|^washer_dryer$|^tree_palette$|^presents$|^printer_style$|^spool_count$/.test(k)) keep[k] = v;
   const out = { ...keep, appliance_type: type, state_entity: "switch.smart_plug", power_entity: "sensor.smart_plug_power" };
   // A plug-read card takes its switch for the power button; a fridge, a
   // screen or a dock reads its plug with the rest and is given it.
@@ -217,6 +229,7 @@ function card(config, entities) {
   if (view === "live" && plugOnly) {
     const plug = plugConfig(config);
     if (!plug) return null;
+    if (plugDry) { plugCount++; return null; }
     [config, entities] = plug;
   }
   const states = {};
@@ -1745,25 +1758,32 @@ function liveGallery() {
   // read, a list of families is not.
   FAMILIES.forEach(([title, makers], n) => {
     const sec = document.createElement("details");
-    if (n === 0) sec.open = true;
     sec.innerHTML = `<summary><span>${title}</span><small>${makers.length}</small></summary>`;
     const grid = document.createElement("div");
     grid.className = "grid";
     sec.appendChild(grid);
     wrap.appendChild(sec);
+    let keys = null;
+    if (plugOnly) {
+      // Counted without drawing; a family with nothing on a plug is left out.
+      plugDry = true; plugCount = 0; plugRecord = new Set();
+      makers.forEach((f) => f());
+      keys = plugRecord;
+      plugDry = false; plugRecord = null;
+      if (!plugCount) { sec.remove(); return; }
+      sec.querySelector("small").textContent = plugCount;
+    }
     const build = () => {
       if (sec.dataset.built) return;
       sec.dataset.built = "1";
       row = grid;
+      plugFamily = keys;
       makers.forEach((f) => f());
-      // A family with nothing on a plug is left out of the plug-only view.
-      if (!grid.children.length) sec.remove();
-      else sec.querySelector("small").textContent = grid.children.length;
+      plugFamily = null;
     };
     // A folded family is drawn when it is opened: two hundred animated
-    // cards built at once froze the page for long seconds. The plug-only
-    // view builds them all, to count and drop the families with no plug.
-    if (n === 0 || plugOnly) build();
+    // cards built at once froze the page for long seconds.
+    if (n === 0 || !wrap.querySelector("details[open]")) { sec.open = true; build(); }
     else sec.addEventListener("toggle", () => sec.open && build());
   });
 }
