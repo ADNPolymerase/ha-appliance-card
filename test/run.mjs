@@ -14057,6 +14057,12 @@ function tvT(w) { return { 'switch.tv': { state: 'on', attributes: {} }, 'sensor
   check('boitier : le volume', infoLine(h, 'Volume').replace(/\s/g, ' '), '40 %');
   check('boitier : un paquet devient un nom', infoLine(STR('playing', { app_id: 'com.netflix.ninja' }), 'App'), 'Netflix');
   check('boitier : un paquet inconnu, son dernier mot', infoLine(STR('playing', { app_id: 'com.example.mytv' }), 'App'), 'Mytv');
+  // Apple's own app is named "TV": its package says it, not a T.
+  check('boitier : appli TV d Apple par son paquet', [svg(STR('playing', { app_name: 'TV', app_id: 'com.apple.TVWatchList' }, { streamer_layout: 'apple_tv' })).includes('<path d="M20.57 17.73'), />T</.test(svg(STR('playing', { app_name: 'TV', app_id: 'com.apple.TVWatchList' }, { streamer_layout: 'apple_tv' })))].join(), 'true,false');
+  check('boitier : appli inconnue toujours par son initiale', />T</.test(svg(STR('playing', { app_name: 'Toto', app_id: 'com.toto.app' }, { streamer_layout: 'apple_tv' }))), true);
+  const markOf = (n, id = '') => (svg(STR('playing', { app_name: n, app_id: id }, { streamer_layout: 'apple_tv' })).match(/>(TFOU|okoo|RB|NHL|FIS|VPN|RA|FT|A|D\+|D|max|N)</) || [])[1];
+  check('boitier : applis Apple et francaises a leur tuile', [['TFOU MAX'], ['Okoo'], ['Red Bull TV'], ['NHL'], ['FIS TV'], ['FaceTime'], ['Disney+'], ['Disney Dreamlight Valley']].map(([n]) => markOf(n)).join(), 'TFOU,okoo,RB,NHL,FIS,FT,D+,D');
+  check('boitier : le logo de l appli quand il existe, ses lettres sinon', [/<path d="m5\.398 0/.test(svg(STR('playing', { app_name: 'Netflix' }, { streamer_layout: 'apple_tv' }))), />C\+</.test(svg(STR('playing', { app_name: 'CANAL+' }, { streamer_layout: 'apple_tv' })))].join(), 'true,true');
   check('boitier : l appli lue dans app_entity', infoLine(STR('playing', { app_name: 'Netflix' }, { app_entity: 'sensor.app' }, { 'sensor.app': s('Disney+') }), 'App'), 'Disney+');
   check('boitier : l ecran d accueil n est pas une appli', infoLine(STR('idle', { app_name: 'Google TV Home', app_id: 'com.google.android.apps.tv.launcherx' }), 'App'), null);
   check('boitier : la chaine d un decodeur', infoLine(STR('playing', { media_channel: 'TF1', media_title: 'Le journal' }), 'Channel'), 'TF1');

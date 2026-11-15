@@ -1,5 +1,5 @@
 // Built by tools/build.mjs from the files of src/: edit those, not this file.
-const CARD_VERSION = "4.25.1";
+const CARD_VERSION = "4.25.2";
 
 console.info(
   "%c HA-APPLIANCE-CARD %c v" + CARD_VERSION + " ",
@@ -5539,31 +5539,46 @@ const SPEAKER_LAYOUTS = ["smart", "homepod_mini", "sonos_one", "sonos_era100", "
 // Streaming boxes (#97). The app a box is in: its colour and its mark, read
 // from the app's name or its package. A launcher is the home screen.
 const STR_APPS = [
-  [/netflix/, "#e50914", "#ffffff", "N"],
-  [/youtube.?music/, "#ff0000", "#ffffff", "\u266b"],
-  [/youtube/, "#ff0000", "#ffffff", "\u25b6"],
-  [/disney/, "#0b2c8f", "#ffffff", "D+"],
+  [/netflix/, "#000000", "#e50914", "N", "netflix"],
+  [/youtube.?music/, "#ff0000", "#ffffff", "\u266b", "youtubemusic"],
+  [/youtube/, "#ffffff", "#ff0000", "\u25b6", "youtube"],
+  [/disney.?(\+|plus)|^disney$/, "#0b2c8f", "#ffffff", "D+"],
   [/prime|amazon.?video|amazonvideo|(^|[^a-z])aiv([^a-z]|$)/, "#00a8e1", "#ffffff", "prime"],
-  [/apple.?music/, "#fa2d48", "#ffffff", "\u266b"],
-  [/apple.?tv|com\.apple\.tv|tv\+/, "#111214", "#ffffff", "tv"],
-  [/plex/, "#282a2d", "#e5a00d", "\u276f"],
-  [/spotify/, "#1db954", "#0b0d0f", "\u266b"],
-  [/deezer/, "#a238ff", "#ffffff", "\u266b"],
-  [/twitch/, "#9146ff", "#ffffff", "T"],
+  [/apple.?music|^(musique|music|musik|musica|muziek)$/, "#fa2d48", "#ffffff", "\u266b", "applemusic"],
+  [/podcast/, "#8e44c9", "#ffffff", "\u25c9", "applepodcasts"],
+  [/^(photos|fotos|foto|bilder)$|com\.apple\.(tv)?photos/, "#ffffff", "#ff9500", "\u2740"],
+  [/^fitness$|com\.apple\.fitness/, "#0b0d0f", "#a6ff00", "\u25ce"],
+  [/^arcade$|apple.?arcade/, "#ff2d55", "#ffffff", "A", "applearcade"],
+  [/app.?store/, "#0d84ff", "#ffffff", "A", "appstore"],
+  [/facetime/, "#34c759", "#ffffff", "FT"],
+  [/^(reglages|settings|einstellungen|ajustes|impostazioni|instellingen)$|com\.apple\.(tv)?settings/, "#8e8e93", "#ffffff", "\u2699"],
+  [/apple.?tv|com\.apple\.tv|tv\+/, "#111214", "#ffffff", "tv", "appletv"],
+  [/plex/, "#282a2d", "#e5a00d", "\u276f", "plex"],
+  [/spotify/, "#121212", "#1db954", "\u266b", "spotify"],
+  [/deezer/, "#a238ff", "#ffffff", "\u266b", "deezer"],
+  [/twitch/, "#9146ff", "#ffffff", "T", "twitch"],
   [/canal/, "#0b0d0f", "#ffffff", "C+"],
   [/molotov/, "#1d1d1b", "#ffffff", "M"],
   [/france.?tv|francetv/, "#1d3fbb", "#ffffff", "f.tv"],
-  [/(^|[^a-z])max([^a-z]|$)|hbo/, "#002be7", "#ffffff", "max"],
-  [/crunchyroll/, "#f47521", "#ffffff", "C"],
-  [/kodi|xbmc/, "#17b2e7", "#ffffff", "K"],
+  [/tfou/, "#ff7a00", "#ffffff", "TFOU"],
+  [/okoo/, "#ff4f9a", "#ffffff", "okoo"],
+  [/red.?bull/, "#001e3c", "#ffcc00", "RB"],
+  [/(^|[^a-z])nhl([^a-z]|$)/, "#000000", "#ffffff", "NHL"],
+  [/(^|[^a-z])fis([^a-z]|$)/, "#003d7c", "#ffffff", "FIS"],
+  [/nordvpn/, "#4687ff", "#ffffff", "VPN", "nordvpn"],
+  [/retroarch/, "#2b2b2b", "#ffffff", "RA", "retroarch"],
+  [/(^|[^a-z])max([^a-z]|$)|hbo/, "#002be7", "#ffffff", "max", "max"],
+  [/crunchyroll/, "#f47521", "#ffffff", "C", "crunchyroll"],
+  [/karafun/, "#7b2cbf", "#ffffff", "\u266a"],
+  [/kodi|xbmc/, "#17b2e7", "#ffffff", "K", "kodi"],
   [/arte/, "#f15a29", "#ffffff", "arte"],
   [/tf1/, "#0b3c8c", "#ffffff", "TF1"],
   [/(^|[^a-z0-9])m6([^a-z0-9]|$)|6play/, "#e4004b", "#ffffff", "M6"],
   [/paramount/, "#0064ff", "#ffffff", "P+"],
   [/dazn/, "#0c161c", "#f8ff13", "DAZN"],
-  [/rakuten/, "#bf0000", "#ffffff", "R"],
+  [/rakuten/, "#bf0000", "#ffffff", "R", "rakuten"],
   [/pluto/, "#2d2d2d", "#fff200", "P"],
-  [/vlc/, "#f48b00", "#ffffff", "\u25b6"],
+  [/vlc/, "#f48b00", "#ffffff", "\u25b6", "vlcmediaplayer"],
   [/orange|tv.?d.?orange/, "#ff7900", "#ffffff", "TV"],
 ];
 const STR_HOME_RE = /launcher|leanback|home.?screen|(^|[^a-z])home([^a-z]|$)|tvlauncher|accueil/;
@@ -5584,7 +5599,7 @@ function strAppLook(name, known = false) {
   const s = stripAccents(String(name || "")).toLowerCase();
   if (!s || STR_HOME_RE.test(s)) return null;
   const hit = STR_APPS.find(([re]) => re.test(s));
-  if (hit) return { bg: hit[1], fg: hit[2], mark: hit[3] };
+  if (hit) return { bg: hit[1], fg: hit[2], mark: hit[3], logo: hit[4] || "" };
   if (known) return null;
   const first = String(name).trim().charAt(0).toUpperCase();
   return { bg: "#455a64", fg: "#ffffff", mark: /[A-Z0-9]/.test(first) ? first : "\u25b6" };
@@ -6432,7 +6447,9 @@ function ntReadOf(type, hass, cfg, st, watts, threshold) {
         value: keepTogether(a.is_volume_muted ? t(hass, "spk_muted") : `${Math.round(vol * 100)} %`), entity: cfg.state_entity });
     }
     // A source is often the app (Android TV); a title never is.
-    const look = app ? strAppLook(app) : strAppLook(a.source, true);
+    // An app named for itself in a word its package says better: Apple's own
+    // is named "TV" (com.apple.TVWatchList), not a T.
+    const look = app ? strAppLook(app, true) || (!appOk && a.app_id ? strAppLook(a.app_id, true) : null) || strAppLook(app) : strAppLook(a.source, true);
     const draw = { kind, on: mode === "playing", st: mode, app: look, muted: !!a.is_volume_muted && live, brand: streamerBrandOf(cfg, st), channel: a.media_channel ? String(a.media_channel) : "" };
     if (mode === "playing") return out("playing", "str_playing", NT_COLORS.run, draw);
     if (mode === "paused") return out("paused", "str_paused", NT_COLORS.idle, draw);
@@ -7888,7 +7905,11 @@ const FR3 = (() => {
     const lit = !s.dark;
     let out = defs(g, lit) + `<defs><linearGradient id="${tub}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${lit ? "#dfeaf2" : "#3a434a"}"/><stop offset="1" stop-color="${lit ? "#b6c8d6" : "#2a3137"}"/></linearGradient>
       <linearGradient id="${lin}" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#cfd8de"/><stop offset="1" stop-color="#f4f7f9"/></linearGradient></defs>`;
-    out += `<ellipse cx="${(x0 + x1) / 2 + 9}" cy="${y1 + 3}" rx="${(x1 - x0) / 2 + 16}" ry="3.6" fill="rgba(0,0,0,.14)"/>
+    // Its shadow lies under its whole footprint, deep as it is: a flat
+    // ellipse under the front left the right side standing on bare floor.
+    const foot = (m, d) => `M${x0 - m} ${y1 + d} L${x1 + m} ${y1 + d} L${x1 + KX + m} ${y1 + KY + d * .5} L${x0 + KX - m} ${y1 + KY + d * .5} Z`;
+    out += `<path d="${foot(4, 3.6)}" fill="rgba(0,0,0,.06)" stroke="rgba(0,0,0,.06)" stroke-width="3" stroke-linejoin="round"/>
+      <path d="${foot(1.5, 2.2)}" fill="rgba(0,0,0,.1)" stroke-linejoin="round"/>
       <path d="M${x1} ${y0} L${x1 + KX} ${y0 + KY} V${y1 + KY} L${x1} ${y1} Z" fill="url(#${g.side})"/>
       <rect x="${x0}" y="${y0}" width="${x1 - x0}" height="${y1 - y0}" rx="2.5" fill="url(#${g.front})" stroke="rgba(0,0,0,.18)" stroke-width=".6"/>
       <rect x="${x0 + 5}" y="${y1 - 11}" width="26" height="6" rx="1.2" fill="#c5ccd3"/>${[0, 1, 2, 3, 4, 5].map((i) => `<rect x="${x0 + 7.5 + i * 3.8}" y="${y1 - 10}" width="1.8" height="4" rx=".6" fill="#6b747e"/>`).join("")}

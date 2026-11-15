@@ -1907,4 +1907,4 @@ Le fourre-tout passe en dernier : les états que la carte connaît déjà garden
 
 ## Licence
 
-MIT. Voir [LICENSE](LICENSE).
+MIT. Voir [LICENSE](LICENSE). Les logos des applis de streaming viennent de [Simple Icons](https://simpleicons.org) (CC0) ; les marques restent à leurs propriétaires.

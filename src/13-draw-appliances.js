@@ -316,7 +316,11 @@ const FR3 = (() => {
     const lit = !s.dark;
     let out = defs(g, lit) + `<defs><linearGradient id="${tub}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${lit ? "#dfeaf2" : "#3a434a"}"/><stop offset="1" stop-color="${lit ? "#b6c8d6" : "#2a3137"}"/></linearGradient>
       <linearGradient id="${lin}" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#cfd8de"/><stop offset="1" stop-color="#f4f7f9"/></linearGradient></defs>`;
-    out += `<ellipse cx="${(x0 + x1) / 2 + 9}" cy="${y1 + 3}" rx="${(x1 - x0) / 2 + 16}" ry="3.6" fill="rgba(0,0,0,.14)"/>
+    // Its shadow lies under its whole footprint, deep as it is: a flat
+    // ellipse under the front left the right side standing on bare floor.
+    const foot = (m, d) => `M${x0 - m} ${y1 + d} L${x1 + m} ${y1 + d} L${x1 + KX + m} ${y1 + KY + d * .5} L${x0 + KX - m} ${y1 + KY + d * .5} Z`;
+    out += `<path d="${foot(4, 3.6)}" fill="rgba(0,0,0,.06)" stroke="rgba(0,0,0,.06)" stroke-width="3" stroke-linejoin="round"/>
+      <path d="${foot(1.5, 2.2)}" fill="rgba(0,0,0,.1)" stroke-linejoin="round"/>
       <path d="M${x1} ${y0} L${x1 + KX} ${y0 + KY} V${y1 + KY} L${x1} ${y1} Z" fill="url(#${g.side})"/>
       <rect x="${x0}" y="${y0}" width="${x1 - x0}" height="${y1 - y0}" rx="2.5" fill="url(#${g.front})" stroke="rgba(0,0,0,.18)" stroke-width=".6"/>
       <rect x="${x0 + 5}" y="${y1 - 11}" width="26" height="6" rx="1.2" fill="#c5ccd3"/>${[0, 1, 2, 3, 4, 5].map((i) => `<rect x="${x0 + 7.5 + i * 3.8}" y="${y1 - 10}" width="1.8" height="4" rx=".6" fill="#6b747e"/>`).join("")}

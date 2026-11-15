@@ -1905,4 +1905,4 @@ The catch-all comes last, so the states the card already knows keep their own me
 
 ## License
 
-MIT. See [LICENSE](LICENSE).
+MIT. See [LICENSE](LICENSE). The streaming apps' logos come from [Simple Icons](https://simpleicons.org) (CC0); the brands remain their owners'.
