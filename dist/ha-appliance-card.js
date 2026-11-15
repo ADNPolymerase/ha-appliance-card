@@ -1,5 +1,5 @@
 // Built by tools/build.mjs from the files of src/: edit those, not this file.
-const CARD_VERSION = "4.25.0";
+const CARD_VERSION = "4.25.1";
 
 console.info(
   "%c HA-APPLIANCE-CARD %c v" + CARD_VERSION + " ",
@@ -4416,13 +4416,6 @@ function robotLayoutOf(cfg, st) {
 // tanks are not a full bag either.
 const ROBOT_BAG_RE = /dust_?bag_?(is_)?full|dustbag_?(\w+_)?full|replace_(the_)?dust_?bag|(^|_)bag_(is_)?full|(^|_)sac(_a_poussiere)?_(est_)?plein|staubbeutel_(ist_)?voll|sacchetto(_\w+)?_pieno|bolsa(_\w+)?_llena|stofzak(_\w+)?_vol($|_)|saco(_\w+)?_cheio|dammpasen(_ar)?_full|st(o|\u00f8)vposen(_er)?_ful|worek(_\w+)?_pe(l|\u0142)ny|sacek(_\w+)?_plny|tele_a_porzsak|porzsak(_\w+)?_tele|\u043c\u0435\u0448\u043e\u043a(_\w+)?_\u043f\u043e\u043b\u043e\u043d|\u5c18\u888b\u5df2\u6ee1|\u96c6\u5c18\u888b\u5df2\u6ee1/;
 const ROBOT_BAG_NOT_RE = /collection_bag|ou_le_conduit|(^|_)(not|pas|nicht|kein|non|no|niet|ikke|inte|nie|ne)_(\w+_)?(full|plein|voll|pieno|llena|vol|cheio|ful|pelny|pe\u0142ny|plny)/;
-function robotBagWord(v) {
-  const s = stripAccents(String(v === undefined || v === null ? "" : v)).trim().toLowerCase().replace(/[\s.,;:!'\u2019()-]+/g, "_");
-  return !!s && ROBOT_BAG_RE.test(s) && !ROBOT_BAG_NOT_RE.test(s);
-}
-function robotBagWord(v) {
-  return robotNoticeWord(v) === "bag";
-}
 const ROBOT_BAG_ATTRS = ["description", "message", "error", "error_message", "last_error_message", "status"];
 // The other things a robot asks for without being stuck (#104): its water
 // tank empty, the station's dirty water full, its battery low. Worded in a
@@ -4443,6 +4436,9 @@ function robotNoticeWord(v) {
   if (!ROBOT_DIRTY_WORD_RE.test(s) && ROBOT_WATER_WORD_RE.test(s) && ROBOT_EMPTY_WORD_RE.test(s) && !ROBOT_NOT_RE.test(s)) return "water";
   if (ROBOT_BATT_RE.test(s) && !ROBOT_BATT_NOT_RE.test(s)) return "battery";
   return "";
+}
+function robotBagWord(v) {
+  return robotNoticeWord(v) === "bag";
 }
 // An entity, or the robot itself, that asks for something: its state, or
 // the sentence an integration puts beside a code (Ecovacs' description).

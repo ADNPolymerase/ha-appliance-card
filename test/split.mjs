@@ -6,7 +6,7 @@
  * wrong once it is split is tested here: a language that never arrives, an
  * editor missing one of the card's helpers, a cache that outlives a release.
  */
-import { mkdtempSync, readFileSync, readdirSync, unlinkSync } from 'node:fs';
+import { mkdtempSync, readFileSync, readdirSync, unlinkSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join, dirname } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
@@ -191,5 +191,19 @@ check('l editeur trouve tout ce qu il prend a la carte', thrown && String(thrown
 let again = null;
 try { await Card.getConfigElement(); } catch (e) { again = e; }
 check('l editeur : une seconde edition ne le redefinit pas', again && String(again), null);
+
+
+// Every file as the browser reads it, a module: a function declared twice
+// passes in a plain script but stops the whole card from loading (#106).
+{
+  const CHK = mkdtempSync(join(tmpdir(), 'hac-mod-'));
+  const bad = [];
+  for (const f of readdirSync(OUT).filter((n) => n.endsWith('.js'))) {
+    const m = join(CHK, f.replace(/\.js$/, '.mjs'));
+    writeFileSync(m, readFileSync(join(OUT, f), 'utf8'));
+    try { execFileSync(process.execPath, ['--check', m], { stdio: 'pipe' }); } catch { bad.push(f); }
+  }
+  check('chaque fichier publie se lit comme un module', bad.join(', '), '');
+}
 
 report();
