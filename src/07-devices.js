@@ -698,10 +698,10 @@ const POOL_WORDS = [
   ["running", /^(on|true|1|running|run|filtering|filtration|filtrage|marche|en.?marche|ein|an|encendid|acceso|aan|boost|eco|manual|manuel)$/],
 ];
 const POOL_LABELS = { off: "ac_off", running: "pool_filtering", chlorinating: "pool_chlorinating", backwash: "pool_backwash",
-  frost: "pool_frost", error: "error", unav: "ev_offline" };
+  frost: "pool_frost", error: "error", unav: "ev_offline", winter: "robot_winter" };
 const POOL_COLORS = {
   off: "var(--disabled-text-color, #9e9e9e)", running: "#1e88e5", chlorinating: "#7cb342", backwash: "#8d6e63",
-  frost: "#03a9f4", error: "#f44336", unav: "var(--disabled-text-color, #9e9e9e)",
+  frost: "#03a9f4", error: "#f44336", unav: "var(--disabled-text-color, #9e9e9e)", winter: "#4fa3d8",
 };
 // A pump draws hundreds of watts: below this one it is off.
 const POOL_POWER_W = 50;
@@ -734,6 +734,15 @@ function poolOn(hass, entityId) {
   return Number.isFinite(n) && n > 0;
 }
 
+// An appliance put away for the winter (a pool, a spa, the garden watering,
+// a grill under its cover; dosing-tank-card #3, like the mower's #80):
+// ticked in the card, or switched on from an on and off entity.
+function seasonWinter(hass, cfg) {
+  return cfg.winter === true || (!!cfg.winter_entity && robotRaised(hass, cfg.winter_entity, /winter|hiver/));
+}
+const poolWinter = seasonWinter;
+// The types that can be put away for the winter, beside the robots.
+const WINTER_TYPES = ["pool_pump", "irrigation", "spa", "pellet_grill"];
 // What the pump does, from its own state, then from what raises something.
 function poolModeOf(hass, cfg, st, watts) {
   const raw = st ? String(st.state).trim().toLowerCase() : "";

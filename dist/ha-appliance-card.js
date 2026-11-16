@@ -1,5 +1,5 @@
 // Built by tools/build.mjs from the files of src/: edit those, not this file.
-const CARD_VERSION = "4.26.1";
+const CARD_VERSION = "4.27.0";
 
 console.info(
   "%c HA-APPLIANCE-CARD %c v" + CARD_VERSION + " ",
@@ -4639,10 +4639,10 @@ const POOL_WORDS = [
   ["running", /^(on|true|1|running|run|filtering|filtration|filtrage|marche|en.?marche|ein|an|encendid|acceso|aan|boost|eco|manual|manuel)$/],
 ];
 const POOL_LABELS = { off: "ac_off", running: "pool_filtering", chlorinating: "pool_chlorinating", backwash: "pool_backwash",
-  frost: "pool_frost", error: "error", unav: "ev_offline" };
+  frost: "pool_frost", error: "error", unav: "ev_offline", winter: "robot_winter" };
 const POOL_COLORS = {
   off: "var(--disabled-text-color, #9e9e9e)", running: "#1e88e5", chlorinating: "#7cb342", backwash: "#8d6e63",
-  frost: "#03a9f4", error: "#f44336", unav: "var(--disabled-text-color, #9e9e9e)",
+  frost: "#03a9f4", error: "#f44336", unav: "var(--disabled-text-color, #9e9e9e)", winter: "#4fa3d8",
 };
 // A pump draws hundreds of watts: below this one it is off.
 const POOL_POWER_W = 50;
@@ -4675,6 +4675,15 @@ function poolOn(hass, entityId) {
   return Number.isFinite(n) && n > 0;
 }
 
+// An appliance put away for the winter (a pool, a spa, the garden watering,
+// a grill under its cover; dosing-tank-card #3, like the mower's #80):
+// ticked in the card, or switched on from an on and off entity.
+function seasonWinter(hass, cfg) {
+  return cfg.winter === true || (!!cfg.winter_entity && robotRaised(hass, cfg.winter_entity, /winter|hiver/));
+}
+const poolWinter = seasonWinter;
+// The types that can be put away for the winter, beside the robots.
+const WINTER_TYPES = ["pool_pump", "irrigation", "spa", "pellet_grill"];
 // What the pump does, from its own state, then from what raises something.
 function poolModeOf(hass, cfg, st, watts) {
   const raw = st ? String(st.state).trim().toLowerCase() : "";
@@ -11592,8 +11601,14 @@ class ApplianceCard extends HTMLElement {
     // against the frost, in error. Its lines give the water, the air, the pH,
     // the RedOx, the time filtered today, the pressure and the pump's mode.
     let pool = null;
+    let poolWintered = false;
     if (cap.poolPump) {
-      const mode = poolModeOf(hass, cfg, st, watts);
+      // Wintered, a pump at rest (or unplugged, its water drained) reads
+      // Winter storage; one running for the frost keeps saying so.
+      const wintered = poolWinter(hass, cfg);
+      const pumpMode = poolModeOf(hass, cfg, st, watts);
+      const mode = wintered && ["off", "unav"].includes(pumpMode) ? "winter" : pumpMode;
+      poolWintered = wintered;
       const chlorine = !!cfg.chlorine_pump_entity;
       const dosing = chlorine && poolOn(hass, cfg.chlorine_pump_entity);
       const shown = dosing && mode === "running" ? "chlorinating" : mode;
@@ -11648,7 +11663,7 @@ class ApplianceCard extends HTMLElement {
       // puts it.
       const needle = pressure !== null && mode !== "unav"
         ? Math.round(-120 + Math.max(0, Math.min(1, pressure / POOL_GAUGE_MAX_BAR)) * 240) : null;
-      pool = { mode, chlorine, dosing, lit, needle, can };
+      pool = { mode, chlorine, dosing, lit, needle, can, winter: wintered };
     }
 
     // Solar panels: they produce, produce little, rest at night or are in
@@ -11987,6 +12002,13 @@ class ApplianceCard extends HTMLElement {
       }
     }
 
+    // Put away for the winter: a spa under its cover, the watering drained, a
+    // grill under its cover. It reads so, whatever its state says.
+    if (ntDraw && ["irrigation", "spa", "pellet_grill"].includes(applianceType) && seasonWinter(hass, cfg)) {
+      ntDraw = { ...ntDraw, winter: true, on: false, ...(applianceType === "pellet_grill" ? { st: "off" } : {}) };
+      if (!cfg.state_show_raw) stateLabel = t(hass, "robot_winter");
+      color = "#4fa3d8";
+    }
     // The card's colour on the drawings made after a real product (a
     // Christmas tree's colour is its lights').
     if (ntDraw && BODY_COLORS[cfg.illustration_color] && applianceType !== "christmas_tree" && !(applianceType === "speaker" && cfg.speaker_color)) ntDraw = { ...ntDraw, tint: cfg.illustration_color };
@@ -11994,7 +12016,7 @@ class ApplianceCard extends HTMLElement {
     // says at rest (a washer's Idle, a heater's Standby, a printer's
     // Offline). A fridge, a ride or a pump says it in words of its own.
     if (plugState && ["switch", "input_boolean"].includes(domainOf(cfg.state_entity)) && st && String(st.state).toLowerCase() === "off"
-      && !cfg.state_show_raw && !["fridge", "mobility", "water_pump"].includes(applianceType)) {
+      && !cfg.state_show_raw && !["fridge", "mobility", "water_pump"].includes(applianceType) && !poolWintered && !(ntDraw && ntDraw.winter)) {
       stateLabel = t(hass, ["printer_3d", "coffee", "air_fryer", "hood", "cooktop", "litter_box"].includes(applianceType) ? "p3_off" : "ac_off");
     }
 
@@ -12124,7 +12146,7 @@ class ApplianceCard extends HTMLElement {
       if (mode === "charging" && (stick ? battery !== null && battery >= 100 : battery === null || battery >= 100)) mode = "docked";
       // Put away for the winter, it reads so whatever its integration says,
       // often nothing at all once it is unplugged (#80).
-      if (layout === "mower" && robotWinter(hass, cfg)) mode = "winter";
+      if (["mower", "pool"].includes(layout) && robotWinter(hass, cfg)) mode = "winter";
       if (!cfg.state_show_raw || mode === "unav") {
         const washer = layout === "floor_washer" ? { washing: "fw_self_cleaning", full: "fw_dirty_full", empty: "fw_clean_empty" } : {};
         stateLabel = t(hass, mode === "cleaning" ? ROBOT_WORK_LABELS[layout] : stick && mode === "docked" ? "stick_charged" : washer[mode] || ROBOT_LABELS[mode]);
@@ -13398,7 +13420,7 @@ function loadEditor() {
   if (customElements.get("ha-appliance-card-editor")) return Promise.resolve();
   if (!editorLoading) {
     editorLoading = import(assetUrl("ha-appliance-card-editor.js"))
-      .then((m) => m.default({ t, onLanguageLoaded, LANGUAGE_NAMES, localizedHass, activationOf, TH_LAYOUTS, EV_POWER_THRESHOLD, stateObj, parseValueMap, stringifyValueMap, alertsArray, entityEntries, LIST_OTHER, ENTITY_LISTS, listCandidates, defaultCardName, stripDeviceName, domainOf, INFO_MAX, autoSuggest, APPLIANCE_TYPES, STATE_DOMAINS, SCREEN_ONLY_FIELDS, illustrationSizeOf, fontScaleOf, compactModeOf, TYPE_GROUPS, caps, detectApplianceType, SCREEN_STANDBY_W, SCREEN_LAYOUTS, SCREEN_IMAGES, screenLayoutOf, screenIsTablet, HD_HEAT_W, PLUG_THRESHOLDS, ZONE_POWER_W, PLUG_SOURCE_TYPES, plugSourceOf, DW_DRY_MIN, WASH_HEAT_W, WASH_SPIN_W, DRYER_HEAT_W, NET_LAYOUTS, SWITCH_PORTS, NET_BAYS, NET_BUSY_MBIT, NET_TEMP_ALERT, netLayoutOf, ROBOT_LAYOUTS, ROBOT_STATIONS, ROBOT_BOX_COLORS, ROBOT_FLOORS, ROBOT_SERVICES, STICK_AWAY_W, robotLayoutOf, PRINTER_STYLES, printerStyleOf, POOL_PRESSURE_ALERT, SOLAR_LAYOUTS, BATTERY_LAYOUTS, BATTERY_IDLE_W, DIFFUSER_LAYOUTS, illustrationTapOf, UNIT_FILTERS, HRV_LAYOUTS, hrvLayoutOf, CAMERA_LAYOUTS, MAILBOX_LAYOUTS, MAILBOX_SIDES, mailboxLayoutOf, MAILBOX_COLORS_3D, LAMP_LAYOUTS, LAMP_SPOTS, lampLayoutOf, FD_COUNTS, CONSOLE_LAYOUTS, IRRIGATION_LAYOUTS, TAP_MODELS, TAP_WALLS, LITTER_LAYOUTS, DETECTOR_LAYOUTS, GRILL_LAYOUTS, SPEAKER_LAYOUTS, STREAMER_LAYOUTS, THS_LAYOUTS, MOBILITY_LAYOUTS, PUMP_LAYOUTS, CIRC_MODELS, FLOOR_LAYOUTS, OPT_LINES, METER_LAYOUTS, meterLayoutOf, irrigationLayoutOf, detectorLayoutOf, TREE_PALETTES, TREE_PRESENTS, pumpLayoutOf, SPK_COLORS, COLLECTOR_STYLES, UPS_BATTERY_LOW, HISTORY_HOURS, BODY_COLORS, esc, MOWER_STYLES, SHELTER_STYLES, SHELTER_COLORS, LAPTOP_COLORS, LAPTOP_STYLES, drawn, stateFreeSource }))
+      .then((m) => m.default({ t, onLanguageLoaded, LANGUAGE_NAMES, localizedHass, activationOf, TH_LAYOUTS, EV_POWER_THRESHOLD, stateObj, parseValueMap, stringifyValueMap, alertsArray, entityEntries, LIST_OTHER, ENTITY_LISTS, listCandidates, defaultCardName, stripDeviceName, domainOf, INFO_MAX, autoSuggest, APPLIANCE_TYPES, STATE_DOMAINS, SCREEN_ONLY_FIELDS, illustrationSizeOf, fontScaleOf, compactModeOf, TYPE_GROUPS, caps, detectApplianceType, SCREEN_STANDBY_W, SCREEN_LAYOUTS, SCREEN_IMAGES, screenLayoutOf, screenIsTablet, HD_HEAT_W, PLUG_THRESHOLDS, ZONE_POWER_W, PLUG_SOURCE_TYPES, plugSourceOf, DW_DRY_MIN, WASH_HEAT_W, WASH_SPIN_W, DRYER_HEAT_W, NET_LAYOUTS, SWITCH_PORTS, NET_BAYS, NET_BUSY_MBIT, NET_TEMP_ALERT, netLayoutOf, ROBOT_LAYOUTS, ROBOT_STATIONS, ROBOT_BOX_COLORS, ROBOT_FLOORS, ROBOT_SERVICES, STICK_AWAY_W, robotLayoutOf, PRINTER_STYLES, printerStyleOf, POOL_PRESSURE_ALERT, WINTER_TYPES, SOLAR_LAYOUTS, BATTERY_LAYOUTS, BATTERY_IDLE_W, DIFFUSER_LAYOUTS, illustrationTapOf, UNIT_FILTERS, HRV_LAYOUTS, hrvLayoutOf, CAMERA_LAYOUTS, MAILBOX_LAYOUTS, MAILBOX_SIDES, mailboxLayoutOf, MAILBOX_COLORS_3D, LAMP_LAYOUTS, LAMP_SPOTS, lampLayoutOf, FD_COUNTS, CONSOLE_LAYOUTS, IRRIGATION_LAYOUTS, TAP_MODELS, TAP_WALLS, LITTER_LAYOUTS, DETECTOR_LAYOUTS, GRILL_LAYOUTS, SPEAKER_LAYOUTS, STREAMER_LAYOUTS, THS_LAYOUTS, MOBILITY_LAYOUTS, PUMP_LAYOUTS, CIRC_MODELS, FLOOR_LAYOUTS, OPT_LINES, METER_LAYOUTS, meterLayoutOf, irrigationLayoutOf, detectorLayoutOf, TREE_PALETTES, TREE_PRESENTS, pumpLayoutOf, SPK_COLORS, COLLECTOR_STYLES, UPS_BATTERY_LOW, HISTORY_HOURS, BODY_COLORS, esc, MOWER_STYLES, SHELTER_STYLES, SHELTER_COLORS, LAPTOP_COLORS, LAPTOP_STYLES, drawn, stateFreeSource }))
       .catch((err) => {
         editorLoading = null;
         throw err;

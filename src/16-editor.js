@@ -156,6 +156,8 @@ const SECTIONS = [
     when: (c) => !!c.chlorine_pump_entity },
   { field: "backwash_entity", types: ["pool_pump"], labelKey: "section_backwash", includeDomains: ["binary_sensor", "switch", "sensor", "input_boolean"] },
   { field: "frost_entity", types: ["pool_pump"], labelKey: "section_frost", includeDomains: ["binary_sensor", "switch", "sensor", "input_boolean"] },
+  { field: "winter_entity", types: WINTER_TYPES, labelKey: "section_robot_winter", includeDomains: ["input_boolean", "switch", "binary_sensor"],
+    extra: (c) => c._row("winter", "robot_winter", { type: "checkbox" }) },
   { field: "pool_alert_entity", types: ["pool_pump"], labelKey: "section_pool_alert", includeDomains: ["binary_sensor", "sensor"] },
   // Solar panels: the energy of the day and an alert. A battery: what goes
   // in and out, its reserve, its charge limit and an alert.
@@ -333,7 +335,7 @@ const SECTIONS = [
   { field: "robot_rain_entity", types: ["robot"], labelKey: "section_robot_rain", includeDomains: ["binary_sensor", "sensor", "switch"],
     when: (c) => robotLayoutOf(c, null) === "mower" },
   { field: "robot_winter_entity", types: ["robot"], labelKey: "section_robot_winter", includeDomains: ["input_boolean", "switch", "binary_sensor"],
-    when: (c) => robotLayoutOf(c, null) === "mower" },
+    when: (c) => ["mower", "pool"].includes(robotLayoutOf(c, null)) },
   { field: "robot_error_entity", types: ["robot"], labelKey: "section_robot_error", includeDomains: ["sensor", "binary_sensor"] },
   { field: "night_mode_entity", types: ["air_purifier", "fan"], labelKey: "pf_night", includeDomains: ["switch", "binary_sensor", "input_boolean"] },
   { field: "heater_entity", types: ["air_purifier", "fan"], labelKey: "section_heater", includeDomains: ["climate", "switch", "select", "binary_sensor"] },
@@ -1479,7 +1481,7 @@ class ApplianceCardEditor extends HTMLElement {
           return this._row("section_screen_layout", "robot_layout", {
             type: "select",
             options: [{ value: "auto", label: t(hass, "unit_auto") }].concat(ROBOT_LAYOUTS.map((v) => ({ value: v, label: t(hass, `layout_robot_${v}`) }))),
-          }) + (layout === "mower" ? this._row("mower_style", "mower_style", {
+          }) + (layout === "pool" ? this._row("robot_winter", "robot_winter", { type: "checkbox" }) : "") + (layout === "mower" ? this._row("mower_style", "mower_style", {
                 type: "select",
                 options: [{ value: "auto", label: t(hass, "unit_auto") }].concat(MOWER_STYLES.map((v) => ({ value: v, label: t(hass, `mower_${v}`) }))),
               }) + this._row("robot_winter", "robot_winter", { type: "checkbox" }) + this._row("robot_shelter", "robot_shelter", { type: "checkbox" })

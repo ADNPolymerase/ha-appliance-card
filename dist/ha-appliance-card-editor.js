@@ -1,6 +1,6 @@
 // Built by tools/build.mjs from the files of src/: edit those, not this file.
 // The card's editor, loaded by the card the first time it is edited.
-export default function defineEditor({ t, onLanguageLoaded, LANGUAGE_NAMES, localizedHass, activationOf, TH_LAYOUTS, EV_POWER_THRESHOLD, stateObj, parseValueMap, stringifyValueMap, alertsArray, entityEntries, LIST_OTHER, ENTITY_LISTS, listCandidates, defaultCardName, stripDeviceName, domainOf, INFO_MAX, autoSuggest, APPLIANCE_TYPES, STATE_DOMAINS, SCREEN_ONLY_FIELDS, illustrationSizeOf, fontScaleOf, compactModeOf, TYPE_GROUPS, caps, detectApplianceType, SCREEN_STANDBY_W, SCREEN_LAYOUTS, SCREEN_IMAGES, screenLayoutOf, screenIsTablet, HD_HEAT_W, PLUG_THRESHOLDS, ZONE_POWER_W, PLUG_SOURCE_TYPES, plugSourceOf, DW_DRY_MIN, WASH_HEAT_W, WASH_SPIN_W, DRYER_HEAT_W, NET_LAYOUTS, SWITCH_PORTS, NET_BAYS, NET_BUSY_MBIT, NET_TEMP_ALERT, netLayoutOf, ROBOT_LAYOUTS, ROBOT_STATIONS, ROBOT_BOX_COLORS, ROBOT_FLOORS, ROBOT_SERVICES, STICK_AWAY_W, robotLayoutOf, PRINTER_STYLES, printerStyleOf, POOL_PRESSURE_ALERT, SOLAR_LAYOUTS, BATTERY_LAYOUTS, BATTERY_IDLE_W, DIFFUSER_LAYOUTS, illustrationTapOf, UNIT_FILTERS, HRV_LAYOUTS, hrvLayoutOf, CAMERA_LAYOUTS, MAILBOX_LAYOUTS, MAILBOX_SIDES, mailboxLayoutOf, MAILBOX_COLORS_3D, LAMP_LAYOUTS, LAMP_SPOTS, lampLayoutOf, FD_COUNTS, CONSOLE_LAYOUTS, IRRIGATION_LAYOUTS, TAP_MODELS, TAP_WALLS, LITTER_LAYOUTS, DETECTOR_LAYOUTS, GRILL_LAYOUTS, SPEAKER_LAYOUTS, STREAMER_LAYOUTS, THS_LAYOUTS, MOBILITY_LAYOUTS, PUMP_LAYOUTS, CIRC_MODELS, FLOOR_LAYOUTS, OPT_LINES, METER_LAYOUTS, meterLayoutOf, irrigationLayoutOf, detectorLayoutOf, TREE_PALETTES, TREE_PRESENTS, pumpLayoutOf, SPK_COLORS, COLLECTOR_STYLES, UPS_BATTERY_LOW, HISTORY_HOURS, BODY_COLORS, esc, MOWER_STYLES, SHELTER_STYLES, SHELTER_COLORS, LAPTOP_COLORS, LAPTOP_STYLES, drawn, stateFreeSource }) {
+export default function defineEditor({ t, onLanguageLoaded, LANGUAGE_NAMES, localizedHass, activationOf, TH_LAYOUTS, EV_POWER_THRESHOLD, stateObj, parseValueMap, stringifyValueMap, alertsArray, entityEntries, LIST_OTHER, ENTITY_LISTS, listCandidates, defaultCardName, stripDeviceName, domainOf, INFO_MAX, autoSuggest, APPLIANCE_TYPES, STATE_DOMAINS, SCREEN_ONLY_FIELDS, illustrationSizeOf, fontScaleOf, compactModeOf, TYPE_GROUPS, caps, detectApplianceType, SCREEN_STANDBY_W, SCREEN_LAYOUTS, SCREEN_IMAGES, screenLayoutOf, screenIsTablet, HD_HEAT_W, PLUG_THRESHOLDS, ZONE_POWER_W, PLUG_SOURCE_TYPES, plugSourceOf, DW_DRY_MIN, WASH_HEAT_W, WASH_SPIN_W, DRYER_HEAT_W, NET_LAYOUTS, SWITCH_PORTS, NET_BAYS, NET_BUSY_MBIT, NET_TEMP_ALERT, netLayoutOf, ROBOT_LAYOUTS, ROBOT_STATIONS, ROBOT_BOX_COLORS, ROBOT_FLOORS, ROBOT_SERVICES, STICK_AWAY_W, robotLayoutOf, PRINTER_STYLES, printerStyleOf, POOL_PRESSURE_ALERT, WINTER_TYPES, SOLAR_LAYOUTS, BATTERY_LAYOUTS, BATTERY_IDLE_W, DIFFUSER_LAYOUTS, illustrationTapOf, UNIT_FILTERS, HRV_LAYOUTS, hrvLayoutOf, CAMERA_LAYOUTS, MAILBOX_LAYOUTS, MAILBOX_SIDES, mailboxLayoutOf, MAILBOX_COLORS_3D, LAMP_LAYOUTS, LAMP_SPOTS, lampLayoutOf, FD_COUNTS, CONSOLE_LAYOUTS, IRRIGATION_LAYOUTS, TAP_MODELS, TAP_WALLS, LITTER_LAYOUTS, DETECTOR_LAYOUTS, GRILL_LAYOUTS, SPEAKER_LAYOUTS, STREAMER_LAYOUTS, THS_LAYOUTS, MOBILITY_LAYOUTS, PUMP_LAYOUTS, CIRC_MODELS, FLOOR_LAYOUTS, OPT_LINES, METER_LAYOUTS, meterLayoutOf, irrigationLayoutOf, detectorLayoutOf, TREE_PALETTES, TREE_PRESENTS, pumpLayoutOf, SPK_COLORS, COLLECTOR_STYLES, UPS_BATTERY_LOW, HISTORY_HOURS, BODY_COLORS, esc, MOWER_STYLES, SHELTER_STYLES, SHELTER_COLORS, LAPTOP_COLORS, LAPTOP_STYLES, drawn, stateFreeSource }) {
 // ---------------------------------------------------------------------------
 // Editor
 // ---------------------------------------------------------------------------
@@ -152,6 +152,8 @@ const SECTIONS = [
     when: (c) => !!c.chlorine_pump_entity },
   { field: "backwash_entity", types: ["pool_pump"], labelKey: "section_backwash", includeDomains: ["binary_sensor", "switch", "sensor", "input_boolean"] },
   { field: "frost_entity", types: ["pool_pump"], labelKey: "section_frost", includeDomains: ["binary_sensor", "switch", "sensor", "input_boolean"] },
+  { field: "winter_entity", types: WINTER_TYPES, labelKey: "section_robot_winter", includeDomains: ["input_boolean", "switch", "binary_sensor"],
+    extra: (c) => c._row("winter", "robot_winter", { type: "checkbox" }) },
   { field: "pool_alert_entity", types: ["pool_pump"], labelKey: "section_pool_alert", includeDomains: ["binary_sensor", "sensor"] },
   // Solar panels: the energy of the day and an alert. A battery: what goes
   // in and out, its reserve, its charge limit and an alert.
@@ -329,7 +331,7 @@ const SECTIONS = [
   { field: "robot_rain_entity", types: ["robot"], labelKey: "section_robot_rain", includeDomains: ["binary_sensor", "sensor", "switch"],
     when: (c) => robotLayoutOf(c, null) === "mower" },
   { field: "robot_winter_entity", types: ["robot"], labelKey: "section_robot_winter", includeDomains: ["input_boolean", "switch", "binary_sensor"],
-    when: (c) => robotLayoutOf(c, null) === "mower" },
+    when: (c) => ["mower", "pool"].includes(robotLayoutOf(c, null)) },
   { field: "robot_error_entity", types: ["robot"], labelKey: "section_robot_error", includeDomains: ["sensor", "binary_sensor"] },
   { field: "night_mode_entity", types: ["air_purifier", "fan"], labelKey: "pf_night", includeDomains: ["switch", "binary_sensor", "input_boolean"] },
   { field: "heater_entity", types: ["air_purifier", "fan"], labelKey: "section_heater", includeDomains: ["climate", "switch", "select", "binary_sensor"] },
@@ -1475,7 +1477,7 @@ class ApplianceCardEditor extends HTMLElement {
           return this._row("section_screen_layout", "robot_layout", {
             type: "select",
             options: [{ value: "auto", label: t(hass, "unit_auto") }].concat(ROBOT_LAYOUTS.map((v) => ({ value: v, label: t(hass, `layout_robot_${v}`) }))),
-          }) + (layout === "mower" ? this._row("mower_style", "mower_style", {
+          }) + (layout === "pool" ? this._row("robot_winter", "robot_winter", { type: "checkbox" }) : "") + (layout === "mower" ? this._row("mower_style", "mower_style", {
                 type: "select",
                 options: [{ value: "auto", label: t(hass, "unit_auto") }].concat(MOWER_STYLES.map((v) => ({ value: v, label: t(hass, `mower_${v}`) }))),
               }) + this._row("robot_winter", "robot_winter", { type: "checkbox" }) + this._row("robot_shelter", "robot_shelter", { type: "checkbox" })

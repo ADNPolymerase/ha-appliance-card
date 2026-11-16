@@ -77,6 +77,7 @@ const POOL_SVG = `<svg class="pl-pp" viewBox="0 -6 96 108">
 <rect x="73" y="62.5" width="11" height="6" rx="1" fill="#22272b"/><circle cx="75" cy="64.3" r=".5" fill="#69727a"/><circle cx="82" cy="64.3" r=".5" fill="#69727a"/>
 <circle class="pl-led" cx="78.5" cy="65.6" r=".9"/>
 <g class="pl-snow" transform="translate(89 42)"><path d="M0 -4.5 V4.5 M-3.9 -2.25 L3.9 2.25 M-3.9 2.25 L3.9 -2.25 M-1.2 -3.4 L0 -2.4 L1.2 -3.4 M-1.2 3.4 L0 2.4 L1.2 3.4" stroke="#4fc3f7" stroke-width="1.2" stroke-linecap="round" fill="none"/></g>
+<g class="pl-wnt"><path d="M59.4 3.6 H92.6 L94 20 H58 Z" fill="#2f5446" stroke="#1f3a30" stroke-width=".6"/><path d="M66 4 L65.2 19.6 M74 4 V19.6 M82 4 L82.8 19.6 M90 4 L91 19.6" stroke="#4d7a68" stroke-width=".7"/><path d="M57 1.4 Q66 -1.4 76 .6 Q86 -1.2 95 1.2 L95.6 3 H56.6 Z" fill="#f7fbfd" stroke="#d6e6ef" stroke-width=".4"/><path d="M8.3 41 Q8 31.6 22 30.4 Q36 31.6 35.7 41 Q31 37.2 26 38.4 Q21 36.6 16 38.6 Q11.5 37.4 8.3 41 Z" fill="#f7fbfd" stroke="#d6e6ef" stroke-width=".4"/><path d="M43.6 56 Q43.6 50 52.5 50 Q61.4 50 61.4 56 Q58 53.4 55 54.4 Q52 52.8 49 54.4 Q46 53.4 43.6 56 Z" fill="#f7fbfd" stroke="#d6e6ef" stroke-width=".4"/><path d="M58.8 62 H67.6 Q71.2 62 71.2 64.6 Q68 63.6 65 64.4 Q62 63.4 58.8 64.2 Z" fill="#f7fbfd"/><path d="M72.6 62.6 Q78.5 60.4 84.4 62.6 V64 Q81 63 78.5 63.8 Q76 63 72.6 64 Z" fill="#f7fbfd"/><path d="M4.2 7.2 Q30 3.6 54.6 5.8" fill="none" stroke="#f7fbfd" stroke-width="1.6" stroke-linecap="round"/><path d="M-2 95 Q24 91.6 50 94 Q72 92 98 95 V97.6 H-2 Z" fill="#f2f8fb"/><circle class="pl-fl" cx="6" cy="-4" r="0.9" style="--fd: 3.4s; --f0: 0s"/><circle class="pl-fl" cx="18" cy="-4" r="0.7" style="--fd: 4.1s; --f0: -1.2s"/><circle class="pl-fl" cx="29" cy="-4" r="1" style="--fd: 3.7s; --f0: -2.4s"/><circle class="pl-fl" cx="41" cy="-4" r="0.8" style="--fd: 4.4s; --f0: -0.6s"/><circle class="pl-fl" cx="52" cy="-4" r="0.9" style="--fd: 3.9s; --f0: -3.1s"/><circle class="pl-fl" cx="63" cy="-4" r="0.7" style="--fd: 4.6s; --f0: -1.8s"/><circle class="pl-fl" cx="74" cy="-4" r="1" style="--fd: 3.5s; --f0: -2.9s"/><circle class="pl-fl" cx="86" cy="-4" r="0.8" style="--fd: 4.2s; --f0: -0.3s"/><circle class="pl-fl" cx="12" cy="-4" r="0.6" style="--fd: 5s; --f0: -3.6s"/><circle class="pl-fl" cx="47" cy="-4" r="0.6" style="--fd: 4.8s; --f0: -2.1s"/><circle class="pl-fl" cx="80" cy="-4" r="0.6" style="--fd: 5.2s; --f0: -4s"/></g>
 <g transform="translate(79 43) scale(.55)"><g class="pl-smoke"><g class="pl-pf pl-pf1"><circle class="pl-o" cx="13" cy="23" r="6.9"/><circle class="pl-o" cx="20" cy="18" r="7.9"/><circle class="pl-o" cx="27" cy="22" r="6.4"/><circle class="pl-o" cx="17" cy="12" r="5.9"/><circle class="pl-o" cx="24" cy="11" r="5.4"/><circle class="pl-f" cx="13" cy="23" r="5.5"/><circle class="pl-f" cx="20" cy="18" r="6.5"/><circle class="pl-f" cx="27" cy="22" r="5"/><circle class="pl-f" cx="17" cy="12" r="4.5"/><circle class="pl-f" cx="24" cy="11" r="4"/><path class="pl-hl" d="M15 9 q2 -2 4 -1 M17 15 q2 -2.5 5 -1.5"/></g><g class="pl-pf pl-pf2"><circle class="pl-o" cx="9.049999999999999" cy="21.55" r="6.074999999999999"/><circle class="pl-o" cx="15" cy="17.299999999999997" r="6.924999999999999"/><circle class="pl-o" cx="20.95" cy="20.7" r="5.65"/><circle class="pl-o" cx="12.45" cy="12.2" r="5.225"/><circle class="pl-o" cx="18.4" cy="11.35" r="4.8"/><circle class="pl-f" cx="9.049999999999999" cy="21.55" r="4.675"/><circle class="pl-f" cx="15" cy="17.299999999999997" r="5.5249999999999995"/><circle class="pl-f" cx="20.95" cy="20.7" r="4.25"/><circle class="pl-f" cx="12.45" cy="12.2" r="3.8249999999999997"/><circle class="pl-f" cx="18.4" cy="11.35" r="3.4"/><path class="pl-hl" d="M10.75 9.649999999999999 q2 -2 4 -1 M12.45 14.75 q2 -2.5 5 -1.5"/></g></g></g><g transform="translate(89.5 63.5)"><g class="pl-ang"><path d="M3.5 1.5 Q3.5 4 1 4"/><path d="M6 1.5 Q6 4 8.5 4"/><path d="M3.5 9.5 Q3.5 7 1 7"/><path d="M6 9.5 Q6 7 8.5 7"/></g></g>
 </svg>`;
 function poolHtml(cls, p) {
@@ -91,7 +92,7 @@ function poolHtml(cls, p) {
       `<rect class="pl-can-l" x="68.1" y="${Math.round((59.5 - h) * 100) / 100}" width="11.8" height="${h}"`);
   }
   return `
-        <div class="machine ${cls} pl pl-m-${mode}${p.dosing ? " pl-chlore" : ""}${p.lit ? " pl-lamp" : ""}${p.chlorine ? "" : " pl-nocl"}">${svg}</div>`;
+        <div class="machine ${cls} pl pl-m-${mode}${p.dosing ? " pl-chlore" : ""}${p.lit ? " pl-lamp" : ""}${p.chlorine ? "" : " pl-nocl"}${p.winter ? " pl-winter" : ""}">${svg}</div>`;
 }
 
 
@@ -141,6 +142,15 @@ css: () => `
         .pl-chlore .pl-can-led{fill:#2ecc71;animation:pl-breathe 1.2s ease-in-out infinite}
         .pl-can-led{fill:#7c858d}
         .pl-ice{opacity:0}
+        /* Winter (dosing-tank-card #3): the pool under its cover, snow on
+           the deck, the filter and the pump, flakes falling slowly. */
+        .pl-wnt{display:none}
+        .pl-winter .pl-wnt{display:inline}
+        .pl-winter .pl-glow,.pl-winter .pl-rip,.pl-winter .pl-spot{display:none}
+        .pl-winter .pl-ice{opacity:1}
+        .pl-winter .pl-body{filter:saturate(.6) brightness(1.05)}
+        .pl-fl{fill:#fff;stroke:#cfe3ee;stroke-width:.25;animation:pl-fall var(--fd) linear var(--f0) infinite}
+        @keyframes pl-fall{0%{transform:translate(0,0);opacity:0}10%{opacity:1}100%{transform:translate(4px,100px);opacity:.2}}
         .pl-m-frost .pl-ice{opacity:1}
         .pl-snow{opacity:0}
         .pl-m-frost .pl-snow{opacity:1;animation:pl-breathe 2.4s ease-in-out infinite}

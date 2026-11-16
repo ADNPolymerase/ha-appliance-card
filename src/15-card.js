@@ -3303,8 +3303,14 @@ class ApplianceCard extends HTMLElement {
     // against the frost, in error. Its lines give the water, the air, the pH,
     // the RedOx, the time filtered today, the pressure and the pump's mode.
     let pool = null;
+    let poolWintered = false;
     if (cap.poolPump) {
-      const mode = poolModeOf(hass, cfg, st, watts);
+      // Wintered, a pump at rest (or unplugged, its water drained) reads
+      // Winter storage; one running for the frost keeps saying so.
+      const wintered = poolWinter(hass, cfg);
+      const pumpMode = poolModeOf(hass, cfg, st, watts);
+      const mode = wintered && ["off", "unav"].includes(pumpMode) ? "winter" : pumpMode;
+      poolWintered = wintered;
       const chlorine = !!cfg.chlorine_pump_entity;
       const dosing = chlorine && poolOn(hass, cfg.chlorine_pump_entity);
       const shown = dosing && mode === "running" ? "chlorinating" : mode;
@@ -3359,7 +3365,7 @@ class ApplianceCard extends HTMLElement {
       // puts it.
       const needle = pressure !== null && mode !== "unav"
         ? Math.round(-120 + Math.max(0, Math.min(1, pressure / POOL_GAUGE_MAX_BAR)) * 240) : null;
-      pool = { mode, chlorine, dosing, lit, needle, can };
+      pool = { mode, chlorine, dosing, lit, needle, can, winter: wintered };
     }
 
     // Solar panels: they produce, produce little, rest at night or are in
@@ -3698,6 +3704,13 @@ class ApplianceCard extends HTMLElement {
       }
     }
 
+    // Put away for the winter: a spa under its cover, the watering drained, a
+    // grill under its cover. It reads so, whatever its state says.
+    if (ntDraw && ["irrigation", "spa", "pellet_grill"].includes(applianceType) && seasonWinter(hass, cfg)) {
+      ntDraw = { ...ntDraw, winter: true, on: false, ...(applianceType === "pellet_grill" ? { st: "off" } : {}) };
+      if (!cfg.state_show_raw) stateLabel = t(hass, "robot_winter");
+      color = "#4fa3d8";
+    }
     // The card's colour on the drawings made after a real product (a
     // Christmas tree's colour is its lights').
     if (ntDraw && BODY_COLORS[cfg.illustration_color] && applianceType !== "christmas_tree" && !(applianceType === "speaker" && cfg.speaker_color)) ntDraw = { ...ntDraw, tint: cfg.illustration_color };
@@ -3705,7 +3718,7 @@ class ApplianceCard extends HTMLElement {
     // says at rest (a washer's Idle, a heater's Standby, a printer's
     // Offline). A fridge, a ride or a pump says it in words of its own.
     if (plugState && ["switch", "input_boolean"].includes(domainOf(cfg.state_entity)) && st && String(st.state).toLowerCase() === "off"
-      && !cfg.state_show_raw && !["fridge", "mobility", "water_pump"].includes(applianceType)) {
+      && !cfg.state_show_raw && !["fridge", "mobility", "water_pump"].includes(applianceType) && !poolWintered && !(ntDraw && ntDraw.winter)) {
       stateLabel = t(hass, ["printer_3d", "coffee", "air_fryer", "hood", "cooktop", "litter_box"].includes(applianceType) ? "p3_off" : "ac_off");
     }
 
@@ -3835,7 +3848,7 @@ class ApplianceCard extends HTMLElement {
       if (mode === "charging" && (stick ? battery !== null && battery >= 100 : battery === null || battery >= 100)) mode = "docked";
       // Put away for the winter, it reads so whatever its integration says,
       // often nothing at all once it is unplugged (#80).
-      if (layout === "mower" && robotWinter(hass, cfg)) mode = "winter";
+      if (["mower", "pool"].includes(layout) && robotWinter(hass, cfg)) mode = "winter";
       if (!cfg.state_show_raw || mode === "unav") {
         const washer = layout === "floor_washer" ? { washing: "fw_self_cleaning", full: "fw_dirty_full", empty: "fw_clean_empty" } : {};
         stateLabel = t(hass, mode === "cleaning" ? ROBOT_WORK_LABELS[layout] : stick && mode === "docked" ? "stick_charged" : washer[mode] || ROBOT_LABELS[mode]);

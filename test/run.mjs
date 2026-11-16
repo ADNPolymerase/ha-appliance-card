@@ -14092,6 +14092,25 @@ function tvT(w) { return { 'switch.tv': { state: 'on', attributes: {} }, 'sensor
     const after1 = writes;
     rerender(b.card, { 'sensor.w': s('Idle') });
     check('rendu : rien de change, rien de reecrit ; un changement, reecrit', [after1, writes].join(), '0,1'); }
+  // A pool put to bed for the winter (dosing-tank-card #3): at rest it
+  // reads Winter storage under its cover; running for the frost, it says so.
+  { const PW = (pump, more = {}, extra = {}) => build({ appliance_type: 'pool_pump', state_entity: 'binary_sensor.pp', ...more }, { 'binary_sensor.pp': s(pump), 'input_boolean.w': s('on'), ...extra }).html;
+    check('piscine hiver : arretee, hivernage', [stateLine(PW('off', { winter: true })), stateLine(PW('off', { winter_entity: 'input_boolean.w' }))].join('|'), 'Winter storage|Winter storage');
+    check('piscine hiver : en marche, filtration', stateLine(PW('on', { winter: true })), 'Filtering');
+    check('piscine hiver : la bache et la neige', [/ pl-winter"/.test(PW('off', { winter: true })), / pl-winter"/.test(PW('off'))].join(), 'true,false');
+    check('piscine hiver : sur prise coupee, hivernage', stateLine(build({ appliance_type: 'pool_pump', state_entity: 'switch.pp', power_entity: 'sensor.ppw', winter: true }, { 'switch.pp': s('off'), 'sensor.ppw': s('0', { unit_of_measurement: 'W' }) }).html), 'Winter storage'); }
+  // Put away for the winter, beside the pool: a spa, the watering, a grill,
+  // a pool robot. Each reads Winter storage, whatever its state says.
+  { const W = (cfg, ents) => stateLine(render(cfg, ents));
+    check('hiver : spa, arrosage, barbecue, robot de piscine', [
+      W({ appliance_type: 'spa', state_entity: 'climate.sp', winter: true }, { 'climate.sp': s('heat', { current_temperature: 38, temperature: 38 }) }),
+      W({ appliance_type: 'irrigation', irrigation_layout: 'tap', state_entity: 'valve.v', winter_entity: 'input_boolean.w' }, { 'valve.v': s('open'), 'input_boolean.w': s('on') }),
+      W({ appliance_type: 'pellet_grill', grill_layout: 'drum', state_entity: 'climate.g', winter: true }, { 'climate.g': s('heat', { current_temperature: 107, temperature: 107 }) }),
+      W({ appliance_type: 'robot', robot_layout: 'pool', state_entity: 'vacuum.d', robot_winter: true }, { 'vacuum.d': s('cleaning') }),
+    ].join('|'), 'Winter storage|Winter storage|Winter storage|Winter storage');
+    check('hiver : sans la case, rien ne change', W({ appliance_type: 'spa', state_entity: 'climate.sp' }, { 'climate.sp': s('heat', { current_temperature: 38, temperature: 38 }) }) !== 'Winter storage', true);
+    const svgOfNt = (h) => (h.match(/<svg class="nt-svg"[\s\S]*?<\/svg>/) || [''])[0];
+    check('hiver : la housse remplace le barbecue, des flocons tombent', [/animateTransform attributeName="transform" type="translate" values="0 0;5 130"/.test(svgOfNt(render({ appliance_type: 'pellet_grill', grill_layout: 'cart', state_entity: 'climate.g', winter: true }, { 'climate.g': s('off') }))), /animateTransform attributeName="transform" type="translate" values="0 0;5 130"/.test(svgOfNt(render({ appliance_type: 'pellet_grill', grill_layout: 'cart', state_entity: 'climate.g' }, { 'climate.g': s('off') })))].join(), 'true,false'); }
   check('boitier : l appli lue dans app_entity', infoLine(STR('playing', { app_name: 'Netflix' }, { app_entity: 'sensor.app' }, { 'sensor.app': s('Disney+') }), 'App'), 'Disney+');
   check('boitier : l ecran d accueil n est pas une appli', infoLine(STR('idle', { app_name: 'Google TV Home', app_id: 'com.google.android.apps.tv.launcherx' }), 'App'), null);
   check('boitier : la chaine d un decodeur', infoLine(STR('playing', { media_channel: 'TF1', media_title: 'Le journal' }), 'Channel'), 'TF1');

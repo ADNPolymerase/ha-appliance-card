@@ -159,6 +159,21 @@ ${brush(-13.5)}${brush(13.5)}
   const bubbles = [0, 1, 2].map((i) => `<circle class="nta-rise ntd${i + 1}" cx="${-2 + i * 2}" cy="-16" r="${1 - i * .15}" fill="#e1f5fe" opacity="0"/>`).join("");
   const caust = [14, 30, 52, 70, 92].map((x, i) => `<path class="nta-caust ntd${i + 1}" d="M${x} 102 q3 -2 6 0 q3 2 6 0" stroke="#e1f5fe" stroke-width=".8" fill="none"/>`).join("");
   const txt = on ? c.lcd || "" : "";
+  // Put away for the winter: the water lowered under its cover, snow on the
+  // cover and the deck, the robot out of the pool.
+  if (c.winter) return `<defs><pattern id="${tp}" width="5" height="5" patternUnits="userSpaceOnUse"><rect width="5" height="5" fill="#8fd0ec"/><path d="M5 0V5M0 5H5" stroke="#6fbbe0" stroke-width=".5"/></pattern>
+${ntV(w, "#4fc3f7", "#0277bd")}${ntV(dk, "#efe5d0", "#d6c7a7")}</defs>
+<rect x="0" y="20" width="120" height="8" fill="url(#${dk})"/><rect x="0" y="27" width="120" height="1.2" fill="#b9a988"/>
+<rect x="6" y="28" width="108" height="80" fill="#cfd8dc"/><rect x="8" y="28" width="104" height="78" fill="url(#${tp})"/>
+<rect x="8" y="52" width="104" height="54" fill="url(#${w})" opacity=".6"/>
+<rect x="6" y="106" width="108" height="3" fill="#90a4ae"/>
+<path d="M4 27 Q60 38 116 27 L116 31 Q60 42 4 31 Z" fill="#2f5446" stroke="#1f3a30" stroke-width=".6"/>
+<path d="M22 30.6 V33.6 M41 33 V36.4 M60 33.8 V37.4 M79 33 V36.4 M98 30.6 V33.6" stroke="#4d7a68" stroke-width=".8"/>
+<path d="M8 28.4 Q60 38.6 112 28.4 Q60 36 8 28.4 Z" fill="#f7fbfd" opacity=".95"/>
+${ntSnowCap(0, 120, 19.6, 2.6)}
+<rect x="86" y="5" width="32" height="16" rx="2" fill="#eceff2" stroke="#aab2bc" stroke-width=".5"/>
+${ntLcd(88.5, 7, 27, 11.6, "", false, "#4fc3f7", 7.8)}
+<circle cx="116" cy="19" r=".9" fill="#9aa1ab"/>${ntSnowCap(86, 118, 4.6, 1.8)}`;
   return `<defs><pattern id="${tp}" width="5" height="5" patternUnits="userSpaceOnUse"><rect width="5" height="5" fill="#8fd0ec"/><path d="M5 0V5M0 5H5" stroke="#6fbbe0" stroke-width=".5"/></pattern>
 ${ntV(w, "#4fc3f7", "#0277bd")}${ntV(bd, "#ffffff", "#b0bec5")}${ntV(dk, "#efe5d0", "#d6c7a7")}</defs>
 <rect x="0" y="20" width="120" height="8" fill="url(#${dk})"/><rect x="0" y="27" width="120" height="1.2" fill="#b9a988"/>
@@ -1152,7 +1167,7 @@ ${[0, 1, 2].map((i) => `<path d="M${hx - 3.6} ${(sonoff ? 82.4 : 83) + i * 1.8} 
 ${ntIrrWall(wall)}
 <g mask="url(#${gm})"><rect x="-10" y="96" width="140" height="30" fill="url(#${gd})"/><path d="M-10 96.5 H130" stroke="#8d8577" stroke-width="1"/>
 ${[0, 1, 2, 3, 4, 5].map((i) => `<path d="M${-6 + i * 26} 125 L${6 + i * 26} 97" stroke="#9a9283" stroke-width=".7"/>`).join("")}<path d="M-10 110 H130" stroke="#9a9283" stroke-width=".7"/></g>
-${tap}${stand}${box}
+${tap}${stand}${c.winter ? "" : `${box}
 <ellipse cx="88" cy="114" rx="30" ry="4" fill="#000" opacity=".12"/>
 <path d="${hose}" fill="none" stroke="${sonoff ? "#1c1d1f" : "#1b5e20"}" stroke-width="5.6" stroke-linecap="round"/>
 <path d="${hose}" fill="none" stroke="${sonoff ? "#3b3e42" : "#43a047"}" stroke-width="3.8" stroke-linecap="round"/>
@@ -1160,8 +1175,8 @@ ${tap}${stand}${box}
 ${coupler}
 <g transform="rotate(-14 96 108)"><rect x="90" y="105" width="11" height="6" rx="2" fill="${sonoff ? "#ff6d00" : "#ffb300"}"/><path d="M100 105.4 L106 104 V112 L100 110.6 Z" fill="${sonoff ? "#212121" : "#f57c00"}"/></g>
 <g class="nt-run">${[["M106 105 Q114 99 125 101", 0], ["M106 107 Q115 103 125 107", 2], ["M106 109 Q114 108 124 114", 4]].map(([d, i]) => ntJet(d, i)).join("")}
-<path d="M106 107 L126 98 L126 116 Z" fill="#e1f5fe" opacity=".35"/></g>
-${sonoff && c.lcd ? `<rect x="6" y="101" width="30" height="10" rx="5" fill="#1e2328" opacity=".82"/><text x="21" y="108.2" font-size="${ntFit(c.lcd, 28, 6.4).toFixed(1)}" font-weight="700" text-anchor="middle" fill="#b3e5fc" ${NT_FONT}>${esc(c.lcd)}</text>` : ""}`;
+<path d="M106 107 L126 98 L126 116 Z" fill="#e1f5fe" opacity=".35"/></g>`}
+${sonoff && c.lcd && !c.winter ? `<rect x="6" y="101" width="30" height="10" rx="5" fill="#1e2328" opacity=".82"/><text x="21" y="108.2" font-size="${ntFit(c.lcd, 28, 6.4).toFixed(1)}" font-weight="700" text-anchor="middle" fill="#b3e5fc" ${NT_FONT}>${esc(c.lcd)}</text>` : ""}`;
 }
 
 // A vegetable patch: a raised wooden bed in three-quarter view, rows of
@@ -3108,10 +3123,62 @@ const ntKeep = (s) => `<!--k-->${s}<!--/k-->`;
 // The drawings a tint applies to: appliances, not the scenes around them
 // (a sump's pit, a floor, a garden, a pool, a roof).
 const NT_TINTED = /^(con_|str_|spk_|lit_|det_|mob_|irr_tap$|dryer$|humidifier$|fws$|wood$|booster$|circulator$|pellet_grill$)/;
+// Winter (dosing-tank-card #3): flakes falling slowly over a drawing, snow
+// lying on what it covers, a cover over a spa, a pool or a grill.
+function ntFlakes(n = 12) {
+  return Array.from({ length: n }, (_, i) => {
+    const x = 4 + ((i * 37) % 112), r = (.7 + (i % 3) * .3).toFixed(1), d = (3.6 + (i % 5) * .6).toFixed(1), b = (-((i * .83) % 4)).toFixed(2);
+    return `<circle cx="${x}" cy="-8" r="${r}" fill="#e3f1fa" stroke="#8fb8d2" stroke-width=".35"><animateTransform attributeName="transform" type="translate" values="0 0;5 130" dur="${d}s" begin="${b}s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;1;1;.2" keyTimes="0;.1;.8;1" dur="${d}s" begin="${b}s" repeatCount="indefinite"/></circle>`;
+  }).join("");
+}
+// A lump of snow along a top edge, from x0 to x1 at y, puffing up by h.
+const ntSnowCap = (x0, x1, y, h = 3) => {
+  const n = Math.max(2, Math.round((x1 - x0) / 12)), w = (x1 - x0) / n;
+  let d = `M${x0} ${y + 1}`;
+  for (let i = 0; i < n; i++) d += ` Q${(x0 + w * (i + .5)).toFixed(1)} ${(y - h * (.8 + (i % 2) * .4)).toFixed(1)} ${(x0 + w * (i + 1)).toFixed(1)} ${y + .4}`;
+  return `<path d="${d} L${x1} ${y + 1.6} Q${(x0 + x1) / 2} ${y + 3.2} ${x0} ${y + 1.6} Z" fill="#f7fbfd" stroke="#d6e6ef" stroke-width=".4"/>`;
+};
+// A grill under its cover: the fabric draped down to the ground, its folds,
+// its drawstring, the feet or wheels showing, snow on top.
+function ntGrillCover(layout) {
+  const [W, H] = { timberline: [96, 76], drum: [94, 64], cart: [86, 72], vertical: [56, 94] }[layout] || [90, 70];
+  const x0 = 60 - W / 2, x1 = 60 + W / 2, y1 = 102, y0 = y1 - H, g = ntId();
+  const top = layout === "drum" ? `Q${x0} ${y0 - 6} 60 ${y0 - 8} Q${x1} ${y0 - 6} ${x1} ${y0 + 10}` : `Q${x0} ${y0} ${x0 + 8} ${y0} H${x1 - 8} Q${x1} ${y0} ${x1} ${y0 + 8}`;
+  const folds = [.22, .41, .63, .82].map((k, i) => `<path d="M${(x0 + W * k).toFixed(1)} ${y0 + 6 + (i % 2) * 4} Q${(x0 + W * k + (i % 2 ? 3 : -3)).toFixed(1)} ${y0 + H * .55} ${(x0 + W * k + (i % 2 ? -1 : 1)).toFixed(1)} ${y1 - 3}" stroke="rgba(0,0,0,.28)" stroke-width="1.1" fill="none"/>`).join("");
+  return `<defs>${ntV(g, "#4a5158", "#23272b")}</defs>
+<ellipse cx="60" cy="${y1 + 4}" rx="${W / 2 + 6}" ry="3.4" fill="#000" opacity=".18"/>
+<rect x="${x0 + 6}" y="${y1 - 2}" width="4" height="7" rx="1" fill="#2b3035"/><rect x="${x1 - 10}" y="${y1 - 2}" width="4" height="7" rx="1" fill="#2b3035"/>
+<path d="M${x0 + 2} ${y1} L${x0} ${y0 + 10} ${top} L${x1 - 2} ${y1} Q60 ${y1 + 3} ${x0 + 2} ${y1} Z" fill="url(#${g})" stroke="#1b1e21" stroke-width=".8"/>
+${folds}
+<path d="M${x0 + 2} ${y1 - 3} Q60 ${y1} ${x1 - 2} ${y1 - 3}" stroke="#15181a" stroke-width="1.4" fill="none"/>
+<rect x="${60 - 9}" y="${y0 + H * .3}" width="18" height="7" rx="1.4" fill="#5b636b" stroke="#2b3035" stroke-width=".5"/>
+${ntSnowCap(x0 + 3, x1 - 3, layout === "drum" ? y0 - 5 : y0 + 1, 3.6)}`;
+}
+// A spa under its insulated cover, folded down the middle, snow on it.
+function ntSpaCover() {
+  const P = (u, v) => [30 + 80 * u - 22 * v, 40 + 22 * v], pt = (u, v, dy = 0) => { const [x, y] = P(u, v); return `${x.toFixed(1)} ${(y + dy).toFixed(1)}`; };
+  return `<path d="M${pt(-.03, -.04, -4)} L${pt(1.03, -.04, -4)} L${pt(1.03, 1.05, -4)} L${pt(-.03, 1.05, -4)} Z" fill="#6d7680" stroke="#454c53" stroke-width=".7"/>
+<path d="M${pt(-.03, 1.05, -4)} L${pt(1.03, 1.05, -4)} L${pt(1.03, 1.05, 1)} L${pt(-.03, 1.05, 1)} Z" fill="#4f575f"/>
+<path d="M${pt(.5, -.04, -4)} L${pt(.5, 1.05, -4)}" stroke="#454c53" stroke-width="1"/>
+<path d="M${pt(.02, .05, -4.6)} L${pt(.98, .05, -4.6)} L${pt(.98, .95, -4.6)} L${pt(.02, .95, -4.6)} Z" fill="#f7fbfd" stroke="#d6e6ef" stroke-width=".4" opacity=".92"/>
+<path d="M${pt(.12, 1.05, 1.2)} L${pt(.12, 1.05, 4)} M${pt(.88, 1.05, 1.2)} L${pt(.88, 1.05, 4)}" stroke="#2b3035" stroke-width="1.2"/>`;
+}
+function ntWinter(d, body) {
+  if (/^pellet_grill/.test(d.kind)) return ntGrillCover(d.layout) + ntFlakes();
+  if (d.kind === "spa") return body + ntSpaCover() + ntFlakes();
+  const snow = "#f4f9fc", edge = 'stroke="#d6e6ef" stroke-width=".5"';
+  // The garden: the timer taken in and the tap drained, snow on the ground,
+  // the lawn and the beds.
+  if (d.kind === "irr_tap") return body + `<ellipse cx="56" cy="101" rx="46" ry="7" fill="${snow}" ${edge}/><ellipse cx="40" cy="99.4" rx="14" ry="3" fill="#ffffff" opacity=".8"/>` + ntFlakes();
+  if (d.kind === "irr_sprinkler") return body + `<ellipse cx="60" cy="104" rx="55" ry="15.6" fill="${snow}" ${edge}/><ellipse cx="60" cy="103.4" rx="5" ry="1.5" fill="#37424c" opacity=".7"/>` + ntFlakes();
+  if (d.kind === "irr_flowers") return body + `<ellipse cx="58" cy="97" rx="50" ry="14" fill="${snow}" ${edge} opacity=".9"/>` + ntFlakes();
+  if (d.kind === "irr_drip") return body + `<path d="M9 72.6 L89 72.6 L106 36 L27 36 Z" fill="${snow}" ${edge} opacity=".88"/>${ntSnowCap(6, 92, 73, 2.4)}` + ntFlakes();
+  return body + ntFlakes();
+}
 function ntSvg(d) {
   ntN = 0;
   const draw = NT_DRAW[d && d.kind] || ntLinky;
-  const body = draw(d || {});
+  const body = d && d.winter ? ntWinter(d, draw(d)) : draw(d || {});
   // A speaker sold in the colour asked is drawn in it, and not tinted.
   let tint = d && d.tint && NT_TINTED.test(d.kind || "") ? d.tint : "";
   if (tint && /^spk_/.test(d.kind) && d.color) {
@@ -3583,7 +3650,7 @@ function robotAskHtml(notice) {
 }
 
 function robotHtml(cls, r) {
-  if (r.layout === "pool") return ntHtml(`${cls} rbt rbt-l-pool rbt-m-${r.mode || "docked"}`, { kind: "pool", on: r.mode === "cleaning", lcd: r.poolTime || "" });
+  if (r.layout === "pool") return ntHtml(`${cls} rbt rbt-l-pool rbt-m-${r.mode || "docked"}`, { kind: "pool", on: r.mode === "cleaning", lcd: r.poolTime || "", winter: r.mode === "winter" });
   if (r.layout === "stick" || r.layout === "floor_washer") {
     return `
         <div class="machine ${cls} rbt rbt-l-${r.layout} rbt-m-${r.mode || "docked"}">${r.layout === "stick" ? dysonSvg(r.battery) : washerSvg(r.battery)}</div>`;

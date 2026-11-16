@@ -1284,6 +1284,8 @@ const poolBackwash = pool({ backwash_entity: "binary_sensor.pool_backwash", pres
 const poolFrost = pool({ frost_entity: "binary_sensor.pool_frost", air_temperature_entity: "sensor.pool_air" },
   [st("binary_sensor.pool_frost", "on"), st("sensor.pool_air", -2, { unit_of_measurement: "°C" })]);
 const poolLight = pool({}, [], "off", "on");
+const poolWintered = pool({ get name() { return L("Pool, winter", "Piscine, hivernage"); }, winter_entity: "input_boolean.pool_winter", air_temperature_entity: "sensor.pool_air" },
+  [st("input_boolean.pool_winter", "on"), st("sensor.pool_air", -1, { unit_of_measurement: "\u00b0C" }), st("sensor.pool_water", 6, { unit_of_measurement: "\u00b0C" })], "off");
 const poolError = pool({ pressure_entity: "sensor.pool_pressure" }, [st("sensor.pool_pressure", 2.1, { unit_of_measurement: "bar" })]);
 
 // Solar panels under the sun, the clouds and the moon, and home batteries
@@ -1443,12 +1445,16 @@ const demoSumpHigh = () => card({ name: L("Sump, high level", "Relevage, niveau 
   [st("switch.sump2", "on"), st("sensor.sump2_level", 72, { unit_of_measurement: "cm" }), st("binary_sensor.sump2_high", "on")]);
 const demoPool = () => card({ name: L("Pool robot", "Robot de piscine"), appliance_type: "robot", robot_layout: "pool", state_entity: "vacuum.dolphin",
   remaining_time_entity: "sensor.dolphin_left" }, [st("vacuum.dolphin", "cleaning"), st("sensor.dolphin_left", 105, { unit_of_measurement: "min" })]);
+const demoPoolBotWinter = () => card({ name: L("Pool robot, winter", "Robot de piscine, hivernage"), appliance_type: "robot", robot_layout: "pool", state_entity: "vacuum.dolphin_w", robot_winter: true },
+  [st("vacuum.dolphin_w", "docked")]);
 const demoFloorWater = () => card({ name: L("Underfloor heating", "Plancher chauffant"), appliance_type: "floor_heating", state_entity: "climate.floor" },
   [st("climate.floor", "heat", { hvac_action: "heating", current_temperature: 21.5, temperature: 22 })]);
 const demoFloorElec = () => card({ name: L("Bathroom floor", "Plancher salle de bains"), appliance_type: "floor_heating", floor_layout: "electric", state_entity: "climate.bath_floor" },
   [st("climate.bath_floor", "heat", { hvac_action: "heating", current_temperature: 24, temperature: 25 })]);
 const demoSpa = () => card({ name: L("Spa", "Spa"), appliance_type: "spa", state_entity: "climate.spa", bubbles_entity: "switch.spa_bubbles", light_entity: "light.spa" },
   [st("climate.spa", "heat", { hvac_action: "idle", current_temperature: 38, temperature: 38 }), st("switch.spa_bubbles", "on"), st("light.spa", "on")]);
+const demoSpaWinter = () => card({ name: L("Spa, winter", "Spa, hivernage"), appliance_type: "spa", state_entity: "climate.spa_w", winter: true },
+  [st("climate.spa_w", "off", { current_temperature: 4, temperature: 38 })]);
 const demoSauna = () => card({ name: L("Sauna", "Sauna"), appliance_type: "sauna", state_entity: "climate.sauna" },
   [st("climate.sauna", "heat", { hvac_action: "heating", current_temperature: 80, temperature: 90 })]);
 const demoAquarium = () => card({ name: L("Aquarium", "Aquarium"), appliance_type: "aquarium", state_entity: "light.aquarium", temperature_entity: "sensor.aquarium_t" },
@@ -1479,6 +1485,7 @@ const irrRain = irrCard(L("Rain delay", "Pause pluie"), { irrigation_layout: "sp
   [st("switch.irr2", "off"), st("binary_sensor.irr_rain", "on"), st("sensor.irr_soil2", 38, { unit_of_measurement: "%" })]);
 const irrTap = irrCard(L("Tap timer", "Programmateur"), { irrigation_layout: "tap", state_entity: "valve.irr_tap", remaining_time_entity: "sensor.irr_tap_left" },
   [st("valve.irr_tap", "open"), st("sensor.irr_tap_left", 12, { unit_of_measurement: "min" })]);
+const irrTapWinter = irrCard(L("Tap, winter", "Robinet, hivernage"), { irrigation_layout: "tap", state_entity: "valve.irr_tap_w", winter: true }, [st("valve.irr_tap_w", "closed")]);
 const irrTapOff = irrCard(L("Dry soil", "Sol sec"), { irrigation_layout: "tap", state_entity: "valve.irr_tap2", soil_moisture_entity: "sensor.irr_soil3" },
   [st("valve.irr_tap2", "closed"), st("sensor.irr_soil3", 14, { unit_of_measurement: "%" })]);
 // #85: Sonoff's tap timer on white render or a standpipe, a vegetable patch
@@ -1691,6 +1698,7 @@ const pgCard = (layout, word, o = {}) => () => card({ name: PG_NAMES[layout], ap
     ...(o.probe ? { probe_entity: "climate.g_probe", probe_alarm_entity: "binary_sensor.g_alarm" } : {}), super_smoke_entity: "switch.g_smoke", keep_warm_entity: "switch.g_warm", error_entity: "sensor.g_error", ...(o.cfg || {}) },
   [st("climate.g", word === "sleeping" || word === "idle" ? "off" : word === "cool_down" ? "cool" : "heat", { current_temperature: o.c ?? 107, temperature: 107 }), st("sensor.g_state", word), st("sensor.g_pellets", o.pel ?? 68, { unit_of_measurement: "%" }),
     st("climate.g_probe", "heat", { current_temperature: o.alarm ? 74 : 58, temperature: 74 }), st("binary_sensor.g_alarm", o.alarm ? "on" : "off"), st("switch.g_smoke", o.smoke ? "on" : "off"), st("switch.g_warm", o.warm ? "on" : "off"), st("sensor.g_error", o.err || "0")]);
+const pgWinterDemo = () => card({ name: L("Grill, winter", "Barbecue, hivernage"), appliance_type: "pellet_grill", grill_layout: "timberline", state_entity: "climate.g_w", winter: true }, [st("climate.g_w", "off", { current_temperature: 2, temperature: 107 })]);
 const PG_STATES = { off: ["sleeping", { c: 18 }], ready: ["idle", { c: 18 }], ignite: ["igniting", { c: 45 }], preheat: ["preheating", { c: 82 }], cook: ["cook_manual", { probe: true }], smoke: ["cook_custom", { smoke: true, c: 90 }], warm: ["cook_manual", { warm: true, c: 74 }], probe: ["cook_manual", { probe: true, alarm: true }], low: ["cook_manual", { pel: 9 }], cool: ["cool_down", { c: 150 }], error: ["cook_manual", { err: "5" }], plain: ["cook_manual", { cfg: { large_temperature: false } }] };
 for (const layout of Object.keys(PG_NAMES)) for (const [k, [word, o]] of Object.entries(PG_STATES)) EXTRA[`pg_${layout}_${k}`] = pgCard(layout, word, o);
 // ?view=live: the public demo, linked from the README. Every family under
@@ -1736,8 +1744,8 @@ function liveGallery() {
     [L("Air purifiers and fans", "Purificateurs et ventilateurs"), [purifier, boxPurifier, ringPurifier, fan, ceilingFan]],
     [L("Robots and vacuums", "Robots et aspirateurs"), [rbtVacuum, rbtEmptying, rbtBox, rbtBoxGold, rbtMop, rbtCombo, rbtDrying, rbtMower, rbtNavimow, rbtRain, rbtStick, rbtWasher]],
     [L("Electric rides", "Mobilit\u00e9 \u00e9lectrique"), [demo_mobScooter, demo_mobOffroad, demo_mobEbike, demo_mobGyropode, demo_mobMotorcycle, demo_mobUnplugged]],
-    [L("Pellet grills and smokers", "Barbecues et fumoirs \u00e0 pellets"), [EXTRA.pg_timberline_cook, EXTRA.pg_timberline_plain, EXTRA.pg_timberline_off, EXTRA.pg_timberline_low, EXTRA.pg_drum_preheat, EXTRA.pg_drum_probe, EXTRA.pg_drum_error, EXTRA.pg_cart_cool, EXTRA.pg_cart_warm, EXTRA.pg_vertical_smoke]],
-    [L("Pool", "Piscine"), [poolRunning, poolChlorine, poolBackwash, poolFrost, poolLight, poolError]],
+    [L("Pellet grills and smokers", "Barbecues et fumoirs \u00e0 pellets"), [EXTRA.pg_timberline_cook, EXTRA.pg_timberline_plain, EXTRA.pg_timberline_off, EXTRA.pg_timberline_low, EXTRA.pg_drum_preheat, EXTRA.pg_drum_probe, EXTRA.pg_drum_error, EXTRA.pg_cart_cool, EXTRA.pg_cart_warm, EXTRA.pg_vertical_smoke, pgWinterDemo]],
+    [L("Pool", "Piscine"), [poolRunning, poolChlorine, poolBackwash, poolFrost, poolWintered, poolLight, poolError]],
     [L("Buffer tanks, circulators, solar thermal and wood stoves", "Ballons, circulateurs, solaire thermique et po\u00eales \u00e0 bois"), [heatTank, heatTankLoading, heatTankLow, heatFws, heatFwsDraw, heatFwsCirc, heatCirc, heatCircWilo, heatCircFault, heatCircNoData, heatSth, heatSthTubes, heatSthFrost, heatSthStag, heatWood, heatWoodEmbers, heatWoodCold, heatWoodWater]],
     [L("Energy", "Énergie"), [solarDay, solarRoof, solarNight, batteryCharging, batteryStation, batteryLow, evCharger, evDischarging]],
     [L("Network and servers", "Réseau et serveurs"), [netSwitch, netRouter("on"), netNas, netServer, netRack, upsOnline, upsBattery, upsLow]],
@@ -1747,10 +1755,10 @@ function liveGallery() {
     [L("Cameras", "Cam\u00e9ras"), [camIndoor, camTube, camOutdoor, camDome, camPrivacy, camOffline]],
     [L("Lamps", "Lampes"), [lampBulb, lampBedside, lampFloor, lampTorch, lampPendant, lampStrip, lampSpots, lampPanels, lampDesk, lampWall, lampOff]],
     [L("Mailboxes and doorbells", "Boîtes aux lettres et sonnettes"), [mbThrough, mbPostman, mbCollect, mbRight, mb3d, mb3dOpen, mb3dBack, mb3dGreen, mbClassic, mbClassicOpen, camDoorbell, camDoorbellIdle]],
-    [L("Around the house", "Autour de la maison"), [demoChest, demoDrawers, demoBooster, demoSump, demoSumpHigh, demoSumpOff, demoPool, demoFloorWater, demoFloorElec, demoSpa, demoSauna, demoAquarium, demoLinky, demoTree, demoTreeRed]],
+    [L("Around the house", "Autour de la maison"), [demoChest, demoDrawers, demoBooster, demoSump, demoSumpHigh, demoSumpOff, demoPool, demoPoolBotWinter, demoFloorWater, demoFloorElec, demoSpa, demoSpaWinter, demoSauna, demoAquarium, demoLinky, demoTree, demoTreeRed]],
     [L("Pets", "Animaux"), [petFeeder, roundFeeder, doubleFeeder, dualFeeder, wetFeeder, petFountain, roundFountain]],
     [L("Litter boxes", "Liti\u00e8res"), [litGlobe, litGlobeClean, litGlobeCat, litBox, litBoxClean, litBoxFull]],
-    [L("Garden watering", "Arrosage"), [irrSprinkler, irrRain, irrTap, irrTapOff, irrSonoff, irrSonoffPipe, irrDrip, irrFlowers]],
+    [L("Garden watering", "Arrosage"), [irrSprinkler, irrRain, irrTap, irrTapOff, irrTapWinter, irrSonoff, irrSonoffPipe, irrDrip, irrFlowers]],
     [L("Smoke, CO and leak detectors", "D\u00e9tecteurs de fum\u00e9e, CO et fuite"), [detSmoke, detSmokeAlarm, detCo, detCoAlarm, detLeak, detLeakAlarm]],
     [L("Speakers", "Enceintes"), [spkSmart, spkMini, spkOne, spkEra100, spkEra300, spkMove, spkFive, spkPlay, spkRoam, spkBar, spkRay, spkAmp, spkPort, spkWave, spkBose500, spkUltra, spkPortable, spkFlex, spkBoseBar, spkBoseAmp, spkShelf, spkDot, spkDotMax, spkNest]],
     [L("Game consoles", "Consoles de jeu"), [conPs1, conPs2, conPs3, conPs4, conPs4Pro, conPs5, conXbox, conX360, conXone, conXsx, conXss, conSwitch, conSwitch2, conLite, conVita, conNes, conSnes, conN64, conCube, conWii, conMd]],

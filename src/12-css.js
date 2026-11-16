@@ -1923,6 +1923,15 @@ const ILLUSTRATION_CSS = {
         .pl-chlore .pl-can-led{fill:#2ecc71;animation:pl-breathe 1.2s ease-in-out infinite}
         .pl-can-led{fill:#7c858d}
         .pl-ice{opacity:0}
+        /* Winter (dosing-tank-card #3): the pool under its cover, snow on
+           the deck, the filter and the pump, flakes falling slowly. */
+        .pl-wnt{display:none}
+        .pl-winter .pl-wnt{display:inline}
+        .pl-winter .pl-glow,.pl-winter .pl-rip,.pl-winter .pl-spot{display:none}
+        .pl-winter .pl-ice{opacity:1}
+        .pl-winter .pl-body{filter:saturate(.6) brightness(1.05)}
+        .pl-fl{fill:#fff;stroke:#cfe3ee;stroke-width:.25;animation:pl-fall var(--fd) linear var(--f0) infinite}
+        @keyframes pl-fall{0%{transform:translate(0,0);opacity:0}10%{opacity:1}100%{transform:translate(4px,100px);opacity:.2}}
         .pl-m-frost .pl-ice{opacity:1}
         .pl-snow{opacity:0}
         .pl-m-frost .pl-snow{opacity:1;animation:pl-breathe 2.4s ease-in-out infinite}
