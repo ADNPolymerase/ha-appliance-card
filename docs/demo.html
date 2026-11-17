@@ -200,6 +200,28 @@ function simulate(sim, domain, service, data) {
     if (go === "returning") later(id, "docked", 4000);
     return;
   }
+  if (domain === "cover") {
+    // The cover travels a step a tick, as a real one would, and stops on stop.
+    const tilt = /_tilt$/.test(service);
+    const attr = tilt ? "current_tilt_position" : "current_position";
+    clearInterval(sim.coverTimer);
+    if (/^stop_cover/.test(service)) {
+      const p = Number((states[id].attributes || {})[attr] ?? 50);
+      return sim.set(id, tilt ? states[id].state : p <= 0 ? "closed" : "open");
+    }
+    const up = /^open_cover/.test(service);
+    if (!tilt) sim.set(id, up ? "opening" : "closing");
+    sim.coverTimer = setInterval(() => {
+      const p = Number((states[id].attributes || {})[attr] ?? (up ? 0 : 100));
+      const next = Math.max(0, Math.min(100, p + (up ? 10 : -10)));
+      sim.set(id, next, attr);
+      if (next === 0 || next === 100) {
+        clearInterval(sim.coverTimer);
+        if (!tilt) sim.set(id, next === 0 ? "closed" : "open");
+      }
+    }, 500);
+    return;
+  }
   if (service === "select_option") return sim.set(id, data.option);
   if (service === "set_value") return sim.set(id, data.value);
   if (service === "toggle") {
@@ -293,6 +315,7 @@ const STATE_WORDS = {
   device_tracker: ["home", "not_home"],
   ups: ["OL", "OL CHRG", "OB DISCHRG", "OB DISCHRG LB", "OL RB", "OL BYPASS", "OFF"],
   floor_washer: ["idle", "in_operation", "self_cleaning"],
+  cover: ["open", "opening", "closing", "closed"],
 };
 const TYPE_WORDS = { washer: CYCLE_WORDS, dryer: CYCLE_WORDS, dishwasher: CYCLE_WORDS, oven: ["Idle", "Preheating", "Running", "Finished"],
   microwave: CYCLE_WORDS, coffee: ["Idle", "Running", "Finished", "Error"], cooker: CYCLE_WORDS, air_fryer: ["idle", "cooking", "paused", "finished"],
@@ -1749,8 +1772,8 @@ function liveGallery() {
   const wrap = document.getElementById("wrap");
   wrap.innerHTML = `<header>
     <h1>HA Appliance Card</h1>
-    <p>${L("A Lovelace card for 66 kinds of home appliances, each drawn and animated from its own data. These cards run on made-up states: in Home Assistant every field is an entity you pick.",
-      "Une card Lovelace pour 66 types d'appareils, chacun dessiné et animé à partir de ses propres données. Ces cartes tournent sur des états inventés : dans Home Assistant, chaque champ est une entité que vous choisissez.")}</p>
+    <p>${L("A Lovelace card for 67 kinds of home appliances, each drawn and animated from its own data. These cards run on made-up states: in Home Assistant every field is an entity you pick.",
+      "Une card Lovelace pour 67 types d'appareils, chacun dessiné et animé à partir de ses propres données. Ces cartes tournent sur des états inventés : dans Home Assistant, chaque champ est une entité que vous choisissez.")}</p>
     <nav>${link("lang", "en", "English", !fr)}${link("lang", "fr", "Français", fr)}<span></span>${link("theme", "light", L("Light", "Clair"), !dark)}${link("theme", "dark", L("Dark", "Sombre"), dark)}<span></span>${link("plug", "0", L("Integrations", "Intégrations"), !plugOnly)}${link("plug", "1", L("Smart plug only", "Prise connectée seule"), plugOnly)}<span></span>${link("color", "", L("Own colours", "Couleurs d'origine"), !demoColor)}${[["white", "White", "Blanc"], ["grey", "Grey", "Gris"], ["black", "Black", "Noir"], ["red", "Red", "Rouge"]].map(([v, en, f]) => link("color", v, L(en, f), demoColor === v)).join("")}<span></span><a href="https://github.com/ADNPolymerase/ha-appliance-card">GitHub</a></nav>
     <p class="hint">${plugOnly
       ? L("Each card below has nothing but a smart plug: its switch and its power meter. Open “Change the values” and move the power, or press the power button.",
@@ -1762,6 +1785,8 @@ function liveGallery() {
     [L("Laundry", "Linge"), [washer, dryer, EXTRA.iron, steamGenerator]],
     [L("Kitchen", "Cuisine"), [dishwasher, oven, microwave, hood, cooktop, fridge, kettle, cooker, coffee, coffeeBlack, riceCooker, airFryer, toaster]],
     [L("Heating and climate", "Chauffage et climat"), [waterHeater, boiler, boilerWindow, boilerThermo, thSquare, thRound, thGlass, thValve, heatPump, pelletStove, spaceHeater, towelWarmer, towelPanel, airConditioner, dehumidifier, humidifier, humidifierNight, humidifierEmpty, humidifierLifted]],
+    [L("CO\u2082 monitors", "Capteurs de CO\u2082"), [EXTRA.co2_eink, EXTRA.co2_box, EXTRA.co2_netatmo, EXTRA.co2_module]],
+    [L("Shutters, blinds, pergolas and awnings", "Volets, stores, pergolas et stores bannes"), [EXTRA.cov_shutter, EXTRA.cov_shutter_closing, EXTRA.cov_shutter_closed, EXTRA.cov_blind, EXTRA.cov_venetian, EXTRA.cov_raffstore, EXTRA.cov_pergola, EXTRA.cov_awning]],
     [L("Air purifiers and fans", "Purificateurs et ventilateurs"), [purifier, boxPurifier, ringPurifier, fan, ceilingFan]],
     [L("Robots and vacuums", "Robots et aspirateurs"), [rbtVacuum, rbtEmptying, rbtBox, rbtBoxGold, rbtMop, rbtCombo, rbtDrying, rbtMower, rbtNavimow, rbtRain, rbtStick, rbtWasher]],
     [L("Electric rides", "Mobilit\u00e9 \u00e9lectrique"), [demo_mobScooter, demo_mobOffroad, demo_mobEbike, demo_mobGyropode, demo_mobMotorcycle, demo_mobUnplugged]],
