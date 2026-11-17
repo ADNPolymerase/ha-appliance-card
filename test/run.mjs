@@ -14545,4 +14545,85 @@ if (RECORD) writeFileSync(process.env.HAC_RECORD, JSON.stringify(RECORD));
   check('107 : case dans l\'editeur', /this\._row\("values_right", "values_right", \{ type: "checkbox" \}\)/.test(SRC), true);
 }
 
+// A CO2 monitor (#108): the climate sensor with a CO2 reading, green, orange
+// or red against two thresholds the owner can move, and its own drawings.
+{
+  const s = (state, a = {}) => ({ state: String(state), attributes: a });
+  const co2 = (v) => s(v, { device_class: 'carbon_dioxide', unit_of_measurement: 'ppm', friendly_name: 'Aranet4 Home CO2' });
+  const kindOf = (h) => (/\bnt-k-(\w+)/.exec(machineCls(h)) || [, null])[1];
+  check('108 : un capteur de CO2 est un capteur climat', /nt-k-ths_co2_eink/.test(render({ state_entity: 'sensor.aranet_co2' }, { 'sensor.aranet_co2': co2(650) })), true);
+  check('108 : vert sous le premier seuil', stateLine(render({ state_entity: 'sensor.aranet_co2' }, { 'sensor.aranet_co2': co2(650) })), 'Air is fine');
+  check('108 : orange entre les seuils', stateLine(render({ state_entity: 'sensor.aranet_co2' }, { 'sensor.aranet_co2': co2(1200) })), 'Ventilation advised');
+  check('108 : rouge au-dela', stateLine(render({ state_entity: 'sensor.aranet_co2' }, { 'sensor.aranet_co2': co2(1600) })), 'Ventilate now');
+  check('108 : seuils reglables', stateLine(render({ state_entity: 'sensor.aranet_co2', co2_warning: 800, co2_alert: 1000 }, { 'sensor.aranet_co2': co2(900) })), 'Ventilation advised');
+  check('108 : seuils reglables, rouge', stateLine(render({ state_entity: 'sensor.aranet_co2', co2_warning: 800, co2_alert: 1000 }, { 'sensor.aranet_co2': co2(1100) })), 'Ventilate now');
+  check('108 : en francais', stateLine(render({ state_entity: 'sensor.aranet_co2', language: 'fr' }, { 'sensor.aranet_co2': co2(1600) })), 'Aérer maintenant');
+  check('108 : la couleur suit le niveau', stateColor(render({ state_entity: 'sensor.aranet_co2' }, { 'sensor.aranet_co2': co2(1600) })), '#e53935');
+  check('108 : le rouge clignote', /co2-pulse/.test(render({ state_entity: 'sensor.aranet_co2' }, { 'sensor.aranet_co2': co2(1600) })), true);
+  check('108 : la valeur sur l\'ecran', />1600</.test(render({ state_entity: 'sensor.aranet_co2' }, { 'sensor.aranet_co2': co2(1600) })), true);
+  // A temperature sensor with a CO2 line of its own.
+  const st = { 'sensor.salon_t': s('21.5', { device_class: 'temperature', unit_of_measurement: '°C', friendly_name: 'Netatmo Salon' }), 'sensor.salon_co2': co2(1250) };
+  const h = render({ state_entity: 'sensor.salon_t', co2_entity: 'sensor.salon_co2' }, st);
+  check('108 : une entite CO2 a part', stateLine(h), 'Ventilation advised');
+  check('108 : Netatmo par son nom', kindOf(h), 'ths_co2_netatmo');
+  check('108 : la ligne CO2', /CO₂/.test(h) && /1250/.test(h), true);
+  check('108 : sans CO2, la temperature reste l\'etat', stateLine(render({ state_entity: 'sensor.salon_t' }, st)).startsWith('21'), true);
+  check('108 : couleur Netatmo', /#d3c5b3/.test(render({ state_entity: 'sensor.salon_t', co2_entity: 'sensor.salon_co2', netatmo_color: 'sand' }, st)), true);
+  check('108 : AirGradient par son nom', kindOf(render({ state_entity: 'sensor.airgradient_co2' }, { 'sensor.airgradient_co2': s(500, { device_class: 'carbon_dioxide', unit_of_measurement: 'ppm', friendly_name: 'I-9PSL CO2' }) })), 'ths_co2_box');
+  check('108 : forme choisie', kindOf(render({ state_entity: 'sensor.aranet_co2', climate_sensor_layout: 'co2_netatmo_module' }, { 'sensor.aranet_co2': co2(500) })), 'ths_co2_netatmo_module');
+  check('108 : hors ligne', stateLine(render({ state_entity: 'sensor.aranet_co2' }, { 'sensor.aranet_co2': s('unavailable', { device_class: 'carbon_dioxide' }) })), 'Offline');
+  check('108 : les champs dans l\'editeur', /field: "co2_entity", types: \["climate_sensor"\]/.test(SRC) && /c\._row\("co2_warning", "co2_warning"/.test(SRC), true);
+}
+
+// Shutters, blinds, a pergola and an awning (#109): the position, the tilt,
+// the movement, their buttons, their colours and a pergola's light.
+{
+  const s = (state, a = {}) => ({ state: String(state), attributes: a });
+  const kindOf = (h) => (/\bnt-k-(\w+)/.exec(machineCls(h)) || [, null])[1];
+  const sh = (state, a = {}) => ({ 'cover.salon': s(state, { device_class: 'shutter', current_position: 45, supported_features: 15, friendly_name: 'Volet salon', ...a }) });
+  check('109 : un cover est un volet', kindOf(render({ state_entity: 'cover.salon' }, sh('open'))), 'cov_shutter');
+  check('109 : ouvert en partie', stateLine(render({ state_entity: 'cover.salon' }, sh('open'))), 'Open 45 %');
+  check('109 : ouvert en partie, en francais', stateLine(render({ state_entity: 'cover.salon', language: 'fr' }, sh('open'))), 'Ouvert à 45 %');
+  check('109 : ferme', stateLine(render({ state_entity: 'cover.salon' }, sh('closed', { current_position: 0 }))), 'Closed');
+  check('109 : ouvert', stateLine(render({ state_entity: 'cover.salon' }, sh('open', { current_position: 100 }))), 'Open');
+  check('109 : en mouvement', stateLine(render({ state_entity: 'cover.salon' }, sh('closing'))), 'Closing');
+  check('109 : les lames defilent', /cv-down/.test(render({ state_entity: 'cover.salon' }, sh('closing'))), true);
+  check('109 : sans position', stateLine(render({ state_entity: 'cover.salon' }, sh('open', { current_position: undefined }))), 'Open');
+  const h = render({ state_entity: 'cover.salon' }, sh('open'));
+  check('109 : trois boutons', ['open_cover', 'stop_cover', 'close_cover'].every((v) => h.includes(`data-service="${v}"`)), true);
+  check('109 : pas de stop sans la fonction', render({ state_entity: 'cover.salon' }, sh('open', { supported_features: 3 })).includes('data-service="stop_cover"'), false);
+  check('109 : la ligne position', /45 %/.test(h), true);
+  check('109 : une porte de garage n\'en est pas', /nt-k-cov_/.test(render({ state_entity: 'cover.garage' }, { 'cover.garage': s('closed', { device_class: 'garage' }) })), false);
+  check('109 : store enrouleur', kindOf(render({ state_entity: 'cover.chambre' }, { 'cover.chambre': s('open', { device_class: 'blind', current_position: 30 }) })), 'cov_blind');
+  check('109 : store venitien par l\'orientation', kindOf(render({ state_entity: 'cover.bureau' }, { 'cover.bureau': s('open', { device_class: 'blind', current_position: 0, current_tilt_position: 50 }) })), 'cov_venetian');
+  check('109 : brise-soleil orientable', kindOf(render({ state_entity: 'cover.facade' }, { 'cover.facade': s('open', { device_class: 'shutter', current_position: 40, current_tilt_position: 100 }) })), 'cov_raffstore');
+  check('109 : la ligne des lames', /Slats/.test(render({ state_entity: 'cover.facade' }, { 'cover.facade': s('open', { device_class: 'shutter', current_position: 40, current_tilt_position: 100 }) })), true);
+  const pg = { 'cover.pergola': s('open', { current_tilt_position: 70, supported_features: 240, friendly_name: 'Pergola' }), 'light.pergola': s('on', { rgb_color: [255, 120, 0] }) };
+  const ph = render({ state_entity: 'cover.pergola', light_entity: 'light.pergola' }, pg);
+  check('109 : pergola par son nom', kindOf(ph), 'cov_pergola');
+  check('109 : pergola, ses lames', stateLine(ph), 'Louvers 70 %');
+  check('109 : pergola, les services d\'orientation', ['open_cover_tilt', 'stop_cover_tilt', 'close_cover_tilt'].every((v) => ph.includes(`data-service="${v}"`)), true);
+  check('109 : pergola, la lumiere allumee', /stroke="#ff7800"/.test(ph), true);
+  check('109 : pergola, le bouton de la lumiere', /data-entity="light\.pergola"/.test(ph), true);
+  check('109 : pergola, la ligne de la lumiere traduite', /Light<\/span>\s*<span[^>]*>On</.test(ph) || /Light[\s\S]{0,80}>On</.test(ph), true);
+  check('109 : pergola, lumiere eteinte', /stroke="#ff7800"/.test(render({ state_entity: 'cover.pergola', light_entity: 'light.pergola' }, { ...pg, 'light.pergola': s('off', { rgb_color: [255, 120, 0] }) })), false);
+  const aw = (state, a = {}) => ({ 'cover.banne': s(state, { device_class: 'awning', current_position: 100, ...a }) });
+  check('109 : store banne', kindOf(render({ state_entity: 'cover.banne' }, aw('open'))), 'cov_awning');
+  check('109 : store banne deploye', stateLine(render({ state_entity: 'cover.banne', language: 'fr' }, aw('open'))), 'Déployé');
+  check('109 : store banne replie', stateLine(render({ state_entity: 'cover.banne', language: 'fr' }, aw('closed', { current_position: 0 }))), 'Replié');
+  check('109 : store banne, toile unie', /#e9e3d6/.test(render({ state_entity: 'cover.banne', fabric_color: 'ecru' }, aw('open'))), true);
+  const svgOf = (h) => (/<svg class="nt-svg"[\s\S]*?<\/svg>/.exec(h) || [''])[0];
+  check('109 : couleur du volet', svgOf(render({ state_entity: 'cover.salon', cover_color: 'anthracite' }, sh('open'))) !== svgOf(render({ state_entity: 'cover.salon' }, sh('open'))), true);
+  check('109 : couleur libre', svgOf(render({ state_entity: 'cover.salon', cover_color: '#123456' }, sh('open'))) !== svgOf(render({ state_entity: 'cover.salon', cover_color: 'anthracite' }, sh('open'))), true);
+  check('109 : couleur inconnue ignoree', svgOf(render({ state_entity: 'cover.salon', cover_color: 'plaid' }, sh('open'))), svgOf(render({ state_entity: 'cover.salon' }, sh('open'))));
+  check('109 : forme choisie', kindOf(render({ state_entity: 'cover.salon', cover_layout: 'awning' }, sh('open'))), 'cov_awning');
+  check('109 : hors ligne', stateLine(render({ state_entity: 'cover.salon' }, { 'cover.salon': s('unavailable', { device_class: 'shutter' }) })), 'Offline');
+  // A press calls the cover's own service.
+  const c = build({ state_entity: 'cover.salon' }, sh('open')).card;
+  const calls = [];
+  c._hass = { ...HASS(sh('open')), callService: (domain, service, data) => calls.push(`${domain}.${service} ${data.entity_id}`) };
+  c._call('cover.salon', { service: 'close_cover' });
+  check('109 : le bouton fermer appelle le service', calls[0], 'cover.close_cover cover.salon');
+}
+
 report();

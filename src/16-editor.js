@@ -230,6 +230,13 @@ const SECTIONS = [
     when: (c) => pumpLayoutOf(c, null) === "circulator" },
   { field: "temperature_entity", types: ["floor_heating", "spa", "sauna", "aquarium", "filament_dryer", "pellet_grill"], labelKey: "temperature", includeDomains: ["sensor", "number", "input_number", "climate"] },
   { field: "humidity_entity", types: ["filament_dryer", "climate_sensor"], labelKey: "ac_line_humidity", includeDomains: ["sensor", "number", "input_number"] },
+  // A CO2 monitor (#108): its CO2, the two thresholds that turn it orange
+  // then red, and its temperature when its state is the CO2.
+  { field: "co2_entity", types: ["climate_sensor"], labelKey: "ths_co2", includeDomains: ["sensor", "number", "input_number"],
+    extra: (c) => c._row("co2_warning", "co2_warning", { placeholder: String(CO2_WARN) }) + c._row("co2_alert", "co2_alert", { placeholder: String(CO2_ALERT) }) },
+  { field: "temperature_entity", types: ["climate_sensor"], labelKey: "temperature", includeDomains: ["sensor", "number", "input_number"] },
+  // The light under a pergola (#109), its LED strip drawn under the beams.
+  { field: "light_entity", types: ["cover"], labelKey: "cov_light", includeDomains: ["light", "switch", "input_boolean"], when: (c) => coverLayoutOf(c, null) === "pergola" },
   { field: "grill_state_entity", types: ["pellet_grill"], labelKey: "section_grill_state", includeDomains: ["sensor"] },
   { field: "pellet_level_entity", types: ["pellet_grill"], labelKey: "section_pellet_level", includeDomains: ["sensor", "number", "input_number", "binary_sensor"] },
   { field: "probe_entity", types: ["pellet_grill"], labelKey: "pg_probe", includeDomains: ["climate", "sensor"] },
@@ -1423,7 +1430,7 @@ class ApplianceCardEditor extends HTMLElement {
           type: "select",
           options: [{ value: "auto", label: t(hass, "unit_auto") }].concat(CIRC_MODELS.map((v) => ({ value: v, label: v === "generic" ? t(hass, "circ_model_generic") : v === "dab" ? "DAB" : v[0].toUpperCase() + v.slice(1) }))),
         }) : "") : ""}
-        ${[["irrigation", "irrigation_layout", IRRIGATION_LAYOUTS, "irr"], ["litter_box", "litter_layout", LITTER_LAYOUTS, "lit"], ["detector", "detector_layout", DETECTOR_LAYOUTS, "det"], ["pellet_grill", "grill_layout", GRILL_LAYOUTS, "pg"], ["speaker", "speaker_layout", SPEAKER_LAYOUTS, "spk"], ["console", "console_layout", CONSOLE_LAYOUTS, "con"], ["streamer", "streamer_layout", STREAMER_LAYOUTS, "str"], ["climate_sensor", "climate_sensor_layout", THS_LAYOUTS, "ths"]]
+        ${[["irrigation", "irrigation_layout", IRRIGATION_LAYOUTS, "irr"], ["litter_box", "litter_layout", LITTER_LAYOUTS, "lit"], ["detector", "detector_layout", DETECTOR_LAYOUTS, "det"], ["pellet_grill", "grill_layout", GRILL_LAYOUTS, "pg"], ["speaker", "speaker_layout", SPEAKER_LAYOUTS, "spk"], ["console", "console_layout", CONSOLE_LAYOUTS, "con"], ["streamer", "streamer_layout", STREAMER_LAYOUTS, "str"], ["climate_sensor", "climate_sensor_layout", THS_LAYOUTS, "ths"], ["cover", "cover_layout", COVER_LAYOUTS, "cov"]]
           .filter(([ty]) => this._type === ty).map(([, f, list, p]) => this._row("section_screen_layout", f, { type: "select",
             options: [{ value: "auto", label: t(hass, "unit_auto") }].concat(list.map((v) => ({ value: v, label: t(hass, `layout_${p}_${v}`) }))) })).join("")}
         ${this._type === "irrigation" && irrigationLayoutOf(this._config, stateObj(hass, this._config.state_entity)) === "tap" ? this._row("irr_model", "tap_model", {
@@ -1432,6 +1439,17 @@ class ApplianceCardEditor extends HTMLElement {
         }) + this._row("irr_wall", "tap_wall", {
           type: "select",
           options: TAP_WALLS.map((v) => ({ value: v, label: t(hass, `irr_wall_${v}`) })),
+        }) : ""}
+        ${this._type === "cover" ? this._row("cover_color", "cover_color", {
+          type: "select",
+          options: [{ value: "auto", label: t(hass, "unit_auto") }].concat(Object.keys(COVER_COLORS).map((v) => ({ value: v, label: t(hass, `cov_c_${v}`) }))),
+        }) + (["blind", "awning"].includes(coverLayoutOf(this._config, stateObj(this._hass, this._config.state_entity))) ? this._row("fabric_color", "fabric_color", {
+          type: "select",
+          options: [{ value: "auto", label: t(hass, "unit_auto") }].concat(Object.keys(FABRIC_COLORS).map((v) => ({ value: v, label: t(hass, `cov_f_${v}`) }))),
+        }) : "") + (coverLayoutOf(this._config, stateObj(this._hass, this._config.state_entity)) === "awning" ? this._row("fabric_stripes", "fabric_stripes", { type: "checkbox", defaultOn: true }) : "") : ""}
+        ${this._type === "climate_sensor" && /^co2_netatmo/.test(thsLayoutOf(this._config, stateObj(this._hass, this._config.state_entity))) ? this._row("netatmo_color", "netatmo_color", {
+          type: "select",
+          options: Object.keys(NETATMO_COLORS).map((v) => ({ value: v, label: t(hass, `ntm_${v}`) })),
         }) : ""}
         ${this._type === "speaker" ? this._row("speaker_color", "speaker_color", {
           type: "select",

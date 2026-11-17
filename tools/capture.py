@@ -87,6 +87,8 @@ FAMILIES = (
     ("speakers", "spk_smart,spk_mini,spk_one,spk_era100,spk_era300,spk_move,spk_five,spk_play,spk_roam,spk_bar,spk_ray,spk_amp,spk_port,spk_wave,spk_bose500,spk_ultra,spk_portable,spk_flex,spk_bosebar,spk_boseamp,spk_shelf,spk_dot,spk_dotmax,spk_nest", 8),
     ("streamers", "str_appletv,str_cube,str_firestick,str_gts,str_cast,str_shield,str_shieldpro,str_roku,str_mibox,str_freebox,str_decoder,str_box,str_stick", 5),
     ("consoles", "con_ps1,con_ps2,con_ps3,con_ps4,con_ps4pro,con_ps5,con_xbox,con_x360,con_xone,con_xsx,con_xss,con_switch,con_switch2,con_lite,con_vita,con_nes,con_snes,con_n64,con_cube,con_wii,con_md", 5),
+    ("co2", "co2_eink,co2_box,co2_netatmo,co2_module", 4),
+    ("covers", "cov_shutter,cov_shutter_closing,cov_shutter_closed,cov_blind,cov_venetian,cov_raffstore,cov_pergola,cov_awning", 4),
     ("heat_storage", "heat_tank,heat_tank_loading,heat_tank_low,heat_fws,heat_fws_draw,heat_fws_circ,heat_circ,heat_circ_wilo,heat_circ_fault,heat_circ_nodata,heat_sth,heat_sth_tubes,heat_sth_frost,heat_sth_stag,heat_wood,heat_wood_embers,heat_wood_cold,heat_wood_water", 5),
 )
 # Sixteen frames a tenth of a second apart over a 1.6 s loop, on a 128-colour

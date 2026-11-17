@@ -22,7 +22,7 @@ Une card Lovelace qui dessine les appareils de la maison et les anime selon leur
 
 ## Fonctionnalités
 
-- **66 types d'appareils, plus de 170 modèles dessinés**, animés pendant qu'ils travaillent et figés à l'arrêt. Le type est reconnu tout seul, d'après l'entité et la marque et le modèle de son appareil, ou choisi avec `appliance_type`.
+- **67 types d'appareils, plus de 170 modèles dessinés**, animés pendant qu'ils travaillent et figés à l'arrêt. Le type est reconnu tout seul, d'après l'entité et la marque et le modèle de son appareil, ou choisi avec `appliance_type`.
 - **Toutes les intégrations** : chaque champ est une entité à choisir. Une simple prise connectée suffit, sa puissance dit si l'appareil chauffe, lave ou essore.
 - **L'état compris** : `Idle`, `RUNNING`, `En marche`… deviennent veille, en cours, pause, terminé, différé ou erreur, avec l'étape du cycle (lavage, rinçage, essorage…).
 - **Ce qui compte pour chaque appareil** : programme, temps restant, porte, alertes, niveaux, températures, énergie et coût, marche du jour.
@@ -223,9 +223,18 @@ Clique sur une famille pour voir ses appareils en marche.
 </details>
 
 <details>
-<summary><b>Capteurs de température et d'humidité</b></summary>
+<summary><b>Capteurs de température, d'humidité et de CO₂</b></summary>
 
 <img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-climate_sensors.fr.png" alt="Capteurs de température et d'humidité">
+
+<img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-co2.fr.gif" alt="Capteurs de CO₂">
+
+</details>
+
+<details>
+<summary><b>Volets, stores, pergolas et stores bannes</b></summary>
+
+<img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-covers.fr.gif" alt="Volets, stores, pergolas et stores bannes">
 
 </details>
 
@@ -277,7 +286,7 @@ Seule `state_entity` est obligatoire, sauf sur un réfrigérateur où une sonde 
 | `done_alert` | `true` fait pulser un badge vert sur le dessin en fin de cycle, jusqu'à l'ouverture de la porte ou un appui sur le badge. Pour les appareils à cycle (lave-linge, sèche-linge, lave-vaisselle, four…). |
 | `illustration_color` | `auto` (défaut, suit le thème) \| `white` \| `grey` \| `black` \| `red` (rouge foncé). Ne change que la carrosserie, pas les couleurs d'état. Un dessin fait d'après un vrai produit (console, boîtier de streaming, imprimante, litière…) garde ses vraies couleurs tant qu'aucune couleur n'est choisie ; son écran, la tuile de l'appli et ses pneus gardent les leurs. Les scènes autour d'un appareil (fosse de relevage, jardin, toit) et la lumière des lampes ne changent pas. |
 | `language` | `auto` (défaut, suit Home Assistant) ou l'un des 15 codes : `en`, `fr`, `de`, `es`, `it`, `nl`, `pt`, `sv`, `no`, `da`, `pl`, `ru`, `zh`, `cs`, `hu`. `nb` et `nb-NO` donnent le norvégien. |
-| `appliance_type` | `auto` (défaut) \| `washer` \| `dryer` \| `dishwasher` \| `oven` \| `microwave` \| `hood` \| `cooktop` \| `fridge` \| `kettle` \| `cooker` \| `coffee` \| `rice_cooker` \| `air_fryer` \| `pellet_grill` \| `water_heater` \| `boiler` \| `thermostat` \| `heat_pump` \| `printer_3d` \| `filament_dryer` \| `pet_feeder` \| `pet_fountain` \| `iron` \| `toaster` \| `pellet_stove` \| `air_conditioner` \| `dehumidifier` \| `humidifier` \| `space_heater` \| `towel_warmer` \| `air_purifier` \| `fan` \| `ev_charger` \| `hair_dryer` \| `screen` \| `network` \| `robot` \| `pool_pump` \| `scale` \| `ups` \| `solar` \| `home_battery` \| `camera` \| `diffuser` \| `hrv` \| `lamp` \| `mailbox` \| `water_pump` \| `floor_heating` \| `spa` \| `sauna` \| `aquarium` \| `meter` \| `christmas_tree` \| `mobility` \| `irrigation` \| `litter_box` \| `detector` \| `speaker` \| `console` \| `streamer` \| `climate_sensor` \| `storage_tank` \| `fresh_water_station` \| `solar_thermal` \| `wood_stove`. |
+| `appliance_type` | `auto` (défaut) \| `washer` \| `dryer` \| `dishwasher` \| `oven` \| `microwave` \| `hood` \| `cooktop` \| `fridge` \| `kettle` \| `cooker` \| `coffee` \| `rice_cooker` \| `air_fryer` \| `pellet_grill` \| `water_heater` \| `boiler` \| `thermostat` \| `heat_pump` \| `printer_3d` \| `filament_dryer` \| `pet_feeder` \| `pet_fountain` \| `iron` \| `toaster` \| `pellet_stove` \| `air_conditioner` \| `dehumidifier` \| `humidifier` \| `space_heater` \| `towel_warmer` \| `air_purifier` \| `fan` \| `ev_charger` \| `hair_dryer` \| `screen` \| `network` \| `robot` \| `pool_pump` \| `scale` \| `ups` \| `solar` \| `home_battery` \| `camera` \| `diffuser` \| `hrv` \| `lamp` \| `mailbox` \| `water_pump` \| `floor_heating` \| `spa` \| `sauna` \| `aquarium` \| `meter` \| `christmas_tree` \| `mobility` \| `irrigation` \| `litter_box` \| `detector` \| `speaker` \| `console` \| `streamer` \| `climate_sensor` \| `cover` \| `storage_tank` \| `fresh_water_station` \| `solar_thermal` \| `wood_stove`. |
 | `tap_action` | Ce que fait un appui sur la carte, dans les mots de Home Assistant : `more-info` (défaut : l'entité d'état, ou sur une carte sans elle ce qu'elle lit à sa place), `none`, `navigate`, `url`, `toggle`, `perform-action` ou `fire-dom-event`, celle qu'écoutent les cartes popup bâties sur browser_mod. En YAML seulement. |
 | `illustration_tap_action` | Un appui sur le dessin seul, le reste de la carte gardant `tap_action` : `toggle` (une lampe allumée en la touchant), `more-info`, `none`, ou n'importe quelle action de Home Assistant. Sans lui, le dessin fait comme la carte. Avec `toggle`, le dessin répond comme les boutons, selon `controls_activation` : un appui, deux appuis ou un appui long. |
 | `show_toggle` | `false` retire le bouton allumer / éteindre d'une lampe, pour une carte qu'on allume en touchant son dessin (`illustration_tap_action: toggle`). |
@@ -1508,7 +1517,16 @@ disk2_entity: sensor.nas_drive_2_status
 | `playtime_entity` / `playtime_left_entity` | console de jeu | Le temps de jeu du jour et le temps restant, tels qu'un contrôle parental les compte (Contrôle parental Nintendo Switch), en lignes. |
 | `streamer_layout` | boîtier de streaming | `apple_tv` \| `fire_tv_cube` \| `fire_tv_stick` \| `google_tv_streamer` \| `chromecast` \| `shield` (le tube) \| `shield_pro` \| `roku` \| `mi_box` (Xiaomi TV Box) \| `freebox` (Freebox Player) \| `decoder` (le décodeur d'un opérateur : Orange, Bouygues, SFR...) \| `box` (n'importe quel boîtier Android TV) \| `stick` (n'importe quelle clé HDMI, une clé Roku en violet). Non renseigné, il se lit dans le nom, puis dans la marque et le modèle de l'appareil (une Apple TV nommée d'après sa pièce, un Fire TV par son code de modèle Amazon). L'état est un `media_player` (Apple TV, Android TV Remote, Android TV / Fire TV par ADB, Google Cast, Roku, Kodi, le boîtier d'un opérateur), sa `remote`, une prise connectée ou n'importe quoi d'allumé ou d'éteint : *Lecture*, *En pause*, *Accueil*, *En veille* ou *Éteint*. Lignes : l'appli (son nom, ou son paquet changé en nom), le titre, la série avec sa saison et son épisode ou l'artiste, la chaîne, la source, le temps restant et le volume. Pendant la lecture, la tuile de l'appli flotte au-dessus du boîtier, à ses couleurs (Netflix, YouTube, Disney+, Prime Video, Apple TV, Plex, Spotify, myCANAL, Kodi et d'autres). Avec une prise connectée, `power_entity` dit allumé (4 W ou plus par défaut, `power_on_threshold`), en veille ou éteint. |
 | `app_entity` | boîtier de streaming | L'appli en cours, quand le lecteur ne la donne pas (l'appli courante d'une Android TV par ADB, un capteur). |
-| `climate_sensor_layout` | capteur de température | `disc` (Sonoff SNZB-02P, ZG-227Z) \| `square` (SNZB-02) \| `cushion` (Aqara) \| `stick` (TH01) \| `lcd_stand` (SNZB-02D) \| `lcd_probe` (SNZB-02LD, SNZB-02WD) \| `lcd_round` (Tuya TS0201). Sans cette option, il se lit dans le modèle de l'appareil, sinon `disc`. |
+| `climate_sensor_layout` | capteur de température | `disc` (Sonoff SNZB-02P, ZG-227Z) \| `square` (SNZB-02) \| `cushion` (Aqara) \| `stick` (TH01) \| `lcd_stand` (SNZB-02D) \| `lcd_probe` (SNZB-02LD, SNZB-02WD) \| `lcd_round` (Tuya TS0201) \| `co2_eink` (Aranet4, son écran e-ink) \| `co2_box` (AirGradient ONE, sa rangée de LED) \| `co2_netatmo` (station intérieure Netatmo, sa rainure lumineuse) \| `co2_netatmo_module` (module intérieur supplémentaire Netatmo). Sans cette option, il se lit dans le nom et le modèle de l'appareil (Aranet, AirGradient, Netatmo) ; un capteur de CO₂ sans autre indice prend `co2_eink`, les autres `disc`. |
+| `co2_entity` | capteur de température | Le CO₂ en ppm : il fait du capteur un capteur de CO₂. L'état devient *Air sain* (vert), *Aérer conseillé* (orange) ou *Aérer maintenant* (rouge, qui clignote), et le CO₂ une ligne. Inutile quand l'entité d'état est déjà le CO₂ (`device_class: carbon_dioxide`) : la température passe alors dans `temperature_entity`. |
+| `co2_warning` / `co2_alert` | capteur de température | Les seuils du CO₂ en ppm : orange au-dessus de `co2_warning` (1000 par défaut), rouge au-dessus de `co2_alert` (1500 par défaut). |
+| `temperature_entity` | capteur de température | La température, en ligne et sur l'écran, quand l'état est le CO₂. |
+| `netatmo_color` | capteur de température | La couleur d'une station ou d'un module Netatmo : `aluminium` (défaut) \| `sand` \| `mint` \| `graphite`. |
+| `cover_layout` | volet | `shutter` (volet roulant avec son coffre) \| `blind` (store enrouleur intérieur) \| `venetian` (store vénitien) \| `raffstore` (brise-soleil orientable extérieur) \| `pergola` (pergola bioclimatique adossée, ses lames qui tournent) \| `awning` (store banne). Sans cette option, il se lit dans la classe de l'appareil (`shutter`, `blind`, `shade`, `awning`), dans le nom (pergola, store banne, brise-soleil, vénitien) et dans l'orientation des lames : un store qui s'oriente est vénitien, un volet qui s'oriente un brise-soleil. Une porte de garage, un portail ou une porte ne sont pas des volets. L'état est un `cover` : position (`current_position`), orientation (`current_tilt_position`), *Ouverture* et *Fermeture* animées, et trois boutons (ouvrir, stop, fermer) selon ce que l'appareil sait faire. Une pergola lit ses lames dans l'orientation, sinon dans la position ; un store banne se dit *Déployé* ou *Replié*. |
+| `cover_color` | volet | La couleur du tablier, des lames, du cadre de la pergola ou du coffre : `white` \| `grey` \| `anthracite` \| `black` \| `beige` \| `wood` \| `brown`, ou `#rrggbb`. |
+| `fabric_color` | volet | La toile d'un store enrouleur ou d'un store banne : `ecru` \| `linen` \| `grey` \| `anthracite` \| `blue` \| `petrol` \| `terracotta` \| `green`, ou `#rrggbb`. |
+| `fabric_stripes` | volet | Store banne : toile rayée (défaut) ou unie (`false`). |
+| `light_entity` | volet | La lumière sous une pergola : allumée, un halo descend de sous les poutres et éclaire la terrasse, à la couleur de l'ampoule. Une ligne et un bouton. |
 | `humidity_entity` / `battery_entity` | capteur de température | L'humidité et la pile, en lignes et sur l'écran des modèles qui en ont un. La ligne de pile passe à l'orange à 20 % ou moins. |
 | `spots` | lampe | Le nombre de spots dessinés, de 1 à 4. Sans réglage, un groupe de lumières dessine un spot par lumière, jusqu'à quatre. |
 | `timer_entity` | lampe | Un `select` de durées (un minuteur d'extinction) : une pastille qui montre celle choisie et ouvre la liste. |
@@ -1660,6 +1678,39 @@ state_entity: sensor.salon_temperature
 humidity_entity: sensor.salon_humidity
 battery_entity: sensor.salon_battery
 climate_sensor_layout: lcd_stand
+```
+
+Un capteur de CO₂ (Aranet4, AirGradient, Netatmo) passe au vert, à l'orange ou au rouge selon les seuils :
+
+```yaml
+type: custom:ha-appliance-card
+appliance_type: climate_sensor
+state_entity: sensor.bureau_co2
+temperature_entity: sensor.bureau_temperature
+humidity_entity: sensor.bureau_humidity
+climate_sensor_layout: co2_eink
+co2_warning: 1000
+co2_alert: 1500
+```
+
+Un volet roulant, un store ou une pergola est un `cover` :
+
+```yaml
+type: custom:ha-appliance-card
+appliance_type: cover
+state_entity: cover.volet_salon
+cover_layout: shutter
+cover_color: anthracite
+```
+
+Une pergola bioclimatique et sa lumière :
+
+```yaml
+type: custom:ha-appliance-card
+appliance_type: cover
+state_entity: cover.pergola
+cover_layout: pergola
+light_entity: light.pergola
 ```
 
 Une enceinte est un lecteur multimédia :

@@ -1701,6 +1701,27 @@ const pgCard = (layout, word, o = {}) => () => card({ name: PG_NAMES[layout], ap
 const pgWinterDemo = () => card({ name: L("Grill, winter", "Barbecue, hivernage"), appliance_type: "pellet_grill", grill_layout: "timberline", state_entity: "climate.g_w", winter: true }, [st("climate.g_w", "off", { current_temperature: 2, temperature: 107 })]);
 const PG_STATES = { off: ["sleeping", { c: 18 }], ready: ["idle", { c: 18 }], ignite: ["igniting", { c: 45 }], preheat: ["preheating", { c: 82 }], cook: ["cook_manual", { probe: true }], smoke: ["cook_custom", { smoke: true, c: 90 }], warm: ["cook_manual", { warm: true, c: 74 }], probe: ["cook_manual", { probe: true, alarm: true }], low: ["cook_manual", { pel: 9 }], cool: ["cool_down", { c: 150 }], error: ["cook_manual", { err: "5" }], plain: ["cook_manual", { cfg: { large_temperature: false } }] };
 for (const layout of Object.keys(PG_NAMES)) for (const [k, [word, o]] of Object.entries(PG_STATES)) EXTRA[`pg_${layout}_${k}`] = pgCard(layout, word, o);
+// CO2 monitors (#108): green, orange and red against the thresholds.
+const co2Card = (name, layout, v, more = {}) => () => card({ name, appliance_type: "climate_sensor", climate_sensor_layout: layout, state_entity: "sensor.co2_" + layout,
+  temperature_entity: "sensor.co2_t", humidity_entity: "sensor.co2_h", ...more },
+  [st("sensor.co2_" + layout, v, { device_class: "carbon_dioxide", unit_of_measurement: "ppm" }), st("sensor.co2_t", 21.7, { device_class: "temperature", unit_of_measurement: "\u00b0C" }), st("sensor.co2_h", 45, { unit_of_measurement: "%" })]);
+// Shutters, blinds, a pergola and an awning (#109).
+const covCard = (name, layout, state, a = {}, more = {}) => () => card({ name, appliance_type: "cover", cover_layout: layout, state_entity: "cover.c_" + layout + "_" + state, ...more },
+  [st("cover.c_" + layout + "_" + state, state, { supported_features: 255, ...a }), ...(more.light_entity ? [st(more.light_entity, "on", { rgb_color: [255, 207, 122] })] : [])]);
+Object.assign(EXTRA, {
+  co2_eink: co2Card(L("Office", "Bureau"), "co2_eink", 683),
+  co2_box: co2Card(L("Bedroom", "Chambre"), "co2_box", 1250),
+  co2_netatmo: co2Card(L("Living room", "Salon"), "co2_netatmo", 1720),
+  co2_module: co2Card(L("Kids' room", "Chambre des enfants"), "co2_netatmo_module", 640, { netatmo_color: "sand" }),
+  cov_shutter: covCard(L("Living room", "Salon"), "shutter", "open", { current_position: 100 }),
+  cov_shutter_closing: covCard(L("Kitchen", "Cuisine"), "shutter", "closing", { current_position: 45 }),
+  cov_shutter_closed: covCard(L("Bedroom", "Chambre"), "shutter", "closed", { current_position: 0 }, { cover_color: "anthracite" }),
+  cov_blind: covCard(L("Bedroom blind", "Store chambre"), "blind", "opening", { current_position: 60 }),
+  cov_venetian: covCard(L("Office blind", "Store bureau"), "venetian", "open", { current_position: 0, current_tilt_position: 50 }),
+  cov_raffstore: covCard(L("Terrace blinds", "Brise-soleil terrasse"), "raffstore", "open", { current_position: 40, current_tilt_position: 100 }),
+  cov_pergola: covCard(L("Pergola", "Pergola"), "pergola", "open", { current_tilt_position: 100 }, { light_entity: "light.pergola" }),
+  cov_awning: covCard(L("Terrace awning", "Store banne"), "awning", "open", { current_position: 100 }, { fabric_color: "terracotta" }),
+});
 // ?view=live: the public demo, linked from the README. Every family under
 // its own title, a grid that fits a phone, the language and the theme to
 // pick. The other views stay as they are: the captures depend on them.

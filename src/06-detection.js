@@ -37,7 +37,7 @@ const TYPE_AUTO_PATTERNS = {
     super_smoke_entity: /(^|[._])smoke$|super.?smoke|smoke.?(mode|plus)/i,
     keep_warm_entity: /keep.?warm/i,
   },
-  climate_sensor: { humidity_entity: /humid|hygro/i, battery_entity: /batter/i },
+  climate_sensor: { humidity_entity: /humid|hygro/i, battery_entity: /batter/i, co2_entity: /co2|carbon.?dioxide|dioxyde/i, temperature_entity: /temp/i },
   filament_dryer: { temperature_entity: /temp/i, humidity_entity: /humid|hygro/i, remaining_time_entity: /remain|time_left|restant/i },
   floor_heating: { temperature_entity: /temp/i },
   aquarium: { temperature_entity: /temp|^climate\./i },
@@ -756,6 +756,8 @@ const TYPE_CAPS = {
   // A streaming box: Apple TV, Fire TV, Chromecast, Shield, Roku, a set-top box.
   streamer: { ntStreamer: true },
   climate_sensor: { readOnly: true },
+  // A window covering, a pergola or an awning (#109), driven by its own buttons.
+  cover: { ntCover: true },
   // The heating of #81 to #84: a buffer tank, a fresh water station, solar
   // thermal collectors and a log stove, read from their temperatures.
   storage_tank: { readOnly: true },
@@ -877,6 +879,7 @@ const STATE_DOMAINS = {
   console: ["media_player", "sensor", "switch", "binary_sensor", "device_tracker", "input_boolean"],
   streamer: ["media_player", "remote", "switch", "binary_sensor", "input_boolean", "sensor"],
   climate_sensor: ["sensor", "number", "input_number"],
+  cover: ["cover"],
   storage_tank: ["sensor", "number", "input_number", "water_heater"],
   fresh_water_station: ["sensor", "binary_sensor", "switch"],
   solar_thermal: ["binary_sensor", "switch", "sensor"],
@@ -989,7 +992,7 @@ const TYPE_GROUPS = [
   ["kitchen", ["dishwasher", "oven", "microwave", "hood", "cooktop", "fridge", "kettle", "cooker", "coffee", "rice_cooker", "air_fryer", "toaster", "pellet_grill"]],
   ["heating", ["water_heater", "boiler", "heat_pump", "thermostat", "pellet_stove", "space_heater", "towel_warmer", "floor_heating", "storage_tank", "fresh_water_station", "wood_stove"]],
   ["air", ["air_conditioner", "dehumidifier", "humidifier", "air_purifier", "fan", "diffuser", "hrv", "climate_sensor"]],
-  ["home", ["screen", "iron", "hair_dryer", "printer_3d", "filament_dryer", "robot", "pool_pump", "scale", "camera", "lamp", "mailbox", "water_pump", "spa", "sauna", "aquarium", "christmas_tree", "mobility", "irrigation", "detector", "speaker", "console", "streamer"]],
+  ["home", ["screen", "iron", "hair_dryer", "printer_3d", "filament_dryer", "robot", "pool_pump", "scale", "camera", "lamp", "mailbox", "water_pump", "spa", "sauna", "aquarium", "christmas_tree", "mobility", "irrigation", "detector", "speaker", "console", "streamer", "cover"]],
   ["energy", ["solar", "solar_thermal", "home_battery", "ev_charger", "meter"]],
   ["pets", ["pet_feeder", "pet_fountain", "litter_box"]],
   ["network", ["network", "ups"]],
@@ -1069,6 +1072,9 @@ function detectApplianceType(cfg, st) {
   // tap unless it says gas.
   if (domainOf(cfg.state_entity) === "valve" && !(st && st.attributes.device_class === "gas")) return "irrigation";
   if (["vacuum", "lawn_mower"].includes(domainOf(cfg.state_entity))) return "robot";
+  // A shutter, a blind, a pergola or an awning (#109); a gate, a garage door
+  // or a door is no window covering.
+  if (domainOf(cfg.state_entity) === "cover" && !(st && ["garage", "gate", "door", "damper"].includes(String(st.attributes.device_class || "")))) return "cover";
   if (domainOf(cfg.state_entity) === "camera") return "camera";
   if (domainOf(cfg.state_entity) === "light") return "lamp";
   // A smoke, CO, gas or water sensor by its device class (X-Sense gives none,
@@ -1220,7 +1226,7 @@ function detectApplianceType(cfg, st) {
   if (/(?<!laun)dry|seche|s\u00e8che|tumble|trockner|secadora|asciugatrice|droger|torktumlare/.test(hay)) return "dryer";
   if (/dish|vaisselle|geschirrsp|spuelmasch|spulmasch|lavavajillas|lavastoviglie|vaatwasser|diskmaskin/.test(hay)) return "dishwasher";
   // A temperature sensor nothing above has claimed.
-  if (st && domainOf(cfg.state_entity) === "sensor" && st.attributes.device_class === "temperature") return "climate_sensor";
+  if (st && domainOf(cfg.state_entity) === "sensor" && ["temperature", "carbon_dioxide"].includes(st.attributes.device_class)) return "climate_sensor";
   return "washer";
 }
 

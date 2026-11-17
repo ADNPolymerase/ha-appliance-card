@@ -3,7 +3,7 @@
 // sauna, an aquarium, a Linky meter and a Christmas tree. Drawn in SVG on a 120 x 135 field; what
 // moves moves only on a machine carrying nt-on, staggered through --d0, and
 // the robot's cable and the sump's float follow their SMIL animations.
-const NT_TYPES = ["pellet_grill", "water_pump", "floor_heating", "spa", "sauna", "aquarium", "meter", "christmas_tree", "mobility", "irrigation", "litter_box", "detector", "speaker", "console", "streamer", "climate_sensor", "storage_tank", "fresh_water_station", "solar_thermal", "wood_stove", "humidifier", "filament_dryer"];
+const NT_TYPES = ["cover", "pellet_grill", "water_pump", "floor_heating", "spa", "sauna", "aquarium", "meter", "christmas_tree", "mobility", "irrigation", "litter_box", "detector", "speaker", "console", "streamer", "climate_sensor", "storage_tank", "fresh_water_station", "solar_thermal", "wood_stove", "humidifier", "filament_dryer"];
 // How many spools a filament dryer holds (#93).
 const FD_COUNTS = [1, 2, 4];
 const FD_COLORS = ["#43a047", "#fb8c00", "#8e24aa", "#eceff1"];
@@ -107,11 +107,17 @@ function streamerBrandOf(cfg, st) {
 }
 // A temperature and humidity sensor by its name or its device's model: Sonoff's
 // disc, square and screens, Aqara's cushion, the Tuya round screen, a stick.
-const THS_LAYOUTS = ["disc", "square", "cushion", "stick", "lcd_stand", "lcd_probe", "lcd_round"];
+const THS_LAYOUTS = ["disc", "square", "cushion", "stick", "lcd_stand", "lcd_probe", "lcd_round", "co2_eink", "co2_box", "co2_netatmo", "co2_netatmo_module"];
 const THS_NAME_RE = /snzb.?02|wsdcgq|lumi.?(weather|sensor.?ht)|(^|[^a-z0-9])ts0201([^a-z0-9]|$)|zg.?227|(^|[^a-z0-9])th01([^a-z0-9]|$)|temp(erature)?.?(and.?|&.?)?humidity.?sensor|thermo.?hygro/;
 function thsLayoutOf(cfg, st) {
   if (THS_LAYOUTS.includes(cfg.climate_sensor_layout)) return cfg.climate_sensor_layout;
   const hay = stripAccents(`${cfg.state_entity || ""} ${cfg.name || ""} ${stHay(st)}`).toLowerCase();
+  // A CO2 monitor (#108): Aranet4, AirGradient, Netatmo's indoor station or
+  // its additional module (the one without a pressure or a noise reading).
+  if (/aranet/.test(hay)) return "co2_eink";
+  if (/airgradient|air.?gradient/.test(hay)) return "co2_box";
+  if (/netatmo|namain|namodule4|smart.?indoor/.test(hay)) return /namodule4|indoor.?module|module.?interieur|additional|zusatz/.test(hay) ? "co2_netatmo_module" : "co2_netatmo";
+  if (st && st.attributes && (st.attributes.device_class === "carbon_dioxide" || cfg.co2_entity)) return "co2_eink";
   const re = [["lcd_probe", /snzb.?02.?(ld|wd)/], ["lcd_stand", /snzb.?02.?d/], ["disc", /snzb.?02.?p|zg.?227/], ["square", /snzb.?02/], ["cushion", /wsdcgq|lumi.?(weather|sensor.?ht)|aqara/],
     ["stick", /(^|[^a-z0-9])th01([^a-z0-9]|$)/], ["lcd_round", /ts0201|with.?display/]];
   const hit = re.find(([, r]) => r.test(hay));
@@ -139,7 +145,8 @@ const NT_ONLY_FIELDS = {
   speaker: ["speaker_layout", "speaker_color"],
   console: ["console_layout", "game_entity", "playtime_entity", "playtime_left_entity"],
   streamer: ["streamer_layout", "app_entity"],
-  climate_sensor: ["climate_sensor_layout"],
+  climate_sensor: ["climate_sensor_layout", "co2_entity", "co2_warning", "co2_alert", "netatmo_color"],
+  cover: ["cover_layout", "cover_color", "fabric_color", "fabric_stripes", "light_entity"],
   pellet_grill: ["grill_layout", "large_temperature", "grill_state_entity", "pellet_level_entity", "probe_entity", "probe_target_entity", "probe_2_entity", "probe_2_target_entity", "probe_state_entity", "probe_alarm_entity", "timer_end_entity", "timer_complete_entity", "super_smoke_entity", "keep_warm_entity"],
   storage_tank: ["temperature_entities", "charge_entity", "charge_min_temp", "charge_max_temp", "tank_volume", "sources", "consumers"],
   fresh_water_station: ["primary_temperature_entity", "cold_water_temperature_entity", "circulation_entity", "circulation_mode_entity", "supply_margin"],
@@ -3707,7 +3714,304 @@ function ntThsLcdRound(c) {
 ${thsFace(X + 2, Y, `<ellipse cx="38" cy="70" rx="24" ry="3.4" fill="#000" opacity=".32" filter="url(#${bl})"/>`)}
 ${thsDepth(X, Y, shape, 12, `url(#${e})`)}${thsFace(X, Y, `${shape(`url(#${t})`)}<circle cx="35" cy="35" r="28.5" fill="#8f958f"/><circle cx="35" cy="35" r="28" fill="url(#${s})"/>${c.unav ? "" : `${thsSignal(25, 11.5, THS_INK)}${thsBattery(35.5, 11.5, THS_INK, c.b)}${thsNumber(c.t, 35, 18, 15.5, THS_INK, THS_GHOST, c.unit)}<path d="M10 38 H60" stroke="${THS_INK}" stroke-width=".5"/>${thsNumber(c.h, 35, 41, 13, THS_INK, THS_GHOST, "%")}`}`)}`;
 }
-const NT_DRAW = { pellet_grill: ntPelletGrill, ths_disc: ntThsDisc, ths_square: ntThsSquare, ths_cushion: ntThsCushion, ths_stick: ntThsStick, ths_lcd_stand: ntThsLcdStand, ths_lcd_probe: ntThsLcdProbe, ths_lcd_round: ntThsLcdRound, dryer: ntFilamentDryer, humidifier: ntHumidifier, circulator: ntCirculator, irr_sprinkler: ntIrrSprinkler, irr_tap: ntIrrTap, irr_drip: ntIrrDrip, irr_flowers: ntIrrFlowers, lit_globe: ntLitterGlobe, lit_box: ntLitterBox, det_smoke: ntDetSmoke, det_co: ntDetCo, det_leak: ntDetLeak, spk_smart: ntSpkSmart, spk_homepod_mini: ntSpkMini, spk_sonos_one: ntSpkOne, spk_bookshelf: ntSpkShelf, spk_sonos_move: ntSpkMove, spk_soundbar: ntSpkBar, spk_echo_dot: ntSpkDot, spk_echo_dot_max: ntSpkDotMax, spk_nest_mini: ntSpkNest, spk_sonos_era100: ntSpkEra100, spk_sonos_era300: ntSpkEra300, spk_bose_wave: ntSpkWave, spk_bose_500: ntSpkBose500, spk_bose_soundlink: ntSpkFlex, spk_bose_soundbar: ntSpkBoseBar, spk_sonos_five: ntSpkFive, spk_sonos_play: ntSpkPlay, spk_sonos_roam: ntSpkRoam, spk_sonos_ray: ntSpkRay, spk_sonos_amp: ntSpkAmp, spk_sonos_port: ntSpkPort, spk_bose_ultra: ntSpkBoseUltra, spk_bose_portable: ntSpkBosePortable, spk_bose_amp: ntSpkBoseAmp, str_apple_tv: (c) => strZoom(strAppleTv(c), 54, 1.45), str_fire_tv_cube: strFireCube, str_fire_tv_stick: (c) => strStick(c, true), str_google_tv_streamer: strGoogleStreamer, str_chromecast: strChromecast, str_shield: strShield, str_shield_pro: strShieldPro, str_roku: strRoku, str_mi_box: strMiBox, str_freebox: strFreebox, str_decoder: strDecoder, str_box: strBox, str_stick: (c) => strStick(c, false), con_ps1: conPs1, con_ps2: conPs2, con_ps3: conPs3, con_ps4: (c) => conPs4(c, false), con_ps4_pro: (c) => conPs4(c, true), con_ps5: conPs5, con_xbox: conXbox, con_xbox_360: conX360, con_xbox_one: conXone, con_xbox_series_x: conXsx, con_xbox_series_s: conXss, con_switch: (c) => conSwitch(c, false), con_switch_2: (c) => conSwitch(c, true), con_switch_lite: conSwitchLite, con_ps_vita: conVita, con_nes: conNes, con_snes: conSnes, con_n64: conN64, con_gamecube: conGamecube, con_wii: conWii, con_megadrive: conMegadrive, tank: ntTank, fws: ntFresh, solth: ntSolarThermal, wood: ntWoodStove, mob_scooter: mobScooter, mob_offroad: mobOffroad, mob_ebike: mobEbike, mob_gyropode: mobGyropode, mob_motorcycle: mobMotorcycle, meter_box: ntMeterBox, meter_dome: ntMeterDome, meter_gas: ntGas, meter_water: ntWater, booster: ntBooster, sump: ntSump, pool: ntPoolRobot, floor: ntFloor, spa: ntSpa, sauna: ntSauna, aquarium: ntAquarium, linky: ntLinky, tree: ntTree };
+// CO2 monitors (#108).
+// A CO2 reading has three levels, green, orange and red, from two thresholds
+// the owner can move: 1000 and 1500 ppm by default, the usual "ventilate"
+// and "ventilate now" marks.
+const CO2_COLORS = ["#43a047", "#fb8c00", "#e53935"];
+const CO2_WARN = 1000, CO2_ALERT = 1500;
+function co2LevelOf(v, warn, alert) {
+  if (v === null || v === undefined) return 0;
+  const w = numberOrNull(warn), a = numberOrNull(alert);
+  const lo = w !== null && w > 0 ? w : CO2_WARN, hi = a !== null && a > lo ? a : Math.max(lo, CO2_ALERT);
+  return v <= lo ? 0 : v <= hi ? 1 : 2;
+}
+// Helpers of their own: a horizontal gradient, a blur, a colour made lighter
+// (amt > 0) or darker (amt < 0).
+const cvH = (id, stops) => `<linearGradient id="${id}" x1="0" y1="0" x2="1" y2="0">${stops.map(([o, c]) => `<stop offset="${o}" stop-color="${c}"/>`).join("")}</linearGradient>`;
+const cvBlur = (id, s = 1.5) => `<filter id="${id}" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="${s}"/></filter>`;
+const cvF = (n) => +n.toFixed(2);
+function cvTone(hex, amt) {
+  const h = String(hex || "#888888").replace("#", "");
+  const v = [0, 2, 4].map((i) => parseInt(h.length === 3 ? h[i / 2] + h[i / 2] : h.slice(i, i + 2), 16) || 0);
+  return "#" + v.map((x) => Math.max(0, Math.min(255, Math.round(amt > 0 ? x + (255 - x) * amt : x * (1 + amt)))).toString(16).padStart(2, "0")).join("");
+}
+// A plate turned a little to the left, its depth going back to the right.
+const co2Face = (x, y, inner) => `<g transform="matrix(.92 .1 0 1 ${x} ${y})">${inner}</g>`;
+function co2Depth(x, y, shape, d, fill) { let o = ""; for (let i = d; i > 0; i -= .5) o += co2Face(cvF(x + .4 * i), cvF(y - .22 * i), shape(fill)); return o; }
+const co2Num = (v) => v === null || v === undefined ? "---" : String(Math.round(v));
+// Aranet4: a square translucent white case, an e-ink screen with the
+// temperature, the humidity and the CO2, the level boxes, and the green,
+// yellow and red strip printed under the screen.
+function ntCo2Eink(c) {
+  const X = 23, Y = 16, s = ntId(), fr = ntId(), sd = ntId(), bl = ntId(), lv = co2LevelOf(c.co2, c.warn, c.alert);
+  const shape = (fl) => `<rect width="68" height="68" rx="11" fill="${fl}"/>`;
+  const box = (x, i) => `<rect x="${x}" y="40.2" width="9.6" height="2.8" rx=".4" fill="${!c.unav && c.co2 !== null && i === lv ? "#1c1c1c" : "#e4e6e1"}" stroke="#1c1c1c" stroke-width=".45"/>`;
+  const ink = c.unav ? "#9aa09a" : "#1c1c1c";
+  return `<defs>${ntV(s, "#e7e9e4", "#d9dcd6")}${cvH(fr, [[0, "#ffffff"], [1, "#e8ebee"]])}${cvH(sd, [[0, "#d9dce0"], [1, "#9ea4ab"]])}${cvBlur(bl, 2)}</defs>
+${co2Face(X + 3, Y, `<rect x="0" y="66" width="72" height="6" rx="3" fill="#000" opacity=".28" filter="url(#${bl})"/>`)}
+${co2Depth(X, Y, shape, 9, `url(#${sd})`)}
+${co2Face(X, Y, `${shape(`url(#${fr})`)}
+<path d="M8 9 h10 v6 h6 M54 12 h6 M50 58 h10 v-6 M10 52 h7 l3 3" fill="none" stroke="#9aa3ab" stroke-width=".6" opacity=".35"/>
+<circle cx="9" cy="30" r="2.6" fill="none" stroke="#c4c9ce" stroke-width=".7"/><circle cx="59" cy="30" r="2.6" fill="none" stroke="#c4c9ce" stroke-width=".7"/>
+<rect x="15.5" y="9" width="37" height="38" rx="1.6" fill="#b9bdb7"/><rect x="16.2" y="9.7" width="35.6" height="36.6" rx="1.2" fill="url(#${s})"/>
+<text x="18" y="16.6" font-size="5" font-weight="700" fill="${ink}" ${NT_FONT}>${c.t === null || c.t === undefined ? "--" : c.t.toFixed(1)}\u00b0${c.unit === "\u00b0F" ? "F" : "C"}</text>
+<text x="49.6" y="16.6" font-size="5" font-weight="700" text-anchor="end" fill="${ink}" ${NT_FONT}>${c.h === null || c.h === undefined ? "--" : Math.round(c.h)}</text>
+<path d="M51.4 12.4 q-1.3 1.6 -1.3 2.4 a1.3 1.3 0 0 0 2.6 0 q0 -.8 -1.3 -2.4z" fill="${ink}"/>
+<text x="34" y="33" font-size="${c.co2 >= 1000 ? 14 : 15.5}" font-weight="600" text-anchor="middle" fill="${ink}" ${NT_FONT}>${c.unav ? "---" : co2Num(c.co2)}</text>
+<rect x="18" y="35.4" width="5" height="2.4" fill="none" stroke="${ink}" stroke-width=".4"/><rect x="18.5" y="35.9" width="${cvF(3.4 * (c.b === undefined ? 1 : c.b))}" height="1.4" fill="${ink}"/>
+<text x="49.6" y="38" font-size="3" text-anchor="end" fill="${ink}" ${NT_FONT}>CO\u2082 ppm</text>
+${box(18, 0)}${box(29.2, 1)}${box(40.4, 2)}
+<rect x="18" y="47.6" width="9.6" height="1.6" fill="#3cb54a"/><rect x="29.2" y="47.6" width="9.6" height="1.6" fill="#f4c20d"/><rect x="40.4" y="47.6" width="9.6" height="1.6" fill="#e53935"/>
+<text x="34" y="60" font-size="7.4" text-anchor="middle" fill="#3d4247" ${NT_FONT}>aranet<tspan font-weight="700">4</tspan></text>`)}`;
+}
+// AirGradient ONE: a white box on a wire stand, its row of LEDs telling the
+// CO2 by their number and their colour, a small OLED screen.
+function ntCo2Box(c) {
+  const X = 19, Y = 20, fr = ntId(), sd = ntId(), bl = ntId(), gl = ntId(), lv = co2LevelOf(c.co2, c.warn, c.alert), col = CO2_COLORS[lv];
+  const lit = c.unav || c.co2 === null || c.co2 === undefined ? 0 : Math.max(1, Math.min(11, Math.round(c.co2 / 2000 * 11)));
+  const pulse = lv === 2 ? ` class="co2-pulse"` : "";
+  const shape = (fl) => `<rect width="74" height="64" rx="7" fill="${fl}"/>`;
+  const leds = [...Array(11)].map((_, i) => { const on = i < lit, x = 12 + i * 5; return `${on ? `<circle cx="${x}" cy="10" r="2.6" fill="${col}" opacity=".55" filter="url(#${gl})"${pulse}/>` : ""}<circle cx="${x}" cy="10" r="1.25" fill="${on ? col : "#dfe2e5"}"${on ? pulse : ""}/>`; }).join("");
+  return `<defs>${cvH(fr, [[0, "#ffffff"], [1, "#e9ecef"]])}${cvH(sd, [[0, "#dcdfe3"], [1, "#a3a9b0"]])}${cvBlur(bl, 2)}${cvBlur(gl, 1.4)}</defs>
+<path d="M76 74 L92 100 L88 102 L76 88 Z" fill="#b7bcc2"/><path d="M92 100 L88 102" stroke="#7d848b" stroke-width="1" stroke-linecap="round"/>
+${co2Face(X + 3, Y, `<rect x="0" y="62" width="78" height="6" rx="3" fill="#000" opacity=".28" filter="url(#${bl})"/>`)}
+${co2Depth(X, Y, shape, 12, `url(#${sd})`)}
+${co2Face(X, Y, `${shape(`url(#${fr})`)}${leds}
+<rect x="34" y="38" width="28" height="15" rx="1.4" fill="#0b0d0f"/>
+${c.unav ? "" : `<text x="36" y="44.4" font-size="4.6" font-weight="700" fill="#fff" ${NT_FONT}>${co2Num(c.co2)}<tspan font-size="2.6" font-weight="400" dx=".6">ppm</tspan></text>
+<text x="36" y="50.6" font-size="3.4" fill="#cfd8dc" ${NT_FONT}>${c.t === null || c.t === undefined ? "--" : c.t.toFixed(1)}\u00b0 ${c.h === null || c.h === undefined ? "--" : Math.round(c.h)}%</text>`}
+<circle cx="15" cy="46" r="6" fill="none" stroke="#1f6fb2" stroke-width="1.1"/><path d="M11.6 47 q1.6 -3 3.4 0 t3.4 0" fill="none" stroke="#1f6fb2" stroke-width=".9"/>
+<text x="10" y="57" font-size="3" fill="#1f6fb2" ${NT_FONT}>airgradient</text>`)}`;
+}
+// Netatmo's indoor station and its additional module, drawn as in
+// ha-netatmo-card: an aluminium cylinder (or sand, mint, graphite), its
+// groove lit with the colour of the air, a translucent white base ring and a
+// white top.
+const NETATMO_COLORS = {
+  aluminium: ["#9aa0a4", "#c2c7cb", "#e2e5e7", "#eef0f1", "#e0e3e5", "#cbcfd2", "#b1b6ba", "#ced2d5", "#93999d"],
+  sand: ["#897d6e", "#b6a898", "#d3c5b3", "#e0d4c4", "#cfc2b0", "#bdb09e", "#a39684", "#bcb09e", "#83776a"],
+  mint: ["#8ca097", "#b6c8bf", "#d6e3dc", "#e3ede7", "#d2dfd8", "#bfd0c8", "#a5b8af", "#bdcec6", "#879b92"],
+  graphite: ["#232629", "#3d4145", "#5c6165", "#6f7479", "#5e6367", "#4b4f53", "#36393d", "#4c5054", "#202326"],
+};
+function ntCo2Netatmo(c, extra) {
+  const ratio = extra ? 2.04 : 3.44, slot = extra ? [.22, .78] : [.175, .84];
+  const CX = 62, RX = 26, RY = 6.5, BASE_BOT = 288, FOOT = BASE_BOT - 10, TOP = BASE_BOT - ratio * RX * 2 + RY, H = FOOT - TOP;
+  const sy1 = TOP + H * slot[0], sw = 4.2, sx = CX + RX * .25, sh = H * (slot[1] - slot[0]);
+  const bd = ntId(), ft = ntId(), sl = ntId(), bs = ntId(), cp = ntId(), b1 = ntId(), b2 = ntId(), ck = ntId();
+  const pal = NETATMO_COLORS[c.body] || NETATMO_COLORS.aluminium;
+  const stops = pal.map((col, i, a) => `<stop offset="${(i / (a.length - 1)).toFixed(3)}" stop-color="${col}"/>`).join("");
+  const lv = co2LevelOf(c.co2, c.warn, c.alert), col = c.unav || c.co2 === null || c.co2 === undefined ? null : CO2_COLORS[lv], pulse = lv === 2 ? ` class="co2-pulse"` : "";
+  const body = `M ${CX - RX} ${TOP} L ${CX - RX} ${FOOT} A ${RX} ${RY} 0 0 0 ${CX + RX} ${FOOT} L ${CX + RX} ${TOP} Z`;
+  const base = `M ${CX - RX} ${FOOT} L ${CX - RX} ${BASE_BOT} A ${RX} ${RY} 0 0 0 ${CX + RX} ${BASE_BOT} L ${CX + RX} ${FOOT} A ${RX} ${RY} 0 0 1 ${CX - RX} ${FOOT} Z`;
+  const k = extra ? .78 : .6, tx = 60 - CX * k, ty = 116 - (BASE_BOT + 6) * k;
+  return `<defs><linearGradient id="${bd}" x1="0" y1="0" x2="1" y2="0">${stops}</linearGradient>${ntV(ft, "rgba(0,0,0,0)", "rgba(0,0,0,.16)")}
+<linearGradient id="${sl}" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="${pal[0]}"/><stop offset=".4" stop-color="${pal[2]}"/><stop offset=".8" stop-color="${pal[3]}"/><stop offset="1" stop-color="${pal[3]}"/></linearGradient>
+${cvH(bs, [[0, "#d3d7da"], [.3, "#fbfcfc"], [.62, "#eef0f1"], [1, "#cfd3d6"]])}<radialGradient id="${cp}" cx=".4" cy=".28" r=".8"><stop offset="0" stop-color="#fff"/><stop offset=".6" stop-color="#f4f6f7"/><stop offset="1" stop-color="#dde1e3"/></radialGradient>
+${cvBlur(b1, 5)}${cvBlur(b2, 2.4)}<clipPath id="${ck}"><path d="${body}"/></clipPath></defs>
+<g transform="translate(${cvF(tx)} ${cvF(ty)}) scale(${k})">
+<ellipse cx="${CX}" cy="${BASE_BOT + 6}" rx="${RX + 7}" ry="4.5" fill="#000" opacity=".16" filter="url(#${b2})"/>
+<path d="${base}" fill="url(#${bs})"/><path d="${base}" fill="none" stroke="#000" stroke-opacity=".14" stroke-width=".7"/>
+<path d="${body}" fill="url(#${bd})"/><g clip-path="url(#${ck})"><rect x="${CX - RX}" y="${FOOT - 26}" width="${RX * 2}" height="${26 + RY}" fill="url(#${ft})"/></g>
+<rect x="${cvF(sx - sw / 2 - .7)}" y="${cvF(sy1 - .7)}" width="${sw + 1.4}" height="${cvF(sh + 1.4)}" rx="${cvF(sw / 2 + .7)}" fill="#000" opacity=".1"/>
+<rect x="${cvF(sx - sw / 2)}" y="${cvF(sy1)}" width="${sw}" height="${cvF(sh)}" rx="${cvF(sw / 2)}" fill="url(#${sl})"/>
+<rect x="${cvF(sx - sw / 2)}" y="${cvF(sy1)}" width="1.5" height="${cvF(sh)}" rx=".75" fill="#000" opacity=".34"/>
+${col ? `<rect${pulse} x="${cvF(sx - sw / 2 - 3.5)}" y="${cvF(sy1 - 3.5)}" width="${sw + 7}" height="${cvF(sh + 7)}" rx="${cvF(sw / 2 + 3.5)}" fill="${col}" opacity=".55" filter="url(#${b1})"/>
+<rect${pulse} x="${cvF(sx - sw / 2 + .45)}" y="${cvF(sy1 + .45)}" width="${sw - .9}" height="${cvF(sh - .9)}" rx="${cvF(sw / 2 - .45)}" fill="${col}" opacity=".9"/>` : ""}
+<path d="${body}" fill="none" stroke="#000" stroke-opacity=".18" stroke-width=".7"/>
+<ellipse cx="${CX}" cy="${TOP}" rx="${RX}" ry="${RY}" fill="url(#${cp})"/>
+<ellipse cx="${CX}" cy="${TOP}" rx="${RX - 3.4}" ry="${RY - 1}" fill="none" stroke="#000" stroke-opacity=".09" stroke-width=".6"/>
+<path d="M ${CX - RX} ${TOP} A ${RX} ${RY} 0 0 0 ${CX + RX} ${TOP}" fill="none" stroke="#000" stroke-opacity=".13" stroke-width=".7"/>
+<path d="M ${CX - RX + 5} ${TOP - 3} A ${RX - 5} ${RY - 2.6} 0 0 1 ${CX + 2} ${TOP - 4.6}" fill="none" stroke="#fff" stroke-opacity=".85" stroke-width="1.3" stroke-linecap="round"/></g>`;
+}
+
+// Window coverings, a pergola and an awning (#109).
+// The cover's own colour (its apron, its slats, its frame) and its fabric's,
+// by name or as #rrggbb.
+const COVER_LAYOUTS = ["shutter", "blind", "venetian", "raffstore", "pergola", "awning"];
+const COVER_COLORS = { white: "#eceff1", grey: "#a7adb3", anthracite: "#4a5056", black: "#2b2b2b", beige: "#d9c7a6", wood: "#b98a57", brown: "#7a5236" };
+const FABRIC_COLORS = { ecru: "#e9e3d6", linen: "#d8cab2", grey: "#9ea3a8", anthracite: "#55595e", blue: "#5f7d95", petrol: "#3f6f8f", terracotta: "#b5533c", green: "#4f7d4a" };
+const cvColor = (v, table) => {
+  const s = String(v || "").trim().toLowerCase();
+  if (table[s]) return table[s];
+  return /^#[0-9a-f]{6}$|^#[0-9a-f]{3}$/.test(s) ? s : "";
+};
+// The cover's drawing: the one chosen, else its name, its device class and
+// whether it tilts.
+function coverLayoutOf(cfg, st) {
+  if (COVER_LAYOUTS.includes(cfg.cover_layout)) return cfg.cover_layout;
+  const a = (st && st.attributes) || {};
+  const hay = stripAccents(`${cfg.state_entity || ""} ${cfg.name || ""} ${stHay(st)}`).toLowerCase();
+  const tilts = a.current_tilt_position !== undefined || (Number(a.supported_features) & 128) > 0;
+  if (/pergola|bioclim|lamellendach|louvered.?roof|tetto.?bioclim/.test(hay)) return "pergola";
+  if (a.device_class === "awning" || /awning|store.?banne|banne|markise|toldo|tenda.?da.?sole|zonnescherm|markis/.test(hay)) return "awning";
+  if (/raffstore|brise.?soleil|(^|[^a-z])bso([^a-z]|$)|exterior.?venetian|external.?blind|aussenjalousie|lamellenstore/.test(hay)) return "raffstore";
+  if (/venetian|venitien|jalousie|persiana.?veneciana|veneziana|lamellen/.test(hay)) return a.device_class === "shutter" ? "raffstore" : "venetian";
+  if (a.device_class === "shutter" || /shutter|volet|rollladen|rolladen|persiana|tapparella|rolluik|rullgardin|rolleta/.test(hay)) return tilts ? "raffstore" : "shutter";
+  if (["blind", "shade", "curtain"].includes(a.device_class) || /blind|shade|store|rollo|estor|tenda|gordijn/.test(hay)) return tilts ? "venetian" : "blind";
+  return tilts ? "venetian" : "shutter";
+}
+// The window in a wall and the garden in its glass.
+function cvGlass(x0, y0, x1, y1, gid) {
+  return `<rect x="${x0}" y="${y0}" width="${x1 - x0}" height="${y1 - y0}" fill="url(#${gid})"/>
+<path d="M${x0} ${y1 - 14} q${cvF((x1 - x0) * .25)} -8 ${cvF((x1 - x0) * .5)} -3 t${cvF((x1 - x0) * .5)} -2 V${y1} H${x0} Z" fill="#7cae7a" opacity=".85"/>
+<path d="M${x0 + 6} ${y1 - 2} L${x0 + 22} ${y0 + 4} M${x0 + 14} ${y1 - 2} L${x0 + 26} ${y0 + 20}" stroke="#fff" stroke-opacity=".35" stroke-width="2.2"/>`;
+}
+const cvFacade = (fid) => `<rect x="-6" y="-10" width="132" height="135" fill="url(#${fid})"/>${[8, 30, 52, 74, 96, 118].map((y) => `<path d="M-6 ${y} H126" stroke="#000" stroke-opacity=".025" stroke-width="1"/>`).join("")}`;
+const cvDir = (c) => c.moving === "opening" ? "up" : c.moving === "closing" ? "down" : "";
+const cvArrow = (dir, x = 108, y = 6) => !dir ? "" : `<g class="cv-arrow" transform="translate(${x} ${y})"><circle r="7" fill="#1e88e5"/><path d="${dir === "up" ? "M-3.4 1.6 L0 -2 L3.4 1.6" : "M-3.4 -1.6 L0 2 L3.4 -1.6"}" fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></g>`;
+// An outdoor roller shutter: its box over the window, its rails, its apron of
+// slats lowered to the position, the slats running while it moves.
+function ntCovShutter(c) {
+  const fa = ntId(), gl = ntId(), bx = ntId(), rl = ntId(), ap = ntId(), cl = ntId(), sh = ntId(), x0 = 26, x1 = 94, top = 25, bot = 104;
+  const yb = top + (bot - top) * (1 - c.p / 100), dir = cvDir(c), mc = c.color || "#e9ecee";
+  const slats = []; for (let y = top - 8.4; y < bot + 8; y += 4.2) slats.push(`<path d="M${x0} ${cvF(y)} H${x1}" stroke="${cvTone(mc, .55)}" stroke-width=".9"/><path d="M${x0} ${cvF(y + 3.2)} H${x1}" stroke="${cvTone(mc, -.38)}" stroke-width=".7"/>`);
+  return `<defs>${ntV(fa, "#ece4d6", "#d6cab5")}${ntV(gl, "#d7ebf8", "#9ec7e4")}${ntV(bx, cvTone(mc, .2), cvTone(mc, -.25))}${cvH(rl, [[0, cvTone(mc, -.2)], [.5, cvTone(mc, .2)], [1, cvTone(mc, -.28)]])}${ntV(ap, cvTone(mc, .1), cvTone(mc, -.08))}<clipPath id="${cl}"><rect x="${x0}" y="${top}" width="${x1 - x0}" height="${cvF(Math.max(0, yb - top))}"/></clipPath>${cvBlur(sh, 1.6)}</defs>
+${cvFacade(fa)}
+<rect x="${x0 - 7}" y="${top - 4}" width="${x1 - x0 + 14}" height="${bot - top + 10}" fill="#000" opacity=".1" filter="url(#${sh})"/>
+<rect x="${x0 - 4}" y="${top}" width="${x1 - x0 + 8}" height="${bot - top}" fill="#5f5a52"/>
+<rect x="${x0 + 1}" y="${top + 1}" width="${x1 - x0 - 2}" height="${bot - top - 2}" fill="#f7f7f7"/>
+${cvGlass(x0 + 4, top + 4, 59, bot - 4, gl)}${cvGlass(61, top + 4, x1 - 4, bot - 4, gl)}
+<rect x="59" y="${top + 2}" width="2" height="${bot - top - 4}" fill="#f2f2f2"/>
+<g clip-path="url(#${cl})"><rect x="${x0}" y="${top}" width="${x1 - x0}" height="${bot - top}" fill="url(#${ap})"/><g${dir ? ` class="cv-${dir}"` : ""}>${slats.join("")}</g></g>
+${yb > top + .5 ? `<rect x="${x0}" y="${cvF(yb - 2.6)}" width="${x1 - x0}" height="2.6" fill="${cvTone(mc, -.35)}"/><path d="M${x0} ${cvF(yb - .2)} H${x1}" stroke="${cvTone(mc, -.6)}" stroke-width=".6"/>` : ""}
+<rect x="${x0 - 4}" y="${top}" width="4.2" height="${bot - top}" fill="url(#${rl})"/><rect x="${x1 - .2}" y="${top}" width="4.2" height="${bot - top}" fill="url(#${rl})"/>
+<rect x="${x0 - 7}" y="${bot}" width="${x1 - x0 + 14}" height="3.6" rx=".6" fill="#efe9de" stroke="#bfb4a2" stroke-width=".4"/>
+<rect x="${x0 - 6}" y="${top - 15}" width="${x1 - x0 + 12}" height="15" rx="1.4" fill="url(#${bx})"/>
+<path d="M${x0 - 6} ${top - 1.2} H${x1 + 6}" stroke="${cvTone(mc, -.45)}" stroke-width=".7"/><path d="M${x0 - 4} ${top - 13} H${x1 + 4}" stroke="#fff" stroke-opacity=".7" stroke-width="1"/>
+${cvArrow(dir)}`;
+}
+// An indoor roller blind: its tube under the top of the window, its fabric
+// down to the position with the light coming through, its bottom bar.
+function ntCovBlind(c) {
+  const wl = ntId(), gl = ntId(), tb = ntId(), fb = ntId(), cl = ntId(), sun = ntId(), x0 = 22, x1 = 98, top = 18, bot = 108;
+  const yb = top + (bot - top) * (1 - c.p / 100), dir = cvDir(c), color = c.fabric || "#d8cab2", fr = c.color || "#f4f5f6", bar = c.color || "#b6bcc1";
+  const weave = []; for (let x = x0 + 2; x < x1; x += 3) weave.push(`<path d="M${x} ${top} V${bot}" stroke="#000" stroke-opacity=".05" stroke-width=".6"/>`);
+  return `<defs>${cvH(wl, [[0, "#f3f4f6"], [1, "#dfe3e7"]])}${ntV(gl, "#e1f0fa", "#a9cfe9")}${ntV(tb, cvTone(fr, .5), cvTone(fr, -.16))}<linearGradient id="${fb}" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="${color}" stop-opacity=".96"/><stop offset=".5" stop-color="${color}" stop-opacity=".82"/><stop offset="1" stop-color="${color}" stop-opacity=".96"/></linearGradient>
+<clipPath id="${cl}"><rect x="${x0}" y="${top}" width="${x1 - x0}" height="${cvF(Math.max(0, yb - top))}"/></clipPath><radialGradient id="${sun}"><stop offset="0" stop-color="#fff8e1" stop-opacity=".28"/><stop offset="1" stop-color="#fff8e1" stop-opacity="0"/></radialGradient></defs>
+<rect x="-6" y="-10" width="132" height="135" fill="url(#${wl})"/>
+<rect x="${x0 - 4}" y="${top - 4}" width="${x1 - x0 + 8}" height="${bot - top + 8}" fill="#fafafa" stroke="#d2d6da" stroke-width=".5"/>
+${cvGlass(x0 + 3, top + 3, 59, bot - 3, gl)}${cvGlass(61, top + 3, x1 - 3, bot - 3, gl)}
+<rect x="59" y="${top}" width="2" height="${bot - top}" fill="#f4f4f4"/>
+<g clip-path="url(#${cl})"><g${dir ? ` class="cv-sway"` : ""}><rect x="${x0}" y="${top}" width="${x1 - x0}" height="${bot - top}" fill="url(#${fb})"/>${weave.join("")}
+<ellipse cx="60" cy="${cvF((top + yb) / 2)}" rx="30" ry="${cvF(Math.max(4, (yb - top) / 2))}" fill="url(#${sun})"/></g></g>
+${yb > top + 1 ? `<rect x="${x0 - .5}" y="${cvF(yb - 2.2)}" width="${x1 - x0 + 1}" height="2.6" rx="1" fill="${bar}"/><path d="M${x0} ${cvF(yb + .2)} H${x1}" stroke="${cvTone(bar, -.35)}" stroke-width=".5"/>` : ""}
+<rect x="${x0 - 6}" y="${bot + 4}" width="${x1 - x0 + 12}" height="4" rx=".8" fill="#fbfbfb" stroke="#cfd4d8" stroke-width=".5"/>
+<rect x="${x0 - 3}" y="${top - 8}" width="${x1 - x0 + 6}" height="8" rx="4" fill="url(#${tb})" stroke="${cvTone(fr, -.25)}" stroke-width=".4"/>
+${dir ? `<g class="cv-${dir}">${[0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map((i) => `<path d="M${x0 + 4 + i * 8} ${top - 7} q1.6 3 0 6" fill="none" stroke="${cvTone(fr, -.3)}" stroke-width=".6"/>`).join("")}</g>` : ""}
+${cvArrow(dir)}`;
+}
+// Venetian slats seen from the front: their tilt makes them a thin edge
+// (open) or a band hiding the window (closed); lifted, they pack under the
+// head rail, or into the box of an outdoor one.
+function cvSlats(x0, x1, top, bot, p, tilt, slat, edge, cord, hidden) {
+  const gap = 5, n = Math.round((bot - top) / gap), down = Math.round(n * (1 - p / 100)), up = n - down;
+  const k = Math.max(0, Math.min(1, tilt / 100)), band = cvF(1.3 + 4.4 * (1 - k)), sp = hidden ? .5 : .42;
+  const stackTop = hidden ? top - 1 - up * sp : top + 1, y0 = stackTop + up * sp;
+  let o = "";
+  for (let i = 0; i < up; i++) o += `<rect x="${x0}" y="${cvF(stackTop + i * sp)}" width="${x1 - x0}" height="${cvF(sp + .3)}" fill="${slat}" stroke="${edge}" stroke-width=".25"/>`;
+  for (let i = 0; i < down; i++) {
+    const y = cvF(y0 + i * gap + 1);
+    o += `<path d="M${x0} ${y} Q60 ${cvF(y - band * .35)} ${x1} ${y} V${cvF(y + band)} Q60 ${cvF(y + band * .65)} ${x0} ${cvF(y + band)} Z" fill="${slat}" stroke="${edge}" stroke-width=".3"/><path d="M${x0 + 2} ${cvF(y + .3)} Q60 ${cvF(y - band * .3)} ${x1 - 2} ${cvF(y + .3)}" fill="none" stroke="#fff" stroke-opacity=".55" stroke-width=".5"/>`;
+  }
+  const yEnd = cvF(y0 + down * gap + 1);
+  return `${[x0 + 14, x1 - 14].map((x) => `<path d="M${x} ${top} V${cvF(yEnd + 2)}" stroke="${cord}" stroke-width=".55"/>`).join("")}${o}<rect x="${x0 - .5}" y="${yEnd}" width="${x1 - x0 + 1}" height="2.4" rx=".8" fill="${slat}" stroke="${edge}" stroke-width=".4"/>`;
+}
+function ntCovVenetian(c, outdoor) {
+  const bg = ntId(), gl = ntId(), hd = ntId(), x0 = 24, x1 = 96, top = 22, bot = 104, dir = cvDir(c);
+  const slat = c.color || (outdoor ? "#6b7279" : "#f3f4f5"), edge = cvTone(slat, -.3), cord = outdoor ? "#2e3338" : "#d6dadd";
+  return `<defs>${outdoor ? ntV(bg, "#ece4d6", "#d6cab5") : cvH(bg, [[0, "#f3f4f6"], [1, "#dfe3e7"]])}${ntV(gl, "#d7ebf8", "#9ec7e4")}${ntV(hd, outdoor ? cvTone(slat, .25) : "#ffffff", outdoor ? cvTone(slat, -.2) : "#cfd4d8")}</defs>
+${outdoor ? cvFacade(bg) : `<rect x="-6" y="-10" width="132" height="135" fill="url(#${bg})"/>`}
+<rect x="${x0 - 4}" y="${top - 4}" width="${x1 - x0 + 8}" height="${bot - top + 8}" fill="${outdoor ? "#5f5a52" : "#fafafa"}" stroke="#d2d6da" stroke-width=".4"/>
+<rect x="${x0}" y="${top}" width="${x1 - x0}" height="${bot - top}" fill="#f7f7f7"/>
+${cvGlass(x0 + 3, top + 3, 59, bot - 3, gl)}${cvGlass(61, top + 3, x1 - 3, bot - 3, gl)}
+<rect x="59" y="${top}" width="2" height="${bot - top}" fill="#f2f2f2"/>
+${outdoor ? `<rect x="${x0 - 4}" y="${top}" width="3" height="${bot - top}" fill="${cvTone(slat, .1)}"/><rect x="${x1 + 1}" y="${top}" width="3" height="${bot - top}" fill="${cvTone(slat, .1)}"/>` : ""}
+${cvSlats(x0, x1, top, bot, c.p, c.tilt, slat, edge, cord, outdoor)}
+<rect x="${x0 - 6}" y="${bot + 4}" width="${x1 - x0 + 12}" height="3.6" rx=".6" fill="${outdoor ? "#efe9de" : "#fbfbfb"}" stroke="#c9c0b0" stroke-width=".4"/>
+<rect x="${x0 - 5}" y="${top - 11}" width="${x1 - x0 + 10}" height="${outdoor ? 12 : 7}" rx="1.2" fill="url(#${hd})" transform="translate(0 ${outdoor ? 0 : 4})"/>
+${cvArrow(dir)}`;
+}
+// A bioclimatic pergola against the house, in oblique view and built in 3D:
+// four posts, a deep beam in front and at the back (where the gutter and the
+// motor live), two lower side beams between them, the louvers turning inside
+// with the tilt (closed, a roof; open, upright blades showing what lies
+// behind), their shadow on the terrace, and the glow of the LED strip under
+// the beams while its light is on.
+function ntCovPergola(c) {
+  const wl = ntId(), gr = ntId(), sk = ntId(), fa = ntId(), sd = ntId(), tp = ntId(), bl = ntId(), hb = ntId(), lp = ntId(), lh = ntId();
+  const k = Math.max(0, Math.min(1, c.tilt / 100)), lc = c.lightColor || "#ffcf7a", mc = c.color || "#5d646b";
+  const W = 84, D = 40, bw = 4.5, bh = 6.5, BH = 11, HP = 58, ox = 13, oy = 40, zx = .35, zy = -.55, GY = oy + HP + D * zy;
+  const pr = (x, y, z) => `${cvF(ox + x + z * zx)} ${cvF(oy - y + z * zy)}`;
+  const poly = (pts, fill, extra = "") => `<polygon points="${pts.map((q) => pr(...q)).join(" ")}" fill="${fill}" ${extra}/>`;
+  const edge = `stroke="${cvTone(mc, -.35)}" stroke-width=".3" stroke-linejoin="round"`;
+  // A box seen from the front, from above and from the right.
+  const box = (x0, x1, y0, y1, z0, z1, faces = "ftr") =>
+    (faces.includes("r") ? poly([[x1, y0, z0], [x1, y0, z1], [x1, y1, z1], [x1, y1, z0]], `url(#${sd})`, edge) : "") +
+    (faces.includes("t") ? poly([[x0, y1, z0], [x1, y1, z0], [x1, y1, z1], [x0, y1, z1]], `url(#${tp})`, edge) : "") +
+    (faces.includes("f") ? poly([[x0, y0, z0], [x1, y0, z0], [x1, y1, z0], [x0, y1, z0]], `url(#${fa})`, edge) : "");
+  const post = (x, z) => box(x, x + bw, -HP, -BH, z, z + bw, "fr");
+  const n = 8, pitch = (D - 2 * bw) / n, bwid = pitch * 1.04, th = k * 1.35, dz = bwid * Math.cos(th) / 2, dy = bwid * Math.sin(th) * .05, yc = -bh / 2;
+  let louv = "", shade = "";
+  for (let i = 0; i < n; i++) {
+    const zc = bw + pitch * (i + .5);
+    const q = [[bw, yc - dy, zc - dz], [W - bw, yc - dy, zc - dz], [W - bw, yc + dy, zc + dz], [bw, yc + dy, zc + dz]];
+    louv += poly(q, `url(#${tp})`, `stroke="${cvTone(mc, -.2)}" stroke-width=".3"`) + (k > .25 ? `<path d="M${pr(bw, yc - dy, zc - dz)} L${pr(W - bw, yc - dy, zc - dz)}" stroke="${cvTone(mc, .1)}" stroke-width=".7"/>` : "");
+    shade += poly(q.map(([x, , z]) => [x - 7, -HP, z]), "#000", `opacity=".2"`);
+  }
+  const halo = (x0, x1, z0, z1, y) => `<polygon points="${[[x0, y, z0], [x1, y, z1], [x1, y - 16, z1], [x0, y - 16, z0]].map((q) => pr(...q)).join(" ")}" fill="url(#${lh})"/>`;
+  const glow = (x0, z0, x1, z1, y) => `<path d="M${pr(x0, y - .4, z0)} L${pr(x1, y - .4, z1)}" stroke="${lc}" stroke-width="4" stroke-linecap="round" opacity=".75" filter="url(#${hb})"/>`;
+  const on = !!c.light;
+  return `<defs>${ntV(wl, "#ece4d6", "#ddd2bf")}${ntV(gr, "#c9c2b6", "#a99f90")}${ntV(sk, "#d7ebf8", "#a9cfe9")}${ntV(fa, cvTone(mc, .18), mc)}${ntV(sd, cvTone(mc, .08), cvTone(mc, -.15))}${ntV(tp, cvTone(mc, .5), cvTone(mc, .36))}${cvBlur(bl, 1.2)}${cvBlur(hb, 2.4)}
+<radialGradient id="${lp}"><stop offset="0" stop-color="${lc}" stop-opacity=".75"/><stop offset="1" stop-color="${lc}" stop-opacity="0"/></radialGradient>
+<linearGradient id="${lh}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${lc}" stop-opacity=".55"/><stop offset="1" stop-color="${lc}" stop-opacity="0"/></linearGradient></defs>
+<rect x="-6" y="-10" width="132" height="135" fill="url(#${sk})"/>
+<rect x="18" y="-10" width="108" height="${cvF(GY + 10)}" fill="url(#${wl})"/>
+<rect x="48" y="${cvF(GY - 38)}" width="30" height="38" fill="#5f5a52"/><rect x="50" y="${cvF(GY - 36)}" width="26" height="36" fill="url(#${sk})"/><rect x="62.4" y="${cvF(GY - 36)}" width="1.2" height="36" fill="#f2f2f2"/>
+<polygon points="-6 ${cvF(GY)} 126 ${cvF(GY)} 126 125 -6 125" fill="url(#${gr})"/>
+<path d="M18 ${cvF(GY)} H126" stroke="#000" stroke-opacity=".18" stroke-width=".6"/>
+${[GY + 9, GY + 21, GY + 36].map((y) => `<path d="M-6 ${cvF(y)} H126" stroke="#000" stroke-opacity=".05"/>`).join("")}
+<g filter="url(#${bl})">${shade}</g>
+${on ? `<ellipse cx="${cvF(ox + W / 2 + D / 2 * zx)}" cy="${cvF(oy + HP + D / 2 * zy + 2)}" rx="50" ry="13" fill="url(#${lp})"/>` : ""}
+${post(0, D - bw)}${post(W - bw, D - bw)}
+${on ? halo(bw, W - bw, D - bw, D - bw, -BH) + halo(bw, bw, bw, D - bw, -bh) + halo(0, W, 0, 0, -BH) : ""}
+${box(0, W, -BH, 0, D - bw, D)}
+${box(0, bw, -bh, 0, bw, D - bw, "tr")}
+${on ? glow(bw, D - bw, W - bw, D - bw, -BH) + glow(bw, bw, bw, D - bw, -bh) : ""}
+${louv}
+${box(W - bw, W, -bh, 0, bw, D - bw, "tr")}
+${box(0, W, -BH, 0, 0, bw)}
+${on ? glow(bw, 0, W - bw, 0, -BH) : ""}
+${post(0, 0)}${post(W - bw, 0)}
+${c.moving ? `<g class="cv-arrow" transform="translate(108 4)"><circle r="7" fill="#1e88e5"/><path d="M-3.6 0 a3.6 3.6 0 1 1 1 2.6" fill="none" stroke="#fff" stroke-width="1.4" stroke-linecap="round"/><path d="M-3.6 3 L-2.6 2.6 L-2.2 3.8" fill="none" stroke="#fff" stroke-width="1.2"/></g>` : ""}`;
+}
+// A terrace awning: its cassette on the wall, the fabric (striped or plain)
+// unrolled to the position on its folding arms, the valance hanging from the
+// front bar, its shade on the terrace.
+function ntCovAwning(c) {
+  const wl = ntId(), gr = ntId(), cs = ntId(), sh = ntId(), bl = ntId();
+  const dir = c.moving === "opening" ? "down" : c.moving === "closing" ? "up" : "";
+  const e = Math.max(0, Math.min(1, c.p / 100)), cA = c.fabric || "#3f6f8f", cB = c.stripes === false ? cvTone(cA, .06) : "#eef0f1", fc = c.color || "#eef0f2";
+  const top = 24, x0 = 18, x1 = 102, fy = top + 2 + 50 * e, spread = 9 * e, fx0 = x0 - spread, fx1 = x1 + spread, n = 8;
+  let stripes = "";
+  for (let i = 0; i < n; i++) {
+    const a = x0 + (x1 - x0) * i / n, b = x0 + (x1 - x0) * (i + 1) / n, a2 = fx0 + (fx1 - fx0) * i / n, b2 = fx0 + (fx1 - fx0) * (i + 1) / n;
+    stripes += `<polygon points="${cvF(a)} ${top + 2} ${cvF(b)} ${top + 2} ${cvF(b2)} ${cvF(fy)} ${cvF(a2)} ${cvF(fy)}" fill="${i % 2 ? cB : cA}"/>`;
+  }
+  const scal = []; for (let i = 0; i < n * 2; i++) { const xa = fx0 + (fx1 - fx0) * i / (n * 2), xb = fx0 + (fx1 - fx0) * (i + 1) / (n * 2); scal.push(`<path d="M${cvF(xa)} ${cvF(fy + 1.8)} V${cvF(fy + 6)} Q${cvF((xa + xb) / 2)} ${cvF(fy + 8.6)} ${cvF(xb)} ${cvF(fy + 6)} V${cvF(fy + 1.8)} Z" fill="${Math.floor(i / 2) % 2 ? cB : cA}" stroke="#000" stroke-opacity=".12" stroke-width=".3"/>`); }
+  const arm = (wx, fx) => { const ex = wx + (fx - wx) * .5 + (wx < 60 ? 10 : -10) * (1 - e), ey = top + 6 + (fy - top - 6) * .55; return `<path d="M${wx} ${top + 6} L${cvF(ex)} ${cvF(ey)} L${cvF(fx)} ${cvF(fy)}" fill="none" stroke="#7b8288" stroke-width="1.6" stroke-linejoin="round"/><circle cx="${cvF(ex)}" cy="${cvF(ey)}" r="1.3" fill="#5d646b"/>`; };
+  return `<defs>${ntV(wl, "#ece4d6", "#d6cab5")}${ntV(gr, "#c9c2b6", "#a99f90")}${ntV(cs, cvTone(fc, .2), cvTone(fc, -.28))}<linearGradient id="${sh}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#000" stop-opacity=".22"/><stop offset="1" stop-color="#000" stop-opacity="0"/></linearGradient>${cvBlur(bl, 2.2)}</defs>
+<rect x="-6" y="-10" width="132" height="135" fill="url(#${wl})"/>
+<rect x="30" y="34" width="60" height="58" fill="#5f5a52"/><rect x="32" y="36" width="56" height="56" fill="#cfe4f3"/><rect x="59.4" y="36" width="1.2" height="56" fill="#f2f2f2"/>
+<polygon points="-6 92 126 92 126 125 -6 125" fill="url(#${gr})"/>
+${e > .02 ? `<polygon points="${cvF(x0)} 92 ${cvF(x1)} 92 ${cvF(fx1 + 4)} ${cvF(Math.min(124, 92 + 34 * e))} ${cvF(fx0 - 4)} ${cvF(Math.min(124, 92 + 34 * e))}" fill="#000" opacity=".16" filter="url(#${bl})"/>
+${arm(x0 + 6, fx0 + 6)}${arm(x1 - 6, fx1 - 6)}<g${dir ? ` class="cv-sway"` : ""}>${stripes}<polygon points="${x0} ${top + 2} ${x1} ${top + 2} ${cvF(fx1)} ${cvF(fy)} ${cvF(fx0)} ${cvF(fy)}" fill="url(#${sh})" opacity=".5"/></g>
+<rect x="${cvF(fx0 - 1)}" y="${cvF(fy - .4)}" width="${cvF(fx1 - fx0 + 2)}" height="2.4" rx="1" fill="#8f969c"/>${scal.join("")}` : ""}
+<rect x="${x0 - 3}" y="${top - 7}" width="${x1 - x0 + 6}" height="10" rx="4" fill="url(#${cs})" stroke="${cvTone(fc, -.35)}" stroke-width=".4"/>
+<path d="M${x0 - 1} ${top - 4.6} H${x1 + 1}" stroke="#fff" stroke-opacity=".8" stroke-width=".9"/>
+${cvArrow(dir, 108, 4)}`;
+}
+const NT_DRAW = { ths_co2_eink: ntCo2Eink, ths_co2_box: ntCo2Box, ths_co2_netatmo: (c) => ntCo2Netatmo(c, false), ths_co2_netatmo_module: (c) => ntCo2Netatmo(c, true), cov_shutter: ntCovShutter, cov_blind: ntCovBlind, cov_venetian: (c) => ntCovVenetian(c, false), cov_raffstore: (c) => ntCovVenetian(c, true), cov_pergola: ntCovPergola, cov_awning: ntCovAwning, pellet_grill: ntPelletGrill, ths_disc: ntThsDisc, ths_square: ntThsSquare, ths_cushion: ntThsCushion, ths_stick: ntThsStick, ths_lcd_stand: ntThsLcdStand, ths_lcd_probe: ntThsLcdProbe, ths_lcd_round: ntThsLcdRound, dryer: ntFilamentDryer, humidifier: ntHumidifier, circulator: ntCirculator, irr_sprinkler: ntIrrSprinkler, irr_tap: ntIrrTap, irr_drip: ntIrrDrip, irr_flowers: ntIrrFlowers, lit_globe: ntLitterGlobe, lit_box: ntLitterBox, det_smoke: ntDetSmoke, det_co: ntDetCo, det_leak: ntDetLeak, spk_smart: ntSpkSmart, spk_homepod_mini: ntSpkMini, spk_sonos_one: ntSpkOne, spk_bookshelf: ntSpkShelf, spk_sonos_move: ntSpkMove, spk_soundbar: ntSpkBar, spk_echo_dot: ntSpkDot, spk_echo_dot_max: ntSpkDotMax, spk_nest_mini: ntSpkNest, spk_sonos_era100: ntSpkEra100, spk_sonos_era300: ntSpkEra300, spk_bose_wave: ntSpkWave, spk_bose_500: ntSpkBose500, spk_bose_soundlink: ntSpkFlex, spk_bose_soundbar: ntSpkBoseBar, spk_sonos_five: ntSpkFive, spk_sonos_play: ntSpkPlay, spk_sonos_roam: ntSpkRoam, spk_sonos_ray: ntSpkRay, spk_sonos_amp: ntSpkAmp, spk_sonos_port: ntSpkPort, spk_bose_ultra: ntSpkBoseUltra, spk_bose_portable: ntSpkBosePortable, spk_bose_amp: ntSpkBoseAmp, str_apple_tv: (c) => strZoom(strAppleTv(c), 54, 1.45), str_fire_tv_cube: strFireCube, str_fire_tv_stick: (c) => strStick(c, true), str_google_tv_streamer: strGoogleStreamer, str_chromecast: strChromecast, str_shield: strShield, str_shield_pro: strShieldPro, str_roku: strRoku, str_mi_box: strMiBox, str_freebox: strFreebox, str_decoder: strDecoder, str_box: strBox, str_stick: (c) => strStick(c, false), con_ps1: conPs1, con_ps2: conPs2, con_ps3: conPs3, con_ps4: (c) => conPs4(c, false), con_ps4_pro: (c) => conPs4(c, true), con_ps5: conPs5, con_xbox: conXbox, con_xbox_360: conX360, con_xbox_one: conXone, con_xbox_series_x: conXsx, con_xbox_series_s: conXss, con_switch: (c) => conSwitch(c, false), con_switch_2: (c) => conSwitch(c, true), con_switch_lite: conSwitchLite, con_ps_vita: conVita, con_nes: conNes, con_snes: conSnes, con_n64: conN64, con_gamecube: conGamecube, con_wii: conWii, con_megadrive: conMegadrive, tank: ntTank, fws: ntFresh, solth: ntSolarThermal, wood: ntWoodStove, mob_scooter: mobScooter, mob_offroad: mobOffroad, mob_ebike: mobEbike, mob_gyropode: mobGyropode, mob_motorcycle: mobMotorcycle, meter_box: ntMeterBox, meter_dome: ntMeterDome, meter_gas: ntGas, meter_water: ntWater, booster: ntBooster, sump: ntSump, pool: ntPoolRobot, floor: ntFloor, spa: ntSpa, sauna: ntSauna, aquarium: ntAquarium, linky: ntLinky, tree: ntTree };
 // The card's colour on a drawing made after a real product: its shell, the
 // greys, blacks and whites it is drawn in, takes the colour, lightest to
 // darkest as before; what has a colour of its own (a screen's glow, a
@@ -3824,6 +4128,12 @@ function ntHtml(cls, d) {
 // The new drawings' motion: nothing moves until the machine runs (nt-on),
 // except a meter's LED and an alarm's beacon. Each part's stagger is its --d0.
 const NT_CSS = `
+        .cv-up{animation:cv-up .9s linear infinite}.cv-down{animation:cv-down .9s linear infinite}
+        @keyframes cv-up{from{transform:translateY(0)}to{transform:translateY(-4.2px)}}
+        @keyframes cv-down{from{transform:translateY(0)}to{transform:translateY(4.2px)}}
+        .cv-arrow{animation:cv-blink 1s ease-in-out infinite}@keyframes cv-blink{0%,100%{opacity:.35}50%{opacity:1}}
+        .cv-sway{animation:cv-sway 1.8s ease-in-out infinite;transform-origin:60px 14px}@keyframes cv-sway{0%,100%{transform:skewX(0)}50%{transform:skewX(.6deg)}}
+        .co2-pulse{animation:co2-pulse 1.6s ease-in-out infinite}@keyframes co2-pulse{0%,100%{opacity:.45}50%{opacity:1}}
         svg.nt-svg{position:absolute;left:0;top:0;width:96px;height:108px;overflow:visible}
         .ntfd-h{fill:none;stroke:#ff6d00;stroke-width:1.8;stroke-linecap:round;opacity:0;animation:ntfd-heat 2.4s ease-in-out infinite;animation-delay:calc(var(--d0,0s) + var(--anim-offset,0s))}
         @keyframes ntfd-heat{0%{opacity:0;transform:translateY(4px)}40%{opacity:1}100%{opacity:0;transform:translateY(-7px)}}
@@ -3994,9 +4304,10 @@ function ntReadOf(type, hass, cfg, st, watts, threshold) {
   if (unav) {
     const ml = meterLayoutOf(cfg, st);
     const kinds = { pellet_grill: "pellet_grill", filament_dryer: "dryer", humidifier: "humidifier", water_pump: pumpLayoutOf(cfg, st), floor_heating: "floor", spa: "spa", sauna: "sauna", aquarium: "aquarium", meter: ml === "linky" ? "linky" : `meter_${ml}`, christmas_tree: "tree", mobility: `mob_${mobilityLayoutOf(cfg, st)}`,
-      irrigation: `irr_${irrigationLayoutOf(cfg, st)}`, litter_box: `lit_${litterLayoutOf(cfg, st)}`, detector: `det_${detectorLayoutOf(cfg, st)}`, speaker: `spk_${speakerLayoutOf(cfg, st)}`, console: `con_${consoleLayoutOf(cfg, st)}`, streamer: `str_${streamerLayoutOf(cfg, st)}`, climate_sensor: `ths_${thsLayoutOf(cfg, st)}` };
+      irrigation: `irr_${irrigationLayoutOf(cfg, st)}`, litter_box: `lit_${litterLayoutOf(cfg, st)}`, detector: `det_${detectorLayoutOf(cfg, st)}`, speaker: `spk_${speakerLayoutOf(cfg, st)}`, console: `con_${consoleLayoutOf(cfg, st)}`, streamer: `str_${streamerLayoutOf(cfg, st)}`, climate_sensor: `ths_${thsLayoutOf(cfg, st)}`, cover: `cov_${coverLayoutOf(cfg, st)}` };
     return out("unav", "ev_offline", NT_COLORS.unav, { kind: kinds[type], on: false, electric: floorLayoutOf(cfg) === "electric", model: type === "water_pump" ? circModelOf(cfg, st) : "",
-      palette: cfg.tree_palette, ...(type === "pellet_grill" ? { layout: grillLayoutOf(cfg, st) } : {}), ...(type === "filament_dryer" ? fdLook(cfg) : {}), presents: type === "christmas_tree" && treePresents(cfg), color: type === "speaker" ? speakerColorOf(cfg, st) : "" });
+      palette: cfg.tree_palette, ...(type === "pellet_grill" ? { layout: grillLayoutOf(cfg, st) } : {}), ...(type === "filament_dryer" ? fdLook(cfg) : {}), presents: type === "christmas_tree" && treePresents(cfg), color: type === "speaker" ? speakerColorOf(cfg, st) : type === "cover" ? cvColor(cfg.cover_color, COVER_COLORS) : "",
+      ...(type === "cover" ? { p: 100, tilt: 60, fabric: cvColor(cfg.fabric_color, FABRIC_COLORS), stripes: cfg.fabric_stripes !== false } : {}), ...(type === "climate_sensor" ? { co2: null, body: cfg.netatmo_color } : {}) });
   }
   if (type === "pellet_grill") {
     const dead2 = (s) => !s || ["unavailable", "unknown", "none", ""].includes(String(s.state).trim().toLowerCase());
@@ -4147,11 +4458,26 @@ function ntReadOf(type, hass, cfg, st, watts, threshold) {
   if (type === "climate_sensor") {
     // The temperature is its state, the humidity and the battery its lines.
     // A screen shows them on the drawing, a thermometer fills up and changes
-    // colour on the models that have none.
+    // colour on the models that have none. A CO2 reading (#108), its state or
+    // a line of its own, makes it a CO2 monitor: green, orange or red against
+    // two thresholds, and the temperature becomes a line.
     const a = (st && st.attributes) || {};
-    const v = numberOrNull(st && st.state);
-    const unit = String(a.unit_of_measurement || "\u00b0C");
+    const co2Main = a.device_class === "carbon_dioxide" || /ppm/i.test(String(a.unit_of_measurement || ""));
+    const co2Id = cfg.co2_entity || (co2Main ? cfg.state_entity : null);
+    const co2 = co2Id ? numericState(hass, co2Id) : null;
+    const tId = co2Main ? cfg.temperature_entity : cfg.state_entity;
+    const ts = tId ? stateObj(hass, tId) : null;
+    const v = ts ? numberOrNull(ts.state) : null;
+    const unit = String((ts && ts.attributes && ts.attributes.unit_of_measurement) || "\u00b0C");
     const celsius = v === null ? null : /f/i.test(unit) ? (v - 32) / 1.8 : v;
+    if (co2Id) {
+      const cl = ntLine(hass, cfg, "ths_co2", "mdi:molecule-co2", "ths_co2", co2Id);
+      if (cl) lines.push(cl);
+    }
+    if (co2Main && tId) {
+      const tl = ntLine(hass, cfg, "ths_temperature", "mdi:thermometer", "temperature", tId);
+      if (tl) lines.push(tl);
+    }
     const hl = ntLine(hass, cfg, "ths_humidity", "mdi:water-percent", "ac_line_humidity", cfg.humidity_entity);
     if (hl) lines.push(hl);
     const bv = cfg.battery_entity ? numericState(hass, cfg.battery_entity) : null;
@@ -4161,8 +4487,41 @@ function ntReadOf(type, hass, cfg, st, watts, threshold) {
     const bl = ntLine(hass, cfg, "ths_battery", low ? "mdi:battery-alert-variant-outline" : "mdi:battery", "section_battery", cfg.battery_entity);
     if (bl) lines.push({ ...bl, value: binaryBat ? t(hass, low ? "opt_low" : "opt_ok") : bl.value, caution: low });
     const draw = { kind: `ths_${thsLayoutOf(cfg, st)}`, on: false, t: v, tc: celsius, unit, h: cfg.humidity_entity ? numericState(hass, cfg.humidity_entity) : null,
-      b: bv !== null ? Math.max(0, Math.min(1, bv / 100)) : low ? .25 : 1 };
-    return { ...out("ok", "type_climate_sensor", thsColor(celsius), draw), label: keepTogether(formatInfoValue(st, hass, null, cfg, cfg.state_entity)) };
+      b: bv !== null ? Math.max(0, Math.min(1, bv / 100)) : low ? .25 : 1, co2, warn: cfg.co2_warning, alert: cfg.co2_alert, body: cfg.netatmo_color };
+    if (co2 !== null) {
+      const lv = co2LevelOf(co2, cfg.co2_warning, cfg.co2_alert);
+      return out(["ok", "ventilate", "poor"][lv], ["co2_good", "co2_ventilate", "co2_poor"][lv], CO2_COLORS[lv], { ...draw, on: lv === 2 });
+    }
+    return { ...out("ok", "type_climate_sensor", thsColor(celsius), draw), label: keepTogether(formatInfoValue(ts || st, hass, null, cfg, tId || cfg.state_entity)) };
+  }
+  if (type === "cover") {
+    // A window covering, a pergola or an awning (#109): its position, its
+    // slats' tilt, whether it moves. A pergola's louvers are read from the
+    // tilt, else from the position its integration gives them.
+    const a = (st && st.attributes) || {};
+    const raw = String((st && st.state) || "").toLowerCase();
+    const layout = coverLayoutOf(cfg, st);
+    const pos = numberOrNull(a.current_position), tilt = numberOrNull(a.current_tilt_position);
+    const moving = raw === "opening" ? "opening" : raw === "closing" ? "closing" : null;
+    const p = pos !== null ? pos : raw === "closed" ? 0 : moving ? 50 : 100;
+    const value = layout === "pergola" ? (tilt !== null ? tilt : p) : p;
+    const ls = cfg.light_entity ? stateObj(hass, cfg.light_entity) : null;
+    const lightOn = !!ls && ["on", "true"].includes(String(ls.state).toLowerCase());
+    const rgb = ls && Array.isArray(ls.attributes.rgb_color) ? ls.attributes.rgb_color : null;
+    if (pos !== null && !(layout === "pergola" && tilt === null)) lines.push({ key: "cov_position", icon: "mdi:arrow-expand-vertical", label: t(hass, "cov_position"), value: `${Math.round(pos)} %`, entity: cfg.state_entity });
+    if (tilt !== null) lines.push({ key: "cov_tilt", icon: "mdi:angle-acute", label: t(hass, "cov_tilt"), value: `${Math.round(tilt)} %`, entity: cfg.state_entity });
+    if (layout === "pergola" && tilt === null && pos !== null) lines.push({ key: "cov_tilt", icon: "mdi:angle-acute", label: t(hass, "cov_tilt"), value: `${Math.round(pos)} %`, entity: cfg.state_entity });
+    if (ls && !HA_OFFLINE_STATES.includes(String(ls.state).toLowerCase())) lines.push({ key: "cov_light", icon: lightOn ? "mdi:lightbulb-on" : "mdi:lightbulb-outline", label: t(hass, "cov_light"), value: t(hass, lightOn ? "lamp_on" : "lamp_off"), entity: cfg.light_entity });
+    const draw = { kind: `cov_${layout}`, on: !!moving, p, tilt: layout === "pergola" ? value : tilt !== null ? tilt : 60, moving,
+      color: cvColor(cfg.cover_color, COVER_COLORS), fabric: cvColor(cfg.fabric_color, FABRIC_COLORS), stripes: cfg.fabric_stripes !== false,
+      light: lightOn, lightColor: rgb ? "#" + rgb.slice(0, 3).map((x) => Math.max(0, Math.min(255, Math.round(x))).toString(16).padStart(2, "0")).join("") : "" };
+    const words = layout === "pergola" ? ["cov_louvers_opening", "cov_louvers_closing", "cov_louvers_open", "cov_louvers_closed", "cov_louvers_at"]
+      : layout === "awning" ? ["cov_deploying", "cov_retracting", "cov_deployed", "cov_retracted", "cov_deployed_at"]
+      : ["cov_opening", "cov_closing", "cov_open", "cov_closed", "cov_open_at"];
+    if (moving) return out("run", words[moving === "opening" ? 0 : 1], NT_COLORS.run, draw);
+    if (value <= 0) return out("off", words[3], NT_COLORS.idle, draw);
+    if (value >= 100 || (pos === null && !(layout === "pergola" && tilt !== null))) return out("on", words[2], NT_COLORS.lit, draw);
+    return { ...out("on", words[4], NT_COLORS.lit, draw), label: t(hass, words[4]).replace("{pct}", String(Math.round(value))) };
   }
   if (type === "console") {
     // A console: a media player from PlayStation Network, Xbox or the PS4
@@ -4566,6 +4925,22 @@ function ntControls(hass, cfg, type) {
   if (type === "speaker" && st && ["playing", "paused", "buffering", "idle", "on"].includes(String(st.state).toLowerCase())) {
     const playing = ["playing", "buffering"].includes(String(st.state).toLowerCase());
     out.push({ key: "play_pause", entity: cfg.state_entity, icon: playing ? "mdi:pause" : "mdi:play", label: t(hass, "play_pause"), on: playing, service: "media_play_pause" });
+  }
+  // A cover's three buttons (#109): its own services, the tilt ones for a
+  // pergola that only turns its louvers, only those its features list. An
+  // awning opens down and closes up; a pergola opens and closes its louvers.
+  if (type === "cover" && st) {
+    const a = st.attributes || {}, f = Number(a.supported_features), layout = coverLayoutOf(cfg, st);
+    const has = (bit) => !Number.isFinite(f) || f <= 0 || (f & bit) > 0;
+    const tiltOnly = layout === "pergola" && a.current_tilt_position !== undefined && a.current_position === undefined;
+    const sv = tiltOnly ? ["open_cover_tilt", "stop_cover_tilt", "close_cover_tilt"] : ["open_cover", "stop_cover", "close_cover"];
+    const bits = tiltOnly ? [16, 64, 32] : [1, 8, 2];
+    const icons = layout === "pergola" ? ["mdi:blinds-open", "mdi:stop", "mdi:blinds"] : layout === "awning" ? ["mdi:arrow-down", "mdi:stop", "mdi:arrow-up"] : ["mdi:arrow-up", "mdi:stop", "mdi:arrow-down"];
+    const btn = [{ key: "cov_open", label: t(hass, "cov_open_btn") }, { key: "cov_stop", label: t(hass, "stop") }, { key: "cov_close", label: t(hass, "cov_close_btn") }]
+      .map((b, i) => ({ ...b, entity: cfg.state_entity, icon: icons[i], service: sv[i], bit: bits[i] })).filter((b) => has(b.bit));
+    // Retracting first on an awning, so its buttons read up, stop, down.
+    out.push(...(layout === "awning" ? btn.slice().reverse() : btn).map(({ bit, ...b }) => b));
+    if (cfg.light_entity && stateObj(hass, cfg.light_entity)) out.push({ key: "cov_light", entity: cfg.light_entity, icon: "mdi:lightbulb", label: t(hass, "cov_light"), on: ntOnOff(hass, cfg.light_entity) });
   }
   if (type === "detector" && cfg.test_entity) out.push({ key: "det_test", entity: cfg.test_entity, icon: "mdi:bell-ring-outline", label: t(hass, "sec_test") });
   if (type === "spa" && cfg.bubbles_entity && ["switch", "input_boolean", "fan"].includes(domainOf(cfg.bubbles_entity))) {

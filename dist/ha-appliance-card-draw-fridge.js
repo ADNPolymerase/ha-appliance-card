@@ -1,9 +1,15 @@
 // Built by tools/build.mjs from the files of src/: edit those, not this file.
 // The fridge drawing and its CSS, loaded by the card the first time it shows one.
-export default function defineDrawing({ BATTERY_LAYOUTS, CAMERA_LAYOUTS, DIFFUSER_LAYOUTS, EV_FLOW_DEFAULT, FR3, HRV_LAYOUTS, LAMP_LAYOUTS, LAMP_SPOTS, LAMP_WARM, LAPTOP_COLORS, MAILBOX_LAYOUTS, MAILBOX_MAX_LETTERS, MB3_PAL, MW_DISHES, NET_LAYOUTS, OVEN_DISHES, ROBOT_FLOORS, ROBOT_LAYOUTS, SCREEN_LAYOUTS, SCREEN_LIT, SCREEN_TABLETS, SHELTER_COLORS, SOLAR_LAYOUTS, T, TOASTER_LAYOUTS, TREE_PALETTES, esc, ntFlake, ntTint, t, thsColor, zoneColumns }) {
+export default function defineDrawing({ BATTERY_LAYOUTS, CAMERA_LAYOUTS, CO2_COLORS, DIFFUSER_LAYOUTS, EV_FLOW_DEFAULT, FR3, HRV_LAYOUTS, LAMP_LAYOUTS, LAMP_SPOTS, LAMP_WARM, LAPTOP_COLORS, MAILBOX_LAYOUTS, MAILBOX_MAX_LETTERS, MB3_PAL, MW_DISHES, NETATMO_COLORS, NET_LAYOUTS, OVEN_DISHES, ROBOT_FLOORS, ROBOT_LAYOUTS, SCREEN_LAYOUTS, SCREEN_LIT, SCREEN_TABLETS, SHELTER_COLORS, SOLAR_LAYOUTS, T, TOASTER_LAYOUTS, TREE_PALETTES, co2LevelOf, esc, ntFlake, ntTint, t, thsColor, zoneColumns }) {
 // The new drawings' motion: nothing moves until the machine runs (nt-on),
 // except a meter's LED and an alarm's beacon. Each part's stagger is its --d0.
 const NT_CSS = `
+        .cv-up{animation:cv-up .9s linear infinite}.cv-down{animation:cv-down .9s linear infinite}
+        @keyframes cv-up{from{transform:translateY(0)}to{transform:translateY(-4.2px)}}
+        @keyframes cv-down{from{transform:translateY(0)}to{transform:translateY(4.2px)}}
+        .cv-arrow{animation:cv-blink 1s ease-in-out infinite}@keyframes cv-blink{0%,100%{opacity:.35}50%{opacity:1}}
+        .cv-sway{animation:cv-sway 1.8s ease-in-out infinite;transform-origin:60px 14px}@keyframes cv-sway{0%,100%{transform:skewX(0)}50%{transform:skewX(.6deg)}}
+        .co2-pulse{animation:co2-pulse 1.6s ease-in-out infinite}@keyframes co2-pulse{0%,100%{opacity:.45}50%{opacity:1}}
         svg.nt-svg{position:absolute;left:0;top:0;width:96px;height:108px;overflow:visible}
         .ntfd-h{fill:none;stroke:#ff6d00;stroke-width:1.8;stroke-linecap:round;opacity:0;animation:ntfd-heat 2.4s ease-in-out infinite;animation-delay:calc(var(--d0,0s) + var(--anim-offset,0s))}
         @keyframes ntfd-heat{0%{opacity:0;transform:translateY(4px)}40%{opacity:1}100%{opacity:0;transform:translateY(-7px)}}
