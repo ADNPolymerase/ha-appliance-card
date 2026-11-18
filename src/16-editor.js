@@ -561,7 +561,7 @@ const SECTIONS = [
   // The history's sensor and its hours, once the history is on.
   { field: "history_entity", types: APPLIANCE_TYPES, labelKey: "section_history", includeDomains: ["sensor", "number", "input_number"],
     when: (c) => !!c.show_history, extra: (c) => c._row("history_hours", "history_hours", { placeholder: String(HISTORY_HOURS) }) + c._row("history_periods", "history_periods", { placeholder: "24h, 7d, 30d" }) },
-  { field: "power_entity", types: APPLIANCE_TYPES, includeDomains: ["sensor"], units: (type) => (type === "heat_pump" ? "power" : ""),
+  { field: "power_entity", types: APPLIANCE_TYPES, includeDomains: ["sensor"], units: "power",
     labelKey: (type) => (type === "solar" ? "section_solar_power" : type === "home_battery" ? "section_battery_power" : type === "heat_pump" ? "section_heating_power" : "section_power"), extra: (c) => {
       const cap = caps(c._currentType());
       // Panels need no threshold; a battery's tells a rest from a charge.
@@ -972,9 +972,12 @@ class ApplianceCardEditor extends HTMLElement {
     if (opts.includeDomains) picker.includeDomains = opts.includeDomains;
     // A power field lists sensors in W, an energy field sensors in kWh (#76),
     // so one cannot end up in the other; the entity already chosen stays.
-    if (opts.units && UNIT_FILTERS[opts.units]) {
-      const re = UNIT_FILTERS[opts.units], keep = this._config[field];
-      picker.entityFilter = (st) => !!st && (st.entity_id === keep || re.test(String((st.attributes || {}).unit_of_measurement || "").replace(/\s/g, "")));
+    // The other fields keep to the unit their name says (a temperature, a
+    // humidity, a battery in %).
+    const units = opts.units || (opts.units === undefined ? fieldUnits(field) : "");
+    if (units && UNIT_FILTERS[units]) {
+      const keep = this._config[field];
+      picker.entityFilter = (st) => !!st && (st.entity_id === keep || unitFilterAccepts(units, st));
     }
     picker.addEventListener("value-changed", (ev) => {
       const value = ev.detail.value;

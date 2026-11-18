@@ -2520,7 +2520,39 @@ check('pac : energie de l eau chaude', nb(infoLine(HM('Heating', 'Tank', 35, HE,
   check('editeur pac : pas des W', !!en && en(ent('sensor.a', 'W')), false);
   check('editeur pac : l entite deja choisie reste, meme en kWh', !!out && out(ent('sensor.kwh_out', 'kWh')), true);
   const plug = newEditor({ appliance_type: 'washer', state_entity: 'sensor.w', power_entity: 'sensor.p' });
-  check('editeur lave-linge : la puissance sans filtre d unite', plug._root.querySelector('[data-slot="power_entity"]')?.children.at(-1)?.entityFilter, undefined);
+  const pf = plug._root.querySelector('[data-slot="power_entity"]')?.children.at(-1)?.entityFilter;
+  check('editeur lave-linge : la puissance en W', !!pf && pf(ent('sensor.a', 'W')), true);
+  check('editeur lave-linge : pas une temperature', !!pf && pf(ent('sensor.a', '°C')), false);
+}
+{
+  // Each field keeps to the unit its name says, any other domain offered.
+  const S = (id, u, dc) => ({ entity_id: id, attributes: { ...(u ? { unit_of_measurement: u } : {}), ...(dc ? { device_class: dc } : {}) } });
+  const filterOf = (cfg, f) => { const ed = newEditor(cfg); ed._open.add(f); ed._build(); return ed._root.querySelector(`[data-slot="${f}"]`)?.children.at(-1)?.entityFilter; };
+  const t = filterOf({ appliance_type: 'kettle', state_entity: 'sensor.k' }, 'temperature_entity');
+  check('filtre : temperature en °C', !!t && t(S('sensor.t', '°C')), true);
+  check('filtre : temperature en °F', !!t && t(S('sensor.t', '°F')), true);
+  check('filtre : pas des W pour une temperature', !!t && t(S('sensor.w', 'W')), false);
+  check('filtre : pas un texte pour une temperature', !!t && t(S('sensor.txt')), false);
+  check('filtre : un climate reste propose', !!t && t(S('climate.k')), true);
+  check('filtre : un input_number reste propose', !!t && t(S('input_number.k')), true);
+  check('filtre : une temperature par sa classe', !!t && t(S('sensor.t2', undefined, 'temperature')), true);
+  const b = filterOf({ appliance_type: 'robot', state_entity: 'vacuum.r' }, 'battery_entity');
+  check('filtre : batterie en %', !!b && b(S('sensor.b', '%')), true);
+  check('filtre : pas des V pour une batterie', !!b && b(S('sensor.v', 'V')), false);
+  check('filtre : une batterie faible binaire reste', !!b && b(S('binary_sensor.low')), true);
+  const d = filterOf({ appliance_type: 'network', state_entity: 'binary_sensor.n' }, 'download_entity');
+  check('filtre : debit en Mbit/s', !!d && d(S('sensor.d', 'Mbit/s')), true);
+  check('filtre : debit en kB/s', !!d && d(S('sensor.d', 'kB/s')), true);
+  check('filtre : pas des % pour un debit', !!d && d(S('sensor.d', '%')), false);
+  const h = filterOf({ appliance_type: 'humidifier', state_entity: 'humidifier.h' }, 'current_humidity_entity');
+  check('filtre : humidite en %', !!h && h(S('sensor.h', '%')), true);
+  check('filtre : pas des °C pour une humidite', !!h && h(S('sensor.h', '°C')), false);
+  const keep = filterOf({ appliance_type: 'kettle', state_entity: 'sensor.k', temperature_entity: 'sensor.odd' }, 'temperature_entity');
+  check('filtre : l entite deja choisie reste', !!keep && keep(S('sensor.odd', 'W')), true);
+  check('filtre : un temps reste libre', filterOf({ appliance_type: 'washer', state_entity: 'sensor.w' }, 'remaining_time_entity'), undefined);
+  check('filtre : un niveau reste libre', filterOf({ appliance_type: 'litter_box', state_entity: 'sensor.l' }, 'litter_level_entity'), undefined);
+}
+{
 }
 // A COP entity is the owner's own, and keeps its name.
 check('circuits : une entite COP reste COP en froid', infoLine(HM('Cooling', 'Room', 17,

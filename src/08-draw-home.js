@@ -86,7 +86,47 @@ ${DIFFUSER_SVGS[layout](wood, b)}${DIF_DROP_BADGE}</svg></div>`;
 // cell state (heat recovery, cool recovery, bypass, defrosting); a filter in
 // days or in percent; four temperatures drawn at the ends of the ducts.
 // The units a power and an energy field accept in the editor's lists.
-const UNIT_FILTERS = { power: /^[mkMG]?W$/, energy: /^[mkMG]?Wh$/ };
+// What a picker lists for a field: a sensor or a number whose unit, or device
+// class, says it measures what the field asks for. Any other domain (a climate
+// for a temperature, a helper of one's own) is always offered.
+const UNIT_FILTERS = {
+  power: { re: /^[mkMG]?W$/, dc: [] },
+  energy: { re: /^[mkMG]?Wh$/, dc: [] },
+  temperature: { re: /^[\u00b0\u00ba]?[CFK]$/, dc: ["temperature"] },
+  humidity: { re: /^%$/, dc: ["humidity", "moisture"] },
+  percent: { re: /^%$/, dc: ["battery"] },
+  voltage: { re: /^[mk]?V$/, dc: ["voltage"] },
+  co2: { re: /^ppm$/i, dc: ["carbon_dioxide"] },
+  mass: { re: /^(mg|g|kg|lbs?|oz|st)$/, dc: ["weight"] },
+  pressure: { re: /^(bar|mbar|psi|[khM]?Pa|mmHg|inHg)$/, dc: ["pressure", "atmospheric_pressure"] },
+  rate: { re: /^([kKMGT]i?)?(bit|B)\/s$|^[kMG]?bps$/, dc: ["data_rate"] },
+};
+const UNIT_FILTERED_DOMAINS = ["sensor", "number"];
+// The unit a field asks for, read from its name: the few that measure one
+// thing whatever the appliance. A field whose unit varies (a level in % or in
+// litres, a time as a duration or a clock time) lists everything.
+function fieldUnits(field) {
+  if (/temperature|^(nozzle|bed|probe|probe_2)_target_entity$|^probe(_2)?_entity$/.test(field)) return "temperature";
+  if (/humidity/.test(field) && field !== "ams_humidity_entity") return "humidity";
+  if (field === "soil_moisture_entity") return "humidity";
+  if (field === "co2_entity") return "co2";
+  if (/energy/.test(field)) return "energy";
+  if (/(^|_)power_entity$/.test(field) && !/level/.test(field)) return "power";
+  if (field === "poe_entity") return "power";
+  if (/voltage/.test(field)) return "voltage";
+  if (field === "download_entity" || field === "upload_entity") return "rate";
+  if (/_mass_entity$|weight/.test(field)) return "mass";
+  if (/pressure/.test(field)) return "pressure";
+  if (["battery_entity", "cpu_entity", "memory_entity", "volume_entity", "charge_limit_entity", "reserve_entity", "fat_ratio_entity"].includes(field)) return "percent";
+  return "";
+}
+function unitFilterAccepts(kind, st) {
+  const f = UNIT_FILTERS[kind];
+  if (!f || !st) return true;
+  if (!UNIT_FILTERED_DOMAINS.includes(String(st.entity_id).split(".")[0])) return true;
+  const a = st.attributes || {};
+  return f.re.test(String(a.unit_of_measurement || "").replace(/\s/g, "")) || f.dc.includes(a.device_class);
+}
 const HRV_ONLY_FIELDS = ["hrv_layout", "active_mode_entity", "supply_temperature_entity", "extract_temperature_entity", "exhaust_temperature_entity", "bypass_entity", "airflow_entity",
   "supply_fan_entity", "exhaust_fan_entity", "exhaust_airflow_entity", "fan_max_rpm", "exhaust_fan_max_rpm", "humidity_control_entity", "filter_life_full", "high_speed_entity", "speed_entities", "zone_valves", "hrv_floors"];
 const HRV_LAYOUTS = ["diagram", "box", "one_duct", "pair", "single", "single_box", "single_basement"];
