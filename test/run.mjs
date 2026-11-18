@@ -11336,6 +11336,15 @@ check('borne : ni un statut reconnu', evMode(evR('SuspendedEVSE', { power_entity
   check('lampe : spot de jardin', shape('light.spot_jardin'), 'garden_spot');
   check('lampe : projecteur exterieur', shape('light.projecteur_exterieur'), 'garden_spot');
   check('lampe : floodlight', shape('light.driveway_floodlight'), 'flood');
+  check('lampe : plafonnier', shape('light.plafonnier_chambre'), 'ceiling');
+  check('lampe : deckenleuchte', shape('light.deckenleuchte_flur'), 'ceiling');
+  check('lampe : ceiling light', shape('light.dining_room_ceiling_light'), 'ceiling');
+  check('lampe : plafonnier anneau', shape('light.plafonnier_anneau_salon'), 'ceiling_ring');
+  check('lampe : ceiling ring', shape('light.ceiling_ring_lounge'), 'ceiling_ring');
+  check('lampe : panneau led', shape('light.panneau_led_bureau'), 'ceiling_panel');
+  check('lampe : led panel', shape('light.office_led_panel'), 'ceiling_panel');
+  check('lampe : nanoleaf reste panneaux', shape('light.nanoleaf_panels'), 'panels');
+  check('lampe : un halogene reste torchere', shape('light.halogen_salon'), 'torch');
   check('lampe : projecteur', shape('light.projecteur_garage'), 'flood');
   check('lampe : led fluter', shape('light.led_fluter_einfahrt'), 'flood');
   check('lampe : schijnwerper', shape('light.schijnwerper_oprit'), 'flood');
@@ -11365,7 +11374,7 @@ check('borne : ni un statut reconnu', evMode(evR('SuspendedEVSE', { power_entity
   check('lampe : up down wall light', shape('light.porch_up_down'), 'spot_updown');
   check('lampe : spots encastres restent', shape('light.spots_salon'), 'spot');
   check('lampe : trail ne devient pas un rail', shape('light.trail_lamp'), 'bulb');
-  for (const l of ['floor_tree', 'strip_cove', 'strip_plinth', 'strip_baseboard', 'strip_slats', 'spot_track', 'spot_surface', 'spot_updown', 'garden_spot', 'flood', 'bollard', 'string', 'curtain', 'icicle', 'festoon', 'squares']) {
+  for (const l of ['floor_tree', 'strip_cove', 'strip_plinth', 'strip_baseboard', 'strip_slats', 'spot_track', 'spot_surface', 'spot_updown', 'garden_spot', 'flood', 'ceiling', 'ceiling_panel', 'ceiling_ring', 'bollard', 'string', 'curtain', 'icicle', 'festoon', 'squares']) {
     check(`lampe : dessin ${l}`, /<svg class="lp-svg"[^>]*>[\s\S]*<\/svg>/.test(lamp('on', {}, { lamp_layout: l })) && !/undefined|NaN/.test(lamp('on', {}, { lamp_layout: l })), true);
   }
   const beams = (h) => (h.match(/class="lp-beam"/g) || []).length;

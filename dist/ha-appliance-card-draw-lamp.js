@@ -218,6 +218,35 @@ LAMP_SVGS.flood = () => `<defs>
 <path d="M28 25.4 L71 21.6 L72.6 24.6 L30.8 28.8 Z" fill="#1e2226"/>
 <path class="lp-lit" d="M30.4 25.9 L70.4 22.3 L71.6 24.2 L32 28 Z"/></g>
 <circle cx="31" cy="22.4" r="1.5" fill="#3a4047"/>`;
+// Ceiling lights, the one fixed on most ceilings. A flush dome of opal glass.
+LAMP_SVGS.ceiling = () => `<defs>${lpBeam("cB")}${lpHalo("cH")}
+<radialGradient id="lp-cG" cx=".5" cy=".15" r=".9"><stop offset="0" stop-color="#fff" stop-opacity=".75"/><stop offset=".6" stop-color="#fff" stop-opacity=".15"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient></defs>
+<rect x="0" y="6" width="96" height="10" class="lp-ceiling"/>
+<path d="M0 16 H96" stroke="#c5ccd3" stroke-width=".8"/>
+<path d="M4 90 H92" stroke="#c5ccd3" stroke-width="1.4"/>
+<path class="lp-beam" d="M28 26 L6 90 H90 L68 26 Z" fill="url(#lp-cB)"/>
+<ellipse class="lp-halo" cx="48" cy="24" rx="30" ry="14" fill="url(#lp-cH)"/>
+<rect x="24" y="16" width="48" height="3" rx="1" fill="#e8ecf0" stroke="#aab2bb" stroke-width=".6"/>
+<path class="lp-lit" d="M26 19 Q26 33 48 33 Q70 33 70 19 Z"/>
+<path d="M26 19 Q26 33 48 33 Q70 33 70 19 Z" fill="url(#lp-cG)"/>`;
+// A flat LED panel, flush with the ceiling, lighting the room evenly.
+LAMP_SVGS.ceiling_panel = () => `<defs>${lpBeam("nB")}</defs>
+<rect x="0" y="6" width="96" height="10" class="lp-ceiling"/>
+<path d="M0 16 H96" stroke="#c5ccd3" stroke-width=".8"/>
+<path d="M4 90 H92" stroke="#c5ccd3" stroke-width="1.4"/>
+<path class="lp-beam" d="M16 20 L2 90 H94 L80 20 Z" fill="url(#lp-nB)"/>
+<rect x="14" y="16" width="68" height="3.4" rx=".8" fill="#e8ecf0" stroke="#aab2bb" stroke-width=".6"/>
+<rect class="lp-lit" x="16" y="18.6" width="64" height="2.6" rx=".6"/>`;
+// A ring: a slim LED halo hung on two wires, lighting down from its circle.
+LAMP_SVGS.ceiling_ring = () => `<defs>${lpBeam("rB")}${lpHalo("rH")}</defs>
+<rect x="0" y="6" width="96" height="10" class="lp-ceiling"/>
+<path d="M0 16 H96" stroke="#c5ccd3" stroke-width=".8"/>
+<path d="M4 90 H92" stroke="#c5ccd3" stroke-width="1.4"/>
+<path class="lp-beam" d="M20 32 L4 90 H92 L76 32 Z" fill="url(#lp-rB)"/>
+<ellipse class="lp-halo" cx="48" cy="30" rx="36" ry="12" fill="url(#lp-rH)"/>
+<path d="M26 16 V29 M70 16 V29" stroke="#8a929b" stroke-width=".6"/>
+<ellipse cx="48" cy="30" rx="28" ry="5.6" fill="none" stroke="#2b3036" stroke-width="3.4"/>
+<ellipse class="lp-litS" cx="48" cy="31" rx="28" ry="5.6" fill="none" stroke-width="2"/>`;
 // Spots on a track: heads hung from a rail, each aimed its own way.
 LAMP_SVGS.spot_track = (c) => {
   const xs = lpSpotRow(c, { 1: 0, 2: 30, 3: 22, 4: 19, 5: 16 });
