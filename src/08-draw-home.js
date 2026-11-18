@@ -930,10 +930,10 @@ function mailboxHtml(cls, c) {
 // and whether an effect runs. A switch or a helper only says on or off, and
 // the lamp is drawn in the warm white of a bulb.
 const LAMP_ONLY_FIELDS = ["lamp_layout", "spots", "timer_entity"];
-const LAMP_LAYOUTS = ["bulb", "bedside", "floor", "torch", "pendant", "strip", "strip_cove", "strip_plinth", "strip_baseboard", "strip_slats", "spot", "spot_track", "spot_surface", "spot_updown", "panels", "desk", "wall", "garden_spot", "bollard", "string", "curtain", "icicle", "festoon", "squares"];
+const LAMP_LAYOUTS = ["bulb", "bedside", "floor", "floor_tree", "torch", "pendant", "strip", "strip_cove", "strip_plinth", "strip_baseboard", "strip_slats", "spot", "spot_track", "spot_surface", "spot_updown", "panels", "desk", "wall", "garden_spot", "bollard", "string", "curtain", "icicle", "festoon", "squares"];
 const LAMP_SPOTS = [1, 2, 3, 4, 5];
 // The layouts drawn with as many spots as the light has.
-const LAMP_SPOT_ROWS = ["spot", "spot_track", "spot_surface", "pendant"];
+const LAMP_SPOT_ROWS = ["spot", "spot_track", "spot_surface", "pendant", "floor_tree"];
 const LAMP_LABELS = { on: "lamp_on", off: "lamp_off", unav: "ev_offline" };
 const LAMP_COLORS = { on: "#ffa000", off: "var(--disabled-text-color, #9e9e9e)", unav: "var(--disabled-text-color, #9e9e9e)" };
 const LAMP_WARM = [255, 197, 107];
@@ -1002,6 +1002,9 @@ function lampLayoutOf(cfg, st) {
   // In the garden: a spotlight on its spike, or a small post along a path.
   if (/garden.?spot|spike|piquet|spiess|erdspie|(spot|projecteur|projector|strahler|foco|faretto).{0,14}(jardin|garden|exterieur|outdoor|garten|giardino|tuin)/.test(hay)) return "garden_spot";
   if (/bollard|borne|potelet|path.?light|pollerleuchte|wegeleuchte|baliza|paletto|tuinpaal|lampadaire.{0,6}(de.?)?jardin|(petit|mini).?lampadaire|garden.?(post|lamp)/.test(hay)) return "bollard";
+  // A floor lamp with several heads up its pole: a tree, or a floor lamp
+  // named for its spots, arms or heads.
+  if (/tree.?(floor.?)?lamp|lampadaire.?arbre|baumleuchte|(lampadaire|floor|stehlampe|stehleuchte|piantana|vloerlamp|lampara.?de.?pie|golvlampa|gulvlampe).{0,16}([2-5].?(arm|bras|spot|tete|kopf|flammig|lichts|luci|luces|head|light)|spots|strahler|tree|arbre|faretti|focos)/.test(hay)) return "floor_tree";
   if (/halogen|torch|uplight|deckenfluter/.test(hay)) return "torch";
   if (/lampadaire|floor|stehlampe|piantana|vloerlamp|(^|[^a-z])arc([^a-z]|$)/.test(hay)) return "floor";
   // Spots, and how they hang: on a track, in cans on the ceiling, or in a
@@ -1021,7 +1024,7 @@ function lampSpotsOf(cfg, st) {
   const n = parseInt(cfg.spots, 10);
   if (LAMP_SPOTS.includes(n)) return n;
   const members = st && Array.isArray(st.attributes.entity_id) ? st.attributes.entity_id.length : 0;
-  return Math.min(5, Math.max(1, members));
+  return members ? Math.min(5, members) : null;
 }
 
 // The lamp, drawn in the light's colour: its halo, the cone it throws, and
@@ -1079,6 +1082,26 @@ ${softShadow(48, 87.4, 11.2, 3.4, 0.29)}
 <path d="M36 86 Q36 83 48 83 Q60 83 60 86 Q60 88.4 48 88.4 Q36 88.4 36 86 Z" fill="#2b3036"/>
 <path d="M34 15 H62 L52 23 H44 Z" fill="url(#lp-tB)" stroke="#8f98a2" stroke-width=".6" stroke-linejoin="round"/>
 <ellipse class="lp-lit" cx="48" cy="15" rx="14" ry="1.8"/>`,
+  // A tree floor lamp: adjustable heads up one pole, turning side to side.
+  floor_tree: (c) => {
+    const n = LAMP_SPOTS.includes(c.spots) ? c.spots : 3;
+    const step = { 1: 0, 2: 16, 3: 14, 4: 12, 5: 10.5 }[n];
+    const k = { 1: 1, 2: 1, 3: 0.95, 4: 0.82, 5: 0.72 }[n];
+    const heads = Array.from({ length: n }, (_, i) => [i % 2 ? -1 : 1, 14 + i * step]);
+    return `<defs>${lpBeam("eB")}${lpHalo("eH")}${lpMetal("eM", "#1e2226", "#4a525b")}</defs>
+${heads.map(([d, y]) => `<g transform="translate(${48 + d * 7} ${y}) rotate(${-d * 35})${k < 1 ? ` scale(${k})` : ""}">
+<circle class="lp-halo" cy="13" r="11" fill="url(#lp-eH)"/>
+<path class="lp-beam" d="M-5.5 13 L-11 38 H11 L5.5 13 Z" fill="url(#lp-eB)"/></g>`).join("")}
+<rect x="46.8" y="8" width="2.4" height="76" rx="1.2" fill="#2b3036"/>
+${softShadow(48, 87.4, 11.2, 3.4, 0.29)}
+<path d="M36 86 Q36 83 48 83 Q60 83 60 86 Q60 88.4 48 88.4 Q36 88.4 36 86 Z" fill="#2b3036"/>
+${heads.map(([d, y]) => `<path d="M48 ${y} H${48 + d * 7}" stroke="#c5ccd3" stroke-width="1.8"/>
+<g transform="translate(${48 + d * 7} ${y}) rotate(${-d * 35})${k < 1 ? ` scale(${k})` : ""}">
+<rect x="-2" y="-1" width="4" height="4" rx="1" fill="#2b3036"/>
+<path d="M-3 3 C-3.4 6 -7 8.5 -7 13 H7 C7 8.5 3.4 6 3 3 Z" fill="url(#lp-eM)"/>
+<ellipse cy="13" rx="7" ry="1.9" fill="#c9a24a"/>
+<ellipse class="lp-lit" cy="13" rx="4.2" ry="1.2"/></g>`).join("")}`;
+  },
   // One pendant, or as many as the spots count, smaller, side by side.
   pendant: (c) => {
     const xs = lpSpotRow(c, { 1: 0, 2: 42, 3: 30, 4: 23, 5: 18 });

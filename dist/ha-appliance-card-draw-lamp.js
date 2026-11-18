@@ -57,6 +57,26 @@ ${softShadow(48, 87.4, 11.2, 3.4, 0.29)}
 <path d="M36 86 Q36 83 48 83 Q60 83 60 86 Q60 88.4 48 88.4 Q36 88.4 36 86 Z" fill="#2b3036"/>
 <path d="M34 15 H62 L52 23 H44 Z" fill="url(#lp-tB)" stroke="#8f98a2" stroke-width=".6" stroke-linejoin="round"/>
 <ellipse class="lp-lit" cx="48" cy="15" rx="14" ry="1.8"/>`,
+  // A tree floor lamp: adjustable heads up one pole, turning side to side.
+  floor_tree: (c) => {
+    const n = LAMP_SPOTS.includes(c.spots) ? c.spots : 3;
+    const step = { 1: 0, 2: 16, 3: 14, 4: 12, 5: 10.5 }[n];
+    const k = { 1: 1, 2: 1, 3: 0.95, 4: 0.82, 5: 0.72 }[n];
+    const heads = Array.from({ length: n }, (_, i) => [i % 2 ? -1 : 1, 14 + i * step]);
+    return `<defs>${lpBeam("eB")}${lpHalo("eH")}${lpMetal("eM", "#1e2226", "#4a525b")}</defs>
+${heads.map(([d, y]) => `<g transform="translate(${48 + d * 7} ${y}) rotate(${-d * 35})${k < 1 ? ` scale(${k})` : ""}">
+<circle class="lp-halo" cy="13" r="11" fill="url(#lp-eH)"/>
+<path class="lp-beam" d="M-5.5 13 L-11 38 H11 L5.5 13 Z" fill="url(#lp-eB)"/></g>`).join("")}
+<rect x="46.8" y="8" width="2.4" height="76" rx="1.2" fill="#2b3036"/>
+${softShadow(48, 87.4, 11.2, 3.4, 0.29)}
+<path d="M36 86 Q36 83 48 83 Q60 83 60 86 Q60 88.4 48 88.4 Q36 88.4 36 86 Z" fill="#2b3036"/>
+${heads.map(([d, y]) => `<path d="M48 ${y} H${48 + d * 7}" stroke="#c5ccd3" stroke-width="1.8"/>
+<g transform="translate(${48 + d * 7} ${y}) rotate(${-d * 35})${k < 1 ? ` scale(${k})` : ""}">
+<rect x="-2" y="-1" width="4" height="4" rx="1" fill="#2b3036"/>
+<path d="M-3 3 C-3.4 6 -7 8.5 -7 13 H7 C7 8.5 3.4 6 3 3 Z" fill="url(#lp-eM)"/>
+<ellipse cy="13" rx="7" ry="1.9" fill="#c9a24a"/>
+<ellipse class="lp-lit" cy="13" rx="4.2" ry="1.2"/></g>`).join("")}`;
+  },
   // One pendant, or as many as the spots count, smaller, side by side.
   pendant: (c) => {
     const xs = lpSpotRow(c, { 1: 0, 2: 42, 3: 30, 4: 23, 5: 18 });
