@@ -43,7 +43,7 @@ Certaines demandes ont leur propre carte :
 
 ## Galerie
 
-Clique sur une famille pour voir ses appareils en marche.
+Clique sur une famille pour voir ses appareils en marche. Les dessins sont montrés avec `illustration_backdrop: state`, la tuile derrière chacun prenant la couleur de son état.
 
 <details>
 <summary><b>Linge et vaisselle</b></summary>
@@ -225,7 +225,7 @@ Clique sur une famille pour voir ses appareils en marche.
 <details>
 <summary><b>Capteurs de température, d'humidité et de CO₂</b></summary>
 
-<img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-climate_sensors.fr.png" alt="Capteurs de température et d'humidité">
+<img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-climate_sensors.fr.gif" alt="Capteurs de température et d'humidité">
 
 <img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-co2.fr.gif" alt="Capteurs de CO₂">
 
@@ -311,6 +311,7 @@ Seule `state_entity` est obligatoire, sauf sur un réfrigérateur où une sonde 
 | `values_right` | `true` place les valeurs des lignes contre le bord droit, comme les lignes d'entités de Home Assistant. Les lignes sans libellé et celles à côté du dessin en mode compact gardent leur place. |
 | `fill_height` | `true` fait occuper à la carte toute la hauteur de sa case, boutons en bas : deux cartes côte à côte ont alors la même hauteur. Désactivé par défaut, car à côté d'une carte bien plus haute, la carte s'étirerait jusqu'à sa hauteur. |
 | `illustration_frame` | `true` pose chaque dessin en bas d'un cadre de la hauteur complète : deux cartes côte à côte dont les dessins n'ont pas la même hauteur, comme un robot avec sa station à côté d'un robot sur une simple base, ont alors leur sol au même niveau. Désactivé par défaut. |
+| `illustration_backdrop` | `neutral` pose une tuile arrondie discrète derrière le dessin, `state` la même tuile teintée par la couleur de l'état (bleu en marche, orange qui chauffe, vert terminé), pour qu'un mur de cartes se lise comme un ensemble. Mêlée au fond de la carte, elle reste douce sur un thème sombre. Aucune par défaut ; la galerie est montrée avec `state`. |
 | `done_alert` | `true` fait pulser un badge vert sur le dessin en fin de cycle, jusqu'à l'ouverture de la porte ou un appui sur le badge. Pour les appareils à cycle (lave-linge, sèche-linge, lave-vaisselle, four…). |
 | `illustration_color` | `auto` (défaut, suit le thème) \| `white` \| `grey` \| `black` \| `red` (rouge foncé). Ne change que la carrosserie, pas les couleurs d'état. Un dessin fait d'après un vrai produit (console, boîtier de streaming, imprimante, litière…) garde ses vraies couleurs tant qu'aucune couleur n'est choisie ; son écran, la tuile de l'appli et ses pneus gardent les leurs. Les scènes autour d'un appareil (fosse de relevage, jardin, toit) et la lumière des lampes ne changent pas. |
 | `language` | `auto` (défaut, suit Home Assistant) ou l'un des 16 codes : `en`, `fr`, `de`, `es`, `it`, `nl`, `pt`, `sv`, `no`, `da`, `pl`, `ru`, `zh`, `cs`, `hu`, `zh-Hant`. `nb` et `nb-NO` donnent le norvégien. `zh` est le chinois simplifié ; `zh-Hant`, `zh-TW` et `zh-HK` donnent le chinois traditionnel. |
@@ -1032,7 +1033,7 @@ battery_entity: sensor.trottinette_batterie   # facultatif
 | `battery_entity` | robot | La batterie, en %, quand l'entité du robot ne la porte pas. Sur la base, *En charge* sous 100 %, *À la base* au-dessus. |
 | `robot_bin_entity` / `robot_water_entity` | robot | Un bac plein, un réservoir d'eau vide : un capteur binaire allumé, un capteur qui le dit, ou un niveau en % (vide à 5 % ou moins, son niveau dessiné dans le robot). |
 | `robot_rain_entity` | robot | La pluie qui garde une tondeuse sur sa base : un nuage et sa pluie sur la pelouse. |
-| `robot_winter` / `robot_winter_entity` | robot | Une tondeuse ou un robot de piscine rangés pour l'hiver (le robot hors de l'eau, le bassin sous sa bâche) : `true`, ou n'importe quelle entité on/off (un `input_boolean`, une automatisation à date fixe). Elle affiche *Hivernage* quoi que dise son intégration, débranchée comprise, sous la neige qui tombe sur sa pelouse, sa base et elle-même, sans aucune ligne. |
+| `robot_winter` / `robot_winter_entity` | robot | Une tondeuse ou un robot de piscine rangés pour l'hiver (le robot posé sur la margelle sous la neige, le bassin sous sa bâche) : `true`, ou n'importe quelle entité on/off (un `input_boolean`, une automatisation à date fixe). Elle affiche *Hivernage* quoi que dise son intégration, débranchée comprise, sous la neige qui tombe sur sa pelouse, sa base et elle-même, sans aucune ligne. |
 | `robot_error_entity` | robot | L'erreur, en mots : le robot fume et son texte s'affiche. *no error*, *none*, `0` et leurs semblables n'en sont pas, dans toutes les langues de la carte (*Aucune erreur*, *Pas d'erreur*, *Keine Fehler*...) : un capteur template qui met un code d'erreur en mots marche tel quel. Un sac de station plein (*dust_bag_full*, *Dust Bag Full*, *Sac plein*, *Staubbeutel voll*..., dans cette entité, le statut ou les attributs du robot) n'est pas une erreur : l'état affiche *Sac plein*, même pendant le nettoyage, et la station déborde. Un réservoir d'eau vide, un réservoir d'eau sale plein ou une batterie faible (*water_empty*, *dirty_water_box_hoare*, *Réservoir d'eau vide*, *low_battery*...) non plus : l'état le dit, la jauge de la station clignote et un petit signe s'affiche au-dessus du robot. Une batterie revenue au-dessus de 30 % ou un niveau de réservoir qui dit le contraire fait oublier le mot périmé. |
 
 </details>
@@ -1831,7 +1832,7 @@ Quand le jardin s'endort, la carte le couche aussi. Cochez `winter`, ou donnez u
 | Spa | `winter` / `winter_entity` | Sous sa couverture isolante. |
 | Arrosage | `winter` / `winter_entity` | Le robinet purgé, le programmateur rentré, de la neige sur la pelouse et les massifs. |
 | Barbecue à pellets | `winter` / `winter_entity` | Sous sa housse. |
-| Robot tondeuse, robot de piscine | `robot_winter` / `robot_winter_entity` | La tondeuse sous la neige sur sa pelouse et sa base ; le robot de piscine sorti de son bassin. Quoi que dise l'intégration, débranché compris, sans ligne. |
+| Robot tondeuse, robot de piscine | `robot_winter` / `robot_winter_entity` | La tondeuse sous la neige sur sa pelouse et sa base ; le robot de piscine posé sur la margelle sous la neige, le bassin sous sa bâche. Quoi que dise l'intégration, débranché compris, sans ligne. |
 | Ventilateur de plafond | sa `direction` | Il tourne dans le sens hiver, l'air chaud renvoyé vers le bas en orange (`fan_direction_inverted` si votre ventilateur appelle l'hiver *forward*). |
 
 Un seul helper pour tout le jardin :
@@ -1840,6 +1841,8 @@ Un seul helper pour tout le jardin :
 winter_entity: input_boolean.winter        # piscine, spa, arrosage, barbecue
 robot_winter_entity: input_boolean.winter  # tondeuse, robot de piscine
 ```
+
+Sur une tablette murale un peu lente, `winter_snowfall: false` garde la neige posée partout mais arrête la chute des flocons.
 
 ### Options communes à plusieurs familles
 

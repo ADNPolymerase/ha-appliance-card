@@ -1,6 +1,6 @@
 // Built by tools/build.mjs from the files of src/: edit those, not this file.
 // The card's editor, loaded by the card the first time it is edited.
-export default function defineEditor({ t, onLanguageLoaded, LANGUAGE_NAMES, localizedHass, activationOf, TH_LAYOUTS, EV_POWER_THRESHOLD, stateObj, parseValueMap, stringifyValueMap, alertsArray, entityEntries, LIST_OTHER, ENTITY_LISTS, listCandidates, defaultCardName, stripDeviceName, domainOf, INFO_MAX, autoSuggest, APPLIANCE_TYPES, STATE_DOMAINS, SCREEN_ONLY_FIELDS, PRINT_PARTS, illustrationSizeOf, fontScaleOf, compactModeOf, TYPE_GROUPS, caps, detectApplianceType, SCREEN_STANDBY_W, SCREEN_LAYOUTS, SCREEN_IMAGES, screenLayoutOf, screenIsTablet, HD_HEAT_W, PLUG_THRESHOLDS, ZONE_POWER_W, PLUG_SOURCE_TYPES, plugSourceOf, DW_DRY_MIN, WASH_HEAT_W, WASH_SPIN_W, DRYER_HEAT_W, NET_LAYOUTS, SWITCH_PORTS, NET_BAYS, NET_BUSY_MBIT, NET_TEMP_ALERT, netLayoutOf, ROBOT_LAYOUTS, ROBOT_STATIONS, ROBOT_BOX_COLORS, ROBOT_FLOORS, ROBOT_SERVICES, STICK_AWAY_W, robotLayoutOf, PRINTER_STYLES, printerStyleOf, POOL_PRESSURE_ALERT, WINTER_TYPES, SOLAR_LAYOUTS, BATTERY_LAYOUTS, BATTERY_IDLE_W, DIFFUSER_LAYOUTS, illustrationTapOf, UNIT_FILTERS, fieldUnits, unitFilterAccepts, HRV_LAYOUTS, hrvLayoutOf, CAMERA_LAYOUTS, MAILBOX_LAYOUTS, MAILBOX_SIDES, mailboxLayoutOf, MAILBOX_COLORS_3D, LAMP_LAYOUTS, LAMP_SPOTS, LAMP_SPOT_ROWS, lampLayoutOf, FD_COUNTS, CONSOLE_LAYOUTS, IRRIGATION_LAYOUTS, TAP_MODELS, TAP_WALLS, LITTER_LAYOUTS, DETECTOR_LAYOUTS, FINGERBOT_LAYOUTS, FINGERBOT_COLORS, GRILL_LAYOUTS, SPEAKER_LAYOUTS, STREAMER_LAYOUTS, THS_LAYOUTS, thsLayoutOf, MOBILITY_LAYOUTS, PUMP_LAYOUTS, CIRC_MODELS, FLOOR_LAYOUTS, OPT_LINES, METER_LAYOUTS, meterLayoutOf, irrigationLayoutOf, detectorLayoutOf, TREE_PALETTES, TREE_PRESENTS, pumpLayoutOf, SPK_COLORS, CO2_WARN, NETATMO_COLORS, COVER_LAYOUTS, COVER_COLORS, FABRIC_COLORS, coverLayoutOf, COLLECTOR_STYLES, UPS_BATTERY_LOW, HISTORY_HOURS, BODY_COLORS, esc, MOWER_STYLES, SHELTER_STYLES, SHELTER_COLORS, LAPTOP_COLORS, LAPTOP_STYLES, drawn, stateFreeSource }) {
+export default function defineEditor({ t, onLanguageLoaded, LANGUAGE_NAMES, localizedHass, activationOf, TH_LAYOUTS, EV_POWER_THRESHOLD, stateObj, parseValueMap, stringifyValueMap, alertsArray, entityEntries, LIST_OTHER, ENTITY_LISTS, listCandidates, defaultCardName, stripDeviceName, domainOf, INFO_MAX, autoSuggest, APPLIANCE_TYPES, STATE_DOMAINS, SCREEN_ONLY_FIELDS, PRINT_PARTS, illustrationSizeOf, illustrationBackdropOf, fontScaleOf, compactModeOf, TYPE_GROUPS, caps, detectApplianceType, SCREEN_STANDBY_W, SCREEN_LAYOUTS, SCREEN_IMAGES, screenLayoutOf, screenIsTablet, HD_HEAT_W, PLUG_THRESHOLDS, ZONE_POWER_W, PLUG_SOURCE_TYPES, plugSourceOf, DW_DRY_MIN, WASH_HEAT_W, WASH_SPIN_W, DRYER_HEAT_W, NET_LAYOUTS, SWITCH_PORTS, NET_BAYS, NET_BUSY_MBIT, NET_TEMP_ALERT, netLayoutOf, ROBOT_LAYOUTS, ROBOT_STATIONS, ROBOT_BOX_COLORS, ROBOT_FLOORS, ROBOT_SERVICES, STICK_AWAY_W, robotLayoutOf, PRINTER_STYLES, printerStyleOf, POOL_PRESSURE_ALERT, WINTER_TYPES, SOLAR_LAYOUTS, BATTERY_LAYOUTS, BATTERY_IDLE_W, DIFFUSER_LAYOUTS, illustrationTapOf, UNIT_FILTERS, fieldUnits, unitFilterAccepts, HRV_LAYOUTS, hrvLayoutOf, CAMERA_LAYOUTS, MAILBOX_LAYOUTS, MAILBOX_SIDES, mailboxLayoutOf, MAILBOX_COLORS_3D, LAMP_LAYOUTS, LAMP_SPOTS, LAMP_SPOT_ROWS, lampLayoutOf, FD_COUNTS, CONSOLE_LAYOUTS, IRRIGATION_LAYOUTS, TAP_MODELS, TAP_WALLS, LITTER_LAYOUTS, DETECTOR_LAYOUTS, FINGERBOT_LAYOUTS, FINGERBOT_COLORS, GRILL_LAYOUTS, SPEAKER_LAYOUTS, STREAMER_LAYOUTS, THS_LAYOUTS, thsLayoutOf, MOBILITY_LAYOUTS, PUMP_LAYOUTS, CIRC_MODELS, FLOOR_LAYOUTS, OPT_LINES, METER_LAYOUTS, meterLayoutOf, irrigationLayoutOf, detectorLayoutOf, TREE_PALETTES, TREE_PRESENTS, pumpLayoutOf, SPK_COLORS, CO2_WARN, NETATMO_COLORS, COVER_LAYOUTS, COVER_COLORS, FABRIC_COLORS, coverLayoutOf, COLLECTOR_STYLES, UPS_BATTERY_LOW, HISTORY_HOURS, BODY_COLORS, esc, MOWER_STYLES, SHELTER_STYLES, SHELTER_COLORS, LAPTOP_COLORS, LAPTOP_STYLES, drawn, stateFreeSource }) {
 // ---------------------------------------------------------------------------
 // Editor
 // ---------------------------------------------------------------------------
@@ -157,7 +157,7 @@ const SECTIONS = [
   { field: "backwash_entity", types: ["pool_pump"], labelKey: "section_backwash", includeDomains: ["binary_sensor", "switch", "sensor", "input_boolean"] },
   { field: "frost_entity", types: ["pool_pump"], labelKey: "section_frost", includeDomains: ["binary_sensor", "switch", "sensor", "input_boolean"] },
   { field: "winter_entity", types: WINTER_TYPES, labelKey: "section_robot_winter", includeDomains: ["input_boolean", "switch", "binary_sensor"],
-    extra: (c) => c._row("winter", "robot_winter", { type: "checkbox" }) },
+    extra: (c) => c._row("winter", "robot_winter", { type: "checkbox" }) + c._row("winter_snowfall", "winter_snowfall", { type: "checkbox", defaultOn: true }) },
   { field: "pool_alert_entity", types: ["pool_pump"], labelKey: "section_pool_alert", includeDomains: ["binary_sensor", "sensor"] },
   // Solar panels: the energy of the day and an alert. A battery: what goes
   // in and out, its reserve, its charge limit and an alert.
@@ -356,7 +356,8 @@ const SECTIONS = [
   { field: "robot_rain_entity", types: ["robot"], labelKey: "section_robot_rain", includeDomains: ["binary_sensor", "sensor", "switch"],
     when: (c) => robotLayoutOf(c, null) === "mower" },
   { field: "robot_winter_entity", types: ["robot"], labelKey: "section_robot_winter", includeDomains: ["input_boolean", "switch", "binary_sensor"],
-    when: (c) => ["mower", "pool"].includes(robotLayoutOf(c, null)) },
+    when: (c) => ["mower", "pool"].includes(robotLayoutOf(c, null)),
+    extra: (c) => c._row("winter_snowfall", "winter_snowfall", { type: "checkbox", defaultOn: true }) },
   { field: "robot_error_entity", types: ["robot"], labelKey: "section_robot_error", includeDomains: ["sensor", "binary_sensor"] },
   { field: "night_mode_entity", types: ["air_purifier", "fan"], labelKey: "pf_night", includeDomains: ["switch", "binary_sensor", "input_boolean"] },
   { field: "heater_entity", types: ["air_purifier", "fan"], labelKey: "section_heater", includeDomains: ["climate", "switch", "select", "binary_sensor"] },
@@ -1679,6 +1680,11 @@ class ApplianceCardEditor extends HTMLElement {
             type: "range", min: 0.3, max: 1.6, step: 0.05, default: 1,
             value: this._config.illustration_size === undefined ? "" : illustrationSizeOf(this._config.illustration_size),
           })}
+          ${this._row("illustration_backdrop", "illustration_backdrop", {
+            type: "select",
+            value: illustrationBackdropOf(this._config.illustration_backdrop) || "none",
+            options: ["none", "neutral", "state"].map((v) => ({ value: v, label: t(hass, `backdrop_${v}`) })),
+          })}
           ${this._row("font_scale", "font_scale", {
             type: "range", min: 0.7, max: 1.4, step: 0.05, default: 1,
             value: this._config.font_scale === undefined ? "" : fontScaleOf(this._config.font_scale),
@@ -1864,9 +1870,11 @@ class ApplianceCardEditor extends HTMLElement {
           delete this._config.speed_power_3;
         }
         // Shown is the default and is not written: only false is.
-        if (["show_name", "show_state", "show_toggle", "show_light_button", "large_temperature"].includes(field) && value) delete this._config[field];
+        if (["show_name", "show_state", "show_toggle", "show_light_button", "large_temperature", "winter_snowfall"].includes(field) && value) delete this._config[field];
         // Compact is written the way it always was: true for the card without
         // its drawing, nothing at all when it is off.
+        // No background is the default and is not written.
+        if (field === "illustration_backdrop" && !illustrationBackdropOf(value)) delete this._config.illustration_backdrop;
         if (field === "compact") {
           if (value === "side") this._config.compact = "side";
           else if (value === "hide") this._config.compact = true;

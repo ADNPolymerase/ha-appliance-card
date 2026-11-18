@@ -4348,6 +4348,8 @@ class ApplianceCard extends HTMLElement {
            level with one that has it, side by side (#61). */
         .pic-frame { min-height: ${Math.round(116 * illustrationSizeOf(cfg.illustration_size))}px; display: flex; flex-direction: column; justify-content: flex-end; }
         .pic-frame > .machine { margin-left: auto; margin-right: auto; }
+        ${backdropCss(illustrationBackdropOf(cfg.illustration_backdrop), color)}
+        ${cfg.winter_snowfall === false ? ".nt-fl,.pl-fl,.rbt-snow{display:none!important}" : ""}
         ${illustrationCss(applianceType, color)}
         .name { font-size: 1.2em; font-weight: 500; color: var(--primary-text-color, #1c1c1c); }
         .state-line { font-size: 1.05em; color: ${color}; margin-top: 2px; }

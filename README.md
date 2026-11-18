@@ -43,7 +43,7 @@ Some requests are better served by one of my other cards:
 
 ## Gallery
 
-Click a family to see its appliances at work.
+Click a family to see its appliances at work. The drawings are shown with `illustration_backdrop: state`, the tile behind each one taking its state colour.
 
 <details>
 <summary><b>Laundry and dishes</b></summary>
@@ -225,7 +225,7 @@ Click a family to see its appliances at work.
 <details>
 <summary><b>Temperature, humidity and CO₂ sensors</b></summary>
 
-<img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-climate_sensors.png" alt="Temperature and humidity sensors">
+<img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-climate_sensors.gif" alt="Temperature and humidity sensors">
 
 <img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-co2.gif" alt="CO₂ monitors">
 
@@ -311,6 +311,7 @@ Only `state_entity` is required, except on a fridge where a probe or a door cont
 | `values_right` | `true` puts the values of the lines against the right edge, like Home Assistant's entity rows. Lines without a label and the lines beside the drawing in compact mode keep their place. |
 | `fill_height` | `true` makes the card take the full height of its slot, with the buttons at the bottom: two cards side by side then have the same height. Off by default, since next to a much taller card it would stretch to that card's height. |
 | `illustration_frame` | `true` sets every drawing at the bottom of a frame of the full drawing height: two cards side by side whose drawings differ in height, such as a robot with its station next to one on a plain base, then have their floors level. Off by default. |
+| `illustration_backdrop` | `neutral` sets a soft rounded tile behind the drawing, `state` the same tile tinted by the state's colour (blue running, orange heating, green done), so a wall of cards reads as one set. Mixed into the card's background, it stays soft on a dark theme. None by default; the gallery is shown with `state`. |
 | `done_alert` | `true` makes a green badge pulse on the drawing when a cycle has finished, until the door opens or the badge is tapped. For appliances with a cycle (washer, dryer, dishwasher, oven…). |
 | `illustration_color` | `auto` (default, follows the theme) \| `white` \| `grey` \| `black` \| `red` (dark red). Only changes the casing, not the state colours. A drawing made after a real product (a console, a streaming box, a printer, a litter box…) is drawn in its real colours until a colour is chosen; its screen, app tile and tyres keep theirs. The scenes around a device (a sump's pit, a garden, a roof) and the lamps' light do not change. |
 | `language` | `auto` (default, follows Home Assistant) or one of the 16 codes: `en`, `fr`, `de`, `es`, `it`, `nl`, `pt`, `sv`, `no`, `da`, `pl`, `ru`, `zh`, `cs`, `hu`, `zh-Hant`. `nb` and `nb-NO` give Norwegian. `zh` is Simplified Chinese; `zh-Hant`, `zh-TW` and `zh-HK` give Traditional Chinese. |
@@ -1032,7 +1033,7 @@ battery_entity: sensor.scooter_battery   # optional
 | `battery_entity` | robot | The battery, in %, when the robot's own entity does not carry it. On the base, *Charging* below 100 %, *Docked* above. |
 | `robot_bin_entity` / `robot_water_entity` | robot | A full bin, an empty water tank: a binary sensor that is on, a sensor that says so, or a tank level in % (empty at 5 % or less, its level drawn in the robot). |
 | `robot_rain_entity` | robot | Rain keeping a mower on its base: a cloud and its rain over the lawn. |
-| `robot_winter` / `robot_winter_entity` | robot | A mower or a pool robot put away for the winter (the pool robot out of its pool, the pool under its cover): `true`, or any on and off entity (an `input_boolean`, an automation by date). It reads *Winter storage* whatever its integration says, unplugged included, under snow falling on its lawn, its base and itself, with no line. |
+| `robot_winter` / `robot_winter_entity` | robot | A mower or a pool robot put away for the winter (the pool under its cover, the pool robot resting on the coping under the snow): `true`, or any on and off entity (an `input_boolean`, an automation by date). It reads *Winter storage* whatever its integration says, unplugged included, under snow falling on its lawn, its base and itself, with no line. |
 | `robot_error_entity` | robot | The error, worded: the robot puffs smoke and its text is shown. *no error*, *none*, `0` and the like are not errors, in any of the card's languages (*Aucune erreur*, *Keine Fehler*...), so a template sensor that words an error code works as it is. A full station dust bag (*dust_bag_full*, *Dust Bag Full*, *Sac plein*, *Staubbeutel voll*..., from this entity, the status or the robot's attributes) is not an error: the state reads *Bag full*, even while the robot cleans, and the station overflows. Nor are an empty water tank, a full dirty water tank or a low battery (*water_empty*, *dirty_water_box_hoare*, *Réservoir d'eau vide*, *low_battery*...): the state says so, the station's gauge blinks and a small sign shows over the robot. A battery back above 30 % or a tank level that says otherwise drops the stale word. |
 
 </details>
@@ -1829,7 +1830,7 @@ When the garden goes to sleep, the card puts it to bed too. Tick `winter`, or gi
 | Spa | `winter` / `winter_entity` | Under its insulated cover. |
 | Garden watering | `winter` / `winter_entity` | The tap drained, the timer taken in, snow on the lawn and the beds. |
 | Pellet grill | `winter` / `winter_entity` | Under its cover. |
-| Robot mower, pool robot | `robot_winter` / `robot_winter_entity` | The mower under snow on its lawn and its base; the pool robot out of its pool. Whatever the integration says, unplugged included, with no line. |
+| Robot mower, pool robot | `robot_winter` / `robot_winter_entity` | The mower under snow on its lawn and its base; the pool robot resting on the coping, snow on it, the pool under its cover. Whatever the integration says, unplugged included, with no line. |
 | Ceiling fan | its `direction` | Turning the winter way, the warm air sent back down in orange (`fan_direction_inverted` when your fan calls winter *forward*). |
 
 One helper for the whole garden:
@@ -1838,6 +1839,8 @@ One helper for the whole garden:
 winter_entity: input_boolean.winter        # pool, spa, watering, grill
 robot_winter_entity: input_boolean.winter  # mower, pool robot
 ```
+
+On a slower wall tablet, `winter_snowfall: false` keeps the snow lying on everything but stops the flakes falling.
 
 ### Options shared by several families
 

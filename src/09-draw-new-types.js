@@ -760,12 +760,15 @@ ${brush(-13.5)}${brush(13.5)}
 ${ntV(w, "#4fc3f7", "#0277bd")}${ntV(dk, "#efe5d0", "#d6c7a7")}</defs>
 <rect x="0" y="20" width="120" height="8" fill="url(#${dk})"/><rect x="0" y="27" width="120" height="1.2" fill="#b9a988"/>
 <rect x="6" y="28" width="108" height="80" fill="#cfd8dc"/><rect x="8" y="28" width="104" height="78" fill="url(#${tp})"/>
-<rect x="8" y="52" width="104" height="54" fill="url(#${w})" opacity=".6"/>
+<rect x="8" y="58" width="104" height="48" fill="url(#${w})" opacity=".45"/>
+<rect x="8" y="28" width="104" height="78" fill="#4b5d68" opacity=".32"/>
 <rect x="6" y="106" width="108" height="3" fill="#90a4ae"/>
-<path d="M4 27 Q60 38 116 27 L116 31 Q60 42 4 31 Z" fill="#2f5446" stroke="#1f3a30" stroke-width=".6"/>
-<path d="M22 30.6 V33.6 M41 33 V36.4 M60 33.8 V37.4 M79 33 V36.4 M98 30.6 V33.6" stroke="#4d7a68" stroke-width=".8"/>
-<path d="M8 28.4 Q60 38.6 112 28.4 Q60 36 8 28.4 Z" fill="#f7fbfd" opacity=".95"/>
+<path d="M2 26 Q60 50 118 26 L118 32 Q60 56 2 32 Z" fill="#2f5446" stroke="#1f3a30" stroke-width=".7"/>
+<path d="M18 31 V36 M38 36.6 V41.6 M60 38.6 V43.6 M82 36.6 V41.6 M102 31 V36" stroke="#4d7a68" stroke-width=".9"/>
+<path d="M6 27.6 Q60 51 114 27.6 Q60 43 6 27.6 Z" fill="#f7fbfd" stroke="#d6e6ef" stroke-width=".4"/>
+<ellipse cx="60" cy="40.6" rx="20" ry="3" fill="#ffffff" opacity=".9"/>
 ${ntSnowCap(0, 120, 19.6, 2.6)}
+<g transform="translate(26 20) scale(1.35)"><rect x="-13" y="-6.4" width="26" height="6.4" rx="3.2" fill="#263238"/><circle cx="-10" cy="-1.2" r="2.6" fill="#1e88e5"/><circle cx="10" cy="-1.2" r="2.6" fill="#1e88e5"/><path d="M-13 -5.6 Q-13 -16 0 -16 Q13 -16 13 -5.6 Z" fill="#cfd8dc" stroke="#90a4ae" stroke-width=".5"/><path d="M-13 -7.4 H13" stroke="#1e88e5" stroke-width="1.6"/><path d="M-12.4 -8.6 Q-13 -18.4 0 -18.6 Q13 -18.4 12.4 -8.6 Q9 -11.4 5 -10.4 Q1 -12 -3 -10.6 Q-8 -11.8 -12.4 -8.6 Z" fill="#ffffff" stroke="#b9cfdc" stroke-width=".5"/><path d="M-12.6 -8.8 Q-14 -6 -12.8 -4" stroke="#ffffff" stroke-width="1.4" fill="none" stroke-linecap="round"/></g>
 <rect x="86" y="5" width="32" height="16" rx="2" fill="#eceff2" stroke="#aab2bc" stroke-width=".5"/>
 ${ntLcd(88.5, 7, 27, 11.6, "", false, "#4fc3f7", 7.8)}
 <circle cx="116" cy="19" r=".9" fill="#9aa1ab"/>${ntSnowCap(86, 118, 4.6, 1.8)}`;
@@ -1843,6 +1846,11 @@ function ntIrrFlowers(c) {
       : k === 2 ? `${[0, 1, 2, 3, 4].map((j) => `<circle cx="${x}" cy="${(fy + j * 1.3).toFixed(1)}" r=".9" fill="#9575cd"/>`).join("")}`
       : `<circle cx="${x}" cy="${fy}" r="2.1" fill="#f06292"/><circle cx="${x}" cy="${fy}" r=".8" fill="#fff59d"/>`;
     const head = `<g transform="translate(${x} ${fy}) scale(${sc}) translate(${-x} ${-fy})">${head0}</g>`;
+    // In winter nothing flowers: a few dry stems cut back, poking out of the snow.
+    if (c.winter) {
+      if (i % 3 === 0) flowers.push({ y, svg: `<path d="M${x.toFixed(1)} ${y.toFixed(1)} V${(y - 6 - (i % 4)).toFixed(1)}" stroke="#7a5c43" stroke-width=".9"/><path d="M${x.toFixed(1)} ${(y - 3).toFixed(1)} l-1.8 -2.2" stroke="#7a5c43" stroke-width=".7"/>` });
+      continue;
+    }
     flowers.push({ y, svg: stem + head });
   }
   flowers.sort((a, b) => a.y - b.y);
@@ -1853,8 +1861,8 @@ ${ntFoot(`${cx - rx + 4} ${cy + ry + 6} ${cx + rx - 4} ${cy + ry + 6} ${cx + rx}
 <path d="M${cx - rx} ${cy} V${cy + 5} A${rx} ${ry} 0 0 0 ${cx + rx} ${cy + 5} V${cy} Z" fill="url(#${ed})"/>
 <ellipse cx="${cx}" cy="${cy}" rx="${rx}" ry="${ry}" fill="url(#${ml})"/>
 ${Array.from({ length: 40 }, (_, i) => `<circle cx="${(cx + Math.cos(i * 2.4) * rx * .9 * ((i % 7) / 7)).toFixed(1)}" cy="${(cy + Math.sin(i * 2.4) * ry * .9 * ((i % 5) / 5)).toFixed(1)}" r=".6" fill="#a1887f" opacity=".6"/>`).join("")}
-${flowers.map((f) => f.svg).join("")}
-${jets.map(([x, y, s], i) => `<rect x="${x - 1}" y="${y - 6}" width="2" height="6" fill="#455a64"/><circle cx="${x}" cy="${y - 6.4}" r="1.4" fill="#263238"/>
+<!--wf-->${flowers.map((f) => f.svg).join("")}<!--/wf-->
+${c.winter ? "" : jets.map(([x, y, s], i) => `<rect x="${x - 1}" y="${y - 6}" width="2" height="6" fill="#455a64"/><circle cx="${x}" cy="${y - 6.4}" r="1.4" fill="#263238"/>
 <g class="nt-run"><g class="nta-sweep${s > 0 ? "L" : "R"}${i ? " ntd3" : ""}" style="transform-origin:${x}px ${y - 7}px">${[0, 1].map((j) => ((d, k) => `<path class="nta-flow ntd${k + 1}" style="animation-duration:1.3s" d="${d}" fill="none" stroke="#29b6f6" stroke-width="1.8" stroke-dasharray="0 4" stroke-linecap="round"/><path class="nta-flow ntd${k + 1}" style="animation-duration:1.3s" d="${d}" fill="none" stroke="#0277bd" stroke-width="1" stroke-dasharray="0 6" stroke-linecap="round"/>`)(`M${x} ${y - 7} Q${x + s * (14 + j * 10)} ${y - 26 - j * 4} ${x + s * (30 + j * 12)} ${y - 4 + j * 3}`, i * 2 + j)).join("")}</g></g>`).join("")}
 ${c.lcd ? `<rect x="44" y="113" width="32" height="10" rx="5" fill="#1e2328" opacity=".82"/><text x="60" y="120.2" font-size="${ntFit(c.lcd, 30, 6.4).toFixed(1)}" font-weight="700" text-anchor="middle" fill="#b3e5fc" ${NT_FONT}>${esc(c.lcd)}</text>` : ""}
 ${ntSoil(108, 60, c.moist)}`;
@@ -4182,6 +4190,10 @@ function ntTintRaw(part, svg, T) {
 // Winter (dosing-tank-card #3): flakes falling slowly over a drawing, snow
 // lying on what it covers, a cover over a spa, a pool or a grill.
 function ntFlakes(n = 12) {
+  // In a group of their own, so winter_snowfall: false can leave them out.
+  return `<g class="nt-fl">${ntFlakesOnly(n)}</g>`;
+}
+function ntFlakesOnly(n) {
   return Array.from({ length: n }, (_, i) => {
     const x = 4 + ((i * 37) % 112), r = (.7 + (i % 3) * .3).toFixed(1), d = (3.6 + (i % 5) * .6).toFixed(1), b = (-((i * .83) % 4)).toFixed(2);
     return `<circle cx="${x}" cy="-8" r="${r}" fill="#e3f1fa" stroke="#8fb8d2" stroke-width=".35"><animateTransform attributeName="transform" type="translate" values="0 0;5 130" dur="${d}s" begin="${b}s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;1;1;.2" keyTimes="0;.1;.8;1" dur="${d}s" begin="${b}s" repeatCount="indefinite"/></circle>`;
@@ -4226,8 +4238,11 @@ function ntWinter(d, body) {
   // The garden: the timer taken in and the tap drained, snow on the ground,
   // the lawn and the beds.
   if (d.kind === "irr_tap") return body + `<ellipse cx="56" cy="101" rx="46" ry="7" fill="${snow}" ${edge}/><ellipse cx="40" cy="99.4" rx="14" ry="3" fill="#ffffff" opacity=".8"/>` + ntFlakes();
-  if (d.kind === "irr_sprinkler") return body + `<ellipse cx="60" cy="104" rx="55" ry="15.6" fill="${snow}" ${edge}/><ellipse cx="60" cy="103.4" rx="5" ry="1.5" fill="#37424c" opacity=".7"/>` + ntFlakes();
-  if (d.kind === "irr_flowers") return body + `<ellipse cx="58" cy="97" rx="50" ry="14" fill="${snow}" ${edge} opacity=".9"/>` + ntFlakes();
+  // Snow over the whole lawn, rim included, in soft drifts.
+  const drifts = (cx, cy, rx, ry) => [[-.55, -.15, .22], [-.15, .25, .26], [.3, -.2, .2], [.55, .2, .18]]
+    .map(([u, v, k]) => `<ellipse cx="${(cx + u * rx).toFixed(1)}" cy="${(cy + v * ry).toFixed(1)}" rx="${(rx * k).toFixed(1)}" ry="${(ry * k * .9).toFixed(1)}" fill="#ffffff" opacity=".85"/>`).join("");
+  if (d.kind === "irr_sprinkler") return body + `<ellipse cx="60" cy="104.6" rx="59.4" ry="18.8" fill="${snow}" ${edge}/><path d="M1 105 V108 A59 18.6 0 0 0 119 108 V105 A59 18.6 0 0 1 1 105 Z" fill="#e3eef5"/>${drifts(60, 103, 58, 18)}<ellipse cx="60" cy="103.4" rx="5" ry="1.5" fill="#37424c" opacity=".7"/>` + ntFlakes(16);
+  if (d.kind === "irr_flowers") return body.replace(/<!--wf-->[\s\S]*?<!--\/wf-->/, "") + `<ellipse cx="58" cy="95.4" rx="54.4" ry="18.4" fill="${snow}" ${edge}/>${drifts(58, 95, 54, 18)}` + body.match(/<!--wf-->([\s\S]*?)<!--\/wf-->/)[1] + ntFlakes(16);
   if (d.kind === "irr_drip") return body + `<path d="M9 72.6 L89 72.6 L106 36 L27 36 Z" fill="${snow}" ${edge} opacity=".88"/>${ntSnowCap(6, 92, 73, 2.4)}` + ntFlakes();
   return body + ntFlakes();
 }

@@ -66,7 +66,8 @@ ${water ? `<path class="ap-water" d="M36 76 Q49 71 60 76 T84 76 V92 H36 Z"/>` : 
 <circle cx="60" cy="68" r="19" fill="url(#${gl})"/>
 <path d="M47 57 Q53 51 62 50" stroke="#fff" stroke-width="2.2" opacity=".35" fill="none" stroke-linecap="round"/>
 <rect x="84" y="62" width="5" height="12" rx="2" fill="url(#${ch})"/>`;
-  return `<svg class="ap-svg ap-${dryer ? "dryer" : "washer"}" viewBox="0 -10 120 135" aria-hidden="true"><defs>${apCabinet(c)}${apChrome(ch)}
+  // Framed close, so a washer stands as tall as the dishwasher beside it.
+  return `<svg class="ap-svg ap-${dryer ? "dryer" : "washer"}" viewBox="12 3 98 110.25" aria-hidden="true"><defs>${apCabinet(c)}${apChrome(ch)}
 <radialGradient id="${gl}" cx=".4" cy=".35" r=".75"><stop offset="0" stop-color="#9fb4c6" stop-opacity=".18"/><stop offset=".75" stop-color="#1d2a36" stop-opacity=".35"/><stop offset="1" stop-color="#0c1218" stop-opacity=".7"/></radialGradient>
 <radialGradient id="${drum}" cx=".5" cy=".45" r=".6"><stop offset="0" stop-color="${dryer ? "#b8c0c8" : "#9aa4ae"}"/><stop offset="1" stop-color="${dryer ? "#4a525b" : "#3a434c"}"/></radialGradient>
 <radialGradient id="${warm}" cx=".5" cy=".5" r=".55"><stop offset="0" stop-color="#ffb74d" stop-opacity=".5"/><stop offset="1" stop-color="#ff7043" stop-opacity="0"/></radialGradient>

@@ -161,7 +161,7 @@ const SECTIONS = [
   { field: "backwash_entity", types: ["pool_pump"], labelKey: "section_backwash", includeDomains: ["binary_sensor", "switch", "sensor", "input_boolean"] },
   { field: "frost_entity", types: ["pool_pump"], labelKey: "section_frost", includeDomains: ["binary_sensor", "switch", "sensor", "input_boolean"] },
   { field: "winter_entity", types: WINTER_TYPES, labelKey: "section_robot_winter", includeDomains: ["input_boolean", "switch", "binary_sensor"],
-    extra: (c) => c._row("winter", "robot_winter", { type: "checkbox" }) },
+    extra: (c) => c._row("winter", "robot_winter", { type: "checkbox" }) + c._row("winter_snowfall", "winter_snowfall", { type: "checkbox", defaultOn: true }) },
   { field: "pool_alert_entity", types: ["pool_pump"], labelKey: "section_pool_alert", includeDomains: ["binary_sensor", "sensor"] },
   // Solar panels: the energy of the day and an alert. A battery: what goes
   // in and out, its reserve, its charge limit and an alert.
@@ -360,7 +360,8 @@ const SECTIONS = [
   { field: "robot_rain_entity", types: ["robot"], labelKey: "section_robot_rain", includeDomains: ["binary_sensor", "sensor", "switch"],
     when: (c) => robotLayoutOf(c, null) === "mower" },
   { field: "robot_winter_entity", types: ["robot"], labelKey: "section_robot_winter", includeDomains: ["input_boolean", "switch", "binary_sensor"],
-    when: (c) => ["mower", "pool"].includes(robotLayoutOf(c, null)) },
+    when: (c) => ["mower", "pool"].includes(robotLayoutOf(c, null)),
+    extra: (c) => c._row("winter_snowfall", "winter_snowfall", { type: "checkbox", defaultOn: true }) },
   { field: "robot_error_entity", types: ["robot"], labelKey: "section_robot_error", includeDomains: ["sensor", "binary_sensor"] },
   { field: "night_mode_entity", types: ["air_purifier", "fan"], labelKey: "pf_night", includeDomains: ["switch", "binary_sensor", "input_boolean"] },
   { field: "heater_entity", types: ["air_purifier", "fan"], labelKey: "section_heater", includeDomains: ["climate", "switch", "select", "binary_sensor"] },
@@ -1683,6 +1684,11 @@ class ApplianceCardEditor extends HTMLElement {
             type: "range", min: 0.3, max: 1.6, step: 0.05, default: 1,
             value: this._config.illustration_size === undefined ? "" : illustrationSizeOf(this._config.illustration_size),
           })}
+          ${this._row("illustration_backdrop", "illustration_backdrop", {
+            type: "select",
+            value: illustrationBackdropOf(this._config.illustration_backdrop) || "none",
+            options: ["none", "neutral", "state"].map((v) => ({ value: v, label: t(hass, `backdrop_${v}`) })),
+          })}
           ${this._row("font_scale", "font_scale", {
             type: "range", min: 0.7, max: 1.4, step: 0.05, default: 1,
             value: this._config.font_scale === undefined ? "" : fontScaleOf(this._config.font_scale),
@@ -1868,9 +1874,11 @@ class ApplianceCardEditor extends HTMLElement {
           delete this._config.speed_power_3;
         }
         // Shown is the default and is not written: only false is.
-        if (["show_name", "show_state", "show_toggle", "show_light_button", "large_temperature"].includes(field) && value) delete this._config[field];
+        if (["show_name", "show_state", "show_toggle", "show_light_button", "large_temperature", "winter_snowfall"].includes(field) && value) delete this._config[field];
         // Compact is written the way it always was: true for the card without
         // its drawing, nothing at all when it is off.
+        // No background is the default and is not written.
+        if (field === "illustration_backdrop" && !illustrationBackdropOf(value)) delete this._config.illustration_backdrop;
         if (field === "compact") {
           if (value === "side") this._config.compact = "side";
           else if (value === "hide") this._config.compact = true;

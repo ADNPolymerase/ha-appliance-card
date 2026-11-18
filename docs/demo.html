@@ -111,6 +111,8 @@ if (params.has("phase") || params.has("seed")) {
   };
 }
 const uiLang = params.get("lang") === "fr" ? "fr" : "en";
+// ?theme=dark on every view, the gallery grids as the live page.
+if (params.get("theme") === "dark") document.documentElement.classList.add("dark");
 const view = ["types", "live"].includes(params.get("view")) ? params.get("view") : "hero";
 // Twenty-nine types, the two other feeders and a ceiling fan, thirty-two
 // cards with the iron on its steam generator: eight across and four down.
@@ -157,6 +159,10 @@ const PLUG_MAX = { washer: 2400, dryer: 2800, dishwasher: 2200, oven: 3500, micr
 const plugOnly = params.get("plug") === "1";
 // ?color= draws every card of the live gallery in one illustration colour.
 const demoColor = ["white", "grey", "black", "red"].includes(params.get("color")) ? params.get("color") : "";
+// ?bd= the background behind the drawings: the gallery shows "state"
+// (illustration_backdrop: state), ?bd=none the card as it comes, ?bd=neutral.
+const demoBackdrop = ["none", "neutral", "state"].includes(params.get("bd")) ? params.get("bd") : "state";
+const backdropOf = (config) => (demoBackdrop === "none" || config.illustration_backdrop ? {} : { illustration_backdrop: demoBackdrop });
 const plugSeen = new Set();
 // The plug-only view counts each family first without drawing it (plugDry),
 // noting which cards it keeps (plugRecord); a family opened later draws
@@ -284,7 +290,7 @@ function card(config, entities) {
     cell.className = "cell";
     cell.appendChild(el);
     row.appendChild(cell);
-    el.setConfig({ type: "custom:ha-appliance-card", ...config, ...(demoColor ? { illustration_color: demoColor } : {}) });
+    el.setConfig({ type: "custom:ha-appliance-card", ...config, ...backdropOf(config), ...(demoColor ? { illustration_color: demoColor } : {}) });
     const sim = { states, config, refresh: () => {}, note: () => {} };
     sim.push = () => { el.hass = { ...mkHass({ ...states }), callService: (d, s, data) => simulate(sim, d, s, data) }; };
     sim.set = (id, value, attr, fromTimer) => {
@@ -302,7 +308,7 @@ function card(config, entities) {
   // lines per card (0: the drawing, its name and its state alone), for the
   // README's animated grids.
   const isize = Number(params.get("isize"));
-  el.setConfig({ type: "custom:ha-appliance-card", ...config, ...(isize ? { illustration_size: posterSize || isize } : {}), ...(posterName ? { name: posterName } : {}) });
+  el.setConfig({ type: "custom:ha-appliance-card", ...config, ...backdropOf(config), ...(isize ? { illustration_size: posterSize || isize } : {}), ...(posterName ? { name: posterName } : {}) });
   el.hass = mkHass(states);
   const maxLines = params.get("lines");
   if (maxLines !== null && el.shadowRoot) {
@@ -1754,6 +1760,10 @@ const ceilingFanWinter = () => card({ illustration_color: "black", name: L("Ceil
   [st("fan.living_ceiling", "on", { percentage: 30, direction: "reverse" })]);
 Object.assign(EXTRA, { win_pool: poolWintered, win_spa: demoSpaWinter, win_tap: irrTapWinter, win_sprinkler: irrSprinklerWinter, win_flowers: irrFlowersWinter,
   win_grill: pgWinterDemo, win_poolbot: demoPoolBotWinter, win_mower: rbtMowerWinter, win_fan: ceilingFanWinter });
+// Temperature and humidity sensors, one of each model.
+const thsCard = (name, layout, t, h) => () => card({ name, appliance_type: "climate_sensor", climate_sensor_layout: layout, state_entity: "sensor.ths_t_" + layout,
+  ...(h ? { humidity_entity: "sensor.ths_h_" + layout } : {}) },
+  [st("sensor.ths_t_" + layout, t, { device_class: "temperature", unit_of_measurement: "\u00b0C" }), ...(h ? [st("sensor.ths_h_" + layout, h, { device_class: "humidity", unit_of_measurement: "%" })] : [])]);
 // CO2 monitors (#108): green, orange and red against the thresholds.
 const co2Card = (name, layout, v, more = {}) => () => card({ name, appliance_type: "climate_sensor", climate_sensor_layout: layout, state_entity: "sensor.co2_" + layout,
   temperature_entity: "sensor.co2_t", humidity_entity: "sensor.co2_h", ...more },
@@ -1784,6 +1794,13 @@ Object.assign(EXTRA, {
   fb_switchbot_black: () => card({ name: L("Projector", "Vid\u00e9oprojecteur"), appliance_type: "fingerbot", fingerbot_color: "black", state_entity: "button.bot_3e9f", battery_entity: "sensor.bot_3e9f_battery" },
     [st("button.bot_3e9f", "unknown"), st("sensor.bot_3e9f_battery", 92, { unit_of_measurement: "%" })]),
   fb_classic: () => card({ name: L("Old remote", "Vieille t\u00e9l\u00e9commande"), appliance_type: "fingerbot", fingerbot_layout: "classic", state_entity: "switch.adaprox" }, [st("switch.adaprox", "off")]),
+  ths_disc: thsCard(L("Bathroom", "Salle de bain"), "disc", 22.4, 71),
+  ths_square: thsCard(L("Bedroom", "Chambre"), "square", 19.6, 48),
+  ths_cushion: thsCard(L("Nursery", "Chambre b\u00e9b\u00e9"), "cushion", 20.8, 52),
+  ths_stick: thsCard(L("Cellar", "Cave"), "stick", 13.2, 76),
+  ths_lcd_stand: thsCard(L("Living room", "Salon"), "lcd_stand", 21.5, 44),
+  ths_lcd_probe: thsCard(L("Freezer probe", "Sonde cong\u00e9lateur"), "lcd_probe", -18.4, 0),
+  ths_lcd_round: thsCard(L("Greenhouse", "Serre"), "lcd_round", 27.9, 83),
   co2_eink: co2Card(L("Office", "Bureau"), "co2_eink", 683),
   co2_box: co2Card(L("Bedroom", "Chambre"), "co2_box", 1250),
   co2_netatmo: co2Card(L("Living room", "Salon"), "co2_netatmo", 1720),

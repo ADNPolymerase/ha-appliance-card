@@ -94,7 +94,8 @@ const TYPE_AUTO_PATTERNS = {
     solar_alert_entity: /error|fault|alarm|defaut/i,
   },
   home_battery: {
-    battery_entity: /battery_?level|state_?of_?charge|(^|[._])soc([._]|$)|batter/i,
+    // Tesla's Powerwall names it charge alone.
+    battery_entity: /battery_?level|state_?of_?charge|(^|[._])soc([._]|$)|batter|(^|[._])charge$/i,
     // One signed power, the battery's and nobody else's (Huawei, Tesla).
     power_entity: /^(?!.*(solar|pv\d?_|grid|load|house|home_)).*(charge.?(or.?)?discharge.?power|(batter|storage).*(power|watt))/i,
     // Huawei's charge/discharge power is one signed sensor: it is power_entity.
@@ -141,7 +142,8 @@ const TYPE_AUTO_PATTERNS = {
     // Ecovacs's station_state, Dreame's state carry the washing and the emptying.
     robot_status_entity: /status|activity|phase|etat|(^|[._])state$/i,
     battery_entity: /batter|akku/i,
-    robot_bin_entity: /bin_?full|dust_?bin_?full|box_?full/i,
+    // A station's dust bag, not how long it lasts.
+    robot_bin_entity: /^(?!.*(life|usage|left|remain|time|hours)).*(bin_?full|dust_?bin_?full|box_?full|dust.?bag.?(full|status))/i,
     // Roborock's water_box_attached is on while the box is in place, its
     // dirty_box_full the wrong tank.
     robot_water_entity: /^(?!.*(attached|carriage|dirty)).*(water_?(shortage|box|tank|level)|low_?water|mop_?water|clean_?water|(^|[._])tank_level)/i,
@@ -301,7 +303,8 @@ const TYPE_AUTO_PATTERNS = {
   // Philips calls the basket a drawer and Xiaomi a pot; VeSync sets its
   // temperature, Xiaomi counts the time left.
   air_fryer: {
-    remaining_time_entity: /time.?to.?end|remaining|left.?time|time.?left|time.?remaining/i,
+    // VeSync gives the time the cooking ends.
+    remaining_time_entity: /time.?to.?end|remaining|left.?time|time.?left|time.?remaining|cook(ing)?.?end/i,
     target_temperature_entity: /target.?temp|set.?temp|cook.?temp/i,
     current_temperature_entity: /current.?temp|work.?temp/i,
     basket_entity: /drawer|basket|pot.?out|pull.?out/i,
@@ -585,16 +588,31 @@ function fieldFits(hass, field, id) {
   return true;
 }
 
+// The entities of the devices hung under this one's (via_device).
+function childDeviceEntities(hass, entityId) {
+  const reg = hass.entities && hass.entities[entityId];
+  const dev = reg && reg.device_id;
+  const devices = hass.devices || {};
+  if (!dev) return [];
+  const kids = new Set(Object.keys(devices).filter((d) => devices[d].via_device_id === dev));
+  return Object.keys(hass.entities || {}).filter((id) => kids.has(hass.entities[id].device_id) && hass.states[id]);
+}
+
 // The sections live in the editor, which is a file of its own in a release:
 // it hands them over, since only the editor ever asks for suggestions.
 function autoSuggest(hass, cfg, sectionsFor) {
   if (!cfg.state_entity || !stateObj(hass, cfg.state_entity)) return {};
-  const siblings = siblingEntityIds(hass, cfg.state_entity).filter((id) => id !== cfg.state_entity);
   const type = detectApplianceType(cfg, stateObj(hass, cfg.state_entity));
+  let siblings = siblingEntityIds(hass, cfg.state_entity).filter((id) => id !== cfg.state_entity);
+  // A Bambu printer's AMS is a device of its own under the printer's: its
+  // trays, humidity and drying are on it.
+  if (type === "printer_3d") siblings = [...new Set(siblings.concat(childDeviceEntities(hass, cfg.state_entity)))];
+  const amsTrays = type === "printer_3d" && !entityEntries(cfg.ams_entities, 4).length
+    ? siblings.filter((id) => /^sensor\..*ams.*tray_?[1-4]$/i.test(id) && hass.states[id]).sort().slice(0, 4) : [];
   // Only ever fill fields the current type actually shows: a suggestion the
   // editor then hides is just a stray key in the user's YAML. Nor one its own
   // picker would refuse: a sensor whose name says start is no start button.
-  const sections = sectionsFor(type, cfg);
+  const sections = sectionsFor(type, amsTrays.length ? { ...cfg, ams_entities: amsTrays } : cfg);
   const allowed = new Set(sections.map((s) => s.field));
   const domains = Object.fromEntries(sections.map((s) => [s.field, s.includeDomains]));
   // A type's own fields choose first: the generic ones would take a session's
@@ -606,6 +624,7 @@ function autoSuggest(hass, cfg, sectionsFor) {
   // hptc1 is missing: better no flow than the buffer tank's.
   const emsHeatPump = type === "heat_pump" && /^sensor\..*hpactivity$/.test(String(cfg.state_entity || ""));
   for (const f of Object.keys(patch)) if (!allowed.has(f)) delete patch[f];
+  if (amsTrays.length) patch.ams_entities = amsTrays;
   // A machine whose name says it washes and dries gets the option written
   // down, so that the editor shows it ticked and the YAML says what the card
   // is doing, rather than both relying on the name for ever.
@@ -977,6 +996,12 @@ function illustrationSizeOf(v) {
   const n = parseFloat(v);
   if (!isFinite(n) || n <= 0) return 1;
   return Math.round(Math.min(1.6, Math.max(0.3, n)) * 100) / 100;
+}
+
+// The background behind the drawing: none, a neutral tile, or the same tile
+// tinted by the state's colour, so a wall of cards reads as one set.
+function illustrationBackdropOf(v) {
+  return v === "neutral" || v === "state" ? v : "";
 }
 
 // The text's size, 0.7 to 1.4 times its own, the drawing left as it is.

@@ -1,5 +1,5 @@
 // Built by tools/build.mjs from the files of src/: edit those, not this file.
-const CARD_VERSION = "4.33.0";
+const CARD_VERSION = "4.34.0";
 
 console.info(
   "%c HA-APPLIANCE-CARD %c v" + CARD_VERSION + " ",
@@ -147,7 +147,7 @@ const T = {
     source: "Source", source_plug: "A smart plug", source_integration: "Integration entities", plug_switch: "Smart plug switch",
     type_thermostat: "Thermostat", section_thermostat_layout: "Model", layout_th_square: "Square", layout_th_round: "Round", layout_th_glass: "Black glass", layout_th_valve: "Radiator valve", th_idle: "Target reached", th_eco: "Eco", th_away: "Away", th_frost: "Frost protection", th_window: "Window open", th_line_valve: "Valve", section_thermostat: "Room thermostat",
     compact_lines: "Information", lines_below: "Under the card", lines_beside: "Beside the drawing", lines_toggle: "Hidden, a chevron shows them", lines_show: "Show the information", lines_hide: "Hide the information",
-    type_mobility: "Electric ride", layout_mob_scooter: "Scooter", layout_mob_offroad: "Off-road scooter", layout_mob_ebike: "E-bike", layout_mob_gyropode: "Gyropode", layout_mob_motorcycle: "Electric motorcycle", mob_charging: "Charging", mob_charged: "Charged", mob_unplugged: "Unplugged", mob_plugged: "Plugged in", type_hair_dryer: "Hair dryer", layout_hd_pistol: "Classic", layout_hd_ring: "Ring", hd_cool: "Cool air", hd_hot: "Hot air", hd_heat_threshold: "Hot air above this power (W)", fill_height: "Fill the height of its slot", done_alert: "Flash at the end of the cycle", done_seen: "Seen", no_power_threshold: "No power draw below (W)", group_appearance: "Appearance", show_name: "Show the name", show_state: "Show the state", values_right: "Values on the right", transparent: "Transparent background", font_scale: "Text size", illustration_size: "Drawing size", compact_mode: "Compact mode", compact_off: "Off", compact_hide: "No drawing", compact_side: "Drawing on the side", group_laundry: "Laundry", group_kitchen: "Kitchen", group_heating: "Heating and hot water", group_air: "Air and climate", group_home: "Home and media", group_pets: "Pets", illustration_frame: "Same drawing height as the cards beside it", section_screen_source: "Input source", screen_source: "Input",
+    type_mobility: "Electric ride", layout_mob_scooter: "Scooter", layout_mob_offroad: "Off-road scooter", layout_mob_ebike: "E-bike", layout_mob_gyropode: "Gyropode", layout_mob_motorcycle: "Electric motorcycle", mob_charging: "Charging", mob_charged: "Charged", mob_unplugged: "Unplugged", mob_plugged: "Plugged in", type_hair_dryer: "Hair dryer", layout_hd_pistol: "Classic", layout_hd_ring: "Ring", hd_cool: "Cool air", hd_hot: "Hot air", hd_heat_threshold: "Hot air above this power (W)", fill_height: "Fill the height of its slot", done_alert: "Flash at the end of the cycle", done_seen: "Seen", no_power_threshold: "No power draw below (W)", group_appearance: "Appearance", show_name: "Show the name", show_state: "Show the state", values_right: "Values on the right", transparent: "Transparent background", font_scale: "Text size", illustration_size: "Drawing size", compact_mode: "Compact mode", compact_off: "Off", compact_hide: "No drawing", compact_side: "Drawing on the side", group_laundry: "Laundry", group_kitchen: "Kitchen", group_heating: "Heating and hot water", group_air: "Air and climate", group_home: "Home and media", group_pets: "Pets", illustration_frame: "Same drawing height as the cards beside it", illustration_backdrop: "Background behind the drawing", backdrop_none: "None", backdrop_neutral: "Neutral", backdrop_state: "State color", winter_snowfall: "Falling snow", section_screen_source: "Input source", screen_source: "Input",
     type_network: "Network device (switch, NAS, server)", group_network: "Network and servers", layout_net_switch: "Switch", layout_net_server: "Server", layout_net_nas: "NAS", layout_net_rack: "Rack", net_ports_count: "Ports drawn", net_bays: "NAS bays", net_online: "Online", net_busy: "Busy", net_alert: "Alert", net_warn: "Disk to watch", section_net_cpu: "CPU usage (%)", section_net_memory: "Memory usage (%)", section_net_volume: "Volume used (%)", section_net_download: "Download rate", section_net_upload: "Upload rate", section_net_ports: "Active ports", net_ports_total: "Port count", section_net_poe: "PoE power", section_net_problem: "Problem alert", section_net_temperature: "Temperature", net_temp_alert: "Alert above this temperature (\u00b0C)", net_busy_threshold: "Busy above this rate (Mbit/s)", net_line_rate: "Throughput", net_line_load: "Load", net_line_volume: "Volume", section_net_disk1: "Disk 1", section_net_disk2: "Disk 2", section_net_disk3: "Disk 3", section_net_disk4: "Disk 4", section_net_disk5: "Disk 5", section_net_disk6: "Disk 6", section_net_disk7: "Disk 7", section_net_disk8: "Disk 8",
     type_robot: "Robot (vacuum, mop, mower)", layout_robot_vacuum: "Robot vacuum", layout_robot_mop: "Mopping robot", layout_robot_combo: "Vacuum and mop robot", layout_robot_mower: "Robot mower", section_robot_station: "Base", robot_station_station: "Emptying or washing station", robot_station_base: "Charging base only", robot_shelter: "Shelter over the base", robot_shelter_style: "Shelter style", mower_style: "Mower style", mower_classic: "Classic", mower_navimow: "Navimow, orange wheels", shelter_lean_to: "Wooden lean-to", shelter_shell: "Shell", shelter_garage: "Garage", robot_shelter_color: "Shell colour", delay_starts_in: "Starts in", section_delay: "Delayed start countdown", state_entity_optional: "State entity (optional)", color_green: "Green", color_orange: "Orange", robot_charging: "Charging", robot_docked: "Docked", robot_cleaning: "Cleaning", robot_mopping: "Mopping", robot_mowing: "Mowing", robot_edgecut: "Edge cutting", robot_returning: "Returning to base", robot_emptying: "Emptying the bin", robot_bin_full: "Bin full", robot_low_battery: "Low battery", robot_bag_full: "Bag full", robot_washing: "Washing the pads", robot_drying: "Drying the pads", robot_water_empty: "Water tank empty", robot_rain: "Rain delay", robot_idle: "Stopped", section_robot_status: "Detailed status", section_battery: "Battery", section_robot_bin: "Bin full alert", section_robot_water: "Water tank", section_robot_rain: "Rain", section_robot_error: "Error", robot_station_box: "Rectangular station", robot_station_color: "Station colour", color_gold: "Gold", robot_camera: "Camera module on the robot", section_robot_clean_tank: "Clean water", section_robot_dirty_tank: "Dirty water",
     type_pool_pump: "Pool pump", pool_filtering: "Filtering", pool_chlorinating: "Chlorine injection", pool_backwash: "Backwash", pool_frost: "Frost protection", pool_light_on: "light on", section_water_temperature: "Water temperature", section_air_temperature: "Air temperature", section_ph: "pH", section_redox: "RedOx (ORP)", section_filtration_time: "Filtration time today", section_pressure: "Filter pressure", pool_pressure_alert: "Alert above this pressure (bar)", section_pool_mode: "Pump mode", section_chlorine_pump: "Chlorine pump", section_chlorine_level: "Chlorine tank level", section_backwash: "Backwash", section_frost: "Frost protection", section_pool_alert: "Alert", pool_line_water: "Water", pool_line_air: "Air", pool_line_filtered: "Filtered today", pool_line_pressure: "Pressure", pool_line_chlorine: "Chlorine tank", pool_line_mode: "Mode",
@@ -2685,7 +2685,9 @@ function siblingEntityIds(hass, entityId) {
 const AUTO_PATTERNS = {
   // Miele's program_phase and program_type, Home Connect's progress: not the
   // programme itself.
-  program_entity: /^(?!.*(phase|finish|progress|type|time|remain|duration|a[ck]tiv|actif|attivo)).*program/i,
+  // LG ThinQ calls it the current cycle or course (its "cycles" is a
+  // counter), SmartThings the washer mode or a select ending in cycle.
+  program_entity: /^(?!.*(phase|finish|progress|type|time|remain|duration|a[ck]tiv|actif|attivo|count))(.*program|.*current.?(cycle|course)|.*[._]course$|.*(washer|dryer|oven)_mode$|select\..*_cycle$)/i,
   active_program_entity: /a[ck]tiv\w*.?program|program\w*.?(a[ck]tiv|actif|attivo)/i,
   // What is left of the cycle, not of the filter or the detergent.
   remaining_time_entity: /^(?!.*(filter|water|clean|detergent|softener|salt|rinse.?aid|batter|range|capacity)).*(time.?to.?end|remain|time.?left|left.?time|finish.?(in|time)|completion.?time|end.?time)/i,
@@ -2706,8 +2708,9 @@ const AUTO_PATTERNS = {
 };
 
 // The step of a cycle: Miele names it a program phase, Electrolux a cycle
-// phase, SmartThings a job state, hOn a pr phase, HomeWhiz a sub state.
-const PHASE_ENTITY_RE = /program.?phase|cycle.?phase|job.?state|pr.?phase|machine.?phase|sub.?state|(^|_)phase$/i;
+// phase, SmartThings a job state, hOn a pr phase, HomeWhiz a sub state,
+// smartthinq a process state, Candy and Hoover a cycle status.
+const PHASE_ENTITY_RE = /program.?phase|cycle.?phase|job.?state|pr.?phase|machine.?phase|sub.?state|process.?state|cycle.?status|(^|_)phase$/i;
 
 // Suggested only for the types that can actually use them, so a washing
 // machine doesn't end up with a "filter life" field pre-filled.
@@ -2805,7 +2808,8 @@ const TYPE_AUTO_PATTERNS = {
     solar_alert_entity: /error|fault|alarm|defaut/i,
   },
   home_battery: {
-    battery_entity: /battery_?level|state_?of_?charge|(^|[._])soc([._]|$)|batter/i,
+    // Tesla's Powerwall names it charge alone.
+    battery_entity: /battery_?level|state_?of_?charge|(^|[._])soc([._]|$)|batter|(^|[._])charge$/i,
     // One signed power, the battery's and nobody else's (Huawei, Tesla).
     power_entity: /^(?!.*(solar|pv\d?_|grid|load|house|home_)).*(charge.?(or.?)?discharge.?power|(batter|storage).*(power|watt))/i,
     // Huawei's charge/discharge power is one signed sensor: it is power_entity.
@@ -2852,7 +2856,8 @@ const TYPE_AUTO_PATTERNS = {
     // Ecovacs's station_state, Dreame's state carry the washing and the emptying.
     robot_status_entity: /status|activity|phase|etat|(^|[._])state$/i,
     battery_entity: /batter|akku/i,
-    robot_bin_entity: /bin_?full|dust_?bin_?full|box_?full/i,
+    // A station's dust bag, not how long it lasts.
+    robot_bin_entity: /^(?!.*(life|usage|left|remain|time|hours)).*(bin_?full|dust_?bin_?full|box_?full|dust.?bag.?(full|status))/i,
     // Roborock's water_box_attached is on while the box is in place, its
     // dirty_box_full the wrong tank.
     robot_water_entity: /^(?!.*(attached|carriage|dirty)).*(water_?(shortage|box|tank|level)|low_?water|mop_?water|clean_?water|(^|[._])tank_level)/i,
@@ -3012,7 +3017,8 @@ const TYPE_AUTO_PATTERNS = {
   // Philips calls the basket a drawer and Xiaomi a pot; VeSync sets its
   // temperature, Xiaomi counts the time left.
   air_fryer: {
-    remaining_time_entity: /time.?to.?end|remaining|left.?time|time.?left|time.?remaining/i,
+    // VeSync gives the time the cooking ends.
+    remaining_time_entity: /time.?to.?end|remaining|left.?time|time.?left|time.?remaining|cook(ing)?.?end/i,
     target_temperature_entity: /target.?temp|set.?temp|cook.?temp/i,
     current_temperature_entity: /current.?temp|work.?temp/i,
     basket_entity: /drawer|basket|pot.?out|pull.?out/i,
@@ -3296,16 +3302,31 @@ function fieldFits(hass, field, id) {
   return true;
 }
 
+// The entities of the devices hung under this one's (via_device).
+function childDeviceEntities(hass, entityId) {
+  const reg = hass.entities && hass.entities[entityId];
+  const dev = reg && reg.device_id;
+  const devices = hass.devices || {};
+  if (!dev) return [];
+  const kids = new Set(Object.keys(devices).filter((d) => devices[d].via_device_id === dev));
+  return Object.keys(hass.entities || {}).filter((id) => kids.has(hass.entities[id].device_id) && hass.states[id]);
+}
+
 // The sections live in the editor, which is a file of its own in a release:
 // it hands them over, since only the editor ever asks for suggestions.
 function autoSuggest(hass, cfg, sectionsFor) {
   if (!cfg.state_entity || !stateObj(hass, cfg.state_entity)) return {};
-  const siblings = siblingEntityIds(hass, cfg.state_entity).filter((id) => id !== cfg.state_entity);
   const type = detectApplianceType(cfg, stateObj(hass, cfg.state_entity));
+  let siblings = siblingEntityIds(hass, cfg.state_entity).filter((id) => id !== cfg.state_entity);
+  // A Bambu printer's AMS is a device of its own under the printer's: its
+  // trays, humidity and drying are on it.
+  if (type === "printer_3d") siblings = [...new Set(siblings.concat(childDeviceEntities(hass, cfg.state_entity)))];
+  const amsTrays = type === "printer_3d" && !entityEntries(cfg.ams_entities, 4).length
+    ? siblings.filter((id) => /^sensor\..*ams.*tray_?[1-4]$/i.test(id) && hass.states[id]).sort().slice(0, 4) : [];
   // Only ever fill fields the current type actually shows: a suggestion the
   // editor then hides is just a stray key in the user's YAML. Nor one its own
   // picker would refuse: a sensor whose name says start is no start button.
-  const sections = sectionsFor(type, cfg);
+  const sections = sectionsFor(type, amsTrays.length ? { ...cfg, ams_entities: amsTrays } : cfg);
   const allowed = new Set(sections.map((s) => s.field));
   const domains = Object.fromEntries(sections.map((s) => [s.field, s.includeDomains]));
   // A type's own fields choose first: the generic ones would take a session's
@@ -3317,6 +3338,7 @@ function autoSuggest(hass, cfg, sectionsFor) {
   // hptc1 is missing: better no flow than the buffer tank's.
   const emsHeatPump = type === "heat_pump" && /^sensor\..*hpactivity$/.test(String(cfg.state_entity || ""));
   for (const f of Object.keys(patch)) if (!allowed.has(f)) delete patch[f];
+  if (amsTrays.length) patch.ams_entities = amsTrays;
   // A machine whose name says it washes and dries gets the option written
   // down, so that the editor shows it ticked and the YAML says what the card
   // is doing, rather than both relying on the name for ever.
@@ -3688,6 +3710,12 @@ function illustrationSizeOf(v) {
   const n = parseFloat(v);
   if (!isFinite(n) || n <= 0) return 1;
   return Math.round(Math.min(1.6, Math.max(0.3, n)) * 100) / 100;
+}
+
+// The background behind the drawing: none, a neutral tile, or the same tile
+// tinted by the state's colour, so a wall of cards reads as one set.
+function illustrationBackdropOf(v) {
+  return v === "neutral" || v === "state" ? v : "";
 }
 
 // The text's size, 0.7 to 1.4 times its own, the drawing left as it is.
@@ -7982,6 +8010,22 @@ const BODY_COLORS = {
   black: { body: "#3b4045", hi: "#515860", lo: "#22262a" },
   red: { body: "#7f2a2e", hi: "#9a383d", lo: "#5a1a1d" },
 };
+
+// illustration_backdrop: a rounded tile behind the drawing, mixed into the
+// card's own background so it stays soft on a dark theme as on a light one.
+// "neutral" takes a touch of the text colour, "state" the state's colour.
+// The tile sits under every piece of the drawing (isolation keeps its
+// z-index inside the box), so a wall or a plate drawn in the scene stays on top.
+function backdropCss(kind, color) {
+  if (!kind) return "";
+  const bg = "var(--card-background-color, var(--ha-card-background, #fff))";
+  const tint = kind === "state" ? color : "var(--primary-text-color, #1c1c1c)";
+  const [lo, hi, edge] = kind === "state" ? [7, 17, 20] : [3, 8, 6];
+  return `.machine { isolation: isolate; }
+        .machine::before { content: ""; position: absolute; left: -6px; right: -6px; top: -8px; bottom: -4px; border-radius: 18px; z-index: -1; pointer-events: none;
+          background: linear-gradient(180deg, color-mix(in srgb, ${tint} ${lo}%, ${bg}), color-mix(in srgb, ${tint} ${hi}%, ${bg}));
+          box-shadow: inset 0 0 0 1px color-mix(in srgb, ${tint} ${edge}%, transparent); }`;
+}
 
 function illustrationCss(type, color) {
   const key = drawKeyOf(type);
@@ -13009,6 +13053,8 @@ class ApplianceCard extends HTMLElement {
            level with one that has it, side by side (#61). */
         .pic-frame { min-height: ${Math.round(116 * illustrationSizeOf(cfg.illustration_size))}px; display: flex; flex-direction: column; justify-content: flex-end; }
         .pic-frame > .machine { margin-left: auto; margin-right: auto; }
+        ${backdropCss(illustrationBackdropOf(cfg.illustration_backdrop), color)}
+        ${cfg.winter_snowfall === false ? ".nt-fl,.pl-fl,.rbt-snow{display:none!important}" : ""}
         ${illustrationCss(applianceType, color)}
         .name { font-size: 1.2em; font-weight: 500; color: var(--primary-text-color, #1c1c1c); }
         .state-line { font-size: 1.05em; color: ${color}; margin-top: 2px; }
@@ -13827,7 +13873,7 @@ function loadEditor() {
   if (customElements.get("ha-appliance-card-editor")) return Promise.resolve();
   if (!editorLoading) {
     editorLoading = import(assetUrl("ha-appliance-card-editor.js"))
-      .then((m) => m.default({ t, onLanguageLoaded, LANGUAGE_NAMES, localizedHass, activationOf, TH_LAYOUTS, EV_POWER_THRESHOLD, stateObj, parseValueMap, stringifyValueMap, alertsArray, entityEntries, LIST_OTHER, ENTITY_LISTS, listCandidates, defaultCardName, stripDeviceName, domainOf, INFO_MAX, autoSuggest, APPLIANCE_TYPES, STATE_DOMAINS, SCREEN_ONLY_FIELDS, PRINT_PARTS, illustrationSizeOf, fontScaleOf, compactModeOf, TYPE_GROUPS, caps, detectApplianceType, SCREEN_STANDBY_W, SCREEN_LAYOUTS, SCREEN_IMAGES, screenLayoutOf, screenIsTablet, HD_HEAT_W, PLUG_THRESHOLDS, ZONE_POWER_W, PLUG_SOURCE_TYPES, plugSourceOf, DW_DRY_MIN, WASH_HEAT_W, WASH_SPIN_W, DRYER_HEAT_W, NET_LAYOUTS, SWITCH_PORTS, NET_BAYS, NET_BUSY_MBIT, NET_TEMP_ALERT, netLayoutOf, ROBOT_LAYOUTS, ROBOT_STATIONS, ROBOT_BOX_COLORS, ROBOT_FLOORS, ROBOT_SERVICES, STICK_AWAY_W, robotLayoutOf, PRINTER_STYLES, printerStyleOf, POOL_PRESSURE_ALERT, WINTER_TYPES, SOLAR_LAYOUTS, BATTERY_LAYOUTS, BATTERY_IDLE_W, DIFFUSER_LAYOUTS, illustrationTapOf, UNIT_FILTERS, fieldUnits, unitFilterAccepts, HRV_LAYOUTS, hrvLayoutOf, CAMERA_LAYOUTS, MAILBOX_LAYOUTS, MAILBOX_SIDES, mailboxLayoutOf, MAILBOX_COLORS_3D, LAMP_LAYOUTS, LAMP_SPOTS, LAMP_SPOT_ROWS, lampLayoutOf, FD_COUNTS, CONSOLE_LAYOUTS, IRRIGATION_LAYOUTS, TAP_MODELS, TAP_WALLS, LITTER_LAYOUTS, DETECTOR_LAYOUTS, FINGERBOT_LAYOUTS, FINGERBOT_COLORS, GRILL_LAYOUTS, SPEAKER_LAYOUTS, STREAMER_LAYOUTS, THS_LAYOUTS, thsLayoutOf, MOBILITY_LAYOUTS, PUMP_LAYOUTS, CIRC_MODELS, FLOOR_LAYOUTS, OPT_LINES, METER_LAYOUTS, meterLayoutOf, irrigationLayoutOf, detectorLayoutOf, TREE_PALETTES, TREE_PRESENTS, pumpLayoutOf, SPK_COLORS, CO2_WARN, NETATMO_COLORS, COVER_LAYOUTS, COVER_COLORS, FABRIC_COLORS, coverLayoutOf, COLLECTOR_STYLES, UPS_BATTERY_LOW, HISTORY_HOURS, BODY_COLORS, esc, MOWER_STYLES, SHELTER_STYLES, SHELTER_COLORS, LAPTOP_COLORS, LAPTOP_STYLES, drawn, stateFreeSource }))
+      .then((m) => m.default({ t, onLanguageLoaded, LANGUAGE_NAMES, localizedHass, activationOf, TH_LAYOUTS, EV_POWER_THRESHOLD, stateObj, parseValueMap, stringifyValueMap, alertsArray, entityEntries, LIST_OTHER, ENTITY_LISTS, listCandidates, defaultCardName, stripDeviceName, domainOf, INFO_MAX, autoSuggest, APPLIANCE_TYPES, STATE_DOMAINS, SCREEN_ONLY_FIELDS, PRINT_PARTS, illustrationSizeOf, illustrationBackdropOf, fontScaleOf, compactModeOf, TYPE_GROUPS, caps, detectApplianceType, SCREEN_STANDBY_W, SCREEN_LAYOUTS, SCREEN_IMAGES, screenLayoutOf, screenIsTablet, HD_HEAT_W, PLUG_THRESHOLDS, ZONE_POWER_W, PLUG_SOURCE_TYPES, plugSourceOf, DW_DRY_MIN, WASH_HEAT_W, WASH_SPIN_W, DRYER_HEAT_W, NET_LAYOUTS, SWITCH_PORTS, NET_BAYS, NET_BUSY_MBIT, NET_TEMP_ALERT, netLayoutOf, ROBOT_LAYOUTS, ROBOT_STATIONS, ROBOT_BOX_COLORS, ROBOT_FLOORS, ROBOT_SERVICES, STICK_AWAY_W, robotLayoutOf, PRINTER_STYLES, printerStyleOf, POOL_PRESSURE_ALERT, WINTER_TYPES, SOLAR_LAYOUTS, BATTERY_LAYOUTS, BATTERY_IDLE_W, DIFFUSER_LAYOUTS, illustrationTapOf, UNIT_FILTERS, fieldUnits, unitFilterAccepts, HRV_LAYOUTS, hrvLayoutOf, CAMERA_LAYOUTS, MAILBOX_LAYOUTS, MAILBOX_SIDES, mailboxLayoutOf, MAILBOX_COLORS_3D, LAMP_LAYOUTS, LAMP_SPOTS, LAMP_SPOT_ROWS, lampLayoutOf, FD_COUNTS, CONSOLE_LAYOUTS, IRRIGATION_LAYOUTS, TAP_MODELS, TAP_WALLS, LITTER_LAYOUTS, DETECTOR_LAYOUTS, FINGERBOT_LAYOUTS, FINGERBOT_COLORS, GRILL_LAYOUTS, SPEAKER_LAYOUTS, STREAMER_LAYOUTS, THS_LAYOUTS, thsLayoutOf, MOBILITY_LAYOUTS, PUMP_LAYOUTS, CIRC_MODELS, FLOOR_LAYOUTS, OPT_LINES, METER_LAYOUTS, meterLayoutOf, irrigationLayoutOf, detectorLayoutOf, TREE_PALETTES, TREE_PRESENTS, pumpLayoutOf, SPK_COLORS, CO2_WARN, NETATMO_COLORS, COVER_LAYOUTS, COVER_COLORS, FABRIC_COLORS, coverLayoutOf, COLLECTOR_STYLES, UPS_BATTERY_LOW, HISTORY_HOURS, BODY_COLORS, esc, MOWER_STYLES, SHELTER_STYLES, SHELTER_COLORS, LAPTOP_COLORS, LAPTOP_STYLES, drawn, stateFreeSource }))
       .catch((err) => {
         editorLoading = null;
         throw err;

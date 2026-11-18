@@ -86,6 +86,7 @@ FAMILIES = (
     ("speakers", "spk_smart,spk_mini,spk_one,spk_era100,spk_era300,spk_move,spk_five,spk_play,spk_roam,spk_bar,spk_ray,spk_amp,spk_port,spk_wave,spk_bose500,spk_ultra,spk_portable,spk_flex,spk_bosebar,spk_boseamp,spk_shelf,spk_dot,spk_dotmax,spk_nest", 8),
     ("streamers", "str_appletv,str_cube,str_firestick,str_gts,str_cast,str_shield,str_shieldpro,str_roku,str_mibox,str_freebox,str_decoder,str_box,str_stick", 5),
     ("consoles", "con_ps1,con_ps2,con_ps3,con_ps4,con_ps4pro,con_ps5,con_xbox,con_x360,con_xone,con_xsx,con_xss,con_switch,con_switch2,con_lite,con_vita,con_nes,con_snes,con_n64,con_cube,con_wii,con_md", 5),
+    ("climate_sensors", "ths_disc,ths_square,ths_cushion,ths_stick,ths_lcd_stand,ths_lcd_probe,ths_lcd_round", 4),
     ("co2", "co2_eink,co2_box,co2_netatmo,co2_module", 4),
     ("covers", "cov_shutter,cov_shutter_closing,cov_shutter_closed,cov_blind,cov_venetian,cov_raffstore,cov_pergola,cov_awning", 4),
     ("fingerbots", "fb_plus,fb_charging,fb_held,fb_low,fb_switchbot,fb_switchbot_black,fb_classic", 4),
@@ -115,17 +116,24 @@ GIF_ISIZE = 1.2
 
 # Families whose drawings are wider than a card: fewer a row, wider cards.
 # The ventilation units draw a whole duct diagram.
-GIF_WIDE = {"ventilation": (2, 400)}
+GIF_WIDE = {"ventilation": (2, 412)}
 # Families whose loop is longer than 1.6 s: frames and their spacing. An
 # electric ride's gauge fills in 5 s, and its fourth bar has to be seen.
 # The litter boxes, the watering, the detectors and the speakers share one 7 s
 # cycle, the litter box's full cleaning, every motion fitting it whole.
-GIF_TIMING = {"winter": (36, 100), "grills": (20, 200), "mobility": (25, 200), "litter": (35, 200), "watering": (35, 200), "detectors": (35, 200), "speakers": (35, 200), "consoles": (35, 200), "streamers": (35, 200)}
+GIF_TIMING = {"grills": (20, 200), "mobility": (25, 200), "litter": (35, 200), "watering": (35, 200), "detectors": (35, 200), "speakers": (35, 200), "consoles": (35, 200), "streamers": (35, 200)}
 
 
 def gif_cols(count):
-    rows = -(-count // 4)
-    return -(-count // rows)
+    # Four a row in every family, so the cards line up from one GIF to the
+    # next; a family of three sits in the middle of the same width.
+    return min(4, count)
+
+
+# Every GIF is as wide as four cards and their gaps, the families of fewer
+# centred in it, so the gallery reads as one column in the README.
+GIF_GAP = 12
+GIF_WIDTH = 4 * GIF_CARD_W + 3 * GIF_GAP + 2 * GIF_PAD
 
 
 class QuietHandler(http.server.SimpleHTTPRequestHandler):
@@ -239,7 +247,12 @@ def gifs(only=None):
                         raise SystemExit(f"no content rendered for {slug}")
                     box = (max(0, b[0] - GIF_PAD), max(0, b[1] - GIF_PAD),
                            min(im.width, b[2] + GIF_PAD), min(im.height, b[3] + GIF_PAD))
-                frames.append(im.crop(box).convert("P", palette=Image.ADAPTIVE, colors=GIF_COLORS))
+                cut = im.crop(box)
+                if cut.width < GIF_WIDTH:
+                    wide = Image.new("RGB", (GIF_WIDTH, cut.height), im.getpixel((2, 2)))
+                    wide.paste(cut, ((GIF_WIDTH - cut.width) // 2, 0))
+                    cut = wide
+                frames.append(cut.convert("P", palette=Image.ADAPTIVE, colors=GIF_COLORS))
                 tmp.unlink()
             out = DOCS / name
             frames[0].save(out, save_all=True, append_images=frames[1:],

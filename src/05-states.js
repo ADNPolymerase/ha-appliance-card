@@ -1246,7 +1246,9 @@ function siblingEntityIds(hass, entityId) {
 const AUTO_PATTERNS = {
   // Miele's program_phase and program_type, Home Connect's progress: not the
   // programme itself.
-  program_entity: /^(?!.*(phase|finish|progress|type|time|remain|duration|a[ck]tiv|actif|attivo)).*program/i,
+  // LG ThinQ calls it the current cycle or course (its "cycles" is a
+  // counter), SmartThings the washer mode or a select ending in cycle.
+  program_entity: /^(?!.*(phase|finish|progress|type|time|remain|duration|a[ck]tiv|actif|attivo|count))(.*program|.*current.?(cycle|course)|.*[._]course$|.*(washer|dryer|oven)_mode$|select\..*_cycle$)/i,
   active_program_entity: /a[ck]tiv\w*.?program|program\w*.?(a[ck]tiv|actif|attivo)/i,
   // What is left of the cycle, not of the filter or the detergent.
   remaining_time_entity: /^(?!.*(filter|water|clean|detergent|softener|salt|rinse.?aid|batter|range|capacity)).*(time.?to.?end|remain|time.?left|left.?time|finish.?(in|time)|completion.?time|end.?time)/i,
@@ -1267,6 +1269,7 @@ const AUTO_PATTERNS = {
 };
 
 // The step of a cycle: Miele names it a program phase, Electrolux a cycle
-// phase, SmartThings a job state, hOn a pr phase, HomeWhiz a sub state.
-const PHASE_ENTITY_RE = /program.?phase|cycle.?phase|job.?state|pr.?phase|machine.?phase|sub.?state|(^|_)phase$/i;
+// phase, SmartThings a job state, hOn a pr phase, HomeWhiz a sub state,
+// smartthinq a process state, Candy and Hoover a cycle status.
+const PHASE_ENTITY_RE = /program.?phase|cycle.?phase|job.?state|pr.?phase|machine.?phase|sub.?state|process.?state|cycle.?status|(^|_)phase$/i;
 

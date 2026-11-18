@@ -1933,7 +1933,7 @@ const ILLUSTRATION_CSS = {
         .pl-winter .pl-glow,.pl-winter .pl-rip,.pl-winter .pl-spot{display:none}
         .pl-winter .pl-ice{opacity:1}
         .pl-winter .pl-body{filter:saturate(.6) brightness(1.05)}
-        .pl-fl{fill:#fff;stroke:#cfe3ee;stroke-width:.25;animation:pl-fall var(--fd) linear var(--f0) infinite}
+        .pl-fl{fill:#fff;stroke:#8fb8d2;stroke-width:.4;transform-box:fill-box;animation:pl-fall var(--fd) linear var(--f0) infinite}
         @keyframes pl-fall{0%{transform:translate(0,0);opacity:0}10%{opacity:1}100%{transform:translate(4px,100px);opacity:.2}}
         .pl-m-frost .pl-ice{opacity:1}
         .pl-snow{opacity:0}

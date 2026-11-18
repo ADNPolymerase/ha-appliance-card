@@ -12094,6 +12094,23 @@ check('borne : ni un statut reconnu', evMode(evR('SuspendedEVSE', { power_entity
   check('editeur ecran : la source d entree', /data-toggle="source_entity"/.test(markup(newEditor({ appliance_type: 'screen', state_entity: 'media_player.g9' }))), true);
 }
 
+// illustration_backdrop: a tile behind the drawing, neutral or tinted by the state.
+{
+  const s = (state, attributes = {}) => ({ state: String(state), attributes });
+  const W = { appliance_type: 'washer', state_entity: 'sensor.w' };
+  const st = { 'sensor.w': s('running') };
+  check('fond : absent par defaut', /\.machine::before/.test(render(W, st)), false);
+  check('fond : valeur inconnue ignoree', /\.machine::before/.test(render({ ...W, illustration_backdrop: 'pink' }, st)), false);
+  const n = render({ ...W, illustration_backdrop: 'neutral' }, st);
+  check('fond neutre : tuile presente', /\.machine::before \{ content: ""/.test(n), true);
+  check('fond neutre : couleur du texte melee au fond de carte', /color-mix\(in srgb, var\(--primary-text-color, #1c1c1c\) 3%, var\(--card-background-color/.test(n), true);
+  const b = render({ ...W, illustration_backdrop: 'state' }, st);
+  check('fond etat : teinte par la couleur de l etat', /color-mix\(in srgb, var\(--info-color, #2196f3\) 7%, var\(--card-background-color/.test(b), true);
+  check('fond etat : sous le dessin', /isolation: isolate/.test(b) && /z-index: -1/.test(b), true);
+  check('fond : none = aucun fond', /\.machine::before/.test(render({ ...W, illustration_backdrop: 'none' }, st)), false);
+  check('fond etat : suit l etat (termine = vert)', /var\(--success-color, #4caf50\) 7%/.test(render({ ...W, illustration_backdrop: 'state' }, { 'sensor.w': s('end of cycle') })), true);
+}
+
 // #61: a frame of the full drawing height keeps two robots' floors level.
 {
   const s = (state, attributes = {}) => ({ state: String(state), attributes });
@@ -14965,6 +14982,57 @@ if (RECORD) writeFileSync(process.env.HAC_RECORD, JSON.stringify(RECORD));
   c._hass = { ...HASS(sh('open')), callService: (domain, service, data) => calls.push(`${domain}.${service} ${data.entity_id}`) };
   c._call('cover.salon', { service: 'close_cover' });
   check('109 : le bouton fermer appelle le service', calls[0], 'cover.close_cover cover.salon');
+}
+
+// 4.34.0: names the detection missed, from LG ThinQ, SmartThings, smartthinq,
+// Candy, VeSync, robot stations, Bambu's AMS and Tesla's Powerwall.
+{
+  const sugDev = (type, stateId, list, devices = {}) => {
+    const states = { [stateId]: { state: 'idle', attributes: {} } };
+    const entities = { [stateId]: { device_id: 'dev' } };
+    for (const [id, attributes = {}, dev = 'dev'] of list) {
+      states[id] = { state: attributes.__state ?? '1', attributes };
+      entities[id] = { device_id: dev };
+    }
+    const ed = new Editor();
+    ed.setConfig({ type: 'custom:ha-appliance-card', appliance_type: type, state_entity: stateId });
+    ed.hass = { ...HASS(states), entities, devices };
+    return ed.events.at(-1)?.detail?.config || {};
+  };
+  const lg = sugDev('washer', 'sensor.lg_washer_run_state', [['sensor.lg_washer_cycles'], ['sensor.lg_washer_current_course']]);
+  check('lg : le programme est le cours, pas le compteur de cycles', lg.program_entity, 'sensor.lg_washer_current_course');
+  const st = sugDev('washer', 'sensor.washer_machine_state', [['sensor.washer_washer_mode'], ['sensor.washer_completion_time']]);
+  check('smartthings : washer_mode est le programme', st.program_entity, 'sensor.washer_washer_mode');
+  const sel = sugDev('dryer', 'sensor.dryer_machine_state', [['select.dryer_dryer_cycle', { options: ['a', 'b'] }]]);
+  check('smartthings : select du cycle = programme', sel.program_entity, 'select.dryer_dryer_cycle');
+  const thinq = sugDev('washer', 'sensor.wm_run_state', [['sensor.wm_process_state']]);
+  check('smartthinq : process_state est la phase', thinq.phase_entity, 'sensor.wm_process_state');
+  const candy = sugDev('washer', 'sensor.candy_status', [['sensor.candy_cycle_status']]);
+  check('candy : cycle_status est la phase', candy.phase_entity, 'sensor.candy_cycle_status');
+  const fry = sugDev('air_fryer', 'sensor.fryer_status', [['sensor.fryer_cook_end_time', { device_class: 'timestamp' }]]);
+  check('vesync : la fin de cuisson', fry.remaining_time_entity, 'sensor.fryer_cook_end_time');
+  const bag = sugDev('robot', 'vacuum.robo', [['sensor.robo_dust_bag_left_time', { unit_of_measurement: 'h' }], ['binary_sensor.robo_dust_bag_full']]);
+  check('robot : le sac plein, pas sa duree', bag.robot_bin_entity, 'binary_sensor.robo_dust_bag_full');
+  const pw = sugDev('home_battery', 'sensor.powerwall_battery_power', [['sensor.powerwall_charge', { unit_of_measurement: '%', device_class: 'battery' }]]);
+  check('powerwall : charge = niveau de batterie', pw.battery_entity, 'sensor.powerwall_charge');
+  const amsDev = { dev: { name: 'X1C' }, ams: { name: 'X1C AMS 1', via_device_id: 'dev' } };
+  const bambu = sugDev('printer_3d', 'sensor.x1c_print_status', [
+    ['sensor.x1c_ams_1_tray_2', {}, 'ams'], ['sensor.x1c_ams_1_tray_1', {}, 'ams'],
+    ['sensor.x1c_ams_1_humidity', { unit_of_measurement: '%' }, 'ams'],
+    ['binary_sensor.x1c_ams_1_drying', {}, 'ams']], amsDev);
+  check('bambu : les bacs de l AMS, dans l ordre', (bambu.ams_entities || []).join(' '), 'sensor.x1c_ams_1_tray_1 sensor.x1c_ams_1_tray_2');
+  check('bambu : humidite de l AMS sur son propre appareil', bambu.ams_humidity_entity, 'sensor.x1c_ams_1_humidity');
+  check('bambu : sechage de l AMS', bambu.ams_drying_entity, 'binary_sensor.x1c_ams_1_drying');
+}
+
+// #120: winter_snowfall: false keeps the snow lying but stops the flakes.
+{
+  const P = { appliance_type: 'pool_pump', state_entity: 'switch.p', winter: true };
+  const st = { 'switch.p': { state: 'off', attributes: {} } };
+  check('120 : flocons par defaut', /\.nt-fl,\.pl-fl,\.rbt-snow\{display:none/.test(render(P, st)), false);
+  check('120 : winter_snowfall false les cache', /\.nt-fl,\.pl-fl,\.rbt-snow\{display:none!important\}/.test(render({ ...P, winter_snowfall: false }, st)), true);
+  const I = { appliance_type: 'irrigation', irrigation_layout: 'sprinkler', state_entity: 'switch.i', winter: true };
+  check('120 : les flocons de l arrosage dans leur groupe', /<g class="nt-fl">/.test(render(I, { 'switch.i': { state: 'off', attributes: {} } })), true);
 }
 
 report();
