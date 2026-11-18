@@ -245,6 +245,34 @@ Clique sur une famille pour voir ses appareils en marche.
 
 </details>
 
+<details>
+<summary><b>Pousse-boutons</b></summary>
+
+<img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-fingerbots.fr.gif" alt="Pousse-boutons">
+
+</details>
+
+<details>
+<summary><b>Écrans et tablettes</b></summary>
+
+<img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-screens.fr.gif" alt="Écrans et tablettes">
+
+</details>
+
+<details>
+<summary><b>Autour de la maison : congélateurs, pompes, plancher chauffant, spa, sauna, aquarium, compteur, sèche-cheveux</b></summary>
+
+<img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-house.fr.gif" alt="Autour de la maison : congélateurs, pompes, plancher chauffant, spa, sauna, aquarium, compteur, sèche-cheveux">
+
+</details>
+
+<details>
+<summary><b>L'hiver arrive</b></summary>
+
+<img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-winter.fr.gif" alt="L'hiver arrive : appareils rangés pour l'hiver">
+
+</details>
+
 ## Installation
 
 ### Par HACS
@@ -1790,6 +1818,28 @@ state_entity: media_player.cuisine
 ```
 
 </details>
+
+### L'hiver arrive
+
+Quand le jardin s'endort, la carte le couche aussi. Cochez `winter`, ou donnez une entité marche/arrêt avec `winter_entity` (un `input_boolean` allumé en octobre, une automatisation sur la température de l'eau), et l'appareil est dessiné rangé pour l'hiver, sous la neige qui tombe. Il affiche *Hivernage*.
+
+<img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-winter.fr.gif" alt="L'hiver arrive : appareils rangés pour l'hiver">
+
+| Appareil | Option | Dessin |
+|---|---|---|
+| Pompe de piscine | `winter` / `winter_entity` | De la neige sur la pompe et le filtre. Une pompe qui tourne pour le hors-gel continue de le dire. |
+| Spa | `winter` / `winter_entity` | Sous sa couverture isolante. |
+| Arrosage | `winter` / `winter_entity` | Le robinet purgé, le programmateur rentré, de la neige sur la pelouse et les massifs. |
+| Barbecue à pellets | `winter` / `winter_entity` | Sous sa housse. |
+| Robot tondeuse, robot de piscine | `robot_winter` / `robot_winter_entity` | La tondeuse sous la neige sur sa pelouse et sa base ; le robot de piscine sorti de son bassin. Quoi que dise l'intégration, débranché compris, sans ligne. |
+| Ventilateur de plafond | sa `direction` | Il tourne dans le sens hiver, l'air chaud renvoyé vers le bas en orange (`fan_direction_inverted` si votre ventilateur appelle l'hiver *forward*). |
+
+Un seul helper pour tout le jardin :
+
+```yaml
+winter_entity: input_boolean.winter        # piscine, spa, arrosage, barbecue
+robot_winter_entity: input_boolean.winter  # tondeuse, robot de piscine
+```
 
 ### Options communes à plusieurs familles
 

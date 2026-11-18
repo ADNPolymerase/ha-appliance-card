@@ -245,6 +245,34 @@ Click a family to see its appliances at work.
 
 </details>
 
+<details>
+<summary><b>Finger bots</b></summary>
+
+<img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-fingerbots.gif" alt="Finger bots">
+
+</details>
+
+<details>
+<summary><b>Screens and tablets</b></summary>
+
+<img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-screens.gif" alt="Screens and tablets">
+
+</details>
+
+<details>
+<summary><b>Around the house: freezers, pumps, underfloor heating, spa, sauna, aquarium, meter, hair dryers</b></summary>
+
+<img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-house.gif" alt="Around the house: freezers, pumps, underfloor heating, spa, sauna, aquarium, meter, hair dryers">
+
+</details>
+
+<details>
+<summary><b>Winter is coming</b></summary>
+
+<img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-winter.gif" alt="Winter is coming: appliances put away for the winter">
+
+</details>
+
 ## Installation
 
 ### HACS
@@ -1788,6 +1816,28 @@ state_entity: media_player.kitchen
 ```
 
 </details>
+
+### Winter is coming
+
+When the garden goes to sleep, the card puts it to bed too. Tick `winter`, or give it any on and off entity with `winter_entity` (an `input_boolean` turned on in October, an automation on the water temperature), and the appliance is drawn put away for the winter, under falling snow. It reads *Winter storage*.
+
+<img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-winter.gif" alt="Winter is coming: appliances put away for the winter">
+
+| Appliance | Option | Drawn |
+|---|---|---|
+| Pool pump | `winter` / `winter_entity` | Snow on the pump and the filter. A pump that runs for the frost keeps saying so. |
+| Spa | `winter` / `winter_entity` | Under its insulated cover. |
+| Garden watering | `winter` / `winter_entity` | The tap drained, the timer taken in, snow on the lawn and the beds. |
+| Pellet grill | `winter` / `winter_entity` | Under its cover. |
+| Robot mower, pool robot | `robot_winter` / `robot_winter_entity` | The mower under snow on its lawn and its base; the pool robot out of its pool. Whatever the integration says, unplugged included, with no line. |
+| Ceiling fan | its `direction` | Turning the winter way, the warm air sent back down in orange (`fan_direction_inverted` when your fan calls winter *forward*). |
+
+One helper for the whole garden:
+
+```yaml
+winter_entity: input_boolean.winter        # pool, spa, watering, grill
+robot_winter_entity: input_boolean.winter  # mower, pool robot
+```
 
 ### Options shared by several families
 

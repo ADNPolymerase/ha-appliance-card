@@ -43,7 +43,7 @@ from PIL import Image, ImageChops
 ROOT = Path(__file__).resolve().parent.parent
 DOCS = ROOT / "docs"
 CHROME = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
-PORT = 8801
+PORT = int(os.environ.get("CAPTURE_PORT", 8801))
 
 # The page gives itself 32px of padding, handed back after cropping to the
 # content so the framing matches what the demo page itself shows.
@@ -69,8 +69,7 @@ FAMILIES = (
     ("garage", "ev_charger,ev_discharging,printer_3d,printer_bambu,printer_centauri,printer_a1,printer_neptune,printer_ams,printer_ams_top,dryer_1,dryer_2,dryer_4", 4),
     ("mobility", "mob_scooter,mob_offroad,mob_ebike,mob_gyropode,mob_motorcycle,mob_unplugged", 3),
     ("network", "net_switch,net_nas,net_server,net_rack,net_router", 5),
-    ("network-routers", "net_router,net_router_down", 2),
-    ("network-models", "net_sw8,net_sw16,net_sw24,net_sw32,net_nas1,net_nas2,net_nas4", 4),
+    ("network-models", "net_sw8,net_sw16,net_sw24,net_sw32,net_nas1,net_nas2,net_nas4,net_nas8", 4),
     ("robots", "robot_vacuum,robot_emptying,robot_box,robot_box_gold,robot_mop,robot_drying,robot_mower,robot_navimow,robot_rain,robot_stick,robot_washer", 4),
     ("pool", "pool_running,pool_chlorine,pool_backwash,pool_frost,pool_light,pool_error", 6),
     ("energy", "solar_day,solar_roof,solar_night,battery_charging,battery_station,battery_low", 6),
@@ -89,14 +88,18 @@ FAMILIES = (
     ("consoles", "con_ps1,con_ps2,con_ps3,con_ps4,con_ps4pro,con_ps5,con_xbox,con_x360,con_xone,con_xsx,con_xss,con_switch,con_switch2,con_lite,con_vita,con_nes,con_snes,con_n64,con_cube,con_wii,con_md", 5),
     ("co2", "co2_eink,co2_box,co2_netatmo,co2_module", 4),
     ("covers", "cov_shutter,cov_shutter_closing,cov_shutter_closed,cov_blind,cov_venetian,cov_raffstore,cov_pergola,cov_awning", 4),
+    ("fingerbots", "fb_plus,fb_charging,fb_held,fb_low,fb_switchbot,fb_switchbot_black,fb_classic", 4),
+    ("screens", "scr_tv,scr_projector,scr_computer,scr_laptop,tab_wall,tab_frame,tab_portrait", 4),
+    ("house", "nt_chest,nt_drawers,nt_booster,nt_sump,nt_sump_high,nt_floor,nt_floor_elec,nt_spa,nt_sauna,nt_aquarium,nt_linky,nt_tree,hd_hot,hd_ring", 4),
+    ("winter", "win_pool,win_spa,win_poolbot,win_mower,win_sprinkler,win_flowers,win_tap,win_grill,win_fan", 3),
     ("heat_storage", "heat_tank,heat_tank_loading,heat_tank_low,heat_fws,heat_fws_draw,heat_fws_circ,heat_circ,heat_circ_wilo,heat_circ_fault,heat_circ_nodata,heat_sth,heat_sth_tubes,heat_sth_frost,heat_sth_stag,heat_wood,heat_wood_embers,heat_wood_cold,heat_wood_water", 5),
 )
-# Sixteen frames a tenth of a second apart over a 1.6 s loop, on a 128-colour
-# palette: the five families weigh about 1.4 MB per language, where 32 frames
-# at 20 per second weighed 5.5 MB for motion barely smoother to the eye. The
-# README is also shown in HACS, often on a phone.
-GIF_FRAMES = 16
-GIF_STEP_MS = 100
+# Forty frames 120 ms apart over a 4.8 s loop, on a 128-colour palette. Most
+# drawings move on 2.4 s, 1.6 s, 1.2 s or 0.8 s, which all fit 4.8 s whole: a
+# 1.6 s loop cut the longer ones short and made them jump back at every turn.
+# The README is also shown in HACS, often on a phone, hence no more frames.
+GIF_FRAMES = 40
+GIF_STEP_MS = 120
 GIF_COLORS = 128
 GIF_SCALE = 1
 # The animated grids are cropped tighter than the screenshots. Keeping the page's full 32px
@@ -117,7 +120,7 @@ GIF_WIDE = {"ventilation": (2, 400)}
 # electric ride's gauge fills in 5 s, and its fourth bar has to be seen.
 # The litter boxes, the watering, the detectors and the speakers share one 7 s
 # cycle, the litter box's full cleaning, every motion fitting it whole.
-GIF_TIMING = {"grills": (20, 200), "mobility": (25, 200), "litter": (35, 200), "watering": (35, 200), "detectors": (35, 200), "speakers": (35, 200), "consoles": (35, 200), "streamers": (35, 200)}
+GIF_TIMING = {"winter": (36, 100), "grills": (20, 200), "mobility": (25, 200), "litter": (35, 200), "watering": (35, 200), "detectors": (35, 200), "speakers": (35, 200), "consoles": (35, 200), "streamers": (35, 200)}
 
 
 def gif_cols(count):
@@ -139,12 +142,18 @@ def serve():
 
 
 def shoot(url, out, window=(1500, 1500), crop=True, scale=SCALE):
-    subprocess.run(
-        [CHROME, "--headless=new", "--disable-gpu", "--hide-scrollbars",
-         f"--force-device-scale-factor={scale}",
-         f"--window-size={window[0]},{window[1]}",
-         "--virtual-time-budget=5000", f"--screenshot={out}", url],
-        capture_output=True, check=True)
+    # A profile of its own, so several captures can run side by side, and a
+    # second try: a headless Chrome now and then exits before its screenshot.
+    cmd = [CHROME, "--headless=new", "--disable-gpu", "--hide-scrollbars",
+           f"--user-data-dir=/tmp/hac-capture-{PORT}",
+           f"--force-device-scale-factor={scale}",
+           f"--window-size={window[0]},{window[1]}",
+           "--virtual-time-budget=5000", f"--screenshot={out}", url]
+    for attempt in range(3):
+        if subprocess.run(cmd, capture_output=True).returncode == 0:
+            break
+    else:
+        subprocess.run(cmd, capture_output=True, check=True)
     im = Image.open(out).convert("RGB")
     if not crop:
         return im
@@ -216,7 +225,7 @@ def gifs(only=None):
             frames_n, step = GIF_TIMING.get(slug, (GIF_FRAMES, GIF_STEP_MS))
             for i in range(frames_n):
                 phase = i * step
-                tmp = DOCS / f".frame-{i}.png"
+                tmp = DOCS / f".frame-{name}-{i}.png"
                 url = (f"http://127.0.0.1:{PORT}/docs/demo.html"
                        f"?view=types&only={types}&cols={cols}&phase={phase}{lang}"
                        f"&lines=0&cw={card_w}&isize={GIF_ISIZE}")
