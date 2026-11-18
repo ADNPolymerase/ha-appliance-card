@@ -1759,6 +1759,12 @@ const co2Card = (name, layout, v, more = {}) => () => card({ name, appliance_typ
   temperature_entity: "sensor.co2_t", humidity_entity: "sensor.co2_h", ...more },
   [st("sensor.co2_" + layout, v, { device_class: "carbon_dioxide", unit_of_measurement: "ppm" }), st("sensor.co2_t", 21.7, { device_class: "temperature", unit_of_measurement: "\u00b0C" }), st("sensor.co2_h", 45, { unit_of_measurement: "%" })]);
 // Shutters, blinds, a pergola and an awning (#109).
+// A cover on its way: in a captured GIF its position follows the frame, the
+// way Home Assistant reports it moving, over the 4.8 s loop.
+const travel = (from, to, still) => {
+  if (!params.has("phase")) return still;
+  return Math.round(from + (to - from) * ((Number(params.get("phase")) % 4800) / 4800));
+};
 const covCard = (name, layout, state, a = {}, more = {}) => () => card({ name, appliance_type: "cover", cover_layout: layout, state_entity: "cover.c_" + layout + "_" + state, ...more },
   [st("cover.c_" + layout + "_" + state, state, { supported_features: 255, ...a }), ...(more.light_entity ? [st(more.light_entity, "on", { rgb_color: [255, 207, 122] })] : [])]);
 // A finger bot (HACF #163): a Fingerbot Plus on Zigbee2MQTT charged by a
@@ -1783,9 +1789,9 @@ Object.assign(EXTRA, {
   co2_netatmo: co2Card(L("Living room", "Salon"), "co2_netatmo", 1720),
   co2_module: co2Card(L("Kids' room", "Chambre des enfants"), "co2_netatmo_module", 640, { netatmo_color: "sand" }),
   cov_shutter: covCard(L("Living room", "Salon"), "shutter", "open", { current_position: 100 }),
-  cov_shutter_closing: covCard(L("Kitchen", "Cuisine"), "shutter", "closing", { current_position: 45 }),
+  cov_shutter_closing: covCard(L("Kitchen", "Cuisine"), "shutter", "closing", { current_position: travel(90, 10, 45) }),
   cov_shutter_closed: covCard(L("Bedroom", "Chambre"), "shutter", "closed", { current_position: 0 }, { cover_color: "anthracite" }),
-  cov_blind: covCard(L("Bedroom blind", "Store chambre"), "blind", "opening", { current_position: 60 }),
+  cov_blind: covCard(L("Bedroom blind", "Store chambre"), "blind", "opening", { current_position: travel(10, 90, 60) }),
   cov_venetian: covCard(L("Office blind", "Store bureau"), "venetian", "open", { current_position: 0, current_tilt_position: 50 }),
   cov_raffstore: covCard(L("Terrace blinds", "Brise-soleil terrasse"), "raffstore", "open", { current_position: 40, current_tilt_position: 100 }),
   cov_pergola: covCard(L("Pergola", "Pergola"), "pergola", "open", { current_tilt_position: 100 }, { light_entity: "light.pergola" }),
