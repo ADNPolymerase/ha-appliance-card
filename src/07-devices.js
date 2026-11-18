@@ -623,14 +623,20 @@ function spoolColorOf(a) {
 function printerAmsOf(hass, cfg) {
   const entries = entityEntries(cfg.ams_entities, 4);
   if (!entries.length) return null;
-  const slots = entries.map((e) => {
+  // Unplugged (Elegoo's Canvas Connected off): the printer feeds its own spool.
+  const link = cfg.ams_connected_entity ? stateObj(hass, cfg.ams_connected_entity) : null;
+  if (link && ["off", "disconnected", "false"].includes(String(link.state).toLowerCase())) return null;
+  // The active spool by number (Elegoo's Active Tray ID, 0 for the first).
+  const act = cfg.ams_active_entity ? stateObj(hass, cfg.ams_active_entity) : null;
+  const actIdx = act && /^\d+$/.test(String(act.state).trim()) ? Number(act.state) : -1;
+  const slots = entries.map((e, i) => {
     const st = stateObj(hass, e.entity);
     const a = (st && st.attributes) || {};
     const raw = st ? String(st.state).trim().toLowerCase() : "";
     const empty = !st || a.empty === true || ["empty", "none", "unknown", "unavailable", ""].includes(raw);
     // Elegoo's CANVAS gives each tray a sensor whose state is its colour.
     const color = /^#?[0-9a-f]{6}([0-9a-f]{2})?$/i.test(raw) ? spoolColorOf({ color: raw }) : spoolColorOf(a);
-    return { entity: e.entity, empty, color: empty ? "" : color, on: !empty && (a.active === true || a.in_use === true) };
+    return { entity: e.entity, empty, color: empty ? "" : color, on: !empty && (a.active === true || a.in_use === true || i === actIdx) };
   });
   return { slots, pos: cfg.ams_position === "top" ? "top" : "side", active: slots.find((x) => x.on) || null, drying: !!cfg.ams_drying_entity && robotRaised(hass, cfg.ams_drying_entity, /dry|sech/) };
 }

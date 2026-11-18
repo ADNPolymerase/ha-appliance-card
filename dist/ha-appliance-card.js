@@ -2565,7 +2565,7 @@ const ENTITY_LISTS = [
     domains: ["switch", "input_boolean", "lock", "light", "fan"], offers: isCornerCandidate, icon: cornerIcon },
   // A filament box beside a 3D printer (#93): one entity per spool.
   { panel: "ams", field: "ams_entities", max: 4, title: "section_ams_list", add: "ams_add", types: ["printer_3d"],
-    domains: ["sensor", "select", "input_text"], offers: (hass, id) => /tray|spool|bobine|ams/.test(id), icon: () => "mdi:printer-3d-nozzle-outline" },
+    domains: ["sensor", "select", "input_text"], offers: (hass, id) => /tray|spool|bobine|ams|_a[1-4]_colou?r$/.test(id), icon: () => "mdi:printer-3d-nozzle-outline" },
   // A ventilation unit run by one entity per speed (#78), in order.
   { panel: "speeds", field: "speed_entities", max: 6, title: "section_speed_list", add: "speeds_add", types: ["hrv"],
     domains: ["input_boolean", "switch", "light"], offers: (hass, id) => ["input_boolean", "switch", "light"].includes(domainOf(id)), icon: () => "mdi:fan" },
@@ -2958,6 +2958,8 @@ const TYPE_AUTO_PATTERNS = {
     total_layers_entity: /total_layer/i,
     ams_humidity_entity: /^sensor\..*ams.*humidity(?!.?index)/i,
     ams_drying_entity: /^binary_sensor\..*ams.*drying/i,
+    ams_active_entity: /^sensor\..*active_tray/i,
+    ams_connected_entity: /^binary_sensor\..*(canvas|ams).*connect/i,
     light_entity: /^(light|switch)\..*(light|led)/i,
     start_entity: /^(button|script)\.(?!.*restart).*start/i,
     pause_entity: /^(button|script)\..*pause/i,
@@ -3671,6 +3673,8 @@ const PRINTER_ONLY_FIELDS = [
   "ams_position",
   "ams_humidity_entity",
   "ams_drying_entity",
+  "ams_active_entity",
+  "ams_connected_entity",
 ];
 
 // The compact modes: "hide" draws no appliance, the card's original compact
@@ -4613,14 +4617,20 @@ function spoolColorOf(a) {
 function printerAmsOf(hass, cfg) {
   const entries = entityEntries(cfg.ams_entities, 4);
   if (!entries.length) return null;
-  const slots = entries.map((e) => {
+  // Unplugged (Elegoo's Canvas Connected off): the printer feeds its own spool.
+  const link = cfg.ams_connected_entity ? stateObj(hass, cfg.ams_connected_entity) : null;
+  if (link && ["off", "disconnected", "false"].includes(String(link.state).toLowerCase())) return null;
+  // The active spool by number (Elegoo's Active Tray ID, 0 for the first).
+  const act = cfg.ams_active_entity ? stateObj(hass, cfg.ams_active_entity) : null;
+  const actIdx = act && /^\d+$/.test(String(act.state).trim()) ? Number(act.state) : -1;
+  const slots = entries.map((e, i) => {
     const st = stateObj(hass, e.entity);
     const a = (st && st.attributes) || {};
     const raw = st ? String(st.state).trim().toLowerCase() : "";
     const empty = !st || a.empty === true || ["empty", "none", "unknown", "unavailable", ""].includes(raw);
     // Elegoo's CANVAS gives each tray a sensor whose state is its colour.
     const color = /^#?[0-9a-f]{6}([0-9a-f]{2})?$/i.test(raw) ? spoolColorOf({ color: raw }) : spoolColorOf(a);
-    return { entity: e.entity, empty, color: empty ? "" : color, on: !empty && (a.active === true || a.in_use === true) };
+    return { entity: e.entity, empty, color: empty ? "" : color, on: !empty && (a.active === true || a.in_use === true || i === actIdx) };
   });
   return { slots, pos: cfg.ams_position === "top" ? "top" : "side", active: slots.find((x) => x.on) || null, drying: !!cfg.ams_drying_entity && robotRaised(hass, cfg.ams_drying_entity, /dry|sech/) };
 }
@@ -10355,7 +10365,8 @@ class ApplianceCard extends HTMLElement {
       const job = isActiveState(norm) || norm === "paused" || norm === "error";
       const pStyle = printerStyleOf(cfg, st);
       const ams = printerAmsOf(hass, cfg);
-      if (ams && ams.active) {
+      // A tray whose state is only its colour (Elegoo) says nothing the drawing does not.
+      if (ams && ams.active && !/^#?[0-9a-f]{6}([0-9a-f]{2})?$/i.test(String(stateObj(hass, ams.active.entity)?.state).trim())) {
         const as = stateObj(hass, ams.active.entity);
         extraLines.push({ key: "ams_spool", icon: "mdi:printer-3d-nozzle-outline", label: t(hass, "ams_spool"), value: formatInfoValue(as, hass, null, cfg, ams.active.entity), entity: ams.active.entity });
       }

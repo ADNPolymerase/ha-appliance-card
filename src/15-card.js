@@ -1757,7 +1757,8 @@ class ApplianceCard extends HTMLElement {
       const job = isActiveState(norm) || norm === "paused" || norm === "error";
       const pStyle = printerStyleOf(cfg, st);
       const ams = printerAmsOf(hass, cfg);
-      if (ams && ams.active) {
+      // A tray whose state is only its colour (Elegoo) says nothing the drawing does not.
+      if (ams && ams.active && !/^#?[0-9a-f]{6}([0-9a-f]{2})?$/i.test(String(stateObj(hass, ams.active.entity)?.state).trim())) {
         const as = stateObj(hass, ams.active.entity);
         extraLines.push({ key: "ams_spool", icon: "mdi:printer-3d-nozzle-outline", label: t(hass, "ams_spool"), value: formatInfoValue(as, hass, null, cfg, ams.active.entity), entity: ams.active.entity });
       }

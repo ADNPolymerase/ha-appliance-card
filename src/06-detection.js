@@ -247,6 +247,8 @@ const TYPE_AUTO_PATTERNS = {
     total_layers_entity: /total_layer/i,
     ams_humidity_entity: /^sensor\..*ams.*humidity(?!.?index)/i,
     ams_drying_entity: /^binary_sensor\..*ams.*drying/i,
+    ams_active_entity: /^sensor\..*active_tray/i,
+    ams_connected_entity: /^binary_sensor\..*(canvas|ams).*connect/i,
     light_entity: /^(light|switch)\..*(light|led)/i,
     start_entity: /^(button|script)\.(?!.*restart).*start/i,
     pause_entity: /^(button|script)\..*pause/i,
@@ -960,6 +962,8 @@ const PRINTER_ONLY_FIELDS = [
   "ams_position",
   "ams_humidity_entity",
   "ams_drying_entity",
+  "ams_active_entity",
+  "ams_connected_entity",
 ];
 
 // The compact modes: "hide" draws no appliance, the card's original compact

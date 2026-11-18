@@ -491,6 +491,8 @@ const SECTIONS = [
   { field: "phase_entity", types: ["printer_3d"], labelKey: "section_print_stage", includeDomains: ["sensor", "input_select"] },
   { field: "ams_humidity_entity", types: ["printer_3d"], labelKey: "ac_line_humidity", includeDomains: ["sensor"], when: (c) => entityEntries(c.ams_entities, 4).length > 0 },
   { field: "ams_drying_entity", types: ["printer_3d"], labelKey: "fd_drying", includeDomains: ["binary_sensor", "sensor", "switch"], when: (c) => entityEntries(c.ams_entities, 4).length > 0 },
+  { field: "ams_active_entity", types: ["printer_3d"], labelKey: "ams_spool", includeDomains: ["sensor", "number", "input_number"], when: (c) => entityEntries(c.ams_entities, 4).length > 0 },
+  { field: "ams_connected_entity", types: ["printer_3d"], labelKey: "section_connectivity", includeDomains: ["binary_sensor", "sensor"], when: (c) => entityEntries(c.ams_entities, 4).length > 0 },
   { field: "nozzle_temperature_entity", types: ["printer_3d"], labelKey: "section_nozzle_temperature", includeDomains: ["sensor"], extra: (c, hass) =>
       c._row("temperature_decimals", "temperature_decimals", {
         type: "select",
