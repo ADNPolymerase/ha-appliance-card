@@ -169,7 +169,8 @@ const NET_NAME_RE = new RegExp([NET_NAS_RE, NET_SWITCH_RE, NET_RACK_RE, NET_SERV
 // The switches drawn: one row of eight, then two rows of eight, twelve and
 // sixteen, numbered like the real ones, odd on top and even below.
 const SWITCH_PORTS = [8, 16, 24, 32];
-const NET_BAYS = [1, 2, 4];
+const NET_BAYS = [1, 2, 4, 8];
+const NET_DISKS = [1, 2, 3, 4, 5, 6, 7, 8];
 // Busy above 10 Mbit/s of traffic, or a processor above 80 %; in alert at
 // 70 degrees, where a NAS or a switch is running hot.
 const NET_BUSY_MBIT = 10;
@@ -191,7 +192,7 @@ function netLayoutOf(cfg, st) {
   if (NET_NAS_RE.test(name)) return "nas";
   if (NET_ROUTER_RE.test(name) || cfg.clients_entity || cfg.wan_entity || cfg.wifi_entity) return "router";
   if (NET_SWITCH_RE.test(name) || cfg.ports_entity || cfg.poe_entity || cfg.switch_ports) return "switch";
-  if (cfg.bays || [1, 2, 3, 4].some((i) => cfg[`disk${i}_entity`])) return "nas";
+  if (cfg.bays || NET_DISKS.some((i) => cfg[`disk${i}_entity`])) return "nas";
   return "server";
 }
 
@@ -209,8 +210,8 @@ function netBaysOf(cfg) {
   const n = parseInt(cfg.bays, 10);
   if (NET_BAYS.includes(n)) return n;
   let last = 0;
-  [1, 2, 3, 4].forEach((i) => { if (cfg[`disk${i}_entity`]) last = i; });
-  return last <= 1 ? (last ? 1 : 2) : last === 2 ? 2 : 4;
+  NET_DISKS.forEach((i) => { if (cfg[`disk${i}_entity`]) last = i; });
+  return last <= 1 ? (last ? 1 : 2) : last === 2 ? 2 : last <= 4 ? 4 : 8;
 }
 
 function netRateBits(hass, entityId) {

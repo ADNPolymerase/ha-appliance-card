@@ -1,5 +1,5 @@
 // Built by tools/build.mjs from the files of src/: edit those, not this file.
-const CARD_VERSION = "4.31.3";
+const CARD_VERSION = "4.32.0";
 
 console.info(
   "%c HA-APPLIANCE-CARD %c v" + CARD_VERSION + " ",
@@ -148,7 +148,7 @@ const T = {
     type_thermostat: "Thermostat", section_thermostat_layout: "Model", layout_th_square: "Square", layout_th_round: "Round", layout_th_glass: "Black glass", layout_th_valve: "Radiator valve", th_idle: "Target reached", th_eco: "Eco", th_away: "Away", th_frost: "Frost protection", th_window: "Window open", th_line_valve: "Valve", section_thermostat: "Room thermostat",
     compact_lines: "Information", lines_below: "Under the card", lines_beside: "Beside the drawing", lines_toggle: "Hidden, a chevron shows them", lines_show: "Show the information", lines_hide: "Hide the information",
     type_mobility: "Electric ride", layout_mob_scooter: "Scooter", layout_mob_offroad: "Off-road scooter", layout_mob_ebike: "E-bike", layout_mob_gyropode: "Gyropode", layout_mob_motorcycle: "Electric motorcycle", mob_charging: "Charging", mob_charged: "Charged", mob_unplugged: "Unplugged", mob_plugged: "Plugged in", type_hair_dryer: "Hair dryer", layout_hd_pistol: "Classic", layout_hd_ring: "Ring", hd_cool: "Cool air", hd_hot: "Hot air", hd_heat_threshold: "Hot air above this power (W)", fill_height: "Fill the height of its slot", done_alert: "Flash at the end of the cycle", done_seen: "Seen", no_power_threshold: "No power draw below (W)", group_appearance: "Appearance", show_name: "Show the name", show_state: "Show the state", values_right: "Values on the right", transparent: "Transparent background", font_scale: "Text size", illustration_size: "Drawing size", compact_mode: "Compact mode", compact_off: "Off", compact_hide: "No drawing", compact_side: "Drawing on the side", group_laundry: "Laundry", group_kitchen: "Kitchen", group_heating: "Heating and hot water", group_air: "Air and climate", group_home: "Home and media", group_pets: "Pets", illustration_frame: "Same drawing height as the cards beside it", section_screen_source: "Input source", screen_source: "Input",
-    type_network: "Network device (switch, NAS, server)", group_network: "Network and servers", layout_net_switch: "Switch", layout_net_server: "Server", layout_net_nas: "NAS", layout_net_rack: "Rack", net_ports_count: "Ports drawn", net_bays: "NAS bays", net_online: "Online", net_busy: "Busy", net_alert: "Alert", net_warn: "Disk to watch", section_net_cpu: "CPU usage (%)", section_net_memory: "Memory usage (%)", section_net_volume: "Volume used (%)", section_net_download: "Download rate", section_net_upload: "Upload rate", section_net_ports: "Active ports", net_ports_total: "Port count", section_net_poe: "PoE power", section_net_problem: "Problem alert", section_net_temperature: "Temperature", net_temp_alert: "Alert above this temperature (\u00b0C)", net_busy_threshold: "Busy above this rate (Mbit/s)", net_line_rate: "Throughput", net_line_load: "Load", net_line_volume: "Volume", section_net_disk1: "Disk 1", section_net_disk2: "Disk 2", section_net_disk3: "Disk 3", section_net_disk4: "Disk 4",
+    type_network: "Network device (switch, NAS, server)", group_network: "Network and servers", layout_net_switch: "Switch", layout_net_server: "Server", layout_net_nas: "NAS", layout_net_rack: "Rack", net_ports_count: "Ports drawn", net_bays: "NAS bays", net_online: "Online", net_busy: "Busy", net_alert: "Alert", net_warn: "Disk to watch", section_net_cpu: "CPU usage (%)", section_net_memory: "Memory usage (%)", section_net_volume: "Volume used (%)", section_net_download: "Download rate", section_net_upload: "Upload rate", section_net_ports: "Active ports", net_ports_total: "Port count", section_net_poe: "PoE power", section_net_problem: "Problem alert", section_net_temperature: "Temperature", net_temp_alert: "Alert above this temperature (\u00b0C)", net_busy_threshold: "Busy above this rate (Mbit/s)", net_line_rate: "Throughput", net_line_load: "Load", net_line_volume: "Volume", section_net_disk1: "Disk 1", section_net_disk2: "Disk 2", section_net_disk3: "Disk 3", section_net_disk4: "Disk 4", section_net_disk5: "Disk 5", section_net_disk6: "Disk 6", section_net_disk7: "Disk 7", section_net_disk8: "Disk 8",
     type_robot: "Robot (vacuum, mop, mower)", layout_robot_vacuum: "Robot vacuum", layout_robot_mop: "Mopping robot", layout_robot_combo: "Vacuum and mop robot", layout_robot_mower: "Robot mower", section_robot_station: "Base", robot_station_station: "Emptying or washing station", robot_station_base: "Charging base only", robot_shelter: "Shelter over the base", robot_shelter_style: "Shelter style", mower_style: "Mower style", mower_classic: "Classic", mower_navimow: "Navimow, orange wheels", shelter_lean_to: "Wooden lean-to", shelter_shell: "Shell", shelter_garage: "Garage", robot_shelter_color: "Shell colour", delay_starts_in: "Starts in", section_delay: "Delayed start countdown", state_entity_optional: "State entity (optional)", color_green: "Green", color_orange: "Orange", robot_charging: "Charging", robot_docked: "Docked", robot_cleaning: "Cleaning", robot_mopping: "Mopping", robot_mowing: "Mowing", robot_edgecut: "Edge cutting", robot_returning: "Returning to base", robot_emptying: "Emptying the bin", robot_bin_full: "Bin full", robot_low_battery: "Low battery", robot_bag_full: "Bag full", robot_washing: "Washing the pads", robot_drying: "Drying the pads", robot_water_empty: "Water tank empty", robot_rain: "Rain delay", robot_idle: "Stopped", section_robot_status: "Detailed status", section_battery: "Battery", section_robot_bin: "Bin full alert", section_robot_water: "Water tank", section_robot_rain: "Rain", section_robot_error: "Error", robot_station_box: "Rectangular station", robot_station_color: "Station colour", color_gold: "Gold", robot_camera: "Camera module on the robot", section_robot_clean_tank: "Clean water", section_robot_dirty_tank: "Dirty water",
     type_pool_pump: "Pool pump", pool_filtering: "Filtering", pool_chlorinating: "Chlorine injection", pool_backwash: "Backwash", pool_frost: "Frost protection", pool_light_on: "light on", section_water_temperature: "Water temperature", section_air_temperature: "Air temperature", section_ph: "pH", section_redox: "RedOx (ORP)", section_filtration_time: "Filtration time today", section_pressure: "Filter pressure", pool_pressure_alert: "Alert above this pressure (bar)", section_pool_mode: "Pump mode", section_chlorine_pump: "Chlorine pump", section_chlorine_level: "Chlorine tank level", section_backwash: "Backwash", section_frost: "Frost protection", section_pool_alert: "Alert", pool_line_water: "Water", pool_line_air: "Air", pool_line_filtered: "Filtered today", pool_line_pressure: "Pressure", pool_line_chlorine: "Chlorine tank", pool_line_mode: "Mode",
     history_last: "Last {h} h", show_history: "Show the history", section_history: "History sensor", history_hours: "Hours of history", history_empty: "No history yet", history_last_days: "Last {d} days", history_chip_h: "{h} h", history_chip_d: "{d} d", history_periods: "History periods", history_total: "Total", delay_set: "Delayed start", delay_none: "None", section_delay_set: "Delayed start setting", hide_when_off: "Show only the state when off", robot_winter: "Winter storage", section_robot_winter: "Winter storage switch",
@@ -3163,7 +3163,7 @@ const INFO_PATTERNS = [
 // hang from it: Synology gives each disk and each volume a device of its own,
 // UGREEN, Unraid and Glances name them on the device itself.
 function netSuggest(hass, cfg) {
-  const anchor = anchorEntity(hass, { ...cfg, disk1_entity: undefined, disk2_entity: undefined, disk3_entity: undefined, disk4_entity: undefined });
+  const anchor = anchorEntity(hass, { ...cfg, ...Object.fromEntries(NET_DISKS.map((i) => [`disk${i}_entity`, undefined])) });
   if (!anchor) return {};
   const reg = hass.entities && hass.entities[anchor];
   const dev = reg && reg.device_id;
@@ -3206,7 +3206,7 @@ function netSuggest(hass, cfg) {
       || pool.find((id) => sensor(id) && /internet|wan/.test(words(id)) && !/port/.test(words(id)) && /status|etat|state/.test(words(id))));
     set("wifi_entity", own.find((id) => domainOf(id) === "switch" && /wi.?fi|wlan/.test(words(id)) && !/guest|invite|wps/.test(words(id))));
   }
-  if (![1, 2, 3, 4].some((i) => cfg[`disk${i}_entity`])) {
+  if (!NET_DISKS.some((i) => cfg[`disk${i}_entity`])) {
     // A disk is best shown by its status, else by its temperature.
     const pick = (ids) => ids.find((id) => sensor(id) && !Number.isFinite(Number(hass.states[id].state)) && !/temp/.test(id))
       || ids.find((id) => sensor(id) && attr(id).device_class === "temperature") || ids[0];
@@ -3227,7 +3227,7 @@ function netSuggest(hass, cfg) {
       }
       disks = [...groups.keys()].sort((a, b) => (lastNumber(a) - lastNumber(b)) || a.localeCompare(b)).map((k) => pick(groups.get(k)));
     }
-    disks.filter(Boolean).slice(0, 4).forEach((id, i) => { patch[`disk${i + 1}_entity`] = id; });
+    disks.filter(Boolean).slice(0, 8).forEach((id, i) => { patch[`disk${i + 1}_entity`] = id; });
   }
   return patch;
 }
@@ -3624,7 +3624,7 @@ const SCREEN_ONLY_FIELDS = ["screen_layout", "laptop_style", "laptop_color", "sc
 // Ports, bays, disks and traffic belong to a network device.
 const NETWORK_ONLY_FIELDS = ["network_layout", "switch_ports", "bays", "busy_threshold", "temperature_alert", "cpu_entity",
   "memory_entity", "volume_entity", "download_entity", "upload_entity", "ports_entity", "ports_total", "poe_entity",
-  "problem_entity", "disk1_entity", "disk2_entity", "disk3_entity", "disk4_entity", "clients_entity", "wan_entity", "wifi_entity"];
+  "problem_entity", "disk1_entity", "disk2_entity", "disk3_entity", "disk4_entity", "disk5_entity", "disk6_entity", "disk7_entity", "disk8_entity", "clients_entity", "wan_entity", "wifi_entity"];
 const SCREEN_MEDIA_FIELDS = ["media_entity", "media2_entity", "media3_entity"];
 const PURIFIER_ONLY_FIELDS = ["purifier_layout", "air_quality_entity", "display_entity", "humidifier_entity", "deep_clean_entity"];
 const FAN_ONLY_FIELDS = ["fan_layout", "wood_blades", "fan_direction_inverted", "oscillating"];
@@ -4166,7 +4166,8 @@ const NET_NAME_RE = new RegExp([NET_NAS_RE, NET_SWITCH_RE, NET_RACK_RE, NET_SERV
 // The switches drawn: one row of eight, then two rows of eight, twelve and
 // sixteen, numbered like the real ones, odd on top and even below.
 const SWITCH_PORTS = [8, 16, 24, 32];
-const NET_BAYS = [1, 2, 4];
+const NET_BAYS = [1, 2, 4, 8];
+const NET_DISKS = [1, 2, 3, 4, 5, 6, 7, 8];
 // Busy above 10 Mbit/s of traffic, or a processor above 80 %; in alert at
 // 70 degrees, where a NAS or a switch is running hot.
 const NET_BUSY_MBIT = 10;
@@ -4188,7 +4189,7 @@ function netLayoutOf(cfg, st) {
   if (NET_NAS_RE.test(name)) return "nas";
   if (NET_ROUTER_RE.test(name) || cfg.clients_entity || cfg.wan_entity || cfg.wifi_entity) return "router";
   if (NET_SWITCH_RE.test(name) || cfg.ports_entity || cfg.poe_entity || cfg.switch_ports) return "switch";
-  if (cfg.bays || [1, 2, 3, 4].some((i) => cfg[`disk${i}_entity`])) return "nas";
+  if (cfg.bays || NET_DISKS.some((i) => cfg[`disk${i}_entity`])) return "nas";
   return "server";
 }
 
@@ -4206,8 +4207,8 @@ function netBaysOf(cfg) {
   const n = parseInt(cfg.bays, 10);
   if (NET_BAYS.includes(n)) return n;
   let last = 0;
-  [1, 2, 3, 4].forEach((i) => { if (cfg[`disk${i}_entity`]) last = i; });
-  return last <= 1 ? (last ? 1 : 2) : last === 2 ? 2 : 4;
+  NET_DISKS.forEach((i) => { if (cfg[`disk${i}_entity`]) last = i; });
+  return last <= 1 ? (last ? 1 : 2) : last === 2 ? 2 : last <= 4 ? 4 : 8;
 }
 
 function netRateBits(hass, entityId) {
@@ -11850,7 +11851,7 @@ class ApplianceCard extends HTMLElement {
     if (cap.network) {
       // The device itself, found without its disks: a disk on a device of its
       // own is read from that device, not taken for the NAS.
-      const anchor = anchorEntity(hass, { ...cfg, disk1_entity: undefined, disk2_entity: undefined, disk3_entity: undefined, disk4_entity: undefined });
+      const anchor = anchorEntity(hass, { ...cfg, ...Object.fromEntries(NET_DISKS.map((i) => [`disk${i}_entity`, undefined])) });
       const anchorReg = anchor && hass.entities ? hass.entities[anchor] : null;
       const anchorDevice = anchorReg ? anchorReg.device_id : null;
       const num = (f) => (cfg[f] ? numericState(hass, cfg[f]) : null);
@@ -11862,7 +11863,7 @@ class ApplianceCard extends HTMLElement {
       const raw = st ? String(st.state).trim().toLowerCase() : "";
       const layout = netLayoutOf(cfg, st);
       const bays = netBaysOf(cfg);
-      const ids = [1, 2, 3, 4].map((i) => cfg[`disk${i}_entity`]);
+      const ids = NET_DISKS.map((i) => cfg[`disk${i}_entity`]);
       const anyDisk = ids.some(Boolean);
       // Without any disk given, the bays only blink with the device's activity.
       const disks = ids.map((id) => (id ? netDiskState(hass, id, anchorDevice) : anyDisk ? "empty" : "gen"))

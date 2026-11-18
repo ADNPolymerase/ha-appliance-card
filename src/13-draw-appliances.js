@@ -779,19 +779,22 @@ function ntSwitch(n, lit) {
 // left, one per bay, then the bays. An empty bay has no tray and its LED stays
 // dark.
 function ntNas(bays, disks) {
-  const tw = 13, gap = 2, strip = 11, w = strip + bays * tw + (bays - 1) * gap + 6, h = 74;
+  // Eight bays make a wide, lower box with slimmer trays, like a DS1821+.
+  const big = bays > 4, tw = big ? 8.5 : 13, gap = big ? 1.2 : 2, strip = 11, h = big ? 64 : 74;
+  const w = +(strip + bays * tw + (bays - 1) * gap + (big ? 4 : 6)).toFixed(1), step = big ? 4.3 : 6;
   const x = Math.round((96 - w) / 2), y = 104 - h - 4;
   const leds = ["nt-pw", "nt-lan"].concat(Array.from({ length: bays }, (_, i) => `d-${disks[i] || "gen"}`));
   let html = `<div class="nt-body" style="left:${x}px;top:${y}px;width:${w}px;height:${h}px;border-radius:4px"></div>`;
-  html += leds.map((k, i) => `<div class="nt-led ${k}" style="left:${x + 4}px;top:${y + 8 + i * 6}px;${ntDelay(i, 0.45, 2.8)}"></div>`).join("");
-  html += `<div class="nt-led" style="left:${x + 4}px;top:${y + 8 + leds.length * 6}px"></div>
+  html += leds.map((k, i) => `<div class="nt-led ${k}" style="left:${x + 4}px;top:${+(y + 8 + i * step).toFixed(1)}px;${ntDelay(i, 0.45, 2.8)}"></div>`).join("");
+  html += `<div class="nt-led" style="left:${x + 4}px;top:${+(y + 8 + leds.length * step).toFixed(1)}px"></div>
           <div class="nt-key" style="left:${x + 2.5}px;top:${y + h - 11}px;width:6px;height:6px"></div>`;
   for (let i = 0; i < bays; i++) {
-    const tx = x + strip + i * (tw + gap);
+    const tx = +(x + strip + i * (tw + gap)).toFixed(1);
     html += `<div class="nt-bay" style="left:${tx}px;top:${y + 5}px;width:${tw}px;height:${h - 10}px"></div>`;
     if (disks[i] !== "empty") {
-      html += `<div class="nt-handle" style="left:${tx + 3}px;top:${y + 8}px;width:${tw - 6}px;height:3px"></div>
-          <div class="nt-tray" style="left:${tx + 3}px;top:${y + 16}px;width:${tw - 6}px;height:${h - 28}px"></div>`;
+      const m = big ? 1.8 : 3;
+      html += `<div class="nt-handle" style="left:${+(tx + m).toFixed(1)}px;top:${y + 8}px;width:${+(tw - 2 * m).toFixed(1)}px;height:3px"></div>
+          <div class="nt-tray" style="left:${+(tx + m).toFixed(1)}px;top:${y + 16}px;width:${+(tw - 2 * m).toFixed(1)}px;height:${h - 28}px"></div>`;
     }
   }
   return `${html}<div class="nt-floor" style="left:${x + 4}px;width:${w - 8}px;top:${y + h}px"></div>`;

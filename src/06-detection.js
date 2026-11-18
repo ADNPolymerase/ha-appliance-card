@@ -452,7 +452,7 @@ const INFO_PATTERNS = [
 // hang from it: Synology gives each disk and each volume a device of its own,
 // UGREEN, Unraid and Glances name them on the device itself.
 function netSuggest(hass, cfg) {
-  const anchor = anchorEntity(hass, { ...cfg, disk1_entity: undefined, disk2_entity: undefined, disk3_entity: undefined, disk4_entity: undefined });
+  const anchor = anchorEntity(hass, { ...cfg, ...Object.fromEntries(NET_DISKS.map((i) => [`disk${i}_entity`, undefined])) });
   if (!anchor) return {};
   const reg = hass.entities && hass.entities[anchor];
   const dev = reg && reg.device_id;
@@ -495,7 +495,7 @@ function netSuggest(hass, cfg) {
       || pool.find((id) => sensor(id) && /internet|wan/.test(words(id)) && !/port/.test(words(id)) && /status|etat|state/.test(words(id))));
     set("wifi_entity", own.find((id) => domainOf(id) === "switch" && /wi.?fi|wlan/.test(words(id)) && !/guest|invite|wps/.test(words(id))));
   }
-  if (![1, 2, 3, 4].some((i) => cfg[`disk${i}_entity`])) {
+  if (!NET_DISKS.some((i) => cfg[`disk${i}_entity`])) {
     // A disk is best shown by its status, else by its temperature.
     const pick = (ids) => ids.find((id) => sensor(id) && !Number.isFinite(Number(hass.states[id].state)) && !/temp/.test(id))
       || ids.find((id) => sensor(id) && attr(id).device_class === "temperature") || ids[0];
@@ -516,7 +516,7 @@ function netSuggest(hass, cfg) {
       }
       disks = [...groups.keys()].sort((a, b) => (lastNumber(a) - lastNumber(b)) || a.localeCompare(b)).map((k) => pick(groups.get(k)));
     }
-    disks.filter(Boolean).slice(0, 4).forEach((id, i) => { patch[`disk${i + 1}_entity`] = id; });
+    disks.filter(Boolean).slice(0, 8).forEach((id, i) => { patch[`disk${i + 1}_entity`] = id; });
   }
   return patch;
 }
@@ -913,7 +913,7 @@ const SCREEN_ONLY_FIELDS = ["screen_layout", "laptop_style", "laptop_color", "sc
 // Ports, bays, disks and traffic belong to a network device.
 const NETWORK_ONLY_FIELDS = ["network_layout", "switch_ports", "bays", "busy_threshold", "temperature_alert", "cpu_entity",
   "memory_entity", "volume_entity", "download_entity", "upload_entity", "ports_entity", "ports_total", "poe_entity",
-  "problem_entity", "disk1_entity", "disk2_entity", "disk3_entity", "disk4_entity", "clients_entity", "wan_entity", "wifi_entity"];
+  "problem_entity", "disk1_entity", "disk2_entity", "disk3_entity", "disk4_entity", "disk5_entity", "disk6_entity", "disk7_entity", "disk8_entity", "clients_entity", "wan_entity", "wifi_entity"];
 const SCREEN_MEDIA_FIELDS = ["media_entity", "media2_entity", "media3_entity"];
 const PURIFIER_ONLY_FIELDS = ["purifier_layout", "air_quality_entity", "display_entity", "humidifier_entity", "deep_clean_entity"];
 const FAN_ONLY_FIELDS = ["fan_layout", "wood_blades", "fan_direction_inverted", "oscillating"];

@@ -3230,7 +3230,7 @@ class ApplianceCard extends HTMLElement {
     if (cap.network) {
       // The device itself, found without its disks: a disk on a device of its
       // own is read from that device, not taken for the NAS.
-      const anchor = anchorEntity(hass, { ...cfg, disk1_entity: undefined, disk2_entity: undefined, disk3_entity: undefined, disk4_entity: undefined });
+      const anchor = anchorEntity(hass, { ...cfg, ...Object.fromEntries(NET_DISKS.map((i) => [`disk${i}_entity`, undefined])) });
       const anchorReg = anchor && hass.entities ? hass.entities[anchor] : null;
       const anchorDevice = anchorReg ? anchorReg.device_id : null;
       const num = (f) => (cfg[f] ? numericState(hass, cfg[f]) : null);
@@ -3242,7 +3242,7 @@ class ApplianceCard extends HTMLElement {
       const raw = st ? String(st.state).trim().toLowerCase() : "";
       const layout = netLayoutOf(cfg, st);
       const bays = netBaysOf(cfg);
-      const ids = [1, 2, 3, 4].map((i) => cfg[`disk${i}_entity`]);
+      const ids = NET_DISKS.map((i) => cfg[`disk${i}_entity`]);
       const anyDisk = ids.some(Boolean);
       // Without any disk given, the bays only blink with the device's activity.
       const disks = ids.map((id) => (id ? netDiskState(hass, id, anchorDevice) : anyDisk ? "empty" : "gen"))

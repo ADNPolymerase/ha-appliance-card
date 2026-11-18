@@ -1411,7 +1411,7 @@ An entity named after a wallbox in the card's languages, after its maker or afte
 | `clients_entity` | network (router) | How many clients are connected, as a line. |
 | `wan_entity` | network (router) | The internet link, a connectivity sensor or a status that says `online` / `offline`: when it is down the router reads *No internet*, in alert. |
 | `wifi_entity` | network (router) | The Wi-Fi, a switch: switched off, the waves stop rising from the antennas and the Wi-Fi light goes dark. |
-| `disk1_entity` … `disk4_entity` / `bays` | network | One entity per disk, any of its own: the card reads all of them. Its LED is green when fine, blue while it reads or writes, dim while asleep, orange when to watch, red when it fails. `bays`: `1`, `2` or `4` bays drawn on a NAS, an empty bay has no tray. |
+| `disk1_entity` … `disk8_entity` / `bays` | network | One entity per disk, any of its own: the card reads all of them. Its LED is green when fine, blue while it reads or writes, dim while asleep, orange when to watch, red when it fails. `bays`: `1`, `2`, `4` or `8` bays drawn on a NAS, an empty bay has no tray. |
 
 ### Filament dryer
 
@@ -1464,9 +1464,9 @@ reload_entity: button.hall_tablet_load_start_url
 <details>
 <summary><b>Network: switches, servers, NAS and racks</b></summary>
 
-Read from whatever it reports. Its `state_entity`, a ping, a router's tracker or a status, says *Online* or *Off*. Traffic above 10 Mbit/s, a busy processor or a disk at work make it *Busy*; a problem, a failed disk or a temperature of 70 °C make it *Alert*, and every LED turns red while the fan starts and stops. A disk to watch says so in orange. Its lines give the traffic, the load, the volume and the ports. In the editor, the card finds the readings on the device and on the devices that hang from it, disks included (Synology, UGREEN, Unraid, Glances). Five models: a switch of 8 to 32 ports, a server tower, a NAS of 1 to 4 bays, a rack, a router.
+Read from whatever it reports. Its `state_entity`, a ping, a router's tracker or a status, says *Online* or *Off*. Traffic above 10 Mbit/s, a busy processor or a disk at work make it *Busy*; a problem, a failed disk or a temperature of 70 °C make it *Alert*, and every LED turns red while the fan starts and stops. A disk to watch says so in orange. Its lines give the traffic, the load, the volume and the ports. In the editor, the card finds the readings on the device and on the devices that hang from it, disks included (Synology, UGREEN, Unraid, Glances). Five models: a switch of 8 to 32 ports, a server tower, a NAS of 1 to 8 bays, a rack, a router.
 
-<img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-network-models.gif" alt="Switches of 8 to 32 ports and NAS of 1 to 4 bays">
+<img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-network-models.gif" alt="Switches of 8 to 32 ports and NAS of 1 to 8 bays">
 
 ```yaml
 type: custom:ha-appliance-card

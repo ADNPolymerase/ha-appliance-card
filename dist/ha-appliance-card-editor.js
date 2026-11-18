@@ -136,6 +136,10 @@ const SECTIONS = [
   { field: "disk2_entity", types: ["network"], labelKey: "section_net_disk2", includeDomains: ["sensor", "binary_sensor"] },
   { field: "disk3_entity", types: ["network"], labelKey: "section_net_disk3", includeDomains: ["sensor", "binary_sensor"] },
   { field: "disk4_entity", types: ["network"], labelKey: "section_net_disk4", includeDomains: ["sensor", "binary_sensor"] },
+  { field: "disk5_entity", types: ["network"], labelKey: "section_net_disk5", includeDomains: ["sensor", "binary_sensor"] },
+  { field: "disk6_entity", types: ["network"], labelKey: "section_net_disk6", includeDomains: ["sensor", "binary_sensor"] },
+  { field: "disk7_entity", types: ["network"], labelKey: "section_net_disk7", includeDomains: ["sensor", "binary_sensor"] },
+  { field: "disk8_entity", types: ["network"], labelKey: "section_net_disk8", includeDomains: ["sensor", "binary_sensor"] },
   // A robot: its detailed status, its battery, and what raises something:
   // a full bin or an empty tank on a vacuum or a mop, rain on a mower.
   // A pool pump: the readings of its water, its filter and its chlorine pump.

@@ -1413,7 +1413,7 @@ Une entité qui porte le nom d'une wallbox dans les langues de la card, de son f
 | `clients_entity` | réseau (routeur) | Le nombre d'appareils connectés, en ligne. |
 | `wan_entity` | réseau (routeur) | Le lien internet, un capteur de connectivité ou un état qui dit `online` / `offline` : quand il tombe, le routeur affiche *Pas d'internet*, en alerte. |
 | `wifi_entity` | réseau (routeur) | Le Wi-Fi, un interrupteur : coupé, les ondes ne montent plus des antennes et le voyant Wi-Fi s'éteint. |
-| `disk1_entity` … `disk4_entity` / `bays` | réseau | Une entité par disque, n'importe laquelle des siennes : la carte les lit toutes. Sa diode est verte quand tout va bien, bleue quand il lit ou écrit, faible quand il dort, orange quand il est à surveiller, rouge quand il est en panne. `bays` : `1`, `2` ou `4` baies dessinées sur un NAS, une baie vide n'a pas de tiroir. |
+| `disk1_entity` … `disk8_entity` / `bays` | réseau | Une entité par disque, n'importe laquelle des siennes : la carte les lit toutes. Sa diode est verte quand tout va bien, bleue quand il lit ou écrit, faible quand il dort, orange quand il est à surveiller, rouge quand il est en panne. `bays` : `1`, `2`, `4` ou `8` baies dessinées sur un NAS, une baie vide n'a pas de tiroir. |
 
 ### Sécheur de filament
 
@@ -1466,9 +1466,9 @@ reload_entity: button.tablette_entree_load_start_url
 <details>
 <summary><b>Réseau : switchs, serveurs, NAS et baies</b></summary>
 
-Lu à partir de ce qu'il remonte. Son `state_entity`, un ping, le suivi du routeur ou un état, dit *En ligne* ou *Éteint*. Un trafic au-delà de 10 Mbit/s, un processeur chargé ou un disque au travail le mettent en *Activité* ; un problème, un disque en panne ou une température de 70 °C le mettent en *Alerte* : toutes les diodes passent au rouge et le ventilateur démarre et s'arrête. Un disque à surveiller le dit en orange. Ses lignes donnent le trafic, la charge, le volume et les ports. Dans l'éditeur, la carte trouve les mesures sur l'appareil et sur les appareils qui en dépendent, disques compris (Synology, UGREEN, Unraid, Glances). Cinq modèles : un switch de 8 à 32 ports, un serveur tour, un NAS de 1 à 4 baies, une baie, un routeur.
+Lu à partir de ce qu'il remonte. Son `state_entity`, un ping, le suivi du routeur ou un état, dit *En ligne* ou *Éteint*. Un trafic au-delà de 10 Mbit/s, un processeur chargé ou un disque au travail le mettent en *Activité* ; un problème, un disque en panne ou une température de 70 °C le mettent en *Alerte* : toutes les diodes passent au rouge et le ventilateur démarre et s'arrête. Un disque à surveiller le dit en orange. Ses lignes donnent le trafic, la charge, le volume et les ports. Dans l'éditeur, la carte trouve les mesures sur l'appareil et sur les appareils qui en dépendent, disques compris (Synology, UGREEN, Unraid, Glances). Cinq modèles : un switch de 8 à 32 ports, un serveur tour, un NAS de 1 à 8 baies, une baie, un routeur.
 
-<img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-network-models.fr.gif" alt="Switchs de 8 à 32 ports et NAS de 1 à 4 baies">
+<img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-network-models.fr.gif" alt="Switchs de 8 à 32 ports et NAS de 1 à 8 baies">
 
 ```yaml
 type: custom:ha-appliance-card

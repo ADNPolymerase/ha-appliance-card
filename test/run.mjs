@@ -3888,7 +3888,13 @@ for (const part of ['benchy', 'figure', 'cat', 'vase', 'knight', 'rocket']) {
 // next job starts.
 {
   const partOf = (h) => (/p3-part-([a-z]+)/.exec(p3Cls(h)) || [])[1];
-  const realOf = (h) => (/class="p3r-part"[^>]*d="([^"]+)"/.exec(h) || [])[1];
+  // The piece itself, not where it stands: the bed goes down as it prints.
+  const realOf = (h) => {
+    const m = /<(path|rect) class="p3r-part"([^>]*)>/.exec(h);
+    if (!m) return undefined;
+    if (m[1] === 'rect') return 'cube';
+    return /transform=/.test(m[2]) ? (/ d="([^"]+)"/.exec(m[2]) || [])[1] : 'pyramid';
+  };
   const st = (state) => ({ 'sensor.p3_status': { state, attributes: {} } });
   const b = build({ ...P3, printed_part: 'random' }, st('printing'));
   const first = partOf(b.html);
@@ -9842,6 +9848,16 @@ check('borne : ni un statut reconnu', evMode(evR('SuspendedEVSE', { power_entity
   check('reseau : NAS 2 baies par defaut', count(draw({ network_layout: 'nas' }), /class="nt-bay"/g), 2);
   check('reseau : NAS 1 baie', count(draw({ network_layout: 'nas', bays: '1' }), /class="nt-bay"/g), 1);
   check('reseau : NAS 4 baies pour 3 disques', count(draw({ network_layout: 'nas', disk3_entity: 'sensor.d3' }, { 'sensor.d3': s('normal') }), /class="nt-bay"/g), 4);
+  check('reseau : NAS 8 baies', count(draw({ network_layout: 'nas', bays: '8' }), /class="nt-bay"/g), 8);
+  check('reseau : NAS 8 baies pour 5 disques', count(draw({ network_layout: 'nas', disk5_entity: 'sensor.d5' }, { 'sensor.d5': s('normal') }), /class="nt-bay"/g), 8);
+  check('reseau : un disque 8 suffit a faire un NAS', count(draw({ disk8_entity: 'sensor.d8' }, { 'sensor.d8': s('normal') }), /class="nt-bay"/g), 8);
+  {
+    const big = draw({ network_layout: 'nas', bays: '8' });
+    const body = big.match(/class="nt-body" style="left:([\d.]+)px;top:[\d.]+px;width:([\d.]+)px;height:([\d.]+)px/);
+    check('reseau : le NAS 8 baies tient dans le dessin', !!body && +body[1] >= 0 && +body[1] + +body[2] <= 96, true);
+    check('reseau : le NAS 8 baies est plus bas', body && +body[3], 64);
+    check('reseau : 8 diodes de disque et 3 autres', count(big, /class="nt-led/g), 11);
+  }
 
   // The state: off, online, busy, in alert.
   const state = (extra, states) => stateLine(render({ appliance_type: 'network', state_entity: 'device_tracker.n', ...extra },
@@ -9895,6 +9911,8 @@ check('borne : ni un statut reconnu', evMode(evR('SuspendedEVSE', { power_entity
   const one = netBuild({ ...nasCfg, disk2_entity: undefined, bays: '2' }, syno, synoEnt);
   check('reseau : baie vide sans tiroir', count(one, /class="nt-tray"/g), 1);
   check('reseau : sa diode reste eteinte', leds(one).join(' '), 'd-ok d-empty');
+  const eight = netBuild({ ...nasCfg, disk2_entity: undefined, disk7_entity: 'sensor.nas_disk_2_status', bays: '8' }, syno, synoEnt);
+  check('reseau : le disque 7 sur un NAS 8 baies', leds(eight).join(' '), 'd-ok d-empty d-empty d-empty d-empty d-empty d-warn d-empty');
   const lone = netBuild({ appliance_type: 'network', network_layout: 'nas', state_entity: 'binary_sensor.up', disk1_entity: 'sensor.left' },
     { 'binary_sensor.up': s('on'), 'sensor.left': s('normal'), 'binary_sensor.worn': s('on', { device_class: 'safety' }) },
     { 'sensor.left': { device_id: 'dl' }, 'binary_sensor.worn': { device_id: 'dl' } });
@@ -9947,6 +9965,21 @@ check('borne : ni un statut reconnu', evMode(evR('SuspendedEVSE', { power_entity
     check('suggestion reseau : le disque 2', sug.disk2_entity, 'sensor.nas_disk_2_status');
     check('suggestion reseau : pas de troisieme disque', sug.disk3_entity, undefined);
   }
+  {
+    const states = { 'device_tracker.nas': s('home') }, ents = { 'device_tracker.nas': { device_id: 'trk' } };
+    const devices = { trk: { name: 'NAS' }, nas: { name: 'NAS' } };
+    for (let i = 1; i <= 6; i++) {
+      states[`sensor.nas_disk_${i}_status`] = s('normal');
+      ents[`sensor.nas_disk_${i}_status`] = { device_id: `d${i}` };
+      devices[`d${i}`] = { name: `NAS (Disk ${i})`, via_device_id: 'nas' };
+    }
+    ents['sensor.nas_cpu'] = { device_id: 'nas' }; states['sensor.nas_cpu'] = pctS(5);
+    const ed = new Editor();
+    ed.setConfig({ type: 'custom:ha-appliance-card', appliance_type: 'network', state_entity: 'device_tracker.nas' });
+    ed.hass = netHass(states, ents, devices);
+    const sug = ed.events.at(-1)?.detail?.config || {};
+    check('suggestion reseau : six disques', [sug.disk5_entity, sug.disk6_entity, sug.disk7_entity].join(' '), 'sensor.nas_disk_5_status sensor.nas_disk_6_status ');
+  }
 
   // The editor: the model, then the ports of a switch or the bays of a NAS.
   const edSw = markup(newEditor({ state_entity: 'binary_sensor.up', appliance_type: 'network', network_layout: 'switch' }));
@@ -9955,7 +9988,7 @@ check('borne : ni un statut reconnu', evMode(evR('SuspendedEVSE', { power_entity
   check('editeur reseau : pas de baies sur un switch', /data-field="bays"/.test(edSw), false);
   const edNas = markup(newEditor({ state_entity: 'binary_sensor.up', appliance_type: 'network', network_layout: 'nas' }));
   check('editeur reseau : les baies du NAS', /data-field="bays"/.test(edNas), true);
-  for (const f of ['download_entity', 'cpu_entity', 'volume_entity', 'ports_entity', 'problem_entity', 'disk1_entity', 'disk4_entity'])
+  for (const f of ['download_entity', 'cpu_entity', 'volume_entity', 'ports_entity', 'problem_entity', 'disk1_entity', 'disk4_entity', 'disk5_entity', 'disk8_entity'])
     check(`editeur reseau : ${f}`, edNas.includes(`data-toggle="${f}"`), true);
   check('editeur reseau : pas de delai d\'arret', /power_off_delay/.test(edNas), false);
   check('editeur : pas de modele reseau ailleurs', /network_layout/.test(markup(newEditor({ state_entity: 'sensor.w', appliance_type: 'washer' }))), false);
