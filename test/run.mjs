@@ -3873,6 +3873,9 @@ contains('dessin : le portique monte avec la piece', busy, 'bottom: calc(22px + 
 contains('piece : un cube par defaut', p3Cls(busy), 'p3-part-cube');
 contains('piece : une pyramide', p3Cls(job({ printed_part: 'pyramid' })), 'p3-part-pyramid');
 contains('piece : un canard', p3Cls(job({ printed_part: 'duck' })), 'p3-part-duck');
+// show_light_button: false takes the light badge away, not the light (JD, 18/11).
+check('lumiere : le bouton par defaut', /class="light-badge/.test(job({ light_entity: 'light.p3' }, { 'light.p3': { state: 'on', attributes: {} } })), true);
+check('lumiere : bouton cache', /class="light-badge/.test(job({ light_entity: 'light.p3', show_light_button: false }, { 'light.p3': { state: 'on', attributes: {} } })), false);
 contains('piece : une forme inconnue reste un cube', p3Cls(job({ printed_part: 'banane' })), 'p3-part-cube');
 // More parts (JD, 18/11): the Benchy, a figure, a cat, a vase, a chess knight
 // and a rocket, drawn on the plain and on the real printers.

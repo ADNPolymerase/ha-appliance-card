@@ -188,6 +188,20 @@ try {
   thrown = e;
 }
 check('l editeur trouve tout ce qu il prend a la carte', thrown && String(thrown), null);
+// Every type's editor, built: a name the editor takes from the card but the
+// build failed to hand over (a spread, ...PRINT_PARTS) breaks only its type.
+{
+  const broken = [];
+  for (const type of ['printer_3d', 'fingerbot', 'lamp', 'cover', 'robot', 'screen', 'hrv', 'speaker', 'oven', 'fridge', 'thermostat', 'irrigation', 'mailbox', 'console', 'pellet_grill', 'detector', 'climate_sensor']) {
+    try {
+      const e2 = new Editor();
+      e2.setConfig({ type: 'custom:ha-appliance-card', appliance_type: type, state_entity: 'sensor.w_state' });
+      e2.hass = hassIn('fr');
+      e2._build();
+    } catch (e) { broken.push(`${type}: ${e.message}`); }
+  }
+  check('l editeur s ouvre pour chaque type', broken.join(' | '), '');
+}
 let again = null;
 try { await Card.getConfigElement(); } catch (e) { again = e; }
 check('l editeur : une seconde edition ne le redefinit pas', again && String(again), null);

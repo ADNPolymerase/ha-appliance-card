@@ -4804,7 +4804,8 @@ class ApplianceCard extends HTMLElement {
       ? `<div class="conn-badge ${connectivity ? "" : "disconnected"}"><ha-icon icon="${connectivity ? "mdi:wifi" : "mdi:wifi-off"}"></ha-icon></div>`
       : "";
 
-    const lightBadgeHtml = cap.light && cfg.light_entity
+    // show_light_button: false hides the light badge; the light still shows on the drawing.
+    const lightBadgeHtml = cap.light && cfg.light_entity && cfg.show_light_button !== false
       ? `<div class="light-badge ${lit ? "on" : ""}" data-entity="${esc(cfg.light_entity)}" title="${esc(t(hass, "light"))}" aria-label="${esc(t(hass, "light"))}"><ha-icon icon="${lit ? "mdi:lightbulb-on" : "mdi:lightbulb-outline"}"></ha-icon></div>`
       : "";
 

@@ -195,7 +195,8 @@ const mainBody = [...groups.values()]
 
 // What the editor takes from the card: every top-level name of the card it
 // mentions, read as a name and not as a property.
-const mentioned = (text, name) => new RegExp(`(?<![\\w$.])${name.replace(/\$/g, '\\$')}(?![\\w$])`).test(text);
+// A spread (...NAME) is a use; a property (a.NAME) is not.
+const mentioned = (text, name) => new RegExp(`(?<![\\w$])(?<![^.]\\.)${name.replace(/\$/g, '\\$')}(?![\\w$])`).test(text);
 const shared = declared(mainBody).filter((n) => !editorNames.has(n) && mentioned(editor, n));
 for (const n of shared) {
   if (new RegExp(`^let\\s+${n}\\b`, 'm').test(mainBody)) fail(`the editor reads ${n}, a let: it would get a copy`);

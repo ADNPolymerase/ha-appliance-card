@@ -1631,6 +1631,7 @@ class ApplianceCardEditor extends HTMLElement {
             options: ["tap", "confirm", "hold", "off"].map((v) => ({ value: v, label: t(hass, `activation_${v}`) })),
           })}
           ${caps(this._type).cycle ? this._row("controls_always", "controls_always", { type: "checkbox" }) : ""}
+          ${caps(this._type).light && this._config.light_entity ? this._row("show_light_button", "show_light_button", { type: "checkbox", defaultOn: true }) : ""}
           ${this._row("illustration_tap_action", "illustration_tap_action", {
             type: "select",
             value: (illustrationTapOf(this._config) || {}).action || "default",
@@ -1860,7 +1861,7 @@ class ApplianceCardEditor extends HTMLElement {
           delete this._config.speed_power_3;
         }
         // Shown is the default and is not written: only false is.
-        if (["show_name", "show_state", "show_toggle", "large_temperature"].includes(field) && value) delete this._config[field];
+        if (["show_name", "show_state", "show_toggle", "show_light_button", "large_temperature"].includes(field) && value) delete this._config[field];
         // Compact is written the way it always was: true for the card without
         // its drawing, nothing at all when it is off.
         if (field === "compact") {
