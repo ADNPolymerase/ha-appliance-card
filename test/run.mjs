@@ -14129,6 +14129,21 @@ function tvT(w) { return { 'switch.tv': { state: 'on', attributes: {} }, 'sensor
   check('boite : sechage en ligne', infoLine(A({ ams_drying_entity: 'binary_sensor.d' }, { 'binary_sensor.d': s('on') }), 'Filament box'), 'Drying');
   check('boite : sechage, les traits', /class="p3a-h"/.test(body(A({ ams_drying_entity: 'binary_sensor.d' }, { 'binary_sensor.d': s('on') }))), true);
   check('boite : pas de sechage, pas de traits', /class="p3a-h"/.test(body(A({ ams_drying_entity: 'binary_sensor.d' }, { 'binary_sensor.d': s('off') }))), false);
+  { const C = { 'sensor.cc_a1_color': s('#E53935'), 'sensor.cc_a2_color': s('2E7D32FF'), 'sensor.cc_a3_color': s('unknown'), 'sensor.cc_active_tray_id': s('01'), 'binary_sensor.cc_canvas_connected': s('on') };
+    const E = (cfg = {}, extra = {}) => A({ ams_entities: ['sensor.cc_a1_color', 'sensor.cc_a2_color', 'sensor.cc_a3_color'], ams_active_entity: 'sensor.cc_active_tray_id', ams_connected_entity: 'binary_sensor.cc_canvas_connected', ...cfg }, { ...C, ...extra });
+    check('Canvas : la couleur dans l\'etat', /fill="#E53935"/i.test(body(E())), true);
+    check('Canvas : la couleur avec alpha dans l\'etat', /fill="#2E7D32"/i.test(body(E())), true);
+    check('Canvas : une place inconnue est vide', EMPTY.test(body(E())), true);
+    check('Canvas : la bobine active par son numero', /stroke="#2E7D32" stroke-width="1\.2"/i.test(body(E())), true);
+    check('Canvas : pas de ligne de bobine pour une couleur seule', infoLine(E(), 'Spool'), null);
+    check('Canvas : une seule active',(body(E()).match(/class="p3a-on"/g) || []).length, 1);
+    check('Canvas : aucune active a l\'arret', /class="p3a-on"/.test(body(E({}, { 'sensor.cc_active_tray_id': s('unknown') }))), false);
+    check('Canvas : debranche, pas de boite', /<svg class="p3a"/.test(E({}, { 'binary_sensor.cc_canvas_connected': s('off') })), false);
+    check('Canvas : branche, la boite', /<svg class="p3a"/.test(E()), true);
+    check('Canvas : capteur absent, la boite', /<svg class="p3a"/.test(E({ ams_connected_entity: 'binary_sensor.nope' })), true);
+    check('Canvas : debranche, sa propre bobine', /fill="url\(#p3r-sp\)"/.test(body(E({ printer_style: 'elegoo_n' }, { 'binary_sensor.cc_canvas_connected': s('off') }))), true);
+    const e = new Editor(); e.setConfig({ type: 'custom:ha-appliance-card', appliance_type: 'printer_3d', state_entity: 'sensor.cc', ams_entities: ['sensor.cc_a1_color'] }); e.hass = HASS({ 'sensor.cc': s('idle') });
+    check('Canvas : editeur, bobine active et branchement', ['ams_active_entity', 'ams_connected_entity'].every((f) => e._sections().some((x) => x.field === f)), true); }
   check('Neptune : sa bobine sur le dessus', /fill="url\(#p3r-sp\)"/.test(body(P({ printer_style: 'elegoo_n' }))), true);
   check('Neptune : plus de bobine avec une boite', /fill="url\(#p3r-sp\)"/.test(body(A({ printer_style: 'elegoo_n' }))), false);
   // The dryer.

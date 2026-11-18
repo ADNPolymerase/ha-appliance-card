@@ -1126,7 +1126,7 @@ const ENTITY_LISTS = [
     domains: ["switch", "input_boolean", "lock", "light", "fan"], offers: isCornerCandidate, icon: cornerIcon },
   // A filament box beside a 3D printer (#93): one entity per spool.
   { panel: "ams", field: "ams_entities", max: 4, title: "section_ams_list", add: "ams_add", types: ["printer_3d"],
-    domains: ["sensor", "select", "input_text"], offers: (hass, id) => /tray|spool|bobine|ams/.test(id), icon: () => "mdi:printer-3d-nozzle-outline" },
+    domains: ["sensor", "select", "input_text"], offers: (hass, id) => /tray|spool|bobine|ams|_a[1-4]_colou?r$/.test(id), icon: () => "mdi:printer-3d-nozzle-outline" },
   // A ventilation unit run by one entity per speed (#78), in order.
   { panel: "speeds", field: "speed_entities", max: 6, title: "section_speed_list", add: "speeds_add", types: ["hrv"],
     domains: ["input_boolean", "switch", "light"], offers: (hass, id) => ["input_boolean", "switch", "light"].includes(domainOf(id)), icon: () => "mdi:fan" },
