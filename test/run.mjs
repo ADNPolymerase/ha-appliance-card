@@ -1296,6 +1296,21 @@ check('locale hu-HU : resolue vers le bloc hu',
     return markup(c);
   })()), 'Folyamatban');
 
+// Traditional Chinese has its own block: zh-Hant (Home Assistant) and the
+// Taiwan / Hong Kong locales land on it, zh-Hans keeps the Simplified one.
+for (const [locale, expected] of [['zh-Hant', '\u904b\u8f49\u4e2d'], ['zh-TW', '\u904b\u8f49\u4e2d'],
+                                  ['zh-HK', '\u904b\u8f49\u4e2d'], ['zh-Hans', '\u8fd0\u884c\u4e2d']]) {
+  check(`locale ${locale} : resolue vers le bon bloc chinois`,
+    stateLine((() => {
+      const c = new Card();
+      c.setConfig({ type: 'custom:ha-appliance-card', appliance_type: 'washer', state_entity: 'sensor.w' });
+      c._hass = { ...HASS({ 'sensor.w': { state: 'Running', attributes: {} } }),
+                  locale: { language: locale }, language: locale };
+      c._render();
+      return markup(c);
+    })()), expected);
+}
+
 // ── Home Connect operation states (issue #8) ─────────────────────────────────
 // Half of BSH's OperationState enum was recognised and half was not, and an
 // unrecognised one printed its whole namespace on the card. Both halves are
@@ -2608,7 +2623,7 @@ contains('eau : et elle y coule', hmCool, '.machine.flowing.mode-hot_water .hp-p
 
 // The cooling line in fourteen languages: a label of its own in each, never
 // the English one a missing entry would fall back to.
-for (const language of ['fr', 'ru', 'de', 'es', 'it', 'nl', 'pt', 'sv', 'no', 'da', 'pl', 'zh', 'cs', 'hu']) {
+for (const language of ['fr', 'ru', 'de', 'es', 'it', 'nl', 'pt', 'sv', 'no', 'da', 'pl', 'zh', 'cs', 'hu', 'zh-Hant']) {
   const h = HM('Cooling', 'Room', 17, { ...HMF, language }, HMR([0, 0], [520, 2900], [0, 0]));
   const labels = [...h.matchAll(/<span class="label">([^<]*)<\/span>/g)].map(m => m[1]);
   check(`circuits : froid produit en ${language}`,
@@ -3224,8 +3239,8 @@ contains('editeur : ses libelles suivent la langue choisie', edLang, "Type d'app
 contains('editeur : jusque dans les sections depliantes', edLang, 'R\u00e9glages g\u00e9n\u00e9raux');
 check('editeur : sans option, il reste dans la langue de Home Assistant',
   /Type d'appareil/.test(markup(newEditor(base))), false);
-check('editeur : les quinze langues et le mode auto sont listes',
-  (edLang.match(/<option value="[a-z]{2}"/g) || []).length, 15);
+check('editeur : les seize langues et le mode auto sont listes',
+  (edLang.match(/<option value="[a-z]{2}(-[A-Za-z]+)?"/g) || []).length, 16);
 contains('editeur : le mode auto est propose', edLang, 'value="auto"');
 
 // ── A light that only reports (issue #8, follow-up) ──────────────────────────
@@ -4419,7 +4434,7 @@ check('essorage : un seche-linge ne s\'emballe pas', machineCls(tdStep('thermo_s
     'Pre-wash|Soaking|Weighing|Filling|Washing|Rinsing|Draining|Spinning|Drying|Cooling|Anti-crease|Steam');
   check('etapes : les douze en francais', labels('fr').join('|'),
     'Prélavage|Trempage|Pesée|Remplissage|Lavage|Rinçage|Vidange|Essorage|Séchage|Refroidissement|Anti-froissage|Vapeur');
-  for (const language of ['ru', 'de', 'es', 'it', 'nl', 'pt', 'sv', 'no', 'da', 'pl', 'zh', 'cs', 'hu']) {
+  for (const language of ['ru', 'de', 'es', 'it', 'nl', 'pt', 'sv', 'no', 'da', 'pl', 'zh', 'cs', 'hu', 'zh-Hant']) {
     const got = labels(language);
     check(`etapes : les douze en ${language}`,
       got.filter((l, i) => !l || l === en[i] || l.startsWith('step_')).length, 0);
@@ -5493,6 +5508,7 @@ check('alertes : un attribut seul se montre sous son nom',
   check('alertes : 8 en tcheque', count('cs', 8), '8 upozornění');
   check('alertes : 8 en hongrois', count('hu', 8), '8 riasztás');
   check('alertes : 3 en chinois', count('zh', 3), '3 条警报');
+  check('alertes : 3 en chinois traditionnel', count('zh-Hant', 3), '3 條警報');
   for (const language of ['de', 'es', 'it', 'nl', 'pt', 'sv', 'no', 'da']) {
     const text = count(language, 3);
     check(`alertes : le compte traduit en ${language}`, /^3 \S/.test(text) && text !== '3 alerts', true);
@@ -5679,7 +5695,7 @@ for (const type of ['washer', 'dryer', 'dishwasher', 'oven', 'microwave', 'hood'
 
 // The panel in fourteen languages: its own words in each, never the English
 // ones a missing entry would fall back to.
-for (const language of ['fr', 'ru', 'de', 'es', 'it', 'nl', 'pt', 'sv', 'no', 'da', 'pl', 'zh', 'cs', 'hu']) {
+for (const language of ['fr', 'ru', 'de', 'es', 'it', 'nl', 'pt', 'sv', 'no', 'da', 'pl', 'zh', 'cs', 'hu', 'zh-Hant']) {
   const html = markup(alertEditor({ language })._root);
   const title = (/data-panel="alerts"[^>]*>\s*<summary>([^<]*)<\/summary>/.exec(html) || [, ''])[1];
   const menu = alertMenu(html);
@@ -5972,7 +5988,7 @@ for (const type of ['washer', 'dryer', 'dishwasher', 'oven', 'microwave', 'hood'
   'cooker', 'coffee', 'rice_cooker', 'water_heater', 'boiler', 'heat_pump', 'printer_3d', 'pet_feeder']) {
   check(`editeur coins : le panneau sur ${type} aussi`, /data-panel="corners"/.test(markup(cornerEditor({ appliance_type: type })._root)), true);
 }
-for (const language of ['fr', 'ru', 'de', 'es', 'it', 'nl', 'pt', 'sv', 'no', 'da', 'pl', 'zh', 'cs', 'hu']) {
+for (const language of ['fr', 'ru', 'de', 'es', 'it', 'nl', 'pt', 'sv', 'no', 'da', 'pl', 'zh', 'cs', 'hu', 'zh-Hant']) {
   const html = markup(cornerEditor({ language })._root);
   const title = (/data-panel="corners"[^>]*>\s*<summary>([^<]*)<\/summary>/.exec(html) || [, ''])[1];
   const menu = cornerMenu(html);
@@ -6020,7 +6036,7 @@ contains('editeur coins : titre en anglais', markup(cornerEditor()._root), '<sum
     check('editeur second reservoir : apparait quand on choisit dual_split', after, true);
     check('editeur second reservoir : et repart avec un autre modele', hasLevelB(markup(ed._root)), false);
   }
-  for (const language of ['fr', 'ru', 'de', 'es', 'it', 'nl', 'pt', 'sv', 'no', 'da', 'pl', 'zh', 'cs', 'hu']) {
+  for (const language of ['fr', 'ru', 'de', 'es', 'it', 'nl', 'pt', 'sv', 'no', 'da', 'pl', 'zh', 'cs', 'hu', 'zh-Hant']) {
     const opts = models(modelOf({ appliance_type: 'pet_feeder', language }));
     check(`editeur modele : traduit en ${language}`,
       opts.length === 5 && !opts.some(o => /Square tank|Round tank|Two bowls|Two hoppers|Rotating plates/.test(o)), true);
@@ -8088,7 +8104,7 @@ check('borne : ni un statut reconnu', evMode(evR('SuspendedEVSE', { power_entity
     'ev_line_session', 'ev_line_limit'];
   const SAME_AS_EN = new Set(['de:ev_offline', 'it:ev_offline', 'nl:ev_offline', 'pt:ev_offline', 'sv:ev_offline', 'da:ev_offline',
     'pl:ev_offline', 'cs:ev_offline', 'hu:ev_offline', 'es:ev_error']);
-  check('traductions borne : quinze langues', Object.keys(TABLE).length, 15);
+  check('traductions borne : seize langues', Object.keys(TABLE).length, 16);
   for (const code of Object.keys(TABLE)) {
     check(`traductions borne ${code} : toutes les cles`, EV_KEYS.filter(k => typeof TABLE[code][k] !== 'string' || !TABLE[code][k].trim()).join(' ') || 'ok', 'ok');
     if (code === 'en') continue;

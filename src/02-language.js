@@ -1,9 +1,15 @@
 function canonicalLanguage(code) {
-  const base = String(code || "en").toLowerCase().split("-")[0];
+  const full = String(code || "en").toLowerCase();
+  const base = full.split("-")[0];
   // Home Assistant uses nb/nb-NO for Norwegian Bokmal. The card's existing
   // translation is kept under no for backwards compatibility, so treat both
   // identifiers as the same language instead of falling back to English.
-  return base === "nb" ? "no" : base;
+  if (base === "nb") return "no";
+  // Home Assistant writes Chinese as zh-Hans and zh-Hant. Traditional Chinese
+  // (zh-Hant, and the zh-TW, zh-HK and zh-MO locales) has a block of its own;
+  // every other zh stays on the Simplified block.
+  if (base === "zh" && /^zh-(hant|tw|hk|mo)(-|$)/.test(full)) return "zh-Hant";
+  return base;
 }
 function lang(hass) {
   const l = canonicalLanguage(hass && ((hass.locale && hass.locale.language) || hass.language));
@@ -101,7 +107,7 @@ const LANGUAGE_NAMES = {
   it: "Italiano", nl: "Nederlands", pt: "Portugu\u00eas", sv: "Svenska",
   no: "Norsk", da: "Dansk", pl: "Polski", ru: "\u0420\u0443\u0441\u0441\u043a\u0438\u0439",
   zh: "\u4e2d\u6587", cs: "\u010ce\u0161tina",
-  hu: "Magyar",
+  hu: "Magyar", "zh-Hant": "\u7e41\u9ad4\u4e2d\u6587",
 };
 
 // A card can be pinned to one language whatever Home Assistant is set to.
