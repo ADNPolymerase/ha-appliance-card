@@ -930,7 +930,7 @@ function mailboxHtml(cls, c) {
 // and whether an effect runs. A switch or a helper only says on or off, and
 // the lamp is drawn in the warm white of a bulb.
 const LAMP_ONLY_FIELDS = ["lamp_layout", "spots", "timer_entity"];
-const LAMP_LAYOUTS = ["bulb", "bedside", "floor", "torch", "pendant", "strip", "spot", "panels", "desk", "wall", "garden_spot", "bollard", "string", "curtain", "icicle", "festoon", "squares"];
+const LAMP_LAYOUTS = ["bulb", "bedside", "floor", "torch", "pendant", "strip", "strip_cove", "strip_plinth", "strip_baseboard", "strip_slats", "spot", "panels", "desk", "wall", "garden_spot", "bollard", "string", "curtain", "icicle", "festoon", "squares"];
 const LAMP_SPOTS = [1, 2, 3, 4];
 const LAMP_LABELS = { on: "lamp_on", off: "lamp_off", unav: "ev_offline" };
 const LAMP_COLORS = { on: "#ffa000", off: "var(--disabled-text-color, #9e9e9e)", unav: "var(--disabled-text-color, #9e9e9e)" };
@@ -979,7 +979,15 @@ function lampLayoutOf(cfg, st) {
   if (LAMP_LAYOUTS.includes(cfg.lamp_layout)) return cfg.lamp_layout;
   const a = (st && st.attributes) || {};
   const hay = stripAccents(`${cfg.state_entity || ""} ${cfg.name || ""} ${a.friendly_name || ""} ${a[DEVICE_ATTR] || ""} ${a.model || ""}`).toLowerCase();
-  if (/strip|ruban|bandeau|streifen|(^|[^a-z])tira|striscia|wled|govee|neon|gradient/.test(hay)) return "strip";
+  // A strip, and where it runs: in a ceiling cove, behind wall slats, along
+  // the skirting board, under a kitchen plinth, or under a shelf.
+  if (/strip|ruban|bandeau|streifen|(^|[^a-z])tira|striscia|wled|govee|neon|gradient/.test(hay)) {
+    if (/(^|[^a-z])(al)?cove([^a-z]|$)|ceiling|plafond|decke|voute|techo|soffitto|sufit|strop|plafon/.test(hay)) return "strip_cove";
+    if (/slat|lamel|latten|tasseau|listell|liston|ripas|(vagg|vegg|vaeg)ribb/.test(hay)) return "strip_slats";
+    if (/skirting|baseboard|plinthe|fu(ss|\u00df)leiste|sockelleiste|battiscopa|rodapie|(^|[^a-z])plint([^a-z]|$)|floor|(^|[^a-z])(sol|boden|vloer|suelo|pavimento)([^a-z]|$)/.test(hay)) return "strip_baseboard";
+    if (/plinth|kick|socle|sockel|zoccolo|zocalo|island|ilot|kookeiland|keukenplint/.test(hay)) return "strip_plinth";
+    return "strip";
+  }
   if (/nanoleaf|panel|panneau|shapes|canvas|hexagon|triangle/.test(hay)) return "panels";
   if (/chevet|bedside|night.?stand|nachttisch|mesita|comodino|nachtkastje/.test(hay)) return "bedside";
   if (/desk|bureau|schreibtisch|escritorio|scrivania/.test(hay)) return "desk";
@@ -1077,6 +1085,48 @@ ${softShadow(48, 87.4, 11.2, 3.4, 0.29)}
 <rect x="20" y="24" width="10" height="14" rx="1" fill="#7c858f"/><rect x="32" y="20" width="8" height="18" rx="1" fill="#a85a3a"/><rect x="62" y="28" width="16" height="10" rx="2" fill="#4f7a96"/>
 <g>${Array.from({ length: 12 }, (_, i) => `<rect class="lp-seg lp-lit" x="${10 + i * 6.4}" y="46" width="5.4" height="2.2" rx="1"/>`).join("")}</g>
 <g class="lp-wash">${Array.from({ length: 12 }, (_, i) => `<ellipse class="lp-seg lp-lit" cx="${(12.7 + i * 6.4).toFixed(1)}" cy="55" rx="5" ry="7" opacity=".35"/>`).join("")}</g>`,
+  // A strip hidden on top of a bulkhead, washing the ceiling above it.
+  strip_cove: () => `<defs><linearGradient id="lp-uU" x1="0" y1="1" x2="0" y2="0"><stop offset="0" class="lp-stop" stop-opacity=".95"/><stop offset="1" class="lp-stop" stop-opacity="0"/></linearGradient>
+<linearGradient id="lp-uB" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#eef1f4"/><stop offset="1" stop-color="#cfd6dd"/></linearGradient></defs>
+<rect x="0" y="4" width="96" height="88" rx="3" class="lp-wall"/>
+<rect x="0" y="4" width="96" height="30" rx="3" class="lp-ceiling"/>
+<path class="lp-beam" d="M8 34 L0 6 H96 L88 34 Z" fill="url(#lp-uU)"/>
+<g class="lp-wash">${Array.from({ length: 12 }, (_, i) => `<ellipse class="lp-seg lp-lit" cx="${(12.7 + i * 6.4).toFixed(1)}" cy="22" rx="5" ry="12" opacity=".35"/>`).join("")}</g>
+<path d="M0 36 H96 V46 H0 Z" fill="url(#lp-uB)"/><path d="M0 36 H96" stroke="#b9c1c9" stroke-width=".8"/>
+<g>${Array.from({ length: 12 }, (_, i) => `<rect class="lp-seg lp-lit" x="${10 + i * 6.4}" y="33.6" width="5.4" height="2.4" rx="1"/>`).join("")}</g>
+${[24, 48, 72].map((x) => `<ellipse cx="${x}" cy="46.6" rx="3.4" ry="1" fill="#9aa3ad"/>`).join("")}
+<rect x="30" y="56" width="36" height="22" rx="1.5" fill="#2b3036" stroke="#8f98a2" stroke-width=".8"/>
+<rect x="22" y="84" width="52" height="6" rx="1.2" fill="#8d6640"/>`,
+  // A strip along the floor at the foot of a wall, washing it upwards.
+  strip_baseboard: () => `<defs><linearGradient id="lp-fU" x1="0" y1="1" x2="0" y2="0"><stop offset="0" class="lp-stop" stop-opacity=".95"/><stop offset="1" class="lp-stop" stop-opacity="0"/></linearGradient></defs>
+<rect x="0" y="4" width="96" height="80" rx="3" class="lp-wall"/>
+<rect x="0" y="84" width="96" height="12" class="lp-ceiling"/>
+<path class="lp-beam" d="M6 80 L0 14 H96 L90 80 Z" fill="url(#lp-fU)"/>
+<g class="lp-wash">${Array.from({ length: 12 }, (_, i) => `<ellipse class="lp-seg lp-lit" cx="${(12.7 + i * 6.4).toFixed(1)}" cy="68" rx="5" ry="11" opacity=".3"/>`).join("")}</g>
+<rect x="30" y="26" width="36" height="24" rx="1" fill="#8d6640"/><rect x="33" y="29" width="30" height="18" fill="#dfe6ec"/><path d="M33 47 L42 37 L48 43 L54 36 L63 47 Z" fill="#7fa58a"/>
+<rect x="2" y="81" width="92" height="3.4" rx=".8" fill="#9aa3ad"/>
+<g>${Array.from({ length: 13 }, (_, i) => `<rect class="lp-seg lp-lit" x="${6 + i * 6.6}" y="79.4" width="5.6" height="2" rx="1"/>`).join("")}</g>
+<ellipse class="lp-wash lp-lit" cx="48" cy="86" rx="44" ry="2.6" opacity=".5"/>`,
+  // A strip under a kitchen cabinet's kick, lighting the floor in front.
+  strip_plinth: () => `<defs>${lpBeam("kB")}${lpHalo("kH")}
+<linearGradient id="lp-kC" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f1f3f5"/><stop offset="1" stop-color="#d5dbe1"/></linearGradient></defs>
+<rect x="0" y="4" width="96" height="68" rx="3" class="lp-wall"/>
+<rect x="0" y="72" width="96" height="24" class="lp-ceiling"/>
+<rect x="6" y="14" width="84" height="5" rx="1" fill="#f7f8f9" stroke="#b9c1c9" stroke-width=".6"/>
+<rect x="9" y="19" width="78" height="44" fill="url(#lp-kC)" stroke="#b9c1c9" stroke-width=".6"/>
+<path d="M28.5 19 V63 M48 19 V63 M67.5 19 V63" stroke="#b9c1c9" stroke-width=".7"/>
+${[19, 38, 58, 77].map((x) => `<rect x="${x - 4}" y="23" width="8" height="1.6" rx=".8" fill="#8f98a2"/>`).join("")}
+<rect x="14" y="63" width="68" height="9" fill="#7c858f"/>
+<ellipse class="lp-halo" cx="48" cy="80" rx="50" ry="12" fill="url(#lp-kH)"/>
+<path class="lp-beam" d="M14 65 L0 96 H96 L82 65 Z" fill="url(#lp-kB)"/>
+<g>${Array.from({ length: 11 }, (_, i) => `<rect class="lp-seg lp-lit" x="${14.2 + i * 6.2}" y="63" width="5.4" height="2" rx="1"/>`).join("")}</g>`,
+  // Wooden slats on a wall, a strip running up behind each one's edge.
+  strip_slats: () => `<defs><linearGradient id="lp-vG" x1="0" x2="1"><stop offset="0" class="lp-stop" stop-opacity="0"/><stop offset=".5" class="lp-stop" stop-opacity=".95"/><stop offset="1" class="lp-stop" stop-opacity="0"/></linearGradient>
+<linearGradient id="lp-vW" x1="0" x2="1"><stop offset="0" stop-color="#b98757"/><stop offset=".5" stop-color="#d2a271"/><stop offset="1" stop-color="#8d6640"/></linearGradient></defs>
+<rect x="0" y="4" width="96" height="88" rx="3" class="lp-wall"/>
+${[[6, 14, 82], [24, 6, 74], [42, 18, 90], [60, 4, 70], [78, 12, 84]].map(([x, y0, y1]) => `<rect class="lp-halo" x="${x - 8}" y="${y0 - 4}" width="26" height="${y1 - y0 + 8}" rx="10" fill="url(#lp-vG)"/>`).join("")}
+${[[6, 14, 82], [24, 6, 74], [42, 18, 90], [60, 4, 70], [78, 12, 84]].map(([x, y0, y1]) => `<rect x="${x}" y="${y0}" width="8" height="${y1 - y0}" rx=".8" fill="url(#lp-vW)"/><path d="M${x + 3} ${y0 + 4} V${y1 - 6}" stroke="#7a5534" stroke-width=".4" opacity=".6"/>`).join("")}
+<g>${[[6, 14, 82], [24, 6, 74], [42, 18, 90], [60, 4, 70], [78, 12, 84]].flatMap(([x, y0, y1]) => Array.from({ length: Math.floor((y1 - y0 - 4) / 6.4) }, (_, i) => `<rect class="lp-seg lp-lit" x="${x + 8}" y="${(y0 + 2 + i * 6.4).toFixed(1)}" width="1.4" height="5.4" rx=".7"/>`)).join("")}</g>`,
   // One spot alone throws a wider cone, several share the ceiling.
   spot: (c) => {
     const n = LAMP_SPOTS.includes(c.spots) ? c.spots : 1;

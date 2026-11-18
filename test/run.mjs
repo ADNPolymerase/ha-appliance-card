@@ -11301,7 +11301,14 @@ check('borne : ni un statut reconnu', evMode(evR('SuspendedEVSE', { power_entity
   check('lampe : Twinkly Squares', shape('light.twinkly_squares'), 'squares');
   check('lampe : guirlande qui scintille', /class="lp-seg lp-tw"/.test(lamp('on', {}, { lamp_layout: 'string' })), true);
   check('lampe : carres de pixels', (lamp('on', {}, { lamp_layout: 'squares' }).match(/class="lp-seg lp-px/g) || []).length, 144);
-  for (const l of ['garden_spot', 'bollard', 'string', 'curtain', 'icicle', 'festoon', 'squares']) {
+  check('lampe : ruban au plafond', shape('light.ruban_led_plafond'), 'strip_cove');
+  check('lampe : ruban derriere les tasseaux', shape('light.wled_slats'), 'strip_slats');
+  check('lampe : ruban le long de la plinthe', shape('light.ruban_plinthe_salon'), 'strip_baseboard');
+  check('lampe : ruban au sol', shape('light.floor_led_strip'), 'strip_baseboard');
+  check('lampe : ruban sous le socle de la cuisine', shape('light.led_strip_kitchen_kick'), 'strip_plinth');
+  check('lampe : ruban sous l ilot', shape('light.ruban_led_ilot'), 'strip_plinth');
+  check('lampe : ruban sans lieu reste sous l etagere', shape('light.ruban_led_cuisine'), 'strip');
+  for (const l of ['strip_cove', 'strip_plinth', 'strip_baseboard', 'strip_slats', 'garden_spot', 'bollard', 'string', 'curtain', 'icicle', 'festoon', 'squares']) {
     check(`lampe : dessin ${l}`, /<svg class="lp-svg"[^>]*>[\s\S]*<\/svg>/.test(lamp('on', {}, { lamp_layout: l })) && !/undefined|NaN/.test(lamp('on', {}, { lamp_layout: l })), true);
   }
   const beams = (h) => (h.match(/class="lp-beam"/g) || []).length;
