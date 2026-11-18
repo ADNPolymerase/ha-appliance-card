@@ -933,7 +933,7 @@ const LAMP_ONLY_FIELDS = ["lamp_layout", "spots", "timer_entity"];
 const LAMP_LAYOUTS = ["bulb", "bedside", "floor", "torch", "pendant", "strip", "strip_cove", "strip_plinth", "strip_baseboard", "strip_slats", "spot", "spot_track", "spot_surface", "spot_updown", "panels", "desk", "wall", "garden_spot", "bollard", "string", "curtain", "icicle", "festoon", "squares"];
 const LAMP_SPOTS = [1, 2, 3, 4, 5];
 // The layouts drawn with as many spots as the light has.
-const LAMP_SPOT_ROWS = ["spot", "spot_track", "spot_surface"];
+const LAMP_SPOT_ROWS = ["spot", "spot_track", "spot_surface", "pendant"];
 const LAMP_LABELS = { on: "lamp_on", off: "lamp_off", unav: "ev_offline" };
 const LAMP_COLORS = { on: "#ffa000", off: "var(--disabled-text-color, #9e9e9e)", unav: "var(--disabled-text-color, #9e9e9e)" };
 const LAMP_WARM = [255, 197, 107];
@@ -1079,18 +1079,24 @@ ${softShadow(48, 87.4, 11.2, 3.4, 0.29)}
 <path d="M36 86 Q36 83 48 83 Q60 83 60 86 Q60 88.4 48 88.4 Q36 88.4 36 86 Z" fill="#2b3036"/>
 <path d="M34 15 H62 L52 23 H44 Z" fill="url(#lp-tB)" stroke="#8f98a2" stroke-width=".6" stroke-linejoin="round"/>
 <ellipse class="lp-lit" cx="48" cy="15" rx="14" ry="1.8"/>`,
-  pendant: () => `<defs>${lpHalo("pH")}${lpBeam("pB")}
+  // One pendant, or as many as the spots count, smaller, side by side.
+  pendant: (c) => {
+    const xs = lpSpotRow(c, { 1: 0, 2: 42, 3: 30, 4: 23, 5: 18 });
+    const k = { 1: 1, 2: 0.62, 3: 0.46, 4: 0.38, 5: 0.31 }[xs.length];
+    return `<defs>${lpHalo("pH")}${lpBeam("pB")}
 <linearGradient id="lp-pD" x1="0" x2="1"><stop offset="0" stop-color="#2f6b5a"/><stop offset=".45" stop-color="#5fa98f"/><stop offset="1" stop-color="#245446"/></linearGradient></defs>
-<path d="M18 4 H78" stroke="#b9c1c9" stroke-width="3" stroke-linecap="round"/>
-<rect x="42" y="4" width="12" height="3" rx="1" fill="#8f98a2"/>
-<circle class="lp-halo" cx="48" cy="50" r="40" fill="url(#lp-pH)"/>
-<path class="lp-beam" d="M28 50 L10 92 H86 L68 50 Z" fill="url(#lp-pB)"/>
+<path d="M${xs.length > 1 ? 6 : 18} 4 H${xs.length > 1 ? 90 : 78}" stroke="#b9c1c9" stroke-width="3" stroke-linecap="round"/>
+${xs.map((x) => `<rect x="${x - 6}" y="4" width="12" height="3" rx="1" fill="#8f98a2"/>
+<circle class="lp-halo" cx="${x}" cy="50" r="${40 * k}" fill="url(#lp-pH)"/>
+<path class="lp-beam" d="M${x - 20 * k} 50 L${x - 38 * k} 92 H${x + 38 * k} L${x + 20 * k} 50 Z" fill="url(#lp-pB)"/>
+${k < 1 ? `<path d="M${x} 7 V${(50 - 24 * k).toFixed(1)}" stroke="#3a4047" stroke-width="1"/>\n` : ""}<g${k < 1 ? ` transform="translate(${(x - 48 * k).toFixed(1)} ${(50 - 50 * k).toFixed(1)}) scale(${k})"` : ""}>
 <path d="M48 7 V26" stroke="#3a4047" stroke-width="1"/>
 <rect x="45" y="26" width="6" height="5" rx="1" fill="#3a4047"/>
 <path d="M45 31 C34 33 27 41 26 50 H70 C69 41 62 33 51 31 Z" fill="url(#lp-pD)"/>
 <path d="M26 50 Q48 53.4 70 50" fill="none" class="lp-litS" stroke-width="1.2" opacity=".9"/>
 <path d="M42.6 50.4 Q48 54 53.4 50.4 Z" class="lp-lit"/>
-<path d="M45 51.2 Q48 52.6 51 51.2" fill="none" stroke="#fff" stroke-width=".8" opacity=".8"/>`,
+<path d="M45 51.2 Q48 52.6 51 51.2" fill="none" stroke="#fff" stroke-width=".8" opacity=".8"/></g>`).join("")}`;
+  },
   strip: () => `<defs>${lpBeam("sB")}
 <linearGradient id="lp-sW" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#c99a6b"/><stop offset="1" stop-color="#8d6640"/></linearGradient></defs>
 <rect x="0" y="10" width="96" height="80" rx="3" class="lp-wall"/>

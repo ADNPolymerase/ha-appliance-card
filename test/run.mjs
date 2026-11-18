@@ -11328,6 +11328,8 @@ check('borne : ni un statut reconnu', evMode(evR('SuspendedEVSE', { power_entity
   check('lampe : rail, une tete par lumiere', beams(lamp('on', { entity_id: ['a', 'b', 'c'] }, { lamp_layout: 'spot_track' })), 3);
   check('lampe : rail a une tete', beams(lamp('on', {}, { lamp_layout: 'spot_track', spots: 1 })), 1);
   check('lampe : spots en saillie choisis', beams(lamp('on', {}, { lamp_layout: 'spot_surface', spots: 4 })), 4);
+  check('lampe : deux suspensions', beams(lamp('on', {}, { lamp_layout: 'pendant', spots: 2 })), 2);
+  check('lampe : une suspension par defaut', beams(lamp('on', {}, { lamp_layout: 'pendant' })), 1);
   check('lampe : un bouton marche', actionBtns(lamp('on')).length, 1);
   check('lampe : bouton actif allumee', actionBtns(lamp('on'))[0].endsWith(':on'), true);
   contains('lampe : le bouton vise la lampe', lamp('on'), 'data-entity="light.salon"');

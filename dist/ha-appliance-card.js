@@ -5467,7 +5467,7 @@ const LAMP_ONLY_FIELDS = ["lamp_layout", "spots", "timer_entity"];
 const LAMP_LAYOUTS = ["bulb", "bedside", "floor", "torch", "pendant", "strip", "strip_cove", "strip_plinth", "strip_baseboard", "strip_slats", "spot", "spot_track", "spot_surface", "spot_updown", "panels", "desk", "wall", "garden_spot", "bollard", "string", "curtain", "icicle", "festoon", "squares"];
 const LAMP_SPOTS = [1, 2, 3, 4, 5];
 // The layouts drawn with as many spots as the light has.
-const LAMP_SPOT_ROWS = ["spot", "spot_track", "spot_surface"];
+const LAMP_SPOT_ROWS = ["spot", "spot_track", "spot_surface", "pendant"];
 const LAMP_LABELS = { on: "lamp_on", off: "lamp_off", unav: "ev_offline" };
 const LAMP_COLORS = { on: "#ffa000", off: "var(--disabled-text-color, #9e9e9e)", unav: "var(--disabled-text-color, #9e9e9e)" };
 const LAMP_WARM = [255, 197, 107];

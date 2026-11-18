@@ -1527,7 +1527,7 @@ disk2_entity: sensor.nas_drive_2_status
 | `fabric_stripes` | cover | Awning: a striped fabric (default) or a plain one (`false`). |
 | `light_entity` | cover | The light under a pergola: while it is on, a glow comes down from under the beams and lights the terrace, in the bulb's colour. A line and a button. |
 | `humidity_entity` / `battery_entity` | temperature sensor | The humidity and the battery, as lines and on the screen of the models that have one. The battery line turns orange at 20 % or less. |
-| `spots` | lamp | The number of spots drawn, 1 to 5, for `spot`, `spot_track` and `spot_surface`. Left out, a light group draws one spot per light, up to five. |
+| `spots` | lamp | The number of spots drawn, 1 to 5, for `spot`, `spot_track` and `spot_surface`, or of lamps hanging for `pendant`. Left out, a light group draws one spot per light, up to five. |
 | `timer_entity` | lamp | A select of durations (an auto-off timer): a pill showing the one chosen, which opens the list. |
 
 </details>

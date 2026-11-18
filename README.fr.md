@@ -1529,7 +1529,7 @@ disk2_entity: sensor.nas_drive_2_status
 | `fabric_stripes` | volet | Store banne : toile rayée (défaut) ou unie (`false`). |
 | `light_entity` | volet | La lumière sous une pergola : allumée, un halo descend de sous les poutres et éclaire la terrasse, à la couleur de l'ampoule. Une ligne et un bouton. |
 | `humidity_entity` / `battery_entity` | capteur de température | L'humidité et la pile, en lignes et sur l'écran des modèles qui en ont un. La ligne de pile passe à l'orange à 20 % ou moins. |
-| `spots` | lampe | Le nombre de spots dessinés, de 1 à 5, pour `spot`, `spot_track` et `spot_surface`. Sans réglage, un groupe de lumières dessine un spot par lumière, jusqu'à cinq. |
+| `spots` | lampe | Le nombre de spots dessinés, de 1 à 5, pour `spot`, `spot_track` et `spot_surface`, ou de suspensions pour `pendant`. Sans réglage, un groupe de lumières dessine un spot par lumière, jusqu'à cinq. |
 | `timer_entity` | lampe | Un `select` de durées (un minuteur d'extinction) : une pastille qui montre celle choisie et ouvre la liste. |
 
 </details>
