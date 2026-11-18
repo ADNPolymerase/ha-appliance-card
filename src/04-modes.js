@@ -859,6 +859,18 @@ const EV_COLORS = {
 // Home Assistant's own words for an entity it cannot read, in its own
 // spelling. An integration's "Unavailable" is a word of the charger's.
 const HA_OFFLINE_STATES = ["unavailable", "unknown"];
+// The attributes a card draws from, by domain, that move without the state or
+// last_changed moving: a redraw must follow them.
+const LIVE_ATTRS = {
+  cover: ["current_position", "current_tilt_position"],
+  climate: ["current_temperature", "temperature", "target_temp_low", "target_temp_high", "hvac_action", "fan_mode", "preset_mode", "swing_mode", "current_humidity", "humidity"],
+  water_heater: ["current_temperature", "temperature", "operation_mode", "away_mode"],
+  fan: ["percentage", "preset_mode", "oscillating", "direction"],
+  humidifier: ["humidity", "current_humidity", "mode", "action"],
+  vacuum: ["battery_level", "status", "fan_speed"],
+  lawn_mower: ["battery_level", "activity"],
+  valve: ["current_position"],
+};
 // The status as the charger means it, or "" for a word the card does not know,
 // which then reads as on any other appliance. An entry of state_map wins, as
 // everywhere, and names one of the ten; "*" catches what is left.

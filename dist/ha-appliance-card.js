@@ -1304,6 +1304,18 @@ const EV_COLORS = {
 // Home Assistant's own words for an entity it cannot read, in its own
 // spelling. An integration's "Unavailable" is a word of the charger's.
 const HA_OFFLINE_STATES = ["unavailable", "unknown"];
+// The attributes a card draws from, by domain, that move without the state or
+// last_changed moving: a redraw must follow them.
+const LIVE_ATTRS = {
+  cover: ["current_position", "current_tilt_position"],
+  climate: ["current_temperature", "temperature", "target_temp_low", "target_temp_high", "hvac_action", "fan_mode", "preset_mode", "swing_mode", "current_humidity", "humidity"],
+  water_heater: ["current_temperature", "temperature", "operation_mode", "away_mode"],
+  fan: ["percentage", "preset_mode", "oscillating", "direction"],
+  humidifier: ["humidity", "current_humidity", "mode", "action"],
+  vacuum: ["battery_level", "status", "fan_speed"],
+  lawn_mower: ["battery_level", "activity"],
+  valve: ["current_position"],
+};
 // The status as the charger means it, or "" for a word the card does not know,
 // which then reads as on any other appliance. An entry of state_map wins, as
 // everywhere, and names one of the ten; "*" catches what is left.
@@ -2835,6 +2847,7 @@ const TYPE_AUTO_PATTERNS = {
     input_voltage_entity: /^(?!.*(nominal|transf)).*(input.?voltage|tension.?d.?entree|eingangsspannung)/i,
   },
   robot: {
+    camera_entity: /^camera\./i,
     // Ecovacs's station_state, Dreame's state carry the washing and the emptying.
     robot_status_entity: /status|activity|phase|etat|(^|[._])state$/i,
     battery_entity: /batter|akku/i,
@@ -2950,11 +2963,13 @@ const TYPE_AUTO_PATTERNS = {
     resume_entity: /^(button|script)\..*(resume|continue)/i,
     stop_entity: /^(button|script)\..*(?<!emergency_)(stop|cancel)/i,
     power_entity: /^sensor\.(?!.*(extruder|bed|chamber|heater|nozzle)).*(_power$|power_w$|watt)/i,
+    camera_entity: /^camera\./i,
   },
   // A feeder's own words, read on an Aqara over Zigbee2MQTT and on a Tuya.
   // The schedule is only suggested when a readable one exists: the raw one is
   // a Python repr, which belongs in a template rather than on a card.
   pet_feeder: {
+    camera_entity: /^camera\./i,
     start_entity: /^(button|script|automation|select|number)\.(?!.*(cancel|disable|enable|delete|skip|schedule|plan|reset|desiccant|restart)).*(feed|start|distribu|croquette|portion)/i,
     portions_today_entity: /portions?.?(per.?day|today|du.?jour)|distributions?.?(per.?day|today|du.?jour)|today.?s.?feeding.?times/i,
     weight_today_entity: /weight.?(per.?day|today)|poids.?du.?jour|today.?s.?feeding.?quantity|food.?dispensed.?today/i,
@@ -4587,7 +4602,9 @@ function printerAmsOf(hass, cfg) {
     const a = (st && st.attributes) || {};
     const raw = st ? String(st.state).trim().toLowerCase() : "";
     const empty = !st || a.empty === true || ["empty", "none", "unknown", "unavailable", ""].includes(raw);
-    return { entity: e.entity, empty, color: empty ? "" : spoolColorOf(a), on: !empty && (a.active === true || a.in_use === true) };
+    // Elegoo's CANVAS gives each tray a sensor whose state is its colour.
+    const color = /^#?[0-9a-f]{6}([0-9a-f]{2})?$/i.test(raw) ? spoolColorOf({ color: raw }) : spoolColorOf(a);
+    return { entity: e.entity, empty, color: empty ? "" : color, on: !empty && (a.active === true || a.in_use === true) };
   });
   return { slots, pos: cfg.ams_position === "top" ? "top" : "side", active: slots.find((x) => x.on) || null, drying: !!cfg.ams_drying_entity && robotRaised(hass, cfg.ams_drying_entity, /dry|sech/) };
 }
@@ -8576,6 +8593,10 @@ class ApplianceCard extends HTMLElement {
       // A light changes colour or brightness without changing state or
       // last_changed: the bulb is drawn in its colour, so that is a change.
       if (domainOf(id) === "light") parts.push(JSON.stringify([a.brightness, a.color_mode, a.rgb_color, a.hs_color, a.xy_color, a.color_temp_kelvin, a.effect]));
+      // Nor does a cover that stops halfway, a thermostat whose room warms up
+      // or a fan that speeds up (#109): the readings drawn live in attributes.
+      const live = LIVE_ATTRS[domainOf(id)];
+      if (live) parts.push(JSON.stringify(live.map((k) => a[k])));
     }
     // While a fridge counts the minutes since its plug went quiet, the minute
     // is part of what is displayed even though no state carries it. The card
@@ -12753,6 +12774,12 @@ class ApplianceCard extends HTMLElement {
           position: absolute; cursor: pointer;
           --mdc-icon-size: 24px; color: var(--success-color, #43a047);
         }
+        .cam-badge {
+          position: absolute; right: 12px; cursor: pointer; display: flex;
+          --mdc-icon-size: 24px; color: var(--secondary-text-color, #767676);
+        }
+        .cam-badge.on { color: var(--primary-color, #03a9f4); }
+        .cam-badge.off { opacity: .5; }
         .door-badge.left { left: 12px; }
         .door-badge.right { right: 12px; }
         .door-badge.open { color: var(--warning-color, #ff9800); }
@@ -12927,8 +12954,8 @@ class ApplianceCard extends HTMLElement {
            them sits on top of anything. */
         .cmp-head { display: flex; align-items: center; gap: 6px; min-height: 32px; }
         .cmp-icons { display: flex; align-items: center; gap: 2px; flex-shrink: 0; }
-        .cmp-icons .light-badge, .cmp-icons .conn-badge, .cmp-icons .corner-btn, .cmp-icons .door-badge, .cmp-icons .batt-badge { position: static; }
-        .cmp-icons .door-badge, .cmp-icons .batt-badge { display: flex; padding: 4px; }
+        .cmp-icons .light-badge, .cmp-icons .conn-badge, .cmp-icons .corner-btn, .cmp-icons .door-badge, .cmp-icons .batt-badge, .cmp-icons .cam-badge { position: static; }
+        .cmp-icons .door-badge, .cmp-icons .batt-badge, .cmp-icons .cam-badge { display: flex; padding: 4px; }
         .cmp-icons .conn-badge, .cmp-icons .light-badge { display: flex; padding: 4px; }
         .cmp-icons .action-btn { width: 32px; height: 32px; }
         .cmp-icons .action-btn ha-icon { --mdc-icon-size: 18px; }
@@ -13271,6 +13298,17 @@ class ApplianceCard extends HTMLElement {
       ? `<div class="batt-badge ${battSide}${batt.pct <= 20 ? " low" : ""}" style="top:${battSide === "right" && connBadgeHtml ? 40 : 10}px" data-more="${esc(cfg.battery_entity || cfg.state_entity)}" title="${esc(t(hass, "section_battery"))}" aria-label="${esc(t(hass, "section_battery"))}"><ha-icon icon="${robotBatteryIcon(batt.pct, batt.charging)}"></ha-icon><span>${Math.round(batt.pct)} %</span></div>`
       : "";
 
+    // The appliance's own camera, a printer's or a robot's: an icon on the
+    // right, under the connection, and a tap opens its live view.
+    const camSt = cfg.camera_entity ? stateObj(hass, cfg.camera_entity) : null;
+    const camOff = !!camSt && HA_OFFLINE_STATES.includes(String(camSt.state).toLowerCase());
+    const camLive = !!camSt && ["streaming", "recording"].includes(String(camSt.state).toLowerCase());
+    const camTop = (connBadgeHtml ? 40 : 10) + (doorSide === "right" ? 30 : 0) + (battSide === "right" ? 30 : 0);
+    const camLabel = t(hass, "type_camera");
+    const camBadgeHtml = camSt
+      ? `<div class="cam-badge${camOff ? " off" : camLive ? " on" : ""}" style="top:${camTop}px" data-more="${esc(cfg.camera_entity)}" title="${esc(camLabel)}" aria-label="${esc(camLabel)}"><ha-icon icon="${camOff ? "mdi:video-off-outline" : "mdi:video-outline"}"></ha-icon></div>`
+      : "";
+
     // The switches the user wants at hand: the first on the left, the second
     // on the right, each under what already sits in its corner. The icon says
     // what each one does and whether it holds.
@@ -13283,7 +13321,7 @@ class ApplianceCard extends HTMLElement {
         const label = c.label || stripNamePrefix(cst.attributes.friendly_name, c.entity);
         const side = i ? "right" : "left";
         const top = side === "left" ? (lightBadgeHtml || doorSide === "left" || battSide === "left" ? 36 : 6)
-          : (connBadgeHtml ? 36 : 6) + (doorSide === "right" || battSide === "right" ? 30 : 0);
+          : (connBadgeHtml ? 36 : 6) + (doorSide === "right" || battSide === "right" ? 30 : 0) + (camBadgeHtml ? 30 : 0);
         return `<div class="corner-btn ${side}${on ? " on" : ""}" style="top:${top}px" data-corner="${esc(c.entity)}" title="${esc(label)}" aria-label="${esc(label)}"><ha-icon icon="${esc(icon)}"></ha-icon></div>`;
       });
     const cornersHtml = cornerList.join("");
@@ -13323,7 +13361,7 @@ class ApplianceCard extends HTMLElement {
     // the rest of the card keeps its own tap.
     const picTap = illustrationTapOf(cfg);
     const leftIcons = lightBadgeHtml + (doorSide === "left" ? doorBadgeHtml : "") + (battSide === "left" ? battBadgeHtml : "") + (cornerList[0] || "");
-    const rightIcons = (compact === "hide" ? doneBadge : "") + (cornerList[1] || "") + (doorSide === "right" ? doorBadgeHtml : "") + (battSide === "right" ? battBadgeHtml : "") + connBadgeHtml
+    const rightIcons = (compact === "hide" ? doneBadge : "") + (cornerList[1] || "") + (doorSide === "right" ? doorBadgeHtml : "") + (battSide === "right" ? battBadgeHtml : "") + camBadgeHtml + connBadgeHtml
       + (compact ? buttonsInline : "");
     // Classes rather than a className: a theme or card_mod may add its own.
     if (this._card.classList) {
@@ -13372,6 +13410,7 @@ class ApplianceCard extends HTMLElement {
         ${connBadgeHtml}
         ${doorBadgeHtml}
         ${battBadgeHtml}
+        ${camBadgeHtml}
         ${cornersHtml}
         <div class="top" id="header">
           ${picTap ? '<div class="pic-tap" data-pic-tap="1">' : ""}${cfg.illustration_frame ? `<div class="pic-frame">${iconHtml}</div>` : iconHtml}${picTap ? "</div>" : ""}
@@ -13451,7 +13490,7 @@ class ApplianceCard extends HTMLElement {
         value: el.getAttribute("data-value"),
       }));
     });
-    this._root.querySelectorAll(".info-line[data-more], .alert-row[data-more], .alerts-pill[data-more], .door-badge[data-more], .batt-badge[data-more]").forEach((el) => {
+    this._root.querySelectorAll(".info-line[data-more], .alert-row[data-more], .alerts-pill[data-more], .door-badge[data-more], .batt-badge[data-more], .cam-badge[data-more]").forEach((el) => {
       el.addEventListener("click", (ev) => {
         ev.stopPropagation();
         this._moreInfo(el.getAttribute("data-more"));

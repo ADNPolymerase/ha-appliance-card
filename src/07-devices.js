@@ -628,7 +628,9 @@ function printerAmsOf(hass, cfg) {
     const a = (st && st.attributes) || {};
     const raw = st ? String(st.state).trim().toLowerCase() : "";
     const empty = !st || a.empty === true || ["empty", "none", "unknown", "unavailable", ""].includes(raw);
-    return { entity: e.entity, empty, color: empty ? "" : spoolColorOf(a), on: !empty && (a.active === true || a.in_use === true) };
+    // Elegoo's CANVAS gives each tray a sensor whose state is its colour.
+    const color = /^#?[0-9a-f]{6}([0-9a-f]{2})?$/i.test(raw) ? spoolColorOf({ color: raw }) : spoolColorOf(a);
+    return { entity: e.entity, empty, color: empty ? "" : color, on: !empty && (a.active === true || a.in_use === true) };
   });
   return { slots, pos: cfg.ams_position === "top" ? "top" : "side", active: slots.find((x) => x.on) || null, drying: !!cfg.ams_drying_entity && robotRaised(hass, cfg.ams_drying_entity, /dry|sech/) };
 }

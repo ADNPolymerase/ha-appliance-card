@@ -137,6 +137,7 @@ const TYPE_AUTO_PATTERNS = {
     input_voltage_entity: /^(?!.*(nominal|transf)).*(input.?voltage|tension.?d.?entree|eingangsspannung)/i,
   },
   robot: {
+    camera_entity: /^camera\./i,
     // Ecovacs's station_state, Dreame's state carry the washing and the emptying.
     robot_status_entity: /status|activity|phase|etat|(^|[._])state$/i,
     battery_entity: /batter|akku/i,
@@ -252,11 +253,13 @@ const TYPE_AUTO_PATTERNS = {
     resume_entity: /^(button|script)\..*(resume|continue)/i,
     stop_entity: /^(button|script)\..*(?<!emergency_)(stop|cancel)/i,
     power_entity: /^sensor\.(?!.*(extruder|bed|chamber|heater|nozzle)).*(_power$|power_w$|watt)/i,
+    camera_entity: /^camera\./i,
   },
   // A feeder's own words, read on an Aqara over Zigbee2MQTT and on a Tuya.
   // The schedule is only suggested when a readable one exists: the raw one is
   // a Python repr, which belongs in a template rather than on a card.
   pet_feeder: {
+    camera_entity: /^camera\./i,
     start_entity: /^(button|script|automation|select|number)\.(?!.*(cancel|disable|enable|delete|skip|schedule|plan|reset|desiccant|restart)).*(feed|start|distribu|croquette|portion)/i,
     portions_today_entity: /portions?.?(per.?day|today|du.?jour)|distributions?.?(per.?day|today|du.?jour)|today.?s.?feeding.?times/i,
     weight_today_entity: /weight.?(per.?day|today)|poids.?du.?jour|today.?s.?feeding.?quantity|food.?dispensed.?today/i,

@@ -3658,6 +3658,20 @@ check('programme : raw court-circuite tout',
 // code: OctoPrint and PrusaLink (core), Bambu Lab, Moonraker, Creality,
 // Elegoo, Flashforge, Anycubic, RepRapFirmware. The entities are made up.
 const P3 = { appliance_type: 'printer_3d', state_entity: 'sensor.p3_status' };
+{
+  // A printer's camera in the top right corner, a tap opens its live view.
+  const s = (state) => ({ state, attributes: {} });
+  const cam = (state, extra = {}) => build({ ...P3, camera_entity: 'camera.p3_cam', ...extra }, { 'sensor.p3_status': s('printing'), 'camera.p3_cam': s(state), 'binary_sensor.p3_online': s('on') });
+  const html = cam('idle').html;
+  check('camera imprimante : l icone en coin', /class="cam-badge" style="top:10px" data-more="camera.p3_cam"/.test(html), true);
+  check('camera imprimante : en direct, en couleur', /class="cam-badge on"/.test(cam('streaming').html), true);
+  check('camera imprimante : hors ligne, barree', /class="cam-badge off"[^>]*><ha-icon icon="mdi:video-off-outline"/.test(cam('unavailable').html), true);
+  check('camera imprimante : sous la connexion', /class="cam-badge" style="top:40px"/.test(cam('idle', { connectivity_entity: 'binary_sensor.p3_online' }).html), true);
+  check('camera imprimante : sans camera, rien', /cam-badge"/.test(build(P3, { 'sensor.p3_status': s('printing') }).html), false);
+  check('camera imprimante : entite absente, rien', /cam-badge"/.test(build({ ...P3, camera_entity: 'camera.nope' }, { 'sensor.p3_status': s('printing') }).html), false);
+  check('camera imprimante : en compact aussi', /<div class="cmp-icons[^"]*">[^]*class="cam-badge/.test(cam('idle', { compact: 'side' }).html), true);
+  check('camera imprimante : un appui ouvre le flux', /\.batt-badge\[data-more\], \.cam-badge\[data-more\]"\)/.test(Card.prototype._render.toString() + Card.toString()), true);
+}
 const p3 = (state, extra = {}, more = {}) => render({ ...P3, ...extra },
   { 'sensor.p3_status': { state, attributes: {} }, ...more });
 const TEMP = v => ({ state: String(v), attributes: { unit_of_measurement: '°C', device_class: 'temperature' } });
@@ -4006,6 +4020,36 @@ contains('editeur : le fichier imprime a son libelle', edHtml('printer_3d'), 'Pr
   check('suggestion imprimante : arret, pas l\'arret d\'urgence', sug.stop_entity, 'button.p1s_x_stop');
   check('suggestion imprimante : pas le capteur start_time en bouton', sug.start_entity, undefined);
   check('suggestion imprimante : la prise, pas la chauffe de la buse', sug.power_entity, 'sensor.p1s_x_plug_power');
+}
+{
+  // Elegoo Centauri Carbon 2 (elegoo-homeassistant): French status names,
+  // the box temperature, the remaining layers and memory beside the
+  // remaining time, a chamber camera and the model's cover image.
+  const P = 'atelier_elegoo_centauri_carbon_2';
+  const ids = ['sensor.P_statut_actuel', 'sensor.P_total_print_time', 'sensor.P_current_print_time', 'sensor.P_remaining_print_time',
+    'sensor.P_end_time', 'sensor.P_begin_time', 'sensor.P_total_layers', 'sensor.P_current_layer', 'sensor.P_remaining_layers',
+    'sensor.P_percent_complete', 'sensor.P_file_name', 'sensor.P_task_id', 'sensor.P_erreur_d_impression', 'sensor.P_remaining_memory',
+    'sensor.P_box_temp', 'sensor.P_nozzle_temperature', 'sensor.P_bed_temperature', 'sensor.P_model_fan_speed',
+    'sensor.P_active_filament_color', 'image.P_cover_image', 'light.P_chamber_light', 'button.P_pause_print',
+    'button.P_resume_print', 'button.P_stop_print', 'button.P_print_selected_file', 'button.P_refresh_file_list',
+    'number.P_target_nozzle_temp', 'number.P_target_bed_temp', 'camera.P_chamber_camera'].map((id) => id.replace('P', P));
+  const unit = (id) => /print_time$/.test(id) ? { unit_of_measurement: 'min', device_class: 'duration' } : /(begin|end)_time$/.test(id) ? { device_class: 'timestamp' }
+    : /temp/.test(id) ? { unit_of_measurement: '°C', device_class: 'temperature' } : /memory/.test(id) ? { unit_of_measurement: 'MB', device_class: 'data_size' } : {};
+  const ed = new Editor();
+  ed.setConfig({ type: 'custom:ha-appliance-card', appliance_type: 'printer_3d', state_entity: `sensor.${P}_statut_actuel` });
+  ed.hass = { ...HASS(Object.fromEntries(ids.map(id => [id, { state: '1', attributes: unit(id) }]))),
+    entities: Object.fromEntries(ids.map(id => [id, { device_id: 'cc2' }])) };
+  const sug = ed.events.at(-1)?.detail?.config || {};
+  check('suggestion centauri : temps restant, pas les couches ni la memoire', sug.remaining_time_entity, `sensor.${P}_remaining_print_time`);
+  check('suggestion centauri : enceinte = box_temp', sug.chamber_temperature_entity, `sensor.${P}_box_temp`);
+  check('suggestion centauri : consigne de buse', sug.nozzle_target_entity, `number.${P}_target_nozzle_temp`);
+  check('suggestion centauri : la camera de l enceinte, pas la vignette', sug.camera_entity, `camera.${P}_chamber_camera`);
+  check('suggestion centauri : reprise', sug.resume_entity, `button.${P}_resume_print`);
+  // The CANVAS trays: a sensor per tray whose state is its colour, empty
+  // when no spool is loaded.
+  const ams = render({ ...P3, ams_entities: ['sensor.cc2_a1_color', 'sensor.cc2_a2_color'] },
+    { 'sensor.p3_status': { state: 'printing', attributes: {} }, 'sensor.cc2_a1_color': { state: '#3FA34D', attributes: {} }, 'sensor.cc2_a2_color': { state: '', attributes: {} } });
+  check('canvas elegoo : la couleur dans l etat', /#3FA34D/i.test(ams), true);
 }
 {
   // OctoPrint names: actual and target, tool0; Moonraker: extruder, number targets.
@@ -11493,6 +11537,18 @@ check('borne : ni un statut reconnu', evMode(evR('SuspendedEVSE', { power_entity
       const sig = (attrs) => card._stateSignature(HASS({ 'light.bureau': { state: 'on', attributes: attrs, last_changed: at(0) } }));
       check('lampe : une autre couleur redessine', sig({ rgb_color: [255, 0, 0] }) !== sig({ rgb_color: [0, 0, 255] }), true);
       check('lampe : une autre luminosite redessine', sig({ brightness: 20 }) !== sig({ brightness: 200 }), true);
+    }
+    {
+      // #109: a blind stopped halfway, a slat angle changed: same state, same
+      // last_changed, a different drawing.
+      const { card } = build({ appliance_type: 'cover', state_entity: 'cover.salon' }, { 'cover.salon': s('open', { current_position: 100 }) });
+      const sig = (id, attrs, state = 'open') => card._stateSignature(HASS({ [id]: { state, attributes: attrs, last_changed: at(0) } }));
+      check('store : une autre position redessine', sig('cover.salon', { current_position: 30 }) !== sig('cover.salon', { current_position: 70 }), true);
+      check('store : une autre inclinaison redessine', sig('cover.salon', { current_position: 50, current_tilt_position: 10 }) !== sig('cover.salon', { current_position: 50, current_tilt_position: 90 }), true);
+      check('store : une autre telemetrie ne redessine pas', sig('cover.salon', { current_position: 50, rssi: -40 }) === sig('cover.salon', { current_position: 50, rssi: -70 }), true);
+      const { card: th } = build({ appliance_type: 'heat_pump', state_entity: 'climate.salon' }, { 'climate.salon': s('heat', { current_temperature: 19 }) });
+      const tsig = (attrs) => th._stateSignature(HASS({ 'climate.salon': { state: 'heat', attributes: attrs, last_changed: at(0) } }));
+      check('thermostat : la piece qui chauffe redessine', tsig({ current_temperature: 19 }) !== tsig({ current_temperature: 21 }), true);
     }
     check('compact side : les boutons a droite meme sous le nom', /\.cmp-side \.cmp-head \.cmp-icons \{ margin-left: auto; \}/.test(L({ compact: 'side' })), true);
     check('dessin : en compact aussi', /class="cmp-pic" data-pic-tap="1"/.test(L({ illustration_tap_action: 'toggle', compact: 'side' })), true);
