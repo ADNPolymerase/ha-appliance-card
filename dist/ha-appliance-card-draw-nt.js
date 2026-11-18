@@ -2099,37 +2099,78 @@ ${strIsoDisc(54, 86, 22, 6, `url(#${t})`, ["#c9c6bf", "#e3e1dc", "#ece9e3", "#d1
 <text x="0" y="0" transform="translate(54 87.6) scale(1.3 .56)" text-anchor="middle" font-size="9" font-weight="700" fill="#c3c0b9" ${NT_FONT}>G</text>
 ${strLed(c, 44, 96, "#ffffff", .55)}${strMute(c, 90, 62)}`;
 }
-// NVIDIA Shield TV: the black tube lying on the table, its end with the
-// ports towards us, the green mark.
+// NVIDIA Shield TV (2019): the matte black tube lying on the table along the
+// boxes' A edge, about four times as long as it is wide, the seam ring near
+// its back end, the NVIDIA eye and name on its flank by the near end, and
+// that end open: a thin rim around the recessed face with the ports.
 function strShield(c) {
-  const b = ntId(), bl = ntId();
-  return `<defs><linearGradient id="${b}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#4a4f55"/><stop offset=".35" stop-color="#25282c"/><stop offset="1" stop-color="#0b0c0e"/></linearGradient>
-<filter id="${bl}" x="-30%" y="-60%" width="160%" height="220%"><feGaussianBlur stdDeviation="1.4"/></filter></defs>
-${strTile(c, 54, 44)}
-<g transform="rotate(23.4 60 84)">
-<rect x="22" y="${84 + 8}" width="76" height="6" rx="3" fill="#000" opacity=".3" filter="url(#${bl})"/>
-<path d="M24 76 H92 Q97 76 97 84 Q97 92 92 92 H24 Q20 92 20 84 Q20 76 24 76 Z" fill="url(#${b})"/>
-<path d="M24 77.6 H90" stroke="#ffffff" stroke-width=".7" opacity=".25" stroke-linecap="round"/>
-<ellipse cx="94" cy="84" rx="3.6" ry="8" fill="#151719"/><rect x="92.6" y="80.6" width="2.6" height="2.2" rx=".3" fill="#5d646b"/><circle cx="94" cy="87" r=".8" fill="#5d646b"/>
-<path d="M28 84 Q31 81.6 34 84 Q31 86.4 28 84 Z" fill="#76b900"/><circle cx="31" cy="84" r=".8" fill="#0b0c0e"/>
-${strLed(c, 86, 80.4, "#76ff03", .6)}</g>
-${strMute(c, 96, 62)}`;
+  const b = ntId(), bl = ntId(), rc = ntId();
+  const n = (v) => +v.toFixed(2), r = 9.2, len = 74, C = [56, 79];
+  const p0 = [C[0] - ISO_A[0] * len / 2, C[1] - ISO_A[1] * len / 2], p1 = [C[0] + ISO_A[0] * len / 2, C[1] + ISO_A[1] * len / 2];
+  // The tube's section, a circle across the axis: along B and up.
+  const u = [ISO_B[0] * r, ISO_B[1] * r], v = [0, -r];
+  const at = (p, t, k = 1) => [n(p[0] + (u[0] * Math.cos(t) + v[0] * Math.sin(t)) * k), n(p[1] + (u[1] * Math.cos(t) + v[1] * Math.sin(t)) * k)];
+  const along = (k) => [p0[0] + (p1[0] - p0[0]) * k, p0[1] + (p1[1] - p0[1]) * k];
+  // Where the outline runs along the axis: the section's tangent there is A.
+  const cr = (p, q) => p[0] * q[1] - p[1] * q[0];
+  const hi = Math.atan2(cr(v, ISO_A), cr(u, ISO_A)), lo = hi - Math.PI;
+  const arc = (p, t0, t1, k = 1, m = 24) => Array.from({ length: m + 1 }, (_, i) => at(p, t0 + (t1 - t0) * i / m, k)).map((q) => `${q[0]} ${q[1]}`).join(" L");
+  const end = (p) => `matrix(${n(u[0])} ${n(u[1])} ${v[0]} ${v[1]} ${n(p[0])} ${n(p[1])})`;
+  const ring = (k) => `M${arc(along(k), hi, lo, 1, 18)}`;
+  const name = at(along(.8), .55);
+  const tg = [-u[0] * Math.sin(.55) + v[0] * Math.cos(.55), -u[1] * Math.sin(.55) + v[1] * Math.cos(.55)], tl = Math.hypot(tg[0], tg[1]);
+  return `<defs><linearGradient id="${b}" gradientUnits="userSpaceOnUse" x1="${at(C, hi)[0]}" y1="${at(C, hi)[1]}" x2="${at(C, lo)[0]}" y2="${at(C, lo)[1]}">
+<stop offset="0" stop-color="#1a1c1f"/><stop offset=".2" stop-color="#34383d"/><stop offset=".4" stop-color="#222529"/><stop offset=".8" stop-color="#0e1012"/><stop offset="1" stop-color="#050607"/></linearGradient>
+<radialGradient id="${rc}" cx=".5" cy=".3" r=".75"><stop offset="0" stop-color="#050607"/><stop offset=".75" stop-color="#101214"/><stop offset="1" stop-color="#1c1f22"/></radialGradient>
+<filter id="${bl}" x="-30%" y="-60%" width="160%" height="220%"><feGaussianBlur stdDeviation="1.8"/></filter></defs>
+${strTile(c, 50, 40)}
+<path d="M${at(p0, lo).join(" ")} L${at(p1, lo).join(" ")}" stroke="#000" stroke-width="8" stroke-linecap="round" opacity=".35" filter="url(#${bl})" transform="translate(1.5 2.8)"/>
+<path d="M${arc(p1, hi, hi + Math.PI)} L${arc(p0, hi - Math.PI, hi)} Z" fill="url(#${b})"/>
+<path d="${ring(.2)}" fill="none" stroke="#050607" stroke-width=".8"/><path d="${ring(.212)}" fill="none" stroke="#3a3e44" stroke-width=".3"/>
+<g transform="${end(p1)}"><circle r="1" fill="#26292d"/><circle r=".86" fill="url(#${rc})"/>
+<rect x="-.38" y="-.12" width=".34" height=".3" rx=".03" fill="#000" stroke="#3a3e44" stroke-width=".25" vector-effect="non-scaling-stroke"/>
+<circle cx=".26" cy=".22" r=".11" fill="#000" stroke="#3a3e44" stroke-width=".25" vector-effect="non-scaling-stroke"/><circle cx=".26" cy="-.06" r=".11" fill="#000" stroke="#3a3e44" stroke-width=".25" vector-effect="non-scaling-stroke"/>
+${Array.from({ length: 14 }, (_, i) => { const t = i / 14 * 2 * Math.PI; return `<circle cx="${n(Math.cos(t) * .72)}" cy="${n(Math.sin(t) * .72)}" r=".05" fill="#2c3035"/>`; }).join("")}</g>
+<g transform="matrix(${n(ISO_A[0])} ${n(ISO_A[1])} ${n(-tg[0] / tl)} ${n(-tg[1] / tl)} ${name[0]} ${name[1]})" fill="#4a5056"><path d="M-12.6 -.9 Q-11 -2.1 -9.4 -.9 Q-11 .3 -12.6 -.9 Z"/><text x="-8.8" y=".2" font-size="2.9" font-weight="800" letter-spacing=".2" ${NT_FONT}>NVIDIA</text></g>
+${strLed(c, ...at(p1, Math.PI / 2, .9), "#76ff03", 1)}
+${strMute(c, 96, 58)}`;
 }
-// NVIDIA Shield TV Pro: the angular black box, its faceted top and the
-// green light along one facet.
+// NVIDIA Shield TV Pro: the thin black slab lying flat, its long edge on the
+// left face, its top folded into facets as on the device: the big glossy
+// one at the back, a matte triangle on the left, the matte front one, a
+// matte one on the right and the small one at the front right with the eye,
+// and the green light along the crease between the glossy and the front
+// facets, turning sharply back up the right crease.
 function strShieldPro(c) {
-  const g = strIsoGeom(60, 68, 58, 40, 2), t = ntId(), gl = ntId();
-  const [L, T, R, F] = g.P;
-  const mid = (p, q, k = .5) => [+(p[0] + (q[0] - p[0]) * k).toFixed(2), +(p[1] + (q[1] - p[1]) * k).toFixed(2)];
-  const a = mid(T, R, .45), b2 = mid(L, F, .55), m1 = mid(T, L), m2 = mid(R, F);
+  const g = strIsoGeom(60, 70, 62, 42, 2), gs = ntId(), ref = ntId(), gl = ntId();
+  // The device's corners seen from above, its long edge at the front.
+  const [TL, TR, BR, BL] = [g.P[1], g.P[2], g.P[3], g.P[0]];
+  const Q = (x, y) => [+(TL[0] + (TR[0] - TL[0]) * x + (BL[0] - TL[0]) * y).toFixed(2), +(TL[1] + (TR[1] - TL[1]) * x + (BL[1] - TL[1]) * y).toFixed(2)];
+  const P = (...pts) => "M" + pts.map((p) => `${p[0]} ${p[1]}`).join(" L") + " Z";
+  const lerp = (p, q, k) => [+(p[0] + (q[0] - p[0]) * k).toFixed(2), +(p[1] + (q[1] - p[1]) * k).toFixed(2)];
+  const A = Q(.27, .2), B = Q(.79, .58), E = Q(.74, 1);
   const lit = ["playing", "paused", "home"].includes(c.st);
-  return `<defs>${strTopGrad(t, "#2f3237", "#121417")}${ntBlur(gl, 1.2)}</defs>
-${strTile(c, 60, 30)}
-${strIsoBox(g, 16, `url(#${t})`, STR_DARK_FACES)}
-<path d="M${m1[0]} ${m1[1]} L${a[0]} ${a[1]} L${b2[0]} ${b2[1]} L${m2[0]} ${m2[1]} M${a[0]} ${a[1]} L${m2[0]} ${m2[1]} M${m1[0]} ${m1[1]} L${b2[0]} ${b2[1]}" fill="none" stroke="#4a4f55" stroke-width=".6"/>
-${c.on ? `<path class="nta-glow" d="M${a[0]} ${a[1]} L${b2[0]} ${b2[1]}" stroke="#76ff03" stroke-width="1.6" stroke-linecap="round" filter="url(#${gl})"/>` : ""}
-<path d="M${a[0]} ${a[1]} L${b2[0]} ${b2[1]}" stroke="${lit ? "#76ff03" : c.st === "standby" ? "#ffb300" : "#3a3e44"}" stroke-width=".8" stroke-linecap="round"/>
-${strMute(c, 98, 52)}`;
+  const col = lit ? "#76ff03" : c.st === "standby" ? "#ffb300" : "#30343a";
+  const s0 = lerp(A, B, .2), s2 = lerp(B, TR, .25);
+  const strip = `M${s0[0]} ${s0[1]} L${B[0]} ${B[1]} L${s2[0]} ${s2[1]}`;
+  const logo = Q(.86, .84);
+  return `<defs><linearGradient id="${gs}" gradientUnits="userSpaceOnUse" x1="${TL[0]}" y1="${TL[1]}" x2="${B[0]}" y2="${B[1]}"><stop offset="0" stop-color="#16181b"/><stop offset=".5" stop-color="#2a2d32"/><stop offset="1" stop-color="#0c0d0f"/></linearGradient>
+<linearGradient id="${ref}" gradientUnits="userSpaceOnUse" x1="${Q(.42, 0)[0]}" y1="${Q(.42, 0)[1]}" x2="${Q(.6, .45)[0]}" y2="${Q(.6, .45)[1]}"><stop offset="0" stop-color="#ffffff" stop-opacity="0"/><stop offset=".5" stop-color="#ffffff" stop-opacity=".24"/><stop offset="1" stop-color="#ffffff" stop-opacity="0"/></linearGradient>
+${ntBlur(gl, 1.4)}</defs>
+${strTile(c, 62, 30)}
+${strIsoBox(g, 4.5, "#141619", STR_DARK_FACES)}
+<path d="${P(TL, A, BL)}" fill="#272a2e"/>
+<path d="${P(A, B, E, BL)}" fill="#181a1d"/>
+<path d="${P(B, BR, E)}" fill="#1e2124"/>
+<path d="${P(TR, BR, B)}" fill="#222529"/>
+<path d="${P(TL, TR, B, A)}" fill="url(#${gs})"/>
+<path d="${P(TL, TR, B, A)}" fill="url(#${ref})"/>
+<path d="M${TL[0]} ${TL[1]} L${A[0]} ${A[1]} L${BL[0]} ${BL[1]} M${A[0]} ${A[1]} L${B[0]} ${B[1]} L${TR[0]} ${TR[1]} M${B[0]} ${B[1]} L${BR[0]} ${BR[1]} M${B[0]} ${B[1]} L${E[0]} ${E[1]}" fill="none" stroke="#3a3e44" stroke-width=".35" stroke-linejoin="round"/>
+${c.on ? `<path class="nta-glow" d="${strip}" fill="none" stroke="#76ff03" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round" filter="url(#${gl})" opacity=".9"/>` : ""}
+<path d="${strip}" fill="none" stroke="${col}" stroke-width="1" stroke-linejoin="round" stroke-linecap="round"/>
+${lit ? `<path d="${strip}" fill="none" stroke="#eaffc8" stroke-width=".3" stroke-linejoin="round" stroke-linecap="round"/>` : ""}
+${strIsoTop(...logo, `<path d="M-1.8 0 Q0 -1.3 1.8 0 Q0 1.3 -1.8 0 Z M-.7 0 Q0 -.6 .7 0 Q0 .6 -.7 0 Z" fill="#4c5258" fill-rule="evenodd"/>`)}
+${strMute(c, 100, 50)}`;
 }
 // Roku Ultra: the black rounded box, the name on its glossy top and its
 // purple tag.
