@@ -200,6 +200,14 @@ function simulate(sim, domain, service, data) {
     if (go === "returning") later(id, "docked", 4000);
     return;
   }
+  if (config && config.appliance_type === "fingerbot") {
+    // A finger bot: a press on a button stamps its time, a switch in click
+    // mode presses and lifts again, in switch mode it holds; its plug toggles.
+    if (domain === "button") return sim.set(id, new Date().toISOString());
+    if (id === config.plug_entity) return flip(id);
+    if (service === "turn_on") { sim.set(id, "on"); return later(id, "off", 1600); }
+    return flip(id);
+  }
   if (domain === "cover") {
     // The cover travels a step a tick, as a real one would, and stops on stop.
     const tilt = /_tilt$/.test(service);
@@ -1731,7 +1739,23 @@ const co2Card = (name, layout, v, more = {}) => () => card({ name, appliance_typ
 // Shutters, blinds, a pergola and an awning (#109).
 const covCard = (name, layout, state, a = {}, more = {}) => () => card({ name, appliance_type: "cover", cover_layout: layout, state_entity: "cover.c_" + layout + "_" + state, ...more },
   [st("cover.c_" + layout + "_" + state, state, { supported_features: 255, ...a }), ...(more.light_entity ? [st(more.light_entity, "on", { rgb_color: [255, 207, 122] })] : [])]);
+// A finger bot (HACF #163): a Fingerbot Plus on Zigbee2MQTT charged by a
+// plug, one held down in switch mode, a SwitchBot Bot and the first model.
+const fbCard = (name, id, sw, mode, bat, more = {}, a = {}) => () => card({ name, appliance_type: "fingerbot", state_entity: id, bot_mode_entity: id + "_mode",
+  battery_entity: id + "_battery", lower_entity: id + "_lower", upper_entity: id + "_upper", sustain_entity: id + "_delay", touch_entity: id + "_touch", ...more },
+  [st(id, sw, a), st(id + "_mode", mode), st(id + "_battery", bat, { unit_of_measurement: "%", device_class: "battery" }), st(id + "_lower", 58, { unit_of_measurement: "%" }),
+    st(id + "_upper", 0, { unit_of_measurement: "%" }), st(id + "_delay", 0, { unit_of_measurement: "s" }), st(id + "_touch", "on"),
+    ...(more.plug_entity ? [st(more.plug_entity, more.plugOn ? "on" : "off"), st(more.power_entity, more.plugOn ? 2.1 : 0, { unit_of_measurement: "W" })] : [])]);
 Object.assign(EXTRA, {
+  fb_plus: fbCard(L("Gate remote", "T\u00e9l\u00e9commande portail"), "switch.fingerbot_gate", "off", "click", 84, { plug_entity: "switch.fb_plug", power_entity: "sensor.fb_plug_power" }),
+  fb_charging: fbCard(L("Garage remote", "T\u00e9l\u00e9commande garage"), "switch.fingerbot_garage", "off", "click", 46, { plug_entity: "switch.fb_plug2", power_entity: "sensor.fb_plug2_power", plugOn: true }),
+  fb_held: fbCard(L("Coffee machine", "Machine \u00e0 caf\u00e9"), "switch.fingerbot_coffee", "on", "switch", 71),
+  fb_low: fbCard(L("Boiler reset", "R\u00e9armement chaudi\u00e8re"), "switch.fingerbot_boiler", "off", "click", 12),
+  fb_switchbot: () => card({ name: L("Desk lamp", "Lampe de bureau"), appliance_type: "fingerbot", state_entity: "switch.bot_7c1a", battery_entity: "sensor.bot_7c1a_battery" },
+    [st("switch.bot_7c1a", "off", { switch_mode: false }), st("sensor.bot_7c1a_battery", 76, { unit_of_measurement: "%" })]),
+  fb_switchbot_black: () => card({ name: L("Projector", "Vid\u00e9oprojecteur"), appliance_type: "fingerbot", fingerbot_color: "black", state_entity: "button.bot_3e9f", battery_entity: "sensor.bot_3e9f_battery" },
+    [st("button.bot_3e9f", "unknown"), st("sensor.bot_3e9f_battery", 92, { unit_of_measurement: "%" })]),
+  fb_classic: () => card({ name: L("Old remote", "Vieille t\u00e9l\u00e9commande"), appliance_type: "fingerbot", fingerbot_layout: "classic", state_entity: "switch.adaprox" }, [st("switch.adaprox", "off")]),
   co2_eink: co2Card(L("Office", "Bureau"), "co2_eink", 683),
   co2_box: co2Card(L("Bedroom", "Chambre"), "co2_box", 1250),
   co2_netatmo: co2Card(L("Living room", "Salon"), "co2_netatmo", 1720),
@@ -1772,8 +1796,8 @@ function liveGallery() {
   const wrap = document.getElementById("wrap");
   wrap.innerHTML = `<header>
     <h1>HA Appliance Card</h1>
-    <p>${L("A Lovelace card for 67 kinds of home appliances, each drawn and animated from its own data. These cards run on made-up states: in Home Assistant every field is an entity you pick.",
-      "Une card Lovelace pour 67 types d'appareils, chacun dessiné et animé à partir de ses propres données. Ces cartes tournent sur des états inventés : dans Home Assistant, chaque champ est une entité que vous choisissez.")}</p>
+    <p>${L("A Lovelace card for 68 kinds of home appliances, each drawn and animated from its own data. These cards run on made-up states: in Home Assistant every field is an entity you pick.",
+      "Une card Lovelace pour 68 types d'appareils, chacun dessiné et animé à partir de ses propres données. Ces cartes tournent sur des états inventés : dans Home Assistant, chaque champ est une entité que vous choisissez.")}</p>
     <nav>${link("lang", "en", "English", !fr)}${link("lang", "fr", "Français", fr)}<span></span>${link("theme", "light", L("Light", "Clair"), !dark)}${link("theme", "dark", L("Dark", "Sombre"), dark)}<span></span>${link("plug", "0", L("Integrations", "Intégrations"), !plugOnly)}${link("plug", "1", L("Smart plug only", "Prise connectée seule"), plugOnly)}<span></span>${link("color", "", L("Own colours", "Couleurs d'origine"), !demoColor)}${[["white", "White", "Blanc"], ["grey", "Grey", "Gris"], ["black", "Black", "Noir"], ["red", "Red", "Rouge"]].map(([v, en, f]) => link("color", v, L(en, f), demoColor === v)).join("")}<span></span><a href="https://github.com/ADNPolymerase/ha-appliance-card">GitHub</a></nav>
     <p class="hint">${plugOnly
       ? L("Each card below has nothing but a smart plug: its switch and its power meter. Open “Change the values” and move the power, or press the power button.",
@@ -1786,6 +1810,7 @@ function liveGallery() {
     [L("Kitchen", "Cuisine"), [dishwasher, oven, microwave, hood, cooktop, fridge, kettle, cooker, coffee, coffeeBlack, riceCooker, airFryer, toaster]],
     [L("Heating and climate", "Chauffage et climat"), [waterHeater, boiler, boilerWindow, boilerThermo, thSquare, thRound, thGlass, thValve, heatPump, pelletStove, spaceHeater, towelWarmer, towelPanel, airConditioner, dehumidifier, humidifier, humidifierNight, humidifierEmpty, humidifierLifted]],
     [L("CO\u2082 monitors", "Capteurs de CO\u2082"), [EXTRA.co2_eink, EXTRA.co2_box, EXTRA.co2_netatmo, EXTRA.co2_module]],
+    [L("Finger bots", "Pousse-boutons"), [EXTRA.fb_plus, EXTRA.fb_charging, EXTRA.fb_held, EXTRA.fb_low, EXTRA.fb_switchbot, EXTRA.fb_switchbot_black, EXTRA.fb_classic]],
     [L("Shutters, blinds, pergolas and awnings", "Volets, stores, pergolas et stores bannes"), [EXTRA.cov_shutter, EXTRA.cov_shutter_closing, EXTRA.cov_shutter_closed, EXTRA.cov_blind, EXTRA.cov_venetian, EXTRA.cov_raffstore, EXTRA.cov_pergola, EXTRA.cov_awning]],
     [L("Air purifiers and fans", "Purificateurs et ventilateurs"), [purifier, boxPurifier, ringPurifier, fan, ceilingFan]],
     [L("Robots and vacuums", "Robots et aspirateurs"), [rbtVacuum, rbtEmptying, rbtBox, rbtBoxGold, rbtMop, rbtCombo, rbtDrying, rbtMower, rbtNavimow, rbtRain, rbtStick, rbtWasher]],

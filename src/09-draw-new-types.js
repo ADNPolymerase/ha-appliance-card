@@ -3,7 +3,7 @@
 // sauna, an aquarium, a Linky meter and a Christmas tree. Drawn in SVG on a 120 x 135 field; what
 // moves moves only on a machine carrying nt-on, staggered through --d0, and
 // the robot's cable and the sump's float follow their SMIL animations.
-const NT_TYPES = ["cover", "pellet_grill", "water_pump", "floor_heating", "spa", "sauna", "aquarium", "meter", "christmas_tree", "mobility", "irrigation", "litter_box", "detector", "speaker", "console", "streamer", "climate_sensor", "storage_tank", "fresh_water_station", "solar_thermal", "wood_stove", "humidifier", "filament_dryer"];
+const NT_TYPES = ["fingerbot", "cover", "pellet_grill", "water_pump", "floor_heating", "spa", "sauna", "aquarium", "meter", "christmas_tree", "mobility", "irrigation", "litter_box", "detector", "speaker", "console", "streamer", "climate_sensor", "storage_tank", "fresh_water_station", "solar_thermal", "wood_stove", "humidifier", "filament_dryer"];
 // How many spools a filament dryer holds (#93).
 const FD_COUNTS = [1, 2, 4];
 const FD_COLORS = ["#43a047", "#fb8c00", "#8e24aa", "#eceff1"];
@@ -15,6 +15,13 @@ const TAP_MODELS = ["generic", "sonoff"];
 const TAP_WALLS = ["brick", "render", "none"];
 const LITTER_LAYOUTS = ["globe", "box"];
 const DETECTOR_LAYOUTS = ["smoke", "co", "leak"];
+// A finger bot's drawing (HACF #163), its colour, how long a press shows and
+// the power that means its plug is charging it.
+const FINGERBOT_LAYOUTS = ["plus", "switchbot", "classic"];
+const FINGERBOT_COLORS = ["white", "black"];
+const FB_PRESS_MS = 4000, FB_CLICK_MS = 15000, FB_CHARGE_W = 0.5;
+// A finger bot by its name: Fingerbot, Adaprox, SwitchBot's Bot.
+const FINGERBOT_NAME_RE = /finger.?bot|adaprox|switch.?bot.?bot|(^|[._\s])bot([._\s]|$)|button.?push(er)?|knopfdrucker|pousse.?bouton|appuie.?bouton/;
 const GRILL_LAYOUTS = ["timberline", "drum", "cart", "vertical"];
 const SPEAKER_LAYOUTS = ["smart", "homepod_mini", "sonos_one", "sonos_era100", "sonos_era300", "sonos_move", "soundbar", "bose_wave", "bose_500", "bose_soundlink", "bose_soundbar", "bookshelf", "echo_dot", "nest_mini", "sonos_five", "sonos_play", "sonos_roam", "sonos_ray", "sonos_amp", "sonos_port", "bose_ultra", "bose_portable", "bose_amp", "echo_dot_max"];
 // Streaming boxes (#97). The app a box is in: its colour and its mark, read
@@ -142,6 +149,7 @@ const NT_ONLY_FIELDS = {
   irrigation: ["irrigation_layout", "zone_entity", "rain_delay_entity", "soil_moisture_entity", "next_run_entity", "tap_model", "tap_wall", "watering_duration_entity"],
   litter_box: ["litter_layout", "waste_drawer_entity", "litter_level_entity", "pet_weight_entity", "visits_entity", "cat_present_entity", "last_use_entity"],
   detector: ["detector_layout", "co_level_entity", "co_entity"],
+  fingerbot: ["fingerbot_layout", "fingerbot_color", "bot_mode_entity", "lower_entity", "upper_entity", "sustain_entity", "reverse_entity", "touch_entity"],
   speaker: ["speaker_layout", "speaker_color"],
   console: ["console_layout", "game_entity", "playtime_entity", "playtime_left_entity"],
   streamer: ["streamer_layout", "app_entity"],
@@ -235,6 +243,7 @@ const NT_NAME_RES = [
   ["climate_sensor", THS_NAME_RE],
   ["litter_box", /scoopfree|purobot|litter|litiere|katzenklo|arenero|lettiera|kattlada|kuweta|kattebak|kattesand|(^|[^a-z])pura.?(x|max)/],
   ["irrigation", /arrosage|arroseur|watering|bhyve|netro|gardena(?!.?(sileno|mow))|irrigat|sprinkler|bewasserung|(^|[^a-z])riego|beregening|bevattning|vanning|vanding|nawadnian|zavlaz|opensprinkler|linktap|hydrawise|rachio|rain.?bird/],
+  ["fingerbot", FINGERBOT_NAME_RE],
   ["detector", /x.?sense|smoke|fumee|detecteur.?(de.?)?(fumee|co|fuite)|monoxyde|carbon.?monoxide|(^|[^a-z])co.?(alarm|detector)|rauchmelder|detector.?de.?humo|rilevatore|rookmelder|brandvarnare|roykvarsler|roegalarm|czujnik.?dymu|water.?leak|fuite.?d.?eau|wassermelder|leak.?sensor/],
   ["christmas_tree", /christmas|xmas|(^|[^a-z])sapin|(^|[^a-z])noel([^a-z]|$)|weihnacht|tannenbaum|navidad|natale|kerstboom|julgran|juletre|juletrae|choink|vanocni.?strom/],
   ["aquarium", /aquari|akwari|akvari/],
@@ -282,6 +291,15 @@ function litterLayoutOf(cfg, st) {
 // a clear, an idle or an unavailable.
 function detAlarmOf(raw) {
   return (NT_ON.includes(raw) || /alarm|smoke|detect|leak|wet|fuite|fumee|emergency|warning|mild|heavy|critical|danger/.test(raw)) && !/^(off|ok|clear|dry|normal|idle|test)$|^(no|not|un)[ _-]?|inactive/.test(raw);
+}
+// Its drawing: the one chosen, else its name. SwitchBot's says so, the first
+// Fingerbot is the Adaprox one without Plus; a touch switch is the Plus's.
+function fingerbotLayoutOf(cfg, st) {
+  if (FINGERBOT_LAYOUTS.includes(cfg.fingerbot_layout)) return cfg.fingerbot_layout;
+  const hay = stripAccents(`${cfg.state_entity || ""} ${cfg.name || ""} ${stHay(st)}`).toLowerCase();
+  if (/switch.?bot|wohand|(^|[._\s])bot([._\s]|$)/.test(hay) && !/finger/.test(hay)) return "switchbot";
+  if (!cfg.touch_entity && /adaprox/.test(hay) && !/plus/.test(hay)) return "classic";
+  return "plus";
 }
 function detectorLayoutOf(cfg, st) {
   if (DETECTOR_LAYOUTS.includes(cfg.detector_layout)) return cfg.detector_layout;
@@ -4061,7 +4079,67 @@ ${arm(x0 + 6, fx0 + 6)}${arm(x1 - 6, fx1 - 6)}<g${dir ? ` class="cv-sway"` : ""}
 <path d="M${x0 - 1} ${top - 4.6} H${x1 + 1}" stroke="#fff" stroke-opacity=".8" stroke-width=".9"/>
 ${cvArrow(dir, 108, 4)}`;
 }
-const NT_DRAW = { ths_co2_eink: ntCo2Eink, ths_co2_box: ntCo2Box, ths_co2_netatmo: (c) => ntCo2Netatmo(c, false), ths_co2_netatmo_module: (c) => ntCo2Netatmo(c, true), cov_shutter: ntCovShutter, cov_blind: ntCovBlind, cov_venetian: (c) => ntCovVenetian(c, false), cov_raffstore: (c) => ntCovVenetian(c, true), cov_pergola: ntCovPergola, cov_awning: ntCovAwning, pellet_grill: ntPelletGrill, ths_disc: ntThsDisc, ths_square: ntThsSquare, ths_cushion: ntThsCushion, ths_stick: ntThsStick, ths_lcd_stand: ntThsLcdStand, ths_lcd_probe: ntThsLcdProbe, ths_lcd_round: ntThsLcdRound, dryer: ntFilamentDryer, humidifier: ntHumidifier, circulator: ntCirculator, irr_sprinkler: ntIrrSprinkler, irr_tap: ntIrrTap, irr_drip: ntIrrDrip, irr_flowers: ntIrrFlowers, lit_globe: ntLitterGlobe, lit_box: ntLitterBox, det_smoke: ntDetSmoke, det_co: ntDetCo, det_leak: ntDetLeak, spk_smart: ntSpkSmart, spk_homepod_mini: ntSpkMini, spk_sonos_one: ntSpkOne, spk_bookshelf: ntSpkShelf, spk_sonos_move: ntSpkMove, spk_soundbar: ntSpkBar, spk_echo_dot: ntSpkDot, spk_echo_dot_max: ntSpkDotMax, spk_nest_mini: ntSpkNest, spk_sonos_era100: ntSpkEra100, spk_sonos_era300: ntSpkEra300, spk_bose_wave: ntSpkWave, spk_bose_500: ntSpkBose500, spk_bose_soundlink: ntSpkFlex, spk_bose_soundbar: ntSpkBoseBar, spk_sonos_five: ntSpkFive, spk_sonos_play: ntSpkPlay, spk_sonos_roam: ntSpkRoam, spk_sonos_ray: ntSpkRay, spk_sonos_amp: ntSpkAmp, spk_sonos_port: ntSpkPort, spk_bose_ultra: ntSpkBoseUltra, spk_bose_portable: ntSpkBosePortable, spk_bose_amp: ntSpkBoseAmp, str_apple_tv: (c) => strZoom(strAppleTv(c), 54, 1.45), str_fire_tv_cube: strFireCube, str_fire_tv_stick: (c) => strStick(c, true), str_google_tv_streamer: strGoogleStreamer, str_chromecast: strChromecast, str_shield: strShield, str_shield_pro: strShieldPro, str_roku: strRoku, str_mi_box: strMiBox, str_freebox: strFreebox, str_decoder: strDecoder, str_box: strBox, str_stick: (c) => strStick(c, false), con_ps1: conPs1, con_ps2: conPs2, con_ps3: conPs3, con_ps4: (c) => conPs4(c, false), con_ps4_pro: (c) => conPs4(c, true), con_ps5: conPs5, con_xbox: conXbox, con_xbox_360: conX360, con_xbox_one: conXone, con_xbox_series_x: conXsx, con_xbox_series_s: conXss, con_switch: (c) => conSwitch(c, false), con_switch_2: (c) => conSwitch(c, true), con_switch_lite: conSwitchLite, con_ps_vita: conVita, con_nes: conNes, con_snes: conSnes, con_n64: conN64, con_gamecube: conGamecube, con_wii: conWii, con_megadrive: conMegadrive, tank: ntTank, fws: ntFresh, solth: ntSolarThermal, wood: ntWoodStove, mob_scooter: mobScooter, mob_offroad: mobOffroad, mob_ebike: mobEbike, mob_gyropode: mobGyropode, mob_motorcycle: mobMotorcycle, meter_box: ntMeterBox, meter_dome: ntMeterDome, meter_gas: ntGas, meter_water: ntWater, booster: ntBooster, sump: ntSump, pool: ntPoolRobot, floor: ntFloor, spa: ntSpa, sauna: ntSauna, aquarium: ntAquarium, linky: ntLinky, tree: ntTree };
+// A finger bot (HACF #163): the small box stuck beside a button it cannot
+// otherwise reach, its arm swinging down onto it. The Tuya Fingerbot Plus
+// (Adaprox, MOES, Zemismart...) with its touch pad on top, SwitchBot's Bot with
+// its lever and its own button, and the first, slimmer Fingerbot. Its arm
+// presses, or stays down in switch mode; its USB-C lead while it charges.
+const FB_BODY = { white: ["#ffffff", "#e3e6e9", "#c3c8cd"], black: ["#45494e", "#24272a", "#16181a"] };
+function ntFingerbot(c) {
+  const g = ntId(), sd = ntId(), bl = ntId(), pl = ntId(), rk = ntId(), cb = ntId();
+  const lay = c.layout || "plus", pal = FB_BODY[c.body] || FB_BODY.white, dark = c.body === "black";
+  // The wall plate it is stuck on, the rocker it presses below it.
+  const P = { x: 14, y: 26, w: 92, h: 96 }, R = { x: 34, y: 78, w: 52, h: 38 };
+  // Body and arm, per model: the Plus a rounded box, the Bot a squarer one,
+  // the first Fingerbot a slim one; the pivot where the arm leaves the body.
+  const B = lay === "switchbot" ? { x: 33, y: 4, w: 54, h: 50, r: 8 } : lay === "classic" ? { x: 31, y: 22, w: 58, h: 32, r: 6 } : { x: 27, y: 10, w: 66, h: 44, r: 12 };
+  const px = B.x + 9, py = B.y + B.h - 4, len = 40, down = c.unav ? 0 : 44;
+  const armCls = c.pressing ? ` class="fb-tap"` : "";
+  const armFill = dark ? "#2b2e32" : "#f6f7f8", armEdge = dark ? "#121314" : "#b9bfc5";
+  const tip = lay === "switchbot"
+    ? `<rect x="${px + len - 8}" y="${py - 4}" width="11" height="8" rx="4" fill="${dark ? "#1b1c1e" : "#dfe3e6"}" stroke="${armEdge}" stroke-width=".5"/>`
+    : `<rect x="${px + len - 5}" y="${py - 4.2}" width="8" height="8.4" rx="2.4" fill="#50545a"/><rect x="${px + len - 4.2}" y="${py - 3.4}" width="2.2" height="6.8" rx="1.1" fill="#7b8086"/>`;
+  const arm = `<g${armCls} style="transform-origin:${px}px ${py}px${c.held ? `;transform:rotate(${down}deg)` : ""}">
+<rect x="${px - 3.5}" y="${py - 3.5}" width="${len}" height="7" rx="3.5" fill="${armFill}" stroke="${armEdge}" stroke-width=".6"/>${tip}
+<circle cx="${px}" cy="${py}" r="4.2" fill="${dark ? "#1d1f22" : "#e7eaed"}" stroke="${armEdge}" stroke-width=".6"/><circle cx="${px}" cy="${py}" r="1.4" fill="${armEdge}"/></g>`;
+  // The plate and its rocker, the top half going down under the finger.
+  const plate = `<rect x="${P.x}" y="${P.y}" width="${P.w}" height="${P.h}" rx="9" fill="#000" opacity=".16" filter="url(#${bl})" transform="translate(2.5 3.5)"/>
+<rect x="${P.x}" y="${P.y}" width="${P.w}" height="${P.h}" rx="9" fill="url(#${pl})" stroke="#cdd2d6" stroke-width=".6"/>
+<rect x="${R.x}" y="${R.y}" width="${R.w}" height="${R.h}" rx="5" fill="url(#${rk})" stroke="#c2c7cc" stroke-width=".6"/>
+<path d="M${R.x + 1} ${R.y + R.h / 2} H${R.x + R.w - 1}" stroke="#d1d6da" stroke-width=".8"/>
+${c.held ? `<rect x="${R.x + .5}" y="${R.y + .5}" width="${R.w - 1}" height="${R.h / 2}" rx="4.5" fill="#000" opacity=".09"/>` : ""}
+${c.pressing ? `<rect class="fb-hit" x="${R.x + .5}" y="${R.y + .5}" width="${R.w - 1}" height="${R.h / 2}" rx="4.5" fill="#000" opacity="0"/>` : ""}`;
+  // The light: blue as it presses, red flashing when its battery runs low,
+  // green on charge.
+  const led = c.unav ? "" : c.pressing || c.held ? "#2196f3" : c.low ? "#e53935" : c.charging ? "#43a047" : "";
+  const ledX = B.x + B.w - 11, ledY = B.y + 10;
+  const ledEl = led ? `<circle${c.low && !c.pressing ? ` class="fb-blink"` : ""} cx="${ledX}" cy="${ledY}" r="1.8" fill="${led}"/><circle cx="${ledX}" cy="${ledY}" r="4" fill="${led}" opacity=".25"/>`
+    : `<circle cx="${ledX}" cy="${ledY}" r="1.4" fill="${dark ? "#55595e" : "#cfd4d8"}"/>`;
+  // The model's own marks: the Plus's touch pad and its ring on top, the
+  // Bot's round button and name, a seam on the first one.
+  const marks = lay === "switchbot"
+    ? `<circle cx="${B.x + 15}" cy="${B.y + 15}" r="6" fill="${pal[1]}" stroke="${pal[2]}" stroke-width=".7"/><circle cx="${B.x + 15}" cy="${B.y + 15}" r="3.2" fill="none" stroke="${pal[2]}" stroke-width=".5"/>
+<text x="${B.x + B.w / 2}" y="${B.y + B.h - 15}" font-size="5" text-anchor="middle" fill="${dark ? "#8b9096" : "#9aa1a8"}" ${NT_FONT}>SwitchBot</text>`
+    : lay === "plus"
+      ? `<ellipse cx="${B.x + B.w / 2 + 1.5}" cy="${B.y - 1.6}" rx="12" ry="2.4" fill="${dark ? "#2f3236" : "#f3f5f7"}" stroke="${c.touch ? "#29b6f6" : pal[2]}" stroke-width="${c.touch ? 1 : .5}"/>`
+      : `<path d="M${B.x + 5} ${B.y + B.h * .5} H${B.x + B.w - 5}" stroke="${pal[2]}" stroke-width=".5"/>`;
+  // The lead from its USB-C port while it charges, and its bolt.
+  const ly = B.y + B.h * .5;
+  const lead = c.charging || c.plugged ? `<path d="M${B.x + B.w + 5} ${ly} C${B.x + B.w + 16} ${ly} 116 30 117 -10" fill="none" stroke="#3a3d41" stroke-width="2.4" stroke-linecap="round"/>
+<rect x="${B.x + B.w}" y="${ly - 2.6}" width="6.5" height="5.2" rx="1.5" fill="#5d6166"/>
+${c.charging ? `<path class="fb-bolt" d="M106 16 l-6 9.5 h5 l-2.5 8.5 l7.5 -11 h-5 l2.5 -7z" fill="#fbc02d" stroke="#f57f17" stroke-width=".5"/>` : ""}` : "";
+  // Its battery, a small gauge in the corner.
+  const gauge = c.battery === null || c.battery === undefined || c.unav ? "" : `<g transform="translate(2 -6)"><rect width="16" height="8" rx="1.6" fill="none" stroke="${c.low ? "#e53935" : "#8d9399"}" stroke-width=".9"/><rect x="16.3" y="2.5" width="1.7" height="3" rx=".5" fill="${c.low ? "#e53935" : "#8d9399"}"/>
+<rect x="1.3" y="1.3" width="${cvF(13.4 * Math.max(0, Math.min(1, c.battery / 100)))}" height="5.4" rx=".9" fill="${c.low ? "#e53935" : c.charging ? "#43a047" : "#8d9399"}"/></g>`;
+  return `<defs>${ntV(g, pal[0], pal[1])}${ntV(sd, pal[1], pal[2])}${cvBlur(bl, 2.4)}${ntV(pl, "#ffffff", "#eceff1")}${ntV(rk, "#ffffff", "#e7eaed")}${cvBlur(cb, 1.8)}</defs>
+${plate}
+<rect x="${B.x + 2}" y="${B.y + 5}" width="${B.w}" height="${B.h}" rx="${B.r}" fill="#000" opacity=".24" filter="url(#${cb})"/>
+<rect x="${B.x + 3.5}" y="${B.y - 3.5}" width="${B.w}" height="${B.h}" rx="${B.r}" fill="url(#${sd})"/>
+<rect x="${B.x}" y="${B.y}" width="${B.w}" height="${B.h}" rx="${B.r}" fill="url(#${g})" stroke="${pal[2]}" stroke-width=".6"/>
+<path d="M${B.x + B.r} ${B.y + 1.3} H${B.x + B.w - B.r}" stroke="#fff" stroke-opacity="${dark ? .18 : .9}" stroke-width="1"/>
+${marks}${ledEl}${arm}${lead}${gauge}`;
+}
+const NT_DRAW = { fb_plus: ntFingerbot, fb_switchbot: ntFingerbot, fb_classic: ntFingerbot, ths_co2_eink: ntCo2Eink, ths_co2_box: ntCo2Box, ths_co2_netatmo: (c) => ntCo2Netatmo(c, false), ths_co2_netatmo_module: (c) => ntCo2Netatmo(c, true), cov_shutter: ntCovShutter, cov_blind: ntCovBlind, cov_venetian: (c) => ntCovVenetian(c, false), cov_raffstore: (c) => ntCovVenetian(c, true), cov_pergola: ntCovPergola, cov_awning: ntCovAwning, pellet_grill: ntPelletGrill, ths_disc: ntThsDisc, ths_square: ntThsSquare, ths_cushion: ntThsCushion, ths_stick: ntThsStick, ths_lcd_stand: ntThsLcdStand, ths_lcd_probe: ntThsLcdProbe, ths_lcd_round: ntThsLcdRound, dryer: ntFilamentDryer, humidifier: ntHumidifier, circulator: ntCirculator, irr_sprinkler: ntIrrSprinkler, irr_tap: ntIrrTap, irr_drip: ntIrrDrip, irr_flowers: ntIrrFlowers, lit_globe: ntLitterGlobe, lit_box: ntLitterBox, det_smoke: ntDetSmoke, det_co: ntDetCo, det_leak: ntDetLeak, spk_smart: ntSpkSmart, spk_homepod_mini: ntSpkMini, spk_sonos_one: ntSpkOne, spk_bookshelf: ntSpkShelf, spk_sonos_move: ntSpkMove, spk_soundbar: ntSpkBar, spk_echo_dot: ntSpkDot, spk_echo_dot_max: ntSpkDotMax, spk_nest_mini: ntSpkNest, spk_sonos_era100: ntSpkEra100, spk_sonos_era300: ntSpkEra300, spk_bose_wave: ntSpkWave, spk_bose_500: ntSpkBose500, spk_bose_soundlink: ntSpkFlex, spk_bose_soundbar: ntSpkBoseBar, spk_sonos_five: ntSpkFive, spk_sonos_play: ntSpkPlay, spk_sonos_roam: ntSpkRoam, spk_sonos_ray: ntSpkRay, spk_sonos_amp: ntSpkAmp, spk_sonos_port: ntSpkPort, spk_bose_ultra: ntSpkBoseUltra, spk_bose_portable: ntSpkBosePortable, spk_bose_amp: ntSpkBoseAmp, str_apple_tv: (c) => strZoom(strAppleTv(c), 54, 1.45), str_fire_tv_cube: strFireCube, str_fire_tv_stick: (c) => strStick(c, true), str_google_tv_streamer: strGoogleStreamer, str_chromecast: strChromecast, str_shield: strShield, str_shield_pro: strShieldPro, str_roku: strRoku, str_mi_box: strMiBox, str_freebox: strFreebox, str_decoder: strDecoder, str_box: strBox, str_stick: (c) => strStick(c, false), con_ps1: conPs1, con_ps2: conPs2, con_ps3: conPs3, con_ps4: (c) => conPs4(c, false), con_ps4_pro: (c) => conPs4(c, true), con_ps5: conPs5, con_xbox: conXbox, con_xbox_360: conX360, con_xbox_one: conXone, con_xbox_series_x: conXsx, con_xbox_series_s: conXss, con_switch: (c) => conSwitch(c, false), con_switch_2: (c) => conSwitch(c, true), con_switch_lite: conSwitchLite, con_ps_vita: conVita, con_nes: conNes, con_snes: conSnes, con_n64: conN64, con_gamecube: conGamecube, con_wii: conWii, con_megadrive: conMegadrive, tank: ntTank, fws: ntFresh, solth: ntSolarThermal, wood: ntWoodStove, mob_scooter: mobScooter, mob_offroad: mobOffroad, mob_ebike: mobEbike, mob_gyropode: mobGyropode, mob_motorcycle: mobMotorcycle, meter_box: ntMeterBox, meter_dome: ntMeterDome, meter_gas: ntGas, meter_water: ntWater, booster: ntBooster, sump: ntSump, pool: ntPoolRobot, floor: ntFloor, spa: ntSpa, sauna: ntSauna, aquarium: ntAquarium, linky: ntLinky, tree: ntTree };
 // The card's colour on a drawing made after a real product: its shell, the
 // greys, blacks and whites it is drawn in, takes the colour, lightest to
 // darkest as before; what has a colour of its own (a screen's glow, a
@@ -4184,6 +4262,10 @@ const NT_CSS = `
         .cv-arrow{animation:cv-blink 1s ease-in-out infinite}@keyframes cv-blink{0%,100%{opacity:.35}50%{opacity:1}}
         .cv-sway{animation:cv-sway 1.8s ease-in-out infinite;transform-origin:60px 14px}@keyframes cv-sway{0%,100%{transform:skewX(0)}50%{transform:skewX(.6deg)}}
         .co2-pulse{animation:co2-pulse 1.6s ease-in-out infinite}@keyframes co2-pulse{0%,100%{opacity:.45}50%{opacity:1}}
+        .fb-tap{animation:fb-tap 1.4s ease-in-out infinite}@keyframes fb-tap{0%,12%,100%{transform:rotate(0deg)}34%,56%{transform:rotate(44deg)}}
+        .fb-hit{animation:fb-hit 1.4s ease-in-out infinite}@keyframes fb-hit{0%,30%,62%,100%{opacity:0}36%,54%{opacity:.1}}
+        .fb-blink{animation:fb-blink 1s steps(2) infinite}@keyframes fb-blink{50%{opacity:.15}}
+        .fb-bolt{animation:fb-bolt 1.6s ease-in-out infinite}@keyframes fb-bolt{0%,100%{opacity:.4}50%{opacity:1}}
         svg.nt-svg{position:absolute;left:0;top:0;width:96px;height:108px;overflow:visible}
         .ntfd-h{fill:none;stroke:#ff6d00;stroke-width:1.8;stroke-linecap:round;opacity:0;animation:ntfd-heat 2.4s ease-in-out infinite;animation-delay:calc(var(--d0,0s) + var(--anim-offset,0s))}
         @keyframes ntfd-heat{0%{opacity:0;transform:translateY(4px)}40%{opacity:1}100%{opacity:0;transform:translateY(-7px)}}
@@ -4351,16 +4433,17 @@ function ntReadOf(type, hass, cfg, st, watts, threshold) {
   // can call the card offline: a CO alarm shows even when the smoke one is out.
   const detCo = type === "detector" && !!cfg.co_entity && detectorLayoutOf(cfg, st) === "smoke" && detAlarmOf(String((stateObj(hass, cfg.co_entity) || {}).state || "").trim().toLowerCase());
   // A detector's none is all clear (Shelly Gas), not a missing value.
-  const unav = !detCo && running === null && !(type === "meter" && !dead) && !(type === "detector" && st && raw === "none");
+  const unav = type === "fingerbot" ? !st || raw === "unavailable"
+    : !detCo && running === null && !(type === "meter" && !dead) && !(type === "detector" && st && raw === "none");
   const tmp = ntTemp(hass, cfg, st);
   const out = (mode, labelKey, color, draw) => ({ mode, label: t(hass, labelKey), color, lines, draw: { ...draw, unav } });
   if (unav) {
     const ml = meterLayoutOf(cfg, st);
     const kinds = { pellet_grill: "pellet_grill", filament_dryer: "dryer", humidifier: "humidifier", water_pump: pumpLayoutOf(cfg, st), floor_heating: "floor", spa: "spa", sauna: "sauna", aquarium: "aquarium", meter: ml === "linky" ? "linky" : `meter_${ml}`, christmas_tree: "tree", mobility: `mob_${mobilityLayoutOf(cfg, st)}`,
-      irrigation: `irr_${irrigationLayoutOf(cfg, st)}`, litter_box: `lit_${litterLayoutOf(cfg, st)}`, detector: `det_${detectorLayoutOf(cfg, st)}`, speaker: `spk_${speakerLayoutOf(cfg, st)}`, console: `con_${consoleLayoutOf(cfg, st)}`, streamer: `str_${streamerLayoutOf(cfg, st)}`, climate_sensor: `ths_${thsLayoutOf(cfg, st)}`, cover: `cov_${coverLayoutOf(cfg, st)}` };
+      irrigation: `irr_${irrigationLayoutOf(cfg, st)}`, litter_box: `lit_${litterLayoutOf(cfg, st)}`, detector: `det_${detectorLayoutOf(cfg, st)}`, fingerbot: `fb_${fingerbotLayoutOf(cfg, st)}`, speaker: `spk_${speakerLayoutOf(cfg, st)}`, console: `con_${consoleLayoutOf(cfg, st)}`, streamer: `str_${streamerLayoutOf(cfg, st)}`, climate_sensor: `ths_${thsLayoutOf(cfg, st)}`, cover: `cov_${coverLayoutOf(cfg, st)}` };
     return out("unav", "ev_offline", NT_COLORS.unav, { kind: kinds[type], on: false, electric: floorLayoutOf(cfg) === "electric", model: type === "water_pump" ? circModelOf(cfg, st) : "",
       palette: cfg.tree_palette, ...(type === "pellet_grill" ? { layout: grillLayoutOf(cfg, st) } : {}), ...(type === "filament_dryer" ? fdLook(cfg) : {}), presents: type === "christmas_tree" && treePresents(cfg), color: type === "speaker" ? speakerColorOf(cfg, st) : type === "cover" ? cvColor(cfg.cover_color, COVER_COLORS) : "",
-      ...(type === "cover" ? { p: 100, tilt: 60, fabric: cvColor(cfg.fabric_color, FABRIC_COLORS), stripes: cfg.fabric_stripes !== false } : {}), ...(type === "climate_sensor" ? { co2: null, body: cfg.netatmo_color } : {}) });
+      ...(type === "cover" ? { p: 100, tilt: 60, fabric: cvColor(cfg.fabric_color, FABRIC_COLORS), stripes: cfg.fabric_stripes !== false } : {}), ...(type === "climate_sensor" ? { co2: null, body: cfg.netatmo_color } : {}), ...(type === "fingerbot" ? { layout: fingerbotLayoutOf(cfg, st), body: cfg.fingerbot_color } : {}) });
   }
   if (type === "pellet_grill") {
     const dead2 = (s) => !s || ["unavailable", "unknown", "none", ""].includes(String(s.state).trim().toLowerCase());
@@ -4489,6 +4572,59 @@ function ntReadOf(type, hass, cfg, st, watts, threshold) {
     const draw = { kind, on: mode === "cleaning", st: mode, cat: mode === "cat" || (cat && mode !== "cleaning"), drawer };
     const map = { cleaning: ["lit_cleaning", NT_COLORS.run], cat: ["lit_cat", "#fb8c00"], full: ["lit_full", NT_COLORS.alarm], fault: ["lit_fault", NT_COLORS.alarm], off: ["lit_sleep", NT_COLORS.off], ready: ["lit_ready", NT_COLORS.lit] };
     return out(mode, map[mode][0], map[mode][1], draw);
+  }
+  if (type === "fingerbot") {
+    // A finger bot (HACF #163): pressing (its switch flipped on, its button
+    // pressed a moment ago), held down in switch mode, charging on its plug,
+    // its battery running low, or ready.
+    const a = (st && st.attributes) || {};
+    const layout = fingerbotLayoutOf(cfg, st);
+    const dom = domainOf(cfg.state_entity);
+    const ms = cfg.bot_mode_entity ? stateObj(hass, cfg.bot_mode_entity) : null;
+    const modeRaw = ms && !HA_OFFLINE_STATES.includes(String(ms.state).toLowerCase()) ? String(ms.state).trim().toLowerCase() : "";
+    // SwitchBot says its mode in an attribute, Tuya and Zigbee2MQTT in a select.
+    const switchMode = /switch|toggle|interrupt|schalter/.test(modeRaw) || (!modeRaw && a.switch_mode === true);
+    const on = NT_ON.includes(raw);
+    // A press shows for a moment: a button's state is the time it was last
+    // pressed, and a switch in click mode drops back by itself, unless it
+    // stays on, when the card settles back after a while.
+    const pressedAt = ["button", "input_button"].includes(dom) ? Date.parse(String(st && st.state)) : NaN;
+    const pressUntil = switchMode ? 0 : Number.isFinite(pressedAt) ? pressedAt + FB_PRESS_MS : on ? (Date.parse((st && st.last_changed) || "") || Date.now()) + FB_CLICK_MS : 0;
+    // A clock a little ahead never makes a press last longer than it can.
+    const pressing = Number.isFinite(pressUntil) && pressUntil > Date.now() && pressUntil - Date.now() <= FB_CLICK_MS + 1000;
+    const held = switchMode && on;
+    const bv = cfg.battery_entity ? numericState(hass, cfg.battery_entity) : numberOrNull(a.battery_level !== undefined ? a.battery_level : a.battery);
+    const low = bv !== null && bv <= 20;
+    const plugged = !!cfg.plug_entity && ntOnOff(hass, cfg.plug_entity);
+    const charging = cfg.charging_entity ? ntOnOff(hass, cfg.charging_entity) || /^charg/.test(String((stateObj(hass, cfg.charging_entity) || {}).state || "").toLowerCase())
+      : cfg.power_entity && watts !== null ? watts >= FB_CHARGE_W : plugged && (bv === null || bv < 100);
+    const ts = cfg.touch_entity ? stateObj(hass, cfg.touch_entity) : null;
+    if (bv !== null) {
+      const bl = ntLine(hass, cfg, "fb_battery", low ? "mdi:battery-alert-variant-outline" : charging ? "mdi:battery-charging" : "mdi:battery", "section_battery", cfg.battery_entity);
+      lines.push(bl ? { ...bl, caution: low } : { key: "fb_battery", icon: low ? "mdi:battery-alert-variant-outline" : "mdi:battery", label: t(hass, "section_battery"), value: `${Math.round(bv)} %`, entity: cfg.state_entity, caution: low });
+    }
+    if (modeRaw) {
+      const word = /switch|toggle|interrupt|schalter/.test(modeRaw) ? "fb_m_switch" : /prog/.test(modeRaw) ? "fb_m_program" : /click|press|push|appui/.test(modeRaw) ? "fb_m_click" : "";
+      const ml = ntLine(hass, cfg, "fb_mode", "mdi:gesture-tap-button", "fb_mode", cfg.bot_mode_entity);
+      if (ml) lines.push(word ? { ...ml, value: t(hass, word) } : ml);
+    }
+    if (Number.isFinite(pressedAt)) lines.push({ key: "fb_last", icon: "mdi:gesture-tap", label: t(hass, "fb_last"), value: keepTogether(feedTime(hass, pressedAt)), entity: cfg.state_entity });
+    for (const [key, icon, id] of [["fb_lower", "mdi:arrow-collapse-down", cfg.lower_entity], ["fb_upper", "mdi:arrow-collapse-up", cfg.upper_entity], ["fb_sustain", "mdi:timer-outline", cfg.sustain_entity]]) {
+      const l = ntLine(hass, cfg, key, icon, key, id);
+      if (l) lines.push(l);
+    }
+    for (const [key, icon, id] of [["fb_reverse", "mdi:swap-vertical", cfg.reverse_entity], ["fb_touch", "mdi:gesture-tap", cfg.touch_entity]]) {
+      const l = ntLine(hass, cfg, key, icon, key, id);
+      if (l && ["on", "off"].includes(String(stateObj(hass, id).state).toLowerCase())) lines.push({ ...l, value: t(hass, ntOnOff(hass, id) ? "fb_yes" : "fb_no") });
+      else if (l) lines.push(l);
+    }
+    const draw = { kind: `fb_${layout}`, on: pressing, pressing, pressUntil: pressing ? pressUntil : 0, held, charging, plugged: plugged || charging, low, battery: bv, layout, body: cfg.fingerbot_color === "black" || (!cfg.fingerbot_color && layout === "switchbot" && /black|noir|schwarz/.test(stHay(st).toLowerCase())) ? "black" : "white",
+      touch: !!ts && ntOnOff(hass, cfg.touch_entity) };
+    if (pressing) return out("run", "fb_pressing", NT_COLORS.run, draw);
+    if (held) return out("on", "fb_held", NT_COLORS.run, draw);
+    if (charging) return out("on", bv !== null && bv >= 100 ? "fb_charged" : "fb_charging", NT_COLORS.lit, draw);
+    if (low) return { ...out("ok", "fb_low", "#ef6c00", draw) };
+    return out("ok", switchMode ? "fb_released" : "fb_ready", NT_COLORS.idle, draw);
   }
   if (type === "detector") {
     // On is an alarm: smoke, CO or water, as its device class or its drawing
@@ -4978,13 +5114,27 @@ function ntReadOf(type, hass, cfg, st, watts, threshold) {
 function ntControls(hass, cfg, type) {
   const out = [];
   const st = stateObj(hass, cfg.state_entity);
-  if (st && !cfg.toggle_entity && type !== "meter" && (["light", "switch", "input_boolean", "valve"].includes(domainOf(cfg.state_entity)) || (type === "humidifier" && domainOf(cfg.state_entity) === "humidifier"))) {
+  if (st && !cfg.toggle_entity && type !== "meter" && type !== "fingerbot" && (["light", "switch", "input_boolean", "valve"].includes(domainOf(cfg.state_entity)) || (type === "humidifier" && domainOf(cfg.state_entity) === "humidifier"))) {
     out.push({ key: "toggle", entity: cfg.state_entity, icon: type === "christmas_tree" ? "mdi:pine-tree" : type === "aquarium" ? "mdi:lightbulb" : type === "mobility" ? "mdi:power-plug" : "mdi:power", label: t(hass, "toggle"),
       on: ["on", "open", "opening"].includes(String(st.state).toLowerCase()) });
   }
   if (type === "speaker" && st && ["playing", "paused", "buffering", "idle", "on"].includes(String(st.state).toLowerCase())) {
     const playing = ["playing", "buffering"].includes(String(st.state).toLowerCase());
     out.push({ key: "play_pause", entity: cfg.state_entity, icon: playing ? "mdi:pause" : "mdi:play", label: t(hass, "play_pause"), on: playing, service: "media_play_pause" });
+  }
+  // A finger bot's press (HACF #163): a press on a button, on in click mode
+  // (it lifts its arm by itself), on and off in switch mode. And the plug
+  // that charges it, when it has one.
+  if (type === "fingerbot" && st) {
+    const dom = domainOf(cfg.state_entity), raw = String(st.state).toLowerCase();
+    const ms = cfg.bot_mode_entity ? String((stateObj(hass, cfg.bot_mode_entity) || {}).state || "").toLowerCase() : "";
+    const switchMode = /switch|toggle|interrupt|schalter/.test(ms) || (!ms && (st.attributes || {}).switch_mode === true);
+    if (["button", "input_button", "script"].includes(dom)) out.push({ key: "fb_press", entity: cfg.state_entity, icon: "mdi:gesture-tap-button", label: t(hass, "fb_press") });
+    else if (["switch", "input_boolean"].includes(dom)) out.push({ key: "fb_press", entity: cfg.state_entity, icon: switchMode ? "mdi:power" : "mdi:gesture-tap-button", label: t(hass, switchMode ? "toggle" : "fb_press"),
+      on: switchMode && NT_ON.includes(raw), ...(switchMode ? {} : { service: "turn_on" }) });
+    if (cfg.plug_entity && stateObj(hass, cfg.plug_entity) && ["switch", "input_boolean"].includes(domainOf(cfg.plug_entity))) {
+      out.push({ key: "fb_plug", entity: cfg.plug_entity, icon: "mdi:power-plug-battery", label: t(hass, "fb_charge"), on: ntOnOff(hass, cfg.plug_entity) });
+    }
   }
   // A cover's three buttons (#109): its own services, the tilt ones for a
   // pergola that only turns its louvers, only those its features list. An

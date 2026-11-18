@@ -22,7 +22,7 @@ Une card Lovelace qui dessine les appareils de la maison et les anime selon leur
 
 ## Fonctionnalités
 
-- **67 types d'appareils, plus de 170 modèles dessinés**, animés pendant qu'ils travaillent et figés à l'arrêt. Le type est reconnu tout seul, d'après l'entité et la marque et le modèle de son appareil, ou choisi avec `appliance_type`.
+- **68 types d'appareils, plus de 170 modèles dessinés**, animés pendant qu'ils travaillent et figés à l'arrêt. Le type est reconnu tout seul, d'après l'entité et la marque et le modèle de son appareil, ou choisi avec `appliance_type`.
 - **Toutes les intégrations** : chaque champ est une entité à choisir. Une simple prise connectée suffit, sa puissance dit si l'appareil chauffe, lave ou essore.
 - **L'état compris** : `Idle`, `RUNNING`, `En marche`… deviennent veille, en cours, pause, terminé, différé ou erreur, avec l'étape du cycle (lavage, rinçage, essorage…).
 - **Ce qui compte pour chaque appareil** : programme, temps restant, porte, alertes, niveaux, températures, énergie et coût, marche du jour.
@@ -286,7 +286,7 @@ Seule `state_entity` est obligatoire, sauf sur un réfrigérateur où une sonde 
 | `done_alert` | `true` fait pulser un badge vert sur le dessin en fin de cycle, jusqu'à l'ouverture de la porte ou un appui sur le badge. Pour les appareils à cycle (lave-linge, sèche-linge, lave-vaisselle, four…). |
 | `illustration_color` | `auto` (défaut, suit le thème) \| `white` \| `grey` \| `black` \| `red` (rouge foncé). Ne change que la carrosserie, pas les couleurs d'état. Un dessin fait d'après un vrai produit (console, boîtier de streaming, imprimante, litière…) garde ses vraies couleurs tant qu'aucune couleur n'est choisie ; son écran, la tuile de l'appli et ses pneus gardent les leurs. Les scènes autour d'un appareil (fosse de relevage, jardin, toit) et la lumière des lampes ne changent pas. |
 | `language` | `auto` (défaut, suit Home Assistant) ou l'un des 16 codes : `en`, `fr`, `de`, `es`, `it`, `nl`, `pt`, `sv`, `no`, `da`, `pl`, `ru`, `zh`, `cs`, `hu`, `zh-Hant`. `nb` et `nb-NO` donnent le norvégien. `zh` est le chinois simplifié ; `zh-Hant`, `zh-TW` et `zh-HK` donnent le chinois traditionnel. |
-| `appliance_type` | `auto` (défaut) \| `washer` \| `dryer` \| `dishwasher` \| `oven` \| `microwave` \| `hood` \| `cooktop` \| `fridge` \| `kettle` \| `cooker` \| `coffee` \| `rice_cooker` \| `air_fryer` \| `pellet_grill` \| `water_heater` \| `boiler` \| `thermostat` \| `heat_pump` \| `printer_3d` \| `filament_dryer` \| `pet_feeder` \| `pet_fountain` \| `iron` \| `toaster` \| `pellet_stove` \| `air_conditioner` \| `dehumidifier` \| `humidifier` \| `space_heater` \| `towel_warmer` \| `air_purifier` \| `fan` \| `ev_charger` \| `hair_dryer` \| `screen` \| `network` \| `robot` \| `pool_pump` \| `scale` \| `ups` \| `solar` \| `home_battery` \| `camera` \| `diffuser` \| `hrv` \| `lamp` \| `mailbox` \| `water_pump` \| `floor_heating` \| `spa` \| `sauna` \| `aquarium` \| `meter` \| `christmas_tree` \| `mobility` \| `irrigation` \| `litter_box` \| `detector` \| `speaker` \| `console` \| `streamer` \| `climate_sensor` \| `cover` \| `storage_tank` \| `fresh_water_station` \| `solar_thermal` \| `wood_stove`. |
+| `appliance_type` | `auto` (défaut) \| `washer` \| `dryer` \| `dishwasher` \| `oven` \| `microwave` \| `hood` \| `cooktop` \| `fridge` \| `kettle` \| `cooker` \| `coffee` \| `rice_cooker` \| `air_fryer` \| `pellet_grill` \| `water_heater` \| `boiler` \| `thermostat` \| `heat_pump` \| `printer_3d` \| `filament_dryer` \| `pet_feeder` \| `pet_fountain` \| `iron` \| `toaster` \| `pellet_stove` \| `air_conditioner` \| `dehumidifier` \| `humidifier` \| `space_heater` \| `towel_warmer` \| `air_purifier` \| `fan` \| `ev_charger` \| `hair_dryer` \| `screen` \| `network` \| `robot` \| `pool_pump` \| `scale` \| `ups` \| `solar` \| `home_battery` \| `camera` \| `diffuser` \| `hrv` \| `lamp` \| `mailbox` \| `water_pump` \| `floor_heating` \| `spa` \| `sauna` \| `aquarium` \| `meter` \| `christmas_tree` \| `mobility` \| `irrigation` \| `litter_box` \| `detector` \| `speaker` \| `console` \| `streamer` \| `climate_sensor` \| `cover` \| `fingerbot` \| `storage_tank` \| `fresh_water_station` \| `solar_thermal` \| `wood_stove`. |
 | `tap_action` | Ce que fait un appui sur la carte, dans les mots de Home Assistant : `more-info` (défaut : l'entité d'état, ou sur une carte sans elle ce qu'elle lit à sa place), `none`, `navigate`, `url`, `toggle`, `perform-action` ou `fire-dom-event`, celle qu'écoutent les cartes popup bâties sur browser_mod. En YAML seulement. |
 | `illustration_tap_action` | Un appui sur le dessin seul, le reste de la carte gardant `tap_action` : `toggle` (une lampe allumée en la touchant), `more-info`, `none`, ou n'importe quelle action de Home Assistant. Sans lui, le dessin fait comme la carte. Avec `toggle`, le dessin répond comme les boutons, selon `controls_activation` : un appui, deux appuis ou un appui long. |
 | `show_toggle` | `false` retire le bouton allumer / éteindre d'une lampe, pour une carte qu'on allume en touchant son dessin (`illustration_tap_action: toggle`). |
@@ -1529,6 +1529,14 @@ disk2_entity: sensor.nas_drive_2_status
 | `fabric_color` | volet | La toile d'un store enrouleur ou d'un store banne : `ecru` \| `linen` \| `grey` \| `anthracite` \| `blue` \| `petrol` \| `terracotta` \| `green`, ou `#rrggbb`. |
 | `fabric_stripes` | volet | Store banne : toile rayée (défaut) ou unie (`false`). |
 | `light_entity` | volet | La lumière sous une pergola : allumée, un halo descend de sous les poutres et éclaire la terrasse, à la couleur de l'ampoule. Une ligne et un bouton. |
+| `state_entity` d'un pousse-bouton | pousse-bouton | Son interrupteur (Fingerbot sur Zigbee2MQTT, ZHA, Tuya, Tuya BLE, LocalTuya ; Bot de SwitchBot) ou son bouton (SwitchBot Cloud, un Bot en mode appui). En mode appui le bras appuie puis remonte (*Appui*), en mode interrupteur il reste baissé tant qu'il est allumé (*Enfoncé*, *Relâché*). Un bouton affiche *Appui* quelques secondes après un appui, puis une ligne *Dernier appui*. |
+| `fingerbot_layout` | pousse-bouton | `plus` (Fingerbot Plus : Tuya, Adaprox, MOES, Zemismart, son pavé tactile sur le dessus) \| `switchbot` (SwitchBot Bot) \| `classic` (le premier Fingerbot, plus fin). Sans lui, un nom avec SwitchBot ou `bot` dessine le Bot, Adaprox sans Plus le premier modèle, le reste le Plus. |
+| `fingerbot_color` | pousse-bouton | `white` (par défaut) \| `black`, pour le SwitchBot Bot noir. |
+| `bot_mode_entity` | pousse-bouton | Son mode : le select de Zigbee2MQTT et de Tuya BLE (`click`, `switch`, `program`), en ligne. L'attribut `switch_mode` de SwitchBot est lu sans lui. |
+| `lower_entity` / `upper_entity` / `sustain_entity` | pousse-bouton | Ses courses basse et haute et sa durée d'appui, en lignes. |
+| `reverse_entity` / `touch_entity` | pousse-bouton | Ses interrupteurs sens inversé et tactile, en lignes *Oui* / *Non* ; l'anneau du pavé tactile s'allume en bleu quand le tactile est actif. |
+| `plug_entity` / `power_entity` / `charging_entity` | pousse-bouton | Ce qui le recharge : l'interrupteur de la prise (un bouton *Charge*), sa puissance (*En charge* à partir de 0,5 W, *Chargé* à 100 %) ou un capteur de charge. Avec la prise seule, allumée veut dire en charge jusqu'à ce que la batterie lise 100 %. Le câble USB-C et un éclair sont dessinés pendant la charge. |
+| `battery_entity` | pousse-bouton | Sa batterie, en ligne et en jauge dans le coin ; à 20 % ou moins, *Batterie faible* et sa lumière clignote en rouge. Un attribut `battery_level` est lu sans lui. |
 | `humidity_entity` / `battery_entity` | capteur de température | L'humidité et la pile, en lignes et sur l'écran des modèles qui en ont un. La ligne de pile passe à l'orange à 20 % ou moins. |
 | `spots` | lampe | Le nombre de spots dessinés, de 1 à 4. Sans réglage, un groupe de lumières dessine un spot par lumière, jusqu'à quatre. |
 | `timer_entity` | lampe | Un `select` de durées (un minuteur d'extinction) : une pastille qui montre celle choisie et ouvre la liste. |
@@ -1724,6 +1732,39 @@ appliance_type: cover
 state_entity: cover.pergola
 cover_layout: pergola
 light_entity: light.pergola
+```
+
+Un pousse-bouton, le petit boîtier collé à côté d'un bouton qu'il appuie, est un `fingerbot`. Les plus répandus, et ce qui les amène dans Home Assistant :
+
+- **Fingerbot et Fingerbot Plus** (Tuya, vendus sous Adaprox, MOES, Zemismart et bien d'autres) : Zigbee avec [Zigbee2MQTT](https://www.zigbee2mqtt.io/devices/TS0001_fingerbot.html) ou [ZHA](https://www.home-assistant.io/integrations/zha/), Bluetooth avec [Tuya BLE](https://github.com/PlusPlus-ua/ha_tuya_ble), ou via une passerelle Tuya avec [Tuya](https://www.home-assistant.io/integrations/tuya/) ou [LocalTuya](https://github.com/xZetsubou/hass-localtuya).
+- **SwitchBot Bot** : [SwitchBot Bluetooth](https://www.home-assistant.io/integrations/switchbot/) ou [SwitchBot Cloud](https://www.home-assistant.io/integrations/switchbot_cloud/).
+- **N'importe quelle prise connectée** qui le recharge : son interrupteur en `plug_entity`, sa puissance en `power_entity`, pour *En charge* et un bouton *Charge*.
+
+L'éditeur remplit le mode, les courses, la durée d'appui, les interrupteurs et la batterie depuis l'appareil du pousse-bouton. Un Fingerbot Plus sur Zigbee2MQTT, rechargé par une prise :
+
+```yaml
+type: custom:ha-appliance-card
+appliance_type: fingerbot
+name: Télécommande portail
+state_entity: switch.fingerbot_portail
+bot_mode_entity: select.fingerbot_portail_mode
+battery_entity: sensor.fingerbot_portail_battery
+lower_entity: number.fingerbot_portail_lower
+upper_entity: number.fingerbot_portail_upper
+sustain_entity: number.fingerbot_portail_delay
+reverse_entity: switch.fingerbot_portail_reverse
+touch_entity: switch.fingerbot_portail_touch
+plug_entity: switch.prise_fingerbot
+power_entity: sensor.prise_fingerbot_power
+```
+
+Un SwitchBot Bot, noir :
+
+```yaml
+type: custom:ha-appliance-card
+appliance_type: fingerbot
+state_entity: switch.bot_7c1a
+fingerbot_color: black
 ```
 
 Une enceinte est un lecteur multimédia :

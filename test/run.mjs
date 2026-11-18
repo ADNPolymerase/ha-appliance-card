@@ -12855,6 +12855,73 @@ function tvT(w) { return { 'switch.tv': { state: 'on', attributes: {} }, 'sensor
   check('editeur console : le modele et le jeu', ['"console_layout"', 'value="megadrive"', 'data-toggle="game_entity"', 'data-toggle="playtime_entity"'].every((f) => ed({ appliance_type: 'console', state_entity: 'media_player.p' }).includes(f)), true);
 }
 
+// A finger bot (HACF #163): Fingerbot Plus on Zigbee2MQTT, SwitchBot's Bot,
+// the first Fingerbot; a press, held down in switch mode, charging on its
+// plug, a low battery, offline.
+{
+  const s = (state, attributes = {}, last_changed) => ({ state: String(state), attributes, ...(last_changed ? { last_changed } : {}) });
+  const kindOf = (h) => (h.match(/class="machine [^"]*\bnt-k-([a-z0-9_]+)/) || [])[1];
+  const ents = (sw, mode = 'click', bat = 84, plug = 'off', watts = 0, sw_at) => ({
+    'switch.fb': s(sw, {}, sw_at || new Date(Date.now()).toISOString()), 'select.fb_mode': s(mode), 'sensor.fb_bat': s(bat, { unit_of_measurement: '%', device_class: 'battery' }),
+    'number.fb_lower': s(58, { unit_of_measurement: '%' }), 'number.fb_upper': s(0, { unit_of_measurement: '%' }), 'number.fb_delay': s(0, { unit_of_measurement: 's' }),
+    'switch.fb_reverse': s('off'), 'switch.fb_touch': s('on'), 'switch.fb_plug': s(plug), 'sensor.fb_plug_power': s(watts, { unit_of_measurement: 'W' }) });
+  const C = { appliance_type: 'fingerbot', state_entity: 'switch.fb', bot_mode_entity: 'select.fb_mode', battery_entity: 'sensor.fb_bat', lower_entity: 'number.fb_lower',
+    upper_entity: 'number.fb_upper', sustain_entity: 'number.fb_delay', reverse_entity: 'switch.fb_reverse', touch_entity: 'switch.fb_touch', plug_entity: 'switch.fb_plug', power_entity: 'sensor.fb_plug_power' };
+  const F = (...a) => render(C, ents(...a));
+  check('fingerbot : pret', stateLine(F('off')), 'Ready');
+  check('fingerbot : Plus par defaut', kindOf(F('off')), 'fb_plus');
+  check('fingerbot : un appui en mode clic', stateLine(F('on')), 'Pressing');
+  check('fingerbot : le bras appuie', /class="fb-tap"/.test(F('on')) && /nt-on/.test(machineCls(F('on'))), true);
+  check('fingerbot : un clic reste allume trop longtemps, la carte se pose', stateLine(F('on', 'click', 84, 'off', 0, new Date(Date.now() - 60000).toISOString())), 'Ready');
+  check('fingerbot : en mode interrupteur, enfonce', stateLine(F('on', 'switch')), 'Held down');
+  check('fingerbot : enfonce, le bras reste baisse', /transform:rotate\(44deg\)/.test(F('on', 'switch')), true);
+  check('fingerbot : en mode interrupteur, relache', stateLine(F('off', 'switch')), 'Released');
+  check('fingerbot : en charge sur la prise', stateLine(F('off', 'click', 40, 'on', 2.1)), 'Charging');
+  check('fingerbot : le cable et l eclair en charge', /class="fb-bolt"/.test(F('off', 'click', 40, 'on', 2.1)), true);
+  check('fingerbot : prise allumee mais 0 W, pas en charge', stateLine(F('off', 'click', 40, 'on', 0)), 'Ready');
+  check('fingerbot : batterie faible', stateLine(F('off', 'click', 12)), 'Low battery');
+  check('fingerbot : la LED clignote batterie faible', /class="fb-blink"/.test(F('off', 'click', 12)), true);
+  check('fingerbot : lignes', ['Mode', 'Down position', 'Up position', 'Hold time', 'Reversed', 'Touch button'].map((l) => infoLine(F('off'), l)).join('|').replace(/\u00a0/g, ' '), 'Press|58 %|0 %|0 s|No|Yes');
+  check('fingerbot : mode interrupteur traduit', infoLine(F('off', 'switch'), 'Mode'), 'Switch');
+  check('fingerbot : bouton appuyer en turn_on', /data-entity="switch\.fb" data-service="turn_on"/.test(F('off')), true);
+  check('fingerbot : en mode interrupteur, un vrai interrupteur', /data-entity="switch\.fb" data-service/.test(F('off', 'switch')), false);
+  check('fingerbot : le bouton de charge', /data-entity="switch\.fb_plug"/.test(F('off')), true);
+  check('fingerbot : pas le bouton marche generique en double', (F('off').match(/data-entity="switch\.fb"/g) || []).length, 1);
+  check('fingerbot : hors ligne', stateLine(render(C, { ...ents('off'), 'switch.fb': s('unavailable') })), 'Offline');
+  {
+    // SwitchBot's Bot through Home Assistant's own integration: a switch with
+    // switch_mode, its name; a button for a press, its time.
+    const sb = render({ appliance_type: 'fingerbot', state_entity: 'switch.bot_a1b2' }, { 'switch.bot_a1b2': s('off', { switch_mode: false }) });
+    check('switchbot : par son nom', kindOf(sb), 'fb_switchbot');
+    check('switchbot : switch_mode vrai, enfonce', stateLine(render({ appliance_type: 'fingerbot', state_entity: 'switch.bot_a1b2' }, { 'switch.bot_a1b2': s('on', { switch_mode: true }) })), 'Held down');
+    const btn = (at) => render({ appliance_type: 'fingerbot', state_entity: 'button.bot_c3', battery_entity: 'sensor.b' }, { 'button.bot_c3': s(at), 'sensor.b': s(76, { unit_of_measurement: '%' }) });
+    check('bouton : appuye a l instant', stateLine(btn(new Date(Date.now()).toISOString())), 'Pressing');
+    check('bouton : appuye il y a une heure', stateLine(btn(new Date(Date.now() - 3600e3).toISOString())), 'Ready');
+    check('bouton : jamais appuye, pas hors ligne', stateLine(btn('unknown')), 'Ready');
+    check('bouton : le dernier appui', infoLine(btn(new Date(Date.now() - 3600e3).toISOString()), 'Last press') !== null, true);
+    check('bouton : appuyer', /data-entity="button\.bot_c3"/.test(btn('unknown')), true);
+    check('fingerbot : noir', /#24272a/.test(render({ appliance_type: 'fingerbot', fingerbot_color: 'black', state_entity: 'switch.bot_x' }, { 'switch.bot_x': s('off') })), true);
+    check('fingerbot : premier modele', kindOf(render({ appliance_type: 'fingerbot', state_entity: 'switch.adaprox_fingerbot' }, { 'switch.adaprox_fingerbot': s('off') })), 'fb_classic');
+    check('fingerbot : dessine sans NaN', /NaN|undefined/.test(F('on') + F('on', 'switch') + F('off', 'click', 40, 'on', 2) + sb), false);
+  }
+  {
+    // Found by its name, and its settings on its device.
+    check('detection : fingerbot par son nom', render({ state_entity: 'switch.fingerbot_portail' }, { 'switch.fingerbot_portail': s('off') }).includes('nt-k-fb_plus'), true);
+    const edHtml = markup(newEditor({ appliance_type: 'fingerbot', state_entity: 'switch.fb' }));
+    check('editeur fingerbot : le type dans la liste', /value="fingerbot"/.test(edHtml), true);
+    check('editeur fingerbot : ses champs', ['bot_mode_entity', 'lower_entity', 'upper_entity', 'sustain_entity', 'reverse_entity', 'touch_entity', 'plug_entity', 'charging_entity', 'battery_entity', 'camera_entity'].map((f) => edHtml.includes(`data-toggle="${f}"`)).join(), 'true,true,true,true,true,true,true,true,true,false');
+    check('editeur fingerbot : forme et couleur', ['"fingerbot_layout"', '"fingerbot_color"', 'value="switchbot"', 'value="black"'].every((x) => edHtml.includes(x)), true);
+    // Zigbee2MQTT's names on its device, filled in.
+    const ids = ['switch.fingerbot_gate', 'select.fingerbot_gate_mode', 'sensor.fingerbot_gate_battery', 'number.fingerbot_gate_lower', 'number.fingerbot_gate_upper', 'number.fingerbot_gate_delay', 'switch.fingerbot_gate_reverse', 'switch.fingerbot_gate_touch'];
+    const ed = new Editor();
+    ed.setConfig({ type: 'custom:ha-appliance-card', appliance_type: 'fingerbot', state_entity: 'switch.fingerbot_gate' });
+    ed.hass = { ...HASS(Object.fromEntries(ids.map((id) => [id, { state: '1', attributes: /battery/.test(id) ? { unit_of_measurement: '%', device_class: 'battery' } : {} }]))), entities: Object.fromEntries(ids.map((id) => [id, { device_id: 'fb' }])) };
+    const sug = ed.events.at(-1)?.detail?.config || {};
+    check('suggestion fingerbot', [sug.bot_mode_entity, sug.battery_entity, sug.lower_entity, sug.upper_entity, sug.sustain_entity, sug.reverse_entity, sug.touch_entity].join(), ids.slice(1).join());
+    check('detection : un robot reste un robot', render({ state_entity: 'vacuum.robot' }, { 'vacuum.robot': s('docked') }).includes('nt-k-fb_'), false);
+  }
+}
+
 // The heating of #81 to #84: a buffer tank, a fresh water station, solar
 // thermal collectors and a log stove.
 {

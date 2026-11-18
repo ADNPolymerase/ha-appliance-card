@@ -3408,7 +3408,67 @@ ${arm(x0 + 6, fx0 + 6)}${arm(x1 - 6, fx1 - 6)}<g${dir ? ` class="cv-sway"` : ""}
 <path d="M${x0 - 1} ${top - 4.6} H${x1 + 1}" stroke="#fff" stroke-opacity=".8" stroke-width=".9"/>
 ${cvArrow(dir, 108, 4)}`;
 }
-const NT_DRAW = { ths_co2_eink: ntCo2Eink, ths_co2_box: ntCo2Box, ths_co2_netatmo: (c) => ntCo2Netatmo(c, false), ths_co2_netatmo_module: (c) => ntCo2Netatmo(c, true), cov_shutter: ntCovShutter, cov_blind: ntCovBlind, cov_venetian: (c) => ntCovVenetian(c, false), cov_raffstore: (c) => ntCovVenetian(c, true), cov_pergola: ntCovPergola, cov_awning: ntCovAwning, pellet_grill: ntPelletGrill, ths_disc: ntThsDisc, ths_square: ntThsSquare, ths_cushion: ntThsCushion, ths_stick: ntThsStick, ths_lcd_stand: ntThsLcdStand, ths_lcd_probe: ntThsLcdProbe, ths_lcd_round: ntThsLcdRound, dryer: ntFilamentDryer, humidifier: ntHumidifier, circulator: ntCirculator, irr_sprinkler: ntIrrSprinkler, irr_tap: ntIrrTap, irr_drip: ntIrrDrip, irr_flowers: ntIrrFlowers, lit_globe: ntLitterGlobe, lit_box: ntLitterBox, det_smoke: ntDetSmoke, det_co: ntDetCo, det_leak: ntDetLeak, spk_smart: ntSpkSmart, spk_homepod_mini: ntSpkMini, spk_sonos_one: ntSpkOne, spk_bookshelf: ntSpkShelf, spk_sonos_move: ntSpkMove, spk_soundbar: ntSpkBar, spk_echo_dot: ntSpkDot, spk_echo_dot_max: ntSpkDotMax, spk_nest_mini: ntSpkNest, spk_sonos_era100: ntSpkEra100, spk_sonos_era300: ntSpkEra300, spk_bose_wave: ntSpkWave, spk_bose_500: ntSpkBose500, spk_bose_soundlink: ntSpkFlex, spk_bose_soundbar: ntSpkBoseBar, spk_sonos_five: ntSpkFive, spk_sonos_play: ntSpkPlay, spk_sonos_roam: ntSpkRoam, spk_sonos_ray: ntSpkRay, spk_sonos_amp: ntSpkAmp, spk_sonos_port: ntSpkPort, spk_bose_ultra: ntSpkBoseUltra, spk_bose_portable: ntSpkBosePortable, spk_bose_amp: ntSpkBoseAmp, str_apple_tv: (c) => strZoom(strAppleTv(c), 54, 1.45), str_fire_tv_cube: strFireCube, str_fire_tv_stick: (c) => strStick(c, true), str_google_tv_streamer: strGoogleStreamer, str_chromecast: strChromecast, str_shield: strShield, str_shield_pro: strShieldPro, str_roku: strRoku, str_mi_box: strMiBox, str_freebox: strFreebox, str_decoder: strDecoder, str_box: strBox, str_stick: (c) => strStick(c, false), con_ps1: conPs1, con_ps2: conPs2, con_ps3: conPs3, con_ps4: (c) => conPs4(c, false), con_ps4_pro: (c) => conPs4(c, true), con_ps5: conPs5, con_xbox: conXbox, con_xbox_360: conX360, con_xbox_one: conXone, con_xbox_series_x: conXsx, con_xbox_series_s: conXss, con_switch: (c) => conSwitch(c, false), con_switch_2: (c) => conSwitch(c, true), con_switch_lite: conSwitchLite, con_ps_vita: conVita, con_nes: conNes, con_snes: conSnes, con_n64: conN64, con_gamecube: conGamecube, con_wii: conWii, con_megadrive: conMegadrive, tank: ntTank, fws: ntFresh, solth: ntSolarThermal, wood: ntWoodStove, mob_scooter: mobScooter, mob_offroad: mobOffroad, mob_ebike: mobEbike, mob_gyropode: mobGyropode, mob_motorcycle: mobMotorcycle, meter_box: ntMeterBox, meter_dome: ntMeterDome, meter_gas: ntGas, meter_water: ntWater, booster: ntBooster, sump: ntSump, pool: ntPoolRobot, floor: ntFloor, spa: ntSpa, sauna: ntSauna, aquarium: ntAquarium, linky: ntLinky, tree: ntTree };
+// A finger bot (HACF #163): the small box stuck beside a button it cannot
+// otherwise reach, its arm swinging down onto it. The Tuya Fingerbot Plus
+// (Adaprox, MOES, Zemismart...) with its touch pad on top, SwitchBot's Bot with
+// its lever and its own button, and the first, slimmer Fingerbot. Its arm
+// presses, or stays down in switch mode; its USB-C lead while it charges.
+const FB_BODY = { white: ["#ffffff", "#e3e6e9", "#c3c8cd"], black: ["#45494e", "#24272a", "#16181a"] };
+function ntFingerbot(c) {
+  const g = ntId(), sd = ntId(), bl = ntId(), pl = ntId(), rk = ntId(), cb = ntId();
+  const lay = c.layout || "plus", pal = FB_BODY[c.body] || FB_BODY.white, dark = c.body === "black";
+  // The wall plate it is stuck on, the rocker it presses below it.
+  const P = { x: 14, y: 26, w: 92, h: 96 }, R = { x: 34, y: 78, w: 52, h: 38 };
+  // Body and arm, per model: the Plus a rounded box, the Bot a squarer one,
+  // the first Fingerbot a slim one; the pivot where the arm leaves the body.
+  const B = lay === "switchbot" ? { x: 33, y: 4, w: 54, h: 50, r: 8 } : lay === "classic" ? { x: 31, y: 22, w: 58, h: 32, r: 6 } : { x: 27, y: 10, w: 66, h: 44, r: 12 };
+  const px = B.x + 9, py = B.y + B.h - 4, len = 40, down = c.unav ? 0 : 44;
+  const armCls = c.pressing ? ` class="fb-tap"` : "";
+  const armFill = dark ? "#2b2e32" : "#f6f7f8", armEdge = dark ? "#121314" : "#b9bfc5";
+  const tip = lay === "switchbot"
+    ? `<rect x="${px + len - 8}" y="${py - 4}" width="11" height="8" rx="4" fill="${dark ? "#1b1c1e" : "#dfe3e6"}" stroke="${armEdge}" stroke-width=".5"/>`
+    : `<rect x="${px + len - 5}" y="${py - 4.2}" width="8" height="8.4" rx="2.4" fill="#50545a"/><rect x="${px + len - 4.2}" y="${py - 3.4}" width="2.2" height="6.8" rx="1.1" fill="#7b8086"/>`;
+  const arm = `<g${armCls} style="transform-origin:${px}px ${py}px${c.held ? `;transform:rotate(${down}deg)` : ""}">
+<rect x="${px - 3.5}" y="${py - 3.5}" width="${len}" height="7" rx="3.5" fill="${armFill}" stroke="${armEdge}" stroke-width=".6"/>${tip}
+<circle cx="${px}" cy="${py}" r="4.2" fill="${dark ? "#1d1f22" : "#e7eaed"}" stroke="${armEdge}" stroke-width=".6"/><circle cx="${px}" cy="${py}" r="1.4" fill="${armEdge}"/></g>`;
+  // The plate and its rocker, the top half going down under the finger.
+  const plate = `<rect x="${P.x}" y="${P.y}" width="${P.w}" height="${P.h}" rx="9" fill="#000" opacity=".16" filter="url(#${bl})" transform="translate(2.5 3.5)"/>
+<rect x="${P.x}" y="${P.y}" width="${P.w}" height="${P.h}" rx="9" fill="url(#${pl})" stroke="#cdd2d6" stroke-width=".6"/>
+<rect x="${R.x}" y="${R.y}" width="${R.w}" height="${R.h}" rx="5" fill="url(#${rk})" stroke="#c2c7cc" stroke-width=".6"/>
+<path d="M${R.x + 1} ${R.y + R.h / 2} H${R.x + R.w - 1}" stroke="#d1d6da" stroke-width=".8"/>
+${c.held ? `<rect x="${R.x + .5}" y="${R.y + .5}" width="${R.w - 1}" height="${R.h / 2}" rx="4.5" fill="#000" opacity=".09"/>` : ""}
+${c.pressing ? `<rect class="fb-hit" x="${R.x + .5}" y="${R.y + .5}" width="${R.w - 1}" height="${R.h / 2}" rx="4.5" fill="#000" opacity="0"/>` : ""}`;
+  // The light: blue as it presses, red flashing when its battery runs low,
+  // green on charge.
+  const led = c.unav ? "" : c.pressing || c.held ? "#2196f3" : c.low ? "#e53935" : c.charging ? "#43a047" : "";
+  const ledX = B.x + B.w - 11, ledY = B.y + 10;
+  const ledEl = led ? `<circle${c.low && !c.pressing ? ` class="fb-blink"` : ""} cx="${ledX}" cy="${ledY}" r="1.8" fill="${led}"/><circle cx="${ledX}" cy="${ledY}" r="4" fill="${led}" opacity=".25"/>`
+    : `<circle cx="${ledX}" cy="${ledY}" r="1.4" fill="${dark ? "#55595e" : "#cfd4d8"}"/>`;
+  // The model's own marks: the Plus's touch pad and its ring on top, the
+  // Bot's round button and name, a seam on the first one.
+  const marks = lay === "switchbot"
+    ? `<circle cx="${B.x + 15}" cy="${B.y + 15}" r="6" fill="${pal[1]}" stroke="${pal[2]}" stroke-width=".7"/><circle cx="${B.x + 15}" cy="${B.y + 15}" r="3.2" fill="none" stroke="${pal[2]}" stroke-width=".5"/>
+<text x="${B.x + B.w / 2}" y="${B.y + B.h - 15}" font-size="5" text-anchor="middle" fill="${dark ? "#8b9096" : "#9aa1a8"}" ${NT_FONT}>SwitchBot</text>`
+    : lay === "plus"
+      ? `<ellipse cx="${B.x + B.w / 2 + 1.5}" cy="${B.y - 1.6}" rx="12" ry="2.4" fill="${dark ? "#2f3236" : "#f3f5f7"}" stroke="${c.touch ? "#29b6f6" : pal[2]}" stroke-width="${c.touch ? 1 : .5}"/>`
+      : `<path d="M${B.x + 5} ${B.y + B.h * .5} H${B.x + B.w - 5}" stroke="${pal[2]}" stroke-width=".5"/>`;
+  // The lead from its USB-C port while it charges, and its bolt.
+  const ly = B.y + B.h * .5;
+  const lead = c.charging || c.plugged ? `<path d="M${B.x + B.w + 5} ${ly} C${B.x + B.w + 16} ${ly} 116 30 117 -10" fill="none" stroke="#3a3d41" stroke-width="2.4" stroke-linecap="round"/>
+<rect x="${B.x + B.w}" y="${ly - 2.6}" width="6.5" height="5.2" rx="1.5" fill="#5d6166"/>
+${c.charging ? `<path class="fb-bolt" d="M106 16 l-6 9.5 h5 l-2.5 8.5 l7.5 -11 h-5 l2.5 -7z" fill="#fbc02d" stroke="#f57f17" stroke-width=".5"/>` : ""}` : "";
+  // Its battery, a small gauge in the corner.
+  const gauge = c.battery === null || c.battery === undefined || c.unav ? "" : `<g transform="translate(2 -6)"><rect width="16" height="8" rx="1.6" fill="none" stroke="${c.low ? "#e53935" : "#8d9399"}" stroke-width=".9"/><rect x="16.3" y="2.5" width="1.7" height="3" rx=".5" fill="${c.low ? "#e53935" : "#8d9399"}"/>
+<rect x="1.3" y="1.3" width="${cvF(13.4 * Math.max(0, Math.min(1, c.battery / 100)))}" height="5.4" rx=".9" fill="${c.low ? "#e53935" : c.charging ? "#43a047" : "#8d9399"}"/></g>`;
+  return `<defs>${ntV(g, pal[0], pal[1])}${ntV(sd, pal[1], pal[2])}${cvBlur(bl, 2.4)}${ntV(pl, "#ffffff", "#eceff1")}${ntV(rk, "#ffffff", "#e7eaed")}${cvBlur(cb, 1.8)}</defs>
+${plate}
+<rect x="${B.x + 2}" y="${B.y + 5}" width="${B.w}" height="${B.h}" rx="${B.r}" fill="#000" opacity=".24" filter="url(#${cb})"/>
+<rect x="${B.x + 3.5}" y="${B.y - 3.5}" width="${B.w}" height="${B.h}" rx="${B.r}" fill="url(#${sd})"/>
+<rect x="${B.x}" y="${B.y}" width="${B.w}" height="${B.h}" rx="${B.r}" fill="url(#${g})" stroke="${pal[2]}" stroke-width=".6"/>
+<path d="M${B.x + B.r} ${B.y + 1.3} H${B.x + B.w - B.r}" stroke="#fff" stroke-opacity="${dark ? .18 : .9}" stroke-width="1"/>
+${marks}${ledEl}${arm}${lead}${gauge}`;
+}
+const NT_DRAW = { fb_plus: ntFingerbot, fb_switchbot: ntFingerbot, fb_classic: ntFingerbot, ths_co2_eink: ntCo2Eink, ths_co2_box: ntCo2Box, ths_co2_netatmo: (c) => ntCo2Netatmo(c, false), ths_co2_netatmo_module: (c) => ntCo2Netatmo(c, true), cov_shutter: ntCovShutter, cov_blind: ntCovBlind, cov_venetian: (c) => ntCovVenetian(c, false), cov_raffstore: (c) => ntCovVenetian(c, true), cov_pergola: ntCovPergola, cov_awning: ntCovAwning, pellet_grill: ntPelletGrill, ths_disc: ntThsDisc, ths_square: ntThsSquare, ths_cushion: ntThsCushion, ths_stick: ntThsStick, ths_lcd_stand: ntThsLcdStand, ths_lcd_probe: ntThsLcdProbe, ths_lcd_round: ntThsLcdRound, dryer: ntFilamentDryer, humidifier: ntHumidifier, circulator: ntCirculator, irr_sprinkler: ntIrrSprinkler, irr_tap: ntIrrTap, irr_drip: ntIrrDrip, irr_flowers: ntIrrFlowers, lit_globe: ntLitterGlobe, lit_box: ntLitterBox, det_smoke: ntDetSmoke, det_co: ntDetCo, det_leak: ntDetLeak, spk_smart: ntSpkSmart, spk_homepod_mini: ntSpkMini, spk_sonos_one: ntSpkOne, spk_bookshelf: ntSpkShelf, spk_sonos_move: ntSpkMove, spk_soundbar: ntSpkBar, spk_echo_dot: ntSpkDot, spk_echo_dot_max: ntSpkDotMax, spk_nest_mini: ntSpkNest, spk_sonos_era100: ntSpkEra100, spk_sonos_era300: ntSpkEra300, spk_bose_wave: ntSpkWave, spk_bose_500: ntSpkBose500, spk_bose_soundlink: ntSpkFlex, spk_bose_soundbar: ntSpkBoseBar, spk_sonos_five: ntSpkFive, spk_sonos_play: ntSpkPlay, spk_sonos_roam: ntSpkRoam, spk_sonos_ray: ntSpkRay, spk_sonos_amp: ntSpkAmp, spk_sonos_port: ntSpkPort, spk_bose_ultra: ntSpkBoseUltra, spk_bose_portable: ntSpkBosePortable, spk_bose_amp: ntSpkBoseAmp, str_apple_tv: (c) => strZoom(strAppleTv(c), 54, 1.45), str_fire_tv_cube: strFireCube, str_fire_tv_stick: (c) => strStick(c, true), str_google_tv_streamer: strGoogleStreamer, str_chromecast: strChromecast, str_shield: strShield, str_shield_pro: strShieldPro, str_roku: strRoku, str_mi_box: strMiBox, str_freebox: strFreebox, str_decoder: strDecoder, str_box: strBox, str_stick: (c) => strStick(c, false), con_ps1: conPs1, con_ps2: conPs2, con_ps3: conPs3, con_ps4: (c) => conPs4(c, false), con_ps4_pro: (c) => conPs4(c, true), con_ps5: conPs5, con_xbox: conXbox, con_xbox_360: conX360, con_xbox_one: conXone, con_xbox_series_x: conXsx, con_xbox_series_s: conXss, con_switch: (c) => conSwitch(c, false), con_switch_2: (c) => conSwitch(c, true), con_switch_lite: conSwitchLite, con_ps_vita: conVita, con_nes: conNes, con_snes: conSnes, con_n64: conN64, con_gamecube: conGamecube, con_wii: conWii, con_megadrive: conMegadrive, tank: ntTank, fws: ntFresh, solth: ntSolarThermal, wood: ntWoodStove, mob_scooter: mobScooter, mob_offroad: mobOffroad, mob_ebike: mobEbike, mob_gyropode: mobGyropode, mob_motorcycle: mobMotorcycle, meter_box: ntMeterBox, meter_dome: ntMeterDome, meter_gas: ntGas, meter_water: ntWater, booster: ntBooster, sump: ntSump, pool: ntPoolRobot, floor: ntFloor, spa: ntSpa, sauna: ntSauna, aquarium: ntAquarium, linky: ntLinky, tree: ntTree };
 // What a tint leaves alone: a part wrapped by ntKeep (an app's tile, a
 // display, a tyre).
 const ntKeep = (s) => `<!--k-->${s}<!--/k-->`;
@@ -3498,6 +3558,10 @@ const NT_CSS = `
         .cv-arrow{animation:cv-blink 1s ease-in-out infinite}@keyframes cv-blink{0%,100%{opacity:.35}50%{opacity:1}}
         .cv-sway{animation:cv-sway 1.8s ease-in-out infinite;transform-origin:60px 14px}@keyframes cv-sway{0%,100%{transform:skewX(0)}50%{transform:skewX(.6deg)}}
         .co2-pulse{animation:co2-pulse 1.6s ease-in-out infinite}@keyframes co2-pulse{0%,100%{opacity:.45}50%{opacity:1}}
+        .fb-tap{animation:fb-tap 1.4s ease-in-out infinite}@keyframes fb-tap{0%,12%,100%{transform:rotate(0deg)}34%,56%{transform:rotate(44deg)}}
+        .fb-hit{animation:fb-hit 1.4s ease-in-out infinite}@keyframes fb-hit{0%,30%,62%,100%{opacity:0}36%,54%{opacity:.1}}
+        .fb-blink{animation:fb-blink 1s steps(2) infinite}@keyframes fb-blink{50%{opacity:.15}}
+        .fb-bolt{animation:fb-bolt 1.6s ease-in-out infinite}@keyframes fb-bolt{0%,100%{opacity:.4}50%{opacity:1}}
         svg.nt-svg{position:absolute;left:0;top:0;width:96px;height:108px;overflow:visible}
         .ntfd-h{fill:none;stroke:#ff6d00;stroke-width:1.8;stroke-linecap:round;opacity:0;animation:ntfd-heat 2.4s ease-in-out infinite;animation-delay:calc(var(--d0,0s) + var(--anim-offset,0s))}
         @keyframes ntfd-heat{0%{opacity:0;transform:translateY(4px)}40%{opacity:1}100%{opacity:0;transform:translateY(-7px)}}

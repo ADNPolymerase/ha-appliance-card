@@ -186,6 +186,7 @@ const T = {
     type_ev_charger: "EV charger", ev_no_vehicle: "No vehicle", ev_connected: "Plugged in", ev_awaiting_auth: "Awaiting authorisation", ev_charging: "Charging", ev_paused: "Charging paused", ev_scheduled: "Scheduled", ev_done: "Charging complete", ev_error: "Error", ev_offline: "Offline", section_vehicle: "Vehicle plugged in (plug sensor)", section_session_energy: "Session energy", section_current_limit: "Charging current limit", ev_power_threshold: "Charging above this power (W)", ev_line_session: "Charged", ev_line_limit: "Current limit",
     ev_discharging: "Discharging", section_discharge_power: "Power the car gives back (to the home or the grid)", ev_line_discharge: "Discharge",
     type_cover: "Shutter, blind, pergola or awning", layout_cov_shutter: "Roller shutter", layout_cov_blind: "Roller blind", layout_cov_venetian: "Venetian blind", layout_cov_raffstore: "Exterior venetian blind", layout_cov_pergola: "Bioclimatic pergola", layout_cov_awning: "Awning", cov_open: "Open", cov_closed: "Closed", cov_open_at: "Open {pct} %", cov_opening: "Opening", cov_closing: "Closing", cov_deployed: "Extended", cov_retracted: "Retracted", cov_deployed_at: "Extended {pct} %", cov_deploying: "Extending", cov_retracting: "Retracting", cov_louvers_open: "Louvers open", cov_louvers_closed: "Louvers closed", cov_louvers_at: "Louvers {pct} %", cov_louvers_opening: "Opening the louvers", cov_louvers_closing: "Closing the louvers", cov_position: "Position", cov_tilt: "Slats", cov_light: "Light", cov_open_btn: "Open", cov_close_btn: "Close", cover_color: "Colour (apron, slats, frame)", fabric_color: "Fabric colour", fabric_stripes: "Striped fabric", cov_c_white: "White", cov_c_grey: "Grey", cov_c_anthracite: "Anthracite", cov_c_black: "Black", cov_c_beige: "Beige", cov_c_wood: "Wood", cov_c_brown: "Brown", cov_f_ecru: "Ecru", cov_f_linen: "Linen", cov_f_grey: "Grey", cov_f_anthracite: "Anthracite", cov_f_blue: "Blue", cov_f_petrol: "Petrol blue", cov_f_terracotta: "Terracotta", cov_f_green: "Green", layout_ths_co2_eink: "CO\u2082 monitor, e-ink (Aranet4)", layout_ths_co2_box: "CO\u2082 monitor, LED bar (AirGradient)", layout_ths_co2_netatmo: "Netatmo indoor station", layout_ths_co2_netatmo_module: "Netatmo additional indoor module", ths_co2: "CO\u2082", co2_good: "Air is fine", co2_ventilate: "Ventilation advised", co2_poor: "Ventilate now", co2_warning: "Orange from (ppm)", co2_alert: "Red from (ppm)", netatmo_color: "Netatmo colour", ntm_aluminium: "Aluminium", ntm_sand: "Sand", ntm_mint: "Mint", ntm_graphite: "Graphite",
+    type_fingerbot: "Finger bot (Fingerbot, SwitchBot Bot)", layout_fb_plus: "Fingerbot Plus (Tuya, Adaprox, MOES)", layout_fb_switchbot: "SwitchBot Bot", layout_fb_classic: "Fingerbot, first model", fingerbot_color: "Colour", fb_ready: "Ready", fb_pressing: "Pressing", fb_held: "Held down", fb_released: "Released", fb_charging: "Charging", fb_charged: "Charged", fb_low: "Low battery", fb_press: "Press", fb_charge: "Charge", fb_mode: "Mode", fb_m_click: "Press", fb_m_switch: "Switch", fb_m_program: "Program", fb_lower: "Down position", fb_upper: "Up position", fb_sustain: "Hold time", fb_reverse: "Reversed", fb_touch: "Touch button", fb_yes: "Yes", fb_no: "No", fb_last: "Last press",
   },
 };
 
@@ -3085,6 +3086,18 @@ const TYPE_AUTO_PATTERNS = {
     watering_duration_entity: /(total|watering).?duration/i,
   },
   // Z2M's battery_low, X-Sense's and Nest's battery.
+  // A finger bot's settings as Zigbee2MQTT, ZHA, Tuya and LocalTuya name
+  // them, and the plug that charges it.
+  fingerbot: {
+    battery_entity: /batter/i,
+    bot_mode_entity: /^(select|input_select)\..*mode/i,
+    lower_entity: /^(number|input_number)\..*(lower|down|bas|press.?depth|arm.?down)/i,
+    upper_entity: /^(number|input_number)\..*(upper|(^|_)up(_|$)|haut|arm.?up)/i,
+    sustain_entity: /^(number|input_number)\..*(delay|sustain|hold|maintien|duration)/i,
+    reverse_entity: /^(switch|select|input_boolean)\..*revers/i,
+    touch_entity: /^(switch|input_boolean)\..*touch/i,
+    charging_entity: /^(binary_sensor|sensor)\..*charg/i,
+  },
   detector: {
     battery_entity: /batter/i,
     co_level_entity: /(^|[._])co([._]|$)|carbon.?monoxide|co.?level|co.?ppm/i,
@@ -3463,6 +3476,8 @@ const TYPE_CAPS = {
   irrigation: { ntIrrigation: true },
   litter_box: { ntLitter: true },
   detector: { ntDetector: true },
+  // A finger bot (HACF #163): its press and the plug that charges it.
+  fingerbot: { ntFingerbot: true },
   speaker: { ntSpeaker: true },
   // A game console, on PlayStation Network, Xbox, the PS4 integration or a plug.
   console: { ntConsole: true },
@@ -3588,6 +3603,7 @@ const STATE_DOMAINS = {
   irrigation: ["valve", "switch", "binary_sensor", "input_boolean", "sensor"],
   litter_box: ["sensor", "vacuum", "binary_sensor", "select", "switch"],
   detector: ["binary_sensor", "sensor", "input_boolean"],
+  fingerbot: ["switch", "button", "input_boolean", "input_button", "script"],
   speaker: ["media_player"],
   console: ["media_player", "sensor", "switch", "binary_sensor", "device_tracker", "input_boolean"],
   streamer: ["media_player", "remote", "switch", "binary_sensor", "input_boolean", "sensor"],
@@ -3705,7 +3721,7 @@ const TYPE_GROUPS = [
   ["kitchen", ["dishwasher", "oven", "microwave", "hood", "cooktop", "fridge", "kettle", "cooker", "coffee", "rice_cooker", "air_fryer", "toaster", "pellet_grill"]],
   ["heating", ["water_heater", "boiler", "heat_pump", "thermostat", "pellet_stove", "space_heater", "towel_warmer", "floor_heating", "storage_tank", "fresh_water_station", "wood_stove"]],
   ["air", ["air_conditioner", "dehumidifier", "humidifier", "air_purifier", "fan", "diffuser", "hrv", "climate_sensor"]],
-  ["home", ["screen", "iron", "hair_dryer", "printer_3d", "filament_dryer", "robot", "pool_pump", "scale", "camera", "lamp", "mailbox", "water_pump", "spa", "sauna", "aquarium", "christmas_tree", "mobility", "irrigation", "detector", "speaker", "console", "streamer", "cover"]],
+  ["home", ["screen", "iron", "hair_dryer", "printer_3d", "filament_dryer", "robot", "pool_pump", "scale", "camera", "lamp", "mailbox", "water_pump", "spa", "sauna", "aquarium", "christmas_tree", "mobility", "irrigation", "detector", "fingerbot", "speaker", "console", "streamer", "cover"]],
   ["energy", ["solar", "solar_thermal", "home_battery", "ev_charger", "meter"]],
   ["pets", ["pet_feeder", "pet_fountain", "litter_box"]],
   ["network", ["network", "ups"]],
@@ -5571,7 +5587,7 @@ function lampSpotsOf(cfg, st) {
 // sauna, an aquarium, a Linky meter and a Christmas tree. Drawn in SVG on a 120 x 135 field; what
 // moves moves only on a machine carrying nt-on, staggered through --d0, and
 // the robot's cable and the sump's float follow their SMIL animations.
-const NT_TYPES = ["cover", "pellet_grill", "water_pump", "floor_heating", "spa", "sauna", "aquarium", "meter", "christmas_tree", "mobility", "irrigation", "litter_box", "detector", "speaker", "console", "streamer", "climate_sensor", "storage_tank", "fresh_water_station", "solar_thermal", "wood_stove", "humidifier", "filament_dryer"];
+const NT_TYPES = ["fingerbot", "cover", "pellet_grill", "water_pump", "floor_heating", "spa", "sauna", "aquarium", "meter", "christmas_tree", "mobility", "irrigation", "litter_box", "detector", "speaker", "console", "streamer", "climate_sensor", "storage_tank", "fresh_water_station", "solar_thermal", "wood_stove", "humidifier", "filament_dryer"];
 // How many spools a filament dryer holds (#93).
 const FD_COUNTS = [1, 2, 4];
 const FD_COLORS = ["#43a047", "#fb8c00", "#8e24aa", "#eceff1"];
@@ -5583,6 +5599,13 @@ const TAP_MODELS = ["generic", "sonoff"];
 const TAP_WALLS = ["brick", "render", "none"];
 const LITTER_LAYOUTS = ["globe", "box"];
 const DETECTOR_LAYOUTS = ["smoke", "co", "leak"];
+// A finger bot's drawing (HACF #163), its colour, how long a press shows and
+// the power that means its plug is charging it.
+const FINGERBOT_LAYOUTS = ["plus", "switchbot", "classic"];
+const FINGERBOT_COLORS = ["white", "black"];
+const FB_PRESS_MS = 4000, FB_CLICK_MS = 15000, FB_CHARGE_W = 0.5;
+// A finger bot by its name: Fingerbot, Adaprox, SwitchBot's Bot.
+const FINGERBOT_NAME_RE = /finger.?bot|adaprox|switch.?bot.?bot|(^|[._\s])bot([._\s]|$)|button.?push(er)?|knopfdrucker|pousse.?bouton|appuie.?bouton/;
 const GRILL_LAYOUTS = ["timberline", "drum", "cart", "vertical"];
 const SPEAKER_LAYOUTS = ["smart", "homepod_mini", "sonos_one", "sonos_era100", "sonos_era300", "sonos_move", "soundbar", "bose_wave", "bose_500", "bose_soundlink", "bose_soundbar", "bookshelf", "echo_dot", "nest_mini", "sonos_five", "sonos_play", "sonos_roam", "sonos_ray", "sonos_amp", "sonos_port", "bose_ultra", "bose_portable", "bose_amp", "echo_dot_max"];
 // Streaming boxes (#97). The app a box is in: its colour and its mark, read
@@ -5710,6 +5733,7 @@ const NT_ONLY_FIELDS = {
   irrigation: ["irrigation_layout", "zone_entity", "rain_delay_entity", "soil_moisture_entity", "next_run_entity", "tap_model", "tap_wall", "watering_duration_entity"],
   litter_box: ["litter_layout", "waste_drawer_entity", "litter_level_entity", "pet_weight_entity", "visits_entity", "cat_present_entity", "last_use_entity"],
   detector: ["detector_layout", "co_level_entity", "co_entity"],
+  fingerbot: ["fingerbot_layout", "fingerbot_color", "bot_mode_entity", "lower_entity", "upper_entity", "sustain_entity", "reverse_entity", "touch_entity"],
   speaker: ["speaker_layout", "speaker_color"],
   console: ["console_layout", "game_entity", "playtime_entity", "playtime_left_entity"],
   streamer: ["streamer_layout", "app_entity"],
@@ -5803,6 +5827,7 @@ const NT_NAME_RES = [
   ["climate_sensor", THS_NAME_RE],
   ["litter_box", /scoopfree|purobot|litter|litiere|katzenklo|arenero|lettiera|kattlada|kuweta|kattebak|kattesand|(^|[^a-z])pura.?(x|max)/],
   ["irrigation", /arrosage|arroseur|watering|bhyve|netro|gardena(?!.?(sileno|mow))|irrigat|sprinkler|bewasserung|(^|[^a-z])riego|beregening|bevattning|vanning|vanding|nawadnian|zavlaz|opensprinkler|linktap|hydrawise|rachio|rain.?bird/],
+  ["fingerbot", FINGERBOT_NAME_RE],
   ["detector", /x.?sense|smoke|fumee|detecteur.?(de.?)?(fumee|co|fuite)|monoxyde|carbon.?monoxide|(^|[^a-z])co.?(alarm|detector)|rauchmelder|detector.?de.?humo|rilevatore|rookmelder|brandvarnare|roykvarsler|roegalarm|czujnik.?dymu|water.?leak|fuite.?d.?eau|wassermelder|leak.?sensor/],
   ["christmas_tree", /christmas|xmas|(^|[^a-z])sapin|(^|[^a-z])noel([^a-z]|$)|weihnacht|tannenbaum|navidad|natale|kerstboom|julgran|juletre|juletrae|choink|vanocni.?strom/],
   ["aquarium", /aquari|akwari|akvari/],
@@ -5850,6 +5875,15 @@ function litterLayoutOf(cfg, st) {
 // a clear, an idle or an unavailable.
 function detAlarmOf(raw) {
   return (NT_ON.includes(raw) || /alarm|smoke|detect|leak|wet|fuite|fumee|emergency|warning|mild|heavy|critical|danger/.test(raw)) && !/^(off|ok|clear|dry|normal|idle|test)$|^(no|not|un)[ _-]?|inactive/.test(raw);
+}
+// Its drawing: the one chosen, else its name. SwitchBot's says so, the first
+// Fingerbot is the Adaprox one without Plus; a touch switch is the Plus's.
+function fingerbotLayoutOf(cfg, st) {
+  if (FINGERBOT_LAYOUTS.includes(cfg.fingerbot_layout)) return cfg.fingerbot_layout;
+  const hay = stripAccents(`${cfg.state_entity || ""} ${cfg.name || ""} ${stHay(st)}`).toLowerCase();
+  if (/switch.?bot|wohand|(^|[._\s])bot([._\s]|$)/.test(hay) && !/finger/.test(hay)) return "switchbot";
+  if (!cfg.touch_entity && /adaprox/.test(hay) && !/plus/.test(hay)) return "classic";
+  return "plus";
 }
 function detectorLayoutOf(cfg, st) {
   if (DETECTOR_LAYOUTS.includes(cfg.detector_layout)) return cfg.detector_layout;
@@ -6343,16 +6377,17 @@ function ntReadOf(type, hass, cfg, st, watts, threshold) {
   // can call the card offline: a CO alarm shows even when the smoke one is out.
   const detCo = type === "detector" && !!cfg.co_entity && detectorLayoutOf(cfg, st) === "smoke" && detAlarmOf(String((stateObj(hass, cfg.co_entity) || {}).state || "").trim().toLowerCase());
   // A detector's none is all clear (Shelly Gas), not a missing value.
-  const unav = !detCo && running === null && !(type === "meter" && !dead) && !(type === "detector" && st && raw === "none");
+  const unav = type === "fingerbot" ? !st || raw === "unavailable"
+    : !detCo && running === null && !(type === "meter" && !dead) && !(type === "detector" && st && raw === "none");
   const tmp = ntTemp(hass, cfg, st);
   const out = (mode, labelKey, color, draw) => ({ mode, label: t(hass, labelKey), color, lines, draw: { ...draw, unav } });
   if (unav) {
     const ml = meterLayoutOf(cfg, st);
     const kinds = { pellet_grill: "pellet_grill", filament_dryer: "dryer", humidifier: "humidifier", water_pump: pumpLayoutOf(cfg, st), floor_heating: "floor", spa: "spa", sauna: "sauna", aquarium: "aquarium", meter: ml === "linky" ? "linky" : `meter_${ml}`, christmas_tree: "tree", mobility: `mob_${mobilityLayoutOf(cfg, st)}`,
-      irrigation: `irr_${irrigationLayoutOf(cfg, st)}`, litter_box: `lit_${litterLayoutOf(cfg, st)}`, detector: `det_${detectorLayoutOf(cfg, st)}`, speaker: `spk_${speakerLayoutOf(cfg, st)}`, console: `con_${consoleLayoutOf(cfg, st)}`, streamer: `str_${streamerLayoutOf(cfg, st)}`, climate_sensor: `ths_${thsLayoutOf(cfg, st)}`, cover: `cov_${coverLayoutOf(cfg, st)}` };
+      irrigation: `irr_${irrigationLayoutOf(cfg, st)}`, litter_box: `lit_${litterLayoutOf(cfg, st)}`, detector: `det_${detectorLayoutOf(cfg, st)}`, fingerbot: `fb_${fingerbotLayoutOf(cfg, st)}`, speaker: `spk_${speakerLayoutOf(cfg, st)}`, console: `con_${consoleLayoutOf(cfg, st)}`, streamer: `str_${streamerLayoutOf(cfg, st)}`, climate_sensor: `ths_${thsLayoutOf(cfg, st)}`, cover: `cov_${coverLayoutOf(cfg, st)}` };
     return out("unav", "ev_offline", NT_COLORS.unav, { kind: kinds[type], on: false, electric: floorLayoutOf(cfg) === "electric", model: type === "water_pump" ? circModelOf(cfg, st) : "",
       palette: cfg.tree_palette, ...(type === "pellet_grill" ? { layout: grillLayoutOf(cfg, st) } : {}), ...(type === "filament_dryer" ? fdLook(cfg) : {}), presents: type === "christmas_tree" && treePresents(cfg), color: type === "speaker" ? speakerColorOf(cfg, st) : type === "cover" ? cvColor(cfg.cover_color, COVER_COLORS) : "",
-      ...(type === "cover" ? { p: 100, tilt: 60, fabric: cvColor(cfg.fabric_color, FABRIC_COLORS), stripes: cfg.fabric_stripes !== false } : {}), ...(type === "climate_sensor" ? { co2: null, body: cfg.netatmo_color } : {}) });
+      ...(type === "cover" ? { p: 100, tilt: 60, fabric: cvColor(cfg.fabric_color, FABRIC_COLORS), stripes: cfg.fabric_stripes !== false } : {}), ...(type === "climate_sensor" ? { co2: null, body: cfg.netatmo_color } : {}), ...(type === "fingerbot" ? { layout: fingerbotLayoutOf(cfg, st), body: cfg.fingerbot_color } : {}) });
   }
   if (type === "pellet_grill") {
     const dead2 = (s) => !s || ["unavailable", "unknown", "none", ""].includes(String(s.state).trim().toLowerCase());
@@ -6481,6 +6516,59 @@ function ntReadOf(type, hass, cfg, st, watts, threshold) {
     const draw = { kind, on: mode === "cleaning", st: mode, cat: mode === "cat" || (cat && mode !== "cleaning"), drawer };
     const map = { cleaning: ["lit_cleaning", NT_COLORS.run], cat: ["lit_cat", "#fb8c00"], full: ["lit_full", NT_COLORS.alarm], fault: ["lit_fault", NT_COLORS.alarm], off: ["lit_sleep", NT_COLORS.off], ready: ["lit_ready", NT_COLORS.lit] };
     return out(mode, map[mode][0], map[mode][1], draw);
+  }
+  if (type === "fingerbot") {
+    // A finger bot (HACF #163): pressing (its switch flipped on, its button
+    // pressed a moment ago), held down in switch mode, charging on its plug,
+    // its battery running low, or ready.
+    const a = (st && st.attributes) || {};
+    const layout = fingerbotLayoutOf(cfg, st);
+    const dom = domainOf(cfg.state_entity);
+    const ms = cfg.bot_mode_entity ? stateObj(hass, cfg.bot_mode_entity) : null;
+    const modeRaw = ms && !HA_OFFLINE_STATES.includes(String(ms.state).toLowerCase()) ? String(ms.state).trim().toLowerCase() : "";
+    // SwitchBot says its mode in an attribute, Tuya and Zigbee2MQTT in a select.
+    const switchMode = /switch|toggle|interrupt|schalter/.test(modeRaw) || (!modeRaw && a.switch_mode === true);
+    const on = NT_ON.includes(raw);
+    // A press shows for a moment: a button's state is the time it was last
+    // pressed, and a switch in click mode drops back by itself, unless it
+    // stays on, when the card settles back after a while.
+    const pressedAt = ["button", "input_button"].includes(dom) ? Date.parse(String(st && st.state)) : NaN;
+    const pressUntil = switchMode ? 0 : Number.isFinite(pressedAt) ? pressedAt + FB_PRESS_MS : on ? (Date.parse((st && st.last_changed) || "") || Date.now()) + FB_CLICK_MS : 0;
+    // A clock a little ahead never makes a press last longer than it can.
+    const pressing = Number.isFinite(pressUntil) && pressUntil > Date.now() && pressUntil - Date.now() <= FB_CLICK_MS + 1000;
+    const held = switchMode && on;
+    const bv = cfg.battery_entity ? numericState(hass, cfg.battery_entity) : numberOrNull(a.battery_level !== undefined ? a.battery_level : a.battery);
+    const low = bv !== null && bv <= 20;
+    const plugged = !!cfg.plug_entity && ntOnOff(hass, cfg.plug_entity);
+    const charging = cfg.charging_entity ? ntOnOff(hass, cfg.charging_entity) || /^charg/.test(String((stateObj(hass, cfg.charging_entity) || {}).state || "").toLowerCase())
+      : cfg.power_entity && watts !== null ? watts >= FB_CHARGE_W : plugged && (bv === null || bv < 100);
+    const ts = cfg.touch_entity ? stateObj(hass, cfg.touch_entity) : null;
+    if (bv !== null) {
+      const bl = ntLine(hass, cfg, "fb_battery", low ? "mdi:battery-alert-variant-outline" : charging ? "mdi:battery-charging" : "mdi:battery", "section_battery", cfg.battery_entity);
+      lines.push(bl ? { ...bl, caution: low } : { key: "fb_battery", icon: low ? "mdi:battery-alert-variant-outline" : "mdi:battery", label: t(hass, "section_battery"), value: `${Math.round(bv)} %`, entity: cfg.state_entity, caution: low });
+    }
+    if (modeRaw) {
+      const word = /switch|toggle|interrupt|schalter/.test(modeRaw) ? "fb_m_switch" : /prog/.test(modeRaw) ? "fb_m_program" : /click|press|push|appui/.test(modeRaw) ? "fb_m_click" : "";
+      const ml = ntLine(hass, cfg, "fb_mode", "mdi:gesture-tap-button", "fb_mode", cfg.bot_mode_entity);
+      if (ml) lines.push(word ? { ...ml, value: t(hass, word) } : ml);
+    }
+    if (Number.isFinite(pressedAt)) lines.push({ key: "fb_last", icon: "mdi:gesture-tap", label: t(hass, "fb_last"), value: keepTogether(feedTime(hass, pressedAt)), entity: cfg.state_entity });
+    for (const [key, icon, id] of [["fb_lower", "mdi:arrow-collapse-down", cfg.lower_entity], ["fb_upper", "mdi:arrow-collapse-up", cfg.upper_entity], ["fb_sustain", "mdi:timer-outline", cfg.sustain_entity]]) {
+      const l = ntLine(hass, cfg, key, icon, key, id);
+      if (l) lines.push(l);
+    }
+    for (const [key, icon, id] of [["fb_reverse", "mdi:swap-vertical", cfg.reverse_entity], ["fb_touch", "mdi:gesture-tap", cfg.touch_entity]]) {
+      const l = ntLine(hass, cfg, key, icon, key, id);
+      if (l && ["on", "off"].includes(String(stateObj(hass, id).state).toLowerCase())) lines.push({ ...l, value: t(hass, ntOnOff(hass, id) ? "fb_yes" : "fb_no") });
+      else if (l) lines.push(l);
+    }
+    const draw = { kind: `fb_${layout}`, on: pressing, pressing, pressUntil: pressing ? pressUntil : 0, held, charging, plugged: plugged || charging, low, battery: bv, layout, body: cfg.fingerbot_color === "black" || (!cfg.fingerbot_color && layout === "switchbot" && /black|noir|schwarz/.test(stHay(st).toLowerCase())) ? "black" : "white",
+      touch: !!ts && ntOnOff(hass, cfg.touch_entity) };
+    if (pressing) return out("run", "fb_pressing", NT_COLORS.run, draw);
+    if (held) return out("on", "fb_held", NT_COLORS.run, draw);
+    if (charging) return out("on", bv !== null && bv >= 100 ? "fb_charged" : "fb_charging", NT_COLORS.lit, draw);
+    if (low) return { ...out("ok", "fb_low", "#ef6c00", draw) };
+    return out("ok", switchMode ? "fb_released" : "fb_ready", NT_COLORS.idle, draw);
   }
   if (type === "detector") {
     // On is an alarm: smoke, CO or water, as its device class or its drawing
@@ -6970,13 +7058,27 @@ function ntReadOf(type, hass, cfg, st, watts, threshold) {
 function ntControls(hass, cfg, type) {
   const out = [];
   const st = stateObj(hass, cfg.state_entity);
-  if (st && !cfg.toggle_entity && type !== "meter" && (["light", "switch", "input_boolean", "valve"].includes(domainOf(cfg.state_entity)) || (type === "humidifier" && domainOf(cfg.state_entity) === "humidifier"))) {
+  if (st && !cfg.toggle_entity && type !== "meter" && type !== "fingerbot" && (["light", "switch", "input_boolean", "valve"].includes(domainOf(cfg.state_entity)) || (type === "humidifier" && domainOf(cfg.state_entity) === "humidifier"))) {
     out.push({ key: "toggle", entity: cfg.state_entity, icon: type === "christmas_tree" ? "mdi:pine-tree" : type === "aquarium" ? "mdi:lightbulb" : type === "mobility" ? "mdi:power-plug" : "mdi:power", label: t(hass, "toggle"),
       on: ["on", "open", "opening"].includes(String(st.state).toLowerCase()) });
   }
   if (type === "speaker" && st && ["playing", "paused", "buffering", "idle", "on"].includes(String(st.state).toLowerCase())) {
     const playing = ["playing", "buffering"].includes(String(st.state).toLowerCase());
     out.push({ key: "play_pause", entity: cfg.state_entity, icon: playing ? "mdi:pause" : "mdi:play", label: t(hass, "play_pause"), on: playing, service: "media_play_pause" });
+  }
+  // A finger bot's press (HACF #163): a press on a button, on in click mode
+  // (it lifts its arm by itself), on and off in switch mode. And the plug
+  // that charges it, when it has one.
+  if (type === "fingerbot" && st) {
+    const dom = domainOf(cfg.state_entity), raw = String(st.state).toLowerCase();
+    const ms = cfg.bot_mode_entity ? String((stateObj(hass, cfg.bot_mode_entity) || {}).state || "").toLowerCase() : "";
+    const switchMode = /switch|toggle|interrupt|schalter/.test(ms) || (!ms && (st.attributes || {}).switch_mode === true);
+    if (["button", "input_button", "script"].includes(dom)) out.push({ key: "fb_press", entity: cfg.state_entity, icon: "mdi:gesture-tap-button", label: t(hass, "fb_press") });
+    else if (["switch", "input_boolean"].includes(dom)) out.push({ key: "fb_press", entity: cfg.state_entity, icon: switchMode ? "mdi:power" : "mdi:gesture-tap-button", label: t(hass, switchMode ? "toggle" : "fb_press"),
+      on: switchMode && NT_ON.includes(raw), ...(switchMode ? {} : { service: "turn_on" }) });
+    if (cfg.plug_entity && stateObj(hass, cfg.plug_entity) && ["switch", "input_boolean"].includes(domainOf(cfg.plug_entity))) {
+      out.push({ key: "fb_plug", entity: cfg.plug_entity, icon: "mdi:power-plug-battery", label: t(hass, "fb_charge"), on: ntOnOff(hass, cfg.plug_entity) });
+    }
   }
   // A cover's three buttons (#109): its own services, the tilt ones for a
   // pergola that only turns its louvers, only those its features list. An
@@ -12178,6 +12280,9 @@ class ApplianceCard extends HTMLElement {
       color = r.color;
       extraLines.push(...r.lines);
       ntDraw = r.draw;
+      // A finger bot's press shows for a moment, then the card settles back.
+      clearTimeout(this._fbTimer);
+      if (r.draw && r.draw.pressUntil && !this._inert) this._fbTimer = setTimeout(() => { this._lastCardHtml = undefined; this._render(); }, Math.min(FB_CLICK_MS, Math.max(0, r.draw.pressUntil - Date.now())) + 50);
       if (r.sliders) sliders.push(...r.sliders);
       // A ride without a battery entity, unplugged, keeps the charge the
       // card last saw: full once it was charged, kept in the browser so a
@@ -13633,7 +13738,7 @@ function loadEditor() {
   if (customElements.get("ha-appliance-card-editor")) return Promise.resolve();
   if (!editorLoading) {
     editorLoading = import(assetUrl("ha-appliance-card-editor.js"))
-      .then((m) => m.default({ t, onLanguageLoaded, LANGUAGE_NAMES, localizedHass, activationOf, TH_LAYOUTS, EV_POWER_THRESHOLD, stateObj, parseValueMap, stringifyValueMap, alertsArray, entityEntries, LIST_OTHER, ENTITY_LISTS, listCandidates, defaultCardName, stripDeviceName, domainOf, INFO_MAX, autoSuggest, APPLIANCE_TYPES, STATE_DOMAINS, SCREEN_ONLY_FIELDS, illustrationSizeOf, fontScaleOf, compactModeOf, TYPE_GROUPS, caps, detectApplianceType, SCREEN_STANDBY_W, SCREEN_LAYOUTS, SCREEN_IMAGES, screenLayoutOf, screenIsTablet, HD_HEAT_W, PLUG_THRESHOLDS, ZONE_POWER_W, PLUG_SOURCE_TYPES, plugSourceOf, DW_DRY_MIN, WASH_HEAT_W, WASH_SPIN_W, DRYER_HEAT_W, NET_LAYOUTS, SWITCH_PORTS, NET_BAYS, NET_BUSY_MBIT, NET_TEMP_ALERT, netLayoutOf, ROBOT_LAYOUTS, ROBOT_STATIONS, ROBOT_BOX_COLORS, ROBOT_FLOORS, ROBOT_SERVICES, STICK_AWAY_W, robotLayoutOf, PRINTER_STYLES, printerStyleOf, POOL_PRESSURE_ALERT, WINTER_TYPES, SOLAR_LAYOUTS, BATTERY_LAYOUTS, BATTERY_IDLE_W, DIFFUSER_LAYOUTS, illustrationTapOf, UNIT_FILTERS, HRV_LAYOUTS, hrvLayoutOf, CAMERA_LAYOUTS, MAILBOX_LAYOUTS, MAILBOX_SIDES, mailboxLayoutOf, MAILBOX_COLORS_3D, LAMP_LAYOUTS, LAMP_SPOTS, lampLayoutOf, FD_COUNTS, CONSOLE_LAYOUTS, IRRIGATION_LAYOUTS, TAP_MODELS, TAP_WALLS, LITTER_LAYOUTS, DETECTOR_LAYOUTS, GRILL_LAYOUTS, SPEAKER_LAYOUTS, STREAMER_LAYOUTS, THS_LAYOUTS, thsLayoutOf, MOBILITY_LAYOUTS, PUMP_LAYOUTS, CIRC_MODELS, FLOOR_LAYOUTS, OPT_LINES, METER_LAYOUTS, meterLayoutOf, irrigationLayoutOf, detectorLayoutOf, TREE_PALETTES, TREE_PRESENTS, pumpLayoutOf, SPK_COLORS, CO2_WARN, NETATMO_COLORS, COVER_LAYOUTS, COVER_COLORS, FABRIC_COLORS, coverLayoutOf, COLLECTOR_STYLES, UPS_BATTERY_LOW, HISTORY_HOURS, BODY_COLORS, esc, MOWER_STYLES, SHELTER_STYLES, SHELTER_COLORS, LAPTOP_COLORS, LAPTOP_STYLES, drawn, stateFreeSource }))
+      .then((m) => m.default({ t, onLanguageLoaded, LANGUAGE_NAMES, localizedHass, activationOf, TH_LAYOUTS, EV_POWER_THRESHOLD, stateObj, parseValueMap, stringifyValueMap, alertsArray, entityEntries, LIST_OTHER, ENTITY_LISTS, listCandidates, defaultCardName, stripDeviceName, domainOf, INFO_MAX, autoSuggest, APPLIANCE_TYPES, STATE_DOMAINS, SCREEN_ONLY_FIELDS, illustrationSizeOf, fontScaleOf, compactModeOf, TYPE_GROUPS, caps, detectApplianceType, SCREEN_STANDBY_W, SCREEN_LAYOUTS, SCREEN_IMAGES, screenLayoutOf, screenIsTablet, HD_HEAT_W, PLUG_THRESHOLDS, ZONE_POWER_W, PLUG_SOURCE_TYPES, plugSourceOf, DW_DRY_MIN, WASH_HEAT_W, WASH_SPIN_W, DRYER_HEAT_W, NET_LAYOUTS, SWITCH_PORTS, NET_BAYS, NET_BUSY_MBIT, NET_TEMP_ALERT, netLayoutOf, ROBOT_LAYOUTS, ROBOT_STATIONS, ROBOT_BOX_COLORS, ROBOT_FLOORS, ROBOT_SERVICES, STICK_AWAY_W, robotLayoutOf, PRINTER_STYLES, printerStyleOf, POOL_PRESSURE_ALERT, WINTER_TYPES, SOLAR_LAYOUTS, BATTERY_LAYOUTS, BATTERY_IDLE_W, DIFFUSER_LAYOUTS, illustrationTapOf, UNIT_FILTERS, HRV_LAYOUTS, hrvLayoutOf, CAMERA_LAYOUTS, MAILBOX_LAYOUTS, MAILBOX_SIDES, mailboxLayoutOf, MAILBOX_COLORS_3D, LAMP_LAYOUTS, LAMP_SPOTS, lampLayoutOf, FD_COUNTS, CONSOLE_LAYOUTS, IRRIGATION_LAYOUTS, TAP_MODELS, TAP_WALLS, LITTER_LAYOUTS, DETECTOR_LAYOUTS, FINGERBOT_LAYOUTS, FINGERBOT_COLORS, GRILL_LAYOUTS, SPEAKER_LAYOUTS, STREAMER_LAYOUTS, THS_LAYOUTS, thsLayoutOf, MOBILITY_LAYOUTS, PUMP_LAYOUTS, CIRC_MODELS, FLOOR_LAYOUTS, OPT_LINES, METER_LAYOUTS, meterLayoutOf, irrigationLayoutOf, detectorLayoutOf, TREE_PALETTES, TREE_PRESENTS, pumpLayoutOf, SPK_COLORS, CO2_WARN, NETATMO_COLORS, COVER_LAYOUTS, COVER_COLORS, FABRIC_COLORS, coverLayoutOf, COLLECTOR_STYLES, UPS_BATTERY_LOW, HISTORY_HOURS, BODY_COLORS, esc, MOWER_STYLES, SHELTER_STYLES, SHELTER_COLORS, LAPTOP_COLORS, LAPTOP_STYLES, drawn, stateFreeSource }))
       .catch((err) => {
         editorLoading = null;
         throw err;

@@ -3694,6 +3694,9 @@ class ApplianceCard extends HTMLElement {
       color = r.color;
       extraLines.push(...r.lines);
       ntDraw = r.draw;
+      // A finger bot's press shows for a moment, then the card settles back.
+      clearTimeout(this._fbTimer);
+      if (r.draw && r.draw.pressUntil && !this._inert) this._fbTimer = setTimeout(() => { this._lastCardHtml = undefined; this._render(); }, Math.min(FB_CLICK_MS, Math.max(0, r.draw.pressUntil - Date.now())) + 50);
       if (r.sliders) sliders.push(...r.sliders);
       // A ride without a battery entity, unplugged, keeps the charge the
       // card last saw: full once it was charged, kept in the browser so a

@@ -375,6 +375,18 @@ const TYPE_AUTO_PATTERNS = {
     watering_duration_entity: /(total|watering).?duration/i,
   },
   // Z2M's battery_low, X-Sense's and Nest's battery.
+  // A finger bot's settings as Zigbee2MQTT, ZHA, Tuya and LocalTuya name
+  // them, and the plug that charges it.
+  fingerbot: {
+    battery_entity: /batter/i,
+    bot_mode_entity: /^(select|input_select)\..*mode/i,
+    lower_entity: /^(number|input_number)\..*(lower|down|bas|press.?depth|arm.?down)/i,
+    upper_entity: /^(number|input_number)\..*(upper|(^|_)up(_|$)|haut|arm.?up)/i,
+    sustain_entity: /^(number|input_number)\..*(delay|sustain|hold|maintien|duration)/i,
+    reverse_entity: /^(switch|select|input_boolean)\..*revers/i,
+    touch_entity: /^(switch|input_boolean)\..*touch/i,
+    charging_entity: /^(binary_sensor|sensor)\..*charg/i,
+  },
   detector: {
     battery_entity: /batter/i,
     co_level_entity: /(^|[._])co([._]|$)|carbon.?monoxide|co.?level|co.?ppm/i,
@@ -753,6 +765,8 @@ const TYPE_CAPS = {
   irrigation: { ntIrrigation: true },
   litter_box: { ntLitter: true },
   detector: { ntDetector: true },
+  // A finger bot (HACF #163): its press and the plug that charges it.
+  fingerbot: { ntFingerbot: true },
   speaker: { ntSpeaker: true },
   // A game console, on PlayStation Network, Xbox, the PS4 integration or a plug.
   console: { ntConsole: true },
@@ -878,6 +892,7 @@ const STATE_DOMAINS = {
   irrigation: ["valve", "switch", "binary_sensor", "input_boolean", "sensor"],
   litter_box: ["sensor", "vacuum", "binary_sensor", "select", "switch"],
   detector: ["binary_sensor", "sensor", "input_boolean"],
+  fingerbot: ["switch", "button", "input_boolean", "input_button", "script"],
   speaker: ["media_player"],
   console: ["media_player", "sensor", "switch", "binary_sensor", "device_tracker", "input_boolean"],
   streamer: ["media_player", "remote", "switch", "binary_sensor", "input_boolean", "sensor"],
@@ -995,7 +1010,7 @@ const TYPE_GROUPS = [
   ["kitchen", ["dishwasher", "oven", "microwave", "hood", "cooktop", "fridge", "kettle", "cooker", "coffee", "rice_cooker", "air_fryer", "toaster", "pellet_grill"]],
   ["heating", ["water_heater", "boiler", "heat_pump", "thermostat", "pellet_stove", "space_heater", "towel_warmer", "floor_heating", "storage_tank", "fresh_water_station", "wood_stove"]],
   ["air", ["air_conditioner", "dehumidifier", "humidifier", "air_purifier", "fan", "diffuser", "hrv", "climate_sensor"]],
-  ["home", ["screen", "iron", "hair_dryer", "printer_3d", "filament_dryer", "robot", "pool_pump", "scale", "camera", "lamp", "mailbox", "water_pump", "spa", "sauna", "aquarium", "christmas_tree", "mobility", "irrigation", "detector", "speaker", "console", "streamer", "cover"]],
+  ["home", ["screen", "iron", "hair_dryer", "printer_3d", "filament_dryer", "robot", "pool_pump", "scale", "camera", "lamp", "mailbox", "water_pump", "spa", "sauna", "aquarium", "christmas_tree", "mobility", "irrigation", "detector", "fingerbot", "speaker", "console", "streamer", "cover"]],
   ["energy", ["solar", "solar_thermal", "home_battery", "ev_charger", "meter"]],
   ["pets", ["pet_feeder", "pet_fountain", "litter_box"]],
   ["network", ["network", "ups"]],
