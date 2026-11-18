@@ -14129,7 +14129,18 @@ function tvT(w) { return { 'switch.tv': { state: 'on', attributes: {} }, 'sensor
   check('boite : le tube a sa couleur', /stroke="#1E88E5" stroke-width="1\.2"/.test(body(A())), true);
   check('boite : sans bobine active, pas de filament', /p3a-flow/.test(body(A({ ams_entities: ['sensor.t1'] }))), false);
   check('boite : a cote, la carte s\'elargit', /border-right:\d+px solid transparent/.test(body(A())), true);
-  check('boite : a cote, le raccord sur le toit', /<rect x="[\d.]+" y="5\.4" width="7" height="5\.5"/.test(body(A())), true);
+  check('boite : a cote, le raccord sur le toit', /<rect x="[\d.]+" y="[\d.-]+" width="7" height="3" rx="1" fill="#3a4046"/.test(body(A())), true);
+  // The tube to the head starts at a fixed inlet on the roof and follows the
+  // head by a shear, so it no longer floats (JD, 18/11).
+  check('tube : la tete n\'emporte plus le tube', /class="p3r-hd"><rect/.test(body(P({ printer_style: 'bambu_x' }))), true);
+  check('tube : il part de l\'entree fixe', /<g transform="translate\(80 6\)"><g class="p3r-tube" style="--p3r-k:0\.762;--p3r-nk:-0\.762">/.test(body(P({ printer_style: 'bambu_x' }))), true);
+  check('tube : il finit sur la tete', /M0 0 C[\d.]+ [\d.]+,[\d.-]+ [\d.]+,-17 21"/.test(body(P({ printer_style: 'bambu_x' }))), true);
+  check('tube : la couleur du bac actif', /class="p3r-tube"[^]*?stroke="#1E88E5" stroke-width="\.6"/.test(body(A())), true);
+  check('tube : sans boite, tube blanc', /class="p3r-tube"[^<]*(<path[^>]*>){2}<path/.test(body(P({ printer_style: 'bambu_x' }))), false);
+  check('tube : le raccord de la boite sur l\'entree', /<rect x="60\.5" y="7\.9" width="7" height="3"/.test(body(A())), true);
+  check('tube : la Neptune part de sa bobine', /translate\(60 12\)/.test(body(P({ printer_style: 'elegoo_n' }))), true);
+  check('tube : la Neptune avec boite part de l\'entree', /translate\(80 12\)/.test(body(A({ printer_style: 'elegoo_n' }))), true);
+  check('tube : le cisaillement suit la tete', /@keyframes p3r-tube \{ 0%, 100% \{ transform: matrix\(1, 0, var\(--p3r-nk\), 1, 0, 0\); \} 50% \{ transform: matrix\(1, 0, var\(--p3r-k\), 1, 0, 0\)/.test(P({ printer_style: 'bambu_x' })), true);
   check('boite : dessus, pas de tube', /p3a-flow/.test(body(A({ ams_position: 'top' }))), false);
   check('boite : dessus, place au-dessus', /border-top:\d+px solid transparent/.test(body(A({ ams_position: 'top' }))), true);
   check('boite : dessus, pas plus large', /border-right/.test(body(A({ ams_position: 'top' }))), false);

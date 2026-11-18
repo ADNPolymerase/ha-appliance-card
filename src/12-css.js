@@ -175,9 +175,11 @@ const ILLUSTRATION_CSS = {
         .p3r-led { opacity: 0.35; }
         .machine.moving .p3r-led { opacity: 0.9; }
         .machine.moving .p3r-hd { animation: p3r-hd 2.4s ease-in-out infinite; animation-delay: var(--anim-offset, 0s); }
+        .machine.moving .p3r-tube { animation: p3r-tube 2.4s ease-in-out infinite; animation-delay: var(--anim-offset, 0s); transform-origin: 0 0; }
         .machine.moving .p3r-slide { transform-box: fill-box; transform-origin: 50% 100%; animation: p3r-slide 2.4s ease-in-out infinite; animation-delay: var(--anim-offset, 0s); }
         .machine.moving .p3r-fan { transform-box: fill-box; transform-origin: 50% 50%; animation: p3r-fan 0.6s linear infinite; animation-delay: var(--anim-offset, 0s); }
         @keyframes p3r-hd { 0%, 100% { transform: translateX(-16px); } 50% { transform: translateX(16px); } }
+        @keyframes p3r-tube { 0%, 100% { transform: matrix(1, 0, var(--p3r-nk), 1, 0, 0); } 50% { transform: matrix(1, 0, var(--p3r-k), 1, 0, 0); } }
         @keyframes p3r-slide { 0%, 100% { transform: scale(0.965); } 50% { transform: scale(1.03); } }
         @keyframes p3r-fan { to { transform: rotate(360deg); } }
         .p3a-on { fill: #2ecc71; }
