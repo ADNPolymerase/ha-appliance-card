@@ -7467,7 +7467,13 @@ check('texte brut decoche : le libelle de la card',
 
   // confirm: a first tap arms, a second within three seconds runs.
   const cf = mk('confirm');
+  // The red look goes on as the buttons are drawn again:
+  // the shortcut that skips an unchanged redraw must not swallow it.
+  let armedShown = 0;
+  const showArmed = cf.c._showArmed.bind(cf.c);
+  cf.c._showArmed = (el) => { armedShown++; showArmed(el); };
   fire(cf.btn(), 'click', ev);
+  check('confirmer : le bouton arme est redessine en rouge', armedShown > 0, true);
   check('confirmer : un tap ne fait rien', cf.calls.length, 0);
   check('confirmer : le bouton est arme', cf.c._armedKey, 'button.stop||');
   fire(cf.btn(), 'click', ev);

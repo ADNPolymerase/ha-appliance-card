@@ -1,5 +1,5 @@
 // Built by tools/build.mjs from the files of src/: edit those, not this file.
-const CARD_VERSION = "4.29.1";
+const CARD_VERSION = "4.29.2";
 
 console.info(
   "%c HA-APPLIANCE-CARD %c v" + CARD_VERSION + " ",
@@ -9075,10 +9075,15 @@ class ApplianceCard extends HTMLElement {
         haptic("selection");
         this._armedKey = key;
         this._armedUntil = Date.now() + CONFIRM_MS;
+        // The red, armed look is put on after the markup is written, so the
+        // markup alone does not change: the unchanged-redraw shortcut must
+        // not keep the old buttons, on arming and on letting go alike.
         this._armTimer = setTimeout(() => {
           this._disarm();
+          this._lastCardHtml = undefined;
           this._render();
         }, CONFIRM_MS);
+        this._lastCardHtml = undefined;
         this._render();
       });
       return;
