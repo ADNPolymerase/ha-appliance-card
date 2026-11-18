@@ -11335,6 +11335,11 @@ check('borne : ni un statut reconnu', evMode(evR('SuspendedEVSE', { power_entity
   const shape = (id, attrs = {}) => (/lp-l-(\w+)/.exec(machineCls(lamp('on', attrs, {}, id))) || [])[1];
   check('lampe : spot de jardin', shape('light.spot_jardin'), 'garden_spot');
   check('lampe : projecteur exterieur', shape('light.projecteur_exterieur'), 'garden_spot');
+  check('lampe : floodlight', shape('light.driveway_floodlight'), 'flood');
+  check('lampe : projecteur', shape('light.projecteur_garage'), 'flood');
+  check('lampe : led fluter', shape('light.led_fluter_einfahrt'), 'flood');
+  check('lampe : schijnwerper', shape('light.schijnwerper_oprit'), 'flood');
+  check('lampe : un deckenfluter reste halogene', shape('light.deckenfluter_wohnzimmer'), 'torch');
   check('lampe : borne de jardin', shape('light.borne_allee'), 'bollard');
   check('lampe : petit lampadaire de jardin', shape('light.lampadaire_jardin'), 'bollard');
   check('lampe : lampadaire du salon reste un lampadaire', shape('light.lampadaire_salon'), 'floor');
@@ -11360,7 +11365,7 @@ check('borne : ni un statut reconnu', evMode(evR('SuspendedEVSE', { power_entity
   check('lampe : up down wall light', shape('light.porch_up_down'), 'spot_updown');
   check('lampe : spots encastres restent', shape('light.spots_salon'), 'spot');
   check('lampe : trail ne devient pas un rail', shape('light.trail_lamp'), 'bulb');
-  for (const l of ['floor_tree', 'strip_cove', 'strip_plinth', 'strip_baseboard', 'strip_slats', 'spot_track', 'spot_surface', 'spot_updown', 'garden_spot', 'bollard', 'string', 'curtain', 'icicle', 'festoon', 'squares']) {
+  for (const l of ['floor_tree', 'strip_cove', 'strip_plinth', 'strip_baseboard', 'strip_slats', 'spot_track', 'spot_surface', 'spot_updown', 'garden_spot', 'flood', 'bollard', 'string', 'curtain', 'icicle', 'festoon', 'squares']) {
     check(`lampe : dessin ${l}`, /<svg class="lp-svg"[^>]*>[\s\S]*<\/svg>/.test(lamp('on', {}, { lamp_layout: l })) && !/undefined|NaN/.test(lamp('on', {}, { lamp_layout: l })), true);
   }
   const beams = (h) => (h.match(/class="lp-beam"/g) || []).length;

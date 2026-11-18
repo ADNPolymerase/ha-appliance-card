@@ -930,7 +930,7 @@ function mailboxHtml(cls, c) {
 // and whether an effect runs. A switch or a helper only says on or off, and
 // the lamp is drawn in the warm white of a bulb.
 const LAMP_ONLY_FIELDS = ["lamp_layout", "spots", "timer_entity"];
-const LAMP_LAYOUTS = ["bulb", "bedside", "floor", "floor_tree", "torch", "pendant", "strip", "strip_cove", "strip_plinth", "strip_baseboard", "strip_slats", "spot", "spot_track", "spot_surface", "spot_updown", "panels", "desk", "wall", "garden_spot", "bollard", "string", "curtain", "icicle", "festoon", "squares"];
+const LAMP_LAYOUTS = ["bulb", "bedside", "floor", "floor_tree", "torch", "pendant", "strip", "strip_cove", "strip_plinth", "strip_baseboard", "strip_slats", "spot", "spot_track", "spot_surface", "spot_updown", "panels", "desk", "wall", "garden_spot", "flood", "bollard", "string", "curtain", "icicle", "festoon", "squares"];
 const LAMP_SPOTS = [1, 2, 3, 4, 5];
 // The layouts drawn with as many spots as the light has.
 const LAMP_SPOT_ROWS = ["spot", "spot_track", "spot_surface", "pendant", "floor_tree"];
@@ -1002,6 +1002,9 @@ function lampLayoutOf(cfg, st) {
   // In the garden: a spotlight on its spike, or a small post along a path.
   if (/garden.?spot|spike|piquet|spiess|erdspie|(spot|projecteur|projector|strahler|foco|faretto).{0,14}(jardin|garden|exterieur|outdoor|garten|giardino|tuin)/.test(hay)) return "garden_spot";
   if (/bollard|borne|potelet|path.?light|pollerleuchte|wegeleuchte|baliza|paletto|tuinpaal|lampadaire.{0,6}(de.?)?jardin|(petit|mini).?lampadaire|garden.?(post|lamp)/.test(hay)) return "bollard";
+  // A floodlight on the house wall (a Deckenfluter is a torchiere, a
+  // videoprojecteur a screen).
+  if (/flood|(?<!decken)fluter|flutlicht|schijnwerper|(^|[^o])projecteur|proiettore|proyector|projetor|stralkastare|lyskaster|naswietlacz/.test(hay)) return "flood";
   // A floor lamp with several heads up its pole: a tree, or a floor lamp
   // named for its spots, arms or heads.
   if (/tree.?(floor.?)?lamp|lampadaire.?arbre|baumleuchte|(lampadaire|floor|stehlampe|stehleuchte|piantana|vloerlamp|lampara.?de.?pie|golvlampa|gulvlampe).{0,16}([2-5].?(arm|bras|spot|tete|kopf|flammig|lichts|luci|luces|head|light)|spots|strahler|tree|arbre|faretti|focos)/.test(hay)) return "floor_tree";
@@ -1230,6 +1233,23 @@ ${lpGrass()}
 <ellipse cx="23.4" cy="56" rx="6.6" ry="2.2" fill="#1e2226"/>
 <ellipse class="lp-lit" cx="23.4" cy="56" rx="5" ry="1.6"/></g>
 <circle class="lp-halo" cx="34.4" cy="59.4" r="11" fill="url(#lp-zH)"/>`;
+// A floodlight on the house wall, the common rectangular kind seen from the
+// side: a slim black slab on its bracket, fins along its top, its glass
+// facing the ground and a wide beam falling from it.
+LAMP_SVGS.flood = () => `<defs>
+<linearGradient id="lp-dB" x1="0" y1="0" x2=".2" y2="1"><stop offset="0" class="lp-stop" stop-opacity=".95"/><stop offset="1" class="lp-stop" stop-opacity=".1"/></linearGradient>
+<linearGradient id="lp-dM" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#4a525b"/><stop offset="1" stop-color="#1e2226"/></linearGradient></defs>
+<rect x="0" y="0" width="22" height="90" class="lp-wall"/>
+<path d="M22 0 V90" stroke="#8a929b" stroke-width="1"/>
+<path d="M22 90 H96" stroke="#c5ccd3" stroke-width="1.4"/>
+<path class="lp-beam" d="M33.9 27.3 L69.8 10.2 L96 38 V90 H24 Z" fill="url(#lp-dB)"/>
+<rect x="22" y="15" width="3" height="12" rx=".8" fill="#2b3036"/>
+<path d="M25 21 H31" stroke="#2b3036" stroke-width="2.6"/>
+<g transform="rotate(-20 31 22.4)">${Array.from({ length: 9 }, (_, i) => { const x = 31 + i * 4.6, y = 18.7 - i * .4; return `<path d="M${x} ${y} v-3.4" stroke="#2b3036" stroke-width="1.5" stroke-linecap="round"/>`; }).join("")}
+<path d="M28 19 L71 15.4 L71 21.6 L28 25.4 Z" fill="url(#lp-dM)"/>
+<path d="M28 25.4 L71 21.6 L72.6 24.6 L30.8 28.8 Z" fill="#1e2226"/>
+<path class="lp-lit" d="M30.4 25.9 L70.4 22.3 L71.6 24.2 L32 28 Z"/></g>
+<circle cx="31" cy="22.4" r="1.5" fill="#3a4047"/>`;
 // Spots on a track: heads hung from a rail, each aimed its own way.
 LAMP_SVGS.spot_track = (c) => {
   const xs = lpSpotRow(c, { 1: 0, 2: 30, 3: 22, 4: 19, 5: 16 });
