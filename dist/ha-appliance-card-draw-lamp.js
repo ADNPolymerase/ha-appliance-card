@@ -6,6 +6,11 @@ const softShadow = (cx, cy, rx, ry, op = .26, b = 1.6) => { const id = `shd-${cx
 // segments that change hue when an effect runs.
 const lpHalo = (id) => `<radialGradient id="lp-${id}" cx=".5" cy=".5" r=".5"><stop offset="0" class="lp-stop"/><stop offset="1" class="lp-stop" stop-opacity="0"/></radialGradient>`;
 const lpBeam = (id) => `<linearGradient id="lp-${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" class="lp-stop" stop-opacity=".95"/><stop offset="1" class="lp-stop" stop-opacity="0"/></linearGradient>`;
+// Where n spots sit across the drawing, centred, `gap` apart for each count.
+const lpSpotRow = (c, gap) => {
+  const n = LAMP_SPOTS.includes(c.spots) ? c.spots : 1;
+  return Array.from({ length: n }, (_, i) => 48 + (i - (n - 1) / 2) * gap[n]);
+};
 const lpMetal = (id, a = "#6f7882", b = "#e8ecf0") => `<linearGradient id="lp-${id}" x1="0" x2="1"><stop offset="0" stop-color="${a}"/><stop offset=".45" stop-color="${b}"/><stop offset="1" stop-color="${a}"/></linearGradient>`;
 const LAMP_SVGS = {
   bulb: () => `<defs>${lpHalo("bH")}
@@ -52,18 +57,24 @@ ${softShadow(48, 87.4, 11.2, 3.4, 0.29)}
 <path d="M36 86 Q36 83 48 83 Q60 83 60 86 Q60 88.4 48 88.4 Q36 88.4 36 86 Z" fill="#2b3036"/>
 <path d="M34 15 H62 L52 23 H44 Z" fill="url(#lp-tB)" stroke="#8f98a2" stroke-width=".6" stroke-linejoin="round"/>
 <ellipse class="lp-lit" cx="48" cy="15" rx="14" ry="1.8"/>`,
-  pendant: () => `<defs>${lpHalo("pH")}${lpBeam("pB")}
+  // One pendant, or as many as the spots count, smaller, side by side.
+  pendant: (c) => {
+    const xs = lpSpotRow(c, { 1: 0, 2: 42, 3: 30, 4: 23, 5: 18 });
+    const k = { 1: 1, 2: 0.62, 3: 0.46, 4: 0.38, 5: 0.31 }[xs.length];
+    return `<defs>${lpHalo("pH")}${lpBeam("pB")}
 <linearGradient id="lp-pD" x1="0" x2="1"><stop offset="0" stop-color="#2f6b5a"/><stop offset=".45" stop-color="#5fa98f"/><stop offset="1" stop-color="#245446"/></linearGradient></defs>
-<path d="M18 4 H78" stroke="#b9c1c9" stroke-width="3" stroke-linecap="round"/>
-<rect x="42" y="4" width="12" height="3" rx="1" fill="#8f98a2"/>
-<circle class="lp-halo" cx="48" cy="50" r="40" fill="url(#lp-pH)"/>
-<path class="lp-beam" d="M28 50 L10 92 H86 L68 50 Z" fill="url(#lp-pB)"/>
+<path d="M${xs.length > 1 ? 6 : 18} 4 H${xs.length > 1 ? 90 : 78}" stroke="#b9c1c9" stroke-width="3" stroke-linecap="round"/>
+${xs.map((x) => `<rect x="${x - 6}" y="4" width="12" height="3" rx="1" fill="#8f98a2"/>
+<circle class="lp-halo" cx="${x}" cy="50" r="${40 * k}" fill="url(#lp-pH)"/>
+<path class="lp-beam" d="M${x - 20 * k} 50 L${x - 38 * k} 92 H${x + 38 * k} L${x + 20 * k} 50 Z" fill="url(#lp-pB)"/>
+${k < 1 ? `<path d="M${x} 7 V${(50 - 24 * k).toFixed(1)}" stroke="#3a4047" stroke-width="1"/>\n` : ""}<g${k < 1 ? ` transform="translate(${(x - 48 * k).toFixed(1)} ${(50 - 50 * k).toFixed(1)}) scale(${k})"` : ""}>
 <path d="M48 7 V26" stroke="#3a4047" stroke-width="1"/>
 <rect x="45" y="26" width="6" height="5" rx="1" fill="#3a4047"/>
 <path d="M45 31 C34 33 27 41 26 50 H70 C69 41 62 33 51 31 Z" fill="url(#lp-pD)"/>
 <path d="M26 50 Q48 53.4 70 50" fill="none" class="lp-litS" stroke-width="1.2" opacity=".9"/>
 <path d="M42.6 50.4 Q48 54 53.4 50.4 Z" class="lp-lit"/>
-<path d="M45 51.2 Q48 52.6 51 51.2" fill="none" stroke="#fff" stroke-width=".8" opacity=".8"/>`,
+<path d="M45 51.2 Q48 52.6 51 51.2" fill="none" stroke="#fff" stroke-width=".8" opacity=".8"/></g>`).join("")}`;
+  },
   strip: () => `<defs>${lpBeam("sB")}
 <linearGradient id="lp-sW" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#c99a6b"/><stop offset="1" stop-color="#8d6640"/></linearGradient></defs>
 <rect x="0" y="10" width="96" height="80" rx="3" class="lp-wall"/>
@@ -116,10 +127,8 @@ ${[[6, 14, 82], [24, 6, 74], [42, 18, 90], [60, 4, 70], [78, 12, 84]].map(([x, y
 <g>${[[6, 14, 82], [24, 6, 74], [42, 18, 90], [60, 4, 70], [78, 12, 84]].flatMap(([x, y0, y1]) => Array.from({ length: Math.floor((y1 - y0 - 4) / 6.4) }, (_, i) => `<rect class="lp-seg lp-lit" x="${x + 8}" y="${(y0 + 2 + i * 6.4).toFixed(1)}" width="1.4" height="5.4" rx=".7"/>`)).join("")}</g>`,
   // One spot alone throws a wider cone, several share the ceiling.
   spot: (c) => {
-    const n = LAMP_SPOTS.includes(c.spots) ? c.spots : 1;
-    const gap = { 1: 0, 2: 32, 3: 27, 4: 22 }[n];
-    const w = { 1: 26, 2: 17, 3: 15, 4: 12 }[n];
-    const xs = Array.from({ length: n }, (_, i) => 48 + (i - (n - 1) / 2) * gap);
+    const xs = lpSpotRow(c, { 1: 0, 2: 32, 3: 27, 4: 22, 5: 18 });
+    const w = { 1: 26, 2: 17, 3: 15, 4: 12, 5: 10 }[xs.length];
     return `<defs>${lpBeam("gB")}</defs>
 <rect x="0" y="6" width="96" height="10" class="lp-ceiling"/>
 <path d="M0 16 H96" stroke="#c5ccd3" stroke-width=".8"/>
@@ -172,6 +181,46 @@ ${lpGrass()}
 <ellipse cx="23.4" cy="56" rx="6.6" ry="2.2" fill="#1e2226"/>
 <ellipse class="lp-lit" cx="23.4" cy="56" rx="5" ry="1.6"/></g>
 <circle class="lp-halo" cx="34.4" cy="59.4" r="11" fill="url(#lp-zH)"/>`;
+// Spots on a track: heads hung from a rail, each aimed its own way.
+LAMP_SVGS.spot_track = (c) => {
+  const xs = lpSpotRow(c, { 1: 0, 2: 30, 3: 22, 4: 19, 5: 16 });
+  const n = xs.length, tilt = { 1: 0, 2: 8, 3: 13.5, 4: 10, 5: 8 }[n], w = { 1: 16, 2: 13, 3: 13, 4: 10, 5: 8 }[n];
+  const heads = xs.map((x, i) => [x, n > 1 ? (tilt * (1 - (2 * i) / (n - 1))).toFixed(1) : 0]);
+  return `<defs>${lpBeam("kB")}${lpMetal("kM", "#1e2226", "#5a636d")}</defs>
+<rect x="0" y="6" width="96" height="10" class="lp-ceiling"/>
+<path d="M0 16 H96" stroke="#c5ccd3" stroke-width=".8"/>
+<path d="M4 90 H92" stroke="#c5ccd3" stroke-width="1.4"/>
+${heads.map(([x, a]) => `<g transform="rotate(${a} ${x} 23)">
+<path class="lp-beam" d="M${x - 4} 37 L${x - w} 88 H${x + w} L${x + 4} 37 Z" fill="url(#lp-kB)"/></g>`).join("")}
+<rect x="6" y="16" width="84" height="4" rx="1" fill="#2b3036"/>
+${heads.map(([x, a]) => `<path d="M${x} 20 V23" stroke="#2b3036" stroke-width="2.2"/>
+<g transform="rotate(${a} ${x} 23)"><circle cx="${x}" cy="23" r="1.8" fill="#3a4047"/>
+<rect x="${x - 5}" y="24" width="10" height="13" rx="1.6" fill="url(#lp-kM)"/>
+<ellipse class="lp-lit" cx="${x}" cy="37" rx="4" ry="1.3"/></g>`).join("")}`;
+};
+// Cans mounted on the ceiling.
+LAMP_SVGS.spot_surface = (c) => {
+  const xs = lpSpotRow(c, { 1: 0, 2: 36, 3: 28, 4: 22, 5: 18 });
+  const w = { 1: 20, 2: 16, 3: 13, 4: 11, 5: 10 }[xs.length];
+  return `<defs>${lpBeam("uB")}${lpMetal("uM", "#1e2226", "#5a636d")}</defs>
+<rect x="0" y="6" width="96" height="10" class="lp-ceiling"/>
+<path d="M0 16 H96" stroke="#c5ccd3" stroke-width=".8"/>
+${xs.map((x) => `<path class="lp-beam" d="M${x - 5} 36 L${x - w} 90 H${x + w} L${x + 5} 36 Z" fill="url(#lp-uB)"/>`).join("")}
+<path d="M4 90 H92" stroke="#c5ccd3" stroke-width="1.4"/>
+${xs.map((x) => `<rect x="${x - 8}" y="16" width="16" height="2" fill="#1e2226"/>
+<rect x="${x - 7}" y="18" width="14" height="18" fill="url(#lp-uM)"/>
+<ellipse class="lp-lit" cx="${x}" cy="36" rx="5.4" ry="1.4"/>`).join("")}`;
+};
+// A cylinder on a wall, throwing one beam up and one down.
+LAMP_SVGS.spot_updown = () => `<defs>${lpBeam("vB")}${lpMetal("vM", "#1e2226", "#5a636d")}
+<linearGradient id="lp-vU" x1="0" y1="1" x2="0" y2="0"><stop offset="0" class="lp-stop" stop-opacity=".95"/><stop offset="1" class="lp-stop" stop-opacity="0"/></linearGradient></defs>
+<rect x="0" y="0" width="96" height="94" rx="3" class="lp-wall"/>
+<path class="lp-beam" d="M43 35 L30 0 H66 L53 35 Z" fill="url(#lp-vU)"/>
+<path class="lp-beam" d="M43 61 L30 94 H66 L53 61 Z" fill="url(#lp-vB)"/>
+<rect x="44" y="44" width="8" height="8" fill="#1e2226"/>
+<rect x="41" y="35" width="14" height="26" rx="2" fill="url(#lp-vM)"/>
+<ellipse class="lp-lit" cx="48" cy="35" rx="5.4" ry="1.3"/>
+<ellipse class="lp-lit" cx="48" cy="61" rx="5.4" ry="1.3"/>`;
 // String lights in two swags between three hooks, Twinkly style: the bulbs
 // twinkle while on, and with an effect each takes its own hue.
 LAMP_SVGS.string = () => {

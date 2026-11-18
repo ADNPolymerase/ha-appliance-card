@@ -11352,14 +11352,28 @@ check('borne : ni un statut reconnu', evMode(evR('SuspendedEVSE', { power_entity
   check('lampe : ruban sous le socle de la cuisine', shape('light.led_strip_kitchen_kick'), 'strip_plinth');
   check('lampe : ruban sous l ilot', shape('light.ruban_led_ilot'), 'strip_plinth');
   check('lampe : ruban sans lieu reste sous l etagere', shape('light.ruban_led_cuisine'), 'strip');
-  for (const l of ['strip_cove', 'strip_plinth', 'strip_baseboard', 'strip_slats', 'garden_spot', 'bollard', 'string', 'curtain', 'icicle', 'festoon', 'squares']) {
+  check('lampe : spots sur rail', shape('light.spots_rail_salon'), 'spot_track');
+  check('lampe : track lights', shape('light.kitchen_track_light'), 'spot_track');
+  check('lampe : spots en saillie', shape('light.spots_saillie_cuisine'), 'spot_surface');
+  check('lampe : aufbaustrahler', shape('light.aufbaustrahler_flur'), 'spot_surface');
+  check('lampe : spot haut bas', shape('light.spot_haut_bas_entree'), 'spot_updown');
+  check('lampe : up down wall light', shape('light.porch_up_down'), 'spot_updown');
+  check('lampe : spots encastres restent', shape('light.spots_salon'), 'spot');
+  check('lampe : trail ne devient pas un rail', shape('light.trail_lamp'), 'bulb');
+  for (const l of ['strip_cove', 'strip_plinth', 'strip_baseboard', 'strip_slats', 'spot_track', 'spot_surface', 'spot_updown', 'garden_spot', 'bollard', 'string', 'curtain', 'icicle', 'festoon', 'squares']) {
     check(`lampe : dessin ${l}`, /<svg class="lp-svg"[^>]*>[\s\S]*<\/svg>/.test(lamp('on', {}, { lamp_layout: l })) && !/undefined|NaN/.test(lamp('on', {}, { lamp_layout: l })), true);
   }
   const beams = (h) => (h.match(/class="lp-beam"/g) || []).length;
   check('lampe : un spot seul', beams(lamp('on', {}, { lamp_layout: 'spot' })), 1);
   check('lampe : trois spots choisis', beams(lamp('on', {}, { lamp_layout: 'spot', spots: 3 })), 3);
   check('lampe : un groupe de deux spots', beams(lamp('on', { entity_id: ['light.a', 'light.b'] }, { lamp_layout: 'spot' })), 2);
-  check('lampe : pas plus de quatre spots', beams(lamp('on', { entity_id: ['a', 'b', 'c', 'd', 'e', 'f'] }, { lamp_layout: 'spot' })), 4);
+  check('lampe : pas plus de cinq spots', beams(lamp('on', { entity_id: ['a', 'b', 'c', 'd', 'e', 'f'] }, { lamp_layout: 'spot' })), 5);
+  check('lampe : cinq spots choisis', beams(lamp('on', {}, { lamp_layout: 'spot', spots: 5 })), 5);
+  check('lampe : rail, une tete par lumiere', beams(lamp('on', { entity_id: ['a', 'b', 'c'] }, { lamp_layout: 'spot_track' })), 3);
+  check('lampe : rail a une tete', beams(lamp('on', {}, { lamp_layout: 'spot_track', spots: 1 })), 1);
+  check('lampe : spots en saillie choisis', beams(lamp('on', {}, { lamp_layout: 'spot_surface', spots: 4 })), 4);
+  check('lampe : deux suspensions', beams(lamp('on', {}, { lamp_layout: 'pendant', spots: 2 })), 2);
+  check('lampe : une suspension par defaut', beams(lamp('on', {}, { lamp_layout: 'pendant' })), 1);
   check('lampe : un bouton marche', actionBtns(lamp('on')).length, 1);
   check('lampe : bouton actif allumee', actionBtns(lamp('on'))[0].endsWith(':on'), true);
   contains('lampe : le bouton vise la lampe', lamp('on'), 'data-entity="light.salon"');
@@ -11384,6 +11398,7 @@ check('borne : ni un statut reconnu', evMode(evR('SuspendedEVSE', { power_entity
   check('editeur lampe : dans la liste', /value="lamp"/.test(ed), true);
   check('editeur lampe : pas de nombre hors spots', /data-field="spots"/.test(ed), false);
   check('editeur lampe : nombre de spots', /data-field="spots"/.test(markup(newEditor({ state_entity: 'light.salon', lamp_layout: 'spot' }))), true);
+  check('editeur lampe : nombre de tetes du rail', /data-field="spots"/.test(markup(newEditor({ state_entity: 'light.salon', lamp_layout: 'spot_track' }))), true);
 }
 
 // =============================================================================
