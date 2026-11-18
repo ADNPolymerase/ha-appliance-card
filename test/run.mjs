@@ -3873,7 +3873,33 @@ contains('dessin : le portique monte avec la piece', busy, 'bottom: calc(22px + 
 contains('piece : un cube par defaut', p3Cls(busy), 'p3-part-cube');
 contains('piece : une pyramide', p3Cls(job({ printed_part: 'pyramid' })), 'p3-part-pyramid');
 contains('piece : un canard', p3Cls(job({ printed_part: 'duck' })), 'p3-part-duck');
-contains('piece : une forme inconnue reste un cube', p3Cls(job({ printed_part: 'benchy' })), 'p3-part-cube');
+contains('piece : une forme inconnue reste un cube', p3Cls(job({ printed_part: 'banane' })), 'p3-part-cube');
+// More parts (JD, 18/11): the Benchy, a figure, a cat, a vase, a chess knight
+// and a rocket, drawn on the plain and on the real printers.
+for (const part of ['benchy', 'figure', 'cat', 'vase', 'knight', 'rocket']) {
+  contains(`piece : ${part}`, p3Cls(job({ printed_part: part })), `p3-part-${part}`);
+  contains(`piece : ${part}, decoupe dans le css`, job({ printed_part: part }), `.p3-part-${part} .p3-shape { border-radius: 0; clip-path: path("`);
+  check(`piece : ${part}, dessin reel`, /<path class="p3r-part" transform="translate\([\d.]+ [\d.]+\) scale\(\.75\)" d="M/.test(job({ printed_part: part, printer_style: 'elegoo_c' })), true);
+}
+// "random": a part drawn at random, kept for the whole job, a new one when the
+// next job starts.
+{
+  const partOf = (h) => (/p3-part-([a-z]+)/.exec(p3Cls(h)) || [])[1];
+  const realOf = (h) => (/class="p3r-part"[^>]*d="([^"]+)"/.exec(h) || [])[1];
+  const st = (state) => ({ 'sensor.p3_status': { state, attributes: {} } });
+  const b = build({ ...P3, printed_part: 'random' }, st('printing'));
+  const first = partOf(b.html);
+  check('aleatoire : une piece de la liste', ['cube', 'pyramid', 'duck', 'benchy', 'figure', 'cat', 'vase', 'knight', 'rocket'].includes(first), true);
+  rerender(b.card, st('printing'));
+  check('aleatoire : gardee pendant le travail', partOf(markup(b.card)), first);
+  rerender(b.card, st('idle'));
+  rerender(b.card, st('printing'));
+  check('aleatoire : une autre au travail suivant', partOf(markup(b.card)) !== first, true);
+  const r = build({ ...P3, printed_part: 'random', printer_style: 'elegoo_c', progress_entity: 'sensor.p3_progress' }, { ...st('printing'), 'sensor.p3_progress': PCT(60) });
+  const d0 = realOf(r.html);
+  rerender(r.card, { ...st('printing'), 'sensor.p3_progress': PCT(70) });
+  check('aleatoire : dessin reel garde sa piece', realOf(markup(r.card)) === d0, true);
+}
 // On a plug alone, the part grows with the time printed: the plug gives no
 // progress, its history gives the start.
 {

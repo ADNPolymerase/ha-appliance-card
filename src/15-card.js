@@ -91,6 +91,18 @@ class ApplianceCard extends HTMLElement {
   // telemetry every second, as Electrolux does, would otherwise defeat the
   // whole point. alerts_entity is the exception, since its attributes are its
   // content.
+  // The part on the bed: the one chosen, or with "random" a new one each
+  // time a job starts, kept until the next (like the oven's dishes).
+  _printPart(cfg, job) {
+    if (cfg.printed_part !== "random") return PRINT_PARTS.includes(cfg.printed_part) ? cfg.printed_part : "cube";
+    if (this._part === undefined || (job && !this._partJob)) {
+      const others = PRINT_PARTS.filter((x) => x !== this._part);
+      this._part = others[Math.floor(Math.random() * others.length)];
+    }
+    this._partJob = job;
+    return this._part;
+  }
+
   _stateSignature(hass) {
     if (!hass || !this._config) return "";
     const parts = [
@@ -1778,7 +1790,7 @@ class ApplianceCard extends HTMLElement {
         layout: pStyle ? (pStyle === "bambu_a" || pStyle === "elegoo_n" ? "open" : "enclosed") : cfg.printer_layout === "open" ? "open" : "enclosed",
         style: pStyle,
         ams,
-        part: ["pyramid", "duck"].includes(cfg.printed_part) ? cfg.printed_part : "cube",
+        part: this._printPart(cfg, job),
         // The part on the bed grows with the job, and stays whole once done.
         height: norm === "done" ? 1 : norm === "error" ? (reached || 0) / 100 : runHeight !== null ? runHeight : (progressPct || 0) / 100,
         moving: isActiveState(norm) && shown !== "preheating",

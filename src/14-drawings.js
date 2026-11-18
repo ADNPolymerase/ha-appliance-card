@@ -39,10 +39,23 @@ const P3R_DEFS = `<defs>
 <linearGradient id="p3r-lt" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff4d6" stop-opacity=".5"/><stop offset="1" stop-color="#fff4d6" stop-opacity="0"/></linearGradient>
 <linearGradient id="p3r-sp" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#000" stop-opacity=".4"/><stop offset=".35" stop-color="#fff" stop-opacity=".22"/><stop offset="1" stop-color="#000" stop-opacity=".45"/></linearGradient>
 </defs>`;
+// The other parts a printer can show, each an outline in a 34 x 40 box
+// standing on its bottom edge: the Benchy tugboat, a little figure, a sitting
+// cat, a spiral vase, a chess knight and a rocket.
+const P3_SHAPES = {
+  benchy: "M1 25 L12 27 V15 Q12 13 14 13 H21 V5 H26 V13 H27 Q29 13 29 15 V28 L33 28 L31 36 Q30 40 26 40 H8 Q4 40 3 36 Z",
+  figure: "M17 1 A8.5 8.5 0 1 1 16.99 1 Z M10 19 H24 Q29 19 30 24 L32 32 H28 L27 27 V40 H7 V27 L6 32 H2 L4 24 Q5 19 10 19 Z",
+  cat: "M8 4 L12 11 H22 L26 4 L28 14 Q29 19 26 21 Q31 26 30 34 Q29 40 23 40 H11 Q5 40 4 34 Q3 26 8 21 Q5 19 6 14 Z M28 36 Q33 35 32 28 L30 28 Q30 33 27 34 Z",
+  vase: "M11 40 H23 Q27 34 27 26 Q27 18 21 12 Q20 8 22 4 H12 Q14 8 13 12 Q7 18 7 26 Q7 34 11 40 Z",
+  knight: "M5 40 H29 V36 H26 L25 31 Q29 24 27 14 Q25 5 16 4 L14 1 L12 6 Q8 8 6 13 L4 18 Q4 21 7 21 L11 19 Q13 18 14 20 Q11 25 9 31 L8 36 H5 Z",
+  rocket: "M17 0 Q27 7 27 20 V27 L33 33 V40 L26 36 H8 L1 40 V33 L7 27 V20 Q7 7 17 0 Z",
+};
 const P3R_MAX = 30;
 function p3rPart(p, cx, bot, h) {
   if (h <= 0) return "";
-  const shape = p.part === "duck"
+  const shape = P3_SHAPES[p.part]
+    ? `<path class="p3r-part" transform="translate(${cx - 12.75} ${bot - P3R_MAX}) scale(.75)" d="${P3_SHAPES[p.part]}"/>`
+    : p.part === "duck"
     ? `<path class="p3r-part" transform="translate(${cx - 12.75} ${bot - P3R_MAX}) scale(.75)" d="M1 20 L10 24 Q13 23 15 20 C12 14 15 5 22 5 C27 5 29 8 29.5 10 L34 12.5 L34 14 L29.5 16 Q28 19 25 21 C31 22 33 26 33 30 C33 37 27 40 17 40 C7 40 2 36 2 31 C2 27 1 24 1 20 Z"/>`
     : p.part === "pyramid"
       ? `<path class="p3r-part" d="M${cx} ${bot - P3R_MAX} L${cx + 14} ${bot} H${cx - 14} Z"/>`

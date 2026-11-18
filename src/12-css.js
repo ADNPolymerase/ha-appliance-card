@@ -137,6 +137,7 @@ const ILLUSTRATION_CSS = {
           border-radius: 0;
           clip-path: path("M1 20 L10 24 Q13 23 15 20 C12 14 15 5 22 5 C27 5 29 8 29.5 10 L34 12.5 L34 14 L29.5 16 Q28 19 25 21 C31 22 33 26 33 30 C33 37 27 40 17 40 C7 40 2 36 2 31 C2 27 1 24 1 20 Z");
         }
+        ${Object.entries(P3_SHAPES).map(([k, d]) => `.p3-part-${k} .p3-part { width: 34px; margin-left: -17px; } .p3-part-${k} .p3-shape { border-radius: 0; clip-path: path("${d}"); }`).join("\n        ")}
         .p3-eye { position: absolute; left: 22px; top: 9px; width: 3px; height: 3px; border-radius: 50%; background: rgba(0, 0, 0, 0.55); }
         .p3-lcd {
           position: absolute; left: 10px; bottom: 4px; width: 30px; height: 9px; border-radius: 2px;

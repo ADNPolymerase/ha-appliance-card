@@ -947,6 +947,9 @@ function noStateSourceOf(cfg, type) {
   const field = (NO_STATE_SOURCES[type] || []).find((f) => cfg[f]);
   return field ? cfg[field] : undefined;
 }
+// The parts a 3D printer can draw on its bed; "random" picks one per job.
+const PRINT_PARTS = ["cube", "pyramid", "duck", "benchy", "figure", "cat", "vase", "knight", "rocket"];
+
 const PRINTER_ONLY_FIELDS = [
   "nozzle_temperature_entity",
   "nozzle_target_entity",

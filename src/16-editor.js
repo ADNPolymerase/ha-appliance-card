@@ -1611,11 +1611,7 @@ class ApplianceCardEditor extends HTMLElement {
         }) : ""}
         ${this._type === "printer_3d" ? this._row("section_printed_part", "printed_part", {
           type: "select",
-          options: [
-            { value: "cube", label: t(hass, "part_cube") },
-            { value: "pyramid", label: t(hass, "part_pyramid") },
-            { value: "duck", label: t(hass, "part_duck") },
-          ],
+          options: ["random", ...PRINT_PARTS].map((v) => ({ value: v, label: t(hass, v === "random" ? "img_random" : `part_${v}`) })),
         }) : ""}
       </div>
       <details class="group" data-panel="general" ${this._panelOpen.general ? "open" : ""}>

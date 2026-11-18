@@ -1,5 +1,5 @@
 // Built by tools/build.mjs from the files of src/: edit those, not this file.
-const CARD_VERSION = "4.31.1";
+const CARD_VERSION = "4.31.2";
 
 console.info(
   "%c HA-APPLIANCE-CARD %c v" + CARD_VERSION + " ",
@@ -135,7 +135,7 @@ const T = {
     p3_cancelled: "Cancelled", p3_failed: "Failed", p3_offline: "Offline", p3_off: "Off",
     p3_attention: "Needs attention", p3_leveling: "Bed levelling", p3_filament: "Changing filament",
     p3_cooling: "Cooling", p3_calibrating: "Calibrating", p3_homing: "Homing",
-    section_printed_part: "Printed part", part_cube: "Cube", part_pyramid: "Pyramid", part_duck: "Rubber duck",
+    section_printed_part: "Printed part", part_cube: "Cube", part_pyramid: "Pyramid", part_duck: "Rubber duck", part_benchy: "Benchy tugboat", part_figure: "Little figure", part_cat: "Cat", part_vase: "Vase", part_knight: "Chess knight", part_rocket: "Rocket",
     type_pet_feeder: "Pet feeder", type_pet_fountain: "Pet fountain", ft_flowing: "Flowing", ft_off: "Off", ft_filter_due: "Filter due", ft_pump_due: "Clean the pump", ft_low_water: "Low water", ft_line_pump: "Pump", ft_line_water: "Water", ft_pump_reset: "Reset pump", ft_last_pump: "Pump last ran", ft_pump_on: "Running", section_pump_clean: "Pump cleaning", section_pump_reset: "Reset pump button", section_pump_running: "Pump running", section_water_level: "Water level", filter_due_below: "Due at or below", filter_life_full: "Days of a new filter", feeder_ready: "Ready", feeder_feeding: "Dispensing", section_portions_today: "Portions today", section_weight_today: "Weight today", section_portion_weight: "Portion weight", section_serving_size: "Serving size", section_feeder_schedule: "Schedule", section_last_feed: "Last feed", section_error: "Error indicator", start_option: "Option to select", start_value: "Value to write", portions: "portions",
     feeder_empty: "Tank empty", feeder_level: "Tank at {pct}", section_level: "Food level", section_level_b: "Food level, second hopper", level_empty_below: "Empty at or below", level_max: "Tank capacity",
     section_feeder_layout: "Model", layout_tower: "Square tank", layout_canister: "Round tank", layout_double: "Two bowls", layout_dual_split: "Two hoppers, split bowl", layout_rotary: "Rotating plates (wet food)",
@@ -3658,6 +3658,9 @@ function noStateSourceOf(cfg, type) {
   const field = (NO_STATE_SOURCES[type] || []).find((f) => cfg[f]);
   return field ? cfg[field] : undefined;
 }
+// The parts a 3D printer can draw on its bed; "random" picks one per job.
+const PRINT_PARTS = ["cube", "pyramid", "duck", "benchy", "figure", "cat", "vase", "knight", "rocket"];
+
 const PRINTER_ONLY_FIELDS = [
   "nozzle_temperature_entity",
   "nozzle_target_entity",
@@ -8708,6 +8711,18 @@ class ApplianceCard extends HTMLElement {
   // telemetry every second, as Electrolux does, would otherwise defeat the
   // whole point. alerts_entity is the exception, since its attributes are its
   // content.
+  // The part on the bed: the one chosen, or with "random" a new one each
+  // time a job starts, kept until the next (like the oven's dishes).
+  _printPart(cfg, job) {
+    if (cfg.printed_part !== "random") return PRINT_PARTS.includes(cfg.printed_part) ? cfg.printed_part : "cube";
+    if (this._part === undefined || (job && !this._partJob)) {
+      const others = PRINT_PARTS.filter((x) => x !== this._part);
+      this._part = others[Math.floor(Math.random() * others.length)];
+    }
+    this._partJob = job;
+    return this._part;
+  }
+
   _stateSignature(hass) {
     if (!hass || !this._config) return "";
     const parts = [
@@ -10395,7 +10410,7 @@ class ApplianceCard extends HTMLElement {
         layout: pStyle ? (pStyle === "bambu_a" || pStyle === "elegoo_n" ? "open" : "enclosed") : cfg.printer_layout === "open" ? "open" : "enclosed",
         style: pStyle,
         ams,
-        part: ["pyramid", "duck"].includes(cfg.printed_part) ? cfg.printed_part : "cube",
+        part: this._printPart(cfg, job),
         // The part on the bed grows with the job, and stays whole once done.
         height: norm === "done" ? 1 : norm === "error" ? (reached || 0) / 100 : runHeight !== null ? runHeight : (progressPct || 0) / 100,
         moving: isActiveState(norm) && shown !== "preheating",
