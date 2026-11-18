@@ -1508,6 +1508,7 @@ disk2_entity: sensor.nas_drive_2_status
 | `battery_entity` | detector | The battery, in % or as a low-battery sensor: a line, and the light turns amber at 20 % or less. |
 | `test_entity` | detector | A button, script or switch that runs the alarm test: a *Test* button on the card. |
 | `co_level_entity` | detector | The CO level, on the alarm's display and as a line. |
+| `co_entity` | detector | The CO alarm of a combined smoke and CO detector (e.g. Nest Protect), a binary sensor (or a sensor, whose own value is shown unless it says an alarm): a *CO alarm* line, and the smoke detector raises the CO alarm when it goes off, even with the smoke sensor offline. It makes the card a smoke detector unless its device class or `detector_layout` says CO or leak, where it is ignored. |
 | `speaker_layout` | speaker | `smart` (HomePod) \| `homepod_mini` \| `sonos_one` \| `sonos_era100` \| `sonos_era300` \| `sonos_move` \| `soundbar` (Sonos Arc or Beam, under its TV) \| `bose_wave` (Wave SoundTouch) \| `bose_500` (Home Speaker 500) \| `bose_soundlink` (SoundLink Flex) \| `bose_soundbar` (Smart Soundbar, under its TV) \| `sonos_five` \| `sonos_play` \| `sonos_roam` \| `sonos_ray` (under its TV) \| `sonos_amp` \| `sonos_port` \| `bose_ultra` (Lifestyle Ultra) \| `bose_portable` (Portable Smart Speaker) \| `bose_amp` (Music Amplifier) \| `bookshelf` \| `echo_dot` \| `echo_dot_max` \| `nest_mini`. Left out, it is read in the name, then in the model of its device: HomePod mini, Era 100, Era 300, Move, Five, Play, Roam, Ray, Amp, Port, Arc, Beam, Lifestyle Ultra, Portable, Music Amplifier, Echo Dot Max, Wave, SoundLink, Flex, another Bose. The state is a `media_player`: what it plays, the artist, the source and the volume are lines. On a smart plug alone (`power_entity`), it plays from 3 W (`power_on_threshold`), is idle below and off when it draws nothing. |
 | `speaker_color` | speaker | `white` \| `black` \| `silver` \| `yellow` \| `orange` \| `blue`, each model in the colours it is sold in: a HomePod white or midnight, a HomePod mini in all five, a Sonos white or black, a Bose 500, Portable or Wave silver or black, a Lifestyle Ultra black or sand (`white`), an Echo Dot charcoal, white or blue, an Echo Dot Max white or black, a SoundLink black, white or blue. Left out, a colour in the name picks it (a HomePod named *white*), then `illustration_color`; otherwise each model has its own. |
 | `console_layout` | game console | `ps1` \| `ps2` \| `ps3` \| `ps4` \| `ps4_pro` \| `ps5` \| `xbox` \| `xbox_360` \| `xbox_one` \| `xbox_series_x` \| `xbox_series_s` \| `switch` \| `switch_2` \| `switch_lite` \| `ps_vita` \| `nes` \| `snes` \| `n64` \| `gamecube` \| `wii` \| `megadrive`. Left out, it is read in the name (PS4 Pro, Series S, Switch Lite, N64...), a brand alone drawing its latest. The state is a `media_player` (PlayStation Network, Xbox, the PS4 integration), PlayStation Network's online status, a smart plug, or anything on and off: *Playing* while a game runs, *On* in its menus, *Rest mode* on standby, *Off*. Sparks rise while it plays, its light is lit when on and amber at rest. |
@@ -1630,6 +1631,17 @@ type: custom:ha-appliance-card
 appliance_type: detector
 state_entity: binary_sensor.kitchen_leak
 battery_entity: sensor.kitchen_leak_battery
+```
+
+A combined smoke and CO alarm, e.g. a Nest Protect, is one card: the smoke sensor as its state, the CO one in `co_entity`:
+
+```yaml
+type: custom:ha-appliance-card
+appliance_type: detector
+name: Nest Protect
+state_entity: binary_sensor.hallway_nest_protect_smoke_status
+co_entity: binary_sensor.hallway_nest_protect_co_status
+battery_entity: sensor.hallway_nest_protect_battery_level
 ```
 
 A game console on PlayStation Network, or a Switch with its parental control's play time:

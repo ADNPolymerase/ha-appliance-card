@@ -141,7 +141,7 @@ const NT_ONLY_FIELDS = {
   mobility: ["mobility_layout"],
   irrigation: ["irrigation_layout", "zone_entity", "rain_delay_entity", "soil_moisture_entity", "next_run_entity", "tap_model", "tap_wall", "watering_duration_entity"],
   litter_box: ["litter_layout", "waste_drawer_entity", "litter_level_entity", "pet_weight_entity", "visits_entity", "cat_present_entity", "last_use_entity"],
-  detector: ["detector_layout", "co_level_entity"],
+  detector: ["detector_layout", "co_level_entity", "co_entity"],
   speaker: ["speaker_layout", "speaker_color"],
   console: ["console_layout", "game_entity", "playtime_entity", "playtime_left_entity"],
   streamer: ["streamer_layout", "app_entity"],
@@ -278,12 +278,20 @@ function litterLayoutOf(cfg, st) {
   const hay = stripAccents(`${cfg.state_entity || ""} ${cfg.name || ""} ${stHay(st)}`).toLowerCase();
   return /petkit|pura|(^|[^a-z])box([^a-z]|$)|caja|scooper/.test(hay) ? "box" : "globe";
 }
+// Whether a detector's state is an alarm: on, or a word that says one, never
+// a clear, an idle or an unavailable.
+function detAlarmOf(raw) {
+  return (NT_ON.includes(raw) || /alarm|smoke|detect|leak|wet|fuite|fumee|emergency|warning|mild|heavy|critical|danger/.test(raw)) && !/^(off|ok|clear|dry|normal|idle|test)$|^(no|not|un)[ _-]?|inactive/.test(raw);
+}
 function detectorLayoutOf(cfg, st) {
   if (DETECTOR_LAYOUTS.includes(cfg.detector_layout)) return cfg.detector_layout;
   const dc = String((st && st.attributes.device_class) || "");
   if (dc === "moisture") return "leak";
   if (dc === "carbon_monoxide" || dc === "gas") return "co";
   if (dc === "smoke") return "smoke";
+  // A CO alarm next to it makes it the smoke half of a combined alarm, before
+  // a "smoke_co" name could guess a CO alarm.
+  if (cfg.co_entity) return "smoke";
   const hay = stripAccents(`${cfg.state_entity || ""} ${cfg.name || ""} ${stHay(st)}`).toLowerCase();
   if (/leak|fuite|water|(^|[^a-z])eau([^a-z]|$)|wasser|fuga|perdita|lekk|lack|moisture|flood/.test(hay)) return "leak";
   if (/(^|[^a-z])co([^a-z0-9]|$)|monox|carbon|(^|[^a-z])gas([^a-z]|$)|(^|[^a-z])gaz([^a-z]|$)/.test(hay)) return "co";
@@ -1957,8 +1965,8 @@ function ntDetSmoke(c) {
 <radialGradient id="${rg}" cx=".5" cy=".5" r=".5"><stop offset=".55" stop-color="#ff1744" stop-opacity=".55"/><stop offset="1" stop-color="#ff1744" stop-opacity="0"/></radialGradient>
 <linearGradient id="${cl}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#d9dee3"/><stop offset="1" stop-color="#d9dee3" stop-opacity="0"/></linearGradient></defs>
 ${ntPatch(60, 20, 80, 30, "#e3e7eb")}
-${c.on ? `<ellipse class="nta-blinkfast" cx="${cx}" cy="${cy}" rx="${rx + 14}" ry="${ry + 9}" fill="url(#${rg})"/>
-<g class="nt-run">${[[40, 118, 9, 1], [60, 122, 10, 3], [80, 118, 9, 5], [50, 124, 8, 2], [70, 122, 9, 4], [30, 124, 7, 6], [90, 124, 7, 3]].map(([x, y, r, d]) => puff(x, y, r, `nta-smoke ntd${d}`)).join("")}
+${c.on ? `<ellipse class="nta-blinkfast" cx="${cx}" cy="${cy}" rx="${rx + 14}" ry="${ry + 9}" fill="url(#${rg})"/>` : ""}
+${c.on && (!c.co || c.smoke) ? `<g class="nt-run">${[[40, 118, 9, 1], [60, 122, 10, 3], [80, 118, 9, 5], [50, 124, 8, 2], [70, 122, 9, 4], [30, 124, 7, 6], [90, 124, 7, 3]].map(([x, y, r, d]) => puff(x, y, r, `nta-smoke ntd${d}`)).join("")}
 ${[[46, 62, 8, "nta-spreadL ntd2"], [74, 62, 8, "nta-spreadR ntd4"], [52, 66, 7, "nta-spreadL ntd5"], [68, 66, 7, "nta-spreadR ntd1"], [60, 64, 7, "nta-spreadL ntd6"]].map(([x, y, r, cls]) => puff(x, y, r, cls)).join("")}</g>` : ""}
 <ellipse cx="${cx}" cy="${cy - h}" rx="${rx + 4}" ry="${ry + 2}" fill="#000" opacity=".07"/>
 <path d="M${cx - rx} ${cy} V${cy - h} A${rx} ${ry} 0 0 1 ${cx + rx} ${cy - h} V${cy} Z" fill="url(#${sd})"/>
@@ -1970,6 +1978,7 @@ ${Array.from({ length: 16 }, (_, i) => { const a = i * Math.PI / 8; return `<pat
 <path d="M${cx - rx * .7} ${cy - ry * .45} Q${cx - rx * .3} ${cy - ry * .85} ${cx + rx * .1} ${cy - ry * .86}" fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round" opacity=".9"/>
 ${c.on ? `<ellipse class="nta-blinkfast" cx="${cx}" cy="${cy}" rx="${rx + 1}" ry="${ry + 1}" fill="none" stroke="#ff1744" stroke-width="1.8"/>` : ""}
 ${detLed(c, cx + rx * .5, cy + ry * .42, 1.5)}
+${c.co ? `<text class="nta-blinkfast" x="${cx}" y="${cy + ry + 22}" font-size="13" font-weight="800" text-anchor="middle" fill="#e53935" ${NT_FONT}>CO</text>` : ""}
 ${c.on ? ntWaves(cx, cy + 30, "#e53935", 26) : ""}`;
 }
 // A CO alarm on the wall, its display reading the parts per million.
@@ -4297,8 +4306,11 @@ function ntReadOf(type, hass, cfg, st, watts, threshold) {
   const raw = st ? String(st.state).trim().toLowerCase() : "";
   const dead = !st || ["unavailable", "unknown", "none", ""].includes(raw);
   const running = ntRunning(hass, cfg, st, watts, threshold);
+  // A combined smoke and CO alarm's CO sensor, read before the main entity
+  // can call the card offline: a CO alarm shows even when the smoke one is out.
+  const detCo = type === "detector" && !!cfg.co_entity && detectorLayoutOf(cfg, st) === "smoke" && detAlarmOf(String((stateObj(hass, cfg.co_entity) || {}).state || "").trim().toLowerCase());
   // A detector's none is all clear (Shelly Gas), not a missing value.
-  const unav = running === null && !(type === "meter" && !dead) && !(type === "detector" && st && raw === "none");
+  const unav = !detCo && running === null && !(type === "meter" && !dead) && !(type === "detector" && st && raw === "none");
   const tmp = ntTemp(hass, cfg, st);
   const out = (mode, labelKey, color, draw) => ({ mode, label: t(hass, labelKey), color, lines, draw: { ...draw, unav } });
   if (unav) {
@@ -4442,7 +4454,7 @@ function ntReadOf(type, hass, cfg, st, watts, threshold) {
     // says. A low battery is a line, the light turns amber.
     const layout = detectorLayoutOf(cfg, st);
     const kind = `det_${layout}`;
-    const alarm = !dead && (NT_ON.includes(raw) || /alarm|smoke|detect|leak|wet|fuite|fumee|emergency|warning|mild|heavy|critical|danger/.test(raw)) && !/^(off|ok|clear|dry|normal|idle|test)$|^(no|not|un)[ _-]?|inactive/.test(raw);
+    const alarm = !dead && detAlarmOf(raw);
     const bv = cfg.battery_entity ? numericState(hass, cfg.battery_entity) : null;
     const bs = cfg.battery_entity ? stateObj(hass, cfg.battery_entity) : null;
     const low = bv !== null ? bv <= 20 : !!bs && domainOf(cfg.battery_entity) === "binary_sensor" && NT_ON.includes(String(bs.state).toLowerCase());
@@ -4450,8 +4462,15 @@ function ntReadOf(type, hass, cfg, st, watts, threshold) {
     if (bl) lines.push({ ...bl, value: domainOf(cfg.battery_entity) === "binary_sensor" ? t(hass, low ? "opt_low" : "opt_ok") : bl.value, caution: low });
     const co = ntLine(hass, cfg, "det_co_level", "mdi:molecule-co", "sec_co_level", cfg.co_level_entity);
     if (co) lines.push(co);
+    // A combined smoke and CO alarm (e.g. Nest Protect): its CO sensor is a
+    // line, and either one going off is the alarm. Only on the smoke drawing.
+    const ca = layout === "smoke" ? ntLine(hass, cfg, "det_co_alarm", "mdi:molecule-co", "sec_co_alarm", cfg.co_entity) : null;
+    // A binary sensor reads Detected or Clear in the card's language; any
+    // other sensor shows its own value unless it is an alarm.
+    if (ca) lines.push({ ...ca, value: detCo ? t(hass, "det_line_detected") : domainOf(cfg.co_entity) === "binary_sensor" ? t(hass, "det_line_clear") : ca.value, caution: detCo });
     const cv = cfg.co_level_entity ? numericState(hass, cfg.co_level_entity) : null;
-    const draw = { kind, on: alarm, low, lcd: cv !== null ? `${Math.round(cv)} ppm` : alarm ? "ALARM" : "OK" };
+    const draw = { kind, on: alarm || detCo, smoke: alarm, co: detCo, low, lcd: cv !== null ? `${Math.round(cv)} ppm` : alarm ? "ALARM" : "OK" };
+    if (detCo) return out("alarm", alarm ? "det_smoke_co" : "det_co", NT_COLORS.alarm, draw);
     if (alarm) return out("alarm", { smoke: "det_smoke", co: "det_co", leak: "det_leak" }[layout], NT_COLORS.alarm, draw);
     return out("ok", "det_ok", NT_COLORS.lit, draw);
   }

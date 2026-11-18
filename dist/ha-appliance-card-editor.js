@@ -309,6 +309,10 @@ const SECTIONS = [
   { field: "last_fire_entity", types: ["wood_stove"], labelKey: "wood_last_fire", includeDomains: ["input_datetime", "sensor"] },
   { field: "cat_present_entity", types: ["litter_box"], labelKey: "sec_cat_present", includeDomains: ["binary_sensor"] },
   { field: "co_level_entity", types: ["detector"], labelKey: "sec_co_level", includeDomains: ["sensor"], when: (c) => detectorLayoutOf(c, null) === "co" },
+  { field: "co_entity", types: ["detector"], labelKey: "sec_co_alarm", includeDomains: ["binary_sensor"],
+    // Offered unless the card is a CO alarm or a leak sensor by choice: a
+    // name alone ("smoke_co", "water_heater_smoke") cannot tell.
+    when: (c) => !["co", "leak"].includes(c.detector_layout) },
   { field: "test_entity", types: ["detector"], labelKey: "sec_test", includeDomains: ["button", "input_button", "script", "switch"] },
   // Optional readings on the older types.
   ...Object.entries(OPT_LINES).flatMap(([ty, list]) => list.flatMap((o) => [{ field: o.field, types: [ty], labelKey: o.label, includeDomains: o.domains }]

@@ -12682,6 +12682,39 @@ function tvT(w) { return { 'switch.tv': { state: 'on', attributes: {} }, 'sensor
   check('detecteur : le dessin suit la classe', [kindOf(DT('smoke', 'off')), kindOf(DT('carbon_monoxide', 'off')), kindOf(DT('moisture', 'off'))].join(), 'det_smoke,det_co,det_leak');
   check('detecteur : la fumee monte en alarme', [/class="nta-smoke/.test(DT('smoke', 'on')), /class="nta-smoke/.test(DT('smoke', 'off'))].join(), 'true,false');
   check('detecteur : taux de CO sur l ecran', /180 ppm/.test(DT('carbon_monoxide', 'on', { co_level_entity: 'sensor.co' }, { 'sensor.co': s(180, { unit_of_measurement: 'ppm' }) })), true);
+  const NP = (smoke, co) => DT('smoke', smoke, { co_entity: 'binary_sensor.co' }, { 'binary_sensor.co': s(co, { device_class: 'carbon_monoxide' }) });
+  check('detecteur combine : RAS', stateLine(NP('off', 'off')), 'All clear');
+  check('detecteur combine : le CO donne l alarme', stateLine(NP('off', 'on')), 'CO detected');
+  check('detecteur combine : fumee seule', stateLine(NP('on', 'off')), 'Smoke detected');
+  check('detecteur combine : les deux', stateLine(NP('on', 'on')), 'Smoke/CO detected');
+  check('detecteur combine : les deux, fumee et CO dessines', [/class="nta-smoke/.test(NP('on', 'on')), />CO<\/text>/.test(NP('on', 'on'))].join(), 'true,true');
+  check('detecteur combine : CO sans fumee qui monte', [kindOf(NP('off', 'on')), /class="nta-smoke/.test(NP('off', 'on')), />CO<\/text>/.test(NP('off', 'on'))].join(), 'det_smoke,false,true');
+  const coOnly = NP('off', 'on');
+  check('detecteur combine : CO seul, en alarme rouge', [/\bnt-on\b/.test(machineCls(coOnly)), /class="nta-beacon/.test(coOnly), /class="nta-blinkfast/.test(coOnly)].join(), 'true,true,true');
+  check('detecteur combine : la ligne CO', [infoLine(NP('off', 'off'), 'CO alarm'), infoLine(coOnly, 'CO alarm')].join(), 'Clear,Detected');
+  check('detecteur combine : la ligne CO en orange', [/class="info-line caution[^"]*"[^>]*><ha-icon icon="mdi:molecule-co"/.test(coOnly), /class="info-line caution[^"]*"[^>]*><ha-icon icon="mdi:molecule-co"/.test(NP('off', 'off'))].join(), 'true,false');
+  check('detecteur combine : la ligne CO traduite, langue imposee', infoLine(DT('smoke', 'off', { co_entity: 'binary_sensor.co', language: 'fr' }, { 'binary_sensor.co': s('on') }), 'Alarme CO'), 'Détecté');
+  for (const st of ['unavailable', 'unknown']) {
+    check(`detecteur combine : CO ${st}, ni alarme ni ligne`, [stateLine(NP('off', st)), infoLine(NP('off', st), 'CO alarm')].join(), 'All clear,');
+  }
+  check('detecteur combine : CO absent de hass, ni alarme ni ligne', [stateLine(DT('smoke', 'off', { co_entity: 'binary_sensor.absent' })), infoLine(DT('smoke', 'off', { co_entity: 'binary_sensor.absent' }), 'CO alarm')].join(), 'All clear,');
+  check('detecteur combine : fumee hors ligne, le CO donne quand meme l alarme', stateLine(NP('unavailable', 'on')), 'CO detected');
+  check('detecteur combine : fumee hors ligne, CO calme, hors ligne', stateLine(NP('unavailable', 'off')), 'Offline');
+  check('detecteur combine : un capteur CO qui dit emergency', stateLine(DT('smoke', 'off', { co_entity: 'sensor.co' }, { 'sensor.co': s('emergency') })), 'CO detected');
+  const LK = (st, co) => DT('moisture', st, { co_entity: 'binary_sensor.co' }, { 'binary_sensor.co': s(co) });
+  check('detecteur combine : ignore sur une fuite', [stateLine(LK('on', 'on')), stateLine(LK('off', 'on')), infoLine(LK('off', 'on'), 'CO alarm')].join(), 'Leak detected,All clear,');
+  check('detecteur combine : ignore sur une alarme CO', stateLine(DT('carbon_monoxide', 'on', { co_entity: 'binary_sensor.co' }, { 'binary_sensor.co': s('on') })), 'CO detected');
+  check('detecteur combine : co_entity seul fait un detecteur', kindOf(render({ state_entity: 'binary_sensor.hall_protect', co_entity: 'binary_sensor.co' }, { 'binary_sensor.hall_protect': s('off'), 'binary_sensor.co': s('off') })), 'det_smoke');
+  const edCo = (cfg) => markup(newEditor({ appliance_type: 'detector', state_entity: 'binary_sensor.d', ...cfg })).includes('data-toggle="co_entity"');
+  check('detecteur combine : le champ dans l editeur', [edCo({ detector_layout: 'smoke' }), edCo({ state_entity: 'binary_sensor.smoke_co_alarm_smoke_detected' }), edCo({ detector_layout: 'co' }), edCo({ detector_layout: 'leak' }), edCo({ state_entity: 'binary_sensor.water_heater_smoke' })].join(), 'true,true,false,false,true');
+  // A name that guesses CO, no device class (a template or MQTT sensor): the
+  // co_entity makes it the smoke half, so the CO alarm is never dropped.
+  const SC = (st, co, ents = {}) => render({ appliance_type: 'detector', state_entity: 'binary_sensor.hall_smoke_co_alarm', co_entity: 'binary_sensor.co' }, { ...(st === null ? {} : { 'binary_sensor.hall_smoke_co_alarm': s(st) }), 'binary_sensor.co': s(co), ...ents });
+  check('detecteur combine : nom smoke_co, sans classe', [stateLine(SC('off', 'on')), kindOf(SC('off', 'on')), infoLine(SC('off', 'on'), 'CO alarm')].join(), 'CO detected,det_smoke,Detected');
+  check('detecteur combine : nom smoke_co hors ligne ou absent, le CO donne l alarme', [stateLine(SC('unavailable', 'on')), stateLine(SC(null, 'on'))].join(), 'CO detected,CO detected');
+  check('detecteur combine : la classe CO garde son dessin', kindOf(DT('carbon_monoxide', 'off', { co_entity: 'binary_sensor.co' }, { 'binary_sensor.co': s('on') })), 'det_co');
+  const CS = (v, unit) => DT('smoke', 'off', { co_entity: 'sensor.co' }, { 'sensor.co': s(v, unit ? { unit_of_measurement: unit } : {}) });
+  check('detecteur combine : un capteur CO en ppm montre sa valeur', [stateLine(CS(250, 'ppm')), /250/.test(infoLine(CS(250, 'ppm'), 'CO alarm') || ''), infoLine(CS('high'), 'CO alarm')].join(), 'All clear,true,high');
   const lowB = DT('smoke', 'off', { battery_entity: 'sensor.b' }, { 'sensor.b': s(12, { unit_of_measurement: '%' }) });
   check('detecteur : pile faible, voyant orange', /fill="#ffb300"/.test(lowB), true);
   check('detecteur : pile en ligne', infoLine(lowB, 'Battery').replace(/\s/g, ' '), '12 %');
