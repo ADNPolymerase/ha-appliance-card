@@ -11360,7 +11360,7 @@ check('borne : ni un statut reconnu', evMode(evR('SuspendedEVSE', { power_entity
   check('lampe : up down wall light', shape('light.porch_up_down'), 'spot_updown');
   check('lampe : spots encastres restent', shape('light.spots_salon'), 'spot');
   check('lampe : trail ne devient pas un rail', shape('light.trail_lamp'), 'bulb');
-  for (const l of ['strip_cove', 'strip_plinth', 'strip_baseboard', 'strip_slats', 'spot_track', 'spot_surface', 'spot_updown', 'garden_spot', 'bollard', 'string', 'curtain', 'icicle', 'festoon', 'squares']) {
+  for (const l of ['floor_tree', 'strip_cove', 'strip_plinth', 'strip_baseboard', 'strip_slats', 'spot_track', 'spot_surface', 'spot_updown', 'garden_spot', 'bollard', 'string', 'curtain', 'icicle', 'festoon', 'squares']) {
     check(`lampe : dessin ${l}`, /<svg class="lp-svg"[^>]*>[\s\S]*<\/svg>/.test(lamp('on', {}, { lamp_layout: l })) && !/undefined|NaN/.test(lamp('on', {}, { lamp_layout: l })), true);
   }
   const beams = (h) => (h.match(/class="lp-beam"/g) || []).length;
@@ -11373,6 +11373,13 @@ check('borne : ni un statut reconnu', evMode(evR('SuspendedEVSE', { power_entity
   check('lampe : rail a une tete', beams(lamp('on', {}, { lamp_layout: 'spot_track', spots: 1 })), 1);
   check('lampe : spots en saillie choisis', beams(lamp('on', {}, { lamp_layout: 'spot_surface', spots: 4 })), 4);
   check('lampe : deux suspensions', beams(lamp('on', {}, { lamp_layout: 'pendant', spots: 2 })), 2);
+  check('lampe : lampadaire a spots, trois tetes par defaut', beams(lamp('on', {}, { lamp_layout: 'floor_tree' })), 3);
+  check('lampe : lampadaire a spots, cinq tetes', beams(lamp('on', {}, { lamp_layout: 'floor_tree', spots: 5 })), 5);
+  check('lampe : lampadaire a spots, une tete par lumiere', beams(lamp('on', { entity_id: ['a', 'b'] }, { lamp_layout: 'floor_tree' })), 2);
+  check('lampe : arbre', shape('light.tree_lamp'), 'floor_tree');
+  check('lampe : lampadaire 3 spots', shape('light.lampadaire_3_spots'), 'floor_tree');
+  check('lampe : stehlampe 3 flammig', shape('light.stehlampe_3_flammig'), 'floor_tree');
+  check('lampe : un lampadaire reste un arc', shape('light.lampadaire_salon'), 'floor');
   check('lampe : une suspension par defaut', beams(lamp('on', {}, { lamp_layout: 'pendant' })), 1);
   check('lampe : un bouton marche', actionBtns(lamp('on')).length, 1);
   check('lampe : bouton actif allumee', actionBtns(lamp('on'))[0].endsWith(':on'), true);
