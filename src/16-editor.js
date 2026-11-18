@@ -1494,7 +1494,7 @@ class ApplianceCardEditor extends HTMLElement {
         ${this._type === "lamp" ? this._row("section_screen_layout", "lamp_layout", {
           type: "select",
           options: [{ value: "auto", label: t(hass, "unit_auto") }].concat(LAMP_LAYOUTS.map((v) => ({ value: v, label: t(hass, `layout_lamp_${v}`) }))),
-        }) + (lampLayoutOf(this._config, stateObj(hass, this._config.state_entity)) === "spot" ? this._row("lamp_spots", "spots", {
+        }) + (LAMP_SPOT_ROWS.includes(lampLayoutOf(this._config, stateObj(hass, this._config.state_entity))) ? this._row("lamp_spots", "spots", {
           type: "select",
           options: [{ value: "auto", label: t(hass, "unit_auto") }].concat(LAMP_SPOTS.map((v) => ({ value: String(v), label: String(v) }))),
         }) : "") + this._row("show_toggle", "show_toggle", { type: "checkbox", defaultOn: true }) : ""}
