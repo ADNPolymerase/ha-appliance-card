@@ -1,6 +1,7 @@
 // Built by tools/build.mjs from the files of src/: edit those, not this file.
 // The solar drawing and its CSS, loaded by the card the first time it shows one.
-export default function defineDrawing({ BATTERY_LAYOUTS, CAMERA_LAYOUTS, CO2_COLORS, DIFFUSER_LAYOUTS, EV_FLOW_DEFAULT, FR3, HRV_LAYOUTS, LAMP_LAYOUTS, LAMP_SPOTS, LAMP_WARM, LAPTOP_COLORS, MAILBOX_LAYOUTS, MAILBOX_MAX_LETTERS, MB3_PAL, MW_DISHES, NETATMO_COLORS, NET_LAYOUTS, OVEN_DISHES, ROBOT_FLOORS, ROBOT_LAYOUTS, SCREEN_LAYOUTS, SCREEN_LIT, SCREEN_TABLETS, SHELTER_COLORS, SOLAR_LAYOUTS, T, TOASTER_LAYOUTS, TREE_PALETTES, co2LevelOf, esc, ntFlake, ntTint, t, thsColor, zoneColumns }) {
+export default function defineDrawing({ BATTERY_LAYOUTS, CAMERA_LAYOUTS, CO2_COLORS, DIFFUSER_LAYOUTS, EV_FLOW_DEFAULT, FR3, HRV_LAYOUTS, LAMP_LAYOUTS, LAMP_SPOTS, LAMP_WARM, LAPTOP_COLORS, MAILBOX_LAYOUTS, MAILBOX_MAX_LETTERS, MB3_PAL, MW_DISHES, NETATMO_COLORS, NET_LAYOUTS, OVEN_DISHES, ROBOT_FLOORS, ROBOT_LAYOUTS, SCREEN_LAYOUTS, SCREEN_LIT, SCREEN_TABLETS, SHELTER_COLORS, SOLAR_LAYOUTS, T, TOASTER_LAYOUTS, TREE_PALETTES, co2LevelOf, esc, ntFlake, ntTint, shdBlur, t, thsColor, zoneColumns }) {
+const softShadow = (cx, cy, rx, ry, op = .26, b = 1.6) => { const id = `shd-${cx}-${cy}-${rx}`.replace(/\./g, "_"); return `${shdBlur(id, b)}<ellipse cx="${cx}" cy="${cy}" rx="${rx}" ry="${ry}" fill="#000" opacity="${op}" filter="url(#${id})"/>`; };
 const ENERGY_CSS = `
         svg.en-e{position:absolute;left:0;top:0;width:96px;height:108px;overflow:visible}
         .en-sun,.en-moon,.en-stars,.en-clouds{display:none}
@@ -109,7 +110,7 @@ const SOLAR_SVGS = (() => {
 <linearGradient id="en-tile" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#b84d36"/><stop offset="1" stop-color="#cf6648"/></linearGradient></defs>`;
   // Two panels on their frame on the ground, seen from the front, tilted to the sky.
   const ground = `<svg class="en-e" viewBox="0 0 96 108">${defs}${ENERGY_SKY}
-<ellipse cx="48" cy="98.5" rx="42" ry="3" fill="rgba(0,0,0,.14)"/>
+${softShadow(48, 97.9, 33.6, 3.8, 0.25)}
 <path d="M27 74 V96 M69 74 V96" stroke="#7d868e" stroke-width="2"/>
 <path d="M27 86 L16 74 M69 86 L80 74" stroke="#7d868e" stroke-width="1.3"/>
 <path d="M15 74 V97 M81 74 V97" stroke="#aeb6bd" stroke-width="2.4" stroke-linecap="round"/>
@@ -129,7 +130,7 @@ ${ENERGY_SMOKE(37, 64, 0.55)}${ENERGY_ANGER(53, 76)}</svg>`;
     return `M${(24 + 15 * k).toFixed(1)} ${y} H${(80 + 15 * k).toFixed(1)}`;
   }).join(" ");
   const roof = `<svg class="en-e" viewBox="0 0 96 108">${defs}${ENERGY_SKY}
-<ellipse cx="52" cy="99.5" rx="44" ry="2.6" fill="rgba(0,0,0,.14)"/>
+${softShadow(52, 98.9, 35.2, 3.4, 0.25)}
 <rect x="67" y="34" width="7" height="12" fill="#a4553f" stroke="#7d3a29" stroke-width=".6"/><rect x="66" y="32.5" width="9" height="2.5" rx=".5" fill="#7d3a29"/>
 <rect x="38" y="64" width="53" height="34" fill="url(#en-wall)" stroke="#bfb196" stroke-width=".7"/>
 <path d="M12 98 V64 L24 47 L37 64 V98 Z" fill="#f6eedf" stroke="#cbbfa6" stroke-width=".7" stroke-linejoin="round"/>

@@ -1,6 +1,7 @@
 // Built by tools/build.mjs from the files of src/: edit those, not this file.
 // The scale drawing and its CSS, loaded by the card the first time it shows one.
-export default function defineDrawing({ BATTERY_LAYOUTS, CAMERA_LAYOUTS, CO2_COLORS, DIFFUSER_LAYOUTS, EV_FLOW_DEFAULT, FR3, HRV_LAYOUTS, LAMP_LAYOUTS, LAMP_SPOTS, LAMP_WARM, LAPTOP_COLORS, MAILBOX_LAYOUTS, MAILBOX_MAX_LETTERS, MB3_PAL, MW_DISHES, NETATMO_COLORS, NET_LAYOUTS, OVEN_DISHES, ROBOT_FLOORS, ROBOT_LAYOUTS, SCREEN_LAYOUTS, SCREEN_LIT, SCREEN_TABLETS, SHELTER_COLORS, SOLAR_LAYOUTS, T, TOASTER_LAYOUTS, TREE_PALETTES, co2LevelOf, esc, ntFlake, ntTint, t, thsColor, zoneColumns }) {
+export default function defineDrawing({ BATTERY_LAYOUTS, CAMERA_LAYOUTS, CO2_COLORS, DIFFUSER_LAYOUTS, EV_FLOW_DEFAULT, FR3, HRV_LAYOUTS, LAMP_LAYOUTS, LAMP_SPOTS, LAMP_WARM, LAPTOP_COLORS, MAILBOX_LAYOUTS, MAILBOX_MAX_LETTERS, MB3_PAL, MW_DISHES, NETATMO_COLORS, NET_LAYOUTS, OVEN_DISHES, ROBOT_FLOORS, ROBOT_LAYOUTS, SCREEN_LAYOUTS, SCREEN_LIT, SCREEN_TABLETS, SHELTER_COLORS, SOLAR_LAYOUTS, T, TOASTER_LAYOUTS, TREE_PALETTES, co2LevelOf, esc, ntFlake, ntTint, shdBlur, t, thsColor, zoneColumns }) {
+const softShadow = (cx, cy, rx, ry, op = .26, b = 1.6) => { const id = `shd-${cx}-${cy}-${rx}`.replace(/\./g, "_"); return `${shdBlur(id, b)}<ellipse cx="${cx}" cy="${cy}" rx="${rx}" ry="${ry}" fill="#000" opacity="${op}" filter="url(#${id})"/>`; };
 // A bathroom scale in perspective: its glass top, the two pads the feet go
 // on, and the screen with the last weight. The screen glows for an hour after
 // a weighing, green with a tick once the goal is reached.
@@ -10,7 +11,7 @@ function scaleHtml(cls, s) {
         <div class="machine ${cls} sc sc-m-${mode}${s.fresh ? " sc-fresh" : ""}"><svg class="sc-svg" viewBox="0 0 96 108">
 <defs><linearGradient id="sc-g-glass" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fbfcfd"/><stop offset="1" stop-color="#d5dbe1"/></linearGradient>
 <linearGradient id="sc-g-edge" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#aab3bc"/><stop offset="1" stop-color="#7d8790"/></linearGradient></defs>
-<ellipse cx="48" cy="98" rx="44" ry="3" fill="rgba(0,0,0,.18)"/>
+${softShadow(48, 97.4, 35.2, 3.8, 0.32)}
 <path d="M6 88 H90 V92 Q90 95 87 95 H9 Q6 95 6 92 Z" fill="url(#sc-g-edge)"/>
 <path d="M20 50 Q21 46 25 46 H71 Q75 46 76 50 L90 86 Q91 89 87 89 H9 Q5 89 6 86 Z" fill="url(#sc-g-glass)" stroke="#b9c1ca" stroke-width=".6"/>
 <path d="M25 48 H42 L28 86 H12 Z" fill="#fff" opacity=".35"/>

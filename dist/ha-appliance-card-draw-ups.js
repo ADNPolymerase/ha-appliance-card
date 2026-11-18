@@ -1,6 +1,7 @@
 // Built by tools/build.mjs from the files of src/: edit those, not this file.
 // The ups drawing and its CSS, loaded by the card the first time it shows one.
-export default function defineDrawing({ BATTERY_LAYOUTS, CAMERA_LAYOUTS, CO2_COLORS, DIFFUSER_LAYOUTS, EV_FLOW_DEFAULT, FR3, HRV_LAYOUTS, LAMP_LAYOUTS, LAMP_SPOTS, LAMP_WARM, LAPTOP_COLORS, MAILBOX_LAYOUTS, MAILBOX_MAX_LETTERS, MB3_PAL, MW_DISHES, NETATMO_COLORS, NET_LAYOUTS, OVEN_DISHES, ROBOT_FLOORS, ROBOT_LAYOUTS, SCREEN_LAYOUTS, SCREEN_LIT, SCREEN_TABLETS, SHELTER_COLORS, SOLAR_LAYOUTS, T, TOASTER_LAYOUTS, TREE_PALETTES, co2LevelOf, esc, ntFlake, ntTint, t, thsColor, zoneColumns }) {
+export default function defineDrawing({ BATTERY_LAYOUTS, CAMERA_LAYOUTS, CO2_COLORS, DIFFUSER_LAYOUTS, EV_FLOW_DEFAULT, FR3, HRV_LAYOUTS, LAMP_LAYOUTS, LAMP_SPOTS, LAMP_WARM, LAPTOP_COLORS, MAILBOX_LAYOUTS, MAILBOX_MAX_LETTERS, MB3_PAL, MW_DISHES, NETATMO_COLORS, NET_LAYOUTS, OVEN_DISHES, ROBOT_FLOORS, ROBOT_LAYOUTS, SCREEN_LAYOUTS, SCREEN_LIT, SCREEN_TABLETS, SHELTER_COLORS, SOLAR_LAYOUTS, T, TOASTER_LAYOUTS, TREE_PALETTES, co2LevelOf, esc, ntFlake, ntTint, shdBlur, t, thsColor, zoneColumns }) {
+const softShadow = (cx, cy, rx, ry, op = .26, b = 1.6) => { const id = `shd-${cx}-${cy}-${rx}`.replace(/\./g, "_"); return `${shdBlur(id, b)}<ellipse cx="${cx}" cy="${cy}" rx="${rx}" ry="${ry}" fill="#000" opacity="${op}" filter="url(#${id})"/>`; };
 // A UPS's drawing: the wall socket and its plug on the left, the UPS with its
 // screen, its three lights and its battery gauge, and the box it keeps alive
 // on the right. On mains the energy flows from the wall through the UPS; on
@@ -12,7 +13,7 @@ function upsSvg(u) {
   const vents = [0, 1, 2, 3, 4].map((i) => `<rect x="36" y="${Math.round((77 + i * 2.6) * 10) / 10}" width="26" height=".9" rx=".45"/>`).join("");
   return `<svg class="up-svg" viewBox="0 0 96 108">
 <defs><linearGradient id="up-g-body" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="var(--bh)"/><stop offset="1" stop-color="var(--bl)"/></linearGradient></defs>
-<ellipse cx="50" cy="99.5" rx="46" ry="2.6" fill="rgba(0,0,0,.18)"/>
+${softShadow(50, 98.9, 36.8, 3.4, 0.32)}
 <rect x="2" y="46" width="17" height="17" rx="3.2" fill="#f4f6f8" stroke="#b9c1ca" stroke-width=".6"/>
 <circle cx="10.5" cy="54.5" r="5.6" fill="#e3e7eb" stroke="#c3cad2" stroke-width=".5"/>
 <circle cx="10.5" cy="54.5" r="4" fill="#262a30"/><rect x="8.8" y="58.2" width="3.4" height="2.4" rx=".7" fill="#262a30"/>

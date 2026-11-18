@@ -541,7 +541,12 @@ function aqLevelOf(st, entityId) {
     if (opts.length === 4 && VESYNC_AQ.every((o, i) => opts[i] === o)) return VESYNC_AQ.indexOf(word) + 1 || null;
     return AQ_WORDS[word] || null;
   }
-  const id = String(entityId || st.entity_id || "").toLowerCase();
+  // An integration that names the step itself (Dyson's category) is the
+  // authority: the same index reads 5 on one unit and 7 on another, and a
+  // small whole number is otherwise too ambiguous to place on a scale.
+  const cat = typeof a.category === "string" ? stripAccents(a.category).toLowerCase().trim().replace(/[\s-]+/g, "_") : "";
+  if (AQ_WORDS[cat]) return AQ_WORDS[cat];
+  const id =String(entityId || st.entity_id || "").toLowerCase();
   const unit = String(a.unit_of_measurement || "").toLowerCase();
   // Winix's level is an enum from 1 (good) to 4 (very poor).
   if (a.device_class === "enum" && Array.isArray(a.options) && a.options.map(String).join() === "1,2,3,4") return num;

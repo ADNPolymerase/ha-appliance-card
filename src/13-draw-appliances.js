@@ -42,7 +42,7 @@ const FR3 = (() => {
   // The cabinet: front x0..x1, y0..y1; side and top drawn with a depth (dx, dy).
   const DX = 11, DY = -6;
   function cabinet(x0, y0, x1, y1, g) {
-    return `<ellipse cx="${(x0 + x1) / 2 + 6}" cy="${y1 + 4}" rx="${(x1 - x0) / 2 + 12}" ry="3.2" fill="rgba(0,0,0,.14)"/>
+    return `${footShadow(`M${x0 - 3} ${y1 + 3.5} H${x1 + 3} L${x1 + DX + 4} ${y1 + DY + 2.5} H${x0 + DX - 1} Z`, .3, 1.8)}
     <path d="M${x1} ${y0} L${x1 + DX} ${y0 + DY} V${y1 + DY} L${x1} ${y1} Z" fill="url(#${g.side})"/>
     <path d="M${x0} ${y0} L${x0 + DX} ${y0 + DY} H${x1 + DX} L${x1} ${y0} Z" fill="url(#${g.top})"/>
     <path d="M${x1} ${y0} L${x1 + DX} ${y0 + DY}" stroke="rgba(255,255,255,.8)" stroke-width=".7"/>
@@ -1011,7 +1011,7 @@ const SOLAR_SVGS = (() => {
 <linearGradient id="en-tile" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#b84d36"/><stop offset="1" stop-color="#cf6648"/></linearGradient></defs>`;
   // Two panels on their frame on the ground, seen from the front, tilted to the sky.
   const ground = `<svg class="en-e" viewBox="0 0 96 108">${defs}${ENERGY_SKY}
-<ellipse cx="48" cy="98.5" rx="42" ry="3" fill="rgba(0,0,0,.14)"/>
+${softShadow(48, 97.9, 33.6, 3.8, 0.25)}
 <path d="M27 74 V96 M69 74 V96" stroke="#7d868e" stroke-width="2"/>
 <path d="M27 86 L16 74 M69 86 L80 74" stroke="#7d868e" stroke-width="1.3"/>
 <path d="M15 74 V97 M81 74 V97" stroke="#aeb6bd" stroke-width="2.4" stroke-linecap="round"/>
@@ -1031,7 +1031,7 @@ ${ENERGY_SMOKE(37, 64, 0.55)}${ENERGY_ANGER(53, 76)}</svg>`;
     return `M${(24 + 15 * k).toFixed(1)} ${y} H${(80 + 15 * k).toFixed(1)}`;
   }).join(" ");
   const roof = `<svg class="en-e" viewBox="0 0 96 108">${defs}${ENERGY_SKY}
-<ellipse cx="52" cy="99.5" rx="44" ry="2.6" fill="rgba(0,0,0,.14)"/>
+${softShadow(52, 98.9, 35.2, 3.4, 0.25)}
 <rect x="67" y="34" width="7" height="12" fill="#a4553f" stroke="#7d3a29" stroke-width=".6"/><rect x="66" y="32.5" width="9" height="2.5" rx=".5" fill="#7d3a29"/>
 <rect x="38" y="64" width="53" height="34" fill="url(#en-wall)" stroke="#bfb196" stroke-width=".7"/>
 <path d="M12 98 V64 L24 47 L37 64 V98 Z" fill="#f6eedf" stroke="#cbbfa6" stroke-width=".7" stroke-linejoin="round"/>
@@ -1074,7 +1074,7 @@ function batterySvg(layout, level, reserve) {
     return `<svg class="en-e" viewBox="0 0 96 108">
 <defs><linearGradient id="en-sb" x1="0" y1="0" x2="1" y2="1"><stop offset="0" style="stop-color:var(--ac-body-hi,#e6e6e6)"/><stop offset=".45" style="stop-color:var(--ac-body,#d7d7d7)"/><stop offset="1" style="stop-color:var(--ac-body-lo,#aeb2b5)"/></linearGradient>
 <linearGradient id="en-st" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#b8c0c7"/><stop offset="1" stop-color="#8f989f"/></linearGradient></defs>
-<ellipse cx="48" cy="99" rx="38" ry="2.6" fill="rgba(0,0,0,.16)"/>
+${softShadow(48, 98.4, 30.4, 3.4, 0.29)}
 <rect x="12" y="37" width="72" height="10" rx="4" fill="url(#en-st)" stroke="#7c858c" stroke-width=".6"/>
 <rect x="19" y="39.5" width="20" height="4" rx="2" fill="#2a2f34"/><rect x="57" y="39.5" width="20" height="4" rx="2" fill="#2a2f34"/>
 <rect x="12" y="44" width="72" height="50" rx="5" fill="url(#en-sb)" stroke="rgba(0,0,0,.3)" stroke-width=".7"/>
@@ -1105,7 +1105,7 @@ ${ENERGY_SMOKE(52, 12, 0.55)}${ENERGY_ANGER(80, 33)}</svg>`;
 <linearGradient id="en-lv" x1="0" x2="1"><stop offset="0" stop-color="#fff" stop-opacity=".35"/><stop offset=".5" stop-color="#fff" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".12"/></linearGradient>
 <linearGradient id="en-sw" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset=".5" stop-color="#fff" stop-opacity=".7"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>
 <clipPath id="en-gclip"><rect x="${gx + 1}" y="${gy + 1}" width="${gw - 2}" height="${inner}" rx="4"/></clipPath></defs>
-<ellipse cx="49" cy="100.5" rx="30" ry="2.4" fill="rgba(0,0,0,.15)"/>
+${softShadow(49, 99.9, 24.0, 3.2, 0.27)}
 <rect x="32" y="15" width="37" height="83" rx="7" style="fill:var(--ac-body-lo,#aeb2b5)"/><rect x="32" y="15" width="37" height="83" rx="7" fill="rgba(0,0,0,.16)"/>
 <rect x="28" y="12" width="35" height="84" rx="7" fill="url(#en-wf)" stroke="rgba(0,0,0,.18)" stroke-width=".8"/>
 <rect x="32" y="17" width="27" height="15" rx="3.5" fill="#12171c"/>
@@ -1141,7 +1141,7 @@ function scaleHtml(cls, s) {
         <div class="machine ${cls} sc sc-m-${mode}${s.fresh ? " sc-fresh" : ""}"><svg class="sc-svg" viewBox="0 0 96 108">
 <defs><linearGradient id="sc-g-glass" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fbfcfd"/><stop offset="1" stop-color="#d5dbe1"/></linearGradient>
 <linearGradient id="sc-g-edge" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#aab3bc"/><stop offset="1" stop-color="#7d8790"/></linearGradient></defs>
-<ellipse cx="48" cy="98" rx="44" ry="3" fill="rgba(0,0,0,.18)"/>
+${softShadow(48, 97.4, 35.2, 3.8, 0.32)}
 <path d="M6 88 H90 V92 Q90 95 87 95 H9 Q6 95 6 92 Z" fill="url(#sc-g-edge)"/>
 <path d="M20 50 Q21 46 25 46 H71 Q75 46 76 50 L90 86 Q91 89 87 89 H9 Q5 89 6 86 Z" fill="url(#sc-g-glass)" stroke="#b9c1ca" stroke-width=".6"/>
 <path d="M25 48 H42 L28 86 H12 Z" fill="#fff" opacity=".35"/>
@@ -1163,7 +1163,7 @@ function upsSvg(u) {
   const vents = [0, 1, 2, 3, 4].map((i) => `<rect x="36" y="${Math.round((77 + i * 2.6) * 10) / 10}" width="26" height=".9" rx=".45"/>`).join("");
   return `<svg class="up-svg" viewBox="0 0 96 108">
 <defs><linearGradient id="up-g-body" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="var(--bh)"/><stop offset="1" stop-color="var(--bl)"/></linearGradient></defs>
-<ellipse cx="50" cy="99.5" rx="46" ry="2.6" fill="rgba(0,0,0,.18)"/>
+${softShadow(50, 98.9, 36.8, 3.4, 0.32)}
 <rect x="2" y="46" width="17" height="17" rx="3.2" fill="#f4f6f8" stroke="#b9c1ca" stroke-width=".6"/>
 <circle cx="10.5" cy="54.5" r="5.6" fill="#e3e7eb" stroke="#c3cad2" stroke-width=".5"/>
 <circle cx="10.5" cy="54.5" r="4" fill="#262a30"/><rect x="8.8" y="58.2" width="3.4" height="2.4" rx=".7" fill="#262a30"/>
@@ -1626,7 +1626,7 @@ ${STICK_SOCKET(85, 59)}
 <circle class="stk-led" cx="17" cy="5" r="1.1"/>
 </g>
 <g class="stk-mach">
-<ellipse cx="40" cy="103.5" rx="30" ry="2" fill="rgba(0,0,0,.14)"/>
+${softShadow(40, 102.9, 24.0, 2.8, 0.25)}
 <g transform="translate(60 30) rotate(22) scale(.76)">
 <path d="M12 -6 H14 V2 H12" fill="#5f666d"/>
 <path d="M5 -16 Q13 -16 13 -8 V10 Q13 14 9 14 H5 Z" fill="url(#stk-gm)" stroke="rgba(0,0,0,.3)" stroke-width=".6"/>
@@ -1681,7 +1681,7 @@ function washerSvg(battery) {
 <clipPath id="fw-rc"><rect x="21.5" y="93" width="31" height="6" rx="3"/></clipPath></defs>
 ${STICK_SOCKET(84, 90)}
 <path class="stk-cab" d="M87.5 94.5 Q80 95 76 101.5 H68"/><path class="stk-ef" d="M87.5 94.5 Q80 95 76 101.5 H68"/>
-<ellipse cx="42" cy="104.5" rx="30" ry="1.6" fill="rgba(0,0,0,.15)"/>
+${softShadow(42, 103.9, 24.0, 2.4, 0.27)}
 <path d="M14 100 Q14 97 18 97 H64 Q68 97 68 100 V102 Q68 104 64 104 H18 Q14 104 14 102 Z" fill="url(#fw-tb)" stroke="rgba(0,0,0,.4)" stroke-width=".5"/>
 <path d="M20 98.6 H58" stroke="rgba(255,255,255,.18)" stroke-width=".6"/>
 <circle class="stk-led" cx="62" cy="100.5" r="1"/>

@@ -13,12 +13,18 @@ function difGrain(clip) {
 }
 const DIF_PUFFS = (x, y) => `<g class="dif-puffs">${[0, 1, 2, 3].map(() => `<ellipse cx="${x}" cy="${y}" rx="6" ry="4.5"/>`).join("")}</g>`;
 const DIF_DROP_BADGE = `<g class="dif-empty"><circle cx="104" cy="16" r="9" fill="#f44336"/><path d="M104 10 Q100 15.5 100 18 A4 4 0 0 0 108 18 Q108 15.5 104 10 Z" fill="#fff"/></g>`;
+// A soft shadow on the floor, blurred so it reads as the object standing on
+// the floor rather than a grey plate laid under it. footPath takes the outline
+// of the footprint itself, for an appliance drawn in three-quarter view.
+const shdBlur = (id, b) => `<filter id="${id}" x="-40%" y="-200%" width="180%" height="500%"><feGaussianBlur stdDeviation="${b}"/></filter>`;
+const softShadow = (cx, cy, rx, ry, op = .26, b = 1.6) => { const id = `shd-${cx}-${cy}-${rx}`.replace(/\./g, "_"); return `${shdBlur(id, b)}<ellipse cx="${cx}" cy="${cy}" rx="${rx}" ry="${ry}" fill="#000" opacity="${op}" filter="url(#${id})"/>`; };
+const footShadow = (d, op = .24, b = 1.6) => { const id = `shdf-${d.length}-${d.slice(1, 12)}`.replace(/[^\w-]/g, "_"); return `${shdBlur(id, b)}<path d="${d}" fill="#000" opacity="${op}" filter="url(#${id})"/>`; };
 const DIF_HALO = (cx, cy, rx, ry) => `<ellipse class="dif-halo" cx="${cx}" cy="${cy}" rx="${rx}" ry="${ry}" fill="url(#dif-g-halo)"/>`;
 const DIFFUSER_SVGS = {
   drop: (wood, b) => {
     const d = "M56.5 14 H63.5 C63.5 30 71 40 85 50 C100 60 103 79 97 91 Q94 99 85 99 H35 Q26 99 23 91 C17 79 20 60 35 50 C49 40 56.5 30 56.5 14 Z";
     return `<defs><radialGradient id="dif-g-b" cx=".38" cy=".38" r=".75"><stop offset="0" stop-color="${b[3]}"/><stop offset=".55" stop-color="${b[0]}"/><stop offset="1" stop-color="${b[2]}"/></radialGradient><clipPath id="dif-c"><path d="${d}"/></clipPath></defs>
-<g transform="translate(12 20) scale(.8)">${DIF_HALO(60, 104, 66, 15)}<ellipse cx="60" cy="106" rx="34" ry="3.5" fill="#000" opacity=".16"/>
+<g transform="translate(12 20) scale(.8)">${DIF_HALO(60, 104, 66, 15)}${softShadow(60, 105.4, 27.2, 4.3, 0.29)}
 <rect x="33" y="99" width="7" height="4" rx="1.5" fill="${b[2]}"/><rect x="80" y="99" width="7" height="4" rx="1.5" fill="${b[2]}"/>
 <path d="${d}" fill="url(#dif-g-b)"/>${wood ? difGrain("dif-c") : ""}
 <path d="M30 60 Q38 50 50 46" stroke="#fff" stroke-width="3" opacity=".25" fill="none" stroke-linecap="round"/>
@@ -26,7 +32,7 @@ const DIFFUSER_SVGS = {
 <rect x="47" y="88" width="12" height="4" rx="2" fill="none" stroke="#f4f4f2" stroke-width=".9"/><rect x="61" y="88" width="12" height="4" rx="2" fill="none" stroke="#f4f4f2" stroke-width=".9"/></g>${DIF_PUFFS(60, 30)}`;
   },
   cone: (wood, b) => `<defs><linearGradient id="dif-g-b" x1="0" x2="1"><stop offset="0" stop-color="${b[2]}"/><stop offset=".35" stop-color="${b[3]}"/><stop offset=".75" stop-color="${b[0]}"/><stop offset="1" stop-color="${b[2]}"/></linearGradient></defs>
-<g transform="translate(12 20) scale(.8)">${DIF_HALO(60, 102, 62, 15)}<ellipse cx="60" cy="104" rx="32" ry="3.5" fill="#000" opacity=".16"/>
+<g transform="translate(12 20) scale(.8)">${DIF_HALO(60, 102, 62, 15)}${softShadow(60, 103.4, 25.6, 4.3, 0.29)}
 <path d="M30 92 Q60 101 90 92 L91 98 Q60 107 29 98 Z" fill="${wood ? "#a8693a" : b[2]}"/>
 <path d="M50 22 Q60 18 70 22 L88 92 Q60 100 32 92 Z" fill="url(#dif-g-b)"/>
 <path class="dif-band" d="M40 70 Q60 75 80 70 L83 82 Q60 88 37 82 Z"/>
@@ -35,7 +41,7 @@ const DIFFUSER_SVGS = {
     const c = wood ? ["#efe9e1", "#d8cfc3", "#b9ad9f"] : [b[3], b[1], b[2]];
     const d = "M60 34 C82 34 92 60 90 80 C88 98 76 104 60 104 C44 104 32 98 30 80 C28 60 38 34 60 34 Z";
     return `<defs><radialGradient id="dif-g-b" cx=".38" cy=".3" r=".8"><stop offset="0" stop-color="${c[0]}"/><stop offset=".6" stop-color="${c[1]}"/><stop offset="1" stop-color="${c[2]}"/></radialGradient></defs>
-${DIF_HALO(60, 105, 54, 13)}<ellipse cx="60" cy="106" rx="30" ry="3.5" fill="#000" opacity=".16"/>
+${DIF_HALO(60, 105, 54, 13)}${softShadow(60, 105.4, 24.0, 4.3, 0.29)}
 <path class="dif-band" d="M36 102 Q60 108 84 102 L84 104 Q60 110 36 104 Z"/>
 <path d="${d}" fill="url(#dif-g-b)"/>
 <path d="M41 56 Q46 44 56 40" stroke="#fff" stroke-width="3" opacity=".3" fill="none" stroke-linecap="round"/>
@@ -43,7 +49,7 @@ ${DIF_HALO(60, 105, 54, 13)}<ellipse cx="60" cy="106" rx="30" ry="3.5" fill="#00
   },
   flame: (wood, b) => `<defs><linearGradient id="dif-g-b" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${b[3]}"/><stop offset="1" stop-color="${b[2]}"/></linearGradient>
 <linearGradient id="dif-g-fl" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#ffcc80"/><stop offset=".4" stop-color="#ff9100"/><stop offset=".85" stop-color="#ff6d00" stop-opacity=".5"/><stop offset="1" stop-color="#ff6d00" stop-opacity="0"/></linearGradient></defs>
-${DIF_HALO(60, 106, 58, 12)}<ellipse cx="60" cy="107" rx="40" ry="3.5" fill="#000" opacity=".16"/>
+${DIF_HALO(60, 106, 58, 12)}${softShadow(60, 106.4, 32.0, 4.3, 0.29)}
 <g class="dif-fl"><path d="M60 72 C50 62 54 50 58 40 C60 48 66 50 64 40 C74 52 72 64 60 72 Z" fill="url(#dif-g-fl)"/></g>
 <g class="dif-fl dif-f2"><path d="M50 72 C44 64 46 56 50 50 C52 58 56 60 55 52 C62 60 60 68 50 72 Z" fill="url(#dif-g-fl)" opacity=".8"/><path d="M70 72 C64 64 66 58 70 52 C72 60 76 62 75 54 C82 62 80 68 70 72 Z" fill="url(#dif-g-fl)" opacity=".8"/></g>
 <path d="M22 72 H98 Q102 72 102 76 V100 Q102 104 98 104 H22 Q18 104 18 100 V76 Q18 72 22 72 Z" fill="url(#dif-g-b)"/>
@@ -54,7 +60,7 @@ ${DIF_HALO(60, 106, 58, 12)}<ellipse cx="60" cy="107" rx="40" ry="3.5" fill="#00
     const base = wood ? ["#c98f55", "#7d4a26"] : [b[0], b[2]];
     return `<defs><linearGradient id="dif-g-b" x1="0" x2="1"><stop offset="0" stop-color="${base[1]}"/><stop offset=".45" stop-color="${base[0]}"/><stop offset="1" stop-color="${base[1]}"/></linearGradient>
 <radialGradient id="dif-g-gl" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#fff" stop-opacity=".9"/><stop offset=".5" stop-color="#e3f0f6" stop-opacity=".35"/><stop offset="1" stop-color="#a7c0cc" stop-opacity=".5"/></radialGradient></defs>
-${DIF_HALO(60, 106, 52, 12)}<ellipse cx="60" cy="107" rx="28" ry="3.5" fill="#000" opacity=".16"/>
+${DIF_HALO(60, 106, 52, 12)}${softShadow(60, 106.4, 22.4, 4.3, 0.29)}
 <path d="M34 84 H86 L82 104 H38 Z" fill="url(#dif-g-b)"/>
 <path d="M57 30 H63 V44 C78 48 84 60 82 70 C80 80 72 84 60 84 C48 84 40 80 38 70 C36 60 42 48 57 44 Z" fill="url(#dif-g-gl)" stroke="#9fb6c2" stroke-width=".8"/>
 <path d="M42 74 Q60 78 78 74 C76 80 70 83 60 83 C50 83 44 80 42 74 Z" fill="#e0a64b" opacity=".75"/>
@@ -868,7 +874,7 @@ const MB_SVGS = {
     const back = c.back
       ? `<g class="mb-swing hr"><path d="M96 34 L113 38.5 V77.5 L96 82 Z" fill="url(#mb-g-sh)" ${MB_EDGE} stroke-width=".6"/><circle cx="109" cy="58" r="1.5" fill="#7b8590"/><rect x="108.6" y="58" width=".8" height="2.4" fill="#7b8590"/></g>`
       : `<rect x="93" y="34" width="5" height="48" rx="1" fill="${MB_BODY}" ${MB_EDGE} stroke-width=".6"/><circle cx="99" cy="58" r="1.6" fill="#7b8590"/><rect x="98.6" y="58" width=".8" height="2.6" fill="#7b8590"/>`;
-    const box = `<ellipse cx="60" cy="124" rx="44" ry="3" fill="#000" opacity=".12"/>
+    const box = `${softShadow(60, 123.4, 35.2, 3.8, 0.22)}
 <rect x="46" y="-8" width="28" height="134" fill="url(#mb-g-stone)"/>
 <path d="M46 6 H74 M46 22 H74 M46 96 H74 M46 112 H74 M60 -8 V6 M54 6 V22 M66 22 V34 M58 82 V96 M64 96 V112 M56 112 V126" stroke="#8d8477" stroke-width=".6" opacity=".7"/>
 <rect x="26" y="34" width="68" height="48" rx="2" fill="url(#mb-g-in)"/>
@@ -896,7 +902,7 @@ ${lbl(34, right ? c.house : c.street)}${lbl(86, right ? c.street : c.house)}`;
 <path d="M41 47.5 H58" stroke="#fff" stroke-width=".8" opacity=".3"/>
 <rect x="44" y="62" width="32" height="8" rx="1" fill="#c8a24e"/><path d="M48 66 H72" stroke="#8a6d2a" stroke-width=".8"/>
 <circle cx="82" cy="80" r="2.2" fill="#7b8590"/><rect x="81.4" y="80" width="1.2" height="3.4" fill="#7b8590"/>`;
-    return `<ellipse cx="60" cy="124" rx="22" ry="2.6" fill="#000" opacity=".14"/>
+    return `${softShadow(60, 123.4, 17.6, 3.4, 0.25)}
 <rect x="55" y="98" width="10" height="27" fill="#8f979f"/><rect x="55" y="98" width="3" height="27" fill="#fff" opacity=".25"/>
 <rect x="24" y="18" width="72" height="82" rx="5" fill="${MB_BODY}" ${MB_EDGE} stroke-width=".7"/>
 <rect x="30" y="40" width="60" height="54" rx="3" fill="url(#mb-g-in)"/>
@@ -1023,7 +1029,7 @@ const LAMP_SVGS = {
 <circle class="lp-halo" cx="48" cy="34" r="42" fill="url(#lp-cH)"/>
 <path class="lp-beam" d="M22 50 L8 86 H88 L74 50 Z" fill="url(#lp-cB)"/>
 <path d="M14 86 H82" stroke="#8a6d52" stroke-width="3" stroke-linecap="round"/>
-<ellipse cx="48" cy="84" rx="13" ry="2" fill="#000" opacity=".18"/>
+${softShadow(48, 83.4, 10.4, 2.8, 0.32)}
 <path d="M41 56 C33 60 33 76 40 82 H56 C63 76 63 60 55 56 Z" fill="url(#lp-cV)"/>
 <path d="M30 18 H66 L76 50 H20 Z" fill="url(#lp-cS)" stroke="#bdb09a" stroke-width=".7"/>
 <path class="lp-wash" d="M30 18 H66 L76 50 H20 Z" fill="url(#lp-cL)"/>
@@ -1035,7 +1041,7 @@ const LAMP_SVGS = {
 <circle class="lp-halo" cx="70" cy="36" r="36" fill="url(#lp-fH)"/>
 <path class="lp-beam" d="M60 34 L46 88 H94 L80 34 Z" fill="url(#lp-fB)"/>
 <path d="M22 84 C18 40 30 10 60 12 C68 12.5 70 18 70 24" fill="none" stroke="url(#lp-fM)" stroke-width="2.6" stroke-linecap="round"/>
-<ellipse cx="22" cy="87" rx="12" ry="3" fill="#000" opacity=".18"/>
+${softShadow(22, 86.4, 9.6, 3.8, 0.32)}
 <path d="M12 84 Q12 80 22 80 Q32 80 32 84 Q32 87 22 87 Q12 87 12 84 Z" fill="#2b3036"/>
 <path d="M58 34 C58 25 63 22 70 22 C77 22 82 25 82 34 Z" fill="url(#lp-fD)"/>
 <ellipse class="lp-lit" cx="70" cy="34" rx="12" ry="2.2"/>`,
@@ -1047,7 +1053,7 @@ ${lpMetal("tM", "#8b949d", "#f4f6f8")}${lpMetal("tB", "#7c858f", "#e3e7eb")}</de
 <rect x="46.8" y="22" width="2.4" height="62" rx="1.2" fill="url(#lp-tM)"/>
 <rect x="45.4" y="52" width="5.2" height="7" rx="1.6" fill="#3a4047"/>
 <circle cx="48" cy="55.5" r="1.3" fill="#8f98a2"/>
-<ellipse cx="48" cy="88" rx="14" ry="2.6" fill="#000" opacity=".16"/>
+${softShadow(48, 87.4, 11.2, 3.4, 0.29)}
 <path d="M36 86 Q36 83 48 83 Q60 83 60 86 Q60 88.4 48 88.4 Q36 88.4 36 86 Z" fill="#2b3036"/>
 <path d="M34 15 H62 L52 23 H44 Z" fill="url(#lp-tB)" stroke="#8f98a2" stroke-width=".6" stroke-linejoin="round"/>
 <ellipse class="lp-lit" cx="48" cy="15" rx="14" ry="1.8"/>`,

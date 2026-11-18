@@ -1,5 +1,5 @@
 // Built by tools/build.mjs from the files of src/: edit those, not this file.
-const CARD_VERSION = "4.29.0";
+const CARD_VERSION = "4.29.1";
 
 console.info(
   "%c HA-APPLIANCE-CARD %c v" + CARD_VERSION + " ",
@@ -1056,7 +1056,12 @@ function aqLevelOf(st, entityId) {
     if (opts.length === 4 && VESYNC_AQ.every((o, i) => opts[i] === o)) return VESYNC_AQ.indexOf(word) + 1 || null;
     return AQ_WORDS[word] || null;
   }
-  const id = String(entityId || st.entity_id || "").toLowerCase();
+  // An integration that names the step itself (Dyson's category) is the
+  // authority: the same index reads 5 on one unit and 7 on another, and a
+  // small whole number is otherwise too ambiguous to place on a scale.
+  const cat = typeof a.category === "string" ? stripAccents(a.category).toLowerCase().trim().replace(/[\s-]+/g, "_") : "";
+  if (AQ_WORDS[cat]) return AQ_WORDS[cat];
+  const id =String(entityId || st.entity_id || "").toLowerCase();
   const unit = String(a.unit_of_measurement || "").toLowerCase();
   // Winix's level is an enum from 1 (good) to 4 (very poor).
   if (a.device_class === "enum" && Array.isArray(a.options) && a.options.map(String).join() === "1,2,3,4") return num;
@@ -5136,6 +5141,11 @@ function hrvControls(hass, cfg) {
   return out;
 }
 
+// A soft shadow on the floor, blurred so it reads as the object standing on
+// the floor rather than a grey plate laid under it. footPath takes the outline
+// of the footprint itself, for an appliance drawn in three-quarter view.
+const shdBlur = (id, b) => `<filter id="${id}" x="-40%" y="-200%" width="180%" height="500%"><feGaussianBlur stdDeviation="${b}"/></filter>`;
+const footShadow = (d, op = .24, b = 1.6) => { const id = `shdf-${d.length}-${d.slice(1, 12)}`.replace(/[^\w-]/g, "_"); return `${shdBlur(id, b)}<path d="${d}" fill="#000" opacity="${op}" filter="url(#${id})"/>`; };
 // Heat recovery ventilation, read from its fan (or climate, or select) entity:
 // on or off, its speed and its preset (boost, away); a bypass or Vallox's
 // cell state (heat recovery, cool recovery, bypass, defrosting); a filter in
@@ -7793,7 +7803,7 @@ const FR3 = (() => {
   // The cabinet: front x0..x1, y0..y1; side and top drawn with a depth (dx, dy).
   const DX = 11, DY = -6;
   function cabinet(x0, y0, x1, y1, g) {
-    return `<ellipse cx="${(x0 + x1) / 2 + 6}" cy="${y1 + 4}" rx="${(x1 - x0) / 2 + 12}" ry="3.2" fill="rgba(0,0,0,.14)"/>
+    return `${footShadow(`M${x0 - 3} ${y1 + 3.5} H${x1 + 3} L${x1 + DX + 4} ${y1 + DY + 2.5} H${x0 + DX - 1} Z`, .3, 1.8)}
     <path d="M${x1} ${y0} L${x1 + DX} ${y0 + DY} V${y1 + DY} L${x1} ${y1} Z" fill="url(#${g.side})"/>
     <path d="M${x0} ${y0} L${x0 + DX} ${y0 + DY} H${x1 + DX} L${x1} ${y0} Z" fill="url(#${g.top})"/>
     <path d="M${x1} ${y0} L${x1 + DX} ${y0 + DY}" stroke="rgba(255,255,255,.8)" stroke-width=".7"/>
@@ -8359,7 +8369,7 @@ function requestDrawing(key) {
   drawState[key] = "loading";
   import(assetUrl(`ha-appliance-card-draw-${key}.js`))
     .then((m) => {
-      if (!drawDeps) drawDeps = { BATTERY_LAYOUTS, CAMERA_LAYOUTS, CO2_COLORS, DIFFUSER_LAYOUTS, EV_FLOW_DEFAULT, FR3, HRV_LAYOUTS, LAMP_LAYOUTS, LAMP_SPOTS, LAMP_WARM, LAPTOP_COLORS, MAILBOX_LAYOUTS, MAILBOX_MAX_LETTERS, MB3_PAL, MW_DISHES, NETATMO_COLORS, NET_LAYOUTS, OVEN_DISHES, ROBOT_FLOORS, ROBOT_LAYOUTS, SCREEN_LAYOUTS, SCREEN_LIT, SCREEN_TABLETS, SHELTER_COLORS, SOLAR_LAYOUTS, T, TOASTER_LAYOUTS, TREE_PALETTES, co2LevelOf, esc, ntFlake, ntTint, t, thsColor, zoneColumns };
+      if (!drawDeps) drawDeps = { BATTERY_LAYOUTS, CAMERA_LAYOUTS, CO2_COLORS, DIFFUSER_LAYOUTS, EV_FLOW_DEFAULT, FR3, HRV_LAYOUTS, LAMP_LAYOUTS, LAMP_SPOTS, LAMP_WARM, LAPTOP_COLORS, MAILBOX_LAYOUTS, MAILBOX_MAX_LETTERS, MB3_PAL, MW_DISHES, NETATMO_COLORS, NET_LAYOUTS, OVEN_DISHES, ROBOT_FLOORS, ROBOT_LAYOUTS, SCREEN_LAYOUTS, SCREEN_LIT, SCREEN_TABLETS, SHELTER_COLORS, SOLAR_LAYOUTS, T, TOASTER_LAYOUTS, TREE_PALETTES, co2LevelOf, esc, ntFlake, ntTint, shdBlur, t, thsColor, zoneColumns };
       drawn[key] = m.default(drawDeps);
       drawState[key] = "ready";
       for (const fn of Array.from(langListeners)) {
