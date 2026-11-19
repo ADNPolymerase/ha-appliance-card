@@ -607,8 +607,8 @@ class ApplianceCard extends HTMLElement {
       this._hass.callService(domain, "press", { entity_id: entityId });
     } else if (["switch", "input_boolean", "fan", "light", "valve", "humidifier"].includes(domain)) {
       this._hass.callService(domain, "toggle", { entity_id: entityId });
-    } else if (domain === "script") {
-      this._hass.callService("script", "turn_on", { entity_id: entityId });
+    } else if (domain === "script" || domain === "scene") {
+      this._hass.callService(domain, "turn_on", { entity_id: entityId });
     } else if (domain === "automation") {
       // Toggling an automation would switch it off, silently, which is the
       // opposite of what a button reading "start" is asking for.
@@ -4341,6 +4341,8 @@ class ApplianceCard extends HTMLElement {
         .corner-btn.right { right: 8px; }
         .corner-btn.on { color: #ffb300; }
         .corner-btn:hover { background: var(--secondary-background-color, rgba(0, 0, 0, 0.04)); }
+        .corner-btn.pressed { color: var(--primary-color, #03a9f4); animation-name: corner-press; animation-duration: .6s; animation-timing-function: ease-out; }
+        @keyframes corner-press { 0% { transform: scale(.82); } 60% { transform: scale(1.12); } 100% { transform: scale(1); } }
         .top { display: flex; flex-direction: column; align-items: center; text-align: center; cursor: pointer; }
         .machine { position: relative; width: 96px; height: 108px; margin: 0 auto 8px; zoom: ${illustrationSizeOf(cfg.illustration_size)}; }
         /* illustration_frame: every drawing sits at the bottom of a frame of
@@ -4808,7 +4810,7 @@ class ApplianceCard extends HTMLElement {
 
     // show_light_button: false hides the light badge; the light still shows on the drawing.
     const lightBadgeHtml = cap.light && cfg.light_entity && cfg.show_light_button !== false
-      ? `<div class="light-badge ${lit ? "on" : ""}" data-entity="${esc(cfg.light_entity)}" title="${esc(t(hass, "light"))}" aria-label="${esc(t(hass, "light"))}"><ha-icon icon="${lit ? "mdi:lightbulb-on" : "mdi:lightbulb-outline"}"></ha-icon></div>`
+      ? `<div class="light-badge ${lit ? "on" : ""}" data-entity="${esc(cfg.light_entity)}" title="${esc(t(hass, "light"))}" aria-label="${esc(t(hass, "light"))}"><ha-icon icon="${esc(lit ? cfg.light_icon_on || cfg.light_icon || "mdi:lightbulb-on" : cfg.light_icon || "mdi:lightbulb-outline")}"></ha-icon></div>`
       : "";
 
     // The door, in a corner rather than in the lines when asked (issue #41):
@@ -4854,9 +4856,10 @@ class ApplianceCard extends HTMLElement {
         const on = cornerOn(cst);
         const icon = cornerIcon(hass, c);
         const label = c.label || stripNamePrefix(cst.attributes.friendly_name, c.entity);
-        const side = i ? "right" : "left";
-        const top = side === "left" ? (lightBadgeHtml || doorSide === "left" || battSide === "left" ? 36 : 6)
-          : (connBadgeHtml ? 36 : 6) + (doorSide === "right" || battSide === "right" ? 30 : 0) + (camBadgeHtml ? 30 : 0);
+        // Left, right, then a second pair under the first (#125).
+        const side = i % 2 ? "right" : "left";
+        const top = (side === "left" ? (lightBadgeHtml || doorSide === "left" || battSide === "left" ? 36 : 6)
+          : (connBadgeHtml ? 36 : 6) + (doorSide === "right" || battSide === "right" ? 30 : 0) + (camBadgeHtml ? 30 : 0)) + (i >= 2 ? 30 : 0);
         return `<div class="corner-btn ${side}${on ? " on" : ""}" style="top:${top}px" data-corner="${esc(c.entity)}" title="${esc(label)}" aria-label="${esc(label)}"><ha-icon icon="${esc(icon)}"></ha-icon></div>`;
       });
     const cornersHtml = cornerList.join("");
@@ -5035,8 +5038,15 @@ class ApplianceCard extends HTMLElement {
     // never unlock anything.
     this._root.querySelectorAll("[data-corner]").forEach((el) => {
       const id = el.getAttribute("data-corner");
-      this._wireControl(el, cfg.controls_activation, id,
-        () => (domainOf(id) === "lock" ? this._moreInfo(id) : this._call(id)));
+      // A pressed button has no state to show it went: the icon springs (#125).
+      this._wireControl(el, cfg.controls_activation, id, () => {
+        if (domainOf(id) === "lock") return this._moreInfo(id);
+        if (CORNER_PRESS.includes(domainOf(id))) {
+          el.classList.add("pressed");
+          setTimeout(() => el.classList.remove("pressed"), 650);
+        }
+        return this._call(id);
+      });
     });
     this._root.querySelectorAll("[data-alerts-toggle]").forEach((el) => {
       el.addEventListener("click", (ev) => {

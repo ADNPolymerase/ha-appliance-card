@@ -59,6 +59,10 @@ const NT_CSS = `
         @keyframes nt-bar3{0%{opacity:.15}48%,100%{opacity:1}}
         @keyframes nt-bar4{0%{opacity:.15}66%,100%{opacity:1}}
         .nta-blinkfast{animation:nt-blinkfast .45s linear infinite}
+        .vlv-turn{transform-box:view-box;transform-origin:60px 80px}
+        .vlv-to-open{animation:vlv-open 2.8s ease-in-out infinite}.vlv-to-close{animation:vlv-close 2.8s ease-in-out infinite}
+        @keyframes vlv-open{0%,15%{transform:rotate(90deg)}75%,100%{transform:rotate(0deg)}}
+        @keyframes vlv-close{0%,15%{transform:rotate(0deg)}75%,100%{transform:rotate(90deg)}}
         .nta-rain{transform-box:fill-box;animation:nt-fall 1.4s ease-in infinite}
         .nta-rdrop{animation:nt-rdrop .6s linear infinite}.nta-rsplash{transform-box:fill-box;transform-origin:center;opacity:0;animation:nt-rsplash .6s ease-out infinite}
         @keyframes nt-rdrop{0%{transform:translate(0,0);opacity:0}10%{opacity:1}100%{transform:translate(-16px,80px);opacity:1}}

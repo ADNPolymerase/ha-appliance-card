@@ -316,6 +316,7 @@ const SECTIONS = [
   { field: "temperature_entity", types: ["wood_stove"], labelKey: "wood_room", includeDomains: ["sensor", "number", "input_number"] },
   { field: "last_fire_entity", types: ["wood_stove"], labelKey: "wood_last_fire", includeDomains: ["input_datetime", "sensor"] },
   { field: "cat_present_entity", types: ["litter_box"], labelKey: "sec_cat_present", includeDomains: ["binary_sensor"] },
+  { field: "leak_entity", types: ["valve"], labelKey: "layout_det_leak", includeDomains: ["binary_sensor", "sensor"] },
   { field: "co_level_entity", types: ["detector"], labelKey: "sec_co_level", includeDomains: ["sensor"], when: (c) => detectorLayoutOf(c, null) === "co" },
   { field: "co_entity", types: ["detector"], labelKey: "sec_co_alarm", includeDomains: ["binary_sensor"],
     // Offered unless the card is a CO alarm or a leak sensor by choice: a
@@ -339,7 +340,7 @@ const SECTIONS = [
   { field: "mail_present_entity", types: ["mailbox"], labelKey: "section_mail_present", includeDomains: ["input_boolean", "binary_sensor", "switch", "sensor"] },
   { field: "front_door_entity", types: ["mailbox"], labelKey: "mb_front_door", includeDomains: ["binary_sensor", "sensor", "input_boolean", "switch"] },
   { field: "back_door_entity", types: ["mailbox"], labelKey: "mb_back_door", includeDomains: ["binary_sensor", "sensor", "input_boolean", "switch"] },
-  { field: "battery_entity", types: ["robot", "home_battery", "ups", "camera", "screen", "mobility", "detector", "climate_sensor", "fingerbot"], labelKey: "section_battery", includeDomains: ["sensor", "binary_sensor"],
+  { field: "battery_entity", types: ["robot", "home_battery", "ups", "camera", "screen", "mobility", "detector", "climate_sensor", "fingerbot", "valve", "drying_rack"], labelKey: "section_battery", includeDomains: ["sensor", "binary_sensor"],
     when: (c) => !(c.appliance_type === "screen" || SCREEN_ONLY_FIELDS.some((f) => c[f])) || screenIsTablet(c) || screenLayoutOf(c) === "laptop", extra: (c) =>
       (caps(c._currentType()).ups ? c._row("ups_battery_low", "battery_low", { placeholder: String(UPS_BATTERY_LOW) }) : "") },
   // A UPS: the time left on its battery, its load and the mains voltage.
@@ -1455,7 +1456,7 @@ class ApplianceCardEditor extends HTMLElement {
           type: "select",
           options: [{ value: "auto", label: t(hass, "unit_auto") }].concat(CIRC_MODELS.map((v) => ({ value: v, label: v === "generic" ? t(hass, "circ_model_generic") : v === "dab" ? "DAB" : v[0].toUpperCase() + v.slice(1) }))),
         }) : "") : ""}
-        ${[["irrigation", "irrigation_layout", IRRIGATION_LAYOUTS, "irr"], ["litter_box", "litter_layout", LITTER_LAYOUTS, "lit"], ["detector", "detector_layout", DETECTOR_LAYOUTS, "det"], ["pellet_grill", "grill_layout", GRILL_LAYOUTS, "pg"], ["speaker", "speaker_layout", SPEAKER_LAYOUTS, "spk"], ["console", "console_layout", CONSOLE_LAYOUTS, "con"], ["streamer", "streamer_layout", STREAMER_LAYOUTS, "str"], ["climate_sensor", "climate_sensor_layout", THS_LAYOUTS, "ths"], ["cover", "cover_layout", COVER_LAYOUTS, "cov"], ["fingerbot", "fingerbot_layout", FINGERBOT_LAYOUTS, "fb"]]
+        ${[["irrigation", "irrigation_layout", IRRIGATION_LAYOUTS, "irr"], ["litter_box", "litter_layout", LITTER_LAYOUTS, "lit"], ["detector", "detector_layout", DETECTOR_LAYOUTS, "det"], ["pellet_grill", "grill_layout", GRILL_LAYOUTS, "pg"], ["speaker", "speaker_layout", SPEAKER_LAYOUTS, "spk"], ["console", "console_layout", CONSOLE_LAYOUTS, "con"], ["streamer", "streamer_layout", STREAMER_LAYOUTS, "str"], ["climate_sensor", "climate_sensor_layout", THS_LAYOUTS, "ths"], ["cover", "cover_layout", COVER_LAYOUTS, "cov"], ["fingerbot", "fingerbot_layout", FINGERBOT_LAYOUTS, "fb"], ["valve", "valve_layout", VALVE_LAYOUTS, "vlv"], ["drying_rack", "rack_layout", RACK_LAYOUTS, "rack"]]
           .filter(([ty]) => this._type === ty).map(([, f, list, p]) => this._row("section_screen_layout", f, { type: "select",
             options: [{ value: "auto", label: t(hass, "unit_auto") }].concat(list.map((v) => ({ value: v, label: t(hass, `layout_${p}_${v}`) }))) })).join("")}
         ${this._type === "detector" && DETECTOR_MODELS[detectorLayoutOf(this._config, stateObj(hass, this._config.state_entity))] ? this._row("det_model", "detector_model", {
@@ -1474,6 +1475,10 @@ class ApplianceCardEditor extends HTMLElement {
         ${this._type === "fingerbot" ? this._row("fingerbot_color", "fingerbot_color", {
           type: "select",
           options: [{ value: "auto", label: t(hass, "unit_auto") }].concat(FINGERBOT_COLORS.map((v) => ({ value: v, label: t(hass, `cov_c_${v}`) }))),
+        }) : ""}
+        ${this._type === "valve" ? this._row("valve_handle_color", "valve_handle_color", {
+          type: "select",
+          options: [{ value: "auto", label: t(hass, "unit_auto") }].concat(VALVE_HANDLE_COLORS.map((v) => ({ value: v, label: t(hass, `vlv_h_${v}`) }))),
         }) : ""}
         ${this._type === "cover" ? this._row("cover_color", "cover_color", {
           type: "select",

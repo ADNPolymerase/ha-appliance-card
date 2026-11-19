@@ -91,6 +91,8 @@ FAMILIES = (
     ("switchbot", "sb_co2,sb_co2_high,sb_pro,sb_meter,sb_plus,sb_outdoor", 3),
     ("covers", "cov_shutter,cov_shutter_closing,cov_shutter_closed,cov_blind,cov_venetian,cov_raffstore,cov_pergola,cov_awning", 4),
     ("fingerbots", "fb_plus,fb_charging,fb_held,fb_low,fb_switchbot,fb_switchbot_black,fb_classic", 4),
+    ("valves", "vlv_aqara,vlv_aqara_closed,vlv_closing,vlv_tuya,vlv_gas,vlv_leak", 3),
+    ("racks", "rack_box,rack_box_closed,rack_accordion,rack_accordion_closed,rack_frame,rack_frame_closed", 3),
     ("screens", "scr_tv,scr_projector,scr_computer,scr_laptop,tab_wall,tab_frame,tab_portrait", 4),
     ("house", "nt_chest,nt_drawers,nt_booster,nt_sump,nt_sump_high,nt_floor,nt_floor_elec,nt_spa,nt_sauna,nt_aquarium,nt_linky,nt_tree,hd_hot,hd_ring", 4),
     ("winter", "win_pool,win_spa,win_poolbot,win_mower,win_sprinkler,win_flowers,win_tap,win_grill,win_fan", 3),

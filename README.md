@@ -255,6 +255,20 @@ Click a family to see its appliances at work. The drawings are shown with `illus
 </details>
 
 <details>
+<summary><b>Shut-off valves</b></summary>
+
+<img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-valves.gif" alt="Shut-off valves">
+
+</details>
+
+<details>
+<summary><b>Wall drying racks</b></summary>
+
+<img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-racks.gif" alt="Wall drying racks">
+
+</details>
+
+<details>
 <summary><b>Screens and tablets</b></summary>
 
 <img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-screens.gif" alt="Screens and tablets">
@@ -317,10 +331,11 @@ Only `state_entity` is required, except on a fridge where a probe or a door cont
 | `done_alert` | `true` makes a green badge pulse on the drawing when a cycle has finished, until the door opens or the badge is tapped. For appliances with a cycle (washer, dryer, dishwasher, oven…). |
 | `illustration_color` | `auto` (default, follows the theme) \| `white` \| `grey` \| `black` \| `red` (dark red). Only changes the casing, not the state colours. A drawing made after a real product (a console, a streaming box, a printer, a litter box…) is drawn in its real colours until a colour is chosen; its screen, app tile and tyres keep theirs. The scenes around a device (a sump's pit, a garden, a roof) and the lamps' light do not change. |
 | `language` | `auto` (default, follows Home Assistant) or one of the 16 codes: `en`, `fr`, `de`, `es`, `it`, `nl`, `pt`, `sv`, `no`, `da`, `pl`, `ru`, `zh`, `cs`, `hu`, `zh-Hant`. `nb` and `nb-NO` give Norwegian. `zh` is Simplified Chinese; `zh-Hant`, `zh-TW` and `zh-HK` give Traditional Chinese. |
-| `appliance_type` | `auto` (default) \| `washer` \| `dryer` \| `dishwasher` \| `oven` \| `microwave` \| `hood` \| `cooktop` \| `fridge` \| `kettle` \| `cooker` \| `coffee` \| `rice_cooker` \| `air_fryer` \| `pellet_grill` \| `water_heater` \| `boiler` \| `thermostat` \| `heat_pump` \| `printer_3d` \| `filament_dryer` \| `pet_feeder` \| `pet_fountain` \| `iron` \| `toaster` \| `pellet_stove` \| `air_conditioner` \| `dehumidifier` \| `humidifier` \| `space_heater` \| `towel_warmer` \| `air_purifier` \| `fan` \| `ev_charger` \| `hair_dryer` \| `screen` \| `network` \| `robot` \| `pool_pump` \| `scale` \| `ups` \| `solar` \| `home_battery` \| `camera` \| `diffuser` \| `hrv` \| `lamp` \| `mailbox` \| `water_pump` \| `floor_heating` \| `spa` \| `sauna` \| `aquarium` \| `meter` \| `christmas_tree` \| `mobility` \| `irrigation` \| `litter_box` \| `detector` \| `speaker` \| `console` \| `streamer` \| `climate_sensor` \| `cover` \| `fingerbot` \| `storage_tank` \| `fresh_water_station` \| `solar_thermal` \| `wood_stove`. |
+| `appliance_type` | `auto` (default) \| `washer` \| `dryer` \| `dishwasher` \| `oven` \| `microwave` \| `hood` \| `cooktop` \| `fridge` \| `kettle` \| `cooker` \| `coffee` \| `rice_cooker` \| `air_fryer` \| `pellet_grill` \| `water_heater` \| `boiler` \| `thermostat` \| `heat_pump` \| `printer_3d` \| `filament_dryer` \| `pet_feeder` \| `pet_fountain` \| `iron` \| `toaster` \| `pellet_stove` \| `air_conditioner` \| `dehumidifier` \| `humidifier` \| `space_heater` \| `towel_warmer` \| `air_purifier` \| `fan` \| `ev_charger` \| `hair_dryer` \| `screen` \| `network` \| `robot` \| `pool_pump` \| `scale` \| `ups` \| `solar` \| `home_battery` \| `camera` \| `diffuser` \| `hrv` \| `lamp` \| `mailbox` \| `water_pump` \| `floor_heating` \| `spa` \| `sauna` \| `aquarium` \| `meter` \| `christmas_tree` \| `mobility` \| `irrigation` \| `litter_box` \| `detector` \| `speaker` \| `console` \| `streamer` \| `climate_sensor` \| `cover` \| `fingerbot` \| `valve` \| `drying_rack` \| `storage_tank` \| `fresh_water_station` \| `solar_thermal` \| `wood_stove`. |
 | `tap_action` | What a tap on the card does, in Home Assistant's own words: `more-info` (default: the state entity, or on a card without one what it reads in its place), `none`, `navigate`, `url`, `toggle`, `perform-action` or `fire-dom-event`, which is what the popup cards built on browser_mod listen for. In YAML only. |
 | `illustration_tap_action` | A tap on the drawing alone, the rest of the card keeping `tap_action`: `toggle` (a lamp lit by touching it), `more-info`, `none`, or any of Home Assistant's actions. Left out, the drawing does what the card does. With `toggle`, the drawing answers like the buttons, as `controls_activation` says: a tap, two taps or a long press. |
 | `show_light_button` | `false` hides the light button in the top left corner (oven, hood, 3D printer, pool pump, diffuser); the light still shows on the drawing. |
+| `light_icon` / `light_icon_on` | The light button's icon, and another while it is on (`mdi:lightbulb-outline` and `mdi:lightbulb-on` by default). `light_icon` alone sets both. |
 | `show_toggle` | `false` takes away a lamp's on/off button, for a card switched by touching its drawing (`illustration_tap_action: toggle`). |
 | `toggle_entity` | Power button (`switch`, `button`, `script`, `input_boolean`, `fan`), highlighted while on. On every type, the fridge included, where it is the only button; pair it with `controls_activation: confirm` for an appliance that must not be switched off by mistake. `hide_when_off: true` shows the state alone while it is off: *Off* whatever the state entity last said, no program, no time, no bar and no alert; on, it also drops an empty bar between cycles. `toggle_hide_when_off: true` hides the button while `state_entity` is off, for a button that only tunes a running appliance (a speed switch next to a separate motor switch). `toggle_icon` swaps its icon, and `toggle_icon_on` sets another while it is on. |
 | `power_entity` / `power_on_threshold` / `power_icon` | Power sensor. With a threshold, the state is derived from it: *running* above, then *finished* when it falls back. With a smart plug's switch as `state_entity`, or the sensor itself, it is derived without one, against the threshold of the type (see *A smart plug alone*). A state from an integration keeps the say. `power_icon` replaces `mdi:power-plug`. |
@@ -346,7 +361,7 @@ Only `state_entity` is required, except on a fridge where a probe or a door cont
 | `alerts_entity` | Entity whose every *attribute* at on, true or active shows as an alert. |
 | `alerts_entities` | Up to 8 alerts with an entity each (Home Connect's salt, rinse aid, i-Dos, filters…), as `{ entity, label?, icon? }` or a plain id, shown while on, true, active, *present* or *confirmed*: one under its own name, several behind their count (see *Alert entities*). |
 | `connectivity_entity` / `connectivity_connected_state` | Connectivity, as a wifi icon, and the "connected" state (default `on`). |
-| `corner_entities` | Up to 2 switches as icons in the top corners, the first on the left and the second on the right, as `{ entity, label?, icon? }` or a plain id. The icon says what each one does and whether it holds (a child lock, an automatic lock, a lock, a switch), and a tap toggles it. A `lock` only opens its dialog: a stray tap never unlocks anything. |
+| `corner_entities` | Up to 4 switches or buttons as icons in the top corners: left, right, then a second pair under them. As `{ entity, label?, icon? }` or a plain id. The icon says what each one does and whether it holds (a child lock, an automatic lock, a lock, a switch), and a tap toggles it. A `button`, a `script`, a `scene` or an `automation` is pressed, run or triggered, and its icon springs; with no `icon`, it comes from the entity, from its kind (restart, update) or from its domain. A `lock` only opens its dialog: a stray tap never unlocks anything. |
 | `info_entities` | Up to 8 lines `{ entity, icon?, label?, value_map?, hide_unit? }`, any beyond are ignored, shown under the lines the card reads on its own. A tap opens the entity's dialog, which is how a tank or a filter gets reset from the card. Past 5 lines the spacing tightens. Values read as in Home Assistant, with the entity's display precision. `value_map` relabels raw values (see below), `hide_unit` drops the unit. |
 | `lines_order` | The order of the info lines, as a list of their keys: `program`, `remaining`, `door`, the ones each type brings (`level`, `last_feed`, `flow_return`, `nozzle`…) and, for the lines you add, their entity id. The visual editor writes it for you by dragging. Lines left out keep their place after the ones named, and a line that is not showing is skipped. |
 | `hidden_lines` | Lines never to show, by the same keys as `lines_order` (`lamp_brightness`, `today`, `power`...). In the visual editor, the eye beside each line of *Line order*. |
@@ -1565,6 +1580,10 @@ disk2_entity: sensor.nas_drive_2_status
 | `state_entity` on a finger bot | finger bot | Its switch (Fingerbot on Zigbee2MQTT, ZHA, Tuya, Tuya BLE, LocalTuya; SwitchBot's Bot) or its button (SwitchBot Cloud, a Bot in press mode). In click mode the arm presses and lifts again (*Pressing*), in switch mode it stays down while on (*Held down*, *Released*). A button shows *Pressing* for a few seconds after a press, then a *Last press* line. |
 | `fingerbot_layout` | finger bot | `plus` (Fingerbot Plus: Tuya, Adaprox, MOES, Zemismart, its touch pad on top) \| `switchbot` (SwitchBot Bot) \| `classic` (the first, slimmer Fingerbot). Left out, a name with SwitchBot or `bot` draws the Bot, Adaprox without Plus the first one, the rest the Plus. |
 | `fingerbot_color` | finger bot | `white` (default) \| `black`, for the black SwitchBot Bot. |
+| `valve_layout` | valve | `aqara` (Aqara Valve Controller T1, the default) \| `tuya` (the Tuya capsule sold under many names: MOES, Zemismart, Avatto...). Read from its name when not set. |
+| `valve_handle_color` | valve | `red` (default) \| `blue` \| `yellow` (the default on a gas valve) \| `black`. |
+| `leak_entity` | valve | A leak sensor: going off, it is the card's alarm and the valve drips, whatever the valve says. |
+| `rack_layout` | drying rack | `box` (a box whose front drops onto its rods, the default) \| `accordion` (accordion arms under a shelf) \| `frame` (a wooden frame that tilts away from the wall). |
 | `bot_mode_entity` | finger bot | Its mode: Zigbee2MQTT's and Tuya BLE's select (`click`, `switch`, `program`), as a line. SwitchBot's `switch_mode` attribute is read without it. |
 | `lower_entity` / `upper_entity` / `sustain_entity` | finger bot | Its down and up positions and its hold time, as lines. |
 | `reverse_entity` / `touch_entity` | finger bot | Its reverse and touch switches, as *Yes* / *No* lines; the touch pad's ring lights blue when touch is on. |
@@ -1817,6 +1836,27 @@ appliance_type: speaker
 speaker_layout: smart
 speaker_color: white
 state_entity: media_player.kitchen
+```
+
+A motorised shut-off valve is a `valve`. The motor sits on a quarter-turn ball valve and turns its handle: open, the handle lies along the pipe and the water runs through; closed, it points across and the water stops at the valve; while it turns, the handle swings. The **Aqara Valve Controller T1** comes in through [Zigbee2MQTT](https://www.zigbee2mqtt.io/devices/VC-X01D.html) or ZHA as a `switch` (on is open), the **Tuya** capsule as a `switch` or a `valve`. A Home Assistant `valve` entity is read as it is, `opening` and `closing` included. A leak sensor next to it makes it the alarm:
+
+```yaml
+type: custom:ha-appliance-card
+appliance_type: valve
+state_entity: switch.water_main
+battery_entity: sensor.water_main_battery
+leak_entity: binary_sensor.washer_leak
+valve_handle_color: blue
+```
+
+A wall drying rack with a contact sensor on it is a `drying_rack`: open, it is unfolded with laundry drying on it; closed, it is folded back against the wall. Its battery is a line.
+
+```yaml
+type: custom:ha-appliance-card
+appliance_type: drying_rack
+rack_layout: accordion
+state_entity: binary_sensor.drying_rack_contact
+battery_entity: sensor.drying_rack_contact_battery
 ```
 
 </details>

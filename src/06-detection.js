@@ -392,6 +392,13 @@ const TYPE_AUTO_PATTERNS = {
     touch_entity: /^(switch|input_boolean)\..*touch/i,
     charging_entity: /^(binary_sensor|sensor)\..*charg/i,
   },
+  drying_rack: {
+    battery_entity: /batter/i,
+  },
+  valve: {
+    battery_entity: /batter/i,
+    leak_entity: /^binary_sensor\..*(leak|fuite|water|wasser|flood)/i,
+  },
   detector: {
     battery_entity: /batter/i,
     co_level_entity: /(^|[._])co([._]|$)|carbon.?monoxide|co.?level|co.?ppm/i,
@@ -788,6 +795,10 @@ const TYPE_CAPS = {
   detector: { ntDetector: true },
   // A finger bot (HACF #163): its press and the plug that charges it.
   fingerbot: { ntFingerbot: true },
+  // A motorised shut-off valve (#123), turned from its own switch.
+  valve: { ntValve: true },
+  // A wall drying rack (#124), read from its contact sensor.
+  drying_rack: { readOnly: true },
   speaker: { ntSpeaker: true },
   // A game console, on PlayStation Network, Xbox, the PS4 integration or a plug.
   console: { ntConsole: true },
@@ -914,6 +925,8 @@ const STATE_DOMAINS = {
   litter_box: ["sensor", "vacuum", "binary_sensor", "select", "switch"],
   detector: ["binary_sensor", "sensor", "input_boolean"],
   fingerbot: ["switch", "button", "input_boolean", "input_button", "script"],
+  valve: ["valve", "switch", "binary_sensor", "input_boolean"],
+  drying_rack: ["binary_sensor", "cover", "input_boolean", "switch", "sensor"],
   speaker: ["media_player"],
   console: ["media_player", "sensor", "switch", "binary_sensor", "device_tracker", "input_boolean"],
   streamer: ["media_player", "remote", "switch", "binary_sensor", "input_boolean", "sensor"],
@@ -1042,7 +1055,7 @@ const TYPE_GROUPS = [
   ["kitchen", ["dishwasher", "oven", "microwave", "hood", "cooktop", "fridge", "kettle", "cooker", "coffee", "rice_cooker", "air_fryer", "toaster", "pellet_grill"]],
   ["heating", ["water_heater", "boiler", "heat_pump", "thermostat", "pellet_stove", "space_heater", "towel_warmer", "floor_heating", "storage_tank", "fresh_water_station", "wood_stove"]],
   ["air", ["air_conditioner", "dehumidifier", "humidifier", "air_purifier", "fan", "diffuser", "hrv", "climate_sensor"]],
-  ["home", ["screen", "iron", "hair_dryer", "printer_3d", "filament_dryer", "robot", "pool_pump", "scale", "camera", "lamp", "mailbox", "water_pump", "spa", "sauna", "aquarium", "christmas_tree", "mobility", "irrigation", "detector", "fingerbot", "speaker", "console", "streamer", "cover"]],
+  ["home", ["screen", "iron", "hair_dryer", "printer_3d", "filament_dryer", "robot", "pool_pump", "scale", "camera", "lamp", "mailbox", "water_pump", "spa", "sauna", "aquarium", "christmas_tree", "mobility", "irrigation", "detector", "fingerbot", "valve", "drying_rack", "speaker", "console", "streamer", "cover"]],
   ["energy", ["solar", "solar_thermal", "home_battery", "ev_charger", "meter"]],
   ["pets", ["pet_feeder", "pet_fountain", "litter_box"]],
   ["network", ["network", "ups"]],
@@ -1121,6 +1134,7 @@ function detectApplianceType(cfg, st) {
   // Home Assistant has a domain of its own for each of them. A valve is a
   // tap unless it says gas.
   if (domainOf(cfg.state_entity) === "valve" && !(st && st.attributes.device_class === "gas")) return "irrigation";
+  if (domainOf(cfg.state_entity) === "valve") return "valve";
   if (["vacuum", "lawn_mower"].includes(domainOf(cfg.state_entity))) return "robot";
   // A shutter, a blind, a pergola or an awning (#109); a gate, a garage door
   // or a door is no window covering.

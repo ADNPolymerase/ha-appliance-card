@@ -863,6 +863,7 @@ const HA_OFFLINE_STATES = ["unavailable", "unknown"];
 // last_changed moving: a redraw must follow them.
 const LIVE_ATTRS = {
   cover: ["current_position", "current_tilt_position"],
+  valve: ["current_position"],
   climate: ["current_temperature", "temperature", "target_temp_low", "target_temp_high", "hvac_action", "fan_mode", "preset_mode", "swing_mode", "current_humidity", "humidity"],
   water_heater: ["current_temperature", "temperature", "operation_mode", "away_mode"],
   fan: ["percentage", "preset_mode", "oscillating", "direction"],

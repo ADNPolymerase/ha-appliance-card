@@ -5846,9 +5846,10 @@ const cssRule = (h, sel) => {
 const cssIcon = (h, sel) => (/--mdc-icon-size: (\d+)px/.exec(cssRule(h, sel)) || [])[1];
 {
   const h = cornerCard(['switch.feeder_child_lock', 'switch.feeder_auto_lock', 'switch.feeder_forcing']).html;
-  check('coins : le premier a gauche, le second a droite, et pas de troisieme', corners(h).join(' / '),
+  check('coins : le premier a gauche, le second a droite, le troisieme dessous a gauche (#125)', corners(h).join(' / '),
     'left+:6:switch.feeder_child_lock:Child lock:mdi:account-lock / '
-    + 'right:6:switch.feeder_auto_lock:Auto lock:mdi:timer-lock-open-outline');
+    + 'right:6:switch.feeder_auto_lock:Auto lock:mdi:timer-lock-open-outline / '
+    + 'left+:36:switch.feeder_forcing:Forcing:mdi:toggle-switch');
   check('coins : son nom se lit aussi a l\'oreille',
     /data-corner="switch\.feeder_child_lock" title="Child lock" aria-label="Child lock"/.test(h), true);
   contains('coins : a gauche, au bord', h, '.corner-btn.left { left: 8px; }');
@@ -5870,9 +5871,32 @@ check('coins : sous la lumiere a gauche',
     corner_entities: ['switch.feeder_child_lock', 'switch.feeder_auto_lock'] },
   { ...CORNER_ST, 'sensor.o': { state: 'off', attributes: {} }, 'light.o': { state: 'off', attributes: {} } }))
     .map(cornerSpot).join(' '), 'left+:36 right:6');
-check('coins : deux au plus',
+check('coins : quatre au plus (#125)',
   corners(cornerCard(['switch.feeder_child_lock', 'switch.feeder_auto_lock', 'switch.feeder_forcing',
-    'lock.feeder_hatch', 'switch.feeder_led']).html).length, 2);
+    'lock.feeder_hatch', 'switch.feeder_led']).html).map(cornerSpot).join(' '), 'left+:6 right:6 left+:36 right+:36');
+{
+  // Buttons, scripts, scenes and automations in the corners (#125): pressed,
+  // never on, with an icon of their own or by what they do.
+  const st = {
+    'button.printer_restart': { state: '2026-11-19T10:00:00+00:00', attributes: { friendly_name: 'Printer Restart', device_class: 'restart' } },
+    'button.octoprint_connect': { state: 'unknown', attributes: { friendly_name: 'OctoPrint Connect' } },
+    'script.router_reboot': { state: 'off', attributes: { friendly_name: 'Router reboot' } },
+    'scene.movie': { state: '2026-11-19T10:00:00+00:00', attributes: { friendly_name: 'Movie', icon: 'mdi:movie' } },
+  };
+  const h = cornerCard(['button.printer_restart', 'button.octoprint_connect', 'script.router_reboot', 'scene.movie'], {}, st).html;
+  check('coins : boutons, script et scene, jamais allumes (#125)', corners(h).map((c) => c.split(':').slice(0, 1).concat(cornerIco(c)).join(' ')).join(' / '),
+    'left mdi:restart / right mdi:gesture-tap-button / left mdi:script-text-play-outline / right mdi:movie');
+  check('coins : un bouton prend l icone donnee (#125)', cornerIco(corners(cornerCard([{ entity: 'button.octoprint_connect', icon: 'mdi:link-variant' }], {}, st).html)[0]), 'mdi:link-variant');
+  check('coins : le bouton presse rebondit', /\.corner-btn\.pressed \{/.test(h) && /CORNER_PRESS\.includes\(domainOf\(id\)\)/.test(SRC), true);
+  check('coins : une scene se lance', /domain === "script" \|\| domain === "scene"/.test(SRC), true);
+  check('coins : l editeur propose boutons et scripts', /field: "corner_entities", max: CORNERS_MAX[^\n]*\n[^\n]*"button", "input_button", "script", "scene", "automation"/.test(SRC), true);
+  const lamp = (lit, extra) => render({ appliance_type: 'oven', state_entity: 'sensor.o', light_entity: 'light.o', ...extra },
+    { 'sensor.o': { state: 'off', attributes: {} }, 'light.o': { state: lit ? 'on' : 'off', attributes: {} } });
+  const lampIcon = (h) => (/class="light-badge[^"]*"[^>]*><ha-icon icon="([^"]+)"/.exec(h) || [])[1];
+  check('lumiere : icone par defaut', lampIcon(lamp(false)) + ' ' + lampIcon(lamp(true)), 'mdi:lightbulb-outline mdi:lightbulb-on');
+  check('lumiere : light_icon et light_icon_on (#125)', lampIcon(lamp(false, { light_icon: 'mdi:led-strip', light_icon_on: 'mdi:led-strip-variant' })) + ' ' + lampIcon(lamp(true, { light_icon: 'mdi:led-strip', light_icon_on: 'mdi:led-strip-variant' })), 'mdi:led-strip mdi:led-strip-variant');
+  check('lumiere : light_icon seul vaut pour les deux', lampIcon(lamp(true, { light_icon: 'mdi:led-strip' })), 'mdi:led-strip');
+}
 check('coins : une entite absente ne prend pas de place',
   corners(cornerCard(['switch.nothing', 'switch.feeder_auto_lock']).html).map(c => c.split(':').slice(0, 3).join(':')).join(' '),
   'left:6:switch.feeder_auto_lock');
@@ -5978,9 +6002,9 @@ check('coins : indisponible, non', cornerAs('switch.feeder_forcing', 'unavailabl
 check('coins : les interrupteurs sont surveilles',
   cornerCard(['switch.feeder_child_lock', 'switch.feeder_auto_lock']).card._watchedEntityIds()
     .filter(id => id.startsWith('switch.')).join(' '), 'switch.feeder_child_lock switch.feeder_auto_lock');
-check('coins : deux surveilles au plus',
+check('coins : quatre surveilles au plus',
   cornerCard(['switch.feeder_child_lock', 'switch.feeder_auto_lock', 'switch.feeder_forcing', 'lock.feeder_hatch',
-    'switch.feeder_led']).card._watchedEntityIds().filter(id => /^(switch|lock)\./.test(id)).length, 2);
+    'switch.feeder_led']).card._watchedEntityIds().filter(id => /^(switch|lock)\./.test(id)).length, 4);
 noInjection('nom d\'un interrupteur', cornerCard(['switch.feeder_child_lock'], {},
   { 'switch.feeder_child_lock': { state: 'on', attributes: { friendly_name: XSS } } }).html);
 check('icone d\'un interrupteur : aucun attribut onload forme',
@@ -6017,7 +6041,7 @@ const cornerSelect = ed => ed._root.querySelector('[data-role="corners-add-selec
   contains('editeur coins : un panneau a lui', html, 'data-panel="corners"');
   check('editeur coins : ferme tant qu\'il est vide', /data-panel="corners" open/.test(html), false);
   check('editeur coins : le menu ne propose que ce que l\'appareil bascule', cornerMenu(html).join(' / '),
-    ':Add a switch… / switch.dw_child_lock:Child lock / lock.dw_door_lock:Door lock / switch.dw_eco:Eco / __other__:Other entity…');
+    ':Add a switch or a button… / switch.dw_child_lock:Child lock / lock.dw_door_lock:Door lock / switch.dw_eco:Eco / __other__:Other entity…');
   fire(cornerSelect(ed), 'change', { target: { value: 'switch.dw_child_lock' } });
   checkFired('editeur coins : choisir dans le menu', ed, ev =>
     check('editeur coins : en simple identifiant', (ev?.detail?.config?.corner_entities || []).join(' '), 'switch.dw_child_lock'));
@@ -6039,17 +6063,17 @@ check('editeur coins : ni ce qu\'une ligne montre',
   fire(cornerSelect(ed), 'change', { target: { value: '__other__' } });
   const picker = ed._root.querySelector('[data-slot="__corners_other"]').children.at(-1);
   check('editeur coins : autre entite, parmi ce qui se bascule', (picker.includeDomains || []).join(','),
-    'switch,input_boolean,lock,light,fan');
+    'switch,input_boolean,lock,light,fan,button,input_button,script,scene,automation');
   check('editeur coins : les alertes gardent leur selecteur ferme', /data-slot="__alerts_other"/.test(markup(ed._root)), false);
   fire(picker, 'value-changed', { detail: { value: 'switch.kitchen_light' } });
   check('editeur coins : l\'entite choisie s\'ajoute', ed._config.corner_entities.join(' '), 'switch.kitchen_light');
   check('editeur coins : et le selecteur se referme', /data-slot="__corners_other"/.test(markup(ed._root)), false);
 }
 {
-  const full = cornerEditor({ corner_entities: ['switch.a', 'switch.b'] });
-  check('editeur coins : a deux, le menu se ferme', /<select data-role="corners-add-select" disabled>/.test(markup(full._root)), true);
+  const full = cornerEditor({ corner_entities: ['switch.a', 'switch.b', 'switch.c', 'switch.d'] });
+  check('editeur coins : a quatre, le menu se ferme', /<select data-role="corners-add-select" disabled>/.test(markup(full._root)), true);
   full._addToList('corners', 'switch.dw_eco');
-  check('editeur coins : et rien ne s\'y ajoute', full._config.corner_entities.length, 2);
+  check('editeur coins : et rien ne s\'y ajoute', full._config.corner_entities.length, 4);
   check('editeur coins : ouvert sur une liste deja faite', /data-panel="corners" open/.test(markup(full._root)), true);
   check('editeur coins : a un, il reste ouvert',
     /<select data-role="corners-add-select">/.test(markup(cornerEditor({ corner_entities: ['switch.a'] })._root)), true);
@@ -6082,7 +6106,7 @@ check('editeur coins : ni ce qu\'une ligne montre',
   devices: { cq: { name: 'Croquettes' } } };
   const h = markup(ed._root);
   check('editeur coins : sans etat, l\'appareil se trouve par ses autres entites', cornerMenu(h).join(' / '),
-    ':Add a switch… / switch.cq_child_lock:Child lock / __other__:Other entity…');
+    ':Add a switch or a button… / switch.cq_child_lock:Child lock / __other__:Other entity…');
   check('editeur alertes : sans etat non plus', alertMenu(h).join(' / '),
     ':Add an alert… / binary_sensor.cq_jam:Jam / __other__:Other entity…');
 }
@@ -6093,7 +6117,7 @@ check('editeur coins : ni ce qu\'une ligne montre',
   ed.setConfig({ type: 'custom:ha-appliance-card', appliance_type: 'washer', state_entity: 'sensor.w_state' });
   ed.hass = HASS({ 'switch.plug': { state: 'on', attributes: { friendly_name: 'Plug' } } });
   check('editeur coins : une entite d\'etat introuvable ne propose rien', cornerMenu(markup(ed._root)).join(' / '),
-    ':Add a switch\u2026 / __other__:Other entity\u2026');
+    ':Add a switch or a button\u2026 / __other__:Other entity\u2026');
 }
 for (const type of ['washer', 'dryer', 'dishwasher', 'oven', 'microwave', 'hood', 'cooktop', 'fridge', 'kettle',
   'cooker', 'coffee', 'rice_cooker', 'water_heater', 'boiler', 'heat_pump', 'printer_3d', 'pet_feeder']) {
@@ -6106,7 +6130,7 @@ for (const language of ['fr', 'ru', 'de', 'es', 'it', 'nl', 'pt', 'sv', 'no', 'd
   check(`editeur coins : titre traduit en ${language}`, title !== '' && title !== 'Corner switches', true);
   check(`editeur coins : menu traduit en ${language}`, menu[0] !== ':Add a switch…' && menu[0].startsWith(':'), true);
 }
-contains('editeur coins : titre en anglais', markup(cornerEditor()._root), '<summary>Corner switches</summary>');
+contains('editeur coins : titre en anglais', markup(cornerEditor()._root), '<summary>Corner switches and buttons</summary>');
 
 // ── The editor: the feeder's model ──
 {
@@ -14956,6 +14980,40 @@ if (RECORD) writeFileSync(process.env.HAC_RECORD, JSON.stringify(RECORD));
   check('121 : date du Meter Pro CO2 en allemand', co2de.includes(`>${de}</text>`), true);
   check('121 : date du Meter Pro CO2 en anglais', h.includes(`>${us}</text>`), true);
   check('121 : nom dans l\'editeur', /layout_ths_switchbot_outdoor: "SwitchBot Indoor\/Outdoor Meter"/.test(SRC), true);
+}
+
+// A motorised shut-off valve (#123) and a wall drying rack (#124).
+{
+  const s = (state, a = {}) => ({ state: String(state), attributes: a });
+  const kindOf = (h) => (/\bnt-k-(\w+)/.exec(machineCls(h)) || [, null])[1];
+  const v = (cfg, states) => render({ appliance_type: 'valve', ...cfg }, states);
+  const detect = (cfg, states) => { const k = kindOf(render(cfg, states)) || ''; return /^vlv_/.test(k) ? 'valve' : /^rack_/.test(k) ? 'drying_rack' : /^irr_/.test(k) ? 'irrigation' : k; };
+  check('123 : vanne Aqara ouverte', stateLine(v({ state_entity: 'switch.vlv' }, { 'switch.vlv': s('on') })), 'Open');
+  check('123 : fermee', stateLine(v({ state_entity: 'switch.vlv' }, { 'switch.vlv': s('off') })), 'Closed');
+  check('123 : en fermeture', stateLine(v({ state_entity: 'valve.v' }, { 'valve.v': s('closing') })), 'Closing');
+  check('123 : en francais', stateLine(v({ state_entity: 'valve.v', language: 'fr' }, { 'valve.v': s('open') })), 'Ouverte');
+  check('123 : Aqara par defaut', kindOf(v({ state_entity: 'switch.vlv' }, { 'switch.vlv': s('on') })), 'vlv_aqara');
+  check('123 : Tuya par son nom', kindOf(v({ state_entity: 'switch.moes_valve' }, { 'switch.moes_valve': s('on') })), 'vlv_tuya');
+  check('123 : forme choisie', kindOf(v({ state_entity: 'switch.vlv', valve_layout: 'tuya' }, { 'switch.vlv': s('on') })), 'vlv_tuya');
+  const leak = v({ state_entity: 'switch.vlv', leak_entity: 'binary_sensor.leak' }, { 'switch.vlv': s('off'), 'binary_sensor.leak': s('on', { device_class: 'moisture' }) });
+  check('123 : une fuite est l alarme', stateLine(leak), 'Leak detected');
+  check('123 : la fuite goutte', /nta-drip/.test(leak), true);
+  check('123 : fermee, la poignee en travers', /rotate\(90 60 80\)/.test(v({ state_entity: 'switch.vlv' }, { 'switch.vlv': s('off') })), true);
+  check('123 : ouverte, l eau passe', /class="nta-flow" d="M83 98/.test(v({ state_entity: 'switch.vlv' }, { 'switch.vlv': s('on') })), true);
+  check('123 : poignee jaune sur le gaz', /#f6c21c/.test(v({ state_entity: 'valve.gas' }, { 'valve.gas': s('closed', { device_class: 'gas' }) })), true);
+  check('123 : couleur choisie', /#4a78d6/.test(v({ state_entity: 'switch.vlv', valve_handle_color: 'blue' }, { 'switch.vlv': s('on') })), true);
+  check('123 : son bouton ouvre et ferme', /mdi:valve-closed/.test(v({ state_entity: 'switch.vlv' }, { 'switch.vlv': s('off') })), true);
+  check('123 : detectee par son modele', detect({ state_entity: 'switch.cuisine' }, { 'switch.cuisine': s('on', { __hac_device: 'aqara VC-X01D' }) }), 'valve');
+  check('123 : une vanne de gaz', detect({ state_entity: 'valve.g' }, { 'valve.g': s('closed', { device_class: 'gas' }) }), 'valve');
+  check('123 : une vanne de jardin reste l arrosage', detect({ state_entity: 'valve.garden' }, { 'valve.garden': s('closed', { device_class: 'water' }) }), 'irrigation');
+  const r = (cfg, states) => render({ appliance_type: 'drying_rack', ...cfg }, states);
+  check('124 : seche-linge mural deplie', stateLine(r({ state_entity: 'binary_sensor.rack' }, { 'binary_sensor.rack': s('on', { device_class: 'opening' }) })), 'Unfolded');
+  check('124 : replie', stateLine(r({ state_entity: 'binary_sensor.rack' }, { 'binary_sensor.rack': s('off') })), 'Folded');
+  check('124 : en francais', stateLine(r({ state_entity: 'binary_sensor.rack', language: 'fr' }, { 'binary_sensor.rack': s('on') })), 'Déplié');
+  check('124 : les trois formes', ['box', 'accordion', 'frame'].map((l) => kindOf(r({ state_entity: 'binary_sensor.rack', rack_layout: l }, { 'binary_sensor.rack': s('on') }))).join(' '), 'rack_box rack_accordion rack_frame');
+  check('124 : sa batterie', /mdi:battery"[^]*92/.test(r({ state_entity: 'binary_sensor.rack', battery_entity: 'sensor.b' }, { 'binary_sensor.rack': s('off'), 'sensor.b': s(92, { unit_of_measurement: '%' }) })), true);
+  check('124 : detecte par son nom', detect({ state_entity: 'binary_sensor.drying_rack_contact' }, { 'binary_sensor.drying_rack_contact': s('off', { device_class: 'opening' }) }), 'drying_rack');
+  check('124 : un sechoir a filament n en est pas un', detect({ state_entity: 'switch.sechoir_filament' }, { 'switch.sechoir_filament': s('off') }) !== 'drying_rack', true);
 }
 
 // Shutters, blinds, a pergola and an awning (#109): the position, the tilt,

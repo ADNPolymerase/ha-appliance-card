@@ -58,7 +58,7 @@ const T = {
     section_info: "Extra info entities", section_lines_order: "Line order",
     info_count: "Number of extra entities",
     section_alert_list: "Alert entities", alerts_add: "Add an alert\u2026", list_other: "Other entity\u2026", list_remove: "Remove",
-    section_corner_list: "Corner switches", corners_add: "Add a switch\u2026",
+    section_corner_list: "Corner switches and buttons", corners_add: "Add a switch or a button\u2026",
     info_label: "Display name (optional)",
     info_value_map: "Value mapping (optional)",
     info_value_map_placeholder: "One per line, e.g.\n0: Ready\n1: Washing",
@@ -187,6 +187,8 @@ const T = {
     ev_discharging: "Discharging", section_discharge_power: "Power the car gives back (to the home or the grid)", ev_line_discharge: "Discharge",
     type_cover: "Shutter, blind, pergola or awning", layout_cov_shutter: "Roller shutter", layout_cov_blind: "Roller blind", layout_cov_venetian: "Venetian blind", layout_cov_raffstore: "Exterior venetian blind", layout_cov_pergola: "Bioclimatic pergola", layout_cov_awning: "Awning", cov_open: "Open", cov_closed: "Closed", cov_open_at: "Open {pct} %", cov_opening: "Opening", cov_closing: "Closing", cov_deployed: "Extended", cov_retracted: "Retracted", cov_deployed_at: "Extended {pct} %", cov_deploying: "Extending", cov_retracting: "Retracting", cov_louvers_open: "Louvers open", cov_louvers_closed: "Louvers closed", cov_louvers_at: "Louvers {pct} %", cov_louvers_opening: "Opening the louvers", cov_louvers_closing: "Closing the louvers", cov_position: "Position", cov_tilt: "Slats", cov_light: "Light", cov_open_btn: "Open", cov_close_btn: "Close", cover_color: "Colour (apron, slats, frame)", fabric_color: "Fabric colour", fabric_stripes: "Striped fabric", cov_c_white: "White", cov_c_grey: "Grey", cov_c_anthracite: "Anthracite", cov_c_black: "Black", cov_c_beige: "Beige", cov_c_wood: "Wood", cov_c_brown: "Brown", cov_f_ecru: "Ecru", cov_f_linen: "Linen", cov_f_grey: "Grey", cov_f_anthracite: "Anthracite", cov_f_blue: "Blue", cov_f_petrol: "Petrol blue", cov_f_terracotta: "Terracotta", cov_f_green: "Green", layout_ths_co2_eink: "CO\u2082 monitor, e-ink (Aranet4)", layout_ths_co2_box: "CO\u2082 monitor, LED bar (AirGradient)", layout_ths_co2_netatmo: "Netatmo indoor station", layout_ths_co2_netatmo_module: "Netatmo additional indoor module", layout_ths_switchbot_co2: "SwitchBot Meter Pro CO\u2082", layout_ths_switchbot_pro: "SwitchBot Meter Pro", layout_ths_switchbot_meter: "SwitchBot Meter", layout_ths_switchbot_plus: "SwitchBot Meter Plus", layout_ths_switchbot_outdoor: "SwitchBot Indoor/Outdoor Meter", ths_co2: "CO\u2082", co2_good: "Air is fine", co2_ventilate: "Ventilation advised", co2_poor: "Ventilate now", co2_warning: "Orange from (ppm)", co2_alert: "Red from (ppm)", netatmo_color: "Netatmo colour", ntm_aluminium: "Aluminium", ntm_sand: "Sand", ntm_mint: "Mint", ntm_graphite: "Graphite",
     type_fingerbot: "Finger bot (Fingerbot, SwitchBot Bot)", layout_fb_plus: "Fingerbot Plus (Tuya, Adaprox, MOES)", layout_fb_switchbot: "SwitchBot Bot", layout_fb_classic: "Fingerbot, first model", fingerbot_color: "Colour", fb_ready: "Ready", fb_pressing: "Pressing", fb_held: "Held down", fb_released: "Released", fb_charging: "Charging", fb_charged: "Charged", fb_low: "Low battery", fb_press: "Press", fb_charge: "Charge", fb_mode: "Mode", fb_m_click: "Press", fb_m_switch: "Switch", fb_m_program: "Program", fb_lower: "Down position", fb_upper: "Up position", fb_sustain: "Hold time", fb_reverse: "Reversed", fb_touch: "Touch button", fb_yes: "Yes", fb_no: "No", fb_last: "Last press",
+    type_valve: "Shut-off valve (Aqara T1, Tuya)", layout_vlv_aqara: "Aqara Valve Controller T1", layout_vlv_tuya: "Tuya valve controller", vlv_open: "Open", vlv_closed: "Closed", vlv_opening: "Opening", vlv_closing: "Closing", valve_handle_color: "Handle colour", vlv_h_red: "Red", vlv_h_blue: "Blue", vlv_h_yellow: "Yellow", vlv_h_black: "Black",
+    type_drying_rack: "Wall drying rack", layout_rack_box: "Fold-down box", layout_rack_accordion: "Accordion under a shelf", layout_rack_frame: "Tilting wooden frame", rack_open: "Unfolded", rack_closed: "Folded",
   },
 };
 
@@ -1309,6 +1311,7 @@ const HA_OFFLINE_STATES = ["unavailable", "unknown"];
 // last_changed moving: a redraw must follow them.
 const LIVE_ATTRS = {
   cover: ["current_position", "current_tilt_position"],
+  valve: ["current_position"],
   climate: ["current_temperature", "temperature", "target_temp_low", "target_temp_high", "hvac_action", "fan_mode", "preset_mode", "swing_mode", "current_humidity", "humidity"],
   water_heater: ["current_temperature", "temperature", "operation_mode", "away_mode"],
   fan: ["percentage", "preset_mode", "oscillating", "direction"],
@@ -2495,7 +2498,7 @@ function alertIcon(hass, e) {
 
 // Two switches at most, one in each top corner: more would crowd the drawing
 // they sit beside.
-const CORNERS_MAX = 2;
+const CORNERS_MAX = 4;
 // What a switch in the corners locks, if anything. A feeder has two: the child
 // lock and the lock that closes the buttons by itself after a while. Read on
 // the integration's own key first, the same in every language, then on the
@@ -2504,7 +2507,11 @@ const CORNERS_MAX = 2;
 const CORNER_CHILD_RE = /child|kinder|enfant|infantil|crianca|bambin|barn|dziec|rodzic|detsk|\u0434\u0435\u0442|\u513f\u7ae5/;
 const CORNER_LOCK_RE = /(^|[^c])lock|verrou|sperr|bloqu|blocc|slot|blokad|zamk|zamek|autolas|\u0431\u043b\u043e\u043a|\u0437\u0430\u043c\u043e\u043a|\u9501/;
 const CORNER_AUTO_RE = /auto|\u0430\u0432\u0442\u043e|\u81ea\u52a8/;
+// A button, a script, a scene or an automation in a corner is pressed, not
+// held (#125): it has no on and off, only what a tap sets going.
+const CORNER_PRESS = ["button", "input_button", "script", "scene", "automation"];
 function cornerKind(hass, entityId) {
+  if (CORNER_PRESS.includes(domainOf(entityId))) return "press";
   const reg = hass.entities && hass.entities[entityId];
   const st = hass.states[entityId];
   const hay = stripAccents([reg && reg.translation_key, entityId, st && st.attributes.friendly_name]
@@ -2520,7 +2527,10 @@ const CORNER_ICONS = {
   auto: ["mdi:timer-lock", "mdi:timer-lock-open-outline"],
   lock: ["mdi:lock", "mdi:lock-open-variant-outline"],
   "": ["mdi:toggle-switch", "mdi:toggle-switch-off-outline"],
+  press: ["mdi:gesture-tap-button", "mdi:gesture-tap-button"],
 };
+// A pressed entity's icon by what it does, when it has none of its own.
+const CORNER_PRESS_ICONS = { restart: "mdi:restart", update: "mdi:package-up", identify: "mdi:crosshairs-question", script: "mdi:script-text-play-outline", scene: "mdi:palette-outline", automation: "mdi:robot-outline" };
 // A switch holds while it is on, a lock while it is locked. An open lock is
 // the opposite of a locked one.
 function cornerOn(st) {
@@ -2532,7 +2542,8 @@ function cornerIcon(hass, c) {
   if (c.icon) return c.icon;
   const st = hass.states[c.entity];
   const kind = cornerKind(hass, c.entity);
-  if (!kind && st && st.attributes.icon) return st.attributes.icon;
+  if ((!kind || kind === "press") && st && st.attributes.icon) return st.attributes.icon;
+  if (kind === "press") return CORNER_PRESS_ICONS[(st && st.attributes.device_class) || ""] || CORNER_PRESS_ICONS[domainOf(c.entity)] || CORNER_ICONS.press[0];
   return CORNER_ICONS[kind][cornerOn(st) ? 0 : 1];
 }
 
@@ -2562,7 +2573,7 @@ const ENTITY_LISTS = [
   { panel: "alerts", field: "alerts_entities", max: ALERTS_MAX, title: "section_alert_list", add: "alerts_add",
     domains: ["binary_sensor", "sensor"], offers: isAlertCandidate, icon: alertIcon },
   { panel: "corners", field: "corner_entities", max: CORNERS_MAX, title: "section_corner_list", add: "corners_add",
-    domains: ["switch", "input_boolean", "lock", "light", "fan"], offers: isCornerCandidate, icon: cornerIcon },
+    domains: ["switch", "input_boolean", "lock", "light", "fan", "button", "input_button", "script", "scene", "automation"], offers: isCornerCandidate, icon: cornerIcon },
   // A filament box beside a 3D printer (#93): one entity per spool.
   { panel: "ams", field: "ams_entities", max: 4, title: "section_ams_list", add: "ams_add", types: ["printer_3d"],
     domains: ["sensor", "select", "input_text"], offers: (hass, id) => /tray|spool|bobine|ams|_a[1-4]_colou?r$/.test(id), icon: () => "mdi:printer-3d-nozzle-outline" },
@@ -3106,6 +3117,13 @@ const TYPE_AUTO_PATTERNS = {
     touch_entity: /^(switch|input_boolean)\..*touch/i,
     charging_entity: /^(binary_sensor|sensor)\..*charg/i,
   },
+  drying_rack: {
+    battery_entity: /batter/i,
+  },
+  valve: {
+    battery_entity: /batter/i,
+    leak_entity: /^binary_sensor\..*(leak|fuite|water|wasser|flood)/i,
+  },
   detector: {
     battery_entity: /batter/i,
     co_level_entity: /(^|[._])co([._]|$)|carbon.?monoxide|co.?level|co.?ppm/i,
@@ -3502,6 +3520,10 @@ const TYPE_CAPS = {
   detector: { ntDetector: true },
   // A finger bot (HACF #163): its press and the plug that charges it.
   fingerbot: { ntFingerbot: true },
+  // A motorised shut-off valve (#123), turned from its own switch.
+  valve: { ntValve: true },
+  // A wall drying rack (#124), read from its contact sensor.
+  drying_rack: { readOnly: true },
   speaker: { ntSpeaker: true },
   // A game console, on PlayStation Network, Xbox, the PS4 integration or a plug.
   console: { ntConsole: true },
@@ -3628,6 +3650,8 @@ const STATE_DOMAINS = {
   litter_box: ["sensor", "vacuum", "binary_sensor", "select", "switch"],
   detector: ["binary_sensor", "sensor", "input_boolean"],
   fingerbot: ["switch", "button", "input_boolean", "input_button", "script"],
+  valve: ["valve", "switch", "binary_sensor", "input_boolean"],
+  drying_rack: ["binary_sensor", "cover", "input_boolean", "switch", "sensor"],
   speaker: ["media_player"],
   console: ["media_player", "sensor", "switch", "binary_sensor", "device_tracker", "input_boolean"],
   streamer: ["media_player", "remote", "switch", "binary_sensor", "input_boolean", "sensor"],
@@ -3756,7 +3780,7 @@ const TYPE_GROUPS = [
   ["kitchen", ["dishwasher", "oven", "microwave", "hood", "cooktop", "fridge", "kettle", "cooker", "coffee", "rice_cooker", "air_fryer", "toaster", "pellet_grill"]],
   ["heating", ["water_heater", "boiler", "heat_pump", "thermostat", "pellet_stove", "space_heater", "towel_warmer", "floor_heating", "storage_tank", "fresh_water_station", "wood_stove"]],
   ["air", ["air_conditioner", "dehumidifier", "humidifier", "air_purifier", "fan", "diffuser", "hrv", "climate_sensor"]],
-  ["home", ["screen", "iron", "hair_dryer", "printer_3d", "filament_dryer", "robot", "pool_pump", "scale", "camera", "lamp", "mailbox", "water_pump", "spa", "sauna", "aquarium", "christmas_tree", "mobility", "irrigation", "detector", "fingerbot", "speaker", "console", "streamer", "cover"]],
+  ["home", ["screen", "iron", "hair_dryer", "printer_3d", "filament_dryer", "robot", "pool_pump", "scale", "camera", "lamp", "mailbox", "water_pump", "spa", "sauna", "aquarium", "christmas_tree", "mobility", "irrigation", "detector", "fingerbot", "valve", "drying_rack", "speaker", "console", "streamer", "cover"]],
   ["energy", ["solar", "solar_thermal", "home_battery", "ev_charger", "meter"]],
   ["pets", ["pet_feeder", "pet_fountain", "litter_box"]],
   ["network", ["network", "ups"]],
@@ -3835,6 +3859,7 @@ function detectApplianceType(cfg, st) {
   // Home Assistant has a domain of its own for each of them. A valve is a
   // tap unless it says gas.
   if (domainOf(cfg.state_entity) === "valve" && !(st && st.attributes.device_class === "gas")) return "irrigation";
+  if (domainOf(cfg.state_entity) === "valve") return "valve";
   if (["vacuum", "lawn_mower"].includes(domainOf(cfg.state_entity))) return "robot";
   // A shutter, a blind, a pergola or an awning (#109); a gate, a garage door
   // or a door is no window covering.
@@ -5691,7 +5716,7 @@ function lampSpotsOf(cfg, st) {
 // sauna, an aquarium, a Linky meter and a Christmas tree. Drawn in SVG on a 120 x 135 field; what
 // moves moves only on a machine carrying nt-on, staggered through --d0, and
 // the robot's cable and the sump's float follow their SMIL animations.
-const NT_TYPES = ["fingerbot", "cover", "pellet_grill", "water_pump", "floor_heating", "spa", "sauna", "aquarium", "meter", "christmas_tree", "mobility", "irrigation", "litter_box", "detector", "speaker", "console", "streamer", "climate_sensor", "storage_tank", "fresh_water_station", "solar_thermal", "wood_stove", "humidifier", "filament_dryer"];
+const NT_TYPES = ["drying_rack", "valve", "fingerbot", "cover", "pellet_grill", "water_pump", "floor_heating", "spa", "sauna", "aquarium", "meter", "christmas_tree", "mobility", "irrigation", "litter_box", "detector", "speaker", "console", "streamer", "climate_sensor", "storage_tank", "fresh_water_station", "solar_thermal", "wood_stove", "humidifier", "filament_dryer"];
 // How many spools a filament dryer holds (#93).
 const FD_COUNTS = [1, 2, 4];
 const FD_COLORS = ["#43a047", "#fb8c00", "#8e24aa", "#eceff1"];
@@ -5708,6 +5733,15 @@ const DETECTOR_MODELS = { door: ["sonoff", "aqara", "hue"], vibration: ["aqara",
 // A finger bot's drawing (HACF #163), its colour, how long a press shows and
 // the power that means its plug is charging it.
 const FINGERBOT_LAYOUTS = ["plus", "switchbot", "classic"];
+// A motorised shut-off valve (#123): Aqara's box or the Tuya capsule.
+const VALVE_LAYOUTS = ["aqara", "tuya"];
+// A wall drying rack with a contact sensor (#124): a fold-down box, an
+// accordion under a shelf, or a tilting wooden frame.
+const RACK_LAYOUTS = ["box", "accordion", "frame"];
+const RACK_NAME_RE = /^(?!.*(filament|cheveux|hair|tumble|seche.?linge)).*(drying.?rack|clothes.?(rack|horse|airer|dryer.?rack)|(^|[^a-z])airer|etendoir|etendage|sechoir.?(mural|a.?linge)|waschestander|trockengestell|tendedero|stendibiancheria|stendino|droogrek|torkstall|torkstallning|t\u00f8rkestativ|torkestativ|torrestativ|suszarka.?(na.?pranie|scienna))/;
+const VALVE_HANDLE_COLORS = ["red", "blue", "yellow", "black"];
+// Named as a shut-off valve, never a garden one nor a radiator's.
+const VALVE_NAME_RE = /^(?!.*(swv|irrig|garden|jardin|arros|sprink|thermostat|trv|radiat|heiz|chauff)).*(vc.?x01|valve.?controller|shut.?off|absperr|wasserventil|gasventil|hauptventil|vanne.?(d.?)?(arrivee|coupure|eau|gaz|motoris|principale)|electrovanne|manipulat|(water|gas|main).?valve|valvola|valvula|afsluiter|kulventil|zawor)/;
 const FINGERBOT_COLORS = ["white", "black"];
 const FB_PRESS_MS = 4000;
 const FB_CLICK_MS = 15000;
@@ -5852,6 +5886,8 @@ const NT_ONLY_FIELDS = {
   irrigation: ["irrigation_layout", "zone_entity", "rain_delay_entity", "soil_moisture_entity", "next_run_entity", "tap_model", "tap_wall", "watering_duration_entity"],
   litter_box: ["litter_layout", "waste_drawer_entity", "litter_level_entity", "pet_weight_entity", "visits_entity", "cat_present_entity", "last_use_entity"],
   detector: ["detector_layout", "detector_model", "co_level_entity", "co_entity"],
+  valve: ["valve_layout", "valve_handle_color", "leak_entity"],
+  drying_rack: ["rack_layout"],
   fingerbot: ["fingerbot_layout", "fingerbot_color", "bot_mode_entity", "lower_entity", "upper_entity", "sustain_entity", "reverse_entity", "touch_entity"],
   speaker: ["speaker_layout", "speaker_color"],
   console: ["console_layout", "game_entity", "playtime_entity", "playtime_left_entity"],
@@ -5947,6 +5983,8 @@ const NT_NAME_RES = [
   ["litter_box", /scoopfree|purobot|litter|litiere|katzenklo|arenero|lettiera|kattlada|kuweta|kattebak|kattesand|(^|[^a-z])pura.?(x|max)/],
   ["irrigation", /arrosage|arroseur|watering|bhyve|netro|gardena(?!.?(sileno|mow))|irrigat|sprinkler|bewasserung|(^|[^a-z])riego|beregening|bevattning|vanning|vanding|nawadnian|zavlaz|opensprinkler|linktap|hydrawise|rachio|rain.?bird/],
   ["fingerbot", FINGERBOT_NAME_RE],
+  ["valve", VALVE_NAME_RE],
+  ["drying_rack", RACK_NAME_RE],
   ["detector", /x.?sense|smoke|fumee|detecteur.?(de.?)?(fumee|co|fuite)|monoxyde|carbon.?monoxide|(^|[^a-z])co.?(alarm|detector)|rauchmelder|detector.?de.?humo|rilevatore|rookmelder|brandvarnare|roykvarsler|roegalarm|czujnik.?dymu|water.?leak|fuite.?d.?eau|wassermelder|leak.?sensor/],
   ["christmas_tree", /christmas|xmas|(^|[^a-z])sapin|(^|[^a-z])noel([^a-z]|$)|weihnacht|tannenbaum|navidad|natale|kerstboom|julgran|juletre|juletrae|choink|vanocni.?strom/],
   ["aquarium", /aquari|akwari|akvari/],
@@ -5997,6 +6035,22 @@ function detAlarmOf(raw) {
 }
 // Its drawing: the one chosen, else its name. SwitchBot's says so, the first
 // Fingerbot is the Adaprox one without Plus; a touch switch is the Plus's.
+function valveLayoutOf(cfg, st) {
+  if (VALVE_LAYOUTS.includes(cfg.valve_layout)) return cfg.valve_layout;
+  const hay = stripAccents(`${cfg.state_entity || ""} ${cfg.name || ""} ${stHay(st)}`).toLowerCase();
+  return /tuya|moes|zemismart|_tz[e3]|manipulat|nous|avatto|girier/.test(hay) && !/aqara|lumi/.test(hay) ? "tuya" : "aqara";
+}
+// Its handle: the colour chosen, yellow on a gas valve, else red.
+function valveHandleOf(cfg, st) {
+  if (VALVE_HANDLE_COLORS.includes(cfg.valve_handle_color)) return cfg.valve_handle_color;
+  const hay = stripAccents(`${cfg.state_entity || ""} ${cfg.name || ""}`).toLowerCase();
+  return (st && st.attributes.device_class === "gas") || /(^|[^a-z])(gas|gaz)([^a-z]|$)/.test(hay) ? "yellow" : "red";
+}
+function rackLayoutOf(cfg, st) {
+  if (RACK_LAYOUTS.includes(cfg.rack_layout)) return cfg.rack_layout;
+  const hay = stripAccents(`${cfg.state_entity || ""} ${cfg.name || ""} ${stHay(st)}`).toLowerCase();
+  return /accordion|accordeon|ziehharmonika|extensible|scissor/.test(hay) ? "accordion" : /wood|bois|holz|frame|cadre|ladder|echelle/.test(hay) ? "frame" : "box";
+}
 function fingerbotLayoutOf(cfg, st) {
   if (FINGERBOT_LAYOUTS.includes(cfg.fingerbot_layout)) return cfg.fingerbot_layout;
   const hay = stripAccents(`${cfg.state_entity || ""} ${cfg.name || ""} ${stHay(st)}`).toLowerCase();
@@ -6521,10 +6575,10 @@ function ntReadOf(type, hass, cfg, st, watts, threshold) {
   if (unav) {
     const ml = meterLayoutOf(cfg, st);
     const kinds = { pellet_grill: "pellet_grill", filament_dryer: "dryer", humidifier: "humidifier", water_pump: pumpLayoutOf(cfg, st), floor_heating: "floor", spa: "spa", sauna: "sauna", aquarium: "aquarium", meter: ml === "linky" ? "linky" : `meter_${ml}`, christmas_tree: "tree", mobility: `mob_${mobilityLayoutOf(cfg, st)}`,
-      irrigation: `irr_${irrigationLayoutOf(cfg, st)}`, litter_box: `lit_${litterLayoutOf(cfg, st)}`, detector: `det_${detectorLayoutOf(cfg, st)}`, fingerbot: `fb_${fingerbotLayoutOf(cfg, st)}`, speaker: `spk_${speakerLayoutOf(cfg, st)}`, console: `con_${consoleLayoutOf(cfg, st)}`, streamer: `str_${streamerLayoutOf(cfg, st)}`, climate_sensor: `ths_${thsLayoutOf(cfg, st)}`, cover: `cov_${coverLayoutOf(cfg, st)}` };
+      irrigation: `irr_${irrigationLayoutOf(cfg, st)}`, litter_box: `lit_${litterLayoutOf(cfg, st)}`, detector: `det_${detectorLayoutOf(cfg, st)}`, fingerbot: `fb_${fingerbotLayoutOf(cfg, st)}`, valve: `vlv_${valveLayoutOf(cfg, st)}`, drying_rack: `rack_${rackLayoutOf(cfg, st)}`, speaker: `spk_${speakerLayoutOf(cfg, st)}`, console: `con_${consoleLayoutOf(cfg, st)}`, streamer: `str_${streamerLayoutOf(cfg, st)}`, climate_sensor: `ths_${thsLayoutOf(cfg, st)}`, cover: `cov_${coverLayoutOf(cfg, st)}` };
     return out("unav", "ev_offline", NT_COLORS.unav, { kind: kinds[type], on: false, electric: floorLayoutOf(cfg) === "electric", model: type === "water_pump" ? circModelOf(cfg, st) : "",
       palette: cfg.tree_palette, ...(type === "pellet_grill" ? { layout: grillLayoutOf(cfg, st) } : {}), ...(type === "filament_dryer" ? fdLook(cfg) : {}), presents: type === "christmas_tree" && treePresents(cfg), color: type === "speaker" ? speakerColorOf(cfg, st) : type === "cover" ? cvColor(cfg.cover_color, COVER_COLORS) : "",
-      ...(type === "cover" ? { p: 100, tilt: 60, fabric: cvColor(cfg.fabric_color, FABRIC_COLORS), stripes: cfg.fabric_stripes !== false } : {}), ...(type === "climate_sensor" ? { co2: null, body: cfg.netatmo_color } : {}), ...(type === "fingerbot" ? { layout: fingerbotLayoutOf(cfg, st), body: cfg.fingerbot_color } : {}) });
+      ...(type === "cover" ? { p: 100, tilt: 60, fabric: cvColor(cfg.fabric_color, FABRIC_COLORS), stripes: cfg.fabric_stripes !== false } : {}), ...(type === "climate_sensor" ? { co2: null, body: cfg.netatmo_color } : {}), ...(type === "fingerbot" ? { layout: fingerbotLayoutOf(cfg, st), body: cfg.fingerbot_color } : {}), ...(type === "valve" ? { handle: valveHandleOf(cfg, st) } : {}) });
   }
   if (type === "pellet_grill") {
     const dead2 = (s) => !s || ["unavailable", "unknown", "none", ""].includes(String(s.state).trim().toLowerCase());
@@ -6706,6 +6760,40 @@ function ntReadOf(type, hass, cfg, st, watts, threshold) {
     if (charging) return out("on", bv !== null && bv >= 100 ? "fb_charged" : "fb_charging", NT_COLORS.lit, draw);
     if (low) return { ...out("ok", "fb_low", "#ef6c00", draw) };
     return out("ok", switchMode ? "fb_released" : "fb_ready", NT_COLORS.idle, draw);
+  }
+  if (type === "drying_rack") {
+    // A wall drying rack (#124): its contact sensor says unfolded or folded,
+    // its battery is a line.
+    const open = ["on", "open", "true", "opening"].includes(raw);
+    const bv = cfg.battery_entity ? numericState(hass, cfg.battery_entity) : null;
+    const bs = cfg.battery_entity ? stateObj(hass, cfg.battery_entity) : null;
+    const low = bv !== null ? bv <= 20 : !!bs && domainOf(cfg.battery_entity) === "binary_sensor" && NT_ON.includes(String(bs.state).toLowerCase());
+    const bl = ntLine(hass, cfg, "rack_battery", low ? "mdi:battery-alert-variant-outline" : "mdi:battery", "section_battery", cfg.battery_entity);
+    if (bl) lines.push({ ...bl, value: domainOf(cfg.battery_entity) === "binary_sensor" ? t(hass, low ? "opt_low" : "opt_ok") : bl.value, caution: low });
+    const draw = { kind: `rack_${rackLayoutOf(cfg, st)}`, on: open, open, low };
+    return open ? out("on", "rack_open", NT_COLORS.lit, draw) : out("off", "rack_closed", NT_COLORS.idle, draw);
+  }
+  if (type === "valve") {
+    // A shut-off valve (#123): open, closed or turning, from a valve, a
+    // switch (Zigbee2MQTT's Aqara T1) or a binary sensor. A leak sensor
+    // going off is the alarm, whatever the valve says.
+    const a = (st && st.attributes) || {};
+    const moving = raw === "opening" ? "opening" : raw === "closing" ? "closing" : null;
+    const pos = numberOrNull(a.current_position);
+    const open = moving ? false : pos !== null && domainOf(cfg.state_entity) === "valve" ? pos > 0 : ["on", "open", "true"].includes(raw);
+    const ls = cfg.leak_entity ? stateObj(hass, cfg.leak_entity) : null;
+    const leak = !!ls && detAlarmOf(String(ls.state).trim().toLowerCase());
+    if (pos !== null && pos > 0 && pos < 100) lines.push({ key: "vlv_position", icon: "mdi:valve", label: t(hass, "cov_position"), value: `${Math.round(pos)} %`, entity: cfg.state_entity });
+    if (ls) lines.push({ key: "vlv_leak", icon: leak ? "mdi:water-alert" : "mdi:water-check", label: t(hass, "layout_det_leak"), value: t(hass, leak ? "det_line_detected" : "det_line_clear"), entity: cfg.leak_entity, caution: leak });
+    const bv = cfg.battery_entity ? numericState(hass, cfg.battery_entity) : null;
+    const bs = cfg.battery_entity ? stateObj(hass, cfg.battery_entity) : null;
+    const low = bv !== null ? bv <= 20 : !!bs && domainOf(cfg.battery_entity) === "binary_sensor" && NT_ON.includes(String(bs.state).toLowerCase());
+    const bl = ntLine(hass, cfg, "vlv_battery", low ? "mdi:battery-alert-variant-outline" : "mdi:battery", "section_battery", cfg.battery_entity);
+    if (bl) lines.push({ ...bl, value: domainOf(cfg.battery_entity) === "binary_sensor" ? t(hass, low ? "opt_low" : "opt_ok") : bl.value, caution: low });
+    const draw = { kind: `vlv_${valveLayoutOf(cfg, st)}`, on: open || !!moving || leak, open, moving, leak, low, handle: valveHandleOf(cfg, st) };
+    if (leak) return out("alarm", "det_leak", NT_COLORS.alarm, draw);
+    if (moving) return out("run", moving === "opening" ? "vlv_opening" : "vlv_closing", NT_COLORS.run, draw);
+    return open ? out("on", "vlv_open", NT_COLORS.lit, draw) : out("off", "vlv_closed", NT_COLORS.idle, draw);
   }
   if (type === "detector") {
     // On is an alarm: smoke, CO or water, as its device class or its drawing
@@ -7202,7 +7290,7 @@ function ntControls(hass, cfg, type) {
   const out = [];
   const st = stateObj(hass, cfg.state_entity);
   if (st && !cfg.toggle_entity && type !== "meter" && type !== "fingerbot" && (["light", "switch", "input_boolean", "valve"].includes(domainOf(cfg.state_entity)) || (type === "humidifier" && domainOf(cfg.state_entity) === "humidifier"))) {
-    out.push({ key: "toggle", entity: cfg.state_entity, icon: type === "christmas_tree" ? "mdi:pine-tree" : type === "aquarium" ? "mdi:lightbulb" : type === "mobility" ? "mdi:power-plug" : "mdi:power", label: t(hass, "toggle"),
+    out.push({ key: "toggle", entity: cfg.state_entity, icon: type === "valve" ? (["on", "open", "opening"].includes(String(st.state).toLowerCase()) ? "mdi:valve-open" : "mdi:valve-closed") : type === "christmas_tree" ? "mdi:pine-tree" : type === "aquarium" ? "mdi:lightbulb" : type === "mobility" ? "mdi:power-plug" : "mdi:power", label: t(hass, "toggle"),
       on: ["on", "open", "opening"].includes(String(st.state).toLowerCase()) });
   }
   if (type === "speaker" && st && ["playing", "paused", "buffering", "idle", "on"].includes(String(st.state).toLowerCase())) {
@@ -9352,8 +9440,8 @@ class ApplianceCard extends HTMLElement {
       this._hass.callService(domain, "press", { entity_id: entityId });
     } else if (["switch", "input_boolean", "fan", "light", "valve", "humidifier"].includes(domain)) {
       this._hass.callService(domain, "toggle", { entity_id: entityId });
-    } else if (domain === "script") {
-      this._hass.callService("script", "turn_on", { entity_id: entityId });
+    } else if (domain === "script" || domain === "scene") {
+      this._hass.callService(domain, "turn_on", { entity_id: entityId });
     } else if (domain === "automation") {
       // Toggling an automation would switch it off, silently, which is the
       // opposite of what a button reading "start" is asking for.
@@ -13086,6 +13174,8 @@ class ApplianceCard extends HTMLElement {
         .corner-btn.right { right: 8px; }
         .corner-btn.on { color: #ffb300; }
         .corner-btn:hover { background: var(--secondary-background-color, rgba(0, 0, 0, 0.04)); }
+        .corner-btn.pressed { color: var(--primary-color, #03a9f4); animation-name: corner-press; animation-duration: .6s; animation-timing-function: ease-out; }
+        @keyframes corner-press { 0% { transform: scale(.82); } 60% { transform: scale(1.12); } 100% { transform: scale(1); } }
         .top { display: flex; flex-direction: column; align-items: center; text-align: center; cursor: pointer; }
         .machine { position: relative; width: 96px; height: 108px; margin: 0 auto 8px; zoom: ${illustrationSizeOf(cfg.illustration_size)}; }
         /* illustration_frame: every drawing sits at the bottom of a frame of
@@ -13553,7 +13643,7 @@ class ApplianceCard extends HTMLElement {
 
     // show_light_button: false hides the light badge; the light still shows on the drawing.
     const lightBadgeHtml = cap.light && cfg.light_entity && cfg.show_light_button !== false
-      ? `<div class="light-badge ${lit ? "on" : ""}" data-entity="${esc(cfg.light_entity)}" title="${esc(t(hass, "light"))}" aria-label="${esc(t(hass, "light"))}"><ha-icon icon="${lit ? "mdi:lightbulb-on" : "mdi:lightbulb-outline"}"></ha-icon></div>`
+      ? `<div class="light-badge ${lit ? "on" : ""}" data-entity="${esc(cfg.light_entity)}" title="${esc(t(hass, "light"))}" aria-label="${esc(t(hass, "light"))}"><ha-icon icon="${esc(lit ? cfg.light_icon_on || cfg.light_icon || "mdi:lightbulb-on" : cfg.light_icon || "mdi:lightbulb-outline")}"></ha-icon></div>`
       : "";
 
     // The door, in a corner rather than in the lines when asked (issue #41):
@@ -13599,9 +13689,10 @@ class ApplianceCard extends HTMLElement {
         const on = cornerOn(cst);
         const icon = cornerIcon(hass, c);
         const label = c.label || stripNamePrefix(cst.attributes.friendly_name, c.entity);
-        const side = i ? "right" : "left";
-        const top = side === "left" ? (lightBadgeHtml || doorSide === "left" || battSide === "left" ? 36 : 6)
-          : (connBadgeHtml ? 36 : 6) + (doorSide === "right" || battSide === "right" ? 30 : 0) + (camBadgeHtml ? 30 : 0);
+        // Left, right, then a second pair under the first (#125).
+        const side = i % 2 ? "right" : "left";
+        const top = (side === "left" ? (lightBadgeHtml || doorSide === "left" || battSide === "left" ? 36 : 6)
+          : (connBadgeHtml ? 36 : 6) + (doorSide === "right" || battSide === "right" ? 30 : 0) + (camBadgeHtml ? 30 : 0)) + (i >= 2 ? 30 : 0);
         return `<div class="corner-btn ${side}${on ? " on" : ""}" style="top:${top}px" data-corner="${esc(c.entity)}" title="${esc(label)}" aria-label="${esc(label)}"><ha-icon icon="${esc(icon)}"></ha-icon></div>`;
       });
     const cornersHtml = cornerList.join("");
@@ -13780,8 +13871,15 @@ class ApplianceCard extends HTMLElement {
     // never unlock anything.
     this._root.querySelectorAll("[data-corner]").forEach((el) => {
       const id = el.getAttribute("data-corner");
-      this._wireControl(el, cfg.controls_activation, id,
-        () => (domainOf(id) === "lock" ? this._moreInfo(id) : this._call(id)));
+      // A pressed button has no state to show it went: the icon springs (#125).
+      this._wireControl(el, cfg.controls_activation, id, () => {
+        if (domainOf(id) === "lock") return this._moreInfo(id);
+        if (CORNER_PRESS.includes(domainOf(id))) {
+          el.classList.add("pressed");
+          setTimeout(() => el.classList.remove("pressed"), 650);
+        }
+        return this._call(id);
+      });
     });
     this._root.querySelectorAll("[data-alerts-toggle]").forEach((el) => {
       el.addEventListener("click", (ev) => {
@@ -13913,7 +14011,7 @@ function loadEditor() {
   if (customElements.get("ha-appliance-card-editor")) return Promise.resolve();
   if (!editorLoading) {
     editorLoading = import(assetUrl("ha-appliance-card-editor.js"))
-      .then((m) => m.default({ t, onLanguageLoaded, LANGUAGE_NAMES, localizedHass, activationOf, TH_LAYOUTS, EV_POWER_THRESHOLD, stateObj, parseValueMap, stringifyValueMap, alertsArray, entityEntries, LIST_OTHER, ENTITY_LISTS, listCandidates, defaultCardName, stripDeviceName, domainOf, INFO_MAX, autoSuggest, APPLIANCE_TYPES, STATE_DOMAINS, SCREEN_ONLY_FIELDS, PRINT_PARTS, illustrationSizeOf, illustrationBackdropOf, fontScaleOf, compactModeOf, TYPE_GROUPS, caps, detectApplianceType, SCREEN_STANDBY_W, SCREEN_LAYOUTS, SCREEN_IMAGES, screenLayoutOf, screenIsTablet, HD_HEAT_W, PLUG_THRESHOLDS, ZONE_POWER_W, PLUG_SOURCE_TYPES, plugSourceOf, DW_DRY_MIN, WASH_HEAT_W, WASH_SPIN_W, DRYER_HEAT_W, NET_LAYOUTS, SWITCH_PORTS, NET_BAYS, NET_BUSY_MBIT, NET_TEMP_ALERT, netLayoutOf, ROBOT_LAYOUTS, ROBOT_STATIONS, ROBOT_BOX_COLORS, ROBOT_FLOORS, ROBOT_SERVICES, STICK_AWAY_W, robotLayoutOf, PRINTER_STYLES, printerStyleOf, POOL_PRESSURE_ALERT, WINTER_TYPES, SOLAR_LAYOUTS, BATTERY_LAYOUTS, BATTERY_IDLE_W, DIFFUSER_LAYOUTS, illustrationTapOf, UNIT_FILTERS, fieldUnits, unitFilterAccepts, HRV_LAYOUTS, hrvLayoutOf, CAMERA_LAYOUTS, MAILBOX_LAYOUTS, MAILBOX_SIDES, mailboxLayoutOf, MAILBOX_COLORS_3D, LAMP_LAYOUTS, LAMP_SPOTS, LAMP_SPOT_ROWS, lampLayoutOf, FD_COUNTS, CONSOLE_LAYOUTS, IRRIGATION_LAYOUTS, TAP_MODELS, TAP_WALLS, LITTER_LAYOUTS, DETECTOR_LAYOUTS, DETECTOR_MODELS, FINGERBOT_LAYOUTS, FINGERBOT_COLORS, GRILL_LAYOUTS, SPEAKER_LAYOUTS, STREAMER_LAYOUTS, THS_LAYOUTS, thsLayoutOf, MOBILITY_LAYOUTS, PUMP_LAYOUTS, CIRC_MODELS, FLOOR_LAYOUTS, OPT_LINES, METER_LAYOUTS, meterLayoutOf, irrigationLayoutOf, detectorLayoutOf, TREE_PALETTES, TREE_PRESENTS, pumpLayoutOf, SPK_COLORS, CO2_WARN, CO2_ALERT, NETATMO_COLORS, COVER_LAYOUTS, COVER_COLORS, FABRIC_COLORS, coverLayoutOf, COLLECTOR_STYLES, UPS_BATTERY_LOW, HISTORY_HOURS, BODY_COLORS, esc, MOWER_STYLES, SHELTER_STYLES, SHELTER_COLORS, LAPTOP_COLORS, LAPTOP_STYLES, drawn, stateFreeSource }))
+      .then((m) => m.default({ t, onLanguageLoaded, LANGUAGE_NAMES, localizedHass, activationOf, TH_LAYOUTS, EV_POWER_THRESHOLD, stateObj, parseValueMap, stringifyValueMap, alertsArray, entityEntries, LIST_OTHER, ENTITY_LISTS, listCandidates, defaultCardName, stripDeviceName, domainOf, INFO_MAX, autoSuggest, APPLIANCE_TYPES, STATE_DOMAINS, SCREEN_ONLY_FIELDS, PRINT_PARTS, illustrationSizeOf, illustrationBackdropOf, fontScaleOf, compactModeOf, TYPE_GROUPS, caps, detectApplianceType, SCREEN_STANDBY_W, SCREEN_LAYOUTS, SCREEN_IMAGES, screenLayoutOf, screenIsTablet, HD_HEAT_W, PLUG_THRESHOLDS, ZONE_POWER_W, PLUG_SOURCE_TYPES, plugSourceOf, DW_DRY_MIN, WASH_HEAT_W, WASH_SPIN_W, DRYER_HEAT_W, NET_LAYOUTS, SWITCH_PORTS, NET_BAYS, NET_BUSY_MBIT, NET_TEMP_ALERT, netLayoutOf, ROBOT_LAYOUTS, ROBOT_STATIONS, ROBOT_BOX_COLORS, ROBOT_FLOORS, ROBOT_SERVICES, STICK_AWAY_W, robotLayoutOf, PRINTER_STYLES, printerStyleOf, POOL_PRESSURE_ALERT, WINTER_TYPES, SOLAR_LAYOUTS, BATTERY_LAYOUTS, BATTERY_IDLE_W, DIFFUSER_LAYOUTS, illustrationTapOf, UNIT_FILTERS, fieldUnits, unitFilterAccepts, HRV_LAYOUTS, hrvLayoutOf, CAMERA_LAYOUTS, MAILBOX_LAYOUTS, MAILBOX_SIDES, mailboxLayoutOf, MAILBOX_COLORS_3D, LAMP_LAYOUTS, LAMP_SPOTS, LAMP_SPOT_ROWS, lampLayoutOf, FD_COUNTS, CONSOLE_LAYOUTS, IRRIGATION_LAYOUTS, TAP_MODELS, TAP_WALLS, LITTER_LAYOUTS, DETECTOR_LAYOUTS, DETECTOR_MODELS, FINGERBOT_LAYOUTS, VALVE_LAYOUTS, RACK_LAYOUTS, VALVE_HANDLE_COLORS, FINGERBOT_COLORS, GRILL_LAYOUTS, SPEAKER_LAYOUTS, STREAMER_LAYOUTS, THS_LAYOUTS, thsLayoutOf, MOBILITY_LAYOUTS, PUMP_LAYOUTS, CIRC_MODELS, FLOOR_LAYOUTS, OPT_LINES, METER_LAYOUTS, meterLayoutOf, irrigationLayoutOf, detectorLayoutOf, TREE_PALETTES, TREE_PRESENTS, pumpLayoutOf, SPK_COLORS, CO2_WARN, CO2_ALERT, NETATMO_COLORS, COVER_LAYOUTS, COVER_COLORS, FABRIC_COLORS, coverLayoutOf, COLLECTOR_STYLES, UPS_BATTERY_LOW, HISTORY_HOURS, BODY_COLORS, esc, MOWER_STYLES, SHELTER_STYLES, SHELTER_COLORS, LAPTOP_COLORS, LAPTOP_STYLES, drawn, stateFreeSource }))
       .catch((err) => {
         editorLoading = null;
         throw err;

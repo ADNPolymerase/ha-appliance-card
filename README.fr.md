@@ -255,6 +255,20 @@ Clique sur une famille pour voir ses appareils en marche. Les dessins sont montr
 </details>
 
 <details>
+<summary><b>Vannes d'arrivée motorisées</b></summary>
+
+<img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-valves.fr.gif" alt="Vannes d'arrivée motorisées">
+
+</details>
+
+<details>
+<summary><b>Séchoirs muraux</b></summary>
+
+<img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-racks.fr.gif" alt="Séchoirs muraux">
+
+</details>
+
+<details>
 <summary><b>Écrans et tablettes</b></summary>
 
 <img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-screens.fr.gif" alt="Écrans et tablettes">
@@ -317,10 +331,11 @@ Seule `state_entity` est obligatoire, sauf sur un réfrigérateur où une sonde 
 | `done_alert` | `true` fait pulser un badge vert sur le dessin en fin de cycle, jusqu'à l'ouverture de la porte ou un appui sur le badge. Pour les appareils à cycle (lave-linge, sèche-linge, lave-vaisselle, four…). |
 | `illustration_color` | `auto` (défaut, suit le thème) \| `white` \| `grey` \| `black` \| `red` (rouge foncé). Ne change que la carrosserie, pas les couleurs d'état. Un dessin fait d'après un vrai produit (console, boîtier de streaming, imprimante, litière…) garde ses vraies couleurs tant qu'aucune couleur n'est choisie ; son écran, la tuile de l'appli et ses pneus gardent les leurs. Les scènes autour d'un appareil (fosse de relevage, jardin, toit) et la lumière des lampes ne changent pas. |
 | `language` | `auto` (défaut, suit Home Assistant) ou l'un des 16 codes : `en`, `fr`, `de`, `es`, `it`, `nl`, `pt`, `sv`, `no`, `da`, `pl`, `ru`, `zh`, `cs`, `hu`, `zh-Hant`. `nb` et `nb-NO` donnent le norvégien. `zh` est le chinois simplifié ; `zh-Hant`, `zh-TW` et `zh-HK` donnent le chinois traditionnel. |
-| `appliance_type` | `auto` (défaut) \| `washer` \| `dryer` \| `dishwasher` \| `oven` \| `microwave` \| `hood` \| `cooktop` \| `fridge` \| `kettle` \| `cooker` \| `coffee` \| `rice_cooker` \| `air_fryer` \| `pellet_grill` \| `water_heater` \| `boiler` \| `thermostat` \| `heat_pump` \| `printer_3d` \| `filament_dryer` \| `pet_feeder` \| `pet_fountain` \| `iron` \| `toaster` \| `pellet_stove` \| `air_conditioner` \| `dehumidifier` \| `humidifier` \| `space_heater` \| `towel_warmer` \| `air_purifier` \| `fan` \| `ev_charger` \| `hair_dryer` \| `screen` \| `network` \| `robot` \| `pool_pump` \| `scale` \| `ups` \| `solar` \| `home_battery` \| `camera` \| `diffuser` \| `hrv` \| `lamp` \| `mailbox` \| `water_pump` \| `floor_heating` \| `spa` \| `sauna` \| `aquarium` \| `meter` \| `christmas_tree` \| `mobility` \| `irrigation` \| `litter_box` \| `detector` \| `speaker` \| `console` \| `streamer` \| `climate_sensor` \| `cover` \| `fingerbot` \| `storage_tank` \| `fresh_water_station` \| `solar_thermal` \| `wood_stove`. |
+| `appliance_type` | `auto` (défaut) \| `washer` \| `dryer` \| `dishwasher` \| `oven` \| `microwave` \| `hood` \| `cooktop` \| `fridge` \| `kettle` \| `cooker` \| `coffee` \| `rice_cooker` \| `air_fryer` \| `pellet_grill` \| `water_heater` \| `boiler` \| `thermostat` \| `heat_pump` \| `printer_3d` \| `filament_dryer` \| `pet_feeder` \| `pet_fountain` \| `iron` \| `toaster` \| `pellet_stove` \| `air_conditioner` \| `dehumidifier` \| `humidifier` \| `space_heater` \| `towel_warmer` \| `air_purifier` \| `fan` \| `ev_charger` \| `hair_dryer` \| `screen` \| `network` \| `robot` \| `pool_pump` \| `scale` \| `ups` \| `solar` \| `home_battery` \| `camera` \| `diffuser` \| `hrv` \| `lamp` \| `mailbox` \| `water_pump` \| `floor_heating` \| `spa` \| `sauna` \| `aquarium` \| `meter` \| `christmas_tree` \| `mobility` \| `irrigation` \| `litter_box` \| `detector` \| `speaker` \| `console` \| `streamer` \| `climate_sensor` \| `cover` \| `fingerbot` \| `valve` \| `drying_rack` \| `storage_tank` \| `fresh_water_station` \| `solar_thermal` \| `wood_stove`. |
 | `tap_action` | Ce que fait un appui sur la carte, dans les mots de Home Assistant : `more-info` (défaut : l'entité d'état, ou sur une carte sans elle ce qu'elle lit à sa place), `none`, `navigate`, `url`, `toggle`, `perform-action` ou `fire-dom-event`, celle qu'écoutent les cartes popup bâties sur browser_mod. En YAML seulement. |
 | `illustration_tap_action` | Un appui sur le dessin seul, le reste de la carte gardant `tap_action` : `toggle` (une lampe allumée en la touchant), `more-info`, `none`, ou n'importe quelle action de Home Assistant. Sans lui, le dessin fait comme la carte. Avec `toggle`, le dessin répond comme les boutons, selon `controls_activation` : un appui, deux appuis ou un appui long. |
 | `show_light_button` | `false` cache le bouton de la lumière en haut à gauche (four, hotte, imprimante 3D, pompe de piscine, diffuseur) ; la lumière reste visible sur le dessin. |
+| `light_icon` / `light_icon_on` | L'icône du bouton de la lumière, et une autre quand elle est allumée (par défaut `mdi:lightbulb-outline` et `mdi:lightbulb-on`). `light_icon` seul vaut pour les deux. |
 | `show_toggle` | `false` retire le bouton allumer / éteindre d'une lampe, pour une carte qu'on allume en touchant son dessin (`illustration_tap_action: toggle`). |
 | `toggle_entity` | Bouton marche/arrêt (`switch`, `button`, `script`, `input_boolean`, `fan`), mis en évidence quand c'est allumé. Sur tous les types, frigo compris, où c'est le seul bouton ; à associer à `controls_activation: confirm` pour un appareil qu'il ne faut pas couper par erreur. `hide_when_off: true` n'affiche que l'état quand il est éteint : *Éteint* quoi qu'ait dit l'entité d'état, sans programme, sans durée, sans barre ni alerte ; allumé, il masque aussi la barre vide entre deux cycles. `toggle_hide_when_off: true` masque le bouton tant que `state_entity` est éteint, pour un bouton qui ne règle qu'un appareil en marche (un interrupteur de vitesse à côté d'un module moteur). `toggle_icon` remplace son icône, et `toggle_icon_on` en met une autre quand c'est allumé. |
 | `power_entity` / `power_on_threshold` / `power_icon` | Capteur de puissance. Avec un seuil, l'état en est déduit : *en marche* au-dessus, puis *terminé* en redescendant. Avec l'interrupteur d'une prise en `state_entity`, ou ce même capteur, il en est déduit sans seuil, avec celui du type (voir *Une prise connectée seule*). L'état d'une intégration garde la main. `power_icon` remplace `mdi:power-plug`. |
@@ -346,7 +361,7 @@ Seule `state_entity` est obligatoire, sauf sur un réfrigérateur où une sonde 
 | `alerts_entity` | Entité dont chaque *attribut* à on, true ou active s'affiche en alerte. |
 | `alerts_entities` | Jusqu'à 8 alertes, une entité chacune (sel, liquide de rinçage, i-Dos, filtres… de Home Connect), en `{ entity, label?, icon? }` ou en simple identifiant, affichées tant qu'elles sont à on, true, active, *present* ou *confirmed* : une seule sous son propre nom, plusieurs derrière leur nombre (voir *Entités d'alerte*). |
 | `connectivity_entity` / `connectivity_connected_state` | Connectivité, en icône wifi, et état « connecté » (défaut `on`). |
-| `corner_entities` | Jusqu'à 2 interrupteurs en icônes dans les coins du haut, le premier à gauche et le second à droite, en `{ entity, label?, icon? }` ou en simple identifiant. L'icône dit ce que fait chacun et s'il est enclenché (sécurité enfant, verrouillage automatique, verrou, interrupteur), et un appui le bascule. Un `lock` ouvre seulement sa fiche : un appui par erreur ne déverrouille jamais rien. |
+| `corner_entities` | Jusqu'à 4 interrupteurs ou boutons en icônes dans les coins du haut : à gauche, à droite, puis une deuxième paire dessous. En `{ entity, label?, icon? }` ou en simple identifiant. L'icône dit ce que fait chacun et s'il est enclenché (sécurité enfant, verrouillage automatique, verrou, interrupteur), et un appui le bascule. Un `button`, un `script`, une `scene` ou une `automation` est pressé, lancé ou déclenché, et son icône rebondit ; sans `icon`, elle vient de l'entité, de son type (redémarrage, mise à jour) ou de son domaine. Un `lock` ouvre seulement sa fiche : un appui par erreur ne déverrouille jamais rien. |
 | `info_entities` | Jusqu'à 8 lignes `{ entity, icon?, label?, value_map?, hide_unit? }`, les suivantes sont ignorées, affichées sous les lignes que la carte lit d'elle-même. Un appui ouvre la fiche de l'entité, ce qui permet de réinitialiser un réservoir ou un filtre depuis la carte. Au-delà de 5 lignes, l'espacement se resserre. Les valeurs s'affichent comme dans Home Assistant, avec la précision d'affichage de l'entité. `value_map` renomme les valeurs brutes (voir plus bas), `hide_unit` masque l'unité. |
 | `lines_order` | L'ordre des lignes d'info, donné par leurs clés : `program`, `remaining`, `door`, celles que chaque type apporte (`level`, `last_feed`, `flow_return`, `nozzle`…) et, pour les lignes ajoutées, leur identifiant d'entité. L'éditeur visuel l'écrit tout seul au glisser. Les lignes non citées gardent leur place après celles qui le sont, et une ligne qui ne s'affiche pas est ignorée. |
 | `hidden_lines` | Les lignes à ne jamais afficher, par les mêmes clés que `lines_order` (`lamp_brightness`, `today`, `power`...). Dans l'éditeur visuel, l'œil à côté de chaque ligne d'*Ordre des lignes*. |
@@ -1567,6 +1582,10 @@ disk2_entity: sensor.nas_drive_2_status
 | `state_entity` d'un pousse-bouton | pousse-bouton | Son interrupteur (Fingerbot sur Zigbee2MQTT, ZHA, Tuya, Tuya BLE, LocalTuya ; Bot de SwitchBot) ou son bouton (SwitchBot Cloud, un Bot en mode appui). En mode appui le bras appuie puis remonte (*Appui*), en mode interrupteur il reste baissé tant qu'il est allumé (*Enfoncé*, *Relâché*). Un bouton affiche *Appui* quelques secondes après un appui, puis une ligne *Dernier appui*. |
 | `fingerbot_layout` | pousse-bouton | `plus` (Fingerbot Plus : Tuya, Adaprox, MOES, Zemismart, son pavé tactile sur le dessus) \| `switchbot` (SwitchBot Bot) \| `classic` (le premier Fingerbot, plus fin). Sans lui, un nom avec SwitchBot ou `bot` dessine le Bot, Adaprox sans Plus le premier modèle, le reste le Plus. |
 | `fingerbot_color` | pousse-bouton | `white` (par défaut) \| `black`, pour le SwitchBot Bot noir. |
+| `valve_layout` | vanne | `aqara` (Aqara Valve Controller T1, par défaut) \| `tuya` (la capsule Tuya vendue sous de nombreux noms : MOES, Zemismart, Avatto...). Sans choix, lu dans son nom. |
+| `valve_handle_color` | vanne | `red` (par défaut) \| `blue` \| `yellow` (par défaut sur une vanne de gaz) \| `black`. |
+| `leak_entity` | vanne | Un détecteur de fuite : déclenché, c'est l'alarme de la carte et la vanne goutte, quoi qu'elle dise. |
+| `rack_layout` | séchoir | `box` (caisson dont la façade se rabat sur ses barres, par défaut) \| `accordion` (bras en accordéon sous une étagère) \| `frame` (cadre en bois qui bascule du mur). |
 | `bot_mode_entity` | pousse-bouton | Son mode : le select de Zigbee2MQTT et de Tuya BLE (`click`, `switch`, `program`), en ligne. L'attribut `switch_mode` de SwitchBot est lu sans lui. |
 | `lower_entity` / `upper_entity` / `sustain_entity` | pousse-bouton | Ses courses basse et haute et sa durée d'appui, en lignes. |
 | `reverse_entity` / `touch_entity` | pousse-bouton | Ses interrupteurs sens inversé et tactile, en lignes *Oui* / *Non* ; l'anneau du pavé tactile s'allume en bleu quand le tactile est actif. |
@@ -1819,6 +1838,27 @@ appliance_type: speaker
 speaker_layout: smart
 speaker_color: white
 state_entity: media_player.cuisine
+```
+
+Une vanne d'arrivée motorisée est une `valve`. Le moteur se pose sur une vanne quart de tour et tourne sa poignée : ouverte, la poignée suit le tuyau et l'eau passe ; fermée, elle est en travers et l'eau s'arrête à la vanne ; pendant qu'elle tourne, la poignée pivote. L'**Aqara Valve Controller T1** arrive par [Zigbee2MQTT](https://www.zigbee2mqtt.io/devices/VC-X01D.html) ou ZHA comme un `switch` (allumé = ouverte), la capsule **Tuya** comme un `switch` ou une `valve`. Une entité `valve` de Home Assistant est lue telle quelle, `opening` et `closing` compris. Un détecteur de fuite à côté en fait l'alarme :
+
+```yaml
+type: custom:ha-appliance-card
+appliance_type: valve
+state_entity: switch.vanne_arrivee
+battery_entity: sensor.vanne_arrivee_battery
+leak_entity: binary_sensor.fuite_lave_linge
+valve_handle_color: blue
+```
+
+Un séchoir à linge mural avec un capteur d'ouverture dessus est un `drying_rack` : ouvert, il est déplié et du linge y sèche ; fermé, il est replié contre le mur. Sa batterie est une ligne.
+
+```yaml
+type: custom:ha-appliance-card
+appliance_type: drying_rack
+rack_layout: accordion
+state_entity: binary_sensor.sechoir_contact
+battery_entity: sensor.sechoir_contact_battery
 ```
 
 </details>

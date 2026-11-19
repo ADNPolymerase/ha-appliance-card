@@ -1056,7 +1056,7 @@ function alertIcon(hass, e) {
 
 // Two switches at most, one in each top corner: more would crowd the drawing
 // they sit beside.
-const CORNERS_MAX = 2;
+const CORNERS_MAX = 4;
 // What a switch in the corners locks, if anything. A feeder has two: the child
 // lock and the lock that closes the buttons by itself after a while. Read on
 // the integration's own key first, the same in every language, then on the
@@ -1065,7 +1065,11 @@ const CORNERS_MAX = 2;
 const CORNER_CHILD_RE = /child|kinder|enfant|infantil|crianca|bambin|barn|dziec|rodzic|detsk|\u0434\u0435\u0442|\u513f\u7ae5/;
 const CORNER_LOCK_RE = /(^|[^c])lock|verrou|sperr|bloqu|blocc|slot|blokad|zamk|zamek|autolas|\u0431\u043b\u043e\u043a|\u0437\u0430\u043c\u043e\u043a|\u9501/;
 const CORNER_AUTO_RE = /auto|\u0430\u0432\u0442\u043e|\u81ea\u52a8/;
+// A button, a script, a scene or an automation in a corner is pressed, not
+// held (#125): it has no on and off, only what a tap sets going.
+const CORNER_PRESS = ["button", "input_button", "script", "scene", "automation"];
 function cornerKind(hass, entityId) {
+  if (CORNER_PRESS.includes(domainOf(entityId))) return "press";
   const reg = hass.entities && hass.entities[entityId];
   const st = hass.states[entityId];
   const hay = stripAccents([reg && reg.translation_key, entityId, st && st.attributes.friendly_name]
@@ -1081,7 +1085,10 @@ const CORNER_ICONS = {
   auto: ["mdi:timer-lock", "mdi:timer-lock-open-outline"],
   lock: ["mdi:lock", "mdi:lock-open-variant-outline"],
   "": ["mdi:toggle-switch", "mdi:toggle-switch-off-outline"],
+  press: ["mdi:gesture-tap-button", "mdi:gesture-tap-button"],
 };
+// A pressed entity's icon by what it does, when it has none of its own.
+const CORNER_PRESS_ICONS = { restart: "mdi:restart", update: "mdi:package-up", identify: "mdi:crosshairs-question", script: "mdi:script-text-play-outline", scene: "mdi:palette-outline", automation: "mdi:robot-outline" };
 // A switch holds while it is on, a lock while it is locked. An open lock is
 // the opposite of a locked one.
 function cornerOn(st) {
@@ -1093,7 +1100,8 @@ function cornerIcon(hass, c) {
   if (c.icon) return c.icon;
   const st = hass.states[c.entity];
   const kind = cornerKind(hass, c.entity);
-  if (!kind && st && st.attributes.icon) return st.attributes.icon;
+  if ((!kind || kind === "press") && st && st.attributes.icon) return st.attributes.icon;
+  if (kind === "press") return CORNER_PRESS_ICONS[(st && st.attributes.device_class) || ""] || CORNER_PRESS_ICONS[domainOf(c.entity)] || CORNER_ICONS.press[0];
   return CORNER_ICONS[kind][cornerOn(st) ? 0 : 1];
 }
 
@@ -1123,7 +1131,7 @@ const ENTITY_LISTS = [
   { panel: "alerts", field: "alerts_entities", max: ALERTS_MAX, title: "section_alert_list", add: "alerts_add",
     domains: ["binary_sensor", "sensor"], offers: isAlertCandidate, icon: alertIcon },
   { panel: "corners", field: "corner_entities", max: CORNERS_MAX, title: "section_corner_list", add: "corners_add",
-    domains: ["switch", "input_boolean", "lock", "light", "fan"], offers: isCornerCandidate, icon: cornerIcon },
+    domains: ["switch", "input_boolean", "lock", "light", "fan", "button", "input_button", "script", "scene", "automation"], offers: isCornerCandidate, icon: cornerIcon },
   // A filament box beside a 3D printer (#93): one entity per spool.
   { panel: "ams", field: "ams_entities", max: 4, title: "section_ams_list", add: "ams_add", types: ["printer_3d"],
     domains: ["sensor", "select", "input_text"], offers: (hass, id) => /tray|spool|bobine|ams|_a[1-4]_colou?r$/.test(id), icon: () => "mdi:printer-3d-nozzle-outline" },

@@ -3,7 +3,7 @@
 // sauna, an aquarium, a Linky meter and a Christmas tree. Drawn in SVG on a 120 x 135 field; what
 // moves moves only on a machine carrying nt-on, staggered through --d0, and
 // the robot's cable and the sump's float follow their SMIL animations.
-const NT_TYPES = ["fingerbot", "cover", "pellet_grill", "water_pump", "floor_heating", "spa", "sauna", "aquarium", "meter", "christmas_tree", "mobility", "irrigation", "litter_box", "detector", "speaker", "console", "streamer", "climate_sensor", "storage_tank", "fresh_water_station", "solar_thermal", "wood_stove", "humidifier", "filament_dryer"];
+const NT_TYPES = ["drying_rack", "valve", "fingerbot", "cover", "pellet_grill", "water_pump", "floor_heating", "spa", "sauna", "aquarium", "meter", "christmas_tree", "mobility", "irrigation", "litter_box", "detector", "speaker", "console", "streamer", "climate_sensor", "storage_tank", "fresh_water_station", "solar_thermal", "wood_stove", "humidifier", "filament_dryer"];
 // How many spools a filament dryer holds (#93).
 const FD_COUNTS = [1, 2, 4];
 const FD_COLORS = ["#43a047", "#fb8c00", "#8e24aa", "#eceff1"];
@@ -20,6 +20,15 @@ const DETECTOR_MODELS = { door: ["sonoff", "aqara", "hue"], vibration: ["aqara",
 // A finger bot's drawing (HACF #163), its colour, how long a press shows and
 // the power that means its plug is charging it.
 const FINGERBOT_LAYOUTS = ["plus", "switchbot", "classic"];
+// A motorised shut-off valve (#123): Aqara's box or the Tuya capsule.
+const VALVE_LAYOUTS = ["aqara", "tuya"];
+// A wall drying rack with a contact sensor (#124): a fold-down box, an
+// accordion under a shelf, or a tilting wooden frame.
+const RACK_LAYOUTS = ["box", "accordion", "frame"];
+const RACK_NAME_RE = /^(?!.*(filament|cheveux|hair|tumble|seche.?linge)).*(drying.?rack|clothes.?(rack|horse|airer|dryer.?rack)|(^|[^a-z])airer|etendoir|etendage|sechoir.?(mural|a.?linge)|waschestander|trockengestell|tendedero|stendibiancheria|stendino|droogrek|torkstall|torkstallning|t\u00f8rkestativ|torkestativ|torrestativ|suszarka.?(na.?pranie|scienna))/;
+const VALVE_HANDLE_COLORS = ["red", "blue", "yellow", "black"];
+// Named as a shut-off valve, never a garden one nor a radiator's.
+const VALVE_NAME_RE = /^(?!.*(swv|irrig|garden|jardin|arros|sprink|thermostat|trv|radiat|heiz|chauff)).*(vc.?x01|valve.?controller|shut.?off|absperr|wasserventil|gasventil|hauptventil|vanne.?(d.?)?(arrivee|coupure|eau|gaz|motoris|principale)|electrovanne|manipulat|(water|gas|main).?valve|valvola|valvula|afsluiter|kulventil|zawor)/;
 const FINGERBOT_COLORS = ["white", "black"];
 const FB_PRESS_MS = 4000;
 const FB_CLICK_MS = 15000;
@@ -164,6 +173,8 @@ const NT_ONLY_FIELDS = {
   irrigation: ["irrigation_layout", "zone_entity", "rain_delay_entity", "soil_moisture_entity", "next_run_entity", "tap_model", "tap_wall", "watering_duration_entity"],
   litter_box: ["litter_layout", "waste_drawer_entity", "litter_level_entity", "pet_weight_entity", "visits_entity", "cat_present_entity", "last_use_entity"],
   detector: ["detector_layout", "detector_model", "co_level_entity", "co_entity"],
+  valve: ["valve_layout", "valve_handle_color", "leak_entity"],
+  drying_rack: ["rack_layout"],
   fingerbot: ["fingerbot_layout", "fingerbot_color", "bot_mode_entity", "lower_entity", "upper_entity", "sustain_entity", "reverse_entity", "touch_entity"],
   speaker: ["speaker_layout", "speaker_color"],
   console: ["console_layout", "game_entity", "playtime_entity", "playtime_left_entity"],
@@ -259,6 +270,8 @@ const NT_NAME_RES = [
   ["litter_box", /scoopfree|purobot|litter|litiere|katzenklo|arenero|lettiera|kattlada|kuweta|kattebak|kattesand|(^|[^a-z])pura.?(x|max)/],
   ["irrigation", /arrosage|arroseur|watering|bhyve|netro|gardena(?!.?(sileno|mow))|irrigat|sprinkler|bewasserung|(^|[^a-z])riego|beregening|bevattning|vanning|vanding|nawadnian|zavlaz|opensprinkler|linktap|hydrawise|rachio|rain.?bird/],
   ["fingerbot", FINGERBOT_NAME_RE],
+  ["valve", VALVE_NAME_RE],
+  ["drying_rack", RACK_NAME_RE],
   ["detector", /x.?sense|smoke|fumee|detecteur.?(de.?)?(fumee|co|fuite)|monoxyde|carbon.?monoxide|(^|[^a-z])co.?(alarm|detector)|rauchmelder|detector.?de.?humo|rilevatore|rookmelder|brandvarnare|roykvarsler|roegalarm|czujnik.?dymu|water.?leak|fuite.?d.?eau|wassermelder|leak.?sensor/],
   ["christmas_tree", /christmas|xmas|(^|[^a-z])sapin|(^|[^a-z])noel([^a-z]|$)|weihnacht|tannenbaum|navidad|natale|kerstboom|julgran|juletre|juletrae|choink|vanocni.?strom/],
   ["aquarium", /aquari|akwari|akvari/],
@@ -309,6 +322,22 @@ function detAlarmOf(raw) {
 }
 // Its drawing: the one chosen, else its name. SwitchBot's says so, the first
 // Fingerbot is the Adaprox one without Plus; a touch switch is the Plus's.
+function valveLayoutOf(cfg, st) {
+  if (VALVE_LAYOUTS.includes(cfg.valve_layout)) return cfg.valve_layout;
+  const hay = stripAccents(`${cfg.state_entity || ""} ${cfg.name || ""} ${stHay(st)}`).toLowerCase();
+  return /tuya|moes|zemismart|_tz[e3]|manipulat|nous|avatto|girier/.test(hay) && !/aqara|lumi/.test(hay) ? "tuya" : "aqara";
+}
+// Its handle: the colour chosen, yellow on a gas valve, else red.
+function valveHandleOf(cfg, st) {
+  if (VALVE_HANDLE_COLORS.includes(cfg.valve_handle_color)) return cfg.valve_handle_color;
+  const hay = stripAccents(`${cfg.state_entity || ""} ${cfg.name || ""}`).toLowerCase();
+  return (st && st.attributes.device_class === "gas") || /(^|[^a-z])(gas|gaz)([^a-z]|$)/.test(hay) ? "yellow" : "red";
+}
+function rackLayoutOf(cfg, st) {
+  if (RACK_LAYOUTS.includes(cfg.rack_layout)) return cfg.rack_layout;
+  const hay = stripAccents(`${cfg.state_entity || ""} ${cfg.name || ""} ${stHay(st)}`).toLowerCase();
+  return /accordion|accordeon|ziehharmonika|extensible|scissor/.test(hay) ? "accordion" : /wood|bois|holz|frame|cadre|ladder|echelle/.test(hay) ? "frame" : "box";
+}
 function fingerbotLayoutOf(cfg, st) {
   if (FINGERBOT_LAYOUTS.includes(cfg.fingerbot_layout)) return cfg.fingerbot_layout;
   const hay = stripAccents(`${cfg.state_entity || ""} ${cfg.name || ""} ${stHay(st)}`).toLowerCase();
@@ -4359,7 +4388,149 @@ ${plate}
 <path d="M${B.x + B.r} ${B.y + 1.3} H${B.x + B.w - B.r}" stroke="#fff" stroke-opacity="${dark ? .18 : .9}" stroke-width="1"/>
 ${marks}${ledEl}${arm}${lead}${gauge}`;
 }
-const NT_DRAW = { fb_plus: ntFingerbot, fb_switchbot: ntFingerbot, fb_classic: ntFingerbot, ths_co2_eink: ntCo2Eink, ths_switchbot_co2: (c) => ntSbPro(c, true), ths_switchbot_pro: (c) => ntSbPro(c, false), ths_switchbot_meter: (c) => ntSbMeter(c, false), ths_switchbot_plus: (c) => ntSbMeter(c, true), ths_switchbot_outdoor: ntSbOutdoor, ths_co2_box: ntCo2Box, ths_co2_netatmo: (c) => ntCo2Netatmo(c, false), ths_co2_netatmo_module: (c) => ntCo2Netatmo(c, true), cov_shutter: ntCovShutter, cov_blind: ntCovBlind, cov_venetian: (c) => ntCovVenetian(c, false), cov_raffstore: (c) => ntCovVenetian(c, true), cov_pergola: ntCovPergola, cov_awning: ntCovAwning, pellet_grill: ntPelletGrill, ths_disc: ntThsDisc, ths_square: ntThsSquare, ths_cushion: ntThsCushion, ths_stick: ntThsStick, ths_lcd_stand: ntThsLcdStand, ths_lcd_probe: ntThsLcdProbe, ths_lcd_round: ntThsLcdRound, dryer: ntFilamentDryer, humidifier: ntHumidifier, circulator: ntCirculator, irr_sprinkler: ntIrrSprinkler, irr_tap: ntIrrTap, irr_drip: ntIrrDrip, irr_flowers: ntIrrFlowers, lit_globe: ntLitterGlobe, lit_box: ntLitterBox, det_smoke: ntDetSmoke, det_co: ntDetCo, det_leak: ntDetLeak, det_door: ntDetDoor, det_vibration: ntDetVibration, det_glass: ntDetGlass, spk_smart: ntSpkSmart, spk_homepod_mini: ntSpkMini, spk_sonos_one: ntSpkOne, spk_bookshelf: ntSpkShelf, spk_sonos_move: ntSpkMove, spk_soundbar: ntSpkBar, spk_echo_dot: ntSpkDot, spk_echo_dot_max: ntSpkDotMax, spk_nest_mini: ntSpkNest, spk_sonos_era100: ntSpkEra100, spk_sonos_era300: ntSpkEra300, spk_bose_wave: ntSpkWave, spk_bose_500: ntSpkBose500, spk_bose_soundlink: ntSpkFlex, spk_bose_soundbar: ntSpkBoseBar, spk_sonos_five: ntSpkFive, spk_sonos_play: ntSpkPlay, spk_sonos_roam: ntSpkRoam, spk_sonos_ray: ntSpkRay, spk_sonos_amp: ntSpkAmp, spk_sonos_port: ntSpkPort, spk_bose_ultra: ntSpkBoseUltra, spk_bose_portable: ntSpkBosePortable, spk_bose_amp: ntSpkBoseAmp, str_apple_tv: (c) => strZoom(strAppleTv(c), 54, 1.45), str_fire_tv_cube: strFireCube, str_fire_tv_stick: (c) => strStick(c, true), str_google_tv_streamer: strGoogleStreamer, str_chromecast: strChromecast, str_shield: strShield, str_shield_pro: strShieldPro, str_roku: strRoku, str_mi_box: strMiBox, str_freebox: strFreebox, str_decoder: strDecoder, str_box: strBox, str_stick: (c) => strStick(c, false), con_ps1: conPs1, con_ps2: conPs2, con_ps3: conPs3, con_ps4: (c) => conPs4(c, false), con_ps4_pro: (c) => conPs4(c, true), con_ps5: conPs5, con_xbox: conXbox, con_xbox_360: conX360, con_xbox_one: conXone, con_xbox_series_x: conXsx, con_xbox_series_s: conXss, con_switch: (c) => conSwitch(c, false), con_switch_2: (c) => conSwitch(c, true), con_switch_lite: conSwitchLite, con_ps_vita: conVita, con_nes: conNes, con_snes: conSnes, con_n64: conN64, con_gamecube: conGamecube, con_wii: conWii, con_megadrive: conMegadrive, tank: ntTank, fws: ntFresh, solth: ntSolarThermal, wood: ntWoodStove, mob_scooter: mobScooter, mob_offroad: mobOffroad, mob_ebike: mobEbike, mob_gyropode: mobGyropode, mob_motorcycle: mobMotorcycle, meter_box: ntMeterBox, meter_dome: ntMeterDome, meter_gas: ntGas, meter_water: ntWater, booster: ntBooster, sump: ntSump, pool: ntPoolRobot, floor: ntFloor, spa: ntSpa, sauna: ntSauna, aquarium: ntAquarium, linky: ntLinky, tree: ntTree };
+// A motorised shut-off valve (#123), after Aqara's Valve Controller T1 and the
+// Tuya capsule sold under many names (Moes, Zemismart...): the motor sits on
+// a quarter-turn ball valve and turns its handle. Open, the handle lies along
+// the pipe and the water runs through; closed, it points across and the water
+// stops at the valve. A leak sensor going off drips from the far joint.
+const VALVE_HANDLES = { red: ["#e53935", "#b71c1c"], blue: ["#4a78d6", "#2a4f9e"], yellow: ["#f6c21c", "#c99300"], black: ["#3a3f44", "#1c1f22"] };
+function vlvPipe(c, g) {
+  const wet = c.open && !c.unav;
+  const up = `<path class="${wet ? "nta-flow" : ""}" d="M2 98 H37" stroke="#4fc3f7" stroke-width="2.6" stroke-dasharray="6 6" stroke-linecap="round" opacity="${c.unav ? 0 : .9}"/>`;
+  const down = wet ? `<path class="nta-flow" d="M83 98 H118" stroke="#4fc3f7" stroke-width="2.6" stroke-dasharray="6 6" stroke-linecap="round" opacity=".9"/>` : "";
+  return `<rect x="0" y="92.5" width="120" height="11" fill="url(#${g.pipe})"/><path d="M0 94.2 H120" stroke="#fff" stroke-width=".9" opacity=".55"/>${up}${down}
+<path d="M38 89 h8 l1.5 3 v12 l-1.5 3 h-8 l-1.5 -3 v-12 z" fill="url(#${g.brass})" stroke="#7a5c15" stroke-width=".5"/>
+<path d="M74 89 h8 l1.5 3 v12 l-1.5 3 h-8 l-1.5 -3 v-12 z" fill="url(#${g.brass})" stroke="#7a5c15" stroke-width=".5"/>
+<rect x="45" y="88" width="30" height="20" rx="8" fill="url(#${g.brass})" stroke="#7a5c15" stroke-width=".55"/>
+<path d="M49 91.5 Q60 89 71 91.5" stroke="#fff3c4" stroke-width="1.2" fill="none" opacity=".7" stroke-linecap="round"/>
+<rect x="57" y="81" width="6" height="8" fill="url(#${g.steel})" stroke="#6d767e" stroke-width=".4"/>`;
+}
+function vlvLever(c, g) {
+  const [a, b] = VALVE_HANDLES[c.handle] || VALVE_HANDLES.red;
+  // Open, the handle lies along the pipe; closed, it is turned a quarter
+  // across it, here pointing down; turning, it swings about its stem.
+  const bar = `<rect x="56" y="77.5" width="14" height="5" rx="1.2" fill="url(#${g.steel})" stroke="#6d767e" stroke-width=".4"/>
+<rect x="66" y="77" width="34" height="6" rx="3" fill="${a}" stroke="${b}" stroke-width=".6"/><path d="M69 78.6 H97" stroke="#fff" stroke-width=".9" opacity=".35" stroke-linecap="round"/>
+<circle cx="60" cy="80" r="2.2" fill="#c3c9ce" stroke="#6d767e" stroke-width=".4"/>`;
+  if (c.moving) return `<g class="vlv-turn ${c.moving === "opening" ? "vlv-to-open" : "vlv-to-close"}">${bar}</g>`;
+  return c.open ? bar : `<g transform="rotate(90 60 80)">${bar}</g>`;
+}
+function vlvLed(c, x, y, r = 1.4) {
+  const col = c.unav ? "#cfd6dc" : c.leak ? "#e53935" : c.moving ? "#29b6f6" : c.low ? "#ffa000" : c.open ? "#43a047" : "#e53935";
+  return `<circle class="${c.moving || c.leak ? "nta-blinkfast" : c.low ? "nta-blink" : ""}" cx="${x}" cy="${y}" r="${r}" fill="${col}"/>`;
+}
+function vlvLeak(c) {
+  if (!c.leak || c.unav) return "";
+  return `<g class="nta-drip"><path d="M86 104 q-2 3.6 0 5.2 q2 -1.6 0 -5.2 z" fill="#4fc3f7"/></g><g class="nta-drip ntd2"><path d="M80.5 104 q-1.8 3.2 0 4.6 q1.8 -1.4 0 -4.6 z" fill="#4fc3f7"/></g>
+<ellipse cx="84" cy="119" rx="17" ry="2.8" fill="#4fc3f7" opacity=".45"/><ellipse class="nta-splash" cx="86" cy="118.6" rx="4" ry="1.2" fill="none" stroke="#4fc3f7" stroke-width=".6"/>`;
+}
+function vlvDefs() {
+  const g = { pipe: ntId(), brass: ntId(), steel: ntId(), body: ntId() };
+  return { g, defs: `<defs><linearGradient id="${g.pipe}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#eef1f3"/><stop offset=".45" stop-color="#b3bbc2"/><stop offset="1" stop-color="#737c84"/></linearGradient>
+<linearGradient id="${g.brass}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ecd37c"/><stop offset=".5" stop-color="#b8922f"/><stop offset="1" stop-color="#7f6017"/></linearGradient>
+<linearGradient id="${g.steel}" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#8d969e"/><stop offset=".5" stop-color="#e6eaed"/><stop offset="1" stop-color="#8d969e"/></linearGradient>
+<linearGradient id="${g.body}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset=".7" stop-color="#f0f2f4"/><stop offset="1" stop-color="#d6dbe0"/></linearGradient></defs>` };
+}
+// Aqara Valve Controller T1: a square-topped box with a rounded bottom, a
+// shield on its face with the brand, two buttons and the PUSH tab under it,
+// held on the pipe by a steel bracket beside the valve.
+function ntValveAqara(c) {
+  const { g, defs } = vlvDefs();
+  return `${defs}${vlvPipe(c, g)}
+<path d="M30 70 h6 v22 h-6 z" fill="url(#${g.steel})" stroke="#6d767e" stroke-width=".4"/><rect x="27" y="88.5" width="12" height="19" rx="2" fill="none" stroke="#8d969e" stroke-width="2.2"/>
+<circle cx="33" cy="87.4" r="1.6" fill="#c3c9ce" stroke="#6d767e" stroke-width=".4"/><circle cx="33" cy="108.6" r="1.6" fill="#c3c9ce" stroke="#6d767e" stroke-width=".4"/>
+<path d="M53 72 v8 h14 v-8" fill="none" stroke="#9aa2a9" stroke-width="2.2" stroke-linejoin="round"/>
+${vlvLever(c, g)}
+<ellipse cx="60" cy="76.5" rx="27" ry="2.4" fill="#000" opacity=".12"/>
+<path d="M34 14 H86 Q92 14 92 20 V54 Q92 76 70 76 H50 Q28 76 28 54 V20 Q28 14 34 14 Z" fill="url(#${g.body})" stroke="#c4cbd1" stroke-width=".7"/>
+<path d="M33 16.5 H87" stroke="#fff" stroke-width="1.4" stroke-linecap="round" opacity=".9"/><path d="M89.5 20 V54 Q89.5 72 70 73.5" stroke="#cfd5da" stroke-width="1.2" fill="none" opacity=".8"/>
+<path d="M60 25 L77 30.5 L75.5 54 Q60 65 44.5 54 L43 30.5 Z" fill="#f3f5f7" stroke="#e0e5e9" stroke-width=".7"/>
+<text x="60" y="36.5" font-size="5.4" font-weight="500" text-anchor="middle" fill="#a9b2ba" ${NT_FONT}>Aqara</text>
+<text x="60" y="41" font-size="2.3" text-anchor="middle" fill="#bcc4cb" ${NT_FONT}>Valve Controller T1</text>
+<circle cx="53" cy="50" r="3.1" fill="#fff" stroke="#cdd4da" stroke-width=".6"/><path d="M53 48.2 v1.6 M51.6 49 a2 2 0 1 0 2.8 0" stroke="#b5bec6" stroke-width=".55" fill="none" stroke-linecap="round"/>
+<circle cx="67" cy="50" r="3.1" fill="#fff" stroke="#cdd4da" stroke-width=".6"/><path d="M65.9 51.1 l2.2 -2.2 m-.6 -.5 l1 1" stroke="#b5bec6" stroke-width=".6" stroke-linecap="round"/>
+${vlvLed(c, 60, 45.5, 1.1)}
+${c.moving ? `<path class="nta-spin" d="M60 41.6 a3.9 3.9 0 1 1 -3.4 2" stroke="#29b6f6" stroke-width=".7" fill="none" stroke-linecap="round"/>` : ""}
+<rect x="50" y="66" width="20" height="7.4" rx="1.6" fill="#cfd4d9" stroke="#aeb5bb" stroke-width=".5"/>
+<text x="60" y="71.6" font-size="4.6" font-weight="700" text-anchor="middle" fill="#8b939a" ${NT_FONT}>PUSH</text>
+${vlvLeak(c)}`;
+}
+// The Tuya capsule: a white pill on the pipe, a blue PUSH strap round its
+// middle, a collar round the pipe and an arm reaching down to the handle.
+function ntValveTuya(c) {
+  const { g, defs } = vlvDefs();
+  return `${defs}${vlvPipe(c, g)}
+<path d="M34 64 h9 v22 h-9 z" fill="url(#${g.body})" stroke="#c4cbd1" stroke-width=".6"/><circle cx="38.5" cy="98" r="8.4" fill="none" stroke="#e9ecef" stroke-width="3.4"/><circle cx="38.5" cy="98" r="8.4" fill="none" stroke="#c4cbd1" stroke-width=".5"/>
+<circle cx="38.5" cy="108.6" r="1.8" fill="#c3c9ce" stroke="#6d767e" stroke-width=".4"/>
+${vlvLever(c, g)}
+<path d="M76 62 h10 v10 h18 v10 h-6 v-5 h-14 q-8 0 -8 -8 z" fill="url(#${g.body})" stroke="#c4cbd1" stroke-width=".6"/>
+<ellipse cx="60" cy="68" rx="38" ry="2.6" fill="#000" opacity=".1"/>
+<rect x="18" y="30" width="84" height="36" rx="18" fill="url(#${g.body})" stroke="#c4cbd1" stroke-width=".7"/>
+<path d="M30 34 H90" stroke="#fff" stroke-width="2" stroke-linecap="round" opacity=".9"/>
+<rect x="53" y="27.5" width="14" height="41" rx="2.4" fill="#3b6fd1" stroke="#26509f" stroke-width=".6"/>
+<text x="60" y="41.5" font-size="4.4" font-weight="700" text-anchor="middle" fill="#fff" transform="rotate(90 60 41.5)" ${NT_FONT}>PUSH</text>
+<circle cx="60" cy="56" r="2.6" fill="#fff" stroke="#26509f" stroke-width=".5"/>${vlvLed(c, 60, 56, 1.1)}
+${c.moving ? `<path class="nta-spin" d="M60 51.6 a4.4 4.4 0 1 1 -3.8 2.2" stroke="#fff" stroke-width=".7" fill="none" stroke-linecap="round"/>` : ""}
+${vlvLeak(c)}`;
+}
+// A wall-mounted drying rack with a contact sensor on it (#124): a box whose
+// front drops down onto its rods, a shelf whose accordion arms pull out, or a
+// wooden frame that tilts away from the wall. Unfolded, laundry hangs on it.
+function rkShirt(x, y, col, dk) {
+  return `<path d="M${x} ${y} l-2.6 2.2 h5.2 z" fill="none" stroke="#9aa2a9" stroke-width=".6"/><path d="M${x - 7} ${y + 4} l4 -1.6 q3 2 6 0 l4 1.6 l2.6 7 l-3.4 1.2 l-1 -2.6 v17 h-10.4 v-17 l-1 2.6 l-3.4 -1.2 z" fill="${col}" stroke="${dk}" stroke-width=".5"/><path d="M${x} ${y + 3} v22" stroke="${dk}" stroke-width=".4" opacity=".6"/>`;
+}
+function rkTowel(x, y, w, h, col, dk) {
+  return `<path d="M${x} ${y} h${w} l1 ${h} h-${w + 2} z" fill="${col}" stroke="${dk}" stroke-width=".5"/>${[.25, .5, .75].map((k) => `<path d="M${(x + w * k).toFixed(1)} ${y + 1} v${h - 2}" stroke="${dk}" stroke-width=".35" opacity=".5"/>`).join("")}<path d="M${x - .6} ${y + h - 4} h${w + 1.6}" stroke="#fff" stroke-width="1" opacity=".5"/>`;
+}
+function rkSensor(c, x, y) {
+  return `<rect x="${x}" y="${y}" width="5" height="9" rx="1.2" fill="#fff" stroke="#aeb8c1" stroke-width=".5"/><circle class="${c.open ? "nta-blinkfast" : ""}" cx="${x + 2.5}" cy="${y + 2}" r=".7" fill="${c.unav ? "#cfd6dc" : c.low ? "#ffa000" : c.open ? "#29b6f6" : "#cfd6dc"}"/>`;
+}
+function ntRackBox(c) {
+  const b = ntId(), f = ntId();
+  const defs = `<defs>${ntV(b, "#ffffff", "#dde2e6")}${ntV(f, "#f7f8f9", "#e3e7ea")}</defs>`;
+  if (!c.open) {
+    return `${defs}<rect x="12" y="44" width="96" height="22" rx="2" fill="url(#${b})" stroke="#c4cbd1" stroke-width=".7"/><path d="M14 47 H106" stroke="#fff" stroke-width="1.2" opacity=".9"/>
+<path d="M60 46 V64" stroke="#d3d9de" stroke-width=".7"/><rect x="40" y="60" width="40" height="2.6" rx="1.3" fill="#d6dbe0"/><ellipse cx="60" cy="69" rx="46" ry="2" fill="#000" opacity=".1"/>${rkSensor(c, 100, 50)}`;
+  }
+  // The front dropped to a shelf of rods, seen from a little above.
+  const rods = [0, 1, 2, 3, 4].map((i) => { const t = (i + 1) / 6, y = 52 + t * 16, x0 = 12 - t * 6, x1 = 108 + t * 6; return `<path d="M${x0.toFixed(1)} ${y.toFixed(1)} H${x1.toFixed(1)}" stroke="#c9ced3" stroke-width="1.6" stroke-linecap="round"/><path d="M${x0.toFixed(1)} ${(y - .5).toFixed(1)} H${x1.toFixed(1)}" stroke="#fff" stroke-width=".5"/>`; }).join("");
+  return `${defs}<rect x="12" y="38" width="96" height="14" rx="2" fill="url(#${b})" stroke="#c4cbd1" stroke-width=".7"/><path d="M14 41 H106" stroke="#fff" stroke-width="1.2" opacity=".9"/>
+<path d="M12 52 L6 70 H114 L108 52" fill="none" stroke="#c4cbd1" stroke-width="2.4" stroke-linejoin="round"/>${rods}<path d="M5 70 H115 V74 H5 Z" fill="url(#${f})" stroke="#c4cbd1" stroke-width=".6"/>
+${rkTowel(22, 67, 22, 28, "#e9dcc6", "#b8a587")}${rkShirt(62, 69, "#efe3c8", "#bba985")}${rkShirt(84, 69, "#f2e7d0", "#bba985")}${rkSensor(c, 100, 42)}`;
+}
+function ntRackAccordion(c) {
+  const b = ntId();
+  const defs = `<defs>${ntV(b, "#ffffff", "#dfe3e7")}</defs>`;
+  const board = `<rect x="18" y="26" width="84" height="46" fill="url(#${b})" stroke="#c4cbd1" stroke-width=".6"/>${[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((i) => `<path d="M${22 + i * 7.6} 28 V70" stroke="#d6dbe0" stroke-width=".6"/>`).join("")}
+<rect x="14" y="20" width="92" height="6" rx="1" fill="#fbfcfd" stroke="#c4cbd1" stroke-width=".6"/><path d="M16 22 H104" stroke="#fff" stroke-width="1" opacity=".9"/>
+<path d="M18 26 l4 6 h-4 z M102 26 l-4 6 h4 z" fill="#e3e7ea" stroke="#c4cbd1" stroke-width=".5"/>
+<rect x="22" y="12" width="8" height="8" rx="1" fill="#e04a6d"/><rect x="33" y="10" width="7" height="10" rx="1.5" fill="#4b8de0"/><rect x="88" y="15" width="12" height="5" rx="1" fill="#9aa2a9"/>`;
+  if (!c.open) {
+    return `${defs}${board}${[0, 1, 2].map((i) => `<path d="M24 ${40 + i * 2.4} H96" stroke="#c9ced3" stroke-width="1.6" stroke-linecap="round"/>`).join("")}
+<path d="M24 38 V48 M96 38 V48" stroke="#c4cbd1" stroke-width="2"/>${rkSensor(c, 98, 52)}`;
+  }
+  // Pulled out towards the viewer: the scissor arms open, each rod a step
+  // further and lower.
+  const nodes = [0, 1, 2, 3, 4].map((i) => ({ dx: i * 4.2, dy: i * 6.4 }));
+  const zig = (x0) => `<path d="${nodes.map((n, i) => `${i ? "L" : "M"}${x0 + n.dx + (i % 2 ? 3 : -3)} ${44 + n.dy}`).join(" ")}" fill="none" stroke="#c4cbd1" stroke-width="1.6" stroke-linejoin="round"/><path d="${nodes.map((n, i) => `${i ? "L" : "M"}${x0 + n.dx + (i % 2 ? -3 : 3)} ${44 + n.dy}`).join(" ")}" fill="none" stroke="#d6dbe0" stroke-width="1.6" stroke-linejoin="round"/>`;
+  const rods = nodes.map((n) => `<path d="M${24 + n.dx} ${44 + n.dy} H${96 + n.dx}" stroke="#c9ced3" stroke-width="1.7" stroke-linecap="round"/><path d="M${24 + n.dx} ${43.5 + n.dy} H${96 + n.dx}" stroke="#fff" stroke-width=".5"/>`).join("");
+  return `${defs}${board}${zig(24)}${zig(96)}${rods}${rkTowel(40, 70, 26, 34, "#8d9196", "#5f6368")}${rkSensor(c, 98, 52)}`;
+}
+function ntRackFrame(c) {
+  const w = ntId(), d = ntId();
+  const defs = `<defs>${ntV(w, "#e6c49a", "#c79a66")}${ntV(d, "#d8b07e", "#a9784a")}</defs>`;
+  const outer = `<rect x="18" y="8" width="84" height="104" rx="1.5" fill="none" stroke="url(#${w})" stroke-width="5"/><path d="M60 10 V110" stroke="url(#${w})" stroke-width="3.6"/>`;
+  const rungs = (x0, x1, y0, y1, xt0, xt1) => [0, 1, 2, 3, 4, 5, 6].map((i) => { const k = (i + .5) / 7, y = y0 + (y1 - y0) * k; const a = x0 + (xt0 - x0) * (1 - k), b = x1 + (xt1 - x1) * (1 - k); return `<path d="M${a.toFixed(1)} ${y.toFixed(1)} H${b.toFixed(1)}" stroke="#c99f6d" stroke-width="1.8"/>`; }).join("");
+  if (!c.open) {
+    return `${defs}${outer}<rect x="62" y="12" width="36" height="96" fill="none" stroke="url(#${d})" stroke-width="3.4"/>${rungs(64, 96, 12, 108, 64, 96)}
+<rect x="22" y="12" width="36" height="96" fill="none" stroke="url(#${d})" stroke-width="3.4"/>${rungs(24, 56, 12, 108, 24, 56)}${rkSensor(c, 96, 102)}`;
+  }
+  // The right leaf tilted out from its foot: its top comes forward, wider.
+  return `${defs}${outer}<rect x="22" y="12" width="36" height="96" fill="none" stroke="url(#${d})" stroke-width="3.4"/>${rungs(24, 56, 12, 108, 24, 56)}
+<path d="M62 108 L98 108 L108 22 L56 22 Z" fill="rgba(0,0,0,.06)"/><path d="M62 108 L98 108 L110 18 L54 18 Z" fill="none" stroke="url(#${d})" stroke-width="3.6" stroke-linejoin="round"/>${rungs(62, 98, 18, 108, 54, 110)}
+${rkTowel(68, 30, 22, 40, "#f1f3f5", "#b9c0c6")}<path d="M70 34 H88" stroke="#9fb3c8" stroke-width="1.2" opacity=".7"/><path d="M70 62 H88" stroke="#9fb3c8" stroke-width="1.2" opacity=".7"/>${rkSensor(c, 96, 102)}`;
+}
+const NT_DRAW = { rack_box: ntRackBox, rack_accordion: ntRackAccordion, rack_frame: ntRackFrame, vlv_aqara: ntValveAqara, vlv_tuya: ntValveTuya,  fb_plus: ntFingerbot, fb_switchbot: ntFingerbot, fb_classic: ntFingerbot, ths_co2_eink: ntCo2Eink, ths_switchbot_co2: (c) => ntSbPro(c, true), ths_switchbot_pro: (c) => ntSbPro(c, false), ths_switchbot_meter: (c) => ntSbMeter(c, false), ths_switchbot_plus: (c) => ntSbMeter(c, true), ths_switchbot_outdoor: ntSbOutdoor, ths_co2_box: ntCo2Box, ths_co2_netatmo: (c) => ntCo2Netatmo(c, false), ths_co2_netatmo_module: (c) => ntCo2Netatmo(c, true), cov_shutter: ntCovShutter, cov_blind: ntCovBlind, cov_venetian: (c) => ntCovVenetian(c, false), cov_raffstore: (c) => ntCovVenetian(c, true), cov_pergola: ntCovPergola, cov_awning: ntCovAwning, pellet_grill: ntPelletGrill, ths_disc: ntThsDisc, ths_square: ntThsSquare, ths_cushion: ntThsCushion, ths_stick: ntThsStick, ths_lcd_stand: ntThsLcdStand, ths_lcd_probe: ntThsLcdProbe, ths_lcd_round: ntThsLcdRound, dryer: ntFilamentDryer, humidifier: ntHumidifier, circulator: ntCirculator, irr_sprinkler: ntIrrSprinkler, irr_tap: ntIrrTap, irr_drip: ntIrrDrip, irr_flowers: ntIrrFlowers, lit_globe: ntLitterGlobe, lit_box: ntLitterBox, det_smoke: ntDetSmoke, det_co: ntDetCo, det_leak: ntDetLeak, det_door: ntDetDoor, det_vibration: ntDetVibration, det_glass: ntDetGlass, spk_smart: ntSpkSmart, spk_homepod_mini: ntSpkMini, spk_sonos_one: ntSpkOne, spk_bookshelf: ntSpkShelf, spk_sonos_move: ntSpkMove, spk_soundbar: ntSpkBar, spk_echo_dot: ntSpkDot, spk_echo_dot_max: ntSpkDotMax, spk_nest_mini: ntSpkNest, spk_sonos_era100: ntSpkEra100, spk_sonos_era300: ntSpkEra300, spk_bose_wave: ntSpkWave, spk_bose_500: ntSpkBose500, spk_bose_soundlink: ntSpkFlex, spk_bose_soundbar: ntSpkBoseBar, spk_sonos_five: ntSpkFive, spk_sonos_play: ntSpkPlay, spk_sonos_roam: ntSpkRoam, spk_sonos_ray: ntSpkRay, spk_sonos_amp: ntSpkAmp, spk_sonos_port: ntSpkPort, spk_bose_ultra: ntSpkBoseUltra, spk_bose_portable: ntSpkBosePortable, spk_bose_amp: ntSpkBoseAmp, str_apple_tv: (c) => strZoom(strAppleTv(c), 54, 1.45), str_fire_tv_cube: strFireCube, str_fire_tv_stick: (c) => strStick(c, true), str_google_tv_streamer: strGoogleStreamer, str_chromecast: strChromecast, str_shield: strShield, str_shield_pro: strShieldPro, str_roku: strRoku, str_mi_box: strMiBox, str_freebox: strFreebox, str_decoder: strDecoder, str_box: strBox, str_stick: (c) => strStick(c, false), con_ps1: conPs1, con_ps2: conPs2, con_ps3: conPs3, con_ps4: (c) => conPs4(c, false), con_ps4_pro: (c) => conPs4(c, true), con_ps5: conPs5, con_xbox: conXbox, con_xbox_360: conX360, con_xbox_one: conXone, con_xbox_series_x: conXsx, con_xbox_series_s: conXss, con_switch: (c) => conSwitch(c, false), con_switch_2: (c) => conSwitch(c, true), con_switch_lite: conSwitchLite, con_ps_vita: conVita, con_nes: conNes, con_snes: conSnes, con_n64: conN64, con_gamecube: conGamecube, con_wii: conWii, con_megadrive: conMegadrive, tank: ntTank, fws: ntFresh, solth: ntSolarThermal, wood: ntWoodStove, mob_scooter: mobScooter, mob_offroad: mobOffroad, mob_ebike: mobEbike, mob_gyropode: mobGyropode, mob_motorcycle: mobMotorcycle, meter_box: ntMeterBox, meter_dome: ntMeterDome, meter_gas: ntGas, meter_water: ntWater, booster: ntBooster, sump: ntSump, pool: ntPoolRobot, floor: ntFloor, spa: ntSpa, sauna: ntSauna, aquarium: ntAquarium, linky: ntLinky, tree: ntTree };
 // The card's colour on a drawing made after a real product: its shell, the
 // greys, blacks and whites it is drawn in, takes the colour, lightest to
 // darkest as before; what has a colour of its own (a screen's glow, a
@@ -4538,6 +4709,10 @@ const NT_CSS = `
         @keyframes nt-bar3{0%{opacity:.15}48%,100%{opacity:1}}
         @keyframes nt-bar4{0%{opacity:.15}66%,100%{opacity:1}}
         .nta-blinkfast{animation:nt-blinkfast .45s linear infinite}
+        .vlv-turn{transform-box:view-box;transform-origin:60px 80px}
+        .vlv-to-open{animation:vlv-open 2.8s ease-in-out infinite}.vlv-to-close{animation:vlv-close 2.8s ease-in-out infinite}
+        @keyframes vlv-open{0%,15%{transform:rotate(90deg)}75%,100%{transform:rotate(0deg)}}
+        @keyframes vlv-close{0%,15%{transform:rotate(0deg)}75%,100%{transform:rotate(90deg)}}
         .nta-rain{transform-box:fill-box;animation:nt-fall 1.4s ease-in infinite}
         .nta-rdrop{animation:nt-rdrop .6s linear infinite}.nta-rsplash{transform-box:fill-box;transform-origin:center;opacity:0;animation:nt-rsplash .6s ease-out infinite}
         @keyframes nt-rdrop{0%{transform:translate(0,0);opacity:0}10%{opacity:1}100%{transform:translate(-16px,80px);opacity:1}}
@@ -4667,10 +4842,10 @@ function ntReadOf(type, hass, cfg, st, watts, threshold) {
   if (unav) {
     const ml = meterLayoutOf(cfg, st);
     const kinds = { pellet_grill: "pellet_grill", filament_dryer: "dryer", humidifier: "humidifier", water_pump: pumpLayoutOf(cfg, st), floor_heating: "floor", spa: "spa", sauna: "sauna", aquarium: "aquarium", meter: ml === "linky" ? "linky" : `meter_${ml}`, christmas_tree: "tree", mobility: `mob_${mobilityLayoutOf(cfg, st)}`,
-      irrigation: `irr_${irrigationLayoutOf(cfg, st)}`, litter_box: `lit_${litterLayoutOf(cfg, st)}`, detector: `det_${detectorLayoutOf(cfg, st)}`, fingerbot: `fb_${fingerbotLayoutOf(cfg, st)}`, speaker: `spk_${speakerLayoutOf(cfg, st)}`, console: `con_${consoleLayoutOf(cfg, st)}`, streamer: `str_${streamerLayoutOf(cfg, st)}`, climate_sensor: `ths_${thsLayoutOf(cfg, st)}`, cover: `cov_${coverLayoutOf(cfg, st)}` };
+      irrigation: `irr_${irrigationLayoutOf(cfg, st)}`, litter_box: `lit_${litterLayoutOf(cfg, st)}`, detector: `det_${detectorLayoutOf(cfg, st)}`, fingerbot: `fb_${fingerbotLayoutOf(cfg, st)}`, valve: `vlv_${valveLayoutOf(cfg, st)}`, drying_rack: `rack_${rackLayoutOf(cfg, st)}`, speaker: `spk_${speakerLayoutOf(cfg, st)}`, console: `con_${consoleLayoutOf(cfg, st)}`, streamer: `str_${streamerLayoutOf(cfg, st)}`, climate_sensor: `ths_${thsLayoutOf(cfg, st)}`, cover: `cov_${coverLayoutOf(cfg, st)}` };
     return out("unav", "ev_offline", NT_COLORS.unav, { kind: kinds[type], on: false, electric: floorLayoutOf(cfg) === "electric", model: type === "water_pump" ? circModelOf(cfg, st) : "",
       palette: cfg.tree_palette, ...(type === "pellet_grill" ? { layout: grillLayoutOf(cfg, st) } : {}), ...(type === "filament_dryer" ? fdLook(cfg) : {}), presents: type === "christmas_tree" && treePresents(cfg), color: type === "speaker" ? speakerColorOf(cfg, st) : type === "cover" ? cvColor(cfg.cover_color, COVER_COLORS) : "",
-      ...(type === "cover" ? { p: 100, tilt: 60, fabric: cvColor(cfg.fabric_color, FABRIC_COLORS), stripes: cfg.fabric_stripes !== false } : {}), ...(type === "climate_sensor" ? { co2: null, body: cfg.netatmo_color } : {}), ...(type === "fingerbot" ? { layout: fingerbotLayoutOf(cfg, st), body: cfg.fingerbot_color } : {}) });
+      ...(type === "cover" ? { p: 100, tilt: 60, fabric: cvColor(cfg.fabric_color, FABRIC_COLORS), stripes: cfg.fabric_stripes !== false } : {}), ...(type === "climate_sensor" ? { co2: null, body: cfg.netatmo_color } : {}), ...(type === "fingerbot" ? { layout: fingerbotLayoutOf(cfg, st), body: cfg.fingerbot_color } : {}), ...(type === "valve" ? { handle: valveHandleOf(cfg, st) } : {}) });
   }
   if (type === "pellet_grill") {
     const dead2 = (s) => !s || ["unavailable", "unknown", "none", ""].includes(String(s.state).trim().toLowerCase());
@@ -4852,6 +5027,40 @@ function ntReadOf(type, hass, cfg, st, watts, threshold) {
     if (charging) return out("on", bv !== null && bv >= 100 ? "fb_charged" : "fb_charging", NT_COLORS.lit, draw);
     if (low) return { ...out("ok", "fb_low", "#ef6c00", draw) };
     return out("ok", switchMode ? "fb_released" : "fb_ready", NT_COLORS.idle, draw);
+  }
+  if (type === "drying_rack") {
+    // A wall drying rack (#124): its contact sensor says unfolded or folded,
+    // its battery is a line.
+    const open = ["on", "open", "true", "opening"].includes(raw);
+    const bv = cfg.battery_entity ? numericState(hass, cfg.battery_entity) : null;
+    const bs = cfg.battery_entity ? stateObj(hass, cfg.battery_entity) : null;
+    const low = bv !== null ? bv <= 20 : !!bs && domainOf(cfg.battery_entity) === "binary_sensor" && NT_ON.includes(String(bs.state).toLowerCase());
+    const bl = ntLine(hass, cfg, "rack_battery", low ? "mdi:battery-alert-variant-outline" : "mdi:battery", "section_battery", cfg.battery_entity);
+    if (bl) lines.push({ ...bl, value: domainOf(cfg.battery_entity) === "binary_sensor" ? t(hass, low ? "opt_low" : "opt_ok") : bl.value, caution: low });
+    const draw = { kind: `rack_${rackLayoutOf(cfg, st)}`, on: open, open, low };
+    return open ? out("on", "rack_open", NT_COLORS.lit, draw) : out("off", "rack_closed", NT_COLORS.idle, draw);
+  }
+  if (type === "valve") {
+    // A shut-off valve (#123): open, closed or turning, from a valve, a
+    // switch (Zigbee2MQTT's Aqara T1) or a binary sensor. A leak sensor
+    // going off is the alarm, whatever the valve says.
+    const a = (st && st.attributes) || {};
+    const moving = raw === "opening" ? "opening" : raw === "closing" ? "closing" : null;
+    const pos = numberOrNull(a.current_position);
+    const open = moving ? false : pos !== null && domainOf(cfg.state_entity) === "valve" ? pos > 0 : ["on", "open", "true"].includes(raw);
+    const ls = cfg.leak_entity ? stateObj(hass, cfg.leak_entity) : null;
+    const leak = !!ls && detAlarmOf(String(ls.state).trim().toLowerCase());
+    if (pos !== null && pos > 0 && pos < 100) lines.push({ key: "vlv_position", icon: "mdi:valve", label: t(hass, "cov_position"), value: `${Math.round(pos)} %`, entity: cfg.state_entity });
+    if (ls) lines.push({ key: "vlv_leak", icon: leak ? "mdi:water-alert" : "mdi:water-check", label: t(hass, "layout_det_leak"), value: t(hass, leak ? "det_line_detected" : "det_line_clear"), entity: cfg.leak_entity, caution: leak });
+    const bv = cfg.battery_entity ? numericState(hass, cfg.battery_entity) : null;
+    const bs = cfg.battery_entity ? stateObj(hass, cfg.battery_entity) : null;
+    const low = bv !== null ? bv <= 20 : !!bs && domainOf(cfg.battery_entity) === "binary_sensor" && NT_ON.includes(String(bs.state).toLowerCase());
+    const bl = ntLine(hass, cfg, "vlv_battery", low ? "mdi:battery-alert-variant-outline" : "mdi:battery", "section_battery", cfg.battery_entity);
+    if (bl) lines.push({ ...bl, value: domainOf(cfg.battery_entity) === "binary_sensor" ? t(hass, low ? "opt_low" : "opt_ok") : bl.value, caution: low });
+    const draw = { kind: `vlv_${valveLayoutOf(cfg, st)}`, on: open || !!moving || leak, open, moving, leak, low, handle: valveHandleOf(cfg, st) };
+    if (leak) return out("alarm", "det_leak", NT_COLORS.alarm, draw);
+    if (moving) return out("run", moving === "opening" ? "vlv_opening" : "vlv_closing", NT_COLORS.run, draw);
+    return open ? out("on", "vlv_open", NT_COLORS.lit, draw) : out("off", "vlv_closed", NT_COLORS.idle, draw);
   }
   if (type === "detector") {
     // On is an alarm: smoke, CO or water, as its device class or its drawing
@@ -5348,7 +5557,7 @@ function ntControls(hass, cfg, type) {
   const out = [];
   const st = stateObj(hass, cfg.state_entity);
   if (st && !cfg.toggle_entity && type !== "meter" && type !== "fingerbot" && (["light", "switch", "input_boolean", "valve"].includes(domainOf(cfg.state_entity)) || (type === "humidifier" && domainOf(cfg.state_entity) === "humidifier"))) {
-    out.push({ key: "toggle", entity: cfg.state_entity, icon: type === "christmas_tree" ? "mdi:pine-tree" : type === "aquarium" ? "mdi:lightbulb" : type === "mobility" ? "mdi:power-plug" : "mdi:power", label: t(hass, "toggle"),
+    out.push({ key: "toggle", entity: cfg.state_entity, icon: type === "valve" ? (["on", "open", "opening"].includes(String(st.state).toLowerCase()) ? "mdi:valve-open" : "mdi:valve-closed") : type === "christmas_tree" ? "mdi:pine-tree" : type === "aquarium" ? "mdi:lightbulb" : type === "mobility" ? "mdi:power-plug" : "mdi:power", label: t(hass, "toggle"),
       on: ["on", "open", "opening"].includes(String(st.state).toLowerCase()) });
   }
   if (type === "speaker" && st && ["playing", "paused", "buffering", "idle", "on"].includes(String(st.state).toLowerCase())) {
