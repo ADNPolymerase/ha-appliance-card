@@ -1476,6 +1476,10 @@ class ApplianceCardEditor extends HTMLElement {
           type: "select",
           options: [{ value: "auto", label: t(hass, "unit_auto") }].concat(FINGERBOT_COLORS.map((v) => ({ value: v, label: t(hass, `cov_c_${v}`) }))),
         }) : ""}
+        ${this._type === "valve" ? this._row("valve_fluid", "valve_fluid", {
+          type: "select",
+          options: [{ value: "auto", label: t(hass, "unit_auto") }].concat(VALVE_FLUIDS.map((v) => ({ value: v, label: t(hass, `vlv_f_${v}`) }))),
+        }) : ""}
         ${this._type === "valve" ? this._row("valve_handle_color", "valve_handle_color", {
           type: "select",
           options: [{ value: "auto", label: t(hass, "unit_auto") }].concat(VALVE_HANDLE_COLORS.map((v) => ({ value: v, label: t(hass, `vlv_h_${v}`) }))),

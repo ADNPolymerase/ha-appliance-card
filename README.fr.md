@@ -1583,6 +1583,7 @@ disk2_entity: sensor.nas_drive_2_status
 | `fingerbot_layout` | pousse-bouton | `plus` (Fingerbot Plus : Tuya, Adaprox, MOES, Zemismart, son pavé tactile sur le dessus) \| `switchbot` (SwitchBot Bot) \| `classic` (le premier Fingerbot, plus fin). Sans lui, un nom avec SwitchBot ou `bot` dessine le Bot, Adaprox sans Plus le premier modèle, le reste le Plus. |
 | `fingerbot_color` | pousse-bouton | `white` (par défaut) \| `black`, pour le SwitchBot Bot noir. |
 | `valve_layout` | vanne | `aqara` (Aqara Valve Controller T1, par défaut) \| `tuya` (la capsule Tuya vendue sous de nombreux noms : MOES, Zemismart, Avatto...). Sans choix, lu dans son nom. |
+| `valve_fluid` | vanne | `water` (par défaut) \| `gas`, lu sur la classe d'appareil `gas` ou le nom. Le tuyau prend la couleur de son fluide, comme dans une maison : bleu pour l'eau (tube PE EN 12201, PER d'eau froide), jaune pour le gaz (tube PE EN 1555). Ses flèches avancent tant que la vanne est ouverte. |
 | `valve_handle_color` | vanne | `red` (par défaut) \| `blue` \| `yellow` (par défaut sur une vanne de gaz) \| `black`. |
 | `leak_entity` | vanne | Un détecteur de fuite : déclenché, c'est l'alarme de la carte et la vanne goutte, quoi qu'elle dise. |
 | `rack_layout` | séchoir | `box` (caisson dont la façade se rabat sur ses barres, par défaut) \| `accordion` (bras en accordéon sous une étagère) \| `frame` (cadre en bois qui bascule du mur). |
@@ -1840,7 +1841,7 @@ speaker_color: white
 state_entity: media_player.cuisine
 ```
 
-Une vanne d'arrivée motorisée est une `valve`. Le moteur se pose sur une vanne quart de tour et tourne sa poignée : ouverte, la poignée suit le tuyau et l'eau passe ; fermée, elle est en travers et l'eau s'arrête à la vanne ; pendant qu'elle tourne, la poignée pivote. L'**Aqara Valve Controller T1** arrive par [Zigbee2MQTT](https://www.zigbee2mqtt.io/devices/VC-X01D.html) ou ZHA comme un `switch` (allumé = ouverte), la capsule **Tuya** comme un `switch` ou une `valve`. Une entité `valve` de Home Assistant est lue telle quelle, `opening` et `closing` compris. Un détecteur de fuite à côté en fait l'alarme :
+Une vanne d'arrivée motorisée est une `valve`. Le moteur se pose sur une vanne quart de tour et tourne sa poignée : ouverte, la poignée suit le tuyau et le fluide passe ; fermée, elle est en travers et l'eau s'arrête à la vanne ; pendant qu'elle tourne, la poignée pivote. L'**Aqara Valve Controller T1** arrive par [Zigbee2MQTT](https://www.zigbee2mqtt.io/devices/VC-X01D.html) ou ZHA comme un `switch` (allumé = ouverte), la capsule **Tuya** comme un `switch` ou une `valve`. Une entité `valve` de Home Assistant est lue telle quelle, `opening` et `closing` compris. Un détecteur de fuite à côté en fait l'alarme :
 
 ```yaml
 type: custom:ha-appliance-card

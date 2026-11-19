@@ -60,6 +60,8 @@ const NT_CSS = `
         @keyframes nt-bar4{0%{opacity:.15}66%,100%{opacity:1}}
         .nta-blinkfast{animation:nt-blinkfast .45s linear infinite}
         .vlv-turn{transform-box:view-box;transform-origin:60px 80px}
+        .nt-on .vlv-arrows{animation:vlv-arrows 1.2s linear infinite}
+        @keyframes vlv-arrows{to{transform:translateX(12px)}}
         .vlv-to-open{animation:vlv-open 2.8s ease-in-out infinite}.vlv-to-close{animation:vlv-close 2.8s ease-in-out infinite}
         @keyframes vlv-open{0%,15%{transform:rotate(90deg)}75%,100%{transform:rotate(0deg)}}
         @keyframes vlv-close{0%,15%{transform:rotate(0deg)}75%,100%{transform:rotate(90deg)}}

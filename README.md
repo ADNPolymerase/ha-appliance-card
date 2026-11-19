@@ -1581,6 +1581,7 @@ disk2_entity: sensor.nas_drive_2_status
 | `fingerbot_layout` | finger bot | `plus` (Fingerbot Plus: Tuya, Adaprox, MOES, Zemismart, its touch pad on top) \| `switchbot` (SwitchBot Bot) \| `classic` (the first, slimmer Fingerbot). Left out, a name with SwitchBot or `bot` draws the Bot, Adaprox without Plus the first one, the rest the Plus. |
 | `fingerbot_color` | finger bot | `white` (default) \| `black`, for the black SwitchBot Bot. |
 | `valve_layout` | valve | `aqara` (Aqara Valve Controller T1, the default) \| `tuya` (the Tuya capsule sold under many names: MOES, Zemismart, Avatto...). Read from its name when not set. |
+| `valve_fluid` | valve | `water` (default) \| `gas`, read from the `gas` device class or the name. The pipe takes its fluid's colour, as in a house: blue for water (PE pipe EN 12201, cold water PEX), yellow for gas (PE pipe EN 1555). Its arrows move while the valve is open. |
 | `valve_handle_color` | valve | `red` (default) \| `blue` \| `yellow` (the default on a gas valve) \| `black`. |
 | `leak_entity` | valve | A leak sensor: going off, it is the card's alarm and the valve drips, whatever the valve says. |
 | `rack_layout` | drying rack | `box` (a box whose front drops onto its rods, the default) \| `accordion` (accordion arms under a shelf) \| `frame` (a wooden frame that tilts away from the wall). |
@@ -1838,7 +1839,7 @@ speaker_color: white
 state_entity: media_player.kitchen
 ```
 
-A motorised shut-off valve is a `valve`. The motor sits on a quarter-turn ball valve and turns its handle: open, the handle lies along the pipe and the water runs through; closed, it points across and the water stops at the valve; while it turns, the handle swings. The **Aqara Valve Controller T1** comes in through [Zigbee2MQTT](https://www.zigbee2mqtt.io/devices/VC-X01D.html) or ZHA as a `switch` (on is open), the **Tuya** capsule as a `switch` or a `valve`. A Home Assistant `valve` entity is read as it is, `opening` and `closing` included. A leak sensor next to it makes it the alarm:
+A motorised shut-off valve is a `valve`. The motor sits on a quarter-turn ball valve and turns its handle: open, the handle lies along the pipe and the water or gas runs through; closed, it points across and the water stops at the valve; while it turns, the handle swings. The **Aqara Valve Controller T1** comes in through [Zigbee2MQTT](https://www.zigbee2mqtt.io/devices/VC-X01D.html) or ZHA as a `switch` (on is open), the **Tuya** capsule as a `switch` or a `valve`. A Home Assistant `valve` entity is read as it is, `opening` and `closing` included. A leak sensor next to it makes it the alarm:
 
 ```yaml
 type: custom:ha-appliance-card

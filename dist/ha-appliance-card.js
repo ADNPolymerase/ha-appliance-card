@@ -188,6 +188,7 @@ const T = {
     type_cover: "Shutter, blind, pergola or awning", layout_cov_shutter: "Roller shutter", layout_cov_blind: "Roller blind", layout_cov_venetian: "Venetian blind", layout_cov_raffstore: "Exterior venetian blind", layout_cov_pergola: "Bioclimatic pergola", layout_cov_awning: "Awning", cov_open: "Open", cov_closed: "Closed", cov_open_at: "Open {pct} %", cov_opening: "Opening", cov_closing: "Closing", cov_deployed: "Extended", cov_retracted: "Retracted", cov_deployed_at: "Extended {pct} %", cov_deploying: "Extending", cov_retracting: "Retracting", cov_louvers_open: "Louvers open", cov_louvers_closed: "Louvers closed", cov_louvers_at: "Louvers {pct} %", cov_louvers_opening: "Opening the louvers", cov_louvers_closing: "Closing the louvers", cov_position: "Position", cov_tilt: "Slats", cov_light: "Light", cov_open_btn: "Open", cov_close_btn: "Close", cover_color: "Colour (apron, slats, frame)", fabric_color: "Fabric colour", fabric_stripes: "Striped fabric", cov_c_white: "White", cov_c_grey: "Grey", cov_c_anthracite: "Anthracite", cov_c_black: "Black", cov_c_beige: "Beige", cov_c_wood: "Wood", cov_c_brown: "Brown", cov_f_ecru: "Ecru", cov_f_linen: "Linen", cov_f_grey: "Grey", cov_f_anthracite: "Anthracite", cov_f_blue: "Blue", cov_f_petrol: "Petrol blue", cov_f_terracotta: "Terracotta", cov_f_green: "Green", layout_ths_co2_eink: "CO\u2082 monitor, e-ink (Aranet4)", layout_ths_co2_box: "CO\u2082 monitor, LED bar (AirGradient)", layout_ths_co2_netatmo: "Netatmo indoor station", layout_ths_co2_netatmo_module: "Netatmo additional indoor module", layout_ths_switchbot_co2: "SwitchBot Meter Pro CO\u2082", layout_ths_switchbot_pro: "SwitchBot Meter Pro", layout_ths_switchbot_meter: "SwitchBot Meter", layout_ths_switchbot_plus: "SwitchBot Meter Plus", layout_ths_switchbot_outdoor: "SwitchBot Indoor/Outdoor Meter", ths_co2: "CO\u2082", co2_good: "Air is fine", co2_ventilate: "Ventilation advised", co2_poor: "Ventilate now", co2_warning: "Orange from (ppm)", co2_alert: "Red from (ppm)", netatmo_color: "Netatmo colour", ntm_aluminium: "Aluminium", ntm_sand: "Sand", ntm_mint: "Mint", ntm_graphite: "Graphite",
     type_fingerbot: "Finger bot (Fingerbot, SwitchBot Bot)", layout_fb_plus: "Fingerbot Plus (Tuya, Adaprox, MOES)", layout_fb_switchbot: "SwitchBot Bot", layout_fb_classic: "Fingerbot, first model", fingerbot_color: "Colour", fb_ready: "Ready", fb_pressing: "Pressing", fb_held: "Held down", fb_released: "Released", fb_charging: "Charging", fb_charged: "Charged", fb_low: "Low battery", fb_press: "Press", fb_charge: "Charge", fb_mode: "Mode", fb_m_click: "Press", fb_m_switch: "Switch", fb_m_program: "Program", fb_lower: "Down position", fb_upper: "Up position", fb_sustain: "Hold time", fb_reverse: "Reversed", fb_touch: "Touch button", fb_yes: "Yes", fb_no: "No", fb_last: "Last press",
     type_valve: "Shut-off valve (Aqara T1, Tuya)", layout_vlv_aqara: "Aqara Valve Controller T1", layout_vlv_tuya: "Tuya valve controller", vlv_open: "Open", vlv_closed: "Closed", vlv_opening: "Opening", vlv_closing: "Closing", valve_handle_color: "Handle colour", vlv_h_red: "Red", vlv_h_blue: "Blue", vlv_h_yellow: "Yellow", vlv_h_black: "Black",
+    valve_fluid: "Fluid", vlv_f_water: "Water", vlv_f_gas: "Gas",
     type_drying_rack: "Wall drying rack", layout_rack_box: "Fold-down box", layout_rack_accordion: "Accordion under a shelf", layout_rack_frame: "Tilting wooden frame", rack_open: "Unfolded", rack_closed: "Folded",
   },
 };
@@ -5740,6 +5741,7 @@ const VALVE_LAYOUTS = ["aqara", "tuya"];
 const RACK_LAYOUTS = ["box", "accordion", "frame"];
 const RACK_NAME_RE = /^(?!.*(filament|cheveux|hair|tumble|seche.?linge)).*(drying.?rack|clothes.?(rack|horse|airer|dryer.?rack)|(^|[^a-z])airer|etendoir|etendage|sechoir.?(mural|a.?linge)|waschestander|trockengestell|tendedero|stendibiancheria|stendino|droogrek|torkstall|torkstallning|t\u00f8rkestativ|torkestativ|torrestativ|suszarka.?(na.?pranie|scienna))/;
 const VALVE_HANDLE_COLORS = ["red", "blue", "yellow", "black"];
+const VALVE_FLUIDS = ["water", "gas"];
 // Named as a shut-off valve, never a garden one nor a radiator's.
 const VALVE_NAME_RE = /^(?!.*(swv|irrig|garden|jardin|arros|sprink|thermostat|trv|radiat|heiz|chauff)).*(vc.?x01|valve.?controller|shut.?off|absperr|wasserventil|gasventil|hauptventil|vanne.?(d.?)?(arrivee|coupure|eau|gaz|motoris|principale)|electrovanne|manipulat|(water|gas|main).?valve|valvola|valvula|afsluiter|kulventil|zawor)/;
 const FINGERBOT_COLORS = ["white", "black"];
@@ -5886,7 +5888,7 @@ const NT_ONLY_FIELDS = {
   irrigation: ["irrigation_layout", "zone_entity", "rain_delay_entity", "soil_moisture_entity", "next_run_entity", "tap_model", "tap_wall", "watering_duration_entity"],
   litter_box: ["litter_layout", "waste_drawer_entity", "litter_level_entity", "pet_weight_entity", "visits_entity", "cat_present_entity", "last_use_entity"],
   detector: ["detector_layout", "detector_model", "co_level_entity", "co_entity"],
-  valve: ["valve_layout", "valve_handle_color", "leak_entity"],
+  valve: ["valve_layout", "valve_fluid", "valve_handle_color", "leak_entity"],
   drying_rack: ["rack_layout"],
   fingerbot: ["fingerbot_layout", "fingerbot_color", "bot_mode_entity", "lower_entity", "upper_entity", "sustain_entity", "reverse_entity", "touch_entity"],
   speaker: ["speaker_layout", "speaker_color"],
@@ -6040,11 +6042,17 @@ function valveLayoutOf(cfg, st) {
   const hay = stripAccents(`${cfg.state_entity || ""} ${cfg.name || ""} ${stHay(st)}`).toLowerCase();
   return /tuya|moes|zemismart|_tz[e3]|manipulat|nous|avatto|girier/.test(hay) && !/aqara|lumi/.test(hay) ? "tuya" : "aqara";
 }
+// What it shuts off: the fluid chosen, gas by its device class or its name,
+// else water.
+function valveFluidOf(cfg, st) {
+  if (VALVE_FLUIDS.includes(cfg.valve_fluid)) return cfg.valve_fluid;
+  const hay = stripAccents(`${cfg.state_entity || ""} ${cfg.name || ""}`).toLowerCase();
+  return (st && st.attributes.device_class === "gas") || /(^|[^a-z])(gas|gaz)([^a-z]|$)/.test(hay) ? "gas" : "water";
+}
 // Its handle: the colour chosen, yellow on a gas valve, else red.
 function valveHandleOf(cfg, st) {
   if (VALVE_HANDLE_COLORS.includes(cfg.valve_handle_color)) return cfg.valve_handle_color;
-  const hay = stripAccents(`${cfg.state_entity || ""} ${cfg.name || ""}`).toLowerCase();
-  return (st && st.attributes.device_class === "gas") || /(^|[^a-z])(gas|gaz)([^a-z]|$)/.test(hay) ? "yellow" : "red";
+  return valveFluidOf(cfg, st) === "gas" ? "yellow" : "red";
 }
 function rackLayoutOf(cfg, st) {
   if (RACK_LAYOUTS.includes(cfg.rack_layout)) return cfg.rack_layout;
@@ -6578,7 +6586,7 @@ function ntReadOf(type, hass, cfg, st, watts, threshold) {
       irrigation: `irr_${irrigationLayoutOf(cfg, st)}`, litter_box: `lit_${litterLayoutOf(cfg, st)}`, detector: `det_${detectorLayoutOf(cfg, st)}`, fingerbot: `fb_${fingerbotLayoutOf(cfg, st)}`, valve: `vlv_${valveLayoutOf(cfg, st)}`, drying_rack: `rack_${rackLayoutOf(cfg, st)}`, speaker: `spk_${speakerLayoutOf(cfg, st)}`, console: `con_${consoleLayoutOf(cfg, st)}`, streamer: `str_${streamerLayoutOf(cfg, st)}`, climate_sensor: `ths_${thsLayoutOf(cfg, st)}`, cover: `cov_${coverLayoutOf(cfg, st)}` };
     return out("unav", "ev_offline", NT_COLORS.unav, { kind: kinds[type], on: false, electric: floorLayoutOf(cfg) === "electric", model: type === "water_pump" ? circModelOf(cfg, st) : "",
       palette: cfg.tree_palette, ...(type === "pellet_grill" ? { layout: grillLayoutOf(cfg, st) } : {}), ...(type === "filament_dryer" ? fdLook(cfg) : {}), presents: type === "christmas_tree" && treePresents(cfg), color: type === "speaker" ? speakerColorOf(cfg, st) : type === "cover" ? cvColor(cfg.cover_color, COVER_COLORS) : "",
-      ...(type === "cover" ? { p: 100, tilt: 60, fabric: cvColor(cfg.fabric_color, FABRIC_COLORS), stripes: cfg.fabric_stripes !== false } : {}), ...(type === "climate_sensor" ? { co2: null, body: cfg.netatmo_color } : {}), ...(type === "fingerbot" ? { layout: fingerbotLayoutOf(cfg, st), body: cfg.fingerbot_color } : {}), ...(type === "valve" ? { handle: valveHandleOf(cfg, st) } : {}) });
+      ...(type === "cover" ? { p: 100, tilt: 60, fabric: cvColor(cfg.fabric_color, FABRIC_COLORS), stripes: cfg.fabric_stripes !== false } : {}), ...(type === "climate_sensor" ? { co2: null, body: cfg.netatmo_color } : {}), ...(type === "fingerbot" ? { layout: fingerbotLayoutOf(cfg, st), body: cfg.fingerbot_color } : {}), ...(type === "valve" ? { handle: valveHandleOf(cfg, st), fluid: valveFluidOf(cfg, st) } : {}) });
   }
   if (type === "pellet_grill") {
     const dead2 = (s) => !s || ["unavailable", "unknown", "none", ""].includes(String(s.state).trim().toLowerCase());
@@ -6790,7 +6798,7 @@ function ntReadOf(type, hass, cfg, st, watts, threshold) {
     const low = bv !== null ? bv <= 20 : !!bs && domainOf(cfg.battery_entity) === "binary_sensor" && NT_ON.includes(String(bs.state).toLowerCase());
     const bl = ntLine(hass, cfg, "vlv_battery", low ? "mdi:battery-alert-variant-outline" : "mdi:battery", "section_battery", cfg.battery_entity);
     if (bl) lines.push({ ...bl, value: domainOf(cfg.battery_entity) === "binary_sensor" ? t(hass, low ? "opt_low" : "opt_ok") : bl.value, caution: low });
-    const draw = { kind: `vlv_${valveLayoutOf(cfg, st)}`, on: open || !!moving || leak, open, moving, leak, low, handle: valveHandleOf(cfg, st) };
+    const draw = { kind: `vlv_${valveLayoutOf(cfg, st)}`, on: open || !!moving || leak, open, moving, leak, low, handle: valveHandleOf(cfg, st), fluid: valveFluidOf(cfg, st) };
     if (leak) return out("alarm", "det_leak", NT_COLORS.alarm, draw);
     if (moving) return out("run", moving === "opening" ? "vlv_opening" : "vlv_closing", NT_COLORS.run, draw);
     return open ? out("on", "vlv_open", NT_COLORS.lit, draw) : out("off", "vlv_closed", NT_COLORS.idle, draw);
@@ -14011,7 +14019,7 @@ function loadEditor() {
   if (customElements.get("ha-appliance-card-editor")) return Promise.resolve();
   if (!editorLoading) {
     editorLoading = import(assetUrl("ha-appliance-card-editor.js"))
-      .then((m) => m.default({ t, onLanguageLoaded, LANGUAGE_NAMES, localizedHass, activationOf, TH_LAYOUTS, EV_POWER_THRESHOLD, stateObj, parseValueMap, stringifyValueMap, alertsArray, entityEntries, LIST_OTHER, ENTITY_LISTS, listCandidates, defaultCardName, stripDeviceName, domainOf, INFO_MAX, autoSuggest, APPLIANCE_TYPES, STATE_DOMAINS, SCREEN_ONLY_FIELDS, PRINT_PARTS, illustrationSizeOf, illustrationBackdropOf, fontScaleOf, compactModeOf, TYPE_GROUPS, caps, detectApplianceType, SCREEN_STANDBY_W, SCREEN_LAYOUTS, SCREEN_IMAGES, screenLayoutOf, screenIsTablet, HD_HEAT_W, PLUG_THRESHOLDS, ZONE_POWER_W, PLUG_SOURCE_TYPES, plugSourceOf, DW_DRY_MIN, WASH_HEAT_W, WASH_SPIN_W, DRYER_HEAT_W, NET_LAYOUTS, SWITCH_PORTS, NET_BAYS, NET_BUSY_MBIT, NET_TEMP_ALERT, netLayoutOf, ROBOT_LAYOUTS, ROBOT_STATIONS, ROBOT_BOX_COLORS, ROBOT_FLOORS, ROBOT_SERVICES, STICK_AWAY_W, robotLayoutOf, PRINTER_STYLES, printerStyleOf, POOL_PRESSURE_ALERT, WINTER_TYPES, SOLAR_LAYOUTS, BATTERY_LAYOUTS, BATTERY_IDLE_W, DIFFUSER_LAYOUTS, illustrationTapOf, UNIT_FILTERS, fieldUnits, unitFilterAccepts, HRV_LAYOUTS, hrvLayoutOf, CAMERA_LAYOUTS, MAILBOX_LAYOUTS, MAILBOX_SIDES, mailboxLayoutOf, MAILBOX_COLORS_3D, LAMP_LAYOUTS, LAMP_SPOTS, LAMP_SPOT_ROWS, lampLayoutOf, FD_COUNTS, CONSOLE_LAYOUTS, IRRIGATION_LAYOUTS, TAP_MODELS, TAP_WALLS, LITTER_LAYOUTS, DETECTOR_LAYOUTS, DETECTOR_MODELS, FINGERBOT_LAYOUTS, VALVE_LAYOUTS, RACK_LAYOUTS, VALVE_HANDLE_COLORS, FINGERBOT_COLORS, GRILL_LAYOUTS, SPEAKER_LAYOUTS, STREAMER_LAYOUTS, THS_LAYOUTS, thsLayoutOf, MOBILITY_LAYOUTS, PUMP_LAYOUTS, CIRC_MODELS, FLOOR_LAYOUTS, OPT_LINES, METER_LAYOUTS, meterLayoutOf, irrigationLayoutOf, detectorLayoutOf, TREE_PALETTES, TREE_PRESENTS, pumpLayoutOf, SPK_COLORS, CO2_WARN, CO2_ALERT, NETATMO_COLORS, COVER_LAYOUTS, COVER_COLORS, FABRIC_COLORS, coverLayoutOf, COLLECTOR_STYLES, UPS_BATTERY_LOW, HISTORY_HOURS, BODY_COLORS, esc, MOWER_STYLES, SHELTER_STYLES, SHELTER_COLORS, LAPTOP_COLORS, LAPTOP_STYLES, drawn, stateFreeSource }))
+      .then((m) => m.default({ t, onLanguageLoaded, LANGUAGE_NAMES, localizedHass, activationOf, TH_LAYOUTS, EV_POWER_THRESHOLD, stateObj, parseValueMap, stringifyValueMap, alertsArray, entityEntries, LIST_OTHER, ENTITY_LISTS, listCandidates, defaultCardName, stripDeviceName, domainOf, INFO_MAX, autoSuggest, APPLIANCE_TYPES, STATE_DOMAINS, SCREEN_ONLY_FIELDS, PRINT_PARTS, illustrationSizeOf, illustrationBackdropOf, fontScaleOf, compactModeOf, TYPE_GROUPS, caps, detectApplianceType, SCREEN_STANDBY_W, SCREEN_LAYOUTS, SCREEN_IMAGES, screenLayoutOf, screenIsTablet, HD_HEAT_W, PLUG_THRESHOLDS, ZONE_POWER_W, PLUG_SOURCE_TYPES, plugSourceOf, DW_DRY_MIN, WASH_HEAT_W, WASH_SPIN_W, DRYER_HEAT_W, NET_LAYOUTS, SWITCH_PORTS, NET_BAYS, NET_BUSY_MBIT, NET_TEMP_ALERT, netLayoutOf, ROBOT_LAYOUTS, ROBOT_STATIONS, ROBOT_BOX_COLORS, ROBOT_FLOORS, ROBOT_SERVICES, STICK_AWAY_W, robotLayoutOf, PRINTER_STYLES, printerStyleOf, POOL_PRESSURE_ALERT, WINTER_TYPES, SOLAR_LAYOUTS, BATTERY_LAYOUTS, BATTERY_IDLE_W, DIFFUSER_LAYOUTS, illustrationTapOf, UNIT_FILTERS, fieldUnits, unitFilterAccepts, HRV_LAYOUTS, hrvLayoutOf, CAMERA_LAYOUTS, MAILBOX_LAYOUTS, MAILBOX_SIDES, mailboxLayoutOf, MAILBOX_COLORS_3D, LAMP_LAYOUTS, LAMP_SPOTS, LAMP_SPOT_ROWS, lampLayoutOf, FD_COUNTS, CONSOLE_LAYOUTS, IRRIGATION_LAYOUTS, TAP_MODELS, TAP_WALLS, LITTER_LAYOUTS, DETECTOR_LAYOUTS, DETECTOR_MODELS, FINGERBOT_LAYOUTS, VALVE_LAYOUTS, RACK_LAYOUTS, VALVE_HANDLE_COLORS, VALVE_FLUIDS, FINGERBOT_COLORS, GRILL_LAYOUTS, SPEAKER_LAYOUTS, STREAMER_LAYOUTS, THS_LAYOUTS, thsLayoutOf, MOBILITY_LAYOUTS, PUMP_LAYOUTS, CIRC_MODELS, FLOOR_LAYOUTS, OPT_LINES, METER_LAYOUTS, meterLayoutOf, irrigationLayoutOf, detectorLayoutOf, TREE_PALETTES, TREE_PRESENTS, pumpLayoutOf, SPK_COLORS, CO2_WARN, CO2_ALERT, NETATMO_COLORS, COVER_LAYOUTS, COVER_COLORS, FABRIC_COLORS, coverLayoutOf, COLLECTOR_STYLES, UPS_BATTERY_LOW, HISTORY_HOURS, BODY_COLORS, esc, MOWER_STYLES, SHELTER_STYLES, SHELTER_COLORS, LAPTOP_COLORS, LAPTOP_STYLES, drawn, stateFreeSource }))
       .catch((err) => {
         editorLoading = null;
         throw err;

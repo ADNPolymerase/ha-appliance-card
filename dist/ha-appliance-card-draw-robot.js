@@ -3661,11 +3661,16 @@ ${marks}${ledEl}${arm}${lead}${gauge}`;
 // the pipe and the water runs through; closed, it points across and the water
 // stops at the valve. A leak sensor going off drips from the far joint.
 const VALVE_HANDLES = { red: ["#e53935", "#b71c1c"], blue: ["#4a78d6", "#2a4f9e"], yellow: ["#f6c21c", "#c99300"], black: ["#3a3f44", "#1c1f22"] };
+// The pipe in its fluid's colour as a house shows it: water blue, as its PE
+// pipe (EN 12201) and cold water PEX are, gas yellow, as its PE pipe
+// (EN 1555) and its marking are. (Industrial marking, NF X08-100 or DIN 2403,
+// paints water green and keeps blue for air.) Arrows give the way it flows,
+// and run downstream only while the valve is open.
 function vlvPipe(c, g) {
   const wet = c.open && !c.unav;
-  const up = `<path class="${wet ? "nta-flow" : ""}" d="M2 98 H37" stroke="#4fc3f7" stroke-width="2.6" stroke-dasharray="6 6" stroke-linecap="round" opacity="${c.unav ? 0 : .9}"/>`;
-  const down = wet ? `<path class="nta-flow" d="M83 98 H118" stroke="#4fc3f7" stroke-width="2.6" stroke-dasharray="6 6" stroke-linecap="round" opacity=".9"/>` : "";
-  return `<rect x="0" y="92.5" width="120" height="11" fill="url(#${g.pipe})"/><path d="M0 94.2 H120" stroke="#fff" stroke-width=".9" opacity=".55"/>${up}${down}
+  const arrows = (x0, x1, run) => { let o = ""; for (let x = x0; x <= x1 - 6; x += 12) o += `<path d="M${x} 95.6 l4.4 2.4 l-4.4 2.4" stroke="#fff" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="${c.unav ? 0 : .95}"/>`; return run ? `<g class="vlv-arrows">${o}</g>` : o; };
+  return `<rect x="0" y="92.5" width="120" height="11" fill="url(#${g.pipe})"/><path d="M0 94.2 H120" stroke="#fff" stroke-width=".9" opacity=".35"/>
+<g clip-path="url(#${g.clipL})">${arrows(-8, 40, wet)}</g>${wet ? `<g clip-path="url(#${g.clipR})">${arrows(76, 124, true)}</g>` : ""}
 <path d="M38 89 h8 l1.5 3 v12 l-1.5 3 h-8 l-1.5 -3 v-12 z" fill="url(#${g.brass})" stroke="#7a5c15" stroke-width=".5"/>
 <path d="M74 89 h8 l1.5 3 v12 l-1.5 3 h-8 l-1.5 -3 v-12 z" fill="url(#${g.brass})" stroke="#7a5c15" stroke-width=".5"/>
 <rect x="45" y="88" width="30" height="20" rx="8" fill="url(#${g.brass})" stroke="#7a5c15" stroke-width=".55"/>
@@ -3691,9 +3696,12 @@ function vlvLeak(c) {
   return `<g class="nta-drip"><path d="M86 104 q-2 3.6 0 5.2 q2 -1.6 0 -5.2 z" fill="#4fc3f7"/></g><g class="nta-drip ntd2"><path d="M80.5 104 q-1.8 3.2 0 4.6 q1.8 -1.4 0 -4.6 z" fill="#4fc3f7"/></g>
 <ellipse cx="84" cy="119" rx="17" ry="2.8" fill="#4fc3f7" opacity=".45"/><ellipse class="nta-splash" cx="86" cy="118.6" rx="4" ry="1.2" fill="none" stroke="#4fc3f7" stroke-width=".6"/>`;
 }
-function vlvDefs() {
-  const g = { pipe: ntId(), brass: ntId(), steel: ntId(), body: ntId() };
-  return { g, defs: `<defs><linearGradient id="${g.pipe}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#eef1f3"/><stop offset=".45" stop-color="#b3bbc2"/><stop offset="1" stop-color="#737c84"/></linearGradient>
+const VALVE_FLUID_PIPES = { water: ["#8cc4f2", "#2f7fd0", "#1d528c"], gas: ["#ffd76a", "#efa908", "#b87a00"] };
+function vlvDefs(c) {
+  const g = { pipe: ntId(), brass: ntId(), steel: ntId(), body: ntId(), clipL: ntId(), clipR: ntId() };
+  const [p0, p1, p2] = VALVE_FLUID_PIPES[c.fluid] || VALVE_FLUID_PIPES.water;
+  return { g, defs: `<defs><linearGradient id="${g.pipe}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${p0}"/><stop offset=".45" stop-color="${p1}"/><stop offset="1" stop-color="${p2}"/></linearGradient>
+<clipPath id="${g.clipL}"><rect x="0" y="90" width="37" height="16"/></clipPath><clipPath id="${g.clipR}"><rect x="83" y="90" width="37" height="16"/></clipPath>
 <linearGradient id="${g.brass}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ecd37c"/><stop offset=".5" stop-color="#b8922f"/><stop offset="1" stop-color="#7f6017"/></linearGradient>
 <linearGradient id="${g.steel}" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#8d969e"/><stop offset=".5" stop-color="#e6eaed"/><stop offset="1" stop-color="#8d969e"/></linearGradient>
 <linearGradient id="${g.body}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset=".7" stop-color="#f0f2f4"/><stop offset="1" stop-color="#d6dbe0"/></linearGradient></defs>` };
@@ -3702,7 +3710,7 @@ function vlvDefs() {
 // shield on its face with the brand, two buttons and the PUSH tab under it,
 // held on the pipe by a steel bracket beside the valve.
 function ntValveAqara(c) {
-  const { g, defs } = vlvDefs();
+  const { g, defs } = vlvDefs(c);
   return `${defs}${vlvPipe(c, g)}
 <path d="M30 70 h6 v22 h-6 z" fill="url(#${g.steel})" stroke="#6d767e" stroke-width=".4"/><rect x="27" y="88.5" width="12" height="19" rx="2" fill="none" stroke="#8d969e" stroke-width="2.2"/>
 <circle cx="33" cy="87.4" r="1.6" fill="#c3c9ce" stroke="#6d767e" stroke-width=".4"/><circle cx="33" cy="108.6" r="1.6" fill="#c3c9ce" stroke="#6d767e" stroke-width=".4"/>
@@ -3725,7 +3733,7 @@ ${vlvLeak(c)}`;
 // The Tuya capsule: a white pill on the pipe, a blue PUSH strap round its
 // middle, a collar round the pipe and an arm reaching down to the handle.
 function ntValveTuya(c) {
-  const { g, defs } = vlvDefs();
+  const { g, defs } = vlvDefs(c);
   return `${defs}${vlvPipe(c, g)}
 <path d="M34 64 h9 v22 h-9 z" fill="url(#${g.body})" stroke="#c4cbd1" stroke-width=".6"/><circle cx="38.5" cy="98" r="8.4" fill="none" stroke="#e9ecef" stroke-width="3.4"/><circle cx="38.5" cy="98" r="8.4" fill="none" stroke="#c4cbd1" stroke-width=".5"/>
 <circle cx="38.5" cy="108.6" r="1.8" fill="#c3c9ce" stroke="#6d767e" stroke-width=".4"/>
@@ -3944,6 +3952,8 @@ const NT_CSS = `
         @keyframes nt-bar4{0%{opacity:.15}66%,100%{opacity:1}}
         .nta-blinkfast{animation:nt-blinkfast .45s linear infinite}
         .vlv-turn{transform-box:view-box;transform-origin:60px 80px}
+        .nt-on .vlv-arrows{animation:vlv-arrows 1.2s linear infinite}
+        @keyframes vlv-arrows{to{transform:translateX(12px)}}
         .vlv-to-open{animation:vlv-open 2.8s ease-in-out infinite}.vlv-to-close{animation:vlv-close 2.8s ease-in-out infinite}
         @keyframes vlv-open{0%,15%{transform:rotate(90deg)}75%,100%{transform:rotate(0deg)}}
         @keyframes vlv-close{0%,15%{transform:rotate(0deg)}75%,100%{transform:rotate(90deg)}}
