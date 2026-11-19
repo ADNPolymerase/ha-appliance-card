@@ -13856,6 +13856,18 @@ class ApplianceCard extends HTMLElement {
       this._modeMenuOpen = false;
       this._pickMode(el.getAttribute("data-mode-option"));
     }));
+    // A turn that plays once (a valve read from a switch) starts where it is
+    // by now: its drawing's clock is moved on by the time gone by since the
+    // change. (Chrome drops a begin set in the past, so the clock moves.)
+    this._root.querySelectorAll("animate[data-swing]").forEach((el) => {
+      const svg = el.ownerSVGElement;
+      if (!svg || svg._hacTimed || typeof svg.setCurrentTime !== "function") return;
+      svg._hacTimed = true;
+      const t0 = performance.now();
+      setTimeout(() => {
+        try { svg.setCurrentTime((Number(el.getAttribute("data-swing")) || 0) + (performance.now() - t0) / 1000); } catch (e) { /* no SMIL here */ }
+      }, 0);
+    });
     this._root.querySelectorAll(".action-btn, .light-badge").forEach((el) => {
       // The mode button opens its menu rather than calling anything.
       if (el.getAttribute("data-menu")) {

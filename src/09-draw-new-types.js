@@ -4419,19 +4419,39 @@ function vlvPipe(c, g) {
 <path d="M49 91.5 Q60 89 71 91.5" stroke="#fff3c4" stroke-width="1.2" fill="none" opacity=".7" stroke-linecap="round"/>
 <rect x="57" y="81" width="6" height="8" fill="url(#${g.steel})" stroke="#6d767e" stroke-width=".4"/>`;
 }
-function vlvLever(c, g, arm = "") {
+// A bar turning about the valve's stem in the horizontal plane, seen from a
+// little above: along the pipe at 0 degrees, pointing at the viewer at 90.
+// Its top, its near side and its end, each a quad, so their shapes morph.
+const VLV_STEM = [60, 80];
+function vlvBar(deg, a0, a1, d, h, dy) {
+  // Cabinet projection: the depth runs down to the left.
+  const t = deg * Math.PI / 180, cs = Math.cos(t), sn = Math.sin(t), zx = -.42, zy = .34;
+  const at = (a, b, up) => { const x = a * cs - b * sn, z = a * sn + b * cs; return `${(VLV_STEM[0] + x + zx * z).toFixed(2)} ${(VLV_STEM[1] + dy + up + zy * z).toFixed(2)}`; };
+  const quad = (pts) => `M${pts.join(" L")} Z`;
+  return {
+    back: quad([at(a0, -d / 2, 0), at(a1, -d / 2, 0), at(a1, -d / 2, h), at(a0, -d / 2, h)]),
+    side: quad([at(a0, d / 2, 0), at(a1, d / 2, 0), at(a1, d / 2, h), at(a0, d / 2, h)]),
+    end: quad([at(a1, -d / 2, 0), at(a1, d / 2, 0), at(a1, d / 2, h), at(a1, -d / 2, h)]),
+    top: quad([at(a0, -d / 2, 0), at(a1, -d / 2, 0), at(a1, d / 2, 0), at(a0, d / 2, 0)]),
+  };
+}
+// The handle, and the motor's fork riding on it. Turning, each face morphs
+// through the quarter turn: a loop while the valve says opening or closing,
+// once from the moment a switch changed, so a redraw carries on where it was.
+function vlvLever(c, g, fork) {
   const [a, b] = VALVE_HANDLES[c.handle] || VALVE_HANDLES.red;
-  // Open, the handle lies along the pipe; closed, it is turned a quarter
-  // across it, here pointing down. The motor's fork holds it and turns with
-  // it, about the stem.
-  const bar = `<rect x="56" y="77.5" width="14" height="5" rx="1.2" fill="url(#${g.steel})" stroke="#6d767e" stroke-width=".4"/>
-<rect x="66" y="77" width="34" height="6" rx="3" fill="${a}" stroke="${b}" stroke-width=".6"/><path d="M69 78.6 H97" stroke="#fff" stroke-width=".9" opacity=".35" stroke-linecap="round"/>
-${arm}<circle cx="60" cy="80" r="2.2" fill="#c3c9ce" stroke="#6d767e" stroke-width=".4"/>`;
-  if (c.moving) return `<g class="vlv-turn ${c.moving === "opening" ? "vlv-to-open" : "vlv-to-close"}">${bar}</g>`;
-  // A switch says open or closed at once: the quarter turn plays once, from
-  // the moment it changed, so a redraw mid-turn carries on where it was.
-  if (c.swing) return `<g class="vlv-swing vlv-swing-${c.open ? "open" : "close"}" style="animation-delay:-${c.swing}ms">${bar}</g>`;
-  return c.open ? bar : `<g transform="rotate(90 60 80)">${bar}</g>`;
+  const parts = [[-3, 6, 4.4, 4, 0, "url(#" + g.steel + ")", "#8d969e", "#6d767e"], [6, 38, 6, 5, 0, a, b, b], ...(fork ? [fork] : [])];
+  const anim = c.moving ? { from: c.moving === "opening" ? 90 : 0, to: c.moving === "opening" ? 0 : 90, loop: true, at: 0 }
+    : c.swing ? { from: c.open ? 90 : 0, to: c.open ? 0 : 90, loop: false, at: c.swing / 1000 } : null;
+  const still = c.open ? 0 : 90;
+  const steps = anim ? (anim.loop ? [0, 0, .1, .25, .4, .55, .7, .85, 1, 1] : [0, .1, .25, .4, .55, .7, .85, 1]).map((f) => anim.from + (anim.to - anim.from) * f) : null;
+  const face = (p, key, fill, stroke) => {
+    const d0 = vlvBar(anim ? anim.to : still, p[0], p[1], p[2], p[3], p[4])[key];
+    const sm = anim ? `<animate attributeName="d" dur="${anim.loop ? 2.8 : 2.5}s" ${anim.loop ? 'repeatCount="indefinite"' : `begin="0s" fill="freeze" data-swing="${anim.at.toFixed(2)}"`} values="${steps.map((x) => vlvBar(x, p[0], p[1], p[2], p[3], p[4])[key]).join(";")}"/>` : "";
+    return `<path d="${anim ? vlvBar(anim.from, p[0], p[1], p[2], p[3], p[4])[key] : d0}" fill="${fill}" stroke="${stroke}" stroke-width=".5" stroke-linejoin="round">${sm}</path>`;
+  };
+  return parts.map((p) => face(p, "back", p[6], p[7]) + face(p, "side", p[6], p[7]) + face(p, "end", p[7], p[7]) + face(p, "top", p[5], p[7])).join("")
+    + `<circle cx="60" cy="80" r="2.2" fill="#c3c9ce" stroke="#6d767e" stroke-width=".4"/>`;
 }
 function vlvLed(c, x, y, r = 1.4) {
   const col = c.unav ? "#cfd6dc" : c.leak ? "#e53935" : c.moving ? "#29b6f6" : c.low ? "#ffa000" : c.open ? "#43a047" : "#e53935";
@@ -4461,7 +4481,7 @@ function ntValveAqara(c) {
 <path d="M30 70 h6 v22 h-6 z" fill="url(#${g.steel})" stroke="#6d767e" stroke-width=".4"/><rect x="27" y="88.5" width="12" height="19" rx="2" fill="none" stroke="#8d969e" stroke-width="2.2"/>
 <circle cx="33" cy="87.4" r="1.6" fill="#c3c9ce" stroke="#6d767e" stroke-width=".4"/><circle cx="33" cy="108.6" r="1.6" fill="#c3c9ce" stroke="#6d767e" stroke-width=".4"/>
 <rect x="57" y="74" width="6" height="6" fill="url(#${g.steel})" stroke="#6d767e" stroke-width=".4"/>
-${vlvLever(c, g, `<path d="M64 75.6 h12 v8.8 h-12" fill="none" stroke="#9aa2a9" stroke-width="2" stroke-linejoin="round"/><path d="M64 74.6 h12" stroke="#d4d9dd" stroke-width=".7"/>`)}
+${vlvLever(c, g, [3, 16, 9, 3, -3, "#d4d9dd", "#9aa2a9", "#7d858c"])}
 <ellipse cx="60" cy="76.5" rx="27" ry="2.4" fill="#000" opacity=".12"/>
 <path d="M34 14 H86 Q92 14 92 20 V54 Q92 76 70 76 H50 Q28 76 28 54 V20 Q28 14 34 14 Z" fill="url(#${g.body})" stroke="#c4cbd1" stroke-width=".7"/>
 <path d="M33 16.5 H87" stroke="#fff" stroke-width="1.4" stroke-linecap="round" opacity=".9"/><path d="M89.5 20 V54 Q89.5 72 70 73.5" stroke="#cfd5da" stroke-width="1.2" fill="none" opacity=".8"/>
@@ -4484,7 +4504,7 @@ function ntValveTuya(c) {
 <path d="M34 64 h9 v22 h-9 z" fill="url(#${g.body})" stroke="#c4cbd1" stroke-width=".6"/><circle cx="38.5" cy="98" r="8.4" fill="none" stroke="#e9ecef" stroke-width="3.4"/><circle cx="38.5" cy="98" r="8.4" fill="none" stroke="#c4cbd1" stroke-width=".5"/>
 <circle cx="38.5" cy="108.6" r="1.8" fill="#c3c9ce" stroke="#6d767e" stroke-width=".4"/>
 <rect x="56.5" y="64" width="7" height="16" fill="url(#${g.body})" stroke="#c4cbd1" stroke-width=".6"/>
-${vlvLever(c, g, `<path d="M62 74.4 H94 Q98 74.4 98 78.4 V85.6 H93.6 V79.2 H62 Z" fill="url(#${g.body})" stroke="#c4cbd1" stroke-width=".6"/><path d="M64 75.6 H93" stroke="#fff" stroke-width=".8" opacity=".9"/>`)}
+${vlvLever(c, g, [2, 36, 9, 3.4, -3.6, "#ffffff", "#dfe3e7", "#b9c1c8"])}
 <ellipse cx="60" cy="68" rx="38" ry="2.6" fill="#000" opacity=".1"/>
 <rect x="18" y="30" width="84" height="36" rx="18" fill="url(#${g.body})" stroke="#c4cbd1" stroke-width=".7"/>
 <path d="M30 34 H90" stroke="#fff" stroke-width="2" stroke-linecap="round" opacity=".9"/>
@@ -4730,11 +4750,6 @@ const NT_CSS = `
         @keyframes nt-bar3{0%{opacity:.15}48%,100%{opacity:1}}
         @keyframes nt-bar4{0%{opacity:.15}66%,100%{opacity:1}}
         .nta-blinkfast{animation:nt-blinkfast .45s linear infinite}
-        .vlv-turn{transform-box:view-box;transform-origin:60px 80px}
-        .vlv-swing{transform-box:view-box;transform-origin:60px 80px;animation-duration:2.5s;animation-timing-function:ease-in-out;animation-fill-mode:both}
-        .vlv-swing-open{animation-name:vlv-sw-open}.vlv-swing-close{animation-name:vlv-sw-close}
-        @keyframes vlv-sw-open{from{transform:rotate(90deg)}to{transform:rotate(0deg)}}
-        @keyframes vlv-sw-close{from{transform:rotate(0deg)}to{transform:rotate(90deg)}}
         .nt-on .vlv-arrows{animation:vlv-arrows 1.2s linear infinite}
         @keyframes vlv-arrows{to{transform:translateX(12px)}}
         .vlv-to-open{animation:vlv-open 2.8s ease-in-out infinite}.vlv-to-close{animation:vlv-close 2.8s ease-in-out infinite}

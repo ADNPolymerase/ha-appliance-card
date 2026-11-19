@@ -59,11 +59,6 @@ const NT_CSS = `
         @keyframes nt-bar3{0%{opacity:.15}48%,100%{opacity:1}}
         @keyframes nt-bar4{0%{opacity:.15}66%,100%{opacity:1}}
         .nta-blinkfast{animation:nt-blinkfast .45s linear infinite}
-        .vlv-turn{transform-box:view-box;transform-origin:60px 80px}
-        .vlv-swing{transform-box:view-box;transform-origin:60px 80px;animation-duration:2.5s;animation-timing-function:ease-in-out;animation-fill-mode:both}
-        .vlv-swing-open{animation-name:vlv-sw-open}.vlv-swing-close{animation-name:vlv-sw-close}
-        @keyframes vlv-sw-open{from{transform:rotate(90deg)}to{transform:rotate(0deg)}}
-        @keyframes vlv-sw-close{from{transform:rotate(0deg)}to{transform:rotate(90deg)}}
         .nt-on .vlv-arrows{animation:vlv-arrows 1.2s linear infinite}
         @keyframes vlv-arrows{to{transform:translateX(12px)}}
         .vlv-to-open{animation:vlv-open 2.8s ease-in-out infinite}.vlv-to-close{animation:vlv-close 2.8s ease-in-out infinite}
