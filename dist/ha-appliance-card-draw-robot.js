@@ -3886,23 +3886,23 @@ function ntFoodTm31(c) {
   const b = ntId(), st = ntId(), lid = ntId(), pn = ntId();
   const lcd = fpReadout(c, c.ready);
   const lit = !!lcd;
-  // The keys: an arc of small round buttons each side of the display.
-  const keys = (x0, dir) => [0, 1, 2, 3].map((i) => `<circle cx="${(x0 + dir * i * 3.6).toFixed(1)}" cy="${(103 + i * i * .35).toFixed(1)}" r="1.25" fill="#5a6168"/>`).join("") + [0, 1, 2].map((i) => `<circle cx="${(x0 + dir * (1.8 + i * 3.6)).toFixed(1)}" cy="${(108.5 + i * .6).toFixed(1)}" r="1.15" fill="#5a6168"/>`).join("");
+  // The keys: an arc of small round buttons each side of the dial.
+  const keys = (x0, dir) => [0, 1, 2, 3].map((i) => `<circle cx="${(x0 + dir * i * 3.4).toFixed(1)}" cy="${(102.5 + i * i * .3).toFixed(1)}" r="1.2" fill="#5a6168"/>`).join("") + [0, 1, 2].map((i) => `<circle cx="${(x0 + dir * (1.7 + i * 3.4)).toFixed(1)}" cy="${(107.2 + i * .5).toFixed(1)}" r="1.1" fill="#5a6168"/>`).join("");
   return `<defs>${ntV(b, "#ffffff", "#e2e5e8")}<linearGradient id="${st}" x1="0" x2="1"><stop offset="0" stop-color="#7f8891"/><stop offset=".32" stop-color="#f1f3f5"/><stop offset=".68" stop-color="#b3bbc2"/><stop offset="1" stop-color="#78818a"/></linearGradient>${ntV(lid, "#5b6168", "#383d42")}${ntV(pn, "#f4f5f6", "#d8dcdf")}</defs>
 ${ntShadow(60, 118, 46)}
 <g class="${c.on && !c.heat ? "nta-vib" : ""}">
-<path d="M22 116 L27 34 Q28 27 35 27 H85 Q92 27 93 34 L98 116 Z" fill="url(#${b})" stroke="#c4c9ce" stroke-width=".7"/>
-<path d="M22 116 L27 34 Q27.5 30 30 28.5 L31 116 Z" fill="#4c5258"/><path d="M98 116 L93 34 Q92.5 30 90 28.5 L89 116 Z" fill="#5d646b"/>
+<path d="M22 113 L27 34 Q28 27 35 27 H85 Q92 27 93 34 L98 113 Q98 116 95 116 H25 Q22 116 22 113 Z" fill="url(#${b})" stroke="#c4c9ce" stroke-width=".7"/>
+<path d="M22.4 112 L27 34 Q27.5 30 30 28.5 L31 116 H25 Q22.4 116 22.4 112 Z" fill="#4c5258"/><path d="M97.6 112 L93 34 Q92.5 30 90 28.5 L89 116 H95 Q97.6 116 97.6 112 Z" fill="#5d646b"/>
 <path d="M33 31 H87" stroke="#fff" stroke-width="1.4" opacity=".9" stroke-linecap="round"/>
-${fpBowl(st, 34, 86, 22, 64, 7)}
-<path d="M54 26 Q50 42 55 62 H63 Q59 43 62 26 Z" fill="#41474d" stroke="#24282c" stroke-width=".5"/><path d="M56 30 Q54 43 57 58" stroke="#fff" stroke-width=".7" opacity=".3" fill="none"/>
-<path d="M31 116 V66 Q60 52 89 66 V116 Z" fill="url(#${b})" stroke="#cfd3d7" stroke-width=".6"/>
-<path d="M33 116 Q33 84 60 81 Q87 84 87 116 Z" fill="url(#${pn})" stroke="#b9bfc5" stroke-width=".6"/>
-<rect x="43" y="84" width="34" height="13" rx="2" fill="${lit ? "#bfe0a2" : "#a7b0a6"}" stroke="#6f7c6d" stroke-width=".6"/>
-<text x="60" y="94.2" font-size="9" font-weight="700" text-anchor="middle" fill="#25331f" ${NT_FONT}>${lcd}</text>
-${keys(38, 1)}${keys(82, -1)}
-<circle cx="60" cy="106" r="5.4" fill="#eef0f2" stroke="#8f979e" stroke-width=".7"/><rect x="59.1" y="101" width="1.8" height="6.4" rx=".9" fill="#41474d" transform="rotate(${c.on ? 55 : -20} 60 106)"/>
-<text x="60" y="114.4" font-size="2.6" text-anchor="middle" fill="#8a9097" ${NT_FONT}>Thermomix</text>
+${fpBowl(st, 34, 86, 22, 62, 7)}
+<path d="M54 26 Q50 42 55 60 H63 Q59 43 62 26 Z" fill="#41474d" stroke="#24282c" stroke-width=".5"/><path d="M56 30 Q54 43 57 56" stroke="#fff" stroke-width=".7" opacity=".3" fill="none"/>
+<path d="M31 116 V64 Q60 50 89 64 V116 Z" fill="url(#${b})" stroke="#cfd3d7" stroke-width=".6"/>
+<path d="M34 110 Q34 78 60 75 Q86 78 86 110 Q86 112.6 83.4 112.6 H36.6 Q34 112.6 34 110 Z" fill="url(#${pn})" stroke="#b9bfc5" stroke-width=".6"/>
+<rect x="37" y="78.5" width="46" height="18" rx="2.2" fill="${lit ? "#bfe0a2" : "#a7b0a6"}" stroke="#6f7c6d" stroke-width=".7"/>
+<text x="60" y="92.2" font-size="12.5" font-weight="700" text-anchor="middle" fill="#25331f" ${NT_FONT}>${lcd}</text>
+${keys(40, 1)}${keys(80, -1)}
+<circle cx="60" cy="104.6" r="5" fill="#eef0f2" stroke="#8f979e" stroke-width=".7"/><rect x="59.1" y="99.8" width="1.8" height="6" rx=".9" fill="#41474d" transform="rotate(${c.on ? 55 : -20} 60 104.6)"/>
+<text x="60" y="111.2" font-size="2.4" text-anchor="middle" fill="#8a9097" ${NT_FONT}>Thermomix</text>
 <path d="M30 22.5 Q60 28.5 90 22.5 L88 19 Q60 14.5 32 19 Z" fill="url(#${lid})" stroke="#24282c" stroke-width=".6"/>
 <path d="M27 21.5 L33 20.5 M93 21.5 L87 20.5" stroke="#383d42" stroke-width="2.6" stroke-linecap="round"/>
 <path d="M53 18 V11 Q60 9.6 67 11 V18 Q60 19.4 53 18 Z" fill="rgba(222,236,246,.6)" stroke="#9cadbb" stroke-width=".6"/><ellipse cx="60" cy="11" rx="7" ry="1.5" fill="rgba(255,255,255,.7)" stroke="#9cadbb" stroke-width=".5"/>
@@ -3933,11 +3933,11 @@ ${fpBowl(st, 37, 83, 26, 70, 5)}
 <path d="M26 34 Q24 27 31 24.5 L33 26 Q29 28.5 30.5 34 Z M94 34 Q96 27 89 24.5 L87 26 Q91 28.5 89.5 34 Z" fill="#2f3439" stroke="#1d2125" stroke-width=".5"/>
 <path d="M53 22 V12 Q60 10.6 67 12 V22 Q60 23.4 53 22 Z" fill="#3a4046" stroke="#22262a" stroke-width=".5"/><ellipse cx="60" cy="12" rx="7" ry="1.6" fill="#5b636a"/>
 ${led(24, 64)}${led(91.6, 64)}
-<rect x="33" y="80" width="52" height="27" rx="3.4" fill="url(#${fr})" stroke="#8f979e" stroke-width=".6"/><rect x="35.4" y="82.4" width="47.2" height="22.2" rx="1.8" fill="${on ? `url(#${sc})` : "#2e373c"}"/>
-${ring(48.5, 10.6, big)}${ring(70.5, 4.6, smalls[0])}${ring(79.2, 4.6, smalls[1])}
-<text x="48.5" y="${c.heat ? 96.4 : 96}" font-size="${c.heat ? 7.6 : 6.6}" font-weight="700" text-anchor="middle" fill="#263238" ${NT_FONT}>${val}</text>
-<circle cx="94" cy="93.5" r="6" fill="#e3e6e9" stroke="#8f979e" stroke-width=".6"/><circle cx="94" cy="93.5" r="4.1" fill="none" stroke="#fff" stroke-width=".9" opacity=".85"/>
-<text x="25.6" y="94.4" font-size="2.4" font-weight="700" text-anchor="middle" fill="#9aa1a8" ${NT_FONT}>VORWERK</text><text x="94.5" y="75" font-size="2.5" text-anchor="middle" fill="#7a8188" ${NT_FONT}>thermomix</text>
+<rect x="31.6" y="81" width="55" height="25.6" rx="3.2" fill="url(#${fr})"/><rect x="32.6" y="82" width="53" height="23.6" rx="2.5" fill="#000" opacity=".25"/><rect x="33.2" y="82.6" width="51.8" height="22.4" rx="2.2" fill="${on ? `url(#${sc})` : "#2e373c"}"/><path d="M34.5 84 H83.5" stroke="#fff" stroke-width=".6" opacity="${on ? .9 : .15}"/>
+${ring(46.5, 10.4, big)}${ring(68.8, 5, smalls[0])}${ring(79.2, 5, smalls[1])}
+<text x="46.5" y="${c.heat ? 96.4 : 96}" font-size="${c.heat ? 7.6 : 6.6}" font-weight="700" text-anchor="middle" fill="#263238" ${NT_FONT}>${val}</text>
+<circle cx="92.6" cy="93.8" r="6.2" fill="url(#${fr})" stroke="#8f979e" stroke-width=".6"/><circle cx="92.6" cy="93.8" r="4.3" fill="none" stroke="#fff" stroke-width=".9" opacity=".85"/>
+<text x="26.2" y="94.6" font-size="2" font-weight="700" text-anchor="middle" fill="#9aa1a8" ${NT_FONT}>VORWERK</text><text x="94.5" y="75" font-size="2.5" text-anchor="middle" fill="#7a8188" ${NT_FONT}>thermomix</text>
 </g>
 ${c.heat ? fpSteam(60, 10) : ""}`;
 }
