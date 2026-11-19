@@ -3677,14 +3677,18 @@ function vlvPipe(c, g) {
 <path d="M49 91.5 Q60 89 71 91.5" stroke="#fff3c4" stroke-width="1.2" fill="none" opacity=".7" stroke-linecap="round"/>
 <rect x="57" y="81" width="6" height="8" fill="url(#${g.steel})" stroke="#6d767e" stroke-width=".4"/>`;
 }
-function vlvLever(c, g) {
+function vlvLever(c, g, arm = "") {
   const [a, b] = VALVE_HANDLES[c.handle] || VALVE_HANDLES.red;
   // Open, the handle lies along the pipe; closed, it is turned a quarter
-  // across it, here pointing down; turning, it swings about its stem.
+  // across it, here pointing down. The motor's fork holds it and turns with
+  // it, about the stem.
   const bar = `<rect x="56" y="77.5" width="14" height="5" rx="1.2" fill="url(#${g.steel})" stroke="#6d767e" stroke-width=".4"/>
 <rect x="66" y="77" width="34" height="6" rx="3" fill="${a}" stroke="${b}" stroke-width=".6"/><path d="M69 78.6 H97" stroke="#fff" stroke-width=".9" opacity=".35" stroke-linecap="round"/>
-<circle cx="60" cy="80" r="2.2" fill="#c3c9ce" stroke="#6d767e" stroke-width=".4"/>`;
+${arm}<circle cx="60" cy="80" r="2.2" fill="#c3c9ce" stroke="#6d767e" stroke-width=".4"/>`;
   if (c.moving) return `<g class="vlv-turn ${c.moving === "opening" ? "vlv-to-open" : "vlv-to-close"}">${bar}</g>`;
+  // A switch says open or closed at once: the quarter turn plays once, from
+  // the moment it changed, so a redraw mid-turn carries on where it was.
+  if (c.swing) return `<g class="vlv-swing vlv-swing-${c.open ? "open" : "close"}" style="animation-delay:-${c.swing}ms">${bar}</g>`;
   return c.open ? bar : `<g transform="rotate(90 60 80)">${bar}</g>`;
 }
 function vlvLed(c, x, y, r = 1.4) {
@@ -3714,8 +3718,8 @@ function ntValveAqara(c) {
   return `${defs}${vlvPipe(c, g)}
 <path d="M30 70 h6 v22 h-6 z" fill="url(#${g.steel})" stroke="#6d767e" stroke-width=".4"/><rect x="27" y="88.5" width="12" height="19" rx="2" fill="none" stroke="#8d969e" stroke-width="2.2"/>
 <circle cx="33" cy="87.4" r="1.6" fill="#c3c9ce" stroke="#6d767e" stroke-width=".4"/><circle cx="33" cy="108.6" r="1.6" fill="#c3c9ce" stroke="#6d767e" stroke-width=".4"/>
-<path d="M53 72 v8 h14 v-8" fill="none" stroke="#9aa2a9" stroke-width="2.2" stroke-linejoin="round"/>
-${vlvLever(c, g)}
+<rect x="57" y="74" width="6" height="6" fill="url(#${g.steel})" stroke="#6d767e" stroke-width=".4"/>
+${vlvLever(c, g, `<path d="M64 75.6 h12 v8.8 h-12" fill="none" stroke="#9aa2a9" stroke-width="2" stroke-linejoin="round"/><path d="M64 74.6 h12" stroke="#d4d9dd" stroke-width=".7"/>`)}
 <ellipse cx="60" cy="76.5" rx="27" ry="2.4" fill="#000" opacity=".12"/>
 <path d="M34 14 H86 Q92 14 92 20 V54 Q92 76 70 76 H50 Q28 76 28 54 V20 Q28 14 34 14 Z" fill="url(#${g.body})" stroke="#c4cbd1" stroke-width=".7"/>
 <path d="M33 16.5 H87" stroke="#fff" stroke-width="1.4" stroke-linecap="round" opacity=".9"/><path d="M89.5 20 V54 Q89.5 72 70 73.5" stroke="#cfd5da" stroke-width="1.2" fill="none" opacity=".8"/>
@@ -3737,8 +3741,8 @@ function ntValveTuya(c) {
   return `${defs}${vlvPipe(c, g)}
 <path d="M34 64 h9 v22 h-9 z" fill="url(#${g.body})" stroke="#c4cbd1" stroke-width=".6"/><circle cx="38.5" cy="98" r="8.4" fill="none" stroke="#e9ecef" stroke-width="3.4"/><circle cx="38.5" cy="98" r="8.4" fill="none" stroke="#c4cbd1" stroke-width=".5"/>
 <circle cx="38.5" cy="108.6" r="1.8" fill="#c3c9ce" stroke="#6d767e" stroke-width=".4"/>
-${vlvLever(c, g)}
-<path d="M76 62 h10 v10 h18 v10 h-6 v-5 h-14 q-8 0 -8 -8 z" fill="url(#${g.body})" stroke="#c4cbd1" stroke-width=".6"/>
+<rect x="56.5" y="64" width="7" height="16" fill="url(#${g.body})" stroke="#c4cbd1" stroke-width=".6"/>
+${vlvLever(c, g, `<path d="M62 74.4 H94 Q98 74.4 98 78.4 V85.6 H93.6 V79.2 H62 Z" fill="url(#${g.body})" stroke="#c4cbd1" stroke-width=".6"/><path d="M64 75.6 H93" stroke="#fff" stroke-width=".8" opacity=".9"/>`)}
 <ellipse cx="60" cy="68" rx="38" ry="2.6" fill="#000" opacity=".1"/>
 <rect x="18" y="30" width="84" height="36" rx="18" fill="url(#${g.body})" stroke="#c4cbd1" stroke-width=".7"/>
 <path d="M30 34 H90" stroke="#fff" stroke-width="2" stroke-linecap="round" opacity=".9"/>
@@ -3952,6 +3956,10 @@ const NT_CSS = `
         @keyframes nt-bar4{0%{opacity:.15}66%,100%{opacity:1}}
         .nta-blinkfast{animation:nt-blinkfast .45s linear infinite}
         .vlv-turn{transform-box:view-box;transform-origin:60px 80px}
+        .vlv-swing{transform-box:view-box;transform-origin:60px 80px;animation-duration:2.5s;animation-timing-function:ease-in-out;animation-fill-mode:both}
+        .vlv-swing-open{animation-name:vlv-sw-open}.vlv-swing-close{animation-name:vlv-sw-close}
+        @keyframes vlv-sw-open{from{transform:rotate(90deg)}to{transform:rotate(0deg)}}
+        @keyframes vlv-sw-close{from{transform:rotate(0deg)}to{transform:rotate(90deg)}}
         .nt-on .vlv-arrows{animation:vlv-arrows 1.2s linear infinite}
         @keyframes vlv-arrows{to{transform:translateX(12px)}}
         .vlv-to-open{animation:vlv-open 2.8s ease-in-out infinite}.vlv-to-close{animation:vlv-close 2.8s ease-in-out infinite}

@@ -5742,6 +5742,8 @@ const RACK_LAYOUTS = ["box", "accordion", "frame"];
 const RACK_NAME_RE = /^(?!.*(filament|cheveux|hair|tumble|seche.?linge)).*(drying.?rack|clothes.?(rack|horse|airer|dryer.?rack)|(^|[^a-z])airer|etendoir|etendage|sechoir.?(mural|a.?linge)|waschestander|trockengestell|tendedero|stendibiancheria|stendino|droogrek|torkstall|torkstallning|t\u00f8rkestativ|torkestativ|torrestativ|suszarka.?(na.?pranie|scienna))/;
 const VALVE_HANDLE_COLORS = ["red", "blue", "yellow", "black"];
 const VALVE_FLUIDS = ["water", "gas"];
+// How long a valve read from a switch is drawn turning after it changed.
+const VALVE_SWING_MS = 2500;
 // Named as a shut-off valve, never a garden one nor a radiator's.
 const VALVE_NAME_RE = /^(?!.*(swv|irrig|garden|jardin|arros|sprink|thermostat|trv|radiat|heiz|chauff)).*(vc.?x01|valve.?controller|shut.?off|absperr|wasserventil|gasventil|hauptventil|vanne.?(d.?)?(arrivee|coupure|eau|gaz|motoris|principale)|electrovanne|manipulat|(water|gas|main).?valve|valvola|valvula|afsluiter|kulventil|zawor)/;
 const FINGERBOT_COLORS = ["white", "black"];
@@ -6798,7 +6800,9 @@ function ntReadOf(type, hass, cfg, st, watts, threshold) {
     const low = bv !== null ? bv <= 20 : !!bs && domainOf(cfg.battery_entity) === "binary_sensor" && NT_ON.includes(String(bs.state).toLowerCase());
     const bl = ntLine(hass, cfg, "vlv_battery", low ? "mdi:battery-alert-variant-outline" : "mdi:battery", "section_battery", cfg.battery_entity);
     if (bl) lines.push({ ...bl, value: domainOf(cfg.battery_entity) === "binary_sensor" ? t(hass, low ? "opt_low" : "opt_ok") : bl.value, caution: low });
-    const draw = { kind: `vlv_${valveLayoutOf(cfg, st)}`, on: open || !!moving || leak, open, moving, leak, low, handle: valveHandleOf(cfg, st), fluid: valveFluidOf(cfg, st) };
+    const since = st && st.last_changed ? Date.now() - Date.parse(st.last_changed) : NaN;
+    const swing = !moving && domainOf(cfg.state_entity) !== "valve" && since >= 0 && since < VALVE_SWING_MS ? Math.round(since) || 1 : 0;
+    const draw = { kind: `vlv_${valveLayoutOf(cfg, st)}`, on: open || !!moving || leak, open, moving, swing, leak, low, handle: valveHandleOf(cfg, st), fluid: valveFluidOf(cfg, st) };
     if (leak) return out("alarm", "det_leak", NT_COLORS.alarm, draw);
     if (moving) return out("run", moving === "opening" ? "vlv_opening" : "vlv_closing", NT_COLORS.run, draw);
     return open ? out("on", "vlv_open", NT_COLORS.lit, draw) : out("off", "vlv_closed", NT_COLORS.idle, draw);
