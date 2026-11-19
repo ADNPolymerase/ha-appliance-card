@@ -15056,7 +15056,7 @@ if (RECORD) writeFileSync(process.env.HAC_RECORD, JSON.stringify(RECORD));
   const spot = cam({ spotlight_entity: 'light.f' }, { 'light.f': s('on') });
   check('170 : projecteur allume, le cone', /cam-spot\b/.test(machineCls(spot)) && /Spotlight/.test(spot), true);
   check('170 : boutons projecteur, sirene, suivi', (cam({ spotlight_entity: 'light.f', siren_entity: 'switch.s', tracking_entity: 'switch.t' }, { 'light.f': s('off'), 'switch.s': s('off'), 'switch.t': s('on') }).match(/mdi:(spotlight-beam|alarm-light|target-account)/g) || []).length >= 3, true);
-  const panOf = (v) => (/<g transform="translate\((-?[\d.]+) /.exec(cam({ pan_entity: 'number.p' }, { 'number.p': s(v, { min: 0, max: 3600 }) }).split('cam-tmx-beam"')[1] || '') || [])[1];
+  const panOf = (v) => (/translate\((-?[\d.]+) [^"]*"><g class="cam-tmx-pan"/.exec(cam({ pan_entity: 'number.p' }, { 'number.p': s(v, { min: 0, max: 3600 }) })) || [])[1];
   check('170 : la boule suit la position panoramique', [panOf(0), panOf(1800), panOf(3600)].join(' '), '-7.0 0.0 7.0');
   const beamOf = (v) => (/<g transform="translate\((-?[\d.]+) [^"]*"><path class="cam-spotcone cam-tmx-beam/.exec(cam({ pan_entity: 'number.p' }, { 'number.p': s(v, { min: 0, max: 3600 }) })) || [])[1];
   check('170 : le faisceau tourne avec la boule', [beamOf(0), beamOf(3600)].join(' '), '-7.0 7.0');

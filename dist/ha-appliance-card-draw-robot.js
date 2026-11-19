@@ -3892,7 +3892,7 @@ function ntFoodTm31(c) {
 ${ntShadow(60, 118, 46)}
 <g class="${c.on && !c.heat ? "nta-vib" : ""}">
 <path d="M22 113 L27 34 Q28 27 35 27 H85 Q92 27 93 34 L98 113 Q98 116 95 116 H25 Q22 116 22 113 Z" fill="url(#${b})" stroke="#c4c9ce" stroke-width=".7"/>
-<path d="M22.4 112 L27 34 Q27.5 30 30 28.5 L31 116 H25 Q22.4 116 22.4 112 Z" fill="#4c5258"/><path d="M97.6 112 L93 34 Q92.5 30 90 28.5 L89 116 H95 Q97.6 116 97.6 112 Z" fill="#5d646b"/>
+<path d="M27 34 Q27.5 30 30 28.5 L35 28.5 L23.2 110 Z" fill="#4c5258"/><path d="M93 34 Q92.5 30 90 28.5 L85 28.5 L96.8 110 Z" fill="#5d646b"/>
 <path d="M33 31 H87" stroke="#fff" stroke-width="1.4" opacity=".9" stroke-linecap="round"/>
 ${fpBowl(st, 34, 86, 22, 62, 7)}
 <path d="M54 26 Q50 42 55 60 H63 Q59 43 62 26 Z" fill="#41474d" stroke="#24282c" stroke-width=".5"/><path d="M56 30 Q54 43 57 56" stroke="#fff" stroke-width=".7" opacity=".3" fill="none"/>

@@ -126,7 +126,6 @@ ${camShadow(60, 21, 56, 3.5, .22)}
 <path d="M36 23 H84" stroke="#fff" stroke-width="1.6" opacity=".75" stroke-linecap="round"/>
 <path d="M34 27 V49" stroke="#fff" stroke-width="2" opacity=".45" stroke-linecap="round"/>
 <path d="M30 49 Q60 55 90 49 V51 Q60 57 30 51 Z" fill="#000" opacity=".12"/>
-<g transform="translate(${c && c.pan !== null && c.pan !== undefined ? ((c.pan - .5) * 14).toFixed(1) : 0} ${c && c.tilt !== null && c.tilt !== undefined ? ((c.tilt - .5) * 8).toFixed(1) : 0})"><path class="cam-spotcone cam-tmx-beam" d="M47 90 L73 90 L100 126 L20 126 Z" fill="url(#cam-g-cone)"/></g>
 <path d="M33 52 Q60 57.5 87 52 V76 A27 32 0 0 1 33 76 Z" fill="url(#cam-g-blk)" ${CAM_EDGE} stroke-width=".7"/>
 <path d="M36 58 V78 Q37 92 46 100" stroke="#fff" stroke-width="1.6" opacity=".16" fill="none" stroke-linecap="round"/>
 <g transform="translate(${c && c.pan !== null && c.pan !== undefined ? ((c.pan - .5) * 14).toFixed(1) : 0} ${c && c.tilt !== null && c.tilt !== undefined ? ((c.tilt - .5) * 8).toFixed(1) : 0})"><g class="cam-tmx-pan"><rect x="43" y="57" width="34" height="36" rx="7" fill="url(#cam-g-dbglass)" stroke="#000" stroke-width=".6"/>
@@ -135,6 +134,7 @@ ${camShadow(60, 21, 56, 3.5, .22)}
 <rect x="45.5" y="68.5" width="29" height="13" rx="2.5" fill="#12171c"/>
 <g class="cam-on">${camLens(53, 75, 4.2, 0)}${camLens(67, 75, 4.2, 0)}<circle class="cam-tmx-spot" cx="54" cy="87" r="3"/><circle class="cam-tmx-spot" cx="66" cy="87" r="3"/></g>
 <g class="cam-off"><circle cx="53" cy="75" r="5" fill="#2a3037"/><circle cx="67" cy="75" r="5" fill="#2a3037"/><circle cx="54" cy="87" r="2.6" fill="#2a3037"/><circle cx="66" cy="87" r="2.6" fill="#2a3037"/></g></g></g>
+<g transform="translate(${c && c.pan !== null && c.pan !== undefined ? ((c.pan - .5) * 14).toFixed(1) : 0} ${c && c.tilt !== null && c.tilt !== undefined ? ((c.tilt - .5) * 8).toFixed(1) : 0})"><path class="cam-spotcone cam-tmx-beam" d="M49 86 L71 86 L102 124 L18 124 Z" fill="url(#cam-g-cone)"/></g>
 <circle class="cam-led" cx="82" cy="58" r="1.2"/>
 ${camWaves(92, 76)}${CAM_REC}`,
   // A video doorbell on its wall: the lens at the top, the motion sensor, and
