@@ -14951,6 +14951,10 @@ if (RECORD) writeFileSync(process.env.HAC_RECORD, JSON.stringify(RECORD));
   check('121 : ligne seche, confort, humide', />DRY</.test(h) && />COMFORT</.test(h) && />WET</.test(h), true);
   check('121 : bande confort du Meter Pro', /#1e88e5/.test(render({ state_entity: 'sensor.t', climate_sensor_layout: 'switchbot_pro' }, { 'sensor.t': dev('WoTHP') })), true);
   check('121 : Indoor/Outdoor sans ecran', />COMFORT</.test(render({ state_entity: 'sensor.t', humidity_entity: 'sensor.h' }, { 'sensor.t': dev('WoIOSensorTH'), 'sensor.h': s(74, { unit_of_measurement: '%' }) })), false);
+  const dd = new Date(); const de = `${dd.getDate()}.${dd.getMonth() + 1}`, us = `${dd.getMonth() + 1}/${dd.getDate()}`;
+  const co2de = render({ state_entity: 'sensor.t', co2_entity: 'sensor.co2', climate_sensor_layout: 'switchbot_co2', language: 'de' }, { 'sensor.t': dev('WoTHPc'), 'sensor.co2': s(600, { device_class: 'carbon_dioxide', unit_of_measurement: 'ppm' }) });
+  check('121 : date du Meter Pro CO2 en allemand', co2de.includes(`>${de}</text>`), true);
+  check('121 : date du Meter Pro CO2 en anglais', h.includes(`>${us}</text>`), true);
   check('121 : nom dans l\'editeur', /layout_ths_switchbot_outdoor: "SwitchBot Indoor\/Outdoor Meter"/.test(SRC), true);
 }
 

@@ -21,7 +21,9 @@ const DETECTOR_MODELS = { door: ["sonoff", "aqara", "hue"], vibration: ["aqara",
 // the power that means its plug is charging it.
 const FINGERBOT_LAYOUTS = ["plus", "switchbot", "classic"];
 const FINGERBOT_COLORS = ["white", "black"];
-const FB_PRESS_MS = 4000, FB_CLICK_MS = 15000, FB_CHARGE_W = 0.5;
+const FB_PRESS_MS = 4000;
+const FB_CLICK_MS = 15000;
+const FB_CHARGE_W = 0.5;
 // A finger bot by its name: Fingerbot, Adaprox, SwitchBot's Bot.
 const FINGERBOT_NAME_RE = /finger.?bot|adaprox|switch.?bot.?bot|(^|[._\s])bot([._\s]|$)|button.?push(er)?|knopfdrucker|pousse.?bouton|appuie.?bouton/;
 const GRILL_LAYOUTS = ["timberline", "drum", "cart", "vertical"];
@@ -2779,7 +2781,8 @@ ${strMute(c, 94, 60)}`;
 // The three-quarter view of the streaming boxes, the Apple TV's: a box's top
 // is a diamond, its edges running down to the right along A and down to the
 // left along B, its corners rounded, its two front faces below it.
-const ISO_A = [.9177, .3971], ISO_B = [-.9177, .3971];
+const ISO_A = [.9177, .3971];
+const ISO_B = [-.9177, .3971];
 function strIsoGeom(cx, cy, a, b, r, lift = [0, 0, 0, 0]) {
   const ha = [ISO_A[0] * a / 2, ISO_A[1] * a / 2], hb = [ISO_B[0] * b / 2, ISO_B[1] * b / 2];
   // Left, top (back), right, front.
@@ -3478,7 +3481,8 @@ const htValve = (x, y, vert, lever = "#d32f2f") => `<rect x="${x - 2.6}" y="${y 
 const htFlow = (pts, col = "#fff", cls = "nta-flow") => `<path class="${cls}" d="${typeof pts === "string" ? pts : htPath(pts)}" stroke="${col}" stroke-opacity=".85" stroke-width="1" stroke-dasharray="2 4" fill="none" stroke-linecap="round"/>`;
 // Heating colours: red for the flow (hot), blue for the return (cold), for
 // the heating circuit and the domestic water alike.
-const HT_HOT = "#e53935", HT_COLD = "#1e88e5";
+const HT_HOT = "#e53935";
+const HT_COLD = "#1e88e5";
 
 // Buffer tank: an upright insulated tank whose front shows its layers, hot on
 // top and cold at the bottom, one marker per sensor at its height. The pipes
@@ -3878,7 +3882,8 @@ const thsSide = (id) => `<linearGradient id="${id}" x1="0" y1="0" x2="1" y2="1">
 const thsFront = (id) => `<linearGradient id="${id}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff"/><stop offset="1" stop-color="#e1e4e8"/></linearGradient>`;
 const thsLcd = (id, a, b) => `<linearGradient id="${id}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${a}"/><stop offset="1" stop-color="${b}"/></linearGradient>`;
 const thsBlur = (id) => `<filter id="${id}" x="-30%" y="-100%" width="160%" height="300%"><feGaussianBlur stdDeviation="2"/></filter>`;
-const THS_INK = "#1d2124", THS_GHOST = "rgba(0,0,0,.055)";
+const THS_INK = "#1d2124";
+const THS_GHOST = "rgba(0,0,0,.055)";
 function ntThsDisc(c) {
   const t = ntId();
   return `<defs>${thsGrad(t)}</defs>${strIsoDisc(60, 58, 33, 11, `url(#${t})`, THS_WHITE)}${strIsoTop(60, 58, `<g transform="rotate(-45)"><g transform="translate(0 -2) scale(1.55)">${thsThermo(7, c.tc)}</g><circle cy="15" r="1.1" fill="#555"/></g>`)}`;
@@ -3920,7 +3925,8 @@ ${thsDepth(X, Y, shape, 12, `url(#${e})`)}${thsFace(X, Y, `${shape(`url(#${t})`)
 // the owner can move: 1000 and 1500 ppm by default, the usual "ventilate"
 // and "ventilate now" marks.
 const CO2_COLORS = ["#43a047", "#fb8c00", "#e53935"];
-const CO2_WARN = 1000, CO2_ALERT = 1500;
+const CO2_WARN = 1000;
+const CO2_ALERT = 1500;
 function co2LevelOf(v, warn, alert) {
   if (v === null || v === undefined) return 0;
   const w = numberOrNull(warn), a = numberOrNull(alert);
@@ -3993,7 +3999,7 @@ function sbInt(v, xr, y, big, col, ghost) {
 }
 // Dry under 30 %, wet over 70 %, as SwitchBot shows it.
 const sbComfort = (h) => h === null || h === undefined ? 1 : h < 30 ? 0 : h > 70 ? 2 : 1;
-const sbClock = (c) => { const d = c.clock || {}; const p = (n) => String(n === undefined ? 0 : n).padStart(2, "0"); return { hm: `${p(d.h)}:${p(d.m)}`, dm: `${d.mo || 1}/${d.d || 1}` }; };
+const sbClock = (c) => { const d = c.clock || {}; const p = (n) => String(n === undefined ? 0 : n).padStart(2, "0"); return { hm: `${p(d.h)}:${p(d.m)}`, dm: d.dm || `${d.mo || 1}/${d.d || 1}` }; };
 // The fold-out stand, hinged at mid-height on the back and reaching back
 // down to the table: its edge seen from the side, and its foot's shadow.
 const sbStand = (xh, yh, xf, yf) => `<path d="M${xh - 1} ${yh - 5} L${xh + 7} ${yh - 6} L${xf + 4} ${yf - .5} L${xf - 5} ${yf + 1.5} Z" fill="#c4c8cd"/><path d="M${xh - 1} ${yh - 5} L${xh + 7} ${yh - 6} L${xh + 7.4} ${yh - 4.4} L${xh - .6} ${yh - 3.4} Z" fill="#e3e6e9"/><path d="M${xh + 7} ${yh - 6} L${xf + 4} ${yf - .5}" stroke="#eef0f2" stroke-width=".9"/><path d="M${xf + 4} ${yf - .5} L${xf - 5} ${yf + 1.5}" stroke="#8d9299" stroke-width="1.1" stroke-linecap="round"/>`;
@@ -4009,7 +4015,7 @@ function ntSbPro(c, co2) {
   const shape = (fl) => `<rect width="${W}" height="${H}" rx="14" fill="${fl}"/>`, ink = THS_INK, gh = "rgba(0,0,0,.05)", ck = sbClock(c), cf = sbComfort(c.h);
   let lcd = "";
   if (!c.unav) {
-    const top = `<text x="27" y="15" font-size="7.4" font-weight="600" text-anchor="middle" fill="${ink}" ${NT_FONT}>${ck.hm}</text><text x="68" y="15" font-size="6.4" font-weight="600" text-anchor="end" fill="${ink}" ${NT_FONT}>${ck.dm}</text>`;
+    const top = `<text x="27" y="15" font-size="7.4" font-weight="600" text-anchor="middle" fill="${ink}" ${NT_FONT}>${ck.hm}</text><text x="68" y="15" font-size="6.4" font-weight="600" text-anchor="end" fill="${ink}" ${NT_FONT}>${esc(ck.dm)}</text>`;
     if (co2) {
       const v = c.co2, w = numberOrNull(c.warn) || CO2_WARN, a = numberOrNull(c.alert) || CO2_ALERT, lv = co2LevelOf(v, c.warn, c.alert);
       const fr2 = v === null || v === undefined ? 0 : lv === 0 ? Math.max(0, (v - 400) / Math.max(1, w - 400)) : lv === 1 ? (v - w) / Math.max(1, a - w) : Math.min(1, (v - a) / Math.max(1, a));
@@ -4910,7 +4916,7 @@ function ntReadOf(type, hass, cfg, st, watts, threshold) {
     const bl = ntLine(hass, cfg, "ths_battery", low ? "mdi:battery-alert-variant-outline" : "mdi:battery", "section_battery", cfg.battery_entity);
     if (bl) lines.push({ ...bl, value: binaryBat ? t(hass, low ? "opt_low" : "opt_ok") : bl.value, caution: low });
     const draw = { kind: `ths_${thsLayoutOf(cfg, st)}`, on: false, t: v, tc: celsius, unit, h: cfg.humidity_entity ? numericState(hass, cfg.humidity_entity) : null,
-      b: bv !== null ? Math.max(0, Math.min(1, bv / 100)) : low ? .25 : 1, co2, warn: cfg.co2_warning, alert: cfg.co2_alert, body: cfg.netatmo_color, clock: (() => { const n = new Date(); return { h: n.getHours(), m: n.getMinutes(), d: n.getDate(), mo: n.getMonth() + 1 }; })() };
+      b: bv !== null ? Math.max(0, Math.min(1, bv / 100)) : low ? .25 : 1, co2, warn: cfg.co2_warning, alert: cfg.co2_alert, body: cfg.netatmo_color, clock: (() => { const n = new Date(); let dm = null; try { dm = new Intl.DateTimeFormat(lang(hass), { day: "numeric", month: "numeric" }).format(n).replace(/\.$/, ""); } catch (e) { dm = null; } return { h: n.getHours(), m: n.getMinutes(), d: n.getDate(), mo: n.getMonth() + 1, dm }; })() };
     if (co2 !== null) {
       const lv = co2LevelOf(co2, cfg.co2_warning, cfg.co2_alert);
       return out(["ok", "ventilate", "poor"][lv], ["co2_good", "co2_ventilate", "co2_poor"][lv], CO2_COLORS[lv], { ...draw, on: lv === 2 });

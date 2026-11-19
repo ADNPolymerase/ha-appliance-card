@@ -33,6 +33,11 @@ const OUT = process.argv.includes('--out')
 const fail = (msg) => { console.error(`build: ${msg}`); process.exit(1); };
 const source = sourceText();
 const lines = source.split('\n');
+// The drawings are split by name, and a statement is known by its first name
+// only: `const A = 1, B = 2;` would leave B behind (CO2_ALERT, #121).
+for (const l of lines) {
+  if (/^(?:const|let|var) [A-Za-z_$][\w$]* = [^;(`{]*, [A-Za-z_$][\w$]* = /.test(l)) fail(`one name per top-level declaration: ${l.slice(0, 60)}`);
+}
 const lineOf = (text) => {
   const i = lines.indexOf(text);
   if (i < 0 || lines.indexOf(text, i + 1) >= 0) fail(`marker not found exactly once: ${text}`);

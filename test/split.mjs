@@ -158,6 +158,16 @@ check('le dessin arrive et la carte se redessine', await until(() => /<svg/.test
 const robot2 = card('robot');
 check('dessin deja la : des le premier rendu', /<svg/.test(markup(robot2)), true);
 
+// #121: a name the drawing reads but the card did not hand over, here
+// CO2_ALERT when co2_alert is not set, left the Meter Pro CO2 empty.
+const sbCo2 = new Card();
+sbCo2.setConfig({ type: 'custom:ha-appliance-card', appliance_type: 'climate_sensor', climate_sensor_layout: 'switchbot_co2',
+  state_entity: 'sensor.w_state', co2_entity: 'sensor.w_state' });
+sbCo2._hass = hassIn('en');
+sbCo2.connectedCallback();
+sbCo2._render();
+check('SwitchBot CO2 sans co2_alert : le dessin s affiche (#121)', await until(() => /<svg/.test(markup(sbCo2))), true);
+
 // A drawing missing from the release: the card without it, one warning.
 unlinkSync(join(OUT, 'ha-appliance-card-draw-toaster.js'));
 const dWarned = [];
