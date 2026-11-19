@@ -4649,7 +4649,7 @@ function ntFoodTm31(c) {
 ${ntShadow(60, 118, 46)}
 <g class="${c.on && !c.heat ? "nta-vib" : ""}">
 <path d="M22 113 L27 34 Q28 27 35 27 H85 Q92 27 93 34 L98 113 Q98 116 95 116 H25 Q22 116 22 113 Z" fill="url(#${b})" stroke="#c4c9ce" stroke-width=".7"/>
-<path d="M27 34 Q27.5 30 30 28.5 L35 28.5 L23.2 110 Z" fill="#4c5258"/><path d="M93 34 Q92.5 30 90 28.5 L85 28.5 L96.8 110 Z" fill="#5d646b"/>
+<path d="M22.4 112 L27 34 Q27.5 30 30 28.5 L31 116 H25 Q22.4 116 22.4 112 Z" fill="#4c5258"/><path d="M97.6 112 L93 34 Q92.5 30 90 28.5 L89 116 H95 Q97.6 116 97.6 112 Z" fill="#5d646b"/>
 <path d="M33 31 H87" stroke="#fff" stroke-width="1.4" opacity=".9" stroke-linecap="round"/>
 ${fpBowl(st, 34, 86, 22, 62, 7)}
 <path d="M54 26 Q50 42 55 60 H63 Q59 43 62 26 Z" fill="#41474d" stroke="#24282c" stroke-width=".5"/><path d="M56 30 Q54 43 57 56" stroke="#fff" stroke-width=".7" opacity=".3" fill="none"/>
@@ -4667,7 +4667,7 @@ ${keys(40, 1)}${keys(80, -1)}
 ${c.heat ? fpSteam(60, 9) : ""}`;
 }
 function ntFoodTm6(c) {
-  const b = ntId(), st = ntId(), lid = ntId(), sc = ntId(), fr = ntId();
+  const b = ntId(), st = ntId(), lid = ntId(), sc = ntId(), fr = ntId(), cv = ntId();
   const lit = c.on || c.ready;
   const val = fpReadout(c, c.ready);
   const led = (x, y) => [0, 1, 2].map((r) => [0, 1, 2].map((k) => `<circle cx="${x + k * 2.2}" cy="${y + r * 2.2}" r=".75" fill="${lit && !c.unav ? "#4cd964" : "#d6dbe0"}"/>`).join("")).join("");
@@ -4678,14 +4678,14 @@ function ntFoodTm6(c) {
   const big = c.heat ? 1 : c.on ? 2 : 0;
   const ring = (x, r, k) => `<circle cx="${x}" cy="93.5" r="${r}" fill="${on ? "#ffffff" : "#3a4449"}" stroke="${on ? (k === big && c.on ? (c.heat ? "#ef6c00" : "#43a047") : "#c3cad0") : "#4d585e"}" stroke-width="${k === big ? 1.2 : .7}"/>`;
   const smalls = [0, 1, 2].filter((k) => k !== big);
-  return `<defs>${ntV(b, "#ffffff", "#e3e6e9")}<linearGradient id="${st}" x1="0" x2="1"><stop offset="0" stop-color="#7f8891"/><stop offset=".32" stop-color="#f1f3f5"/><stop offset=".68" stop-color="#b3bbc2"/><stop offset="1" stop-color="#78818a"/></linearGradient>${ntV(lid, "#4b5259", "#2a2f34")}${ntV(sc, "#fbfcfc", "#e6ebee")}${ntV(fr, "#d9dde1", "#a9b0b6")}</defs>
+  return `<defs>${ntV(b, "#ffffff", "#e3e6e9")}<linearGradient id="${st}" x1="0" x2="1"><stop offset="0" stop-color="#7f8891"/><stop offset=".32" stop-color="#f1f3f5"/><stop offset=".68" stop-color="#b3bbc2"/><stop offset="1" stop-color="#78818a"/></linearGradient>${ntV(lid, "#4b5259", "#2a2f34")}${ntV(sc, "#fbfcfc", "#e6ebee")}${ntV(fr, "#d9dde1", "#a9b0b6")}<clipPath id="${cv}"><path d="M31 14 V30 Q31 73 60 75 Q89 73 89 30 V14 Z"/></clipPath></defs>
 ${ntShadow(60, 118, 46)}
 <g class="${c.on && !c.heat ? "nta-vib" : ""}">
 <path d="M18 40 Q18 22 34 22 H86 Q102 22 102 40 V100 Q102 116 86 116 H34 Q18 116 18 100 Z" fill="url(#${b})" stroke="#c4c9ce" stroke-width=".7"/>
 <path d="M24 34 Q26 25 36 25 H60" stroke="#fff" stroke-width="2" fill="none" opacity=".9" stroke-linecap="round"/>
 <path d="M32 30 Q32 72 60 74 Q88 72 88 30 Z" fill="#c9ced3"/><path d="M34 31 Q35 69 60 71 Q85 69 86 31" fill="none" stroke="#b3b9bf" stroke-width=".6"/>
-${fpBowl(st, 37, 83, 26, 70, 5)}
-<path d="M55 30 Q51 49 56 70 H64 Q60 50 64 30 Z" fill="#3a4046" stroke="#22262a" stroke-width=".5"/><path d="M57 34 Q55 49 58 66" stroke="#fff" stroke-width=".7" opacity=".3" fill="none"/>
+<g clip-path="url(#${cv})">${fpBowl(st, 37, 83, 26, 70, 5)}
+<path d="M55 30 Q51 49 56 70 H64 Q60 50 64 30 Z" fill="#3a4046" stroke="#22262a" stroke-width=".5"/><path d="M57 34 Q55 49 58 66" stroke="#fff" stroke-width=".7" opacity=".3" fill="none"/></g>
 <path d="M31 25.5 Q60 31.5 89 25.5 L87 22 Q60 17.5 33 22 Z" fill="url(#${lid})" stroke="#22262a" stroke-width=".6"/>
 <path d="M26 34 Q24 27 31 24.5 L33 26 Q29 28.5 30.5 34 Z M94 34 Q96 27 89 24.5 L87 26 Q91 28.5 89.5 34 Z" fill="#2f3439" stroke="#1d2125" stroke-width=".5"/>
 <path d="M53 22 V12 Q60 10.6 67 12 V22 Q60 23.4 53 22 Z" fill="#3a4046" stroke="#22262a" stroke-width=".5"/><ellipse cx="60" cy="12" rx="7" ry="1.6" fill="#5b636a"/>
