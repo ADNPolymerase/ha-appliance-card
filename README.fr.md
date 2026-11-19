@@ -22,7 +22,7 @@ Une card Lovelace qui dessine les appareils de la maison et les anime selon leur
 
 ## Fonctionnalités
 
-- **68 types d'appareils, plus de 170 modèles dessinés**, animés pendant qu'ils travaillent et figés à l'arrêt. Le type est reconnu tout seul, d'après l'entité et la marque et le modèle de son appareil, ou choisi avec `appliance_type`.
+- **70 types d'appareils, plus de 170 modèles dessinés**, animés pendant qu'ils travaillent et figés à l'arrêt. Le type est reconnu tout seul, d'après l'entité et la marque et le modèle de son appareil, ou choisi avec `appliance_type`.
 - **Toutes les intégrations** : chaque champ est une entité à choisir. Une simple prise connectée suffit, sa puissance dit si l'appareil chauffe, lave ou essore.
 - **L'état compris** : `Idle`, `RUNNING`, `En marche`… deviennent veille, en cours, pause, terminé, différé ou erreur, avec l'étape du cycle (lavage, rinçage, essorage…).
 - **Ce qui compte pour chaque appareil** : programme, temps restant, porte, alertes, niveaux, températures, énergie et coût, marche du jour.
@@ -1587,6 +1587,7 @@ disk2_entity: sensor.nas_drive_2_status
 | `valve_handle_color` | vanne | `red` (par défaut) \| `blue` \| `yellow` (par défaut sur une vanne de gaz) \| `black`. |
 | `leak_entity` | vanne | Un détecteur de fuite : déclenché, c'est l'alarme de la carte et la vanne goutte, quoi qu'elle dise. |
 | `rack_layout` | séchoir | `box` (caisson dont la façade se rabat sur ses barres, par défaut) \| `accordion` (bras en accordéon sous une étagère) \| `frame` (cadre en bois qui bascule du mur). |
+| `rack_color` | séchoir | `white` \| `wood` \| `black`. Par défaut blanc pour le caisson et l'accordéon, bois pour le cadre. |
 | `bot_mode_entity` | pousse-bouton | Son mode : le select de Zigbee2MQTT et de Tuya BLE (`click`, `switch`, `program`), en ligne. L'attribut `switch_mode` de SwitchBot est lu sans lui. |
 | `lower_entity` / `upper_entity` / `sustain_entity` | pousse-bouton | Ses courses basse et haute et sa durée d'appui, en lignes. |
 | `reverse_entity` / `touch_entity` | pousse-bouton | Ses interrupteurs sens inversé et tactile, en lignes *Oui* / *Non* ; l'anneau du pavé tactile s'allume en bleu quand le tactile est actif. |
@@ -1841,7 +1842,7 @@ speaker_color: white
 state_entity: media_player.cuisine
 ```
 
-Une vanne d'arrivée motorisée est une `valve`. Le moteur se pose sur une vanne quart de tour et tourne sa poignée : ouverte, la poignée suit le tuyau et le fluide passe ; fermée, elle est en travers et l'eau s'arrête à la vanne ; pendant qu'elle tourne, la poignée pivote. L'**Aqara Valve Controller T1** arrive par [Zigbee2MQTT](https://www.zigbee2mqtt.io/devices/VC-X01D.html) ou ZHA comme un `switch` (allumé = ouverte), la capsule **Tuya** comme un `switch` ou une `valve`. Une entité `valve` de Home Assistant est lue telle quelle, `opening` et `closing` compris. Un détecteur de fuite à côté en fait l'alarme :
+Une vanne d'arrivée motorisée est une `valve`. Le moteur se pose sur une vanne quart de tour et tourne sa poignée : ouverte, la poignée suit le tuyau et le fluide passe ; fermée, elle est en travers et le fluide s'arrête à la vanne. Elle pivote pendant qu'elle tourne, et une vanne vue comme un interrupteur joue son quart de tour après chaque changement. L'**Aqara Valve Controller T1** arrive par [Zigbee2MQTT](https://www.zigbee2mqtt.io/devices/VC-X01D.html) ou ZHA comme un `switch` (allumé = ouverte), la capsule **Tuya** comme un `switch` ou une `valve`. Une entité `valve` de Home Assistant est lue telle quelle, `opening` et `closing` compris. Un détecteur de fuite à côté en fait l'alarme :
 
 ```yaml
 type: custom:ha-appliance-card
@@ -1852,12 +1853,13 @@ leak_entity: binary_sensor.fuite_lave_linge
 valve_handle_color: blue
 ```
 
-Un séchoir à linge mural avec un capteur d'ouverture dessus est un `drying_rack` : ouvert, il est déplié et du linge y sèche ; fermé, il est replié contre le mur. Sa batterie est une ligne.
+Un séchoir à linge mural avec un capteur d'ouverture dessus est un `drying_rack` : ouvert, il est déplié et du linge y sèche ; fermé, il est replié contre le mur. Il se déplie et se replie sur la carte quand son capteur change. Sa batterie est une ligne.
 
 ```yaml
 type: custom:ha-appliance-card
 appliance_type: drying_rack
 rack_layout: accordion
+rack_color: wood
 state_entity: binary_sensor.sechoir_contact
 battery_entity: sensor.sechoir_contact_battery
 ```

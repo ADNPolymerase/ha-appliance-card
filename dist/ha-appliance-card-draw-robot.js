@@ -1,6 +1,6 @@
 // Built by tools/build.mjs from the files of src/: edit those, not this file.
 // The robot drawing and its CSS, loaded by the card the first time it shows one.
-export default function defineDrawing({ BATTERY_LAYOUTS, CAMERA_LAYOUTS, CO2_ALERT, CO2_COLORS, CO2_WARN, DIFFUSER_LAYOUTS, EV_FLOW_DEFAULT, FR3, HRV_LAYOUTS, LAMP_LAYOUTS, LAMP_SPOTS, LAMP_WARM, LAPTOP_COLORS, MAILBOX_LAYOUTS, MAILBOX_MAX_LETTERS, MB3_PAL, MW_DISHES, NETATMO_COLORS, NET_LAYOUTS, OVEN_DISHES, ROBOT_FLOORS, ROBOT_LAYOUTS, SCREEN_LAYOUTS, SCREEN_LIT, SCREEN_TABLETS, SHELTER_COLORS, SOLAR_LAYOUTS, T, TOASTER_LAYOUTS, TREE_PALETTES, co2LevelOf, esc, ntFlake, ntTint, numberOrNull, shdBlur, t, thsColor, zoneColumns }) {
+export default function defineDrawing({ BATTERY_LAYOUTS, CAMERA_LAYOUTS, CO2_ALERT, CO2_COLORS, CO2_WARN, DIFFUSER_LAYOUTS, EV_FLOW_DEFAULT, FR3, HRV_LAYOUTS, LAMP_LAYOUTS, LAMP_SPOTS, LAMP_WARM, LAPTOP_COLORS, MAILBOX_LAYOUTS, MAILBOX_MAX_LETTERS, MB3_PAL, MW_DISHES, NETATMO_COLORS, NET_LAYOUTS, OVEN_DISHES, RACK_TRANS_S, ROBOT_FLOORS, ROBOT_LAYOUTS, SCREEN_LAYOUTS, SCREEN_LIT, SCREEN_TABLETS, SHELTER_COLORS, SOLAR_LAYOUTS, T, TOASTER_LAYOUTS, TREE_PALETTES, co2LevelOf, esc, ntFlake, ntTint, numberOrNull, shdBlur, t, thsColor, zoneColumns }) {
 // The small screen and the air lines the dehumidifier and the two heaters
 // share. Warm air rises; the air a dehumidifier or a fan blows goes the other
 // way along the same lines.
@@ -3717,8 +3717,11 @@ function vlvLed(c, x, y, r = 1.4) {
 }
 function vlvLeak(c) {
   if (!c.leak || c.unav) return "";
-  return `<g class="nta-drip"><path d="M86 104 q-2 3.6 0 5.2 q2 -1.6 0 -5.2 z" fill="#4fc3f7"/></g><g class="nta-drip ntd2"><path d="M80.5 104 q-1.8 3.2 0 4.6 q1.8 -1.4 0 -4.6 z" fill="#4fc3f7"/></g>
-<ellipse cx="84" cy="119" rx="17" ry="2.8" fill="#4fc3f7" opacity=".45"/><ellipse class="nta-splash" cx="86" cy="118.6" rx="4" ry="1.2" fill="none" stroke="#4fc3f7" stroke-width=".6"/>`;
+  // Water seeps from under the joint past the valve and drips into a pool.
+  const drop = (x, cls) => `<path class="vlv-drip ${cls}" d="M${x} 107.4 q-1.7 3 0 4.4 q1.7 -1.4 0 -4.4 z" fill="#4fc3f7"/>`;
+  return `<path d="M76 106.6 q2 1.6 4 0 q2 1.6 4 0" stroke="#4fc3f7" stroke-width="1.1" fill="none" opacity=".85"/>
+<ellipse cx="80" cy="119" rx="16" ry="2.6" fill="#4fc3f7" opacity=".45"/>${drop(78.5, "")}${drop(82, "ntd2")}
+<ellipse class="vlv-splash" cx="79.5" cy="118.6" rx="4" ry="1.2" fill="none" stroke="#4fc3f7" stroke-width=".6"/>`;
 }
 const VALVE_FLUID_PIPES = { water: ["#8cc4f2", "#2f7fd0", "#1d528c"], gas: ["#ffd76a", "#efa908", "#b87a00"] };
 function vlvDefs(c) {
@@ -3784,50 +3787,78 @@ function rkTowel(x, y, w, h, col, dk) {
 function rkSensor(c, x, y) {
   return `<rect x="${x}" y="${y}" width="5" height="9" rx="1.2" fill="#fff" stroke="#aeb8c1" stroke-width=".5"/><circle class="${c.open ? "nta-blinkfast" : ""}" cx="${x + 2.5}" cy="${y + 2}" r=".7" fill="${c.unav ? "#cfd6dc" : c.low ? "#ffa000" : c.open ? "#29b6f6" : "#cfd6dc"}"/>`;
 }
+function rkAnim(c, attr, closed, open, extra = "") {
+  if (!c.trans) return "";
+  const v = c.open ? `${closed};${open}` : `${open};${closed}`;
+  return `<animate attributeName="${attr}" dur="${RACK_TRANS_S}s" begin="0s" fill="freeze" data-swing="${c.trans.toFixed(2)}" values="${v}" ${extra}/>`;
+}
+// A height scale about a line, animated: the group's own transform, from one to the other.
+function rkScale(c, cx, cy, closed, body) {
+  const s1 = c.open ? 1 : closed;
+  const anim = c.trans ? `<animateTransform attributeName="transform" type="scale" dur="${RACK_TRANS_S}s" begin="0s" fill="freeze" data-swing="${c.trans.toFixed(2)}" values="${c.open ? `1 ${closed};1 1` : `1 1;1 ${closed}`}"/>` : "";
+  return `<g transform="translate(${cx} ${cy})"><g transform="scale(1 ${s1})">${anim}<g transform="translate(${-cx} ${-cy})">${body}</g></g></g>`;
+}
+// Laundry shows once unfolded, and goes first when it folds.
+function rkLaundry(c, body) {
+  if (!c.open && !c.trans) return "";
+  const a = c.trans ? `<animate attributeName="opacity" dur="${RACK_TRANS_S}s" begin="0s" fill="freeze" data-swing="${c.trans.toFixed(2)}" values="${c.open ? "0;0;1" : "1;0;0"}" keyTimes="${c.open ? "0;.7;1" : "0;.3;1"}"/>` : "";
+  return `<g opacity="${c.open ? 1 : 0}">${a}${body}</g>`;
+}
+// The rack's finish: white, wood or black. A box and an accordion come
+// white, a frame in wood.
+const RACK_PALETTES = {
+  white: { a: "#ffffff", b: "#dde2e6", f0: "#f7f8f9", f1: "#e3e7ea", line: "#c4cbd1", rod: "#c9ced3", hi: "#ffffff", slat: "#d6dbe0", shelf: "#fbfcfd", rung: "#d3d8dd", w0: "#f6f7f8", w1: "#d7dce0", d0: "#fbfcfd", d1: "#c9ced3" },
+  wood: { a: "#e9caa0", b: "#c79a66", f0: "#e3c08f", f1: "#c08f5b", line: "#9c6d40", rod: "#b88a58", hi: "#f6e2c4", slat: "#c9a171", shelf: "#e4c393", rung: "#c99f6d", w0: "#e6c49a", w1: "#c79a66", d0: "#d8b07e", d1: "#a9784a" },
+  black: { a: "#4d5258", b: "#2a2e32", f0: "#444a50", f1: "#2a2e32", line: "#1b1e21", rod: "#5d636a", hi: "rgba(255,255,255,.25)", slat: "#3a3f44", shelf: "#3f444a", rung: "#4a5056", w0: "#50565c", w1: "#2c3035", d0: "#4a5056", d1: "#26292d" },
+};
+const rkPal = (c, def) => RACK_PALETTES[c.color] || RACK_PALETTES[def];
 function ntRackBox(c) {
-  const b = ntId(), f = ntId();
-  const defs = `<defs>${ntV(b, "#ffffff", "#dde2e6")}${ntV(f, "#f7f8f9", "#e3e7ea")}</defs>`;
-  if (!c.open) {
-    return `${defs}<rect x="12" y="44" width="96" height="22" rx="2" fill="url(#${b})" stroke="#c4cbd1" stroke-width=".7"/><path d="M14 47 H106" stroke="#fff" stroke-width="1.2" opacity=".9"/>
-<path d="M60 46 V64" stroke="#d3d9de" stroke-width=".7"/><rect x="40" y="60" width="40" height="2.6" rx="1.3" fill="#d6dbe0"/><ellipse cx="60" cy="69" rx="46" ry="2" fill="#000" opacity=".1"/>${rkSensor(c, 100, 50)}`;
-  }
-  // The front dropped to a shelf of rods, seen from a little above.
-  const rods = [0, 1, 2, 3, 4].map((i) => { const t = (i + 1) / 6, y = 52 + t * 16, x0 = 12 - t * 6, x1 = 108 + t * 6; return `<path d="M${x0.toFixed(1)} ${y.toFixed(1)} H${x1.toFixed(1)}" stroke="#c9ced3" stroke-width="1.6" stroke-linecap="round"/><path d="M${x0.toFixed(1)} ${(y - .5).toFixed(1)} H${x1.toFixed(1)}" stroke="#fff" stroke-width=".5"/>`; }).join("");
-  return `${defs}<rect x="12" y="38" width="96" height="14" rx="2" fill="url(#${b})" stroke="#c4cbd1" stroke-width=".7"/><path d="M14 41 H106" stroke="#fff" stroke-width="1.2" opacity=".9"/>
-<path d="M12 52 L6 70 H114 L108 52" fill="none" stroke="#c4cbd1" stroke-width="2.4" stroke-linejoin="round"/>${rods}<path d="M5 70 H115 V74 H5 Z" fill="url(#${f})" stroke="#c4cbd1" stroke-width=".6"/>
-${rkTowel(22, 67, 22, 28, "#e9dcc6", "#b8a587")}${rkShirt(62, 69, "#efe3c8", "#bba985")}${rkShirt(84, 69, "#f2e7d0", "#bba985")}${rkSensor(c, 100, 42)}`;
+  const b = ntId(), f = ntId(), P = rkPal(c, "white");
+  const defs = `<defs>${ntV(b, P.a, P.b)}${ntV(f, P.f0, P.f1)}</defs>`;
+  // The housing stays; its front, hinged at the bottom, drops forward into the
+  // shelf of rods, seen from a little above.
+  const rods = [0, 1, 2, 3, 4].map((i) => { const t = (i + 1) / 6, y = 52 + t * 16, x0 = 12 - t * 6, x1 = 108 + t * 6; return `<path d="M${x0.toFixed(1)} ${y.toFixed(1)} H${x1.toFixed(1)}" stroke="${P.rod}" stroke-width="1.6" stroke-linecap="round"/><path d="M${x0.toFixed(1)} ${(y - .5).toFixed(1)} H${x1.toFixed(1)}" stroke="${P.hi}" stroke-width=".5"/>`; }).join("");
+  const shelf = `<path d="M12 52 L6 70 H114 L108 52" fill="none" stroke="${P.line}" stroke-width="2.4" stroke-linejoin="round"/>${rods}<path d="M5 70 H115 V74 H5 Z" fill="url(#${f})" stroke="${P.line}" stroke-width=".6"/>`;
+  const front = `<rect x="12" y="52" width="96" height="14" rx="2" fill="url(#${b})" stroke="${P.line}" stroke-width=".7"/><rect x="40" y="60" width="40" height="2.6" rx="1.3" fill="${P.slat}"/>`;
+  return `${defs}<rect x="12" y="38" width="96" height="14" rx="2" fill="url(#${b})" stroke="${P.line}" stroke-width=".7"/><path d="M14 41 H106" stroke="${P.hi}" stroke-width="1.2" opacity=".9"/>
+${c.open || c.trans ? rkScale(c, 60, 52, .02, shelf) : ""}
+${!c.open || c.trans ? rkScale({ ...c, open: !c.open }, 60, 66, .02, front) : ""}
+${!c.open ? `<ellipse cx="60" cy="69" rx="46" ry="2" fill="#000" opacity=".1"/>` : ""}
+${rkLaundry(c, `${rkTowel(22, 67, 22, 28, "#e9dcc6", "#b8a587")}${rkShirt(62, 69, "#efe3c8", "#bba985")}${rkShirt(84, 69, "#f2e7d0", "#bba985")}`)}${rkSensor(c, 100, 42)}`;
 }
 function ntRackAccordion(c) {
-  const b = ntId();
-  const defs = `<defs>${ntV(b, "#ffffff", "#dfe3e7")}</defs>`;
-  const board = `<rect x="18" y="26" width="84" height="46" fill="url(#${b})" stroke="#c4cbd1" stroke-width=".6"/>${[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((i) => `<path d="M${22 + i * 7.6} 28 V70" stroke="#d6dbe0" stroke-width=".6"/>`).join("")}
-<rect x="14" y="20" width="92" height="6" rx="1" fill="#fbfcfd" stroke="#c4cbd1" stroke-width=".6"/><path d="M16 22 H104" stroke="#fff" stroke-width="1" opacity=".9"/>
-<path d="M18 26 l4 6 h-4 z M102 26 l-4 6 h4 z" fill="#e3e7ea" stroke="#c4cbd1" stroke-width=".5"/>
+  const b = ntId(), P = rkPal(c, "white");
+  const defs = `<defs>${ntV(b, P.a, P.b)}</defs>`;
+  const board = `<rect x="18" y="26" width="84" height="46" fill="url(#${b})" stroke="${P.line}" stroke-width=".6"/>${[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((i) => `<path d="M${22 + i * 7.6} 28 V70" stroke="${P.slat}" stroke-width=".6"/>`).join("")}
+<rect x="14" y="20" width="92" height="6" rx="1" fill="${P.shelf}" stroke="${P.line}" stroke-width=".6"/><path d="M16 22 H104" stroke="${P.hi}" stroke-width="1" opacity=".9"/>
+<path d="M18 26 l4 6 h-4 z M102 26 l-4 6 h4 z" fill="${P.f1}" stroke="${P.line}" stroke-width=".5"/>
 <rect x="22" y="12" width="8" height="8" rx="1" fill="#e04a6d"/><rect x="33" y="10" width="7" height="10" rx="1.5" fill="#4b8de0"/><rect x="88" y="15" width="12" height="5" rx="1" fill="#9aa2a9"/>`;
-  if (!c.open) {
-    return `${defs}${board}${[0, 1, 2].map((i) => `<path d="M24 ${40 + i * 2.4} H96" stroke="#c9ced3" stroke-width="1.6" stroke-linecap="round"/>`).join("")}
-<path d="M24 38 V48 M96 38 V48" stroke="#c4cbd1" stroke-width="2"/>${rkSensor(c, 98, 52)}`;
-  }
-  // Pulled out towards the viewer: the scissor arms open, each rod a step
-  // further and lower.
-  const nodes = [0, 1, 2, 3, 4].map((i) => ({ dx: i * 4.2, dy: i * 6.4 }));
-  const zig = (x0) => `<path d="${nodes.map((n, i) => `${i ? "L" : "M"}${x0 + n.dx + (i % 2 ? 3 : -3)} ${44 + n.dy}`).join(" ")}" fill="none" stroke="#c4cbd1" stroke-width="1.6" stroke-linejoin="round"/><path d="${nodes.map((n, i) => `${i ? "L" : "M"}${x0 + n.dx + (i % 2 ? -3 : 3)} ${44 + n.dy}`).join(" ")}" fill="none" stroke="#d6dbe0" stroke-width="1.6" stroke-linejoin="round"/>`;
-  const rods = nodes.map((n) => `<path d="M${24 + n.dx} ${44 + n.dy} H${96 + n.dx}" stroke="#c9ced3" stroke-width="1.7" stroke-linecap="round"/><path d="M${24 + n.dx} ${43.5 + n.dy} H${96 + n.dx}" stroke="#fff" stroke-width=".5"/>`).join("");
-  return `${defs}${board}${zig(24)}${zig(96)}${rods}${rkTowel(40, 70, 26, 34, "#8d9196", "#5f6368")}${rkSensor(c, 98, 52)}`;
+  // The scissor arms pull out: each node moves out from the wall with the
+  // same share of the way, so folding brings every rod back to it.
+  const nodes = [0, 1, 2, 3, 4];
+  const pt = (i, k, side) => { const dx = i * 4.2 * k, dy = i * 6.4 * k + 2 * (1 - k) * i * .4; return [side + dx, 44 + dy]; };
+  const zigD = (x0, k, flip) => nodes.map((i) => { const [x, y] = pt(i, k, x0); return `${i ? "L" : "M"}${(x + ((i % 2 ? 3 : -3) * (flip ? -1 : 1)) * (.3 + .7 * k)).toFixed(2)} ${y.toFixed(2)}`; }).join(" ");
+  const rodD = (i, k) => { const [x, y] = pt(i, k, 24); return `M${x.toFixed(2)} ${y.toFixed(2)} H${(x + 72).toFixed(2)}`; };
+  const K = c.open ? 1 : 0.06;
+  const morph = (fn) => (c.trans ? rkAnim(c, "d", fn(0.06), fn(1)) : "");
+  const arms = [24, 96].map((x0) => [false, true].map((fl) => `<path d="${zigD(x0, K, fl)}" fill="none" stroke="${fl ? P.slat : P.line}" stroke-width="1.6" stroke-linejoin="round">${morph((k) => zigD(x0, k, fl))}</path>`).join("")).join("");
+  const rods = nodes.map((i) => `<path d="${rodD(i, K)}" stroke="${P.rod}" stroke-width="1.7" stroke-linecap="round">${morph((k) => rodD(i, k))}</path>`).join("");
+  return `${defs}${board}${arms}${rods}${rkLaundry(c, rkTowel(40, 70, 26, 34, "#8d9196", "#5f6368"))}${rkSensor(c, 98, 52)}`;
 }
 function ntRackFrame(c) {
-  const w = ntId(), d = ntId();
-  const defs = `<defs>${ntV(w, "#e6c49a", "#c79a66")}${ntV(d, "#d8b07e", "#a9784a")}</defs>`;
+  const w = ntId(), d = ntId(), P = rkPal(c, "wood");
+  const defs = `<defs>${ntV(w, P.w0, P.w1)}${ntV(d, P.d0, P.d1)}</defs>`;
   const outer = `<rect x="18" y="8" width="84" height="104" rx="1.5" fill="none" stroke="url(#${w})" stroke-width="5"/><path d="M60 10 V110" stroke="url(#${w})" stroke-width="3.6"/>`;
-  const rungs = (x0, x1, y0, y1, xt0, xt1) => [0, 1, 2, 3, 4, 5, 6].map((i) => { const k = (i + .5) / 7, y = y0 + (y1 - y0) * k; const a = x0 + (xt0 - x0) * (1 - k), b = x1 + (xt1 - x1) * (1 - k); return `<path d="M${a.toFixed(1)} ${y.toFixed(1)} H${b.toFixed(1)}" stroke="#c99f6d" stroke-width="1.8"/>`; }).join("");
-  if (!c.open) {
-    return `${defs}${outer}<rect x="62" y="12" width="36" height="96" fill="none" stroke="url(#${d})" stroke-width="3.4"/>${rungs(64, 96, 12, 108, 64, 96)}
-<rect x="22" y="12" width="36" height="96" fill="none" stroke="url(#${d})" stroke-width="3.4"/>${rungs(24, 56, 12, 108, 24, 56)}${rkSensor(c, 96, 102)}`;
-  }
-  // The right leaf tilted out from its foot: its top comes forward, wider.
-  return `${defs}${outer}<rect x="22" y="12" width="36" height="96" fill="none" stroke="url(#${d})" stroke-width="3.4"/>${rungs(24, 56, 12, 108, 24, 56)}
-<path d="M62 108 L98 108 L108 22 L56 22 Z" fill="rgba(0,0,0,.06)"/><path d="M62 108 L98 108 L110 18 L54 18 Z" fill="none" stroke="url(#${d})" stroke-width="3.6" stroke-linejoin="round"/>${rungs(62, 98, 18, 108, 54, 110)}
-${rkTowel(68, 30, 22, 40, "#f1f3f5", "#b9c0c6")}<path d="M70 34 H88" stroke="#9fb3c8" stroke-width="1.2" opacity=".7"/><path d="M70 62 H88" stroke="#9fb3c8" stroke-width="1.2" opacity=".7"/>${rkSensor(c, 96, 102)}`;
+  const rungD = (i, x0, x1, y0, y1, xt0, xt1) => { const k = (i + .5) / 7, y = y0 + (y1 - y0) * k; const a = x0 + (xt0 - x0) * (1 - k), b = x1 + (xt1 - x1) * (1 - k); return `M${a.toFixed(1)} ${y.toFixed(1)} L${b.toFixed(1)} ${y.toFixed(1)}`; };
+  const left = `<rect x="22" y="12" width="36" height="96" fill="none" stroke="url(#${d})" stroke-width="3.4"/>${[0, 1, 2, 3, 4, 5, 6].map((i) => `<path d="${rungD(i, 24, 56, 12, 108, 24, 56)}" stroke="${P.rung}" stroke-width="1.8"/>`).join("")}`;
+  // The right leaf tilts out from its foot: its top comes forward, wider.
+  const leafD = (k) => `M62 108 L98 108 L${(98 + 12 * k).toFixed(1)} ${(12 + 6 * k).toFixed(1)} L${(62 - 8 * k).toFixed(1)} ${(12 + 6 * k).toFixed(1)} Z`;
+  const rungK = (i, k) => rungD(i, 62, 98, 12 + 6 * k, 108, 62 - 8 * k, 98 + 12 * k);
+  const K = c.open ? 1 : 0;
+  const morph = (fn) => (c.trans ? rkAnim(c, "d", fn(0), fn(1)) : "");
+  const shade = `<path d="${leafD(K)}" fill="rgba(0,0,0,${c.open ? .06 : 0})">${c.trans ? rkAnim(c, "fill", "rgba(0,0,0,0)", "rgba(0,0,0,.06)") : ""}</path>`;
+  const leaf = `${shade}<path d="${leafD(K)}" fill="none" stroke="url(#${d})" stroke-width="3.6" stroke-linejoin="round">${morph(leafD)}</path>${[0, 1, 2, 3, 4, 5, 6].map((i) => `<path d="${rungK(i, K)}" stroke="${P.rung}" stroke-width="1.8">${morph((k) => rungK(i, k))}</path>`).join("")}`;
+  return `${defs}${outer}${left}${leaf}${rkLaundry(c, `${rkTowel(68, 30, 22, 40, "#f1f3f5", "#b9c0c6")}<path d="M70 34 H88" stroke="#9fb3c8" stroke-width="1.2" opacity=".7"/><path d="M70 62 H88" stroke="#9fb3c8" stroke-width="1.2" opacity=".7"/>`)}${rkSensor(c, 96, 102)}`;
 }
 const NT_DRAW = { rack_box: ntRackBox, rack_accordion: ntRackAccordion, rack_frame: ntRackFrame, vlv_aqara: ntValveAqara, vlv_tuya: ntValveTuya,  fb_plus: ntFingerbot, fb_switchbot: ntFingerbot, fb_classic: ntFingerbot, ths_co2_eink: ntCo2Eink, ths_switchbot_co2: (c) => ntSbPro(c, true), ths_switchbot_pro: (c) => ntSbPro(c, false), ths_switchbot_meter: (c) => ntSbMeter(c, false), ths_switchbot_plus: (c) => ntSbMeter(c, true), ths_switchbot_outdoor: ntSbOutdoor, ths_co2_box: ntCo2Box, ths_co2_netatmo: (c) => ntCo2Netatmo(c, false), ths_co2_netatmo_module: (c) => ntCo2Netatmo(c, true), cov_shutter: ntCovShutter, cov_blind: ntCovBlind, cov_venetian: (c) => ntCovVenetian(c, false), cov_raffstore: (c) => ntCovVenetian(c, true), cov_pergola: ntCovPergola, cov_awning: ntCovAwning, pellet_grill: ntPelletGrill, ths_disc: ntThsDisc, ths_square: ntThsSquare, ths_cushion: ntThsCushion, ths_stick: ntThsStick, ths_lcd_stand: ntThsLcdStand, ths_lcd_probe: ntThsLcdProbe, ths_lcd_round: ntThsLcdRound, dryer: ntFilamentDryer, humidifier: ntHumidifier, circulator: ntCirculator, irr_sprinkler: ntIrrSprinkler, irr_tap: ntIrrTap, irr_drip: ntIrrDrip, irr_flowers: ntIrrFlowers, lit_globe: ntLitterGlobe, lit_box: ntLitterBox, det_smoke: ntDetSmoke, det_co: ntDetCo, det_leak: ntDetLeak, det_door: ntDetDoor, det_vibration: ntDetVibration, det_glass: ntDetGlass, spk_smart: ntSpkSmart, spk_homepod_mini: ntSpkMini, spk_sonos_one: ntSpkOne, spk_bookshelf: ntSpkShelf, spk_sonos_move: ntSpkMove, spk_soundbar: ntSpkBar, spk_echo_dot: ntSpkDot, spk_echo_dot_max: ntSpkDotMax, spk_nest_mini: ntSpkNest, spk_sonos_era100: ntSpkEra100, spk_sonos_era300: ntSpkEra300, spk_bose_wave: ntSpkWave, spk_bose_500: ntSpkBose500, spk_bose_soundlink: ntSpkFlex, spk_bose_soundbar: ntSpkBoseBar, spk_sonos_five: ntSpkFive, spk_sonos_play: ntSpkPlay, spk_sonos_roam: ntSpkRoam, spk_sonos_ray: ntSpkRay, spk_sonos_amp: ntSpkAmp, spk_sonos_port: ntSpkPort, spk_bose_ultra: ntSpkBoseUltra, spk_bose_portable: ntSpkBosePortable, spk_bose_amp: ntSpkBoseAmp, str_apple_tv: (c) => strZoom(strAppleTv(c), 54, 1.45), str_fire_tv_cube: strFireCube, str_fire_tv_stick: (c) => strStick(c, true), str_google_tv_streamer: strGoogleStreamer, str_chromecast: strChromecast, str_shield: strShield, str_shield_pro: strShieldPro, str_roku: strRoku, str_mi_box: strMiBox, str_freebox: strFreebox, str_decoder: strDecoder, str_box: strBox, str_stick: (c) => strStick(c, false), con_ps1: conPs1, con_ps2: conPs2, con_ps3: conPs3, con_ps4: (c) => conPs4(c, false), con_ps4_pro: (c) => conPs4(c, true), con_ps5: conPs5, con_xbox: conXbox, con_xbox_360: conX360, con_xbox_one: conXone, con_xbox_series_x: conXsx, con_xbox_series_s: conXss, con_switch: (c) => conSwitch(c, false), con_switch_2: (c) => conSwitch(c, true), con_switch_lite: conSwitchLite, con_ps_vita: conVita, con_nes: conNes, con_snes: conSnes, con_n64: conN64, con_gamecube: conGamecube, con_wii: conWii, con_megadrive: conMegadrive, tank: ntTank, fws: ntFresh, solth: ntSolarThermal, wood: ntWoodStove, mob_scooter: mobScooter, mob_offroad: mobOffroad, mob_ebike: mobEbike, mob_gyropode: mobGyropode, mob_motorcycle: mobMotorcycle, meter_box: ntMeterBox, meter_dome: ntMeterDome, meter_gas: ntGas, meter_water: ntWater, booster: ntBooster, sump: ntSump, pool: ntPoolRobot, floor: ntFloor, spa: ntSpa, sauna: ntSauna, aquarium: ntAquarium, linky: ntLinky, tree: ntTree };
 // What a tint leaves alone: a part wrapped by ntKeep (an app's tile, a
@@ -3975,6 +4006,10 @@ const NT_CSS = `
         @keyframes nt-bar3{0%{opacity:.15}48%,100%{opacity:1}}
         @keyframes nt-bar4{0%{opacity:.15}66%,100%{opacity:1}}
         .nta-blinkfast{animation:nt-blinkfast .45s linear infinite}
+        .vlv-drip{transform-box:fill-box;animation:vlv-drip 1.4s ease-in infinite}.vlv-drip.ntd2{animation-delay:.7s}
+        @keyframes vlv-drip{0%{transform:translateY(0) scale(.4);opacity:0}15%{transform:translateY(0) scale(1);opacity:1}85%{transform:translateY(8px);opacity:1}100%{transform:translateY(9px);opacity:0}}
+        .vlv-splash{transform-box:fill-box;transform-origin:center;animation:vlv-splash 1.4s ease-out infinite;opacity:0}
+        @keyframes vlv-splash{0%,80%{transform:scale(.3);opacity:0}86%{opacity:.9}100%{transform:scale(1.6);opacity:0}}
         .nt-on .vlv-arrows{animation:vlv-arrows 1.2s linear infinite}
         @keyframes vlv-arrows{to{transform:translateX(12px)}}
         .vlv-to-open{animation:vlv-open 2.8s ease-in-out infinite}.vlv-to-close{animation:vlv-close 2.8s ease-in-out infinite}

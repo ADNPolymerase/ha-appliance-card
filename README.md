@@ -22,7 +22,7 @@ A Lovelace card that draws the appliances of your home and animates them from th
 
 ## Features
 
-- **68 appliance types, more than 170 models drawn**, animated while they work and still when they stop. The type is detected on its own, from the entity and from the maker and model of its device, or set with `appliance_type`.
+- **70 appliance types, more than 170 models drawn**, animated while they work and still when they stop. The type is detected on its own, from the entity and from the maker and model of its device, or set with `appliance_type`.
 - **Any integration**: every field is an entity you pick. A plain smart plug is enough, its power tells whether the appliance heats, washes or spins.
 - **State understood**: `Idle`, `RUNNING`, `wash`… become idle, running, paused, finished, delayed or error, with the step of the cycle (wash, rinse, spin…).
 - **What matters for each appliance**: program, time left, door, alerts, levels, temperatures, energy and cost, today's running time.
@@ -1585,6 +1585,7 @@ disk2_entity: sensor.nas_drive_2_status
 | `valve_handle_color` | valve | `red` (default) \| `blue` \| `yellow` (the default on a gas valve) \| `black`. |
 | `leak_entity` | valve | A leak sensor: going off, it is the card's alarm and the valve drips, whatever the valve says. |
 | `rack_layout` | drying rack | `box` (a box whose front drops onto its rods, the default) \| `accordion` (accordion arms under a shelf) \| `frame` (a wooden frame that tilts away from the wall). |
+| `rack_color` | drying rack | `white` \| `wood` \| `black`. White by default for the box and the accordion, wood for the frame. |
 | `bot_mode_entity` | finger bot | Its mode: Zigbee2MQTT's and Tuya BLE's select (`click`, `switch`, `program`), as a line. SwitchBot's `switch_mode` attribute is read without it. |
 | `lower_entity` / `upper_entity` / `sustain_entity` | finger bot | Its down and up positions and its hold time, as lines. |
 | `reverse_entity` / `touch_entity` | finger bot | Its reverse and touch switches, as *Yes* / *No* lines; the touch pad's ring lights blue when touch is on. |
@@ -1839,7 +1840,7 @@ speaker_color: white
 state_entity: media_player.kitchen
 ```
 
-A motorised shut-off valve is a `valve`. The motor sits on a quarter-turn ball valve and turns its handle: open, the handle lies along the pipe and the water or gas runs through; closed, it points across and the water stops at the valve; while it turns, the handle swings. The **Aqara Valve Controller T1** comes in through [Zigbee2MQTT](https://www.zigbee2mqtt.io/devices/VC-X01D.html) or ZHA as a `switch` (on is open), the **Tuya** capsule as a `switch` or a `valve`. A Home Assistant `valve` entity is read as it is, `opening` and `closing` included. A leak sensor next to it makes it the alarm:
+A motorised shut-off valve is a `valve`. The motor sits on a quarter-turn ball valve and turns its handle: open, the handle lies along the pipe and the water or gas runs through; closed, it points across and the flow stops at the valve. It swings while it turns, and a valve seen as a switch plays its quarter turn once after it changed. The **Aqara Valve Controller T1** comes in through [Zigbee2MQTT](https://www.zigbee2mqtt.io/devices/VC-X01D.html) or ZHA as a `switch` (on is open), the **Tuya** capsule as a `switch` or a `valve`. A Home Assistant `valve` entity is read as it is, `opening` and `closing` included. A leak sensor next to it makes it the alarm:
 
 ```yaml
 type: custom:ha-appliance-card
@@ -1850,12 +1851,13 @@ leak_entity: binary_sensor.washer_leak
 valve_handle_color: blue
 ```
 
-A wall drying rack with a contact sensor on it is a `drying_rack`: open, it is unfolded with laundry drying on it; closed, it is folded back against the wall. Its battery is a line.
+A wall drying rack with a contact sensor on it is a `drying_rack`: open, it is unfolded with laundry drying on it; closed, it is folded back against the wall. It unfolds and folds on the card as its sensor changes. Its battery is a line.
 
 ```yaml
 type: custom:ha-appliance-card
 appliance_type: drying_rack
 rack_layout: accordion
+rack_color: wood
 state_entity: binary_sensor.drying_rack_contact
 battery_entity: sensor.drying_rack_contact_battery
 ```

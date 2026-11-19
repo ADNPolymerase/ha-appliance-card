@@ -5014,7 +5014,7 @@ class ApplianceCard extends HTMLElement {
     // A turn that plays once (a valve read from a switch) starts where it is
     // by now: its drawing's clock is moved on by the time gone by since the
     // change. (Chrome drops a begin set in the past, so the clock moves.)
-    this._root.querySelectorAll("animate[data-swing]").forEach((el) => {
+    this._root.querySelectorAll("[data-swing]").forEach((el) => {
       const svg = el.ownerSVGElement;
       if (!svg || svg._hacTimed || typeof svg.setCurrentTime !== "function") return;
       svg._hacTimed = true;
