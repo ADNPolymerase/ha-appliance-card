@@ -1388,6 +1388,9 @@ const camOutdoor = camCard(L("Garden", "Jardin"), "recording", { night_entity: "
   [st("switch.cam_ir", "on")]);
 const camDome = camCard(L("Garage", "Garage"), "idle", { camera_layout: "dome", motion_entity: "binary_sensor.cam_motion" }, {},
   [st("binary_sensor.cam_motion", "on")]);
+const camTrackmix = camCard(L("Driveway", "All\u00e9e"), "idle", { motion_entity: "binary_sensor.cam_motion", night_entity: "switch.cam_ir" }, { brand: "Reolink", model_name: "TrackMix WiFi" },
+  [st("binary_sensor.cam_motion", "on"), st("switch.cam_ir", "on")]);
+const camTrackmixDay = camCard(L("Terrace", "Terrasse"), "idle", { camera_layout: "trackmix" }, { brand: "Reolink" });
 const camPrivacy = camCard(L("Bedroom", "Chambre"), "idle", { camera_layout: "indoor", privacy_entity: "switch.cam_privacy", toggle_entity: "switch.cam_privacy" }, {},
   [st("switch.cam_privacy", "on")]);
 // Diffusers: a Meross on its spray select, Tuya ones on a fan or a switch,
@@ -1563,6 +1566,16 @@ const detCo = detCard(L("Boiler room", "Chaufferie"), "carbon_monoxide", false, 
 const detCoAlarm = detCard(L("Carbon monoxide", "Monoxyde de carbone"), "carbon_monoxide", true, { co_level_entity: "sensor.det_co2" }, [st("sensor.det_co2", 180, { unit_of_measurement: "ppm" })]);
 const detLeak = detCard(L("Under the sink", "Sous l'évier"), "moisture", false);
 const detLeakAlarm = detCard(L("Water leak", "Fuite d'eau"), "moisture", true);
+const detDoor = detCard(L("Front door", "Porte d'entr\u00e9e"), "door", false);
+const detDoorOpen = detCard(L("Back door", "Porte arri\u00e8re"), "door", true);
+const detVib = detCard(L("Safe", "Coffre-fort"), "vibration", false);
+const detVibOn = detCard(L("Drawer", "Tiroir"), "vibration", true);
+const detGlass = detCard(L("Bay window", "Baie vitr\u00e9e"), "glass", false, { detector_layout: "glass" });
+const detDoorAqara = detCard(L("Bedroom window", "Fen\u00eatre chambre"), "window", true, { detector_model: "aqara" });
+const detDoorHue = detCard(L("Garden door", "Porte du jardin"), "door", false, { detector_model: "hue" });
+const detVibTuya = detCard(L("Washing machine", "Lave-linge"), "vibration", true, { detector_model: "tuya" });
+const detGlassAjax = detCard(L("Patio door", "Porte-fen\u00eatre"), "glass", false, { detector_layout: "glass", detector_model: "ajax" });
+const detGlassOn = detCard(L("Living room window", "Fen\u00eatre du salon"), "glass", true, { detector_layout: "glass" });
 const spkCard = (name, layout, state, attrs, color) => () => card({ name, appliance_type: "speaker", speaker_layout: layout, state_entity: "media_player.spk_" + layout, ...(color ? { speaker_color: color } : {}) },
   [st("media_player.spk_" + layout, state, { volume_level: 0.4, ...attrs })]);
 const spkSmart = spkCard(L("HomePod", "HomePod"), "smart", "playing", { media_title: "Clair de lune", media_artist: "Debussy" });
@@ -1722,7 +1735,7 @@ const EXTRA = { printer_bambu: printerBambu, printer_centauri: printerCentauri, 
                 ups_replace: upsReplace, ups_off: upsOff,
                 dif_drop: difDrop, dif_cone: difCone, dif_stone: difStone, dif_flame: difFlame, dif_nebulizer: difNebulizer,
                 hrv_diagram: hrvDiagram, hrv_box: hrvBox, hrv_one_duct: hrvOneDuct, hrv_pair: hrvPair, hrv_bypass: hrvBypass, hrv_single: hrvSingle, hrv_single_high: hrvSingleHigh, hrv_single_off: hrvSingleOff, hrv_single_box: hrvSingleBox, hrv_single_box_high: hrvSingleBoxHigh, hrv_basement: hrvBasement, hrv_basement_shut: hrvBasementShut,
-                cam_indoor: camIndoor, cam_tube: camTube, cam_outdoor: camOutdoor, cam_dome: camDome, cam_privacy: camPrivacy, cam_offline: camOffline,
+                cam_indoor: camIndoor, cam_tube: camTube, cam_outdoor: camOutdoor, cam_dome: camDome, cam_trackmix: camTrackmix, cam_trackmix_day: camTrackmixDay, cam_privacy: camPrivacy, cam_offline: camOffline,
                 lamp_bulb: lampBulb, lamp_bedside: lampBedside, lamp_floor: lampFloor, lamp_torch: lampTorch, lamp_pendant: lampPendant,
                 lamp_strip: lampStrip, lamp_spots: lampSpots, lamp_panels: lampPanels, lamp_desk: lampDesk, lamp_wall: lampWall, lamp_off: lampOff,
                 cam_doorbell: camDoorbell, cam_doorbell_idle: camDoorbellIdle, mb_through: mbThrough, mb_postman: mbPostman, mb_collect: mbCollect,
@@ -1732,7 +1745,7 @@ const EXTRA = { printer_bambu: printerBambu, printer_centauri: printerCentauri, 
                 nt_tree: demoTree, nt_tree_red: demoTreeRed,
                 irr_sprinkler: irrSprinkler, irr_rain: irrRain, irr_tap: irrTap, irr_tap_off: irrTapOff, irr_sonoff: irrSonoff, irr_sonoff_pipe: irrSonoffPipe, irr_drip: irrDrip, irr_flowers: irrFlowers,
                 lit_globe: litGlobe, lit_globe_clean: litGlobeClean, lit_globe_cat: litGlobeCat, lit_box: litBox, lit_box_clean: litBoxClean, lit_box_full: litBoxFull,
-                det_smoke: detSmoke, det_smoke_alarm: detSmokeAlarm, det_co: detCo, det_co_alarm: detCoAlarm, det_leak: detLeak, det_leak_alarm: detLeakAlarm,
+                det_smoke: detSmoke, det_smoke_alarm: detSmokeAlarm, det_co: detCo, det_co_alarm: detCoAlarm, det_leak: detLeak, det_leak_alarm: detLeakAlarm, det_door: detDoor, det_door_open: detDoorOpen, det_vib: detVib, det_vib_on: detVibOn, det_glass: detGlass, det_glass_on: detGlassOn, det_door_aqara: detDoorAqara, det_door_hue: detDoorHue, det_vib_tuya: detVibTuya, det_glass_ajax: detGlassAjax,
                 spk_smart: spkSmart, spk_mini: spkMini, spk_one: spkOne, spk_shelf: spkShelf, spk_move: spkMove, spk_bar: spkBar, spk_dot: spkDot, spk_nest: spkNest, spk_era100: spkEra100, spk_era300: spkEra300, spk_wave: spkWave, spk_bose500: spkBose500, spk_flex: spkFlex, spk_bosebar: spkBoseBar, spk_five: spkFive, spk_play: spkPlay, spk_roam: spkRoam, spk_ray: spkRay, spk_amp: spkAmp, spk_port: spkPort, spk_ultra: spkUltra, spk_portable: spkPortable, spk_boseamp: spkBoseAmp, spk_dotmax: spkDotMax, str_appletv: strAppleTv, str_cube: strCube, str_firestick: strFireStick, str_gts: strGts, str_cast: strCast, str_shield: strShield, str_shieldpro: strShieldPro, str_roku: strRoku, str_mibox: strMiBox, str_freebox: strFreebox, str_decoder: strDecoder, str_box: strBox, str_stick: strStick, heat_tank: heatTank, heat_tank_loading: heatTankLoading, heat_tank_low: heatTankLow, heat_fws: heatFws, heat_fws_draw: heatFwsDraw, heat_fws_circ: heatFwsCirc, heat_circ: heatCirc, heat_circ_wilo: heatCircWilo, heat_circ_fault: heatCircFault, heat_circ_nodata: heatCircNoData, heat_sth: heatSth, heat_sth_tubes: heatSthTubes, heat_sth_frost: heatSthFrost, heat_sth_stag: heatSthStag, heat_wood: heatWood, heat_wood_embers: heatWoodEmbers, heat_wood_cold: heatWoodCold, heat_wood_water: heatWoodWater, con_ps1: conPs1, con_ps2: conPs2, con_ps3: conPs3, con_ps4: conPs4, con_ps4pro: conPs4Pro, con_ps5: conPs5, con_xbox: conXbox, con_x360: conX360, con_xone: conXone, con_xsx: conXsx, con_xss: conXss, con_switch: conSwitch, con_switch2: conSwitch2, con_lite: conLite, con_vita: conVita, con_nes: conNes, con_snes: conSnes, con_n64: conN64, con_cube: conCube, con_wii: conWii, con_md: conMd,
                 mob_scooter: demo_mobScooter, mob_offroad: demo_mobOffroad, mob_ebike: demo_mobEbike, mob_gyropode: demo_mobGyropode, mob_motorcycle: demo_mobMotorcycle, mob_unplugged: demo_mobUnplugged, mob_poster: demo_mobPoster,
                 net_sw8: netSw(8, 6), net_sw16: netSw(16, 11), net_sw24: netSw(24, 20), net_sw32: netSw(32, 27),
@@ -1805,6 +1818,12 @@ Object.assign(EXTRA, {
   co2_box: co2Card(L("Bedroom", "Chambre"), "co2_box", 1250),
   co2_netatmo: co2Card(L("Living room", "Salon"), "co2_netatmo", 1720),
   co2_module: co2Card(L("Kids' room", "Chambre des enfants"), "co2_netatmo_module", 640, { netatmo_color: "sand" }),
+  sb_co2: co2Card(L("Study", "Bureau"), "switchbot_co2", 537),
+  sb_co2_high: co2Card(L("Meeting room", "Salle de r\u00e9union"), "switchbot_co2", 1460),
+  sb_pro: thsCard(L("Living room", "Salon"), "switchbot_pro", 24.6, 53),
+  sb_meter: thsCard(L("Bedroom", "Chambre"), "switchbot_meter", 27.4, 47),
+  sb_plus: thsCard(L("Kitchen", "Cuisine"), "switchbot_plus", 24.6, 63),
+  sb_outdoor: thsCard(L("Garden", "Jardin"), "switchbot_outdoor", 6.8, 74),
   cov_shutter: covCard(L("Living room", "Salon"), "shutter", "open", { current_position: 100 }),
   cov_shutter_closing: covCard(L("Kitchen", "Cuisine"), "shutter", "closing", { current_position: travel(90, 10, 45) }),
   cov_shutter_closed: covCard(L("Bedroom", "Chambre"), "shutter", "closed", { current_position: 0 }, { cover_color: "anthracite" }),
@@ -1855,6 +1874,7 @@ function liveGallery() {
     [L("Kitchen", "Cuisine"), [dishwasher, oven, microwave, hood, cooktop, fridge, kettle, cooker, coffee, coffeeBlack, riceCooker, airFryer, toaster]],
     [L("Heating and climate", "Chauffage et climat"), [waterHeater, boiler, boilerWindow, boilerThermo, thSquare, thRound, thGlass, thValve, heatPump, pelletStove, spaceHeater, towelWarmer, towelPanel, airConditioner, dehumidifier, humidifier, humidifierNight, humidifierEmpty, humidifierLifted]],
     [L("CO\u2082 monitors", "Capteurs de CO\u2082"), [EXTRA.co2_eink, EXTRA.co2_box, EXTRA.co2_netatmo, EXTRA.co2_module]],
+    [L("SwitchBot meters", "Thermom\u00e8tres SwitchBot"), [EXTRA.sb_co2, EXTRA.sb_co2_high, EXTRA.sb_pro, EXTRA.sb_meter, EXTRA.sb_plus, EXTRA.sb_outdoor]],
     [L("Finger bots", "Pousse-boutons"), [EXTRA.fb_plus, EXTRA.fb_charging, EXTRA.fb_held, EXTRA.fb_low, EXTRA.fb_switchbot, EXTRA.fb_switchbot_black, EXTRA.fb_classic]],
     [L("Shutters, blinds, pergolas and awnings", "Volets, stores, pergolas et stores bannes"), [EXTRA.cov_shutter, EXTRA.cov_shutter_closing, EXTRA.cov_shutter_closed, EXTRA.cov_blind, EXTRA.cov_venetian, EXTRA.cov_raffstore, EXTRA.cov_pergola, EXTRA.cov_awning]],
     [L("Air purifiers and fans", "Purificateurs et ventilateurs"), [purifier, boxPurifier, ringPurifier, fan, ceilingFan]],

@@ -14933,6 +14933,27 @@ if (RECORD) writeFileSync(process.env.HAC_RECORD, JSON.stringify(RECORD));
   check('108 : les champs dans l\'editeur', /field: "co2_entity", types: \["climate_sensor"\]/.test(SRC) && /c\._row\("co2_warning", "co2_warning"/.test(SRC), true);
 }
 
+// SwitchBot's meters (#121): five drawings, told apart by the device model.
+{
+  const s = (state, a = {}) => ({ state: String(state), attributes: a });
+  const kindOf = (h) => (/\bnt-k-(\w+)/.exec(machineCls(h)) || [, null])[1];
+  const dev = (model, more = {}) => s(20.7, { device_class: 'temperature', unit_of_measurement: '°C', friendly_name: 'Temperatur', __hac_device: `switchbot ${model}`, ...more });
+  const k = (model, cfg = {}, more = {}) => kindOf(render({ state_entity: 'sensor.t', ...cfg }, { 'sensor.t': dev(model, more), 'sensor.co2': s(432, { device_class: 'carbon_dioxide', unit_of_measurement: 'ppm' }), 'sensor.h': s(42, { unit_of_measurement: '%' }) }));
+  check('121 : Meter Pro CO2 par son modele', k('WoTHPc'), 'ths_switchbot_co2');
+  check('121 : Meter Pro avec une entite CO2', k('WoTHP', { co2_entity: 'sensor.co2' }), 'ths_switchbot_co2');
+  check('121 : Meter Pro sans CO2', k('WoTHP Meter Pro'), 'ths_switchbot_pro');
+  check('121 : Indoor/Outdoor', k('WoIOSensorTH'), 'ths_switchbot_outdoor');
+  check('121 : Meter Plus', k('Meter Plus'), 'ths_switchbot_plus');
+  check('121 : Meter', k('WoSensorTH'), 'ths_switchbot_meter');
+  check('121 : forme choisie', k('WoTHPc', { climate_sensor_layout: 'switchbot_meter' }), 'ths_switchbot_meter');
+  const h = render({ state_entity: 'sensor.t', co2_entity: 'sensor.co2', humidity_entity: 'sensor.h', climate_sensor_layout: 'switchbot_co2' }, { 'sensor.t': dev('WoTHPc'), 'sensor.co2': s(1460, { device_class: 'carbon_dioxide', unit_of_measurement: 'ppm' }), 'sensor.h': s(42, { unit_of_measurement: '%' }) });
+  check('121 : bande verte, jaune, rouge', /#3cb54a/.test(h) && /#f4c20d/.test(h) && /#e53935/.test(h), true);
+  check('121 : ligne seche, confort, humide', />DRY</.test(h) && />COMFORT</.test(h) && />WET</.test(h), true);
+  check('121 : bande confort du Meter Pro', /#1e88e5/.test(render({ state_entity: 'sensor.t', climate_sensor_layout: 'switchbot_pro' }, { 'sensor.t': dev('WoTHP') })), true);
+  check('121 : Indoor/Outdoor sans ecran', />COMFORT</.test(render({ state_entity: 'sensor.t', humidity_entity: 'sensor.h' }, { 'sensor.t': dev('WoIOSensorTH'), 'sensor.h': s(74, { unit_of_measurement: '%' }) })), false);
+  check('121 : nom dans l\'editeur', /layout_ths_switchbot_outdoor: "SwitchBot Indoor\/Outdoor Meter"/.test(SRC), true);
+}
+
 // Shutters, blinds, a pergola and an awning (#109): the position, the tilt,
 // the movement, their buttons, their colours and a pergola's light.
 {
@@ -15033,6 +15054,38 @@ if (RECORD) writeFileSync(process.env.HAC_RECORD, JSON.stringify(RECORD));
   check('120 : winter_snowfall false les cache', /\.nt-fl,\.pl-fl,\.rbt-snow\{display:none!important\}/.test(render({ ...P, winter_snowfall: false }, st)), true);
   const I = { appliance_type: 'irrigation', irrigation_layout: 'sprinkler', state_entity: 'switch.i', winter: true };
   check('120 : les flocons de l arrosage dans leur groupe', /<g class="nt-fl">/.test(render(I, { 'switch.i': { state: 'off', attributes: {} } })), true);
+}
+
+// PiErO30 (HACF): door contact, vibration and glass break detectors.
+{
+  const D = (dc, state, more = {}) => build({ appliance_type: 'detector', state_entity: 'binary_sensor.x', ...more }, { 'binary_sensor.x': { state, attributes: { device_class: dc } } }).html;
+  check('contact : ferme', stateLine(D('door', 'off')), 'Closed');
+  check('contact : ouvert, pas une alarme', stateLine(D('door', 'on')), 'Open');
+  check('contact : fenetre aussi', stateLine(D('window', 'on')), 'Open');
+  check('contact : son dessin', /det_door|nt-on/.test(D('door', 'on')), true);
+  check('vibration : au repos', stateLine(D('vibration', 'off')), 'Still');
+  check('vibration : detectee', stateLine(D('vibration', 'on')), 'Vibration');
+  check('bris de glace : par le nom', stateLine(build({ appliance_type: 'detector', state_entity: 'binary_sensor.glass_break' }, { 'binary_sensor.glass_break': { state: 'on', attributes: {} } }).html), 'Glass break');
+  check('bris de glace : au repos tout va bien', stateLine(D('', 'off', { detector_layout: 'glass' })), 'All clear');
+  check('fumee : inchangee', stateLine(D('smoke', 'on')), 'Smoke detected');
+}
+
+// Detector models, the window contact, and the dual-lens camera.
+{
+  const D = (cfg, attrs = {}, state = 'off') => build({ appliance_type: 'detector', state_entity: 'binary_sensor.x', ...cfg }, { 'binary_sensor.x': { state, attributes: attrs } }).html;
+  check('modele : Sonoff par defaut', /M76 29 Q81 27.6 86 29/.test(D({}, { device_class: 'door' })), true);
+  check('modele : Aqara lu dans le nom', /x="76" y="30" width="10" height="30"/.test(D({ name: 'Aqara porte' }, { device_class: 'door' })), true);
+  check('modele : Hue choisi', />hue<\/text>/.test(D({ detector_model: 'hue' }, { device_class: 'door' })), true);
+  check('modele : un modele d une autre forme est ignore', /x="76" y="30" width="10"/.test(D({ detector_model: 'ajax' }, { device_class: 'door' })), false);
+  check('modele : vibration Tuya', /x="32" y="64" width="56" height="20"/.test(D({ detector_model: 'tuya' }, { device_class: 'vibration' })), true);
+  check('modele : bris de glace Ajax', /x="96" y="20" width="18" height="30"/.test(D({ detector_layout: 'glass', detector_model: 'ajax' })), true);
+  check('fenetre : chassis blanc au lieu de la porte', /fill="#f3f5f7"/.test(D({}, { device_class: 'window' })) && !/fill="#f3f5f7"/.test(D({}, { device_class: 'door' })), true);
+  check('fenetre : lue dans le nom', /fill="#f3f5f7"/.test(D({ name: 'Fenetre chambre' }, { device_class: 'opening' })), true);
+  check('porte : bois', /width="62" height="106" fill="url\(#/.test(D({}, { device_class: 'door' })), true);
+  const cam = (cfg, attrs) => build({ state_entity: 'camera.c', ...cfg }, { 'camera.c': { state: 'idle', attributes: attrs } }).html;
+  check('trackmix : lue dans le modele', /cam-l-trackmix/.test(cam({}, { brand: 'Reolink', model_name: 'TrackMix PoE' })), true);
+  check('trackmix : choisie', /cam-tmx-pan/.test(cam({ camera_layout: 'trackmix' }, {})), true);
+  check('trackmix : autre camera inchangee', /cam-l-outdoor/.test(cam({}, { brand: 'Arlo' })), true);
 }
 
 report();

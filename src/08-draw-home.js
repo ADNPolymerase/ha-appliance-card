@@ -505,7 +505,7 @@ function hrvHtml(cls, h) {
 // Netatmo's monitoring attribute) says it is off, and a connectivity sensor
 // that it is gone.
 const CAMERA_ONLY_FIELDS = ["camera_layout", "motion_entity", "recording_entity", "night_entity", "privacy_entity", "signal_entity", "ring_entity"];
-const CAMERA_LAYOUTS = ["indoor", "tube", "outdoor", "dome", "doorbell"];
+const CAMERA_LAYOUTS = ["indoor", "tube", "outdoor", "dome", "doorbell", "trackmix"];
 const CAMERA_LABELS = { idle: "cam_idle", live: "cam_live", rec: "cam_rec", motion: "cam_motion", ring: "cam_ring", off: "cam_off", unav: "ev_offline" };
 const CAMERA_COLORS = { idle: "var(--secondary-text-color, #727272)", live: "#03a9f4", rec: "#f44336", motion: "#ff9800", ring: "#03a9f4",
   off: "var(--disabled-text-color, #9e9e9e)", unav: "var(--disabled-text-color, #9e9e9e)" };
@@ -572,6 +572,7 @@ function cameraLayoutOf(cfg, st) {
   const a = (st && st.attributes) || {};
   const hay = stripAccents(`${cfg.state_entity || ""} ${cfg.name || ""} ${a.friendly_name || ""} ${a[DEVICE_ATTR] || ""} ${a.brand || ""} ${a.model_name || a.model || ""}`).toLowerCase();
   if (cfg.ring_entity || /doorbell|sonnette|klingel|timbre|campanello|deurbel|campainha|dorrklocka|ringeklokke|dorklokke|dzwonek|zvonek|visitor/.test(hay)) return "doorbell";
+  if (/trackmix|dual.?lens|duo.?lens|double.?(optique|objectif)|ptz.*dual|e1.?outdoor/.test(hay)) return "trackmix";
   if (/dome|kuppel|domo|cupola|turret/.test(hay)) return "dome";
   if (/netatmo/.test(hay) && !/presence|outdoor|exterieur|exterior/.test(hay)) return "tube";
   if (/outdoor|exterieur|exterior|aussen|garden|jardin|garage|driveway|porch|terrasse|street|front|back|arriere|avant|entree|portail|gate|spotlight|bullet|presence|arlo/.test(hay)) return "outdoor";
@@ -690,6 +691,28 @@ ${camShadow(60, 21, 56, 3.5, .22)}
 <path d="M24 39 A36 37 0 0 0 96 39" fill="none" ${CAM_EDGE} stroke-width=".7"/>
 <circle class="cam-led" cx="40" cy="50" r="1.3"/>
 </g>${camWaves(86, 96)}<g transform="translate(0 92)">${CAM_REC}</g>`,
+  // A dual-lens tracking camera, after the Reolink TrackMix: the wall plate
+  // on top, the fixed white head, and under it the black globe that turns.
+  // Its window holds the two light sensors, the wide and the telephoto
+  // lenses side by side, and the two spotlights. On a motion the globe pans.
+  trackmix: () => `${camShadow(62, 112, 24, 3, .2)}
+<rect x="42" y="3" width="36" height="17" rx="2.5" fill="url(#cam-g-shv)" ${CAM_EDGE} stroke-width=".6"/>
+<path d="M45 5.5 H75" stroke="#fff" stroke-width="1.2" opacity=".7" stroke-linecap="round"/>
+<circle cx="48" cy="12" r="1.3" fill="rgba(0,0,0,.3)"/><circle cx="72" cy="12" r="1.3" fill="rgba(0,0,0,.3)"/>
+<path d="M30 26 Q30 19 37 19 H83 Q90 19 90 26 V51 Q60 57 30 51 Z" fill="url(#cam-g-shv)" ${CAM_EDGE} stroke-width=".7"/>
+<path d="M36 23 H84" stroke="#fff" stroke-width="1.6" opacity=".75" stroke-linecap="round"/>
+<path d="M34 27 V49" stroke="#fff" stroke-width="2" opacity=".45" stroke-linecap="round"/>
+<path d="M30 49 Q60 55 90 49 V51 Q60 57 30 51 Z" fill="#000" opacity=".12"/>
+<path d="M33 52 Q60 57.5 87 52 V76 A27 32 0 0 1 33 76 Z" fill="url(#cam-g-blk)" ${CAM_EDGE} stroke-width=".7"/>
+<path d="M36 58 V78 Q37 92 46 100" stroke="#fff" stroke-width="1.6" opacity=".16" fill="none" stroke-linecap="round"/>
+<g class="cam-tmx-pan"><rect x="43" y="57" width="34" height="36" rx="7" fill="url(#cam-g-dbglass)" stroke="#000" stroke-width=".6"/>
+<path d="M46 60 Q52 58 60 58" stroke="#fff" stroke-width="1" opacity=".2" fill="none" stroke-linecap="round"/>
+<rect x="49" y="60.5" width="22" height="6" rx="3" fill="#1b2128"/><circle cx="54.5" cy="63.5" r="1.6" fill="#3a4550"/><circle cx="65.5" cy="63.5" r="1.6" fill="#3a4550"/>
+<rect x="45.5" y="68.5" width="29" height="13" rx="2.5" fill="#12171c"/>
+<g class="cam-on">${camLens(53, 75, 4.2, 0)}${camLens(67, 75, 4.2, 0)}<circle class="cam-tmx-spot" cx="54" cy="87" r="3"/><circle class="cam-tmx-spot" cx="66" cy="87" r="3"/></g>
+<g class="cam-off"><circle cx="53" cy="75" r="5" fill="#2a3037"/><circle cx="67" cy="75" r="5" fill="#2a3037"/><circle cx="54" cy="87" r="2.6" fill="#2a3037"/><circle cx="66" cy="87" r="2.6" fill="#2a3037"/></g></g>
+<circle class="cam-led" cx="82" cy="58" r="1.2"/>
+${camWaves(92, 76)}${CAM_REC}`,
   // A video doorbell on its wall: the lens at the top, the motion sensor, and
   // the button in its ring of light, which beats when someone rings.
   doorbell: () => `${camShadow(62, 62, 22, 58, .14)}

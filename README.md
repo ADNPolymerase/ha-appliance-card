@@ -195,9 +195,9 @@ Click a family to see its appliances at work. The drawings are shown with `illus
 </details>
 
 <details>
-<summary><b>Smoke, CO and leak detectors</b></summary>
+<summary><b>Smoke, CO, leak, door, vibration and glass break detectors</b></summary>
 
-<img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-detectors.gif" alt="Smoke, CO and leak detectors">
+<img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-detectors.gif" alt="Smoke, CO, leak, door, vibration and glass break detectors">
 
 </details>
 
@@ -228,6 +228,8 @@ Click a family to see its appliances at work. The drawings are shown with `illus
 <img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-climate_sensors.gif" alt="Temperature and humidity sensors">
 
 <img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-co2.gif" alt="CO₂ monitors">
+
+<img src="https://raw.githubusercontent.com/ADNPolymerase/ha-appliance-card/main/docs/family-switchbot.gif" alt="SwitchBot meters">
 
 </details>
 
@@ -1521,7 +1523,7 @@ disk2_entity: sensor.nas_drive_2_status
 | `weight_goal_entity` / `weight_goal` | scale | The weight goal, from a sensor or as a number (the sensor wins): a *Goal* line with what is left to lose or to gain, and *Goal reached* within half a unit. |
 | `fat_ratio_entity` / `fat_mass_entity` | scale | Body fat, in % and in mass, on one *Fat* line. |
 | `muscle_mass_entity` / `bone_mass_entity` | scale | Muscle and bone mass, as lines. |
-| `camera_layout` | camera | `indoor` (a pan and tilt camera) \| `tube` (Netatmo Welcome) \| `outdoor` (a battery camera like an Arlo, on its wall bracket) \| `dome` (on the ceiling) \| `doorbell` (a video doorbell). Left out, a camera with a `ring_entity` or a name that says doorbell is a doorbell, a Netatmo indoor camera is a tube, a name that says dome a dome, and a name or a brand that says outdoor, garden, front, back, Arlo or spotlight an outdoor camera. |
+| `camera_layout` | camera | `indoor` (a pan and tilt camera) \| `tube` (Netatmo Welcome) \| `outdoor` (a battery camera like an Arlo, on its wall bracket) \| `dome` (on the ceiling) \| `doorbell` (a video doorbell) \| `trackmix` (a dual-lens tracking camera like the Reolink TrackMix: its globe turns to follow a motion, its two spotlights light up at night). Left out, a camera with a `ring_entity` or a name that says doorbell is a doorbell, a Netatmo indoor camera is a tube, a name that says dome a dome, and a name or a brand that says outdoor, garden, front, back, Arlo or spotlight an outdoor camera. |
 | `ring_entity` | camera | The doorbell's button: a binary sensor on while it is pressed (Reolink's *visitor*), or an event entity (Ring, Nest, UniFi Protect), *Ringing* for 30 seconds after its last `ring`. The ring of light beats, then a *Last ring* line. |
 | `motion_entity` | camera | A motion sensor: *Motion detected* while it is on, orange waves in front of the lens, then a *Last motion* line. A count above zero (Frigate) also means motion, and an `event` entity (Nest, Ring) means motion for 30 seconds after it fires. |
 | `recording_entity` | camera | A recording sensor, for the integrations whose camera entity does not say *recording*. |
@@ -1537,7 +1539,8 @@ disk2_entity: sensor.nas_drive_2_status
 | `front_door_entity` / `back_door_entity` | mailbox | The contacts on the street door and on the house door: *Front door open*, *Back door open*, the door swings open and daylight comes in, and a line for each. |
 | `tree_palette` | christmas_tree | `multicolor` (default) \| `red_gold` \| `red_silver` \| `gold_silver` \| `blue_silver` \| `white_silver` \| `red_green`: the baubles, the lights, the tinsel, the star, the pot and the presents. |
 | `presents` | christmas_tree | `auto` (default, presents under the tree on 24 and 25 December only) \| `show` \| `hide`. |
-| `detector_layout` | detector | `smoke` (a smoke detector on the ceiling) \| `co` (a CO alarm on the wall, its display in ppm) \| `leak` (a leak sensor on the floor). Left out, the device class picks it (`smoke`, `carbon_monoxide` or `gas`, `moisture`), or the name. On is an alarm: the smoke rises to the ceiling, the CO display turns red, the water drips into a puddle. |
+| `detector_layout` | detector | `smoke` (a smoke detector on the ceiling) \| `co` (a CO alarm on the wall, its display in ppm) \| `leak` (a leak sensor on the floor) \| `door` (a door or window contact, open or closed; a window when the device class or the name says window) \| `vibration` (a vibration sensor) \| `glass` (a glass break sensor). Left out, the device class picks it (`smoke`, `carbon_monoxide` or `gas`, `moisture`, `door`, `window`, `opening`, `garage_door`, `vibration`), or the name. On is an alarm: the smoke rises to the ceiling, the CO display turns red, the water drips into a puddle. |
+| `detector_model` | detector | The model drawn for a door contact (`sonoff`, `aqara`, `hue`), a vibration sensor (`aqara`, `tuya`) or a glass break sensor (`ring`, `ajax`). Left out, the brand in the device's name or model picks it, else the first one. |
 | `battery_entity` | detector | The battery, in % or as a low-battery sensor: a line, and the light turns amber at 20 % or less. |
 | `test_entity` | detector | A button, script or switch that runs the alarm test: a *Test* button on the card. |
 | `co_level_entity` | detector | The CO level, on the alarm's display and as a line. |
@@ -1549,7 +1552,7 @@ disk2_entity: sensor.nas_drive_2_status
 | `playtime_entity` / `playtime_left_entity` | game console | Today's play time and the time left, as a parental control counts them (Nintendo Switch Parental Controls), as lines. |
 | `streamer_layout` | streaming box | `apple_tv` \| `fire_tv_cube` \| `fire_tv_stick` \| `google_tv_streamer` \| `chromecast` \| `shield` (the tube) \| `shield_pro` \| `roku` \| `mi_box` (Xiaomi TV Box) \| `freebox` (Freebox Player) \| `decoder` (an operator's set-top box: Orange, Bouygues, SFR...) \| `box` (any Android TV box) \| `stick` (any HDMI stick, a Roku stick in purple). Left out, it is read in the name, then in the device's maker and model (an Apple TV named after its room, a Fire TV by its Amazon model code). The state is a `media_player` (Apple TV, Android TV Remote, Android TV / Fire TV over ADB, Google Cast, Roku, Kodi, an operator's box), its `remote`, a smart plug or anything on and off: *Playing*, *Paused*, *Home screen*, *Standby* or *Off*. Lines: the app (its name, or its package turned into a name), the title, the series with its season and episode or the artist, the channel, the source, the time left and the volume. While it plays, the app's tile floats above the box in the app's colours (Netflix, YouTube, Disney+, Prime Video, Apple TV, Plex, Spotify, myCANAL, Kodi and others). With a smart plug, `power_entity` says on (4 W or more by default, `power_on_threshold`), standby or off. |
 | `app_entity` | streaming box | The app in use, when the media player does not say it (an Android TV's current app over ADB, a sensor). |
-| `climate_sensor_layout` | temperature sensor | `disc` (Sonoff SNZB-02P, ZG-227Z) \| `square` (SNZB-02) \| `cushion` (Aqara) \| `stick` (TH01) \| `lcd_stand` (SNZB-02D) \| `lcd_probe` (SNZB-02LD, SNZB-02WD) \| `lcd_round` (Tuya TS0201) \| `co2_eink` (Aranet4 and its e-ink screen) \| `co2_box` (AirGradient ONE and its row of LEDs) \| `co2_netatmo` (Netatmo indoor station and its lit groove) \| `co2_netatmo_module` (Netatmo additional indoor module). Left out, read from the device's name and model (Aranet, AirGradient, Netatmo); a CO₂ sensor with nothing else to go on is `co2_eink`, anything else `disc`. |
+| `climate_sensor_layout` | temperature sensor | `disc` (Sonoff SNZB-02P, ZG-227Z) \| `square` (SNZB-02) \| `cushion` (Aqara) \| `stick` (TH01) \| `lcd_stand` (SNZB-02D) \| `lcd_probe` (SNZB-02LD, SNZB-02WD) \| `lcd_round` (Tuya TS0201) \| `co2_eink` (Aranet4 and its e-ink screen) \| `co2_box` (AirGradient ONE and its row of LEDs) \| `co2_netatmo` (Netatmo indoor station and its lit groove) \| `co2_netatmo_module` (Netatmo additional indoor module) \| `switchbot_co2` (SwitchBot Meter Pro CO₂) \| `switchbot_pro` (Meter Pro) \| `switchbot_meter` (Meter) \| `switchbot_plus` (Meter Plus) \| `switchbot_outdoor` (Indoor/Outdoor Meter). Left out, read from the device's name and model (Aranet, AirGradient, Netatmo, SwitchBot); a CO₂ sensor with nothing else to go on is `co2_eink`, anything else `disc`. |
 | `co2_entity` | temperature sensor | The CO₂ in ppm: it makes the sensor a CO₂ monitor. The state reads *Air is fine* (green), *Ventilation advised* (orange) or *Ventilate now* (red, blinking), and the CO₂ is a line. Not needed when the state entity is the CO₂ itself (`device_class: carbon_dioxide`): the temperature then goes in `temperature_entity`. |
 | `co2_warning` / `co2_alert` | temperature sensor | The CO₂ thresholds in ppm: orange above `co2_warning` (1000 by default), red above `co2_alert` (1500 by default). |
 | `temperature_entity` | temperature sensor | The temperature, as a line and on the screen, when the state is the CO₂. |

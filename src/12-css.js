@@ -2125,6 +2125,11 @@ const ILLUSTRATION_CSS = {
         @keyframes cam-breathe { 0%, 100% { opacity: .35; } 50% { opacity: 1; } }
         @keyframes cam-wave { 0% { opacity: 0; transform: scale(.6); } 30% { opacity: 1; } 100% { opacity: 0; transform: scale(1.25); } }
         @keyframes cam-ir { 0%, 100% { opacity: .55; } 50% { opacity: 1; } }
+        .cam-tmx-spot{fill:#f5f2e6;stroke:#8f8a78;stroke-width:.5}
+        .cam-night .cam-tmx-spot,.cam-m-motion.cam-night .cam-tmx-spot{fill:#fff3c4;filter:drop-shadow(0 0 3px #ffe082)}
+        .cam-tmx-pan{transform-box:fill-box;transform-origin:center}
+        .cam-m-motion .cam-tmx-pan{animation:cam-pan 3.2s ease-in-out infinite;animation-delay:var(--anim-offset,0s)}
+        @keyframes cam-pan { 0%, 100% { transform: translateX(-5px); } 50% { transform: translateX(5px); } }
         .cam-dbring{fill:none;stroke:#4fc3f7;stroke-width:2.4;opacity:.45}
         .cam-m-ring .cam-dbring{opacity:1;stroke:#29b6f6;animation:cam-dbpulse 1s ease-in-out infinite;animation-delay:var(--anim-offset,0s)}
         .cam-m-off .cam-dbring,.cam-m-unav .cam-dbring{opacity:0}

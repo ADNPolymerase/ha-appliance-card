@@ -1458,6 +1458,12 @@ class ApplianceCardEditor extends HTMLElement {
         ${[["irrigation", "irrigation_layout", IRRIGATION_LAYOUTS, "irr"], ["litter_box", "litter_layout", LITTER_LAYOUTS, "lit"], ["detector", "detector_layout", DETECTOR_LAYOUTS, "det"], ["pellet_grill", "grill_layout", GRILL_LAYOUTS, "pg"], ["speaker", "speaker_layout", SPEAKER_LAYOUTS, "spk"], ["console", "console_layout", CONSOLE_LAYOUTS, "con"], ["streamer", "streamer_layout", STREAMER_LAYOUTS, "str"], ["climate_sensor", "climate_sensor_layout", THS_LAYOUTS, "ths"], ["cover", "cover_layout", COVER_LAYOUTS, "cov"], ["fingerbot", "fingerbot_layout", FINGERBOT_LAYOUTS, "fb"]]
           .filter(([ty]) => this._type === ty).map(([, f, list, p]) => this._row("section_screen_layout", f, { type: "select",
             options: [{ value: "auto", label: t(hass, "unit_auto") }].concat(list.map((v) => ({ value: v, label: t(hass, `layout_${p}_${v}`) }))) })).join("")}
+        ${this._type === "detector" && DETECTOR_MODELS[detectorLayoutOf(this._config, stateObj(hass, this._config.state_entity))] ? this._row("det_model", "detector_model", {
+          type: "select",
+          value: this._config.detector_model || "auto",
+          options: [{ value: "auto", label: t(hass, "unit_auto") }].concat(DETECTOR_MODELS[detectorLayoutOf(this._config, stateObj(hass, this._config.state_entity))]
+            .map((v) => ({ value: v, label: { sonoff: "Sonoff", aqara: "Aqara", hue: "Philips Hue", tuya: "Tuya", ring: "Ring", ajax: "Ajax" }[v] }))),
+        }) : ""}
         ${this._type === "irrigation" && irrigationLayoutOf(this._config, stateObj(hass, this._config.state_entity)) === "tap" ? this._row("irr_model", "tap_model", {
           type: "select",
           options: [{ value: "auto", label: t(hass, "unit_auto") }].concat(TAP_MODELS.map((v) => ({ value: v, label: t(hass, `irr_model_${v}`) }))),
@@ -1877,6 +1883,7 @@ class ApplianceCardEditor extends HTMLElement {
         if (["show_name", "show_state", "show_toggle", "show_light_button", "large_temperature", "winter_snowfall"].includes(field) && value) delete this._config[field];
         // Compact is written the way it always was: true for the card without
         // its drawing, nothing at all when it is off.
+        if (field === "detector_model" && value === "auto") delete this._config.detector_model;
         // No background is the default and is not written.
         if (field === "illustration_backdrop" && !illustrationBackdropOf(value)) delete this._config.illustration_backdrop;
         if (field === "compact") {
