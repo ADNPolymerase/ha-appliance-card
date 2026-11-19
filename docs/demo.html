@@ -1904,9 +1904,9 @@ function liveGallery() {
     [L("Heating and climate", "Chauffage et climat"), [waterHeater, boiler, boilerWindow, boilerThermo, thSquare, thRound, thGlass, thValve, heatPump, pelletStove, spaceHeater, towelWarmer, towelPanel, airConditioner, dehumidifier, humidifier, humidifierNight, humidifierEmpty, humidifierLifted]],
     [L("CO\u2082 monitors", "Capteurs de CO\u2082"), [EXTRA.co2_eink, EXTRA.co2_box, EXTRA.co2_netatmo, EXTRA.co2_module]],
     [L("SwitchBot meters", "Thermom\u00e8tres SwitchBot"), [EXTRA.sb_co2, EXTRA.sb_co2_high, EXTRA.sb_pro, EXTRA.sb_meter, EXTRA.sb_plus, EXTRA.sb_outdoor]],
-    [L("Corner switches and buttons", "Interrupteurs et boutons dans les coins"), [EXTRA.corners4]],
-    [L("Drying racks", "S\u00e9choirs muraux"), [EXTRA.rack_box, EXTRA.rack_box_closed, EXTRA.rack_accordion, EXTRA.rack_accordion_closed, EXTRA.rack_frame, EXTRA.rack_frame_closed]],
-    [L("Shut-off valves", "Vannes d'arriv\u00e9e"), [EXTRA.vlv_aqara, EXTRA.vlv_aqara_closed, EXTRA.vlv_closing, EXTRA.vlv_tuya, EXTRA.vlv_gas, EXTRA.vlv_leak]],
+    [L("Corner switches and buttons", "Interrupteurs et boutons dans les coins"), [EXTRA.corners4], "new"],
+    [L("Drying racks", "S\u00e9choirs muraux"), [EXTRA.rack_box, EXTRA.rack_box_closed, EXTRA.rack_accordion, EXTRA.rack_accordion_closed, EXTRA.rack_frame, EXTRA.rack_frame_closed], "new"],
+    [L("Shut-off valves", "Vannes d'arriv\u00e9e"), [EXTRA.vlv_aqara, EXTRA.vlv_aqara_closed, EXTRA.vlv_closing, EXTRA.vlv_tuya, EXTRA.vlv_gas, EXTRA.vlv_leak], "new"],
     [L("Finger bots", "Pousse-boutons"), [EXTRA.fb_plus, EXTRA.fb_charging, EXTRA.fb_held, EXTRA.fb_low, EXTRA.fb_switchbot, EXTRA.fb_switchbot_black, EXTRA.fb_classic]],
     [L("Shutters, blinds, pergolas and awnings", "Volets, stores, pergolas et stores bannes"), [EXTRA.cov_shutter, EXTRA.cov_shutter_closing, EXTRA.cov_shutter_closed, EXTRA.cov_blind, EXTRA.cov_venetian, EXTRA.cov_raffstore, EXTRA.cov_pergola, EXTRA.cov_awning]],
     [L("Air purifiers and fans", "Purificateurs et ventilateurs"), [purifier, boxPurifier, ringPurifier, fan, ceilingFan]],
@@ -1932,9 +1932,11 @@ function liveGallery() {
     [L("Game consoles", "Consoles de jeu"), [conPs1, conPs2, conPs3, conPs4, conPs4Pro, conPs5, conXbox, conX360, conXone, conXsx, conXss, conSwitch, conSwitch2, conLite, conVita, conNes, conSnes, conN64, conCube, conWii, conMd]],
     [L("Streaming boxes", "Bo\u00eetiers de streaming"), [strAppleTv, strCube, strFireStick, strGts, strCast, strShield, strShieldPro, strRoku, strMiBox, strFreebox, strDecoder, strBox, strStick]],
   ];
+  // ?new=1 shows only the families of the coming release, all open.
+  const newOnly = params.get("new") === "1";
   // Each family folds, the first one open: forty cards in a row are hard to
   // read, a list of families is not.
-  FAMILIES.forEach(([title, makers], n) => {
+  FAMILIES.filter((f) => !newOnly || f[2] === "new").forEach(([title, makers], n) => {
     const sec = document.createElement("details");
     sec.innerHTML = `<summary><span>${title}</span><small>${makers.length}</small></summary>`;
     const grid = document.createElement("div");
@@ -1961,7 +1963,7 @@ function liveGallery() {
     };
     // A folded family is drawn when it is opened: two hundred animated
     // cards built at once froze the page for long seconds.
-    if (n === 0 || !wrap.querySelector("details[open]")) { sec.open = true; build(); }
+    if (newOnly || n === 0 || !wrap.querySelector("details[open]")) { sec.open = true; build(); }
     else sec.addEventListener("toggle", () => sec.open && build());
   });
 }
