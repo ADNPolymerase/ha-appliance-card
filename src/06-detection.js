@@ -68,6 +68,8 @@ const TYPE_AUTO_PATTERNS = {
   },
   // Arlo calls its sensors motion_camera_x and connected_camera_x, Reolink
   // and Tapo name a privacy switch, and most of them an infrared mode.
+  // A floodlight's motion sensor on the same device (Ring, Eufy, Shelly).
+  lamp: { motion_entity: /^binary_sensor\..*(motion|mouvement|bewegung|movimiento|movimento|pir|occupancy)/i },
   camera: {
     // Frigate's person count is a number, its motion a contact.
     motion_entity: /^(?!sensor\..*(count|last|sensitiv)).*(motion|mouvement|bewegung|movimiento|movimento|person|human)/i,
@@ -1130,7 +1132,9 @@ function detectApplianceType(cfg, st) {
   if (BATTERY_ONLY_FIELDS.some((f) => cfg[f])) return "home_battery";
   if (SCALE_ONLY_FIELDS.some((f) => cfg[f])) return "scale";
   if (UPS_ONLY_FIELDS.some((f) => cfg[f])) return "ups";
-  if (CAMERA_ONLY_FIELDS.some((f) => cfg[f])) return "camera";
+  // A motion sensor on a light is a floodlight's (HACF #171), not a camera's.
+  const lampMotion = !!cfg.lamp_layout || domainOf(cfg.state_entity) === "light";
+  if (CAMERA_ONLY_FIELDS.some((f) => cfg[f] && !(f === "motion_entity" && lampMotion))) return "camera";
   if (LAMP_ONLY_FIELDS.some((f) => cfg[f])) return "lamp";
   if (MAILBOX_ONLY_FIELDS.some((f) => cfg[f])) return "mailbox";
   if (DIFFUSER_ONLY_FIELDS.some((f) => cfg[f])) return "diffuser";

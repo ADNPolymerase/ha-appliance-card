@@ -2202,6 +2202,12 @@ const ILLUSTRATION_CSS = {
         .lp-ceiling{fill:color-mix(in srgb,var(--primary-text-color,#212121) 9%,transparent)}
         .lp-m-off .lp-halo,.lp-m-off .lp-beam,.lp-m-off .lp-wash,.lp-m-unav .lp-halo,.lp-m-unav .lp-beam,.lp-m-unav .lp-wash{opacity:0}
         .lp-m-off .lp-lit,.lp-m-unav .lp-lit{fill:#d9dee3}
+        .lp-pir{fill:#ff1744;opacity:0;transition:opacity .3s}
+        .lp-pirw{opacity:0}
+        .lp-motion .lp-pir{opacity:.55;animation:lp-pir 1.2s ease-in-out infinite;animation-delay:var(--anim-offset,0s)}
+        .lp-motion .lp-pirw{animation:lp-pirw 1.2s ease-out infinite;animation-delay:var(--anim-offset,0s)}
+        @keyframes lp-pir{50%{opacity:.15}}
+        @keyframes lp-pirw{0%{opacity:0;transform:translateY(-3px)}40%{opacity:1}100%{opacity:0;transform:translateY(3px)}}
         .lp-m-off .lp-litS,.lp-m-unav .lp-litS{stroke:#c5ccd3}
         .lp-m-off .lp-stop,.lp-m-unav .lp-stop{stop-color:#e3e7eb}
         .machine.lp-m-unav{opacity:.45;filter:grayscale(1)}

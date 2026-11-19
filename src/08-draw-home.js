@@ -1022,8 +1022,8 @@ function mailboxHtml(cls, c) {
 // A lamp, read from its light entity: on or off, how bright, in what colour,
 // and whether an effect runs. A switch or a helper only says on or off, and
 // the lamp is drawn in the warm white of a bulb.
-const LAMP_ONLY_FIELDS = ["lamp_layout", "spots", "timer_entity"];
-const LAMP_LAYOUTS = ["bulb", "bedside", "floor", "floor_tree", "torch", "pendant", "ceiling", "ceiling_panel", "ceiling_ring", "strip", "strip_cove", "strip_plinth", "strip_baseboard", "strip_slats", "spot", "spot_track", "spot_surface", "spot_updown", "panels", "desk", "wall", "garden_spot", "flood", "bollard", "string", "curtain", "icicle", "festoon", "squares"];
+const LAMP_ONLY_FIELDS = ["lamp_layout", "spots", "timer_entity", "motion_entity"];
+const LAMP_LAYOUTS = ["bulb", "bedside", "floor", "floor_tree", "torch", "pendant", "ceiling", "ceiling_panel", "ceiling_ring", "strip", "strip_cove", "strip_plinth", "strip_baseboard", "strip_slats", "spot", "spot_track", "spot_surface", "spot_updown", "panels", "desk", "wall", "garden_spot", "garden_tree", "flood", "flood_pir", "bollard", "string", "curtain", "icicle", "festoon", "squares"];
 const LAMP_SPOTS = [1, 2, 3, 4, 5];
 // The layouts drawn with as many spots as the light has.
 const LAMP_SPOT_ROWS = ["spot", "spot_track", "spot_surface", "pendant", "floor_tree"];
@@ -1095,10 +1095,12 @@ function lampLayoutOf(cfg, st) {
   if (/twinkly.{0,12}(square|matri)|pixel.?(square|panel|matri)|(^|[^a-z])matri(x|ce)/.test(hay)) return "squares";
   if (/twinkly|guirlande|fairy|string.?light|lichterkette|guirnalda|ghirlanda|lichtsnoer|ljusslinga|lysslynge|lyskaede|girlanda|lampki/.test(hay)) return "string";
   // In the garden: a spotlight on its spike, or a small post along a path.
+  if (/(spot|projecteur|projector|strahler|foco|faretto|uplight|piquet|spike).{0,24}(^|[^a-z])(arbres?|trees?|baum|arbol|albero|boom|trad|drzewo?)([^a-z]|$)|(^|[^a-z])(arbres?|trees?|baum|arbol|albero|boom)[^a-z].{0,16}(spot|uplight|eclair|light|licht)/.test(hay)) return "garden_tree";
   if (/garden.?spot|spike|piquet|spiess|erdspie|(spot|projecteur|projector|strahler|foco|faretto).{0,14}(jardin|garden|exterieur|outdoor|garten|giardino|tuin)/.test(hay)) return "garden_spot";
   if (/bollard|borne|potelet|path.?light|pollerleuchte|wegeleuchte|baliza|paletto|tuinpaal|lampadaire.{0,6}(de.?)?jardin|(petit|mini).?lampadaire|garden.?(post|lamp)/.test(hay)) return "bollard";
   // A floodlight on the house wall (a Deckenfluter is a torchiere, a
   // videoprojecteur a screen).
+  if (/(flood|(?<!decken)fluter|flutlicht|projecteur|proiettore|proyector|schijnwerper|strahler).{0,24}(pir|detect|motion|mouvement|bewegung|sensor|capteur|movimiento|movimento)|(pir|bewegungsmelder).{0,16}(flood|fluter|projecteur|strahler)/.test(hay)) return "flood_pir";
   if (/flood|(?<!decken)fluter|flutlicht|schijnwerper|(^|[^o])projecteur|proiettore|proyector|projetor|stralkastare|lyskaster|naswietlacz/.test(hay)) return "flood";
   // A floor lamp with several heads up its pole: a tree, or a floor lamp
   // named for its spots, arms or heads.
@@ -1349,6 +1351,47 @@ LAMP_SVGS.flood = () => `<defs>
 <path d="M28 25.4 L71 21.6 L72.6 24.6 L30.8 28.8 Z" fill="#1e2226"/>
 <path class="lp-lit" d="M30.4 25.9 L70.4 22.3 L71.6 24.2 L32 28 Z"/></g>
 <circle cx="31" cy="22.4" r="1.5" fill="#3a4047"/>`;
+// A floodlight with its motion sensor (HACF #171), the common LED kind seen
+// from the front: a flat slab of LEDs on its bracket, and under it the
+// sensor's dome on its own small arm. A motion lights the dome red and sends
+// waves out of it.
+LAMP_SVGS.flood_pir = () => `<defs>
+<linearGradient id="lp-fB" x1="0" y1="0" x2="0" y2="1"><stop offset="0" class="lp-stop" stop-opacity=".9"/><stop offset="1" class="lp-stop" stop-opacity=".06"/></linearGradient>
+<linearGradient id="lp-fM" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#4a525b"/><stop offset="1" stop-color="#1e2226"/></linearGradient>
+<radialGradient id="lp-fD" cx=".4" cy=".35" r=".7"><stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#c9d0d6"/></radialGradient>
+<pattern id="lp-fL" width="3.4" height="3.4" patternUnits="userSpaceOnUse"><circle cx="1.7" cy="1.7" r=".75" fill="#fff8e1" opacity=".9"/></pattern></defs>
+<path d="M0 90 H96" stroke="#c5ccd3" stroke-width="1.4"/>
+<g transform="translate(-12 -4) scale(1.25)"><path class="lp-beam" d="M24 40 L72 40 L96 90 H0 Z" fill="url(#lp-fB)"/>
+<rect x="44" y="4" width="8" height="5" rx="1" fill="#2b3036"/><path d="M48 9 V14" stroke="#2b3036" stroke-width="2.4"/>
+<path d="M30 14 Q27 14 27 18 V22 M66 14 Q69 14 69 18 V22" stroke="#2b3036" stroke-width="2" fill="none"/>
+<rect x="24" y="14" width="48" height="27" rx="2.4" fill="url(#lp-fM)"/>
+<rect x="27.4" y="17" width="41.2" height="20.6" rx="1.2" class="lp-lit"/>
+<rect x="27.4" y="17" width="41.2" height="20.6" rx="1.2" fill="url(#lp-fL)" opacity=".55"/>
+<path d="M28 18 L46 18 L32 36 L28 36 Z" fill="#fff" opacity=".12"/>
+<path d="M48 41 V45" stroke="#2b3036" stroke-width="2.2"/>
+<rect x="41" y="45" width="14" height="9" rx="2" fill="url(#lp-fM)"/>
+<path d="M43 54 A5 5 0 0 0 53 54 Z" fill="url(#lp-fD)" stroke="#8f979e" stroke-width=".5"/>
+<path class="lp-pir" d="M43 54 A5 5 0 0 0 53 54 Z"/>
+<g class="lp-pirw"><path d="M38 60 Q48 66 58 60" fill="none" stroke="#ff5252" stroke-width="1.4" stroke-linecap="round"/><path d="M34 65 Q48 73 62 65" fill="none" stroke="#ff5252" stroke-width="1.4" stroke-linecap="round" opacity=".6"/></g></g>`;
+// A spotlight at the foot of a tree, lighting its trunk and its crown from
+// below (HACF #171): the light climbs the bark and catches the leaves.
+LAMP_SVGS.garden_tree = () => `<defs>
+<linearGradient id="lp-tB" x1="0" y1="1" x2="0" y2="0"><stop offset="0" class="lp-stop" stop-opacity=".95"/><stop offset="1" class="lp-stop" stop-opacity="0"/></linearGradient>
+<radialGradient id="lp-tW" cx=".5" cy=".9" r=".75"><stop offset="0" class="lp-stop" stop-opacity=".9"/><stop offset="1" class="lp-stop" stop-opacity="0"/></radialGradient>
+<radialGradient id="lp-tG" cx=".45" cy=".4" r=".7"><stop offset="0" stop-color="#4a8236"/><stop offset="1" stop-color="#27511f"/></radialGradient>
+<linearGradient id="lp-tK" x1="0" x2="1"><stop offset="0" stop-color="#4a3322"/><stop offset=".5" stop-color="#7a5636"/><stop offset="1" stop-color="#3c2a1c"/></linearGradient>
+${lpMetal("tM", "#2b3036", "#6f7882")}</defs>
+<path d="M14 34 C6 22 16 4 34 6 C42 -2 62 -2 68 6 C84 4 94 18 86 32 C94 42 84 56 70 52 C62 60 34 60 26 52 C12 54 6 42 14 34 Z" fill="url(#lp-tG)"/>
+<path d="M24 20 q6 -6 12 -4 M56 10 q8 -2 12 4 M74 34 q6 2 6 8 M20 40 q2 6 8 8" fill="none" stroke="#6aa64f" stroke-width="1.4" stroke-linecap="round" opacity=".7"/>
+<path class="lp-wash" d="M14 34 C6 22 16 4 34 6 C42 -2 62 -2 68 6 C84 4 94 18 86 32 C94 42 84 56 70 52 C62 60 34 60 26 52 C12 54 6 42 14 34 Z" fill="url(#lp-tW)"/>
+<path d="M44 86 C46 74 44 62 42 50 L36 40 M46 56 L58 42 M47 66 L56 58" stroke="url(#lp-tK)" stroke-width="2.6" fill="none" stroke-linecap="round"/>
+<path d="M40 86 C43 72 42 60 40 48 L50 48 C50 60 50 72 54 86 Z" fill="url(#lp-tK)"/>
+<path class="lp-wash" d="M40 86 C43 72 42 60 40 48 L50 48 C50 60 50 72 54 86 Z" fill="url(#lp-tB)"/>
+<path class="lp-beam" d="M26 66 L32 66 L64 8 L34 4 Z" fill="url(#lp-tB)"/>
+${lpGrass()}
+<path d="M30 76 L30 90 L28.8 94 L27.6 90 L27.6 76 Z" fill="#2b3036"/>
+<g transform="rotate(-14 28.8 76)"><rect x="24" y="64" width="9.6" height="12" rx="2" fill="url(#lp-tM)"/>
+<ellipse cx="28.8" cy="64" rx="5.4" ry="1.8" fill="#1e2226"/><ellipse class="lp-lit" cx="28.8" cy="64" rx="4" ry="1.3"/></g>`;
 // Ceiling lights, the one fixed on most ceilings. A flush dome of opal glass.
 LAMP_SVGS.ceiling = () => `<defs>${lpBeam("cB")}${lpHalo("cH")}
 <radialGradient id="lp-cG" cx=".5" cy=".15" r=".9"><stop offset="0" stop-color="#fff" stop-opacity=".75"/><stop offset=".6" stop-color="#fff" stop-opacity=".15"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient></defs>
@@ -1507,7 +1550,7 @@ ${lpGrass()}
 <rect x="46.6" y="20.4" width="2.8" height="3" rx="1" fill="#2b3036"/>`;
 function lampHtml(cls, c) {
   const layout = LAMP_LAYOUTS.includes(c.layout) ? c.layout : "bulb";
-  const flags = ["lp", `lp-l-${layout}`, `lp-m-${c.mode || "unav"}`, c.fx ? "lp-fx" : ""].filter(Boolean).join(" ");
+  const flags = ["lp", `lp-l-${layout}`, `lp-m-${c.mode || "unav"}`, c.fx ? "lp-fx" : "", c.motion ? "lp-motion" : ""].filter(Boolean).join(" ");
   const rgb = Array.isArray(c.rgb) ? c.rgb : LAMP_WARM;
   // Dimmed down to a quarter, never out: a lamp at 1 % is still a lit lamp.
   const level = c.pct === null || c.pct === undefined ? 1 : 0.25 + 0.75 * Math.min(100, Math.max(0, c.pct)) / 100;

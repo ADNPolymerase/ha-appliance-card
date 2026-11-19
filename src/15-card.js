@@ -3699,7 +3699,11 @@ class ApplianceCard extends HTMLElement {
       if (l.effect) {
         extraLines.push({ key: "lamp_effect", icon: "mdi:auto-fix", label: t(hass, "lamp_line_effect"), value: l.effect, entity: cfg.state_entity });
       }
-      lampDraw = { mode: l.mode, rgb: l.rgb, pct: l.pct, fx: !!l.effect, layout: lampLayoutOf(cfg, st), spots: lampSpotsOf(cfg, st) };
+      // A floodlight's motion sensor (HACF #171): a line, and its dome lights red.
+      const mst = cfg.motion_entity ? stateObj(hass, cfg.motion_entity) : null;
+      const motion = !!mst && ["on", "true", "1", "detected", "home"].includes(String(mst.state).trim().toLowerCase());
+      if (mst) extraLines.push({ key: "lamp_motion", icon: motion ? "mdi:motion-sensor" : "mdi:motion-sensor-off", label: t(hass, "section_motion"), value: t(hass, motion ? "det_line_detected" : "det_line_clear"), entity: cfg.motion_entity, caution: motion });
+      lampDraw = { mode: l.mode, rgb: l.rgb, pct: l.pct, fx: !!l.effect, layout: lampLayoutOf(cfg, st), spots: lampSpotsOf(cfg, st), motion };
     }
 
     // The HACF drawings: a pump, underfloor heating, a spa, a sauna, an
@@ -4264,7 +4268,7 @@ class ApplianceCard extends HTMLElement {
       illustrationCtx.mailbox && [illustrationCtx.mailbox.mode, illustrationCtx.mailbox.drawn, illustrationCtx.mailbox.count, illustrationCtx.mailbox.front,
         illustrationCtx.mailbox.back, illustrationCtx.mailbox.layout, illustrationCtx.mailbox.side, illustrationCtx.mailbox.color, illustrationCtx.mailbox.arriveAt].join("/"),
       illustrationCtx.lampDraw && [illustrationCtx.lampDraw.mode, illustrationCtx.lampDraw.rgb.join(","), illustrationCtx.lampDraw.pct,
-        illustrationCtx.lampDraw.fx, illustrationCtx.lampDraw.layout, illustrationCtx.lampDraw.spots].join("/"),
+        illustrationCtx.lampDraw.fx, illustrationCtx.lampDraw.layout, illustrationCtx.lampDraw.spots, illustrationCtx.lampDraw.motion].join("/"),
       illustrationCtx.scale && [illustrationCtx.scale.mode, illustrationCtx.scale.text, illustrationCtx.scale.unit, illustrationCtx.scale.fresh].join("/"),
       illustrationCtx.ups && [illustrationCtx.ups.mode, illustrationCtx.ups.alert, illustrationCtx.ups.charging, illustrationCtx.ups.segs,
         illustrationCtx.ups.lcd, illustrationCtx.ups.level, illustrationCtx.ups.pace].join("/"),

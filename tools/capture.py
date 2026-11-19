@@ -94,6 +94,8 @@ FAMILIES = (
     ("valves", "vlv_aqara,vlv_aqara_closed,vlv_closing,vlv_tuya,vlv_gas,vlv_leak", 3),
     ("racks", "rack_box,rack_box_closed,rack_accordion,rack_accordion_closed,rack_frame,rack_frame_closed", 3),
     ("foodproc", "fp_tm31,fp_tm31_off,fp_tm6,fp_tm6_ready", 4),
+    ("floodlights", "lamp_flood_pir,lamp_flood_pir_off,lamp_tree,lamp_tree_off", 4),
+    ("hifi", "focal_bird_w,focal_bird_b,focal_od6_w,focal_od6_b,denon_on,denon_off", 3),
     ("screens", "scr_tv,scr_projector,scr_computer,scr_laptop,tab_wall,tab_frame,tab_portrait", 4),
     ("house", "nt_chest,nt_drawers,nt_booster,nt_sump,nt_sump_high,nt_floor,nt_floor_elec,nt_spa,nt_sauna,nt_aquarium,nt_linky,nt_tree,hd_hot,hd_ring", 4),
     ("winter", "win_pool,win_spa,win_poolbot,win_mower,win_sprinkler,win_flowers,win_tap,win_grill,win_fan", 3),
@@ -125,7 +127,7 @@ GIF_WIDE = {"ventilation": (2, 412)}
 # electric ride's gauge fills in 5 s, and its fourth bar has to be seen.
 # The litter boxes, the watering, the detectors and the speakers share one 7 s
 # cycle, the litter box's full cleaning, every motion fitting it whole.
-GIF_TIMING = {"grills": (20, 200), "mobility": (25, 200), "litter": (35, 200), "watering": (35, 200), "detectors": (35, 200), "speakers": (35, 200), "consoles": (35, 200), "streamers": (35, 200)}
+GIF_TIMING = {"grills": (20, 200), "mobility": (25, 200), "litter": (35, 200), "watering": (35, 200), "detectors": (35, 200), "speakers": (35, 200), "hifi": (35, 200), "consoles": (35, 200), "streamers": (35, 200)}
 
 
 def gif_cols(count):

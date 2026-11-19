@@ -15080,6 +15080,34 @@ if (RECORD) writeFileSync(process.env.HAC_RECORD, JSON.stringify(RECORD));
   check('170 : detecte par son nom', kindOf(render({ state_entity: 'switch.thermomix' }, { 'switch.thermomix': s('on') })) !== null && /fp_/.test(kindOf(render({ state_entity: 'switch.thermomix' }, { 'switch.thermomix': s('on') }))), true);
 }
 
+// HACF #171-#172: a floodlight with its motion sensor, a tree uplight, Focal speakers, a Denon receiver.
+{
+  const s = (state, a = {}) => ({ state: String(state), attributes: a });
+  const kindOf = (h) => (/\bnt-k-(\w+)/.exec(machineCls(h)) || [, null])[1];
+  const lpOf = (h) => (/\blp-l-(\w+)/.exec(machineCls(h)) || [, null])[1];
+  const flood = (motion) => render({ state_entity: 'light.allee', lamp_layout: 'flood_pir', motion_entity: 'binary_sensor.allee_motion' }, { 'light.allee': s('on', { brightness: 255 }), 'binary_sensor.allee_motion': s(motion ? 'on' : 'off', { device_class: 'motion' }) });
+  check('171 : un projecteur avec detecteur reste une lampe', lpOf(flood(true)), 'flood_pir');
+  check('171 : mouvement, le detecteur rougit', /\blp-motion\b/.test(machineCls(flood(true))), true);
+  check('171 : sans mouvement, rien', /\blp-motion\b/.test(machineCls(flood(false))), false);
+  check('171 : ligne de mouvement', /Detected/.test(flood(true)) && /Clear/.test(flood(false)), true);
+  check('171 : une lumiere avec motion_entity n est pas une camera', lpOf(render({ state_entity: 'light.garage', motion_entity: 'binary_sensor.garage_motion' }, { 'light.garage': s('on'), 'binary_sensor.garage_motion': s('off') })) !== null, true);
+  check('171 : detecte par son nom', lpOf(render({ state_entity: 'light.projecteur_detecteur_allee' }, { 'light.projecteur_detecteur_allee': s('on') })), 'flood_pir');
+  check('171 : spot sur arbre par son nom', lpOf(render({ state_entity: 'light.spot_arbre_jardin' }, { 'light.spot_arbre_jardin': s('on') })), 'garden_tree');
+  check('171 : entree n est pas un arbre', lpOf(render({ state_entity: 'light.spot_haut_bas_entree' }, { 'light.spot_haut_bas_entree': s('on') })), 'spot_updown');
+  const spk = (id, attrs = {}, state = 'playing') => render({ appliance_type: 'speaker', state_entity: id }, { [id]: s(state, attrs) });
+  check('172 : Focal Bird par son nom', kindOf(spk('media_player.focal_bird_salon')), 'spk_focal_bird');
+  check('172 : Focal 100 OD6 par son nom', kindOf(spk('media_player.focal_od6_terrasse')), 'spk_focal_od6');
+  check('172 : un ampli Denon', kindOf(spk('media_player.denon_avr_x3800h')), 'spk_denon_avr');
+  check('172 : une enceinte Denon Home reste une enceinte', kindOf(spk('media_player.denon_home_150')) !== 'spk_denon_avr', true);
+  const avr = spk('media_player.denon_avr', { source: 'Blu-ray', sound_mode: 'Dolby Atmos', volume_level: .5 });
+  check('172 : l ecran de l ampli dit la source', />Blu-ray</.test(avr), true);
+  check('172 : et le mode son', />Dolby Atmos</.test(avr), true);
+  check('172 : ligne mode son', /Sound mode/.test(avr), true);
+  check('172 : ampli eteint, ecran vide', />Blu-ray</.test(spk('media_player.denon_avr', { source: 'Blu-ray' }, 'off')), false);
+  check('172 : une source echappee', /<script>/.test(spk('media_player.denon_avr', { source: '<script>' })), false);
+  check('172 : Focal blanche ou noire', [spk('media_player.focal_bird_blanc'), spk('media_player.focal_bird_noir')].map((h) => /#ffffff/.test(h) ? 'w' : 'b').join(''), 'wb');
+}
+
 // Shutters, blinds, a pergola and an awning (#109): the position, the tilt,
 // the movement, their buttons, their colours and a pergola's light.
 {

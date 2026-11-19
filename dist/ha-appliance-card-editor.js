@@ -199,6 +199,8 @@ const SECTIONS = [
   { field: "active_mode_entity", types: ["hrv"], labelKey: "section_active_mode", includeDomains: ["sensor", "select", "input_select"] },
   // A lamp's timer: a list of durations.
   { field: "timer_entity", types: ["lamp"], labelKey: "lamp_timer", includeDomains: ["select", "input_select"] },
+  // A floodlight's motion sensor (HACF #171).
+  { field: "motion_entity", types: ["lamp"], labelKey: "section_motion", includeDomains: ["binary_sensor"] },
   // A camera: what it sees, whether it records, its night vision, its
   // privacy switch and its signal.
   { field: "motion_entity", types: ["camera"], labelKey: "section_motion", includeDomains: ["binary_sensor", "sensor", "event"] },
